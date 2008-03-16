@@ -1,0 +1,61 @@
+library.o: library.c class.h ../../include/proto/cybergraphics.h \
+  ../../include/proto/muimaster.h ../../include/libraries/mui.h \
+  ../../include/interfaces/muimaster.h ../../include/inline4/muimaster.h \
+  ../../include/cybergraphx/cybergraphics.h \
+  ../../include/mui/TheBar_mcc.h ../../include/mui/TheBar_mcp.h \
+  ../../include/mcc_common.h ../../include/SDI_compiler.h \
+  ../../include/SDI_hook.h ../../include/SDI_lib.h \
+  ../../include/SDI_stdarg.h ../../include/SDI_compiler.h \
+  ../../include/SDI_stdarg.h ../../include/SDI_hook.h debug.h \
+  class_protos.h private.h rev.h ../../include/mccinit.c
+utils.o: utils.c class.h ../../include/proto/cybergraphics.h \
+  ../../include/proto/muimaster.h ../../include/libraries/mui.h \
+  ../../include/interfaces/muimaster.h ../../include/inline4/muimaster.h \
+  ../../include/cybergraphx/cybergraphics.h \
+  ../../include/mui/TheBar_mcc.h ../../include/mui/TheBar_mcp.h \
+  ../../include/mcc_common.h ../../include/SDI_compiler.h \
+  ../../include/SDI_hook.h ../../include/SDI_lib.h \
+  ../../include/SDI_stdarg.h ../../include/SDI_compiler.h \
+  ../../include/SDI_stdarg.h ../../include/SDI_hook.h debug.h \
+  class_protos.h
+brc1.o: brc1.c class.h ../../include/proto/cybergraphics.h \
+  ../../include/proto/muimaster.h ../../include/libraries/mui.h \
+  ../../include/interfaces/muimaster.h ../../include/inline4/muimaster.h \
+  ../../include/cybergraphx/cybergraphics.h \
+  ../../include/mui/TheBar_mcc.h ../../include/mui/TheBar_mcp.h \
+  ../../include/mcc_common.h ../../include/SDI_compiler.h \
+  ../../include/SDI_hook.h ../../include/SDI_lib.h \
+  ../../include/SDI_stdarg.h ../../include/SDI_compiler.h \
+  ../../include/SDI_stdarg.h ../../include/SDI_hook.h debug.h \
+  class_protos.h
+scale.o: scale.c class.h ../../include/proto/cybergraphics.h \
+  ../../include/proto/muimaster.h ../../include/libraries/mui.h \
+  ../../include/interfaces/muimaster.h ../../include/inline4/muimaster.h \
+  ../../include/cybergraphx/cybergraphics.h \
+  ../../include/mui/TheBar_mcc.h ../../include/mui/TheBar_mcp.h \
+  ../../include/mcc_common.h ../../include/SDI_compiler.h \
+  ../../include/SDI_hook.h ../../include/SDI_lib.h \
+  ../../include/SDI_stdarg.h ../../include/SDI_compiler.h \
+  ../../include/SDI_stdarg.h ../../include/SDI_hook.h debug.h \
+  class_protos.h
+build.o: build.c class.h ../../include/proto/cybergraphics.h \
+  ../../include/proto/muimaster.h ../../include/libraries/mui.h \
+  ../../include/interfaces/muimaster.h ../../include/inline4/muimaster.h \
+  ../../include/cybergraphx/cybergraphics.h \
+  ../../include/mui/TheBar_mcc.h ../../include/mui/TheBar_mcp.h \
+  ../../include/mcc_common.h ../../include/SDI_compiler.h \
+  ../../include/SDI_hook.h ../../include/SDI_lib.h \
+  ../../include/SDI_stdarg.h ../../include/SDI_compiler.h \
+  ../../include/SDI_stdarg.h ../../include/SDI_hook.h debug.h \
+  class_protos.h private.h
+class.o: class.c class.h ../../include/proto/cybergraphics.h \
+  ../../include/proto/muimaster.h ../../include/libraries/mui.h \
+  ../../include/interfaces/muimaster.h ../../include/inline4/muimaster.h \
+  ../../include/cybergraphx/cybergraphics.h \
+  ../../include/mui/TheBar_mcc.h ../../include/mui/TheBar_mcp.h \
+  ../../include/mcc_common.h ../../include/SDI_compiler.h \
+  ../../include/SDI_hook.h ../../include/SDI_lib.h \
+  ../../include/SDI_stdarg.h ../../include/SDI_compiler.h \
+  ../../include/SDI_stdarg.h ../../include/SDI_hook.h debug.h \
+  class_protos.h private.h rev.h
+debug.o: debug.c

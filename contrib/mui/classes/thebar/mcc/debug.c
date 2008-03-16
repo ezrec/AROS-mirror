@@ -29,9 +29,9 @@
 #include <proto/exec.h>
 #include <proto/dos.h>
 
-#include "SDI_compiler.h"
+#include <SDI_compiler.h>
 
-#include "Debug.h"
+#include "debug.h"
 #include "rev.h"
 
 // redefinition section

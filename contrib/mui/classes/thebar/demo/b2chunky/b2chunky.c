@@ -97,6 +97,18 @@ main(int argc,char **argv)
                             if (args.tc) r = DoMethod(dto,PDTM_READPIXELARRAY,chunky,PBPAFMT_ARGB,4*bmh->bmh_Width,0,0,bmh->bmh_Width,bmh->bmh_Height);
                             else r = DoMethod(dto,PDTM_READPIXELARRAY,chunky,PBPAFMT_LUT8,bmh->bmh_Width,0,0,bmh->bmh_Width,bmh->bmh_Height);
 
+                            if (FindResident("MorphOS"))
+                            {
+								struct Library *PictureDTBase = OpenLibrary("picture.datatype", 0);
+
+                                if (PictureDTBase &&
+          							(PictureDTBase->lib_Version<50) ||
+              						(PictureDTBase->lib_Version==50 && PictureDTBase->lib_Revision<17))
+								{
+                                    r = TRUE;
+                                }
+                            }
+
                             if (!r && !args.tc)
                             {
                                 register UBYTE *tchunky;

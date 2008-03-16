@@ -1,6 +1,3 @@
-#ifndef _THEBAR_MCP_H_
-#define _THEBAR_MCP_H_
-
 /***************************************************************************
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
@@ -19,9 +16,12 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: TheBar_mcp.h 159 2008-01-14 23:29:30Z damato $
-
 ***************************************************************************/
+
+#ifndef _THEBAR_MCP_H_
+#define _THEBAR_MCP_H_
+
+/***********************************************************************/
 
 #ifndef LIBRARIES_MUI_H
 #include <libraries/mui.h>

@@ -16,14 +16,10 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id$
-
 ***************************************************************************/
 
 #include "class.h"
 #include "private.h"
-
-#include "Debug.h"
 
 /***********************************************************************/
 
@@ -135,11 +131,11 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
             {
                 ULONG len = RAWIDTH(w)*h;
 
-            	if((copy->mask = gmalloc(len)))
+                if((copy->mask = gmalloc(len)))
                 {
                     alpha = copy->mask;
                     memset(alpha,0,len);
-		        }
+                }
             }
             else if((copy->mask = ALLOCRASTER(w,h)))
               alpha = copy->mask;
@@ -188,7 +184,7 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
                             if (!aflag)
                             {
-                            	alpha[x>>3] = 0;
+                                alpha[x>>3] = 0;
                                 aflag = 1;
                             }
 
@@ -197,7 +193,7 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
                             if (!(bitmask >>= 1))
                             {
-                            	bitmask = 0x80;
+                                bitmask = 0x80;
                                 aflag = 0;
                             }
 
@@ -215,11 +211,11 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
                 maskDone = TRUE;
             }
             else
-                copymem(chunky,image->data,size);
+                memcpy(chunky,image->data,size);
         }
 
         if (isFlagSet(flags, MFLG_Grey))
-            copymem(copy->grey = chunky+size,chunky,size);
+            memcpy(copy->grey = chunky+size,chunky,size);
 
         if (!maskDone && alpha)
         {
@@ -239,7 +235,7 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
                 {
                     if (!aflag)
                     {
-                    	alpha[x>>3] = 0;
+                        alpha[x>>3] = 0;
                         aflag = 1;
                     }
 
@@ -248,7 +244,7 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
                     if (!(bitmask >>= 1))
                     {
-                    	bitmask = 0x80;
+                        bitmask = 0x80;
                         aflag = 0;
                     }
                 }
@@ -281,7 +277,7 @@ LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
         struct copy    temp;
         UBYTE *cchunky;
 
-        copymem(&temp,copy,sizeof(temp));
+        memcpy(&temp,copy,sizeof(temp));
         temp.flags = MFLG_Scaled|MFLG_NtMask;
         if ((cchunky = LUT8ToLUT8(image,&temp)) == NULL)
         {
@@ -355,7 +351,7 @@ LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
                     {
                         alpha[x>>3] = 0;
                         aflag = 1;
-		            }
+                    }
 
                     if (p!=trColor)
                         alpha[x>>3] |= bitmask;
@@ -364,7 +360,7 @@ LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
                     {
                         bitmask = 0x80;
                         aflag = 0;
-		    }
+            }
                 }
 
                 if (gdest)
@@ -529,14 +525,14 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy, ULONG allowAlphaChan
 
                             if (!aflag)
                             {
-                            	alpha[x>>3] = 0;
+                                alpha[x>>3] = 0;
                                 aflag = 1;
                             }
 
-    			            #if defined(WITH_ALPHA)
-    	                    if (useAlpha) hi = *src<0xFF;
+                            #if defined(WITH_ALPHA)
+                            if (useAlpha) hi = *src<0xFF;
                             #else
-            	            if (useAlpha) hi = (allowAlphaChannel ? *src<0xFF : !(c & 0xFF000000));
+                            if (useAlpha) hi = (allowAlphaChannel ? *src<0xFF : !(c & 0xFF000000));
                             #endif
                             else
                                 hi = (c & 0x00FFFFFF)==trColor;
@@ -546,12 +542,12 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy, ULONG allowAlphaChan
 
                             if (!(bitmask >>= 1))
                             {
-                            	bitmask = 0x80;
+                                bitmask = 0x80;
                                 aflag = 0;
                             }
 
-		                    if (*src)
-		                        reallyHasAlpha = TRUE;
+                            if (*src)
+                                reallyHasAlpha = TRUE;
                         }
 
                         if (gdest)
@@ -583,13 +579,13 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy, ULONG allowAlphaChan
 
                 if (!reallyHasAlpha)
                     setFlag(image->flags, BRFLG_EmptyAlpha);
-    	        else
-    	            clearFlag(image->flags, BRFLG_EmptyAlpha);
+                else
+                    clearFlag(image->flags, BRFLG_EmptyAlpha);
 
                 maskDone = TRUE;
             }
             else
-                copymem(chunky,image->data,size);
+                memcpy(chunky,image->data,size);
         }
 
         if (!maskDone && (alpha || gdest))
@@ -618,7 +614,7 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy, ULONG allowAlphaChan
 
                         if (!aflag)
                         {
-			                alpha[x>>3] = 0;
+                            alpha[x>>3] = 0;
                             aflag = 1;
                         }
 
@@ -639,8 +635,8 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy, ULONG allowAlphaChan
                             aflag = 0;
                         }
 
-        		    	if (*src)
-        		    	    reallyHasAlpha = TRUE;
+                        if (*src)
+                            reallyHasAlpha = TRUE;
                     }
 
                     if (gdest)
@@ -723,9 +719,9 @@ addColor(struct palette *pal,ULONG rgb)
     {
         if (pal->colors[i]==rgb)
         {
-        	RETURN(i);
-        	return i;
-       	}
+            RETURN(i);
+            return i;
+        }
     }
 
     if (pal->numColors<pal->maxColors)
@@ -855,7 +851,7 @@ RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
                 {
                     ULONG hi;
 
-		            if (!aflag)
+                    if (!aflag)
                     {
                         alpha[x>>3] = 0;
                         aflag = 1;
@@ -871,7 +867,7 @@ RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
                     if (!(bitmask >>= 1))
                     {
-                    	bitmask = 0x80;
+                        bitmask = 0x80;
                         aflag = 0;
                     }
                 }
@@ -925,8 +921,8 @@ getSource(struct MUIS_TheBar_Brush *image)
 
         if ((src = gmalloc(size)) == NULL)
         {
-        	RETURN(NULL);
-        	return NULL;
+            RETURN(NULL);
+            return NULL;
         }
 
         if(BRCUnpack(image->data,src,image->compressedSize,size) != 0)
@@ -995,8 +991,8 @@ makeSources(struct InstData *data,struct make *make)
         freeSource(data->image,back);
         if (!make->chunky)
         {
-        	RETURN(FALSE);
-        	return FALSE;
+            RETURN(FALSE);
+            return FALSE;
         }
 
         make->mask    = copy.mask;
@@ -1050,7 +1046,7 @@ makeSources(struct InstData *data,struct make *make)
                 data->image->data = back;
         }
 
-		RETURN(TRUE);
+        RETURN(TRUE);
         return TRUE;
     }
 
@@ -1082,8 +1078,8 @@ makeSourcesRGB(struct InstData *data,struct make *make)
         copy.dh    = make->dh;
         copy.flags = make->flags;
 
-		if (isFlagSet(data->image->flags, BRFLG_ARGB))
-		#if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
+        if (isFlagSet(data->image->flags, BRFLG_ARGB))
+        #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
             make->chunky = RGBToRGB(data->image,&copy);
         #else
             make->chunky = RGBToRGB(data->image,&copy,data->allowAlphaChannel);
@@ -1094,8 +1090,8 @@ makeSourcesRGB(struct InstData *data,struct make *make)
         freeSource(data->image,back);
         if (!make->chunky)
         {
-        	RETURN(FALSE);
-        	return FALSE;
+            RETURN(FALSE);
+            return FALSE;
         }
 
         make->mask    = copy.mask;
@@ -1107,12 +1103,12 @@ makeSourcesRGB(struct InstData *data,struct make *make)
 
             if((data->simage->data = getSource(data->simage)))
             {
-				if (isFlagSet(data->simage->flags, BRFLG_ARGB))
-				#if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
+                if (isFlagSet(data->simage->flags, BRFLG_ARGB))
+                #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
                     make->schunky = RGBToRGB(data->simage,&copy);
                 #else
                     make->schunky = RGBToRGB(data->simage,&copy,data->allowAlphaChannel);
-               	#endif
+                #endif
                 else
                     make->schunky = LUT8ToRGB(data->simage,&copy);
 
@@ -1130,8 +1126,8 @@ makeSourcesRGB(struct InstData *data,struct make *make)
 
             if((data->dimage->data = getSource(data->dimage)))
             {
-				if (isFlagSet(data->dimage->flags, BRFLG_ARGB))
-				#if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
+                if (isFlagSet(data->dimage->flags, BRFLG_ARGB))
+                #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
                     make->dchunky = RGBToRGB(data->dimage,&copy);
                 #else
                     make->dchunky = RGBToRGB(data->dimage,&copy,data->allowAlphaChannel);
@@ -1196,8 +1192,8 @@ buildBitMapsCyber(struct InstData *data)
 
     if ((make = gmalloc(sizeof(struct make))) == NULL)
     {
-    	LEAVE();
-    	return;
+        LEAVE();
+        return;
     }
     memset(make,0,sizeof(struct make));
 
@@ -1285,24 +1281,24 @@ buildBitMapsCyber(struct InstData *data)
     #endif
     {
         data->nchunky  = make->chunky;
-    	data->gchunky  = make->gchunky;
+        data->gchunky  = make->gchunky;
 
         data->snchunky = make->schunky;
-	    data->sgchunky = make->sgchunky;
+        data->sgchunky = make->sgchunky;
 
         data->dnchunky = make->dchunky;
-    	data->dgchunky = make->dgchunky;
+        data->dgchunky = make->dgchunky;
     }
     else
     {
-    	// free unused chunky blocks
-  		if(make->chunky)
-  		    gfree(make->chunky);
-	    if(make->schunky)
-	        gfree(make->schunky);
-	  	if(make->dchunky)
-	  	    gfree(make->dchunky);
-  	}
+        // free unused chunky blocks
+        if(make->chunky)
+            gfree(make->chunky);
+        if(make->schunky)
+            gfree(make->schunky);
+        if(make->dchunky)
+            gfree(make->dchunky);
+    }
 
     gfree(make);
 
@@ -1322,7 +1318,7 @@ LUT8ToBitMap(struct InstData *data,
              struct pen *pens)
 {
     struct BitMap *dest;
-    UWORD	    d;
+    UWORD       d;
 
     ENTER();
 
@@ -1440,7 +1436,7 @@ greyBitMap(struct InstData *data,
         return bm;
     }
 
-	RETURN(NULL);
+    RETURN(NULL);
     return NULL;
 }
 
@@ -1458,8 +1454,8 @@ buildBitMaps(struct InstData *data)
 
     if ((make = gmalloc(sizeof(struct make))) == NULL)
     {
-    	LEAVE();
-    	return;
+        LEAVE();
+        return;
     }
 
     memset(make,0,sizeof(struct make));
@@ -1651,7 +1647,7 @@ scaleBitMap(APTR src,struct scaleBitMap *scale,ULONG flags)
         BitMapScale(&bsa);
     }
 
-	RETURN(dest);
+    RETURN(dest);
     return dest;
 }
 
@@ -1907,7 +1903,7 @@ build(struct InstData *data)
     {
         if (isFlagSet(data->flags, FLG_Strip))
         {
-	        #if defined(WITH_ALPHA)
+            #if defined(WITH_ALPHA)
             if (isFlagSet(data->flags, FLG_CyberDeep))
             #else
             if (data->allowAlphaChannel && isFlagSet(data->flags, FLG_CyberDeep))
@@ -1930,7 +1926,7 @@ build(struct InstData *data)
                 if (data->strip->mask)
                 {
                     if((data->mask = (isFlagSet(data->flags, FLG_CyberMap) ? ALLOCRASTERCG(data->imgWidth,data->imgHeight) : ALLOCRASTER(data->imgWidth,data->imgHeight))))
-                      copymem(data->mask,data->strip->mask,RAWIDTH(data->imgWidth)*data->imgHeight);
+                      memcpy(data->mask,data->strip->mask,RAWIDTH(data->imgWidth)*data->imgHeight);
                 }
             }
         }

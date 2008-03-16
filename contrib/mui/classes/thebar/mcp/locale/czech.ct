@@ -1,9 +1,8 @@
-## version $VER: TheBar_mcp.catalog 21.3 (4.1.2008)
+## version $VER: TheBar.catalog 21.4 (10.3.2008)
 ## language czech
 ## codeset 5
 ;
 ;
-; CATCOMP TheBar.cd CFILE loc.h
 ; CATCOMP TheBar.cd CTFILE TheBar.ct
 ;
 Msg_Reg_Colors
@@ -682,6 +681,14 @@ Msg_Event_MouseObject
 MouseObjekt
 ; MouseObject
 ;
+Msg_DisMode_Blend
+Prolnout s pozadím
+; Blend
+;
+Msg_DisMode_BlendGrey
+Prolnout (odstíny ¹edi)
+; Blend grey
+;
 Msg_Item_Defaults
 Výchozí stav
 ; Reset to defaults
@@ -694,14 +701,26 @@ Metoda zji¹»ování pozice my¹i nad tlaèítky.\n\
 ; - IntuiTicks: it is verified periodically\n\
 ; - MouseMove: it is verified at every mouse move
 ;
+Msg_SpacersSize_None
+Bez mezery
+; None
+;
+Msg_SpacersSize_OnePoint
+Jedna linka
+; One point
+;
+Msg_SpacersSize_TwoPoint
+Dvì linky
+; Two points
+;
 ;
 Msg_Info_First
 %s\n\
-Copyright (C) 2003-2005 Alfonso Ranieri\n\
-Copyright (C) 2005-2007 TheBar Open Source Team
+Copyright (C) 2003-2008 Alfonso Ranieri\n\
+a TheBar Open Source Team
 ; %s\n\
-; Copyright (c) 2003-2005 Alfonso Ranieri\n\
-; Copyright (c) 2005-2007 TheBar Open Source Team
+; Copyright (c) 2003-2008 Alfonso Ranieri\n\
+; and TheBar Open Source Team
 ;
 Msg_Info_Reserved
 Distribuováno na základì licence LGPL2.

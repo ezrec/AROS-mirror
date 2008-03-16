@@ -1,6 +1,6 @@
 ## chunk AUTH Pär Boberg
 ## language svenska
-## version $VER: TheBar_mcp.ct 21.5 (26.11.07)
+## version $VER: TheBar.ct 26.1 (06.03.08)
 Msg_Reg_Colors
 Färger
 ;#DEF Colors
@@ -617,6 +617,14 @@ Msg_Event_MouseObject
 Musobjekt
 ;#DEF MouseObject
 ;#SET (//)
+Msg_DisMode_Blend
+Blanda
+;#DEF Blend
+;#SET (//)
+Msg_DisMode_BlendGrey
+Blanda grå
+;#DEF Blend grey
+;#SET (//)
 Msg_Item_Defaults
 Återställ till förval
 ;#DEF Reset to defaults
@@ -625,9 +633,21 @@ Msg_NoMUI20Event_Help
 Hur vi verifierar att muspekaren är över en knapp:\n- IntuiTicks: verifieras periodiskt\n- Musflyttning: verifieras vid varje musflyttning
 ;#DEF How to verify if the mouse is over a button:\n- IntuiTicks: it is verified periodically\n- MouseMove: it is verified at every mouse move
 ;#SET (502//)
+Msg_SpacersSize_None
+Ingen
+;#DEF None
+;#SET (//)
+Msg_SpacersSize_OnePoint
+En punkt
+;#DEF One point
+;#SET (//)
+Msg_SpacersSize_TwoPoint
+Två punkter
+;#DEF Two points
+;#SET (//)
 Msg_Info_First
-%s\nKopieringsrätt (c) 2003-2005 Alfonso Ranieri\nKopieringsrätt (c) 2005-2007 av TheBar Open Source Team
-;#DEF %s\nCopyright (c) 2003-2005 Alfonso Ranieri\nCopyright (c) 2005-2007 TheBar Open Source Team
+%s\nKopieringsrätt (c) 2003-2008 Alfonso Ranieri\noch TheBar Open Source Team
+;#DEF %s\nCopyright (c) 2003-2008 Alfonso Ranieri\nand TheBar Open Source Team
 ;#SET (600//)
 Msg_Info_Reserved
 Distribuerad under termerna av LGPL2.

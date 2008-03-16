@@ -1,6 +1,3 @@
-#ifndef _PRIVATE_H
-#define _PRIVATE_H
-
 /***************************************************************************
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
@@ -19,38 +16,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: private.h 195 2008-02-18 12:11:32Z alforan $
-
 ***************************************************************************/
-
-#include <mui/TheBar_mcc.h>
-
-#include "TheBar_mcp.h"
-
-/***************************************************************************/
-
-extern ULONG lib_flags;
-extern struct Catalog *lib_cat;
-
-extern struct MUI_CustomClass *ThisClass;
-
-#if !defined(__MORPHOS__) && !defined(__amigaos4__)
-extern struct MUI_CustomClass *lib_coloradjust;
-extern struct MUI_CustomClass *lib_penadjust;
-extern struct MUI_CustomClass *lib_backgroundadjust;
-extern struct MUI_CustomClass *lib_poppen;
-extern struct MUI_CustomClass *lib_popbackground;
-#endif
-
-enum
-{
-  BASEFLG_Init    = 1<<0,
-  BASEFLG_MUI20   = 1<<1,
-  BASEFLG_MUI4    = 1<<2,
-  BASEFLG_MORPHOS = 1<<3,
-};
-
-/***************************************************************************/
 
 struct InstData
 {
@@ -125,7 +91,3 @@ struct InstData
 };
 
 /***************************************************************************/
-
-
-#endif /* _PRIVATE_H */
-

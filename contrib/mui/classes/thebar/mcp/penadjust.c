@@ -16,8 +16,6 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id$
-
 ***************************************************************************/
 
 #ifdef __AROS__
@@ -25,16 +23,6 @@
 #endif
 
 #include "class.h"
-
-#include <stdlib.h>
-#include <stdio.h>
-
-#include <mui/muiundoc.h>
-
-#include "locale.h"
-#include "private.h"
-
-#include "SDI_hook.h"
 
 /***********************************************************************/
 
@@ -131,7 +119,7 @@ mPenslistSetup(struct IClass *cl,Object *obj,Msg msg)
 
     if (!DoSuperMethodA(cl,obj,msg)) return FALSE;
 
-    copymem(&rp,&_screen(obj)->RastPort,sizeof(rp));
+    memcpy(&rp,&_screen(obj)->RastPort,sizeof(rp));
     SetFont(&rp,_font(obj));
     TextExtent(&rp,"X",1,&te);
     w = te.te_Height;
@@ -142,7 +130,7 @@ mPenslistSetup(struct IClass *cl,Object *obj,Msg msg)
     {
         char buf[64];
 
-        snprintf(buf,sizeof(buf),"2:m%ld",i);
+        msnprintf(buf,sizeof(buf),(STRPTR)"2:m%ld",i);
 
         data->pens[i] = ImageObject,
             MUIA_Image_FreeHoriz, TRUE,
@@ -155,7 +143,7 @@ mPenslistSetup(struct IClass *cl,Object *obj,Msg msg)
         if (data->pens[i])
         {
             data->pimages[i] = (APTR)DoMethod(data->list,MUIM_List_CreateImage,data->pens[i],0);
-            snprintf(buf,sizeof(buf),"\33O[%08lx] %s",data->pimages[i],pens[i]);
+            msnprintf(buf,sizeof(buf),(STRPTR)"\33O[%08lx] %s",data->pimages[i],pens[i]);
             DoMethod(data->list,MUIM_List_InsertSingle,buf,MUIV_List_Insert_Bottom);
         }
     }
@@ -396,7 +384,7 @@ mPenadjustDragDrop(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragDrop *ms
                 g = (c>>8) & 0xff;
                 b = c & 0xff;
 
-                snprintf(spec, sizeof(spec), "r%08lx,%08lx,%08lx",(r<<24)|(r<<16)|(r<<8)|r,(g<<24)|(g<<16)|(g<<8)|g,(b<<24)|(b<<16)|(b<<8)|b);
+                msnprintf(spec, sizeof(spec), (STRPTR)"r%08lx,%08lx,%08lx",(r<<24)|(r<<16)|(r<<8)|r,(g<<24)|(g<<16)|(g<<8)|g,(b<<24)|(b<<16)|(b<<8)|b);
                 set(obj,MUIA_Pendisplay_Spec,spec);
             }
 
@@ -497,7 +485,7 @@ mPenadjustGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpe
         {
           x = xget(data->mui, MUIA_List_Active);
           if(x>=0)
-            snprintf(spec, sizeof(spec), "m%ld",x);
+            msnprintf(spec, sizeof(spec), (STRPTR)"m%ld",x);
           else
             res = MUIV_Popbackground_GetSpec_Fail;
 
@@ -508,7 +496,7 @@ mPenadjustGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpe
         case PAGE_Colormap:
         {
           x = xget(data->colormap, MUIA_Numeric_Value);
-          snprintf(spec, sizeof(spec), "p%ld",x);
+          msnprintf(spec, sizeof(spec), (STRPTR)"p%ld",x);
         }
         break;
 
@@ -517,7 +505,7 @@ mPenadjustGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpe
         {
           struct MUI_RGBcolor *rgb = (struct MUI_RGBcolor *)xget(data->rgb, MUIA_Coloradjust_RGB);
 
-          snprintf(spec, sizeof(spec), "r%08lx,%08lx,%08lx", rgb->red, rgb->green, rgb->blue);
+          msnprintf(spec, sizeof(spec), (STRPTR)"r%08lx,%08lx,%08lx", rgb->red, rgb->green, rgb->blue);
         }
         break;
     }
@@ -526,7 +514,7 @@ mPenadjustGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpe
     else
     {
         if (msg->flags & MUIV_Popbackground_GetSpec_Image)
-          sprintf(msg->spec, "2:%s", spec);
+          msprintf(msg->spec, (STRPTR)"2:%s", spec);
         else
           strcpy(msg->spec, spec);
     }

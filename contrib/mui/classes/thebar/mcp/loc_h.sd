@@ -1,0 +1,59 @@
+##stringtype C
+##shortstrings
+/*
+** This file was created automatically by flexcat.
+** It is written to be compatible with catcomp,
+** so you choose, but... Do NOT edit by hand!
+**/
+
+#ifndef _LOC_H
+#define _LOC_H
+
+#ifndef EXEC_TYPES_H
+#include <exec/types.h>
+#endif
+
+#ifdef CATCOMP_ARRAY
+	#undef CATCOMP_NUMBERS
+	#define CATCOMP_NUMBERS
+    #undef CATCOMP_STRINGS
+	#define CATCOMP_STRINGS
+#endif
+
+/****************************************************************************/
+
+#ifdef CATCOMP_NUMBERS
+
+#define %i %dL
+
+#endif /* CATCOMP_NUMBERS */
+
+/****************************************************************************/
+
+#ifdef CATCOMP_STRINGS
+
+const unsigned char %i_STR[] = %s;
+
+#endif /* CATCOMP_STRINGS */
+
+/****************************************************************************/
+
+#ifdef CATCOMP_ARRAY
+
+struct CatCompArrayType
+{
+    LONG   cca_ID;
+    STRPTR cca_Str;
+};
+
+static struct CatCompArrayType CatCompArray[] =
+{
+    {%i,(STRPTR)(%i_STR)},
+    {0,NULL} /* Yes, I know about %%%(,); I just like it this way. */
+};
+
+#endif /* CATCOMP_ARRAY */
+
+/****************************************************************************/
+
+#endif /* _LOC_H */

@@ -16,29 +16,14 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id$
-
 ***************************************************************************/
-
-#include <proto/exec.h>
-#include <proto/muimaster.h>
-
-/******************************************************************************/
-/*                                                                            */
-/* MCC/MCP name and version                                                   */
-/*                                                                            */
-/* ATTENTION:  The FIRST LETTER of NAME MUST be UPPERCASE                     */
-/*                                                                            */
-/******************************************************************************/
 
 #include "class.h"
 #include "private.h"
-#include "locale.h"
 #include "rev.h"
+#include <mcc_common.h>
 
-#include "mcc_common.h"
-
-#include "Debug.h"
+/******************************************************************************/
 
 #define VERSION       LIB_VERSION
 #define REVISION      LIB_REVISION
@@ -54,6 +39,8 @@
 #define CLASSINIT
 #define CLASSEXPUNGE
 #define MIN_STACKSIZE 8192
+
+/******************************************************************************/
 
 struct Library *DataTypesBase = NULL;
 struct Library *CyberGfxBase = NULL;
@@ -80,17 +67,16 @@ struct MUI_CustomClass *lib_backgroundadjust = NULL;
 struct MUI_CustomClass *lib_poppen = NULL;
 struct MUI_CustomClass *lib_popbackground = NULL;
 #endif
+struct Catalog *lib_cat = NULL;
 ULONG lib_flags = 0;
 
 /******************************************************************************/
-/* define the functions used by the startup code ahead of including mccinit.c */
-/******************************************************************************/
+
 static BOOL ClassInit(UNUSED struct Library *base);
 static BOOL ClassExpunge(UNUSED struct Library *base);
 
 /******************************************************************************/
-/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
-/******************************************************************************/
+
 #define USE_PREFSIMAGE_COLORS
 #define USE_PREFSIMAGE_BODY
 #define PREFSIMAGEOBJECT \
@@ -106,134 +92,142 @@ static BOOL ClassExpunge(UNUSED struct Library *base);
     MUIA_Bitmap_SourceColors,   (ULONG *)image_palette,\
     MUIA_Bitmap_Transparent,    0,\
   End
+
+/******************************************************************************/
+
 #include "icon.bh"
-#include "mccinit.c"
+#include <mccinit.c>
 
 /******************************************************************************/
-/* define all implementations of our user functions                           */
-/******************************************************************************/
-static BOOL ClassInit(UNUSED struct Library *base)
+
+static BOOL
+ClassInit(UNUSED struct Library *base)
 {
-	ENTER();
+    ENTER();
 
-	if ((DataTypesBase = OpenLibrary("datatypes.library", 37)) &&
-        GETINTERFACE(IDataTypes, struct DataTypesIFace *, DataTypesBase))
-  	{
-    	if ((IFFParseBase = OpenLibrary("iffparse.library", 37)) &&
-    	    GETINTERFACE(IIFFParse, struct IFFParseIFace *, IFFParseBase))
-    	{
-    		ULONG success = TRUE;
+    if ((DataTypesBase = OpenLibrary("datatypes.library",37)) &&
+        GETINTERFACE(IDataTypes,struct DataTypesIFace *,DataTypesBase) &&
+        (IFFParseBase = OpenLibrary("iffparse.library",37)) &&
+        GETINTERFACE(IIFFParse,struct IFFParseIFace *,IFFParseBase) &&
+        (LocaleBase = (APTR)OpenLibrary("locale.library",36)) &&
+        GETINTERFACE(ILocale,struct LocaleIFace *,LocaleBase))
+    {
+    	ULONG success = TRUE;
 
-      		// check for MUI 3.9+
-      		if (MUIMasterBase->lib_Version >= MUIVER20)
-      		{
-        		lib_flags |= BASEFLG_MUI20;
+        // check for MUI 3.9+
+        if (MUIMasterBase->lib_Version>=20)
+        {
+        	lib_flags |= BASEFLG_MUI20;
 
-        		// check for MUI 4.0+
-        		if (MUIMasterBase->lib_Version>MUIVER20 || MUIMasterBase->lib_Revision>=5341)
-          			lib_flags |= BASEFLG_MUI4;
-      		}
+            // check for MUI 4.0+
+            if (MUIMasterBase->lib_Version>20 || MUIMasterBase->lib_Revision>=5341)
+            	lib_flags |= BASEFLG_MUI4;
+        }
 
-      		// on MUI 3.1 system's we do have to
-      		// initialize our subclasses as well
-      		#if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
-      		if (!(lib_flags & BASEFLG_MUI20))
-      		{
-        		if (!initColoradjust() ||
-            		!initPenadjust() ||
-            		!initBackgroundadjust() ||
-            		!initPoppen() ||
-            		!initPopbackground())
-				{
-					success = FALSE;
-				}
-		    }
-			#endif
+        // on MUI 3.1 system's we do have to
+        // initialize our subclasses as well
+        #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
+        if (!(lib_flags & BASEFLG_MUI20))
+        {
+        	if (!initColoradjust() ||
+            	!initPenadjust() ||
+              !initBackgroundadjust() ||
+              !initPoppen() ||
+              !initPopbackground())
+            {
+            	success = FALSE;
+            }
+        }
+        #endif
 
-		  	if (success)
-	  		{
-      			// open the locale library which is not mandatory of course
-      			if ((LocaleBase = (APTR)OpenLibrary("locale.library", 36)) &&
-         			GETINTERFACE(ILocale, struct LocaleIFace *, LocaleBase))
-      			{
-        			OpenCat();
-      			}
+        if (success)
+        {
+            initStrings();
 
-	      		// we open the cybgraphics.library but without failing if
-      			// it doesn't exist
-      			if ((CyberGfxBase = OpenLibrary("cybergraphics.library", 41)) &&
-            		GETINTERFACE(ICyberGfx, struct CyberGfxIFace *, CyberGfxBase))
-	      		{ }
+            // we open the cybgraphics.library but without failing if
+            // it doesn't exist
+            CyberGfxBase = OpenLibrary("cybergraphics.library",41);
+            #ifdef __amigaos4__
+            if (!GETINTERFACE(ICyberGfx,struct CyberGfxIFace *,CyberGfxBase))
+            {
+              CloseLibrary(CyberGfxBase);
+              CyberGfxBase = NULL;
+            }
+            #endif
 
-        		lib_flags |= BASEFLG_Init;
+            lib_flags |= BASEFLG_Init;
 
-        		RETURN(TRUE);
-        		return(TRUE);
-      		}
-  		}
-	}
+            RETURN(TRUE);
+            return(TRUE);
+        }
+    }
   
-	ClassExpunge(base);
+    ClassExpunge(base);
 
-	RETURN(FALSE);
-	return(FALSE);
+    RETURN(FALSE);
+    return(FALSE);
 }
 
+/******************************************************************************/
 
-static BOOL ClassExpunge(UNUSED struct Library *base)
+static BOOL
+ClassExpunge(UNUSED struct Library *base)
 {
-  ENTER();
+    ENTER();
 
-  #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
-  if(!(lib_flags & BASEFLG_MUI20))
-  {
-    freePopbackground();
-    freePoppen();
-    freeBackgroundadjust();
-    freePenadjust();
-    freeColoradjust();
-  }
-  #endif
+    #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
+    if (!(lib_flags & BASEFLG_MUI20))
+    {
+        freePopbackground();
+        freePoppen();
+        freeBackgroundadjust();
+        freePenadjust();
+        freeColoradjust();
+    }
+    #endif
 
-  if(CyberGfxBase)
-  {
-    DROPINTERFACE(ICyberGfx);
-    CloseLibrary(CyberGfxBase);
-    CyberGfxBase = NULL;
-  }
+    if (CyberGfxBase)
+    {
+        DROPINTERFACE(ICyberGfx);
+        CloseLibrary(CyberGfxBase);
+        CyberGfxBase = NULL;
+    }
 
-  if(LocaleBase)
-  {
-    CloseCat();
-    DROPINTERFACE(ILocale);
-    CloseLibrary((struct Library *)LocaleBase);
-    LocaleBase = NULL;
-  }
+    if (LocaleBase)
+    {
+        if (lib_cat) CloseCatalog(lib_cat);
+        DROPINTERFACE(ILocale);
+        CloseLibrary((struct Library *)LocaleBase);
+        LocaleBase = NULL;
+    }
 
-  if(IFFParseBase)
-  {
-    DROPINTERFACE(IIFFParse);
-    CloseLibrary(IFFParseBase);
-    IFFParseBase = NULL;
-  }
+    if (IFFParseBase)
+    {
+        DROPINTERFACE(IIFFParse);
+        CloseLibrary(IFFParseBase);
+        IFFParseBase = NULL;
+    }
 
-  if(DataTypesBase)
-  {
-    DROPINTERFACE(IDataTypes);
-    CloseLibrary(DataTypesBase);
-    DataTypesBase = NULL;
-  }
+    if (DataTypesBase)
+    {
+        DROPINTERFACE(IDataTypes);
+        CloseLibrary(DataTypesBase);
+        DataTypesBase = NULL;
+    }
 
-  lib_flags &= ~(BASEFLG_Init|BASEFLG_MUI20|BASEFLG_MUI4);
+    lib_flags &= ~(BASEFLG_Init|BASEFLG_MUI20|BASEFLG_MUI4);
 
-  RETURN(TRUE);
-  return(TRUE);
+    RETURN(TRUE);
+    return(TRUE);
 }
+
+/******************************************************************************/
 
 #ifdef __AROS__
 #include <aros/symbolsets.h>
-
 ADD2INITLIB(ClassInit, 0);
 ADD2EXPUNGELIB(ClassExpunge, 0);
-
 #endif
+
+/******************************************************************************/
+

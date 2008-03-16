@@ -16,19 +16,9 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id$
-
 ***************************************************************************/
 
 #include "class.h"
-
-#include "SDI_stdarg.h"
-#include "mcc_common.h"
-
-#include "Debug.h"
-
-#include <stdlib.h>
-
 #include <proto/input.h>
 
 /***********************************************************************/
@@ -58,7 +48,7 @@ Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 }
 #endif
 
-
+#if !defined(__amigaos4__)
 /***********************************************************************/
 
 // own strlcpy/strlcat are only required for classic OS3 compiles and also
@@ -91,7 +81,9 @@ strlcpy(char *dst, const char *src, size_t siz)
 
         return(s - src - 1);        /* count does not include NUL */
 }
+#endif
 
+#if !defined(__amigaos4__)
 size_t
 strlcat(char *dst, const char *src, size_t siz)
 {
@@ -119,6 +111,7 @@ strlcat(char *dst, const char *src, size_t siz)
 
         return(dlen + (s - src));        /* count does not include NUL */
 }
+#endif
 
 #endif
 
@@ -322,11 +315,11 @@ ULONG peekQualifier(void)
 
   if((port = CreateMsgPort()) != NULL)
   {
-    struct IORequest *iorequest;
+    struct IOStdReq *iorequest;
 
-    if((iorequest = CreateIORequest(port, sizeof(*iorequest))) != NULL)
+    if((iorequest = (struct IOStdReq *)CreateIORequest(port, sizeof(*iorequest))) != NULL)
     {
-      if(OpenDevice("input.device", 0, iorequest, 0) == 0)
+      if(OpenDevice("input.device", 0, (struct IORequest*)iorequest, 0) == 0)
       {
         struct Library *InputBase = (struct Library *)iorequest->io_Device;
         #ifdef __amigaos4__
@@ -336,9 +329,9 @@ ULONG peekQualifier(void)
         rc = PeekQualifier();
 
         DROPINTERFACE(IInput);
-        CloseDevice(iorequest);
+        CloseDevice((struct IORequest*)iorequest);
       }
-      DeleteIORequest(iorequest);
+      DeleteIORequest((struct IORequest *)iorequest);
     }
     DeleteMsgPort(port);
   }

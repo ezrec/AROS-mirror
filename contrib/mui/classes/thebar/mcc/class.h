@@ -16,13 +16,13 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: class.h 205 2008-02-19 08:38:17Z thboeckel $
-
 ***************************************************************************/
 
-#ifndef _CLASS_H
-#define _CLASS_H
+#ifdef __AROS__
+#define MUIMASTER_YES_INLINE_STDARG
+#endif
 
+#define __NOLIBBASE__
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/utility.h>
@@ -45,22 +45,112 @@
 #include <string.h>
 
 #include <mui/TheBar_mcc.h>
+#include <mui/TheBar_mcp.h>
 
-#include "SDI_compiler.h"
+#include <mcc_common.h>
+#include <SDI_compiler.h>
+#include <SDI_hook.h>
+#include <SDI_stdarg.h>
 
-// these systems are able to handle alpha channel information
+#include "debug.h"
+
+/***************************************************************************/
+
+#if defined(__amigaos4__)
+extern struct Library         *SysBase;
+extern struct Library         *DOSBase;
+extern struct Library         *GfxBase;
+extern struct Library         *IntuitionBase;
+#else
+extern struct ExecBase        *SysBase;
+extern struct DosLibrary      *DOSBase;
+extern struct IntuitionBase   *IntuitionBase;
+extern struct GfxBase         *GfxBase;
+#endif
+extern struct Library         *UtilityBase;
+extern struct Library         *MUIMasterBase;
+
+extern struct Library         *DataTypesBase;
+extern struct Library         *CyberGfxBase;
+extern struct Library         *PictureDTBase;
+
+extern struct MUI_CustomClass *lib_thisClass;
+extern struct MUI_CustomClass *lib_spacerClass;
+extern struct MUI_CustomClass *lib_dragBarClass;
+
+extern ULONG                  lib_flags;
+
+enum
+{
+  BASEFLG_Init         = 1<<0,
+  BASEFLG_MUI20        = 1<<1,
+  BASEFLG_MUI4         = 1<<2,
+  BASEFLG_BROKENMOSPDT = 1<<3,
+};
+
+/***************************************************************************/
+/*
+** Macros
+*/
+
+/* these systems are able to handle alpha channel information */
 #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
-	#define WITH_ALPHA			1
+    #define WITH_ALPHA 1
 #endif
 
-/***********************************************************************/
+#define _riflags(obj) (muiRenderInfo(obj)->mri_Flags)
+
+#define RAWIDTH(w)                      ((((UWORD)(w))+15)>>3 & 0xFFFE)
+#define BOOLSAME(a,b)                   (((a) ? TRUE : FALSE)==((b) ? TRUE : FALSE))
+
+#define getconfigitem(cl,obj,item,ptr)  DoSuperMethod(cl,obj,MUIM_GetConfigItem,item,(ULONG)ptr)
+#define superset(cl,obj,tag,val)        SetSuperAttrs(cl,obj,tag,(ULONG)(val),TAG_DONE)
+#define superget(cl,obj,tag,storage)    DoSuperMethod(cl,obj,OM_GET,tag,(ULONG)(storage))
+#define nnsuperset(cl,obj,tag,val)      SetSuperAttrs(cl,obj,tag,(ULONG)(val),MUIA_NoNotify,TRUE,TAG_DONE)
+#undef set
+#define set(obj,attr,value)             SetAttrs((Object *)(obj),(ULONG)(attr),(ULONG)(value),TAG_DONE)
+#undef get
+#define get(obj,attr,store)             GetAttr((ULONG)(attr),(APTR)obj,(ULONG *)((ULONG)(store)))
+
+#define setFlag(mask, flag)             (mask) |= (flag)
+#define clearFlag(mask, flag)           (mask) &= ~(flag)
+#define isAnyFlagSet(mask, flag)        (((mask) & (flag)) != 0)
+#define isFlagSet(mask, flag)           (((mask) & (flag)) == (flag))
+#define isFlagClear(mask, flag)         (((mask) & (flag)) == 0)
+
+#ifdef __MORPHOS__
+#undef NewObject
+#undef MUI_NewObject
+#undef DoSuperNew
+APTR NewObject(struct IClass *classPtr,CONST_STRPTR classID,ULONG tag1,...);
+Object *MUI_NewObject(CONST_STRPTR classname,Tag tag1,...);
+#endif
+
+// xget()
+// Gets an attribute value from a MUI object
+#ifdef __AROS__
+#define xget XGET
+#else
+ULONG xget(Object *obj, const ULONG attr);
+#if defined(__GNUC__)
+  // please note that we do not evaluate the return value of GetAttr()
+  // as some attributes (e.g. MUIA_Selected) always return FALSE, even
+  // when they are supported by the object. But setting b=0 right before
+  // the GetAttr() should catch the case when attr doesn't exist at all
+  #define xget(OBJ, ATTR) ({ULONG b=0; GetAttr(ATTR, OBJ, &b); b;})
+#endif
+#endif /* __AROS__ */
+
+#if !defined(IsMinListEmpty)
+#define IsMinListEmpty(x)     (((x)->mlh_TailPred) == (struct MinNode *)(x))
+#endif
 
 #ifdef __AROS__
-#define spacerObject  BOOPSIOBJMACRO_START(lib_spacerClass->mcc_Class)
-#define dragBarObject BOOPSIOBJMACRO_START(lib_dragBarClass->mcc_Class)
+    #define spacerObject  BOOPSIOBJMACRO_START(lib_spacerClass->mcc_Class)
+    #define dragBarObject BOOPSIOBJMACRO_START(lib_dragBarClass->mcc_Class)
 #else
-#define spacerObject  NewObject(lib_spacerClass->mcc_Class,NULL
-#define dragBarObject NewObject(lib_dragBarClass->mcc_Class,NULL
+    #define spacerObject  NewObject(lib_spacerClass->mcc_Class,NULL
+    #define dragBarObject NewObject(lib_dragBarClass->mcc_Class,NULL
 #endif
 
 /***********************************************************************/
@@ -87,13 +177,53 @@ enum
 };
 
 /****************************************************************************/
+/*
+** MUI undocs
+*/
 
+#ifndef MUIM_Backfill
+#define MUIM_Backfill 0x80428d73
+struct  MUIP_Backfill        { ULONG MethodID; LONG left; LONG top; LONG right; LONG bottom; LONG xoffset; LONG yoffset; LONG lum; };
+#endif
+
+#ifndef MUIA_CustomBackfill
+#define MUIA_CustomBackfill  0x80420a63
+#endif
+
+#ifndef MUIM_CustomBackfill  
+#define MUIM_CustomBackfill  MUIM_Backfill
+#endif
+
+#ifndef MUIP_CustomBackfill
+#define MUIP_CustomBackfill  MUIP_Backfill
+#endif
+
+#ifndef MUIM_CreateDragImage
+#define MUIM_CreateDragImage 0x8042eb6f /* V18 */ /* Custom Class */
+struct  MUIP_CreateDragImage { ULONG MethodID; LONG touchx; LONG touchy; ULONG flags; }; /* Custom Class */
+struct MUI_DragImage
+{
+    struct BitMap *bm;
+    WORD width;  
+    WORD height;
+    WORD touchx; 
+    WORD touchy;
+    ULONG flags;
+};
+#endif
+
+#ifndef MUIM_DeleteDragImage 
+#define MUIM_DeleteDragImage 0x80423037
+struct MUIP_DeleteDragImage {ULONG MethodID; struct MUI_DragImage *di;};
+#endif
+
+/*
 // xget()
 // Gets an attribute value from a MUI object
 #ifdef __AROS__
-#define xget XGET
+    #define xget XGET
 #else
-ULONG xget(Object *obj, const ULONG attr);
+    ULONG xget(Object *obj, const ULONG attr);
 #if defined(__GNUC__)
   // please note that we do not evaluate the return value of GetAttr()
   // as some attributes (e.g. MUIA_Selected) always return FALSE, even
@@ -102,30 +232,11 @@ ULONG xget(Object *obj, const ULONG attr);
   #define xget(OBJ, ATTR) ({ULONG b=0; GetAttr(ATTR, OBJ, &b); b;})
 #endif
 #endif
+*/
 
 /****************************************************************************/
 
-/* utils.c */
-#ifdef __MORPHOS__
-
-#elif defined(__AROS__)
-Object *DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
-#else
-Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
-#endif
-APTR allocVecPooled(APTR pool, ULONG size);
-void freeVecPooled (APTR pool, APTR mem);
-APTR reallocVecPooledNC(APTR pool,APTR mem,ULONG size);
-
-/* brc1.c */
-int BRCUnpack(APTR pSource, APTR pDest, LONG srcBytes0, LONG dstBytes0);
-
-/* spacer.c */
-BOOL initSpacerClass(void);
-
-/* dragbar.c */
-BOOL initDragBarClass(void);
+#include "class_protos.h"
 
 /***********************************************************************/
 
-#endif /* _CLASS_H */

@@ -24,13 +24,6 @@
 #include "private.h"
 #include "rev.h"
 
-#include <mui/muiundoc.h>
-
-#include "TheBar_mcp.h"
-
-#include "SDI_hook.h"
-#include "Debug.h"
-
 #undef GetOutlinePen
 #include <graphics/gfxmacros.h>
 
@@ -277,30 +270,30 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         {
             if (isFlagClear(lib_flags,BASEFLG_MUI4))
             {
-	            if(isFlagSet(userFlags, UFLG_UserHorizInnerSpacing))
-	            {
-	                if (pack.horizInnerSpacing>0 && pack.horizInnerSpacing<=16)
-	                    data->horizInnerSpacing = pack.horizInnerSpacing;
-	                else
-	                    clearFlag(userFlags, UFLG_UserHorizInnerSpacing);
-	            }
+                if(isFlagSet(userFlags, UFLG_UserHorizInnerSpacing))
+                {
+                    if (pack.horizInnerSpacing>0 && pack.horizInnerSpacing<=16)
+                        data->horizInnerSpacing = pack.horizInnerSpacing;
+                    else
+                        clearFlag(userFlags, UFLG_UserHorizInnerSpacing);
+                }
 
-	            if (isFlagSet(userFlags, UFLG_UserTopInnerSpacing))
-	            {
-	                if (pack.topInnerSpacing>0 && pack.topInnerSpacing<=16)
-	                    data->topInnerSpacing = pack.topInnerSpacing;
-	                else
-	                    clearFlag(userFlags, UFLG_UserTopInnerSpacing);
-	            }
+                if (isFlagSet(userFlags, UFLG_UserTopInnerSpacing))
+                {
+                    if (pack.topInnerSpacing>0 && pack.topInnerSpacing<=16)
+                        data->topInnerSpacing = pack.topInnerSpacing;
+                    else
+                        clearFlag(userFlags, UFLG_UserTopInnerSpacing);
+                }
 
-	            if (isFlagSet(userFlags, UFLG_UserBottomInnerSpacing))
-	            {
-	                if (pack.bottomInnerSpacing>0 && pack.bottomInnerSpacing<=16)
-	                    data->bottomInnerSpacing = pack.bottomInnerSpacing;
-	                else
-	                    clearFlag(userFlags, UFLG_UserBottomInnerSpacing);
-	            }
-	        }
+                if (isFlagSet(userFlags, UFLG_UserBottomInnerSpacing))
+                {
+                    if (pack.bottomInnerSpacing>0 && pack.bottomInnerSpacing<=16)
+                        data->bottomInnerSpacing = pack.bottomInnerSpacing;
+                    else
+                        clearFlag(userFlags, UFLG_UserBottomInnerSpacing);
+                }
+            }
 
             if (isFlagSet(userFlags, UFLG_UserHorizTextGfxSpacing))
             {
@@ -340,7 +333,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                 {
                     data->disMode = pack.disMode;
                     if (data->disMode==MUIV_TheButton_DisMode_Sunny)
-                    	clearFlag(data->flags, FLG_Sunny);
+                        clearFlag(data->flags, FLG_Sunny);
                 }
                 else
                     clearFlag(userFlags, UFLG_UserDisMode);
@@ -608,14 +601,15 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                     sel = TRUE;
                     setidcmp = TRUE;
 
-    				if (isFlagSet(lib_flags,BASEFLG_MUI4) && isFlagSet(data->flags,FLG_Borderless))
+                    if (isFlagSet(lib_flags,BASEFLG_MUI4) && isFlagSet(data->flags,FLG_Borderless))
                     {
                         tag->ti_Tag = TAG_IGNORE;
 
-                        SetSuperAttrs(cl,obj,MUIA_Selected,     tidata,
+                        SetSuperAttrs(cl,obj,MUIA_Selected,     tidata ? TRUE : FALSE,
                                              MUIA_FrameDynamic, tidata  ? FALSE : isFlagSet(data->flags, FLG_Raised),
                                              MUIA_FrameVisible, !tidata ? FALSE : isFlagClear(data->userFlags, UFLG_NtRaiseActive),
                                              MUIA_ShowSelState, isFlagSet(data->userFlags, UFLG_NtRaiseActive) ? FALSE : tidata,
+                                             MUIA_NoNotify,     GetTagData(MUIA_NoNotify,FALSE,msg->ops_AttrList),
                                              TAG_DONE);
                     }
                 }
@@ -638,7 +632,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
             case MUIA_ShowMe:
                 if (BOOLSAME(tidata,isFlagSet(data->flags,FLG_ShowMe)))
                 {
-				    tag->ti_Tag = TAG_IGNORE;
+                    tag->ti_Tag = TAG_IGNORE;
                 }
                 else
                 {
@@ -758,9 +752,9 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
     {
         addRemEventHandler(cl,obj,data);
 
-		if (isFlagSet(data->flags,FLG_Disabled))
+        if (isFlagSet(data->flags,FLG_Disabled))
         {
-        	clearFlag(data->flags,FLG_MouseOver);
+            clearFlag(data->flags,FLG_MouseOver);
         }
         else
         {
@@ -769,8 +763,8 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 back = TRUE;
                 clearFlag(data->flags,FLG_MouseOver);
             }
-    	}
-	}
+        }
+    }
 
     if (isFlagSet(data->flags,FLG_Borderless))
     {
@@ -853,8 +847,8 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
     /* Super method */
     if (!DoSuperMethodA(cl,obj,msg))
     {
-    	RETURN(FALSE);
-    	return FALSE;
+        RETURN(FALSE);
+        return FALSE;
     }
 
     if (isFlagClear(data->flags2, FLG2_Limbo))
@@ -870,8 +864,8 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
                                    MUIA_Frame, (ULONG)ptr,
                                    TAG_DONE);
 
-        	// modify MUIA_FrameDynamic/Visible only for MUI3 as MUI3.x doesn't know
-        	// these attributes at all
+            // modify MUIA_FrameDynamic/Visible only for MUI3 as MUI3.x doesn't know
+            // these attributes at all
 
             if(isFlagSet(data->flags, FLG_Borderless))
             {
@@ -906,20 +900,20 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
             else
                 data->activeBack = NULL;
 
-	        // Frame shine
-	        if (!getconfigitem(cl,obj,MUICFG_TheBar_FrameShinePen,&ptr))
-	            ptr = MUIDEF_TheBar_FrameShinePen;
-	        data->shine = MUI_ObtainPen(muiRenderInfo(obj),(struct MUI_PenSpec *)ptr,0);
+            // Frame shine
+            if (!getconfigitem(cl,obj,MUICFG_TheBar_FrameShinePen,&ptr))
+                ptr = MUIDEF_TheBar_FrameShinePen;
+            data->shine = MUI_ObtainPen(muiRenderInfo(obj),(struct MUI_PenSpec *)ptr,0);
 
-	        // Frame shadow
-	        if (!getconfigitem(cl,obj,MUICFG_TheBar_FrameShadowPen,&ptr))
-	            ptr = MUIDEF_TheBar_FrameShadowPen;
-	        data->shadow = MUI_ObtainPen(muiRenderInfo(obj),(struct MUI_PenSpec *)ptr,0);
+            // Frame shadow
+            if (!getconfigitem(cl,obj,MUICFG_TheBar_FrameShadowPen,&ptr))
+                ptr = MUIDEF_TheBar_FrameShadowPen;
+            data->shadow = MUI_ObtainPen(muiRenderInfo(obj),(struct MUI_PenSpec *)ptr,0);
 
-	        //Frame style
-	        data->fStyle = getconfigitem(cl,obj,MUICFG_TheBar_FrameStyle,&val) ?
-	            *val : MUIDEF_TheBar_FrameStyle;
-		}
+            //Frame style
+            data->fStyle = getconfigitem(cl,obj,MUICFG_TheBar_FrameStyle,&val) ?
+                *val : MUIDEF_TheBar_FrameStyle;
+        }
 
         /* Disabled body */
         if (!getconfigitem(cl,obj,MUICFG_TheBar_DisBodyPen,&ptr))
@@ -959,25 +953,25 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 
         if (isFlagClear(lib_flags,BASEFLG_MUI4))
         {
-	        /* Inner spaces */
-	        if (isFlagClear(data->userFlags, UFLG_UserHorizInnerSpacing))
-	        {
-	            data->horizInnerSpacing = getconfigitem(cl,obj,MUICFG_TheBar_HorizInnerSpacing,&val) ?
-	                *val : MUIDEF_TheBar_HorizInnerSpacing;
-	        }
+            /* Inner spaces */
+            if (isFlagClear(data->userFlags, UFLG_UserHorizInnerSpacing))
+            {
+                data->horizInnerSpacing = getconfigitem(cl,obj,MUICFG_TheBar_HorizInnerSpacing,&val) ?
+                    *val : MUIDEF_TheBar_HorizInnerSpacing;
+            }
 
-	        if (isFlagClear(data->userFlags, UFLG_UserTopInnerSpacing))
-	        {
-	            data->topInnerSpacing = getconfigitem(cl,obj,MUICFG_TheBar_TopInnerSpacing,&val) ?
-	                *val : MUIDEF_TheBar_TopInnerSpacing;
-	        }
+            if (isFlagClear(data->userFlags, UFLG_UserTopInnerSpacing))
+            {
+                data->topInnerSpacing = getconfigitem(cl,obj,MUICFG_TheBar_TopInnerSpacing,&val) ?
+                    *val : MUIDEF_TheBar_TopInnerSpacing;
+            }
 
-	        if (isFlagClear(data->userFlags, UFLG_UserBottomInnerSpacing))
-	        {
-	            data->bottomInnerSpacing = getconfigitem(cl,obj,MUICFG_TheBar_BottomInnerSpacing,&val) ?
-	                *val : MUIDEF_TheBar_BottomInnerSpacing;
-	        }
-	    }
+            if (isFlagClear(data->userFlags, UFLG_UserBottomInnerSpacing))
+            {
+                data->bottomInnerSpacing = getconfigitem(cl,obj,MUICFG_TheBar_BottomInnerSpacing,&val) ?
+                    *val : MUIDEF_TheBar_BottomInnerSpacing;
+            }
+        }
 
         /* Precision */
         if (isFlagClear(data->userFlags, UFLG_UserPrecision))
@@ -998,7 +992,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
                 *val : MUIDEF_TheBar_DisMode;
 
             if (data->disMode==MUIV_TheButton_DisMode_Sunny)
-            	clearFlag(data->flags, FLG_Sunny);
+                clearFlag(data->flags, FLG_Sunny);
         }
 
         /* Scale ratio */
@@ -1237,7 +1231,7 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
     {
         struct RastPort rp;
 
-        copymem(&rp,&_screen(obj)->RastPort,sizeof(rp));
+        memcpy(&rp,&_screen(obj)->RastPort,sizeof(rp));
 
         if (data->vMode==MUIV_TheButton_ViewMode_Text)
             SetFont(&rp,data->tf);
@@ -1491,11 +1485,11 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                 struct BitMap *bm = NULL;
                 APTR          mask = NULL;
                 UWORD         x = 0, y = 0;
-                UBYTE	        *chunky = NULL;
+                UBYTE           *chunky = NULL;
                 #if defined(WITH_ALPHA)
-                ULONG	        useChunky = isFlagSet(data->image->flags, BRFLG_AlphaMask);
+                ULONG           useChunky = isFlagSet(data->image->flags, BRFLG_AlphaMask);
                 #else
-                ULONG	        useChunky = (data->allowAlphaChannel && isFlagSet(data->image->flags, BRFLG_AlphaMask));
+                ULONG           useChunky = (data->allowAlphaChannel && isFlagSet(data->image->flags, BRFLG_AlphaMask));
                 #endif
 
                 if ((disMode==MUIV_TheButton_DisMode_Blend) || (disMode==MUIV_TheButton_DisMode_BlendGrey))
@@ -1547,95 +1541,95 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                     }
 
                     if (!chunky)
-                    	disMode = MUIV_TheButton_DisMode_FullGrid;
+                        disMode = MUIV_TheButton_DisMode_FullGrid;
                 }
 
                 if ((disMode!=MUIV_TheButton_DisMode_Blend) && (disMode!=MUIV_TheButton_DisMode_BlendGrey))
                 {
-	                if (isFlagSet(data->flags, FLG_Sunny))
-	                {
-	                    if (strip)
-	                    {
-	                        if (useChunky)
-	                            chunky = data->strip->dgchunky;
+                    if (isFlagSet(data->flags, FLG_Sunny))
+                    {
+                        if (strip)
+                        {
+                            if (useChunky)
+                                chunky = data->strip->dgchunky;
 
-	                        if((bm = data->strip->dgreyBM))
-	                          mask = data->strip->dmask;
-	                        else
-	                          mask = data->strip->mask;
+                            if((bm = data->strip->dgreyBM))
+                              mask = data->strip->dmask;
+                            else
+                              mask = data->strip->mask;
 
-	                        x = data->image->left;
-	                        y = data->image->top;
-	                    }
-	                    else
-	                    {
-	                        if (useChunky)
-	                            chunky = data->dgchunky;
+                            x = data->image->left;
+                            y = data->image->top;
+                        }
+                        else
+                        {
+                            if (useChunky)
+                                chunky = data->dgchunky;
 
-	                        if((bm = data->dgreyBM))
-	                          mask = data->dmask;
-	                        else
-	                          mask = data->mask;
+                            if((bm = data->dgreyBM))
+                              mask = data->dmask;
+                            else
+                              mask = data->mask;
 
-	                        x = y = 0;
-	                    }
-	                }
-	                else
-	                {
-	                    if (disMode==MUIV_TheButton_DisMode_Sunny)
-	                    {
-	                        if (strip)
-	                        {
-	    	                    if (useChunky)
-	    	                        chunky = data->strip->gchunky;
+                            x = y = 0;
+                        }
+                    }
+                    else
+                    {
+                        if (disMode==MUIV_TheButton_DisMode_Sunny)
+                        {
+                            if (strip)
+                            {
+                                if (useChunky)
+                                    chunky = data->strip->gchunky;
 
-	                            bm = data->strip->greyBM;
-	                            mask = data->strip->mask;
+                                bm = data->strip->greyBM;
+                                mask = data->strip->mask;
 
-	                            x = data->image->left;
-	                            y = data->image->top;
-	                        }
-	                        else
-	                        {
-	    	                    if (useChunky)
-	    	                        chunky = data->gchunky;
+                                x = data->image->left;
+                                y = data->image->top;
+                            }
+                            else
+                            {
+                                if (useChunky)
+                                    chunky = data->gchunky;
 
-	                            bm = data->greyBM;
-	                            mask = data->mask;
+                                bm = data->greyBM;
+                                mask = data->mask;
 
-	                            x = y = 0;
-	                        }
-	                    }
-	                    else
-	                    {
-	                        if (strip)
-	                        {
-	    	                    if (useChunky)
-	    	                        chunky = data->strip->dnchunky;
+                                x = y = 0;
+                            }
+                        }
+                        else
+                        {
+                            if (strip)
+                            {
+                                if (useChunky)
+                                    chunky = data->strip->dnchunky;
 
-	                            if((bm = data->strip->dnormalBM))
-	                              mask = data->strip->dmask;
-	                            else
-	                              mask = data->strip->mask;
+                                if((bm = data->strip->dnormalBM))
+                                  mask = data->strip->dmask;
+                                else
+                                  mask = data->strip->mask;
 
-	                            x = data->image->left;
-	                            y = data->image->top;
-	                        }
-	                        else
-	                        {
-	    	                    if (useChunky)
-	    	                        chunky = data->dnchunky;
+                                x = data->image->left;
+                                y = data->image->top;
+                            }
+                            else
+                            {
+                                if (useChunky)
+                                    chunky = data->dnchunky;
 
-	                            if((bm = data->dnormalBM))
-	                              mask = data->dmask;
-	                            else
-	                              mask = data->mask;
+                                if((bm = data->dnormalBM))
+                                  mask = data->dmask;
+                                else
+                                  mask = data->mask;
 
-	                            x = y = 0;
-	                        }
-	                    }
-	                }
-	            }
+                                x = y = 0;
+                            }
+                        }
+                    }
+                }
 
                 if((done = (bm || chunky)))
                 {
@@ -1687,7 +1681,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                         if(bm)
                         {
                           #if defined(__amigaos4__)
-                    	  if(mask != NULL)
+                          if(mask != NULL)
                             BltBitMapTags(BLITA_Source,         bm,
                                           BLITA_Dest,           rp,
                                           BLITA_SrcType,        BLITT_BITMAP,
@@ -1714,10 +1708,10 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                                           BLITA_Height,         ih,
                                           TAG_DONE);
                           #else
-                    	  if (mask != NULL)
-                    	      BltMaskBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,(ABC|ABNC|ANBC),mask);
-                    	  else
-                    	      BltBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,0xc0);
+                          if (mask != NULL)
+                              BltMaskBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,(ABC|ABNC|ANBC),mask);
+                          else
+                              BltBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,0xc0);
                           #endif
                         }
                     }
@@ -1794,16 +1788,16 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                 struct BitMap *bm;
                 APTR          mask;
                 UWORD         x = 0, y = 0;
-                UBYTE	      *chunky = NULL;
+                UBYTE         *chunky = NULL;
                 #if defined(WITH_ALPHA)
-                ULONG	      useChunky = isFlagSet(data->image->flags, BRFLG_AlphaMask);
+                ULONG         useChunky = isFlagSet(data->image->flags, BRFLG_AlphaMask);
                 #else
-                ULONG	      useChunky = (data->allowAlphaChannel && isFlagSet(data->image->flags, BRFLG_AlphaMask));
+                ULONG         useChunky = (data->allowAlphaChannel && isFlagSet(data->image->flags, BRFLG_AlphaMask));
                 #endif
 
                 if (strip)
                 {
-	                if (isFlagSet(data->flags, FLG_Scaled))
+                    if (isFlagSet(data->flags, FLG_Scaled))
                     {
                         if (useChunky)
                             chunky = data->nchunky;
@@ -1836,7 +1830,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                 {
                     if (strip)
                     {
-    	                if (isFlagSet(data->flags, FLG_Scaled))
+                        if (isFlagSet(data->flags, FLG_Scaled))
                         {
                             if (useChunky)
                                 chunky = data->snchunky;
@@ -1851,8 +1845,8 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                         {
                             if (data->strip->snormalBM)
                             {
-	        	                if (useChunky)
-	        	                    chunky = data->strip->snchunky;
+                                if (useChunky)
+                                    chunky = data->strip->snchunky;
 
                                 bm = data->strip->snormalBM;
                                 mask = data->strip->smask;
@@ -1863,8 +1857,8 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                     {
                         if (data->snormalBM)
                         {
-    	                    if (useChunky)
-    	                        chunky = data->snchunky;
+                            if (useChunky)
+                                chunky = data->snchunky;
 
                             bm = data->snormalBM;
                             mask = data->smask;
@@ -1875,7 +1869,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                 {
                     if (strip)
                     {
-    	                if (isFlagSet(data->flags, FLG_Scaled))
+                        if (isFlagSet(data->flags, FLG_Scaled))
                         {
                             if (useChunky)
                                 chunky = data->gchunky;
@@ -1915,7 +1909,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                         if((tbm = (AllocBitMap(iw,ih,GetBitMapAttr(bm,BMA_DEPTH), isFlagSet(data->flags, FLG_CyberMap) ? BMF_MINPLANES : 0, isFlagSet(data->flags, FLG_CyberMap) ? bm : NULL))))
                         {
                             struct BitMap *tbmask = NULL; // gcc
-                            APTR 	    tmask;
+                            APTR        tmask;
 
                             if (strip && isFlagClear(data->flags, FLG_Scaled))
                             {
@@ -1978,7 +1972,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                                 BltBitMap(bm,x,y,tbm,0,0,iw,ih,0xc0,0xff,NULL);
                                 #endif
 
-                                copymem(&trp,rp,sizeof(trp));
+                                memcpy(&trp,rp,sizeof(trp));
                                 trp.Layer  = NULL;
                                 trp.BitMap = tbm;
 
@@ -2021,7 +2015,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
                     if (!done)
                     {
-      	                if (chunky)
+                        if (chunky)
                         {
                             #if defined(__amigaos4__)
                             if(isFlagSet(data->image->flags, BRFLG_EmptyAlpha))
@@ -2064,7 +2058,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                         {
                             if(bm)
                             {
-      	                      //if (isFlagSet(data->image->flags, BRFLG_EmptyAlpha) && mask)
+                              //if (isFlagSet(data->image->flags, BRFLG_EmptyAlpha) && mask)
                               #if defined(__amigaos4__)
                               if(mask != NULL)
                                 BltBitMapTags(BLITA_Source,         bm,
@@ -2093,9 +2087,9 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                                               BLITA_Height,         ih,
                                               TAG_DONE);
                               #else
-      	                      if(mask != NULL)
+                              if(mask != NULL)
                                   BltMaskBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,(ABC|ABNC|ANBC),mask);
-                        	  else
+                              else
                                   BltBitMapRastPort(bm,x,y,rp,ixp,iyp,iw,ih,0xc0);
                               #endif
                             }
@@ -2270,7 +2264,7 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_Notify *msg)
     if((notify = allocVecPooled(data->pool, size)))
     {
       // now we fill the notify structure
-      copymem(&notify->msg, msg, sizeof(struct MUIP_Notify)+(sizeof(ULONG)*msg->FollowParams));
+      memcpy(&notify->msg, msg, sizeof(struct MUIP_Notify)+(sizeof(ULONG)*msg->FollowParams));
 
       // add the new notify to the notifies list of the button
       AddTail((struct List *)&data->notifyList, (struct Node *)notify);
@@ -2282,7 +2276,7 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_Notify *msg)
       // f.e. a notification on MUIA_Selected,MUIV_EveryTime is not possible
       // so, we simply add a third parm to the message, which will store the real value
       // and in mSendNotify, we use that value
-      result = DoSuperMethod(cl, obj, MUIM_Notify, msg->TrigAttr, msg->TrigVal, obj, 3, MUIM_TheButton_SendNotify, notify,MUIV_TriggerValue);
+      result = DoSuperMethod(cl, obj, MUIM_Notify, msg->TrigAttr, msg->TrigVal, (IPTR)obj, 3, MUIM_TheButton_SendNotify, (IPTR)notify,MUIV_TriggerValue);
 
       // in case the DoSuperMethod returns an error we go and cleanup the notify again
       if(result == 0)
@@ -2416,7 +2410,7 @@ mSendNotify(struct IClass *cl, Object *obj, struct MUIP_TheButton_SendNotify *ms
           ULONG *para = (ULONG *)(((LONG)&notify->msg.FollowParams)+sizeof(ULONG));
 
           // now we fill the notify structure
-          copymem(destMessage, para, sizeof(ULONG)*(notify->msg.FollowParams));
+          memcpy(destMessage, para, sizeof(ULONG)*(notify->msg.FollowParams));
 
           // parse through the destMessage and replace certain
           // variable with their correct values.
@@ -2488,38 +2482,38 @@ mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
     ULONG           dosuper = TRUE;
- 	Object 			*p;
+    Object          *p;
     IPTR            result = 0; //gcc
 
     ENTER();
-	
+    
     p = (Object *)xget(obj,MUIA_Parent);
     if (p)
     {
-    	if ((data->flags & FLG_IsSpacer) ||
-     		((data->flags & FLG_Raised) && (!(data->flags & FLG_MouseOver) || (data->flags & FLG_Selected) || !data->activeBack))||
-     		!(data->flags & FLG_Raised))
+        if ((data->flags & FLG_IsSpacer) ||
+            ((data->flags & FLG_Raised) && (!(data->flags & FLG_MouseOver) || (data->flags & FLG_Selected) || !data->activeBack))||
+            !(data->flags & FLG_Raised))
         {
             result = DoMethod(p,MUIM_Backfill,
-	            msg->left,
-	            msg->top,
-	            msg->right,
-	            msg->bottom,
-	            msg->left+msg->xoffset,
-	            msg->top+msg->yoffset,
-	            0);
+                msg->left,
+                msg->top,
+                msg->right,
+                msg->bottom,
+                msg->left+msg->xoffset,
+                msg->top+msg->yoffset,
+                0);
 
-			dosuper = FALSE;
-	    }
+            dosuper = FALSE;
+        }
     }
 
     if (dosuper)
     {
-	    if (isFlagSet(lib_flags,BASEFLG_MUI20))
-    	  result = DoSuperMethodA(cl,obj,(Msg)msg);
-		else
+        if (isFlagSet(lib_flags,BASEFLG_MUI20))
+          result = DoSuperMethodA(cl,obj,(Msg)msg);
+        else
           result = DoSuperMethod(cl,obj,MUIM_DrawBackground,msg->left,msg->top,msg->right-msg->left+1,msg->bottom-msg->top+1,msg->xoffset,msg->yoffset,0);
-	}
+    }
 
     RETURN(result);
     return result;

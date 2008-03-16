@@ -1,6 +1,3 @@
-#ifndef _PRIVATE_H
-#define _PRIVATE_H
-
 /***************************************************************************
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
@@ -19,35 +16,9 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: private.h 218 2008-02-23 12:57:32Z alforan $
+ $Id: private.h 240 2008-03-10 13:34:04Z alforan $
 
 ***************************************************************************/
-
-#include <mui/TheBar_mcc.h>
-
-#include "TheBar_mcp.h"
-
-#include <mui/muiundoc.h>
-
-/***************************************************************************/
-
-extern ULONG lib_flags;
-
-extern struct MUI_CustomClass *lib_thisClass;
-extern struct MUI_CustomClass *lib_spacerClass;
-extern struct MUI_CustomClass *lib_dragBarClass;
-
-extern struct Library *PictureDTBase;
-
-enum
-{
-  BASEFLG_Init         = 1<<0,
-  BASEFLG_MUI20        = 1<<1,
-  BASEFLG_MUI4         = 1<<2,
-  BASEFLG_BROKENMOSPDT = 1<<3,
-};
-
-/***************************************************************************/
 
 struct pen
 {
@@ -143,14 +114,14 @@ struct InstData
     ULONG                          spacersSize;
 
     #if defined(VIRTUAL)
-    ULONG			               objWidth;
-    ULONG			               objMWidth;
-    ULONG			               objHeight;
-    ULONG			               objMHeight;
+    ULONG                          objWidth;
+    ULONG                          objMWidth;
+    ULONG                          objHeight;
+    ULONG                          objMHeight;
     #endif
 
-    char          		           frameSpec[256];
-    ULONG			               userFrame;
+    char                           frameSpec[256];
+    ULONG                          userFrame;
 
     #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
     ULONG                          allowAlphaChannel;
@@ -237,7 +208,7 @@ enum
     UFLG2_UserNtRaiseActive        = 1<<2,
     UFLG2_NtRaiseActive            = 1<<3,
     UFLG2_UserSpacersSize          = 1<<4,
-    UFLG2_UserFrame	               = 1<<5,
+    UFLG2_UserFrame                = 1<<5,
 };
 
 /***********************************************************************/
@@ -285,31 +256,4 @@ void build(struct InstData *data);
 void freeBitMaps(struct InstData *data);
 
 /***********************************************************************/
-
-#define MUIVER20 20
-
-/***********************************************************************/
-
-// some general macros
-#define RAWIDTH(w)                      ((((UWORD)(w))+15)>>3 & 0xFFFE)
-#define BOOLSAME(a,b)                   (((a) ? TRUE : FALSE)==((b) ? TRUE : FALSE))
-#define getconfigitem(cl,obj,item,ptr)  DoSuperMethod(cl,obj,MUIM_GetConfigItem,item,(IPTR)ptr)
-
-#if defined(__MORPHOS__)
-#define copymem(to,from,len)            CopyMem((APTR)(from),(APTR)(to),(ULONG)(len))
-#else
-#define copymem(to,from,len)            memcpy((to),(from),(len));
-#endif
-
-#if !defined(IsMinListEmpty)
-#define IsMinListEmpty(x)     (((x)->mlh_TailPred) == (struct MinNode *)(x))
-#endif
-
-#define setFlag(mask, flag)             (mask) |= (flag)
-#define clearFlag(mask, flag)           (mask) &= ~(flag)
-#define isAnyFlagSet(mask, flag)        (((mask) & (flag)) != 0)
-#define isFlagSet(mask, flag)           (((mask) & (flag)) == (flag))
-#define isFlagClear(mask, flag)         (((mask) & (flag)) == 0)
-
-#endif /* _PRIVATE_H */
 

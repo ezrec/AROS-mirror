@@ -16,21 +16,9 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id$
-
 ***************************************************************************/
 
 #include "class.h"
-
-#include <stdlib.h>
-#include <stdio.h>
-
-#include <mui/muiundoc.h>
-
-#include "locale.h"
-#include "private.h"
-
-#include "SDI_hook.h"
 
 /***********************************************************************/
 
@@ -129,7 +117,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
             break;
 
             case MUIA_Popbackground_Grad:
-                copymem(&data->grad,(struct MUIS_TheBar_Gradient *)tidata,sizeof(data->grad));
+                memcpy(&data->grad,(struct MUIS_TheBar_Gradient *)tidata,sizeof(data->grad));
                 SetSuperAttrs(cl,obj,MUIA_Imagedisplay_Spec,NULL,TAG_DONE);
                 data->flags |= FLG_GradientMode;
                 redraw = TRUE;
@@ -371,7 +359,7 @@ mDragDrop(struct IClass *cl, Object *obj,struct MUIP_DragDrop *msg)
   {
     char spec[sizeof(struct MUI_PenSpec)+2];
 
-    snprintf(spec,sizeof(spec),"2:%s",x);
+    msnprintf(spec,sizeof(spec),(STRPTR)"2:%s",x);
     set(obj,MUIA_Imagedisplay_Spec,spec);
   }
   else if((x = xget(msg->obj,MUIA_Popbackground_Grad)))
@@ -388,7 +376,7 @@ mDragDrop(struct IClass *cl, Object *obj,struct MUIP_DragDrop *msg)
       g = (c>>8) & 0xff;
       b = c & 0xff;
 
-      snprintf(spec, sizeof(spec), "2:r%08lx,%08lx,%08lx",(r<<24)|(r<<16)|(r<<8)|r,(g<<24)|(g<<16)|(g<<8)|g,(b<<24)|(b<<16)|(b<<8)|b);
+      msnprintf(spec, sizeof(spec), (STRPTR)"2:r%08lx,%08lx,%08lx",(r<<24)|(r<<16)|(r<<8)|r,(g<<24)|(g<<16)|(g<<8)|g,(b<<24)|(b<<16)|(b<<8)|b);
       set(obj,MUIA_Imagedisplay_Spec,spec);
     }
   }

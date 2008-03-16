@@ -16,8 +16,6 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id$
-
 ***************************************************************************/
 
 #ifdef DEBUG
@@ -29,9 +27,9 @@
 #include <proto/exec.h>
 #include <proto/dos.h>
 
-#include "SDI_compiler.h"
+#include <SDI_compiler.h>
 
-#include "Debug.h"
+#include "debug.h"
 #include "rev.h"
 
 // redefinition section

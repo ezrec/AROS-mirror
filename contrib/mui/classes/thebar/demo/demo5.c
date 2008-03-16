@@ -72,6 +72,8 @@ struct MUIS_TheBar_Button buttons[] =
 const char *appearances[] = {"Images and text","Images","Text",NULL};
 const char *labelPoss[] = {"Bottom","Top","Right","Left",NULL};
 
+const char *usedClasses[] = {"TheBar.mcc",NULL};
+
 int
 main(UNUSED int argc,char **argv)
 {
@@ -92,6 +94,7 @@ main(UNUSED int argc,char **argv)
                     MUIA_Application_Author,       "Alfonso Ranieri <alforan@tin.it>",
                     MUIA_Application_Description,  "TheBar example",
                     MUIA_Application_Base,         "THEBAREXAMPLE",
+                    MUIA_Application_UsedClasses,  usedClasses,
 
                     SubWindow, win = WindowObject,
                         MUIA_Window_ID,    MAKE_ID('M','W','I','N'),

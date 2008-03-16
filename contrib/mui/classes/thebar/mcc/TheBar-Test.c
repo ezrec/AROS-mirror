@@ -20,35 +20,32 @@
 
 ***************************************************************************/
 
-#include <stdio.h>
-#include <string.h>
-
-#include <clib/alib_protos.h>
-
-#include <exec/tasks.h>
-#include <libraries/mui.h>
-
-#include <proto/dos.h>
-#include <proto/exec.h>
-#include <proto/muimaster.h>
-#include <proto/intuition.h>
-#include <proto/utility.h>
-
-#include "private.h"
-#include "mcc_common.h"
 #include "class.h"
-#include "Debug.h"
+#include "private.h"
+#include "debug.h"
+#include <stdio.h>
 
-#include "SDI_hook.h"
+/******************************************************************************/
+
+#ifndef MAKE_ID
+#define MAKE_ID(a,b,c,d) ((ULONG) (a)<<24 | (ULONG) (b)<<16 | (ULONG) (c)<<8 | (ULONG) (d))
+#endif
+
+/******************************************************************************/
 
 #if defined(__amigaos4__)
 struct Library *GfxBase = NULL;
 struct Library *IntuitionBase = NULL;
 struct Library *MUIMasterBase = NULL;
-struct Library *UtilityBase = NULL;
 struct Library *CyberGfxBase = NULL;
 struct Library *DataTypesBase = NULL;
 struct Library *PictureDTBase = NULL;
+
+struct GraphicsIFace *IGraphics = NULL;
+struct IntuitionIFace *IIntuition = NULL;
+struct MUIMasterIFace *IMUIMaster = NULL;
+struct CyberGfxIFace *ICyberGfx = NULL;
+struct DataTypesIFace *IDataTypes = NULL;
 #elif defined(__MORPHOS__)
 struct GfxBase *GfxBase = NULL;
 struct IntuitionBase *IntuitionBase = NULL;
@@ -67,55 +64,160 @@ struct Library *DataTypesBase = NULL;
 struct Library *PictureDTBase = NULL;
 #endif
 
-#if defined(__amigaos4__)
-struct GraphicsIFace *IGraphics = NULL;
-struct IntuitionIFace *IIntuition = NULL;
-struct MUIMasterIFace *IMUIMaster = NULL;
-struct UtilityIFace *IUtility = NULL;
-struct CyberGfxIFace *ICyberGfx = NULL;
-struct DataTypesIFace *IDataTypes = NULL;
-#endif
-
 DISPATCHERPROTO(_Dispatcher);
 struct MUI_CustomClass *lib_thisClass = NULL;
 struct MUI_CustomClass *lib_spacerClass = NULL;
 struct MUI_CustomClass *lib_dragBarClass = NULL;
 ULONG lib_flags = 0;
 
-// global data
+/******************************************************************************/
+
+void closeAll(void)
+{
+    D(DBF_STARTUP,"cleaning up thisClass...");
+    if (lib_thisClass)    MUI_DeleteCustomClass(lib_thisClass);
+    D(DBF_STARTUP,"cleaning up dragBarClass...");
+    if (lib_dragBarClass) MUI_DeleteCustomClass(lib_dragBarClass);
+    D(DBF_STARTUP,"cleaning up spacerClass...");
+    if (lib_spacerClass)  MUI_DeleteCustomClass(lib_spacerClass);
+
+    D(DBF_STARTUP,"cleaning up MUIMasterBase...");
+    if (MUIMasterBase)
+    {
+        DROPINTERFACE(IMUIMaster);
+        CloseLibrary(MUIMasterBase);
+    }
+
+    D(DBF_STARTUP,"cleaning up VyberGfxBase...");
+    if (CyberGfxBase)
+    {
+        DROPINTERFACE(ICyberGfx);
+        CloseLibrary(CyberGfxBase);
+    }
+
+    D(DBF_STARTUP,"cleaning up DataTypesBase...");
+    if (DataTypesBase)
+    {
+        DROPINTERFACE(IDataTypes);
+        CloseLibrary(DataTypesBase);
+    }
+
+    D(DBF_STARTUP,"cleaning up UtilityBase...");
+    if (UtilityBase)
+    {
+        DROPINTERFACE(IUtility);
+        CloseLibrary(UtilityBase);
+    }
+
+    D(DBF_STARTUP,"cleaning up IntuitionBase...");
+    if (IntuitionBase)
+    {
+        DROPINTERFACE(IIntuition);
+        CloseLibrary((struct Library *)IntuitionBase);
+    }
+
+    D(DBF_STARTUP,"cleaning up GfxBase...");
+    if (GfxBase)
+    {
+        DROPINTERFACE(IGraphics);
+        CloseLibrary((struct Library *)GfxBase);
+    }
+}
+
+ULONG initAll(void)
+{
+    if ((GfxBase = (APTR)OpenLibrary("graphics.library", 38)) &&
+        GETINTERFACE(IGraphics, GfxBase) &&
+        (IntuitionBase = (APTR)OpenLibrary("intuition.library", 38)) &&
+        GETINTERFACE(IIntuition, IntuitionBase) &&
+		#ifndef __amigaos4__
+        (UtilityBase = OpenLibrary("utility.library", 38)) &&
+        GETINTERFACE(IUtility, UtilityBase) &&
+		#endif        
+		(DataTypesBase = OpenLibrary("datatypes.library", 37)) &&
+        GETINTERFACE(IDataTypes, DataTypesBase) &&
+        (MUIMasterBase = OpenLibrary("muimaster.library", 19/*MUIMASTER_VMIN*/)) &&
+        GETINTERFACE(IMUIMaster, MUIMasterBase) &&
+        initSpacerClass() &&
+        initDragBarClass() &&
+        (lib_thisClass = MUI_CreateCustomClass(NULL, (STRPTR)MUIC_Group, NULL, sizeof(struct InstData), ENTRY(_Dispatcher))))
+    {
+        CyberGfxBase = OpenLibrary("cybergraphics.library",41);
+        #ifdef __amigaos4__
+        if (!GETINTERFACE(ICyberGfx,CyberGfxBase))
+        {
+            CloseLibrary(CyberGfxBase);
+            CyberGfxBase = NULL;
+        }
+        #endif
+
+        PictureDTBase = OpenLibrary("picture.datatype",0);
+        #if !defined(__amigaos4__) && !defined(__AROS__)
+        if (PictureDTBase)
+        {
+            if (FindResident("MorphOS"))
+            {
+                if ((PictureDTBase->lib_Version<50) ||
+                    (PictureDTBase->lib_Version==50 && PictureDTBase->lib_Revision<17))
+                {
+                    setFlag(lib_flags,BASEFLG_BROKENMOSPDT);
+                }
+            }
+        }
+        #endif
+
+        if (MUIMasterBase->lib_Version>=20)
+        {
+            setFlag(lib_flags, BASEFLG_MUI20);
+
+            if (MUIMasterBase->lib_Version>20 || MUIMasterBase->lib_Revision>=5341)
+                setFlag(lib_flags, BASEFLG_MUI4);
+        }
+
+        #if defined(DEBUG)
+        SetupDebug();
+        #endif
+
+        return TRUE;
+  }
+
+  return FALSE;
+}
+/******************************************************************************/
+
 static const char *appearances[] = { "Images and text", "Images", "Text", NULL};
 static const char *labelPoss[] = { "Bottom", "Top", "Right", "Left", NULL};
 
 static struct MUIS_TheBar_Button buttons[] =
 {
-  { 0, 0, "_Pred", "Pread mail.",    0, 0, NULL, NULL },
-  { 1, 1, "_Next", "Next mail.",     0, 0, NULL, NULL },
-  { 2, 2, "_Move", "Move somewhere.",0, 0, NULL, NULL },
-  { MUIV_TheBar_BarSpacer, 3, NULL, NULL, 0, 0, NULL, NULL },
-  { 3, 4, "_Forw", "Forward somewhere.", 0, 0, NULL, NULL },
-  { 4, 5, "F_ind", "Find something.", 0, 0, NULL, NULL },
-  { 5, 6, "_Save", "Save mail.", 0, 0, NULL, NULL },
-  { MUIV_TheBar_End , 0, NULL, NULL, 0, 0, NULL, NULL },
+    { 0, 0, "_Pred", "Pread mail.",    0, 0, NULL, NULL },
+    { 1, 1, "_Next", "Next mail.",     0, 0, NULL, NULL },
+    { 2, 2, "_Move", "Move somewhere.",0, 0, NULL, NULL },
+    { MUIV_TheBar_BarSpacer, 3, NULL, NULL, 0, 0, NULL, NULL },
+    { 3, 4, "_Forw", "Forward somewhere.", 0, 0, NULL, NULL },
+    { 4, 5, "F_ind", "Find something.", 0, 0, NULL, NULL },
+    { 5, 6, "_Save", "Save mail.", 0, 0, NULL, NULL },
+    { MUIV_TheBar_End , 0, NULL, NULL, 0, 0, NULL, NULL },
 };
 
 // static hooks
 HOOKPROTONHNO(SaveFunc, ULONG, UNUSED ULONG *qual)
 {
-  D(DBF_STARTUP, "SaveHook triggered: %08lx\n", *qual);
+    D(DBF_STARTUP, "SaveHook triggered: %08lx\n", *qual);
 
-  return 0;
+    return 0;
 }
 MakeStaticHook(SaveHook, SaveFunc);
 
 HOOKPROTONHNO(SleepFunc, ULONG, Object **sb)
 {
-  ULONG sleeping;
+    ULONG sleeping;
 
-  DoMethod(*sb, MUIM_TheBar_GetAttr, 6, MUIA_TheBar_Attr_Sleep, &sleeping);
+    DoMethod(*sb, MUIM_TheBar_GetAttr, 6, MUIA_TheBar_Attr_Sleep, (ULONG)&sleeping);
 
-  D(DBF_STARTUP, "SleepHook triggered: %08lx %ld\n", (ULONG)*sb, sleeping);
+    D(DBF_STARTUP, "SleepHook triggered: %08lx %ld\n", (ULONG)*sb, sleeping);
 
-  DoMethod(*sb, MUIM_TheBar_SetAttr, 6, MUIA_TheBar_Attr_Sleep, !sleeping);
+    DoMethod(*sb, MUIM_TheBar_SetAttr, 6, MUIA_TheBar_Attr_Sleep, !sleeping);
 
   return 0;
 }
@@ -123,190 +225,110 @@ MakeStaticHook(SleepHook, SleepFunc);
 
 int main(void)
 {
-  if((GfxBase = (APTR)OpenLibrary("graphics.library", 38)) &&
-    GETINTERFACE(IGraphics, GfxBase))
-  if((IntuitionBase = (APTR)OpenLibrary("intuition.library", 38)) &&
-    GETINTERFACE(IIntuition, IntuitionBase))
-  if((UtilityBase = OpenLibrary("utility.library", 38)) &&
-    GETINTERFACE(IUtility, UtilityBase))
-  if((DataTypesBase = OpenLibrary("datatypes.library", 37)) &&
-    GETINTERFACE(IDataTypes, DataTypesBase))
-  {
-    // Open cybergraphics.library (optional)
-    if((CyberGfxBase = OpenLibrary("cybergraphics.library", 41)) &&
-       GETINTERFACE(ICyberGfx, CyberGfxBase) == FALSE)
+    if (initAll())
     {
-      CloseLibrary(CyberGfxBase);
-      CyberGfxBase = NULL;
-    }
+        Object *app, *win, *sb, *appearance, *labelPos, *borderless, *sunny, *raised, *scaled, *update;
 
-    #if defined(DEBUG)
-    SetupDebug();
-    #endif
+        ENTER();
+        app = ApplicationObject,
+            MUIA_Application_Title,        "TheBar Demo1",
+            MUIA_Application_Version,      "$VER: TheBarDemo1 1.0 (24.6.2003)",
+            MUIA_Application_Copyright,    "Copyright 2003 by Alfonso Ranieri",
+            MUIA_Application_Author,       "Alfonso Ranieri <alforan@tin.it>",
+            MUIA_Application_Description,  "TheBar example",
+            MUIA_Application_Base,         "THEBAREXAMPLE",
 
-    ENTER();
+            SubWindow, win = WindowObject,
+                MUIA_Window_ID,    MAKE_ID('M','A','I','N'),
+                MUIA_Window_Title, "TheBar Demo1",
 
-    if((MUIMasterBase = OpenLibrary("muimaster.library", 19/*MUIMASTER_VMIN*/)) &&
-      GETINTERFACE(IMUIMaster, MUIMasterBase))
-    {
-      Object *app, *win, *sb, *appearance, *labelPos, *borderless, *sunny, *raised, *scaled, *update;
-
-      // now we init our subclasses
-      initSpacerClass();
-      initDragBarClass();
-
-      lib_thisClass = MUI_CreateCustomClass(NULL, (STRPTR)MUIC_Group, NULL, sizeof(struct InstData), ENTRY(_Dispatcher));
-
-      if(lib_thisClass && (app = ApplicationObject,
-                         MUIA_Application_Title,         "TheBar Demo1",
-                         MUIA_Application_Version,       "$VER: TheBarDemo1 1.0 (24.6.2003)",
-                         MUIA_Application_Copyright,     "Copyright 2003 by Alfonso Ranieri",
-                         MUIA_Application_Author,        "Alfonso Ranieri <alforan@tin.it>",
-                         MUIA_Application_Description,  "TheBar example",
-                         MUIA_Application_Base,         "THEBAREXAMPLE",
-
-                         SubWindow, win = WindowObject,
-                           MUIA_Window_ID,             MAKE_ID('M','A','I','N'),
-                           MUIA_Window_Title,          "TheBar Demo1",
-                           WindowContents, VGroup,
-                             Child, sb = NewObject(lib_thisClass->mcc_Class, NULL,
-                               MUIA_Group_Horiz,       TRUE,
-                               MUIA_TheBar_EnableKeys, TRUE,
-                               MUIA_TheBar_Buttons,    buttons,
-                               MUIA_TheBar_PicsDrawer, "AmiKit:t/thebar/demo/pics",
-                               MUIA_TheBar_Strip,      "Read.toolbar",
-                               MUIA_TheBar_SelStrip,   "Read_S.toolbar",
-                               MUIA_TheBar_DisStrip,   "Read_G.toolbar",
-                               MUIA_TheBar_StripCols,  11,
-                             End,
-                             Child, VGroup,
-                               GroupFrameT("Settings"),
-                               Child, HGroup,
-                                 Child, Label2("Appearance"),
-                                 Child, appearance = MUI_MakeObject(MUIO_Cycle,NULL,appearances),
-                                 Child, Label2("Label pos"),
-                                 Child, labelPos = MUI_MakeObject(MUIO_Cycle,NULL,labelPoss),
-                               End,
-                               Child, HGroup,
-                                 Child, HSpace(0),
-                                 Child, Label1("Borderless"),
-                                 Child, borderless = MUI_MakeObject(MUIO_Checkmark,NULL),
-                                 Child, HSpace(0),
-                                 Child, Label1("Sunny"),
-                                 Child, sunny = MUI_MakeObject(MUIO_Checkmark,NULL),
-                                 Child, HSpace(0),
-                                 Child, Label1("Raised"),
-                                 Child, raised = MUI_MakeObject(MUIO_Checkmark,NULL),
-                                 Child, HSpace(0),
-                                 Child, Label1("Scaled"),
-                                 Child, scaled = MUI_MakeObject(MUIO_Checkmark,NULL),
-                                 Child, HSpace(0),
-                               End,
-                             End,
-                             Child, update = MUI_MakeObject(MUIO_Button,"_Update"),
-                           End,
-                         End,
-                       End))
-      {
-        ULONG sigs = 0, id;
-
-        DoMethod(win,MUIM_Notify,MUIA_Window_CloseRequest,TRUE,MUIV_Notify_Application,2,MUIM_Application_ReturnID,MUIV_Application_ReturnID_Quit);
-        DoMethod(update,MUIM_Notify,MUIA_Pressed,FALSE,app,2,MUIM_Application_ReturnID,TAG_USER);
-
-        set(win,MUIA_Window_Open,TRUE);
-
-        // now we generate some notifies
-        DoMethod(sb, MUIM_TheBar_Notify, 5, MUIA_Pressed, FALSE, sb, 3, MUIM_CallHook, &SleepHook, sb);
-        DoMethod(sb, MUIM_TheBar_Notify, 6, MUIA_Pressed, FALSE, sb, 3, MUIM_CallHook, &SaveHook, MUIV_TheBar_Qualifier);
-
-        while((LONG)(id = DoMethod(app,MUIM_Application_NewInput,&sigs)) != MUIV_Application_ReturnID_Quit)
+                WindowContents, VGroup,
+                    Child, sb = NewObject(lib_thisClass->mcc_Class, NULL,
+                        MUIA_Group_Horiz,       TRUE,
+                        MUIA_TheBar_EnableKeys, TRUE,
+                        MUIA_TheBar_Buttons,    buttons,
+                        MUIA_TheBar_PicsDrawer, "AmiKit:t/thebar/demo/pics",
+                        MUIA_TheBar_Strip,      "Read.toolbar",
+                        MUIA_TheBar_SelStrip,   "Read_S.toolbar",
+                        MUIA_TheBar_DisStrip,   "Read_G.toolbar",
+                        MUIA_TheBar_StripCols,  11,
+                    End,
+                    Child, VGroup,
+                        GroupFrameT("Settings"),
+                        Child, HGroup,
+                            Child, Label2("Appearance"),
+                            Child, appearance = MUI_MakeObject(MUIO_Cycle,NULL,(ULONG)appearances),
+                            Child, Label2("Label pos"),
+                            Child, labelPos = MUI_MakeObject(MUIO_Cycle,NULL,(ULONG)labelPoss),
+                        End,
+                        Child, HGroup,
+                            Child, HSpace(0),
+                            Child, Label1("Borderless"),
+                            Child, borderless = MUI_MakeObject(MUIO_Checkmark,NULL),
+                            Child, HSpace(0),
+                            Child, Label1("Sunny"),
+                            Child, sunny = MUI_MakeObject(MUIO_Checkmark,NULL),
+                            Child, HSpace(0),
+                            Child, Label1("Raised"),
+                            Child, raised = MUI_MakeObject(MUIO_Checkmark,NULL),
+                            Child, HSpace(0),
+                            Child, Label1("Scaled"),
+                            Child, scaled = MUI_MakeObject(MUIO_Checkmark,NULL),
+                            Child, HSpace(0),
+                        End,
+                    End,
+                    Child, update = MUI_MakeObject(MUIO_Button,(ULONG)"_Update"),
+                End,
+            End,
+        End;
+        if (app)
         {
-          if(id==TAG_USER)
-          {
-            ULONG appearanceV, labelPosV, borderlessV, sunnyV, raisedV, scaledV;
+            ULONG sigs = 0, id;
 
-            get(appearance,MUIA_Cycle_Active,&appearanceV);
-            get(labelPos,MUIA_Cycle_Active,&labelPosV);
-            get(borderless,MUIA_Selected,&borderlessV);
-            get(sunny,MUIA_Selected,&sunnyV);
-            get(raised,MUIA_Selected,&raisedV);
-            get(scaled,MUIA_Selected,&scaledV);
+            DoMethod(win,MUIM_Notify,MUIA_Window_CloseRequest,TRUE,MUIV_Notify_Application,2,MUIM_Application_ReturnID,MUIV_Application_ReturnID_Quit);
+            DoMethod(update,MUIM_Notify,MUIA_Pressed,FALSE,(ULONG)app,2,MUIM_Application_ReturnID,TAG_USER);
 
-            SetAttrs(sb,MUIA_TheBar_ViewMode,   appearanceV,
-                        MUIA_TheBar_LabelPos,   labelPosV,
-                        MUIA_TheBar_Borderless, borderlessV,
-                        MUIA_TheBar_Sunny,      sunnyV,
-                        MUIA_TheBar_Raised,     raisedV,
-                        MUIA_TheBar_Scaled,     scaledV,
-                        TAG_DONE);
-          }
+            DoMethod(sb, MUIM_TheBar_Notify, 5, MUIA_Pressed, FALSE, (ULONG)sb, 3, MUIM_CallHook, (ULONG)&SleepHook, (ULONG)sb);
+            DoMethod(sb, MUIM_TheBar_Notify, 6, MUIA_Pressed, FALSE, (ULONG)sb, 3, MUIM_CallHook, (ULONG)&SaveHook, MUIV_TheBar_Qualifier);
 
-          if(sigs)
-          {
-            sigs = Wait(sigs | SIGBREAKF_CTRL_C);
-            if(sigs & SIGBREAKF_CTRL_C) break;
-          }
+            set(win,MUIA_Window_Open,TRUE);
+
+            while ((LONG)(id = DoMethod(app,MUIM_Application_NewInput,(ULONG)&sigs)) != MUIV_Application_ReturnID_Quit)
+            {
+                if (id==TAG_USER)
+                {
+                    ULONG appearanceV, labelPosV, borderlessV, sunnyV, raisedV, scaledV;
+
+                    get(appearance,MUIA_Cycle_Active,&appearanceV);
+                    get(labelPos,MUIA_Cycle_Active,&labelPosV);
+                    get(borderless,MUIA_Selected,&borderlessV);
+                    get(sunny,MUIA_Selected,&sunnyV);
+                    get(raised,MUIA_Selected,&raisedV);
+                    get(scaled,MUIA_Selected,&scaledV);
+
+                    SetAttrs(sb,MUIA_TheBar_ViewMode,   appearanceV,
+                                MUIA_TheBar_LabelPos,   labelPosV,
+                                MUIA_TheBar_Borderless, borderlessV,
+                                MUIA_TheBar_Sunny,      sunnyV,
+                                MUIA_TheBar_Raised,     raisedV,
+                                MUIA_TheBar_Scaled,     scaledV,
+                                TAG_DONE);
+                }
+
+                if (sigs)
+                {
+                    sigs = Wait(sigs | SIGBREAKF_CTRL_C);
+                    if (sigs & SIGBREAKF_CTRL_C) break;
+                }
+            }
+
+            D(DBF_STARTUP, "cleaning up application object...");
+            MUI_DisposeObject(app);
         }
-
-        D(DBF_STARTUP, "cleaning up application object...");
-        MUI_DisposeObject(app);
-
-        D(DBF_STARTUP, "cleaning up mcc...");
-        if(lib_thisClass)
-        {
-          MUI_DeleteCustomClass(lib_thisClass);
-          lib_thisClass = NULL;
-        }
-      }
-      else
-        printf("Failed to create application\n");
-
-     if(lib_dragBarClass)
-       MUI_DeleteCustomClass(lib_dragBarClass);
-
-     if(lib_spacerClass)
-       MUI_DeleteCustomClass(lib_spacerClass);
-
-      DROPINTERFACE(IMUIMaster);
-      CloseLibrary(MUIMasterBase);
-      MUIMasterBase = NULL;
+        else printf("Failed to create application\n");
     }
-  }
+    else printf("Failed to create something\n");
 
-  D(DBF_STARTUP, "freeing library bases/interfaces...");
-
-  if(CyberGfxBase)
-  {
-    DROPINTERFACE(ICyberGfx);
-    CloseLibrary(CyberGfxBase);
-    CyberGfxBase = NULL;
-  }
-
-  if(DataTypesBase)
-  {
-    DROPINTERFACE(IDataTypes);
-    CloseLibrary(DataTypesBase);
-    DataTypesBase = NULL;
-  }
-
-  if(UtilityBase)
-  {
-    DROPINTERFACE(IUtility);
-    CloseLibrary(UtilityBase);
-  }
-
-  if(IntuitionBase)
-  {
-    DROPINTERFACE(IIntuition);
-    CloseLibrary((struct Library *)IntuitionBase);
-  }
-
-  if(GfxBase)
-  {
-    DROPINTERFACE(IGraphics);
-    CloseLibrary((struct Library *)GfxBase);
-  }
-
-  RETURN(0);
-  return 0;
+    RETURN(0);
+    return 0;
 }

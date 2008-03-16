@@ -16,15 +16,12 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: class.h 205 2008-02-19 08:38:17Z thboeckel $
-
 ***************************************************************************/
 
 #ifndef _CLASS_H
 #define _CLASS_H
 
-#include <diskfont/glyph.h>
-
+#define __NOLIBBASE__
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/utility.h>
@@ -42,23 +39,109 @@
 #include <utility/pack.h>
 #include <datatypes/pictureclass.h>
 #include <cybergraphx/cybergraphics.h>
-
-#include <string.h>
+#include <diskfont/glyph.h>
 
 #include <mui/TheBar_mcc.h>
+#include <mui/TheBar_mcp.h>
 
-#include "private.h"
+#include <string.h>
+#include <stdlib.h>
 
-#include "SDI_compiler.h"
+#include <mcc_common.h>
+#include <SDI_compiler.h>
+#include <SDI_stdarg.h>
+#include <SDI_hook.h>
 
-// these systems are able to handle alpha channel information
-#if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
-	#define WITH_ALPHA			1
-#endif
+#include "debug.h"
 
 /****************************************************************************/
+/*
+** Libraries shared stuff
+*/
+
+#if defined(__amigaos4__)
+extern struct Library          *SysBase;
+extern struct Library          *DOSBase;
+extern struct Library          *GfxBase;
+extern struct Library          *IntuitionBase;
+#else
+extern struct ExecBase         *SysBase;
+extern struct DosLibrary       *DOSBase;
+extern struct IntuitionBase    *IntuitionBase;
+extern struct GfxBase          *GfxBase;
+#endif
+extern struct Library          *UtilityBase;
+extern struct Library          *MUIMasterBase;
+
+extern struct Library          *DataTypesBase;
+extern struct Library          *CyberGfxBase;
+extern struct Library          *DiskfontBase;
+extern struct Library          *PictureDTBase;
+
+extern struct SignalSemaphore  lib_poolSem;
+extern APTR                    lib_pool;
+extern ULONG                   lib_alpha;
+extern ULONG                   lib_flags;
+
+enum
+{
+    BASEFLG_Init  = 1<<0,
+    BASEFLG_MUI20 = 1<<1,
+    BASEFLG_MUI4  = 1<<2,
+};
+
+/****************************************************************************/
+/*
+** Macros
+*/
+
+/* these systems are able to handle alpha channel information */
+#if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
+    #define WITH_ALPHA          1
+#endif
 
 #define _riflags(obj) (muiRenderInfo(obj)->mri_Flags)
+
+#define RAWIDTH(w)                      ((((UWORD)(w))+15)>>3 & 0xFFFE)
+#define BOOLSAME(a,b)                   (((a) ? TRUE : FALSE)==((b) ? TRUE : FALSE))
+
+#define getconfigitem(cl,obj,item,ptr)  DoSuperMethod(cl,obj,MUIM_GetConfigItem,item,(ULONG)ptr)
+#define superset(cl,obj,tag,val)        SetSuperAttrs(cl,obj,tag,(ULONG)(val),TAG_DONE)
+#define superget(cl,obj,tag,storage)    DoSuperMethod(cl,obj,OM_GET,tag,(ULONG)(storage))
+#define nnsuperset(cl,obj,tag,val)      SetSuperAttrs(cl,obj,tag,(ULONG)(val),MUIA_NoNotify,TRUE,TAG_DONE)
+#undef set
+#define set(obj,attr,value)             SetAttrs((Object *)(obj),(ULONG)(attr),(ULONG)(value),TAG_DONE)
+#undef get
+#define get(obj,attr,store)             GetAttr((ULONG)(attr),(APTR)obj,(ULONG *)((ULONG)(store)))
+
+#define setFlag(mask, flag)             (mask) |= (flag)
+#define clearFlag(mask, flag)           (mask) &= ~(flag)
+#define isAnyFlagSet(mask, flag)        (((mask) & (flag)) != 0)
+#define isFlagSet(mask, flag)           (((mask) & (flag)) == (flag))
+#define isFlagClear(mask, flag)         (((mask) & (flag)) == 0)
+
+#ifdef __MORPHOS__
+#undef NewObject
+#undef MUI_NewObject
+#undef DoSuperNew
+APTR NewObject(struct IClass *classPtr,CONST_STRPTR classID,ULONG tag1,...);
+Object *MUI_NewObject(CONST_STRPTR classname,Tag tag1,...);
+#endif
+
+// xget()
+// Gets an attribute value from a MUI object
+#ifdef __AROS__
+#define xget XGET
+#else
+ULONG xget(Object *obj, const ULONG attr);
+#if defined(__GNUC__)
+  // please note that we do not evaluate the return value of GetAttr()
+  // as some attributes (e.g. MUIA_Selected) always return FALSE, even
+  // when they are supported by the object. But setting b=0 right before
+  // the GetAttr() should catch the case when attr doesn't exist at all
+  #define xget(OBJ, ATTR) ({ULONG b=0; GetAttr(ATTR, OBJ, &b); b;})
+#endif
+#endif /* __AROS__ */
 
 /***********************************************************************/
 
@@ -99,50 +182,34 @@ struct scale
 };
 
 /***********************************************************************/
+/*
+** MUI undocs
+*/
 
-// xget()
-// Gets an attribute value from a MUI object
-#ifdef __AROS__
-#define xget XGET
-#else
-ULONG xget(Object *obj, const ULONG attr);
-#if defined(__GNUC__)
-  // please note that we do not evaluate the return value of GetAttr()
-  // as some attributes (e.g. MUIA_Selected) always return FALSE, even
-  // when they are supported by the object. But setting b=0 right before
-  // the GetAttr() should catch the case when attr doesn't exist at all
-  #define xget(OBJ, ATTR) ({ULONG b=0; GetAttr(ATTR, OBJ, &b); b;})
+#ifndef MUIM_Backfill
+#define MUIM_Backfill 0x80428d73
+struct  MUIP_Backfill        { ULONG MethodID; LONG left; LONG top; LONG right; LONG bottom; LONG xoffset; LONG yoffset; LONG lum; };
 #endif
-#endif /* __AROS__ */
+
+#ifndef MUIA_CustomBackfill
+#define MUIA_CustomBackfill  0x80420a63
+#endif
+
+#ifndef MUIM_CustomBackfill  
+#define MUIM_CustomBackfill  MUIM_Backfill
+#endif
+
+#ifndef MUIP_CustomBackfill
+#define MUIP_CustomBackfill  MUIP_Backfill
+#endif
+
+#ifndef IDCMP_MOUSEOBJECT
+#define IDCMP_MOUSEOBJECT 0x40000000
+#endif
 
 /***********************************************************************/
 
-/* utils.c */
-#ifdef __MORPHOS__
-#elif defined(__AROS__)
-Object *DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
-#else
-Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
-#endif
-APTR allocVecPooled(APTR pool, ULONG size);
-void freeVecPooled(APTR pool, APTR mem);
-void stripUnderscore(STRPTR dest , STRPTR from, ULONG mode);
-struct TextFont *openFont(STRPTR name);
-APTR gmalloc(ULONG size);
-void gfree(APTR mem);
-ULONG peekQualifier(void);
-
-/* brc1.c */
-int BRCUnpack(APTR pSource, APTR pDest, LONG srcBytes0, LONG dstBytes0);
-
-/* scale.c */
-void scale(struct scale *sce , UBYTE *src , UBYTE *dst);
-void scaleRGB(struct scale *sce , ULONG *src , ULONG *dst);
-
-/* build.c */
-void scaleStripBitMaps(struct InstData *data);
-void freeBitMaps(struct InstData *data);
-void build(struct InstData *data);
+#include "class_protos.h"
 
 /***********************************************************************/
 

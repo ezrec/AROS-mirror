@@ -33,27 +33,29 @@ TARGETDIR := $(AROS_CONTRIB)/Zune/MCC_TheBar/Locale/Catalogs
 
 #MM
 contrib-zune-classes-thebar-mcp-catalogs : locale.h locale.c \
-    $(TARGETDIR)/deutsch/TheBar_mcp.catalog \
-    $(TARGETDIR)/czech/TheBar_mcp.catalog \
-    $(TARGETDIR)/français/TheBar_mcp.catalog \
-    $(TARGETDIR)/svenska/TheBar_mcp.catalog
+    $(TARGETDIR)/deutsch/TheBar.catalog \
+    $(TARGETDIR)/czech/TheBar.catalog \
+    $(TARGETDIR)/français/TheBar.catalog \
+    $(TARGETDIR)/svenska/TheBar.catalog \
+    $(TARGETDIR)/italiano/TheBar.catalog
+
 
 locale.h: locale.c
-locale.c: locale/TheBar_mcp.cd C_h.sd C_c.sd
-	@$(FLEXCAT) locale/TheBar_mcp.cd locale.h=C_h.sd locale.c=C_c.sd
+locale.c: locale/TheBar.cd C_h.sd C_c.sd
+	@$(FLEXCAT) locale/TheBar.cd locale.h=C_h.sd locale.c=C_c.sd
 
-$(TARGETDIR)/deutsch/TheBar_mcp.catalog: locale/german.ct
+$(TARGETDIR)/deutsch/TheBar.catalog: locale/german.ct
 	@$(MKDIR) $(TARGETDIR)/deutsch
-	@$(FLEXCAT) locale/TheBar_mcp.cd $< CATALOG $@
+	@$(FLEXCAT) locale/TheBar.cd $< CATALOG $@
 
-$(TARGETDIR)/czech/TheBar_mcp.catalog: locale/czech.ct
+$(TARGETDIR)/czech/TheBar.catalog: locale/czech.ct
 	@$(MKDIR) $(TARGETDIR)/czech
-	@$(FLEXCAT) locale/TheBar_mcp.cd $< CATALOG $@
+	@$(FLEXCAT) locale/TheBar.cd $< CATALOG $@
 
-$(TARGETDIR)/français/TheBar_mcp.catalog: locale/french.ct
+$(TARGETDIR)/français/TheBar.catalog: locale/french.ct
 	@$(MKDIR) $(TARGETDIR)/français
-	@$(FLEXCAT) locale/TheBar_mcp.cd $< CATALOG $@
+	@$(FLEXCAT) locale/TheBar.cd $< CATALOG $@
 
-$(TARGETDIR)/svenska/TheBar_mcp.catalog: locale/swedish.ct
+$(TARGETDIR)/svenska/TheBar.catalog: locale/swedish.ct
 	@$(MKDIR) $(TARGETDIR)/svenska
-	@$(FLEXCAT) locale/TheBar_mcp.cd $< CATALOG $@
+	@$(FLEXCAT) locale/TheBar.cd $< CATALOG $@

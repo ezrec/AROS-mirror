@@ -1,0 +1,155 @@
+
+Introduction
+============
+If you want to use static pics in your application, you must
+supply them as chunky arrays.
+
+b2chunky reads a pic and produces a chunky output C include file.
+
+
+Distribution
+============
+b2chunky is copyright by Alfonso Ranieri. It is a FREEEWARE
+application and may be used and distributed without limitations.
+
+
+Warning
+=======
+THIS SOFTWARE AND INFORMATION ARE PROVIDED *AS IS*. ALL USE IS AT
+YOUR OWN RISK, AND NO LIABILITY OR RESPONSIBILITY IS ASSUMED. NO
+WARRANTIES ARE MADE.
+
+
+Usage
+=====
+b2chunky may only be used from shell.
+
+It's template is:
+FROM/A,TO/K,NAME/K,TC=TRUECOLOR/S,NTC=NTCOMPRESS/S,TR=TRCOLOR/K,
+TRI=TRCOLORINDEX/K/N,AM=ALPHAMASK/S,RGBC=RGBCOLS/S
+
+FROM
+The name of the file to read.
+
+TO
+Output file name.
+
+NAME
+Name to use in the output.
+
+TRUECOLOR
+Produces true color ARGB output rather than chunky LUT8.
+
+NTCOMPRESS
+If supplied, the body is not compressed, otherwise it is
+compressed with a byte run 1 compression. There is no need to
+supply this, because of TheBar supports byte run 1 compression.
+
+TRCOLOR
+Forces the transparent to the supplied 0x00rrggbb value for
+TRUECOLOR ARGB data.
+
+TRCOLORINDEX
+Forces the transparent to pen number to the supplied value for
+LUT8 data.
+
+ALPHAMASK
+ARGB data are saved with the alpha channel.
+
+RGBCOLS
+Colors are saved as ULONG R,G,B array, rather than ULONG
+0x00rrggbb array. Note that colors are used only in LUT8 data
+format.
+
+Examples
+=======
+
+Let's suppose you have the pic called disc.iff
+
+After
+b2chunky disc.iff TO disc.h NAME Disc
+
+you have a new file called disc.h .
+
+In your source, you must do something like:
+
+...
+
+#include "Disc.h"
+
+...
+
+struct MUIS_TheBar_Brush discBrush =
+{
+    Disc_Data,
+    DISC_WIDTH,
+    DISC_HEIGHT,
+    DISC_TOTALWIDTH,
+    Disc_Colors,
+    DISC_NUMCOLORS,
+    0,
+    0,
+    DISC_WIDTH,
+    DISC_HEIGHT,
+    DISC_TRCOLOR,
+    DISC_CSIZE,
+    DISC_FLAGS
+};
+
+struct MUIS_TheBar_Brush *brushes[] = {&discBrush,...,NULL};
+
+...
+
+Child, bar = TheBarObject,
+    ...
+    MUIA_TheBar_Buttons,     buttons,
+    MUIA_TheBar_Images,      brushes,
+    ...
+End,
+
+
+Let's suppose you have the pic called Symbols.iff made of 48 in 3
+rows and 16 colums, with no space among them:
+
+After
+b2chunky Symbols.iff TO Symbols.h
+
+you have a new file called Symbols.h .
+
+In your source, you must do something like:
+
+...
+
+#include "Symbols.h"
+
+...
+
+struct MUIS_TheBar_Brush symbolsBrush =
+{
+    Symbols_Data,
+    SYMBOLS_WIDTH,
+    SYMBOLS_HEIGHT,
+    SYMBOLS_TOTALWIDTH,
+    Symbols_Colors,
+    SYMBOLS_NUMCOLORS,
+    0,
+    0,
+    SYMBOLS_WIDTH,
+    SYMBOLS_HEIGHT,
+    SYMBOLS_TRCOLOR,
+    SYMBOLS_CSIZE,
+    SYMBOLS_FLAGS
+};
+
+...
+
+Child, sb = TheBarObject,
+    ...
+    MUIA_TheBar_StripBrush,      &symbolsBrush,
+    MUIA_TheBar_StripCols,       16,
+    MUIA_TheBar_StripRows,       3,
+    MUIA_TheBar_StripHorizSpace, 0,
+    MUIA_TheBar_StripVertSpace,  0,
+    ...
+End,
+

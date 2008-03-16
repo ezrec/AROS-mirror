@@ -16,18 +16,9 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id$
-
 ***************************************************************************/
 
 #include "class.h"
-#include "private.h"
-#include "locale.h"
-
-#include <mui/muiundoc.h>
-
-#include "SDI_stdarg.h"
-#include "SDI_compiler.h"
 
 /***********************************************************************/
 
@@ -59,38 +50,42 @@ Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 /***********************************************************************/
 
 #if !defined(__MORPHOS__) && !defined(__AROS__)
-
 int
 stch_l(const char *chr_ptr,long *u_ptr)
 {
-	const char *str = chr_ptr;
+    const char *str = chr_ptr;
     ULONG      val = 0;
 
-	for (;;)
-	{
-        unsigned char c = (unsigned char)*str;
+    if (str)
+    {
+        for (;;)
+        {
+            unsigned char c = (unsigned char)*str;
 
-        if (c>='0' && c<='9') c -= '0';
-        else if (c>='a' && c<='f') c -= 'a'-10;
-	         else if (c>='A' && c<='F') c -= 'A'-10;
-				  else break;
+            if (!c) break;
 
-		val <<= 4;
-        val += c;
-        str++;
-	}
+            if (c>='0' && c<='9') c -= '0';
+            else if (c>='a' && c<='f') c -= 'a'-10;
+                 else if (c>='A' && c<='F') c -= 'A'-10;
+                      else break;
 
-	*u_ptr = (long)val;
+            val <<= 4;
+            val += c;
+        
+            str++;
+        }
+    }
+    
+    *u_ptr = (long)val;
 
-	return (int)(str-chr_ptr);
+    return str-chr_ptr;
 }
-
 #endif
 
 /***********************************************************************/
 
 Object *
-obutton(const void *text, const void *help)
+obutton(ULONG text,ULONG help)
 {
     Object *obj;
 
@@ -103,7 +98,7 @@ obutton(const void *text, const void *help)
 /***********************************************************************/
 
 Object *
-ocycle(const char **array, const void *key, const void *help)
+ocycle(STRPTR *array,ULONG key,ULONG help)
 {
     Object *obj;
 
@@ -116,7 +111,7 @@ ocycle(const char **array, const void *key, const void *help)
 /***********************************************************************/
 
 Object *
-ocheck(const void *key, const void *help)
+ocheck(ULONG key,ULONG help)
 {
     Object *obj;
 
@@ -129,7 +124,7 @@ ocheck(const void *key, const void *help)
 /***********************************************************************/
 
 Object *
-oslider(const void *key, const void *help, LONG min, LONG max)
+oslider(ULONG key,ULONG help,LONG min,LONG max)
 {
     Object *obj;
 
@@ -142,7 +137,7 @@ oslider(const void *key, const void *help, LONG min, LONG max)
 /***********************************************************************/
 
 Object *
-opop(ULONG type, const void *key)
+opop(ULONG type,ULONG key)
 {
     Object *obj;
 
@@ -157,7 +152,7 @@ opop(ULONG type, const void *key)
         {
             ULONG k;
 
-            if((k = GetKeyChar(tr(key))))
+            if((k = getKeyChar(tr(key))))
                 set(obj,MUIA_ControlChar,ToLower(k));
         }
     }
@@ -168,12 +163,12 @@ opop(ULONG type, const void *key)
 /***********************************************************************/
 
 Object *
-opoppen(const void *key, const void *title, const void *help)
+opoppen(ULONG key,ULONG title,ULONG help)
 {
     #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
     return PoppenObject,
         MUIA_Window_Title, (ULONG)tr(title),
-        MUIA_ControlChar,  (ULONG)GetKeyChar(tr(key)),
+        MUIA_ControlChar,  (ULONG)getKeyChar(tr(key)),
         MUIA_Draggable,    TRUE,
         MUIA_CycleChain,   TRUE,
         MUIA_ShortHelp,    (ULONG)tr(help),
@@ -183,7 +178,7 @@ opoppen(const void *key, const void *title, const void *help)
     {
         return PoppenObject,
             MUIA_Window_Title, (ULONG)tr(title),
-            MUIA_ControlChar,  (ULONG)GetKeyChar(tr(key)),
+            MUIA_ControlChar,  (ULONG)getKeyChar(tr(key)),
             MUIA_Draggable,    TRUE,
             MUIA_CycleChain,   TRUE,
             MUIA_ShortHelp,    (ULONG)tr(help),
@@ -193,7 +188,7 @@ opoppen(const void *key, const void *title, const void *help)
     {
         return poppenObject,
             MUIA_Window_Title, (ULONG)tr(title),
-            MUIA_ControlChar,  (ULONG)GetKeyChar(tr(key)),
+            MUIA_ControlChar,  (ULONG)getKeyChar(tr(key)),
             MUIA_Draggable,    TRUE,
             MUIA_CycleChain,   TRUE,
             MUIA_ShortHelp,    (ULONG)tr(help),
@@ -205,11 +200,11 @@ opoppen(const void *key, const void *title, const void *help)
 /***********************************************************************/
 
 Object *
-opopfri(const void *key, const void *title, const void *help)
+opopfri(ULONG key,ULONG title,ULONG help)
 {
     return MUI_NewObject("Popfrimage.mui",
         MUIA_Window_Title,     (ULONG)tr(title),
-        MUIA_ControlChar,      (ULONG)GetKeyChar(tr(key)),
+        MUIA_ControlChar,      (ULONG)getKeyChar(tr(key)),
         MUIA_CycleChain,       TRUE,
         MUIA_ShortHelp,        (ULONG)tr(help),
         0x80421794, 0,
@@ -222,13 +217,13 @@ opopfri(const void *key, const void *title, const void *help)
 /***********************************************************************/
 
 Object *
-opopback(UNUSED ULONG gradient, const void *key, const void *title, const void *help)
+opopback(UNUSED ULONG gradient,ULONG key,ULONG title,ULONG help)
 {
     #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
     return MUI_NewObject(MUIC_Popimage,
         MUIA_Imageadjust_Type, MUIV_Imageadjust_Type_Background,
         MUIA_Window_Title,     (ULONG)tr(title),
-        MUIA_ControlChar,      (ULONG)GetKeyChar(tr(key)),
+        MUIA_ControlChar,      (ULONG)getKeyChar(tr(key)),
         MUIA_Draggable,        TRUE,
         MUIA_CycleChain,       TRUE,
         MUIA_ShortHelp,        (ULONG)tr(help),
@@ -239,7 +234,7 @@ opopback(UNUSED ULONG gradient, const void *key, const void *title, const void *
         return MUI_NewObject(MUIC_Popimage,
             MUIA_Imageadjust_Type, MUIV_Imageadjust_Type_Background,
             MUIA_Window_Title,     (ULONG)tr(title),
-            MUIA_ControlChar,      (ULONG)GetKeyChar(tr(key)),
+            MUIA_ControlChar,      (ULONG)getKeyChar(tr(key)),
             MUIA_Draggable,        TRUE,
             MUIA_CycleChain,       TRUE,
             MUIA_ShortHelp,        (ULONG)tr(help),
@@ -249,7 +244,7 @@ opopback(UNUSED ULONG gradient, const void *key, const void *title, const void *
     {
         return popbackObject,
             MUIA_Window_Title,           (ULONG)tr(title),
-            MUIA_ControlChar,            (ULONG)GetKeyChar(tr(key)),
+            MUIA_ControlChar,            (ULONG)getKeyChar(tr(key)),
             MUIA_Draggable,              TRUE,
             MUIA_CycleChain,             TRUE,
             MUIA_ShortHelp,              (ULONG)tr(help),
@@ -266,14 +261,14 @@ opopback(UNUSED ULONG gradient, const void *key, const void *title, const void *
 #endif
 
 Object *
-opopframe(const void *key, const void *title, const void *help)
+opopframe(ULONG key,ULONG title,ULONG help)
 {
     return PopframeObject,
         MUIA_Window_Title, (ULONG)tr(title),
         MUIA_Draggable,    TRUE,
         MUIA_CycleChain,   1,
-	    MUIA_ShortHelp,    (ULONG)tr(help),
-	    MUIA_ControlChar,  (ULONG)GetKeyChar(tr(key)),
+        MUIA_ShortHelp,    (ULONG)tr(help),
+        MUIA_ControlChar,  (ULONG)getKeyChar(tr(key)),
     End;
 }
 
@@ -472,3 +467,77 @@ drawGradient(Object *obj,struct MUIS_TheBar_Gradient *grad)
 #endif
 
 /***********************************************************************/
+
+#if !defined(__amigaos4__) && !defined(__AROS__)
+
+#if !defined(__MORPHOS__)
+static UWORD fmtfunc[] = {0x16c0,0x4e75};
+#endif
+
+STDARGS void
+msprintf(STRPTR buf,STRPTR fmt,...)
+{
+    #ifdef __MORPHOS__
+    va_list va;
+    va_start(va,fmt);
+    VNewRawDoFmt(fmt,(APTR)0,buf,va);
+    va_end(va);
+    #else
+    RawDoFmt(fmt,&fmt+1,(APTR)fmtfunc,buf);
+    #endif
+}
+
+struct stream
+{
+    UBYTE   *buf;
+    int     size;
+    int     counter;
+    int     stop;
+};
+
+static void
+#ifdef __MORPHOS__
+msnprintfStuff(struct stream *st,UBYTE c)
+#else
+ASM msnprintfStuff(REG(d0,UBYTE c),REG(a3,struct stream *st))
+#endif
+{
+    if (!st->stop)
+    {
+        if (++st->counter>=st->size)
+        {
+            *(st->buf) = 0;
+            st->stop   = 1;
+        }
+        else *(st->buf++) = c;
+    }
+}
+
+STDARGS int
+msnprintf(STRPTR buf,int size,STRPTR fmt,...)
+{
+    struct stream st;
+    #ifdef __MORPHOS__
+    va_list       va;
+    va_start(va,fmt);
+    #endif
+
+    st.buf     = buf;
+    st.size    = size;
+    st.counter = 0;
+    st.stop    = 0;
+
+    #ifdef __MORPHOS__
+    VNewRawDoFmt(fmt,(APTR)msnprintfStuff,(STRPTR)&st,va);
+    va_end(va);
+    #else
+    RawDoFmt(fmt,&fmt+1,(APTR)msnprintfStuff,&st);
+    #endif
+
+    return st.counter-1;
+}
+
+#endif /* !__amigaos4__ && !__AROS__ */
+
+/***********************************************************************/
+

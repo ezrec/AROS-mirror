@@ -16,8 +16,6 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id$
-
 ***************************************************************************/
 
 #ifdef __AROS__
@@ -25,19 +23,11 @@
 #endif
 
 #include "class.h"
-
 #include <proto/colorwheel.h>
 #include <gadgets/gradientslider.h>
 #include <gadgets/colorwheel.h>
 #include <intuition/icclass.h>
 #include <intuition/gadgetclass.h>
-
-#include <mui/muiundoc.h>
-
-#include "locale.h"
-#include "private.h"
-
-#include "SDI_hook.h"
 
 /***********************************************************************/
 
@@ -130,7 +120,7 @@ mColorWheelSets(struct IClass *cl,Object *obj,struct opSet *msg)
                    data->hsb.cw_Saturation != ((struct ColorWheelHSB *)tidata)->cw_Saturation ||
                    data->hsb.cw_Brightness != ((struct ColorWheelHSB *)tidata)->cw_Brightness)
                 {
-                  copymem(&data->hsb,(struct ColorWheelHSB *)tidata,sizeof(data->hsb));
+                  memcpy(&data->hsb,(struct ColorWheelHSB *)tidata,sizeof(data->hsb));
                 }
                 else
                 {
@@ -186,7 +176,7 @@ mColorWheelShow(struct IClass *cl,Object *obj,Msg msg)
 
     if (!DoSuperMethodA(cl,obj,msg)) return FALSE;
 
-    copymem(&hsb,&data->hsb,sizeof(hsb));
+    memcpy(&hsb,&data->hsb,sizeof(hsb));
     if (data->hsb.cw_Hue) data->hsb.cw_Hue = 0;
     else data->hsb.cw_Hue = 1;
     SetSuperAttrs(cl, obj, WHEEL_HSB, &hsb, TAG_DONE);
@@ -212,7 +202,7 @@ mColorWheelHide(struct IClass *cl,Object *obj,Msg msg)
     #ifdef __AROS__
     // AROS's get() doesn't like a structure as storage pointer
     GetAttr(obj,WHEEL_HSB, (IPTR*)&data->hsb);
-	#else
+    #else
     get(obj,WHEEL_HSB, (ULONG)&data->hsb);
     #endif
 
@@ -233,11 +223,11 @@ mColorWheelHandleEvent(UNUSED struct IClass *cl,Object *obj,struct MUIP_HandleEv
         struct ColorWheelHSB hsb;
 
         #ifdef __AROS__
-		// AROS's get() doesn't like a structure as storage pointer
+        // AROS's get() doesn't like a structure as storage pointer
         GetAttr(obj,WHEEL_HSB,(IPTR*)&hsb);
-		#else
-		get(obj,WHEEL_HSB,(ULONG)&hsb);
-		#endif
+        #else
+        get(obj,WHEEL_HSB,(ULONG)&hsb);
+        #endif
         SetAttrs(obj,WHEEL_Hue,hsb.cw_Hue,WHEEL_Saturation,hsb.cw_Saturation,WHEEL_Brightness,hsb.cw_Brightness,TAG_DONE);
     }
 

@@ -2,8 +2,144 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-03-16  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/loc.c: some code cleanup and added some const specifiers where they
+    were possible.
+  * mcp/loc_h.sd: removed the const specifier since the array is modified and
+    this modification will clash OS4's read-only memory layout.
+  * mcp/library.c: fixed some identation issues.
+
+2008-03-11  Alfonso Ranieri <alforan@tin.it>
+
+  * #?/library.c ClassInit() changed
+  * mcp/library.c locale.library is now needed
+  * #?/makefile little changes to check for DEBUG in a 
+    better way
+  * added trunk/makefile that build/clean everything
+  * mcp/loc.c removed "register" usage
+  * button/class.c changed "tidata" to "tidata ? TRUE :FALSE"
+    in superset of MUIA_Selected in mSets()
+  * #?/makefiles added cleanall
+  * mcc/makefile does compile TheBar-Test now
+  * #?makefile/added help and cleanall targets
+  * #? removed copymem() for memcpy()
+  * TheBar-Test.c fixed to compile and work. It freezed on MorphOS
+
+2008-03-11  Vit Sindlar <sindlarv at centrum dot cz>
+
+  * mcp/locale/czech.ct: updated Czech catalog translation
+
+2008-03-10  Alfonso Ranieri <alforan@tin.it>
+  (Less) Big changes again:
+  * makefiles rewritten. Sorry the previous ignored dependencies
+    (try "make && touch rev.h && make", if you don't believe me...).
+    The main difference is that now DEBUG=1 must be specified if you
+    want debugging infos.
+  * Other small changes...
+    
+2008-03-09  Alfonso Ranieri <alforan@tin.it>
+  Big changes:
+
+  * added msprintf() based on RawDoFmt() for MorphOS and OS3. 
+    OS4 people said clib/newlib sprintf() is to be preferred.
+    Don't know about Aros, so I left sprintf() usage for it.
+
+  * Changed the way localization works. Restored my old locale
+    handling way. Now static arrays are inited in ClassInit() via 
+    a double lists of strings/id. It is not strictly needed, but it
+    will work when mccinit.c will be changed (?) to close/dispose stuff
+    in libClose() (I think that is the way libs should work).
+
+  * Many changes, many indeed. Now "private.h" just contains the main class instance
+    data and the prototypes of the few functions that operate on it (aka "friends functions").
+    private.h should be only included in class.c (and build.c); mccinit.c compels us to
+    include it in library.c too. That is not nice, but... All other stuff are in class.h and
+    in class_protos.h. All the changes above generated a chain of changes to Makefile, 
+    dependencies and so on. I don't think I broke anything. All compiles fine (but for OS4
+    for which I STILL need the missing definitions of the Blit stuff). 
+    Some files were moved to more "reasonable" position. F.e., TheBar.cd is now in mcp and not in
+    mcp/locale and TheBar_mcp.h is in include/mui .
+
+  * Probably other things I don't remember...
+
+
+2008-03-06  Pär Boberg <pbobbenb@spray.se>
+
+  * mcp/locale/swedish.ct: Updated according to changes.
+
+2008-03-04  Thore Böckelmann <tboeckel@gmx.de>
+
+  * #?/Makefile: removed -lm from the linker libs as nothing needs floating
+    point math. Also added dump as target.
+
+2008-03-03  Thore Böckelmann <tboeckel@gmx.de>
+
+  * demo/demo7.c: slightly adapted the placement restrictions to respect the
+    parent group's width and height. This really fixes the size expansion
+    problems of too small windows.
+
+#### v26.1 RELEASE ############################################################
+
+2008-03-02 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: some more final v26.1 release preparation changes.
+  * mcp/Makefile: added the italian translation to the makefile.
+  * mcp/locale/italian.ct: renamed italiano.ct to italian.ct as we use plain
+    english names or otherwise we get trouble with SVN when we add other
+    catalog with names that do not conform to US-ASCII.
+
+2008-03-02 Alfonso Ranieri <alforan@tin.it>
+
+  * mcp/locale: catalog name reverted to "TheBar.catalog"
+  * mcp/locale/italiano.ct: added italian catalog translation
+  * button/class.c: added a check for MUIA_NoNotify
+    when setting MUIA_Selected in OM_SET, because it
+    is done by hands
+
+2008-03-01 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final v26.1 release preparation changes.
+  * doc/MCC_TheBar.doc, include/mui/TheBar_mcc.h: added Id and URL SVN
+    keywords so that developers can easily identify which version of the
+    doc and include file they have and where to look for an updated version.
+
+2008-02-29 Alfonso Ranieri <alforan@tin.it>
+
+  * Updated demo/demo7.c
+
+2008-02-25  Alfonso Ranieri <alforan@tin.it>
+
+  * Fixed makefiles DESTDIR locations
+
+2008-02-25  Alfonso Ranieri <alforan@tin.it>
+
+  * Added install target in makefiles
+  * Revisited mos broken dt detection
+  * Little fix to b2chunky even if that app is quite
+    broken and obsolete
+
+2008-02-24  Alfonso Ranieri <alforan@tin.it>
+
+  * gooooshhh what a bug in class.c while loading brushes...
+    This is my very own fault :P
+
+2008-02-23  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/utils.c: fixed a minor compiler warning.
+
+2008-02-23  Alfonso Ranieri <alforan@tin.it>
+
+  * Added MUIA_Application_UsedClasses to all demos
+  * Removed include/mui/muiundoc.h and needed only
+    needed MUI undocs stuff to each class.h
+  * Some little fix somewhere
+
 2008-02-23  Matthias Rustler <mrustler@gmx.de>
+
   * Update of AROS port
+  * Replaced IORequest by IOStdReq to silence the "iorequest too short"
+    warnings under AROS
 
 2008-02-22  Jens Langner <Jens.Langner@light-speed.de>
 
@@ -52,16 +188,16 @@ MUI TheBar MCC class - ChangeLog
 2008-02-20  Alfonso Ranieri <alforan@tin.it>
 
   * mcp/popbackground.c - fixed dispatchers definitions and some broken SetAttrs
-  * mcp/library.c - fixed os3 classes init with no check 
-  * mcp/coloradjust.c - those GetAttr() made it crashes on various systems. Not 
+  * mcp/library.c - fixed os3 classes init with no check
+  * mcp/coloradjust.c - those GetAttr() made it crashes on various systems. Not
     investigated just put under #ifdef
   * mcp/backgroundadjust.c - fixed dispatchers definitions
-  
-  While doing all that bug fixing work, I realized that the actual form of TheBar sources 
-  are in a strange form. I really think SDI should be rewritten for a better information 
+
+  While doing all that bug fixing work, I realized that the actual form of TheBar sources
+  are in a strange form. I really think SDI should be rewritten for a better information
   incapsulation. Sharing all istance data, methods, dispatchers everywhere is a *bad* MUI
   programming practice and something I always avoid. Now, let's fix it and then will see...
-  
+
 2008-02-20  Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/locale/german.ct: updated german translation to latest changes.

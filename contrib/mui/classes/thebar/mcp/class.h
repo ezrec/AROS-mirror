@@ -16,17 +16,21 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: class.h 218 2008-02-23 12:57:32Z alforan $
-
 ***************************************************************************/
 
 #ifndef _CLASS_H
 #define _CLASS_H
 
+/***********************************************************************/
+/*
+** Includes
+*/
+
 #ifdef __AROS__
 #define MUIMASTER_YES_INLINE_STDARG
 #endif
 
+#define __NOLIBBASE__
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/graphics.h>
@@ -37,40 +41,116 @@
 #include <proto/muimaster.h>
 
 #include <clib/alib_protos.h>
-
 #ifndef __AROS__
 #include <clib/debug_protos.h>
 #endif
-
 #include <libraries/gadtools.h>
-
-#include <string.h>
-
 #include <mui/TheBar_mcc.h>
+#include <mui/TheBar_mcp.h>
 
-#include "TheBar_mcp.h"
-#include "SDI_compiler.h"
+#if defined(__amigaos4__) || defined(__AROS__)
+#include <stdio.h>
+#define msprintf sprintf
+#define msnprintf snprintf
+#endif
+#include <string.h>
+#include <stdlib.h>
+
+#include <SDI_compiler.h>
+#include <SDI_stdarg.h>
+#include <SDI_hook.h>
+
+#include "debug.h"
+#define CATCOMP_NUMBERS
+#include "loc.h"
 
 /***********************************************************************/
+/*
+** Libraries shared stuff
+*/
 
+#if defined(__amigaos4__)
+extern struct Library         *SysBase;
+extern struct Library         *DOSBase;
+extern struct Library         *GfxBase;
+extern struct Library         *IntuitionBase;
+#else
+extern struct ExecBase        *SysBase;
+extern struct DosLibrary      *DOSBase;
+extern struct IntuitionBase   *IntuitionBase;
+extern struct GfxBase         *GfxBase;
+#endif
+extern struct Library         *UtilityBase;
+extern struct Library         *MUIMasterBase;
+
+extern struct Library         *DataTypesBase;
+extern struct Library         *CyberGfxBase;
+extern struct Library         *IFFParseBase;
+#if !defined(__amigaos4__) && !defined(__MORPHOS__)
+extern struct LocaleBase      *LocaleBase;
+#else
+extern struct Library         *LocaleBase;
+#endif
+
+extern struct MUI_CustomClass *ThisClass;
+#if !defined(__MORPHOS__) && !defined(__amigaos4__)
+extern struct MUI_CustomClass *lib_coloradjust;
+extern struct MUI_CustomClass *lib_penadjust;
+extern struct MUI_CustomClass *lib_backgroundadjust;
+extern struct MUI_CustomClass *lib_poppen;
+extern struct MUI_CustomClass *lib_popbackground;
+#endif
+
+extern struct Catalog         *lib_cat;
+extern ULONG                  lib_flags;
+
+/* lib_flags */
+enum
+{
+  BASEFLG_Init    = 1<<0,
+  BASEFLG_MUI20   = 1<<1,
+  BASEFLG_MUI4    = 1<<2,
+  BASEFLG_MORPHOS = 1<<3,
+};
+
+/*
+** Class string to localize at init
+** Should be in class.c, but mccinit
+** doesn't permit that.
+*/
+extern STRPTR regs[], frames[], precisions[], dismodes[],
+              spacersSizes[], viewModes[], labelPoss[];
+
+#if defined(__amigaos4__) || defined(__AROS__)
+#define msprintf sprintf
+#define msnprintf snprintf
+#endif
+
+/***************************************************************************/
+/*
+** Coloradjust class
+*/
+
+/* Tag base */
 #define COLORADJBASE 0xF76B1000
 
+/* Attributes */
 #define MUIA_Coloradj_RedComp    COLORADJBASE+0
 #define MUIA_Coloradj_GreenComp  COLORADJBASE+1
 #define MUIA_Coloradj_BlueComp   COLORADJBASE+2
 #define MUIA_Coloradj_Colorfield COLORADJBASE+3
 
 /***********************************************************************/
+/*
+** Popbackground class
+*/
 
+/* Tag base */
 #define POPBACKTAGBASE TBPTAGBASE+100
 
 #define POPBACKGROUNDSPECSIZE 280
 
-/***********************************************************************/
-/*
-** Methods
-*/
-
+/* Methods */
 #define MUIM_Popbackground_Open          POPBACKTAGBASE+0
 #define MUIM_Popbackground_Close         POPBACKTAGBASE+1
 #define MUIM_Popbackground_SetSpec       POPBACKTAGBASE+2
@@ -82,10 +162,7 @@
 #define MUIM_Popbackground_SetStatus     POPBACKTAGBASE+8
 #define MUIM_Popbackground_GetStatus     POPBACKTAGBASE+9
 
-/***********************************************************************/
-/*
-** Methods structures
-*/
+/* Methods Structs */
 
 struct MUIP_Popbackground_Close
 {
@@ -158,11 +235,7 @@ struct MUIP_Popbackground_GetStatus
     struct MUIS_Popbackground_Status *status;
 };
 
-/***********************************************************************/
-/*
-** Attributes
-*/
-
+/* Attributes */
 #define MUIA_Popbackground_PopObj     POPBACKTAGBASE+0
 #define MUIA_Popbackground_BackObj    POPBACKTAGBASE+1
 #define MUIA_Popbackground_Gradient   POPBACKTAGBASE+2
@@ -172,10 +245,7 @@ struct MUIP_Popbackground_GetStatus
 #define MUIA_Popbackground_File       POPBACKTAGBASE+6
 #define MUIA_Popbackground_Horiz      POPBACKTAGBASE+7
 
-/***********************************************************************/
-/*
-** Structures
-*/
+/* Structs */
 
 struct MUI_PopbackgroundSpec
 {
@@ -194,7 +264,7 @@ struct MUIS_Popbackground_Status
 
 /***********************************************************************/
 /*
-** MUI macros
+** Macros
 */
 
 #ifdef __AROS__
@@ -209,6 +279,51 @@ struct MUIS_Popbackground_Status
 #define backgroundadjustObject  NewObject(lib_backgroundadjust->mcc_Class,NULL
 #define poppenObject            NewObject(lib_poppen->mcc_Class,NULL
 #define popbackObject           NewObject(lib_popbackground->mcc_Class,NULL
+#endif
+
+#define superget(cl,obj,tag,storage)    DoSuperMethod(cl,obj,OM_GET,tag,(IPTR)(storage))
+#define superset(cl,obj,tag,val)        SetSuperAttrs(cl,obj,tag,(IPTR)(val),TAG_DONE)
+#define addconfigitem(cfg,value,size,item) DoMethod(cfg,MUIM_Dataspace_Add,(IPTR)(value),size,item)
+
+#undef get
+#define get(obj,attr,store)            GetAttr((ULONG)(attr),(APTR)obj,(ULONG *)((ULONG)(store)))
+#undef set
+#define set(obj,attr,value)            SetAttrs((Object *)(obj),(ULONG)(attr),(ULONG)(value),TAG_DONE)
+#undef nnset
+#define nnset(obj,attr,value)          SetAttrs((Object *)(obj),MUIA_NoNotify,TRUE,(ULONG)(attr),(ULONG)(value),TAG_DONE)
+
+// xget()
+// Gets an attribute value from a MUI object
+#ifdef __AROS__
+#define xget XGET
+#else
+ULONG xget(Object *obj, const ULONG attr);
+#if defined(__GNUC__)
+  // please note that we do not evaluate the return value of GetAttr()
+  // as some attributes (e.g. MUIA_Selected) always return FALSE, even
+  // when they are supported by the object. But setting b=0 right before
+  // the GetAttr() should catch the case when attr doesn't exist at all
+  #define xget(OBJ, ATTR) ({ULONG b=0; GetAttr(ATTR, OBJ, &b); b;})
+#endif
+#endif
+
+
+#define olabel(id)    Label(tr(id))
+#define olabel1(id)   Label1(tr(id))
+#define ollabel1(id)  LLabel1(tr(id))
+#define olabel2(id)   Label2(tr(id))
+#define oflabel(id)   FreeLabel(tr(id))
+#define oclabel(id)   CLabel(tr(id))
+#define owspace(w)    RectangleObject, MUIA_Weight, (w), End
+#define ofhspace(str) RectangleObject, MUIA_FixHeightTxt, (str), End
+
+
+#ifdef __MORPHOS__
+#undef NewObject
+#undef MUI_NewObject
+#undef DoSuperNew
+APTR NewObject(struct IClass *classPtr,CONST_STRPTR classID,ULONG tag1,...);
+Object *MUI_NewObject(CONST_STRPTR classname,Tag tag1,...);
 #endif
 
 /***********************************************************************/
@@ -232,7 +347,18 @@ struct MUIS_Popbackground_Status
 #define MUIA_Window_IconifyGadget    0x8042BC26
 #endif
 
-/***********************************************************************/
+
+#ifndef MUIA_Imagedisplay_Spec
+#define MUIA_Imagedisplay_Spec 0x8042a547 
+#endif
+
+#ifndef MUIA_Imageadjust_Type
+#define MUIA_Imageadjust_Type 0x80422f2b
+#endif
+
+#ifndef MUIA_Framedisplay_Spec
+#define MUIA_Framedisplay_Spec 0x80421794
+#endif
 
 #ifndef MUIM_Mccprefs_RegisterGadget
 #define MUIM_Mccprefs_RegisterGadget 0x80424828
@@ -255,90 +381,38 @@ struct MUIS_Popbackground_Status
 #define MUIV_Imageadjust_Type_Pen 3
 #endif
 
+#ifndef MUIC_Crawling
+#define MUIC_Crawling "Crawling.mcc"
+#endif
+
+#ifndef CrawlingObject 
+#define CrawlingObject MUI_NewObject(MUIC_Crawling
+#endif
+
+#ifndef MUIM_CreateDragImage
+#define MUIM_CreateDragImage 0x8042eb6f /* V18 */ /* Custom Class */
+struct  MUIP_CreateDragImage { ULONG MethodID; LONG touchx; LONG touchy; ULONG flags; }; /* Custom Class */
+
+struct MUI_DragImage
+{
+    struct BitMap *bm;
+    WORD width;  
+    WORD height;
+    WORD touchx; 
+    WORD touchy;
+    ULONG flags;
+};
+
+#endif
+
+#ifndef MUIM_DeleteDragImage 
+#define MUIM_DeleteDragImage 0x80423037
+struct MUIP_DeleteDragImage {ULONG MethodID; struct MUI_DragImage *di;}; 
+#endif
+
 /***********************************************************************/
 
-#define superget(cl,obj,tag,storage)    DoSuperMethod(cl,obj,OM_GET,tag,(IPTR)(storage))
-#define superset(cl,obj,tag,val)        SetSuperAttrs(cl,obj,tag,(IPTR)(val),TAG_DONE)
-#define addconfigitem(cfg,value,size,item) DoMethod(cfg,MUIM_Dataspace_Add,(IPTR)(value),size,item)
-
-#if defined(__MORPHOS__)
-#define copymem(to,from,len)            CopyMem((APTR)(from),(APTR)(to),(ULONG)(len))
-#else
-#define copymem(to,from,len)            memcpy((to),(from),(len));
-#endif
-
-#define MUIVER20 20
-
-/***********************************************************************/
-
-// xget()
-// Gets an attribute value from a MUI object
-#ifdef __AROS__
-#define xget XGET
-#else
-ULONG xget(Object *obj, const ULONG attr);
-#if defined(__GNUC__)
-  // please note that we do not evaluate the return value of GetAttr()
-  // as some attributes (e.g. MUIA_Selected) always return FALSE, even
-  // when they are supported by the object. But setting b=0 right before
-  // the GetAttr() should catch the case when attr doesn't exist at all
-  #define xget(OBJ, ATTR) ({ULONG b=0; GetAttr(ATTR, OBJ, &b); b;})
-#endif
-#endif
-
-/****************************************************************************/
-
-/* utils.c */
-#ifdef __MORPHOS__
-#elif defined(__AROS__)
-Object * DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
-#else
-Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
-int stch_l(const char *chr_ptr, long *u_ptr);
-#endif
-
-/* utils.c */
-#define olabel(id)    Label(tr(id))
-#define olabel1(id)   Label1(tr(id))
-#define ollabel1(id)  LLabel1(tr(id))
-#define olabel2(id)   Label2(tr(id))
-#define oflabel(id)   FreeLabel(tr(id))
-#define oclabel(id)   CLabel(tr(id))
-#define owspace(w)    RectangleObject, MUIA_Weight, (w), End
-#define ofhspace(str) RectangleObject, MUIA_FixHeightTxt, (str), End
-
-Object *obutton(const void *text, const void *help);
-Object *ocycle(const char **array, const void *key, const void *help);
-Object *ocheck(const void *key, const void *help);
-Object *oslider(const void * key, const void *help, LONG min, LONG max);
-Object *opop(ULONG type, const void *key);
-Object *opoppen(const void *key, const void *title, const void *help);
-Object *opopfri(const void *key, const void *title, const void *help);
-Object *opopback(ULONG gradient, const void *key, const void *title, const void *help);
-Object *opopframe(const void *key, const void *title, const void *help);
-void drawGradient(Object *obj, struct MUIS_TheBar_Gradient *grad);
-
-#if !defined(__MORPHOS__) && !defined(__amigaos4__)
-/* coloradjust.c */
-void freeColoradjust ( void );
-ULONG initColoradjust ( void );
-
-/* penadjust.c */
-void freePenadjust ( void );
-ULONG initPenadjust ( void );
-
-/* backgroundadjust.c */
-void freeBackgroundadjust ( void );
-ULONG initBackgroundadjust ( void );
-
-/* poppen.c */
-void freePoppen ( void );
-ULONG initPoppen ( void );
-
-/* popbackground.c */
-void freePopbackground ( void );
-ULONG initPopbackground ( void );
-#endif
+#include "class_protos.h"
 
 /***********************************************************************/
 

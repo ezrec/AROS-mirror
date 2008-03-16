@@ -1,0 +1,59 @@
+
+Introduction
+============
+Sometimes it is very annoying to find GUI short cuts. fkeys was
+born as a try to aid the programmer or the translator to do that.
+
+
+Distribution
+============
+fkeys is copyright by Alfonso Ranieri. It is a FREEEWARE
+application and may be used and distributed without limitations.
+
+
+Warning
+=======
+THIS SOFTWARE AND INFORMATION ARE PROVIDED *AS IS*. ALL USE IS AT
+YOUR OWN RISK, AND NO LIABILITY OR RESPONSIBILITY IS ASSUMED. NO
+WARRANTIES ARE MADE.
+
+
+Usage
+=====
+fkeys may only be used from shell.
+It's template is:
+FROM/A,TO,IN=INCLUDE/K,EX=EXCLUDE/K:
+
+FROM
+
+It is the name of a file to read the label from. The file must
+contains the labels to find the shortcut of. E.g.:
+
+---
+Open
+Close
+Find
+---
+
+Up to 256 lines are read. Empty lines and lines beginning with ;
+or # are discarded.
+
+
+TO
+Output file name.
+
+
+INCLUDE
+fkeys considers only alphabetic and numeric chars for shortcuts.
+You may specify a string of other chars to be included. E.g. /*-+
+
+EXCLUDE
+Exclude this chars.
+
+The result of fkeys may be:
+- A complete solution
+- A partial solution
+
+fkeys may be broken at any time: a partial solution will be
+printed out.
+

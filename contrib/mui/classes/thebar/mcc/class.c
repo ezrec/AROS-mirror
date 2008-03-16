@@ -20,19 +20,11 @@
 
 ***************************************************************************/
 
-#ifdef __AROS__
-#define MUIMASTER_YES_INLINE_STDARG
-#endif
-
 #include "class.h"
 #include "private.h"
-
-#include <mui/muiundoc.h>
-
-#include "SDI_hook.h"
-#include "Debug.h"
-
 #include "rev.h"
+
+/***********************************************************************/
 
 #ifndef PDTA_AlphaChannel
 /* does the image contain alpha channel data? */
@@ -53,7 +45,7 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
 
     if (button->img==MUIV_TheBar_BarSpacer)
     {
-    	Object *spacer;
+        Object *spacer;
 
         spacer = spacerObject,
             MUIA_Group_Horiz, isFlagSet(flags, FLG_Horiz),
@@ -116,12 +108,13 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
       }
     }
 
+    brush  = NULL;
+    sbrush = NULL;
+    dbrush = NULL;
+
     if (isFlagSet(flags, FLG_TextOnly))
     {
         viewMode = MUIV_TheBar_ViewMode_Text;
-        brush = NULL;
-        sbrush = NULL;
-        dbrush = NULL;
     }
     else
     {
@@ -133,19 +126,9 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
 
             if (data->sbrushes)
                 sbrush = data->sbrushes[button->img];
-            else
-                sbrush = NULL;
 
             if (data->dbrushes)
                 dbrush = data->dbrushes[button->img];
-            else
-                dbrush = NULL;
-        }
-        else
-        {
-            brush = NULL;
-            sbrush = NULL;
-            dbrush = NULL;
         }
     }
 
@@ -380,9 +363,9 @@ orderButtons(struct IClass *cl,Object *obj,struct InstData *data)
     if (data->db) n++;
 
     if (n>STATICSORTSIZE)
-    	smsg = allocVecPooled(data->pool,sizeof(struct MUIP_Group_Sort)+sizeof(Object *)*(n+1));
+        smsg = allocVecPooled(data->pool,sizeof(struct MUIP_Group_Sort)+sizeof(Object *)*(n+1));
     else
-    	smsg = (struct MUIP_Group_Sort *)&data->sortMsgID;
+        smsg = (struct MUIP_Group_Sort *)&data->sortMsgID;
 
     if(!smsg)
     {
@@ -399,7 +382,7 @@ orderButtons(struct IClass *cl,Object *obj,struct InstData *data)
         o = smsg->obj+1;
     }
     else
-    	o = smsg->obj;
+        o = smsg->obj;
 
     for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
         if (isFlagClear(button->flags, BFLG_Sleep) && isFlagClear(button->flags, BFLG_Hide))
@@ -527,21 +510,21 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                                   w /= 2;
                                 break;
 
-								case MUIV_TheBar_SpacersSize_None:
+                                case MUIV_TheBar_SpacersSize_None:
                                   w = 0;
                                 break;
 
-								case MUIV_TheBar_SpacersSize_OnePoint:
+                                case MUIV_TheBar_SpacersSize_OnePoint:
                                   w = 1;
                                 break;
 
-								case MUIV_TheBar_SpacersSize_TwoPoint:
+                                case MUIV_TheBar_SpacersSize_TwoPoint:
                                   w = 2;
                                 break;
 
                                 default:
-                              	  if(isFlagSet(data->spacersSize, MUIV_TheBar_SpacersSize_PointsFlag))
-								    w = MUIV_TheBar_SpacersSize_GetPoints(data->spacersSize);
+                                  if(isFlagSet(data->spacersSize, MUIV_TheBar_SpacersSize_PointsFlag))
+                                    w = MUIV_TheBar_SpacersSize_GetPoints(data->spacersSize);
                                 break;
                             }
                             addSpace = 0;
@@ -608,21 +591,21 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                                   w /= 2;
                                 break;
 
-                 				case MUIV_TheBar_SpacersSize_None:
+                                case MUIV_TheBar_SpacersSize_None:
                                   w = 0;
                                 break;
 
-								case MUIV_TheBar_SpacersSize_OnePoint:
+                                case MUIV_TheBar_SpacersSize_OnePoint:
                                   w = 1;
                                 break;
 
-								case MUIV_TheBar_SpacersSize_TwoPoint:
+                                case MUIV_TheBar_SpacersSize_TwoPoint:
                                   w = 2;
                                 break;
 
                                 default:
                                   if(isFlagSet(data->spacersSize, MUIV_TheBar_SpacersSize_PointsFlag))
-								    w = MUIV_TheBar_SpacersSize_GetPoints(data->spacersSize);
+                                    w = MUIV_TheBar_SpacersSize_GetPoints(data->spacersSize);
                                 break;
                             }
                             height += w;
@@ -724,7 +707,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
             data->width  = lm->lm_MinMax.MinWidth;
             data->height = lm->lm_MinMax.MinHeight;
 
-			/* Please check what was commented */
+            /* Please check what was commented */
             #if defined(VIRTUAL)
               //#if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
               data->objWidth   = lm->lm_MinMax.MinWidth;
@@ -739,8 +722,8 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                 data->objHeight = lm->lm_MinMax.MinHeight;
                 data->objMeight = lm->lm_MinMax.MaxHeight;
               }
-   	          #endif*/
-	        #endif // VIRTUAL
+              #endif*/
+            #endif // VIRTUAL
 
             data->lcols = cols;
             data->lrows = rows;
@@ -829,21 +812,21 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                                   width /= 2;
                                 break;
 
-                 				case MUIV_TheBar_SpacersSize_None:
+                                case MUIV_TheBar_SpacersSize_None:
                                   width = 0;
                                 break;
 
-								case MUIV_TheBar_SpacersSize_OnePoint:
+                                case MUIV_TheBar_SpacersSize_OnePoint:
                                   width = 1;
                                 break;
 
-								case MUIV_TheBar_SpacersSize_TwoPoint:
+                                case MUIV_TheBar_SpacersSize_TwoPoint:
                                   width = 2;
                                 break;
 
                                 default:
                                   if(isFlagSet(data->spacersSize, MUIV_TheBar_SpacersSize_PointsFlag))
-								    width = MUIV_TheBar_SpacersSize_GetPoints(data->spacersSize);
+                                    width = MUIV_TheBar_SpacersSize_GetPoints(data->spacersSize);
                                 break;
                             }
                             height = data->buttonHeight;
@@ -1057,21 +1040,21 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                                   height /= 2;
                                 break;
 
-								case MUIV_TheBar_SpacersSize_None:
+                                case MUIV_TheBar_SpacersSize_None:
                                   height = 0;
                                 break;
 
-								case MUIV_TheBar_SpacersSize_OnePoint:
+                                case MUIV_TheBar_SpacersSize_OnePoint:
                                   height = 1;
                                 break;
 
-								case MUIV_TheBar_SpacersSize_TwoPoint:
+                                case MUIV_TheBar_SpacersSize_TwoPoint:
                                   height = 2;
                                 break;
 
                                 default:
                                   if(isFlagSet(data->spacersSize, MUIV_TheBar_SpacersSize_PointsFlag))
-									height = MUIV_TheBar_SpacersSize_GetPoints(data->spacersSize);
+                                    height = MUIV_TheBar_SpacersSize_GetPoints(data->spacersSize);
                                 break;
                             }
                             width  = data->buttonWidth;
@@ -1126,7 +1109,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                     #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
                     if (isFlagSet(data->flags, FLG_Framed))
                         x += data->leftBarFrameSpacing+1;
-  	                #endif
+                    #endif
 
                     if(!MUI_Layout(child,x,y,width,height,0))
                     {
@@ -1203,10 +1186,10 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
                 {
                   res = DoMethod(dto,PDTM_READPIXELARRAY,(IPTR)chunky,PBPAFMT_ARGB,width<<2,0,0,width,height);
 
-			      #if !defined(__amigaos4__) && !defined(__AROS__)
+                  #if !defined(__amigaos4__) && !defined(__AROS__)
                   // ignore the return code for mos broken pdt
                   if (isFlagSet(lib_flags,BASEFLG_BROKENMOSPDT)) res = TRUE;
-				  #endif
+                  #endif
 
                   #ifdef __AROS__
                   // ignore the return code for AROS
@@ -1269,7 +1252,7 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
                     {
                         brush->dataTotalWidth = tw;
 
-                        if (colors && numColors) copymem(brush->colors = (ULONG *)(chunky+size),colors,csize);
+                        if (colors && numColors) memcpy(brush->colors = (ULONG *)(chunky+size),colors,csize);
                         brush->numColors = numColors;
 
                         if (bmh->bmh_Masking==mskHasTransparentColor) brush->trColor = bmh->bmh_Transparent;
@@ -1293,36 +1276,36 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
                             #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
                             else
                             {
-                            	// MorphOS, OS4 and AROS always deliver a proper alpha channel
-                            	setFlag(brush->flags, BRFLG_AlphaMask);
+                                // MorphOS, OS4 and AROS always deliver a proper alpha channel
+                                setFlag(brush->flags, BRFLG_AlphaMask);
                             }
                             #else
                             {
-                            	// on OS3 it depends on the used picture.datatype
-                            	if(bmh->bmh_Masking == mskHasAlpha)
-                            	{
-                            		// if the masking tells us about an alpha channel
-                            		// then we use this information directly
-                            		setFlag(brush->flags, BRFLG_AlphaMask);
-                            	}
-                            	else
-                            	{
-                            		// otherwise we ask the DT object about an alpha channel
-	                                APTR plane = NULL;
-	                                ULONG hasAlpha = 0;
+                                // on OS3 it depends on the used picture.datatype
+                                if(bmh->bmh_Masking == mskHasAlpha)
+                                {
+                                    // if the masking tells us about an alpha channel
+                                    // then we use this information directly
+                                    setFlag(brush->flags, BRFLG_AlphaMask);
+                                }
+                                else
+                                {
+                                    // otherwise we ask the DT object about an alpha channel
+                                    APTR plane = NULL;
+                                    ULONG hasAlpha = 0;
 
-	                                if (GetDTAttrs(dto, PDTA_MaskPlane, (IPTR)&plane, TAG_DONE) && plane != NULL)
-	                                    setFlag(brush->flags, BRFLG_AlphaMask);
-	                                else if (GetDTAttrs(dto, PDTA_AlphaChannel, (IPTR)&hasAlpha, TAG_DONE) && hasAlpha != 0)
-	                                    setFlag(brush->flags, BRFLG_AlphaMask);
-	                            }
+                                    if (GetDTAttrs(dto, PDTA_MaskPlane, (IPTR)&plane, TAG_DONE) && plane != NULL)
+                                        setFlag(brush->flags, BRFLG_AlphaMask);
+                                    else if (GetDTAttrs(dto, PDTA_AlphaChannel, (IPTR)&hasAlpha, TAG_DONE) && hasAlpha != 0)
+                                        setFlag(brush->flags, BRFLG_AlphaMask);
+                                }
                             }
                             #endif
 
                         }
                         else
                         {
-                            if (colors && numColors) copymem(brush->colors = (ULONG *)(chunky+size),colors,csize);
+                            if (colors && numColors) memcpy(brush->colors = (ULONG *)(chunky+size),colors,csize);
                             brush->numColors = numColors;
 
                             if (bmh->bmh_Masking==mskHasTransparentColor) brush->trColor = bmh->bmh_Transparent;
@@ -1705,9 +1688,9 @@ makePicsFun(struct pack *pt,
 
             if (dostrip == TRUE)
             {
-                copymem(sb,pt->stripBrush,sizeof(*sb));
-                if (pt->sstripBrush) copymem(ssb,pt->sstripBrush,sizeof(*ssb));
-                if (pt->dstripBrush) copymem(dsb,pt->dstripBrush,sizeof(*dsb));
+                memcpy(sb,pt->stripBrush,sizeof(*sb));
+                if (pt->sstripBrush) memcpy(ssb,pt->sstripBrush,sizeof(*ssb));
+                if (pt->dstripBrush) memcpy(dsb,pt->dstripBrush,sizeof(*dsb));
             }
             else
             {
@@ -1795,7 +1778,7 @@ makePicsFun(struct pack *pt,
 
                             for (j = hofs = 0; j<(int)cols; j++, hofs += w+horizSpace)
                             {
-                                copymem(pt->brushes[x] = brush,sb,sizeof(struct MUIS_TheBar_Brush));
+                                memcpy(pt->brushes[x] = brush,sb,sizeof(struct MUIS_TheBar_Brush));
                                 brush->left   = hofs;
                                 brush->top    = vofs;
                                 brush->width  = w;
@@ -1804,7 +1787,7 @@ makePicsFun(struct pack *pt,
 
                                 if (sbrush)
                                 {
-                                    copymem(pt->sbrushes[x] = sbrush,ssb,sizeof(struct MUIS_TheBar_Brush));
+                                    memcpy(pt->sbrushes[x] = sbrush,ssb,sizeof(struct MUIS_TheBar_Brush));
                                     sbrush->left   = hofs;
                                     sbrush->top    = vofs;
                                     sbrush->width  = w;
@@ -1814,7 +1797,7 @@ makePicsFun(struct pack *pt,
 
                                 if (dbrush)
                                 {
-                                    copymem(pt->dbrushes[x] = dbrush,dsb,sizeof(struct MUIS_TheBar_Brush));
+                                    memcpy(pt->dbrushes[x] = dbrush,dsb,sizeof(struct MUIS_TheBar_Brush));
                                     dbrush->left   = hofs;
                                     dbrush->top    = vofs;
                                     dbrush->width  = w;
@@ -1916,14 +1899,20 @@ makePicsFun(struct pack *pt,
                             if (pt->sbrushes)
                             {
                                 if (*sp!=MUIV_TheBar_SkipPic)
-                                    loadDTBrush(pool,pt->sbrushes[i] = sbrush+i,*sp);
+                                {
+                                    if (!loadDTBrush(pool,pt->sbrushes[i] = sbrush+i,*sp))
+                                        pt->sbrushes[i] = NULL;
+                                }
                                 sp++;
                             }
 
                             if (pt->dbrushes)
                             {
                                 if (*dp!=MUIV_TheBar_SkipPic)
-                                    loadDTBrush(pool,pt->dbrushes[i] = dbrush+i,*dp);
+                                {
+                                    if (!loadDTBrush(pool,pt->dbrushes[i] = dbrush+i,*dp))
+                                        pt->dbrushes[i] = NULL;
+                                }
                                 dp++;
                             }
                         }
@@ -1959,7 +1948,7 @@ makePicsFun(struct pack *pt,
         me->pr_WindowPtr = win;
     }
 
-  	if (pics == TRUE)
+    if (pics == TRUE)
         *nbrPtr = nbr;
 
     RETURN(pics);
@@ -2037,7 +2026,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     if (isFlagSet(pt.pflags, PFLG_FreeVertExists) ? isFlagSet(pt.flags, PFLG_FreeVert) : isFlagSet(pt.flags, FLG_Horiz) == 0)
         setFlag(pt.flags, FLG_FreeVert);
 
-  	pics = makePics(&pt,pool,&sb,&ssb,&dsb,&nbr);
+    pics = makePics(&pt,pool,&sb,&ssb,&dsb,&nbr);
 
     if((obj = (Object *)DoSuperNew(cl,obj,
             MUIA_Group_LayoutHook,   (IPTR)&LayoutHook,
@@ -2069,11 +2058,11 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         if (isFlagSet(data->flags, FLG_FreeStrip))
         {
             if (sb.data)
-                copymem(&data->image,&sb,sizeof(data->image));
+                memcpy(&data->image,&sb,sizeof(data->image));
             if (ssb.data)
-                copymem(&data->simage,&ssb,sizeof(data->simage));
+                memcpy(&data->simage,&ssb,sizeof(data->simage));
             if (dsb.data)
-                copymem(&data->dimage,&dsb,sizeof(data->dimage));
+                memcpy(&data->dimage,&dsb,sizeof(data->dimage));
         }
 
         data->userFlags  = pt.userFlags;
@@ -2216,9 +2205,9 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                     clearFlag(userFlags2, UFLG2_UserSpacersSize);
                 */
                 if (MUIV_TheBar_SpacersSize_IsValid(pt.spacersSize))
-                	data->spacersSize = pt.spacersSize;
+                    data->spacersSize = pt.spacersSize;
                 else
-                	clearFlag(userFlags2, UFLG2_UserSpacersSize);
+                    clearFlag(userFlags2, UFLG2_UserSpacersSize);
             }
 
             data->userFlags  = userFlags;
@@ -2531,7 +2520,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                     setFlag(flags, SFLG_Frame);
                 }
                 break;
-    	    #endif
+            #endif
 
             case MUIA_TheBar_DragBar:
                 if (!BOOLSAME(tidata, isFlagSet(data->flags, FLG_DragBar)))
@@ -2541,8 +2530,8 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                         setFlag(data->flags, FLG_DragBar);
 
                         if((data->db = dragBarObject,
-                            	MUIA_Group_Horiz,      isFlagSet(data->flags, FLG_Horiz),
-                            	MUIA_TheButton_TheBar, (IPTR)obj,
+                                MUIA_Group_Horiz,      isFlagSet(data->flags, FLG_Horiz),
+                                MUIA_TheButton_TheBar, (IPTR)obj,
                             End))
                         {
                             DoSuperMethod(cl,obj,OM_ADDMEMBER,(IPTR)data->db);
@@ -3016,7 +3005,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
             {
                 if (isFlagClear(lib_flags, BASEFLG_MUI20) && getconfigitem(cl,obj,MUICFG_TheBar_Gradient,&ptr))
                 {
-                    copymem(&data->grad,ptr,sizeof(data->grad));
+                    memcpy(&data->grad,ptr,sizeof(data->grad));
                     SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Background,NULL,TAG_DONE);
                     setFlag(data->flags2, FLG2_Gradient);
                     done = TRUE;
@@ -3039,13 +3028,13 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
         }
     }
 
-	if (isAnyFlagSet(lib_flags,BASEFLG_MUI20|BASEFLG_MUI4))
+    if (isAnyFlagSet(lib_flags,BASEFLG_MUI20|BASEFLG_MUI4))
     {
-	  if (getconfigitem(cl,obj,MUICFG_TheBar_Frame,&ptr))
+      if (getconfigitem(cl,obj,MUICFG_TheBar_Frame,&ptr))
       {
-	    strlcpy(data->frameSpec,ptr,sizeof(data->frameSpec));
-    	SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,(IPTR)data->frameSpec,TAG_DONE);
-	  }
+        strlcpy(data->frameSpec,ptr,sizeof(data->frameSpec));
+        SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,(IPTR)data->frameSpec,TAG_DONE);
+      }
     }
     else
     {
@@ -3181,14 +3170,14 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
                 DoMethod(button->obj,MUIM_TheButton_Build);
     }
 
-  	if (isFlagClear(lib_flags,BASEFLG_MUI20))
+    if (isFlagClear(lib_flags,BASEFLG_MUI20))
     {
-	    memset(&data->eh,0,sizeof(data->eh));
-    	data->eh.ehn_Class  = cl;
-	    data->eh.ehn_Object = obj;
-    	data->eh.ehn_Events = IDCMP_ACTIVEWINDOW|IDCMP_INACTIVEWINDOW;
-	    DoMethod(_win(obj),MUIM_Window_AddEventHandler,(IPTR)&data->eh);
-	}
+        memset(&data->eh,0,sizeof(data->eh));
+        data->eh.ehn_Class  = cl;
+        data->eh.ehn_Object = obj;
+        data->eh.ehn_Events = IDCMP_ACTIVEWINDOW|IDCMP_INACTIVEWINDOW;
+        DoMethod(_win(obj),MUIM_Window_AddEventHandler,(IPTR)&data->eh);
+    }
 
     #if defined(VIRTUAL)
     setFlag(data->flags, FLG_IsInVirtgroup);
@@ -3227,8 +3216,8 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
         freeFramePens(obj,data);
     #endif
 
-  	if (isFlagClear(lib_flags,BASEFLG_MUI20))
-    	DoMethod(_win(obj),MUIM_Window_RemEventHandler,(IPTR)&data->eh);
+    if (isFlagClear(lib_flags,BASEFLG_MUI20))
+        DoMethod(_win(obj),MUIM_Window_RemEventHandler,(IPTR)&data->eh);
 
     if (isFlagSet(data->flags, FLG_FreeStrip))
         freeBitMaps(data);
@@ -3261,22 +3250,22 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
     ULONG res = DoSuperMethodA(cl,obj,(Msg)msg);
 
-  	if (isFlagClear(lib_flags,BASEFLG_MUI4))
+    if (isFlagClear(lib_flags,BASEFLG_MUI4))
     {
-	    struct InstData *data = INST_DATA(cl,obj);
+        struct InstData *data = INST_DATA(cl,obj);
 
-	    msg->MinMaxInfo->MinWidth  = _subwidth(obj)+data->objWidth;
-	    msg->MinMaxInfo->DefWidth  = _subwidth(obj)+data->objWidth;
-	    msg->MinMaxInfo->MaxWidth  = _subwidth(obj)+data->objMWidth;
-		if (msg->MinMaxInfo->MaxWidth>MUI_MAXMAX)
-	    	msg->MinMaxInfo->MaxWidth = MUI_MAXMAX;
+        msg->MinMaxInfo->MinWidth  = _subwidth(obj)+data->objWidth;
+        msg->MinMaxInfo->DefWidth  = _subwidth(obj)+data->objWidth;
+        msg->MinMaxInfo->MaxWidth  = _subwidth(obj)+data->objMWidth;
+        if (msg->MinMaxInfo->MaxWidth>MUI_MAXMAX)
+            msg->MinMaxInfo->MaxWidth = MUI_MAXMAX;
 
-	    msg->MinMaxInfo->MinHeight = _subheight(obj)+data->objHeight;
-	    msg->MinMaxInfo->DefHeight = _subheight(obj)+data->objHeight;
-	    msg->MinMaxInfo->MaxHeight = _subheight(obj)+data->objMHeight;
-		if (msg->MinMaxInfo->MaxHeight>MUI_MAXMAX)
-	    	msg->MinMaxInfo->MaxHeight = MUI_MAXMAX;
-	}
+        msg->MinMaxInfo->MinHeight = _subheight(obj)+data->objHeight;
+        msg->MinMaxInfo->DefHeight = _subheight(obj)+data->objHeight;
+        msg->MinMaxInfo->MaxHeight = _subheight(obj)+data->objMHeight;
+        if (msg->MinMaxInfo->MaxHeight>MUI_MAXMAX)
+            msg->MinMaxInfo->MaxHeight = MUI_MAXMAX;
+    }
 
     return res;
 }
@@ -3561,7 +3550,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
     {
         struct RastPort rp;
 
-        copymem(&rp,_rp(obj),sizeof(rp));
+        memcpy(&rp,_rp(obj),sizeof(rp));
 
         SetAPen(&rp,MUIPEN(data->barFrameShinePen));
         Move(&rp,_left(obj),_bottom(obj));
@@ -3589,7 +3578,7 @@ mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
   ENTER();
 
   if (isFlagSet(lib_flags,BASEFLG_MUI20))
-	return DoSuperMethodA(cl,obj,(Msg)msg);
+    return DoSuperMethodA(cl,obj,(Msg)msg);
 
   if(data->gradbm)
     BltBitMapRastPort(data->gradbm,msg->left-_left(obj),msg->top-_top(obj),_rp(obj),msg->left,msg->top,msg->right-msg->left+1,msg->bottom-msg->top+1,0xc0);
@@ -3728,7 +3717,7 @@ mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
         if((clone = allocVecPooled(data->pool, size)))
         {
           // copy the data of the notify
-          copymem(clone, notify, size);
+          memcpy(clone, notify, size);
 
           // add it to our clone list
           AddTail((struct List *)&button->notifyListClone, (struct Node *)clone);
@@ -3831,8 +3820,8 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
       notify->TrigVal       = msg->value;
       notify->DestObj       = msg->dest;
 
-      // fill the rest with copymem
-      copymem(&notify->FollowParams, &msg->followParams, sizeof(IPTR)*(msg->followParams+1));
+      // fill the rest with memcpy
+      memcpy(&notify->FollowParams, &msg->followParams, sizeof(IPTR)*(msg->followParams+1));
 
       // now we set the notify as we have identifed the button
       result = DoMethodA(button->obj, (Msg)notify);
@@ -3861,7 +3850,7 @@ mKillNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_KillNotify *msg)
   {
     // now we kill the notify as we have identifed the button
     if(msg->dest != NULL)
-      DoMethod(button->obj, MUIM_KillNotifyObj, msg->attr, msg->dest);
+      DoMethod(button->obj, MUIM_KillNotifyObj, (ULONG)msg->attr, (ULONG)msg->dest);
     else
       DoMethod(button->obj, MUIM_KillNotify, msg->attr);
   }
@@ -4122,7 +4111,7 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
           if((clone = allocVecPooled(data->pool, size)))
           {
             // copy the data of the notify
-            copymem(clone, notify, size);
+            memcpy(clone, notify, size);
 
             // add it to our clone list
             AddTail((struct List *)&bt->notifyListClone, (struct Node *)clone);
@@ -4536,31 +4525,31 @@ mGetDragImage(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetDragImage *msg
 static IPTR
 mHandleEvent(struct IClass *cl, Object *obj, UNUSED struct MUIP_HandleEvent *msg)
 {
-  	if (isFlagClear(lib_flags,BASEFLG_MUI20))
+    if (isFlagClear(lib_flags,BASEFLG_MUI20))
     {
-    	struct InstData *data = INST_DATA(cl,obj);
-	    struct Button *button, *succ;
+        struct InstData *data = INST_DATA(cl,obj);
+        struct Button *button, *succ;
 
-	    ENTER();
+        ENTER();
 
-	    for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
-	    {
-	        if (isFlagSet(button->flags, BFLG_Sleep))
-	            continue;
+        for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
+        {
+            if (isFlagSet(button->flags, BFLG_Sleep))
+                continue;
 
-	        set(button->obj,MUIA_TheButton_MouseOver,FALSE);
-	    }
+            set(button->obj,MUIA_TheButton_MouseOver,FALSE);
+        }
 
-	    RETURN(0);
-	    return 0;
-	}
+        RETURN(0);
+        return 0;
+    }
     else
     {
         ULONG res = DoSuperMethodA(cl,obj,(Msg)msg);
 
-	    RETURN(res);
-	    return res;
-	}
+        RETURN(res);
+        return res;
+    }
 }
 
 
@@ -4589,9 +4578,9 @@ DISPATCHER(_Dispatcher)
     #endif
     case MUIM_Backfill:                 return mBackfill(cl,obj,(APTR)msg);
 
-	#ifdef VIRTUAL
+    #ifdef VIRTUAL
     case MUIM_AskMinMax:                return mAskMinMax(cl,obj,(APTR)msg);
-	#endif
+    #endif
     case MUIM_CreateDragImage:          return mCreateDragImage(cl,obj,(APTR)msg);
     case MUIM_DeleteDragImage:          return mDeleteDragImage(cl,obj,(APTR)msg);
     case MUIM_HandleEvent:              return mHandleEvent(cl,obj,(APTR)msg);

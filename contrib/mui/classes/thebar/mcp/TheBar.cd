@@ -1,5 +1,4 @@
 ;
-; CATCOMP TheBar.cd CFILE loc.h
 ; CATCOMP TheBar.cd CTFILE TheBar.ct
 ;
 Msg_Reg_Colors (1//)

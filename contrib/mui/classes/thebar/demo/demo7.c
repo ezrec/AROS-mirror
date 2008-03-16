@@ -44,6 +44,8 @@ struct Library *MUIMasterBase;
 
 #define DD_FACT 5
 
+#define MUIM_MainGroup_AdjustBar (TAG_USER+1)
+
 /***********************************************************************/
 
 #if defined(__amigaos4__)
@@ -88,6 +90,11 @@ struct data
     Object *bar;
     Object *list;
     ULONG  barPos;
+    ULONG  nbarPos;
+    ULONG  ibarPos;
+
+    BOOL noHoriz;
+    BOOL noVert;
 };
 
 enum
@@ -100,72 +107,56 @@ enum
 
 /***********************************************************************/
 
-#define ROWS      3
-#define COLS     16
-#define HSPACE    0
-#define VSPACE    0
-#define PIC(x,y) (x+y*COLS)
-
-#define BAR {MUIV_TheBar_BarSpacer, -1, NULL, NULL, 0, 0, NULL, NULL}
-
 struct MUIS_TheBar_Button buttons[] =
 {
-    {PIC(7,0),  1, "_Face",  "Just a face.", 0, 0, NULL, NULL},
-    {PIC(14,0), 2, "_Mouse", "Your mouse.", 0, 0, NULL, NULL},
-    {PIC(1,1),  3, "_Tree",  "Mind takes place.", 0, 0, NULL, NULL},
-
-    BAR,
-
-    {PIC(10,1), 4, "_Help",  "Read this!.", 0, 0, NULL, NULL},
-    {PIC(2,2),  5, "_ARexx", "ARexx for ever!.", 0, 0, NULL, NULL},
-    {PIC(1,0),  6, "_Host",  "Your computer.", 0, 0, NULL, NULL},
-
-    {MUIV_TheBar_End, 0, NULL, NULL, 0, 0, NULL, NULL}
+    {7,  0, "_Face",  "Just a face.",      0, 0, NULL, NULL},
+    {14, 1, "_Mouse", "Your mouse.",       0, 0, NULL, NULL},
+    {17, 2, "_Tree",  "Mind takes place.", 0, 0, NULL, NULL},
+    {MUIV_TheBar_BarSpacer, -1, NULL, NULL,0, 0, NULL, NULL},
+    {26, 3, "_Help",  "Read this!.",       0, 0, NULL, NULL},
+    {34, 4, "_ARexx", "ARexx for ever!.",  0, 0, NULL, NULL},
+    {1,  5, "_Host",  "Your computer.",    0, 0, NULL, NULL},
+    {MUIV_TheBar_End,-1,NULL, NULL,        0, 0, NULL, NULL}
 };
 
-#define SAMPLETEXT "\
+#define TEXT "\
 This example shows how to move the bar around.\n\n\
-Of course, this is only a semplification of a real situation, where more than four positions are available and many objects are involved.\n\n\
+Of course, this is only a simplification of a real situation, where more than four positions are available and many objects are involved.\n\n\
 Programmers should always avoid to Init/Exit Change and to set Horiz on groups or whatever when not strictly needed!\
 "
-
-#ifdef __MORPHOS__
-#define FRAME
-#else
-#define FRAME MUIA_TheBar_Frame, TRUE,
-#endif
 
 ULONG
 mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     Object *bar, *list;
 
-    Printf("new()\n");
-    if ((obj = (Object *)DoSuperNew(cl,obj,
-
+    obj = (Object *)DoSuperNew(cl,obj,
             Child, bar = TheBarVirtObject,
-        	FRAME
                 MUIA_Group_Horiz,            TRUE,
                 MUIA_TheBar_Buttons,         buttons,
                 MUIA_TheBar_PicsDrawer,      "PROGDIR:Pics",
                 MUIA_TheBar_Strip,           "symbols",
-                MUIA_TheBar_StripCols,       COLS,
-                MUIA_TheBar_StripRows,       ROWS,
-                MUIA_TheBar_StripHSpace,     HSPACE,
-                MUIA_TheBar_StripVSpace,     VSPACE,
+                MUIA_TheBar_StripCols,       16,
+                MUIA_TheBar_StripRows,       3,
+                MUIA_TheBar_StripHSpace,     0,
+                MUIA_TheBar_StripVSpace,     0,
+                MUIA_TheBar_Frame,           TRUE,
                 MUIA_TheBar_DragBar,         TRUE,
                 MUIA_TheBar_EnableKeys,      TRUE,
+                MUIA_TheBar_IgnoreAppearance,TRUE,
             End,
 
             Child, list = ListviewObject,
                 MUIA_Listview_List,  FloattextObject,
                     TextFrame,
                     MUIA_Background,     MUII_TextBack,
-                    MUIA_Floattext_Text, SAMPLETEXT,
+                    MUIA_Floattext_Text, TEXT,
                 End,
             End,
 
-            TAG_MORE, (ULONG)msg->ops_AttrList)) != NULL)
+            TAG_MORE,msg->ops_AttrList);
+
+    if (obj)
     {
         struct data *data = INST_DATA(cl,obj);
 
@@ -190,18 +181,22 @@ mDragQuery(struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg)
 /***********************************************************************/
 
 ULONG
-mDragBegin(UNUSED struct IClass *cl,UNUSED Object *obj,UNUSED struct MUIP_DragBegin *msg)
+mDragBegin(struct IClass *cl,Object *obj,UNUSED struct MUIP_DragBegin *msg)
 {
+    struct data *data = INST_DATA(cl,obj);
+
+    data->ibarPos = 0;
+
     return 0;
 }
 
 /***********************************************************************/
 
 ULONG
-findPos(Object *obj,ULONG obPos,ULONG mx,ULONG my)
+findPos(Object *obj,ULONG obPos,LONG mx,LONG my)
 {
     ULONG bPos;
-    ULONG  l, t, r, b, w, h;
+    LONG  l, t, r, b, w, h;
 
     l = _mleft(obj);
     t = _mtop(obj);
@@ -215,31 +210,47 @@ findPos(Object *obj,ULONG obPos,ULONG mx,ULONG my)
     switch (obPos)
     {
         case BARPOS_LEFT:
-            if (mx<l+w) bPos = BARPOS_LEFT;
-            else if (mx>r-w) bPos = BARPOS_RIGHT;
-                 else if (my<t+h) bPos = BARPOS_TOP;
-                      else if (my>b-h) bPos = BARPOS_BOTTOM;
+            if (mx<l+w)
+                bPos = BARPOS_LEFT;
+            else if (mx>r-w)
+                bPos = BARPOS_RIGHT;
+            else if (my<t+h)
+                bPos = BARPOS_TOP;
+            else if (my>b-h)
+                bPos = BARPOS_BOTTOM;
             break;
 
         case BARPOS_RIGHT:
-            if (mx>r-w) bPos = BARPOS_RIGHT;
-            else if (mx<l+w) bPos = BARPOS_LEFT;
-                 else if (my<t+h) bPos = BARPOS_TOP;
-                      else if (my>b-h) bPos = BARPOS_BOTTOM;
+            if (mx>r-w)
+                bPos = BARPOS_RIGHT;
+            else if (mx<l+w)
+                bPos = BARPOS_LEFT;
+            else if (my<t+h)
+                bPos = BARPOS_TOP;
+            else if (my>b-h)
+                bPos = BARPOS_BOTTOM;
             break;
 
         case BARPOS_TOP:
-            if (my<t+h) bPos = BARPOS_TOP;
-            else if (mx<l+w) bPos = BARPOS_LEFT;
-                 else if (mx>r-w) bPos = BARPOS_RIGHT;
-                      else if (my>b-h) bPos = BARPOS_BOTTOM;
+            if (my<t+h)
+                bPos = BARPOS_TOP;
+            else if (mx<l+w)
+                bPos = BARPOS_LEFT;
+            else if (mx>r-w)
+                bPos = BARPOS_RIGHT;
+            else if (my>b-h)
+                bPos = BARPOS_BOTTOM;
             break;
 
         case BARPOS_BOTTOM:
-            if (my>b-h) bPos = BARPOS_BOTTOM;
-            else if (mx<l+w) bPos = BARPOS_LEFT;
-                 else if (mx>r-w) bPos = BARPOS_RIGHT;
-                      else if (my<t+h) bPos = BARPOS_TOP;
+            if (my>b-h)
+                bPos = BARPOS_BOTTOM;
+            else if (mx<l+w)
+                bPos = BARPOS_LEFT;
+            else if (mx>r-w)
+                bPos = BARPOS_RIGHT;
+            else if (my<t+h)
+                bPos = BARPOS_TOP;
             break;
     }
 
@@ -250,14 +261,81 @@ ULONG
 mDragReport(struct IClass *cl,Object *obj,struct MUIP_DragReport *msg)
 {
     struct data *data = INST_DATA(cl,obj);
-    ULONG       bPos, obPos, horiz, ohoriz, first, ofirst;
+    ULONG       bPos, obPos;
 
-    if (!msg->update) return MUIV_DragReport_Refresh;
+    if (!msg->update)
+        return MUIV_DragReport_Refresh;
 
     obPos = data->barPos;
     bPos  = findPos(obj,obPos,msg->x,msg->y);
 
-    if (bPos==0) return MUIV_DragReport_Continue;
+    if (bPos==0)
+        return MUIV_DragReport_Continue;
+
+    switch (obPos)
+    {
+        case BARPOS_TOP:
+        case BARPOS_BOTTOM:
+            if ((bPos==BARPOS_LEFT || bPos==BARPOS_RIGHT) && data->noVert)
+            {
+                data->ibarPos = bPos;
+                return MUIV_DragReport_Continue;
+            }
+            break;
+
+        case BARPOS_LEFT:
+        case BARPOS_RIGHT:
+            if ((bPos==BARPOS_TOP || bPos==BARPOS_BOTTOM) && data->noHoriz)
+            {
+                data->ibarPos = bPos;
+                return MUIV_DragReport_Continue;
+            }
+            break;
+    }
+
+    data->nbarPos = bPos;
+    data->ibarPos = 0;
+    DoMethod(obj,MUIM_MainGroup_AdjustBar);
+
+    return MUIV_DragReport_Continue;
+}
+
+/***********************************************************************/
+
+ULONG
+mDragFinish(struct IClass *cl,Object *obj,UNUSED struct MUIP_DragFinish *msg)
+{
+    struct data *data = INST_DATA(cl,obj);
+
+    return data->ibarPos ? MUIV_DragQuery_Accept : MUIV_DragQuery_Refuse;
+}
+
+/***********************************************************************/
+
+ULONG
+mDragDrop(struct IClass *cl,Object *obj,UNUSED struct MUIP_DragDrop *msg)
+{
+    struct data *data = INST_DATA(cl,obj);
+
+    if (data->ibarPos)
+    {
+        data->nbarPos = data->ibarPos;
+        DoMethod(obj,MUIM_MainGroup_AdjustBar);
+    }
+
+    return 0;
+}
+
+/***********************************************************************/
+
+ULONG
+mAdjustBar(struct IClass *cl,Object *obj,UNUSED Msg msg)
+{
+    struct data *data = INST_DATA(cl,obj);
+    ULONG       bPos, obPos, horiz, ohoriz, first, ofirst;
+
+    obPos = data->barPos;
+    bPos  = data->nbarPos;
 
     horiz  = (bPos==BARPOS_LEFT)  || (bPos==BARPOS_RIGHT);
     ohoriz = (obPos==BARPOS_LEFT) || (obPos==BARPOS_RIGHT);
@@ -271,8 +349,10 @@ mDragReport(struct IClass *cl,Object *obj,struct MUIP_DragReport *msg)
 
     if (first!=ofirst)
     {
-        if (first) DoSuperMethod(cl,obj,MUIM_Group_Sort,data->bar,data->list,NULL);
-        else DoSuperMethod(cl,obj,MUIM_Group_Sort,data->list,data->bar,NULL);
+        if (first)
+            DoSuperMethod(cl,obj,MUIM_Group_Sort,data->bar,data->list,NULL);
+        else
+            DoSuperMethod(cl,obj,MUIM_Group_Sort,data->list,data->bar,NULL);
     }
 
     if (horiz!=ohoriz)
@@ -287,23 +367,30 @@ mDragReport(struct IClass *cl,Object *obj,struct MUIP_DragReport *msg)
 
     data->barPos = bPos;
 
-    return MUIV_DragReport_Continue;
-}
-
-/***********************************************************************/
-
-ULONG
-mDragFinish(UNUSED struct IClass *cl,UNUSED Object *obj,UNUSED struct MUIP_DragFinish *msg)
-{
     return 0;
 }
 
 /***********************************************************************/
 
 ULONG
-mDragDrop(UNUSED struct IClass *cl,UNUSED Object *obj,UNUSED struct MUIP_DragDrop *msg)
+mShow(struct IClass *cl,Object *obj,Msg msg)
 {
-    return 0;
+    struct data *data = INST_DATA(cl,obj);
+    Object *parent;
+
+    if (!DoSuperMethodA(cl,obj,msg))
+        return FALSE;
+
+    // get the parent group, containing the list and the bar
+    get(obj, MUIA_Parent, &parent);
+
+    // These are rough estimations assuming that the single buttons have square dimensions.
+    // Horizontal placement is forbidden if the group's width is less than the bar's height.
+    data->noHoriz = _width(parent) < _minheight(data->bar);
+    // Vertical placement is forbidden if the group's height is less than the bar's width.
+    data->noVert = _height(parent) < _minwidth(data->bar);
+
+    return TRUE;
 }
 
 /***********************************************************************/
@@ -314,22 +401,28 @@ BOOPSI_DISPATCHER(IPTR,_dispatcher,cl,obj,msg)
 DISPATCHER(_dispatcher)
 #endif
 {
-    Printf("dispatcher()\n");
     switch(msg->MethodID)
     {
-        case OM_NEW:          return mNew(cl,obj,(APTR)msg);
-        case MUIM_DragQuery:  return mDragQuery(cl,obj,(APTR)msg);
-        case MUIM_DragBegin:  return mDragBegin(cl,obj,(APTR)msg);
-        case MUIM_DragReport: return mDragReport(cl,obj,(APTR)msg);
-        case MUIM_DragFinish: return mDragFinish(cl,obj,(APTR)msg);
-        case MUIM_DragDrop:   return mDragDrop(cl,obj,(APTR)msg);
-        default:              return DoSuperMethodA(cl,obj,msg);
+        case OM_NEW:                   return mNew(cl,obj,(APTR)msg);
+
+        case MUIM_Show:                return mShow(cl,obj,(APTR)msg);
+        case MUIM_DragQuery:           return mDragQuery(cl,obj,(APTR)msg);
+        case MUIM_DragBegin:           return mDragBegin(cl,obj,(APTR)msg);
+        case MUIM_DragReport:          return mDragReport(cl,obj,(APTR)msg);
+        case MUIM_DragFinish:          return mDragFinish(cl,obj,(APTR)msg);
+        case MUIM_DragDrop:            return mDragDrop(cl,obj,(APTR)msg);
+
+        case MUIM_MainGroup_AdjustBar: return mAdjustBar(cl,obj,(APTR)msg);
+
+        default:                       return DoSuperMethodA(cl,obj,msg);
     }
 }
 #ifdef __AROS__
 BOOPSI_DISPATCHER_END
 #endif
 
+const char *usedClasses[] = {"TheBar.mcc",NULL};
+    
 int
 main(UNUSED int argc,char **argv)
 {
@@ -343,17 +436,18 @@ main(UNUSED int argc,char **argv)
         {
             struct MUI_CustomClass *mainGroupClass;
 
-            if ((mainGroupClass = MUI_CreateCustomClass(NULL,MUIC_Group,NULL,sizeof(struct data),ENTRY(_dispatcher))) != NULL)
+            if ((mainGroupClass = MUI_CreateCustomClass(NULL,(STRPTR)MUIC_Group,NULL,sizeof(struct data),ENTRY(_dispatcher))) != NULL)
             {
                 Object *app, *win;
 
                 if ((app = ApplicationObject,
                         MUIA_Application_Title,         "TheBar Demo7",
-                        MUIA_Application_Version,       "$VER: TheBarDemo7 1.0 (24.6.2003)",
-                        MUIA_Application_Copyright,     "Copyright 2003 by Alfonso Ranieri",
+                        MUIA_Application_Version,       "$VER: TheBarDemo7 1.1 (29.2.2008)",
+                        MUIA_Application_Copyright,     "Copyright 2008 by Alfonso Ranieri",
                         MUIA_Application_Author,        "Alfonso Ranieri <alforan@tin.it>",
-                        MUIA_Application_Description,  "TheBar example",
-                        MUIA_Application_Base,         "THEBAREXAMPLE",
+                        MUIA_Application_Description,   "TheBar example",
+                        MUIA_Application_Base,          "THEBAREXAMPLE",
+                        MUIA_Application_UsedClasses,   usedClasses,
 
                         SubWindow, win = WindowObject,
                             MUIA_Window_ID,             MAKE_ID('M','A','I','N'),

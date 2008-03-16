@@ -16,8 +16,6 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: Debug.h 208 2008-02-19 13:13:56Z damato $
-
 ***************************************************************************/
 
 #ifndef DEBUG_H

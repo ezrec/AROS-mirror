@@ -16,15 +16,13 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: rev.h 172 2008-01-29 08:08:17Z damato $
-
 ***************************************************************************/
 
 #define LIB_VERSION    26
 #define LIB_REVISION   1
 
 #define LIB_REV_STRING "26.1"
-#define LIB_DATE       "29.01.2008"
+#define LIB_DATE       "02.03.2008"
 
 #if defined(__PPC__)
   #if defined(__MORPHOS__)
