@@ -10,9 +10,9 @@ include $(TOP)/config/make.cfg
 #MM				contrib-dhcp-libomapip	\
 #MM				contrib-dhcp-libminires
 
-USER_CFLAGS :=	-iquote ../includes -I../includes	\
+USER_CFLAGS :=	-I../includes				\
 		-I$(AROS_DEVELOPMENT)/netinclude	\
-		-DCLIENT_PATH="Net:C/dhclient"
+		-DCLIENT_PATH="C:"
 
 FILES :=	dhclient clparse
 

@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 #MM contrib-dhcp-libdst : arostcp-includes
 
-USER_CFLAGS :=	-iquote ../includes -I../includes	\
+USER_CFLAGS :=	-I../includes				\
 		-I$(AROS_DEVELOPMENT)/netinclude	\
 		-DHMAC_MD5 -DMINIRES_LIB
 

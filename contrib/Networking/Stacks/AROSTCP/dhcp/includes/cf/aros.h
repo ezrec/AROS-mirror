@@ -55,13 +55,6 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#ifndef DEBUG
-#define DEBUG 1
-#endif
-#include <aros/debug.h>
-
-#define AGR kprintf("[dhclient] %s:%d\n", __FUNCTION__, __LINE__);
-
 extern int h_errno;
 
 #include <net/if.h>
@@ -98,7 +91,7 @@ extern int h_errno;
 #define _PATH_DHCLIENT_DB	AROSTCP_DB "dhclient.leases"
 #define _PATH_DHCLIENT_CONF	AROSTCP_DB "dhclient.conf"
 #define _PATH_RESOLV_CONF	AROSTCP_DB "resolv.conf"
-#define _PATH_DHCRELAY_PID	AROSTCP_T  "T:dhcrelay.pid"
+#define _PATH_DHCRELAY_PID	AROSTCP_T  "dhcrelay.pid"
 
 #define EOL	'\n'
 #define VOIDPTR void *

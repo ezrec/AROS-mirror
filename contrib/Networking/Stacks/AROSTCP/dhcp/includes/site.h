@@ -14,7 +14,7 @@
    syslog().   This also makes dhcpd use the dhcpd.conf in its working
    directory and write the dhcpd.leases file there. */
 
-#define DEBUG 1
+/* #define DEBUG 1 */
 
 /* Define this to see what the parser is parsing.   You probably don't
    want to see this. */

@@ -50,7 +50,6 @@ struct Library *SocketBase = NULL;
 
 static void __close_bsdsocket()
 {
-AGR
 	if (MiamiBase)
 	{
 		CloseLibrary(MiamiBase);
@@ -65,12 +64,12 @@ AGR
 
 void  openlog(const char *ident, int logstat, int logfac)
 {
-	kprintf("openlog %s %d %d\n", ident, logstat, logfac);
+	log_debug("openlog %s %d %d\n", ident, logstat, logfac);
 }
 
 int   setlogmask(int pmask)
 {
-	kprintf("setlogmask %d\n", pmask);
+	log_debug("setlogmask %d\n", pmask);
 	return -1;
 }
 #endif
