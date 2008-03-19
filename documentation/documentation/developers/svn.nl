@@ -3,7 +3,7 @@ Werken met Subversion
 =====================
 
 :Authors:   Aaron Digulla, Adam Chodorowski 
-:Copyright: Copyright ù 1995-2002, The AROS Development Team
+:Copyright: Copyright (C) 1995-2002, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -126,7 +126,7 @@ De AROS broncode ophalen
 Om een kopie van de AROS broncode te verkrijgen moet u het "checkout" commando gebruiken,
 op de volgende manier::
 
-    > svn checkout https://svn.aros.org:8080/svn/aros/trunk/AROS
+    > svn checkout https://svn.aros.org/svn/aros/trunk/AROS
 
 Dit zal een map met de naam AROS creëren en deze vullen met alle sources. Dit kan
 enige tijd duren als u een langzame netwerk verbinding heeft.
@@ -134,7 +134,7 @@ De aparte "contrib" module bevat programma's van derden die naar AROS overgezet 
 U moet ook hier een checkout toepassen mocht u alle AROS soorten willen bouwen::
 
     > cd AROS
-    > svn checkout https://svn.aros.org:8080/svn/aros/trunk/contrib
+    > svn checkout https://svn.aros.org/svn/aros/trunk/contrib
 
 .. Tip:: 
 
@@ -151,7 +151,7 @@ achtergronden, of de "documentation" module die de bronnen van de website bevat.
 
 U kunt een lijst met alle modules opvragen met::
 
-    > svn ls https://svn.aros.org:8080/svn/aros/trunk/
+    > svn ls https://svn.aros.org/svn/aros/trunk/
 
 Uw lokale archief updaten
 =========================
@@ -285,7 +285,7 @@ plaats:
    
       > cd subversion-1.1.3
       > svn import -m "Begin import van SVN 1.11.12" 
-      \ https://svn.aros.org:8080/svn/aros/trunk/contrib/development/versioning/svn
+      \ https://svn.aros.org/svn/aros/trunk/contrib/development/versioning/svn
 
 Aanvullende informatie
 ======================

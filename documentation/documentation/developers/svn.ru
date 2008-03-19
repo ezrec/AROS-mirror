@@ -3,7 +3,7 @@
 =========================
 
 :Авторы:    Aaron Digulla, Adam Chodorowski, Sergey Mineychev 
-:Copyright: Copyright щ 1995-2002, The AROS Development Team
+:Copyright: Copyright (C) 1995-2002, The AROS Development Team
 :Версия:    $Revision$
 :Дата:      $Date$
 :Статус:    Завершено.
@@ -101,7 +101,7 @@ __ contribute#joining-the-team
 Чтобы получить рабочую копию кода и документации AROS необходимо использовать 
 команду "checkout" (сверка), например::
 
-    > svn checkout https://svn.aros.org:8080/svn/aros/trunk/AROS
+    > svn checkout https://svn.aros.org/svn/aros/trunk/AROS
 
 Эта команда создаст директорию с именем AROS и наполнит её всеми исходниками
 системы, что может занять значительное время, если ваша сеть медленная. Раздел 
@@ -109,7 +109,7 @@ __ contribute#joining-the-team
 сверять, чтобы собрать любой вид AROS::
 
     > cd AROS
-    > svn checkout https://svn.aros.org:8080/svn/aros/trunk/contrib
+    > svn checkout https://svn.aros.org/svn/aros/trunk/contrib
 
 .. Tip:: 
 
@@ -127,7 +127,7 @@ __ contribute#joining-the-team
 
 Список имеющихся разделов можно получить с помощью следующей команды::
 
-    > svn ls https://svn.aros.org:8080/svn/aros/trunk/
+    > svn ls https://svn.aros.org/svn/aros/trunk/
 
 Обновление исходного кода
 =========================
@@ -237,7 +237,7 @@ SVN не станет автоматически заглядывать в новосозданные директории и добавлять
 
       > cd subversion-1.1.3
       > svn import -m "Initial import of SVN 1.11.12" 
-      \ https://svn.aros.org:8080/svn/aros/trunk/contrib/development/versioning/svn
+      \ https://svn.aros.org/svn/aros/trunk/contrib/development/versioning/svn
 
 Дополнительная документация
 ===========================

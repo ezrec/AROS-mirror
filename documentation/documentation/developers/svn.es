@@ -3,7 +3,7 @@ Trabajando con Subversion
 =========================
 
 :Authors:   Aaron Digulla, Adam Chodorowski 
-:Copyright: Copyright ù 1995-2002, The AROS Development Team
+:Copyright: Copyright (C) 1995-2002, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -129,7 +129,7 @@ Obtener los fuentes de AROS
 
 Para obtener una copia de los fuentes de AROS usa el comando "checkout", así::
 
-    > svn checkout https://svn.aros.org:8080/svn/aros/trunk/AROS
+    > svn checkout https://svn.aros.org/svn/aros/trunk/AROS
 
 Esto creará un directorio llamado AROS y lo poblará con todos los fuentes,
 lo que podría tomar bastante tiempo si tienes una conexión lenta a la red.
@@ -137,7 +137,7 @@ El módulo "contrib" contiene los programas de terceros que han sido transferidos
 a AROS. Tienes que descarga para compilar todos los sabores de AROS::
 
     > cd AROS
-    > svn checkout https://svn.aros.org:8080/svn/aros/trunk/contrib
+    > svn checkout https://svn.aros.org/svn/aros/trunk/contrib
 
 .. Consejo::
     Después de la descarga, SNV recordará de dónde vino el fuente.
@@ -154,7 +154,7 @@ y el módulo "documentation" que contiene los fuentes del sitio web.
 
 Puedes tener una lista de los módulos disponibles con el comando::
 
-    > svn ls https://svn.aros.org:8080/svn/aros/trunk/
+    > svn ls https://svn.aros.org/svn/aros/trunk/
 
 Actualizar los fuentes
 ======================
@@ -290,7 +290,7 @@ el comando import en el manual de SVN es muy pobremente escrito, dado el ejemplo
 
       > cd subversion-1.1.3
       > svn import -m "Initial import of SVN 1.11.12" 
-      \ https://svn.aros.org:8080/svn/aros/trunk/contrib/development/versioning/svn
+      \ https://svn.aros.org/svn/aros/trunk/contrib/development/versioning/svn
 
 Lecturas adicionales
 ====================

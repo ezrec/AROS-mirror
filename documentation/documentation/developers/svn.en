@@ -3,7 +3,7 @@ Working with Subversion
 =======================
 
 :Authors:   Aaron Digulla, Adam Chodorowski 
-:Copyright: Copyright ù 1995-2002, The AROS Development Team
+:Copyright: Copyright (C) 1995-2002, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -120,7 +120,7 @@ Getting the AROS sources
 
 To get a copy of the AROS sources you use the "checkout" command, like this::
 
-    > svn checkout https://svn.aros.org:8080/svn/aros/trunk/AROS
+    > svn checkout https://svn.aros.org/svn/aros/trunk/AROS
 
 This will create a directory called AROS and populate it with all the sources,
 which might take quite some time if you have a slow network connection.
@@ -129,7 +129,7 @@ The "contrib" module contains third party programs that have been ported to AROS
 You have to checkout it in order to build all AROS flavours::
 
     > cd AROS
-    > svn checkout https://svn.aros.org:8080/svn/aros/trunk/contrib
+    > svn checkout https://svn.aros.org/svn/aros/trunk/contrib
 
 .. Tip:: 
 
@@ -147,7 +147,7 @@ contains images like screenshots, backdrops and similar, and the
 
 You can get a list of the available modules with::
 
-    > svn ls https://svn.aros.org:8080/svn/aros/trunk/
+    > svn ls https://svn.aros.org/svn/aros/trunk/
 
 Updating the sources
 ====================
@@ -277,7 +277,7 @@ in the SVN manual is quite poorly written, so an example is in order:
 
       > cd subversion-1.1.3
       > svn import -m "Initial import of SVN 1.11.12" 
-      \ https://svn.aros.org:8080/svn/aros/trunk/contrib/development/versioning/svn
+      \ https://svn.aros.org/svn/aros/trunk/contrib/development/versioning/svn
 
 Further reading
 ===============

@@ -3,7 +3,7 @@ Subversion:in kanssa työskentely
 ================================
 
 :Authors:   Aaron Digulla, Adam Chodorowski 
-:Copyright: Copyright © 1995-2002, The AROS Development Team
+:Copyright: Copyright (C) 1995-2002, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -84,7 +84,7 @@ AROS:in lähdekoodin hankkiminen
 
 Käytä "checkout" komentoa hakeaksesi AROS:in lähdekoodit::
 
-    > svn checkout https://sbb.hepe.com:8080/svn/aros/trunk/AROS
+    > svn checkout https://sbb.hepe.com/svn/aros/trunk/AROS
 
 Tämä luo hakemiston nimeltä AROS ja asuttaa sen kaikella AROS:in alaisuuteen
 kuuluvalla lähdekoodilla, missä voikin vierähtää jokunen tovi jos
@@ -92,7 +92,7 @@ verkkoyhteytesi on hidas. "necessary" moduuli contrib:ista on nyt pakollinen
 kaikille AROS versioille kun se aiemmin tarvittiin vain i386-pc portille::
 
     > cd AROS
-    > svn checkout https://sbb.hepe.com:8080/svn/aros/trunk/necessary
+    > svn checkout https://sbb.hepe.com/svn/aros/trunk/necessary
 
 .. Tip:: 
 
@@ -112,7 +112,7 @@ ohjelman.
 
 Saatavilla olevat moduulit voit listata näin::
 
-    > svn ls https://sbb.hepe.com:8080/svn/aros/trunk/
+    > svn ls https://sbb.hepe.com/svn/aros/trunk/
 
 Lähdekoodin päivitys
 ====================
@@ -216,7 +216,7 @@ on surkeasti kirjoitettu, joten esimerkki taitaa olla paikallaan:
 
       > cd subversion-1.1.3
       > svn import -m "Initial import of SVN 1.11.12" 
-      \ https://sbb.hepe.com:8080/contrib/development/versioning/svn
+      \ https://sbb.hepe.com/contrib/development/versioning/svn
 
 Lisälukemista
 =============
