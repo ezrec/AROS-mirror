@@ -35,7 +35,7 @@ ifndef (OS)
 endif
 
 # debug
-ifeq ($(DEBUG),1) 
+ifeq ($(DEBUG),1)
  override DEBUG = -DDEBUG -O0
 else
 ifeq ($(DEBUG),yes)
@@ -135,7 +135,7 @@ endif
 endif
 
 # objects
-OBJS  = library.o utils.o brc1.o scale.o build.o class.o debug.o
+OBJS  = library.o utils.o brc1.o scale.o build.o class.o debug.o vastubs.o
 FOBJS = $(addprefix $(ODIR)/,$(OBJS))
 
 # main target
@@ -179,7 +179,7 @@ $(OBJS):
 clean:
 	@echo "  => Cleaning..."
 	@$(RM) $(FOBJS) $(M68KSTUBS)
-	@$(RM) $(BINDIR)/$(TNAME) $(BINDIR)/$(TNAME).db $(BINDIR)/$(TNAME).map 
+	@$(RM) $(BINDIR)/$(TNAME) $(BINDIR)/$(TNAME).db $(BINDIR)/$(TNAME).map
 	@echo "  <= Done."
 
 # cleanall

@@ -135,9 +135,9 @@ endif
 endif
 endif
 
-# objects 
-OBJS         = library.o utils.o brc1.o dragbar.o spacer.o scale.o build.o class.o debug.o
-TESTOBJS     = TheBar-Test.o brc1.o build.o class.o dragbar.o scale.o spacer.o utils.o debug.o
+# objects
+OBJS         = library.o utils.o brc1.o dragbar.o spacer.o scale.o build.o class.o debug.o vastubs.o
+TESTOBJS     = TheBar-Test.o brc1.o build.o class.o dragbar.o scale.o spacer.o utils.o debug.o vastubs.o
 ONLYTESTOBJS = $(filter-out $(OBJS),$(TESTOBJS))
 
 # let's export all

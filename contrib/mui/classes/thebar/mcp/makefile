@@ -89,7 +89,7 @@ LDFLAGS  = $(CPU) $(DEBUGSYM) -nostartfiles
 LDLIBS   =
 
 # objects
-OBJS      = library.o utils.o loc.o class.o debug.o
+OBJS      = library.o utils.o loc.o class.o debug.o vastubs.o
 EXTRAOBJS = coloradjust.o backgroundadjust.o penadjust.o popbackground.o poppen.o
 # these are for dependencies generation
 ALLOBJS   = $(OBJS)
@@ -192,7 +192,7 @@ loc.h: TheBar.cd loc_h.sd
 clean:
 	@echo "  => Cleaning..."
 	@$(RM) $(FOBJS) $(M68KSTUBS)
-	@$(RM) $(BINDIR)/$(TNAME) $(BINDIR)/$(TNAME).db $(BINDIR)/$(TNAME).map 
+	@$(RM) $(BINDIR)/$(TNAME) $(BINDIR)/$(TNAME).db $(BINDIR)/$(TNAME).map
 	@echo "  <= Done."
 
 # cleanall

@@ -2,6 +2,25 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-03-19  Matthias Rustler <mrustler@gmx.de>
+
+  * AROS port updated
+
+2008-03-19  Thore Böckelmann <tboeckel@gmx.de>
+
+  * makefile: modified the toplevel makefile to use AmigaOS commands only and
+    not rely on any specific Unix extension of the echo command. "avail flush"
+    will surely fail on any Unix system. Replaced all "cd <subdir> && make"
+    combinations by "make -C <subdir>" calls. Also replaced all "make" calls
+    by "$(MAKE)" which will use the command name which the make process was
+    invoked with instead of the hardcoded "make". For OS4 this allows to use
+    gmake instead of make.
+
+2008-03-17  Thore Böckelmann <tboeckel@gmx.de>
+
+  * #?/vastubs.c, #?/makefile: added vararg stubs for OS3 to be able to link
+    against clib2 which misses these stubs.
+
 2008-03-16  Thore Böckelmann <tboeckel@gmx.de>
 
   * mcp/loc.c: some code cleanup and added some const specifiers where they
@@ -14,7 +33,7 @@ MUI TheBar MCC class - ChangeLog
 
   * #?/library.c ClassInit() changed
   * mcp/library.c locale.library is now needed
-  * #?/makefile little changes to check for DEBUG in a 
+  * #?/makefile little changes to check for DEBUG in a
     better way
   * added trunk/makefile that build/clean everything
   * mcp/loc.c removed "register" usage
@@ -37,16 +56,16 @@ MUI TheBar MCC class - ChangeLog
     The main difference is that now DEBUG=1 must be specified if you
     want debugging infos.
   * Other small changes...
-    
+
 2008-03-09  Alfonso Ranieri <alforan@tin.it>
   Big changes:
 
-  * added msprintf() based on RawDoFmt() for MorphOS and OS3. 
+  * added msprintf() based on RawDoFmt() for MorphOS and OS3.
     OS4 people said clib/newlib sprintf() is to be preferred.
     Don't know about Aros, so I left sprintf() usage for it.
 
   * Changed the way localization works. Restored my old locale
-    handling way. Now static arrays are inited in ClassInit() via 
+    handling way. Now static arrays are inited in ClassInit() via
     a double lists of strings/id. It is not strictly needed, but it
     will work when mccinit.c will be changed (?) to close/dispose stuff
     in libClose() (I think that is the way libs should work).
@@ -55,9 +74,9 @@ MUI TheBar MCC class - ChangeLog
     data and the prototypes of the few functions that operate on it (aka "friends functions").
     private.h should be only included in class.c (and build.c); mccinit.c compels us to
     include it in library.c too. That is not nice, but... All other stuff are in class.h and
-    in class_protos.h. All the changes above generated a chain of changes to Makefile, 
+    in class_protos.h. All the changes above generated a chain of changes to Makefile,
     dependencies and so on. I don't think I broke anything. All compiles fine (but for OS4
-    for which I STILL need the missing definitions of the Blit stuff). 
+    for which I STILL need the missing definitions of the Blit stuff).
     Some files were moved to more "reasonable" position. F.e., TheBar.cd is now in mcp and not in
     mcp/locale and TheBar_mcp.h is in include/mui .
 
