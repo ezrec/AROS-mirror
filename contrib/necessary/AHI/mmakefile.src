@@ -2,8 +2,6 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
-#MM- contrib-quick : contrib-AHI-quick
-#MM- contrib       : contrib-AHI
 
 #MM- AHI-quick : contrib-AHI-quick
 #MM- AHI       : contrib-AHI
