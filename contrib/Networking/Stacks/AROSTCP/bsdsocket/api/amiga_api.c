@@ -145,7 +145,7 @@ BOOL SB_Expunged = FALSE; /* boolean value set by ELL_Expunge */
 
 AROS_LH1 (struct Library *, Open,
 	AROS_LHA(ULONG, version, D0),
-        struct Library *, libPtr, 1, ELL)
+        struct Library *, libPtr, 0, ELL)
 {
   AROS_LIBFUNC_INIT
   struct SocketBase * newBase;

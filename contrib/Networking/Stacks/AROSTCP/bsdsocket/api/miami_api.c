@@ -39,40 +39,47 @@
 #define SocketBase MiamiBase->_SocketBase
 #define UserGroupBase MiamiBase->_UserGroupBase
 
-extern ULONG Miami_UserFuncTable[];
+typedef VOID (* f_void)(APTR args, ...);
+
+extern f_void Miami_UserFuncTable[];
 extern struct ifnet *ifnet;
 
 void __MiamiLIB_Cleanup(struct MiamiBase *MiamiBase)
 {
-  void *freestart;
-  ULONG size;
+	void *freestart;
+	ULONG size;
 
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: __MiamiLIB_Cleanup()\n"));
 #endif
 
-  if (SocketBase)
-    CloseLibrary(&SocketBase->libNode);
-  freestart = (void *)((ULONG)MiamiBase - (ULONG)MiamiBase->Lib.lib_NegSize);
-  size = MiamiBase->Lib.lib_NegSize + MiamiBase->Lib.lib_PosSize;
-  FreeMem(freestart, size);
+	if (SocketBase)
+		CloseLibrary(&SocketBase->libNode);
+
+	freestart = (void *)((ULONG)MiamiBase - (ULONG)MiamiBase->Lib.lib_NegSize);
+	size = MiamiBase->Lib.lib_NegSize + MiamiBase->Lib.lib_PosSize;
+	FreeMem(freestart, size);
 }
 
-struct MiamiBase* MiamiLIB_Open(struct Library *MasterBase)
+AROS_LH1 (struct Library *, Open,
+	AROS_LHA(ULONG, version, D0),
+        struct Library *, MasterBase, 0, Miami)
 {
-  struct MiamiBase *MiamiBase;
-  WORD *i;
+	AROS_LIBFUNC_INIT
+
+	struct MiamiBase *MiamiBase;
+	WORD *i;
 
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiLIB_Open()\n"));
 #endif
   
-  D(kprintf("MiamiLIB_Open: 0x%08lx <%s> OpenCount %ld\n",
+	D(kprintf("MiamiLIB_Open: 0x%p <%s> OpenCount %ld\n",
 		     MasterBase,
 		     MasterBase->lib_Node.ln_Name,
 		     MasterBase->lib_OpenCnt));
 
-  MiamiBase = (struct MiamiBase *)MakeLibrary(Miami_UserFuncTable,
+	MiamiBase = (struct MiamiBase *)MakeLibrary(Miami_UserFuncTable,
 #if !defined(__AROS__)
 				             (UWORD *)&Miami_initTable,
 #else
@@ -82,53 +89,60 @@ D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiLIB_Open()\n"));
 					     sizeof(struct MiamiBase),
 					     NULL);
 #if defined(__AROS__)
-  ((struct Library *)MiamiBase)->lib_Node.ln_Type = NT_LIBRARY;
-  ((struct Library *)MiamiBase)->lib_Node.ln_Name = (APTR)MIAMILIBNAME;
-  ((struct Library *)MiamiBase)->lib_Flags = (LIBF_SUMUSED|LIBF_CHANGED);
-  ((struct Library *)MiamiBase)->lib_Version = MIAMI_VERSION;
-  ((struct Library *)MiamiBase)->lib_Revision = MIAMI_REVISION;
-  ((struct Library *)MiamiBase)->lib_IdString = (APTR)RELEASESTRING MIAMI_VSTRING;
+	((struct Library *)MiamiBase)->lib_Node.ln_Type = NT_LIBRARY;
+	((struct Library *)MiamiBase)->lib_Node.ln_Name = (APTR)MIAMILIBNAME;
+	((struct Library *)MiamiBase)->lib_Flags = (LIBF_SUMUSED|LIBF_CHANGED);
+	((struct Library *)MiamiBase)->lib_Version = MIAMI_VERSION;
+	((struct Library *)MiamiBase)->lib_Revision = MIAMI_REVISION;
+	((struct Library *)MiamiBase)->lib_IdString = (APTR)RELEASESTRING MIAMI_VSTRING;
 
-D(bug("[AROSTCP](miami_api.c) MiamiLIB_Open: Created MIAMI user library base: %08lx\n", MiamiBase));
+D(bug("[AROSTCP](miami_api.c) MiamiLIB_Open: Created MIAMI user library base: 0x%p\n", MiamiBase));
 #endif
-  D(kprintf("Created user miami.library base: %08lx\n", MiamiBase);)
-  if (MiamiBase) {
-    for (i = (WORD *)((struct Library *)MiamiBase + 1); i < (WORD *)(MiamiBase + 1); i++)
-      *i = 0L;
-    MiamiBase->Lib.lib_OpenCnt = 1;
-    SocketBase = OpenLibrary("bsdsocket.library", VERSION);
-    if (SocketBase) {
-	D(__log(LOG_DEBUG,"miami.library opened: SocketBase = 0x%08lx, MiamiBase = 0x%08lx", (ULONG)SocketBase, (ULONG)MiamiBase);)
-	return(MiamiBase);
-    }
-    D(else kprintf("Unable to open bsdsocket.library\n");)
-    __MiamiLIB_Cleanup(MiamiBase);
-  }
-  return(NULL);
+	D(kprintf("Created user miami.library base: 0x%p\n", MiamiBase);)
+	if (MiamiBase) {
+		for (i = (WORD *)((struct Library *)MiamiBase + 1); i < (WORD *)(MiamiBase + 1); i++)
+		  *i = 0L;
+		MiamiBase->Lib.lib_OpenCnt = 1;
+		SocketBase = OpenLibrary("bsdsocket.library", VERSION);
+		if (SocketBase) {
+		D(__log(LOG_DEBUG,"miami.library opened: SocketBase = 0x%p, MiamiBase = 0x%p", (ULONG)SocketBase, (ULONG)MiamiBase);)
+		return(MiamiBase);
+		}
+		D(else kprintf("Unable to open bsdsocket.library\n");)
+		__MiamiLIB_Cleanup(MiamiBase);
+	}
+	return(NULL);
+
+	AROS_LIBFUNC_EXIT
 }
 
-ULONG	MiamiLIB_Close(struct MiamiBase *MiamiBase)
+AROS_LH0(ULONG *, Close, struct MiamiBase *, MiamiBase, 1, Miami)
 {
-VOID * freestart;
-ULONG  size;
+	AROS_LIBFUNC_INIT
+
+	VOID * freestart;
+	ULONG  size;
 
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiLIB_Close()\n"));
 #endif
 
-  D(kprintf("MiamiLIB_Close: 0x%08lx <%s> OpenCount %ld\n",
+	D(kprintf("MiamiLIB_Close: 0x%p <%s> OpenCount %ld\n",
 		      MiamiBase,
 		      MasterMiamiBase->lib_Node.ln_Name,
 		      MasterMiamiBase->lib_OpenCnt));
 
-  if (MiamiBase->_UserGroupBase)
-    CloseLibrary(MiamiBase->_UserGroupBase);
-  __MiamiLIB_Cleanup(MiamiBase);
-  MasterMiamiBase->lib_OpenCnt--;
-  D(kprintf("MiamiLIB_Close: done\n"));
+	if (MiamiBase->_UserGroupBase)
+		CloseLibrary(MiamiBase->_UserGroupBase);
 
-  return(0);
+	__MiamiLIB_Cleanup(MiamiBase);
+	MasterMiamiBase->lib_OpenCnt--;
+	D(kprintf("MiamiLIB_Close: done\n"));
+
+	return(0);
+	AROS_LIBFUNC_EXIT
 }
+
 
 AROS_LH7(int, MiamiSysCtl,
          AROS_LHA(LONG *, name, A0),
@@ -203,13 +217,13 @@ D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiPFAddHook()\n"));
 #endif
 
 #ifdef ENABLE_PACKET_FILTER
-	DPF(__log(LOG_DEBUG,"MiamiPFAddHook(0x%08lx, %s) called", hook, interface);)
+	DPF(__log(LOG_DEBUG,"MiamiPFAddHook(0x%p, %s) called", hook, interface);)
 
 	ifp = ifunit(interface);
-	DPF(__log(LOG_DEBUG,"ifp = 0x%08lxn");)
+	DPF(__log(LOG_DEBUG,"ifp = 0x%pn");)
 	if (ifp) {
 		pf = bsd_malloc(sizeof(struct packet_filter_hook), NULL, NULL);
-		DPF(syslog(LOG_DEBUG,"Handle = 0x%08lx", pf);)
+		DPF(syslog(LOG_DEBUG,"Handle = 0x%p", pf);)
 		if (pf) {
 			pf->pfil_if = ifp;
 			pf->pfil_hook = hook;
@@ -218,7 +232,7 @@ D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiPFAddHook()\n"));
 			AddTail((struct List *)&pfil_list, (struct Node *)pf);
 			ReleaseSemaphore(&pfil_list_lock);
 			DPF(__log(LOG_DEBUG,"Added packet filter hook:");)
-			DPF(__log(LOG_DEBUG,"Function: 0x%08lx", hook->h_Entry);)
+			DPF(__log(LOG_DEBUG,"Function: 0x%p", hook->h_Entry);)
 			DPF(__log(LOG_DEBUG,"CPU type: %lu", pf->pfil_hooktype);)
 		}
 	}
@@ -241,7 +255,7 @@ AROS_LH1(void, MiamiPFRemoveHook,
 D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiPFRemoveHook()\n"));
 #endif
 	
-	DPF(log("MiamiPFRemoveHook(0x%08lx) called", handle);)
+	DPF(log("MiamiPFRemoveHook(0x%p) called", handle);)
 	if (handle) {
 		ObtainSemaphore(&pfil_list_lock);
 		Remove(handle);
@@ -580,7 +594,7 @@ AROS_LH0(LONG, MiamiGetResOptions,
 D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiResGetOptions()\n"));
 #endif
 
-	DSYSCALLS(__log(LOG_DEBUG,"MiamiResGetOptions() called, result: 0x%08lx", SocketBase.res_state.options);)
+	DSYSCALLS(__log(LOG_DEBUG,"MiamiResGetOptions() called, result: 0x%p", SocketBase.res_state.options);)
 	return SocketBase->res_state.options;
 
 	AROS_LIBFUNC_EXIT
@@ -597,7 +611,7 @@ AROS_LH1(void, MiamiSetResOptions,
 D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiResSetOptions()\n"));
 #endif
 
-	DSYSCALLS(__log(LOG_DEBUG,"MiamiResSetOptions(0x%08lx) called", options);)
+	DSYSCALLS(__log(LOG_DEBUG,"MiamiResSetOptions(0x%p) called", options);)
 	SocketBase->res_state.options = options;
 
 	AROS_LIBFUNC_EXIT
@@ -653,7 +667,7 @@ D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiGetFdCallback()\n"));
 #endif
 
 	*cbptr = SocketBase->fdCallback;
-	DSYSCALLS(__log(LOG_DEBUG,"MiamiGetFdCallback() called, *cbptr = 0x%08lx", (ULONG)*cbptr);)
+	DSYSCALLS(__log(LOG_DEBUG,"MiamiGetFdCallback() called, *cbptr = 0x%p", (ULONG)*cbptr);)
 	return *cbptr ? MIAMICPU_M68KREG : 0;
 
 	AROS_LIBFUNC_EXIT
@@ -671,7 +685,7 @@ AROS_LH2(LONG, MiamiSetFdCallback,
 D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiSetFdCallback()\n"));
 #endif
 
-	DSYSCALLS(__log(LOG_DEBUG,"MiamiSetFdCallback(0x%08lx, %ld) called", (ULONG)cbptr, cputype);)
+	DSYSCALLS(__log(LOG_DEBUG,"MiamiSetFdCallback(0x%p, %ld) called", (ULONG)cbptr, cputype);)
 	if (cputype == MIAMICPU_M68KREG) {
 		SocketBase->fdCallback = cbptr;
 		return TRUE;
@@ -741,15 +755,15 @@ D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiGetCredentials()\n"));
 #endif
 
 	/* We don't want to have this library at all, so we open it only if we really need it */
-        if (!UserGroupBase)
-			UserGroupBase = OpenLibrary("usergroup.library",4);
+	if (!UserGroupBase)
+		UserGroupBase = OpenLibrary("usergroup.library",4);
 
-	DSYSCALLS(__log(LOG_DEBUG,"MiamiGetCredentials(): UserGroupBase = 0x%08lx", (ULONG)UserGroupBase);)
+	DSYSCALLS(__log(LOG_DEBUG,"MiamiGetCredentials(): UserGroupBase = 0x%p", (ULONG)UserGroupBase);)
 #warning "TODO: uncomment the following lines once we have a working usergroups.library implemenetation"
 //		if (UserGroupBase)
 //		return getcredentials(NULL);
 
-		return NULL;
+	return NULL;
 
 	AROS_LIBFUNC_EXIT
 }

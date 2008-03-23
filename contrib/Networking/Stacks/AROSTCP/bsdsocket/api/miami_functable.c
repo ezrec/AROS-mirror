@@ -35,8 +35,9 @@ extern VOID AROS_SLIB_ENTRY(Null, LIB)(VOID);
  * "declarations" for ExecLibraryList_funcTable functions.
  */ 
 
-extern void MiamiLIB_Open(void);
-extern void MiamiLIB_Close(void);
+extern VOID AROS_SLIB_ENTRY(Open, Miami)();
+extern VOID AROS_SLIB_ENTRY(Close, Miami)();
+
 extern VOID AROS_SLIB_ENTRY(Expunge, ELL)();
 
 f_void Miami_InitFuncTable[]=
@@ -44,8 +45,8 @@ f_void Miami_InitFuncTable[]=
 #ifdef __MORPHOS__
 	FUNCARRAY_32BIT_NATIVE,
 #endif
-	MiamiLIB_Open,
-    MiamiLIB_Close,
+	AROS_SLIB_ENTRY(Open, Miami),
+    AROS_SLIB_ENTRY(Close, Miami),
 	AROS_SLIB_ENTRY(Expunge, ELL),
 #warning "TODO: NicJA - LIB_Null??"
 #if defined(__AROS__)
@@ -120,7 +121,7 @@ f_void	Miami_UserFuncTable[] =
 #else
   AROS_SLIB_ENTRY(Null, LIB),	     /* ELL_Open() is never called */
 #endif
-	MiamiLIB_Close,
+	AROS_SLIB_ENTRY(Close, Miami),
 #warning "TODO: NicJA - LIB_Null??"
 #if defined(__AROS__)
    NULL,
