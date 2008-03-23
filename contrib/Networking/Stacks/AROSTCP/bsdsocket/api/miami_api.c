@@ -47,7 +47,7 @@ extern struct ifnet *ifnet;
 void __MiamiLIB_Cleanup(struct MiamiBase *MiamiBase)
 {
 	void *freestart;
-	ULONG size;
+	IPTR size;
 
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: __MiamiLIB_Cleanup()\n"));
@@ -56,7 +56,7 @@ D(bug("[AROSTCP.MIAMI] miami_api.c: __MiamiLIB_Cleanup()\n"));
 	if (SocketBase)
 		CloseLibrary(&SocketBase->libNode);
 
-	freestart = (void *)((ULONG)MiamiBase - (ULONG)MiamiBase->Lib.lib_NegSize);
+	freestart = (void *)((IPTR)MiamiBase - (IPTR)MiamiBase->Lib.lib_NegSize);
 	size = MiamiBase->Lib.lib_NegSize + MiamiBase->Lib.lib_PosSize;
 	FreeMem(freestart, size);
 }
@@ -101,12 +101,12 @@ D(bug("[AROSTCP](miami_api.c) MiamiLIB_Open: Created MIAMI user library base: 0x
 	D(kprintf("Created user miami.library base: 0x%p\n", MiamiBase);)
 	if (MiamiBase) {
 		for (i = (WORD *)((struct Library *)MiamiBase + 1); i < (WORD *)(MiamiBase + 1); i++)
-		  *i = 0L;
+			*i = 0;
 		MiamiBase->Lib.lib_OpenCnt = 1;
 		SocketBase = OpenLibrary("bsdsocket.library", VERSION);
 		if (SocketBase) {
-		D(__log(LOG_DEBUG,"miami.library opened: SocketBase = 0x%p, MiamiBase = 0x%p", (ULONG)SocketBase, (ULONG)MiamiBase);)
-		return(MiamiBase);
+			D(__log(LOG_DEBUG,"miami.library opened: SocketBase = 0x%p, MiamiBase = 0x%p", (IPTR)SocketBase, (IPTR)MiamiBase);)
+			return(MiamiBase);
 		}
 		D(else kprintf("Unable to open bsdsocket.library\n");)
 		__MiamiLIB_Cleanup(MiamiBase);
@@ -119,9 +119,6 @@ D(bug("[AROSTCP](miami_api.c) MiamiLIB_Open: Created MIAMI user library base: 0x
 AROS_LH0(ULONG *, Close, struct MiamiBase *, MiamiBase, 1, Miami)
 {
 	AROS_LIBFUNC_INIT
-
-	VOID * freestart;
-	ULONG  size;
 
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiLIB_Close()\n"));
@@ -758,7 +755,7 @@ D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiGetCredentials()\n"));
 	if (!UserGroupBase)
 		UserGroupBase = OpenLibrary("usergroup.library",4);
 
-	DSYSCALLS(__log(LOG_DEBUG,"MiamiGetCredentials(): UserGroupBase = 0x%p", (ULONG)UserGroupBase);)
+	DSYSCALLS(__log(LOG_DEBUG,"MiamiGetCredentials(): UserGroupBase = 0x%p", (IPTR)UserGroupBase);)
 #warning "TODO: uncomment the following lines once we have a working usergroups.library implemenetation"
 //		if (UserGroupBase)
 //		return getcredentials(NULL);
