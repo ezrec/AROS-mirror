@@ -308,7 +308,7 @@ addwith(struct NetDataBase *ndb,
   UBYTE result[REPLYBUFLEN + 1];
 //struct CSource res;
   LONG retval = RETURN_OK;
-  LONG Args[WITHARGS] = { 0 };
+  IPTR Args[WITHARGS] = { 0 };
   int which;
 
 #if defined(__AROS__)
@@ -466,7 +466,7 @@ addservent(struct NetDataBase *ndb,
 	    UBYTE **errstrp, struct CSource *res, ULONG flags)
 {
   LONG retval;
-  LONG Args[NDBARGS] = { 0 };
+  IPTR Args[NDBARGS] = { 0 };
   struct ServentNode *sn;     
   int aliases, plen;
 
@@ -522,7 +522,7 @@ addhostent(struct NetDataBase *ndb,
 	    UBYTE **errstrp, struct CSource *res, ULONG flags)
 {
   LONG retval;
-  LONG Args[NDBARGS] = { 0 };
+  IPTR Args[NDBARGS] = { 0 };
   struct HostentNode *hn;
   struct in_addr addr;
   int aliases;
@@ -580,7 +580,7 @@ addnetent(struct NetDataBase *ndb,
 	  UBYTE **errstrp, struct CSource *res, ULONG flags)
 {
   LONG retval;
-  LONG Args[NDBARGS] = { 0 };
+  IPTR Args[NDBARGS] = { 0 };
   struct NetentNode *nn;
   struct in_addr addr;
   int aliases;
@@ -631,7 +631,7 @@ addprotoent(struct NetDataBase *ndb,
 	    UBYTE **errstrp, struct CSource *res, ULONG flags)
 {
   LONG retval;
-  LONG Args[NDBARGS] = { 0 };
+  IPTR Args[NDBARGS] = { 0 };
   struct ProtoentNode *pn;     
   int aliases;
 
@@ -679,7 +679,7 @@ addrtent(struct NetDataBase *ndb,
 	       UBYTE **errstrp, struct CSource *res, ULONG flags)
 {
   LONG retval;
-  LONG Args[RTARGS] = { 0 };
+  IPTR Args[RTARGS] = { 0 };
   struct ortentry route;
 
 #if defined(__AROS__)
@@ -853,7 +853,7 @@ addaccessent(struct NetDataBase *ndb,
 	     const UBYTE **errstrp, struct CSource *res, ULONG ifflags)
 {
   LONG retval = RETURN_WARN;
-  LONG Args[ACCARGS] = { 0 };
+  IPTR Args[ACCARGS] = { 0 };
 
   ULONG host, mask;
   UWORD port, flags = ACF_CONTINUE;

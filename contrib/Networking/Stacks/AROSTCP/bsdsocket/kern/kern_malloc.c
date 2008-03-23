@@ -47,7 +47,7 @@ D(bug("[AROSTCP](kern_malloc.c) malloc_init: Failed to Allocate Pool\n"));
       return FALSE;
     }
 #if defined(__AROS__)
-D(bug("[AROSTCP](kern_malloc.c) malloc_init: Pool Allocated (%d bytes) @ 0x%08x\n", __MALLOC_POOLSIZE, mem_pool));
+D(bug("[AROSTCP](kern_malloc.c) malloc_init: Pool Allocated (%d bytes) @ 0x%p\n", __MALLOC_POOLSIZE, mem_pool));
 #endif
     /*
      * Initialize malloc_semaphore for use.
@@ -90,7 +90,7 @@ D(bug("[AROSTCP](kern_malloc.c) bsd_malloc()\n"));
   *((ULONG *)mem)++=0xbaadab00;
 #endif
 #if defined(__AROS__)
-D(bug("[AROSTCP](kern_malloc.c) bsd_malloc: Allocated %d bytes @ 0x%08x, from pool @ 0x%08x\n", size, mem, mem_pool));
+D(bug("[AROSTCP](kern_malloc.c) bsd_malloc: Allocated %d bytes @ 0x%p, from pool @ 0x%p\n", size, mem, mem_pool));
 #endif
   ReleaseSemaphore(&malloc_semaphore);
 
@@ -101,7 +101,7 @@ void
 bsd_free(void *addr, int type)
 {
 #if defined(__AROS__)
-D(bug("[AROSTCP](kern_malloc.c) bsd_free(0x%08x, pool @ 0x%08x)\n", addr, mem_pool));
+D(bug("[AROSTCP](kern_malloc.c) bsd_free(0x%p, pool @ 0x%p)\n", addr, mem_pool));
 #endif
 
   ObtainSemaphore(&malloc_semaphore);
@@ -116,9 +116,9 @@ D(bug("[AROSTCP](kern_malloc.c) bsd_free(0x%08x, pool @ 0x%08x)\n", addr, mem_po
   else
   {
 #if defined(__AROS__)
-D(bug("[AROSTCP](kern_malloc.c) bsd_free: Attempt to free non-allocated memory at 0x%08x!!!\n", addr));
+D(bug("[AROSTCP](kern_malloc.c) bsd_free: Attempt to free non-allocated memory at 0x%p!!!\n", addr));
 #endif
-    log(LOG_CRIT,"Attempt to free non-allocated memory at 0x%08x!!!", addr);
+    log(LOG_CRIT,"Attempt to free non-allocated memory at 0x%p!!!", addr);
   }
 #endif
   ReleaseSemaphore(&malloc_semaphore);
@@ -138,7 +138,7 @@ bsd_realloc(void * mem, unsigned long size, int type, int flags)
 {
   void *new_mem = NULL;
 #if defined(__AROS__)
-D(bug("[AROSTCP](kern_malloc.c) bsd_realloc(0x%08x : %d bytes, pool @ 0x%08x)\n", mem, size, mem_pool));
+D(bug("[AROSTCP](kern_malloc.c) bsd_realloc(0x%p : %d bytes, pool @ 0x%p)\n", mem, size, mem_pool));
 #endif
 
   ObtainSemaphore(&malloc_semaphore);
@@ -153,7 +153,7 @@ D(bug("[AROSTCP](kern_malloc.c) bsd_realloc(0x%08x : %d bytes, pool @ 0x%08x)\n"
 #define realsize size
 #endif
       new_mem = AllocVecPooled(mem_pool, realsize);
-D(bug("[AROSTCP](kern_malloc.c) bsd_realloc: Allocated %d bytes @ 0x%08x\n", realsize, new_mem));
+D(bug("[AROSTCP](kern_malloc.c) bsd_realloc: Allocated %d bytes @ 0x%p\n", realsize, new_mem));
       if(new_mem != NULL) {
 #ifdef DEBUG_MEM
 	*((ULONG *)new_mem)++ = 0xbaadab00;
@@ -166,9 +166,9 @@ D(bug("[AROSTCP](kern_malloc.c) bsd_realloc: Allocated %d bytes @ 0x%08x\n", rea
     else
     {
 #if defined(__AROS__)
-D(bug("[AROSTCP](kern_malloc.c) bsd_free: Attempt to reallocate non-allocated memory at 0x%08x!!!", mem));
+D(bug("[AROSTCP](kern_malloc.c) bsd_free: Attempt to reallocate non-allocated memory at 0x%p!!!", mem));
 #endif
-      log(LOG_CRIT,"Attempt to reallocate non-allocated memory at 0x%08x!!!", mem);
+      log(LOG_CRIT,"Attempt to reallocate non-allocated memory at 0x%p!!!", mem);
     }
   }
 #endif

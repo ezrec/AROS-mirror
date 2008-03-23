@@ -138,9 +138,9 @@ D(bug("[AROSTCP](amiga_main.c) main: Kernel launching ...\n"));
    */
   AROSTCP_Task = FindTask(NULL);
 #if defined(__AROS__)
-D(bug("[AROSTCP](amiga_main.c) main: AROSTCP_Task=%08x\n",AROSTCP_Task));
+D(bug("[AROSTCP](amiga_main.c) main: AROSTCP_Task @ 0x%p\n",AROSTCP_Task));
 #endif
-  D(Printf("AROSTCP_Task=%08x\n",AROSTCP_Task);)
+  D(Printf("AROSTCP_Task @ 0x%p\n",AROSTCP_Task);)
 
   /*
    * Get a lock on the 'db' directory so we don't need an assign.

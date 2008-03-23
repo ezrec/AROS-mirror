@@ -480,7 +480,7 @@ readconfig(void)
   UBYTE result[REPLYBUFLEN + 1]; /* for error returns */
   struct CSource res;
   struct RDArgs *rdargs = NULL;
-  LONG args[CL_SIZE] = { 0 };
+  IPTR args[CL_SIZE] = { 0 };
   UBYTE *errstr;
   LONG error = 0;
 #if defined(__AROS__)
@@ -556,7 +556,7 @@ D(bug("[AROSTCP](amiga_config.c) parseroute()\n"));
   UBYTE Buffer[KEYWORDLEN];
   LONG  BufLen = sizeof(Buffer);
   struct RDArgs *rdargs;
-  LONG argArray[ROUTE_TEMPLATE_SIZE] = { 0 };
+  IPTR argArray[ROUTE_TEMPLATE_SIZE] = { 0 };
   LONG vlen, item;
   WORD index;
   UBYTE *value;
