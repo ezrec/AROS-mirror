@@ -189,9 +189,9 @@ D(bug("[AROSTCP](amiga_netdb.c) alloc_netdb()\n"));
     ndb = NULL;
   }
 #if defined(__AROS__)
-D(bug("[AROSTCP](amiga_netdb.c) alloc_netdb: Allocated ndb = 0x%08x, ndb_AccessTable = 0x%08x\n", ndb, ndb->ndb_AccessTable));
+D(bug("[AROSTCP](amiga_netdb.c) alloc_netdb: Allocated ndb = 0x%p, ndb_AccessTable = 0x%p\n", ndb, ndb->ndb_AccessTable));
 #endif
-  DNETDB(else __log(LOG_DEBUG,"Allocated ndb = 0x%08x, ndb_AccessTable = 0x%08x", ndb, ndb->ndb_AccessTable);)
+  DNETDB(else __log(LOG_DEBUG,"Allocated ndb = 0x%p, ndb_AccessTable = 0x%p", ndb, ndb->ndb_AccessTable);)
   return ndb;
 }
 
@@ -205,7 +205,7 @@ free_netdb(struct NetDataBase *ndb)
   struct GenentNode *gn;
   struct MinList *gl;
 #if defined(__AROS__)
-D(bug("[AROSTCP](amiga_netdb.c) free_netdb( 0x%08x )\n", ndb));
+D(bug("[AROSTCP](amiga_netdb.c) free_netdb( 0x%p )\n", ndb));
 #endif
   for (gl = (struct MinList *)&ndb->ndb_Hosts;
        gl <= (struct MinList *)&ndb->ndb_Domains;        
