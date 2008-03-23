@@ -153,9 +153,9 @@ AROS_LH1 (struct Library *, Open,
   WORD * i;
 
 #if defined(__AROS__)
-D(bug("[AROSTCP](amiga_api.c) ELL_Open()\n[AROSTCP](amiga_api.c) ELL_Open: version=%lu, libPtr=%08lx\n", version, libPtr));
+D(bug("[AROSTCP](amiga_api.c) ELL_Open()\n[AROSTCP](amiga_api.c) ELL_Open: version=%lu, libPtr=0x%p\n", version, libPtr));
 #else
-  D(KPrintF("ELL_Open: version=%lu, libPtr=%08lx\n", version, libPtr);)
+  D(KPrintF("ELL_Open: version=%lu, libPtr=0x%p\n", version, libPtr);)
 #endif
   /*
    * One task may open socket library more than once. In that case caller
@@ -188,9 +188,9 @@ D(bug("[AROSTCP](amiga_api.c) ELL_Open()\n[AROSTCP](amiga_api.c) ELL_Open: versi
   ((struct Library *)newBase)->lib_Revision = REVISION;
   ((struct Library *)newBase)->lib_IdString = (APTR)RELEASESTRING VSTRING;
   
-D(bug("[AROSTCP](amiga_api.c) ELL_Open: Created user library base @ %08lx\n", newBase));
+D(bug("[AROSTCP](amiga_api.c) ELL_Open: Created user library base @ 0x%p\n", newBase));
 #endif
-  D(__log(LOG_DEBUG,"Created user library base: %08lx\n", newBase);)
+  D(__log(LOG_DEBUG,"Created user library base: 0x%p\n", newBase);)
   if (newBase == NULL)
     return NULL;
 
@@ -464,9 +464,9 @@ D(bug("[AROSTCP](amiga_api.c) api_init()\n"));
   ((struct Library *)MasterSocketBase)->lib_Revision = REVISION;
   ((struct Library *)MasterSocketBase)->lib_IdString = (APTR)RELEASESTRING VSTRING;
   
-D(bug("[AROSTCP](amiga_api.c) api_init: Created master library base: %08lx\n", MasterSocketBase));
+D(bug("[AROSTCP](amiga_api.c) api_init: Created master library base: 0x%p\n", MasterSocketBase));
 #endif
-  D(Printf("Created master library base: %08lx\n", MasterSocketBase);)
+  D(Printf("Created master library base: 0x%p\n", MasterSocketBase);)
   if (MasterSocketBase == NULL)
     return FALSE;
 
@@ -487,9 +487,9 @@ D(bug("[AROSTCP](amiga_api.c) api_init: Created master library base: %08lx\n", M
   ((struct Library *)MasterMiamiBase)->lib_Revision = MIAMI_REVISION;
   ((struct Library *)MasterMiamiBase)->lib_IdString = (APTR)RELEASESTRING MIAMI_VSTRING;
 
-D(bug("[AROSTCP](amiga_api.c) api_init: Created MIAMI library base: %08lx\n", MasterMiamiBase));
+D(bug("[AROSTCP](amiga_api.c) api_init: Created MIAMI library base: 0x%p\n", MasterMiamiBase));
 #endif
-  D(Printf("Created master miami.library base: 0x%08lx\n", MasterMiamiBase);)
+  D(Printf("Created master miami.library base: 0x%p\n", MasterMiamiBase);)
   if (MasterMiamiBase == NULL)
     return FALSE;
 
