@@ -91,9 +91,9 @@ D(bug("[AROSTCP](amiga_syscalls.c) __socket()\n"));
       so->so_pgid = libPtr;
       FD_SET(fd, (fd_set *)(libPtr->dTable + libPtr->dTableSize));
 #if defined(__AROS__)
-D(bug("[AROSTCP](amiga_syscalls.c) __socket: created socket 0x%08lx fd = %ld libPtr = 0x%08lx\n", so, fd, libPtr));
+D(bug("[AROSTCP](amiga_syscalls.c) __socket: created socket 0x%p fd = %ld libPtr = 0x%p\n", so, fd, libPtr));
 #endif
-      DEVENTS(__log(LOG_DEBUG,"socket(): created socket 0x%08lx fd = %ld libPtr = 0x%08lx", so, fd, libPtr);)
+      DEVENTS(__log(LOG_DEBUG,"socket(): created socket 0x%p fd = %ld libPtr = 0x%p", so, fd, libPtr);)
     }
   }
   
