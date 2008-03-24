@@ -556,6 +556,7 @@
 /Games/Moria3D/Source/*.o
 /Games/Moria3D/Source/*.info
 /Games/Moria3D/Source/Moria3D.Linux
+/Games/Moria3D/Source/mmakefile
 
 # Games/Moria3D/Textures
 
@@ -894,10 +895,12 @@
 # Networking/Stacks/AROSTCP/dhcp
 
 # Networking/Stacks/AROSTCP/dhcp/client
+/Networking/Stacks/AROSTCP/dhcp/client/mmakefile
 
 # Networking/Stacks/AROSTCP/dhcp/client/scripts
 
 # Networking/Stacks/AROSTCP/dhcp/common
+/Networking/Stacks/AROSTCP/dhcp/common/mmakefile
 
 # Networking/Stacks/AROSTCP/dhcp/contrib
 
@@ -910,6 +913,7 @@
 # Networking/Stacks/AROSTCP/dhcp/doc/ja_JP.eucJP
 
 # Networking/Stacks/AROSTCP/dhcp/dst
+/Networking/Stacks/AROSTCP/dhcp/dst/mmakefile
 
 # Networking/Stacks/AROSTCP/dhcp/includes
 
@@ -926,8 +930,10 @@
 # Networking/Stacks/AROSTCP/dhcp/includes/omapip
 
 # Networking/Stacks/AROSTCP/dhcp/minires
+/Networking/Stacks/AROSTCP/dhcp/minires/mmakefile
 
 # Networking/Stacks/AROSTCP/dhcp/omapip
+/Networking/Stacks/AROSTCP/dhcp/omapip/mmakefile
 
 # Networking/Stacks/AROSTCP/dhcp/relay
 
@@ -3243,6 +3249,7 @@
 /mui/classes/BWins/mmakefile
 
 # mui/classes/BWins/Demos
+/mui/classes/BWins/Demos/mmakefile
 
 # mui/classes/BWins/include
 
@@ -3260,6 +3267,7 @@
 /mui/classes/BWins/mcc/mmakefile
 
 # mui/classes/BWins/mcp
+/mui/classes/BWins/mcp/mmakefile
 
 # mui/classes/mailtext
 /mui/classes/mailtext/mmakefile
@@ -3429,6 +3437,7 @@
 /music/shellplayer/mmakefile
 
 # necessary
+/necessary/mmakefile
 
 # necessary/AHI
 /necessary/AHI/mmakefile
@@ -3581,6 +3590,9 @@
 # necessary/AHI/Test/examine_ahi
 
 # necessary/AHI/Toccata
+
+# necessary/AmberRAM
+/necessary/AmberRAM/mmakefile
 
 # necessary/CDVDFS
 
