@@ -36,9 +36,8 @@ contrib-zune-classes-thebar-mcp-catalogs : loc.h loc.c \
     $(TARGETDIR)/deutsch/TheBar.catalog \
     $(TARGETDIR)/czech/TheBar.catalog \
     $(TARGETDIR)/svenska/TheBar.catalog \
-    $(TARGETDIR)/italiano/TheBar.catalog
-
-#    $(TARGETDIR)/français/TheBar.catalog
+    $(TARGETDIR)/italiano/TheBar.catalog \
+    $(TARGETDIR)/français/TheBar.catalog
 
 loc.h: TheBar.cd loc_h.sd
 	@$(FLEXCAT) TheBar.cd loc.h=loc_h.sd
