@@ -18,7 +18,7 @@
    Lackland AFB, TX, 78236-5128
  */
 #ifdef __AROS__
-#include <bsdsocket.h>
+#include <proto/bsdsocket.h>
 #include <termcap.h>
 #include <dos/dos.h>
 #include <proto/exec.h>

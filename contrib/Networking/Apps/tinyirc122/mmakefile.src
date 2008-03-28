@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 AROSTCPINC=$(TOP)/contrib/Networking/Stacks/AROSTCP/bsdsocket
 
 ##USER_INCLUDES := -isystem $(AROSTCPINC)/../netinclude -isystem  $(AROSTCPINC)/. -isystem $(AROSTCPINC)/protos -isystem $(TOP)/contrib/Networking/Developer/includes 
-USER_INCLUDES := -isystem $(TOP)/contrib/Networking/Developer/includes 
+USER_INCLUDES := -I$(AROS_DEVELOPMENT)/netinclude 
 
 USER_CFLAGS := \
         -Wno-uninitialized -Wno-parentheses \

@@ -40,7 +40,7 @@
  * 2003-01-07  fitz          Initial version.
  * ---------------------------------------------------------------------------------- */
 #ifdef __AROS__
-#include <bsdsocket.h>
+#include <proto/bsdsocket.h>
 #include <termcap.h>
 #include <dos/dos.h>
 #include <proto/exec.h>
@@ -172,7 +172,10 @@ int main(int argc, char **argv)
 #ifdef __AROS__
   SocketBase = OpenLibrary("bsdsocket.library", 3);
   if(SocketBase == NULL)
+  {
+    puts("Can't open bsdsocket.library");
     return RETURN_FAIL;
+  }
   SetErrnoPtr(&errno, sizeof(errno));
 #endif /* __AROS__ */
     int                 retval   = -1;
@@ -255,13 +258,13 @@ int main(int argc, char **argv)
                         break;
                     case 'n':
 #ifdef _DEBUG_TTEL
-                        printf ("DEBUG: remote CR/LF conversion turned OFF\n", opt);
+                        printf ("DEBUG: remote CR/LF conversion turned OFF\n");
 #endif
                         convert_nl = 0;
                         break;
                     case 'x':
 #ifdef _DEBUG_TTEL
-                        printf ("DEBUG: hex mode turned ON\n", opt);
+                        printf ("DEBUG: hex mode turned ON\n");
 #endif
                         hex_mode = 1;
                         break;

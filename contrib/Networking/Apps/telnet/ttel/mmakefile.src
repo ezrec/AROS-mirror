@@ -1,12 +1,12 @@
 include $(TOP)/config/make.cfg
 
 ##MM- aros-tcpip-apps : aros-tcpip-apps-ttel
-#MM aros-tcpip-apps-ttel : includes linklibs
+#MM aros-tcpip-apps-ttel : includes linklibs contrib-gnu-termcap
 
 #AROSTCPINC=$(TOP)/contrib/Networking/Stacks/AROSTCP/bsdsocket
 
 ##USER_INCLUDES := -isystem $(AROSTCPINC)/../netinclude -isystem  $(AROSTCPINC)/. -isystem $(AROSTCPINC)/protos -isystem $(TOP)/contrib/Networking/Developer/includes 
-USER_INCLUDES := -isystem $(TOP)/contrib/Networking/Developer/includes 
+USER_INCLUDES := -I$(AROS_DEVELOPMENT)/netinclude 
 
 USER_CFLAGS := \
         -Wno-uninitialized -Wno-parentheses \
@@ -16,5 +16,5 @@ USER_CFLAGS := \
 EXEDIR := $(CONTRIBDIR)/Networking/Apps/ttel
 
 %build_prog mmake=aros-tcpip-apps-ttel \
-    progname=ttel targetdir=$(EXEDIR)/ \
+    progname=ttel targetdir=$(EXEDIR) \
     files=ttel uselibs="arossupport amiga arosc m termcap"
