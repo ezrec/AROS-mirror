@@ -20,7 +20,9 @@ ICONS := BlackHole \
          PowerZoom \
          RubberStrings \
          Tunnel \
-         Voxel
+         Voxel \
+	 startsomedemos \
+	 startsomedemos2
 
 #MM- themes-gorilla-contrib-icons-extras-clean : themes-gorilla-contrib-icons-extras-demos-clean
 %build_icons mmake=themes-gorilla-contrib-icons-extras-demos icons=$(ICONS) dir=$(CONTRIBDIR)/Demos
