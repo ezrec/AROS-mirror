@@ -6,7 +6,7 @@
 
 include $(TOP)/config/make.cfg
 
-EXEDIR := $(CONTRIBDIR)/Sound
+EXEDIR := $(AROS_CONTRIB)/MultiMedia/Audio/MadAHI
 
 FILES  := madoss \
 	  bit \
