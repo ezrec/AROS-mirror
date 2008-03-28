@@ -20,7 +20,7 @@
 #include <dos/rdargs.h>
 #include <clib/dos_protos.h>
 #include <defines/dos.h>
-#include <bsdsocket.h>
+#include <proto/bsdsocket.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
 #define AF_INET 2 /* we need to fix our includes */
