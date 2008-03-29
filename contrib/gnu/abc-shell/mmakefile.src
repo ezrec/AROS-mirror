@@ -1,0 +1,18 @@
+# Copyright © 2008, The AROS Development Team. All rights reserved.
+# $Id$
+
+-include $(TOP)/config/make.cfg
+
+FILES   := amigaos alloc c_ksh c_sh c_test environ eval exec expr history io jobs\
+           lex main misc missing path shf sigact syn table trap tree tty var version
+DESTDIR := $(AROS_DEVELOPMENT)/bin
+
+USER_CFLAGS := -DAMIGA -DPOSIXLY_CORRECT -DHISTORY -DAUTOINIT
+
+#MM- contrib-gnu    : contrib-gnu-sh
+#MM- contrib-gnu-sh : sh
+
+%build_prog mmake=contrib-gnu-sh progname=sh files=$(FILES) targetdir=$(DESTDIR) \
+    uselibs="arosc m"
+
+%common

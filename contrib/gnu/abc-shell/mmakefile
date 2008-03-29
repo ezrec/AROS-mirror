@@ -1,0 +1,187 @@
+include $(TOP)/config/make.cfg
+
+FILES   := amigaos alloc c_ksh c_sh c_test environ eval exec expr history io jobs\
+           lex main misc missing path shf sigact syn table trap tree tty var version
+DESTDIR := $(AROS_DEVELOPMENT)/bin
+
+USER_CFLAGS := -DAMIGA -DPOSIXLY_CORRECT -DHISTORY -DAUTOINIT
+
+#MM- contrib-gnu    : contrib-gnu-sh
+#MM- contrib-gnu-sh : sh
+
+
+.PHONY : contrib-gnu-sh
+
+BDID := $(BDID)_
+ifneq ($(filter $(TARGET),contrib-gnu-sh contrib-gnu-sh-clean contrib-gnu-sh-quick),)
+BDTARGETID := $(BDID)
+endif
+
+BD_PROGNAME$(BDID)  := sh
+BD_OBJDIR$(BDID)    := $(GENDIR)/$(CURDIR)
+BD_TARGETDIR$(BDID) := $(DESTDIR)
+
+BD_FILES$(BDID)     := $(FILES)
+BD_ASMFILES$(BDID)  := 
+BD_OBJS$(BDID)      := $(addsuffix .o,$(addprefix $(BD_OBJDIR$(BDID))/,$(BD_FILES$(BDID)) $(BD_ASMFILES$(BDID))))
+BD_DEPS$(BDID)      := $(addsuffix .d,$(addprefix $(BD_OBJDIR$(BDID))/,$(BD_FILES$(BDID))))
+
+BD_CFLAGS$(BDID)    := $(CFLAGS)
+BD_AFLAGS$(BDID)    := $(AFLAGS)
+BD_DFLAGS$(BDID)    := $(BD_CFLAGS$(BDID))
+BD_LDFLAGS$(BDID)   := $(LDFLAGS)
+
+#MM
+contrib-gnu-sh-quick : contrib-gnu-sh
+
+#MM contrib-gnu-sh : includes-generate-deps
+contrib-gnu-sh : $(BD_TARGETDIR$(BDID))/$(BD_PROGNAME$(BDID))
+
+ifneq ($(filter $(TARGET),contrib-gnu-sh contrib-gnu-sh-quick),)
+
+ifeq ($(BD_OBJDIR$(BDID)),)
+  TMP_TARGETBASE := %
+else
+  TMP_TARGETBASE := $(BD_OBJDIR$(BDID))/$(notdir %)
+endif
+
+ifeq ($(findstring target,host target),)
+  $(error unknown compiler target)
+endif
+ifeq (target,target)
+$(TMP_TARGETBASE).o : TMP_CMD:=$(TARGET_CC)
+$(TMP_TARGETBASE).d : TMP_CMD:=$(TARGET_CC)
+endif
+ifeq (target,host)
+$(TMP_TARGETBASE).o : TMP_CMD:=$(HOST_CC)
+$(TMP_TARGETBASE).d : TMP_CMD:=$(HOST_CC)
+endif
+
+ifeq (no,yes)
+  $(TMP_TARGETBASE).o : CFLAGS := -nix $(BD_CFLAGS$(BDID))
+else
+  $(TMP_TARGETBASE).o : CFLAGS := $(BD_CFLAGS$(BDID))
+endif
+$(TMP_TARGETBASE).o : %.c
+	@$(ECHO) "Compiling $<"
+	@$(IF) $(TMP_CMD) $(CFLAGS) -c $< -o $@ > $(GENDIR)/cerrors 2>&1 ; then \
+	    $(IF) $(TEST) -s $(GENDIR)/cerrors ; then \
+		$(ECHO) "$<: $(TMP_CMD) $(CFLAGS) -c $< -o $@" >> $(GENDIR)/errors ; \
+		tee < $(GENDIR)/cerrors -a $(GENDIR)/errors ; \
+	    else \
+		$(NOP) ; \
+	    fi ; \
+	else \
+	    $(ECHO) "Compile failed: $(TMP_CMD) $(CFLAGS) -c $< -o $@" 1>&2 ; \
+	    tee < $(GENDIR)/cerrors -a $(GENDIR)/errors 1>&2 ; \
+	    exit 1 ; \
+	fi
+
+ifeq ($(BD_DFLAGS$(BDID)),)
+  ifeq (no,yes)
+    $(TMP_TARGETBASE).d : TMP_DFLAGS:=-nix $(BD_CFLAGS$(BDID))
+  else
+    $(TMP_TARGETBASE).d : TMP_DFLAGS:=$(BD_CFLAGS$(BDID))
+  endif
+else
+  ifeq (no,yes)
+    $(TMP_TARGETBASE).d : TMP_DFLAGS:=-nix $(BD_DFLAGS$(BDID))
+  else
+    $(TMP_TARGETBASE).d : TMP_DFLAGS:=$(BD_DFLAGS$(BDID))
+  endif
+endif
+$(TMP_TARGETBASE).d : %.c
+	@$(IF) $(TEST) ! -d $(dir $@) ; then $(MKDIR) $(dir $@) ; else $(NOP) ; fi
+	@$(ECHO) "Makedepend $(CURDIR)/$(notdir $<)..."
+	@AROS_CC="$(TMP_CMD)" $(MKDEPEND) $(TMP_DFLAGS) $< -o $@
+
+ifeq ($(BD_OBJDIR$(BDID)),)
+TMP_TARGETS := $(addsuffix .o,$(BD_ASMFILES$(BDID)))
+TMP_WILDCARD := %
+else
+TMP_TARGETS := $(addsuffix .o,$(addprefix $(BD_OBJDIR$(BDID))/,$(notdir $(BD_ASMFILES$(BDID)))))
+TMP_WILDCARD := $(BD_OBJDIR$(BDID))/%
+
+# Be sure that all .s files are generated
+$(TMP_TARGETS) : | $(addsuffix .s,$(BD_ASMFILES$(BDID)))
+
+# Be sure that all .c files are found
+TMP_DIRS := $(filter-out ./,$(sort $(dir $(BD_ASMFILES$(BDID)))))
+ifneq ($(TMP_DIRS),)
+    vpath %.s $(TMP_DIRS)
+endif
+
+endif
+
+$(TMP_TARGETS) : AFLAGS := $(BD_AFLAGS$(BDID))
+$(TMP_TARGETS) : $(TMP_WILDCARD).o : %.s
+	@$(ECHO) "Assembling $(notdir $<)..."
+	@$(IF) $(CC) $(AFLAGS) $< -o $@ > $(GENDIR)/cerrors 2>&1 ; then \
+	    $(IF) $(TEST) -s $(GENDIR)/cerrors ; then \
+		$(ECHO) "$(notdir $<): $(CC) $(AFLAGS) $< -o $@" >> $(GENDIR)/errors ; \
+		$(CAT) $(GENDIR)/cerrors >> $(GENDIR)/errors ; \
+	    else \
+		$(NOP) ; \
+	    fi ; \
+	else \
+	    $(ECHO) "Assemble failed: $(CC) $(AFLAGS) $< -o $@" 1>&2 ; \
+	    tee < $(GENDIR)/cerrors -a $(GENDIR)/errors 1>&2 ; \
+	    exit 1 ; \
+	fi
+
+
+TMP_EXTRA_LDFLAGS := 
+ifeq (no,yes)
+    TMP_EXTRA_LDFLAGS += $(NIX_LDFLAGS)
+endif
+ifeq (yes,no)
+    TMP_EXTRA_LDFLAGS += $(NOSTARTUP_LDFLAGS)
+endif
+ifeq (no,yes)
+    TMP_EXTRA_LDFLAGS += $(DETACH_LDFLAGS)
+endif
+$(BD_TARGETDIR$(BDID))/$(BD_PROGNAME$(BDID)) : EXTRA_LDFLAGS:=$(TMP_EXTRA_LDFLAGS)
+
+$(BD_TARGETDIR$(BDID))/$(BD_PROGNAME$(BDID)) : $(BD_OBJS$(BDID)) $(addprefix $(LIBDIR)/lib,$(addsuffix .a,arosc m libinit autoinit))
+	@$(ECHO) "Linking $@..."
+	@$(IF) $(AROS_CC) $(BD_LDFLAGS$(BDID)) $(EXTRA_LDFLAGS) $(BD_OBJS$(BDID)) -o $@ $(addprefix -l,arosc m) $(addprefix -l,) 2>&1 > $(GENDIR)/cerrors 2>&1 ; then \
+		$(IF) $(TEST) -s $(GENDIR)/cerrors ; then \
+				$(ECHO) "$@: $(AROS_CC) $(BD_LDFLAGS$(BDID)) $(EXTRA_LDFLAGS) $(BD_OBJS$(BDID)) -o $@ $(addprefix -l,arosc m) $(addprefix -l,)" >> $(GENDIR)/errors ; \
+				$(CAT) $(GENDIR)/cerrors >> $(GENDIR)/errors ; \
+	   	else \
+			$(NOP) ; \
+    		fi ; \
+	else \
+	    $(ECHO) "Link failed: $(AROS_CC) $(BD_LDFLAGS$(BDID)) $(EXTRA_LDFLAGS) $(BD_OBJS$(BDID)) -o $@ $(addprefix -l,arosc m) $(addprefix -l,)" 1>&2 ; \
+	    tee < $(GENDIR)/cerrors -a $(GENDIR)/errors 1>&2 ; \
+	    exit 1 ; \
+	fi; \
+	$(STRIP) $@
+
+endif
+
+ifneq ($(BD_DEPS$(BDID)),)
+  ifneq (contrib-gnu-sh contrib-gnu-sh-quick,)
+    ifneq ($(findstring $(TARGET),contrib-gnu-sh contrib-gnu-sh-quick),)
+      -include $(BD_DEPS$(BDID))
+    endif
+  else
+    ifeq (,$(filter clean% %clean %clean% setup% includes% %setup,$(TARGET)))
+      -include $(BD_DEPS$(BDID))
+    endif
+  endif
+endif
+
+$(BD_OBJS$(BDID)) $(BD_DEPS$(BDID)) : | $(BD_OBJDIR$(BDID))
+$(BD_TARGETDIR$(BDID))/$(BD_PROGNAME$(BDID)) : | $(BD_TARGETDIR$(BDID))
+GLOB_MKDIRS += $(BD_OBJDIR$(BDID)) $(BD_TARGETDIR$(BDID))
+
+
+# Delete generated makefiles
+#MM
+clean ::
+	@$(RM) $(TOP)/$(CURDIR)/mmakefile $(TOP)/$(CURDIR)/mmakefile.bak
+
+include $(TOP)/config/make.tail
+
+BDID := $(BDTARGETID)
