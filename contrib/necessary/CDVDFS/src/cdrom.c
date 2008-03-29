@@ -218,11 +218,7 @@ int Do_SCSI_Command
 		int p_direction
 	)
 {
-/* FIXME: DirectSCSI requests cause ata.device lockup in AROS. The driver needs to be fixed. */
-#ifdef __AROS__
-    	return 0;
-#else
-int bufs = p_cd->std_buffers + p_cd->file_buffers + 1;
+	int bufs = p_cd->std_buffers + p_cd->file_buffers + 1;
 
 	p_cd->scsireq->io_Length   = sizeof (struct SCSICmd);
 	p_cd->scsireq->io_Data     = (APTR) &p_cd->cmd;
@@ -249,7 +245,6 @@ int bufs = p_cd->std_buffers + p_cd->file_buffers + 1;
 	}
 	else
 		return 1;
-#endif
 }
 
 int Read_From_Drive
