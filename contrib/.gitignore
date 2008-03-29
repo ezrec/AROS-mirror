@@ -716,6 +716,92 @@
 
 # MultiMedia/AMP2/refresh
 
+# MultiMedia/abcm2ps
+/MultiMedia/abcm2ps/mmakefile
+
+# MultiMedia/libs
+
+# MultiMedia/libs/ptplay
+
+# MultiMedia/libs/ptplay/Include
+
+# MultiMedia/libs/ptplay/Include/fd
+
+# MultiMedia/libs/ptplay/Sources
+/MultiMedia/libs/ptplay/Sources/mmakefile
+
+# MultiMedia/mad
+/MultiMedia/mad/mmakefile
+
+# MultiMedia/mad/doc
+
+# MultiMedia/play
+/MultiMedia/play/play
+
+# MultiMedia/play/libavcodec
+/MultiMedia/play/libavcodec/Makefile.*
+/MultiMedia/play/libavcodec/.depend
+/MultiMedia/play/libavcodec/libavcodec.a
+
+# MultiMedia/play/libavcodec/alpha
+
+# MultiMedia/play/libavcodec/armv4l
+
+# MultiMedia/play/libavcodec/i386
+
+# MultiMedia/play/libavcodec/liba52
+
+# MultiMedia/play/libavcodec/libpostproc
+
+# MultiMedia/play/libavcodec/mlib
+
+# MultiMedia/play/libavcodec/ppc
+
+# MultiMedia/play/libavcodec/ps2
+
+# MultiMedia/play/libavcodec/sh4
+
+# MultiMedia/play/libavcodec/sparc
+
+# MultiMedia/play/libavformat
+/MultiMedia/play/libavformat/config.h
+/MultiMedia/play/libavformat/config.mak
+/MultiMedia/play/libavformat/*ffmpeg
+/MultiMedia/play/libavformat/ffserver
+/MultiMedia/play/libavformat/Makefile.*
+/MultiMedia/play/libavformat/.depend
+/MultiMedia/play/libavformat/libavformat.a
+
+# MultiMedia/play/obj
+
+# MultiMedia/radium
+/MultiMedia/radium/mmakefile
+
+# MultiMedia/radium/Qt
+
+# MultiMedia/radium/amiga
+
+# MultiMedia/radium/amiga/instrprop
+
+# MultiMedia/radium/amiga/plug-ins
+
+# MultiMedia/radium/aros
+
+# MultiMedia/radium/common
+
+# MultiMedia/radium/common/new
+
+# MultiMedia/radium/dummies
+
+# MultiMedia/radium/midi
+
+# MultiMedia/radium/mmd2loader
+
+# MultiMedia/shellplayer
+/MultiMedia/shellplayer/mmakefile
+
+# MultiMedia/sox
+
 # Networking
 
 # Networking/Apps
@@ -738,6 +824,26 @@
 
 # Networking/Apps/aaedt/icons
 /Networking/Apps/aaedt/icons/mmakefile
+
+# Networking/Apps/amosaic
+
+# Networking/Apps/amosaic/libwww2
+/Networking/Apps/amosaic/libwww2/mmakefile
+
+# Networking/Apps/amosaic/libwww2/Unused
+
+# Networking/Apps/amosaic/src
+/Networking/Apps/amosaic/src/mmakefile
+/Networking/Apps/amosaic/src/*.bak
+/Networking/Apps/amosaic/src/*.o
+
+# Networking/Apps/amosaic/src/bitmaps
+
+# Networking/Apps/amosaic/src/catalogs
+
+# Networking/Apps/amosaic/src/catalogs/deutsch
+
+# Networking/Apps/amosaic/src/catalogs/svenska
 
 # Networking/Apps/telnet
 
@@ -973,6 +1079,90 @@
 /Networking/Stacks/AROSTCP/syslog/mmakefile
 
 # Networking/Stacks/AROSTCP/usergroup
+
+# Networking/Stacks/lwip
+
+# Networking/Stacks/lwip/lwip
+
+# Networking/Stacks/lwip/lwip/doc
+
+# Networking/Stacks/lwip/lwip/proj
+
+# Networking/Stacks/lwip/lwip/proj/amigaos
+/Networking/Stacks/lwip/lwip/proj/amigaos/SCOPTIONS
+/Networking/Stacks/lwip/lwip/proj/amigaos/*.o
+/Networking/Stacks/lwip/lwip/proj/amigaos/*.bak
+/Networking/Stacks/lwip/lwip/proj/amigaos/*.info
+/Networking/Stacks/lwip/lwip/proj/amigaos/*.lnk
+/Networking/Stacks/lwip/lwip/proj/amigaos/test
+/Networking/Stacks/lwip/lwip/proj/amigaos/testserver
+/Networking/Stacks/lwip/lwip/proj/amigaos/testclient
+/Networking/Stacks/lwip/lwip/proj/amigaos/simpleping
+/Networking/Stacks/lwip/lwip/proj/amigaos/testgethostbyname
+/Networking/Stacks/lwip/lwip/proj/amigaos/ping
+/Networking/Stacks/lwip/lwip/proj/amigaos/mmakefile
+
+# Networking/Stacks/lwip/lwip/proj/amigaos/include
+
+# Networking/Stacks/lwip/lwip/proj/amigaos/include/arch
+/Networking/Stacks/lwip/lwip/proj/amigaos/include/arch/*.info
+/Networking/Stacks/lwip/lwip/proj/amigaos/include/arch/*.bak
+
+# Networking/Stacks/lwip/lwip/proj/amigaos/include/netif
+/Networking/Stacks/lwip/lwip/proj/amigaos/include/netif/*.bak
+/Networking/Stacks/lwip/lwip/proj/amigaos/include/netif/*.info
+
+# Networking/Stacks/lwip/lwip/proj/amigaos/include/sys
+
+# Networking/Stacks/lwip/lwip/proj/amigaos/netif
+/Networking/Stacks/lwip/lwip/proj/amigaos/netif/*.o
+/Networking/Stacks/lwip/lwip/proj/amigaos/netif/*.bak
+/Networking/Stacks/lwip/lwip/proj/amigaos/netif/*.info
+
+# Networking/Stacks/lwip/lwip/proj/amigaos/netif/tapinterface
+/Networking/Stacks/lwip/lwip/proj/amigaos/netif/tapinterface/mmakefile
+
+# Networking/Stacks/lwip/lwip/proj/aros
+
+# Networking/Stacks/lwip/lwip/src
+
+# Networking/Stacks/lwip/lwip/src/api
+/Networking/Stacks/lwip/lwip/src/api/*.o
+/Networking/Stacks/lwip/lwip/src/api/*.info
+/Networking/Stacks/lwip/lwip/src/api/*.bak
+
+# Networking/Stacks/lwip/lwip/src/core
+/Networking/Stacks/lwip/lwip/src/core/*.o
+/Networking/Stacks/lwip/lwip/src/core/*.bak
+/Networking/Stacks/lwip/lwip/src/core/*.info
+
+# Networking/Stacks/lwip/lwip/src/core/ipv4
+/Networking/Stacks/lwip/lwip/src/core/ipv4/*.o
+/Networking/Stacks/lwip/lwip/src/core/ipv4/*.bak
+/Networking/Stacks/lwip/lwip/src/core/ipv4/*.info
+
+# Networking/Stacks/lwip/lwip/src/core/ipv6
+
+# Networking/Stacks/lwip/lwip/src/include
+
+# Networking/Stacks/lwip/lwip/src/include/ipv4
+
+# Networking/Stacks/lwip/lwip/src/include/ipv4/lwip
+
+# Networking/Stacks/lwip/lwip/src/include/ipv6
+
+# Networking/Stacks/lwip/lwip/src/include/ipv6/lwip
+
+# Networking/Stacks/lwip/lwip/src/include/lwip
+
+# Networking/Stacks/lwip/lwip/src/include/netif
+
+# Networking/Stacks/lwip/lwip/src/netif
+/Networking/Stacks/lwip/lwip/src/netif/*.o
+/Networking/Stacks/lwip/lwip/src/netif/*.bak
+/Networking/Stacks/lwip/lwip/src/netif/*.info
+
+# Networking/Stacks/lwip/lwip/src/netif/ppp
 
 # Networking/Utils
 
@@ -1575,30 +1765,6 @@
 
 # aminet/util/wb/modifyicon
 /aminet/util/wb/modifyicon/mmakefile
-
-# amosaic
-
-# amosaic/libwww2
-/amosaic/libwww2/mmakefile
-
-# amosaic/libwww2/Unused
-
-# amosaic/src
-/amosaic/src/mmakefile
-/amosaic/src/*.bak
-/amosaic/src/*.o
-
-# amosaic/src/bitmaps
-
-# amosaic/src/catalogs
-
-# amosaic/src/catalogs/deutsch
-
-# amosaic/src/catalogs/svenska
-
-# audio
-
-# audio/sox
 
 # bgui
 
@@ -2581,52 +2747,6 @@
 
 # gfx
 
-# gfx/4p
-
-# gfx/4p/Docs
-
-# gfx/4p/Images
-
-# gfx/4p/Palettes
-
-# gfx/4p/archs
-
-# gfx/4p/archs/BeOS
-
-# gfx/4p/archs/Darwin
-
-# gfx/4p/archs/Darwin/Resources
-
-# gfx/4p/archs/Darwin/Resources/English.lproj
-
-# gfx/4p/archs/Darwin/Resources/SDLMain.nib
-
-# gfx/4p/archs/Linux
-
-# gfx/4p/archs/SunOS
-
-# gfx/4p/src
-
-# gfx/4p/src/archs
-
-# gfx/4p/src/archs/darwin
-
-# gfx/4p/src/dialogs
-
-# gfx/4p/src/jsui
-
-# gfx/4p/src/jsui/gfx
-
-# gfx/4p/src/jsui/gui
-
-# gfx/4p/src/jsui/gui/widgets
-
-# gfx/4p/src/paint
-
-# gfx/4p/src/paint/iff
-
-# gfx/4p/src/paint/tools
-
 # gfx/XaoS
 /gfx/XaoS/mmakefile
 
@@ -2922,6 +3042,19 @@
 # gnu/FriBidi
 /gnu/FriBidi/mmakefile
 
+# gnu/abc-shell
+/gnu/abc-shell/mmakefile
+
+# gnu/abc-shell/AmiUpdate
+
+# gnu/abc-shell/etc
+
+# gnu/abc-shell/old
+
+# gnu/abc-shell/test_cmds
+
+# gnu/abc-shell/tests
+
 # gnu/bc
 /gnu/bc/mmakefile
 /gnu/bc/.files-touched
@@ -2933,6 +3066,9 @@
 # gnu/bison
 /gnu/bison/mmakefile
 /gnu/bison/.files-touched
+
+# gnu/coreutils
+/gnu/coreutils/mmakefile
 
 # gnu/cpuid
 /gnu/cpuid/mmakefile
@@ -3157,90 +3293,6 @@
 
 # libini/include
 
-# lwip
-
-# lwip/lwip
-
-# lwip/lwip/doc
-
-# lwip/lwip/proj
-
-# lwip/lwip/proj/amigaos
-/lwip/lwip/proj/amigaos/SCOPTIONS
-/lwip/lwip/proj/amigaos/*.o
-/lwip/lwip/proj/amigaos/*.bak
-/lwip/lwip/proj/amigaos/*.info
-/lwip/lwip/proj/amigaos/*.lnk
-/lwip/lwip/proj/amigaos/test
-/lwip/lwip/proj/amigaos/testserver
-/lwip/lwip/proj/amigaos/testclient
-/lwip/lwip/proj/amigaos/simpleping
-/lwip/lwip/proj/amigaos/testgethostbyname
-/lwip/lwip/proj/amigaos/ping
-/lwip/lwip/proj/amigaos/mmakefile
-
-# lwip/lwip/proj/amigaos/include
-
-# lwip/lwip/proj/amigaos/include/arch
-/lwip/lwip/proj/amigaos/include/arch/*.info
-/lwip/lwip/proj/amigaos/include/arch/*.bak
-
-# lwip/lwip/proj/amigaos/include/netif
-/lwip/lwip/proj/amigaos/include/netif/*.bak
-/lwip/lwip/proj/amigaos/include/netif/*.info
-
-# lwip/lwip/proj/amigaos/include/sys
-
-# lwip/lwip/proj/amigaos/netif
-/lwip/lwip/proj/amigaos/netif/*.o
-/lwip/lwip/proj/amigaos/netif/*.bak
-/lwip/lwip/proj/amigaos/netif/*.info
-
-# lwip/lwip/proj/amigaos/netif/tapinterface
-/lwip/lwip/proj/amigaos/netif/tapinterface/mmakefile
-
-# lwip/lwip/proj/aros
-
-# lwip/lwip/src
-
-# lwip/lwip/src/api
-/lwip/lwip/src/api/*.o
-/lwip/lwip/src/api/*.info
-/lwip/lwip/src/api/*.bak
-
-# lwip/lwip/src/core
-/lwip/lwip/src/core/*.o
-/lwip/lwip/src/core/*.bak
-/lwip/lwip/src/core/*.info
-
-# lwip/lwip/src/core/ipv4
-/lwip/lwip/src/core/ipv4/*.o
-/lwip/lwip/src/core/ipv4/*.bak
-/lwip/lwip/src/core/ipv4/*.info
-
-# lwip/lwip/src/core/ipv6
-
-# lwip/lwip/src/include
-
-# lwip/lwip/src/include/ipv4
-
-# lwip/lwip/src/include/ipv4/lwip
-
-# lwip/lwip/src/include/ipv6
-
-# lwip/lwip/src/include/ipv6/lwip
-
-# lwip/lwip/src/include/lwip
-
-# lwip/lwip/src/include/netif
-
-# lwip/lwip/src/netif
-/lwip/lwip/src/netif/*.o
-/lwip/lwip/src/netif/*.bak
-/lwip/lwip/src/netif/*.info
-
-# lwip/lwip/src/netif/ppp
-
 # mui
 
 # mui/classes
@@ -3409,32 +3461,6 @@
 /mui/madmatrix/*.bak
 /mui/madmatrix/*.lnk
 /mui/madmatrix/mmakefile
-
-# music
-
-# music/libs
-
-# music/libs/ptplay
-
-# music/libs/ptplay/Include
-
-# music/libs/ptplay/Include/fd
-
-# music/libs/ptplay/Sources
-/music/libs/ptplay/Sources/mmakefile
-
-# music/mad
-/music/mad/mmakefile
-
-# music/mad/doc
-
-# music/notation
-
-# music/notation/abcm2ps
-/music/notation/abcm2ps/mmakefile
-
-# music/shellplayer
-/music/shellplayer/mmakefile
 
 # necessary
 /necessary/mmakefile
@@ -3855,68 +3881,6 @@
 # pack/libxad/portable/tools
 
 # pack/libxad/portable/unix
-
-# play
-/play/play
-
-# play/libavcodec
-/play/libavcodec/Makefile.*
-/play/libavcodec/.depend
-/play/libavcodec/libavcodec.a
-
-# play/libavcodec/alpha
-
-# play/libavcodec/armv4l
-
-# play/libavcodec/i386
-
-# play/libavcodec/liba52
-
-# play/libavcodec/libpostproc
-
-# play/libavcodec/mlib
-
-# play/libavcodec/ppc
-
-# play/libavcodec/ps2
-
-# play/libavcodec/sh4
-
-# play/libavcodec/sparc
-
-# play/libavformat
-/play/libavformat/config.h
-/play/libavformat/config.mak
-/play/libavformat/*ffmpeg
-/play/libavformat/ffserver
-/play/libavformat/Makefile.*
-/play/libavformat/.depend
-/play/libavformat/libavformat.a
-
-# play/obj
-
-# radium
-/radium/mmakefile
-
-# radium/Qt
-
-# radium/amiga
-
-# radium/amiga/instrprop
-
-# radium/amiga/plug-ins
-
-# radium/aros
-
-# radium/common
-
-# radium/common/new
-
-# radium/dummies
-
-# radium/midi
-
-# radium/mmd2loader
 
 # regina
 /regina/mmakefile
