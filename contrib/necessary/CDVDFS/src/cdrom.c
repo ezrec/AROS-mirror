@@ -10,6 +10,9 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 30-Mar-08 error     - Updated 'Find_Last_Session' with a generic command
+ *                       mandatory for all MMC devices; corrected major flaw
+ *                       with uninitialized variables
  * 12-Aug-07 sonic     - Added some debug output.
  * 09-Apr-07 sonic     - Disabled DirectSCSI on AROS.
  * 08-Apr-07 sonic     - Removed redundant TRACKDISK option.
@@ -611,30 +614,46 @@ void Clear_Sector_Buffers (CDROM *p_cd)
 
 int Find_Last_Session(CDROM *p_cd, uint32_t *p_result)
 {
-static unsigned char cmd[10] = { 0xC7, 3, 0, 0, 0, 0, 0, 0, 0, 0 };
-int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
-unsigned char *buf = p_cd->buffers[dummy_buf];
-int min, sec, frame;
+    static uint8_t cmd[] = {0x43, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, SCSI_BUFSIZE>>8, 0x00, 0x00};
+    
+    /*
+     * first, make the initiator use the logical offset of 0 in case the above fails;
+     * this method will do one of:
+     * a) detect first track in last session by issuing appropriate ReadTOC on CD; if this is a data track
+     *    then it shall be used as 'current' track, or
+     * b) use the first track of first session in case of any failure
+     *
+     * in future this would be a good idea to allow user choose from multiple tracks.
+     */
+    *p_result = 0;
+    uint8_t *buf = p_cd->buffers[p_cd->std_buffers + p_cd->file_buffers];
 
-	if (p_cd->model != MODEL_TOSHIBA_3401)
-		return FALSE;
+    /*
+     * now that we have a spare buffer, try to fetch some data from that CD
+     */
+    if (!Do_SCSI_Command(p_cd, buf, SCSI_BUFSIZE, cmd, sizeof(cmd), SCSIF_READ))
+       return FALSE;
 
-	if (
-			!Do_SCSI_Command
-				(
-					p_cd,
-					p_cd->buffers[dummy_buf],
-					SCSI_BUFSIZE,
-					cmd,
-					sizeof (cmd),
-					SCSIF_READ
-				)
-		) 
- 		return FALSE;
+    /*
+     * check if we are dealing with a DATA track here.
+     * nobody would like to spend an hour trying to get his mixed mode cd read
+     */
+    BUG(dbprintf("[CDVDFS] First track in last session has type %lx\n", buf[5]));
+    if ((buf[5] & 0xfc) != 0x14)
+    {
+       BUG(dbprintf("[CDVDFS] This track is not a DATA track. Will default to track 1.\n", buf[5]));
 
-	min = (buf[1] & 0xF) + ((buf[1] & 0xF0) >> 4) * 10;
-	sec = (buf[2] & 0xF) + ((buf[2] & 0xF0) >> 4) * 10;
-	frame = (buf[3] & 0xF) + ((buf[3] & 0xF0) >> 4) * 10;
-	*p_result = frame + sec * 75 + min * (75 * 60) - 150;
-	return TRUE;
+       /*
+        * this indeed sets the address of first track in first session, but we have no idea if this really is a data track.
+        * we don't care anyways. it will be detected by higher layer
+        */
+       return TRUE;
+    }
+
+    /*
+     * the ReadTOC has MSF field set to 0 so we treat obtained values as logical block address
+     */
+
+    *p_result = (buf[8] << 24) | (buf[9] << 16) | (buf[10] << 8) | (buf[11]);
+    return TRUE;
 }
