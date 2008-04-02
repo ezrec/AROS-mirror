@@ -39,23 +39,10 @@
 #define FREEA(p) free(p)
 #endif
 
-//#include <proto/freetype2.h>
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_OUTLINE_H
 #include FT_TRUETYPE_IDS_H
-#include FT_TRUETYPE_TABLES_H
-/*
-#include <freetype/freetype.h>
-#include <freetype/ftoutln.h>
-#include <freetype/ttnameid.h>
-*/
-#include <freetype/internal/ftobjs.h>
-
-#ifndef FT_OPEN_STREAM
-#define FT_OPEN_STREAM ft_open_stream
-#endif
 
 #include "SDL.h"
 #include "SDL_endian.h"
@@ -281,7 +268,6 @@ TTF_Font* TTF_OpenFontIndexRW( SDL_RWops *src, int freesrc, int ptsize, long ind
 	}
 	memset(stream, 0, sizeof(*stream));
 
-	stream->memory = library->memory;
 	stream->read = RWread;
 	stream->descriptor.pointer = src;
 	stream->pos = (unsigned long)position;
@@ -523,12 +509,20 @@ static FT_Error Load_Glyph( TTF_Font* font, Uint16 ch, c_glyph* cached, int want
 
 		/* FT_Render_Glyph() and .fon fonts always generate a
 		 * two-color (black and white) glyphslot surface, even
-		 * when rendered in ft_render_mode_normal.  This is probably
-		 * a freetype2 bug because it is inconsistent with the
-		 * freetype2 documentation under FT_Render_Mode section.
-		 * */
-		if ( mono || !FT_IS_SCALABLE(face) ) {
+		 * when rendered in ft_render_mode_normal. */
+		/* FT_IS_SCALABLE() means that the font is in outline format,
+		 * but does not imply that outline is rendered as 8-bit
+		 * grayscale, because embedded bitmap/graymap is preferred
+		 * (see FT_LOAD_DEFAULT section of FreeType2 API Reference).
+		 * FT_Render_Glyph() canreturn two-color bitmap or 4/16/256-
+		 * color graymap according to the format of embedded bitmap/
+		 * graymap. */
+		if ( glyph->bitmap.pixel_mode == FT_PIXEL_MODE_MONO ) {
 			dst->pitch *= 8;
+		} else if ( glyph->bitmap.pixel_mode == FT_PIXEL_MODE_GRAY2 ) {
+			dst->pitch *= 4;
+		} else if ( glyph->bitmap.pixel_mode == FT_PIXEL_MODE_GRAY4 ) {
+			dst->pitch *= 2;
 		}
 
 		/* Adjust for bold and italic text */
@@ -557,25 +551,50 @@ static FT_Error Load_Glyph( TTF_Font* font, Uint16 ch, c_glyph* cached, int want
 					unsigned char *srcp = src->buffer + soffset;
 					unsigned char *dstp = dst->buffer + doffset;
 					int j;
-					for ( j = 0; j < src->width; j += 8 ) {
-						unsigned char ch = *srcp++;
-						*dstp++ = (ch&0x80) >> 7;
-						ch <<= 1;
-						*dstp++ = (ch&0x80) >> 7;
-						ch <<= 1;
-						*dstp++ = (ch&0x80) >> 7;
-						ch <<= 1;
-						*dstp++ = (ch&0x80) >> 7;
-						ch <<= 1;
-						*dstp++ = (ch&0x80) >> 7;
-						ch <<= 1;
-						*dstp++ = (ch&0x80) >> 7;
-						ch <<= 1;
-						*dstp++ = (ch&0x80) >> 7;
-						ch <<= 1;
-						*dstp++ = (ch&0x80) >> 7;
+					if ( glyph->bitmap.pixel_mode == FT_PIXEL_MODE_MONO ) {
+						for ( j = 0; j < src->width; j += 8 ) {
+							unsigned char ch = *srcp++;
+							*dstp++ = (ch&0x80) >> 7;
+							ch <<= 1;
+							*dstp++ = (ch&0x80) >> 7;
+							ch <<= 1;
+							*dstp++ = (ch&0x80) >> 7;
+							ch <<= 1;
+							*dstp++ = (ch&0x80) >> 7;
+							ch <<= 1;
+							*dstp++ = (ch&0x80) >> 7;
+							ch <<= 1;
+							*dstp++ = (ch&0x80) >> 7;
+							ch <<= 1;
+							*dstp++ = (ch&0x80) >> 7;
+							ch <<= 1;
+							*dstp++ = (ch&0x80) >> 7;
+						}
+					}  else if ( glyph->bitmap.pixel_mode == FT_PIXEL_MODE_GRAY2 ) {
+						for ( j = 0; j < src->width; j += 4 ) {
+							unsigned char ch = *srcp++;
+							*dstp++ = (((ch&0xA0) >> 6) >= 0x2) ? 1 : 0;
+							ch <<= 2;
+							*dstp++ = (((ch&0xA0) >> 6) >= 0x2) ? 1 : 0;
+							ch <<= 2;
+							*dstp++ = (((ch&0xA0) >> 6) >= 0x2) ? 1 : 0;
+							ch <<= 2;
+							*dstp++ = (((ch&0xA0) >> 6) >= 0x2) ? 1 : 0;
+						}
+					} else if ( glyph->bitmap.pixel_mode == FT_PIXEL_MODE_GRAY4 ) {
+						for ( j = 0; j < src->width; j += 2 ) {
+							unsigned char ch = *srcp++;
+							*dstp++ = (((ch&0xF0) >> 4) >= 0x8) ? 1 : 0;
+							ch <<= 4;
+							*dstp++ = (((ch&0xF0) >> 4) >= 0x8) ? 1 : 0;
+						}
+					} else {
+						for ( j = 0; j < src->width; j++ ) {
+							unsigned char ch = *srcp++;
+							*dstp++ = (ch >= 0x80) ? 1 : 0;
+						}
 					}
-				} else if ( !FT_IS_SCALABLE(face) ) {
+				} else if ( glyph->bitmap.pixel_mode == FT_PIXEL_MODE_MONO ) {
 					/* This special case wouldn't
 					 * be here if the FT_Render_Glyph()
 					 * function wasn't buggy when it tried
@@ -600,6 +619,38 @@ static FT_Error Load_Glyph( TTF_Font* font, Uint16 ch, c_glyph* cached, int want
 							ch <<= 1;
 						}
 					}
+				} else if ( glyph->bitmap.pixel_mode == FT_PIXEL_MODE_GRAY2 ) {
+					unsigned char *srcp = src->buffer + soffset;
+					unsigned char *dstp = dst->buffer + doffset;
+					unsigned char ch;
+					int j, k;
+					for ( j = 0; j < src->width; j += 4 ) {
+						ch = *srcp++;
+						for ( k = 0; k < 4; ++k ) {
+							if ((ch&0xA0) >> 6) {
+								*dstp++ = NUM_GRAYS * ((ch&0xA0) >> 6) / 3 - 1;
+							} else {
+								*dstp++ = 0x00;
+							}
+							ch <<= 2;
+						}
+					}
+				} else if ( glyph->bitmap.pixel_mode == FT_PIXEL_MODE_GRAY4 ) {
+					unsigned char *srcp = src->buffer + soffset;
+					unsigned char *dstp = dst->buffer + doffset;
+					unsigned char ch;
+					int j, k;
+					for ( j = 0; j < src->width; j += 2 ) {
+						ch = *srcp++;
+						for ( k = 0; k < 2; ++k ) {
+							if ((ch&0xF0) >> 4) {
+							    *dstp++ = NUM_GRAYS * ((ch&0xF0) >> 4) / 15 - 1;
+							} else {
+								*dstp++ = 0x00;
+							}
+							ch <<= 4;
+						}
+					}
 				} else {
 					memcpy(dst->buffer+doffset,
 					       src->buffer+soffset, src->pitch);
@@ -620,11 +671,15 @@ static FT_Error Load_Glyph( TTF_Font* font, Uint16 ch, c_glyph* cached, int want
 				pixmap = (Uint8*) dst->buffer + row * dst->pitch;
 				for( offset=1; offset <= font->glyph_overhang; ++offset ) {
 					for( col = dst->width - 1; col > 0; --col ) {
-						pixel = (pixmap[col] + pixmap[col-1]);
-						if( pixel > NUM_GRAYS - 1 ) {
-							pixel = NUM_GRAYS - 1;
+						if( mono ) {
+							pixmap[col] |= pixmap[col-1];
+						} else {
+							pixel = (pixmap[col] + pixmap[col-1]);
+							if( pixel > NUM_GRAYS - 1 ) {
+								pixel = NUM_GRAYS - 1;
+							}
+							pixmap[col] = (Uint8) pixel;
 						}
-						pixmap[col] = (Uint8) pixel;
 					}
 				}
 			}
@@ -664,17 +719,19 @@ static FT_Error Find_Glyph( TTF_Font* font, Uint16 ch, int want )
 
 void TTF_CloseFont( TTF_Font* font )
 {
-	Flush_Cache( font );
-	if ( font->face ) {
-		FT_Done_Face( font->face );
+	if ( font ) {
+		Flush_Cache( font );
+		if ( font->face ) {
+			FT_Done_Face( font->face );
+		}
+		if ( font->args.stream ) {
+			free( font->args.stream );
+		}
+		if ( font->freesrc ) {
+			SDL_RWclose( font->src );
+		}
+		free( font );
 	}
-	if ( font->args.stream ) {
-		free( font->args.stream );
-	}
-	if ( font->freesrc ) {
-		SDL_RWclose( font->src );
-	}
-	free( font );
 }
 
 static Uint16 *LATIN1_to_UNICODE(Uint16 *unicode, const char *text, int len)
@@ -718,42 +775,42 @@ static Uint16 *UTF8_to_UNICODE(Uint16 *unicode, const char *utf8, int len)
 	return unicode;
 }
 
-int TTF_FontHeight(TTF_Font *font)
+int TTF_FontHeight(const TTF_Font *font)
 {
 	return(font->height);
 }
 
-int TTF_FontAscent(TTF_Font *font)
+int TTF_FontAscent(const TTF_Font *font)
 {
 	return(font->ascent);
 }
 
-int TTF_FontDescent(TTF_Font *font)
+int TTF_FontDescent(const TTF_Font *font)
 {
 	return(font->descent);
 }
 
-int TTF_FontLineSkip(TTF_Font *font)
+int TTF_FontLineSkip(const TTF_Font *font)
 {
 	return(font->lineskip);
 }
 
-long TTF_FontFaces(TTF_Font *font)
+long TTF_FontFaces(const TTF_Font *font)
 {
 	return(font->face->num_faces);
 }
 
-int TTF_FontFaceIsFixedWidth(TTF_Font *font)
+int TTF_FontFaceIsFixedWidth(const TTF_Font *font)
 {
 	return(FT_IS_FIXED_WIDTH(font->face));
 }
 
-char *TTF_FontFaceFamilyName(TTF_Font *font)
+char *TTF_FontFaceFamilyName(const TTF_Font *font)
 {
 	return(font->face->family_name);
 }
 
-char *TTF_FontFaceStyleName(TTF_Font *font)
+char *TTF_FontFaceStyleName(const TTF_Font *font)
 {
 	return(font->face->style_name);
 }
@@ -1737,7 +1794,7 @@ void TTF_SetFontStyle( TTF_Font* font, int style )
 	Flush_Cache( font );
 }
 
-int TTF_GetFontStyle( TTF_Font* font )
+int TTF_GetFontStyle( const TTF_Font* font )
 {
 	return font->style;
 }
