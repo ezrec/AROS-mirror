@@ -261,9 +261,9 @@ riferimento a `Lavorare con Subversion <svn.php>`__
 
 In breve, i comandi che dovete usare sono come i seguenti::
 
-   > svn checkout https://svn.aros.org:8080/svn/aros/trunk/AROS
+   > svn checkout https://svn.aros.org/svn/aros/trunk/AROS
    > cd AROS
-   > svn checkout https://svn.aros.org:8080/svn/aros/trunk/contrib
+   > svn checkout https://svn.aros.org/svn/aros/trunk/contrib
 
 
 Configurare e compilare i sorgenti di AROS

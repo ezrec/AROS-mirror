@@ -8,7 +8,7 @@ Compiling AROS
             + Lennard voor den Dag
             + Aaron Digulla
             + Adam Chodorowski
-:Copyright: Copyright © 2001-2007, The AROS Development Team
+:Copyright: Copyright © 2001-2008, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -207,18 +207,35 @@ Because the Live CD misses needed packages we have to get them from internet::
 
 You will need to enter your user password at the prompt.
 
+Setting the locale to ISO8859 
+"""""""""""""""""""""""""""""
+
+This step is not strictly necessary. However, file names with accented
+characters will be not be reproduced properly if it is not done.
+Just find the en_US iso 8859-1 string in list provided by the
+following applications and choose it)::
+
+     > sudo apt-get install localeconf
+     > sudo dpkg-reconfigure localeconf
+
+Then we will set the console's locale::
+
+     > sudo locale-gen "en_US"
+     > sudo dpkg-reconfigure locales
+     > export LANG="en_US.ISO-8859-1"
+
 
 Get the sources 
 """""""""""""""
 
-To find out more instruction on how to use our SVN Repository
+To find out more instruction on how to use our SVN Repository,
 please refer to `Working with Subversion <svn.php>`__
 
-In brief, the commands you must use is like the following::
+In brief, the commands you must use are the following::
 
-   > svn checkout https://svn.aros.org:8080/svn/aros/trunk/AROS
+   > svn checkout https://svn.aros.org/svn/aros/trunk/AROS
    > cd AROS
-   > svn checkout https://svn.aros.org:8080/svn/aros/trunk/contrib
+   > svn checkout https://svn.aros.org/svn/aros/trunk/contrib
 
 
 Configure and compile AROS sources
@@ -235,5 +252,5 @@ Finally, type::
 
 This shall take a while (up to some hours on slow machines) :) 
 After that you will get AROS-hosted compiled. 
-Please also note that you might need an internet access during the progress,
+Please also note that you might need internet access during the progress,
 used to download latest EUAE sources. 

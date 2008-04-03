@@ -281,9 +281,9 @@ ISO-образ компакт-диска с сайта Ubuntu и вы установили с него систему. Также
 
 Вкратце, команды, которые вы должны использовать будут похожи на эти::
 
-   > svn checkout https://svn.aros.org:8080/svn/aros/trunk/AROS
+   > svn checkout https://svn.aros.org/svn/aros/trunk/AROS
    > cd AROS
-   > svn checkout https://svn.aros.org:8080/svn/aros/trunk/contrib
+   > svn checkout https://svn.aros.org/svn/aros/trunk/contrib
 
 
 Настройка и компилирование AROS из исходного кода 
