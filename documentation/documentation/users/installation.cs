@@ -3,7 +3,7 @@ AROS prùvodce instalací
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
-:Copyright: Copyright ² 1995-2006, The AROS Development Team
+:Copyright: Copyright (C) 1995-2008, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Needs to be updated for some AROS ports. Can be translated.
@@ -180,6 +180,7 @@ booting from the floppy, but after the most important things have been loaded
 (including the CDROM filesystem handler) it will continue booting from the
 CDROM.
 
+.. _floppy: Disketa
 
 Disketa
 ^^^^^^^

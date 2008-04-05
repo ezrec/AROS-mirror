@@ -190,6 +190,7 @@ AROS wird anfangen von der Diskette zu starten wird dann jedoch nachdem die
 wichtigsten Dinge geladen wurden (inkl. dem CD-ROM Dateisystemtreiber) den
 Start von der CD-ROM fortsetzen.
 
+.. _Startdiskette: Diskette
 
 Diskette
 ^^^^^^^^
