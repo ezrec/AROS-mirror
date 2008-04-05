@@ -3,7 +3,7 @@ Writing portable Software
 =========================
 
 :Authors:   Matthias Rustler
-:Copyright: Copyright © 2007, The AROS Development Team
+:Copyright: Copyright (C) 2007-2008, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Work in progress.
@@ -18,7 +18,7 @@ Introduction
 ============
 
 Back in the old days it was easy: both integer and address types had a size of
-32 bit and the bytes were ordered in big endian. But because AROS is a portable,
+32 bit and the bytes were ordered in big endian. But because AROS is portable,
 developers have to take care about some things or their source code will not run
 on all AROS flavours.
 
@@ -40,9 +40,9 @@ You can query the endianness this way::
     #include <aros/cpu.h>
     ...
     if (AROS_BIG_ENDIAN) {
-        Puts("We are big endian.\n");
+        Puts("We are big endian.");
     } else {
-        Puts("We are little endian.\n");
+        Puts("We are little endian.");
     }
 
 
@@ -107,7 +107,7 @@ Register based::
     ...
     static struct Hook myhook;
     ...
-    AROS_UFH3S(ULONG, myfunction,
+    AROS_UFH3(ULONG, myfunction,
     AROS_UFHA(struct Hook *, h, A0),
     AROS_UFHA(Object *, object, A2),
     AROS_UFHA(APTR, msg, A1))
@@ -128,6 +128,8 @@ Register based::
         ...
     }
 
+UFH3 means User Function Head with 3 arguments. You can append an "S" if you want
+to make the function static.
 
 Stack based::
 
@@ -154,6 +156,49 @@ Stack based::
 
 *HookEntry* is defined in amiga.lib. This function forwards the stack arguments
 to registers.
+
+
+User Function Prototype
+-----------------------
+
+If you want to define a prototype for a register based user function you have to
+use the AROS_UFP (User Function Prototype) macro like this::
+
+    AROS_UFP3(ULONG, myfunction,
+	AROS_UFPA(struct Hook *, h, A0),
+	AROS_UFPA(Object *, obj, A2),
+	AROS_UFPA(APTR, msg, A1));
+
+
+Hints
+------
+
+So far we've only discussed user functions with 3 arguments. The UFxx macros are way more
+flexible. You can define functions with 0 to 15 arguments as you can see in the header
+"aros/asmcall.h". But if you need a hook function for the system (e.g. for Zune callback
+functions) you need the special case with 3 arguments and they must be given in the order
+A0, A2, A1.
+
+You're probably wondering what this A0, A1, A2 is. Well, this are register names of the
+68k architecture. On other platforms they are forwarded to other registers or even put
+on the stack.
+
+
+Calling User Functions
+----------------------
+
+For the standard case with 3 arguments Utility library provides the function
+*CallHookPkt()*::
+
+    retval = CallHookPkt(hook, par1, par2);
+
+There is another macro named UFC (User Function Call) if you want to call
+the user function with more than 3 arguments::
+
+    retval = AROS_UFC4(ULONG, myfunction,
+            AROS_UFCA(APTR, value1, A0)
+            AROS_UFCA(Object *, value2, A2)
+            AROS_UFCA(APTR, value3, A1) );
 
 
 Variadic Structure Parameters
