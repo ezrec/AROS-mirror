@@ -64,6 +64,7 @@ Inputs
 
      AI_ArosBuildDate IPTR
              Given in the format: <d>.<m>.<y>
+
      AI_ArosVariant IPTR
              Configure time variant name.
 

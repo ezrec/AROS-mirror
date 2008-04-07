@@ -609,11 +609,12 @@ Notes
 ~~~~~
 ::
 
-     This function is not called by apps directly. Instead dos.library/DosGet-
-     LocalizedString is patched to use this function. This means, that the
-     LocaleBase parameter above actually points to DOSBase, so we make use of 
-     the global LocaleBase variable. This function is marked as private,
-     thus the headers generator won't mind the different basename in the header.
+     This function is not called by apps directly. Instead
+     dos.library/StrToDate() is patched to use this function. This means
+     that the LocaleBase parameter above actually points to DOSBase, so we
+     make use of the global LocaleBase variable. This function is marked as
+     private, thus the headers generator won't mind the different basename
+     in the header.
      
 
 See also
@@ -876,7 +877,7 @@ Synopsis
  BOOL ParseDate(
           struct Locale    * locale,
           struct DateStamp * date,
-          STRPTR fmtTemplate,
+          CONST_STRPTR fmtTemplate,
           struct Hook      * getCharFunc );
 
 Function
@@ -935,15 +936,16 @@ Notes
      This has a few differences from the implementation in locale.library
      v38. In particular:
          - %p does not have to be at the end of the line.
-         - %d and %e are not effectively the same, ie %d requires a leading
-           zero, but %e can not handle leading 0's.
+         - %d and %e are not effectively the same: leading spaces are
+           allowed before %e, but not before %d.
 
 
 Bugs
 ~~~~
 ::
 
-     %d, %e probably needs some work.
+     %p, %b, %A and probably others accept substrings and superstrings of
+     valid strings.
 
 
 See also

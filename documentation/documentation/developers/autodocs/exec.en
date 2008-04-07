@@ -9,40 +9,100 @@ exec
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AbortIO`_                              `AddDevice`_                            `AddHead`_                              `AddIntServer`_                         
-`AddLibrary`_                           `AddMemHandler`_                        `AddMemList`_                           `AddPort`_                              
-`AddResource`_                          `AddSemaphore`_                         `AddTail`_                              `AddTask`_                              
-`Alert`_                                `AllocAbs`_                             `AllocEntry`_                           `AllocMem`_                             
-`AllocPooled`_                          `AllocSignal`_                          `AllocTrap`_                            `AllocVec`_                             
-`Allocate`_                             `AttemptSemaphore`_                     `AttemptSemaphoreShared`_               `AvailMem`_                             
-`CacheClearE`_                          `CacheClearU`_                          `CacheControl`_                         `CachePostDMA`_                         
-`CachePreDMA`_                          `Cause`_                                `CheckIO`_                              `ChildFree`_                            
-`ChildOrphan`_                          `ChildStatus`_                          `ChildWait`_                            `CloseDevice`_                          
-`CloseLibrary`_                         `ColdReboot`_                           `CopyMem`_                              `CopyMemQuick`_                         
-`CreateIORequest`_                      `CreateMsgPort`_                        `CreatePool`_                           `Deallocate`_                           
-`Debug`_                                `DeleteIORequest`_                      `DeleteMsgPort`_                        `DeletePool`_                           
-`Disable`_                              `DoIO`_                                 `Enable`_                               `Enqueue`_                              
-`FindName`_                             `FindPort`_                             `FindResident`_                         `FindSemaphore`_                        
-`FindTask`_                             `Forbid`_                               `FreeEntry`_                            `FreeMem`_                              
-`FreePooled`_                           `FreeSignal`_                           `FreeTrap`_                             `FreeVec`_                              
-`GetCC`_                                `GetMsg`_                               `InitCode`_                             `InitResident`_                         
-`InitSemaphore`_                        `InitStruct`_                           `Insert`_                               `MakeFunctions`_                        
-`MakeLibrary`_                          `NewAddTask`_                           `NewAllocEntry`_                        `ObtainQuickVector`_                    
-`ObtainSemaphore`_                      `ObtainSemaphoreList`_                  `ObtainSemaphoreShared`_                `OldOpenLibrary`_                       
-`OpenDevice`_                           `OpenLibrary`_                          `OpenResource`_                         `Permit`_                               
-`Procure`_                              `PutMsg`_                               `RawDoFmt`_                             `ReleaseSemaphore`_                     
-`ReleaseSemaphoreList`_                 `RemDevice`_                            `RemHead`_                              `RemIntServer`_                         
-`RemLibrary`_                           `RemMemHandler`_                        `RemPort`_                              `RemResource`_                          
-`RemSemaphore`_                         `RemTail`_                              `RemTask`_                              `Remove`_                               
-`ReplyMsg`_                             `SendIO`_                               `SetExcept`_                            `SetFunction`_                          
-`SetIntVector`_                         `SetSR`_                                `SetSignal`_                            `SetTaskPri`_                           
-`Signal`_                               `StackSwap`_                            `SumKickData`_                          `SumLibrary`_                           
-`SuperState`_                           `Supervisor`_                           `Switch`_                               `TypeOfMem`_                            
-`UserState`_                            `Vacate`_                               `Wait`_                                 `WaitIO`_                               
-`WaitPort`_                             `dummy`_                                
+`AVL_RemNodeByAddress`_                 `AbortIO`_                              `AddDevice`_                            `AddHead`_                              
+`AddIntServer`_                         `AddLibrary`_                           `AddMemHandler`_                        `AddMemList`_                           
+`AddPort`_                              `AddResource`_                          `AddSemaphore`_                         `AddTail`_                              
+`AddTask`_                              `Alert`_                                `AllocAbs`_                             `AllocEntry`_                           
+`AllocMem`_                             `AllocPooled`_                          `AllocSignal`_                          `AllocTrap`_                            
+`AllocVec`_                             `Allocate`_                             `AttemptSemaphore`_                     `AttemptSemaphoreShared`_               
+`AvailMem`_                             `CacheClearE`_                          `CacheClearU`_                          `CacheControl`_                         
+`CachePostDMA`_                         `CachePreDMA`_                          `Cause`_                                `CheckIO`_                              
+`ChildFree`_                            `ChildOrphan`_                          `ChildStatus`_                          `ChildWait`_                            
+`CloseDevice`_                          `CloseLibrary`_                         `ColdReboot`_                           `CopyMem`_                              
+`CopyMemQuick`_                         `CreateIORequest`_                      `CreateMsgPort`_                        `CreatePool`_                           
+`Deallocate`_                           `Debug`_                                `DeleteIORequest`_                      `DeleteMsgPort`_                        
+`DeletePool`_                           `Disable`_                              `DoIO`_                                 `Enable`_                               
+`Enqueue`_                              `FindName`_                             `FindPort`_                             `FindResident`_                         
+`FindSemaphore`_                        `FindTask`_                             `Forbid`_                               `FreeEntry`_                            
+`FreeMem`_                              `FreePooled`_                           `FreeSignal`_                           `FreeTrap`_                             
+`FreeVec`_                              `GetCC`_                                `GetMsg`_                               `InitCode`_                             
+`InitResident`_                         `InitSemaphore`_                        `InitStruct`_                           `Insert`_                               
+`MakeFunctions`_                        `MakeLibrary`_                          `NewAddTask`_                           `NewAllocEntry`_                        
+`ObtainQuickVector`_                    `ObtainSemaphore`_                      `ObtainSemaphoreList`_                  `ObtainSemaphoreShared`_                
+`OldOpenLibrary`_                       `OpenDevice`_                           `OpenLibrary`_                          `OpenResource`_                         
+`Permit`_                               `Procure`_                              `PutMsg`_                               `RawDoFmt`_                             
+`ReleaseSemaphore`_                     `ReleaseSemaphoreList`_                 `RemDevice`_                            `RemHead`_                              
+`RemIntServer`_                         `RemLibrary`_                           `RemMemHandler`_                        `RemPort`_                              
+`RemResource`_                          `RemSemaphore`_                         `RemTail`_                              `RemTask`_                              
+`Remove`_                               `ReplyMsg`_                             `SendIO`_                               `SetExcept`_                            
+`SetFunction`_                          `SetIntVector`_                         `SetSR`_                                `SetSignal`_                            
+`SetTaskPri`_                           `Signal`_                               `StackSwap`_                            `SumKickData`_                          
+`SumLibrary`_                           `SuperState`_                           `Supervisor`_                           `Switch`_                               
+`TypeOfMem`_                            `UserState`_                            `Vacate`_                               `Wait`_                                 
+`WaitIO`_                               `WaitPort`_                             `dummy`_                                
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
+
+AVL_RemNodeByAddress
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct AVLNode * AVL_RemNodeByAddress(
+          struct AVLNode ** Root,
+          struct AVLNode * Node );
+
+Function
+~~~~~~~~
+::
+
+     Remove a given node from the tree.
+
+
+Inputs
+~~~~~~
+::
+
+     Root - A pointer to a pointer to the root node of the tree.
+
+     Node - A struct AVLNode to remove.  The node must be present
+            in the tree.
+
+
+Result
+~~~~~~
+::
+
+     Node is returned.
+
+
+Example
+~~~~~~~
+::
+
+     See AVL_NextNodeByAddress(), AVL_PrevNodeByAddress()
+
+
+Notes
+~~~~~
+::
+
+     Removing a node may require multiple rebalancing steps
+     in the tree.  Each step however runs in constant time
+     and no more than 1.44log(n) steps will be required.
+
+
+See also
+~~~~~~~~
+::
+
+     AVL_AddNode(), AVL_FindNode(), AVL_NextNodeByAddress(),
+     AVL_PrevNodeByAddress()
+
+
 
 AbortIO
 =======
