@@ -26,8 +26,9 @@ Shell commands
 `Diskchange`__
 `Echo`__
 `Else`__
-`EndCli`__
+`EndCLI`__
 `EndIf`__
+`EndShell`__
 `EndSkip`__
 `Eval`__
 `Execute`__
@@ -42,6 +43,7 @@ Shell commands
 `If`__
 `Info`__
 `Install`__
+`Install-grub2-i386-pc`__
 `Install-i386-pc`__
 `Iprefs`__
 `Join`__
@@ -107,6 +109,7 @@ __ echo
 __ else
 __ endcli
 __ endif
+__ endshell
 __ endskip
 __ eval
 __ execute
@@ -121,6 +124,7 @@ __ identify
 __ if
 __ info
 __ install
+__ install-grub2-i386-pc
 __ install-i386-pc
 __ iprefs
 __ join

@@ -65,6 +65,8 @@ Notes
  The script file is not a script in execute sense (as you may not use any
  .key, .bra or .ket and similar things).
 
+ Feb 2008 - initial support for .key/bra/ket/dot/dollar/default.
+
 
 See also
 ~~~~~~~~

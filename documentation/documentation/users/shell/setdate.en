@@ -33,7 +33,7 @@ Location
 ::
 
 
-     Sys:c
+     C:
 
 
 Function
@@ -41,12 +41,12 @@ Function
 ::
 
 
-     Changes the the date and time of the creation or last change of a
-     file or directory. With option ALL, it changes the date and time of
-     all files and directories (and files and subdirectories to those)
-     matching the specified pattern.
-         You may use the output from Date as input to SetDate.
- 
+     Changes the date and time of the creation or last change of a file or
+     directory. With option ALL, it also changes the date and time of all
+     files and subdirectories within directories matching the specified
+     pattern. If either the date or time is unspecified, the current date
+     or time is used.
+
 
 Inputs
 ~~~~~~
@@ -56,14 +56,15 @@ Inputs
      FILE     --  File (or pattern) to change the date of.
 
      WEEKDAY  --  Specification of the day of the date. This is locale
-                  sensitive, and you may use standard keywords as
+                  sensitive, and you may use standard keywords such as
                   'Tomorrow' and 'Yesterday' (in the language used, of
                   course).
 
-     DATE     --  A date described according to the locale specification
-                  of the currently used language.
+     DATE     --  A date in the format DD-MMM-YY.
+                  MMM is either the number or the first 3 letters of the
+                  month in English.
 
-     TIME     --  Time string in localized format.
+     TIME     --  Time string in the format HH:MM:SS or HH:MM.
 
      ALL      --  Recurse through subdirectories.
 
@@ -81,10 +82,18 @@ Example
 ::
 
 
-     SetDate #? `Date` ALL
+     SetDate #? ALL
 
      Sets the date for all files and directories in the current directory
      and its subdirectories to the current date.
+
+
+Bugs
+~~~~
+::
+
+
+     ALL flag does not work.
 
 
 See also

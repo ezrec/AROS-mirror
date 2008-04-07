@@ -1,5 +1,5 @@
 ======
-EndCli
+EndCLI
 ======
 
 .. This document is automatically generated. Don't edit it!
@@ -10,14 +10,14 @@ EndCli
 
 ::
 
- EndCli 
+ EndCLI 
 
 Location
 ~~~~~~~~
 ::
 
 
-     Workbench:C
+     C:
 
 
 Function
@@ -25,6 +25,6 @@ Function
 ::
 
 
-     Exits a CLI
+     Exits a Shell/CLI.
 
 
