@@ -1,0 +1,59 @@
+=============
+Status Update
+=============
+
+:Author:   Paolo Besser
+:Date:     2008-04-12
+
+Distribuzioni
+-------------
+
+Sono appena state pubblicate due nuove distribuzioni di AROS:
+VmwAROS LIVE! e una nuova versione di WinAROS. La prima è costituita
+da un ambiente pre-configurato che può partire da CD o essere
+installato su disco fisso, basato sulla macchina virtuale di VmwAROS.
+Il secondo, invece, è un ambiente di sviluppo inserito in una
+macchina virtuale di QEMU. Potete leggere maggiori dettagli nella
+nostra `pagina dei download`__. Gli utenti e gli sviluppatori di
+applicazioni dovrebbero scaricare una di loro.
+
+Aggiornamento
+-------------
+
+Krysztof Smiechowicz, Alain Greppin e Neil Cafferkey hanno realizzato
+una versione binaria per architettura i386 dei compilatori gcc/g++
+3.3.1 basata sulle patch di Fabio, scaricabile dagli Archivi. Si 
+tratta sicuramente di un'ottima notizia per chi vuole portare o
+sviluppare software su AROS, ma non è neanche l'unica: negli Archivi
+si può reperire anche la nuova versione di Murks!IDE, il miglior
+ambiente di sviluppo integrato per AROS, che ora supporta pienamente
+il C++. L'hanno realizzata Krysztof Smiechowicz e Heinz-Raphael
+Reinke.
+
+È un periodo in cui il codice viene passato al setaccio. Krysztof 
+Smiechowicz ha incominciato a verificare il grado di completezza delle 
+API, mentre Barry Nelson ha controllato, filtrato e cominciato a
+gestire di persona il nostro bug tracker. Molti bug già corretti sono
+stati eliminati dalla lista.
+
+Nic Andrews e Alain Greppin sono riusciti a implementare Grub2, di cui
+è possibile vedere uno `screenshot`__ su Aros-Exec. L'aspetto migliore
+di questa notizia è che finalmente gli utenti potranno liberarsi delle
+lente partizioni FFS e caricare il sistema direttamente con SFS. 
+Questa opzione, tuttavia, non è ancora consigliabile in quanto restano
+alcuni problemi di incompatibilità con certe applicazioni di AROS.
+
+Alain Greppin ha incassato la taglia per il client DHCP di AROS. In
+questo modo il nostro sistema operativo può ottenere un indirizzo IP
+automatico da un server. Ha anche completato il porting di `TeXlive`__.
+
+Tomasz Wiszkowski e Michal Schulz stanno lavorando su ata.device per
+migliorarlo. È stato così possibile inserire il supporto iniziale per
+alcuni controller Serial ATA: "I controller SATA che supportano le
+operazioni in legacy mode dovrebbero essere operativi (ma questo non
+significa che abbiamo già ottenuto il supporto AHCI)".
+
+__ http://aros.sourceforge.net/it/download.php
+__ http://i175.photobucket.com/albums/w131/Kalamatee/AROS/grub2gfx-1.jpg
+__ http://www.chilibi.org/aros/texlive
+
