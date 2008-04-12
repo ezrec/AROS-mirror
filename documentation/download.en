@@ -89,11 +89,11 @@ Snapshots
 =========
 
 Starting from March 1st 2007, Snapshots of AROS won't be available 
-anymore. We'd encourage everyone who would try AROS to download the 
-latest nightly build instead. AROS is growing really fast, and 
-Snapshots often contained obsolete code. We also think that nightly 
-builds are more useful from a beta-testing point of view: please
-use the `bug tracker`__ to report bugs.
+anymore. We'd encourage everyone who would try AROS to download 
+either a distribution, or the latest nightly build instead. AROS is
+growing really fast, and Snapshots often contained obsolete code. We
+also think that nightly builds are more useful from a beta-testing 
+point of view: please use the `bug tracker`__ to report bugs.
 
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 

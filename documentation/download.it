@@ -4,6 +4,69 @@ Download
 
 .. Contents::
 
+Distribuzioni
+=============
+
+Le distribuzioni sono versioni di AROS controllate, pre-configurate e
+che includono diverse applicazioni utili. Magari non avranno i file di
+sistema più recenti, ma la loro stabilità e semplicità d'uso è 
+sicuramente maggiore di quella delle nightly build. Se siete
+semplicemente incuriositi da AROS e volete scoprire cos'ha da offrirvi,
+le distribuzioni sono fatte apposta per voi!
+
+VmwAROS
+-------
+
+VmwAROS è distribuita in un formato particolare: una macchina virtuale
+da usare con gli appositi software forniti da VMware (Player, Fusion,
+Server, Workstation). La distribuzione contiene numerosi programmi
+pre-installati che includono giochi, programma di posta elettronica,
+editor di testi, editori di immagini, ambiente di sviluppo,
+compilatori, browser web, client di IRC e tanti, tanti ancora! Rende
+semplice la configurazione della rete, sia manualmente sia tramite DHCP
+e può essere eseguita come qualsiasi altro programma di Windows, Linux
+o MacOS. Si possono anche scambiare file facilmente tra l'ambiente AROS
+e il sistema operativo che lo ospita.
+
+Si può scaricare l'ultima versione `qui`__. Per maggiori informazioni 
+fate clic `qui`__.
+
+VmwAROS Live!
+-------------
+
+Basata sulle stesse tecnologie di VmwAROS, la distribuzione VmwAROS
+LIVE! fornisce lo stesso ambiente completo e pre-configurato, ma nella
+forma di CD avviabile. Lo si può far funzionare su qualsiasi computer 
+dotato di hardware supportato da AROS, senza subire i rallentamenti
+dovuti all'impiego del software di virtualizzazione. Se volete il 
+massimo da questa distribuzione, potete anche installarla sul vostro
+disco fisso, in questo caso diventerà un'alternativa al vostro solito
+Windows o Linux.
+
+Si può scaricare l'ultima versione `qui`__. Per maggiori informazioni 
+fate clic `qui`__.
+
+WinAROS
+-------
+
+WinAROS è una distribuzione che impiega il software di virtualizzazione
+QEMU per funzionare. La si può usare su Windows o su Linux e contiene
+una suite di compilatori C/C++ già configurati così come Murks!IDE, il
+migliore (e anche unico) Ambiente di Sviluppo Integrato per AROS.
+
+Si può scaricare l'ultima versione `qui`__.
+
+__ http://vmwaros.blogspot.com/2008/04/vmwaros-is-complete-aros-desktop.html
+__ http://www.vmwaros.org/
+
+__ http://vmwaros.blogspot.com/2008/04/blog-post.html
+__ http://www.vmwaros.org/
+
+__ http://amidevcpp.amiga-world.de/WinAros/WinArosDeveloper042008.exe
+
+Nightly build
+=============
+
 .. Nota::
 
    Per scaricare correttamente una nightly build, consigliamo vivamente 
@@ -11,26 +74,6 @@ Download
    interrotto, oppure il comando wget (con "wget -c" per scaricare la 
    porzione rimanente di un file già scaricato in parte da un altro 
    programma).
-
-Snapshot
-========
-
-A partire dal primo marzo 2007, le versioni snapshot di AROS non 
-sono più disponibili per il download. Consigliamo a tutti coloro che 
-volessero provare AROS di scaricare la nightly build più recente. 
-AROS sta crescendo molto velocemente e le Snapshot purtroppo finivano 
-sempre per contenere codice estremamente vecchio, anzi, obsoleto.
-Riteniamo inoltre che le nightly build siano molto più utili per il 
-beta testing del sistema operativo. Per cortesia, se trovate errori 
-segnalateceli attraverso lo strumento apposito, il `bug tracker`__.
-
-
-__ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
-
-
-
-Nightly build
-=============
 
 Le nightly build vengono create automaticamente ogni notte a partire 
 dal codice sorgente più aggiornato. Siccome si tratta di versioni in 
@@ -44,4 +87,19 @@ esitate a contattarci per mezzo dei forum di `AROS-Exec`__.
 
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 __ http://aros-exec.org/
+
+Snapshot
+========
+
+A partire dal primo marzo 2007, le versioni snapshot di AROS non 
+sono più disponibili per il download. Consigliamo a tutti coloro che 
+volessero provare AROS di scaricare una distribuzione, oppure la 
+nightly build più recente. AROS sta crescendo molto velocemente e le 
+Snapshot purtroppo finivano sempre per contenere codice estremamente 
+vecchio, anzi, obsoleto. Riteniamo inoltre che le nightly build siano 
+molto più utili per il beta testing del sistema operativo. Per 
+cortesia, se trovate errori segnalateceli attraverso lo strumento 
+apposito, il `bug tracker`__.
+
+__ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 
