@@ -12,16 +12,16 @@ Sono appena state pubblicate due nuove distribuzioni di AROS:
 VmwAROS LIVE! e una nuova versione di WinAROS. La prima è costituita
 da un ambiente pre-configurato che può partire da CD o essere
 installato su disco fisso, basato sulla macchina virtuale di VmwAROS.
-Il secondo, invece, è un ambiente di sviluppo inserito in una
+La seconda, invece, è un ambiente di sviluppo inserito in una
 macchina virtuale di QEMU. Potete leggere maggiori dettagli nella
 nostra `pagina dei download`__. Gli utenti e gli sviluppatori di
-applicazioni dovrebbero scaricare una di loro.
+applicazioni dovrebbero scaricare una di esse.
 
 Aggiornamento
 -------------
 
 Krysztof Smiechowicz, Alain Greppin e Neil Cafferkey hanno realizzato
-una versione binaria per architettura i386 dei compilatori gcc/g++
+una versione binaria per architettura i386 del compilatore gcc/g++
 3.3.1 basata sulle patch di Fabio, scaricabile dagli Archivi. Si 
 tratta sicuramente di un'ottima notizia per chi vuole portare o
 sviluppare software su AROS, ma non è neanche l'unica: negli Archivi
@@ -49,7 +49,7 @@ automatico da un server. Ha anche completato il porting di `TeXlive`__.
 
 Tomasz Wiszkowski e Michal Schulz stanno lavorando su ata.device per
 migliorarlo. È stato così possibile inserire il supporto iniziale per
-alcuni controller Serial ATA: "I controller SATA che supportano le
+alcuni chipset Serial ATA: "I controller SATA che supportano le
 operazioni in legacy mode dovrebbero essere operativi (ma questo non
 significa che abbiamo già ottenuto il supporto AHCI)".
 

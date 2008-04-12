@@ -28,20 +28,21 @@ C++ supporting version of Murks!IDE, AROS' best Integrated Development
 Environment, brought to us by Krysztof Smiechowicz and Heinz-Raphael
 Reinke.
 
-It's also time for serious bufixing. Krysztof Smiechowicz has started
+It's also time for serious bugfixing. Krysztof Smiechowicz has started
 reviewing API completeness, while Barry Nelson reviewed, filtered and
 started managing our bug tracker. Lots of already-fixed bugs have been
 removed from the list.
 
 Nic Andrews and Alain Greppin have finally implemented grub2 in AROS.
-Nic showed a nice screenshot__ on Aros-Exec too. The great news about
+Nic showed a nice `screenshot`__ on Aros-Exec too. The great news about
 this, is users can finally get rid of slow FFS partitions and boot
 system files from SFS ones. This option isn't encouraged yet, however,
 due to some still existing compatibility flaws with some AROS 
 applications.
 
 Alain Greppin has completed AROS DHCP bounty with his dhclient command.
-AROS can now get automatic IP address configuration. He also ported TeXlive__
+AROS can now get automatic IP address configuration. He also ported 
+`TeXlive`__.
 
 Tomasz Wiszkowski and Michal Schulz are working on the ata.device in
 order to improve it. Initial support has been added for some Serial ATA
