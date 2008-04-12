@@ -1,0 +1,54 @@
+=============
+Status Update
+=============
+
+:Author:   Paolo Besser
+:Date:     2008-04-12
+
+Distributions
+-------------
+
+Two AROS distributions have been recently released. VmwAROS LIVE! and
+a new WinAROS version. The former is a bootable and installable
+pre-configured environment based on the VmwAROS virtual machine, the
+latter is a QEMU-tailored virtual machine complete with IDE and 
+updated development environment. More details are available in our
+`download page`__. Users and application developers are encouraged to
+download them.
+
+Latest news
+-----------
+
+Krysztof Smiechowicz, Alain Greppin and Neil Cafferkey have provided
+a public binary native i386 package of gcc/g++ 3.3.1 - based on Fabio's
+patches, downloadable from the Archives. This is obviously a good
+news for anyone interested in developing or porting software to AROS,
+but it is not the only one: on the Archives you can find also the new
+C++ supporting version of Murks!IDE, AROS' best Integrated Development
+Environment, brought to us by Krysztof Smiechowicz and Heinz-Raphael
+Reinke.
+
+It's also time for serious bufixing. Krysztof Smiechowicz has started
+reviewing API completeness, while Barry Nelson reviewed, filtered and
+started managing our bug tracker. Lots of already-fixed bugs have been
+removed from the list.
+
+Nic Andrews and Alain Greppin have finally implemented grub2 in AROS.
+Nic showed a nice screenshot__ on Aros-Exec too. The great news about
+this, is users can finally get rid of slow FFS partitions and boot
+system files from SFS ones. This option isn't encouraged yet, however,
+due to some still existing compatibility flaws with some AROS 
+applications.
+
+Alain Greppin has completed AROS DHCP bounty with his dhclient command.
+AROS can now get automatic IP address configuration. He also ported TeXlive__
+
+Tomasz Wiszkowski and Michal Schulz are working on the ata.device in
+order to improve it. Initial support has been added for some Serial ATA
+chipsets: "SATA controllers supporting legacy operation mode should now
+be operational (this means we don't have AHCI at this moment)".
+
+__ http://aros.sourceforge.net/download.php
+__ http://i175.photobucket.com/albums/w131/Kalamatee/AROS/grub2gfx-1.jpg
+__ http://www.chilibi.org/aros/texlive
+
