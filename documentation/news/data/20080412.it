@@ -20,7 +20,7 @@ applicazioni dovrebbero scaricare una di esse.
 Aggiornamento
 -------------
 
-Krysztof Smiechowicz, Alain Greppin e Neil Cafferkey hanno realizzato
+Krysztof Smiechowicz e Alain Greppin hanno realizzato
 una versione binaria per architettura i386 del compilatore gcc/g++
 3.3.1 basata sulle patch di Fabio, scaricabile dagli Archivi. Si 
 tratta sicuramente di un'ottima notizia per chi vuole portare o

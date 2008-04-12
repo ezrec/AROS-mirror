@@ -19,7 +19,7 @@ download them.
 Latest news
 -----------
 
-Krysztof Smiechowicz, Alain Greppin and Neil Cafferkey have provided
+Krysztof Smiechowicz and Alain Greppin have provided
 a public binary native i386 package of gcc/g++ 3.3.1 - based on Fabio's
 patches, downloadable from the Archives. This is obviously a good
 news for anyone interested in developing or porting software to AROS,
