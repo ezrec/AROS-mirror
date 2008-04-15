@@ -17,13 +17,13 @@ complete AROS experience.
 VmwAROS
 -------
 VmwAROS is distibuted as the disk image file that can be run in VMware
-virtualization software (Player, Fusion, Server, Workstation). The distribution
+virtualization software (`Player`__, Fusion, Server, Workstation). The distribution
 contains a number of preinstaled software, including email application, text 
 editor, image editor, development environment, compilers pack, web browser,
 IRC client and many more! It delivers network connectivity either via
 manual configuration or DHCP client and you can run it on your Windows,
 Linux or Mac box! You can also upload and download files from AROS using a
-built-in ftp server!
+distribution`s built-in ftp server.
 
 You will find information about the latest release `here`__. General distribution
 page is located `here`__
@@ -33,7 +33,7 @@ VmwAROS Live!
 
 Based on the same technologies as VmwAROS, the VmwAROS Live! distribution delivers
 a highly preconfigured and ready-to-use environment in the form of a LiveCD.
-You can run the CD on any AROS-supported hardware and enjoy the system running
+You can run the CD on any AROS-supported PC-x86 hardware and enjoy the system running
 without the overhead of virtualization software. If you want to get more out of
 AROS, this distribution lets you install itself to your real harddrive, and
 become an alternative system for your Windows or Linux.
@@ -47,10 +47,12 @@ WinAROS
 WinAROS is a distribution targeting the QEMU virtualization software as its host.
 This distribution can be run under qemu either on Windows or Linux. The distribution
 contains a preconfigured C/C++ compilers package as well as the Murks!IDE - the best
-(and only) Integrated Development Environment for native AROS!
+(and only) Integrated Development Environment for native AROS, which also makes it
+a good beginner developer`s choice.
 
 General distribution page is located `here`__
 
+__ http://vmware.com/products/player/
 __ http://vmwaros.blogspot.com/2008/04/vmwaros-is-complete-aros-desktop.html
 __ http://www.vmwaros.org/
 
