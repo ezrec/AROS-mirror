@@ -187,7 +187,6 @@ typedef struct ohci_td {
 #define TD_CC_MASK      0xf0000000
 
 #define HC_FSMPS(i) (((i-210) * 6 / 7)<<16)
-#define HC_PERIODIC(i) ((i) * 9 / 10)
 
 #define CLID_Drv_USB_OHCI "Bus::Drv::OHCI"
 #define IID_Drv_USB_OHCI  "Bus::Drv::OHCI"
