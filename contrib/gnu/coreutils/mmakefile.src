@@ -3,7 +3,7 @@
 
 -include $(TOP)/config/make.cfg
 
-##MM- contrib-gnu : contrib-gnu-coreutils
+#MM- contrib-gnu : contrib-gnu-coreutils
 #MM- contrib-gnu-coreutils : development-coreutils
 
 %fetch_and_build_gnu_development package=coreutils version=5.2.1 patch=yes

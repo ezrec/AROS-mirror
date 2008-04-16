@@ -3,7 +3,7 @@
 
 -include $(TOP)/config/make.cfg
 
-##MM- contrib-gnu : contrib-gnu-bison
-##MM- contrib-gnu-bison : development-bison
+#MM- contrib-gnu : contrib-gnu-bison
+#MM- contrib-gnu-bison : development-bison
 
 %fetch_and_build_gnu_development package=bison version=1.875 patch=yes

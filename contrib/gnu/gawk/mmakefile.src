@@ -3,7 +3,7 @@
 
 -include $(TOP)/config/make.cfg
 
-##MM- contrib-gnu : contrib-gnu-gawk
-##MM- contrib-gnu-gawk : development-gawk
+#MM- contrib-gnu : contrib-gnu-gawk
+#MM- contrib-gnu-gawk : development-gawk
 
 %fetch_and_build_gnu_development package=gawk version=3.1.3 patch=yes

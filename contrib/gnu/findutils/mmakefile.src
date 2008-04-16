@@ -4,6 +4,6 @@
 -include $(TOP)/config/make.cfg
 
 ##MM- contrib-gnu : contrib-gnu-findutils
-##MM- contrib-gnu-findutils : development-findutils
+#MM- contrib-gnu-findutils : development-findutils
 
 %fetch_and_build_gnu_development package=findutils version=4.1 patch=yes

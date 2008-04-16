@@ -3,7 +3,7 @@
 
 -include $(TOP)/config/make.cfg
 
-##MM- contrib-gnu : contrib-gnu-bc
-##MM- contrib-gnu-bc : development-bc
+#MM- contrib-gnu : contrib-gnu-bc
+#MM- contrib-gnu-bc : development-bc
 
 %fetch_and_build_gnu_development package=bc version=1.06
