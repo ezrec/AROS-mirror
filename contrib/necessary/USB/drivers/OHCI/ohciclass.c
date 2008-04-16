@@ -45,7 +45,7 @@ static const usb_hub_descriptor_t hub_descriptor = {
     bDescLength:        sizeof(usb_hub_descriptor_t) - 31,
     bDescriptorType:    UDESC_HUB,
     bNbrPorts:          2,
-    wHubCharacteristics:AROS_WORD2LE(UHD_PWR_NO_SWITCH | UHD_OC_INDIVIDUAL),
+    wHubCharacteristics:0,
     bPwrOn2PwrGood:     50,
     bHubContrCurrent:   0,
     DeviceRemovable:    {0,},
@@ -85,7 +85,8 @@ OOP_Object *METHOD(OHCI, Root, New)
 
         CopyMem(&hub_descriptor, &ohci->hubDescr, sizeof(usb_hub_descriptor_t));
         ohci->hubDescr.bNbrPorts = GetTagData(aHidd_USBHub_NumPorts, 0, msg->attrList);
-
+        ohci->hubDescr.wHubCharacteristics = AROS_WORD2LE(UHD_PWR_NO_SWITCH | UHD_OC_INDIVIDUAL);
+        
         OOP_GetAttr(ohci->pciDevice, aHidd_PCIDevice_INTLine, &ohci->irqNum);
         
         ohci->irqHandler = AllocPooled(SD(cl)->memPool, sizeof(HIDDT_IRQ_Handler));

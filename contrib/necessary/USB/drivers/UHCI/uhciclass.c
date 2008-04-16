@@ -1055,7 +1055,7 @@ static const usb_hub_descriptor_t hub_descriptor = {
     bDescLength:        sizeof(usb_hub_descriptor_t) - 31,
     bDescriptorType:    UDESC_HUB,
     bNbrPorts:          2,
-    wHubCharacteristics:AROS_WORD2LE(UHD_PWR_NO_SWITCH | UHD_OC_INDIVIDUAL),
+    wHubCharacteristics:0,
     bPwrOn2PwrGood:     50,
     bHubContrCurrent:   0,
     DeviceRemovable:    {0,},
@@ -1087,6 +1087,7 @@ BOOL METHOD(UHCI, Hidd_USBDevice, GetDeviceDescriptor)
 BOOL METHOD(UHCI, Hidd_USBHub, GetHubDescriptor)
 {
     CopyMem(&hub_descriptor, msg->descriptor, sizeof(hub_descriptor));
+    msg->descriptor->wHubCharacteristics = AROS_WORD2LE(UHD_PWR_NO_SWITCH | UHD_OC_INDIVIDUAL); 
     return TRUE;
 }
 
