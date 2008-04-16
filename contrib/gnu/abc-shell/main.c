@@ -133,7 +133,7 @@ main(int argc, char *argv[])
         init_histvec();
 
 #if defined(__AROS__)
-        def_path = "/System/Development/bin:/System/Development:/C:.";
+        def_path = "/SYS/Development/bin:/SYS/Development:/C:.";
 #else
         def_path = "/gcc/bin:/SDK/C:/SDK/Local/C:/SDK/Local/newlib/bin:/SDK/Local/clib2/bin:/C:.";
 #endif
@@ -174,7 +174,7 @@ main(int argc, char *argv[])
                 struct tbl *vp = global("SHELL");
                 /* setstr can't fail here */
 #if defined(__AROS__)
-                setstr(vp, "/System/Development/bin/sh", KSH_RETURN_ERROR);
+                setstr(vp, "/SYS/Development/bin/sh", KSH_RETURN_ERROR);
 #else
                 setstr(vp, "/SDK/C/sh", KSH_RETURN_ERROR);
 #endif
@@ -220,7 +220,7 @@ main(int argc, char *argv[])
                 struct tbl *vp = global("HISTFILE");
                 /* setstr can't fail here */
 #if defined(__AROS__)
-                setstr(vp, "/System/Development/Data/abc-shell/history", KSH_RETURN_ERROR);
+                setstr(vp, "/SYS/Development/Data/abc-shell/history", KSH_RETURN_ERROR);
 #else
                 setstr(vp, "/SDK/Data/abc-shell/history", KSH_RETURN_ERROR);
 #endif
@@ -394,7 +394,7 @@ main(int argc, char *argv[])
         /* If env isn't set, include default environment */
         if (env_file == null)
 #if defined(__AROS__)
-                env_file = strdup("/System/Development/Data/abc-shell/variables");
+                env_file = strdup("/SYS/Development/Data/abc-shell/variables");
 #else
                 env_file = strdup("/SDK/Data/abc-shell/variables");
 #endif
