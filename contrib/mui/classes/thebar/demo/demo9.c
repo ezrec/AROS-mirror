@@ -2,6 +2,7 @@
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/muimaster.h>
+#include <proto/intuition.h>
 #include <clib/alib_protos.h>
 #include <mui/TheBar_mcc.h>
 #include <string.h>
