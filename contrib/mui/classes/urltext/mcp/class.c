@@ -2,6 +2,8 @@
 #include "class.h"
 #include <libraries/asl.h>
 
+#include <stdio.h>
+
 /****************************************************************************/
 
 #define ALFIEHP         "http://web.tiscalinet.it/amiga"

@@ -6,6 +6,9 @@
 #include <libraries/gadtools.h>
 #include <graphics/rpattr.h>
 
+#include <string.h>
+#include <stdio.h>
+
 /****************************************************************************/
 
 
