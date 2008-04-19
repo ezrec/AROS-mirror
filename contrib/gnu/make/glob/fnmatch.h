@@ -36,7 +36,7 @@ extern "C" {
    non-ANSI C where `const' is problematical.  */
 #endif /* C++ or ANSI C.  */
 
-#ifndef const
+#ifndef __const
 # if (defined __STDC__ && __STDC__) || defined __cplusplus
 #  define __const	const
 # else
