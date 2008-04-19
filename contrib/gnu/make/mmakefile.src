@@ -23,8 +23,8 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib-gnu    : contrib-gnu-make
-#MM contrib-gnu-make : includes linklibs 
+#MM- contrib-gnu : contrib-gnu-make
+#MM contrib-gnu-make : includes linklibs kernel-aros-linklib
 
 TARGETDIR := $(AROS_DEVELOPMENT)
 
