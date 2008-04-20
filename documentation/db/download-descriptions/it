@@ -37,55 +37,56 @@ contrib-source:
 docs-html:
     Documentazione in HTML. Contiene tutto quello che c'è
     scritto nel sito, ma adattato per la lettura offline.
-i386-freebsd5-system:
+freebsd5-i386-system:
     Versione hosted per FreeBSD/i386 5.x. Non funziona
     su sistemi FreeBSD 4.x.
-i386-freebsd-system:
+freebsd-i386-system:
     Versione hosted per FreeBSD/i386 5.x. Non funziona
     su sistemi FreeBSD 4.x.
-i386-linux-system:
+linux-i386-system:
     La versione hosted per Linux/i386. È la versione
     più matura e completa, quindi potrete eseguire su di
     essa tutti i programmi inclusi. Questo archivio
     contiene tutti i file di sistema compilati
     dall'albero di SVN.
-ppc-linux-system:
+linux-ppc-system:
     La versione hosted per Linux/PowerPC. Questo archivio
     contiene tutti i file di sistema compilati dall'albero di SVN.
-i386-pc-boot-floppy:
+pc-i386-boot-floppy:
     La versione nativa per PC con processori i386 e
     compatibili. Questo archivio contiene l'immagine
     del floppy di avvio, con cui potrete realizzare un
     disco per caricare AROS.
-i386-pc-boot-iso:
+pc-i386-boot-iso:
     La versione nativa per PC con processori i386 e
     compatibili. Questo archivio contiene l'immagine
     di un CDROM di avvio, senza software aggiuntivo.
-i386-all-contrib:
+pc-i386-contrib:
     Questo archivio contiene tutto il software scritto da
     terzi e compilato per architettura i386. funziona
     su entrambe le versioni appropriate (es. i386-linux, 
     i386-pc), siano essere hosted o native.
-ppc-all-contrib:
-    Questo archivio contiene tutto il software scritto da
-    terzi e compilato per architettura PowerPC.
-x86_64-pc-boot-iso:
-    La versione nativa per i sistemi PC a 64 bit(x86_64, amd64.
+pc-x86_64-boot-iso:
+    La versione nativa per i sistemi PC a 64 bit(x86_64, amd64).
     Questa è la ISO di un CD-ROM con cui è possibile avviare il
     sistema operativo e contiene il software scritto da terzi.
-x86_64-all-contrib:
+pc-x86_64-contrib:
     Questo archivio contiene tutto il software scritto da terzi
     compilato per l'architettura x86_64, da usare con la versione
     nativa x86_64.
-i386-all-sdk:
+linux-ppc-contrib:
+    Questo archivio contiene tutti i programmi realizzati da terzi,
+    compilati per l'architettura PowerPC, da usare con il porting
+    per Linux/PowerPC.
+pc-i386-sdk:
     Set di strumenti per compilare i vostri programmi per
     AROS, sulla macchina che preferite. Avrete bisogno di gcc
     e di binutils configurati per produrre eseguibili i386-elf.
-ppc-all-sdk:
+pc-ppc-sdk:
     Set di strumenti per compilare i vostri programmi per
     AROS, sulla macchina che preferite. Avrete bisogno di gcc
     e di binutils configurati per produrre eseguibili ppc-elf.
-x86_64-all-sdk:
+pc-x86_64-sdk:
     Set di strumenti per compilare i vostri programmi per
     AROS, sulla macchina che preferite. Avrete bisogno di gcc
     e di binutils configurati per produrre eseguibili x86_64-elf.
