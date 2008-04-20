@@ -100,7 +100,7 @@ static void AddFileSystemTask(struct ASFSBase *asfsbase, struct IOFileSys *iofs)
     struct DosPacket 	     packet;
     struct ProcNode 	    *node;
     struct Globals 	    *newglobal;
-    struct TagItem 	     tags[]=
+    const struct TagItem 	     tags[]=
     {
         {NP_Entry  , (IPTR)ASFSOldEntry    	    	},
         {NP_Name   , (IPTR)"ASFS - packet style Process"},

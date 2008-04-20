@@ -305,11 +305,10 @@ LONG __saveds mainprogram() {
     ULONG reslen;
     APTR old_a4;
     APTR newdata;
-    
 #endif
 
-  D(bug("Filesystem main\n"));
-  
+    D(bug("Filesystem main\n"));
+
 #ifdef __AROS__
     initGlobals();
     globals->sysBase = SysBase;
@@ -464,11 +463,17 @@ LONG __saveds mainprogram() {
 
                               //  returnpacket(DOSTRUE,0);   // Sep 19 1999: Moved down again.
 
-                              _DEBUG(("CreateNewProcTags..."));
+                              _DEBUG(("CreateNewProc..."));
 
-                              if(CreateNewProcTags(NP_Entry, (ULONG)sdlhtask,
-                                                   NP_Name, (ULONG)"SFS DosList handler",
-                                                   NP_Priority, 19, TAG_DONE)!=0) {
+                                const struct TagItem 	     tags[]=
+                                {
+                                    {NP_Entry      , (IPTR)sdlhtask    	    	},
+                                    {NP_Name       , (IPTR)"SFS DosList handler"},
+                                    {NP_Priority   , 19                         },
+                                    {TAG_DONE      , 0     	    	    	    }
+                                };
+
+                              if(CreateNewProc(tags)!=0) {
 
                               _DEBUG(("ok\n"));
 
