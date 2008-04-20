@@ -4,24 +4,76 @@ Download
 
 .. Contents::
 
-.. Note::
+Distributionen
+==============
 
-   Zum Herunterladen von 'Nightly Builds' brauchst Du einen Downloadmanager,
-   der einen unterbrochenen Download fortsetzen kann, oder ein Shellprogramm
-   wie wget (Du kannst mit "wget -c" den Rest einer von einem anderen Programm
-   nur teilweise heruntergeladen Datei anfordern)
+Distributionen sind AROS-Versionen, die getestet und voreingestellt sind und
+ein paar nützliche Anwenderprogramme enthalten. Sie sind zwar nicht auf dem
+neusten Stand, aber ihre Stabilität und Benutzerfreundlichkeit ist viel
+größer als die der 'Nightly Builds'. Falls Du ein Anwender bist, der
+die Fähigkeiten von AROS ausprobieren will: verwende die Distributionen, um die 
+umfangreichtste AROS-Erfahrung sammeln zu können.
+
+
+VmwAROS
+-------
+
+VmAROS wird als Diskimage vertrieben, welches unter der VMware-Virtualisierungssoftware
+(`Player`__, Fusion, Server, Workstation) läuft. Diese Distribution enthält ein
+paar vorinstallierte Programme, darunter ein E-Mail-Klient, Texteditor,
+Grafikeditor, Entwicklungsumgebung, Kompilerpaket, Webbrowser, IRC-Klient
+und noch viel mehr! Die Netzwerkverbindung kann manuell oder per DHCP-Klient
+hergestellt werden. Es läuft unter Windows, Linux or Mac! Du kannst auch Dateien
+mit dem FTP-Server hoch- und herunterladen.
+
+Allgemeine Informationen kannst Du `hier`__ finden. Heruntergeladen werden kann es
+von `hier`__.
+
+VmwAROS Live!
+-------------
+
+Basierend auf der gleichen Technologie wie VmAROS liefert die VmwAROS Live!
+Distribution eine voreingestellte und nutzungsbereite Umgebung in Form einer
+LiveCD. Du kannst die CD auf jeder von AROS unterstützten PC-x86-Hardware
+laufen lassen, ohne dabei eine Virtualisierungssoftware zu benötigen. Falls
+Du mehr aus AROS herausholen willst, kannst Du AROS von dieser Distribution
+auch auf Deine Festplatte installieren. Damit wird es ein alternatives System
+zu Windows und Linux.
+
+Informationen über die neuste Ausgabe gibt es `hier`__. Heruntergeladen werden kann es
+von `hier`__.
+
+WinAROS
+-------
+
+WinAROS ist eine Distribution für die QEMU-Virtualisierungssoftware. Diese 
+Distribution kann unter QEMU sowohl mit Windows als auch Linux laufen. Sie
+enthält ein C/C++-Kompilerpaket und die Murk!IDE, die beste (und einzige)
+integrierte Entwicklungsumgebung für das "einheimische" AROS. Dies macht es
+eine gute Wahl für Anfänger in der Softwareentwicklung.
+
+Bezogen werden kan es von `hier`__.
+
+__ http://vmware.com/products/player/
+__ http://vmwaros.blogspot.com/2008/04/vmwaros-is-complete-aros-desktop.html
+__ http://www.vmwaros.org/
+
+__ http://vmwaros.blogspot.com/2008/04/blog-post.html
+__ http://www.vmwaros.org/
+
+__ http://amidevcpp.amiga-world.de/WinAros.php
+
 
 Snapshots
 =========
 
 Seit dem 1. März 2007 gibt es keine 'Snapshots' mehr. Wer AROS ausprobieren will, sollte
-stattdessen die 'Nightly Builds' herunterladen.
+stattdessen die Distributionen oder die 'Nightly Builds' herunterladen.
 AROS wächst sehr schnell, dadurch enthielten die 'Snapshots' oft veralteten Kode. Außerdem
 glauben wir, dass die 'Nightly Builds' besser zum Beta-Testen geeignet sind:
 verwende bitte den `bug tracker`__, um Fehler zu melden.
 
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
-
 
 
 Nightly builds
@@ -35,10 +87,18 @@ Jedoch funktionieren sie meistens ganz gut.
 Melde bitte Fehler, die Du beim Benutzen der 'Nightly Builds' entdeckst, an den 
 `bug tracker`__. Für andere Anforderungen bitte die Foren von `AROS-Exec`__ verwenden.
 
+.. Note::
+
+   Zum Herunterladen von 'Nightly Builds' brauchst Du einen Downloadmanager,
+   der einen unterbrochenen Download fortsetzen kann, oder ein Shellprogramm
+   wie wget (Du kannst mit "wget -c" den Rest einer von einem anderen Programm
+   nur teilweise heruntergeladen Datei anfordern)
+
 .. raw:: html
 
    <?php virtual( "/cgi-bin/files?type=nightly&lang=de" ); ?>
 
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 __ http://aros-exec.org/
+
 
