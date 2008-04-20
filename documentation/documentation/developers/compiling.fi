@@ -56,7 +56,7 @@ tapauksessa ``source`` paketin hankkiminen riittää (ellet tahdo kääntää myös
 i386-pc portin.
 
 __ ../../download
-__ ../../documentation/developers/contribute#the-cvs-repository
+__ ../../documentation/developers/contribute#the-subversion-repository
 
 
 Rakentaminen

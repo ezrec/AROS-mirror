@@ -54,7 +54,7 @@ quieras compilar los programas contribuídos). En el último caso, mira
 en la `subversion documentation`__.
 
 __ ../../download
-__ ../../documentation/developers/contribute#the-svn-repository
+__ ../../documentation/developers/contribute#the-subversion-repository
 __ ../../documentation/developers/svn
 
 

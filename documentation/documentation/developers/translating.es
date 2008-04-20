@@ -126,7 +126,7 @@ con SVN. Esto descargará el depósito del momento a tu HD, conteniendo todos los
 archivos del sitio web.
 Las ubicaciones son::
 
-  https://svn.aros.org:8080/svn/aros/trunk/documentation/
+  https://svn.aros.org/svn/aros/trunk/documentation/
 
 Cuando recorras la copia local (o la descargada) notarás las extensiones para los 
 diferentes lenguajes. Cada extensión corresponde a un lenguaje específico, y como

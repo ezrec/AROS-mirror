@@ -54,7 +54,7 @@ case, getting the ``source`` package is enough (unless you also want to
 compile the contrib programs). In the latter case, see `subversion documentation`__.
 
 __ ../../download
-__ ../../documentation/developers/contribute#the-svn-repository
+__ ../../documentation/developers/contribute#the-subversion-repository
 __ ../../documentation/developers/svn
 
 

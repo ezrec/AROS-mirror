@@ -54,7 +54,7 @@ SVN (для этого потребуется `получить доступ`__ к репозиторию). Для разработчика
 смотрите документацию по `работе с Subversion`__.
 
 __ ../../download
-__ ../../documentation/developers/contribute#the-svn-repository
+__ ../../documentation/developers/contribute#the-subversion-repository
 __ ../../documentation/developers/svn
 
 

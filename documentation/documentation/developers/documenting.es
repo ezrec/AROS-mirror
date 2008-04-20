@@ -222,7 +222,7 @@ sitio web necesitarás:
 
 __ http://www.python.org/
 __ http://www.pythonware.com/products/pil/
-__ http://darwinports.opendarwin.org/
+__ http://darwinports.com/
 __ http://py-pil.darwinports.com/
 
 Setting up

@@ -214,7 +214,7 @@ VPC is essentially an emulator, with a limited speed and it is demanding a
 reasonable fast PPC machine (see the website for more details).
 
 For Intel Macs (OS X) Qemu has been ported and sequentially renamed as
-`Q <http://www.kju-app.org/kju/>`__ . It comes as a Intel 
+`Q <http://www.kju-app.org/>`__ . It comes as a Intel 
 Binary and is freeware. Q does not support direct virtualisation yet (or the 
 i386 kernel accerelation module), making it achieve only part of the 
 possible speed at the moment. 
@@ -249,10 +249,9 @@ with needed size in bytes, M or G for mega- or giga-) with a command like::
     qemu-img create -f qcow aros.img <size>
 
 A set of pre-installed or empty diskimages is available to make running AROS under 
-VM a bit easier. WinAros is a preinstalled AROS environment installed on a HD image, 
-compatible with famous virtual machines QEMU and Microsoft VirtualPC, both 
-freely available on the net. You may download both Winaros versons on a
-`website`__. QEMU Winaros is `here`__ and VirtualPC one `here`__ .
+VM a bit easier. WinAros is a preinstalled AROS environment installed on a HD image
+for the famous virtual machine QEMU which is freely available on the net.
+You may download Winaros from its `website`__.
 
 Installation Kit for AROS (IKAROS) is a set of virtual disk images for 
 different virtualisers, including QEMU and VMware, already partitioned, 
@@ -263,9 +262,7 @@ builds. It allows easy installation of new versions without messing with
 partition setup. Installation instructions included. Please check 
 `Aros-Exec Archives`__ in (emu/misc) section for the recent updates.
 
-__ http://amidevcpp.amiga-world.de/afa_binarie_upload.php
-__ http://amidevcpp.amiga-world.de/WinAros/WinAros_Light_QEMU.zip
-__ http://amidevcpp.amiga-world.de/WinAros/WinAros_Light_VPC.zip
+__ http://amidevcpp.amiga-world.de/WinAros/
 __ http://archives.aros-exec.org/index.php?function=browse&cat=emulation/misc
 
 

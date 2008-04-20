@@ -109,7 +109,7 @@ When you have SVN access, perform a checkout of the website sources with SVN.
 This will download the current repository to your HD, containing all the files of the website. 
 The locations is:: 
 
-  https://svn.aros.org:8080/svn/aros/trunk/documentation/
+  https://svn.aros.org/svn/aros/trunk/documentation/
 
 When browsing the local copy (or the downloaded one) you will notice the many different language 
 extensions behind files. Each extension corresponds to a specific language, and as you can 
