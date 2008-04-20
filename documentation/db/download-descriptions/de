@@ -37,54 +37,54 @@ contrib-source:
 docs-html:
     Dokumentation im HTML-Format. Enthält alles, was auf der Webseite
     vorhanden ist, aufbereitet zum Offline-Lesen.
-i386-freebsd5-system:
+freebsd5-i386-system:
     Die gehostete Version für FreeBSD/i386 5.x. Beachte, dass
     sie nicht auf FreeBSD 4.x-Systemen läuft.
-i386-freebsd-system:
+freebsd-i386-system:
     Die gehostete Version für FreeBSD/i386 5.x. Beachte, dass
     sie nicht auf FreeBSD 4.x-Systemen läuft.
-i386-linux-system:
+linux-i386-system:
     Die gehostete Version für Linux/i386. Dies ist die vollständigste
     und ausgereifste Portierung, d.h. dass Du alle mitgelieferten
     Programme und Demos laufen lassen kannst. Dieses Archiv enthällt
     alle AROS-System-Binärdateien aus dem Subversion-Archiv.
-ppc-linux-system:
+linux-ppc-system:
     Die gehostete Version für Linux/PowerPC. Dieses Archiv enthält alle
     AROS-System-Binärdateien aus dem Subversion-Archiv.
-i386-pc-boot-floppy:
+pc-i386-boot-floppy:
     Die native Version für i386-PC-AT-Computer und Kompatible.
     Dieses Archiv enthält das Boot-Diskettenimage, welches Du schnell
     auf eine Diskette schreiben kannst um AROS davon zu Booten.
-i386-pc-boot-iso:
+pc-i386-boot-iso:
     Die native Version für i386-PC-AT-Computer und Kompatible.
     Dies ist das boot-fähige CDROM-ISO-Image, welches alle AROS-
     System und beigestellten Programme enthält.
-i386-all-contrib:
+pc-i386-contrib:
     Dieses Archiv enthält alle beigesteuerten Programme für die
     i386-Architektur. Sie funktionieren sowohl für hosted (z.B. i386-linux)
     als auch für native (i386-pc).
-x86_64-pc-boot-iso:
+pc-x86_64-boot-iso:
     Die native Version für 64-Bit (x86_64, amd64) Computer.
     Dies ist das bootbare CDROM ISO-Image, welches alle
     AROS-Systemprogramme und beigesteuerte Programme enthält.
-x86_64-all-contrib:
+pc-x86_64-contrib:
     This archive contains all the contributed programs
     compiled for the x86_64 architecture, for use with the
     x86_64 native version.
-ppc-all-contrib:
+linux-ppc-contrib:
     Dieses Archiv enthält alle beigesteuerten Programme für die
     PowerPC-Architektur für die Linux/PowerPC-Portierung.
-i386-all-sdk:
+pc-i386-sdk:
     Dateien und Werkzeuge um Deine eigenen AROS-Programme
     auf Deiner Maschine zu erstellen. GCC und die Binutils
     müssen so konfiguriert sein, dass sie Programme im
     i386-elf-Format erzeugen.
-ppc-all-sdk:
+pc-ppc-sdk:
     Dateien und Werkzeuge um Deine eigenen AROS-Programme
     auf Deiner Maschine zu erstellen. GCC und die Binutils
     müssen so konfiguriert sein, dass sie Programme im
     ppc-elf-Format erzeugen.
-x86_64-all-sdk:
+pc-x86_64-sdk:
     Dateien und Werkzeuge um Deine eigenen AROS-Programme
     auf Deiner Maschine zu erstellen. GCC und die Binutils
     müssen so konfiguriert sein, dass sie Programme im
