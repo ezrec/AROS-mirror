@@ -7,22 +7,23 @@ Download
 Distributions
 =============
 
-Distributions are AROS versions that are tested, preconfigured and 
-contain a number of usefull user applications. They may not have the
-latest core system, but their stability and user friendliness is much
-greater than those of nightly builds. If you are a user, interested in
-checking what AROS has to offer, use the distributions to get the most
+Distributions are preconfigured and tested versions of AROS. They 
+contain a number of usefull user applications that dont come with the
+main AROS.org binaries and will be of great interest to users. They may
+not have the latest core system, but their stability and user friendliness
+is much greater than those of the nightly builds. If you are a user, interested
+in checking what AROS has to offer, use the distributions to get the most
 complete AROS experience.
 
 VmwAROS
 -------
-VmwAROS is distibuted as the disk image file that can be run in VMware
+VmwAROS is distibuted as harddisk image file(s) that can be run in VMware
 virtualization software (`Player`__, Fusion, Server, Workstation). The distribution
-contains a number of preinstaled software, including email application, text 
-editor, image editor, development environment, compilers pack, web browser,
-IRC client and many more! It delivers network connectivity either via
+contains a number of preinstaled software packages, including email application,
+text editor, image editor, development environment, compilers pack, web browser,
+IRC client and much more! It delivers network connectivity either via
 manual configuration or DHCP client and you can run it on your Windows,
-Linux or Mac box! You can also upload and download files from AROS using a
+Linux or Mac box! You can also upload and download files from AROS using the
 distribution`s built-in ftp server.
 
 You will find information about the latest release `here`__. General distribution
