@@ -18,7 +18,7 @@ VmwAROS
 -------
 
 VmwAROS è distribuita in un formato particolare: una macchina virtuale
-da usare con gli appositi software forniti da VMware (Player, Fusion,
+da usare con appositi software forniti da VMware (`Player`__, Fusion,
 Server, Workstation). La distribuzione contiene numerosi programmi
 pre-installati che includono giochi, programma di posta elettronica,
 editor di testi, editori di immagini, ambiente di sviluppo,
@@ -56,13 +56,29 @@ migliore (e anche unico) Ambiente di Sviluppo Integrato per AROS.
 
 Si può scaricare l'ultima versione `qui`__.
 
+__ http://vmware.com/products/player/
 __ http://vmwaros.blogspot.com/2008/04/vmwaros-is-complete-aros-desktop.html
 __ http://www.vmwaros.org/
 
 __ http://vmwaros.blogspot.com/2008/04/blog-post.html
 __ http://www.vmwaros.org/
 
-__ http://amidevcpp.amiga-world.de/WinAros/WinArosDeveloper042008.exe
+__ http://amidevcpp.amiga-world.de/WinAros.php
+
+Snapshot
+========
+
+A partire dal primo marzo 2007, le versioni snapshot di AROS non 
+sono più disponibili per il download. Consigliamo a tutti coloro che 
+volessero provare AROS di scaricare una distribuzione, oppure la 
+nightly build più recente. AROS sta crescendo molto velocemente e le 
+Snapshot purtroppo finivano sempre per contenere codice estremamente 
+vecchio, anzi, obsoleto. Riteniamo inoltre che le nightly build siano 
+molto più utili per il beta testing del sistema operativo. Per 
+cortesia, se trovate errori segnalateceli attraverso lo strumento 
+apposito, il `bug tracker`__.
+
+__ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 
 Nightly build
 =============
@@ -88,18 +104,4 @@ esitate a contattarci per mezzo dei forum di `AROS-Exec`__.
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 __ http://aros-exec.org/
 
-Snapshot
-========
-
-A partire dal primo marzo 2007, le versioni snapshot di AROS non 
-sono più disponibili per il download. Consigliamo a tutti coloro che 
-volessero provare AROS di scaricare una distribuzione, oppure la 
-nightly build più recente. AROS sta crescendo molto velocemente e le 
-Snapshot purtroppo finivano sempre per contenere codice estremamente 
-vecchio, anzi, obsoleto. Riteniamo inoltre che le nightly build siano 
-molto più utili per il beta testing del sistema operativo. Per 
-cortesia, se trovate errori segnalateceli attraverso lo strumento 
-apposito, il `bug tracker`__.
-
-__ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 
