@@ -116,6 +116,7 @@ dateHeading = descriptions.get( 'headings', 'date', '' )
 
 logsLabel = descriptions.get( 'links', 'build-logs', '' )
 downloadLabel = descriptions.get( 'links', 'download', '' )
+md5Label = descriptions.get( 'links', 'md5', '' )
 
 print '''
     <p><table class="layout" border="0" cellpadding="2" cellspacing="1" bgcolor="%(colorFrame)s">
@@ -207,7 +208,7 @@ for group in groups.keys():
                 <table class="layout" border="0" cellspacing="0" cellpadding="0">
                 <tr class="layout">
                  <td class="layout" rowspan="2"><a href="%(url)s"><img border="0" src="/images/disk.png"></a></td>
-                 <td class="layout"><a href="%(url)s">%(downloadLabel)s</a>&nbsp;</td>
+                 <td class="layout"><b><a href="%(url)s">%(downloadLabel)s</a></b><br><a href="%(url)s.md5">%(md5Label)s</a>&nbsp;</td>
                 </tr>
                 <tr class="layout">
                  <td class="layout">%(size)s</td></tr>
