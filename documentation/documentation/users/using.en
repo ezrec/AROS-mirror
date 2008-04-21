@@ -157,9 +157,9 @@ if something has happened.
 
 There`s a number of free virtual machine packages,
 most knowingly is QEMU (Free, Open Source, for many host systems), VMWare Player 
-(Free. There`s also a full VMWare server for free that require a free serial) and Microsoft VPC (Free).
-You can get a version for your "host" system that suits your needs. We will
-describe some tips on launching AROS for different VM`s. 
+(Free. There`s also a full VMWare server for free that require a free serial) 
+and Microsoft VPC (Free). You can get a version for your "host" system that 
+suits your needs. We will describe some tips on launching AROS for different VM`s. 
 
 Instead of having almost the same AROS setup inside the VM`s, there`s a 
 difference in setting the VM itself. 
@@ -180,9 +180,10 @@ VM for Windows
 
 QEMU on Windows is almost the same thing as on Linux. The difference is in networking
 and some other issues. You can find useful information and packages on 
-`QEMU On Windows page <http://www.h7.dion.ne.jp/~qemu-win/>`__ . 
-Also there`s nice GUI for QEMU called QEMU Manager, including the QEMU package.
-There`s also some GUI`s for QEMU for some systems can be found in links.
+`QEMU On Windows page <http://www1.interq.or.jp/t-takeda/top.html>`__ . 
+Also there`s nice GUI for QEMU called `QEMU Manager <http://www.davereyn.co.uk/>`__, 
+including the QEMU and KQEMU package. There`s also some GUI`s for QEMU for some 
+systems can be found in links section.
 
 QEMU must be launched as a console application with some parameters given. 
 We will review some options in other sections, meaning you must append
@@ -252,15 +253,6 @@ A set of pre-installed or empty diskimages is available to make running AROS und
 VM a bit easier. WinAros is a preinstalled AROS environment installed on a HD image
 for the famous virtual machine QEMU which is freely available on the net.
 You may download Winaros from its `website`__.
-
-Installation Kit for AROS (IKAROS) is a set of virtual disk images for 
-different virtualisers, including QEMU and VMware, already partitioned, 
-formatted, and ready to install AROS on. Its benefits are its small archive 
-size, as it doesn't include large amount of files, and the possbility to 
-install fresh AROS versions, which make it useful for testing the nightly 
-builds. It allows easy installation of new versions without messing with 
-partition setup. Installation instructions included. Please check 
-`Aros-Exec Archives`__ in (emu/misc) section for the recent updates.
 
 __ http://amidevcpp.amiga-world.de/WinAros/
 __ http://archives.aros-exec.org/index.php?function=browse&cat=emulation/misc
