@@ -11,6 +11,7 @@ date: Datum
 
 build-logs: build logs
 download: Download
+md5: MD5
 
 [units]
 
