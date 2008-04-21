@@ -165,64 +165,67 @@ for group in groups.keys():
     for package in groups[group].keys():
         description = descriptions.get( 'descriptions', package, '' )
 
-        print '''
-                <tr class="layout" valign="middle" bgcolor="%(colorTD)s">
-                    <td class="layout" valign="top">
-                        <p><i>%(package)s</i></p>
-                        <p><font size="-1">%(description)s</font></p>
-                    </td>
-        ''' % vars()
-
-        column = span
-
-        for date in dates:
-            if date in groups[group][package]:
-                colorBlended = Color.blend( colorFileDL, colorBG, span, column )
-            else:
-                colorBlended = Color.blend( colorFileNA, colorBG, span, column )
-
+        if description == '':
+            continue
+        else:
             print '''
-                        <td class="layout" align="center" bgcolor="%(colorBlended)s">
+                    <tr class="layout" valign="middle" bgcolor="%(colorTD)s">
+                        <td class="layout" valign="top">
+                            <p><i>%(package)s</i></p>
+                            <p><font size="-1">%(description)s</font></p>
+                        </td>
             ''' % vars()
 
-            if date in groups[group][package]:
-                file = 'AROS-' + date + '-' + package
-		path = os.path.join( root, date, group, file )
-                
-		if os.access(path + '.tar.bz2', os.F_OK):
-		    path = path + '.tar.bz2'
-		    file = file + '.tar.bz2'
-		elif os.access(path + '.zip', os.F_OK):
-		    path = path + '.zip'
-		    file = file + '.zip'
-		else:
-		    path = path + '.php'
-		    file = file + '.php'
-		
-		if dltype == "nightly":
-		    url  = 'http://aros.sourceforge.net/cgi-bin/%s-download?%s/%s/%s' % (dltype, date, group, file)
-		else:
-		    url  = 'http://prdownloads.sourceforge.net/aros/%s?download' % (file)
-                size = formatSize( os.path.getsize( path ) )
+            column = span
+
+            for date in dates:
+                if date in groups[group][package]:
+                    colorBlended = Color.blend( colorFileDL, colorBG, span, column )
+                else:
+                    colorBlended = Color.blend( colorFileNA, colorBG, span, column )
+
                 print '''
-                <table class="layout" border="0" cellspacing="0" cellpadding="0">
-                <tr class="layout">
-                 <td class="layout" rowspan="2"><a href="%(url)s"><img border="0" src="/images/disk.png"></a></td>
-                 <td class="layout"><b><a href="%(url)s">%(downloadLabel)s</a></b><br><a href="%(url)s.md5">%(md5Label)s</a>&nbsp;</td>
-                </tr>
-                <tr class="layout">
-                 <td class="layout">%(size)s</td></tr>
-                </tr></table>
+                            <td class="layout" align="center" bgcolor="%(colorBlended)s">
                 ''' % vars()
+
+                if date in groups[group][package]:
+                    file = 'AROS-' + date + '-' + package
+            path = os.path.join( root, date, group, file )
+                    
+            if os.access(path + '.tar.bz2', os.F_OK):
+                path = path + '.tar.bz2'
+                file = file + '.tar.bz2'
+            elif os.access(path + '.zip', os.F_OK):
+                path = path + '.zip'
+                file = file + '.zip'
             else:
-                print '''
-                <font color="%(colorGhosted)s">not available</font>
-                ''' % vars()
-            print '''</td>'''
+                path = path + '.php'
+                file = file + '.php'
+            
+            if dltype == "nightly":
+                url  = 'http://aros.sourceforge.net/cgi-bin/%s-download?%s/%s/%s' % (dltype, date, group, file)
+            else:
+                url  = 'http://prdownloads.sourceforge.net/aros/%s?download' % (file)
+                    size = formatSize( os.path.getsize( path ) )
+                    print '''
+                    <table class="layout" border="0" cellspacing="0" cellpadding="0">
+                    <tr class="layout">
+                     <td class="layout" rowspan="2"><a href="%(url)s"><img border="0" src="/images/disk.png"></a></td>
+                     <td class="layout"><b><a href="%(url)s">%(downloadLabel)s</a></b><br><a href="%(url)s.md5">%(md5Label)s</a>&nbsp;</td>
+                    </tr>
+                    <tr class="layout">
+                     <td class="layout">%(size)s</td></tr>
+                    </tr></table>
+                    ''' % vars()
+                else:
+                    print '''
+                    <font color="%(colorGhosted)s">not available</font>
+                    ''' % vars()
+                print '''</td>'''
 
-            column = column - 1
+                column = column - 1
 
-        print '''        </tr>'''
+            print '''        </tr>'''
 
 print '''
     </table></p>
