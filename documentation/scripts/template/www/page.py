@@ -353,7 +353,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                                         BR(),
                                         _M['trademarks'],
                                         BR(),
-                                        time.asctime(time.gmtime()),
+                                        time.strftime("%Y-%m-%d %H:%M %Z", time.gmtime()),
                     statsPHP6,
                                         BR(),
                                         BR()
