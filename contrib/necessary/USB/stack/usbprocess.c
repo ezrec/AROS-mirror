@@ -188,7 +188,7 @@ void UpdatePaths(struct usb_staticdata *sd)
             }
         }
 
-        UnLockDosList(dl);
+        UnLockDosList(LDF_READ | LDF_ASSIGNS);
     }
 }
 
