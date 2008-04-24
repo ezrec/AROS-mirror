@@ -655,35 +655,34 @@ void CGX_DestroyWindow(_THIS, SDL_Surface *screen)
 //			CGX_LeaveFullScreen(this); tolto x crash
 		}
 
-		/* Destroy the output window */
+		/* Free the colormap entries */
+		if ( SDL_XPixels ) {
+
+			if(this->screen && this->hidden && GFX_Display &&
+               this->screen->format&&this->hidden->depth==8&&!was_fullscreen)
+            {
+                int numcolors = 1<<this->screen->format->BitsPerPixel;
+	    		unsigned long pixel;
+
+                if(numcolors>256)
+                    numcolors=256;
+
+                D(bug("Releasing %d pens...\n", numcolors));
+
+                for ( pixel=0; pixel<numcolors; pixel++ )
+                {
+                    if(SDL_XPixels[pixel]>=0)
+                        ReleasePen(GFX_Display->ViewPort.ColorMap,SDL_XPixels[pixel]);
+                }
+            }
+			free(SDL_XPixels);
+			SDL_XPixels = NULL;
+		}
+
+  		/* Destroy the output window */
 		if ( SDL_Window ) {
 			CloseWindow(SDL_Window);
 			SDL_Window=NULL;
-		}
-
-		/* Free the colormap entries */
-		if ( SDL_XPixels ) {
-			int numcolors;
-			unsigned long pixel;
-
-			if(this->screen->format&&this->hidden->depth==8&&!was_fullscreen)
-			{
-				numcolors = 1<<this->screen->format->BitsPerPixel;
-
-				if(numcolors>256)
-					numcolors=256;
-
-				if(!was_fullscreen&&this->hidden->depth==8)
-				{
-					for ( pixel=0; pixel<numcolors; pixel++ )
-					{
-						if(SDL_XPixels[pixel]>=0)
-							ReleasePen(GFX_Display->ViewPort.ColorMap,SDL_XPixels[pixel]);
-					}
-				}
-			}
-			free(SDL_XPixels);
-			SDL_XPixels = NULL;
 		}
 	}
 }
@@ -714,10 +713,10 @@ int CGX_CreateWindow(_THIS, SDL_Surface *screen,
 {
     Uint32 form, rb, gb, bb;
 
-    D(bug("CGX_CreateWindow\n"));
+    D(bug("CGX_CreateWindow %dx%d/%d flags:%lx\n", w, h, bpp, flags));
 
     /* If a window is already present, destroy it and start fresh */
-    if ( SDL_Window )
+    if ( SDL_Window ) 
         CGX_DestroyWindow(this, screen);
 
     /* See if we have been given a window id */
@@ -908,15 +907,21 @@ static SDL_Surface *CGX_SetVideoMode(_THIS, SDL_Surface *current,
 	Uint32 saved_flags;
 	int needcreate=0;
 
-	D(bug("CGX_SetVideoMode current:%lx\n",current));
+	D(bug("CGX_SetVideoMode current:%lx, bpp:%ld, flags:%lx\n",current, bpp, flags));
 
 	/* Lock the event thread, in multi-threading environments */
 	SDL_Lock_EventThread();
 
 // Check if the window needs to be closed or can be resized
 
-	if( (flags&SDL_FULLSCREEN) || (current && current->flags&SDL_FULLSCREEN && !(flags&SDL_FULLSCREEN)))
+	if( (flags&SDL_FULLSCREEN) || 
+         (current && (current->flags&SDL_FULLSCREEN) && !(flags&SDL_FULLSCREEN))) {
+        if (current) {
+            D(bug("Discovered we need to re-create window, flags:%lx, current:%lx\n",
+                        flags, current->flags));
+        }
 		needcreate=1;
+    }
 
 // Check if we need to close an already existing videomode...
 
@@ -1083,12 +1088,16 @@ buildnewscreen:
 	saved_flags = current->flags;
 
 	if (SDL_Window && (saved_flags&SDL_OPENGL) == (flags&SDL_OPENGL)
-	    && bpp == current->format->BitsPerPixel && !needcreate) {
+	    && /* bpp == current->format->BitsPerPixel && */!needcreate) {
 		if (CGX_ResizeWindow(this, current, width, height, flags) < 0) {
 			current = NULL;
 			goto done;
 		}
 	} else {
+        if (SDL_Window) {
+            D(bug("bpp: %d (current %d)\n",bpp, current->format->BitsPerPixel));
+        }
+
 		if (CGX_CreateWindow(this,current,width,height,bpp,flags) < 0) {
 			current = NULL;
 			goto done;
@@ -1184,10 +1193,6 @@ static int CGX_SetColors(_THIS, int firstcolor, int ncolors, SDL_Color *colors)
 
 		xcmap[0]=(ncolors<<16);
 		xcmap[0]+=firstcolor;
-
-//		D(bug("Setting %ld colors from color %ld on an HWPALETTE screen\n",ncolors,firstcolor));
-
-// per ora ho sostituito questo gli altri casi sono ancora da gestire
 
 		for ( i=0; i<ncolors; i++ ) {
 			xcmap[i*3+1] = colors[i].r<<24;
