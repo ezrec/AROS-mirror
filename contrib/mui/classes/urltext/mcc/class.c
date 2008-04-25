@@ -233,7 +233,7 @@ mGet(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opGet *msg)
         case MUIA_Urltext_Visited:  *msg->opg_Storage = (data->flags & UTFLG_Visited) ? TRUE : FALSE; return TRUE;
         case MUIA_Version:          *msg->opg_Storage = VERSION; return TRUE;
         case MUIA_Revision:         *msg->opg_Storage = REVISION; return TRUE;
-        case MUIA_Urltext_Version:  *msg->opg_Storage = (IPTR)VERSTAG+7;
+        case MUIA_Urltext_Version:  *msg->opg_Storage = (IPTR)VERSTAG+7; return TRUE;
         default: return DoSuperMethodA(cl,obj,(APTR)msg);
     }
 }
