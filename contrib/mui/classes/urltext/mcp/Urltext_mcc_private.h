@@ -28,7 +28,7 @@
 
 /***********************************************************************/
 
-#define MUISN_Alfie     0xFEC9
+#define MUISN_Alfie     ((unsigned int) 0xFEC9)
 #define TAG_MUI_Alfie   (TAG_USER|(MUISN_Alfie<<16))
 
 /***********************************************************************/
@@ -52,7 +52,7 @@ struct data
 /* attributes - Scheme is: [ISGN] */
 enum
 {
-    MUIA_Urltext_Base = (int)(TAG_MUI_Alfie+200),
+    MUIA_Urltext_Base = (unsigned int)(TAG_MUI_Alfie+200),
 
     MUIA_Urltext_MouseOutPen,       /* [IS..] (struct MUI_PenSpec *) PRIVATE!           */
     MUIA_Urltext_MouseOverPen,      /* [IS..] (struct MUI_PenSpec *) PRIVATE!           */
@@ -82,7 +82,7 @@ enum
 /* methods */
 enum
 {
-    MUIAM_Urltext_Base = (int)(TAG_MUI_Alfie+200),
+    MUIAM_Urltext_Base = (unsigned int)(TAG_MUI_Alfie+200),
     MUIM_Urltext_OpenURL,
     MUIM_Urltext_Copy,
     MUIM_Urltext_OpenURLPrefs,
