@@ -45,29 +45,30 @@ freebsd-i386-system:
     Die gehostete Version für FreeBSD/i386 5.x. Beachte, dass
     sie nicht auf FreeBSD 4.x-Systemen läuft.
 linux-i386-system:
-    Die gehostete Version für Linux/i386. Dies ist die vollständigste
-    und ausgereifste Portierung, d.h. dass Du alle mitgelieferten
-    Programme und Demos laufen lassen kannst. Dieses Archiv enthällt
+    Die gehostete Version für Linux/i386. Dieses Archiv enthält
+    alle AROS-System-Binärdateien aus dem Subversion-Archiv.
+linux-x86_64-system:
+    Die gehostete Version für Linux/x86_64. Dieses Archiv enthält
     alle AROS-System-Binärdateien aus dem Subversion-Archiv.
 linux-ppc-system:
     Die gehostete Version für Linux/PowerPC. Dieses Archiv enthält alle
     AROS-System-Binärdateien aus dem Subversion-Archiv.
 pc-i386-boot-floppy:
     Die native Version für i386-PC-AT-Computer und Kompatible.
-    Dieses Archiv enthält das Boot-Diskettenimage, welches Du schnell
-    auf eine Diskette schreiben kannst um AROS davon zu Booten.
+    Dieses Archiv enthält das Boot-Diskettenimage, welches Du
+    auf eine Diskette schreiben kannst um AROS davon zu booten.
 pc-i386-boot-iso:
     Die native Version für i386-PC-AT-Computer und Kompatible.
     Dies ist das boot-fähige CDROM-ISO-Image, welches alle AROS-
-    System und beigestellten Programme enthält.
-pc-i386-contrib:
-    Dieses Archiv enthält alle beigesteuerten Programme für die
-    i386-Architektur. Sie funktionieren sowohl für hosted (z.B. i386-linux)
-    als auch für native (i386-pc).
+    System- und beigestellten Programme enthält.
 pc-x86_64-boot-iso:
     Die native Version für 64-Bit (x86_64, amd64) Computer.
     Dies ist das bootbare CDROM ISO-Image, welches alle
     AROS-Systemprogramme und beigesteuerte Programme enthält.
+pc-i386-contrib:
+    Dieses Archiv enthält alle beigesteuerten Programme für die
+    i386-Architektur. Sie funktionieren sowohl für hosted (z.B. i386-linux)
+    als auch für native (i386-pc).
 pc-x86_64-contrib:
     This archive contains all the contributed programs
     compiled for the x86_64 architecture, for use with the
@@ -80,7 +81,7 @@ pc-i386-sdk:
     auf Deiner Maschine zu erstellen. GCC und die Binutils
     müssen so konfiguriert sein, dass sie Programme im
     i386-elf-Format erzeugen.
-pc-ppc-sdk:
+linux-ppc-sdk:
     Dateien und Werkzeuge um Deine eigenen AROS-Programme
     auf Deiner Maschine zu erstellen. GCC und die Binutils
     müssen so konfiguriert sein, dass sie Programme im
