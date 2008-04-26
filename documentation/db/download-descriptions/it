@@ -84,7 +84,7 @@ pc-i386-sdk:
     Set di strumenti per compilare i vostri programmi per
     AROS, sulla macchina che preferite. Avrete bisogno di gcc
     e di binutils configurati per produrre eseguibili i386-elf.
-pc-ppc-sdk:
+linux-ppc-sdk:
     Set di strumenti per compilare i vostri programmi per
     AROS, sulla macchina che preferite. Avrete bisogno di gcc
     e di binutils configurati per produrre eseguibili ppc-elf.
