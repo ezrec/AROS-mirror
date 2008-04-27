@@ -6,7 +6,6 @@ import os
 
 from html import *
 from components import *
-import time
 
 def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
     navigation = Tree \
@@ -352,8 +351,6 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                                         _M['copyright'],
                                         BR(),
                                         _M['trademarks'],
-                                        BR(),
-                                        time.strftime("%Y-%m-%d %H:%M %Z", time.gmtime()),
                     statsPHP6,
                                         BR(),
                                         BR()
