@@ -52,8 +52,8 @@ static int HID_Init(LIBBASETYPEPTR LIBBASE)
             { NULL, NULL }
     };
 
-    D(bug("[HID] USB HID Init\n"));
- 
+    D(bug("[HID] USB HID Init.\n"));
+    
     InitSemaphore(&LIBBASE->sd.Lock);
     
     if (OOP_ObtainAttrBases(attrbases))
@@ -99,4 +99,4 @@ static int HID_Expunge(LIBBASETYPEPTR LIBBASE)
 
 ADD2INITLIB(HID_Init, 0)
 ADD2EXPUNGELIB(HID_Expunge, 0)
-//ADD2LIBS((STRPTR)"usb.hidd", 0, static struct Library *, __usbbase)
+
