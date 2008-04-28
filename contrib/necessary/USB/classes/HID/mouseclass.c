@@ -46,50 +46,53 @@ void METHOD(USBMouse, Hidd_USBHID, ParseReport)
 {
     MouseData *mouse = OOP_INST_DATA(cl, o);
     
-    int x=0,y=0,z=0,buttons=0;
-    int i;
-
-    int fill = mouse->head - mouse->tail;
-
-    if (mouse->head < mouse->tail)
-        fill += RING_SIZE;
-    
-    /* Parse the movement and button data stored in this report */
-    x = hid_get_data(msg->report, &mouse->loc_x);
-    y = hid_get_data(msg->report, &mouse->loc_y);
-    z = hid_get_data(msg->report, &mouse->loc_wheel);
-    
-    for (i=0; i < mouse->loc_btncnt; i++)
-        if (hid_get_data(msg->report, &mouse->loc_btn[i]))
-            buttons |= (1 << i);
-
-    if (fill > (RING_SIZE - 1))
-    {
-        bug("[Mouse] EVENT QUEUE FULL.\n");
-        return;
-    }
-
-    /*
-     *  Store the parsed event into the ring. Do it in Disable() state, since the semaphore
-     * locking in Cause()'d code does not make much sence. 
-     */
-    
-    Disable();
-    
-    mouse->report_ring[mouse->head].dx = x;
-    mouse->report_ring[mouse->head].dy = y;
-    mouse->report_ring[mouse->head].dz = z;
-    mouse->report_ring[mouse->head].btn = buttons;
-    mouse->head = (mouse->head+1) % RING_SIZE;
-
-    Enable();
-
-    /* 
-     * If there is a mouse task, signal it. Once triggered it should pop all events from the rihg
-     * and pass them to the input.device
-     */
     if (mouse->mouse_task)
-        Signal(mouse->mouse_task, SIGBREAKF_CTRL_F);
+    {
+        int x=0,y=0,z=0,buttons=0;
+        int i;
+    
+        int fill = mouse->head - mouse->tail;
+    
+        if (mouse->head < mouse->tail)
+            fill += RING_SIZE;
+        
+        /* Parse the movement and button data stored in this report */
+        x = hid_get_data(msg->report, &mouse->loc_x);
+        y = hid_get_data(msg->report, &mouse->loc_y);
+        z = hid_get_data(msg->report, &mouse->loc_wheel);
+        
+        for (i=0; i < mouse->loc_btncnt; i++)
+            if (hid_get_data(msg->report, &mouse->loc_btn[i]))
+                buttons |= (1 << i);
+    
+        if (fill > (RING_SIZE - 1))
+        {
+            bug("[Mouse] EVENT QUEUE FULL.\n");
+            return;
+        }
+    
+        /*
+         *  Store the parsed event into the ring. Do it in Disable() state, since the semaphore
+         * locking in Cause()'d code does not make much sence. 
+         */
+        
+        Disable();
+        
+        mouse->report_ring[mouse->head].dx = x;
+        mouse->report_ring[mouse->head].dy = y;
+        mouse->report_ring[mouse->head].dz = z;
+        mouse->report_ring[mouse->head].btn = buttons;
+        mouse->head = (mouse->head+1) % RING_SIZE;
+    
+        Enable();
+    
+        /* 
+         * If there is a mouse task, signal it. Once triggered it should pop all events from the rihg
+         * and pass them to the input.device
+         */
+        if (mouse->mouse_task)
+            Signal(mouse->mouse_task, SIGBREAKF_CTRL_F);
+    }
 }
 
 OOP_Object *METHOD(USBMouse, Root, New)
