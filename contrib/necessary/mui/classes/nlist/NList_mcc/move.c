@@ -41,7 +41,7 @@ void  NL_Move( long *dest, long *src, long len, long newpos )
 {
 	if ( len > 0 )
 	{
-		len /= 4;
+		len /= sizeof(struct TypeEntry *);
 		len--;
 
 		do
@@ -58,7 +58,7 @@ void  NL_MoveD( long *dest, long *src, long len, long newpos )
 {
 	if ( len > 0 )
 	{
-		len /= 4;
+		len /= sizeof(struct TypeEntry *);
 		len--;
 
 		do
