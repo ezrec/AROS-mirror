@@ -102,21 +102,23 @@ void METHOD(USBKbd, Hidd_USBHID, ParseReport)
     uint8_t *buff = msg->report;
     int i;
     
-    CopyMem(kbd->code, kbd->prev_code, kbd->loc_keycnt + 1);
-
-    /* Clear the modifier code */
-    kbd->code[0] = 0;
-
-    for (i=0; i < kbd->loc_modcnt; i++)
-    {
-        if (hid_get_data(msg->report, &kbd->loc_mod[i].loc))
-            kbd->code[0] |= 1 << i;
-    }
-    
-    CopyMem(msg->report + kbd->loc_keycode.pos / 8, &kbd->code[1], kbd->loc_keycode.count);
-    
     if (kbd->kbd_task)
+    {
+        CopyMem(kbd->code, kbd->prev_code, kbd->loc_keycnt + 1);
+    
+        /* Clear the modifier code */
+        kbd->code[0] = 0;
+    
+        for (i=0; i < kbd->loc_modcnt; i++)
+        {
+            if (hid_get_data(msg->report, &kbd->loc_mod[i].loc))
+                kbd->code[0] |= 1 << i;
+        }
+        
+        CopyMem(msg->report + kbd->loc_keycode.pos / 8, &kbd->code[1], kbd->loc_keycode.count);
+    
         Signal(kbd->kbd_task, SIGBREAKF_CTRL_F);
+    }
 }
 
 OOP_Object *METHOD(USBKbd, Root, New)
