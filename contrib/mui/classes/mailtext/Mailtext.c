@@ -810,7 +810,7 @@ static ULONG Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
 
             fnt[0] = '\0' ;
 
-            l = (ULONG)c - (ULONG)item ;
+            l = (IPTR)c - (IPTR)item ;
 
             strncpy(fnt, (STRPTR)item, l) ;
             fnt[l] = '\0' ;
