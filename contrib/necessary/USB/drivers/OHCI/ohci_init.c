@@ -61,7 +61,7 @@ AROS_UFH3(void, Enumerator,
             { aHidd_PCIDevice_isMaster, TRUE },
             { TAG_DONE, 0UL },
     };
-
+    
     OOP_SetAttrs(pciDevice, (struct TagItem *)attrs);
     OOP_GetAttr(pciDevice, aHidd_PCIDevice_Base0, &LIBBASE->sd.ramBase[counter]);
     OOP_GetAttr(pciDevice, aHidd_PCIDevice_Driver, (void *)&LIBBASE->sd.pciDriver[counter]);
@@ -69,20 +69,20 @@ AROS_UFH3(void, Enumerator,
 
     regs = (ohci_registers_t *)LIBBASE->sd.ramBase[counter];
 
-    LIBBASE->sd.numPorts[counter] = HC_RHA_GET_NDP(regs->HcRhDescriptorA);
+    LIBBASE->sd.numPorts[counter] = HC_RHA_GET_NDP(AROS_LE2LONG(mmio(regs->HcRhDescriptorA)));
     
     D(bug("[OHCI]   %d-port Device %d @ %08x with MMIO @ %08x\n", LIBBASE->sd.numPorts[counter], counter + 1, pciDevice, LIBBASE->sd.ramBase[counter]));
     
-    uint32_t ctrl = mmio(regs->HcControl); 
+    uint32_t ctrl = AROS_LE2LONG(mmio(regs->HcControl));
     if (ctrl & HC_CTRL_IR)
     {
         D(bug("[OHCI]   Performing BIOS handoff\n"));
         int delay = 500; /* 0.5 second */
-        mmio(regs->HcInterruptEnable) = HC_INTR_OC;
-        mmio(regs->HcCommandStatus) = HC_CS_OCR;
+        mmio(regs->HcInterruptEnable) = AROS_LONG2LE(HC_INTR_OC);
+        mmio(regs->HcCommandStatus) = AROS_LONG2LE(HC_CS_OCR);
         
         /* Loop */
-        while ((delay > 0) && (mmio(regs->HcControl) & HC_CTRL_IR))
+        while ((delay > 0) && AROS_LE2LONG(mmio(regs->HcControl) & HC_CTRL_IR))
         {
             delay -= 2;
             ohci_Delay(tr, 2);
@@ -90,12 +90,12 @@ AROS_UFH3(void, Enumerator,
         if (delay < 0)
             D(bug("[OHCI]   BIOS handoff failed!\n"));
         
-        mmio(regs->HcControl) = ctrl & HC_CTRL_RWC;
+        mmio(regs->HcControl) = AROS_LONG2LE(ctrl & HC_CTRL_RWC);
     }
     
     /* Disable all interrupts */
-    mmio(regs->HcInterruptDisable) = 0xffffffff;
-    mmio(regs->HcInterruptStatus)  = 0xffffffff;
+    mmio(regs->HcInterruptDisable) = AROS_LONG2LE(0xffffffff);
+    mmio(regs->HcInterruptStatus)  = AROS_LONG2LE(0xffffffff);
     
     LIBBASE->sd.numDevices = ++counter;
 

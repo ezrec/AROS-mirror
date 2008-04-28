@@ -61,10 +61,10 @@ BOOL METHOD(OHCI, Hidd_USBHub, OnOff)
     BOOL retval = FALSE;
     D(bug("[OHCI] USBHub::OnOff(%d)\n", msg->on));
     
-    uint32_t ctl = mmio(ohci->regs->HcControl);
+    uint32_t ctl = AROS_LE2LONG(mmio(ohci->regs->HcControl));
     ctl &= ~HC_CTRL_HCFS_MASK;
     ctl |= msg->on ? HC_CTRL_HCFS_OPERATIONAL : HC_CTRL_HCFS_SUSPENDED;
-    mmio(ohci->regs->HcControl) = ctl;
+    mmio(ohci->regs->HcControl) = AROS_LONG2LE(ctl);
     
     ohci->running = msg->on;
 
@@ -97,21 +97,21 @@ BOOL METHOD(OHCI, Hidd_USBHub, PortReset)
     
     D(bug("[OHCI] Port %d reset\n", msg->portNummer));
     
-    mmio(ohci->regs->HcRhPortStatus[msg->portNummer-1]) = UPS_RESET;
+    mmio(ohci->regs->HcRhPortStatus[msg->portNummer-1]) = AROS_LONG2LE(UPS_RESET);
     
     for (i=0; i < 5; i++)
     {
         D(bug("[OHCI] Reset: Waiting for completion\n"));
         
         ohci_Delay(ohci->tr, USB_PORT_ROOT_RESET_DELAY);
-        if ((mmio(ohci->regs->HcRhPortStatus[msg->portNummer-1]) & UPS_RESET) == 0)
+        if ((mmio(ohci->regs->HcRhPortStatus[msg->portNummer-1]) & AROS_LONG2LE(UPS_RESET)) == 0)
             break;
     }
     
     if (i == 5)
         return FALSE;
 
-    mmio(ohci->regs->HcRhPortStatus[msg->portNummer-1]) = UPS_C_PORT_RESET << 16;
+    mmio(ohci->regs->HcRhPortStatus[msg->portNummer-1]) = AROS_LONG2LE(UPS_C_PORT_RESET << 16);
     
     return TRUE;
 }
@@ -139,13 +139,13 @@ BOOL METHOD(OHCI, Hidd_USBHub, GetPortStatus)
     
     if (msg->port >= 1 && msg->port <= ohci->hubDescr.bNbrPorts)
     {
-        uint32_t val = mmio(ohci->regs->HcRhPortStatus[msg->port-1]);
-        msg->status->wPortStatus = val;
-        msg->status->wPortChange = val >> 16;
+        uint32_t val = AROS_LE2LONG(mmio(ohci->regs->HcRhPortStatus[msg->port-1]));
+        msg->status->wPortStatus = AROS_WORD2LE(val);
+        msg->status->wPortChange = AROS_WORD2LE(val >> 16);
         retval = TRUE;
     }
     
-    D(bug("[OHCI] GetPortStatus: sts=%04x chg=%04x\n", msg->status->wPortStatus, msg->status->wPortChange));
+    D(bug("[OHCI] GetPortStatus: sts=%04x chg=%04x\n", AROS_LE2WORD(msg->status->wPortStatus), AROS_LE2WORD(msg->status->wPortChange)));
     
     return retval;
 }
@@ -162,35 +162,35 @@ BOOL METHOD(OHCI, Hidd_USBHub, ClearPortFeature)
     switch (msg->feature)
     {
         case UHF_PORT_ENABLE:
-            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_CURRENT_CONNECT_STATUS;
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = AROS_LONG2LE(UPS_CURRENT_CONNECT_STATUS);
             break;
         
         case UHF_PORT_SUSPEND:
-            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_OVERCURRENT_INDICATOR;
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = AROS_LONG2LE(UPS_OVERCURRENT_INDICATOR);
             break;
             
         case UHF_PORT_POWER:
-            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_LOW_SPEED;
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = AROS_LONG2LE(UPS_LOW_SPEED);
             break;
         
         case UHF_C_PORT_CONNECTION:
-            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_C_CONNECT_STATUS << 16;
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = AROS_LONG2LE(UPS_C_CONNECT_STATUS << 16);
             break;
             
         case UHF_C_PORT_ENABLE:
-            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_C_PORT_ENABLED << 16;
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = AROS_LONG2LE(UPS_C_PORT_ENABLED << 16);
             break;
             
         case UHF_C_PORT_SUSPEND:
-            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_C_SUSPEND << 16;
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = AROS_LONG2LE(UPS_C_SUSPEND << 16);
             break;
      
         case UHF_C_PORT_OVER_CURRENT:
-            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_C_OVERCURRENT_INDICATOR << 16;
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = AROS_LONG2LE(UPS_C_OVERCURRENT_INDICATOR << 16);
             break;
      
         case UHF_C_PORT_RESET:
-            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_C_PORT_RESET << 16;
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = AROS_LONG2LE(UPS_C_PORT_RESET << 16);
             break;
     }
     
@@ -207,7 +207,7 @@ BOOL METHOD(OHCI, Hidd_USBHub, ClearPortFeature)
             GetMsg(&ohci->timerPort);
             
             D(bug("[OHCI] Reenabling the RHSC interrupt\n"));
-            mmio(ohci->regs->HcInterruptEnable) = mmio(ohci->regs->HcInterruptEnable) | HC_INTR_RHSC;
+            mmio(ohci->regs->HcInterruptEnable) = mmio(ohci->regs->HcInterruptEnable) | AROS_LONG2LE(HC_INTR_RHSC);
             break;
         
         default:
@@ -230,23 +230,23 @@ BOOL METHOD(OHCI, Hidd_USBHub, SetPortFeature)
     switch (msg->feature)
     {
         case UHF_PORT_ENABLE:
-            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_PORT_ENABLED;
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = AROS_LONG2LE(UPS_PORT_ENABLED);
             break;
             
         case UHF_PORT_SUSPEND:
-            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_SUSPEND;
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = AROS_LONG2LE(UPS_SUSPEND);
             break;
      
         case UHF_PORT_POWER:
-            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_PORT_POWER;
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = AROS_LONG2LE(UPS_PORT_POWER);
             break;
      
         case UHF_PORT_RESET:
-            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_RESET;
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = AROS_LONG2LE(UPS_RESET);
             for (i=0; i < 5; i++)
             {
                 ohci_Delay(ohci->tr, USB_PORT_ROOT_RESET_DELAY);
-                if ((mmio(ohci->regs->HcRhPortStatus[msg->port-1]) & UPS_RESET) == 0)
+                if ((mmio(ohci->regs->HcRhPortStatus[msg->port-1]) & AROS_LONG2LE(UPS_RESET)) == 0)
                     break;
             }
             if (i == 5)
@@ -279,8 +279,8 @@ AROS_UFH3(void, OHCI_HubInterrupt,
     D(bug("[OHCI] INTR: Reenabling the RHSC interrupt\n"));
     
     /* Reenable the RHSC interrupt */
-    mmio(ohci->regs->HcInterruptEnable) = HC_INTR_RHSC;
-    mmio(ohci->regs->HcInterruptStatus) = HC_INTR_RHSC;
+    mmio(ohci->regs->HcInterruptEnable) = AROS_LONG2LE(HC_INTR_RHSC);
+    mmio(ohci->regs->HcInterruptStatus) = AROS_LONG2LE(HC_INTR_RHSC);
     
     AROS_USERFUNC_EXIT
 }

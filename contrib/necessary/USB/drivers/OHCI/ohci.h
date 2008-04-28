@@ -24,6 +24,7 @@
 #include <inttypes.h>
 
 #include <aros/asmcall.h>
+#include <aros/macros.h>
 
 #include <exec/semaphores.h>
 #include <devices/timer.h>
@@ -101,8 +102,8 @@ typedef struct ohci_registers {
 #define HC_FM_GET_FSMPS(v)      (((v) >> 16) & 0x7fff)
 #define HC_FM_FIT               0x80000000
 
-#define HC_FM_FSMPS(v)          ((((i)-210)*6/7) << 16)
-#define HC_PERIODIC(v)          ((i)*9/10)
+#define HC_FM_FSMPS(v)          ((((v)-210)*6/7) << 16)
+#define HC_PERIODIC(v)          ((v)*9/10)
 
 /* HcRhDescriptorA */
 #define HC_RHA_GET_NDP(v)       ((v) & 0xff)
@@ -139,8 +140,13 @@ typedef struct ohci_pipe ohci_pipe_t;
 
 typedef struct ohci_hcca {
     uint32_t    hccaIntrTab[32];
+//#if AROS_BIG_ENDIAN
+//    uint16_t    pad;
+//    uint16_t    hccaFrNum;
+//#else
     uint16_t    hccaFrNum;
     uint16_t    pad;
+//#endif
     uint32_t    hccaDoneHead;
     uint8_t     hccaRsvd[116];
 } __attribute__((packed)) ohci_hcca_t;
@@ -151,6 +157,7 @@ typedef struct ohci_ed {
     uint32_t    edHeadP;
     uint32_t    edNextED;
     ohci_pipe_t *edPipe;
+    uint32_t    edUsage;
 } __attribute__((aligned(32))) ohci_ed_t;
 
 #define ED_FA_MASK      0x0000007f
@@ -163,13 +170,8 @@ typedef struct ohci_ed {
 #define ED_C            0x00000002
 #define ED_H            0x00000001
 
-#define ED_GET_USAGE(ed) (((ed)->edFlags >> 27) + (((ed)->edTailP & 0x0f) << 5) + (((ed)->edNextED & 0x0f) << 9))
-#define ED_SET_USAGE(ed,u) \
-    do {                        \
-        (ed)->edFlags = ((ed)->edFlags & 0x07ffffff) | ((u) & 0x001f) << 27; \
-        (ed)->edTailP = ((ed)->edTailP & 0xfffffff0) | (((u) & 0x01e0) >> 5);  \
-        (ed)->edNextED= ((ed)->edNextED& 0xfffffff0) | (((u) & 0x1e00) >> 9);  \
-    } while(0)
+#define ED_GET_USAGE(ed) ((ed)->edUsage)
+#define ED_SET_USAGE(ed,u) ((ed)->edUsage = (u))
 
 typedef struct ohci_td {
     uint32_t    tdFlags;
@@ -275,7 +277,7 @@ struct ohcibase
 typedef struct ohci_data {
     struct ohci_staticdata      *sd;
     volatile ohci_registers_t   *regs;
-    ohci_hcca_t                 *hcca;
+    volatile ohci_hcca_t        *hcca;
     usb_hub_descriptor_t        hubDescr;
     uint8_t                     running;
     uint8_t                     pendingRHSC;

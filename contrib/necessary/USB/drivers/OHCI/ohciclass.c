@@ -38,6 +38,7 @@
 
 #include <proto/oop.h>
 #include <proto/utility.h>
+#include <proto/exec.h>
 
 #include "ohci.h"
 
@@ -64,6 +65,7 @@ OOP_Object *METHOD(OHCI, Root, New)
         ohci_data_t *ohci = OOP_INST_DATA(cl, o);
         int i;
         
+        ohci->pendingRHSC = 1;
         ohci->tr = ohci_CreateTimer();
         
         NEWLIST(&ohci->intList);
@@ -112,15 +114,18 @@ OOP_Object *METHOD(OHCI, Root, New)
         ohci->ctrl_head = ohci_AllocED(cl, o);
         ohci->ctrl_head->edFlags = AROS_LONG2LE(ED_K);
         ohci->ctrl_head->edNextED = 0;
+        CacheClearE(ohci->ctrl_head, sizeof(ohci_ed_t), CACRF_ClearD);
         
         ohci->bulk_head = ohci_AllocED(cl, o);
         ohci->bulk_head->edFlags = AROS_LONG2LE(ED_K);
         ohci->bulk_head->edNextED = 0;
+        CacheClearE(ohci->bulk_head, sizeof(ohci_ed_t), CACRF_ClearD);
         
         ohci->isoc_head = ohci_AllocED(cl, o);
         ohci->isoc_head->edFlags = AROS_LONG2LE(ED_K);
         ohci->isoc_head->edNextED = 0;
-
+        CacheClearE(ohci->isoc_head, sizeof(ohci_ed_t), CACRF_ClearD);
+        
         /* 
          * The endpoints for interrupts.
          * 
@@ -131,45 +136,52 @@ OOP_Object *METHOD(OHCI, Root, New)
          */
         ohci->int01 = ohci_AllocED(cl, o);
         ohci->int01->edFlags = AROS_LONG2LE(ED_K);
-        ohci->int01->edNextED = (uint32_t)ohci->isoc_head;
+        ohci->int01->edNextED = AROS_LONG2LE((uint32_t)ohci->isoc_head);
+        CacheClearE(ohci->int01, sizeof(ohci_ed_t), CACRF_ClearD);
         
         for (i=0; i < 2; i++)
         {
             ohci->int02[i] = ohci_AllocED(cl, o);
             ohci->int02[i]->edFlags = AROS_LONG2LE(ED_K);
-            ohci->int02[i]->edNextED = (uint32_t)ohci->int01;
+            ohci->int02[i]->edNextED = AROS_LONG2LE((uint32_t)ohci->int01);
+            CacheClearE(ohci->int02[i], sizeof(ohci_ed_t), CACRF_ClearD);
         }
 
         for (i=0; i < 4; i++)
         {
             ohci->int04[i] = ohci_AllocED(cl, o);
             ohci->int04[i]->edFlags = AROS_LONG2LE(ED_K);
-            ohci->int04[i]->edNextED = (uint32_t)ohci->int02[i & 0x01];
+            ohci->int04[i]->edNextED = AROS_LONG2LE((uint32_t)ohci->int02[i & 0x01]);
+            CacheClearE(ohci->int04[i], sizeof(ohci_ed_t), CACRF_ClearD);
         }
 
         for (i=0; i < 8; i++)
         {
             ohci->int08[i] = ohci_AllocED(cl, o);
             ohci->int08[i]->edFlags = AROS_LONG2LE(ED_K);
-            ohci->int08[i]->edNextED = (uint32_t)ohci->int04[i & 0x03];
+            ohci->int08[i]->edNextED = AROS_LONG2LE((uint32_t)ohci->int04[i & 0x03]);
+            CacheClearE(ohci->int08[i], sizeof(ohci_ed_t), CACRF_ClearD);
         }
 
         for (i=0; i < 16; i++)
         {
             ohci->int16[i] = ohci_AllocED(cl, o);
             ohci->int16[i]->edFlags = AROS_LONG2LE(ED_K);
-            ohci->int16[i]->edNextED = (uint32_t)ohci->int08[i & 0x07];
+            ohci->int16[i]->edNextED = AROS_LONG2LE((uint32_t)ohci->int08[i & 0x07]);
+            CacheClearE(ohci->int16[i], sizeof(ohci_ed_t), CACRF_ClearD);
         }
         
         for (i=0; i < 32; i++)
         {
             ohci->int32[i] = ohci_AllocED(cl, o);
             ohci->int32[i]->edFlags = AROS_LONG2LE(ED_K);
-            ohci->int32[i]->edNextED = (uint32_t)ohci->int16[i & 0x0f];
+            ohci->int32[i]->edNextED = AROS_LONG2LE((uint32_t)ohci->int16[i & 0x0f]);
+            CacheClearE(ohci->int32[i], sizeof(ohci_ed_t), CACRF_ClearD);
             
             /* Link this pointers with HCCA table */ 
-            ohci->hcca->hccaIntrTab[i] = (uint32_t)ohci->int32[i];
+            ohci->hcca->hccaIntrTab[i] = AROS_LONG2LE((uint32_t)ohci->int32[i]);
         }
+        CacheClearE(ohci->hcca, sizeof(ohci_hcca_t), CACRF_ClearD);
         
         /* Reset OHCI */
         
@@ -177,22 +189,22 @@ OOP_Object *METHOD(OHCI, Root, New)
          * Preserve some registers which were set by BIOS. I will have 
          * to get rid of it pretty soon
          */
-        uint32_t ctl = mmio(ohci->regs->HcControl);
+        uint32_t ctl = AROS_LE2LONG(mmio(ohci->regs->HcControl));
         uint32_t rwc = ctl | HC_CTRL_RWC;
-        uint32_t fm = mmio(ohci->regs->HcFmInterval);
-        uint32_t desca = (ohci->regs->HcRhDescriptorA);
-        uint32_t descb = (ohci->regs->HcRhDescriptorB);
+        uint32_t fm = AROS_LE2LONG(mmio(ohci->regs->HcFmInterval));
+        uint32_t desca = AROS_LE2LONG(mmio(ohci->regs->HcRhDescriptorA));
+        uint32_t descb = AROS_LE2LONG(mmio(ohci->regs->HcRhDescriptorB));
         
         D(bug("[OHCI] ctl=%08x fm=%08x desca=%08x descb=%08x\n", ctl,fm,desca,descb));
         
-        mmio(ohci->regs->HcControl) = rwc | HC_CTRL_HCFS_RESET;
+        mmio(ohci->regs->HcControl) = AROS_LONG2LE(rwc | HC_CTRL_HCFS_RESET);
         ohci_Delay(ohci->tr, USB_BUS_RESET_DELAY);
         
-        mmio(ohci->regs->HcCommandStatus) = HC_CS_HCR;
+        mmio(ohci->regs->HcCommandStatus) = AROS_LONG2LE(HC_CS_HCR);
         for (i=0; i < 10; i++)
         {
             ohci_Delay(ohci->tr, 1);
-            if (!(mmio(ohci->regs->HcCommandStatus) & HC_CS_HCR))
+            if (!(mmio(ohci->regs->HcCommandStatus) & AROS_LONG2LE(HC_CS_HCR)))
                 break;
         }
         
@@ -202,32 +214,35 @@ OOP_Object *METHOD(OHCI, Root, New)
         /* Initial setup of OHCI */
         D(bug("[OHCI] Initial setup\n"));
         
-        mmio(ohci->regs->HcHCCA) = (uint32_t)ohci->hcca;
-        mmio(ohci->regs->HcBulkHeadED) = (uint32_t)ohci->bulk_head;
-        mmio(ohci->regs->HcControlHeadED) = (uint32_t)ohci->ctrl_head;
-        mmio(ohci->regs->HcInterruptDisable) = 0xc000007f;
+        mmio(ohci->regs->HcHCCA) = AROS_LONG2LE((uint32_t)ohci->hcca);
+        mmio(ohci->regs->HcBulkHeadED) = AROS_LONG2LE((uint32_t)ohci->bulk_head);
+        mmio(ohci->regs->HcControlHeadED) = AROS_LONG2LE((uint32_t)ohci->ctrl_head);
+        mmio(ohci->regs->HcInterruptDisable) = AROS_LONG2LE(0xc000007f);
         
-        ctl = mmio(ohci->regs->HcControl);
+        ctl = AROS_LE2LONG(mmio(ohci->regs->HcControl));
         ctl &= ~(HC_CTRL_CBSR_MASK | HC_CTRL_HCFS_MASK | HC_CTRL_PLE |
                  HC_CTRL_IE | HC_CTRL_CLE | HC_CTRL_BLE | HC_CTRL_IR );
         ctl |= HC_CTRL_PLE | HC_CTRL_IE | HC_CTRL_CLE | HC_CTRL_BLE | 
                rwc | HC_CTRL_CBSR_1_4 | HC_CTRL_HCFS_SUSPENDED;
         
         /* Start OHCI */
-        mmio(ohci->regs->HcControl) = ctl;
+        mmio(ohci->regs->HcControl) = AROS_LONG2LE(ctl);
 
         uint32_t ival = HC_FM_GET_IVAL(fm);
-        fm = (mmio(ohci->regs->HcFmRemaining) & HC_FM_FIT) ^ HC_FM_FIT;
+        D(bug("[OHCI] ival=%08x\n", ival));
+        fm = (AROS_LE2LONG(mmio(ohci->regs->HcFmRemaining)) & HC_FM_FIT) ^ HC_FM_FIT;
         fm |= HC_FM_FSMPS(ival) | ival;
-        mmio(ohci->regs->HcFmInterval) = fm;
+        D(bug("[OHCI] fm=%08x\n", fm));
+        mmio(ohci->regs->HcFmInterval) = AROS_LONG2LE(fm);
         uint32_t per = HC_PERIODIC(ival);
-        mmio(ohci->regs->HcPeriodicStart) = per;
+        mmio(ohci->regs->HcPeriodicStart) = AROS_LONG2LE(per);
+	D(bug("[OHCI] periodic start=%08x\n", per));
         
-        mmio(ohci->regs->HcRhDescriptorA) = desca | HC_RHA_NOCP;
-        mmio(ohci->regs->HcRhStatus) = HC_RHS_LPSC;
+        mmio(ohci->regs->HcRhDescriptorA) = AROS_LONG2LE(desca | HC_RHA_NOCP);
+        mmio(ohci->regs->HcRhStatus) = AROS_LONG2LE(HC_RHS_LPSC);
         ohci_Delay(ohci->tr, 5);
-        mmio(ohci->regs->HcRhDescriptorA) = desca;
-        mmio(ohci->regs->HcRhDescriptorB) = descb;
+        mmio(ohci->regs->HcRhDescriptorA) = AROS_LONG2LE(desca);
+        mmio(ohci->regs->HcRhDescriptorB) = AROS_LONG2LE(descb);
         
         if (HC_RHA_GET_POTPGT(desca) != 0)
         {
@@ -236,8 +251,8 @@ OOP_Object *METHOD(OHCI, Root, New)
         }
         
         /* Enable interrupts */
-        mmio(ohci->regs->HcInterruptEnable) = HC_INTR_MIE | HC_INTR_SO | HC_INTR_WDH |
-            HC_INTR_RD | HC_INTR_UE | HC_INTR_RHSC;
+        mmio(ohci->regs->HcInterruptEnable) = AROS_LONG2LE(HC_INTR_MIE | HC_INTR_SO | HC_INTR_WDH |
+            HC_INTR_RD | HC_INTR_UE | HC_INTR_RHSC);
         
         D(bug("[OHCI] OHCI controller up and running.\n"));
         success = TRUE;
