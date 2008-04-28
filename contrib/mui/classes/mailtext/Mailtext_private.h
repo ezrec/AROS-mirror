@@ -64,8 +64,8 @@
 
 /*** Methods ***/
 
-#define MUIM_Mailtext_CallAction            0x8057012d
-#define MUIM_Mailtext_CopyToClip            0x8057013c                         /***/
+#define MUIM_Mailtext_CallAction            0x8057012dUL
+#define MUIM_Mailtext_CopyToClip            0x8057013cUL                         /***/
 
 /*** Method structs ***/
 
@@ -82,42 +82,42 @@
 // #define MUIA_Mailtext_UDistance             0x80570106
 // #define MUIA_Mailtext_RDistance             0x8057010D
 
-#define MUIA_Mailtext_Distance              0x80570101
-#define MUIA_Mailtext_IncPercent            0x80570103  /* v10 [ISG] */        /***/
-#define MUIA_Mailtext_ShowAttributes        0x80570104
-#define MUIA_Mailtext_Text                  0x80570105  /* v10 [ISG] */        /***/
-#define MUIA_Mailtext_QuoteChars            0x80570107  /* v10 [ISG] */        /***/
-#define MUIA_Mailtext_QuoteDistance         0x80570108
-#define MUIA_Mailtext_DisablePattern        0x80570109
-#define MUIA_Mailtext_EnablePattern         0x8057010A
-#define MUIA_Mailtext_TerminatingChars      0x8057010B
-#define MUIA_Mailtext_NonIntroducingChars   0x8057010C
-#define MUIA_Mailtext_WhitespaceChars       0x8057010E
+#define MUIA_Mailtext_Distance              0x80570101UL
+#define MUIA_Mailtext_IncPercent            0x80570103UL  /* v10 [ISG] */        /***/
+#define MUIA_Mailtext_ShowAttributes        0x80570104UL
+#define MUIA_Mailtext_Text                  0x80570105UL  /* v10 [ISG] */        /***/
+#define MUIA_Mailtext_QuoteChars            0x80570107UL  /* v10 [ISG] */        /***/
+#define MUIA_Mailtext_QuoteDistance         0x80570108UL
+#define MUIA_Mailtext_DisablePattern        0x80570109UL
+#define MUIA_Mailtext_EnablePattern         0x8057010AUL
+#define MUIA_Mailtext_TerminatingChars      0x8057010BUL
+#define MUIA_Mailtext_NonIntroducingChars   0x8057010CUL
+#define MUIA_Mailtext_WhitespaceChars       0x8057010EUL
 
-#define MUIA_Mailtext_SeparateSignature     0x80570138
-#define MUIA_Mailtext_SigSepPattern         0x80570140
+#define MUIA_Mailtext_SeparateSignature     0x80570138UL
+#define MUIA_Mailtext_SigSepPattern         0x80570140UL
 
-#define MUIA_Mailtext_URLAction             0x8057012e
-#define MUIA_Mailtext_URLActionBeep         0x80570134
-#define MUIA_Mailtext_URLActionStack        0x8057012f
-#define MUIA_Mailtext_URLUnderline          0x80570130
+#define MUIA_Mailtext_URLAction             0x8057012eUL
+#define MUIA_Mailtext_URLActionBeep         0x80570134UL
+#define MUIA_Mailtext_URLActionStack        0x8057012fUL
+#define MUIA_Mailtext_URLUnderline          0x80570130UL
 
-#define MUIA_Mailtext_Color_QuoteLevel1     0x8057011D
-#define MUIA_Mailtext_Color_QuoteLevel2     0x8057011E
-#define MUIA_Mailtext_Color_QuoteLevel3     0x8057011F
-#define MUIA_Mailtext_Color_QuoteLevel4     0x80570120
-#define MUIA_Mailtext_Color_QuoteLevel5     0x80570121
+#define MUIA_Mailtext_Color_QuoteLevel1     0x8057011DUL
+#define MUIA_Mailtext_Color_QuoteLevel2     0x8057011EUL
+#define MUIA_Mailtext_Color_QuoteLevel3     0x8057011FUL
+#define MUIA_Mailtext_Color_QuoteLevel4     0x80570120UL
+#define MUIA_Mailtext_Color_QuoteLevel5     0x80570121UL
 
-#define MUIA_Mailtext_Color_Text            0x80570122
-#define MUIA_Mailtext_Color_URL             0x8057012c
+#define MUIA_Mailtext_Color_Text            0x80570122UL
+#define MUIA_Mailtext_Color_URL             0x8057012cUL
 
-#define MUIA_Mailtext_ForbidContextMenu     0x80570136  /* v18 [I..] */        /***/
-#define MUIA_Mailtext_UseContextMenu        0x8057012a
+#define MUIA_Mailtext_ForbidContextMenu     0x80570136UL  /* v18 [I..] */        /***/
+#define MUIA_Mailtext_UseContextMenu        0x8057012aUL
 
-#define MUIA_Mailtext_ActionEMail           0x8057013a  /* v19 [..G] */        /***/
-#define MUIA_Mailtext_ActionURL             0x8057013b  /* v18 [..G] */        /***/
-#define MUIA_Mailtext_DisplayRaw            0x80570139  /* v18 [.SG] */        /***/
-#define MUIA_Mailtext_Wordwrap              0x8057013d  /* v18 [.SG] */        /***/
+#define MUIA_Mailtext_ActionEMail           0x8057013aUL  /* v19 [..G] */        /***/
+#define MUIA_Mailtext_ActionURL             0x8057013bUL  /* v18 [..G] */        /***/
+#define MUIA_Mailtext_DisplayRaw            0x80570139UL  /* v18 [.SG] */        /***/
+#define MUIA_Mailtext_Wordwrap              0x8057013dUL  /* v18 [.SG] */        /***/
 
 /*** Special attribute values ***/
 
@@ -125,38 +125,38 @@
 
 /*** Configs (private) ***/
 
-#define MUICFG_Mailtext_DisablePattern      0x8057010F
-#define MUICFG_Mailtext_Distance            0x80570110
-#define MUICFG_Mailtext_EnablePattern       0x80570111
-#define MUICFG_Mailtext_NonIntroducingChars 0x80570112
-#define MUICFG_Mailtext_QuoteChars          0x80570113
-#define MUICFG_Mailtext_QuoteDistance       0x80570114
-#define MUICFG_Mailtext_ShowAttributes      0x80570115
-#define MUICFG_Mailtext_TerminatingChars    0x80570116
-#define MUICFG_Mailtext_WhitespaceChars     0x80570117
+#define MUICFG_Mailtext_DisablePattern      0x8057010FUL
+#define MUICFG_Mailtext_Distance            0x80570110UL
+#define MUICFG_Mailtext_EnablePattern       0x80570111UL
+#define MUICFG_Mailtext_NonIntroducingChars 0x80570112UL
+#define MUICFG_Mailtext_QuoteChars          0x80570113UL
+#define MUICFG_Mailtext_QuoteDistance       0x80570114UL
+#define MUICFG_Mailtext_ShowAttributes      0x80570115UL
+#define MUICFG_Mailtext_TerminatingChars    0x80570116UL
+#define MUICFG_Mailtext_WhitespaceChars     0x80570117UL
 
-#define MUICFG_Mailtext_SeparateSignature   0x80570137
-#define MUICFG_Mailtext_SigSepPattern       0x8057013f
+#define MUICFG_Mailtext_SeparateSignature   0x80570137UL
+#define MUICFG_Mailtext_SigSepPattern       0x8057013fUL
 
-#define MUICFG_Mailtext_URLAction           0x80570131
-#define MUICFG_Mailtext_URLActionBeep       0x80570135
-#define MUICFG_Mailtext_URLActionStack      0x80570132
-#define MUICFG_Mailtext_URLUnderline        0x80570133
+#define MUICFG_Mailtext_URLAction           0x80570131UL
+#define MUICFG_Mailtext_URLActionBeep       0x80570135UL
+#define MUICFG_Mailtext_URLActionStack      0x80570132UL
+#define MUICFG_Mailtext_URLUnderline        0x80570133UL
 
-#define MUICFG_Mailtext_QuoteCharsUse       0x8057011C
+#define MUICFG_Mailtext_QuoteCharsUse       0x8057011CUL
 
-#define MUICFG_Mailtext_Color_QuoteLevel1   0x80570123
-#define MUICFG_Mailtext_Color_QuoteLevel2   0x80570124
-#define MUICFG_Mailtext_Color_QuoteLevel3   0x80570125
-#define MUICFG_Mailtext_Color_QuoteLevel4   0x80570126
-#define MUICFG_Mailtext_Color_QuoteLevel5   0x80570127
+#define MUICFG_Mailtext_Color_QuoteLevel1   0x80570123UL
+#define MUICFG_Mailtext_Color_QuoteLevel2   0x80570124UL
+#define MUICFG_Mailtext_Color_QuoteLevel3   0x80570125UL
+#define MUICFG_Mailtext_Color_QuoteLevel4   0x80570126UL
+#define MUICFG_Mailtext_Color_QuoteLevel5   0x80570127UL
 
-#define MUICFG_Mailtext_Color_Text          0x80570128
-#define MUICFG_Mailtext_Color_URL           0x8057012b
+#define MUICFG_Mailtext_Color_Text          0x80570128UL
+#define MUICFG_Mailtext_Color_URL           0x8057012bUL
 
-#define MUICFG_Mailtext_UseContextMenu      0x80570129
-#define MUICFG_Mailtext_Wordwrap            0x8057013e
-#define MUICFG_Mailtext_Font                0x80570141
+#define MUICFG_Mailtext_UseContextMenu      0x80570129UL
+#define MUICFG_Mailtext_Wordwrap            0x8057013eUL
+#define MUICFG_Mailtext_Font                0x80570141UL
 
 /*** Defaults (private) ***/
 
@@ -196,7 +196,7 @@
 
 #define MUID_Mailtext_UseContextMenu         TRUE
 
-#define MUID_Mailtext_NonIntroducingChars    " :.,^+\\|?([{&%$§\"!/*_#"
+#define MUID_Mailtext_NonIntroducingChars    " :.,^+\\|?([{&%$ï¿½\"!/*_#"
 #define MUID_Mailtext_TerminatingChars       " )]}.,:+-'&\"!?*/_#"
 #define MUID_Mailtext_WhitespaceChars        " ([{\"'&+*/_#"
 
@@ -280,8 +280,8 @@
 *        character that switches off a certain textattribute.
 *
 *    AUTHOR
-*        Mailtext.mcc/Mailtext.mcp is written and © 1996-2001 by Olaf Peters
-*        Mailtext.mcc/Mailtext.mcp is © 2006 by Mailtext Open Source Team
+*        Mailtext.mcc/Mailtext.mcp is written and ï¿½ 1996-2001 by Olaf Peters
+*        Mailtext.mcc/Mailtext.mcp is ï¿½ 2006 by Mailtext Open Source Team
 *
 *    USAGE RESTRICTIONS
 *        This program is free software; you can redistribute it and/or modify

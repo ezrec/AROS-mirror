@@ -43,15 +43,15 @@ Mailtext - An MUI Custom Class for eMessage display
 
 #define MailtextObject MUI_NewObject(MUIC_Mailtext
 
-#define MUIM_Mailtext_CopyToClip            0x8057013c
-#define MUIA_Mailtext_IncPercent            0x80570103  /* v10 [ISG] */
-#define MUIA_Mailtext_Text                  0x80570105  /* v10 [ISG] */
-#define MUIA_Mailtext_QuoteChars            0x80570107  /* v10 [ISG] */
-#define MUIA_Mailtext_ForbidContextMenu     0x80570136  /* v18 [I..] */
-#define MUIA_Mailtext_ActionEMail           0x8057013a  /* v19 [..G] */
-#define MUIA_Mailtext_ActionURL             0x8057013b  /* v18 [..G] */
-#define MUIA_Mailtext_DisplayRaw            0x80570139  /* v18 [.SG] */
-#define MUIA_Mailtext_Wordwrap              0x8057013d  /* v18 [.SG] */
+#define MUIM_Mailtext_CopyToClip            0x8057013cUL
+#define MUIA_Mailtext_IncPercent            0x80570103UL  /* v10 [ISG] */
+#define MUIA_Mailtext_Text                  0x80570105UL  /* v10 [ISG] */
+#define MUIA_Mailtext_QuoteChars            0x80570107UL  /* v10 [ISG] */
+#define MUIA_Mailtext_ForbidContextMenu     0x80570136UL  /* v18 [I..] */
+#define MUIA_Mailtext_ActionEMail           0x8057013aUL  /* v19 [..G] */
+#define MUIA_Mailtext_ActionURL             0x8057013bUL  /* v18 [..G] */
+#define MUIA_Mailtext_DisplayRaw            0x80570139UL  /* v18 [.SG] */
+#define MUIA_Mailtext_Wordwrap              0x8057013dUL  /* v18 [.SG] */
 
 #endif /* MAILTEXT_MCC_H */
 
