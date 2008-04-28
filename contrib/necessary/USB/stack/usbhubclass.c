@@ -60,7 +60,9 @@ static AROS_UFH3(void, HubInterrupt,
     
     /* Signal the HUB process about incoming interrupt */
     HubData *hub = interruptData;  
-    Signal(&hub->hub_task->pr_Task, 1 << hub->sigInterrupt);
+    
+    if (hub->hub_task)
+        Signal(&hub->hub_task->pr_Task, 1 << hub->sigInterrupt);
     
     AROS_USERFUNC_EXIT
 }
