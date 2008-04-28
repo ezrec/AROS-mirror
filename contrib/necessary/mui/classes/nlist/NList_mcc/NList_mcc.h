@@ -500,49 +500,49 @@ struct MUI_NList_GetSelectInfo
 #define MUIM_NList_Destruct           0x9d5100A2 /* GM */
 #define MUIM_NList_Compare            0x9d5100A3 /* GM */
 #define MUIM_NList_Display            0x9d5100A4 /* GM */
-struct  MUIP_NList_Clear              { ULONG MethodID; };
-struct  MUIP_NList_CreateImage        { ULONG MethodID; Object *obj; ULONG flags; };
-struct  MUIP_NList_DeleteImage        { ULONG MethodID; APTR listimg; };
-struct  MUIP_NList_Exchange           { ULONG MethodID; LONG pos1; LONG pos2; };
-struct  MUIP_NList_GetEntry           { ULONG MethodID; LONG pos; APTR *entry; };
-struct  MUIP_NList_Insert             { ULONG MethodID; APTR *entries; LONG count; LONG pos; ULONG flags; };
-struct  MUIP_NList_InsertSingle       { ULONG MethodID; APTR entry; LONG pos; };
-struct  MUIP_NList_Jump               { ULONG MethodID; LONG pos; };
-struct  MUIP_NList_Move               { ULONG MethodID; LONG from; LONG to; };
-struct  MUIP_NList_NextSelected       { ULONG MethodID; LONG *pos; };
-struct  MUIP_NList_Redraw             { ULONG MethodID; LONG pos; };
-struct  MUIP_NList_Remove             { ULONG MethodID; LONG pos; };
-struct  MUIP_NList_Select             { ULONG MethodID; LONG pos; LONG seltype; LONG *state; };
-struct  MUIP_NList_Sort               { ULONG MethodID; };
-struct  MUIP_NList_TestPos            { ULONG MethodID; LONG x; LONG y; struct MUI_NList_TestPos_Result *res; };
-struct  MUIP_NList_CopyToClip         { ULONG MethodID; LONG pos; ULONG clipnum; APTR *entries; struct Hook *hook; };
-struct  MUIP_NList_UseImage           { ULONG MethodID; Object *obj; LONG imgnum; ULONG flags; };
-struct  MUIP_NList_ReplaceSingle      { ULONG MethodID; APTR entry; LONG pos; LONG wrapcol; LONG align; };
-struct  MUIP_NList_InsertWrap         { ULONG MethodID; APTR *entries; LONG count; LONG pos; LONG wrapcol; LONG align; ULONG flags; };
-struct  MUIP_NList_InsertSingleWrap   { ULONG MethodID; APTR entry; LONG pos; LONG wrapcol; LONG align; };
-struct  MUIP_NList_GetEntryInfo       { ULONG MethodID; struct MUI_NList_GetEntryInfo *res; };
-struct  MUIP_NList_QueryBeginning     { ULONG MethodID; };
-struct  MUIP_NList_GetSelectInfo      { ULONG MethodID; struct MUI_NList_GetSelectInfo *res; };
-struct  MUIP_NList_CopyTo             { ULONG MethodID; LONG pos; char *filename; APTR *result; APTR *entries; };
-struct  MUIP_NList_DropType           { ULONG MethodID; LONG *pos; LONG *type; LONG minx, maxx, miny, maxy; LONG mousex, mousey; };
-struct  MUIP_NList_DropDraw           { ULONG MethodID; LONG pos; LONG type; LONG minx, maxx, miny, maxy; };
-struct  MUIP_NList_RedrawEntry        { ULONG MethodID; APTR entry; };
-struct  MUIP_NList_DoMethod           { ULONG MethodID; LONG pos; APTR DestObj; ULONG FollowParams; /* ... */  };
-struct  MUIP_NList_ColWidth           { ULONG MethodID; LONG col; LONG width; };
-struct  MUIP_NList_ContextMenuBuild   { ULONG MethodID; LONG mx; LONG my; LONG pos; LONG column; LONG flags; LONG ontop; };
-struct  MUIP_NList_DropEntryDrawErase { ULONG MethodID; LONG type; LONG drawpos; LONG erasepos; };
-struct  MUIP_NList_ColToColumn        { ULONG MethodID; LONG col; };
-struct  MUIP_NList_ColumnToCol        { ULONG MethodID; LONG column; };
-struct  MUIP_NList_Sort2              { ULONG MethodID; LONG sort_type; LONG sort_type_add; };
-struct  MUIP_NList_PrevSelected       { ULONG MethodID; LONG *pos; };
-struct  MUIP_NList_SetColumnCol       { ULONG MethodID; LONG column; LONG col; };
-struct  MUIP_NList_Sort3              { ULONG MethodID; LONG sort_type; LONG sort_type_add; LONG which; };
-struct  MUIP_NList_GetPos             { ULONG MethodID; APTR entry; LONG *pos; };
-struct  MUIP_NList_SelectChange       { ULONG MethodID; LONG pos; LONG state; ULONG flags; };
-struct  MUIP_NList_Construct          { ULONG MethodID; APTR entry; APTR pool; };
-struct  MUIP_NList_Destruct           { ULONG MethodID; APTR entry; APTR pool; };
-struct  MUIP_NList_Compare            { ULONG MethodID; APTR entry1; APTR entry2; LONG sort_type1; LONG sort_type2; };
-struct  MUIP_NList_Display            { ULONG MethodID; APTR entry; LONG entry_pos; STRPTR *strings; STRPTR *preparses; };
+struct  MUIP_NList_Clear              { STACKED ULONG MethodID; };
+struct  MUIP_NList_CreateImage        { STACKED ULONG MethodID; STACKED Object *obj; STACKED ULONG flags; };
+struct  MUIP_NList_DeleteImage        { STACKED ULONG MethodID; STACKED APTR listimg; };
+struct  MUIP_NList_Exchange           { STACKED ULONG MethodID; STACKED LONG pos1; STACKED LONG pos2; };
+struct  MUIP_NList_GetEntry           { STACKED ULONG MethodID; STACKED LONG pos; STACKED APTR *entry; };
+struct  MUIP_NList_Insert             { STACKED ULONG MethodID; STACKED APTR *entries; STACKED LONG count; STACKED LONG pos; STACKED ULONG flags; };
+struct  MUIP_NList_InsertSingle       { STACKED ULONG MethodID; STACKED APTR entry; STACKED LONG pos; };
+struct  MUIP_NList_Jump               { STACKED ULONG MethodID; STACKED LONG pos; };
+struct  MUIP_NList_Move               { STACKED ULONG MethodID; STACKED LONG from; STACKED LONG to; };
+struct  MUIP_NList_NextSelected       { STACKED ULONG MethodID; STACKED LONG *pos; };
+struct  MUIP_NList_Redraw             { STACKED ULONG MethodID; STACKED LONG pos; };
+struct  MUIP_NList_Remove             { STACKED ULONG MethodID; STACKED LONG pos; };
+struct  MUIP_NList_Select             { STACKED ULONG MethodID; STACKED LONG pos; STACKED LONG seltype; STACKED LONG *state; };
+struct  MUIP_NList_Sort               { STACKED ULONG MethodID; };
+struct  MUIP_NList_TestPos            { STACKED ULONG MethodID; STACKED LONG x; STACKED LONG y; STACKED struct MUI_NList_TestPos_Result *res; };
+struct  MUIP_NList_CopyToClip         { STACKED ULONG MethodID; STACKED LONG pos; STACKED ULONG clipnum; STACKED APTR *entries; STACKED struct Hook *hook; };
+struct  MUIP_NList_UseImage           { STACKED ULONG MethodID; STACKED Object *obj; STACKED LONG imgnum; STACKED ULONG flags; };
+struct  MUIP_NList_ReplaceSingle      { STACKED ULONG MethodID; STACKED APTR entry; STACKED LONG pos; STACKED LONG wrapcol; STACKED LONG align; };
+struct  MUIP_NList_InsertWrap         { STACKED ULONG MethodID; STACKED APTR *entries; STACKED LONG count; STACKED LONG pos; STACKED LONG wrapcol; STACKED LONG align; STACKED ULONG flags; };
+struct  MUIP_NList_InsertSingleWrap   { STACKED ULONG MethodID; STACKED APTR entry; STACKED LONG pos; STACKED LONG wrapcol; STACKED LONG align; };
+struct  MUIP_NList_GetEntryInfo       { STACKED ULONG MethodID; STACKED struct MUI_NList_GetEntryInfo *res; };
+struct  MUIP_NList_QueryBeginning     { STACKED ULONG MethodID; };
+struct  MUIP_NList_GetSelectInfo      { STACKED ULONG MethodID; STACKED struct MUI_NList_GetSelectInfo *res; };
+struct  MUIP_NList_CopyTo             { STACKED ULONG MethodID; STACKED LONG pos; STACKED char *filename; STACKED APTR *result; STACKED APTR *entries; };
+struct  MUIP_NList_DropType           { STACKED ULONG MethodID; STACKED LONG *pos; STACKED LONG *type; STACKED LONG minx, maxx, miny, maxy; STACKED LONG mousex, mousey; };
+struct  MUIP_NList_DropDraw           { STACKED ULONG MethodID; STACKED LONG pos; STACKED LONG type; STACKED LONG minx, maxx, miny, maxy; };
+struct  MUIP_NList_RedrawEntry        { STACKED ULONG MethodID; STACKED APTR entry; };
+struct  MUIP_NList_DoMethod           { STACKED ULONG MethodID; STACKED LONG pos; STACKED APTR DestObj; STACKED ULONG FollowParams; /* ... */  };
+struct  MUIP_NList_ColWidth           { STACKED ULONG MethodID; STACKED LONG col; STACKED LONG width; };
+struct  MUIP_NList_ContextMenuBuild   { STACKED ULONG MethodID; STACKED LONG mx; STACKED LONG my; STACKED LONG pos; STACKED LONG column; STACKED LONG flags; STACKED LONG ontop; };
+struct  MUIP_NList_DropEntryDrawErase { STACKED ULONG MethodID; STACKED LONG type; STACKED LONG drawpos; STACKED LONG erasepos; };
+struct  MUIP_NList_ColToColumn        { STACKED ULONG MethodID; STACKED LONG col; };
+struct  MUIP_NList_ColumnToCol        { STACKED ULONG MethodID; STACKED LONG column; };
+struct  MUIP_NList_Sort2              { STACKED ULONG MethodID; STACKED LONG sort_type; STACKED LONG sort_type_add; };
+struct  MUIP_NList_PrevSelected       { STACKED ULONG MethodID; STACKED LONG *pos; };
+struct  MUIP_NList_SetColumnCol       { STACKED ULONG MethodID; STACKED LONG column; STACKED LONG col; };
+struct  MUIP_NList_Sort3              { STACKED ULONG MethodID; STACKED LONG sort_type; STACKED LONG sort_type_add; STACKED LONG which; };
+struct  MUIP_NList_GetPos             { STACKED ULONG MethodID; STACKED APTR entry; STACKED LONG *pos; };
+struct  MUIP_NList_SelectChange       { STACKED ULONG MethodID; STACKED LONG pos; STACKED LONG state; STACKED ULONG flags; };
+struct  MUIP_NList_Construct          { STACKED ULONG MethodID; STACKED APTR entry; STACKED APTR pool; };
+struct  MUIP_NList_Destruct           { STACKED ULONG MethodID; STACKED APTR entry; STACKED APTR pool; };
+struct  MUIP_NList_Compare            { STACKED ULONG MethodID; STACKED APTR entry1; STACKED APTR entry2; STACKED LONG sort_type1; STACKED LONG sort_type2; };
+struct  MUIP_NList_Display            { STACKED ULONG MethodID; STACKED APTR entry; STACKED LONG entry_pos; STACKED STRPTR *strings; STACKED STRPTR *preparses; };
 
 #define DISPLAY_ARRAY_MAX 64
 
@@ -561,52 +561,52 @@ struct  MUIP_NList_Display            { ULONG MethodID; APTR entry; LONG entry_p
  */
 struct NList_CompareMessage
 {
-  APTR entry1;
-  APTR entry2;
-  LONG sort_type;
-  LONG sort_type2;
+  STACKED APTR entry1;
+  STACKED APTR entry2;
+  STACKED LONG sort_type;
+  STACKED LONG sort_type2;
 };
 
 struct NList_ConstructMessage
 {
-  APTR entry;
-  APTR pool;
+  STACKED APTR entry;
+  STACKED APTR pool;
 };
 
 struct NList_DestructMessage
 {
-  APTR entry;
-  APTR pool;
+  STACKED APTR entry;
+  STACKED APTR pool;
 };
 
 struct NList_DisplayMessage
 {
-  APTR entry;
-  LONG entry_pos;
-  char *strings[DISPLAY_ARRAY_MAX];
-  char *preparses[DISPLAY_ARRAY_MAX];
+  STACKED APTR entry;
+  STACKED LONG entry_pos;
+  STACKED char *strings[DISPLAY_ARRAY_MAX];
+  STACKED char *preparses[DISPLAY_ARRAY_MAX];
 };
 
 struct NList_CopyEntryToClipMessage
 {
-  APTR entry;
-  LONG entry_pos;
-  char *str_result;
-  LONG column1;
-  LONG column1_pos;
-  LONG column2;
-  LONG column2_pos;
-  LONG column1_pos_type;
-  LONG column2_pos_type;
+  STACKED APTR entry;
+  STACKED LONG entry_pos;
+  STACKED char *str_result;
+  STACKED LONG column1;
+  STACKED LONG column1_pos;
+  STACKED LONG column2;
+  STACKED LONG column2_pos;
+  STACKED LONG column1_pos_type;
+  STACKED LONG column2_pos_type;
 };
 
 struct NList_CopyColumnToClipMessage
 {
-  char *string;
-  LONG entry_pos;
-  char *str_result;
-  LONG str_pos1;
-  LONG str_pos2;
+  STACKED char *string;
+  STACKED LONG entry_pos;
+  STACKED char *str_result;
+  STACKED LONG str_pos1;
+  STACKED LONG str_pos2;
 };
 
 
