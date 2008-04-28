@@ -31,14 +31,14 @@ void DumpDescriptor(usb_descriptor_t *desc)
     {
         bug("[USB]  bDescriptorType = %d (Device)\n", desc->bDescriptorType);
         usb_device_descriptor_t *d = (usb_device_descriptor_t *)desc;
-        bug("[USB]  bcdUSB = 0x%04x\n", d->bcdUSB);
+        bug("[USB]  bcdUSB = 0x%04x\n", AROS_LE2WORD(d->bcdUSB));
         bug("[USB]  bDeviceClass = 0x%02x\n", d->bDeviceClass);
         bug("[USB]  bDeviceSubClass = 0x%02x\n", d->bDeviceSubClass);
         bug("[USB]  bDeviceProtocol = 0x%02x\n", d->bDeviceProtocol);
         bug("[USB]  bMaxPacketSize = 0x%04x\n", d->bMaxPacketSize);
         bug("[USB]  idVendor = 0x%04x\n", d->idVendor);
-        bug("[USB]  idProduct = 0x%04x\n", d->idProduct);
-        bug("[USB]  bcdDevice = 0x%04x\n", d->bcdDevice);
+        bug("[USB]  idProduct = 0x%04x\n", AROS_LE2WORD(d->idProduct));
+        bug("[USB]  bcdDevice = 0x%04x\n", AROS_LE2WORD(d->bcdDevice));
         bug("[USB]  iManufacturer = 0x%02x\n", d->iManufacturer);
         bug("[USB]  iProduct = 0x%02x\n", d->iProduct);
         bug("[USB]  iSerialNumber = 0x%02x\n", d->iSerialNumber);
@@ -48,7 +48,7 @@ void DumpDescriptor(usb_descriptor_t *desc)
     {
         bug("[USB]  bDescriptorType = %d (Config)\n", desc->bDescriptorType);
         usb_config_descriptor_t *d = (usb_config_descriptor_t *)desc;
-        bug("[USB]  wTotalLength = %d\n", d->wTotalLength);
+        bug("[USB]  wTotalLength = %d\n", AROS_LE2WORD(d->wTotalLength));
         bug("[USB]  bNumInterface = %d\n", d->bNumInterface);
         bug("[USB]  bConfigurationValue = %d\n", d->bConfigurationValue);
         bug("[USB]  iConfiguration = %d\n", d->iConfiguration);
@@ -68,7 +68,7 @@ void DumpDescriptor(usb_descriptor_t *desc)
         int i;
         bug("[USB]  bDescriptorType = %d (Hub)\n", desc->bDescriptorType);
         bug("[USB]  bNbrPorts = %d\n", d->bNbrPorts);
-        bug("[USB]  wHubCharacteristics = 0x%04x\n", d->wHubCharacteristics);
+        bug("[USB]  wHubCharacteristics = 0x%04x\n", AROS_LE2WORD(d->wHubCharacteristics));
         bug("[USB]  bPwrOn2PwrGood = %d ms\n", d->bPwrOn2PwrGood * UHD_PWRON_FACTOR);
         bug("[USB]  bHubContrCurrent = %d\n", d->bHubContrCurrent);
         bug("[USB]  DeviceRemovable = ");
@@ -82,7 +82,7 @@ void DumpDescriptor(usb_descriptor_t *desc)
         usb_endpoint_descriptor_t *d = (usb_endpoint_descriptor_t *)desc;
         bug("[USB]  bEndpointAddress = %02x\n", d->bEndpointAddress);
         bug("[USB]  bmAttributes = %02x\n", d->bmAttributes);
-        bug("[USB]  wMaxPacketSize = %d\n", d->wMaxPacketSize);
+        bug("[USB]  wMaxPacketSize = %d\n", AROS_LE2WORD(d->wMaxPacketSize));
         bug("[USB]  bInterval = %d\n", d->bInterval);
     }
     else
