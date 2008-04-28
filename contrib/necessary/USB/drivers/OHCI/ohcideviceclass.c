@@ -54,7 +54,7 @@ static const usb_device_descriptor_t device_descriptor = {
     bNumConfigurations: 1,
 };
 
-static const usb_endpoint_descriptor_t endpoint_descriptor = {
+static usb_endpoint_descriptor_t endpoint_descriptor = {
     bLength:            sizeof(usb_endpoint_descriptor_t),
     bDescriptorType:    UDESC_ENDPOINT,
     bEndpointAddress:   0x81,
@@ -106,6 +106,8 @@ BOOL METHOD(OHCI, Hidd_USBDevice, GetString)
 
 const usb_endpoint_descriptor_t * METHOD(OHCI, Hidd_USBDevice, GetEndpoint)
 {
+    endpoint_descriptor.wMaxPacketSize = AROS_WORD2LE(1);
+    
     if (msg->interface == 0 && msg->endpoint == 0)
         return &endpoint_descriptor;
     else
