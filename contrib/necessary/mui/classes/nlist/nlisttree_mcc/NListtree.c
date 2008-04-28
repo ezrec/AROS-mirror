@@ -143,45 +143,11 @@
 /*********************************************************************************************/
 
 // add a replacemnet define for the standard sprintf
-#define sprintf MySPrintf
-
 #ifdef __AROS__
-AROS_UFH2S(void, putchfunc, 
-    AROS_UFHA(UBYTE, chr, D0),
-    AROS_UFHA(UBYTE **, data, A3))
-{
-    AROS_USERFUNC_INIT
-    
-    *(*data)++ = chr;
-    
-    AROS_USERFUNC_EXIT
-}
-
-int MySPrintf(char *buf, char *fmt, ...) __stackparm;
-int MySPrintf(char *buf, char *fmt, ...)
-{
-	va_list args;
-	va_start(args, fmt);
-
-#if 0
-	APTR raw_args[] = { &args, fmt };
-	RawDoFmt("%V", raw_args, NULL, buf);
+#define MySPrintf sprintf
 #else
-#warning "FIXME: Code above is better, but doesn't work because locale.library RawDoFmt"
-#warning "       replacement doesn't know %V"
-
-    	{
-    	    UBYTE *bufptr = buf;
-	
-	    RawDoFmt(fmt, &fmt + 1, NULL, bufptr);
-    	}
-#endif
-	
-	va_end(args);
-	
-	return strlen(buf);
-}
-#elif defined(__amigaos4__)
+#define sprintf MySPrintf
+#if defined(__amigaos4__)
 int VARARGS68K MySPrintf(char *buf, char *fmt, ...)
 {
 	va_list args;
@@ -214,6 +180,7 @@ int STDARGS MySPrintf(char *buf, char *fmt,...)
 
 	return(strlen(buf));
 }
+#endif
 #endif
 
 
@@ -888,16 +855,9 @@ static IPTR MyCallHook(struct Hook *hook, struct NListtree_Data *data, ...)
 #else
 static IPTR MyCallHook(struct Hook *hook, struct NListtree_Data *data, ...)
 {
-    IPTR    retval;
-    va_list args;
-
-    va_start (args, data);
-
-    retval = CallHookPkt(hook, data->Obj, (APTR)args);
-
-    va_end (args);
-
-    return retval;
+    AROS_SLOWSTACKHOOKS_PRE(data)
+    retval = CallHookPkt(hook, data->Obj, AROS_SLOWSTACKHOOKS_ARG(data));
+    AROS_SLOWSTACKHOOKS_POST
 }
 #endif
 #else
