@@ -70,7 +70,11 @@ static AROS_UFH3(void, HidInterrupt,
     AROS_USERFUNC_INIT
     
     HidData *hid = interruptData;
-
+    
+    /* Invalidate the cache. Report has been sent through DMA */
+    CacheClearE(hid->buffer, hid->buflen, CACRF_InvalidateD);
+    
+    /* And let the class handle it */
     HIDD_USBHID_ParseReport(hid->o, hid->buffer, hid->buflen);
 
     AROS_USERFUNC_EXIT
