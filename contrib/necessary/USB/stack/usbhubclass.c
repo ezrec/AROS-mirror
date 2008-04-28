@@ -135,7 +135,7 @@ OOP_Object *METHOD(USBHub, Root, New)
                 hub->interrupt.is_Data = hub;
                 hub->interrupt.is_Code = HubInterrupt;
                 hub->intr_pipe = HIDD_USBDevice_CreatePipe(o, PIPE_Interrupt, ep->bEndpointAddress, ep->bInterval, 0);
-                HIDD_USBDrv_AddInterrupt(drv, hub->intr_pipe, &hub->status[0], ep->wMaxPacketSize, &hub->interrupt);
+                HIDD_USBDrv_AddInterrupt(drv, hub->intr_pipe, &hub->status[0], AROS_LE2WORD(ep->wMaxPacketSize), &hub->interrupt);
             }
             
         }
@@ -278,7 +278,7 @@ BOOL METHOD(USBHub, Hidd_USBHub, PortReset)
     req.bRequest = UR_SET_FEATURE;
     req.wValue = AROS_WORD2LE(UHF_PORT_RESET);
     req.wIndex = AROS_WORD2LE(msg->portNummer);
-    req.wLength = 0;
+    req.wLength = AROS_WORD2LE(0);
     
     retval = HIDD_USBDevice_ControlMessage(o, NULL, &req, NULL, 0); 
     
@@ -319,7 +319,7 @@ BOOL METHOD(USBHub, Hidd_USBHub, GetPortStatus)
 
     req.bmRequestType = UT_READ_CLASS_OTHER;
     req.bRequest = UR_GET_STATUS;
-    req.wValue = 0;
+    req.wValue = AROS_WORD2LE(0);
     req.wIndex = AROS_WORD2LE(msg->port);
     req.wLength = AROS_WORD2LE(sizeof(usb_port_status_t));
 
@@ -334,8 +334,8 @@ BOOL METHOD(USBHub, Hidd_USBHub, GetHubStatus)
 
     req.bmRequestType = UT_READ_CLASS_DEVICE;
     req.bRequest = UR_GET_STATUS;
-    req.wValue = 0;
-    req.wIndex = 0;
+    req.wValue = AROS_WORD2LE(0);
+    req.wIndex = AROS_WORD2LE(0);
     req.wLength = AROS_WORD2LE(sizeof(usb_hub_status_t));
 
     return HIDD_USBDevice_ControlMessage(o, NULL, &req, msg->status, sizeof(usb_hub_status_t)); 
@@ -350,8 +350,8 @@ BOOL METHOD(USBHub, Hidd_USBHub, ClearHubFeature)
     req.bmRequestType = UT_WRITE_CLASS_DEVICE;
     req.bRequest = UR_CLEAR_FEATURE;
     req.wValue = AROS_WORD2LE(msg->feature);
-    req.wIndex = 0;
-    req.wLength = 0;
+    req.wIndex = AROS_WORD2LE(0);
+    req.wLength = AROS_WORD2LE(0);
 
     return HIDD_USBDevice_ControlMessage(o, NULL, &req, NULL, 0); 
 }
@@ -365,8 +365,8 @@ BOOL METHOD(USBHub, Hidd_USBHub, SetHubFeature)
     req.bmRequestType = UT_WRITE_CLASS_DEVICE;
     req.bRequest = UR_SET_FEATURE;
     req.wValue = AROS_WORD2LE(msg->feature);
-    req.wIndex = 0;
-    req.wLength = 0;
+    req.wIndex = AROS_WORD2LE(0);
+    req.wLength = AROS_WORD2LE(0);
 
     return HIDD_USBDevice_ControlMessage(o, NULL, &req, NULL, 0); 
 }
@@ -381,7 +381,7 @@ BOOL METHOD(USBHub, Hidd_USBHub, ClearPortFeature)
     req.bRequest = UR_CLEAR_FEATURE;
     req.wValue = AROS_WORD2LE(msg->feature);
     req.wIndex = AROS_WORD2LE(msg->port);
-    req.wLength = 0;
+    req.wLength = AROS_WORD2LE(0);
 
     return HIDD_USBDevice_ControlMessage(o, NULL, &req, NULL, 0); 
 }
@@ -396,7 +396,7 @@ BOOL METHOD(USBHub, Hidd_USBHub, SetPortFeature)
     req.bRequest = UR_SET_FEATURE;
     req.wValue = AROS_WORD2LE(msg->feature);
     req.wIndex = AROS_WORD2LE(msg->port);
-    req.wLength = 0;
+    req.wLength = AROS_WORD2LE(0);
 
     return HIDD_USBDevice_ControlMessage(o, NULL, &req, NULL, 0); 
 }
@@ -407,7 +407,7 @@ BOOL METHOD(USBHub, Hidd_USBHub, GetHubDescriptor)
             bmRequestType:  UT_READ_CLASS_DEVICE,
             bRequest:       UR_GET_DESCRIPTOR,
             wValue:         AROS_WORD2LE(((uint8_t)UDESC_HUB) << 8),
-            wIndex:         0,
+            wIndex:         AROS_WORD2LE(0),
             wLength:        AROS_WORD2LE(USB_HUB_DESCRIPTOR_SIZE)
     };
 

@@ -46,9 +46,9 @@ static BOOL usb_SetAddress(OOP_Class *cl, OOP_Object *o, uint8_t address)
     USBDevice_Request request = {
             bmRequestType:  UT_WRITE_DEVICE,
             bRequest:       UR_SET_ADDRESS,
-            wValue:         address,
-            wIndex:         0,
-            wLength:        0
+            wValue:         AROS_WORD2LE(address),
+            wIndex:         AROS_WORD2LE(0),
+            wLength:        AROS_WORD2LE(0)
     };
 
     if (dev->default_pipe)
@@ -72,7 +72,7 @@ static BOOL usb_SetAddress(OOP_Class *cl, OOP_Object *o, uint8_t address)
                 bmRequestType:  UT_READ_DEVICE,
                 bRequest:       UR_GET_DESCRIPTOR,
                 wValue:         AROS_WORD2LE(UDESC_DEVICE << 8),
-                wIndex:         0,
+                wIndex:         AROS_WORD2LE(0),
                 wLength:        AROS_WORD2LE(USB_DEVICE_DESCRIPTOR_SIZE)
         };
         ret = HIDD_USBDrv_ControlTransfer(dev->bus, pipe, &request, &descriptor, sizeof(descriptor));        
@@ -106,14 +106,14 @@ BOOL METHOD(USBDevice, Hidd_USBDevice, GetString)
         USBDevice_Request request = {
                 bmRequestType:  UT_READ_DEVICE,
                 bRequest:       UR_GET_DESCRIPTOR,
-                wValue:         UDESC_STRING << 8 | (msg->id & 0xff),
-                wIndex:         msg->language,
-                wLength:        1
+                wValue:         AROS_WORD2LE(UDESC_STRING << 8 | (msg->id & 0xff)),
+                wIndex:         AROS_WORD2LE(msg->language),
+                wLength:        AROS_WORD2LE(1)
         };
 
         if (HIDD_USBDevice_ControlMessage(o, NULL, &request, msg->string, 1))
         {
-            request.wLength = msg->string->bLength;
+            request.wLength = AROS_WORD2LE(msg->string->bLength);
             if (HIDD_USBDrv_ControlTransfer(dev->bus, dev->default_pipe, &request, msg->string, msg->string->bLength))
             {
                 return TRUE;
@@ -192,7 +192,7 @@ OOP_Object *METHOD(USBDevice, Root, New)
         HIDD_USBDevice_GetDeviceDescriptor(o, &dev->descriptor);
 
         D(bug("[USBDevice::New] Device %04x:%04x %02x/%02x/%02x at address %08x:%02x\n",
-                dev->descriptor.idProduct, dev->descriptor.idVendor,
+                AROS_LE2WORD(dev->descriptor.idProduct), AROS_LE2WORD(dev->descriptor.idVendor),
                 dev->descriptor.bDeviceClass, dev->descriptor.bDeviceSubClass, dev->descriptor.bDeviceProtocol,
                 dev->bus, dev->address));
 
@@ -206,7 +206,7 @@ OOP_Object *METHOD(USBDevice, Root, New)
             dev->product_name = AllocVecPooled(SD(cl)->MemPool, 1 + ((string.bLength - 2) >> 1));
 
             for (i=0; i < (string.bLength - 2) >> 1; i++) {
-                dev->product_name[i] = string.bString[i];
+                dev->product_name[i] = AROS_LE2WORD(string.bString[i]);
             }
             dev->product_name[(string.bLength - 2) >> 1] = 0;
         }
@@ -217,7 +217,7 @@ OOP_Object *METHOD(USBDevice, Root, New)
             dev->manufacturer_name = AllocVecPooled(SD(cl)->MemPool, 1 + ((string.bLength - 2) >> 1));
 
             for (i=0; i < (string.bLength - 2) >> 1; i++) {
-                dev->manufacturer_name[i] = string.bString[i];
+                dev->manufacturer_name[i] = AROS_LE2WORD(string.bString[i]);
             }
             dev->manufacturer_name[(string.bLength - 2) >> 1] = 0;
         }
@@ -228,7 +228,7 @@ OOP_Object *METHOD(USBDevice, Root, New)
             dev->serialnumber_name = AllocVecPooled(SD(cl)->MemPool, 1 + ((string.bLength - 2) >> 1));
 
             for (i=0; i < (string.bLength - 2) >> 1; i++) {
-                dev->serialnumber_name[i] = string.bString[i];
+                dev->serialnumber_name[i] = AROS_LE2WORD(string.bString[i]);
             }
             dev->serialnumber_name[(string.bLength - 2) >> 1] = 0;
         }
@@ -249,14 +249,19 @@ OOP_Object *METHOD(USBDevice, Root, New)
 BOOL METHOD(USBDevice, Hidd_USBDevice, GetDescriptor)
 {
     USBDevice_Request req;
-
+    BOOL ret;
+    
     req.bmRequestType = UT_READ_DEVICE;
     req.bRequest = UR_GET_DESCRIPTOR;
-    req.wValue = msg->type << 8 | msg->index;
-    req.wIndex = 0;
-    req.wLength = msg->length;
+    req.wValue = AROS_WORD2LE(msg->type << 8 | msg->index);
+    req.wIndex = AROS_WORD2LE(0);
+    req.wLength = AROS_WORD2LE(msg->length);
 
-    return HIDD_USBDevice_ControlMessage(o, NULL, &req, msg->descriptor, msg->length); 
+    ret = HIDD_USBDevice_ControlMessage(o, NULL, &req, msg->descriptor, msg->length);
+    
+    DumpDescriptor(msg->descriptor);
+    
+    return ret;
 }
 
 BOOL METHOD(USBDevice, Hidd_USBDevice, GetConfigDescriptor)
@@ -275,9 +280,9 @@ BOOL METHOD(USBDevice, Hidd_USBDevice, GetStatus)
 
     req.bmRequestType = UT_READ_DEVICE;
     req.bRequest = UR_GET_STATUS;
-    req.wValue = 0;
-    req.wIndex = 0;
-    req.wLength = sizeof(usb_status_t);
+    req.wValue = AROS_WORD2LE(0);
+    req.wIndex = AROS_WORD2LE(0);
+    req.wLength = AROS_WORD2LE(sizeof(usb_status_t));
 
     return HIDD_USBDevice_ControlMessage(o, NULL, &req, msg->status, sizeof(usb_status_t)); 
 }
@@ -571,6 +576,8 @@ usb_endpoint_descriptor_t * METHOD(USBDevice, Hidd_USBDevice, GetEndpoint)
         }
     }
     
+    DumpDescriptor(d);
+    
     return d;
 }
 
@@ -640,11 +647,11 @@ void METHOD(USBDevice, Root, Get)
                 break;
 
             case aoHidd_USBDevice_ProductID:
-                *msg->storage = dev->descriptor.idProduct;
+                *msg->storage = AROS_LE2WORD(dev->descriptor.idProduct);
                 break;
 
             case aoHidd_USBDevice_VendorID:
-                *msg->storage = dev->descriptor.idVendor;
+                *msg->storage = AROS_LE2WORD(dev->descriptor.idVendor);
                 break;
 
             case aoHidd_USBDevice_ProductName:

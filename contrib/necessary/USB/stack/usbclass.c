@@ -250,9 +250,9 @@ OOP_Object *METHOD(USB, Hidd_USB, NewDevice)
     USBDevice_Request request = {
             bmRequestType:      UT_READ_DEVICE,
             bRequest:           UR_GET_DESCRIPTOR,
-            wValue:             UDESC_DEVICE << 8,
-            wIndex:             0,
-            wLength:            8
+            wValue:             AROS_WORD2LE(UDESC_DEVICE << 8),
+            wIndex:             AROS_WORD2LE(0),
+            wLength:            AROS_WORD2LE(8)
     };
     
     memset(&descriptor, 0, sizeof(descriptor));
@@ -282,9 +282,9 @@ OOP_Object *METHOD(USB, Hidd_USB, NewDevice)
             USBDevice_Request req = {
                     bmRequestType:  UT_WRITE_DEVICE,
                     bRequest:       UR_SET_ADDRESS,
-                    wValue:         address,
-                    wIndex:         0,
-                    wLength:        0
+                    wValue:         AROS_WORD2LE(address),
+                    wIndex:         AROS_WORD2LE(0),
+                    wLength:        AROS_WORD2LE(0)
             };
             
             HIDD_USBDrv_ControlTransfer(bus, pipe, &req, NULL, 0);
@@ -300,8 +300,8 @@ OOP_Object *METHOD(USB, Hidd_USB, NewDevice)
             }
         }
         
-        request.wValue = UDESC_CONFIG << 8;
-        request.wLength = USB_CONFIG_DESCRIPTOR_SIZE;
+        request.wValue = AROS_WORD2LE(UDESC_CONFIG << 8);
+        request.wLength = AROS_WORD2LE(USB_CONFIG_DESCRIPTOR_SIZE);
         
         HIDD_USBDrv_ControlTransfer(bus, pipe, &request, &config, USB_CONFIG_DESCRIPTOR_SIZE);
         
