@@ -46,108 +46,108 @@
 
 /* Attributes */
 
-#define MUIA_NList_TypeSelect               0x9d510030 /* GM  is.  LONG              */
-#define MUIA_NList_Prop_DeltaFactor         0x9d510031 /* GM  ..gn LONG              */
-#define MUIA_NList_Horiz_DeltaFactor        0x9d510032 /* GM  ..gn LONG              */
+#define MUIA_NList_TypeSelect               0x9d510030UL /* GM  is.  LONG              */
+#define MUIA_NList_Prop_DeltaFactor         0x9d510031UL /* GM  ..gn LONG              */
+#define MUIA_NList_Horiz_DeltaFactor        0x9d510032UL /* GM  ..gn LONG              */
 
-#define MUIA_NList_Horiz_First              0x9d510033 /* GM  .sgn LONG              */
-#define MUIA_NList_Horiz_Visible            0x9d510034 /* GM  ..gn LONG              */
-#define MUIA_NList_Horiz_Entries            0x9d510035 /* GM  ..gn LONG              */
+#define MUIA_NList_Horiz_First              0x9d510033UL /* GM  .sgn LONG              */
+#define MUIA_NList_Horiz_Visible            0x9d510034UL /* GM  ..gn LONG              */
+#define MUIA_NList_Horiz_Entries            0x9d510035UL /* GM  ..gn LONG              */
 
-#define MUIA_NList_Prop_First               0x9d510036 /* GM  .sgn LONG              */
-#define MUIA_NList_Prop_Visible             0x9d510037 /* GM  ..gn LONG              */
-#define MUIA_NList_Prop_Entries             0x9d510038 /* GM  ..gn LONG              */
+#define MUIA_NList_Prop_First               0x9d510036UL /* GM  .sgn LONG              */
+#define MUIA_NList_Prop_Visible             0x9d510037UL /* GM  ..gn LONG              */
+#define MUIA_NList_Prop_Entries             0x9d510038UL /* GM  ..gn LONG              */
 
-#define MUIA_NList_TitlePen                 0x9d510039 /* GM  isg  LONG              */
-#define MUIA_NList_ListPen                  0x9d51003a /* GM  isg  LONG              */
-#define MUIA_NList_SelectPen                0x9d51003b /* GM  isg  LONG              */
-#define MUIA_NList_CursorPen                0x9d51003c /* GM  isg  LONG              */
-#define MUIA_NList_UnselCurPen              0x9d51003d /* GM  isg  LONG              */
+#define MUIA_NList_TitlePen                 0x9d510039UL /* GM  isg  LONG              */
+#define MUIA_NList_ListPen                  0x9d51003aUL /* GM  isg  LONG              */
+#define MUIA_NList_SelectPen                0x9d51003bUL /* GM  isg  LONG              */
+#define MUIA_NList_CursorPen                0x9d51003cUL /* GM  isg  LONG              */
+#define MUIA_NList_UnselCurPen              0x9d51003dUL /* GM  isg  LONG              */
 
-#define MUIA_NList_ListBackground           0x9d51003e /* GM  isg  LONG              */
-#define MUIA_NList_TitleBackground          0x9d51003f /* GM  isg  LONG              */
-#define MUIA_NList_SelectBackground         0x9d510040 /* GM  isg  LONG              */
-#define MUIA_NList_CursorBackground         0x9d510041 /* GM  isg  LONG              */
-#define MUIA_NList_UnselCurBackground       0x9d510042 /* GM  isg  LONG              */
+#define MUIA_NList_ListBackground           0x9d51003eUL /* GM  isg  LONG              */
+#define MUIA_NList_TitleBackground          0x9d51003fUL /* GM  isg  LONG              */
+#define MUIA_NList_SelectBackground         0x9d510040UL /* GM  isg  LONG              */
+#define MUIA_NList_CursorBackground         0x9d510041UL /* GM  isg  LONG              */
+#define MUIA_NList_UnselCurBackground       0x9d510042UL /* GM  isg  LONG              */
 
-#define MUIA_NList_MultiClick               0x9d510043 /* GM  ..gn LONG              */
+#define MUIA_NList_MultiClick               0x9d510043UL /* GM  ..gn LONG              */
 
-#define MUIA_NList_DefaultObjectOnClick     0x9d510044 /* GM  is.  BOOL              */
+#define MUIA_NList_DefaultObjectOnClick     0x9d510044UL /* GM  is.  BOOL              */
 
-#define MUIA_NList_ClickColumn              0x9d510045 /* GM  ..g  LONG              */
-#define MUIA_NList_DefClickColumn           0x9d510046 /* GM  isg  LONG              */
-#define MUIA_NList_DoubleClick              0x9d510047 /* GM  ..gn LONG              */
-#define MUIA_NList_DragType                 0x9d510048 /* GM  isg  LONG              */
-#define MUIA_NList_Input                    0x9d510049 /* GM  isg  BOOL              */
-#define MUIA_NList_MultiSelect              0x9d51004a /* GM  is.  LONG              */
-#define MUIA_NList_SelectChange             0x9d51004b /* GM  ...n BOOL              */
+#define MUIA_NList_ClickColumn              0x9d510045UL /* GM  ..g  LONG              */
+#define MUIA_NList_DefClickColumn           0x9d510046UL /* GM  isg  LONG              */
+#define MUIA_NList_DoubleClick              0x9d510047UL /* GM  ..gn LONG              */
+#define MUIA_NList_DragType                 0x9d510048UL /* GM  isg  LONG              */
+#define MUIA_NList_Input                    0x9d510049UL /* GM  isg  BOOL              */
+#define MUIA_NList_MultiSelect              0x9d51004aUL /* GM  is.  LONG              */
+#define MUIA_NList_SelectChange             0x9d51004bUL /* GM  ...n BOOL              */
 
-#define MUIA_NList_Active                   0x9d51004c /* GM  isgn LONG              */
-#define MUIA_NList_AdjustHeight             0x9d51004d /* GM  i..  BOOL              */
-#define MUIA_NList_AdjustWidth              0x9d51004e /* GM  i..  BOOL              */
-#define MUIA_NList_AutoVisible              0x9d51004f /* GM  isg  BOOL              */
-#define MUIA_NList_CompareHook              0x9d510050 /* GM  is.  struct Hook *     */
-#define MUIA_NList_ConstructHook            0x9d510051 /* GM  is.  struct Hook *     */
-#define MUIA_NList_DestructHook             0x9d510052 /* GM  is.  struct Hook *     */
-#define MUIA_NList_DisplayHook              0x9d510053 /* GM  is.  struct Hook *     */
-#define MUIA_NList_DragSortable             0x9d510054 /* GM  isg  BOOL              */
-#define MUIA_NList_DropMark                 0x9d510055 /* GM  ..g  LONG              */
-#define MUIA_NList_Entries                  0x9d510056 /* GM  ..gn LONG              */
-#define MUIA_NList_First                    0x9d510057 /* GM  isgn LONG              */
-#define MUIA_NList_Format                   0x9d510058 /* GM  isg  STRPTR            */
-#define MUIA_NList_InsertPosition           0x9d510059 /* GM  ..gn LONG              */
-#define MUIA_NList_MinLineHeight            0x9d51005a /* GM  is.  LONG              */
-#define MUIA_NList_MultiTestHook            0x9d51005b /* GM  is.  struct Hook *     */
-#define MUIA_NList_Pool                     0x9d51005c /* GM  i..  APTR              */
-#define MUIA_NList_PoolPuddleSize           0x9d51005d /* GM  i..  ULONG             */
-#define MUIA_NList_PoolThreshSize           0x9d51005e /* GM  i..  ULONG             */
-#define MUIA_NList_Quiet                    0x9d51005f /* GM  .s.  BOOL              */
-#define MUIA_NList_ShowDropMarks            0x9d510060 /* GM  isg  BOOL              */
-#define MUIA_NList_SourceArray              0x9d510061 /* GM  i..  APTR *            */
-#define MUIA_NList_Title                    0x9d510062 /* GM  isg  char *            */
-#define MUIA_NList_Visible                  0x9d510063 /* GM  ..g  LONG              */
-#define MUIA_NList_CopyEntryToClipHook      0x9d510064 /* GM  is.  struct Hook *     */
-#define MUIA_NList_KeepActive               0x9d510065 /* GM  .s.  Obj *             */
-#define MUIA_NList_MakeActive               0x9d510066 /* GM  .s.  Obj *             */
-#define MUIA_NList_SourceString             0x9d510067 /* GM  i..  char *            */
-#define MUIA_NList_CopyColumnToClipHook     0x9d510068 /* GM  is.  struct Hook *     */
-#define MUIA_NList_ListCompatibility        0x9d510069 /* GM  ...  OBSOLETE          */
-#define MUIA_NList_AutoCopyToClip           0x9d51006A /* GM  is.  BOOL              */
-#define MUIA_NList_TabSize                  0x9d51006B /* GM  isg  ULONG             */
-#define MUIA_NList_SkipChars                0x9d51006C /* GM  isg  char *            */
-#define MUIA_NList_DisplayRecall            0x9d51006D /* GM  .g.  BOOL              */
-#define MUIA_NList_PrivateData              0x9d51006E /* GM  isg  APTR              */
-#define MUIA_NList_EntryValueDependent      0x9d51006F /* GM  isg  BOOL              */
+#define MUIA_NList_Active                   0x9d51004cUL /* GM  isgn LONG              */
+#define MUIA_NList_AdjustHeight             0x9d51004dUL /* GM  i..  BOOL              */
+#define MUIA_NList_AdjustWidth              0x9d51004eUL /* GM  i..  BOOL              */
+#define MUIA_NList_AutoVisible              0x9d51004fUL /* GM  isg  BOOL              */
+#define MUIA_NList_CompareHook              0x9d510050UL /* GM  is.  struct Hook *     */
+#define MUIA_NList_ConstructHook            0x9d510051UL /* GM  is.  struct Hook *     */
+#define MUIA_NList_DestructHook             0x9d510052UL /* GM  is.  struct Hook *     */
+#define MUIA_NList_DisplayHook              0x9d510053UL /* GM  is.  struct Hook *     */
+#define MUIA_NList_DragSortable             0x9d510054UL /* GM  isg  BOOL              */
+#define MUIA_NList_DropMark                 0x9d510055UL /* GM  ..g  LONG              */
+#define MUIA_NList_Entries                  0x9d510056UL /* GM  ..gn LONG              */
+#define MUIA_NList_First                    0x9d510057UL /* GM  isgn LONG              */
+#define MUIA_NList_Format                   0x9d510058UL /* GM  isg  STRPTR            */
+#define MUIA_NList_InsertPosition           0x9d510059UL /* GM  ..gn LONG              */
+#define MUIA_NList_MinLineHeight            0x9d51005aUL /* GM  is.  LONG              */
+#define MUIA_NList_MultiTestHook            0x9d51005bUL /* GM  is.  struct Hook *     */
+#define MUIA_NList_Pool                     0x9d51005cUL /* GM  i..  APTR              */
+#define MUIA_NList_PoolPuddleSize           0x9d51005dUL /* GM  i..  ULONG             */
+#define MUIA_NList_PoolThreshSize           0x9d51005eUL /* GM  i..  ULONG             */
+#define MUIA_NList_Quiet                    0x9d51005fUL /* GM  .s.  BOOL              */
+#define MUIA_NList_ShowDropMarks            0x9d510060UL /* GM  isg  BOOL              */
+#define MUIA_NList_SourceArray              0x9d510061UL /* GM  i..  APTR *            */
+#define MUIA_NList_Title                    0x9d510062UL /* GM  isg  char *            */
+#define MUIA_NList_Visible                  0x9d510063UL /* GM  ..g  LONG              */
+#define MUIA_NList_CopyEntryToClipHook      0x9d510064UL /* GM  is.  struct Hook *     */
+#define MUIA_NList_KeepActive               0x9d510065UL /* GM  .s.  Obj *             */
+#define MUIA_NList_MakeActive               0x9d510066UL /* GM  .s.  Obj *             */
+#define MUIA_NList_SourceString             0x9d510067UL /* GM  i..  char *            */
+#define MUIA_NList_CopyColumnToClipHook     0x9d510068UL /* GM  is.  struct Hook *     */
+#define MUIA_NList_ListCompatibility        0x9d510069UL /* GM  ...  OBSOLETE          */
+#define MUIA_NList_AutoCopyToClip           0x9d51006AUL /* GM  is.  BOOL              */
+#define MUIA_NList_TabSize                  0x9d51006BUL /* GM  isg  ULONG             */
+#define MUIA_NList_SkipChars                0x9d51006CUL /* GM  isg  char *            */
+#define MUIA_NList_DisplayRecall            0x9d51006DUL /* GM  .g.  BOOL              */
+#define MUIA_NList_PrivateData              0x9d51006EUL /* GM  isg  APTR              */
+#define MUIA_NList_EntryValueDependent      0x9d51006FUL /* GM  isg  BOOL              */
 
-#define MUIA_NList_StackCheck               0x9d510097 /* GM  i..  BOOL              */
-#define MUIA_NList_WordSelectChars          0x9d510098 /* GM  isg  char *            */
-#define MUIA_NList_EntryClick               0x9d510099 /* GM  ..gn LONG              */
-#define MUIA_NList_DragColOnly              0x9d51009A /* GM  isg  LONG              */
-#define MUIA_NList_TitleClick               0x9d51009B /* GM  isgn LONG              */
-#define MUIA_NList_DropType                 0x9d51009C /* GM  ..g  LONG              */
-#define MUIA_NList_ForcePen                 0x9d51009D /* GM  isg  LONG              */
-#define MUIA_NList_SourceInsert             0x9d51009E /* GM  i..  struct MUIP_NList_InsertWrap *   */
-#define MUIA_NList_TitleSeparator           0x9d51009F /* GM  isg  BOOL              */
+#define MUIA_NList_StackCheck               0x9d510097UL /* GM  i..  BOOL              */
+#define MUIA_NList_WordSelectChars          0x9d510098UL /* GM  isg  char *            */
+#define MUIA_NList_EntryClick               0x9d510099UL /* GM  ..gn LONG              */
+#define MUIA_NList_DragColOnly              0x9d51009AUL /* GM  isg  LONG              */
+#define MUIA_NList_TitleClick               0x9d51009BUL /* GM  isgn LONG              */
+#define MUIA_NList_DropType                 0x9d51009CUL /* GM  ..g  LONG              */
+#define MUIA_NList_ForcePen                 0x9d51009DUL /* GM  isg  LONG              */
+#define MUIA_NList_SourceInsert             0x9d51009EUL /* GM  i..  struct MUIP_NList_InsertWrap *   */
+#define MUIA_NList_TitleSeparator           0x9d51009FUL /* GM  isg  BOOL              */
 
-#define MUIA_NList_SortType2                0x9d5100ED /* GM  isgn LONG              */
-#define MUIA_NList_TitleClick2              0x9d5100EE /* GM  isgn LONG              */
-#define MUIA_NList_TitleMark2               0x9d5100EF /* GM  isg  LONG              */
-#define MUIA_NList_MultiClickAlone          0x9d5100F0 /* GM  ..gn LONG              */
-#define MUIA_NList_TitleMark                0x9d5100F1 /* GM  isg  LONG              */
-#define MUIA_NList_DragSortInsert           0x9d5100F2 /* GM  ..gn LONG              */
-#define MUIA_NList_MinColSortable           0x9d5100F3 /* GM  isg  LONG              */
-#define MUIA_NList_Imports                  0x9d5100F4 /* GM  isg  LONG              */
-#define MUIA_NList_Exports                  0x9d5100F5 /* GM  isg  LONG              */
-#define MUIA_NList_Columns                  0x9d5100F6 /* GM  isgn BYTE *            */
-#define MUIA_NList_LineHeight               0x9d5100F7 /* GM  ..gn LONG              */
-#define MUIA_NList_ButtonClick              0x9d5100F8 /* GM  ..gn LONG              */
-#define MUIA_NList_CopyEntryToClipHook2     0x9d5100F9 /* GM  is.  struct Hook *     */
-#define MUIA_NList_CopyColumnToClipHook2    0x9d5100FA /* GM  is.  struct Hook *     */
-#define MUIA_NList_CompareHook2             0x9d5100FB /* GM  is.  struct Hook *     */
-#define MUIA_NList_ConstructHook2           0x9d5100FC /* GM  is.  struct Hook *     */
-#define MUIA_NList_DestructHook2            0x9d5100FD /* GM  is.  struct Hook *     */
-#define MUIA_NList_DisplayHook2             0x9d5100FE /* GM  is.  struct Hook *     */
-#define MUIA_NList_SortType                 0x9d5100FF /* GM  isgn LONG              */
+#define MUIA_NList_SortType2                0x9d5100EDUL /* GM  isgn LONG              */
+#define MUIA_NList_TitleClick2              0x9d5100EEUL /* GM  isgn LONG              */
+#define MUIA_NList_TitleMark2               0x9d5100EFUL /* GM  isg  LONG              */
+#define MUIA_NList_MultiClickAlone          0x9d5100F0UL /* GM  ..gn LONG              */
+#define MUIA_NList_TitleMark                0x9d5100F1UL /* GM  isg  LONG              */
+#define MUIA_NList_DragSortInsert           0x9d5100F2UL /* GM  ..gn LONG              */
+#define MUIA_NList_MinColSortable           0x9d5100F3UL /* GM  isg  LONG              */
+#define MUIA_NList_Imports                  0x9d5100F4UL /* GM  isg  LONG              */
+#define MUIA_NList_Exports                  0x9d5100F5UL /* GM  isg  LONG              */
+#define MUIA_NList_Columns                  0x9d5100F6UL /* GM  isgn BYTE *            */
+#define MUIA_NList_LineHeight               0x9d5100F7UL /* GM  ..gn LONG              */
+#define MUIA_NList_ButtonClick              0x9d5100F8UL /* GM  ..gn LONG              */
+#define MUIA_NList_CopyEntryToClipHook2     0x9d5100F9UL /* GM  is.  struct Hook *     */
+#define MUIA_NList_CopyColumnToClipHook2    0x9d5100FAUL /* GM  is.  struct Hook *     */
+#define MUIA_NList_CompareHook2             0x9d5100FBUL /* GM  is.  struct Hook *     */
+#define MUIA_NList_ConstructHook2           0x9d5100FCUL /* GM  is.  struct Hook *     */
+#define MUIA_NList_DestructHook2            0x9d5100FDUL /* GM  is.  struct Hook *     */
+#define MUIA_NList_DisplayHook2             0x9d5100FEUL /* GM  is.  struct Hook *     */
+#define MUIA_NList_SortType                 0x9d5100FFUL /* GM  isgn LONG              */
 
 
 #define MUIA_NLIMG_EntryCurrent             MUIA_NList_First   /* LONG (special for nlist custom image object) */
