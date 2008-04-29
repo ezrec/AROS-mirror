@@ -179,213 +179,213 @@ struct MUI_NListtree_TestPos_Result {
 /*** Method structs ***/
 
 struct MUIP_NListtree_Open {
-    ULONG MethodID;
-    struct MUI_NListtree_TreeNode *ListNode;
-    struct MUI_NListtree_TreeNode *TreeNode;
-    ULONG Flags;
+    STACKED ULONG MethodID;
+    STACKED struct MUI_NListtree_TreeNode *ListNode;
+    STACKED struct MUI_NListtree_TreeNode *TreeNode;
+    STACKED ULONG Flags;
 };
 
 
 struct MUIP_NListtree_Close {
-    ULONG MethodID;
-    struct MUI_NListtree_TreeNode *ListNode;
-    struct MUI_NListtree_TreeNode *TreeNode;
-    ULONG Flags;
+    STACKED ULONG MethodID;
+    STACKED struct MUI_NListtree_TreeNode *ListNode;
+    STACKED struct MUI_NListtree_TreeNode *TreeNode;
+    STACKED ULONG Flags;
 };
 
 
 struct MUIP_NListtree_Insert {
-    ULONG   MethodID;
-    STRPTR  Name;
-    APTR    User;
-    struct  MUI_NListtree_TreeNode *ListNode;
-    struct  MUI_NListtree_TreeNode *PrevNode;
-    ULONG   Flags;
+    STACKED ULONG   MethodID;
+    STACKED STRPTR  Name;
+    STACKED APTR    User;
+    STACKED struct  MUI_NListtree_TreeNode *ListNode;
+    STACKED struct  MUI_NListtree_TreeNode *PrevNode;
+    STACKED ULONG   Flags;
 };
 
 
 struct MUIP_NListtree_Remove {
-    ULONG MethodID;
-    struct MUI_NListtree_TreeNode *ListNode;
-    struct MUI_NListtree_TreeNode *TreeNode;
-    ULONG Flags;
+    STACKED ULONG MethodID;
+    STACKED struct MUI_NListtree_TreeNode *ListNode;
+    STACKED struct MUI_NListtree_TreeNode *TreeNode;
+    STACKED ULONG Flags;
 };
 
 
 struct MUIP_NListtree_Clear {
-    ULONG MethodID;
-    struct MUI_NListtree_TreeNode *ListNode;
-    ULONG Flags;
+    STACKED ULONG MethodID;
+    STACKED struct MUI_NListtree_TreeNode *ListNode;
+    STACKED ULONG Flags;
 };
 
 
 struct MUIP_NListtree_FindName {
-    ULONG   MethodID;
-    struct  MUI_NListtree_TreeNode *ListNode;
-    STRPTR  Name;
-    ULONG   Flags;
+    STACKED ULONG   MethodID;
+    STACKED struct  MUI_NListtree_TreeNode *ListNode;
+    STACKED STRPTR  Name;
+    STACKED ULONG   Flags;
 };
 
 
 struct MUIP_NListtree_FindUserData {
-    ULONG   MethodID;
-    struct  MUI_NListtree_TreeNode *ListNode;
-    APTR    User;
-    ULONG   Flags;
+    STACKED ULONG   MethodID;
+    STACKED struct  MUI_NListtree_TreeNode *ListNode;
+    STACKED APTR    User;
+    STACKED ULONG   Flags;
 };
 
 
 struct MUIP_NListtree_GetEntry {
-    ULONG MethodID;
-    struct MUI_NListtree_TreeNode *Node;
-    LONG  Position;
-    ULONG Flags;
+    STACKED ULONG MethodID;
+    STACKED struct MUI_NListtree_TreeNode *Node;
+    STACKED LONG  Position;
+    STACKED ULONG Flags;
 };
 
 
 struct MUIP_NListtree_GetNr {
-    ULONG MethodID;
-    struct MUI_NListtree_TreeNode *TreeNode;
-    ULONG Flags;
+    STACKED ULONG MethodID;
+    STACKED struct MUI_NListtree_TreeNode *TreeNode;
+    STACKED ULONG Flags;
 };
 
 
 struct MUIP_NListtree_Move {
-    ULONG MethodID;
-    struct MUI_NListtree_TreeNode *OldListNode;
-    struct MUI_NListtree_TreeNode *OldTreeNode;
-    struct MUI_NListtree_TreeNode *NewListNode;
-    struct MUI_NListtree_TreeNode *NewTreeNode;
-    ULONG Flags;
+    STACKED ULONG MethodID;
+    STACKED struct MUI_NListtree_TreeNode *OldListNode;
+    STACKED struct MUI_NListtree_TreeNode *OldTreeNode;
+    STACKED struct MUI_NListtree_TreeNode *NewListNode;
+    STACKED struct MUI_NListtree_TreeNode *NewTreeNode;
+    STACKED ULONG Flags;
 };
 
 
 struct MUIP_NListtree_Exchange {
-    ULONG MethodID;
-    struct MUI_NListtree_TreeNode *ListNode1;
-    struct MUI_NListtree_TreeNode *TreeNode1;
-    struct MUI_NListtree_TreeNode *ListNode2;
-    struct MUI_NListtree_TreeNode *TreeNode2;
-    ULONG Flags;
+    STACKED ULONG MethodID;
+    STACKED struct MUI_NListtree_TreeNode *ListNode1;
+    STACKED struct MUI_NListtree_TreeNode *TreeNode1;
+    STACKED struct MUI_NListtree_TreeNode *ListNode2;
+    STACKED struct MUI_NListtree_TreeNode *TreeNode2;
+    STACKED ULONG Flags;
 };
 
 
 struct MUIP_NListtree_Rename {
-    ULONG   MethodID;
-    struct  MUI_NListtree_TreeNode *TreeNode;
-    STRPTR  NewName;
-    ULONG   Flags;
+    STACKED ULONG   MethodID;
+    STACKED struct  MUI_NListtree_TreeNode *TreeNode;
+    STACKED STRPTR  NewName;
+    STACKED ULONG   Flags;
 };
 
 
 struct MUIP_NListtree_Sort {
-    ULONG MethodID;
-    struct MUI_NListtree_TreeNode *ListNode;
-    ULONG Flags;
+    STACKED ULONG MethodID;
+    STACKED struct MUI_NListtree_TreeNode *ListNode;
+    STACKED ULONG Flags;
 };
 
 
 struct MUIP_NListtree_TestPos {
-    ULONG MethodID;
-    LONG  X;
-    LONG  Y;
-    APTR  Result;
+    STACKED ULONG MethodID;
+    STACKED LONG  X;
+    STACKED LONG  Y;
+    STACKED APTR  Result;
 };
 
 
 struct MUIP_NListtree_Redraw {
-    ULONG MethodID;
-    struct MUI_NListtree_TreeNode *TreeNode;
-    ULONG Flags;
+    STACKED ULONG MethodID;
+    STACKED struct MUI_NListtree_TreeNode *TreeNode;
+    STACKED ULONG Flags;
 };
 
 
 struct MUIP_NListtree_Select {
-    ULONG MethodID;
-    struct MUI_NListtree_TreeNode *TreeNode;
-    LONG    SelType,
-            SelFlags,
-            *State;
+    STACKED ULONG MethodID;
+    STACKED struct MUI_NListtree_TreeNode *TreeNode;
+    STACKED LONG    SelType,
+                    SelFlags,
+                    *State;
 };
 
 
 struct MUIP_NListtree_NextSelected {
-    ULONG MethodID;
-    struct MUI_NListtree_TreeNode **TreeNode;
+    STACKED ULONG MethodID;
+    STACKED struct MUI_NListtree_TreeNode **TreeNode;
 };
 
 
 struct MUIP_NListtree_MultiTest {
-    ULONG MethodID;
-    struct MUI_NListtree_TreeNode *TreeNode;
-    LONG    SelType,
-            SelFlags,
-            CurrType;
+    STACKED ULONG MethodID;
+    STACKED struct MUI_NListtree_TreeNode *TreeNode;
+    STACKED LONG    SelType,
+                    SelFlags,
+                    CurrType;
 };
 
 
 struct MUIP_NListtree_Copy {
-    ULONG MethodID;
-    struct MUI_NListtree_TreeNode *SourceListNode;
-    struct MUI_NListtree_TreeNode *SourceTreeNode;
-    struct MUI_NListtree_TreeNode *DestListNode;
-    struct MUI_NListtree_TreeNode *DestTreeNode;
-    ULONG Flags;
+    STACKED ULONG MethodID;
+    STACKED struct MUI_NListtree_TreeNode *SourceListNode;
+    STACKED struct MUI_NListtree_TreeNode *SourceTreeNode;
+    STACKED struct MUI_NListtree_TreeNode *DestListNode;
+    STACKED struct MUI_NListtree_TreeNode *DestTreeNode;
+    STACKED ULONG Flags;
 };
 
 
 struct MUIP_NListtree_InsertStruct {
-    ULONG   MethodID;
-    STRPTR  Name;
-    APTR    User;
-    STRPTR  Delimiter;
-    ULONG   Flags;
+    STACKED ULONG   MethodID;
+    STACKED STRPTR  Name;
+    STACKED APTR    User;
+    STACKED STRPTR  Delimiter;
+    STACKED ULONG   Flags;
 };
 
 
 struct MUIP_NListtree_Active {
-    ULONG MethodID;
-    LONG Pos;
-    struct MUI_NListtree_TreeNode *ActiveNode;
+    STACKED ULONG MethodID;
+    STACKED LONG Pos;
+    STACKED struct MUI_NListtree_TreeNode *ActiveNode;
 };
 
 
 struct MUIP_NListtree_DoubleClick {
-    ULONG MethodID;
-    struct MUI_NListtree_TreeNode *TreeNode;
-    LONG Entry;
-    LONG Column;
+    STACKED ULONG MethodID;
+    STACKED struct MUI_NListtree_TreeNode *TreeNode;
+    STACKED LONG Entry;
+    STACKED LONG Column;
 };
 
 
 struct MUIP_NListtree_PrevSelected {
-    ULONG MethodID;
-    struct MUI_NListtree_TreeNode **TreeNode;
+    STACKED ULONG MethodID;
+    STACKED struct MUI_NListtree_TreeNode **TreeNode;
 };
 
 
 struct MUIP_NListtree_CopyToClip {
-    ULONG MethodID;
-    struct MUI_NListtree_TreeNode *TreeNode;
-    LONG Pos;
-    LONG Unit;
+    STACKED ULONG MethodID;
+    STACKED struct MUI_NListtree_TreeNode *TreeNode;
+    STACKED LONG Pos;
+    STACKED LONG Unit;
 };
 
 
 struct  MUIP_NListtree_DropType {
-    ULONG MethodID;
-    LONG *Pos;
-    LONG *Type;
-    LONG MinX, MaxX, MinY, MaxY;
-    LONG MouseX, MouseY;
+    STACKED ULONG MethodID;
+    STACKED LONG *Pos;
+    STACKED LONG *Type;
+    STACKED LONG MinX, MaxX, MinY, MaxY;
+    STACKED LONG MouseX, MouseY;
 };
 
 
 struct  MUIP_NListtree_DropDraw {
-    ULONG MethodID;
-    LONG Pos;
-    LONG Type;
-    LONG MinX, MaxX, MinY, MaxY;
+    STACKED ULONG MethodID;
+    STACKED LONG Pos;
+    STACKED LONG Type;
+    STACKED LONG MinX, MaxX, MinY, MaxY;
 };
 
 
@@ -591,93 +591,93 @@ struct  MUIP_NListtree_DropDraw {
 
 struct MUIP_NListtree_CloseMessage
 {
-    ULONG HookID;
-    struct MUI_NListtree_TreeNode *TreeNode;
+    STACKED ULONG HookID;
+    STACKED struct MUI_NListtree_TreeNode *TreeNode;
 };
 
 
 struct MUIP_NListtree_CompareMessage
 {
-    ULONG HookID;
-    struct MUI_NListtree_TreeNode *TreeNode1;
-    struct MUI_NListtree_TreeNode *TreeNode2;
-    LONG SortType;
+    STACKED ULONG HookID;
+    STACKED struct MUI_NListtree_TreeNode *TreeNode1;
+    STACKED struct MUI_NListtree_TreeNode *TreeNode2;
+    STACKED LONG SortType;
 };
 
 
 struct MUIP_NListtree_ConstructMessage
 {
-    ULONG HookID;
-    STRPTR Name;
-    APTR UserData;
-    APTR MemPool;
-    ULONG Flags;
+    STACKED ULONG HookID;
+    STACKED STRPTR Name;
+    STACKED APTR UserData;
+    STACKED APTR MemPool;
+    STACKED ULONG Flags;
 };
 
 
 struct MUIP_NListtree_DestructMessage
 {
-    ULONG HookID;
-    STRPTR Name;
-    APTR UserData;
-    APTR MemPool;
-    ULONG Flags;
+    STACKED ULONG HookID;
+    STACKED STRPTR Name;
+    STACKED APTR UserData;
+    STACKED APTR MemPool;
+    STACKED ULONG Flags;
 };
 
 
 struct MUIP_NListtree_DisplayMessage
 {
-    ULONG   HookID;
-    struct  MUI_NListtree_TreeNode *TreeNode;
-    LONG    EntryPos;
-    STRPTR  *Array;
-    STRPTR  *Preparse;
+    STACKED ULONG   HookID;
+    STACKED struct  MUI_NListtree_TreeNode *TreeNode;
+    STACKED LONG    EntryPos;
+    STACKED STRPTR  *Array;
+    STACKED STRPTR  *Preparse;
 };
 
 
 struct MUIP_NListtree_CopyToClipMessage
 {
-    ULONG   HookID;
-    struct  MUI_NListtree_TreeNode *TreeNode;
-    LONG    Pos;
-    LONG    Unit;
+    STACKED ULONG   HookID;
+    STACKED struct  MUI_NListtree_TreeNode *TreeNode;
+    STACKED LONG    Pos;
+    STACKED LONG    Unit;
 };
 
 
 struct MUIP_NListtree_FindNameMessage
 {
-    ULONG   HookID;
-    STRPTR  Name;
-    STRPTR  NodeName;
-    APTR    UserData;
-    ULONG   Flags;
+    STACKED ULONG   HookID;
+    STACKED STRPTR  Name;
+    STACKED STRPTR  NodeName;
+    STACKED APTR    UserData;
+    STACKED ULONG   Flags;
 };
 
 
 struct MUIP_NListtree_FindUserDataMessage
 {
-    ULONG   HookID;
-    APTR    User;
-    APTR    UserData;
-    STRPTR  NodeName;
-    ULONG   Flags;
+    STACKED ULONG   HookID;
+    STACKED APTR    User;
+    STACKED APTR    UserData;
+    STACKED STRPTR  NodeName;
+    STACKED ULONG   Flags;
 };
 
 
 struct MUIP_NListtree_OpenMessage
 {
-    ULONG HookID;
-    struct MUI_NListtree_TreeNode *TreeNode;
+    STACKED ULONG HookID;
+    STACKED struct MUI_NListtree_TreeNode *TreeNode;
 };
 
 
 struct MUIP_NListtree_MultiTestMessage
 {
-    ULONG HookID;
-    struct MUI_NListtree_TreeNode *TreeNode;
-    LONG    SelType,
-            SelFlags,
-            CurrType;
+    STACKED ULONG HookID;
+    STACKED struct MUI_NListtree_TreeNode *TreeNode;
+    STACKED LONG    SelType,
+                    SelFlags,
+                    CurrType;
 };
 
 #endif /* NLISTTREE_MCC_H */
