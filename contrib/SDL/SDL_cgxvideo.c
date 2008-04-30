@@ -133,6 +133,7 @@ static void DestroyScreen(_THIS)
 		if(this->hidden->dbuffer)
 		{
 			extern struct MsgPort *safeport,*dispport;
+            D(bug("Freeing double buffering stuff..."));
 
 			this->hidden->dbuffer=0;
 
@@ -165,6 +166,7 @@ static void DestroyScreen(_THIS)
 
 			SDL_RastPort=NULL;
 		}
+        D(bug("Closing screen..."));
 		CloseScreen(GFX_Display);
 		currently_fullscreen=0;
 	}
@@ -172,6 +174,7 @@ static void DestroyScreen(_THIS)
 		UnlockPubScreen(NULL,GFX_Display);
 
 	GFX_Display = NULL;
+    D(bug("Ok\n"));
 }
 
 static int CGX_Available(void)
@@ -979,9 +982,9 @@ buildnewscreen:
 
             GFX_Display=NULL;
 
-			D(bug("Opening screen %dx%d/%d...\n", width, height, bpp));
+			D(bug("Opening screen %dx%d/%d (id:%lx)...\n", width, height, bpp, okid));
 
-			if(okid!=INVALID_ID)
+			if(okid!=INVALID_ID) {
 				GFX_Display=OpenScreenTags(NULL,
 								SA_Width,width,
 								SA_Height,height,
@@ -989,14 +992,20 @@ buildnewscreen:
 								SA_Depth,bpp,
 								SA_DisplayID,okid,
 								TAG_DONE);
+            }
 
 			if (!GFX_Display) {
+                D(bug("OpenScreenTags failed!\n"));
 				GFX_Display = SDL_Display;
 				flags &= ~SDL_FULLSCREEN;
 				flags &= ~SDL_DOUBLEBUF;
 			}
 			else {
-				UnlockPubScreen(NULL,SDL_Display);
+                /*
+                 * if (SDL_Display)
+    			 * 	 UnlockPubScreen(NULL,SDL_Display);
+                 */
+
 				SDL_Display=GFX_Display;
 	
 				D(bug("Screen opened: %d x %d.\n", GFX_Display->Width, GFX_Display->Height));
