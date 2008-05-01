@@ -3081,10 +3081,6 @@
 /gnu/ed/mmakefile
 /gnu/ed/.files-touched
 
-# gnu/fileutils
-/gnu/fileutils/mmakefile
-/gnu/fileutils/.files-touched
-
 # gnu/findutils
 /gnu/findutils/mmakefile
 /gnu/findutils/.files-touched
@@ -3197,10 +3193,6 @@
 
 # gnu/termcap
 /gnu/termcap/mmakefile
-
-# gnu/textutils
-/gnu/textutils/mmakefile
-/gnu/textutils/.files-touched
 
 # gnu/which
 /gnu/which/mmakefile
