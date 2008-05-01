@@ -36,6 +36,9 @@
 #ifndef IP_H
 #define IP_H
 
+#include <netinet/in_systm.h>
+#include <netinet/in.h>
+
 #ifndef BYTE_ORDER
 #error BYTE_ORDER undefined
 #endif
