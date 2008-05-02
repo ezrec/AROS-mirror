@@ -3,7 +3,7 @@ AROS Debugging Manual
 =====================
 
 :Authors:   David Le Corfec
-:Copyright: Copyright © 2004, The AROS Development Team
+:Copyright: Copyright (C) 2004-2008, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Work in progress.
@@ -318,14 +318,19 @@ Program-induced breakpoint on i386
 
 If you insert::
 
-    asm("int $3");
+    asm("int3");
 
 in C code, a trace exception will be generated at execution.
 It may be very useful while running with GDB, to enter interactive
 debugging when a specific condition occurs::
 
     if (byteSize == 112)
-        asm("int $3");
+        asm("int3");
+
+GUI frontends
+-------------
+
+There exist GUI frontends for GDB, e.g. ``ddd``.
 
 -----------------
 Resource tracking
@@ -410,6 +415,24 @@ Devlist
 
 Same as ``Liblist``, but for Exec Devices.
 
+
+Misc Wanderer tools
+===================
+
+Snoopy
+------
+
+Snoopy (sys:utilities/snoopy) patches some library functions in such a way that their arguments
+and result are print to the debugging console.
+
+Sashimi
+-------
+
+Sashimi (sys:tools/debug/sashimi) shows all debugging output in a Wanderer window.
+This is useful when you want to see debug output of AROS when it's build without debug support
+or you can't read the serial output.
+
+
 Tips and tricks
 ===============
 
@@ -441,7 +464,7 @@ Memory leaks
   ``rom/exec/allocvec.c``, and check if the leak size varies accordingly.
 
 + Try to identify the leaking allocation by sending a trace exception
-  (``asm("int $3")`` on i386) on a specific alloc size in
+  (``asm("int3")`` on i386) on a specific alloc size in
   ``rom/exec/allocvec.c`` or in ``rom/exec/allocmem.c``.
   Of course you'll need to run your program with GDB for this to
   be useful. Use ``bt`` and other GDB commands to identify the cause
@@ -450,4 +473,3 @@ Memory leaks
 + When you spot the possible leak location, modify its allocation size
   (eg. by adding a char array at the end of the allocated struct) and
   check if the leak size grows accordingly.
-
