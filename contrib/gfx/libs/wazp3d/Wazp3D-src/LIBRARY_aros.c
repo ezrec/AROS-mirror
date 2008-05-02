@@ -62,18 +62,17 @@ if(pt==NULL)
 else
     return(pt); 
 }
-
 /*==================================================================================*/
 void Libfree(void *p)
-    {FreeVec(p);}
-
+{
+FreeVec(p);
+}
 /*==================================================================================*/
 void *Libmemcpy(void *s1,const void *s2,LONG n)
 {
   CopyMem((APTR)s2,(APTR)s1,n);
   return s1;
 }
-
 /*==================================================================================*/
 UBYTE *Libstrcpy(UBYTE *s1,UBYTE *s2)
 { UBYTE *s=s1;
@@ -82,7 +81,6 @@ UBYTE *Libstrcpy(UBYTE *s1,UBYTE *s2)
   while(*s2++!='\0');
   return s1;
 }
-
 /*==================================================================================*/
 UBYTE *Libstrcat(UBYTE *s1,UBYTE *s2)
 {
@@ -95,7 +93,6 @@ UBYTE *Libstrcat(UBYTE *s1,UBYTE *s2)
     ;
   return s1;
 }
-
 /*==================================================================================*/
 ULONG Libstrlen(UBYTE *string)
 {
@@ -139,7 +136,6 @@ BPTR file;
     Close(file); 
     }
 }
-
 /*==================================================================================*/
 void Libloadfile(UBYTE *filename,void *pt,ULONG size)
 {
@@ -151,7 +147,6 @@ BPTR file;
     Close(file); 
     }
 }
-
 /*==================================================================================*/
 static int OpenAmigaLibraries(struct Library *lh)
 {
