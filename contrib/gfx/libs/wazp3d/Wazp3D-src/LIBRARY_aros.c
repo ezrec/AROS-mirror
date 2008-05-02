@@ -141,6 +141,18 @@ BPTR file;
 }
 
 /*==================================================================================*/
+void Libloadfile(UBYTE *filename,void *pt,ULONG size)
+{
+BPTR file;
+
+    if ((file = Open(filename,MODE_OLDFILE)))
+    { 
+    Read(file,pt,size);
+    Close(file); 
+    }
+}
+
+/*==================================================================================*/
 static int OpenAmigaLibraries(struct Library *lh)
 {
 /* Initialize the standards libraries We assume that ROM libraries open OK */

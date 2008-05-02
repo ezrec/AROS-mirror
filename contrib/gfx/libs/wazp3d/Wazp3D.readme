@@ -2,13 +2,13 @@ Short: Wazp3D library is a CPU only Warp3D v4.2 implementation
 Author: thellier@free.fr (Alain Thellier) 
 Uploader: thellier@free.fr 
 Type: driver/video 
-Version: beta 36 (March 2008) 
+Version: beta 37 (April 2008) 
 Requires: RTG system,68040 
 Architecture: m68k-amigaos >= 3.0.0; 
 http://aminet.net/package/driver/video/Wazp3D     
 
 DESCRIPTION 
-Wazp3D beta 36 : Alain THELLIER - Paris - FRANCE - (November 2006 to March 2008) 
+Wazp3D beta 37 : Alain THELLIER - Paris - FRANCE - (November 2006 to April 2008) 
 Wazp3D is a library intended to be compatible with the famous Warp3D.library for AmigaOS 68040 
 
 LICENSE 
@@ -20,35 +20,47 @@ o The 88 functions from the latest Warp3D.library v4.2 are presents :-)
 o Sources included (...so Wazp3D has been ported to AROS) 
 o Software only (=slow) : no need to have 3D hardware 
 o Work in UAE so can serve to test your 3D softwares inside UAE 
-o The Wazp3D driver can lie and pretend to be a "perfect hardware driver" so the 3D-softwares will not fail due to a lacking feature. 
+o The Wazp3D driver can lie and pretend to be a "perfect hardware driver"  so the 3D-softwares will not fail due to a lacking feature. 
 o Full Documentation, faq and grabs at http://thellier.free.fr/Wazp3D.htm 
 o Unlike QuarkTex you can run multiple Warp3D applications concurrently 
-o Built-in debugger 
+o Built-in debugger
+
+INSTALLATION 
+copy LIBS:Warp3D.library TO LIBS:Warp3D.library.sav 
+copy Wazp3D.library TO LIBS:Warp3D.library 
 
 HISTORY 
 Wazp3D was first created to test the "Tales of Tamar"'s 3D Map inside WinUAE. 
 I have no time left to work more on this Wazp3D project. So i release the source & library 
- 
-VERSIONS HISTORY 
-Beta 36  
+
+VERSIONS  HISTORY 
+Beta 37 
+Changes since previous one: 
+o Four new games are working now: Alybox, D3gnop, Sopoblock,YAPMG :-) 
+o New option "Reload Textures" to load a new texture set (to change ugly originals textures) 
+o Library also builded without debugger (smaller version) 
+o New option "Hack ARGB" to convert  directly ARGB textures data to RGBA (for Tamar 3D) = economize memory 
+o Obsolete option "Clamp UV[0.0 1.0]" is removed (textures are allways W3D_REPEAT) 
+
+Beta 36 
 Changes since previous one: 
 o Nicer & a few faster with some new optimised pixels functions 
 o Texture-repeat works (Bzone) 
-o Smooth Textures options (nice)
-o More compatible : Fog or coloring works now on partially transparent faces (like trees in TOT3D) = new pixels functions 
+o Smooth Textures options 
+o More compatible : Fog or coloring works now on partially transparent faces (like trees in Tamar 3D) = new pixels functions 
 o Fog works better (not perfect yet) 
-o New options "Use ClearImage" & "Update At UnlockHardware " to enhance update for some programs like gears(screen),Engine, sKulpt or TheVague. 
+o New options "Use ClearImage" & "Update At UnlockHardware "  to enhance update for some programs like gears(screen),Engine, sKulpt or TheVague. 
 
 Beta 35 
 Changes since previous one: 
 o Code clean-up and library enhancements from Gunther Nikl 
 o "Hack1 tex RGBA" works again (draw a textured-triangle as a Gouraud untextured one = faster) 
-o "Hack2 tex RGBA" works again (draw a textured-triangle as a Flat untextured one = faster) 
+o "Hack2 tex RGBA" works again (draw a textured-triangle as a   Flat  untextured one = faster) 
 
 Beta 34 
 Changes since previous one: 
 o Brand new pixels functions that allow to render lighted textures :-) so looks now very nice 
-o Corrected a very bad bug concerning pixels-buffering. 
+o Corrected a very bad bug  concerning pixels-buffering. 
 o New Bug has appeared :-/ so 4D-clock & other StormMesa stuffs now crash... 
 o Library is smaller :-) 
 
@@ -77,7 +89,7 @@ o Less bugs (even some few fatals one)
 o Fog works (not perfect) 
 o First Culling (CCW/CW face order) implementation (still bugged) 
 o "Hack1 tex RGBA" works (draw a textured-triangle as a Gouraud untextured one = faster) 
-o "Hack2 tex RGBA" works (draw a textured-triangle as a Flat untextured one = faster) 
+o "Hack2 tex RGBA" works (draw a textured-triangle as a   Flat  untextured one = faster) 
 o "AntiAlias Screen" new & works (3x3 median per pixel) (slow) 
 o Library is smaller :-) 
 o More compatible with new 3Dprogs 
@@ -90,9 +102,16 @@ o Project's name changed to "Wazp3D"
 KNOWN BUGS 
 o SOFT3D_ClearImage (= clearing Wazp3D internal RGBA buffer) dont use well the MinUpdate region (This bug is patched) 
 o Refresh display problem (sKulpt) 
-o StormMesa crashs 
+o StormMesa  crashs 
 o Fog still not perfect 
- 
+
+TO DO IN THE FUTURE 
+o Option to dump rendered objects as text-files 
+o A faster coloring... 
+o Make StormMesa progs working.... 
+o Builtin FPS counter 
+o A GPL demo program 
+
 IMPORTANT 
 Wazp3D is not perfect but it was good enough for me :-) 
 This Wazp3D binary is intended to be used within a very fast 68040 AmigaOS (= UAE emulator with JIT like WinUAE) 
@@ -104,31 +123,27 @@ But it only need much speed for his software rendering
 Some 3Dprogs need a big stack to be able to run without crash (glsokoban,etc...) 
 
 IMPLEMENTED FEATURES 
-Texturing 
-Zbuffer (Zbuffer > z) 
-Goureaud shading 
-Alpha blending (1 - Alpha) 
-Color blending (DECAL) 
-All Fogs 
-All primitives 
-All vertex formats,etc... 
- 
+    Texturing 
+    Zbuffer (Zbuffer > z) 
+    Goureaud shading 
+    Alpha blending (1 - Alpha) 
+    Color blending (DECAL) 
+    All Fogs 
+    All primitives 
+    All vertex formats,etc...
+
 UNIMPLEMENTED FEATURES 
-Stencil masking 
-Color masking 
-Alpha masking 
-Zbuffer Functions 
-Blending functions 
-Stippling 
-Mipmapping 
-Filtering, etc... 
+    Stencil masking 
+    Color masking 
+    Alpha masking 
+    Zbuffer Functions 
+    Blending functions 
+    Stippling 
+    Mipmapping 
+    Filtering, etc... 
 
 TESTED AND WORKING SOFTWARES     
 see full documentation at http://thellier.free.fr/Wazp3D.htm
-
-INSTALLATION 
-copy LIBS:Warp3D.library TO LIBS:Warp3D.library.sav 
-copy Wazp3D.library TO LIBS:Warp3D.library 
 
 WAZP3D-SETTINGS
 The Wazp3D-Settings tool allow to change some parameters of the Wazp3D
