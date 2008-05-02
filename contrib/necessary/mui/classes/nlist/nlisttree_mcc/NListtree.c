@@ -5989,7 +5989,7 @@ ULONG _Setup( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
 {
 	struct NListtree_Data *data = INST_DATA( cl, obj );
 	Object *pdobj, *idobj;
-	LONG d;
+	IPTR d;
 	BOOL x;
 
 	D(bug( "\n" ) );
