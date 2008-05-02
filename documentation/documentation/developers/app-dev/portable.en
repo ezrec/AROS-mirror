@@ -46,9 +46,9 @@ You can query the endianness this way::
     }
 
 
-AROS_BIG_ENDIAN is always defined if you include cpu.h. It has a value of 1 on big
+AROS_BIG_ENDIAN is always defined if you include <aros/cpu.h>. It has a value of 1 on big
 endian systems and 0 on little endian systems. This makes it possible to query the
-define with both C "if" and preprocessor "#if".
+define with both C "if" and preprocessor "#if". This means you must not use "#ifdef".
 
 You can find some conversion macros like *AROS_WORD2BE* in the header *aros/macros.h*.
 If you need some peek and poke functions with build-in endianness conversion look in
@@ -196,9 +196,10 @@ There is another macro named UFC (User Function Call) if you want to call
 the user function with more than 3 arguments::
 
     retval = AROS_UFC4(ULONG, myfunction,
-            AROS_UFCA(APTR, value1, A0)
-            AROS_UFCA(Object *, value2, A2)
-            AROS_UFCA(APTR, value3, A1) );
+            AROS_UFCA(APTR, value1, A0),
+            AROS_UFCA(Object *, value2, A2),
+            AROS_UFCA(APTR, value3, A1),
+            AROS_UFCA(LONG, value4, D1) );
 
 
 Variadic Structure Parameters
@@ -209,13 +210,69 @@ Messages for BOOPSI methods are defined as structs, e.g.::
     struct MUIP_Application_SetMenuCheck { ULONG MethodID; ULONG MenuID; LONG stat; };
 
 This causes problems when the method is called with the variadic *DoMethod*, because on some
-architecutes the parameters are passed on stack, in registers, or even in both.::
+architectures the parameters are passed on stack, in registers, or even in both.::
 
     DoMethod(obj, MUIM_Application_SetMenuCheck, 10, 20);
 
 The solution is to prefix all elements in the struct with *STACKED*::
 
     struct MUIP_Application_SetMenuCheck { STACKED ULONG MethodID; STACKED ULONG MenuID; STACKED LONG stat; };
+
+
+Tag Values
+==========
+
+AROS uses quite often variadic functions with tag lists as parameters. E.g.::
+
+    func(tag1, value1, tag2, value2, ... , TAG_DONE);
+
+When you define such tags you have to ensure that they are 64 bit. This means you have to append "UL" to the value. E.g::
+
+    #define MUIA_NList_Horiz_DeltaFactor  0x9d510032UL
+
+You don't have to care about this when you're OR'ing with TAG_USER or derivates like MUIB_MUI, MUIB_RSVD, MUIB_ZUNE and MUIB_AROS::
+
+    #define MUIA_Application_Active  (MUIB_MUI|0x004260ab)
+
+
+Forwarding Variadic Parameters to a Variadic Function
+=====================================================
+
+Sometimes you have to write variadic functions which forwards its parameters to a variadic system function.
+On 68k this was often done like this::
+
+    APTR DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1, ...)
+    {
+        return (APTR)(DoSuperMethod(cl,obj,OM_NEW,&tag1,TAG_DONE));
+    }
+
+This isn't portable because you can't control how the compiler stores the variadic parameters.
+
+You have to write it this way::
+
+    IPTR DoSuperNew(struct IClass *cl, Object *obj, ULONG tag1, ...)
+    {
+        AROS_SLOWSTACKTAGS_PRE(tag1)
+        retval = (IPTR)DoSuperMethod(cl, obj, OM_NEW, AROS_SLOWSTACKTAGS_ARG(tag1));
+        AROS_SLOWSTACKTAGS_POST
+    }
+
+Note that the name of the return variable "retval" is defined by the macros and can't be changed.
+
+For functions with no return value there are the macros *AROS_NR_SLOWSTACKTAGS_PRE* and *AROS_NR_SLOWSTACKTAGS_POST*.
+All this slowstacktags macros are defined in <utility/tagitem.h>.
+
+For variadic hook functions exists similar macros in <clib/alib_protos.h>. Example usage::
+
+    ULONG MyCallHookPktA(Object *obj, struct Hook *hook, ...)
+    {
+        AROS_SLOWSTACKHOOKS_PRE(hook)
+        retval = CallHookPkt(hook, obj, AROS_SLOWSTACKHOOKS_ARG(hook));
+        AROS_SLOWSTACKHOOKS_POST
+    }
+
+Also in <clib/alib_protos.h> there are defined AROS_SLOWSTACKMETHODS_XXX macros. DoMethod() is implemented with this.
+As an application developer you'll normally not come in touch with this macros.
 
 
 Include files
