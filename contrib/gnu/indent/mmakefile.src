@@ -3,7 +3,7 @@
 
 -include $(TOP)/config/make.cfg
 
-#MM- contrib-gnu : contrib-gnu-indent
+##MM- contrib-gnu : contrib-gnu-indent
 #MM- contrib-gnu-indent : development-indent
 
 %fetch_and_build_gnu_development package=indent version=2.2.9 patch=yes
