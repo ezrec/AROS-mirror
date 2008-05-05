@@ -1,0 +1,44 @@
+# Copyright © 2008, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+##MM- contrib-gfx : contrib-gfx-netpbm
+#MM- contrib-gfx-netpbm : contrib-gfx-netpbm-pngtopnm contrib-gfx-netpbm-ppmtoilbm
+#MM- contrib-gfx-netpbm-pngtopnm : contrib-gfx-netpbm-fetch
+#MM- contrib-gfx-netpbm-ppmtoilbm : contrib-gfx-netpbm-fetch
+
+REPOSITORIES = sf://netpbm
+ARCHBASE := netpbm-10.26.53
+TARGETDIR := $(AROS_DEVELOPMENT)/bin
+USER_INCLUDES := -I$(PORTSDIR)/netpbm/$(ARCHBASE) \
+                 -I$(PORTSDIR)/netpbm/$(ARCHBASE)/lib \
+                 -I$(PORTSDIR)/netpbm/$(ARCHBASE)/lib/util \
+                 -I$(PORTSDIR)/netpbm/$(ARCHBASE)converter/ppm
+
+PNGTOPNMFILES := converter/other/pngtopnm lib/util/nstring lib/util/shhopt \
+         lib/libpm lib/libpnm1 lib/libpnm2 lib/libpbm1 lib/libpbm2 \
+         lib/libpbm3 lib/libpgm1 lib/libpgm2 lib/libppmcolor lib/colorname \
+         lib/libppmcmap lib/libppm1 lib/libppm2 lib/fileio
+
+PPMTOILBMFILES := converter/ppm/ppmtoilbm lib/libpm lib/libpnm1 lib/libpnm2 \
+         lib/libpbm1 lib/libpbm2 lib/libpbm3 lib/libpgm1 lib/libpgm2 \
+         lib/libppmcolor lib/colorname lib/libppmcmap lib/libppm1 \
+         lib/libppmfloyd lib/libppm2 lib/fileio
+
+%build_prog mmake=contrib-gfx-netpbm-pngtopnm progname=pngtopnm \
+    srcdir=$(PORTSDIR)/netpbm/$(ARCHBASE)/ \
+    files=$(PNGTOPNMFILES) targetdir=$(TARGETDIR) \
+    uselibs="arosc png z"
+
+%build_prog mmake=contrib-gfx-netpbm-ppmtoilbm progname=ppmtoilbm \
+    srcdir=$(PORTSDIR)/netpbm/$(ARCHBASE)/ \
+    files=$(PPMTOILBMFILES) targetdir=$(TARGETDIR) \
+    uselibs="arosc"
+
+#MM
+contrib-gfx-netpbm-fetch :
+	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/netpbm \
+	location=$(PORTSSOURCEDIR) \
+	archive_origins=$(REPOSITORIES) suffixes="tgz" \
+	patches_specs=netpbm-10.26.53-aros.diff:netpbm-10.26.53:-p1
