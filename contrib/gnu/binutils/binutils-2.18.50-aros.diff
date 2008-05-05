@@ -1,0 +1,73 @@
+diff --git binutils-2.18.50/bfd/config.bfd binutils-2.18.50/bfd/config.bfd
+index 198dfe4..aaa12e8 100644
+--- binutils-2.18.50/bfd/config.bfd
++++ binutils-2.18.50/bfd/config.bfd
+@@ -581,6 +581,10 @@ case "${targ}" in
+     targ_selvecs="bfd_elf32_i386_vec i386coff_vec"
+     want64=true
+     ;;
++  x86_64-*-aros*)
++    targ_defvec=bfd_elf64_x86_64_vec
++    want64=true
++    ;;
+   x86_64-*-freebsd* | x86_64-*-kfreebsd*-gnu)
+     targ_defvec=bfd_elf64_x86_64_freebsd_vec
+     targ_selvecs="bfd_elf32_i386_freebsd_vec i386coff_vec bfd_efi_app_ia32_vec bfd_efi_app_x86_64_vec bfd_elf32_i386_vec bfd_elf64_x86_64_vec"
+@@ -1102,6 +1102,9 @@ case "${targ}" in
+     targ_selvecs="mach_o_be_vec mach_o_le_vec mach_o_fat_vec pef_vec pef_xlib_vec sym_vec"
+     targ_archs="bfd_powerpc_arch bfd_rs6000_arch bfd_i386_arch"
+     ;;
++  powerpc-*-aros*)
++    targ_defvec=bfd_elf32_powerpc_vec
++    ;;
+   powerpc-*-macos*)
+     targ_defvec=pmac_xcoff_vec
+     ;;
+diff --git binutils-2.18.50/binutils/readelf.c binutils-2.18.50/binutils/readelf.c
+index 9fc8e0c..57464a6 100644
+--- binutils-2.18.50/binutils/readelf.c
++++ binutils-2.18.50/binutils/readelf.c
+@@ -2359,7 +2359,7 @@ get_osabi_name (unsigned int osabi)
+     case ELFOSABI_OPENBSD:	return "UNIX - OpenBSD";
+     case ELFOSABI_OPENVMS:	return "VMS - OpenVMS";
+     case ELFOSABI_NSK:		return "HP - Non-Stop Kernel";
+-    case ELFOSABI_AROS:		return "Amiga Research OS";
++    case ELFOSABI_AROS:		return "AROS Research OS";
+     case ELFOSABI_STANDALONE:	return _("Standalone App");
+     case ELFOSABI_ARM:		return "ARM";
+     default:
+diff --git binutils-2.18.50/include/elf/common.h binutils-2.18.50/include/elf/common.h
+index 5b71782..324fa9c 100644
+--- binutils-2.18.50/include/elf/common.h
++++ binutils-2.18.50/include/elf/common.h
+@@ -73,7 +73,7 @@
+ #define ELFOSABI_OPENBSD     12	/* OpenBSD */
+ #define ELFOSABI_OPENVMS     13	/* OpenVMS */
+ #define ELFOSABI_NSK	     14	/* Hewlett-Packard Non-Stop Kernel */
+-#define ELFOSABI_AROS	     15	/* Amiga Research OS */
++#define ELFOSABI_AROS	     15	/* AROS Research OS */
+ #define ELFOSABI_ARM	     97	/* ARM */
+ #define ELFOSABI_STANDALONE 255	/* Standalone (embedded) application */
+ 
+diff --git binutils-2.18.50/ld/configure.tgt binutils-2.18.50/ld/configure.tgt
+index d4f53ef..2d43e8b 100644
+--- binutils-2.18.50/ld/configure.tgt
++++ binutils-2.18.50/ld/configure.tgt
+@@ -234,6 +234,9 @@ i[3-7]86-*-elf*)	targ_emul=elf_i386 ;;
+ x86_64-*-elf*)		targ_emul=elf_x86_64
+ 			targ_extra_emuls=elf_i386
+ 			;;
++x86_64-*-aros*)		targ_emul=elf_x86_64
++			targ_extra_emuls=elf_i386
++			;;
+ i[3-7]86-*-kaos*)	targ_emul=elf_i386 ;;
+ i[3-7]86-*-freebsdaout* | i[3-7]86-*-freebsd[12].* | i[3-7]86-*-freebsd[12])
+ 			targ_emul=i386bsd ;;
+@@ -468,6 +468,7 @@ powerpc*-*-elf* | powerpc*-*-eabi* | powerpc*-*-sysv* \
+ powerpc-*-vxworks*)
+ 			targ_emul=elf32ppcvxworks
+ 			targ_extra_emuls="elf32ppc elf32ppclinux elf32ppcsim" ;;
++powerpc-*-aros*)	targ_emul=elf32ppc ;;
+ powerpc-*-nto*)         targ_emul=elf32ppcnto ;;
+ powerpcle-*-nto*)       targ_emul=elf32lppcnto ;;
+ powerpc-*-rtems*)	targ_emul=elf32ppc ;;
