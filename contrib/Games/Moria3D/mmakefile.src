@@ -16,7 +16,7 @@ make-dirs :
 
 copy-files : $(DEST)
 
-$(INSTDIR)/% : %
+$(INSTDIR)/% : % make-dirs
 	$(CP) $< $@
 
 #MM

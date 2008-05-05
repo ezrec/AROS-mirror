@@ -12,10 +12,10 @@ INCL_FILES_2 := $(foreach f, $(INCLUDE_FILES), $(GENINCDIR)/$(INCLUDE_DEST_DIR)/
 #MM includes-copy
 includes-copy : setup $(INCL_FILES_1) $(INCL_FILES_2)
 
-$(AROS_INCLUDES)/$(INCLUDE_DEST_DIR)/%.h : $(INCLUDE_SRC_DIR)/%.h
+$(AROS_INCLUDES)/$(INCLUDE_DEST_DIR)/%.h : $(INCLUDE_SRC_DIR)/%.h setup
 	@$(CP) $< $@
 
-$(GENINCDIR)/$(INCLUDE_DEST_DIR)/%.h : $(INCLUDE_SRC_DIR)/%.h
+$(GENINCDIR)/$(INCLUDE_DEST_DIR)/%.h : $(INCLUDE_SRC_DIR)/%.h setup
 	@$(CP) $< $@
 
 setup ::

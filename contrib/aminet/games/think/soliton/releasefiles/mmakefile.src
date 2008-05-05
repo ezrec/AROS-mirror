@@ -16,10 +16,10 @@ aminet-games-think-soliton-releasefiles : setup $(CARDFILES) $(PATTERNFILES)
 setup :
 	%mkdirs_q $(CARDDIR) $(PATTERNDIR)
     
-$(CARDDIR)/%.iff : Graphics/%.iff
+$(CARDDIR)/%.iff : Graphics/%.iff setup
 	@$(CP) $< $@
 
 
-$(PATTERNDIR)/%.iff : Graphics/%.iff
+$(PATTERNDIR)/%.iff : Graphics/%.iff setup
 	@$(CP) $< $@
 

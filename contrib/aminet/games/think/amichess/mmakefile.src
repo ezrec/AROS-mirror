@@ -40,27 +40,27 @@ setup :
 	%mkdirs_q $(foreach f, $(PIECESSUB), $(PIECESDIR)/$(f))
 	%mkdirs_q $(PROMODIR)
 
-$(BOARDDIR)/%/Dark : Boards/%/Dark
+$(BOARDDIR)/%/Dark : Boards/%/Dark setup
 	@$(CP) $< $@
 
-$(BOARDDIR)/%/Light : Boards/%/Light
+$(BOARDDIR)/%/Light : Boards/%/Light setup
 	@$(CP) $< $@
 
-$(PIECESDIR)/1024/% : Pieces/1024/%
+$(PIECESDIR)/1024/% : Pieces/1024/% setup
 	@$(CP) $< $@
 	
-$(PIECESDIR)/800/% : Pieces/800/%
+$(PIECESDIR)/800/% : Pieces/800/% setup
 	@$(CP) $< $@
 	
-$(PROMODIR)/% : Promote/%
+$(PROMODIR)/% : Promote/% setup
 	@$(CP) $< $@
 
-$(DOCDIR)/%.readme : %.readme
+$(DOCDIR)/%.readme : %.readme setup
 	@$(CP) $< $@
 
-$(DOCDIR)/%.dok : %.dok
+$(DOCDIR)/%.dok : %.dok setup
 	@$(CP) $< $@
 
-$(ICONDIR)/%.info : icons/%.info    
+$(ICONDIR)/%.info : icons/%.info setup 
 	@$(CP) $< $@
 
