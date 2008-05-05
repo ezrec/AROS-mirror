@@ -110,11 +110,21 @@ Kernel:
     Sebastian Heutling
     Fabio Alemagna
     Georg Steger
+    Nic Andrews
 
 DOS:
     Georg Steger
     Fabio Alemagna
     The MorphOS team
+    Rob Howard
+    Pavel Fedin
+
+NETWORKING:
+    Neil Cafferkey
+    Pavel Fedin
+    Michal Schulz
+    Nic Andrews
+    Alain Greppin
 
 C link library and POSIX layer:
     Aaron Digulla
