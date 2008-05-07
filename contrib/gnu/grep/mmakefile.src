@@ -4,6 +4,7 @@
 -include $(TOP)/config/make.cfg
 
 ##MM- contrib-gnu : contrib-gnu-grep
-##MM- contrib-gnu-grep : development-grep
+#MM- contrib-gnu-grep : development-grep
 
-%fetch_and_build_gnu_development package=grep version=2.5.1 patch=yes
+%fetch_and_build_gnu_development package=grep version=2.5.1 patch=yes \
+	extraoptions="CPPFLAGS='-UMBS_SUPPORT'"
