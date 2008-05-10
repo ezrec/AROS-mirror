@@ -1,0 +1,102 @@
+================================
+AROS Implementation Completeness
+================================
+
+.. Contents::
+
+3.1 OS API
+==========
+Libraries
+---------
+============================= ======= =======
+Library                       Generic  i386  
+============================= ======= =======
+amigaguide.library                 0%      0%
+amiga.library     
+asl.library
+bullet.library                                
+commodities.library              100%    100% 
+datatypes.library
+ddebug.library
+debug.library
+diskfont.library
+dos.library                       
+exec.library                      92%     92%
+expansion.library
+gadtools.library
+graphics.library
+icon.library
+iffparse.library
+intuition.library
+keymap.library
+layers.library
+locale.library
+lowlevel.library
+mathffp.library
+mathieeedoubbas.library
+mathieeedoubtrans.library
+mathieeesingbas.library
+mathieeesingtrans.library
+mathtrans.library
+nonvolatile.library
+realtime.library
+rexxsyslib.library
+translator.library
+utility.library
+workbench.library
+============================= ======= =======
+
+Comments:
+
++ bullet.library interface is implemented in freetype2.library
+
+Devices
+-------
+================ ======
+Device           Status             
+================ ======
+serial.device
+timer.device
+trackdisk.device
+parallel.device
+console.device
+audio.device
+cd.device
+clipboard.device
+gameport.device
+input.device
+keyboard.device
+narrator.device
+printer.device
+================ ======
+
+Datatypes
+---------
+=================== ======
+Datatype            Status
+=================== ======
+amigaguide.datatype
+sound.datatype
+text.datatype
+picture.datatype
+ilbm.datatype
+animation.datatype
+ascii.datatype
+=================== ======
+
+Resources
+---------
+=================== ======
+Resource            Status
+=================== ======
+battclock.resource
+battmem.resource
+cardres.resource
+cia.resource
+disk.resource
+filesystem.resource
+potgo.resource
+misc.resource
+=================== ======
+
+Last updated: 2008-05-10
