@@ -219,14 +219,16 @@ The solution is to prefix all elements in the struct with *STACKED*::
     struct MUIP_Application_SetMenuCheck { STACKED ULONG MethodID; STACKED ULONG MenuID; STACKED LONG stat; };
 
 
-Tag Values
-==========
+Tag Identifiers/Values
+======================
 
-AROS uses quite often variadic functions with tag lists as parameters. E.g.::
+To write programs easily portable to 64-bit architectures make sure that all variadic arguments to functions
+using AROS_SLOWSTACKTAGS macros (for example NewObject(), MUI_NewObject(), CreateNewProcTags()
+and many more) are of type with size equal to *Tag* type for tag identifiers and *IPTR* type for tag values. If you
+use any arguments with smaller types, mentioned functions may receive randomly corrupted
+argument values.
 
-    func(tag1, value1, tag2, value2, ... , TAG_DONE);
-
-When you define such tags you have to ensure that they are 64 bit. This means you have to append "UL" to the value. E.g::
+The paragraph above was probably hard to understand. In short: add *UL* to tag values::
 
     #define MUIA_NList_Horiz_DeltaFactor  0x9d510032UL
 
