@@ -36,15 +36,14 @@ extern "C" {
    non-ANSI C where `const' is problematical.  */
 #endif /* C++ or ANSI C.  */
 
+#ifndef __const
 #ifndef const
 # if (defined __STDC__ && __STDC__) || defined __cplusplus
-#  ifdef __const
-#    undef __const
-#  endif
 #  define __const	const
 # else
 #  define __const
 # endif
+#endif
 #endif
 
 /* We #undef these before defining them because some losing systems
@@ -77,7 +76,7 @@ extern "C" {
 
 /* Match NAME against the filename pattern PATTERN,
    returning zero if it matches, FNM_NOMATCH if not.  */
-extern int fnmatch __P ((__const char *__pattern, __const char *__name,
+extern int fnmatch __P ((const char *__pattern, const char *__name,
 			 int __flags));
 
 #ifdef	__cplusplus

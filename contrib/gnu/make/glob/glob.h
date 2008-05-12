@@ -128,12 +128,12 @@ typedef struct
        are used instead of the normal file access functions.  */
     void (*gl_closedir) __PMT ((void *));
     struct dirent *(*gl_readdir) __PMT ((void *));
-    __ptr_t (*gl_opendir) __PMT ((__const char *));
-    int (*gl_lstat) __PMT ((__const char *, struct stat *));
+    __ptr_t (*gl_opendir) __PMT ((const char *));
+    int (*gl_lstat) __PMT ((const char *, struct stat *));
 #if defined(VMS) && defined(__DECC) && !defined(_POSIX_C_SOURCE)
-    int (*gl_stat) __PMT ((__const char *, struct stat *, ...));
+    int (*gl_stat) __PMT ((const char *, struct stat *, ...));
 #else
-    int (*gl_stat) __PMT ((__const char *, struct stat *));
+    int (*gl_stat) __PMT ((const char *, struct stat *));
 #endif
   } glob_t;
 
@@ -178,15 +178,15 @@ extern void globfree64 __P ((glob64_t *__pglob));
    If memory cannot be allocated for PGLOB, GLOB_NOSPACE is returned.
    Otherwise, `glob' returns zero.  */
 #if _FILE_OFFSET_BITS != 64 || __GNUC__ < 2
-extern int glob __P ((__const char *__pattern, int __flags,
-		      int (*__errfunc) (__const char *, int),
+extern int glob __P ((const char *__pattern, int __flags,
+		      int (*__errfunc) (const char *, int),
 		      glob_t *__pglob));
 
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
 extern void globfree __P ((glob_t *__pglob));
 #else
-extern int glob __P ((__const char *__pattern, int __flags,
-		      int (*__errfunc) (__const char *, int),
+extern int glob __P ((const char *__pattern, int __flags,
+		      int (*__errfunc) (const char *, int),
 		      glob_t *__pglob)) __asm__ ("glob64");
 
 extern void globfree __P ((glob_t *__pglob)) __asm__ ("globfree64");
@@ -199,7 +199,7 @@ extern void globfree __P ((glob_t *__pglob)) __asm__ ("globfree64");
 
    This function is not part of the interface specified by POSIX.2
    but several programs want to use it.  */
-extern int glob_pattern_p __P ((__const char *__pattern, int __quote));
+extern int glob_pattern_p __P ((const char *__pattern, int __quote));
 #endif
 
 #ifdef	__cplusplus

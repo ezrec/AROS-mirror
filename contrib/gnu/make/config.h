@@ -146,7 +146,7 @@
 /* #undef HAVE_PSTAT_GETDYNAMIC */
 
 /* Define if <signal.h> defines the SA_RESTART constant. */
-/* #undef HAVE_SA_RESTART */
+#define HAVE_SA_RESTART 1
 
 /* Define to 1 if you have the `setegid' function. */
 /* #undef HAVE_SETEGID */
