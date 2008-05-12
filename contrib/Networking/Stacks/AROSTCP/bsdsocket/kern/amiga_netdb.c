@@ -418,7 +418,7 @@ D(bug("[AROSTCP](amiga_netdb.c) addifent: configuring interface '%s'\n", ssc->ar
 					ifp->if_data.ifi_aros_usedhcp = 0;
 					if (setaddr ((struct sockaddr_in *)&ifr.ifra_addr, ssc->args->a_ip, AF_INET)) {
 						if (ssc->args->a_netmask) {
-							DIFCONF(Printf("> Netmask: %s\n". ssc->args->a_netmask);)
+							DIFCONF(Printf("> Netmask: %s\n", ssc->args->a_netmask);)
 							if (!setaddr ((struct sockaddr_in *)&ifr.ifra_mask, ssc->args->a_netmask, AF_UNSPEC)) {
 								*errstrp = ERR_SYNTAX;
 								retval = RETURN_WARN;
