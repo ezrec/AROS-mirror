@@ -241,6 +241,7 @@ OOP_Object *METHOD(HID, Root, New)
         if (hid->cdesc)
         {
             uint32_t flags;
+            uint16_t repid;
             
             D(bug("[HID::New()] Getting config descriptor of size %d...\n",AROS_LE2WORD(cdesc.wTotalLength)));
 
@@ -255,10 +256,20 @@ OOP_Object *METHOD(HID, Root, New)
             
             HIDD_USBHID_GetReportDescriptor(o, hid->reportLength, hid->report);
             
-            hid->buflen = hid_report_size(hid->report, hid->reportLength, hid_input, 0);
+            hid->nreport = hid_maxrepid(hid->report, hid->reportLength) + 1;
+            hid->buflen = 0;
+            
+            for (repid = 0; repid < hid->nreport; repid++)
+            {
+                uint16_t repsize = hid_report_size(hid->report, hid->reportLength, hid_input, repid);
+                D(bug("[HID::New()] Report %d: size %d\n", repid, repsize));
+                if (repsize > hid->buflen)
+                    hid->buflen = repsize;
+            }
+            
             hid->buffer = AllocVecPooled(SD(cl)->MemPool, hid->buflen);
             
-            D(bug("[HID::New()] Length of input report 0 is %d\n", hid->buflen));
+            D(bug("[HID::New()] Length of input report is %d\n", hid->buflen));
             
             usb_endpoint_descriptor_t *ep = HIDD_USBDevice_GetEndpoint(o, iface, 0);
             

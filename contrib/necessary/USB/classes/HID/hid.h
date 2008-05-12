@@ -104,6 +104,7 @@ typedef struct HidData {
     usb_hid_descriptor_t        *hd;
     char                        *report;
     uint16_t                    reportLength;
+    uint16_t                    nreport;
 
     struct Interrupt            interrupt;
     APTR                        intr_pipe;
@@ -225,6 +226,7 @@ struct hid_item {
 
 struct hid_data *hid_start_parse(void *d, int len, enum hid_kind kind);
 void hid_end_parse(struct hid_data *s);
+int hid_maxrepid(struct hid_data *s, int len);
 int hid_get_item(struct hid_data *s, struct hid_item *h);
 int hid_report_size(void *buf, int len, enum hid_kind k, uint8_t id);
 int hid_locate(void *desc, int size, uint32_t usage, uint8_t id,

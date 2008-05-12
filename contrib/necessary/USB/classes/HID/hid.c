@@ -58,6 +58,28 @@ struct hid_data {
     enum hid_kind kind;
 };
 
+int hid_maxrepid(struct hid_data *s, int len)
+{
+    struct hid_item h;
+    struct hid_data *d;
+    int maxid = -1;
+    h.report_ID = 0;
+    
+    bug("[HID] hid_maxrepid(%p,%d)\n", s, len);
+    
+    for (d = hid_start_parse(s, len, hid_none); hid_get_item(d, &h);)
+    {
+        bug("[HID]   ReportID=%d\n", h.report_ID);
+        
+        if (h.report_ID > maxid)
+            maxid = h.report_ID;
+    }
+    
+    hid_end_parse(d);
+    
+    return maxid;
+}
+
 static void hid_clear_local(struct hid_item *c)
 {
     c->usage = 0;
