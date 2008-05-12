@@ -79,7 +79,7 @@ extern struct mbuf *mfree;
  * at least MINCLSIZE of data must be stored.
  */
 
-#define	MSIZE		128				/* size of an mbuf */
+#define	MSIZE		256			/* size of an mbuf */
 #define	MLEN		(MSIZE - sizeof(struct m_hdr))	/* normal data len */
 #define	MHLEN		(MLEN - sizeof(struct pkthdr))	/* data len w/pkthdr */
 
@@ -121,6 +121,8 @@ struct m_hdr {
 struct	pkthdr {
 	int	len;		/* total packet length */
 	struct	ifnet *rcvif;	/* rcv interface */
+	/* variables for ip and tcp reassembly */
+	caddr_t header;                 /* pointer to packet header */	
 };
 
 /* description of external storage mapped into mbuf, valid if M_EXT set */

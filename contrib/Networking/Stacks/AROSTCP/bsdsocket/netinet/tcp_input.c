@@ -93,154 +93,144 @@ struct inpcbinfo tcbinfo;
  * Set DELACK for segments received in order, but ack immediately
  * when segments are out of order (so fast retransmit can work).
  */
-#ifdef TCP_ACK_HACK
-#define	TCP_REASS(tp, ti, m, so, flags) { \
-	if ((ti)->ti_seq == (tp)->rcv_nxt && \
-	    (tp)->seg_next == (struct tcpiphdr *)(tp) && \
-	    (tp)->t_state == TCPS_ESTABLISHED) { \
-		if (ti->ti_flags & TH_PUSH) \
+#define TCP_REASS(tp, ti, m, so, flags) { \
+    if ((ti)->ti_seq == (tp)->rcv_nxt && \
+        (tp)->t_segq == NULL && \
+        (tp)->t_state == TCPS_ESTABLISHED) { \
+        if (ti->ti_flags & TH_PUSH) \
 			tp->t_flags |= TF_ACKNOW; \
 		else \
 			tp->t_flags |= TF_DELACK; \
-		(tp)->rcv_nxt += (ti)->ti_len; \
-		flags = (ti)->ti_flags & TH_FIN; \
-		tcpstat.tcps_rcvpack++;\
-		tcpstat.tcps_rcvbyte += (ti)->ti_len;\
-		sbappend(&(so)->so_rcv, (m)); \
-		sorwakeup(so); \
-	} else { \
-		(flags) = tcp_reass((tp), (ti), (m)); \
-		tp->t_flags |= TF_ACKNOW; \
-	} \
+        (tp)->rcv_nxt += (ti)->ti_len; \
+        flags = (ti)->ti_flags & TH_FIN; \
+        tcpstat.tcps_rcvpack++;\
+        tcpstat.tcps_rcvbyte += (ti)->ti_len;\
+        sbappend(&(so)->so_rcv, (m)); \
+        sorwakeup(so); \
+    } else { \
+        (flags) = tcp_reass((tp), (ti), (m)); \
+        tp->t_flags |= TF_ACKNOW; \
+    } \
 }
-#else
-#define	TCP_REASS(tp, ti, m, so, flags) { \
-	if ((ti)->ti_seq == (tp)->rcv_nxt && \
-	    (tp)->seg_next == (struct tcpiphdr *)(tp) && \
-	    (tp)->t_state == TCPS_ESTABLISHED) { \
-		tp->t_flags |= TF_DELACK; \
-		(tp)->rcv_nxt += (ti)->ti_len; \
-		flags = (ti)->ti_flags & TH_FIN; \
-		tcpstat.tcps_rcvpack++;\
-		tcpstat.tcps_rcvbyte += (ti)->ti_len;\
-		sbappend(&(so)->so_rcv, (m)); \
-		sorwakeup(so); \
-	} else { \
-		(flags) = tcp_reass((tp), (ti), (m)); \
-		tp->t_flags |= TF_ACKNOW; \
-	} \
-}
-#endif
-#ifndef TUBA_INCLUDE
 
 int
 tcp_reass(tp, ti, m)
-	register struct tcpcb *tp;
-	register struct tcpiphdr *ti;
-	struct mbuf *m;
+        struct tcpcb *tp;
+        struct tcpiphdr *ti;
+        struct mbuf *m;
 {
-	register struct tcpiphdr *q;
-	struct socket *so = tp->t_inpcb->inp_socket;
-	int flags;
+        struct mbuf *q;
+        struct mbuf *p;
+        struct mbuf *nq;
+        struct socket *so = tp->t_inpcb->inp_socket;
+        int flags;
 
-	/*
-	 * Call with ti==0 after become established to
-	 * force pre-ESTABLISHED data up to user socket.
-	 */
-	if (ti == 0)
-		goto present;
+#define GETTCP(m)       ((struct tcpiphdr *)m->m_pkthdr.header)
 
-	/*
-	 * Find a segment which begins after this one does.
-	 */
-	for (q = tp->seg_next; q != (struct tcpiphdr *)tp;
-	    q = (struct tcpiphdr *)q->ti_next)
-		if (SEQ_GT(q->ti_seq, ti->ti_seq))
-			break;
+        /*
+         * Call with ti==0 after become established to
+         * force pre-ESTABLISHED data up to user socket.
+         */
+        if (ti == 0)
+                goto present;
 
-	/*
-	 * If there is a preceding segment, it may provide some of
-	 * our data already.  If so, drop the data from the incoming
-	 * segment.  If it provides all of our data, drop us.
-	 */
-	if ((struct tcpiphdr *)q->ti_prev != (struct tcpiphdr *)tp) {
-		register int i;
-		q = (struct tcpiphdr *)q->ti_prev;
-		/* conversion to int (in i) handles seq wraparound */
-		i = q->ti_seq + q->ti_len - ti->ti_seq;
-		if (i > 0) {
-			if (i >= ti->ti_len) {
-				tcpstat.tcps_rcvduppack++;
-				tcpstat.tcps_rcvdupbyte += ti->ti_len;
-				m_freem(m);
-				/*
-				 * Try to present any queued data
-				 * at the left window edge to the user.
-				 * This is needed after the 3-WHS
-				 * completes.
-				 */
-				goto present;	/* ??? */
-			}
-			m_adj(m, i);
-			ti->ti_len -= i;
-			ti->ti_seq += i;
-		}
-		q = (struct tcpiphdr *)(q->ti_next);
-	}
-	tcpstat.tcps_rcvoopack++;
-	tcpstat.tcps_rcvoobyte += ti->ti_len;
-	REASS_MBUF(ti) = m;		/* XXX */
+        m->m_pkthdr.header = ti;
 
-	/*
-	 * While we overlap succeeding segments trim them or,
-	 * if they are completely covered, dequeue them.
-	 */
-	while (q != (struct tcpiphdr *)tp) {
-		register int i = (ti->ti_seq + ti->ti_len) - q->ti_seq;
-		if (i <= 0)
-			break;
-		if (i < q->ti_len) {
-			q->ti_seq += i;
-			q->ti_len -= i;
-			m_adj(REASS_MBUF(q), i);
-			break;
-		}
-		q = (struct tcpiphdr *)q->ti_next;
-		m = REASS_MBUF((struct tcpiphdr *)q->ti_prev);
-		remque(q->ti_prev);
-		m_freem(m);
-	}
+        /*
+         * Find a segment which begins after this one does.
+         */
+        for (q = tp->t_segq, p = NULL; q; p = q, q = q->m_nextpkt)
+                if (SEQ_GT(GETTCP(q)->ti_seq, ti->ti_seq))
+                        break;
 
-	/*
-	 * Stick new segment in its place.
-	 */
-	insque(ti, q->ti_prev);
+        /*
+         * If there is a preceding segment, it may provide some of
+         * our data already.  If so, drop the data from the incoming
+         * segment.  If it provides all of our data, drop us.
+         */
+        if (p != NULL) {
+                register int i;
+                /* conversion to int (in i) handles seq wraparound */
+                i = GETTCP(p)->ti_seq + GETTCP(p)->ti_len - ti->ti_seq;
+                if (i > 0) {
+                        if (i >= ti->ti_len) {
+                                tcpstat.tcps_rcvduppack++;
+                                tcpstat.tcps_rcvdupbyte += ti->ti_len;
+                                m_freem(m);
+                                /*
+                                 * Try to present any queued data
+                                 * at the left window edge to the user.
+                                 * This is needed after the 3-WHS
+                                 * completes.
+                                 */
+                                goto present;   /* ??? */
+                        }
+                        m_adj(m, i);
+                        ti->ti_len -= i;
+                        ti->ti_seq += i;
+                }
+        }
+        tcpstat.tcps_rcvoopack++;
+        tcpstat.tcps_rcvoobyte += ti->ti_len;
+
+        /*
+         * While we overlap succeeding segments trim them or,
+         * if they are completely covered, dequeue them.
+         */
+        while (q) {
+                register int i = (ti->ti_seq + ti->ti_len) - GETTCP(q)->ti_seq;
+                if (i <= 0)
+                        break;
+                if (i < GETTCP(q)->ti_len) {
+                        GETTCP(q)->ti_seq += i;
+                        GETTCP(q)->ti_len -= i;
+                        m_adj(q, i);
+                        break;
+                }
+
+                nq = q->m_nextpkt;
+                if (p)
+                        p->m_nextpkt = nq;
+                else
+                        tp->t_segq = nq;
+                m_freem(q);
+                q = nq;
+        }
+
+        if (p == NULL) {
+                m->m_nextpkt = tp->t_segq;
+                tp->t_segq = m;
+        } else {
+                m->m_nextpkt = p->m_nextpkt;
+                p->m_nextpkt = m;
+        }
 
 present:
-	/*
-	 * Present data to user, advancing rcv_nxt through
-	 * completed sequence space.
-	 */
-	if (!TCPS_HAVEESTABLISHED(tp->t_state))
-		return (0);
-	ti = tp->seg_next;
-	if (ti == (struct tcpiphdr *)tp || ti->ti_seq != tp->rcv_nxt)
-		return (0);
-	if (tp->t_state == TCPS_SYN_RECEIVED && ti->ti_len)
-		return (0);
-	do {
-		tp->rcv_nxt += ti->ti_len;
-		flags = ti->ti_flags & TH_FIN;
-		remque(ti);
-		m = REASS_MBUF(ti);
-		ti = (struct tcpiphdr *)ti->ti_next;
-		if (so->so_state & SS_CANTRCVMORE)
-			m_freem(m);
-		else
-			sbappend(&so->so_rcv, m);
-	} while (ti != (struct tcpiphdr *)tp && ti->ti_seq == tp->rcv_nxt);
-	sorwakeup(so);
-	return (flags);
+        /*
+         * Present data to user, advancing rcv_nxt through
+         * completed sequence space.
+         */
+        if (!TCPS_HAVEESTABLISHED(tp->t_state))
+                return (0);
+        q = tp->t_segq;
+        if (!q || GETTCP(q)->ti_seq != tp->rcv_nxt)
+                return (0);
+        do {
+                tp->rcv_nxt += GETTCP(q)->ti_len;
+                flags = GETTCP(q)->ti_flags & TH_FIN;
+                nq = q->m_nextpkt;
+                tp->t_segq = nq;
+                q->m_nextpkt = NULL;
+                if (so->so_state & SS_CANTRCVMORE)
+                        m_freem(q);
+                else
+                        sbappend(&so->so_rcv, q);
+                q = nq;
+        } while (q && GETTCP(q)->ti_seq == tp->rcv_nxt);
+        sorwakeup(so);
+        return (flags);
+
+#undef GETTCP
 }
 
 /*
@@ -295,8 +285,7 @@ tcp_input(m, iphlen)
 	 */
 	tlen = ((struct ip *)ti)->ip_len;
 	len = sizeof (struct ip) + tlen;
-	ti->ti_next = ti->ti_prev = 0;
-	ti->ti_x1 = 0;
+	bzero(ti->ti_x1, sizeof(ti->ti_x1));
 	ti->ti_len = (u_short)tlen;
 	HTONS(ti->ti_len);
 	ti->ti_sum = in_cksum(m, len);
@@ -304,7 +293,6 @@ tcp_input(m, iphlen)
 		tcpstat.tcps_rcvbadsum++;
 		goto drop;
 	}
-#endif /* TUBA_INCLUDE */
 
 	/*
 	 * Check that TCP offset makes sense,
@@ -548,7 +536,7 @@ findpcb:
 				return;
 			}
 		} else if (ti->ti_ack == tp->snd_una &&
-		    tp->seg_next == (struct tcpiphdr *)tp &&
+			tp->t_segq == NULL &&
 		    ti->ti_len <= sbspace(&so->so_rcv)) {
 			/*
 			 * this is a pure, in-sequence data packet

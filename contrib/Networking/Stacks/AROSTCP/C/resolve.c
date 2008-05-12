@@ -66,7 +66,7 @@ int main(void)
     if (rdargs = ReadArgs((UBYTE *)template, (LONG *)args, NULL)) {
       long addr = inet_addr(args->a_ipaddr);
       struct hostent *hp;
-      if (addr == -1)
+      if (addr == INADDR_NONE)
 	hp = gethostbyname(args->a_ipaddr);
       else
         hp = gethostbyaddr((caddr_t)&addr, sizeof(addr), AF_INET);

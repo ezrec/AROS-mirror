@@ -167,7 +167,7 @@
  * Internet address (a structure for historical reasons)
  */
 struct in_addr {
-	u_long s_addr;
+	u_int32_t s_addr;
 };
 
 /*

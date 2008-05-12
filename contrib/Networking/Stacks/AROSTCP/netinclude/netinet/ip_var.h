@@ -40,8 +40,7 @@
  * Overlay for ip header used by other protocols (tcp, udp).
  */
 struct ipovly {
-	caddr_t	ih_next, ih_prev;	/* for protocol sequence q's */
-	u_char	ih_x1;			/* (unused) */
+	u_char	ih_x1[9];			/* (unused) */
 	u_char	ih_pr;			/* protocol */
 	short	ih_len;			/* protocol length */
 	struct	in_addr ih_src;		/* source internet address */

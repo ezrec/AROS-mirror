@@ -37,8 +37,8 @@
 #ifndef _NETINET_TCP_H_
 #define _NETINET_TCP_H_
 
-typedef	u_long	tcp_seq;
-typedef u_long	tcp_cc;			/* connection count per rfc1644 */
+typedef	u_int32_t	tcp_seq;
+typedef u_int32_t	tcp_cc;			/* connection count per rfc1644 */
 
 /*
  * TCP header.

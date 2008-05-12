@@ -241,7 +241,7 @@ D(bug("[AROSTCP](gethostnameadr.c) getanswer()\n"));
     type = _getshort(cp); 
     cp += sizeof(u_short);
     class = _getshort(cp);
-    cp += sizeof(u_short) + sizeof(u_long);
+    cp += sizeof(u_short) + sizeof(u_int32_t);
     n = _getshort(cp);
     cp += sizeof(u_short);
     

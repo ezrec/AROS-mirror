@@ -44,8 +44,7 @@
  * Tcp control block, one per tcp; fields:
  */
 struct tcpcb {
-	struct	tcpiphdr *seg_next;	/* sequencing queue */
-	struct	tcpiphdr *seg_prev;
+	struct  mbuf *t_segq; /* sequencing queue */
 	short	t_state;		/* state of this connection */
 	short	t_timer[TCPT_NTIMERS];	/* tcp timers */
 	short	t_rxtshift;		/* log(2) of rexmt exp. backoff */
@@ -347,7 +346,7 @@ void	 tcp_pulloutofband __P((struct socket *,
 void	 tcp_quench __P((struct inpcb *, int));
 int	 tcp_reass __P((struct tcpcb *, struct tcpiphdr *, struct mbuf *));
 void	 tcp_respond __P((struct tcpcb *,
-	    struct tcpiphdr *, struct mbuf *, u_long, u_long, int));
+	    struct tcpiphdr *, struct mbuf *, tcp_seq, tcp_seq, int));
 struct rtentry *
 	 tcp_rtlookup __P((struct inpcb *));
 void	 tcp_setpersist __P((struct tcpcb *));
