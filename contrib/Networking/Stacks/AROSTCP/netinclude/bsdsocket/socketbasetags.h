@@ -119,7 +119,7 @@
  * only 1,2 & 4 are legal 'size' values. If the 'size' value is illegal,
  * the tag is set to 0, which causes SocketBaseTagList() to fail.
  */
-#define SBTC_ERRNOPTR(size)    ((size == sizeof(long)) ? SBTC_ERRNOLONGPTR   :\
+#define SBTC_ERRNOPTR(size)    ((size == sizeof(int)) ? SBTC_ERRNOLONGPTR   :\
 				((size == sizeof(short)) ? SBTC_ERRNOWORDPTR :\
 				 ((size == sizeof(char)) ? SBTC_ERRNOBYTEPTR :\
 				  0)))
