@@ -718,7 +718,7 @@ _AHI_BestAudioIDA( struct TagItem* tags,
   {
     // Give the user's preferred sound card extra points
     { AHIDB_AudioID,    AHIBase->ahib_AudioMode },
-    { TAG_MORE,         (ULONG) &const_defdizzy }
+    { TAG_MORE,         (IPTR) &const_defdizzy }
   };
 
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)
@@ -726,7 +726,7 @@ _AHI_BestAudioIDA( struct TagItem* tags,
     Debug_BestAudioIDA(tags);
   }
 
-  dizzytags = (struct TagItem *) GetTagData(AHIB_Dizzy, (ULONG) defdizzy,tags);
+  dizzytags = (struct TagItem *) GetTagData(AHIB_Dizzy, (IPTR) defdizzy,tags);
 
   while(AHI_INVALID_ID != (id=AHI_NextAudioID(id)))
   {

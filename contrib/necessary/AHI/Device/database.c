@@ -372,22 +372,22 @@ _AHI_AddAudioMode( struct TagItem* DBtags,
         if(tag->ti_Data) switch(tag->ti_Tag)
         {
           case AHIDB_Data:
-            tp->ti_Data = ((ULONG) &node->ahidbn_Tags[tagitems]);
+            tp->ti_Data = ((IPTR) &node->ahidbn_Tags[tagitems]);
             CopyMem((APTR)tag->ti_Data, (APTR)tp->ti_Data, datalength);
             break;
 
           case AHIDB_Name:
-            tp->ti_Data = ((ULONG) &node->ahidbn_Tags[tagitems]) + datalength;
+            tp->ti_Data = ((IPTR) &node->ahidbn_Tags[tagitems]) + datalength;
             strcpy((UBYTE *)tp->ti_Data, (UBYTE *)tag->ti_Data);
             break;
 
           case AHIDB_Driver:
-            tp->ti_Data= ((ULONG) &node->ahidbn_Tags[tagitems]) + datalength + namelength;
+            tp->ti_Data= ((IPTR) &node->ahidbn_Tags[tagitems]) + datalength + namelength;
             strcpy((UBYTE *)tp->ti_Data, (UBYTE *)tag->ti_Data);
             break;
 
           case AHIDB_DriverBaseName:
-            tp->ti_Data = ((ULONG) &node->ahidbn_Tags[tagitems]) + datalength + namelength + driverlength;
+            tp->ti_Data = ((IPTR) &node->ahidbn_Tags[tagitems]) + datalength + namelength + driverlength;
             strcpy((UBYTE *)tp->ti_Data, (UBYTE *)tag->ti_Data);
             break;
 
@@ -730,7 +730,7 @@ AddModeFile ( UBYTE *filename )
                 }
               }
 
-              extratags[0].ti_Data = (ULONG) name->sp_Data;
+              extratags[0].ti_Data = (IPTR) name->sp_Data;
 
               // Now verify that the driver can really be opened
 
@@ -761,7 +761,7 @@ AddModeFile ( UBYTE *filename )
                   else
                   {
                     // It is a DEVS:AHI driver!
-                    extratags[2].ti_Data = (ULONG) "DEVS:AHI";
+                    extratags[2].ti_Data = (IPTR) "DEVS:AHI";
 
                     CloseLibrary( driver_base );
                   }
@@ -783,7 +783,7 @@ AddModeFile ( UBYTE *filename )
                 rc = FALSE;
               }
 
-              extratags[1].ti_Data = (ULONG) data->sp_Data;
+              extratags[1].ti_Data = (IPTR) data->sp_Data;
             }
 
             while(rc && ci != NULL)
@@ -854,7 +854,7 @@ AddModeFile ( UBYTE *filename )
               {
                 // Link taglists
 
-                extratags[3].ti_Data = (ULONG) ci->ci_Data;
+                extratags[3].ti_Data = (IPTR) ci->ci_Data;
 
                 rc = AHI_AddAudioMode(extratags);
 

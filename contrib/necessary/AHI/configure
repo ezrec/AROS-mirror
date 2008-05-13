@@ -1573,6 +1573,14 @@ _ACEOF
   asflags="--defsym CPU=${CPU} --defsym LITTLE_ENDIAN=1"
   resident=""                                        stripflag="--strip-unneeded"
  ;;
+ x86_64-*-aros)
+ : ${CPU="x86_64"}
+  cflags=""
+  optflags="-mcpu=k8 -O2 -fomit-frame-pointer"
+  linkerflags=""
+  asflags="--defsym CPU=${CPU} --defsym LITTLE_ENDIAN=1 --defsym x86_64=1"
+  resident=""                                        stripflag="--strip-unneeded"
+ ;;
  *)
   { echo "$as_me:$LINENO: WARNING: Unknown architecture!" >&5
 echo "$as_me: WARNING: Unknown architecture!" >&2;}

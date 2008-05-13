@@ -496,9 +496,9 @@ InitUnit ( ULONG unit,
               iounit
             };
 
-            iounit->Process = CreateNewProcTags( NP_Entry,    (ULONG) &m68k_DevProc,
-                                                 NP_Name,     (ULONG) AHINAME " Unit Process",
-                                                 NP_Priority, AHI_PRI,
+            iounit->Process = CreateNewProcTags( NP_Entry,    (IPTR) &m68k_DevProc,
+                                                 NP_Name,     (IPTR) AHINAME " Unit Process",
+                                                 NP_Priority, (IPTR) AHI_PRI,
                                                  TAG_DONE );
 
             if( iounit->Process != NULL )
@@ -604,7 +604,7 @@ ReadConfig ( struct AHIDevUnit *iounit,
 
   if((iff=AllocIFF()))
   {
-    iff->iff_Stream=(ULONG) Open("ENV:Sys/ahi.prefs", MODE_OLDFILE);
+    iff->iff_Stream=(IPTR) Open("ENV:Sys/ahi.prefs", MODE_OLDFILE);
     if(iff->iff_Stream)
     {
       InitIFFasDOS(iff);

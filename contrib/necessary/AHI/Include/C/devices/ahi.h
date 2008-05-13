@@ -290,60 +290,60 @@ struct AHIEffChannelInfo
 /*** DEFS */
 
 #define AHINAME			"ahi.device"
-#define AHI_INVALID_ID		(~0UL)			/* Invalid Audio ID */
-#define AHI_DEFAULT_ID		(0x00000000UL)		/* Only for AHI_AllocAudioA()! */
-#define AHI_LOOPBACK_ID		(0x00000001UL)		/* Special sample render Audio ID */
-#define AHI_DEFAULT_FREQ	(0UL)			/* Only for AHI_AllocAudioA()! */
-#define AHI_MIXFREQ		(~0UL)			/* Special frequency for AHI_SetFreq() */
+#define AHI_INVALID_ID		(~0U)			/* Invalid Audio ID */
+#define AHI_DEFAULT_ID		(0x00000000U)		/* Only for AHI_AllocAudioA()! */
+#define AHI_LOOPBACK_ID		(0x00000001U)		/* Special sample render Audio ID */
+#define AHI_DEFAULT_FREQ	(0U)			/* Only for AHI_AllocAudioA()! */
+#define AHI_MIXFREQ		(~0U)			/* Special frequency for AHI_SetFreq() */
 #define AHI_NOSOUND		(0xffffU)		/* Turns a channel off */
 
  /* Set#? Flags */
-#define AHISF_IMM		(1UL<<0)	/* Trigger action immediately	*/
-#define AHISF_NODELAY		(1UL<<1)	/* Don't wait for zero-crossing */
+#define AHISF_IMM		(1U<<0)	/* Trigger action immediately	*/
+#define AHISF_NODELAY		(1U<<1)	/* Don't wait for zero-crossing */
 
-#define AHISF_NONE		(0UL)		/* No flags (V6)		*/
+#define AHISF_NONE		(0U)		/* No flags (V6)		*/
 
-#define AHISB_IMM		(0UL)
-#define AHISB_NODELAY		(1UL)
+#define AHISB_IMM		(0U)
+#define AHISB_NODELAY		(1U)
 
  /* Effect Types */
-#define AHIET_CANCEL		(1UL<<31)		/* OR with effect to disable */
-#define AHIET_MASTERVOLUME	(1UL)
-#define AHIET_OUTPUTBUFFER	(2UL)
+#define AHIET_CANCEL		(1U<<31)		/* OR with effect to disable */
+#define AHIET_MASTERVOLUME	(1U)
+#define AHIET_OUTPUTBUFFER	(2U)
 /* --- New for V4 --- */
-#define AHIET_DSPMASK		(3UL)
-#define AHIET_DSPECHO		(4UL)
-#define AHIET_CHANNELINFO	(5UL)
+#define AHIET_DSPMASK		(3U)
+#define AHIET_DSPECHO		(4U)
+#define AHIET_CHANNELINFO	(5U)
 
  /* Sound Types */
-#define AHIST_NOTYPE		(~0UL)			/* Private */
-#define AHIST_SAMPLE		(0UL)			/* 8 or 16 bit sample */
-#define AHIST_DYNAMICSAMPLE	(1UL)			/* Dynamic sample */
-#define AHIST_INPUT		(1UL<<29)		/* The input from your sampler */
-#define AHIST_BW		(1UL<<30)		/* Private */
+#define AHIST_NOTYPE		(~0U)			/* Private */
+#define AHIST_SAMPLE		(0U)			/* 8 or 16 bit sample */
+#define AHIST_DYNAMICSAMPLE	(1U)			/* Dynamic sample */
+#define AHIST_INPUT		(1U<<29)		/* The input from your sampler */
+#define AHIST_BW		(1U<<30)		/* Private */
 
  /* Sample types */
 /* Note that only AHIST_M8S, AHIST_S8S, AHIST_M16S and AHIST_S16S
    (plus AHIST_M32S, AHIST_S32S and AHIST_L7_1 in V6)
    are supported by AHI_LoadSound(). */
-#define AHIST_M8S		(0UL)			/* Mono, 8 bit signed (BYTE) */
-#define AHIST_M16S		(1UL)			/* Mono, 16 bit signed (WORD) */
-#define AHIST_S8S		(2UL)			/* Stereo, 8 bit signed (2×BYTE) */
-#define AHIST_S16S		(3UL)			/* Stereo, 16 bit signed (2×WORD) */
-#define AHIST_M32S		(8UL)			/* Mono, 32 bit signed (LONG) */
-#define AHIST_S32S		(10UL)			/* Stereo, 32 bit signed (2×LONG) */
+#define AHIST_M8S		(0U)			/* Mono, 8 bit signed (BYTE) */
+#define AHIST_M16S		(1U)			/* Mono, 16 bit signed (WORD) */
+#define AHIST_S8S		(2U)			/* Stereo, 8 bit signed (2×BYTE) */
+#define AHIST_S16S		(3U)			/* Stereo, 16 bit signed (2×WORD) */
+#define AHIST_M32S		(8U)			/* Mono, 32 bit signed (LONG) */
+#define AHIST_S32S		(10U)			/* Stereo, 32 bit signed (2×LONG) */
 
-#define AHIST_M8U		(4UL)			/* OBSOLETE! */
-#define AHIST_L7_1		(0x00c3000aUL)		/* 7.1, 32 bit signed (8×LONG) */
+#define AHIST_M8U		(4U)			/* OBSOLETE! */
+#define AHIST_L7_1		(0x00c3000aU)		/* 7.1, 32 bit signed (8×LONG) */
 
  /* Error codes */
-#define AHIE_OK			(0UL)			/* No error */
-#define AHIE_NOMEM		(1UL)			/* Out of memory */
-#define AHIE_BADSOUNDTYPE	(2UL)			/* Unknown sound type */
-#define AHIE_BADSAMPLETYPE	(3UL)			/* Unknown/unsupported sample type */
-#define AHIE_ABORTED		(4UL)			/* User-triggered abortion */
-#define AHIE_UNKNOWN		(5UL)			/* Error, but unknown */
-#define AHIE_HALFDUPLEX		(6UL)			/* CMD_WRITE/CMD_READ failure */
+#define AHIE_OK			(0U)			/* No error */
+#define AHIE_NOMEM		(1U)			/* Out of memory */
+#define AHIE_BADSOUNDTYPE	(2U)			/* Unknown sound type */
+#define AHIE_BADSAMPLETYPE	(3U)			/* Unknown/unsupported sample type */
+#define AHIE_ABORTED		(4U)			/* User-triggered abortion */
+#define AHIE_UNKNOWN		(5U)			/* Error, but unknown */
+#define AHIE_HALFDUPLEX		(6U)			/* CMD_WRITE/CMD_READ failure */
 
 
 
@@ -419,7 +419,7 @@ struct AHIRequest
 
  /* Flags for OpenDevice() */
 
-#define	AHIDF_NOMODESCAN	(1UL<<0)
-#define	AHIDB_NOMODESCAN	(0UL)
+#define	AHIDF_NOMODESCAN	(1U<<0)
+#define	AHIDB_NOMODESCAN	(0U)
 
 #endif /* DEVICES_AHI_H */

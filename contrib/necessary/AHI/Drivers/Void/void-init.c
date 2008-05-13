@@ -15,7 +15,7 @@ DriverInit( struct DriverBase* AHIsubBase )
 
   VoidBase->dosbase = OpenLibrary( DOSNAME, 37 );
 
-  if( DOSBase == NULL )
+  if( VoidBase->dosbase == NULL )
   {
     Req( "Unable to open 'dos.library' version 37.\n" );
     return FALSE;

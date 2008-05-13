@@ -85,6 +85,15 @@ case $host in
   resident=""                                      dnl *** Not supported (yet?)
   stripflag="--strip-unneeded"
  ;;
+ x86_64-*-aros)
+ : ${CPU="x86_64"}
+  cflags=""
+  optflags="-mcpu=k8 -O2 -fomit-frame-pointer"
+  linkerflags=""
+  asflags="--defsym CPU=${CPU} --defsym LITTLE_ENDIAN=1 --defsym x86_64=1"
+  resident=""
+  stripflag="--strip-unneeded"
+ ;;
  *)
   AC_MSG_WARN(Unknown architecture!)
  ;;
