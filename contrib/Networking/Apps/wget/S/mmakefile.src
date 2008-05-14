@@ -5,8 +5,10 @@ FILES := Package-Startup
 
 #MM- aros-tcpip-apps-wget : aros-tcpip-apps-wget-startup
 
+#MM- aros-tcpip-apps-wget-startup : workbench-prefs-envarc aros-tcpip-apps-wget-envpackage aros-tcpip-apps-wget-startupfiles
+
 #MM
-aros-tcpip-apps-wget-startup :
+aros-tcpip-apps-wget-envpackage :
 	$(ECHO) "Extras:Networking/Apps/Wget" >$(AROS_PACKAGES)/wget
 
-%copy_files_q dst=$(AROS_CONTRIB)/Networking/Apps/WGet/S maketarget=aros-tcpip-apps-wget-startup
+%copy_files_q dst=$(AROS_CONTRIB)/Networking/Apps/WGet/S maketarget=aros-tcpip-apps-wget-startupfiles
