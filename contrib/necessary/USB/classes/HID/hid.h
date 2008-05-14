@@ -124,7 +124,8 @@ typedef struct MouseData {
     usb_hid_descriptor_t        *hd;
     char                        *report;
     uint16_t                    reportLength;
-
+    uint16_t                    nreport;
+    
     struct Process              *mouse_task;
     
     uint8_t                     rel_x, rel_y, rel_z;

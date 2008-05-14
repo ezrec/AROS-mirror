@@ -224,7 +224,7 @@ OOP_Object *METHOD(HID, Root, New)
         hid->sd = SD(cl);
         hid->o = o;
         
-        D(bug("[HID::New()] Configuring the device...\n"));
+        D(bug("[HID::New()] HidData=%p Configuring the device...\n", hid));
 
         /* Configure the HID device */
         HIDD_USBDevice_Configure(o, 0);

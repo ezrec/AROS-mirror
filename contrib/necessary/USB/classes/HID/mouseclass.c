@@ -46,6 +46,8 @@ void METHOD(USBMouse, Hidd_USBHID, ParseReport)
 {
     MouseData *mouse = OOP_INST_DATA(cl, o);
     
+    D(OOP_DoSuperMethod(cl, o, msg));
+    
     if (mouse->mouse_task)
     {
         int x=0,y=0,z=0,buttons=0;
@@ -103,11 +105,13 @@ OOP_Object *METHOD(USBMouse, Root, New)
     if (o)
     {
         MouseData *mouse = OOP_INST_DATA(cl, o);
+        int i;
+        
         mouse->sd = SD(cl);
         mouse->o = o;
         mouse->hd = HIDD_USBHID_GetHidDescriptor(o);
         uint32_t flags;
-
+        
         mouse->head = mouse->tail = 0;
         
         HIDD_USBHID_SetProtocol(o, 1);
@@ -122,42 +126,53 @@ OOP_Object *METHOD(USBMouse, Root, New)
         
         HIDD_USBHID_GetReportDescriptor(o, mouse->reportLength, mouse->report);
 
-        if (hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_GENERIC_DESKTOP, HUG_X),
-                   0, hid_input, &mouse->loc_x, &flags, &mouse->range_x))
-        {
-            mouse->rel_x = flags & HIO_RELATIVE;
-
-            D(bug("[USBMouse::New()] Has %s X ranging from %d to %d\n", mouse->rel_x?"relative":"absolute",
-                    mouse->range_x.minimum, mouse->range_x.maximum));
-        }
+        mouse->nreport = hid_maxrepid(mouse->report, mouse->reportLength) + 1;
         
-        if (hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_GENERIC_DESKTOP, HUG_Y),
-                   0, hid_input, &mouse->loc_y, &flags, &mouse->range_y))
+        for (i=0; i < mouse->nreport; i++)
         {
-            mouse->rel_y = flags & HIO_RELATIVE;
-            D(bug("[USBMouse::New()] Has %s Y ranging from %d to %d\n", mouse->rel_y?"relative":"absolute",
-                    mouse->range_y.minimum, mouse->range_y.maximum));            
-        }
-
-        if (!hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_GENERIC_DESKTOP, HUG_Z),
-                   0, hid_input, &mouse->loc_wheel, &flags, NULL))
-            hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_GENERIC_DESKTOP, HUG_WHEEL),
-                       0, hid_input, &mouse->loc_wheel, &flags, NULL);
-        
-        if (mouse->loc_wheel.size) {
-            mouse->rel_z = flags & HIO_RELATIVE; 
-            D(bug("[USBMouse::New()] Has %s Z\n", mouse->rel_z ? "relative":"absolute"));
-        }
-        
-        for (mouse->loc_btncnt = 1; mouse->loc_btncnt <= MAX_BTN; mouse->loc_btncnt++)
-        {
-            if (!hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_BUTTON, mouse->loc_btncnt),
-                       0, hid_input, &mouse->loc_btn[mouse->loc_btncnt-1], &flags, NULL)) {
+            D(bug("[USBMouse::New() Checking report %d\n", i));
+            
+            if (hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_GENERIC_DESKTOP, HUG_X),
+                       i, hid_input, &mouse->loc_x, &flags, &mouse->range_x))
+            {
+                D(bug("[USBMouse::New()] Found report with mouse coordinates\n"));
                 
-                mouse->loc_btncnt--;
-                break;
+                mouse->rel_x = flags & HIO_RELATIVE;
+                D(bug("[USBMouse::New()] Has %s X ranging from %d to %d\n", mouse->rel_x?"relative":"absolute",
+                        mouse->range_x.minimum, mouse->range_x.maximum));
             }
-        }        
+            else
+                continue;
+            
+            if (hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_GENERIC_DESKTOP, HUG_Y),
+                       i, hid_input, &mouse->loc_y, &flags, &mouse->range_y))
+            {
+                mouse->rel_y = flags & HIO_RELATIVE;
+                D(bug("[USBMouse::New()] Has %s Y ranging from %d to %d\n", mouse->rel_y?"relative":"absolute",
+                        mouse->range_y.minimum, mouse->range_y.maximum));            
+            }
+            
+            if (!hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_GENERIC_DESKTOP, HUG_Z),
+                       i, hid_input, &mouse->loc_wheel, &flags, NULL))
+                hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_GENERIC_DESKTOP, HUG_WHEEL),
+                           i, hid_input, &mouse->loc_wheel, &flags, NULL);
+            
+            if (mouse->loc_wheel.size) {
+                mouse->rel_z = flags & HIO_RELATIVE;
+                D(bug("[USBMouse::New()] Has %s Z\n", mouse->rel_z ? "relative":"absolute"));
+            }
+            
+            for (mouse->loc_btncnt = 1; mouse->loc_btncnt <= MAX_BTN; mouse->loc_btncnt++)
+            {
+                if (!hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_BUTTON, mouse->loc_btncnt),
+                           i, hid_input, &mouse->loc_btn[mouse->loc_btncnt-1], &flags, NULL)) {
+                    
+                    mouse->loc_btncnt--;
+                    break;
+                }
+            }
+        }
+
         D(bug("[USBMouse::New()] Pointing device has %d buttons\n", mouse->loc_btncnt));
         
         struct TagItem tags[] = {
