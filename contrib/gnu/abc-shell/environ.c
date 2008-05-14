@@ -10,7 +10,7 @@
 char **environ = NULL;
 
 
-#if defined(__amigaos4__)
+#if defined(__amigaos4__) || defined(__AROS__)
 
 #define MAX_ENV_SIZE 1024  /* maximum number of environ entries */
 

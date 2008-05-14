@@ -117,7 +117,11 @@ extern int dup2(int, int);
 
 #ifndef EXECSHELL
 /* shell to exec scripts (see also $SHELL initialization in main.c) */
+#ifdef __AROS__
+#  define EXECSHELL     "/SYS/Development/bin/sh"
+#else
 #  define EXECSHELL     "/SDK/C/sh"
+#endif
 #  define EXECSHELL_STR "EXECSHELL"
 #endif
 

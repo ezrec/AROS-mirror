@@ -160,7 +160,7 @@ int pipe(int filedes[2])
                  pipenum++,GetUniqueID());
 #endif
 #else
-#if defined(AROS)
+#if defined(__AROS__)
         snprintf(pipe_name, sizeof(pipe_name), "/PIPEFS/%x%08x/4096/0",
                  pipenum++,GetUniqueID());
 #elif defined(__amigaos4__)
@@ -243,6 +243,7 @@ void __translate_path(const char *in, char *out)
 			{
 				/* A "solitary" dot, output it */
 				*out++ = '.';
+				*out++ = *in;
 			}
 		}
 		else
@@ -400,25 +401,6 @@ struct command_data
     struct Task *parent;
 };
 
-
-#if defined (__AROS__)
-static void __get_default_file(int fdnum, FILE** fd)
-{
-	if (fdnum == STDIN_FILENO)
-	{
-		*fd = Input();
-		return;
-	}
-
-	if (fdnum == STDOUT_FILENO)
-		*fd = Output();
-	else
-	{
-		struct Task* thisTask = FindTask(0);
-		*fd = ((struct Process *)thisTask)->pr_CES;
-	}
-}
-#endif
 
 static LONG __get_default_stack_size()
 {
@@ -610,6 +592,7 @@ int execve(const char *filename, char *const argv[], char *const envp[])
                 BPTR seglist = LoadSeg(fname);
                 if(seglist)
                 {
+#ifndef __AROS__
                     /* check if we have an executable */
                     struct PseudoSegList *ps = NULL;
                     if(!GetSegListInfoTags( seglist, GSLI_Native, &ps, TAG_DONE))
@@ -622,15 +605,18 @@ int execve(const char *filename, char *const argv[], char *const envp[])
 
                     if( ps != NULL )
                     {
+#endif
                         SetProgramName(fname);
                         lastresult=RunCommand(seglist,__get_default_stack_size(),
                                               full,strlen(full));
                         errno=0;
+#ifndef __AROS__
                     }
                     else
                     {
                         errno=ENOEXEC;
                     }
+#endif
                     UnLoadSeg(seglist);
                     seglist = 0;
                 }
@@ -778,16 +764,16 @@ exchild(struct op *t, int flags,
         proc = CreateNewProcTags(
             NP_Entry,                execute_child,
 #if !defined(__AROS__)
-            NP_Child,                true,
+            NP_Child,                (IPTR) true,
 #endif
-            NP_StackSize,            __get_default_stack_size(),
-            NP_Input,                amigafd[0],
-            NP_Output,               amigafd[1],
-            NP_CloseOutput,          false,
-            NP_CloseInput,           false,
-            NP_Error,                amigafd[2],
-            NP_CloseError,           false,
-            NP_Cli,                  true,
+            NP_StackSize,            (IPTR) __get_default_stack_size(),
+            NP_Input,                (IPTR) amigafd[0],
+            NP_Output,               (IPTR) amigafd[1],
+            NP_CloseOutput,          (IPTR) false,
+            NP_CloseInput,           (IPTR) false,
+            NP_Error,                (IPTR) amigafd[2],
+            NP_CloseError,           (IPTR) false,
+            NP_Cli,                  (IPTR) true,
             NP_Name,                 name,
 #if !defined(__AROS__)
             NP_CommandName,          name,
@@ -796,12 +782,17 @@ exchild(struct op *t, int flags,
             NP_UserData,             (int)&taskdata,
             NP_NotifyOnDeathSigTask, thisTask,
 #endif
+#ifdef __AROS__
+            NP_UserData,             &taskdata,
+#endif
             TAG_DONE);
 
         if ( proc != NULL ) {
 #ifndef __amigaos4__
 #warning this code has been included!
+#ifndef __AROS__
                 proc->pr_Task.tc_UserData = &taskdata;
+#endif
                 Wait(SIGBREAKF_CTRL_F);
 #else
                 Wait(SIGF_CHILD);

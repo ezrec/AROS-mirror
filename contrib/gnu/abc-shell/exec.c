@@ -6,6 +6,9 @@
 #include <sys/stat.h>
 #include "sh.h"
 #include "c_test.h"
+#include <dos/dos.h>
+#include <dos/bptr.h>
+#include <proto/dos.h>
 
 /* Does ps4 get parameter substitutions done? */
 #define PS4_SUBSTITUTE(s)      substitute((s), 0)

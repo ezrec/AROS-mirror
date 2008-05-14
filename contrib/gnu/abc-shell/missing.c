@@ -63,6 +63,7 @@ ksh_times(struct tms *tms)
 
 #endif
 
+#ifndef __AROS__
 int
 dup2(int oldd, int newd)
 {
@@ -82,3 +83,4 @@ dup2(int oldd, int newd)
 
         return fcntl(oldd, F_DUPFD, newd);
 }
+#endif

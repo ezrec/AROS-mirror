@@ -379,7 +379,7 @@ static APTR SetProcWindow(APTR new_proc_window)
 static int
 test_stat(const char *path, struct stat *statb)
 {
-#if AMIGA
+#if defined AMIGA && !defined __AROS__
         int res;
 	APTR old_proc_window;
         old_proc_window = SetProcWindow((APTR)-1);
