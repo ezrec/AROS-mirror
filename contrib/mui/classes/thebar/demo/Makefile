@@ -16,7 +16,7 @@
 #
 # TheBar class Support Site:  http://www.sf.net/projects/thebar
 #
-# $Id: Makefile 182 2008-02-01 20:50:57Z alforan $
+# $Id: Makefile 259 2008-04-15 09:48:33Z thboeckel $
 #
 #***************************************************************************/
 
@@ -233,25 +233,25 @@ endif
 # Here starts all stuff that is common for all target platforms and
 # hosts.
 
-DEMO1OBJS  = $(OBJDIR)/demo1.o
+DEMO1OBJS  = $(OBJDIR)/demo1.o $(OBJDIR)/vastubs.o
 
-DEMO2OBJS  = $(OBJDIR)/demo2.o
+DEMO2OBJS  = $(OBJDIR)/demo2.o $(OBJDIR)/vastubs.o
 
-DEMO3OBJS  = $(OBJDIR)/demo3.o
+DEMO3OBJS  = $(OBJDIR)/demo3.o $(OBJDIR)/vastubs.o
 
-DEMO4OBJS  = $(OBJDIR)/demo4.o
+DEMO4OBJS  = $(OBJDIR)/demo4.o $(OBJDIR)/vastubs.o
 
-DEMO5OBJS  = $(OBJDIR)/demo5.o
+DEMO5OBJS  = $(OBJDIR)/demo5.o $(OBJDIR)/vastubs.o
 
-DEMO6OBJS  = $(OBJDIR)/demo6.o
+DEMO6OBJS  = $(OBJDIR)/demo6.o $(OBJDIR)/vastubs.o
 
-DEMO7OBJS  = $(OBJDIR)/demo7.o
+DEMO7OBJS  = $(OBJDIR)/demo7.o $(OBJDIR)/vastubs.o
 
-DEMO8OBJS  = $(OBJDIR)/demo8.o
+DEMO8OBJS  = $(OBJDIR)/demo8.o $(OBJDIR)/vastubs.o
 
-DEMO9OBJS  = $(OBJDIR)/demo9.o
+DEMO9OBJS  = $(OBJDIR)/demo9.o $(OBJDIR)/vastubs.o
 
-DEMO10OBJS = $(OBJDIR)/demo10.o
+DEMO10OBJS = $(OBJDIR)/demo10.o $(OBJDIR)/vastubs.o
 
 #
 
