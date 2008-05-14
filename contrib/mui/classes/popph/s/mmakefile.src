@@ -3,10 +3,12 @@ include $(TOP)/config/make.cfg
 
 FILES := Package-Startup Package-Shutdown
 
+#MM- contrib-zune-classes-popph-startup : workbench-prefs-envarc contrib-zune-classes-popph-startupfiles contrib-zune-classes-popph-envpackage
+
 #MM- contrib-zune-classes-popph-class      : contrib-zune-classes-popph-startup
 
 #MM
-contrib-zune-classes-popph-startup :
+contrib-zune-classes-popph-envpackage :
 	$(ECHO) "Extras:Zune/MCC_Popph" >$(AROS_PACKAGES)/MCC_Popph
 
-%copy_files_q dst=$(CONTRIBDIR)/Zune/MCC_Popph/S maketarget=contrib-zune-classes-popph-startup
+%copy_files_q dst=$(CONTRIBDIR)/Zune/MCC_Popph/S maketarget=contrib-zune-classes-popph-startupfiles
