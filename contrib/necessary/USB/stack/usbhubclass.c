@@ -440,9 +440,20 @@ static void hub_enable(OOP_Class *cl, OOP_Object *o)
 static void hub_disable(OOP_Class *cl, OOP_Object *o)
 {
     HubData *hub = OOP_INST_DATA(cl, o);
+    int pwrdly, port;
 
     if (!hub->got_descriptor)
         hub->got_descriptor = HIDD_USBHub_GetHubDescriptor(o, &hub->descriptor);
+
+    pwrdly = hub->descriptor.bPwrOn2PwrGood * UHD_PWRON_FACTOR + USB_EXTRA_POWER_UP_TIME;
+
+    for (port = 1; port <= hub->descriptor.bNbrPorts; port++)
+    {
+        if (!HIDD_USBHub_ClearPortFeature(o, port, UHF_PORT_POWER))
+            bug("[USBHub] PowerOff on port %d failed\n", port);
+        
+        USBDelay(hub->tr, pwrdly);
+    }
 } 
 
 static void hub_explore(OOP_Class *cl, OOP_Object *o)

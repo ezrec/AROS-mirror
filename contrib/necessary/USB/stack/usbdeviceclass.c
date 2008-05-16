@@ -259,8 +259,6 @@ BOOL METHOD(USBDevice, Hidd_USBDevice, GetDescriptor)
 
     ret = HIDD_USBDevice_ControlMessage(o, NULL, &req, msg->descriptor, msg->length);
     
-    DumpDescriptor(msg->descriptor);
-    
     return ret;
 }
 
