@@ -152,7 +152,7 @@ struct DevData
 struct UnitData
   {
     struct Message           ud_Message;
-    ULONG                    ud_Hardware;
+    IPTR                     ud_Hardware;
     struct Library          *ud_SysBase;
     struct Library          *ud_PrometheusBase;
     struct Library          *ud_DOSBase;
@@ -222,7 +222,7 @@ void S2GetGlobalStats(struct UnitData *ud, struct IOSana2Req *req);
 
 void HardwareReset(struct UnitData *ud);
 void HardwareInit (struct UnitData *ud);
-ULONG FindHardware(struct DevData *dd, WORD unit, struct UnitData *ud);
+IPTR FindHardware(struct DevData *dd, WORD unit, struct UnitData *ud);
 void GoOnline (struct UnitData *ud);
 void GoOffline(struct UnitData *ud);
 void GetHwAddress(struct UnitData *ud);
@@ -388,7 +388,8 @@ APTR DevExpunge(REG(a6, struct DevData *dd))
     Remove((struct Node*)dd);
     CloseDeviceLibraries(dd);
     seglist = dd->dd_SegList;
-    FreeMem((APTR)dd - dd->dd_Lib.lib_NegSize, (LONG)dd->dd_Lib.lib_PosSize + (LONG)dd->dd_Lib.lib_NegSize);
+    FreeMem((APTR)dd - dd->dd_Lib.lib_NegSize,
+        (IPTR)dd->dd_Lib.lib_PosSize + (IPTR)dd->dd_Lib.lib_NegSize);
     DBG("DevExpunge(): expunged.");
     return seglist;
   }
@@ -564,9 +565,9 @@ LONG PrepareCookie(struct IOSana2Req *req, struct DevData *dd)
 
         if (bfun = AllocMem(sizeof(struct BuffFunctions), MEMF_ANY))
           {
-            bfun->bf_CopyFrom = (APTR)GetTagData(S2_CopyFromBuff, (ULONG)NULL,
+            bfun->bf_CopyFrom = (APTR)GetTagData(S2_CopyFromBuff, (IPTR)NULL,
               (struct TagItem*)req->ios2_BufferManagement);
-            bfun->bf_CopyTo = (APTR)GetTagData(S2_CopyToBuff, (ULONG)NULL,
+            bfun->bf_CopyTo = (APTR)GetTagData(S2_CopyToBuff, (IPTR)NULL,
               (struct TagItem*)req->ios2_BufferManagement);
 
             if (bfun->bf_CopyFrom && bfun->bf_CopyTo)
@@ -588,16 +589,19 @@ LONG RunTask(struct DevData *dd, struct UnitData *ud)
   {
     USE(SysBase)
     USE(DOSBase)
+    const struct TagItem task_tags[] =
+    {
+      {NP_Entry, (IPTR)UnitTask},
+      {NP_Name, (IPTR)ud->ud_Name},
+      {NP_Priority, 6},
+      {TAG_END, 0}
+    };
 
     DBG("RunTask() called.");
 
     if(ud->ud_LifeTime = CreateMsgPort())
       {
-        if (ud->ud_Task = (struct Task*)CreateNewProcTags(
-          NP_Entry, (LONG)UnitTask,
-          NP_Name, (LONG)ud->ud_Name,
-          NP_Priority, 6,
-        TAG_END))
+        if (ud->ud_Task = (struct Task*)CreateNewProc(task_tags))
           {
             WORD i;
 
@@ -1062,12 +1066,12 @@ void RemoveInterrupt(struct UnitData *ud)
 ///
 /// FindHardware()
 
-ULONG FindHardware(struct DevData *dd, WORD unit, struct UnitData *ud)
+IPTR FindHardware(struct DevData *dd, WORD unit, struct UnitData *ud)
   {
     USE(PrometheusBase)
     WORD u = unit;
     APTR board = NULL;
-    ULONG hwbase;
+    IPTR hwbase;
 
     while (u-- >= 0)
       {
@@ -1082,10 +1086,10 @@ ULONG FindHardware(struct DevData *dd, WORD unit, struct UnitData *ud)
       {
         ud->ud_Board = board;
         Prm_GetBoardAttrsTags(board,
-          PRM_MemoryAddr0, (LONG)&hwbase,
+          PRM_MemoryAddr0, (IPTR)&hwbase,
         TAG_END);
         Prm_SetBoardAttrsTags(board,
-          PRM_BoardOwner, (LONG)dd,
+          PRM_BoardOwner, (IPTR)dd,
         TAG_END);
         return hwbase;
       }
@@ -1097,7 +1101,7 @@ ULONG FindHardware(struct DevData *dd, WORD unit, struct UnitData *ud)
 
 void HardwareInit (struct UnitData *ud)
   {
-    ULONG hw = ud->ud_Hardware;
+    IPTR hw = ud->ud_Hardware;
 
     BYTEOUT(hw + NE2000_COMMAND, 0x21);
     BYTEOUT(hw + NE2000_DATA_CONFIG,
@@ -1122,7 +1126,7 @@ void HardwareInit (struct UnitData *ud)
 void HardwareReset (struct UnitData *ud)
   {
     USE_U(DOSBase)
-    ULONG hw = ud->ud_Hardware;
+    IPTR hw = ud->ud_Hardware;
     UBYTE trash;
 
     WORDOUT(hw + NE2000_RESET_PORT, trash);
@@ -1137,7 +1141,7 @@ void HardwareReset (struct UnitData *ud)
 
 void GoOnline (struct UnitData *ud)
   {
-    ULONG hw = ud->ud_Hardware;
+    IPTR hw = ud->ud_Hardware;
 
     HardwareReset(ud);
     WriteHwAddress(ud);
@@ -1157,7 +1161,7 @@ void GoOnline (struct UnitData *ud)
 
 void GoOffline(struct UnitData *ud)
   {
-    ULONG hw = ud->ud_Hardware;
+    IPTR hw = ud->ud_Hardware;
 
     BYTEOUT(hw + NE2000_COMMAND, 0x21);
     BYTEOUT(hw + NE2000_TX_CONFIG, 0x02);
@@ -1173,7 +1177,7 @@ void GoOffline(struct UnitData *ud)
 
 void BoardShutdown(struct UnitData *ud)
   {
-    ULONG hw = ud->ud_Hardware;
+    IPTR hw = ud->ud_Hardware;
 
     GoOffline(ud);
     BYTEOUT(hw + NE2000_INT_MASK, 0);
@@ -1242,7 +1246,7 @@ LONG PacketReceived(struct UnitData *ud)
 void BufferOverflow(struct UnitData *ud)
   {
     struct Library *DOSBase = ud->ud_DOSBase;
-    ULONG hw = ud->ud_Hardware;
+    IPTR hw = ud->ud_Hardware;
     UBYTE txp, resent = FALSE, intstatus;
 
     txp = BYTEIN(hw + NE2000_COMMAND) & COMMAND_TXP;
@@ -1281,7 +1285,7 @@ void SendPacket(struct UnitData *ud, struct IOSana2Req *req)
   {
     USE_U(SysBase)
     USE_UD(DOSBase)
-    ULONG hw = ud->ud_Hardware;
+    IPTR hw = ud->ud_Hardware;
     UBYTE ethbuffer[1536], *datapointer;
     UWORD *ethdata = (UWORD*)ethbuffer;
     ULONG data_len = req->ios2_DataLength;
@@ -1358,7 +1362,7 @@ void SendPacket(struct UnitData *ud, struct IOSana2Req *req)
 void GetHwAddress(struct UnitData *ud)
   {
     USE_UD(DOSBase)
-    ULONG hw = ud->ud_Hardware;
+    IPTR hw = ud->ud_Hardware;
     WORD i;
 
     BYTEOUT(hw + NE2000_DMA_COUNTER0, 6);
@@ -1383,7 +1387,7 @@ void GetHwAddress(struct UnitData *ud)
 void WriteHwAddress(struct UnitData *ud)
   {
     USE_UD(DOSBase)
-    ULONG hw = ud->ud_Hardware;
+    IPTR hw = ud->ud_Hardware;
     WORD i;
 
     #ifdef PDEBUG
@@ -1408,7 +1412,7 @@ void WriteHwAddress(struct UnitData *ud)
 LONG RingBufferNotEmpty(struct UnitData *ud)
   {
     UBYTE current;
-    ULONG hw = ud->ud_Hardware;
+    IPTR hw = ud->ud_Hardware;
 
     BYTEOUT(hw + NE2000_COMMAND,
       COMMAND_PAGE1 | COMMAND_ABORT | COMMAND_START);
