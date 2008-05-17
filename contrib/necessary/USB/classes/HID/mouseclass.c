@@ -52,14 +52,8 @@ void METHOD(USBMouse, Hidd_USBHID, ParseReport)
     {
         int x=0,y=0,z=0,buttons=0;
         int i;
-        uint8_t *rep = (uint8_t *)msg->report;
-        uint8_t report_id = 0;
-        
-        /* If it was a multi-report device, get the report ID */
-        if (mouse->nreport != 1)
-            report_id = *rep++;
-        
-        if (report_id == mouse->mouse_report)
+
+        if (msg->id == mouse->mouse_report)
         {
         
             int fill = mouse->head - mouse->tail;
@@ -68,12 +62,12 @@ void METHOD(USBMouse, Hidd_USBHID, ParseReport)
                 fill += RING_SIZE;
             
             /* Parse the movement and button data stored in this report */
-            x = hid_get_data(rep, &mouse->loc_x);
-            y = hid_get_data(rep, &mouse->loc_y);
-            z = hid_get_data(rep, &mouse->loc_wheel);
+            x = hid_get_data(msg->report, &mouse->loc_x);
+            y = hid_get_data(msg->report, &mouse->loc_y);
+            z = hid_get_data(msg->report, &mouse->loc_wheel);
             
             for (i=0; i < mouse->loc_btncnt; i++)
-                if (hid_get_data(rep, &mouse->loc_btn[i]))
+                if (hid_get_data(msg->report, &mouse->loc_btn[i]))
                     buttons |= (1 << i);
         
             if (fill > (RING_SIZE - 1))
@@ -106,7 +100,7 @@ void METHOD(USBMouse, Hidd_USBHID, ParseReport)
         }
         else
         {
-            D(bug("[Mouse] Report ID %d. We don't need it\n", report_id));
+            D(bug("[Mouse] Report ID %d. We don't need it\n", msg->id));
         }
     }
 }

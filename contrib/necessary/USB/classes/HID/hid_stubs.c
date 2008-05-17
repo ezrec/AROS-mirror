@@ -106,7 +106,7 @@ BOOL HIDD_USBHID_SetReport(OOP_Object *obj, uint8_t type, uint8_t id, void *repo
     return OOP_DoMethod(obj, &p.mID);
 }
 
-void HIDD_USBHID_ParseReport(OOP_Object *obj, void *report, uint32_t report_length)
+void HIDD_USBHID_ParseReport(OOP_Object *obj, uint8_t id, void *report, uint32_t report_length)
 {
     STATIC_MID;
     struct pHidd_USBHID_ParseReport p;
@@ -114,6 +114,7 @@ void HIDD_USBHID_ParseReport(OOP_Object *obj, void *report, uint32_t report_leng
     if (!mid) mid = OOP_GetMethodID((STRPTR)IID_Hidd_USBHID, moHidd_USBHID_ParseReport);
 
     p.mID = mid;
+    p.id = id;
     p.report = report;
     p.report_length = report_length;
 

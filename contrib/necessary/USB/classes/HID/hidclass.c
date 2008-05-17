@@ -70,12 +70,20 @@ static AROS_UFH3(void, HidInterrupt,
     AROS_USERFUNC_INIT
     
     HidData *hid = interruptData;
+    uint8_t reportid = 0;
     
     /* Invalidate the cache. Report has been sent through DMA */
     CacheClearE(hid->buffer, hid->buflen, CACRF_InvalidateD);
     
-    /* And let the class handle it */
-    HIDD_USBHID_ParseReport(hid->o, hid->buffer, hid->buflen);
+    if (hid->nreport != 1)
+    {
+        reportid = hid->buffer[0];
+
+        /* And let the class handle it */
+        HIDD_USBHID_ParseReport(hid->o, reportid, &hid->buffer[1], hid->buflen);
+    }
+    else
+        HIDD_USBHID_ParseReport(hid->o, 0, hid->buffer, hid->buflen);
 
     AROS_USERFUNC_EXIT
 }
@@ -162,11 +170,19 @@ void METHOD(HID, Hidd_USBHID, ParseReport)
 {
     HidData *hid = OOP_INST_DATA(cl, o);
     int i;
+    uint8_t *data = hid->buffer;
+    int len = hid->buflen;
     
-    D(bug("[HID] Unknown report:"));
+    if (hid->nreport != 1)
+    {
+        data++;
+        len--;
+    }
     
-    for (i=0; i < hid->buflen; i++)
-        D(bug("%02x ", hid->buffer[i]));
+    D(bug("[HID] Unknown report id %d: ", msg->id));
+    
+    for (i=0; i < len; i++)
+        D(bug("%02x ", data[i]));
     
     D(bug("\n"));
 }

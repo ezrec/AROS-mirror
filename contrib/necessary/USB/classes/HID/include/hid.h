@@ -59,6 +59,7 @@ struct pHidd_USBHID_SetIdle {
 
 struct pHidd_USBHID_ParseReport {
     OOP_MethodID        mID;
+    uint8_t             id;
     void                *report;
     uint32_t            report_length;
 };
@@ -239,6 +240,6 @@ BOOL HIDD_USBHID_SetIdle(OOP_Object *obj, uint8_t duration, uint8_t id);
 BOOL HIDD_USBHID_SetProtocol(OOP_Object *obj, uint8_t protocol);
 BOOL HIDD_USBHID_SetReport(OOP_Object *obj, uint8_t type, uint8_t id, void *report, uint16_t length);
 usb_hid_descriptor_t *HIDD_USBHID_GetHidDescriptor(OOP_Object *obj);
-void HIDD_USBHID_ParseReport(OOP_Object *obj, void *report, uint32_t report_length);
+void HIDD_USBHID_ParseReport(OOP_Object *obj, uint8_t id, void *report, uint32_t report_length);
 
 #endif /*USB_HID_H*/
