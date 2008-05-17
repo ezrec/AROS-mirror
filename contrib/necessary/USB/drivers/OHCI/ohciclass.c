@@ -197,6 +197,12 @@ OOP_Object *METHOD(OHCI, Root, New)
         
         D(bug("[OHCI] ctl=%08x fm=%08x desca=%08x descb=%08x\n", ctl,fm,desca,descb));
         
+        for (i=0; i < ohci->hubDescr.bNbrPorts; i++)
+        {
+            mmio(ohci->regs->HcRhPortStatus[i]) = AROS_LONG2LE(UPS_LOW_SPEED);
+            ohci_Delay(ohci->tr, ohci->hubDescr.bPwrOn2PwrGood * UHD_PWRON_FACTOR + USB_EXTRA_POWER_UP_TIME);
+        }
+        
         mmio(ohci->regs->HcControl) = AROS_LONG2LE(rwc | HC_CTRL_HCFS_RESET);
         ohci_Delay(ohci->tr, USB_BUS_RESET_DELAY);
         
