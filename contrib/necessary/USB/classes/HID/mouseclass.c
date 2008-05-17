@@ -152,14 +152,15 @@ OOP_Object *METHOD(USBMouse, Root, New)
                         mouse->range_y.minimum, mouse->range_y.maximum));            
             }
             
-            if (!hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_GENERIC_DESKTOP, HUG_Z),
-                       i, hid_input, &mouse->loc_wheel, &flags, NULL))
+            if (hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_GENERIC_DESKTOP, HUG_Z),
+                       i, hid_input, &mouse->loc_wheel, &flags, NULL) ||
                 hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_GENERIC_DESKTOP, HUG_WHEEL),
-                           i, hid_input, &mouse->loc_wheel, &flags, NULL);
-            
-            if (mouse->loc_wheel.size) {
-                mouse->rel_z = flags & HIO_RELATIVE;
-                D(bug("[USBMouse::New()] Has %s Z\n", mouse->rel_z ? "relative":"absolute"));
+                       i, hid_input, &mouse->loc_wheel, &flags, NULL))
+            {
+                if (mouse->loc_wheel.size) {
+                    mouse->rel_z = flags & HIO_RELATIVE;
+                    D(bug("[USBMouse::New()] Has %s Z\n", mouse->rel_z ? "relative":"absolute"));
+                }
             }
             
             for (mouse->loc_btncnt = 1; mouse->loc_btncnt <= MAX_BTN; mouse->loc_btncnt++)
