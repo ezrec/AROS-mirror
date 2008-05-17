@@ -13,5 +13,6 @@ contrib-zune-classes-urltext-envpackage :
 #MM- contrib-zune-classes-urltext-mcc      : contrib-zune-classes-urltext-startup
 #MM- contrib-zune-classes-urltext-mcp      : contrib-zune-classes-urltext-startup
 
+#MM contrib-zune-classes-urltext-startupfiles :
 %copy_files_q dst=$(CONTRIBDIR)/Zune/MCC_Urltext/s maketarget=contrib-zune-classes-urltext-startupfiles
 

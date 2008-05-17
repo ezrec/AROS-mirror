@@ -12,5 +12,6 @@ contrib-zune-classes-mailtext-envpackage :
 #MM- contrib-zune-classes-mailtext-class      : contrib-zune-classes-mailtext-startup
 #MM- contrib-zune-classes-mailtext-mcp      : contrib-zune-classes-mailtext-startup
 
+#MM contrib-zune-classes-mailtext-startupfiles :
 %copy_files_q dst=$(CONTRIBDIR)/Zune/MCC_Mailtext/S maketarget=contrib-zune-classes-mailtext-startupfiles
 
