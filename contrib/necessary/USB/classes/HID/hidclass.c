@@ -267,6 +267,10 @@ OOP_Object *METHOD(HID, Root, New)
                     hid->buflen = repsize;
             }
             
+            /* If there is more than one report ID, make a space for report ID */
+            if (hid->nreport != 1)
+                hid->buflen++;
+            
             hid->buffer = AllocVecPooled(SD(cl)->MemPool, hid->buflen);
             
             D(bug("[HID::New()] Length of input report is %d\n", hid->buflen));

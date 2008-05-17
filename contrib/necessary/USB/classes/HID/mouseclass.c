@@ -52,48 +52,62 @@ void METHOD(USBMouse, Hidd_USBHID, ParseReport)
     {
         int x=0,y=0,z=0,buttons=0;
         int i;
-    
-        int fill = mouse->head - mouse->tail;
-    
-        if (mouse->head < mouse->tail)
-            fill += RING_SIZE;
+        uint8_t *rep = (uint8_t *)msg->report;
+        uint8_t report_id = 0;
         
-        /* Parse the movement and button data stored in this report */
-        x = hid_get_data(msg->report, &mouse->loc_x);
-        y = hid_get_data(msg->report, &mouse->loc_y);
-        z = hid_get_data(msg->report, &mouse->loc_wheel);
+        /* If it was a multi-report device, get the report ID */
+        if (mouse->nreport != 1)
+            report_id = *rep++;
         
-        for (i=0; i < mouse->loc_btncnt; i++)
-            if (hid_get_data(msg->report, &mouse->loc_btn[i]))
-                buttons |= (1 << i);
-    
-        if (fill > (RING_SIZE - 1))
+        if (report_id == mouse->mouse_report)
         {
-            bug("[Mouse] EVENT QUEUE FULL.\n");
-            return;
+        
+            int fill = mouse->head - mouse->tail;
+        
+            if (mouse->head < mouse->tail)
+                fill += RING_SIZE;
+            
+            /* Parse the movement and button data stored in this report */
+            x = hid_get_data(rep, &mouse->loc_x);
+            y = hid_get_data(rep, &mouse->loc_y);
+            z = hid_get_data(rep, &mouse->loc_wheel);
+            
+            for (i=0; i < mouse->loc_btncnt; i++)
+                if (hid_get_data(rep, &mouse->loc_btn[i]))
+                    buttons |= (1 << i);
+        
+            if (fill > (RING_SIZE - 1))
+            {
+                bug("[Mouse] EVENT QUEUE FULL.\n");
+                return;
+            }
+        
+            /*
+             *  Store the parsed event into the ring. Do it in Disable() state, since the semaphore
+             * locking in Cause()'d code does not make much sence. 
+             */
+            
+            Disable();
+            
+            mouse->report_ring[mouse->head].dx = x;
+            mouse->report_ring[mouse->head].dy = y;
+            mouse->report_ring[mouse->head].dz = z;
+            mouse->report_ring[mouse->head].btn = buttons;
+            mouse->head = (mouse->head+1) % RING_SIZE;
+        
+            Enable();
+        
+            /* 
+             * If there is a mouse task, signal it. Once triggered it should pop all events from the rihg
+             * and pass them to the input.device
+             */
+            if (mouse->mouse_task)
+                Signal(mouse->mouse_task, SIGBREAKF_CTRL_F);
         }
-    
-        /*
-         *  Store the parsed event into the ring. Do it in Disable() state, since the semaphore
-         * locking in Cause()'d code does not make much sence. 
-         */
-        
-        Disable();
-        
-        mouse->report_ring[mouse->head].dx = x;
-        mouse->report_ring[mouse->head].dy = y;
-        mouse->report_ring[mouse->head].dz = z;
-        mouse->report_ring[mouse->head].btn = buttons;
-        mouse->head = (mouse->head+1) % RING_SIZE;
-    
-        Enable();
-    
-        /* 
-         * If there is a mouse task, signal it. Once triggered it should pop all events from the rihg
-         * and pass them to the input.device
-         */
-        if (mouse->mouse_task)
-            Signal(mouse->mouse_task, SIGBREAKF_CTRL_F);
+        else
+        {
+            D(bug("[Mouse] Report ID %d. We don't need it\n", report_id));
+        }
     }
 }
 
@@ -135,8 +149,9 @@ OOP_Object *METHOD(USBMouse, Root, New)
             if (hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_GENERIC_DESKTOP, HUG_X),
                        i, hid_input, &mouse->loc_x, &flags, &mouse->range_x))
             {
-                D(bug("[USBMouse::New()] Found report with mouse coordinates\n"));
+                D(bug("[USBMouse::New()] Mouse coordinates found in report %d\n", i));
                 
+                mouse->mouse_report = i;
                 mouse->rel_x = flags & HIO_RELATIVE;
                 D(bug("[USBMouse::New()] Has %s X ranging from %d to %d\n", mouse->rel_x?"relative":"absolute",
                         mouse->range_x.minimum, mouse->range_x.maximum));
