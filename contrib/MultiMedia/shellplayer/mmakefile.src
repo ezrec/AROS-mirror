@@ -17,9 +17,13 @@ FILES  := ShellPlayer
     files=$(FILES) uselibs="amiga arosc ptplay"
 
 #MM
-contrib-shellplayer-cpy : $(EXEDIR)/README.aros
+contrib-shellplayer-cpy : $(EXEDIR)/README.aros $(EXEDIR)/ShellPlayer.readme
 
 $(EXEDIR)/README.aros : README.aros
+	$(MKDIR) $(EXEDIR)
+	$(CP) $< $@
+
+$(EXEDIR)/ShellPlayer.readme : ShellPlayer.readme
 	$(MKDIR) $(EXEDIR)
 	$(CP) $< $@
 

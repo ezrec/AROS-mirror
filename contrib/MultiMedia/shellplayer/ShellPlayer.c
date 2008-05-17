@@ -160,7 +160,7 @@ int main(void)
 
 	maintask = FindTask(NULL);
 
-	args = ReadArgs("FILE/A,FREQ/K/N", (LONG *)&params, NULL);
+	args = ReadArgs("FILE/A,FREQ/K/N", (IPTR *)&params, NULL);
 
 	if (args)
 	{
@@ -219,6 +219,7 @@ int main(void)
 
 						if (player)
 						{
+							rc = RETURN_OK;
 							Printf("Now playing \033[1m%s\033[22m at %ld Hz... Press CTRL-C to abort.\n", params.file, frequency);
 
 							do
@@ -258,5 +259,7 @@ int main(void)
 		FreeArgs(args);
 	}
 
+	if (rc = RETURN_FAIL)
+		PrintFault(IoErr(), NULL);
 	return rc;
 }
