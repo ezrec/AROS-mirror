@@ -125,7 +125,7 @@ typedef struct MouseData {
     char                        *report;
     uint16_t                    reportLength;
     uint16_t                    nreport;
-    uint16_t                    mouse_report;
+    int                         mouse_report;
     
     struct Process              *mouse_task;
     

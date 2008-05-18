@@ -135,7 +135,8 @@ OOP_Object *METHOD(USBMouse, Root, New)
         HIDD_USBHID_GetReportDescriptor(o, mouse->reportLength, mouse->report);
 
         mouse->nreport = hid_maxrepid(mouse->report, mouse->reportLength) + 1;
-        
+	mouse->mouse_report = -1;
+	        
         for (i=0; i < mouse->nreport; i++)
         {
             D(bug("[USBMouse::New() Checking report %d\n", i));
@@ -180,7 +181,10 @@ OOP_Object *METHOD(USBMouse, Root, New)
                     mouse->loc_btncnt--;
                     break;
                 }
-            }
+            }	
+	    
+	    if (mouse->mouse_report != -1)
+		break;
         }
 
         D(bug("[USBMouse::New()] Pointing device has %d buttons\n", mouse->loc_btncnt));
