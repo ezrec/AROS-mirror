@@ -46,8 +46,6 @@ void METHOD(USBMouse, Hidd_USBHID, ParseReport)
 {
     MouseData *mouse = OOP_INST_DATA(cl, o);
     
-    D(OOP_DoSuperMethod(cl, o, msg));
-    
     if (mouse->mouse_task)
     {
         int x=0,y=0,z=0,buttons=0;
