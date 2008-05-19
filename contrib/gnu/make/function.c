@@ -1648,9 +1648,16 @@ func_shell (char *o, char **argv, const char *funcname)
 
             MyExecute(argv,envp,child_stdout);
 
+/* We can't free argv on AROS, as it was allocated with emulated alloca()
+   function (see alloca.c) and is freed automatically. argv[0] is freed in
+   handle_function() after expand_builtin_function(), so there's no need to
+   free it here. Probably someone thoughtlessly copied it from above where
+   command_argv is freed. */
+#ifndef  __AROS__
             /* Free the storage only the child needed.  */
             free (argv[0]);
             free ((char *) argv);
+#endif
 #if 1
             for (i = 0; envp[i] != 0; ++i)
               free (envp[i]);
