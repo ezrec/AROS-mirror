@@ -8,7 +8,7 @@ Compiling AROS
             + Lennard voor den Dag
             + Aaron Digulla
             + Adam Chodorowski
-:Copyright: Copyright © 2001-2008, The AROS Development Team
+:Copyright: Copyright (C) 2001-2008, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -160,7 +160,7 @@ finished. Additionally, you can create a bootable ISO image by running::
 
     > make bootiso-pc-i386
 
-The ISO image can be found at ``bin/pc-i386/gen/rom/boot/aros.iso``.
+The ISO image can be found at ``distfiles/aros-pc-i386.iso``.
 
 Appendix
 ========

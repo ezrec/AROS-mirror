@@ -8,7 +8,7 @@ Cómo compilar AROS
             + Lennard voor den Dag
             + Aaron Digulla
             + Adam Chodorowski
-:Copyright: Copyright ² 2001-2003, The AROS Development Team
+:Copyright: Copyright (C) 2001-2008, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -170,7 +170,7 @@ crear una imagen ISO de arranque ejecutando::
 
     > make bootiso-pc-i386
 
-La imagen ISO se encuentrará en ``bin/pc-i386/gen/rom/boot/aros.iso``.
+La imagen ISO se encuentrará en ``distfiles/aros-pc-i386.iso``.
 
 Apéndice
 ========

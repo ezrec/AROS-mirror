@@ -8,7 +8,7 @@
             + Lennard voor den Dag
             + Aaron Digulla
             + Adam Chodorowski
-:Copyright: Copyright 2001-2007, The AROS Development Team
+:Copyright: Copyright (C) 2001-2008, The AROS Development Team
 :Версия:    $Revision$
 :Дата:      $Date$
 :Статус:    Завершено.
@@ -170,7 +170,7 @@ Native-версия AROS/i386-pc
 
     > make bootiso-pc-i386
 
-Созданный ISO-образ будет помещён в ``bin/pc-i386/gen/rom/boot/aros.iso``.
+Созданный ISO-образ будет помещён в ``distfiles/aros-pc-i386.iso``.
 
           
 Приложение

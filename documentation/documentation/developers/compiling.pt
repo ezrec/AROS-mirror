@@ -8,7 +8,7 @@ Compilando o AROS
             		+ Lennard voor den Dag
             		+ Aaron Digulla
             		+ Adam Chodorowski
-:Direitos de Cópia:	Copyright ¦ 2001-2003, A equipa de desenvolvimento AROS
+:Direitos de Cópia:	Copyright (C) 2001-2008, A equipa de desenvolvimento AROS
 :Versão:		$Revision$
 :Data:			$Date$
 :Estado:		Feito.
@@ -162,7 +162,7 @@ terminado. Adicionalmente, poderá criar uma imagem ISO de arranque correndo::
 
     > make bootiso-pc-i386
 
-A imagem ISO pode ser encontrada em ``bin/pc-i386/gen/rom/boot/aros.iso``.
+A imagem ISO pode ser encontrada em ``distfiles/aros-pc-i386.iso``.
 
 Apendice
 ========
