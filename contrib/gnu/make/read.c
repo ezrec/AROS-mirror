@@ -2892,7 +2892,7 @@ construct_include_path (char **arg_dirs)
     {
       unsigned int len = strlen (dirs[i]);
       /* If dir name is written with a trailing slash, discard it.  */
-      if (dirs[i][len - 1] == '/')
+      if (len > 0 && dirs[i][len - 1] == '/')
         /* We can't just clobber a null in because it may have come from
            a literal string and literal strings may not be writable.  */
         dirs[i] = savestring (dirs[i], len - 1);
