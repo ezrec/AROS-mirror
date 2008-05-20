@@ -11,14 +11,9 @@
 struct AROSBase
 {
     struct DriverBase driverbase;
-    struct Library*   dosbase;
-    struct Library*   ossbase;
 };
 
 #define DRIVERBASE_SIZEOF (sizeof (struct AROSBase))
-
-#define DOSBase  (AROSBase->dosbase)
-#define OSSBase	 (AROSBase->ossbase)
 
 struct AROSData
 {
