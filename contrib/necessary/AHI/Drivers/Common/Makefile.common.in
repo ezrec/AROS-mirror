@@ -36,7 +36,8 @@ ARFLAGS         = @ARFLAGS@
 
 SFDC		= @SFDC@
 
-LIBS		= @LIBS@
+# Do not link drivers wit any library by default
+LIBS		= 
 
 INSTALL		= @INSTALL@
 INSTALL_PROGRAM	= @INSTALL_PROGRAM@
@@ -105,7 +106,7 @@ Makefile: Makefile.in Makefile.common.in ../../config.status
 	$(AS) $(ASFLAGS) $^ -o $@
 
 $(DRIVER):		$(DRIVER_OBJECTS)
-	$(CC) $(LDFLAGS) $^ -o $@
+	$(CC) $(LDFLAGS) $^ $(LIBS) -o $@
 
 $(MODEFILE):	$(MODEFILE).o
 	$(OBJCOPY) --output-target=binary $< $@

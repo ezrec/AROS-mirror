@@ -13,4 +13,4 @@ OBJECTS		= aros-init.o aros-main.o aros-playslave.o aros-accel.o
 
 include ../Common/Makefile.common
 
-LDFLAGS		+= -lossshared
+LIBS		+= -lossshared
