@@ -17,7 +17,7 @@ USER_CFLAGS = -I..
 
 %build_prog mmake=contrib-regina-rexxmast-arosc \
     progname=RexxMast targetdir=$(AROS_C) \
-    files=RexxMast uselibs="amiga arosc"
+    files=RexxMast uselibs="regina_shared amiga arosc"
 
 %build_progs mmake=contrib-regina-rexxmast-reginac \
     files="sendrexxmsg listen4msg" targetdir=$(DEMODIR) \

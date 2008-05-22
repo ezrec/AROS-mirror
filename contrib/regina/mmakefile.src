@@ -41,7 +41,7 @@ FILES := $(OFILES) rexx nosaa mt_notmt
 FILES := regina
 %build_prog mmake=contrib-regina-regina \
     progname=regina targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+    files=$(FILES) uselibs="regina_shared arossupport amiga arosc m"
 
 
 

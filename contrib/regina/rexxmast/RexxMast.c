@@ -1,5 +1,3 @@
-#include "rexxsaa.h"
-
 #include <proto/alib.h>
 #include <proto/dos.h>
 #include <proto/exec.h>
