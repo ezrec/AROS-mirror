@@ -1,3 +1,15 @@
+diff -ur gawk-3.1.3/awk.h gawk-3.1.3-aros/awk.h
+--- gawk-3.1.3/awk.h    2003-06-29 14:52:40.000000000 +0200
++++ gawk-3.1.3-aros/awk.h        2008-05-23 15:02:28.000000000 +0200
+@@ -73,7 +73,7 @@
+ #ifdef HAVE_SIGNUM_H
+ #include <signum.h>
+ #endif
+-#if defined(HAVE_MBRLEN) && defined(HAVE_MBRTOWC) && defined(HAVE_WCHAR_H) && defined(HAVE_WCTYPE_H)
++#if defined(HAVE_MBRLEN) && defined(HAVE_MBRTOWC) && defined(HAVE_WCHAR_H) && defined(HAVE_WCTYPE_H) && !defined __AROS__
+ /* We can handle multibyte strings.  */
+ #define MBS_SUPPORT
+ #include <wchar.h>
 Only in gawk-3.1.3-aros: .files-touched
 diff -ur gawk-3.1.3/io.c gawk-3.1.3-aros/io.c
 --- gawk-3.1.3/io.c	2003-07-04 13:50:58.000000000 -0400
