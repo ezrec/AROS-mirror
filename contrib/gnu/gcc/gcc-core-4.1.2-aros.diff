@@ -386,6 +386,17 @@ diff -uwNr gcc-4.1.2/gcc/config.host gcc-4.1.2.new/gcc/config.host
 +    host_can_use_collect2=no
 +    ;;
  esac
+--- gcc-4.1.2/gcc/gcc.c	2006-11-07 15:26:21.000000000 +0100
++++ gcc-4.1.2.new/gcc/gcc.c	2008-05-21 22:08:33.000000000 +0200
+@@ -3596,7 +3596,7 @@
+ 	{
+ 	  /* -pipe has to go into the switches array as well as
+ 	     setting a flag.  */
+-	  use_pipes = 1;
++	  use_pipes = 0;
+ 	  n_switches++;
+ 	}
+       else if (strcmp (argv[i], "-###") == 0)
 diff -uwNr gcc-4.1.2/gcc/libgcov.c gcc-4.1.2.new/gcc/libgcov.c
 --- gcc-4.1.2/gcc/libgcov.c	2005-07-13 18:28:25.000000000 +0200
 +++ gcc-4.1.2.new/gcc/libgcov.c	2008-04-21 18:48:51.000000000 +0200
