@@ -4,7 +4,7 @@ Manual de Desenvolvimento de Aplicações AROS
 
 :Autores:		Staf Verhaegen, Sebastian Rittau, Stefan Rieken, Matt Parsons,
 			Adam Chodorowski, Fabio Alemagna, Matthias Rustler
-:Direitos de Cópia:	Copyright © 1995-2006, A equipa de desenvolvimento AROS
+:Direitos de Cópia:	Copyright (C) 1995-2008, A equipa de desenvolvimento AROS
 :Versão:		$Revision$
 :Data:			$Date$
 :estado:		Por acabar; Integração iniciada (um caminho looongo a percorrer).
@@ -29,7 +29,6 @@ Tabela de Conteúdos
 + `Procurando recursos`__
 + `Multitarefa`__
 + `Localização`__
-+ `Apendice`__
 
 __ introduction
 __ buildsystem
@@ -39,5 +38,3 @@ __ intuition-library
 __ resource-tracking
 __ multitasking
 __ localization
-__ appendix
-

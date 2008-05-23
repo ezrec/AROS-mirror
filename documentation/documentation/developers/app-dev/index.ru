@@ -4,7 +4,7 @@ AROS Руководство по разработке приложений
 
 :Авторы:    Staf Verhaegen, Sebastian Rittau, Stefan Rieken, Matt Parsons,
             Adam Chodorowski, Fabio Alemagna, Matthias Rustler
-:Copyright: Copyright © 1995-2007, The AROS Development Team
+:Copyright: Copyright (C) 1995-2008, The AROS Development Team
 :Версия:    $Revision$
 :Дата:      $Date$
 :Статус:    Не завершено; в процессе объединения (впереди долгий путь).
@@ -31,7 +31,6 @@ AROS Руководство по разработке приложений
 + `Многозадачность`__
 + `Локализация`__
 + `Написание портируемых приложений`__
-+ `Приложение`__
 
 __ introduction
 __ buildsystem
@@ -43,4 +42,3 @@ __ resource-tracking
 __ multitasking
 __ localization
 __ portable
-__ appendix
