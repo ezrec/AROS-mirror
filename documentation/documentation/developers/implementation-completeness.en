@@ -14,13 +14,13 @@ Library                       Generic  i386
 amigaguide.library                 0%      0%
 amiga.library     
 asl.library
-bullet.library                                
+bullet.library                    90%     90%             
 commodities.library              100%    100% 
 datatypes.library
 ddebug.library
 debug.library
 diskfont.library
-dos.library                       
+dos.library                       93%     93%
 exec.library                      92%     92%
 expansion.library
 gadtools.library
@@ -75,6 +75,7 @@ Datatypes
 =================== ======
 Datatype            Status
 =================== ======
+8svx.datatype
 amigaguide.datatype
 sound.datatype
 text.datatype
@@ -99,4 +100,4 @@ potgo.resource
 misc.resource
 =================== ======
 
-Last updated: 2008-05-10
+Last updated: 2008-05-24
