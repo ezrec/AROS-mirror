@@ -20,7 +20,7 @@ Introduction
 Back in the old days it was easy: both integer and address types had a size of
 32 bit and the bytes were ordered in big endian. But because AROS is portable,
 developers have to take care about some things or their source code will not run
-on all AROS flavours.
+on all AROS ports.
 
 
 Endianness
@@ -60,9 +60,9 @@ If you need some peek and poke functions with build-in endianness conversion loo
 Data Types
 ==========
 
-Some notes about the AROS data types which are defined in the header <exec/types.h>:
+The AROS data types are defined in the header <exec/types.h>.
 
-The fundamental data types have a defined size on both 32 and 64 bit systems:
+The fundamental integer data types have a defined size on both 32 and 64 bit systems:
 
 ===========  ============
 Type         sizeof(Type)
@@ -74,6 +74,10 @@ QUAD, UQUAD       8
 ===========  ============
 
 This is opposed to C types like *int* and *long* which are depending on hardware.
+
+
+IPTR
+----
 
 *IPTR* is defined as unsigned integer type which is large enough to store a pointer.
 You must use it when you want to store an address in an integer type.
@@ -93,15 +97,25 @@ has to be translated for AROS to::
 
 Other notable things
 which are affected by this: `TagItem`s (the `ti_Data` field is now an `IPTR`
-instead of `ULONG`), BOOPSI classes (eg. the return value of `DoMethod()`),
+instead of `ULONG`), BOOPSI classes (e.g. the return value of `DoMethod()`),
 `ReadArgs()`, `VPrintf()`, `VFPrintf()` and more.
+
+
+64 bit variables
+----------------
+
+The type of 64 bit variables is `QUAD` (unsigned: `UQUAD`). This is for example
+returned by the function `SMult64()` of utility.library. To access the
+high- and loworder 32bit values of the 64bit variable, use `LOW32OF64()`
+and `HIGH32OF64()` which are defined in `AROS/include/aros/64bit.h`.
 
 
 Hooks
 =====
 
-Hooks are used when a function needs a pointer to a function as argument. They are needed
-quite often in Zune user interfaces. There are two ways how you can define them:
+Hooks are used when a system function needs a pointer to a callback function
+as argument. They are used quite often in Zune user interfaces. There are two ways
+how you can define them:
 
 Register based::
 
@@ -156,8 +170,8 @@ Stack based::
         ...
     }
 
-*HookEntry* is defined in amiga.lib. This function forwards the stack arguments
-to registers.
+*HookEntry* is defined in amiga.lib. This function forwards the register arguments
+to stack arguments.
 
 
 User Function Prototype
@@ -204,17 +218,19 @@ the user function with more than 3 arguments::
             AROS_UFCA(LONG, value4, D1) );
 
 
-Variadic Structure Parameters
-=============================
+Variadic Functions with Structure Parameters
+============================================
 
-Messages for BOOPSI methods are defined as structs, e.g.::
+Messages for BOOPSI/Zune methods are defined as structs. The structure elements are then
+used as arguments for the variadic function *DoMethod()*, e.g.::
 
     struct MUIP_Application_SetMenuCheck { ULONG MethodID; ULONG MenuID; LONG stat; };
-
-This causes problems when the method is called with the variadic *DoMethod*, because on some
-architectures the parameters are passed on stack, in registers, or even in both.::
-
     DoMethod(obj, MUIM_Application_SetMenuCheck, 10, 20);
+
+This causes problems on AROS for several reasons:
+* small data types like WORD aren't expanded correctly, i.e. some bytes contain trash data
+* on some CPUs the stack grows upwards
+* on some architectures the parameters are passed on stack, in registers, or even in both
 
 The solution is to prefix all elements in the struct with *STACKED*::
 
@@ -229,7 +245,7 @@ The original AmigaOS doesn't use the tags below `TAG_USER` (have a look a at
 tags at or near `TAG_USER` because then they might interfere with the OS's
 own tags. To solve this, AROS *does* use the tags *below* `TAG_USER` and the
 various implementators need not fear that their tags may overlap with the
-ones from the system. The file ``AROS/include/utility/tagitem.h`` now contains
+ones from the system. The file ``AROS/Development/include/utility/tagitem.h`` now contains
 the basic offsets for the various parts of the OS. In the future, it might be
 possible for users to allocate ranges of tags for specific uses.
 
@@ -239,7 +255,7 @@ and many more) are of type with size equal to *Tag* type for tag identifiers and
 use any arguments with smaller types, mentioned functions may receive randomly corrupted
 argument values.
 
-The paragraph above was probably hard to understand. In short: add *UL* to tag values::
+This can be reached by adding *UL* to tag identifiers::
 
     #define MUIA_NList_Horiz_DeltaFactor  0x9d510032UL
 
@@ -263,7 +279,7 @@ This isn't portable because you can't control how the compiler stores the variad
 
 You have to write it this way::
 
-    IPTR DoSuperNew(struct IClass *cl, Object *obj, ULONG tag1, ...)
+    IPTR DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...)
     {
         AROS_SLOWSTACKTAGS_PRE(tag1)
         retval = (IPTR)DoSuperMethod(cl, obj, OM_NEW, AROS_SLOWSTACKTAGS_ARG(tag1));
@@ -441,7 +457,7 @@ Porting from AmigaOS
 ====================
 
 AmigaOS source code often contains compiler attributes like *__asm* and  *__saveds* to use register
-for parameters etc. Sometimes even macros like *ASM* and *SAVEDS* are used to get some platform/compiler independence.
+for parameters etc. Sometimes macros like *ASM* and *SAVEDS* are used to get some platform/compiler independence.
 
 The following macros/attributes can be removed or replaced by empty macros:
 
@@ -457,6 +473,8 @@ VARARGS68K is for variadic functions and has to be defined this way::
 SDI
 ---
 
-Another famous macros set for compatibility between different Amiga-like operating
-systems and compilers are the SDI macros. Currently, they aren't fully compatible with
+Another famous macro set for compatibility between different Amiga-like operating
+systems and compilers are the SDI_ macros. Currently, they aren't fully compatible with
 AROS, so you have to replace them by AROS macros.
+
+.. _SDI: http://sditools.cvs.sourceforge.net/sditools/sditools/headers/
