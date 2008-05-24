@@ -8,6 +8,7 @@ Compiling AROS
             + Lennard voor den Dag
             + Aaron Digulla
             + Adam Chodorowski
+            + Neil Cafferkey
 :Copyright: Copyright (C) 2001-2008, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
@@ -15,8 +16,8 @@ Compiling AROS
 :Abstract:  
     This document will explain how to compile AROS. Development of AROS is 
     currently not self-hosted, which means that you cannot compile AROS from 
-    inside AROS. To compile and develop for AROS, you will need a Linux or 
-    FreeBSD system.
+    inside AROS. To compile and develop for AROS, you will need a Linux,
+    FreeBSD or Mac OS X system.
 
 
 .. Contents::
@@ -35,7 +36,7 @@ The following software is required for compiling AROS:
 + Bison
 + Flex
 + pngtopnm and ppmtoilbm (part of the netpbm package)
-+ Autoconf
++ Autoconf 2.61+
 + Automake
 + Common utilities like cp, mv, sort, uniq, head, ...
 
@@ -44,6 +45,49 @@ following is also required:
 
 + X11 development headers and libraries
 
+Mac OS X
+--------
+
+Although there is currently no OS-X-hosted version of AROS, PC-native
+AROS can be cross compiled under OS X. There are several additional
+requirements for compiling AROS on this platform. Firstly, these
+software packages must be installed:
+
++ XCode
++ MacPorts
+
+The following MacPort packages then need to be installed to complete the
+set of required software listed earlier:
+
++ i386-elf-gcc
++ netpbm
++ cdrtools
++ gawk
++ py-pil
++ wget
++ autoconf (if using XCode 2.4 or earlier)
+
+These can be installed with, for example::
+
+    > sudo port install i386-elf-gcc
+
+You also need to create a dummy crt0.o file for use by configure
+scripts. Create the following file in a text editor and save it as
+crt0.c::
+
+    int _start()
+    {
+    }
+
+Then compile and install it with::
+
+    > i386-elf-gcc -c crt0.c
+    > sudo cp crt0.o /opt/local/i386-elf/lib/
+
+Lastly, there is a missing symbolic link that needs to be created::
+
+    > cd /opt/local/bin
+    > sudo ln -s i386-elf-gcc-3.4.3 i386-elf-gcc
 
 Sources
 =======
@@ -251,4 +295,4 @@ Finally, type::
 This shall take a while (up to some hours on slow machines) :) 
 After that you will get AROS-hosted compiled. 
 Please also note that you might need internet access during the progress,
-used to download latest EUAE sources. 
+used to download latest EUAE and GNU sources. 
