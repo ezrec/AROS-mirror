@@ -3,7 +3,9 @@
 include $(TOP)/config/make.cfg
 
 #MM- aros-tcpip-apps : aros-tcpip-apps-wget
-#MM- aros-tcpip-apps-wget : aros-tcpip-apps-wget-bin aros-tcpip-apps-wget-cpy
+
+#MM- aros-tcpip-apps-wget : aros-tcpip-apps-wget-bin aros-tcpip-apps-wget-cpy \
+#MM  aros-tcpip-apps-wget-sample
 
 TARGETDIR := $(AROS_CONTRIB)/Networking/Apps/WGet
 
@@ -17,5 +19,11 @@ DOCFILES := wget.info sample.wgetrc
 
 %copy_files_q files=$(DOCFILES) \
     src=doc dst=$(TARGETDIR)/doc maketarget=aros-tcpip-apps-wget-cpy
+
+#MM
+aros-tcpip-apps-wget-sample : $(AROS_ENVARC)/wgetcfg
+
+$(AROS_ENVARC)/wgetcfg : ./doc/sample.wgetrc
+	@$(CP) $^ $@
 
 %common

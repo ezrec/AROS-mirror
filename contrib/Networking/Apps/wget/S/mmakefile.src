@@ -11,4 +11,5 @@ FILES := Package-Startup
 aros-tcpip-apps-wget-envpackage :
 	$(ECHO) "Extras:Networking/Apps/Wget" >$(AROS_PACKAGES)/wget
 
+#MM aros-tcpip-apps-wget-startupfiles :
 %copy_files_q dst=$(AROS_CONTRIB)/Networking/Apps/WGet/S maketarget=aros-tcpip-apps-wget-startupfiles
