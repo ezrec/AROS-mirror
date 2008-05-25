@@ -3,10 +3,12 @@ include $(TOP)/config/make.cfg
 
 FILES := Package-Startup Package-Shutdown
 
-#MM- contrib-development-lua : contrib-development-lua-startup
+#MM- contrib-development-lua : workbench-prefs-envarc contrib-development-lua-startupfiles \
+#MM  contrib-development-lua-envpackage
 
 #MM
-contrib-development-lua-startup :
+contrib-development-lua-envpackage :
 	$(ECHO) "Extras:Development/Lua" >$(AROS_PACKAGES)/Lua
 
-%copy_files_q dst=$(AROS_CONTRIB)/Development/Lua/S maketarget=contrib-development-lua-startup
+#MM contrib-development-lua-startupfiles :
+%copy_files_q dst=$(AROS_CONTRIB)/Development/Lua/S maketarget=contrib-development-lua-startupfiles
