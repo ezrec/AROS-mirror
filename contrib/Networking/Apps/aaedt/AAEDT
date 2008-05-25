@@ -237,7 +237,7 @@ end
 
 function show_readme()
   -- show latest downloaded readme file
-  local retval = os.execute('run sys:utilities/multiview "' .. readme_target .. '"')
+  local retval = os.execute('c:run sys:utilities/multiview "' .. readme_target .. '"')
   if retval > 0 then
     app:request(window, 0, "Error", "OK", "'run multiview' returned error code " .. retval)
   end
@@ -313,7 +313,7 @@ function main()
     mui.MUIA_Application_Author     , "Matthias Rustler",
     mui.MUIA_Application_Description, "Download tool for archives.aros-exec",
     mui.MUIA_Application_Title      , "AAEDT",
-    mui.MUIA_Application_Version    , "$VER: AAEDT 1.1 (05.04.2007)",
+    mui.MUIA_Application_Version    , "$VER: AAEDT 1.2 (25.05.2008)",
     mui.MUIA_Application_Base       , "AAEDT",
 
     mui.MUIA_Application_Window, window
