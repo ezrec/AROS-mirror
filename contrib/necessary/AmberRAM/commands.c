@@ -27,7 +27,7 @@ MA 02111-1307, USA.
 
 static const TEXT utility_name[] = UTILITYNAME;
 static const TEXT locale_name[] = "locale.library";
-static const TEXT default_vol_name[] = "RAM Disc";
+static const TEXT default_vol_name[] = "RAM Disk";
 
 
 static const UWORD examine_sizes[] =
