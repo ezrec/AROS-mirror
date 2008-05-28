@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright © 2002-2007, The AROS Development Team. All rights reserved.
+# Copyright © 2002-2008, The AROS Development Team. All rights reserved.
 # $Id$
 
 import os, sys, shutil, glob
