@@ -68,7 +68,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
     
         Tree \
         ( [
-            #A( _N['status'], href=makeURL('introduction/status/everything.html' ),
+            A( _N['status'], href=makeURL('introduction/status/everything', lang ) ),
             A( _N['screenshots'], href=makeURL( 'pictures/screenshots/', lang) ),
             A( _N['ports'], href=makeURL( 'introduction/ports', lang ) ),
             A( _N['license'], href='%(BASE)slicense.html' )

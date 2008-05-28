@@ -163,12 +163,20 @@ def makePictures():
 	    ).write( TEMPLATE_DATA[lang] % strings )
 
 
-def makeStatus():
-    dstdir = os.path.join( DSTROOT, 'introduction/status' )
-    makedir( dstdir )
+# makeStatus
+# ----------
+# Creates graphs of component implementation status.
 
+def makeStatus():
     tasks  = db.tasks.parse.parse( file( 'db/tasks', 'r' ) )
-    db.tasks.format.html.format( tasks, dstdir, TEMPLATE_DATA[lang] )
+    for lang in LANGUAGES:
+        dstdir = 'introduction/status'
+        if lang == 'en':
+            dstdir = os.path.join( DSTROOT, dstdir )
+        else:
+            dstdir = os.path.join( DSTROOT, lang, dstdir )
+        makedir( dstdir )
+        db.tasks.format.html.format( tasks, dstdir, TEMPLATE_DATA[lang] )
 
 
 # makeNews
@@ -440,7 +448,7 @@ def buildWWW():
         TEMPLATE_DATA[lang] = file( TEMPLATE + lang, 'r' ).read()
 
     makePictures()
-    #makeStatus()
+    makeStatus()
 
     recurse( processWWW )
 

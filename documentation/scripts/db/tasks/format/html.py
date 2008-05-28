@@ -22,7 +22,7 @@ def format( root, directory, template ):
         if isinstance( item, Category ):
             row.append \
             ( 
-                TD( A( href = item.id + '.html', contents = item.description ) )
+                TD( A( href = item.id + '.php', contents = item.description ) )
             )
             row.append \
             (
@@ -100,7 +100,7 @@ def format( root, directory, template ):
         'CONTENT' : '<h1>Status: ' + root.description + '</h1>' + str( content )
     }
 
-    output = file( os.path.join( directory, root.id + '.html' ), 'w' )
+    output = file( os.path.join( directory, root.id + '.php' ), 'w' )
     output.write( template % strings )
     output.close()
 
