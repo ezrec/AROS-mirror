@@ -12,7 +12,7 @@ C_DONE   = 'green'
 C_INWORK = 'yellow'
 C_TODO   = 'red'
 
-def format( root, directory, template ):
+def format( root, directory, template, lang ):
     # First, format this category.
     content = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
 
@@ -94,11 +94,19 @@ def format( root, directory, template ):
 
         content.append( row )
 
-    strings = {
-        'ROOT' : '../../',
-        'BASE' : '../../',
-        'CONTENT' : '<h1>Status: ' + root.description + '</h1>' + str( content )
-    }
+    contentstr = '<h1>Status: ' + root.description + '</h1>' + str( content )
+    if lang == 'en':
+        strings = {
+            'ROOT'    : '../../',
+            'BASE'    : '../../',
+            'CONTENT' : contentstr
+        }
+    else:
+        strings = {
+            'ROOT'    : '../../../',
+            'BASE'    : '../../../',
+            'CONTENT' : contentstr
+        }
 
     output = file( os.path.join( directory, root.id + '.php' ), 'w' )
     output.write( template % strings )
@@ -107,6 +115,6 @@ def format( root, directory, template ):
     # Second, recurse down.
     for item in root:
         if isinstance( item, Category ):
-            format( item, directory, template )
+            format( item, directory, template, lang )
 
 

@@ -176,7 +176,7 @@ def makeStatus():
         else:
             dstdir = os.path.join( DSTROOT, lang, dstdir )
         makedir( dstdir )
-        db.tasks.format.html.format( tasks, dstdir, TEMPLATE_DATA[lang] )
+        db.tasks.format.html.format( tasks, dstdir, TEMPLATE_DATA[lang], lang )
 
 
 # makeNews
