@@ -7,7 +7,6 @@
 
 #MM- development-SDL_image : linklibs-SDL
 
-%fetch_and_build_gnu_development package=SDL_image version=1.2.6 patch=no \
-    package_repo=http://www.libsdl.org/projects/SDL_image/release/ \
-    extraoptions="--disable-jpg-shared --disable-png-shared --disable-tif-shared"
+%fetch_and_build_gnu_development package=SDL_image version=1.2.3 patch=yes \
+    package_repo=http://www.libsdl.org/projects/SDL_image/release/
 
