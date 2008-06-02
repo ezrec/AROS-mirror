@@ -125,7 +125,7 @@ struct timerequest *USBCreateTimer()
         if (tr)
         {
             FreeSignal(mp->mp_SigBit);
-            if (!OpenDevice((STRPTR)"timer.device", UNIT_MICROHZ, (struct IORequest *)tr, 0))
+            if (!OpenDevice((STRPTR)"timer.device", UNIT_VBLANK, (struct IORequest *)tr, 0))
                 return tr;
             
             DeleteIORequest((struct IORequest *)tr);

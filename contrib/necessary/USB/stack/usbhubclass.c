@@ -17,8 +17,15 @@
     Free Software Foundation, Inc.,
     59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+/*
+ * CHANGELOG:
+ * DATE        NAME                ENTRY
+ * ----------  ------------------  -------------------------------------------------------------------
+ * 2008-06-02  T. Wiszkowski       Updated device detection mechanism so the stack is aware of already 
+ *                                 connected devices
+ */
 
-#define DEBUG 1
+#define DEBUG 0
 
 #include <inttypes.h>
 
@@ -489,10 +496,15 @@ static void hub_explore(OOP_Class *cl, OOP_Object *o)
             HIDD_USBHub_ClearPortFeature(o, port, UHF_C_PORT_ENABLE);
 #warning: TODO: Extend
         }
-        
-        if (!(change & UPS_C_CONNECT_STATUS))
+       
+	/* 
+	 * if connection status has not changed and device is still disconnected skip port. 
+	 * the original method did not analyse ports after reset.
+	 */	
+        if ((0 == (status & UPS_CURRENT_CONNECT_STATUS)) == (0 == hub->children[port-1]))
         {
-            D(bug("[USBHub Process]   !C_CONNECT_STATUS\n"));
+	    // D(bug("[USBHub Process]   !C_CONNECT_STATUS\n"));
+	    D(bug("[USBHub Process]    UPS_CURRENT_CONNECT_STATUS reflects actual mapping\n"));
             continue;
         }
                 
