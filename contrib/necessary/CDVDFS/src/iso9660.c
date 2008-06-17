@@ -11,6 +11,9 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 16-Jun-08 sonic   - Skip files with "Associated" flag set. Helps to
+ *                     read ISO discs created under MacOS.
+ *                   - Supports "Hidden" flag.
  * 06-May-07 sonic   - Rewritten routines dealing wkith object names.
  *                   - Added support for RockRidge protection bits and file comments.
  * 08-Apr-07 sonic   - removed redundant "TRACKDISK" option
@@ -62,6 +65,10 @@
 #include "globals.h"
 
 #include "clib_stuff.h"
+
+#ifndef FIBF_HIDDEN
+#define FIBF_HIDDEN (1<<7)
+#endif
 
 t_bool Iso_Is_Top_Level_Object (CDROM_OBJ *);
 
@@ -487,7 +494,9 @@ CDROM_OBJ *Iso_Open_Obj_In_Directory(CDROM_OBJ *p_dir, char *p_name)
 			offset = (offset & 0xfffff800) + 2048;
 			continue;
 		}
-		if (Names_Equal(p_dir->volume, dir, p_name))
+		/* We skip files that are marked as associated */
+		if (((dir->flags & FILE_FLAG_ASSOCIATED) == 0) &&
+		    Names_Equal(p_dir->volume, dir, p_name))
 			break;
 		offset += dir->length;
 	}
@@ -499,8 +508,8 @@ CDROM_OBJ *Iso_Open_Obj_In_Directory(CDROM_OBJ *p_dir, char *p_name)
 	if (!obj)
 		return NULL;
 
-	obj->directory_f = (dir->flags & 2);
-	obj->protection = 0;
+	obj->directory_f = (dir->flags & FILE_FLAG_DIRECTORY);
+	obj->protection = (dir->flags & FILE_FLAG_HIDDEN) ? FIBF_HIDDEN : 0;
 	if (p_dir->volume->protocol == PRO_ROCK && Is_A_Symbolic_Link(p_dir->volume, dir, &obj->protection))
 	{
 		obj->symlink_f = 1;
@@ -702,34 +711,36 @@ int len;
 		*p_offset = offset + rec->length;
 	}
 
-	for (;;)
-	{
-		if (OBJ(p_dir,dir)->data_length <= *p_offset)
-			return 0;
-
-		rec = Get_Directory_Record
-					(
-						p_dir->volume,
-						OBJ(p_dir,dir)->extent_loc + OBJ(p_dir,dir)->ext_attr_length,
-						*p_offset
-					);
-		if (!rec)
-			return 0;
-
-		if (rec->length == 0)
+	do {
+		for (;;)
 		{
-			/* go to next logical sector: */
-			*p_offset = (*p_offset & 0xfffff800) + 2048;
-		}
-		else
-			break;
-	}
+			if (OBJ(p_dir,dir)->data_length <= *p_offset)
+				return 0;
 
-	*p_offset += rec->length;
+			rec = Get_Directory_Record
+						(
+							p_dir->volume,
+							OBJ(p_dir,dir)->extent_loc + OBJ(p_dir,dir)->ext_attr_length,
+							*p_offset
+						);
+			if (!rec)
+				return 0;
+
+			if (rec->length == 0)
+			{
+				/* go to next logical sector: */
+				*p_offset = (*p_offset & 0xfffff800) + 2048;
+			}
+			else
+				break;
+		}
+
+		*p_offset += rec->length;
+	} while (rec->flags & FILE_FLAG_ASSOCIATED);
 
 	p_info->name_length = Get_File_Name(p_dir->volume, rec, p_info->name, sizeof(p_info->name));
 
-	p_info->protection = 0;
+	p_info->protection = (rec->flags & FILE_FLAG_HIDDEN) ? FIBF_HIDDEN : 0;
 
 	if (p_dir->volume->protocol == PRO_ROCK && Is_A_Symbolic_Link(p_dir->volume, rec, &p_info->protection))
 	{
@@ -744,7 +755,7 @@ int len;
 	else
 	{
 		p_info->symlink_f = 0;
-		p_info->directory_f = rec->flags & 2;
+		p_info->directory_f = rec->flags & FILE_FLAG_DIRECTORY;
 	}
 
 	p_info->file_length = rec->data_length;

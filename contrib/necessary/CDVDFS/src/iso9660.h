@@ -48,6 +48,11 @@ typedef struct directory_record {
   char			file_id[1];
 } __attribute__((packed) )directory_record;
 
+/* Some of file flags we use */
+#define FILE_FLAG_HIDDEN     0x01
+#define FILE_FLAG_DIRECTORY  0x02
+#define FILE_FLAG_ASSOCIATED 0x04
+
 typedef char time_and_date[17];
 
 typedef struct prim_vol_desc {

@@ -2,8 +2,8 @@
 ;(C) 1994 Thomas Kessler
 ;(C) 2005-2007 Pavel Fedin
 
-(set #amicdrom-version "1.3")
-(set #amicdrom-date "(06-May-07)")
+(set #amicdrom-version "1.4")
+(set #amicdrom-date "(16-Jun-08)")
 (set #install-version "1.2")
 
 (set old-level @user-level)

@@ -10,6 +10,7 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 06-Jun-08 sonic     - Fixed to compile with gcc v2
  * 30-Mar-08 error     - Updated 'Find_Last_Session' with a generic command
  *                       mandatory for all MMC devices; corrected major flaw
  *                       with uninitialized variables
@@ -615,6 +616,7 @@ void Clear_Sector_Buffers (CDROM *p_cd)
 int Find_Last_Session(CDROM *p_cd, uint32_t *p_result)
 {
     static uint8_t cmd[] = {0x43, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, SCSI_BUFSIZE>>8, 0x00, 0x00};
+    uint8_t *buf;
     
     /*
      * first, make the initiator use the logical offset of 0 in case the above fails;
@@ -626,7 +628,7 @@ int Find_Last_Session(CDROM *p_cd, uint32_t *p_result)
      * in future this would be a good idea to allow user choose from multiple tracks.
      */
     *p_result = 0;
-    uint8_t *buf = p_cd->buffers[p_cd->std_buffers + p_cd->file_buffers];
+    buf = p_cd->buffers[p_cd->std_buffers + p_cd->file_buffers];
 
     /*
      * now that we have a spare buffer, try to fetch some data from that CD

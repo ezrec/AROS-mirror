@@ -5,7 +5,7 @@
  *
  * ----------------------------------------------------------------------
  * This code is (C) Copyright 1993,1994 by Frank Munkert.
- *              (C) Copyright 2007 by Pavel Fedin.
+ *              (C) Copyright 2007 - 2008 by Pavel Fedin.
  * All rights reserved.
  * This software may be freely distributed and redistributed for
  * non-commercial purposes, provided this notice is included.
@@ -197,7 +197,7 @@ struct Globals *global=&glob;
 
 void Remove_Seglist (void);
 
-char __version__[] = "\0$VER: CDVDFS 1.3 (15-May-2007)";
+char __version__[] = "\0$VER: CDVDFS 1.4 (16-Jun-2008)";
 
 LONG SAVEDS Main(void)
 {
