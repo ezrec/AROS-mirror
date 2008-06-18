@@ -26,9 +26,11 @@
 #include <proto/oop.h>
 #include <proto/exec.h>
 #include <proto/utility.h>
+#include <proto/kernel.h>
 
 #include "emac.h"
 #include LC_LIBDEFS_FILE
+
 
 static int GM_UNIQUENAME(Init)(LIBBASETYPEPTR LIBBASE)
 {
@@ -50,7 +52,17 @@ static int GM_UNIQUENAME(Init)(LIBBASETYPEPTR LIBBASE)
     LIBBASE->emb_Sana2Info.MTU = ETH_MTU;
     LIBBASE->emb_Sana2Info.AddrFieldSize = 8 * ETH_ADDRESSSIZE;
 
-    return TRUE;
+    LIBBASE->emb_Pool = CreatePool(MEMF_CLEAR | MEMF_PUBLIC | MEMF_SEM_PROTECTED, 8192, 4096);
+    
+    if (LIBBASE->emb_Pool != NULL)
+    {
+        LIBBASE->emb_Units[0] = CreateUnit(LIBBASE, 0);
+        LIBBASE->emb_Units[1] = CreateUnit(LIBBASE, 1);
+
+        return TRUE;
+    }
+    
+    return FALSE;
 }
 
 ADD2INITLIB(GM_UNIQUENAME(Init),0)
