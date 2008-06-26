@@ -1,0 +1,52 @@
+====================================================
+AROS Research Operating System Offline Documentation
+====================================================
+
+.. raw:: html
+   
+   <p align="center"><img src="./images/aros-banner-blue.png"/></p>
+
+Introduction
+============
+
+The AROS Research Operating System is a lightweight, efficient and flexible desktop operating system, designed to help you make the most of your computer. It's an independent, portable and free project, aiming at being compatible with AmigaOS 3.1 at the API level (like Wine, unlike UAE), while improving on it in many areas. The source code is available under an open source license, which allows anyone to freely improve upon it.
+
+
+Offline resources
+=================
+
++ `Introduction`__
++ `We need your help!`__
++ `News archive`__
++ `Installation`__
++ `Shell commands`__
++ `Autodocs`__
++ `Developers resources index`__
++ `Users resources index`__
++ `Contact`__
++ `License`__
+
+
+Online resources
+================
+
++ `AROS website`__
++ `Downloads`__
++ `Status`__
++ `Bugtracker`__
+
+__ introduction/index
+__ documentation/developers/contribute
+__ news/archive/index
+__ documentation/users/installation
+__ documentation/users/shell/index
+__ documentation/developers/autodocs/index
+__ documentation/developers/index
+__ documentation/users/index
+__ contact
+__ license.html
+
+__ http://www.aros.org
+__ http://www.aros.org/download.php
+__ http://www.aros.org/introduction/status/everything.php
+__ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
