@@ -3,6 +3,7 @@ Developers Resources
 ====================
 
 + `How to contribute`__
++ `Roadmap`__
 + `SVN access and usage`__
 + `How to compile`__
 + `Applications development manual`__
@@ -12,12 +13,15 @@ Developers Resources
 + `Debugging manual`__
 + `Reference`__
 + `Specifications`__
++ `UI style guide`__
 + `Documenting`__
 + `Porting`__
++ `Translating`__
 + `Summaries`__
 + `Useful links`__
 
 __ contribute
+__ roadmap
 __ svn
 __ compiling
 __ app-dev/index
@@ -27,8 +31,10 @@ __ hardware/pci
 __ debugging
 __ autodocs/index
 __ specifications/index
+__ ui
 __ documenting
 __ porting
+__ translating
 __ summaries/index
 __ links
 
