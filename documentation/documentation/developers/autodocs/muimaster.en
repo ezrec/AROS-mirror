@@ -31,13 +31,6 @@ Synopsis
           struct MUI_RenderInfo * mri,
           struct Region * r );
 
-Bugs
-~~~~
-::
-
-     The function itself is a bug ;-) Remove it!
-
-
 
 MUI_AddClipping
 ===============
@@ -53,13 +46,6 @@ Synopsis
           WORD width,
           WORD height );
 
-Bugs
-~~~~
-::
-
-     The function itself is a bug ;-) Remove it!
-
-
 
 MUI_AllocAslRequest
 ===================
@@ -72,11 +58,32 @@ Synopsis
           unsigned long reqType,
           struct TagItem * tagList );
 
-Bugs
-~~~~
+Function
+~~~~~~~~
 ::
 
-     The function itself is a bug ;-) Remove it!
+     Interface to asl.library.
+
+
+Inputs
+~~~~~~
+::
+
+     see asl.library/AllocAslRequest()
+
+
+Result
+~~~~~~
+::
+
+     Pointer to AslRequest
+
+
+See also
+~~~~~~~~
+::
+
+     asl.library/AllocAslRequest()
 
 
 
@@ -91,11 +98,18 @@ Synopsis
           APTR requester,
           struct TagItem * tagList );
 
-Bugs
-~~~~
+Function
+~~~~~~~~
 ::
 
-     The function itself is a bug ;-) Remove it!
+     Interface to asl.library.
+
+
+See also
+~~~~~~~~
+::
+
+     asl.library/AslRequest()
 
 
 
@@ -109,13 +123,6 @@ Synopsis
  BOOL MUI_BeginRefresh(
           struct MUI_RenderInfo * mri,
           ULONG flags );
-
-Bugs
-~~~~
-::
-
-     The function itself is a bug ;-) Remove it!
-
 
 
 MUI_CreateCustomClass
@@ -132,13 +139,6 @@ Synopsis
           ULONG datasize,
           APTR dispatcher );
 
-Bugs
-~~~~
-::
-
-     The function itself is a bug ;-) Remove it!
-
-
 
 MUI_DeleteCustomClass
 =====================
@@ -150,11 +150,33 @@ Synopsis
  BOOL MUI_DeleteCustomClass(
           struct MUI_CustomClass * mcc );
 
-Bugs
-~~~~
+Function
+~~~~~~~~
 ::
 
-     The function itself is a bug ;-) Remove it!
+     Delete private or public custom classes.
+
+
+Inputs
+~~~~~~
+::
+
+     mcc - pointer from MUI_CreateCustomClass()
+
+
+Result
+~~~~~~
+::
+
+     TRUE  : success
+     FALSE : some objects or sub classes were still in use.
+
+
+See also
+~~~~~~~~
+::
+
+     MUI_CreateCustomClass()
 
 
 
@@ -179,16 +201,9 @@ Inputs
 ~~~~~~
 ::
 
-     obj -- pointer to MUI object created with MUI_NewObject. Maybe NULL,
-     in which case this function has no effect.
+     obj - pointer to MUI object created with MUI_NewObject. Maybe NULL,
+           in which case this function has no effect.
      
-
-Bugs
-~~~~
-::
-
-     The function itself is a bug ;-) Remove it!
-
 
 
 MUI_EndRefresh
@@ -202,13 +217,6 @@ Synopsis
           struct MUI_RenderInfo * mri,
           ULONG flags );
 
-Bugs
-~~~~
-::
-
-     The function itself is a bug ;-) Remove it!
-
-
 
 MUI_Error
 =========
@@ -219,11 +227,18 @@ Synopsis
 
  LONG MUI_Error();
 
-Bugs
-~~~~
+Function
+~~~~~~~~
 ::
 
-     The function itself is a bug ;-) Remove it!
+     Obsolete function. Use SetIoErr()/IoErr() instead.
+
+
+See also
+~~~~~~~~
+::
+
+     MUI_SetError()
 
 
 
@@ -237,11 +252,18 @@ Synopsis
  VOID MUI_FreeAslRequest(
           APTR requester );
 
-Bugs
-~~~~
+Function
+~~~~~~~~
 ::
 
-     The function itself is a bug ;-) Remove it!
+     Interface to asl.library
+
+
+See also
+~~~~~~~~
+::
+
+     asl.library/FreeAslRequest()
 
 
 
@@ -259,7 +281,8 @@ Function
 ~~~~~~~~
 ::
 
-     Frees a class returned by MUI_GetClass().
+     Frees a class returned by MUI_GetClass(). This function is
+     obsolete. Use MUI_DeleteCustomClass() instead.
 
 
 Inputs
@@ -267,20 +290,6 @@ Inputs
 ::
 
      cl - The pointer to the class.
-
-
-Result
-~~~~~~
-::
-
-     VOID - The function always succeed: if the class can't be
-
-
-Notes
-~~~~~
-::
-
-     This function is obsolete, DO NOT use it.
 
 
 See also
@@ -362,13 +371,6 @@ Synopsis
           LONG height,
           ULONG flags );
 
-Bugs
-~~~~
-::
-
-     The function itself is a bug ;-) Remove it!
-
-
 
 MUI_MakeObjectA
 ===============
@@ -381,11 +383,35 @@ Synopsis
           LONG type,
           IPTR * params );
 
-Bugs
-~~~~
+Function
+~~~~~~~~
 ::
 
-     The function itself is a bug ;-) Remove it!
+     Create an object from the builtin object collection.
+     See file libraries/mui.h for a list of available objects
+     and their parameters. Note that this is not a taglist.
+
+
+Inputs
+~~~~~~
+::
+
+     type   - kind of builtin object
+     params - additional parameters for object
+
+
+Result
+~~~~~~
+::
+
+     Pointer to object
+
+
+See also
+~~~~~~~~
+::
+
+     MUI_CreateCustomClass(), MUI_DeleteCustomClass()
 
 
 
@@ -400,11 +426,33 @@ Synopsis
           ClassID classid,
           struct TagItem * tags );
 
-Bugs
-~~~~
+Function
+~~~~~~~~
 ::
 
-     The function itself is a bug ;-) Remove it!
+     Create object from MUI class.
+
+
+Inputs
+~~~~~~
+::
+
+     classid - case sensitive name/ID string of a MUI class.
+     taglist - attribute/value pairs for the new object.
+
+
+Result
+~~~~~~
+::
+
+     Pointer to object. NULL means failure.
+
+
+See also
+~~~~~~~~
+::
+
+     MUI_DisposeObject(), SetAttrs(), GetAttr()
 
 
 
@@ -420,11 +468,19 @@ Synopsis
           struct MUI_PenSpec * spec,
           ULONG flags );
 
-Bugs
-~~~~
+Function
+~~~~~~~~
 ::
 
-     The function itself is a bug ;-) Remove it!
+     Turns struct MUI_PenSpec (the result of a Poppen object) into
+     a pen for SetAPen().
+
+
+See also
+~~~~~~~~
+::
+
+     MUI_ReleasePen()
 
 
 
@@ -438,13 +494,6 @@ Synopsis
  VOID MUI_Redraw(
           Object * obj,
           ULONG flags );
-
-Bugs
-~~~~
-::
-
-     The function itself is a bug ;-) Remove it!
-
 
 
 MUI_RejectIDCMP
@@ -477,13 +526,6 @@ Synopsis
           struct MUI_RenderInfo * mri,
           LONG pen );
 
-Bugs
-~~~~
-::
-
-     The function itself is a bug ;-) Remove it!
-
-
 
 MUI_RemoveClipRegion
 ====================
@@ -505,13 +547,6 @@ Notes
      MUI_AddClipRegion should better duplicate the region.
 
 
-Bugs
-~~~~
-::
-
-     The function itself is a bug ;-) Remove it!
-
-
 
 MUI_RemoveClipping
 ==================
@@ -523,13 +558,6 @@ Synopsis
  VOID MUI_RemoveClipping(
           struct MUI_RenderInfo * mri,
           APTR handle );
-
-Bugs
-~~~~
-::
-
-     The function itself is a bug ;-) Remove it!
-
 
 
 MUI_RequestA
@@ -598,12 +626,5 @@ Synopsis
 
  LONG MUI_SetError(
           LONG num );
-
-Bugs
-~~~~
-::
-
-     The function itself is a bug ;-) Remove it!
-
 
 

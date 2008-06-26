@@ -2001,7 +2001,7 @@ Inputs
                     if it is too small.
      threshSize   - Allocations beyond the threshSize are given
                     directly to the system. threshSize must be
-                    smaller than the puddleSize.
+                    smaller or equal than the puddleSize.
 
 
 Result
@@ -4558,7 +4558,8 @@ Inputs
 
      library     - Pointer to library structure.
      funcOffset  - Offset of the jumpvector from the library base address in
-                   bytes.
+                   bytes. It's the negative LVO (library vector offset)
+                   multiplied with LIB_VECTSIZE.
      newFunction - New jumptable entry (pointer to the new function).
 
 
@@ -4567,6 +4568,16 @@ Result
 ::
 
      Old jumptable entry (pointer to the old function).
+
+
+Example
+~~~~~~~
+::
+
+     Patch of the function Open() from dos.library:
+     You can find the LVO of 5 in clib/dos_protos.h.
+     SetFunction(DOSBase, -5 * LIB_VECTSIZE, NewOpen);
+     NewOpen must be prepared with AROS_UFH macros.
 
 
 Notes

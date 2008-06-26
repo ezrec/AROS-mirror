@@ -952,13 +952,23 @@ Function
 ~~~~~~~~
 ::
 
- Attempt to close the Workbench screen:
- - Check for open application windows. return FALSE if there are any
- - Clean up all special buffers
- - Close the Workbench screen
- - Make the Workbench program mostly inactive
-   (disk activity will still be monitored)
- - Return TRUE
+ Attempt to close the Workbench screen. This will fail if there are any
+ non-Drawer windows open on it.
+
+
+Result
+~~~~~~
+::
+
+     success - TRUE if Workbench screen could be closed.
+
+
+Notes
+~~~~~
+::
+
+     If the Workbench screen is already closed when this function is called,
+     FALSE is returned.
 
 
 See also
@@ -2679,8 +2689,8 @@ Function
 
 
  Arbitrates access to the system public screen list. This is for Public
- Screen Manager programs only! The list should be locked as short a time
- as possible.
+ Screen Manager programs only! The list should be locked for as short a
+ time as possible.
 
 
 Notes
@@ -2689,7 +2699,6 @@ Notes
 
 
  The list's nodes are PubScreenNodes as defined in <intuition/screens.h>.
- Act very quickly when holding this lock!
 
 
 See also

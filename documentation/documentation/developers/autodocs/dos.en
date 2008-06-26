@@ -38,16 +38,16 @@ dos
 `ReadArgs`_                             `ReadItem`_                             `ReadLink`_                             `Relabel`_                              
 `RemAssignList`_                        `RemDosEntry`_                          `RemSegment`_                           `Rename`_                               
 `ReplyPkt`_                             `RunCommand`_                           `SameDevice`_                           `SameLock`_                             
-`Seek`_                                 `SelectError`_                          `SelectInput`_                          `SelectOutput`_                         
-`SendPkt`_                              `SetArgStr`_                            `SetComment`_                           `SetConsoleTask`_                       
-`SetCurrentDirName`_                    `SetFileDate`_                          `SetFileSize`_                          `SetFileSysTask`_                       
-`SetIoErr`_                             `SetMode`_                              `SetOwner`_                             `SetProgramDir`_                        
-`SetProgramName`_                       `SetPrompt`_                            `SetProtection`_                        `SetVBuf`_                              
-`SetVar`_                               `SplitName`_                            `StartNotify`_                          `StrToDate`_                            
-`StrToLong`_                            `SystemTagList`_                        `UnGetC`_                               `UnLoadSeg`_                            
-`UnLockDosList`_                        `UnLockRecord`_                         `UnLockRecords`_                        `VFPrintf`_                             
-`VFWritef`_                             `VPrintf`_                              `WaitForChar`_                          `WaitPkt`_                              
-`Write`_                                `WriteChars`_                           
+`ScanVars`_                             `Seek`_                                 `SelectError`_                          `SelectInput`_                          
+`SelectOutput`_                         `SendPkt`_                              `SetArgStr`_                            `SetComment`_                           
+`SetConsoleTask`_                       `SetCurrentDirName`_                    `SetFileDate`_                          `SetFileSize`_                          
+`SetFileSysTask`_                       `SetIoErr`_                             `SetMode`_                              `SetOwner`_                             
+`SetProgramDir`_                        `SetProgramName`_                       `SetPrompt`_                            `SetProtection`_                        
+`SetVBuf`_                              `SetVar`_                               `SplitName`_                            `StartNotify`_                          
+`StrToDate`_                            `StrToLong`_                            `SystemTagList`_                        `UnGetC`_                               
+`UnLoadSeg`_                            `UnLockDosList`_                        `UnLockRecord`_                         `UnLockRecords`_                        
+`VFPrintf`_                             `VFWritef`_                             `VPrintf`_                              `WaitForChar`_                          
+`WaitPkt`_                              `Write`_                                `WriteChars`_                           
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -5038,6 +5038,70 @@ Synopsis
  LONG SameLock(
           BPTR lock1,
           BPTR lock2 );
+
+
+ScanVars
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG ScanVars(
+          struct Hook * hook,
+          ULONG flags,
+          APTR userdata );
+
+Function
+~~~~~~~~
+::
+
+     Scan local and/or global variables accordingly to specified flags. For
+     each scanned variable hook function is called. Scanning process will
+     continue as long as hook returns 0. If hook returns a non-zero value,
+     scanning will be aborted and ScanVars will return this value.
+
+
+Inputs
+~~~~~~
+::
+
+     userdata - Any user-specific data passed to hook function.
+     flags - Same as in GetVar().
+     hook - Hook function that will be called for each scanned variable as:
+            result = hook_function(hook,userdata,message) with ScanVarsMsg
+            structure as message parameter containing information about given
+            variable.
+     
+
+Result
+~~~~~~
+::
+
+     !=0 returned by hook function if scan process was aborted, 0 otherwise.
+
+
+Notes
+~~~~~
+::
+
+ ScanVarsMsg structure content is valid only during hook call.
+ See <dos/var.h> for description of ScanVarsMsg structure.
+
+
+Bugs
+~~~~
+::
+
+ Currently only local variables scanning is implemented.
+
+
+See also
+~~~~~~~~
+::
+
+     DeleteVar(), FindVar(), GetVar(), SetVar(), <dos/var.h>
+
 
 
 Seek
