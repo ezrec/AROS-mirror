@@ -25,7 +25,7 @@ Location
 ::
 
 
-     Workbench:C
+     C:
 
 
 Function
@@ -52,7 +52,7 @@ Example
 ::
 
 
-     shell FROM S:Startup-Sequence
+     Shell FROM S:Startup-Sequence
 
      Starts a shell and executes the startup script.
 
