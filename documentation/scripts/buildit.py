@@ -550,6 +550,9 @@ def buildWWW():
         toolpath 
     )
 
+    # Remove index-offline.php
+    remove( os.path.join( DSTROOT, 'index-offline.php' ) )
+
     os.system( 'chmod -R go+r %s' % DSTROOT )
 
 
@@ -564,9 +567,13 @@ def buildHTML():
     copySamples()
 
     copy( 'targets/www/docutils.css', DSTROOT )
-    copy( 'targets/html/aros.css', DSTROOT )
+    copy( 'targets/www/aros.css', DSTROOT )
 
     copy( 'license.html', DSTROOT )
+
+    # Use index-offline as index
+    remove( os.path.join( DSTROOT, 'index.html' ) )
+    os.rename( os.path.join( DSTROOT, 'index-offline.html' ), os.path.join( DSTROOT, 'index.html' ) )
 
     os.system( 'chmod -R go+r %s' % DSTROOT )
 
