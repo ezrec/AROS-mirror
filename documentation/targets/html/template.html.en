@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-15" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-15" />
+<title>AROS Research Operating System</title>
+<link rel="stylesheet" href="%(ROOT)saros.css" type="text/css" />
+</head>
+<body>
+<h1 class="title">AROS Research Operating System Offline Documentation</h1>
+<p align="center"><img src="%(ROOT)s/images/aros-banner-blue.png"/></p><div class="section">
+
+
+%(CONTENT)s
+
+</body>
+</html>

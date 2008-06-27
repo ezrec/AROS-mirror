@@ -12,7 +12,7 @@ C_DONE   = 'green'
 C_INWORK = 'yellow'
 C_TODO   = 'red'
 
-def format( root, directory, template, lang ):
+def format( root, directory, template, lang, extension ):
     # First, format this category.
     content = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
 
@@ -22,7 +22,7 @@ def format( root, directory, template, lang ):
         if isinstance( item, Category ):
             row.append \
             ( 
-                TD( A( href = item.id + '.php', contents = item.description ) )
+                TD( A( href = item.id + extension, contents = item.description ) )
             )
             row.append \
             (
@@ -108,13 +108,13 @@ def format( root, directory, template, lang ):
             'CONTENT' : contentstr
         }
 
-    output = file( os.path.join( directory, root.id + '.php' ), 'w' )
+    output = file( os.path.join( directory, root.id + extension ), 'w' )
     output.write( template % strings )
     output.close()
 
     # Second, recurse down.
     for item in root:
         if isinstance( item, Category ):
-            format( item, directory, template, lang )
+            format( item, directory, template, lang, extension )
 
 

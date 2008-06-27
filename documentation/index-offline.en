@@ -21,18 +21,17 @@ Offline resources
 + `Installation`__
 + `Shell commands`__
 + `Autodocs`__
++ `Status`__
 + `Developers resources index`__
 + `Users resources index`__
 + `Contact`__
 + `License`__
-
 
 Online resources
 ================
 
 + `AROS website`__
 + `Downloads`__
-+ `Status`__
 + `Bugtracker`__
 
 __ introduction/index
@@ -41,6 +40,7 @@ __ news/archive/index
 __ documentation/users/installation
 __ documentation/users/shell/index
 __ documentation/developers/autodocs/index
+__ introduction/status/everything
 __ documentation/developers/index
 __ documentation/users/index
 __ contact
@@ -48,5 +48,4 @@ __ license.html
 
 __ http://www.aros.org
 __ http://www.aros.org/download.php
-__ http://www.aros.org/introduction/status/everything.php
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse

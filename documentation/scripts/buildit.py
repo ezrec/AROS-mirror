@@ -167,7 +167,7 @@ def makePictures():
 # ----------
 # Creates graphs of component implementation status.
 
-def makeStatus():
+def makeStatus( extension = '.php' ):
     tasks  = db.tasks.parse.parse( file( 'db/tasks', 'r' ) )
     for lang in LANGUAGES:
         dstdir = 'introduction/status'
@@ -176,7 +176,7 @@ def makeStatus():
         else:
             dstdir = os.path.join( DSTROOT, lang, dstdir )
         makedir( dstdir )
-        db.tasks.format.html.format( tasks, dstdir, TEMPLATE_DATA[lang], lang )
+        db.tasks.format.html.format( tasks, dstdir, TEMPLATE_DATA[lang], lang, extension )
 
 
 # makeNews
@@ -558,6 +558,8 @@ def buildWWW():
 
 def buildHTML():
     global DSTROOT ; DSTROOT = os.path.join( DSTROOT, 'html' )
+    global LANGUAGES ; LANGUAGES = [ 'en' ]
+    TEMPLATE_DATA['en'] = file( 'targets/html/template.html.en', 'r' ).read()
 
     if not os.path.exists( 'news/index.en' ):
         file( 'news/index.en', 'w' ).write( '' )
@@ -570,6 +572,9 @@ def buildHTML():
     copy( 'targets/www/aros.css', DSTROOT )
 
     copy( 'license.html', DSTROOT )
+
+    # Make status
+    makeStatus( '.html' )
 
     # Use index-offline as index
     remove( os.path.join( DSTROOT, 'index.html' ) )
