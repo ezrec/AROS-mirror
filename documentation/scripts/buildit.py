@@ -561,6 +561,8 @@ def buildHTML():
     global LANGUAGES ; LANGUAGES = [ 'en' ]
     TEMPLATE_DATA['en'] = file( 'targets/html/template.html.en', 'r' ).read()
 
+    makeNews();
+
     if not os.path.exists( 'news/index.en' ):
         file( 'news/index.en', 'w' ).write( '' )
     recurse( processHTML )
