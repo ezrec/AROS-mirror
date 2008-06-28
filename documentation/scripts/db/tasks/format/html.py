@@ -8,9 +8,9 @@ from html_ import *
 
 # Settings
 
-C_DONE   = 'green'
-C_INWORK = 'yellow'
-C_TODO   = 'red'
+C_Completed   = 'green'
+C_NeedsSomeWork = 'yellow'
+C_NotImplemented   = 'red'
 
 def format( root, directory, template, lang, extension ):
     # First, format this category.
@@ -46,17 +46,17 @@ def format( root, directory, template, lang, extension ):
                                         [
                                             TD \
                                             ( 
-                                                bgcolor = C_DONE, 
+                                                bgcolor = C_Completed, 
                                                 width = `item.done * 100 / item.total` + '%'
                                             ),
                                             TD \
                                             (
-                                                bgcolor = C_INWORK,
+                                                bgcolor = C_NeedsSomeWork,
                                                 width = `item.inwork * 100 / item.total` + '%'
                                             ),
                                             TD \
                                             (
-                                                bgcolor = C_TODO,
+                                                bgcolor = C_NotImplemented,
                                                 width = `item.todo * 100 / item.total` + '%'
                                             )
                                         ]
@@ -68,9 +68,9 @@ def format( root, directory, template, lang, extension ):
                 )
             )
         else:
-            if   item.status == Task.DONE:   color = C_DONE
-            elif item.status == Task.INWORK: color = C_INWORK
-            elif item.status == Task.TODO:   color = C_TODO
+            if   item.status == CategoryItem.Completed:   color = C_Completed
+            elif item.status == CategoryItem.NeedsSomeWork: color = C_NeedsSomeWork
+            elif item.status == CategoryItem.NotImplemented:   color = C_NotImplemented
             
             row.append( TD( item.description ) )
             row.append \

@@ -2,10 +2,13 @@
 # Copyright © 2002, The AROS Development Team. All rights reserved.
 # $Id$
 
-class Task:
-    DONE   = 2
-    INWORK = 1
-    TODO   = 0
+class CategoryItem:
+    Completed   = 2
+    NeedsSomeWork = 1
+    NotImplemented   = 0
+    #TODO : Add more statuses
+    #TODO : Add architecture
+    #TODO : Add API version
 
     def __init__( self, id, description, category, status ):
         self.id          = id
@@ -53,11 +56,11 @@ class Category( list ):
             if item.__class__ != Category:
                 self.total += 1
 
-                if   item.status == Task.DONE:
+                if   item.status == CategoryItem.Completed:
                     self.done   += 1
-                elif item.status == Task.INWORK:
+                elif item.status == CategoryItem.NeedsSomeWork:
                     self.inwork += 1
-                elif item.status == Task.TODO:
+                elif item.status == CategoryItem.NotImplemented:
                     self.todo   += 1
 
             else:

@@ -168,7 +168,7 @@ def makePictures():
 # Creates graphs of component implementation status.
 
 def makeStatus( extension = '.php' ):
-    tasks  = db.tasks.parse.parse( file( 'db/tasks', 'r' ) )
+    tasks  = db.tasks.parse.parse( file( 'db/status', 'r' ) )
     for lang in LANGUAGES:
         dstdir = 'introduction/status'
         if lang == 'en':

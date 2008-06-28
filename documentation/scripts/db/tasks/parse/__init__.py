@@ -6,19 +6,19 @@ from db.tasks.model import *
 from data import *
 
 def parse( file ):
-    tasks = {}
+    categoryitems = {}
     size  = 0
 
     for line in file:
         words = line.strip().split( ';' )
-    
-        id          = words[0]
-        description = words[3]
-        category    = words[0][:-5]
-        status      = int(words[1])
-        developers  = words[2].split( ',' )
         
-        tasks[id] = Task( id, description, category, status ) 
+
+        id          = words[0] + words[1]
+        description = words[1]
+        category    = words[0]
+        status      = int(words[4])
+        
+        categoryitems[id] = CategoryItem( id, description, category, status ) 
     
 
     cats = {}        
@@ -26,9 +26,9 @@ def parse( file ):
     while True:
         bubbled = False
     
-        for task in tasks.copy().itervalues():
-            if task.category:
-                category = task.category
+        for categoryitem in categoryitems.copy().itervalues():
+            if categoryitem.category:
+                category = categoryitem.category
             
                 if category not in cats:
                     supercategory = None
@@ -43,16 +43,16 @@ def parse( file ):
                     
                     c = Category( category, longy, supercategory )
                     cats[c.id] = c
-                    tasks[c.id] = c
+                    categoryitems[c.id] = c
                 
-                cats[category].append( task )
-                del tasks[task.id]
+                cats[category].append( categoryitem )
+                del categoryitems[categoryitem.id]
                 bubbled = True
             
         if not bubbled:
             break
 
-    everything = tasks['everything']
+    everything = categoryitems['everything']
     everything.recalculate()    
     everything.sort()
     
