@@ -12,6 +12,16 @@ def parse( file ):
     for line in file:
         words = line.strip().split( ';' )
         
+        # TODO: Add support for architectures different than generic
+        architecture = int(words[2])
+        if architecture != CategoryItem.ARCH_Generic:
+            continue
+        
+        # TODO Add support for API versions different than OS31
+        apiversion = int(words[3])
+        if apiversion != CategoryItem.API_OS31:
+            continue
+        
 
         id          = words[0] + words[1]
         description = words[1]

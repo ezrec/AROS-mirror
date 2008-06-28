@@ -3,12 +3,18 @@
 # $Id$
 
 class CategoryItem:
-    Completed   = 2
-    NeedsSomeWork = 1
-    NotImplemented   = 0
-    #TODO : Add more statuses
-    #TODO : Add architecture
-    #TODO : Add API version
+    STAT_Completed   = 2
+    STAT_NeedsSomeWork = 1
+    STAT_NotImplemented   = 0
+    STAT_Skipped = 3
+    STAT_ArchitectureDependant = 4
+    STAT_AmigaOnly = 5
+
+    ARCH_Generic = 1
+    ARCH_i386 = 2
+
+    API_OS31 = 1
+    API_AROS = 2
 
     def __init__( self, id, description, category, status ):
         self.id          = id
@@ -31,11 +37,14 @@ class Category( list ):
         self.description = description
         self.category    = category
         
-        self.done        = 0
-        self.inwork      = 0
-        self.todo        = 0
+        self.completed                  = 0
+        self.needssomework              = 0
+        self.notimplemented             = 0
+        self.skipped                    = 0
+        self.architecturedependant      = 0
+        self.amigaonly                  = 0
         
-        self.total       = 0
+        self.total                      = 0
 
     def __lt__( self, other ): return self.id <  other.id 
     def __le__( self, other ): return self.id <= other.id 
@@ -56,18 +65,27 @@ class Category( list ):
             if item.__class__ != Category:
                 self.total += 1
 
-                if   item.status == CategoryItem.Completed:
-                    self.done   += 1
-                elif item.status == CategoryItem.NeedsSomeWork:
-                    self.inwork += 1
-                elif item.status == CategoryItem.NotImplemented:
-                    self.todo   += 1
+                if   item.status == CategoryItem.STAT_Completed:
+                    self.completed              += 1
+                elif item.status == CategoryItem.STAT_NeedsSomeWork:
+                    self.needssomework          += 1
+                elif item.status == CategoryItem.STAT_NotImplemented:
+                    self.notimplemented         += 1
+                elif item.status == CategoryItem.STAT_Skipped:
+                    self.skipped                += 1
+                elif item.status == CategoryItem.STAT_ArchitectureDependant:
+                    self.architecturedependant  += 1
+                elif item.status == CategoryItem.STAT_AmigaOnly:
+                    self.amigaonly              += 1
 
             else:
                 item.recalculate()
                 
-                self.done   += item.done
-                self.inwork += item.inwork
-                self.todo   += item.todo
-                self.total  += item.total
+                self.completed              += item.completed
+                self.needssomework          += item.needssomework
+                self.notimplemented         += item.notimplemented
+                self.skipped                += item.skipped
+                self.architecturedependant  += item.architecturedependant
+                self.amigaonly              += item.amigaonly
+                self.total                  += item.total
 
