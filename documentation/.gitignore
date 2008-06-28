@@ -1,0 +1,144 @@
+
+# /
+/credits.en
+/.*.swp
+
+# /documentation/developers/
+/documentation/developers/.*.swp
+
+# /news/
+/news/index.*
+
+# /news/archive/
+/news/archive/2008.*
+/news/archive/2007.*
+/news/archive/2006.*
+/news/archive/2005.*
+/news/archive/2004.*
+/news/archive/2003.*
+/news/archive/2002.*
+/news/archive/2001.*
+/news/archive/2000.*
+
+# /scripts/
+/scripts/*.pyc
+/scripts/.*.swp
+
+# /scripts/build/
+/scripts/build/*.pyc
+
+# /scripts/config/
+/scripts/config/user
+
+# /scripts/db/
+/scripts/db/*.pyc
+
+# /scripts/db/credits/
+/scripts/db/credits/*.pyc
+
+# /scripts/db/credits/format/
+/scripts/db/credits/format/*.pyc
+
+# /scripts/db/mirrors/
+/scripts/db/mirrors/*.pyc
+
+# /scripts/db/mirrors/format/
+/scripts/db/mirrors/format/*.pyc
+
+# /scripts/db/tasks/
+/scripts/db/tasks/*.pyc
+
+# /scripts/db/tasks/format/
+/scripts/db/tasks/format/*.pyc
+
+# /scripts/db/tasks/parse/
+/scripts/db/tasks/parse/*.pyc
+
+# /scripts/docutils/
+/scripts/docutils/*.pyc
+
+# /scripts/docutils/languages/
+/scripts/docutils/languages/*.pyc
+
+# /scripts/docutils/parsers/
+/scripts/docutils/parsers/*.pyc
+
+# /scripts/docutils/parsers/rst/
+/scripts/docutils/parsers/rst/*.pyc
+
+# /scripts/docutils/parsers/rst/directives/
+/scripts/docutils/parsers/rst/directives/*.pyc
+
+# /scripts/docutils/parsers/rst/include/
+/scripts/docutils/parsers/rst/include/*.pyc
+
+# /scripts/docutils/parsers/rst/languages/
+/scripts/docutils/parsers/rst/languages/*.pyc
+
+# /scripts/docutils/readers/
+/scripts/docutils/readers/*.pyc
+
+# /scripts/docutils/readers/python/
+/scripts/docutils/readers/python/*.pyc
+
+# /scripts/docutils/transforms/
+/scripts/docutils/transforms/*.pyc
+
+# /scripts/docutils/writers/
+/scripts/docutils/writers/*.pyc
+
+# /scripts/docutils/writers/html4css1/
+/scripts/docutils/writers/html4css1/*.pyc
+
+# /scripts/docutils/writers/latex2e/
+/scripts/docutils/writers/latex2e/*.pyc
+
+# /scripts/docutils/writers/newlatex2e/
+/scripts/docutils/writers/newlatex2e/*.pyc
+
+# /scripts/docutils/writers/pep_html/
+/scripts/docutils/writers/pep_html/*.pyc
+
+# /scripts/docutils/writers/s5_html/
+/scripts/docutils/writers/s5_html/*.pyc
+
+# /scripts/docutils/writers/s5_html/themes/
+/scripts/docutils/writers/s5_html/themes/*.pyc
+
+# /scripts/docutils/writers/s5_html/themes/big-black/
+/scripts/docutils/writers/s5_html/themes/big-black/*.pyc
+
+# /scripts/docutils/writers/s5_html/themes/big-white/
+/scripts/docutils/writers/s5_html/themes/big-white/*.pyc
+
+# /scripts/docutils/writers/s5_html/themes/default/
+/scripts/docutils/writers/s5_html/themes/default/*.pyc
+
+# /scripts/docutils/writers/s5_html/themes/medium-black/
+/scripts/docutils/writers/s5_html/themes/medium-black/*.pyc
+
+# /scripts/docutils/writers/s5_html/themes/medium-white/
+/scripts/docutils/writers/s5_html/themes/medium-white/*.pyc
+
+# /scripts/docutils/writers/s5_html/themes/small-black/
+/scripts/docutils/writers/s5_html/themes/small-black/*.pyc
+
+# /scripts/docutils/writers/s5_html/themes/small-white/
+/scripts/docutils/writers/s5_html/themes/small-white/*.pyc
+
+# /scripts/template/
+/scripts/template/*.pyc
+
+# /scripts/template/www/
+/scripts/template/www/*.pyc
+
+# /targets/www/
+/targets/www/template.html.*
+/targets/www/.*.swp
+
+# /targets/www/template/
+/targets/www/template/*.pyc
+/targets/www/template/.*.swp
+
+# /targets/www/tools/
+/targets/www/tools/.*.swp
