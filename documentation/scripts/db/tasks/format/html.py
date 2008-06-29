@@ -12,8 +12,8 @@ C_Completed             = 'green'
 C_NeedsSomeWork         = 'yellow'
 C_NotImplemented        = 'red'
 C_Skipped               = 'green'
-C_ArchitectureDependant = 'aquamarine'
-C_AmigaOnly             = 'aquamarine'
+C_ArchitectureDependant = 'lightseagreen'
+C_AmigaOnly             = 'lightgray'
 
 def format( root, directory, template, lang, extension ):
     # First, format this category.
@@ -38,42 +38,42 @@ def format( root, directory, template, lang, extension ):
                 dyncontents.append(TD \
                              ( 
                              bgcolor = C_Completed, 
-                             width = `item.completed * 100 / item.total` + '%'
+                             width = `int (round( item.completed * 100.0 / item.total, 0 ) )` + '%'
                              ) )
 
             if item.skipped != 0:
                 dyncontents.append(TD \
                              ( 
                              bgcolor = C_Skipped, 
-                             width = `item.skipped * 100 / item.total` + '%'
+                             width = `int (round( item.skipped * 100.0 / item.total, 0 ) )` + '%'
                              ) )
 
             if item.architecturedependant != 0:
                 dyncontents.append(TD \
                              ( 
                              bgcolor = C_ArchitectureDependant, 
-                             width = `item.architecturedependant * 100 / item.total` + '%'
+                             width = `int (round( item.architecturedependant * 100.0 / item.total, 0 ) )` + '%'
                              ) )
 
             if item.amigaonly != 0:
                 dyncontents.append(TD \
                              ( 
                              bgcolor = C_AmigaOnly, 
-                             width = `item.amigaonly * 100 / item.total` + '%'
+                             width = `int (round( item.amigaonly * 100.0 / item.total, 0 ) )` + '%'
                              ) ) 
            
             if item.needssomework != 0:
                 dyncontents.append(TD \
                              ( 
                              bgcolor = C_NeedsSomeWork, 
-                             width = `item.needssomework * 100 / item.total` + '%'
+                             width = `int (round( item.needssomework * 100.0 / item.total, 0 ) )` + '%'
                              ) )
 
             if item.notimplemented != 0:
                 dyncontents.append(TD \
                              ( 
                              bgcolor = C_NotImplemented, 
-                             width = `item.notimplemented * 100 / item.total` + '%'
+                             width = `int (round( item.notimplemented * 100.0 / item.total, 0 ) )` + '%'
                              ) )
             row.append \
             ( 
