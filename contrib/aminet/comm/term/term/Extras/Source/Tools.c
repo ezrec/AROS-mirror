@@ -14,10 +14,11 @@
 #endif
 
 #ifdef __AROS__
-#include <aros/asmcall.h>
+# include <aros/asmcall.h>
 # ifdef Dispatch
 #  undef Dispatch
 # endif
+# define Dispatch MyDispatch
 AROS_UFP3(VOID, Dispatch,
  AROS_UFPA(struct Hook *        , UnusedHook , A0),
  AROS_UFPA(struct RastPort *    , RPort, A2),

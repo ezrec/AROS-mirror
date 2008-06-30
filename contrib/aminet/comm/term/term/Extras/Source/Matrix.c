@@ -18,6 +18,7 @@
 # ifdef Dispatch
 #  undef Dispatch
 # endif
+# define Dispatch MyDispatch
 AROS_UFP3(STATIC ULONG, Dispatch,
  AROS_UFPA(Class *        , class , A0),
  AROS_UFPA(Object *       , obj, A2),

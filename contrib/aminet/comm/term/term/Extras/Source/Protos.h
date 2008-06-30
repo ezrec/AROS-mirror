@@ -12,6 +12,33 @@
 
 /**********************************************************************/
 
+	/* AROS compatibility */
+#ifdef __AROS__
+
+# ifdef ScrollRegion
+#  undef ScrollRegion
+# endif
+# define ScrollRegion MyScrollRegion
+
+# ifdef SetRegion
+#  undef SetRegion
+# endif
+# define SetRegion MySetRegion
+
+# ifdef FreeVecPooled
+#  undef FreeVecPooled
+# endif
+# define FreeVecPooled MyFreeVecPooled
+
+# ifdef AllocVecPooled
+#  undef AllocVecPooled
+# endif
+# define AllocVecPooled MyAllocVecPooled
+
+#endif
+
+/**********************************************************************/
+
 	/* Debugging macro */
 
 #define DB(x)	;
@@ -422,11 +449,6 @@ ULONG SAVE_DS ASM CommonEditRoutine(REG(a0) struct Hook *UnusedHook, REG(a2) str
 VOID UpdatePens(VOID);
 LONG GetFontWidth(VOID);
 VOID RethinkRasterLimit(VOID);
-#ifdef __AROS__
-# ifdef ScrollRegion
-# undef ScrollRegion
-# endif
-#endif
 VOID ScrollRegion(LONG Direction);
 BOOL DoCancel(VOID);
 BOOL ParseCode(LONG c);
@@ -470,11 +492,6 @@ VOID SetTabs(STRPTR Buffer);
 VOID SetAbsolutePosition(STRPTR Buffer);
 VOID SetTopPosition(STRPTR Buffer);
 VOID SetAttributes(STRPTR Buffer);
-#ifdef __AROS__
-# ifdef SetRegion
-#  undef SetRegion
-# endif
-#endif
 VOID SetRegion(STRPTR Buffer);
 VOID ResetCursor(VOID);
 VOID MoveCursorUp(STRPTR Buffer);
@@ -729,9 +746,7 @@ VOID MoveMouseMarker(struct MarkerContext *Context);
 BOOL CheckMarkerHighlighting(struct MarkerContext *Context, LONG Line, LONG *Left, LONG *Right);
 VOID TransferMarker(struct MarkerContext *Context, ULONG Qualifier);
 BOOL SetWordMarker(struct MarkerContext *Context, LONG FirstVisibleLine, LONG NumVisibleLines, LONG NumLines, LONG FirstVisibleColumn, LONG NumVisibleColumns, LONG NumColumns);
-//#ifndef __AROS__
 VOID SetMarker(struct MarkerContext *Context, LONG FirstVisibleLine, LONG NumVisibleLines, LONG NumLines, LONG FirstVisibleColumn, LONG NumVisibleColumns, LONG NumColumns, LONG Line, LONG WordLeft, LONG WordRight);
-//#endif
 VOID SelectAllMarker(struct MarkerContext *Context, LONG FirstVisibleLine, LONG NumVisibleLines, LONG NumLines, LONG FirstVisibleColumn, LONG NumVisibleColumns, LONG NumColumns, LONG FirstLeft, LONG FirstLine, LONG LastRight, LONG LastLine);
 BOOL CheckMarker(struct MarkerContext *Context);
 
