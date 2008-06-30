@@ -22,13 +22,17 @@
 #define DEBUG 1
 #include <aros/debug.h>
 
+
 #include "aros-gui.h"
 
 /****************************************************************************/
 
-#undef Exception  /* Undef Exception because otherwise would conflict with the function
-                   * with the same name used in UAE
-				   */
+/* Avoid conflict between AROS exec Exception function and the UAE one */
+#ifdef Exception
+#undef Exception
+#endif
+#define Exception MyException
+
 /****************************************************************************/
 
 
