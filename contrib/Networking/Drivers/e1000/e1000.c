@@ -100,17 +100,6 @@ static BOOL e1000func_check_64k_bound(struct net_device *dev,
 	return TRUE;
 }
 
-static inline UBYTE *get_hwbase(struct net_device *dev)
-{
-    return (UBYTE*)((struct e1000_hw *)dev->e1ku_Private00)->hw_addr;
-}
-
-static inline void pci_push(UBYTE *base)
-{
-    /* force out pending posted writes */
-    readl(base);
-}
-
 void e1000func_irq_disable(struct net_device *dev)
 {
 	E1000_WRITE_REG((struct e1000_hw *)dev->e1ku_Private00, E1000_IMC, ~0);
@@ -177,40 +166,30 @@ static void e1000func_leave_82542_rst(struct net_device *dev)
 
 static void e1000func_startrx(struct net_device *dev)
 {
-    UBYTE *base = get_hwbase(dev);
-
 D(bug("[%s]: e1000func_startrx\n", dev->e1ku_name));
 #warning "TODO: Handle starting/stopping Rx"
 }
 
 static void e1000func_stoprx(struct net_device *dev)
 {
-    UBYTE *base = get_hwbase(dev);
-
 D(bug("[%s]: e1000func_stoprx\n", dev->e1ku_name));
 #warning "TODO: Handle starting/stopping Rx"
 }
 
 static void e1000func_starttx(struct net_device *dev)
 {
-    UBYTE *base = get_hwbase(dev);
-
 D(bug("[%s]: e1000func_starttx()\n", dev->e1ku_name));
 #warning "TODO: Handle starting/stopping Tx"
 }
 
 static void e1000func_stoptx(struct net_device *dev)
 {
-    UBYTE *base = get_hwbase(dev);
-
 D(bug("[%s]: e1000func_stoptx()\n", dev->e1ku_name));
 #warning "TODO: Handle starting/stopping Tx"
 }
 
 static void e1000func_txrxreset(struct net_device *dev)
 {
-    UBYTE *base = get_hwbase(dev);
-
 D(bug("[%s]: e1000func_txrxreset()\n", dev->e1ku_name));
 }
 
@@ -1007,8 +986,6 @@ void e1000func_free_rx_resources(struct net_device *dev,
 
 static int e1000func_close(struct net_device *dev)
 {
-    UBYTE *base;
-
     dev->e1ku_ifflags &= ~IFF_UP;
 
 //    ObtainSemaphore(&np->lock);
@@ -1021,8 +998,6 @@ static int e1000func_close(struct net_device *dev)
 //    ObtainSemaphore(&np->lock);
     
     e1000func_deinitialize(dev);    // Stop the chipset and set it in 16bit-mode
-
-    base = get_hwbase(dev);
 
 //    ReleaseSemaphore(&np->lock);
 
