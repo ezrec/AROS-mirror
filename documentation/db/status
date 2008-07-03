@@ -12,14 +12,6 @@ alib_stdio;fputs;1;1;2
 alib_stdio;getchar;1;1;0
 alib_stdio;putchar;1;1;0
 alib_stdio;puts;1;1;2
-asl;AllocFileRequest;1;1;2
-asl;FreeFileRequest;1;1;2
-asl;RequestFile;1;1;2
-asl;AllocAslRequest;1;1;2
-asl;FreeAslRequest;1;1;2
-asl;AslRequest;1;1;2
-asl;AbortAslRequest;1;1;2
-asl;ActivateAslRequest;1;1;2
 battclock;ResetBattClock;1;1;2
 battclock;ReadBattClock;1;1;2
 battclock;WriteBattClock;1;1;2
@@ -1093,6 +1085,7 @@ exec;Exception;1;2;2
 exec;FreeVecPooled;1;2;2
 exec;Reschedule;1;2;1
 exec;Switch;1;2;2
+exec;VNewRawDoFmt;1;2;1
 exec;Dispatch;2;2;3
 exec;Switch;2;2;3
 exec;CacheClearE;2;1;3
@@ -1653,3 +1646,11 @@ intuition;ShowWindow;1;2;2
 intuition;StartScreenNotifyTagList;1;2;2
 intuition;unlockPubClass;1;2;2
 intuition;WindowAction;1;2;1
+asl;AllocAslRequest;1;1;2
+asl;AllocFileRequest;1;1;2
+asl;AslRequest;1;1;2
+asl;FreeAslRequest;1;1;2
+asl;FreeFileRequest;1;1;2
+asl;RequestFile;1;1;2
+asl;AbortAslRequest;1;2;2
+asl;ActivateAslRequest;1;2;1

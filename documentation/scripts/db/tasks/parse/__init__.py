@@ -16,19 +16,14 @@ def parse( file ):
         architecture = int(words[2])
         if architecture != CategoryItem.ARCH_Generic:
             continue
-        
-        # TODO Add support for API versions different than OS31
-        apiversion = int(words[3])
-        if apiversion != CategoryItem.API_OS31:
-            continue
-        
 
-        id          = words[0] + words[1]
+        id          = words[0] + words[1] + words[2] + words[3]
         description = words[1]
         category    = words[0]
         status      = int(words[4])
+        apiversion = int(words[3])
         
-        categoryitems[id] = CategoryItem( id, description, category, status ) 
+        categoryitems[id] = CategoryItem( id, description, category, status, architecture, apiversion ) 
     
 
     cats = {}        

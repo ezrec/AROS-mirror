@@ -16,11 +16,13 @@ class CategoryItem:
     API_OS31 = 1
     API_AROS = 2
 
-    def __init__( self, id, description, category, status ):
-        self.id          = id
-        self.description = description
-        self.category    = category
-        self.status      = status
+    def __init__( self, id, description, category, status, architecture, apiversion ):
+        self.id             =   id
+        self.description    =   description
+        self.category       =   category
+        self.status         =   status
+        self.architecture   =   architecture
+        self.apiversion     =   apiversion
     
     def __lt__( self, other ): return self.id <  other.id 
     def __le__( self, other ): return self.id <= other.id 
