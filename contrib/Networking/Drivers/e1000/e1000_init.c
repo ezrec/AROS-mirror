@@ -316,19 +316,10 @@ D(bug("[e1000] OpenDevice: Unit %d @ %p\n", unitnum, unit));
         req->ios2_BufferManagement = NULL;
 
         /* Check request size */
-
         if(req->ios2_Req.io_Message.mn_Length < sizeof(struct IOSana2Req))
             error = IOERR_OPENFAIL;
 
-        /* Get the requested unit */
-        if((error == 0) && (unitnum == 0))
-        {
-            req->ios2_Req.io_Unit = (APTR)unit;
-        }
-        else error = IOERR_OPENFAIL;
-
         /* Handle device sharing */
-
         if(error == 0)
         {
             if(unit->e1ku_open_count != 0 && ((unit->e1ku_ifflags & IFF_SHARED) == 0 ||
