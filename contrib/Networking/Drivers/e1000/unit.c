@@ -236,9 +236,11 @@ D(bug("[%s]: ## e1000func_TX_Int: nxt to use = %d, write queue port @ %p\n", uni
 
         buffer_info = &tx_ring->buffer_info[i];
 
-        if ((frame = AllocMem(ETH_MAXPACKETSIZE, MEMF_PUBLIC|MEMF_CLEAR)) != NULL)
+        if ((buffer_info->buffer = AllocMem(ETH_MAXPACKETSIZE, MEMF_PUBLIC|MEMF_CLEAR)) != NULL)
         {
-            if ((buffer_info->dma = HIDD_PCIDriver_MapPCI(unit->e1ku_PCIDriver, frame, ETH_MAXPACKETSIZE)) == NULL)
+            frame = buffer;
+
+            if ((buffer_info->dma = HIDD_PCIDriver_CPUtoPCI(unit->e1ku_PCIDriver, buffer_info->buffer)) == NULL)
             {
 D(bug("[%s]: e1000func_TX_Int: Failed to Map Tx DMA buffer\n", unit->e1ku_name));
             }
@@ -420,10 +422,10 @@ D(bug("Processing ..\n"));
 			rx_cleaned |= e1000func_clean_rx_irq(dev,
 			                                &dev->e1ku_rxRing[j]);
 
-//		tx_cleaned = 0;
-//		for (j = 0 ; j < dev->e1ku_txRing_QueueSize ; j++)
-//			tx_cleaned |= e1000_clean_tx_irq(adapter,
-//			                                 &adapter->e1ku_txRing[j]);
+		tx_cleaned = 0;
+		for (j = 0 ; j < dev->e1ku_txRing_QueueSize ; j++)
+			tx_cleaned |= e1000func_clean_tx_irq(dev,
+			                                 &dev->e1ku_txRing[j]);
 
 		if (!rx_cleaned && !tx_cleaned)
 			break;

@@ -233,6 +233,7 @@ enum netdev_state_t
 #include "e1000_hw.h"
 
 struct e1000_buffer {
+    APTR buffer;
 	APTR dma;
 	UWORD length;
 	UWORD next_to_watch;

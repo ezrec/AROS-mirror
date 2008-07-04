@@ -39,24 +39,32 @@
 
 #include "e1000.h"
 
+#define ADVERTISED_1000baseT_Full           (1 << 5)
+#define ADVERTISED_Autoneg                  (1 << 6)
+#define ADVERTISED_TP                       (1 << 7)
+#define ADVERTISED_FIBRE                    (1 << 10)
+
+#define AUTONEG_DISABLE                     0x00
+#define AUTONEG_ENABLE                      0x01
+
 #define E1000_FLAG_HAS_SMBUS                (1 << 0)
 #define E1000_FLAG_HAS_INTR_MODERATION      (1 << 4)
 #define E1000_FLAG_BAD_TX_CARRIER_STATS_FD  (1 << 6)
 #define E1000_FLAG_QUAD_PORT_A              (1 << 8)
 #define E1000_FLAG_SMART_POWER_DOWN         (1 << 9)
 
-#define E1000_TX_FLAGS_CSUM		0x00000001
-#define E1000_TX_FLAGS_VLAN		0x00000002
-#define E1000_TX_FLAGS_TSO		0x00000004
-#define E1000_TX_FLAGS_IPV4		0x00000008
-#define E1000_TX_FLAGS_VLAN_MASK	0xffff0000
-#define E1000_TX_FLAGS_VLAN_SHIFT	16
+#define E1000_TX_FLAGS_CSUM		            0x00000001
+#define E1000_TX_FLAGS_VLAN		            0x00000002
+#define E1000_TX_FLAGS_TSO		            0x00000004
+#define E1000_TX_FLAGS_IPV4		            0x00000008
+#define E1000_TX_FLAGS_VLAN_MASK	        0xffff0000
+#define E1000_TX_FLAGS_VLAN_SHIFT	        16
 
 #define ALIGN(x,a) (((x)+(a)-1L)&~((a)-1L))
 #define min(a, b)  (((a) < (b)) ? (a) : (b))
 #define max(a, b)  (((a) > (b)) ? (a) : (b))
 
-#define E1000_MAX_INTR 10
+#define E1000_MAX_INTR                      10
 
 /* TX/RX descriptor defines */
 #define E1000_DEFAULT_TXD                  256
@@ -75,17 +83,17 @@
 
 
 /* this is the size past which hardware will drop packets when setting LPE=0 */
-#define MAXIMUM_ETHERNET_VLAN_SIZE 1522
+#define MAXIMUM_ETHERNET_VLAN_SIZE          1522
 
 /* Supported Rx Buffer Sizes */
-#define E1000_RXBUFFER_128   128
-#define E1000_RXBUFFER_256   256
-#define E1000_RXBUFFER_512   512
-#define E1000_RXBUFFER_1024  1024
-#define E1000_RXBUFFER_2048  2048
-#define E1000_RXBUFFER_4096  4096
-#define E1000_RXBUFFER_8192  8192
-#define E1000_RXBUFFER_16384 16384
+#define E1000_RXBUFFER_128                  128
+#define E1000_RXBUFFER_256                  256
+#define E1000_RXBUFFER_512                  512
+#define E1000_RXBUFFER_1024                 1024
+#define E1000_RXBUFFER_2048                 2048
+#define E1000_RXBUFFER_4096                 4096
+#define E1000_RXBUFFER_8192                 8192
+#define E1000_RXBUFFER_16384                16384
 
 /* SmartSpeed delimiters */
 #define E1000_SMARTSPEED_DOWNSHIFT 3
@@ -128,7 +136,6 @@
 
 #define PCI_COMMAND_REGISTER   PCICS_COMMAND
 #define CMD_MEM_WRT_INVALIDATE (1 << PCICMB_INVALIDATE)
-//#define ETH_ADDR_LEN           ETH_ALEN
 
 #ifdef __BIG_ENDIAN
 #define E1000_BIG_ENDIAN __BIG_ENDIAN
@@ -255,6 +262,8 @@ struct e1000Unit {
 
 	APTR                    *e1ku_hw_stats;
 
+	BOOL                    detect_tx_hung;
+
 /* End : Intel e1000 specific */
 
     struct Process          *e1ku_Process;
@@ -331,6 +340,7 @@ void e1000func_free_tx_resources(struct net_device *dev, struct e1000_tx_ring *t
 void e1000func_free_rx_resources(struct net_device *dev, struct e1000_rx_ring *rx_ring);
 int e1000func_set_mac(struct net_device *dev);
 void e1000func_set_multi(struct net_device *dev);
+BOOL e1000func_clean_tx_irq(struct net_device *dev, struct e1000_tx_ring *tx_ring);
 BOOL e1000func_clean_rx_irq(struct net_device *dev, struct e1000_rx_ring *rx_ring);
 
 /* unit.c definitions */

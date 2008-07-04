@@ -164,35 +164,6 @@ static void e1000func_leave_82542_rst(struct net_device *dev)
 //	}
 }
 
-static void e1000func_startrx(struct net_device *dev)
-{
-D(bug("[%s]: e1000func_startrx\n", dev->e1ku_name));
-#warning "TODO: Handle starting/stopping Rx"
-}
-
-static void e1000func_stoprx(struct net_device *dev)
-{
-D(bug("[%s]: e1000func_stoprx\n", dev->e1ku_name));
-#warning "TODO: Handle starting/stopping Rx"
-}
-
-static void e1000func_starttx(struct net_device *dev)
-{
-D(bug("[%s]: e1000func_starttx()\n", dev->e1ku_name));
-#warning "TODO: Handle starting/stopping Tx"
-}
-
-static void e1000func_stoptx(struct net_device *dev)
-{
-D(bug("[%s]: e1000func_stoptx()\n", dev->e1ku_name));
-#warning "TODO: Handle starting/stopping Tx"
-}
-
-static void e1000func_txrxreset(struct net_device *dev)
-{
-D(bug("[%s]: e1000func_txrxreset()\n", dev->e1ku_name));
-}
-
 static void e1000func_configure_tx(struct net_device *dev)
 {
     struct e1000_hw *hw = dev->e1ku_Private00;
@@ -350,11 +321,6 @@ static void e1000func_configure_rx(struct net_device *dev)
 
 D(bug("[%s]: e1000func_configure_rx()\n", dev->e1ku_name));
     
-	{
-		//adapter->clean_rx = e1000func_clean_rx_irq;
-		//adapter->alloc_rx_buf = e1000func_alloc_rx_buffers;
-	}
-
 	/* disable receivers while setting up the descriptors */
 	rctl = E1000_READ_REG(hw, E1000_RCTL);
 	E1000_WRITE_REG(hw, E1000_RCTL, rctl & ~E1000_RCTL_EN);
@@ -558,8 +524,6 @@ D(bug("[%s]: e1000func_reset: Hardware Error\n", dev->e1ku_name));
 
 	e1000_reset_adaptive(hw);
 	e1000_get_phy_info(hw);
-
-//	e1000_release_manageability(dev);
 }
 
 int e1000func_set_mac(struct net_device *dev)
@@ -643,29 +607,6 @@ static void e1000func_deinitialize(struct net_device *dev)
 {
 }
 
-static void e1000func_drain_tx(struct net_device *dev)
-{
-    int i;
-//    for (i = 0; i < TX_RING_SIZE; i++) {
-#warning "TODO: e1000func_drain_tx does nothing atm."
-//    }
-}
-
-static void e1000func_drain_rx(struct net_device *dev)
-{
-    int i;
-//    for (i = 0; i < RX_RING_SIZE; i++) {
-#warning "TODO: e1000func_drain_rx does nothing atm."
-//    }
-}
-
-
-static void drain_ring(struct net_device *dev)
-{
-    e1000func_drain_tx(dev);
-    e1000func_drain_rx(dev);
-}
-
 int request_irq(struct net_device *dev)
 {
     OOP_Object *irq = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
@@ -718,7 +659,6 @@ D(bug("[%s]: e1000func_setup_tx_resources: Unable to allocate memory for the tra
 	}
 
 	/* round up to nearest 4K */
-
 	tx_ring->size = tx_ring->count * sizeof(struct e1000_tx_desc);
 	tx_ring->size = ALIGN(tx_ring->size, 4096);
 
@@ -808,7 +748,6 @@ D(bug("[%s]: e1000_setup_rx_resources: Unable to allocate memory for the receive
 	}
 
 	/* Round up to nearest 4K */
-
 	rx_ring->size = rx_ring->count * sizeof(struct e1000_rx_desc);
 	rx_ring->size = ALIGN(rx_ring->size, 4096);
 
@@ -882,17 +821,13 @@ D(bug("[%s]: e1000func_setup_all_rx_resources: Allocation for Rx Queue %u failed
 void e1000func_unmap_and_free_tx_resource(struct net_device *dev,
                                              struct e1000_buffer *buffer_info)
 {
-/*	if (buffer_info->dma) {
-		pci_unmap_page(dev->pdev,
-				buffer_info->dma,
-				buffer_info->length,
-				PCI_DMA_TODEVICE);
-		buffer_info->dma = 0;
+	if (buffer_info->dma) {
+		buffer_info->dma = NULL;
 	}
-	if (buffer_info->skb) {
-		dev_kfree_skb_any(buffer_info->skb);
-		buffer_info->skb = NULL;
-	}*/
+	if (buffer_info->buffer) {
+		FreeMem(buffer_info->buffer, ETH_MAXPACKETSIZE);
+		buffer_info->buffer = NULL;
+	}
 	/* buffer_info must be completely set up in the transmit path */
 }
 
@@ -941,28 +876,28 @@ void e1000func_free_tx_resources(struct net_device *dev,
 void e1000func_clean_rx_ring(struct net_device *dev,
                                 struct e1000_rx_ring *rx_ring)
 {
-	struct e1000_rx_buffer *buffer_info;
     struct e1000_hw *hw = dev->e1ku_Private00;
+	struct e1000_rx_buffer *buffer_info;
 	unsigned long size;
 	unsigned int i;
 
-	/* Free all the Rx ring sk_buffs */
+	/* Free all the Rx ring buffers */
 	for (i = 0; i < rx_ring->count; i++) {
 		buffer_info = &rx_ring->buffer_info[i];
-		/*if (buffer_info->dma &&
-		    dev->clean_rx == e1000_clean_rx_irq) {
-			//pci_unmap_single(pdev, buffer_info->dma,
-			//                 dev->rx_buffer_len,
-			//                 PCI_DMA_FROMDEVICE);
-		}*/
-		buffer_info->dma = 0;
+		if (buffer_info->dma != NULL) {
+            buffer_info->dma = NULL;
+		}
+        if (buffer_info->buffer)
+        {
+            FreeMem(buffer_info->buffer, dev->rx_buffer_len);
+            buffer_info->buffer = NULL;
+        }
 	}
 
 	size = sizeof(struct e1000_rx_buffer) * rx_ring->count;
 	memset(rx_ring->buffer_info, 0, size);
 
 	/* Zero out the descriptor ring */
-
 	memset(rx_ring->desc, 0, rx_ring->size);
 
 	rx_ring->next_to_clean = 0;
@@ -997,13 +932,13 @@ static int e1000func_close(struct net_device *dev)
 //    netif_stop_queue(dev);
 //    ObtainSemaphore(&np->lock);
     
-    e1000func_deinitialize(dev);    // Stop the chipset and set it in 16bit-mode
+//    e1000func_deinitialize(dev);    // Stop the chipset and set it in 16bit-mode
 
 //    ReleaseSemaphore(&np->lock);
 
     free_irq(dev);
 
-    drain_ring(dev);
+//    drain_ring(dev);
 
 //    HIDD_PCIDriver_FreePCIMem(dev->e1ku_PCIDriver, np->rx_buffer);
 //    HIDD_PCIDriver_FreePCIMem(dev->e1ku_PCIDriver, np->tx_buffer);
@@ -1029,7 +964,7 @@ void e1000func_alloc_rx_buffers(struct net_device *dev,
 		if ((buffer_info->buffer = AllocMem(dev->rx_buffer_len, MEMF_PUBLIC|MEMF_CLEAR)) != NULL)
         {
 D(bug("[%s]: e1000func_alloc_rx_buffers: Buffer %d Allocated @ %p\n", dev->e1ku_name, i, buffer_info->buffer));
-            if ((buffer_info->dma = (UBYTE *)HIDD_PCIDriver_MapPCI(dev->e1ku_PCIDriver, (APTR)buffer_info->buffer, dev->rx_buffer_len)) == NULL)
+            if ((buffer_info->dma = (UBYTE *)HIDD_PCIDriver_CPUtoPCI(dev->e1ku_PCIDriver, (APTR)buffer_info->buffer)) == NULL)
             {
 D(bug("[%s]: e1000func_alloc_rx_buffers: Failed to Map Buffer %d for DMA!!\n", dev->e1ku_name, i));
             }
@@ -1076,6 +1011,91 @@ D(bug("[%s]: e1000func_configure: Tx/Rx Configured\n", dev->e1ku_name));
 		                      E1000_DESC_UNUSED(ring));
 	}
 D(bug("[%s]: e1000func_configure: Finished\n", dev->e1ku_name));
+}
+
+BOOL e1000func_clean_tx_irq(struct net_device *dev,
+                                    struct e1000_tx_ring *tx_ring)
+{
+    struct e1000_hw *hw = dev->e1ku_Private00;
+	struct e1000_tx_desc *tx_desc, *eop_desc;
+	struct e1000_buffer *buffer_info;
+	unsigned int i, eop;
+	BOOL cleaned = FALSE;
+	BOOL retval = TRUE;
+	unsigned int total_tx_bytes=0, total_tx_packets=0;
+
+	i = tx_ring->next_to_clean;
+	eop = tx_ring->buffer_info[i].next_to_watch;
+	eop_desc = E1000_TX_DESC(*tx_ring, eop);
+
+	while (eop_desc->upper.data & AROS_LONG2LE(E1000_TXD_STAT_DD)) {
+		for (cleaned = FALSE; !cleaned; ) {
+			tx_desc = E1000_TX_DESC(*tx_ring, i);
+			buffer_info = &tx_ring->buffer_info[i];
+			cleaned = (i == eop);
+
+			if (cleaned) {
+				struct eth_frame *frame = buffer_info->buffer;
+				total_tx_packets++;
+//				total_tx_bytes += frame->len;
+			}
+			e1000func_unmap_and_free_tx_resource(dev, buffer_info);
+			tx_desc->upper.data = 0;
+
+			if (++i == tx_ring->count) i = 0;
+		}
+
+		eop = tx_ring->buffer_info[i].next_to_watch;
+		eop_desc = E1000_TX_DESC(*tx_ring, eop);
+	}
+
+	tx_ring->next_to_clean = i;
+
+#define TX_WAKE_THRESHOLD 32
+//	if (cleaned && netif_carrier_ok(netdev) &&
+//		     E1000_DESC_UNUSED(tx_ring) >= TX_WAKE_THRESHOLD) {
+		/* Make sure that anybody stopping the queue after this
+		 * sees the new next_to_clean.
+		 */
+//		smp_mb();
+
+//		if (netif_queue_stopped(netdev) &&
+//		    !(test_bit(__E1000_DOWN, &adapter->state))) {
+//			netif_wake_queue(netdev);
+//			++adapter->restart_queue;
+//		}
+//	}
+
+	if (dev->detect_tx_hung) {
+		/* Detect a transmit hang in hardware, this serializes the
+		 * check with the clearing of time_stamp and movement of i */
+		dev->detect_tx_hung = FALSE;
+		if (tx_ring->buffer_info[eop].dma  && !(E1000_READ_REG(hw, E1000_STATUS) &  E1000_STATUS_TXOFF)) {
+			/* detected Tx unit hang */
+D(bug("[%s]: e1000func_clean_rx_irq: Detected Tx Unit Hang\n"
+					"  Tx Queue             <%lu>\n"
+					"  TDH                  <%x>\n"
+					"  TDT                  <%x>\n"
+					"  next_to_use          <%x>\n"
+					"  next_to_clean        <%x>\n"
+					"buffer_info[next_to_clean]\n"
+					"  next_to_watch        <%x>\n"
+					"  next_to_watch.status <%x>\n",
+                dev->e1ku_name,
+				(unsigned long)((tx_ring - dev->e1ku_txRing) / sizeof(struct e1000_tx_ring)),
+				readl(hw->hw_addr + tx_ring->tdh),
+				readl(hw->hw_addr + tx_ring->tdt),
+				tx_ring->next_to_use,
+				tx_ring->next_to_clean,
+				eop,
+				eop_desc->upper.fields.status));
+//			netif_stop_queue(netdev);
+		}
+	}
+    dev->e1ku_stats.PacketsSent += total_tx_packets;
+//	adapter->total_tx_bytes += total_tx_bytes;
+//	adapter->total_tx_packets += total_tx_packets;
+	return retval;
 }
 
 BOOL e1000func_clean_rx_irq(struct net_device *dev,
@@ -1230,27 +1250,18 @@ D(bug("[%s]: e1000func_clean_rx_irq: packet copied to orphan queue\n", dev->e1ku
 next_desc:
 		rx_desc->status = 0;
 
-		/* return some buffers to hardware, one at a time is too slow */
-		if (cleaned_count >= E1000_RX_BUFFER_WRITE) {
-//			adapter->alloc_rx_buf(adapter, rx_ring, cleaned_count);
-			cleaned_count = 0;
-		}
-
 		/* use prefetched values */
 		rx_desc = next_rxd;
 		buffer_info = next_buffer;
 	}
 	rx_ring->next_to_clean = i;
 
-	cleaned_count = E1000_DESC_UNUSED(rx_ring);
-//	if (cleaned_count)
-//		adapter->alloc_rx_buf(adapter, rx_ring, cleaned_count);
+	if ((cleaned_count = E1000_DESC_UNUSED(rx_ring)))
+        writel(i, hw->hw_addr + rx_ring->rdt);
 
     dev->e1ku_stats.PacketsReceived += total_rx_packets;
 	//adapter->total_rx_packets += total_rx_packets;
 	//adapter->total_rx_bytes += total_rx_bytes;
-	//adapter->net_stats.rx_bytes += total_rx_bytes;
-	//adapter->net_stats.rx_packets += total_rx_packets;
 D(bug("[%s]: e1000func_clean_rx_irq: Received %d packets (%d bytes)\n", dev->e1ku_name, total_rx_packets, total_rx_bytes));
 
 	return cleaned;
@@ -1302,10 +1313,12 @@ void e1000_read_pci_cfg(struct e1000_hw *hw, ULONG reg, UWORD *value)
 {
     struct e1000Unit *unit = (struct e1000Unit *)hw->back;
 D(bug("[%s]: e1000_read_pci_cfg()\n", unit->e1ku_name));
+//    *value = (UWORD)HIDD_PCIDevice_ReadConfigWord(unit->e1ku_PCIDevice, reg);
 }
 
 void e1000_write_pci_cfg(struct e1000_hw *hw, ULONG reg, UWORD *value)
 {
     struct e1000Unit *unit = (struct e1000Unit *)hw->back;
 D(bug("[%s]: e1000_write_pci_cfg()\n", unit->e1ku_name));
+//    HIDD_PCIDevice_WriteConfigWord(unit->e1ku_PCIDevice, reg, *value);
 }

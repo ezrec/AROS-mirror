@@ -377,6 +377,13 @@ D(bug("[e1000] OpenDevice: Starting Unit %d\n", unitnum));
             hw = unit->e1ku_Private00;
             mac_type = hw->mac.type;
 
+            hw->mac.autoneg = AUTONEG_ENABLE;
+            if (hw->phy.media_type == e1000_media_type_fiber)
+                hw->phy.autoneg_advertised = ADVERTISED_1000baseT_Full | ADVERTISED_FIBRE | ADVERTISED_Autoneg;
+            else
+                hw->phy.autoneg_advertised = ADVERTISED_TP | ADVERTISED_Autoneg;
+            hw->fc.original_type = e1000_fc_default;
+
             rx_ring_count = max((ULONG)E1000_DEFAULT_RXD ,(ULONG)E1000_MIN_RXD);
             rx_ring_count = min(rx_ring_count,(ULONG)(mac_type < e1000_82544 ?
                 E1000_MAX_RXD : E1000_MAX_82544_RXD));
