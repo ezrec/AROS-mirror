@@ -8,7 +8,7 @@
 </head>
 <body>
 <h1 class="title">AROS Research Operating System Offline Documentation</h1>
-<p align="center"><img src="%(ROOT)s/images/aros-banner-blue.png"/></p><div class="section">
+<p align="center"><img src="%(ROOT)simages/aros-banner-blue.png"/></p><div class="section">
 
 
 %(CONTENT)s

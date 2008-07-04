@@ -15,14 +15,16 @@ C_Skipped               = 'green'
 C_ArchitectureDependant = 'lightseagreen'
 C_AmigaOnly             = 'lightgrey'
 
+def calculateCategoryScore( item ):
+    if isinstance( item, Category):
+        return ( 100 * ( item.completed + item.skipped ) + 50 * item.needssomework ) \
+                / (item.total - item.architecturedependant - item.amigaonly)
+    else:
+        return 0;
+
 def formatRowCategory( item, extension ):
 
     row = TR( bgcolor = '#dddddd' )
-
-    # Calculate category score
-    categoryscore = \
-    ( 100 * ( item.completed + item.skipped ) + 50 * item.needssomework ) \
-    / (item.total - item.architecturedependant - item.amigaonly)
 
     # Dynamically build category status chart
     # The 'if' are needed here, because when sum(width != 100%) and there are
@@ -76,7 +78,7 @@ def formatRowCategory( item, extension ):
     )
     row.append \
     (
-        TD( width = '5%', height = '100%', align = 'right', contents = str( categoryscore ) + '%' )
+        TD( width = '5%', height = '100%', align = 'right', contents = str( calculateCategoryScore( item ) ) + '%' )
     )
     row.append \
     (
@@ -159,8 +161,31 @@ def format( root, directory, template, lang, extension ):
                 content_CategoryItemsAROSAPI.append( row )
                 
 
+    header = Table \
+             (
+                bgcolor = '#999999', width = '100%', cellpadding = 2, \
+                contents = TR \
+                (
+                    bgcolor = '#dddddd', style='font-size:larger;font-weight:bold',
+                    contents = [
+                    TD \
+                    (
+                        contents = root.description
+                    ),
+                    TD \
+                    (
+                        width = '5%', align = 'right',
+                        contents = str( calculateCategoryScore( root ) ) + '%'
+                    ),
+                    TD \
+                    (
+                        width = '75%'
+                    )
+                    ]
+                )
+             )
 
-    contentstr = '<h1>Status: ' + root.description + '</h1>'
+    contentstr = str( header )
     
     if len( content_Categories ) > 0:
         contentstr += '<br/>' + str ( content_Categories )
