@@ -238,7 +238,7 @@ D(bug("[%s]: ## e1000func_TX_Int: nxt to use = %d, write queue port @ %p\n", uni
 
         if ((buffer_info->buffer = AllocMem(ETH_MAXPACKETSIZE, MEMF_PUBLIC|MEMF_CLEAR)) != NULL)
         {
-            frame = buffer;
+            frame = buffer_info->buffer;
 
             if ((buffer_info->dma = HIDD_PCIDriver_CPUtoPCI(unit->e1ku_PCIDriver, buffer_info->buffer)) == NULL)
             {
