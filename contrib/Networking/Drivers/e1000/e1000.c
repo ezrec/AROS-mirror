@@ -964,7 +964,7 @@ void e1000func_alloc_rx_buffers(struct net_device *dev,
 		if ((buffer_info->buffer = AllocMem(dev->rx_buffer_len, MEMF_PUBLIC|MEMF_CLEAR)) != NULL)
         {
 D(bug("[%s]: e1000func_alloc_rx_buffers: Buffer %d Allocated @ %p\n", dev->e1ku_name, i, buffer_info->buffer));
-            if ((buffer_info->dma = (UBYTE *)HIDD_PCIDriver_CPUtoPCI(dev->e1ku_PCIDriver, (APTR)buffer_info->buffer)) == NULL)
+            if ((buffer_info->dma = HIDD_PCIDriver_CPUtoPCI(dev->e1ku_PCIDriver, (APTR)buffer_info->buffer)) == NULL)
             {
 D(bug("[%s]: e1000func_alloc_rx_buffers: Failed to Map Buffer %d for DMA!!\n", dev->e1ku_name, i));
             }
@@ -1072,23 +1072,15 @@ BOOL e1000func_clean_tx_irq(struct net_device *dev,
 		dev->detect_tx_hung = FALSE;
 		if (tx_ring->buffer_info[eop].dma  && !(E1000_READ_REG(hw, E1000_STATUS) &  E1000_STATUS_TXOFF)) {
 			/* detected Tx unit hang */
-D(bug("[%s]: e1000func_clean_rx_irq: Detected Tx Unit Hang\n"
-					"  Tx Queue             <%lu>\n"
-					"  TDH                  <%x>\n"
-					"  TDT                  <%x>\n"
-					"  next_to_use          <%x>\n"
-					"  next_to_clean        <%x>\n"
-					"buffer_info[next_to_clean]\n"
-					"  next_to_watch        <%x>\n"
-					"  next_to_watch.status <%x>\n",
-                dev->e1ku_name,
-				(unsigned long)((tx_ring - dev->e1ku_txRing) / sizeof(struct e1000_tx_ring)),
-				readl(hw->hw_addr + tx_ring->tdh),
-				readl(hw->hw_addr + tx_ring->tdt),
-				tx_ring->next_to_use,
-				tx_ring->next_to_clean,
-				eop,
-				eop_desc->upper.fields.status));
+D(bug("[%s]: e1000func_clean_tx_irq: Detected Tx Unit Hang -:\n", dev->e1ku_name));
+D(bug("[%s]: e1000func_clean_tx_irq:     Tx Queue             <%lu>\n", dev->e1ku_name, (unsigned long)((tx_ring - dev->e1ku_txRing) / sizeof(struct e1000_tx_ring))));
+D(bug("[%s]: e1000func_clean_tx_irq:     TDH                  <%x>\n", dev->e1ku_name, readl(hw->hw_addr + tx_ring->tdh)));
+D(bug("[%s]: e1000func_clean_tx_irq:     TDT                  <%x>\n", dev->e1ku_name, readl(hw->hw_addr + tx_ring->tdt)));
+D(bug("[%s]: e1000func_clean_tx_irq:     next_to_use          <%x>\n", dev->e1ku_name, tx_ring->next_to_use));
+D(bug("[%s]: e1000func_clean_tx_irq:     next_to_clean        <%x>\n", dev->e1ku_name, tx_ring->next_to_clean));
+D(bug("[%s]: e1000func_clean_tx_irq:   buffer_info[next_to_clean]\n", dev->e1ku_name));
+D(bug("[%s]: e1000func_clean_tx_irq:     next_to_watch        <%x>\n", dev->e1ku_name, eop));
+D(bug("[%s]: e1000func_clean_tx_irq:     next_to_watch.status <%x>\n", dev->e1ku_name, eop_desc->upper.fields.status));
 //			netif_stop_queue(netdev);
 		}
 	}

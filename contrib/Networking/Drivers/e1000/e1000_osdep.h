@@ -235,6 +235,35 @@ struct e1000Unit {
     struct Sana2DeviceStats e1ku_stats;
 //    ULONG                   e1ku_special_stats[STAT_COUNT];
 
+    struct Process          *e1ku_Process;
+
+    struct MsgPort          *e1ku_input_port;
+
+    struct MsgPort          *e1ku_request_ports[REQUEST_QUEUE_COUNT];
+
+    HIDDT_IRQ_Handler       *e1ku_irqhandler;
+    HIDDT_IRQ_Handler       *e1ku_touthandler;
+
+    struct MsgPort          *e1ku_TimerSlowPort;
+    struct timerequest      *e1ku_TimerSlowReq;
+
+    struct MsgPort          *e1ku_TimerFastPort;
+    struct timerequest      *e1ku_TimerFastReq;
+
+    struct MsgPort          *e1ku_DelayPort;
+    struct timerequest      *e1ku_DelayReq;
+
+    BYTE                    e1ku_signal_0;
+    BYTE                    e1ku_signal_1;
+    BYTE                    e1ku_signal_2;
+    BYTE                    e1ku_signal_3;
+
+    UBYTE                   e1ku_dev_addr[6];
+    UBYTE                   e1ku_org_addr[6];
+
+    struct Interrupt        e1ku_tx_int;
+    struct Interrupt        e1ku_tx_end_int;
+
 /* Start : Intel e1000 specific */
 
 	IPTR                    e1ku_Private00;                 /* Pointer to Intels driver-code hardware struct */
@@ -266,40 +295,9 @@ struct e1000Unit {
 
 /* End : Intel e1000 specific */
 
-    struct Process          *e1ku_Process;
-
-    BYTE                    e1ku_signal_0;
-    BYTE                    e1ku_signal_1;
-    BYTE                    e1ku_signal_2;
-    BYTE                    e1ku_signal_3;
-
-    struct MsgPort          *e1ku_input_port;
-
-    struct MsgPort          *e1ku_request_ports[REQUEST_QUEUE_COUNT];
-
-    HIDDT_IRQ_Handler       *e1ku_irqhandler;
-    HIDDT_IRQ_Handler       *e1ku_touthandler;
-
-//    struct Interrupt        e1ku_rx_int;
-    struct Interrupt        e1ku_tx_int;
-    struct Interrupt        e1ku_tx_end_int;
-
-    ULONG                   e1ku_state;
-
     struct timeval          e1ku_toutPOLL;
     BOOL                    e1ku_toutNEED;
 
-    struct MsgPort          *e1ku_TimerSlowPort;
-    struct timerequest      *e1ku_TimerSlowReq;
-
-    struct MsgPort          *e1ku_TimerFastPort;
-    struct timerequest      *e1ku_TimerFastReq;
-
-    struct MsgPort          *e1ku_DelayPort;
-    struct timerequest      *e1ku_DelayReq;
-
-    UBYTE                   e1ku_dev_addr[6];
-    UBYTE                   e1ku_org_addr[6];
 };
 
 #define net_device e1000Unit
