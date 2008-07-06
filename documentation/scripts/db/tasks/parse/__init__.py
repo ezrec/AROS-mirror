@@ -12,16 +12,13 @@ def parse( file ):
     for line in file:
         words = line.strip().split( ';' )
         
-        # TODO: Add support for architectures different than generic
-        architecture = int(words[2])
-        if architecture != CategoryItem.ARCH_Generic:
-            continue
-
-        id          = words[0] + words[1] + words[2] + words[3]
+        id          = words[0] + words[1] + words[3]
         description = words[1]
         category    = words[0]
         status      = int(words[4])
         apiversion = int(words[3])
+        architecture = int(words[2])
+
         
         categoryitems[id] = CategoryItem( id, description, category, status, architecture, apiversion ) 
     

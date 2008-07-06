@@ -7,7 +7,7 @@ class CategoryItem:
     STAT_NeedsSomeWork = 1
     STAT_NotImplemented   = 0
     STAT_Skipped = 3
-    STAT_ArchitectureDependant = 4
+#    STAT_ArchitectureDependant = 4 - Removed, ARCH_i386 status is shown instead of ARCH_Generic/STAT_ArchitectureDependant
     STAT_AmigaOnly = 5
 
     ARCH_Generic = 1
@@ -43,7 +43,6 @@ class Category( list ):
         self.needssomework              = 0
         self.notimplemented             = 0
         self.skipped                    = 0
-        self.architecturedependant      = 0
         self.amigaonly                  = 0
         
         self.total                      = 0
@@ -75,8 +74,6 @@ class Category( list ):
                     self.notimplemented         += 1
                 elif item.status == CategoryItem.STAT_Skipped:
                     self.skipped                += 1
-                elif item.status == CategoryItem.STAT_ArchitectureDependant:
-                    self.architecturedependant  += 1
                 elif item.status == CategoryItem.STAT_AmigaOnly:
                     self.amigaonly              += 1
 
@@ -87,7 +84,6 @@ class Category( list ):
                 self.needssomework          += item.needssomework
                 self.notimplemented         += item.notimplemented
                 self.skipped                += item.skipped
-                self.architecturedependant  += item.architecturedependant
                 self.amigaonly              += item.amigaonly
                 self.total                  += item.total
 

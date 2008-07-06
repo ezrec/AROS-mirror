@@ -12,13 +12,12 @@ C_Completed             = 'green'
 C_NeedsSomeWork         = 'yellow'
 C_NotImplemented        = 'red'
 C_Skipped               = 'green'
-C_ArchitectureDependant = 'lightseagreen'
 C_AmigaOnly             = 'lightgrey'
 
 def calculateCategoryScore( item ):
     if isinstance( item, Category):
         return ( 100 * ( item.completed + item.skipped ) + 50 * item.needssomework ) \
-                / (item.total - item.architecturedependant - item.amigaonly)
+                / (item.total - item.amigaonly)
     else:
         return 0;
 
@@ -37,7 +36,6 @@ def formatRowCategory( item, extension ):
 
     formatRowCategoryStatus( dyncontents, item.completed, item.total, C_Completed)
     formatRowCategoryStatus( dyncontents, item.skipped, item.total, C_Skipped)
-    formatRowCategoryStatus( dyncontents, item.architecturedependant, item.total, C_ArchitectureDependant)
     formatRowCategoryStatus( dyncontents, item.amigaonly, item.total, C_AmigaOnly)
     formatRowCategoryStatus( dyncontents, item.needssomework, item.total, C_NeedsSomeWork)
     formatRowCategoryStatus( dyncontents, item.notimplemented, item.total, C_NotImplemented)
@@ -87,10 +85,13 @@ def formatRowCategoryItem( item, extension ):
     elif item.status == CategoryItem.STAT_NeedsSomeWork: color = C_NeedsSomeWork
     elif item.status == CategoryItem.STAT_NotImplemented:   color = C_NotImplemented
     elif item.status == CategoryItem.STAT_Skipped: color = C_Skipped
-    elif item.status == CategoryItem.STAT_ArchitectureDependant:   color = C_ArchitectureDependant
     elif item.status == CategoryItem.STAT_AmigaOnly: color = C_AmigaOnly
     
-    row.append( TD( item.description ) )
+    description = item.description
+    if item.architecture == CategoryItem.ARCH_i386:
+        description = description + ' (<i>i386</i>)'
+        
+    row.append( TD( description ) )
     row.append \
     ( 
         TD \
@@ -172,7 +173,6 @@ def formatLegend( ):
                     TD( formatLegendColorTable( C_Completed ) ), TD( ' - Completed,' ),
                     TD( formatLegendColorTable( C_NeedsSomeWork ) ), TD( ' - Needs some work,' ),
                     TD( formatLegendColorTable( C_NotImplemented ) ), TD( ' - Not implemented,' ),
-                    TD( formatLegendColorTable( C_ArchitectureDependant ) ), TD( ' - Architecture specific,' ),
                     TD( formatLegendColorTable( C_AmigaOnly ) ), TD( ' - Amiga only' )
                     ]
                 )
