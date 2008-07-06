@@ -22,6 +22,10 @@ def calculateCategoryScore( item ):
     else:
         return 0;
 
+def formatRowCategoryStatus(array, count, total, color):
+    if count != 0:
+        array.append( TD( bgcolor = color, width = `int ( round( count * 100.0 / total, 0 ) )` + '%' ) )
+
 def formatRowCategory( item, extension ):
 
     row = TR( bgcolor = '#dddddd' )
@@ -31,47 +35,13 @@ def formatRowCategory( item, extension ):
     # entries with 0%, they are still beeing drawn
     dyncontents = []
 
-    if item.completed != 0:
-        dyncontents.append(TD \
-                     ( 
-                     bgcolor = C_Completed, 
-                     width = `int (round( item.completed * 100.0 / item.total, 0 ) )` + '%'
-                     ) )
+    formatRowCategoryStatus( dyncontents, item.completed, item.total, C_Completed)
+    formatRowCategoryStatus( dyncontents, item.skipped, item.total, C_Skipped)
+    formatRowCategoryStatus( dyncontents, item.architecturedependant, item.total, C_ArchitectureDependant)
+    formatRowCategoryStatus( dyncontents, item.amigaonly, item.total, C_AmigaOnly)
+    formatRowCategoryStatus( dyncontents, item.needssomework, item.total, C_NeedsSomeWork)
+    formatRowCategoryStatus( dyncontents, item.notimplemented, item.total, C_NotImplemented)
 
-    if item.skipped != 0:
-        dyncontents.append(TD \
-                     ( 
-                     bgcolor = C_Skipped, 
-                     width = `int (round( item.skipped * 100.0 / item.total, 0 ) )` + '%'
-                     ) )
-
-    if item.architecturedependant != 0:
-        dyncontents.append(TD \
-                     ( 
-                     bgcolor = C_ArchitectureDependant, 
-                     width = `int (round( item.architecturedependant * 100.0 / item.total, 0 ) )` + '%'
-                     ) )
-
-    if item.amigaonly != 0:
-        dyncontents.append(TD \
-                     ( 
-                     bgcolor = C_AmigaOnly, 
-                     width = `int (round( item.amigaonly * 100.0 / item.total, 0 ) )` + '%'
-                     ) ) 
-   
-    if item.needssomework != 0:
-        dyncontents.append(TD \
-                     ( 
-                     bgcolor = C_NeedsSomeWork, 
-                     width = `int (round( item.needssomework * 100.0 / item.total, 0 ) )` + '%'
-                     ) )
-
-    if item.notimplemented != 0:
-        dyncontents.append(TD \
-                     ( 
-                     bgcolor = C_NotImplemented, 
-                     width = `int (round( item.notimplemented * 100.0 / item.total, 0 ) )` + '%'
-                     ) )
     row.append \
     ( 
         TD( A( href = item.id + extension, contents = item.description ) )
@@ -89,7 +59,7 @@ def formatRowCategory( item, extension ):
             (
                 bgcolor = 'black', width = '100%', height = '100%',
                 cellspacing = 2, contents = TR \
-                ( 
+                (
                     TD \
                     ( 
                         Table \
@@ -141,6 +111,75 @@ def formatRowCategoryItem( item, extension ):
     
     return row
 
+def formatHeader( root ):
+
+    header = Table \
+             (
+                bgcolor = '#999999', width = '40%', cellpadding = 2, \
+                contents = TR \
+                (
+                    bgcolor = 'lightblue', style='font-size:medium;font-weight:bold',
+                    contents = [
+                    TD \
+                    (
+                        contents = 'Status: ' + root.description
+                    ),
+                    TD \
+                    (
+                        width = '15%', align = 'right',
+                        contents = str( calculateCategoryScore( root ) ) + '%'
+                    )
+                    ]
+                )
+             )
+    return header
+
+def formatLegendColorTable( color ):
+
+    legendColorTable = Table \
+                     ( 
+                        bgcolor = '#999999', width = '20px', height = '20px', cellpadding = 2,
+                        contents = TR \
+                        (
+                            bgcolor = '#dddddd',
+                            contents = TD \
+                            (
+                                Table \
+                                (
+                                    bgcolor = 'black', width = '100%', height = '100%',
+                                    cellspacing = 2, contents = TR \
+                                    (
+                                        height = '100%',
+                                        contents = TD \
+                                        (
+                                            bgcolor = color,
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                     )
+
+    return legendColorTable
+
+def formatLegend( ):
+    legend = Table \
+             (
+                TR \
+                (
+                    contents =
+                    [
+                    TD( formatLegendColorTable( C_Completed ) ), TD( ' - Completed,' ),
+                    TD( formatLegendColorTable( C_NeedsSomeWork ) ), TD( ' - Needs some work,' ),
+                    TD( formatLegendColorTable( C_NotImplemented ) ), TD( ' - Not implemented,' ),
+                    TD( formatLegendColorTable( C_ArchitectureDependant ) ), TD( ' - Architecture specific,' ),
+                    TD( formatLegendColorTable( C_AmigaOnly ) ), TD( ' - Amiga only' )
+                    ]
+                )
+            )             
+
+    return legend
+
 def format( root, directory, template, lang, extension ):
     
     # First, format this category.
@@ -161,40 +200,20 @@ def format( root, directory, template, lang, extension ):
                 content_CategoryItemsAROSAPI.append( row )
                 
 
-    header = Table \
-             (
-                bgcolor = '#999999', width = '100%', cellpadding = 2, \
-                contents = TR \
-                (
-                    bgcolor = '#dddddd', style='font-size:larger;font-weight:bold',
-                    contents = [
-                    TD \
-                    (
-                        contents = root.description
-                    ),
-                    TD \
-                    (
-                        width = '5%', align = 'right',
-                        contents = str( calculateCategoryScore( root ) ) + '%'
-                    ),
-                    TD \
-                    (
-                        width = '75%'
-                    )
-                    ]
-                )
-             )
 
-    contentstr = str( header )
+
+    contentstr = '<br/>' + str( formatHeader( root ) )
+
+    contentstr += '<br/>' + str( formatLegend( ) )
     
     if len( content_Categories ) > 0:
-        contentstr += '<br/>' + str ( content_Categories )
+        contentstr += '<h2 align="center">Categories</h2>' + str ( content_Categories )
     
     if len( content_CategoryItemsOS31API ) > 0:
-        contentstr += '<br/><h2 align="center">OS 3.1 API</h2>' + str( content_CategoryItemsOS31API )
+        contentstr += '<h2 align="center">OS 3.1 API</h2>' + str( content_CategoryItemsOS31API )
 
     if len( content_CategoryItemsAROSAPI ) > 0:
-        contentstr += '<br/><h2 align="center">AROS Extensions API</h2>' + str( content_CategoryItemsAROSAPI )
+        contentstr += '<h2 align="center">AROS Extensions API</h2>' + str( content_CategoryItemsAROSAPI )
 
     if lang == 'en':
         strings = {
