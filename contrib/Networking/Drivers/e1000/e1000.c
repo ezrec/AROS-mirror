@@ -662,48 +662,38 @@ D(bug("[%s]: e1000func_setup_tx_resources: Unable to allocate memory for the tra
 	tx_ring->size = tx_ring->count * sizeof(struct e1000_tx_desc);
 	tx_ring->size = ALIGN(tx_ring->size, 4096);
 
-	tx_ring->desc = HIDD_PCIDriver_AllocPCIMem(
-                        dev->e1ku_PCIDriver,
-                        tx_ring->size);
-
-    tx_ring->dma = tx_ring->desc;
-    
-	if (tx_ring->desc == NULL) {
+	if ((tx_ring->desc = AllocMem(tx_ring->size, MEMF_PUBLIC | MEMF_CLEAR)) == NULL) {
 setup_tx_desc_die:
 		FreeMem(tx_ring->buffer_info, size);
 D(bug("[%s]: e1000func_setup_tx_resources: Unable to allocate memory for the transmit descriptor ring\n", dev->e1ku_name));
 		return -E1000_ERR_CONFIG;
 	}
-
+    tx_ring->dma = HIDD_PCIDriver_CPUtoPCI(dev->e1ku_PCIDriver, (APTR)tx_ring->desc);
+    
 	/* Fix for errata 23, can't cross 64kB boundary */
 	if (!e1000func_check_64k_bound(dev, tx_ring->desc, tx_ring->size)) {
 		void *olddesc = tx_ring->desc;
 		APTR olddma = tx_ring->dma;
 D(bug("[%s]: e1000func_setup_tx_resources: tx_ring align check failed: %u bytes at %p\n", dev->e1ku_name, tx_ring->size, tx_ring->desc));
 		/* Try again, without freeing the previous */
-		tx_ring->desc = HIDD_PCIDriver_AllocPCIMem(
-                        dev->e1ku_PCIDriver,
-                        tx_ring->size);
-
-        tx_ring->dma = tx_ring->desc;
-
-		/* Failed allocation, critical failure */
-		if (!tx_ring->desc) {
-            HIDD_PCIDriver_FreePCIMem(dev->e1ku_PCIDriver, olddesc);
+		if ((tx_ring->desc = AllocMem(tx_ring->size, MEMF_PUBLIC | MEMF_CLEAR)) == NULL) {
+            /* Failed allocation, critical failure */
+            FreeMem(olddesc, tx_ring->size);
 			goto setup_tx_desc_die;
 		}
+        tx_ring->dma = HIDD_PCIDriver_CPUtoPCI(dev->e1ku_PCIDriver, (APTR)tx_ring->desc);
 
 		if (!e1000func_check_64k_bound(dev, tx_ring->desc,
 		                           tx_ring->size)) {
 			/* give up */
-			HIDD_PCIDriver_FreePCIMem(dev->e1ku_PCIDriver, tx_ring->desc);
-			HIDD_PCIDriver_FreePCIMem(dev->e1ku_PCIDriver, olddesc);
+            FreeMem(tx_ring->desc, tx_ring->size);
+            FreeMem(olddesc, tx_ring->size);
 D(bug("[%s]: e1000func_setup_tx_resources: Unable to allocate aligned memory for the transmit descriptor ring\n", dev->e1ku_name));
 			FreeMem(tx_ring->buffer_info, size);
 			return -E1000_ERR_CONFIG;
 		} else {
 			/* Free old allocation, new allocation was successful */
-			HIDD_PCIDriver_FreePCIMem(dev->e1ku_PCIDriver, olddesc);
+            FreeMem(olddesc, tx_ring->size);
 		}
 	}
 
@@ -743,7 +733,7 @@ D(bug("[%s]: e1000func_setup_rx_resources()\n", dev->e1ku_name));
 D(bug("[%s]: e1000func_setup_rx_resources: rx_ring->count = %d\n", dev->e1ku_name, rx_ring->count));
 
 	if ((rx_ring->buffer_info = AllocMem(buffer_size, MEMF_PUBLIC | MEMF_CLEAR)) == NULL) {
-D(bug("[%s]: e1000_setup_rx_resources: Unable to allocate memory for the receive descriptor ring\n", dev->e1ku_name));
+D(bug("[%s]: e1000_setup_rx_resources: Unable to allocate memory for the receive ring buffers\n", dev->e1ku_name));
 		return -E1000_ERR_CONFIG;
 	}
 
@@ -751,16 +741,13 @@ D(bug("[%s]: e1000_setup_rx_resources: Unable to allocate memory for the receive
 	rx_ring->size = rx_ring->count * sizeof(struct e1000_rx_desc);
 	rx_ring->size = ALIGN(rx_ring->size, 4096);
 
-	if ((rx_ring->desc = HIDD_PCIDriver_AllocPCIMem(
-                        dev->e1ku_PCIDriver,
-                        rx_ring->size)) == NULL) {
-D(bug("[%s]: e1000_setup_rx_resources: Unable to allocate memory for the receive descriptor ring\n", dev->e1ku_name));
+	if ((rx_ring->desc = AllocMem(rx_ring->size, MEMF_PUBLIC | MEMF_CLEAR)) == NULL) {
+D(bug("[%s]: e1000_setup_rx_resources: Unable to allocate memory for the receive ring descriptors\n", dev->e1ku_name));
 setup_rx_desc_die:
 		FreeMem(rx_ring->buffer_info, buffer_size);
 		return -E1000_ERR_CONFIG;
 	}
-
-    rx_ring->dma = rx_ring->desc;
+    rx_ring->dma = HIDD_PCIDriver_CPUtoPCI(dev->e1ku_PCIDriver, (APTR)rx_ring->desc);
 
 	/* Fix for errata 23, can't cross 64kB boundary */
 	if (!e1000func_check_64k_bound(dev, rx_ring->desc, rx_ring->size)) {
@@ -769,27 +756,24 @@ setup_rx_desc_die:
 D(bug("[%s]: e1000_setup_rx_resources: rx_ring align check failed: %u bytes at %p\n", dev->e1ku_name, rx_ring->size, rx_ring->desc));
 
 		/* Try again, without freeing the previous */
-		if ((rx_ring->desc = HIDD_PCIDriver_AllocPCIMem(
-                            dev->e1ku_PCIDriver,
-                            rx_ring->size)) == NULL) {
+		if ((rx_ring->desc = AllocMem(rx_ring->size, MEMF_PUBLIC | MEMF_CLEAR)) == NULL) {
             /* Failed allocation, critical failure */
-            HIDD_PCIDriver_FreePCIMem(dev->e1ku_PCIDriver, olddesc);
+            FreeMem(olddesc, rx_ring->size);
 D(bug("[%s]: e1000_setup_rx_resources: Unable to allocate memory for the receive descriptor ring\n", dev->e1ku_name));
 			goto setup_rx_desc_die;
 		}
-
-        rx_ring->dma = rx_ring->desc;
+        rx_ring->dma = HIDD_PCIDriver_CPUtoPCI(dev->e1ku_PCIDriver, (APTR)rx_ring->desc);
 
 		if (!e1000func_check_64k_bound(dev, rx_ring->desc,
 		                           rx_ring->size)) {
 			/* give up */
-            HIDD_PCIDriver_FreePCIMem(dev->e1ku_PCIDriver, rx_ring->desc);
-            HIDD_PCIDriver_FreePCIMem(dev->e1ku_PCIDriver, olddesc);
+            FreeMem(rx_ring->desc, rx_ring->size);
+            FreeMem(olddesc, rx_ring->size);
 D(bug("[%s]: e1000_setup_rx_resources: Unable to allocate aligned memory for the receive descriptor ring\n", dev->e1ku_name));
 			goto setup_rx_desc_die;
 		} else {
 			/* Free old allocation, new allocation was successful */
-            HIDD_PCIDriver_FreePCIMem(dev->e1ku_PCIDriver, olddesc);
+            FreeMem(olddesc, rx_ring->size);
 		}
 	}
 
@@ -839,8 +823,9 @@ void e1000func_clean_tx_ring(struct net_device *dev,
 	unsigned long size;
 	unsigned int i;
 
+D(bug("[%s]: e1000func_clean_tx_ring()\n", dev->e1ku_name));
+    
 	/* Free all the Tx ring buffers */
-
 	for (i = 0; i < tx_ring->count; i++) {
 		buffer_info = &tx_ring->buffer_info[i];
 		e1000func_unmap_and_free_tx_resource(dev, buffer_info);
@@ -864,12 +849,14 @@ void e1000func_clean_tx_ring(struct net_device *dev,
 void e1000func_free_tx_resources(struct net_device *dev,
                                     struct e1000_tx_ring *tx_ring)
 {
+D(bug("[%s]: e1000func_free_tx_resources()\n", dev->e1ku_name));
+
 	e1000func_clean_tx_ring(dev, tx_ring);
 
-	FreeMem(tx_ring->buffer_info, tx_ring->size);
+	FreeMem(tx_ring->buffer_info, sizeof(struct e1000_buffer) * tx_ring->count);
 	tx_ring->buffer_info = NULL;
 
-	HIDD_PCIDriver_FreePCIMem(dev->e1ku_PCIDriver, tx_ring->desc);
+    FreeMem(tx_ring->desc, tx_ring->size);
     tx_ring->dma =  tx_ring->desc = NULL;
 }
 
@@ -880,6 +867,8 @@ void e1000func_clean_rx_ring(struct net_device *dev,
 	struct e1000_rx_buffer *buffer_info;
 	unsigned long size;
 	unsigned int i;
+
+D(bug("[%s]: e1000func_clean_rx_ring()\n", dev->e1ku_name));
 
 	/* Free all the Rx ring buffers */
 	for (i = 0; i < rx_ring->count; i++) {
@@ -910,12 +899,14 @@ void e1000func_clean_rx_ring(struct net_device *dev,
 void e1000func_free_rx_resources(struct net_device *dev,
                                     struct e1000_rx_ring *rx_ring)
 {
+D(bug("[%s]: e1000func_free_rx_resources()\n", dev->e1ku_name));
+
 	e1000func_clean_rx_ring(dev, rx_ring);
 
-	FreeMem(rx_ring->buffer_info, rx_ring->size);
+	FreeMem(rx_ring->buffer_info, sizeof(struct e1000_rx_buffer) * rx_ring->count);
 	rx_ring->buffer_info = NULL;
 
-	HIDD_PCIDriver_FreePCIMem(dev->e1ku_PCIDriver, rx_ring->desc);
+    FreeMem(rx_ring->desc, rx_ring->size);
 	rx_ring->dma = rx_ring->desc = NULL;
 }
 
@@ -1021,21 +1012,27 @@ BOOL e1000func_clean_tx_irq(struct net_device *dev,
 	struct e1000_buffer *buffer_info;
 	unsigned int i, eop;
 	BOOL cleaned = FALSE;
-	BOOL retval = TRUE;
+	BOOL retval = FALSE;
 	unsigned int total_tx_bytes=0, total_tx_packets=0;
+
+D(bug("[%s]: e1000func_clean_tx_irq()\n", dev->e1ku_name));
 
 	i = tx_ring->next_to_clean;
 	eop = tx_ring->buffer_info[i].next_to_watch;
 	eop_desc = E1000_TX_DESC(*tx_ring, eop);
 
+D(bug("[%s]: e1000func_clean_tx_irq: nxt to clean=%d, eop=%d\n", dev->e1ku_name, i, eop));
+
 	while (eop_desc->upper.data & AROS_LONG2LE(E1000_TXD_STAT_DD)) {
 		for (cleaned = FALSE; !cleaned; ) {
+D(bug("[%s]: e1000func_clean_tx_irq: cleaning Tx buffer %d\n", dev->e1ku_name, i));
 			tx_desc = E1000_TX_DESC(*tx_ring, i);
 			buffer_info = &tx_ring->buffer_info[i];
 			cleaned = (i == eop);
 
 			if (cleaned) {
-				struct eth_frame *frame = buffer_info->buffer;
+                retval = TRUE;
+//				struct eth_frame *frame = buffer_info->buffer;
 				total_tx_packets++;
 //				total_tx_bytes += frame->len;
 			}
@@ -1248,8 +1245,8 @@ next_desc:
 	}
 	rx_ring->next_to_clean = i;
 
-	if ((cleaned_count = E1000_DESC_UNUSED(rx_ring)))
-        writel(i, hw->hw_addr + rx_ring->rdt);
+//	if ((cleaned_count = E1000_DESC_UNUSED(rx_ring)))
+//        writel(i, hw->hw_addr + rx_ring->rdt);
 
     dev->e1ku_stats.PacketsReceived += total_rx_packets;
 	//adapter->total_rx_packets += total_rx_packets;
@@ -1304,13 +1301,20 @@ D(bug("[%s]: e1000_free_dev_spec_struct()\n", unit->e1ku_name));
 void e1000_read_pci_cfg(struct e1000_hw *hw, ULONG reg, UWORD *value)
 {
     struct e1000Unit *unit = (struct e1000Unit *)hw->back;
+    struct pHidd_PCIDevice_ReadConfigWord pcireadmsg;
 D(bug("[%s]: e1000_read_pci_cfg()\n", unit->e1ku_name));
-//    *value = (UWORD)HIDD_PCIDevice_ReadConfigWord(unit->e1ku_PCIDevice, reg);
+    pcireadmsg.mID = OOP_GetMethodID(IID_Hidd_PCIDriver, moHidd_PCIDevice_ReadConfigWord);
+    pcireadmsg.reg = reg;
+    *value = (UWORD)OOP_DoMethod(unit->e1ku_PCIDevice, &pcireadmsg);
 }
 
 void e1000_write_pci_cfg(struct e1000_hw *hw, ULONG reg, UWORD *value)
 {
     struct e1000Unit *unit = (struct e1000Unit *)hw->back;
+    struct pHidd_PCIDevice_WriteConfigWord pciwritemsg;
 D(bug("[%s]: e1000_write_pci_cfg()\n", unit->e1ku_name));
-//    HIDD_PCIDevice_WriteConfigWord(unit->e1ku_PCIDevice, reg, *value);
+    pciwritemsg.mID = OOP_GetMethodID(IID_Hidd_PCIDriver, moHidd_PCIDevice_WriteConfigWord);
+    pciwritemsg.reg = reg;
+    pciwritemsg.val = *value;
+    OOP_DoMethod(unit->e1ku_PCIDevice, &pciwritemsg);
 }

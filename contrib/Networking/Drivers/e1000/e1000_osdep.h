@@ -142,6 +142,12 @@
 #endif
 
 #if DEBUG > 0
+#if defined(intel_debug)
+#define E1K_INTELDEBUG
+#endif
+#endif
+
+#if defined(E1K_INTELDEBUG)
 #define DEBUGOUT(S) D(bug("[%s] %s:" S, ((struct e1000Unit *)hw->back)->e1ku_name, __PRETTY_FUNCTION__));
 #define DEBUGOUT1(S, A) D(bug("[%s] %s:" S , ((struct e1000Unit *)hw->back)->e1ku_name, __PRETTY_FUNCTION__, A));
 

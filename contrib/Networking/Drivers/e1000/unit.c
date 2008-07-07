@@ -155,7 +155,7 @@ D(bug("[%s] unit.FlushUnit\n", unit->e1ku_name));
     }
 
     opener = (APTR)unit->e1ku_Openers.mlh_Head;
-    tail = (APTR)unit->e1ku_Openers.mlh_Tail;
+    tail = (APTR)&unit->e1ku_Openers.mlh_Tail;
 
     /* Flush every opener's read queue */
 
@@ -274,7 +274,7 @@ D(bug("[%s]: e1000func_TX_Int: Tx DMA buffer %d @ %p\n", unit->e1ku_name, i, buf
             if (error == 0)
             {
                 Disable();
-D(bug("[%s]: e1000func_TX_Int: packet %d [type = %d] queued for transmission.", unit->e1ku_name, i, frame->eth_packet_data));
+D(bug("[%s]: e1000func_TX_Int: packet %d [type = %d] queued for transmission.\n", unit->e1ku_name, i, AROS_BE2WORD(frame->eth_packet_type)));
 
               /* DEBUG? Dump frame if so */
 #ifdef DEBUG
@@ -302,6 +302,8 @@ D(bug("[%s]: e1000func_TX_Int: packet %d [type = %d] queued for transmission.", 
                 writel(i, hw->hw_addr + tx_ring->tdt);
             }
         }
+
+        buffer_info->next_to_watch = i;
 
         if (++i == tx_ring->count) i = 0;
 
@@ -346,12 +348,6 @@ D(bug("[%s]: ## e1000func_TX_End_Int()\n", unit->e1ku_name));
 
    AROS_USERFUNC_EXIT
 }
-
-/*
- * Maximum number of loops until we assume that a bit in the irq mask
- * is stuck. Overridable with module param.
- */
-static const int max_interrupt_work = 5;
 
 /*
  * Handle timeouts and other strange cases
@@ -419,13 +415,11 @@ D(bug("Processing ..\n"));
 	for (i = 0; i < E1000_MAX_INTR; i++) {
 		rx_cleaned = 0;
 		for (j = 0; j < dev->e1ku_rxRing_QueueSize; j++)
-			rx_cleaned |= e1000func_clean_rx_irq(dev,
-			                                &dev->e1ku_rxRing[j]);
+			rx_cleaned |= e1000func_clean_rx_irq(dev, &dev->e1ku_rxRing[j]);
 
 		tx_cleaned = 0;
 		for (j = 0 ; j < dev->e1ku_txRing_QueueSize ; j++)
-			tx_cleaned |= e1000func_clean_tx_irq(dev,
-			                                 &dev->e1ku_txRing[j]);
+			tx_cleaned |= e1000func_clean_tx_irq(dev, &dev->e1ku_txRing[j]);
 
 		if (!rx_cleaned && !tx_cleaned)
 			break;
@@ -768,7 +762,7 @@ D(bug("[%s] CreateUnit: Device MMIO : %p [%d bytes]\n", unit->e1ku_name, MAPPEDB
         hw->hw_addr = (UBYTE *)HIDD_PCIDriver_MapPCI(driver, (APTR)MAPPEDBase, MB_len);
         unit->e1ku_SizeMem = MB_len;
 
-D(bug("[%s] CreateUnit: Mapped MMIO : %p\n", unit->e1ku_name, ((struct e1000_hw *)unit->e1ku_Private00)->hw_addr));
+D(bug("[%s] CreateUnit: Mapped MMIO : %p\n", unit->e1ku_name, hw->hw_addr));
         
         if ((hw->io_base) && (hw->hw_addr))
         {
@@ -780,9 +774,7 @@ D(bug("[%s] CreateUnit: Mapped MMIO : %p\n", unit->e1ku_name, ((struct e1000_hw 
             };
             OOP_SetAttrs(pciDevice, (struct TagItem *)&attrs);
 
-            unit->e1ku_DelayPort = CreateMsgPort();
-
-            if (unit->e1ku_DelayPort != NULL)
+            if ((unit->e1ku_DelayPort = CreateMsgPort()) != NULL)
             {
                 unit->e1ku_DelayReq = (struct timerequest *)
                     CreateIORequest((struct MsgPort *)unit->e1ku_DelayPort, sizeof(struct timerequest));
@@ -974,7 +966,7 @@ D(bug("[%s] CreateUnit: (PCI%s:%s:%s)\n", unit->e1ku_name,
                                     DeleteMsgPort(sm_UD->e1ksm_SyncPort);
                                     FreeMem(sm_UD, sizeof(struct e1000Startup));
 
-    D(bug("[%s]  CreateUnit: Device Initialised. Unit @ %x\n", unit->e1ku_name, unit));
+    D(bug("[%s]  CreateUnit: Device Initialised. Unit %d @ %p\n", unit->e1ku_name, unit->e1ku_UnitNum, unit));
                                     return unit;
                                 }
                             }
@@ -1039,7 +1031,6 @@ void DeleteUnit(struct e1000Base *e1KBase, struct e1000Unit *unit)
         if (unit->e1ku_irqhandler)
         {
             FreeMem(unit->e1ku_irqhandler, sizeof(HIDDT_IRQ_Handler));
-            //LIBBASE->e1kb_IRQ = NULL;
         }
 
         if ((struct e1000_hw *)unit->e1ku_Private00)

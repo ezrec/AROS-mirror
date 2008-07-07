@@ -319,6 +319,8 @@ D(bug("[e1000] OpenDevice: Unit %d @ %p\n", unitnum, unit));
         if(req->ios2_Req.io_Message.mn_Length < sizeof(struct IOSana2Req))
             error = IOERR_OPENFAIL;
 
+        req->ios2_Req.io_Unit = (APTR)unit;
+
         /* Handle device sharing */
         if(error == 0)
         {
@@ -483,18 +485,22 @@ AROS_LH1(void, beginio,
 D(bug("[e1000] BeginIO()\n"));
 
     req->ios2_Req.io_Error = 0;
-    dev = (APTR)req->ios2_Req.io_Unit;
-
-    if (AttemptSemaphore(&dev->e1ku_unit_lock))
+    if ((dev = (APTR)req->ios2_Req.io_Unit) != NULL)
     {
-        handle_request(LIBBASE, req);
-    }
-    else
-    {
-        req->ios2_Req.io_Flags &= ~IOF_QUICK;
-        PutMsg(dev->e1ku_input_port, (struct Message *)req);
-    }
+D(bug("[e1000] BeginIO: unit @ %p\n", dev));
 
+        if (AttemptSemaphore(&dev->e1ku_unit_lock))
+        {
+D(bug("[e1000] BeginIO: Calling handle_request()\n"));
+            handle_request(LIBBASE, req);
+        }
+        else
+        {
+D(bug("[e1000] BeginIO: Queueing request\n"));
+            req->ios2_Req.io_Flags &= ~IOF_QUICK;
+            PutMsg(dev->e1ku_input_port, (struct Message *)req);
+        }
+    }
     AROS_LIBFUNC_EXIT
 }
 
@@ -504,20 +510,22 @@ AROS_LH1(LONG, abortio,
 {
     AROS_LIBFUNC_INIT
     struct e1000Unit *dev;
-    dev = (APTR)req->ios2_Req.io_Unit;
 
+    if ((dev = (APTR)req->ios2_Req.io_Unit) != NULL)
+    {
 D(bug("[e1000] AbortIO()\n"));
 
-    Disable();
-    if ((req->ios2_Req.io_Message.mn_Node.ln_Type == NT_MESSAGE) &&
-        (req->ios2_Req.io_Flags & IOF_QUICK) == 0)
-    {
-        Remove((struct Node *)req);
-        req->ios2_Req.io_Error = IOERR_ABORTED;
-        req->ios2_WireError = S2WERR_GENERIC_ERROR;
-        ReplyMsg((struct Message *)req);
+        Disable();
+        if ((req->ios2_Req.io_Message.mn_Node.ln_Type == NT_MESSAGE) &&
+            (req->ios2_Req.io_Flags & IOF_QUICK) == 0)
+        {
+            Remove((struct Node *)req);
+            req->ios2_Req.io_Error = IOERR_ABORTED;
+            req->ios2_WireError = S2WERR_GENERIC_ERROR;
+            ReplyMsg((struct Message *)req);
+        }
+        Enable();
     }
-    Enable();
 
     return 0;
 

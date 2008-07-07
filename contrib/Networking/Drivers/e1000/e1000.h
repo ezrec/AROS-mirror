@@ -21,6 +21,7 @@
 */
 
 #define DEBUG 1
+//#define intel_debug
 #include <aros/debug.h>
 
 #include <exec/types.h>
