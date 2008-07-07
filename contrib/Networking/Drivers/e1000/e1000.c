@@ -1203,9 +1203,7 @@ D(bug("[%s]: e1000func_clean_rx_irq: Packet IP accepted with type = %d, checksum
                /* Offer packet to each request until it's accepted */
                while((request != request_tail) && !accepted)
                {
-                  if((request->ios2_PacketType == AROS_BE2WORD(frame->eth_packet_type))
-                     || ((request->ios2_PacketType <= ETH_MTU)
-                          && (AROS_BE2WORD(frame->eth_packet_type) <= ETH_MTU)))
+                  if (request->ios2_PacketType == AROS_BE2WORD(frame->eth_packet_type))
                   {
 D(bug("[%s]: e1000func_clean_rx_irq: copy packet for opener ..\n", dev->e1ku_name));
                      CopyPacket(LIBBASE, dev, request, length, AROS_BE2WORD(frame->eth_packet_type), frame);
