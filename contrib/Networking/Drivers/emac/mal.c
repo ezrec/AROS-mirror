@@ -40,7 +40,11 @@ static void MALIRQHandler(struct EMACBase *EMACBase, uint8_t inttype)
     switch (inttype)
     {
         case INTR_MTE:
-            D(bug("[EMAC ] MAL TX EOB\n"));
+            /* get the information about channel causing the interrupt */
+            temp = rddcr(MAL0_TXEOBISR);
+            /* Clear the interrupt flag */
+            wrdcr(MAL0_TXEOBISR, temp);
+            D(bug("[EMAC ] MAL TX EOB (TXEOBISR=%08x)\n", temp));
             break;
         case INTR_MRE:
             /* get the information about channel causing the interrupt */
@@ -136,7 +140,7 @@ void EMAC_MAL_Init(struct EMACBase *EMACBase)
 
         EMACBase->emb_MALTXChannels[i][TX_RING_SIZE - 1].md_ctrl |= MAL_CTRL_TX_W;
 
-        CacheClearE(EMACBase->emb_MALTXChannels[i], 32 + RX_RING_SIZE * sizeof(mal_descriptor_t), CACRF_ClearD);
+        CacheClearE(EMACBase->emb_MALTXChannels[i], RX_RING_SIZE * sizeof(mal_descriptor_t), CACRF_ClearD);
 
         D(bug("[EMAC ] MAL TX Channel %d @ %p\n", i, EMACBase->emb_MALTXChannels[i]));
     }

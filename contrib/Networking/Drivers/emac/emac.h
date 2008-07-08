@@ -145,10 +145,9 @@ struct EMACUnit {
     struct Interrupt    eu_TXEndInt;
 
     mal_packet_t        *eu_RXChannel;
-    mal_packet_t        *eu_TXChannel[2];
+    mal_packet_t        *eu_TXChannel;
     uint8_t             eu_LastRXSlot;
-    uint8_t             eu_LastTX1Slot;
-    uint8_t             eu_LastTX2Slot;
+    uint8_t             eu_LastTXSlot;
 
     intptr_t            eu_IOBase;
     uint32_t            eu_Flags;

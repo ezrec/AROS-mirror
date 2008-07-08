@@ -45,7 +45,7 @@ static int EMAC_Start(struct EMACUnit *unit)
     stack = SuperState();
     D(bug("[EMAC%d] Enable MAL\n", unit->eu_UnitNum));
     wrdcr(MAL0_RXCASR, 0x80000000 >> unit->eu_UnitNum);
-    wrdcr(MAL0_TXCASR, 0xc0000000 >> (2*unit->eu_UnitNum));
+    wrdcr(MAL0_TXCASR, 0x80000000 >> (2*unit->eu_UnitNum));
     UserState(stack);
 
     /* set RMII mode */
@@ -537,6 +537,157 @@ AROS_UFH3(void, EMAC_RX_Int,
     AROS_USERFUNC_EXIT
 }
 
+void tx_int(struct EMACUnit *unit, struct ExecBase *SysBase)
+{
+    struct EMACBase *EMACBase = unit->eu_EMACBase;
+    mal_descriptor_t descr;
+    int nr, try_count = 1;
+    int last_slot = unit->eu_LastTXSlot;
+    UWORD packet_size, data_size;
+    struct IOSana2Req *request;
+    struct Opener *opener;
+    UBYTE *buffer;
+    ULONG wire_error=0;
+    BYTE error;
+    struct MsgPort *port;
+    struct TypeStats *tracker;
+    int packet_pos;
+    int sub_pos;
+    BOOL proceed = TRUE; /* Success by default */
+
+    port = unit->eu_RequestPorts[WRITE_QUEUE];
+
+    D(bug("[EMAC%d] TX Int\n", unit->eu_UnitNum));
+    D(bug("[EMAC%d] Starting at packet %d\d", unit->eu_UnitNum, (last_slot + 1) % TX_RING_SIZE));
+
+//    for (nr=0; nr < TX_RING_SIZE; nr++)
+//    {
+//        CacheClearE(&unit->eu_TXChannel[nr>>2], sizeof(mal_packet_t), CACRF_InvalidateD);
+//        D(bug("%04x ",unit->eu_TXChannel[nr>>2].descr[nr%4].md_ctrl));
+//    }
+    /* Still no error and there are packets to be sent? */
+    while(proceed && (!IsMsgPortEmpty(port)))
+    {
+        mal_packet_t mal_packet;
+
+        nr = (last_slot + 1) % TX_RING_SIZE;
+
+        packet_pos = nr >> 2 ;
+        sub_pos = nr % 4;
+
+        error = 0;
+
+        /* Invalidate memory containing MAL descriptor */
+        CacheClearE(&unit->eu_TXChannel[packet_pos], sizeof(mal_packet), CACRF_InvalidateD);
+        mal_packet = unit->eu_TXChannel[packet_pos];
+        /* Work on local descriptor's copy */
+        descr = mal_packet.descr[sub_pos];
+
+        if (!(descr.md_ctrl & MAL_CTRL_TX_R))
+        {
+            struct eth_frame *eth = (struct eth_frame *)descr.md_buffer;
+            request = (APTR)port->mp_MsgList.lh_Head;
+            data_size = packet_size = request->ios2_DataLength;
+
+            opener = (APTR)request->ios2_BufferManagement;
+
+            if((request->ios2_Req.io_Flags & SANA2IOF_RAW) == 0)
+            {
+               packet_size += ETH_PACKET_DATA;
+               CopyMem(request->ios2_DstAddr, eth->eth_packet_dest, ETH_ADDRESSSIZE);
+               CopyMem(unit->eu_DevAddr, eth->eth_packet_source, ETH_ADDRESSSIZE);
+               eth->eth_packet_type = request->ios2_PacketType;
+
+               buffer = eth->eth_packet_data;
+            }
+            else
+               buffer = descr.md_buffer;
+
+            if (!opener->tx_function(buffer, request->ios2_Data, data_size))
+            {
+               error = S2ERR_NO_RESOURCES;
+               wire_error = S2WERR_BUFF_ERROR;
+               ReportEvents(EMACBase, unit,
+                  S2EVENT_ERROR | S2EVENT_SOFTWARE | S2EVENT_BUFF
+                  | S2EVENT_TX);
+            }
+
+            if (error == 0)
+            {
+                D(bug("[EMAC%d] packet %d:%d [type = %d] queued for transmission.", unit->eu_UnitNum, last_slot, nr, eth->eth_packet_type));
+
+                /* Dump contents of frame if DEBUG enabled */
+                D({
+                    int j;
+                    for (j=0; j<64; j++) {
+                        if ((j%16) == 0)
+                            D(bug("\n%03x:", j));
+                        D(bug(" %02x", ((unsigned char*)eth)[j]));
+                    }
+                    D(bug("\n"));
+                });
+
+                /* Update the descriptor */
+                descr.md_length = packet_size;
+                descr.md_ctrl |= MAL_CTRL_TX_R | MAL_CTRL_TX_I | MAL_CTRL_TX_L | EMAC_CTRL_TX_GFCS | EMAC_CTRL_TX_GP;
+                CacheClearE(descr.md_buffer, descr.md_length, CACRF_ClearD);
+
+                CacheClearE(&unit->eu_TXChannel[packet_pos], sizeof(mal_packet), CACRF_InvalidateD);
+                mal_packet = unit->eu_TXChannel[packet_pos];
+                mal_packet.descr[sub_pos] = descr;
+                unit->eu_TXChannel[packet_pos] = mal_packet;
+                CacheClearE(&unit->eu_TXChannel[packet_pos], sizeof(mal_packet), CACRF_ClearD);
+            }
+
+            /* Reply packet */
+
+            request->ios2_Req.io_Error = error;
+            request->ios2_WireError = wire_error;
+            Disable();
+            Remove((APTR)request);
+            Enable();
+            ReplyMsg((APTR)request);
+
+            /* Update statistics */
+
+            if(error == 0)
+            {
+                tracker = FindTypeStats(EMACBase, unit, &unit->eu_TypeTrackers,
+                    request->ios2_PacketType);
+                if(tracker != NULL)
+                {
+                    tracker->stats.PacketsSent++;
+                    tracker->stats.BytesSent += packet_size;
+                }
+            }
+            try_count=0;
+        }
+
+        unit->eu_LastTXSlot = ++last_slot;
+        try_count++;
+
+        /*
+         * If we've just run out of free space on the TX queue, stop
+         * it and give up pushing further frames
+         */
+        if ( (try_count + 1) >= TX_RING_SIZE)
+        {
+            D(bug("[EMAC%d] output queue full!. Stopping [count = %d, TX_RING_SIZE = %d\n", unit->eu_UnitNum, try_count, TX_RING_SIZE));
+            proceed = FALSE;
+        }
+    }
+
+    /* Tell EMAC that it has new packets to process */
+    outl(inl(EMAC_TXM0 + unit->eu_IOBase) | EMAC_TXM0_GNP0, EMAC_TXM0 + unit->eu_IOBase);
+
+    /* Was there success? Enable incomming of new packets */
+    if(proceed)
+        unit->eu_RequestPorts[WRITE_QUEUE]->mp_Flags = PA_SOFTINT;
+    else
+        unit->eu_RequestPorts[WRITE_QUEUE]->mp_Flags = PA_IGNORE;
+
+}
+
 static
 AROS_UFH3(void, EMAC_TX_Int,
     AROS_UFHA(struct EMACUnit *, unit,  A1),
@@ -546,6 +697,7 @@ AROS_UFH3(void, EMAC_TX_Int,
     AROS_USERFUNC_INIT
 
     D(bug("[EMAC%d] TX Int\n", unit->eu_UnitNum));
+    tx_int(unit, SysBase);
 
     AROS_USERFUNC_EXIT
 }
@@ -689,8 +841,7 @@ struct EMACUnit *CreateUnit(struct EMACBase *EMACBase, uint8_t num)
         unit->eu_PHYAddr = EMAC_Units[num].ui_PHYAddr;
         unit->eu_MTU = ETH_MTU;
 
-        unit->eu_LastTX1Slot = TX_RING_SIZE - 1;
-        unit->eu_LastTX2Slot = TX_RING_SIZE - 1;
+        unit->eu_LastTXSlot = TX_RING_SIZE - 1;
         unit->eu_LastRXSlot = RX_RING_SIZE - 1;
 
         unit->start = EMAC_Start;
@@ -711,8 +862,8 @@ struct EMACUnit *CreateUnit(struct EMACBase *EMACBase, uint8_t num)
         unit->eu_TXEndInt.is_Data = unit;
 
         unit->eu_RXChannel = (mal_packet_t *)EMACBase->emb_MALRXChannels[num];
-        unit->eu_TXChannel[0] = (mal_packet_t *)EMACBase->emb_MALTXChannels[2*num];
-        unit->eu_TXChannel[1] = (mal_packet_t *)EMACBase->emb_MALTXChannels[2*num+1];
+        unit->eu_TXChannel = (mal_packet_t *)EMACBase->emb_MALTXChannels[num];
+        //unit->eu_TXChannel[1] = (mal_packet_t *)EMACBase->emb_MALTXChannels[2*num+1];
 
         for (i=0; i < REQUEST_QUEUE_COUNT; i++)
         {

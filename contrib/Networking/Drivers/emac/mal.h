@@ -23,6 +23,10 @@ void EMAC_MAL_Init(struct EMACBase *EMACBase);
 #define MAL_CTRL_TX_L   0x1000  /* Last */
 #define MAL_CTRL_TX_I   0x0400  /* Interrupt */
 
+#define EMAC_CTRL_TX_GFCS       0x0200
+#define EMAC_CTRL_TX_GP         0x0100
+
+
 #define MAL_CTRL_RX_E   0x8000  /* Empty */
 #define MAL_CTRL_RX_W   0x4000  /* Wrap */
 #define MAL_CTRL_RX_CM  0x2000  /* Continous mode */
