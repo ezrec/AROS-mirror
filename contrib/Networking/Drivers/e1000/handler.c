@@ -708,6 +708,8 @@ D(bug("[%s]: CmdOffline()\n", unit->e1ku_name));
 
     if((unit->e1ku_ifflags & IFF_UP) != 0)
     {
+        unit->e1ku_ifflags &= ~IFF_UP;
+
         tctl = E1000_READ_REG((struct e1000_hw *)unit->e1ku_Private00, E1000_TCTL);
         tctl &= ~E1000_TCTL_EN;
         E1000_WRITE_REG((struct e1000_hw *)unit->e1ku_Private00, E1000_TCTL, tctl);
@@ -718,7 +720,6 @@ D(bug("[%s]: CmdOffline()\n", unit->e1ku_name));
 
         e1000func_irq_disable(unit);
 
-        unit->e1ku_ifflags &= ~IFF_UP;
         ReportEvents(LIBBASE, unit, S2EVENT_OFFLINE);
     }
 
