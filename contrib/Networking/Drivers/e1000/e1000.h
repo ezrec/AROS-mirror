@@ -249,7 +249,7 @@ struct e1000_tx_ring {
 	/* pointer to the descriptor ring memory */
 	APTR desc;
 	/* physical address of the descriptor ring */
-	IPTR dma;
+	APTR dma;
 	/* length of descriptor ring in bytes */
 	unsigned int size;
 	/* number of descriptors in the ring */

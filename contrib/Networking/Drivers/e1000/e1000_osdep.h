@@ -257,8 +257,8 @@ struct e1000Unit {
     struct MsgPort          *e1ku_TimerFastPort;
     struct timerequest      *e1ku_TimerFastReq;
 
-    struct MsgPort          *e1ku_DelayPort;
-    struct timerequest      *e1ku_DelayReq;
+    struct MsgPort          e1ku_DelayPort;
+    struct timerequest      e1ku_DelayReq;
 
     BYTE                    e1ku_signal_0;
     BYTE                    e1ku_signal_1;
@@ -269,7 +269,6 @@ struct e1000Unit {
     UBYTE                   e1ku_org_addr[6];
 
     struct Interrupt        e1ku_tx_int;
-    struct Interrupt        e1ku_tx_end_int;
 
 /* Start : Intel e1000 specific */
 
@@ -327,34 +326,34 @@ struct e1000Unit {
  * but cannot process phy register reads/writes faster than millisecond
  * intervals...and we establish link due to a "link status change" interrupt.
  */
-void e1000_msec_delay(struct net_device *dev, LONG msec);
-void e1000_msec_delay_irq(struct net_device *dev, LONG msec);
-void e1000_usec_delay(struct net_device *dev, ULONG usec);
+void e1000_msec_delay(struct net_device *, ULONG);
+void e1000_msec_delay_irq(struct net_device *, ULONG);
+void e1000_usec_delay(struct net_device *, ULONG);
 #define msec_delay(msec)     e1000_msec_delay((struct net_device *)hw->back, msec)
 #define msec_delay_irq(msec) e1000_msec_delay_irq((struct net_device *)hw->back, msec)
 #define usec_delay(usec)     e1000_usec_delay((struct net_device *)hw->back, usec)
 /* misc */
-int request_irq(struct net_device *dev);
+int request_irq(struct net_device *);
 void e1000func_irq_disable(struct net_device *);
-void e1000func_irq_enable(struct net_device *dev);
-void e1000func_reset(struct net_device *dev);
-int e1000func_setup_all_tx_resources(struct net_device *dev);
-int e1000func_setup_all_rx_resources(struct net_device *dev);
-void e1000func_configure(struct net_device *dev);
-void e1000func_free_tx_resources(struct net_device *dev, struct e1000_tx_ring *tx_ring);
-void e1000func_free_rx_resources(struct net_device *dev, struct e1000_rx_ring *rx_ring);
-int e1000func_set_mac(struct net_device *dev);
-void e1000func_set_multi(struct net_device *dev);
-BOOL e1000func_clean_tx_irq(struct net_device *dev, struct e1000_tx_ring *tx_ring);
-BOOL e1000func_clean_rx_irq(struct net_device *dev, struct e1000_rx_ring *rx_ring);
+void e1000func_irq_enable(struct net_device *);
+void e1000func_reset(struct net_device *);
+int e1000func_setup_all_tx_resources(struct net_device *);
+int e1000func_setup_all_rx_resources(struct net_device *);
+void e1000func_configure(struct net_device *);
+void e1000func_free_tx_resources(struct net_device *, struct e1000_tx_ring *);
+void e1000func_free_rx_resources(struct net_device *, struct e1000_rx_ring *);
+int e1000func_set_mac(struct net_device *);
+void e1000func_set_multi(struct net_device *);
+BOOL e1000func_clean_tx_irq(struct net_device *, struct e1000_tx_ring *);
+BOOL e1000func_clean_rx_irq(struct net_device *, struct e1000_rx_ring *);
 
 /* unit.c definitions */
 /* IO functions */
-volatile UBYTE readb(APTR base);
-volatile void  writeb(UBYTE val, APTR base);
-volatile UWORD readw(APTR base);
-volatile void  writew(UWORD val, APTR base);
-volatile ULONG readl(APTR base);
-volatile void  writel(ULONG val, APTR base);
+volatile UBYTE readb(APTR);
+volatile void  writeb(UBYTE, APTR);
+volatile UWORD readw(APTR);
+volatile void  writew(UWORD, APTR);
+volatile ULONG readl(APTR);
+volatile void  writel(ULONG, APTR);
 
 #endif /* _E1000_OSDEP_H_ */

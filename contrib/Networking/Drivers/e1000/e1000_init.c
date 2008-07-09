@@ -96,39 +96,7 @@ struct pci_device_ids e1000_devices[] =
     {  (E1000_DEV_ID_82546GB_PCIE),             "82546GB (PCI-E)"             },
     {  (E1000_DEV_ID_82546GB_QUAD_COPPER),      "82546GB (Quad Copper)"       },
     {  (E1000_DEV_ID_82546GB_QUAD_COPPER_KSP3), "82546GB (Quad Copper KSP3)"  },
-/*
-    {  (E1000_DEV_ID_ICH8_IGP_M_AMT),           "ICH8 IGP M AMT"              },
-    {  (E1000_DEV_ID_ICH8_IGP_AMT),             "ICH8 IGP AMT"                },
-    {  (E1000_DEV_ID_ICH8_IGP_C),               "ICH8 IGP C"                  },
-    {  (E1000_DEV_ID_ICH8_IFE),                 "ICH8 IFE"                    },
-    {  (E1000_DEV_ID_ICH8_IGP_M),               "ICH8 IGP M"                  },
-
-    {  (E1000_DEV_ID_82571EB_COPPER),           "82571EB (Copper)"            },
-    {  (E1000_DEV_ID_82571EB_FIBER),            "82571EB (Fiber)"             },
-    {  (E1000_DEV_ID_82571EB_SERDES),           "82571EB (Serdes)"            },
-
-
-    {  (E1000_DEV_ID_82572EI_COPPER),           "82572EI (Copper)"            },
-    {  (E1000_DEV_ID_82572EI_FIBER),            "82572EI (Fiber)"             },
-    {  (E1000_DEV_ID_82572EI_SERDES),           "82572EI (Serdes)"            },
-
-    {  (E1000_DEV_ID_82573E),                   "82573E"                      },
-    {  (E1000_DEV_ID_82573E_IAMT),              "82573E (IAMT)"               },
-    {  (E1000_DEV_ID_80003ES2LAN_COPPER_DPT),   "80003ES2LAN (Copper DPT)"    },
-    {  (E1000_DEV_ID_80003ES2LAN_SERDES_DPT),   "80003ES2LAN (Serdes DPT)"    },
-
-    {  (E1000_DEV_ID_82573L),                   "82573L"                      },
-    {  (E1000_DEV_ID_82571EB_QUAD_COPPER),      "82571EB (Quad Copper)"       },
-    {  (E1000_DEV_ID_82571EB_QUAD_FIBER),       "82571EB (Quad Fiber)"        },
-    
-    {  (E1000_DEV_ID_82572EI),                  "82572EI"                     },
-    {  (E1000_DEV_ID_80003ES2LAN_COPPER_SPT),   "80003ES2LAN (Copper SPT)"    },
-    {  (E1000_DEV_ID_80003ES2LAN_SERDES_SPT),   "80003ES2LAN (Serdes SPT)"    },
-    {  (E1000_DEV_ID_82571EB_QUAD_COPPER_LP),   "82571EB (Quad Copper LP)"    },
-    {  (E1000_DEV_ID_ICH8_IFE_GT),              "ICH8 IFE GT"                 },
-    {  (E1000_DEV_ID_ICH8_IFE_G),               "ICH8 IFE G"                  },
-*/
-    {  NULL                                                                   }
+    {  (IPTR)NULL,                              NULL                          }
 };
 
 AROS_UFH3(void, PCI_Enumerator,
@@ -139,17 +107,16 @@ AROS_UFH3(void, PCI_Enumerator,
     AROS_USERFUNC_INIT
 
     struct e1000Unit   *unit;
-    
+    int devid_count = 0;
+    IPTR DeviceID = 0;
+
 D(bug("[e1000] PCI_Enumerator()\n"));
 
     LIBBASETYPEPTR LIBBASE = (LIBBASETYPEPTR)hook->h_Data;
 
-    int devid_count = 0;
-    IPTR DeviceID;
-
     OOP_GetAttr(pciDevice, aHidd_PCIDevice_ProductID, &DeviceID);
 
-    while(e1000_devices[devid_count].deviceid != NULL)
+    while(e1000_devices[devid_count].deviceid != (IPTR)NULL)
     {
         if (DeviceID == e1000_devices[devid_count].deviceid)
         {
@@ -240,11 +207,11 @@ static int GM_UNIQUENAME(Expunge)(LIBBASETYPEPTR LIBBASE)
 {
 D(bug("[e1000] Expunge()\n"));
 
-    struct e1000Unit *unit_current;
+    struct e1000Unit *unit_current, *unit_tmp;
 
     if (!(IsListEmpty(&LIBBASE->e1kb_Units)))
     {
-        ForeachNode(&LIBBASE->e1kb_Units, unit_current)
+        ForeachNodeSafe(&LIBBASE->e1kb_Units, unit_current, unit_tmp)
         {
             DeleteUnit(LIBBASE, unit_current);
         }
@@ -292,7 +259,6 @@ static int GM_UNIQUENAME(Open)
     struct TagItem *tags;
     struct e1000Unit *unit = NULL, *unit_current;
     struct Opener *opener;
-    struct e1000_hw *hw;
     BYTE error=0;
     int i;
 
@@ -376,15 +342,14 @@ D(bug("[e1000] OpenDevice: Starting Unit %d\n", unitnum));
             unsigned int rx_ring_count, tx_ring_count;
             e1000_mac_type mac_type;
 
-            hw = unit->e1ku_Private00;
-            mac_type = hw->mac.type;
+            mac_type = ((struct e1000_hw *)unit->e1ku_Private00)->mac.type;
 
-            hw->mac.autoneg = AUTONEG_ENABLE;
-            if (hw->phy.media_type == e1000_media_type_fiber)
-                hw->phy.autoneg_advertised = ADVERTISED_1000baseT_Full | ADVERTISED_FIBRE | ADVERTISED_Autoneg;
+            ((struct e1000_hw *)unit->e1ku_Private00)->mac.autoneg = AUTONEG_ENABLE;
+            if (((struct e1000_hw *)unit->e1ku_Private00)->phy.media_type == e1000_media_type_fiber)
+                ((struct e1000_hw *)unit->e1ku_Private00)->phy.autoneg_advertised = ADVERTISED_1000baseT_Full | ADVERTISED_FIBRE | ADVERTISED_Autoneg;
             else
-                hw->phy.autoneg_advertised = ADVERTISED_TP | ADVERTISED_Autoneg;
-            hw->fc.original_type = e1000_fc_default;
+                ((struct e1000_hw *)unit->e1ku_Private00)->phy.autoneg_advertised = ADVERTISED_TP | ADVERTISED_Autoneg;
+            ((struct e1000_hw *)unit->e1ku_Private00)->fc.original_type = e1000_fc_default;
 
             rx_ring_count = max((ULONG)E1000_DEFAULT_RXD ,(ULONG)E1000_MIN_RXD);
             rx_ring_count = min(rx_ring_count,(ULONG)(mac_type < e1000_82544 ?
@@ -410,8 +375,8 @@ D(bug("[e1000] OpenDevice: Starting Unit %d\n", unitnum));
             if ((error == 0) && (e1000func_setup_all_rx_resources(unit)))
                 error = IOERR_OPENFAIL;
 
-            if ((error == 0) && (hw->phy.media_type == e1000_media_type_copper))
-                e1000_power_up_phy(hw);
+            if ((error == 0) && (((struct e1000_hw *)unit->e1ku_Private00)->phy.media_type == e1000_media_type_copper))
+                e1000_power_up_phy((struct e1000_hw *)unit->e1ku_Private00);
 
             if (error == 0)
                 e1000func_configure(unit);
@@ -443,7 +408,7 @@ static int GM_UNIQUENAME(Close)
     struct IOSana2Req* req
 )
 {
-    struct e1000Unit *unit = req->ios2_Req.io_Unit;
+    struct e1000Unit *unit = (struct e1000Unit *)req->ios2_Req.io_Unit;
     struct Opener *opener;
 
 D(bug("[e1000] CloseDevice(unit @ %p, unitno %d)\n", unit, unit->e1ku_UnitNum));
@@ -452,7 +417,7 @@ D(bug("[e1000] CloseDevice(unit @ %p, unitno %d)\n", unit, unit->e1ku_UnitNum));
 //    unit->stop(unit);
 
     opener = (APTR)req->ios2_BufferManagement;
-    if (opener != NULL)
+    if ((APTR)req->ios2_BufferManagement != NULL)
     {
         Disable();
         Remove((struct Node *)opener);
@@ -474,16 +439,16 @@ AROS_LH1(void, beginio,
     LIBBASETYPEPTR, LIBBASE, 5, e1000)
 {
     AROS_LIBFUNC_INIT
-    struct e1000Unit *dev;
+    struct e1000Unit *unit;
 
 D(bug("[e1000] BeginIO()\n"));
 
     req->ios2_Req.io_Error = 0;
-    if ((dev = (APTR)req->ios2_Req.io_Unit) != NULL)
+    if ((unit = (APTR)req->ios2_Req.io_Unit) != NULL)
     {
-D(bug("[e1000] BeginIO: unit @ %p\n", dev));
+D(bug("[e1000] BeginIO: unit @ %p\n", unit));
 
-        if (AttemptSemaphore(&dev->e1ku_unit_lock))
+        if (AttemptSemaphore(&unit->e1ku_unit_lock))
         {
 D(bug("[e1000] BeginIO: Calling handle_request()\n"));
             handle_request(LIBBASE, req);
@@ -492,7 +457,7 @@ D(bug("[e1000] BeginIO: Calling handle_request()\n"));
         {
 D(bug("[e1000] BeginIO: Queueing request\n"));
             req->ios2_Req.io_Flags &= ~IOF_QUICK;
-            PutMsg(dev->e1ku_input_port, (struct Message *)req);
+            PutMsg(unit->e1ku_input_port, (struct Message *)req);
         }
     }
     AROS_LIBFUNC_EXIT
@@ -503,9 +468,9 @@ AROS_LH1(LONG, abortio,
     LIBBASETYPEPTR, LIBBASE, 6, e1000)
 {
     AROS_LIBFUNC_INIT
-    struct e1000Unit *dev;
+    struct e1000Unit *unit;
 
-    if ((dev = (APTR)req->ios2_Req.io_Unit) != NULL)
+    if ((unit = (APTR)req->ios2_Req.io_Unit) != NULL)
     {
 D(bug("[e1000] AbortIO()\n"));
 
