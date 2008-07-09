@@ -417,18 +417,12 @@ D(bug("[e1000] OpenDevice: Starting Unit %d\n", unitnum));
                 e1000func_configure(unit);
 
             if ((error == 0) && (request_irq(unit)))
+            {
                 error = IOERR_OPENFAIL;
-
-            if (error == 0)
+            }
+            else
             {
 D(bug("[%s] OpenDevice: IRQ Attached\n", unit->e1ku_name));
-                e1000func_irq_enable(unit);
-            }
-
-            if(error == 0)
-            {
-                /* fire a link status change interrupt to start the watchdog */
-                E1000_WRITE_REG(hw, E1000_ICS, E1000_ICS_LSC);
             }
         }
     }

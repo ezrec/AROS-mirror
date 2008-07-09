@@ -38,7 +38,11 @@
 
 #include <stdlib.h>
 
+#include "e1000_osdep.h"
 #include "e1000.h"
+#include "e1000_defines.h"
+#include "e1000_api.h"
+
 #include "unit.h"
 #include LC_LIBDEFS_FILE
 
@@ -641,9 +645,9 @@ D(bug("[%s]: CmdReadOrphan()\n", unit->e1ku_name));
 static BOOL CmdOnline(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
 {
     struct e1000Unit *unit = (struct e1000Unit *)request->ios2_Req.io_Unit;
+    ULONG wire_error = 0, rctl, tctl;
+    int i;
     BYTE error = 0;
-    ULONG wire_error = 0;
-    UWORD i;
 
 D(bug("[%s]: CmdOnline()\n", unit->e1ku_name));
 
@@ -665,12 +669,24 @@ D(bug("[%s]: CmdOnline()\n", unit->e1ku_name));
         unit->e1ku_stats.UnknownTypesReceived = 0;
         unit->e1ku_stats.Reconfigurations = 0;
 
-#warning "TODO: handle special stats"
-//        for(i = 0; i < STAT_COUNT; i++)
-//            unit->e1ku_special_stats[i] = 0;
+        for(i = 0; i < SANA2_SPECIAL_STAT_COUNT; i++)
+            unit->e1ku_special_stats[i] = 0;
 
-       unit->e1ku_ifflags |= IFF_UP;
-       ReportEvents(LIBBASE, unit, S2EVENT_ONLINE);
+        tctl = E1000_READ_REG((struct e1000_hw *)unit->e1ku_Private00, E1000_TCTL);
+        tctl |= E1000_TCTL_EN;
+        E1000_WRITE_REG((struct e1000_hw *)unit->e1ku_Private00, E1000_TCTL, tctl);
+
+        rctl = E1000_READ_REG((struct e1000_hw *)unit->e1ku_Private00, E1000_RCTL);
+        rctl |= E1000_RCTL_EN;
+        E1000_WRITE_REG((struct e1000_hw *)unit->e1ku_Private00, E1000_RCTL, rctl);
+
+        e1000func_irq_enable(unit);
+
+        /* fire a link status change interrupt to start the watchdog */
+        E1000_WRITE_REG((struct e1000_hw *)unit->e1ku_Private00, E1000_ICS, E1000_ICS_LSC);
+
+        unit->e1ku_ifflags |= IFF_UP;
+        ReportEvents(LIBBASE, unit, S2EVENT_ONLINE);
     }
 
     /* Return */
@@ -683,7 +699,7 @@ D(bug("[%s]: CmdOnline()\n", unit->e1ku_name));
 static BOOL CmdOffline(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
 {
     struct e1000Unit *unit;
-
+	ULONG rctl, tctl;
     /* Put adapter offline */
 
     unit = (APTR)request->ios2_Req.io_Unit;
@@ -692,6 +708,16 @@ D(bug("[%s]: CmdOffline()\n", unit->e1ku_name));
 
     if((unit->e1ku_ifflags & IFF_UP) != 0)
     {
+        tctl = E1000_READ_REG((struct e1000_hw *)unit->e1ku_Private00, E1000_TCTL);
+        tctl &= ~E1000_TCTL_EN;
+        E1000_WRITE_REG((struct e1000_hw *)unit->e1ku_Private00, E1000_TCTL, tctl);
+
+        rctl = E1000_READ_REG((struct e1000_hw *)unit->e1ku_Private00, E1000_RCTL);
+        rctl &= ~E1000_RCTL_EN;
+        E1000_WRITE_REG((struct e1000_hw *)unit->e1ku_Private00, E1000_RCTL, rctl);
+
+        e1000func_irq_disable(unit);
+
         unit->e1ku_ifflags &= ~IFF_UP;
         ReportEvents(LIBBASE, unit, S2EVENT_OFFLINE);
     }

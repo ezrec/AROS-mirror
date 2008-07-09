@@ -220,7 +220,7 @@ D(bug("[%s]: e1000func_configure_tx: Tx Queue %d rdh=%d, rdt=%d\n", dev->e1ku_na
 	/* Program the Transmit Control Register */
 	tctl = E1000_READ_REG(hw, E1000_TCTL);
 	tctl &= ~E1000_TCTL_CT;
-	tctl |= E1000_TCTL_PSP | E1000_TCTL_RTLC | E1000_TCTL_EN |
+	tctl |= E1000_TCTL_PSP | E1000_TCTL_RTLC |
 		(E1000_COLLISION_THRESHOLD << E1000_CT_SHIFT);
 
 	e1000_config_collision_dist(hw);
@@ -257,8 +257,7 @@ D(bug("[%s]: e1000func_setup_rctl()\n", dev->e1ku_name));
 
 	rctl &= ~(3 << E1000_RCTL_MO_SHIFT);
 
-	rctl |= E1000_RCTL_EN | E1000_RCTL_BAM |
-		E1000_RCTL_LBM_NO | E1000_RCTL_RDMTS_HALF |
+	rctl |= E1000_RCTL_BAM | E1000_RCTL_LBM_NO | E1000_RCTL_RDMTS_HALF |
 		(hw->mac.mc_filter_type << E1000_RCTL_MO_SHIFT);
 
 	/* disable the stripping of CRC because it breaks
@@ -368,7 +367,6 @@ D(bug("[%s]: e1000func_configure_rx: Configuring checksum Offload..\n", dev->e1k
 		E1000_WRITE_REG(hw, E1000_RXCSUM, rxcsum);
 	}
 
-D(bug("[%s]: e1000func_configure_rx: Enable Receivers..\n", dev->e1ku_name));
 	/* Enable Receivers */
 	E1000_WRITE_REG(hw, E1000_RCTL, rctl);
 }

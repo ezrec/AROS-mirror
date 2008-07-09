@@ -212,6 +212,7 @@
 
 #define E1000_READ_FLASH_REG16(a, reg) (readw((a)->flash_address + reg))
 
+#define SANA2_SPECIAL_STAT_COUNT 3
 
 struct e1000Unit {
     struct Node             e1ku_Node;
@@ -239,7 +240,7 @@ struct e1000Unit {
     ULONG                   e1ku_ifflags;
     struct Sana2DeviceQuery e1ku_Sana2Info;
     struct Sana2DeviceStats e1ku_stats;
-//    ULONG                   e1ku_special_stats[STAT_COUNT];
+    ULONG                   e1ku_special_stats[SANA2_SPECIAL_STAT_COUNT];
 
     struct Process          *e1ku_Process;
 
