@@ -2,6 +2,7 @@
 #MM     contrib-networking-drivers-nforce-$(AROS_TARGET_CPU) \
 #MM     contrib-networking-drivers-pcnet32-$(AROS_TARGET_CPU) \
 #MM     contrib-networking-drivers-viarhine-$(AROS_TARGET_CPU) \
+#MM     contrib-networking-drivers-e1000-$(AROS_TARGET_CPU) \
 ##MM     contrib-networking-drivers-rtl8139-$(AROS_TARGET_CPU) \
 #MM     contrib-networking-drivers-etherlink3 \
 #MM     contrib-networking-drivers-intelpro100 \
