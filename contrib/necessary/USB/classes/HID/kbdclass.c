@@ -201,10 +201,13 @@ OOP_Object *METHOD(USBKbd, Root, New)
                 { NP_UserData,  (intptr_t)kbd },
                 { NP_Priority,  50 },
                 { NP_Name,      (intptr_t)"HID Keyboard" },
+                { NP_Input,     0 },
+                { NP_Output,    0 },
+                { NP_Error,     0 },
                 { TAG_DONE,     0UL },
         };
 
-        CreateNewProc(tags);
+        kbd->kbd_task = CreateNewProc(tags);
     }
 
     return o;
@@ -218,7 +221,8 @@ void METHOD(USBKbd, Root, Dispose)
 {
     KbdData *kbd = OOP_INST_DATA(cl, o);
 
-    Signal(kbd->kbd_task, SIGBREAKF_CTRL_C);
+    if (kbd->kbd_task)
+        Signal(kbd->kbd_task, SIGBREAKF_CTRL_C);
 
     if (kbd->report)
         FreeVecPooled(SD(cl)->MemPool, kbd->report);
@@ -309,8 +313,6 @@ static void kbd_process()
     OOP_Class *cl = sd->hidClass;
     uint32_t sigset;
 
-    kbd->kbd_task = FindTask(NULL);
-
     struct MsgPort *port = CreateMsgPort();
     struct IOStdReq *req = (struct IOStdReq *)CreateIORequest(port, sizeof(struct IOStdReq));
     struct Device *InputBase;
@@ -339,7 +341,7 @@ static void kbd_process()
 
         if (sigset & SIGBREAKF_CTRL_C)
         {
-            D(bug("[Kbd] USB mouse detached. Cleaning up\n"));
+            D(bug("[Kbd] USB keyboard detached. Cleaning up\n"));
 
             CloseDevice((struct IORequest *)req);
             DeleteIORequest((struct IORequest *)req);
@@ -347,11 +349,6 @@ static void kbd_process()
             FreeVec(ie);
             return;
         }
-
-        D(bug("[Kbd] InputBase->dd_Library.lib_OpenCnt = %d\n", InputBase->dd_Library.lib_OpenCnt));
-
-        if (InputBase->dd_Library.lib_OpenCnt < 2)
-            continue;
 
         if (sigset & SIGBREAKF_CTRL_F)
         {

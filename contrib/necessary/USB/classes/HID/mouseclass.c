@@ -3,7 +3,7 @@
     $Id$
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU Library General Public License as 
+    it under the terms of the GNU Library General Public License as
     published by the Free Software Foundation; either version 2 of the
     License, or (at your option) any later version.
 
@@ -45,7 +45,7 @@ static void mouse_process();
 void METHOD(USBMouse, Hidd_USBHID, ParseReport)
 {
     MouseData *mouse = OOP_INST_DATA(cl, o);
-    
+
     if (mouse->mouse_task)
     {
         int x=0,y=0,z=0,buttons=0;
@@ -53,43 +53,43 @@ void METHOD(USBMouse, Hidd_USBHID, ParseReport)
 
         if (msg->id == mouse->mouse_report)
         {
-        
+
             int fill = mouse->head - mouse->tail;
-        
+
             if (mouse->head < mouse->tail)
                 fill += RING_SIZE;
-            
+
             /* Parse the movement and button data stored in this report */
             x = hid_get_data(msg->report, &mouse->loc_x);
             y = hid_get_data(msg->report, &mouse->loc_y);
             z = hid_get_data(msg->report, &mouse->loc_wheel);
-            
+
             for (i=0; i < mouse->loc_btncnt; i++)
                 if (hid_get_data(msg->report, &mouse->loc_btn[i]))
                     buttons |= (1 << i);
-        
+
             if (fill > (RING_SIZE - 1))
             {
                 bug("[Mouse] EVENT QUEUE FULL.\n");
                 return;
             }
-        
+
             /*
              *  Store the parsed event into the ring. Do it in Disable() state, since the semaphore
-             * locking in Cause()'d code does not make much sence. 
+             * locking in Cause()'d code does not make much sence.
              */
-            
+
             Disable();
-            
+
             mouse->report_ring[mouse->head].dx = x;
             mouse->report_ring[mouse->head].dy = y;
             mouse->report_ring[mouse->head].dz = z;
             mouse->report_ring[mouse->head].btn = buttons;
             mouse->head = (mouse->head+1) % RING_SIZE;
-        
+
             Enable();
-        
-            /* 
+
+            /*
              * If there is a mouse task, signal it. Once triggered it should pop all events from the rihg
              * and pass them to the input.device
              */
@@ -112,38 +112,38 @@ OOP_Object *METHOD(USBMouse, Root, New)
     {
         MouseData *mouse = OOP_INST_DATA(cl, o);
         int i;
-        
+
         mouse->sd = SD(cl);
         mouse->o = o;
         mouse->hd = HIDD_USBHID_GetHidDescriptor(o);
         uint32_t flags;
-        
+
         mouse->head = mouse->tail = 0;
-        
+
         HIDD_USBHID_SetProtocol(o, 1);
-        
+
         D(bug("[USBMouse::New()] Hid descriptor @ %p\n", mouse->hd));
         D(bug("[USBMouse::New()] Number of Report descriptors: %d\n", mouse->hd->bNumDescriptors));
-        
+
         mouse->reportLength = AROS_LE2WORD(mouse->hd->descrs[0].wDescriptorLength);
         mouse->report = AllocVecPooled(SD(cl)->MemPool, mouse->reportLength);
-        
+
         D(bug("[USBMouse::New()] Getting report descriptor of size %d\n", mouse->reportLength));
-        
+
         HIDD_USBHID_GetReportDescriptor(o, mouse->reportLength, mouse->report);
 
         mouse->nreport = hid_maxrepid(mouse->report, mouse->reportLength) + 1;
 	mouse->mouse_report = -1;
-	        
+
         for (i=0; i < mouse->nreport; i++)
         {
             D(bug("[USBMouse::New() Checking report %d\n", i));
-            
+
             if (hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_GENERIC_DESKTOP, HUG_X),
                        i, hid_input, &mouse->loc_x, &flags, &mouse->range_x))
             {
                 D(bug("[USBMouse::New()] Mouse coordinates found in report %d\n", i));
-                
+
                 mouse->mouse_report = i;
                 mouse->rel_x = flags & HIO_RELATIVE;
                 D(bug("[USBMouse::New()] Has %s X ranging from %d to %d\n", mouse->rel_x?"relative":"absolute",
@@ -151,15 +151,15 @@ OOP_Object *METHOD(USBMouse, Root, New)
             }
             else
                 continue;
-            
+
             if (hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_GENERIC_DESKTOP, HUG_Y),
                        i, hid_input, &mouse->loc_y, &flags, &mouse->range_y))
             {
                 mouse->rel_y = flags & HIO_RELATIVE;
                 D(bug("[USBMouse::New()] Has %s Y ranging from %d to %d\n", mouse->rel_y?"relative":"absolute",
-                        mouse->range_y.minimum, mouse->range_y.maximum));            
+                        mouse->range_y.minimum, mouse->range_y.maximum));
             }
-            
+
             if (hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_GENERIC_DESKTOP, HUG_Z),
                        i, hid_input, &mouse->loc_wheel, &flags, NULL) ||
                 hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_GENERIC_DESKTOP, HUG_WHEEL),
@@ -170,34 +170,37 @@ OOP_Object *METHOD(USBMouse, Root, New)
                     D(bug("[USBMouse::New()] Has %s Z\n", mouse->rel_z ? "relative":"absolute"));
                 }
             }
-            
+
             for (mouse->loc_btncnt = 1; mouse->loc_btncnt <= MAX_BTN; mouse->loc_btncnt++)
             {
                 if (!hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_BUTTON, mouse->loc_btncnt),
                            i, hid_input, &mouse->loc_btn[mouse->loc_btncnt-1], &flags, NULL)) {
-                    
+
                     mouse->loc_btncnt--;
                     break;
                 }
-            }	
-	    
+            }
+
 	    if (mouse->mouse_report != -1)
 		break;
         }
 
         D(bug("[USBMouse::New()] Pointing device has %d buttons\n", mouse->loc_btncnt));
-        
+
         struct TagItem tags[] = {
                 { NP_Entry,     (intptr_t)mouse_process },
-                { NP_UserData,  (intptr_t)mouse },                
-                { NP_Priority,  50 },
+                { NP_UserData,  (intptr_t)mouse },
+                { NP_Priority,  51 },
                 { NP_Name,      (intptr_t)"HID Mouse" },
+                { NP_Input,     0 },
+                { NP_Output,    0 },
+                { NP_Error,     0 },
                 { TAG_DONE,     0UL },
         };
 
         mouse->mouse_task = CreateNewProc(tags);
     }
-    
+
     return o;
 }
 
@@ -208,12 +211,12 @@ struct pRoot_Dispose {
 void METHOD(USBMouse, Root, Dispose)
 {
     MouseData *mouse = OOP_INST_DATA(cl, o);
-    
+
     Signal(mouse->mouse_task, SIGBREAKF_CTRL_C);
-    
+
     if (mouse->report)
         FreeVecPooled(SD(cl)->MemPool, mouse->report);
-    
+
     OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
 }
 
@@ -222,7 +225,7 @@ static void mouse_process()
     MouseData *mouse = (MouseData *)(FindTask(NULL)->tc_UserData);
     struct hid_staticdata *sd = mouse->sd;
     uint32_t sigset;
-    
+
     struct MsgPort *port = CreateMsgPort();
     struct IOStdReq *req = (struct IOStdReq *)CreateIORequest(port, sizeof(struct IOStdReq));
     struct Device *InputBase;
@@ -235,29 +238,29 @@ static void mouse_process()
         DeleteIORequest((struct IORequest *)req);
         DeleteMsgPort(port);
         mouse->mouse_task = NULL;
-        
+
         bug("[Mouse] Failed to open input.device\n");
-        
+
         return;
     }
-    
+
     InputBase = req->io_Device;
-    
+
     for (;;)
     {
         sigset = Wait(SIGBREAKF_CTRL_C | SIGBREAKF_CTRL_F);
-        
+
         if (sigset & SIGBREAKF_CTRL_C)
         {
             D(bug("[Mouse] USB mouse detached. Cleaning up\n"));
-            
+
             CloseDevice((struct IORequest *)req);
             DeleteIORequest((struct IORequest *)req);
             DeleteMsgPort(port);
             FreeVec(ie);
             return;
         }
-        
+
         if (sigset & SIGBREAKF_CTRL_F)
         {
             while (mouse->tail != mouse->head)
@@ -265,33 +268,33 @@ static void mouse_process()
                 int x=0,y=0,z=0,buttons=0,b_down=0,b_up=0;
                 int i;
                 int iec = 0;
-                  
+
                 Disable();
-                
+
                 x = mouse->report_ring[mouse->tail].dx;
                 y = mouse->report_ring[mouse->tail].dy;
                 z = mouse->report_ring[mouse->tail].dz;
                 buttons = mouse->report_ring[mouse->tail].btn;
-                
+
                 mouse->tail = (mouse->tail + 1 ) % RING_SIZE;
-                
+
                 Enable();
-                
+
                 b_down = (buttons^mouse->buttonstate) & buttons;
                 b_up = (buttons^mouse->buttonstate) & ~buttons;
-    
+
                 UWORD qual = PeekQualifier() & ~(IEQUALIFIER_MIDBUTTON | IEQUALIFIER_RBUTTON | IEQUALIFIER_LEFTBUTTON);
-                
+
                 qual |= IEQUALIFIER_RELATIVEMOUSE;
-                
+
                 /* Update the initial qualifier according to the buttonstate */
-                
+
                 if ((buttons & ~b_down) & 1)
                     qual |= IEQUALIFIER_LEFTBUTTON;
-    
+
                 if ((buttons & ~b_down) & 2)
                     qual |= IEQUALIFIER_RBUTTON;
-                
+
                 if ((buttons & ~b_down) & 4)
                     qual |= IEQUALIFIER_MIDBUTTON;
 
@@ -309,14 +312,14 @@ static void mouse_process()
                     ie[iec].ie_X = 0;
                     ie[iec].ie_Y = 0;
                     ie[iec].ie_EventAddress = &iet;
-                    
+
                     req->io_Data = &ie[iec];
                     req->io_Length = sizeof(struct InputEvent);
                     req->io_Command = IND_WRITEEVENT;
-                    
-                    DoIO(req);                        
+
+                    DoIO(req);
                 }
-                
+
                 else if (x!=0 || y!=0)
                 {
                     ie[iec].ie_Class = IECLASS_RAWMOUSE;
@@ -325,11 +328,11 @@ static void mouse_process()
                     ie[iec].ie_SubClass = 0;
                     ie[iec].ie_X = x;
                     ie[iec].ie_Y = y;
-                    
+
                     iec++;
                 }
-                           
-                if (buttons!=mouse->buttonstate) 
+
+                if (buttons!=mouse->buttonstate)
                 {
                     if (b_up & 1)
                     {
@@ -339,20 +342,20 @@ static void mouse_process()
                         ie[iec].ie_SubClass = 0;
                         ie[iec].ie_X = 0;
                         ie[iec].ie_Y = 0;
-                        
+
                         iec++;
                     }
                     if (b_down & 1)
                     {
                         qual |= IEQUALIFIER_LEFTBUTTON;
-                        
+
                         ie[iec].ie_Class = IECLASS_RAWMOUSE;
                         ie[iec].ie_Code = IECODE_LBUTTON;
                         ie[iec].ie_Qualifier = qual;
                         ie[iec].ie_SubClass = 0;
                         ie[iec].ie_X = 0;
                         ie[iec].ie_Y = 0;
-    
+
                         iec++;
                     }
                     if (b_up & 2)
@@ -363,20 +366,20 @@ static void mouse_process()
                         ie[iec].ie_SubClass = 0;
                         ie[iec].ie_X = 0;
                         ie[iec].ie_Y = 0;
-                        
+
                         iec++;
                     }
                     if (b_down & 2)
                     {
                         qual |= IEQUALIFIER_RBUTTON;
-    
+
                         ie[iec].ie_Class = IECLASS_RAWMOUSE;
                         ie[iec].ie_Code = IECODE_RBUTTON;
                         ie[iec].ie_Qualifier = qual;
                         ie[iec].ie_SubClass = 0;
                         ie[iec].ie_X = 0;
                         ie[iec].ie_Y = 0;
-                        
+
                         iec++;
                     }
                     if (b_up & 4)
@@ -387,26 +390,26 @@ static void mouse_process()
                         ie[iec].ie_SubClass = 0;
                         ie[iec].ie_X = 0;
                         ie[iec].ie_Y = 0;
-                        
+
                         iec++;
                     }
                     if (b_down & 4)
                     {
                         qual |= IEQUALIFIER_MIDBUTTON;
-    
+
                         ie[iec].ie_Class = IECLASS_RAWMOUSE;
                         ie[iec].ie_Code = IECODE_MBUTTON;
                         ie[iec].ie_Qualifier = qual;
                         ie[iec].ie_SubClass = 0;
                         ie[iec].ie_X = 0;
                         ie[iec].ie_Y = 0;
-                        
+
                         iec++;
                     }
 
                     mouse->buttonstate = buttons;
                 }
-    
+
                 if (z!=0)
                 {
                     ie[iec].ie_Class = IECLASS_RAWKEY;
@@ -415,8 +418,8 @@ static void mouse_process()
                     ie[iec].ie_SubClass = 0;
                     ie[iec].ie_X = 0;
                     ie[iec].ie_Y = 0;
-                    
-                    iec++;                
+
+                    iec++;
 
                     ie[iec].ie_Class = IECLASS_RAWKEY;
                     ie[iec].ie_Code = ((z > 0) ? RAWKEY_NM_WHEEL_UP : RAWKEY_NM_WHEEL_DOWN) |
@@ -425,21 +428,21 @@ static void mouse_process()
                     ie[iec].ie_SubClass = 0;
                     ie[iec].ie_X = 0;
                     ie[iec].ie_Y = 0;
-                    
-                    iec++;                
+
+                    iec++;
 
                 }
-    
+
                 if (iec)
                 {
                     req->io_Data = &ie[0];
                     req->io_Length = iec * sizeof(struct InputEvent);
                     req->io_Command = IND_ADDEVENT;
-                    
+
                     DoIO(req);
                 }
-                
+
             }
         }
-    }    
+    }
 }
