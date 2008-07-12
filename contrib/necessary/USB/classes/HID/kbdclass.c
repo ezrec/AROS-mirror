@@ -123,6 +123,9 @@ void METHOD(USBKbd, Hidd_USBHID, ParseReport)
 
 OOP_Object *METHOD(USBKbd, Root, New)
 {
+    struct Task *t;
+    struct MemList *ml;
+
     D(bug("[USBKbd] USBKeyboard::New()\n"));
 
     o = (OOP_Object *)OOP_DoSuperMethod(cl, o, (OOP_Msg) msg);
@@ -197,17 +200,41 @@ OOP_Object *METHOD(USBKbd, Root, New)
                    0, hid_output, &kbd->loc_scrollock, NULL, NULL);
 
         struct TagItem tags[] = {
-                { NP_Entry,     (intptr_t)kbd_process },
-                { NP_UserData,  (intptr_t)kbd },
-                { NP_Priority,  50 },
-                { NP_Name,      (intptr_t)"HID Keyboard" },
-                { NP_Input,     0 },
-                { NP_Output,    0 },
-                { NP_Error,     0 },
-                { TAG_DONE,     0UL },
-        };
+                        { TASKTAG_ARG1,   (IPTR)cl },
+                        { TASKTAG_ARG2,   (IPTR)o },
+                        { TAG_DONE,       0UL },
+                };
 
-        kbd->kbd_task = CreateNewProc(tags);
+        t = AllocMem(sizeof(struct Task), MEMF_PUBLIC|MEMF_CLEAR);
+        ml = AllocMem(sizeof(struct MemList) + sizeof(struct MemEntry), MEMF_PUBLIC|MEMF_CLEAR);
+
+        if (t && ml)
+        {
+            char *sp = AllocMem(10240, MEMF_PUBLIC|MEMF_CLEAR);
+            t->tc_SPLower = sp;
+            t->tc_SPUpper = sp + 10240;
+#if AROS_STACK_GROWS_DOWNWARDS
+            t->tc_SPReg = (char *)t->tc_SPUpper - SP_OFFSET;
+#else
+            t->tc_SPReg = (char *)t->tc_SPLower + SP_OFFSET;
+#endif
+
+            ml->ml_NumEntries = 2;
+            ml->ml_ME[0].me_Addr = t;
+            ml->ml_ME[0].me_Length = sizeof(struct Task);
+            ml->ml_ME[1].me_Addr = sp;
+            ml->ml_ME[1].me_Length = 10240;
+
+            NEWLIST(&t->tc_MemEntry);
+            ADDHEAD(&t->tc_MemEntry, &ml->ml_Node);
+
+            t->tc_Node.ln_Name = "HID USB Keyboard";
+            t->tc_Node.ln_Type = NT_TASK;
+            t->tc_Node.ln_Pri = 50;
+
+            NewAddTask(t, kbd_process, NULL, &tags);
+            kbd->kbd_task = t;
+        }
     }
 
     return o;
@@ -305,12 +332,10 @@ static uint16_t code2qual(uint16_t code)
         }                               \
     } while(0);
 
-static void kbd_process()
+static void kbd_process(OOP_Class *cl, OOP_Object *o)
 {
-    KbdData *kbd = (KbdData *)(FindTask(NULL)->tc_UserData);
+    KbdData *kbd = OOP_INST_DATA(cl, o);
     struct hid_staticdata *sd = kbd->sd;
-    OOP_Object *o = kbd->o;
-    OOP_Class *cl = sd->hidClass;
     uint32_t sigset;
 
     struct MsgPort *port = CreateMsgPort();

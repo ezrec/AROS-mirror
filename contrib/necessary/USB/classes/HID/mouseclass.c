@@ -105,6 +105,9 @@ void METHOD(USBMouse, Hidd_USBHID, ParseReport)
 
 OOP_Object *METHOD(USBMouse, Root, New)
 {
+    struct Task *t;
+    struct MemList *ml;
+
     D(bug("[USBMouse] USBMouse::New()\n"));
 
     o = (OOP_Object *)OOP_DoSuperMethod(cl, o, (OOP_Msg) msg);
@@ -186,19 +189,42 @@ OOP_Object *METHOD(USBMouse, Root, New)
         }
 
         D(bug("[USBMouse::New()] Pointing device has %d buttons\n", mouse->loc_btncnt));
-
         struct TagItem tags[] = {
-                { NP_Entry,     (intptr_t)mouse_process },
-                { NP_UserData,  (intptr_t)mouse },
-                { NP_Priority,  51 },
-                { NP_Name,      (intptr_t)"HID Mouse" },
-                { NP_Input,     0 },
-                { NP_Output,    0 },
-                { NP_Error,     0 },
-                { TAG_DONE,     0UL },
-        };
+                        { TASKTAG_ARG1,   (IPTR)cl },
+                        { TASKTAG_ARG2,   (IPTR)o },
+                        { TAG_DONE,       0UL },
+                };
 
-        mouse->mouse_task = CreateNewProc(tags);
+        t = AllocMem(sizeof(struct Task), MEMF_PUBLIC|MEMF_CLEAR);
+        ml = AllocMem(sizeof(struct MemList) + sizeof(struct MemEntry), MEMF_PUBLIC|MEMF_CLEAR);
+
+        if (t && ml)
+        {
+            char *sp = AllocMem(10240, MEMF_PUBLIC|MEMF_CLEAR);
+            t->tc_SPLower = sp;
+            t->tc_SPUpper = sp + 10240;
+#if AROS_STACK_GROWS_DOWNWARDS
+            t->tc_SPReg = (char *)t->tc_SPUpper - SP_OFFSET;
+#else
+            t->tc_SPReg = (char *)t->tc_SPLower + SP_OFFSET;
+#endif
+
+            ml->ml_NumEntries = 2;
+            ml->ml_ME[0].me_Addr = t;
+            ml->ml_ME[0].me_Length = sizeof(struct Task);
+            ml->ml_ME[1].me_Addr = sp;
+            ml->ml_ME[1].me_Length = 10240;
+
+            NEWLIST(&t->tc_MemEntry);
+            ADDHEAD(&t->tc_MemEntry, &ml->ml_Node);
+
+            t->tc_Node.ln_Name = "HID USB Mouse";
+            t->tc_Node.ln_Type = NT_TASK;
+            t->tc_Node.ln_Pri = 50;
+
+            NewAddTask(t, mouse_process, NULL, &tags);
+            mouse->mouse_task = t;
+        }
     }
 
     return o;
@@ -220,9 +246,9 @@ void METHOD(USBMouse, Root, Dispose)
     OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
 }
 
-static void mouse_process()
+static void mouse_process(OOP_Class *cl, OOP_Object *o)
 {
-    MouseData *mouse = (MouseData *)(FindTask(NULL)->tc_UserData);
+    MouseData *mouse = OOP_INST_DATA(cl, o);
     struct hid_staticdata *sd = mouse->sd;
     uint32_t sigset;
 

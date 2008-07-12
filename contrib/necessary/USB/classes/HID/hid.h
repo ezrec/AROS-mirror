@@ -6,7 +6,7 @@
     $Id$
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU Library General Public License as 
+    it under the terms of the GNU Library General Public License as
     published by the Free Software Foundation; either version 2 of the
     License, or (at your option) any later version.
 
@@ -51,13 +51,13 @@
 #undef HiddUSBHIDAttrBase
 #undef HiddAttrBase
 
-#define HiddPCIDeviceAttrBase (SD(cl)->HiddPCIDeviceAB) 
-#define HiddUSBDeviceAttrBase (SD(cl)->HiddUSBDeviceAB) 
-#define HiddUSBHubAttrBase (SD(cl)->HiddUSBHubAB) 
-#define HiddUSBDrvAttrBase (SD(cl)->HiddUSBDrvAB) 
-#define HiddAttrBase (SD(cl)->HiddAB) 
-#define HiddUSBAttrBase (SD(cl)->HiddUSBAB) 
-#define HiddUSBHIDAttrBase (SD(cl)->HiddUSBHIDAB) 
+#define HiddPCIDeviceAttrBase (SD(cl)->HiddPCIDeviceAB)
+#define HiddUSBDeviceAttrBase (SD(cl)->HiddUSBDeviceAB)
+#define HiddUSBHubAttrBase (SD(cl)->HiddUSBHubAB)
+#define HiddUSBDrvAttrBase (SD(cl)->HiddUSBDrvAB)
+#define HiddAttrBase (SD(cl)->HiddAB)
+#define HiddUSBAttrBase (SD(cl)->HiddUSBAB)
+#define HiddUSBHIDAttrBase (SD(cl)->HiddUSBHIDAB)
 
 struct hid_location {
     uint32_t size;
@@ -77,7 +77,7 @@ struct hid_staticdata
     OOP_Class               *hidClass;
     OOP_Class               *mouseClass;
     OOP_Class               *kbdClass;
-    
+
     OOP_AttrBase            HiddPCIDeviceAB;
     OOP_AttrBase            HiddUSBDeviceAB;
     OOP_AttrBase            HiddUSBHubAB;
@@ -98,7 +98,7 @@ struct hidbase
 typedef struct HidData {
     struct hid_staticdata       *sd;
     OOP_Object                  *o;
-    
+
     usb_config_descriptor_t     *cdesc;
     usb_device_descriptor_t     ddesc;
     usb_hid_descriptor_t        *hd;
@@ -120,21 +120,21 @@ typedef struct {
 typedef struct MouseData {
     struct hid_staticdata       *sd;
     OOP_Object                  *o;
-    
+
     usb_hid_descriptor_t        *hd;
     char                        *report;
     uint16_t                    reportLength;
     uint16_t                    nreport;
     int                         mouse_report;
-    
-    struct Process              *mouse_task;
-    
+
+    struct Task                 *mouse_task;
+
     uint8_t                     rel_x, rel_y, rel_z;
     uint8_t                     buttonstate;
 
     int32_t                     last_x, last_y, max_x, max_y;
     uint8_t                     tablet;
-    
+
     struct hid_range            range_x;
     struct hid_range            range_y;
     struct hid_location         loc_x;
@@ -142,7 +142,7 @@ typedef struct MouseData {
     struct hid_location         loc_wheel;
     struct hid_location         loc_btn[MAX_BTN];
     uint8_t                     loc_btncnt;
-    
+
 #define RING_SIZE       8
     report_t report_ring[RING_SIZE];
     uint8_t head,tail;
@@ -156,25 +156,25 @@ struct key_mod {
 typedef struct KbdData {
     struct hid_staticdata       *sd;
     OOP_Object                  *o;
-    
+
     usb_hid_descriptor_t        *hd;
     char                        *report;
     uint16_t                    reportLength;
 
-    struct Process              *kbd_task;
+    struct Task                 *kbd_task;
 
     uint16_t                    prev_key;
     uint16_t                    prev_prev_key;
     uint16_t                    prev_qual;
     uint16_t                    prev_prev_qual;
-    
+
     uint8_t                     *prev_code;
     uint8_t                     *code;
-    
+
     struct hid_location         loc_scrollock;
     struct hid_location         loc_numlock;
     struct hid_location         loc_capslock;
-    
+
     struct key_mod              loc_mod[8];
     struct hid_location         loc_keycode;
     uint8_t                     loc_modcnt;
