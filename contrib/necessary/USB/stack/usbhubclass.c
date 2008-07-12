@@ -479,8 +479,6 @@ static void hub_explore(OOP_Class *cl, OOP_Object *o)
         usb_port_status_t port_status;
         uint16_t status, change;
 
-        D(bug("[USBHub Process] bNbrPorts=%d\n", hub->descriptor.bNbrPorts));
-
         if (!HIDD_USBHub_GetPortStatus(o, port, &port_status))
         {
             D(bug("[USBHub Process] HIDD_USBHub_GetPortStatus(%p, %d, %p) failed\n",
