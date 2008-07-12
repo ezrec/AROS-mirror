@@ -69,7 +69,7 @@ static AROS_UFH3(void, HubInterrupt,
     HubData *hub = interruptData;
 
     if (hub->hub_task)
-        Signal(&hub->hub_task->pr_Task, 1 << hub->sigInterrupt);
+        Signal(hub->hub_task, 1 << hub->sigInterrupt);
 
     AROS_USERFUNC_EXIT
 }
@@ -80,6 +80,9 @@ static AROS_UFH3(void, HubInterrupt,
  */
 OOP_Object *METHOD(USBHub, Root, New)
 {
+    struct Task    *t;
+    struct MemList *ml;
+
     D(bug("[USB] USBHub::New()\n"));
 
     o = (OOP_Object *)OOP_DoSuperMethod(cl, o, (OOP_Msg) msg);
@@ -150,22 +153,44 @@ OOP_Object *METHOD(USBHub, Root, New)
         }
 
         struct TagItem tags[] = {
-                { NP_Entry,     (IPTR)hub_process },
-                { NP_UserData,  (IPTR)hub },
-                { NP_Priority,  0 },
-                { NP_Name,      (IPTR)hub->proc_name },
-                { NP_WindowPtr, -1 },
-                { TAG_DONE,     0UL },
+                { TASKTAG_ARG1,   (IPTR)hub },
+                { TASKTAG_ARG2,   (IPTR)o   },
+                { TASKTAG_ARG3,   (IPTR)FindTask(NULL) },
+                { TAG_DONE,       0UL },
         };
 
-        message.ev_Message.mn_ReplyPort = CreateMsgPort();
-        message.ev_Type = evt_Startup;
-        message.ev_Target = o;
+        t = AllocMem(sizeof(struct Task), MEMF_PUBLIC|MEMF_CLEAR);
+        ml = AllocMem(sizeof(struct MemList) + sizeof(struct MemEntry), MEMF_PUBLIC|MEMF_CLEAR);
 
-        hub->hub_task = CreateNewProc(tags);
-        PutMsg(&hub->hub_task->pr_MsgPort, (struct Message *)&message);
-        WaitPort(message.ev_Message.mn_ReplyPort);
-        DeleteMsgPort(message.ev_Message.mn_ReplyPort);
+        if (t && ml)
+        {
+            char *sp = AllocMem(10240, MEMF_PUBLIC|MEMF_CLEAR);
+            t->tc_SPLower = sp;
+            t->tc_SPUpper = sp + 10240;
+#if AROS_STACK_GROWS_DOWNWARDS
+            t->tc_SPReg = (char *)t->tc_SPUpper - SP_OFFSET;
+#else
+            t->tc_SPReg = (char *)t->tc_SPLower + SP_OFFSET;
+#endif
+
+            ml->ml_NumEntries = 2;
+            ml->ml_ME[0].me_Addr = t;
+            ml->ml_ME[0].me_Length = sizeof(struct Task);
+            ml->ml_ME[1].me_Addr = sp;
+            ml->ml_ME[1].me_Length = 10240;
+
+            NEWLIST(&t->tc_MemEntry);
+            ADDHEAD(&t->tc_MemEntry, &ml->ml_Node);
+
+            t->tc_Node.ln_Name = hub->proc_name;
+            t->tc_Node.ln_Type = NT_TASK;
+            t->tc_Node.ln_Pri = 0;
+
+            NewAddTask(t, hub_process, NULL, &tags);
+            hub->hub_task = t;
+        }
+
+        Wait(SIGF_SINGLE);
     }
 
     D(bug("[USB] USBHub::New() = %p\n",o));
@@ -186,7 +211,7 @@ void METHOD(USBHub, Root, Dispose)
     message.ev_Message.mn_ReplyPort = CreateMsgPort();
     message.ev_Type = evt_Cleanup;
 
-    PutMsg(&hub->hub_task->pr_MsgPort, (struct Message *)&message);
+    PutMsg(hub->hub_port, (struct Message *)&message);
     WaitPort(message.ev_Message.mn_ReplyPort);
     DeleteMsgPort(message.ev_Message.mn_ReplyPort);
 
@@ -263,7 +288,7 @@ BOOL METHOD(USBHub, Hidd_USBHub, OnOff)
     message.ev_Message.mn_ReplyPort = CreateMsgPort();
     message.ev_Type = evt_OnOff;
 
-    PutMsg(&hub->hub_task->pr_MsgPort, (struct Message *)&message);
+    PutMsg(hub->hub_port, (struct Message *)&message);
     WaitPort(message.ev_Message.mn_ReplyPort);
     DeleteMsgPort(message.ev_Message.mn_ReplyPort);
 
@@ -556,33 +581,36 @@ static void hub_explore(OOP_Class *cl, OOP_Object *o)
     }
 }
 
-static void hub_process()
+static void hub_process(HubData *hub, OOP_Object *o, struct Task *parent)
 {
-    HubData *hub = (HubData *)(FindTask(NULL)->tc_UserData);
-    struct Process *hub_task = (struct Process *)FindTask(NULL);
+    struct Task *hub_task = FindTask(NULL);
     struct usb_staticdata *sd = hub->sd;
-    OOP_Object *o = NULL;
     OOP_Object *drv = NULL;
     OOP_Class *cl = sd->hubClass;
     struct usbEvent *ev = NULL;
     uint32_t sigset;
 
     hub->tr = USBCreateTimer();
+    hub->hub_port = CreateMsgPort();
+
+    OOP_GetAttr(o, aHidd_USBDevice_Bus, &drv);
+    SetTaskPri(FindTask(NULL), 10);
 
     D(bug("[USBHub Process] HUB process (%p)\n", FindTask(NULL)));
+
+    Signal(parent, SIGF_SINGLE);
 
     for (;;)
     {
         D(bug("[USBHub Process] YAWN...\n"));
 
-        sigset = Wait( (1 << hub_task->pr_MsgPort.mp_SigBit) |
+        sigset = Wait( (1 << hub->hub_port->mp_SigBit) |
                        (1 << hub->sigInterrupt)
                      );
         D(bug("[USBHub Process] signals rcvd: %p\n", sigset));
 
-
         /* handle messages */
-        while ((ev = (struct usbEvent *)GetMsg(&hub_task->pr_MsgPort)) != NULL)
+        while ((ev = (struct usbEvent *)GetMsg(hub->hub_port)) != NULL)
         {
             BOOL reply = TRUE;
 
@@ -590,9 +618,6 @@ static void hub_process()
             {
                 case evt_Startup:
                     D(bug("[USBHub Process] Startup MSG\n"));
-                    o = ev->ev_Target;
-                    OOP_GetAttr(o, aHidd_USBDevice_Bus, &drv);
-                    SetTaskPri(FindTask(NULL), 10);
                     break;
 
                 case evt_Method:
@@ -653,12 +678,8 @@ static void hub_process()
             {
                 ObtainSemaphore(&d->d_Lock);
                 hub_explore(cl, o);
-                D(bug("----->MARKER 5<-----\n"));
                 ReleaseSemaphore(&d->d_Lock);
-                D(bug("----->MARKER 6<-----\n"));
             }
-            D(bug("----->MARKER 7<-----\n"));
-
         }
     }
 }

@@ -6,7 +6,7 @@
     $Id$
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU Library General Public License as 
+    it under the terms of the GNU Library General Public License as
     published by the Free Software Foundation; either version 2 of the
     License, or (at your option) any later version.
 
@@ -68,7 +68,7 @@ struct usb_staticdata
 
     struct List                 driverList;
     struct SignalSemaphore      driverListLock;
-    
+
     struct List                 extClassList;
 
     struct Process              *usbProcess;
@@ -107,27 +107,28 @@ typedef struct  {
     char                        *manufacturer_name;
     char                        *serialnumber_name;
 
-    void                        *default_pipe;	
+    void                        *default_pipe;
     struct usb_staticdata       *sd;
     OOP_Object                  *hub;
     OOP_Object                  *bus;
     struct timerequest          *tr;
-    
+
     OOP_Object                  *next;
 } DeviceData;
 
 typedef struct  {
-    struct Process              *hub_task;
+    struct Task                 *hub_task;
+    struct MsgPort              *hub_port;
     struct timerequest          *tr;
     uint8_t                     sigInterrupt;
-    
+
     STRPTR                      hub_name;
-    STRPTR                      proc_name;	
+    STRPTR                      proc_name;
     struct usb_staticdata       *sd;
     OOP_Object                  **children;
     usb_hub_descriptor_t        descriptor;
     uint8_t                     got_descriptor;
-    
+
     void                        *intr_pipe;
 
     uint8_t                     root;

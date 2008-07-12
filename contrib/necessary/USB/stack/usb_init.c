@@ -3,7 +3,7 @@
     $Id$
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU Library General Public License as 
+    it under the terms of the GNU Library General Public License as
     published by the Free Software Foundation; either version 2 of the
     License, or (at your option) any later version.
 
@@ -73,9 +73,10 @@ static int USB_Init(LIBBASETYPEPTR LIBBASE)
 
             struct TagItem tags[] = {
                     { NP_Entry,		(IPTR)usb_process },
-                    { NP_UserData,	(IPTR)&LIBBASE->sd },		
+                    { NP_UserData,	(IPTR)&LIBBASE->sd },
                     { NP_Priority,	5 },
                     { NP_Name,		(IPTR)"USB" },
+                    { NP_WindowPtr,     -1 },
                     { TAG_DONE, 	0UL },
             };
 
@@ -85,7 +86,7 @@ static int USB_Init(LIBBASETYPEPTR LIBBASE)
             LIBBASE->sd.usbProcess = CreateNewProc(tags);
             PutMsg(&LIBBASE->sd.usbProcess->pr_MsgPort, (struct Message *)&message);
             WaitPort(message.ev_Message.mn_ReplyPort);
-            DeleteMsgPort(message.ev_Message.mn_ReplyPort); 
+            DeleteMsgPort(message.ev_Message.mn_ReplyPort);
 
             return TRUE;
         }
@@ -96,7 +97,7 @@ static int USB_Init(LIBBASETYPEPTR LIBBASE)
 }
 
 static int USB_Expunge(LIBBASETYPEPTR LIBBASE)
-{ 
+{
     struct OOP_ABDescr attrbases[] = {
             { (STRPTR)IID_Hidd,                 &HiddAttrBase },
             { (STRPTR)IID_Hidd_USB,             &HiddUSBAttrBase },
@@ -114,7 +115,7 @@ static int USB_Expunge(LIBBASETYPEPTR LIBBASE)
 
     PutMsg(&LIBBASE->sd.usbProcess->pr_MsgPort, (struct Message *)&message);
     WaitPort(message.ev_Message.mn_ReplyPort);
-    DeleteMsgPort(message.ev_Message.mn_ReplyPort); 
+    DeleteMsgPort(message.ev_Message.mn_ReplyPort);
 
     OOP_ReleaseAttrBases(attrbases);
 
