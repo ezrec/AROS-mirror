@@ -272,6 +272,7 @@ OOP_Object *METHOD(USB, Hidd_USB, NewDevice)
                 break;
         }
         ReleaseSemaphore(&SD(cl)->driverListLock);
+
         ObtainSemaphore(&drv->d_Lock);
 
         pipe = HIDD_USBDrv_CreatePipe(bus, PIPE_Control, msg->fast, 0, 0, 0, 8, 100);
@@ -346,12 +347,8 @@ OOP_Object *METHOD(USB, Hidd_USB, NewDevice)
                 {
                     tags[0].ti_Data = i - 1;
 
-                    D(bug("--------> %d <---------", i));
-
                     ForeachNode(&SD(cl)->extClassList, ec)
                     {
-
-                        D(bug("--------> %p <---------", ec));
 
                         D(bug("[USB] Trying external class \"%s\"\n", ec->ec_Node.ln_Name));
 
@@ -371,8 +368,6 @@ OOP_Object *METHOD(USB, Hidd_USB, NewDevice)
                             {
                                 new_device = OOP_NewObject(NULL, (STRPTR)clid, tags);
 
-                                D(bug("----->MARKER 01<-----\n"));
-
                                 if (new_device)
                                 {
                                     tags[2].ti_Data = (intptr_t)new_device;
@@ -390,15 +385,11 @@ OOP_Object *METHOD(USB, Hidd_USB, NewDevice)
             }
         }
 
-        D(bug("----->MARKER 02<-----\n"));
-
         if (cdesc)
             FreeVecPooled(SD(cl)->MemPool, cdesc);
 
         ReleaseSemaphore(&drv->d_Lock);
     }
-
-    D(bug("----->MARKER 03<-----\n"));
 
     return new_device;
 }
