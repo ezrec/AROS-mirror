@@ -3,7 +3,7 @@
     $Id$
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU Library General Public License as 
+    it under the terms of the GNU Library General Public License as
     published by the Free Software Foundation; either version 2 of the
     License, or (at your option) any later version.
 
@@ -50,9 +50,9 @@
 void ohci_Delay(struct timerequest *tr, uint32_t msec)
 {
     /* Allocate a signal within this task context */
-    tr->tr_node.io_Message.mn_ReplyPort->mp_SigBit = AllocSignal(-1);
+    tr->tr_node.io_Message.mn_ReplyPort->mp_SigBit = SIGB_SINGLE;
     tr->tr_node.io_Message.mn_ReplyPort->mp_SigTask = FindTask(NULL);
-    
+
     /* Specify the request */
     tr->tr_node.io_Command = TR_ADDREQUEST;
     tr->tr_time.tv_secs = msec / 1000;
@@ -60,9 +60,7 @@ void ohci_Delay(struct timerequest *tr, uint32_t msec)
 
     /* Wait */
     DoIO((struct IORequest *)tr);
-    
-    /* The signal is not needed anymore */
-    FreeSignal(tr->tr_node.io_Message.mn_ReplyPort->mp_SigBit);
+
     tr->tr_node.io_Message.mn_ReplyPort->mp_SigTask = NULL;
 }
 
@@ -71,23 +69,23 @@ struct timerequest *ohci_CreateTimer()
 {
     struct timerequest *tr = NULL;
     struct MsgPort *mp = NULL;
-    
+
     mp = CreateMsgPort();
     if (mp)
-    {        
+    {
         tr = (struct timerequest *)CreateIORequest(mp, sizeof(struct timerequest));
         if (tr)
         {
             FreeSignal(mp->mp_SigBit);
             if (!OpenDevice((STRPTR)"timer.device", UNIT_MICROHZ, (struct IORequest *)tr, 0))
                 return tr;
-            
+
             DeleteIORequest((struct IORequest *)tr);
             mp->mp_SigBit = AllocSignal(-1);
         }
         DeleteMsgPort(mp);
     }
-    
+
     return NULL;
 }
 
@@ -103,11 +101,11 @@ void ohci_DeleteTimer(struct timerequest *tr)
 }
 
 /*
- * This function allocats new 32-byte Transfer Descriptor from the 
- * pool of 4K-aligned PCI-accessible memory regions. Within each 4K page, 
+ * This function allocats new 32-byte Transfer Descriptor from the
+ * pool of 4K-aligned PCI-accessible memory regions. Within each 4K page,
  * a bitmap is used to determine, which of the TD elements are available
  * for use.
- * 
+ *
  * This function returns NULL if no free TD's are found and no more memory
  * is available.
  */
@@ -196,7 +194,7 @@ ohci_ed_t *ohci_AllocED(OOP_Class *cl, OOP_Object *o)
 void ohci_FreeTDQuick(ohci_data_t *ohci, ohci_td_t *td)
 {
     td_node_t *t;
-    
+
     /* We're inside interrupt probably. Don't ObtainSemaphore. Just lock interrupts instead */
     Disable();
 
@@ -279,12 +277,12 @@ void ohci_Handler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
     ohci_data_t *ohci = (ohci_data_t *)irq->h_Data;
     uint32_t intrs = 0;
     uint32_t done;
-    
+
     mmio(ohci->regs->HcInterruptDisable) = AROS_LONG2LE(HC_INTR_MIE);
-    
+
     CacheClearE(ohci->hcca, sizeof(ohci_hcca_t), CACRF_InvalidateD);
     done = AROS_LE2LONG(ohci->hcca->hccaDoneHead);
-    
+
     if (done != 0)
     {
         if (done & ~1)
@@ -303,39 +301,39 @@ void ohci_Handler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
         }
     }
     CacheClearE(ohci->hcca, sizeof(ohci_hcca_t), CACRF_ClearD);
-    
+
     intrs &= ~HC_INTR_MIE;
     /* Ack interrupts */
     mmio(ohci->regs->HcInterruptStatus) = AROS_LONG2LE(intrs);
-    
+
     /* Clear disabled interrupts */
     intrs &= AROS_LE2LONG(mmio(ohci->regs->HcInterruptEnable));
-    
+
     if (intrs)
-        D(bug("[OHCI] Intr handler %08x, enabled %08x\n", 
-              intrs, 
+        D(bug("[OHCI] Intr handler %08x, enabled %08x\n",
+              intrs,
               AROS_LE2LONG(mmio(ohci->regs->HcInterruptEnable))));
 
     if (intrs & HC_INTR_WDH)
     {
         D(bug("[OHCI] WDH Interrupt, hccaDoneHead=%p\n[OHCI] TD's in hccaDoneHead:\n", done));
         ohci_td_t *td = (ohci_td_t*)(done & 0xfffffff0);
-        
+
         while (td)
         {
             CacheClearE(td, sizeof(ohci_td_t), CACRF_InvalidateD);
             CacheClearE(ohci->hcca, sizeof(ohci_hcca_t), CACRF_InvalidateD);
-            
+
             ohci_td_t *tmp = td;
-            
-            /* 
-             * For each TD issue the signal for corresponding pipe if the 
+
+            /*
+             * For each TD issue the signal for corresponding pipe if the
              * edHeadP=edTailP (thus, the pipe is ready).
              */
             if (td->tdPipe)
             {
                 ohci_pipe_t *pipe = td->tdPipe;
-                
+
                 CacheClearE(pipe->ed, sizeof(ohci_ed_t), CACRF_InvalidateD);
                 if (pipe->ed->edHeadP == pipe->ed->edTailP)
                 {
@@ -343,7 +341,7 @@ void ohci_Handler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
                         Signal(pipe->sigTask, 1 << pipe->signal);
                 }
             }
-            
+
             D(bug("[OHCI]   TD @ %p (%08x %08x %08x %08x)\n", td, AROS_LE2LONG(td->tdFlags), AROS_LE2LONG(td->tdCurrentBufferPointer), AROS_LE2LONG(td->tdBufferEnd), AROS_LE2LONG(td->tdNextTD)));
 
             td = (ohci_td_t *)AROS_LE2LONG(td->tdNextTD);
@@ -351,17 +349,17 @@ void ohci_Handler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
             if (tmp->tdPipe->type == PIPE_Interrupt)
             {
                 ohci_td_t *itd = (ohci_td_t *)AROS_LE2LONG(tmp->tdPipe->ed->edTailP);
-                
+
                 CacheClearE(itd, sizeof(ohci_td_t), CACRF_InvalidateD);
                 D(bug("[OHCI]   TD belongs to the interrupt pipe. Intr = %p\n", tmp->tdPipe->interrupt));
-                
+
                 if (tmp->tdPipe->interrupt)
                 {
                     Cause(tmp->tdPipe->interrupt->intr);
                 }
-                
+
                 D(bug("[OHCI]   restarting TD\n"));
-                
+
                 /* Restart the pipe's interrupt */
                 itd->tdFlags = tmp->tdFlags | AROS_LONG2LE(0xf0000000);
                 itd->tdPipe = tmp->tdPipe;
@@ -375,52 +373,52 @@ void ohci_Handler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
                 tmp->tdBufferEnd = 0;
 
                 D(bug("[OHCI]   TD @ %p (%08x %08x %08x %08x)\n", itd, AROS_LE2LONG(itd->tdFlags), AROS_LE2LONG(itd->tdCurrentBufferPointer), AROS_LE2LONG(itd->tdBufferEnd), AROS_LE2LONG(itd->tdNextTD)));
-                
+
                 D(bug("[OHCI]   Pipe=%p, HeadP=%p, TailP=%p\n", itd->tdPipe,
                       AROS_LE2LONG(itd->tdPipe->ed->edHeadP), AROS_LE2LONG(itd->tdPipe->ed->edTailP)));
-                D(bug("[OHCI]   ED @ %p (%p %p %p %p)\n", itd->tdPipe->ed, 
+                D(bug("[OHCI]   ED @ %p (%p %p %p %p)\n", itd->tdPipe->ed,
                                   AROS_LE2LONG(itd->tdPipe->ed->edFlags),
-                                  AROS_LE2LONG(itd->tdPipe->ed->edHeadP), 
-                                  AROS_LE2LONG(itd->tdPipe->ed->edTailP), 
+                                  AROS_LE2LONG(itd->tdPipe->ed->edHeadP),
+                                  AROS_LE2LONG(itd->tdPipe->ed->edTailP),
                                   AROS_LE2LONG(itd->tdPipe->ed->edNextED)
                                   ));
-                
+
                 CacheClearE(tmp->tdPipe->ed, sizeof(ohci_ed_t), CACRF_ClearD);
                 CacheClearE(tmp, sizeof(ohci_td_t), CACRF_ClearD);
                 CacheClearE(itd, sizeof(ohci_td_t), CACRF_ClearD);
-                
+
             }
             else
                 ohci_FreeTDQuick(ohci, tmp);
 
         }
-        
+
         ohci->hcca->hccaDoneHead = 0;
         CacheClearE(ohci->hcca, sizeof(ohci_hcca_t), CACRF_ClearD);
-        
+
         mmio(ohci->regs->HcInterruptStatus) = AROS_LONG2LE(HC_INTR_WDH);
         intrs &= ~HC_INTR_WDH;
     }
-    
+
     if (intrs & HC_INTR_RHSC)
     {
         D(bug("[OHCI] RHSC interrupt. Disabling it for 1 second\n"));
-        
+
         mmio(ohci->regs->HcInterruptDisable) = AROS_LONG2LE(HC_INTR_RHSC);
         mmio(ohci->regs->HcInterruptStatus) = AROS_LONG2LE(HC_INTR_RHSC);
-        
+
         intrs &= ~HC_INTR_RHSC;
-        
+
         /* Restart the RHSC enable timer */
         ohci->timerReq->tr_node.io_Command = TR_ADDREQUEST;
         ohci->timerReq->tr_time.tv_secs = 1;
         ohci->timerReq->tr_time.tv_micro = 0;
         SendIO((struct IORequest *)ohci->timerReq);
-        
+
         if (ohci->running)
         {
             struct Interrupt *intr;
-            
+
             ForeachNode(&ohci->intList, intr)
             {
                 Cause(intr);
@@ -429,60 +427,60 @@ void ohci_Handler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
         else
         {
             /*
-             * OHCI is not yet in running state, thus posting any interrupts 
-             * down the classes is forbidden. The pending flag will be set in 
+             * OHCI is not yet in running state, thus posting any interrupts
+             * down the classes is forbidden. The pending flag will be set in
              * order to issue the interrupts as soon as the OHCI will be switched
              * back to the running state
              */
             ohci->pendingRHSC = 1;
         }
     }
-    
+
     if (intrs)
     {
         mmio(ohci->regs->HcInterruptDisable) = AROS_LE2LONG(intrs);
         D(bug("[OHCI] Disabling interrupts %p\n", intrs));
     }
-    
+
     mmio(ohci->regs->HcInterruptEnable) = AROS_LONG2LE(HC_INTR_MIE);
 }
 
 BOOL METHOD(OHCI, Hidd_USBDrv, AddInterrupt)
 {
     BOOL retval = FALSE;
-    
+
     if (msg->pipe == (void *)0xdeadbeef)
     {
         ohci_data_t *ohci = OOP_INST_DATA(cl, o);
         D(bug("[OHCI] AddInterrupt() local for the OHCI. Intr %p, list %p\n", msg->interrupt, &ohci->intList));
-        
+
         if (!ohci->regs)
             ohci->tmp = msg->interrupt;
         else
             AddTail(&ohci->intList, &msg->interrupt->is_Node);
-        
-        retval = TRUE;    
+
+        retval = TRUE;
     }
     else
     {
         ohci_intr_t *intr = AllocVecPooled(SD(cl)->memPool, sizeof(ohci_intr_t));
         ohci_pipe_t *pipe = msg->pipe;
-        ohci_td_t *tail; 
-        
+        ohci_td_t *tail;
+
         D(bug("[OHCI] AddInterrupt() intr = %p\n", intr));
-        
+
         if (intr)
         {
             intr->intr = msg->interrupt;
 
             tail = ohci_AllocTD(cl, o);
-            
+
             intr->td = pipe->tail;
             intr->td->tdPipe = pipe;
             intr->buffer = msg->buffer;
             intr->length = msg->length;
             pipe->tail = tail;
-            
+
             if (msg->buffer)
             {
                 intr->td->tdCurrentBufferPointer = AROS_LONG2LE((uint32_t)msg->buffer);
@@ -490,7 +488,7 @@ BOOL METHOD(OHCI, Hidd_USBDrv, AddInterrupt)
             }
             else
                 intr->td->tdBufferEnd = intr->td->tdCurrentBufferPointer = 0;
-                
+
             D(bug("[OHCI] AddInterrupt() buffer: %08x - %08x\n", AROS_LE2LONG(intr->td->tdCurrentBufferPointer), AROS_LE2LONG(intr->td->tdBufferEnd)));
 
             if (UE_GET_DIR(pipe->endpoint) == UE_DIR_IN)
@@ -499,26 +497,26 @@ BOOL METHOD(OHCI, Hidd_USBDrv, AddInterrupt)
             }
             else
             {
-                intr->td->tdFlags = AROS_LONG2LE(0xf0080000);                
+                intr->td->tdFlags = AROS_LONG2LE(0xf0080000);
             }
-            
+
             intr->td->tdNextTD = AROS_LONG2LE((uint32_t)tail);
 
             D(bug("[OHCI]   TD @ %p (%p %p %p %p)\n", intr->td, AROS_LE2LONG(intr->td->tdFlags), AROS_LE2LONG(intr->td->tdCurrentBufferPointer), AROS_LE2LONG(intr->td->tdBufferEnd), AROS_LE2LONG(intr->td->tdNextTD)));
 
             CacheClearE(intr->td, sizeof(ohci_td_t), CACRF_ClearD);
-            
+
             retval = TRUE;
-            
+
             pipe->interrupt = intr;
             pipe->ed->edTailP = AROS_LONG2LE((uint32_t)tail);
 
             CacheClearE(intr->td, sizeof(ohci_td_t), CACRF_ClearD);
-            
-            D(bug("[OHCI]   ED @ %p (%p %p %p %p)\n", pipe->ed, 
+
+            D(bug("[OHCI]   ED @ %p (%p %p %p %p)\n", pipe->ed,
                   AROS_LE2LONG(pipe->ed->edFlags),
-                  AROS_LE2LONG(pipe->ed->edHeadP), 
-                  AROS_LE2LONG(pipe->ed->edTailP), 
+                  AROS_LE2LONG(pipe->ed->edHeadP),
+                  AROS_LE2LONG(pipe->ed->edTailP),
                   AROS_LE2LONG(pipe->ed->edNextED)
                   ));
 
@@ -526,7 +524,7 @@ BOOL METHOD(OHCI, Hidd_USBDrv, AddInterrupt)
         }
     }
     D(bug("[OHCI::AddInterrupt] %s\n", retval ? "success":"failure"));
-    
+
     return retval;
 }
 
@@ -548,7 +546,7 @@ static ohci_ed_t *ohci_SelectIntrED(ohci_data_t *ohci, uint8_t interval)
 {
     ohci_ed_t   **ed = NULL;
     uint8_t     i, count, minimum, bestat;
-    
+
     if (interval < 2)
     {
         ed = &ohci->int01;
@@ -590,11 +588,11 @@ static ohci_ed_t *ohci_SelectIntrED(ohci_data_t *ohci, uint8_t interval)
             bestat = i;
         }
     } while (++i < count);
-    
+
     (bug("[OHCI] Best node (%d uses) %d from %d\n", minimum, bestat, count));
 
     ED_SET_USAGE(ed[bestat], ED_GET_USAGE(ed[bestat]) + 1);
-    
+
     return ed[bestat];
 }
 
@@ -605,7 +603,7 @@ void *METHOD(OHCI, Hidd_USBDrv, CreatePipe)
 
 //    if (msg->address == 2 && msg->endpoint==0x81)
 //        msg->maxpacket=4;
-    
+
     D({
         bug("[OHCI] CreatePipe(");
         switch (msg->type)
@@ -625,12 +623,12 @@ void *METHOD(OHCI, Hidd_USBDrv, CreatePipe)
             default:
                 bug("????");
         }
-        bug(", %s, %02x, %02x, %d, %dms)\n", msg->fullspeed ? "FAST":"SLOW", 
+        bug(", %s, %02x, %02x, %d, %dms)\n", msg->fullspeed ? "FAST":"SLOW",
                 msg->address, msg->endpoint, msg->maxpacket, msg->timeout);
     });
-    
+
     pipe = AllocVecPooled(SD(cl)->memPool,sizeof(ohci_pipe_t));
-    
+
     if (pipe)
     {
         pipe->tail = ohci_AllocTD(cl, o);
@@ -640,18 +638,18 @@ void *METHOD(OHCI, Hidd_USBDrv, CreatePipe)
         pipe->tail->tdNextTD = 0;
         pipe->tail->tdPipe = pipe;
         CacheClearE(pipe->tail, sizeof(ohci_td_t), CACRF_ClearD);
-        
+
         pipe->ed = ohci_AllocED(cl, o);
         pipe->type = msg->type;
         pipe->address = msg->address;
         pipe->endpoint = msg->endpoint;
         pipe->interval = msg->period;
-      
+
         pipe->ed->edPipe = pipe;
         pipe->ed->edFlags = AROS_LONG2LE((msg->address & ED_FA_MASK) |
                             ((msg->endpoint << 7) & ED_EN_MASK) |
                             ((msg->maxpacket << 16) & ED_MPS_MASK) | ED_K);
-        
+
         if (!msg->fullspeed)
             pipe->ed->edFlags |= AROS_LONG2LE(ED_S);
 
@@ -659,17 +657,17 @@ void *METHOD(OHCI, Hidd_USBDrv, CreatePipe)
         //pipe->ed->edHeadP |= AROS_LONG2LE(2);
 
         CacheClearE(pipe->ed, sizeof(ohci_ed_t), CACRF_ClearD);
-            
+
         //NEWLIST(&pipe->intList);
         InitSemaphore(&pipe->lock);
-        
+
         pipe->timeoutVal = msg->timeout;
         pipe->timeout = (struct timerequest *)CreateIORequest(
                 CreateMsgPort(), sizeof(struct timerequest));
 
         FreeSignal(pipe->timeout->tr_node.io_Message.mn_ReplyPort->mp_SigBit);
         OpenDevice((STRPTR)"timer.device", UNIT_MICROHZ, (struct IORequest *)pipe->timeout, 0);
-        
+
         /* According to the pipe's type, add it to proper list */
         switch (msg->type)
         {
@@ -691,7 +689,7 @@ void *METHOD(OHCI, Hidd_USBDrv, CreatePipe)
                 pipe->location = ohci_SelectIntrED(ohci, msg->period);
                 break;
         }
-        
+
         if (pipe->location)
         {
             pipe->ed->edNextED = pipe->location->edNextED & AROS_LONG2LE(0xfffffff0);
@@ -699,14 +697,14 @@ void *METHOD(OHCI, Hidd_USBDrv, CreatePipe)
 
             D(bug("[OHCI] Master ED at %p\n", pipe->location));
         }
-        
+
         pipe->ed->edFlags &= ~AROS_LONG2LE(ED_K);
         pipe->location->edFlags &= ~AROS_LONG2LE(ED_K);
-        
+
         CacheClearE(pipe->location, sizeof(ohci_ed_t), CACRF_ClearD);
         CacheClearE(pipe->ed, sizeof(ohci_ed_t), CACRF_ClearD);
     }
-    
+
     D(bug("[OHCI] CreatePipe()=%p\n", pipe));
     return pipe;
 }
@@ -715,33 +713,33 @@ void METHOD(OHCI, Hidd_USBDrv, DeletePipe)
 {
     ohci_data_t *ohci = OOP_INST_DATA(cl, o);
     ohci_pipe_t *pipe = msg->pipe;
-    
+
     D(bug("[OHCI] DeletePipe(%p, ed=%p)\n", pipe, pipe->ed));
-    
+
     if (pipe)
     {
         ohci_ed_t *ed = pipe->location;
 
-        D(bug("[OHCI]   ED @ %p (%p %p %p %p)\n", pipe->ed, 
+        D(bug("[OHCI]   ED @ %p (%p %p %p %p)\n", pipe->ed,
               AROS_LE2LONG(pipe->ed->edFlags),
-              AROS_LE2LONG(pipe->ed->edHeadP), 
-              AROS_LE2LONG(pipe->ed->edTailP), 
+              AROS_LE2LONG(pipe->ed->edHeadP),
+              AROS_LE2LONG(pipe->ed->edTailP),
               AROS_LE2LONG(pipe->ed->edNextED)
               ));
-        
+
         D(bug("[OHCI]  location=%p\n", ed));
 
-        D(bug("[OHCI]   ED @ %p (%p %p %p %p)\n", ed, 
+        D(bug("[OHCI]   ED @ %p (%p %p %p %p)\n", ed,
               AROS_LE2LONG(ed->edFlags),
-              AROS_LE2LONG(ed->edHeadP), 
-              AROS_LE2LONG(ed->edTailP), 
+              AROS_LE2LONG(ed->edHeadP),
+              AROS_LE2LONG(ed->edTailP),
               AROS_LE2LONG(ed->edNextED)
               ));
-        
+
         /* Stop pipe from beeing processed */
         pipe->ed->edFlags |= AROS_LONG2LE(ED_K);
         CacheClearE(pipe->ed, sizeof(ohci_ed_t), CACRF_ClearD);
-        
+
         if (pipe->type == PIPE_Interrupt)
         {
             Disable();
@@ -749,12 +747,12 @@ void METHOD(OHCI, Hidd_USBDrv, DeletePipe)
             CacheClearE(ed, sizeof(ohci_ed_t), CACRF_ClearD);
             Enable();
         }
-        
+
         /* Remove pipe from the proper list */
         while ((uint32_t)ed & 0xfffffff0)
         {
             D(bug("[OHCI]  ed->edNextED=%p\n", AROS_LE2LONG(ed->edNextED)));
-            
+
             if ((AROS_LE2LONG(ed->edNextED) & 0xfffffff0) == ((uint32_t)pipe->ed))
             {
                 D(bug("[OHCI]  ED match the pipe (pipe->edNextED=%p)\n", AROS_LE2LONG(pipe->ed->edNextED)));
@@ -762,16 +760,16 @@ void METHOD(OHCI, Hidd_USBDrv, DeletePipe)
                 uint32_t next = (AROS_LE2LONG(ed->edNextED) & 0x0000000f) | (AROS_LE2LONG(pipe->ed->edNextED) & 0xfffffff0);
                 ed->edNextED = AROS_LONG2LE(next);
                 Enable();
-                
+
                 D(bug("[OHCI]  ed->edNextED=%p (fixed)\n", AROS_LONG2LE(ed->edNextED)));
 
                 CacheClearE(ed, sizeof(ohci_ed_t), CACRF_ClearD);
                 break;
             }
-            
+
             ed = (ohci_ed_t *)(AROS_LONG2LE(ed->edNextED) & 0xfffffff0);
         }
-        
+
         /* Remove any TD's pending */
         while((AROS_LE2LONG(pipe->ed->edTailP) & 0xfffffff0) != (AROS_LE2LONG(pipe->ed->edHeadP) & 0xfffffff0))
         {
@@ -782,10 +780,10 @@ void METHOD(OHCI, Hidd_USBDrv, DeletePipe)
 
             ohci_FreeTD(cl, o, t);
         }
-            
+
         if (pipe->ed->edTailP)
             ohci_FreeTD(cl, o, (ohci_td_t *)AROS_LE2LONG(pipe->ed->edTailP));
-        
+
         /* Close timer device */
         pipe->timeout->tr_node.io_Message.mn_ReplyPort->mp_SigBit = AllocSignal(-1);
         CloseDevice((struct IORequest *)pipe->timeout);
@@ -795,7 +793,7 @@ void METHOD(OHCI, Hidd_USBDrv, DeletePipe)
         ohci_FreeED(cl, o, pipe->ed);
         FreeVecPooled(SD(cl)->memPool, pipe);
     }
-    
+
 
 }
 
@@ -808,47 +806,47 @@ BOOL METHOD(OHCI, Hidd_USBDrv, ControlTransfer)
     int32_t msec = pipe->timeoutVal;
     BOOL retval = FALSE;
     ULONG length;
-    
+
     D(bug("[OHCI] ControlTransfer()\n"));
-    
+
     ObtainSemaphore(&pipe->lock);
-    
+
     if (sig >= 0 && toutsig >= 0)
     {
         ohci_td_t *setup;
         ohci_td_t *status;
         ohci_td_t *td, *tail;
-        
+
         pipe->signal = sig;
         pipe->sigTask = FindTask(NULL);
-                
+
         tail = ohci_AllocTD(cl, o);
         tail->tdFlags = 0;
         tail->tdCurrentBufferPointer = 0;
         tail->tdBufferEnd = 0;
         tail->tdNextTD = 0;
         tail->tdPipe = pipe;
-        
+
         /* Do the right control transfer */
         setup = td = pipe->tail;
         setup->tdFlags = AROS_LONG2LE(0xf0000000 | 0x02000000 | 0x00e00000);
         setup->tdCurrentBufferPointer = AROS_LONG2LE((uint32_t)msg->request);
         setup->tdBufferEnd = AROS_LONG2LE((uint32_t)msg->request + sizeof(USBDevice_Request) - 1);
         setup->tdPipe = pipe;
-        
+
         status = ohci_AllocTD(cl, o);
         status->tdFlags = AROS_LONG2LE(0xf3000000 | ((msg->request->bmRequestType & UT_READ) ? 0x00080000 : 0x00100000));
         status->tdBufferEnd = 0;
         status->tdCurrentBufferPointer = 0;
         status->tdNextTD = AROS_LONG2LE((uint32_t)tail);
         status->tdPipe = pipe;
-        
+
         if (msg->buffer && msg->length < 8192)
         {
             /* Get new TD and link it immediatelly with the previous one */
             td->tdNextTD = AROS_LONG2LE((uint32_t)ohci_AllocTD(cl, o));
             td = (ohci_td_t *)AROS_LE2LONG(td->tdNextTD);
-            
+
             td->tdFlags = AROS_LONG2LE(0xf3e00000 | ((msg->request->bmRequestType & UT_READ) ? 0x00100000 : 0x00080000));
             td->tdCurrentBufferPointer = AROS_LONG2LE((uint32_t)msg->buffer);
             td->tdBufferEnd = AROS_LONG2LE((uint32_t)msg->buffer + msg->length - 1);
@@ -862,9 +860,9 @@ BOOL METHOD(OHCI, Hidd_USBDrv, ControlTransfer)
         if (td != setup)
             D(bug("[OHCI]   DATA=%p (%p %p %p %p)\n", td, AROS_LE2LONG(td->tdFlags), AROS_LE2LONG(td->tdCurrentBufferPointer), AROS_LE2LONG(td->tdBufferEnd), AROS_LE2LONG(td->tdNextTD)));
         D(bug("[OHCI]   STAT=%p (%p %p %p %p)\n", status, AROS_LE2LONG(status->tdFlags), AROS_LE2LONG(status->tdCurrentBufferPointer), AROS_LE2LONG(status->tdBufferEnd), AROS_LE2LONG(status->tdNextTD)));
-        
+
         pipe->errorCode = 0;
-        
+
         /* Link the first TD with end of the ED's transfer queue */
         CacheClearE(setup, sizeof(ohci_td_t), CACRF_ClearD);
         CacheClearE(status, sizeof(ohci_td_t), CACRF_ClearD);
@@ -880,7 +878,7 @@ BOOL METHOD(OHCI, Hidd_USBDrv, ControlTransfer)
             else
                 CachePreDMA(msg->buffer, &length, DMA_ReadFromRAM);
         }
-        
+
         /* Fire the transfer */
         if (pipe->timeoutVal != 0)
         {
@@ -897,19 +895,19 @@ BOOL METHOD(OHCI, Hidd_USBDrv, ControlTransfer)
         pipe->ed->edTailP = AROS_LONG2LE((uint32_t)tail);
         pipe->tail = tail;
         CacheClearE(pipe->ed, sizeof(ohci_ed_t), CACRF_ClearD);
-        
+
         mmio(ohci->regs->HcCommandStatus) |= AROS_LONG2LE(HC_CS_CLF);
-        
+
         /* Wait for completion signals */
         if (Wait((1 << sig) | (1 << toutsig)) & (1 << toutsig))
         {
             /* Timeout. Pipe stall. */
             bug("[OHCI] !!!TIMEOUT!!!\n");
-            
+
             GetMsg(pipe->timeout->tr_node.io_Message.mn_ReplyPort);
-            
+
             /* Remove any TD's pending */
-            
+
             D(bug("[OHCI] HeadP=%p TailP=%p\n", AROS_LE2LONG(pipe->ed->edHeadP), AROS_LE2LONG(pipe->ed->edTailP)));
             D(bug("[OHCI] TD's in ED: \n"));
             ohci_td_t *td = (ohci_td_t*)(AROS_LE2LONG(pipe->ed->edHeadP) & 0xfffffff0);
@@ -929,23 +927,23 @@ BOOL METHOD(OHCI, Hidd_USBDrv, ControlTransfer)
             /* Reenable the ED */
             pipe->ed->edHeadP &= AROS_LONG2LE(0xfffffff0);
             CacheClearE(pipe->ed, sizeof(ohci_ed_t), CACRF_ClearD);
-            
-            retval = FALSE;                
+
+            retval = FALSE;
         }
         else
         {
-            /* 
+            /*
              * No timeout occured. Remove the timeout request and report success. In this case,
              * the TD's are freed automatically by the interrupt handler.
              */
             if (!CheckIO((struct IORequest *)pipe->timeout))
                 AbortIO((struct IORequest *)pipe->timeout);
             WaitIO((struct IORequest *)pipe->timeout);
-            
+
             if (!pipe->errorCode)
                 retval = TRUE;
         }
-        
+
         length = sizeof(USBDevice_Request);
         CachePostDMA(msg->request, &length, DMA_ReadFromRAM);
         if (msg->buffer && msg->length)
@@ -956,15 +954,15 @@ BOOL METHOD(OHCI, Hidd_USBDrv, ControlTransfer)
             else
                 CachePostDMA(msg->buffer, &length, DMA_ReadFromRAM);
         }
-        
-        
+
+
         FreeSignal(sig);
         FreeSignal(toutsig);
     }
-    
+
     D(bug("[OHCI] ControlTransfer() %s\n", retval?"OK":"FAILED"));
-    
+
     ReleaseSemaphore(&pipe->lock);
-    
+
     return retval;
 }
