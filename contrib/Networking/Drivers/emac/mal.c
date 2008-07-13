@@ -44,25 +44,27 @@ static void MALIRQHandler(struct EMACBase *EMACBase, uint8_t inttype)
             temp = rddcr(MAL0_TXEOBISR);
             /* Clear the interrupt flag */
             wrdcr(MAL0_TXEOBISR, temp);
-            D(bug("[EMAC ] MAL TX EOB (TXEOBISR=%08x)\n", temp));
             break;
+
         case INTR_MRE:
             /* get the information about channel causing the interrupt */
             temp = rddcr(MAL0_RXEOBISR);
             /* Clear the interrupt flag */
             wrdcr(MAL0_RXEOBISR, temp);
-            D(bug("[EMAC ] MAL RX EOB (RXEOBISR=%08x)\n", temp));
             if (temp & 0x80000000)
                 MALMRE(EMACBase, EMACBase->emb_Units[0]);
             if (temp & 0x40000000)
                 MALMRE(EMACBase, EMACBase->emb_Units[0]);
             break;
+
         case INTR_MTDE:
             D(bug("[EMAC ] MAL TXDE\n"));
             break;
+
         case INTR_MRDE:
             D(bug("[EMAC ] MAL RXDE\n"));
             break;
+
         case INTR_MS:
             D(bug("[EMAC ] MAL SERR\n"));
             break;
