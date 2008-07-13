@@ -220,7 +220,7 @@ OOP_Object *METHOD(USBMouse, Root, New)
 
             t->tc_Node.ln_Name = "HID USB Mouse";
             t->tc_Node.ln_Type = NT_TASK;
-            t->tc_Node.ln_Pri = 50;
+            t->tc_Node.ln_Pri = 20;     /* same priority as input.device */
 
             NewAddTask(t, mouse_process, NULL, &tags);
             mouse->mouse_task = t;

@@ -230,7 +230,7 @@ OOP_Object *METHOD(USBKbd, Root, New)
 
             t->tc_Node.ln_Name = "HID USB Keyboard";
             t->tc_Node.ln_Type = NT_TASK;
-            t->tc_Node.ln_Pri = 50;
+            t->tc_Node.ln_Pri = 20;     /* same priority as input.device */
 
             NewAddTask(t, kbd_process, NULL, &tags);
             kbd->kbd_task = t;
