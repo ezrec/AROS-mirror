@@ -12,7 +12,7 @@ C_Completed             = 'green'
 C_NeedsSomeWork         = 'yellow'
 C_NotImplemented        = 'red'
 C_Skipped               = 'green'
-C_AmigaOnly             = 'lightgrey'
+C_AmigaOnly             = 'tan'
 
 def calculateCategoryScore( item ):
     if isinstance( item, Category):
