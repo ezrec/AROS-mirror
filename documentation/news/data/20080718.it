@@ -1,0 +1,65 @@
+=============
+Aggiornamento
+=============
+
+:Author:   Paolo Besser e Saimon69
+:Date:     18-07-2008
+
+Ultime novità
+-------------
+
+Negli ultimi tempi si sta svolgendo un grande lavoro "under the hood": sotto il cofano; le novità da segnalare infatti sono moltissime e
+riguardano numerosi aspetti del progetto.
+
+Stanislaw Szymczyk ha completato il porting su piattaforma x86-64 della
+versione hosted su Linux. Inoltre sta dando un contributo fondamentale
+all'auto-compilabilità di AROS, convertendo gli strumenti necessari.
+Di recente, ha portato su AROS abc-shell e ottenuto qualche risultato
+incoraggiante.
+
+Krzysztof Smiechowicz invece si sta occupando di verificare la 
+completezza delle API rispetto alle specifiche dettate come requisiti 
+minimi di AROS, fornendo un report periodico sotto forma di foglio 
+di calcolo excel-compatibile. Potete tenere sotto contollo
+la compatibilità di AROS con AmigaOS nella pagina dello `stato`__.
+
+Grazie a Pavel Fedin, HDToolbox può ridimensionare e muovere le partizioni, per quanto questa possibilità abbia ancora bisogno di 
+qualche test. Pavel ha inoltre portato BHFormat su AROS e attivato 
+l'opzione di Wanderer che consente di formattare i dischi.
+
+Pavel Fedin, Krzysztof Smiechowicz e Tomasz Wiszkowski hanno inoltre
+lavorato alacremente per risolvere i problemi del nostro ata.device e
+dei suoi derivati, in modo da risolvere i problemi di compatibilità
+che affliggono AROS con alcune configurazioni hardware.
+
+Michal Schulz sta tuttora lavorando sul porting di AROS per SAM440EP.
+Di recente, ha rilasciato anche una `beta iniziale`__. Non cercate di 
+eseguirla su altre piattaforme PPC, perché non funzionerà.
+
+Gianfranco Gignina ha dato un forte contributo alla localizzazione e
+alla correzione di diversi bug di ZUNE, cominciando a lavorare su una
+versione "portabile" di Wanderer, in modo che possa essere reso più
+indipendente dal resto del sistema e facilmente portatile su altre
+piattaforme AmigaOS.
+
+La nuova implementazione del linguaggio E, PortablE, è un altra lieta 
+novella per AROS. Maggiori informazioni sono disponibili `qui`__.
+
+Nick Andrews sta realizzando un driver per schede di rete Intel da
+1000 Mbps, favorendo in questo modo la connettività del sistema e
+allargandola a numerose schede madri.
+
+Infine Paolo Besser ha rilasciato una nuova versione della sua
+distribuzione VmwAROS, la 0.8, che introduce notevoli migliore sul
+fronte grafico e della compatibilità. Come in passato, VmwAROS è
+disponibile in due versioni: `una che si avvia da CD`__ e si può 
+installare su disco fisso, e `un'altra`__ che gira direttamente in una
+macchina virtuale di VMware.
+
+__ http://aros.sourceforge.net/it/introduction/status/everything.php
+__ http://msaros.blogspot.com/2008/05/try-it-yourself.html
+__ http://cshandley.co.uk/portable
+__ http://live.vmwaros.org
+__ http://ve.vmwaros.org
+
+
