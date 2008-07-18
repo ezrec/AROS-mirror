@@ -16,10 +16,10 @@ C_AmigaOnly             = 'tan'
 
 def calculateCategoryScore( item ):
     if isinstance( item, Category):
-        return ( 100 * ( item.completed + item.skipped ) + 50 * item.needssomework ) \
-                / (item.total - item.amigaonly)
-    else:
-        return 0;
+        if item.total != 0:
+            return ( 100 * ( item.completed + item.skipped ) + 50 * item.needssomework ) \
+                    / (item.total - item.amigaonly)
+    return 0;
 
 def formatRowCategoryStatus(array, count, total, color):
     if count != 0:

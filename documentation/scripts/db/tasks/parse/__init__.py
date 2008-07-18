@@ -7,7 +7,6 @@ from data import *
 
 def parse( file ):
     categoryitems = {}
-    size  = 0
 
     for line in file:
         words = line.strip().split( ';' )
@@ -23,38 +22,45 @@ def parse( file ):
         categoryitems[id] = CategoryItem( id, description, category, status, architecture, apiversion ) 
     
 
-    cats = {}        
-    
-    while True:
-        bubbled = False
-    
-        for categoryitem in categoryitems.copy().itervalues():
-            if categoryitem.category:
-                category = categoryitem.category
-            
-                if category not in cats:
-                    supercategory = None
-                    for key, value in categories.iteritems():
-                        if category in value:
-                            supercategory = key 
-                
-                    if abbreviations.has_key( category ):
-                        longy = abbreviations[category]
-                    else:
-                        longy = category
-                    
-                    c = Category( category, longy, supercategory )
-                    cats[c.id] = c
-                    categoryitems[c.id] = c
-                
-                cats[category].append( categoryitem )
-                del categoryitems[categoryitem.id]
-                bubbled = True
-            
-        if not bubbled:
-            break
+    # Create categories  
+    cats = {}
+    c = Category( 'everything', 'Everything', None )
+    cats[c.id] = c
 
-    everything = categoryitems['everything']
+    #TODO: Load from file
+    for key, value in categories.iteritems():
+        for category in value:
+            if abbreviations.has_key( category ):
+                longy = abbreviations[ category ]
+            else:
+                longy = category
+        
+            c = Category( category, longy, key )
+            cats[c.id] = c
+
+    # Link categories
+    for key, value in cats.iteritems():
+        if value.category != None:
+            if value.category in cats:
+                cats[value.category].append( value )
+            else:
+                cats['everything'].append( value )
+
+    # Assign category items to categories
+    for categoryitem in categoryitems.copy().itervalues():
+
+        category = categoryitem.category
+
+        # Fallback for not existing categories            
+        if category not in cats:
+            category = 'everything'
+            
+        cats[category].append( categoryitem )
+        del categoryitems[categoryitem.id]
+            
+
+
+    everything = cats['everything']
     everything.recalculate()    
     everything.sort()
     

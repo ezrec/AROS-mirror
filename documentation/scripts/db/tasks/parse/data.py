@@ -87,6 +87,7 @@ categories = {
         'translator',
         'utility',
         'wb',
+        'rexxsupport',
         'rexxsyslib',
         'reqtools',
         'realtime',
@@ -113,12 +114,10 @@ categories = {
         'camd',
         'bullet',
         'asl',
-        'arp',
         'amigaguide'
     ],
     
     'devices' : [
-        'serial',
         'input',
         'timer',
         'console',
@@ -165,13 +164,11 @@ categories = {
         'prefs',
         'system',
         'utilities',
-        'tools',
         'c'
     ],
     
     'linklibs' : [
         'clib',
-        'alib',
         'alib_stdio',
         'alib_commodities'
     ],
