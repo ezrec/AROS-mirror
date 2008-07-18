@@ -1661,7 +1661,7 @@ lowlevel;AddVBlankInt;1;1;2
 lowlevel;ElapsedTime;1;1;0
 lowlevel;GetKey;1;1;0
 lowlevel;GetLanguageSelection;1;1;2
-lowlevel;QueryKeys;1;1;2
+lowlevel;QueryKeys;1;1;0
 lowlevel;ReadJoyPort;1;1;0
 lowlevel;RemKBInt;1;1;0
 lowlevel;RemTimerInt;1;1;0
