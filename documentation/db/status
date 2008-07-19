@@ -1,74 +1,74 @@
-#CATEGORIES_BEGIN (basecategory, category, description)
-everything;libraries;Libraries
-everything;classes;Classes
-everything;devices;Devices
-everything;resources;Resources
-everything;hidds;HIDDs
-everything;programs;Programs
-everything;linklibs;Linklibs
-everything;other;Other
-linklibs;clib;ANSI C link library
-linklibs;alib_stdio;Amiga.lib - Standard I/O
-linklibs;alib_commodities;Amiga.lib - Commodities
-libraries;intuition;Intuition.library
-libraries;graphics;Graphics.library
-libraries;dos;Dos.library
-libraries;translator;Translator.library
-libraries;utility;Utility.library
-libraries;wb;Workbench.library
-libraries;rexxsupport;RexxSupport.library
-libraries;rexxsyslib;RexxSys.library
-libraries;reqtools;ReqTools.library
-libraries;realtime;RealTime.library
-libraries;nonvolatile;NonVolatile.library
-libraries;mathtrans;MathTrans.library
-libraries;icon;Icon.library
-libraries;iffparse;IFFParse.library
-libraries;keymap;Keymap.library
-libraries;layers;Layers.library
-libraries;locale;Locale.library
-libraries;lowlevel;LowLevel.library
-libraries;mathffp;MathFFP.library
-libraries;mathieeedoubbas;MathIEEEDoubleBase.library
-libraries;mathieeedoubtrans;MathIEEEDoubleTrans.library
-libraries;mathieeesingbas;MathIEEESingleBase.library
-libraries;mathieeesingtrans;MathIEEESingleTrans.library
-libraries;gadtools;GadTools.library
-libraries;expansion;Expansion.library
-libraries;exec;Exec.library
-libraries;diskfont;Diskfont.library
-libraries;datatypes;Datatypes.library
-libraries;commodities;Commodities.library
-libraries;camd;Camd.library
-libraries;bullet;Bullet.library
-libraries;asl;Asl.library
-libraries;amigaguide;AmigaGuide.library
-classes;gadgets;Gadgets
-classes;DataType;Datatypes
-classes;dtclass;DTClass
-classes;boopsi;BOOPSI Classes
-gadgets;gradientslider;Gradientslider Gadget
-gadgets;colorwheel;Colorwheel Gadget
-devices;input;Input.device
-devices;timer;Timer.device
-devices;console;Console.device
-devices;ramdrive;Ramdrive.device
-devices;DevCMD;Device commands
-hidds;HID;Design a new HIDD
-hidds;HIDG;Graphics.HIDD
-programs;prefs;Preferences
-programs;system;System
-programs;utilities;Utilities
-programs;c;Shell commands
-utilities;multiview;MultiView
-system;rexxmast;RexxMast Program
-resources;potgo;Potgo.resource
-resources;misc;Misc.resource
-resources;disk;Disk.resource
-resources;cia;Cia.resource
-resources;cardres;Card.resource
-resources;battmem;Battery backedup memory
-resources;battclock;Battery backedup clock
+#CATEGORIES_BEGIN (basecategory, category, description, reserved, last update date)
+everything;libraries;Libraries;1;2003-08-26
+everything;classes;Classes;1;2003-08-26
+everything;devices;Devices;1;2003-08-26
+everything;resources;Resources;1;2003-08-26
+everything;hidds;HIDDs;1;2003-08-26
+everything;programs;Programs;1;2003-08-26
+everything;linklibs;Linklibs;1;2003-08-26
+everything;other;Other;1;2003-08-26
+linklibs;clib;ANSI C link library;1;2003-08-26
+linklibs;alib_stdio;Amiga.lib - Standard I/O;1;2003-08-26
+linklibs;alib_commodities;Amiga.lib - Commodities;1;2003-08-26
+libraries;intuition;Intuition.library;1;2008-07-19
+libraries;graphics;Graphics.library;1;2008-07-19
+libraries;dos;Dos.library;1;2008-07-19
+libraries;translator;Translator.library;1;2003-08-26
+libraries;utility;Utility.library;1;2003-08-26
+libraries;wb;Workbench.library;1;2003-08-26
+libraries;rexxsupport;RexxSupport.library;1;2003-08-26
+libraries;rexxsyslib;RexxSys.library;1;2003-08-26
+libraries;reqtools;ReqTools.library;1;2003-08-26
+libraries;realtime;RealTime.library;1;2003-08-26
+libraries;nonvolatile;NonVolatile.library;1;2003-08-26
+libraries;mathtrans;MathTrans.library;1;2003-08-26
+libraries;icon;Icon.library;1;2008-07-19
+libraries;iffparse;IFFParse.library;1;2008-07-19
+libraries;keymap;Keymap.library;1;2008-07-19
+libraries;layers;Layers.library;1;2008-07-19
+libraries;locale;Locale.library;1;2008-07-19
+libraries;lowlevel;LowLevel.library;1;2008-07-19
+libraries;mathffp;MathFFP.library;1;2003-08-26
+libraries;mathieeedoubbas;MathIEEEDoubleBase.library;1;2003-08-26
+libraries;mathieeedoubtrans;MathIEEEDoubleTrans.library;1;2003-08-26
+libraries;mathieeesingbas;MathIEEESingleBase.library;1;2003-08-26
+libraries;mathieeesingtrans;MathIEEESingleTrans.library;1;2003-08-26
+libraries;gadtools;GadTools.library;1;2008-07-19
+libraries;expansion;Expansion.library;1;2008-07-19
+libraries;exec;Exec.library;1;2008-07-19
+libraries;diskfont;Diskfont.library;1;2008-07-19
+libraries;datatypes;Datatypes.library;1;2008-07-19
+libraries;commodities;Commodities.library;1;2008-07-19
+libraries;camd;Camd.library;1;2008-07-19
+libraries;bullet;Bullet.library;1;2008-07-19
+libraries;asl;Asl.library;1;2008-07-19
+libraries;amigaguide;AmigaGuide.library;1;2008-07-19
+classes;gadgets;Gadgets;1;2003-08-26
+classes;DataType;Datatypes;1;2003-08-26
+classes;dtclass;DTClass;1;2003-08-26
+classes;boopsi;BOOPSI Classes;1;2003-08-26
+gadgets;gradientslider;Gradientslider Gadget;1;2003-08-26
+gadgets;colorwheel;Colorwheel Gadget;1;2003-08-26
+devices;input;Input.device;1;2003-08-26
+devices;timer;Timer.device;1;2003-08-26
+devices;console;Console.device;1;2003-08-26
+devices;ramdrive;Ramdrive.device;1;2003-08-26
+devices;DevCMD;Device commands;1;2003-08-26
+hidds;HID;Design a new HIDD;1;2003-08-26
+hidds;HIDG;Graphics.HIDD;1;2003-08-26
+programs;prefs;Preferences;1;2003-08-26
+programs;system;System;1;2003-08-26
+programs;utilities;Utilities;1;2003-08-26
+programs;c;Shell commands;1;2003-08-26
+utilities;multiview;MultiView;1;2003-08-26
+system;rexxmast;RexxMast Program;1;2003-08-26
+resources;potgo;Potgo.resource;1;2003-08-26
+resources;misc;Misc.resource;1;2003-08-26
+resources;disk;Disk.resource;1;2003-08-26
+resources;cia;Cia.resource;1;2003-08-26
+resources;cardres;Card.resource;1;2003-08-26
+resources;battmem;Battery backedup memory;1;2003-08-26
+resources;battclock;Battery backedup clock;1;2003-08-26
 #CATEGORIES_END
 #CATEGORY_ITEMS_BEGIN (category, description, architecture, api version, status)
 alib_commodities;ArgArrayDone;1;1;2

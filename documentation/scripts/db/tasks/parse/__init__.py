@@ -8,7 +8,7 @@ def createCategories( file ):
 
     # Root category    
     categories = {}
-    c = Category( 'everything', 'Everything', None )
+    c = Category( 'everything', 'Everything', None, None )
     categories[c.id] = c
 
     # Search for startup
@@ -27,8 +27,9 @@ def createCategories( file ):
         basecategory    = words[0]
         category        = words[1]
         description     = words[2]
+        lastupdated     = words[4]
 
-        c = Category( category, description, basecategory )
+        c = Category( category, description, basecategory, lastupdated )
         categories[c.id] = c
 
     # Link categories

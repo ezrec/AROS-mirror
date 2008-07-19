@@ -32,12 +32,13 @@ class CategoryItem:
     def __ge__( self, other ): return self.id >= other.id 
 
 class Category( list ):
-    def __init__( self, id, description, category=None ):
+    def __init__( self, id, description, category, lastupdated ):
         list.__init__( self )
         
         self.id          = id
         self.description = description
         self.category    = category
+        self.lastupdated = lastupdated
         
         self.completed                  = 0
         self.needssomework              = 0

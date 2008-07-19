@@ -46,13 +46,16 @@ def formatRowCategory( item, extension ):
     )
     row.append \
     (
-        TD( width = '5%', height = '100%', align = 'right', contents = str( calculateCategoryScore( item ) ) + '%' )
+        TD \
+        ( width = '15%', height = '100%', align = 'right', \
+          contents = str( calculateCategoryScore( item ) ) + '% (' + item.lastupdated + ')' 
+        )
     )
     row.append \
     (
         TD \
         (
-            width = '75%', height = '100%',
+            width = '65%', height = '100%',
             contents = Table \
             (
                 bgcolor = 'black', width = '100%', height = '100%',
