@@ -13,7 +13,7 @@ class CategoryItem:
     ARCH_Generic = 1
     ARCH_i386 = 2
 
-    API_OS31 = 1
+    API_AmigaOS = 1
     API_AROS = 2
 
     def __init__( self, id, description, category, status, architecture, apiversion ):

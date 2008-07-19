@@ -187,7 +187,7 @@ def format( root, directory, template, lang, extension ):
     
     # First, format this category.
     content_Categories = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
-    content_CategoryItemsOS31API = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
+    content_CategoryItemsAmigaOSAPI = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
     content_CategoryItemsAROSAPI = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
 
     for item in root:
@@ -197,8 +197,8 @@ def format( root, directory, template, lang, extension ):
             content_Categories.append(row)
         else:
             row = formatRowCategoryItem( item, extension )
-            if item.apiversion == CategoryItem.API_OS31:
-                content_CategoryItemsOS31API.append( row )
+            if item.apiversion == CategoryItem.API_AmigaOS:
+                content_CategoryItemsAmigaOSAPI.append( row )
             elif item.apiversion == CategoryItem.API_AROS:
                 content_CategoryItemsAROSAPI.append( row )
                 
@@ -212,8 +212,8 @@ def format( root, directory, template, lang, extension ):
     if len( content_Categories ) > 0:
         contentstr += '<h2 align="center">Categories</h2>' + str ( content_Categories )
     
-    if len( content_CategoryItemsOS31API ) > 0:
-        contentstr += '<h2 align="center">OS 3.1 API</h2>' + str( content_CategoryItemsOS31API )
+    if len( content_CategoryItemsAmigaOSAPI ) > 0:
+        contentstr += '<h2 align="center">AmigaOS API</h2>' + str( content_CategoryItemsAmigaOSAPI )
 
     if len( content_CategoryItemsAROSAPI ) > 0:
         contentstr += '<h2 align="center">AROS Extensions API</h2>' + str( content_CategoryItemsAROSAPI )
