@@ -1,3 +1,76 @@
+#CATEGORIES_BEGIN (basecategory, category, description)
+everything;libraries;Libraries
+everything;classes;Classes
+everything;devices;Devices
+everything;resources;Resources
+everything;hidds;HIDDs
+everything;programs;Programs
+everything;linklibs;Linklibs
+everything;other;Other
+linklibs;clib;ANSI C link library
+linklibs;alib_stdio;Amiga.lib - Standard I/O
+linklibs;alib_commodities;Amiga.lib - Commodities
+libraries;intuition;Intuition.library
+libraries;graphics;Graphics.library
+libraries;dos;Dos.library
+libraries;translator;Translator.library
+libraries;utility;Utility.library
+libraries;wb;Workbench.library
+libraries;rexxsupport;RexxSupport.library
+libraries;rexxsyslib;RexxSys.library
+libraries;reqtools;ReqTools.library
+libraries;realtime;RealTime.library
+libraries;nonvolatile;NonVolatile.library
+libraries;mathtrans;MathTrans.library
+libraries;icon;Icon.library
+libraries;iffparse;IFFParse.library
+libraries;keymap;Keymap.library
+libraries;layers;Layers.library
+libraries;locale;Locale.library
+libraries;lowlevel;LowLevel.library
+libraries;mathffp;MathFFP.library
+libraries;mathieeedoubbas;MathIEEEDoubleBase.library
+libraries;mathieeedoubtrans;MathIEEEDoubleTrans.library
+libraries;mathieeesingbas;MathIEEESingleBase.library
+libraries;mathieeesingtrans;MathIEEESingleTrans.library
+libraries;gadtools;GadTools.library
+libraries;expansion;Expansion.library
+libraries;exec;Exec.library
+libraries;diskfont;Diskfont.library
+libraries;datatypes;Datatypes.library
+libraries;commodities;Commodities.library
+libraries;camd;Camd.library
+libraries;bullet;Bullet.library
+libraries;asl;Asl.library
+libraries;amigaguide;AmigaGuide.library
+classes;gadgets;Gadgets
+classes;DataType;Datatypes
+classes;dtclass;DTClass
+classes;boopsi;BOOPSI Classes
+gadgets;gradientslider;Gradientslider Gadget
+gadgets;colorwheel;Colorwheel Gadget
+devices;input;Input.device
+devices;timer;Timer.device
+devices;console;Console.device
+devices;ramdrive;Ramdrive.device
+devices;DevCMD;Device commands
+hidds;HID;Design a new HIDD
+hidds;HIDG;Graphics.HIDD
+programs;prefs;Preferences
+programs;system;System
+programs;utilities;Utilities
+programs;c;Shell commands
+utilities;multiview;MultiView
+system;rexxmast;RexxMast Program
+resources;potgo;Potgo.resource
+resources;misc;Misc.resource
+resources;disk;Disk.resource
+resources;cia;Cia.resource
+resources;cardres;Card.resource
+resources;battmem;Battery backedup memory
+resources;battclock;Battery backedup clock
+#CATEGORIES_END
+#CATEGORY_ITEMS_BEGIN (category, description, architecture, api version, status)
 alib_commodities;ArgArrayDone;1;1;2
 alib_commodities;ArgArrayInit;1;1;2
 alib_commodities;ArgInt;1;1;2
@@ -1670,3 +1743,4 @@ lowlevel;SetJoyPortAttrsA;1;1;0
 lowlevel;StartTimerInt;1;1;0
 lowlevel;StopTimerInt;1;1;0
 lowlevel;SystemControlA;1;1;0
+#CATEGORY_ITEMS_END

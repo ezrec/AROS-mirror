@@ -3,12 +3,59 @@
 # $Id$
 
 from db.tasks.model import *
-from data import *
 
-def parse( file ):
+def createCategories( file ):
+
+    # Root category    
+    categories = {}
+    c = Category( 'everything', 'Everything', None )
+    categories[c.id] = c
+
+    # Search for startup
+    file.seek(0)   
+    for line in file:
+        if line.find( "CATEGORIES_BEGIN" ) != -1:
+            break
+
+    # Load categories
+    for line in file:
+        if line.find( "CATEGORIES_END" ) != -1:
+            break
+
+        words = line.strip().split( ';' )
+        
+        basecategory    = words[0]
+        category        = words[1]
+        description     = words[2]
+
+        c = Category( category, description, basecategory )
+        categories[c.id] = c
+
+    # Link categories
+    for key, value in categories.iteritems():
+        if value.category != None:
+            if value.category in categories:
+                categories[value.category].append( value )
+            else:
+                categories['everything'].append( value )
+
+    return categories
+
+def createCategoryItems( file ):
+
     categoryitems = {}
 
+    # Search for startup
+    file.seek(0)   
     for line in file:
+        if line.find( "CATEGORY_ITEMS_BEGIN" ) != -1:
+            break
+
+    # Load category items
+    for line in file:
+        if line.find( "CATEGORY_ITEMS_END" ) != -1:
+            break
+    
         words = line.strip().split( ';' )
         
         id          = words[0] + words[1] + words[3]
@@ -19,32 +66,15 @@ def parse( file ):
         architecture = int(words[2])
 
         
-        categoryitems[id] = CategoryItem( id, description, category, status, architecture, apiversion ) 
-    
+        categoryitems[id] = CategoryItem( id, description, category, status, architecture, apiversion )
 
-    # Create categories  
-    cats = {}
-    c = Category( 'everything', 'Everything', None )
-    cats[c.id] = c
+    return categoryitems
 
-    #TODO: Load from file
-    for key, value in categories.iteritems():
-        for category in value:
-            if abbreviations.has_key( category ):
-                longy = abbreviations[ category ]
-            else:
-                longy = category
-        
-            c = Category( category, longy, key )
-            cats[c.id] = c
+def parse( file ):
 
-    # Link categories
-    for key, value in cats.iteritems():
-        if value.category != None:
-            if value.category in cats:
-                cats[value.category].append( value )
-            else:
-                cats['everything'].append( value )
+    # Create categories and category items
+    categories = createCategories( file )
+    categoryitems = createCategoryItems( file )
 
     # Assign category items to categories
     for categoryitem in categoryitems.copy().itervalues():
@@ -52,15 +82,15 @@ def parse( file ):
         category = categoryitem.category
 
         # Fallback for not existing categories            
-        if category not in cats:
+        if category not in categories:
             category = 'everything'
             
-        cats[category].append( categoryitem )
+        categories[category].append( categoryitem )
         del categoryitems[categoryitem.id]
             
 
 
-    everything = cats['everything']
+    everything = categories[ 'everything' ]
     everything.recalculate()    
     everything.sort()
     
