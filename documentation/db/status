@@ -19,7 +19,7 @@ libraries;wb;Workbench.library;1;2003-08-26
 libraries;rexxsupport;RexxSupport.library;1;2003-08-26
 libraries;rexxsyslib;RexxSys.library;1;2003-08-26
 libraries;reqtools;ReqTools.library;1;2003-08-26
-libraries;realtime;RealTime.library;1;2003-08-26
+libraries;realtime;RealTime.library;1;2008-07-21
 libraries;nonvolatile;NonVolatile.library;1;2008-07-21
 libraries;nvdisk;NVDisk.library;1;2008-07-21
 libraries;mathtrans;MathTrans.library;1;2008-07-20
@@ -571,17 +571,6 @@ prefs;Time prefs program;1;1;1
 prefs;WBPattern prefs program;1;1;1
 prefs;Printer prefs program;1;1;0
 ramdrive;KillRAD;1;1;0
-ramdrive;KillRAD;1;1;0
-realtime;LockRealTime;1;1;2
-realtime;UnlockRealTime;1;1;2
-realtime;CreatePlayerA;1;1;2
-realtime;DeletePlayer;1;1;2
-realtime;SetPlayerAttrsA;1;1;2
-realtime;SetConductorState;1;1;2
-realtime;ExternalSync;1;1;2
-realtime;NextConductor;1;1;2
-realtime;FindConductor;1;1;2
-realtime;GetPlayerAttrsA;1;1;2
 reqtools;rtAllocRequestA;1;1;2
 reqtools;rtFreeRequest;1;1;2
 reqtools;rtFreeReqBuffer;1;1;2
@@ -1750,4 +1739,14 @@ nvdisk;MemInfo;1;1;2
 nvdisk;ReadData;1;1;2
 nvdisk;SetProtection;1;1;2
 nvdisk;WriteData;1;1;2
+realtime;CreatePlayerA;1;1;2
+realtime;DeletePlayer;1;1;2
+realtime;ExternalSync;1;1;2
+realtime;FindConductor;1;1;2
+realtime;GetPlayerAttrsA;1;1;2
+realtime;LockRealTime;1;1;2
+realtime;NextConductor;1;1;2
+realtime;SetConductorState;1;1;2
+realtime;SetPlayerAttrsA;1;1;2
+realtime;UnlockRealTime;1;1;2
 #CATEGORY_ITEMS_END
