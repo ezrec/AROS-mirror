@@ -1,5 +1,5 @@
 =============
-Aggiornamento
+Status update
 =============
 
 :Author:   Paolo Besser and Saimon69
@@ -27,12 +27,12 @@ need some testing. Pavel has also ported BHFormat and activated
 Wanderer options to format disks.
 
 Pavel Fedin, Krzysztof Smiechowicz and Tomasz Wiszkowski are also
-working hard on our ata.device and atapi-related files to get rid of
+working hard on our ata.device and ATAPI-related files to get rid of
 compatibility problems which disallowed AROS to boot properly on some
 configurations. 
 
 Michal Schulz is still working on his SAM440EP porting of AROS. He
-recently released a working `initial beta`__ SAM owners may try
+recently released a working `initial beta`__ that SAM owners may try
 by themselves. Don't place it on other PPC architectures, though, as
 it won't work.
 
@@ -44,10 +44,10 @@ on the other AmigaOS-like platforms.
 There's a new, valuable implementation of the E language on AROS:
 it's `PortablE`__, and you should definitely give it a try!
 
-Nick Andrews is writing a Intel Gigabit NIC driver for AROS, which
-will allow networking on a wide range of motherboards.
+Nick Andrews is writing a Intel Gigabit E1000 NIC driver for AROS, which
+will allow networking on a wide range of motherboards that integrates it.
 
-Paolo Besser has released the new 0.8 version of his VmwAROS
+Paolo Besser has released the new 0.8b version of his VmwAROS
 distribution, which introduces improvements on the GUI style and
 a new dual-kernel feature to allow booting on some configurations.
 Once again, the distribution is available in two flavours: a
