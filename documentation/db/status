@@ -1,12 +1,12 @@
 #CATEGORIES_BEGIN (basecategory, category, description, reserved, last update date)
-everything;libraries;Libraries;1;2008-07-25
-everything;classes;Classes;1;2003-08-26
-everything;devices;Devices;1;2003-08-26
-everything;resources;Resources;1;2003-08-26
-everything;hidds;HIDDs;1;2003-08-26
-everything;programs;Programs;1;2003-08-26
-everything;linklibs;Linklibs;1;2003-08-26
-everything;other;Other;1;2003-08-26
+everything;libraries;Libraries;0;2008-07-25
+everything;classes;Classes;0;2003-08-26
+everything;devices;Devices;0;2003-08-26
+everything;resources;Resources;0;2003-08-26
+everything;hidds;HIDDs;0;2003-08-26
+everything;programs;Programs;0;2003-08-26
+everything;linklibs;Linklibs;0;2003-08-26
+everything;other;Other;0;2003-08-26
 linklibs;clib;ANSI C link library;1;2003-08-26
 linklibs;alib_stdio;Amiga.lib - Standard I/O;1;2003-08-26
 linklibs;alib_commodities;Amiga.lib - Commodities;1;2003-08-26
@@ -18,7 +18,7 @@ libraries;utility;Utility.library;1;2008-07-23
 libraries;wb;Workbench.library;1;2008-07-23
 libraries;rexxsupport;RexxSupport.library;1;2008-07-24
 libraries;rexxsyslib;RexxSysLib.library;1;2008-07-22
-libraries;reqtools;ReqTools.library;1;2008-07-25
+libraries;reqtools;ReqTools.library;2;2008-07-25
 libraries;realtime;RealTime.library;1;2008-07-21
 libraries;nonvolatile;NonVolatile.library;1;2008-07-21
 libraries;nvdisk;NVDisk.library;1;2008-07-21
@@ -44,10 +44,10 @@ libraries;camd;Camd.library;1;2008-07-19
 libraries;bullet;Bullet.library;1;2008-07-19
 libraries;asl;Asl.library;1;2008-07-19
 libraries;amigaguide;AmigaGuide.library;1;2008-07-19
-classes;gadgets;Gadgets;1;2003-08-26
-classes;DataType;Datatypes;1;2003-08-26
-classes;dtclass;DTClass;1;2003-08-26
-classes;boopsi;BOOPSI Classes;1;2003-08-26
+classes;gadgets;Gadgets;0;2003-08-26
+classes;DataType;Datatypes;0;2003-08-26
+classes;dtclass;DTClass;0;2003-08-26
+classes;boopsi;BOOPSI Classes;0;2003-08-26
 gadgets;gradientslider;Gradientslider Gadget;1;2003-08-26
 gadgets;colorwheel;Colorwheel Gadget;1;2003-08-26
 devices;input;Input.device;1;2003-08-26
@@ -55,12 +55,12 @@ devices;timer;Timer.device;1;2003-08-26
 devices;console;Console.device;1;2003-08-26
 devices;ramdrive;Ramdrive.device;1;2003-08-26
 devices;DevCMD;Device commands;1;2003-08-26
-hidds;HID;Design a new HIDD;1;2003-08-26
-hidds;HIDG;Graphics.HIDD;1;2003-08-26
-programs;prefs;Preferences;1;2003-08-26
-programs;system;System;1;2003-08-26
-programs;utilities;Utilities;1;2003-08-26
-programs;c;Shell commands;1;2003-08-26
+hidds;HID;Design a new HIDD;2;2003-08-26
+hidds;HIDG;Graphics.HIDD;2;2003-08-26
+programs;prefs;Preferences;0;2003-08-26
+programs;system;System;0;2003-08-26
+programs;utilities;Utilities;0;2003-08-26
+programs;c;Shell commands;0;2003-08-26
 utilities;multiview;MultiView;1;2003-08-26
 system;rexxmast;RexxMast Program;1;2003-08-26
 resources;potgo;Potgo.resource;1;2003-08-26

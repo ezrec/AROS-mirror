@@ -13,32 +13,37 @@ class CategoryItem:
     ARCH_Generic = 1
     ARCH_i386 = 2
 
-    API_AmigaOS = 1
+    API_Original = 1
     API_AROS = 2
 
-    def __init__( self, id, description, category, status, architecture, apiversion ):
-        self.id             =   id
-        self.description    =   description
-        self.category       =   category
-        self.status         =   status
-        self.architecture   =   architecture
-        self.apiversion     =   apiversion
+    def __init__( self, description, parentcategory, status, architecture, apiversion ):
+        self.description            =   description
+        self.parentcategory         =   parentcategory
+        self.status                 =   status
+        self.architecture           =   architecture
+        self.apiversion             =   apiversion
     
-    def __lt__( self, other ): return self.id <  other.id 
-    def __le__( self, other ): return self.id <= other.id 
-    def __eq__( self, other ): return self.id == other.id 
-    def __ne__( self, other ): return self.id != other.id 
-    def __gt__( self, other ): return self.id >  other.id 
-    def __ge__( self, other ): return self.id >= other.id 
+    def __lt__( self, other ): return self.description <  other.description 
+    def __le__( self, other ): return self.description <= other.description 
+    def __eq__( self, other ): return self.description == other.description 
+    def __ne__( self, other ): return self.description != other.description 
+    def __gt__( self, other ): return self.description >  other.description 
+    def __ge__( self, other ): return self.description >= other.description 
 
 class Category( list ):
-    def __init__( self, id, description, category, lastupdated ):
+
+    TYPE_General    =   0
+    TYPE_AmigaOS    =   1
+    TYPE_External   =   2
+
+    def __init__( self, category, description, parentcategory, categorytype, lastupdated ):
         list.__init__( self )
         
-        self.id          = id
-        self.description = description
-        self.category    = category
-        self.lastupdated = lastupdated
+        self.category           =   category
+        self.description        =   description
+        self.parentcategory     =   parentcategory
+        self.lastupdated        =   lastupdated
+        self.categorytype       =   categorytype
         
         self.completed                  = 0
         self.needssomework              = 0
@@ -48,12 +53,12 @@ class Category( list ):
         
         self.total                      = 0
 
-    def __lt__( self, other ): return self.id <  other.id 
-    def __le__( self, other ): return self.id <= other.id 
-    def __eq__( self, other ): return self.id == other.id 
-    def __ne__( self, other ): return self.id != other.id 
-    def __gt__( self, other ): return self.id >  other.id 
-    def __ge__( self, other ): return self.id >= other.id 
+    def __lt__( self, other ): return self.category <  other.category 
+    def __le__( self, other ): return self.category <= other.category 
+    def __eq__( self, other ): return self.category == other.category 
+    def __ne__( self, other ): return self.category != other.category 
+    def __gt__( self, other ): return self.category >  other.category 
+    def __ge__( self, other ): return self.category >= other.category 
 
     def sort( self ):
         for item in self:

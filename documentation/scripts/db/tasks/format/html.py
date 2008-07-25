@@ -42,7 +42,7 @@ def formatRowCategory( item, extension ):
 
     row.append \
     ( 
-        TD( A( href = item.id + extension, contents = item.description ) )
+        TD( A( href = item.category + extension, contents = item.description ) )
     )
     row.append \
     (
@@ -166,9 +166,17 @@ def formatLegendColorTable( color ):
 
     return legendColorTable
 
+def formatReturnLink( parent, extension ):
+    if parent is not None:
+        return 'Return to ' + str( A( href = parent.category + extension, contents = parent.description ) ) +'<br/>'
+    else:
+        return ''
+
 def formatLegend( ):
     legend = Table \
              (
+                contents =
+                [
                 TR \
                 (
                     contents =
@@ -178,42 +186,98 @@ def formatLegend( ):
                     TD( formatLegendColorTable( C_NotImplemented ) ), TD( ' - Not implemented,' ),
                     TD( formatLegendColorTable( C_AmigaOnly ) ), TD( ' - Amiga only' )
                     ]
+                ),
+                TR \
+                (
+                    contents = 
+                    [
+                    TD \
+                    (
+                        colspan = 8,
+                        contents = Table \
+                        (
+                            TR \
+                            (
+                                contents =
+                                [
+                                TD
+                                (
+                                    contents = Table \
+                                    ( 
+                                        bgcolor = '#999999',
+                                        contents = TR \
+                                        (
+                                            bgcolor = '#dddddd',
+                                            contents = TD \
+                                            (
+                                                contents = '100% (2008-07-31)'
+                                            )
+                                        )
+                                    )
+                                ),
+                                TD
+                                (
+                                    style = 'padding-top: 4px',
+                                    contents = '- 100% = completeness score, 2008-07-31 = date of last update'
+                                )
+                                ]
+                            )
+                        )
+                    )
+                    ]
                 )
+                ]
             )             
 
     return legend
 
-def format( root, directory, template, lang, extension ):
+def format( root, directory, template, lang, extension, parent = None ):
     
     # First, format this category.
-    content_Categories = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
-    content_CategoryItemsAmigaOSAPI = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
+    content_CategoriesGeneral = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
+    content_CategoriesAmigaOS = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
+    content_CategoriesExternal = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
+    content_CategoryItemsOriginalAPI = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
     content_CategoryItemsAROSAPI = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
 
     for item in root:
         
         if isinstance( item, Category ):
             row = formatRowCategory( item, extension )
-            content_Categories.append(row)
+            if item.categorytype == Category.TYPE_General:
+                content_CategoriesGeneral.append(row)
+            elif item.categorytype == Category.TYPE_AmigaOS:
+                content_CategoriesAmigaOS.append(row)
+            elif item.categorytype == Category.TYPE_External:
+                content_CategoriesExternal.append(row)
         else:
             row = formatRowCategoryItem( item, extension )
-            if item.apiversion == CategoryItem.API_AmigaOS:
-                content_CategoryItemsAmigaOSAPI.append( row )
+            if item.apiversion == CategoryItem.API_Original:
+                content_CategoryItemsOriginalAPI.append( row )
             elif item.apiversion == CategoryItem.API_AROS:
                 content_CategoryItemsAROSAPI.append( row )
                 
 
+    contentstr = '';
 
+    contentstr += str( formatReturnLink( parent, extension ) )
 
-    contentstr = '<br/>' + str( formatHeader( root ) )
+    contentstr += '<br/>' + str( formatHeader( root ) )
 
     contentstr += '<br/>' + str( formatLegend( ) )
+
     
-    if len( content_Categories ) > 0:
-        contentstr += '<h2 align="center">Categories</h2>' + str ( content_Categories )
+    if len( content_CategoriesGeneral ) > 0:
+        contentstr += '<h2 align="center">Categories</h2>' + str ( content_CategoriesGeneral )
     
-    if len( content_CategoryItemsAmigaOSAPI ) > 0:
-        contentstr += '<h2 align="center">AmigaOS API</h2>' + str( content_CategoryItemsAmigaOSAPI )
+    if len( content_CategoriesAmigaOS ) > 0:
+        contentstr += '<h2 align="center">' + root.description + ' (AmigaOS) </h2>' + str ( content_CategoriesAmigaOS )
+
+    if len( content_CategoriesExternal ) > 0:
+        contentstr += '<h2 align="center">' + root.description + ' (External) </h2>' + str ( content_CategoriesExternal )
+
+    if len( content_CategoryItemsOriginalAPI ) > 0:
+        contentstr += '<h2 align="center">Original API</h2>' + str( content_CategoryItemsOriginalAPI )
 
     if len( content_CategoryItemsAROSAPI ) > 0:
         contentstr += '<h2 align="center">AROS Extensions API</h2>' + str( content_CategoryItemsAROSAPI )
@@ -231,13 +295,13 @@ def format( root, directory, template, lang, extension ):
             'CONTENT' : contentstr
         }
 
-    output = file( os.path.join( directory, root.id + extension ), 'w' )
+    output = file( os.path.join( directory, root.category + extension ), 'w' )
     output.write( template % strings )
     output.close()
 
     # Second, recurse down.
     for item in root:
         if isinstance( item, Category ):
-            format( item, directory, template, lang, extension )
+            format( item, directory, template, lang, extension, root )
 
 
