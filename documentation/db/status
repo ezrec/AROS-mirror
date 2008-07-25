@@ -1,5 +1,5 @@
 #CATEGORIES_BEGIN (basecategory, category, description, reserved, last update date)
-everything;libraries;Libraries;1;2003-08-26
+everything;libraries;Libraries;1;2008-07-25
 everything;classes;Classes;1;2003-08-26
 everything;devices;Devices;1;2003-08-26
 everything;resources;Resources;1;2003-08-26
@@ -16,9 +16,9 @@ libraries;dos;Dos.library;1;2008-07-19
 libraries;translator;Translator.library;1;2008-07-22
 libraries;utility;Utility.library;1;2008-07-23
 libraries;wb;Workbench.library;1;2008-07-23
-libraries;rexxsupport;RexxSupport.library;1;2003-08-26
+libraries;rexxsupport;RexxSupport.library;1;2008-07-24
 libraries;rexxsyslib;RexxSysLib.library;1;2008-07-22
-libraries;reqtools;ReqTools.library;1;2003-08-26
+libraries;reqtools;ReqTools.library;1;2008-07-25
 libraries;realtime;RealTime.library;1;2008-07-21
 libraries;nonvolatile;NonVolatile.library;1;2008-07-21
 libraries;nvdisk;NVDisk.library;1;2008-07-21
@@ -571,40 +571,7 @@ prefs;Time prefs program;1;1;1
 prefs;WBPattern prefs program;1;1;1
 prefs;Printer prefs program;1;1;0
 ramdrive;KillRAD;1;1;0
-reqtools;rtAllocRequestA;1;1;2
-reqtools;rtFreeRequest;1;1;2
-reqtools;rtFreeReqBuffer;1;1;2
-reqtools;rtChangeReqAttrA;1;1;2
-reqtools;rtFileRequestA;1;1;2
-reqtools;rtFreeFileList;1;1;2
-reqtools;rtEZRequestA;1;1;2
-reqtools;rtGetStringA;1;1;2
-reqtools;rtGetLongA;1;1;2
-reqtools;rtFontRequestA;1;1;2
-reqtools;rtPaletteRequestA;1;1;2
-reqtools;rtReqHandlerA;1;1;2
-reqtools;rtSetWaitPointer;1;1;2
-reqtools;rtGetVScreenSize;1;1;2
-reqtools;rtSetReqPosition;1;1;2
-reqtools;rtSpread;1;1;2
-reqtools;rtScreenToFrontSafely;1;1;2
-reqtools;rtLockPrefs;1;1;2
-reqtools;rtUnlockPrefs;1;1;2
-reqtools;rtCloseWindowSafely;1;1;2
-reqtools;rtLockWindow;1;1;2
-reqtools;rtUnlockWindow;1;1;2
 rexxmast;RexxMast with the "REXX" port;1;1;2
-rexxsupport;ALLOCMEM;1;1;2
-rexxsupport;CLOSEPORT;1;1;2
-rexxsupport;FREEMEM;1;1;2
-rexxsupport;GETARG;1;1;2
-rexxsupport;GETPKT;1;1;2
-rexxsupport;OPENPORT;1;1;2
-rexxsupport;REPLY;1;1;2
-rexxsupport;SHOWDIR;1;1;2
-rexxsupport;SHOWLIST;1;1;2
-rexxsupport;STATEF;1;1;2
-rexxsupport;WAITPKT;1;1;2
 timer;AddTime;1;1;2
 timer;SubTime;1;1;2
 timer;CmpTime;1;1;2
@@ -1745,4 +1712,53 @@ utility;UDivMod32;2;1;1
 utility;UMult32;2;1;2
 utility;UMult64;2;1;2
 utility;UnpackStructureTags;1;1;2
+rexxsupport;ARexx - ALLOCMEM;1;1;2
+rexxsupport;ARexx - BADDR;1;1;2
+rexxsupport;ARexx - CLOSEPORT;1;1;2
+rexxsupport;ARexx - DELAY;1;1;2
+rexxsupport;ARexx - DELETE;1;1;2
+rexxsupport;ARexx - FORBID;1;1;2
+rexxsupport;ARexx - FREEMEM;1;1;2
+rexxsupport;ARexx - GETARG;1;1;2
+rexxsupport;ARexx - GETPKT;1;1;2
+rexxsupport;ARexx - MAKEDIR;1;1;2
+rexxsupport;ARexx - NEXT;1;1;2
+rexxsupport;ARexx - NULL;1;1;2
+rexxsupport;ARexx - OFFSET;1;1;2
+rexxsupport;ARexx - OPENPORT;1;1;2
+rexxsupport;ARexx - PERMIT;1;1;2
+rexxsupport;ARexx - RENAME;1;1;2
+rexxsupport;ARexx - REPLY;1;1;2
+rexxsupport;ARexx - SHOWDIR;1;1;2
+rexxsupport;ARexx - SHOWLIST;1;1;2
+rexxsupport;ARexx - STATEF;1;1;2
+rexxsupport;ARexx - TYPEPKT;1;1;2
+rexxsupport;ARexx - WAITPKT;1;1;2
+rexxsupport;ArexxDispatch;1;1;2
+rexxsupport;ClosePortRsrc;1;1;2
+reqtools;rtAllocRequestA;1;1;2
+reqtools;rtChangeReqAttrA;1;1;2
+reqtools;rtCloseWindowSafely;1;1;2
+reqtools;rtEZRequestA;1;1;2
+reqtools;rtFileRequestA;1;1;2
+reqtools;rtFontRequestA;1;1;2
+reqtools;rtFreeFileList;1;1;2
+reqtools;rtFreeReqBuffer;1;1;2
+reqtools;rtFreeRequest;1;1;2
+reqtools;rtGetLongA;1;1;2
+reqtools;rtGetStringA;1;1;2
+reqtools;rtGetVScreenSize;1;1;1
+reqtools;rtInternalEnterPasswordA;1;1;2
+reqtools;rtInternalGetPasswordA;1;1;2
+reqtools;rtLockPrefs;1;1;2
+reqtools;rtLockWindow;1;1;2
+reqtools;rtPaletteRequestA;1;1;1
+reqtools;rtReqHandlerA;1;1;2
+reqtools;rtScreenModeRequestA;1;1;2
+reqtools;rtScreenToFrontSafely;1;1;1
+reqtools;rtSetReqPosition;1;1;1
+reqtools;rtSetWaitPointer;1;1;2
+reqtools;rtSpread;1;1;2
+reqtools;rtUnlockPrefs;1;1;2
+reqtools;rtUnlockWindow;1;1;2
 #CATEGORY_ITEMS_END
