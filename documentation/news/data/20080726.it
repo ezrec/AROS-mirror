@@ -1,0 +1,34 @@
+=============
+Status update
+=============
+
+:Author:   Paolo Besser
+:Date:     2008-07-26
+
+Missioni compiute!
+------------------
+
+Queste due notizie meritano un nuovo aggiornamento del sito, sebbene
+l'ultimo risalga solo a una settimana fa.
+
+Michal Schulz ha completato la sua versione nativa di AROS per la
+scheda madre SAM440EP, base della piattaforma "Samantha". Per la prima
+volta, AROS diventa "il" sistema operativo di preferenza, assieme a
+Linux, per una piattaforma diversa da x86. ACube Systems, la casa
+produttrice e distributrice, ha incluso un CD avviabile di AROS
+direttamente nella confezione. I primi acquirenti della scheda madre
+SAM440EP possono scaricare la loro versione di AROS dal sito di
+`Michal`__. Gli altri posssono `approfittare di uno sconto`__, valido 
+per tutta l'estate, per mettere le proprie mani su questa piattaforma
+alternativa.
+
+Krzysztof Smiechowicz ha terminato il suo lungo lavoro di verifica
+dello stato di completezza e di compatibilità delle librerie di AROS,
+nei confronti di quelle di AmigaOS 3.1. Il risultato finale ammonta a 
+ben 89%, il che significa che uno dei più ambiziosi traguardi di AROS
+è molto vicino. Potete verificare `qui`__ la situazione corrente.
+
+__ http://msaros.blogspot.com/2008/07/sam440-bounty.html
+__ http://www.sam440.com/ita/summerfollies.html
+__ http://aros.sourceforge.net/introduction/status/libraries.php
+
