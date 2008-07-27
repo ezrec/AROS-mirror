@@ -278,11 +278,10 @@ static BOOL CmdS2DeviceQuery(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
     struct e1000Unit *unit = (APTR)request->ios2_Req.io_Unit;
     struct Sana2DeviceQuery *info;
     ULONG size_available, size;
-
+    UWORD lnk_speed = 0, lnk_duplex = 0;
 D(bug("[%s]: CmdS2DeviceQuery()\n", unit->e1ku_name));
 
     /* Copy device info */
-
     info = request->ios2_StatData;
     size = size_available = info->SizeAvailable;
     if(size > sizeof(struct Sana2DeviceQuery))
@@ -290,8 +289,9 @@ D(bug("[%s]: CmdS2DeviceQuery()\n", unit->e1ku_name));
 
     CopyMem(&unit->e1ku_Sana2Info, info, size);
 
-#warning "TODO: Get correct BPS for S2DeviceQuery"
-    info->BPS = 100000000;
+    e1000_get_speed_and_duplex((struct e1000_hw *)unit->e1ku_Private00, &lnk_speed, &lnk_duplex);
+
+    info->BPS = (1000000 * lnk_speed);
     info->MTU = unit->e1ku_mtu;
     info->HardwareType = S2WireType_Ethernet;
     info->SizeAvailable = size_available;

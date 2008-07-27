@@ -128,7 +128,7 @@ D(bug("[e1000] PCI_Enumerator: Found %s e1000 NIC, ProductID = %04x\n", e1000_de
             }
             else
             {
-D(bug("[%s] PCI_Enumerator: Failed to create unit!\n", unit->e1ku_name));
+D(bug("[e1000] PCI_Enumerator: Failed to create unit!\n"));
             }
             break;
         }
