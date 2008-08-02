@@ -236,7 +236,7 @@ def format( root, directory, template, lang, extension, parent = None ):
     # First, format this category.
     content_CategoriesGeneral = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
     content_CategoriesAmigaOS = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
-    content_CategoriesExternal = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
+    content_CategoriesExtensions = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
     content_CategoryItemsOriginalAPI = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
     content_CategoryItemsAROSAPI = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
 
@@ -248,8 +248,8 @@ def format( root, directory, template, lang, extension, parent = None ):
                 content_CategoriesGeneral.append(row)
             elif item.categorytype == Category.TYPE_AmigaOS:
                 content_CategoriesAmigaOS.append(row)
-            elif item.categorytype == Category.TYPE_External:
-                content_CategoriesExternal.append(row)
+            elif item.categorytype == Category.TYPE_Extensions:
+                content_CategoriesExtensions.append(row)
         else:
             row = formatRowCategoryItem( item, extension )
             if item.apiversion == CategoryItem.API_Original:
@@ -273,8 +273,9 @@ def format( root, directory, template, lang, extension, parent = None ):
     if len( content_CategoriesAmigaOS ) > 0:
         contentstr += '<h2 align="center">' + root.description + ' (AmigaOS) </h2>' + str ( content_CategoriesAmigaOS )
 
-    if len( content_CategoriesExternal ) > 0:
-        contentstr += '<h2 align="center">' + root.description + ' (External) </h2>' + str ( content_CategoriesExternal )
+    if len( content_CategoriesExtensions ) > 0:
+        contentstr += '<h2 align="center">' + root.description + ' (Extensions) </h2>' \
+            + str ( content_CategoriesExtensions )
 
     if len( content_CategoryItemsOriginalAPI ) > 0:
         contentstr += '<h2 align="center">Original API</h2>' + str( content_CategoryItemsOriginalAPI )

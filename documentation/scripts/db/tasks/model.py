@@ -34,7 +34,7 @@ class Category( list ):
 
     TYPE_General    =   0
     TYPE_AmigaOS    =   1
-    TYPE_External   =   2
+    TYPE_Extensions =   2
 
     def __init__( self, category, description, parentcategory, categorytype, lastupdated ):
         list.__init__( self )

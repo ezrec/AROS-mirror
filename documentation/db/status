@@ -1,12 +1,13 @@
 #CATEGORIES_BEGIN (basecategory, category, description, reserved, last update date)
-everything;libraries;Libraries;0;2008-07-25
-everything;classes;Classes;0;2003-08-26
-everything;devices;Devices;0;2003-08-26
-everything;resources;Resources;0;2003-08-26
-everything;hidds;HIDDs;0;2003-08-26
-everything;programs;Programs;0;2003-08-26
-everything;linklibs;Linklibs;0;2003-08-26
-everything;other;Other;0;2003-08-26
+everything;libraries;Libraries;1;2008-07-25
+everything;classes;Classes;1;2003-08-26
+everything;devices;Devices;1;2003-08-26
+everything;resources;Resources;1;2003-08-26
+everything;hidds;HIDDs;2;2003-08-26
+everything;programs;Programs;1;2003-08-26
+everything;linklibs;Linklibs;1;2003-08-26
+everything;other;Other;1;2003-08-26
+everything;libraries_ext;Libraries;2;2008-08-01
 linklibs;clib;ANSI C link library;1;2003-08-26
 linklibs;alib_stdio;Amiga.lib - Standard I/O;1;2003-08-26
 linklibs;alib_commodities;Amiga.lib - Commodities;1;2003-08-26
@@ -18,7 +19,7 @@ libraries;utility;Utility.library;1;2008-07-23
 libraries;wb;Workbench.library;1;2008-07-23
 libraries;rexxsupport;RexxSupport.library;1;2008-07-24
 libraries;rexxsyslib;RexxSysLib.library;1;2008-07-22
-libraries;reqtools;ReqTools.library;2;2008-07-25
+libraries_ext;reqtools;ReqTools.library;2;2008-07-25
 libraries;realtime;RealTime.library;1;2008-07-21
 libraries;nonvolatile;NonVolatile.library;1;2008-07-21
 libraries;nvdisk;NVDisk.library;1;2008-07-21
