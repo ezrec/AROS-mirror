@@ -11,6 +11,6 @@ INTELMACFILES := e1000_82540 e1000_82541 e1000_82542 e1000_82543
 %build_module mmake=contrib-networking-drivers-e1000 \
     modname=e1000 modtype=device \
     files="e1000_init $(FILES) $(INTELCOREFILES) $(INTELMACFILES)" \
-    moduledir=Devs/Networks uselibs="rom amiga hiddstubs"
+    moduledir=Storage/Devs/Networks uselibs="rom amiga hiddstubs"
 
 %common
