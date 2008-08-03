@@ -55,7 +55,16 @@ devices;input;Input.device;1;2003-08-26
 devices;timer;Timer.device;1;2003-08-26
 devices;console;Console.device;1;2003-08-26
 devices;ramdrive;Ramdrive.device;1;2003-08-26
-devices;DevCMD;Device commands;1;2003-08-26
+devices;printer;Printer.device;1;2003-08-26
+devices;audio;Audio.device;1;2003-08-26
+devices;cd_dev;Cd.device;1;2003-08-26
+devices;clipboard;Clipboard.device;1;2003-08-26
+devices;gameport;Gameport.device;1;2003-08-26
+devices;keyboard;Keyboard.device;1;2003-08-26
+devices;narrator;Narrator.device;1;2003-08-26
+devices;parallel;Parallel.device;1;2003-08-26
+devices;serial;Serial.device;1;2003-08-26
+devices;trackdisk;Trackdisk.device;1;2003-08-26
 hidds;HID;Design a new HIDD;2;2003-08-26
 hidds;HIDG;Graphics.HIDD;2;2003-08-26
 programs;prefs;Preferences;0;2003-08-26
@@ -371,8 +380,6 @@ colorwheel;ConvertHSBToRGB;1;1;2
 colorwheel;ConvertRGBToHSB;1;1;2
 colorwheel;colorwheel.gadget class;1;1;2
 gradientslider;gradientslider.gadget class;1;1;2
-console;CDInputHandler;1;1;1
-console;RawKeyConvert;1;1;2
 DataType;8svx.datatype;1;1;0
 DataType;amigaguide.datatype;1;1;0
 DataType;animation.datatype;1;1;0
@@ -382,135 +389,6 @@ DataType;picture.datatype;1;1;0
 DataType;sound.datatype;1;1;0
 DataType;text.datatype;1;1;2
 DataType;binary.datatype;1;1;2
-DevCMD;ADCMD_ALLOCATE;1;1;0
-DevCMD;ADCMD_FINISH;1;1;0
-DevCMD;ADCMD_FREE;1;1;0
-DevCMD;ADCMD_LOCK;1;1;0
-DevCMD;ADCMD_PERVOL;1;1;0
-DevCMD;ADCMD_SETPREC;1;1;0
-DevCMD;ADCMD_WAITCYCLE;1;1;0
-DevCMD;AD - CMD_CLEAR;1;1;0
-DevCMD;AD - CMD_FLUSH;1;1;0
-DevCMD;AD - CMD_READ;1;1;0
-DevCMD;AD - CMD_RESET;1;1;0
-DevCMD;AD - CMD_START;1;1;0
-DevCMD;AD - CMD_STOP;1;1;0
-DevCMD;AD - CMD_UPDATE;1;1;0
-DevCMD;AD - CMD_WRITE;1;1;0
-DevCMD;CD_ADDCHANGEINT;1;1;0
-DevCMD;CD_ADDFRAMEINT;1;1;0
-DevCMD;CD_ATTENUATE;1;1;0
-DevCMD;CD_CHANGENUM;1;1;0
-DevCMD;CD_CHANGESTATE;1;1;0
-DevCMD;CD_CONFIG;1;1;0
-DevCMD;CD_EJECT;1;1;0
-DevCMD;CD_GETGEOMETRY;1;1;0
-DevCMD;CD_INFO;1;1;0
-DevCMD;CD_MOTOR;1;1;0
-DevCMD;CD_PAUSE;1;1;0
-DevCMD;CD_PLAYLSN;1;1;0
-DevCMD;CD_PLAYMSF;1;1;0
-DevCMD;CD_PLAYTRACK;1;1;0
-DevCMD;CD_PROTSTATUS;1;1;0
-DevCMD;CD_QCODELSN;1;1;0
-DevCMD;CD_QCODEMSF;1;1;0
-DevCMD;CD_READ;1;1;0
-DevCMD;CD_READXL;1;1;0
-DevCMD;CD_REMCHANGEINT;1;1;0
-DevCMD;CD_REMFRAMEINT;1;1;0
-DevCMD;CD_SEARCH;1;1;0
-DevCMD;CD_SEEK;1;1;0
-DevCMD;CD_TOCLSN;1;1;0
-DevCMD;CD_TOCMSF;1;1;0
-DevCMD;CBD_CHANGEHOOK;1;1;2
-DevCMD;CBD_CURRENTREADID;1;1;2
-DevCMD;CBD_CURRENTWRITEID;1;1;2
-DevCMD;CBD_POST;1;1;2
-DevCMD;CB - CMD_READ;1;1;2
-DevCMD;CB - CMD_UPDATE;1;1;2
-DevCMD;CB - CMD_WRITE;1;1;2
-DevCMD;CD_ASKDEFAULTKEYMAP;1;1;1
-DevCMD;CD_ASKKEYMAP;1;1;1
-DevCMD;CD_SETDEFAULTKEYMAP;1;1;1
-DevCMD;CD_SETKEYMAP;1;1;1
-DevCMD;CSD - CMD_CLEAR;1;1;1
-DevCMD;CSD - CMD_READ;1;1;1
-DevCMD;CSD - CMD_WRITE;1;1;1
-DevCMD;GPD_ASKCTYPE;1;1;2
-DevCMD;GPD_ASKTRIGGER;1;1;2
-DevCMD;GPD_READEVENT;1;1;2
-DevCMD;GPD_SETCTYPE;1;1;1
-DevCMD;GPD_SETTRIGGER;1;1;2
-DevCMD;IND_ADDHANDLER;1;1;2
-DevCMD;IND_REMHANDLER;1;1;2
-DevCMD;IND_SETMPORT;1;1;0
-DevCMD;IND_SETMTRIG;1;1;0
-DevCMD;IND_SETMTYPE;1;1;0
-DevCMD;IND_SETPERIOD;1;1;2
-DevCMD;IND_SETTHRESH;1;1;2
-DevCMD;IND_WRITEEVENT;1;1;2
-DevCMD;KBD - CMD_CLEAR;1;1;2
-DevCMD;KBD_ADDRESETHANDLER;1;1;2
-DevCMD;KBD_READEVENT;1;1;2
-DevCMD;KBD_READMATRIX;1;1;2
-DevCMD;KBD_REMRESETHANDLER;1;1;2
-DevCMD;KBD_RESETHANDLERDONE;1;1;2
-DevCMD;NA - CMD_FLUSH;1;1;0
-DevCMD;NA - CMD_READ;1;1;0
-DevCMD;NA - CMD_RESET;1;1;0
-DevCMD;NA - CMD_START;1;1;0
-DevCMD;NA - CMD_STOP;1;1;0
-DevCMD;NA - CMD_WRITE;1;1;0
-DevCMD;PD - CMD_CLEAR;1;1;1
-DevCMD;PD - CMD_FLUSH;1;1;1
-DevCMD;PD - CMD_READ;1;1;1
-DevCMD;PD - CMD_RESET;1;1;1
-DevCMD;PD - CMD_START;1;1;1
-DevCMD;PD - CMD_STOP;1;1;1
-DevCMD;PD - CMD_WRITE;1;1;1
-DevCMD;PDCMD_QUERY;1;1;1
-DevCMD;PDCMD_SETPARAMS;1;1;1
-DevCMD;PRD - CMD_FLUSH;1;1;0
-DevCMD;PRD - CMD_INVALID;1;1;0
-DevCMD;PRD - CMD_RESET;1;1;0
-DevCMD;PRD - CMD_START;1;1;0
-DevCMD;PRD - CMD_STOP;1;1;0
-DevCMD;PRD - CMD_WRITE;1;1;0
-DevCMD;PRD_DUMPRPORT;1;1;0
-DevCMD;PRD_PRTCOMMAND;1;1;0
-DevCMD;PRD_QUERY;1;1;0
-DevCMD;PRD_RAWWRITE;1;1;0
-DevCMD;SD - CMD_CLEAR;1;1;2
-DevCMD;SD - CMD_FLUSH;1;1;2
-DevCMD;SD - CMD_READ;1;1;2
-DevCMD;SD - CMD_RESET;1;1;2
-DevCMD;SD - CMD_START;1;1;1
-DevCMD;SD - CMD_STOP;1;1;1
-DevCMD;SD - CMD_WRITE;1;1;2
-DevCMD;SDCMD_BREAK;1;1;2
-DevCMD;SDCMD_QUERY;1;1;2
-DevCMD;SDCMD_SETPARAMS;1;1;2
-DevCMD;TR_ADDREQUEST;1;1;1
-DevCMD;TR_GETSYSTIME;1;1;2
-DevCMD;TR_SETSYSTIME;1;1;2
-DevCMD;TD - CMD_CLEAR;1;1;0
-DevCMD;TD - CMD_READ;1;1;0
-DevCMD;TD - CMD_UPDATE;1;1;0
-DevCMD;TD - CMD_WRITE;1;1;0
-DevCMD;TD_ADDCHANGEINT;1;1;0
-DevCMD;TD_CHANGENUM;1;1;0
-DevCMD;TD_CHANGESTATE;1;1;0
-DevCMD;TD_EJECT;1;1;0
-DevCMD;TD_FORMAT;1;1;0
-DevCMD;TD_GETDRIVETYPE;1;1;0
-DevCMD;TD_GETGEOMETRY;1;1;0
-DevCMD;TD_GETNUMTRACKS;1;1;0
-DevCMD;TD_MOTOR;1;1;0
-DevCMD;TD_PROTSTATUS;1;1;0
-DevCMD;TD_RAWREAD;1;1;0
-DevCMD;TD_RAWWRITE;1;1;0
-DevCMD;TD_REMCHANGEINT;1;1;0
-DevCMD;TD_SEEK;1;1;0
 disk;AllocUnit;1;1;0
 disk;FreeUnit;1;1;0
 disk;GetUnit;1;1;0
@@ -553,7 +431,6 @@ HIDG;HIDDV_Graphics_Cmd_FillText;1;1;0
 HIDG;HIDDV_Graphics_Cmd_FillSpan;1;1;0
 HIDG;HIDDV_Graphics_Cmd_Clear;1;1;0
 HIDG;HIDDV_Graphics_Cmd_Special;1;1;0
-input;PeekQualifier;1;1;2
 misc;AllocMiscResource;1;1;2
 misc;FreeMiscResource;1;1;2
 multiview;MultiView;1;1;1
@@ -571,13 +448,7 @@ prefs;Serial prefs program;1;1;1
 prefs;Time prefs program;1;1;1
 prefs;WBPattern prefs program;1;1;1
 prefs;Printer prefs program;1;1;0
-ramdrive;KillRAD;1;1;0
 rexxmast;RexxMast with the "REXX" port;1;1;2
-timer;AddTime;1;1;2
-timer;SubTime;1;1;2
-timer;CmpTime;1;1;2
-timer;ReadEClock;1;1;0
-timer;GetSysTime;1;1;2
 other;Nonvolatile disk based implementation;1;1;2
 other;System/Format;1;1;0
 exec;AbortIO;1;1;2
@@ -1762,4 +1633,169 @@ reqtools;rtSetWaitPointer;1;1;2
 reqtools;rtSpread;1;1;2
 reqtools;rtUnlockPrefs;1;1;2
 reqtools;rtUnlockWindow;1;1;2
+console;CDInputHandler;1;1;1
+console;RawKeyConvert;1;1;2
+console;CD_ASKDEFAULTKEYMAP;1;1;1
+console;CD_ASKKEYMAP;1;1;1
+console;CD_SETDEFAULTKEYMAP;1;1;1
+console;CD_SETKEYMAP;1;1;1
+console;OpenDevice;1;1;1
+console;CMD_CLEAR;1;1;1
+console;CMD_READ;1;1;1
+console;CMD_WRITE;1;1;1
+input;PeekQualifier;1;1;2
+input;IND_ADDHANDLER;1;1;2
+input;IND_REMHANDLER;1;1;2
+input;IND_SETMPORT;1;1;0
+input;IND_SETMTRIG;1;1;0
+input;IND_SETMTYPE;1;1;0
+input;IND_SETPERIOD;1;1;2
+input;IND_SETTHRESH;1;1;2
+input;IND_WRITEEVENT;1;1;2
+timer;AbortIO;1;1;2
+timer;AddTime;1;1;2
+timer;SubTime;1;1;2
+timer;CmpTime;1;1;2
+timer;ReadEClock;1;1;0
+timer;GetSysTime;1;1;2
+timer;TR_ADDREQUEST;1;1;1
+timer;TR_GETSYSTIME;1;1;2
+timer;TR_SETSYSTIME;1;1;2
+ramdrive;KillRAD;1;1;0
+printer;CMD_FLUSH;1;1;0
+printer;CMD_INVALID;1;1;0
+printer;CMD_RESET;1;1;0
+printer;CMD_START;1;1;0
+printer;CMD_STOP;1;1;0
+printer;CMD_WRITE;1;1;0
+printer;PRD_DUMPRPORT;1;1;0
+printer;PRD_DUMPRPORTAGS;1;1;0
+printer;PRD_EDITPREFS;1;1;0
+printer;PRD_PRTCOMMAND;1;1;0
+printer;PRD_QUERY;1;1;0
+printer;PRD_RAWWRITE;1;1;0
+printer;PRD_READPREFS;1;1;0
+printer;PRD_SETERRHOOK;1;1;0
+printer;PRD_WRITEPREFS;1;1;0
+printer;PBothReady;1;1;0
+printer;CallErrHook;1;1;0
+printer;PQuery;1;1;0
+printer;PRead;1;1;0
+printer;PWrite;1;1;0
+audio;ADCMD_ALLOCATE;1;1;0
+audio;ADCMD_FINISH;1;1;0
+audio;ADCMD_FREE;1;1;0
+audio;ADCMD_LOCK;1;1;0
+audio;ADCMD_PERVOL;1;1;0
+audio;ADCMD_SETPREC;1;1;0
+audio;ADCMD_WAITCYCLE;1;1;0
+audio;CMD_CLEAR;1;1;0
+audio;CMD_FLUSH;1;1;0
+audio;CMD_READ;1;1;0
+audio;CMD_RESET;1;1;0
+audio;CMD_START;1;1;0
+audio;CMD_STOP;1;1;0
+audio;CMD_UPDATE;1;1;0
+audio;CMD_WRITE;1;1;0
+audio;AbortIO;1;1;0
+audio;BeginIO;1;1;0
+audio;CloseDevice;1;1;0
+audio;Expunge;1;1;0
+audio;OpenDevice;1;1;0
+cd_dev;CD_ADDCHANGEINT;1;1;0
+cd_dev;CD_ADDFRAMEINT;1;1;0
+cd_dev;CD_ATTENUATE;1;1;0
+cd_dev;CD_CHANGENUM;1;1;0
+cd_dev;CD_CHANGESTATE;1;1;0
+cd_dev;CD_CONFIG;1;1;0
+cd_dev;CD_EJECT;1;1;0
+cd_dev;CD_GETGEOMETRY;1;1;0
+cd_dev;CD_INFO;1;1;0
+cd_dev;CD_MOTOR;1;1;0
+cd_dev;CD_PAUSE;1;1;0
+cd_dev;CD_PLAYLSN;1;1;0
+cd_dev;CD_PLAYMSF;1;1;0
+cd_dev;CD_PLAYTRACK;1;1;0
+cd_dev;CD_PROTSTATUS;1;1;0
+cd_dev;CD_QCODELSN;1;1;0
+cd_dev;CD_QCODEMSF;1;1;0
+cd_dev;CD_READ;1;1;0
+cd_dev;CD_READXL;1;1;0
+cd_dev;CD_REMCHANGEINT;1;1;0
+cd_dev;CD_REMFRAMEINT;1;1;0
+cd_dev;CD_SEARCH;1;1;0
+cd_dev;CD_SEEK;1;1;0
+cd_dev;CD_TOCLSN;1;1;0
+cd_dev;CD_TOCMSF;1;1;0
+cd_dev;CloseDevice;1;1;0
+cd_dev;OpenDevice;1;1;0
+clipboard;CBD_CHANGEHOOK;1;1;2
+clipboard;CBD_CURRENTREADID;1;1;2
+clipboard;CBD_CURRENTWRITEID;1;1;2
+clipboard;CBD_POST;1;1;2
+clipboard;CMD_READ;1;1;2
+clipboard;CMD_UPDATE;1;1;2
+clipboard;CMD_WRITE;1;1;2
+gameport;GPD_ASKCTYPE;1;1;2
+gameport;GPD_ASKTRIGGER;1;1;2
+gameport;GPD_READEVENT;1;1;2
+gameport;GPD_SETCTYPE;1;1;1
+gameport;GPD_SETTRIGGER;1;1;2
+keyboard;CMD_CLEAR;1;1;2
+keyboard;KBD_ADDRESETHANDLER;1;1;2
+keyboard;KBD_READEVENT;1;1;2
+keyboard;KBD_READMATRIX;1;1;2
+keyboard;KBD_REMRESETHANDLER;1;1;2
+keyboard;KBD_RESETHANDLERDONE;1;1;2
+narrator;CMD_FLUSH;1;1;0
+narrator;CMD_READ;1;1;0
+narrator;CMD_RESET;1;1;0
+narrator;CMD_START;1;1;0
+narrator;CMD_STOP;1;1;0
+narrator;CMD_WRITE;1;1;0
+narrator;AbortIO;1;1;0
+narrator;OpenDevice;1;1;0
+narrator;CloseDevice;1;1;0
+parallel;CMD_CLEAR;1;1;1
+parallel;CMD_FLUSH;1;1;1
+parallel;CMD_READ;1;1;1
+parallel;CMD_RESET;1;1;1
+parallel;CMD_START;1;1;1
+parallel;CMD_STOP;1;1;1
+parallel;CMD_WRITE;1;1;1
+parallel;PDCMD_QUERY;1;1;1
+parallel;PDCMD_SETPARAMS;1;1;1
+parallel;OpenDevice;1;1;1
+serial;CMD_CLEAR;1;1;2
+serial;CMD_FLUSH;1;1;2
+serial;CMD_READ;1;1;2
+serial;CMD_RESET;1;1;2
+serial;CMD_START;1;1;1
+serial;CMD_STOP;1;1;1
+serial;CMD_WRITE;1;1;2
+serial;SDCMD_BREAK;1;1;2
+serial;SDCMD_QUERY;1;1;2
+serial;SDCMD_SETPARAMS;1;1;2
+serial;AbortIO;1;1;2
+serial;BeginIO;1;1;2
+serial;CloseDevice;1;1;2
+serial;OpenDevice;1;1;2
+trackdisk;CMD_CLEAR;1;1;0
+trackdisk;CMD_READ;1;1;0
+trackdisk;CMD_UPDATE;1;1;0
+trackdisk;CMD_WRITE;1;1;0
+trackdisk;TD_ADDCHANGEINT;1;1;0
+trackdisk;TD_CHANGENUM;1;1;0
+trackdisk;TD_CHANGESTATE;1;1;0
+trackdisk;TD_EJECT;1;1;0
+trackdisk;TD_FORMAT;1;1;0
+trackdisk;TD_GETDRIVETYPE;1;1;0
+trackdisk;TD_GETGEOMETRY;1;1;0
+trackdisk;TD_GETNUMTRACKS;1;1;0
+trackdisk;TD_MOTOR;1;1;0
+trackdisk;TD_PROTSTATUS;1;1;0
+trackdisk;TD_RAWREAD;1;1;0
+trackdisk;TD_RAWWRITE;1;1;0
+trackdisk;TD_REMCHANGEINT;1;1;0
+trackdisk;TD_SEEK;1;1;0
 #CATEGORY_ITEMS_END
