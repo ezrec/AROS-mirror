@@ -562,6 +562,9 @@
 # /Networking/Developer/includes/
 /Networking/Developer/includes/mmakefile
 
+# /Networking/Drivers/e1000/
+/Networking/Drivers/e1000/mmakefile
+
 # /Networking/Drivers/emac/
 /Networking/Drivers/emac/mmakefile
 
@@ -786,9 +789,6 @@
 /aminet/dev/src/chunkyiclass/mmakefile
 /aminet/dev/src/chunkyiclass/strings.h
 /aminet/dev/src/chunkyiclass/strings.c
-
-# /aminet/disk/misc/Format64/Source/
-/aminet/disk/misc/Format64/Source/mmakefile
 
 # /aminet/disk/misc/Mtools-2.0.7/
 /aminet/disk/misc/Mtools-2.0.7/mmakefile
