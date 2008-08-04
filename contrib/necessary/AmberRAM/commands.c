@@ -100,7 +100,6 @@ struct Handler *CmdStartup(STRPTR name, struct DeviceNode *dev_node,
    /* Initialise private handler structure */
 
    handler = AllocMem(sizeof(struct Handler), MEMF_CLEAR);
-
    if(handler == NULL)
       error = IoErr();
 
@@ -146,36 +145,42 @@ struct Handler *CmdStartup(STRPTR name, struct DeviceNode *dev_node,
 
       AddDosEntry(volume);
       handler->volume = volume;
+
+      /* Open default locale */
+
+      handler->locale = OpenLocale(NULL);
+
+      /* Initialise notification handling */
+
+      NewList((APTR)&handler->notifications);
+      port = CreateMsgPort();
+      handler->notify_port = port;
+      if(port == NULL)
+         error = IoErr();
    }
-
-   /* Open default locale */
-
-   handler->locale = OpenLocale(NULL);
-
-   /* Initialise notification handling */
-
-   NewList((APTR)&handler->notifications);
-   port = CreateMsgPort();
-   handler->notify_port = port;
-   if(port == NULL)
-      error = IoErr();
 
    /* Create the root directory and get a shared lock on it */
 
-   root_dir = CreateObject(handler, default_vol_name, ST_ROOT, NULL);
-   handler->root_dir = root_dir;
-   if(root_dir != NULL)
+   if(error == 0)
    {
-      if(LockObject(handler, root_dir, ACCESS_READ) == NULL)
+      root_dir = CreateObject(handler, default_vol_name, ST_ROOT, NULL);
+      handler->root_dir = root_dir;
+      if(root_dir != NULL)
+      {
+         if(LockObject(handler, root_dir, ACCESS_READ) == NULL)
+            error = IoErr();
+      }
+      else
          error = IoErr();
    }
-   else
-      error = IoErr();
 
    /* Shut down handler if an error occurred */
 
    if(error != 0)
+   {
       DeleteHandler(handler);
+      handler = NULL;
+   }
 
    /* Return result */
 
