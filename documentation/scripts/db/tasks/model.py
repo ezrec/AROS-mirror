@@ -30,6 +30,20 @@ class CategoryItem:
     def __gt__( self, other ): return self.description >  other.description 
     def __ge__( self, other ): return self.description >= other.description 
 
+class Comment:
+
+    def __init__( self, comment, parentcategory ):
+        self.comment        =   comment
+        self.parentcategory =   parentcategory
+
+    def __lt__( self, other ): return self.comment <  other.comment 
+    def __le__( self, other ): return self.comment <= other.comment 
+    def __eq__( self, other ): return self.comment == other.comment 
+    def __ne__( self, other ): return self.comment != other.comment 
+    def __gt__( self, other ): return self.comment >  other.comment 
+    def __ge__( self, other ): return self.comment >= other.comment 
+    
+
 class Category( list ):
 
     TYPE_General    =   0
@@ -45,13 +59,15 @@ class Category( list ):
         self.lastupdated        =   lastupdated
         self.categorytype       =   categorytype
         
-        self.completed                  = 0
-        self.needssomework              = 0
-        self.notimplemented             = 0
-        self.skipped                    = 0
-        self.amigaonly                  = 0
+        self.completed          = 0
+        self.needssomework      = 0
+        self.notimplemented     = 0
+        self.skipped            = 0
+        self.amigaonly          = 0
         
-        self.total                      = 0
+        self.total              = 0
+
+        self.comments           = []
 
     def __lt__( self, other ): return self.category <  other.category 
     def __le__( self, other ): return self.category <= other.category 
@@ -69,7 +85,7 @@ class Category( list ):
     
     def recalculate( self ):
         for item in self:
-            if item.__class__ != Category:
+            if isinstance( item, CategoryItem ):
                 self.total += 1
 
                 if   item.status == CategoryItem.STAT_Completed:
@@ -83,7 +99,7 @@ class Category( list ):
                 elif item.status == CategoryItem.STAT_AmigaOnly:
                     self.amigaonly              += 1
 
-            else:
+            elif isinstance( item, Category ):
                 item.recalculate()
                 
                 self.completed              += item.completed

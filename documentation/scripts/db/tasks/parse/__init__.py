@@ -71,11 +71,36 @@ def createCategoryItems( file ):
 
     return categoryitems
 
+def createComments( file ):
+
+    comments = []
+
+    # Search for startup
+    file.seek(0)   
+    for line in file:
+        if line.find( "COMMENTS_BEGIN" ) != -1:
+            break
+
+    # Load category items
+    for line in file:
+        if line.find( "COMMENTS_END" ) != -1:
+            break
+    
+        words = line.strip().split( ';' )
+        
+        comment = words[1]
+        category    = words[0]
+        
+        comments.append( Comment( comment, category ) )
+
+    return comments
+
 def parse( file ):
 
-    # Create categories and category items
+    # Create categories, category items and comments
     categories = createCategories( file )
     categoryitems = createCategoryItems( file )
+    comments = createComments( file )
 
     # Assign category items to categories
     for categoryitem in categoryitems:
@@ -87,6 +112,17 @@ def parse( file ):
             category = 'everything'
             
         categories[category].append( categoryitem )            
+
+    # Assign comments to categories
+    for comment in comments:
+
+        category = comment.parentcategory
+
+        # Fallback for not existing categories            
+        if category not in categories:
+            category = 'everything'
+            
+        categories[category].comments.append( comment )  
 
 
     everything = categories[ 'everything' ]

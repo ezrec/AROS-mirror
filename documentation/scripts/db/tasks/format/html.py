@@ -239,6 +239,8 @@ def format( root, directory, template, lang, extension, parent = None ):
     content_CategoriesExtensions = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
     content_CategoryItemsOriginalAPI = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
     content_CategoryItemsAROSAPI = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
+    #FIXME: GRRR: how do you create UL in html_?
+    content_Comments = '<ul>'
 
     for item in root:
         
@@ -250,15 +252,19 @@ def format( root, directory, template, lang, extension, parent = None ):
                 content_CategoriesAmigaOS.append(row)
             elif item.categorytype == Category.TYPE_Extensions:
                 content_CategoriesExtensions.append(row)
-        else:
+        elif isinstance( item, CategoryItem ):
             row = formatRowCategoryItem( item, extension )
             if item.apiversion == CategoryItem.API_Original:
                 content_CategoryItemsOriginalAPI.append( row )
             elif item.apiversion == CategoryItem.API_AROS:
                 content_CategoryItemsAROSAPI.append( row )
-                
 
-    contentstr = '';
+    # Format category comments                
+    for item in root.comments:
+       content_Comments += '<li>' + item.comment + '</li>'
+    content_Comments += '</ul>'
+
+    contentstr = ''
 
     contentstr += str( formatReturnLink( parent, extension ) )
 
@@ -282,6 +288,9 @@ def format( root, directory, template, lang, extension, parent = None ):
 
     if len( content_CategoryItemsAROSAPI ) > 0:
         contentstr += '<h2 align="center">AROS Extensions API</h2>' + str( content_CategoryItemsAROSAPI )
+
+    if content_Comments != '<ul></ul>':
+        contentstr += '<h2 align="left">Comments</h2>' + str( content_Comments )
 
     if lang == 'en':
         strings = {

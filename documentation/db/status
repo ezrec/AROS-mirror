@@ -53,13 +53,13 @@ gadgets;gradientslider;Gradientslider Gadget;1;2003-08-26
 gadgets;colorwheel;Colorwheel Gadget;1;2003-08-26
 devices;input;Input.device;1;2003-08-26
 devices;timer;Timer.device;1;2003-08-26
-devices;console;Console.device;1;2003-08-26
+devices;console;Console.device;1;2008-08-04
 devices;ramdrive;Ramdrive.device;1;2003-08-26
 devices;printer;Printer.device;1;2003-08-26
 devices;audio;Audio.device;1;2003-08-26
 devices;cd_dev;Cd.device;1;2003-08-26
 devices;clipboard;Clipboard.device;1;2003-08-26
-devices;gameport;Gameport.device;1;2003-08-26
+devices;gameport;Gameport.device;1;2008-08-04
 devices;keyboard;Keyboard.device;1;2003-08-26
 devices;narrator;Narrator.device;1;2003-08-26
 devices;parallel;Parallel.device;1;2003-08-26
@@ -1633,16 +1633,16 @@ reqtools;rtSetWaitPointer;1;1;2
 reqtools;rtSpread;1;1;2
 reqtools;rtUnlockPrefs;1;1;2
 reqtools;rtUnlockWindow;1;1;2
-console;CDInputHandler;1;1;1
+console;NSCMD_DEVICEQUERY;1;2;2
+console;CDInputHandler;1;1;2
 console;RawKeyConvert;1;1;2
-console;CD_ASKDEFAULTKEYMAP;1;1;1
-console;CD_ASKKEYMAP;1;1;1
-console;CD_SETDEFAULTKEYMAP;1;1;1
-console;CD_SETKEYMAP;1;1;1
-console;OpenDevice;1;1;1
-console;CMD_CLEAR;1;1;1
-console;CMD_READ;1;1;1
-console;CMD_WRITE;1;1;1
+console;CD_ASKDEFAULTKEYMAP;1;1;0
+console;CD_ASKKEYMAP;1;1;0
+console;CD_SETDEFAULTKEYMAP;1;1;0
+console;CD_SETKEYMAP;1;1;0
+console;CMD_CLEAR;1;1;0
+console;CMD_READ;1;1;2
+console;CMD_WRITE;1;1;2
 input;PeekQualifier;1;1;2
 input;IND_ADDHANDLER;1;1;2
 input;IND_REMHANDLER;1;1;2
@@ -1736,11 +1736,14 @@ clipboard;CBD_POST;1;1;2
 clipboard;CMD_READ;1;1;2
 clipboard;CMD_UPDATE;1;1;2
 clipboard;CMD_WRITE;1;1;2
+gameport;CMD_CLEAR;1;1;2
 gameport;GPD_ASKCTYPE;1;1;2
 gameport;GPD_ASKTRIGGER;1;1;2
-gameport;GPD_READEVENT;1;1;2
-gameport;GPD_SETCTYPE;1;1;1
+gameport;GPD_READEVENT;1;1;1
+gameport;GPD_SETCTYPE;1;1;2
 gameport;GPD_SETTRIGGER;1;1;2
+gameport;CMD_HIDDINIT;1;2;1
+gameport;NSCMD_DEVICEQUERY;1;2;2
 keyboard;CMD_CLEAR;1;1;2
 keyboard;KBD_ADDRESETHANDLER;1;1;2
 keyboard;KBD_READEVENT;1;1;2
@@ -1799,3 +1802,7 @@ trackdisk;TD_RAWWRITE;1;1;0
 trackdisk;TD_REMCHANGEINT;1;1;0
 trackdisk;TD_SEEK;1;1;0
 #CATEGORY_ITEMS_END
+#COMMENTS_BEGIN (category, comment)
+gameport;Gameport.device supports only mouse
+bullet;Bullet.library interface is implemented in freetype.library
+#COMMENTS_END
