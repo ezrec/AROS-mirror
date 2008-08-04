@@ -1805,4 +1805,5 @@ trackdisk;TD_SEEK;1;1;0
 #COMMENTS_BEGIN (category, comment)
 gameport;Gameport.device supports only mouse
 bullet;Bullet.library interface is implemented in freetype.library
+everything;Extensions section does not contain all subsections
 #COMMENTS_END

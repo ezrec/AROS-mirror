@@ -242,22 +242,23 @@ def format( root, directory, template, lang, extension, parent = None ):
     #FIXME: GRRR: how do you create UL in html_?
     content_Comments = '<ul>'
 
-    for item in root:
-        
-        if isinstance( item, Category ):
-            row = formatRowCategory( item, extension )
-            if item.categorytype == Category.TYPE_General:
-                content_CategoriesGeneral.append(row)
-            elif item.categorytype == Category.TYPE_AmigaOS:
-                content_CategoriesAmigaOS.append(row)
-            elif item.categorytype == Category.TYPE_Extensions:
-                content_CategoriesExtensions.append(row)
-        elif isinstance( item, CategoryItem ):
-            row = formatRowCategoryItem( item, extension )
-            if item.apiversion == CategoryItem.API_Original:
-                content_CategoryItemsOriginalAPI.append( row )
-            elif item.apiversion == CategoryItem.API_AROS:
-                content_CategoryItemsAROSAPI.append( row )
+    # Format subcategories
+    for item in root.subcategories:
+        row = formatRowCategory( item, extension )
+        if item.categorytype == Category.TYPE_General:
+            content_CategoriesGeneral.append(row)
+        elif item.categorytype == Category.TYPE_AmigaOS:
+            content_CategoriesAmigaOS.append(row)
+        elif item.categorytype == Category.TYPE_Extensions:
+            content_CategoriesExtensions.append(row)
+
+    # Format category items
+    for item in root.categoryitems:
+        row = formatRowCategoryItem( item, extension )
+        if item.apiversion == CategoryItem.API_Original:
+            content_CategoryItemsOriginalAPI.append( row )
+        elif item.apiversion == CategoryItem.API_AROS:
+            content_CategoryItemsAROSAPI.append( row )
 
     # Format category comments                
     for item in root.comments:
@@ -310,8 +311,7 @@ def format( root, directory, template, lang, extension, parent = None ):
     output.close()
 
     # Second, recurse down.
-    for item in root:
-        if isinstance( item, Category ):
-            format( item, directory, template, lang, extension, root )
+    for item in root.subcategories:
+        format( item, directory, template, lang, extension, root )
 
 

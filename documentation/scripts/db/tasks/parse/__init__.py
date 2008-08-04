@@ -37,9 +37,9 @@ def createCategories( file ):
     for key, value in categories.iteritems():
         if value.parentcategory != None:
             if value.parentcategory in categories:
-                categories[value.parentcategory].append( value )
+                categories[value.parentcategory].subcategories.append( value )
             else:
-                categories['everything'].append( value )
+                categories['everything'].subcategories.append( value )
 
     return categories
 
@@ -81,7 +81,7 @@ def createComments( file ):
         if line.find( "COMMENTS_BEGIN" ) != -1:
             break
 
-    # Load category items
+    # Load comments
     for line in file:
         if line.find( "COMMENTS_END" ) != -1:
             break
@@ -111,7 +111,7 @@ def parse( file ):
         if category not in categories:
             category = 'everything'
             
-        categories[category].append( categoryitem )            
+        categories[category].categoryitems.append( categoryitem )            
 
     # Assign comments to categories
     for comment in comments:

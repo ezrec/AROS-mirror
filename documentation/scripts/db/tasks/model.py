@@ -2,7 +2,18 @@
 # Copyright © 2002, The AROS Development Team. All rights reserved.
 # $Id$
 
-class CategoryItem:
+class Sortable:
+    def __init__( self, sortkey ):
+        self.sortkey = sortkey
+
+    def __lt__( self, other ): return self.sortkey <  other.sortkey 
+    def __le__( self, other ): return self.sortkey <= other.sortkey 
+    def __eq__( self, other ): return self.sortkey == other.sortkey 
+    def __ne__( self, other ): return self.sortkey != other.sortkey 
+    def __gt__( self, other ): return self.sortkey >  other.sortkey 
+    def __ge__( self, other ): return self.sortkey >= other.sortkey 
+
+class CategoryItem( Sortable ):
     STAT_Completed   = 2
     STAT_NeedsSomeWork = 1
     STAT_NotImplemented   = 0
@@ -17,42 +28,29 @@ class CategoryItem:
     API_AROS = 2
 
     def __init__( self, description, parentcategory, status, architecture, apiversion ):
+        Sortable.__init__( self, description )
         self.description            =   description
         self.parentcategory         =   parentcategory
         self.status                 =   status
         self.architecture           =   architecture
         self.apiversion             =   apiversion
-    
-    def __lt__( self, other ): return self.description <  other.description 
-    def __le__( self, other ): return self.description <= other.description 
-    def __eq__( self, other ): return self.description == other.description 
-    def __ne__( self, other ): return self.description != other.description 
-    def __gt__( self, other ): return self.description >  other.description 
-    def __ge__( self, other ): return self.description >= other.description 
 
-class Comment:
+class Comment( Sortable ):
 
     def __init__( self, comment, parentcategory ):
+        Sortable.__init__( self, comment )
         self.comment        =   comment
-        self.parentcategory =   parentcategory
+        self.parentcategory =   parentcategory    
 
-    def __lt__( self, other ): return self.comment <  other.comment 
-    def __le__( self, other ): return self.comment <= other.comment 
-    def __eq__( self, other ): return self.comment == other.comment 
-    def __ne__( self, other ): return self.comment != other.comment 
-    def __gt__( self, other ): return self.comment >  other.comment 
-    def __ge__( self, other ): return self.comment >= other.comment 
-    
-
-class Category( list ):
+class Category( Sortable ):
 
     TYPE_General    =   0
     TYPE_AmigaOS    =   1
     TYPE_Extensions =   2
 
     def __init__( self, category, description, parentcategory, categorytype, lastupdated ):
-        list.__init__( self )
-        
+        Sortable.__init__( self, category )
+       
         self.category           =   category
         self.description        =   description
         self.parentcategory     =   parentcategory
@@ -68,44 +66,39 @@ class Category( list ):
         self.total              = 0
 
         self.comments           = []
+        self.categoryitems      = []
+        self.subcategories      = []
 
-    def __lt__( self, other ): return self.category <  other.category 
-    def __le__( self, other ): return self.category <= other.category 
-    def __eq__( self, other ): return self.category == other.category 
-    def __ne__( self, other ): return self.category != other.category 
-    def __gt__( self, other ): return self.category >  other.category 
-    def __ge__( self, other ): return self.category >= other.category 
 
     def sort( self ):
-        for item in self:
-            if item.__class__ == Category:
-                item.sort()
-                
-        list.sort( self )
+        for item in self.subcategories:
+            item.sort()
+        self.comments.sort()
+        self.categoryitems.sort()       
+        self.subcategories.sort()
     
     def recalculate( self ):
-        for item in self:
-            if isinstance( item, CategoryItem ):
-                self.total += 1
+        for item in self.categoryitems:
+            self.total += 1
 
-                if   item.status == CategoryItem.STAT_Completed:
-                    self.completed              += 1
-                elif item.status == CategoryItem.STAT_NeedsSomeWork:
-                    self.needssomework          += 1
-                elif item.status == CategoryItem.STAT_NotImplemented:
-                    self.notimplemented         += 1
-                elif item.status == CategoryItem.STAT_Skipped:
-                    self.skipped                += 1
-                elif item.status == CategoryItem.STAT_AmigaOnly:
-                    self.amigaonly              += 1
+            if   item.status == CategoryItem.STAT_Completed:
+                self.completed              += 1
+            elif item.status == CategoryItem.STAT_NeedsSomeWork:
+                self.needssomework          += 1
+            elif item.status == CategoryItem.STAT_NotImplemented:
+                self.notimplemented         += 1
+            elif item.status == CategoryItem.STAT_Skipped:
+                self.skipped                += 1
+            elif item.status == CategoryItem.STAT_AmigaOnly:
+                self.amigaonly              += 1
 
-            elif isinstance( item, Category ):
-                item.recalculate()
-                
-                self.completed              += item.completed
-                self.needssomework          += item.needssomework
-                self.notimplemented         += item.notimplemented
-                self.skipped                += item.skipped
-                self.amigaonly              += item.amigaonly
-                self.total                  += item.total
+        for item in self.subcategories:
+            item.recalculate()
+            
+            self.completed              += item.completed
+            self.needssomework          += item.needssomework
+            self.notimplemented         += item.notimplemented
+            self.skipped                += item.skipped
+            self.amigaonly              += item.amigaonly
+            self.total                  += item.total
 
