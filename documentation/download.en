@@ -15,9 +15,9 @@ is much greater than those of the nightly builds. If you are a user, interested
 in checking what AROS has to offer, use the distributions to get the most
 complete AROS experience.
 
-VmwAROS
--------
-VmwAROS is distibuted as harddisk image file(s) that can be run in VMware
+VmwAROS VE
+----------
+VmwAROS VE is distibuted as harddisk image file(s) that can be run in VMware
 virtualization software (`Player`__, Fusion, Server, Workstation). The distribution
 contains a number of preinstaled software packages, including email application,
 text editor, image editor, development environment, compilers pack, web browser,
@@ -54,7 +54,7 @@ a good beginner developer`s choice.
 General distribution page is located `here`__
 
 __ http://vmware.com/products/player
-__ http://vm.vmwaros.org
+__ http://ve.vmwaros.org
 __ http://www.vmwaros.org
 
 __ http://live.vmwaros.org

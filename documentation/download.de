@@ -15,10 +15,10 @@ die Fähigkeiten von AROS ausprobieren will: verwende die Distributionen, um die
 umfangreichtste AROS-Erfahrung sammeln zu können.
 
 
-VmwAROS
--------
+VmwAROS VE
+----------
 
-VmAROS wird als Diskimage vertrieben, welches unter der VMware-Virtualisierungssoftware
+VmAROS VE wird als Diskimage vertrieben, welches unter der VMware-Virtualisierungssoftware
 (`Player`__, Fusion, Server, Workstation) läuft. Diese Distribution enthält ein
 paar vorinstallierte Programme, darunter ein E-Mail-Klient, Texteditor,
 Grafikeditor, Entwicklungsumgebung, Kompilerpaket, Webbrowser, IRC-Klient
@@ -55,10 +55,10 @@ eine gute Wahl für Anfänger in der Softwareentwicklung.
 Bezogen werden kan es von `hier`__.
 
 __ http://vmware.com/products/player/
-__ http://vmwaros.blogspot.com/2008/04/vmwaros-is-complete-aros-desktop.html
+__ http://ve.vmwaros.org
 __ http://www.vmwaros.org/
 
-__ http://vmwaros.blogspot.com/2008/04/blog-post.html
+__ http://live.vmwaros.org
 __ http://www.vmwaros.org/
 
 __ http://amidevcpp.amiga-world.de/WinAros.php

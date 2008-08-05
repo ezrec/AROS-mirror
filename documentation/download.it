@@ -14,10 +14,10 @@ sicuramente maggiore di quella delle nightly build. Se siete
 semplicemente incuriositi da AROS e volete scoprire cos'ha da offrirvi,
 le distribuzioni sono fatte apposta per voi!
 
-VmwAROS
--------
+VmwAROS VE
+----------
 
-VmwAROS è distribuita in un formato particolare: una macchina virtuale
+VmwAROS VE è distribuita in un formato particolare: una macchina virtuale
 da usare con appositi software forniti da VMware (`Player`__, Fusion,
 Server, Workstation). La distribuzione contiene numerosi programmi
 pre-installati che includono giochi, programma di posta elettronica,
@@ -57,7 +57,7 @@ migliore (e anche unico) Ambiente di Sviluppo Integrato per AROS.
 Si può scaricare l'ultima versione `qui`__.
 
 __ http://vmware.com/products/player
-__ http://vm.vmwaros.org
+__ http://ve.vmwaros.org
 __ http://www.vmwaros.org
 
 __ http://live.vmwaros.org
