@@ -44,7 +44,7 @@ class Comment( Sortable ):
 
 class Category( Sortable ):
 
-    TYPE_General    =   0
+#    TYPE_General    =   0 - Removed as the distinction is now on the top-most level
     TYPE_AmigaOS    =   1
     TYPE_Extensions =   2
 

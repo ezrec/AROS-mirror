@@ -6,7 +6,6 @@ everything;resources;Resources;1;2003-08-26
 everything;hidds;HIDDs;2;2003-08-26
 everything;programs;Programs;1;2003-08-26
 everything;linklibs;Linklibs;1;2003-08-26
-everything;other;Other;1;2003-08-26
 everything;libraries_ext;Libraries;2;2008-08-01
 linklibs;clib;ANSI C link library;1;2003-08-26
 linklibs;alib_stdio;Amiga.lib - Standard I/O;1;2003-08-26
@@ -19,7 +18,6 @@ libraries;utility;Utility.library;1;2008-07-23
 libraries;wb;Workbench.library;1;2008-07-23
 libraries;rexxsupport;RexxSupport.library;1;2008-07-24
 libraries;rexxsyslib;RexxSysLib.library;1;2008-07-22
-libraries_ext;reqtools;ReqTools.library;2;2008-07-25
 libraries;realtime;RealTime.library;1;2008-07-21
 libraries;nonvolatile;NonVolatile.library;1;2008-07-21
 libraries;nvdisk;NVDisk.library;1;2008-07-21
@@ -45,10 +43,11 @@ libraries;camd;Camd.library;1;2008-07-19
 libraries;bullet;Bullet.library;1;2008-07-19
 libraries;asl;Asl.library;1;2008-07-19
 libraries;amigaguide;AmigaGuide.library;1;2008-07-19
-classes;gadgets;Gadgets;0;2003-08-26
-classes;DataType;Datatypes;0;2003-08-26
-classes;dtclass;DTClass;0;2003-08-26
-classes;boopsi;BOOPSI Classes;0;2003-08-26
+libraries_ext;reqtools;ReqTools.library;2;2008-07-25
+classes;gadgets;Gadgets;1;2003-08-26
+classes;DataType;Datatypes;1;2003-08-26
+classes;dtclass;DTClass;1;2003-08-26
+classes;boopsi;BOOPSI Classes;1;2003-08-26
 gadgets;gradientslider;Gradientslider Gadget;1;2003-08-26
 gadgets;colorwheel;Colorwheel Gadget;1;2003-08-26
 devices;input;Input.device;1;2008-08-05
@@ -56,8 +55,8 @@ devices;timer;Timer.device;1;2003-08-26
 devices;console;Console.device;1;2008-08-04
 devices;ramdrive;Ramdrive.device;1;2003-08-26
 devices;printer;Printer.device;1;2003-08-26
-devices;audio;Audio.device;1;2003-08-26
-devices;cd_dev;Cd.device;1;2003-08-26
+devices;audio;Audio.device;1;2008-08-06
+devices;cd_dev;Cd.device;1;2008-08-06
 devices;clipboard;Clipboard.device;1;2008-08-05
 devices;gameport;Gameport.device;1;2008-08-04
 devices;keyboard;Keyboard.device;1;2008-08-05
@@ -450,8 +449,7 @@ prefs;Time prefs program;1;1;1
 prefs;WBPattern prefs program;1;1;1
 prefs;Printer prefs program;1;1;0
 rexxmast;RexxMast with the "REXX" port;1;1;2
-other;Nonvolatile disk based implementation;1;1;2
-other;System/Format;1;1;0
+system;System/Format;1;1;0
 exec;AbortIO;1;1;2
 exec;AddDevice;1;1;2
 exec;AddHead;1;1;2
@@ -1656,7 +1654,6 @@ input;IND_WRITEEVENT;1;1;2
 input;IND_ADDEVENT;1;2;2
 input;NSCMD_DEVICEQUERY;1;2;2
 input;AddNullEvent;1;2;2
-timer;AbortIO;1;1;2
 timer;AddTime;1;1;2
 timer;SubTime;1;1;2
 timer;CmpTime;1;1;2
@@ -1701,11 +1698,6 @@ audio;CMD_START;1;1;0
 audio;CMD_STOP;1;1;0
 audio;CMD_UPDATE;1;1;0
 audio;CMD_WRITE;1;1;0
-audio;AbortIO;1;1;0
-audio;BeginIO;1;1;0
-audio;CloseDevice;1;1;0
-audio;Expunge;1;1;0
-audio;OpenDevice;1;1;0
 cd_dev;CD_ADDCHANGEINT;1;1;0
 cd_dev;CD_ADDFRAMEINT;1;1;0
 cd_dev;CD_ATTENUATE;1;1;0
@@ -1731,8 +1723,6 @@ cd_dev;CD_SEARCH;1;1;0
 cd_dev;CD_SEEK;1;1;0
 cd_dev;CD_TOCLSN;1;1;0
 cd_dev;CD_TOCMSF;1;1;0
-cd_dev;CloseDevice;1;1;0
-cd_dev;OpenDevice;1;1;0
 clipboard;CBD_CHANGEHOOK;1;1;2
 clipboard;CBD_CURRENTREADID;1;1;2
 clipboard;CBD_CURRENTWRITEID;1;1;2
@@ -1763,9 +1753,6 @@ narrator;CMD_RESET;1;1;0
 narrator;CMD_START;1;1;0
 narrator;CMD_STOP;1;1;0
 narrator;CMD_WRITE;1;1;0
-narrator;AbortIO;1;1;0
-narrator;OpenDevice;1;1;0
-narrator;CloseDevice;1;1;0
 parallel;CMD_CLEAR;1;1;1
 parallel;CMD_FLUSH;1;1;1
 parallel;CMD_READ;1;1;1
@@ -1775,7 +1762,6 @@ parallel;CMD_STOP;1;1;1
 parallel;CMD_WRITE;1;1;1
 parallel;PDCMD_QUERY;1;1;1
 parallel;PDCMD_SETPARAMS;1;1;1
-parallel;OpenDevice;1;1;1
 serial;CMD_CLEAR;1;1;2
 serial;CMD_FLUSH;1;1;2
 serial;CMD_READ;1;1;2
@@ -1786,10 +1772,6 @@ serial;CMD_WRITE;1;1;2
 serial;SDCMD_BREAK;1;1;2
 serial;SDCMD_QUERY;1;1;2
 serial;SDCMD_SETPARAMS;1;1;2
-serial;AbortIO;1;1;2
-serial;BeginIO;1;1;2
-serial;CloseDevice;1;1;2
-serial;OpenDevice;1;1;2
 trackdisk;CMD_CLEAR;1;1;0
 trackdisk;CMD_READ;1;1;0
 trackdisk;CMD_UPDATE;1;1;0

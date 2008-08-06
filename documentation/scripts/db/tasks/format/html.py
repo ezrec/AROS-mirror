@@ -234,20 +234,17 @@ def formatLegend( ):
 def format( root, directory, template, lang, extension, parent = None ):
     
     # First, format this category.
-    content_CategoriesGeneral = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
-    content_CategoriesAmigaOS = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
-    content_CategoriesExtensions = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
-    content_CategoryItemsOriginalAPI = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
-    content_CategoryItemsAROSAPI = Table( bgcolor = '#999999', width = '100%', cellpadding = 2 )
+    content_CategoriesAmigaOS = Table( bgcolor = '#999999', width = '98%', cellpadding = 2 )
+    content_CategoriesExtensions = Table( bgcolor = '#999999', width = '98%', cellpadding = 2 )
+    content_CategoryItemsOriginalAPI = Table( bgcolor = '#999999', width = '98%', cellpadding = 2 )
+    content_CategoryItemsAROSAPI = Table( bgcolor = '#999999', width = '98%', cellpadding = 2 )
     #FIXME: GRRR: how do you create UL in html_?
     content_Comments = '<ul>'
 
     # Format subcategories
     for item in root.subcategories:
         row = formatRowCategory( item, extension )
-        if item.categorytype == Category.TYPE_General:
-            content_CategoriesGeneral.append(row)
-        elif item.categorytype == Category.TYPE_AmigaOS:
+        if item.categorytype == Category.TYPE_AmigaOS:
             content_CategoriesAmigaOS.append(row)
         elif item.categorytype == Category.TYPE_Extensions:
             content_CategoriesExtensions.append(row)
@@ -269,29 +266,27 @@ def format( root, directory, template, lang, extension, parent = None ):
 
     contentstr += str( formatReturnLink( parent, extension ) )
 
-    contentstr += '<br/>' + str( formatHeader( root ) )
+    contentstr += '\n<br/>' + str( formatHeader( root ) )
 
-    contentstr += '<br/>' + str( formatLegend( ) )
+    contentstr += '\n<br/>' + str( formatLegend( ) )
 
-    
-    if len( content_CategoriesGeneral ) > 0:
-        contentstr += '<h2 align="center">Categories</h2>' + str ( content_CategoriesGeneral )
-    
+        
     if len( content_CategoriesAmigaOS ) > 0:
-        contentstr += '<h2 align="center">' + root.description + ' (AmigaOS) </h2>' + str ( content_CategoriesAmigaOS )
+        contentstr += '\n<h2 align="center">' + root.description + ' (AmigaOS) </h2>' \
+            + str ( content_CategoriesAmigaOS )
 
     if len( content_CategoriesExtensions ) > 0:
-        contentstr += '<h2 align="center">' + root.description + ' (Extensions) </h2>' \
+        contentstr += '\n<h2 align="center">' + root.description + ' (Extensions) </h2>' \
             + str ( content_CategoriesExtensions )
 
     if len( content_CategoryItemsOriginalAPI ) > 0:
-        contentstr += '<h2 align="center">Original API</h2>' + str( content_CategoryItemsOriginalAPI )
+        contentstr += '\n<h2 align="center">Original API</h2>' + str( content_CategoryItemsOriginalAPI )
 
     if len( content_CategoryItemsAROSAPI ) > 0:
-        contentstr += '<h2 align="center">AROS Extensions API</h2>' + str( content_CategoryItemsAROSAPI )
+        contentstr += '\n<h2 align="center">AROS Extensions API</h2>' + str( content_CategoryItemsAROSAPI )
 
     if content_Comments != '<ul></ul>':
-        contentstr += '<h2 align="left">Comments</h2>' + str( content_Comments )
+        contentstr += '\n<h2 align="left">Comments</h2>' + str( content_Comments )
 
     if lang == 'en':
         strings = {
