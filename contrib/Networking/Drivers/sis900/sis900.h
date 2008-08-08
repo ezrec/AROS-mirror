@@ -144,24 +144,45 @@ typedef struct _BufferDesc {
 	ULONG bufptr;
 } BufferDesc;
 
+#define SANA2_SPECIAL_STAT_COUNT 3
+
 /* Per-Unit Device struct */
 struct SiS900Unit {
     struct MinNode          *sis900u_Node;
 
     struct SiS900Base       *sis900u_device;
+
     STRPTR                  sis900u_name;
 
-    struct MinList          sis900u_Openers;
-    struct MinList          sis900u_multicast_ranges;
-    struct MinList          sis900u_type_trackers;
     ULONG                   sis900u_UnitNum;
-    LONG                    sis900u_range_count;
+    IPTR                    sis900u_DriverFlags;
 
     OOP_Object              *sis900u_PCIDevice;
     OOP_Object              *sis900u_PCIDriver;
+    IPTR                    sis900u_IRQ;
 
-    struct timeval          sis900u_toutPOLL;
-    BOOL                    sis900u_toutNEED;
+    int                     sis900u_open_count;
+    struct SignalSemaphore  sis900u_unit_lock;
+
+    LONG                    sis900u_range_count;
+    struct MinList          sis900u_Openers;
+    struct MinList          sis900u_multicast_ranges;
+    struct MinList          sis900u_type_trackers;
+
+    ULONG                   sis900u_mtu;
+    ULONG                   sis900u_ifflags;
+    struct Sana2DeviceQuery sis900u_Sana2Info;
+    struct Sana2DeviceStats sis900u_stats;
+    ULONG                   sis900u_special_stats[SANA2_SPECIAL_STAT_COUNT];
+
+    struct Process          *sis900u_Process;
+
+    struct MsgPort          *sis900u_input_port;
+
+    struct MsgPort          *sis900u_request_ports[REQUEST_QUEUE_COUNT];
+
+    HIDDT_IRQ_Handler       *sis900u_irqhandler;
+    HIDDT_IRQ_Handler       *sis900u_touthandler;
 
     struct MsgPort          *sis900u_TimerSlowPort;
     struct timerequest      *sis900u_TimerSlowReq;
@@ -169,74 +190,36 @@ struct SiS900Unit {
     struct MsgPort          *sis900u_TimerFastPort;
     struct timerequest      *sis900u_TimerFastReq;
 
-    struct Sana2DeviceQuery sis900u_Sana2Info;
-    struct Sana2DeviceStats sis900u_stats;
-// Number of sana2 specialstats
-#define STAT_COUNT 3
-    ULONG                   sis900u_special_stats[STAT_COUNT];
+    struct MsgPort          e1ku_DelayPort;
+    struct timerequest      e1ku_DelayReq;
 
 	char                    *sis900u_rtl_cardname;
 	char                    *sis900u_rtl_chipname;
-	ULONG                  sis900u_rtl_chipcapabilities;
-	
-	ULONG                  sis900u_rtl_LinkSpeed;
-#define support_fdx     (1 << 0) // Supports Full Duplex
-#define support_mii     (1 << 1)
-#define support_fset    (1 << 2)
-#define support_ltint   (1 << 3)
-#define support_dxsuflo (1 << 4)
-/* Card Funcs */
-    void                    (*initialize)(struct SiS900Unit *);
-    void                    (*deinitialize)(struct SiS900Unit *);
-    int                     (*start)(struct SiS900Unit *);
-    int                     (*stop)(struct SiS900Unit *);
-    int                     (*alloc_rx)(struct SiS900Unit *);
-    void                    (*set_mac_address)(struct SiS900Unit *);
-    void                    (*linkchange)(struct SiS900Unit *);
-    void                    (*linkirq)(struct SiS900Unit *);
-//    ULONG                   (*descr_getlength)(struct ring_desc *prd, ULONG v);
-    void                    (*set_multicast)(struct SiS900Unit *);
 
-    int                     sis900u_open_count;
-    struct SignalSemaphore  sis900u_unit_lock;
-
-    struct Process          *sis900u_Process;
-
-    HIDDT_IRQ_Handler       *sis900u_irqhandler;
-    HIDDT_IRQ_Handler       *sis900u_touthandler;
-    IPTR	                  sis900u_DeviceID;
-    IPTR	                  sis900u_RevisionID;
+    IPTR	                sis900u_DeviceID;
+    IPTR	                sis900u_RevisionID;
     IPTR                    sis900u_HostRevisionID;
-    IPTR                    sis900u_DriverFlags;
-    IPTR                    sis900u_IRQ;
     IPTR                    sis900u_BaseMem;
     IPTR                    sis900u_SizeMem;
-    IPTR	                  sis900u_BaseIO;
+    IPTR	                sis900u_BaseIO;
 
     BYTE                    sis900u_signal_0;
     BYTE                    sis900u_signal_1;
     BYTE                    sis900u_signal_2;
     BYTE                    sis900u_signal_3;
 
-    struct MsgPort          *sis900u_input_port;
-
-    struct MsgPort          *sis900u_request_ports[REQUEST_QUEUE_COUNT];
+    UBYTE                   sis900u_dev_addr[6];
+    UWORD                   sis900u_org_addr[3];
 
     struct Interrupt        sis900u_rx_int;
     struct Interrupt        sis900u_tx_int;
 
-    ULONG                   sis900u_mtu;
-    ULONG                   sis900u_ifflags;
     ULONG                   sis900u_state;
     APTR                    sis900u_mc_list;
-    UBYTE                   sis900u_dev_addr[6];
-    UWORD                   sis900u_org_addr[3];
-//    struct fe_priv          *sis900u_fe_priv;
 
 /* SiS900 - New!! */
-	/* The saved address of a sent/receive-in-place packet buffer */
-	APTR                    tx_skbuff[NUM_TX_DESC];
-	APTR                    rx_skbuff[NUM_RX_DESC];
+	APTR                    tx_buffers[NUM_TX_DESC];
+	APTR                    rx_buffers[NUM_RX_DESC];
 
 	BufferDesc              *tx_ring;
 	BufferDesc              *rx_ring;
@@ -322,7 +305,6 @@ static inline void netif_schedule(struct SiS900Unit *unit)
         Cause(&unit->sis900u_tx_int);
     }
 }
-
 
 static inline void netif_start_queue(struct SiS900Unit *unit)
 {
@@ -415,54 +397,6 @@ struct dev_mc_list
     int                     dmi_gusers;
 };
 
-/*struct fe_priv {
-    struct SiS900Unit   *pci_dev;
-    int     in_shutdown;
-    ULONG   linkspeed;
-    int     duplex;
-    int     autoneg;
-    int     fixed_mode;
-    int     phyaddr;
-    int     wolenabled;
-    unsigned int phy_oui;
-    UWORD   gigabit;
-    ULONG   desc_ver;
-    struct SignalSemaphore  lock;
-
-    IPTR     ring_addr;
-
-// Start - rtl new
-    int                           full_duplex;
-
-	char                       mii_phys[4]; //MII device address
-	unsigned short    advertising;  //NWay media advertising
-	
-	unsigned int          rx_config;
-    struct   eth_frame   *rx_buffer;
-	unsigned int          rx_buf_len;
-	int                           rx_current;
-
-	int                           tx_flag;
-    struct   eth_frame    *tx_buffer;
-	unsigned char       *tx_pbuf[NUM_TX_DESC];
-	unsigned char       *tx_buf[NUM_TX_DESC];
-	int                            tx_dirty;
-	int                            tx_current;
-// End - rtl new
-	
-    ULONG   cur_rx, refill_rx;
-
-    ULONG   next_tx, nic_tx;
-    ULONG   tx_flags;
-
-    ULONG   irqmask;
-    ULONG   need_linktimer;
-    struct  timeval link_timeout;
-    ULONG   orig_mac[2];
-};*/
-
-#define pci_name(unit)  (unit->sis900u_name)
-
 /* ENET defines */
 
 #define HZ                  1000000
@@ -497,27 +431,8 @@ struct eth_frame {
 } __attribute__((packed));
 #define eth_packet_ieeelen eth_packet_type
 
-void sis900func_get_functions(struct SiS900Unit *Unit);
-
-/* **************************** */
-/*     OLD SIS900 DEFINES       */
-/* **************************** */
-
-#ifndef SIS900_LOG_TX_BUFFERS
-#define SIS900_LOG_TX_BUFFERS      3
-#define SIS900_LOG_RX_BUFFERS      4
-#endif
-
-#define TX_RING_SIZE                (1 << (SIS900_LOG_TX_BUFFERS))
-#define TX_RING_MOD_MASK            (TX_RING_SIZE - 1)
-#define TX_RING_LEN_BITS            ((SIS900_LOG_TX_BUFFERS) << 12)
-
-#define RX_RING_SIZE                (1 << (SIS900_LOG_RX_BUFFERS))
-#define RX_RING_MOD_MASK            (RX_RING_SIZE - 1)
-#define RX_RING_LEN_BITS            ((SIS900_LOG_RX_BUFFERS) << 4)
-
 /* ***************************** */
-/*     REAL SiS900 DEFINES       */
+/*     SiS900 DEFINES       */
 /* ***************************** */
 
 /* The I/O extent, SiS 900 needs 256 bytes of io address */
@@ -777,6 +692,15 @@ enum sis630_revision_id {
 
 #define TX_TOTAL_SIZE	NUM_TX_DESC*sizeof(BufferDesc)
 #define RX_TOTAL_SIZE	NUM_RX_DESC*sizeof(BufferDesc)
+
+int mdio_read(struct SiS900Unit *, int, int);
+
+void sis900func_initialize(struct SiS900Unit *);
+void sis900func_deinitialize(struct SiS900Unit *);
+int sis900func_open(struct SiS900Unit *);
+int sis900func_close(struct SiS900Unit *);
+void sis900func_set_mac(struct SiS900Unit *);
+void sis900func_set_multicast(struct SiS900Unit *);
 
 #endif
 

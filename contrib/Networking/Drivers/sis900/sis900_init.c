@@ -63,13 +63,13 @@ D(bug("[SiS900] PCI_Enumerator()\n"));
     LIBBASETYPEPTR LIBBASE = (LIBBASETYPEPTR)hook->h_Data;
 
 	BOOL FoundCompatNIC = FALSE;
-    IPTR DeviceID, VendorID, RevisionID, CardCapabilities;
+    IPTR DeviceID, VendorID, RevisionID;
+	char *CardName, *CardChipName;
     struct SiS900Unit   *unit;
 
     OOP_GetAttr(pciDevice, aHidd_PCIDevice_VendorID, &VendorID);
     OOP_GetAttr(pciDevice, aHidd_PCIDevice_ProductID, &DeviceID);
     OOP_GetAttr(pciDevice, aHidd_PCIDevice_RevisionID, &RevisionID);
-	char *CardName, *CardChipName;
 	
     if ((DeviceID == 0x0900))
     {
@@ -88,7 +88,7 @@ D(bug("[SiS900] PCI_Enumerator()\n"));
 	{
 D(bug("[SiS900] PCI_Enumerator: Found %s NIC, PCI_ID %04x:%04x Rev:%d\n", CardName, VendorID, DeviceID, RevisionID));
 
-        if ((unit = CreateUnit(LIBBASE, pciDevice, CardCapabilities, CardName, CardChipName)))
+        if ((unit = CreateUnit(LIBBASE, pciDevice, CardName, CardChipName)))
         {
             AddTail(&LIBBASE->sis900b_Units, &unit->sis900u_Node);
         }
@@ -309,7 +309,7 @@ D(bug("[SiS900] OpenDevice: Unit %d @ %p\n", unitnum, unit));
         if (error != 0)
             CloseDevice((struct IORequest *)req);
         else
-            unit->start(unit);
+            sis900func_open(unit);
 
     }
     else
@@ -334,7 +334,7 @@ static int GM_UNIQUENAME(Close)
 
 D(bug("[SiS900] CloseDevice(unit @ %p, unitno %d)\n", unit, unit->sis900u_UnitNum));
 
-    unit->stop(unit);
+    sis900func_close(unit);
 
     opener = (APTR)req->ios2_BufferManagement;
     if (opener != NULL)

@@ -41,7 +41,7 @@
 #include "sis900.h"
 #include LC_LIBDEFS_FILE
 
-struct SiS900Unit *CreateUnit(LIBBASETYPEPTR, OOP_Object *, ULONG, char *, char *);
+struct SiS900Unit *CreateUnit(LIBBASETYPEPTR, OOP_Object *, char *, char *);
 void DeleteUnit(struct SiS900Base *, struct SiS900Unit *);
 void FlushUnit(LIBBASETYPEPTR, struct SiS900Unit *, UBYTE, BYTE);
 BOOL AddressFilter(struct SiS900Base *, struct SiS900Unit *, UBYTE *);

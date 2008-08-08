@@ -164,7 +164,7 @@ AROS_UFH3(void, SiS900_RX_IntF,
     struct IOSana2Req *request, *request_tail;
     BOOL accepted, is_orphan;
 
-D(bug("%s: SiS900_RX_IntF() !!!!\n", unit->sis900u_name));
+D(bug("[%s]: SiS900_RX_IntF() !!!!\n", unit->sis900u_name));
 //    np->cur_rx = 0;
 
     /* Endless loop, with break from inside */
@@ -182,48 +182,48 @@ D(bug("%s: SiS900_RX_IntF() !!!!\n", unit->sis900u_name));
 //        Flags = AROS_LE2WORD(((struct rx_ring_desc *)np->ring_addr)[i].BufferStatus);
 //        len = AROS_LE2WORD(((struct rx_ring_desc *)np->ring_addr)[i].BufferMsgLength);
 
-//D(bug("%s: SiS900_RX_IntF: looking at packet %d:%d, Flags 0x%x, len %d\n",
+//D(bug("[%s]: SiS900_RX_IntF: looking at packet %d:%d, Flags 0x%x, len %d\n",
 //                unit->sis900u_name, np->cur_rx, i, Flags, len));
 
         /* Do we own the packet or the chipset? */
         if ((Flags & (1 << 15))!=0)
         {
-D(bug("%s: SiS900_RX_IntF: packet owned by chipset\n", unit->sis900u_name));
+D(bug("[%s]: SiS900_RX_IntF: packet owned by chipset\n", unit->sis900u_name));
             goto next_pkt;	 /* still owned by hardware, */
         }
 
-D(bug("%s: SiS900_RX_IntF: packet is for us\n", unit->sis900u_name));
+D(bug("[%s]: SiS900_RX_IntF: packet is for us\n", unit->sis900u_name));
 
         /* the packet is for us - get it :) */
 
             if (Flags & (1 << 7)) { // Bus Parity Error
-D(bug("%s: SiS900_RX_IntF: packet has Bus Parity error!\n", unit->sis900u_name));
+D(bug("[%s]: SiS900_RX_IntF: packet has Bus Parity error!\n", unit->sis900u_name));
                 ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
                 unit->sis900u_stats.BadData++;
                 goto next_pkt;
             }
 
             if (Flags & (1 << 8)) { // End of Packet
-D(bug("%s: SiS900_RX_IntF: END of Packet\n", unit->sis900u_name));
+D(bug("[%s]: SiS900_RX_IntF: END of Packet\n", unit->sis900u_name));
             }
             if (Flags & (1 << 9)) { // Start of Packet
-D(bug("%s: SiS900_RX_IntF: START of Packet\n", unit->sis900u_name));
+D(bug("[%s]: SiS900_RX_IntF: START of Packet\n", unit->sis900u_name));
             }
 
             if (Flags & (1 << 10)) { // Buffer Error
-D(bug("%s: SiS900_RX_IntF: packet has CRC error!\n", unit->sis900u_name));
+D(bug("[%s]: SiS900_RX_IntF: packet has CRC error!\n", unit->sis900u_name));
                 ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
                 unit->sis900u_stats.BadData++;
                 goto next_pkt;
             }
             if (Flags & (1 << 11)) { // CRC Error
-D(bug("%s: SiS900_RX_IntF: packet has CRC error!\n", unit->sis900u_name));
+D(bug("[%s]: SiS900_RX_IntF: packet has CRC error!\n", unit->sis900u_name));
                 ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
                 unit->sis900u_stats.BadData++;
                 goto next_pkt;
             }
             if (Flags & (1 << 12)) { // OVERFLOW Error
-D(bug("%s: SiS900_RX_IntF: packet has OVERFLOW error!\n", unit->sis900u_name));
+D(bug("[%s]: SiS900_RX_IntF: packet has OVERFLOW error!\n", unit->sis900u_name));
                 ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
                 unit->sis900u_stats.BadData++;
                 goto next_pkt;
@@ -234,7 +234,7 @@ D(bug("%s: SiS900_RX_IntF: packet has OVERFLOW error!\n", unit->sis900u_name));
                 goto next_pkt;
             }
 
-D(bug("%s: SiS900_RX_IntF: packet doesnt report errors\n", unit->sis900u_name));
+D(bug("[%s]: SiS900_RX_IntF: packet doesnt report errors\n", unit->sis900u_name));
 
         /* got a valid packet - forward it to the network core */
 //        frame = &np->rx_buffer[i];
@@ -258,7 +258,7 @@ D(bug("%s: SiS900_RX_IntF: packet doesnt report errors\n", unit->sis900u_name));
         {
             /* Packet is addressed to this driver */
             packet_type = AROS_BE2WORD(frame->eth_packet_type);
-D(bug("%s: SiS900_RX_IntF: Packet IP accepted with type = %d\n", unit->sis900u_name, packet_type));
+D(bug("[%s]: SiS900_RX_IntF: Packet IP accepted with type = %d\n", unit->sis900u_name, packet_type));
 
             opener = (APTR)unit->sis900u_Openers.mlh_Head;
             opener_tail = (APTR)&unit->sis900u_Openers.mlh_Tail;
@@ -277,7 +277,7 @@ D(bug("%s: SiS900_RX_IntF: Packet IP accepted with type = %d\n", unit->sis900u_n
                      || ((request->ios2_PacketType <= ETH_MTU)
                           && (packet_type <= ETH_MTU)))
                   {
-D(bug("%s: SiS900_RX_IntF: copy packet for opener ..\n", unit->sis900u_name));
+D(bug("[%s]: SiS900_RX_IntF: copy packet for opener ..\n", unit->sis900u_name));
                      CopyPacket(LIBBASE, unit, request, len, packet_type, frame);
                      accepted = TRUE;
                   }
@@ -301,7 +301,7 @@ D(bug("%s: SiS900_RX_IntF: copy packet for opener ..\n", unit->sis900u_name));
                     CopyPacket(LIBBASE, unit,
                         (APTR)unit->sis900u_request_ports[ADOPT_QUEUE]->
                         mp_MsgList.lh_Head, len, packet_type, frame);
-D(bug("%s: SiS900_RX_IntF: packet copied to orphan queue\n", unit->sis900u_name));
+D(bug("[%s]: SiS900_RX_IntF: packet copied to orphan queue\n", unit->sis900u_name));
                 }
             }
 
@@ -345,7 +345,7 @@ AROS_UFH3(void, SiS900_TX_IntF,
     int nr, try_count=1;
     BOOL proceed = FALSE; /* Fails by default */
 
-D(bug("%s: SiS900_TX_IntF()\n", unit->sis900u_name));
+D(bug("[%s]: SiS900_TX_IntF()\n", unit->sis900u_name));
 
     /* send packet only if there is free space on tx queue. Otherwise do nothing */
     if (!netif_queue_stopped(unit))
@@ -401,7 +401,7 @@ D(bug("%s: SiS900_TX_IntF()\n", unit->sis900u_name));
 		   if (error == 0)
 		   {
 			  Disable();
-//D(bug("%s: SiS900_TX_IntF: packet %d  @ %x [type = %d] queued for transmission.", unit->sis900u_name, nr, np->tx_buf[nr], ((struct eth_frame *)np->tx_buf[nr])->eth_packet_type));
+//D(bug("[%s]: SiS900_TX_IntF: packet %d  @ %x [type = %d] queued for transmission.", unit->sis900u_name, nr, np->tx_buf[nr], ((struct eth_frame *)np->tx_buf[nr])->eth_packet_type));
 
 			  /* DEBUG? Dump frame if so */
 /*#ifdef DEBUG
@@ -421,7 +421,7 @@ D(bug("%s: SiS900_TX_IntF()\n", unit->sis900u_name));
 			  /* Set the ring details for the packet .. */
 //			  LONGOUT(base + RTLr_TxAddr0 + (nr *4), np->tx_buf[nr]);
 //			  LONGOUT(base + RTLr_TxStatus0 + (nr * 4), np->tx_flag | (packet_size >= ETH_ZLEN ? packet_size : ETH_ZLEN));
-D(bug("%s: SiS900_TX_IntF: Packet Queued.\n", unit->sis900u_name));
+D(bug("[%s]: SiS900_TX_IntF: Packet Queued.\n", unit->sis900u_name));
 		   }
 
 		   /* Reply packet */
@@ -456,7 +456,7 @@ D(bug("%s: SiS900_TX_IntF: Packet Queued.\n", unit->sis900u_name));
 
             if ( (try_count + 1) >= TX_RING_SIZE)
             {
-D(bug("%s: output queue full!. Stopping [count = %d, TX_RING_SIZE = %d\n", unit->sis900u_name, try_count, TX_RING_SIZE));
+D(bug("[%s]: output queue full!. Stopping [count = %d, TX_RING_SIZE = %d\n", unit->sis900u_name, try_count, TX_RING_SIZE));
                netif_stop_queue(unit);
                proceed = FALSE;
             }             */
@@ -482,17 +482,17 @@ static void SiS900_TimeoutHandlerF(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
     struct Device *TimerBase = unit->sis900u_TimerSlowReq->tr_node.io_Device;
 
     GetSysTime(&time);
-//D(bug("%s: SiS900_TimeoutHandlerF()\n", unit->sis900u_name));
+//D(bug("[%s]: SiS900_TimeoutHandlerF()\n", unit->sis900u_name));
 
     /*
      * If timeout timer is expected, and time elapsed - regenerate the 
      * interrupt handler 
      */
-    if (unit->sis900u_toutNEED && (CmpTime(&time, &unit->sis900u_toutPOLL ) < 0))
-    {
-        unit->sis900u_toutNEED = FALSE;
+//    if (unit->sis900u_toutNEED && (CmpTime(&time, &unit->sis900u_toutPOLL ) < 0))
+//    {
+//        unit->sis900u_toutNEED = FALSE;
         //Cause(&unit->sis900u_tx_end_int);
-    }
+//    }
 }
 
 /*
@@ -509,70 +509,7 @@ static void SiS900_IntHandlerF(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
     struct Device *TimerBase = unit->sis900u_TimerSlowReq->tr_node.io_Device;
     struct timeval time;
 
-D(bug("%s: SiS900_IntHandlerF()!!!!!!!\n", unit->sis900u_name));
-    
-/*    while (1)
-    {
-		int status = WORDIN(base + RTLr_IntrStatus);
-
-		if (status & RxUnderrun) link_changed = WORDIN(base + RTLr_CSCR) & CSCR_LinkChangeBit;
-        WORDOUT(base + RTLr_IntrStatus, status);
-
-        if ((status & (PCIErr | PCSTimeout | RxUnderrun | RxOverflow | RxFIFOOver | TxErr | TxOK | RxErr | RxOK)) == 0) break;
-		
-		if ( status & (RxOK | RxUnderrun | RxOverflow | RxFIFOOver) ) // Chipset has Recieved packet(s)
-		{
-D(bug("%s: SiS900_IntHandlerF: Packet Reception Attempt detected!\n", unit->sis900u_name));
-			Cause(&unit->sis900u_rx_int);
-		}
-
-		if ( status & (TxOK | TxErr) ) // Chipset has attempted to Send packet(s)
-		{
-D(bug("%s: SiS900_IntHandlerF: Packet Transmition Attempt detected!\n", unit->sis900u_name));
-/ *			unsigned int dirty_tx = np->tx_dirty;
-
-			while ( np->tx_current - dirty_tx > 0)
-			{
-				int nr = dirty_tx % NUM_TX_DESC;
-				int txstatus = LONGIN(base + RTLr_TxStatus0 + (nr * 4));
-				
-				if (!(txstatus & (TxStatOK | TxUnderrun | TxAborted))) break; // Transmition not complete yet ..
-
-				// N.B: TxCarrierLost is always asserted at 100mbps.
-                if (txstatus & (TxOutOfWindow | TxAborted))
-				{
-D(bug("%s: SiS900_IntHandlerF: Transmition Error! Tx status %8.8x\n", unit->sis900u_name, txstatus));
-					if (txstatus & TxAborted)
-					{
-						LONGOUT(base + RTLr_TxConfig, TX_DMA_BURST <<8);
-					}
-				}
-				else
-				{
-					if (txstatus & TxUnderrun)
-					{
-						  if (np->tx_flag < 0x00300000) np->tx_flag += 0x00020000;
-					}
-				}
-				np->tx_pbuf[nr] = NULL;
-				dirty_tx++;
-			}
-			np->tx_dirty = dirty_tx;* /
-		}
-
-		if ( status & (PCIErr | PCSTimeout | RxUnderrun | RxOverflow | RxFIFOOver | TxErr | RxErr) ) // Chipset has Reported an ERROR
-		{
-D(bug("%s: SiS900_IntHandlerF: ERROR Detected\n", unit->sis900u_name));
-			if (status = 0xffff)	break; // Missing Chip!
-		}
-		
-		if (--interrupt_work < 0)
-		{
-D(bug("%s: SiS900_IntHandlerF: MAX interrupt work reached.\n", unit->sis900u_name));
-			WORDOUT(base + RTLr_IntrStatus, 0xffff);
-			break;
-		}
-    }*/
+D(bug("[%s]: SiS900_IntHandlerF()!!!!!!!\n", unit->sis900u_name));
 
 	do {
 		status = LONGIN(ioaddr + isr);
@@ -580,7 +517,7 @@ D(bug("%s: SiS900_IntHandlerF: MAX interrupt work reached.\n", unit->sis900u_nam
 		if ((status & (HIBERR|TxURN|TxERR|TxIDLE|RxORN|RxERR|RxOK)) == 0)
 		{
 			/* nothing intresting happened */
-D(bug("%s: SiS900_IntHandlerF: Nothing for us ..\n", unit->sis900u_name));
+D(bug("[%s]: SiS900_IntHandlerF: Nothing for us ..\n", unit->sis900u_name));
 			break;
 		}
 		handled = 1;
@@ -588,7 +525,7 @@ D(bug("%s: SiS900_IntHandlerF: Nothing for us ..\n", unit->sis900u_name));
 		/* why dow't we break after Tx/Rx case ?? keyword: full-duplex */
 		if (status & (RxORN | RxERR | RxOK))
 		{
-D(bug("%s: SiS900_IntHandlerF: Rx Detected!\n", unit->sis900u_name));
+D(bug("[%s]: SiS900_IntHandlerF: Rx Detected!\n", unit->sis900u_name));
 			/* Rx interrupt */
 			//sis900_rx(net_dev);
 			Cause(&unit->sis900u_rx_int);
@@ -596,7 +533,7 @@ D(bug("%s: SiS900_IntHandlerF: Rx Detected!\n", unit->sis900u_name));
 
 		if (status & (TxURN | TxERR | TxIDLE))
 		{
-D(bug("%s: SiS900_IntHandlerF: End of Tx Detected\n", unit->sis900u_name));
+D(bug("[%s]: SiS900_IntHandlerF: End of Tx Detected\n", unit->sis900u_name));
 			/* Tx interrupt */
 			//sis900_finish_xmit(net_dev);
 		}
@@ -604,18 +541,18 @@ D(bug("%s: SiS900_IntHandlerF: End of Tx Detected\n", unit->sis900u_name));
 		/* something strange happened !!! */
 		if (status & HIBERR) {
 //			if(netif_msg_intr(sis_priv))
-D(bug("%s: SiS900_IntHandlerF: Abnormal interrupt, status %#8.8x\n", unit->sis900u_name, status));
+D(bug("[%s]: SiS900_IntHandlerF: Abnormal interrupt, status %#8.8x\n", unit->sis900u_name, status));
 			break;
 		}
 		if (--boguscnt < 0) {
 //			if(netif_msg_intr(sis_priv))
-D(bug("%s: SiS900_IntHandlerF: Too much work at interrupt, interrupt status = %#8.8x\n", unit->sis900u_name, status));
+D(bug("[%s]: SiS900_IntHandlerF: Too much work at interrupt, interrupt status = %#8.8x\n", unit->sis900u_name, status));
 			break;
 		}
 	} while (1);
 
 //	if(netif_msg_intr(sis_priv))
-D(bug("%s: SiS900_IntHandlerF: xiting interrupt, interrupt status = 0x%#8.8x\n", unit->sis900u_name, LONGIN(ioaddr + isr)));
+D(bug("[%s]: SiS900_IntHandlerF: xiting interrupt, interrupt status = 0x%#8.8x\n", unit->sis900u_name, LONGIN(ioaddr + isr)));
 
    return;
 }
@@ -628,7 +565,7 @@ VOID CopyPacket(struct SiS900Base *SiS900DeviceBase, struct SiS900Unit *unit,
     BOOL filtered = FALSE;
     UBYTE *ptr;
 
-D(bug("%s: CopyPacket(packet @ %x, len = %d)\n", unit->sis900u_name, buffer, packet_size));
+D(bug("[%s]: CopyPacket(packet @ %x, len = %d)\n", unit->sis900u_name, buffer, packet_size));
 
     /* Set multicast and broadcast flags */
 
@@ -637,12 +574,12 @@ D(bug("%s: CopyPacket(packet @ %x, len = %d)\n", unit->sis900u_name, buffer, pac
        (*((UWORD *)(buffer->eth_packet_dest + 4)) == 0xffff))
     {
        request->ios2_Req.io_Flags |= SANA2IOF_BCAST;
-D(bug("%s: CopyPacket: BROADCAST Flag set\n", unit->sis900u_name));
+D(bug("[%s]: CopyPacket: BROADCAST Flag set\n", unit->sis900u_name));
     }
     else if((buffer->eth_packet_dest[0] & 0x1) != 0)
     {
        request->ios2_Req.io_Flags |= SANA2IOF_MCAST;
-D(bug("%s: CopyPacket: MULTICAST Flag set\n", unit->sis900u_name));
+D(bug("[%s]: CopyPacket: MULTICAST Flag set\n", unit->sis900u_name));
     }
 
     /* Set source and destination addresses and packet type */
@@ -664,7 +601,7 @@ D(bug("%s: CopyPacket: MULTICAST Flag set\n", unit->sis900u_name));
 
     request->ios2_DataLength = packet_size;
 
-D(bug("%s: CopyPacket: packet @ %x (%d bytes)\n", unit->sis900u_name, ptr, packet_size));
+D(bug("[%s]: CopyPacket: packet @ %x (%d bytes)\n", unit->sis900u_name, ptr, packet_size));
 
     /* Filter packet */
 
@@ -673,14 +610,14 @@ D(bug("%s: CopyPacket: packet @ %x (%d bytes)\n", unit->sis900u_name, ptr, packe
         (opener->filter_hook != NULL))
         if(!CallHookPkt(opener->filter_hook, request, ptr))
         {
-D(bug("%s: CopyPacket: packet filtered\n", unit->sis900u_name));
+D(bug("[%s]: CopyPacket: packet filtered\n", unit->sis900u_name));
             filtered = TRUE;
         }
 
     if(!filtered)
     {
         /* Copy packet into opener's buffer and reply packet */
-D(bug("%s: CopyPacket: opener recieve packet .. ", unit->sis900u_name));
+D(bug("[%s]: CopyPacket: opener recieve packet .. ", unit->sis900u_name));
         if(!opener->rx_function(request->ios2_Data, ptr, packet_size))
         {
 D(bug("ERROR occured!!\n"));
@@ -696,7 +633,7 @@ D(bug("SUCCESS!!\n"));
         Remove((APTR)request);
         Enable();
         ReplyMsg((APTR)request);
-D(bug("%s: CopyPacket: opener notified.\n", unit->sis900u_name));
+D(bug("[%s]: CopyPacket: opener notified.\n", unit->sis900u_name));
     }
 }
 
@@ -785,7 +722,7 @@ D(bug("%s SiS900_Schedular: Setting device up\n", unit->sis900u_name));
 
 D(bug("%s SiS900_Schedular: Got VBLANK unit of timer.device\n", unit->sis900u_name));
 
-                unit->initialize(unit);
+                sis900func_initialize(unit);
 
                 msg->mn_ReplyPort = reply_port;
                 msg->mn_Length = sizeof(struct Message);
@@ -819,7 +756,7 @@ D(bug("%s SiS900_Schedular: entering forever loop ... \n", unit->sis900u_name));
                          * already and waits for our process to complete. Free
                          * memory allocared here and kindly return.
                          */
-                        unit->deinitialize(unit);
+                        sis900func_deinitialize(unit);
                         CloseDevice((struct IORequest *)unit->sis900u_TimerSlowReq);
                         DeleteIORequest((struct IORequest *)unit->sis900u_TimerSlowReq);
                         DeleteMsgPort(unit->sis900u_TimerSlowPort);
@@ -857,7 +794,7 @@ D(bug("%s SiS900_Schedular: Handle incomming signal.\n", unit->sis900u_name));
 /*
  * Create new SiS900 ethernet device unit
  */
-struct SiS900Unit *CreateUnit(struct SiS900Base *SiS900DeviceBase, OOP_Object *pciDevice, ULONG CardCapabilities, char * CardName, char * CardChipset)
+struct SiS900Unit *CreateUnit(struct SiS900Base *SiS900DeviceBase, OOP_Object *pciDevice, char * CardName, char * CardChipset)
 {
     struct SiS900Unit *unit = NULL;
     BOOL success = TRUE;
@@ -878,7 +815,7 @@ D(bug("[SiS900] CreateUnit: Unit allocated @ %x\n", unit));
         unit->sis900u_Sana2Info.MTU = ETH_MTU;
         unit->sis900u_Sana2Info.AddrFieldSize = 8 * ETH_ADDRESSSIZE;
 
-        if ((unit->sis900u_name = AllocVec(6 + (unit->sis900u_UnitNum/10) + 2, MEMF_PUBLIC | MEMF_CLEAR)) == NULL)
+        if ((unit->sis900u_name = AllocVec(7 + (unit->sis900u_UnitNum/10) + 2, MEMF_PUBLIC | MEMF_CLEAR)) == NULL)
         {
             FreeMem(unit, sizeof(struct SiS900Unit));
             return NULL;
@@ -939,40 +876,37 @@ D(bug("%s CreateUnit:   INT:%d, base1:%x, base0:%x, size0:%d\n", unit->sis900u_n
             OOP_SetAttrs(pciDevice, (struct TagItem *)&attrs);
 
 D(bug("%s CreateUnit:   PCI_BaseMem @ %x\n", unit->sis900u_name, unit->sis900u_BaseMem));
-			
-            sis900func_get_functions(unit);
-
             if ((unit->tx_ring = AllocMem(TX_TOTAL_SIZE, MEMF_PUBLIC|MEMF_CLEAR)) != NULL)
             {
 
                 if ((unit->tx_ring_dma = HIDD_PCIDriver_CPUtoPCI(unit->sis900u_PCIDriver, unit->tx_ring)) == NULL)
                 {
-D(bug("[%s]: CreateUnit: Failed to Map Tx Ring Buffer DMA\n", unit->sis900u_name));
+D(bug("[%s]: CreateUnit: Failed to Map Tx Ring Buffer Descriptors DMA \n", unit->sis900u_name));
 					return NULL;
                 }
             }
             else
             {
-D(bug("[%s]: CreateUnit: Failed to Allocate Tx Ring Buffer\n", unit->sis900u_name));
+D(bug("[%s]: CreateUnit: Failed to Allocate Tx Ring Buffer Descriptors\n", unit->sis900u_name));
 				return NULL;
             }
-D(bug("[%s]: CreateUnit: Tx Ring Buffer @ %p [DMA @ %p]\n", unit->sis900u_name, unit->tx_ring, unit->tx_ring_dma));
+D(bug("[%s]: CreateUnit: Tx Ring Buffer Descriptors @ %p [DMA @ %p]\n", unit->sis900u_name, unit->tx_ring, unit->tx_ring_dma));
 
             if ((unit->rx_ring = AllocMem(RX_TOTAL_SIZE, MEMF_PUBLIC|MEMF_CLEAR)) != NULL)
             {
 
                 if ((unit->rx_ring_dma = HIDD_PCIDriver_CPUtoPCI(unit->sis900u_PCIDriver, unit->rx_ring)) == NULL)
                 {
-D(bug("[%s]: CreateUnit: Failed to Map Rx Ring Buffer DMA\n", unit->sis900u_name));
+D(bug("[%s]: CreateUnit: Failed to Map Rx Ring Buffer Descriptors DMA\n", unit->sis900u_name));
 					return NULL;
 				}
             }
             else
             {
-D(bug("[%s]: CreateUnit: Failed to Allocate Rx Ring Buffer DMA\n", unit->sis900u_name));
+D(bug("[%s]: CreateUnit: Failed to Allocate Rx Ring Buffer Descriptors DMA\n", unit->sis900u_name));
 				return NULL;
             }
-D(bug("[%s]: CreateUnit: Rx Ring Buffer @ %p [DMA @ %p]\n", unit->sis900u_name, unit->rx_ring, unit->rx_ring_dma));
+D(bug("[%s]: CreateUnit: Rx Ring Buffer Descriptors @ %p [DMA @ %p]\n", unit->sis900u_name, unit->rx_ring, unit->rx_ring_dma));
 
             unit->sis900u_irqhandler = AllocMem(sizeof(HIDDT_IRQ_Handler), MEMF_PUBLIC|MEMF_CLEAR);
             unit->sis900u_touthandler = AllocMem(sizeof(HIDDT_IRQ_Handler), MEMF_PUBLIC|MEMF_CLEAR);
@@ -1051,7 +985,7 @@ D(bug("[%s]  CreateUnit: Device Initialised. Unit %d @ %p\n", unit->sis900u_name
                 }
                 else
                 {
-D(bug("%s: ERRORS occured during Device setup - ABORTING\n", unit->sis900u_name));
+D(bug("[%s]: ERRORS occured during Device setup - ABORTING\n", unit->sis900u_name));
                 }
             }
         }
@@ -1073,6 +1007,9 @@ D(bug("[SiS900] PANIC! Couldn't get MMIO area. Aborting\n"));
 void DeleteUnit(struct SiS900Base *SiS900DeviceBase, struct SiS900Unit *Unit)
 {
     int i;
+
+D(bug("[SiS900] DeleteUnit()\n"));
+
     if (Unit)
     {
         if (Unit->sis900u_Process)
@@ -1171,7 +1108,7 @@ BOOL AddMulticastRange(LIBBASETYPEPTR LIBBASE, struct SiS900Unit *unit, const UB
             if (unit->sis900u_range_count++ == 0)
             {
                 unit->sis900u_ifflags |= IFF_ALLMULTI;
-                unit->set_multicast(unit);
+                sis900func_set_multicast(unit);
             }
         }
     }
@@ -1205,7 +1142,7 @@ BOOL RemMulticastRange(LIBBASETYPEPTR LIBBASE, struct SiS900Unit *unit, const UB
             if (--unit->sis900u_range_count == 0)
             {
                 unit->sis900u_ifflags &= ~IFF_ALLMULTI;
-                unit->set_multicast(unit);
+                sis900func_set_multicast(unit);
             }
         }
     }

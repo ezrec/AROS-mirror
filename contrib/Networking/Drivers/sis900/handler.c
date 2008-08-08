@@ -201,7 +201,7 @@ static BOOL CmdRead(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
 
     unit = (APTR)request->ios2_Req.io_Unit;
 
-D(bug("%s: S2CmdRead()\n", unit->sis900u_name));
+D(bug("[%s]: S2CmdRead()\n", unit->sis900u_name));
 
     if((unit->sis900u_ifflags & IFF_UP) != 0)
     {
@@ -232,7 +232,7 @@ static BOOL CmdWrite(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
 
     unit = (APTR)request->ios2_Req.io_Unit;
     
-D(bug("%s: S2CmdWrite()\n", unit->sis900u_name));
+D(bug("[%s]: S2CmdWrite()\n", unit->sis900u_name));
     
     if((unit->sis900u_ifflags & IFF_UP) == 0)
     {
@@ -275,12 +275,18 @@ static BOOL CmdS2DeviceQuery(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
     struct SiS900Unit *unit = (APTR)request->ios2_Req.io_Unit;
 //    struct fe_priv *np = unit->sis900u_fe_priv;
     struct Sana2DeviceQuery *info;
-    ULONG size_available, size;
+    ULONG size_available, size, status;
+    int i = 0;
 
-D(bug("%s: S2CmdDeviceQuery()\n", unit->sis900u_name));
+D(bug("[%s]: S2CmdDeviceQuery()\n", unit->sis900u_name));
+	
+    /* STSOUT register is Latched on Transition, read operation updates it */
+    while (i++ < 2)
+        status = mdio_read(unit, unit->cur_phy, MII_STSOUT);
 
+D(bug("[%s]: S2CmdDeviceQuery: PHY status %x\n", unit->sis900u_name, status));
+	
     /* Copy device info */
-
     info = request->ios2_StatData;
     size = size_available = info->SizeAvailable;
     if(size > sizeof(struct Sana2DeviceQuery))
@@ -288,7 +294,11 @@ D(bug("%s: S2CmdDeviceQuery()\n", unit->sis900u_name));
 
     CopyMem(&unit->sis900u_Sana2Info, info, size);
 
-    info->BPS = unit->sis900u_rtl_LinkSpeed;
+    if (status & MII_STSOUT_SPD)
+		info->BPS = 100000000;
+    else
+		info->BPS = 10000000;
+
     info->MTU = unit->sis900u_mtu;
     info->HardwareType = S2WireType_Ethernet;
     info->SizeAvailable = size_available;
@@ -307,7 +317,7 @@ static BOOL CmdGetStationAddress(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *requ
 
     unit = (APTR)request->ios2_Req.io_Unit;
     
-D(bug("%s: S2CmdGetStationAddress()\n", unit->sis900u_name));
+D(bug("[%s]: S2CmdGetStationAddress()\n", unit->sis900u_name));
 
     CopyMem(unit->sis900u_dev_addr, request->ios2_SrcAddr, ETH_ADDRESSSIZE);
     CopyMem(unit->sis900u_org_addr, request->ios2_DstAddr, ETH_ADDRESSSIZE);
@@ -325,12 +335,12 @@ static BOOL CmdConfigInterface(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *reques
 
     unit = (APTR)request->ios2_Req.io_Unit;
 
-D(bug("%s: S2CmdConfigInterface()\n", unit->sis900u_name));
+D(bug("[%s]: S2CmdConfigInterface()\n", unit->sis900u_name));
 
     if((unit->sis900u_ifflags & IFF_CONFIGURED) == 0)
     {
         CopyMem(request->ios2_SrcAddr, unit->sis900u_dev_addr, ETH_ADDRESSSIZE);
-        unit->set_mac_address(unit);
+        sis900func_set_mac(unit);
         unit->sis900u_ifflags |= IFF_CONFIGURED;
     }
     else
@@ -367,7 +377,7 @@ static BOOL CmdTrackType(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
 
     unit = (APTR)request->ios2_Req.io_Unit;
     
-D(bug("%s: S2CmdTrackType()\n", unit->sis900u_name));
+D(bug("[%s]: S2CmdTrackType()\n", unit->sis900u_name));
     
     packet_type = request->ios2_PacketType;
 
@@ -437,7 +447,7 @@ static BOOL CmdUntrackType(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
 
     unit = (APTR)request->ios2_Req.io_Unit;
     
-D(bug("%s: S2CmdUntrackType()\n", unit->sis900u_name));
+D(bug("[%s]: S2CmdUntrackType()\n", unit->sis900u_name));
     
     packet_type = request->ios2_PacketType;
 
@@ -484,7 +494,7 @@ static BOOL CmdGetTypeStats(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
 
     unit = (APTR)request->ios2_Req.io_Unit;
 
-D(bug("%s: S2CmdGetTypeStats()\n", unit->sis900u_name));
+D(bug("[%s]: S2CmdGetTypeStats()\n", unit->sis900u_name));
 
     packet_type = request->ios2_PacketType;
 
@@ -524,7 +534,7 @@ static BOOL CmdGetGlobalStats(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request
 
     unit = (APTR)request->ios2_Req.io_Unit;
 
-D(bug("%s: S2CmdGetGlobalStats()\n", unit->sis900u_name));
+D(bug("[%s]: S2CmdGetGlobalStats()\n", unit->sis900u_name));
 
     CopyMem(&unit->sis900u_stats, request->ios2_StatData,
         sizeof(struct Sana2DeviceStats));
@@ -566,7 +576,7 @@ static BOOL CmdOnEvent(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
 
     unit = (APTR)request->ios2_Req.io_Unit;
 
-D(bug("%s: S2CmdOnEvent()\n", unit->sis900u_name));
+D(bug("[%s]: S2CmdOnEvent()\n", unit->sis900u_name));
 
     wanted_events = request->ios2_WireError;
     if((wanted_events & ~KNOWN_EVENTS) != 0)
@@ -612,7 +622,7 @@ static BOOL CmdReadOrphan(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
     /* Check request is valid */
 
     unit = (APTR)request->ios2_Req.io_Unit;
-D(bug("%s: S2CmdReadOrphan()\n", unit->sis900u_name));
+D(bug("[%s]: S2CmdReadOrphan()\n", unit->sis900u_name));
 
     if((unit->sis900u_ifflags & IFF_UP) == 0)
     {
@@ -646,7 +656,7 @@ static BOOL CmdOnline(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
     ULONG wire_error = 0;
     UWORD i;
 
-D(bug("%s: S2CmdOnline()\n", unit->sis900u_name));
+D(bug("[%s]: S2CmdOnline()\n", unit->sis900u_name));
 
     /* Check request is valid */
     if((unit->sis900u_ifflags & IFF_CONFIGURED) == 0)
@@ -666,10 +676,10 @@ D(bug("%s: S2CmdOnline()\n", unit->sis900u_name));
         unit->sis900u_stats.UnknownTypesReceived = 0;
         unit->sis900u_stats.Reconfigurations = 0;
 
-        for(i = 0; i < STAT_COUNT; i++)
+        for(i = 0; i < SANA2_SPECIAL_STAT_COUNT; i++)
             unit->sis900u_special_stats[i] = 0;
 
-        if (unit->start(unit)) {
+        if (sis900func_open(unit)) {
             error = S2ERR_OUTOFSERVICE;
             wire_error = S2WERR_GENERIC_ERROR;
         }
@@ -690,10 +700,10 @@ static BOOL CmdOffline(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
 
     unit = (APTR)request->ios2_Req.io_Unit;
 
-D(bug("%s: S2CmdOffline()\n", unit->sis900u_name));
+D(bug("[%s]: S2CmdOffline()\n", unit->sis900u_name));
 
     if((unit->sis900u_ifflags & IFF_UP) != 0)
-        unit->stop(unit);
+        sis900func_close(unit);
 
     /* Return */
     return TRUE;
@@ -706,7 +716,7 @@ static BOOL CmdAddMulticastAddresses(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *
 
     unit = (APTR)request->ios2_Req.io_Unit;
 
-D(bug("%s: S2CmdAddMulticastAddresses()\n", unit->sis900u_name));
+D(bug("[%s]: S2CmdAddMulticastAddresses()\n", unit->sis900u_name));
 
     lower_bound = request->ios2_SrcAddr;
     if(request->ios2_Req.io_Command == S2_ADDMULTICASTADDRESS)
@@ -732,7 +742,7 @@ static BOOL CmdDelMulticastAddresses(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *
 
     unit = (APTR)request->ios2_Req.io_Unit;
 
-D(bug("%s: S2CmdDelMulticastAddresses()\n", unit->sis900u_name));
+D(bug("[%s]: S2CmdDelMulticastAddresses()\n", unit->sis900u_name));
 
     lower_bound = request->ios2_SrcAddr;
     if(request->ios2_Req.io_Command == S2_DELMULTICASTADDRESS)

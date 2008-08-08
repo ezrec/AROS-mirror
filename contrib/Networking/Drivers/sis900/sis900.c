@@ -281,7 +281,7 @@ static void mdio_reset(long mdio_addr)
  *	using MDIO management frame structure and protocol(defined by ISO/IEC).
  *	Please see SiS7014 or ICS spec
  */
-static int mdio_read(struct net_device *unit, int phy_id, int location)
+int mdio_read(struct net_device *unit, int phy_id, int location)
 {
 	long mdio_addr = unit->sis900u_BaseMem + mear;
 	int mii_cmd = MIIread | (phy_id << MIIpmdShift) | (location << MIIregShift);
@@ -377,7 +377,7 @@ static void sis900_set_capability(struct net_device *unit, struct mii_phy *phy)
 	UWORD cap;
 	UWORD status;
 
-D(bug("[%s]  sis900_set_capability()\n", unit->sis900u_name));
+D(bug("[%s]  sis900_set_capability(phy:%d)\n", unit->sis900u_name, phy->phy_addr));
 
 	status = mdio_read(unit, phy->phy_addr, MII_STATUS);
 	status = mdio_read(unit, phy->phy_addr, MII_STATUS);
@@ -406,14 +406,14 @@ static void sis900_auto_negotiate(struct net_device *unit, int phy_addr)
 	int i = 0;
 	ULONG status;
 
-D(bug("[%s]  sis900_auto_negotiate()\n", unit->sis900u_name));
+D(bug("[%s]  sis900_auto_negotiate(phy:%d)\n", unit->sis900u_name, phy_addr));
 	
 	while (i++ < 2)
 		status = mdio_read(unit, phy_addr, MII_STATUS);
 
 	if (!(status & MII_STAT_LINK)){
 		//if(netif_msg_link(sis_priv))
-D(bug("%s: sis900_auto_negotiate: Media Link Off\n", unit->sis900u_name));
+D(bug("[%s]: sis900_auto_negotiate: Media Link Off\n", unit->sis900u_name));
 		unit->autong_complete = 1;
 		netif_carrier_off(unit);
 		return;
@@ -467,7 +467,7 @@ D(bug("[%s]  sis900_default_phy()\n", unit->sis900u_name));
 	if (unit->mii != default_phy) {
 		unit->mii = default_phy;
 		unit->cur_phy = default_phy->phy_addr;
-D(bug("%s: sis900_default_phy: Using transceiver found at address %d as default\n", unit->sis900u_name, unit->cur_phy));
+D(bug("[%s]: sis900_default_phy: Using transceiver found at address %d as default\n", unit->sis900u_name, unit->cur_phy));
 	}
 
 //	unit->mii_info.phy_id = unit->cur_phy;
@@ -496,7 +496,7 @@ static UWORD sis900_reset_phy(struct net_device *unit, int phy_addr)
 	int i = 0;
 	UWORD status;
 
-D(bug("[%s]  sis900_reset_phy()\n", unit->sis900u_name));
+D(bug("[%s]  sis900_reset_phy(phy:%d)\n", unit->sis900u_name, phy_addr));
 
 	while (i++ < 2)
 		status = mdio_read(unit, phy_addr, MII_STATUS);
@@ -537,12 +537,12 @@ D(bug("[%s]  sis900_mii_probe()\n", unit->sis900u_name));
 			mii_status = mdio_read(unit, phy_addr, MII_STATUS);
 
 		if (mii_status == 0xffff || mii_status == 0x0000) {
-D(bug("%s: sis900_mii_probe: MII at address %d not accessible\n", unit->sis900u_name, phy_addr));
+D(bug("[%s]: sis900_mii_probe: MII at address %d not accessible\n", unit->sis900u_name, phy_addr));
 			continue;
 		}
 
 		if ((mii_phy = AllocMem(sizeof(struct mii_phy), MEMF_PUBLIC | MEMF_CLEAR)) == NULL) {
-D(bug("%s: sis900_mii_probe: MII %d: Cannot allocate mem for struct mii_phy\n", unit->sis900u_name, phy_addr));
+D(bug("[%s]: sis900_mii_probe: MII %d: Cannot allocate mem for struct mii_phy\n", unit->sis900u_name, phy_addr));
 			mii_phy = unit->first_mii;
 			while (mii_phy) {
 				struct mii_phy *phy;
@@ -568,18 +568,18 @@ D(bug("%s: sis900_mii_probe: MII %d: Cannot allocate mem for struct mii_phy\n", 
 				if (mii_chip_table[i].phy_types == MIX)
 					mii_phy->phy_types =
 					    (mii_status & (MII_STAT_CAN_TX_FDX | MII_STAT_CAN_TX)) ? LAN : HOME;
-D(bug("%s: sis900_mii_probe: %s transceiver found at address %d.\n", unit->sis900u_name, mii_chip_table[i].name, phy_addr));
+D(bug("[%s]: sis900_mii_probe: %s transceiver found at address %d.\n", unit->sis900u_name, mii_chip_table[i].name, phy_addr));
 				break;
 			}
 			
 		if( !mii_chip_table[i].phy_id1 ) {
-D(bug("%s: sis900_mii_probe: Unknown PHY transceiver found at address %d.\n", unit->sis900u_name, phy_addr));
+D(bug("[%s]: sis900_mii_probe: Unknown PHY transceiver found at address %d.\n", unit->sis900u_name, phy_addr));
 			mii_phy->phy_types = UNKNOWN;
 		}
 	}
 	
 	if (unit->mii == NULL) {
-D(bug("%s: sis900_mii_probe: No MII transceivers found!\n", unit->sis900u_name));
+D(bug("[%s]: sis900_mii_probe: No MII transceivers found!\n", unit->sis900u_name));
 		return 0;
 	}
 
@@ -597,19 +597,19 @@ D(bug("%s: sis900_mii_probe: No MII transceivers found!\n", unit->sis900u_name))
         ((unit->mii->phy_id1&0xFFF0) == 0xF440))
             mdio_write(unit, unit->cur_phy, 0x0018, 0xD200);
 
-/*	if(status & MII_STAT_LINK){
+	if(status & MII_STAT_LINK){
 		while (poll_bit) {
-			yield();
+//			yield();
 
 			poll_bit ^= (mdio_read(unit, unit->cur_phy, MII_STATUS) & poll_bit);
-			if (time_after_eq(jiffies, timeout)) {
-D(bug("%s: sis900_mii_probe: reset phy and link down now\n", unit->sis900u_name));
+//			if (time_after_eq(jiffies, timeout)) {
+//D(bug("[%s]: sis900_mii_probe: reset phy and link down now\n", unit->sis900u_name));
 #warning "TODO: Return -ETIME!"
 				//return -ETIME;
-                return 0;
-			}
+//                return 0;
+//			}
 		}
-	}*/
+	}
 
 	if (unit->sis900u_RevisionID == SIS630E_900_REV) {
 		/* SiS 630E has some bugs on default value of PHY registers */
@@ -617,7 +617,7 @@ D(bug("%s: sis900_mii_probe: reset phy and link down now\n", unit->sis900u_name)
 		mdio_write(unit, unit->cur_phy, MII_CONFIG1, 0x22);
 		mdio_write(unit, unit->cur_phy, MII_CONFIG2, 0xff00);
 		mdio_write(unit, unit->cur_phy, MII_MASK, 0xffc0);
-		//mdio_write(net_dev, sis_priv->cur_phy, MII_CONTROL, 0x1000);	
+		//mdio_write(unit, unit->cur_phy, MII_CONTROL, 0x1000);	
 	}
 
 	if (unit->mii->status & MII_STAT_LINK)
@@ -630,32 +630,32 @@ D(bug("%s: sis900_mii_probe: reset phy and link down now\n", unit->sis900u_name)
 
 static void sis900func_start_rx(struct net_device *unit)
 {
-D(bug("%s: sis900func_start_rx\n", unit->sis900u_name));
+D(bug("[%s]: sis900func_start_rx\n", unit->sis900u_name));
     // Already running? Stop it.
 #warning "TODO: Handle starting/stopping Rx"
 }
 
 static void sis900func_stop_rx(struct net_device *unit)
 {
-D(bug("%s: sis900func_stop_rx\n", unit->sis900u_name));
+D(bug("[%s]: sis900func_stop_rx\n", unit->sis900u_name));
 #warning "TODO: Handle starting/stopping Rx"
 }
 
 static void sis900func_start_tx(struct net_device *unit)
 {
-D(bug("%s: sis900func_start_tx()\n", unit->sis900u_name));
+D(bug("[%s]: sis900func_start_tx()\n", unit->sis900u_name));
 #warning "TODO: Handle starting/stopping Tx"
 }
 
 static void sis900func_stop_tx(struct net_device *unit)
 {
-D(bug("%s: sis900func_stop_tx()\n", unit->sis900u_name));
+D(bug("[%s]: sis900func_stop_tx()\n", unit->sis900u_name));
 #warning "TODO: Handle starting/stopping Tx"
 }
 
 static void sis900func_txrx_reset(struct net_device *unit)
 {
-D(bug("%s: sis900func_txrx_reset()\n", unit->sis900u_name));
+D(bug("[%s]: sis900func_txrx_reset()\n", unit->sis900u_name));
 }
 
 /**
@@ -675,7 +675,7 @@ D(bug("[%s]  sis900_get_mac_addr()\n", unit->sis900u_name));
 	/* check to see if we have sane EEPROM */
 	signature = (UWORD) read_eeprom(unit->sis900u_BaseMem, EEPROMSignature);    
 	if (signature == 0xffff || signature == 0x0000) {
-D(bug("%s: sis900_get_mac_addr:  Error EERPOM read %x\n", unit->sis900u_name, signature));
+D(bug("[%s]: sis900_get_mac_addr:  Error EERPOM read %x\n", unit->sis900u_name, signature));
 		return 0;
 	}
 
@@ -809,24 +809,24 @@ D(bug("[%s]  sis96x_get_mac_addr()\n", unit->sis900u_name));
  * sis900func_set_multicast: unit->set_multicast function
  * Called with unit->xmit_lock held.
  */
-static void sis900func_set_multicast(struct net_device *unit)
+void sis900func_set_multicast(struct net_device *unit)
 {
     ULONG addr[2];
     ULONG mask[2];
     ULONG pff;
 
-D(bug("%s: sis900func_set_multicast()\n", unit->sis900u_name));
+D(bug("[%s]: sis900func_set_multicast()\n", unit->sis900u_name));
 
     memset(addr, 0, sizeof(addr));
     memset(mask, 0, sizeof(mask));
 }
 
-static void sis900func_deinitialize(struct net_device *unit)
+void sis900func_deinitialize(struct net_device *unit)
 {
 D(bug("[%s]  sis900func_deinitialize()\n", unit->sis900u_name));
 }
 
-static void sis900func_initialize(struct net_device *unit)
+void sis900func_initialize(struct net_device *unit)
 {
     int i, ret, config1;
 
@@ -843,20 +843,20 @@ D(bug("[%s]  sis900func_initialize()\n", unit->sis900u_name));
 		ret = sis900_get_mac_addr(unit);
 
 	if (ret == 0) {
-D(bug("%s: Cannot read MAC address.\n", unit->sis900u_name));
+D(bug("[%s]: Cannot read MAC address.\n", unit->sis900u_name));
 		return;
 	}
     
-    unit->sis900u_dev_addr[0] = (unit->sis900u_org_addr[0] >> 8) & 0xff;
-    unit->sis900u_dev_addr[1] = (unit->sis900u_org_addr[0] >> 0) & 0xff;
+    unit->sis900u_dev_addr[0] = unit->sis900u_org_addr[0] & 0xff;
+    unit->sis900u_dev_addr[1] = (unit->sis900u_org_addr[0] >> 8) & 0xff;
 
-    unit->sis900u_dev_addr[2] = (unit->sis900u_org_addr[1] >> 8) & 0xff;
-    unit->sis900u_dev_addr[3] = (unit->sis900u_org_addr[1] >> 0) & 0xff;
+    unit->sis900u_dev_addr[2] = unit->sis900u_org_addr[1] & 0xff;
+    unit->sis900u_dev_addr[3] = (unit->sis900u_org_addr[1] >> 8) & 0xff;
 
-    unit->sis900u_dev_addr[4] = (unit->sis900u_org_addr[2] >> 8) & 0xff;
-    unit->sis900u_dev_addr[5] = (unit->sis900u_org_addr[2] >> 0) & 0xff;
+    unit->sis900u_dev_addr[4] = unit->sis900u_org_addr[2] & 0xff;
+    unit->sis900u_dev_addr[5] = (unit->sis900u_org_addr[2] >> 8) & 0xff;
 
-D(bug("%s: MAC Address %02x:%02x:%02x:%02x:%02x:%02x\n", unit->sis900u_name,
+D(bug("[%s]: MAC Address %02x:%02x:%02x:%02x:%02x:%02x\n", unit->sis900u_name,
             unit->sis900u_dev_addr[0], unit->sis900u_dev_addr[1], unit->sis900u_dev_addr[2],
             unit->sis900u_dev_addr[3], unit->sis900u_dev_addr[4], unit->sis900u_dev_addr[5]));
 	
@@ -868,7 +868,7 @@ D(bug("%s: MAC Address %02x:%02x:%02x:%02x:%02x:%02x\n", unit->sis900u_name,
 
 	/* probe for mii transceiver */
 	if (sis900_mii_probe(unit) == 0) {
-D(bug("%s: Error probing MII device.\n", unit->sis900u_name));
+D(bug("[%s]: Error probing MII device.\n", unit->sis900u_name));
 		return;
 	}
 }
@@ -884,7 +884,7 @@ static void sis900func_drain_tx(struct net_device *unit)
 static void sis900func_drain_rx(struct net_device *unit)
 {
     int i;
-    for (i = 0; i < RX_RING_SIZE; i++) {
+    for (i = 0; i < NUM_RX_DESC; i++) {
 #warning "TODO: sis900func_drain_rx does nothing atm."
     }
 }
@@ -900,14 +900,14 @@ static int request_irq(struct net_device *unit)
     OOP_Object *irq = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
     BOOL ret;
 
-D(bug("%s: request_irq()\n", unit->sis900u_name));
+D(bug("[%s]: request_irq()\n", unit->sis900u_name));
 
     if (irq)
     {
         ret = HIDD_IRQ_AddHandler(irq, unit->sis900u_irqhandler, unit->sis900u_IRQ);
         HIDD_IRQ_AddHandler(irq, unit->sis900u_touthandler, vHidd_IRQ_Timer);
 
-D(bug("%s: request_irq: IRQ Handlers configured\n", unit->sis900u_name));
+D(bug("[%s]: request_irq: IRQ Handlers configured\n", unit->sis900u_name));
 
         OOP_DisposeObject(irq);
 
@@ -930,11 +930,11 @@ static void free_irq(struct net_device *unit)
     }
 }
 
-static void sis900func_set_mac(struct net_device *unit)
+void sis900func_set_mac(struct net_device *unit)
 {
    int i;
 
-D(bug("%s: sis900func_set_mac()\n", unit->sis900u_name));
+D(bug("[%s]: sis900func_set_mac()\n", unit->sis900u_name));
 
 /*	BYTEOUT(base + RTLr_Cfg9346, 0xc0);
     LONGOUT(base + RTLr_MAC0 + 0, (
@@ -965,7 +965,7 @@ static void sis900_reset(struct net_device *unit)
 	int i = 0;
 	ULONG status = TxRCMP | RxRCMP;
 
-D(bug("%s: sis900_reset()\n", unit->sis900u_name));
+D(bug("[%s]: sis900_reset()\n", unit->sis900u_name));
 
 	LONGOUT(ioaddr + ier, 0);
 	LONGOUT(ioaddr + imr, 0);
@@ -1015,11 +1015,14 @@ static void sis630_set_eq(struct net_device *unit, UBYTE revision)
 	UWORD reg14h, eq_value=0, max_value=0, min_value=0;
 	int i, maxcount=10;
 
-	D(bug("%s: sis630_set_eq()\n", unit->sis900u_name));
+D(bug("[%s]: sis630_set_eq()\n", unit->sis900u_name));
 	
 	if ( !(revision == SIS630E_900_REV || revision == SIS630EA1_900_REV ||
 	       revision == SIS630A_900_REV || revision ==  SIS630ET_900_REV) )
+	{
+D(bug("[%s]: sis630_set_eq: Skipping for revision %d chipset\n", unit->sis900u_name, revision));
 		return;
+	}
 
 	if (netif_carrier_ok(unit)) {
 		reg14h = mdio_read(unit, unit->cur_phy, MII_RESV);
@@ -1088,7 +1091,7 @@ static void sis900_init_rxfilter(struct net_device *unit)
 	ULONG rfcrSave;
 	ULONG i;
 
-D(bug("%s: sis900_init_rxfilter()\n", unit->sis900u_name));
+D(bug("[%s]: sis900_init_rxfilter()\n", unit->sis900u_name));
 
 	rfcrSave = LONGIN(rfcr + ioaddr);
 
@@ -1099,12 +1102,12 @@ D(bug("%s: sis900_init_rxfilter()\n", unit->sis900u_name));
 	for (i = 0 ; i < 3 ; i++) {
 		ULONG w;
 
-		w = (ULONG)unit->sis900u_dev_addr[+i];
+		w = (unit->sis900u_dev_addr[(i * 2)] << 8 ) + unit->sis900u_dev_addr[(i * 2) + 1];
 		LONGOUT(ioaddr + rfcr, (i << RFADDR_shift));
 		LONGOUT(ioaddr + rfdr, w);
 
 		//if (netif_msg_hw(unit)) {
-D(bug("%s: sis900_init_rxfilter: Receive Filter Addrss[%d]=%x\n",unit->sis900u_name, i, LONGIN(ioaddr + rfdr)));
+D(bug("[%s]: sis900_init_rxfilter: Receive Filter Addrss[%d]=%x\n",unit->sis900u_name, i, LONGIN(ioaddr + rfdr)));
 		//}
 	}
 
@@ -1121,26 +1124,39 @@ D(bug("%s: sis900_init_rxfilter: Receive Filter Addrss[%d]=%x\n",unit->sis900u_n
 static void sis900_init_tx_ring(struct net_device *unit)
 {
 	long ioaddr = unit->sis900u_BaseMem;
-	int i;
+	int i, allocate = 1;
 
-D(bug("%s: sis900_init_tx_ring()\n", unit->sis900u_name));
+D(bug("[%s]: sis900_init_tx_ring()\n", unit->sis900u_name));
 
 	unit->tx_full = 0;
 	unit->dirty_tx = unit->cur_tx = 0;
 
 	for (i = 0; i < NUM_TX_DESC; i++) {
-		unit->tx_skbuff[i] = NULL;
+		APTR framebuffer;
+
+		if ((allocate) && ((framebuffer = AllocMem(TX_BUF_SIZE, MEMF_PUBLIC | MEMF_CLEAR)) == NULL)) {
+			/* not enough memory for framebuffer this makes a "hole"
+			   on the buffer ring, it is not clear how the
+			   hardware will react to this kind of degenerated
+			   buffer */
+			allocate = 0;
+		}
 
 		unit->tx_ring[i].link = unit->tx_ring_dma +
 			((i+1)%NUM_TX_DESC)*sizeof(BufferDesc);
 		unit->tx_ring[i].cmdsts = 0;
-		unit->tx_ring[i].bufptr = 0;
+		if (framebuffer)
+		{
+			unit->tx_buffers[i] = framebuffer;
+			unit->tx_ring[i].bufptr = HIDD_PCIDriver_CPUtoPCI(unit->sis900u_PCIDriver, framebuffer);
+		}
+D(bug("[%s]: sis900_init_tx_ring: Buffer %d @ %p\n", unit->sis900u_name, i, framebuffer));
 	}
 
 	/* load Transmit Descriptor Register */
 	LONGOUT(ioaddr + txdp, unit->tx_ring_dma);
 //	if (netif_msg_hw(unit))
-D(bug("%s: sis900_init_tx_ring: TX descriptor register loaded with: %8.8x\n",unit->sis900u_name, LONGIN(ioaddr + txdp)));
+D(bug("[%s]: sis900_init_tx_ring: TX descriptor register loaded with: %8.8x\n",unit->sis900u_name, LONGIN(ioaddr + txdp)));
 }
 
 /**
@@ -1153,44 +1169,40 @@ D(bug("%s: sis900_init_tx_ring: TX descriptor register loaded with: %8.8x\n",uni
 static void sis900_init_rx_ring(struct net_device *unit)
 {
 	long ioaddr = unit->sis900u_BaseMem;
-	int i;
+	int i, allocate = 1;
 
-D(bug("%s: sis900_init_rx_ring()\n", unit->sis900u_name));
+D(bug("[%s]: sis900_init_rx_ring()\n", unit->sis900u_name));
 
 	unit->cur_rx = 0;
 	unit->dirty_rx = 0;
 
-	/* init RX descriptor */
+	/*  init RX descriptor and allocate buffers */
 	for (i = 0; i < NUM_RX_DESC; i++) {
-		unit->rx_skbuff[i] = NULL;
+		APTR framebuffer;
 
-		unit->rx_ring[i].link = unit->rx_ring_dma +
-			((i+1)%NUM_RX_DESC)*sizeof(BufferDesc);
-		unit->rx_ring[i].cmdsts = 0;
-		unit->rx_ring[i].bufptr = 0;
-	}
-
-	/* allocate sock buffers */
-	for (i = 0; i < NUM_RX_DESC; i++) {
-		APTR skb;
-
-		if ((skb = AllocMem(RX_BUF_SIZE, MEMF_PUBLIC | MEMF_CLEAR)) == NULL) {
-			/* not enough memory for skbuff, this makes a "hole"
+		if ((allocate) && ((framebuffer = AllocMem(RX_BUF_SIZE, MEMF_PUBLIC | MEMF_CLEAR)) == NULL)) {
+			/* not enough memory for framebuffer this makes a "hole"
 			   on the buffer ring, it is not clear how the
 			   hardware will react to this kind of degenerated
 			   buffer */
-			break;
+			allocate = 0;
 		}
-		unit->rx_skbuff[i] = skb;
+		unit->rx_ring[i].link = unit->rx_ring_dma +
+			((i+1)%NUM_RX_DESC)*sizeof(BufferDesc);
 		unit->rx_ring[i].cmdsts = RX_BUF_SIZE;
-        unit->rx_ring[i].bufptr = HIDD_PCIDriver_CPUtoPCI(unit->sis900u_PCIDriver, skb);
+		if (framebuffer)
+		{
+			unit->rx_buffers[i] = framebuffer;
+			unit->rx_ring[i].bufptr = HIDD_PCIDriver_CPUtoPCI(unit->sis900u_PCIDriver, framebuffer);
+		}
+D(bug("[%s]: sis900_init_rx_ring: Buffer %d @ %p\n", unit->sis900u_name, i, framebuffer));
 	}
 	unit->dirty_rx = (unsigned int) (i - NUM_RX_DESC);
 
 	/* load Receive Descriptor Register */
 	LONGOUT(ioaddr + rxdp, unit->rx_ring_dma);
 //	if (netif_msg_hw(sis_priv))
-D(bug("%s: sis900_init_rx_ring: RX descriptor register loaded with: %8.8x\n",unit->sis900u_name, LONGIN(ioaddr + rxdp)));
+D(bug("[%s]: sis900_init_rx_ring: RX descriptor register loaded with: %8.8x\n",unit->sis900u_name, LONGIN(ioaddr + rxdp)));
 }
 
 
@@ -1209,7 +1221,7 @@ static void set_rx_mode(struct net_device *unit)
 	int i, table_entries;
 	ULONG rx_mode;
 
-D(bug("%s: set_rx_mode()\n", unit->sis900u_name));
+D(bug("[%s]: set_rx_mode()\n", unit->sis900u_name));
 
 	/* 635 Hash Table entires = 256(2^16) */
 	if((unit->sis900u_RevisionID >= SIS635A_900_REV) ||
@@ -1287,7 +1299,7 @@ static void sis900_set_mode(long ioaddr, int speed, int duplex)
 {
 	ULONG tx_flags = 0, rx_flags = 0;
 
-//D(bug("%s: sis900_set_mode()\n", unit->sis900u_name));
+//D(bug("[%s]: sis900_set_mode()\n", unit->sis900u_name));
 
 	if (LONGIN(ioaddr + cfg) & EDB_MASTER_EN) {
 		tx_flags = TxATP | (DMA_BURST_64 << TxMXDMA_shift) |
@@ -1332,7 +1344,7 @@ static void sis900_check_mode(struct net_device *unit, struct mii_phy *mii_phy)
 	long ioaddr = unit->sis900u_BaseMem;
 	int speed, duplex;
 
-D(bug("%s: sis900_check_mode()\n", unit->sis900u_name));
+D(bug("[%s]: sis900_check_mode()\n", unit->sis900u_name));
 	
 	if (mii_phy->phy_types == LAN) {
 		LONGOUT(ioaddr + cfg, ~EXD & LONGIN(ioaddr + cfg));
@@ -1347,11 +1359,11 @@ D(bug("%s: sis900_check_mode()\n", unit->sis900u_name));
 	}
 }
 
-static int sis900func_open(struct net_device *unit)
+int sis900func_open(struct net_device *unit)
 {
     int ret, i, rx_buf_len_idx;
 
-D(bug("%s: sis900func_open()\n", unit->sis900u_name));
+D(bug("[%s]: sis900func_open()\n", unit->sis900u_name));
 
 	/* Soft reset the chip. */
 	sis900_reset(unit);
@@ -1375,7 +1387,7 @@ D(bug("%s: sis900func_open()\n", unit->sis900u_name));
 	/* Workaround for EDB */
 	sis900_set_mode(unit->sis900u_BaseMem, HW_SPEED_10_MBPS, FDX_CAPABLE_HALF_SELECTED);
 
-D(bug("%s: sis900func_open: Enabling NIC's interupts .. \n", unit->sis900u_name));
+D(bug("[%s]: sis900func_open: Enabling NIC's interupts .. \n", unit->sis900u_name));
 	/* Enable all known interrupts by setting the interrupt mask. */
 	LONGOUT(unit->sis900u_BaseMem + imr, (RxSOVR|RxORN|RxERR|RxOK|TxURN|TxERR|TxIDLE));
 	LONGOUT(unit->sis900u_BaseMem + cr, RxENA | LONGIN(unit->sis900u_BaseMem + cr));
@@ -1385,7 +1397,7 @@ D(bug("%s: sis900func_open: Enabling NIC's interupts .. \n", unit->sis900u_name)
 
    unit->sis900u_ifflags |= IFF_UP;
    ReportEvents(LIBBASE, unit, S2EVENT_ONLINE);
-D(bug("%s: sis900func_open: Device set as ONLINE\n",unit->sis900u_name));
+D(bug("[%s]: sis900func_open: Device set as ONLINE\n",unit->sis900u_name));
 
    return 0;
 
@@ -1394,11 +1406,11 @@ out_drain:
     return ret;
 }
 
-static int sis900func_close(struct net_device *unit)
+int sis900func_close(struct net_device *unit)
 {
     UBYTE *base;
 
-D(bug("%s: sis900func_close()\n", unit->sis900u_name));
+D(bug("[%s]: sis900func_close()\n", unit->sis900u_name));
 	
     unit->sis900u_ifflags &= ~IFF_UP;
 
@@ -1406,7 +1418,7 @@ D(bug("%s: sis900func_close()\n", unit->sis900u_name));
 //   np->in_shutdown = 1;
 //    ReleaseSemaphore(&np->lock);
 
-    unit->sis900u_toutNEED = FALSE;
+//    unit->sis900u_toutNEED = FALSE;
 
     netif_stop_queue(unit);
 //    ObtainSemaphore(&np->lock);
@@ -1427,14 +1439,4 @@ D(bug("%s: sis900func_close()\n", unit->sis900u_name));
     ReportEvents(LIBBASE, unit, S2EVENT_OFFLINE);
 
     return 0;
-}
-
-void sis900func_get_functions(struct net_device *Unit)
-{
-    Unit->initialize = sis900func_initialize;
-    Unit->deinitialize = sis900func_deinitialize;
-    Unit->start = sis900func_open;
-    Unit->stop = sis900func_close;
-    Unit->set_mac_address = sis900func_set_mac;
-    Unit->set_multicast = sis900func_set_multicast;
 }
