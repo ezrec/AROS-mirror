@@ -245,9 +245,6 @@ static const ULONG tx_tags[] = {
     S2_CopyFromBuff32
 };
 
-/*
- * Open device handles currently only one e1000 unit.
- */
 static int GM_UNIQUENAME(Open)
 (
     LIBBASETYPEPTR LIBBASE,
@@ -470,10 +467,10 @@ AROS_LH1(LONG, abortio,
     AROS_LIBFUNC_INIT
     struct e1000Unit *unit;
 
-    if ((unit = (APTR)req->ios2_Req.io_Unit) != NULL)
-    {
 D(bug("[e1000] AbortIO()\n"));
 
+    if ((unit = (APTR)req->ios2_Req.io_Unit) != NULL)
+    {
         Disable();
         if ((req->ios2_Req.io_Message.mn_Node.ln_Type == NT_MESSAGE) &&
             (req->ios2_Req.io_Flags & IOF_QUICK) == 0)
