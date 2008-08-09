@@ -53,6 +53,10 @@ MA 02111-1307, USA.
 #define REVISION 9
 #define DATE "6.1.2008"
 
+#ifdef __AROS__
+#define rom_tag Ram_ROMTag
+#endif
+
 extern LONG Main();
 static VOID Init(REG(d0, ULONG unused), REG(a0, APTR seg_list),
    REG(BASE_REG, struct ExecBase *sys_base));
@@ -72,7 +76,7 @@ const struct Resident rom_tag =
    RTF_AFTERDOS,
    VERSION,
    NT_PROCESS,
-   -127,
+   -128,
    (STRPTR)handler_name,
    (STRPTR)version_string,
    (APTR)Init
