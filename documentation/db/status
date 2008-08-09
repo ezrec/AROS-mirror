@@ -51,7 +51,7 @@ classes;boopsi;BOOPSI Classes;1;2003-08-26
 gadgets;gradientslider;Gradientslider Gadget;1;2003-08-26
 gadgets;colorwheel;Colorwheel Gadget;1;2003-08-26
 devices;input;Input.device;1;2008-08-05
-devices;timer;Timer.device;1;2003-08-26
+devices;timer;Timer.device;1;2008-08-09
 devices;console;Console.device;1;2008-08-04
 devices;ramdrive;Ramdrive.device;1;2008-08-07
 devices;printer;Printer.device;1;2008-08-07
@@ -62,15 +62,15 @@ devices;gameport;Gameport.device;1;2008-08-04
 devices;keyboard;Keyboard.device;1;2008-08-05
 devices;narrator;Narrator.device;1;2008-08-07
 devices;parallel;Parallel.device;1;2008-08-07
-devices;serial;Serial.device;1;2003-08-26
+devices;serial;Serial.device;1;2008-08-09
 devices;trackdisk;Trackdisk.device;1;2003-08-26
 devices;scsi;Scsi.device;1;2003-08-26
 hidds;HID;Design a new HIDD;2;2003-08-26
 hidds;HIDG;Graphics.HIDD;2;2003-08-26
-programs;prefs;Preferences;0;2003-08-26
-programs;system;System;0;2003-08-26
-programs;utilities;Utilities;0;2003-08-26
-programs;c;Shell commands;0;2003-08-26
+programs;prefs;Preferences;1;2003-08-26
+programs;system;System;1;2003-08-26
+programs;utilities;Utilities;1;2003-08-26
+programs;c;Shell commands;1;2003-08-26
 utilities;multiview;MultiView;1;2003-08-26
 system;rexxmast;RexxMast Program;1;2003-08-26
 resources;potgo;Potgo.resource;1;2003-08-26
@@ -1657,11 +1657,12 @@ input;AddNullEvent;1;2;2
 timer;AddTime;1;1;2
 timer;SubTime;1;1;2
 timer;CmpTime;1;1;2
-timer;ReadEClock;1;1;0
-timer;GetSysTime;1;1;2
-timer;TR_ADDREQUEST;1;1;1
-timer;TR_GETSYSTIME;1;1;2
-timer;TR_SETSYSTIME;1;1;2
+timer;ReadEClock;2;1;2
+timer;GetSysTime;2;1;2
+timer;TR_ADDREQUEST;2;1;2
+timer;TR_GETSYSTIME;2;1;2
+timer;TR_SETSYSTIME;2;1;2
+timer;NSCMD_DEVICEQUERY;2;1;2
 ramdrive;KillRAD;1;1;0
 ramdrive;KillRAD0;1;1;0
 ramdrive;CMD_FLUSH;1;1;2
@@ -1796,12 +1797,13 @@ serial;CMD_CLEAR;1;1;2
 serial;CMD_FLUSH;1;1;2
 serial;CMD_READ;1;1;2
 serial;CMD_RESET;1;1;2
-serial;CMD_START;1;1;1
-serial;CMD_STOP;1;1;1
+serial;CMD_START;1;1;2
+serial;CMD_STOP;1;1;2
 serial;CMD_WRITE;1;1;2
 serial;SDCMD_BREAK;1;1;2
 serial;SDCMD_QUERY;1;1;2
 serial;SDCMD_SETPARAMS;1;1;2
+serial;NSCMD_DEVICEQUERY;1;2;2
 trackdisk;CMD_CLEAR;1;1;0
 trackdisk;CMD_READ;1;1;0
 trackdisk;CMD_UPDATE;1;1;0
