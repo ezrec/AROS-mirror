@@ -494,7 +494,49 @@ D(bug("[%s]: SiS900_IntHandlerF: Rx Detected!\n", unit->sis900u_name));
 		{
 D(bug("[%s]: SiS900_IntHandlerF: End of Tx Detected\n", unit->sis900u_name));
 			/* Tx interrupt */
-			//sis900_finish_xmit(net_dev);
+			for (; unit->dirty_tx != unit->cur_tx; unit->dirty_tx++) {
+				unsigned int entry;
+				ULONG tx_status;
+
+				entry = unit->dirty_tx % NUM_TX_DESC;
+				tx_status = unit->tx_ring[entry].cmdsts;
+
+				if (tx_status & OWN) {
+					/* The packet is not transmitted yet (owned by hardware) !
+					 * Note: the interrupt is generated only when Tx Machine
+					 * is idle, so this is an almost impossible case */
+					break;
+				}
+
+				if (tx_status & (ABORT | UNDERRUN | OWCOLL)) {
+					/* packet unsuccessfully transmitted */
+D(bug("[%s]: SiS900_IntHandlerF: Transmit error, Tx status %8.8x.\n", unit->sis900u_name, tx_status));
+//					unit->stats.tx_errors++;
+					if (tx_status & UNDERRUN)
+					{
+//						unit->stats.tx_fifo_errors++;
+					}
+					if (tx_status & ABORT)
+					{
+//						unit->stats.tx_aborted_errors++;
+					}
+					if (tx_status & NOCARRIER)
+					{
+//						unit->stats.tx_carrier_errors++;
+					}
+					if (tx_status & OWCOLL)
+					{
+//						unit->stats.tx_window_errors++;
+					}
+				} else {
+					/* packet successfully transmitted */
+//					sis_priv->stats.collisions += (tx_status & COLCNT) >> 16;
+//					sis_priv->stats.tx_bytes += tx_status & DSIZE;
+					unit->sis900u_stats.PacketsSent++;
+				}
+				/* Mark the buffer as usable again ... */
+				unit->tx_ring[entry].cmdsts = 0;
+			}
 		}
 
 		/* something strange happened !!! */
