@@ -1,4 +1,4 @@
-/* $Id: access.c,v 1.1.1.2 2005/12/07 10:50:34 sonic_amiga Exp $
+/* $Id$
  *
  *      access.c - check access to a file or a directory
  *

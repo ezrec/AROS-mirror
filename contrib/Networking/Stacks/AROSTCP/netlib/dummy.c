@@ -1,4 +1,4 @@
-/* $Id: dummy.c,v 1.4 2005/12/09 09:57:21 sonic_amiga Exp $
+/* $Id$
  *
  *      dummy.c - unimplemented netdb functions 
  *

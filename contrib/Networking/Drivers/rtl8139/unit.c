@@ -143,9 +143,9 @@ D(bug("%s unit.FlushUnit\n", unit->rtl8139u_name));
  * Interrupt handler called whenever RTL8139 NIC interface generates interrupt.
  * It's duty is to iterate throgh RX queue searching for new packets.
  * 
- * Please note, that allthough multicast support could be done on interface 
+ * Please note, that although multicast support could be done on interface 
  * basis, it is done in this function as result of quick integration of both
- * the forcedeth driver (IFF_ALLMULTI flag) and etherling3 driver (AddressMatch
+ * the forcedeth driver (IFF_ALLMULTI flag) and etherlink3 driver (AddressMatch
  * filter function).
  */
 void RTL8139_RX_Process(struct RTL8139Unit *unit)

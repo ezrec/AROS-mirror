@@ -2,7 +2,7 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id: socket_intern.h,v 1.3 2002/07/20 14:42:57 sebauer Exp $
+    $Id$
 */
 
 #ifndef MUIMASTER_INTERN_H

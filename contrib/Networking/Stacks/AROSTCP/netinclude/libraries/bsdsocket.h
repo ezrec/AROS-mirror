@@ -2,7 +2,7 @@
 #define _LIBRARIES_BSDSOCKET_H
 
 /*
- * $Id: bsdsocket.h,v 1.3 2006/12/15 08:45:24 sonic_amiga Exp $
+ * $Id$
  *
  * :ts=8
  *

@@ -43,7 +43,7 @@ static char rcsid[] = "$NetBSD: inet_addr.c,v 1.6 1996/02/02 15:22:23 mrg Exp $"
 
 #ifndef lint
 static char copyright[] =
-"$Id: inet_addr.c,v 1.1.1.1 2005/12/07 10:50:33 sonic_amiga Exp $ Copyright (c) 1983, 1990, 1993 The Regents of the University of California.  All rights reserved.\n";
+"$Id$ Copyright (c) 1983, 1990, 1993 The Regents of the University of California.  All rights reserved.\n";
 #endif /* not lint */
 
 #include "omapip/omapip_p.h"

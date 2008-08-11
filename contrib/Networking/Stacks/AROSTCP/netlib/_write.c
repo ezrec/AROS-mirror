@@ -1,4 +1,4 @@
-/* $Id: _write.c,v 1.1.1.2 2005/12/07 10:50:34 sonic_amiga Exp $
+/* $Id$
  *
  *      _write.c - write() for both files and sockets (SAS/C)
  *

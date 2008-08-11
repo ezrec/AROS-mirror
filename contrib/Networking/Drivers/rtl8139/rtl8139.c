@@ -308,7 +308,6 @@ D(bug("%s: No MII transceiver found, Assuming SYM transceiver\n", dev->rtl8139u_
 	dev->rtl8139u_dev_addr[1] = dev->rtl8139u_org_addr[1] = np->orig_mac[1];
 	dev->rtl8139u_dev_addr[2] = dev->rtl8139u_org_addr[2] = np->orig_mac[2];
 	dev->rtl8139u_dev_addr[3] = dev->rtl8139u_org_addr[3] = np->orig_mac[3];
-
 	dev->rtl8139u_dev_addr[4] = dev->rtl8139u_org_addr[4] = np->orig_mac[4];
 	dev->rtl8139u_dev_addr[5] = dev->rtl8139u_org_addr[5] = np->orig_mac[5];
 

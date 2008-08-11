@@ -2,7 +2,7 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id: globaldata.h,v 1.1 2002/07/28 11:13:55 sebauer Exp $
+    $Id$
 */
 
 #ifndef _GLOBALDATA_H

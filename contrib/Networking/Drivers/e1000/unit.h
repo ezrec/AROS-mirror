@@ -1,7 +1,7 @@
 #ifndef _UNIT_H_
 #define _UNIT_H_
 /*
- * $Id: e1000_osdep.h 24814 2006-09-16 22:08:33Z NicJA $
+ * $Id$
  */
 /*
     This program is free software; you can redistribute it and/or modify

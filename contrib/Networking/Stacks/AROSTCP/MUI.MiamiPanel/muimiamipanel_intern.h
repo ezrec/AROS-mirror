@@ -2,7 +2,7 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id: miamipanel_intern.h 15644 2002-10-30 17:36:30Z stegerg $
+    $Id$
 */
 
 #ifndef _MIAMIPANEL_INTERN_H

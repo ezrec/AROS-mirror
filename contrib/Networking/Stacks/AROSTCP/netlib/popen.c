@@ -1,4 +1,4 @@
-/* $Id: popen.c,v 1.2 2005/11/09 06:35:01 sonic_amiga Exp $
+/* $Id$
  *
  *      popen.c - Unix comaptible popen() and pclose()
  *

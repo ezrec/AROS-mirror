@@ -1,4 +1,4 @@
-/* $Id: iomode.c,v 1.1.1.2 2005/12/07 10:50:34 sonic_amiga Exp $
+/* $Id$
  *
  *      iomode.c - set file io mode (normal or translated) (SAS/C)
  *

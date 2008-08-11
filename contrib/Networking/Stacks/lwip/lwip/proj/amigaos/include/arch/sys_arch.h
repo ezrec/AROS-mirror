@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: sys_arch.h,v 1.1 2001/12/12 10:00:57 adam Exp $
+ * $Id$
  */
 #ifndef __ARCH_SYS_ARCH_H__
 #define __ARCH_SYS_ARCH_H__

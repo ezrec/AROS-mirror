@@ -1,4 +1,4 @@
-#   $Id: mmakefile.src 26534 2007-09-13 15:01:35Z NicJA $
+#   $Id$
 include $(TOP)/config/make.cfg
 
 FILES := emac_hw emac_unit mal handler

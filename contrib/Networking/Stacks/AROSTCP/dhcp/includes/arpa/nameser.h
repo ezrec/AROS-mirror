@@ -55,7 +55,7 @@
  */
 
 /*
- *	$Id: nameser.h,v 1.1.1.1 2005/12/07 10:50:33 sonic_amiga Exp $
+ *	$Id$
  */
 
 #ifndef _ARPA_NAMESER_H_

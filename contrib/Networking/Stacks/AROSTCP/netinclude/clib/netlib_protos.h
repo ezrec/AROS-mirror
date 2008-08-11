@@ -3,8 +3,8 @@
 /*
 **      $Filename: clib/netlib_protos.h $
 **	$Release$
-**      $Revision: 1.5 $
-**      $Date: 2005/12/09 09:58:26 $
+**      $Revision$
+**      $Date$
 **
 **	Prototypes for netlib utility functions
 **

@@ -30,7 +30,7 @@
 
 #ifndef lint
 static char ocopyright[] =
-"$Id: cltest.c,v 1.1.1.1 2005/12/07 10:50:32 sonic_amiga Exp $ Copyright (c) 2004 Internet Systems Consortium.  All rights reserved.\n";
+"$Id$ Copyright (c) 2004 Internet Systems Consortium.  All rights reserved.\n";
 #endif /* not lint */
 
 #include <time.h>

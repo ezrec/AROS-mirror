@@ -30,7 +30,7 @@
  * 
  * Author: Adam Dunkels <adam@sics.se>
  *
- * $Id: perf.h,v 1.2 2001/12/14 20:13:44 adam Exp $
+ * $Id$
  */
 #ifndef __ARCH_PERF_H__
 #define __ARCH_PERF_H__

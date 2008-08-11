@@ -1,4 +1,4 @@
-/* $Id: dhcpctl.h,v 1.1.1.1 2005/12/07 10:50:32 sonic_amiga Exp $
+/* $Id$
 
    Subroutines providing general support for objects. */
 

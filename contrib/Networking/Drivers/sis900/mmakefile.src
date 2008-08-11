@@ -1,4 +1,4 @@
-#   $Id: mmakefile.src 24846 2006-10-06 09:42:11Z weissms $
+#   $Id$
 include $(TOP)/config/make.cfg
 
 #MM- contrib-networking-drivers-sis900-i386 : contrib-networking-drivers-sis900

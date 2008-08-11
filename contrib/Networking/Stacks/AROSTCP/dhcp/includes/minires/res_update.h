@@ -22,7 +22,7 @@
  */
 
 /*
- *	$Id: res_update.h,v 1.1.1.1 2005/12/07 10:50:33 sonic_amiga Exp $
+ *	$Id$
  */
 
 #ifndef __RES_UPDATE_H
