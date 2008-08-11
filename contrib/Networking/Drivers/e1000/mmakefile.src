@@ -1,4 +1,4 @@
-#   $Id: mmakefile.src 24846 2006-10-06 09:42:11Z weissms $
+#   $Id$
 include $(TOP)/config/make.cfg
 
 #MM- contrib-networking-drivers-e1000-i386 : contrib-networking-drivers-e1000
@@ -11,6 +11,6 @@ INTELMACFILES := e1000_82540 e1000_82541 e1000_82542 e1000_82543
 %build_module mmake=contrib-networking-drivers-e1000 \
     modname=e1000 modtype=device \
     files="e1000_init $(FILES) $(INTELCOREFILES) $(INTELMACFILES)" \
-    moduledir=Storage/Devs/Networks uselibs="rom amiga hiddstubs"
+    moduledir=Storage/Networks uselibs="rom amiga hiddstubs"
 
 %common
