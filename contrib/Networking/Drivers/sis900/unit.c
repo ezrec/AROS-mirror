@@ -156,175 +156,140 @@ AROS_UFH3(void, SiS900_RX_IntF,
     AROS_USERFUNC_INIT
 
     struct SiS900Base *SiS900DeviceBase = unit->sis900u_device;
-//    struct fe_priv *np = unit->sis900u_fe_priv;
-    UWORD Flags;
     struct TypeStats *tracker;
     ULONG packet_type;
     struct Opener *opener, *opener_tail;
     struct IOSana2Req *request, *request_tail;
     BOOL accepted, is_orphan;
 
+	unsigned int entry = unit->cur_rx % NUM_RX_DESC;
+	ULONG rx_status = unit->rx_ring[entry].cmdsts;
+	
 D(bug("[%s]: SiS900_RX_IntF() !!!!\n", unit->sis900u_name));
-//    np->cur_rx = 0;
+D(bug("[%s]: SiS900_RX_IntF: cur_rx:%4.4d, dirty_rx:%4.4d status:0x%8.8x\n", unit->sis900u_name, unit->cur_rx, unit->dirty_rx, rx_status));
 
-    /* Endless loop, with break from inside */
-    for(;;)
-    {
+	while (rx_status & OWN)
+	{
+		unsigned int rx_size;
         int i;
-        UWORD len=0;
         struct eth_frame *frame;
 
-//        if (np->cur_rx >= RX_RING_SIZE)
-//            break;	/* we scanned the whole ring - do not continue */
+		rx_size = (rx_status & DSIZE) - CRC_SIZE;
 
-        /* Get the in-queue number */
-//        i = np->cur_rx % RX_RING_SIZE;
-//        Flags = AROS_LE2WORD(((struct rx_ring_desc *)np->ring_addr)[i].BufferStatus);
-//        len = AROS_LE2WORD(((struct rx_ring_desc *)np->ring_addr)[i].BufferMsgLength);
+		if (rx_status & (ABORT|OVERRUN|TOOLONG|RUNT|RXISERR|CRCERR|FAERR))
+		{
+			/* corrupted packet received */
+D(bug("[%s]: SiS900_RX_IntF: Corrupted packet received, buffer status = 0x%8.8x.\n", unit->sis900u_name, rx_status));
+//			unit->stats.rx_errors++;
+			if (rx_status & OVERRUN)
+			{
+//				unit->stats.rx_over_errors++;
+			}
+			if (rx_status & (TOOLONG|RUNT))
+			{
+//				unit->stats.rx_length_errors++;
+			}
+			if (rx_status & (RXISERR | FAERR))
+			{
+//				unit->stats.rx_frame_errors++;
+			}
+			if (rx_status & CRCERR) 
+			{
+//				unit->stats.rx_crc_errors++;
+			}
+			/* reset buffer descriptor state */
+			unit->rx_ring[entry].cmdsts = RX_BUF_SIZE;
+		}
+		else
+		{
+			/* got a valid packet - forward it to the network core */
+			frame = unit->rx_buffers[entry];
+			is_orphan = TRUE;
 
-//D(bug("[%s]: SiS900_RX_IntF: looking at packet %d:%d, Flags 0x%x, len %d\n",
-//                unit->sis900u_name, np->cur_rx, i, Flags, len));
-
-        /* Do we own the packet or the chipset? */
-        if ((Flags & (1 << 15))!=0)
-        {
-D(bug("[%s]: SiS900_RX_IntF: packet owned by chipset\n", unit->sis900u_name));
-            goto next_pkt;	 /* still owned by hardware, */
-        }
-
-D(bug("[%s]: SiS900_RX_IntF: packet is for us\n", unit->sis900u_name));
-
-        /* the packet is for us - get it :) */
-
-            if (Flags & (1 << 7)) { // Bus Parity Error
-D(bug("[%s]: SiS900_RX_IntF: packet has Bus Parity error!\n", unit->sis900u_name));
-                ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
-                unit->sis900u_stats.BadData++;
-                goto next_pkt;
-            }
-
-            if (Flags & (1 << 8)) { // End of Packet
-D(bug("[%s]: SiS900_RX_IntF: END of Packet\n", unit->sis900u_name));
-            }
-            if (Flags & (1 << 9)) { // Start of Packet
-D(bug("[%s]: SiS900_RX_IntF: START of Packet\n", unit->sis900u_name));
-            }
-
-            if (Flags & (1 << 10)) { // Buffer Error
-D(bug("[%s]: SiS900_RX_IntF: packet has CRC error!\n", unit->sis900u_name));
-                ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
-                unit->sis900u_stats.BadData++;
-                goto next_pkt;
-            }
-            if (Flags & (1 << 11)) { // CRC Error
-D(bug("[%s]: SiS900_RX_IntF: packet has CRC error!\n", unit->sis900u_name));
-                ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
-                unit->sis900u_stats.BadData++;
-                goto next_pkt;
-            }
-            if (Flags & (1 << 12)) { // OVERFLOW Error
-D(bug("[%s]: SiS900_RX_IntF: packet has OVERFLOW error!\n", unit->sis900u_name));
-                ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
-                unit->sis900u_stats.BadData++;
-                goto next_pkt;
-            }
-            if (Flags & (1 << 13)) { // Framing Error
-                ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
-                unit->sis900u_stats.BadData++;
-                goto next_pkt;
-            }
-
-D(bug("[%s]: SiS900_RX_IntF: packet doesnt report errors\n", unit->sis900u_name));
-
-        /* got a valid packet - forward it to the network core */
-//        frame = &np->rx_buffer[i];
-        is_orphan = TRUE;
-
-        /* Dump contents of frame if DEBUG enabled */
+			/* Dump contents of frame if DEBUG enabled */
 #ifdef DEBUG
-                {
-                int j;
-                    for (j=0; j<64; j++) {
-                        if ((j%16) == 0)
-                            D(bug("\n%03x:", j));
-                        D(bug(" %02x", ((unsigned char*)frame)[j]));
-                    }
-                    D(bug("\n"));
-                }
+					{
+					int j;
+						for (j=0; j<64; j++) {
+							if ((j%16) == 0)
+								D(bug("\n%03x:", j));
+							D(bug(" %02x", ((unsigned char*)frame)[j]));
+						}
+						D(bug("\n"));
+					}
 #endif
 
-        /* Check for address validity */
-        if(AddressFilter(LIBBASE, unit, frame->eth_packet_dest))
-        {
-            /* Packet is addressed to this driver */
-            packet_type = AROS_BE2WORD(frame->eth_packet_type);
+			/* Check for address validity */
+			if(AddressFilter(LIBBASE, unit, frame->eth_packet_dest))
+			{
+				/* Packet is addressed to this driver */
+				packet_type = AROS_BE2WORD(frame->eth_packet_type);
 D(bug("[%s]: SiS900_RX_IntF: Packet IP accepted with type = %d\n", unit->sis900u_name, packet_type));
 
-            opener = (APTR)unit->sis900u_Openers.mlh_Head;
-            opener_tail = (APTR)&unit->sis900u_Openers.mlh_Tail;
+				opener = (APTR)unit->sis900u_Openers.mlh_Head;
+				opener_tail = (APTR)&unit->sis900u_Openers.mlh_Tail;
 
-            /* Offer packet to every opener */
-            while(opener != opener_tail)
-            {
-               request = (APTR)opener->read_port.mp_MsgList.lh_Head;
-               request_tail = (APTR)&opener->read_port.mp_MsgList.lh_Tail;
-               accepted = FALSE;
+				/* Offer packet to every opener */
+				while(opener != opener_tail)
+				{
+				   request = (APTR)opener->read_port.mp_MsgList.lh_Head;
+				   request_tail = (APTR)&opener->read_port.mp_MsgList.lh_Tail;
+				   accepted = FALSE;
 
-               /* Offer packet to each request until it's accepted */
-               while((request != request_tail) && !accepted)
-               {
-                  if((request->ios2_PacketType == packet_type)
-                     || ((request->ios2_PacketType <= ETH_MTU)
-                          && (packet_type <= ETH_MTU)))
-                  {
+				   /* Offer packet to each request until it's accepted */
+				   while((request != request_tail) && !accepted)
+				   {
+					  if((request->ios2_PacketType == packet_type)
+						 || ((request->ios2_PacketType <= ETH_MTU)
+							  && (packet_type <= ETH_MTU)))
+					  {
 D(bug("[%s]: SiS900_RX_IntF: copy packet for opener ..\n", unit->sis900u_name));
-                     CopyPacket(LIBBASE, unit, request, len, packet_type, frame);
-                     accepted = TRUE;
-                  }
-                  request =
-                     (struct IOSana2Req *)request->ios2_Req.io_Message.mn_Node.ln_Succ;
-               }
+						 CopyPacket(LIBBASE, unit, request, rx_size, packet_type, frame);
+						 accepted = TRUE;
+					  }
+					  request =
+						 (struct IOSana2Req *)request->ios2_Req.io_Message.mn_Node.ln_Succ;
+				   }
 
-               if(accepted)
-                  is_orphan = FALSE;
+				   if(accepted)
+					  is_orphan = FALSE;
 
-               opener = (APTR)opener->node.mln_Succ;
-            }
+				   opener = (APTR)opener->node.mln_Succ;
+				}
 
-            /* If packet was unwanted, give it to S2_READORPHAN request */
-            if(is_orphan)
-            {
-                unit->sis900u_stats.UnknownTypesReceived++;
+				/* If packet was unwanted, give it to S2_READORPHAN request */
+				if(is_orphan)
+				{
+					unit->sis900u_stats.UnknownTypesReceived++;
 
-                if(!IsMsgPortEmpty(unit->sis900u_request_ports[ADOPT_QUEUE]))
-                {
-                    CopyPacket(LIBBASE, unit,
-                        (APTR)unit->sis900u_request_ports[ADOPT_QUEUE]->
-                        mp_MsgList.lh_Head, len, packet_type, frame);
+					if(!IsMsgPortEmpty(unit->sis900u_request_ports[ADOPT_QUEUE]))
+					{
+						CopyPacket(LIBBASE, unit,
+							(APTR)unit->sis900u_request_ports[ADOPT_QUEUE]->
+							mp_MsgList.lh_Head, rx_size, packet_type, frame);
 D(bug("[%s]: SiS900_RX_IntF: packet copied to orphan queue\n", unit->sis900u_name));
-                }
-            }
+					}
+				}
 
-            /* Update remaining statistics */
+				/* Update remaining statistics */
 
-            tracker =
-                FindTypeStats(LIBBASE, unit, &unit->sis900u_type_trackers, packet_type);
+				tracker =
+					FindTypeStats(LIBBASE, unit, &unit->sis900u_type_trackers, packet_type);
 
-            if(tracker != NULL)
-            {
-                tracker->stats.PacketsReceived++;
-                tracker->stats.BytesReceived += len;
-            }
+				if(tracker != NULL)
+				{
+					tracker->stats.PacketsReceived++;
+					tracker->stats.BytesReceived += rx_size;
+				}
+			}
+			unit->sis900u_stats.PacketsReceived++;
+
+			unit->rx_ring[entry].cmdsts = RX_BUF_SIZE;
+			unit->dirty_rx++;
         }
-
-        unit->sis900u_stats.PacketsReceived++;
-
-/*        ((struct rx_ring_desc *)np->ring_addr)[i].BufferStatus = AROS_WORD2LE((1 << 8)|(1 << 9)|(1 << 15)); // Mark packet as available again */
-
-next_pkt:
-        
-        unit->sis900u_stats.PacketsReceived = unit->sis900u_stats.PacketsReceived;
-/*        np->cur_rx++;*/
+		unit->cur_rx++;
+		entry = unit->cur_rx % NUM_RX_DESC;
+		rx_status = unit->rx_ring[entry].cmdsts;
     }
 
     AROS_USERFUNC_EXIT
@@ -340,11 +305,14 @@ AROS_UFH3(void, SiS900_TX_IntF,
 {
     AROS_USERFUNC_INIT
 
-//    struct fe_priv *np = unit->sis900u_fe_priv;
     struct SiS900Base *SiS900DeviceBase = unit->sis900u_device;
-    int nr, try_count=1;
+	long ioaddr = unit->sis900u_BaseMem;
     BOOL proceed = FALSE; /* Fails by default */
 
+	unsigned int  entry;
+	unsigned int  index_cur_tx, index_dirty_tx;
+	unsigned int  count_dirty_tx;
+	
 D(bug("[%s]: SiS900_TX_IntF()\n", unit->sis900u_name));
 
     /* send packet only if there is free space on tx queue. Otherwise do nothing */
@@ -367,99 +335,91 @@ D(bug("[%s]: SiS900_TX_IntF()\n", unit->sis900u_name));
         /* Still no error and there are packets to be sent? */
         while(proceed && (!IsMsgPortEmpty(port)))
         {
-//            nr = np->tx_current % NUM_TX_DESC;
+			entry = unit->cur_tx % NUM_TX_DESC;
             error = 0;
 
-		   request = (APTR)port->mp_MsgList.lh_Head;
-		   data_size = packet_size = request->ios2_DataLength;
+			request = (APTR)port->mp_MsgList.lh_Head;
+			data_size = packet_size = request->ios2_DataLength;
 
-		   opener = (APTR)request->ios2_BufferManagement;
+			opener = (APTR)request->ios2_BufferManagement;
 
-//			np->tx_pbuf[nr] = np->tx_buf[nr];
-		   if((request->ios2_Req.io_Flags & SANA2IOF_RAW) == 0)
-		   {
-			  packet_size += ETH_PACKET_DATA;
-//			  CopyMem(request->ios2_DstAddr, &((struct eth_frame *)np->tx_buf[nr])->eth_packet_dest, ETH_ADDRESSSIZE);
-//			  CopyMem(unit->sis900u_dev_addr, &((struct eth_frame *)np->tx_buf[nr])->eth_packet_source, ETH_ADDRESSSIZE);
-//			  ((struct eth_frame *)np->tx_buf[nr])->eth_packet_type = AROS_WORD2BE(request->ios2_PacketType);
+			if((request->ios2_Req.io_Flags & SANA2IOF_RAW) == 0)
+			{
+				packet_size += ETH_PACKET_DATA;
+				CopyMem(request->ios2_DstAddr, &((struct eth_frame *)unit->tx_buffers[entry])->eth_packet_dest, ETH_ADDRESSSIZE);
+				CopyMem(unit->sis900u_dev_addr, &((struct eth_frame *)unit->tx_buffers[entry])->eth_packet_source, ETH_ADDRESSSIZE);
+				((struct eth_frame *)unit->tx_buffers[entry])->eth_packet_type = AROS_WORD2BE(request->ios2_PacketType);
 
-//			  buffer = &((struct eth_frame *)np->tx_buf[nr])->eth_packet_data;
-		   }
-		   else
-//			  buffer = np->tx_buf[nr];
+				buffer = &((struct eth_frame *)unit->tx_buffers[entry])->eth_packet_data;
+			}
+			else
+				buffer = unit->tx_buffers[entry];
 
-		   if (!opener->tx_function(buffer, request->ios2_Data, data_size))
-		   {
-			  error = S2ERR_NO_RESOURCES;
-			  wire_error = S2WERR_BUFF_ERROR;
-			  ReportEvents(LIBBASE, unit,
-				 S2EVENT_ERROR | S2EVENT_SOFTWARE | S2EVENT_BUFF
-				 | S2EVENT_TX);
-		   }
+			if (!opener->tx_function(buffer, request->ios2_Data, data_size))
+			{
+				error = S2ERR_NO_RESOURCES;
+				wire_error = S2WERR_BUFF_ERROR;
+				ReportEvents(LIBBASE, unit,
+					S2EVENT_ERROR | S2EVENT_SOFTWARE | S2EVENT_BUFF
+					| S2EVENT_TX);
+			}
 
-		   /* Now the packet is already in TX buffer, update flags for NIC */
-		   if (error == 0)
-		   {
-			  Disable();
-//D(bug("[%s]: SiS900_TX_IntF: packet %d  @ %x [type = %d] queued for transmission.", unit->sis900u_name, nr, np->tx_buf[nr], ((struct eth_frame *)np->tx_buf[nr])->eth_packet_type));
+			/* Now the packet is already in TX buffer, update flags for NIC */
+			if (error == 0)
+			{
+				Disable();
+D(bug("[%s]: SiS900_TX_IntF: packet %d  @ %x [type = %d] queued for transmission.", unit->sis900u_name, entry, unit->tx_buffers[entry], ((struct eth_frame *)unit->tx_buffers[entry])->eth_packet_type));
 
 			  /* DEBUG? Dump frame if so */
-/*#ifdef DEBUG
-			  {
-			  int j;
-				   for (j=0; j<64; j++) {
-					  if ((j%16) == 0)
-						  D(bug("\n%03x:", j));
-					  D(bug(" %02x", ((unsigned char*)np->tx_buf[nr])[j]));
-				 }
-				  D(bug("\n"));
-			  }
-#endif*/
+#ifdef DEBUG
+				{
+					int j;
+					for (j=0; j<64; j++) {
+						if ((j%16) == 0)
+							D(bug("\n%03x:", j));
+						D(bug(" %02x", ((unsigned char*)unit->tx_buffers[entry])[j]));
+					}
+					D(bug("\n"));
+				}
+#endif
 
-			  Enable();
+				Enable();
 
-			  /* Set the ring details for the packet .. */
-//			  LONGOUT(base + RTLr_TxAddr0 + (nr *4), np->tx_buf[nr]);
-//			  LONGOUT(base + RTLr_TxStatus0 + (nr * 4), np->tx_flag | (packet_size >= ETH_ZLEN ? packet_size : ETH_ZLEN));
+				/* Set the ring details for the packet .. */
+				unit->tx_ring[entry].cmdsts = (OWN | packet_size);
+				LONGOUT(ioaddr + cr, TxENA | LONGIN(ioaddr + cr));
+
+				unit->cur_tx ++;
+				index_cur_tx = unit->cur_tx;
+				index_dirty_tx = unit->dirty_tx;
+
+				for (count_dirty_tx = 0; index_cur_tx != index_dirty_tx; index_dirty_tx++)
+					count_dirty_tx ++;
+
 D(bug("[%s]: SiS900_TX_IntF: Packet Queued.\n", unit->sis900u_name));
-		   }
+			}
+	
+			/* Reply packet */
 
-		   /* Reply packet */
+			request->ios2_Req.io_Error = error;
+			request->ios2_WireError = wire_error;
+			Disable();
+			Remove((APTR)request);
+			Enable();
+			ReplyMsg((APTR)request);
 
-		   request->ios2_Req.io_Error = error;
-		   request->ios2_WireError = wire_error;
-		   Disable();
-		   Remove((APTR)request);
-		   Enable();
-		   ReplyMsg((APTR)request);
+			/* Update statistics */
 
-		   /* Update statistics */
-
-		   if(error == 0)
-		   {
-			   tracker = FindTypeStats(LIBBASE, unit, &unit->sis900u_type_trackers,
-				   request->ios2_PacketType);
-			   if(tracker != NULL)
-			   {
-				   tracker->stats.PacketsSent++;
-				   tracker->stats.BytesSent += packet_size;
-			   }
-		   }
-		   //try_count=0;
-
-//		   np->tx_current++;
-            //try_count++;
-            
-            /* 
-             * If we've just run out of free space on the TX queue, stop
-             * it and give up pushing further frames
-
-            if ( (try_count + 1) >= TX_RING_SIZE)
-            {
-D(bug("[%s]: output queue full!. Stopping [count = %d, TX_RING_SIZE = %d\n", unit->sis900u_name, try_count, TX_RING_SIZE));
-               netif_stop_queue(unit);
-               proceed = FALSE;
-            }             */
+			if(error == 0)
+			{
+				tracker = FindTypeStats(LIBBASE, unit, &unit->sis900u_type_trackers,
+					request->ios2_PacketType);
+				if(tracker != NULL)
+				{
+					tracker->stats.PacketsSent++;
+					tracker->stats.BytesSent += packet_size;
+				}
+			}
         }
     }
 
@@ -481,7 +441,7 @@ static void SiS900_TimeoutHandlerF(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
     struct timeval time;
     struct Device *TimerBase = unit->sis900u_TimerSlowReq->tr_node.io_Device;
 
-    GetSysTime(&time);
+//    GetSysTime(&time);
 //D(bug("[%s]: SiS900_TimeoutHandlerF()\n", unit->sis900u_name));
 
     /*
@@ -500,7 +460,7 @@ static void SiS900_TimeoutHandlerF(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
  */
 static void SiS900_IntHandlerF(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
 {
-    struct SiS900Unit *unit = (struct SiS900Unit *) irq->h_Data;
+    struct SiS900Unit *unit = (struct SiS900Unit *)irq->h_Data;
 	long ioaddr = unit->sis900u_BaseMem;
     ULONG events;
     int i, link_changed, boguscnt = 20;
@@ -527,7 +487,6 @@ D(bug("[%s]: SiS900_IntHandlerF: Nothing for us ..\n", unit->sis900u_name));
 		{
 D(bug("[%s]: SiS900_IntHandlerF: Rx Detected!\n", unit->sis900u_name));
 			/* Rx interrupt */
-			//sis900_rx(net_dev);
 			Cause(&unit->sis900u_rx_int);
 		}
 
@@ -540,19 +499,16 @@ D(bug("[%s]: SiS900_IntHandlerF: End of Tx Detected\n", unit->sis900u_name));
 
 		/* something strange happened !!! */
 		if (status & HIBERR) {
-//			if(netif_msg_intr(sis_priv))
 D(bug("[%s]: SiS900_IntHandlerF: Abnormal interrupt, status %#8.8x\n", unit->sis900u_name, status));
 			break;
 		}
 		if (--boguscnt < 0) {
-//			if(netif_msg_intr(sis_priv))
 D(bug("[%s]: SiS900_IntHandlerF: Too much work at interrupt, interrupt status = %#8.8x\n", unit->sis900u_name, status));
 			break;
 		}
 	} while (1);
 
-//	if(netif_msg_intr(sis_priv))
-D(bug("[%s]: SiS900_IntHandlerF: xiting interrupt, interrupt status = 0x%#8.8x\n", unit->sis900u_name, LONGIN(ioaddr + isr)));
+D(bug("[%s]: SiS900_IntHandlerF: exiting interrupt, interrupt status = 0x%#8.8x\n", unit->sis900u_name, LONGIN(ioaddr + isr)));
 
    return;
 }
@@ -1029,12 +985,6 @@ D(bug("[SiS900] DeleteUnit()\n"));
         {
             FreeMem(Unit->sis900u_irqhandler, sizeof(HIDDT_IRQ_Handler));
         }
-
-        //if (Unit->sis900u_fe_priv)
-        //{
-         //   FreeMem(Unit->sis900u_fe_priv, sizeof(struct fe_priv));
-          //  Unit->sis900u_fe_priv = NULL;
-        //}
 
         if (Unit->sis900u_BaseMem)
         {

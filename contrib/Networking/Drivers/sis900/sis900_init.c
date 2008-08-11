@@ -119,10 +119,6 @@ D(bug("[SiS900] Init()\n"));
 
     NEWLIST(&LIBBASE->sis900b_Units);
 
-//    LIBBASE->sis900b_Sana2Info.HardwareType = S2WireType_Ethernet;
-//    LIBBASE->sis900b_Sana2Info.MTU = ETH_MTU;
-//    LIBBASE->sis900b_Sana2Info.AddrFieldSize = 8 * ETH_ADDRESSSIZE;
-
     OOPBase = OpenLibrary("oop.library",0);
 
     if (OOPBase != NULL)
@@ -252,20 +248,17 @@ D(bug("[SiS900] OpenDevice: Unit %d @ %p\n", unitnum, unit));
         req->ios2_BufferManagement = NULL;
 
         /* Check request size */
-
-        if(req->ios2_Req.io_Message.mn_Length < sizeof(struct IOSana2Req))
+        if (req->ios2_Req.io_Message.mn_Length < sizeof(struct IOSana2Req))
             error = IOERR_OPENFAIL;
 
         /* Get the requested unit */
-        if((error == 0) && (unitnum == 0))
+        if (error == 0)
         {
             req->ios2_Req.io_Unit = (APTR)unit;
         }
-        else error = IOERR_OPENFAIL;
 
         /* Handle device sharing */
-
-        if(error == 0)
+        if (error == 0)
         {
             if(unit->sis900u_open_count != 0 && ((unit->sis900u_ifflags & IFF_SHARED) == 0 ||
                 (flags & SANA2OPF_MINE) != 0))
@@ -273,7 +266,7 @@ D(bug("[SiS900] OpenDevice: Unit %d @ %p\n", unitnum, unit));
             unit->sis900u_open_count++;
         }
 
-        if(error == 0)
+        if (error == 0)
         {
             if((flags & SANA2OPF_MINE) == 0)
             unit->sis900u_ifflags |= IFF_SHARED;
@@ -288,7 +281,7 @@ D(bug("[SiS900] OpenDevice: Unit %d @ %p\n", unitnum, unit));
             error = IOERR_OPENFAIL;
         }
 
-        if(error == 0)
+        if (error == 0)
         {
             NEWLIST(&opener->read_port.mp_MsgList);
             opener->read_port.mp_Flags = PA_IGNORE;
