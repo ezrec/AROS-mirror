@@ -38,8 +38,9 @@ exec
 `SetFunction`_                          `SetIntVector`_                         `SetSR`_                                `SetSignal`_                            
 `SetTaskPri`_                           `Signal`_                               `StackSwap`_                            `SumKickData`_                          
 `SumLibrary`_                           `SuperState`_                           `Supervisor`_                           `Switch`_                               
-`TypeOfMem`_                            `UserState`_                            `Vacate`_                               `Wait`_                                 
-`WaitIO`_                               `WaitPort`_                             `dummy`_                                
+`TypeOfMem`_                            `UserState`_                            `VNewRawDoFmt`_                         `Vacate`_                               
+`Wait`_                                 `WaitIO`_                               `WaitPort`_                             `dummy`_                                
+
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -2470,6 +2471,8 @@ Notes
 
      The list must contain complete Nodes and no MinNodes.
 
+     When supplied with a NULL list argument, defaults to the exec port list.
+
 
 
 FindPort
@@ -3886,8 +3889,7 @@ Inputs
                                 Defaults to no limit.
 
                     size      - 'w' means WORD.
-                                'l' means LONG.
-                                'i' means IPTR.
+                                'l' means IPTR (LONG on 32-bit architectures and QUAD on 64-bit).
 
                                 defaults to WORD, if nothing is specified.
 
@@ -3898,42 +3900,6 @@ Inputs
                                 's' C string. NULL terminated.
                                 'u' unsigned decimal number.
                                 'x' unsigned hexdecimal number.
-
-                    As an AROS extension, the following special options
-                    are allowed:
-
-                    %[type]
-
-                    type - 'v' means that the current data in the DataStream is a pointer
-                               to a an object of type va_list, as defined in <stdarg.h>.
-
-                               From this point on the data is fetched from the va_list
-                               and not from the original DataStream array anymore.
-
-                               If the pointer is NULL, however, then nothing changes
-                               and data fetching proceeds as if no %v had been specified
-                               at all.
-
-                         - 'V' it's like 'v', but requires an additional parameter which,
-                               if non NULL, instructs RawDoFmt to switch to another
-                               format string, whose address is the value of the parameter.
-
-
-Result
-~~~~~~
-::
-
-     Pointer to the rest of the DataStream.
-
-     NOTE: If the format string contains one of the va_list-related options, then
-           the result will be the same pointer to the va_list object
-
-
-Example
-~~~~~~~
-::
-
-                               to use this option.
 
      DataStream   - Pointer to a zone of memory containing the data. Data has to be
                     WORD aligned.
@@ -3947,7 +3913,21 @@ Example
 
      PutChData    - Data propagated to each call of the callback hook.
 
+
+Result
+~~~~~~
+::
+
+     Pointer to the rest of the DataStream.
+
+
+Example
+~~~~~~~
+::
+
      Build a sprintf style function:
+
+         __stackparm void my_sprintf(UBYTE *buffer, UBYTE *format, ...);
 
          static void callback(UBYTE chr __reg(d0), UBYTE **data __reg(a3))
          {
@@ -3959,30 +3939,11 @@ Example
              RawDoFmt(format, &format+1, &callback, &buffer);
          }
 
-     The above example makes the assumption that arguments are
-     all passed on the stack, which is true on some architectures
-     but is not on some others. In the general case you should NOT
-     use that approach, you should rather use the %v or %V options
-     and the standard <stdarg.h> facilities, like this:
-
-         #include <stdarg.h>
-
-         static void callback(UBYTE chr __reg(d0), UBYTE **data __reg(a3))
-         {
-            *(*data)++=chr;
-         }
-
-         void my_sprintf(UBYTE *buffer, UBYTE *format, ...)
-         {
-             va_list args;
-             va_start(args, format);
-
-             APTR raw_args[] = { &args, format };
-
-             RawDoFmt("%V", raw_args, &callback, &buffer);
-
-             va_end(args);
-         }
+     The above example uses __stackparm attribute in the function
+     prototype in order to make sure that arguments are all passed on
+     the stack on all architectures. The alternative is to use
+     VNewRawDoFmt() function which takes va_list instead of array
+     DataStream.
 
 
 Notes
@@ -5141,6 +5102,117 @@ See also
 ::
 
      SuperState(), Supervisor()
+
+
+
+VNewRawDoFmt
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ STRPTR VNewRawDoFmt(
+          CONST_STRPTR FormatString,
+          VOID_FUNC PutChProc,
+          APTR PutChData,
+          va_list DataStream );
+
+Function
+~~~~~~~~
+::
+
+     printf-style formatting function with callback hook and C-style
+     DataStream.
+
+
+Inputs
+~~~~~~
+::
+
+     FormatString - Pointer to the format string with any of the following
+                    DataStream formatting options allowed:
+
+                    %[leftalign][minwidth.][maxwidth][size][type]
+
+                    leftalign - '-' means align left. Default: align right.
+                    minwidth  - minimum width of field. Defaults to 0.
+                    maxwidth  - maximum width of field (for strings only).
+                                Defaults to no limit.
+
+                    size      - 'w' means WORD.
+                                'l' means IPTR (LONG on 32-bit architectures and QUAD on 64-bit).
+
+                                defaults to WORD, if nothing is specified.
+
+                    type      - 'b' BSTR. It will use the internal representation
+                                    of the BSTR defined by the ABI.
+                                'c' single character.
+                                'd' signed decimal number.
+                                's' C string. NULL terminated.
+                                'u' unsigned decimal number.
+                                'x' unsigned hexdecimal number.
+
+     DataStream   - C-style data stream (va_list variable)
+
+     PutChProc    - Callback function. In caseCalled for each character, including
+                    the NULL terminator. The fuction is called as follow:
+
+                    AROS_UFC2(void, PutChProc,
+                              AROS_UFCA(UBYTE, char,      D0),
+                              AROS_UFCA(APTR , PutChData, A3));
+
+     PutChData    - Data propagated to each call of the callback hook.
+
+
+Result
+~~~~~~
+::
+
+     Pointer to the rest of the DataStream.
+
+
+Example
+~~~~~~~
+::
+
+     Build a sprintf style function:
+
+         static void callback(UBYTE chr __reg(d0), UBYTE **data __reg(a3))
+         {
+            *(*data)++=chr;
+         }
+
+         void my_sprintf(UBYTE *buffer, UBYTE *format, ...)
+         {
+             va_list args;
+             
+             va_start(args, format);
+             VNewRawDoFmt(format, args, &callback, &buffer);
+             va_end(args);
+         }
+
+     The above example uses __stackparm attribute in the function
+     prototype in order to make sure that arguments are all passed on
+     the stack on all architectures. The alternative is to use
+     VNewRawDoFmt() function which takes DataStream in the form of
+     va_list instead of linear array.
+
+
+Notes
+~~~~~
+::
+
+     The field size defaults to words which may be different from the
+     default integer size of the compiler.
+
+
+Bugs
+~~~~
+::
+
+     PutChData cannot be modified from the callback hook on non-m68k
+     systems.
 
 
 
