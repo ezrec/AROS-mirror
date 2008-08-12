@@ -35,7 +35,6 @@ Shell commands
 `FailAt`__
 `Fault`__
 `Filenote`__
-`Format`__
 `Get`__
 `Getenv`__
 `IconX`__
@@ -116,7 +115,6 @@ __ execute
 __ failat
 __ fault
 __ filenote
-__ format
 __ get
 __ getenv
 __ iconx
