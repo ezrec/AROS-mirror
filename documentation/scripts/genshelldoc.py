@@ -14,9 +14,8 @@ import string
 
 docdir1="/home/mazze/projects/AROS/workbench/c"
 docdir2="/home/mazze/projects/AROS/workbench/c/shellcommands"
-docdir3="/home/mazze/projects/AROS/workbench/c/Format"
-docdir4="/home/mazze/projects/AROS/workbench/c/Identify"
-docdir5="/home/mazze/projects/AROS/workbench/c/iprefs"
+docdir3="/home/mazze/projects/AROS/workbench/c/Identify"
+docdir4="/home/mazze/projects/AROS/workbench/c/iprefs"
 targetdir="../documentation/users/shell"
 
 state_waitblock=1
@@ -227,7 +226,6 @@ createdocs(docdir1)
 createdocs(docdir2)
 createdocs(docdir3)
 createdocs(docdir4)
-createdocs(docdir5)
 doclist.sort()
 
 # connect the capter files
