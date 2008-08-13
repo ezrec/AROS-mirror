@@ -3,14 +3,14 @@ Status update
 =============
 
 :Author:   Paolo Besser and Saimon69
-:Date:     07-18-2008
+:Date:     2008-07-18
 
 Latest updates
 --------------
 
 Sorry for this status update being so late, however the AROS team is
 really working hard "under the hood" in order to bring you a better
-operating system. There are many valuable news to talk about.
+operating system. There is much important news to talk about.
 
 Stanislaw Szymczyk has completed the port of linux hosted flavour
 on the x86-64 platform, and is greatly helping AROS self-compilation
@@ -18,7 +18,7 @@ by porting the needed tools. The last one has been the abc-shell, and
 he's gaining some encouraging results.
 
 Krzysztof Smiechowicz is reviewing AROS API completeness, in order to
-keep track of AmigaOS compatibility and whole project's status. You
+keep track of AmigaOS compatibility and the whole project's status. You
 can see the results whenever you want in our updated `status`__ page.
 
 Pavel Fedin has greatly improved HDToolBox functionalities: now it
@@ -38,17 +38,17 @@ it won't work.
 
 Gianfranco Gignina has helped detecting and fixing many Zune bugs,
 and started to work on a portable and more independent version of
-Wanderer. Project's goal is to allow easy porting of Wanderer also
-on the other AmigaOS-like platforms.
+Wanderer. The project's goal is to allow easy porting of Wanderer to
+the other AmigaOS-like platforms.
 
 There's a new, valuable implementation of the E language on AROS:
 it's `PortablE`__, and you should definitely give it a try!
 
-Nick Andrews is writing a Intel Gigabit E1000 NIC driver for AROS, which
-will allow networking on a wide range of motherboards that integrates it.
+Nick Andrews is writing an Intel Gigabit E1000 NIC driver for AROS, which
+will allow networking on a wide range of motherboards that integrate it.
 
 Paolo Besser has released the new 0.8b version of his VmwAROS
-distribution, which introduces improvements on the GUI style and
+distribution, which introduces improvements in the GUI style and
 a new dual-kernel feature to allow booting on some configurations.
 Once again, the distribution is available in two flavours: a
 `live CD`__ which runs on top of any X86 hardware and can be
