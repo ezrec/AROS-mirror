@@ -3650,12 +3650,6 @@ LONG initdisk() {
 #ifdef __AROS__
             UBYTE *d2=(UBYTE *)BADDR(vn->dl_Name);
             copystr(oc->object[0].name, d2, 30);
-            vn->dl_Ext.dl_AROS.dl_Device = &globals->asfsbase->device;
-            vn->dl_Ext.dl_AROS.dl_Unit = (struct Unit *)&globals->device->rootfh;
-
-_DEBUG(("AddDosEntry: dl_Device=%x dl_Unit=%x\n",
-        vn->dl_Ext.dl_AROS.dl_Device,vn->dl_Ext.dl_AROS.dl_Unit));
-            
 #else
             UBYTE *d2=(UBYTE *)BADDR(vn->dl_Name);
             UBYTE *d=d2+1;
@@ -3691,7 +3685,10 @@ _DEBUG(("AddDosEntry: dl_Device=%x dl_Unit=%x\n",
         _DEBUG(("initdisk: Using new or old volumenode.\n"));
 
         if(errorcode==0) {    /* Reusing the found VolumeNode or using the new VolumeNode */
-#ifndef __AROS__
+#ifdef __AROS__
+          vn->dl_Ext.dl_AROS.dl_Device = &globals->asfsbase->device;
+          vn->dl_Ext.dl_AROS.dl_Unit = (struct Unit *)&globals->device->rootfh;
+#else
           vn->dl_Task=devnode->dn_Task;
 #endif
           vn->dl_DiskType=globals->dosenvec->de_DosType;
@@ -3788,7 +3785,9 @@ static void deinitdisk() {
 
       Forbid();
 
-#ifndef __AROS__
+#ifdef __AROS__
+      globals->volumenode->dl_Ext.dl_AROS.dl_Unit = NULL;
+#else
       globals->volumenode->dl_Task=0;    /* This seems to be necessary */
 #endif
       globals->volumenode->dl_LockList=(LONG)globals->locklist;

@@ -1298,6 +1298,7 @@ void Create_Volume_Node (LONG p_disk_type, ULONG p_volume_date) {
 		global->DevList = dl;
 #ifdef __AROS__
 		dl->dl_Ext.dl_AROS.dl_Device = &global->acdrbase->device;
+		dl->dl_Ext.dl_AROS.dl_Unit = (struct Unit *)&global->device->rootfh;
 #else
 		dl->dl_Task = &global->DosProc->pr_MsgPort;
 #endif
@@ -1446,7 +1447,9 @@ void Unmount (void)
       		   global->g_volume->locks);)
       BUG(dbprintf("[there are still %d file handles on this volume]",
       		   global->g_volume->file_handles);)
-#ifndef __AROS__
+#ifdef __AROS__
+      global->DevList->dl_Ext.dl_AROS.dl_Unit = NULL;
+#else
       global->DevList->dl_Task = NULL;
 #endif
     }
