@@ -1,50 +1,60 @@
-=============
-Status Update
-=============
+================
+Stav aktualizace
+================
 
-:Author:   Paolo Besser
-:Date:     01.10.2007
+:Autor:   Paolo Besser
+:Datum:   01.10.2007
 
 Poslední zprávy
 ---------------
 
-Aktuality! Neil Cafferkey komitnul zbrusu nový `instalátor`__ 
-pro AROS, dovolující èist¹í a bezpeènìj¹í instalaci na pevný disk. 
-Nové vlastnosti jsou následující:
+Neuvìøitelná zpráva! Neil Cafferkey komitnul zbrusu nový `instalátor`__ 
+AROSu, který umo¾òuje èist¹í a bezpeènìj¹í instalaci na pevné disky. 
+Tady jsou jeho nové funkce:
 
-- Mù¾e být specifikována instalace jednotek a oddílù.
-- Funguje vytváøení pracovních oddílù.
-- Mù¾e být urèena velikost oddílù a existující oddíly mù¾ou být zachovány.
-- Pøidání Windows do GRUB bootovacího menu, pokud je nalezen oddíl s Windows.
+- Mù¾e být urèena instalaèní jednotka a oddíl.
+- Funguje vytvoøení pracovního oddílu (Work partition).
+- Mohou být urèeny velikosti oddílu a souèasné oddíly mohou být zachovány.
+- Pokud je nalezen systémový oddíl s Windows, je automaticky doplnìn do spou¹tìcího menu GRUBu.
+- Místní nastavení (locale) mù¾e být specifikováno bìhem instalace.
 
 
-Uvìdomte si prosím, ¾e se jedná stále o beta software. Tady jsou nìkterá 
-varování od Neila: "Nový HD instalátor je teï zahrnutý v 
-noèních ISO a je pøipraven na testování. However, there's currently a bug 
-in either Wanderer or FFS that needs to be worked around. After startng 
-the installer, you need to quit Wanderer before continuing (unless 
-you're not going to format any partitions).
-Be even more careful than usual with this version of the installer, ie. 
-don't expose a machine with unbacked-up valuable data to it. It should 
-preserve all existing partitions if requested, but no one has tested 
-this so far besides me."
+Pozor, stále se jedná o beta (testovací) software. Pár varování
+od Neila: "Nový instalátor je zaøazen do noèních sestavení
+a je pøipraven k testování. Nicménì je v souèasné dobì chyba ve Wandereru
+nebo v souborovém systému FFS. Na jejím odstranìní se pracuje.
+Pokud bude¹ formátovat oddíly, je tøeba po spu¹tìní instalátoru pøed dal¹ím
+pokraèováním ukonèit Wanderer.
+Buï s touto verzí instalátoru je¹tì víc opatrnìj¹í, ne¾ kdykoli jindy - tzn.
+nepou¾ívat poèítaè s nezazálohovanými cennými daty. Mìly by být
+zachovány v¹echny existující oblasti (pokud je o to po¾ádáno), ale nikdo
+jiný ne¾ já to netestoval."
 
-Pokud máte testovací stroj with no important data on it, you'd be very
-smart downloading 10-01 nightly build (or later) and help us finding 
-bugs. Mù¾ete pou¾ít Bug Tracker nebo poslat zprávu do téhle AROS-Exec 
+Pokud vlastní¹ testovací stroj (bez dùle¾itých dat), bylo by skvìlé, pokud
+by sis stáhnul noèní sestavení z 10.01.2007 (nebo pozdìj¹í) a pomohl
+nám najít chyby. Mù¾e¹ pou¾ít Bug Tracker nebo poslat zprávu do AROS-Exec
 `diskuze`__. 
 
 
-Demonstrating AROS
-------------------
+Pøedstavení AROSu
+-----------------
 
-As previously anticipated na tìchto stránkách, AROS has been a guest 
-star of `Pianeta Amiga 2007`__. Bìhem populární Amiga show, 
-Paolo Besser pøedstavil AROS to a niche of interested Amiga 
-fellows. The event has been anticipated by some important IT news
-sites like `TGM Online`__ and `HW Upgrade`__. A report of the 
-show has been published by `The AROS Show`__ (read it `here`__) Také se mù¾ete 
-podívat na hezké `video`__ na YouTube.
+Jak u¾ bylo na tomto webu uvedeno, AROS byl jednou z hvìzd
+`Pianeta Amiga 2007`__. Bìhem populární Amiga show, 
+Paolo Besser pøedstavil AROS zájemcùm z øad u¾ivatelù Amigy.
+Tato událost byla zveøejnìna nìkolika významnými zpravodajskými weby ze svìta IT
+jako `TGM Online`__ a `HW Upgrade`__. Zpráva z této show 
+byla publikována na `The AROS Show`__ (pøeèíst si ji mù¾e¹ `zde`__). Také se
+mù¾e¹ podívat na zajímavé `video`__ na YouTube.
+
+AROS ve svìtì
+-------------
+
+Ná¹ web má nìkolik novì pøelo¾ených dokumentací - jmenovitì do øeètiny (Ioannis
+Koniaris), ¹panìl¹tiny (Ariel Gomez) a èe¹tiny (Petr Novák), s obvyklou
+a nezbytnou pomocí od Neila Cafferkeyho. ©védská (Jon Anderson) a
+ruská (Softy) aktualizace pøekladu se objeví ji¾ brzy. Také se tu jistì co nejdøíve objeví
+mnohé dal¹í aktualizace do ostatních jazykù (od... Tebe?).
 
 __ http://mama.indstate.edu/users/nova/installer.jpg
 __ http://aros-exec.org/modules/newbb/viewtopic.php?topic_id=2319

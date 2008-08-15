@@ -2,193 +2,209 @@
 Zásluhy
 =======
 
-Koordinace:
-===========
-    + Aaron Digulla
-
-Evangelizace:
-=============
-    + Ola "4pLaY" Jensen
-    + Matt Parsons
-
-HIDD subsystém:
-===============
-    + Aaron Digulla
-    + Georg Steger
-    + Iain Templeton
-    + Kars de Jong
-    + Nils Henrik Lorentzen
-    + Sebastian Rittau
-    + Stefan Berger
-    + Sven Drieling
-
-Intuice:
-========
-    + Stefan Berger
-    + Bernardo Innocenti
-    + Adam Chodorowski
-    + Aaron Digulla
-    + Emmanuel Lesueur
-    + Fabio Alemagna
-    + Flavio Stanchina
-    + Henning Kiel
-    + Iain Templeton
-    + Sven Drieling
-    + Kjetil Svalastog Matheussen
-    + Lars Bischoff
-    + Lennard voor den Dag
-    + Martin Recktenwald
-    + Nils Henrik Lorentzen
-    + Michal Schulz
-    + Johan Alfredsson
-    + Sebastian Rittau
-    + Georg Steger
-    + Kars de Jong
-    + Staf Verhaegen
-
-Grafika:
-========
-    + Aaron Digulla
-    + Stefan Berger
-    + Georg Steger
-    + Bernardo Innocenti
-    + Branko Collin
-    + Fabio Alemagna
-    + Henning Kiel
-    + Iain Templeton 
-    + Kjetil Svalastog Matheussen
-    + Lars Bischoff
-    + Lennard voor den Dag
-    + Martin Recktenwald
-    + Nils Henrik Lorentzen
-    + Johan Alfredsson
-    + Sebastian Heutling
-    + Sebastian Rittau
-    + Kars de Jong 
-    + Staf Verhaegen
-    + Flavio Stanchina
-
-Pøíkazy pro Shell:
-==================
-    + Martin Recktenwald
-    + Henning Kiel
-    + Adam Chodorowski
-    + Sebastian Rittau
-    + Luke A. Guest
-    + Johan Alfredsson
-    + Iain Templeton
-    + Fabio Alemagna
-
-Workbench:
+Koordinace
 ==========
-    + Adam Chodorowski
-    + Stefan Berger
-    + Henning Kiel
-    + Sebastian Bauer
-    + Paul Smith
++ Aaron Digulla
 
-Nástroje:
-=========
-    + Adam Chodorowski
-    + Georg Steger
-    + Johan Alfredsson
-    + Henning Kiel
-
-Preference:
+Roz¹iøování
 ===========
-    + Georg Steger
-    + Peter Eriksson
-    + Nico François
-    + Magnus Holmgren
++ Ola "4pLaY" Jensen
++ Matt Parsons
 
-BGUI:
-=====
-    + Adam Chodorowski
-    + Georg Steger
-    + Stefan Berger
+HIDD subsystém
+==============
++ Aaron Digulla
++ Georg Steger
++ Iain Templeton
++ Kars de Jong
++ Nils Henrik Lorentzen
++ Sebastian Rittau
++ Stefan Berger
++ Sven Drieling
 
-Zune:
-=====
-    + David Le Corfec
-    + Sebastian Bauer
-    + Georg Steger
-    + Fabio Alemagna
-    + Adam Chodorowski
-    
-Kernel:
+Intuice
 =======
-    + Iain Templeton
-    + Michal Schulz
-    + Aaron Digulla
-    + Sebastian Heutling
-    + Fabio Alemagna
-    + Georg Steger
++ Stefan Berger
++ Bernardo Innocenti
++ Adam Chodorowski
++ Aaron Digulla
++ Emmanuel Lesueur
++ Fabio Alemagna
++ Flavio Stanchina
++ Henning Kiel
++ Iain Templeton
++ Sven Drieling
++ Kjetil Svalastog Matheussen
++ Lars Bischoff
++ Lennard voor den Dag
++ Martin Recktenwald
++ Nils Henrik Lorentzen
++ Michal Schulz
++ Johan Alfredsson
++ Sebastian Rittau
++ Georg Steger
++ Kars de Jong
++ Staf Verhaegen
 
-DOS:
-====
-    + Georg Steger
-    + Fabio Alemagna
-    + The MorphOS team
+Grafika
+=======
++ Aaron Digulla
++ Stefan Berger
++ Georg Steger
++ Bernardo Innocenti
++ Branko Collin
++ Damir Butrovski
++ Fabio Alemagna
++ Henning Kiel
++ Iain Templeton 
++ Kjetil Svalastog Matheussen
++ Lars Bischoff
++ Lennard voor den Dag
++ Martin Recktenwald
++ Nils Henrik Lorentzen
++ Johan Alfredsson
++ Sebastian Heutling
++ Sebastian Rittau
++ Kars de Jong 
++ Staf Verhaegen
++ Flavio Stanchina
 
-Knihovny jazyka C a POSIX layer:
-================================
-    + Aaron Digulla
-    + Fabio Alemagna
-    + Iain Templeton
-    + Henning Kiel
+Shell pøíkazy
+=============
++ Martin Recktenwald
++ Henning Kiel
++ Adam Chodorowski
++ Sebastian Rittau
++ Luke A. Guest
++ Johan Alfredsson
++ Iain Templeton
++ Fabio Alemagna
 
-Datové typy:
-============
-    + Johan Alfredsson
-    + Sebastian Bauer
-    + Georg Steger
-    + Joerg Dietrich
-    + Martin Gierich
-    + Stephan Rupprecht
-
-Dokumentace:
-============
-    + Adam Chodorowski
-    + Aaron Digulla
-    + Matt Parsons
-    + Stefan Rieken
-    + Sebastian Rittau
-    + Sven Drieling
-    + Peter Eriksson
-    + Kjetil S. Matheussen
-    + Michal Schulz
-    + Daniel Holmen
-    + Matthias Rustler
-
-Pøeklad:
-========
-    + Henning Kiel
-    + Adam Chodorowski
-    + Georg Steger
-    + Daniel Holmen
-    + Markku Sukanen
-    + William Ouwehand
-    + Ioannis Koniaris
-    + Sergey Mineychev
-    + Paolo Besser
-    + Petr Novak
-
-Artistry:
+Workbench
 =========
-    + Eric W. Schwartz
-    + Pixel Art
-    + Martin "Mason" Merz
-    + Cyb0rg / Resistance
-    + Alien / Paradox
-    + Daniel Holmen
-    + Richard Kapp
-    + Paul Gallant
-    + Jostein "Taxi" Klemmetsrud
-    + Paolo Besser
-    + Adam Chodorowski
-    
-Web:
++ Adam Chodorowski
++ Stefan Berger
++ Henning Kiel
++ Sebastian Bauer
++ Paul Smith
++ Nick Andrews (Kalamatee)
++ Christoph Johann Szczecina
+
+Nástroje
+========
++ Adam Chodorowski
++ Georg Steger
++ Johan Alfredsson
++ Henning Kiel
++ Matthias Rustler
+
+Preference
+==========
++ Georg Steger
++ Peter Eriksson
++ Nico François
++ Magnus Holmgren
+
+BGUI
 ====
-    + Adam Chodorowski
-    + Daniel Holmen
-    + Tom / Mithrandir
++ Adam Chodorowski
++ Georg Steger
++ Stefan Berger
+
+Zune
+====
++ David Le Corfec
++ Sebastian Bauer
++ Georg Steger
++ Fabio Alemagna
++ Adam Chodorowski
+
+Kernel
+======
++ Iain Templeton
++ Michal Schulz
++ Aaron Digulla
++ Sebastian Heutling
++ Fabio Alemagna
++ Georg Steger
++ Nick Andrews (Kalamatee)
+
+DOS
+===
++ Georg Steger
++ Fabio Alemagna
++ The MorphOS team
++ Rob Howard
++ Pavel Fedin
+
+Sí»ování
+========
++ Neil Cafferkey
++ Pavel Fedin
++ Michal Schulz
++ Nick Andrews (Kalamatee)
++ Alain Greppin
+
+C link library a POSIX rozhraní
+===============================
++ Aaron Digulla
++ Fabio Alemagna
++ Iain Templeton
++ Henning Kiel
+
+Datatypy
+========
++ Johan Alfredsson
++ Sebastian Bauer
++ Georg Steger
++ Joerg Dietrich
++ Martin Gierich
++ Stephan Rupprecht
+
+Dokumentace
+===========
++ Adam Chodorowski
++ Aaron Digulla
++ Matt Parsons
++ Stefan Rieken
++ Sebastian Rittau
++ Sven Drieling
++ Peter Eriksson
++ Kjetil S. Matheussen
++ Michal Schulz
++ Daniel Holmen
++ Matthias Rustler
+
+Pøeklad
+=======
++ Henning Kiel
++ Adam Chodorowski
++ Georg Steger
++ Daniel Holmen
++ Markku Sukanen
++ William Ouwehand
++ Ioannis Koniaris
++ Sergey Mineychev
++ Paolo Besser
++ Petr Novak
++ Ariel H. Gómez
+
+Umìní
+=====
++ Eric W. Schwartz
++ Pixel Art
++ Martin "Mason" Merz
++ Cyb0rg / Resistance
++ Alien / Paradox
++ Daniel Holmen
++ Richard Kapp
++ Paul Gallant
++ Jostein "Taxi" Klemmetsrud
++ Paolo Besser
++ Adam Chodorowski
+
+Web
+===
++ Adam Chodorowski
++ Daniel Holmen
++ Tom / Mithrandir
