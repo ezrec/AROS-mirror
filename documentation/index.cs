@@ -1,4 +1,4 @@
-s.. raw:: html
+.. raw:: html
 
    <table style="text-align: justify; width: 100%;" background="/images/bgcolormain.png" border="0" cellpadding="1" cellspacing="1"><tr><td style="vertical-align: top;">
 
@@ -53,7 +53,7 @@ s.. raw:: html
    <td style="vertical-align: top;"><?php if ($win_ie56) { echo "<img alt=\"Open Bounty Icon\" src=\"/images/bountyicon1.gif\" align=\"middle\">";} 
    else { echo "<img alt=\"Open Bounty Icon\" src=\"/images/bountyicon1.png\" align=\"middle\">"; } ?>
    Open (otevøené) Bounties:<br><img style="width: 177px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
-   <a href=http://www.teamaros.org>AROS tým</a> je hlavní skupina pro podporu AROSu, která se sna¾í hnát AROS dopøedu hlavnì získáváním penìz prostøednictvím darù na zamìøený vývoj.
+   <a href=http://www.teamaros.org>Team AROS</a> je hlavní tým pro podporu AROSu, který se sna¾í hnát AROS dopøedu hlavnì získáváním penìz prostøednictvím darù na zamìøený vývoj.
    <?php include("/home/groups/a/ar/aros/htdocs/rsfeed/teamarosopenb.php"); ?><br></td></tr></table>
    <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td style="vertical-align: top;">
    <?php if ($win_ie56) { echo "<img alt=\"Assigned Bounty Icon\" src=\"/images/bountyicon2.gif\" align=\"middle\">"; } 

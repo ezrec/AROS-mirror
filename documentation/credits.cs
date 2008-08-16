@@ -69,8 +69,8 @@ Grafika
 + Staf Verhaegen
 + Flavio Stanchina
 
-Shell pøíkazy
-=============
+Pøíkazy shellu
+==============
 + Martin Recktenwald
 + Henning Kiel
 + Adam Chodorowski
