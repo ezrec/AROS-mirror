@@ -114,6 +114,7 @@ struct Handler *CmdStartup(STRPTR name, struct DeviceNode *dev_node,
 
       dev_node->dn_Task = proc_port;
 
+      /* Create pools for zeroed, non-zeroed and public zeroed memory */
 
       handler->clear_pool = CreatePool(MEMF_CLEAR, CLEAR_PUDDLE_SIZE,
          CLEAR_PUDDLE_THRESH);
@@ -342,6 +343,9 @@ BOOL CmdFind(struct Handler *handler, struct FileHandle *handle,
       case MODE_NEWFILE:
          if(file != NULL)
          {
+            if((GetRealObject(file)->protection & FIBF_DELETE) != 0)
+               error = ERROR_DELETE_PROTECTED;
+
             if(((struct Node *)file)->ln_Pri >= 0)
                error = ERROR_OBJECT_EXISTS;
          }
@@ -443,6 +447,7 @@ BOOL CmdFHFromLock(struct Handler *handler, struct FileHandle *handle,
       {
          opening->file = file;
          opening->block = (struct Block *)file->elements.mlh_Head;
+         AddTail((struct List *)&lock->openings, (struct Node *)opening);
       }
       else
          error = IoErr();
@@ -516,6 +521,7 @@ BOOL CmdEnd(struct Handler *handler, struct Opening *opening)
 
    if(error == 0)
    {
+      Remove((APTR)opening);
       CmdFreeLock(handler, lock);
       FreePooled(handler->clear_pool, opening, sizeof(struct Opening));
    }
@@ -626,12 +632,6 @@ UPINT CmdWrite(struct Handler *handler, struct Opening *opening,
    file = opening->file;
    lock = file->lock;
 
-#ifndef AMIGAOS
-   if(((struct FileLock *)lock)->fl_Access == ACCESS_READ)
-      error = ERROR_OBJECT_IN_USE;
-                                 /* ERROR_WRONG_LOCK_TYPE would be better */
-#endif
-
    if((file->protection & FIBF_WRITE) != 0)
       error = ERROR_WRITE_PROTECTED;
 
@@ -684,9 +684,6 @@ UPINT CmdWrite(struct Handler *handler, struct Opening *opening,
 *
 ****************************************************************************
 *
-* Note: Being at EOF is represented by the current block being the dummy
-* tail and the block position being zero.
-*
 */
 
 UPINT CmdSeek(struct Opening *opening, PINT offset, LONG mode)
@@ -713,8 +710,8 @@ UPINT CmdSeek(struct Opening *opening, PINT offset, LONG mode)
    }
    else
    {
-      block = (APTR)&file->elements.mlh_Tail;
-      block_pos = 0;
+      block = (APTR)file->elements.mlh_TailPred;
+      block_pos = file->end_length;
       new_pos = file->length;
    }
 
@@ -733,7 +730,7 @@ UPINT CmdSeek(struct Opening *opening, PINT offset, LONG mode)
 
       block_length = GetBlockLength(file, block);
       remainder = offset + block_pos;
-      while(remainder >= block_length && remainder > 0)
+      while(remainder > block_length)
       {
          remainder -= block_length;
          block = (APTR)((struct MinNode *)block)->mln_Succ;
@@ -748,7 +745,7 @@ UPINT CmdSeek(struct Opening *opening, PINT offset, LONG mode)
 
       block_length = block_pos;
       remainder = -offset;
-      while(remainder > block_length)
+      while(remainder >= block_length && remainder > 0)
       {
          remainder -= block_length;
          block = (APTR)((struct MinNode *)block)->mln_Pred;

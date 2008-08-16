@@ -2,7 +2,7 @@
 
 File: notification.c
 Author: Neil Cafferkey
-Copyright (C) 2001-2003 Neil Cafferkey
+Copyright (C) 2001-2008 Neil Cafferkey
 
 This file is free software; you can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License as
@@ -349,16 +349,23 @@ struct Notification *FindNotification(struct Handler *handler,
 VOID ReceiveNotifyReply(struct Handler *handler,
    struct NotifyMessage *message)
 {
-   struct Notification *notification;
    struct NotifyRequest *request;
+   struct Notification *notification = NULL;
+
+   /* Get request and free message */
 
    request = message->nm_NReq;
-   notification = FindNotification(handler, request);
    FreePooled(handler->public_pool, message, sizeof(struct NotifyMessage));
 
+   /* Get notification if EndNotify() hasn't been called */
+
+   if(request->nr_FullName != NULL)
+      notification = FindNotification(handler, request);
    if(notification != NULL)
    {
       request->nr_MsgCount--;
+
+      /* Send a new notification if there's one pending */
 
       if((request->nr_Flags & NRF_MAGIC) != 0)
       {

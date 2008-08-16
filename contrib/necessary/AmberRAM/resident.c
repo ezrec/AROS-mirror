@@ -58,7 +58,7 @@ MA 02111-1307, USA.
 #endif
 
 extern LONG Main();
-static VOID Init(REG(d0, ULONG unused), REG(a0, APTR seg_list),
+static APTR Init(REG(d0, ULONG unused), REG(a0, APTR seg_list),
    REG(BASE_REG, struct ExecBase *sys_base));
 
 static const TEXT handler_name[] = HANDLER_NAME;
@@ -84,7 +84,7 @@ const struct Resident rom_tag =
 
 
 
-static VOID Init(REG(d0, ULONG unused), REG(a0, APTR seg_list),
+static APTR Init(REG(d0, ULONG unused), REG(a0, APTR seg_list),
    REG(BASE_REG, struct ExecBase *sys_base))
 {
    struct DosLibrary *DOSBase;
@@ -98,11 +98,13 @@ static VOID Init(REG(d0, ULONG unused), REG(a0, APTR seg_list),
    if(dev_node == NULL)
       Alert(AT_DeadEnd | AG_NoMemory);
    dev_node->dn_Handler = (STRPTR)handler_name;
-   dev_node->dn_StackSize = 100000;
+   dev_node->dn_StackSize = 10000;
    dev_node->dn_SegList = MKBADDR(Main) - 1;
    if(!AddDosEntry((APTR)dev_node))
       Alert(AT_DeadEnd);
 
-   return;
+   return NULL;
 }
+
+
 

@@ -9,7 +9,7 @@ LINKER = ld -e _Main -s
 AMIGA_LIB = GG:lib/libamiga.a
 
 HANDLER = amber-ram-handler
-OBJS = handler.o commands.o filesystem.o notification.o support.o
+OBJS = resident.o handler.o commands.o filesystem.o notification.o support.o
 HDRS = handler.h handler_protos.h
 STARTUP = startup.o
 
@@ -20,7 +20,7 @@ $(HANDLER): $(STARTUP) $(MAKEFILE) $(OBJS)
 	$(LINKER) $(STARTUP) $(OBJS) $(AMIGA_LIB) -o $(HANDLER)
 	Protect "$(HANDLER)" -e
 
-$(OBJS): $(MAKEFILE) $(HDRS)
+$(OBJS) $(STARTUP): $(MAKEFILE) $(HDRS)
 
 install: $(HANDLER)
 	Copy CLONE "$(HANDLER)" "L:"

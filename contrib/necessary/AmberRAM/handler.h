@@ -90,6 +90,7 @@ struct Lock
    struct FileLock lock;
    UPINT lock_count;
    BOOL changed;
+   struct MinList openings;
 };
 
 
@@ -107,11 +108,13 @@ struct Object
    TEXT *comment;
    struct MinNode hard_link;
    struct MinList notifications;
+   struct Block start_block;   /* a zero-length block */
 };
 
 
 struct Opening
 {
+   struct MinNode node;
    struct Object *file;
    UPINT pos;
    struct Block *block;

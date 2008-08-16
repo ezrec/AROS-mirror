@@ -175,6 +175,9 @@ struct Object *CreateObject(struct Handler *handler, const TEXT *name,
       DateStamp(&object->date);
       NewList((struct List *)&object->notifications);
 
+      if(type == ST_FILE)
+         AddTail((APTR)&object->elements, (APTR)&object->start_block);
+
       if(name != NULL)
       {
          if(!SetName(handler, object, name))
@@ -208,7 +211,7 @@ struct Object *CreateObject(struct Handler *handler, const TEXT *name,
 /****i* ram.handler/AttemptDeleteObject ************************************
 *
 *   NAME
-*	AttemptDeleteObject --
+*	AttemptDeleteObject -- Attempt to delete an object.
 *
 *   SYNOPSIS
 *	success = AttemptDeleteObject(handler, object)
@@ -216,6 +219,8 @@ struct Object *CreateObject(struct Handler *handler, const TEXT *name,
 *	BOOL AttemptDeleteObject(struct Handler *, struct Object *);
 *
 *   FUNCTION
+*	Attempts to delete the specified object. Note that this function
+*	does not check permissions.
 *
 *   INPUTS
 *	object - the object to be deleted, or NULL for no action.
@@ -388,8 +393,11 @@ VOID DeleteObject(struct Handler *handler, struct Object *object)
 
          while((block = (APTR)RemTail((struct List *)&object->elements))
             != NULL)
-            FreePooled(handler->muddy_pool, block,
-               sizeof(struct Block) + block->length);
+         {
+            if(block->length != 0)
+               FreePooled(handler->muddy_pool, block,
+                  sizeof(struct Block) + block->length);
+         }
       }
 
       /* Free object's memory */
@@ -542,6 +550,8 @@ PINT ChangeFileSize(struct Handler *handler, struct Opening *opening,
    struct Block *block, *end_block;
    struct Object *file;
    LONG error = 0;
+   struct MinList *openings;
+   struct Opening *tail;
 
    /* Get origin */
 
@@ -575,8 +585,7 @@ PINT ChangeFileSize(struct Handler *handler, struct Opening *opening,
    end_length = file->end_length;
 
    block = GetLastBlock(file);
-   if(block != NULL)
-      full_length += block->length - end_length;
+   full_length += block->length - end_length;
 
    /* Change size */
 
@@ -622,11 +631,7 @@ PINT ChangeFileSize(struct Handler *handler, struct Opening *opening,
          full_length -= block->length;
       }
       end_block = (APTR)file->elements.mlh_TailPred;
-      if((APTR)end_block != (APTR)&file->elements)
-         end_length = end_block->length;
-      else
-         end_length = 0;
-      file->end_length = end_length;
+      file->end_length = end_length = end_block->length;
 
       /* Allocate a suitably sized end block and copy old data to it */
 
@@ -642,26 +647,34 @@ PINT ChangeFileSize(struct Handler *handler, struct Opening *opening,
       }
       else
          AddTail((struct List *)&file->elements, (APTR)block);
-
-      /* Ensure opening's position isn't past new EOF */
-
-      if(opening->pos > new_length)
-      {
-         opening->block = (APTR)&file->elements.mlh_Tail;
-         opening->block_pos = 0;
-         opening->pos = new_length;
-      }
    }
-
-   /* Re-establish old seek position */
-
-   CmdSeek(opening, old_pos, OFFSET_BEGINNING);
 
    /* Store new file size */
 
    if(new_length != -1)
       file->length = new_length;
    handler->block_count += file->block_count - block_count;
+
+   /* Re-establish old seek position */
+
+   opening->pos = old_pos;
+
+   /* Adjust all openings for this file to ensure that their position isn't
+      past the new EOF and that their block and block position are valid */
+
+   openings = &file->lock->openings;
+   opening = (APTR)openings->mlh_Head;
+   tail = (APTR)&openings->mlh_Tail;
+
+   while(opening != tail)
+   {
+      if(opening->pos > file->length)
+      {
+         opening->pos = file->length;
+      }
+      CmdSeek(opening, opening->pos, OFFSET_BEGINNING);
+      opening = (APTR)((struct MinNode *)opening)->mln_Succ;
+   }
 
    SetIoErr(error);
    return new_length;
@@ -718,8 +731,17 @@ UPINT ReadData(struct Opening *opening, UBYTE *buffer, UPINT length)
    {
       /* Get number of remaining valid bytes in this block */
 
-      block_length = GetBlockLength(file, block);
-      block_length -= block_pos;
+      block_length = block->length - block_pos;
+
+      /* Get next block if end of current one has been reached */
+
+      if(block_length == 0)
+      {
+         block = (struct Block *)((struct MinNode *)block)->mln_Succ;
+         block_pos = 0;
+         /*read_length = 0;*/
+         block_length = block->length;
+      }
 
       /* Copy block contents into the caller's buffer */
 
@@ -728,21 +750,13 @@ UPINT ReadData(struct Opening *opening, UBYTE *buffer, UPINT length)
          read_length);
       remainder -= read_length;
       buffer += read_length;
-
-      /* Get next block */
-
-      if(read_length == block_length)
-      {
-         block = (struct Block *)((struct MinNode *)block)->mln_Succ;
-         block_pos = 0;
-         read_length = 0;
-      }
+      block_pos += read_length;
    }
 
    /* Record new position for next access */
 
    opening->block = block;
-   opening->block_pos = block_pos + read_length;
+   opening->block_pos = block_pos;
    opening->pos += length;
 
    /* Return number of bytes read */
@@ -796,35 +810,38 @@ UPINT WriteData(struct Handler *handler, struct Opening *opening,
    block = opening->block;
    block_pos = opening->block_pos;
 
-   /* If at EOF, go back to use up any space left in last block */
-
-   if(pos == file_length && pos != 0)
-   {
-      block = (struct Block *)((struct MinNode *)block)->mln_Pred;
-      block_pos = file->end_length;
-   }
-
    while(remainder > 0 && error == 0)
    {
-      /* Add another block to the file if required */
+      block_length = block->length - block_pos;
 
-      if(((struct MinNode *)block)->mln_Succ == NULL)
+      /* Move on to next block if end of current block reached */
+
+      if(block_length == 0)
       {
-         new_block = AddDataBlock(handler, opening->file, remainder);
-         if(new_block != NULL)
+         block = (struct Block *)((struct MinNode *)block)->mln_Succ;
+         block_pos = 0;
+
+         /* Add another block to the file if required */
+
+         if(((struct MinNode *)block)->mln_Succ == NULL)
          {
-            block = new_block;
-            file->end_length = 0;
+            new_block = AddDataBlock(handler, opening->file, remainder);
+            if(new_block != NULL)
+            {
+               block = new_block;
+               file->end_length = 0;
+            }
+            else
+               error = IoErr();
          }
-         else
-            error = IoErr();
+
+         block_length = block->length;
       }
 
       /* Write as much as possible to the current block */
 
       if(error == 0)
       {
-         block_length = block->length - block_pos;
          write_length = MIN(remainder, block_length);
          CopyMem(buffer,
             ((UBYTE *)block) + sizeof(struct Block) + block_pos,
@@ -832,31 +849,14 @@ UPINT WriteData(struct Handler *handler, struct Opening *opening,
          remainder -= write_length;
          buffer += write_length;
          block_pos += write_length;
-
-         /* Move on to next block if end of current block reached */
-
-         if(write_length == block_length)
-         {
-            block = (struct Block *)((struct MinNode *)block)->mln_Succ;
-            block_pos = 0;
-         }
       }
    }
 
    /* Recalculate length of used portion of last block */
 
    end_block = GetLastBlock(file);
-   if(end_block != NULL)
-   {
-      if(block == end_block && block_pos >= file->end_length)
-      {
-         file->end_length = block_pos;
-         block = (struct Block *)((struct MinNode *)block)->mln_Succ;
-         block_pos = 0;
-      }
-      else if(((struct MinNode *)block)->mln_Succ == NULL)
-         file->end_length = end_block->length;
-   }
+   if(block == end_block && block_pos >= file->end_length)
+      file->end_length = block_pos;
 
    /* Update file size, volume size and current position */
 
@@ -928,6 +928,8 @@ struct Lock *LockObject(struct Handler *handler, struct Object *object,
          ((struct FileLock *)lock)->fl_Access = access;
          ((struct FileLock *)lock)->fl_Task = handler->proc_port;
          ((struct FileLock *)lock)->fl_Volume = MKBADDR(handler->volume);
+
+         NewList((struct List *)&lock->openings);
       }
       else
          error = IoErr();
@@ -1081,9 +1083,7 @@ VOID AdjustExaminations(struct Handler *handler, struct Object *object)
    while(examination != tail)
    {
       if(examination->next_object == object)
-      {
          examination->next_object = (APTR)((struct Node *)object)->ln_Succ;
-      }
       examination = (APTR)((struct MinNode *)examination)->mln_Succ;
    }
 
@@ -1339,7 +1339,7 @@ struct Object *GetRealObject(struct Object *object)
 /****i* ram.handler/GetBlockLength *****************************************
 *
 *   NAME
-*	GetBlockLength --
+*	GetBlockLength -- Get the number of utilised bytes in a block.
 *
 *   SYNOPSIS
 *	length = GetBlockLength(file, block)
@@ -1370,8 +1370,6 @@ UPINT GetBlockLength(struct Object *file, struct Block *block)
 
    if(block == (APTR)file->elements.mlh_TailPred)
       length = file->end_length;
-   else if(((struct MinNode *)block)->mln_Succ == NULL)
-      length = 0;
    else
       length = block->length;
 
@@ -1412,10 +1410,7 @@ static struct Block *GetLastBlock(struct Object *file)
 {
    struct Block *block;
 
-   if(IsListEmpty((struct List *)&file->elements))
-      block = NULL;
-   else
-      block = (APTR)file->elements.mlh_TailPred;
+   block = (APTR)file->elements.mlh_TailPred;
 
    return block;
 }
