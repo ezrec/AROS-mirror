@@ -13,11 +13,11 @@ sponsors:         Sponzoøi
 [navigation]
 
 home:             Domù
-news:             Novinky
-archive:          Archiv
+news:             Zprávy
+archive:          Archív
 introduction:     Úvod
 status:           Stav
-screenshots:      Snímky obrazovky
+screenshots:      Snímky
 ports:            Porty
 license:          Licence
 download:         Download
@@ -31,29 +31,29 @@ faq:              FAQ
 developers:       Vývojáøi
 contribute:       Spolupráce
 roadmap:          Roadmap
-bug-tracker:      Sledovaè chyb
-working-with-subversion: Práce se Subversion
+bug-tracker:      Bug tracker
+working-with-subversion: Práce s SVN
 compiling:        Kompilování
 application-development-manual: Manuál pro vývoj aplikací
-zune-application-development-manual: Manuál pro vývoj aplikací se Zune
-system-development-manual:      Manuál pro vývoj systému
+zune-application-development-manual: Manuál pro vývoj Zune aplikací
+system-development-manual: Manuál pro vývoj systému
 debugging-manual: Manuál pro ladìní
 reference:        Reference
 specifications:   Specifikace
-ui-style-guide:   Pøíruèka stylu UI
+ui-style-guide:   Pøíruèka UI stylu
 documenting:      Dokumentace
 porting:          Portování
 translating:      Pøekládání
-summaries:        Souhrny
+summaries:        Shrnutí
 links:            Odkazy
 contact:          Kontakt
 mailing-lists:    Mailing listy
 forums:           Fóra
-irc-channels:     Kanály IRC
+irc-channels:     IRC kanály
 credits:          Zásluhy
 acknowledgements: Podìkování
 pictures:         Fotografie
-developers-together: Vývojáøi spoleènì
+developers-together: Vývojáøi dohromady
 sponsors:         Sponzoøi
 linking:          Odkazování
 
@@ -63,5 +63,5 @@ go:               Jít na
 search:           Hledat
 copyright:        Copyright &copy; 1995-2008, The AROS Development Team. All rights reserved.
 trademarks:       Amiga&reg; is a trademark of Amiga Inc. All other trademarks belong to their respective owners.
-read-more:        Èíst více...
+read-more:        Více zde...
 large-image:      Zvìt¹it...
