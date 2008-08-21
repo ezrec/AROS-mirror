@@ -315,10 +315,10 @@ BOOL CmdFind(struct Handler *handler, struct FileHandle *handle,
 
    /* Set access mode */
 
-   if(type == MODE_OLDFILE)
-      mode = ACCESS_READ;
-   else
+   if(type == MODE_NEWFILE)
       mode = ACCESS_WRITE;
+   else
+      mode = ACCESS_READ;
 
    /* Get file */
 
