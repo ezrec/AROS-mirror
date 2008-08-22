@@ -31,7 +31,11 @@
 
 #include <exec/types.h>
 
+#if defined(__AROS__)
+#include "MemoryPool.h"
+#else
 #include "include/MemoryPool.h"
+#endif
 
 typedef LONG olPosition;
 typedef ULONG olDimension;

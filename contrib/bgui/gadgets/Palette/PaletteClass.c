@@ -251,7 +251,10 @@ METHOD(PaletteClassNew, struct opSet *,ops)
        
       /* AROS FIX: (WORD) typecast, otherwise gcc error "comparison always 0, due to limited datatype..." */
       #ifdef __AROS__
-      CLAMP((WORD)pd->pd_ColorOffset, 0, 256 - (WORD)pd->pd_NumColors);
+      if ((WORD)pd->pd_ColorOffset < 0)
+          pd->pd_ColorOffset = 0;
+      else if ((WORD)pd->pd_ColorOffset > (WORD)(256 - pd->pd_NumColors))
+          pd->pd_ColorOffset = (WORD)(256 - pd->pd_NumColors);
       #else
       CLAMP( pd->pd_ColorOffset, 0, 256 - pd->pd_NumColors );
       #endif

@@ -1,0 +1,166 @@
+include $(TOP)/config/make.cfg
+include ../make.cfg
+
+BINDIR = $(AROSDIR)
+LIBDIR = $(AROS_LIB)
+OBJDIR = $(GENDIR)/$(CURDIR)
+
+COMMONINCLUDES := -Iinclude -I../
+LAYOUTGROUPINCLUDES := $(COMMONINCLUDES) -Iinclude -I./LayoutGroup
+TREEVIEWINCLUDES := $(COMMONINCLUDES) -I./TreeView/include
+
+EXELIBS = -L$(LIBDIR) -lamiga -larossupport -larosc -larosm -lbgui -lautoinit
+
+BARGADGET = bgui_bar.gadget
+BARDEMO = BarDemo
+BARLIBTARGETS := $(OBJDIR)/Bar/iIntersectRectangles.o \
+	$(OBJDIR)/Bar/iSubtractRectangles.o \
+	$(OBJDIR)/Bar/BarClass.o
+
+LAYOUTGROUPGADGET = bgui_layoutgroup.gadget
+LAYOUTGROUPDEMO = LayoutGroupDemo
+LAYOUTGROUPLIBTARGETS = $(OBJDIR)/LayoutGroup/Layout.o \
+	$(OBJDIR)/LayoutGroup/MemoryPool.o \
+	$(OBJDIR)/LayoutGroup/LayoutGroupClass.o
+
+PALETTEGADGET = bgui_palette.gadget
+PALETTEDEMO = PaletteDemo
+PALETTELIBTARGETS = $(OBJDIR)/Palette/PaletteClass.o
+
+POPBUTTONGADGET = bgui_popbutton.gadget
+POPBUTTONDEMO = PopButtonDemo
+POPBUTTONLIBTARGETS = $(OBJDIR)/PopButton/PopButtonClass.o
+
+TREEVIEWGADGET = bgui_treeview.gadget
+TREEVIEWDEMO = TreeViewDemo
+TREEVIEWLIBTARGETS = $(OBJDIR)/TreeView/TVExpand.o \
+	$(OBJDIR)/TreeView/TVGetEntry.o \
+	$(OBJDIR)/TreeView/TVGetSet.o \
+	$(OBJDIR)/TreeView/TVInput.o \
+	$(OBJDIR)/TreeView/TVInsert.o \
+	$(OBJDIR)/TreeView/TVLVHandlers.o \
+	$(OBJDIR)/TreeView/TVMisc.o \
+	$(OBJDIR)/TreeView/TVMove.o \
+	$(OBJDIR)/TreeView/TVNewDispose.o \
+	$(OBJDIR)/TreeView/TVRemove.o \
+	$(OBJDIR)/TreeView/TVReplace.o \
+	$(OBJDIR)/TreeView/TVSelect.o \
+	$(OBJDIR)/TreeView/TVUtil.o \
+	$(OBJDIR)/TreeView/TVVisible.o \
+	$(OBJDIR)/TreeView/TreeViewClass.o
+
+COMMONLIBSTARTTARGETS = $(OBJDIR)/common/bguiclass_lib.o \
+	$(OBJDIR)/common/bguiclass_libtag.o
+
+COMMONLIBTARGETS = $(COMMONLIBSTARTTARGETS) $(OBJDIR)/common/bguiclass_libendtag.o
+
+bgui-gadgets-bar-mkdir :
+		@$(MKDIR) $(GENDIR)/$(CURDIR)/Bar $(GENDIR)/$(CURDIR)/common
+
+bgui-gadgets-layoutgroup-mkdir :
+		@$(MKDIR) $(GENDIR)/$(CURDIR)/LayoutGroup $(GENDIR)/$(CURDIR)/common
+
+bgui-gadgets-palette-mkdir :
+		@$(MKDIR) $(GENDIR)/$(CURDIR)/Palette $(GENDIR)/$(CURDIR)/common
+
+bgui-gadgets-popbutton-mkdir :
+		@$(MKDIR) $(GENDIR)/$(CURDIR)/PopButton $(GENDIR)/$(CURDIR)/common
+
+bgui-gadgets-treeview-mkdir :
+		@$(MKDIR) $(GENDIR)/$(CURDIR)/TreeView $(GENDIR)/$(CURDIR)/common
+
+#MM bgui-gadgets-bar : bgui-gadgets-bar-mkdir
+bgui-gadgets-bar : bgui-gadgets-bar-mkdir $(BARLIBTARGETS) $(BGUIGADGETSDIR)/$(BARGADGET) $(BGUIEXAMPLESDIR)/$(BARDEMO)
+
+#MM bgui-gadgets-layoutgroup : bgui-gadgets-layoutgroup-mkdir
+bgui-gadgets-layoutgroup : bgui-gadgets-layoutgroup-mkdir $(LAYOUTGROUPLIBTARGETS) $(BGUIGADGETSDIR)/$(LAYOUTGROUPGADGET) $(BGUIEXAMPLESDIR)/$(LAYOUTGROUPDEMO)
+
+#MM bgui-gadgets-palette : bgui-gadgets-palette-mkdir
+bgui-gadgets-palette : bgui-gadgets-palette-mkdir $(PALETTELIBTARGETS) $(BGUIGADGETSDIR)/$(PALETTEGADGET) $(BGUIEXAMPLESDIR)/$(PALETTEDEMO)
+
+#MM bgui-gadgets-popbutton : bgui-gadgets-popbutton-mkdir
+bgui-gadgets-popbutton : bgui-gadgets-popbutton-mkdir $(POPBUTTONLIBTARGETS) $(BGUIGADGETSDIR)/$(POPBUTTONGADGET) $(BGUIEXAMPLESDIR)/$(POPBUTTONDEMO)
+
+#MM bgui-gadgets-treeview : bgui-gadgets-treeview-mkdir
+bgui-gadgets-treeview : bgui-gadgets-treeview-mkdir $(TREEVIEWLIBTARGETS) $(BGUIGADGETSDIR)/$(TREEVIEWGADGET) $(BGUIEXAMPLESDIR)/$(TREEVIEWDEMO)
+
+$(BGUIGADGETSDIR)/%.gadget: $(OBJDIR)/%.gadget
+	@$(ECHO) Installing $@...
+	@$(CP) $< $@
+
+$(OBJDIR)/$(BARGADGET) : $(COMMONLIBTARGETS) $(BARLIBTARGETS)
+	$(AROS_CC) $(NOSTARTUP_LDFLAGS) $(LDFLAGS) $(COMMONINCLUDES) \
+		$(COMMONLIBSTARTTARGETS) \
+		$(BARLIBTARGETS) \
+		$(OBJDIR)/common/bguiclass_libendtag.o \
+		-lbgui -lrom \
+		-o $@
+
+$(OBJDIR)/$(LAYOUTGROUPGADGET) : $(COMMONLIBTARGETS) $(LAYOUTGROUPLIBTARGETS)
+	$(AROS_CC) $(NOSTARTUP_LDFLAGS) $(LDFLAGS) $(LAYOUTGROUPINCLUDES) \
+		$(COMMONLIBSTARTTARGETS) \
+		$(LAYOUTGROUPLIBTARGETS) \
+		$(OBJDIR)/common/bguiclass_libendtag.o \
+		-lbgui -lrom \
+		-o $@
+
+$(OBJDIR)/$(PALETTEGADGET) : $(COMMONLIBTARGETS) $(PALETTELIBTARGETS)
+	$(AROS_CC) $(NOSTARTUP_LDFLAGS) $(LDFLAGS) $(COMMONINCLUDES) \
+		$(COMMONLIBSTARTTARGETS) \
+		$(PALETTELIBTARGETS) \
+		$(OBJDIR)/common/bguiclass_libendtag.o \
+		-lbgui -lrom \
+		-o $@
+
+$(OBJDIR)/$(POPBUTTONGADGET) : $(COMMONLIBTARGETS) $(POPBUTTONLIBTARGETS)
+	$(AROS_CC) $(NOSTARTUP_LDFLAGS) $(LDFLAGS) $(COMMONINCLUDES) \
+		$(COMMONLIBSTARTTARGETS) \
+		$(POPBUTTONLIBTARGETS) \
+		$(OBJDIR)/common/bguiclass_libendtag.o \
+		-lbgui -lrom \
+		-o $@
+
+$(OBJDIR)/$(TREEVIEWGADGET) : $(COMMONLIBTARGETS) $(TREEVIEWLIBTARGETS)
+	$(AROS_CC) $(NOSTARTUP_LDFLAGS) $(LDFLAGS) $(TREEVIEWINCLUDES) \
+		$(COMMONLIBSTARTTARGETS) \
+		$(TREEVIEWLIBTARGETS) \
+		$(OBJDIR)/common/bguiclass_libendtag.o \
+		-lbgui -lrom \
+		-o $@
+
+$(BGUIEXAMPLESDIR)/% : $(OBJDIR)/%
+	@$(ECHO) Installing $@
+	@$(CP) $< $@
+
+$(OBJDIR)/$(BARDEMO) : $(OBJDIR)/Bar/$(BARDEMO).o
+	@$(AROS_CC) $(LDFLAGS) $< -o $@ $(EXELIBS)
+
+$(OBJDIR)/$(LAYOUTGROUPDEMO) : $(OBJDIR)/LayoutGroup/$(LAYOUTGROUPDEMO).o
+	@$(AROS_CC) $(LDFLAGS) $< -o $@ $(EXELIBS)
+
+$(OBJDIR)/$(PALETTEDEMO) : $(OBJDIR)/Palette/$(PALETTEDEMO).o
+	@$(AROS_CC) $(LDFLAGS) $< -o $@ $(EXELIBS)
+
+$(OBJDIR)/$(POPBUTTONDEMO) : $(OBJDIR)/PopButton/$(POPBUTTONDEMO).o
+	@$(AROS_CC) $(LDFLAGS) $< -o $@ $(EXELIBS)
+
+$(OBJDIR)/$(TREEVIEWDEMO) : $(OBJDIR)/TreeView/$(TREEVIEWDEMO).o
+	@$(AROS_CC) $(LDFLAGS) $< -o $@ $(EXELIBS)
+
+$(OBJDIR)/Bar/%.o : ./Bar/%.c
+	@$(AROS_CC) $(CFLAGS) -c $< -o $@
+
+$(OBJDIR)/LayoutGroup/%.o : ./LayoutGroup/%.c
+	@$(AROS_CC) $(CFLAGS) $(LAYOUTGROUPINCLUDES) -c $< -o $@
+
+$(OBJDIR)/Palette/%.o : ./Palette/%.c
+	@$(AROS_CC) $(CFLAGS) -c $< -o $@
+
+$(OBJDIR)/PopButton/%.o : ./PopButton/%.c
+	@$(AROS_CC) $(CFLAGS) -c $< -o $@
+
+$(OBJDIR)/TreeView/%.o : ./TreeView/%.c
+	@$(AROS_CC) $(CFLAGS) $(TREEVIEWINCLUDES) -c $< -o $@
+
+$(OBJDIR)/common/%.o : ./common/%.c
+	@$(AROS_CC) $(CFLAGS) -c $< -o $@
