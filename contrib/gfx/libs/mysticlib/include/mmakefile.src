@@ -8,17 +8,17 @@ INCLUDE_DEST_DIR := libraries
 
 INCL_FILES_1 := $(foreach f, $(INCLUDE_FILES), $(AROS_INCLUDES)/$(INCLUDE_DEST_DIR)/$(f))
 INCL_FILES_2 := $(foreach f, $(INCLUDE_FILES), $(GENINCDIR)/$(INCLUDE_DEST_DIR)/$(f))
+INCL_DIRS := $(AROS_INCLUDES)/$(INCLUDE_DEST_DIR) $(GENINCDIR)/$(INCLUDE_DEST_DIR)
+
+%dir_deps name=DIR_DEPS dirs=$(INCL_DIRS)
 
 #MM includes-copy
-includes-copy : setup $(INCL_FILES_1) $(INCL_FILES_2)
+includes-copy : $(INCL_FILES_1) $(INCL_FILES_2)
 
-$(AROS_INCLUDES)/$(INCLUDE_DEST_DIR)/%.h : $(INCLUDE_SRC_DIR)/%.h
+$(AROS_INCLUDES)/$(INCLUDE_DEST_DIR)/%.h : $(INCLUDE_SRC_DIR)/%.h $(DIR_DEPS)
 	@$(CP) $< $@
 
-$(GENINCDIR)/$(INCLUDE_DEST_DIR)/%.h : $(INCLUDE_SRC_DIR)/%.h
+$(GENINCDIR)/$(INCLUDE_DEST_DIR)/%.h : $(INCLUDE_SRC_DIR)/%.h $(DIR_DEPS)
 	@$(CP) $< $@
-
-setup ::
-	%mkdirs_q $(AROS_INCLUDES)/$(INCLUDE_DEST_DIR) $(GENINCDIR)/$(INCLUDE_DEST_DIR)
 
 %common
