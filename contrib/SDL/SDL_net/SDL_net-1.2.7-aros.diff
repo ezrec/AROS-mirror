@@ -1,0 +1,59 @@
+diff -ur SDL_net-1.2.7/SDLnet.c SDL_net-1.2.7-aros/SDLnet.c
+--- SDL_net-1.2.7/SDLnet.c	2007-07-20 14:41:49.000000000 +0200
++++ SDL_net-1.2.7-aros/SDLnet.c	2008-08-20 19:45:50.000000000 +0200
+@@ -29,6 +29,12 @@
+ #include "SDLnetsys.h"
+ #include "SDL_net.h"
+ 
++#ifdef __AROS__
++#include <proto/exec.h>
++struct Library * SocketBase = NULL;
++int h_errno = 0;
++extern int errno;
++#endif
+ 
+ const SDL_version *SDLNet_Linked_Version(void)
+ {
+@@ -292,6 +298,17 @@
+ 			SDLNet_SetError("Couldn't initialize Winsock 1.1\n");
+ 			return(-1);
+ 		}
++#elif defined __AROS__
++        if(!(SocketBase = OpenLibrary("bsdsocket.library", 4 ))) {
++			SDLNet_SetError("No TCP/IP Stack running!\n");
++			return(-1);
++        }
++
++        if( SocketBaseTags(SBTM_SETVAL(SBTC_ERRNOPTR(sizeof(errno))), (IPTR)&errno,
++  		     SBTM_SETVAL(SBTC_HERRNOLONGPTR), (IPTR)&h_errno, TAG_DONE )) {
++			SDLNet_SetError("Error initializing bsdsocket\n");
++			return(-1);
++        }
+ #else
+ 		/* SIGPIPE is generated when a remote socket is closed */
+ 		void (*handler)(int);
+@@ -318,6 +335,11 @@
+ 				WSACleanup();
+ 			}
+ 		}
++#elif defined __AROS__
++	    if(SocketBase) {
++		    CloseLibrary(SocketBase);
++		    SocketBase = NULL;
++	    }
+ #else
+ 		/* Restore the SIGPIPE handler */
+ 		void (*handler)(int);
+diff -ur SDL_net-1.2.7/SDLnetsys.h SDL_net-1.2.7-aros/SDLnetsys.h
+--- SDL_net-1.2.7/SDLnetsys.h	2007-07-20 14:41:49.000000000 +0200
++++ SDL_net-1.2.7-aros/SDLnetsys.h	2008-08-12 22:20:41.000000000 +0200
+@@ -59,7 +59,8 @@
+ #include <netinet/tcp.h>
+ #endif
+ #include <netdb.h>
+-#include <sys/socket.h>
++#include <proto/socket.h>
++#include <bsdsocket/socketbasetags.h>
+ #endif /* WIN32 */
+ #endif /* Open Transport */
+ 
