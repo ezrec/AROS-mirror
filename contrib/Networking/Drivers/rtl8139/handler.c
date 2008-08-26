@@ -286,7 +286,7 @@ D(bug("%s: S2CmdDeviceQuery()\n", unit->rtl8139u_name));
 	if(size > sizeof(struct Sana2DeviceQuery))
 		size = sizeof(struct Sana2DeviceQuery);
 
-	CopyMem(&LIBBASE->rtl8139b_Sana2Info, info, size);
+	CopyMem(&unit->rtl8139u_Sana2Info, info, size);
 
 	info->BPS = unit->rtl8139u_rtl_LinkSpeed;
 	info->MTU = ETH_MTU;

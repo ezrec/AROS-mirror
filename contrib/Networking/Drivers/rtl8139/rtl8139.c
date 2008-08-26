@@ -55,7 +55,7 @@
 /* A bit fixed linux stuff here :) */
 
 #undef LIBBASE
-#define LIBBASE (dev->rtl8139u_device)
+#define LIBBASE (unit->rtl8139u_device)
 
 #define TIMER_RPROK 3599597124UL
 
@@ -87,14 +87,14 @@ void udelay(LONG usec)
 	}
 }
 
-static inline struct fe_priv *get_pcnpriv(struct net_device *dev)
+static inline struct fe_priv *get_pcnpriv(struct net_device *unit)
 {
-	return dev->rtl8139u_fe_priv;
+	return unit->rtl8139u_fe_priv;
 }
 
-static inline UBYTE *get_hwbase(struct net_device *dev)
+static inline UBYTE *get_hwbase(struct net_device *unit)
 {
-	return (UBYTE *)dev->rtl8139u_BaseMem;
+	return (UBYTE *)unit->rtl8139u_BaseMem;
 }
 
 static int read_eeprom(long base, int location, int addr_len)
@@ -152,10 +152,10 @@ static void mdio_sync(long base)
 	}
 }
 
-static int mdio_read(struct net_device *dev, int phy_id, int location)
+static int mdio_read(struct net_device *unit, int phy_id, int location)
 {
-	struct fe_priv *np = get_pcnpriv(dev);
-	UBYTE *base = get_hwbase(dev);
+	struct fe_priv *np = get_pcnpriv(unit);
+	UBYTE *base = get_hwbase(unit);
 	int mii_cmd = (0xf6 << 10) | (phy_id << 5) | location;
 	int retval = 0;
 	int i;
@@ -192,83 +192,83 @@ static int mdio_read(struct net_device *dev, int phy_id, int location)
 	return (retval >> 1) & 0xffff;
 }
 
-static void rtl8139nic_start_rx(struct net_device *dev)
+static void rtl8139nic_start_rx(struct net_device *unit)
 {
-	struct fe_priv *np = get_pcnpriv(dev);
-	UBYTE *base = get_hwbase(dev);
+	struct fe_priv *np = get_pcnpriv(unit);
+	UBYTE *base = get_hwbase(unit);
 
-D(bug("%s: rtl8139nic_start_rx\n", dev->rtl8139u_name));
+D(bug("%s: rtl8139nic_start_rx\n", unit->rtl8139u_name));
 	// Already running? Stop it.
 #warning "TODO: Handle starting/stopping Rx"
 }
 
-static void rtl8139nic_stop_rx(struct net_device *dev)
+static void rtl8139nic_stop_rx(struct net_device *unit)
 {
-	UBYTE *base = get_hwbase(dev);
+	UBYTE *base = get_hwbase(unit);
 
-D(bug("%s: rtl8139nic_stop_rx\n", dev->rtl8139u_name));
+D(bug("%s: rtl8139nic_stop_rx\n", unit->rtl8139u_name));
 #warning "TODO: Handle starting/stopping Rx"
 }
 
-static void rtl8139nic_start_tx(struct net_device *dev)
+static void rtl8139nic_start_tx(struct net_device *unit)
 {
-	UBYTE *base = get_hwbase(dev);
+	UBYTE *base = get_hwbase(unit);
 
-D(bug("%s: rtl8139nic_start_tx()\n", dev->rtl8139u_name));
+D(bug("%s: rtl8139nic_start_tx()\n", unit->rtl8139u_name));
 #warning "TODO: Handle starting/stopping Tx"
 }
 
-static void rtl8139nic_stop_tx(struct net_device *dev)
+static void rtl8139nic_stop_tx(struct net_device *unit)
 {
-	UBYTE *base = get_hwbase(dev);
+	UBYTE *base = get_hwbase(unit);
 
-D(bug("%s: rtl8139nic_stop_tx()\n", dev->rtl8139u_name));
+D(bug("%s: rtl8139nic_stop_tx()\n", unit->rtl8139u_name));
 #warning "TODO: Handle starting/stopping Tx"
 }
 
-static void rtl8139nic_txrx_reset(struct net_device *dev)
+static void rtl8139nic_txrx_reset(struct net_device *unit)
 {
-	struct fe_priv *np = get_pcnpriv(dev);
-	UBYTE *base = get_hwbase(dev);
+	struct fe_priv *np = get_pcnpriv(unit);
+	UBYTE *base = get_hwbase(unit);
 
-D(bug("%s: rtl8139nic_txrx_reset()\n", dev->rtl8139u_name));
+D(bug("%s: rtl8139nic_txrx_reset()\n", unit->rtl8139u_name));
 }
 
 /*
- * rtl8139nic_set_multicast: dev->set_multicast function
- * Called with dev->xmit_lock held.
+ * rtl8139nic_set_multicast: unit->set_multicast function
+ * Called with unit->xmit_lock held.
  */
-static void rtl8139nic_set_multicast(struct net_device *dev)
+static void rtl8139nic_set_multicast(struct net_device *unit)
 {
-	struct fe_priv *np = get_pcnpriv(dev);
-	UBYTE *base = get_hwbase(dev);
+	struct fe_priv *np = get_pcnpriv(unit);
+	UBYTE *base = get_hwbase(unit);
 	ULONG addr[2];
 	ULONG mask[2];
 	ULONG pff;
 
-D(bug("%s: rtl8139nic_set_multicast()\n", dev->rtl8139u_name));
+D(bug("%s: rtl8139nic_set_multicast()\n", unit->rtl8139u_name));
 
 	memset(addr, 0, sizeof(addr));
 	memset(mask, 0, sizeof(mask));
 }
 
-static void rtl8139nic_deinitialize(struct net_device *dev)
+static void rtl8139nic_deinitialize(struct net_device *unit)
 {
 
 }
 
-static void rtl8139nic_initialize(struct net_device *dev)
+static void rtl8139nic_initialize(struct net_device *unit)
 {
-	struct fe_priv *np = dev->rtl8139u_fe_priv;
-	UBYTE *base = get_hwbase(dev);
+	struct fe_priv *np = unit->rtl8139u_fe_priv;
+	UBYTE *base = get_hwbase(unit);
 	int i, config1;
 
 	config1 = BYTEIN(base + RTLr_Config1);
-	if (dev->rtl8139u_rtl_chipcapabilities & RTLc_HAS_MII_XCVR)
+	if (unit->rtl8139u_rtl_chipcapabilities & RTLc_HAS_MII_XCVR)
 	{
 		BYTEOUT(base + RTLr_Config1, config1 & ~0x03);
 	}
-D(bug("%s: Chipset brought out of low power mode.\n", dev->rtl8139u_name));
+D(bug("%s: Chipset brought out of low power mode.\n", unit->rtl8139u_name));
 
 	{
 		int addr_len = read_eeprom(base, 0, 8) == 0x8129 ? 8 : 6;
@@ -282,16 +282,16 @@ D(bug("%s: Chipset brought out of low power mode.\n", dev->rtl8139u_name));
 	}
 
 	int phy, phy_idx = 0;
-	if (dev->rtl8139u_rtl_chipcapabilities & RTLc_HAS_MII_XCVR)
+	if (unit->rtl8139u_rtl_chipcapabilities & RTLc_HAS_MII_XCVR)
 	{
 		for (phy = 0; phy < 32 && phy_idx < sizeof(np->mii_phys); phy++)
 		{
-			int mii_status = mdio_read(dev, phy, 1);
+			int mii_status = mdio_read(unit, phy, 1);
 			if (mii_status != 0xffff && mii_status != 0x0000)
 			{
 				np->mii_phys[phy_idx++] = phy;
-				np->advertising = mdio_read(dev, phy, 4);
-D(bug("%s: MII transceiver %d status 0x%4.4x advertising %4.4x\n", dev->rtl8139u_name,
+				np->advertising = mdio_read(unit, phy, 4);
+D(bug("%s: MII transceiver %d status 0x%4.4x advertising %4.4x\n", unit->rtl8139u_name,
 																										  phy, mii_status, np->advertising));
 
 			}
@@ -300,42 +300,42 @@ D(bug("%s: MII transceiver %d status 0x%4.4x advertising %4.4x\n", dev->rtl8139u
 
 	if (phy_idx ==0)
 	{
-D(bug("%s: No MII transceiver found, Assuming SYM transceiver\n", dev->rtl8139u_name));
+D(bug("%s: No MII transceiver found, Assuming SYM transceiver\n", unit->rtl8139u_name));
 		np->mii_phys[0] = 32;
 	}
 		
-	dev->rtl8139u_dev_addr[0] = dev->rtl8139u_org_addr[0] = np->orig_mac[0];
-	dev->rtl8139u_dev_addr[1] = dev->rtl8139u_org_addr[1] = np->orig_mac[1];
-	dev->rtl8139u_dev_addr[2] = dev->rtl8139u_org_addr[2] = np->orig_mac[2];
-	dev->rtl8139u_dev_addr[3] = dev->rtl8139u_org_addr[3] = np->orig_mac[3];
-	dev->rtl8139u_dev_addr[4] = dev->rtl8139u_org_addr[4] = np->orig_mac[4];
-	dev->rtl8139u_dev_addr[5] = dev->rtl8139u_org_addr[5] = np->orig_mac[5];
+	unit->rtl8139u_dev_addr[0] = unit->rtl8139u_org_addr[0] = np->orig_mac[0];
+	unit->rtl8139u_dev_addr[1] = unit->rtl8139u_org_addr[1] = np->orig_mac[1];
+	unit->rtl8139u_dev_addr[2] = unit->rtl8139u_org_addr[2] = np->orig_mac[2];
+	unit->rtl8139u_dev_addr[3] = unit->rtl8139u_org_addr[3] = np->orig_mac[3];
+	unit->rtl8139u_dev_addr[4] = unit->rtl8139u_org_addr[4] = np->orig_mac[4];
+	unit->rtl8139u_dev_addr[5] = unit->rtl8139u_org_addr[5] = np->orig_mac[5];
 
-D(bug("%s: MAC Address %02x:%02x:%02x:%02x:%02x:%02x\n", dev->rtl8139u_name,
-			dev->rtl8139u_dev_addr[0], dev->rtl8139u_dev_addr[1], dev->rtl8139u_dev_addr[2],
-			dev->rtl8139u_dev_addr[3], dev->rtl8139u_dev_addr[4], dev->rtl8139u_dev_addr[5]));
+D(bug("%s: MAC Address %02x:%02x:%02x:%02x:%02x:%02x\n", unit->rtl8139u_name,
+			unit->rtl8139u_dev_addr[0], unit->rtl8139u_dev_addr[1], unit->rtl8139u_dev_addr[2],
+			unit->rtl8139u_dev_addr[3], unit->rtl8139u_dev_addr[4], unit->rtl8139u_dev_addr[5]));
   
 	BYTEOUT(base + RTLr_Cfg9346, 0xc0);
-	if (dev->rtl8139u_rtl_chipcapabilities & RTLc_HAS_MII_XCVR)
+	if (unit->rtl8139u_rtl_chipcapabilities & RTLc_HAS_MII_XCVR)
 	{
 		BYTEOUT(base + RTLr_Config1, 0x03);
 	}
 	BYTEOUT(base + RTLr_HltClk, 'H'); //Disable the chips clock ('R' enables)
-D(bug("%s: Chipset put into low power mode.\n", dev->rtl8139u_name));
+D(bug("%s: Chipset put into low power mode.\n", unit->rtl8139u_name));
 }
 
-static void rtl8139nic_drain_tx(struct net_device *dev)
+static void rtl8139nic_drain_tx(struct net_device *unit)
 {
-	struct fe_priv *np = get_pcnpriv(dev);
+	struct fe_priv *np = get_pcnpriv(unit);
 	int i;
 	for (i = 0; i < NUM_TX_DESC; i++) {
 #warning "TODO: rtl8139nic_drain_tx does nothing atm."
 	}
 }
 
-static void rtl8139nic_drain_rx(struct net_device *dev)
+static void rtl8139nic_drain_rx(struct net_device *unit)
 {
-	struct fe_priv *np = get_pcnpriv(dev);
+	struct fe_priv *np = get_pcnpriv(unit);
 	int i;
 //	for (i = 0; i < RX_RING_SIZE; i++) {
 #warning "TODO: rtl8139nic_drain_rx does nothing atm."
@@ -343,25 +343,25 @@ static void rtl8139nic_drain_rx(struct net_device *dev)
 }
 
 
-static void drain_ring(struct net_device *dev)
+static void drain_ring(struct net_device *unit)
 {
-	rtl8139nic_drain_tx(dev);
-	rtl8139nic_drain_rx(dev);
+	rtl8139nic_drain_tx(unit);
+	rtl8139nic_drain_rx(unit);
 }
 
-static int request_irq(struct net_device *dev)
+static int request_irq(struct net_device *unit)
 {
 	OOP_Object *irq = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
 	BOOL ret;
 
-D(bug("%s: request_irq()\n", dev->rtl8139u_name));
+D(bug("%s: request_irq()\n", unit->rtl8139u_name));
 
 	if (irq)
 	{
-		ret = HIDD_IRQ_AddHandler(irq, dev->rtl8139u_irqhandler, dev->rtl8139u_IRQ);
-		HIDD_IRQ_AddHandler(irq, dev->rtl8139u_touthandler, vHidd_IRQ_Timer);
+		ret = HIDD_IRQ_AddHandler(irq, unit->rtl8139u_irqhandler, unit->rtl8139u_IRQ);
+		HIDD_IRQ_AddHandler(irq, unit->rtl8139u_touthandler, vHidd_IRQ_Timer);
 
-D(bug("%s: request_irq: IRQ Handlers configured\n", dev->rtl8139u_name));
+D(bug("%s: request_irq: IRQ Handlers configured\n", unit->rtl8139u_name));
 
 		OOP_DisposeObject(irq);
 
@@ -373,28 +373,43 @@ D(bug("%s: request_irq: IRQ Handlers configured\n", dev->rtl8139u_name));
 	return 1;
 }
 
-static void free_irq(struct net_device *dev)
+static void free_irq(struct net_device *unit)
 {
 	OOP_Object *irq = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
 	if (irq)
 	{
-		HIDD_IRQ_RemHandler(irq, dev->rtl8139u_irqhandler);
-		HIDD_IRQ_RemHandler(irq, dev->rtl8139u_touthandler);
+		HIDD_IRQ_RemHandler(irq, unit->rtl8139u_irqhandler);
+		HIDD_IRQ_RemHandler(irq, unit->rtl8139u_touthandler);
 		OOP_DisposeObject(irq);
 	}
 }
 
-int rtl8139nic_set_rxmode(struct net_device *dev)
+int rtl8139nic_set_rxmode(struct net_device *unit)
 {
-	struct fe_priv *np = get_pcnpriv(dev);
-	UBYTE *base = get_hwbase(dev);
-	unsigned long mc_filter[2];         //Multicast hash filter.
-	unsigned int rx_mode;
-	
-#warning "TODO: Fix set_rxmode.. temp Running in promiscuous mode for now .."
-	rx_mode = AcceptBroadcast | AcceptMulticast | AcceptMyPhys;
-	mc_filter[1] = mc_filter[0] = 0xffffffff;
+	struct fe_priv *np = get_pcnpriv(unit);
+	UBYTE *base = get_hwbase(unit);
+	ULONG mc_filter[2];         //Multicast hash filter.
+	ULONG rx_mode;
 
+#warning "TODO: Fix set_rxmode.. temp Running in promiscuous mode for now .."
+	//if (unit->sis900u_ifflags & IFF_PROMISC) {
+		rx_mode = AcceptBroadcast | AcceptMulticast | AcceptMyPhys | AcceptAllPhys;
+		mc_filter[1] = mc_filter[0] = 0xffffffff;
+	/*} else if ((unit->mc_count > multicast_filter_limit) ||
+			(unit->sis900u_ifflags & IFF_ALLMULTI)) {
+		rx_mode = AcceptBroadcast | AcceptMulticast | AcceptMyPhys | AcceptAllPhys;
+		mc_filter[1] = mc_filter[0] = 0xffffffff;
+	} else {
+		struct mclist *mclist;
+		int i;
+
+		rx_mode = AcceptBroadcast | AcceptMulticast | AcceptMyPhys;
+		mc_filter[1] = mc_filter[0] = 0;
+		for (i = 0, mclist = dev->netif->mclist; mclist && i < dev->netif->mccount; i++, mclist = mclist->next)
+		{
+		  set_bit(mc_filter, ether_crc(6, (unsigned char *) &mclist->hwaddr) >> 26);
+		}
+	} */
 	LONGOUT(base + RTLr_RxConfig, np->rx_config | rx_mode);
 	LONGOUT(base + RTLr_MAR0 + 0, mc_filter[0]);
 	LONGOUT(base + RTLr_MAR0 + 4, mc_filter[1]);
@@ -402,9 +417,9 @@ int rtl8139nic_set_rxmode(struct net_device *dev)
 	return 0;
 }
 
-static void rtl8139nic_set_mac(struct net_device *dev)
+static void rtl8139nic_set_mac(struct net_device *unit)
 {
-	UBYTE *base = get_hwbase(dev);
+	UBYTE *base = get_hwbase(unit);
 	int i,j;
 
 	BYTEOUT(base + RTLr_Cfg9346, 0xc0);
@@ -412,8 +427,8 @@ static void rtl8139nic_set_mac(struct net_device *dev)
 	j=0;
 	for (i = 0; i < 3; i++)
 	{
-		UWORD mac_curr = dev->rtl8139u_dev_addr[j++];
-		mac_curr |= (dev->rtl8139u_dev_addr[j++] << 8);
+		UWORD mac_curr = unit->rtl8139u_dev_addr[j++];
+		mac_curr |= (unit->rtl8139u_dev_addr[j++] << 8);
 		WORDOUT(base +RTLr_MAC0 + i, mac_curr);
 	}
 	
@@ -421,15 +436,15 @@ static void rtl8139nic_set_mac(struct net_device *dev)
 
 }
 
-static int rtl8139nic_open(struct net_device *dev)
+static int rtl8139nic_open(struct net_device *unit)
 {
-	struct fe_priv *np = get_pcnpriv(dev);
-	UBYTE *base = get_hwbase(dev);
+	struct fe_priv *np = get_pcnpriv(unit);
+	UBYTE *base = get_hwbase(unit);
 	int ret, i, rx_buf_len_idx;
 
 	rx_buf_len_idx = RX_BUF_LEN_IDX;
 
-	ret = request_irq(dev);
+	ret = request_irq(unit);
 	if (ret)
 		goto out_drain;
 
@@ -438,7 +453,7 @@ static int rtl8139nic_open(struct net_device *dev)
 		np->rx_buf_len = 8192 << rx_buf_len_idx;
 		
 		np->rx_buffer = HIDD_PCIDriver_AllocPCIMem(
-						dev->rtl8139u_PCIDriver,
+						unit->rtl8139u_PCIDriver,
 						(np->rx_buf_len + 16 + (TX_BUF_SIZE * NUM_TX_DESC)));
 
 		if (np->rx_buffer != NULL)
@@ -449,7 +464,7 @@ static int rtl8139nic_open(struct net_device *dev)
 
 	if ((np->rx_buffer != NULL) && (np->tx_buffer != NULL))
 	{
-D(bug("%s: rtl8139nic_open: Allocated IO Buffers [ %d x Tx @ %x] [ Rx @ %x, %d bytes]\n",dev->rtl8139u_name,
+D(bug("%s: rtl8139nic_open: Allocated IO Buffers [ %d x Tx @ %x] [ Rx @ %x, %d bytes]\n",unit->rtl8139u_name,
 						NUM_TX_DESC, np->tx_buffer,
 						np->rx_buffer,  np->rx_buf_len));
    
@@ -460,7 +475,7 @@ D(bug("%s: rtl8139nic_open: Allocated IO Buffers [ %d x Tx @ %x] [ Rx @ %x, %d b
 			np->tx_pbuf[i] = NULL;
 			np->tx_buf[i]  = np->tx_buffer + (i * TX_BUF_SIZE);
 		}
-D(bug("%s: rtl8139nic_open: TX Buffers initialised\n",dev->rtl8139u_name));
+D(bug("%s: rtl8139nic_open: TX Buffers initialised\n",unit->rtl8139u_name));
 
 		np->tx_flag = (TX_FIFO_THRESH << 11) & 0x003f0000;
 		np->rx_config = (RX_FIFO_THRESH << 13) | (rx_buf_len_idx << 11) | (RX_DMA_BURST << 8);
@@ -470,10 +485,10 @@ D(bug("%s: rtl8139nic_open: TX Buffers initialised\n",dev->rtl8139u_name));
 		{
 			if ((BYTEIN(base + RTLr_ChipCmd) & CmdReset) ==0) break;
 		}
-D(bug("%s: rtl8139nic_open: NIC Reset\n",dev->rtl8139u_name));		
+D(bug("%s: rtl8139nic_open: NIC Reset\n",unit->rtl8139u_name));		
 
-		rtl8139nic_set_mac(dev);
-D(bug("%s: rtl8139nic_open: copied MAC address\n",dev->rtl8139u_name));
+		rtl8139nic_set_mac(unit);
+D(bug("%s: rtl8139nic_open: copied MAC address\n",unit->rtl8139u_name));
 
 		np->rx_current = 0;
 
@@ -484,12 +499,12 @@ D(bug("%s: rtl8139nic_open: copied MAC address\n",dev->rtl8139u_name));
 		LONGOUT(base + RTLr_RxConfig, np->rx_config);
 		LONGOUT(base + RTLr_TxConfig, TX_DMA_BURST << 8);
 
-D(bug("%s: rtl8139nic_open: Enabled Tx/Rx\n",dev->rtl8139u_name));
+D(bug("%s: rtl8139nic_open: Enabled Tx/Rx\n",unit->rtl8139u_name));
 
 		/* check_duplex */
-		if (np->mii_phys[0] >= 0 || (dev->rtl8139u_rtl_chipcapabilities & RTLc_HAS_MII_XCVR))
+		if (np->mii_phys[0] >= 0 || (unit->rtl8139u_rtl_chipcapabilities & RTLc_HAS_MII_XCVR))
 		{
-			unsigned short mii_reg5 = mdio_read(dev, np->mii_phys[0], 5);
+			UBYTE mii_reg5 = mdio_read(unit, np->mii_phys[0], 5);
 			if (mii_reg5 != 0xffff)
 			{
 				if (((mii_reg5 & 0x0100) == 0x0100) || ((mii_reg5 & 0x00c0) == 0x0040))
@@ -500,75 +515,75 @@ D(bug("%s: rtl8139nic_open: Enabled Tx/Rx\n",dev->rtl8139u_name));
 
 			if ((mii_reg5 == 0 ) || !(mii_reg5 & 0x0180))
 			{
-			   dev->rtl8139u_rtl_LinkSpeed = 10000000;
+			   unit->rtl8139u_rtl_LinkSpeed = 10000000;
 			}
 			else
 			{
-			   dev->rtl8139u_rtl_LinkSpeed = 100000000;				
+			   unit->rtl8139u_rtl_LinkSpeed = 100000000;				
 			}
 			
-D(bug("%s: rtl8139nic_open: Setting %s%s-duplex based on auto-neg partner ability %4.4x\n",dev->rtl8139u_name,
-																																				 mii_reg5 == 0 ? "" : (mii_reg5 & 0x0180) ? "100mbps " : "10mbps ",
-																																				 np->full_duplex ? "full" : "half", mii_reg5));
+D(bug("%s: rtl8139nic_open: Setting %s%s-duplex based on auto-neg partner ability %4.4x\n",unit->rtl8139u_name,
+																							 mii_reg5 == 0 ? "" : (mii_reg5 & 0x0180) ? "100mbps " : "10mbps ",
+																							 np->full_duplex ? "full" : "half", mii_reg5));
 		}
 
-		if (dev->rtl8139u_rtl_chipcapabilities & RTLc_HAS_MII_XCVR)
+		if (unit->rtl8139u_rtl_chipcapabilities & RTLc_HAS_MII_XCVR)
 		{
 			BYTEOUT(base + RTLr_Config1, np->full_duplex ? 0x60 : 0x20);
 		}
 		BYTEOUT(base + RTLr_Cfg9346, 0x00);
+		LONGOUT(base + RTLr_RxBuf, np->rx_buffer);
 
 		//Start the chips Tx/Rx processes
 		LONGOUT(base + RTLr_RxMissed, 0);
-		LONGOUT(base + RTLr_RxBuf, np->rx_buffer);
 
-		rtl8139nic_set_rxmode(dev);
+		rtl8139nic_set_rxmode(unit);
 		BYTEOUT(base + RTLr_ChipCmd, CmdRxEnb | CmdTxEnb);
 
 		//Enable all known interrupts by setting the interrupt mask ..
 		WORDOUT(base + RTLr_IntrMask, PCIErr | PCSTimeout | RxUnderrun | RxOverflow | RxFIFOOver | TxErr | TxOK | RxErr | RxOK);
 		
-	   dev->rtl8139u_flags |= IFF_UP;
-	   ReportEvents(LIBBASE, dev, S2EVENT_ONLINE);
-D(bug("%s: rtl8139nic_open: Device set as ONLINE\n",dev->rtl8139u_name));
+	   unit->rtl8139u_flags |= IFF_UP;
+	   ReportEvents(LIBBASE, unit, S2EVENT_ONLINE);
+D(bug("%s: rtl8139nic_open: Device set as ONLINE\n",unit->rtl8139u_name));
 	}
 	return 0;
 
 out_drain:
-	drain_ring(dev);
+	drain_ring(unit);
 	return ret;
 }
 
-static int rtl8139nic_close(struct net_device *dev)
+static int rtl8139nic_close(struct net_device *unit)
 {
-	struct fe_priv *np = get_pcnpriv(dev);
+	struct fe_priv *np = get_pcnpriv(unit);
 	UBYTE *base;
 
-	dev->rtl8139u_flags &= ~IFF_UP;
+	unit->rtl8139u_flags &= ~IFF_UP;
 
 	ObtainSemaphore(&np->lock);
 	np->in_shutdown = 1;
 	ReleaseSemaphore(&np->lock);
 
-	dev->rtl8139u_toutNEED = FALSE;
+	unit->rtl8139u_toutNEED = FALSE;
 
-	netif_stop_queue(dev);
+	netif_stop_queue(unit);
 	ObtainSemaphore(&np->lock);
 
-	rtl8139nic_deinitialize(dev);    // Stop the chipset and set it in 16bit-mode
+	rtl8139nic_deinitialize(unit);    // Stop the chipset and set it in 16bit-mode
 
-	base = get_hwbase(dev);
+	base = get_hwbase(unit);
 
 	ReleaseSemaphore(&np->lock);
 
-	free_irq(dev);
+	free_irq(unit);
 
-	drain_ring(dev);
+	drain_ring(unit);
 
-	HIDD_PCIDriver_FreePCIMem(dev->rtl8139u_PCIDriver, np->rx_buffer);
-	HIDD_PCIDriver_FreePCIMem(dev->rtl8139u_PCIDriver, np->tx_buffer);
+	HIDD_PCIDriver_FreePCIMem(unit->rtl8139u_PCIDriver, np->rx_buffer);
+	HIDD_PCIDriver_FreePCIMem(unit->rtl8139u_PCIDriver, np->tx_buffer);
 
-	ReportEvents(LIBBASE, dev, S2EVENT_OFFLINE);
+	ReportEvents(LIBBASE, unit, S2EVENT_OFFLINE);
 
 	return 0;
 }

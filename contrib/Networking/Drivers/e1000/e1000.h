@@ -55,8 +55,8 @@ typedef UQUAD u64;
 
 extern struct Library *OOPBase;
 
-#define e1000_TASK_NAME	"%s task"
-#define e1000_PORT_NAME	"%s port"
+#define e1000_TASK_NAME	"%s.task"
+#define e1000_PORT_NAME	"%s.port"
 
 struct e1000Base
 {

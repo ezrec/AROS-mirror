@@ -22,7 +22,7 @@
 	MA 02111-1307, USA.
 */
 
-#define DEBUG 1
+#define DEBUG 0
 #include <aros/debug.h>
 
 #include <exec/types.h>
@@ -47,8 +47,8 @@
 
 #define net_device RTL8139Unit
 
-#define RTL8139_TASK_NAME	"RTL8139.task"
-#define RTL8139_PORT_NAME	"RTL8139.port"
+#define RTL8139_TASK_NAME	"%s.task"
+#define RTL8139_PORT_NAME	"%s.port"
 
 /** Operational parameters that are set at compile time **/
 #define ETH_ZLEN  60 // Min. octets in frame sans FCS
@@ -70,24 +70,27 @@ extern struct Library *OOPBase;
 
 struct RTL8139Base {
 	struct Device       rtl8139b_Device;
-	struct Library      *rtl8139b_UtilityBase;
-	struct MsgPort      *rtl8139b_syncport;
+    struct ExecBase     *rtl8139b_SysBase;
+    BPTR                rtl8139b_SegList;
+    struct Library      *rtl8139b_UtilityBase;
 
-	OOP_Object          *rtl8139b_pci;
-	OOP_Object          *rtl8139b_irq;
-	OOP_AttrBase        rtl8139b_pciDeviceAttrBase;
+	OOP_Object          *rtl8139b_PCI;
+	OOP_AttrBase        rtl8139b_PCIDeviceAttrBase;
 
-	struct Sana2DeviceQuery  rtl8139b_Sana2Info;
-	struct RTL8139Unit            *rtl8139b_unit;
-
-	/* UnitCount is used to assign unit ID's to found hardware ..*/
-	unsigned int                    rtl8139b_UnitCount;
+    ULONG               rtl8139b_UnitCount;
+    struct List         rtl8139b_Units;
 };
 
 #define UtilityBase (LIBBASE->rtl8139b_UtilityBase)
 
 #undef HiddPCIDeviceAttrBase
-#define HiddPCIDeviceAttrBase   (LIBBASE->rtl8139b_pciDeviceAttrBase)
+#define HiddPCIDeviceAttrBase   (LIBBASE->rtl8139b_PCIDeviceAttrBase)
+
+struct RTL8139Startup
+{
+    struct MsgPort           *rtl8139sm_SyncPort;
+    struct RTL8139Unit       *rtl8139sm_Unit;
+};
 
 enum {
 	WRITE_QUEUE,
@@ -157,15 +160,26 @@ struct tx_ring_desc
 #define STAT_COUNT 3
 
 struct RTL8139Unit {
-	struct MinNode          *rtl8139u_Node;
-	struct MinList          rtl8139u_Openers;
-	struct MinList          rtl8139u_multicast_ranges;
-	struct MinList          rtl8139u_type_trackers;
+	struct MinNode          rtl8139u_Node;
+
+	struct RTL8139Base    *rtl8139u_device;
+
+	STRPTR                  rtl8139u_name;
+	
 	ULONG                   rtl8139u_UnitNum;
-	LONG                    rtl8139u_range_count;
+	IPTR                    rtl8139u_DriverFlags;
 
 	OOP_Object              *rtl8139u_PCIDevice;
 	OOP_Object              *rtl8139u_PCIDriver;
+	IPTR                    rtl8139u_IRQ;
+
+	int                     rtl8139u_open_count;
+	struct SignalSemaphore  rtl8139u_unit_lock;
+
+	LONG                    rtl8139u_range_count;
+	struct MinList          rtl8139u_Openers;
+	struct MinList          rtl8139u_multicast_ranges;
+	struct MinList          rtl8139u_type_trackers;
 
 	struct timeval          rtl8139u_toutPOLL;
 	BOOL                    rtl8139u_toutNEED;
@@ -176,6 +190,9 @@ struct RTL8139Unit {
 	struct MsgPort          *rtl8139u_TimerFastPort;
 	struct timerequest      *rtl8139u_TimerFastReq;
 
+	ULONG                   rtl8139u_mtu;
+	ULONG                   rtl8139u_flags;
+	struct Sana2DeviceQuery  rtl8139u_Sana2Info;
 	struct Sana2DeviceStats rtl8139u_stats;
 	ULONG                   rtl8139u_special_stats[STAT_COUNT];
 
@@ -201,17 +218,11 @@ struct RTL8139Unit {
 //    ULONG                   (*descr_getlength)(struct ring_desc *prd, ULONG v);
 	void                    (*set_multicast)(struct RTL8139Unit *);
 
-	int                     rtl8139u_open_count;
-	struct SignalSemaphore  rtl8139u_unit_lock;
-
 	struct Process          *rtl8139u_Process;
 
-	struct RTL8139Base    *rtl8139u_device;
 	HIDDT_IRQ_Handler       *rtl8139u_irqhandler;
 	HIDDT_IRQ_Handler       *rtl8139u_touthandler;
 	IPTR	                  rtl8139u_DeviceID;
-	IPTR                    rtl8139u_DriverFlags;
-	IPTR                    rtl8139u_IRQ;
 	IPTR                    rtl8139u_BaseMem;
 	IPTR                    rtl8139u_SizeMem;
 	IPTR	                  rtl8139u_BaseIO;
@@ -228,9 +239,6 @@ struct RTL8139Unit {
 	struct Interrupt        rtl8139u_rx_int;
 	struct Interrupt        rtl8139u_tx_int;
 
-	STRPTR                  rtl8139u_name;
-	ULONG                   rtl8139u_mtu;
-	ULONG                   rtl8139u_flags;
 	ULONG                   rtl8139u_state;
 	APTR                    rtl8139u_mc_list;
 	UBYTE                   rtl8139u_dev_addr[6];
@@ -396,50 +404,50 @@ struct dev_mc_list
 };
 
 struct fe_priv {
-	struct RTL8139Unit   *pci_dev;
-	int     in_shutdown;
-	ULONG   linkspeed;
-	int     duplex;
-	int     autoneg;
-	int     fixed_mode;
-	int     phyaddr;
-	int     wolenabled;
-	unsigned int phy_oui;
-	UWORD   gigabit;
-	ULONG   desc_ver;
+	struct RTL8139Unit      *pci_dev;
+	int                     in_shutdown;
+	ULONG                   linkspeed;
+	int                     duplex;
+	int                     autoneg;
+	int                     fixed_mode;
+	int                     phyaddr;
+	int                     wolenabled;
+	unsigned int            phy_oui;
+	UWORD                   gigabit;
+	ULONG                   desc_ver;
 	struct SignalSemaphore  lock;
 
-	IPTR     ring_addr;
+	IPTR                    ring_addr;
 
 /* Start - rtl new */
-	int                           full_duplex;
+	int                     full_duplex;
 
-	char                       mii_phys[4]; //MII device address
-	unsigned short    advertising;  //NWay media advertising
+	char                    mii_phys[4]; //MII device address
+	unsigned short          advertising;  //NWay media advertising
 
-	unsigned int          rx_config;
-	UBYTE                       *rx_buffer;
-	unsigned int          rx_buf_len;
-	int                           rx_current;
+	unsigned int            rx_config;
+	UBYTE                   *rx_buffer;
+	unsigned int            rx_buf_len;
+	unsigned int            rx_current;
 
-	int                           tx_flag;
-	UBYTE                       *tx_buffer;
-	unsigned char       *tx_pbuf[NUM_TX_DESC];
-	unsigned char       *tx_buf[NUM_TX_DESC];
-	int                            tx_dirty;
-	int                            tx_current;
+	ULONG                   tx_flag;
+	UBYTE                   *tx_buffer;
+	unsigned char           *tx_pbuf[NUM_TX_DESC];
+	unsigned char           *tx_buf[NUM_TX_DESC];
+	unsigned int            tx_dirty;
+	unsigned int            tx_current;
 /* End - rtl new */
 	
-	unsigned short    cur_rx;
-	ULONG                     refill_rx;
+	unsigned short          cur_rx;
+	ULONG                   refill_rx;
 
-	ULONG   next_tx, nic_tx;
-	ULONG   tx_flags;
+	ULONG                   next_tx, nic_tx;
+	ULONG                   tx_flags;
 
-	ULONG   irqmask;
-	ULONG   need_linktimer;
-	struct  timeval link_timeout;
-	UBYTE   orig_mac[6];
+	ULONG                   irqmask;
+	ULONG                   need_linktimer;
+	struct  timeval         link_timeout;
+	UBYTE                   orig_mac[6];
 };
 
 #define pci_name(unit)  (unit->rtl8139u_name)

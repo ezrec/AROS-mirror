@@ -45,8 +45,8 @@
 
 #include LC_LIBDEFS_FILE
 
-#define SiS900_TASK_NAME	"%s task"
-#define SiS900_PORT_NAME	"%s port"
+#define SiS900_TASK_NAME	"%s.task"
+#define SiS900_PORT_NAME	"%s.port"
 
 /** Operational parameters that are set at compile time **/
 #define ETH_ZLEN  60 // Min. octets in frame sans FCS
@@ -71,16 +71,16 @@ struct SiS900Base {
     struct List         sis900b_Units;
 };
 
+#define UtilityBase (LIBBASE->sis900b_UtilityBase)
+
+#undef HiddPCIDeviceAttrBase
+#define HiddPCIDeviceAttrBase   (LIBBASE->sis900b_PCIDeviceAttrBase)
+
 struct SiS900Startup
 {
     struct MsgPort           *sis900sm_SyncPort;
     struct SiS900Unit        *sis900sm_Unit;
 };
-
-#define UtilityBase (LIBBASE->sis900b_UtilityBase)
-
-#undef HiddPCIDeviceAttrBase
-#define HiddPCIDeviceAttrBase   (LIBBASE->sis900b_PCIDeviceAttrBase)
 
 enum {
     WRITE_QUEUE,
@@ -148,7 +148,7 @@ typedef struct _BufferDesc {
 
 /* Per-Unit Device struct */
 struct SiS900Unit {
-    struct MinNode          *sis900u_Node;
+    struct MinNode          sis900u_Node;
 
     struct SiS900Base       *sis900u_device;
 

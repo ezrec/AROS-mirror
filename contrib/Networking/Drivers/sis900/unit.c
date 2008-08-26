@@ -955,12 +955,10 @@ D(bug("[%s]: CreateUnit: Rx Ring Buffer Descriptors @ %p [DMA @ %p]\n", unit->si
 
                     if ((sm_UD = AllocMem(sizeof(struct SiS900Startup), MEMF_PUBLIC | MEMF_CLEAR)) != NULL)
                     {
-
                         sprintf((char *)tmpbuff, SiS900_TASK_NAME, unit->sis900u_name);
 
                         sm_UD->sis900sm_SyncPort = CreateMsgPort();
                         sm_UD->sis900sm_Unit = unit;
-
 
                         unit->sis900u_Process = CreateNewProcTags(
                                                 NP_Entry, (IPTR)SiS900_Schedular,
