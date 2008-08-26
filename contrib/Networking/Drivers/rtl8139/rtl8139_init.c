@@ -253,9 +253,6 @@ static const ULONG tx_tags[] = {
 	S2_CopyFromBuff32
 };
 
-/*
- * Open device handles currently only one rtl8139 unit.
- */
 static int GM_UNIQUENAME(Open)
 (
 	LIBBASETYPEPTR LIBBASE,

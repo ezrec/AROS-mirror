@@ -20,3 +20,7 @@ supported NIC's:
 
 TODO/Known Issues:
 
+# Driver currently works in promiscuous mode - set rx mode needs fixed
+to correctly set multicast filter.
+# Duplicate packets getting recieved .. need to investigate.
+# Needs fixed to handle link change.
