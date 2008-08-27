@@ -18,6 +18,8 @@ from build.thumbnail import *
 from template.www import makeTemplates
 from template.www.gallery import *
 
+import autodoc
+
 # Setup
 SRCROOT    = os.path.abspath( '.' )
 DSTROOT    = os.path.abspath( '../bin/documentation' )
@@ -586,14 +588,18 @@ def buildHTML():
 
 
 targets = {
-    'clean': buildClean,
-    'www':   buildWWW,
-    'html':  buildHTML
+    'clean':     buildClean,
+    'www':       buildWWW,
+    'html':      buildHTML,
+    'alldocs':   autodoc.create_all_docs,
+    'shelldocs': autodoc.create_shell_docs,
+    'libdocs':   autodoc.create_lib_docs
 }
 
 
 # Usage: build [target [language]]
-# Target is  www, html, or clean.
+# Target is  www, html, clean, alldocs, shelldocs, libdocs.
+# The latter 3 update the documentation which is extracted from the source code.
 # A language may only be specified for the www target. If a language is
 # specified, only that language is built. If no language is specified, all
 # languages are built.
