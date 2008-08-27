@@ -1,0 +1,2494 @@
+diff -ruN coreutils-6.9/configure coreutils-6.9.new/configure
+--- coreutils-6.9/configure	2007-03-22 22:20:28.000000000 +0100
++++ coreutils-6.9.new/configure	2008-08-27 20:00:30.000000000 +0200
+@@ -6573,7 +6573,9 @@
+ 
+ 
+ 
+-
++ac_cv_func_fchdir=yes
++ac_cv_func_dup2=yes
++ac_cv_func_lstat=yes
+ for ac_func in $ac_func_list
+ do
+ as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
+@@ -9015,6 +9017,7 @@
+ 
+    { $as_echo "$as_me:$LINENO: checking whether getcwd (NULL, 0) allocates memory for result" >&5
+ $as_echo_n "checking whether getcwd (NULL, 0) allocates memory for result... " >&6; }
++gl_cv_func_getcwd_null=yes
+ if test "${gl_cv_func_getcwd_null+set}" = set; then
+   $as_echo_n "(cached) " >&6
+ else
+@@ -14277,6 +14280,7 @@
+ 
+ 
+ 
++ac_cv_func_lstat_empty_string_bug=no
+ { $as_echo "$as_me:$LINENO: checking whether lstat accepts an empty string" >&5
+ $as_echo_n "checking whether lstat accepts an empty string... " >&6; }
+ if test "${ac_cv_func_lstat_empty_string_bug+set}" = set; then
+@@ -15722,7 +15726,7 @@
+ 
+   fi
+ 
+-
++gl_cv_func_working_utimes=yes
+   { $as_echo "$as_me:$LINENO: checking determine whether the utimes function works" >&5
+ $as_echo_n "checking determine whether the utimes function works... " >&6; }
+ if test "${gl_cv_func_working_utimes+set}" = set; then
+@@ -22796,6 +22800,7 @@
+ 
+   { $as_echo "$as_me:$LINENO: checking whether getcwd handles long file names properly" >&5
+ $as_echo_n "checking whether getcwd handles long file names properly... " >&6; }
++gl_cv_func_getcwd_path_max=yes
+ if test "${gl_cv_func_getcwd_path_max+set}" = set; then
+   $as_echo_n "(cached) " >&6
+ else
+@@ -23114,6 +23119,7 @@
+ 
+   { $as_echo "$as_me:$LINENO: checking whether getcwd aborts when 4k < cwd_length < 16k" >&5
+ $as_echo_n "checking whether getcwd aborts when 4k < cwd_length < 16k... " >&6; }
++gl_cv_func_getcwd_abort_bug=no
+ if test "${gl_cv_func_getcwd_abort_bug+set}" = set; then
+   $as_echo_n "(cached) " >&6
+ else
+@@ -23857,7 +23863,7 @@
+ 
+   if test $ac_cv_func_gethostname = no; then
+ 
+-
++ac_cv_func_uname=yes
+ for ac_func in uname
+ do
+ as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
+@@ -29082,7 +29088,7 @@
+   gl_LIBOBJS="$gl_LIBOBJS long-options.$ac_objext"
+ 
+ 
+-
++ac_cv_func_lstat_dereferences_slashed_symlink=yes
+   { $as_echo "$as_me:$LINENO: checking whether lstat dereferences a symlink specified with a trailing slash" >&5
+ $as_echo_n "checking whether lstat dereferences a symlink specified with a trailing slash... " >&6; }
+ if test "${ac_cv_func_lstat_dereferences_slashed_symlink+set}" = set; then
+@@ -34196,7 +34202,7 @@
+   gl_LIBOBJS="$gl_LIBOBJS posixver.$ac_objext"
+ 
+ 
+-
++jm_cv_func_svid_putenv=yes
+   { $as_echo "$as_me:$LINENO: checking for SVID conformant putenv" >&5
+ $as_echo_n "checking for SVID conformant putenv... " >&6; }
+ if test "${jm_cv_func_svid_putenv+set}" = set; then
+@@ -43671,6 +43677,7 @@
+ 
+   { $as_echo "$as_me:$LINENO: checking whether tzset clobbers localtime buffer" >&5
+ $as_echo_n "checking whether tzset clobbers localtime buffer... " >&6; }
++gl_cv_func_tzset_clobber=no
+ if test "${gl_cv_func_tzset_clobber+set}" = set; then
+   $as_echo_n "(cached) " >&6
+ else
+diff -ruN coreutils-6.9/lib/at-func.c coreutils-6.9.new/lib/at-func.c
+--- coreutils-6.9/lib/at-func.c	2006-09-30 02:37:48.000000000 +0200
++++ coreutils-6.9.new/lib/at-func.c	2008-08-27 20:00:30.000000000 +0200
+@@ -37,7 +37,7 @@
+ 
+   if (fd == AT_FDCWD || IS_ABSOLUTE_FILE_NAME (file))
+     return CALL_FUNC (file);
+-
++#ifndef __AROS__
+   {
+     char buf[OPENAT_BUFFER_SIZE];
+     char *proc_file = openat_proc_name (buf, fd, file);
+@@ -59,7 +59,7 @@
+ 	  }
+       }
+   }
+-
++#endif
+   if (save_cwd (&saved_cwd) != 0)
+     openat_save_fail (errno);
+ 
+diff -ruN coreutils-6.9/lib/cloexec.c coreutils-6.9.new/lib/cloexec.c
+--- coreutils-6.9/lib/cloexec.c	2006-09-14 00:38:14.000000000 +0200
++++ coreutils-6.9.new/lib/cloexec.c	2008-08-27 20:00:30.000000000 +0200
+@@ -36,7 +36,7 @@
+ int
+ set_cloexec_flag (int desc, bool value)
+ {
+-#if defined F_GETFD && defined F_SETFD
++#if defined F_GETFD && defined F_SETFD && !defined __AROS__
+ 
+   int flags = fcntl (desc, F_GETFD, 0);
+ 
+diff -ruN coreutils-6.9/lib/getpagesize.h coreutils-6.9.new/lib/getpagesize.h
+--- coreutils-6.9/lib/getpagesize.h	2006-12-31 00:27:20.000000000 +0100
++++ coreutils-6.9.new/lib/getpagesize.h	2008-08-27 20:00:30.000000000 +0200
+@@ -43,7 +43,7 @@
+ #endif
+ 
+ /* This is for AmigaOS4.0.  */
+-#if !defined getpagesize && defined __amigaos4__
++#if !defined getpagesize && (defined __amigaos4__ || defined __AROS__)
+ # define getpagesize() 2048
+ #endif
+ 
+diff -ruN coreutils-6.9/lib/getpass.c coreutils-6.9.new/lib/getpass.c
+--- coreutils-6.9/lib/getpass.c	2006-09-27 19:59:19.000000000 +0200
++++ coreutils-6.9.new/lib/getpass.c	2008-08-27 20:00:30.000000000 +0200
+@@ -89,7 +89,6 @@
+ {
+   FILE *tty;
+   FILE *in, *out;
+-  struct termios s, t;
+   bool tty_changed = false;
+   static char *buf;
+   static size_t bufsize;
+@@ -116,6 +115,7 @@
+ 
+   /* Turn echoing off if it is on now.  */
+ #if HAVE_TCGETATTR
++  struct termios s, t;
+   if (tcgetattr (fileno (in), &t) == 0)
+     {
+       /* Save the old one. */
+diff -ruN coreutils-6.9/lib/Makefile.in coreutils-6.9.new/lib/Makefile.in
+--- coreutils-6.9/lib/Makefile.in	2007-03-22 22:20:22.000000000 +0100
++++ coreutils-6.9.new/lib/Makefile.in	2008-08-27 20:00:30.000000000 +0200
+@@ -208,7 +208,7 @@
+ 	full-write.$(OBJEXT) getdate.$(OBJEXT) hash-pjw.$(OBJEXT) \
+ 	linebuffer.$(OBJEXT) localcharset.$(OBJEXT) mbchar.$(OBJEXT) \
+ 	mbscasecmp.$(OBJEXT) mbswidth.$(OBJEXT) readtokens0.$(OBJEXT) \
+-	savewd.$(OBJEXT) strnlen1.$(OBJEXT) unicodeio.$(OBJEXT) \
++	strnlen1.$(OBJEXT) unicodeio.$(OBJEXT) \
+ 	version-etc.$(OBJEXT) version-etc-fsf.$(OBJEXT) \
+ 	xalloc-die.$(OBJEXT) xgethostname.$(OBJEXT) xmemcoll.$(OBJEXT) \
+ 	xreadlink.$(OBJEXT) xreadlink-with-size.$(OBJEXT) \
+diff -ruN coreutils-6.9/lib/mkancesdirs.c coreutils-6.9.new/lib/mkancesdirs.c
+--- coreutils-6.9/lib/mkancesdirs.c	2006-10-07 09:07:34.000000000 +0200
++++ coreutils-6.9.new/lib/mkancesdirs.c	2008-08-27 20:00:30.000000000 +0200
+@@ -18,75 +18,100 @@
+ 
+ /* Written by Paul Eggert.  */
+ 
+-#include <config.h>
++#ifdef HAVE_CONFIG_H
++# include <config.h>
++#endif
+ 
+ #include "mkancesdirs.h"
+ 
+-#include <sys/types.h>
+-#include <sys/stat.h>
+-#include <fcntl.h>
+-
+ #include <errno.h>
+-#include <unistd.h>
++#include <sys/stat.h>
+ 
+ #include "dirname.h"
+-#include "savewd.h"
++#include "stat-macros.h"
++
++/* Return 0 if FILE is a directory, otherwise -1 (setting errno).  */
++
++static int
++test_dir (char const *file)
++{
++  struct stat st;
++  if (stat (file, &st) == 0)
++    {
++      if (S_ISDIR (st.st_mode))
++	return 0;
++      errno = ENOTDIR;
++    }
++  return -1;
++}
+ 
+ /* Ensure that the ancestor directories of FILE exist, using an
+    algorithm that should work even if two processes execute this
+-   function in parallel.  Modify FILE as necessary to access the
+-   ancestor directories, but restore FILE to an equivalent value
+-   if successful.
+-
+-   WD points to the working directory, using the conventions of
+-   savewd.
++   function in parallel.  Temporarily modify FILE by storing '\0'
++   bytes into it, to access the ancestor directories.
+ 
+    Create any ancestor directories that don't already exist, by
+-   invoking MAKE_DIR (FILE, COMPONENT, MAKE_DIR_ARG).  This function
+-   should return 0 if successful and the resulting directory is
+-   readable, 1 if successful but the resulting directory might not be
+-   readable, -1 (setting errno) otherwise.  If COMPONENT is relative,
+-   it is relative to the temporary working directory, which may differ
+-   from *WD.
+-
+-   Ordinarily MAKE_DIR is executed with the working directory changed
+-   to reflect the already-made prefix, and mkancesdirs returns with
+-   the working directory changed a prefix of FILE.  However, if the
+-   initial working directory cannot be saved in a file descriptor,
+-   MAKE_DIR is invoked in a subprocess and this function returns in
+-   both the parent and child process, so the caller should not assume
+-   any changed state survives other than the EXITMAX component of WD,
+-   and the caller should take care that the parent does not attempt to
+-   do the work that the child is doing.
+-
+-   If successful and if this process can go ahead and create FILE,
+-   return the length of the prefix of FILE that has already been made.
+-   If successful so far but a child process is doing the actual work,
+-   return -2.  If unsuccessful, return -1 and set errno.  */
+-
+-ptrdiff_t
+-mkancesdirs (char *file, struct savewd *wd,
+-	     int (*make_dir) (char const *, char const *, void *),
++   invoking MAKE_DIR (ANCESTOR, MAKE_DIR_ARG).  This function should
++   return zero if successful, -1 (setting errno) otherwise.
++
++   If successful, return 0 with FILE set back to its original value;
++   otherwise, return -1 (setting errno), storing a '\0' into *FILE so
++   that it names the ancestor directory that had problems.  */
++
++int
++mkancesdirs (char *file,
++	     int (*make_dir) (char const *, void *),
+ 	     void *make_dir_arg)
+ {
++  /* This algorithm is O(N**2) but in typical practice the fancier
++     O(N) algorithms are slower.  */
++
+   /* Address of the previous directory separator that follows an
+      ordinary byte in a file name in the left-to-right scan, or NULL
+      if no such separator precedes the current location P.  */
+   char *sep = NULL;
+ 
+-  /* Address of the leftmost file name component that has not yet
+-     been processed.  */
+-  char *component = file;
+-
+-  char *p = file + FILE_SYSTEM_PREFIX_LEN (file);
++  char const *prefix_end = file + FILE_SYSTEM_PREFIX_LEN (file);
++  char *p;
+   char c;
+-  bool made_dir = false;
+ 
+-  /* Scan forward through FILE, creating and chdiring into directories
+-     along the way.  Try MAKE_DIR before chdir, so that the procedure
+-     works even when two or more processes are executing it in
+-     parallel.  Isolate each file name component by having COMPONENT
+-     point to its start and SEP point just after its end.  */
++  /* Search backward through FILE using mkdir to create the
++     furthest-away ancestor that is needed.  This loop isn't needed
++     for correctness, but typically ancestors already exist so this
++     loop speeds things up a bit.
++
++     This loop runs a bit faster if errno initially contains an error
++     number corresponding to a failed access to FILE.  However, things
++     work correctly regardless of errno's initial value.  */
++
++  for (p = last_component (file); prefix_end < p; p--)
++    if (ISSLASH (*p) && ! ISSLASH (p[-1]))
++      {
++	*p = '\0';
++
++	if (errno == ENOENT && make_dir (file, make_dir_arg) == 0)
++	  {
++	    *p = '/';
++	    break;
++	  }
++
++	if (errno != ENOENT)
++	  {
++	    if (test_dir (file) == 0)
++	      {
++		*p = '/';
++		break;
++	      }
++	    if (errno != ENOENT)
++	      return -1;
++	  }
++
++	*p = '/';
++      }
++
++  /* Scan forward through FILE, creating directories along the way.
++     Try mkdir before stat, so that the procedure works even when two
++     or more processes are executing it in parallel.  */
+ 
+   while ((c = *p++))
+     if (ISSLASH (*p))
+@@ -96,59 +121,12 @@
+       }
+     else if (ISSLASH (c) && *p && sep)
+       {
+-	/* Don't bother to make or test for "." since it does not
+-	   affect the algorithm.  */
+-	if (! (sep - component == 1 && component[0] == '.'))
+-	  {
+-	    int make_dir_errno = 0;
+-	    int savewd_chdir_options = 0;
+-	    int chdir_result;
+-
+-	    /* Temporarily modify FILE to isolate this file name
+-	       component.  */
+-	    *sep = '\0';
+-
+-	    /* Invoke MAKE_DIR on this component, except don't bother
+-	       with ".." since it must exist if its "parent" does.  */
+-	    if (sep - component == 2
+-		&& component[0] == '.' && component[1] == '.')
+-	      made_dir = false;
+-	    else
+-	      switch (make_dir (file, component, make_dir_arg))
+-		{
+-		case -1:
+-		  make_dir_errno = errno;
+-		  break;
+-
+-		case 0:
+-		  savewd_chdir_options |= SAVEWD_CHDIR_READABLE;
+-		  /* Fall through.  */
+-		case 1:
+-		  made_dir = true;
+-		  break;
+-		}
+-
+-	    if (made_dir)
+-	      savewd_chdir_options |= SAVEWD_CHDIR_NOFOLLOW;
+-
+-	    chdir_result =
+-	      savewd_chdir (wd, component, savewd_chdir_options, NULL);
+-
+-	    /* Undo the temporary modification to FILE, unless there
+-	       was a failure.  */
+-	    if (chdir_result != -1)
+-	      *sep = '/';
+-
+-	    if (chdir_result != 0)
+-	      {
+-		if (make_dir_errno != 0 && errno == ENOENT)
+-		  errno = make_dir_errno;
+-		return chdir_result;
+-	      }
+-	  }
+-
+-	component = p;
++	*sep = '\0';
++	if (make_dir (file, make_dir_arg) != 0 && test_dir (file) != 0)
++	  return -1;
++	*sep = '/';
+       }
+ 
+-  return component - file;
++
++  return 0;
+ }
+diff -ruN coreutils-6.9/lib/mkancesdirs.h coreutils-6.9.new/lib/mkancesdirs.h
+--- coreutils-6.9/lib/mkancesdirs.h	2006-10-07 09:07:34.000000000 +0200
++++ coreutils-6.9.new/lib/mkancesdirs.h	2008-08-27 20:00:30.000000000 +0200
+@@ -1,4 +1 @@
+-#include <stddef.h>
+-struct savewd;
+-ptrdiff_t mkancesdirs (char *, struct savewd *,
+-		       int (*) (char const *, char const *, void *), void *);
++int mkancesdirs (char *, int (*) (char const *, void *), void *);
+diff -ruN coreutils-6.9/lib/mkdir-p.c coreutils-6.9.new/lib/mkdir-p.c
+--- coreutils-6.9/lib/mkdir-p.c	2007-02-01 08:56:15.000000000 +0100
++++ coreutils-6.9.new/lib/mkdir-p.c	2008-08-27 20:00:30.000000000 +0200
+@@ -1,7 +1,7 @@
+ /* mkdir-p.c -- Ensure that a directory and its parents exist.
+ 
+-   Copyright (C) 1990, 1997, 1998, 1999, 2000, 2002, 2003, 2004, 2005,
+-   2006, 2007 Free Software Foundation, Inc.
++   Copyright (C) 1990, 1997, 1998, 1999, 2000, 2002, 2003, 2004, 2005, 2006
++   Free Software Foundation, Inc.
+ 
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+@@ -19,34 +19,28 @@
+ 
+ /* Written by Paul Eggert, David MacKenzie, and Jim Meyering.  */
+ 
+-#include <config.h>
++#ifdef HAVE_CONFIG_H
++# include <config.h>
++#endif
+ 
+ #include "mkdir-p.h"
+ 
+ #include <errno.h>
+ #include <sys/stat.h>
+-#include <unistd.h>
+ 
+ #include "gettext.h"
+ #define _(msgid) gettext (msgid)
+ 
+-#include "dirchownmod.h"
+-#include "dirname.h"
++#include "dirchownmod.c"
+ #include "error.h"
+ #include "quote.h"
+ #include "mkancesdirs.h"
+-#include "savewd.h"
+-
+-#ifndef HAVE_FCHMOD
+-# define HAVE_FCHMOD false
+-#endif
++#include "stat-macros.h"
+ 
+ /* Ensure that the directory DIR exists.
+ 
+-   WD is the working directory, as in savewd.c.
+-
+    If MAKE_ANCESTOR is not null, create any ancestor directories that
+-   don't already exist, by invoking MAKE_ANCESTOR (DIR, ANCESTOR, OPTIONS).
++   don't already exist, by invoking MAKE_ANCESTOR (ANCESTOR, OPTIONS).
+    This function should return zero if successful, -1 (setting errno)
+    otherwise.  In this case, DIR may be modified by storing '\0' bytes
+    into it, to access the ancestor directories, and this modification
+@@ -54,7 +48,7 @@
+    created.
+ 
+    Create DIR as a new directory with using mkdir with permissions
+-   MODE.  It is also OK if MAKE_ANCESTOR is not null and a
++   MODE.  It is also OK if MAKE_ANCESTOR_DIR is not null and a
+    directory DIR already exists.
+ 
+    Call ANNOUNCE (DIR, OPTIONS) just after successfully making DIR,
+@@ -77,16 +71,13 @@
+    This implementation assumes the current umask is zero.
+ 
+    Return true if DIR exists as a directory with the proper ownership
+-   and file mode bits when done, or if a child process has been
+-   dispatched to do the real work (though the child process may not
+-   have finished yet -- it is the caller's responsibility to handle
+-   this).  Report a diagnostic and return false on failure, storing
+-   '\0' into *DIR if an ancestor directory had problems.  */
++   and file mode bits when done.  Report a diagnostic and return false
++   on failure, storing '\0' into *DIR if an ancestor directory had
++   problems.  */
+ 
+ bool
+ make_dir_parents (char *dir,
+-		  struct savewd *wd,
+-		  int (*make_ancestor) (char const *, char const *, void *),
++		  int (*make_ancestor) (char const *, void *),
+ 		  void *options,
+ 		  mode_t mode,
+ 		  void (*announce) (char const *, void *),
+@@ -95,115 +86,51 @@
+ 		  gid_t group,
+ 		  bool preserve_existing)
+ {
+-  int mkdir_errno = (IS_ABSOLUTE_FILE_NAME (dir) ? 0 : savewd_errno (wd));
++  bool made_dir = (mkdir (dir, mode) == 0);
+ 
+-  if (mkdir_errno == 0)
++  if (!made_dir && make_ancestor && errno == ENOENT)
+     {
+-      ptrdiff_t prefix_len = 0;
+-      int savewd_chdir_options = (HAVE_FCHMOD ? SAVEWD_CHDIR_SKIP_READABLE : 0);
+-
+-      if (make_ancestor)
++      if (mkancesdirs (dir, make_ancestor, options) == 0)
++	made_dir = (mkdir (dir, mode) == 0);
++      else
+ 	{
+-	  prefix_len = mkancesdirs (dir, wd, make_ancestor, options);
+-	  if (prefix_len < 0)
+-	    {
+-	      if (prefix_len < -1)
+-		return true;
+-	      mkdir_errno = errno;
+-	    }
++	  /* mkancestdirs updated DIR for a better-looking
++	     diagnostic, so don't try to stat DIR below.  */
++	  make_ancestor = NULL;
+ 	}
++    }
+ 
+-      if (0 <= prefix_len)
++  if (made_dir)
++    {
++      announce (dir, options);
++      preserve_existing =
++	(owner == (uid_t) -1 && group == (gid_t) -1
++	 && ! ((mode_bits & (S_ISUID | S_ISGID)) | (mode & S_ISVTX)));
++    }
++  else
++    {
++      int mkdir_errno = errno;
++      struct stat st;
++      if (! (make_ancestor && mkdir_errno != ENOENT
++	     && stat (dir, &st) == 0 && S_ISDIR (st.st_mode)))
+ 	{
+-	  /* If the ownership might change, or if the directory will be
+-	     writeable to other users and its special mode bits may
+-	     change after the directory is created, create it with
+-	     more restrictive permissions at first, so unauthorized
+-	     users cannot nip in before the directory is ready.  */
+-	  bool keep_owner = owner == (uid_t) -1 && group == (gid_t) -1;
+-	  bool keep_special_mode_bits =
+-	    ((mode_bits & (S_ISUID | S_ISGID)) | (mode & S_ISVTX)) == 0;
+-	  mode_t mkdir_mode = mode;
+-	  if (! keep_owner)
+-	    mkdir_mode &= ~ (S_IRWXG | S_IRWXO);
+-	  else if (! keep_special_mode_bits)
+-	    mkdir_mode &= ~ (S_IWGRP | S_IWOTH);
+-
+-	  if (mkdir (dir + prefix_len, mkdir_mode) == 0)
+-	    {
+-	      announce (dir, options);
+-	      preserve_existing = keep_owner & keep_special_mode_bits;
+-	      savewd_chdir_options |=
+-		(SAVEWD_CHDIR_NOFOLLOW
+-		 | (mode & S_IRUSR ? SAVEWD_CHDIR_READABLE : 0));
+-	    }
+-	  else
+-	    {
+-	      mkdir_errno = errno;
+-	      mkdir_mode = -1;
+-	    }
+-
+-	  if (preserve_existing)
+-	    {
+-	      struct stat st;
+-	      if (mkdir_errno == 0
+-		  || (mkdir_errno != ENOENT && make_ancestor
+-		      && stat (dir + prefix_len, &st) == 0
+-		      && S_ISDIR (st.st_mode)))
+-		return true;
+-	    }
+-	  else
+-	    {
+-	      int open_result[2];
+-	      int chdir_result =
+-		savewd_chdir (wd, dir + prefix_len,
+-			      savewd_chdir_options, open_result);
+-	      if (chdir_result < -1)
+-		return true;
+-	      else
+-		{
+-		  bool chdir_ok = (chdir_result == 0);
+-		  int chdir_errno = errno;
+-		  int fd = open_result[0];
+-		  bool chdir_failed_unexpectedly =
+-		    (mkdir_errno == 0
+-		     && ((! chdir_ok && (mode & S_IXUSR))
+-			 || (fd < 0 && (mode & S_IRUSR))));
+-
+-		  if (chdir_failed_unexpectedly)
+-		    {
+-		      /* No need to save errno here; it's irrelevant.  */
+-		      if (0 <= fd)
+-			close (fd);
+-		    }
+-		  else
+-		    {
+-		      char const *subdir = (chdir_ok ? "." : dir + prefix_len);
+-		      if (dirchownmod (fd, subdir, mkdir_mode, owner, group,
+-				       mode, mode_bits)
+-			  == 0)
+-			return true;
+-		    }
+-
+-		  if (mkdir_errno == 0
+-		      || (mkdir_errno != ENOENT && make_ancestor
+-			  && errno != ENOTDIR))
+-		    {
+-		      error (0,
+-			     (! chdir_failed_unexpectedly ? errno
+-			      : ! chdir_ok && (mode & S_IXUSR) ? chdir_errno
+-			      : open_result[1]),
+-			     _(keep_owner
+-			       ? "cannot change permissions of %s"
+-			       : "cannot change owner and permissions of %s"),
+-			     quote (dir));
+-		      return false;
+-		    }
+-		}
+-	    }
++	  error (0, mkdir_errno, _("cannot create directory %s"), quote (dir));
++	  return false;
+ 	}
+     }
+ 
+-  error (0, mkdir_errno, _("cannot create directory %s"), quote (dir));
+-  return false;
++  if (! preserve_existing
++      && (dirchownmod (-1, dir, (made_dir ? mode : (mode_t) -1),
++		       owner, group, mode, mode_bits)
++	  != 0))
++    {
++      error (0, errno,
++	     _(owner == (uid_t) -1 && group == (gid_t) -1
++	       ? "cannot change permissions of %s"
++	       : "cannot change owner and permissions of %s"),
++	     quote (dir));
++      return false;
++    }
++
++  return true;
+ }
+diff -ruN coreutils-6.9/lib/mkdir-p.h coreutils-6.9.new/lib/mkdir-p.h
+--- coreutils-6.9/lib/mkdir-p.h	2006-10-07 09:07:34.000000000 +0200
++++ coreutils-6.9.new/lib/mkdir-p.h	2008-08-27 20:00:30.000000000 +0200
+@@ -1,7 +1,7 @@
+ /* mkdir-p.h -- Ensure that a directory and its parents exist.
+ 
+-   Copyright (C) 1994, 1995, 1996, 1997, 2000, 2003, 2004, 2005, 2006
+-   Free Software Foundation, Inc.
++   Copyright (C) 1994, 1995, 1996, 1997, 2000, 2003, 2004, 2005 Free
++   Software Foundation, Inc.
+ 
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+@@ -22,11 +22,8 @@
+ #include <stdbool.h>
+ #include <sys/types.h>
+ 
+-struct savewd;
+ bool make_dir_parents (char *dir,
+-		       struct savewd *wd,
+-		       int (*make_ancestor) (char const *, char const *,
+-					     void *),
++		       int (*make_ancestor) (char const *, void *),
+ 		       void *options,
+ 		       mode_t mode,
+ 		       void (*announce) (char const *, void *),
+diff -ruN coreutils-6.9/lib/nanosleep.c coreutils-6.9.new/lib/nanosleep.c
+--- coreutils-6.9/lib/nanosleep.c	2007-02-12 19:49:19.000000000 +0100
++++ coreutils-6.9.new/lib/nanosleep.c	2008-08-27 20:00:30.000000000 +0200
+@@ -124,6 +124,12 @@
+ static void
+ my_usleep (const struct timespec *ts_delay)
+ {
++#ifdef __AROS__
++  usleep(
++  	ts_delay->tv_sec * 1000000 + 
++	(ts_delay->tv_nsec + 999) / 1000
++  );
++#else
+   struct timeval tv_delay;
+   tv_delay.tv_sec = ts_delay->tv_sec;
+   tv_delay.tv_usec = (ts_delay->tv_nsec + 999) / 1000;
+@@ -139,6 +145,7 @@
+ 	}
+     }
+   select (0, NULL, NULL, NULL, &tv_delay);
++#endif
+ }
+ 
+ /* Suspend execution for at least *REQUESTED_DELAY seconds.  The
+diff -ruN coreutils-6.9/lib/openat-proc.c coreutils-6.9.new/lib/openat-proc.c
+--- coreutils-6.9/lib/openat-proc.c	2007-01-14 12:32:10.000000000 +0100
++++ coreutils-6.9.new/lib/openat-proc.c	2008-08-27 20:00:30.000000000 +0200
+@@ -53,6 +53,7 @@
+ char *
+ openat_proc_name (char buf[OPENAT_BUFFER_SIZE], int fd, char const *file)
+ {
++  return NULL;
+   static int proc_status = 0;
+ 
+   if (! proc_status)
+diff -ruN coreutils-6.9/man/Makefile.in coreutils-6.9.new/man/Makefile.in
+--- coreutils-6.9/man/Makefile.in	2007-03-22 22:20:22.000000000 +0100
++++ coreutils-6.9.new/man/Makefile.in	2008-08-27 20:00:30.000000000 +0200
+@@ -857,19 +857,7 @@
+ 	      'or inadequate' 1>&2 \
+ 	    ;;							\
+ 	  *)							\
+-	    rm -f $@						\
+-	    && { echo "Updating man page $@";			\
+-	         rm -rf $t;					\
+-	         mkdir $t;					\
+-	         (cd $t && $(LN_S) ../../src/$(mapped_name) $*); \
+-	            $(PERL) -- $(srcdir)/help2man		\
+-	             --source='$(PACKAGE_STRING)'		\
+-	             --include=$(srcdir)/$*.x			\
+-	             --output=$t/$@ $t/$*;			\
+-	       }						\
+-	    && sed 's|$*\.td/||g' $t/$@ > $@			\
+-	    && chmod a-w $@					\
+-	    && rm -rf $t ;;					\
++	    ;;					\
+ 	esac
+ 
+ check-local: check-x-vs-1 check-programs-vs-x
+diff -ruN coreutils-6.9/src/env.c coreutils-6.9.new/src/env.c
+--- coreutils-6.9/src/env.c	2007-03-18 22:36:43.000000000 +0100
++++ coreutils-6.9.new/src/env.c	2008-08-27 20:00:30.000000000 +0200
+@@ -81,6 +81,7 @@
+ #include <stdio.h>
+ #include <getopt.h>
+ #include <sys/types.h>
++#include <sys/arosc.h>
+ #include <getopt.h>
+ 
+ #include "system.h"
+@@ -93,7 +94,7 @@
+ 
+ int putenv ();
+ 
+-extern char **environ;
++char **environ;
+ 
+ /* The name by which this program was run. */
+ char *program_name;
+@@ -140,6 +141,7 @@
+ {
+   int optc;
+   bool ignore_environment = false;
++  static char *dummy_environ[] = { NULL };
+ 
+   initialize_main (&argc, &argv);
+   program_name = argv[0];
+@@ -169,12 +171,6 @@
+   if (optind < argc && STREQ (argv[optind], "-"))
+     ignore_environment = true;
+ 
+-  if (ignore_environment)
+-    {
+-      static char *dummy_environ[] = { NULL };
+-      environ = dummy_environ;
+-    }
+-
+   optind = 0;			/* Force GNU getopt to re-initialize. */
+   while ((optc = getopt_long (argc, argv, "+iu:", longopts, NULL)) != -1)
+     if (optc == 'u')
+@@ -189,17 +185,35 @@
+   /* If no program is specified, print the environment and exit. */
+   if (argc <= optind)
+     {
+-      char *const *e = environ;
+-      while (*e)
+-	puts (*e++);
++      char *const *e;
++      if (!ignore_environment)
++	{
++	  int size = __env_get_environ(NULL, 0);
++	  e = (char *const *) malloc(size);
++	  if (e)
++	    {
++              if (__env_get_environ(e, size) != -1)
++                {
++                  for (int i = 0; e[i]; i++)
++                    puts (e[i]);
++                }
++              else
++                {
++                  free(e);
++                  exit (EXIT_FAIL);
++                }
++              free(e);
++	    }
++	  else
++            exit (EXIT_FAIL);
++	}
+       exit (EXIT_SUCCESS);
+     }
+ 
+-  execvp (argv[optind], &argv[optind]);
+-
+-  {
+-    int exit_status = (errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE);
+-    error (0, errno, "%s", argv[optind]);
+-    exit (exit_status);
+-  }
++  if(execvp (argv[optind], &argv[optind]) != 0)
++    {
++      int exit_status = (errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE);
++      error (0, errno, "%s", argv[optind]);
++      exit (exit_status);
++    }
+ }
+diff -ruN coreutils-6.9/src/install.c coreutils-6.9.new/src/install.c
+--- coreutils-6.9/src/install.c	2007-03-18 22:36:43.000000000 +0100
++++ coreutils-6.9.new/src/install.c	2008-08-27 20:00:30.000000000 +0200
+@@ -1,5 +1,5 @@
+ /* install - copy files and set attributes
+-   Copyright (C) 89, 90, 91, 1995-2007 Free Software Foundation, Inc.
++   Copyright (C) 89, 90, 91, 1995-2006 Free Software Foundation, Inc.
+ 
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+@@ -30,12 +30,12 @@
+ #include "error.h"
+ #include "cp-hash.h"
+ #include "copy.h"
++#include "dirname.h"
+ #include "filenamecat.h"
+ #include "mkancesdirs.h"
+ #include "mkdir-p.h"
+ #include "modechange.h"
+ #include "quote.h"
+-#include "savewd.h"
+ #include "stat-time.h"
+ #include "utimens.h"
+ #include "xstrtol.h"
+@@ -79,8 +79,7 @@
+ static void get_ids (void);
+ static void strip (char const *name);
+ static void announce_mkdir (char const *dir, void *options);
+-static int make_ancestor (char const *dir, char const *component,
+-			  void *options);
++static int make_ancestor (char const *dir, void *options);
+ void usage (int status);
+ 
+ /* The name this program was run with, for error messages. */
+@@ -195,23 +194,11 @@
+   return is_a_dir;
+ }
+ 
+-/* Process a command-line file name, for the -d option.  */
+-static int
+-process_dir (char *dir, struct savewd *wd, void *options)
+-{
+-  return (make_dir_parents (dir, wd,
+-			    make_ancestor, options,
+-			    dir_mode, announce_mkdir,
+-			    dir_mode_bits, owner_id, group_id, false)
+-	  ? EXIT_SUCCESS
+-	  : EXIT_FAILURE);
+-}
+-
+ int
+ main (int argc, char **argv)
+ {
+   int optc;
+-  int exit_status = EXIT_SUCCESS;
++  bool ok = true;
+   const char *specified_mode = NULL;
+   bool make_backups = false;
+   char *backup_suffix_string;
+@@ -375,7 +362,13 @@
+   get_ids ();
+ 
+   if (dir_arg)
+-    exit_status = savewd_process_files (n_files, file, process_dir, &x);
++    {
++      int i;
++      for (i = 0; i < n_files; i++)
++	ok &= make_dir_parents (file[i], make_ancestor, &x,
++				dir_mode, announce_mkdir,
++				dir_mode_bits, owner_id, group_id, false);
++    }
+   else
+     {
+       /* FIXME: it's a little gross that this initialization is
+@@ -384,22 +377,23 @@
+ 
+       if (!target_directory)
+         {
+-          if (! (mkdir_and_install
+-		 ? install_file_in_file_parents (file[0], file[1], &x)
+-		 : install_file_in_file (file[0], file[1], &x)))
+-	    exit_status = EXIT_FAILURE;
++          if (mkdir_and_install)
++	    ok = install_file_in_file_parents (file[0], file[1], &x);
++	  else
++	    ok = install_file_in_file (file[0], file[1], &x);
+ 	}
+       else
+ 	{
+ 	  int i;
+ 	  dest_info_init (&x);
+ 	  for (i = 0; i < n_files; i++)
+-	    if (! install_file_in_dir (file[i], target_directory, &x))
+-	      exit_status = EXIT_FAILURE;
++	    {
++	      ok &= install_file_in_dir (file[i], target_directory, &x);
++	    }
+ 	}
+     }
+ 
+-  exit (exit_status);
++  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
+ }
+ 
+ /* Copy file FROM onto file TO, creating any missing parent directories of TO.
+@@ -409,36 +403,13 @@
+ install_file_in_file_parents (char const *from, char *to,
+ 			      struct cp_options *x)
+ {
+-  bool save_working_directory =
+-    ! (IS_ABSOLUTE_FILE_NAME (from) && IS_ABSOLUTE_FILE_NAME (to));
+-  int status = EXIT_SUCCESS;
+-
+-  struct savewd wd;
+-  savewd_init (&wd);
+-  if (! save_working_directory)
+-    savewd_finish (&wd);
+-
+-  if (mkancesdirs (to, &wd, make_ancestor, x) == -1)
++  if (mkancesdirs (to, make_ancestor, x) != 0)
+     {
+       error (0, errno, _("cannot create directory %s"), to);
+-      status = EXIT_FAILURE;
+-    }
+-
+-  if (save_working_directory)
+-    {
+-      int restore_result = savewd_restore (&wd, status);
+-      int restore_errno = errno;
+-      savewd_finish (&wd);
+-      if (EXIT_SUCCESS < restore_result)
+-	return false;
+-      if (restore_result < 0 && status == EXIT_SUCCESS)
+-	{
+-	  error (0, restore_errno, _("cannot create directory %s"), to);
+-	  return false;
+-	}
++      return false;
+     }
+ 
+-  return (status == EXIT_SUCCESS && install_file_in_file (from, to, x));
++  return install_file_in_file (from, to, x);
+ }
+ 
+ /* Copy file FROM onto file TO and give TO the appropriate
+@@ -459,10 +430,11 @@
+     return false;
+   if (strip_files)
+     strip (to);
+-  if (x->preserve_timestamps && (strip_files || ! S_ISREG (from_sb.st_mode))
+-      && ! change_timestamps (&from_sb, to))
++  if (! change_attributes (to))
+     return false;
+-  return change_attributes (to);
++  if (x->preserve_timestamps && (strip_files || ! S_ISREG (from_sb.st_mode)))
++    return change_timestamps (&from_sb, to);
++  return true;
+ }
+ 
+ /* Copy file FROM into directory TO_DIR, keeping its same name,
+@@ -550,6 +522,16 @@
+    magic numbers vary so much from system to system that making
+    it portable would be very difficult.  Not worth the effort. */
+ 
++#if defined __amigaos4__ || defined __AROS__
++static void
++strip (const char *path)
++{
++  char buffer[1024];
++  sprintf(buffer, "strip %s\n", path);
++
++  system(buffer);
++}
++#else
+ static void
+ strip (char const *name)
+ {
+@@ -566,13 +548,15 @@
+       error (EXIT_FAILURE, errno, _("cannot run strip"));
+       break;
+     default:			/* Parent. */
+-      if (waitpid (pid, &status, 0) < 0)
+-	error (EXIT_FAILURE, errno, _("waiting for strip"));
+-      else if (! WIFEXITED (status) || WEXITSTATUS (status))
+-	error (EXIT_FAILURE, 0, _("strip process terminated abnormally"));
++      /* Parent process. */
++      while (pid != wait (&status))	/* Wait for kid to finish. */
++	/* Do nothing. */ ;
++      if (status)
++	error (EXIT_FAILURE, 0, _("strip failed"));
+       break;
+     }
+ }
++#endif
+ 
+ /* Initialize the user and group ownership of the files to install. */
+ 
+@@ -628,13 +612,11 @@
+     error (0, 0, _("creating directory %s"), quote (dir));
+ }
+ 
+-/* Make ancestor directory DIR, whose last file name component is
+-   COMPONENT, with options OPTIONS.  Assume the working directory is
+-   COMPONENT's parent.  */
++/* Make ancestor directory DIR, with options OPTIONS.  */
+ static int
+-make_ancestor (char const *dir, char const *component, void *options)
++make_ancestor (char const *dir, void *options)
+ {
+-  int r = mkdir (component, DEFAULT_MODE);
++  int r = mkdir (dir, DEFAULT_MODE);
+   if (r == 0)
+     announce_mkdir (dir, options);
+   return r;
+@@ -682,7 +664,7 @@
+   -p, --preserve-timestamps   apply access/modification times of SOURCE files\n\
+                         to corresponding destination files\n\
+   -s, --strip         strip symbol tables\n\
+-  -S, --suffix=SUFFIX  override the usual backup suffix\n\
++  -S, --suffix=SUFFIX override the usual backup suffix\n\
+   -t, --target-directory=DIRECTORY  copy all SOURCE arguments into DIRECTORY\n\
+   -T, --no-target-directory  treat DEST as a normal file\n\
+   -v, --verbose       print the name of each directory as it is created\n\
+diff -ruN coreutils-6.9/src/Makefile.am coreutils-6.9.new/src/Makefile.am
+--- coreutils-6.9/src/Makefile.am	2007-03-20 08:24:27.000000000 +0100
++++ coreutils-6.9.new/src/Makefile.am	2008-08-27 20:00:30.000000000 +0200
+@@ -16,7 +16,7 @@
+ ## along with this program; if not, write to the Free Software Foundation,
+ ## Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ 
+-EXTRA_PROGRAMS = chroot df hostid nice pinky stty su uname uptime users who
++EXTRA_PROGRAMS = chroot df hostid nice pinky stty uname uptime users who
+ 
+ bin_SCRIPTS = groups
+ bin_PROGRAMS = [ chgrp chown chmod cp dd dircolors du \
+@@ -48,7 +48,7 @@
+ EXTRA_DIST = dcgen dircolors.hin tac-pipe.c \
+   groups.sh wheel-gen.pl extract-magic c99-to-c89.diff
+ BUILT_SOURCES =
+-CLEANFILES = $(SCRIPTS) su
++CLEANFILES = $(SCRIPTS)
+ 
+ AM_CPPFLAGS = -I$(top_srcdir)/lib
+ 
+@@ -102,8 +102,6 @@
+ # If necessary, add -lm to resolve use of pow in lib/strtod.c.
+ uptime_LDADD = $(LDADD) $(POW_LIB) $(GETLOADAVG_LIBS)
+ 
+-su_LDADD = $(LDADD) $(LIB_CRYPT)
+-
+ dir_LDADD += $(LIB_ACL_TRIVIAL) $(LIB_ACL)
+ ls_LDADD += $(LIB_ACL_TRIVIAL) $(LIB_ACL)
+ vdir_LDADD += $(LIB_ACL_TRIVIAL) $(LIB_ACL)
+@@ -131,48 +129,19 @@
+ 	chmod +x $@-t
+ 	mv $@-t $@
+ 
+-all-local: su$(EXEEXT)
++all-local: 
+ 
+ installed_su = $(DESTDIR)$(bindir)/`echo su|sed '$(transform)'`
+ 
+ setuid_root_mode = a=rx,u+s
+ 
+-INSTALL_SU = \
+-  p=su; \
+-  echo " $(INSTALL_PROGRAM) $$p $(installed_su)"; \
+-  $(INSTALL_PROGRAM) $$p $(installed_su); \
+-  echo " chown root $(installed_su)"; \
+-  chown root $(installed_su); \
+-  echo " chmod $(setuid_root_mode) $(installed_su)"; \
+-  chmod $(setuid_root_mode) $(installed_su)
+-
+-install-root: su$(EXEEXT)
+-	@$(INSTALL_SU)
+-
+-install-exec-local: su$(EXEEXT)
+-	@TMPFILE=$(DESTDIR)$(bindir)/.su-$$$$; \
+-	rm -f $$TMPFILE; \
+-	echo > $$TMPFILE; \
+-## See if we can create a setuid root executable in $(bindir).
+-## If not, then don't even try to install su.
+-	can_create_suid_root_executable=no; \
+-	chown root $$TMPFILE > /dev/null 2>&1 \
+-	  && chmod $(setuid_root_mode) $$TMPFILE > /dev/null 2>&1 \
+-	  && can_create_suid_root_executable=yes; \
+-	rm -f $$TMPFILE; \
+-	if test $$can_create_suid_root_executable = yes; then \
+-	  $(INSTALL_SU); \
+-	else \
+-	  echo "WARNING: insufficient access; not installing su"; \
+-	  echo "NOTE: to install su, run 'make install-root' as root"; \
+-	fi
++INSTALL_SU = 
++
++install-root: 
++
++install-exec-local: 
+ 
+ uninstall-local:
+-# Remove su only if it's one we installed.
+-	@if grep '$(GNU_PACKAGE)' $(installed_su) > /dev/null 2>&1; then \
+-	  echo "  rm -f $(installed_su)"; \
+-	  rm -f $(installed_su); \
+-	else :; fi
+ 
+ # Use `ginstall' in the definition of PROGRAMS and in dependencies to avoid
+ # confusion with the `install' target.  The install rule transforms `ginstall'
+diff -ruN coreutils-6.9/src/Makefile.in coreutils-6.9.new/src/Makefile.in
+--- coreutils-6.9/src/Makefile.in	2007-03-22 22:23:20.000000000 +0100
++++ coreutils-6.9.new/src/Makefile.in	2008-08-27 20:00:30.000000000 +0200
+@@ -34,7 +34,7 @@
+ build_triplet = @build@
+ host_triplet = @host@
+ EXTRA_PROGRAMS = chroot$(EXEEXT) df$(EXEEXT) hostid$(EXEEXT) \
+-	nice$(EXEEXT) pinky$(EXEEXT) stty$(EXEEXT) su$(EXEEXT) \
++	nice$(EXEEXT) pinky$(EXEEXT) stty$(EXEEXT) \
+ 	uname$(EXEEXT) uptime$(EXEEXT) users$(EXEEXT) who$(EXEEXT)
+ bin_PROGRAMS = [$(EXEEXT) chgrp$(EXEEXT) chown$(EXEEXT) chmod$(EXEEXT) \
+ 	cp$(EXEEXT) dd$(EXEEXT) dircolors$(EXEEXT) du$(EXEEXT) \
+@@ -551,9 +551,6 @@
+ stty_LDADD = $(LDADD)
+ stty_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+ 	../lib/libcoreutils.a
+-su_SOURCES = su.c
+-su_OBJECTS = su.$(OBJEXT)
+-su_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
+ sum_SOURCES = sum.c
+ sum_OBJECTS = sum.$(OBJEXT)
+ sum_LDADD = $(LDADD)
+@@ -677,7 +674,7 @@
+ 	rmdir.c seq.c setuidgid.c $(sha1sum_SOURCES) \
+ 	$(sha224sum_SOURCES) $(sha256sum_SOURCES) $(sha384sum_SOURCES) \
+ 	$(sha512sum_SOURCES) shred.c shuf.c sleep.c sort.c split.c \
+-	stat.c stty.c su.c sum.c sync.c tac.c tail.c tee.c test.c \
++	stat.c stty.c sum.c sync.c tac.c tail.c tee.c test.c \
+ 	touch.c tr.c true.c tsort.c tty.c uname.c unexpand.c uniq.c \
+ 	unlink.c uptime.c users.c $(vdir_SOURCES) wc.c who.c whoami.c \
+ 	yes.c
+@@ -693,7 +690,7 @@
+ 	rmdir.c seq.c setuidgid.c $(sha1sum_SOURCES) \
+ 	$(sha224sum_SOURCES) $(sha256sum_SOURCES) $(sha384sum_SOURCES) \
+ 	$(sha512sum_SOURCES) shred.c shuf.c sleep.c sort.c split.c \
+-	stat.c stty.c su.c sum.c sync.c tac.c tail.c tee.c test.c \
++	stat.c stty.c sum.c sync.c tac.c tail.c tee.c test.c \
+ 	touch.c tr.c true.c tsort.c tty.c uname.c unexpand.c uniq.c \
+ 	unlink.c uptime.c users.c $(vdir_SOURCES) wc.c who.c whoami.c \
+ 	yes.c
+@@ -1019,7 +1016,7 @@
+   groups.sh wheel-gen.pl extract-magic c99-to-c89.diff
+ 
+ BUILT_SOURCES = dircolors.h wheel-size.h wheel.h fs.h
+-CLEANFILES = $(SCRIPTS) su
++CLEANFILES = $(SCRIPTS) 
+ AM_CPPFLAGS = -I$(top_srcdir)/lib
+ 
+ # Sometimes, the expansion of $(LIBINTL) includes -lc which may
+@@ -1070,7 +1067,6 @@
+ 
+ # If necessary, add -lm to resolve use of pow in lib/strtod.c.
+ uptime_LDADD = $(LDADD) $(POW_LIB) $(GETLOADAVG_LIBS)
+-su_LDADD = $(LDADD) $(LIB_CRYPT)
+ SUFFIXES = .sh
+ 
+ # Get the release year from ../lib/version-etc.c.
+@@ -1423,9 +1419,6 @@
+ stty$(EXEEXT): $(stty_OBJECTS) $(stty_DEPENDENCIES) 
+ 	@rm -f stty$(EXEEXT)
+ 	$(LINK) $(stty_OBJECTS) $(stty_LDADD) $(LIBS)
+-su$(EXEEXT): $(su_OBJECTS) $(su_DEPENDENCIES) 
+-	@rm -f su$(EXEEXT)
+-	$(LINK) $(su_OBJECTS) $(su_LDADD) $(LIBS)
+ sum$(EXEEXT): $(sum_OBJECTS) $(sum_DEPENDENCIES) 
+ 	@rm -f sum$(EXEEXT)
+ 	$(LINK) $(sum_OBJECTS) $(sum_LDADD) $(LIBS)
+@@ -1597,7 +1590,6 @@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/split.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stat.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stty.Po@am__quote@
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/su.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sum.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sync.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tac.Po@am__quote@
+@@ -1919,33 +1911,14 @@
+ 	chmod +x $@-t
+ 	mv $@-t $@
+ 
+-all-local: su$(EXEEXT)
++all-local:
+ 
+-install-root: su$(EXEEXT)
+-	@$(INSTALL_SU)
++install-root: 
+ 
+-install-exec-local: su$(EXEEXT)
+-	@TMPFILE=$(DESTDIR)$(bindir)/.su-$$$$; \
+-	rm -f $$TMPFILE; \
+-	echo > $$TMPFILE; \
+-	can_create_suid_root_executable=no; \
+-	chown root $$TMPFILE > /dev/null 2>&1 \
+-	  && chmod $(setuid_root_mode) $$TMPFILE > /dev/null 2>&1 \
+-	  && can_create_suid_root_executable=yes; \
+-	rm -f $$TMPFILE; \
+-	if test $$can_create_suid_root_executable = yes; then \
+-	  $(INSTALL_SU); \
+-	else \
+-	  echo "WARNING: insufficient access; not installing su"; \
+-	  echo "NOTE: to install su, run 'make install-root' as root"; \
+-	fi
++install-exec-local:
+ 
+ uninstall-local:
+-# Remove su only if it's one we installed.
+-	@if grep '$(GNU_PACKAGE)' $(installed_su) > /dev/null 2>&1; then \
+-	  echo "  rm -f $(installed_su)"; \
+-	  rm -f $(installed_su); \
+-	else :; fi
++
+ dircolors.h: dcgen dircolors.hin
+ 	@rm -f $@ $@-t
+ 	$(PERL) -w -- $(srcdir)/dcgen $(srcdir)/dircolors.hin > $@-t
+diff -ruN coreutils-6.9/src/mkdir.c coreutils-6.9.new/src/mkdir.c
+--- coreutils-6.9/src/mkdir.c	2007-03-18 22:36:43.000000000 +0100
++++ coreutils-6.9.new/src/mkdir.c	2008-08-27 20:00:30.000000000 +0200
+@@ -23,12 +23,12 @@
+ #include <sys/types.h>
+ 
+ #include "system.h"
++#include "dirname.h"
+ #include "error.h"
+ #include "lchmod.h"
+ #include "mkdir-p.h"
+ #include "modechange.h"
+ #include "quote.h"
+-#include "savewd.h"
+ 
+ /* The official name of this program (e.g., no `g' prefix).  */
+ #define PROGRAM_NAME "mkdir"
+@@ -76,22 +76,12 @@
+   exit (status);
+ }
+ 
+-/* Options passed to subsidiary functions.  */
++/* Options for announce_mkdir and make_ancestor.  */
+ struct mkdir_options
+ {
+-  /* Function to make an ancestor, or NULL if ancestors should not be
+-     made.  */
+-  int (*make_ancestor_function) (char const *, char const *, void *);
+-
+   /* Mode for ancestor directory.  */
+   mode_t ancestor_mode;
+ 
+-  /* Mode for directory itself.  */
+-  mode_t mode;
+-
+-  /* File mode bits affected by MODE.  */
+-  mode_t mode_bits;
+-
+   /* If not null, format to use when reporting newly made directories.  */
+   char const *created_directory_format;
+ };
+@@ -105,45 +95,27 @@
+     error (0, 0, o->created_directory_format, quote (dir));
+ }
+ 
+-/* Make ancestor directory DIR, whose last component is COMPONENT,
+-   with options OPTIONS.  Assume the working directory is COMPONENT's
+-   parent.  Return 0 if successful and the resulting directory is
+-   readable, 1 if successful but the resulting directory is not
+-   readable, -1 (setting errno) otherwise.  */
++/* Make ancestor directory DIR, with options OPTIONS.  */
+ static int
+-make_ancestor (char const *dir, char const *component, void *options)
++make_ancestor (char const *dir, void *options)
+ {
+   struct mkdir_options const *o = options;
+-  int r = mkdir (component, o->ancestor_mode);
++  int r = mkdir (dir, o->ancestor_mode);
+   if (r == 0)
+-    {
+-      r = ! (o->ancestor_mode & S_IRUSR);
+-      announce_mkdir (dir, options);
+-    }
++    announce_mkdir (dir, options);
+   return r;
+ }
+ 
+-/* Process a command-line file name.  */
+-static int
+-process_dir (char *dir, struct savewd *wd, void *options)
+-{
+-  struct mkdir_options const *o = options;
+-  return (make_dir_parents (dir, wd, o->make_ancestor_function, options,
+-			    o->mode, announce_mkdir,
+-			    o->mode_bits, (uid_t) -1, (gid_t) -1, true)
+-	  ? EXIT_SUCCESS
+-	  : EXIT_FAILURE);
+-}
+-
+ int
+ main (int argc, char **argv)
+ {
++  mode_t mode = S_IRWXUGO;
++  mode_t mode_bits = 0;
++  int (*make_ancestor_function) (char const *, void *) = NULL;
+   const char *specified_mode = NULL;
++  int exit_status = EXIT_SUCCESS;
+   int optc;
+   struct mkdir_options options;
+-  options.make_ancestor_function = NULL;
+-  options.mode = S_IRWXUGO;
+-  options.mode_bits = 0;
+   options.created_directory_format = NULL;
+ 
+   initialize_main (&argc, &argv);
+@@ -159,7 +131,7 @@
+       switch (optc)
+ 	{
+ 	case 'p':
+-	  options.make_ancestor_function = make_ancestor;
++	  make_ancestor_function = make_ancestor;
+ 	  break;
+ 	case 'm':
+ 	  specified_mode = optarg;
+@@ -180,7 +152,7 @@
+       usage (EXIT_FAILURE);
+     }
+ 
+-  if (options.make_ancestor_function || specified_mode)
++  if (make_ancestor_function || specified_mode)
+     {
+       mode_t umask_value = umask (0);
+ 
+@@ -192,14 +164,19 @@
+ 	  if (!change)
+ 	    error (EXIT_FAILURE, 0, _("invalid mode %s"),
+ 		   quote (specified_mode));
+-	  options.mode = mode_adjust (S_IRWXUGO, true, umask_value, change,
+-				      &options.mode_bits);
++	  mode = mode_adjust (S_IRWXUGO, true, umask_value, change,
++			      &mode_bits);
+ 	  free (change);
+ 	}
+       else
+-	options.mode = S_IRWXUGO & ~umask_value;
++	mode &= ~umask_value;
+     }
+ 
+-  exit (savewd_process_files (argc - optind, argv + optind,
+-			      process_dir, &options));
++  for (; optind < argc; ++optind)
++    if (! make_dir_parents (argv[optind], make_ancestor_function, &options,
++			    mode, announce_mkdir,
++			    mode_bits, (uid_t) -1, (gid_t) -1, true))
++      exit_status = EXIT_FAILURE;
++
++  exit (exit_status);
+ }
+diff -ruN coreutils-6.9/src/printenv.c coreutils-6.9.new/src/printenv.c
+--- coreutils-6.9/src/printenv.c	2007-03-18 22:36:43.000000000 +0100
++++ coreutils-6.9.new/src/printenv.c	2008-08-27 20:00:30.000000000 +0200
+@@ -31,6 +31,7 @@
+ #include <config.h>
+ #include <stdio.h>
+ #include <sys/types.h>
++#include <sys/arosc.h>
+ #include <getopt.h>
+ 
+ #include "system.h"
+@@ -48,7 +49,7 @@
+ /* The name this program was run with. */
+ char *program_name;
+ 
+-extern char **environ;
++char **environ;
+ 
+ void
+ usage (int status)
+@@ -81,6 +82,19 @@
+   int i;
+   bool ok;
+ 
++  int size = __env_get_environ(NULL, 0);
++  environ = (char *const *) malloc(size);
++  if (environ)
++    {
++      if (__env_get_environ(environ, size) == -1)
++        {
++          free(environ);
++          exit (EXIT_FAILURE);
++        }
++    }
++  else
++    exit (EXIT_FAILURE);
++
+   initialize_main (&argc, &argv);
+   program_name = argv[0];
+   setlocale (LC_ALL, "");
+@@ -129,6 +143,7 @@
+ 
+       ok = (matches == argc - optind);
+     }
+-
++  free(environ);
++  
+   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
+ }
+diff -ruN coreutils-6.9/src/remove.c coreutils-6.9.new/src/remove.c
+--- coreutils-6.9/src/remove.c	2007-03-18 22:36:43.000000000 +0100
++++ coreutils-6.9.new/src/remove.c	2008-08-27 20:00:30.000000000 +0200
+@@ -1278,7 +1278,9 @@
+ 
+   /* Ensure that *dirp is not NULL and that its file descriptor is valid.  */
+   assert (*dirp != NULL);
++#ifndef __AROS__
+   assert (0 <= fcntl (dirfd (*dirp), F_GETFD));
++#endif
+ 
+   return status;
+ }
+diff -ruN coreutils-6.9/src/sort.c coreutils-6.9.new/src/sort.c
+--- coreutils-6.9/src/sort.c	2007-03-18 22:36:43.000000000 +0100
++++ coreutils-6.9.new/src/sort.c	2008-08-27 20:00:30.000000000 +0200
+@@ -1,5 +1,5 @@
+ /* sort - sort lines of text (with all kinds of options).
+-   Copyright (C) 1988, 1991-2007 Free Software Foundation, Inc.
++   Copyright (C) 1988, 1991-2006 Free Software Foundation, Inc.
+ 
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+@@ -25,13 +25,10 @@
+ 
+ #include <getopt.h>
+ #include <sys/types.h>
+-#include <sys/wait.h>
+ #include <signal.h>
+ #include "system.h"
+-#include "argmatch.h"
+ #include "error.h"
+ #include "hard-locale.h"
+-#include "hash.h"
+ #include "inttostr.h"
+ #include "md5.h"
+ #include "physmem.h"
+@@ -66,8 +63,7 @@
+    present.  */
+ #ifndef SA_NOCLDSTOP
+ # define SA_NOCLDSTOP 0
+-/* No sigprocmask.  Always 'return' zero. */
+-# define sigprocmask(How, Set, Oset) (0)
++# define sigprocmask(How, Set, Oset) /* empty */
+ # define sigset_t int
+ # if ! HAVE_SIGINTERRUPT
+ #  define siginterrupt(sig, flag) /* empty */
+@@ -96,20 +92,6 @@
+     SORT_FAILURE = 2
+   };
+ 
+-enum
+-  {
+-    /* The number of times we should try to fork a compression process
+-       (we retry if the fork call fails).  We don't _need_ to compress
+-       temp files, this is just to reduce disk access, so this number
+-       can be small.  */
+-    MAX_FORK_TRIES_COMPRESS = 2,
+-
+-    /* The number of times we should try to fork a decompression process.
+-       If we can't fork a decompression process, we can't sort, so this
+-       number should be big.  */
+-    MAX_FORK_TRIES_DECOMPRESS = 8
+-  };
+-
+ /* The representation of the decimal point in the current locale.  */
+ static int decimal_point;
+ 
+@@ -279,9 +261,6 @@
+ /* List of key field comparisons to be tried.  */
+ static struct keyfield *keylist;
+ 
+-/* Program used to (de)compress temp files.  Must accept -d.  */
+-static char const *compress_program;
+-
+ static void sortlines_temp (struct line *, size_t, struct line *);
+ 
+ /* Report MESSAGE for FILE, then clean up and exit.
+@@ -336,14 +315,9 @@
+       fputs (_("\
+ Other options:\n\
+ \n\
+-  -c, --check, --check=diagnose-first  check for sorted input; do not sort\n\
+-  -C, --check=quiet, --check=silent  like -c, but do not report first bad line\n\
+-      --compress-program=PROG  compress temporaries with PROG;\n\
+-                              decompress them with PROG -d\n\
++  -c, --check               check whether input is sorted; do not sort\n\
+   -k, --key=POS1[,POS2]     start a key at POS1, end it at POS2 (origin 1)\n\
+   -m, --merge               merge already sorted files; do not sort\n\
+-"), stdout);
+-      fputs (_("\
+   -o, --output=FILE         write result to FILE instead of standard output\n\
+   -s, --stable              stabilize sort by disabling last-resort comparison\n\
+   -S, --buffer-size=SIZE    use SIZE for main memory buffer\n\
+@@ -363,7 +337,7 @@
+       fputs (_("\
+ \n\
+ POS is F[.C][OPTS], where F is the field number and C the character position\n\
+-in the field; both are origin 1.  If neither -t nor -b is in effect, characters\n\
++in the field.  If neither the -t nor the -b option is in effect, the characters\n\
+ in a field are counted from the beginning of the preceding whitespace.  OPTS is\n\
+ one or more single-letter ordering options, which override global ordering\n\
+ options for that key.  If no key is given, use the entire line as the key.\n\
+@@ -390,18 +364,15 @@
+    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+ enum
+ {
+-  CHECK_OPTION = CHAR_MAX + 1,
+-  COMPRESS_PROGRAM_OPTION,
+-  RANDOM_SOURCE_OPTION
++  RANDOM_SOURCE_OPTION = CHAR_MAX + 1
+ };
+ 
+-static char const short_options[] = "-bcCdfgik:mMno:rRsS:t:T:uy:z";
++static char const short_options[] = "-bcdfgik:mMno:rRsS:t:T:uy:z";
+ 
+ static struct option const long_options[] =
+ {
+   {"ignore-leading-blanks", no_argument, NULL, 'b'},
+-  {"check", optional_argument, NULL, CHECK_OPTION},
+-  {"compress-program", required_argument, NULL, COMPRESS_PROGRAM_OPTION},
++  {"check", no_argument, NULL, 'c'},
+   {"dictionary-order", no_argument, NULL, 'd'},
+   {"ignore-case", no_argument, NULL, 'f'},
+   {"general-numeric-sort", no_argument, NULL, 'g'},
+@@ -425,220 +396,18 @@
+   {NULL, 0, NULL, 0},
+ };
+ 
+-static char const *const check_args[] =
+-{
+-  "quiet", "silent", "diagnose-first", NULL
+-};
+-static char const check_types[] =
+-{
+-  'C', 'C', 'c'
+-};
+-ARGMATCH_VERIFY (check_args, check_types);
+-
+ /* The set of signals that are caught.  */
+ static sigset_t caught_signals;
+ 
+-/* Critical section status.  */
+-struct cs_status
+-{
+-  bool valid;
+-  sigset_t sigs;
+-};
+-
+-/* Enter a critical section.  */
+-static struct cs_status
+-cs_enter (void)
+-{
+-  struct cs_status status;
+-  status.valid = (sigprocmask (SIG_BLOCK, &caught_signals, &status.sigs) == 0);
+-  return status;
+-}
+-
+-/* Leave a critical section.  */
+-static void
+-cs_leave (struct cs_status status)
+-{
+-  if (status.valid)
+-    {
+-      /* Ignore failure when restoring the signal mask. */
+-      sigprocmask (SIG_SETMASK, &status.sigs, NULL);
+-    }
+-}
+-
+ /* The list of temporary files. */
+ struct tempnode
+ {
+   struct tempnode *volatile next;
+-  pid_t pid;     /* If compressed, the pid of compressor, else zero */
+   char name[1];  /* Actual size is 1 + file name length.  */
+ };
+ static struct tempnode *volatile temphead;
+ static struct tempnode *volatile *temptail = &temphead;
+ 
+-struct sortfile
+-{
+-  char const *name;
+-  pid_t pid;     /* If compressed, the pid of compressor, else zero */
+-};
+-
+-/* A table where we store compression process states.  We clean up all
+-   processes in a timely manner so as not to exhaust system resources,
+-   so we store the info on whether the process is still running, or has
+-   been reaped here.  */
+-static Hash_table *proctab;
+-
+-enum { INIT_PROCTAB_SIZE = 47 };
+-
+-enum procstate { ALIVE, ZOMBIE };
+-
+-/* A proctab entry.  The COUNT field is there in case we fork a new
+-   compression process that has the same PID as an old zombie process
+-   that is still in the table (because the process to decompress the
+-   temp file it was associated with hasn't started yet).  */
+-struct procnode
+-{
+-  pid_t pid;
+-  enum procstate state;
+-  size_t count;
+-};
+-
+-static size_t
+-proctab_hasher (const void *entry, size_t tabsize)
+-{
+-  const struct procnode *node = entry;
+-  return node->pid % tabsize;
+-}
+-
+-static bool
+-proctab_comparator (const void *e1, const void *e2)
+-{
+-  const struct procnode *n1 = e1, *n2 = e2;
+-  return n1->pid == n2->pid;
+-}
+-
+-/* The total number of forked processes (compressors and decompressors)
+-   that have not been reaped yet. */
+-static size_t nprocs;
+-
+-/* The number of child processes we'll allow before we try to reap some. */
+-enum { MAX_PROCS_BEFORE_REAP = 2 };
+-
+-/* If 0 < PID, wait for the child process with that PID to exit.
+-   If PID is -1, clean up a random child process which has finished and
+-   return the process ID of that child.  If PID is -1 and no processes
+-   have quit yet, return 0 without waiting.  */
+-
+-static pid_t
+-reap (pid_t pid)
+-{
+-  int status;
+-  pid_t cpid = waitpid (pid, &status, pid < 0 ? WNOHANG : 0);
+-
+-  if (cpid < 0)
+-    error (SORT_FAILURE, errno, _("waiting for %s [-d]"),
+-           compress_program);
+-  else if (0 < cpid)
+-    {
+-      if (! WIFEXITED (status) || WEXITSTATUS (status))
+-	error (SORT_FAILURE, 0, _("%s [-d] terminated abnormally"),
+-	       compress_program);
+-      --nprocs;
+-    }
+-
+-  return cpid;
+-}
+-
+-/* Add the PID of a running compression process to proctab, or update
+-   the entry COUNT and STATE fields if it's already there.  This also
+-   creates the table for us the first time it's called.  */
+-
+-static void
+-register_proc (pid_t pid)
+-{
+-  struct procnode test, *node;
+-
+-  if (! proctab)
+-    {
+-      proctab = hash_initialize (INIT_PROCTAB_SIZE, NULL,
+-				 proctab_hasher,
+-				 proctab_comparator,
+-				 free);
+-      if (! proctab)
+-	xalloc_die ();
+-    }
+-
+-  test.pid = pid;
+-  node = hash_lookup (proctab, &test);
+-  if (node)
+-    {
+-      node->state = ALIVE;
+-      ++node->count;
+-    }
+-  else
+-    {
+-      node = xmalloc (sizeof *node);
+-      node->pid = pid;
+-      node->state = ALIVE;
+-      node->count = 1;
+-      hash_insert (proctab, node);
+-    }
+-}
+-
+-/* This is called when we reap a random process.  We don't know
+-   whether we have reaped a compression process or a decompression
+-   process until we look in the table.  If there's an ALIVE entry for
+-   it, then we have reaped a compression process, so change the state
+-   to ZOMBIE.  Otherwise, it's a decompression processes, so ignore it.  */
+-
+-static void
+-update_proc (pid_t pid)
+-{
+-  struct procnode test, *node;
+-
+-  test.pid = pid;
+-  node = hash_lookup (proctab, &test);
+-  if (node)
+-    node->state = ZOMBIE;
+-}
+-
+-/* This is for when we need to wait for a compression process to exit.
+-   If it has a ZOMBIE entry in the table then it's already dead and has
+-   been reaped.  Note that if there's an ALIVE entry for it, it still may
+-   already have died and been reaped if a second process was created with
+-   the same PID.  This is probably exceedingly rare, but to be on the safe
+-   side we will have to wait for any compression process with this PID.  */
+-
+-static void
+-wait_proc (pid_t pid)
+-{
+-  struct procnode test, *node;
+-
+-  test.pid = pid;
+-  node = hash_lookup (proctab, &test);
+-  if (node->state == ALIVE)
+-    reap (pid);
+-
+-  node->state = ZOMBIE;
+-  if (! --node->count)
+-    {
+-      hash_delete (proctab, node);
+-      free (node);
+-    }
+-}
+-
+-/* Keep reaping finished children as long as there are more to reap.
+-   This doesn't block waiting for any of them, it only reaps those
+-   that are already dead.  */
+-
+-static void
+-reap_some (void)
+-{
+-  pid_t pid;
+-
+-  while (0 < nprocs && (pid = reap (-1)))
+-    update_proc (pid);
+-}
+-
+ /* Clean up any remaining temporary files.  */
+ 
+ static void
+@@ -648,34 +417,17 @@
+ 
+   for (node = temphead; node; node = node->next)
+     unlink (node->name);
+-  temphead = NULL;
+-}
+-
+-/* Cleanup actions to take when exiting.  */
+-
+-static void
+-exit_cleanup (void)
+-{
+-  if (temphead)
+-    {
+-      /* Clean up any remaining temporary files in a critical section so
+-	 that a signal handler does not try to clean them too.  */
+-      struct cs_status cs = cs_enter ();
+-      cleanup ();
+-      cs_leave (cs);
+-    }
+-
+-  close_stdout ();
+ }
+ 
+-/* Create a new temporary file, returning its newly allocated tempnode.
+-   Store into *PFD the file descriptor open for writing.  */
++/* Create a new temporary file, returning its newly allocated name.
++   Store into *PFP a stream open for writing.  */
+ 
+-static struct tempnode *
+-create_temp_file (int *pfd)
++static char *
++create_temp_file (FILE **pfp)
+ {
+   static char const slashbase[] = "/sortXXXXXX";
+   static size_t temp_dir_index;
++  sigset_t oldset;
+   int fd;
+   int saved_errno;
+   char const *temp_dir = temp_dirs[temp_dir_index];
+@@ -683,17 +435,15 @@
+   struct tempnode *node =
+     xmalloc (offsetof (struct tempnode, name) + len + sizeof slashbase);
+   char *file = node->name;
+-  struct cs_status cs;
+ 
+   memcpy (file, temp_dir, len);
+   memcpy (file + len, slashbase, sizeof slashbase);
+   node->next = NULL;
+-  node->pid = 0;
+   if (++temp_dir_index == temp_dir_count)
+     temp_dir_index = 0;
+ 
+   /* Create the temporary file in a critical section, to avoid races.  */
+-  cs = cs_enter ();
++  sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
+   fd = mkstemp (file);
+   if (0 <= fd)
+     {
+@@ -701,14 +451,13 @@
+       temptail = &node->next;
+     }
+   saved_errno = errno;
+-  cs_leave (cs);
++  sigprocmask (SIG_SETMASK, &oldset, NULL);
+   errno = saved_errno;
+ 
+-  if (fd < 0)
++  if (fd < 0 || (*pfp = fdopen (fd, "w")) == NULL)
+     die (_("cannot create temporary file"), file);
+ 
+-  *pfd = fd;
+-  return node;
++  return file;
+ }
+ 
+ /* Return a stream for FILE, opened with mode HOW.  A null FILE means
+@@ -766,172 +515,6 @@
+ }
+ 
+ static void
+-dup2_or_die (int oldfd, int newfd)
+-{
+-  if (dup2 (oldfd, newfd) < 0)
+-    error (SORT_FAILURE, errno, _("dup2 failed"));
+-}
+-
+-/* Fork a child process for piping to and do common cleanup.  The
+-   TRIES parameter tells us how many times to try to fork before
+-   giving up.  Return the PID of the child or -1 if fork failed.  */
+-
+-static pid_t
+-pipe_fork (int pipefds[2], size_t tries)
+-{
+-#if HAVE_WORKING_FORK
+-  struct tempnode *saved_temphead;
+-  int saved_errno;
+-  unsigned int wait_retry = 1;
+-  pid_t pid IF_LINT (= -1);
+-  struct cs_status cs;
+-
+-  if (pipe (pipefds) < 0)
+-    return -1;
+-
+-  while (tries--)
+-    {
+-      /* This is so the child process won't delete our temp files
+-	 if it receives a signal before exec-ing.  */
+-      cs = cs_enter ();
+-      saved_temphead = temphead;
+-      temphead = NULL;
+-
+-      pid = fork ();
+-      saved_errno = errno;
+-      if (pid)
+-	temphead = saved_temphead;
+-
+-      cs_leave (cs);
+-      errno = saved_errno;
+-
+-      if (0 <= pid || errno != EAGAIN)
+-	break;
+-      else
+-	{
+-	  sleep (wait_retry);
+-	  wait_retry *= 2;
+-	  reap_some ();
+-	}
+-    }
+-
+-  if (pid < 0)
+-    {
+-      close (pipefds[0]);
+-      close (pipefds[1]);
+-    }
+-  else if (pid == 0)
+-    {
+-      close (STDIN_FILENO);
+-      close (STDOUT_FILENO);
+-    }
+-  else
+-    ++nprocs;
+-
+-  return pid;
+-
+-#else  /* ! HAVE_WORKING_FORK */
+-  return -1;
+-#endif
+-}
+-
+-/* Create a temporary file and start a compression program to filter output
+-   to that file.  Set *PFP to the file handle and if *PPID is non-NULL,
+-   set it to the PID of the newly-created process.  */
+-
+-static char *
+-create_temp (FILE **pfp, pid_t *ppid)
+-{
+-  int tempfd;
+-  struct tempnode *node = create_temp_file (&tempfd);
+-  char *name = node->name;
+-
+-  if (compress_program)
+-    {
+-      int pipefds[2];
+-
+-      node->pid = pipe_fork (pipefds, MAX_FORK_TRIES_COMPRESS);
+-      if (0 < node->pid)
+-	{
+-	  close (tempfd);
+-	  close (pipefds[0]);
+-	  tempfd = pipefds[1];
+-
+-	  register_proc (node->pid);
+-	}
+-      else if (node->pid == 0)
+-	{
+-	  close (pipefds[1]);
+-	  dup2_or_die (tempfd, STDOUT_FILENO);
+-	  close (tempfd);
+-	  dup2_or_die (pipefds[0], STDIN_FILENO);
+-	  close (pipefds[0]);
+-
+-	  if (execlp (compress_program, compress_program, (char *) NULL) < 0)
+-	    error (SORT_FAILURE, errno, _("couldn't execute %s"),
+-		   compress_program);
+-	}
+-      else
+-	node->pid = 0;
+-    }
+-
+-  *pfp = fdopen (tempfd, "w");
+-  if (! *pfp)
+-    die (_("couldn't create temporary file"), name);
+-
+-  if (ppid)
+-    *ppid = node->pid;
+-
+-  return name;
+-}
+-
+-/* Open a compressed temp file and start a decompression process through
+-   which to filter the input.  PID must be the valid processes ID of the
+-   process used to compress the file.  */
+-
+-static FILE *
+-open_temp (const char *name, pid_t pid)
+-{
+-  int tempfd, pipefds[2];
+-  pid_t child_pid;
+-  FILE *fp;
+-
+-  wait_proc (pid);
+-
+-  tempfd = open (name, O_RDONLY);
+-  if (tempfd < 0)
+-    die (_("couldn't open temporary file"), name);
+-
+-  child_pid = pipe_fork (pipefds, MAX_FORK_TRIES_DECOMPRESS);
+-  if (0 < child_pid)
+-    {
+-      close (tempfd);
+-      close (pipefds[1]);
+-    }
+-  else if (child_pid == 0)
+-    {
+-      close (pipefds[0]);
+-      dup2_or_die (tempfd, STDIN_FILENO);
+-      close (tempfd);
+-      dup2_or_die (pipefds[1], STDOUT_FILENO);
+-      close (pipefds[1]);
+-
+-      if (execlp (compress_program, compress_program, "-d", (char *) NULL) < 0)
+-	error (SORT_FAILURE, errno, _("couldn't execute %s -d"),
+-	       compress_program);
+-    }
+-  else
+-    error (SORT_FAILURE, errno, _("couldn't create process for %s -d"),
+-	   compress_program);
+-
+-  fp = fdopen (pipefds[0], "r");
+-  if (! fp)
+-    die (_("couldn't create temporary file"), name);
+-
+-  return fp;
+-}
+-
+-static void
+ write_bytes (const char *buf, size_t n_bytes, FILE *fp, const char *output_file)
+ {
+   if (fwrite (buf, 1, n_bytes, fp) != n_bytes)
+@@ -956,20 +539,20 @@
+   struct tempnode *volatile *pnode;
+   struct tempnode *node;
+   struct tempnode *next;
++  sigset_t oldset;
+   int unlink_status;
+   int unlink_errno = 0;
+-  struct cs_status cs;
+ 
+   for (pnode = &temphead; (node = *pnode)->name != name; pnode = &node->next)
+     continue;
+ 
+   /* Unlink the temporary file in a critical section to avoid races.  */
+   next = node->next;
+-  cs = cs_enter ();
++  sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
+   unlink_status = unlink (name);
+   unlink_errno = errno;
+   *pnode = next;
+-  cs_leave (cs);
++  sigprocmask (SIG_SETMASK, &oldset, NULL);
+ 
+   if (unlink_status != 0)
+     error (0, unlink_errno, _("warning: cannot remove: %s"), name);
+@@ -1910,13 +1493,13 @@
+   return reverse ? -diff : diff;
+ }
+ 
+-/* Check that the lines read from FILE_NAME come in order.  Return
+-   true if they are in order.  If CHECKONLY == 'c', also print a
+-   diagnostic (FILE_NAME, line number, contents of line) to stderr if
+-   they are not in order.  */
++/* Check that the lines read from FILE_NAME come in order.  Print a
++   diagnostic (FILE_NAME, line number, contents of line) to stderr and return
++   false if they are not in order.  Otherwise, print no diagnostic
++   and return true.  */
+ 
+ static bool
+-check (char const *file_name, char checkonly)
++check (char const *file_name)
+ {
+   FILE *fp = xfopen (file_name, "r");
+   struct buffer buf;		/* Input buffer. */
+@@ -1942,19 +1525,15 @@
+ 	{
+ 	found_disorder:
+ 	  {
+-	    if (checkonly == 'c')
+-	      {
+-		struct line const *disorder_line = line - 1;
+-		uintmax_t disorder_line_number =
+-		  buffer_linelim (&buf) - disorder_line + line_number;
+-		char hr_buf[INT_BUFSIZE_BOUND (uintmax_t)];
+-		fprintf (stderr, _("%s: %s:%s: disorder: "),
+-			 program_name, file_name,
+-			 umaxtostr (disorder_line_number, hr_buf));
+-		write_bytes (disorder_line->text, disorder_line->length,
+-			     stderr, _("standard error"));
+-	      }
+-
++	    struct line const *disorder_line = line - 1;
++	    uintmax_t disorder_line_number =
++	      buffer_linelim (&buf) - disorder_line + line_number;
++	    char hr_buf[INT_BUFSIZE_BOUND (uintmax_t)];
++	    fprintf (stderr, _("%s: %s:%s: disorder: "),
++		     program_name, file_name,
++		     umaxtostr (disorder_line_number, hr_buf));
++	    write_bytes (disorder_line->text, disorder_line->length, stderr,
++			 _("standard error"));
+ 	    ordered = false;
+ 	    break;
+ 	  }
+@@ -2007,7 +1586,7 @@
+    file has not been opened yet (or written to, if standard output).  */
+ 
+ static void
+-mergefps (struct sortfile *files, size_t ntemps, size_t nfiles,
++mergefps (char **files, size_t ntemps, size_t nfiles,
+ 	  FILE *ofp, char const *output_file)
+ {
+   FILE *fps[NMERGE];		/* Input streams for each file.  */
+@@ -2030,12 +1609,10 @@
+   /* Read initial lines from each input file. */
+   for (i = 0; i < nfiles; )
+     {
+-      fps[i] = (files[i].pid
+-		? open_temp (files[i].name, files[i].pid)
+-		: xfopen (files[i].name, "r"));
++      fps[i] = xfopen (files[i], "r");
+       initbuf (&buffer[i], sizeof (struct line),
+ 	       MAX (merge_buffer_size, sort_size / nfiles));
+-      if (fillbuf (&buffer[i], fps[i], files[i].name))
++      if (fillbuf (&buffer[i], fps[i], files[i]))
+ 	{
+ 	  struct line const *linelim = buffer_linelim (&buffer[i]);
+ 	  cur[i] = linelim - 1;
+@@ -2045,11 +1622,11 @@
+       else
+ 	{
+ 	  /* fps[i] is empty; eliminate it from future consideration.  */
+-	  xfclose (fps[i], files[i].name);
++	  xfclose (fps[i], files[i]);
+ 	  if (i < ntemps)
+ 	    {
+ 	      ntemps--;
+-	      zaptemp (files[i].name);
++	      zaptemp (files[i]);
+ 	    }
+ 	  free (buffer[i].buf);
+ 	  --nfiles;
+@@ -2118,7 +1695,7 @@
+ 	cur[ord[0]] = smallest - 1;
+       else
+ 	{
+-	  if (fillbuf (&buffer[ord[0]], fps[ord[0]], files[ord[0]].name))
++	  if (fillbuf (&buffer[ord[0]], fps[ord[0]], files[ord[0]]))
+ 	    {
+ 	      struct line const *linelim = buffer_linelim (&buffer[ord[0]]);
+ 	      cur[ord[0]] = linelim - 1;
+@@ -2131,11 +1708,11 @@
+ 		if (ord[i] > ord[0])
+ 		  --ord[i];
+ 	      --nfiles;
+-	      xfclose (fps[ord[0]], files[ord[0]].name);
++	      xfclose (fps[ord[0]], files[ord[0]]);
+ 	      if (ord[0] < ntemps)
+ 		{
+ 		  ntemps--;
+-		  zaptemp (files[ord[0]].name);
++		  zaptemp (files[ord[0]]);
+ 		}
+ 	      free (buffer[ord[0]].buf);
+ 	      for (i = ord[0]; i < nfiles; ++i)
+@@ -2178,10 +1755,6 @@
+ 	  ord[j] = ord[j + 1];
+ 	ord[count_of_smaller_lines] = ord0;
+       }
+-
+-      /* Free up some resources every once in a while.  */
+-      if (MAX_PROCS_BEFORE_REAP < nprocs)
+-	reap_some ();
+     }
+ 
+   if (unique && savedline)
+@@ -2320,8 +1893,8 @@
+    common cases.  */
+ 
+ static size_t
+-avoid_trashing_input (struct sortfile *files, size_t ntemps,
+-		      size_t nfiles, char const *outfile)
++avoid_trashing_input (char **files, size_t ntemps, size_t nfiles,
++		      char const *outfile)
+ {
+   size_t i;
+   bool got_outstat = false;
+@@ -2329,11 +1902,11 @@
+ 
+   for (i = ntemps; i < nfiles; i++)
+     {
+-      bool is_stdin = STREQ (files[i].name, "-");
++      bool is_stdin = STREQ (files[i], "-");
+       bool same;
+       struct stat instat;
+ 
+-      if (outfile && STREQ (outfile, files[i].name) && !is_stdin)
++      if (outfile && STREQ (outfile, files[i]) && !is_stdin)
+ 	same = true;
+       else
+ 	{
+@@ -2349,7 +1922,7 @@
+ 
+ 	  same = (((is_stdin
+ 		    ? fstat (STDIN_FILENO, &instat)
+-		    : stat (files[i].name, &instat))
++		    : stat (files[i], &instat))
+ 		   == 0)
+ 		  && SAME_INODE (instat, outstat));
+ 	}
+@@ -2357,11 +1930,9 @@
+       if (same)
+ 	{
+ 	  FILE *tftp;
+-	  pid_t pid;
+-	  char *temp = create_temp (&tftp, &pid);
+-	  mergefps (&files[i],0, nfiles - i, tftp, temp);
+-	  files[i].name = temp;
+-	  files[i].pid = pid;
++	  char *temp = create_temp_file (&tftp);
++	  mergefps (&files[i], 0, nfiles - i, tftp, temp);
++	  files[i] = temp;
+ 	  return i + 1;
+ 	}
+     }
+@@ -2375,8 +1946,7 @@
+    OUTPUT_FILE; a null OUTPUT_FILE stands for standard output.  */
+ 
+ static void
+-merge (struct sortfile *files, size_t ntemps, size_t nfiles,
+-       char const *output_file)
++merge (char **files, size_t ntemps, size_t nfiles, char const *output_file)
+ {
+   while (NMERGE < nfiles)
+     {
+@@ -2397,13 +1967,11 @@
+       for (out = in = 0; out < nfiles / NMERGE; out++, in += NMERGE)
+ 	{
+ 	  FILE *tfp;
+-	  pid_t pid;
+-	  char *temp = create_temp (&tfp, &pid);
++	  char *temp = create_temp_file (&tfp);
+ 	  size_t nt = MIN (ntemps, NMERGE);
+ 	  ntemps -= nt;
+ 	  mergefps (&files[in], nt, NMERGE, tfp, temp);
+-	  files[out].name = temp;
+-	  files[out].pid = pid;
++	  files[out] = temp;
+ 	}
+ 
+       remainder = nfiles - in;
+@@ -2416,13 +1984,11 @@
+ 	     files as possible, to avoid needless I/O.  */
+ 	  size_t nshortmerge = remainder - cheap_slots + 1;
+ 	  FILE *tfp;
+-	  pid_t pid;
+-	  char *temp = create_temp (&tfp, &pid);
++	  char *temp = create_temp_file (&tfp);
+ 	  size_t nt = MIN (ntemps, nshortmerge);
+ 	  ntemps -= nt;
+ 	  mergefps (&files[in], nt, nshortmerge, tfp, temp);
+-	  files[out].name = temp;
+-	  files[out++].pid = pid;
++	  files[out++] = temp;
+ 	  in += nshortmerge;
+ 	}
+ 
+@@ -2494,7 +2060,7 @@
+ 	  else
+ 	    {
+ 	      ++ntemps;
+-	      temp_output = create_temp (&tfp, NULL);
++	      temp_output = create_temp_file (&tfp);
+ 	    }
+ 
+ 	  do
+@@ -2509,10 +2075,6 @@
+ 
+ 	  xfclose (tfp, temp_output);
+ 
+-	  /* Free up some resources every once in a while.  */
+-	  if (MAX_PROCS_BEFORE_REAP < nprocs)
+-	    reap_some ();
+-
+ 	  if (output_file_created)
+ 	    goto finish;
+ 	}
+@@ -2526,11 +2088,10 @@
+     {
+       size_t i;
+       struct tempnode *node = temphead;
+-      struct sortfile *tempfiles = xnmalloc (ntemps, sizeof *tempfiles);
++      char **tempfiles = xnmalloc (ntemps, sizeof *tempfiles);
+       for (i = 0; node; i++)
+ 	{
+-	  tempfiles[i].name = node->name;
+-	  tempfiles[i].pid = node->pid;
++	  tempfiles[i] = node->name;
+ 	  node = node->next;
+ 	}
+       merge (tempfiles, ntemps, ntemps, output_file);
+@@ -2538,13 +2099,12 @@
+     }
+ }
+ 
+-/* Insert a malloc'd copy of key KEY_ARG at the end of the key list.  */
++/* Insert key KEY at the end of the key list.  */
+ 
+ static void
+-insertkey (struct keyfield *key_arg)
++insertkey (struct keyfield *key)
+ {
+   struct keyfield **p;
+-  struct keyfield *key = xmemdup (key_arg, sizeof *key);
+ 
+   for (p = &keylist; *p; p = &(*p)->next)
+     continue;
+@@ -2609,8 +2169,7 @@
+ 
+ /* Parse the leading integer in STRING and store the resulting value
+    (which must fit into size_t) into *VAL.  Return the address of the
+-   suffix after the integer.  If the value is too large, silently
+-   substitute SIZE_MAX.  If MSGID is NULL, return NULL after
++   suffix after the integer.  If MSGID is NULL, return NULL after
+    failure; otherwise, report MSGID and exit on failure.  */
+ 
+ static char const *
+@@ -2629,8 +2188,10 @@
+       /* Fall through.  */
+     case LONGINT_OVERFLOW:
+     case LONGINT_OVERFLOW | LONGINT_INVALID_SUFFIX_CHAR:
+-      *val = SIZE_MAX;
+-      break;
++      if (msgid)
++	error (SORT_FAILURE, 0, _("%s: count `%.*s' too large"),
++	       _(msgid), (int) (suffix - string), string);
++      return NULL;
+ 
+     case LONGINT_INVALID:
+       if (msgid)
+@@ -2710,9 +2271,9 @@
+ }
+ 
+ static struct keyfield *
+-key_init (struct keyfield *key)
++new_key (void)
+ {
+-  memset (key, 0, sizeof *key);
++  struct keyfield *key = xzalloc (sizeof *key);
+   key->eword = SIZE_MAX;
+   return key;
+ }
+@@ -2721,18 +2282,17 @@
+ main (int argc, char **argv)
+ {
+   struct keyfield *key;
+-  struct keyfield key_buf;
+   struct keyfield gkey;
+   char const *s;
+   int c = 0;
+-  char checkonly = 0;
++  bool checkonly = false;
+   bool mergeonly = false;
+   char *random_source = NULL;
+   bool need_random = false;
+   size_t nfiles = 0;
+   bool posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
+   bool obsolete_usage = (posix2_version () < 200112);
+-  char **files;
++  char *minus = "-", **files;
+   char const *outfile = NULL;
+ 
+   initialize_main (&argc, &argv);
+@@ -2741,7 +2301,10 @@
+   bindtextdomain (PACKAGE, LOCALEDIR);
+   textdomain (PACKAGE);
+ 
++  atexit (cleanup);
++
+   initialize_exit_failure (SORT_FAILURE);
++  atexit (close_stdout);
+ 
+   hard_LC_COLLATE = hard_locale (LC_COLLATE);
+ #if HAVE_NL_LANGINFO
+@@ -2770,26 +2333,7 @@
+ 
+   {
+     size_t i;
+-    static int const sig[] =
+-      {
+-	/* The usual suspects.  */
+-	SIGALRM, SIGHUP, SIGINT, SIGPIPE, SIGQUIT, SIGTERM,
+-#ifdef SIGPOLL
+-	SIGPOLL,
+-#endif
+-#ifdef SIGPROF
+-	SIGPROF,
+-#endif
+-#ifdef SIGVTALRM
+-	SIGVTALRM,
+-#endif
+-#ifdef SIGXCPU
+-	SIGXCPU,
+-#endif
+-#ifdef SIGXFSZ
+-	SIGXFSZ,
+-#endif
+-      };
++    static int const sig[] = { SIGHUP, SIGINT, SIGPIPE, SIGTERM };
+     enum { nsigs = sizeof sig / sizeof sig[0] };
+ 
+ #if SA_NOCLDSTOP
+@@ -2820,9 +2364,6 @@
+ #endif
+   }
+ 
+-  /* The signal mask is known, so it is safe to invoke exit_cleanup.  */
+-  atexit (exit_cleanup);
+-
+   gkey.sword = gkey.eword = SIZE_MAX;
+   gkey.ignore = NULL;
+   gkey.translate = NULL;
+@@ -2867,7 +2408,7 @@
+ 		{
+ 		  /* Treat +POS1 [-POS2] as a key if possible; but silently
+ 		     treat an operand as a file if it is not a valid +POS1.  */
+-		  key = key_init (&key_buf);
++		  key = new_key ();
+ 		  s = parse_field_count (optarg + 1, &key->sword, NULL);
+ 		  if (s && *s == '.')
+ 		    s = parse_field_count (s + 1, &key->schar, NULL);
+@@ -2917,26 +2458,12 @@
+ 	  }
+ 	  break;
+ 
+-	case CHECK_OPTION:
+-	  c = (optarg
+-	       ? XARGMATCH ("--check", optarg, check_args, check_types)
+-	       : 'c');
+-	  /* Fall through.  */
+ 	case 'c':
+-	case 'C':
+-	  if (checkonly && checkonly != c)
+-	    incompatible_options ("cC");
+-	  checkonly = c;
+-	  break;
+-
+-	case COMPRESS_PROGRAM_OPTION:
+-	  if (compress_program && strcmp (compress_program, optarg) != 0)
+-	    error (SORT_FAILURE, 0, _("multiple compress programs specified"));
+-	  compress_program = optarg;
++	  checkonly = true;
+ 	  break;
+ 
+ 	case 'k':
+-	  key = key_init (&key_buf);
++	  key = new_key ();
+ 
+ 	  /* Get POS1. */
+ 	  s = parse_field_count (optarg, &key->sword,
+@@ -3130,40 +2657,26 @@
+ 
+   if (nfiles == 0)
+     {
+-      static char *minus = "-";
+       nfiles = 1;
+-      free (files);
+       files = &minus;
+     }
+ 
+   if (checkonly)
+     {
+       if (nfiles > 1)
+-	error (SORT_FAILURE, 0, _("extra operand %s not allowed with -%c"),
+-	       quote (files[1]), checkonly);
++	error (SORT_FAILURE, 0, _("extra operand %s not allowed with -c"),
++	       quote (files[1]));
+ 
+       if (outfile)
+-	{
+-	  static char opts[] = {0, 'o', 0};
+-	  opts[0] = checkonly;
+-	  incompatible_options (opts);
+-	}
++	incompatible_options ("co");
+ 
+-      /* POSIX requires that sort return 1 IFF invoked with -c or -C and the
++      /* POSIX requires that sort return 1 IFF invoked with -c and the
+ 	 input is not properly sorted.  */
+-      exit (check (files[0], checkonly) ? EXIT_SUCCESS : SORT_OUT_OF_ORDER);
++      exit (check (files[0]) ? EXIT_SUCCESS : SORT_OUT_OF_ORDER);
+     }
+ 
+   if (mergeonly)
+-    {
+-      struct sortfile *sortfiles = xcalloc (nfiles, sizeof *sortfiles);
+-      size_t i;
+-
+-      for (i = 0; i < nfiles; ++i)
+-	sortfiles[i].name = files[i];
+-
+-      merge (sortfiles, 0, nfiles, outfile);
+-    }
++    merge (files, 0, nfiles, outfile);
+   else
+     sort (files, nfiles, outfile);
+ 
+diff -ruN coreutils-6.9/src/system.h coreutils-6.9.new/src/system.h
+--- coreutils-6.9/src/system.h	2007-03-18 22:36:43.000000000 +0100
++++ coreutils-6.9.new/src/system.h	2008-08-27 20:00:30.000000000 +0200
+@@ -511,7 +511,6 @@
+ # if ! defined ftello
+ static inline off_t ftello (FILE *stream)
+ {
+-  verify (sizeof (long int) <= sizeof (off_t));
+   return ftell (stream);
+ }
+ # endif
