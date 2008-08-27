@@ -4,7 +4,7 @@
 
 :Авторы:    Staf Verhaegen, Sebastian Rittau, Stefan Rieken, Matt Parsons,
             Adam Chodorowski, Fabio Alemagna, Matthias Rustler
-:Copyright: Copyright Љ 1995-2006, The AROS Development Team
+:Copyright: Copyright (C) 1995-2006, The AROS Development Team
 :Версия:    $Revision$
 :Дата:      $Date$
 :Статус:    Не завершено; в процессе объединения (впереди долгий путь).
@@ -738,7 +738,7 @@ per-opener libbase должны это учитывать.
 .. Поправить:: Эта функция будет подробно объяснена в главе об окнах.
 
 Теперь вам надо только знать, что эта функция открывает новое окно. Мы зададим
-аргументу `newwin` значение `NULL`. Единственные теги, используемые сейчас::
+аргументу `newwin` значение `NULL`. Единственные теги, используемые сейчас:
 
 ==========  ===============================  ========
 Тег         Описание                         Тип
