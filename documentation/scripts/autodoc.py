@@ -180,7 +180,7 @@ def create_lib_docs():
 def create_shell_docs():
     srcdirs = ( topdir + "/workbench/c",
                 topdir + "/workbench/c/shellcommands",
-                topdir + "/workbench/c/Identity",
+                topdir + "/workbench/c/Identify",
                 topdir + "/workbench/c/iprefs" )
                 
     targetdir = "documentation/users/shell" # relative to main build script
