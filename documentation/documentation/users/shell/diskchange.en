@@ -8,9 +8,21 @@ Diskchange
 
 ---------------
 
+Name
+~~~~
 ::
 
- Diskchange 
+
+     Diskchange
+
+
+Format
+~~~~~~
+::
+
+
+     Diskchange DEVICE
+
 
 Synopsis
 ~~~~~~~~

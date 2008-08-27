@@ -8,9 +8,13 @@ Delay
 
 ---------------
 
+Name
+~~~~
 ::
 
- Delay (n) [TICK | TICKS]
+
+     Delay (n) [TICK | TICKS]
+
 
 Synopsis
 ~~~~~~~~

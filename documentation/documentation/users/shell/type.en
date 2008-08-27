@@ -8,9 +8,13 @@ Type
 
 ---------------
 
+Name
+~~~~
 ::
 
- Type {<file | pattern>} [TO <name>] [OPT H | N] [HEX | NUMBER]
+
+     Type {<file | pattern>} [TO <name>] [OPT H | N] [HEX | NUMBER]
+
 
 Synopsis
 ~~~~~~~~

@@ -8,9 +8,13 @@ Echo
 
 ---------------
 
+Name
+~~~~
 ::
 
- Echo [<string>] [NOLINE] [FIRST <n>] [LEN <n>] [TO <filename>]
+
+     Echo [<string>] [NOLINE] [FIRST <n>] [LEN <n>] [TO <filename>]
+
 
 Synopsis
 ~~~~~~~~

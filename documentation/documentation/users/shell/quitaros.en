@@ -4,13 +4,16 @@ QuitAROS
 
 .. This document is automatically generated. Don't edit it!
 
-`Index <index>`_ `Prev <quit>`_ `Next <reboot>`_ 
+`Index <index>`_ `Prev <quit>`_ `Next <relabel>`_ 
 
 ---------------
 
+Name
+~~~~
 ::
 
- QuitAROS 
+     QuitAROS
+
 
 Synopsis
 ~~~~~~~~

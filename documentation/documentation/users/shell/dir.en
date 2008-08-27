@@ -8,9 +8,14 @@ Dir
 
 ---------------
 
+Name
+~~~~
 ::
 
+
  Dir [(dir | pattern)] [OPT A | I | D | F] [ALL] [DIRS] [FILES] [INTER]
+
+
 
 Synopsis
 ~~~~~~~~

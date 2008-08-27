@@ -8,9 +8,21 @@ Conclip
 
 ---------------
 
+Name
+~~~~
 ::
 
- Conclip 
+
+     Conclip
+
+
+Format
+~~~~~~
+::
+
+
+     CONCLIP [ [UNIT | CLIPUNIT] <unitnumber>] [OFF]
+
 
 Synopsis
 ~~~~~~~~

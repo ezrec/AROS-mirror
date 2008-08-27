@@ -8,9 +8,13 @@ Avail
 
 ---------------
 
+Name
+~~~~
 ::
 
- Avail [CHIP | FAST | TOTAL | FLUSH] [H | HUMAN]
+
+     Avail [CHIP | FAST | TOTAL | FLUSH] [H | HUMAN]
+
 
 Synopsis
 ~~~~~~~~

@@ -8,9 +8,13 @@ AddBuffers
 
 ---------------
 
+Name
+~~~~
 ::
 
- AddBuffers (drive) [(N)]
+
+     AddBuffers (drive) [(N)]
+
 
 Synopsis
 ~~~~~~~~

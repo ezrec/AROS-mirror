@@ -38,7 +38,6 @@ Shell commands
 `Get`__
 `Getenv`__
 `IconX`__
-`Identify`__
 `If`__
 `Info`__
 `Install`__
@@ -58,7 +57,6 @@ Shell commands
 `Protect`__
 `Quit`__
 `QuitAROS`__
-`Reboot`__
 `Relabel`__
 `Rename`__
 `RequestChoice`__
@@ -67,7 +65,6 @@ Shell commands
 `Search`__
 `Set`__
 `SetClock`__
-`SetDate`__
 `SetDefaultFont`__
 `Setenv`__
 `SetKeyboard`__
@@ -118,7 +115,6 @@ __ filenote
 __ get
 __ getenv
 __ iconx
-__ identify
 __ if
 __ info
 __ install
@@ -138,7 +134,6 @@ __ prompt
 __ protect
 __ quit
 __ quitaros
-__ reboot
 __ relabel
 __ rename
 __ requestchoice
@@ -147,7 +142,6 @@ __ run
 __ search
 __ set
 __ setclock
-__ setdate
 __ setdefaultfont
 __ setenv
 __ setkeyboard

@@ -8,9 +8,13 @@ Wait
 
 ---------------
 
+Name
+~~~~
 ::
 
- Wait [(n)] [SEC | SECS | MIN | MINS] [ UNTIL (time) ]
+
+     Wait [(n)] [SEC | SECS | MIN | MINS] [ UNTIL (time) ]
+
 
 Synopsis
 ~~~~~~~~

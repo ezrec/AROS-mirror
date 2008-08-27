@@ -8,9 +8,13 @@ AddDatatypes
 
 ---------------
 
+Name
+~~~~
 ::
 
- AddDatatypes (files) [QUIET] [REFRESH] [LIST]
+
+     AddDatatypes (files) [QUIET] [REFRESH] [LIST]
+
 
 Synopsis
 ~~~~~~~~

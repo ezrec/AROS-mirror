@@ -8,9 +8,21 @@ Mount
 
 ---------------
 
+Name
+~~~~
 ::
 
- Mount 
+
+     Mount
+
+
+Format
+~~~~~~
+::
+
+
+     Mount <Device> <From>
+             
 
 Synopsis
 ~~~~~~~~

@@ -8,16 +8,13 @@ Unsetenv
 
 ---------------
 
-::
-
- Unsetenv 
-
-Synopsis
-~~~~~~~~
+Name
+~~~~
 ::
 
 
-     NAME
+     Unsetenv
+
 
 
 Location

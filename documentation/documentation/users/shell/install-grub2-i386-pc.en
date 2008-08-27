@@ -8,9 +8,13 @@ Install-grub2-i386-pc
 
 ---------------
 
+Name
+~~~~
 ::
 
- Install-grub2-i386-pc 
+
+     Install-grub2-i386-pc
+
 
 Synopsis
 ~~~~~~~~

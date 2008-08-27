@@ -8,9 +8,13 @@ Version
 
 ---------------
 
+Name
+~~~~
 ::
 
- Version [<library|device|file>] [<version #>] [<revision #>] [FILE] [FULL] [RES]
+
+     Version [<library|device|file>] [<version #>] [<revision #>] [FILE] [FULL] [RES] 
+
 
 Synopsis
 ~~~~~~~~
