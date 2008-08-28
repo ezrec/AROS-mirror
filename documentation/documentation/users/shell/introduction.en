@@ -3,7 +3,7 @@ Introduction to AROS Shell
 ==========================
 
 :Authors:   Matthias Rustler 
-:Copyright: Copyright © 2006, The AROS Development Team
+:Copyright: Copyright (C) 2006-2008, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Draft
@@ -22,16 +22,19 @@ normally shows the the number of the Shell and the current path.
 The Shell has a history. You can access it with cursor up
 and down keys.
 
+You can move the cursor in the current command line with the cursor
+left and right keys and delete characters with the backspace and del keys.
+
 There is a completion feature. If you type the first letters of a command
 or a file name and press the tabulator key, the Shell searches for a matching
 name. If there are more possibilties a window will be opened where you can
 select an entry.
 
-AROS commands and file names are case insensitiv. You can even use
+AROS commands and file names are case insensitive. You can even use
 mixed case.
 
 AROS searches commands in the current directory and in the search path.
-You can view and change the search path with the `path <path>`_ command.
+You can view and change the search path with the `Path <path>`_ command.
 
 Some important commands
 -----------------------
@@ -42,14 +45,14 @@ Some important commands
 + `INFO <info>`_ -- shows available drives
 + `MAKEDIR <makedir>`_ -- creates directory
 + `RENAME <rename>`_ -- renames files and directories
-+ `TYPE <type>`_ -- show content of text file
++ `TYPE <type>`_ -- shows content of text file
 
 Path
 ----
 Absolute paths start with the drive name and a colon (:),
 directories are separated with a slash (/). 
 The drive name can be a device name (dh0:), a volume name (workbench:)
-or a logical drive (see `assign <assign>`_ command)
+or a logical drive (see `Assign <assign>`_ command)
 
 ::
   
@@ -61,9 +64,8 @@ If you need the current path as argument of a command, you can just write "".
 
   Example: copy from ram:x to ""
   
-A colon alone means base directory of the current path.
-When the path starts with a colon then it is relative to the base
-directory of the given path.
+When the path starts with a colon then it is relative to the root
+directory of the current path.
 
 A slash at the beginning of a path means: go one level up. Two slashes mean go two
 levels up and so on.
@@ -94,6 +96,9 @@ The keywords can have options::
   /F -- rest of command line
   =  -- abbreviation; you can optionally use the abbreviation
 
+Some commands like `Copy <copy>`_ have an extended help. You can see it when you type
+again a question mark after the short help is shown.
+
 When calling a command '=' can be used for distinct assignment between keyword and value::
 
   Example: copy from=a.dat to=b.dat
@@ -109,6 +114,7 @@ Some commands allow patterns for file name parameters::
   |  -- or
   () -- group
   [] -- range
+  `  -- disable the following special character
 
 Examples::
 
@@ -125,6 +131,7 @@ Redirection
   > redirects output to file or device
   >> redirects output and appends to file
   < redirects input from file or device
+  
   Example: dir >ram:a 
 
 Pipe
@@ -145,6 +152,11 @@ Special devices
 + ram: you can use the ram disk like a hard drive. But after a reset its content is lost. 
 + nil: if you don't want the messages of a command to be displayed in the window you
   can use the 'nil:' device. Example: delete #? >nil:
++ con: read/write from/to another Shell window
++ console: the current Shell window
++ sys: the drive from which AROS was booted
++ ser: the serial interface
++ par: the parallel interface
 
 Running in background
 ---------------------
@@ -160,3 +172,11 @@ Info files
 Files with the suffix '.info' play an important role in Wanderer. They contain
 the icon picture and some additional information. When you work with shell commands
 you have to take the Info files into account.
+
+Scripts
+-------
+You can write programs of Shell commands with a text editor. Scripts can be
+executed by the `Execute <execute>`_ command. Another possibility is to set
+the 's' flag with the `Protect <protect>`_ command. Then you can just type the
+script's name to execute it. If you have some commands you want to be run every
+time AROS starts, write them in a file with the name 's:user-startup'.
