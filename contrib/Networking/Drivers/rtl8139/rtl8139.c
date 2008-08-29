@@ -197,7 +197,7 @@ static void rtl8139nic_start_rx(struct net_device *unit)
 	struct fe_priv *np = get_pcnpriv(unit);
 	UBYTE *base = get_hwbase(unit);
 
-D(bug("%s: rtl8139nic_start_rx\n", unit->rtl8139u_name));
+RTLD(bug("[%s] rtl8139nic_start_rx\n", unit->rtl8139u_name))
 	// Already running? Stop it.
 #warning "TODO: Handle starting/stopping Rx"
 }
@@ -206,7 +206,7 @@ static void rtl8139nic_stop_rx(struct net_device *unit)
 {
 	UBYTE *base = get_hwbase(unit);
 
-D(bug("%s: rtl8139nic_stop_rx\n", unit->rtl8139u_name));
+RTLD(bug("[%s] rtl8139nic_stop_rx\n", unit->rtl8139u_name))
 #warning "TODO: Handle starting/stopping Rx"
 }
 
@@ -214,7 +214,7 @@ static void rtl8139nic_start_tx(struct net_device *unit)
 {
 	UBYTE *base = get_hwbase(unit);
 
-D(bug("%s: rtl8139nic_start_tx()\n", unit->rtl8139u_name));
+RTLD(bug("[%s] rtl8139nic_start_tx()\n", unit->rtl8139u_name))
 #warning "TODO: Handle starting/stopping Tx"
 }
 
@@ -222,7 +222,7 @@ static void rtl8139nic_stop_tx(struct net_device *unit)
 {
 	UBYTE *base = get_hwbase(unit);
 
-D(bug("%s: rtl8139nic_stop_tx()\n", unit->rtl8139u_name));
+RTLD(bug("[%s] rtl8139nic_stop_tx()\n", unit->rtl8139u_name))
 #warning "TODO: Handle starting/stopping Tx"
 }
 
@@ -231,7 +231,7 @@ static void rtl8139nic_txrx_reset(struct net_device *unit)
 	struct fe_priv *np = get_pcnpriv(unit);
 	UBYTE *base = get_hwbase(unit);
 
-D(bug("%s: rtl8139nic_txrx_reset()\n", unit->rtl8139u_name));
+RTLD(bug("[%s] rtl8139nic_txrx_reset()\n", unit->rtl8139u_name))
 }
 
 /*
@@ -246,7 +246,7 @@ static void rtl8139nic_set_multicast(struct net_device *unit)
 	ULONG mask[2];
 	ULONG pff;
 
-D(bug("%s: rtl8139nic_set_multicast()\n", unit->rtl8139u_name));
+RTLD(bug("[%s] rtl8139nic_set_multicast()\n", unit->rtl8139u_name))
 
 	memset(addr, 0, sizeof(addr));
 	memset(mask, 0, sizeof(mask));
@@ -255,6 +255,67 @@ D(bug("%s: rtl8139nic_set_multicast()\n", unit->rtl8139u_name));
 static void rtl8139nic_deinitialize(struct net_device *unit)
 {
 
+}
+
+static void rtl8139nic_get_mac(struct net_device *unit, char * addr, BOOL fromROM)
+{
+	UBYTE *base = get_hwbase(unit);
+	int i;
+
+RTLD(bug("[%s] rtl8139nic_get_mac()\n",unit->rtl8139u_name))
+	if (fromROM)
+	{
+		int addr_len = read_eeprom(base, 0, 8) == 0x8129 ? 8 : 6;
+		int mac_add = 0;
+		for (i = 0; i < 3; i++)
+		{
+			UWORD mac_curr = read_eeprom(base, i + 7, addr_len);
+			addr[mac_add++] = mac_curr & 0xff;
+			addr[mac_add++] = (mac_curr >> 8) & 0xff;
+		}
+	}
+	else
+	{
+		ULONG mac_cur = 0;
+		mac_cur = LONGIN(base + RTLr_MAC0 + 0);
+		addr[0] = mac_cur & 0xFF;
+		addr[1] = (mac_cur >> 8) & 0xFF;
+		addr[2] = (mac_cur >> 16) & 0xFF;
+		addr[3] = (mac_cur >> 24) & 0xFF;
+		mac_cur = LONGIN(base + RTLr_MAC0 + 4);
+		addr[4] = mac_cur & 0xFF;
+		addr[5] = (mac_cur >> 8) & 0xFF;
+	}
+}
+
+static void rtl8139nic_set_mac(struct net_device *unit)
+{
+	UBYTE *base = get_hwbase(unit);
+	int i,j;
+
+RTLD(bug("[%s] rtl8139nic_set_mac()\n",unit->rtl8139u_name))
+
+	BYTEOUT(base + RTLr_Cfg9346, 0xc0);
+
+	LONGOUT(base + RTLr_MAC0 + 0,
+		unit->rtl8139u_dev_addr[0] |
+		(unit->rtl8139u_dev_addr[1] << 8) |
+		(unit->rtl8139u_dev_addr[2] << 16) |
+		(unit->rtl8139u_dev_addr[3] << 24));
+	LONGOUT(base + RTLr_MAC0 + 4,
+		unit->rtl8139u_dev_addr[4] |
+		(unit->rtl8139u_dev_addr[5] << 8));
+
+	BYTEOUT(base + RTLr_Cfg9346, 0x00);
+
+RTLD(
+	/* Read it back to be certain! */
+	TEXT	newmac[6];
+	rtl8139nic_get_mac(unit, newmac, FALSE);
+
+	bug("[%s] rtl8139nic_set_mac: New MAC Address %02x:%02x:%02x:%02x:%02x:%02x\n", unit->rtl8139u_name,
+			newmac[0], newmac[1], newmac[2],
+			newmac[3], newmac[4], newmac[5]))
 }
 
 static void rtl8139nic_initialize(struct net_device *unit)
@@ -268,18 +329,9 @@ static void rtl8139nic_initialize(struct net_device *unit)
 	{
 		BYTEOUT(base + RTLr_Config1, config1 & ~0x03);
 	}
-D(bug("%s: Chipset brought out of low power mode.\n", unit->rtl8139u_name));
+RTLD(bug("[%s] Chipset brought out of low power mode.\n", unit->rtl8139u_name))
 
-	{
-		int addr_len = read_eeprom(base, 0, 8) == 0x8129 ? 8 : 6;
-		int mac_add = 0;
-		for (i = 0; i < 3; i++)
-		{
-			UWORD mac_curr = read_eeprom(base, i + 7, addr_len);
-			np->orig_mac[mac_add++] = mac_curr & 0xff;
-			np->orig_mac[mac_add++] = (mac_curr >> 8) & 0xff;
-		}
-	}
+	rtl8139nic_get_mac(unit, np->orig_mac, TRUE);
 
 	int phy, phy_idx = 0;
 	if (unit->rtl8139u_rtl_chipcapabilities & RTLc_HAS_MII_XCVR)
@@ -291,16 +343,15 @@ D(bug("%s: Chipset brought out of low power mode.\n", unit->rtl8139u_name));
 			{
 				np->mii_phys[phy_idx++] = phy;
 				np->advertising = mdio_read(unit, phy, 4);
-D(bug("%s: MII transceiver %d status 0x%4.4x advertising %4.4x\n", unit->rtl8139u_name,
-																										  phy, mii_status, np->advertising));
-
+RTLD(bug("[%s] MII transceiver %d status 0x%4.4x advertising %4.4x\n", unit->rtl8139u_name,
+																		phy, mii_status, np->advertising))
 			}
 		}
 	}
 
-	if (phy_idx ==0)
+	if (phy_idx == 0)
 	{
-D(bug("%s: No MII transceiver found, Assuming SYM transceiver\n", unit->rtl8139u_name));
+RTLD(bug("[%s] No MII transceiver found, Assuming SYM transceiver\n", unit->rtl8139u_name))
 		np->mii_phys[0] = 32;
 	}
 		
@@ -311,9 +362,9 @@ D(bug("%s: No MII transceiver found, Assuming SYM transceiver\n", unit->rtl8139u
 	unit->rtl8139u_dev_addr[4] = unit->rtl8139u_org_addr[4] = np->orig_mac[4];
 	unit->rtl8139u_dev_addr[5] = unit->rtl8139u_org_addr[5] = np->orig_mac[5];
 
-D(bug("%s: MAC Address %02x:%02x:%02x:%02x:%02x:%02x\n", unit->rtl8139u_name,
+RTLD(bug("[%s] MAC Address %02x:%02x:%02x:%02x:%02x:%02x\n", unit->rtl8139u_name,
 			unit->rtl8139u_dev_addr[0], unit->rtl8139u_dev_addr[1], unit->rtl8139u_dev_addr[2],
-			unit->rtl8139u_dev_addr[3], unit->rtl8139u_dev_addr[4], unit->rtl8139u_dev_addr[5]));
+			unit->rtl8139u_dev_addr[3], unit->rtl8139u_dev_addr[4], unit->rtl8139u_dev_addr[5]))
   
 	BYTEOUT(base + RTLr_Cfg9346, 0xc0);
 	if (unit->rtl8139u_rtl_chipcapabilities & RTLc_HAS_MII_XCVR)
@@ -321,7 +372,7 @@ D(bug("%s: MAC Address %02x:%02x:%02x:%02x:%02x:%02x\n", unit->rtl8139u_name,
 		BYTEOUT(base + RTLr_Config1, 0x03);
 	}
 	BYTEOUT(base + RTLr_HltClk, 'H'); //Disable the chips clock ('R' enables)
-D(bug("%s: Chipset put into low power mode.\n", unit->rtl8139u_name));
+RTLD(bug("[%s] Chipset put into low power mode.\n", unit->rtl8139u_name))
 }
 
 static void rtl8139nic_drain_tx(struct net_device *unit)
@@ -354,14 +405,14 @@ static int request_irq(struct net_device *unit)
 	OOP_Object *irq = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
 	BOOL ret;
 
-D(bug("%s: request_irq()\n", unit->rtl8139u_name));
+RTLD(bug("[%s] request_irq()\n", unit->rtl8139u_name))
 
 	if (irq)
 	{
 		ret = HIDD_IRQ_AddHandler(irq, unit->rtl8139u_irqhandler, unit->rtl8139u_IRQ);
 		HIDD_IRQ_AddHandler(irq, unit->rtl8139u_touthandler, vHidd_IRQ_Timer);
 
-D(bug("%s: request_irq: IRQ Handlers configured\n", unit->rtl8139u_name));
+RTLD(bug("[%s] request_irq: IRQ Handlers configured\n", unit->rtl8139u_name))
 
 		OOP_DisposeObject(irq);
 
@@ -391,49 +442,47 @@ int rtl8139nic_set_rxmode(struct net_device *unit)
 	ULONG mc_filter[2];         //Multicast hash filter.
 	ULONG rx_mode;
 
-#warning "TODO: Fix set_rxmode.. temp Running in promiscuous mode for now .."
-	//if (unit->sis900u_ifflags & IFF_PROMISC) {
+RTLD(bug("[%s] rtl8139nic_set_rxmode(flags %x)\n", unit->rtl8139u_name, unit->rtl8139u_flags))
+
+#warning "TODO: Fix set_rxmode.. doesnt load multicast list atm .."
+	if (unit->rtl8139u_flags & IFF_PROMISC)
+	{
+RTLD(bug("[%s] rtl8139nic_set_rxmode: Mode: PROMISC\n",unit->rtl8139u_name))
 		rx_mode = AcceptBroadcast | AcceptMulticast | AcceptMyPhys | AcceptAllPhys;
 		mc_filter[1] = mc_filter[0] = 0xffffffff;
-	/*} else if ((unit->mc_count > multicast_filter_limit) ||
-			(unit->sis900u_ifflags & IFF_ALLMULTI)) {
-		rx_mode = AcceptBroadcast | AcceptMulticast | AcceptMyPhys | AcceptAllPhys;
+	}
+	else if (unit->rtl8139u_flags & IFF_ALLMULTI)
+	{
+RTLD(bug("[%s] rtl8139nic_set_rxmode: Mode: ALLMULTI\n",unit->rtl8139u_name))
+		rx_mode = AcceptBroadcast | AcceptMulticast | AcceptMyPhys;
 		mc_filter[1] = mc_filter[0] = 0xffffffff;
-	} else {
-		struct mclist *mclist;
-		int i;
+	}
+	else
+	{
+//		struct mclist *mclist;
+//		int i;
+RTLD(bug("[%s] rtl8139nic_set_rxmode: Mode: DEFAULT\n",unit->rtl8139u_name))
 
 		rx_mode = AcceptBroadcast | AcceptMulticast | AcceptMyPhys;
-		mc_filter[1] = mc_filter[0] = 0;
-		for (i = 0, mclist = dev->netif->mclist; mclist && i < dev->netif->mccount; i++, mclist = mclist->next)
-		{
-		  set_bit(mc_filter, ether_crc(6, (unsigned char *) &mclist->hwaddr) >> 26);
+		/*if (unit->mc_count < multicast_filter_limit)
+		{*/
+			mc_filter[1] = mc_filter[0] = 0;
+			/*for (i = 0, mclist = dev->netif->mclist; mclist && i < dev->netif->mccount; i++, mclist = mclist->next)
+			{
+		  		set_bit(mc_filter, ether_crc(6, (unsigned char *) &mclist->hwaddr) >> 26);
+			}
 		}
-	} */
+		else
+		{
+			mc_filter[1] = mc_filter[0] = 0xffffffff;
+		}*/
+	}
+
 	LONGOUT(base + RTLr_RxConfig, np->rx_config | rx_mode);
 	LONGOUT(base + RTLr_MAR0 + 0, mc_filter[0]);
 	LONGOUT(base + RTLr_MAR0 + 4, mc_filter[1]);
-	
+
 	return 0;
-}
-
-static void rtl8139nic_set_mac(struct net_device *unit)
-{
-	UBYTE *base = get_hwbase(unit);
-	int i,j;
-
-	BYTEOUT(base + RTLr_Cfg9346, 0xc0);
-
-	j=0;
-	for (i = 0; i < 3; i++)
-	{
-		UWORD mac_curr = unit->rtl8139u_dev_addr[j++];
-		mac_curr |= (unit->rtl8139u_dev_addr[j++] << 8);
-		WORDOUT(base +RTLr_MAC0 + i, mac_curr);
-	}
-	
-	BYTEOUT(base + RTLr_Cfg9346, 0x00);
-
 }
 
 static int rtl8139nic_open(struct net_device *unit)
@@ -464,9 +513,9 @@ static int rtl8139nic_open(struct net_device *unit)
 
 	if ((np->rx_buffer != NULL) && (np->tx_buffer != NULL))
 	{
-D(bug("%s: rtl8139nic_open: Allocated IO Buffers [ %d x Tx @ %x] [ Rx @ %x, %d bytes]\n",unit->rtl8139u_name,
+RTLD(bug("[%s] rtl8139nic_open: Allocated IO Buffers [ %d x Tx @ %x] [ Rx @ %x, %d bytes]\n",unit->rtl8139u_name,
 						NUM_TX_DESC, np->tx_buffer,
-						np->rx_buffer,  np->rx_buf_len));
+						np->rx_buffer,  np->rx_buf_len))
    
 		np->tx_dirty = np->tx_current = 0;
 
@@ -475,7 +524,7 @@ D(bug("%s: rtl8139nic_open: Allocated IO Buffers [ %d x Tx @ %x] [ Rx @ %x, %d b
 			np->tx_pbuf[i] = NULL;
 			np->tx_buf[i]  = np->tx_buffer + (i * TX_BUF_SIZE);
 		}
-D(bug("%s: rtl8139nic_open: TX Buffers initialised\n",unit->rtl8139u_name));
+RTLD(bug("[%s] rtl8139nic_open: TX Buffers initialised\n",unit->rtl8139u_name))
 
 		np->tx_flag = (TX_FIFO_THRESH << 11) & 0x003f0000;
 		np->rx_config = (RX_FIFO_THRESH << 13) | (rx_buf_len_idx << 11) | (RX_DMA_BURST << 8);
@@ -485,10 +534,10 @@ D(bug("%s: rtl8139nic_open: TX Buffers initialised\n",unit->rtl8139u_name));
 		{
 			if ((BYTEIN(base + RTLr_ChipCmd) & CmdReset) ==0) break;
 		}
-D(bug("%s: rtl8139nic_open: NIC Reset\n",unit->rtl8139u_name));		
+RTLD(bug("[%s] rtl8139nic_open: NIC Reset\n",unit->rtl8139u_name))
 
 		rtl8139nic_set_mac(unit);
-D(bug("%s: rtl8139nic_open: copied MAC address\n",unit->rtl8139u_name));
+RTLD(bug("[%s] rtl8139nic_open: copied MAC address\n",unit->rtl8139u_name))
 
 		np->rx_current = 0;
 
@@ -499,7 +548,7 @@ D(bug("%s: rtl8139nic_open: copied MAC address\n",unit->rtl8139u_name));
 		LONGOUT(base + RTLr_RxConfig, np->rx_config);
 		LONGOUT(base + RTLr_TxConfig, TX_DMA_BURST << 8);
 
-D(bug("%s: rtl8139nic_open: Enabled Tx/Rx\n",unit->rtl8139u_name));
+RTLD(bug("[%s] rtl8139nic_open: Enabled Tx/Rx\n",unit->rtl8139u_name))
 
 		/* check_duplex */
 		if (np->mii_phys[0] >= 0 || (unit->rtl8139u_rtl_chipcapabilities & RTLc_HAS_MII_XCVR))
@@ -522,9 +571,9 @@ D(bug("%s: rtl8139nic_open: Enabled Tx/Rx\n",unit->rtl8139u_name));
 			   unit->rtl8139u_rtl_LinkSpeed = 100000000;				
 			}
 			
-D(bug("%s: rtl8139nic_open: Setting %s%s-duplex based on auto-neg partner ability %4.4x\n",unit->rtl8139u_name,
+RTLD(bug("[%s] rtl8139nic_open: Setting %s%s-duplex based on auto-neg partner ability %4.4x\n",unit->rtl8139u_name,
 																							 mii_reg5 == 0 ? "" : (mii_reg5 & 0x0180) ? "100mbps " : "10mbps ",
-																							 np->full_duplex ? "full" : "half", mii_reg5));
+																							 np->full_duplex ? "full" : "half", mii_reg5))
 		}
 
 		if (unit->rtl8139u_rtl_chipcapabilities & RTLc_HAS_MII_XCVR)
@@ -545,7 +594,7 @@ D(bug("%s: rtl8139nic_open: Setting %s%s-duplex based on auto-neg partner abilit
 		
 	   unit->rtl8139u_flags |= IFF_UP;
 	   ReportEvents(LIBBASE, unit, S2EVENT_ONLINE);
-D(bug("%s: rtl8139nic_open: Device set as ONLINE\n",unit->rtl8139u_name));
+RTLD(bug("[%s] rtl8139nic_open: Device set as ONLINE\n",unit->rtl8139u_name))
 	}
 	return 0;
 

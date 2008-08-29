@@ -110,7 +110,7 @@ void FlushUnit(LIBBASETYPEPTR LIBBASE, struct RTL8139Unit *unit, UBYTE last_queu
 	UBYTE i;
 	struct Opener *opener, *tail;
 
-D(bug("%s unit.FlushUnit\n", unit->rtl8139u_name));
+RTLD(bug("[%s] unit.FlushUnit\n", unit->rtl8139u_name))
 
 	/* Abort queued operations */
 
@@ -139,14 +139,8 @@ D(bug("%s unit.FlushUnit\n", unit->rtl8139u_name));
 	}
 }
 
-/*
- * Interrupt handler called whenever RTL8139 NIC interface generates interrupt.
+/* Interrupt Rx Support Function ..
  * It's duty is to iterate throgh RX queue searching for new packets.
- * 
- * Please note, that although multicast support could be done on interface 
- * basis, it is done in this function as result of quick integration of both
- * the forcedeth driver (IFF_ALLMULTI flag) and etherlink3 driver (AddressMatch
- * filter function).
  */
 void RTL8139_RX_Process(struct RTL8139Unit *unit)
 {
@@ -160,52 +154,55 @@ void RTL8139_RX_Process(struct RTL8139Unit *unit)
 	struct IOSana2Req *request, *request_tail;
 	BOOL accepted, is_orphan;
 
-D(bug("%s: RTL8139_RX_Process() !!!!\n", unit->rtl8139u_name));
-	unsigned short cur_rx = np->cur_rx;
+RTLD(bug("[%s] RTL8139_RX_Process() !!!!\n", unit->rtl8139u_name))
 
 	while((BYTEIN(base + RTLr_ChipCmd) & RxBufEmpty) == 0)
 	{
 		UWORD len = 0, overspill = 0;
 		struct eth_frame *frame;
 
+		unsigned short cur_rx = np->cur_rx;
 		unsigned int ring_offset = cur_rx % np->rx_buf_len;
 		unsigned long rx_status = *(unsigned long *)(np->rx_buffer + ring_offset);
 		unsigned int rx_size = rx_status >> 16;
 
-D(bug("%s: RTL8139_RX_Process: np->rx_buffer  = %p\n",
-			unit->rtl8139u_name, np->rx_buffer));
+		np->cur_rx = (unsigned short)(cur_rx + rx_size + ETH_CRCSIZE + 3) & ~3;
+		WORDOUT(base + RTLr_RxBufPtr, np->cur_rx - 16);
+
+RTLD(bug("[%s] RTL8139_RX_Process: RecieveBuffers  @ 0x%p\n",
+			unit->rtl8139u_name, np->rx_buffer))
 		
-D(bug("%s: RTL8139_RX_Process: cur_rx=%d, ring_offset=%4.4x, rx_status=%8.8x rx_size=%d\n",
-			unit->rtl8139u_name, cur_rx, ring_offset, rx_status, rx_size));
-		
+RTLD(bug("[%s] RTL8139_RX_Process: Rx = %d [offset=%4.4x, Status=%8.8x Size=%d]\n",
+			unit->rtl8139u_name, cur_rx, ring_offset, rx_status, rx_size))
+
 		if (rx_status & (RxBadSymbol | RxRunt | RxTooLong | RxCRCErr | RxBadAlign))
 		{
-D(bug("%s: RTL8139_RX_Process: Ethernet frame had errors, Status %8.8x\n",
-			unit->rtl8139u_name, rx_status));
+RTLD(bug("[%s] RTL8139_RX_Process: Ethernet frame had errors, Status %8.8x\n",
+				unit->rtl8139u_name, rx_status))
 
 			if (rx_status == 0xffffffff)
 			{
-D(bug("%s: RTL8139_RX_Process: Invalid Recieve Status\n", unit->rtl8139u_name));
+RTLD(bug("[%s] RTL8139_RX_Process: Invalid Recieve Status\n", unit->rtl8139u_name))
 				rx_status = 0;
 			}
 
 			if (rx_status & RxTooLong)
 			{
-D(bug("%s: RTL8139_RX_Process: Oversized Ethernet Frame\n", unit->rtl8139u_name));
+RTLD(bug("[%s] RTL8139_RX_Process: Oversized Ethernet Frame\n", unit->rtl8139u_name))
 			}
 
 			/* Reset the reciever */
 			np->cur_rx = 0;
 			BYTEOUT(base + RTLr_ChipCmd, CmdTxEnb);
-			
+
 			rtl8139nic_set_rxmode(RTL8139DeviceBase);
 			BYTEOUT(base + RTLr_ChipCmd, CmdRxEnb | CmdTxEnb);
 		}
 		else if (rx_status & RxStatusOK)
 		{
-			len = rx_size - 4;
-			frame = (UBYTE *)(np->rx_buffer + ring_offset + 4);
-D(bug("%s: RTL8139_RX_Process: frame @ %p, len=%d\n", unit->rtl8139u_name, frame, len));
+			len = rx_size - ETH_CRCSIZE;
+			frame = (UBYTE *)(np->rx_buffer + ring_offset + ETH_CRCSIZE);
+RTLD(bug("[%s] RTL8139_RX_Process: frame @ %p, len=%d\n", unit->rtl8139u_name, frame, len))
 
 			/* got a valid packet - forward it to the network core */
 			is_orphan = TRUE;
@@ -213,31 +210,26 @@ D(bug("%s: RTL8139_RX_Process: frame @ %p, len=%d\n", unit->rtl8139u_name, frame
 			if (ring_offset + rx_size > np->rx_buf_len)
 			{
 				overspill = (ring_offset + rx_size) - np->rx_buf_len;
-D(bug("%s: RTL8139_RX_Process: WRAPPED Frame! (%d bytes overspill)\n", unit->rtl8139u_name, overspill));
+RTLD(bug("[%s] RTL8139_RX_Process: WRAPPED Frame! (%d bytes overspill)\n", unit->rtl8139u_name, overspill))
 				len = len - overspill;
 #warning "TODO: We need to copy the wrapped buffer into a temp buff to pass to listeners!"
 			}
 			
-			/* Dump contents of frame if DEBUG enabled */
-#ifdef DEBUG
-			{
-				int j;
+			RTLD( int j;
 				for (j=0; j<64; j++) {
 					if ((j%16) == 0)
-						D(bug("\n%03x:", j));
+						bug("\n%03x:", j);
 
-					D(bug(" %02x", ((unsigned char*)frame)[j]));
+					bug(" %02x", ((unsigned char*)frame)[j]);
 				}
-				D(bug("\n"));
-			}
-#endif
+				bug("\n");)
 
 			/* Check for address validity */
 			if(AddressFilter(LIBBASE, unit, frame->eth_packet_dest))
 			{
 				/* Packet is addressed to this driver */
 				packet_type = AROS_BE2WORD(frame->eth_packet_type);
-D(bug("%s: RTL8139_RX_Process: Packet IP accepted with type = %d\n", unit->rtl8139u_name, packet_type));
+RTLD(bug("[%s] RTL8139_RX_Process: Packet IP accepted with type = %d\n", unit->rtl8139u_name, packet_type))
 
 				opener = (APTR)unit->rtl8139u_Openers.mlh_Head;
 				opener_tail = (APTR)&unit->rtl8139u_Openers.mlh_Tail;
@@ -256,7 +248,7 @@ D(bug("%s: RTL8139_RX_Process: Packet IP accepted with type = %d\n", unit->rtl81
 						  || ((request->ios2_PacketType <= ETH_MTU)
 						  && (packet_type <= ETH_MTU)))
 						{
-D(bug("%s: RTL8139_RX_Process: copy packet for opener ..\n", unit->rtl8139u_name));
+RTLD(bug("[%s] RTL8139_RX_Process: copy packet for opener ..\n", unit->rtl8139u_name))
 							CopyPacket(LIBBASE, unit, request, len, packet_type, frame);
 							accepted = TRUE;
 						}
@@ -279,12 +271,11 @@ D(bug("%s: RTL8139_RX_Process: copy packet for opener ..\n", unit->rtl8139u_name
 						CopyPacket(LIBBASE, unit,
 						  (APTR)unit->rtl8139u_request_ports[ADOPT_QUEUE]->
 						  mp_MsgList.lh_Head, len, packet_type, frame);
-D(bug("%s: RTL8139_RX_Process: packet copied to orphan queue\n", unit->rtl8139u_name));
+RTLD(bug("[%s] RTL8139_RX_Process: packet copied to orphan queue\n", unit->rtl8139u_name))
 					}
 				}
 
 				/* Update remaining statistics */
-
 				tracker =  FindTypeStats(LIBBASE, unit, &unit->rtl8139u_type_trackers, packet_type);
 
 				if(tracker != NULL)
@@ -293,25 +284,13 @@ D(bug("%s: RTL8139_RX_Process: packet copied to orphan queue\n", unit->rtl8139u_
 					tracker->stats.BytesReceived += len;
 				}
 			}
-
 			unit->rtl8139u_stats.PacketsReceived++;
 		}
 		else
 		{
-D(bug("%s: RTL8139_RX_Process: Rx Packet Processing complete\n", unit->rtl8139u_name));
+RTLD(bug("[%s] RTL8139_RX_Process: Rx Packet Processing complete\n", unit->rtl8139u_name))
 		}
-		cur_rx = (cur_rx + rx_size + 4 + 3) & ~3;
-		WORDOUT(base + RTLr_RxBufPtr, cur_rx - 16);
-
-//		UWORD status = WORDIN(base + RTLr_IntrStatus) & RxAckBits;
-
-//		if (status)
-//		{
-//			WORDOUT(base + RTLr_IntrStatus, RxAckBits);
-//		}
 	}
-
-	np->cur_rx = cur_rx;
 }
 
 /*
@@ -329,7 +308,7 @@ AROS_UFH3(void, RTL8139_TX_IntF,
 	int nr, try_count=1;
 	BOOL proceed = FALSE; /* Fails by default */
 
-	D(bug("%s: RTL8139_TX_IntF()\n", unit->rtl8139u_name));
+	RTLD(bug("[%s] RTL8139_TX_IntF()\n", unit->rtl8139u_name))
 
 	/* send packet only if there is free space on tx queue. Otherwise do nothing */
 	if (!netif_queue_stopped(unit))
@@ -388,28 +367,22 @@ AROS_UFH3(void, RTL8139_TX_IntF,
 				/* Now the packet is already in TX buffer, update flags for NIC */
 				if (error == 0)
 				{
-D(bug("%s: RTL8139_TX_IntF: packet %d  @ %p [type = %d] queued for transmission.", unit->rtl8139u_name, nr, np->tx_buf[nr], AROS_BE2WORD(((struct eth_frame *)np->tx_buf[nr])->eth_packet_type)));
+RTLD(bug("[%s] RTL8139_TX_IntF: packet %d  @ %p [type = %d] queued for transmission.", unit->rtl8139u_name, nr, np->tx_buf[nr], AROS_BE2WORD(((struct eth_frame *)np->tx_buf[nr])->eth_packet_type)))
 
-					/* DEBUG? Dump frame if so */
-#ifdef DEBUG
-					{
-						int j;
+					RTLD( int j;
 						for (j=0; j<64; j++) {
 							if ((j%16) == 0)
-								D(bug("\n%03x:", j));
-
-							D(bug(" %02x", ((unsigned char*)np->tx_buf[nr])[j]));
+								bug("\n%03x:", j);
+							bug(" %02x", ((unsigned char*)np->tx_buf[nr])[j]);
 						}
-						D(bug("\n"));
-					}
-#endif
+						bug("\n");)
+
 					/* Set the ring details for the packet .. */
 					LONGOUT(base + RTLr_TxAddr0 + (nr << 2), np->tx_buf[nr]);
 					LONGOUT(base + RTLr_TxStatus0 + (nr << 2), np->tx_flag | (packet_size >= ETH_ZLEN ? packet_size : ETH_ZLEN));
 				}
 
 				/* Reply packet */
-
 				request->ios2_Req.io_Error = error;
 				request->ios2_WireError = wire_error;
 				Disable();
@@ -418,7 +391,6 @@ D(bug("%s: RTL8139_TX_IntF: packet %d  @ %p [type = %d] queued for transmission.
 				ReplyMsg((APTR)request);
 
 				/* Update statistics */
-
 				if(error == 0)
 				{
 					tracker = FindTypeStats(LIBBASE, unit, &unit->rtl8139u_type_trackers, request->ios2_PacketType);
@@ -437,10 +409,9 @@ D(bug("%s: RTL8139_TX_IntF: packet %d  @ %p [type = %d] queued for transmission.
 			/* 
 			* If we've just run out of free space on the TX queue, stop
 			* it and give up pushing further frames */
-
 			if ( (try_count + 1) >= NUM_TX_DESC)
 			{
-D(bug("%s: output queue full!. Stopping [count = %d, NUM_TX_DESC = %d\n", unit->rtl8139u_name, try_count, NUM_TX_DESC));
+RTLD(bug("[%s] output queue full!. Stopping [count = %d, NUM_TX_DESC = %d\n", unit->rtl8139u_name, try_count, NUM_TX_DESC))
 				netif_stop_queue(unit);
 				proceed = FALSE;
 			}            
@@ -466,7 +437,7 @@ static void RTL8139_TimeoutHandlerF(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw
 	struct Device *TimerBase = unit->rtl8139u_TimerSlowReq->tr_node.io_Device;
 
 	GetSysTime(&time);
-	//D(bug("%s: RTL8139_TimeoutHandlerF()\n", unit->rtl8139u_name));
+	//RTLD(bug("[%s] RTL8139_TimeoutHandlerF()\n", unit->rtl8139u_name))
 
 	/*
 	* If timeout timer is expected, and time elapsed - regenerate the 
@@ -480,16 +451,22 @@ static void RTL8139_TimeoutHandlerF(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw
 }
 
 /*
- * The interrupt handler - schedules code execution to proper handlers
+ * Interrupt handler called whenever RTL8139 NIC interface generates interrupt.
+ * 
+ * Please note, that although multicast support could be done on interface 
+ * basis, it is done in this function as result of quick integration of both
+ * the forcedeth driver (IFF_ALLMULTI flag) and etherlink3 driver (AddressMatch
+ * filter function).
  */
 static void RTL8139_IntHandlerF(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
 {
 	struct RTL8139Unit *unit = (struct RTL8139Unit *) irq->h_Data;
 	struct fe_priv *np = unit->rtl8139u_fe_priv;
 	UBYTE *base = (UBYTE*) unit->rtl8139u_BaseMem;
-	int link_changed, interrupt_work = 20;
+	unsigned int link_changed, CSCRval;
+	int interrupt_work = 20;
 
-D(bug("%s: RTL8139_IntHandlerF()!!!!!!!\n", unit->rtl8139u_name));
+RTLD(bug("[%s] RTL8139_IntHandlerF()!!!!!!!\n", unit->rtl8139u_name))
 	
 	while (1)
 	{
@@ -497,36 +474,47 @@ D(bug("%s: RTL8139_IntHandlerF()!!!!!!!\n", unit->rtl8139u_name));
 
 		if (status & RxUnderrun)
 		{
-			link_changed = WORDIN(base + RTLr_CSCR) & CSCR_LinkChangeBit;
-D(bug("%s: RTL8139_IntHandlerF: Link Change : %d\n", unit->rtl8139u_name, link_changed));
+			CSCRval = WORDIN(base + RTLr_CSCR);
+			link_changed = (CSCRval & CSCR_LinkChangeBit);
+RTLD(bug("[%s] RTL8139_IntHandlerF: Link Change : %d\n", unit->rtl8139u_name, link_changed))
 #warning "TODO: Disable/Enable interface on link change"
+			if (CSCRval & CSCR_LinkOKBit) {
+RTLD(bug("[%s] RTL8139_IntHandlerF: Link Change : Link UP\n", unit->rtl8139u_name))
+				BYTEOUT(base + RTLr_ChipCmd, CmdTxEnb);
+				rtl8139nic_set_rxmode(unit); // Reset the multicast list
+				BYTEOUT(base + RTLr_ChipCmd, CmdRxEnb | CmdTxEnb);
+				unit->rtl8139u_flags |= IFF_UP;
+			} else {
+RTLD(bug("[%s] RTL8139_IntHandlerF: Link Change : Link DOWN\n", unit->rtl8139u_name))
+				unit->rtl8139u_flags &= ~IFF_UP;
+			}
 		}
 
 		WORDOUT(base + RTLr_IntrStatus, status);
 
 		if ((status & (RxOK | RxErr | RxUnderrun | RxOverflow | RxFIFOOver | TxOK | TxErr | PCIErr | PCSTimeout)) == 0)
 		{
-D(bug("%s: RTL8139_IntHandlerF: No work to process..\n", unit->rtl8139u_name));
+RTLD(bug("[%s] RTL8139_IntHandlerF: No work to process..\n", unit->rtl8139u_name))
 			break;
 		}
 		
-		if ( status & (RxOK | RxErr | RxUnderrun | RxOverflow | RxFIFOOver) ) // Chipset has Recieved packet(s)
+		if (status & (RxOK | RxErr | RxUnderrun | RxOverflow | RxFIFOOver)) // Chipset has Recieved packet(s)
 		{
-D(bug("%s: RTL8139_IntHandlerF: Packet Reception Attempt detected!\n", unit->rtl8139u_name));
+RTLD(bug("[%s] RTL8139_IntHandlerF: Packet Reception Attempt detected!\n", unit->rtl8139u_name))
 			RTL8139_RX_Process(unit);
 		}
 
-		if ( status & (TxOK | TxErr) ) // Chipset has attempted to Send packet(s)
+		if (status & (TxOK | TxErr)) // Chipset has attempted to Send packet(s)
 		{
-D(bug("%s: RTL8139_IntHandlerF: Packet Transmition Attempt detected!\n", unit->rtl8139u_name));
+RTLD(bug("[%s] RTL8139_IntHandlerF: Packet Transmition Attempt detected!\n", unit->rtl8139u_name))
 			unsigned int dirty_tx = np->tx_dirty;
 			unsigned int tx_cur = 0;
 
-			while ( tx_cur < NUM_TX_DESC)
+			while (tx_cur < NUM_TX_DESC)
 			{
 				BOOL transmit_error = FALSE;
 
-				if ( np->tx_pbuf[tx_cur] != NULL)
+				if (np->tx_pbuf[tx_cur] != NULL)
 				{
 					ULONG txstatus = LONGIN(base + RTLr_TxStatus0 + (tx_cur << 2));
 
@@ -535,7 +523,7 @@ D(bug("%s: RTL8139_IntHandlerF: Packet Transmition Attempt detected!\n", unit->r
 						// N.B: TxCarrierLost is always asserted at 100mbps.
 						if (txstatus & (TxOutOfWindow | TxAborted))
 						{
-D(bug("%s: RTL8139_IntHandlerF: Packet %d Transmition Error! Tx status %8.8x\n", unit->rtl8139u_name, tx_cur, txstatus));
+RTLD(bug("[%s] RTL8139_IntHandlerF: Packet %d Transmition Error! Tx status %8.8x\n", unit->rtl8139u_name, tx_cur, txstatus))
 							if (txstatus & TxAborted)
 							{
 								LONGOUT(base + RTLr_TxConfig, TX_DMA_BURST << 8);
@@ -546,14 +534,14 @@ D(bug("%s: RTL8139_IntHandlerF: Packet %d Transmition Error! Tx status %8.8x\n",
 						{
 							if (txstatus & TxUnderrun)
 							{
-D(bug("%s: RTL8139_IntHandlerF: Packet %d Transmition Underrun Error! Adjusting flags\n", unit->rtl8139u_name, tx_cur));
+RTLD(bug("[%s] RTL8139_IntHandlerF: Packet %d Transmition Underrun Error! Adjusting flags\n", unit->rtl8139u_name, tx_cur))
 								if (np->tx_flag < 0x00300000)
 									np->tx_flag += 0x00020000;
 								transmit_error = TRUE;
 							}
 							else
 							{
-D(bug("%s: RTL8139_IntHandlerF: Packet %d Sent Successfully\n", unit->rtl8139u_name, tx_cur));
+RTLD(bug("[%s] RTL8139_IntHandlerF: Packet %d Sent Successfully\n", unit->rtl8139u_name, tx_cur))
 							}
 						}
 						np->tx_pbuf[tx_cur] = NULL;
@@ -562,7 +550,7 @@ D(bug("%s: RTL8139_IntHandlerF: Packet %d Sent Successfully\n", unit->rtl8139u_n
 					}
 					else
 					{
-D(bug("%s: RTL8139_IntHandlerF: Packet %d  still in transmission\n", unit->rtl8139u_name, tx_cur));
+RTLD(bug("[%s] RTL8139_IntHandlerF: Packet %d  still in transmission\n", unit->rtl8139u_name, tx_cur))
 					}
 				}
 				tx_cur++;
@@ -570,15 +558,15 @@ D(bug("%s: RTL8139_IntHandlerF: Packet %d  still in transmission\n", unit->rtl81
 			np->tx_dirty = dirty_tx;
 		}
 
-		if ( status & (PCIErr | PCSTimeout) ) // Chipset has Reported an ERROR
+		if (status & (PCIErr | PCSTimeout)) // Chipset has Reported an ERROR
 		{
-D(bug("%s: RTL8139_IntHandlerF: ERROR Detected\n", unit->rtl8139u_name));
+RTLD(bug("[%s] RTL8139_IntHandlerF: ERROR Detected\n", unit->rtl8139u_name))
 			if (status == 0xffff)	break; // Missing Chip!
 		}
 
 		if (--interrupt_work < 0)
 		{
-D(bug("%s: RTL8139_IntHandlerF: MAX interrupt work reached.\n", unit->rtl8139u_name));
+RTLD(bug("[%s] RTL8139_IntHandlerF: MAX interrupt work reached.\n", unit->rtl8139u_name))
 			WORDOUT(base + RTLr_IntrStatus, 0xffff);
 			break;
 		}
@@ -595,7 +583,7 @@ VOID CopyPacket(struct RTL8139Base *RTL8139DeviceBase, struct RTL8139Unit *unit,
 	BOOL filtered = FALSE;
 	UBYTE *ptr;
 
-D(bug("%s: CopyPacket(packet @ %x, len = %d)\n", unit->rtl8139u_name, buffer, packet_size));
+RTLD(bug("[%s] CopyPacket(packet @ %x, len = %d)\n", unit->rtl8139u_name, buffer, packet_size))
 
 	/* Set multicast and broadcast flags */
 
@@ -604,12 +592,12 @@ D(bug("%s: CopyPacket(packet @ %x, len = %d)\n", unit->rtl8139u_name, buffer, pa
 	   (*((UWORD *)(buffer->eth_packet_dest + 4)) == 0xffff))
 	{
 	   request->ios2_Req.io_Flags |= SANA2IOF_BCAST;
-D(bug("%s: CopyPacket: BROADCAST Flag set\n", unit->rtl8139u_name));
+RTLD(bug("[%s] CopyPacket: BROADCAST Flag set\n", unit->rtl8139u_name))
 	}
 	else if((buffer->eth_packet_dest[0] & 0x1) != 0)
 	{
 	   request->ios2_Req.io_Flags |= SANA2IOF_MCAST;
-D(bug("%s: CopyPacket: MULTICAST Flag set\n", unit->rtl8139u_name));
+RTLD(bug("[%s] CopyPacket: MULTICAST Flag set\n", unit->rtl8139u_name))
 	}
 
 	/* Set source and destination addresses and packet type */
@@ -631,7 +619,7 @@ D(bug("%s: CopyPacket: MULTICAST Flag set\n", unit->rtl8139u_name));
 
 	request->ios2_DataLength = packet_size;
 
-D(bug("%s: CopyPacket: packet @ %x (%d bytes)\n", unit->rtl8139u_name, ptr, packet_size));
+RTLD(bug("[%s] CopyPacket: packet @ %x (%d bytes)\n", unit->rtl8139u_name, ptr, packet_size))
 
 	/* Filter packet */
 
@@ -640,30 +628,30 @@ D(bug("%s: CopyPacket: packet @ %x (%d bytes)\n", unit->rtl8139u_name, ptr, pack
 		(opener->filter_hook != NULL))
 		if(!CallHookPkt(opener->filter_hook, request, ptr))
 		{
-D(bug("%s: CopyPacket: packet filtered\n", unit->rtl8139u_name));
+RTLD(bug("[%s] CopyPacket: packet filtered\n", unit->rtl8139u_name))
 			filtered = TRUE;
 		}
 
 	if(!filtered)
 	{
 		/* Copy packet into opener's buffer and reply packet */
-D(bug("%s: CopyPacket: opener recieve packet .. ", unit->rtl8139u_name));
+RTLD(bug("[%s] CopyPacket: opener recieve packet .. ", unit->rtl8139u_name))
 		if(!opener->rx_function(request->ios2_Data, ptr, packet_size))
 		{
-D(bug("ERROR occured!!\n"));
+RTLD(bug("ERROR occured!!\n"))
 			request->ios2_Req.io_Error = S2ERR_NO_RESOURCES;
 			request->ios2_WireError = S2WERR_BUFF_ERROR;
 			ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_SOFTWARE | S2EVENT_BUFF | S2EVENT_RX);
 		}
 		else
 		{
-D(bug("SUCCESS!!\n"));
+RTLD(bug("SUCCESS!!\n"))
 		}
 		Disable();
 		Remove((APTR)request);
 		Enable();
 		ReplyMsg((APTR)request);
-D(bug("%s: CopyPacket: opener notified.\n", unit->rtl8139u_name));
+RTLD(bug("[%s] CopyPacket: opener notified.\n", unit->rtl8139u_name))
 	}
 }
 
@@ -716,24 +704,25 @@ AROS_UFH3(void, RTL8139_Schedular,
 {
 	AROS_USERFUNC_INIT
 
-    struct RTL8139Startup *sm_UD = FindTask(NULL)->tc_UserData;
-    struct RTL8139Unit *unit = sm_UD->rtl8139sm_Unit;
+	struct Task				*taskSelf = FindTask(NULL);
+    struct RTL8139Startup	*sm_UD = taskSelf->tc_UserData;
+    struct RTL8139Unit		*unit = sm_UD->rtl8139sm_Unit;
 
-	LIBBASETYPEPTR LIBBASE = unit->rtl8139u_device;
-	APTR BattClockBase;
-	struct MsgPort *reply_port, *input;
+	LIBBASETYPEPTR			LIBBASE = unit->rtl8139u_device;
+	struct MsgPort 			*reply_port, *input;
+	APTR 					BattClockBase;
 
-D(bug("%s RTL8139_Schedular()\n", unit->rtl8139u_name));
-D(bug("%s RTL8139_Schedular: Setting device up\n", unit->rtl8139u_name));
+RTLD(bug("[%s] RTL8139_Schedular()\n", taskSelf->tc_Node.ln_Name))
+RTLD(bug("[%s] RTL8139_Schedular: Setting up device '%s'\n", taskSelf->tc_Node.ln_Name, unit->rtl8139u_name))
 
 	if ((reply_port = CreateMsgPort()) == NULL)
 	{
-D(bug("%s RTL8139_Schedular: Failed to create Reply message port\n", unit->rtl8139u_name));
+RTLD(bug("[%s] RTL8139_Schedular: Failed to create Reply message port\n", taskSelf->tc_Node.ln_Name))
 	}
 
 	if ((input = CreateMsgPort()) == NULL)
 	{
-D(bug("%s RTL8139_Schedular: Failed to create Input message port\n", unit->rtl8139u_name));
+RTLD(bug("[%s] RTL8139_Schedular: Failed to create Input message port\n", taskSelf->tc_Node.ln_Name))
 	}
 
 	unit->rtl8139u_input_port = input; 
@@ -757,21 +746,21 @@ D(bug("%s RTL8139_Schedular: Failed to create Input message port\n", unit->rtl81
 				struct Message *msg = AllocVec(sizeof(struct Message), MEMF_PUBLIC|MEMF_CLEAR);
 				ULONG sigset;
 
-D(bug("%s RTL8139_Schedular: Got VBLANK unit of timer.device\n", unit->rtl8139u_name));
+RTLD(bug("[%s] RTL8139_Schedular: Got VBLANK unit of timer.device\n", taskSelf->tc_Node.ln_Name))
 
 				unit->initialize(unit);
 
 				msg->mn_ReplyPort = reply_port;
 				msg->mn_Length = sizeof(struct Message);
 
-D(bug("%s RTL8139_Schedular: Setup complete. Sending handshake\n", unit->rtl8139u_name));
+RTLD(bug("[%s] RTL8139_Schedular: Setup complete. Sending handshake\n", taskSelf->tc_Node.ln_Name))
 				PutMsg(sm_UD->rtl8139sm_SyncPort, msg);
 				WaitPort(reply_port);
 				GetMsg(reply_port);
 
 				FreeVec(msg);
 
-D(bug("%s RTL8139_Schedular: entering forever loop ... \n", unit->rtl8139u_name));
+RTLD(bug("[%s] RTL8139_Schedular: entering forever loop ... \n", taskSelf->tc_Node.ln_Name))
 
 				unit->rtl8139u_signal_0 = AllocSignal(-1);
 				unit->rtl8139u_signal_1 = AllocSignal(-1);
@@ -800,7 +789,7 @@ D(bug("%s RTL8139_Schedular: entering forever loop ... \n", unit->rtl8139u_name)
 						DeleteMsgPort(input);
 						DeleteMsgPort(reply_port);
 
-D(bug("%s RTL8139_Schedular: Process shutdown.\n", unit->rtl8139u_name));
+RTLD(bug("[%s] RTL8139_Schedular: Process shutdown.\n", taskSelf->tc_Node.ln_Name))
 						return;
 					}
 					else if (recvd & (1 << input->mp_SigBit))
@@ -810,14 +799,14 @@ D(bug("%s RTL8139_Schedular: Process shutdown.\n", unit->rtl8139u_name));
 						/* Handle incoming transactions */
 						while ((io = (struct IOSana2Req *)GetMsg(input))!= NULL);
 						{
-D(bug("%s RTL8139_Schedular: Handle incomming transaction.\n", unit->rtl8139u_name));
+RTLD(bug("[%s] RTL8139_Schedular: Handle incomming transaction.\n", taskSelf->tc_Node.ln_Name))
 							ObtainSemaphore(&unit->rtl8139u_unit_lock);
 							handle_request(LIBBASE, io);
 						}
 					}
 					else
 					{
-D(bug("%s RTL8139_Schedular: Handle incomming signal.\n", unit->rtl8139u_name));
+RTLD(bug("[%s] RTL8139_Schedular: Handle incomming signal.\n", taskSelf->tc_Node.ln_Name))
 						/* Handle incoming signals */
 					}
 				}
@@ -837,14 +826,26 @@ struct RTL8139Unit *CreateUnit(struct RTL8139Base *RTL8139DeviceBase, OOP_Object
 	BOOL success = TRUE;
 	int i;
 
-D(bug("[RTL8139] CreateUnit()\n"));
+#if defined(RTL_DEBUG)
+	BOOL doDebug = TRUE;
+#else
+#warning "TODO: Get option to debug from somewhere .."
+	BOOL doDebug = FALSE;
+#endif
+	
+	if (doDebug)
+	{
+		bug("[rtl8139] CreateUnit()\n");
+	}
 
 	if ((unit = AllocMem(sizeof(struct RTL8139Unit), MEMF_PUBLIC | MEMF_CLEAR)) != NULL)
 	{
 		IPTR        DeviceID, base, len;
 		OOP_Object  *driver;
 
-D(bug("[RTL8139] CreateUnit: Unit allocated @ %x\n", unit));
+		if (doDebug)
+			unit->rtl8139u_flags |= IFF_DEBUG;
+		
 		unit->rtl8139u_UnitNum = RTL8139DeviceBase->rtl8139b_UnitCount++;
 
 		unit->rtl8139u_Sana2Info.HardwareType = S2WireType_Ethernet;
@@ -857,6 +858,8 @@ D(bug("[RTL8139] CreateUnit: Unit allocated @ %x\n", unit));
             return NULL;
 		}
         sprintf((char *)unit->rtl8139u_name, "rtl8139.%d", unit->rtl8139u_UnitNum);
+
+RTLD(bug("[rtl8139] CreateUnit: Unit allocated @ 0x%p\n", unit))
 
 		OOP_GetAttr(pciDevice, aHidd_PCIDevice_ProductID, &DeviceID);
 		OOP_GetAttr(pciDevice, aHidd_PCIDevice_Driver, (APTR)&driver);
@@ -882,9 +885,9 @@ D(bug("[RTL8139] CreateUnit: Unit allocated @ %x\n", unit));
 		OOP_GetAttr(pciDevice, aHidd_PCIDevice_Base0,   &base);
 		OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size0,   &len);
 
-D(bug("%s CreateUnit:   INT:%d, base1:%x, base0:%x, size0:%d\n", unit->rtl8139u_name,
+RTLD(bug("[%s] CreateUnit:   INT:%d, base1:0x%p, base0:0x%p, size0:%d\n", unit->rtl8139u_name,
 																   unit->rtl8139u_IRQ, unit->rtl8139u_BaseIO,
-																   base, len));
+																   base, len))
 
 		unit->rtl8139u_BaseMem = (IPTR)HIDD_PCIDriver_MapPCI(driver, (APTR)base, len);
 		unit->rtl8139u_SizeMem = len;
@@ -899,8 +902,8 @@ D(bug("%s CreateUnit:   INT:%d, base1:%x, base0:%x, size0:%d\n", unit->rtl8139u_
 			};
 			OOP_SetAttrs(pciDevice, (struct TagItem *)&attrs);
 
-D(bug("%s CreateUnit:   PCI_BaseMem @ %x\n", unit->rtl8139u_name, unit->rtl8139u_BaseMem));
-			
+RTLD(bug("[%s] CreateUnit:   PCI_BaseMem @ 0x%p\n", unit->rtl8139u_name, unit->rtl8139u_BaseMem))
+
 			unit->rtl8139u_fe_priv = AllocMem(sizeof(struct fe_priv), MEMF_PUBLIC|MEMF_CLEAR);
 
 			rtl8139nic_get_functions(unit);
@@ -979,19 +982,24 @@ D(bug("%s CreateUnit:   PCI_BaseMem @ %x\n", unit->rtl8139u_name, unit->rtl8139u
 							DeleteMsgPort(sm_UD->rtl8139sm_SyncPort);
 							FreeMem(sm_UD, sizeof(struct RTL8139Startup));
 
-D(bug("[%s]  CreateUnit: Device Initialised. Unit %d @ %p\n", unit->rtl8139u_name, unit->rtl8139u_UnitNum, unit));
+RTLD(bug("[%s]  CreateUnit: Device Initialised. Unit %d @ %p\n", unit->rtl8139u_name, unit->rtl8139u_UnitNum, unit))
 							return unit;
 						}
 					}
 					else
 					{
-D(bug("%s: ERRORS occured during Device setup - ABORTING\n", unit->rtl8139u_name));
+RTLD(bug("[%s] ERRORS occured during Device setup - ABORTING\n", unit->rtl8139u_name))
 					}
 				}
 			}
 		}
 		else
-D(bug("[RTL8139] PANIC! Couldn't get MMIO area. Aborting\n"));
+RTLD(bug("[rtl8139] PANIC! Couldn't get MMIO area. Aborting\n"))
+	}
+	else if (doDebug)
+	{
+		bug("[rtl8139] CreateUnit: Failed to Allocate Unit storage!\n");
+		return NULL;
 	}
 	DeleteUnit(RTL8139DeviceBase, unit);	
 	return NULL;

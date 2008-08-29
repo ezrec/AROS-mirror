@@ -22,8 +22,16 @@
 	MA 02111-1307, USA.
 */
 
-#define DEBUG 0
+//#define RTL_DEBUG
+
+#define DEBUG 1
 #include <aros/debug.h>
+
+#define RTLD(d) \
+	if (unit->rtl8139u_flags & IFF_DEBUG) \
+	{ \
+		d; \
+	}
 
 #include <exec/types.h>
 #include <exec/libraries.h>

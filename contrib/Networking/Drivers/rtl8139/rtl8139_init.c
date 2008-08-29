@@ -52,7 +52,7 @@
 
 struct Library *OOPBase;
 
-AROS_UFH3(void, Enumerator,
+AROS_UFH3(void, PCI_Enumerator,
 	AROS_UFHA(struct Hook *,    hook,       A0),
 	AROS_UFHA(OOP_Object *,     pciDevice,  A2),
 	AROS_UFHA(APTR,             message,    A1))
@@ -67,7 +67,7 @@ AROS_UFH3(void, Enumerator,
 			CardCapabilities;
 	BOOL    FoundCompatNIC = FALSE;
 
-D(bug("[RTL8139] init.PCI_Enumerator(PCI Device Obj @ %p)\n", pciDevice));
+D(bug("[rtl8139] PCI_Enumerator(PCI Device Obj @ %p)\n", pciDevice));
 
 	LIBBASETYPEPTR LIBBASE = (LIBBASETYPEPTR)hook->h_Data;
 
@@ -129,7 +129,7 @@ D(bug("[RTL8139] init.PCI_Enumerator(PCI Device Obj @ %p)\n", pciDevice));
 
 	if (FoundCompatNIC)
 	{
-D(bug("[RTL8139] Found %s NIC [%s], PCI_ID %04x:%04x Rev:%d\n", CardName, CardChipName, VendorID, DeviceID, RevisionID));
+D(bug("[rtl8139] PCI_Enumerator: Found %s NIC [%s], PCI_ID %04x:%04x Rev:%d\n", CardName, CardChipName, VendorID, DeviceID, RevisionID));
 
 		struct RTL8139Unit *unit = NULL;
 		
@@ -139,10 +139,10 @@ D(bug("[RTL8139] Found %s NIC [%s], PCI_ID %04x:%04x Rev:%d\n", CardName, CardCh
         }
         else
         {
-D(bug("[RTL8139] PCI_Enumerator: Failed to create unit!\n"));
+D(bug("[rtl8139] PCI_Enumerator: Failed to create unit!\n"));
             return;
         }
-D(bug("[%s] PCI_Enumerator: %s NIC I/O MEM @ %08x\n", unit->rtl8139u_name, unit->rtl8139u_rtl_chipname, unit->rtl8139u_BaseMem));
+RTLD(bug("[%s] PCI_Enumerator: %s NIC I/O MEM @ %08x\n", unit->rtl8139u_name, unit->rtl8139u_rtl_chipname, unit->rtl8139u_BaseMem))
 
 	}
 	
@@ -151,53 +151,51 @@ D(bug("[%s] PCI_Enumerator: %s NIC I/O MEM @ %08x\n", unit->rtl8139u_name, unit-
 
 static int GM_UNIQUENAME(Init)(LIBBASETYPEPTR LIBBASE)
 {
-D(bug("[RTL8139] init.Init()\n"));
+D(bug("[rtl8139] Init()\n"));
 
     UBYTE tmpbuff[100];
     sprintf((char *)tmpbuff, RTL8139_TASK_NAME, "rtl8139.0");
 
     if (FindTask(tmpbuff) != NULL)
 	{
-		D(bug("[RTL8139] device already up and running.\n"));
+		D(bug("[rtl8139] Init: Found Task '%s'! - Device already up and running.\n", tmpbuff));
 		return FALSE;
 	}
+
+    NEWLIST(&LIBBASE->rtl8139b_Units);
 
 	OOPBase = OpenLibrary("oop.library",0);
 
 	if (OOPBase != NULL)
 	{
-		D(bug("[RTL8139] Got oop.library\n"));
+		D(bug("[rtl8139] Init: oop.library opened @ %p\n", OOPBase));
 
 		LIBBASE->rtl8139b_UtilityBase = OpenLibrary("utility.library",0);
 
 		if (LIBBASE->rtl8139b_UtilityBase != NULL)
 		{
-			D(bug("[RTL8139] Got utility.library\n"));
+			D(bug("[rtl8139] Init: utility.library opened @ %p\n", LIBBASE->rtl8139b_UtilityBase));
 
 			LIBBASE->rtl8139b_PCIDeviceAttrBase = OOP_ObtainAttrBase(IID_Hidd_PCIDevice);
 
 			if (LIBBASE->rtl8139b_PCIDeviceAttrBase != 0)
 			{
-				D(bug("[RTL8139] Got HiddPCIDeviceAttrBase\n"));
+				D(bug("[rtl8139] Init: HiddPCIDeviceAttrBase @ %p\n", LIBBASE->rtl8139b_PCIDeviceAttrBase));
 
 				LIBBASE->rtl8139b_PCI = OOP_NewObject(NULL, CLID_Hidd_PCI, NULL);
 
 				if (LIBBASE->rtl8139b_PCI)
 				{
-					D(bug("[RTL8139] Got PCI object\n"));
+					D(bug("[rtl8139] Init: PCI Subsystem HIDD object @ %p\n", LIBBASE->rtl8139b_PCI));
 
 					struct Hook FindHook = {
-						h_Entry:    (IPTR (*)())Enumerator,
+						h_Entry:    (IPTR (*)())PCI_Enumerator,
 						h_Data:     LIBBASE,
-					};
-
-					struct TagItem Requirements[] = {
-						{ TAG_DONE,             0UL }
 					};
 
 					HIDD_PCI_EnumDevices(   LIBBASE->rtl8139b_PCI,
 											&FindHook,
-											(struct TagItem *)&Requirements);
+											NULL);
 
                     if (!(IsListEmpty(&LIBBASE->rtl8139b_Units)))
                     {
@@ -213,7 +211,7 @@ D(bug("[RTL8139] init.Init()\n"));
 
 static int GM_UNIQUENAME(Expunge)(LIBBASETYPEPTR LIBBASE)
 {
-D(bug("[RTL8139] init.Expunge\n"));
+D(bug("[rtl8139] Expunge()\n"));
 
     struct RTL8139Unit *unit_current, *unit_tmp;
 
@@ -275,12 +273,12 @@ static int GM_UNIQUENAME(Open)
                 unit = unit_current;
         }
     }
-    
-D(bug("[RTL8139] OpenDevice(%d)\n", unitnum));
+
+D(bug("[rtl8139] OpenDevice(%d)\n", unitnum));
 
     if (unit != NULL)
     {
-D(bug("[RTL8139] OpenDevice: Unit %d @ %p\n", unitnum, unit));
+RTLD(bug("[rtl8139] OpenDevice: Unit %d @ %p\n", unitnum, unit));
 		req->ios2_Req.io_Unit = NULL;
 		tags = req->ios2_BufferManagement;
 
@@ -300,22 +298,23 @@ D(bug("[RTL8139] OpenDevice: Unit %d @ %p\n", unitnum, unit));
 			if (unit->rtl8139u_open_count != 0 && ((unit->rtl8139u_flags & IFF_SHARED) == 0 ||
 				(flags & SANA2OPF_MINE) != 0))
 				error = IOERR_UNITBUSY;
-			unit->rtl8139u_open_count++;
+			else
+				unit->rtl8139u_open_count++;
 		}
 
 		if (error == 0)
 		{
 			if ((flags & SANA2OPF_MINE) == 0)
-			unit->rtl8139u_flags |= IFF_SHARED;
-			else if((flags & SANA2OPF_PROM) != 0)
-			unit->rtl8139u_flags |= IFF_PROMISC;
+				unit->rtl8139u_flags |= IFF_SHARED;
+			else if ((flags & SANA2OPF_PROM) != 0)
+				unit->rtl8139u_flags |= IFF_PROMISC;
 
 			/* Set up buffer-management structure and get hooks */
 			opener = AllocVec(sizeof(struct Opener), MEMF_PUBLIC | MEMF_CLEAR);
 			req->ios2_BufferManagement = (APTR)opener;
 
 			if(opener == NULL)
-			error = IOERR_OPENFAIL;
+				error = IOERR_OPENFAIL;
 		}
 
 		if (error == 0)
@@ -343,7 +342,7 @@ D(bug("[RTL8139] OpenDevice: Unit %d @ %p\n", unitnum, unit));
 	}
     else
     {
-D(bug("[RTL8139] OpenDevice: Invalid Unit! (unitno = %d)\n", unitnum));
+D(bug("[rtl8139] OpenDevice: Invalid Unit! (unitno = %d)\n", unitnum));
         error = IOERR_OPENFAIL;
     }
 
@@ -361,7 +360,7 @@ static int GM_UNIQUENAME(Close)
 	struct RTL8139Unit *unit = (struct RTL8139Unit *)req->ios2_Req.io_Unit;
 	struct Opener *opener;
 
-D(bug("[RTL8139] CloseDevice(unit @ %p, unitno %d)\n", unit, unit->rtl8139u_UnitNum));
+RTLD(bug("[rtl8139] CloseDevice(unit @ %p, unitno %d)\n", unit, unit->rtl8139u_UnitNum))
 
 	unit->stop(unit);
 
@@ -383,14 +382,14 @@ ADD2EXPUNGELIB(GM_UNIQUENAME(Expunge),0)
 ADD2OPENDEV(GM_UNIQUENAME(Open),0)
 ADD2CLOSEDEV(GM_UNIQUENAME(Close),0)
 
-AROS_LH1(void, beginio,
+AROS_LH1(void, BeginIO,
 	AROS_LHA(struct IOSana2Req *, req, A1),
 	LIBBASETYPEPTR, LIBBASE, 5, RTL8139Dev)
 {
 	AROS_LIBFUNC_INIT
 	struct RTL8139Unit *unit;
 
-D(bug("[RTL8139] init.BeginIO\n"));
+RTLD(bug("[rtl8139] BeginIO()\n"));
 
 	req->ios2_Req.io_Error = 0;
 	unit = (APTR)req->ios2_Req.io_Unit;
@@ -408,7 +407,7 @@ D(bug("[RTL8139] init.BeginIO\n"));
 	AROS_LIBFUNC_EXIT
 }
 
-AROS_LH1(LONG, abortio,
+AROS_LH1(LONG, AbortIO,
 	AROS_LHA(struct IOSana2Req *, req, A1),
 	LIBBASETYPEPTR, LIBBASE, 6, RTL8139Dev)
 {
@@ -416,7 +415,7 @@ AROS_LH1(LONG, abortio,
 	struct RTL8139Unit *unit;
 	unit = (APTR)req->ios2_Req.io_Unit;
 
-D(bug("[RTL8139] init.AbortIO\n"));
+RTLD(bug("[rtl8139] AbortIO()\n"))
 
 	Disable();
 	if ((req->ios2_Req.io_Message.mn_Node.ln_Type == NT_MESSAGE) &&
