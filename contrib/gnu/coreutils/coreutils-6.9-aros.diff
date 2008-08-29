@@ -62,7 +62,15 @@ diff -ruN coreutils-6.9/configure coreutils-6.9.new/configure
  for ac_func in uname
  do
  as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
-@@ -29082,7 +29088,7 @@
+@@ -27697,6 +27703,7 @@
+        aux*)		os='A/UX';;
+        atheos*)		os='AtheOS';;
+        amigaos*)	os='Amiga OS';;
++       aros*)		os='AROS';;
+        aix*)		os='AIX';;
+ 
+        # The default heuristic takes the initial alphabetic string
+@@ -29082,7 +29089,7 @@
    gl_LIBOBJS="$gl_LIBOBJS long-options.$ac_objext"
  
  
@@ -71,7 +79,7 @@ diff -ruN coreutils-6.9/configure coreutils-6.9.new/configure
    { $as_echo "$as_me:$LINENO: checking whether lstat dereferences a symlink specified with a trailing slash" >&5
  $as_echo_n "checking whether lstat dereferences a symlink specified with a trailing slash... " >&6; }
  if test "${ac_cv_func_lstat_dereferences_slashed_symlink+set}" = set; then
-@@ -34196,7 +34202,7 @@
+@@ -34196,7 +34203,7 @@
    gl_LIBOBJS="$gl_LIBOBJS posixver.$ac_objext"
  
  
@@ -80,7 +88,7 @@ diff -ruN coreutils-6.9/configure coreutils-6.9.new/configure
    { $as_echo "$as_me:$LINENO: checking for SVID conformant putenv" >&5
  $as_echo_n "checking for SVID conformant putenv... " >&6; }
  if test "${jm_cv_func_svid_putenv+set}" = set; then
-@@ -43671,6 +43677,7 @@
+@@ -43671,6 +43678,7 @@
  
    { $as_echo "$as_me:$LINENO: checking whether tzset clobbers localtime buffer" >&5
  $as_echo_n "checking whether tzset clobbers localtime buffer... " >&6; }
