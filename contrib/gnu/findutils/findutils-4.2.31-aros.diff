@@ -1,0 +1,374 @@
+diff -ruN findutils-4.2.31/configure findutils-4.2.31.new/configure
+--- findutils-4.2.31/configure	2007-05-30 22:06:17.000000000 +0200
++++ findutils-4.2.31.new/configure	2008-08-28 00:00:41.000000000 +0200
+@@ -1847,13 +1847,9 @@
+ gl_func_list="$gl_func_list resolvepath"
+ gl_header_list="$gl_header_list fcntl.h"
+ gl_func_list="$gl_func_list mempcpy"
+-gl_func_list="$gl_func_list btowc"
+-gl_func_list="$gl_func_list iswctype"
+-gl_func_list="$gl_func_list mbsrtowcs"
+ gl_func_list="$gl_func_list wmemchr"
+ gl_func_list="$gl_func_list wmemcpy"
+ gl_func_list="$gl_func_list wmempcpy"
+-gl_header_list="$gl_header_list wctype.h"
+ gl_header_list="$gl_header_list stdio_ext.h"
+ gl_header_list="$gl_header_list stdint.h"
+ gl_header_list="$gl_header_list inttypes.h"
+@@ -1864,15 +1860,11 @@
+ gl_func_list="$gl_func_list fdopendir"
+ gl_func_list="$gl_func_list mbsinit"
+ gl_header_list="$gl_header_list locale.h"
+-gl_func_list="$gl_func_list mbrtowc"
+-gl_func_list="$gl_func_list wcrtomb"
+-gl_func_list="$gl_func_list wcscoll"
+ gl_func_list="$gl_func_list fchdir"
+ gl_header_list="$gl_header_list stdlib.h"
+ gl_func_list="$gl_func_list mblen"
+ gl_func_list="$gl_func_list mbrlen"
+ gl_func_list="$gl_func_list tzset"
+-gl_header_list="$gl_header_list wchar.h"
+ gl_header_list="$gl_header_list string.h"
+ gl_func_list="$gl_func_list lstat"
+ gl_header_list="$gl_header_list sys/stat.h"
+@@ -18260,6 +18252,7 @@
+ 
+ 	gl_cv_func_mbrtowc=no
+ fi
++gl_cv_func_mbrtowc=no
+ 
+ rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
+       conftest$ac_exeext conftest.$ac_ext
+@@ -20215,6 +20208,7 @@
+ 
+ 	gt_cv_c_wchar_t=no
+ fi
++gt_cv_c_wchar_t=no
+ 
+ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+ fi
+diff -ruN findutils-4.2.31/find/pred.c findutils-4.2.31.new/find/pred.c
+--- findutils-4.2.31/find/pred.c	2007-04-22 17:43:17.000000000 +0200
++++ findutils-4.2.31.new/find/pred.c	2008-08-28 00:00:41.000000000 +0200
+@@ -149,6 +149,11 @@
+ #undef MAX
+ #define MAX(a, b) ((a) > (b) ? (a) : (b))
+ 
++#include <proto/exec.h>
++#include <proto/dos.h>
++#include <exec/exec.h>
++#include <dos/dos.h>
++
+ static boolean insert_lname PARAMS((char *pathname, struct stat *stat_buf, struct predicate *pred_ptr, boolean ignore_case));
+ 
+ static char *format_date PARAMS((time_t when, int kind));
+@@ -1538,7 +1543,52 @@
+     }
+ }
+ 
++LONG execute_child()
++{
++  struct Task *this = FindTask(NULL);
++  APTR *userdata = this->tc_UserData;
++  const struct exec_val *execp = userdata[0];
++  struct buildcmd_state *buildstate = userdata[1];
++
++  /* We be the child. */
++  prep_child_for_exec(execp->close_stdin);
++
++  /* For -exec and -ok, change directory back to the starting directory.
++   * for -execdir and -okdir, stay in the directory we are searching
++   * (the latter is more secure).
++   */
++  if (!execp->use_current_dir)
++  {
++    /* Even if DEBUG_STAT is set, don't announce our change of 
++     * directory, since we're not going to emit a subsequent 
++     * announcement of a call to stat() anyway, as we're about 
++     * to exec something. 
++     */
++    if (starting_desc < 0
++        ? chdir (starting_dir) != 0
++        : fchdir (starting_desc) != 0)
++      {
++        error (0, errno, "%s", starting_dir);
++        return 1;
++      }
++  }
++  
++  if(execvp (buildstate->cmd_argv[0], buildstate->cmd_argv) != 0)
++  {
++    error (0, errno, "%s", buildstate->cmd_argv[0]);
++    return 1;
++  }
+ 
++  return 0;
++}
++
++void
++wakeup_parent (LONG return_code, APTR *exit_data)
++{
++  struct Task *parent;
++  Signal((struct Task*) exit_data[1], SIGBREAKF_CTRL_F);
++  *(int*)exit_data[0] = 0;
++}
+ 
+ int
+ launch (const struct buildcmd_control *ctl,
+@@ -1548,6 +1598,10 @@
+   pid_t child_pid;
+   static int first_time = 1;
+   const struct exec_val *execp = buildstate->usercontext;
++  struct Task *this = FindTask(NULL);
++  APTR taskdata[3] = { execp, buildstate, this };
++  APTR exitdata[2] = { &wait_status, this };
++  struct Process *proc = NULL;
+   
+   /* Null terminate the arg list.  */
+   bc_push_arg (ctl, buildstate, (char *) NULL, 0, NULL, 0, false); 
+@@ -1555,7 +1609,7 @@
+   /* Make sure output of command doesn't get mixed with find output. */
+   fflush (stdout);
+   fflush (stderr);
+-  
++
+   /* Make sure to listen for the kids.  */
+   if (first_time)
+     {
+@@ -1563,72 +1617,31 @@
+       signal (SIGCHLD, SIG_DFL);
+     }
+ 
+-  child_pid = fork ();
+-  if (child_pid == -1)
+-    error (1, errno, _("cannot fork"));
+-  if (child_pid == 0)
+-    {
+-      /* We be the child. */
+-      prep_child_for_exec(execp->close_stdin);
+-
+-      /* For -exec and -ok, change directory back to the starting directory.
+-       * for -execdir and -okdir, stay in the directory we are searching
+-       * (the latter is more secure).
+-       */
+-      if (!execp->use_current_dir)
+-	{
+-	  /* Even if DEBUG_STAT is set, don't announce our change of 
+-	   * directory, since we're not going to emit a subsequent 
+-	   * announcement of a call to stat() anyway, as we're about 
+-	   * to exec something. 
+-	   */
+-	  if (starting_desc < 0
+-	      ? chdir (starting_dir) != 0
+-	      : fchdir (starting_desc) != 0)
+-	    {
+-	      error (0, errno, "%s", starting_dir);
+-	      _exit (1);
+-	    }
+-	}
+-      
+-      execvp (buildstate->cmd_argv[0], buildstate->cmd_argv);
+-      error (0, errno, "%s", buildstate->cmd_argv[0]);
+-      _exit (1);
+-    }
+-
++    proc = CreateNewProcTags(
++      NP_Entry,        execute_child,
++      NP_StackSize,    (IPTR) NULL,
++      NP_Input,        (IPTR) Input(),
++      NP_Output,       (IPTR) Output(),
++      NP_CloseOutput,  (IPTR) false,
++      NP_CloseInput,   (IPTR) false,
++      NP_Error,        (IPTR) Error(),
++      NP_CloseError,   (IPTR) false,
++      NP_Cli,          (IPTR) true,
++      NP_Name,         buildstate->cmd_argv[0],
++      NP_UserData,     taskdata,
++      NP_ExitCode,     wakeup_parent,
++      NP_ExitData,     exitdata,
++      TAG_DONE);
++
++  if(proc != NULL)
++  {
++    Wait(SIGBREAKF_CTRL_F);
++  }
+ 
+   /* In parent; set up for next time. */
+   bc_clear_args(ctl, buildstate);
+ 
+-  
+-  while (waitpid (child_pid, &wait_status, 0) == (pid_t) -1)
+-    {
+-      if (errno != EINTR)
+-	{
+-	  error (0, errno, _("error waiting for %s"), buildstate->cmd_argv[0]);
+-	  state.exit_status = 1;
+-	  return 0;		/* FAIL */
+-	}
+-    }
+-  
+-  if (WIFSIGNALED (wait_status))
+-    {
+-      error (0, 0, _("%s terminated by signal %d"),
+-	     buildstate->cmd_argv[0], WTERMSIG (wait_status));
+-      
+-      if (execp->multiple)
+-	{
+-	  /* -exec   \; just returns false if the invoked command fails. 
+-	   * -exec {} + returns true if the invoked command fails, but
+-	   *            sets the program exit status.
+-	   */
+-	  state.exit_status = 1;
+-	}
+-      
+-      return 1;			/* OK */
+-    }
+-
+-  if (0 == WEXITSTATUS (wait_status))
++  if (0 == wait_status)
+     {
+       return 1;			/* OK */
+     }
+@@ -1644,7 +1657,7 @@
+ 	}
+       return 0;			/* FAIL */
+     }
+-  
++
+ }
+ 
+ 
+diff -ruN findutils-4.2.31/lib/buildcmd.c findutils-4.2.31.new/lib/buildcmd.c
+--- findutils-4.2.31/lib/buildcmd.c	2007-02-27 11:23:17.000000000 +0100
++++ findutils-4.2.31.new/lib/buildcmd.c	2008-08-28 00:09:05.000000000 +0200
+@@ -92,8 +92,8 @@
+ 
+ #include "buildcmd.h"
+ 
++#include <sys/arosc.h>
+ 
+-extern char **environ;
+ 
+ 
+ static char *mbstrstr PARAMS ((const char *haystack, const char *needle));
+@@ -411,10 +411,27 @@
+ bc_size_of_environment (void)
+ {
+   size_t len = 0u;
+-  char **envp = environ;
++  char **envp;
++  int i;
+ 
+-  while (*envp)
+-    len += strlen (*envp++) + 1;
++  int size = __env_get_environ(NULL, 0);
++  envp = (char **) malloc(size);
++  if (envp)
++    {
++      if ((size = __env_get_environ(envp, size)) != -1)
++	{
++	  for (i = 0; envp[i]; i++)
++            len += strlen (envp[i]) + 1;
++	}
++      else
++        {
++	  free (envp);
++	  return size;
++	}
++      free (envp);
++    }
++  else
++    return size;
+ 
+   return len;
+ }
+diff -ruN findutils-4.2.31/xargs/xargs.c findutils-4.2.31.new/xargs/xargs.c
+--- findutils-4.2.31/xargs/xargs.c	2007-03-02 01:14:25.000000000 +0100
++++ findutils-4.2.31.new/xargs/xargs.c	2008-08-29 00:02:05.000000000 +0200
+@@ -170,6 +170,11 @@
+ #include "closeout.h"
+ #include "gnulib-version.h"
+ 
++#include <proto/exec.h>
++#include <proto/dos.h>
++#include <exec/exec.h>
++#include <dos/dos.h>
++
+ void error PARAMS ((int status, int errnum, char *message,...));
+ 
+ extern char *version_string;
+@@ -996,6 +1001,22 @@
+     }
+ }
+ 
++void
++wakeup_parent (LONG return_code, APTR *exit_data)
++{
++  struct Task *parent;
++  Signal ((struct Task*) exit_data[1], SIGBREAKF_CTRL_F);
++  *(int*)exit_data[0] = return_code;
++}
++
++LONG execute_child()
++{
++  prep_child_for_exec();
++  if (execvp (bc_state.cmd_argv[0], bc_state.cmd_argv) == 0)
++    return (0);
++  error (0, errno, "%s", bc_state.cmd_argv[0]);
++  return (errno == ENOENT ? 127 : 126);
++}
+ 
+ /* Execute the command that has been built in `cmd_argv'.  This may involve
+    waiting for processes that were previously executed.  */
+@@ -1003,6 +1024,10 @@
+ static int
+ xargs_do_exec (const struct buildcmd_control *ctl, struct buildcmd_state *state)
+ {
++  int wait_status;
++  struct Task *this = FindTask(NULL);
++  APTR exitdata[2] = { &wait_status, this };
++  struct Process *proc = NULL;
+   pid_t child;
+ 
+   bc_push_arg (&bc_ctl, &bc_state,
+@@ -1018,21 +1043,26 @@
+ 	print_args (false);
+       /* If we run out of processes, wait for a child to return and
+          try again.  */
+-      while ((child = fork ()) < 0 && errno == EAGAIN && procs_executing)
+-	wait_for_proc (false);
+-      switch (child)
+-	{
+-	case -1:
+-	  error (1, errno, _("cannot fork"));
++      proc = CreateNewProcTags(
++        NP_Entry,        execute_child,
++        NP_StackSize,    (IPTR) NULL,
++        NP_Input,        (IPTR) Input(),
++        NP_Output,       (IPTR) Output(),
++        NP_CloseOutput,  (IPTR) false,
++        NP_CloseInput,   (IPTR) false,
++        NP_Error,        (IPTR) Error(),
++        NP_CloseError,   (IPTR) false,
++        NP_Cli,          (IPTR) true,
++        NP_Name,         bc_state.cmd_argv[0],
++        NP_ExitCode,     wakeup_parent,
++        NP_ExitData,     exitdata,
++        TAG_DONE);
++
++      if(proc != NULL)
++      {
++        Wait(SIGBREAKF_CTRL_F);
++      }
+ 
+-	case 0:		/* Child.  */
+-	  prep_child_for_exec();
+-	  execvp (bc_state.cmd_argv[0], bc_state.cmd_argv);
+-	  error (0, errno, "%s", bc_state.cmd_argv[0]);
+-	  _exit (errno == ENOENT ? 127 : 126);
+-	  /*NOTREACHED*/
+-	}
+-      add_proc (child);
+     }
+ 
+   bc_clear_args(&bc_ctl, &bc_state);
