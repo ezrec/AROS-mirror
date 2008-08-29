@@ -69,19 +69,24 @@ bgui-gadgets-popbutton-mkdir :
 bgui-gadgets-treeview-mkdir :
 		@$(MKDIR) $(GENDIR)/$(CURDIR)/TreeView $(GENDIR)/$(CURDIR)/common
 
-#MM bgui-gadgets-bar : bgui-gadgets-bar-mkdir
+#MM
+bgui-gadgets-bar : bgui-gadgets-bar-mkdir
 bgui-gadgets-bar : bgui-gadgets-bar-mkdir $(BARLIBTARGETS) $(BGUIGADGETSDIR)/$(BARGADGET) $(BGUIEXAMPLESDIR)/$(BARDEMO)
 
-#MM bgui-gadgets-layoutgroup : bgui-gadgets-layoutgroup-mkdir
+#MM
+bgui-gadgets-layoutgroup : bgui-gadgets-layoutgroup-mkdir
 bgui-gadgets-layoutgroup : bgui-gadgets-layoutgroup-mkdir $(LAYOUTGROUPLIBTARGETS) $(BGUIGADGETSDIR)/$(LAYOUTGROUPGADGET) $(BGUIEXAMPLESDIR)/$(LAYOUTGROUPDEMO)
 
-#MM bgui-gadgets-palette : bgui-gadgets-palette-mkdir
+#MM
+bgui-gadgets-palette : bgui-gadgets-palette-mkdir
 bgui-gadgets-palette : bgui-gadgets-palette-mkdir $(PALETTELIBTARGETS) $(BGUIGADGETSDIR)/$(PALETTEGADGET) $(BGUIEXAMPLESDIR)/$(PALETTEDEMO)
 
-#MM bgui-gadgets-popbutton : bgui-gadgets-popbutton-mkdir
+#MM
+bgui-gadgets-popbutton : bgui-gadgets-popbutton-mkdir
 bgui-gadgets-popbutton : bgui-gadgets-popbutton-mkdir $(POPBUTTONLIBTARGETS) $(BGUIGADGETSDIR)/$(POPBUTTONGADGET) $(BGUIEXAMPLESDIR)/$(POPBUTTONDEMO)
 
-#MM bgui-gadgets-treeview : bgui-gadgets-treeview-mkdir
+#MM
+bgui-gadgets-treeview : bgui-gadgets-treeview-mkdir
 bgui-gadgets-treeview : bgui-gadgets-treeview-mkdir $(TREEVIEWLIBTARGETS) $(BGUIGADGETSDIR)/$(TREEVIEWGADGET) $(BGUIEXAMPLESDIR)/$(TREEVIEWDEMO)
 
 $(BGUIGADGETSDIR)/%.gadget: $(OBJDIR)/%.gadget
