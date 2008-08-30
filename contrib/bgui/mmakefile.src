@@ -82,7 +82,8 @@ bgui-setup : makedirs
 	$(MKDIR) $(AROS_PACKAGES)
 	$(ECHO) "Extras:BGUI" >$(AROS_PACKAGES)/BGUI
         
-#MM bgui-includes-copy : $(INCLUDE_FILES)
+#MM
+bgui-includes-copy : $(INCLUDE_FILES)
 bgui-includes-copy : $(INCLUDE_FILES)
 
 #MM bgui-library : bgui-test bgui-examples
