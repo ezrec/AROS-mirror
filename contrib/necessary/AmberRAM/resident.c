@@ -99,7 +99,7 @@ static APTR Init(REG(d0, ULONG unused), REG(a0, APTR seg_list),
       Alert(AT_DeadEnd | AG_NoMemory);
    dev_node->dn_Handler = (STRPTR)handler_name;
    dev_node->dn_StackSize = 10000;
-   dev_node->dn_SegList = MKBADDR(Main) - 1;
+   dev_node->dn_SegList = MKBADDR((BPTR *)Main - 1);
    if(!AddDosEntry((APTR)dev_node))
       Alert(AT_DeadEnd);
 
