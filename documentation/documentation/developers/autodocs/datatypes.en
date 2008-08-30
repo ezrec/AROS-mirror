@@ -14,8 +14,8 @@ datatypes
 `FindMethod`_                           `FindToolNodeA`_                        `FindTriggerMethod`_                    `FreeDTMethods`_                        
 `GetDTAttrsA`_                          `GetDTMethods`_                         `GetDTString`_                          `GetDTTriggerMethodDataFlags`_          
 `GetDTTriggerMethods`_                  `LaunchToolA`_                          `LockDataType`_                         `NewDTObjectA`_                         
-`ObtainDTDrawInfoA`_                    `ObtainDataTypeA`_                      `PrintDTObjectA`_                       `RefreshDTObjectA`_                     
-`ReleaseDTDrawInfo`_                    `ReleaseDataType`_                      `RemoveDTObject`_                       `SaveDTObjectA`_                        
+`ObtainDataTypeA`_                      `ObtainDTDrawInfoA`_                    `PrintDTObjectA`_                       `RefreshDTObjectA`_                     
+`ReleaseDataType`_                      `ReleaseDTDrawInfo`_                    `RemoveDTObject`_                       `SaveDTObjectA`_                        
 `SetDTAttrsA`_                          `StartDragSelect`_                      
 ======================================= ======================================= ======================================= ======================================= 
 
@@ -1094,60 +1094,6 @@ See also
 
 
 
-ObtainDTDrawInfoA
-=================
-
-Synopsis
-~~~~~~~~
-::
-
- APTR ObtainDTDrawInfoA(
-          Object         * o,
-          struct TagItem * attrs );
-
-Function
-~~~~~~~~
-::
-
-
- Prepare a data type object for drawing into a RastPort; this function
- will send the DTM_OBTAINDRAWINFO method the object using an opSet
- message.
-
-
-Inputs
-~~~~~~
-::
-
-
- o      --  pointer to the data type object to obtain the drawinfo for;
-            may be NULL in which case nothing is done
- attrs  --  additional attributes
-
-
-Result
-~~~~~~
-::
-
-
- A private handle that must be passed to ReleaseDTDrawInfo when the
- application is done drawing the object, or NULL if failure.
-
- TAGS
-
- PDTA_Screen     --  for pictureclass objects
- ADTA_Screen     --  for animationclass objects
-
-
-See also
-~~~~~~~~
-::
-
-
- DrawDTObjectA(), ReleaseDTDrawInfo()
-
-
-
 ObtainDataTypeA
 ===============
 
@@ -1199,6 +1145,60 @@ See also
 
 
  ReleaseDataType()
+
+
+
+ObtainDTDrawInfoA
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR ObtainDTDrawInfoA(
+          Object         * o,
+          struct TagItem * attrs );
+
+Function
+~~~~~~~~
+::
+
+
+ Prepare a data type object for drawing into a RastPort; this function
+ will send the DTM_OBTAINDRAWINFO method the object using an opSet
+ message.
+
+
+Inputs
+~~~~~~
+::
+
+
+ o      --  pointer to the data type object to obtain the drawinfo for;
+            may be NULL in which case nothing is done
+ attrs  --  additional attributes
+
+
+Result
+~~~~~~
+::
+
+
+ A private handle that must be passed to ReleaseDTDrawInfo when the
+ application is done drawing the object, or NULL if failure.
+
+ TAGS
+
+ PDTA_Screen     --  for pictureclass objects
+ ADTA_Screen     --  for animationclass objects
+
+
+See also
+~~~~~~~~
+::
+
+
+ DrawDTObjectA(), ReleaseDTDrawInfo()
 
 
 
@@ -1295,6 +1295,42 @@ See also
 
 
 
+ReleaseDataType
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID ReleaseDataType(
+          struct DataType * dt );
+
+Function
+~~~~~~~~
+::
+
+
+ Release a DataType structure aquired by ObtainDataTypeA().
+
+
+Inputs
+~~~~~~
+::
+
+
+ dt  --  DataType structure as returned by ObtainDataTypeA(); NULL is
+         a valid input.
+
+
+See also
+~~~~~~~~
+::
+
+
+ ObtainDataTypeA()
+
+
+
 ReleaseDTDrawInfo
 =================
 
@@ -1345,42 +1381,6 @@ See also
 
 
  DrawDTObjectA(), ObtainDTDrawInfo()
-
-
-
-ReleaseDataType
-===============
-
-Synopsis
-~~~~~~~~
-::
-
- VOID ReleaseDataType(
-          struct DataType * dt );
-
-Function
-~~~~~~~~
-::
-
-
- Release a DataType structure aquired by ObtainDataTypeA().
-
-
-Inputs
-~~~~~~
-::
-
-
- dt  --  DataType structure as returned by ObtainDataTypeA(); NULL is
-         a valid input.
-
-
-See also
-~~~~~~~~
-::
-
-
- ObtainDataTypeA()
 
 
 

@@ -49,6 +49,9 @@ Inputs
      PT_TYPE     - partition type (depends on PartitionTable type)
      PT_POSITION - position number within the partition table (MBR->PC)
      PT_ACTIVE   - set this partition active (MBR->PC)
+     PT_NAME     - set partition name (HD0, HD1, ...)
+     
+
 
 Result
 ~~~~~~
@@ -245,6 +248,8 @@ Inputs
      PT_TYPE     - struct PartitionType *           ; get partition type (MBR-PC)
      PT_POSITION - ULONG *           ; position of partition (MBR-PC)
      PT_ACTIVE   - LONG *           ; is partition active
+     PT_NAME     - STRPTR    ; get name of partition (max 31 Bytes + NULL-byte)
+
 
 
 GetPartitionTableAttrs
@@ -438,6 +443,8 @@ Inputs
      PT_TYPE     - change partition type (MBR-PC)
      PT_POSITION - move partition to another position (MBR-PC)
      PT_ACTIVE   - set partition active
+     PT_NAME     - change name of partition (max 31 Bytes + NULL-byte)
+
 
 
 SetPartitionTableAttrs

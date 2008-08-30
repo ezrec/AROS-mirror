@@ -9,213 +9,21 @@ bsdsocket
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`CloseSocket`_                          `Dup2Socket`_                           `Errno`_                                `GetSocketEvents`_                      
-`Inet_LnaOf`_                           `Inet_MakeAddr`_                        `Inet_NetOf`_                           `Inet_NtoA`_                            
-`IoctlSocket`_                          `ObtainSocket`_                         `ReleaseCopyOfSocket`_                  `ReleaseSocket`_                        
-`SetErrnoPtr`_                          `SetSocketSignals`_                     `SocketBaseTagList`_                    `WaitSelect`_                           
-`accept`_                               `bind`_                                 `connect`_                              `getdtablesize`_                        
-`gethostbyaddr`_                        `gethostbyname`_                        `gethostid`_                            `gethostname`_                          
-`getnetbyaddr`_                         `getnetbyname`_                         `getpeername`_                          `getprotobyname`_                       
-`getprotobynumber`_                     `getservbyname`_                        `getservbyport`_                        `getsockname`_                          
-`getsockopt`_                           `inet_addr`_                            `inet_network`_                         `listen`_                               
-`recv`_                                 `recvfrom`_                             `recvmsg`_                              `send`_                                 
-`sendmsg`_                              `sendto`_                               `setsockopt`_                           `shutdown`_                             
-`socket`_                               `vsyslog`_                              
+`accept`_                               `bind`_                                 `CloseSocket`_                          `connect`_                              
+`Dup2Socket`_                           `Errno`_                                `getdtablesize`_                        `gethostbyaddr`_                        
+`gethostbyname`_                        `gethostid`_                            `gethostname`_                          `getnetbyaddr`_                         
+`getnetbyname`_                         `getpeername`_                          `getprotobyname`_                       `getprotobynumber`_                     
+`getservbyname`_                        `getservbyport`_                        `GetSocketEvents`_                      `getsockname`_                          
+`getsockopt`_                           `inet_addr`_                            `Inet_LnaOf`_                           `Inet_MakeAddr`_                        
+`Inet_NetOf`_                           `inet_network`_                         `Inet_NtoA`_                            `IoctlSocket`_                          
+`listen`_                               `ObtainSocket`_                         `recv`_                                 `recvfrom`_                             
+`recvmsg`_                              `ReleaseCopyOfSocket`_                  `ReleaseSocket`_                        `send`_                                 
+`sendmsg`_                              `sendto`_                               `SetErrnoPtr`_                          `SetSocketSignals`_                     
+`setsockopt`_                           `shutdown`_                             `socket`_                               `SocketBaseTagList`_                    
+`vsyslog`_                              `WaitSelect`_                           
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
-
-CloseSocket
-===========
-
-Synopsis
-~~~~~~~~
-::
-
- int CloseSocket(
-          int s );
-
-
-Dup2Socket
-==========
-
-Synopsis
-~~~~~~~~
-::
-
- int Dup2Socket(
-          int fd1,
-          int fd2 );
-
-
-Errno
-=====
-
-Synopsis
-~~~~~~~~
-::
-
- LONG Errno();
-
-
-GetSocketEvents
-===============
-
-Synopsis
-~~~~~~~~
-::
-
- LONG GetSocketEvents(
-          ULONG * eventsp );
-
-
-Inet_LnaOf
-==========
-
-Synopsis
-~~~~~~~~
-::
-
- unsigned long Inet_LnaOf(
-          unsigned long in );
-
-
-Inet_MakeAddr
-=============
-
-Synopsis
-~~~~~~~~
-::
-
- unsigned long Inet_MakeAddr(
-          int net,
-          int lna );
-
-
-Inet_NetOf
-==========
-
-Synopsis
-~~~~~~~~
-::
-
- unsigned long Inet_NetOf(
-          unsigned long in );
-
-
-Inet_NtoA
-=========
-
-Synopsis
-~~~~~~~~
-::
-
- char * Inet_NtoA(
-          unsigned long in );
-
-
-IoctlSocket
-===========
-
-Synopsis
-~~~~~~~~
-::
-
- int IoctlSocket(
-          int s,
-          unsigned long request,
-          char * argp );
-
-
-ObtainSocket
-============
-
-Synopsis
-~~~~~~~~
-::
-
- LONG ObtainSocket(
-          LONG id,
-          LONG domain,
-          LONG type,
-          LONG protocol );
-
-
-ReleaseCopyOfSocket
-===================
-
-Synopsis
-~~~~~~~~
-::
-
- LONG ReleaseCopyOfSocket(
-          LONG sd,
-          LONG id );
-
-
-ReleaseSocket
-=============
-
-Synopsis
-~~~~~~~~
-::
-
- LONG ReleaseSocket(
-          LONG sd,
-          LONG id );
-
-
-SetErrnoPtr
-===========
-
-Synopsis
-~~~~~~~~
-::
-
- void SetErrnoPtr(
-          void * ptr,
-          int size );
-
-
-SetSocketSignals
-================
-
-Synopsis
-~~~~~~~~
-::
-
- void SetSocketSignals(
-          ULONG intrmask,
-          ULONG iomask,
-          ULONG urgmask );
-
-
-SocketBaseTagList
-=================
-
-Synopsis
-~~~~~~~~
-::
-
- ULONG SocketBaseTagList(
-          struct TagItem * tagList );
-
-
-WaitSelect
-==========
-
-Synopsis
-~~~~~~~~
-::
-
- int WaitSelect(
-          int nfds,
-          fd_set * readfds,
-          fd_set * writefds,
-          fd_set * exceptfds,
-          struct timeval * timeout,
-          ULONG * sigmask );
-
 
 accept
 ======
@@ -243,6 +51,17 @@ Synopsis
           int namelen );
 
 
+CloseSocket
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ int CloseSocket(
+          int s );
+
+
 connect
 =======
 
@@ -254,6 +73,28 @@ Synopsis
           int s,
           struct sockaddr * name,
           int namelen );
+
+
+Dup2Socket
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ int Dup2Socket(
+          int fd1,
+          int fd2 );
+
+
+Errno
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG Errno();
 
 
 getdtablesize
@@ -394,6 +235,17 @@ Synopsis
           char * proto );
 
 
+GetSocketEvents
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG GetSocketEvents(
+          ULONG * eventsp );
+
+
 getsockname
 ===========
 
@@ -433,6 +285,40 @@ Synopsis
           const char * cp );
 
 
+Inet_LnaOf
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ unsigned long Inet_LnaOf(
+          unsigned long in );
+
+
+Inet_MakeAddr
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ unsigned long Inet_MakeAddr(
+          int net,
+          int lna );
+
+
+Inet_NetOf
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ unsigned long Inet_NetOf(
+          unsigned long in );
+
+
 inet_network
 ============
 
@@ -442,6 +328,30 @@ Synopsis
 
  unsigned long inet_network(
           const char * cp );
+
+
+Inet_NtoA
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ char * Inet_NtoA(
+          unsigned long in );
+
+
+IoctlSocket
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ int IoctlSocket(
+          int s,
+          unsigned long request,
+          char * argp );
 
 
 listen
@@ -454,6 +364,20 @@ Synopsis
  int listen(
           int s,
           int backlog );
+
+
+ObtainSocket
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG ObtainSocket(
+          LONG id,
+          LONG domain,
+          LONG type,
+          LONG protocol );
 
 
 recv
@@ -499,6 +423,30 @@ Synopsis
           int flags );
 
 
+ReleaseCopyOfSocket
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG ReleaseCopyOfSocket(
+          LONG sd,
+          LONG id );
+
+
+ReleaseSocket
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG ReleaseSocket(
+          LONG sd,
+          LONG id );
+
+
 send
 ====
 
@@ -542,6 +490,31 @@ Synopsis
           int tolen );
 
 
+SetErrnoPtr
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void SetErrnoPtr(
+          void * ptr,
+          int size );
+
+
+SetSocketSignals
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ void SetSocketSignals(
+          ULONG intrmask,
+          ULONG iomask,
+          ULONG urgmask );
+
+
 setsockopt
 ==========
 
@@ -582,6 +555,17 @@ Synopsis
           int protocol );
 
 
+SocketBaseTagList
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG SocketBaseTagList(
+          struct TagItem * tagList );
+
+
 vsyslog
 =======
 
@@ -593,5 +577,21 @@ Synopsis
           int level,
           const char * format,
           LONG * args );
+
+
+WaitSelect
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ int WaitSelect(
+          int nfds,
+          fd_set * readfds,
+          fd_set * writefds,
+          fd_set * exceptfds,
+          struct timeval * timeout,
+          ULONG * sigmask );
 
 

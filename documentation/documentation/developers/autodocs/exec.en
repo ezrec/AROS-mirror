@@ -9,101 +9,40 @@ exec
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AVL_RemNodeByAddress`_                 `AbortIO`_                              `AddDevice`_                            `AddHead`_                              
-`AddIntServer`_                         `AddLibrary`_                           `AddMemHandler`_                        `AddMemList`_                           
-`AddPort`_                              `AddResource`_                          `AddSemaphore`_                         `AddTail`_                              
-`AddTask`_                              `Alert`_                                `AllocAbs`_                             `AllocEntry`_                           
+`AbortIO`_                              `AddDevice`_                            `AddHead`_                              `AddIntServer`_                         
+`AddLibrary`_                           `AddMemHandler`_                        `AddMemList`_                           `AddPort`_                              
+`AddResource`_                          `AddSemaphore`_                         `AddTail`_                              `AddTask`_                              
+`Alert`_                                `AllocAbs`_                             `Allocate`_                             `AllocEntry`_                           
 `AllocMem`_                             `AllocPooled`_                          `AllocSignal`_                          `AllocTrap`_                            
-`AllocVec`_                             `Allocate`_                             `AttemptSemaphore`_                     `AttemptSemaphoreShared`_               
-`AvailMem`_                             `CacheClearE`_                          `CacheClearU`_                          `CacheControl`_                         
-`CachePostDMA`_                         `CachePreDMA`_                          `Cause`_                                `CheckIO`_                              
-`ChildFree`_                            `ChildOrphan`_                          `ChildStatus`_                          `ChildWait`_                            
-`CloseDevice`_                          `CloseLibrary`_                         `ColdReboot`_                           `CopyMem`_                              
-`CopyMemQuick`_                         `CreateIORequest`_                      `CreateMsgPort`_                        `CreatePool`_                           
-`Deallocate`_                           `Debug`_                                `DeleteIORequest`_                      `DeleteMsgPort`_                        
-`DeletePool`_                           `Disable`_                              `DoIO`_                                 `Enable`_                               
-`Enqueue`_                              `FindName`_                             `FindPort`_                             `FindResident`_                         
-`FindSemaphore`_                        `FindTask`_                             `Forbid`_                               `FreeEntry`_                            
-`FreeMem`_                              `FreePooled`_                           `FreeSignal`_                           `FreeTrap`_                             
-`FreeVec`_                              `GetCC`_                                `GetMsg`_                               `InitCode`_                             
-`InitResident`_                         `InitSemaphore`_                        `InitStruct`_                           `Insert`_                               
-`MakeFunctions`_                        `MakeLibrary`_                          `NewAddTask`_                           `NewAllocEntry`_                        
-`ObtainQuickVector`_                    `ObtainSemaphore`_                      `ObtainSemaphoreList`_                  `ObtainSemaphoreShared`_                
-`OldOpenLibrary`_                       `OpenDevice`_                           `OpenLibrary`_                          `OpenResource`_                         
-`Permit`_                               `Procure`_                              `PutMsg`_                               `RawDoFmt`_                             
-`ReleaseSemaphore`_                     `ReleaseSemaphoreList`_                 `RemDevice`_                            `RemHead`_                              
-`RemIntServer`_                         `RemLibrary`_                           `RemMemHandler`_                        `RemPort`_                              
-`RemResource`_                          `RemSemaphore`_                         `RemTail`_                              `RemTask`_                              
-`Remove`_                               `ReplyMsg`_                             `SendIO`_                               `SetExcept`_                            
-`SetFunction`_                          `SetIntVector`_                         `SetSR`_                                `SetSignal`_                            
-`SetTaskPri`_                           `Signal`_                               `StackSwap`_                            `SumKickData`_                          
-`SumLibrary`_                           `SuperState`_                           `Supervisor`_                           `Switch`_                               
-`TypeOfMem`_                            `UserState`_                            `VNewRawDoFmt`_                         `Vacate`_                               
-`Wait`_                                 `WaitIO`_                               `WaitPort`_                             `dummy`_                                
+`AllocVec`_                             `AttemptSemaphore`_                     `AttemptSemaphoreShared`_               `AvailMem`_                             
+`CacheClearE`_                          `CacheClearU`_                          `CacheControl`_                         `CachePostDMA`_                         
+`CachePreDMA`_                          `Cause`_                                `CheckIO`_                              `ChildFree`_                            
+`ChildOrphan`_                          `ChildStatus`_                          `ChildWait`_                            `CloseDevice`_                          
+`CloseLibrary`_                         `ColdReboot`_                           `CopyMem`_                              `CopyMemQuick`_                         
+`CreateIORequest`_                      `CreateMsgPort`_                        `CreatePool`_                           `Deallocate`_                           
+`Debug`_                                `DeleteIORequest`_                      `DeleteMsgPort`_                        `DeletePool`_                           
+`Disable`_                              `DoIO`_                                 `Enable`_                               `Enqueue`_                              
+`FindName`_                             `FindPort`_                             `FindResident`_                         `FindSemaphore`_                        
+`FindTask`_                             `Forbid`_                               `FreeEntry`_                            `FreeMem`_                              
+`FreePooled`_                           `FreeSignal`_                           `FreeTrap`_                             `FreeVec`_                              
+`GetCC`_                                `GetMsg`_                               `InitCode`_                             `InitResident`_                         
+`InitSemaphore`_                        `InitStruct`_                           `Insert`_                               `MakeFunctions`_                        
+`MakeLibrary`_                          `NewAddTask`_                           `NewAllocEntry`_                        `ObtainQuickVector`_                    
+`ObtainSemaphoreList`_                  `ObtainSemaphoreShared`_                `OldOpenLibrary`_                       `OpenDevice`_                           
+`OpenLibrary`_                          `OpenResource`_                         `Permit`_                               `Procure`_                              
+`PutMsg`_                               `RawDoFmt`_                             `ReleaseSemaphoreList`_                 `RemDevice`_                            
+`RemHead`_                              `RemIntServer`_                         `RemLibrary`_                           `RemMemHandler`_                        
+`Remove`_                               `RemPort`_                              `RemResource`_                          `RemSemaphore`_                         
+`RemTail`_                              `RemTask`_                              `ReplyMsg`_                             `SendIO`_                               
+`SetExcept`_                            `SetFunction`_                          `SetIntVector`_                         `SetSignal`_                            
+`SetSR`_                                `SetTaskPri`_                           `Signal`_                               `StackSwap`_                            
+`SumKickData`_                          `SumLibrary`_                           `SuperState`_                           `Supervisor`_                           
+`Switch`_                               `TypeOfMem`_                            `UserState`_                            `Vacate`_                               
+`VNewRawDoFmt`_                         `Wait`_                                 `WaitIO`_                               `WaitPort`_                             
 
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
-
-AVL_RemNodeByAddress
-====================
-
-Synopsis
-~~~~~~~~
-::
-
- struct AVLNode * AVL_RemNodeByAddress(
-          struct AVLNode ** Root,
-          struct AVLNode * Node );
-
-Function
-~~~~~~~~
-::
-
-     Remove a given node from the tree.
-
-
-Inputs
-~~~~~~
-::
-
-     Root - A pointer to a pointer to the root node of the tree.
-
-     Node - A struct AVLNode to remove.  The node must be present
-            in the tree.
-
-
-Result
-~~~~~~
-::
-
-     Node is returned.
-
-
-Example
-~~~~~~~
-::
-
-     See AVL_NextNodeByAddress(), AVL_PrevNodeByAddress()
-
-
-Notes
-~~~~~
-::
-
-     Removing a node may require multiple rebalancing steps
-     in the tree.  Each step however runs in constant time
-     and no more than 1.44log(n) steps will be required.
-
-
-See also
-~~~~~~~~
-::
-
-     AVL_AddNode(), AVL_FindNode(), AVL_NextNodeByAddress(),
-     AVL_PrevNodeByAddress()
-
-
 
 AbortIO
 =======
@@ -651,6 +590,84 @@ See also
 
 
 
+Allocate
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR Allocate(
+          struct MemHeader * freeList,
+          ULONG byteSize );
+
+Function
+~~~~~~~~
+::
+
+     Allocate memory out of a private region handled by the MemHeader
+     structure.
+
+
+Inputs
+~~~~~~
+::
+
+     freeList - Pointer to the MemHeader structure which holds the memory
+     byteSize - Number of bytes you want to get
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the number of bytes you wanted or NULL if the memory
+     couldn't be allocated
+
+
+Example
+~~~~~~~
+::
+
+     #define POOLSIZE 4096
+     \* Get a MemHeader structure and some private memory *\
+     mh=(struct MemHeader *)
+         AllocMem(sizeof(struct MemHeader)+POOLSIZE,MEMF_ANY);
+     if(mh!=NULL)
+     {
+         \* Build a private pool *\
+         mh->mh_First=(struct MemChunk *)(mh+1);
+         mh->mh_First->mc_Next=NULL;
+         mh->mh_First->mc_Bytes=POOLSIZE;
+         mh->mh_Free=POOLSIZE;
+         {
+             \* Use the pool *\
+             UBYTE *mem1,*mem2;
+             mem1=Allocate(mh,1000);
+             mem2=Allocate(mh,2000);
+             \* Do something with memory... *\
+         }
+         \* Free everything at once *\
+         FreeMem(mh,sizeof(struct MemHeader)+POOLSIZE);
+     }
+
+
+Notes
+~~~~~
+::
+
+     The memory is aligned to sizeof(struct MemChunk). All requests
+     are rounded up to a multiple of that size.
+
+
+See also
+~~~~~~~~
+::
+
+     Deallocate()
+
+
+
 AllocEntry
 ==========
 
@@ -893,84 +910,6 @@ See also
 ::
 
      FreeVec()
-
-
-
-Allocate
-========
-
-Synopsis
-~~~~~~~~
-::
-
- APTR Allocate(
-          struct MemHeader * freeList,
-          ULONG byteSize );
-
-Function
-~~~~~~~~
-::
-
-     Allocate memory out of a private region handled by the MemHeader
-     structure.
-
-
-Inputs
-~~~~~~
-::
-
-     freeList - Pointer to the MemHeader structure which holds the memory
-     byteSize - Number of bytes you want to get
-
-
-Result
-~~~~~~
-::
-
-     A pointer to the number of bytes you wanted or NULL if the memory
-     couldn't be allocated
-
-
-Example
-~~~~~~~
-::
-
-     #define POOLSIZE 4096
-     \* Get a MemHeader structure and some private memory *\
-     mh=(struct MemHeader *)
-         AllocMem(sizeof(struct MemHeader)+POOLSIZE,MEMF_ANY);
-     if(mh!=NULL)
-     {
-         \* Build a private pool *\
-         mh->mh_First=(struct MemChunk *)(mh+1);
-         mh->mh_First->mc_Next=NULL;
-         mh->mh_First->mc_Bytes=POOLSIZE;
-         mh->mh_Free=POOLSIZE;
-         {
-             \* Use the pool *\
-             UBYTE *mem1,*mem2;
-             mem1=Allocate(mh,1000);
-             mem2=Allocate(mh,2000);
-             \* Do something with memory... *\
-         }
-         \* Free everything at once *\
-         FreeMem(mh,sizeof(struct MemHeader)+POOLSIZE);
-     }
-
-
-Notes
-~~~~~
-::
-
-     The memory is aligned to sizeof(struct MemChunk). All requests
-     are rounded up to a multiple of that size.
-
-
-See also
-~~~~~~~~
-::
-
-     Deallocate()
 
 
 
@@ -3403,47 +3342,6 @@ Synopsis
           APTR interruptCode );
 
 
-ObtainSemaphore
-===============
-
-Synopsis
-~~~~~~~~
-::
-
- void ObtainSemaphore(
-          struct SignalSemaphore * sigSem );
-
-Function
-~~~~~~~~
-::
-
-     Obtain an exclusive lock on a semaphore. If the semaphore is already
-     in use by another task this function will wait until the semaphore
-     becomes free.
-
-
-Inputs
-~~~~~~
-::
-
-     sigSem - Pointer to semaphore structure
-
-
-Notes
-~~~~~
-::
-
-     This function preserves all registers.
-
-
-See also
-~~~~~~~~
-::
-
-     ReleaseSemaphore()
-
-
-
 ObtainSemaphoreList
 ===================
 
@@ -3963,41 +3861,6 @@ Bugs
 
 
 
-ReleaseSemaphore
-================
-
-Synopsis
-~~~~~~~~
-::
-
- void ReleaseSemaphore(
-          struct SignalSemaphore * sigSem );
-
-Function
-~~~~~~~~
-::
-
-     Releases a lock on a semaphore obtained with either ObtainSemaphore(),
-     ObtainSemaphoreShared(), AttemptSemaphore or AttemptSemaphoreShared().
-     Each call to one of those functions must be accompanied with one
-     call to ReleasSemaphore().
-
-
-Inputs
-~~~~~~
-::
-
-     sigSem - pointer to semaphore structure
-
-
-Notes
-~~~~~
-::
-
-     This function preserves all registers.
-
-
-
 ReleaseSemaphoreList
 ====================
 
@@ -4169,6 +4032,49 @@ Inputs
 
 
 
+Remove
+======
+
+Synopsis
+~~~~~~~~
+::
+
+ void Remove(
+          struct Node * node );
+
+Function
+~~~~~~~~
+::
+
+     Remove a node from a list.
+
+
+Inputs
+~~~~~~
+::
+
+     node - This node to be removed.
+
+
+Example
+~~~~~~~
+::
+
+     struct Node * node;
+
+     // Remove node
+     Remove (node);
+
+
+Notes
+~~~~~
+::
+
+     There is no need to specify the list but the node must be in
+     a list !
+
+
+
 RemPort
 =======
 
@@ -4337,49 +4243,6 @@ See also
 ::
 
      AddTask()
-
-
-
-Remove
-======
-
-Synopsis
-~~~~~~~~
-::
-
- void Remove(
-          struct Node * node );
-
-Function
-~~~~~~~~
-::
-
-     Remove a node from a list.
-
-
-Inputs
-~~~~~~
-::
-
-     node - This node to be removed.
-
-
-Example
-~~~~~~~
-::
-
-     struct Node * node;
-
-     // Remove node
-     Remove (node);
-
-
-Notes
-~~~~~
-::
-
-     There is no need to specify the list but the node must be in
-     a list !
 
 
 
@@ -4581,6 +4444,47 @@ Synopsis
           struct Interrupt * interrupt );
 
 
+SetSignal
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG SetSignal(
+          ULONG newSignals,
+          ULONG signalSet );
+
+Function
+~~~~~~~~
+::
+
+     Change or read the set of signals sent to the current task.
+
+
+Inputs
+~~~~~~
+::
+
+     newSignals - New values for the signals.
+     signalSet  - Mask of signals affected by 'newSignals'.
+
+
+Result
+~~~~~~
+::
+
+     Old signal set.
+
+
+See also
+~~~~~~~~
+::
+
+     AllocSignal(), FreeSignal(), Wait(), Signal(), SetExcept()
+
+
+
 SetSR
 =====
 
@@ -4638,47 +4542,6 @@ Bugs
 ::
 
      This function may do nothing on non-mc680x0 systems.
-
-
-
-SetSignal
-=========
-
-Synopsis
-~~~~~~~~
-::
-
- ULONG SetSignal(
-          ULONG newSignals,
-          ULONG signalSet );
-
-Function
-~~~~~~~~
-::
-
-     Change or read the set of signals sent to the current task.
-
-
-Inputs
-~~~~~~
-::
-
-     newSignals - New values for the signals.
-     signalSet  - Mask of signals affected by 'newSignals'.
-
-
-Result
-~~~~~~
-::
-
-     Old signal set.
-
-
-See also
-~~~~~~~~
-::
-
-     AllocSignal(), FreeSignal(), Wait(), Signal(), SetExcept()
 
 
 
@@ -5105,6 +4968,43 @@ See also
 
 
 
+Vacate
+======
+
+Synopsis
+~~~~~~~~
+::
+
+ void Vacate(
+          struct SignalSemaphore  * sigSem,
+          struct SemaphoreMessage * bidMsg );
+
+Function
+~~~~~~~~
+::
+
+     Release a lock obtained with Procure. This will even work if the
+     message is not yet replied - the request will be cancelled and the
+     message replied. In any case the ssm_Semaphore field will be set to
+     NULL.
+
+
+Inputs
+~~~~~~
+::
+
+     sigSem - Pointer to semaphore structure.
+     bidMsg - Pointer to struct SemaphoreMessage.
+
+
+See also
+~~~~~~~~
+::
+
+     Procure()
+
+
+
 VNewRawDoFmt
 ============
 
@@ -5213,43 +5113,6 @@ Bugs
 
      PutChData cannot be modified from the callback hook on non-m68k
      systems.
-
-
-
-Vacate
-======
-
-Synopsis
-~~~~~~~~
-::
-
- void Vacate(
-          struct SignalSemaphore  * sigSem,
-          struct SemaphoreMessage * bidMsg );
-
-Function
-~~~~~~~~
-::
-
-     Release a lock obtained with Procure. This will even work if the
-     message is not yet replied - the request will be cancelled and the
-     message replied. In any case the ssm_Semaphore field will be set to
-     NULL.
-
-
-Inputs
-~~~~~~
-::
-
-     sigSem - Pointer to semaphore structure.
-     bidMsg - Pointer to struct SemaphoreMessage.
-
-
-See also
-~~~~~~~~
-::
-
-     Procure()
 
 
 
@@ -5385,15 +5248,5 @@ See also
 
      WaitPort(), GetMsg()
 
-
-
-dummy
-=====
-
-Synopsis
-~~~~~~~~
-::
-
- ULONG dummy();
 
 

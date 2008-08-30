@@ -9,7 +9,7 @@ utility
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AddNamedObject`_                       `AllocNamedObjectA`_                    `AllocateTagItems`_                     `Amiga2Date`_                           
+`AddNamedObject`_                       `AllocateTagItems`_                     `AllocNamedObjectA`_                    `Amiga2Date`_                           
 `ApplyTagChanges`_                      `AttemptRemNamedObject`_                `CallHookPkt`_                          `CheckDate`_                            
 `CloneTagItems`_                        `Date2Amiga`_                           `FilterTagChanges`_                     `FilterTagItems`_                       
 `FindNamedObject`_                      `FindTagItem`_                          `FreeNamedObject`_                      `FreeTagItems`_                         
@@ -68,10 +68,16 @@ Result
      as a second object, or when the object is already in a NameSpace.
 
 
+Notes
+~~~~~
+::
+
+     See BUGS.
+
+
 Bugs
 ~~~~
 ::
-
 
      Although the AmigaOS 3.1 autodocs did not say so, under 3.0 you
      couldn't add a NamedObject to a NameSpace when the NamedObject you
@@ -84,6 +90,73 @@ See also
 ::
 
      utility/name.h, RemNamedObject()
+
+
+
+AllocateTagItems
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct TagItem * AllocateTagItems(
+          ULONG numTags );
+
+Function
+~~~~~~~~
+::
+
+     Allocate a number of TagItems in an array for whatever you like.
+     The memory allocated will be cleared.
+
+
+Inputs
+~~~~~~
+::
+
+     numTags     - The number of TagItems to allocate.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to an array of struct TagItem containing numTags tags.
+
+
+Example
+~~~~~~~
+::
+
+     struct TagItem *tagList;
+
+     tagList =  AllocateTagItems( 4 );
+
+     tagList[0].ti_Tag  = NA_Name;
+     tagList[0].ti_Data = (IPTR)"A list of tags";
+     tagList[3].ti_Tag  = TAG_DONE;
+
+     \* Do what you want with your TagList here ... *\
+
+     FreeTagItems( tagList );
+
+
+Notes
+~~~~~
+::
+
+     The number you supply must include the terminating tag (ie TAG_DONE)
+     There is no provision for extra TagItems at the end of the list.
+
+     If the number of tags to allocate is zero, then none will be.
+
+
+See also
+~~~~~~~~
+::
+
+     FreeTagsItems()
 
 
 
@@ -161,73 +234,6 @@ See also
 ::
 
      FreeNamedObject()
-
-
-
-AllocateTagItems
-================
-
-Synopsis
-~~~~~~~~
-::
-
- struct TagItem * AllocateTagItems(
-          ULONG numTags );
-
-Function
-~~~~~~~~
-::
-
-     Allocate a number of TagItems in an array for whatever you like.
-     The memory allocated will be cleared.
-
-
-Inputs
-~~~~~~
-::
-
-     numTags     - The number of TagItems to allocate.
-
-
-Result
-~~~~~~
-::
-
-     A pointer to an array of struct TagItem containing numTags tags.
-
-
-Example
-~~~~~~~
-::
-
-     struct TagItem *tagList;
-
-     tagList =  AllocateTagItems( 4 );
-
-     tagList[0].ti_Tag  = NA_Name;
-     tagList[0].ti_Data = (IPTR)"A list of tags";
-     tagList[3].ti_Tag  = TAG_DONE;
-
-     \* Do what you want with your TagList here ... *\
-
-     FreeTagItems( tagList );
-
-
-Notes
-~~~~~
-::
-
-     The number you supply must include the terminating tag (ie TAG_DONE)
-     There is no provision for extra TagItems at the end of the list.
-
-     If the number of tags to allocate is zero, then none will be.
-
-
-See also
-~~~~~~~~
-::
-
-     FreeTagsItems()
 
 
 

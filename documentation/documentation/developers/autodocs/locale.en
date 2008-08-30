@@ -11,9 +11,7 @@ locale
 ======================================= ======================================= ======================================= ======================================= 
 `CloseCatalog`_                         `CloseLocale`_                          `ConvToLower`_                          `ConvToUpper`_                          
 `FormatDate`_                           `FormatString`_                         `GetCatalogStr`_                        `GetLocaleStr`_                         
-`IsXXXX`_                               `LocDateToStr`_                         `LocDosGetLocalizedString`_             `LocRawDoFmt`_                          
-`LocStrToDate`_                         `LocStricmp`_                           `LocStrnicmp`_                          `LocToLower`_                           
-`LocToUpper`_                           `OpenCatalogA`_                         `OpenLocale`_                           `ParseDate`_                            
+`IsXXXX`_                               `OpenCatalogA`_                         `OpenLocale`_                           `ParseDate`_                            
 `RexxHost`_                             `StrConvert`_                           `StrnCmp`_                              
 ======================================= ======================================= ======================================= ======================================= 
 
@@ -110,7 +108,7 @@ Synopsis
 ::
 
  ULONG ConvToLower(
-          struct Locale * locale,
+          const struct Locale * locale,
           ULONG character );
 
 Function
@@ -154,7 +152,7 @@ Synopsis
 ::
 
  ULONG ConvToUpper(
-          struct Locale * locale,
+          const struct Locale * locale,
           ULONG character );
 
 Function
@@ -205,10 +203,10 @@ Synopsis
 ::
 
  VOID FormatDate(
-          struct Locale    * locale,
-          STRPTR formatString,
-          struct DateStamp * date,
-          struct Hook      * hook );
+          const struct Locale    * locale,
+          CONST_STRPTR formatString,
+          const struct DateStamp * date,
+          const struct Hook      * hook );
 
 Function
 ~~~~~~~~
@@ -292,10 +290,10 @@ Synopsis
 ::
 
  APTR FormatString(
-          struct Locale * locale,
-          STRPTR fmtTemplate,
-          APTR dataStream,
-          struct Hook   * putCharFunc );
+          const struct Locale * locale,
+          CONST_STRPTR fmtTemplate,
+          CONST_APTR dataStream,
+          const struct Hook   * putCharFunc );
 
 
 GetCatalogStr
@@ -355,8 +353,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- STRPTR GetLocaleStr(
-          struct Locale * locale,
+ CONST_STRPTR GetLocaleStr(
+          const struct Locale * locale,
           ULONG stringNum );
 
 Function
@@ -395,7 +393,7 @@ Synopsis
 ::
 
  BOOL IsXXXX(
-          struct Locale * locale,
+          const struct Locale * locale,
           ULONG character );
 
 Function
@@ -449,357 +447,6 @@ Notes
 
 
 
-LocDateToStr
-============
-
-Synopsis
-~~~~~~~~
-::
-
- LONG LocDateToStr(
-          struct DateTime * datetime );
-
-Function
-~~~~~~~~
-::
-
-     See dos.library/DateToStr
-     
-
-Inputs
-~~~~~~
-::
-
-     See dos.library/DateToStr
-
-
-Notes
-~~~~~
-::
-
-     This function is not called by apps directly. Instead dos.library/DateToStr
-     is patched to use this function. This means, that the LocaleBase parameter
-     above actually points to DOSBase!!! But I may not rename it, because then
-     no entry for this function is generated in the Locale functable by the
-     corresponding script!
-     
-
-See also
-~~~~~~~~
-::
-
-     dos.library/DateToStr, locale.library/FormatDate.
-
-
-
-LocDosGetLocalizedString
-========================
-
-Synopsis
-~~~~~~~~
-::
-
- CONST_STRPTR LocDosGetLocalizedString(
-          LONG stringNum );
-
-Function
-~~~~~~~~
-::
-
-     See dos.library/DosGetLocalizedString
-     
-
-Inputs
-~~~~~~
-::
-
-     See dos.library/DosGetLocalizedString
-
-
-Notes
-~~~~~
-::
-
-     This function is not called by apps directly. Instead dos.library/DosGet-
-     LocalizedString is patched to use this function. This means, that the
-     LocaleBase parameter above actually points to DOSBase, so we make use of 
-     the global LocaleBase variable. This function is marked as private,
-     thus the headers generator won't mind the different basename in the header.
-     
-
-See also
-~~~~~~~~
-::
-
-     dos.library/DosGetString(), dos.library/DosGetLocalizedString()
-
-
-
-LocRawDoFmt
-===========
-
-Synopsis
-~~~~~~~~
-::
-
- APTR LocRawDoFmt(
-          CONST_STRPTR FormatString,
-          APTR DataStream,
-          VOID_FUNC PutChProc,
-          APTR PutChData );
-
-Function
-~~~~~~~~
-::
-
-     See exec.library/RawDoFmt
-
-
-Inputs
-~~~~~~
-::
-
-     See exec.library/RawDoFmt
-
-
-Notes
-~~~~~
-::
-
-     This function is not called by apps directly. Instead dos.library/DosGet-
-     LocalizedString is patched to use this function. This means, that the
-     LocaleBase parameter above actually points to SysBase, so we make use of
-     the global LocaleBase variable. This function is marked as private,
-     thus the headers generator won't mind the different basename in the header.
-
-
-See also
-~~~~~~~~
-::
-
-     RawDoFmt(), FormatString().
-
-
-
-LocStrToDate
-============
-
-Synopsis
-~~~~~~~~
-::
-
- LONG LocStrToDate(
-          struct DateTime * datetime );
-
-Function
-~~~~~~~~
-::
-
-     See dos.library/StrToDate
-     
-
-Inputs
-~~~~~~
-::
-
-     See dos.library/StrToDate
-
-
-Notes
-~~~~~
-::
-
-     This function is not called by apps directly. Instead
-     dos.library/StrToDate() is patched to use this function. This means
-     that the LocaleBase parameter above actually points to DOSBase, so we
-     make use of the global LocaleBase variable. This function is marked as
-     private, thus the headers generator won't mind the different basename
-     in the header.
-     
-
-See also
-~~~~~~~~
-::
-
-     dos.library/StrToDate, locale.library/ParseDate.
-
-
-
-LocStricmp
-==========
-
-Synopsis
-~~~~~~~~
-::
-
- LONG LocStricmp(
-          CONST_STRPTR string1,
-          CONST_STRPTR string2 );
-
-Function
-~~~~~~~~
-::
-
-     See utility.library/Stricmp
-     
-
-Inputs
-~~~~~~
-::
-
-     See utility.library/Stricmp
-
-
-Notes
-~~~~~
-::
-
-     This function is not called by apps directly. Instead dos.library/DosGet-
-     LocalizedString is patched to use this function. This means, that the
-     LocaleBase parameter above actually points to UtilityBase, so we make use of 
-     the global LocaleBase variable. This function is marked as private,
-     thus the headers generator won't mind the different basename in the header.
-     
-
-See also
-~~~~~~~~
-::
-
-     utility.library/Stricmp(), locale.library/StrnCmp().
-
-
-
-LocStrnicmp
-===========
-
-Synopsis
-~~~~~~~~
-::
-
- LONG LocStrnicmp(
-          CONST_STRPTR string1,
-          CONST_STRPTR string2,
-          LONG length );
-
-Function
-~~~~~~~~
-::
-
-     See utility.library/Strnicmp
-     
-
-Inputs
-~~~~~~
-::
-
-     See utility.library/Strnicmp
-
-
-Notes
-~~~~~
-::
-
-     This function is not called by apps directly. Instead dos.library/DosGet-
-     LocalizedString is patched to use this function. This means, that the
-     LocaleBase parameter above actually points to UtilityBase, so we make use of 
-     the global LocaleBase variable. This function is marked as private,
-     thus the headers generator won't mind the different basename in the header.
-     
-
-See also
-~~~~~~~~
-::
-
-     utility.library/Strnicmp(), locale.library/StrnCmp().
-
-
-
-LocToLower
-==========
-
-Synopsis
-~~~~~~~~
-::
-
- ULONG LocToLower(
-          ULONG character );
-
-Function
-~~~~~~~~
-::
-
-     See utility.library/ToLower
-     
-
-Inputs
-~~~~~~
-::
-
-     See utility.library/ToLower
-
-
-Notes
-~~~~~
-::
-
-     This function is not called by apps directly. Instead dos.library/DosGet-
-     LocalizedString is patched to use this function. This means, that the
-     LocaleBase parameter above actually points to UtilityBase, so we make use of 
-     the global LocaleBase variable. This function is marked as private,
-     thus the headers generator won't mind the different basename in the header.
-     
-
-See also
-~~~~~~~~
-::
-
-     utility.library/ToLower(), locale.library/ConvToLower().
-
-
-
-LocToUpper
-==========
-
-Synopsis
-~~~~~~~~
-::
-
- ULONG LocToUpper(
-          ULONG character );
-
-Function
-~~~~~~~~
-::
-
-     See utility.library/ToUpper
-     
-
-Inputs
-~~~~~~
-::
-
-     See utility.library/ToUpper
-
-
-Notes
-~~~~~
-::
-
-     This function is not called by apps directly. Instead dos.library/DosGet-
-     LocalizedString is patched to use this function. This means, that the
-     LocaleBase parameter above actually points to UtilityBase, so we make use of 
-     the global LocaleBase variable. This function is marked as private,
-     thus the headers generator won't mind the different basename in the header.
-     
-
-See also
-~~~~~~~~
-::
-
-     utility.library/ToUpper(), locale.library/ConvToUpper().
-
-
-
 OpenCatalogA
 ============
 
@@ -808,9 +455,9 @@ Synopsis
 ::
 
  struct Catalog * OpenCatalogA(
-          struct Locale  * locale,
-          STRPTR name,
-          struct TagItem * tags );
+          const struct Locale  * locale,
+          CONST_STRPTR name,
+          const struct TagItem * tags );
 
 
 OpenLocale
@@ -821,7 +468,7 @@ Synopsis
 ::
 
  struct Locale * OpenLocale(
-          STRPTR name );
+          CONST_STRPTR name );
 
 Function
 ~~~~~~~~
@@ -875,10 +522,10 @@ Synopsis
 ::
 
  BOOL ParseDate(
-          struct Locale    * locale,
+          const struct Locale    * locale,
           struct DateStamp * date,
           CONST_STRPTR fmtTemplate,
-          struct Hook      * getCharFunc );
+          const struct Hook      * getCharFunc );
 
 Function
 ~~~~~~~~
@@ -982,8 +629,8 @@ Synopsis
 ::
 
  ULONG StrConvert(
-          struct Locale * locale,
-          STRPTR string,
+          const struct Locale * locale,
+          CONST_STRPTR string,
           APTR buffer,
           ULONG bufferSize,
           ULONG type );
@@ -1041,9 +688,9 @@ Synopsis
 ::
 
  LONG StrnCmp(
-          struct Locale * locale,
-          STRPTR string1,
-          STRPTR string2,
+          const struct Locale * locale,
+          CONST_STRPTR string1,
+          CONST_STRPTR string2,
           LONG length,
           ULONG type );
 
@@ -1067,7 +714,8 @@ Inputs
      locale      -   Which locale to use for this comparison.
      string1     -   NULL terminated string.
      string2     -   NULL terminated string.
-     length      -   Maximum length of string to compare.
+     length      -   Maximum length of string to compare, or -1 to
+         compare entire strings.
      type        -   How to compare the strings, values are:
 
          SC_ASCII

@@ -360,6 +360,14 @@ Result
  Indication of the success of the operation
  
      0                --  no error
+     NVERR_BADNAME    --  'appName' or 'itemName' were not correctly
+                          specified names
+     NVERR_WRITEPROT  --  the nonvolatile storage is read only
+     NVERR_FAIL       --  failure in data saving (storage is full or write
+                          protected)
+     NVERR_FATAL      --  fatal error (possible loss of previously saved
+                          data)
+ 
 
 Notes
 ~~~~~

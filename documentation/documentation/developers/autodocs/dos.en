@@ -16,38 +16,39 @@ dos
 `Close`_                                `CompareDates`_                         `CreateDir`_                            `CreateNewProc`_                        
 `CreateProc`_                           `CurrentDir`_                           `DateStamp`_                            `DateToStr`_                            
 `Delay`_                                `DeleteFile`_                           `DeleteVar`_                            `DeviceProc`_                           
-`DisplayError`_                         `DoPkt`_                                `DupLock`_                              `EndNotify`_                            
-`Error`_                                `ErrorReport`_                          `ExAll`_                                `ExAllEnd`_                             
-`ExNext`_                               `Examine`_                              `Execute`_                              `Exit`_                                 
-`FGetC`_                                `FGets`_                                `FPutC`_                                `FPuts`_                                
-`FRead`_                                `FWrite`_                               `Fault`_                                `FilePart`_                             
-`FindArg`_                              `FindCliProc`_                          `FindDosEntry`_                         `FindSegment`_                          
-`FindVar`_                              `Flush`_                                `Format`_                               `FreeArgs`_                             
-`FreeDeviceProc`_                       `FreeDosEntry`_                         `FreeDosObject`_                        `GetArgStr`_                            
-`GetConsoleTask`_                       `GetCurrentDirName`_                    `GetDeviceProc`_                        `GetFileSysTask`_                       
-`GetProgramDir`_                        `GetProgramName`_                       `GetPrompt`_                            `GetVar`_                               
-`Info`_                                 `Inhibit`_                              `Input`_                                `InternalLoadSeg`_                      
-`InternalUnLoadSeg`_                    `IoErr`_                                `IsFileSystem`_                         `IsInteractive`_                        
-`LoadSeg`_                              `Lock`_                                 `LockDosList`_                          `LockRecord`_                           
-`LockRecords`_                          `MakeDosEntry`_                         `MakeLink`_                             `MatchEnd`_                             
-`MatchFirst`_                           `MatchNext`_                            `MatchPattern`_                         `MatchPatternNoCase`_                   
-`MaxCli`_                               `NameFromLock`_                         `NewLoadSeg`_                           `NextDosEntry`_                         
-`Open`_                                 `OpenFromLock`_                         `Output`_                               `ParentDir`_                            
-`ParentOfFH`_                           `ParsePattern`_                         `ParsePatternNoCase`_                   `PathPart`_                             
-`Pipe`_                                 `PrintFault`_                           `PutStr`_                               `Read`_                                 
-`ReadArgs`_                             `ReadItem`_                             `ReadLink`_                             `Relabel`_                              
-`RemAssignList`_                        `RemDosEntry`_                          `RemSegment`_                           `Rename`_                               
-`ReplyPkt`_                             `RunCommand`_                           `SameDevice`_                           `SameLock`_                             
-`ScanVars`_                             `Seek`_                                 `SelectError`_                          `SelectInput`_                          
-`SelectOutput`_                         `SendPkt`_                              `SetArgStr`_                            `SetComment`_                           
-`SetConsoleTask`_                       `SetCurrentDirName`_                    `SetFileDate`_                          `SetFileSize`_                          
-`SetFileSysTask`_                       `SetIoErr`_                             `SetMode`_                              `SetOwner`_                             
-`SetProgramDir`_                        `SetProgramName`_                       `SetPrompt`_                            `SetProtection`_                        
-`SetVBuf`_                              `SetVar`_                               `SplitName`_                            `StartNotify`_                          
-`StrToDate`_                            `StrToLong`_                            `SystemTagList`_                        `UnGetC`_                               
-`UnLoadSeg`_                            `UnLockDosList`_                        `UnLockRecord`_                         `UnLockRecords`_                        
-`VFPrintf`_                             `VFWritef`_                             `VPrintf`_                              `WaitForChar`_                          
-`WaitPkt`_                              `Write`_                                `WriteChars`_                           
+`DisplayError`_                         `DoPkt`_                                `DupLock`_                              `DupLockFromFH`_                        
+`EndNotify`_                            `Error`_                                `ErrorReport`_                          `ExAll`_                                
+`ExAllEnd`_                             `Examine`_                              `ExamineFH`_                            `Execute`_                              
+`Exit`_                                 `ExNext`_                               `Fault`_                                `FGetC`_                                
+`FGets`_                                `FilePart`_                             `FindArg`_                              `FindCliProc`_                          
+`FindDosEntry`_                         `FindSegment`_                          `FindVar`_                              `Flush`_                                
+`Format`_                               `FPutC`_                                `FPuts`_                                `FRead`_                                
+`FreeArgs`_                             `FreeDeviceProc`_                       `FreeDosEntry`_                         `FreeDosObject`_                        
+`FWrite`_                               `GetArgStr`_                            `GetConsoleTask`_                       `GetCurrentDirName`_                    
+`GetDeviceProc`_                        `GetFileSysTask`_                       `GetProgramDir`_                        `GetProgramName`_                       
+`GetPrompt`_                            `GetVar`_                               `Info`_                                 `Inhibit`_                              
+`Input`_                                `InternalLoadSeg`_                      `InternalUnLoadSeg`_                    `IoErr`_                                
+`IsFileSystem`_                         `IsInteractive`_                        `LoadSeg`_                              `Lock`_                                 
+`LockDosList`_                          `LockRecord`_                           `LockRecords`_                          `MakeDosEntry`_                         
+`MakeLink`_                             `MatchEnd`_                             `MatchFirst`_                           `MatchNext`_                            
+`MatchPattern`_                         `MatchPatternNoCase`_                   `MaxCli`_                               `NameFromFH`_                           
+`NameFromLock`_                         `NewLoadSeg`_                           `NextDosEntry`_                         `Open`_                                 
+`OpenFromLock`_                         `Output`_                               `ParentDir`_                            `ParentOfFH`_                           
+`ParsePattern`_                         `ParsePatternNoCase`_                   `PathPart`_                             `Pipe`_                                 
+`PrintFault`_                           `PutStr`_                               `Read`_                                 `ReadArgs`_                             
+`ReadItem`_                             `ReadLink`_                             `Relabel`_                              `RemAssignList`_                        
+`RemDosEntry`_                          `RemSegment`_                           `Rename`_                               `ReplyPkt`_                             
+`RunCommand`_                           `SameDevice`_                           `SameLock`_                             `Seek`_                                 
+`SelectError`_                          `SelectInput`_                          `SelectOutput`_                         `SendPkt`_                              
+`SetArgStr`_                            `SetComment`_                           `SetConsoleTask`_                       `SetCurrentDirName`_                    
+`SetFileDate`_                          `SetFileSize`_                          `SetFileSysTask`_                       `SetIoErr`_                             
+`SetMode`_                              `SetOwner`_                             `SetProgramDir`_                        `SetProgramName`_                       
+`SetPrompt`_                            `SetProtection`_                        `SetVar`_                               `SetVBuf`_                              
+`SplitName`_                            `StartNotify`_                          `StrToDate`_                            `StrToLong`_                            
+`SystemTagList`_                        `UnGetC`_                               `UnLoadSeg`_                            `UnLock`_                               
+`UnLockDosList`_                        `UnLockRecord`_                         `UnLockRecords`_                        `VFPrintf`_                             
+`VFWritef`_                             `VPrintf`_                              `WaitForChar`_                          `WaitPkt`_                              
+`Write`_                                `WriteChars`_                           
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -552,7 +553,7 @@ Function
 ~~~~~~~~
 ::
 
-     Try to change the mode used by a lock or filehandle.
+     Try to change the access mode of a lock or filehandle.
 
 
 Inputs
@@ -561,7 +562,7 @@ Inputs
 
      type    - CHANGE_FH or CHANGE_LOCK.
      object  - Filehandle or lock.
-     newmode - New mode (see <dos/dos.h>).
+     newmode - New mode, either SHARED_LOCK or EXCLUSIVE_LOCK.
 
 
 Result
@@ -570,14 +571,6 @@ Result
 
      != 0 if all went well, otherwise 0. IoErr() gives additional
      information in the latter case.
-
-
-Notes
-~~~~~
-::
-
-     Since filehandles and locks are identical under AROS the type
-     argument is ignored.
 
 
 
@@ -1422,6 +1415,46 @@ Notes
 
 
 
+DupLockFromFH
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ BPTR DupLockFromFH(
+          BPTR fh );
+
+Function
+~~~~~~~~
+::
+
+     Try to get a lock on the object selected by the filehandle.
+
+
+Inputs
+~~~~~~
+::
+
+     fh - filehandle.
+
+
+Result
+~~~~~~
+::
+
+     The new lock or 0 in case of an error. IoErr() will give additional
+     information in that case.
+
+
+Notes
+~~~~~
+::
+
+     This function is identical to DupLock().
+
+
+
 EndNotify
 =========
 
@@ -1561,6 +1594,11 @@ Inputs
  lock     --  lock on the directory to be examined
  buffer   --  buffer for the data that is returned (must be aligned)
               which is filled with (partial) ExAllData structures
+              (see NOTES)
+ size     --  size of 'buffer' in bytes
+ type     --  type of the data to be returned
+ control  --  a control structure allocated by AllocDosObject()
+
 
 Result
 ~~~~~~
@@ -1577,15 +1615,53 @@ Notes
 ~~~~~
 ::
 
- size     --  size of 'buffer' in bytes
- type     --  type of the data to be returned
- control  --  a control structure allocated by AllocDosObject()
-
  
  The following information is essential information on the ExAllData
  structure:
 
  ead_type :
+
+ ED_NAME        --  filename
+ ED_TYPE        --  type
+ ED_SIZE        --  size in bytes
+ ED_PROTECTION  --  protection bits
+ ED_DATE        --  date information (3 longwords)
+ ED_COMMENT     --  file comment (NULL if no comment exists)
+ ED_OWNER       --  owner user and group id
+
+ This is an incremental list meaning that if you specify ED_OWNER you
+ will get ALL attributes!
+
+
+ Filesystems that support ExAll() must support at least up to ED_COMMENT.
+ If a filesystem doesn't support a particular type, ERROR_BAD_NUMBER must
+ be returned.
+
+ ead_Next : pointer to the next entry in the buffer. The last entry
+            has a NULL value for ead_Next.
+
+
+ The control structure have the following fields.
+
+ eac_Entries : the number of entries in the buffer after a call to ExAll().
+               Make sure that your code handles the case when eac_Entries
+               is 0 and ExAll() returns TRUE.
+
+ eac_LastKey : must be initialized to 0 before calling ExAll() for the
+               first time.
+
+ eac_MatchString : if NULL then information on all files will be returned.
+                   If non-NULL it's interpreted as a pointer to a string
+                   used for pattern matching which files to return
+                   information on. This string must have been parsed by
+                   ParsePatternNoCase()!
+
+ eac_MatchFunc : pointer to a hook that will be called to decide if an
+                 entry should be included in the buffer. If NULL, no
+                 matching function will be called. The hook is called as
+                 follows
+
+                     BOOL = MatchFunc(hook, data, typeptr)
 
 
 See also
@@ -1648,6 +1724,160 @@ See also
 
 
  ExAll(), AllocDosObject()
+
+
+
+Examine
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL Examine(
+          BPTR lock,
+          struct FileInfoBlock * fib );
+
+Function
+~~~~~~~~
+::
+
+
+ Fill in a FileInfoBlock structure concerning a file or directory 
+ associated with a particular lock.
+
+
+Inputs
+~~~~~~
+::
+
+
+ lock  --  lock to examine
+ fib   --  FileInfoBlock where the result of the examination is stored
+
+
+Result
+~~~~~~
+::
+
+
+ A boolean telling whether the operation was successful or not.
+
+
+Notes
+~~~~~
+::
+
+
+ FileInfoBlocks should be allocated with AllocDosObject(). You may make
+ a copy of the FileInfoBlock but, however, this copy may NOT be passed
+ to ExNext()!
+
+
+See also
+~~~~~~~~
+::
+
+
+ Lock(), UnLock(), ExNext(), AllocDosObject(), ExAll(), <dos/dos.h>
+
+
+
+ExamineFH
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL ExamineFH(
+          BPTR fh,
+          struct FileInfoBlock * fib );
+
+
+Execute
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG Execute(
+          CONST_STRPTR string,
+          BPTR input,
+          BPTR output );
+
+Function
+~~~~~~~~
+::
+
+
+ Execute a CLI command specified in 'string'. This string may contain
+ features you may use on the shell commandline like redirection using >,
+ < or >>. Execute() doesn't return until the command(s) that should be
+ executed are finished.
+     If 'input' is not NULL, more commands will be read from this stream
+ until end of file is reached. 'output' will be used as the output stream
+ of the commands (if output is not redirected). If 'output' is NULL the
+ current window is used for output -- note that programs run from the
+ Workbench doesn't normally have a current window.
+
+
+Inputs
+~~~~~~
+::
+
+
+ string  --  pointer to a NULL-terminated string with commands
+             (may be NULL)
+ input   --  stream to use as input (may be NULL)
+ output  --  stream to use as output (may be NULL)
+
+
+Result
+~~~~~~
+::
+
+
+ Boolean telling whether Execute() could find and start the specified
+ command(s). (This is NOT the return code of the command(s).)
+
+
+See also
+~~~~~~~~
+::
+
+
+ SystemTagList()
+
+
+
+Exit
+====
+
+Synopsis
+~~~~~~~~
+::
+
+ void Exit(
+          LONG returnCode );
+
+Function
+~~~~~~~~
+::
+
+
+ Obsolete function, the purpose of which was to exit from a BCPL program.
+ DO NOT CALL THIS FUNCTION!
+
+
+Notes
+~~~~~
+::
+
+
+ This function is obsolete and doens't do anything. Therefore, do not
+ call it!
 
 
 
@@ -1733,144 +1963,51 @@ See also
 
 
 
-Examine
-=======
+Fault
+=====
 
 Synopsis
 ~~~~~~~~
 ::
 
- BOOL Examine(
-          BPTR lock,
-          struct FileInfoBlock * fib );
+ BOOL Fault(
+          LONG code,
+          CONST_STRPTR header,
+          STRPTR buffer,
+          LONG len );
 
 Function
 ~~~~~~~~
 ::
 
+     Fault will obtain the error message string for the given error
+     code. First the header string is copied to the buffer, followed
+     by a ":" (colon), then the NULL terminated string for the error
+     message into the buffer.
 
- Fill in a FileInfoBlock structure concerning a file or directory 
- associated with a particular lock.
+     By convention, error messages are ALWAYS less than 80 (plus 1 for
+     NULL termination), and ideally less than 60 characters.
+
+     If the error code is not know, then the string "Unknown error"
+     followed by the error number will be added to the string.
 
 
 Inputs
 ~~~~~~
 ::
 
-
- lock  --  lock to examine
- fib   --  FileInfoBlock where the result of the examination is stored
-
-
-Result
-~~~~~~
-::
-
-
- A boolean telling whether the operation was successful or not.
-
-
-Notes
-~~~~~
-::
-
-
- FileInfoBlocks should be allocated with AllocDosObject(). You may make
- a copy of the FileInfoBlock but, however, this copy may NOT be passed
- to ExNext()!
-
-
-See also
-~~~~~~~~
-::
-
-
- Lock(), UnLock(), ExNext(), AllocDosObject(), ExAll(), <dos/dos.h>
-
-
-
-Execute
-=======
-
-Synopsis
-~~~~~~~~
-::
-
- LONG Execute(
-          CONST_STRPTR string,
-          BPTR input,
-          BPTR output );
-
-Function
-~~~~~~~~
-::
-
-
- Execute a CLI command specified in 'string'. This string may contain
- features you may use on the shell commandline like redirection using >,
- < or >>. Execute() doesn't return until the command(s) that should be
- executed are finished.
-     If 'input' is not NULL, more commands will be read from this stream
- until end of file is reached. 'output' will be used as the output stream
- of the commands (if output is not redirected). If 'output' is NULL the
- current window is used for output -- note that programs run from the
- Workbench doesn't normally have a current window.
-
-
-Inputs
-~~~~~~
-::
-
-
- string  --  pointer to a NULL-terminated string with commands
-             (may be NULL)
- input   --  stream to use as input (may be NULL)
- output  --  stream to use as output (may be NULL)
+     code    -   The error code.
+     header  -   The string to prepend to the buffer before the error
+                 text. This may be NULL in which case nothing is prepended.
+     buffer  -   The destination buffer.
+     len     -   Length of the buffer.
 
 
 Result
 ~~~~~~
 ::
 
-
- Boolean telling whether Execute() could find and start the specified
- command(s). (This is NOT the return code of the command(s).)
-
-
-See also
-~~~~~~~~
-::
-
-
- SystemTagList()
-
-
-
-Exit
-====
-
-Synopsis
-~~~~~~~~
-::
-
- void Exit(
-          LONG returnCode );
-
-Function
-~~~~~~~~
-::
-
-
- Obsolete function, the purpose of which was to exit from a BCPL program.
-
-
-Notes
-~~~~~
-::
-
-
- This function is obsolete and doens't do anything. Therefore, do not
- call it!
+     Number of characters placed in the buffer, may be 0.
 
 
 
@@ -1953,225 +2090,6 @@ Result
 ::
 
      buf or NULL if the first thing read is EOF.
-
-
-
-FPutC
-=====
-
-Synopsis
-~~~~~~~~
-::
-
- LONG FPutC(
-          BPTR file,
-          LONG character );
-
-Inputs
-~~~~~~
-::
-
-     file      - Filehandle to write to.
-     character - Character to write.
-
-
-Result
-~~~~~~
-::
-
-     The character written or EOF in case of an error.
-     IoErr() gives additional information in that case.
-
-
-See also
-~~~~~~~~
-::
-
-     FGetC(), IoErr()
-
-
-
-FPuts
-=====
-
-Synopsis
-~~~~~~~~
-::
-
- LONG FPuts(
-          BPTR file,
-          CONST_STRPTR string );
-
-Function
-~~~~~~~~
-::
-
- This routine writes an unformatted string to the filehandle.  No
- newline is appended to the string.  This routine is buffered.
-
-
-Inputs
-~~~~~~
-::
-
-     file   - Filehandle to write to.
-     string - String to write.
-
-
-Result
-~~~~~~
-::
-
-     0 if all went well or EOF in case of an error.
-     IoErr() gives additional information in that case.
-
-
-See also
-~~~~~~~~
-::
-
-     FGetC(), IoErr()
-
-
-
-FRead
-=====
-
-Synopsis
-~~~~~~~~
-::
-
- LONG FRead(
-          BPTR fh,
-          APTR block,
-          ULONG blocklen,
-          ULONG number );
-
-Function
-~~~~~~~~
-::
-
-     Read a number of blocks from a file.
-
-
-Inputs
-~~~~~~
-::
-
-     fh - Read from this file
-     block - The data is put here
-     blocklen - This is the size of a single block
-     number - The number of blocks
-
-
-Result
-~~~~~~
-::
-
-     The number of blocks read from the file or 0 on EOF.
-     This function may return less than the requested number of blocks
-     IoErr() gives additional information in case of an error.
-
-
-See also
-~~~~~~~~
-::
-
-     Open(), FWrite(), FPutc(), Close()
-
-
-
-FWrite
-======
-
-Synopsis
-~~~~~~~~
-::
-
- LONG FWrite(
-          BPTR fh,
-          CONST_APTR block,
-          ULONG blocklen,
-          ULONG numblocks );
-
-Function
-~~~~~~~~
-::
-
-     Write a number of blocks to a file.
-
-
-Inputs
-~~~~~~
-::
-
-     fh        - Write to this file
-     block     - The data begins here
- blocklen  - number of bytes per block.  Must be > 0.
- numblocks - number of blocks to write.  Must be > 0.
-
-
-Result
-~~~~~~
-::
-
-     The number of blocks written to the file or EOF on error. IoErr()
-     gives additional information in case of an error.
-
-
-See also
-~~~~~~~~
-::
-
-     Open(), FRead(), FPutc(), Close()
-
-
-
-Fault
-=====
-
-Synopsis
-~~~~~~~~
-::
-
- BOOL Fault(
-          LONG code,
-          CONST_STRPTR header,
-          STRPTR buffer,
-          LONG len );
-
-Function
-~~~~~~~~
-::
-
-     Fault will obtain the error message string for the given error
-     code. First the header string is copied to the buffer, followed
-     by a ":" (colon), then the NULL terminated string for the error
-     message into the buffer.
-
-     By convention, error messages are ALWAYS less than 80 (plus 1 for
-     NULL termination), and ideally less than 60 characters.
-
-     If the error code is not know, then the string "Unknown error"
-     followed by the error number will be added to the string.
-
-
-Inputs
-~~~~~~
-::
-
-     code    -   The error code.
-     header  -   The string to prepend to the buffer before the error
-                 text. This may be NULL in which case nothing is prepended.
-     buffer  -   The destination buffer.
-     len     -   Length of the buffer.
-
-
-Result
-~~~~~~
-::
-
-     Number of characters placed in the buffer, may be 0.
 
 
 
@@ -2514,6 +2432,131 @@ Result
 
 
 
+FPutC
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG FPutC(
+          BPTR file,
+          LONG character );
+
+Inputs
+~~~~~~
+::
+
+     file      - Filehandle to write to.
+     character - Character to write.
+
+
+Result
+~~~~~~
+::
+
+     The character written or EOF in case of an error.
+     IoErr() gives additional information in that case.
+
+
+See also
+~~~~~~~~
+::
+
+     FGetC(), IoErr()
+
+
+
+FPuts
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG FPuts(
+          BPTR file,
+          CONST_STRPTR string );
+
+Function
+~~~~~~~~
+::
+
+ This routine writes an unformatted string to the filehandle.  No
+ newline is appended to the string.  This routine is buffered.
+
+
+Inputs
+~~~~~~
+::
+
+     file   - Filehandle to write to.
+     string - String to write.
+
+
+Result
+~~~~~~
+::
+
+     0 if all went well or EOF in case of an error.
+     IoErr() gives additional information in that case.
+
+
+See also
+~~~~~~~~
+::
+
+     FGetC(), IoErr()
+
+
+
+FRead
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG FRead(
+          BPTR fh,
+          APTR block,
+          ULONG blocklen,
+          ULONG number );
+
+Function
+~~~~~~~~
+::
+
+     Read a number of blocks from a file.
+
+
+Inputs
+~~~~~~
+::
+
+     fh - Read from this file
+     block - The data is put here
+     blocklen - This is the size of a single block
+     number - The number of blocks
+
+
+Result
+~~~~~~
+::
+
+     The number of blocks read from the file or 0 on EOF.
+     This function may return less than the requested number of blocks
+     IoErr() gives additional information in case of an error.
+
+
+See also
+~~~~~~~~
+::
+
+     Open(), FWrite(), FPutc(), Close()
+
+
+
 FreeArgs
 ========
 
@@ -2646,6 +2689,52 @@ Inputs
 
      type - object type. The same parameter as given to AllocDosObject().
      ptr  - Pointer to object.
+
+
+
+FWrite
+======
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG FWrite(
+          BPTR fh,
+          CONST_APTR block,
+          ULONG blocklen,
+          ULONG numblocks );
+
+Function
+~~~~~~~~
+::
+
+     Write a number of blocks to a file.
+
+
+Inputs
+~~~~~~
+::
+
+     fh        - Write to this file
+     block     - The data begins here
+ blocklen  - number of bytes per block.  Must be > 0.
+ numblocks - number of blocks to write.  Must be > 0.
+
+
+Result
+~~~~~~
+::
+
+     The number of blocks written to the file or EOF on error. IoErr()
+     gives additional information in case of an error.
+
+
+See also
+~~~~~~~~
+::
+
+     Open(), FRead(), FPutc(), Close()
 
 
 
@@ -3051,7 +3140,6 @@ Result
            if the size of the buffer is 0.
        the total length of the variable
            otherwise.
-
 
 
 Bugs
@@ -3964,6 +4052,45 @@ Result
 
 
 
+NameFromFH
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG NameFromFH(
+          BPTR fh,
+          STRPTR buffer,
+          LONG len );
+
+Function
+~~~~~~~~
+::
+
+     Get the full path name associated with file-handle into a
+     user supplied buffer.
+
+
+Inputs
+~~~~~~
+::
+
+     fh     - File-handle to file or directory.
+     buffer - Buffer to fill. Contains a NUL terminated string if
+              all went well.
+     length - Size of the buffer in bytes.
+
+
+Result
+~~~~~~
+::
+
+     !=0 if all went well, 0 in case of an error. IoErr() will
+     give additional information in that case.
+
+
+
 NameFromLock
 ============
 
@@ -4601,6 +4728,41 @@ Inputs
 
      template - Template string. The template string is given as
                 a number of options separated by ',' and modified
+                by '/' modifiers, e.g. 'NAME,WIDTH/N,HEIGHT/N'
+                means get a name string and two numbers (width and
+                height). The possible modifiers are:
+                /S Option is a switch. It may be either set or
+                   left out.
+                /T Option is a boolean value. Requires an argument
+                   which may be "ON", "YES" (setting the respective
+                   argument to 1), "OFF" or "NO" (setting the
+                   respective argument to 0).
+                /N Option is a number. Strings are not allowed.
+                   If the option is optional, a pointer to the
+                   actual number is returned. This is how you know
+                   if it was really given. The number is always of type
+                   LONG.
+                /A Argument is required. If it is left out ReadArgs()
+                   fails.
+                /K The keyword must be given when filling the option.
+                   Normally it's skipped.
+                /M Multiple strings or, when used in combination with /N,
+                   numbers. The result is returned as an array of pointers
+                   to strings or LONGs, and is terminated with NULL. /M
+                   eats all strings that don't fit into any other option.
+                   If there are unfilled /A arguments after parsing they
+                   steal strings from /M. This makes it possible to, for
+                   example, write a Copy command template like
+                   'FROM/A/M,TO/A'. There may be only one /M option in a
+                   template.
+                /F Eats the rest of the line even if there are option
+                   keywords in it.
+     array    - Array to be filled with the result values. The array must
+                be intialized to the default values before calling
+                ReadArgs().
+     rdargs   - An optional RDArgs structure determinating the type of
+                input to process.
+
 
 Result
 ~~~~~~
@@ -5038,70 +5200,6 @@ Synopsis
  LONG SameLock(
           BPTR lock1,
           BPTR lock2 );
-
-
-ScanVars
-========
-
-Synopsis
-~~~~~~~~
-::
-
- LONG ScanVars(
-          struct Hook * hook,
-          ULONG flags,
-          APTR userdata );
-
-Function
-~~~~~~~~
-::
-
-     Scan local and/or global variables accordingly to specified flags. For
-     each scanned variable hook function is called. Scanning process will
-     continue as long as hook returns 0. If hook returns a non-zero value,
-     scanning will be aborted and ScanVars will return this value.
-
-
-Inputs
-~~~~~~
-::
-
-     userdata - Any user-specific data passed to hook function.
-     flags - Same as in GetVar().
-     hook - Hook function that will be called for each scanned variable as:
-            result = hook_function(hook,userdata,message) with ScanVarsMsg
-            structure as message parameter containing information about given
-            variable.
-     
-
-Result
-~~~~~~
-::
-
-     !=0 returned by hook function if scan process was aborted, 0 otherwise.
-
-
-Notes
-~~~~~
-::
-
- ScanVarsMsg structure content is valid only during hook call.
- See <dos/var.h> for description of ScanVarsMsg structure.
-
-
-Bugs
-~~~~
-::
-
- Currently only local variables scanning is implemented.
-
-
-See also
-~~~~~~~~
-::
-
-     DeleteVar(), FindVar(), GetVar(), SetVar(), <dos/var.h>
-
 
 
 Seek
@@ -5864,50 +5962,6 @@ Result
 
 
 
-SetVBuf
-=======
-
-Synopsis
-~~~~~~~~
-::
-
- LONG SetVBuf(
-          BPTR file,
-          STRPTR buff,
-          LONG type,
-          LONG size );
-
-Function
-~~~~~~~~
-::
-
-     Changes the buffering modes and buffer size for a filehandle.
-     With buff == NULL, the current buffer will be deallocated and a
-     new one of (approximately) size will be allocated.  If buffer is
-     non-NULL, it will be used for buffering and must be at least
-     max(size,208) bytes long, and MUST be longword aligned.  If size
-     is -1, then only the buffering mode will be changed.
- 
-
-Inputs
-~~~~~~
-::
-
-     file - Filehandle
-     buff - buffer pointer for buffered I/O or NULL.
-     type - buffering mode (see <dos/stdio.h>)
-     size - size of buffer for buffered I/O (sizes less than 208 bytes
-            will be rounded up to 208), or -1.
-
-
-Result
-~~~~~~
-::
-
-     0 if operation succeeded. 
-
-
-
 SetVar
 ======
 
@@ -6000,6 +6054,50 @@ See also
 ::
 
      DeleteVar(), FindVar(), GetVar(),
+
+
+
+SetVBuf
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG SetVBuf(
+          BPTR file,
+          STRPTR buff,
+          LONG type,
+          LONG size );
+
+Function
+~~~~~~~~
+::
+
+     Changes the buffering modes and buffer size for a filehandle.
+     With buff == NULL, the current buffer will be deallocated and a
+     new one of (approximately) size will be allocated.  If buffer is
+     non-NULL, it will be used for buffering and must be at least
+     max(size,208) bytes long, and MUST be longword aligned.  If size
+     is -1, then only the buffering mode will be changed.
+ 
+
+Inputs
+~~~~~~
+::
+
+     file - Filehandle
+     buff - buffer pointer for buffered I/O or NULL.
+     type - buffering mode (see <dos/stdio.h>)
+     size - size of buffer for buffered I/O (sizes less than 208 bytes
+            will be rounded up to 208), or -1.
+
+
+Result
+~~~~~~
+::
+
+     0 if operation succeeded. 
 
 
 
@@ -6410,6 +6508,38 @@ See also
 ::
 
      LoadSeg()
+
+
+
+UnLock
+======
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL UnLock(
+          BPTR lock );
+
+Function
+~~~~~~~~
+::
+
+     Free a lock created with Lock().
+
+
+Inputs
+~~~~~~
+::
+
+     lock -- The lock to free
+
+
+Notes
+~~~~~
+::
+
+     This function is identical to Close() - see there.
 
 
 

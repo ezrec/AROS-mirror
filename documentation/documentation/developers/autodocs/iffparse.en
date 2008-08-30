@@ -334,9 +334,6 @@ Result
 
      top - Pointer to top contextnode or NULL if none.
 
-     since the default context node exists as long as the iffhandle
-     itself. However, the user is never given a pointer to this node.
-
 
 See also
 ~~~~~~~~

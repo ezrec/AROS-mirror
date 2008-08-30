@@ -9,10 +9,36 @@ prometheus
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`Prm_FindBoardTagList`_                 
+`Prm_AddIntServer`_                     `Prm_AllocDMABuffer`_                   `Prm_FindBoardTagList`_                 `Prm_FreeDMABuffer`_                    
+`Prm_GetBoardAttrsTagList`_             `Prm_GetPhysicalAddr`_                  `Prm_ReadConfigByte`_                   `Prm_ReadConfigLong`_                   
+`Prm_ReadConfigWord`_                   `Prm_RemIntServer`_                     `Prm_SetBoardAttrsTagList`_             `Prm_WriteConfigByte`_                  
+`Prm_WriteConfigLong`_                  `Prm_WriteConfigWord`_                  
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
+
+Prm_AddIntServer
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL Prm_AddIntServer(
+          PCIBoard * board,
+          struct Interrupt * interrupt );
+
+
+Prm_AllocDMABuffer
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR Prm_AllocDMABuffer(
+          ULONG size );
+
 
 Prm_FindBoardTagList
 ====================
@@ -24,5 +50,139 @@ Synopsis
  PCIBoard * Prm_FindBoardTagList(
           PCIBoard * previous,
           struct TagItem * tag_list );
+
+
+Prm_FreeDMABuffer
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID Prm_FreeDMABuffer(
+          APTR buffer,
+          ULONG size );
+
+
+Prm_GetBoardAttrsTagList
+========================
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG Prm_GetBoardAttrsTagList(
+          PCIBoard * board,
+          struct TagItem * tag_list );
+
+
+Prm_GetPhysicalAddr
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR Prm_GetPhysicalAddr(
+          APTR address );
+
+
+Prm_ReadConfigByte
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ UBYTE Prm_ReadConfigByte(
+          PCIBoard * board,
+          UBYTE offset );
+
+
+Prm_ReadConfigLong
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG Prm_ReadConfigLong(
+          PCIBoard * board,
+          UBYTE offset );
+
+
+Prm_ReadConfigWord
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ UWORD Prm_ReadConfigWord(
+          PCIBoard * board,
+          UBYTE offset );
+
+
+Prm_RemIntServer
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID Prm_RemIntServer(
+          PCIBoard * board,
+          struct Interrupt * interrupt );
+
+
+Prm_SetBoardAttrsTagList
+========================
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG Prm_SetBoardAttrsTagList(
+          PCIBoard * board,
+          struct TagItem * tag_list );
+
+
+Prm_WriteConfigByte
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID Prm_WriteConfigByte(
+          PCIBoard * board,
+          UBYTE data,
+          UBYTE offset );
+
+
+Prm_WriteConfigLong
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID Prm_WriteConfigLong(
+          PCIBoard * board,
+          ULONG data,
+          UBYTE offset );
+
+
+Prm_WriteConfigWord
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID Prm_WriteConfigWord(
+          PCIBoard * board,
+          UWORD data,
+          UBYTE offset );
 
 

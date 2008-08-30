@@ -962,12 +962,13 @@ Inputs
 
              link - pointer to the midilink to send to.
              msg  - The complete message to send. A message can not hold more
+                    than 3 bytes, so it fits fine in a ULONG integer. See NOTES
+                    to see how a message is built up.
+
 
 Notes
 ~~~~~
 ::
-
-                    to see how a message is built up.
 
              Sending an illegal message may have serious consequences. If you for
              some reason are not completely shure whether your message is legal,

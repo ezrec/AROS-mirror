@@ -9,28 +9,16 @@ muimaster
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`MUI_AddClipRegion`_                    `MUI_AddClipping`_                      `MUI_AllocAslRequest`_                  `MUI_AslRequest`_                       
+`MUI_AddClipping`_                      `MUI_AddClipRegion`_                    `MUI_AllocAslRequest`_                  `MUI_AslRequest`_                       
 `MUI_BeginRefresh`_                     `MUI_CreateCustomClass`_                `MUI_DeleteCustomClass`_                `MUI_DisposeObject`_                    
 `MUI_EndRefresh`_                       `MUI_Error`_                            `MUI_FreeAslRequest`_                   `MUI_FreeClass`_                        
 `MUI_GetClass`_                         `MUI_Layout`_                           `MUI_MakeObjectA`_                      `MUI_NewObjectA`_                       
 `MUI_ObtainPen`_                        `MUI_Redraw`_                           `MUI_RejectIDCMP`_                      `MUI_ReleasePen`_                       
-`MUI_RemoveClipRegion`_                 `MUI_RemoveClipping`_                   `MUI_RequestA`_                         `MUI_RequestIDCMP`_                     
+`MUI_RemoveClipping`_                   `MUI_RemoveClipRegion`_                 `MUI_RequestA`_                         `MUI_RequestIDCMP`_                     
 `MUI_SetError`_                         
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
-
-MUI_AddClipRegion
-=================
-
-Synopsis
-~~~~~~~~
-::
-
- APTR MUI_AddClipRegion(
-          struct MUI_RenderInfo * mri,
-          struct Region * r );
-
 
 MUI_AddClipping
 ===============
@@ -45,6 +33,18 @@ Synopsis
           WORD top,
           WORD width,
           WORD height );
+
+
+MUI_AddClipRegion
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR MUI_AddClipRegion(
+          struct MUI_RenderInfo * mri,
+          struct Region * r );
 
 
 MUI_AllocAslRequest
@@ -527,6 +527,18 @@ Synopsis
           LONG pen );
 
 
+MUI_RemoveClipping
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID MUI_RemoveClipping(
+          struct MUI_RenderInfo * mri,
+          APTR handle );
+
+
 MUI_RemoveClipRegion
 ====================
 
@@ -546,18 +558,6 @@ Notes
      sba: This function frees the region given in MUI_AddClipRegion, but this seems wrong to me.
      MUI_AddClipRegion should better duplicate the region.
 
-
-
-MUI_RemoveClipping
-==================
-
-Synopsis
-~~~~~~~~
-::
-
- VOID MUI_RemoveClipping(
-          struct MUI_RenderInfo * mri,
-          APTR handle );
 
 
 MUI_RequestA

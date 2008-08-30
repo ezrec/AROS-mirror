@@ -10,10 +10,10 @@ gadtools
 
 ======================================= ======================================= ======================================= ======================================= 
 `CreateContext`_                        `CreateGadgetA`_                        `CreateMenusA`_                         `DrawBevelBoxA`_                        
-`FreeGadgets`_                          `FreeMenus`_                            `FreeVisualInfo`_                       `GT_BeginRefresh`_                      
-`GT_EndRefresh`_                        `GT_FilterIMsg`_                        `GT_GetGadgetAttrsA`_                   `GT_GetIMsg`_                           
-`GT_PostFilterIMsg`_                    `GT_RefreshWindow`_                     `GT_ReplyIMsg`_                         `GT_SetGadgetAttrsA`_                   
-`GetVisualInfoA`_                       `LayoutMenuItemsA`_                     `LayoutMenusA`_                         
+`FreeGadgets`_                          `FreeMenus`_                            `FreeVisualInfo`_                       `GetVisualInfoA`_                       
+`GT_BeginRefresh`_                      `GT_EndRefresh`_                        `GT_FilterIMsg`_                        `GT_GetGadgetAttrsA`_                   
+`GT_GetIMsg`_                           `GT_PostFilterIMsg`_                    `GT_RefreshWindow`_                     `GT_ReplyIMsg`_                         
+`GT_SetGadgetAttrsA`_                   `LayoutMenuItemsA`_                     `LayoutMenusA`_                         
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -293,6 +293,50 @@ See also
 ::
 
      GetVisualInfo()
+
+
+
+GetVisualInfoA
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR GetVisualInfoA(
+          struct Screen * screen,
+          struct TagItem * tagList );
+
+Function
+~~~~~~~~
+::
+
+     GetVisualInfoA() creates a visual info structure, which is needed
+     by several gadtools functions. When you're done using it, you have
+     to call FreeVisualInfo().
+
+
+Inputs
+~~~~~~
+::
+
+     screen -  pointer to the screen to create a visual info structure for
+               (may be NULL)
+     taglist - additional tags (none defined, yet)
+
+
+Result
+~~~~~~
+::
+
+     A (private) visual info structure. NULL indicates an error.
+
+
+See also
+~~~~~~~~
+::
+
+     FreeVisualInfo()
 
 
 
@@ -665,50 +709,6 @@ See also
 ::
 
      GT_GetGadgetAttrsA(), intuition.library/SetGadgetAttrsA()
-
-
-
-GetVisualInfoA
-==============
-
-Synopsis
-~~~~~~~~
-::
-
- APTR GetVisualInfoA(
-          struct Screen * screen,
-          struct TagItem * tagList );
-
-Function
-~~~~~~~~
-::
-
-     GetVisualInfoA() creates a visual info structure, which is needed
-     by several gadtools functions. When you're done using it, you have
-     to call FreeVisualInfo().
-
-
-Inputs
-~~~~~~
-::
-
-     screen -  pointer to the screen to create a visual info structure for
-               (may be NULL)
-     taglist - additional tags (none defined, yet)
-
-
-Result
-~~~~~~
-::
-
-     A (private) visual info structure. NULL indicates an error.
-
-
-See also
-~~~~~~~~
-::
-
-     FreeVisualInfo()
 
 
 

@@ -9,8 +9,8 @@ intuition
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`ActivateGadget`_                       `ActivateWindow`_                       `AddClass`_                             `AddGList`_                             
-`AddGadget`_                            `AllocIntuiMessage`_                    `AllocRemember`_                        `AllocScreenBuffer`_                    
+`ActivateGadget`_                       `ActivateWindow`_                       `AddClass`_                             `AddGadget`_                            
+`AddGList`_                             `AllocIntuiMessage`_                    `AllocRemember`_                        `AllocScreenBuffer`_                    
 `AlohaWorkbench`_                       `AutoRequest`_                          `BeginRefresh`_                         `BuildEasyRequestArgs`_                 
 `BuildSysRequest`_                      `ChangeDecoration`_                     `ChangeScreenBuffer`_                   `ChangeWindowBox`_                      
 `ChangeWindowShape`_                    `ClearDMRequest`_                       `ClearMenuStrip`_                       `ClearPointer`_                         
@@ -20,30 +20,30 @@ intuition
 `DumpIntuiState`_                       `EasyRequestArgs`_                      `EndRefresh`_                           `EndRequest`_                           
 `EndScreenNotify`_                      `EraseImage`_                           `FindClass`_                            `FreeClass`_                            
 `FreeIntuiMessage`_                     `FreeRemember`_                         `FreeScreenBuffer`_                     `FreeScreenDrawInfo`_                   
-`FreeSysRequest`_                       `GadgetMouse`_                          `GetAttr`_                              `GetDefPrefs`_                          
-`GetDefaultPubScreen`_                  `GetPrefs`_                             `GetScreenData`_                        `GetScreenDrawInfo`_                    
+`FreeSysRequest`_                       `GadgetMouse`_                          `GetAttr`_                              `GetDefaultPubScreen`_                  
+`GetDefPrefs`_                          `GetPrefs`_                             `GetScreenData`_                        `GetScreenDrawInfo`_                    
 `HelpControl`_                          `HideWindow`_                           `InitRequester`_                        `IntuiTextLength`_                      
 `IsWindowVisible`_                      `ItemAddress`_                          `LateIntuiInit`_                        `LendMenus`_                            
-`LockIBase`_                            `LockPubScreen`_                        `LockPubScreenList`_                    `MakeClass`_                            
-`MakeScreen`_                           `ModifyIDCMP`_                          `ModifyProp`_                           `MoveScreen`_                           
-`MoveWindow`_                           `MoveWindowInFrontOf`_                  `NewModifyProp`_                        `NewObjectA`_                           
-`NextObject`_                           `NextPubScreen`_                        `ObtainGIRPort`_                        `OffGadget`_                            
-`OffMenu`_                              `OnGadget`_                             `OnMenu`_                               `OpenScreen`_                           
-`OpenScreenTagList`_                    `OpenWindow`_                           `OpenWindowTagList`_                    `OpenWorkBench`_                        
-`PointInImage`_                         `PrintIText`_                           `PubScreenStatus`_                      `QueryOverscan`_                        
-`RefreshGList`_                         `RefreshGadgets`_                       `RefreshWindowFrame`_                   `ReleaseGIRPort`_                       
-`RemakeDisplay`_                        `RemoveClass`_                          `RemoveGList`_                          `RemoveGadget`_                         
-`ReportMouse`_                          `Request`_                              `ResetMenuStrip`_                       `RethinkDisplay`_                       
-`ScreenDepth`_                          `ScreenPosition`_                       `ScreenToBack`_                         `ScreenToFront`_                        
-`ScrollWindowRaster`_                   `SendIntuiMessage`_                     `SetAttrsA`_                            `SetDMRequest`_                         
-`SetDefaultPubScreen`_                  `SetDefaultScreenFont`_                 `SetEditHook`_                          `SetGadgetAttrsA`_                      
-`SetIPrefs`_                            `SetMenuStrip`_                         `SetMouseQueue`_                        `SetPointer`_                           
-`SetPrefs`_                             `SetPubScreenModes`_                    `SetWindowPointerA`_                    `SetWindowTitles`_                      
-`ShowTitle`_                            `ShowWindow`_                           `SizeWindow`_                           `StartScreenNotifyTagList`_             
-`SysReqHandler`_                        `TimedDisplayAlert`_                    `UnlockIBase`_                          `UnlockPubScreen`_                      
-`UnlockPubScreenList`_                  `ViewAddress`_                          `ViewPortAddress`_                      `WBenchToBack`_                         
-`WBenchToFront`_                        `WindowLimits`_                         `WindowToBack`_                         `WindowToFront`_                        
-`ZipWindow`_                            `lockPubClass`_                         `unlockPubClass`_                       
+`LockIBase`_                            `lockPubClass`_                         `LockPubScreen`_                        `LockPubScreenList`_                    
+`MakeClass`_                            `MakeScreen`_                           `ModifyIDCMP`_                          `ModifyProp`_                           
+`MoveScreen`_                           `MoveWindow`_                           `MoveWindowInFrontOf`_                  `NewModifyProp`_                        
+`NewObjectA`_                           `NextObject`_                           `NextPubScreen`_                        `ObtainGIRPort`_                        
+`OffGadget`_                            `OffMenu`_                              `OnGadget`_                             `OnMenu`_                               
+`OpenScreen`_                           `OpenScreenTagList`_                    `OpenWindow`_                           `OpenWindowTagList`_                    
+`OpenWorkBench`_                        `PointInImage`_                         `PrintIText`_                           `PubScreenStatus`_                      
+`QueryOverscan`_                        `RefreshGadgets`_                       `RefreshGList`_                         `RefreshWindowFrame`_                   
+`ReleaseGIRPort`_                       `RemakeDisplay`_                        `RemoveClass`_                          `RemoveGadget`_                         
+`RemoveGList`_                          `ReportMouse`_                          `Request`_                              `ResetMenuStrip`_                       
+`RethinkDisplay`_                       `ScreenDepth`_                          `ScreenPosition`_                       `ScreenToBack`_                         
+`ScreenToFront`_                        `ScrollWindowRaster`_                   `SendIntuiMessage`_                     `SetAttrsA`_                            
+`SetDefaultPubScreen`_                  `SetDefaultScreenFont`_                 `SetDMRequest`_                         `SetEditHook`_                          
+`SetGadgetAttrsA`_                      `SetIPrefs`_                            `SetMenuStrip`_                         `SetMouseQueue`_                        
+`SetPointer`_                           `SetPrefs`_                             `SetPubScreenModes`_                    `SetWindowPointerA`_                    
+`SetWindowTitles`_                      `ShowTitle`_                            `ShowWindow`_                           `SizeWindow`_                           
+`StartScreenNotifyTagList`_             `SysReqHandler`_                        `TimedDisplayAlert`_                    `UnlockIBase`_                          
+`unlockPubClass`_                       `UnlockPubScreen`_                      `UnlockPubScreenList`_                  `ViewAddress`_                          
+`ViewPortAddress`_                      `WBenchToBack`_                         `WBenchToFront`_                        `WindowLimits`_                         
+`WindowToBack`_                         `WindowToFront`_                        `ZipWindow`_                            
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -55,10 +55,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL ActivateGadget(
-          struct Gadget * gadget,
-          struct Window * window,
-          struct Requester * requester );
+ BOOL ActivateGadget();
 
 Function
 ~~~~~~~~
@@ -85,8 +82,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ActivateWindow(
-          struct Window * window );
+ void ActivateWindow();
 
 Function
 ~~~~~~~~
@@ -138,8 +134,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void AddClass(
-          struct IClass * classPtr );
+ void AddClass();
 
 Function
 ~~~~~~~~
@@ -188,6 +183,50 @@ See also
 
 
 
+AddGadget
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ UWORD AddGadget();
+
+Function
+~~~~~~~~
+::
+
+ Adds a single gadget to a window.
+
+
+Inputs
+~~~~~~
+::
+
+ window - Add gadget to this window
+ gadget - Add this gadget
+ position - The position to add the gadget in the list of
+     gadgets already in the window. Use 0 to insert the
+     gadget before all others or ~0 to append it to the
+     list.
+
+
+Result
+~~~~~~
+::
+
+ The position where the gadget was really inserted.
+
+
+Notes
+~~~~~
+::
+
+ This just adds the gadget to the list. It will not be visible
+ until you refresh the window.
+
+
+
 AddGList
 ========
 
@@ -195,12 +234,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- UWORD AddGList(
-          struct Window    * window,
-          struct Gadget    * gadget,
-          ULONG position,
-          LONG numGad,
-          struct Requester * requester );
+ UWORD AddGList();
 
 Function
 ~~~~~~~~
@@ -247,53 +281,6 @@ See also
 
 
 
-AddGadget
-=========
-
-Synopsis
-~~~~~~~~
-::
-
- UWORD AddGadget(
-          struct Window * window,
-          struct Gadget * gadget,
-          ULONG position );
-
-Function
-~~~~~~~~
-::
-
- Adds a single gadget to a window.
-
-
-Inputs
-~~~~~~
-::
-
- window - Add gadget to this window
- gadget - Add this gadget
- position - The position to add the gadget in the list of
-     gadgets already in the window. Use 0 to insert the
-     gadget before all others or ~0 to append it to the
-     list.
-
-
-Result
-~~~~~~
-::
-
- The position where the gadget was really inserted.
-
-
-Notes
-~~~~~
-::
-
- This just adds the gadget to the list. It will not be visible
- until you refresh the window.
-
-
-
 AllocIntuiMessage
 =================
 
@@ -301,8 +288,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct IntuiMessage * AllocIntuiMessage(
-          struct Window * window );
+ struct IntuiMessage * AllocIntuiMessage();
 
 Function
 ~~~~~~~~
@@ -334,10 +320,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- APTR AllocRemember(
-          struct Remember ** rememberKey,
-          ULONG size,
-          ULONG flags );
+ APTR AllocRemember();
 
 Function
 ~~~~~~~~
@@ -370,10 +353,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct ScreenBuffer * AllocScreenBuffer(
-          struct Screen * screen,
-          struct BitMap * bitmap,
-          ULONG flags );
+ struct ScreenBuffer * AllocScreenBuffer();
 
 Function
 ~~~~~~~~
@@ -447,8 +427,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void AlohaWorkbench(
-          struct MsgPort * wbmsgport );
+ void AlohaWorkbench();
 
 Function
 ~~~~~~~~
@@ -506,15 +485,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL AutoRequest(
-          struct Window    * window,
-          struct IntuiText * body,
-          struct IntuiText * posText,
-          struct IntuiText * negText,
-          ULONG pFlag,
-          ULONG nFlag,
-          ULONG width,
-          ULONG height );
+ BOOL AutoRequest();
 
 
 BeginRefresh
@@ -524,8 +495,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void BeginRefresh(
-          struct Window * window );
+ void BeginRefresh();
 
 
 BuildEasyRequestArgs
@@ -535,11 +505,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Window * BuildEasyRequestArgs(
-          struct Window     * RefWindow,
-          struct EasyStruct * easyStruct,
-          ULONG IDCMP,
-          APTR Args );
+ struct Window * BuildEasyRequestArgs();
 
 Function
 ~~~~~~~~
@@ -589,14 +555,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Window * BuildSysRequest(
-          struct Window * window,
-          struct IntuiText * bodytext,
-          struct IntuiText * postext,
-          struct IntuiText * negtext,
-          ULONG IDCMPFlags,
-          WORD width,
-          WORD height );
+ struct Window * BuildSysRequest();
 
 Inputs
 ~~~~~~
@@ -626,9 +585,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ChangeDecoration(
-          ULONG ID,
-          struct NewDecorator * nd );
+ void ChangeDecoration();
 
 Function
 ~~~~~~~~
@@ -667,9 +624,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- ULONG ChangeScreenBuffer(
-          struct Screen * screen,
-          struct ScreenBuffer * screenbuffer );
+ ULONG ChangeScreenBuffer();
 
 Function
 ~~~~~~~~
@@ -725,12 +680,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ChangeWindowBox(
-          struct Window * window,
-          LONG left,
-          LONG top,
-          LONG width,
-          LONG height );
+ void ChangeWindowBox();
 
 Function
 ~~~~~~~~
@@ -764,10 +714,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Region * ChangeWindowShape(
-          struct Window * window,
-          struct Region * newshape,
-          struct Hook * callback );
+ struct Region * ChangeWindowShape();
 
 Function
 ~~~~~~~~
@@ -791,8 +738,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL ClearDMRequest(
-          struct Window * window );
+ BOOL ClearDMRequest();
 
 Inputs
 ~~~~~~
@@ -816,8 +762,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ClearMenuStrip(
-          struct Window * window );
+ void ClearMenuStrip();
 
 
 ClearPointer
@@ -827,8 +772,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ClearPointer(
-          struct Window * window );
+ void ClearPointer();
 
 Function
 ~~~~~~~~
@@ -862,8 +806,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL CloseScreen(
-          struct Screen * screen );
+ BOOL CloseScreen();
 
 Function
 ~~~~~~~~
@@ -898,8 +841,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void CloseWindow(
-          struct Window * window );
+ void CloseWindow();
 
 Function
 ~~~~~~~~
@@ -986,9 +928,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void CurrentTime(
-          ULONG * seconds,
-          ULONG * micros );
+ void CurrentTime();
 
 Function
 ~~~~~~~~
@@ -1037,10 +977,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL DisplayAlert(
-          ULONG alertnumber,
-          UBYTE* string,
-          UWORD height );
+ BOOL DisplayAlert();
 
 Function
 ~~~~~~~~
@@ -1084,8 +1021,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void DisplayBeep(
-          struct Screen * screen );
+ void DisplayBeep();
 
 Function
 ~~~~~~~~
@@ -1112,8 +1048,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void DisposeObject(
-          APTR object );
+ void DisposeObject();
 
 Function
 ~~~~~~~~
@@ -1166,11 +1101,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- IPTR DoGadgetMethodA(
-          struct Gadget    * gad,
-          struct Window    * win,
-          struct Requester * req,
-          Msg msg );
+ IPTR DoGadgetMethodA();
 
 Function
 ~~~~~~~~
@@ -1208,11 +1139,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL DoubleClick(
-          ULONG sSeconds,
-          ULONG sMicros,
-          ULONG cSeconds,
-          ULONG cMicros );
+ BOOL DoubleClick();
 
 Function
 ~~~~~~~~
@@ -1245,11 +1172,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void DrawBorder(
-          struct RastPort * rp,
-          struct Border   * border,
-          LONG leftOffset,
-          LONG topOffset );
+ void DrawBorder();
 
 Function
 ~~~~~~~~
@@ -1316,11 +1239,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void DrawImage(
-          struct RastPort * rp,
-          struct Image    * image,
-          LONG leftOffset,
-          LONG topOffset );
+ void DrawImage();
 
 Function
 ~~~~~~~~
@@ -1353,13 +1272,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void DrawImageState(
-          struct RastPort * rp,
-          struct Image    * image,
-          LONG leftOffset,
-          LONG topOffset,
-          ULONG state,
-          struct DrawInfo * drawInfo );
+ void DrawImageState();
 
 Function
 ~~~~~~~~
@@ -1427,11 +1340,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG EasyRequestArgs(
-          struct Window     * window,
-          struct EasyStruct * easyStruct,
-          ULONG             * IDCMP_ptr,
-          APTR argList );
+ LONG EasyRequestArgs();
 
 Function
 ~~~~~~~~
@@ -1482,9 +1391,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void EndRefresh(
-          struct Window * window,
-          BOOL complete );
+ void EndRefresh();
 
 
 EndRequest
@@ -1494,9 +1401,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void EndRequest(
-          struct Requester * requester,
-          struct Window * window );
+ void EndRequest();
 
 Function
 ~~~~~~~~
@@ -1536,8 +1441,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL EndScreenNotify(
-          IPTR notify );
+ BOOL EndScreenNotify();
 
 Function
 ~~~~~~~~
@@ -1574,11 +1478,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void EraseImage(
-          struct RastPort * rp,
-          struct Image    * image,
-          LONG leftOffset,
-          LONG topOffset );
+ void EraseImage();
 
 Function
 ~~~~~~~~
@@ -1619,8 +1519,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct IClass * FindClass(
-          ClassID classID );
+ struct IClass * FindClass();
 
 
 FreeClass
@@ -1630,8 +1529,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL FreeClass(
-          struct IClass * iclass );
+ BOOL FreeClass();
 
 Function
 ~~~~~~~~
@@ -1710,8 +1608,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void FreeIntuiMessage(
-          struct IntuiMessage * imsg );
+ void FreeIntuiMessage();
 
 Function
 ~~~~~~~~
@@ -1743,9 +1640,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void FreeRemember(
-          struct Remember ** rememberKey,
-          LONG reallyForget );
+ void FreeRemember();
 
 
 FreeScreenBuffer
@@ -1755,9 +1650,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void FreeScreenBuffer(
-          struct Screen * screen,
-          struct ScreenBuffer * screenbuffer );
+ void FreeScreenBuffer();
 
 Function
 ~~~~~~~~
@@ -1811,9 +1704,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void FreeScreenDrawInfo(
-          struct Screen   * screen,
-          struct DrawInfo * drawInfo );
+ void FreeScreenDrawInfo();
 
 Function
 ~~~~~~~~
@@ -1853,8 +1744,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void FreeSysRequest(
-          struct Window * window );
+ void FreeSysRequest();
 
 Function
 ~~~~~~~~
@@ -1893,10 +1783,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void GadgetMouse(
-          struct Gadget     * gadget,
-          struct GadgetInfo * ginfo,
-          WORD              * mousepoint );
+ void GadgetMouse();
 
 Function
 ~~~~~~~~
@@ -1940,10 +1827,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- ULONG GetAttr(
-          ULONG attrID,
-          Object * object,
-          IPTR * storagePtr );
+ ULONG GetAttr();
 
 Function
 ~~~~~~~~
@@ -1994,6 +1878,54 @@ See also
 
 
 
+GetDefaultPubScreen
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Screen * GetDefaultPubScreen();
+
+Function
+~~~~~~~~
+::
+
+ Returns the name of the current default public screen.
+ This will be "Workbench" if there is no default public screen.
+
+
+Inputs
+~~~~~~
+::
+
+ nameBuffer - A buffer of length MAXPUBSCREENNAME
+
+
+Result
+~~~~~~
+::
+
+ None.
+
+
+Notes
+~~~~~
+::
+
+ Only Public Screen Manager utilities want to use this function
+ since it is easy to open a window on the default public screen
+ without specifying a name.
+
+
+See also
+~~~~~~~~
+::
+
+ SetDefaultPubScreen(), OpenWindow()
+
+
+
 GetDefPrefs
 ===========
 
@@ -2001,9 +1933,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Preferences * GetDefPrefs(
-          struct Preferences * prefbuffer,
-          WORD size );
+ struct Preferences * GetDefPrefs();
 
 Function
 ~~~~~~~~
@@ -2036,48 +1966,6 @@ See also
 
 
 
-GetDefaultPubScreen
-===================
-
-Synopsis
-~~~~~~~~
-::
-
- struct Screen * GetDefaultPubScreen(
-          UBYTE * nameBuffer );
-
-Function
-~~~~~~~~
-::
-
- Returns the name of the current default public screen.
- This will be "Workbench" if there is no default public screen.
-
-
-Result
-~~~~~~
-::
-
- None.
-
-
-Notes
-~~~~~
-::
-
- Only Public Screen Manager utilities want to use this function
- since it is easy to open a window on the default public screen
- without specifying a name.
-
-
-See also
-~~~~~~~~
-::
-
- SetDefaultPubScreen(), OpenWindow()
-
-
-
 GetPrefs
 ========
 
@@ -2085,9 +1973,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Preferences * GetPrefs(
-          struct Preferences * prefbuffer,
-          WORD size );
+ struct Preferences * GetPrefs();
 
 Function
 ~~~~~~~~
@@ -2127,11 +2013,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG GetScreenData(
-          APTR buffer,
-          ULONG size,
-          ULONG type,
-          struct Screen * screen );
+ LONG GetScreenData();
 
 Function
 ~~~~~~~~
@@ -2176,8 +2058,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct DrawInfo * GetScreenDrawInfo(
-          struct Screen * screen );
+ struct DrawInfo * GetScreenDrawInfo();
 
 Function
 ~~~~~~~~
@@ -2226,9 +2107,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void HelpControl(
-          struct Window * window,
-          ULONG flags );
+ void HelpControl();
 
 Function
 ~~~~~~~~
@@ -2270,8 +2149,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- VOID HideWindow(
-          struct Window * window );
+ VOID HideWindow();
 
 Function
 ~~~~~~~~
@@ -2295,8 +2173,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void InitRequester(
-          struct Requester * requester );
+ void InitRequester();
 
 Function
 ~~~~~~~~
@@ -2342,8 +2219,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG IntuiTextLength(
-          struct IntuiText * iText );
+ LONG IntuiTextLength();
 
 Function
 ~~~~~~~~
@@ -2378,8 +2254,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG IsWindowVisible(
-          struct Window * window );
+ LONG IsWindowVisible();
 
 Function
 ~~~~~~~~
@@ -2413,9 +2288,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct MenuItem * ItemAddress(
-          struct Menu * menustrip,
-          UWORD menunumber );
+ struct MenuItem * ItemAddress();
 
 Function
 ~~~~~~~~
@@ -2460,8 +2333,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL LateIntuiInit(
-          APTR data );
+ BOOL LateIntuiInit();
 
 Function
 ~~~~~~~~
@@ -2502,9 +2374,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void LendMenus(
-          struct Window * fromwindow,
-          struct Window * towindow );
+ void LendMenus();
 
 Function
 ~~~~~~~~
@@ -2550,8 +2420,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- ULONG LockIBase(
-          ULONG What );
+ ULONG LockIBase();
 
 Function
 ~~~~~~~~
@@ -2592,6 +2461,32 @@ See also
 
 
 
+lockPubClass
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void lockPubClass();
+
+Function
+~~~~~~~~
+::
+
+
+ Locks the public classes list.
+
+
+See also
+~~~~~~~~
+::
+
+
+ unlockPubClass().
+
+
+
 LockPubScreen
 =============
 
@@ -2599,8 +2494,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Screen * LockPubScreen(
-          CONST_STRPTR name );
+ struct Screen * LockPubScreen();
 
 Function
 ~~~~~~~~
@@ -2717,12 +2611,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct IClass * MakeClass(
-          ClassID classID,
-          ClassID superClassID,
-          struct IClass * superClassPtr,
-          ULONG instanceSize,
-          ULONG flags );
+ struct IClass * MakeClass();
 
 Function
 ~~~~~~~~
@@ -2789,8 +2678,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG MakeScreen(
-          struct Screen * screen );
+ LONG MakeScreen();
 
 Inputs
 ~~~~~~
@@ -2821,9 +2709,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL ModifyIDCMP(
-          struct Window * window,
-          ULONG flags );
+ BOOL ModifyIDCMP();
 
 Function
 ~~~~~~~~
@@ -2915,15 +2801,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ModifyProp(
-          struct Gadget    * gadget,
-          struct Window    * window,
-          struct Requester * requester,
-          ULONG flags,
-          ULONG horizPot,
-          ULONG vertPot,
-          ULONG horizBody,
-          ULONG vertBody );
+ void ModifyProp();
 
 Function
 ~~~~~~~~
@@ -2979,10 +2857,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void MoveScreen(
-          struct Screen * screen,
-          LONG dx,
-          LONG dy );
+ void MoveScreen();
 
 Function
 ~~~~~~~~
@@ -3033,10 +2908,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void MoveWindow(
-          struct Window * window,
-          LONG dx,
-          LONG dy );
+ void MoveWindow();
 
 Function
 ~~~~~~~~
@@ -3075,9 +2947,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void MoveWindowInFrontOf(
-          struct Window * window,
-          struct Window * behindwindow );
+ void MoveWindowInFrontOf();
 
 Function
 ~~~~~~~~
@@ -3116,16 +2986,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void NewModifyProp(
-          struct Gadget    * gadget,
-          struct Window    * window,
-          struct Requester * requester,
-          ULONG flags,
-          ULONG horizPot,
-          ULONG vertPot,
-          ULONG horizBody,
-          ULONG vertBody,
-          LONG numGad );
+ void NewModifyProp();
 
 Function
 ~~~~~~~~
@@ -3176,10 +3037,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- APTR NewObjectA(
-          struct IClass  * classPtr,
-          UBYTE          * classID,
-          struct TagItem * tagList );
+ APTR NewObjectA();
 
 Function
 ~~~~~~~~
@@ -3237,8 +3095,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- APTR NextObject(
-          APTR objectPtrPtr );
+ APTR NextObject();
 
 Function
 ~~~~~~~~
@@ -3283,9 +3140,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- UBYTE * NextPubScreen(
-          struct Screen * screen,
-          UBYTE * namebuff );
+ UBYTE * NextPubScreen();
 
 Function
 ~~~~~~~~
@@ -3303,6 +3158,9 @@ Inputs
 
  screen    --  Pointer to the public screen your window is open in or
                NULL if you don't have a pointer to a public screen.
+ namebuff  --  Pointer to a buffer with (at least) MAXPUBSCREENNAME+1
+               characters to put the name of the next public screen in.
+
 
 Result
 ~~~~~~
@@ -3342,8 +3200,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct RastPort * ObtainGIRPort(
-          struct GadgetInfo * gInfo );
+ struct RastPort * ObtainGIRPort();
 
 Function
 ~~~~~~~~
@@ -3394,10 +3251,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void OffGadget(
-          struct Gadget    * gadget,
-          struct Window    * window,
-          struct Requester * requester );
+ void OffGadget();
 
 Function
 ~~~~~~~~
@@ -3446,9 +3300,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void OffMenu(
-          struct Window    * window,
-          UWORD menunumber );
+ void OffMenu();
 
 Function
 ~~~~~~~~
@@ -3488,10 +3340,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void OnGadget(
-          struct Gadget    * gadget,
-          struct Window    * window,
-          struct Requester * requester );
+ void OnGadget();
 
 Function
 ~~~~~~~~
@@ -3533,9 +3382,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void OnMenu(
-          struct Window    * window,
-          UWORD menunumber );
+ void OnMenu();
 
 Function
 ~~~~~~~~
@@ -3575,8 +3422,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Screen * OpenScreen(
-          struct NewScreen * newScreen );
+ struct Screen * OpenScreen();
 
 
 OpenScreenTagList
@@ -3586,9 +3432,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Screen * OpenScreenTagList(
-          struct NewScreen * newScreen,
-          struct TagItem   * tagList );
+ struct Screen * OpenScreenTagList();
 
 
 OpenWindow
@@ -3598,8 +3442,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Window * OpenWindow(
-          struct NewWindow * newWindow );
+ struct Window * OpenWindow();
 
 Function
 ~~~~~~~~
@@ -3640,9 +3483,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Window * OpenWindowTagList(
-          struct NewWindow * newWindow,
-          struct TagItem   * tagList );
+ struct Window * OpenWindowTagList();
 
 
 OpenWorkBench
@@ -3694,9 +3535,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL PointInImage(
-          ULONG point,
-          struct Image * image );
+ BOOL PointInImage();
 
 Function
 ~~~~~~~~
@@ -3730,11 +3569,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void PrintIText(
-          struct RastPort  * rp,
-          struct IntuiText * iText,
-          LONG leftOffset,
-          LONG topOffset );
+ void PrintIText();
 
 Function
 ~~~~~~~~
@@ -3769,9 +3604,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- UWORD PubScreenStatus(
-          struct Screen * Scr,
-          UWORD StatusFlags );
+ UWORD PubScreenStatus();
 
 Function
 ~~~~~~~~
@@ -3817,10 +3650,57 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG QueryOverscan(
-          ULONG displayid,
-          struct Rectangle * rect,
-          WORD oscantype );
+ LONG QueryOverscan();
+
+
+RefreshGadgets
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ void RefreshGadgets();
+
+Function
+~~~~~~~~
+::
+
+ Refreshes all gadgets starting at the specified gadget.
+
+
+Inputs
+~~~~~~
+::
+
+ gadgets - The first gadget to be refreshed
+ window - The gadget must be in this window
+ requester - If any gadget has GTYP_REQGADGET set, this must
+     point to a valid Requester. Otherwise the value is
+     ignored.
+
+
+Result
+~~~~~~
+::
+
+ None.
+
+
+Example
+~~~~~~~
+::
+
+ // Refresh all gadgets of a window
+ RefreshGadgets (win->FirstGadget, win, NULL);
+
+
+See also
+~~~~~~~~
+::
+
+ RefreshGList()
+
 
 
 RefreshGList
@@ -3830,11 +3710,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void RefreshGList(
-          struct Gadget    * gadgets,
-          struct Window    * window,
-          struct Requester * requester,
-          LONG numGad );
+ void RefreshGList();
 
 Function
 ~~~~~~~~
@@ -3886,59 +3762,6 @@ Notes
 
 
 
-RefreshGadgets
-==============
-
-Synopsis
-~~~~~~~~
-::
-
- void RefreshGadgets(
-          struct Gadget    * gadgets,
-          struct Window    * window,
-          struct Requester * requester );
-
-Function
-~~~~~~~~
-::
-
- Refreshes all gadgets starting at the specified gadget.
-
-
-Inputs
-~~~~~~
-::
-
- gadgets - The first gadget to be refreshed
- window - The gadget must be in this window
- requester - If any gadget has GTYP_REQGADGET set, this must
-     point to a valid Requester. Otherwise the value is
-     ignored.
-
-
-Result
-~~~~~~
-::
-
- None.
-
-
-Example
-~~~~~~~
-::
-
- // Refresh all gadgets of a window
- RefreshGadgets (win->FirstGadget, win, NULL);
-
-
-See also
-~~~~~~~~
-::
-
- RefreshGList()
-
-
-
 RefreshWindowFrame
 ==================
 
@@ -3946,8 +3769,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void RefreshWindowFrame(
-          struct Window * window );
+ void RefreshWindowFrame();
 
 
 ReleaseGIRPort
@@ -3957,8 +3779,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ReleaseGIRPort(
-          struct RastPort * rp );
+ void ReleaseGIRPort();
 
 Function
 ~~~~~~~~
@@ -4021,8 +3842,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void RemoveClass(
-          struct IClass * classPtr );
+ void RemoveClass();
 
 Function
 ~~~~~~~~
@@ -4057,19 +3877,6 @@ See also
 
 
 
-RemoveGList
-===========
-
-Synopsis
-~~~~~~~~
-::
-
- UWORD RemoveGList(
-          struct Window * remPtr,
-          struct Gadget * gadget,
-          LONG numGad );
-
-
 RemoveGadget
 ============
 
@@ -4077,9 +3884,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- UWORD RemoveGadget(
-          struct Window * window,
-          struct Gadget * gadget );
+ UWORD RemoveGadget();
 
 Function
 ~~~~~~~~
@@ -4105,6 +3910,16 @@ Result
 
 
 
+RemoveGList
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ UWORD RemoveGList();
+
+
 ReportMouse
 ===========
 
@@ -4112,9 +3927,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ReportMouse(
-          LONG flag,
-          struct Window * window );
+ void ReportMouse();
 
 Function
 ~~~~~~~~
@@ -4155,9 +3968,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL Request(
-          struct Requester * requester,
-          struct Window * window );
+ BOOL Request();
 
 Function
 ~~~~~~~~
@@ -4196,9 +4007,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL ResetMenuStrip(
-          struct Window * window,
-          struct Menu * menu );
+ BOOL ResetMenuStrip();
 
 Function
 ~~~~~~~~
@@ -4290,10 +4099,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ScreenDepth(
-          struct Screen * screen,
-          ULONG flags,
-          APTR reserved );
+ void ScreenDepth();
 
 Function
 ~~~~~~~~
@@ -4349,13 +4155,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ScreenPosition(
-          struct Screen * screen,
-          ULONG flags,
-          LONG x1,
-          LONG y1,
-          LONG x2,
-          LONG y2 );
+ void ScreenPosition();
 
 Function
 ~~~~~~~~
@@ -4419,8 +4219,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ScreenToBack(
-          struct Screen * screen );
+ void ScreenToBack();
 
 Function
 ~~~~~~~~
@@ -4464,8 +4263,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ScreenToFront(
-          struct Screen * screen );
+ void ScreenToFront();
 
 Function
 ~~~~~~~~
@@ -4506,14 +4304,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ScrollWindowRaster(
-          struct Window * win,
-          WORD dx,
-          WORD dy,
-          WORD xmin,
-          WORD ymin,
-          WORD xmax,
-          WORD ymax );
+ void ScrollWindowRaster();
 
 Function
 ~~~~~~~~
@@ -4551,9 +4342,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void SendIntuiMessage(
-          struct Window * window,
-          struct IntuiMessage * imsg );
+ void SendIntuiMessage();
 
 Function
 ~~~~~~~~
@@ -4613,9 +4402,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- ULONG SetAttrsA(
-          APTR object,
-          struct TagItem * tagList );
+ ULONG SetAttrsA();
 
 Function
 ~~~~~~~~
@@ -4659,6 +4446,75 @@ See also
 
 
 
+SetDefaultPubScreen
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ void SetDefaultPubScreen();
+
+Function
+~~~~~~~~
+::
+
+
+ Specifies the default public screen for visitor windows to open up on.
+     The screen is used when a requested public screen is not available
+ and the FALLBACK option is enabled or when the visitor window asks for
+ the default public screen.
+
+
+Inputs
+~~~~~~
+::
+
+
+ name  --  The name of the public screen that should be used as default,
+           or NULL to specify the Workbench screen.
+
+
+See also
+~~~~~~~~
+::
+
+
+ OpenWindow(), OpenScreen()
+
+
+
+SetDefaultScreenFont
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+ void SetDefaultScreenFont();
+
+Function
+~~~~~~~~
+::
+
+     Set the default Font.
+
+
+Inputs
+~~~~~~
+::
+
+ textfont - The Font to be used.
+
+
+Notes
+~~~~~
+::
+
+     PRIVATE(!!!!) Do not use
+ 
+
+
 SetDMRequest
 ============
 
@@ -4666,9 +4522,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL SetDMRequest(
-          struct Window * window,
-          struct Requester * dmrequest );
+ BOOL SetDMRequest();
 
 Function
 ~~~~~~~~
@@ -4717,77 +4571,6 @@ See also
 
 
 
-SetDefaultPubScreen
-===================
-
-Synopsis
-~~~~~~~~
-::
-
- void SetDefaultPubScreen(
-          UBYTE * name );
-
-Function
-~~~~~~~~
-::
-
-
- Specifies the default public screen for visitor windows to open up on.
-     The screen is used when a requested public screen is not available
- and the FALLBACK option is enabled or when the visitor window asks for
- the default public screen.
-
-
-Inputs
-~~~~~~
-::
-
-
- name  --  The name of the public screen that should be used as default,
-           or NULL to specify the Workbench screen.
-
-
-See also
-~~~~~~~~
-::
-
-
- OpenWindow(), OpenScreen()
-
-
-
-SetDefaultScreenFont
-====================
-
-Synopsis
-~~~~~~~~
-::
-
- void SetDefaultScreenFont(
-          struct TextFont * textfont );
-
-Function
-~~~~~~~~
-::
-
-     Set the default Font.
-
-
-Inputs
-~~~~~~
-::
-
- textfont - The Font to be used.
-
-
-Notes
-~~~~~
-::
-
-     PRIVATE(!!!!) Do not use
- 
-
-
 SetEditHook
 ===========
 
@@ -4795,8 +4578,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Hook * SetEditHook(
-          struct Hook * hook );
+ struct Hook * SetEditHook();
 
 Function
 ~~~~~~~~
@@ -4828,11 +4610,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- IPTR SetGadgetAttrsA(
-          struct Gadget * gadget,
-          struct Window * window,
-          struct Requester * requester,
-          struct TagItem * tagList );
+ IPTR SetGadgetAttrsA();
 
 Function
 ~~~~~~~~
@@ -4885,10 +4663,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- ULONG SetIPrefs(
-          APTR data,
-          ULONG length,
-          ULONG type );
+ ULONG SetIPrefs();
 
 Result
 ~~~~~~
@@ -4905,9 +4680,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL SetMenuStrip(
-          struct Window * window,
-          struct Menu   * menu );
+ BOOL SetMenuStrip();
 
 Function
 ~~~~~~~~
@@ -4958,9 +4731,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG SetMouseQueue(
-          struct Window * window,
-          UWORD queuelength );
+ LONG SetMouseQueue();
 
 Function
 ~~~~~~~~
@@ -5009,13 +4780,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void SetPointer(
-          struct Window * window,
-          UWORD         * pointer,
-          LONG height,
-          LONG width,
-          LONG xOffset,
-          LONG yOffset );
+ void SetPointer();
 
 Function
 ~~~~~~~~
@@ -5051,10 +4816,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Preferences * SetPrefs(
-          struct Preferences * prefbuffer,
-          LONG size,
-          BOOL inform );
+ struct Preferences * SetPrefs();
 
 Function
 ~~~~~~~~
@@ -5096,8 +4858,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- UWORD SetPubScreenModes(
-          UWORD modes );
+ UWORD SetPubScreenModes();
 
 Function
 ~~~~~~~~
@@ -5143,9 +4904,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void SetWindowPointerA(
-          struct Window * window,
-          struct TagItem * taglist );
+ void SetWindowPointerA();
 
 
 SetWindowTitles
@@ -5155,10 +4914,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void SetWindowTitles(
-          struct Window * window,
-          CONST_STRPTR windowTitle,
-          CONST_STRPTR screenTitle );
+ void SetWindowTitles();
 
 Function
 ~~~~~~~~
@@ -5206,9 +4962,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ShowTitle(
-          struct Screen * screen,
-          BOOL ShowIt );
+ void ShowTitle();
 
 Function
 ~~~~~~~~
@@ -5243,8 +4997,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- VOID ShowWindow(
-          struct Window * window );
+ VOID ShowWindow();
 
 Function
 ~~~~~~~~
@@ -5271,10 +5024,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void SizeWindow(
-          struct Window * window,
-          LONG dx,
-          LONG dy );
+ void SizeWindow();
 
 Function
 ~~~~~~~~
@@ -5315,8 +5065,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- IPTR StartScreenNotifyTagList(
-          struct TagItem * tags );
+ IPTR StartScreenNotifyTagList();
 
 Function
 ~~~~~~~~
@@ -5353,10 +5102,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG SysReqHandler(
-          struct Window  * window,
-          ULONG   * IDCMPFlagsPtr,
-          BOOL WaitInput );
+ LONG SysReqHandler();
 
 Function
 ~~~~~~~~
@@ -5423,11 +5169,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL TimedDisplayAlert(
-          ULONG alertnumber,
-          UBYTE * string,
-          UWORD height,
-          ULONG time );
+ BOOL TimedDisplayAlert();
 
 
 UnlockIBase
@@ -5437,8 +5179,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void UnlockIBase(
-          ULONG ibLock );
+ void UnlockIBase();
 
 Function
 ~~~~~~~~
@@ -5470,6 +5211,32 @@ See also
 
 
 
+unlockPubClass
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ void unlockPubClass();
+
+Function
+~~~~~~~~
+::
+
+
+ Unlocks the public classes list.
+
+
+See also
+~~~~~~~~
+::
+
+
+ lockPubClass().
+
+
+
 UnlockPubScreen
 ===============
 
@@ -5477,9 +5244,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void UnlockPubScreen(
-          UBYTE         * name,
-          struct Screen * screen );
+ void UnlockPubScreen();
 
 Function
 ~~~~~~~~
@@ -5588,8 +5353,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct ViewPort * ViewPortAddress(
-          struct Window * Window );
+ struct ViewPort * ViewPortAddress();
 
 Function
 ~~~~~~~~
@@ -5708,12 +5472,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL WindowLimits(
-          struct Window * window,
-          WORD MinWidth,
-          WORD MinHeight,
-          UWORD MaxWidth,
-          UWORD MaxHeight );
+ BOOL WindowLimits();
 
 Function
 ~~~~~~~~
@@ -5756,8 +5515,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void WindowToBack(
-          struct Window * window );
+ void WindowToBack();
 
 Function
 ~~~~~~~~
@@ -5788,8 +5546,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void WindowToFront(
-          struct Window * window );
+ void WindowToFront();
 
 Function
 ~~~~~~~~
@@ -5820,8 +5577,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ZipWindow(
-          struct Window * window );
+ void ZipWindow();
 
 Function
 ~~~~~~~~
@@ -5859,58 +5615,6 @@ See also
 ::
 
  ChangeWindowBox(), MoveWindow(), SizeWindow()
-
-
-
-lockPubClass
-============
-
-Synopsis
-~~~~~~~~
-::
-
- void lockPubClass();
-
-Function
-~~~~~~~~
-::
-
-
- Locks the public classes list.
-
-
-See also
-~~~~~~~~
-::
-
-
- unlockPubClass().
-
-
-
-unlockPubClass
-==============
-
-Synopsis
-~~~~~~~~
-::
-
- void unlockPubClass();
-
-Function
-~~~~~~~~
-::
-
-
- Unlocks the public classes list.
-
-
-See also
-~~~~~~~~
-::
-
-
- lockPubClass().
 
 
 

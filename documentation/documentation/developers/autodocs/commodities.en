@@ -16,7 +16,7 @@ commodities
 `DivertCxMsg`_                          `EnqueueCxObj`_                         `FreeBrokerList`_                       `InsertCxObj`_                          
 `InvertKeyMap`_                         `MatchIX`_                              `ParseIX`_                              `RemoveCxObj`_                          
 `RouteCxMsg`_                           `SetCxObjPri`_                          `SetFilter`_                            `SetFilterIX`_                          
-`SetTranslate`_                         `events`_                               
+`SetTranslate`_                         
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -578,10 +578,6 @@ Result
 
  The ackumulated error of the object 'co'. See <libraries/commodities.h>
  for the possible errors.
-
- is says "error - the accumulated error, or 0 if 'co' is NULL". As the
- commodities.library I have (39.6 I believe) returns 0, I do the same
- below.
 
 
 See also
@@ -1437,15 +1433,5 @@ See also
 
  cx_lib/CxTranslate(), <devices/inputevent.h>
 
-
-
-events
-======
-
-Synopsis
-~~~~~~~~
-::
-
- struct InputEvent * events();
 
 
