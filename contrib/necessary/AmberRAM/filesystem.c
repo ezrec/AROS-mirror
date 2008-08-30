@@ -416,7 +416,7 @@ VOID DeleteObject(struct Handler *handler, struct Object *object)
 /****i* ram.handler/GetObject **********************************************
 *
 *   NAME
-*	GetObject --
+*	GetObject -- Find an object given a lock and a path relative to it.
 *
 *   SYNOPSIS
 *	object = GetObject(handler, lock, name,
@@ -447,15 +447,14 @@ VOID DeleteObject(struct Handler *handler, struct Object *object)
 *
 */
 
-struct Object *GetObject(struct Handler *handler,
-   struct Lock *lock, const TEXT *name, struct Object **parent)
+struct Object *GetObject(struct Handler *handler, struct Lock *lock,
+    const TEXT *name, struct Object **parent)
 {
    const TEXT *p;
    TEXT ch, buffer[MAX_NAME_SIZE + 1];
    PINT pos;
    struct Object *object, *old_object;
 
-   old_object = NULL;
    for(ch = *(p = name); ch != ':' && ch != '\0'; ch = *(++p));
    if(ch == ':')
       name = p + 1;
@@ -464,6 +463,7 @@ struct Object *GetObject(struct Handler *handler,
 
    lock = FIXLOCK(handler, lock);
    object = (APTR)((struct FileLock *)lock)->fl_Key;
+   old_object = object->parent;
 
    /* Traverse textual portion of path */
 

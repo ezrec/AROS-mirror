@@ -94,8 +94,8 @@ struct Object *CreateObject(struct Handler *handler, const TEXT *name,
 BOOL AttemptDeleteObject(struct Handler *handler, struct Object *object,
    BOOL notify);
 VOID DeleteObject(struct Handler *handler, struct Object *object);
-struct Object *GetObject(struct Handler *handler,
-   struct Lock *lock, const TEXT *name, struct Object **parent);
+struct Object *GetObject(struct Handler *handler, struct Lock *lock,
+    const TEXT *name, struct Object **parent);
 PINT ChangeFileSize(struct Handler *handler, struct Opening *opening,
    PINT offset, LONG mode);
 UPINT ReadData(struct Opening *opening, UBYTE *buffer, UPINT length);
