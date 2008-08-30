@@ -808,8 +808,6 @@ PINT CmdSetFileSize(struct Handler *handler, struct Opening *opening,
    file = opening->file;
    lock = file->lock;
 
-   if(((struct FileLock *)lock)->fl_Access == ACCESS_READ)
-      error = ERROR_OBJECT_IN_USE;
    if((file->protection & FIBF_WRITE) != 0)
       error = ERROR_WRITE_PROTECTED;
    if(handler->locked)
