@@ -11,7 +11,7 @@ EXEDIR := $(CONTRIBDIR)/Misc/aminet/Typeface
 
 USER_CFLAGS := -DINTUITION_NO_INLINE_STDARG
 
-#MM aminet-text-misc-typeface : setup-typeface-catalogs
+#MM aminet-text-misc-typeface : setup-typeface-catalogs contrib-bgui
 
 %build_prog mmake=aminet-text-misc-typeface \
     progname=Typeface targetdir=$(EXEDIR) \
