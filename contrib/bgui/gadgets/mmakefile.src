@@ -89,7 +89,7 @@ bgui-gadgets-popbutton : bgui-gadgets-popbutton-mkdir $(POPBUTTONLIBTARGETS) $(B
 bgui-gadgets-treeview : bgui-gadgets-treeview-mkdir
 bgui-gadgets-treeview : bgui-gadgets-treeview-mkdir $(TREEVIEWLIBTARGETS) $(BGUIGADGETSDIR)/$(TREEVIEWGADGET) $(BGUIEXAMPLESDIR)/$(TREEVIEWDEMO)
 
-$(BGUIGADGETSDIR)/%.gadget: $(OBJDIR)/%.gadget
+$(BGUIGADGETSDIR)/%.gadget : $(OBJDIR)/%.gadget
 	@$(ECHO) Installing $@...
 	@$(CP) $< $@
 
