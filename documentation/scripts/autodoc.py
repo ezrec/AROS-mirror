@@ -6,7 +6,6 @@
 
 # TODO:
 # - Cross references
-# - Parse static libraries
 
 
 import glob
@@ -36,13 +35,16 @@ titles_regx = re.compile(r"""
 # Regex for AROS library functions
 libfunc_regx = re.compile(r'AROS_.*\(\s*(.*?)\s*\,\s*(.*?)\s*\,')
 
+# Regex for C library functions
+cfunc_regx = re.compile(r"^\s*(.*?)(\w*)\s*\([\w,()]*$", re.MULTILINE)
+
 # don't generate autodocs from this files
 blacklist = ("buildeasyrequestargs.c", "buildeasyrequestargs_morphos.c",
 		"buildsysrequest.c", "buildsysrequest_morphos.c",
 		"refreshwindowframe.c", "refreshwindowframe_morphos.c",
 		"setiprefs.c", "setiprefs_morphos.c",
 		"sysreqhandler.c", "sysreqhandler_morphos.c",
-		"match_old.c")
+		"match_old.c","dosdoio.c","exec_util.c")
 
 
 class autodoc:
@@ -121,59 +123,74 @@ class libautodoc(autodoc):
         # search for function name
         m = libfunc_regx.search(content)
         if m:
+            # AROS lib function
             self.docname = m.group(2)
-            self.docfilename = self.docname.lower()
             self.rettype = m.group(1)
-        else:
-            return
-        
-        #search for parameter/type
-        if self.titles.has_key("SYNOPSIS"):
-            for par in libfunc_regx.findall(self.titles["SYNOPSIS"]):
-                self.parameters.append(par)
+            self.docfilename = self.docname.lower()
 
-        # create new Synopsis
-        syn = " " + self.rettype + " " + self.docname
-        if len(self.parameters) == 0:
-            syn += "();\n"
-        else:
-            syn += "(\n"
-            for line in self.parameters:
-                syn += "          " + line[0] + " " + line[1]
-                if line is self.parameters[-1]:
-                    syn += " );\n"
-                else:
-                    syn += ",\n"
-        
-        # check for variadic prototype
-        varproto = ""
-        if len(self.parameters) > 0:
-            if self.docname[-1] == "A":
-                # function name ends with "A"
-                varproto = self.docname[:-1]
-            elif self.docname[-7:] == "TagList":
-                # function name ends with "TagList"
-                varproto = self.docname[:-7] + "Tags"
-            elif self.docname[-4:] == "Args" and (self.docname not in ("ReadArgs","FreeArgs")):
-                # function name ends with "Args"
-                varproto = self.docname[:-4]
+            #search for parameter/type
+            if self.titles.has_key("SYNOPSIS"):
+                for par in libfunc_regx.findall(self.titles["SYNOPSIS"]):
+                    self.parameters.append(par)
+
+            # create new Synopsis
+            syn = " " + self.rettype + " " + self.docname
+            if len(self.parameters) == 0:
+                syn += "();\n"
             else:
-                # last argument's type is "const struct TagItem *"
-                lastarg = self.parameters[-1] # last parameter
-                lastarg = lastarg[0] # type
-                if lastarg[-16:] == "struct TagItem *":
-                    varproto = self.docname + "Tags"
+                syn += "(\n"
+                for line in self.parameters:
+                    syn += "          " + line[0] + " " + line[1]
+                    if line is self.parameters[-1]:
+                        syn += " );\n"
+                    else:
+                        syn += ",\n"
             
-        # append variadic prototype
-        if len(varproto) > 0:
-            syn += " \n"
-            syn += " " + self.rettype + " " + varproto + "(\n"
-            if len(self.parameters) > 1:
-                for line in self.parameters[:-1]:
-                    syn += "          " + line[0] + " " + line[1] + ",\n"
-            syn += "          TAG tag, ... );\n"
+            # check for variadic prototype
+            varproto = ""
+            if len(self.parameters) > 0:
+                if self.docname[-1] == "A":
+                    # function name ends with "A"
+                    varproto = self.docname[:-1]
+                elif self.docname[-7:] == "TagList":
+                    # function name ends with "TagList"
+                    varproto = self.docname[:-7] + "Tags"
+                elif self.docname[-4:] == "Args" and (self.docname not in ("ReadArgs","FreeArgs")):
+                    # function name ends with "Args"
+                    varproto = self.docname[:-4]
+                else:
+                    # last argument's type is "const struct TagItem *"
+                    lastarg = self.parameters[-1] # last parameter
+                    lastarg = lastarg[0] # type
+                    if lastarg[-16:] == "struct TagItem *":
+                        varproto = self.docname + "Tags"
+                
+            # append variadic prototype
+            if len(varproto) > 0:
+                syn += " \n"
+                syn += " " + self.rettype + " " + varproto + "(\n"
+                if len(self.parameters) > 1:
+                    for line in self.parameters[:-1]:
+                        syn += "          " + line[0] + " " + line[1] + ",\n"
+                syn += "          TAG tag, ... );\n"
 
-        self.titles["SYNOPSIS"] = syn
+            self.titles["SYNOPSIS"] = syn
+        
+        else:
+            # C function
+            m = cfunc_regx.search(content)
+            if m:
+                self.docname = m.group(2)
+                self.rettype = m.group(1)
+                self.docfilename = self.docname.lower()
+                # We don't parse the Synopsis but insert the function name add the beginning
+                syn = self.titles["SYNOPSIS"]
+                syn = "  " + self.rettype + self.docname + "(\n" + syn
+                self.titles["SYNOPSIS"] = syn
+            else:
+                print content
+                raise ValueError("No field 'NAME' in autodoc")
+
 
     def write(self, filehandle, titles):
         filehandle.write(self.docname + "\n")
@@ -324,6 +341,17 @@ def create_lib_docs_dir(srcdir, targetdir):
             libdocs = libdoclist()
             libdocs.read(docpath)
             libdocs.write(targetdir, lib_titles)
+
+    return
+    # add some docs for linker libs in AROS/compiler
+    subdirs = ( os.path.join(topdir, "compiler", "alib"),
+                os.path.join(topdir, "compiler", "arossupport"),
+                os.path.join(topdir, "compiler", "clib") )
+    
+    for docpath in subdirs:
+        libdocs = libdoclist()
+        libdocs.read(docpath)
+        libdocs.write(targetdir, lib_titles)
 
 def create_shell_docs():
     srcdirs = ( os.path.join(topdir, "workbench", "c"),
