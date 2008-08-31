@@ -1,0 +1,10021 @@
+====
+clib
+====
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_
+
+----------
+
+======================================= ======================================= ======================================= ======================================= 
+`__get_default_file`_                   `__path_a2u`_                           `__path_u2a`_                           `__spawnv`_                             
+`__vcformat`_                           `__vcscan`_                             `_exit`_                                `abort`_                                
+`abs`_                                  `access`_                               `asctime`_                              `asctime_r`_                            
+`assert`_                               `atof`_                                 `atoi`_                                 `atol`_                                 
+`bcmp`_                                 `bsearch`_                              `bzero`_                                `calloc`_                               
+`chdir`_                                `chmod`_                                `clearerr`_                             `clock`_                                
+`close`_                                `closedir`_                             `creat`_                                `ctime`_                                
+`ctime_r`_                              `difftime`_                             `dirfd`_                                `div`_                                  
+`dup`_                                  `dup2`_                                 `execl`_                                `execve`_                               
+`execvp`_                               `exit`_                                 `fchdir`_                               `fchmod`_                               
+`fclose`_                               `fdopen`_                               `feof`_                                 `ferror`_                               
+`fflush`_                               `fgetc`_                                `fgetpos`_                              `fgets`_                                
+`fileno`_                               `fopen`_                                `fprintf`_                              `fputc`_                                
+`fputs`_                                `fread`_                                `free`_                                 `freopen`_                              
+`fscanf`_                               `fseek`_                                `fsetpos`_                              `ftell`_                                
+`ftruncate`_                            `fwrite`_                               `gcvt`_                                 `getc`_                                 
+`getchar`_                              `getcwd`_                               `getegid`_                              `getenv`_                               
+`geteuid`_                              `getfsstat`_                            `getgid`_                               `getlogin`_                             
+`getpid`_                               `gets`_                                 `gettimeofday`_                         `getuid`_                               
+`gmtime`_                               `gmtime_r`_                             `isalnum`_                              `isalpha`_                              
+`isascii`_                              `isblank`_                              `iscntrl`_                              `isdigit`_                              
+`isgraph`_                              `islower`_                              `isprint`_                              `ispunct`_                              
+`isspace`_                              `isupper`_                              `isxdigit`_                             `kill`_                                 
+`labs`_                                 `ldiv`_                                 `lldiv`_                                `localtime`_                            
+`localtime_r`_                          `lseek`_                                `malloc`_                               `memchr`_                               
+`memcmp`_                               `memset`_                               `mkdir`_                                `mkstemp`_                              
+`mktemp`_                               `mktime`_                               `open`_                                 `opendir`_                              
+`pclose`_                               `perror`_                               `popen`_                                `posix_memalign`_                       
+`printf`_                               `putc`_                                 `putenv`_                               `puts`_                                 
+`qsort`_                                `rand`_                                 `read`_                                 `readdir`_                              
+`realloc`_                              `realloc_nocopy`_                       `remove`_                               `rename`_                               
+`rewind`_                               `rmdir`_                                `scanf`_                                `setbuf`_                               
+`setenv`_                               `setgid`_                               `setlinebuf`_                           `setuid`_                               
+`setvbuf`_                              `sigaction`_                            `sigaddset`_                            `sigdelset`_                            
+`sigemptyset`_                          `sigfillset`_                           `sigismember`_                          `sigpending`_                           
+`sigprocmask`_                          `sigsuspend`_                           `sleep`_                                `snprintf`_                             
+`spawnv`_                               `spawnvp`_                              `sprintf`_                              `srand`_                                
+`sscanf`_                               `statfs`_                               `stccpy`_                               `stcd_l`_                               
+`stch_l`_                               `stcl_d`_                               `stcl_h`_                               `stcl_o`_                               
+`stco_l`_                               `stcu_d`_                               `stpblk`_                               `stpcpy`_                               
+`stpsym`_                               `strcasecmp`_                           `strcasestr`_                           `strcat`_                               
+`strchr`_                               `strcmp`_                               `strcoll`_                              `strcpy`_                               
+`strcspn`_                              `strdup`_                               `strerror`_                             `strerror`_                             
+`strlen`_                               `strlwr`_                               `strncasecmp`_                          `strncat`_                              
+`strncmp`_                              `strncpy`_                              `strpbrk`_                              `strrchr`_                              
+`strrev`_                               `strsep`_                               `strspn`_                               `strstr`_                               
+`strtod`_                               `strtok`_                               `strtol`_                               `strtoll`_                              
+`strtoul`_                              `strtoull`_                             `strupr`_                               `strxfrm`_                              
+`system`_                               `time`_                                 `tmpfile`_                              `truncate`_                             
+`ttyname`_                              `uname`_                                `ungetc`_                               `unlink`_                               
+`unsetenv`_                             `updatestdio`_                          `usleep`_                               `vfprintf`_                             
+`vfscanf`_                              `vprintf`_                              `vscanf`_                               `vsnprintf`_                            
+`vsprintf`_                             `vsscanf`_                              `write`_                                
+======================================= ======================================= ======================================= ======================================= 
+
+-----------
+
+__get_default_file
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+  int __get_default_file(
+     int file_descriptor,
+     long * file_handle)
+
+
+Function
+~~~~~~~~
+::
+
+     Gets dos.library file handle associated with a given file descriptor.
+
+
+Inputs
+~~~~~~
+::
+
+     file_descriptor - the File Descriptor you wish to obtain the associated 
+             file handle for.
+     file_handle - Pointer to store the associated file handle.
+
+
+Result
+~~~~~~
+::
+
+     !=0 on error, 0 on success.
+
+
+Notes
+~~~~~
+::
+
+ This function is not a part of the ISO C standard, it comes from clib2
+ project and was implemented to make porting of abc-shell easier.
+
+
+
+__path_a2u
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  const char *__path_a2u(
+     const char *apath)
+
+
+Function
+~~~~~~~~
+::
+
+     Translates an AmigaDOS-style path into an unix one.
+
+
+Inputs
+~~~~~~
+::
+
+     apath - AmigaDOS-style path to translate into an unix-style equivalent.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to a string containing the unix-style path, or NULL in
+     case of error.
+
+     The pointer is valid only until next call to this function, so if
+     you need to call this function recursively, you must save the string
+     pointed to by the pointer before calling this function again.
+
+
+Notes
+~~~~~
+::
+
+     This function is for private usage by system code. Do not use it
+     elsewhere.
+
+
+
+__path_u2a
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  const char *__path_u2a(
+     const char *upath)
+
+
+Function
+~~~~~~~~
+::
+
+     Translates an unix-style path into an AmigaDOS one.
+
+
+Inputs
+~~~~~~
+::
+
+     upath - Unix-style path to translate into an AmigaDOS-style equivalent.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to a string containing the AmigaDOS-style path, or NULL in
+     case of error.
+
+     The pointer is valid only until next call to this function, so if
+     you need to call this function recursively, you must save the string
+     pointed to by the pointer before calling this function again.
+
+
+Notes
+~~~~~
+::
+
+     This function is for private usage by system code. Do not use it
+     elsewhere.
+
+
+
+__spawnv
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  int __spawnv(
+      int         mode,
+      BPTR        seg,
+      char *const argv[])
+
+
+Function
+~~~~~~~~
+::
+
+     Spawn a child process, given a vector of arguments and an already LoadSeg()'d executable.
+
+
+Inputs
+~~~~~~
+::
+
+     mode - the way the child process has to be loaded, and how the parent has to behave
+            after the child process is initiated. Specify one of the following values:
+
+            P_WAIT    - the child program is loaded into memory, then it's executed while
+                        the parent process waits for it to terminate, at which point the
+                        patent process resumes execution.
+
+            P_NOWAIT  - the parent program is executed concurrently with the new child process.
+
+            P_OVERLAY - teplace the parent program with the child program in memory and then
+                        execute the child. The parent program will never be resumed. This
+                        mode is equivalent to calling one of the exec*() functions.
+
+     seg  - the LoadSeg()'s executable. The segment is UnloadSeg()'d by this function.
+
+     argv - a pointer to a NULL terminated array of strings representing arguments to pass
+            to the child process. The first entry in the array is conventionally the name of
+            the program to spawn, but in any case it must _never_ be NULL, and the argv
+            pointer itself must never be NULL either.
+
+
+Result
+~~~~~~
+::
+
+
+     If P_WAIT is specified, then the return code of the child program is returned.
+     If instead P_NOWAIT is used, then the pid of the newly created process is returned.
+     Finally, if P_OVERLAY is used, the function doesn't return unless an error has occurred,
+     in which case -1 is returned also for the other modes and the global errno variable will
+     hold the proper error code.
+
+
+Notes
+~~~~~
+::
+
+
+     The way the child process behaves regarding parent's file descriptors, signal handlers
+     and so on is the same way it would behave with one of the exec*(3) functions.
+     This, for one, means that all filedescriptors are inherited except the ones which have
+     the close-on-exec flag set.
+
+
+See also
+~~~~~~~~
+::
+
+     execl(), execle(), execlp(), execlpe(), execv(), execve(), execvp(), execvpe(), getenv(),
+     putenv(), setenv(), spawn(), spawnl(), spawnle(), spawnlp(), spawnlpe(), spawnp(),
+     spawnve(), spawnvp(), spawnvpe(), wait(), waitpid()
+
+
+
+__vcformat
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  int __vcformat(
+     void       * data,
+     int       (* outc)(int, void *),
+     const char * format,
+     va_list      args)
+
+
+Function
+~~~~~~~~
+::
+
+     Format a list of arguments and call a function for each char
+     to print.
+
+
+Inputs
+~~~~~~
+::
+
+     data - This is passed to the usercallback outc
+     outc - Call this function for every character that should be
+             emitted. The function should return EOF on error and
+             > 0 otherwise.
+     format - A printf() format string.
+     args - A list of arguments for the format string.
+
+
+Result
+~~~~~~
+::
+
+     The number of characters written.
+
+
+
+__vcscan
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  int __vcscan(
+     void       * data,
+     int       (* getc)(void *),
+     int       (* ungetc)(int,void *),
+     const char * format,
+     va_list      args)
+
+
+Function
+~~~~~~~~
+::
+
+     Scan an input stream as specified in format. The result of
+     the scan will be placed in args.
+
+
+Inputs
+~~~~~~
+::
+
+     data - This is passed to the usercallback getc and ungetc
+     getc - This function gets called when the routine wants to
+             read the next character. It whould return EOF when
+             no more characters are available.
+     ungetc - This function gets called when the routine wants to
+             put a read character back into the stream. The next
+             call to getc should return this character. It is possible
+             that this function is called more than once before the
+             next getc.
+     format - A scanf() format string.
+     args - A list of arguments in which the result of the scan should
+             be placed.
+
+
+Result
+~~~~~~
+::
+
+     The number of arguments converted.
+
+
+
+_exit
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  void _exit(
+     int code)
+
+
+Function
+~~~~~~~~
+::
+
+     Terminates the running program immediately. The code is returned to 
+     the program which has called the running program. In contrast to
+     exit(), this function does not call user exit-handlers added with 
+     atexit() or on_exit(). It does, however, close open filehandles.
+
+
+Inputs
+~~~~~~
+::
+
+     code - Exit code. 0 for success, other values for failure.
+
+
+Result
+~~~~~~
+::
+
+     None. This function does not return.
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library or in a threaded
+     application.
+
+EXAMPLE
+
+
+Bugs
+~~~~
+::
+
+     Currently, this function *does* trigger user exit-handlers to be 
+     called.
+
+
+See also
+~~~~~~~~
+::
+
+     exit()
+
+
+
+abort
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  void abort(
+     void)
+
+
+Function
+~~~~~~~~
+::
+
+     Causes abnormal program termination. If there is a signal handler
+     for SIGABORT, then the handler will be called. If the handler
+     returns, then the program is continued.
+
+
+Inputs
+~~~~~~
+::
+
+     None.
+
+
+Result
+~~~~~~
+::
+
+     None. This function does not return.
+
+
+Example
+~~~~~~~
+::
+
+     if (fatal_error)
+         abort ();
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library or
+     in a threaded application.
+
+
+Bugs
+~~~~
+::
+
+     Signal handling is not implemented yet.
+
+
+See also
+~~~~~~~~
+::
+
+     signal(), exit()
+
+
+
+abs
+===
+
+Synopsis
+~~~~~~~~
+::
+
+  int abs(
+     int j)
+
+
+Function
+~~~~~~~~
+::
+
+     Compute the absolute value of j.
+
+
+Inputs
+~~~~~~
+::
+
+     j - A signed integer
+
+
+Result
+~~~~~~
+::
+
+     The absolute value of j.
+
+
+Example
+~~~~~~~
+::
+
+     // returns 1
+     abs (1);
+
+     // returns 1
+     abs (-1);
+
+
+See also
+~~~~~~~~
+::
+
+     labs(), fabs()
+
+
+
+access
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int access(
+     const char *path,
+     int         mode)
+
+
+Function
+~~~~~~~~
+::
+
+     Check access permissions of a file or pathname
+
+
+Inputs
+~~~~~~
+::
+
+     path - the path of the file being checked
+     mode - the bitwise inclusive OR of the access permissions
+            to be checked:
+
+            W_OK - for write permission
+            R_OK - for readpermissions
+            X_OK - for execute permission
+            F_OK - Just to see whether the file exists
+
+
+Result
+~~~~~~
+::
+
+     If path cannot be found or if any of the desired access
+     modes would not be granted, then a -1 value is returned;
+     otherwise a 0 value is returned.
+
+
+See also
+~~~~~~~~
+::
+
+     open(), ftruncate()
+
+
+
+asctime
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  char * asctime(
+     const struct tm * tm)
+
+
+Function
+~~~~~~~~
+::
+
+     The asctime() function converts the broken-down time value tm
+     into a string.
+
+     See asctime_r() for details.
+
+
+Inputs
+~~~~~~
+::
+
+     tm - The broken down time
+
+
+Result
+~~~~~~
+::
+
+     A statically allocated buffer with the converted time. Note that
+     the contents of the buffer might get lost with the call of any of the
+     date and time functions.
+
+
+Example
+~~~~~~~
+::
+
+     time_t      tt;
+     struct tm * tm;
+     char      * str;
+
+     // Get time
+     time (&tt);
+
+     // Break time up
+     tm = localtime (&tt);
+
+     // Convert to string
+     str = asctime (tm);
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library or
+     in a threaded application. Use asctime_r() instead.
+
+
+See also
+~~~~~~~~
+::
+
+     time(), ctime(), gmtime(), localtime()
+
+
+
+asctime_r
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  char * asctime_r(
+     const struct tm * tm,
+     char * buf)
+
+
+Function
+~~~~~~~~
+::
+
+     The asctime_r() function converts the broken-down time value tm
+     into a string with this format:
+
+         "Wed Jun 30 21:49:08 1993\n"
+
+
+Inputs
+~~~~~~
+::
+
+     tm - The broken down time
+     buf - Buffer of at least 26 characters to store the string in
+
+
+Result
+~~~~~~
+::
+
+     The pointer passed in buf, containing the converted time. Note that
+     there is a newline at the end of the buffer.
+
+
+Example
+~~~~~~~
+::
+
+     time_t    tt;
+     struct tm tm;
+     char      str[26];
+
+     // Get time
+     time (&tt);
+
+     // Break time up
+     localtime (&tt, &tm);
+
+     // Convert to string
+     asctime (&tm, str);
+
+
+See also
+~~~~~~~~
+::
+
+     time(), ctime_r(), gmtime_r(), localtime_r()
+
+
+
+assert
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  void assert(
+     expr)
+
+
+Function
+~~~~~~~~
+::
+
+     Evaluates the expression expr and if it's FALSE or NULL, then
+     printf a message and stops the program. The message will
+     contain the expression, the name of the file with the assert
+     in it and the line in the file.
+
+
+Inputs
+~~~~~~
+::
+
+     expr - The expression to evaluate. The type of the expression does
+             not matter, only if its zero/NULL or not.
+
+
+Result
+~~~~~~
+::
+
+     The function doesn't return.
+
+
+Example
+~~~~~~~
+::
+
+     // Make sure that x equals 1
+     assert (x==1);
+
+
+
+atof
+====
+
+Synopsis
+~~~~~~~~
+::
+
+  double atof(
+     const char * str)
+
+
+Function
+~~~~~~~~
+::
+
+     Convert a string of digits into a double.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The string which should be converted. Leading
+             whitespace are ignored. The number may be prefixed
+             by a '+' or '-'.
+
+
+Result
+~~~~~~
+::
+
+     The value of string str.
+
+
+See also
+~~~~~~~~
+::
+
+     atoi(), atol(), strtod(), strtol(), strtoul()
+
+
+
+atoi
+====
+
+Synopsis
+~~~~~~~~
+::
+
+  int atoi(
+     const char * str)
+
+
+Function
+~~~~~~~~
+::
+
+     Convert a string of digits into an integer.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The string which should be converted. Leading
+             whitespace are ignored. The number may be prefixed
+             by a '+' or '-'.
+
+
+Result
+~~~~~~
+::
+
+     The value of string str.
+
+
+Example
+~~~~~~~
+::
+
+     // returns 1
+     atoi ("  \t +1");
+
+     // returns 1
+     atoi ("1");
+
+     // returns -1
+     atoi ("  \n -1");
+
+
+See also
+~~~~~~~~
+::
+
+     atof(), atol(), strtod(), strtol(), strtoul()
+
+
+
+atol
+====
+
+Synopsis
+~~~~~~~~
+::
+
+  long atol(
+     const char * str)
+
+
+Function
+~~~~~~~~
+::
+
+     Convert a string of digits into an long integer.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The string which should be converted. Leading
+             whitespace are ignored. The number may be prefixed
+             by a '+' or '-'.
+
+
+Result
+~~~~~~
+::
+
+     The value of string str.
+
+
+Example
+~~~~~~~
+::
+
+     // returns 1
+     atol ("  \t +1");
+
+     // returns 1
+     atol ("1");
+
+     // returns -1
+     atol ("  \n -1");
+
+
+See also
+~~~~~~~~
+::
+
+     atof(), atoi(), strtod(), strtol(), strtoul()
+
+
+
+bcmp
+====
+
+Synopsis
+~~~~~~~~
+::
+
+  int bcmp(
+     const void * s1,
+     const void * s2,
+     size_t       n)
+
+
+Function
+~~~~~~~~
+::
+
+     Compare the first n bytes of s1 and s2.
+
+
+Inputs
+~~~~~~
+::
+
+     s1 - The first byte array to be compared
+     s2 - The second byte array to be compared
+     n  - How many bytes to compare
+
+
+
+bsearch
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  void * bsearch(
+     const void * key,
+     const void * base,
+     size_t       count,
+     size_t       size,
+     int       (* comparefunction)(const void *, const void *))
+
+
+Function
+~~~~~~~~
+::
+
+     Search in a sorted array for an entry key.
+
+
+Inputs
+~~~~~~
+::
+
+     key - Look for this key.
+     base - This is the address of the first element in the array
+             to be searched. Note that the array *must* be sorted.
+     count - The number of elements in the array
+     size - The size of one element
+     comparefunction - The function which is called when two elements
+             must be compared. The function gets the addresses of two
+             elements of the array and must return 0 is both are equal,
+             < 0 if the first element is less than the second and > 0
+             otherwise.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the element which equals key in the array or NULL if
+     no such element could be found.
+
+
+
+bzero
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  void bzero(
+     void * ptr,
+     size_t    len)
+
+
+Function
+~~~~~~~~
+::
+
+     Write len zero bytes to ptr. If len is zero, does nothing.
+
+
+Inputs
+~~~~~~
+::
+
+     ptr - The first byte of the area in memory to be cleared.
+     len - How many bytes to clear.
+
+
+
+calloc
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  void * calloc(
+     size_t count,
+     size_t size)
+
+
+Function
+~~~~~~~~
+::
+
+     Allocate size bytes of memory, clears the memory (sets all bytes to
+     0) and returns the address of the first byte.
+
+
+Inputs
+~~~~~~
+::
+
+     count - How many time size
+     size - How much memory to allocate.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the allocated memory or NULL. If you don't need the
+     memory anymore, you can pass this pointer to free(). If you don't,
+     the memory will be freed for you when the application exits.
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library or
+     in a threaded application.
+
+
+See also
+~~~~~~~~
+::
+
+     free(), malloc()
+
+
+
+chdir
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  int chdir(
+     const char *path )
+
+
+Function
+~~~~~~~~
+::
+
+     Change the current working directory to the one specified by path.
+
+
+Inputs
+~~~~~~
+::
+
+     path - Path of the directory to change to.
+     
+
+Result
+~~~~~~
+::
+
+     If the current directory was changed successfully, zero is returned.    
+     Otherwise, -1 is returned and errno set apropriately.
+     
+
+Notes
+~~~~~
+::
+
+     At program exit, the current working directory will be changed back
+     to the one that was current when the program first started. If you
+     do not desire this behaviour, use dos.library/CurrentDir() instead.
+     The path given to chdir can be translated so that getcwd gives back
+     a string that is not the same but points to th same directory. For
+     example, assigns are replaced by the path where the assign points to
+     and device names (like DH0:) are replaced with the volume name
+     (e.g. Workbench:).
+
+
+
+chmod
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  int chmod(
+     const char *path, 
+     mode_t mode)
+
+
+Function
+~~~~~~~~
+::
+
+     Change permission bits of a specified file.
+
+
+Inputs
+~~~~~~
+::
+
+     path - path to the file
+     mode - permission bits
+ 
+
+Result
+~~~~~~
+::
+
+     Permission bits of the file given by path are changed accordingly
+     to given mode.
+ 
+
+
+clearerr
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  void clearerr(
+     FILE * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Clear EOF and error flag in a stream. You must call this for
+     example after you have read the file until EOF, then appended
+     something to it and want to continue reading.
+
+
+Inputs
+~~~~~~
+::
+
+     stream - The stream to be reset.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+See also
+~~~~~~~~
+::
+
+     ferror(), clearerr()
+
+
+
+clock
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  clock_t clock(
+     void)
+
+
+Function
+~~~~~~~~
+::
+
+    clock() returns an approximation of the time passed since
+    the program was started
+
+
+Result
+~~~~~~
+::
+
+     The time passed in CLOCKS_PER_SEC units. To get the
+     number of seconds divide by CLOCKS_PER_SEC.
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library or
+     in a threaded application.
+
+
+See also
+~~~~~~~~
+::
+
+     time()
+
+
+
+close
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  int close(
+     int fd)
+
+
+Function
+~~~~~~~~
+::
+
+     Closes an open file. If this is the last file descriptor
+     associated with this file, then all allocated resources
+     are freed, too.
+
+
+Inputs
+~~~~~~
+::
+
+     fd - The result of a successful open()
+
+
+Result
+~~~~~~
+::
+
+     -1 for error or zero on success.
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library or
+     in a threaded application.
+
+
+See also
+~~~~~~~~
+::
+
+     open(), read(), write(), fopen()
+
+
+
+closedir
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  int closedir(
+     DIR *dir)
+
+
+Function
+~~~~~~~~
+::
+
+      Closes a directory
+
+
+Inputs
+~~~~~~
+::
+
+     dir - the directory stream pointing to the directory being closed
+
+
+Result
+~~~~~~
+::
+
+     The  closedir()  function  returns  0  on success or -1 on
+     failure.
+
+
+See also
+~~~~~~~~
+::
+
+     close(), opendir(),  readdir(), rewinddir(), seekdir(),
+     telldir(), scandir()
+
+
+
+creat
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  int creat(
+     const char * pathname,
+     int          mode)
+
+
+Function
+~~~~~~~~
+::
+
+     Creates a file with the specified mode and name.
+
+
+Inputs
+~~~~~~
+::
+
+     pathname - Path and filename of the file you want to open.
+     mode - The access flags.
+
+
+Result
+~~~~~~
+::
+
+     -1 for error or a file descriptor for use with write().
+
+
+Notes
+~~~~~
+::
+
+     If the filesystem doesn't allow to specify different access modes
+     for users, groups and others, then the user modes are used.
+
+     This is the same as open (pathname, O_CREAT|O_WRONLY|O_TRUNC, mode);
+
+     This function must not be used in a shared library or
+     in a threaded application.
+
+
+See also
+~~~~~~~~
+::
+
+     open(), close(), write(), fopen()
+
+
+
+ctime
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  char * ctime(
+     const time_t * tt)
+
+
+Function
+~~~~~~~~
+::
+
+     The ctime() function converts the broken-down time value tt
+     into a string.
+
+     See ctime_r() for details.
+
+
+Inputs
+~~~~~~
+::
+
+     tt - Convert this time.
+
+
+Result
+~~~~~~
+::
+
+     A statically allocated buffer with the converted time. Note that
+     the contents of the buffer might get lost with the call of any of the
+     date and time functions.
+
+
+Example
+~~~~~~~
+::
+
+     time_t tt;
+     char * str;
+
+     // Get time
+     time (&tt);
+
+     // Convert to string
+     str = ctime (&tt);
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library or
+     in a threaded application. Use ctime_r() instead.
+
+
+See also
+~~~~~~~~
+::
+
+     time(), asctime(), gmtime(), localtime()
+
+
+
+ctime_r
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  char * ctime_r(
+     const time_t * tt,
+     char * buf)
+
+
+Function
+~~~~~~~~
+::
+
+     The ctime_r() function converts the time value tt into a string with
+     this format:
+
+         "Wed Jun 30 21:49:08 1993\n"
+
+
+Inputs
+~~~~~~
+::
+
+     tt - Convert this time.
+     buf - Buffer of at least 26 characters to store the string in
+
+
+Result
+~~~~~~
+::
+
+     The pointer passed in buf, containing the converted time. Note that
+     there is a newline at the end of the buffer.
+
+
+Example
+~~~~~~~
+::
+
+     time_t tt;
+     char str[26];
+
+     // Get time
+     time (&tt);
+
+     // Convert to string
+     ctime (&tt, str);
+
+
+See also
+~~~~~~~~
+::
+
+     time(), asctime_r(), gmtime_r(), localtime_r()
+
+
+
+difftime
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  double difftime(
+     time_t time2,
+     time_t time1)
+
+
+Function
+~~~~~~~~
+::
+
+    difftime() returns the number of seconds elapsed between
+    time time2 and time time1. 
+
+
+Inputs
+~~~~~~
+::
+
+     time2 - time value from which time1 is subtracted
+     time1 - time value that is subtracted from time2
+
+
+Result
+~~~~~~
+::
+
+     The number of seconds elapsed in double precision.
+
+
+Example
+~~~~~~~
+::
+
+     time_t tt1, tt2;
+     double secs;
+     
+     time (&tt1);
+     ...
+     time (&tt2);
+     
+     secs = difftime(tt2, tt1);
+     
+
+See also
+~~~~~~~~
+::
+
+     time(), ctime(), asctime(), localtime()
+
+
+
+dirfd
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  int dirfd(
+     DIR *dir)
+
+
+Function
+~~~~~~~~
+::
+
+     get directory stream file descriptor
+
+
+Inputs
+~~~~~~
+::
+
+     dir - directory stream dir.
+
+
+Result
+~~~~~~
+::
+
+     on error -1 is returned.
+
+
+Notes
+~~~~~
+::
+
+    This descriptor is the one used internally by the directory stream.  As
+    a  result,  it  is  only useful for functions which do not depend on or
+    alter the file position, such as fstat(2) and fchdir(2).   It  will  be
+    automatically closed when closedir(3) is called.
+
+
+See also
+~~~~~~~~
+::
+
+     open(), readdir(), closedir(), rewinddir(), seekdir(),
+     telldir(), scandir()
+
+
+
+div
+===
+
+Synopsis
+~~~~~~~~
+::
+
+  div_t div(
+     int numer,
+     int denom)
+
+
+Function
+~~~~~~~~
+::
+
+     Compute quotient en remainder of two int variables
+
+
+Inputs
+~~~~~~
+::
+
+     numer = the numerator
+     denom = the denominator
+
+
+Result
+~~~~~~
+::
+
+     a struct with two ints quot and rem with
+     quot = numer / denom and rem = numer % denom.
+
+     typedef struct div_t {
+         int quot;
+         int rem;
+     } div_t;
+
+NOTES
+
+
+See also
+~~~~~~~~
+::
+
+     ldiv()
+
+
+
+dup
+===
+
+Synopsis
+~~~~~~~~
+::
+
+  int dup(
+     int oldfd
+     )
+
+
+Function
+~~~~~~~~
+::
+
+     Duplicates a file descriptor.
+
+     The object referenced by the descriptor does not distinguish between oldd
+     and newd in any way.  Thus if newd and oldd are duplicate references to
+     an open file, read(),  write() and lseek() calls all move a single
+     pointer into the file, and append mode, non-blocking I/O and asynchronous
+     I/O options are shared between the references.  If a separate pointer
+     into the file is desired, a different object reference to the file must be
+     obtained by issuing an additional open(2) call.  The close-on-exec flag
+     on the new file descriptor is unset.
+
+
+Inputs
+~~~~~~
+::
+
+     oldfd - The file descriptor to be duplicated
+
+
+Result
+~~~~~~
+::
+
+     -1 for error or the new descriptor.
+
+     The new descriptor returned by the call is the lowest numbered
+     descriptor currently not in use by the process.
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library or
+     in a threaded application.
+
+
+See also
+~~~~~~~~
+::
+
+      accept(),  open(),  close(),  fcntl(),  pipe(),  socket()
+
+
+
+dup2
+====
+
+Synopsis
+~~~~~~~~
+::
+
+  int dup2(
+     int oldfd,
+     int newfd
+     )
+
+
+Function
+~~~~~~~~
+::
+
+     Duplicates a file descriptor.
+
+     The object referenced by the descriptor does not distinguish between oldd
+     and newd in any way.  Thus if newd and oldd are duplicate references to
+     an open file, read(),  write() and lseek() calls all move a single
+     pointer into the file, and append mode, non-blocking I/O and asynchronous
+     I/O options are shared between the references.  If a separate pointer
+     into the file is desired, a different object reference to the file must be
+     obtained by issuing an additional open(2) call.  The close-on-exec flag
+     on the new file descriptor is unset.
+
+
+Inputs
+~~~~~~
+::
+
+     oldfd - The file descriptor to be duplicated
+     newfd - The value of the new descriptor we want the old one to be duplicated in
+
+
+Result
+~~~~~~
+::
+
+     -1 for error or newfd on success
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library or
+     in a threaded application.
+
+
+See also
+~~~~~~~~
+::
+
+      accept(),  open(),  close(),  fcntl(),  pipe(),  socket()
+
+
+
+execl
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  int execl(
+     const char *path, 
+     const char *arg, ...)
+     
+
+
+execve
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int execve(
+     const char *filename,
+     char *const argv[],
+     char *const envp[])
+     
+
+Function
+~~~~~~~~
+::
+
+     Executes a file with given name.
+
+
+Inputs
+~~~~~~
+::
+
+     filename - Name of the file to execute.
+     argv - Array of arguments provided to main() function of the executed
+     file.
+     envp - Array of environment variables passed as environment to the
+     executed program.
+
+
+Result
+~~~~~~
+::
+
+     Returns -1 and sets errno appropriately in case of error, otherwise
+     returns 0.
+
+
+Bugs
+~~~~
+::
+
+     As opposed to *nix execve implementations, this implementation DOES
+     RETURN to caller. Its purpose is to ease porting of programs using
+     exec functions, you still have to make sure that after calling this
+     function program will behave as anticipated.
+
+
+
+execvp
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int execvp(
+     const char *file, 
+     char *const argv[])
+     
+
+Function
+~~~~~~~~
+::
+
+     Executes a file with specified arguments.
+
+
+Inputs
+~~~~~~
+::
+
+     file - Name of the file to execute.
+     argv - Array of arguments given to main() function of the executed
+     file.
+
+
+Result
+~~~~~~
+::
+
+     0 in case of success. In case of failure errno is set appropriately
+     and function returns -1.
+
+
+Bugs
+~~~~
+::
+
+     See execve documentation.
+
+
+See also
+~~~~~~~~
+::
+
+     execve
+     
+
+
+exit
+====
+
+Synopsis
+~~~~~~~~
+::
+
+  void exit(
+     int code)
+
+
+Function
+~~~~~~~~
+::
+
+     Terminates the running program. The code is returned to the
+     program which has called the running program.
+
+
+Inputs
+~~~~~~
+::
+
+     code - Exit code. 0 for success, other values for failure.
+
+
+Result
+~~~~~~
+::
+
+     None. This function does not return.
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library or
+     in a threaded application.
+
+EXAMPLE
+     if (no_problems)
+         exit (0);
+
+     if (warning)
+         exit (5);
+
+     if (error)
+         exit (10);
+
+     if (fatal)
+         exit (20);
+
+
+See also
+~~~~~~~~
+::
+
+     atexit(), on_exit()
+
+
+
+fchdir
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int fchdir(
+     int fd )
+
+
+Function
+~~~~~~~~
+::
+
+     Change the current working directory to the directory given as an open
+     file descriptor.
+
+
+Inputs
+~~~~~~
+::
+
+     fd - File descriptor of the directory to change to.
+     
+
+Result
+~~~~~~
+::
+
+     If the current directory was changed successfully, zero is returned.    
+     Otherwise, -1 is returned and errno set apropriately.
+     
+
+Notes
+~~~~~
+::
+
+     At program exit, the current working directory will be changed back
+     to the one that was current when the program first started. If you
+     do not desire this behaviour, use dos.library/CurrentDir() instead.
+
+
+
+fchmod
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int fchmod(
+     int fildes,
+     mode_t mode)
+
+
+
+fclose
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int fclose(
+     FILE * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Closes a stream.
+
+
+Inputs
+~~~~~~
+::
+
+     stream - Stream to close.
+
+
+Result
+~~~~~~
+::
+
+     Upon successful completion 0 is returned. Otherwise, EOF is
+     returned and the global variable errno is set to indicate the
+     error. In either case no further access to the stream is possible.
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library or
+     in a threaded application.
+
+
+See also
+~~~~~~~~
+::
+
+     fopen(), open(), close()
+
+
+
+fdopen
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  FILE *fdopen(
+     int         filedes,
+     const char *mode
+     )
+
+
+Function
+~~~~~~~~
+::
+
+     function associates a stream with an existing file descriptor.
+
+
+Inputs
+~~~~~~
+::
+
+     filedes - The descriptor the stream has to be associated with
+     mode    - The mode of the stream  (same as with fopen()) must be com­
+               patible with the mode of the file  descriptor.   The  file
+               position  indicator  of  the  new  stream  is  set to that
+               belonging to fildes, and the error and end-of-file indica­
+               tors  are cleared.  Modes "w" or "w+" do not cause trunca­
+               tion of the file.  The file descriptor is not dup'ed,  and
+               will  be  closed  when  the  stream  created  by fdopen is
+               closed.
+
+
+Result
+~~~~~~
+::
+
+     NULL on error or the new stream assiciated with the descriptor.
+
+     The new descriptor returned by the call is the lowest numbered
+     descriptor currently not in use by the process.
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library or
+     in a threaded application.
+
+
+See also
+~~~~~~~~
+::
+
+      open(), fclose(), fileno()
+
+
+
+feof
+====
+
+Synopsis
+~~~~~~~~
+::
+
+  int feof(
+     FILE * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Test the EOF-Flag of a stream. This flag is set automatically by
+     any function which recognises EOF. To clear it, call clearerr().
+
+
+Inputs
+~~~~~~
+::
+
+     stream - The stream to be tested.
+
+
+Result
+~~~~~~
+::
+
+     != 0, if the stream is at the end of the file, 0 otherwise.
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library or
+     in a threaded application.
+
+
+See also
+~~~~~~~~
+::
+
+     ferror(), clearerr()
+
+
+
+ferror
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int ferror(
+     FILE * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Test the error flag of a stream. This flag is set automatically by
+     any function that detects an error. To clear it, call clearerr().
+
+
+Inputs
+~~~~~~
+::
+
+     stream - The stream to be tested.
+
+
+Result
+~~~~~~
+::
+
+     != 0, if the stream had an error, 0 otherwise.
+
+
+See also
+~~~~~~~~
+::
+
+     ferror(), clearerr()
+
+
+
+fflush
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int fflush(
+     FILE * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Flush a stream. If the stream is an input stream, then the stream
+     is synchronised for unbuffered I/O. If the stream is an output
+     stream, then any buffered data is written.
+
+
+Inputs
+~~~~~~
+::
+
+     stream - Flush this stream. May be NULL. In this case, all
+             output streams are flushed.
+
+
+Result
+~~~~~~
+::
+
+     0 on success or EOF on error.
+
+
+
+fgetc
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  int fgetc(
+     FILE * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Read one character from the stream. If there is no character
+     available or an error occurred, the function returns EOF.
+
+
+Inputs
+~~~~~~
+::
+
+     stream - Read from this stream
+
+
+Result
+~~~~~~
+::
+
+     The character read or EOF on end of file or error.
+
+
+See also
+~~~~~~~~
+::
+
+     getc(), fputc(), putc()
+
+
+
+fgetpos
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int fgetpos(
+     FILE   * stream,
+     fpos_t * pos)
+
+
+Function
+~~~~~~~~
+::
+
+     Get the current position in a stream. This function is eqivalent
+     to ftell(). However, on some systems fpos_t may be a complex
+     structure, so this routine may be the only way to portably
+     get the position of a stream.
+
+
+Inputs
+~~~~~~
+::
+
+     stream - The stream to get the position from.
+     pos - Pointer to the fpos_t position structure to fill.
+
+
+Result
+~~~~~~
+::
+
+     0 on success and -1 on error. If an error occurred, the global
+     variable errno is set.
+
+
+See also
+~~~~~~~~
+::
+
+     fsetpos()
+
+
+
+fgets
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  char * fgets(
+     char * buffer,
+     int    size,
+     FILE * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Read one line of characters from the stream into the buffer.
+     Reading will stop, when a newline ('\n') is encountered, EOF
+     or when the buffer is full. If a newline is read, then it is
+     put into the buffer. The last character in the buffer is always
+     '\0' (Therefore at most size-1 characters can be read in one go).
+
+
+Inputs
+~~~~~~
+::
+
+     buffer - Write characters into this buffer
+     size - This is the size of the buffer in characters.
+     stream - Read from this stream
+
+
+Result
+~~~~~~
+::
+
+     buffer or NULL in case of an error or EOF.
+
+
+Example
+~~~~~~~
+::
+
+     // Read a file line by line
+     char line[256];
+
+     // Read until EOF
+     while (fgets (line, sizeof (line), fh))
+     {
+         // Evaluate the line
+     }
+
+
+See also
+~~~~~~~~
+::
+
+     fopen(), gets(), fputs(), putc()
+
+
+
+fileno
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int fileno(
+     FILE *stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Returns the descriptor associated with the stream
+
+
+Inputs
+~~~~~~
+::
+
+     strem - the stream to get the descriptor from
+
+
+Result
+~~~~~~
+::
+
+     The integer descriptor
+
+
+See also
+~~~~~~~~
+::
+
+     open()
+
+
+
+fopen
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  FILE * fopen(
+     const char * pathname,
+     const char * mode)
+
+
+Function
+~~~~~~~~
+::
+
+     Opens a file with the specified name in the specified mode.
+
+
+Inputs
+~~~~~~
+::
+
+     pathname - Path and filename of the file you want to open.
+     mode - How to open the file:
+
+             r: Open for reading. The stream is positioned at the
+                     beginning of the file.
+
+             r+: Open for reading and writing. The stream is positioned
+                     at the beginning of the file.
+
+             w: Open for writing. If the file doesn't exist, then
+                     it is created. If it does already exist, then
+                     it is truncated. The stream is positioned at the
+                     beginning of the file.
+
+             w+: Open for reading and writing. If the file doesn't
+                     exist, then it is created. If it does already
+                     exist, then it is truncated. The stream is
+                     positioned at the beginning of the file.
+
+             a: Open for writing. If the file doesn't exist, then
+                     it is created. The stream is positioned at the
+                     end of the file.
+
+             a+: Open for reading and writing. If the file doesn't
+                     exist, then it is created. The stream is positioned
+                     at the end of the file.
+
+             b: Open in binary more. This has no effect and is ignored.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to a FILE handle or NULL in case of an error. When NULL
+     is returned, then errno is set to indicate the error.
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library or
+     in a threaded application.
+
+
+Bugs
+~~~~
+::
+
+     Most modes are not supported right now.
+
+
+See also
+~~~~~~~~
+::
+
+     fclose(), fread(), fwrite(), open(), fgets(), fgetc(),
+     fputs(), fputc(), getc(), putc()
+
+
+
+fprintf
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int fprintf(
+     FILE       * fh,
+     const char * format,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     Format a string with the specified arguments and write it to
+     the stream.
+
+
+Inputs
+~~~~~~
+::
+
+     fh - Write to this stream
+     format - How to format the arguments
+     ... - The additional arguments
+
+
+Result
+~~~~~~
+::
+
+     The number of characters written to the stream or EOF on error.
+
+
+
+fputc
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  int fputc(
+     int    c,
+     FILE * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Write one character to the specified stream.
+
+
+Inputs
+~~~~~~
+::
+
+     c - The character to output
+     stream - The character is written to this stream
+
+
+Result
+~~~~~~
+::
+
+     The character written or EOF on error.
+
+
+
+fputs
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  int fputs(
+     const char * str,
+     FILE       * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Write a string to the specified stream.
+
+
+Inputs
+~~~~~~
+::
+
+     str - Output this string...
+     fh - ...to this stream
+
+
+Result
+~~~~~~
+::
+
+     > 0 on success and EOF on error.
+
+
+See also
+~~~~~~~~
+::
+
+     puts(), fputc(), putc()
+
+
+
+fread
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  size_t fread(
+     void * buf,
+     size_t size,
+     size_t nblocks,
+     FILE * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Read an amount of bytes from a stream.
+
+
+Inputs
+~~~~~~
+::
+
+     buf - The buffer to read the bytes into
+     size - Size of one block to read
+     nblocks - The number of blocks to read
+     stream - Read from this stream
+
+
+Result
+~~~~~~
+::
+
+     The number of blocks read. This may range from 0 when the stream
+     contains no more blocks up to nblocks. In case of an error, 0 is
+     returned.
+
+
+See also
+~~~~~~~~
+::
+
+     fopen(), fwrite()
+
+
+
+free
+====
+
+Synopsis
+~~~~~~~~
+::
+
+  void free(
+     void * memory)
+
+
+Function
+~~~~~~~~
+::
+
+     Return memory allocated with malloc() or a similar function to the
+     system.
+
+
+Inputs
+~~~~~~
+::
+
+     memory - The result of the previous call to malloc(), etc. or
+             NULL.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library or in a threaded
+     application.
+
+
+See also
+~~~~~~~~
+::
+
+     malloc()
+
+
+
+freopen
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  FILE *freopen(
+     const char *path,
+     const char *mode,
+     FILE       *stream
+     )
+
+
+Function
+~~~~~~~~
+::
+
+     Opens the  file whose name is the string pointed to by path  and
+     associates  the  stream  pointed to by stream with it.
+
+
+Inputs
+~~~~~~
+::
+
+     path   - the file to open
+     mode   - The mode of the stream  (same as with fopen()) must be com­
+              patible with the mode of the file  descriptor.   The  file
+              position  indicator  of  the  new  stream  is  set to that
+              belonging to fildes, and the error and end-of-file indica­
+              tors  are cleared.  Modes "w" or "w+" do not cause trunca­
+              tion of the file.  The file descriptor is not dup'ed,  and
+              will  be  closed  when  the  stream  created  by fdopen is
+              closed.
+     stream - the stream to wich the file will be associated.
+
+
+Result
+~~~~~~
+::
+
+     NULL on error or stream.
+
+
+See also
+~~~~~~~~
+::
+
+      open(), fclose(), fileno()
+
+
+
+fscanf
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int fscanf(
+     FILE       * fh,
+     const char * format,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     Scan a string with the specified arguments and write the results
+     in the specified parameters.
+
+
+Inputs
+~~~~~~
+::
+
+     fh - Read from this stream
+     format - How to convert the input into the arguments
+     ... - Write the result in these arguments
+
+
+Result
+~~~~~~
+::
+
+     The number of converted arguments.
+
+
+See also
+~~~~~~~~
+::
+
+     scanf()
+
+
+
+fseek
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  int fseek(
+     FILE * stream,
+     long   offset,
+     int    whence)
+
+
+Function
+~~~~~~~~
+::
+
+     Change the current position in a stream.
+
+
+Inputs
+~~~~~~
+::
+
+     stream - Modify this stream
+     offset, whence - How to modify the current position. whence
+             can be SEEK_SET, then offset is the absolute position
+             in the file (0 is the first byte), SEEK_CUR then the
+             position will change by offset (ie. -5 means to move
+             5 bytes to the beginning of the file) or SEEK_END.
+             SEEK_END means that the offset is relative to the
+             end of the file (-1 is the last byte and 0 is
+             the EOF).
+
+
+Result
+~~~~~~
+::
+
+     0 on success and -1 on error. If an error occurred, the global
+     variable errno is set.
+
+
+Bugs
+~~~~
+::
+
+ Not fully compatible with iso fseek, especially in 'ab' and 'a+b'
+ modes
+
+
+See also
+~~~~~~~~
+::
+
+     fopen(), fwrite()
+
+
+
+fsetpos
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int fsetpos(
+     FILE            * stream,
+     const fpos_t    * pos)
+
+
+Function
+~~~~~~~~
+::
+
+     Change the current position in a stream. This function is eqivalent
+     to fseek() with whence set to SEEK_SET. However, on some systems
+     fpos_t may be a complex structure, so this routine may be the only
+     way to portably reposition a stream.
+
+
+Inputs
+~~~~~~
+::
+
+     stream - Modify this stream
+     pos - The new position in the stream.
+
+
+Result
+~~~~~~
+::
+
+     0 on success and -1 on error. If an error occurred, the global
+     variable errno is set.
+
+
+See also
+~~~~~~~~
+::
+
+     fgetpos()
+
+
+
+ftell
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  long ftell(
+     FILE * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Tell the current position in a stream.
+
+
+Inputs
+~~~~~~
+::
+
+     stream - Obtain position of this stream
+
+
+Result
+~~~~~~
+::
+
+     The position on success and -1 on error.
+     If an error occurred, the global variable errno is set.
+
+
+See also
+~~~~~~~~
+::
+
+     fopen(), fseek(), fwrite()
+
+
+
+ftruncate
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  int ftruncate(
+     int   fd,
+     off_t length)
+
+
+Function
+~~~~~~~~
+::
+
+     Truncate a file to a specified length
+
+
+Inputs
+~~~~~~
+::
+
+     fd     - the descriptor of the file being truncated.
+              The file must be open for writing
+     lenght - The file will have at most this size
+
+
+Result
+~~~~~~
+::
+
+     0 on success or -1 on errorr.
+
+
+Notes
+~~~~~
+::
+
+     If the file previously was larger than this size, the extra  data
+     is  lost.   If  the  file  previously  was  shorter, it is
+     unspecified whether the  file  is  left  unchanged  or  is
+     extended.  In  the  latter case the extended part reads as
+     zero bytes.
+
+
+
+See also
+~~~~~~~~
+::
+
+     open(), truncate()
+
+
+
+fwrite
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  size_t fwrite(
+     const void * restrict   buf,
+     size_t                  size,
+     size_t                  nblocks,
+     FILE * restrict         stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Write an amount of bytes to a stream.
+
+
+Inputs
+~~~~~~
+::
+
+     buf - The buffer to write to the stream
+     size - Size of one block to write
+     nblocks - The number of blocks to write
+     stream - Write to this stream
+
+
+Result
+~~~~~~
+::
+
+     The number of blocks written. If no error occurred, this is
+     nblocks. Otherwise examine errno for the reason of the error.
+
+
+See also
+~~~~~~~~
+::
+
+     fopen(), fwrite()
+
+
+
+gcvt
+====
+
+Synopsis
+~~~~~~~~
+::
+
+  char * gcvt(
+     double    number,
+     int       ndigit,
+     char    * buf
+     )
+
+
+Function
+~~~~~~~~
+::
+
+     Converts a number to a minimal length NULL terminated ASCII string.
+     It produces ndigit significant digits in either printf F format or
+     E format.
+
+
+Inputs
+~~~~~~
+::
+
+     number  - The number to convert.
+     ndigits - The number of significan digits that the string has to have.
+     buf     - The buffer that will contain the result string.
+
+
+Result
+~~~~~~
+::
+
+     The address of the string pointed to by buf.
+
+
+See also
+~~~~~~~~
+::
+
+     ecvt(), fcvt(), sprintf()
+
+
+
+getc
+====
+
+Synopsis
+~~~~~~~~
+::
+
+  int getc(
+     FILE * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Read one character from the stream. If there is no character
+     available or an error occurred, the function returns EOF.
+
+
+Inputs
+~~~~~~
+::
+
+     stream - Read from this stream
+
+
+Result
+~~~~~~
+::
+
+     The character read or EOF on end of file or error.
+
+
+See also
+~~~~~~~~
+::
+
+     fgetc(), fputc(), putc()
+
+
+
+getchar
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int getchar(
+
+Function
+~~~~~~~~
+::
+
+     Read one character from the standard input stream. If there
+     is no character available or an error occurred, the function
+     returns EOF.
+
+
+Result
+~~~~~~
+::
+
+     The character read or EOF on end of file or error.
+
+
+See also
+~~~~~~~~
+::
+
+     fgetc(), getc(), fputc(), putc()
+
+
+
+getcwd
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  char *getcwd(
+     char *buf,
+     size_t size)
+
+
+Function
+~~~~~~~~
+::
+
+     Get the current working directory.
+
+
+Inputs
+~~~~~~
+::
+
+     buf - Pointer of the buffer where the path is to be stored
+     size - The size of the above buffer
+
+
+Result
+~~~~~~
+::
+
+     Copies the absolute pathname of the current working directory
+     to the buffer. If the pathname is longer than the buffer
+     (with lenght "size") NULL is returned and errno set to ERANGE.
+     Otherwise the pointer to the buffer is returned.
+
+
+Notes
+~~~~~
+::
+
+     If buf is NULL this function will allocate the buffer itself
+     using malloc() and the specified size "size". If size is
+     0, too, the buffer is allocated to hold the whole path.
+     It is possible and recommended to free() this buffer yourself!
+     The path returned does not have to be literally the same as the
+     one given to chdir. See NOTES from chdir for more explanation.
+
+
+See also
+~~~~~~~~
+::
+
+     chdir
+
+
+
+getegid
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  gid_t getegid(
+     void)
+
+
+See also
+~~~~~~~~
+::
+
+     setgid()
+     
+
+
+getenv
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  char *getenv(
+     const char *name)
+
+
+Function
+~~~~~~~~
+::
+
+     Get an environment variable.
+
+
+Inputs
+~~~~~~
+::
+
+     name - Name of the environment variable.
+
+
+Result
+~~~~~~
+::
+
+     Pointer to the variable's value, or NULL on failure.
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library.
+
+
+
+geteuid
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  uid_t geteuid(
+     void)
+
+
+See also
+~~~~~~~~
+::
+
+     getuid()
+     
+
+
+getfsstat
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  int getfsstat(
+ struct statfs *buf, 
+ long bufsize, 
+ int flags)
+
+
+Function
+~~~~~~~~
+::
+
+     Gets information about mounted filesystems.
+
+
+Inputs
+~~~~~~
+::
+
+     buf - pointer to statfs structures where information about filesystems
+         will be stored or NULL
+     bufsize - size of buf in bytes
+     flags - not used
+
+
+Result
+~~~~~~
+::
+
+     If buf is NULL number of mounted filesystems is returned. If buf is
+     not null, information about mounted filesystems is stored in statfs
+     structures up to bufsize bytes
+
+
+Bugs
+~~~~
+::
+
+     f_flags, f_files, f_ffree and f_fsid.val are always set to 0
+     f_mntfromname is set to an empty string
+
+
+
+getgid
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  gid_t getgid(
+     void)
+
+
+See also
+~~~~~~~~
+::
+
+     setgid()
+     
+
+
+getlogin
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  char * getlogin(
+     )
+     
+
+
+getpid
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  pid_t getpid(
+     )
+
+
+Function
+~~~~~~~~
+::
+
+     Returns the process ID of the calling process
+
+
+Result
+~~~~~~
+::
+
+     The process ID of the calling process.
+
+
+
+gets
+====
+
+Synopsis
+~~~~~~~~
+::
+
+  char * gets(
+     char * buffer)
+
+
+Function
+~~~~~~~~
+::
+
+     Read one line of characters from the standard input stream into
+     the buffer. Reading will stop, when a newline ('\n') is encountered,
+     EOF or when the buffer is full. If a newline is read, then it is
+     replaced by '\0'. The last character in the buffer is always '\0'.
+
+
+Inputs
+~~~~~~
+::
+
+     buffer - Write characters into this buffer
+
+
+Result
+~~~~~~
+::
+
+     buffer or NULL in case of an error or EOF.
+
+
+Bugs
+~~~~
+::
+
+     Never use this function. gets() does not know how large the buffer
+     is and will continue to store characters past the end of the buffer
+     if it has not encountered a newline or EOF yet. Use fgets() instead.
+
+
+See also
+~~~~~~~~
+::
+
+     fgets()
+
+
+
+gettimeofday
+============
+
+Synopsis
+~~~~~~~~
+::
+
+  int gettimeofday(
+     struct timeval  * tv,
+     struct timezone * tz)
+
+
+Function
+~~~~~~~~
+::
+
+     Return the current time and/or timezone.
+
+
+Inputs
+~~~~~~
+::
+
+     tv - If this pointer is non-NULL, the current time will be
+             stored here. The structure looks like this:
+
+             struct timeval
+             {
+                 long tv_sec;        // seconds
+                 long tv_usec;       // microseconds
+             };
+
+     tz - If this pointer is non-NULL, the current timezone will be
+             stored here. The structure looks like this:
+
+             struct timezone
+             {
+                 int  tz_minuteswest; // minutes west of Greenwich
+                 int  tz_dsttime;     // type of dst correction
+             };
+
+             With daylight savings times defined as follows :
+
+             DST_NONE        // not on dst
+             DST_USA         // USA style dst
+             DST_AUST        // Australian style dst
+             DST_WET         // Western European dst
+             DST_MET         // Middle European dst
+             DST_EET         // Eastern European dst
+             DST_CAN         // Canada
+             DST_GB          // Great Britain and Eire
+             DST_RUM         // Rumania
+             DST_TUR         // Turkey
+             DST_AUSTALT     // Australian style with shift in 1986
+
+             And the following macros are defined to operate on this :
+
+             timerisset(tv) - TRUE if tv contains a time
+
+             timercmp(tv1, tv2, cmp) - Return the result of the
+                     comparison "tv1 cmp tv2"
+
+             timerclear(tv) - Clear the timeval struct
+
+
+Result
+~~~~~~
+::
+
+     The number of seconds.
+
+
+Example
+~~~~~~~
+::
+
+     struct timeval tv;
+
+     // Get the current time and print it
+     gettimeofday (&tv, NULL);
+
+     printf ("Seconds = %ld, uSec = %ld\n", tv->tv_sec, tv->tv_usec);
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library or
+     in a threaded application.
+
+
+See also
+~~~~~~~~
+::
+
+     ctime(), asctime(), localtime(), time()
+
+
+
+getuid
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  uid_t getuid(
+     void)
+
+
+See also
+~~~~~~~~
+::
+
+     geteuid()
+     
+
+
+gmtime
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  struct tm * gmtime(
+     const time_t * tt)
+
+
+Function
+~~~~~~~~
+::
+
+     The gmtime() function converts the calendar time tt to
+     broken-down time representation, expressed in Coordinated Universal
+     Time (UTC).
+
+     See gmtime_r() for details.
+
+
+Inputs
+~~~~~~
+::
+
+     tt - The time to convert
+
+
+Result
+~~~~~~
+::
+
+     A statically allocated buffer with the broken down time in Coordinated
+     Universal Time (UTC). Note that the contents of the buffer might get
+     lost with the call of any of the date and time functions.
+
+
+Example
+~~~~~~~
+::
+
+     time_t      tt;
+     struct tm * tm;
+
+     // Get the time
+     time (&tt);
+
+     // and convert it
+     tm = gmtime (&tt);
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library or
+     in a threaded application. Use gmtime_r() instead.
+
+
+See also
+~~~~~~~~
+::
+
+     time(), ctime(), asctime(), localtime()
+
+
+
+gmtime_r
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  struct tm * gmtime_r(
+     const time_t * tt,
+     struct tm * tm)
+
+
+Function
+~~~~~~~~
+::
+
+     The gmtime_r() function converts the calendar time tt to
+     broken-down time representation, expressed in Coordinated Universal
+     Time (UTC).
+
+
+
+Inputs
+~~~~~~
+::
+
+     tt - The time to convert
+     tm - A struct tm to store the result in
+
+
+Result
+~~~~~~
+::
+
+     The pointer passed in tm, containing the broken down time in
+     Coordinated Universal Time (UTC).
+
+
+Example
+~~~~~~~
+::
+
+     time_t    tt;
+     struct tm tm;
+
+     // Get the time
+     time (&tt);
+
+     // and convert it
+     gmtime (&tt, &tm);
+
+
+See also
+~~~~~~~~
+::
+
+     time(), ctime_r(), asctime_r(), localtime_r()
+
+
+
+isalnum
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int isalnum(
+     int c)
+
+
+Function
+~~~~~~~~
+::
+
+     Test if a character is an alphabetic character or a digit. Works
+     for all characters between -128 and 255 inclusive both.
+
+
+Inputs
+~~~~~~
+::
+
+     c - The character to test.
+
+
+Result
+~~~~~~
+::
+
+     != 0 if the character is alphabetic character or a digit, 0 otherwise.
+
+
+Example
+~~~~~~~
+::
+
+     isalnum ('A')    -> true
+     isalnum ('a')    -> true
+     isalnum ('0')    -> true
+     isalnum ('.')    -> false
+     isalnum ('\n')   -> false
+     isalnum ('\001') -> false
+     isalnum (EOF)    -> false
+
+
+
+isalpha
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int isalpha(
+     int c)
+
+
+Function
+~~~~~~~~
+::
+
+     Test if a character is an alphabetic character. Works for all
+     characters between -128 and 255 inclusive both.
+
+
+Inputs
+~~~~~~
+::
+
+     c - The character to test.
+
+
+Result
+~~~~~~
+::
+
+     != 0 if the character is an alphabetic character, 0 otherwise.
+
+
+Example
+~~~~~~~
+::
+
+     isalpha ('A')    -> true
+     isalpha ('a')    -> true
+     isalpha ('0')    -> false
+     isalpha ('.')    -> false
+     isalpha ('\n')   -> false
+     isalpha ('\001') -> false
+     isalpha (EOF)    -> false
+
+
+
+isascii
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int isascii(
+     int c)
+
+
+Function
+~~~~~~~~
+::
+
+     Test if a character is an ascii character. Works for all characters
+     between -128 and 255 inclusive both.
+
+
+Inputs
+~~~~~~
+::
+
+     c - The character to test.
+
+
+Result
+~~~~~~
+::
+
+     != 0 if the character is an ascii character, 0 otherwise.
+
+
+Example
+~~~~~~~
+::
+
+     isascii ('A')    -> true
+     isascii ('a')    -> true
+     isascii ('0')    -> true
+     isascii ('.')    -> true
+     isascii ('\n')   -> true
+     isascii ('\001') -> true
+     isascii (EOF)    -> false
+
+
+
+isblank
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int isblank(
+     int c)
+
+
+Function
+~~~~~~~~
+::
+
+     Test if a character is a space or a tab. Works for all characters
+     between -128 and 255 inclusive both.
+
+
+Inputs
+~~~~~~
+::
+
+     c - The character to test.
+
+
+Result
+~~~~~~
+::
+
+     != 0 if the character is a space or tab, 0 otherwise.
+
+
+Example
+~~~~~~~
+::
+
+     isblank ('A')    -> false
+     isblank ('a')    -> false
+     isblank ('0')    -> false
+     isblank ('.')    -> false
+     isblank (' ')    -> true
+     isblank ('\n')   -> false
+     isblank ('\001') -> false
+     isblank (EOF)    -> false
+
+
+
+iscntrl
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int iscntrl(
+     int c)
+
+
+Function
+~~~~~~~~
+::
+
+     Test if a character is a control character. Works for all
+     characters between -128 and 255 inclusive both.
+
+
+Inputs
+~~~~~~
+::
+
+     c - The character to test.
+
+
+Result
+~~~~~~
+::
+
+     != 0 if the character is a control character, 0 otherwise.
+
+
+Example
+~~~~~~~
+::
+
+     iscntrl ('A')    -> false
+     iscntrl ('a')    -> false
+     iscntrl ('0')    -> false
+     iscntrl ('.')    -> false
+     iscntrl ('\n')   -> true
+     iscntrl ('\001') -> true
+     iscntrl (EOF)    -> false
+
+
+
+isdigit
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int isdigit(
+     int c)
+
+
+Function
+~~~~~~~~
+::
+
+     Test if a character is a digit. Works for all characters between
+     -128 and 255 inclusive both.
+
+
+Inputs
+~~~~~~
+::
+
+     c - The character to test.
+
+
+Result
+~~~~~~
+::
+
+     != 0 if the character is a digit, 0 otherwise.
+
+
+Example
+~~~~~~~
+::
+
+     isdigit ('A')    -> false
+     isdigit ('a')    -> false
+     isdigit ('0')    -> true
+     isdigit ('.')    -> false
+     isdigit ('\n')   -> false
+     isdigit ('\001') -> false
+     isdigit (EOF)    -> false
+
+
+
+isgraph
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int isgraph(
+     int c)
+
+
+Function
+~~~~~~~~
+::
+
+     Test if a character is a printable character but no whitespace.
+     Works for all characters between -128 and 255 inclusive both.
+
+
+Inputs
+~~~~~~
+::
+
+     c - The character to test.
+
+
+Result
+~~~~~~
+::
+
+     != 0 if the character is a printable character but no whitespace, 0
+     otherwise.
+
+
+Example
+~~~~~~~
+::
+
+     isgraph ('A')    -> true
+     isgraph ('a')    -> true
+     isgraph ('0')    -> true
+     isgraph ('.')    -> true
+     isgraph ('\n')   -> false
+     isgraph ('\001') -> false
+     isgraph (EOF)    -> false
+
+
+
+islower
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int islower(
+     int c)
+
+
+Function
+~~~~~~~~
+::
+
+     Test if a character is lowercase. Works for all characters between
+     -128 and 255 inclusive both.
+
+
+Inputs
+~~~~~~
+::
+
+     c - The character to test.
+
+
+Result
+~~~~~~
+::
+
+     != 0 if the character is lowercase, 0 otherwise.
+
+
+Example
+~~~~~~~
+::
+
+     islower ('A')    -> false
+     islower ('a')    -> true
+     islower ('0')    -> false
+     islower ('.')    -> false
+     islower ('\n')   -> false
+     islower ('\001') -> false
+     islower (EOF)    -> false
+
+
+
+isprint
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int isprint(
+     int c)
+
+
+Function
+~~~~~~~~
+::
+
+     Test if a character is a printable character. Works for all
+     characters between -128 and 255 inclusive both.
+
+
+Inputs
+~~~~~~
+::
+
+     c - The character to test.
+
+
+Result
+~~~~~~
+::
+
+     != 0 if the character is a printable character, 0 otherwise.
+
+
+Example
+~~~~~~~
+::
+
+     isprint ('A')    -> true
+     isprint ('a')    -> true
+     isprint ('0')    -> true
+     isprint ('.')    -> true
+     isprint ('\n')   -> true
+     isprint ('\001') -> false
+     isprint (EOF)    -> false
+
+
+
+ispunct
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int ispunct(
+     int c)
+
+
+Function
+~~~~~~~~
+::
+
+     Test if a character is printable but not alphanumeric. Works for
+     all characters between -128 and 255 inclusive both.
+
+
+Inputs
+~~~~~~
+::
+
+     c - The character to test.
+
+
+Result
+~~~~~~
+::
+
+     != 0 if the character is printable but not alphanumeric, 0
+     otherwise.
+
+
+Example
+~~~~~~~
+::
+
+     ispunct ('A')    -> false
+     ispunct ('a')    -> false
+     ispunct ('0')    -> false
+     ispunct ('.')    -> true
+     ispunct ('\n')   -> false
+     ispunct ('\001') -> false
+     ispunct (EOF)    -> false
+
+
+
+isspace
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int isspace(
+     int c)
+
+
+Function
+~~~~~~~~
+::
+
+     Test if a character is whitespace. Works for all characters between
+     -128 and 255 inclusive both.
+
+
+Inputs
+~~~~~~
+::
+
+     c - The character to test.
+
+
+Result
+~~~~~~
+::
+
+     != 0 if the character is whitespace, 0 otherwise.
+
+
+Example
+~~~~~~~
+::
+
+     isspace ('A')    -> false
+     isspace ('a')    -> false
+     isspace ('0')    -> false
+     isspace ('.')    -> false
+     isspace ('\n')   -> true
+     isspace ('\001') -> false
+     isspace (EOF)    -> false
+
+
+
+isupper
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int isupper(
+     int c)
+
+
+Function
+~~~~~~~~
+::
+
+     Test if a character is uppercase. Works for all characters between
+     -128 and 255 inclusive both.
+
+
+Inputs
+~~~~~~
+::
+
+     c - The character to test.
+
+
+Result
+~~~~~~
+::
+
+     != 0 if the character is uppercase, 0 otherwise.
+
+
+Example
+~~~~~~~
+::
+
+     isupper ('A')    -> true
+     isupper ('a')    -> false
+     isupper ('0')    -> false
+     isupper ('.')    -> false
+     isupper ('\n')   -> false
+     isupper ('\001') -> false
+     isupper (EOF)    -> false
+
+
+
+isxdigit
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  int isxdigit(
+     int c)
+
+
+Function
+~~~~~~~~
+::
+
+     Test if a character is a hexadecimal digit. Works for all
+     characters between -128 and 255 inclusive both.
+
+
+Inputs
+~~~~~~
+::
+
+     c - The character to test.
+
+
+Result
+~~~~~~
+::
+
+     != 0 if the character is a hexadecimal digit, 0 otherwise.
+
+
+Example
+~~~~~~~
+::
+
+     isxdigit ('A')    -> true
+     isxdigit ('a')    -> true
+     isxdigit ('x')    -> false
+     isxdigit ('0')    -> true
+     isxdigit ('.')    -> false
+     isxdigit ('\n')   -> false
+     isxdigit ('\001') -> false
+     isxdigit (EOF)    -> false
+
+
+
+kill
+====
+
+Synopsis
+~~~~~~~~
+::
+
+  int kill(
+     pid_t pid,
+     int   sig)
+
+
+
+labs
+====
+
+Synopsis
+~~~~~~~~
+::
+
+  long labs(
+     long j)
+
+
+Function
+~~~~~~~~
+::
+
+     Compute the absolute value of j.
+
+
+Inputs
+~~~~~~
+::
+
+     j - A signed long
+
+
+Result
+~~~~~~
+::
+
+     The absolute value of j.
+
+
+Example
+~~~~~~~
+::
+
+     // returns 1
+     labs (1L);
+
+     // returns 1
+     labs (-1L);
+
+
+See also
+~~~~~~~~
+::
+
+     abs(), fabs()
+
+
+
+ldiv
+====
+
+Synopsis
+~~~~~~~~
+::
+
+  ldiv_t ldiv(
+     long int numer,
+     long int denom)
+
+
+Function
+~~~~~~~~
+::
+
+     Compute quotient en remainder of two long variables
+
+
+Inputs
+~~~~~~
+::
+
+     numer = the numerator
+     denom = the denominator
+
+
+Result
+~~~~~~
+::
+
+     a struct with two long ints quot and rem with
+     quot = numer / denom and rem = numer % denom.
+
+     typedef struct ldiv_t {
+         long int quot;
+         long int rem;
+     } ldiv_t;
+
+
+See also
+~~~~~~~~
+::
+
+     div()
+
+
+
+lldiv
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  lldiv_t lldiv(
+     long long int numer,
+     long long int denom)
+
+
+Function
+~~~~~~~~
+::
+
+     Compute quotient en remainder of two long long variables
+
+
+Inputs
+~~~~~~
+::
+
+     numer = the numerator
+     denom = the denominator
+
+
+Result
+~~~~~~
+::
+
+     a struct with two long ints quot and rem with
+     quot = numer / denom and rem = numer % denom.
+
+     typedef struct lldiv_t {
+         long long int quot;
+         long long int rem;
+     } lldiv_t;
+
+
+See also
+~~~~~~~~
+::
+
+     div(), ldiv()
+
+
+
+localtime
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  struct tm * localtime(
+     const time_t * tt)
+
+
+Function
+~~~~~~~~
+::
+
+     Splits the system time in seconds into a structure.
+
+     See localtime_r() for details.
+
+
+Inputs
+~~~~~~
+::
+
+     tt - A time in seconds from the 1. Jan 1970
+
+
+Result
+~~~~~~
+::
+
+     A statically allocated buffer with the broken up time. Note that
+     the contents of the buffer might get lost with the call of any of
+     the date and time functions.
+
+
+Example
+~~~~~~~
+::
+
+     time_t      tt;
+     struct tm * tm;
+
+     // Get time
+     time (&tt);
+
+     // Break time up
+     tm = localtime (&tt);
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library or
+     in a threaded application. Use localtime_r() instead.
+
+
+See also
+~~~~~~~~
+::
+
+     time(), ctime(), asctime(), gmtime()
+
+
+
+localtime_r
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  struct tm * localtime_r(
+     const time_t * tt,
+     struct tm * tm)
+
+
+Function
+~~~~~~~~
+::
+
+     Splits the system time in seconds into a structure.
+     The members of the tm structure are:
+
+     \begin{description}
+     \item {tm_sec} The number of seconds after the minute, normally in
+             the range 0 to 59, but can be up to 61 to allow for leap
+             seconds.
+
+     \item{tm_min} The number of minutes after the hour, in the range 0
+             to 59.
+
+     \item{tm_hour} The number of hours past midnight, in the range 0 to
+             23.
+
+     \item{tm_mday} The day of the month, in the range 1 to 31.
+
+     \item{tm_mon} The number of months since January, in the range 0 to
+             11.
+
+     \item{tm_year} The number of years since 1900.
+
+     \item{tm_wday} The number of days since Sunday, in the range 0 to
+             6.
+
+     \item{tm_yday} The number of days since January 1, in the range  0
+             to 365.
+
+     \item{tm_isdst} A flag that indicates whether daylight saving time
+             is in effect at the time described. The value is positive
+             if daylight saving time is in effect, zero if it is not,
+             and negative if the information is not available.
+
+     \end{description}
+
+
+Inputs
+~~~~~~
+::
+
+     tt - A time in seconds from the 1. Jan 1970
+     tm - A struct tm to store the result in
+
+
+Result
+~~~~~~
+::
+
+     The pointer passed in tm.
+
+
+Example
+~~~~~~~
+::
+
+     time_t    tt;
+     struct tm tm;
+
+     // Get time
+     time (&tt);
+
+     // Break time up
+     localtime_r (&tt, &tm);
+
+
+See also
+~~~~~~~~
+::
+
+     time(), ctime_r(), asctime_r(), gmtime_r()
+
+
+
+lseek
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  off_t lseek(
+     int    filedes,
+     off_t  offset,
+     int    whence)
+
+
+Function
+~~~~~~~~
+::
+
+     Reposition read/write file offset
+
+
+Inputs
+~~~~~~
+::
+
+     filedef - the filedescriptor being modified
+     offset, whence -
+               How to modify the current position. whence
+               can be SEEK_SET, then offset is the absolute position
+               in the file (0 is the first byte), SEEK_CUR then the
+               position will change by offset (ie. -5 means to move
+               5 bytes to the beginning of the file) or SEEK_END.
+               SEEK_END means that the offset is relative to the
+               end of the file (-1 is the last byte and 0 is
+               the EOF).
+
+
+Result
+~~~~~~
+::
+
+     The new position on success and -1 on error. If an error occurred, the global
+     variable errno is set.
+
+
+See also
+~~~~~~~~
+::
+
+     fopen(), fwrite()
+
+
+
+malloc
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  void *malloc(
+     size_t size)
+
+
+Function
+~~~~~~~~
+::
+
+     Allocate size bytes of memory and return the address of the
+     first byte.
+
+
+Inputs
+~~~~~~
+::
+
+     size - How much memory to allocate.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the allocated memory or NULL. If you don't need the
+     memory anymore, you can pass this pointer to free(). If you don't,
+     the memory will be freed for you when the application exits.
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library or in a threaded
+     application.
+
+
+See also
+~~~~~~~~
+::
+
+     free()
+
+
+
+memchr
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  void * memchr(
+     const void * mem,
+     int          c,
+     size_t       n)
+
+
+Function
+~~~~~~~~
+::
+
+     Copy the contents of a part of memory to another. Both areas
+     must not overlap. If they do, use memmove().
+
+
+Inputs
+~~~~~~
+::
+
+     dest - The first byte of the destination area in memory
+     src - The first byte of the source area in memory
+     count - How many bytes to copy
+
+
+Result
+~~~~~~
+::
+
+     dest.
+
+
+
+memcmp
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int memcmp(
+     const void * s1,
+     const void * s2,
+     size_t       n)
+
+
+Function
+~~~~~~~~
+::
+
+     Calculate s1 - s2 for the n bytes after s1 and s2 and stop when
+     the difference is not 0.
+
+
+Inputs
+~~~~~~
+::
+
+     s1, s2 - Begin of the memory areas to compare
+     n - The number of bytes to compare
+
+
+Result
+~~~~~~
+::
+
+     The difference of the memory areas. The difference is 0, if both
+     are equal, < 0 if s1 < s2 and > 0 if s1 > s2. Note that it may be
+     greater then 1 or less than -1.
+
+
+Notes
+~~~~~
+::
+
+     This function is not part of a library and may thus be called
+     any time.
+
+
+See also
+~~~~~~~~
+::
+
+     strcmp(), strncmp(), strcasecmp() strncasecmp()
+
+
+
+memset
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  void * memset(
+     void * dest,
+     int    c,
+     size_t count)
+
+
+Function
+~~~~~~~~
+::
+
+     Fill the memory at dest with count times c.
+
+
+Inputs
+~~~~~~
+::
+
+     dest - The first byte of the destination area in memory
+     c - The byte to fill memory with
+     count - How many bytes to write
+
+
+Result
+~~~~~~
+::
+
+     dest.
+
+
+See also
+~~~~~~~~
+::
+
+     memmove(), memcpy()
+
+
+
+mkdir
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  int mkdir(
+     const char *path,
+     mode_t      mode)
+
+
+Function
+~~~~~~~~
+::
+
+      Make a directory file
+
+
+Inputs
+~~~~~~
+::
+
+     path - the path of the directory being created
+     mode - the permission flags for the directory
+
+
+Result
+~~~~~~
+::
+
+     0 on success or -1 on errorr.
+
+
+See also
+~~~~~~~~
+::
+
+     chmod(),  stat(),  umask()
+
+
+
+mkstemp
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int mkstemp(
+     char *template)
+
+
+Inputs
+~~~~~~
+::
+
+ A template that must end with 'XXXXXX'
+     
+
+Result
+~~~~~~
+::
+
+ A file descriptor of opened temporary file or -1 on error.
+
+
+
+mktemp
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  char *mktemp(
+     char *template)
+
+
+Function
+~~~~~~~~
+::
+
+     Make a unique temporary file name.
+
+
+Inputs
+~~~~~~
+::
+
+     template- Name of the environment variable.
+
+
+Result
+~~~~~~
+::
+
+     Returns template.
+
+
+Notes
+~~~~~
+::
+
+     Template must end in "XXXXXX" (i.e at least 6 X's).
+     
+             Prior to this paragraph being created, mktemp() sometimes produced filenames
+             with '/' in them. AROS doesn't like that at all. Fortunately, the bug in this
+             function which produced it has been fixed. -- blippy
+             
+             For clarity, define the HEAD of the template to be the part before the tail,
+             and the TAIL to be the succession of X's. So in, T:temp.XXXXXX , the head is
+             T:temp. and the tail is XXXXXX .
+             
+
+Bugs
+~~~~
+::
+
+     Cannot create more than 26 filenames for the same process id. This is because
+     the "bumping" is only done to the first tail character - it should be
+     generalised to bump more characters if necessary.
+
+
+
+mktime
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  time_t mktime(
+     struct tm * utim)
+
+
+Function
+~~~~~~~~
+::
+
+     The mktime() function converts the broken-down time utim to
+     calendar time representation.
+
+
+Inputs
+~~~~~~
+::
+
+     utim - The broken-down time to convert
+
+
+Result
+~~~~~~
+::
+
+     The converted calendar time
+
+
+Example
+~~~~~~~
+::
+
+     time_t      tt;
+     struct tm * tm;
+
+     //Computation which results in a tm
+     tm = ...
+
+     // and convert it
+     tt = mktime (tm);
+
+
+Bugs
+~~~~
+::
+
+     At the moment sanity check is not performed nor a normalization on the
+     structure is done
+
+
+See also
+~~~~~~~~
+::
+
+     time(), ctime(), asctime(), localtime(), gmtime()
+
+
+
+open
+====
+
+Synopsis
+~~~~~~~~
+::
+
+  int open(
+     const char * pathname,
+     int              flags,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     Opens a file with the specified flags and name.
+
+
+Inputs
+~~~~~~
+::
+
+     pathname - Path and filename of the file you want to open.
+     flags - Most be exactly one of: O_RDONLY, O_WRONLY or O_RDWR
+             to open a file for reading, writing or for reading and
+             writing.
+
+             The mode can be modified by or'ing the following bits in:
+
+             O_CREAT: Create the file if it doesn't exist (only for
+                     O_WRONLY or O_RDWR). If this flag is set, then
+                     open() will look for a third parameter mode. mode
+                     must contain the access modes for the file
+                     (mostly 0644).
+             O_EXCL: Only with O_CREAT. If the file does already exist,
+                     then open() fails. See BUGS.
+             O_NOCTTY:
+             O_TRUNC: If the file exists, then it gets overwritten. This
+                     is the default and the opposite to O_APPEND.
+             O_APPEND: If the file exists, then the startung position for
+                     writes is the end of the file.
+             O_NONBLOCK or O_NDELAY: Opens the file in non-blocking mode.
+                     If there is no data in the file, then read() on a
+                     terminal will return immediately instead of waiting
+                     until data arrives. Has no effect on write().
+             O_SYNC: The process will be stopped for each write() and the
+                     data will be flushed before the write() returns.
+                     This ensures that the data is physically written
+                     when write() returns. If this flag is not specified,
+                     the data is written into a buffer and flushed only
+                     once in a while.
+
+
+Result
+~~~~~~
+::
+
+     -1 for error or a file descriptor for use with read(), write(), etc.
+
+
+Notes
+~~~~~
+::
+
+     If the filesystem doesn't allow to specify different access modes
+     for users, groups and others, then the user modes are used.
+
+     This function must not be used in a shared library or
+     in a threaded application.
+
+
+
+Bugs
+~~~~
+::
+
+     The flag O_EXCL is not very reliable if the file resides on a NFS
+     filesystem.
+
+     Most flags are not supported right now.
+
+
+See also
+~~~~~~~~
+::
+
+     close(), read(), write(), fopen()
+
+
+
+opendir
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  DIR *opendir(
+     const char *name)
+
+
+Function
+~~~~~~~~
+::
+
+     Opens a directory
+
+
+Inputs
+~~~~~~
+::
+
+     pathname - Path and filename of the directory you want to open.
+
+
+Result
+~~~~~~
+::
+
+     NULL for error or a directory stream
+
+
+See also
+~~~~~~~~
+::
+
+     open(), readdir(), closedir(), rewinddir(), seekdir(),
+     telldir(), scandir()
+
+
+
+pclose
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int pclose(
+     FILE * stream)
+
+
+See also
+~~~~~~~~
+::
+
+     popen()
+
+
+
+perror
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  void perror(
+     const char *string
+     )
+
+
+Function
+~~~~~~~~
+::
+
+     looks up the language-dependent error message string affiliated with an error
+     number and writes it, followed by a newline, to the standard error stream.
+
+
+Inputs
+~~~~~~
+::
+
+     string - the string to prepend the error message. If NULL only the error
+              message will be printed, otherwise the error message will be
+              separated from string by a colon.
+
+
+popen
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  FILE * popen(
+     const char * command,
+     const char * mode)
+
+
+Function
+~~~~~~~~
+::
+
+     "opens" a process by creating a pipe, spawning a new process and invoking
+     the shell.
+
+
+Inputs
+~~~~~~
+::
+
+     command - Pointer to a null terminated string containing the command
+               to be executed by the shell.
+
+     mode - Since a pipe is unidirectional, mode can be only one of
+
+             r: Open for reading. After popen() returns, the stream can
+                be used to read from it, as if it were a normal file stream,
+                in order to get the command's output.
+
+             w: Open for writing. After popen() returns, the stream can
+                be used to write to it, as if it were a normal file stream,
+                in order to provide the command with some input.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to a FILE handle or NULL in case of an error. When NULL
+     is returned, then errno is set to indicate the error.
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library or
+     in a threaded application.
+
+
+See also
+~~~~~~~~
+::
+
+     fclose(), fread(), fwrite(), pipe(), pclose()
+
+
+
+posix_memalign
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+  int posix_memalign(
+     void **memptr,
+     size_t alignment,
+     size_t size)
+
+
+Function
+~~~~~~~~
+::
+
+     Allocate aligned memory.
+
+
+Inputs
+~~~~~~
+::
+
+     memptr - Pointer to a place to store the pointer to allocated memory.
+     alignment - Alignment of allocated memory. The address of the
+                 allocated memory will be a multiple of this value, which
+                 must be a power of two and a multiple of sizeof(void *).
+     size - How much memory to allocate.
+
+
+Result
+~~~~~~
+::
+
+     Returns zero on success.
+     Returns EINVAL if the alignment parameter was not a power of two, or
+     was not a multiple of sizeof(void *).
+     Returns ENOMEM if there was insufficient memory to fulfill the request.
+
+
+Notes
+~~~~~
+::
+
+     Memory allocated by posix_memalign() should be freed with free(). If
+     not, it will be freed when the program terminates.
+
+     This function must not be used in a shared library or in a threaded
+     application.
+
+     If an error occurs, errno will not be set.
+
+
+See also
+~~~~~~~~
+::
+
+     free()
+
+
+
+printf
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int printf(
+     const char * format,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     Formats a list of arguments and prints them to standard out.
+
+     The format string is composed of zero or more directives: ordinary
+     characters (not %), which are copied unchanged to the output
+     stream; and conversion specifications, each of which results in
+     fetching zero or more subsequent arguments Each conversion
+     specification is introduced by the character %. The arguments must
+     correspond properly (after type promotion) with the conversion
+     specifier. After the %, the following appear in sequence:
+
+     \begin{itemize}
+     \item Zero or more of the following flags:
+
+     \begin{description}
+     \item{#} specifying that the value should be converted to an
+     ``alternate form''. For c, d, i, n, p, s, and u conversions, this
+     option has no effect. For o conversions, the precision of the
+     number is increased to force the first character of the output
+     string to a zero (except if a zero value is printed with an
+     explicit precision of zero). For x and X conversions, a non-zero
+     result has the string `0x' (or `0X' for X conversions) prepended to
+     it. For e, E, f, g, and G conversions, the result will always
+     contain a decimal point, even if no digits follow it (normally, a
+     decimal point appears in the results of those conversions only if a
+     digit follows). For g and G conversions, trailing zeros are not
+     removed from the result as they would otherwise be.
+
+     \item{0} specifying zero padding. For all conversions except n, the
+     converted value is padded on the left with zeros rather than
+     blanks. If a precision is given with a numeric conversion (d, i, o,
+     u, i, x, and X), the 0 flag is ignored.
+
+     \item{-} (a negative field width flag) indicates the converted
+     value is to be left adjusted on the field boundary. Except for n
+     conversions, the converted value is padded on the right with
+     blanks, rather than on the left with blanks or zeros. A -
+     overrides a 0 if both are given.
+
+     \item{ } (a space) specifying that a blank should be left before a
+     positive number produced by a signed conversion (d, e, E, f, g, G,
+     or i). + specifying that a sign always be placed before a number
+     produced by a signed conversion. A + overrides a space if both are
+     used.
+
+     \item{'} specifying that in a numerical argument the output is to
+     be grouped if the locale information indicates any. Note that many
+     versions of gcc cannot parse this option and will issue a warning.
+
+     \end{description}
+
+     \item An optional decimal digit string specifying a minimum field
+     width. If the converted value has fewer characters than the field
+     width, it will be padded with spaces on the left (or right, if the
+     left-adjustment flag has been given) to fill out the field width.
+
+     \item An optional precision, in the form of a period (`.') followed
+     by an optional digit string. If the digit string is omitted, the
+     precision is taken as zero. This gives the minimum number of digits
+     to appear for d, i, o, u, x, and X conversions, the number of
+     digits to appear after the decimal-point for e, E, and f
+     conversions, the maximum number of significant digits for g and G
+     conversions, or the maximum number of characters to be printed from
+     a string for s conversions.
+
+     \item The optional character h, specifying that a following d, i,
+     o, u, x, or X conversion corresponds to a short int or unsigned
+     short int argument, or that a following n conversion corresponds to
+     a pointer to a short int argument.
+
+     \item The optional character l (ell) specifying that a following d,
+     i, o, u, x, or X conversion applies to a pointer to a long int or
+     unsigned long int argument, or that a following n conversion
+     corresponds to a pointer to a long int argument. Linux provides a
+     non ANSI compliant use of two l flags as a synonym to q or L. Thus
+     ll can be used in combination with float conversions. This usage
+     is, however, strongly discouraged.
+
+     \item The character L specifying that a following e, E,
+     f, g, or G conversion corresponds to a long double
+     argument, or a following d, i, o, u, x, or X conversion corresponds to a long long argument. Note
+     that long long is not specified in ANSI C and
+     therefore not portable to all architectures.
+
+     \item The optional character q. This is equivalent to L. See the
+     STANDARDS and BUGS sections for comments on the use of ll, L, and
+     q.
+
+     \item A Z character specifying that the following integer (d, i, o,
+     u, i, x, and X), conversion corresponds to a size_t argument.
+
+     \item A character that specifies the type of conversion to be
+     applied.
+
+     A field width or precision, or both, may be indicated by an
+     asterisk `*' instead of a digit string. In this case, an int
+     argument supplies the field width or precision. A negative field
+     width is treated as a left adjustment flag followed by a positive
+     field width; a negative precision is treated as though it were
+     missing.
+
+     The conversion specifiers and their meanings are:
+
+     \begin{description}
+     \item{diouxX} The int (or appropriate variant) argument is
+     converted to signed decimal (d and i), unsigned octal (o, unsigned
+     decimal (u, or unsigned hexadecimal (x and X) notation. The letters
+     abcdef are used for x conversions; the letters ABCDEF are used for
+     X conversions. The precision, if any, gives the minimum number of
+     digits that must appear; if the converted value requires fewer
+     digits, it is padded on the left with zeros.
+
+     \item{eE} The double argument is rounded and converted in the style
+     [<->]d.dddedd where there is one digit before the decimal-point
+     character and the number of digits after it is equal to the
+     precision; if the precision is missing, it is taken as 6; if the
+     precision is zero, no decimal-point character appears. An E
+     conversion uses the letter E (rather than e) to introduce the
+     exponent. The exponent always contains at least two digits; if the
+     value is zero, the exponent is 00.
+
+     \item{f} The double argument is rounded and converted to decimal
+     notation in the style [-]ddd.ddd, where the number of digits after
+     the decimal-point character is equal to the precision
+     specification. If the precision is missing, it is taken as 6; if
+     the precision is explicitly zero, no decimal-point character
+     appears. If a decimal point appears, at least one digit appears
+     before it.
+
+     \item{g} The double argument is converted in style f or e (or E for
+     G conversions). The precision specifies the number of significant
+     digits. If the precision is missing, 6 digits are given; if the
+     precision is zero, it is treated as 1. Style e is used if the
+     exponent from its conversion is less than -4 or greater than or
+     equal to the precision. Trailing zeros are removed from the
+     fractional part of the result; a decimal point appears only if it
+     is followed by at least one digit.
+
+     \item{c} The int argument is converted to an unsigned char, and the
+     resulting character is written.
+
+     \item{s} The ``char *'' argument is expected to be a pointer to an
+     array of character type (pointer to a string). Characters from the
+     array are written up to (but not including) a terminating NUL
+     character; if a precision is specified, no more than the number
+     specified are written. If a precision is given, no null character
+     need be present; if the precision is not specified, or is greater
+     than the size of the array, the array must contain a terminating
+     NUL character.
+
+     \item{p} The ``void *'' pointer argument is printed in hexadecimal
+     (as if by %#x or %#lx).
+
+     \item{n} The number of characters written so far is stored into the
+     integer indicated by the ``int *'' (or variant) pointer argument.
+     No argument is converted.
+
+     \item{%} A `%' is written. No argument is converted. The complete
+     conversion specification is `%%'.
+
+     \end{description}
+     \end{itemize}
+
+     In no case does a non-existent or small field width cause
+     truncation of a field; if the result of a conversion is wider than
+     the field width, the field is expanded to contain the conversion
+     result.
+
+
+Inputs
+~~~~~~
+::
+
+     format - Format string as described above
+     ... - Arguments for the format string
+
+
+Result
+~~~~~~
+::
+
+     The number of characters written to stdout or EOF on error.
+
+
+Example
+~~~~~~~
+::
+
+     To print a date and time in the form `Sunday, July 3,
+     10:02', where weekday and month are pointers to strings:
+
+         #include <stdio.h>
+
+         fprintf (stdout, "%s, %s %d, %.2d:%.2d\n",
+                 weekday, month, day, hour, min);
+
+     To print to five decimal places:
+
+         #include <math.h>
+         #include <stdio.h>
+
+         fprintf (stdout, "pi = %.5f\n", 4 * atan(1.0));
+
+     To allocate a 128 byte string and print into it:
+
+         #include <stdio.h>
+         #include <stdlib.h>
+         #include <stdarg.h>
+
+         char *newfmt(const char *fmt, ...)
+         {
+             char *p;
+             va_list ap;
+
+             if ((p = malloc(128)) == NULL)
+                 return (NULL);
+
+             va_start(ap, fmt);
+
+             (void) vsnprintf(p, 128, fmt, ap);
+
+             va_end(ap);
+
+             return (p);
+         }
+
+
+Bugs
+~~~~
+::
+
+     All functions are fully ANSI C3.159-1989 conformant, but provide
+     the additional flags q, Z and ' as well as an additional behaviour
+     of the L and l flags. The latter may be considered to be a bug, as
+     it changes the behaviour of flags defined in ANSI C3.159-1989.
+
+     The effect of padding the %p format with zeros (either by the 0
+     flag or by specifying a precision), and the benign effect (i.e.,
+     none) of the # flag on %n and %p conversions, as well as
+     nonsensical combinations such as are not standard; such
+     combinations should be avoided.
+
+     Some combinations of flags defined by ANSI C are not making sense
+     in ANSI C (e.g. %Ld). While they may have a well-defined behaviour
+     on Linux, this need not to be so on other architectures. Therefore
+     it usually is better to use flags that are not defined by ANSI C at
+     all, i.e. use q instead of L in combination with diouxX conversions
+     or ll. The usage of q is not the same as on BSD 4.4, as it may be
+     used in float conversions equivalently to L.
+
+     Because sprintf and vsprintf assume an infinitely long string,
+     callers must be careful not to overflow the actual space; this is
+     often impossible to assure.
+
+
+See also
+~~~~~~~~
+::
+
+     fprintf(), vprintf(), vfprintf(), sprintf(), vsprintf(),
+     vnsprintf()
+
+
+
+putc
+====
+
+Synopsis
+~~~~~~~~
+::
+
+  int putc(
+     int    c,
+     FILE * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Write one character to the specified stream.
+
+
+Inputs
+~~~~~~
+::
+
+     c - The character to output
+     stream - The character is written to this stream
+
+
+Result
+~~~~~~
+::
+
+     The character written or EOF on error.
+
+
+
+putenv
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int putenv(
+     const char *string)
+
+
+Function
+~~~~~~~~
+::
+
+     Change or add an environment variable.
+
+
+Inputs
+~~~~~~
+::
+
+     string - Is of the form "name=value", where name is the variable's
+              name and value is its value. In case the string is of the form
+              "name" then the variable is removed from the environment.
+
+Result
+~~~~~~
+::
+
+     The putenv() function returns zero on success, or -1 if an
+     error occurs. In such a case the errno variable is set
+     appropriately.
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library.
+     Conforming to BSD4.4 in that it makes a copy of the argument string.
+
+
+
+puts
+====
+
+Synopsis
+~~~~~~~~
+::
+
+  int puts(
+     const char * str)
+
+
+Function
+~~~~~~~~
+::
+
+     Print a string to stdout. A newline ('\n') is emmitted after the
+     string.
+
+
+Inputs
+~~~~~~
+::
+
+     str - Print this string
+
+
+Result
+~~~~~~
+::
+
+     > 0 on success and EOF on error. On error, the reason is put in
+     errno.
+
+
+Example
+~~~~~~~
+::
+
+     #include <errno.h>
+
+     if (puts ("Hello World.") != EOF)
+         fprintf (stderr, "Success");
+     else
+         fprintf (stderr, "Failure: errno=%d", errno);
+
+
+See also
+~~~~~~~~
+::
+
+     fputs(), printf(), fprintf(), putc(), fputc()
+
+
+
+qsort
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  void qsort(
+     void * a,
+     size_t n,
+     size_t es,
+     int (* cmp)(const void *, const void *))
+
+
+Function
+~~~~~~~~
+::
+
+     Sort the array a. It contains n elements of the size es. Elements
+     are compares using the function cmp().
+
+
+Inputs
+~~~~~~
+::
+
+     a - The array to sort
+     n - The number of elements in the array
+     es - The size of a single element in the array
+     cmp - The function which is called when two elements must be
+             compared. The function gets the addresses of two elements
+             of the array and must return 0 is both are equal, < 0 if
+             the first element is less than the second and > 0 otherwise.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+     // Use this function to compare to stringpointers
+     int cmp_strptr (const char ** sptr1, const char ** sptr2)
+     {
+         return strcmp (*sptr1, *sptr2);
+     }
+
+     // Sort an array of strings
+     char ** strings;
+
+     // fill the array
+     strings = malloc (sizeof (char *)*4);
+     strings[0] = strdup ("h");
+     strings[1] = strdup ("a");
+     strings[2] = strdup ("f");
+     strings[3] = strdup ("d");
+
+     // Sort it
+     qsort (strings, sizeof (char *), 4, (void *)cmp_strptr);
+
+
+See also
+~~~~~~~~
+::
+
+     strcmp(), strncmp(), memcmp(), strcasecmp(), strncasecmp()
+
+
+
+rand
+====
+
+Synopsis
+~~~~~~~~
+::
+
+  int rand(
+     void)
+
+
+Function
+~~~~~~~~
+::
+
+     A random number generator.
+
+
+Inputs
+~~~~~~
+::
+
+     None.
+
+
+Result
+~~~~~~
+::
+
+     A pseudo-random integer between 0 and RAND_MAX.
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library or
+     in a threaded application.
+
+
+
+read
+====
+
+Synopsis
+~~~~~~~~
+::
+
+  ssize_t read(
+     int    fd,
+     void * buf,
+     size_t count)
+
+
+Function
+~~~~~~~~
+::
+
+     Read an amount of bytes from a file descriptor.
+
+
+Inputs
+~~~~~~
+::
+
+     fd - The file descriptor to read from
+     buf - The buffer to read the bytes into
+     count - Read this many bytes.
+
+
+Result
+~~~~~~
+::
+
+     The number of characters read (may range from 0 when the file
+     descriptor contains no more characters to count) or -1 on error.
+
+
+See also
+~~~~~~~~
+::
+
+     open(), read(), fread()
+
+
+
+readdir
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  struct dirent *readdir(
+     DIR *dir)
+
+
+Function
+~~~~~~~~
+::
+
+      Reads a directory
+
+
+Inputs
+~~~~~~
+::
+
+     dir - the directory stream pointing to the directory being read
+
+
+Result
+~~~~~~
+::
+
+     The  readdir()  function  returns  a  pointer  to a dirent
+     structure, or NULL if an error occurs  or  end-of-file  is
+     reached.
+
+     The data returned by readdir() is  overwritten  by  subse­
+     quent calls to readdir() for the same directory stream.
+
+     According  to POSIX, the dirent structure contains a field
+     char d_name[] of unspecified size, with at  most  NAME_MAX
+     characters  preceding the terminating null character.  Use
+     of other fields will harm the  portability  of  your  pro­
+     grams.
+
+
+See also
+~~~~~~~~
+::
+
+     read(), opendir(), closedir(), rewinddir(), seekdir(),
+     telldir(), scandir()
+
+
+
+realloc
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  void * realloc(
+     void * oldmem,
+     size_t size)
+
+
+Function
+~~~~~~~~
+::
+
+     Change the size of an allocated part of memory. The memory must
+     have been allocated by malloc() or calloc(). If you reduce the
+     size, the old contents will be lost. If you enlarge the size,
+     the new contents will be undefined.
+
+
+Inputs
+~~~~~~
+::
+
+     oldmen - What you got from malloc() or calloc().
+     size - The new size.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the allocated memory or NULL. If you don't need the
+     memory anymore, you can pass this pointer to free(). If you don't,
+     the memory will be freed for you when the application exits.
+
+
+Notes
+~~~~~
+::
+
+     If you get NULL, the memory at oldmem will not have been freed and
+     can still be used.
+
+     This function must not be used in a shared library or
+     in a threaded application.
+
+
+
+See also
+~~~~~~~~
+::
+
+     free(), malloc(), calloc()
+
+
+
+realloc_nocopy
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+  void * realloc_nocopy(
+     void * oldmem,
+     size_t size)
+
+
+Function
+~~~~~~~~
+::
+
+     Change the size of an allocated part of memory. The memory must
+     have been allocated by malloc(), calloc(), realloc() or realloc_nocopy().
+     
+     The reallocated buffer, unlike with realloc(), is not guaranteed to hold
+     a copy of the old one.
+
+
+Inputs
+~~~~~~
+::
+
+     oldmen - What you got from malloc(), calloc(), realloc() or realloc_nocopy().
+              If NULL, the function will behave exactly like malloc().
+     size   - The new size. If 0, the buffer will be freed.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the allocated memory or NULL. If you don't need the
+     memory anymore, you can pass this pointer to free(). If you don't,
+     the memory will be freed for you when the application exits.
+
+
+Notes
+~~~~~
+::
+
+     If you get NULL, the memory at oldmem will not have been freed and
+     can still be used.
+
+     This function must not be used in a shared library or
+     in a threaded application.
+
+     This function is AROS specific.
+
+
+See also
+~~~~~~~~
+::
+
+     free(), malloc(), calloc(), realloc()
+
+
+
+remove
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int remove(
+     const char * pathname)
+
+
+Function
+~~~~~~~~
+::
+
+     Deletes a file or directory.
+
+
+Inputs
+~~~~~~
+::
+
+     pathname - Complete path to the file or directory.
+
+
+Result
+~~~~~~
+::
+
+     0 on success and -1 on error. In case of an error, errno is set.
+     
+
+Notes
+~~~~~
+::
+
+     Identical to unlink
+
+
+See also
+~~~~~~~~
+::
+
+     unlink
+
+
+
+rename
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int rename(
+     const char * oldpath,
+     const char * newpath)
+
+
+Function
+~~~~~~~~
+::
+
+     Renames a file or directory.
+
+
+Inputs
+~~~~~~
+::
+
+     oldpath - Complete path to existing file or directory.
+     newpath - Complete path to the new file or directory.
+
+
+Result
+~~~~~~
+::
+
+     0 on success and -1 on error. In case of an error, errno is set.
+     
+
+
+rewind
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  void rewind(
+     FILE * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Change the current position in a stream to the beginning.
+
+
+Inputs
+~~~~~~
+::
+
+     stream - Modify this stream
+
+
+See also
+~~~~~~~~
+::
+
+     fopen(), fwrite(), fseek()
+
+
+
+rmdir
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  int rmdir(
+     const char * pathname)
+
+
+Function
+~~~~~~~~
+::
+
+     Deletes an empty directory.
+
+
+Inputs
+~~~~~~
+::
+
+     pathname - Complete path to the directory.
+
+
+Result
+~~~~~~
+::
+
+     0 on success and -1 on error. In case of an error, errno is set.
+     
+
+See also
+~~~~~~~~
+::
+
+     unlink(), remove()
+
+
+
+scanf
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  int scanf(
+     const char * format,
+     ...)
+
+
+Result
+~~~~~~
+::
+
+     The number of converted parameters
+
+
+See also
+~~~~~~~~
+::
+
+     fscanf(), vscanf(), vfscanf(), sscanf(), vsscanf(),
+     vnsscanf()
+
+
+
+setbuf
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  void setbuf(
+     FILE *stream,
+     char *buf)
+
+
+Notes
+~~~~~
+::
+
+     This is a simpler alias for setvbuf() according to manpage.
+
+
+
+setenv
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int setenv(
+     const char *name,
+     const char *value,
+     int         overwrite)
+
+Function
+~~~~~~~~
+::
+
+     Change or add an environment variable.
+
+
+Inputs
+~~~~~~
+::
+
+     name      - Name of the environment variable,
+     value     - Value wich the variable must be set or changed to.
+     overwrite - If non-zero then, if a variable with the name name already
+                 exists, its value is changet to value, otherwise is not
+                 changed
+                 
+
+Result
+~~~~~~
+::
+
+     Returns zero on success, or -1 if there was insufficient
+     space in the environment.
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library.
+
+
+
+setgid
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int setgid(
+     gid_t gid)
+
+
+
+setlinebuf
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  void setlinebuf(
+     FILE *stream)
+
+
+Notes
+~~~~~
+::
+
+     This is a simpler alias for setvbuf() according to manpage.
+
+
+
+setuid
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int setuid(
+     uid_t uid)
+
+
+
+setvbuf
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int setvbuf(
+     FILE *stream,
+     char *buf,
+     int mode,
+     size_t size)
+
+
+
+sigaction
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  int sigaction(
+     int signum,
+     const  struct  sigaction  *act,
+     struct sigaction *oldact)
+
+
+
+sigaddset
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  int sigaddset(
+     sigset_t *set,
+     int signum)
+
+
+
+sigdelset
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  int sigdelset(
+     sigset_t *set,
+     int signum)
+
+
+
+sigemptyset
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  int sigemptyset(
+     sigset_t *set)
+
+
+
+sigfillset
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  int sigfillset(
+     sigset_t *set)
+
+
+
+sigismember
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  int sigismember(
+     const sigset_t *set,
+     int signum)
+
+
+
+sigpending
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  int sigpending(
+     sigset_t *set)
+
+
+
+sigprocmask
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  int sigprocmask(
+     int  how,
+     const  sigset_t *set,
+     sigset_t *oldset)
+
+
+
+sigsuspend
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  int sigsuspend(
+     const sigset_t *mask)
+
+
+
+sleep
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  unsigned int sleep(
+     unsigned int seconds )
+
+
+Function
+~~~~~~~~
+::
+
+     The sleep() function makes the current process sleep for the
+     specified number of seconds or until a signal arrives which
+     is not ignored.
+
+
+Inputs
+~~~~~~
+::
+
+     seconds - The number of seconds to sleep
+
+
+Result
+~~~~~~
+::
+
+     Zero if the requested time has elapsed, or the number of seconds
+     left to sleep when the process was signalled.
+
+
+Example
+~~~~~~~
+::
+
+     // Sleep for 10 seconds
+     sleep( 10 );
+     
+
+Bugs
+~~~~
+::
+
+     The current implementation simply uses the dos.library function
+     Delay() to sleep, and cannot be interrupted by incoming signals.
+     This shouldn't be of any importance, since AROS doesn't have 
+     POSIX style signalling yet (but when it is implemented, this
+     function needs to be changed). 
+
+
+
+snprintf
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  int snprintf(
+     char       * str,
+     size_t       n,
+     const char * format,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     Formats a list of arguments and writes them into the string str.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The formatted string is written into this variable. You
+             must make sure that it is large enough to contain the
+             result.
+     n - At most n characters are written into the string. This
+             includes the final 0.
+     format - Format string as described above
+     ... - Arguments for the format string
+
+
+Result
+~~~~~~
+::
+
+     The number of characters written into the string. If this is
+     -1, then there was not enough room. The 0 byte at the end is not
+     included.
+
+
+See also
+~~~~~~~~
+::
+
+     fprintf(), vprintf(), vfprintf(), snprintf(), vsprintf(),
+     vnsprintf()
+
+
+
+spawnv
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int spawnv(
+      int         mode,
+      const char *path,
+      char *const argv[])
+
+
+Function
+~~~~~~~~
+::
+
+     Spawn a child process, given a vector of arguments
+
+
+Inputs
+~~~~~~
+::
+
+     mode - the way the child process has to be loaded, and how the parent has to behave
+            after the child process is initiated. Specify one of the following values:
+
+            P_WAIT    - the child program is loaded into memory, then it's executed while
+                        the parent process waits for it to terminate, at which point the
+                        patent process resumes execution.
+
+            P_NOWAIT  - the parent program is executed concurrently with the new child process.
+
+            P_OVERLAY - teplace the parent program with the child program in memory and then
+                        execute the child. The parent program will never be resumed. This
+                        mode is equivalent to calling one of the exec*() functions.
+
+     path - the full path name of the executable.
+
+     argv - a pointer to a NULL terminated array of strings representing arguments to pass
+            to the child process. The first entry in the array is conventionally the name of
+            the program to spawn, but in any case it must _never_ be NULL, and the argv
+            pointer itself must never be NULL either.
+
+
+Result
+~~~~~~
+::
+
+
+     If P_WAIT is specified, then the return code of the child program is returned.
+     If instead P_NOWAIT is used, then the pid of the newly created process is returned.
+     Finally, if P_OVERLAY is used, the function doesn't return unless an error has occurred,
+     in which case -1 is returned also for the other modes and the global errno variable will
+     hold the proper error code.
+
+
+Notes
+~~~~~
+::
+
+
+     The way the child process behaves regarding parent's file descriptors, signal handlers
+     and so on is the same way it would behave with one of the exec*(3) functions.
+     This, for one, means that all filedescriptors are inherited except the ones which have
+     the close-on-exec flag set.
+
+
+See also
+~~~~~~~~
+::
+
+     execl(), execle(), execlp(), execlpe(), execv(), execve(), execvp(), execvpe(), getenv(),
+     putenv(), setenv(), spawn(), spawnl(), spawnle(), spawnlp(), spawnlpe(), spawnp(),
+     spawnve(), spawnvp(), spawnvpe(), wait(), waitpid()
+
+
+
+spawnvp
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int spawnvp(
+      int         mode,
+      const char *command,
+      char *const argv[])
+
+
+Function
+~~~~~~~~
+::
+
+     Spawn a child process, given a vector of arguments. It's like spawnv(), but
+     searches the command in the directories specified by the PATH environment
+     variable.
+
+
+Inputs
+~~~~~~
+::
+
+     mode - the way the child process has to be loaded, and how the parent has to behave
+            after the child process is initiated. Specify one of the following values:
+
+            P_WAIT    - the child program is loaded into memory, then it's executed while
+                        the parent process waits for it to terminate, at which point the
+                        patent process resumes execution.
+
+            P_NOWAIT  - the parent program is executed concurrently with the new child process.
+
+            P_OVERLAY - teplace the parent program with the child program in memory and then
+                        execute the child. The parent program will never be resumed. This
+                        mode is equivalent to calling one of the exec*() functions.
+
+     command - the command to execute. Unless it's an absolute path name, the command
+               will be searched in the directories specified by the PATH environment
+               variable.
+
+     argv - a pointer to a NULL terminated array of strings representing arguments to pass
+            to the child process. The first entry in the array is conventionally the name of
+            the program to spawn, but in any case it must _never_ be NULL, and the argv
+            pointer itself must never be NULL either.
+
+
+Result
+~~~~~~
+::
+
+
+     If P_WAIT is specified, then the return code of the child program is returned.
+     If instead P_NOWAIT is used, then the pid of the newly created process is returned.
+     Finally, if P_OVERLAY is used, the function doesn't return unless an error has occurred,
+     in which case -1 is returned also for the other modes and the global errno variable will
+     hold the proper error code.
+
+
+Notes
+~~~~~
+::
+
+
+     The way the child process behaves regarding parent's file descriptors, signal handlers
+     and so on is the same way it would behave with one of the exec*(3) functions.
+     This, for one, means that all filedescriptors are inherited except the ones which have
+     the close-on-exec flag set.
+
+
+See also
+~~~~~~~~
+::
+
+     execl(), execle(), execlp(), execlpe(), execv(), execve(), execvp(), execvpe(), getenv(),
+     putenv(), setenv(), spawn(), spawnl(), spawnle(), spawnlp(), spawnlpe(), spawnp(),
+     spawnve(), spawnvp(), spawnvpe(), wait(), waitpid()
+
+
+
+sprintf
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int sprintf(
+     char       * str,
+     const char * format,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     Formats a list of arguments and writes them into the string str.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The formatted string is written into this variable. You
+             must make sure that it is large enough to contain the
+             result.
+     format - Format string as described above
+     ... - Arguments for the format string
+
+
+Result
+~~~~~~
+::
+
+     The number of characters written into the string.
+
+
+Notes
+~~~~~
+::
+
+     No checks are made that str is large enough for the result.
+
+
+See also
+~~~~~~~~
+::
+
+     fprintf(), vprintf(), vfprintf(), snprintf(), vsprintf(),
+     vnsprintf()
+
+
+
+srand
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  void srand(
+     unsigned int seed)
+
+
+Function
+~~~~~~~~
+::
+
+     Set the starting value for the random number generator rand()
+
+
+Inputs
+~~~~~~
+::
+
+     seed - New start value
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library or
+     in a threaded application.
+
+
+
+sscanf
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int sscanf(
+     const char  *str,
+     const char  *format,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     Scan the specified string and convert it into the arguments as
+     specified by format.
+
+
+Inputs
+~~~~~~
+::
+
+     str     - The routine examines this string.
+     format - Format string. See scanf() for a description
+     ...    - Arguments for the result
+
+
+Result
+~~~~~~
+::
+
+     The number of converted parameters.
+
+
+See also
+~~~~~~~~
+::
+
+     fscanf(), vscanf(), vfscanf(), snscanf(), vsscanf(),
+     vnsscanf()
+
+
+
+statfs
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int statfs(
+ const char *path,
+ struct statfs *buf)
+
+
+Function
+~~~~~~~~
+::
+
+     Gets information about mounted filesystem.
+
+
+Inputs
+~~~~~~
+::
+
+     path - path to any file in the filesystem we want to know about
+     buf - pointer to statfs structures where information about filesystem
+         will be stored
+
+
+Result
+~~~~~~
+::
+
+     Information about filesystem is stored in statfs structure
+
+
+Bugs
+~~~~
+::
+
+     f_flags, f_files, f_ffree and f_fsid.val are always set to 0
+     f_mntfromname is set to an empty string
+
+
+
+stccpy
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  size_t stccpy(
+     char       * dest,
+     const char * src,
+     size_t       n)
+
+
+Function
+~~~~~~~~
+::
+
+     Copy a string. Works like an assignment "dest=src;". At most
+     n characters are copied.
+
+
+Inputs
+~~~~~~
+::
+
+     dest - The string is copied into this variable. Make sure it is
+             large enough.
+     src - This is the new contents of dest.
+     n - How many characters to copy at most. If the string src is
+             smaller than that, only strlen(str)+1 bytes are copied.
+
+
+Result
+~~~~~~
+::
+
+     The number of copied characters.
+
+
+Notes
+~~~~~
+::
+
+     No check is beeing made that dest is large enough for src.
+
+
+See also
+~~~~~~~~
+::
+
+     strncpy()
+
+
+
+stcd_l
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int stcd_l(
+     const char      * in,
+     long            * lvalue)
+
+
+Function
+~~~~~~~~
+::
+
+     Convert decimal string to a long integer
+
+
+Inputs
+~~~~~~
+::
+
+     in     - The decimal string to be converted
+     lvalue - Pointer to long where the result is saved 
+
+
+Result
+~~~~~~
+::
+
+     1 means success. 0 means failure.
+
+
+Notes
+~~~~~
+::
+
+     SAS C specific
+     
+
+
+stch_l
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int stch_l(
+     const char      * in,
+     long            * lvalue)
+
+
+Function
+~~~~~~~~
+::
+
+     Convert hexadecimal string to a long integer
+
+
+Inputs
+~~~~~~
+::
+
+     in     - The hexadecimal string to be converted
+     lvalue - Pointer to long where the result is saved 
+
+
+Result
+~~~~~~
+::
+
+     Number of characters converted
+
+
+Notes
+~~~~~
+::
+
+     SAS C specific
+     
+
+
+stcl_d
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int stcl_d(
+     char            * out,
+     long        lvalue)
+
+
+Function
+~~~~~~~~
+::
+
+     Convert an long integer to a decimal string
+
+
+Inputs
+~~~~~~
+::
+
+     out     - Result will be put into this string
+     uivalue - the value to convert
+
+
+Result
+~~~~~~
+::
+
+     The number of characters written into the string
+
+
+Notes
+~~~~~
+::
+
+     SAS C specific
+     
+
+
+stcl_h
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int stcl_h(
+     char            * out,
+     long        lvalue)
+
+
+Function
+~~~~~~~~
+::
+
+     Convert an long integer to a hex string
+
+
+Inputs
+~~~~~~
+::
+
+     out     - Result will be put into this string
+     uivalue - the value to convert
+
+
+Result
+~~~~~~
+::
+
+     The number of characters written into the string
+
+
+Notes
+~~~~~
+::
+
+     SAS C specific
+     
+
+
+stcl_o
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int stcl_o(
+     char            * out,
+     long        lvalue)
+
+
+Function
+~~~~~~~~
+::
+
+     Convert an long integer to an octal string
+
+
+Inputs
+~~~~~~
+::
+
+     out     - Result will be put into this string
+     uivalue - the value to convert
+
+
+Result
+~~~~~~
+::
+
+     The number of characters written into the string
+
+
+Notes
+~~~~~
+::
+
+     SAS C specific
+     
+
+
+stco_l
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int stco_l(
+     const char      * in,
+     long            * lvalue)
+
+
+Function
+~~~~~~~~
+::
+
+     Convert octal string to a long integer
+
+
+Inputs
+~~~~~~
+::
+
+     in     - The octal string to be converted
+     lvalue - Pointer to long where the result is saved 
+
+
+Result
+~~~~~~
+::
+
+     1 means success. 0 means failure.
+
+
+Notes
+~~~~~
+::
+
+     SAS C specific
+     
+
+
+stcu_d
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int stcu_d(
+     char            * out,
+     unsigned        uivalue)
+
+
+Function
+~~~~~~~~
+::
+
+     Convert an unsigned integer to a decimal string
+
+
+Inputs
+~~~~~~
+::
+
+     out     - Result will be put into this string
+     uivalue - the value to convert
+
+
+Result
+~~~~~~
+::
+
+     The number of characters written into the string
+
+
+Notes
+~~~~~
+::
+
+     SAS C specific
+     
+
+
+stpblk
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  char * stpblk(
+     const char * str )
+
+
+Function
+~~~~~~~~
+::
+
+     Searches for the first non-blank character in a string. A blank 
+     character is defined as one that isspace() treats like one 
+     (ie. spaces, tabs and newlines).
+
+
+Inputs
+~~~~~~
+::
+
+     str - String to search.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the first occurence of a non-blank character in str.
+
+
+Example
+~~~~~~~
+::
+
+     char *hello = " Hello";
+     char *empty = "      ";
+ 
+     printf( stpblk( hello ) );                 
+     --> Hello
+     
+     printf( stpblk( empty ) );                 
+     -->
+     
+     printf( "%d", strlen( stpblk( hello ) ) );
+     --> 5
+     
+     printf( "%d", strlen( stpblk( empty ) ) ); 
+     --> 0
+     
+
+Notes
+~~~~~
+::
+
+     This function always returns a valid pointer as provided str isn't
+     NULL. If there are no non-blank characters in the string, a pointer
+     to the trailing '\0' is returned (ie. an empty string).
+     
+
+See also
+~~~~~~~~
+::
+
+     isspace()
+
+
+
+stpcpy
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  char * stpcpy(
+     char       * dest,
+     const char * src)
+
+
+Function
+~~~~~~~~
+::
+
+     Copy a string returning pointer to its end.
+
+
+Inputs
+~~~~~~
+::
+
+     dest - The string is copied into this variable. Make sure it is
+            large enough.
+            
+     src - This is the new contents of dest.
+
+
+Result
+~~~~~~
+::
+
+     pointer to the end of the string dest (address of it's null
+     character)
+
+
+Notes
+~~~~~
+::
+
+     No check is beeing made that dest is large enough for src.
+
+
+See also
+~~~~~~~~
+::
+
+     strcpy()
+
+
+
+stpsym
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  char * stpsym(
+     char * str_ptr,
+     char * dest_ptr,
+     int dest_size)
+
+
+Function
+~~~~~~~~
+::
+
+     Searches for a symbol in a string.
+
+
+Inputs
+~~~~~~
+::
+
+     str_ptr - points to the string to scan
+
+     dest_ptr - points to the string where stpsym stores the symbol
+
+     dest_size - specifies the size in bytes of *dest_ptr
+
+
+Result
+~~~~~~
+::
+
+     Pointer to the next character in the string after the symbol.
+     If stpsym could not find a symbol, it returns str_ptr.
+
+
+Example
+~~~~~~~
+::
+
+     #include <string.h>
+     #include <stdio.h>
+
+     int main(void)
+     {
+         char *text;
+         char symbol[10];
+         char *r;
+
+         text = "alpha1  2";
+         r = stpsym(text,symbol,10);
+         printf("%s",symbol);   // prints "alpha1"
+     }
+
+
+Notes
+~~~~~
+::
+
+     A symbol consists of an alphabetic character followed by zero
+     or more alphanumeric characters.  stpsym() does not skip leading
+     space characters.
+
+     Note that if you want to retrieve a symbol of length n, you need
+     to ensure that *dest_ptr can accommodate at least n+1 elements,
+     and that dest_size == n+1.  This extra element is needed for the
+     terminating null character.
+
+
+
+strcasecmp
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  int strcasecmp(
+     const char * str1,
+     const char * str2)
+
+
+Function
+~~~~~~~~
+::
+
+     Calculate str1 - str2 ignoring case.
+
+
+Inputs
+~~~~~~
+::
+
+     str1, str2 - Strings to compare
+
+
+Result
+~~~~~~
+::
+
+     The difference of the strings. The difference is 0, if both are
+     equal, < 0 if str1 < str2 and > 0 if str1 > str2. Note that
+     it may be greater then 1 or less than -1.
+
+
+Notes
+~~~~~
+::
+
+     This function is not part of a library and may thus be called
+     any time.
+
+
+
+strcasestr
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  char * strcasestr(
+     const char * str,
+     const char * search)
+
+
+Function
+~~~~~~~~
+::
+
+     Searches for a string in a string.
+
+
+Inputs
+~~~~~~
+::
+
+     str - Search this string
+     search - Look for this string
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the first occurence of search in str or NULL if search
+     is not found in str.
+
+
+Example
+~~~~~~~
+::
+
+     char buffer[64];
+
+     strcpy (buffer, "Hello ");
+
+     // This returns a pointer to the first l in buffer.
+     strcasestr (buffer, "llo ");
+
+     // This returns NULL
+     strcasestr (buffer, "llox");
+
+
+See also
+~~~~~~~~
+::
+
+     strchr(), strrchr(), strpbrk()
+
+
+
+strcat
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  char * strcat(
+     char       * dest,
+     const char * src)
+
+
+Function
+~~~~~~~~
+::
+
+     Concatenates two strings.
+
+
+Inputs
+~~~~~~
+::
+
+     dest - src is appended to this string. Make sure that there
+             is enough room for src.
+     src - This string is appended to dest
+
+
+Result
+~~~~~~
+::
+
+     dest.
+
+
+Example
+~~~~~~~
+::
+
+     char buffer[64];
+
+     strcpy (buffer, "Hello ");
+     strcat (buffer, "World.");
+
+     // Buffer now contains "Hello World."
+
+
+Notes
+~~~~~
+::
+
+     The routine makes no checks if dest is large enough.
+
+
+
+strchr
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  char * strchr(
+     const char * str,
+     int          c)
+
+
+Function
+~~~~~~~~
+::
+
+     Searches for a character in a string.
+
+
+Inputs
+~~~~~~
+::
+
+     str - Search this string
+     c - Look for this character
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the first occurence of c in str or NULL if c is not
+     found in str.
+
+
+Example
+~~~~~~~
+::
+
+     char buffer[64];
+
+     strcpy (buffer, "Hello ");
+
+     // This returns a pointer to the first l in buffer.
+     strchr (buffer, 'l');
+
+     // This returns NULL
+     strchr (buffer, 'x');
+
+
+See also
+~~~~~~~~
+::
+
+     strrchr()
+
+
+
+strcmp
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int strcmp(
+     const char * str1,
+     const char * str2)
+
+
+Function
+~~~~~~~~
+::
+
+     Calculate str1 - str2.
+
+
+Inputs
+~~~~~~
+::
+
+     str1, str2 - Strings to compare
+
+
+Result
+~~~~~~
+::
+
+     The difference of the strings. The difference is 0, if both are
+     equal, < 0 if str1 < str2 and > 0 if str1 > str2. Note that
+     it may be greater then 1 or less than -1.
+
+
+Notes
+~~~~~
+::
+
+     This function is not part of a library and may thus be called
+     any time.
+
+
+
+strcoll
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int strcoll(
+     const char * str1,
+     const char * str2)
+
+
+Function
+~~~~~~~~
+::
+
+     Calculate str1 - str2. The operation is based on strings interpreted
+     as appropriate for the program's current locale  for  category  LC_COLLATE.
+
+
+Inputs
+~~~~~~
+::
+
+     str1, str2 - Strings to compare
+
+
+Result
+~~~~~~
+::
+
+     The difference of the strings. The difference is 0, if both are
+     equal, < 0 if str1 < str2 and > 0 if str1 > str2. Note that
+     it may be greater then 1 or less than -1.
+
+
+
+strcpy
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  char * strcpy(
+     char       * dest,
+     const char * src)
+
+
+Function
+~~~~~~~~
+::
+
+     Copy a string. Works like an assignment "dest=src;".
+
+
+Inputs
+~~~~~~
+::
+
+     dest - The string is copied into this variable. Make sure it is
+             large enough.
+     src - This is the new contents of dest.
+
+
+Result
+~~~~~~
+::
+
+     dest.
+
+
+Notes
+~~~~~
+::
+
+     No check is beeing made that dest is large enough for src.
+
+
+See also
+~~~~~~~~
+::
+
+     strncpy(), memcpy(), memmove()
+
+
+
+strcspn
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  size_t strcspn(
+     const char * str,
+     const char * reject)
+
+
+Function
+~~~~~~~~
+::
+
+     Calculates the length of the initial segment of str which consists
+     entirely of characters not in reject.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The string to check.
+     reject - Characters which must not be in str.
+
+
+Result
+~~~~~~
+::
+
+     Length of the initial segment of str which doesn't contain any
+     characters from reject.
+
+
+Example
+~~~~~~~
+::
+
+     char buffer[64];
+
+     strcpy (buffer, "Hello ");
+
+     // Returns 5
+     strcspn (buffer, " ");
+
+     // Returns 0
+     strcspn (buffer, "H");
+
+
+
+strdup
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  char * strdup(
+     const char * orig)
+
+
+Function
+~~~~~~~~
+::
+
+     Create a copy of a string. The copy can be freed with free() or will
+     be freed when then program ends.
+
+
+Inputs
+~~~~~~
+::
+
+     str1 - Strings to duplicate
+
+
+Result
+~~~~~~
+::
+
+     A copy of the string which can be freed with free().
+
+
+
+strerror
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  char * strerror(
+     int n)
+
+
+Function
+~~~~~~~~
+::
+
+     Returns a readable string for an error number in errno.
+
+
+Inputs
+~~~~~~
+::
+
+     n - The contents of errno or a #define from errno.h
+
+
+Result
+~~~~~~
+::
+
+     A string describing the error.
+
+
+
+strerror
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  char * strerror(
+     int n)
+
+
+Function
+~~~~~~~~
+::
+
+     Returns a readable string for an error number in errno.
+
+
+Inputs
+~~~~~~
+::
+
+     n - The contents of errno or a #define from errno.h
+
+
+Result
+~~~~~~
+::
+
+     A string describing the error.
+
+
+
+strlen
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  size_t strlen(
+     const char * ptr)
+
+
+Function
+~~~~~~~~
+::
+
+     Calculate the length of a string (without the terminating 0 byte).
+
+
+Inputs
+~~~~~~
+::
+
+     ptr - The string to get its length for
+
+
+Result
+~~~~~~
+::
+
+     The length of the string.
+
+
+
+strlwr
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  char * strlwr(
+     char * str)
+
+
+Function
+~~~~~~~~
+::
+
+     
+     Converts a string to all lower case characters. Modifies
+     the given string.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The string to convert.
+
+
+Result
+~~~~~~
+::
+
+     The same string buffer is passed back with all characters converted.
+
+
+
+strncasecmp
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  int strncasecmp(
+     const char * str1,
+     const char * str2,
+     size_t       n)
+
+
+Function
+~~~~~~~~
+::
+
+     Calculate str1 - str2 ignoring case. Upto n characters are taken
+     into account.
+
+
+Inputs
+~~~~~~
+::
+
+     str1, str2 - Strings to compare
+
+
+Result
+~~~~~~
+::
+
+     The difference of the strings. The difference is 0, if both are
+     equal, < 0 if str1 < str2 and > 0 if str1 > str2. Note that
+     it may be greater then 1 or less than -1.
+
+
+Notes
+~~~~~
+::
+
+     This function is not part of a library and may thus be called
+     any time.
+
+
+
+strncat
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  char * strncat(
+     char       * dest,
+     const char * src,
+     size_t       n)
+
+
+Function
+~~~~~~~~
+::
+
+     Concatenates two strings. If src is longer than n characters, then
+     only the first n characters are copied.
+
+
+Inputs
+~~~~~~
+::
+
+     dest - src is appended to this string. Make sure that there
+             is enough room for src.
+     src - This string is appended to dest
+     n - No more than this number of characters of src are copied.
+
+
+Result
+~~~~~~
+::
+
+     dest.
+
+
+Example
+~~~~~~~
+::
+
+     char buffer[64];
+
+     strcpy (buffer, "Hello ");
+     strncat (buffer, "World.!!", 6);
+
+     // Buffer now contains "Hello World."
+
+
+Notes
+~~~~~
+::
+
+     The routine makes no checks if dest is large enough. The size of
+     dest must be at least strlen(dest)+n+1.
+
+
+
+strncmp
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int strncmp(
+     const char * str1,
+     const char * str2,
+     size_t       n)
+
+
+Function
+~~~~~~~~
+::
+
+     Calculate str1 - str2 for upto n chars or upto the first 0 byte.
+
+
+Inputs
+~~~~~~
+::
+
+     str1, str2 - Strings to compare
+
+
+Result
+~~~~~~
+::
+
+     The difference of the strings. The difference is 0, if both are
+     equal, < 0 if str1 < str2 and > 0 if str1 > str2. Note that
+     it may be greater then 1 or less than -1.
+
+
+Notes
+~~~~~
+::
+
+     This function is not part of a library and may thus be called
+     any time.
+
+
+
+strncpy
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  char * strncpy(
+     char       * dest,
+     const char * src,
+     size_t       n)
+
+
+Function
+~~~~~~~~
+::
+
+     Copy a string. Works like an assignment "dest=src;". At most
+     n characters are copied.
+
+
+Inputs
+~~~~~~
+::
+
+     dest - The string is copied into this variable. Make sure it is
+             large enough.
+     src - This is the new contents of dest.
+     n - How many characters to copy at most. If the string src is
+             smaller than that, only strlen(str)+1 bytes are copied.
+
+
+Result
+~~~~~~
+::
+
+     dest.
+
+
+Notes
+~~~~~
+::
+
+     No check is beeing made that dest is large enough for src.
+
+
+See also
+~~~~~~~~
+::
+
+     strncpy(), memcpy(), memmove()
+
+
+
+strpbrk
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  char * strpbrk(
+     const char * str,
+     const char * accept)
+
+
+Function
+~~~~~~~~
+::
+
+     Locate the first occurrence of any character in accept in str.
+
+
+Inputs
+~~~~~~
+::
+
+     str - Search this string
+     accept - Look for these characters
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the first occurence of any character in accept in str
+     or NULL if no character of accept is not found in str.
+
+
+Example
+~~~~~~~
+::
+
+     char buffer[64];
+
+     strcpy (buffer, "Hello ");
+
+     // This returns a pointer to the first l in buffer.
+     strpbrk (buffer, "lo");
+
+     // This returns NULL
+     strpbrk (buffer, "xyz");
+
+
+See also
+~~~~~~~~
+::
+
+     strchr(), strrchr()
+
+
+
+strrchr
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  char * strrchr(
+     const char * str,
+     int          c)
+
+
+Function
+~~~~~~~~
+::
+
+     Searches for the last character c in a string.
+
+
+Inputs
+~~~~~~
+::
+
+     str - Search this string
+     c - Look for this character
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the first occurence of c in str or NULL if c is not
+     found in str.
+
+
+Example
+~~~~~~~
+::
+
+     char buffer[64];
+
+     strcpy (buffer, "Hello ");
+
+     // This returns a pointer to the second l in buffer.
+     strrchr (buffer, 'l');
+
+     // This returns NULL
+     strrchr (buffer, 'x');
+
+
+See also
+~~~~~~~~
+::
+
+     strrchr()
+
+
+
+strrev
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  char * strrev(
+     char       * s)
+
+
+Function
+~~~~~~~~
+::
+
+     Reverse a string (rotate it about its midpoint)
+
+
+Inputs
+~~~~~~
+::
+
+     s - The string to be reversed
+
+
+Result
+~~~~~~
+::
+
+     The original string pointer
+
+
+Example
+~~~~~~~
+::
+
+     char buffer[64];
+
+     strcpy (buffer, "Hello);
+     strrev(buffer);
+     
+     // buffer now contains "olleH"
+
+
+
+Notes
+~~~~~
+::
+
+     SAS C specific
+
+
+
+strsep
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  char * strsep(
+     char       ** strptr,
+     const char * sep)
+
+
+Function
+~~~~~~~~
+::
+
+     Separates a string by the characters in sep.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The string to check or NULL if the next word in
+             the last string is to be searched.
+     sep - Characters which separate "words" in str.
+
+
+Result
+~~~~~~
+::
+
+     The first word in str or the next one if str is NULL.
+
+
+Example
+~~~~~~~
+::
+
+     char buffer[64];
+     char **bufptr
+
+     strcpy (buffer, "Hello, this is a test.");
+     *bufptr = buffer
+
+     // First word. Returns "Hello"
+     strtok (bufptr, " \t,.");
+
+     // Next word. Returns "this"
+     strtok (bufptr, " \t,.");
+
+     // Next word. Returns "is"
+     strtok (bufptr, " \t");
+
+     // Next word. Returns "a"
+     strtok (bufptr, " \t");
+
+     // Next word. Returns "test."
+     strtok (bufptr, " \t");
+
+     // Next word. Returns NULL.
+     strtok (bufptr, " \t");
+
+
+Notes
+~~~~~
+::
+
+     The function changes str !
+
+
+
+strspn
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  size_t strspn(
+     const char * str,
+     const char * accept)
+
+
+Function
+~~~~~~~~
+::
+
+     Calculates the length of the initial segment of str which consists
+     entirely of characters in accept.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The string to check.
+     accept - Characters which have to be in str.
+
+
+Result
+~~~~~~
+::
+
+     Length of the initial segment of str which contains only
+     characters from accept.
+
+
+Example
+~~~~~~~
+::
+
+     char buffer[64];
+
+     strcpy (buffer, "Hello ");
+
+     // Returns 5
+     strspn (buffer, "Helo");
+
+     // Returns 0
+     strspn (buffer, "xyz");
+
+
+
+strstr
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  char * strstr(
+     const char * str,
+     const char * search)
+
+
+Function
+~~~~~~~~
+::
+
+     Searches for a string in a string.
+
+
+Inputs
+~~~~~~
+::
+
+     str - Search this string
+     search - Look for this string
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the first occurence of search in str or NULL if search
+     is not found in str.
+
+
+Example
+~~~~~~~
+::
+
+     char buffer[64];
+
+     strcpy (buffer, "Hello ");
+
+     // This returns a pointer to the first l in buffer.
+     strstr (buffer, "llo ");
+
+     // This returns NULL
+     strstr (buffer, "llox");
+
+
+See also
+~~~~~~~~
+::
+
+     strchr(), strrchr(), strpbrk()
+
+
+
+strtod
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  double strtod(
+     const char * str,
+     char      ** endptr)
+
+
+Function
+~~~~~~~~
+::
+
+     Convert a string of digits into a double.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The string which should be converted. Leading
+             whitespace are ignored. The number may be prefixed
+             by a '+' or '-'. An 'e' or 'E' introduces the exponent.
+             Komma is only allowed before exponent.
+     endptr - If this is non-NULL, then the address of the first
+             character after the number in the string is stored
+             here.
+
+
+Result
+~~~~~~
+::
+
+     The value of the string. The first character after the number
+     is returned in *endptr, if endptr is non-NULL. If no digits can
+     be converted, *endptr contains str (if non-NULL) and 0 is
+     returned.
+
+
+See also
+~~~~~~~~
+::
+
+     atof(), atoi(), atol(), strtol(), strtoul()
+
+
+
+strtok
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  char * strtok(
+     char       * str,
+     const char * sep)
+
+
+Function
+~~~~~~~~
+::
+
+     Separates a string by the characters in sep.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The string to check or NULL if the next word in
+             the last string is to be searched.
+     sep - Characters which separate "words" in str.
+
+
+Result
+~~~~~~
+::
+
+     The first word in str or the next one if str is NULL.
+
+
+Example
+~~~~~~~
+::
+
+     char buffer[64];
+
+     strcpy (buffer, "Hello, this is a test.");
+
+     // Init. Returns "Hello"
+     strtok (str, " \t,.");
+
+     // Next word. Returns "this"
+     strtok (NULL, " \t,.");
+
+     // Next word. Returns "is"
+     strtok (NULL, " \t");
+
+     // Next word. Returns "a"
+     strtok (NULL, " \t");
+
+     // Next word. Returns "test."
+     strtok (NULL, " \t");
+
+     // Next word. Returns NULL.
+     strtok (NULL, " \t");
+
+
+Notes
+~~~~~
+::
+
+     The function changes str !
+
+
+
+strtol
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  long strtol(
+     const char * str,
+     char      ** endptr,
+     int          base)
+
+
+Function
+~~~~~~~~
+::
+
+     Convert a string of digits into an integer according to the
+     given base.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The string which should be converted. Leading
+             whitespace are ignored. The number may be prefixed
+             by a '+' or '-'. If base is above 10, then the
+             alphabetic characters from 'A' are used to specify
+             digits above 9 (ie. 'A' or 'a' is 10, 'B' or 'b' is
+             11 and so on until 'Z' or 'z' is 35).
+     endptr - If this is non-NULL, then the address of the first
+             character after the number in the string is stored
+             here.
+     base - The base for the number. May be 0 or between 2 and 36,
+             including both. 0 means to autodetect the base. strtoul()
+             selects the base by inspecting the first characters
+             of the string. If they are "0x", then base 16 is
+             assumed. If they are "0", then base 8 is assumed. Any
+             other digit will assume base 10. This is like in C.
+
+             If you give base 16, then an optional "0x" may
+             precede the number in the string.
+
+
+Result
+~~~~~~
+::
+
+     The value of the string. The first character after the number
+     is returned in *endptr, if endptr is non-NULL. If no digits can
+     be converted, *endptr contains str (if non-NULL) and 0 is
+     returned.
+
+
+Example
+~~~~~~~
+::
+
+     // returns 1, ptr points to the 0-Byte
+     strol ("  \t +0x1", &ptr, 0);
+
+     // Returns 15. ptr points to the a
+     strol ("017a", &ptr, 0);
+
+     // Returns 215 (5*36 + 35)
+     strol ("5z", &ptr, 36);
+
+
+See also
+~~~~~~~~
+::
+
+     atof(), atoi(), atol(), strtod(), strtoul()
+
+
+
+strtoll
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  long long strtoll(
+     const char * restrict   str,
+     char      ** restrict   endptr,
+     int                     base)
+
+
+Function
+~~~~~~~~
+::
+
+     Convert a string of digits into an integer according to the
+     given base.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The string which should be converted. Leading
+             whitespace are ignored. The number may be prefixed
+             by a '+' or '-'. If base is above 10, then the
+             alphabetic characters from 'A' are used to specify
+             digits above 9 (ie. 'A' or 'a' is 10, 'B' or 'b' is
+             11 and so on until 'Z' or 'z' is 35).
+     endptr - If this is non-NULL, then the address of the first
+             character after the number in the string is stored
+             here.
+     base - The base for the number. May be 0 or between 2 and 36,
+             including both. 0 means to autodetect the base. strtoul()
+             selects the base by inspecting the first characters
+             of the string. If they are "0x", then base 16 is
+             assumed. If they are "0", then base 8 is assumed. Any
+             other digit will assume base 10. This is like in C.
+
+             If you give base 16, then an optional "0x" may
+             precede the number in the string.
+
+
+Result
+~~~~~~
+::
+
+     The value of the string. The first character after the number
+     is returned in *endptr, if endptr is non-NULL. If no digits can
+     be converted, *endptr contains str (if non-NULL) and 0 is
+     returned.
+
+
+Example
+~~~~~~~
+::
+
+     // returns 1, ptr points to the 0-Byte
+     strtoll ("  \t +0x1", &ptr, 0);
+
+     // Returns 15. ptr points to the a
+     strtoll ("017a", &ptr, 0);
+
+     // Returns 215 (5*36 + 35)
+     strtoll ("5z", &ptr, 36);
+
+
+See also
+~~~~~~~~
+::
+
+     strtoull()
+
+
+
+strtoul
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  unsigned long strtoul(
+     const char * str,
+     char      ** endptr,
+     int          base)
+
+
+Function
+~~~~~~~~
+::
+
+     Convert a string of digits into an integer according to the
+     given base.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The string which should be converted. Leading
+             whitespace are ignored. The number may be prefixed
+             by a '+' or '-'. If base is above 10, then the
+             alphabetic characters from 'A' are used to specify
+             digits above 9 (ie. 'A' or 'a' is 10, 'B' or 'b' is
+             11 and so on until 'Z' or 'z' is 35).
+     endptr - If this is non-NULL, then the address of the first
+             character after the number in the string is stored
+             here.
+     base - The base for the number. May be 0 or between 2 and 36,
+             including both. 0 means to autodetect the base. strtoul()
+             selects the base by inspecting the first characters
+             of the string. If they are "0x", then base 16 is
+             assumed. If they are "0", then base 8 is assumed. Any
+             other digit will assume base 10. This is like in C.
+
+             If you give base 16, then an optional "0x" may
+             precede the number in the string.
+
+
+Result
+~~~~~~
+::
+
+     The value of the string. The first character after the number
+     is returned in *endptr, if endptr is non-NULL. If no digits can
+     be converted, *endptr contains str (if non-NULL) and 0 is
+     returned.
+
+
+Example
+~~~~~~~
+::
+
+     // Returns 1, ptr points to the 0-Byte
+     strtoul ("  \t +0x1", &ptr, 0);
+
+     // Returns 15. ptr points to the a
+     strtoul ("017a", &ptr, 0);
+
+     // Returns 215 (5*36 + 35)
+     strtoul ("5z", &ptr, 36);
+
+
+See also
+~~~~~~~~
+::
+
+     atoi(), atol(), strtod(), strtol(), strtoul()
+
+
+
+strtoull
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  unsigned long long strtoull(
+     const char * restrict   str,
+     char      ** restrict   endptr,
+     int                     base)
+
+
+Function
+~~~~~~~~
+::
+
+     Convert a string of digits into an integer according to the
+     given base.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The string which should be converted. Leading
+             whitespace are ignored. The number may be prefixed
+             by a '+' or '-'. If base is above 10, then the
+             alphabetic characters from 'A' are used to specify
+             digits above 9 (ie. 'A' or 'a' is 10, 'B' or 'b' is
+             11 and so on until 'Z' or 'z' is 35).
+     endptr - If this is non-NULL, then the address of the first
+             character after the number in the string is stored
+             here.
+     base - The base for the number. May be 0 or between 2 and 36,
+             including both. 0 means to autodetect the base. strtoull()
+             selects the base by inspecting the first characters
+             of the string. If they are "0x", then base 16 is
+             assumed. If they are "0", then base 8 is assumed. Any
+             other digit will assume base 10. This is like in C.
+
+             If you give base 16, then an optional "0x" may
+             precede the number in the string.
+
+
+Result
+~~~~~~
+::
+
+     The value of the string. The first character after the number
+     is returned in *endptr, if endptr is non-NULL. If no digits can
+     be converted, *endptr contains str (if non-NULL) and 0 is
+     returned.
+
+
+Example
+~~~~~~~
+::
+
+     // Returns 1, ptr points to the 0-Byte
+     strtoull ("  \t +0x1", &ptr, 0);
+
+     // Returns 15. ptr points to the a
+     strtoull ("017a", &ptr, 0);
+
+     // Returns 215 (5*36 + 35)
+     strtoull ("5z", &ptr, 36);
+
+
+See also
+~~~~~~~~
+::
+
+     strtoll(), strtoull()
+
+
+
+strupr
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  char * strupr(
+     char * str)
+
+
+Function
+~~~~~~~~
+::
+
+     
+     Converts a string to all upper case characters. Modifies
+     the given string.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The string to convert.
+
+
+Result
+~~~~~~
+::
+
+     The same string buffer is passed back with all characters converted.
+
+
+
+strxfrm
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  size_t strxfrm(
+     char * restrict dst,
+     const char * restrict src,
+     size_t n)
+
+
+Function
+~~~~~~~~
+::
+
+     The strxfrm() function transforms a null-terminated string pointed to by
+     src according to the current locale collation if any, then copies the
+     transformed string into dst.  Not more than n characters are copied into
+     dst, including the terminating null character added.  If n is set to 0
+     (it helps to determine an actual size needed for transformation), dst is
+     permitted to be a NULL pointer.
+
+     Comparing two strings using strcmp() after strxfrm() is equal to compar-
+     ing two original strings with strcoll().
+
+
+Inputs
+~~~~~~
+::
+
+     dst - the destination string's buffer
+     src - the source string
+     n   - the size of the dst buffer.
+
+
+Result
+~~~~~~
+::
+
+     Upon successful completion, strxfrm() returns the length of the trans-
+     formed string not including the terminating null character.  If this
+     value is n or more, the contents of dst are indeterminate.
+
+
+
+system
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int system(
+     const char *string)
+
+
+
+time
+====
+
+Synopsis
+~~~~~~~~
+::
+
+  time_t time(
+     time_t * tloc)
+
+
+Function
+~~~~~~~~
+::
+
+    time() returns the time since 00:00:00 GMT, January 1, 1970,
+    measured in seconds.
+
+
+Inputs
+~~~~~~
+::
+
+     tloc - If this pointer is non-NULL, then the time is written into
+             this variable as well.
+
+
+Result
+~~~~~~
+::
+
+     The number of seconds.
+
+
+Example
+~~~~~~~
+::
+
+     time_t tt1, tt2;
+
+     // tt1 and tt2 are the same
+     tt1 = time (&tt2);
+
+     // This is valid, too
+     tt1 = time (NULL);
+
+
+Notes
+~~~~~
+::
+
+     This function must not be used in a shared library or
+     in a threaded application.
+
+
+See also
+~~~~~~~~
+::
+
+     ctime(), asctime(), localtime()
+
+
+
+tmpfile
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  FILE * tmpfile(
+     void)
+
+
+Function
+~~~~~~~~
+::
+
+     The tmpfile() function returns a pointer to a stream
+     associated with a file descriptor returned by the routine
+     mkstemp(3).  The created file is unlinked before tmpfile()
+     returns, causing the file to be automatically deleted when the
+     last reference to it is closed.  The file is opened with the
+     access value `w+'.  The file is created in the T: directory,
+     which is the standard AROS temp directory.
+
+
+
+Result
+~~~~~~
+::
+
+     The tmpfile() function returns a pointer to an open file stream on 
+     success. On error, a NULL pointer is returned and errno is set 
+     appropriately.
+
+ ERRORS 
+     The tmpfile() function may fail and set the global variable
+     errno for any of the errors specified for the library functions
+     fdopen() or mkstemp().
+
+
+Example
+~~~~~~~
+::
+
+     #include <errno.h>
+     #include <stdio.h>
+     #include <string.h>
+
+     main()
+     {
+       FILE * fp;
+
+       fp = tmpfile();
+       if ( fp == NULL)
+       {
+         perror(strerror(errno));
+         return;
+       }
+
+       fprintf(fp, "do a bit of writing to the temp file");
+     }
+
+
+Bugs
+~~~~
+::
+
+     BUG1: The temporary file is neither closed nor deleted. Ideally,
+     unlink() could be used to mark the temp file for removal (see
+     BUG1 in the source code) - but I suspect a bug in unlink() itself,
+     whereby it tries to remove the file straight away, rather than
+     waiting for all references to it to be closed. The bug is not too
+     serious, because all temp files are written to the T: directory,
+     which get zapped when AROS is closed down. However, problems may
+     exist when you start creating over 26 temp files with the same PID.
+
+
+
+See also
+~~~~~~~~
+::
+
+     fopen(), mkstemp()
+
+
+
+truncate
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  int truncate(
+     const char *path,
+     off_t       length)
+
+
+Function
+~~~~~~~~
+::
+
+     Truncate a file to a specified length
+
+
+Inputs
+~~~~~~
+::
+
+     path   - the path of the file being truncated
+     lenght - The file will have at most this size
+
+
+Result
+~~~~~~
+::
+
+     0 on success or -1 on errorr.
+
+
+Notes
+~~~~~
+::
+
+     If the file previously was larger than this size, the extra  data
+     is  lost.   If  the  file  previously  was  shorter, it is
+     unspecified whether the  file  is  left  unchanged  or  is
+     extended.  In  the  latter case the extended part reads as
+     zero bytes.
+
+
+
+See also
+~~~~~~~~
+::
+
+     open()
+
+
+
+ttyname
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  char * ttyname(
+     int fd)
+     
+
+
+uname
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  int uname(
+ struct utsname *name)
+     
+
+Function
+~~~~~~~~
+::
+
+     Store information about the operating system in the structure pointed 
+     by name.
+     
+
+Inputs
+~~~~~~
+::
+
+     name - Pointer to utsname structure defined in <sys/utsname.h>.
+
+
+Result
+~~~~~~
+::
+
+     If the information was stored successfully, zero is returned. Otherwise
+     function returns -1 and sets errno appropriately.
+
+
+
+ungetc
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int ungetc(
+     int    c,
+     FILE * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Puch the character c character back into the stream.
+
+
+Inputs
+~~~~~~
+::
+
+     c - Put this character back into the stream. The next read will
+             return this character. If you push back more than one
+             character, then they will be returned in reverse order.
+             The function gurantees that one character can be
+             pushed back but no more. It is possible to push the EOF
+             character back into the stream.
+     stream - Read from this stream
+
+
+Result
+~~~~~~
+::
+
+     c or EOF on error.
+
+
+See also
+~~~~~~~~
+::
+
+     fgetc(), getc(), fputc(), putc()
+
+
+
+unlink
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int unlink(
+     const char * pathname)
+
+
+Function
+~~~~~~~~
+::
+
+     Delete a file from disk.
+
+
+Inputs
+~~~~~~
+::
+
+     pathname - Complete path to the file
+
+
+Result
+~~~~~~
+::
+
+     0 on success and -1 on error. In case of an error, errno is set.
+
+
+Example
+~~~~~~~
+::
+
+     // Delete the file xyz in the current directory
+     unlink ("xyz");
+
+
+Notes
+~~~~~
+::
+
+     Identical to remove
+
+
+
+unsetenv
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  void unsetenv(
+     const char *name)
+
+
+Function
+~~~~~~~~
+::
+
+      deletes a variable from the environment.
+
+
+Inputs
+~~~~~~
+::
+
+     name  --  Name of the environment variable to delete.
+
+
+Result
+~~~~~~
+::
+
+    Returns zero on success, or -1 if the variable was not found.
+
+
+
+updatestdio
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  void updatestdio(
+     void)
+
+
+Function
+~~~~~~~~
+::
+
+     Update stdin, stdout, stderr to reflect changes done by calling
+     dos.library functions like SelectInput(), ...
+
+
+Notes
+~~~~~
+::
+
+     stdin, stdout and stderr will be flushed before they are updated.
+
+
+
+usleep
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int usleep(
+     useconds_t usec) 
+     
+
+Function
+~~~~~~~~
+::
+
+     Suspends program execution for a given number of microseconds.
+
+
+Inputs
+~~~~~~
+::
+
+     usec - number of microseconds to wait
+
+
+Result
+~~~~~~
+::
+
+     0 on success, -1 on error
+
+
+
+vfprintf
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  int vfprintf(
+     FILE       * stream,
+     const char * format,
+     va_list      args)
+
+
+Function
+~~~~~~~~
+::
+
+     Format a list of arguments and print them on the specified stream.
+
+
+Inputs
+~~~~~~
+::
+
+     stream - A stream on which one can write
+     format - A printf() format string.
+     args - A list of arguments for the format string.
+
+
+Result
+~~~~~~
+::
+
+     The number of characters written.
+
+
+
+vfscanf
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int vfscanf(
+     FILE       * stream,
+     const char * format,
+     va_list      args)
+
+
+Function
+~~~~~~~~
+::
+
+     Read the scream, scan it as the format specified and write the
+     result of the conversion into the specified arguments.
+
+
+Inputs
+~~~~~~
+::
+
+     stream - A stream to read from
+     format - A scanf() format string.
+     args - A list of arguments for the results.
+
+
+Result
+~~~~~~
+::
+
+     The number of converted arguments.
+
+
+
+vprintf
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int vprintf(
+     const char * format,
+     va_list      args)
+
+
+Function
+~~~~~~~~
+::
+
+     Format a list of arguments and print them on the standard output.
+
+
+Inputs
+~~~~~~
+::
+
+     format - A printf() format string.
+     args - A list of arguments for the format string.
+
+
+Result
+~~~~~~
+::
+
+     The number of characters written.
+
+
+
+vscanf
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int vscanf(
+     const char * format,
+     va_list      args)
+
+
+Function
+~~~~~~~~
+::
+
+     Scan the standard input and convert it into the arguments as
+     specified by format.
+
+
+Inputs
+~~~~~~
+::
+
+     format - A scanf() format string.
+     args - A list of arguments for the results
+
+
+Result
+~~~~~~
+::
+
+     The number of converted parameters.
+
+
+
+vsnprintf
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  int vsnprintf(
+     char       * str,
+     size_t       n,
+     const char * format,
+     va_list      args)
+
+
+Function
+~~~~~~~~
+::
+
+     Format a list of arguments and put them into the string str.
+     The function makes sure that no more than n characters (including
+     the terminal 0 byte) are written into str.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The formatted result is stored here
+     n - The size of str
+     format - A printf() format string.
+     args - A list of arguments for the format string.
+
+
+Result
+~~~~~~
+::
+
+     The number of characters written or -1 if the string was too small.
+     In this case, the string is not 0-terminated.
+
+
+Notes
+~~~~~
+::
+
+     No check is beeing made that str is large enough to contain
+     the result.
+
+
+See also
+~~~~~~~~
+::
+
+     printf(), sprintf(), fprintf(), vprintf(), vfprintf(), snprintf(),
+     vsnprintf()
+
+
+
+vsprintf
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  int vsprintf(
+     char       * str,
+     const char * format,
+     va_list      args)
+
+
+Function
+~~~~~~~~
+::
+
+     Format a list of arguments and put them into the string str.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The formatted result is stored here
+     format - A printf() format string.
+     args - A list of arguments for the format string.
+
+
+Result
+~~~~~~
+::
+
+     The number of characters written.
+
+
+Notes
+~~~~~
+::
+
+     No check is beeing made that str is large enough to contain
+     the result.
+
+
+See also
+~~~~~~~~
+::
+
+     printf(), sprintf(), fprintf(), vprintf(), vfprintf(), snprintf(),
+     vsnprintf()
+
+
+
+vsscanf
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int vsscanf(
+     const char *str,
+     const char *format,
+     va_list     args)
+
+
+Function
+~~~~~~~~
+::
+
+     Scan a string and convert it into the arguments as specified
+     by format.
+
+
+Inputs
+~~~~~~
+::
+
+     str - Scan this string
+     format - A scanf() format string.
+     args - A list of arguments for the results
+
+
+Result
+~~~~~~
+::
+
+     The number of arguments converted.
+
+
+See also
+~~~~~~~~
+::
+
+     scanf(), sscanf(), fscanf(), vscanf(), vfscanf(), snscanf(),
+     vsnscanf()
+
+
+
+write
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+  ssize_t write(
+     int          fd,
+     const void * buf,
+     size_t       count)
+
+
+Function
+~~~~~~~~
+::
+
+     Write an amount of characters to the specified file descriptor.
+
+
+Inputs
+~~~~~~
+::
+
+     fd - The file descriptor to write to
+     buf - Write these bytes into the file descriptor
+     count - Write that many bytes
+
+
+Result
+~~~~~~
+::
+
+     The number of characters written or -1 on error.
+
+
+

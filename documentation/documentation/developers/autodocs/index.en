@@ -4,8 +4,10 @@ Autodocs for Libraries
 
 .. This document is automatically generated. Don't edit it!
 
++ `alib <alib>`_
 + `amigaguide <amigaguide>`_
 + `aros <aros>`_
++ `arossupport <arossupport>`_
 + `asl <asl>`_
 + `battclock <battclock>`_
 + `boopsi <boopsi>`_
@@ -15,6 +17,7 @@ Autodocs for Libraries
 + `camd <camd>`_
 + `cgfx <cgfx>`_
 + `cgxvideo <cgxvideo>`_
++ `clib <clib>`_
 + `commodities <commodities>`_
 + `coolimages <coolimages>`_
 + `datatypes <datatypes>`_

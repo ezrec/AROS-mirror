@@ -1,0 +1,2196 @@
+===========
+arossupport
+===========
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_
+
+----------
+
+======================================= ======================================= ======================================= ======================================= 
+`CalcChecksum`_                         `debugmem`_                             `FindNextNodes`_                        `FindNode`_                             
+`FreeStruct`_                           `hexdump`_                              `IsDosEntryA`_                          `kprintf`_                              
+`NastyFreeMem`_                         `Purify_AddMemory`_                     `Purify_CheckAccess`_                   `Purify_Init`_                          
+`Purify_SetState`_                      `RawPutChars`_                          `ReadByte`_                             `ReadDouble`_                           
+`ReadFloat`_                            `ReadLong`_                             `ReadString`_                           `ReadStruct`_                           
+`ReadWord`_                             `RemoveSList`_                          `rkprintf`_                             `RT_FreeResource`_                      
+`RT_IntAdd`_                            `RT_IntCheck`_                          `RT_IntEnter`_                          `RT_IntExitB`_                          
+`RT_IntExitE`_                          `RT_IntFree`_                           `RT_IntInitB`_                          `RT_IntInitE`_                          
+`RT_IntLeave`_                          `RT_IntTrack`_                          `RT_ShowRTStack`_                       `RT_ShowStack`_                         
+`strrncasecmp`_                         `WriteByte`_                            `WriteDouble`_                          `WriteFloat`_                           
+`WriteLong`_                            `WriteString`_                          `WriteStruct`_                          `WriteWord`_                            
+
+======================================= ======================================= ======================================= ======================================= 
+
+-----------
+
+CalcChecksum
+============
+
+Synopsis
+~~~~~~~~
+::
+
+  ULONG CalcChecksum(
+     APTR  memory,
+     ULONG size)
+
+
+Function
+~~~~~~~~
+::
+
+     Calculate a checksum for a given area of memory.
+
+
+Inputs
+~~~~~~
+::
+
+     memory - Start here
+     size - This many bytes. Must be a multiple of sizeof(ULONG)
+
+
+Result
+~~~~~~
+::
+
+     The checksum for the memory. If you store the checksum somewhere
+     in the area and run CalcChecksum() again, the result will be 0.
+     To achieve this, you must set the place, where the checksum will
+     be placed later, to 0 before you call the function.
+
+
+Example
+~~~~~~~
+::
+
+     ULONG mem[512];
+
+     mem[0] = 0; // Store checksum here
+     mem[0] = CalcChecksum (mem, sizeof (mem));
+
+     if (CalcChecksum (mem, sizeof (mem))
+         printf ("Something is wrong !!\n");
+     else
+         printf ("Data is unchanged.\n");
+
+
+Notes
+~~~~~
+::
+
+     This function is not part of a library and may thus be called
+     any time.
+
+
+See also
+~~~~~~~~
+::
+
+     SumKickData(), SumLibrary()
+
+
+
+debugmem
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  void debugmem(
+     void)
+
+
+Function
+~~~~~~~~
+::
+
+     Print information about all memory lists.
+
+
+Inputs
+~~~~~~
+::
+
+     None.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Notes
+~~~~~
+::
+
+     This function is not part of a library and may thus be called
+     any time.
+
+
+
+FindNextNodes
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+  static int FindNextNodes(
+     APTR            memPtr,
+     struct PNode ** before,
+     struct PNode ** after)
+
+
+Function
+~~~~~~~~
+::
+
+     Returns the addresses of the PNodes right before and right right
+     after memPtr.
+
+
+Inputs
+~~~~~~
+::
+
+     memPtr - The address to look for
+     before - Pointer to a pointer to PNode where the address of
+             the node right before memPtr will be stored.
+     after - Pointer to a pointer to PNode where the address of
+             the node right after memPtr will be stored.
+
+
+Result
+~~~~~~
+::
+
+     The number of found PNodes. *before will contain a pointer to
+     the PNode which is before memPtr or which contains memPtr or NULL
+     if there is no node before PNode. *after will contain a pointer
+     to the first PNode which comes right after memPtr or NULL if no
+     PNode follows memPtr.
+
+
+Notes
+~~~~~
+::
+
+     Must not be called before Purify_Init().
+
+
+
+FindNode
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  static struct PNode * FindNode(
+     APTR memPtr)
+
+
+Function
+~~~~~~~~
+::
+
+     Searches for the PNode which contains memPtr.
+
+
+Inputs
+~~~~~~
+::
+
+     memPtr - A pointer into a piece of memory previously made known
+             with Purify_AddMemory.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to a PNode which contains the memPtr or NULL if there
+     is no such pointer. No error will be printed.
+
+
+Notes
+~~~~~
+::
+
+     Must not be called before Purify_Init().
+
+
+
+FreeStruct
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  void FreeStruct(
+     APTR         data,
+     const IPTR * sd)
+
+
+Function
+~~~~~~~~
+::
+
+     Free a structure which was created by ReadStruct().
+
+
+Inputs
+~~~~~~
+::
+
+     data - This was returned by ReadStruct() in the dataptr parameter.
+             Must be non-NULL.
+     sd - Description of the structure to be read. The first element
+             is the size of the structure.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+     See ReadStruct()
+
+
+See also
+~~~~~~~~
+::
+
+     Open(), Close(), ReadByte(), ReadWord(), ReadLong(), ReadFloat(),
+     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
+     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+
+
+
+hexdump
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  void hexdump(
+     const void * data,
+     IPTR         offset,
+     ULONG        count)
+
+
+Function
+~~~~~~~~
+::
+
+     Prints a hexdump of the data beginning at data. The format
+     is liks this:
+
+     xxxxxxxx: dddddddd dddddddd dddddddd dddddddd aaaaaaaaaaaaaaaa
+
+     Where x is the address (8 chars hex), dd is a data byte (2 chars
+     hex) and a is the ASCII representation of a data byte or "." if
+     the data byte is not printable.
+
+
+Inputs
+~~~~~~
+::
+
+     data - Start here with the dump
+     offset - This offset is used as the address in the output. If
+             you give 0L here, then the first address will be
+             00000000. If you give (IPTR)data here, then the
+             first address will be the memory address of the data.
+     count - How many bytes to print.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+
+IsDosEntryA
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL IsDosEntryA(
+
+     char  * Name,
+     ULONG   Flags)
+
+
+Function
+~~~~~~~~
+::
+
+
+     There is a need in file/directory processing where an application
+     may need to determine whether a path is just a volume/device or
+     assignment name.
+
+
+Inputs
+~~~~~~
+::
+
+
+     Name  - The path to test.
+
+     Flags - Any combination of the following:
+
+             LDF_ASSIGNS
+             LDF_DEVICES
+             LDF_VOLUMES
+
+
+Result
+~~~~~~
+::
+
+
+     Boolean True or False.
+
+
+Example
+~~~~~~~
+::
+
+
+     BOOL Success;
+
+     ...
+
+     Success = IsDosEntryA("Work:", LDF_VOLUMES)
+     if (Success == TRUE)
+     {
+       ...
+     }  
+
+
+Notes
+~~~~~
+::
+
+
+     Requires the programmer to open the utility.library and initialise
+     UtilityBase.
+
+     In future releases the buffer size will be set via a taglist.
+
+
+See also
+~~~~~~~~
+::
+
+
+     <dos/dosextens.h>
+
+
+
+kprintf
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int kprintf(
+     const UBYTE * fmt,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     Formats fmt with the specified arguments like printf() (and *not*
+     like RawDoFmt()) and uses a secure way to deliver the message to
+     the user; ie. the user *will* see this message no matter what.
+
+
+Inputs
+~~~~~~
+::
+
+     fmt - printf()-style format string
+
+
+Result
+~~~~~~
+::
+
+     The number of characters output.
+
+
+Notes
+~~~~~
+::
+
+     This function is not part of a library and may thus be called
+     any time.
+
+
+
+NastyFreeMem
+============
+
+Synopsis
+~~~~~~~~
+::
+
+  void NastyFreeMem(
+     APTR  mem,
+     ULONG size)
+
+
+Function
+~~~~~~~~
+::
+
+     Overwrites the memory with 0xDEADBEEF before actually freeing it.
+
+
+Inputs
+~~~~~~
+::
+
+     mem - Pointer which was returned by AllocMem()
+     size - Size which was given to AllocMem()
+
+
+Result
+~~~~~~
+::
+
+     The function may print some infos using kprintf().
+
+
+Notes
+~~~~~
+::
+
+     This function depends on SysBase.
+
+
+See also
+~~~~~~~~
+::
+
+     FreeMem()
+
+
+
+Purify_AddMemory
+================
+
+Synopsis
+~~~~~~~~
+::
+
+  void Purify_AddMemory(
+     APTR  memPtr,
+     ULONG size)
+
+
+Function
+~~~~~~~~
+::
+
+     Add size bytes of memory at memPtr to watch. Any access to this
+     memory will be checked after this call.
+
+
+Inputs
+~~~~~~
+::
+
+     memPtr - Start of the memory block
+     size - The size of the memory block
+
+
+Result
+~~~~~~
+::
+
+     none
+
+
+Notes
+~~~~~
+::
+
+     This function is not part of any library and may thus be called at
+     any time.
+
+
+
+Purify_CheckAccess
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+  void Purify_CheckAccess(
+     APTR  memPtr,
+     ULONG size,
+     ULONG type)
+
+
+Function
+~~~~~~~~
+::
+
+     Checks a specific kind of access to memPtr[0...size-1].
+
+
+Inputs
+~~~~~~
+::
+
+     memPtr - Where the access happens
+     size - How many bytes are accessed
+     type - Kind of access (PMA_READ, PMA_WRITE or PMA_MODIFY)
+
+
+Result
+~~~~~~
+::
+
+     none
+
+
+
+Purify_Init
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  void Purify_Init(
+     void)
+
+
+Function
+~~~~~~~~
+::
+
+     Initialize purify.
+
+
+Inputs
+~~~~~~
+::
+
+     none
+
+
+Result
+~~~~~~
+::
+
+     none
+
+
+Notes
+~~~~~
+::
+
+     This function is not part of any library and may thus be called at
+     any time.
+
+
+
+Purify_SetState
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+  void Purify_SetState(
+     APTR  memPtr,
+     ULONG size,
+     ULONG state)
+
+
+Function
+~~~~~~~~
+::
+
+     Brings a block of memory into a certain state (eg. empty, initialized,
+     read-only). memPtr and size must be within a block beforehand
+     declared with Purify_AddMemory().
+
+
+Inputs
+~~~~~~
+::
+
+     memPtr - Where to start
+     size - How many bytes after memPtr
+     state - The new state of the memory:
+             PMS_EMPTY - The memory may be read from and written to,
+                     but any read before the first write will yield an
+                     error (read from uninitialized memory).
+             PMS_INITIALIZED - The memory has been initialized and may
+                     be read and writen to.
+             PMS_READONLY - The memory may be read but not written to.
+             PMS_FREE - The memory may not be read from or written to.
+
+
+Result
+~~~~~~
+::
+
+     none
+
+
+
+RawPutChars
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  void RawPutChars(
+     const UBYTE * str,
+     int           len)
+
+
+Function
+~~~~~~~~
+::
+
+     Emits len bytes of fmt via RawPutChar()
+
+
+Inputs
+~~~~~~
+::
+
+     str - string to print
+     len - how many bytes of str to print
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+
+ReadByte
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL ReadByte(
+     struct Hook * hook,
+     UBYTE       * dataptr,
+     void        * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Reads one big endian 8bit value from a streamhook.
+
+
+Inputs
+~~~~~~
+::
+
+     hook - Streamhook
+     dataptr - Put the data here
+     stream - Read from this stream
+
+
+Result
+~~~~~~
+::
+
+     The function returns TRUE on success. On success, the value
+     read is written into dataptr. On failure, FALSE is returned and the
+     contents of dataptr are not changed.
+
+
+Notes
+~~~~~
+::
+
+     This function reads big endian values from a streamhook even on
+     little endian machines.
+
+
+See also
+~~~~~~~~
+::
+
+     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
+     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
+     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+
+
+
+ReadDouble
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL ReadDouble(
+     struct Hook * hook,
+     DOUBLE      * dataptr,
+     void        * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Reads one big endian 64bit double precision floating point value
+     from a streamhook.
+
+
+Inputs
+~~~~~~
+::
+
+     hook - Streamhook
+     dataptr - Put the data here
+     stream - Read from this stream
+
+
+Result
+~~~~~~
+::
+
+     The function returns TRUE on success. On success, the value
+     read is written into dataptr. On failure, FALSE is returned and the
+     contents of dataptr are not changed.
+
+
+Notes
+~~~~~
+::
+
+     This function reads big endian values from a streamhook even on
+     little endian machines.
+
+
+See also
+~~~~~~~~
+::
+
+     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
+     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
+     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+
+
+
+ReadFloat
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL ReadFloat(
+     struct Hook * hook,
+     FLOAT       * dataptr,
+     void        * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Reads one big endian 32bit floating point value from a streamhook.
+
+
+Inputs
+~~~~~~
+::
+
+     hook - Streamhook
+     dataptr - Put the data here
+     stream - Read from this stream
+
+
+Result
+~~~~~~
+::
+
+     The function returns TRUE on success. On success, the value
+     read is written into dataptr. On failure, FALSE is returned and the
+     contents of dataptr are not changed.
+
+
+Notes
+~~~~~
+::
+
+     This function reads big endian values from a streamhook even on
+     little endian machines.
+
+
+See also
+~~~~~~~~
+::
+
+     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
+     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
+     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+
+
+
+ReadLong
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL ReadLong(
+     struct Hook * hook,
+     ULONG       * dataptr,
+     void        * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Reads one big endian 32bit value from a streamhook.
+
+
+Inputs
+~~~~~~
+::
+
+     hook - Streamhook
+     dataptr - Put the data here
+     stream - Read from this stream
+
+
+Result
+~~~~~~
+::
+
+     The function returns TRUE on success. On success, the value
+     read is written into dataptr. On failure, FALSE is returned and the
+     contents of dataptr are not changed.
+
+
+Notes
+~~~~~
+::
+
+     This function reads big endian values from a streamhook even on
+     little endian machines.
+
+
+See also
+~~~~~~~~
+::
+
+     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
+     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
+     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+
+
+
+ReadString
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL ReadString(
+     struct Hook * hook,
+     STRPTR      * dataptr,
+     void        * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Reads one C string from a streamhook.
+
+
+Inputs
+~~~~~~
+::
+
+     hook - Streamhook
+     dataptr - Put the data here. If you don't need the string anymore,
+         call FreeVec() to free it.
+     stream - Read from this stream
+
+
+Result
+~~~~~~
+::
+
+     The function returns TRUE on success. On success, the string
+     read is written into dataptr. On failure, FALSE is returned and the
+     contents of dataptr are not changed. The string must be freed with
+     FreeVec().
+
+
+Notes
+~~~~~
+::
+
+     This function reads big endian values from a streamhook even on
+     little endian machines.
+
+
+See also
+~~~~~~~~
+::
+
+     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
+     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
+     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+
+
+
+ReadStruct
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL ReadStruct(
+     struct Hook * hook,
+     APTR        * dataptr,
+     void        * stream,
+     const IPTR  * sd)
+
+
+Function
+~~~~~~~~
+::
+
+     Reads one big endian structure from a streamhook.
+
+
+Inputs
+~~~~~~
+::
+
+     hook - Streamhook
+     dataptr - Put the data here
+     stream - Read from this stream
+     sd - Description of the structure to be read. The first element
+             is the size of the structure.
+
+
+Result
+~~~~~~
+::
+
+     The function returns TRUE on success. On success, the value
+     read is written into dataptr. On failure, FALSE is returned and the
+     contents of dataptr are not changed.
+
+
+Example
+~~~~~~~
+::
+
+     See below.
+
+
+Notes
+~~~~~
+::
+
+     This function reads big endian values from a streamhook even on
+     little endian machines.
+
+
+See also
+~~~~~~~~
+::
+
+     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
+     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
+     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+
+
+
+ReadWord
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL ReadWord(
+     struct Hook * hook,
+     UWORD       * dataptr,
+     void        * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Reads one big endian 16bit value from a streamhook.
+
+
+Inputs
+~~~~~~
+::
+
+     hook - Streamhook
+     dataptr - Put the data here
+     stream - Read from this stream
+
+
+Result
+~~~~~~
+::
+
+     The function returns TRUE on success. On success, the value
+     read is written into dataptr. On failure, FALSE is returned and the
+     contents of dataptr are not changed.
+
+
+Notes
+~~~~~
+::
+
+     This function reads big endian values from a streamhook even on
+     little endian machines.
+
+
+See also
+~~~~~~~~
+::
+
+     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
+     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
+     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+
+
+
+RemoveSList
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  APTR RemoveSList(
+     APTR * list,
+     APTR   node)
+
+
+Function
+~~~~~~~~
+::
+
+     Remove the node from a single linked list.
+
+
+Inputs
+~~~~~~
+::
+
+     list - Pointer to the pointer which contains the first element
+             of the single linked list.
+     node - The node which is to be removed.
+
+
+Result
+~~~~~~
+::
+
+     Returns the node if it was in the list.
+
+
+Example
+~~~~~~~
+::
+
+     @atend
+
+
+Notes
+~~~~~
+::
+
+     This function is not part of a library and may thus be called
+     any time.
+
+
+
+rkprintf
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  int rkprintf(
+     const STRPTR mainSystem,
+     const STRPTR subSystem,
+     int level,
+     const UBYTE * fmt,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     Call kprintf if debugging for this main and subsystem is enabled
+     at a level larger than the level above. The minimal level is 1
+     (this way, debugging can be disabled in the debug config file
+     by giving a level of 0).
+
+     You should not call this function directly but use the rbug
+     macro. The rbug macro does some magic to make the handling
+     more simple.
+
+
+Inputs
+~~~~~~
+::
+
+     mainSystem - The main system. Use one of the DBG_MAINSYSTEM_*
+             macros to avoid typos.
+     subSystem - The part of the main system. Use one of the
+             DBG_*_SUBSYSTEM_* macros.
+     level - The debug level. Higher levels should give more details.
+             The lowest level is 1.
+     fmt - printf()-style format string
+
+
+Result
+~~~~~~
+::
+
+     The number of characters output.
+
+
+Example
+~~~~~~~
+::
+
+     if (cache)
+     {
+         ...
+         D(rbug(INTUITION, INPUTHANDLER, 3,
+             "allocating event from cache (%p)", event
+         ));
+         ...
+     }
+
+
+Notes
+~~~~~
+::
+
+     This function is not part of a library and may thus be called
+     any time.
+
+
+
+RT_FreeResource
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+  void RT_FreeResource(
+     RTData * rtd,
+     int      rtt,
+     RTNode * rtnode)
+
+
+Function
+~~~~~~~~
+::
+
+     Free a resource after the task that allocated it, died. Also
+     print a nasty message about this.
+
+
+Inputs
+~~~~~~
+::
+
+     rt - The node with the resource to be freed.
+
+
+Result
+~~~~~~
+::
+
+     none
+
+
+
+RT_IntAdd
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  IPTR RT_IntAdd(
+     int          rtt,
+     const char * file,
+     int          line,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     Adds a resource to be tracked. The arguments after
+     line depend on the type of resource to be traced:
+
+     RTT_ALLOCMEM:     APTR          memPtr,
+                       ULONG         size)
+
+
+Inputs
+~~~~~~
+::
+
+     rtt - Type of the resource
+     file - The file RT_IntAdd was called it
+     line - The line of the file
+     task - The task to be added
+     memPtr - Pointer to a piece of memory to be tracked
+     size - The size of the memory beginning at memPtr
+
+
+Result
+~~~~~~
+::
+
+     none
+
+
+
+RT_IntCheck
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  IPTR RT_IntCheck(
+     int          rtt,
+     const char * file,
+     int          line,
+     int          op,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     Checks a resource. Will print an error if the resource is not found
+     or has already been freed or if the type of the resource doesn't
+     match. The arguments after line depend on the type of resource to
+     be traced:
+
+     RTT_ALLOCMEM:     APTR          memPtr,
+                     ULONG         size)
+
+
+Inputs
+~~~~~~
+::
+
+     rtt - Type of the resource
+     file - The file RT_IntCheck was called it
+     line - The line of the file
+     task - The task to be added
+     memPtr - Pointer to a piece of memory to be tracked
+     size - The size of the memory beginning at memPtr
+
+
+Result
+~~~~~~
+::
+
+     none
+
+
+Notes
+~~~~~
+::
+
+     All strings must be static.
+
+
+
+RT_IntEnter
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  void RT_IntEnter(
+     const char * function,
+     const char * file,
+     int          line)
+
+
+Function
+~~~~~~~~
+::
+
+     Tells the RT that a new function is about to be entered. This is used
+     to make it easier to track an error.
+
+
+Inputs
+~~~~~~
+::
+
+     function - name of the function to be entered
+     file - file with the call of the function
+     line - Line-number of the call
+
+
+Result
+~~~~~~
+::
+
+     none
+
+
+Notes
+~~~~~
+::
+
+     All strings must be static.
+
+
+
+RT_IntExitB
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  void RT_IntExitB(
+     void)
+
+
+Function
+~~~~~~~~
+::
+
+     Stops the resource tracking. All resources which are still allocated
+     are printed and then released.
+
+
+Inputs
+~~~~~~
+::
+
+     none
+
+
+Result
+~~~~~~
+::
+
+     none
+
+
+
+RT_IntExitE
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  void RT_IntExitE(
+     void)
+
+
+Function
+~~~~~~~~
+::
+
+     Stops the resource tracking. All resources which are still allocated
+     are printed and then released.
+
+
+Inputs
+~~~~~~
+::
+
+     none
+
+
+Result
+~~~~~~
+::
+
+     none
+
+
+
+RT_IntFree
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  IPTR RT_IntFree(
+     int          rtt,
+     const char * file,
+     int          line,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     Stops tracing of a resource. The arguments after
+     line depend on the type of resource to be traced.
+
+
+Inputs
+~~~~~~
+::
+
+     rtt - Type of the resource
+     file - The file RT_IntAdd was called it
+     line - The line of the file
+
+
+Result
+~~~~~~
+::
+
+     none
+
+
+Notes
+~~~~~
+::
+
+     All strings must be static.
+
+
+
+RT_IntInitB
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  void RT_IntInitB(
+     void)
+
+
+Function
+~~~~~~~~
+::
+
+     Begin initialization of resource tracking.
+
+
+Inputs
+~~~~~~
+::
+
+     none
+
+
+Result
+~~~~~~
+::
+
+     none
+
+
+
+RT_IntInitE
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  void RT_IntInitE(
+     void)
+
+
+Function
+~~~~~~~~
+::
+
+     End initialization of resource tracking.
+
+
+Inputs
+~~~~~~
+::
+
+     none
+
+
+Result
+~~~~~~
+::
+
+     none
+
+
+
+RT_IntLeave
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  void RT_IntLeave(
+     void)
+
+
+Function
+~~~~~~~~
+::
+
+     Tells the RT that a the function has been left.
+
+
+Inputs
+~~~~~~
+::
+
+     none
+
+
+Result
+~~~~~~
+::
+
+     none
+
+
+
+RT_IntTrack
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  void RT_IntTrack(
+     int          rtt,
+     const char * file,
+     int          line,
+     APTR         res,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     Adds a resource to be tracked. The arguments after
+     line depend on the type of resource to be traced.
+     The resource›is marked as "must not be freed by the
+     user".
+
+
+Inputs
+~~~~~~
+::
+
+     rtt - Type of the resource
+     file - The file RT_IntAdd was called it
+     line - The line of the file
+     res - Pointer to the resouce
+
+
+Result
+~~~~~~
+::
+
+     none
+
+
+
+RT_ShowRTStack
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+  void RT_ShowRTStack(
+     void)
+
+
+Function
+~~~~~~~~
+::
+
+     Prints the contents of the callstack built by RT_Enter() and
+     RT_Leave().
+
+
+Inputs
+~~~~~~
+::
+
+     none
+
+
+Result
+~~~~~~
+::
+
+     none
+
+
+
+RT_ShowStack
+============
+
+Synopsis
+~~~~~~~~
+::
+
+  void RT_ShowStack(
+     RTNode * node)
+
+
+Function
+~~~~~~~~
+::
+
+     Prints the contents of the callstack stored in the node.
+
+
+Inputs
+~~~~~~
+::
+
+     node - The node with the callstack to be printed
+
+
+Result
+~~~~~~
+::
+
+     none
+
+
+
+strrncasecmp
+============
+
+Synopsis
+~~~~~~~~
+::
+
+  int strrncasecmp(
+     const char * str1,
+     const char * str2,
+     int          cnt)
+
+
+Function
+~~~~~~~~
+::
+
+     Compare the end parts of two strings. Case is ignored.
+
+
+Inputs
+~~~~~~
+::
+
+     str1, str2 - Strings to compare
+     cnt - Compare that many characters
+
+
+Result
+~~~~~~
+::
+
+     Returns 0 if the strings are equal and != 0 otherwise.
+
+
+Example
+~~~~~~~
+::
+
+     // rc = 0
+     rc = strrncasecmp ("disk.info", ".INFO", 5);
+
+     // rc <> 0
+     rc = strrncasecmp ("disk.info", ".c", 2);
+
+
+Notes
+~~~~~
+::
+
+     This function is not part of a library and may thus be called
+     any time.
+
+
+See also
+~~~~~~~~
+::
+
+     strcmp(), strcasecmp(), strncasecmp(), strrchr()
+
+
+
+WriteByte
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL WriteByte(
+     struct Hook * hook,
+     UBYTE         data,
+     void        * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Writes one big endian 8bit value to a streamhook.
+
+
+Inputs
+~~~~~~
+::
+
+     hook - Write to this streamhook
+     data - Data to be written
+     stream - Stream passed to streamhook
+
+
+Result
+~~~~~~
+::
+
+     The function returns TRUE on success and FALSE otherwise.
+     See IoErr() for the reason in case of an error.
+
+
+Notes
+~~~~~
+::
+
+     This function writes big endian values to a file even on little
+     endian machines.
+
+
+See also
+~~~~~~~~
+::
+
+     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
+     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
+     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+
+
+
+WriteDouble
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL WriteDouble(
+     struct Hook * hook,
+     DOUBLE        data,
+     void        * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Writes one big endian 64bit double precision floating point value
+     to a streamhook.
+
+
+Inputs
+~~~~~~
+::
+
+     hook - Write to this streamhook
+     data - Data to be written
+     stream - Stream passed to streamhook
+
+
+Result
+~~~~~~
+::
+
+     The function returns TRUE on success and FALSE otherwise.
+     See IoErr() for the reason in case of an error.
+
+
+Notes
+~~~~~
+::
+
+     This function writes big endian values to a file even on little
+     endian machines.
+
+
+See also
+~~~~~~~~
+::
+
+     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
+     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
+     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+
+
+
+WriteFloat
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL WriteFloat(
+     struct Hook * hook,
+     FLOAT         data,
+     void        * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Writes one big endian 32bit floating point value to a streamhook.
+
+
+Inputs
+~~~~~~
+::
+
+     hook - Write to this streamhook
+     data - Data to be written
+     stream - Stream passed to streamhook
+
+
+Result
+~~~~~~
+::
+
+     The function returns TRUE on success and FALSE otherwise.
+     See IoErr() for the reason in case of an error.
+
+
+Notes
+~~~~~
+::
+
+     This function writes big endian values to a file even on little
+     endian machines.
+
+
+See also
+~~~~~~~~
+::
+
+     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
+     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
+     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+
+
+
+WriteLong
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL WriteLong(
+     struct Hook * hook,
+     ULONG         data,
+     void        * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Writes one big endian 32bit value to a streamhook.
+
+
+Inputs
+~~~~~~
+::
+
+     hook - Write to this streamhook
+     data - Data to be written
+     stream - Stream passed to streamhook
+
+
+Result
+~~~~~~
+::
+
+     The function returns TRUE on success and FALSE otherwise.
+     See IoErr() for the reason in case of an error.
+
+
+Notes
+~~~~~
+::
+
+     This function writes big endian values to a file even on little
+     endian machines.
+
+
+See also
+~~~~~~~~
+::
+
+     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
+     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
+     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+
+
+
+WriteString
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL WriteString(
+     struct Hook * hook,
+     STRPTR        data,
+     void        * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Writes one big endian string to a streamhook.
+
+
+Inputs
+~~~~~~
+::
+
+     hook - Write to this streamhook
+     data - Data to be written
+     stream - Stream passed to streamhook
+
+
+Result
+~~~~~~
+::
+
+     The function returns TRUE on success and FALSE otherwise.
+     See IoErr() for the reason in case of an error.
+
+
+Notes
+~~~~~
+::
+
+     This function writes big endian values to a file even on little
+     endian machines.
+
+
+See also
+~~~~~~~~
+::
+
+     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
+     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
+     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+
+
+
+WriteStruct
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL WriteStruct(
+     struct Hook * hook,
+     void        * data,
+     void        * stream,
+     const IPTR  * sd)
+
+
+Function
+~~~~~~~~
+::
+
+     Writes one big endian structure to a streamhook.
+
+
+Inputs
+~~~~~~
+::
+
+     hook - Write to this streamhook
+     data - Data to be written
+     stream - Stream passed to streamhook
+     sd - Description of the structure to be written. The first element
+             is the size of the structure.
+
+
+Result
+~~~~~~
+::
+
+     The function returns TRUE on success and FALSE otherwise. In error,
+     you can examine IoErr() to find out what was wrong.
+
+
+Example
+~~~~~~~
+::
+
+     See ReadStruct().
+
+
+Notes
+~~~~~
+::
+
+     This function writes big endian values to a file even on little
+     endian machines.
+
+
+See also
+~~~~~~~~
+::
+
+     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
+     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
+     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+
+
+
+WriteWord
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL WriteWord(
+     struct Hook * hook,
+     UWORD         data,
+     void        * stream)
+
+
+Function
+~~~~~~~~
+::
+
+     Writes one big endian 16bit value to a streamhook.
+
+
+Inputs
+~~~~~~
+::
+
+     hook - Write to this streamhook
+     data - Data to be written
+     stream - Stream passed to streamhook
+
+
+Result
+~~~~~~
+::
+
+     The function returns TRUE on success and FALSE otherwise.
+     See IoErr() for the reason in case of an error.
+
+
+Notes
+~~~~~
+::
+
+     This function writes big endian values to a file even on little
+     endian machines.
+
+
+See also
+~~~~~~~~
+::
+
+     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
+     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
+     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+
+
+

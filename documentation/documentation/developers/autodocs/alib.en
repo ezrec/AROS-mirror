@@ -1,0 +1,3962 @@
+====
+alib
+====
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_
+
+----------
+
+======================================= ======================================= ======================================= ======================================= 
+`__attribute__`_                        `__sprintf`_                            `AddAmigaGuideHost`_                    `AddAppIcon`_                           
+`AddAppMenuItem`_                       `AddAppWindow`_                         `AddAppWindowDropZone`_                 `AllocAslRequestTags`_                  
+`AllocDosObjectTags`_                   `AllocNamedObject`_                     `AllocSpriteData`_                      `ArgArrayDone`_                         
+`ArgArrayInit`_                         `ArgInt`_                               `ArgString`_                            `ArosInquire`_                          
+`AslRequestTags`_                       `AsmAllocPooled`_                       `AsmCreatePool`_                        `AsmDeletePool`_                        
+`AsmFreePooled`_                        `BeginIO`_                              `BestCModeIDTags`_                      `BestModeID`_                           
+`BuildEasyRequest`_                     `CallHookA`_                            `ChangeExtSprite`_                      `CheckRexxMsg`_                         
+`CloseWorkbenchObject`_                 `CoerceMethodA`_                        `CreateExtIO`_                          `CreateGadget`_                         
+`CreateLayerTags`_                      `CreateMenus`_                          `CreateNewProcTags`_                    `CreatePort`_                           
+`CreateStdIO`_                          `CreateTask`_                           `DeleteExtIO`_                          `DeletePort`_                           
+`DeleteStdIO`_                          `DeleteTask`_                           `DoDTMethod`_                           `DoGadgetMethod`_                       
+`DoMethodA`_                            `DoSuperMethodA`_                       `DoSuperNewTagList`_                    `DrawBevelBox`_                         
+`EasyRequest`_                          `ExtendFontTags`_                       `FastRand`_                             `FreeIEvents`_                          
+`FreeMsgFromStack`_                     `FreeParamsFromStack`_                  `FreeTagsFromStack`_                    `GetDTAttrs`_                           
+`GetExtSprite`_                         `GetMsgFromStack`_                      `GetParamsFromStack`_                   `GetRexxVar`_                           
+`GetRPAttrs`_                           `GetTagsFromStack`_                     `GetVisualInfo`_                        `GT_GetGadgetAttrs`_                    
+`GT_SetGadgetAttrs`_                    `HookEntry`_                            `HotKey`_                               `InvertString`_                         
+`LayoutMenuItems`_                      `LayoutMenus`_                          `LibAllocPooled`_                       `LibCreatePool`_                        
+`LibDeletePool`_                        `LibFreePooled`_                        `LockBitMapTags`_                       `MakeWorkbenchObjectVisible`_           
+`MergeSortList`_                        `NewDTObject`_                          `NewList`_                              `NewLoadSegTags`_                       
+`NewObject`_                            `NewRawDoFmt`_                          `ObtainBestPen`_                        `ObtainInfo`_                           
+`OpenAmigaGuide`_                       `OpenAmigaGuideAsync`_                  `OpenCatalog`_                          `OpenScreenTags`_                       
+`OpenWindowTags`_                       `OpenWorkbenchObject`_                  `RangeRand`_                            `ReAllocVec`_                           
+`RefreshDTObject`_                      `RefreshDTObjects`_                     `ReleaseInfo`_                          `RemoveAmigaGuideHost`_                 
+`SendAmigaGuideCmd`_                    `SendAmigaGuideContext`_                `SetAmigaGuideAttrs`_                   `SetAmigaGuideContext`_                 
+`SetAttrs`_                             `SetDTAttrs`_                           `SetGadgetAttrs`_                       `SetInfo`_                              
+`SetRexxVar`_                           `SetRPAttrs`_                           `SetSuperAttrs`_                        `SetWindowPointer`_                     
+`StrDup`_                               `SystemTags`_                           `TimeDelay`_                            `UnLockBitMapTags`_                     
+`VideoControlTags`_                     `WorkbenchControl`_                     
+======================================= ======================================= ======================================= ======================================= 
+
+-----------
+
+__attribute__
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+  __attribute__(
+     struct MinNode *l,
+     int (*compare)(struct MinNode *n1, struct MinNode *n2, void *data),
+     void *data)
+
+
+Function
+~~~~~~~~
+::
+
+     Given a list of ordered circular sublists, merge pairs of ordered sublists into one
+     ordered circular sublist. 
+
+
+Inputs
+~~~~~~
+::
+
+     l       - The first node of the first sublist. The sublists must be linked one
+               after the other one, and must be circular lists, that is their
+               first node's Pred pointer must point to their last node.
+               
+               I.e., the 2nd sublist will be at l->mln_Pred->mln_Succ, the 3rd will be at
+               l->mln_Pred->mln_Succ->mln_Pred->mln_Succ and so on.
+              
+     compare - Pointer to the comparison function used to merge the 
+               sublists
+              
+     data    - Pointer to user-defined data which will be passed untouched
+               to the comparison function.
+
+
+Result
+~~~~~~
+::
+
+     Pointer to the first node of the resulting list of sublists, with the same
+     format of the input list, but with pairs of sublists merged into one.
+ 
+
+
+__sprintf
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  VOID  __sprintf(
+          UBYTE *buffer, UBYTE *format, ...)
+
+
+Function
+~~~~~~~~
+::
+
+     Print a formatted string to a buffer.
+
+
+Inputs
+~~~~~~
+::
+
+     buffer   --  the buffer to fill
+     format   --  the format string, see the RawDoFmt() documentation for
+                  information on which formatting commands there are
+
+
+See also
+~~~~~~~~
+::
+
+     exec.library/RawDoFmt()
+
+
+
+AddAmigaGuideHost
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+  AMIGAGUIDEHOST AddAmigaGuideHost(
+     struct Hook * hook,
+     STRPTR name,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of amigaguide.library/AddAmigaGuideHostA().
+     For information see amigaguide.library/AddAmigaGuideHostA().
+
+
+See also
+~~~~~~~~
+::
+
+     amigaguide/AddAmigaGuideHostA()
+
+
+
+AddAppIcon
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  struct AppIcon * AddAppIcon(
+     ULONG id,
+     ULONG userdata,
+     STRPTR text,
+     struct MsgPort * msgport,
+     BPTR lock,
+     struct DiskObject * diskobj,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of workbench.library/AddAppIconA().
+     For information see workbench.library/AddAppIconA().
+
+
+See also
+~~~~~~~~
+::
+
+     workbench/AddAppIconA()
+
+
+
+AddAppMenuItem
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+  struct AppMenuItem * AddAppMenuItem(
+     ULONG id,
+     ULONG userdata,
+     STRPTR text,
+     struct MsgPort * msgport,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of workbench.library/AddAppMenuItemA().
+     For information see workbench.library/AddAppMenuItemA().
+
+
+See also
+~~~~~~~~
+::
+
+     workbench/AddAppMenuItemA()
+
+
+
+AddAppWindow
+============
+
+Synopsis
+~~~~~~~~
+::
+
+  struct AppWindow * AddAppWindow(
+     ULONG id,
+     ULONG userdata,
+     struct Window * window,
+     struct MsgPort * msgport,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of workbench.library/AddAppWindowA().
+     For information see workbench.library/AddAppWindowA().
+
+
+See also
+~~~~~~~~
+::
+
+     workbench/AddAppWindowA()
+
+
+
+AddAppWindowDropZone
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+  struct AppWindowDropZone * AddAppWindowDropZone(
+     struct AppWindow * aw,
+     ULONG              id,
+     ULONG              userdata,
+     Tag                tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of workbench.library/AddAppWindowDropZoneA().
+     For information see workbench.library/AddAppWindowDropZoneA().
+
+
+See also
+~~~~~~~~
+::
+
+     workbench/AddAppWindowDropZoneA()
+
+
+
+AllocAslRequestTags
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+  APTR AllocAslRequestTags(
+     ULONG   reqType,
+     Tag     tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of the asl.library AllocAslRequest().
+     For information see asl.library/AllocAslRequest().
+
+
+Inputs
+~~~~~~
+::
+
+     reqType     -   Type of requester to allocate.
+     tag1        -   TagList of extra arguments.
+
+
+See also
+~~~~~~~~
+::
+
+     locale/AllocAslRequest()
+
+
+
+AllocDosObjectTags
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+  APTR AllocDosObjectTags(
+     ULONG type,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of dos.library/AllocDosObject().
+     For information see dos.library/AllocDosObject().
+
+
+See also
+~~~~~~~~
+::
+
+     dos/AllocDosObject()
+
+
+
+AllocNamedObject
+================
+
+Synopsis
+~~~~~~~~
+::
+
+  struct NamedObject * AllocNamedObject(
+     STRPTR             name,
+     Tag                tag1,
+     ...                )
+
+
+Function
+~~~~~~~~
+::
+
+     Allocate a NamedObject. This is the varargs version of the function.
+     For more information see AllocNamedObjectA() in utility.library.
+
+
+Inputs
+~~~~~~
+::
+
+     name        -   The name of the object to allocate.
+     tag1        -   The first Tag of the arguments. End the list with
+                     TAG_DONE.
+
+
+Result
+~~~~~~
+::
+
+     The address of a NamedObject, or NULL if the allocation failed.
+
+
+See also
+~~~~~~~~
+::
+
+     utility/AllocNamedObjectA()
+
+
+
+AllocSpriteData
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+  struct ExtSprite * AllocSpriteData(
+     struct BitMap * bitmap,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of graphics.library/AllocSpriteDataA().
+     For information see graphics.library/AllocSpriteDataA().
+
+
+See also
+~~~~~~~~
+::
+
+     graphics/AllocSpriteDataA()
+
+
+
+ArgArrayDone
+============
+
+Synopsis
+~~~~~~~~
+::
+
+  VOID  ArgArrayDone(
+    VOID              )
+
+
+Function
+~~~~~~~~
+::
+
+     Cleans up after a call to ArgArrayInit().  Make sure you don't need
+     the tooltype anymore array before calling this function. 
+
+
+Result
+~~~~~~
+::
+
+     Cleanup is made after an ArgArrayInit() call. This includes
+     deallocation of the tooltype array returned from that function.
+
+
+Notes
+~~~~~
+::
+
+     The tooltype array got from ArgArrayInit() will no longer be valid
+     after a call to this function.
+
+
+See also
+~~~~~~~~
+::
+
+     ArgArrayInit()
+
+
+
+ArgArrayInit
+============
+
+Synopsis
+~~~~~~~~
+::
+
+  UBYTE  **ArgArrayInit(
+     ULONG    argc,
+     UBYTE  **argv        )
+
+
+Function
+~~~~~~~~
+::
+
+     Initializes a NULL terminated array of strings that may be passed
+     to icon.library/FindToolType() or the functions ArgInt() and
+     ArgString().  This function can be passed the arguments given to
+     main() regardless of whether the program was called from shell or
+     from workbench.
+
+
+Inputs
+~~~~~~
+::
+
+     argc  --  number of arguments to the program when called from shell
+               or 0 if called from workbench
+     argv  --  'argc' pointers to the strings of the arguments; this array
+               should be NULL terminated
+
+
+Result
+~~~~~~
+::
+
+     A tooltype array to use with FindToolType(); the result of that
+     function can be used with ArgString() and ArgInt() to extract
+     values from the tooltype array. If the process was started from
+     shell the function just returns 'argv'. If no tooltype array could
+     be created, NULL is returned.
+
+
+Notes
+~~~~~
+::
+
+     This function builds some structures that should be disposed of
+     when the tooltype array is no longer needed. The function
+     ArgArrayDone() does that.  This function requires that icon.library
+     has been opened and that IconBase is valid; in fact IconBase must
+     be valid until a call to ArgArrayDone() is made.
+
+
+See also
+~~~~~~~~
+::
+
+     ArgString(), ArgInt(), ArgArrayDone(), icon.library/FindToolType()
+
+
+
+ArgInt
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  LONG  ArgInt(
+    UBYTE  **tt,
+    STRPTR   entry,
+    LONG     defaultval)
+         
+
+
+Function
+~~~~~~~~
+::
+
+     Returns the value associated with the string 'entry' found in the
+     tooltypes array 'tt'. If no match with entry was found,
+     'defaultval' is returned.
+
+
+Inputs
+~~~~~~
+::
+
+     tt          --  the tooltypes array ( returned by ArgArrayInit() )
+     entry       --  entry to look for (in tooltype "entry=value")
+     defaultval  --  value returned if 'entry' was not found
+
+
+Result
+~~~~~~
+::
+
+     (The tooltypes looks like "Entry=Value".) Returns Value if Entry
+     was found; otherwise returns 'defaultval'.
+
+
+See also
+~~~~~~~~
+::
+
+     ArgArrayInit()
+
+
+
+ArgString
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  STRPTR   ArgString(
+    UBYTE  **tt,
+    STRPTR   entry,
+    STRPTR   defaultstring)
+         
+
+
+Function
+~~~~~~~~
+::
+
+     Looks for 'entry' in the tooltypes array 'tt'. If not found
+     'defaultstring' is returned, otherwise the string corresponding to
+     'entry' is returned. Say the tooltype Settings=SaveonExit exists
+     within the array, then a pointer to "SaveonExit" is returned when
+     ArgString(tt, "Settings") is done.
+
+
+Inputs
+~~~~~~
+::
+
+     tt     --  the tooltype array to search in
+     entry  --  the string to look for in the tooltype array
+
+
+Result
+~~~~~~
+::
+
+     Pointer to the string corresponding to 'entry' in the tooltype
+     array, or 'defaultstring' if 'entry' was not found.
+
+
+See also
+~~~~~~~~
+::
+
+     ArgArrayInit()
+
+
+
+ArosInquire
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  ULONG ArosInquire(
+     ULONG tag1,
+     ...)
+
+
+See also
+~~~~~~~~
+::
+
+     aros/ArosInquire()
+
+
+
+AslRequestTags
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL AslRequestTags(
+     APTR requester,
+     Tag  tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of the asl.library AslRequest().
+     For information see asl.library/AslRequest().
+
+
+Inputs
+~~~~~~
+::
+
+     requester - Pointer to requester returned by AllocAslRequest().
+     tag1      - TagList of extra arguments.
+
+
+See also
+~~~~~~~~
+::
+
+     locale/AslRequest()
+
+
+
+AsmAllocPooled
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR AsmAllocPooled(
+          APTR poolHeader,
+          ULONG memSize,
+          struct ExecBase * SysBase );
+
+
+AsmCreatePool
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR AsmCreatePool(
+          ULONG MemFlags,
+          ULONG PuddleSize,
+          ULONG ThreshSize,
+          struct ExecBase * SysBase );
+
+
+AsmDeletePool
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ void AsmDeletePool(
+          APTR poolHeader,
+          struct ExecBase * SysBase );
+
+
+AsmFreePooled
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ void AsmFreePooled(
+          APTR poolHeader,
+          APTR Memory,
+          ULONG MemSize,
+          struct ExecBase * SysBase );
+
+
+BeginIO
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  void BeginIO(
+     struct IORequest * ioReq)
+
+
+Function
+~~~~~~~~
+::
+
+     Call the BeginIO() function of the given device.
+
+
+Inputs
+~~~~~~
+::
+
+     ioReq - a filled out IORequest structure.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+See also
+~~~~~~~~
+::
+
+     AbortIO()
+
+
+
+BestCModeIDTags
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+  ULONG BestCModeIDTags(
+     Tag     tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of the cybergraphics.library call
+ BestCModeIDTagList().
+     For more information see the documentation of 
+ cybergraphics.library/BestCModeIDTagList().
+
+
+Inputs
+~~~~~~
+::
+
+     tag1        -   TagList of display requirements.
+
+
+
+BestModeID
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  ULONG BestModeID(
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of graphics.library/BestModeIDA().
+     For information see graphics.library/BestModeIDA().
+
+
+See also
+~~~~~~~~
+::
+
+     graphics/BestModeIDA()
+
+
+
+BuildEasyRequest
+================
+
+Synopsis
+~~~~~~~~
+::
+
+  struct Window * BuildEasyRequest(
+     struct Window     * RefWindow,
+     struct EasyStruct * easyStruct,
+     ULONG               IDCMP,
+     ...)
+
+
+
+CallHookA
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  IPTR CallHookA(
+     struct Hook * hook,
+     APTR          object,
+     APTR          param)
+
+
+Function
+~~~~~~~~
+::
+
+     Calls a hook with the specified object and parameters.
+
+
+Inputs
+~~~~~~
+::
+
+     hook - Call this hook.
+     object - This is the object which is passed to the hook. The valid
+         values for this parameter depends on the definition of the called
+         hook.
+     param - Pass these parameters to the specified object
+
+
+Result
+~~~~~~
+::
+
+     The return value depends on the definition of the hook.
+
+
+See also
+~~~~~~~~
+::
+
+     CallHook()
+
+
+
+ChangeExtSprite
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+  LONG ChangeExtSprite(
+     struct ViewPort * vp,
+     struct ExtSprite * oldsprite,
+     struct ExtSprite * newsprite,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of graphics.library/ChangeExtSpriteA().
+     For information see graphics.library/ChangeExtSpriteA().
+
+
+See also
+~~~~~~~~
+::
+
+     graphics/ChangeExtSpriteA()
+
+
+
+CheckRexxMsg
+============
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL CheckRexxMsg(
+     struct RexxMsg * msg)
+
+
+Function
+~~~~~~~~
+::
+
+     Check to see if provided message was generated by the rexx interpreter
+
+
+Inputs
+~~~~~~
+::
+
+     msg - The message to check
+
+
+Result
+~~~~~~
+::
+
+     Wether this message is OK.
+
+
+See also
+~~~~~~~~
+::
+
+     SetRexxVar, GetRexxVar
+
+
+
+CloseWorkbenchObject
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL CloseWorkbenchObject(
+     STRPTR name,
+     Tag    tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of workbench.library/CloseWorkbenchObjectA().
+     For information see workbench.library/CloseWorkbenchObjectA().
+
+
+See also
+~~~~~~~~
+::
+
+     workbench/CloseWorkbenchObjectA()
+
+
+
+CoerceMethodA
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+  IPTR CoerceMethodA(
+     Class  * cl,
+     Object * obj,
+     Msg      message)
+
+
+Function
+~~~~~~~~
+::
+
+     Invokes a method on a BOOPSI object, as if this was a object, inherited
+     from the class passed in. Ie the dispatcher of the this class is called
+     instead of the objects classes dispatcher.
+
+
+Inputs
+~~~~~~
+::
+
+     cl - Class, which dispatcher is to be called.
+     obj - The object, on which the method is to be performed on.
+     message - The message. The first field is the same for all methods and
+               specifies which method is to be invokes (see
+               <intuition/classusr.h>).
+
+
+Result
+~~~~~~
+::
+
+     Class and method depending. See the class documentation. A value of 0
+     can mean a valid return code but can also mean that a method was not
+     supported.
+
+
+
+CreateExtIO
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  struct IORequest * CreateExtIO(
+     struct MsgPort * port,
+     ULONG            iosize)
+
+
+Function
+~~~~~~~~
+::
+
+     Create an extended IORequest structure. This structure can
+     be freed with DeleteExtIO().
+
+
+Inputs
+~~~~~~
+::
+
+     port - MsgPort to be signaled on events
+     iosize - Size of the structure
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the new IORequest structure.
+
+
+See also
+~~~~~~~~
+::
+
+     CreateStdIO(), DeleteExtIO()
+
+
+
+CreateGadget
+============
+
+Synopsis
+~~~~~~~~
+::
+
+  struct Gadget * CreateGadget(
+     ULONG kind,
+     struct Gadget * previous,
+     struct NewGadget * ng,
+     Tag             tag1,
+     ...             )
+
+
+Function
+~~~~~~~~
+::
+
+     Varargs version of gadtools.library/CreateGadgetA().
+
+
+
+CreateLayerTags
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+  struct Layer * CreateLayerTags(
+     struct Layer_Info * li,
+     struct BitMap     * bm,
+     LONG                x0,
+     LONG                y0,
+     LONG                x1,
+     LONG                y1,
+     LONG                flags,
+     Tag                 tag1,
+     ...)
+
+
+
+CreateMenus
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  struct Menu * CreateMenus(
+     struct NewMenu * newmenu,
+     Tag              tag1,
+     ...             )
+
+
+Function
+~~~~~~~~
+::
+
+     Varargs version of gadtools.library/CreateMenusA().
+
+
+
+CreateNewProcTags
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+  struct Process * CreateNewProcTags(
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of dos.library/CreateNewProc().
+     For information see dos.library/CreateNewProc().
+
+
+See also
+~~~~~~~~
+::
+
+     dos/CreateNewProc()
+
+
+
+CreatePort
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  struct MsgPort * CreatePort(
+     STRPTR name,
+     LONG   pri)
+
+
+Function
+~~~~~~~~
+::
+
+     Allocate and initialize a new Exec message port. You must
+     use DeletePort() to get rid of it.
+
+
+Inputs
+~~~~~~
+::
+
+     name - The name of the new port. The string is not copied
+     pri - The priority of the port.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the new message port or NULL if no memory or
+     no signal was available.
+
+
+See also
+~~~~~~~~
+::
+
+     DeletePort(), CreateMsgPort(), DeleteMsgPort()
+
+
+
+CreateStdIO
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  struct IOStdReq * CreateStdIO(
+     struct MsgPort * port)
+
+
+Function
+~~~~~~~~
+::
+
+     Create a standard IORequest structure. The structire
+     can be freed with DeleteStdIO().
+
+
+Inputs
+~~~~~~
+::
+
+     port - The port to be signaled on events.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the new IORequest structure.
+
+
+See also
+~~~~~~~~
+::
+
+     CreateExtIO(), DeleteStdIO()
+
+
+
+CreateTask
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  struct Task * CreateTask(
+     STRPTR name,
+     LONG   pri,
+     APTR   initpc,
+     ULONG  stacksize)
+
+
+Function
+~~~~~~~~
+::
+
+     Create a new task.
+
+
+Inputs
+~~~~~~
+::
+
+     name - Name of the task. The string is not copied. Note that
+         task names' need not be unique.
+     pri - The initial priority of the task (normally 0)
+     initpc - The address of the first instruction of the
+         task. In most cases, this is the address of a
+         function.
+     stacksize - The size of the stack for the task. Always
+         keep in mind that the size of the stack must include
+         the amount of stack which is needed by the routines
+         called by the task.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the new task or NULL on failure.
+
+
+
+DeleteExtIO
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  void DeleteExtIO(
+     struct IORequest * ioreq)
+
+
+Function
+~~~~~~~~
+::
+
+     Free a structure created by CreateExtIO().
+
+
+Inputs
+~~~~~~
+::
+
+     ioreq - The returnvalue of CreateExtIO(). Must be
+         non-NULL.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+See also
+~~~~~~~~
+::
+
+     CreateStdIO(), CreateExt()
+
+
+
+DeletePort
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  void DeletePort(
+     struct MsgPort * mp)
+
+
+Function
+~~~~~~~~
+::
+
+     Free a message port created by CreatePort()
+
+
+Inputs
+~~~~~~
+::
+
+     mp - The result of CreatePort()
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+See also
+~~~~~~~~
+::
+
+     CreatePort(), CreateMsgPort(), DeleteMsgPort()
+
+
+
+DeleteStdIO
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  void DeleteStdIO(
+     struct IOStdReq * io)
+
+
+Function
+~~~~~~~~
+::
+
+     Delete a structure which was created by CreateStdIO().
+
+
+Inputs
+~~~~~~
+::
+
+     io - The value returned by CreateStdIO(). Must be
+         non-NULL.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+See also
+~~~~~~~~
+::
+
+     CreateStdIO()
+
+
+
+DeleteTask
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  void DeleteTask(
+     struct Task * task)
+
+
+Function
+~~~~~~~~
+::
+
+     Get rid of a task which was created by CreateTask().
+
+
+Inputs
+~~~~~~
+::
+
+     task - The task which was created by CreateTask(). Must be
+         non-NULL.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+See also
+~~~~~~~~
+::
+
+     RemTask()
+
+
+
+DoDTMethod
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  IPTR DoDTMethod(
+     Object           * obj,
+     struct Window    * win,
+     struct Requester * req,
+     ULONG              methodId,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     Invokes a boopsi method on a datatype object with a GadgetInfo derived from
+     the supplied window or requester parameter.
+
+
+Inputs
+~~~~~~
+::
+
+     gad - The datatype object to work on
+     win - The window which contains the gadget or the requester with
+             the gadgets.
+     req - If the gadget is in a requester, you must specify that one,
+             too.
+     methodId - The message to the gadget follows here.
+
+
+Result
+~~~~~~
+::
+
+     The result depends on the contents of the message sent to the
+     gadget.
+
+
+
+DoGadgetMethod
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+  IPTR DoGadgetMethod(
+     struct Gadget    * gad,
+     struct Window    * win,
+     struct Requester * req,
+     ULONG              methodId,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     Invokes a boopsi method on a object with a GadgetInfo derived from
+     the supplied window or requester parameter.
+
+
+Inputs
+~~~~~~
+::
+
+     gad - The gadget to work on
+     win - The window which contains the gadget or the requester with
+             the gadgets.
+     req - If the gadget is in a requester, you must specify that one,
+             too.
+     methodId - The message to the gadget follows here.
+
+
+Result
+~~~~~~
+::
+
+     The result depends on the contents of the message sent to the
+     gadget.
+
+
+
+DoMethodA
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  IPTR DoMethodA(
+     Object * obj,
+     Msg      message)
+
+
+Function
+~~~~~~~~
+::
+
+     Invokes a method on a BOOPSI object. The dispatcher of the class the
+     object is inherited from is called. For more information about methods
+     a class supports, see the class documentation.
+
+
+Inputs
+~~~~~~
+::
+
+     obj - The object on which the method is to be performed.
+     message - The message. The first field is the same for all methods and
+               specifies which method is to be invoked (see
+               <intuition/classusr.h>).
+
+
+Result
+~~~~~~
+::
+
+     Class and method dependent. See the class documentation. A value of 0
+     can be a valid return code but can also mean that a method is not
+     supported.
+
+
+See also
+~~~~~~~~
+::
+
+     NewObjectA(), SetAttrsA(), GetAttr(), DisposeObject(), CoerceMethodA(),
+     DoSuperMethodA(), <intuition/classusr.h>
+
+
+
+DoSuperMethodA
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+  IPTR DoSuperMethodA(
+     Class  * cl,
+     Object * obj,
+     Msg      message)
+
+
+Function
+~~~~~~~~
+::
+
+     Invokes a method on a BOOPSI object, as if this was a object, inherited
+     from the superclass of the class passed in. Ie the dispatcher of the
+     superclass is called instead of the objects classes dispatcher.
+
+
+Inputs
+~~~~~~
+::
+
+     cl - Class, which superclasses dispatcher is to be called.
+     obj - The object, on which the method is to be performed on.
+     message - The message. The first field is the same for all methods and
+               specifies which method is to be invokes (see
+               <intuition/classusr.h>).
+
+
+Result
+~~~~~~
+::
+
+     Class and method depending. See the class documentation. A value of 0
+     can mean a valid return code but can also mean that a method was not
+     supported.
+
+
+See also
+~~~~~~~~
+::
+
+     NewObjectA(), SetAttrsA(), GetAttr(), DisposeObject(), DoMethodA(),
+     CoerceMethodA(), <intuition/classes.h>
+
+
+
+DoSuperNewTagList
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+  IPTR DoSuperNewTagList(
+         Class             *CLASS,
+         Object            *object,
+         struct GadgetInfo *gadgetInfo,
+         struct TagItem    *tags
+     )
+
+
+See also
+~~~~~~~~
+::
+
+     NewObjectA(), SetAttrsA(), GetAttr(), DisposeObject(), DoMethodA(),
+     CoerceMethodA(), <intuition/classes.h>
+
+
+
+DrawBevelBox
+============
+
+Synopsis
+~~~~~~~~
+::
+
+  void DrawBevelBox(
+     struct RastPort * rp,
+     WORD              left,
+     WORD              top,
+     WORD              width,
+     WORD              height,
+     Tag               tag1,
+     ...             )
+
+
+Function
+~~~~~~~~
+::
+
+     Varargs version of gadtools.library/DrawBevelBoxA().
+
+
+
+EasyRequest
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  LONG EasyRequest(
+     struct Window     * window,
+     struct EasyStruct * easyStruct,
+     ULONG             * idcmpPtr,
+     ...)
+
+
+
+ExtendFontTags
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+  ULONG ExtendFontTags(
+     struct TextFont * font,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of graphics.library/ExtendFont().
+     For information see graphics.library/ExtendFont().
+
+
+See also
+~~~~~~~~
+::
+
+     graphics/ExtendFont()
+
+
+
+FastRand
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  ULONG FastRand(
+     ULONG seed)
+
+
+
+FreeIEvents
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  VOID FreeIEvents(
+
+     struct InputEvent *ie)
+
+
+Function
+~~~~~~~~
+::
+
+
+ Frees a chain of input events allocated by InvertString().
+
+
+Inputs
+~~~~~~
+::
+
+
+ ie    --  input event chain
+
+
+See also
+~~~~~~~~
+::
+
+
+ Commodities.library/InvertString()
+
+
+
+FreeMsgFromStack
+================
+
+Synopsis
+~~~~~~~~
+::
+
+  void FreeMsgFromStack(
+     Msg msg)
+
+
+Function
+~~~~~~~~
+::
+
+     Frees the memory occupied by the message which was created by
+     GetMsgFromStack().
+
+
+Inputs
+~~~~~~
+::
+
+     msg - The return value of GetMsgFromStack(). May be NULL.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+See also
+~~~~~~~~
+::
+
+     GetMsgFromStack()
+
+
+
+FreeParamsFromStack
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+  void FreeParamsFromStack(
+     APTR params)
+
+
+Function
+~~~~~~~~
+::
+
+     Frees the memory occupied by the parameters array which was
+     created by GetParamsFromStack().
+
+
+Inputs
+~~~~~~
+::
+
+     params - The return value of GetParamsFromStack(). May be NULL.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+See also
+~~~~~~~~
+::
+
+     GetParamsFromStack()
+
+
+
+FreeTagsFromStack
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+  void FreeTagsFromStack(
+     struct TagItem * tags)
+
+
+Function
+~~~~~~~~
+::
+
+     Frees the memory occupied by the tagitems which were created by
+     GetTagsFromStack().
+
+
+Inputs
+~~~~~~
+::
+
+     tags - The return value of GetTagsFromStack(). May be NULL.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+See also
+~~~~~~~~
+::
+
+     GetTagsFromStack()
+
+
+
+GetDTAttrs
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  ULONG GetDTAttrs(
+     Object * o,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of datatypes.library/GetDTAttrsA().
+     For information see datatypes.library/GetDTAttrsA().
+
+
+
+GetExtSprite
+============
+
+Synopsis
+~~~~~~~~
+::
+
+  LONG GetExtSprite(
+     struct ExtSprite * sprite,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of graphics.library/GetExtSpriteA().
+     For information see graphics.library/GetExtSpriteA().
+
+
+See also
+~~~~~~~~
+::
+
+     graphics/GetExtSpriteA()
+
+
+
+GetMsgFromStack
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+  Msg GetMsgFromStack(
+     IPTR    MethodID,
+     va_list args)
+
+
+Function
+~~~~~~~~
+::
+
+     Builds a message structure with the parameters which are passed on
+     the stack. This function is used on machines which have compilers
+     which don't pass the arguments to a varargs function unlike the
+     Amiga ones.
+
+
+Inputs
+~~~~~~
+::
+
+     MethodID - This is the ID of the message
+     args - This has to be initialized by va_start()
+     firstlocal - The address of the first local function of the
+             function which wants to call GetMsgFromStack()
+
+
+Result
+~~~~~~
+::
+
+     A message which can be passed to any function which expects the
+     structure which is defined for this MethodID or NULL if something
+     failed. This call may fail for different reasons on different
+     systems. On some systems, NULL indicates that there was not enough
+     memory, on others that the MethodID is unknown.
+
+
+Notes
+~~~~~
+::
+
+     This function fails for structures with more than 32 fields.
+
+
+See also
+~~~~~~~~
+::
+
+     NewObject(), SetAttrs(), GetAttr(), DisposeObject(), DoMethod(),
+     DoSuperMethod(), "Basic Object-Oriented Programming System for
+     Intuition" and the "boopsi Class Reference" Dokument.
+
+
+
+GetParamsFromStack
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+  APTR GetParamsFromStack(
+     va_list args)
+
+
+Function
+~~~~~~~~
+::
+
+     Builds an array of parameters which are passed on the stack.
+     This function is used on machines which have compilers which
+     don't pass the arguments to a varargs function unlike the
+     Amiga ones.
+
+
+Inputs
+~~~~~~
+::
+
+     args - This has to be initialized by va_start()
+
+
+Result
+~~~~~~
+::
+
+     An array which can be passed to any function which expects the
+     structure or NULL if something failed. This call may fail for
+     different reasons on different systems. On some systems, NULL 
+     indicates that there was not enough     memory.
+
+
+Notes
+~~~~~
+::
+
+     This function fails for structures with more than 20 fields.
+
+
+See also
+~~~~~~~~
+::
+
+     CallHook().
+
+
+
+GetRexxVar
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  LONG GetRexxVar(
+     struct RexxMsg *msg,
+     char *varname,
+     char **value)
+
+
+Function
+~~~~~~~~
+::
+
+     Get a the value of the name rexx variable.
+
+
+Inputs
+~~~~~~
+::
+
+     msg - A rexx message generated from a running rexx script
+     varname - The name of the variable to get the value from
+     value - a pointer to a string pointer that will be filled with
+             a pointer to the value of the variable. This value
+             not be changed. On AROS this pointer will also be an
+             argstring so you can get the length with LengthArgstring.
+     length - the length of the value argument
+
+
+Result
+~~~~~~
+::
+
+     0 when succes, otherwise a rexx error value is returned.
+
+
+Notes
+~~~~~
+::
+
+     On AROS the pointer returned in value is only valid until the next
+     getrexxvar call on the same running script.
+
+
+See also
+~~~~~~~~
+::
+
+     CheckRexxMsg, GetRexxVar
+
+
+
+GetRPAttrs
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  void GetRPAttrs(
+     struct RastPort * rp,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of graphics.library/GetRPAttrsA().
+     For information see graphics.library/GetRPAttrsA().
+
+
+See also
+~~~~~~~~
+::
+
+     graphics/GetRPAttrsA()
+
+
+
+GetTagsFromStack
+================
+
+Synopsis
+~~~~~~~~
+::
+
+  struct TagItem * GetTagsFromStack(
+     IPTR    firstTag,
+     va_list args)
+
+
+Function
+~~~~~~~~
+::
+
+     Builds a tagitem array with the tags on the stack. This function is
+     used on machines which have compilers which don't pass the
+     arguments to a varargs function unlike the Amiga ones.
+
+
+Inputs
+~~~~~~
+::
+
+     firstTag - This is the first tag passed to the function
+     args - This has to be initialized by va_start()
+
+
+Result
+~~~~~~
+::
+
+     A TagItem array which can be passed to any function which expects
+     such an array or NULL if something failed. This call may fail for
+     different reasons on different systems. On some systems, NULL
+     indicates that there was not enough memory, on others that the
+     MethodID is unknown.
+
+
+See also
+~~~~~~~~
+::
+
+     NewObject(), SetAttrs(), GetAttr(), DisposeObject(), DoMethod(),
+     DoSuperMethod(), "Basic Object-Oriented Programming System for
+     Intuition" and the "boopsi Class Reference" Dokument.
+
+
+
+GetVisualInfo
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+  APTR GetVisualInfo(
+     struct Screen * screen,
+     Tag             tag1,
+     ...             )
+
+
+Function
+~~~~~~~~
+::
+
+     Varargs version of gadtools.library/GetVisualInfoA().
+
+
+
+GT_GetGadgetAttrs
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+  LONG GT_GetGadgetAttrs(
+     struct Gadget    * gad,
+     struct Window    * win,
+     struct Requester * req,
+     Tag                tag1,
+     ...                )
+
+
+Function
+~~~~~~~~
+::
+
+     Varargs version of gadtools.library/GT_GetGadgetAttrsA().
+
+
+See also
+~~~~~~~~
+::
+
+     gadtools.library/GT_GetGadgetAttrsA()
+
+
+
+GT_SetGadgetAttrs
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+  void GT_SetGadgetAttrs(
+     struct Gadget    * gad,
+     struct Window    * win,
+     struct Requester * req,
+     Tag                tag1,
+     ...                )
+
+
+Function
+~~~~~~~~
+::
+
+     Varargs version of gadtools.library/GT_SetGadgetAttrsA().
+
+
+
+HookEntry
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ IPTR HookEntry(
+          struct Hook * hook,
+          APTR object,
+          APTR param );
+
+Function
+~~~~~~~~
+::
+
+     Some high level languages (HLL) don't allow to pass arguments in
+     registers. For these HLLs, it's not possible to call a hook
+     directly. To use hooks with these HLLs, you must put HookEntry into
+     hook->h_Entry and the real callback function into hook->h_SubEntry.
+     HookEntry will push the registers on the stack and then call
+     hook->h_SubEntry.
+
+
+Inputs
+~~~~~~
+::
+
+     hook - Call this hook.
+     object - This is the object which is passed to the hook. The valid
+         values for this parameter depends on the definition of the called
+         hook.
+     param - Pass these parameters to the specified object
+
+
+Result
+~~~~~~
+::
+
+     The return value depends on the definition of the hook.
+
+
+See also
+~~~~~~~~
+::
+
+     CallHookA(), CallHook()
+
+
+
+HotKey
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  CxObj *HotKey(
+     STRPTR          description,
+     struct MsgPort *port,
+     LONG            id
+                  )
+
+
+Function
+~~~~~~~~
+::
+
+     A simple way to get a hotkey for your program. The program is
+     posted a message when the user does the specified input action in
+     'description' regardless of whether the program has input focus or
+     not. The key combination event is swallowed, that is not sent any
+     farther in the input system.
+
+     It's recommended that the user should be able to specify a
+     program's hotkey with tooltypes, for instance
+     HOTKEY="alt shift f5".
+
+
+Inputs
+~~~~~~
+::
+
+     description  --  commodities filter description (see
+                      commodities.library/SetFilter())
+     port         --  message port the hotkey messages will be sent to
+     id           --  identifier (see CxSender()) 
+
+
+Result
+~~~~~~
+::
+
+     A pointer to a filter object which represents the HotKey.
+
+
+Notes
+~~~~~
+::
+
+     Commodities.library must be open at the time of the call.
+
+
+See also
+~~~~~~~~
+::
+
+     CxFilter(), CxTranslate(), CxSender(), commodities.library/SetFilter(),
+     commodities.library/CxObjError()
+
+
+
+InvertString
+============
+
+Synopsis
+~~~~~~~~
+::
+
+  struct InputEvent *InvertString(
+
+     STRPTR str,
+     struct KeyMap *km
+                  )
+
+Function
+~~~~~~~~
+::
+
+     Return a linked list of input events which would produce the string
+     'str' with the keymap 'km'.
+
+
+Inputs
+~~~~~~
+::
+
+     str  --  pointer to a (NULL-terminated) string that may contain
+              * ANSI character codes
+              * backslash-escaped characters:
+                \n    --  carriage return
+                \r    --  carriage return
+                \t    --  tab
+                \\    --  backslash
+              * a description of an input event a la ParseIX() surrounded
+                by angle brackets
+
+     km   --  keymap to use for the conversion or NULL to use the default
+              keymap
+
+
+Result
+~~~~~~
+::
+
+     A linked list of input events or NULL if something went wrong.
+
+
+Example
+~~~~~~~
+::
+
+     An example string: "Hello <shift alt a>\n"
+
+
+See also
+~~~~~~~~
+::
+
+     commodities.library/ParseIX(), FreeIEvents()
+
+
+
+LayoutMenuItems
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL LayoutMenuItems(
+     struct MenuItem * menuitem,
+     APTR              vi,
+     Tag               tag1,
+     ...               )
+
+
+Function
+~~~~~~~~
+::
+
+     Varargs version of gadtools.library/LayoutMenuItemsA().
+
+
+
+LayoutMenus
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL LayoutMenus(
+     struct Menu * menu,
+     APTR          vi,
+     Tag           tag1,
+     ...           )
+
+
+Function
+~~~~~~~~
+::
+
+     Varargs version of gadtools.library/LayoutMenusA().
+
+
+
+LibAllocPooled
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+  APTR LibAllocPooled(
+     APTR  pool,
+     ULONG memSize)
+
+
+
+LibCreatePool
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+  APTR LibCreatePool(
+     ULONG requirements,
+     ULONG puddleSize,
+     ULONG threshSize)
+
+
+
+LibDeletePool
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+  VOID LibDeletePool(
+     APTR pool)
+
+
+
+LibFreePooled
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+  void LibFreePooled(
+     APTR  pool,
+     APTR  memory,
+     ULONG memSize)
+
+
+
+LockBitMapTags
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+  APTR LockBitMapTags(
+     APTR handle,
+     Tag tag1,
+     ...)
+
+
+
+MakeWorkbenchObjectVisible
+==========================
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL MakeWorkbenchObjectVisible(
+     STRPTR name,
+     Tag    tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of workbench.library/MakeWorkbenchObjectVisibleA().
+     For information see workbench.library/MakeWorkbenchObjectVisibleA().
+
+
+See also
+~~~~~~~~
+::
+
+     workbench/MakeWorkbenchObjectVisibleA()
+
+
+
+MergeSortList
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+  void MergeSortList(
+     struct MinList *l,
+     int (*compare)(struct MinNode *n1, struct MinNode *n2, void *data),
+     void *data)
+
+
+Function
+~~~~~~~~
+::
+
+     Sorts an Exec-style doubly linked list, by using a variant of the merge sorting
+     algorithm, which is Theta(n log n ). No additional space is required other than
+     the one needed for local variables in the function itself. The function is not
+     recursive.
+
+
+Inputs
+~~~~~~
+::
+
+    l       - The list to sort.
+              
+    compare - Pointer to the comparison function which establishes the order
+              of the elements in the list
+              
+    data    - Pointer to user-defined data which will be passed untouched
+              to the comparison function.
+
+
+Result
+~~~~~~
+::
+
+     The given list, sorted in place.
+ 
+
+
+NewDTObject
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  Object * NewDTObject(
+     APTR name,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of datatypes.library/NewDTObjectA().
+     For information see datatypes.library/NewDTObjectA().
+
+
+
+NewList
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  void NewList(
+     struct List * list)
+
+
+Function
+~~~~~~~~
+::
+
+     Initialize a list. After that, you can use functions like
+     AddHead(), AddTail() and Insert() on the list.
+
+
+Inputs
+~~~~~~
+::
+
+     list - the list to be initialized
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+     See below.
+
+
+Notes
+~~~~~
+::
+
+     You can also pass a struct MinList to this function.
+
+
+See also
+~~~~~~~~
+::
+
+     NEWLIST() macro, AddHead(), AddTail(), Insert(), Enqueue(),
+     Remove(), RemHead(), RemTail()
+
+
+
+NewLoadSegTags
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+  BPTR NewLoadSegTags(
+     STRPTR file,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of dos.library/NewLoadSeg().
+     For information see dos.library/NewLoadSeg().
+
+
+See also
+~~~~~~~~
+::
+
+     dos/NewLoadSeg()
+
+
+
+NewObject
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  APTR NewObject(
+     struct IClass * classPtr,
+     UBYTE         * classID,
+     Tag             tag1,
+     ...             )
+
+
+Function
+~~~~~~~~
+::
+
+     Use this function to create BOOPSI objects (BOOPSI stands for
+     "Basic Object Oriented Programming System for Intuition).
+
+     You may specify a class either by it's name (if it's a public class)
+     or by a pointer to its definition (if it's a private class). If
+     classPtr is NULL, classID is used.
+
+
+Inputs
+~~~~~~
+::
+
+     classPtr - Pointer to a private class (or a public class if you
+             happen to have a pointer to it)
+     classID - Name of a public class
+     tagList - Initial attributes. Read the documentation of the class
+             carefully to find out which attributes must be specified
+             here and which can.
+
+
+Result
+~~~~~~
+::
+
+     A BOOPSI object which can be manipulated with general functions and
+     which must be disposed with DisposeObject() later.
+
+
+Notes
+~~~~~
+::
+
+     This functions send OM_NEW to the dispatcher of the class.
+
+
+See also
+~~~~~~~~
+::
+
+     DisposeObject(), SetAttrs(), GetAttr(), MakeClass(),
+     "Basic Object-Oriented Programming System for Intuition" and
+     "boopsi Class Reference" Dokument.
+
+
+
+NewRawDoFmt
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  STRPTR NewRawDoFmt(
+     CONST_STRPTR FormatString,
+     VOID_FUNC PutChProc,
+     APTR PutChData,
+     ... )
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of exec.library/VNewRawDoFmt().
+     For information see exec.library/VNewRawDoFmt().
+
+
+
+ObtainBestPen
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+  LONG ObtainBestPen(
+     struct ColorMap * cm,
+     ULONG R,
+     ULONG G,
+     ULONG B,
+     Tag tag1,
+     ... )
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of graphics.library/ObtainBestPenA().
+     For information see graphics.library/ObtainBestPenA().
+
+
+See also
+~~~~~~~~
+::
+
+     graphics/ObtainBestPenA()
+
+
+
+ObtainInfo
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  ULONG ObtainInfo(
+     struct GlyphEngine *glyphEngine,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     Obtain information about an GlyphEngine.
+
+
+Inputs
+~~~~~~
+::
+
+     object - Obtain information about this GlyphEngine
+     tag1 - The first of a list of attribute/value-pairs. The last
+             attribute in this list must be TAG_END or TAG_DONE.
+             The value for this last attribute is not examined (ie.
+             you need not specify it).
+
+
+Result
+~~~~~~
+::
+
+     Bullet Error Code
+
+
+See also
+~~~~~~~~
+::
+
+     bullet.library/ObtainInfoA()
+
+
+
+OpenAmigaGuide
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+  AMIGAGUIDECONTEXT OpenAmigaGuide(
+     struct NewAmigaGuide * nag,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of amigaguide.library/OpenAmigaGuideA().
+     For information see amigaguide.library/OpenAmigaGuideA().
+
+
+See also
+~~~~~~~~
+::
+
+     amigaguide/OpenAmigaGuideA()
+
+
+
+OpenAmigaGuideAsync
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+  AMIGAGUIDECONTEXT OpenAmigaGuideAsync(
+     struct NewAmigaGuide * nag,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of amigaguide.library/OpenAmigaGuideAsyncA().
+     For information see amigaguide.library/OpenAmigaGuideAsyncA().
+
+
+See also
+~~~~~~~~
+::
+
+     amigaguide/OpenAmigaGuideAsyncA()
+
+
+
+OpenCatalog
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  struct Catalog * OpenCatalog(
+     const struct Locale * locale,
+     CONST_STRPTR name,
+     Tag             tag1,
+     ...             )
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of the locale.library OpenCatalogA().
+     For information see locale.library/OpenCatalog()
+
+
+Inputs
+~~~~~~
+::
+
+     locale      -   The locale describing the language the user
+                     wants.
+     name        -   Name of the catalog file.
+     tag1        -   TagList of extra arguments.
+
+
+Result
+~~~~~~
+::
+
+     Either a pointer to a Catalog, or NULL.
+
+     Although the function may have returned NULL, that does not
+     necessarily meant there is an error. If dos/IoErr() returns
+     0, then there was no error, but the language of the built in
+     strings is the same as that of a catalog.
+
+     If IoErr() != 0, then there was an error however.
+
+
+See also
+~~~~~~~~
+::
+
+     locale/OpenCatalogA(), locale/CloseCatalog(),
+     locale/GetCatalogStr()
+
+
+
+OpenScreenTags
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+  struct Screen * OpenScreenTags(
+     struct NewScreen *  newScreen,
+     Tag                 tag1,
+     ...)
+
+
+
+OpenWindowTags
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+  struct Window * OpenWindowTags(
+     struct NewWindow * newWindow,
+     Tag                tag1,
+     ...                )
+
+
+
+OpenWorkbenchObject
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL OpenWorkbenchObject(
+     STRPTR name,
+     Tag    tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of workbench.library/OpenWorkbenchObjectA().
+     For information see workbench.library/OpenWorkbenchObjectA().
+
+
+See also
+~~~~~~~~
+::
+
+     workbench/OpenWorkbenchObjectA()
+
+
+
+RangeRand
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  ULONG RangeRand(
+     ULONG maxValue)
+
+
+
+ReAllocVec
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  APTR ReAllocVec(
+     APTR  oldmem,
+     ULONG newsize,
+     ULONG requirements)
+
+
+Function
+~~~~~~~~
+::
+
+     Change the size of an AllocVec:ed part of memory. The memory must
+     have been allocated by AllocVec(). If you reduce the
+     size, the old contents will be lost. If you enlarge the size,
+     the new contents will be undefined.
+
+
+Inputs
+~~~~~~
+::
+
+     oldmen - What you got from AllocVec().
+     newsize - The new size.
+     requirements - The (new) requirements.
+             Note that if no new block of memory is allocated, the
+             requirements are not considered.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the allocated memory or NULL. If you don't need the
+     memory anymore, you can pass this pointer to FreeVec().
+
+
+Notes
+~~~~~
+::
+
+     If you get NULL, the memory at oldmem will not have been freed and
+     can still be used.
+     Note that if no new block of memory is allocated, the requirements
+     are not considered.
+
+     This function must not be used in a shared library or in a
+     threaded application. (???)
+
+
+
+See also
+~~~~~~~~
+::
+
+     AllocVec(), FreeVec(), CopyMem()
+
+
+
+RefreshDTObject
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+  void RefreshDTObject(
+     Object * o,
+     struct Window * win,
+     struct Requester *req,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of datatypes.library/RefreshDTObjectA().
+     For information see datatypes.library/RefreshDTObjectA().
+
+
+
+RefreshDTObjects
+================
+
+Synopsis
+~~~~~~~~
+::
+
+  void RefreshDTObjects(
+     Object * o,
+     struct Window * win,
+     struct Requester *req,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of datatypes.library/RefreshDTObjectA().
+     For information see datatypes.library/RefreshDTObjectA().
+
+
+
+ReleaseInfo
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  ULONG ReleaseInfo(
+     struct GlyphEngine *glyphEngine,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     Release information obtained from an GlyphEngine.
+
+
+Inputs
+~~~~~~
+::
+
+     object - Release information obtained from this GlyphEngine
+     tag1 - The first of a list of attribute/value-pairs. The last
+             attribute in this list must be TAG_END or TAG_DONE.
+             The value for this last attribute is not examined (ie.
+             you need not specify it).
+
+
+Result
+~~~~~~
+::
+
+     Bullet Error Code
+
+
+See also
+~~~~~~~~
+::
+
+     bullet.library/ReleaseInfoA()
+
+
+
+RemoveAmigaGuideHost
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+  LONG RemoveAmigaGuideHost(
+     AMIGAGUIDEHOST key,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of amigaguide.library/RemoveAmigaGuideHostA().
+     For information see amigaguide.library/RemoveAmigaGuideHostA().
+
+
+See also
+~~~~~~~~
+::
+
+     amigaguide/RemoveAmigaGuideHostA()
+
+
+
+SendAmigaGuideCmd
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL SendAmigaGuideCmd(
+     AMIGAGUIDECONTEXT handle,
+     STRPTR cmd,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of amigaguide.library/SendAmigaGuideCmdA().
+     For information see amigaguide.library/SendAmigaGuideCmdA().
+
+
+See also
+~~~~~~~~
+::
+
+     amigaguide/SendAmigaGuideCmdA()
+
+
+
+SendAmigaGuideContext
+=====================
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL SendAmigaGuideContext(
+     AMIGAGUIDECONTEXT handle,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of amigaguide.library/SendAmigaGuideContextA().
+     For information see amigaguide.library/SendAmigaGuideContextA().
+
+
+See also
+~~~~~~~~
+::
+
+     amigaguide/SendAmigaGuideContextA()
+
+
+
+SetAmigaGuideAttrs
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+  LONG SetAmigaGuideAttrs(
+     AMIGAGUIDECONTEXT handle,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of amigaguide.library/SetAmigaGuideAttrsA().
+     For information see amigaguide.library/SetAmigaGuideAttrsA().
+
+
+See also
+~~~~~~~~
+::
+
+     amigaguide/SetAmigaGuideAttrsA()
+
+
+
+SetAmigaGuideContext
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL SetAmigaGuideContext(
+     AMIGAGUIDECONTEXT handle,
+     ULONG context,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of amigaguide.library/SetAmigaGuideContextA().
+     For information see amigaguide.library/SetAmigaGuideContextA().
+
+
+See also
+~~~~~~~~
+::
+
+     amigaguide/SetAmigaGuideContextA()
+
+
+
+SetAttrs
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  IPTR SetAttrs(
+     APTR  object,
+     Tag   tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     Changes several attributes of an object at the same time. How the
+     object interprets the new attributes depends on the class.
+
+
+Inputs
+~~~~~~
+::
+
+     object - Change the attributes of this object
+     tag1 - The first of a list of attribute/value-pairs. The last
+             attribute in this list must be TAG_END or TAG_DONE.
+             The value for this last attribute is not examined (ie.
+             you need not specify it).
+
+
+Result
+~~~~~~
+::
+
+     Depends in the class. For gadgets, this value is non-zero if
+     they need redrawing after the values have changed. Other classes
+     will define other return values.
+
+
+Notes
+~~~~~
+::
+
+     This function sends OM_SET to the object.
+
+
+See also
+~~~~~~~~
+::
+
+     NewObject(), DisposeObject(), GetAttr(), MakeClass(),
+     "Basic Object-Oriented Programming System for Intuition" and
+     "boopsi Class Reference" Dokument.
+
+
+
+SetDTAttrs
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  ULONG SetDTAttrs(
+     Object * o,
+     struct Window * win,
+     struct Requester *req,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of datatypes.library/SetDTAttrsA().
+     For information see datatypes.library/SetDTAttrsA().
+
+
+
+SetGadgetAttrs
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+  IPTR SetGadgetAttrs(
+     struct Gadget    * Gadget,
+     struct Window    * Window,
+     struct Requester * Requester,
+     Tag                tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     Changes several attributes of a gadget at the same time. How the
+     gadget interprets the new attributes depends on the class.
+
+
+Inputs
+~~~~~~
+::
+
+     Gadget - Change the attributes of this object
+     Window - The window the gadget is in
+     Requester - The Requester the gadget is in, may be NULL
+     tag1 - The first of a list of attribute/value-pairs. The last
+             attribute in this list must be TAG_END or TAG_DONE.
+             The value for this last attribute is not examined (ie.
+             you need not specify it).
+
+
+Result
+~~~~~~
+::
+
+     This value is non-zero if the gadget needs redrawing after the
+     values have changed.
+
+
+Notes
+~~~~~
+::
+
+     This function sends OM_SET to the object.
+
+
+See also
+~~~~~~~~
+::
+
+     NewObject(), SetAttrs(),
+     "Basic Object-Oriented Programming System for Intuition" and
+     "boopsi Class Reference" Dokument.
+
+
+
+SetInfo
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  ULONG SetInfo(
+     struct GlyphEngine *glyphEngine,
+     Tag                 tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     Changes attributes of an GlyphEngine.
+
+
+Inputs
+~~~~~~
+::
+
+     object - Change the attributes of this GlyphEngine
+     tag1 - The first of a list of attribute/value-pairs. The last
+             attribute in this list must be TAG_END or TAG_DONE.
+             The value for this last attribute is not examined (ie.
+             you need not specify it).
+
+
+Result
+~~~~~~
+::
+
+     Bullet Error Code
+
+
+See also
+~~~~~~~~
+::
+
+     bullet.library/SetInfoA()
+
+
+
+SetRexxVar
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  LONG SetRexxVar(
+     struct RexxMsg *msg,
+     char *varname,
+     char * value,
+     ULONG length)
+
+
+Function
+~~~~~~~~
+::
+
+     Set a the value of the name rexx variable.
+
+
+Inputs
+~~~~~~
+::
+
+     msg - A rexx message generated from a running rexx script
+     varname - The name of the variable to set the value
+     value - a pointer to the beginning of the value to set
+     length - the length of the value argument
+
+
+Result
+~~~~~~
+::
+
+     0 when succes, otherwise a rexx error value is returned.
+
+
+See also
+~~~~~~~~
+::
+
+     CheckRexxMsg, GetRexxVar
+
+
+
+SetRPAttrs
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  void SetRPAttrs(
+     struct RastPort * rp,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of graphics.library/SetRPAttrsA().
+     For information see graphics.library/SetRPAttrsA().
+
+
+See also
+~~~~~~~~
+::
+
+     graphics/SetRPAttrsA()
+
+
+
+SetSuperAttrs
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+  IPTR SetSuperAttrs(
+     Class *  class,
+     Object * object,
+     Tag      tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     Changes several attributes of an object at the same time. How the
+     object interprets the new attributes depends on the class.
+
+
+Inputs
+~~~~~~
+::
+
+     class - Assume that the object is of this class.
+     object - Change the attributes of this object
+     tag1 - The first of a list of attribute/value-pairs. The last
+             attribute in this list must be TAG_END or TAG_DONE.
+             The value for this last attribute is not examined (ie.
+             you need not specify it).
+
+
+Result
+~~~~~~
+::
+
+     Depends in the class. For gadgets, this value is non-zero if
+     they need redrawing after the values have changed. Other classes
+     will define other return values.
+
+
+Notes
+~~~~~
+::
+
+     This function sends OM_SET to the object.
+
+
+See also
+~~~~~~~~
+::
+
+     NewObject(), DisposeObject(), GetAttr(), MakeClass(),
+     "Basic Object-Oriented Programming System for Intuition" and
+     "boopsi Class Reference" Dokument.
+
+
+
+SetWindowPointer
+================
+
+Synopsis
+~~~~~~~~
+::
+
+  void SetWindowPointer(
+     struct Window   * window,
+     ULONG             tag1,
+     ...               )
+
+
+Function
+~~~~~~~~
+::
+
+     Varargs version of intuition.library/SetWindowPointerA().
+
+
+
+StrDup
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  STRPTR StrDup(
+     CONST_STRPTR    str)
+
+
+Function
+~~~~~~~~
+::
+
+     This function allocates enough space, and copies the given string 
+     into it.
+
+
+Inputs
+~~~~~~
+::
+
+     str - the string to duplicate
+
+
+Result
+~~~~~~
+::
+
+     A string copy of the original string (possibly of zero length) or 
+     NULL if passed a NULL pointer.
+
+
+Notes
+~~~~~
+::
+
+     This functions allocates the new string memory with AllocVec().
+     Don't forget to call FreeVec() when you're done with it.
+
+
+See also
+~~~~~~~~
+::
+
+     AllocVec(), FreeVec(), CopyMem()
+
+
+
+SystemTags
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  LONG SystemTags(
+     STRPTR command,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of dos.library/SystemTagList().
+     For information see dos.library/SystemTagList().
+
+
+See also
+~~~~~~~~
+::
+
+     dos/SystemTagList()
+
+
+
+TimeDelay
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG TimeDelay(
+          LONG Unit,
+          ULONG Seconds,
+          ULONG MicroSeconds );
+
+Function
+~~~~~~~~
+::
+
+     TimeDelay() waits for the specified period of time before returning
+     to the caller.
+
+
+Inputs
+~~~~~~
+::
+
+     Unit         -  The timer.device unit to use for this command.
+     Seconds      -  The number of seconds to wait.
+     MicroSeconds -  The number of microseconds to wait.
+
+
+Result
+~~~~~~
+::
+
+     Zero if everything went ok, non-zero if there was a problem.
+
+
+Notes
+~~~~~
+::
+
+     If this function fails, the most likely reasons are:
+     - invalid timer.device unit numbers
+
+     This function uses the SIGF_SINGLE signal, strange things can
+     happen if you are waiting on this signal when you call this
+     function. Basically: Don't use it and call this function.
+
+
+See also
+~~~~~~~~
+::
+
+     timer/TR_ADDREQUEST
+
+
+
+UnLockBitMapTags
+================
+
+Synopsis
+~~~~~~~~
+::
+
+  void UnLockBitMapTags(
+     APTR handle,
+     Tag tag1,
+     ...)
+
+
+
+VideoControlTags
+================
+
+Synopsis
+~~~~~~~~
+::
+
+  ULONG VideoControlTags(
+     struct ColorMap * cm,
+     Tag tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of graphics.library/VideoControl().
+     For information see graphics.library/VideoControl().
+
+
+See also
+~~~~~~~~
+::
+
+     graphics/VideoControl()
+
+
+
+WorkbenchControl
+================
+
+Synopsis
+~~~~~~~~
+::
+
+  BOOL WorkbenchControl(
+     STRPTR name,
+     Tag    tag1,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     This is the varargs version of workbench.library/WorkbenchControlA().
+     For information see workbench.library/WorkbenchControlA().
+
+
+See also
+~~~~~~~~
+::
+
+     workbench/WorkbenchControlA()
+
+
+
