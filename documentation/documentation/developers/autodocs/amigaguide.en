@@ -29,6 +29,11 @@ Synopsis
           struct Hook * hook,
           STRPTR name,
           struct TagItem * attrs );
+ 
+ AMIGAGUIDEHOST AddAmigaGuideHost(
+          struct Hook * hook,
+          STRPTR name,
+          TAG tag, ... );
 
 
 AmigaGuideSignal
@@ -131,6 +136,10 @@ Synopsis
  AMIGAGUIDECONTEXT OpenAmigaGuideA(
           struct NewAmigaGuide * nag,
           struct TagItem * attrs );
+ 
+ AMIGAGUIDECONTEXT OpenAmigaGuide(
+          struct NewAmigaGuide * nag,
+          TAG tag, ... );
 
 
 OpenAmigaGuideAsyncA
@@ -143,6 +152,10 @@ Synopsis
  AMIGAGUIDECONTEXT OpenAmigaGuideAsyncA(
           struct NewAmigaGuide * nag,
           struct TagItem * attrs );
+ 
+ AMIGAGUIDECONTEXT OpenAmigaGuideAsync(
+          struct NewAmigaGuide * nag,
+          TAG tag, ... );
 
 
 RemoveAmigaGuideHostA
@@ -155,6 +168,10 @@ Synopsis
  LONG RemoveAmigaGuideHostA(
           AMIGAGUIDEHOST key,
           struct TagItem * attrs );
+ 
+ LONG RemoveAmigaGuideHost(
+          AMIGAGUIDEHOST key,
+          TAG tag, ... );
 
 
 ReplyAmigaGuideMsg
@@ -179,6 +196,11 @@ Synopsis
           AMIGAGUIDECONTEXT handle,
           STRPTR cmd,
           struct TagItem * attrs );
+ 
+ BOOL SendAmigaGuideCmd(
+          AMIGAGUIDECONTEXT handle,
+          STRPTR cmd,
+          TAG tag, ... );
 
 
 SendAmigaGuideContextA
@@ -191,6 +213,10 @@ Synopsis
  BOOL SendAmigaGuideContextA(
           AMIGAGUIDECONTEXT handle,
           struct TagItem * attrs );
+ 
+ BOOL SendAmigaGuideContext(
+          AMIGAGUIDECONTEXT handle,
+          TAG tag, ... );
 
 
 SetAmigaGuideAttrsA
@@ -203,6 +229,10 @@ Synopsis
  LONG SetAmigaGuideAttrsA(
           AMIGAGUIDECONTEXT handle,
           struct TagItem * attrs );
+ 
+ LONG SetAmigaGuideAttrs(
+          AMIGAGUIDECONTEXT handle,
+          TAG tag, ... );
 
 
 SetAmigaGuideContextA
@@ -216,6 +246,11 @@ Synopsis
           AMIGAGUIDECONTEXT handle,
           ULONG context,
           struct TagItem * attrs );
+ 
+ BOOL SetAmigaGuideContext(
+          AMIGAGUIDECONTEXT handle,
+          ULONG context,
+          TAG tag, ... );
 
 
 UnlockAmigaGuideBase

@@ -29,6 +29,9 @@ Synopsis
 
  struct List * AllocCModeListTagList(
           struct TagItem * tags );
+ 
+ struct List * AllocCModeListTags(
+          TAG tag, ... );
 
 
 BestCModeIDTagList
@@ -40,6 +43,9 @@ Synopsis
 
  ULONG BestCModeIDTagList(
           struct TagItem * tags );
+ 
+ ULONG BestCModeIDTags(
+          TAG tag, ... );
 
 
 BltTemplateAlpha
@@ -70,6 +76,10 @@ Synopsis
  ULONG CModeRequestTagList(
           APTR ,
           struct TagItem *  );
+ 
+ ULONG CModeRequestTags(
+          APTR ,
+          TAG tag, ... );
 
 
 CVideoCtrlTagList
@@ -82,6 +92,10 @@ Synopsis
  void CVideoCtrlTagList(
           struct ViewPort * vp,
           struct TagItem  * tags );
+ 
+ void CVideoCtrlTags(
+          struct ViewPort * vp,
+          TAG tag, ... );
 
 
 DoCDrawMethodTagList
@@ -95,6 +109,11 @@ Synopsis
           struct Hook     * hook,
           struct RastPort * rp,
           struct TagItem  * tags );
+ 
+ void DoCDrawMethodTags(
+          struct Hook     * hook,
+          struct RastPort * rp,
+          TAG tag, ... );
 
 
 ExtractColor
@@ -201,6 +220,10 @@ Synopsis
  APTR LockBitMapTagList(
           APTR bitmap,
           struct TagItem * tags );
+ 
+ APTR LockBitMapTags(
+          APTR bitmap,
+          TAG tag, ... );
 
 
 MovePixelArray
@@ -294,6 +317,10 @@ Synopsis
  void UnLockBitMapTagList(
           APTR Handle,
           struct TagItem * Tags );
+ 
+ void UnLockBitMapTags(
+          APTR Handle,
+          TAG tag, ... );
 
 
 WriteLUTPixelArray

@@ -458,6 +458,11 @@ Synopsis
           const struct Locale  * locale,
           CONST_STRPTR name,
           const struct TagItem * tags );
+ 
+ struct Catalog * OpenCatalog(
+          const struct Locale  * locale,
+          CONST_STRPTR name,
+          TAG tag, ... );
 
 
 OpenLocale

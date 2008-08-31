@@ -25,6 +25,9 @@ Synopsis
 
  struct Player * CreatePlayerA(
           struct TagItem * tagList );
+ 
+ struct Player * CreatePlayer(
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -271,6 +274,10 @@ Synopsis
  BOOL GetPlayerAttrsA(
           struct Player  * player,
           struct TagItem * tagList );
+ 
+ BOOL GetPlayerAttrs(
+          struct Player  * player,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -488,6 +495,10 @@ Synopsis
  BOOL SetPlayerAttrsA(
           struct Player  * player,
           struct TagItem * tagList );
+ 
+ BOOL SetPlayerAttrs(
+          struct Player  * player,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~

@@ -30,6 +30,10 @@ Synopsis
  APTR rtAllocRequestA(
           ULONG type,
           struct TagItem * taglist );
+ 
+ APTR rtAllocRequest(
+          ULONG type,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -88,6 +92,10 @@ Synopsis
  LONG rtChangeReqAttrA(
           APTR req,
           struct TagItem * taglist );
+ 
+ LONG rtChangeReqAttr(
+          APTR req,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -289,6 +297,13 @@ Synopsis
           struct rtReqInfo * reqinfo,
           APTR argarray,
           struct TagItem * taglist );
+ 
+ ULONG rtEZRequest(
+          char * bodyfmt,
+          char * gadfmt,
+          struct rtReqInfo * reqinfo,
+          APTR argarray,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -597,6 +612,12 @@ Synopsis
           char * file,
           char * title,
           struct TagItem * taglist );
+ 
+ APTR rtFileRequest(
+          struct rtFileRequester * filereq,
+          char * file,
+          char * title,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -860,6 +881,11 @@ Synopsis
           struct rtFontRequester * fontreq,
           char * title,
           struct TagItem * taglist );
+ 
+ ULONG rtFontRequest(
+          struct rtFontRequester * fontreq,
+          char * title,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -1173,6 +1199,12 @@ Synopsis
           char * title,
           struct rtReqInfo * reqinfo,
           struct TagItem * taglist );
+ 
+ ULONG rtGetLong(
+          ULONG * longptr,
+          char * title,
+          struct rtReqInfo * reqinfo,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -1335,6 +1367,13 @@ Synopsis
           char * title,
           struct rtReqInfo * reqinfo,
           struct TagItem * taglist );
+ 
+ ULONG rtGetString(
+          UBYTE * buffer,
+          ULONG maxchars,
+          char * title,
+          struct rtReqInfo * reqinfo,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -1552,6 +1591,12 @@ Synopsis
           PWCALLBACKFUNPTR pwcallback,
           struct rtReqInfo * reqinfo,
           struct TagItem * taglist );
+ 
+ BOOL rtInternalEnterPassword(
+          UBYTE * buffer,
+          PWCALLBACKFUNPTR pwcallback,
+          struct rtReqInfo * reqinfo,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -1717,6 +1762,13 @@ Synopsis
           PWCALLBACKFUNPTR pwcallback,
           struct rtReqInfo * reqinfo,
           struct TagItem * taglist );
+ 
+ BOOL rtInternalGetPassword(
+          UBYTE * buffer,
+          ULONG checksum,
+          PWCALLBACKFUNPTR pwcallback,
+          struct rtReqInfo * reqinfo,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -1967,6 +2019,11 @@ Synopsis
           char * title,
           struct rtReqInfo * reqinfo,
           struct TagItem * taglist );
+ 
+ LONG rtPaletteRequest(
+          char * title,
+          struct rtReqInfo * reqinfo,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -2082,6 +2139,11 @@ Synopsis
           struct rtHandlerInfo * handlerinfo,
           ULONG sigs,
           struct TagItem * taglist );
+ 
+ ULONG rtReqHandler(
+          struct rtHandlerInfo * handlerinfo,
+          ULONG sigs,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -2220,6 +2282,11 @@ Synopsis
           struct rtScreenModeRequester * screenmodereq,
           char * title,
           struct TagItem * taglist );
+ 
+ ULONG rtScreenModeRequest(
+          struct rtScreenModeRequester * screenmodereq,
+          char * title,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~

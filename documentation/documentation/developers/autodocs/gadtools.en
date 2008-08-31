@@ -66,6 +66,12 @@ Synopsis
           struct Gadget * previous,
           struct NewGadget * ng,
           struct TagItem * taglist );
+ 
+ struct Gadget * CreateGadget(
+          ULONG kind,
+          struct Gadget * previous,
+          struct NewGadget * ng,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -113,6 +119,10 @@ Synopsis
  struct Menu * CreateMenusA(
           struct NewMenu * newmenu,
           struct TagItem * tagList );
+ 
+ struct Menu * CreateMenus(
+          struct NewMenu * newmenu,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -169,6 +179,14 @@ Synopsis
           WORD width,
           WORD height,
           struct TagItem * taglist );
+ 
+ void DrawBevelBox(
+          struct RastPort * rport,
+          WORD left,
+          WORD top,
+          WORD width,
+          WORD height,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -306,6 +324,10 @@ Synopsis
  APTR GetVisualInfoA(
           struct Screen * screen,
           struct TagItem * tagList );
+ 
+ APTR GetVisualInfo(
+          struct Screen * screen,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -486,6 +508,12 @@ Synopsis
           struct Window * win,
           struct Requester * req,
           struct TagItem * taglist );
+ 
+ LONG GT_GetGadgetAttrs(
+          struct Gadget * gad,
+          struct Window * win,
+          struct Requester * req,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -676,6 +704,12 @@ Synopsis
           struct Window * win,
           struct Requester * req,
           struct TagItem * tagList );
+ 
+ void GT_SetGadgetAttrs(
+          struct Gadget * gad,
+          struct Window * win,
+          struct Requester * req,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -723,6 +757,11 @@ Synopsis
           struct MenuItem * menuitem,
           APTR vi,
           struct TagItem * tagList );
+ 
+ BOOL LayoutMenuItems(
+          struct MenuItem * menuitem,
+          APTR vi,
+          TAG tag, ... );
 
 Inputs
 ~~~~~~
@@ -759,6 +798,11 @@ Synopsis
           struct Menu * menu,
           APTR vi,
           struct TagItem * tagList );
+ 
+ BOOL LayoutMenus(
+          struct Menu * menu,
+          APTR vi,
+          TAG tag, ... );
 
 Inputs
 ~~~~~~

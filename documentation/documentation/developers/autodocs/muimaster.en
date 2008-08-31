@@ -57,6 +57,10 @@ Synopsis
  APTR MUI_AllocAslRequest(
           unsigned long reqType,
           struct TagItem * tagList );
+ 
+ APTR MUI_AllocAslRequestTags(
+          unsigned long reqType,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -97,6 +101,10 @@ Synopsis
  BOOL MUI_AslRequest(
           APTR requester,
           struct TagItem * tagList );
+ 
+ BOOL MUI_AslRequestTags(
+          APTR requester,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -382,6 +390,10 @@ Synopsis
  Object * MUI_MakeObjectA(
           LONG type,
           IPTR * params );
+ 
+ Object * MUI_MakeObject(
+          LONG type,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -425,6 +437,10 @@ Synopsis
  Object * MUI_NewObjectA(
           ClassID classid,
           struct TagItem * tags );
+ 
+ Object * MUI_NewObject(
+          ClassID classid,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -575,6 +591,15 @@ Synopsis
           CONST_STRPTR gadgets,
           CONST_STRPTR format,
           APTR params );
+ 
+ LONG MUI_Request(
+          APTR app,
+          APTR win,
+          LONGBITS flags,
+          CONST_STRPTR title,
+          CONST_STRPTR gadgets,
+          CONST_STRPTR format,
+          TAG tag, ... );
 
 
 MUI_RequestIDCMP

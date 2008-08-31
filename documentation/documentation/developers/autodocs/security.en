@@ -79,6 +79,9 @@ Synopsis
 
  BOOL secCheckPasswd(
           struct TagItem * taglist );
+ 
+ BOOL secCheckPasswdTags(
+          TAG tag, ... );
 
 
 secContextLocate
@@ -249,6 +252,11 @@ Synopsis
           struct secExtOwner * user,
           ULONG owner,
           struct TagItem * taglist );
+ 
+ ULONG secGetRelationship(
+          struct secExtOwner * user,
+          ULONG owner,
+          TAG tag, ... );
 
 
 secGetTaskExtOwner
@@ -347,6 +355,9 @@ Synopsis
 
  ULONG secLoginA(
           struct TagItem * taglist );
+ 
+ ULONG secLogin(
+          TAG tag, ... );
 
 
 secLogout
@@ -414,6 +425,9 @@ Synopsis
 
  BOOL secSetDefProtectionA(
           struct TagItem * taglist );
+ 
+ BOOL secSetDefProtection(
+          TAG tag, ... );
 
 
 secsetegid

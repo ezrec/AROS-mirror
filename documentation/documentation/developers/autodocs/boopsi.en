@@ -366,6 +366,11 @@ Synopsis
           struct IClass  * classPtr,
           UBYTE          * classID,
           struct TagItem * tagList );
+ 
+ APTR NewObject(
+          struct IClass  * classPtr,
+          UBYTE          * classID,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -515,6 +520,10 @@ Synopsis
  ULONG SetAttrsA(
           APTR object,
           struct TagItem * tagList );
+ 
+ ULONG SetAttrs(
+          APTR object,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~

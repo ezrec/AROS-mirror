@@ -157,6 +157,15 @@ Synopsis
           LONG topEdge,
           ULONG state,
           struct TagItem * tags );
+ 
+ void DrawIconState(
+          struct RastPort * rp,
+          struct DiskObject * icon,
+          STRPTR label,
+          LONG leftEdge,
+          LONG topEdge,
+          ULONG state,
+          TAG tag, ... );
 
 See also
 ~~~~~~~~
@@ -176,6 +185,10 @@ Synopsis
  struct DiskObject * DupDiskObjectA(
           struct DiskObject * icon,
           struct TagItem * tags );
+ 
+ struct DiskObject * DupDiskObject(
+          struct DiskObject * icon,
+          TAG tag, ... );
 
 
 FindToolType
@@ -392,6 +405,13 @@ Synopsis
           STRPTR label,
           struct Rectangle * rectangle,
           struct TagItem * tags );
+ 
+ BOOL GetIconRectangle(
+          struct RastPort * rp,
+          struct DiskObject * icon,
+          STRPTR label,
+          struct Rectangle * rectangle,
+          TAG tag, ... );
 
 
 GetIconTagList
@@ -404,6 +424,10 @@ Synopsis
  struct DiskObject * GetIconTagList(
           CONST_STRPTR name,
           const struct TagItem * tags );
+ 
+ struct DiskObject * GetIconTags(
+          CONST_STRPTR name,
+          TAG tag, ... );
 
 Inputs
 ~~~~~~
@@ -438,6 +462,10 @@ Synopsis
  ULONG IconControlA(
           struct DiskObject * icon,
           struct TagItem * tags );
+ 
+ ULONG IconControl(
+          struct DiskObject * icon,
+          TAG tag, ... );
 
 
 LayoutIconA
@@ -451,6 +479,11 @@ Synopsis
           struct DiskObject * icon,
           struct Screen * screen,
           struct TagItem * tags );
+ 
+ BOOL LayoutIcon(
+          struct DiskObject * icon,
+          struct Screen * screen,
+          TAG tag, ... );
 
 
 MatchToolValue
@@ -561,5 +594,10 @@ Synopsis
           CONST_STRPTR name,
           struct DiskObject * icon,
           struct TagItem * tags );
+ 
+ BOOL PutIconTags(
+          CONST_STRPTR name,
+          struct DiskObject * icon,
+          TAG tag, ... );
 
 

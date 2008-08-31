@@ -302,6 +302,11 @@ Synopsis
           struct OOP_IClass  * classPtr,
           UBYTE          * classID,
           struct TagItem * tagList );
+ 
+ APTR OOP_NewObjectTags(
+          struct OOP_IClass  * classPtr,
+          UBYTE          * classID,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -580,6 +585,10 @@ Synopsis
  IPTR OOP_SetAttrs(
           OOP_Object     * object,
           struct TagItem * attrList );
+ 
+ IPTR OOP_SetAttrsTags(
+          OOP_Object     * object,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~

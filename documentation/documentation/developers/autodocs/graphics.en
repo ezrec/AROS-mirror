@@ -457,6 +457,10 @@ Synopsis
  struct ExtSprite * AllocSpriteDataA(
           struct BitMap * bitmap,
           struct TagItem * tagList );
+ 
+ struct ExtSprite * AllocSpriteData(
+          struct BitMap * bitmap,
+          TAG tag, ... );
 
 Inputs
 ~~~~~~
@@ -1156,6 +1160,9 @@ Synopsis
 
  ULONG BestModeIDA(
           struct TagItem * TagItems );
+ 
+ ULONG BestModeID(
+          TAG tag, ... );
 
 Inputs
 ~~~~~~
@@ -1681,6 +1688,12 @@ Synopsis
           struct ExtSprite * oldsprite,
           struct ExtSprite * newsprite,
           struct TagItem * tags );
+ 
+ LONG ChangeExtSprite(
+          struct ViewPort * vp,
+          struct ExtSprite * oldsprite,
+          struct ExtSprite * newsprite,
+          TAG tag, ... );
 
 Inputs
 ~~~~~~
@@ -2306,6 +2319,17 @@ Synopsis
           ULONG width,
           ULONG height,
           struct TagItem * tags );
+ 
+ ULONG ConvertPixels(
+          APTR srcPixels,
+          ULONG srcMod,
+          ULONG srcPixFmt,
+          APTR dstPixels,
+          ULONG dstMod,
+          ULONG dstPixFmt,
+          ULONG width,
+          ULONG height,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -3668,6 +3692,10 @@ Synopsis
  LONG GetExtSpriteA(
           struct ExtSprite * sprite,
           struct TagItem * tags );
+ 
+ LONG GetExtSprite(
+          struct ExtSprite * sprite,
+          TAG tag, ... );
 
 Inputs
 ~~~~~~
@@ -3882,6 +3910,10 @@ Synopsis
  void GetRPAttrsA(
           struct RastPort * rp,
           struct TagItem  * tags );
+ 
+ void GetRPAttrs(
+          struct RastPort * rp,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -5224,6 +5256,13 @@ Synopsis
           ULONG g,
           ULONG b,
           struct TagItem * tags );
+ 
+ LONG ObtainBestPen(
+          struct ColorMap * cm,
+          ULONG r,
+          ULONG g,
+          ULONG b,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -6955,6 +6994,12 @@ Synopsis
           ULONG dstPixFmt,
           APTR function,
           struct TagItem * tags );
+ 
+ APTR SetRGBConversionFunction(
+          ULONG srcPixFmt,
+          ULONG dstPixFmt,
+          APTR function,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -7015,6 +7060,10 @@ Synopsis
  void SetRPAttrsA(
           struct RastPort * rp,
           struct TagItem  * tags );
+ 
+ void SetRPAttrs(
+          struct RastPort * rp,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -7591,6 +7640,10 @@ Synopsis
  ULONG VideoControl(
           struct ColorMap * cm,
           struct TagItem * tags );
+ 
+ ULONG VideoControlTags(
+          struct ColorMap * cm,
+          TAG tag, ... );
 
 Inputs
 ~~~~~~

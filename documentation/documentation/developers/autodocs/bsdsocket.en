@@ -339,6 +339,9 @@ Synopsis
 
  char * Inet_NtoA(
           unsigned long in );
+ 
+ char * Inet_Nto(
+          TAG tag, ... );
 
 
 IoctlSocket
@@ -564,6 +567,9 @@ Synopsis
 
  ULONG SocketBaseTagList(
           struct TagItem * tagList );
+ 
+ ULONG SocketBaseTags(
+          TAG tag, ... );
 
 
 vsyslog

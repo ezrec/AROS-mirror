@@ -34,6 +34,11 @@ Synopsis
           struct MidiNode * midinode,
           LONG type,
           struct TagItem * tags );
+ 
+ struct MidiLink * AddMidiLink(
+          struct MidiNode * midinode,
+          LONG type,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -93,6 +98,9 @@ Synopsis
 
  struct MidiNode * CreateMidiA(
           struct TagItem * tags );
+ 
+ struct MidiNode * CreateMidi(
+          TAG tag, ... );
 
 Inputs
 ~~~~~~
@@ -349,6 +357,10 @@ Synopsis
  ULONG GetMidiAttrsA(
           struct MidiNode * midinode,
           struct TagItem * tags );
+ 
+ ULONG GetMidiAttrs(
+          struct MidiNode * midinode,
+          TAG tag, ... );
 
 Notes
 ~~~~~
@@ -415,6 +427,10 @@ Synopsis
  ULONG GetMidiLinkAttrsA(
           struct MidiLink * midilink,
           struct TagItem * tags );
+ 
+ ULONG GetMidiLinkAttrs(
+          struct MidiLink * midilink,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -1142,6 +1158,10 @@ Synopsis
  BOOL SetMidiAttrsA(
           struct MidiNode * midinode,
           struct TagItem * tags );
+ 
+ BOOL SetMidiAttrs(
+          struct MidiNode * midinode,
+          TAG tag, ... );
 
 Inputs
 ~~~~~~
@@ -1229,6 +1249,10 @@ Synopsis
  BOOL SetMidiLinkAttrsA(
           struct MidiLink * midilink,
           struct TagItem * tags );
+ 
+ BOOL SetMidiLinkAttrs(
+          struct MidiLink * midilink,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~

@@ -337,6 +337,16 @@ Synopsis
           LONG y1,
           LONG flags,
           struct TagItem    * tagList );
+ 
+ struct Layer * CreateLayerTags(
+          struct Layer_Info * li,
+          struct BitMap     * bm,
+          LONG x0,
+          LONG y0,
+          LONG x1,
+          LONG y1,
+          LONG flags,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -1132,6 +1142,10 @@ Synopsis
  ULONG ScaleLayer(
           struct Layer   * l,
           struct TagItem * taglist );
+ 
+ ULONG ScaleLayerTags(
+          struct Layer   * l,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~

@@ -291,6 +291,10 @@ Synopsis
  APTR AllocDosObject(
           ULONG type,
           const struct TagItem * tags );
+ 
+ APTR AllocDosObjectTags(
+          ULONG type,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -855,6 +859,9 @@ Synopsis
 
  struct Process * CreateNewProc(
           struct TagItem * tags );
+ 
+ struct Process * CreateNewProcTags(
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -4140,6 +4147,10 @@ Synopsis
  BPTR NewLoadSeg(
           CONST_STRPTR file,
           struct TagItem * tags );
+ 
+ BPTR NewLoadSegTags(
+          CONST_STRPTR file,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -4287,15 +4298,6 @@ Result
 
      New filehandle or 0 in case of an error. IoErr() will give
      additional information in that case.
-
-
-Notes
-~~~~~
-::
-
-     Since locks and filehandles in AROS are identical this function
-     is just the (useless) identity operator and thus can never fail.
-     It's there for compatibility to Amiga OS.
 
 
 
@@ -6350,6 +6352,10 @@ Synopsis
  LONG SystemTagList(
           CONST_STRPTR command,
           struct TagItem * tags );
+ 
+ LONG SystemTags(
+          CONST_STRPTR command,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~

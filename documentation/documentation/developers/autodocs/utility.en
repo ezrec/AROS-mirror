@@ -170,6 +170,10 @@ Synopsis
  struct NamedObject * AllocNamedObjectA(
           CONST_STRPTR name,
           CONST struct TagItem * tagList );
+ 
+ struct NamedObject * AllocNamedObject(
+          CONST_STRPTR name,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -286,6 +290,10 @@ Synopsis
  void ApplyTagChanges(
           struct TagItem * list,
           struct TagItem * changelist );
+ 
+ void ApplyTagChangesTags(
+          struct TagItem * list,
+          TAG tag, ... );
 
 
 AttemptRemNamedObject
@@ -476,6 +484,9 @@ Synopsis
 
  struct TagItem * CloneTagItems(
           const struct TagItem * tagList );
+ 
+ struct TagItem * CloneTagItemsTags(
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -749,6 +760,10 @@ Synopsis
  struct TagItem * FindTagItem(
           Tag tagValue,
           const struct TagItem * tagList );
+ 
+ struct TagItem * FindTagItemTags(
+          Tag tagValue,
+          TAG tag, ... );
 
 
 FreeNamedObject
@@ -800,6 +815,9 @@ Synopsis
 
  void FreeTagItems(
           struct TagItem * tagList );
+ 
+ void FreeTagItemsTags(
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -866,6 +884,11 @@ Synopsis
           Tag tagValue,
           IPTR defaultVal,
           const struct TagItem * tagList );
+ 
+ IPTR GetTagDataTags(
+          Tag tagValue,
+          IPTR defaultVal,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -1102,6 +1125,11 @@ Synopsis
           ULONG initialFlags,
           struct TagItem * tagList,
           struct TagItem * boolMap );
+ 
+ ULONG PackBoolTagsTags(
+          ULONG initialFlags,
+          struct TagItem * tagList,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -1167,6 +1195,11 @@ Synopsis
           APTR pack,
           ULONG          * packTable,
           struct TagItem * tagList );
+ 
+ ULONG PackStructureTagsTags(
+          APTR pack,
+          ULONG          * packTable,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -1214,6 +1247,10 @@ Synopsis
  void RefreshTagItemClones(
           struct TagItem * clone,
           const struct TagItem * original );
+ 
+ void RefreshTagItemClonesTags(
+          struct TagItem * clone,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -2038,6 +2075,11 @@ Synopsis
           APTR pack,
           ULONG          * packTable,
           struct TagItem * tagList );
+ 
+ ULONG UnpackStructureTagsTags(
+          APTR pack,
+          ULONG          * packTable,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~

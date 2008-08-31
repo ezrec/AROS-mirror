@@ -23,6 +23,9 @@ Synopsis
 
  ULONG ArosInquireA(
           struct TagItem * taglist );
+ 
+ ULONG ArosInquire(
+          TAG tag, ... );
 
 Function
 ~~~~~~~~

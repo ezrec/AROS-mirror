@@ -15,31 +15,33 @@ exec
 `Alert`_                                `AllocAbs`_                             `Allocate`_                             `AllocEntry`_                           
 `AllocMem`_                             `AllocPooled`_                          `AllocSignal`_                          `AllocTrap`_                            
 `AllocVec`_                             `AttemptSemaphore`_                     `AttemptSemaphoreShared`_               `AvailMem`_                             
-`CacheClearE`_                          `CacheClearU`_                          `CacheControl`_                         `CachePostDMA`_                         
-`CachePreDMA`_                          `Cause`_                                `CheckIO`_                              `ChildFree`_                            
-`ChildOrphan`_                          `ChildStatus`_                          `ChildWait`_                            `CloseDevice`_                          
-`CloseLibrary`_                         `ColdReboot`_                           `CopyMem`_                              `CopyMemQuick`_                         
-`CreateIORequest`_                      `CreateMsgPort`_                        `CreatePool`_                           `Deallocate`_                           
-`Debug`_                                `DeleteIORequest`_                      `DeleteMsgPort`_                        `DeletePool`_                           
-`Disable`_                              `DoIO`_                                 `Enable`_                               `Enqueue`_                              
-`FindName`_                             `FindPort`_                             `FindResident`_                         `FindSemaphore`_                        
-`FindTask`_                             `Forbid`_                               `FreeEntry`_                            `FreeMem`_                              
-`FreePooled`_                           `FreeSignal`_                           `FreeTrap`_                             `FreeVec`_                              
-`GetCC`_                                `GetMsg`_                               `InitCode`_                             `InitResident`_                         
-`InitSemaphore`_                        `InitStruct`_                           `Insert`_                               `MakeFunctions`_                        
-`MakeLibrary`_                          `NewAddTask`_                           `NewAllocEntry`_                        `ObtainQuickVector`_                    
-`ObtainSemaphoreList`_                  `ObtainSemaphoreShared`_                `OldOpenLibrary`_                       `OpenDevice`_                           
-`OpenLibrary`_                          `OpenResource`_                         `Permit`_                               `Procure`_                              
-`PutMsg`_                               `RawDoFmt`_                             `ReleaseSemaphoreList`_                 `RemDevice`_                            
-`RemHead`_                              `RemIntServer`_                         `RemLibrary`_                           `RemMemHandler`_                        
-`Remove`_                               `RemPort`_                              `RemResource`_                          `RemSemaphore`_                         
-`RemTail`_                              `RemTask`_                              `ReplyMsg`_                             `SendIO`_                               
-`SetExcept`_                            `SetFunction`_                          `SetIntVector`_                         `SetSignal`_                            
-`SetSR`_                                `SetTaskPri`_                           `Signal`_                               `StackSwap`_                            
-`SumKickData`_                          `SumLibrary`_                           `SuperState`_                           `Supervisor`_                           
-`Switch`_                               `TypeOfMem`_                            `UserState`_                            `Vacate`_                               
-`VNewRawDoFmt`_                         `Wait`_                                 `WaitIO`_                               `WaitPort`_                             
-
+`AVL_AddNode`_                          `AVL_FindFirstNode`_                    `AVL_FindLastNode`_                     `AVL_FindNextNodeByAddress`_            
+`AVL_FindNextNodeByKey`_                `AVL_FindNode`_                         `AVL_FindPrevNodeByAddress`_            `AVL_FindPrevNodeByKey`_                
+`AVL_RemNodeByAddress`_                 `AVL_RemNodeByKey`_                     `CacheClearE`_                          `CacheClearU`_                          
+`CacheControl`_                         `CachePostDMA`_                         `CachePreDMA`_                          `Cause`_                                
+`CheckIO`_                              `ChildFree`_                            `ChildOrphan`_                          `ChildStatus`_                          
+`ChildWait`_                            `CloseDevice`_                          `CloseLibrary`_                         `ColdReboot`_                           
+`CopyMem`_                              `CopyMemQuick`_                         `CreateIORequest`_                      `CreateMsgPort`_                        
+`CreatePool`_                           `Deallocate`_                           `Debug`_                                `DeleteIORequest`_                      
+`DeleteMsgPort`_                        `DeletePool`_                           `Disable`_                              `DoIO`_                                 
+`Enable`_                               `Enqueue`_                              `FindName`_                             `FindPort`_                             
+`FindResident`_                         `FindSemaphore`_                        `FindTask`_                             `Forbid`_                               
+`FreeEntry`_                            `FreeMem`_                              `FreePooled`_                           `FreeSignal`_                           
+`FreeTrap`_                             `FreeVec`_                              `GetCC`_                                `GetMsg`_                               
+`InitCode`_                             `InitResident`_                         `InitSemaphore`_                        `InitStruct`_                           
+`Insert`_                               `MakeFunctions`_                        `MakeLibrary`_                          `NewAddTask`_                           
+`NewAllocEntry`_                        `ObtainQuickVector`_                    `ObtainSemaphoreList`_                  `ObtainSemaphoreShared`_                
+`OldOpenLibrary`_                       `OpenDevice`_                           `OpenLibrary`_                          `OpenResource`_                         
+`Permit`_                               `Procure`_                              `PutMsg`_                               `RawDoFmt`_                             
+`ReleaseSemaphoreList`_                 `RemDevice`_                            `RemHead`_                              `RemIntServer`_                         
+`RemLibrary`_                           `RemMemHandler`_                        `Remove`_                               `RemPort`_                              
+`RemResource`_                          `RemSemaphore`_                         `RemTail`_                              `RemTask`_                              
+`ReplyMsg`_                             `SendIO`_                               `SetExcept`_                            `SetFunction`_                          
+`SetIntVector`_                         `SetSignal`_                            `SetSR`_                                `SetTaskPri`_                           
+`Signal`_                               `StackSwap`_                            `SumKickData`_                          `SumLibrary`_                           
+`SuperState`_                           `Supervisor`_                           `Switch`_                               `TypeOfMem`_                            
+`UserState`_                            `Vacate`_                               `VNewRawDoFmt`_                         `Wait`_                                 
+`WaitIO`_                               `WaitPort`_                             
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -1059,6 +1061,696 @@ Notes
 
 
 
+AVL_AddNode
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct AVLNode * AVL_AddNode(
+          struct AVLNode ** root,
+          struct AVLNode * node,
+          AVLNODECOMP func );
+
+Function
+~~~~~~~~
+::
+
+     Add a new node to an AVL tree.
+
+
+Inputs
+~~~~~~
+::
+
+     Root  - The root node of the tree to which the new node will be added.
+             Initially and if the tree is empty, this will be NULL.
+
+     Node  - The new node to add.  Any key information must alread be
+             initialised.
+
+     Func  - A key comparison function.  It will be passed 2 nodes,
+             node1 and node2 to compare and must return <0, 0 or >0 to
+             reflect node1 < node2, node1 == node, or node1 > node2
+             respectively.
+
+
+Result
+~~~~~~
+::
+
+     NULL if the node was added to the tree, or a pointer to a node with the
+     same key which already exists in the tree.
+
+
+Example
+~~~~~~~
+::
+
+     This is a fragment which counts the occurances of every word in a file.
+     Also note that this example embeds the struct AVLNode data at
+     the start of the structure, so simple casts suffice for translating
+     AVLNode to ExampleNode addresses.
+
+     struct ExampleNode {
+         struct AVLNode avl;
+         STRPTR key;
+         ULONG count;
+     };
+
+     static LONG ExampleNodeComp(const struct AVLNode *a1, const struct AVLNode *a2)
+     {
+         const struct ExampleNode *e1 = (const struct ExampleNode *)a1;
+         const struct ExampleNode *e2 = (const struct ExampleNode *)e2;
+
+         return strcmp(a1->key, a2->key);
+     }
+
+     static LONG ExampleKeyComp(const struct AVLNode *a1, AVLKey key)
+     {
+         const struct ExampleNode *e1 = (const struct ExampleNode *)a1;
+         char *skey = key;
+
+         return strcmp(a1->key, skey);
+     }
+
+     void CountWords(wordfile)
+     {
+         struct ExampleNode *node;
+         struct AVLNode *root = NULL, *check;
+
+         node = AllocMem(sizeof(struct ExampleNode), 0);
+         node->count = 1;
+
+         while (node->key = read_word(wordfile)) {
+             check = AVL_AddNode(&root, &node->avl, ExampleNodecomp);
+
+             if (check != NULL) {
+                 struct ExampleNode *work = (struct ExampleNode *)check;
+
+                 check->count += 1;
+             } else {
+                 free(node->key);
+                 node = AllocMem(sizeof(struct ExampleNode), 0);
+                 node->count = 1;
+             }
+         }
+         FreeMem(node, sizeof(struct ExampleNode));
+     }
+
+
+Notes
+~~~~~
+::
+
+     AVL trees are balanced binary search trees.  This implementation is
+     based on embedding the struct AVLNode within your own data object
+     and providing custom comparison functions wherever they are needed.
+
+     Two comparison functions are needed for different cases.  It is entirely
+     up to the application as to how it interprets the nodes and compares
+     the keys.
+
+     AVLNODECOMP is used to compare the keys of two nodes.
+
+     typedef LONG *AVLNODECOMP(const struct AVLNode *avlnode1,
+                               const struct AVLNode *avlnode2);
+             D0                A0, A1
+
+     AVLKEYCOMP is used to compare a key to a node.
+
+     typedef LONG *AVLKEYCOMP(const struct AVLNode *avlnode,
+                              AVLKey key);
+             D0               A0, A1
+
+     These functions must return the same sense for the same key values.
+     That is,
+         <0  if key of avlnode1 <  key of avlnode2
+             if key of avlnode  <  key
+          0  if key of avlnode1 == key of avlnode2
+             if key of avlnode  == key
+         >0  if key of avlnode1 >  key of avlnode2
+             if key of avlnode  <  key
+
+     Since this function returns the existing node if the keys match,
+     this function can be used to efficiently add items to the tree or
+     update existing items without requiring additional lookups.
+
+
+See also
+~~~~~~~~
+::
+
+     AVL_FindNode(), AVL_FindNextNodeByKey(), AVL_FindPrevNodeByKey(),
+     AVL_RemNodeByAddress(), AVL_RemNodeByKey()
+
+
+
+AVL_FindFirstNode
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct AVLNode * AVL_FindFirstNode(
+          const struct AVLNode * Root );
+
+Function
+~~~~~~~~
+::
+
+     Find the smallest node in an AVL tree.
+
+
+Inputs
+~~~~~~
+::
+
+     Root - The root node of the AVL tree.
+
+
+Result
+~~~~~~
+::
+
+     NULL if the tree is empty (i.e. Root is NULL), or the node
+     which contains the least value in the tree as determined by
+     the comparision function used to add the node.
+
+
+Example
+~~~~~~~
+::
+
+     See AVL_FindNextNodeByAddress()
+
+
+Notes
+~~~~~
+::
+
+     AVL trees are balanced but not minimal.  This operation
+     must iterate the full depth of the tree on one side -
+     approximately 1.44Log(N).
+
+
+See also
+~~~~~~~~
+::
+
+     AVL_AddNode(), AVL_FindNextNodeByAddress()
+
+
+
+AVL_FindLastNode
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct AVLNode * AVL_FindLastNode(
+          const struct AVLNode * Root );
+
+Function
+~~~~~~~~
+::
+
+     Find the largest node in an AVL tree.
+
+
+Inputs
+~~~~~~
+::
+
+     Root - The root node of the AVL tree.
+
+
+Result
+~~~~~~
+::
+
+     NULL if the tree is empty (i.e. Root is NULL), or the node
+     which contains the greatest value in the tree as determined by
+     the comparision function used to add the node.
+
+
+Example
+~~~~~~~
+::
+
+     See AVL_FindPrevNodeByAddress()
+
+
+Notes
+~~~~~
+::
+
+     AVL trees are balanced but not minimal.  This operation
+     must iterate the full depth of the tree on one side -
+     approximately 1.44Log(N).
+
+
+See also
+~~~~~~~~
+::
+
+     AVL_AddNode(), AVL_FindPrevNodeByAddress()
+
+
+
+AVL_FindNextNodeByAddress
+=========================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct AVLNode * AVL_FindNextNodeByAddress(
+          const struct AVLNode * Node );
+
+Function
+~~~~~~~~
+::
+
+     Perform an in-order traversal to the next node in the tree.
+
+
+Inputs
+~~~~~~
+::
+
+     Node - The current node.  The node must be present in the tree.
+
+
+Result
+~~~~~~
+::
+
+     The next-greatest node in the tree, or NULL if Node was already
+     the highest valued node in the tree.
+
+
+Example
+~~~~~~~
+::
+
+     ... in-order traversal of all nodes
+     node = (struct ExampleNode *)AVL_FindFirstNode(root);
+     while (node) {
+         printf(" %s\n", node->key);
+         node = (struct ExampleNode *)AVL_FindNextNodeByAddress(node);
+     }
+
+     ... in-order traversal of all nodes - with safe deletion
+     node = (struct ExampleNode *)AVL_FindFirstNode(root);
+     next = (struct ExampleNode *)AVL_FindNextNodeByAddress(node);
+     while (node) {
+         printf(" %s\n", node->key);
+
+         if (DELETE_NODE(node))
+             AVL_RemNodeByAddress(&root, node);
+
+         node = next;
+         next = (struct ExampleNode *)AVL_FindNextNodeByAddress(node);
+     }
+
+
+Notes
+~~~~~
+::
+
+     This implementation uses a parent pointer to avoid needing
+     a stack or state to track it's current position in the tree.
+
+     Although this operation is typically O(1), in the worst case it
+     iterate the full depth of the tree - approximately 1.44Log(N).
+
+
+See also
+~~~~~~~~
+::
+
+     AVL_AddNode(), AVL_RemNodeByAddress(), AVL_FindFirstNode()
+
+
+
+AVL_FindNextNodeByKey
+=====================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct AVLNode * AVL_FindNextNodeByKey(
+          const struct AVLNode * Root,
+          AVLKEYCOMP func );
+
+Function
+~~~~~~~~
+::
+
+     Find the node matching the key, or if such a node does not exist,
+     then the node with the next-highest value.
+
+
+Inputs
+~~~~~~
+::
+
+     Root - The root of the AVL tree.
+
+     key  - The key to search.
+
+     func - The AVLKEYCOMP key comparision function for this tree.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the struct AVLNode which matches this key, or
+     if that key is not present in the tree, the next highest node.
+     Or NULL if key is higher than the key of any node in the tree.
+
+
+Notes
+~~~~~
+::
+
+     This is only O(1.44log(n)) in the worst case.
+
+
+See also
+~~~~~~~~
+::
+
+     AVL_AddNode(), AVL_FindNextNodeByAddress(), AVL_FindLastNode()
+
+
+
+AVL_FindNode
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct AVLNode * AVL_FindNode(
+          const struct AVLNode * Root,
+          AVLKEYCOMP func );
+
+Function
+~~~~~~~~
+::
+
+     Find an entry in the AVL tree by key.
+
+
+Inputs
+~~~~~~
+::
+
+     Root - The root of the AVL tree.
+
+     key  - The key to search.
+
+     func - The AVLKEYCOMP key comparision function for this tree.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the node matching key if it exists in the
+     tree, or NULL if no such node exists.
+
+
+Example
+~~~~~~~
+::
+
+     node = (struct ExampleNode *)AVL_FindNode(root, "aros", ExampleKeyComp);
+     if (node)
+         printf(" `%s' occurs %d times\n", node->key, node->count);
+
+
+See also
+~~~~~~~~
+::
+
+     AVL_AddNode(), AVL_RemNodeByAddress(), AVL_FindNextNodeByAddress(),
+     AVL_FindPrevNodeByAddress()
+
+
+
+AVL_FindPrevNodeByAddress
+=========================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct AVLNode * AVL_FindPrevNodeByAddress(
+          const struct AVLNode * Node );
+
+Function
+~~~~~~~~
+::
+
+     Perform an inverse-order traversal to the previous node in the tree.
+
+
+Inputs
+~~~~~~
+::
+
+     Node - The current node.  The node must be present in the tree.
+
+
+Result
+~~~~~~
+::
+
+     The next-least node in the tree, or NULL if Node was already
+     the lowest valued node in the tree.
+
+
+Example
+~~~~~~~
+::
+
+     ... inverse-order traversal of all nodes
+     node = (struct ExampleNode *)AVL_FindLastNode(root);
+     while (node) {
+         printf(" %s\n", node->key);
+         node = (struct ExampleNode *)AVL_FindPrevNodeByAddress(node);
+     }
+
+     ... inverse-order traversal of all nodes - with safe deletion
+     node = (struct ExampleNode *)AVL_FindLastNode(root);
+     prev = (struct ExampleNode *)AVL_FindPrevNodeByAddress(node);
+     while (node) {
+         printf(" %s\n", node->key);
+
+         if (DELETE_NODE(node))
+             AVL_RemNodeByAddress(&root, node);
+
+         node = prev;
+         prev = (struct ExampleNode *)AVL_FindPrevNodeByAddress(node);
+     }
+
+
+Notes
+~~~~~
+::
+
+     This implementation uses a parent pointer to avoid needing
+     a stack or state to track it's current position in the tree.
+
+     Although this operation is typically O(1), in the worst case it
+     iterate the full depth of the tree - approximately 1.44Log(N).
+
+
+See also
+~~~~~~~~
+::
+
+     AVL_AddNode(), AVL_RemNodeByAddress(), AVL_FindLastNode()
+
+
+
+AVL_FindPrevNodeByKey
+=====================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct AVLNode * AVL_FindPrevNodeByKey(
+          const struct AVLNode * root,
+          AVLKEYCOMP func );
+
+Function
+~~~~~~~~
+::
+
+     Find the node matching the key, or if such a node does not exist,
+     then the node with the next-lowest value.
+
+
+Inputs
+~~~~~~
+::
+
+     Root - The root of the AVL tree.
+
+     key  - The key to search.
+
+     func - The AVLKEYCOMP key comparision function for this tree.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the struct AVLNode which matches this key, or
+     if that key is not present in the tree, the next lowest node.
+     Or NULL if key is lower than the key of any node in the tree.
+
+
+Notes
+~~~~~
+::
+
+     This is only O(1.44log(n)) in the worst case.
+
+
+See also
+~~~~~~~~
+::
+
+     AVL_AddNode(), AVL_FindNextNodeByAddress(), AVL_FindLastNode()
+
+
+
+AVL_RemNodeByAddress
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct AVLNode * AVL_RemNodeByAddress(
+          struct AVLNode ** Root,
+          struct AVLNode * Node );
+
+Function
+~~~~~~~~
+::
+
+     Remove a given node from the tree.
+
+
+Inputs
+~~~~~~
+::
+
+     Root - A pointer to a pointer to the root node of the tree.
+
+     Node - A struct AVLNode to remove.  The node must be present
+            in the tree.
+
+
+Result
+~~~~~~
+::
+
+     Node is returned.
+
+
+Example
+~~~~~~~
+::
+
+     See AVL_NextNodeByAddress(), AVL_PrevNodeByAddress()
+
+
+Notes
+~~~~~
+::
+
+     Removing a node may require multiple rebalancing steps
+     in the tree.  Each step however runs in constant time
+     and no more than 1.44log(n) steps will be required.
+
+
+See also
+~~~~~~~~
+::
+
+     AVL_AddNode(), AVL_FindNode(), AVL_NextNodeByAddress(),
+     AVL_PrevNodeByAddress()
+
+
+
+AVL_RemNodeByKey
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct AVLNode * AVL_RemNodeByKey(
+          struct AVLNode ** root,
+          AVLKEYCOMP func );
+
+Function
+~~~~~~~~
+::
+
+     Looks up a node in the tree by key, and removes it if it
+     is found.
+
+
+Inputs
+~~~~~~
+::
+
+     Root - A pointer to a pointer to the root node of the AVL tree.
+
+     key  - The key to search for.
+
+     func - An AVLKEYCOMP function used to compare the key and nodes
+            in the tree.
+
+
+Result
+~~~~~~
+::
+
+     If the key was present in the tree, then a pointer to the node
+     for that key.  Otherwise NULL if no such key existed in the
+     tree.
+
+
+Notes
+~~~~~
+::
+
+     See AVL_RemNodeByAddress().
+
+
+See also
+~~~~~~~~
+::
+
+     AVL_AddNode(), AVL_RemNodeByAddress()
+
+
+
 CacheClearE
 ===========
 
@@ -1251,6 +1943,11 @@ Synopsis
           APTR address,
           ULONG * length,
           ULONG flags );
+ 
+ void CachePostDM(
+          APTR address,
+          ULONG * length,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -1299,6 +1996,11 @@ Synopsis
           APTR address,
           ULONG * length,
           ULONG flags );
+ 
+ APTR CachePreDM(
+          APTR address,
+          ULONG * length,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -3229,6 +3931,12 @@ Synopsis
           APTR initialPC,
           APTR finalPC,
           struct TagItem * tagList );
+ 
+ APTR NewAddTaskTags(
+          struct Task * task,
+          APTR initialPC,
+          APTR finalPC,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~

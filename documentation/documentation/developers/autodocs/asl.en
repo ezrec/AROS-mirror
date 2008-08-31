@@ -48,6 +48,10 @@ Synopsis
  APTR AllocAslRequest(
           ULONG reqType,
           struct TagItem * tagList );
+ 
+ APTR AllocAslRequestTags(
+          ULONG reqType,
+          TAG tag, ... );
 
 
 AllocFileRequest
@@ -84,6 +88,10 @@ Synopsis
  BOOL AslRequest(
           APTR requester,
           struct TagItem * tagList );
+ 
+ BOOL AslRequestTags(
+          APTR requester,
+          TAG tag, ... );
 
 
 FreeAslRequest

@@ -33,6 +33,15 @@ Synopsis
           BPTR lock,
           struct DiskObject * diskobj,
           struct TagItem * taglist );
+ 
+ struct AppIcon * AddAppIcon(
+          ULONG id,
+          ULONG userdata,
+          char * text,
+          struct MsgPort * msgport,
+          BPTR lock,
+          struct DiskObject * diskobj,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -229,6 +238,13 @@ Synopsis
           APTR text,
           struct MsgPort * msgport,
           struct TagItem * taglist );
+ 
+ struct AppMenuItem * AddAppMenuItem(
+          ULONG id,
+          ULONG userdata,
+          APTR text,
+          struct MsgPort * msgport,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -304,6 +320,13 @@ Synopsis
           struct Window * window,
           struct MsgPort * msgport,
           struct TagItem * taglist );
+ 
+ struct AppWindow * AddAppWindow(
+          ULONG id,
+          ULONG userdata,
+          struct Window * window,
+          struct MsgPort * msgport,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -373,6 +396,12 @@ Synopsis
           ULONG id,
           ULONG userdata,
           struct TagItem * tags );
+ 
+ struct AppWindowDropZone * AddAppWindowDropZone(
+          struct AppWindow * aw,
+          ULONG id,
+          ULONG userdata,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -480,6 +509,11 @@ Synopsis
           STRPTR name,
           struct Hook * hook,
           struct TagItem * tags );
+ 
+ BOOL ChangeWorkbenchSelection(
+          STRPTR name,
+          struct Hook * hook,
+          TAG tag, ... );
 
 
 CloseWorkbenchObjectA
@@ -492,6 +526,10 @@ Synopsis
  BOOL CloseWorkbenchObjectA(
           STRPTR name,
           struct TagItem * tags );
+ 
+ BOOL CloseWorkbenchObject(
+          STRPTR name,
+          TAG tag, ... );
 
 
 GetNextAppIcon
@@ -575,6 +613,10 @@ Synopsis
  BOOL MakeWorkbenchObjectVisibleA(
           STRPTR name,
           struct TagItem * tags );
+ 
+ BOOL MakeWorkbenchObjectVisible(
+          STRPTR name,
+          TAG tag, ... );
 
 
 OpenWorkbenchObjectA
@@ -587,6 +629,10 @@ Synopsis
  BOOL OpenWorkbenchObjectA(
           STRPTR name,
           struct TagItem * tags );
+ 
+ BOOL OpenWorkbenchObject(
+          STRPTR name,
+          TAG tag, ... );
 
 
 RegisterWorkbench
@@ -1002,6 +1048,11 @@ Synopsis
           STRPTR name,
           LONG type,
           struct TagItem * tags );
+ 
+ BOOL UpdateWorkbenchObject(
+          STRPTR name,
+          LONG type,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -1063,5 +1114,9 @@ Synopsis
  BOOL WorkbenchControlA(
           STRPTR name,
           struct TagItem * tags );
+ 
+ BOOL WorkbenchControl(
+          STRPTR name,
+          TAG tag, ... );
 
 

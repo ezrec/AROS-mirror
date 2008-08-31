@@ -55,7 +55,10 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL ActivateGadget();
+ BOOL ActivateGadget(
+          struct Gadget * gadget,
+          struct Window * window,
+          struct Requester * requester );
 
 Function
 ~~~~~~~~
@@ -82,7 +85,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ActivateWindow();
+ void ActivateWindow(
+          struct Window * window );
 
 Function
 ~~~~~~~~
@@ -134,7 +138,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- void AddClass();
+ void AddClass(
+          struct IClass * classPtr );
 
 Function
 ~~~~~~~~
@@ -190,7 +195,10 @@ Synopsis
 ~~~~~~~~
 ::
 
- UWORD AddGadget();
+ UWORD AddGadget(
+          struct Window * window,
+          struct Gadget * gadget,
+          ULONG position );
 
 Function
 ~~~~~~~~
@@ -234,7 +242,12 @@ Synopsis
 ~~~~~~~~
 ::
 
- UWORD AddGList();
+ UWORD AddGList(
+          struct Window    * window,
+          struct Gadget    * gadget,
+          ULONG position,
+          LONG numGad,
+          struct Requester * requester );
 
 Function
 ~~~~~~~~
@@ -288,7 +301,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct IntuiMessage * AllocIntuiMessage();
+ struct IntuiMessage * AllocIntuiMessage(
+          struct Window * window );
 
 Function
 ~~~~~~~~
@@ -320,7 +334,10 @@ Synopsis
 ~~~~~~~~
 ::
 
- APTR AllocRemember();
+ APTR AllocRemember(
+          struct Remember ** rememberKey,
+          ULONG size,
+          ULONG flags );
 
 Function
 ~~~~~~~~
@@ -353,7 +370,10 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct ScreenBuffer * AllocScreenBuffer();
+ struct ScreenBuffer * AllocScreenBuffer(
+          struct Screen * screen,
+          struct BitMap * bitmap,
+          ULONG flags );
 
 Function
 ~~~~~~~~
@@ -427,7 +447,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- void AlohaWorkbench();
+ void AlohaWorkbench(
+          struct MsgPort * wbmsgport );
 
 Function
 ~~~~~~~~
@@ -485,7 +506,15 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL AutoRequest();
+ BOOL AutoRequest(
+          struct Window    * window,
+          struct IntuiText * body,
+          struct IntuiText * posText,
+          struct IntuiText * negText,
+          ULONG pFlag,
+          ULONG nFlag,
+          ULONG width,
+          ULONG height );
 
 
 BeginRefresh
@@ -495,7 +524,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- void BeginRefresh();
+ void BeginRefresh(
+          struct Window * window );
 
 
 BuildEasyRequestArgs
@@ -505,7 +535,17 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Window * BuildEasyRequestArgs();
+ struct Window * BuildEasyRequestArgs(
+          struct Window     * RefWindow,
+          struct EasyStruct * easyStruct,
+          ULONG IDCMP,
+          APTR Args );
+ 
+ struct Window * BuildEasyRequest(
+          struct Window     * RefWindow,
+          struct EasyStruct * easyStruct,
+          ULONG IDCMP,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -555,7 +595,14 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Window * BuildSysRequest();
+ struct Window * BuildSysRequest(
+          struct Window * window,
+          struct IntuiText * bodytext,
+          struct IntuiText * postext,
+          struct IntuiText * negtext,
+          ULONG IDCMPFlags,
+          WORD width,
+          WORD height );
 
 Inputs
 ~~~~~~
@@ -585,7 +632,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ChangeDecoration();
+ void ChangeDecoration(
+          ULONG ID,
+          struct NewDecorator * nd );
 
 Function
 ~~~~~~~~
@@ -624,7 +673,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- ULONG ChangeScreenBuffer();
+ ULONG ChangeScreenBuffer(
+          struct Screen * screen,
+          struct ScreenBuffer * screenbuffer );
 
 Function
 ~~~~~~~~
@@ -680,7 +731,12 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ChangeWindowBox();
+ void ChangeWindowBox(
+          struct Window * window,
+          LONG left,
+          LONG top,
+          LONG width,
+          LONG height );
 
 Function
 ~~~~~~~~
@@ -714,7 +770,10 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Region * ChangeWindowShape();
+ struct Region * ChangeWindowShape(
+          struct Window * window,
+          struct Region * newshape,
+          struct Hook * callback );
 
 Function
 ~~~~~~~~
@@ -738,7 +797,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL ClearDMRequest();
+ BOOL ClearDMRequest(
+          struct Window * window );
 
 Inputs
 ~~~~~~
@@ -762,7 +822,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ClearMenuStrip();
+ void ClearMenuStrip(
+          struct Window * window );
 
 
 ClearPointer
@@ -772,7 +833,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ClearPointer();
+ void ClearPointer(
+          struct Window * window );
 
 Function
 ~~~~~~~~
@@ -806,7 +868,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL CloseScreen();
+ BOOL CloseScreen(
+          struct Screen * screen );
 
 Function
 ~~~~~~~~
@@ -841,7 +904,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- void CloseWindow();
+ void CloseWindow(
+          struct Window * window );
 
 Function
 ~~~~~~~~
@@ -928,7 +992,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- void CurrentTime();
+ void CurrentTime(
+          ULONG * seconds,
+          ULONG * micros );
 
 Function
 ~~~~~~~~
@@ -977,7 +1043,10 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL DisplayAlert();
+ BOOL DisplayAlert(
+          ULONG alertnumber,
+          UBYTE* string,
+          UWORD height );
 
 Function
 ~~~~~~~~
@@ -1021,7 +1090,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- void DisplayBeep();
+ void DisplayBeep(
+          struct Screen * screen );
 
 Function
 ~~~~~~~~
@@ -1048,7 +1118,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- void DisposeObject();
+ void DisposeObject(
+          APTR object );
 
 Function
 ~~~~~~~~
@@ -1101,7 +1172,17 @@ Synopsis
 ~~~~~~~~
 ::
 
- IPTR DoGadgetMethodA();
+ IPTR DoGadgetMethodA(
+          struct Gadget    * gad,
+          struct Window    * win,
+          struct Requester * req,
+          Msg msg );
+ 
+ IPTR DoGadgetMethod(
+          struct Gadget    * gad,
+          struct Window    * win,
+          struct Requester * req,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -1139,7 +1220,11 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL DoubleClick();
+ BOOL DoubleClick(
+          ULONG sSeconds,
+          ULONG sMicros,
+          ULONG cSeconds,
+          ULONG cMicros );
 
 Function
 ~~~~~~~~
@@ -1172,7 +1257,11 @@ Synopsis
 ~~~~~~~~
 ::
 
- void DrawBorder();
+ void DrawBorder(
+          struct RastPort * rp,
+          struct Border   * border,
+          LONG leftOffset,
+          LONG topOffset );
 
 Function
 ~~~~~~~~
@@ -1239,7 +1328,11 @@ Synopsis
 ~~~~~~~~
 ::
 
- void DrawImage();
+ void DrawImage(
+          struct RastPort * rp,
+          struct Image    * image,
+          LONG leftOffset,
+          LONG topOffset );
 
 Function
 ~~~~~~~~
@@ -1272,7 +1365,13 @@ Synopsis
 ~~~~~~~~
 ::
 
- void DrawImageState();
+ void DrawImageState(
+          struct RastPort * rp,
+          struct Image    * image,
+          LONG leftOffset,
+          LONG topOffset,
+          ULONG state,
+          struct DrawInfo * drawInfo );
 
 Function
 ~~~~~~~~
@@ -1340,7 +1439,17 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG EasyRequestArgs();
+ LONG EasyRequestArgs(
+          struct Window     * window,
+          struct EasyStruct * easyStruct,
+          ULONG             * IDCMP_ptr,
+          APTR argList );
+ 
+ LONG EasyRequest(
+          struct Window     * window,
+          struct EasyStruct * easyStruct,
+          ULONG             * IDCMP_ptr,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -1391,7 +1500,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- void EndRefresh();
+ void EndRefresh(
+          struct Window * window,
+          BOOL complete );
 
 
 EndRequest
@@ -1401,7 +1512,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- void EndRequest();
+ void EndRequest(
+          struct Requester * requester,
+          struct Window * window );
 
 Function
 ~~~~~~~~
@@ -1441,7 +1554,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL EndScreenNotify();
+ BOOL EndScreenNotify(
+          IPTR notify );
 
 Function
 ~~~~~~~~
@@ -1478,7 +1592,11 @@ Synopsis
 ~~~~~~~~
 ::
 
- void EraseImage();
+ void EraseImage(
+          struct RastPort * rp,
+          struct Image    * image,
+          LONG leftOffset,
+          LONG topOffset );
 
 Function
 ~~~~~~~~
@@ -1519,7 +1637,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct IClass * FindClass();
+ struct IClass * FindClass(
+          ClassID classID );
 
 
 FreeClass
@@ -1529,7 +1648,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL FreeClass();
+ BOOL FreeClass(
+          struct IClass * iclass );
 
 Function
 ~~~~~~~~
@@ -1608,7 +1728,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- void FreeIntuiMessage();
+ void FreeIntuiMessage(
+          struct IntuiMessage * imsg );
 
 Function
 ~~~~~~~~
@@ -1640,7 +1761,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- void FreeRemember();
+ void FreeRemember(
+          struct Remember ** rememberKey,
+          LONG reallyForget );
 
 
 FreeScreenBuffer
@@ -1650,7 +1773,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- void FreeScreenBuffer();
+ void FreeScreenBuffer(
+          struct Screen * screen,
+          struct ScreenBuffer * screenbuffer );
 
 Function
 ~~~~~~~~
@@ -1704,7 +1829,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- void FreeScreenDrawInfo();
+ void FreeScreenDrawInfo(
+          struct Screen   * screen,
+          struct DrawInfo * drawInfo );
 
 Function
 ~~~~~~~~
@@ -1744,7 +1871,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- void FreeSysRequest();
+ void FreeSysRequest(
+          struct Window * window );
 
 Function
 ~~~~~~~~
@@ -1783,7 +1911,10 @@ Synopsis
 ~~~~~~~~
 ::
 
- void GadgetMouse();
+ void GadgetMouse(
+          struct Gadget     * gadget,
+          struct GadgetInfo * ginfo,
+          WORD              * mousepoint );
 
 Function
 ~~~~~~~~
@@ -1827,7 +1958,10 @@ Synopsis
 ~~~~~~~~
 ::
 
- ULONG GetAttr();
+ ULONG GetAttr(
+          ULONG attrID,
+          Object * object,
+          IPTR * storagePtr );
 
 Function
 ~~~~~~~~
@@ -1885,7 +2019,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Screen * GetDefaultPubScreen();
+ struct Screen * GetDefaultPubScreen(
+          UBYTE * nameBuffer );
 
 Function
 ~~~~~~~~
@@ -1933,7 +2068,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Preferences * GetDefPrefs();
+ struct Preferences * GetDefPrefs(
+          struct Preferences * prefbuffer,
+          WORD size );
 
 Function
 ~~~~~~~~
@@ -1973,7 +2110,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Preferences * GetPrefs();
+ struct Preferences * GetPrefs(
+          struct Preferences * prefbuffer,
+          WORD size );
 
 Function
 ~~~~~~~~
@@ -2013,7 +2152,11 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG GetScreenData();
+ LONG GetScreenData(
+          APTR buffer,
+          ULONG size,
+          ULONG type,
+          struct Screen * screen );
 
 Function
 ~~~~~~~~
@@ -2058,7 +2201,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct DrawInfo * GetScreenDrawInfo();
+ struct DrawInfo * GetScreenDrawInfo(
+          struct Screen * screen );
 
 Function
 ~~~~~~~~
@@ -2107,7 +2251,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- void HelpControl();
+ void HelpControl(
+          struct Window * window,
+          ULONG flags );
 
 Function
 ~~~~~~~~
@@ -2149,7 +2295,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- VOID HideWindow();
+ VOID HideWindow(
+          struct Window * window );
 
 Function
 ~~~~~~~~
@@ -2173,7 +2320,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- void InitRequester();
+ void InitRequester(
+          struct Requester * requester );
 
 Function
 ~~~~~~~~
@@ -2219,7 +2367,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG IntuiTextLength();
+ LONG IntuiTextLength(
+          struct IntuiText * iText );
 
 Function
 ~~~~~~~~
@@ -2254,7 +2403,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG IsWindowVisible();
+ LONG IsWindowVisible(
+          struct Window * window );
 
 Function
 ~~~~~~~~
@@ -2288,7 +2438,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct MenuItem * ItemAddress();
+ struct MenuItem * ItemAddress(
+          struct Menu * menustrip,
+          UWORD menunumber );
 
 Function
 ~~~~~~~~
@@ -2333,7 +2485,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL LateIntuiInit();
+ BOOL LateIntuiInit(
+          APTR data );
 
 Function
 ~~~~~~~~
@@ -2374,7 +2527,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- void LendMenus();
+ void LendMenus(
+          struct Window * fromwindow,
+          struct Window * towindow );
 
 Function
 ~~~~~~~~
@@ -2420,7 +2575,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- ULONG LockIBase();
+ ULONG LockIBase(
+          ULONG What );
 
 Function
 ~~~~~~~~
@@ -2494,7 +2650,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Screen * LockPubScreen();
+ struct Screen * LockPubScreen(
+          CONST_STRPTR name );
 
 Function
 ~~~~~~~~
@@ -2611,7 +2768,12 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct IClass * MakeClass();
+ struct IClass * MakeClass(
+          ClassID classID,
+          ClassID superClassID,
+          struct IClass * superClassPtr,
+          ULONG instanceSize,
+          ULONG flags );
 
 Function
 ~~~~~~~~
@@ -2678,7 +2840,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG MakeScreen();
+ LONG MakeScreen(
+          struct Screen * screen );
 
 Inputs
 ~~~~~~
@@ -2709,7 +2872,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL ModifyIDCMP();
+ BOOL ModifyIDCMP(
+          struct Window * window,
+          ULONG flags );
 
 Function
 ~~~~~~~~
@@ -2801,7 +2966,15 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ModifyProp();
+ void ModifyProp(
+          struct Gadget    * gadget,
+          struct Window    * window,
+          struct Requester * requester,
+          ULONG flags,
+          ULONG horizPot,
+          ULONG vertPot,
+          ULONG horizBody,
+          ULONG vertBody );
 
 Function
 ~~~~~~~~
@@ -2857,7 +3030,10 @@ Synopsis
 ~~~~~~~~
 ::
 
- void MoveScreen();
+ void MoveScreen(
+          struct Screen * screen,
+          LONG dx,
+          LONG dy );
 
 Function
 ~~~~~~~~
@@ -2908,7 +3084,10 @@ Synopsis
 ~~~~~~~~
 ::
 
- void MoveWindow();
+ void MoveWindow(
+          struct Window * window,
+          LONG dx,
+          LONG dy );
 
 Function
 ~~~~~~~~
@@ -2947,7 +3126,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- void MoveWindowInFrontOf();
+ void MoveWindowInFrontOf(
+          struct Window * window,
+          struct Window * behindwindow );
 
 Function
 ~~~~~~~~
@@ -2986,7 +3167,16 @@ Synopsis
 ~~~~~~~~
 ::
 
- void NewModifyProp();
+ void NewModifyProp(
+          struct Gadget    * gadget,
+          struct Window    * window,
+          struct Requester * requester,
+          ULONG flags,
+          ULONG horizPot,
+          ULONG vertPot,
+          ULONG horizBody,
+          ULONG vertBody,
+          LONG numGad );
 
 Function
 ~~~~~~~~
@@ -3037,7 +3227,15 @@ Synopsis
 ~~~~~~~~
 ::
 
- APTR NewObjectA();
+ APTR NewObjectA(
+          struct IClass  * classPtr,
+          UBYTE          * classID,
+          struct TagItem * tagList );
+ 
+ APTR NewObject(
+          struct IClass  * classPtr,
+          UBYTE          * classID,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -3095,7 +3293,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- APTR NextObject();
+ APTR NextObject(
+          APTR objectPtrPtr );
 
 Function
 ~~~~~~~~
@@ -3140,7 +3339,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- UBYTE * NextPubScreen();
+ UBYTE * NextPubScreen(
+          struct Screen * screen,
+          UBYTE * namebuff );
 
 Function
 ~~~~~~~~
@@ -3200,7 +3401,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct RastPort * ObtainGIRPort();
+ struct RastPort * ObtainGIRPort(
+          struct GadgetInfo * gInfo );
 
 Function
 ~~~~~~~~
@@ -3251,7 +3453,10 @@ Synopsis
 ~~~~~~~~
 ::
 
- void OffGadget();
+ void OffGadget(
+          struct Gadget    * gadget,
+          struct Window    * window,
+          struct Requester * requester );
 
 Function
 ~~~~~~~~
@@ -3300,7 +3505,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- void OffMenu();
+ void OffMenu(
+          struct Window    * window,
+          UWORD menunumber );
 
 Function
 ~~~~~~~~
@@ -3340,7 +3547,10 @@ Synopsis
 ~~~~~~~~
 ::
 
- void OnGadget();
+ void OnGadget(
+          struct Gadget    * gadget,
+          struct Window    * window,
+          struct Requester * requester );
 
 Function
 ~~~~~~~~
@@ -3382,7 +3592,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- void OnMenu();
+ void OnMenu(
+          struct Window    * window,
+          UWORD menunumber );
 
 Function
 ~~~~~~~~
@@ -3422,7 +3634,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Screen * OpenScreen();
+ struct Screen * OpenScreen(
+          struct NewScreen * newScreen );
 
 
 OpenScreenTagList
@@ -3432,7 +3645,13 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Screen * OpenScreenTagList();
+ struct Screen * OpenScreenTagList(
+          struct NewScreen * newScreen,
+          struct TagItem   * tagList );
+ 
+ struct Screen * OpenScreenTags(
+          struct NewScreen * newScreen,
+          TAG tag, ... );
 
 
 OpenWindow
@@ -3442,7 +3661,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Window * OpenWindow();
+ struct Window * OpenWindow(
+          struct NewWindow * newWindow );
 
 Function
 ~~~~~~~~
@@ -3483,7 +3703,13 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Window * OpenWindowTagList();
+ struct Window * OpenWindowTagList(
+          struct NewWindow * newWindow,
+          struct TagItem   * tagList );
+ 
+ struct Window * OpenWindowTags(
+          struct NewWindow * newWindow,
+          TAG tag, ... );
 
 
 OpenWorkBench
@@ -3535,7 +3761,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL PointInImage();
+ BOOL PointInImage(
+          ULONG point,
+          struct Image * image );
 
 Function
 ~~~~~~~~
@@ -3569,7 +3797,11 @@ Synopsis
 ~~~~~~~~
 ::
 
- void PrintIText();
+ void PrintIText(
+          struct RastPort  * rp,
+          struct IntuiText * iText,
+          LONG leftOffset,
+          LONG topOffset );
 
 Function
 ~~~~~~~~
@@ -3604,7 +3836,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- UWORD PubScreenStatus();
+ UWORD PubScreenStatus(
+          struct Screen * Scr,
+          UWORD StatusFlags );
 
 Function
 ~~~~~~~~
@@ -3650,7 +3884,10 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG QueryOverscan();
+ LONG QueryOverscan(
+          ULONG displayid,
+          struct Rectangle * rect,
+          WORD oscantype );
 
 
 RefreshGadgets
@@ -3660,7 +3897,10 @@ Synopsis
 ~~~~~~~~
 ::
 
- void RefreshGadgets();
+ void RefreshGadgets(
+          struct Gadget    * gadgets,
+          struct Window    * window,
+          struct Requester * requester );
 
 Function
 ~~~~~~~~
@@ -3710,7 +3950,11 @@ Synopsis
 ~~~~~~~~
 ::
 
- void RefreshGList();
+ void RefreshGList(
+          struct Gadget    * gadgets,
+          struct Window    * window,
+          struct Requester * requester,
+          LONG numGad );
 
 Function
 ~~~~~~~~
@@ -3769,7 +4013,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- void RefreshWindowFrame();
+ void RefreshWindowFrame(
+          struct Window * window );
 
 
 ReleaseGIRPort
@@ -3779,7 +4024,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ReleaseGIRPort();
+ void ReleaseGIRPort(
+          struct RastPort * rp );
 
 Function
 ~~~~~~~~
@@ -3842,7 +4088,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- void RemoveClass();
+ void RemoveClass(
+          struct IClass * classPtr );
 
 Function
 ~~~~~~~~
@@ -3884,7 +4131,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- UWORD RemoveGadget();
+ UWORD RemoveGadget(
+          struct Window * window,
+          struct Gadget * gadget );
 
 Function
 ~~~~~~~~
@@ -3917,7 +4166,10 @@ Synopsis
 ~~~~~~~~
 ::
 
- UWORD RemoveGList();
+ UWORD RemoveGList(
+          struct Window * remPtr,
+          struct Gadget * gadget,
+          LONG numGad );
 
 
 ReportMouse
@@ -3927,7 +4179,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ReportMouse();
+ void ReportMouse(
+          LONG flag,
+          struct Window * window );
 
 Function
 ~~~~~~~~
@@ -3968,7 +4222,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL Request();
+ BOOL Request(
+          struct Requester * requester,
+          struct Window * window );
 
 Function
 ~~~~~~~~
@@ -4007,7 +4263,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL ResetMenuStrip();
+ BOOL ResetMenuStrip(
+          struct Window * window,
+          struct Menu * menu );
 
 Function
 ~~~~~~~~
@@ -4099,7 +4357,10 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ScreenDepth();
+ void ScreenDepth(
+          struct Screen * screen,
+          ULONG flags,
+          APTR reserved );
 
 Function
 ~~~~~~~~
@@ -4155,7 +4416,13 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ScreenPosition();
+ void ScreenPosition(
+          struct Screen * screen,
+          ULONG flags,
+          LONG x1,
+          LONG y1,
+          LONG x2,
+          LONG y2 );
 
 Function
 ~~~~~~~~
@@ -4219,7 +4486,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ScreenToBack();
+ void ScreenToBack(
+          struct Screen * screen );
 
 Function
 ~~~~~~~~
@@ -4263,7 +4531,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ScreenToFront();
+ void ScreenToFront(
+          struct Screen * screen );
 
 Function
 ~~~~~~~~
@@ -4304,7 +4573,14 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ScrollWindowRaster();
+ void ScrollWindowRaster(
+          struct Window * win,
+          WORD dx,
+          WORD dy,
+          WORD xmin,
+          WORD ymin,
+          WORD xmax,
+          WORD ymax );
 
 Function
 ~~~~~~~~
@@ -4342,7 +4618,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- void SendIntuiMessage();
+ void SendIntuiMessage(
+          struct Window * window,
+          struct IntuiMessage * imsg );
 
 Function
 ~~~~~~~~
@@ -4402,7 +4680,13 @@ Synopsis
 ~~~~~~~~
 ::
 
- ULONG SetAttrsA();
+ ULONG SetAttrsA(
+          APTR object,
+          struct TagItem * tagList );
+ 
+ ULONG SetAttrs(
+          APTR object,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -4453,7 +4737,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- void SetDefaultPubScreen();
+ void SetDefaultPubScreen(
+          UBYTE * name );
 
 Function
 ~~~~~~~~
@@ -4491,7 +4776,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- void SetDefaultScreenFont();
+ void SetDefaultScreenFont(
+          struct TextFont * textfont );
 
 Function
 ~~~~~~~~
@@ -4522,7 +4808,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL SetDMRequest();
+ BOOL SetDMRequest(
+          struct Window * window,
+          struct Requester * dmrequest );
 
 Function
 ~~~~~~~~
@@ -4578,7 +4866,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Hook * SetEditHook();
+ struct Hook * SetEditHook(
+          struct Hook * hook );
 
 Function
 ~~~~~~~~
@@ -4610,7 +4899,17 @@ Synopsis
 ~~~~~~~~
 ::
 
- IPTR SetGadgetAttrsA();
+ IPTR SetGadgetAttrsA(
+          struct Gadget * gadget,
+          struct Window * window,
+          struct Requester * requester,
+          struct TagItem * tagList );
+ 
+ IPTR SetGadgetAttrs(
+          struct Gadget * gadget,
+          struct Window * window,
+          struct Requester * requester,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -4663,7 +4962,10 @@ Synopsis
 ~~~~~~~~
 ::
 
- ULONG SetIPrefs();
+ ULONG SetIPrefs(
+          APTR data,
+          ULONG length,
+          ULONG type );
 
 Result
 ~~~~~~
@@ -4680,7 +4982,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL SetMenuStrip();
+ BOOL SetMenuStrip(
+          struct Window * window,
+          struct Menu   * menu );
 
 Function
 ~~~~~~~~
@@ -4731,7 +5035,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG SetMouseQueue();
+ LONG SetMouseQueue(
+          struct Window * window,
+          UWORD queuelength );
 
 Function
 ~~~~~~~~
@@ -4780,7 +5086,13 @@ Synopsis
 ~~~~~~~~
 ::
 
- void SetPointer();
+ void SetPointer(
+          struct Window * window,
+          UWORD         * pointer,
+          LONG height,
+          LONG width,
+          LONG xOffset,
+          LONG yOffset );
 
 Function
 ~~~~~~~~
@@ -4816,7 +5128,10 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Preferences * SetPrefs();
+ struct Preferences * SetPrefs(
+          struct Preferences * prefbuffer,
+          LONG size,
+          BOOL inform );
 
 Function
 ~~~~~~~~
@@ -4858,7 +5173,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- UWORD SetPubScreenModes();
+ UWORD SetPubScreenModes(
+          UWORD modes );
 
 Function
 ~~~~~~~~
@@ -4904,7 +5220,13 @@ Synopsis
 ~~~~~~~~
 ::
 
- void SetWindowPointerA();
+ void SetWindowPointerA(
+          struct Window * window,
+          struct TagItem * taglist );
+ 
+ void SetWindowPointer(
+          struct Window * window,
+          TAG tag, ... );
 
 
 SetWindowTitles
@@ -4914,7 +5236,10 @@ Synopsis
 ~~~~~~~~
 ::
 
- void SetWindowTitles();
+ void SetWindowTitles(
+          struct Window * window,
+          CONST_STRPTR windowTitle,
+          CONST_STRPTR screenTitle );
 
 Function
 ~~~~~~~~
@@ -4962,7 +5287,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ShowTitle();
+ void ShowTitle(
+          struct Screen * screen,
+          BOOL ShowIt );
 
 Function
 ~~~~~~~~
@@ -4997,7 +5324,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- VOID ShowWindow();
+ VOID ShowWindow(
+          struct Window * window );
 
 Function
 ~~~~~~~~
@@ -5024,7 +5352,10 @@ Synopsis
 ~~~~~~~~
 ::
 
- void SizeWindow();
+ void SizeWindow(
+          struct Window * window,
+          LONG dx,
+          LONG dy );
 
 Function
 ~~~~~~~~
@@ -5065,7 +5396,11 @@ Synopsis
 ~~~~~~~~
 ::
 
- IPTR StartScreenNotifyTagList();
+ IPTR StartScreenNotifyTagList(
+          struct TagItem * tags );
+ 
+ IPTR StartScreenNotifyTags(
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -5102,7 +5437,10 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG SysReqHandler();
+ LONG SysReqHandler(
+          struct Window  * window,
+          ULONG   * IDCMPFlagsPtr,
+          BOOL WaitInput );
 
 Function
 ~~~~~~~~
@@ -5169,7 +5507,11 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL TimedDisplayAlert();
+ BOOL TimedDisplayAlert(
+          ULONG alertnumber,
+          UBYTE * string,
+          UWORD height,
+          ULONG time );
 
 
 UnlockIBase
@@ -5179,7 +5521,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- void UnlockIBase();
+ void UnlockIBase(
+          ULONG ibLock );
 
 Function
 ~~~~~~~~
@@ -5244,7 +5587,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- void UnlockPubScreen();
+ void UnlockPubScreen(
+          UBYTE         * name,
+          struct Screen * screen );
 
 Function
 ~~~~~~~~
@@ -5353,7 +5698,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct ViewPort * ViewPortAddress();
+ struct ViewPort * ViewPortAddress(
+          struct Window * Window );
 
 Function
 ~~~~~~~~
@@ -5472,7 +5818,12 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL WindowLimits();
+ BOOL WindowLimits(
+          struct Window * window,
+          WORD MinWidth,
+          WORD MinHeight,
+          UWORD MaxWidth,
+          UWORD MaxHeight );
 
 Function
 ~~~~~~~~
@@ -5515,7 +5866,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- void WindowToBack();
+ void WindowToBack(
+          struct Window * window );
 
 Function
 ~~~~~~~~
@@ -5546,7 +5898,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- void WindowToFront();
+ void WindowToFront(
+          struct Window * window );
 
 Function
 ~~~~~~~~
@@ -5577,7 +5930,8 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ZipWindow();
+ void ZipWindow(
+          struct Window * window );
 
 Function
 ~~~~~~~~

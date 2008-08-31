@@ -27,6 +27,10 @@ Synopsis
  struct PartitionHandle * AddPartition(
           struct PartitionHandle * root,
           struct TagItem * taglist );
+ 
+ struct PartitionHandle * AddPartitionTags(
+          struct PartitionHandle * root,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -230,6 +234,10 @@ Synopsis
  LONG GetPartitionAttrs(
           struct PartitionHandle * ph,
           struct TagItem * taglist );
+ 
+ LONG GetPartitionAttrsTags(
+          struct PartitionHandle * ph,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -262,6 +270,10 @@ Synopsis
  LONG GetPartitionTableAttrs(
           struct PartitionHandle * root,
           struct TagItem * taglist );
+ 
+ LONG GetPartitionTableAttrsTags(
+          struct PartitionHandle * root,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -425,6 +437,10 @@ Synopsis
  LONG SetPartitionAttrs(
           struct PartitionHandle * ph,
           struct TagItem * taglist );
+ 
+ LONG SetPartitionAttrsTags(
+          struct PartitionHandle * ph,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -457,6 +473,10 @@ Synopsis
  LONG SetPartitionTableAttrs(
           struct PartitionHandle * root,
           struct TagItem * taglist );
+ 
+ LONG SetPartitionTableAttrsTags(
+          struct PartitionHandle * root,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~

@@ -50,6 +50,10 @@ Synopsis
  PCIBoard * Prm_FindBoardTagList(
           PCIBoard * previous,
           struct TagItem * tag_list );
+ 
+ PCIBoard * Prm_FindBoardTags(
+          PCIBoard * previous,
+          TAG tag, ... );
 
 
 Prm_FreeDMABuffer
@@ -74,6 +78,10 @@ Synopsis
  ULONG Prm_GetBoardAttrsTagList(
           PCIBoard * board,
           struct TagItem * tag_list );
+ 
+ ULONG Prm_GetBoardAttrsTags(
+          PCIBoard * board,
+          TAG tag, ... );
 
 
 Prm_GetPhysicalAddr
@@ -145,6 +153,10 @@ Synopsis
  ULONG Prm_SetBoardAttrsTagList(
           PCIBoard * board,
           struct TagItem * tag_list );
+ 
+ ULONG Prm_SetBoardAttrsTags(
+          PCIBoard * board,
+          TAG tag, ... );
 
 
 Prm_WriteConfigByte

@@ -276,6 +276,15 @@ Synopsis
           ULONG which,
           struct IBox      * domain,
           struct TagItem   * attrs );
+ 
+ ULONG DoDTDomain(
+          Object           * o,
+          struct Window    * win,
+          struct Requester * req,
+          struct RastPort  * rport,
+          ULONG which,
+          struct IBox      * domain,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -339,6 +348,12 @@ Synopsis
           struct Window    * win,
           struct Requester * req,
           Msg msg );
+ 
+ IPTR DoDTMethod(
+          Object           * o,
+          struct Window    * win,
+          struct Requester * req,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -393,6 +408,17 @@ Synopsis
           LONG th,
           LONG tv,
           struct TagItem  * attrs );
+ 
+ LONG DrawDTObject(
+          struct RastPort * rp,
+          Object          * o,
+          LONG x,
+          LONG y,
+          LONG w,
+          LONG h,
+          LONG th,
+          LONG tv,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -507,6 +533,10 @@ Synopsis
  struct ToolNode * FindToolNodeA(
           struct List    * toollist,
           struct TagItem * attrs );
+ 
+ struct ToolNode * FindToolNode(
+          struct List    * toollist,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -658,6 +688,10 @@ Synopsis
  ULONG GetDTAttrsA(
           Object         * o,
           struct TagItem * attrs );
+ 
+ ULONG GetDTAttrs(
+          Object         * o,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -904,6 +938,11 @@ Synopsis
           struct Tool * tool,
           STRPTR project,
           struct TagItem * attrs );
+ 
+ ULONG LaunchTool(
+          struct Tool * tool,
+          STRPTR project,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -1006,6 +1045,10 @@ Synopsis
  Object * NewDTObjectA(
           APTR name,
           struct TagItem * attrs );
+ 
+ Object * NewDTObject(
+          APTR name,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -1105,6 +1148,11 @@ Synopsis
           ULONG type,
           APTR handle,
           struct TagItem * attrs );
+ 
+ struct DataType * ObtainDataType(
+          ULONG type,
+          APTR handle,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -1158,6 +1206,10 @@ Synopsis
  APTR ObtainDTDrawInfoA(
           Object         * o,
           struct TagItem * attrs );
+ 
+ APTR ObtainDTDrawInfo(
+          Object         * o,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -1214,6 +1266,12 @@ Synopsis
           struct Window    * window,
           struct Requester * requester,
           struct dtPrint   * msg );
+ 
+ ULONG PrintDTObject(
+          Object           * object,
+          struct Window    * window,
+          struct Requester * requester,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -1266,6 +1324,12 @@ Synopsis
           struct Window    * window,
           struct Requester * req,
           struct TagItem   * attrs );
+ 
+ void RefreshDTObject(
+          Object           * object,
+          struct Window    * window,
+          struct Requester * req,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -1447,6 +1511,15 @@ Synopsis
           ULONG mode,
           BOOL saveicon,
           struct TagItem   * attrs );
+ 
+ ULONG SaveDTObject(
+          Object           * o,
+          struct Window    * win,
+          struct Requester * req,
+          STRPTR file,
+          ULONG mode,
+          BOOL saveicon,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -1499,6 +1572,12 @@ Synopsis
           struct Window    * win,
           struct Requester * req,
           struct TagItem   * attrs );
+ 
+ ULONG SetDTAttrs(
+          Object * o,
+          struct Window    * win,
+          struct Requester * req,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~

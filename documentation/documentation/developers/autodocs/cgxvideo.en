@@ -27,6 +27,11 @@ Synopsis
           struct VLayerHandle * VLayerHandle,
           struct Window * Window,
           struct TagItem  * TagItems );
+ 
+ ULONG AttachVLayerTags(
+          struct VLayerHandle * VLayerHandle,
+          struct Window * Window,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -88,6 +93,10 @@ Synopsis
  struct VLayerHandle * CreateVLayerHandleTagList(
           struct Screen * Screen,
           struct TagItem  * TagItems );
+ 
+ struct VLayerHandle * CreateVLayerHandleTags(
+          struct Screen * Screen,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -332,6 +341,10 @@ Synopsis
  void SetVLayerAttrTagList(
           struct VLayerHandle * VLayerHandle,
           struct TagItem  * TagItems );
+ 
+ void SetVLayerAttrTags(
+          struct VLayerHandle * VLayerHandle,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
