@@ -4,6 +4,11 @@
 
 # This script creates files in ReST format from autodoc headers
 
+# TODO:
+# - Cross references
+# - Parse static libraries
+
+
 import glob
 import os
 import re
@@ -32,26 +37,20 @@ titles_regx = re.compile(r"""
 libfunc_regx = re.compile(r'AROS_.*\(\s*(.*?)\s*\,\s*(.*?)\s*\,')
 
 # don't generate autodocs from this files
-# don't generate autodocs from this files
-#blacklist = ("buildeasyrequestargs.c", "buildeasyrequestargs_morphos.c",
-#		"buildsysrequest.c", "buildsysrequest_morphos.c",
-#		"refreshwindowframe.c", "refreshwindowframe_morphos.c",
-#		"setiprefs.c", "setiprefs_morphos.c",
-#		"sysreqhandler.c", "sysreqhandler_morphos.c",
-#		"match_old.c")
+blacklist = ("buildeasyrequestargs.c", "buildeasyrequestargs_morphos.c",
+		"buildsysrequest.c", "buildsysrequest_morphos.c",
+		"refreshwindowframe.c", "refreshwindowframe_morphos.c",
+		"setiprefs.c", "setiprefs_morphos.c",
+		"sysreqhandler.c", "sysreqhandler_morphos.c",
+		"match_old.c")
 
-
-# don't generate library autodocs from this files
-blacklist = ("buildeasyrequestargs_morphos.c",
-                "buildsysrequest_morphos.c",
-                "refreshwindowframe_morphos.c",
-                "setiprefs_morphos.c",
-                "sysreqhandler_morphos.c",
-                "match_old.c")
 
 class autodoc:
     def __init__(self, content):
-        self.reset()
+        self.titles = {} # dict for each title
+        self.docname = "" # function or command name
+        self.docfilename = "" # filename without ".en"
+
         current_title = None
         for line in content.splitlines():
             match = titles_regx.match(line)
@@ -69,11 +68,6 @@ class autodoc:
     def __cmp__(self, other):
         return cmp(self.docfilename, other.docfilename)
 
-    def reset(self):
-        self.titles = {} # dict for each title
-        self.docname = "" # function or command name
-        self.docfilename = "" # filename without ".en"
-
     def write(self, filehandle, titles):
         for title in titles:
             title_key = title.upper()
@@ -90,16 +84,14 @@ class autodoc:
 class shellautodoc(autodoc):
     def __init__(self, content):
         autodoc.__init__(self, content)
+        self.prevdocfilename = ""
+        self.nextdocfilename = ""
+
         # get docname
         self.docname = self.titles["NAME"].split()[0]
         if self.docname == "":
             raise ValueError("docname is empty")
         self.docfilename = self.docname.lower()
-
-    def reset(self):
-        autodoc.reset(self)
-        self.prevdocfilename = ""
-        self.nextdocfilename = ""
 
     def write(self, filehandle, titles):
         underline="=" * len(self.docname) + "\n"
@@ -122,13 +114,20 @@ class shellautodoc(autodoc):
 
 class libautodoc(autodoc):
     def __init__(self, content):
-        self.reset()
         autodoc.__init__(self, content)
+        self.rettype = ""
+        self.parameters = []
+
+        # search for function name
         m = libfunc_regx.search(content)
         if m:
             self.docname = m.group(2)
             self.docfilename = self.docname.lower()
             self.rettype = m.group(1)
+        else:
+            return
+        
+        #search for parameter/type
         if self.titles.has_key("SYNOPSIS"):
             for par in libfunc_regx.findall(self.titles["SYNOPSIS"]):
                 self.parameters.append(par)
@@ -139,20 +138,42 @@ class libautodoc(autodoc):
             syn += "();\n"
         else:
             syn += "(\n"
-            for linenr in range(len(self.parameters)):
-                line = self.parameters[linenr]
+            for line in self.parameters:
                 syn += "          " + line[0] + " " + line[1]
-                if linenr < len(self.parameters) - 1:
-                    syn += ",\n"
-                else:
+                if line is self.parameters[-1]:
                     syn += " );\n"
+                else:
+                    syn += ",\n"
+        
+        # check for variadic prototype
+        varproto = ""
+        if len(self.parameters) > 0:
+            if self.docname[-1] == "A":
+                # function name ends with "A"
+                varproto = self.docname[:-1]
+            elif self.docname[-7:] == "TagList":
+                # function name ends with "TagList"
+                varproto = self.docname[:-7] + "Tags"
+            elif self.docname[-4:] == "Args" and (self.docname not in ("ReadArgs","FreeArgs")):
+                # function name ends with "Args"
+                varproto = self.docname[:-4]
+            else:
+                # last argument's type is "const struct TagItem *"
+                lastarg = self.parameters[-1] # last parameter
+                lastarg = lastarg[0] # type
+                if lastarg[-16:] == "struct TagItem *":
+                    varproto = self.docname + "Tags"
+            
+        # append variadic prototype
+        if len(varproto) > 0:
+            syn += " \n"
+            syn += " " + self.rettype + " " + varproto + "(\n"
+            if len(self.parameters) > 1:
+                for line in self.parameters[:-1]:
+                    syn += "          " + line[0] + " " + line[1] + ",\n"
+            syn += "          TAG tag, ... );\n"
+
         self.titles["SYNOPSIS"] = syn
-
-    def reset(self):
-        autodoc.reset(self)
-        self.rettype = ""
-        self.parameters = []
-
 
     def write(self, filehandle, titles):
         filehandle.write(self.docname + "\n")
@@ -283,6 +304,7 @@ def create_lib_docs():
     filehandle.write("======================\n")
     filehandle.write("Autodocs for Libraries\n")
     filehandle.write("======================\n\n")
+    filehandle.write(".. This document is automatically generated. Don't edit it!\n\n")
 
     for doc in files:
         if doc[0:5] != "index" and doc != ".svn":
@@ -296,10 +318,8 @@ def create_lib_docs_dir(srcdir, targetdir):
     lib_titles = ("Synopsis","Template","Function",
         "Inputs","Result","Example","Notes","Bugs","See also")  # The titles we want
                                                                 # to be print
-    print subdirs
     for dir in subdirs: # exec ,graphics etc.
         docpath = os.path.join(srcdir, dir)
-        print "dir docpath", dir, docpath
         if (dir != ".svn") and os.path.isdir(docpath) :
             libdocs = libdoclist()
             libdocs.read(docpath)
