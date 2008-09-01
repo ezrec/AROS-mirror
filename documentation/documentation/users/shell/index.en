@@ -6,162 +6,83 @@ Shell Commands
 
 `Introduction <introduction>`_
 
-`AddBuffers`__
-`AddDatatypes`__
-`Alias`__
-`Ask`__
-`Assign`__
-`Avail`__
-`Beep`__
-`Break`__
-`CD`__
-`ChangeTaskPri`__
-`Conclip`__
-`Copy`__
-`CopytoPAR`__
-`Date`__
-`Delay`__
-`Delete`__
-`Dir`__
-`Diskchange`__
-`Echo`__
-`Else`__
-`EndCLI`__
-`EndIf`__
-`EndShell`__
-`EndSkip`__
-`Eval`__
-`Execute`__
-`FailAt`__
-`Fault`__
-`Filenote`__
-`Get`__
-`Getenv`__
-`IconX`__
-`Identify`__
-`If`__
-`Info`__
-`Install`__
-`Install-grub2-i386-pc`__
-`Install-i386-pc`__
-`Iprefs`__
-`Join`__
-`Lab`__
-`List`__
-`Lock`__
-`MakeDir`__
-`MakeLink`__
-`Mount`__
-`NewShell`__
-`Path`__
-`Prompt`__
-`Protect`__
-`Quit`__
-`QuitAROS`__
-`Reboot`__
-`Relabel`__
-`Rename`__
-`RequestChoice`__
-`RequestFile`__
-`Run`__
-`Search`__
-`Set`__
-`SetClock`__
-`SetDate`__
-`SetDefaultFont`__
-`Setenv`__
-`SetKeyboard`__
-`Shell`__
-`Skip`__
-`Sort`__
-`Stack`__
-`Status`__
-`Type`__
-`Unalias`__
-`Unset`__
-`Unsetenv`__
-`UUIDGen`__
-`Version`__
-`Wait`__
-`Which`__
-`Why`__
-
-__ addbuffers
-__ adddatatypes
-__ alias
-__ ask
-__ assign
-__ avail
-__ beep
-__ break
-__ cd
-__ changetaskpri
-__ conclip
-__ copy
-__ copytopar
-__ date
-__ delay
-__ delete
-__ dir
-__ diskchange
-__ echo
-__ else
-__ endcli
-__ endif
-__ endshell
-__ endskip
-__ eval
-__ execute
-__ failat
-__ fault
-__ filenote
-__ get
-__ getenv
-__ iconx
-__ identify
-__ if
-__ info
-__ install
-__ install-grub2-i386-pc
-__ install-i386-pc
-__ iprefs
-__ join
-__ lab
-__ list
-__ lock
-__ makedir
-__ makelink
-__ mount
-__ newshell
-__ path
-__ prompt
-__ protect
-__ quit
-__ quitaros
-__ reboot
-__ relabel
-__ rename
-__ requestchoice
-__ requestfile
-__ run
-__ search
-__ set
-__ setclock
-__ setdate
-__ setdefaultfont
-__ setenv
-__ setkeyboard
-__ shell
-__ skip
-__ sort
-__ stack
-__ status
-__ type
-__ unalias
-__ unset
-__ unsetenv
-__ uuidgen
-__ version
-__ wait
-__ which
-__ why
++ `addbuffers <addbuffers>`_
++ `adddatatypes <adddatatypes>`_
++ `alias <alias>`_
++ `ask <ask>`_
++ `assign <assign>`_
++ `avail <avail>`_
++ `beep <beep>`_
++ `break <break>`_
++ `cd <cd>`_
++ `changetaskpri <changetaskpri>`_
++ `conclip <conclip>`_
++ `copy <copy>`_
++ `copytopar <copytopar>`_
++ `date <date>`_
++ `delay <delay>`_
++ `delete <delete>`_
++ `dir <dir>`_
++ `diskchange <diskchange>`_
++ `echo <echo>`_
++ `else <else>`_
++ `endcli <endcli>`_
++ `endif <endif>`_
++ `endshell <endshell>`_
++ `endskip <endskip>`_
++ `eval <eval>`_
++ `execute <execute>`_
++ `failat <failat>`_
++ `fault <fault>`_
++ `filenote <filenote>`_
++ `get <get>`_
++ `getenv <getenv>`_
++ `iconx <iconx>`_
++ `identify <identify>`_
++ `if <if>`_
++ `info <info>`_
++ `install-grub2-i386-pc <install-grub2-i386-pc>`_
++ `install-i386-pc <install-i386-pc>`_
++ `install <install>`_
++ `introduction <introduction>`_
++ `iprefs <iprefs>`_
++ `join <join>`_
++ `lab <lab>`_
++ `list <list>`_
++ `lock <lock>`_
++ `makedir <makedir>`_
++ `makelink <makelink>`_
++ `mount <mount>`_
++ `newshell <newshell>`_
++ `path <path>`_
++ `prompt <prompt>`_
++ `protect <protect>`_
++ `quit <quit>`_
++ `quitaros <quitaros>`_
++ `reboot <reboot>`_
++ `relabel <relabel>`_
++ `rename <rename>`_
++ `requestchoice <requestchoice>`_
++ `requestfile <requestfile>`_
++ `run <run>`_
++ `search <search>`_
++ `set <set>`_
++ `setclock <setclock>`_
++ `setdate <setdate>`_
++ `setdefaultfont <setdefaultfont>`_
++ `setenv <setenv>`_
++ `setkeyboard <setkeyboard>`_
++ `shell <shell>`_
++ `skip <skip>`_
++ `sort <sort>`_
++ `stack <stack>`_
++ `status <status>`_
++ `type <type>`_
++ `unalias <unalias>`_
++ `unset <unset>`_
++ `unsetenv <unsetenv>`_
++ `uuidgen <uuidgen>`_
++ `version <version>`_
++ `wait <wait>`_
++ `which <which>`_
++ `why <why>`_

@@ -1,0 +1,55 @@
+============
+ClickToFront
+============
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <autopoint>`_ `Next <depthmenu>`_ 
+
+---------------
+
+Name
+~~~~
+::
+
+
+     ClickToFront
+
+
+Synopsis
+~~~~~~~~
+::
+
+
+     CX_PRIORITY/N/K, QUALIFIER/K, DOUBLE/S
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:Tools/Commodities
+
+
+Function
+~~~~~~~~
+::
+
+
+     Automatically raises and activates a window when clicking in it.
+
+
+Inputs
+~~~~~~
+::
+
+
+     CX_PRIORITY  --  The priority of the commodity
+
+     QUALIFIER    --  Qualifier to match the double click (LEFT_ALT,
+                      RIGHT_ALT, CTRL or NONE).
+
+     DOUBLE       --  If specified, clicking means double-clicking.
+
+

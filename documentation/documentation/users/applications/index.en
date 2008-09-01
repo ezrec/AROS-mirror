@@ -1,7 +1,13 @@
-============
+.. This document is automatically generated. Don't edit it!
+
+==============
 Applications
-============
+==============
 
-+ `E-UAE`__
-
-__ euae
++ `autopoint <autopoint>`_
++ `clicktofront <clicktofront>`_
++ `depthmenu <depthmenu>`_
++ `euae <euae>`_
++ `exchange <exchange>`_
++ `nocapslock <nocapslock>`_
++ `wimp <wimp>`_

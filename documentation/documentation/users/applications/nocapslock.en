@@ -1,0 +1,50 @@
+==========
+NoCapsLock
+==========
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <exchange>`_ `Next <wimp>`_ 
+
+---------------
+
+Name
+~~~~
+::
+
+
+     NoCapsLock
+
+
+Synopsis
+~~~~~~~~
+::
+
+
+     CX_PRIORITY/N/K
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:Tools/Commodities
+
+
+Function
+~~~~~~~~
+::
+
+
+     Renders the CAPS LOCK key ineffective.
+
+
+Inputs
+~~~~~~
+::
+
+
+     CX_PRIORITY  --  The priority of the commodity
+
+

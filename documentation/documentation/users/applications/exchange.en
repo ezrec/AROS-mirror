@@ -1,0 +1,52 @@
+========
+Exchange
+========
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <depthmenu>`_ `Next <nocapslock>`_ 
+
+---------------
+
+Name
+~~~~
+::
+
+
+     Exchange
+
+
+Synopsis
+~~~~~~~~
+::
+
+
+     CX_PRIORITY/K/N,CX_POPUP/K/S,CX_POPKEY/K
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:Tools/Commodities
+
+
+Function
+~~~~~~~~
+::
+
+
+     Manages the commodities in the system
+
+
+Inputs
+~~~~~~
+::
+
+
+     CX_PRIORITY  --  Priority of the Exchange broker
+     CX_POPUP     --  Appear at startup
+     CX_POPKEY    --  Hotkey combination for Exchange
+
+
