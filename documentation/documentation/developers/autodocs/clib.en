@@ -51,17 +51,17 @@ clib
 `stco_l`_                               `stcu_d`_                               `stpblk`_                               `stpcpy`_                               
 `stpsym`_                               `strcasecmp`_                           `strcasestr`_                           `strcat`_                               
 `strchr`_                               `strcmp`_                               `strcoll`_                              `strcpy`_                               
-`strcspn`_                              `strdup`_                               `strerror`_                             `strerror`_                             
-`strlen`_                               `strlwr`_                               `strncasecmp`_                          `strncat`_                              
-`strncmp`_                              `strncpy`_                              `strpbrk`_                              `strrchr`_                              
-`strrev`_                               `strsep`_                               `strspn`_                               `strstr`_                               
-`strtod`_                               `strtok`_                               `strtol`_                               `strtoll`_                              
-`strtoul`_                              `strtoull`_                             `strupr`_                               `strxfrm`_                              
-`system`_                               `time`_                                 `tmpfile`_                              `truncate`_                             
-`ttyname`_                              `uname`_                                `ungetc`_                               `unlink`_                               
-`unsetenv`_                             `updatestdio`_                          `usleep`_                               `vfprintf`_                             
-`vfscanf`_                              `vprintf`_                              `vscanf`_                               `vsnprintf`_                            
-`vsprintf`_                             `vsscanf`_                              `write`_                                
+`strcspn`_                              `strdup`_                               `strerror`_                             `strlen`_                               
+`strlwr`_                               `strncasecmp`_                          `strncat`_                              `strncmp`_                              
+`strncpy`_                              `strpbrk`_                              `strrchr`_                              `strrev`_                               
+`strsep`_                               `strspn`_                               `strstr`_                               `strtod`_                               
+`strtok`_                               `strtol`_                               `strtoll`_                              `strtoul`_                              
+`strtoull`_                             `strupr`_                               `strxfrm`_                              `system`_                               
+`time`_                                 `tmpfile`_                              `truncate`_                             `ttyname`_                              
+`uname`_                                `ungetc`_                               `unlink`_                               `unsetenv`_                             
+`updatestdio`_                          `usleep`_                               `vfprintf`_                             `vfscanf`_                              
+`vprintf`_                              `vscanf`_                               `vsnprintf`_                            `vsprintf`_                             
+`vsscanf`_                              `write`_                                
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -8028,39 +8028,6 @@ Result
 ::
 
      A copy of the string which can be freed with free().
-
-
-
-strerror
-========
-
-Synopsis
-~~~~~~~~
-::
-
-  char * strerror(
-     int n)
-
-
-Function
-~~~~~~~~
-::
-
-     Returns a readable string for an error number in errno.
-
-
-Inputs
-~~~~~~
-::
-
-     n - The contents of errno or a #define from errno.h
-
-
-Result
-~~~~~~
-::
-
-     A string describing the error.
 
 
 
