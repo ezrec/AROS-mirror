@@ -25,14 +25,14 @@ static char rcsid =
  "@(#) $Id$";
 #endif
 
-/* StormMesa implementation of SDL OpenGL support */
+/* AROSMesa implementation of SDL OpenGL support */
 
 #include "SDL_error.h"
 #include "SDL_cgxgl_c.h"
 #include "SDL_cgxvideo.h"
 
 #ifdef HAVE_OPENGL
-AmigaMesaContext glcont=NULL;
+AROSMesaContext glcont=NULL;
 #endif
 
 /* Init OpenGL */
@@ -69,6 +69,7 @@ int CGX_GL_Init(_THIS)
 	else {
 		attributes[i++].ti_Data = GL_FALSE;
 	}
+    
 	// no depth buffer ?
 	if ( this->gl_config.depth_size == 0 ) {
 		attributes[i].ti_Tag = AMA_NoDepth;
@@ -86,10 +87,11 @@ int CGX_GL_Init(_THIS)
 		attributes[i].ti_Tag = AMA_NoAccum;
 		attributes[i++].ti_Data = GL_TRUE;
 	}
+    
 	// done...
 	attributes[i].ti_Tag	= TAG_DONE;
 
-	glcont = AmigaMesaCreateContext(attributes);
+	glcont = AROSMesaCreateContext(attributes);
 	if ( glcont == NULL ) {
 		SDL_SetError("Couldn't create OpenGL context");
 		return(-1);
@@ -109,7 +111,7 @@ void CGX_GL_Quit(_THIS)
 {
 #ifdef HAVE_OPENGL
 	if ( glcont != NULL ) {
-		AmigaMesaDestroyContext(glcont);
+		AROSMesaDestroyContext(glcont);
 		glcont = NULL;
 		this->gl_data->gl_active = 0;
 		this->gl_config.driver_loaded = 0;
@@ -129,7 +131,9 @@ int CGX_GL_Update(_THIS)
 	tags[0].ti_Tag = AMA_Window;
 	tags[0].ti_Data = (unsigned long)win;
 	tags[1].ti_Tag = TAG_DONE;
-	AmigaMesaSetRast(glcont, tags);
+    
+    /* AROSMesa 7.0.3 does not support this */
+    //AROSMesaSetRast(glcont, tags);
 
 	return 0;
 #else
@@ -146,13 +150,13 @@ int CGX_GL_MakeCurrent(_THIS)
 	if(glcont == NULL)
 		return -1;
 
-	AmigaMesaMakeCurrent(glcont, glcont->buffer);
+	AROSMesaMakeCurrent(glcont);
 	return 0;
 }
 
 void CGX_GL_SwapBuffers(_THIS)
 {
-	AmigaMesaSwapBuffers(glcont);
+	AROSMesaSwapBuffers(glcont);
 }
 
 int CGX_GL_GetAttribute(_THIS, SDL_GLattr attrib, int* value) {
@@ -196,7 +200,8 @@ int CGX_GL_GetAttribute(_THIS, SDL_GLattr attrib, int* value) {
 			return -1;
 	}
 
-	AmigaMesaGetConfig(glcont->visual, mesa_attrib, value);
+    /* AROSMesa 7.0.3 does not support this */
+	//AROSMesaGetConfig(glcont->visual, mesa_attrib, value);
 	return 0;
 }
 

@@ -25,13 +25,13 @@ static char rcsid =
  "@(#) $Id$";
 #endif
 
-/* StormMesa implementation of SDL OpenGL support */
+/* AROSMesa implementation of SDL OpenGL support */
 
 #include "SDL_sysvideo.h"
 #define _THIS   SDL_VideoDevice *_this
 
 #ifdef HAVE_OPENGL
-#include <GL/Amigamesa.h>
+#include <GL/AROSMesa.h> /* Requires AROSMesa 7.0.3 port header */
 extern void *AmiGetGLProc(const char *proc);
 #endif /* HAVE_OPENGL */
 
