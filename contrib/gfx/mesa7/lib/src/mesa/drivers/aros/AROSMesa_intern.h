@@ -4,6 +4,10 @@
 #include "mtypes.h"
 #include <GL/AROSMesa.h>
 
+
+extern struct Library * AROSMesaCyberGfxBase;
+#define CyberGfxBase AROSMesaCyberGfxBase
+
 /* TrueColor (RGBA) to ColorFrmt Macros */
 #define     TC_ARGB(r, g, b, a)           ((((((a << 8) | r) << 8) | g) << 8) | b)
 #define     TC_RGBA(r, g, b, a)           ((((((r << 8) | g) << 8) | b) << 8) | a)
@@ -15,10 +19,7 @@
 
 #define FIXx(x) (amesa->left + (x))
 
-#define FIXy(y) (amesa->RealHeight - amesa->bottom - (y))
-
-#define FIXxy(x,y) ((amesa->RealWidth * FIXy(y) + FIXx(x)))
-
+#define FIXy(y) (amesa->top + (amesa->height - 1) - (y))
 
 
 /* Structs */
@@ -76,21 +77,20 @@ struct arosmesa_context
 
     ULONG                    clearpixel;            /* pixel for clearing the color buffers */
 
-    /* etc... */
     struct Window           *window;                /* Intuition window */
-    struct RastPort         *visible_rp;            /* Visible rastport */
     struct Screen           *Screen;                /* Current screen*/
+    
+    /* Rastport 'visible' to user (window rasport, screen rastport)*/
+    struct RastPort         *visible_rp;            
+    /* Rastport dimentions */
+    GLuint                  visible_rp_width;       /* the rastport drawing area full size*/
+    GLuint                  visible_rp_height;      /* the rastport drawing area full size*/
 
+    /* Buffer information */
     GLuint                  depth;                  /* bits per pixel (1, 8, 24, etc) */
-
-    GLuint                  width, height;          /* drawable area */
+    GLuint                  width, height;          /* drawable area on rastport excluding borders */
     GLuint                  top, bottom;            /* offsets due to window border */
     GLuint                  left, right;            /* offsets due to window border */
-    GLuint                  RealWidth,RealHeight;   /* the drawingareas real size*/
-    GLuint                  FixedWidth,FixedHeight; /* The internal buffer real size speeds up the drawing a bit*/
-
-    /* Internal Functions */
-    void (*SwapBuffer)(struct arosmesa_context *);  /* Use this when AROSMesaSwapBuffers is called */
 };
 
 /* typedef struct arosmesa_context * AROSMesaContext; */ /* Defined in AROSMesa.h */

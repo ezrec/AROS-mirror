@@ -48,23 +48,10 @@
 #include "glheader.h"
 #include <GL/gl.h>
 #include "context.h"
-#include "colormac.h"
-#include "depth.h"
 #include "extensions.h"
-#include "macros.h"
-#include "matrix.h"
-#include "imports.h"
-#include "texcompress.h"
-#include "texformat.h"
-#include "texstore.h"
 #include "framebuffer.h"
 #include "swrast/swrast.h"
 #include "swrast_setup/swrast_setup.h"
-#include "swrast/s_context.h"
-#include "swrast/s_depth.h"
-#include "swrast/s_lines.h"
-#include "swrast/s_triangle.h"
-#include "swrast/s_trispan.h"
 #include "tnl/tnl.h"
 #include "tnl/t_context.h"
 #include "tnl/t_pipeline.h"
@@ -73,14 +60,12 @@
 
 #include "renderbuffer.h"
 
-void arosRasterizer_Standard_SwapBuffer(AROSMesaContext amesa);
-
 /**********************************************************************/
 /*****        Internal Data                     *****/
 /**********************************************************************/
 
-GLenum         LastError;        /* The last error generated*/
-struct Library *CyberGfxBase = NULL;    /* optional base address for cybergfx */
+GLenum         LastError;                       /* The last error generated*/
+struct Library * AROSMesaCyberGfxBase = NULL;    /* Base address for cybergfx */
 
 /**********************************************************************/
 /*****          AROS/Mesa API Functions          *****/
@@ -142,10 +127,25 @@ AROSMesaSwapBuffers(AROSMesaContext amesa)
 {        
     /* copy/swap back buffer to front if applicable */
 
-    //D(bug("[AROSMESA] AROSMesaSwapBuffers(amesa @ %x)\n", amesa));
+    D(bug("[AROSMESA] AROSMesaSwapBuffers(amesa @ %x)\n", amesa));
     
-    if (amesa->SwapBuffer)
-        (*amesa->SwapBuffer)( amesa );
+
+    if (amesa->back_rb)
+    {
+        UBYTE minterm = 0xc0;
+
+        ClipBlit(amesa->back_rb->rp, amesa->left, amesa->top,  
+            /* from */
+            amesa->front_rb->rp, amesa->left, amesa->top,  
+            /* to */
+            amesa->width, amesa->height,  
+            /* size */
+            minterm);
+    }
+    else
+    {
+        D(bug("[AROSMESA] AROSMesaSwapBuffers: NOP - SINGLE buffer\n"));
+    }
 }
 
 /*
@@ -208,34 +208,30 @@ aros_Standard_init(AROSMesaContext amesa, struct TagItem *tagList)
 
     D(bug("[AROSMESA] aros_Standard_init: Cloned RastPort @ %x\n", amesa->rp));
 
-    amesa->RealWidth = amesa->visible_rp->Layer->bounds.MaxX - amesa->visible_rp->Layer->bounds.MinX;
-    amesa->FixedWidth = amesa->RealWidth;
-  
-    amesa->RealHeight = amesa->visible_rp->Layer->bounds.MaxY - amesa->visible_rp->Layer->bounds.MinY;
-    amesa->FixedHeight = amesa->RealHeight;
+    amesa->visible_rp_width = 
+        amesa->visible_rp->Layer->bounds.MaxX - amesa->visible_rp->Layer->bounds.MinX + 1;
+
+    amesa->visible_rp_height = 
+        amesa->visible_rp->Layer->bounds.MaxY - amesa->visible_rp->Layer->bounds.MinY + 1;
 
     amesa->left = GetTagData(AMA_Left, 0, tagList);
     amesa->right = GetTagData(AMA_Right, 0, tagList);
     amesa->top = GetTagData(AMA_Top, 0, tagList);
     amesa->bottom = GetTagData(AMA_Bottom, 0, tagList);
 
-    amesa->width = GetTagData(AMA_Width, (amesa->RealWidth - amesa->left - amesa->right), tagList);
-    amesa->height = GetTagData(AMA_Height, (amesa->RealHeight - amesa->top - amesa->bottom), tagList);
+    amesa->width = GetTagData(AMA_Width, (amesa->visible_rp_width - amesa->left - amesa->right), tagList);
+    amesa->height = GetTagData(AMA_Height, (amesa->visible_rp_height - amesa->top - amesa->bottom), tagList);
 
     amesa->clearpixel = 0;   /* current drawing/clearing pens */
 
     if (amesa->window)
     {
         D(bug("[AROSMESA] aros_Standard_init: Clipping Rastport to Window's dimensions\n"));
-        /* AROS: Clip the rastport to the visible area */
-        /*rastcliprect.MinX = amesa->window->BorderLeft;	 
-        rastcliprect.MinY = amesa->window->BorderTop;
-        rastcliprect.MaxX = -amesa->window->BorderRight;
-        rastcliprect.MaxY = -amesa->window->BorderBottom;*/
-        rastcliprect.MinX = 0;
-        rastcliprect.MinY = 0;
-        rastcliprect.MaxX = 640;
-        rastcliprect.MaxY = 480;
+        /* Clip the rastport to the visible area */
+        rastcliprect.MinX = amesa->left;
+        rastcliprect.MinY = amesa->top;
+        rastcliprect.MaxX = amesa->left + amesa->width;
+        rastcliprect.MaxY = amesa->top + amesa->height;
         SetRPAttrsA(amesa->visible_rp, crptags);
     }
 
@@ -257,17 +253,7 @@ aros_Standard_init(AROSMesaContext amesa, struct TagItem *tagList)
             D(bug("[AROSMESA] aros_Standard_init: WARNING - Illegal RastPort Depth, attempting to correct\n"));
             amesa->depth = GetCyberMapAttr(amesa->visible_rp->BitMap, CYBRMATTR_DEPTH);
         }
-
-/*        if (amesa->depth <= 8)
-        {
-            D(bug("[AROSMESA] aros_Standard_init: Allocating CMap : "));
-            AllocCMap(amesa->Screen);
-        }*/
     }
-
-
-
-    amesa->SwapBuffer = arosRasterizer_Standard_SwapBuffer;
 
     return TRUE;
 }
@@ -433,8 +419,8 @@ AROSMesaCreateContext(struct TagItem *tagList)
         if (amesa->visual->db_flag == GL_TRUE)
         {
             /* Enable double buffer */
-            struct RastPort * back_rp = arosRasterizer_make_rastport(amesa->RealWidth, 
-                                            amesa->RealHeight, amesa->depth, amesa->visible_rp->BitMap);
+            struct RastPort * back_rp = arosRasterizer_make_rastport(amesa->visible_rp_width, 
+                                            amesa->visible_rp_height, amesa->depth, amesa->visible_rp->BitMap);
 
             if (back_rp)
             {
@@ -541,70 +527,4 @@ AROSMesaMakeCurrent(AROSMesaContext amesa)
 
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-void
-arosRasterizer_Standard_SwapBuffer(AROSMesaContext amesa)
-{
-    //D(bug("[AROSMESA:RAST] arosRasterizer_Standard_SwapBuffer(amesa @ %x)\n", amesa));
-
-
-    if (amesa->back_rb)
-    {
-        UBYTE minterm = 0xc0;
-/*    int x = amesa->left; */
-/*    int y = amesa->RealHeight-amesa->bottom-amesa->height; */
-
-
-//        ClipBlit(amesa->back_rp, FIXx(((GLcontext *)amesa->gl_ctx)->Viewport.X), 
-//            (FIXy(((GLcontext *)amesa->gl_ctx)->Viewport.Y) - ((GLcontext *)amesa->gl_ctx)->Viewport.Height) + 1,  
-            /* from */
-//            amesa->front_rp, FIXx(((GLcontext *)amesa->gl_ctx)->Viewport.X), 
-//            (FIXy(((GLcontext *)amesa->gl_ctx)->Viewport.Y) - ((GLcontext *)amesa->gl_ctx)->Viewport.Height) + 1,  
-            /* to */
-//            ((GLcontext *)amesa->gl_ctx)->Viewport.Width, ((GLcontext *)amesa->gl_ctx)->Viewport.Height,  
-            /* size */
-//            minterm);
-
-
-        ClipBlit(amesa->back_rb->rp, 0, 0,  
-            /* from */
-            amesa->front_rb->rp, 0, 0,  
-            /* to */
-            640, 480,  
-            /* size */
-            minterm);
-
-
-    // ClipBlit( amesa->back_rp, x, y,
-      /* from */
-      // amesa->front_rp, x,y,
-      /* to */
-      // amesa->width, amesa->height,
-      /* size */
-      // minterm );
-
-/* TODO Use these cordinates insted more efficent if you only use part of screen
-    RectFill(amesa->rp,FIXx(CC.Viewport.X),FIXy(CC.Viewport.Y)-CC.Viewport.Height+1,
-          FIXx(CC.Viewport.X)+CC.Viewport.Width-1,FIXy(CC.Viewport.Y));*/
-    }
-    else
-    {
-        D(bug("[AROSMESA:RAST] arosRasterizer_Standard_SwapBuffer: NOP - SINGLE buffer\n"));
-    }
-}
-
-
-
 

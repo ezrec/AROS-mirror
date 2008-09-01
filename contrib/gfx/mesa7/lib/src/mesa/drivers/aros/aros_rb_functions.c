@@ -149,10 +149,6 @@ void aros_renderbuffer_putrow(GLcontext *ctx, struct gl_renderbuffer *rb, GLuint
     y = FIXy(y);
     x = FIXx(x);
 
-    /* XXX HACK - back rastport is only 639x479 right now! */
-    if (x > 638) x = 638;
-    if (y > 478) y = 478;
-    if ((x + count) > 639) count -= (x + count) - 639;
 
     if((dp = (ULONG*)aros_rb->imageline))
     {       

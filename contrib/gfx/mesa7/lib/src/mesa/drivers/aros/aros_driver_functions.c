@@ -58,9 +58,7 @@ void aros_clear(GLcontext* ctx, GLbitfield mask)
         if(amesa->front_rb->rp != NULL)
         {
             D(bug("[AROSMESA] aros_clear: front_rp->Clearing viewport (ALL)\n"));
-            FillPixelArray (amesa->front_rb->rp, FIXx(ctx->Viewport.X), (FIXy(ctx->Viewport.Y) - ctx->Viewport.Height) + 1, 
-                /*FIXx(ctx->Viewport.X)+*/ctx->Viewport.Width - FIXx(ctx->Viewport.X), 
-                ctx->Viewport.Height/*FIXy(ctx->Viewport.Y)*/, amesa->clearpixel);
+            FillPixelArray (amesa->front_rb->rp, amesa->left, amesa->top, amesa->width, amesa->height, amesa->clearpixel);
 
             mask &= ~BUFFER_BIT_FRONT_LEFT;
         }
@@ -75,9 +73,7 @@ void aros_clear(GLcontext* ctx, GLbitfield mask)
         if(amesa->back_rb->rp != NULL)
         {
             D(bug("[AROSMESA] aros_clear: back_rp->Clearing viewport (ALL)\n"));
-            FillPixelArray (amesa->back_rb->rp, FIXx(ctx->Viewport.X), (FIXy(ctx->Viewport.Y) - ctx->Viewport.Height) + 1, 
-                /*FIXx(ctx->Viewport.X)+*/ctx->Viewport.Width - FIXx(ctx->Viewport.X), 
-                ctx->Viewport.Height/*FIXy(ctx->Viewport.Y)*/, amesa->clearpixel);
+            FillPixelArray (amesa->back_rb->rp, amesa->left, amesa->top, amesa->width, amesa->height, amesa->clearpixel);
 
             mask &= ~BUFFER_BIT_BACK_LEFT;
         }
