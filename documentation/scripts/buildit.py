@@ -593,7 +593,8 @@ targets = {
     'html':      buildHTML,
     'alldocs':   autodoc.create_all_docs,
     'shelldocs': autodoc.create_shell_docs,
-    'libdocs':   autodoc.create_lib_docs
+    'libdocs':   autodoc.create_lib_docs,
+    'appsdocs':  autodoc.create_apps_docs
 }
 
 

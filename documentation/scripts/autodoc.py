@@ -2,7 +2,30 @@
 # Copyright © 2008, The AROS Development Team. All rights reserved.
 # $Id$
 
-# This script creates files in ReST format from autodoc headers
+
+"""Autodoc to ReST converter.
+
+Classes and functions for parsing autodoc headers and writing them
+in ReST format.
+
+For that the script can find the sources the documentation must be checked out like
+this to the AROS directory:
+
+AROS
+    ...
+    compiler
+    workbench
+    rom
+    ...
+    documentation
+        scripts
+...
+
+If you have them in another directory the variable "topdir" can be adjusted.
+If you use a relative path take care that the script is called by the main build script
+from one directory level above.
+"""
+
 
 # TODO:
 # - Cross references
@@ -39,16 +62,29 @@ libfunc_regx = re.compile(r'AROS_.*\(\s*(.*?)\s*\,\s*(.*?)\s*\,')
 cfunc_regx = re.compile(r"^\s*(.*?)(\w*)\s*\([\w,()]*$", re.MULTILINE)
 
 # don't generate autodocs from this files
-blacklist = ("buildeasyrequestargs.c", "buildeasyrequestargs_morphos.c",
-		"buildsysrequest.c", "buildsysrequest_morphos.c",
-		"refreshwindowframe.c", "refreshwindowframe_morphos.c",
-		"setiprefs.c", "setiprefs_morphos.c",
-		"sysreqhandler.c", "sysreqhandler_morphos.c",
-		"match_old.c","dosdoio.c","exec_util.c")
+blacklist = (   "buildeasyrequestargs.c", "buildeasyrequestargs_morphos.c",
+                "buildsysrequest.c", "buildsysrequest_morphos.c",
+                "refreshwindowframe.c", "refreshwindowframe_morphos.c",
+                "setiprefs.c", "setiprefs_morphos.c",
+                "sysreqhandler.c", "sysreqhandler_morphos.c",
+                "match_old.c","dosdoio.c","exec_util.c","strerror_rom.c" )
 
 
 class autodoc:
+    """ Autodoc base class.
+    
+    Subclasses must set the elements
+    docname (function or command name e.g. "Draw") and docfilename (lower case docname)
+    """
+    
     def __init__(self, content):
+        """Constructor. Reads and parses autodoc string.
+
+        Arguments:
+
+        content - String of autodoc text chunk without sourrounding comment lines
+        """
+        
         self.titles = {} # dict for each title
         self.docname = "" # function or command name
         self.docfilename = "" # filename without ".en"
@@ -68,9 +104,20 @@ class autodoc:
                 self.titles[title] = ""
 
     def __cmp__(self, other):
+        """Compare function for sorting by docfilename.
+        """
+        
         return cmp(self.docfilename, other.docfilename)
 
     def write(self, filehandle, titles):
+        """Write autodoc elements to file.
+        
+        Arguments:
+        
+        filehandle - filehandle of a file to write the autodoc in
+        titles - what titles (e.g. Synopsis, Note) should be print
+        """
+        
         for title in titles:
             title_key = title.upper()
             if self.titles.has_key(title_key):
@@ -84,7 +131,17 @@ class autodoc:
 
 
 class shellautodoc(autodoc):
+    """Autodoc class for Shell commands and applications.
+    """
+    
     def __init__(self, content):
+        """Constructor. Reads and parses autodoc string.
+
+        Arguments:
+
+        content - String of autodoc text chunk without sourrounding comment lines
+        """
+
         autodoc.__init__(self, content)
         self.prevdocfilename = ""
         self.nextdocfilename = ""
@@ -96,6 +153,16 @@ class shellautodoc(autodoc):
         self.docfilename = self.docname.lower()
 
     def write(self, filehandle, titles):
+        """Write autodoc elements to file.
+        
+        Arguments:
+        
+        filehandle -    filehandle of a file to write the autodoc in
+        titles -        what titles (e.g. Synopsis, Note) should be print.
+                        Write them in the given capitalization.
+
+        """
+
         underline="=" * len(self.docname) + "\n"
         filehandle.write(underline)
         filehandle.write(self.docname + "\n")
@@ -115,7 +182,17 @@ class shellautodoc(autodoc):
 
 
 class libautodoc(autodoc):
+    """Autodoc class for library functions (shared and static).
+    """
+
     def __init__(self, content):
+        """Constructor. Reads and parses autodoc string.
+
+        Arguments:
+
+        content - String of autodoc text chunk without sourrounding comment lines
+        """
+
         autodoc.__init__(self, content)
         self.rettype = ""
         self.parameters = []
@@ -193,17 +270,43 @@ class libautodoc(autodoc):
 
 
     def write(self, filehandle, titles):
+        """Write autodoc to file.
+        
+        Arguments:
+        
+        filehandle -    filehandle of a file to write the autodoc in
+        titles -        what titles (e.g. Synopsis, Note) should be print.
+                        Write them in the given capitalization.
+        """
+
         filehandle.write(self.docname + "\n")
         filehandle.write("=" * len(self.docname) + "\n\n")
         autodoc.write(self, filehandle, titles)
         filehandle.write("\n")
 
 
-class shelldoclist:
-    def __init__(self):
-        self.doclist = []
+class shelldoclist():
+    """List of Shell autodocs
+    
+    Handles the Shell autodocs of a single directory.
+    """
 
+    def __init__(self):
+        """Constructor.
+        """
+
+        self.doclist = []
+    
     def read(self, srcdir):
+        """Scan directory for autodocs
+        
+        Reads all *.c files of the given directory and scans them for autodocs.
+        
+        Arguments:
+        
+        srcdir - directory from which the autodocs should be read
+        """
+        
         filenames = glob.glob(os.path.join(srcdir, "*.c"))
         for filename in filenames:
             print "Reading from file", filename
@@ -223,7 +326,15 @@ class shelldoclist:
             if docnr<len(self.doclist) - 1:
                 self.doclist[docnr].nextdocfilename = self.doclist[docnr + 1].docfilename
 
-    def write_index(self, filehandle):
+    def write_index(self, filehandle, targetdir):
+        """Write index file.
+        
+        Arguments:
+        
+        filehandle - handle of a file where the index (TOC) should be written
+        targetdir - directory which should be listed
+        """
+        
         print "Creating index file"
         filehandle.write(".. This document is automatically generated. Don't edit it!\n\n")
         filehandle.write("==============\n")
@@ -231,13 +342,20 @@ class shelldoclist:
         filehandle.write("==============\n\n")
         filehandle.write("`Introduction <introduction>`_\n\n")
 
-        for doc in self.doclist:
-            filehandle.write("`" + doc.docname + "`__\n")
-        filehandle.write("\n")
-        for doc in self.doclist:    
-            filehandle.write("__ " + doc.docfilename + "\n")
-
+        write_index(filehandle, targetdir)
+    
     def write(self, targetdir, titles):
+        """Write autodocs to directory.
+        
+        Each autodoc will be written in a single file.
+        
+        Arguments:
+        
+        targedir -      name of a directory to where autodocs and index should be written
+        titles -        what titles (e.g. Synopsis, Note) should be print.
+                        Write them in the given capitalization.
+        """
+        
         for doc in self.doclist:
             filename = os.path.join(targetdir, doc.docfilename + ".en")
             print "Writing to file", filename
@@ -247,17 +365,40 @@ class shelldoclist:
         
         # create index page
         filehandle = open(os.path.join(targetdir, "index.en"), "w")
-        self.write_index(filehandle)
+        self.write_index(filehandle, targetdir)
         filehandle.close()
 
 
 class libdoclist:
+    """List of autodocs of static and shared libraries.
+    
+    Handles the autodocs of a single directory.
+    """
+
     def __init__(self):
+        """Constructor.
+        """
+        
         self.doclist = []
         self.docfilename = ""
 
-    def read(self, srcdir):
-        self.docfilename = os.path.basename(srcdir) # rightmost part of the path
+    def read(self, srcdir, name=None):
+        """Scan directory for autodocs.
+        
+        Reads all *.c files of the given directory and scans them for autodocs.
+        
+        Arguments:
+        
+        srcdir - directory from which the autodocs should be read
+        name -  Name of the document. If no name is given the rightmost part of
+                srcdir will be used. This name will be later used for storing the file.
+        """
+
+        if name:
+            self.docfilename = name
+        else:
+            self.docfilename = os.path.basename(srcdir) # rightmost part of the path
+        
         cfiles = os.listdir(srcdir)
         for file in cfiles:
             if not (file in blacklist) and file[-2:]==".c":
@@ -273,6 +414,17 @@ class libdoclist:
         self.doclist.sort()
 
     def write(self, targetdir, titles):
+        """Write autodocs to directory.
+        
+        All autodocs will be written in a single file.
+        
+        Arguments:
+        
+        targedir -      name of a directory to where autodocs and index should be written
+        titles -        what titles (e.g. Synopsis, Note) should be print.
+                        Write them in the given capitalization.
+        """
+
         if len(self.doclist) > 0:
             filename = os.path.join(targetdir, self.docfilename + ".en")
             print "Writing to file", filename
@@ -305,44 +457,61 @@ class libdoclist:
             filehandle.close()
 
 
-def create_lib_docs():
-    targetdir = os.path.join("documentation", "test")
-    targetdir = os.path.join("documentation", "developers", "autodocs")
-    srcdirs = ( os.path.join(topdir, "rom"), os.path.join(topdir, "workbench/libs") )
-    for dir in srcdirs:
-        create_lib_docs_dir(dir, targetdir)
+class appsdoclist(shelldoclist):
+    """List of autodocs of applications.
+    
+    Handles the autodocs of a single directory.
+    """
 
-    # print index file
+    def write_index(self, filehandle, targetdir):
+        """Write index file.
+        
+        Arguments:
+        
+        filehandle - handle of a file where the index (TOC) should be written.
+        targetdir - directory which should be listed
+        """
+        
+        # create index page
+        filehandle = open(os.path.join(targetdir, "index.en"), "w")
+        print "Creating index file"
+        filehandle.write(".. This document is automatically generated. Don't edit it!\n\n")
+        filehandle.write("==============\n")
+        filehandle.write("Applications\n")
+        filehandle.write("==============\n\n")
+        write_index(filehandle, targetdir)
+        filehandle.close()
+
+
+def write_index(filehandle, targetdir):
+    """Append directory listing to index file
+    
+    Arguments:
+    
+    filehandle - file where directory listing should be appended
+    targedir - directory which should be listed
+    """
+        
     files = os.listdir(targetdir)
     files.sort()
 
-    filehandle = open(os.path.join(targetdir, "index.en"), "w")
-    print "Creating index.en"
-    filehandle.write("======================\n")
-    filehandle.write("Autodocs for Libraries\n")
-    filehandle.write("======================\n\n")
-    filehandle.write(".. This document is automatically generated. Don't edit it!\n\n")
-
     for doc in files:
-        if doc[0:5] != "index" and doc != ".svn":
-            docname = doc[0:-3]
+        if doc[-3:] == ".en" and doc[:5] != "index" and doc != ".svn":
+            docname = doc[:-3]
             filehandle.write("+ `%s <%s>`_\n" %(docname, docname))
-    filehandle.close()
     
-
-def create_lib_docs_dir(srcdir, targetdir):
-    subdirs = os.listdir(srcdir)
+def create_lib_docs():
+    """Create only the library docs.
+    """
+    
     lib_titles = ("Synopsis","Template","Function",
         "Inputs","Result","Example","Notes","Bugs","See also")  # The titles we want
                                                                 # to be print
-    for dir in subdirs: # exec ,graphics etc.
-        docpath = os.path.join(srcdir, dir)
-        if (dir != ".svn") and os.path.isdir(docpath) :
-            libdocs = libdoclist()
-            libdocs.read(docpath)
-            libdocs.write(targetdir, lib_titles)
+    targetdir = os.path.join("documentation", "developers", "autodocs")
+    srcdirs = ( os.path.join(topdir, "rom"), os.path.join(topdir, "workbench/libs") )
+    for dir in srcdirs:
+        create_lib_docs_dir(dir, targetdir, lib_titles)
 
-    return
     # add some docs for linker libs in AROS/compiler
     subdirs = ( os.path.join(topdir, "compiler", "alib"),
                 os.path.join(topdir, "compiler", "arossupport"),
@@ -353,7 +522,44 @@ def create_lib_docs_dir(srcdir, targetdir):
         libdocs.read(docpath)
         libdocs.write(targetdir, lib_titles)
 
+    # print index file
+    filehandle = open(os.path.join(targetdir, "index.en"), "w")
+    print "Creating index.en"
+    filehandle.write("======================\n")
+    filehandle.write("Autodocs for Libraries\n")
+    filehandle.write("======================\n\n")
+    filehandle.write(".. This document is automatically generated. Don't edit it!\n\n")
+
+    write_index(filehandle, targetdir)
+    filehandle.close()
+    print "Done"
+
+def create_lib_docs_dir(srcdir, targetdir, titles):
+    """Scan whole parent directory.
+    
+    Scans a parent directory like AROS/rom for subdirectories with
+    *.c files with autodoc headers.
+    
+    Arguments:
+    
+    srcdir -    parent directory of directory with autodocs.
+    targetdir - the directory where the resulting ReST files should be stored
+    titles -    what titles (e.g. Synopsis, Note) should be print.
+                Write them in the given capitalization.
+    """
+    
+    subdirs = os.listdir(srcdir)
+    for dir in subdirs: # exec ,graphics etc.
+        docpath = os.path.join(srcdir, dir)
+        if (dir != ".svn") and os.path.isdir(docpath) :
+            libdocs = libdoclist()
+            libdocs.read(docpath)
+            libdocs.write(targetdir, titles)
+
 def create_shell_docs():
+    """Create only the Shell commands docs.
+    """
+    
     srcdirs = ( os.path.join(topdir, "workbench", "c"),
                 os.path.join(topdir, "workbench", "c", "shellcommands"),
                 os.path.join(topdir, "workbench", "c", "Identify"),
@@ -369,9 +575,29 @@ def create_shell_docs():
     shelldocs.write(targetdir, shell_titles)
     print "Done"
 
+def create_apps_docs():
+    """Create only the application docs.
+    """
+    
+    srcdirs = ( os.path.join(topdir, "workbench", "tools", "commodities"),
+                os.path.join(topdir, "workbench", "tools") )
+                
+    targetdir = os.path.join("documentation", "users", "applications") # relative to main build script
+    apps_titles = ("Name","Format","Template","Synopsis","Location","Function",
+        "Inputs","Result","Example","Notes","Bugs","See also")  # The titles we want
+                                                                # to be print
+    appsdocs = appsdoclist()
+    for dir in srcdirs:
+        appsdocs.read(dir)
+    appsdocs.write(targetdir, apps_titles)
+    print "Done"
+
 def create_all_docs():
+    """Create all docs.
+    """
     create_shell_docs()
     create_lib_docs()
+    create_apps_docs()
 
 
 if __name__ == "__main__":
