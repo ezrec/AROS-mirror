@@ -89,6 +89,8 @@ bgui-gadgets-popbutton : bgui-gadgets-popbutton-mkdir $(POPBUTTONLIBTARGETS) $(B
 bgui-gadgets-treeview : bgui-gadgets-treeview-mkdir
 bgui-gadgets-treeview : bgui-gadgets-treeview-mkdir $(TREEVIEWLIBTARGETS) $(BGUIGADGETSDIR)/$(TREEVIEWGADGET) $(BGUIEXAMPLESDIR)/$(TREEVIEWDEMO)
 
+.PHONY: $(BGUIGADGETSDIR)/$(BARGADGET) $(BGUIGADGETSDIR)/$(LAYOUTGROUPGADGET) $(BGUIGADGETSDIR)/$(PALETTEGADGET) $(BGUIGADGETSDIR)/$(POPBUTTONGADGET) $(BGUIGADGETSDIR)/$(TREEVIEWGADGET)
+
 $(BGUIGADGETSDIR)/%.gadget : $(OBJDIR)/%.gadget
 	@$(ECHO) Installing $@...
 	@$(CP) $< $@
