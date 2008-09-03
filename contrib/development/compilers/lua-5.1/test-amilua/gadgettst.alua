@@ -6,7 +6,7 @@ function drawstuff()
     win:box(70, 200, 200, 40, true) -- draw filled box
 end
 
-win = Siamiga.createwindow("Siamiga Test Window",0, 30, 400, 300, true, false)
+win = Siamiga.createwindow("Siamiga Test Window",0, 30, 400, 270, true, false)
 gt="Caption"
 g1 = win:addgadget(5, "button", 20, 10, 100, 15, "OK")
 g2 = win:addgadget(7, "check", 100, 30, 100, 50, "Gad 2")

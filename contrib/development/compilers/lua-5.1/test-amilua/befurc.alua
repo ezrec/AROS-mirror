@@ -79,11 +79,11 @@ function draw(func, pen)
 end
 
 win = Siamiga.createwindow("Function Plotter", 0, 20, 450, 350, true, true)
-gadxwl = win:addgadget(1, "string", 60, 50, 70, 25, "xwl", xwl)
-gadywo = win:addgadget(2, "string", 60, 80, 70, 25, "ywo", ywo)
-gadxwr = win:addgadget(3, "string", 60, 110, 70, 25, "xwr", xwr)
-gadywu = win:addgadget(4, "string", 60, 140, 70, 25, "ywu", ywu)
-gadyst = win:addgadget(5, "string", 60, 170, 70, 25, "Ystart", ystart)
+gadxwl = win:addgadget(1, "string", 60, 50, 70, 25, "x left", xwl)
+gadywo = win:addgadget(2, "string", 60, 80, 70, 25, "y top", ywo)
+gadxwr = win:addgadget(3, "string", 60, 110, 70, 25, "x right", xwr)
+gadywu = win:addgadget(4, "string", 60, 140, 70, 25, "y bottom", ywu)
+gadyst = win:addgadget(5, "string", 60, 170, 70, 25, "y start", ystart)
 gadmaxit = win:addgadget(6, "integer", 60, 200, 70, 25, "Max. Iter", maxiter)
 gadminit = win:addgadget(7, "integer", 60, 230, 70, 25, "Min. Iter", miniter)
 

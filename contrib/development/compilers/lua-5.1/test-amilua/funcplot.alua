@@ -1,7 +1,7 @@
 -- simple function plotter with no clipping in y direction
 -- uses Siamiga gadgets
 
-xsl = 130
+xsl = 145
 ysu = 300
 xsr = 350
 yso = 30
@@ -80,11 +80,11 @@ function draw(func, pen)
 end
 
 win = Siamiga.createwindow("Function Plotter", 0, 20, 450, 350, true, false)
-gadxwl = win:addgadget(1, "string", 40, 30, 70, 25, "xwl", xwl)
-gadywo = win:addgadget(2, "string", 40, 60, 70, 25, "ywo", ywo)
-gadxwr = win:addgadget(3, "string", 40, 90, 70, 25, "xwr", xwr)
-gadywu = win:addgadget(4, "string", 40, 120, 70, 25, "ywu", ywu)
-gadapp = win:addgadget(6, "button", 40, 160, 70, 25, "Apply")
+gadxwl = win:addgadget(1, "string", 55, 30, 70, 25, "x left", xwl)
+gadywo = win:addgadget(2, "string", 55, 60, 70, 25, "y top", ywo)
+gadxwr = win:addgadget(3, "string", 55, 90, 70, 25, "x right", xwr)
+gadywu = win:addgadget(4, "string", 55, 120, 70, 25, "y bottom", ywu)
+gadapp = win:addgadget(6, "button", 55, 160, 70, 25, "Apply")
 
 win:openwindow()
 draw()
