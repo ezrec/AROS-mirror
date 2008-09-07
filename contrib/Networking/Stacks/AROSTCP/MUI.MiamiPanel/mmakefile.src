@@ -38,6 +38,6 @@ USER_CFLAGS := -Wno-uninitialized -Wno-parentheses
 %build_module mmake=arostcp-libs-muimiamipanel \
     modname=MUI modtype=library modsuffix=MiamiPanel conffile=MUI.MiamiPanel.conf \
     files="$(MUIMIAMIPANELCORE) $(MUIMIAMIPANELCLASSES)" \
-    linklibname=muimiamipanel uselibs="amiga arosc m mui" genincludes=no
+    linklibname=muimiamipanel uselibs="amiga arosc m mui"
 
 %common
