@@ -27,10 +27,6 @@ from one directory level above.
 """
 
 
-# TODO:
-# - Cross references
-
-
 import glob
 import os
 import re
@@ -60,6 +56,21 @@ libfunc_regx = re.compile(r'AROS_.*\(\s*(.*?)\s*\,\s*(.*?)\s*\,')
 
 # Regex for C library functions
 cfunc_regx = re.compile(r"^\s*(.*?)(\w*)\s*\([\w,()]*$", re.MULTILINE)
+
+# Regex for parsing "see also"
+xref_regx = re.compile(r"""
+(
+(?P<libname>\w+?)\.library/(?P<funcname>\w+?)\(\)
+|
+(?P<localfuncname>\w+?)\(\)
+|
+(?P<path>[\w:/.<>\ "-]+)
+|
+(?P<command>[\w-]+)
+)
+[\s,]+?
+""", re.VERBOSE | re.MULTILINE)
+
 
 # don't generate autodocs from this files
 blacklist = (   "buildeasyrequestargs.c", "buildeasyrequestargs_morphos.c",
@@ -102,7 +113,34 @@ class autodoc:
         for title, content in self.titles.iteritems():
             if content.strip() == "":
                 self.titles[title] = ""
-
+        
+        # parse "see also"
+        if self.titles.has_key("SEE ALSO"):
+            self.titles["XREF"] = []
+            for xref in xref_regx.finditer(self.titles["SEE ALSO"]):
+                libname = xref.group('libname')
+                funcname = xref.group('funcname')
+                localfuncname = xref.group('localfuncname')
+                path = xref.group('path')
+                command = xref.group('command')
+                # check for allowed combinations
+                if libname and funcname and not localfuncname and not path and not command:
+                    # libname + funcname
+                    self.titles["XREF"].append( (1, libname, funcname) )
+                elif not libname and not funcname and localfuncname and not path and not command:
+                    # localfuncname
+                    self.titles["XREF"].append( (2, localfuncname, "") )
+                elif not libname and not funcname and not localfuncname and path and not command:
+                    # path
+                    self.titles["XREF"].append( (3, path, "") )
+                elif not libname and not funcname and not localfuncname and not path and command:
+                    # command
+                    self.titles["XREF"].append( (4, command, "") )
+                else:
+                    print "*" * 20
+                    print self.titles["SEE ALSO"]
+                    raise ValueError("XREF parsing error")
+        
     def __cmp__(self, other):
         """Compare function for sorting by docfilename.
         """
@@ -120,7 +158,7 @@ class autodoc:
         
         for title in titles:
             title_key = title.upper()
-            if self.titles.has_key(title_key):
+            if title_key != "SEE ALSO" and self.titles.has_key(title_key):
                 lines = self.titles[title_key]
                 if len(lines) > 0:
                     filehandle.write(title + "\n")
@@ -128,6 +166,35 @@ class autodoc:
                     filehandle.write("::\n\n")
                     filehandle.write(lines)
                     filehandle.write("\n")
+
+    def write_xref(self, filehandle, path_to_shell, path_to_lib):
+        """Write xrefs ('see also') to file.
+        
+        Arguments:
+        
+        filehandle - filehandle of a file to write the autodoc in
+        path_to_shell - relative path from target document to directory with Shell command documents
+        path_to_lib - relative path from target document to directory with library documents
+        """
+        
+        if self.titles.has_key("XREF"):
+            if len(self.titles["XREF"]) > 0:
+                filehandle.write("See Also\n~~~~~~~~\n\n")
+                for kind, name1, name2 in self.titles["XREF"]:
+                    if kind == 1:
+                        # library + function name
+                        filehandle.write("`%s.library/%s() <%s/%s#%s>`_ "
+                                        %(name1, name2, path_to_lib, name1, name2.lower()) )
+                    elif kind == 2:
+                        # localfuncname
+                        filehandle.write("`%s()`_ " %(name1) )
+                    elif kind == 3:
+                        # path (no hyperlink)
+                        filehandle.write("%s " %name1 )                  
+                    elif kind == 4:
+                        # command
+                        filehandle.write("`%s <%s>`_ " %(name1, name1.lower()) )
+                filehandle.write("\n\n")
 
 
 class shellautodoc(autodoc):
@@ -181,6 +248,7 @@ class shellautodoc(autodoc):
         autodoc.write(self, filehandle, titles)
 
 
+
 class libautodoc(autodoc):
     """Autodoc class for library functions (shared and static).
     """
@@ -201,7 +269,7 @@ class libautodoc(autodoc):
         m = libfunc_regx.search(content)
         if m:
             # AROS lib function
-            self.docname = m.group(2)
+            self.docname = m.group(2) + "()"
             self.rettype = m.group(1)
             self.docfilename = self.docname.lower()
 
@@ -257,7 +325,7 @@ class libautodoc(autodoc):
             # C function
             m = cfunc_regx.search(content)
             if m:
-                self.docname = m.group(2)
+                self.docname = m.group(2) + "()"
                 self.rettype = m.group(1)
                 self.docfilename = self.docname.lower()
                 # We don't parse the Synopsis but insert the function name add the beginning
@@ -361,6 +429,7 @@ class shelldoclist:
             print "Writing to file", filename
             filehandle = open(filename, "w")
             doc.write(filehandle, titles)
+            doc.write_xref(filehandle, ".", "../../developers/autodocs")
             filehandle.close()
         
         # create index page
@@ -454,6 +523,7 @@ class libdoclist:
      
             for doc in self.doclist:
                 doc.write(filehandle, titles)
+                doc.write_xref(filehandle, "../../users/shell", ".")
             filehandle.close()
 
 
@@ -496,7 +566,7 @@ def write_index(filehandle, targetdir):
     files.sort()
 
     for doc in files:
-        if doc[-3:] == ".en" and doc[:5] != "index" and doc != ".svn":
+        if doc[-3:] == ".en" and doc[:5] != "index" and doc != ".svn" and doc != "introduction":
             docname = doc[:-3]
             filehandle.write("+ `%s <%s>`_\n" %(docname, docname))
     
@@ -563,6 +633,8 @@ def create_shell_docs():
     srcdirs = ( os.path.join(topdir, "workbench", "c"),
                 os.path.join(topdir, "workbench", "c", "shellcommands"),
                 os.path.join(topdir, "workbench", "c", "Identify"),
+                os.path.join(topdir, "workbench", "c", "Partition"),
+                os.path.join(topdir, "workbench", "c", "Decoration"),
                 os.path.join(topdir, "workbench", "c", "iprefs") )
                 
     targetdir = os.path.join("documentation", "users", "shell") # relative to main build script
