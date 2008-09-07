@@ -21,4 +21,10 @@ USER_INCLUDES := -I../include
   files=$(FILES) \
   uselibs="amiga mui rom popupmenu"
 
+
+#MM includes-copy
+
+INCLUDE_FILES := ../include/MUI/BWin_mcc.h
+%copy_includes path=mui dir=../include/MUI
+
 %common
