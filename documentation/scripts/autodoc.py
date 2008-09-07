@@ -285,7 +285,7 @@ class libautodoc(autodoc):
         filehandle.write("\n")
 
 
-class shelldoclist():
+class shelldoclist:
     """List of Shell autodocs
     
     Handles the Shell autodocs of a single directory.
