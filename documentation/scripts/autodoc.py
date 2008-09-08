@@ -57,18 +57,24 @@ libfunc_regx = re.compile(r'AROS_.*\(\s*(.*?)\s*\,\s*(.*?)\s*\,')
 # Regex for C library functions
 cfunc_regx = re.compile(r"^\s*(.*?)(\w*)\s*\([\w,()]*$", re.MULTILINE)
 
-# Regex for parsing "see also"
+# Regex for splitting a block by comma and \n
+split_regx = re.compile(r"[\n,]+", re.MULTILINE)
+
+# Regex for parsing a line of "see also"
 xref_regx = re.compile(r"""
+^
+\s*
 (
 (?P<libname>\w+?)\.library/(?P<funcname>\w+?)\(\)
 |
 (?P<localfuncname>\w+?)\(\)
 |
-(?P<path>[\w:/.<>\ "-]+)
-|
 (?P<command>[\w-]+)
+|
+(?P<path>.+?)
 )
-[\s,]+?
+\s*
+$
 """, re.VERBOSE | re.MULTILINE)
 
 
@@ -78,7 +84,8 @@ blacklist = (   "buildeasyrequestargs.c", "buildeasyrequestargs_morphos.c",
                 "refreshwindowframe.c", "refreshwindowframe_morphos.c",
                 "setiprefs.c", "setiprefs_morphos.c",
                 "sysreqhandler.c", "sysreqhandler_morphos.c",
-                "match_old.c","dosdoio.c","exec_util.c","strerror_rom.c" )
+                "match_old.c","dosdoio.c","exec_util.c","strerror_rom.c",
+                "runprozess.c")
 
 
 class autodoc:
@@ -117,29 +124,31 @@ class autodoc:
         # parse "see also"
         if self.titles.has_key("SEE ALSO"):
             self.titles["XREF"] = []
-            for xref in xref_regx.finditer(self.titles["SEE ALSO"]):
-                libname = xref.group('libname')
-                funcname = xref.group('funcname')
-                localfuncname = xref.group('localfuncname')
-                path = xref.group('path')
-                command = xref.group('command')
-                # check for allowed combinations
-                if libname and funcname and not localfuncname and not path and not command:
-                    # libname + funcname
-                    self.titles["XREF"].append( (1, libname, funcname) )
-                elif not libname and not funcname and localfuncname and not path and not command:
-                    # localfuncname
-                    self.titles["XREF"].append( (2, localfuncname, "") )
-                elif not libname and not funcname and not localfuncname and path and not command:
-                    # path
-                    self.titles["XREF"].append( (3, path, "") )
-                elif not libname and not funcname and not localfuncname and not path and command:
-                    # command
-                    self.titles["XREF"].append( (4, command, "") )
-                else:
-                    print "*" * 20
-                    print self.titles["SEE ALSO"]
-                    raise ValueError("XREF parsing error")
+            for ref in split_regx.split(self.titles["SEE ALSO"]):
+                xref = xref_regx.match(ref)
+                if xref:
+                    libname = xref.group('libname')
+                    funcname = xref.group('funcname')
+                    localfuncname = xref.group('localfuncname')
+                    path = xref.group('path')
+                    command = xref.group('command')
+                    # check for allowed combinations
+                    if libname and funcname and not localfuncname and not path and not command:
+                        # libname + funcname
+                        self.titles["XREF"].append( (1, libname, funcname) )
+                    elif not libname and not funcname and localfuncname and not path and not command:
+                        # localfuncname
+                        self.titles["XREF"].append( (2, localfuncname, "") )
+                    elif not libname and not funcname and not localfuncname and path and not command:
+                        # path
+                        self.titles["XREF"].append( (3, path, "") )
+                    elif not libname and not funcname and not localfuncname and not path and command:
+                        # command
+                        self.titles["XREF"].append( (4, command, "") )
+                    else:
+                        print "*" * 20
+                        print self.titles["SEE ALSO"]
+                        raise ValueError("XREF parsing error")
         
     def __cmp__(self, other):
         """Compare function for sorting by docfilename.
@@ -179,7 +188,7 @@ class autodoc:
         
         if self.titles.has_key("XREF"):
             if len(self.titles["XREF"]) > 0:
-                filehandle.write("See Also\n~~~~~~~~\n\n")
+                filehandle.write("See also\n~~~~~~~~\n\n")
                 for kind, name1, name2 in self.titles["XREF"]:
                     if kind == 1:
                         # library + function name
@@ -269,7 +278,7 @@ class libautodoc(autodoc):
         m = libfunc_regx.search(content)
         if m:
             # AROS lib function
-            self.docname = m.group(2) + "()"
+            self.docname = m.group(2)
             self.rettype = m.group(1)
             self.docfilename = self.docname.lower()
 
@@ -325,16 +334,20 @@ class libautodoc(autodoc):
             # C function
             m = cfunc_regx.search(content)
             if m:
-                self.docname = m.group(2) + "()"
+                self.docname = m.group(2)
                 self.rettype = m.group(1)
                 self.docfilename = self.docname.lower()
-                # We don't parse the Synopsis but insert the function name add the beginning
+                # We don't parse the Synopsis but insert the function name at the beginning
                 syn = self.titles["SYNOPSIS"]
                 syn = "  " + self.rettype + self.docname + "(\n" + syn
                 self.titles["SYNOPSIS"] = syn
             else:
                 print content
                 raise ValueError("No field 'NAME' in autodoc")
+                
+        # append pair of brackets
+        self.docname += "()"
+        self.docfilename = self.docname.lower()
 
 
     def write(self, filehandle, titles):
@@ -566,7 +579,7 @@ def write_index(filehandle, targetdir):
     files.sort()
 
     for doc in files:
-        if doc[-3:] == ".en" and doc[:5] != "index" and doc != ".svn" and doc != "introduction":
+        if doc[-3:] == ".en" and doc[:5] != "index" and doc != ".svn" and doc[:12] != "introduction":
             docname = doc[:-3]
             filehandle.write("+ `%s <%s>`_\n" %(docname, docname))
     
