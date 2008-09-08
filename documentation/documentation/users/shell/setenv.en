@@ -83,9 +83,6 @@ Example
 
 See also
 ~~~~~~~~
-::
 
-
-     Getenv, Unsetenv
-
+`Getenv <getenv>`_ `Unsetenv <unsetenv>`_ 
 

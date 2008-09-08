@@ -75,9 +75,6 @@ Example
 
 See also
 ~~~~~~~~
-::
 
-
-     SetPrompt()
-
+`dos.library/SetPrompt() <../../developers/autodocs/dos#setprompt>`_ 
 

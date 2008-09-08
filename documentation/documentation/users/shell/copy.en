@@ -202,9 +202,6 @@ Inputs
 
 See also
 ~~~~~~~~
-::
 
-
-     Delete, Rename, MakeDir, MakeLink
-
+`Delete <delete>`_ `Rename <rename>`_ `MakeDir <makedir>`_ `MakeLink <makelink>`_ 
 

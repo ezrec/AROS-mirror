@@ -99,9 +99,6 @@ Notes
 
 See also
 ~~~~~~~~
-::
 
-
-     intuition.library/EasyRequest(), intuition.library/EasyRequestArgs()
-
+`intuition.library/EasyRequestArgs() <../../developers/autodocs/intuition#easyrequestargs>`_ 
 

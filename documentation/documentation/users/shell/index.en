@@ -20,6 +20,7 @@ Shell Commands
 + `copy <copy>`_
 + `copytopar <copytopar>`_
 + `date <date>`_
++ `decoration <decoration>`_
 + `delay <delay>`_
 + `delete <delete>`_
 + `dir <dir>`_
@@ -44,7 +45,6 @@ Shell Commands
 + `install-grub2-i386-pc <install-grub2-i386-pc>`_
 + `install-i386-pc <install-i386-pc>`_
 + `install <install>`_
-+ `introduction <introduction>`_
 + `iprefs <iprefs>`_
 + `join <join>`_
 + `lab <lab>`_
@@ -54,6 +54,7 @@ Shell Commands
 + `makelink <makelink>`_
 + `mount <mount>`_
 + `newshell <newshell>`_
++ `partition <partition>`_
 + `path <path>`_
 + `prompt <prompt>`_
 + `protect <protect>`_

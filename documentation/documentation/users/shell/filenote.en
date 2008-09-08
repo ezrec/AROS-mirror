@@ -100,9 +100,6 @@ Notes
 
 See also
 ~~~~~~~~
-::
 
-
-     dos.library/SetComment()
-
+`dos.library/SetComment() <../../developers/autodocs/dos#setcomment>`_ 
 
