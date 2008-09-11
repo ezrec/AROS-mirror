@@ -8,8 +8,8 @@ Stav aktualizace
 Mise splnìna!
 -------------
 
-Dvì velké novinky a nový Stav aktualizace, i kdy¾ poslední je teprve
-týden starý.
+I kdy¾ je poslední "Stav aktualizace" teprve týden starý,
+objevily se dvì velké novinky a máme tu nový.
 
 Michal Schulz dokonèil port nativního AROSu na základní desku
 "Samantha" SAM440EP. To je poprvé, kdy je zcela podporována jiná ne¾

@@ -8,7 +8,7 @@ Stav aktualizace
 Poslední aktualizace
 --------------------
 
-Omlouváme se, ¾e Stav aktualizace pøi¹el tak pozdì, ale AROS tým
+Omlouváme se, ¾e "Stav aktualizace" pøi¹el tak pozdì, ale AROS tým
 velmi tvrdì pracuje "under the hood", aby pøinesl lep¹í
 operaèní systém. Ní¾e je spousta zajímavých novinek, o kterých se mluví.
 

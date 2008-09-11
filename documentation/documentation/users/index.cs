@@ -1,10 +1,10 @@
-==================
-U¾ivatelské zdroje
-==================
+====================
+Zdroje pro u¾ivatele
+====================
 
 + `Jak na instalaci`__
 + `Pou¾ívání`__
-+ `Pøíkazy Shellu`__
++ `Pøíkazy shellu`__
 + `Aplikace`__
 + `FAQ`__
 

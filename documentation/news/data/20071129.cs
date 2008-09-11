@@ -38,7 +38,7 @@ U¾ivatel Aros-Exec Fishy_fis oznámil novou AROS distribuci nazvanou
 `Velocity`__ (Rychlost). První beta verze by mìla být uvolnìna v nejbli¾¹í dobì.
 "Velocity bude distribuována jako instalovatelné live-cd a jako VMWare obraz.
 Bude obsahovat podstatnì více (nakonfigurovaného)
-softwaru, ne¾ ISO obrazy noèních sestavení". Ukázky jsou k dispozici.
+softwaru, ne¾ ISO obrazy noèních sestavení". K dispozici jsou snímky obrazovky.
 
 Robert Norris pracuje na webovém prohlí¾eèi pro AROS zalo¾eném na Webkitu, nazvaném
 Traveller. Mezitím taky aktualizoval spoustu AROS knihoven

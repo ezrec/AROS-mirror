@@ -70,7 +70,7 @@ dostupné. Chceme povzbudit v¹echny, kteøí by chtìli vyzkou¹et AROS, aby si místo
 nich stáhli buï distribuci nebo poslední noèní sestavení. AROS
 roste opravdu rychle a Snapshoty èasto obsahovaly zastaralý kód. Také
 si myslíme, ¾e noèní sestavení jsou z hlediska beta testování
-u¾iteènìj¹í: pou¾ij prosím `bug tracker`__ k nahlá¹ení chyb.
+u¾iteènìj¹í: k nahlá¹ení chyb prosím pou¾ij `bug tracker`__.
 
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 

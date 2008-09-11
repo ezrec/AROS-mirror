@@ -33,7 +33,7 @@ zaèal spravovat ná¹ bug tracker. Vìt¹ina z u¾ opravených chyb byla
 odstranìna ze seznamu.
 
 Nic Andrews a Alain Greppin koneènì implementovali grub2 do AROSu.
-Nic také ukázal hezký `snímek`__ na Aros-Exec. Skvìlou zprávou je,
+Nic také na Aros-Exec ukázal `snímek obrazovky`__. Skvìlou zprávou je,
 ¾e u¾ivatelé se mohou koneènì zbavit pomalých FFS oddílù a spou¹tìt
 systémové soubory z SFS oddílù. Tato mo¾nost je¹tì není doporuèována, proto¾e
 stále existují urèité nedostatky v kompatibilitì s nìkterými AROS

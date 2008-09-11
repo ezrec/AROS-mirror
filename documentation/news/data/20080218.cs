@@ -43,7 +43,7 @@ Robert Norris udìlal znaèný pokrok s Travellerem (jeho webový prohlí¾eè pro AROS
 zalo¾ený na Webkitu). Aby v¹echno správnì fungovalo, je stále zapotøebí
 dokódovat nìkolik chybìjících funkcí a knihoven, nicménì jeho port Cairo.library
 je na dobré cestì a celkem dobøe uspìl pøi zobrazování nìkolika stránek.
-Opravdu slibné `ukázky`__ byly publikovány na `jeho
+Opravdu slibné `snímky obrazovky`__ byly publikovány na `jeho
 blogu`__.
 
 
@@ -60,7 +60,7 @@ Alain Greppin naportoval TeXlive na AROS, ("bounty" dokonèeno). Více informací
 o tomto poèinu na `jeho webu`__.
 
 Tomek 'Error' Wiszkowski pracuje na Frying Pan, aplikaci
-pro vypalování CD/DVD. Na AROS-Exec.org publikoval `nìkolik ukázek`__.
+pro vypalování CD/DVD. Na AROS-Exec.org zveøejnil `nìkolik snímkù obrazovky`__.
 Verze 1.3 pro AROS (shareware) mù¾e být sta¾ena z `webu
 této aplikace`__. Aby správnì fungovala, opravil také nìkolik chyb
 v ATA rozhraní AROSu.
