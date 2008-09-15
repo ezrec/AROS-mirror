@@ -28,6 +28,7 @@ static const struct {
     { 0x1039, 0x7012, "SIS 7012"	},
     { 0x10de, 0x01b1, "NVIDIA nForce"	},
     { 0x10de, 0x006a, "NVIDIA nForce2"	},
+    { 0x10de, 0x008a, "MCP2S AC'97 Audio Controller" },
     { 0x10de, 0x00da, "NVIDIA nForce3"	},
     { 0x1022, 0x746d, "AMD 8111"	},
     { 0x1022, 0x7445, "AMD 768"		},
