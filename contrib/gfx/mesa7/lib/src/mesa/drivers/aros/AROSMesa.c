@@ -33,6 +33,7 @@
 #include "aros_fb_functions.h"
 #include "aros_visual_functions.h"
 #include "aros_context_functions.h"
+#include "aros_swrast_functions.h"
 
 #include <aros/debug.h>
 #include <proto/cybergraphics.h>
@@ -111,16 +112,22 @@ AROSMesaDestroyContext(AROSMesaContext amesa)
         aros_delete_visual(amesa->visual);
         aros_delete_framebuffer(amesa->framebuffer);
 
-        aros_delete_renderbuffer(amesa->front_rb);
-
-        if (amesa->back_rb)
-            aros_delete_renderbuffer(amesa->back_rb);
+        aros_delete_renderbuffer(amesa->renderbuffer);
 
         aros_delete_context(amesa);
     }
 
 }
 
+#include <proto/cybergraphics.h>
+#include <proto/graphics.h>
+#include <cybergraphx/cybergraphics.h>
+
+#if (AROS_BIG_ENDIAN == 1)
+#define AROS_PIXFMT RECFMT_ARGB    /* Big Endian Archs. */
+#else
+#define AROS_PIXFMT RECTFMT_BGRA32   /* Little Endian Archs. */
+#endif
 
 void GLAPIENTRY
 AROSMesaSwapBuffers(AROSMesaContext amesa)
@@ -128,55 +135,19 @@ AROSMesaSwapBuffers(AROSMesaContext amesa)
     /* copy/swap back buffer to front if applicable */
 
     D(bug("[AROSMESA] AROSMesaSwapBuffers(amesa @ %x)\n", amesa));
-    
 
-    if (amesa->back_rb)
-    {
-        UBYTE minterm = 0xc0;
+    WritePixelArray(
+        amesa->renderbuffer->buffer, 
+        0,
+        0,
+        4 * GET_GL_RB_PTR(amesa->renderbuffer)->Width, 
+        amesa->visible_rp, 
+        amesa->left, 
+        amesa->top, 
+        amesa->width, 
+        amesa->height, 
+        AROS_PIXFMT);
 
-        ClipBlit(amesa->back_rb->rp, amesa->left, amesa->top,  
-            /* from */
-            amesa->front_rb->rp, amesa->left, amesa->top,  
-            /* to */
-            amesa->width, amesa->height,  
-            /* size */
-            minterm);
-    }
-    else
-    {
-        D(bug("[AROSMESA] AROSMesaSwapBuffers: NOP - SINGLE buffer\n"));
-    }
-}
-
-/*
- * Create a new rastport to use as a back buffer.
- * Input:  width, height - size in pixels
- *    depth - number of bitplanes
- */
-
-static struct RastPort *
-arosRasterizer_make_rastport( int width, int height, int depth, struct BitMap *friendbm )
-{
-    struct RastPort *rp = NULL;
-    struct BitMap *bm = NULL;
-    
-    D(bug("[AROSMESA:RAST] arosRasterizer_make_rastport()\n"));
-
-
-    if ((bm = AllocBitMap(width, height, depth, BMF_CLEAR|BMF_INTERLEAVED, friendbm)))
-    {
-        if ((rp = CreateRastPort()))
-        {
-            rp->BitMap = bm;
-            return rp;
-        }
-        else
-        {
-            FreeBitMap(bm);
-            return NULL;
-        }
-    }
-    else return NULL;
 }
 
 static BOOL
@@ -407,33 +378,17 @@ AROSMesaCreateContext(struct TagItem *tagList)
             goto amccontextclean;
         }
     
-        amesa->front_rb = aros_new_renderbuffer(amesa->visible_rp, GL_FALSE);   
+        amesa->renderbuffer = aros_new_renderbuffer();   
 
         _mesa_add_renderbuffer(GET_GL_FB_PTR(amesa->framebuffer), BUFFER_FRONT_LEFT, 
-            GET_GL_RB_PTR(amesa->front_rb));
+            GET_GL_RB_PTR(amesa->renderbuffer));
         
         /* Set draw buffer as front */
         ctx->Color.DrawBuffer[0] = GL_FRONT;
 
 
-        if (amesa->visual->db_flag == GL_TRUE)
-        {
-            /* Enable double buffer */
-            struct RastPort * back_rp = arosRasterizer_make_rastport(amesa->visible_rp_width, 
-                                            amesa->visible_rp_height, amesa->depth, amesa->visible_rp->BitMap);
-
-            if (back_rp)
-            {
-                amesa->back_rb = aros_new_renderbuffer(back_rp, GL_TRUE);
-      
-                _mesa_add_renderbuffer(GET_GL_FB_PTR(amesa->framebuffer), BUFFER_BACK_LEFT, 
-                    GET_GL_RB_PTR(amesa->back_rb));
-
-                /* Set draw buffer as back */
-                ctx->Color.DrawBuffer[0] = GL_BACK;
-            }
-        }
-
+        /* AROSMesa is always "double buffered" */
+        /* if (amesa->visual->db_flag == GL_TRUE) */
 
         _mesa_add_soft_renderbuffers(GET_GL_FB_PTR(amesa->framebuffer),
                                    GL_FALSE, /* color */
@@ -453,6 +408,7 @@ AROSMesaCreateContext(struct TagItem *tagList)
     _tnl_CreateContext(ctx);
     _swsetup_CreateContext(ctx);
 
+    aros_swrast_initialize(ctx);
 
     _swsetup_Wakeup(ctx);
 

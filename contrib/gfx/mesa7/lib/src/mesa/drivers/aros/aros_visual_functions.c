@@ -32,7 +32,7 @@ AROSMesaVisual aros_new_visual(GLboolean db_flag)
     /* Initialize mesa structure */
     if(!_mesa_initialize_visual(vis,
                                 GL_TRUE,        /* RGB */
-                                db_flag,
+                                GL_FALSE,       /* Double buffer - AROSMesa uses front buffer as back buffer */
                                 GL_FALSE,       /* stereo */
                                 redBits,
                                 greenBits,

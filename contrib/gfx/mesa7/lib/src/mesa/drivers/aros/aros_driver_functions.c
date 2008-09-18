@@ -55,10 +55,16 @@ void aros_clear(GLcontext* ctx, GLbitfield mask)
 
     if ((mask & (BUFFER_BIT_FRONT_LEFT)))
     {  
-        if(amesa->front_rb->rp != NULL)
+        if(amesa->renderbuffer != NULL)
         {
             D(bug("[AROSMESA] aros_clear: front_rp->Clearing viewport (ALL)\n"));
-            FillPixelArray (amesa->front_rb->rp, amesa->left, amesa->top, amesa->width, amesa->height, amesa->clearpixel);
+            ULONG i;
+            ULONG size = GET_GL_RB_PTR(amesa->renderbuffer)->Width * 
+                            GET_GL_RB_PTR(amesa->renderbuffer)->Height;
+
+            ULONG * dp = (ULONG*)amesa->renderbuffer->buffer;
+            for (i = 0; i < size; i++, dp++)
+                *dp = amesa->clearpixel;
 
             mask &= ~BUFFER_BIT_FRONT_LEFT;
         }
@@ -70,17 +76,8 @@ void aros_clear(GLcontext* ctx, GLbitfield mask)
 
     if ((mask & (BUFFER_BIT_BACK_LEFT)))
     {  
-        if(amesa->back_rb->rp != NULL)
-        {
-            D(bug("[AROSMESA] aros_clear: back_rp->Clearing viewport (ALL)\n"));
-            FillPixelArray (amesa->back_rb->rp, amesa->left, amesa->top, amesa->width, amesa->height, amesa->clearpixel);
-
-            mask &= ~BUFFER_BIT_BACK_LEFT;
-        }
-        else
-        {
-            D(bug("[AROSMESA] aros_clear: Serious ERROR amesa->back_rp = NULL detected\n"));
-        }    
+        /* Noop */
+        mask &= ~BUFFER_BIT_BACK_LEFT;
     }
   
     if (mask)

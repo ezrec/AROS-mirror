@@ -284,7 +284,8 @@ AROS_DRIVER_SOURCES =           \
     drivers/aros/aros_rb_functions.c \
     drivers/aros/aros_fb_functions.c \
     drivers/aros/aros_visual_functions.c \
-    drivers/aros/aros_context_functions.c
+    drivers/aros/aros_context_functions.c \
+    drivers/aros/aros_swrast_functions.c
 
 ### All the core C sources
 
