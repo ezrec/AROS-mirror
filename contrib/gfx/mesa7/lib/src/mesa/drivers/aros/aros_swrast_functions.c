@@ -1,16 +1,18 @@
 #include "aros_swrast_functions.h"
 
-#define FAST_RASTERIZATION 1
+#define FAST_RASTERIZATION 1 /* Set this to 0 to get default MESA rasterization */
 #define DEBUG 0
 #include <aros/debug.h>
 #include "swrast/swrast.h"
 #include "swrast/s_context.h"
 
 #include "main/context.h"
+#include "main/colormac.h"
 
-/* Fast, low quality, textured, alpha, Z-disabled */
+/* Fast, low quality, textured, alpha, Z-disabled, GL_MODULATE */
 
 #define NAME aros_simple_textured_triangle
+#define INTERP_RGB 1
 #define INTERP_INT_TEX 1
 #define S_SCALE twidth
 #define T_SCALE theight
@@ -42,16 +44,19 @@
       GLint pos = (t << twidth_log2) + s;				                    \
       pos = pos << 2;  /* multiply by 4 (RGBA) */			                \
       if (texture[pos+3]) /* alpha */                                       \
-        *dp = TC_ARGB(texture[pos],                                         \
-                        texture[pos+1],                                     \
-                        texture[pos+2], 255);                               \
+        *dp = TC_ARGB(CHAN_PRODUCT(FixedToChan(span.red), texture[pos]),                                         \
+                        CHAN_PRODUCT(FixedToChan(span.green), texture[pos+1]),                                     \
+                        CHAN_PRODUCT(FixedToChan(span.blue), texture[pos+2]), 255);                               \
       span.intTex[0] += span.intTexStep[0];				                    \
       span.intTex[1] += span.intTexStep[1];				                    \
+      span.red += span.redStep;                                                 \
+      span.green += span.greenStep;                                             \
+      span.blue += span.blueStep;                                               \
    }									                                    \
 
 #include "s_tritemp.h"
 
-/* Fast, low quality, textured, alpha, Z-enabled */
+/* Fast, low quality, textured, alpha, Z-enabled, GL_REPLACE */
 
 #define NAME aros_simple_z_textured_triangle
 #define INTERP_Z 1
@@ -89,8 +94,9 @@
          GLint pos = (t << twidth_log2) + s;				                    \
          pos = pos << 2;  /* multiply by 4 (RGBA)*/			                    \
          if (texture[pos+3]) { /* alpha */                                      \
-        *dp = TC_ARGB(texture[pos],                   \
-        texture[pos+1], texture[pos+2], 255);   \
+        *dp = TC_ARGB(texture[pos],                                         \
+                        texture[pos+1],                                     \
+                        texture[pos+2], 255);                               \
             zRow[i] = z;							                            \
          }                                                                      \
       }									                                        \
@@ -247,6 +253,11 @@ static void aros_nodraw_triangle( GLcontext *ctx, const SWvertex *v0,
 
 static void aros_choose_triangle(GLcontext * ctx)
 {
+    /* Functions listed below ARE NOT generic functions
+     * They handle only a very limited set of most frequent
+     * combination of states/attributes
+     */
+
     SWcontext * swrast = SWRAST_CONTEXT(ctx);
 
     if (ctx->Polygon.CullFlag &&
@@ -288,7 +299,6 @@ static void aros_choose_triangle(GLcontext * ctx)
     else /* ctx->RenderMode==GL_RENDER */
     {
         /* TODO implement other modes*/
-//        D(bug("Modes different than GL_RENDER not implemented"));
         swrast->Triangle = aros_triangle_noop;
     }
 }
