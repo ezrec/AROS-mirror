@@ -1195,27 +1195,19 @@ void mainloop(void) {
           _DEBUG(("ACTION_INHIBIT(%ld)\n",globals->packet->dp_Arg1));
 
           /* This function nests.  Each call to inhibit the disk should be matched
-             with one to uninhibit the disk.
-
-             Inhibiting will only be allowed when there are no pending changes
-             (operations) to be committed to the disk. */
+             with one to uninhibit the disk. */
 
           if(globals->packet->dp_Arg1!=DOSFALSE) {
-            if(globals->pendingchanges==FALSE) {
-              #ifdef STARTDEBUG
-                dreq("Disk inhibited (nesting = %ld).", globals->inhibitnestcounter);
-              #endif
+            #ifdef STARTDEBUG
+              dreq("Disk inhibited (nesting = %ld).", globals->inhibitnestcounter);
+            #endif
 
-              if(globals->inhibitnestcounter++==0) {   // Inhibited for the first time?
-                globals->disktype=ID_BUSY;  /* Must be put before deinitdisk() Feb 27 1999: Maybe not needed anymore */
-                deinitdisk();
-              }
+            if(globals->inhibitnestcounter++==0) {   // Inhibited for the first time?
+              globals->disktype=ID_BUSY;  /* Must be put before deinitdisk() Feb 27 1999: Maybe not needed anymore */
+              deinitdisk();
+            }
 
-              returnpacket(DOSTRUE,0);
-            }
-            else {
-              returnpacket(DOSFALSE, ERROR_OBJECT_IN_USE);
-            }
+            returnpacket(DOSTRUE,0);
           }
           else if(globals->inhibitnestcounter>0 && --globals->inhibitnestcounter==0) {
 
@@ -3759,7 +3751,7 @@ void removevolumenode(struct DosList *dol, struct DosList *vn) {
 static void deinitdisk() {
 
   /* This function flushes all caches, and then invalidates them.
-     If succesful, this function then proceeds to either remove
+     If successful, this function then proceeds to either remove
      the volumenode, or transfer any outstanding locks/notifies to
      it.  Finally it notifies the system of the disk removal. */
 
@@ -4119,7 +4111,7 @@ LONG readcachebuffercheck(struct CacheBuffer **returnedcb,ULONG blckno,ULONG typ
 /* How the CacheBuffers work:
    ==========================
 
-When the filesystem starts the number of buffers indicated
+When the filesystem starts, the number of buffers indicated
 by the Mountlist are allocated.  If the number of buffers
 is below the minimum then the filesystem will increase the
 number of buffers to the minimum.  AddBuffers can be used
