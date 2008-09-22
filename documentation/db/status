@@ -1,13 +1,15 @@
 #CATEGORIES_BEGIN (basecategory, category, description, reserved, last update date)
-everything;libraries;Libraries;1;2008-08-24
-everything;classes;Classes;1;2003-08-26
-everything;devices;Devices;1;2008-08-24
-everything;resources;Resources;1;2003-08-26
-everything;hidds;HIDDs;2;2003-08-26
-everything;programs;Programs;1;2003-08-26
-everything;linklibs;Linklibs;1;2003-08-26
-everything;libraries_ext;Libraries;2;2008-08-01
-linklibs;clib;ANSI C link library;1;2003-08-26
+everything;amigaos;AmigaOS 3.1 API;1;2003-08-26
+everything;aros;AROS API;2;2003-08-26
+amigaos;libraries;Libraries;1;2008-08-24
+amigaos;classes;Classes;1;2003-08-26
+amigaos;devices;Devices;1;2008-08-24
+amigaos;resources;Resources;1;2003-08-26
+aros;hidds;HIDDs;2;2003-08-26
+amigaos;programs;Programs;1;2003-08-26
+amigaos;linklibs;Linklibs;1;2003-08-26
+aros;libraries_ext;Libraries;2;2003-08-26
+libraries_ext;clib;Arosc.library;2;2003-08-26
 linklibs;alib_stdio;Amiga.lib - Standard I/O;1;2003-08-26
 linklibs;alib_commodities;Amiga.lib - Commodities;1;2003-08-26
 libraries;intuition;Intuition.library;1;2008-07-19
@@ -731,7 +733,7 @@ dos;NameFromLock;1;1;2
 dos;NewLoadSeg;1;1;2
 dos;NextDosEntry;1;1;2
 dos;Open;1;1;2
-dos;OpenFromLock;1;1;1
+dos;OpenFromLock;1;1;2
 dos;Output;1;1;2
 dos;ParentDir;1;1;1
 dos;ParentOfFH;1;1;2
@@ -1844,7 +1846,7 @@ scsi;TD_FORMAT;1;1;2
 #COMMENTS_BEGIN (category, comment)
 gameport;Gameport.device supports only mouse
 bullet;Bullet.library interface is implemented in freetype.library
-everything;Extensions section does not contain all subsections
+aros;Extensions section does not contain all subsections
 trackdisk;Supports only PC-compatible 1.44 MB disk drives
 scsi;Scsi.device interface is implemented in AROS ata.device
 #COMMENTS_END
