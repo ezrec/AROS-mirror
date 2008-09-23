@@ -4,7 +4,7 @@ everything;aros;AROS API;2;2003-08-26
 amigaos;libraries;Libraries;1;2008-08-24
 amigaos;classes;Classes;1;2003-08-26
 amigaos;devices;Devices;1;2008-08-24
-amigaos;resources;Resources;1;2003-08-26
+amigaos;resources;Resources;1;2008-09-23
 aros;hidds;HIDDs;2;2003-08-26
 amigaos;programs;Programs;1;2003-08-26
 amigaos;linklibs;Linklibs;1;2003-08-26
@@ -75,13 +75,14 @@ programs;utilities;Utilities;1;2003-08-26
 programs;c;Shell commands;1;2003-08-26
 utilities;multiview;MultiView;1;2003-08-26
 system;rexxmast;RexxMast Program;1;2003-08-26
-resources;potgo;Potgo.resource;1;2003-08-26
-resources;misc;Misc.resource;1;2003-08-26
-resources;disk;Disk.resource;1;2003-08-26
-resources;cia;Cia.resource;1;2003-08-26
-resources;cardres;Card.resource;1;2003-08-26
-resources;battmem;Battery backedup memory;1;2003-08-26
-resources;battclock;Battery backedup clock;1;2003-08-26
+resources;potgo;Potgo.resource;1;2008-09-23
+resources;misc;Misc.resource;1;2008-09-23
+resources;disk;Disk.resource;1;2008-09-23
+resources;cia;Cia.resource;1;2008-09-23
+resources;cardres;Card.resource;1;2008-09-23
+resources;battmem;Battmem.resource;1;2008-09-23
+resources;battclock;Battclock.resource;1;2008-09-23
+resources;filesysres;FileSystem.resource;1;2008-09-23
 #CATEGORIES_END
 #CATEGORY_ITEMS_BEGIN (category, description, architecture, api version, status)
 alib_commodities;ArgArrayDone;1;1;2
@@ -98,13 +99,6 @@ alib_stdio;fputs;1;1;2
 alib_stdio;getchar;1;1;0
 alib_stdio;putchar;1;1;0
 alib_stdio;puts;1;1;2
-battclock;ResetBattClock;1;1;2
-battclock;ReadBattClock;1;1;2
-battclock;WriteBattClock;1;1;2
-battmem;ObtainBattSemaphore;1;1;0
-battmem;ReleaseBattSemaphore;1;1;0
-battmem;ReadBattMem;1;1;0
-battmem;WriteBattMem;1;1;0
 boopsi;BOOL Gadgets;1;1;2
 boopsi;BOOPSI ButtonGadgetClass;1;1;2
 boopsi;BOOPSI FrameIClass;1;1;2
@@ -121,27 +115,6 @@ boopsi;PROP Gadgets;1;1;2
 boopsi;BOOPSI RootClass;1;1;2
 boopsi;BOOPSI StrGClass;1;1;2
 boopsi;BOOPSI FillRectClass;1;1;2
-cardres;OwnCard;1;1;0
-cardres;ReleaseCard;1;1;0
-cardres;GetCardMap;1;1;0
-cardres;BeginCardAccess;1;1;0
-cardres;EndCardAccess;1;1;0
-cardres;ReadCardStatus;1;1;0
-cardres;CardResetRemove;1;1;0
-cardres;CardMiscControl;1;1;0
-cardres;CardAccessSpeed;1;1;0
-cardres;CardProgramVoltage;1;1;0
-cardres;CardResetCard;1;1;0
-cardres;CopyTuple;1;1;0
-cardres;DeviceTuple;1;1;0
-cardres;IfAmigaXIP;1;1;0
-cardres;CardForceChange;1;1;0
-cardres;CardChangeCount;1;1;0
-cardres;CardInterface;1;1;0
-cia;AddICRVector;1;1;0
-cia;RemICRVector;1;1;0
-cia;AbleICR;1;1;0
-cia;SetICR;1;1;0
 clib;abort;1;1;1
 clib;abs;1;1;2
 clib;asctime;1;1;2
@@ -391,12 +364,6 @@ DataType;picture.datatype;1;1;0
 DataType;sound.datatype;1;1;0
 DataType;text.datatype;1;1;2
 DataType;binary.datatype;1;1;2
-disk;AllocUnit;1;1;0
-disk;FreeUnit;1;1;0
-disk;GetUnit;1;1;0
-disk;GiveUnit;1;1;0
-disk;GetUnitID;1;1;0
-disk;ReadUnitID;1;1;0
 dtclass;ObtainEngine;1;1;2
 HID;Alarm.hidd;1;1;0
 HID;Timer.hidd;1;1;0
@@ -433,12 +400,7 @@ HIDG;HIDDV_Graphics_Cmd_FillText;1;1;0
 HIDG;HIDDV_Graphics_Cmd_FillSpan;1;1;0
 HIDG;HIDDV_Graphics_Cmd_Clear;1;1;0
 HIDG;HIDDV_Graphics_Cmd_Special;1;1;0
-misc;AllocMiscResource;1;1;2
-misc;FreeMiscResource;1;1;2
 multiview;MultiView;1;1;1
-potgo;AllocPotBits;1;1;0
-potgo;FreePotBits;1;1;0
-potgo;WritePotgo;1;1;0
 prefs;Locale prefs program;1;1;2
 prefs;Font prefs program;1;1;1
 prefs;Input prefs program;1;1;1
@@ -1842,6 +1804,46 @@ scsi;TD_PROTSTATUS;1;1;2
 scsi;TD_CHANGESTATE;1;1;2
 scsi;TD_SEEK;1;1;0
 scsi;TD_FORMAT;1;1;2
+battclock;ResetBattClock;1;1;0
+battclock;ReadBattClock;2;1;2
+battclock;WriteBattClock;1;1;0
+battmem;ObtainBattSemaphore;1;1;0
+battmem;ReleaseBattSemaphore;1;1;0
+battmem;ReadBattMem;1;1;0
+battmem;WriteBattMem;1;1;0
+cardres;OwnCard;1;1;5
+cardres;ReleaseCard;1;1;5
+cardres;GetCardMap;1;1;5
+cardres;BeginCardAccess;1;1;5
+cardres;EndCardAccess;1;1;5
+cardres;ReadCardStatus;1;1;5
+cardres;CardResetRemove;1;1;5
+cardres;CardMiscControl;1;1;5
+cardres;CardAccessSpeed;1;1;5
+cardres;CardProgramVoltage;1;1;5
+cardres;CardResetCard;1;1;5
+cardres;CopyTuple;1;1;5
+cardres;DeviceTuple;1;1;5
+cardres;IfAmigaXIP;1;1;5
+cardres;CardForceChange;1;1;5
+cardres;CardChangeCount;1;1;5
+cardres;CardInterface;1;1;5
+cia;AddICRVector;1;1;5
+cia;RemICRVector;1;1;5
+cia;AbleICR;1;1;5
+cia;SetICR;1;1;5
+disk;AllocUnit;1;1;0
+disk;FreeUnit;1;1;0
+disk;GetUnit;1;1;0
+disk;GiveUnit;1;1;0
+disk;GetUnitID;1;1;0
+disk;ReadUnitID;1;1;0
+filesysres;OpenResource;1;1;0
+misc;AllocMiscResource;1;1;2
+misc;FreeMiscResource;1;1;2
+potgo;AllocPotBits;1;1;5
+potgo;FreePotBits;1;1;5
+potgo;WritePotgo;1;1;5
 #CATEGORY_ITEMS_END
 #COMMENTS_BEGIN (category, comment)
 gameport;Gameport.device supports only mouse
@@ -1849,4 +1851,5 @@ bullet;Bullet.library interface is implemented in freetype.library
 aros;Extensions section does not contain all subsections
 trackdisk;Supports only PC-compatible 1.44 MB disk drives
 scsi;Scsi.device interface is implemented in AROS ata.device
+cardres;Card.resource is tied to the Amiga GAYLE chip
 #COMMENTS_END
