@@ -28,7 +28,7 @@ class CategoryItem( Sortable ):
     API_AROS = 2
 
     def __init__( self, description, parentcategory, status, architecture, apiversion ):
-        Sortable.__init__( self, description )
+        Sortable.__init__( self, description.upper() )
         self.description            =   description
         self.parentcategory         =   parentcategory
         self.status                 =   status
@@ -38,7 +38,7 @@ class CategoryItem( Sortable ):
 class Comment( Sortable ):
 
     def __init__( self, comment, parentcategory ):
-        Sortable.__init__( self, comment )
+        Sortable.__init__( self, comment.upper() )
         self.comment        =   comment
         self.parentcategory =   parentcategory    
 
@@ -49,7 +49,7 @@ class Category( Sortable ):
     TYPE_Extensions =   2
 
     def __init__( self, category, description, parentcategory, categorytype, lastupdated ):
-        Sortable.__init__( self, category )
+        Sortable.__init__( self, category.upper() )
        
         self.category           =   category
         self.description        =   description

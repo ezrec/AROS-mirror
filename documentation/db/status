@@ -1,4 +1,4 @@
-#CATEGORIES_BEGIN (basecategory, category, description, reserved, last update date)
+#CATEGORIES_BEGIN (basecategory, category, description, type, last update date)
 everything;amigaos;AmigaOS 3.1 API;1;2003-08-26
 everything;aros;AROS API;2;2003-08-26
 amigaos;libraries;Libraries;1;2008-08-24
@@ -7,11 +7,10 @@ amigaos;devices;Devices;1;2008-08-24
 amigaos;resources;Resources;1;2008-09-23
 aros;hidds;HIDDs;2;2003-08-26
 amigaos;programs;Programs;1;2003-08-26
-amigaos;linklibs;Linklibs;1;2003-08-26
+amigaos;linklibs;Linklibs;1;2008-09-24
 aros;libraries_ext;Libraries;2;2003-08-26
 libraries_ext;clib;Arosc.library;2;2003-08-26
-linklibs;alib_stdio;Amiga.lib - Standard I/O;1;2003-08-26
-linklibs;alib_commodities;Amiga.lib - Commodities;1;2003-08-26
+linklibs;alib;Amiga.lib;1;2008-09-24
 libraries;intuition;Intuition.library;1;2008-07-19
 libraries;graphics;Graphics.library;1;2008-07-19
 libraries;dos;Dos.library;1;2008-07-19
@@ -85,20 +84,6 @@ resources;battclock;Battclock.resource;1;2008-09-23
 resources;filesysres;FileSystem.resource;1;2008-09-23
 #CATEGORIES_END
 #CATEGORY_ITEMS_BEGIN (category, description, architecture, api version, status)
-alib_commodities;ArgArrayDone;1;1;2
-alib_commodities;ArgArrayInit;1;1;2
-alib_commodities;ArgInt;1;1;2
-alib_commodities;ArgString;1;1;2
-alib_commodities;HotKey;1;1;2
-alib_commodities;InvertString;1;1;2
-alib_commodities;FreeIEvents;1;1;2
-alib_stdio;fclose;1;1;2
-alib_stdio;fgetc;1;1;2
-alib_stdio;fputc;1;1;2
-alib_stdio;fputs;1;1;2
-alib_stdio;getchar;1;1;0
-alib_stdio;putchar;1;1;0
-alib_stdio;puts;1;1;2
 boopsi;BOOL Gadgets;1;1;2
 boopsi;BOOPSI ButtonGadgetClass;1;1;2
 boopsi;BOOPSI FrameIClass;1;1;2
@@ -1844,6 +1829,140 @@ misc;FreeMiscResource;1;1;2
 potgo;AllocPotBits;1;1;5
 potgo;FreePotBits;1;1;5
 potgo;WritePotgo;1;1;5
+alib;fclose;1;1;0
+alib;fprintf;1;1;0
+alib;fgetc;1;1;0
+alib;fputc;1;1;0
+alib;fputs;1;1;0
+alib;getchar;1;1;0
+alib;putchar;1;1;0
+alib;puts;1;1;0
+alib;ACrypt;1;1;0
+alib;AddTOF;1;1;0
+alib;afp;1;1;0
+alib;ArgArrayDone;1;1;2
+alib;ArgArrayInit;1;1;2
+alib;ArgInt;1;1;2
+alib;ArgString;1;1;2
+alib;arnd;1;1;0
+alib;BeginIO;1;1;2
+alib;CallHook;1;1;2
+alib;CallHookA;1;1;2
+alib;CheckRexxMsg;1;1;2
+alib;CoerceMethod;1;1;2
+alib;CoerceMethodA;1;1;2
+alib;CreateExtIO;1;1;2
+alib;CreatePort;1;1;2
+alib;CreateStdIO;1;1;2
+alib;CreateTask;1;1;2
+alib;CxCustom;1;1;2
+alib;CxDebug;1;1;2
+alib;CxFilter;1;1;2
+alib;CxSender;1;1;2
+alib;CxSignal;1;1;2
+alib;CxTranslate;1;1;2
+alib;dbf;1;1;0
+alib;DeleteExtIO;1;1;2
+alib;DeletePort;1;1;2
+alib;DeleteStdIO;1;1;2
+alib;DeleteTask;1;1;2
+alib;DoMethod;1;1;2
+alib;DoMethodA;1;1;2
+alib;DoSuperMethod;1;1;2
+alib;DoSuperMethodA;1;1;2
+alib;FastRand;1;1;2
+alib;fpa;1;1;0
+alib;FreeIEvents;1;1;2
+alib;GetRexxVar;1;1;2
+alib;HookEntry;1;1;2
+alib;HotKey;1;1;2
+alib;InvertString;1;1;1
+alib;NewList;1;1;2
+alib;printf;1;1;0
+alib;RangeRand;1;1;2
+alib;RemTOF;1;1;0
+alib;SetRexxVar;1;1;2
+alib;SetSuperAttrs;1;1;2
+alib;sprintf;1;1;0
+alib;TimeDelay;1;1;2
+alib;LibAllocPooled;1;1;2
+alib;LibCreatePool;1;1;2
+alib;LibDeletePool;1;1;2
+alib;LibFreePooled;1;1;2
+alib;AddAmigaGuideHost;1;2;2
+alib;AddAppIcon;1;2;2
+alib;AddAppMenuItem;1;2;2
+alib;AddAppWindow;1;2;2
+alib;AddAppWindowDropZone;1;2;2
+alib;AllocAslRequestTags;1;2;2
+alib;AllocDosObjectTags;1;2;2
+alib;AllocNamedObject;1;2;2
+alib;AllocSpriteData;1;2;2
+alib;ArosInquire;1;2;2
+alib;AslRequestTags;1;2;2
+alib;AsmAllocPooled;1;2;2
+alib;AsmCreatePool;1;2;2
+alib;AsmDeletePool;1;2;2
+alib;AsmFreePooled;1;2;2
+alib;BestCModeIDTags;1;2;2
+alib;BestModeID;1;2;2
+alib;BuildEasyRequest;1;2;2
+alib;ChangeExtSprite;1;2;2
+alib;CloseWorkbenchObject;1;2;2
+alib;CreateGadget;1;2;2
+alib;CreateLayerTags;1;2;2
+alib;CreateMenus;1;2;2
+alib;CreateNewProcTags;1;2;2
+alib;DoDTMethod;1;2;2
+alib;DoGadgetMethod;1;2;2
+alib;DoSuperNewTagList;1;2;2
+alib;DoSuperNewTags;1;2;2
+alib;DrawBevelBox;1;2;2
+alib;EasyRequest;1;2;2
+alib;ExtendFontTags;1;2;2
+alib;GetDTAttrs;1;2;2
+alib;GetExtSprite;1;2;2
+alib;GetRPAttrs;1;2;2
+alib;GetVisualInfo;1;2;2
+alib;GT_GetGadgetAttrs;1;2;2
+alib;GT_SetGadgetAttrs;1;2;2
+alib;LayoutMenuItems;1;2;2
+alib;LayoutMenus;1;2;2
+alib;LockBitMapTags;1;2;2
+alib;MakeWorkbenchObjectVisible;1;2;2
+alib;MergeSortList;1;2;2
+alib;NewDTObject;1;2;2
+alib;NewLoadSegTags;1;2;2
+alib;NewObject;1;2;2
+alib;NewRawDoFmt;1;2;2
+alib;ObtainBestPen;1;2;2
+alib;ObtainInfo;1;2;2
+alib;OpenAmigaGuide;1;2;2
+alib;OpenAmigaGuideAsync;1;2;2
+alib;OpenCatalog;1;2;2
+alib;OpenScreenTags;1;2;2
+alib;OpenWindowTags;1;2;2
+alib;OpenWorkbenchObject;1;2;1
+alib;ReAllocVec;1;2;2
+alib;RefreshDTObject;1;2;2
+alib;RefreshDTObjects;1;2;2
+alib;ReleaseInfo;1;2;2
+alib;RemoveAmigaGuideHost;1;2;2
+alib;SendAmigaGuideCmd;1;2;2
+alib;SendAmigaGuideContext;1;2;2
+alib;SetAmigaGuideAttrs;1;2;2
+alib;SetAmigaGuideContext;1;2;2
+alib;SetAttrs;1;2;2
+alib;SetDTAttrs;1;2;2
+alib;SetGadgetAttrs;1;2;2
+alib;SetInfo;1;2;2
+alib;SetRPAttrs;1;2;2
+alib;SetWindowPointer;1;2;2
+alib;StrDup;1;2;2
+alib;SystemTags;1;2;2
+alib;UnLockBitMapTags;1;2;2
+alib;VideoControlTags;1;2;2
+alib;WorkbenchControl;1;2;2
 #CATEGORY_ITEMS_END
 #COMMENTS_BEGIN (category, comment)
 gameport;Gameport.device supports only mouse
@@ -1852,4 +1971,5 @@ aros;Extensions section does not contain all subsections
 trackdisk;Supports only PC-compatible 1.44 MB disk drives
 scsi;Scsi.device interface is implemented in AROS ata.device
 cardres;Card.resource is tied to the Amiga GAYLE chip
+alib;CxCustom, CxDebug, CxFilter, CxSender, CxSignal and CxTranslate are macros defined in libraries/commodities.h
 #COMMENTS_END
