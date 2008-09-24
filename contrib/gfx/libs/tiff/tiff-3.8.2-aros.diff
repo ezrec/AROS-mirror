@@ -1,0 +1,27 @@
+diff -ruN tiff-3.8.2/config/ltmain.sh tiff/config/ltmain.sh
+--- tiff-3.8.2/config/ltmain.sh	2006-01-23 19:22:32.000000000 +0100
++++ tiff/config/ltmain.sh	2008-09-24 15:28:16.000000000 +0200
+@@ -4726,6 +4726,11 @@
+ 	    age="$number_minor"
+ 	    revision="$number_minor"
+ 	    ;;
++	  none)
++	    current=`expr $number_major + $number_minor`
++	    age="$number_minor"
++	    revision="$number_revision"
++	    ;;
+ 	  esac
+ 	  ;;
+ 	no)
+diff -ruN tiff-3.8.2/configure tiff/configure
+--- tiff-3.8.2/configure	2006-03-23 15:44:47.000000000 +0100
++++ tiff/configure	2008-09-24 15:28:15.000000000 +0200
+@@ -20759,7 +20759,7 @@
+ finish_cmds='`$ECHO "X$finish_cmds" | $Xsed -e "$delay_single_quote_subst"`'
+ finish_eval='`$ECHO "X$finish_eval" | $Xsed -e "$delay_single_quote_subst"`'
+ hardcode_into_libs='`$ECHO "X$hardcode_into_libs" | $Xsed -e "$delay_single_quote_subst"`'
+-sys_lib_search_path_spec='`$ECHO "X$sys_lib_search_path_spec" | $Xsed -e "$delay_single_quote_subst"`'
++sys_lib_search_path_spec=''
+ sys_lib_dlsearch_path_spec='`$ECHO "X$sys_lib_dlsearch_path_spec" | $Xsed -e "$delay_single_quote_subst"`'
+ hardcode_action='`$ECHO "X$hardcode_action" | $Xsed -e "$delay_single_quote_subst"`'
+ enable_dlopen='`$ECHO "X$enable_dlopen" | $Xsed -e "$delay_single_quote_subst"`'
