@@ -102,3 +102,17 @@ class Category( Sortable ):
             self.amigaonly              += item.amigaonly
             self.total                  += item.total
 
+    def removeempty( self ):
+
+        subcategoriestemp = []
+        subcategoriestemp += self.subcategories
+        self.subcategories = []
+        
+        for item in subcategoriestemp:
+            if item.removeempty( ) == False:
+                self.subcategories.append( item )
+
+        if ( len ( self.categoryitems ) == 0 ) and ( len ( self.subcategories ) == 0 ):
+            return True
+    
+        return False

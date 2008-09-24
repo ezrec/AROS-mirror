@@ -1,6 +1,4 @@
 #CATEGORIES_BEGIN (basecategory, category, description, type, last update date)
-everything;amigaos;AmigaOS 3.1 API;1;2003-08-26
-everything;aros;AROS API;2;2003-08-26
 amigaos;libraries;Libraries;1;2008-08-24
 amigaos;classes;Classes;1;2003-08-26
 amigaos;devices;Devices;1;2008-08-24
@@ -1984,7 +1982,8 @@ ddebuglib;KCmpStr;1;1;0
 #COMMENTS_BEGIN (category, comment)
 gameport;Gameport.device supports only mouse
 bullet;Bullet.library interface is implemented in freetype.library
-aros;Extensions section does not contain all subsections
+aros;AROS Extensions section does not contain all subsections
+everything;AROS Extensions section does not contain all subsections
 trackdisk;Supports only PC-compatible 1.44 MB disk drives
 scsi;Scsi.device interface is implemented in AROS ata.device
 cardres;Card.resource is tied to the Amiga GAYLE chip

@@ -6,9 +6,13 @@ from db.tasks.model import *
 
 def createCategories( file ):
 
-    # Root category    
+    # Root categories
     categories = {}
     c = Category( 'everything', 'Everything', None, 0, None )
+    categories[c.category] = c
+    c = Category( 'amigaos', 'AmigaOS 3.1', 'everything', Category.TYPE_AmigaOS, None )
+    categories[c.category] = c
+    c = Category( 'aros', 'AROS Extensions', 'everything', Category.TYPE_Extensions, None )
     categories[c.category] = c
 
     # Search for startup
@@ -32,6 +36,21 @@ def createCategories( file ):
 
         c = Category( category, description, parentcategory, categorytype, lastupdated )
         categories[c.category] = c
+
+        # If category is not an Extension and there is no existing twin extension category, create it (virtual category)
+        if categorytype != Category.TYPE_Extensions:
+            category += "_ext"
+            if category not in categories:
+                if parentcategory == "amigaos":
+                    # Override top-most extension category name
+                    parentcategory = "aros"
+                else:
+                    parentcategory += "_ext"
+
+                c = Category( category, description, parentcategory, Category.TYPE_Extensions, lastupdated )
+                categories[c.category] = c
+            
+
 
     # Link categories
     for key, value in categories.iteritems():
@@ -66,7 +85,6 @@ def createCategoryItems( file ):
         apiversion = int( words[3] )
         architecture = int( words[2] )
 
-        
         categoryitems.append( CategoryItem( description, category, status, architecture, apiversion ) )
 
     return categoryitems
@@ -110,7 +128,12 @@ def parse( file ):
         # Fallback for not existing categories            
         if category not in categories:
             category = 'everything'
-            
+        
+        # If item is an Extension and item's category is not an Extension, assign item to extension category
+        if categoryitem.apiversion == CategoryItem.API_AROS:
+            if categories[category].categorytype != Category.TYPE_Extensions:
+                category += "_ext"
+
         categories[category].categoryitems.append( categoryitem )            
 
     # Assign comments to categories
@@ -126,7 +149,11 @@ def parse( file ):
 
 
     everything = categories[ 'everything' ]
-    everything.recalculate()    
-    everything.sort()
+    # Remove empty categories
+    everything.removeempty( )
+    # Recalculate count values
+    everything.recalculate( )  
+    # Sort items  
+    everything.sort( )
     
     return everything
