@@ -11,6 +11,8 @@ amigaos;linklibs;Linklibs;1;2008-09-24
 aros;libraries_ext;Libraries;2;2003-08-26
 libraries_ext;clib;Arosc.library;2;2003-08-26
 linklibs;alib;Amiga.lib;1;2008-09-24
+linklibs;debuglib;Debug.lib;1;2008-09-24
+linklibs;ddebuglib;DDebug.lib;1;2008-09-24
 libraries;intuition;Intuition.library;1;2008-07-19
 libraries;graphics;Graphics.library;1;2008-07-19
 libraries;dos;Dos.library;1;2008-07-19
@@ -1963,6 +1965,21 @@ alib;SystemTags;1;2;2
 alib;UnLockBitMapTags;1;2;2
 alib;VideoControlTags;1;2;2
 alib;WorkbenchControl;1;2;2
+debuglib;KCmpStr;1;1;0
+debuglib;KGetChar;1;1;0
+debuglib;KGetNum;1;1;0
+debuglib;KMayGetChar;1;1;0
+debuglib;KPrintF;1;1;2
+debuglib;KPutChar;1;1;2
+debuglib;KPutStr;1;1;0
+ddebuglib;DDoFmt;1;1;0
+ddebuglib;DGetChar;1;1;0
+ddebuglib;DGetNum;1;1;0
+ddebuglib;DMayGetChar;1;1;0
+ddebuglib;DPutChar;1;1;0
+ddebuglib;DPutFmt;1;1;0
+ddebuglib;DPutStr;1;1;0
+ddebuglib;KCmpStr;1;1;0
 #CATEGORY_ITEMS_END
 #COMMENTS_BEGIN (category, comment)
 gameport;Gameport.device supports only mouse
@@ -1972,4 +1989,5 @@ trackdisk;Supports only PC-compatible 1.44 MB disk drives
 scsi;Scsi.device interface is implemented in AROS ata.device
 cardres;Card.resource is tied to the Amiga GAYLE chip
 alib;CxCustom, CxDebug, CxFilter, CxSender, CxSignal and CxTranslate are macros defined in libraries/commodities.h
+debuglib;KPrintF and KPutChar are implemented in arossupport.lib
 #COMMENTS_END
