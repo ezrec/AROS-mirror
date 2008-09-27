@@ -65,7 +65,7 @@ class Standard( Container ):
             result += ' ' + name + '="' + str( self.attributes[name] ) + '"'
         result += '>'
         result += Container.__str__( self )
-        result += '</' + self.name + '>'
+        result += '</' + self.name + '>\n'
 
         return result
 
