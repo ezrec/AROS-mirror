@@ -50,25 +50,25 @@
    else { echo "<img alt=\"Community Icon\" src=\"/images/communityicon.png\" align=\"middle\">"; } ?> 
    Los comentarios más recientes en el foro AROS-EXEC :<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
    <a href=http://www.aros-exec.org>AROS-EXEC</a> es el principal sitio de la comunidad AROS. Recibe ayuda, descubre lo que está pasando en la comunidad, y añade tus pensamientos sobre AROS.<br><br>
-   <?php include("/home/groups/a/ar/aros/htdocs/rsfeed/aeforum.php"); ?><br></td></tr></tbody></table>
+   <?php include("rsfeed/aeforum.php"); ?><br></td></tr></tbody></table>
    <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr>
    <td style="vertical-align: top;"><?php if ($win_ie56) { echo "<img alt=\"Open Bounty Icon\" src=\"/images/bountyicon1.gif\" align=\"middle\">";} 
    else { echo "<img alt=\"Open Bounty Icon\" src=\"/images/bountyicon1.png\" align=\"middle\">"; } ?>
    Recompensas abiertas:<br><img style="width: 177px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
    <a href=http://www.teamaros.org>Team AROS</a> es un grupo base de apoyo para AROS, intentando actuar como un catalizador para AROS, principalmente recogiendo dinero a través de donaciones para enforcarse en el desarrollo.
-   <?php include("/home/groups/a/ar/aros/htdocs/rsfeed/teamarosopenb.php"); ?><br></td></tr></table>
+   <?php include("rsfeed/teamarosopenb.php"); ?><br></td></tr></table>
    <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td style="vertical-align: top;">
    <?php if ($win_ie56) { echo "<img alt=\"Assigned Bounty Icon\" src=\"/images/bountyicon2.gif\" align=\"middle\">"; } 
    else { echo "<img alt=\"Assigned Bounty Icon\" src=\"/images/bountyicon2.png\" align=\"middle\">"; } ?> 
    Recompensas asignadas:<br><img style="width: 177px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
-   <?php include("/home/groups/a/ar/aros/htdocs/rsfeed/teamarosassigned.php"); ?><br></td></tr></table>
+   <?php include("rsfeed/teamarosassigned.php"); ?><br></td></tr></table>
    <table style="width: 100%; text-align: justify; margin-left: auto; margin-right: auto;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td style="vertical-align: top;">
    <?php if ($win_ie56) { echo "<img alt=\"Syndication Icon\" src=\"/images/rssicon1.gif\" align=\"middle\">"; } else { echo "<img alt=\"Syndication Icon\" src=\"/images/rssicon1.png\" align=\"middle\">"; } ?>
    Syndication Feeds:<br><img style="width: 177px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
-   <?php  include("/home/groups/a/ar/aros/htdocs/rsfeed/synfeed.php");  ?><br></td></tr></table>
+   <?php  include("rsfeed/synfeed.php");  ?><br></td></tr></table>
    <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
    <?php if ($win_ie56) { echo "<img alt=\"Archive Icon\" src=\"/images/archivedownloadicon.gif\" align=\"middle\">"; } 
    else { echo "<img alt=\"Archive Icon\" src=\"/images/archivedownloadicon.png\" align=\"middle\">"; } ?>
    Las últimas propuestas al ARCHIVE:<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
    <a href=http://archives.aros-exec.org>Los archivos de AROS</a>   guardan el contenido más reciente propuesto por nuestra comunidad, y es el primer lugar para buscar aplicaciones de usuario, temas, gráficos, y documentación adicional.<br><br>
-   <?php include("/home/groups/a/ar/aros/htdocs/rsfeed/archives.php"); ?><br></td></tr></table></td></tr></table>
+   <?php include("rsfeed/archives.php"); ?><br></td></tr></table></td></tr></table>

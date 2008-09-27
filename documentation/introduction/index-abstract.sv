@@ -4,7 +4,7 @@
 
 .. raw:: html
 
-  <?php include('/home/groups/a/ar/aros/htdocs/rsfeed/randimg.php');  random_image("/images/thubs/","100","76"); ?>
+  <?php include('../rsfeed/randimg.php');  random_image("images/thubs/","100","76"); ?>
 
 AROS är ett portabelt och fritt operativsystem för desktop med syfte på
 att vara kompatibelt med AmigaOS 3.1, och samtidigt förbättra det i
