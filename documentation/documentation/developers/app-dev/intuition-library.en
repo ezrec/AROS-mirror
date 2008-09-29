@@ -4,7 +4,7 @@ AROS Application Development Manual
 
 :Authors:   Staf Verhaegen, Sebastian Rittau, Stefan Rieken, Matt Parsons,
             Adam Chodorowski, Fabio Alemagna, Matthias Rustler
-:Copyright: Copyright © 1995-2006, The AROS Development Team
+:Copyright: Copyright © 1995-2008, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Unfinished; integration started (looong way left to go).
@@ -20,14 +20,41 @@ AROS Application Development Manual
 
 .. Contents::
 
---------------------------------
-Graphical User Interfaces (GUIs)
---------------------------------
+-----------------
+Intuition.library
+-----------------
 
 Windows
 -------
 
-FIXME
+============================= =======================================================
+`OpenWindowTagList()`_
+`OpenWindow()`_
+`CloseWindow()`_
+`BeginRefresh()`_
+`EndRefresh()`_
+`RefreshWindowFrame()`_
+`ActivateWindow()`_
+`SizeWindow()`_
+`MoveWindow()`_
+`ChangeWindowBox()`_
+`WindowLimits()`_
+`WindowToBack()`_
+`WindowToFront()`_
+`MoveWindowInFrontOf()`_
+`ZipWindow()`_
+`SetWindowTitles()`_
+`SetWindowPointerA()`_
+`SetPointerBounds()`_
+`ShowWindow()`_
+`HideWindow()`_
+`IsWindowVisible()`_
+
+`ChangeWindowShape()`_
+`ScrollWindowRaster()`_
+`ScrollWindowRasterNoFill()`_
+`WindowAction()`_
+============================= =======================================================
 
 
 Requesters
@@ -73,21 +100,324 @@ Complex Requesters
 
 FIXME
 
-
-Asl Requesters (Font-, File- and Screenmode-)
-"""""""""""""""""""""""""""""""""""""""""""""
-
-FIXME
+============================= =======================================================
+`Request()`_
+`EndRequest()`_
+`InitRequester()`_
+`EasyRequestArgs()`_
+`BuildEasyRequestArgs()`_
+`SysReqHandler()`_
+`AutoRequest()`_
+`BuildSysRequest()`_
+`FreeSysRequest()`_
+`SetDMRequest()`_
+`ClearDMRequest()`_
+`DisplayAlert()`_
+`TimedDisplayAlert()`_
+`DisplayBeep()`_
+============================= =======================================================
 
 
 Screens
 -------
 
-FIXME
+============================= =======================================================
+`OpenScreenTagList()`_
+`OpenScreen()`_
+`CloseScreen()`_
+`MoveScreen()`_
+`ScreenPosition()`_
+`ScreenToBack()`_
+`ScreenToFront()`_
+`ScreenDepth()`_
+`ShowTitle()`_
+`GetScreenDrawInfo()`_
+`FreeScreenDrawInfo()`_
+`GetScreenData()`_
+`QueryOverscan()`_
+`LockPubScreen()`_
+`UnlockPubScreen()`_
+`NextPubScreen()`_
+`PubScreenStatus()`_
+`LockPubScreenList()`_
+`UnlockPubScreenList()`_
+`SetDefaultPubScreen()`_
+`SetPubScreenModes()`_
+`GetDefaultPubScreen()`_
+`StartScreenNotifyTagList()`_
+`EndScreenNotify()`_
+`OpenWorkBench()`_
+`CloseWorkBench()`_
+`WBenchToBack()`_
+`WBenchToFront()`_
+`AlohaWorkbench()`_
+`ViewAddress()`_
+`ViewPortAddress()`_
+`MakeScreen()`_
+`RethinkDisplay()`_
+`RemakeDisplay()`_
+`AllocScreenBuffer()`_
+`ChangeScreenBuffer()`_
+`FreeScreenBuffer()`_
+`SetDefaultScreenFont()`_
+============================= =======================================================
+
 
 
 Gadgets
--------
+-------------
 
-FIXME
+============================= =======================================================
+`AddGadget()`_
+`AddGList()`_
+`RemoveGadget()`_
+`RemoveGList()`_
+`RefreshGList()`_
+`RefreshGadgets()`_
+`ModifyProp()`_
+`NewModifyProp()`_
+`OffGadget()`_
+`OnGadget()`_
+`ActivateGadget()`_
+`SetEditHook()`_
+`GadgetMouse()`_
+`HelpControl()`_
+============================= =======================================================
 
+
+Menus
+-----
+
+============================= =======================================================
+`SetMenuStrip()`_
+`ClearMenuStrip()`_
+`ResetMenuStrip()`_
+`ItemAddress()`_
+`OffMenu()`_
+`OnMenu()`_
+`LendMenus()`_
+============================= =======================================================
+
+
+Images/Line Drawing
+-------------------
+
+============================= =======================================================
+`DrawBorder()`_
+`DrawImage()`_
+`DrawImageState()`_
+`EraseImage()`_
+`PrintIText()`_
+`IntuiTextLength()`_
+`GetScreenDrawInfo()`_
+`FreeScreenDrawInfo()`_
+`PointInImage()`_
+============================= =======================================================
+
+
+Input/Output
+------------
+
+============================= =======================================================
+`ModifyIDCMP()`_
+`AllocIntuiMessage()`_
+`FreeIntuiMessage()`_
+`SendIntuiMessage()`_
+============================= =======================================================
+
+
+Mouse/Keyboard
+--------------
+
+============================= =======================================================
+`DoubleClick()`_
+`SetPointer()`_
+`ClearPointer()`_
+`SetMouseQueue()`_
+`ReportMouse()`_
+============================= =======================================================
+
+
+BOOPSI
+------
+
+============================= =======================================================
+`NewObjectA()`_
+`DisposeObject()`_
+`SetAttrsA()`_
+`SetGadgetAttrsA()`_
+`GetAttr()`_
+`MakeClass()`_
+`FreeClass()`_
+`AddClass()`_
+`RemoveClass()`_
+`ObtainGIRPort()`_
+`ReleaseGIRPort()`_
+`DoGadgetMethodA()`_
+`DoNotify()`_
+`FindClass()`_
+`FreeICData()`_
+`NextObject()`_
+
+============================= =======================================================
+
+
+Misc.
+-----
+
+============================= =======================================================
+`AllocRemember()`_
+`FreeRemember()`_
+`LockIBase()`_
+`UnlockIBase()`_
+`CurrentTime()`_
+`ChangeDecoration()`_
+`SetIPrefs()`_
+`SetPrefs()`_
+`GetPrefs()`_
+`GetDefPrefs()`_
+`LateIntuiInit()`_
+============================= =======================================================
+
+
+.. _ActivateGadget(): ../autodocs/intuition#activategadget
+.. _ActivateWindow(): ../autodocs/intuition#activatewindow
+.. _AddClass(): ../autodocs/intuition#addclass
+.. _AddGList(): ../autodocs/intuition#addglist
+.. _AddGadget(): ../autodocs/intuition#addgadget
+.. _AllocIntuiMessage(): ../autodocs/intuition#allocintuimessage
+.. _AllocRemember(): ../autodocs/intuition#allocremember
+.. _AllocScreenBuffer(): ../autodocs/intuition#allocscreenbuffer
+.. _AlohaWorkbench(): ../autodocs/intuition#alohaworkbench
+.. _AutoRequest(): ../autodocs/intuition#autorequest
+.. _BeginRefresh(): ../autodocs/intuition#beginrefresh
+.. _BuildEasyRequestArgs(): ../autodocs/intuition#buildeasyrequestargs
+.. _BuildSysRequest(): ../autodocs/intuition#buildsysrequest
+.. _ChangeDecoration(): ../autodocs/intuition#changedecoration
+.. _ChangeScreenBuffer(): ../autodocs/intuition#changescreenbuffer
+.. _ChangeWindowBox(): ../autodocs/intuition#changewindowbox
+.. _ChangeWindowShape(): ../autodocs/intuition#changewindowshape
+.. _ClearDMRequest(): ../autodocs/intuition#cleardmrequest
+.. _ClearMenuStrip(): ../autodocs/intuition#clearmenustrip
+.. _ClearPointer(): ../autodocs/intuition#clearpointer
+.. _CloseScreen(): ../autodocs/intuition#closescreen
+.. _CloseWindow(): ../autodocs/intuition#closewindow
+.. _CloseWorkBench(): ../autodocs/intuition#closeworkbench
+.. _CurrentTime(): ../autodocs/intuition#currenttime
+.. _DisplayAlert(): ../autodocs/intuition#displayalert
+.. _DisplayBeep(): ../autodocs/intuition#displaybeep
+.. _DisposeObject(): ../autodocs/intuition#disposeobject
+.. _DoGadgetMethodA(): ../autodocs/intuition#dogadgetmethoda
+.. _DoNotify(): ../autodocs/intuition#donotify
+.. _DoubleClick(): ../autodocs/intuition#doubleclick
+.. _DrawBorder(): ../autodocs/intuition#drawborder
+.. _DrawImage(): ../autodocs/intuition#drawimage
+.. _DrawImageState(): ../autodocs/intuition#drawimagestate
+.. _EasyRequestArgs(): ../autodocs/intuition#easyrequestargs
+.. _EndRefresh(): ../autodocs/intuition#endrefresh
+.. _EndRequest(): ../autodocs/intuition#endrequest
+.. _EndScreenNotify(): ../autodocs/intuition#endscreennotify
+.. _EraseImage(): ../autodocs/intuition#eraseimage
+.. _FindClass(): ../autodocs/intuition#findclass
+.. _FreeClass(): ../autodocs/intuition#freeclass
+.. _FreeICData(): ../autodocs/intuition#freeicdata
+.. _FreeIntuiMessage(): ../autodocs/intuition#freeintuimessage
+.. _FreeRemember(): ../autodocs/intuition#freeremember
+.. _FreeScreenBuffer(): ../autodocs/intuition#freescreenbuffer
+.. _FreeScreenDrawInfo(): ../autodocs/intuition#freescreendrawinfo
+.. _FreeSysRequest(): ../autodocs/intuition#freesysrequest
+.. _GadgetMouse(): ../autodocs/intuition#gadgetmouse
+.. _GetAttr(): ../autodocs/intuition#getattr
+.. _GetDefPrefs(): ../autodocs/intuition#getdefprefs
+.. _GetDefaultPubScreen(): ../autodocs/intuition#getdefaultpubscreen
+.. _GetPrefs(): ../autodocs/intuition#getprefs
+.. _GetScreenData(): ../autodocs/intuition#getscreendata
+.. _GetScreenDrawInfo(): ../autodocs/intuition#getscreendrawinfo
+.. _HelpControl(): ../autodocs/intuition#helpcontrol
+.. _HideWindow(): ../autodocs/intuition#hidewindow
+.. _InitRequester(): ../autodocs/intuition#initrequester
+.. _IntuiTextLength(): ../autodocs/intuition#intuitextlength
+.. _IsWindowVisible(): ../autodocs/intuition#iswindowvisible
+.. _ItemAddress(): ../autodocs/intuition#itemaddress
+.. _LateIntuiInit(): ../autodocs/intuition#lateintuiinit
+.. _LendMenus(): ../autodocs/intuition#lendmenus
+.. _LockIBase(): ../autodocs/intuition#lockibase
+.. _LockPubScreen(): ../autodocs/intuition#lockpubscreen
+.. _LockPubScreenList(): ../autodocs/intuition#lockpubscreenlist
+.. _MakeClass(): ../autodocs/intuition#makeclass
+.. _MakeScreen(): ../autodocs/intuition#makescreen
+.. _ModifyIDCMP(): ../autodocs/intuition#modifyidcmp
+.. _ModifyProp(): ../autodocs/intuition#modifyprop
+.. _MoveScreen(): ../autodocs/intuition#movescreen
+.. _MoveWindow(): ../autodocs/intuition#movewindow
+.. _MoveWindowInFrontOf(): ../autodocs/intuition#movewindowinfrontof
+.. _NewModifyProp(): ../autodocs/intuition#newmodifyprop
+.. _NewObjectA(): ../autodocs/intuition#newobjecta
+.. _NextObject(): ../autodocs/intuition#nextobject
+.. _NextPubScreen(): ../autodocs/intuition#nextpubscreen
+.. _ObtainGIRPort(): ../autodocs/intuition#obtaingirport
+.. _OffGadget(): ../autodocs/intuition#offgadget
+.. _OffMenu(): ../autodocs/intuition#offmenu
+.. _OnGadget(): ../autodocs/intuition#ongadget
+.. _OnMenu(): ../autodocs/intuition#onmenu
+.. _OpenScreen(): ../autodocs/intuition#openscreen
+.. _OpenScreenTagList(): ../autodocs/intuition#openscreentaglist
+.. _OpenWindow(): ../autodocs/intuition#openwindow
+.. _OpenWindowTagList(): ../autodocs/intuition#openwindowtaglist
+.. _OpenWorkBench(): ../autodocs/intuition#openworkbench
+.. _PointInImage(): ../autodocs/intuition#pointinimage
+.. _PrintIText(): ../autodocs/intuition#printitext
+.. _PubScreenStatus(): ../autodocs/intuition#pubscreenstatus
+.. _QueryOverscan(): ../autodocs/intuition#queryoverscan
+.. _RefreshGList(): ../autodocs/intuition#refreshglist
+.. _RefreshGadgets(): ../autodocs/intuition#refreshgadgets
+.. _RefreshWindowFrame(): ../autodocs/intuition#refreshwindowframe
+.. _ReleaseGIRPort(): ../autodocs/intuition#releasegirport
+.. _RemakeDisplay(): ../autodocs/intuition#remakedisplay
+.. _RemoveClass(): ../autodocs/intuition#removeclass
+.. _RemoveGList(): ../autodocs/intuition#removeglist
+.. _RemoveGadget(): ../autodocs/intuition#removegadget
+.. _ReportMouse(): ../autodocs/intuition#reportmouse
+.. _Request(): ../autodocs/intuition#request
+.. _ResetMenuStrip(): ../autodocs/intuition#resetmenustrip
+.. _RethinkDisplay(): ../autodocs/intuition#rethinkdisplay
+.. _ScreenDepth(): ../autodocs/intuition#screendepth
+.. _ScreenPosition(): ../autodocs/intuition#screenposition
+.. _ScreenToBack(): ../autodocs/intuition#screentoback
+.. _ScreenToFront(): ../autodocs/intuition#screentofront
+.. _ScrollWindowRaster(): ../autodocs/intuition#scrollwindowraster
+.. _ScrollWindowRasterNoFill(): ../autodocs/intuition#scrollwindowrasternofill
+.. _SendIntuiMessage(): ../autodocs/intuition#sendintuimessage
+.. _SetAttrsA(): ../autodocs/intuition#setattrsa
+.. _SetDMRequest(): ../autodocs/intuition#setdmrequest
+.. _SetDefaultPubScreen(): ../autodocs/intuition#setdefaultpubscreen
+.. _SetDefaultScreenFont(): ../autodocs/intuition#setdefaultscreenfont
+.. _SetEditHook(): ../autodocs/intuition#setedithook
+.. _SetGadgetAttrsA(): ../autodocs/intuition#setgadgetattrsa
+.. _SetIPrefs(): ../autodocs/intuition#setiprefs
+.. _SetMenuStrip(): ../autodocs/intuition#setmenustrip
+.. _SetMouseQueue(): ../autodocs/intuition#setmousequeue
+.. _SetPointer(): ../autodocs/intuition#setpointer
+.. _SetPointerBounds(): ../autodocs/intuition#setpointerbounds
+.. _SetPrefs(): ../autodocs/intuition#setprefs
+.. _SetPubScreenModes(): ../autodocs/intuition#setpubscreenmodes
+.. _SetWindowPointerA(): ../autodocs/intuition#setwindowpointera
+.. _SetWindowTitles(): ../autodocs/intuition#setwindowtitles
+.. _ShowTitle(): ../autodocs/intuition#showtitle
+.. _ShowWindow(): ../autodocs/intuition#showwindow
+.. _SizeWindow(): ../autodocs/intuition#sizewindow
+.. _StartScreenNotifyTagList(): ../autodocs/intuition#startscreennotifytaglist
+.. _SysReqHandler(): ../autodocs/intuition#sysreqhandler
+.. _TimedDisplayAlert(): ../autodocs/intuition#timeddisplayalert
+.. _UnlockIBase(): ../autodocs/intuition#unlockibase
+.. _UnlockPubScreen(): ../autodocs/intuition#unlockpubscreen
+.. _UnlockPubScreenList(): ../autodocs/intuition#unlockpubscreenlist
+.. _ViewAddress(): ../autodocs/intuition#viewaddress
+.. _ViewPortAddress(): ../autodocs/intuition#viewportaddress
+.. _WBenchToBack(): ../autodocs/intuition#wbenchtoback
+.. _WBenchToFront(): ../autodocs/intuition#wbenchtofront
+.. _WindowAction(): ../autodocs/intuition#windowaction
+.. _WindowLimits(): ../autodocs/intuition#windowlimits
+.. _WindowToBack(): ../autodocs/intuition#windowtoback
+.. _WindowToFront(): ../autodocs/intuition#windowtofront
+.. _ZipWindow(): ../autodocs/intuition#zipwindow

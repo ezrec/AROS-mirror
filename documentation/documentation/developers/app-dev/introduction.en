@@ -4,7 +4,7 @@ AROS Application Development Manual
 
 :Authors:   Staf Verhaegen, Sebastian Rittau, Stefan Rieken, Matt Parsons,
             Adam Chodorowski, Fabio Alemagna, Matthias Rustler
-:Copyright: Copyright ¦ 1995-2006, The AROS Development Team
+:Copyright: Copyright (C) 1995-2008, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Unfinished; integration started (looong way left to go).
@@ -60,10 +60,10 @@ Compiling in the AROS source tree with the build system
 
 If you have your own source tree of AROS and compiled AROS there, you can use the
 AROS build system to compile programs for AROS. You do this by putting your
-program source code somewhere in the AROS tree. The 'local' directory in main AROS
-source directory can be used to put the code in. Let's first make a directory
+program source code somewhere in the AROS tree. Let's first make a directory
 there, assuming you are in the top AROS source directory::
 
+  % mkdir local
   % mkdir local/helloworld
 
 Put the helloworld.c file there and an additional file for the build
@@ -87,8 +87,8 @@ not-trivial dependencies. It is explained in a `separate chapter`__
 __ buildsystem
 
 
-Compiling on Linux with GCC
----------------------------
+Compiling on Linux with the "fake" GCC
+--------------------------------------
 
 Under AROS/hosted you are using a configured version of the Linux GCC. 
 There is a difference depending on whether you use the compiled version
@@ -120,6 +120,16 @@ AROS versions of ld, ranlib, the catalog compiler Flexcat, etc.
 .. Note:: If you are using i386-linux-aros-strip you have to add the parameters
    `--strip-unneeded --remove-section .comment`. Otherwise strip will create 
    corrupt binaries.
+
+Compiling on Linux or Windows with a cross-compiler
+---------------------------------------------------
+
+You can download a cross-compiler from `here`__.
+
+Advantage over the fake compiler is, that you can additionally compile C++ sources. After
+installing you should update the sys-includes and the libs from a recent SDK.
+
+__ http://www.zerohero.se/cross/aros.html
 
 
 Compiling for native-i386
@@ -173,7 +183,7 @@ later in detail.
 
 + `exec.library` is the most important library. It is responsible for handling
   the most basic things like managing `tasks` (i.e. programs), `memory`,
-  `libraries` and many other  things.
+  `libraries` and many other things.
 
 + `utility.library` implements very important mechanisms for "talking" to
   libraries: `taglists` that will be discussed later in this chapter and `hooks`.
@@ -185,11 +195,48 @@ later in detail.
 + `intuition.library` handles `graphical user interfaces (GUIs)`. With Intuition
   you can create `windows` and `gadgets` and handle them accordingly. There are
   other libraries, which work on top of intuition and provide more sophisticated
-  and more specialised GUI functions. Examples are `gadtools.library`, which
+  and more specialised GUI functions. Examples are `muimaster.library`, which
   implements some more complicated gadgets and `asl.library`, which provides
   file- and other `requesters`.
 
-FIXME: add zune, graphics, ...
++ `graphics.library` contains drawing functions.
+
++ `cybergraphics.library` extents graphics.library by functions for true- and high-
+  color bitmaps.
+
++ `muimaster.library` provides an advanced object oriented mechanism for gadgets
+  (a.k.a widgets on other platforms). Therefore it replaces fully or partially
+  `gadtools.library`, `boopsi.library` `reqtools.library` `asl.library` and
+  `intuition.library`.
+
++ `datatypes.library` implements an object oriented interface to all kind of multimedia
+  data.
+
++ `asl.library` handles requesters for fonts, files and screens.
+
++ `locale.library` makes AROS international. It provides functions for loading catalogs
+  with translated strings.
+
++ `keymap.library` translates between keyboard and ANSI codes.
+
++ `workbench.library` and `icon.library` contain support functions for the AROS GUI
+  "Wanderer".
+
++ `diskfont.library` loads fonts from disk.
+
++ `commodities.library` is for programs which watch and manipulate the input event
+  stream, e.g. programs which react on hotkeys.
+
++ `iffparse.library` supports reading and writing of data which is written in IFF format.
+  This format is mainly used for configuration data and graphics/music/text.
+
++ `bsdsocket.library` for network support.
+
++ `rexxsupport.library` and `rexxsyslib.library` have are usefull when you want extend
+  your programs with the AREXX macro language.
+
+Additionally there are some libraries for very specific tasks which aren't mentioned here.
+
 
 How AROS libraries work
 .......................

@@ -3,7 +3,7 @@ AROS Application Development Manual
 ===================================
 
 :Authors:   Matthias Rustler
-:Copyright: Copyright © 2007, The AROS Development Team
+:Copyright: Copyright (C) 2007-2008, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Unfinished
@@ -58,16 +58,14 @@ only with LUT modes. For a full access you need the functions from the
 `cybergraphics library <../autodocs/cgfx>`__.
 
 ======================== ===========================================================================
-`GetBitMapAttr()`_       query bitmap attributes. Use this instead of peeking in bitmap structure
-`AllocBitMap()`_         allocate and initialize bitmap
-`AllocScreenBitMap()`_   (private AROS function)
-`SetFrontBitMap()`_      (private AROS function)
-`InitBitMap()`_          initialize bitmap
-`FreeBitMap()`_          free resources allocated by a bitmap
-`AllocRaster()`_         allocate a single bitplane
-`FreeRaster()`_          free a single bitplane
-`CopySBitMap()`_         syncronize super-bitmap (see Intuition)
-`SyncSBitMap()`_         syncronize super-bitmap
+`GetBitMapAttr()`_       Query bitmap attributes. Use this instead of peeking in bitmap structure
+`AllocBitMap()`_         Allocate and initialize bitmap
+`InitBitMap()`_          Initialize bitmap
+`FreeBitMap()`_          Free resources allocated by a bitmap
+`AllocRaster()`_         Allocate a single bitplane
+`FreeRaster()`_          Free a single bitplane
+`CopySBitMap()`_         Syncronize super-bitmap (see Intuition)
+`SyncSBitMap()`_         Syncronize super-bitmap
 ======================== ===========================================================================
 
 
@@ -113,7 +111,7 @@ Drawing modes
 - COMPLEMENT: for each set bit the state in the target is reversed
 - INVERSVID: is used for text rendering
     - JAM1|INVERSVID: text appears as transparent letter surrounded by foreground color
-    - JAM2|INVERSVID: like previos, but letter is drawn with background color.
+    - JAM2|INVERSVID: like previous, but letter is drawn with background color.
 
 TODO: check whether the drawing modes are really available.
 
@@ -144,28 +142,28 @@ Reset of area pattern::
     SetAfPt(&rastPort, NULL, 0);
 
 ===================== ======================================================================
-`CloneRastPort()`_    copy rastport
-`CreateRastPort()`_   create rastport
-`InitRastPort()`_     initialize rastport
-`DeinitRastPort()`_   deinitialize rastport
-`FreeRastPort()`_     free rastport
-`SetAPen()`_          set primary pen
-`GetAPen()`_          get primary pen
-`SetBPen()`_          set secondary pen
-`GetBPen()`_          get secondary pen
-SetOPen()             set area outline pen and switch on outline mode (macro in graphics/gfxmacros.h)
-`SetOutlinePen()`_    set area outline pen
-`GetOutlinePen()`_    get area outline pen
-BNDRYOFF()            switch off area outline mode (macro in graphics/gfxmacros.h)
-`SetDrMd()`_          set drawing mode
-`GetDrMd()`_          get drawing mode
-SetDrPt()             set line pattern (macro in graphics/gfxmacros.h)
-SetAfPt()             set area pattern (macro in graphics/gfxmacros.h)
-`SetABPenDrMd()`_     set primary pen, secondary pen and drawing mode in one step
-`SetRPAttrsA()`_      set misc. drawing attributes
-`GetRPAttrsA()`_      get misc. drawing attributes
-`InitTmpRas()`_       initialize a TmpRas structure.
-`SetWriteMask()`_     set write mask
+`CloneRastPort()`_    Copy rastport
+`CreateRastPort()`_   Create rastport
+`InitRastPort()`_     Initialize rastport
+`DeinitRastPort()`_   Deinitialize rastport
+`FreeRastPort()`_     Free rastport
+`SetAPen()`_          Set primary pen
+`GetAPen()`_          Get primary pen
+`SetBPen()`_          Set secondary pen
+`GetBPen()`_          Get secondary pen
+SetOPen()             Set area outline pen and switch on outline mode (macro in graphics/gfxmacros.h)
+`SetOutlinePen()`_    Get area outline pen
+`GetOutlinePen()`_    Get area outline pen
+BNDRYOFF()            Switch off area outline mode (macro in graphics/gfxmacros.h)
+`SetDrMd()`_          Set drawing mode
+`GetDrMd()`_          Get drawing mode
+SetDrPt()             Set line pattern (macro in graphics/gfxmacros.h)
+SetAfPt()             Set area pattern (macro in graphics/gfxmacros.h)
+`SetABPenDrMd()`_     Set primary pen, secondary pen and drawing mode in one step
+`SetRPAttrsA()`_      Set misc. drawing attributes
+`GetRPAttrsA()`_      Get misc. drawing attributes
+`InitTmpRas()`_       Initialize a TmpRas structure.
+`SetWriteMask()`_     Set write mask
 ===================== ======================================================================
 
 
@@ -179,17 +177,17 @@ For the `Flood()`_ function you have to attach a TmpRas to the rastport as
 explained unter `Area operations`_.
 
 ======================= =============================================================================
-`Move()`_               change pen position
-`Draw()`_               draw a line from current pen position to given coordinate
-`DrawEllipse()`_        draw an ellipse
-DrawCircle()            draw a circle (macro in graphics/gfxmacros.h)
-`PolyDraw()`_           draw connected lines from an array of points
-`WritePixel()`_         write a single pixel
-`ReadPixel()`_          read the pen value of a pixel
-`EraseRect()`_          fill rectangular area with current backfill hook (TODO: what's this?)
-`SetRast()`_            fill entire drawing area with given pen
-`RectFill()`_           fill a rectangular area with the current rastport settings
-`Flood()`_              flood fill an arbitrary shape
+`Move()`_               Change pen position
+`Draw()`_               Draw a line from current pen position to given coordinate
+`DrawEllipse()`_        Draw an ellipse
+DrawCircle()            Draw a circle (macro in graphics/gfxmacros.h)
+`PolyDraw()`_           Draw connected lines from an array of points
+`WritePixel()`_         Write a single pixel
+`ReadPixel()`_          Read the pen value of a pixel
+`EraseRect()`_          Fill rectangular area with current backfill hook (TODO: what's this?)
+`SetRast()`_            Fill entire drawing area with given pen
+`RectFill()`_           Fill a rectangular area with the current rastport settings
+`Flood()`_              Flood fill an arbitrary shape
 ======================= =============================================================================
 
 
@@ -197,25 +195,25 @@ Data moving
 -----------
 
 ========================== ===========================================================================
-`BltBitMap()`_             copy rectangular area
-`BltBitMapRastPort()`_     copy rectangular area
-`BltRastPortBitMap()`_     copy rectangular area (AROS extension)
-`ClipBlit()`_              copy rectangular area with layers and clip rects. Use this if you want
+`BltBitMap()`_             Copy rectangular area
+`BltBitMapRastPort()`_     Copy rectangular area
+`BltRastPortBitMap()`_     Copy rectangular area (AROS extension)
+`ClipBlit()`_              Copy rectangular area with layers and clip rects. Use this if you want
                            to blit into a window
-`BltClear()`_              set a memory block to zero. On classic Amigas this block must be in
+`BltClear()`_              Set a memory block to zero. On classic Amigas this block must be in
                            chip ram.
-`BltMaskBitMapRastPort()`_ copy rectangular area with using a mask
-`BltPattern()`_            draw a rectangular pattern into a bitmap
-`BltTemplate()`_           draw a rectangular pattern into a bitmap
-`BitMapScale()`_           copy a rectangular area and change its size
-`ScalerDiv()`_             helper function for `BitMapScale()`_
-`ScrollRaster()`_          move rectangular area within a bitmap
-`ScrollRasterBF()`_        move rectangular area, fill free space with `EraseRect()`_
-`WriteChunkyPixels()`_     write rectangular area from an array with pen values
-`WritePixelArray8()`_      write rectangular area from an array with pen values
-`ReadPixelArray8()`_       read rectangular area into memory
-`WritePixelLine8()`_       write horiz. line from an array with pen values
-`ReadPixelLine8()`_        read horiz. line from into memory
+`BltMaskBitMapRastPort()`_ Copy rectangular area with using a mask
+`BltPattern()`_            Draw a rectangular pattern into a bitmap
+`BltTemplate()`_           Draw a rectangular pattern into a bitmap
+`BitMapScale()`_           Copy a rectangular area and change its size
+`ScalerDiv()`_             Helper function for `BitMapScale()`_
+`ScrollRaster()`_          Move rectangular area within a bitmap
+`ScrollRasterBF()`_        Move rectangular area, fill free space with `EraseRect()`_
+`WriteChunkyPixels()`_     Write rectangular area from an array with pen values
+`WritePixelArray8()`_      Write rectangular area from an array with pen values
+`ReadPixelArray8()`_       Read rectangular area into memory
+`WritePixelLine8()`_       Write horiz. line from an array with pen values
+`ReadPixelLine8()`_        Read horiz. line from an array into memory
 ========================== ===========================================================================
 
 
@@ -246,12 +244,12 @@ you want to draw into::
     rastPort->TmpRas = &tmpRas;
 
 ================== =============================================================================
-`InitArea()`_      initalizes the AreaInfo
-`AreaMove()`_      closes open polygon and sets start point for a new polygon. You don't have to
+`InitArea()`_      Initalizes the AreaInfo
+`AreaMove()`_      Closes open polygon and sets start point for a new polygon. You don't have to
                    connect the end point to the start point.
-`AreaDraw()`_      add point to vector buffer
-`AreaEllipse()`_   add filled ellipse to vector buffer
-`AreaEnd()`_       start filling operation
+`AreaDraw()`_      Add point to vector buffer
+`AreaEllipse()`_   Add filled ellipse to vector buffer
+`AreaEnd()`_       Start filling operation
 ================== =============================================================================
 
 
@@ -259,26 +257,26 @@ Text
 ----
 
 ==================  =============================================================================
-`OpenFont()`_       open a font which is in the system font list. Better use OpenDiskFont()
+`OpenFont()`_       Open a font which is in the system font list. Better use OpenDiskFont()
                     from the diskfont library.
-`CloseFont()`_      close font, which had been opened by `OpenFont()`_ or OpenDiskFont()
-`AddFont()`_        add font to the system list
-`RemFont()`_        remove font from system list
-`SetFont()`_        set current font of rastport
-`AskFont()`_        get TextAttr for current rastport font
-`SetSoftStyle()`_   set soft style bits of current font
-`AskSoftStyle()`_   get soft style bits of current font
-`Text()`_           render text at current pen position
-`ClearEOL()`_       clear from current position to end of line
-`ClearScreen()`_    clear from current position to end of rastport
-`ExtendFont()`_     extend struct TextFont by a struct ExtendFont
-`StripFont()`_      remove tf_Extension from a font
-`TextLength()`_     calculate the width of a string in pixels. You can use `TextExtent()`_
+`CloseFont()`_      Close font, which had been opened by `OpenFont()`_ or OpenDiskFont()
+`AddFont()`_        Add font to the system list
+`RemFont()`_        Remove font from system list
+`SetFont()`_        Set current font of rastport
+`AskFont()`_        Get TextAttr for current rastport font
+`SetSoftStyle()`_   Set soft style bits of current font
+`AskSoftStyle()`_   Get soft style bits of current font
+`Text()`_           Render text at current pen position
+`ClearEOL()`_       Clear from current position to end of line
+`ClearScreen()`_    Clear from current position to end of rastport
+`ExtendFont()`_     Extend struct TextFont by a struct ExtendFont
+`StripFont()`_      Remove tf_Extension from a font
+`TextLength()`_     Calculate the width of a string in pixels. You can use `TextExtent()`_
                     if you need more detailed information
-`TextExtent()`_     fill TextExtend structure with information about current font
-`FontExtent()`_     fill TextExtend structure with information about given font
-`TextFit()`_        count the number of characters which will fit into given bounds
-`WeighTAMatch()`_   checks how well two different fonts match
+`TextExtent()`_     Fill TextExtend structure with information about current font
+`FontExtent()`_     Fill TextExtend structure with information about given font
+`TextFit()`_        Count the number of characters which will fit into given bounds
+`WeighTAMatch()`_   Checks how well two different fonts match
 ==================  =============================================================================
 
 
@@ -324,153 +322,162 @@ We have to differ two cases:
 
 
 =================== =============================================================================
-`GetColorMap()`_    allocate and initialize colormap
-`FreeColorMap()`_   free colormap
-`AttachPalExtra()`_ allocate and attach palette sharing structure to a colormap
-`FindColor()`_      find closest matching color
-`ObtainBestPenA()`_ search for closest color match or allocate a new pen
-`ObtainPen()`_      obtain a free palette entry
-`ReleasePen()`_     frees a pen created with `ObtainPen()`_ or `ObtainBestPenA()`_
-`GetRGB32()`_       read a series of RGB values from a colormap
-`GetRGB4()`_        reads RGB value of a single color register (deprecated)
-`LoadRGB32()`_      set a series of RGB values for this viewport
-`LoadRGB4()`_       set RGB color values from an array (deprecated)
-`SetMaxPen()`_      set maximum pen value for a rastport
-`SetRGB32()`_       set one color register for a viewport
-`SetRGB32CM()`_     set one color register for a colormap
-`SetRGB4()`_        set one color register for a viewport (deprecated)
-`SetRGB4CM()`_      set one color register for a colormap (deprecated)
+`GetColorMap()`_    Allocate and initialize colormap
+`FreeColorMap()`_   Free colormap
+`AttachPalExtra()`_ Allocate and attach palette sharing structure to a colormap
+`FindColor()`_      Find closest matching color
+`ObtainBestPenA()`_ Search for closest color match or allocate a new pen
+`ObtainPen()`_      Obtain a free palette entry
+`ReleasePen()`_     Frees a pen created with `ObtainPen()`_ or `ObtainBestPenA()`_
+`GetRGB32()`_       Read a series of RGB values from a colormap
+`GetRGB4()`_        Reads RGB value of a single color register (deprecated)
+`LoadRGB32()`_      Set a series of RGB values for this viewport
+`LoadRGB4()`_       Set RGB color values from an array (deprecated)
+`SetMaxPen()`_      Set maximum pen value for a rastport
+`SetRGB32()`_       Set one color register for a viewport
+`SetRGB32CM()`_     Set one color register for a colormap
+`SetRGB4()`_        Set one color register for a viewport (deprecated)
+`SetRGB4CM()`_      Set one color register for a colormap (deprecated)
 =================== =============================================================================
 
 
 Animation
 ---------
 
-- `AddAnimOb()`_
-- `AddBob()`_
-- `AddVSprite()`_
-- `AllocDBufInfo()`_
-- `AllocSpriteDataA()`_
-- `Animate()`_
-- `ChangeExtSpriteA()`_
-- `ChangeSprite()`_
-- `ChangeVPBitMap()`_
-- `DoCollision()`_
-- `DrawGList()`_
-- `FreeDBufInfo()`_
-- `FreeGBuffers()`_
-- `FreeSprite()`_
-- `FreeSpriteData()`_
-- `GetExtSpriteA()`_
-- `GetGBuffers()`_
-- `GetSprite()`_
-- `InitGMasks()`_
-- `InitGels()`_
-- `InitMasks()`_
-- `MoveSprite()`_
-- `RemIBob()`_
-- `RemVSprite()`_
-- `SetCollision()`_
-- `SortGList()`_
+======================== ===========================================================================
+`AddAnimOb()`_           Add AnimObject to linked list
+`AddBob()`_              Add Bob to GEL list
+`AddVSprite()`_          Add VSprite to GEL list
+`AllocSpriteDataA()`_    Allocate sprite data and convert from a bitmap
+`FreeSpriteData()`_      Free data allocated by AllocSpriteDataA()
+`Animate()`_             Processes all AnimObs in the current animation list
+`ChangeExtSpriteA()`_    Change extented sprite
+`ChangeSprite()`_        Change simple sprite
+`DoCollision()`_         Test all GEL for collisions
+`DrawGList()`_           Draw all GEL
+`GetGBuffers()`_         Allocate all buffers for an AnimOb
+`FreeGBuffers()`_        Release memory which was allocated by GetGBuffers()
+`SortGList()`_           Sort GEL list by y and x coordinates
+`GetSprite()`_           Get a simple sprite
+`FreeSprite()`_          Free sprite
+`GetExtSpriteA()`_       Attempt to allocate one of the 8 sprites
+`InitGMasks()`_          Initialize all masks of an AnimOb
+`InitGels()`_            Initialize GEL list
+`InitMasks()`_           Initialize BoderLine and CollMaks of a VSprite
+`MoveSprite()`_          Move sprite relative to viewport
+RemBob()                 Remove a Bob from GEL list (macro)
+`RemIBob()`_             Remove a Bob from GEL list and RastPort
+`RemVSprite()`_          Remove VSprite from GEL list
+`SetCollision()`_        Set which is called at collisions
+`AllocDBufInfo()`_       Alloc structure for multi-buffered animation
+`FreeDBufInfo()`_        Free multi-buffer information
+`ChangeVPBitMap()`_      Change buffer
+======================== ===========================================================================
 
 
 Layers
 ------
 
-- `AndRectRect()`_
-- `AndRectRegion()`_
-- `AndRectRegionND()`_
-- `AndRegionRegion()`_
-- `AndRegionRegionND()`_
-- `AreRegionsEqual()`_
-- `AttemptLockLayerRom()`_
-- `ClearRectRegion()`_
-- `ClearRectRegionND()`_
-- `ClearRegion()`_
-- `ClearRegionRegion()`_
-- `ClearRegionRegionND()`_
-- `CopyRegion()`_
-- `DisposeRegion()`_
-- `IsPointInRegion()`_
-- `NewRectRegion()`_
-- `NewRegion()`_
-- `OrRectRegion()`_
-- `OrRectRegionND()`_
-- `OrRegionRegion()`_
-- `OrRegionRegionND()`_
-- `ScrollRegion()`_
-- `SetRegion()`_
-- `SwapRegions()`_
-- `XorRectRegion()`_
-- `XorRectRegionND()`_
-- `XorRegionRegion()`_
-- `XorRegionRegionND()`_
+======================== ===========================================================================
+`AndRectRect()`_
+`AndRectRegion()`_
+`AndRectRegionND()`_
+`AndRegionRegion()`_
+`AndRegionRegionND()`_
+`AreRegionsEqual()`_
+`AttemptLockLayerRom()`_
+`ClearRectRegion()`_
+`ClearRectRegionND()`_
+`ClearRegion()`_
+`ClearRegionRegion()`_
+`ClearRegionRegionND()`_
+`CopyRegion()`_
+`DisposeRegion()`_
+`IsPointInRegion()`_
+`NewRectRegion()`_
+`NewRegion()`_
+`OrRectRegion()`_
+`OrRectRegionND()`_
+`OrRegionRegion()`_
+`OrRegionRegionND()`_
+`ScrollRegion()`_
+`SetRegion()`_
+`SwapRegions()`_
+`XorRectRegion()`_
+`XorRectRegionND()`_
+`XorRegionRegion()`_
+`XorRegionRegionND()`_
+======================== ===========================================================================
 
 
 Display database
 ----------------
 
-- `BestModeIDA()`_
-- `CloseMonitor()`_
-- `CoerceMode()`_
-- `FindDisplayInfo()`_
-- `GetVPModeID()`_
-- `GfxAssociate()`_
-- `GfxFree()`_
-- `GfxLookUp()`_
-- `GfxNew()`_
-- `ModeNotAvailable()`_
-- `NextDisplayInfo()`_
-- `OpenMonitor()`_
+======================== ===========================================================================
+`BestModeIDA()`_         Search a mode for the given properties
+`OpenMonitor()`_         Open named monitor specification
+`CloseMonitor()`_        Close monitor specification
+`CoerceMode()`_          ViewPort mode coercion
+`FindDisplayInfo()`_     Get display information from the database
+`NextDisplayInfo()`_     Iterate displayinfo
+`ModeNotAvailable()`_    Check availability of a display ID
+`GetVPModeID()`_         Get display ID from ViewPort
+`GfxNew()`_              Allocate a graphics extended data structure
+`GfxFree()`_             Free structure allocated by GfxNew()_
+`GfxAssociate()`_        Associate a graphics extended node with a pointer
+`GfxLookUp()`_           Find a graphics extended node by pointer
+======================== ===========================================================================
 
 
 Blitter
 -------
 
-- `DisownBlitter()`_
-- `OwnBlitter()`_
-- `QBSBlit()`_
-- `QBlit()`_
-- `WaitBlit()`_
+======================== ===========================================================================
+`DisownBlitter()`_
+`OwnBlitter()`_
+`QBSBlit()`_
+`QBlit()`_
+`WaitBlit()`_
+======================== ===========================================================================
 
 
 Copper
 ------
 
-- `CBump()`_
-- `CMove()`_
-- `CWait()`_
-- `FreeCopList()`_
-- `FreeCprList()`_
-- `FreeVPortCopLists()`_
-- `MrgCop()`_
-- `UCopperListInit()`_
+======================== ===========================================================================
+`CBump()`_
+`CMove()`_
+`CWait()`_
+`FreeCopList()`_
+`FreeCprList()`_
+`FreeVPortCopLists()`_
+`MrgCop()`_
+`UCopperListInit()`_
+======================== ===========================================================================
 
 
 Misc
 ----
 
-- `CalcIVG()`_
-- `ConvertPixelsA()`_
-- `InitGfxHidd()`_
-- `InitVPort()`_
-- `InitView()`_
-- `LateGfxInit()`_
-- `LoadView()`_
-- `LockLayerRom()`_
-- `MakeVPort()`_
-- `MouseCoordsRelative()`_
-- `ScrollVPort()`_
-- `SetChipRev()`_
-- `SetPointerPos()`_
-- `SetPointerShape()`_
-- `SetRGBConversionFunctionA()`_
-- `ShowImminentReset()`_
-- `UnlockLayerRom()`_
-- `VBeamPos()`_
-- `VideoControl()`_
-- `WaitBOVP()`_
-- `WaitTOF()`_
+============================== ======================================================================
+`SetRGBConversionFunctionA()`_ Replace pixel conversion routine
+`ConvertPixelsA()`_            Convert pixels from one pixfmt to another
+`InitVPort()`_                 Initialize ViewPort structure
+`InitView()`_                  Initialize View structure
+`LoadView()`_                  Create current display from coprocessor instruction list
+`LockLayerRom()`_              Lock layer structure
+`UnlockLayerRom()`_            Unlock layer structure
+`MakeVPort()`_                 Create copper list for viewport
+`ScrollVPort()`_               Scroll viewport
+`SetChipRev()`_                Switch on chipset features
+`VBeamPos()`_                  Get vertical beam position
+`VideoControl()`_              Modify viewport's colormap
+`WaitBOVP()`_                  Wait till vertical beam reached bottom of viewport
+`WaitTOF()`_                   Wait for vertical blank
+`CalcIVG()`_                   Calculate the number of blank lines above a ViewPort
+============================== ======================================================================
+
+
 
 .. _AddAnimOb(): ../autodocs/graphics#addanimob
 .. _AddBob(): ../autodocs/graphics#addbob

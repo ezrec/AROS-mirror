@@ -1,0 +1,91 @@
+===================================
+AROS Application Development Manual
+===================================
+
+:Authors:   Matthias Rustler
+:Copyright: Copyright (C) 2008, The AROS Development Team
+:Version:   $Revision: 26249 $
+:Date:      $Date: 2007-06-01 01:18:33 +0200 (Fr, 01 Jun 2007) $
+:Status:    Unfinished
+:ToDo:      Write introductions and examples
+
+`Index <index>`_
+
+.. Warning::
+
+   This document is not finished! It is highly likely that many parts are
+   out-of-date, contain incorrect information or are simply missing
+   altogether. If you want to help rectify this, please contact us.
+
+   
+------------
+icon.library
+------------
+
+.. Contents::
+
+
+DiskObject
+----------
+
+=============================== ==========================================================
+`NewDiskObject()`_
+`GetDiskObject()`_
+`GetDiskObjectNew()`_
+`PutDiskObject()`_
+`GetIconTagList()`_
+`PutIconTagList()`_
+`GetDefDiskObject()`_
+`PutDefDiskObject()`_
+`DupDiskObjectA()`_
+`DeleteDiskObject()`_           Deletes .info file from disk
+`FreeDiskObject()`_             Free the DiskObject created by GetDiskObject()_
+`GetIconRectangleA()`_
+`IconControlA()`_
+`LayoutIconA()`_
+`DrawIconStateA()`_
+`ChangeToSelectedIconColor()`_
+`BumpRevision()`_              
+=============================== ==========================================================
+
+
+Tooltypes
+---------
+
+=============================== ==========================================================
+`FindToolType()`_               Search for an entry in the tooltype array
+`MatchToolValue()`_             Search in an entry for a value
+=============================== ==========================================================
+
+
+Misc.
+-----
+
+=============================== ==========================================================
+`AddFreeList()`_
+`FreeFreeList()`_
+=============================== ==========================================================
+
+
+
+.. _AddFreeList(): ../autodocs/icon#addfreelist
+.. _BumpRevision(): ../autodocs/icon#bumprevision
+.. _ChangeToSelectedIconColor(): ../autodocs/icon#changetoselectediconcolor
+.. _DeleteDiskObject(): ../autodocs/icon#deletediskobject
+.. _DrawIconStateA(): ../autodocs/icon#drawiconstatea
+.. _DupDiskObjectA(): ../autodocs/icon#dupdiskobjecta
+.. _FindToolType(): ../autodocs/icon#findtooltype
+.. _FreeDiskObject(): ../autodocs/icon#freediskobject
+.. _FreeFreeList(): ../autodocs/icon#freefreelist
+.. _GetDefDiskObject(): ../autodocs/icon#getdefdiskobject
+.. _GetDiskObject(): ../autodocs/icon#getdiskobject
+.. _GetDiskObjectNew(): ../autodocs/icon#getdiskobjectnew
+.. _GetIconRectangleA(): ../autodocs/icon#geticonrectanglea
+.. _GetIconTagList(): ../autodocs/icon#geticontaglist
+.. _IconControlA(): ../autodocs/icon#iconcontrola
+.. _LayoutIconA(): ../autodocs/icon#layouticona
+.. _MatchToolValue(): ../autodocs/icon#matchtoolvalue
+.. _NewDiskObject(): ../autodocs/icon#newdiskobject
+.. _PutDefDiskObject(): ../autodocs/icon#putdefdiskobject
+.. _PutDiskObject(): ../autodocs/icon#putdiskobject
+.. _PutIconTagList(): ../autodocs/icon#puticontaglist

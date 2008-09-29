@@ -338,3 +338,382 @@ secondary error, use::
 ``code`` is the new secondary error-code and the old secondary error-code is
 returned.
 
+
+
+Stream I/O
+----------
+
+============================= ======================================================
+`Open()`_
+`OpenFromLock()`_
+`Close()`_
+`FGetC()`_
+`UnGetC()`_
+`FGets()`_
+`FPutC()`_
+`FPuts()`_
+`FRead()`_
+`FWrite()`_
+`Flush()`_
+`PutStr()`_
+`Read()`_
+`WaitForChar()`_
+`Seek()`_
+`LockRecord()`_
+`LockRecords()`_
+`UnLockRecord()`_
+`UnLockRecords()`_
+`VFPrintf()`_
+`VFWritef()`_
+`VPrintf()`_
+`SetVBuf()`_
+`Write()`_
+`WriteChars()`_
+`SelectInput()`_
+`SelectOutput()`_
+`SelectError()`_
+`Input()`_
+`Output()`_
+`Error()`_
+`AddBuffers()`_
+`ChangeMode()`_
+`Pipe()`_
+============================= ======================================================
+
+
+Files/Directories
+-----------------
+
+============================= ======================================================
+`AssignAdd()`_
+`AssignLate()`_
+`AssignLock()`_
+`AssignPath()`_
+`RemAssignList()`_
+`CreateDir()`_
+`CurrentDir()`_
+`ParentDir()`_
+`ParentOfFH()`_
+`DeleteFile()`_
+`Rename()`_
+`Relabel()`_
+`SetVar()`_
+`FindVar()`_
+`GetVar()`_
+`ScanVars()`_
+`DeleteVar()`_
+`MakeLink()`_
+`ReadLink()`_
+`SetFileSize()`_
+`SetComment()`_
+`SetFileDate()`_
+`SetProtection()`_
+`SetOwner()`_
+`AddPart()`_
+`FilePart()`_
+`PathPart()`_
+`SplitName()`_
+`Format()`_
+`StartNotify()`_
+`EndNotify()`_
+============================= ======================================================
+
+
+Examination
+-----------
+
+============================= ======================================================
+`Lock()`_
+`DupLock()`_
+`NameFromLock()`_
+`ExAll()`_
+`ExAllEnd()`_
+`ExNext()`_
+`Examine()`_
+`MatchEnd()`_
+`MatchFirst()`_
+`MatchNext()`_
+`MatchPattern()`_
+`MatchPatternNoCase()`_
+`ParsePattern()`_
+`ParsePatternNoCase()`_
+`SameDevice()`_
+`SameLock()`_
+`Info()`_
+============================= ======================================================
+
+
+Packets
+-------
+
+============================= ======================================================
+`AbortPkt()`_
+`DoPkt()`_
+`ReplyPkt()`_
+`SendPkt()`_
+`WaitPkt()`_
+============================= ======================================================
+
+
+DOS entries
+-----------
+
+============================= ======================================================
+`AddDosEntry()`_
+`RemDosEntry()`_
+`FreeDosEntry()`_
+`AllocDosObject()`_
+`FreeDosObject()`_
+`AttemptLockDosList()`_
+`FindDosEntry()`_
+`LockDosList()`_
+`UnLockDosList()`_
+`MakeDosEntry()`_
+`NextDosEntry()`_
+`IsFileSystem()`_
+`IsInteractive()`_
+`Inhibit()`_
+============================= ======================================================
+
+
+Error
+-----
+
+============================= ======================================================
+`DisplayError()`_
+`ErrorReport()`_
+`Fault()`_
+`PrintFault()`_
+`IoErr()`_
+`SetIoErr()`_
+============================= ======================================================
+
+
+Arguments
+---------
+
+============================= ======================================================
+`ReadArgs()`_
+`ReadItem()`_
+`FindArg()`_
+`FreeArgs()`_
+`GetArgStr()`_
+`SetArgStr()`_
+============================= ======================================================
+
+
+Process
+-------
+
+============================= ======================================================
+`CreateNewProc()`_
+`CreateProc()`_
+`AddSegment()`_
+`NewLoadSeg()`_
+`LoadSeg()`_
+`UnLoadSeg()`_
+`InternalLoadSeg()`_
+`InternalUnLoadSeg()`_
+`FindSegment()`_
+`RemSegment()`_
+`DeviceProc()`_
+`CheckSignal()`_
+`SetProgramName()`_
+`GetProgramName()`_
+`SetCurrentDirName()`_
+`GetCurrentDirName()`_
+`GetProgramDir()`_
+`SetProgramDir()`_
+`RunCommand()`_
+`SystemTagList()`_
+`Execute()`_
+`Exit()`_
+`GetDeviceProc()`_
+`FreeDeviceProc()`_
+`GetConsoleTask()`_
+`SetConsoleTask()`_
+`SetFileSysTask()`_
+`GetFileSysTask()`_
+`MaxCli()`_
+`Cli()`_
+`CliInitNewcli()`_
+`CliInitRun()`_
+`FindCliProc()`_
+`SetPrompt()`_
+`GetPrompt()`_
+`SetMode()`_
+============================= ======================================================
+
+
+Misc.
+-----
+
+============================= ======================================================
+`Delay()`_
+`CompareDates()`_
+`DateStamp()`_
+`DateToStr()`_
+`DosGetLocalizedString()`_
+`DosGetString()`_
+`StrToDate()`_
+`StrToLong()`_
+============================= ======================================================
+
+
+.. _AbortPkt(): ../autodocs/dos#abortpkt
+.. _AddBuffers(): ../autodocs/dos#addbuffers
+.. _AddDosEntry(): ../autodocs/dos#adddosentry
+.. _AddPart(): ../autodocs/dos#addpart
+.. _AddSegment(): ../autodocs/dos#addsegment
+.. _AllocDosObject(): ../autodocs/dos#allocdosobject
+.. _AssignAdd(): ../autodocs/dos#assignadd
+.. _AssignLate(): ../autodocs/dos#assignlate
+.. _AssignLock(): ../autodocs/dos#assignlock
+.. _AssignPath(): ../autodocs/dos#assignpath
+.. _AttemptLockDosList(): ../autodocs/dos#attemptlockdoslist
+.. _ChangeMode(): ../autodocs/dos#changemode
+.. _CheckSignal(): ../autodocs/dos#checksignal
+.. _Cli(): ../autodocs/dos#cli
+.. _CliInitNewcli(): ../autodocs/dos#cliinitnewcli
+.. _CliInitRun(): ../autodocs/dos#cliinitrun
+.. _Close(): ../autodocs/dos#close
+.. _CompareDates(): ../autodocs/dos#comparedates
+.. _CreateDir(): ../autodocs/dos#createdir
+.. _CreateNewProc(): ../autodocs/dos#createnewproc
+.. _CreateProc(): ../autodocs/dos#createproc
+.. _CurrentDir(): ../autodocs/dos#currentdir
+.. _DateStamp(): ../autodocs/dos#datestamp
+.. _DateToStr(): ../autodocs/dos#datetostr
+.. _Delay(): ../autodocs/dos#delay
+.. _DeleteFile(): ../autodocs/dos#deletefile
+.. _DeleteVar(): ../autodocs/dos#deletevar
+.. _DeviceProc(): ../autodocs/dos#deviceproc
+.. _DisplayError(): ../autodocs/dos#displayerror
+.. _DoPkt(): ../autodocs/dos#dopkt
+.. _DosGetLocalizedString(): ../autodocs/dos#dosgetlocalizedstring
+.. _DosGetString(): ../autodocs/dos#dosgetstring
+.. _DupLock(): ../autodocs/dos#duplock
+.. _EndNotify(): ../autodocs/dos#endnotify
+.. _Error(): ../autodocs/dos#error
+.. _ErrorReport(): ../autodocs/dos#errorreport
+.. _ExAll(): ../autodocs/dos#exall
+.. _ExAllEnd(): ../autodocs/dos#exallend
+.. _ExNext(): ../autodocs/dos#exnext
+.. _Examine(): ../autodocs/dos#examine
+.. _Execute(): ../autodocs/dos#execute
+.. _Exit(): ../autodocs/dos#exit
+.. _FGetC(): ../autodocs/dos#fgetc
+.. _FGets(): ../autodocs/dos#fgets
+.. _FPutC(): ../autodocs/dos#fputc
+.. _FPuts(): ../autodocs/dos#fputs
+.. _FRead(): ../autodocs/dos#fread
+.. _FWrite(): ../autodocs/dos#fwrite
+.. _Fault(): ../autodocs/dos#fault
+.. _FilePart(): ../autodocs/dos#filepart
+.. _FindArg(): ../autodocs/dos#findarg
+.. _FindCliProc(): ../autodocs/dos#findcliproc
+.. _FindDosEntry(): ../autodocs/dos#finddosentry
+.. _FindSegment(): ../autodocs/dos#findsegment
+.. _FindVar(): ../autodocs/dos#findvar
+.. _Flush(): ../autodocs/dos#flush
+.. _Format(): ../autodocs/dos#format
+.. _FreeArgs(): ../autodocs/dos#freeargs
+.. _FreeDeviceProc(): ../autodocs/dos#freedeviceproc
+.. _FreeDosEntry(): ../autodocs/dos#freedosentry
+.. _FreeDosObject(): ../autodocs/dos#freedosobject
+.. _GetArgStr(): ../autodocs/dos#getargstr
+.. _GetConsoleTask(): ../autodocs/dos#getconsoletask
+.. _GetCurrentDirName(): ../autodocs/dos#getcurrentdirname
+.. _GetDeviceProc(): ../autodocs/dos#getdeviceproc
+.. _GetFileSysTask(): ../autodocs/dos#getfilesystask
+.. _GetProgramDir(): ../autodocs/dos#getprogramdir
+.. _GetProgramName(): ../autodocs/dos#getprogramname
+.. _GetPrompt(): ../autodocs/dos#getprompt
+.. _GetVar(): ../autodocs/dos#getvar
+.. _Info(): ../autodocs/dos#info
+.. _Inhibit(): ../autodocs/dos#inhibit
+.. _Input(): ../autodocs/dos#input
+.. _InternalLoadSeg(): ../autodocs/dos#internalloadseg
+.. _InternalUnLoadSeg(): ../autodocs/dos#internalunloadseg
+.. _IoErr(): ../autodocs/dos#ioerr
+.. _IsFileSystem(): ../autodocs/dos#isfilesystem
+.. _IsInteractive(): ../autodocs/dos#isinteractive
+.. _LoadSeg(): ../autodocs/dos#loadseg
+.. _Lock(): ../autodocs/dos#lock
+.. _LockDosList(): ../autodocs/dos#lockdoslist
+.. _LockRecord(): ../autodocs/dos#lockrecord
+.. _LockRecords(): ../autodocs/dos#lockrecords
+.. _MakeDosEntry(): ../autodocs/dos#makedosentry
+.. _MakeLink(): ../autodocs/dos#makelink
+.. _MatchEnd(): ../autodocs/dos#matchend
+.. _MatchFirst(): ../autodocs/dos#matchfirst
+.. _MatchNext(): ../autodocs/dos#matchnext
+.. _MatchPattern(): ../autodocs/dos#matchpattern
+.. _MatchPatternNoCase(): ../autodocs/dos#matchpatternnocase
+.. _MaxCli(): ../autodocs/dos#maxcli
+.. _NameFromLock(): ../autodocs/dos#namefromlock
+.. _NewLoadSeg(): ../autodocs/dos#newloadseg
+.. _NextDosEntry(): ../autodocs/dos#nextdosentry
+.. _Open(): ../autodocs/dos#open
+.. _OpenFromLock(): ../autodocs/dos#openfromlock
+.. _Output(): ../autodocs/dos#output
+.. _ParentDir(): ../autodocs/dos#parentdir
+.. _ParentOfFH(): ../autodocs/dos#parentoffh
+.. _ParsePattern(): ../autodocs/dos#parsepattern
+.. _ParsePatternNoCase(): ../autodocs/dos#parsepatternnocase
+.. _PathPart(): ../autodocs/dos#pathpart
+.. _Pipe(): ../autodocs/dos#pipe
+.. _PrintFault(): ../autodocs/dos#printfault
+.. _PutStr(): ../autodocs/dos#putstr
+.. _Read(): ../autodocs/dos#read
+.. _ReadArgs(): ../autodocs/dos#readargs
+.. _ReadItem(): ../autodocs/dos#readitem
+.. _ReadLink(): ../autodocs/dos#readlink
+.. _Relabel(): ../autodocs/dos#relabel
+.. _RemAssignList(): ../autodocs/dos#remassignlist
+.. _RemDosEntry(): ../autodocs/dos#remdosentry
+.. _RemSegment(): ../autodocs/dos#remsegment
+.. _Rename(): ../autodocs/dos#rename
+.. _ReplyPkt(): ../autodocs/dos#replypkt
+.. _RunCommand(): ../autodocs/dos#runcommand
+.. _SameDevice(): ../autodocs/dos#samedevice
+.. _SameLock(): ../autodocs/dos#samelock
+.. _ScanVars(): ../autodocs/dos#scanvars
+.. _Seek(): ../autodocs/dos#seek
+.. _SelectError(): ../autodocs/dos#selecterror
+.. _SelectInput(): ../autodocs/dos#selectinput
+.. _SelectOutput(): ../autodocs/dos#selectoutput
+.. _SendPkt(): ../autodocs/dos#sendpkt
+.. _SetArgStr(): ../autodocs/dos#setargstr
+.. _SetComment(): ../autodocs/dos#setcomment
+.. _SetConsoleTask(): ../autodocs/dos#setconsoletask
+.. _SetCurrentDirName(): ../autodocs/dos#setcurrentdirname
+.. _SetFileDate(): ../autodocs/dos#setfiledate
+.. _SetFileSize(): ../autodocs/dos#setfilesize
+.. _SetFileSysTask(): ../autodocs/dos#setfilesystask
+.. _SetIoErr(): ../autodocs/dos#setioerr
+.. _SetMode(): ../autodocs/dos#setmode
+.. _SetOwner(): ../autodocs/dos#setowner
+.. _SetProgramDir(): ../autodocs/dos#setprogramdir
+.. _SetProgramName(): ../autodocs/dos#setprogramname
+.. _SetPrompt(): ../autodocs/dos#setprompt
+.. _SetProtection(): ../autodocs/dos#setprotection
+.. _SetVBuf(): ../autodocs/dos#setvbuf
+.. _SetVar(): ../autodocs/dos#setvar
+.. _SplitName(): ../autodocs/dos#splitname
+.. _StartNotify(): ../autodocs/dos#startnotify
+.. _StrToDate(): ../autodocs/dos#strtodate
+.. _StrToLong(): ../autodocs/dos#strtolong
+.. _SystemTagList(): ../autodocs/dos#systemtaglist
+.. _UnGetC(): ../autodocs/dos#ungetc
+.. _UnLoadSeg(): ../autodocs/dos#unloadseg
+.. _UnLockDosList(): ../autodocs/dos#unlockdoslist
+.. _UnLockRecord(): ../autodocs/dos#unlockrecord
+.. _UnLockRecords(): ../autodocs/dos#unlockrecords
+.. _VFPrintf(): ../autodocs/dos#vfprintf
+.. _VFWritef(): ../autodocs/dos#vfwritef
+.. _VPrintf(): ../autodocs/dos#vprintf
+.. _WaitForChar(): ../autodocs/dos#waitforchar
+.. _WaitPkt(): ../autodocs/dos#waitpkt
+.. _Write(): ../autodocs/dos#write
+.. _WriteChars(): ../autodocs/dos#writechars
