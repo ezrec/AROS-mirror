@@ -3,7 +3,7 @@ AROS Documentation Manual
 =========================
 
 :Authors:   Adam Chodorowski, Matthias Rustler 
-:Copyright: Copyright ¦ 1995-2006, The AROS Development Team
+:Copyright: Copyright (C) 1995-2008, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Work in progress.
@@ -93,7 +93,7 @@ In order to change or write documentation you need a checkout of the
 .. Note::
 
     Both the subversion archive and the included directory with the user and 
-    developer manuals both have the name 'documentation'. Don't mix them up.
+    developer manuals have the name 'documentation'. Don't mix them up.
 
 Subdirectories
 --------------
@@ -135,17 +135,133 @@ The names and paths of the pictures are hard-coded in the python script
 Feel free to make a feature request in the developer mailing list if 
 you want this to be changed.
 
+Autodocs
+--------
+
+Autodocs are a method to embed documentation in source code. It is mainly used
+for Shell commands and functions of runtime and linker libraries. 
+
+The rules for an autodoc block are:
+
++ Block must start with a slash and at least 6 stars. (it's usually a line with
+  77 stars.)
+
++ Block ends with at least 7 stars. (again usually 77 stars.)
+
++ You can find the rules for library functions in the document about
+  system development.
+
++ Autodocs for Shell functions are similar. Here is an example for the
+  function "Alias"::
+
+    /*****************************************************************************
+
+        NAME
+
+            Alias
+
+        SYNOPSIS
+
+            NAME,STRING/F
+
+        LOCATION
+
+            Sys:c
+
+        FUNCTION
+
+            Alias allows you to create an alternate name for other DOS commands.
+            If Alias is used with no parameters, it will display the current
+            list of Aliases defined within the current shell.
+
+            Using a pair of square brackets within an alias allows you to
+            provide the 'new' dos command with parameters.
+
+            If no parameters are specified, the current list of aliases are
+            displayed.
+
+        INPUTS
+
+            NAME    - The name of the alias to set.
+
+            STRING  - The value of the alias NAME.
+
+        RESULT
+
+            Standard DOS error codes.
+
+        NOTES
+
+        EXAMPLE
+
+            Alias DF "Type [] number"
+
+                By typing "DF S:Shell-Startup" in the shell, you are actually
+                executing the command "Type S:Shell-Startup number". This will
+                display the contents of the S:Shell-Startup file in the shell
+                with line numbers on the left hand side.
+
+        BUGS
+
+        SEE ALSO
+
+            Unalias
+
+        INTERNALS
+
+    ******************************************************************************/
+
++ The titles (NAME, SYNOPSIS etc.) must be written in upper case and must start
+  at column 5.
+
++ The text blocks should start at column 9.
+
++ If you want to mark a function as internal put the letter "i" somewhere within
+  the 6 stars in the initial comment line. This way the autodoc is ignored by
+  the build script.
+
++ The "SEE ALSO" chapter is parsed and hyperlinks are created. The rules are:
+
+  - The entries must be separated by comma or newline.
+
+  - A name only is interpreted as Shell command.
+  
+  - A name with round brackets (e.g. Draw()) is interpreted as function which
+    exists in the same library.
+    
+  - An entry like "exec.library/FreeMem()" causes a link to the document of
+    the given library.
+    
+  - Anything else is just interpreted as plain text.
+
+
+The autodocs are translated to the ReST format by the script "autodoc.py".
+This script can be called from the main build script like this::
+
+    ./build alldocs
+
+The script must have access to the AROS source code. Thus the AROS sources
+and the documentation archive must be checked out like this::
+
+    AROS
+        ...
+        workbench
+        ...
+        documentation
+            scripts
+
+
 Commit
 -------
 
 Before you commit the new or modified documents you should `build`__ both the
 HTML and WWW targets locally. Look for error messages and fix them. Check the
 result in a web browser. Normally, the changes are applied to http://www.aros.org
-within some hours after a commit.
+within one day after a commit.
 
 __ building_
 
- 
+
 Technical notes
 ===============
 
