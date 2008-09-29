@@ -26,6 +26,9 @@ If you use a relative path take care that the script is called by the main build
 from one directory level above.
 """
 
+# TODO:
+# - xref links to function macros
+# - differ between libraries, devices and linklibs
 
 import glob
 import os
@@ -85,7 +88,7 @@ blacklist = (   "buildeasyrequestargs.c", "buildeasyrequestargs_morphos.c",
                 "setiprefs.c", "setiprefs_morphos.c",
                 "sysreqhandler.c", "sysreqhandler_morphos.c",
                 "match_old.c","dosdoio.c","exec_util.c","strerror_rom.c",
-                "runprozess.c")
+                "runprocess.c")
 
 
 class autodoc:
@@ -537,6 +540,9 @@ class libdoclist:
             for doc in self.doclist:
                 doc.write(filehandle, titles)
                 doc.write_xref(filehandle, "../../users/shell", ".")
+                # write transition
+                if doc is not self.doclist[-1]:
+                    filehandle.write("----------\n\n")
             filehandle.close()
 
 
@@ -609,7 +615,7 @@ def create_lib_docs():
     filehandle = open(os.path.join(targetdir, "index.en"), "w")
     print "Creating index.en"
     filehandle.write("======================\n")
-    filehandle.write("Autodocs for Libraries\n")
+    filehandle.write("Autodocs for Modules\n")
     filehandle.write("======================\n\n")
     filehandle.write(".. This document is automatically generated. Don't edit it!\n\n")
 
