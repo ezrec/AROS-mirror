@@ -21,7 +21,7 @@ Synopsis
 ::
 
 
-     NAME/M,ALL/S
+     NAME/M/A,ALL/S
 
 
 Location
@@ -29,7 +29,7 @@ Location
 ::
 
 
-     Sys:C
+     C:
 
 
 Function

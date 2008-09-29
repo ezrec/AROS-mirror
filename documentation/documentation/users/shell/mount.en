@@ -71,6 +71,6 @@ Example
 
 
      Mount DEVS:FAT0    
-     (Mounts a FAT device defined on SYS:Devs/FAT0 file)
+     (Mounts a FAT device defined in the DEVS:FAT0 file)
 
 

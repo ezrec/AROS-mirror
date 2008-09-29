@@ -1,0 +1,55 @@
+==========
+Decoration
+==========
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <date>`_ `Next <delay>`_ 
+
+---------------
+
+Name
+~~~~
+::
+
+
+     Decoration
+
+
+Synopsis
+~~~~~~~~
+::
+
+
+     (N/A)
+
+
+Location
+~~~~~~~~
+::
+
+
+     Sys:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     Allows user definable skins for the intuition windows, menus and gadgets.
+     
+
+Notes
+~~~~~
+::
+
+
+     Must be launched before Wanderer - usually in the S:startup-sequence
+     
+
+See also
+~~~~~~~~
+
+`IPREFS <iprefs>`_   
+
