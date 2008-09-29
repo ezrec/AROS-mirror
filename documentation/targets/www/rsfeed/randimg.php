@@ -29,15 +29,8 @@ http://www.domain.com/file.php?path=<bad path>
 And by doing so potentially access sensetive files.
 */
 function random_image($dir,$w,$h) {
-    //$dir2 = '/home/groups/a/ar/aros/htdocs'.$dir;
-    /* This icky part gets current directory and checks for images/thubs there.
-       If not found, change to one dir up and blindly assume that it's there.
-    */
-    $curdir = getcwd();
-    if (!is_dir($curdir . '/' . $dir)) {
-      chdir("..");
-    }
-    $dir2 = getcwd() . $dir;
+    $dir2 = '/home/groups/a/ar/aros/htdocs'.$dir;
+    //echo $dir2;
     if(file_exists($dir2) AND !ereg("\.\.",$dir) AND !ereg("\.ht",$dir)) {
         $d = dir("$dir2");
         $i = 0;
