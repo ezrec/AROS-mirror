@@ -236,7 +236,7 @@ def format( root, directory, template, lang, extension, parent = None ):
     # First, format this category.
 
     content_CategoryItemsOriginalAPI = Table( bgcolor = '#999999', width = '98%', cellpadding = 2 )
-    content_CategoryItemsAROSAPI = Table( bgcolor = '#999999', width = '98%', cellpadding = 2 )
+    content_CategoryItemsExtensionAPI = Table( bgcolor = '#999999', width = '98%', cellpadding = 2 )
     #FIXME: GRRR: how do you create UL in html_?
     content_Comments = '<ul>'
 
@@ -245,8 +245,8 @@ def format( root, directory, template, lang, extension, parent = None ):
         row = formatRowCategoryItem( item, extension )
         if item.apiversion == CategoryItem.API_Original:
             content_CategoryItemsOriginalAPI.append( row )
-        elif item.apiversion == CategoryItem.API_AROS:
-            content_CategoryItemsAROSAPI.append( row )
+        elif item.apiversion == CategoryItem.API_Extension:
+            content_CategoryItemsExtensionAPI.append( row )
 
     # Format category comments                
     for item in root.comments:
@@ -262,31 +262,16 @@ def format( root, directory, template, lang, extension, parent = None ):
 
         contentstr += '\n<br/>' + str( formatLegend( ) )
 
-        content_CategoriesAmigaOS = Table( bgcolor = '#999999', width = '98%', cellpadding = 2 )
-        content_CategoriesExtensions = Table( bgcolor = '#999999', width = '98%', cellpadding = 2 )
+        content_Categories = Table( bgcolor = '#999999', width = '98%', cellpadding = 2 )
 
         # Format subcategories
         for item in root.subcategories:
             row = formatRowCategory( item, extension )
-            if item.categorytype == Category.TYPE_AmigaOS:
-                content_CategoriesAmigaOS.append( row )
-            elif item.categorytype == Category.TYPE_Extensions:
-                content_CategoriesExtensions.append( row )
+            content_Categories.append( row )
+        
+        if len( content_Categories ) > 0:
+            contentstr += '\n<br>' + str ( content_Categories )
             
-        if len( content_CategoriesAmigaOS ) > 0:
-            contentstr += '\n<h2 align="center">' + root.description + ' (AmigaOS) </h2>' \
-                + str ( content_CategoriesAmigaOS )
-
-        if len( content_CategoriesExtensions ) > 0:
-            contentstr += '\n<h2 align="center">' + root.description + ' (Extensions) </h2>' \
-                + str ( content_CategoriesExtensions )
-
-        if len( content_CategoryItemsOriginalAPI ) > 0:
-            contentstr += '\n<h2 align="center">Original API</h2>' + str( content_CategoryItemsOriginalAPI )
-
-        if len( content_CategoryItemsAROSAPI ) > 0:
-            contentstr += '\n<h2 align="center">AROS Extensions API</h2>' + str( content_CategoryItemsAROSAPI )
-
     else:
         # Different formatting for main page (show two levels of subcategories)
         
@@ -295,29 +280,21 @@ def format( root, directory, template, lang, extension, parent = None ):
 
         for item in root.subcategories:
             contentstr += '\n<br/>' + str( formatHeader( item ) )
-            content_CategoriesAmigaOS = Table( bgcolor = '#999999', width = '98%', cellpadding = 2 )
-            content_CategoriesExtensions = Table( bgcolor = '#999999', width = '98%', cellpadding = 2 )
+            content_Categories = Table( bgcolor = '#999999', width = '98%', cellpadding = 2 )
+
             for subitem in item.subcategories:
                 row = formatRowCategory( subitem, extension )
-                if item.categorytype == Category.TYPE_AmigaOS:
-                    content_CategoriesAmigaOS.append( row )
-                elif item.categorytype == Category.TYPE_Extensions:
-                    content_CategoriesExtensions.append( row )
+                content_Categories.append( row )
+            
+            if len( content_Categories ) > 0:
+                contentstr += '\n<br>' + str ( content_Categories )
 
-            if len( content_CategoriesAmigaOS ) > 0:
-                contentstr += '\n<br>' + str ( content_CategoriesAmigaOS )
+    # Add category items
+    if len( content_CategoryItemsOriginalAPI ) > 0:
+        contentstr += '\n<h2 align="center">Original API</h2>' + str( content_CategoryItemsOriginalAPI )
 
-            if len( content_CategoriesExtensions ) > 0:
-                contentstr += '\n<br>' + str ( content_CategoriesExtensions )           
-
-        # Items having non-existing category will be propagated to front page
-        if len( content_CategoryItemsOriginalAPI ) > 0:
-            contentstr += '\n<h2 align="center">UNASSIGNED ENTRIES (Original API)</h2>'\
-                + str( content_CategoryItemsOriginalAPI )
-
-        if len( content_CategoryItemsAROSAPI ) > 0:
-            contentstr += '\n<h2 align="center">UNASSIGNED ENTRIES (AROS Extensions API)</h2>' \
-                + str( content_CategoryItemsAROSAPI )
+    if len( content_CategoryItemsExtensionAPI ) > 0:
+        contentstr += '\n<h2 align="center">Extensions API</h2>' + str( content_CategoryItemsExtensionAPI )
 
 
     # Add comments

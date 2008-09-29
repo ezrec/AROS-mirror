@@ -1,87 +1,88 @@
-#CATEGORIES_BEGIN (basecategory, category, description, type, last update date)
-amigaos;libraries;Libraries;1;2008-08-24
-amigaos;classes;Classes;1;2003-08-26
-amigaos;devices;Devices;1;2008-08-24
-amigaos;resources;Resources;1;2008-09-23
-aros;hidds;HIDDs;2;2003-08-26
-amigaos;programs;Programs;1;2003-08-26
-amigaos;linklibs;Linklibs;1;2008-09-24
-aros;libraries_ext;Libraries;2;2003-08-26
-libraries_ext;clib;Arosc.library;2;2003-08-26
-linklibs;alib;Amiga.lib;1;2008-09-24
-linklibs;debuglib;Debug.lib;1;2008-09-24
-linklibs;ddebuglib;DDebug.lib;1;2008-09-24
-libraries;intuition;Intuition.library;1;2008-07-19
-libraries;graphics;Graphics.library;1;2008-07-19
-libraries;dos;Dos.library;1;2008-07-19
-libraries;translator;Translator.library;1;2008-07-22
-libraries;utility;Utility.library;1;2008-07-23
-libraries;wb;Workbench.library;1;2008-07-23
-libraries;rexxsupport;RexxSupport.library;1;2008-07-24
-libraries;rexxsyslib;RexxSysLib.library;1;2008-07-22
-libraries;realtime;RealTime.library;1;2008-07-21
-libraries;nonvolatile;NonVolatile.library;1;2008-07-21
-libraries;nvdisk;NVDisk.library;1;2008-07-21
-libraries;mathtrans;MathTrans.library;1;2008-07-20
-libraries;icon;Icon.library;1;2008-07-19
-libraries;iffparse;IFFParse.library;1;2008-07-19
-libraries;keymap;Keymap.library;1;2008-07-19
-libraries;layers;Layers.library;1;2008-07-19
-libraries;locale;Locale.library;1;2008-07-19
-libraries;lowlevel;LowLevel.library;1;2008-07-19
-libraries;mathffp;MathFFP.library;1;2008-07-19
-libraries;mathieeedoubbas;MathIEEEDoubleBase.library;1;2008-07-21
-libraries;mathieeedoubtrans;MathIEEEDoubleTrans.library;1;2008-08-24
-libraries;mathieeesingbas;MathIEEESingleBase.library;1;2008-07-21
-libraries;mathieeesingtrans;MathIEEESingleTrans.library;1;2008-07-21
-libraries;gadtools;GadTools.library;1;2008-07-19
-libraries;expansion;Expansion.library;1;2008-07-19
-libraries;exec;Exec.library;1;2008-07-19
-libraries;diskfont;Diskfont.library;1;2008-07-19
-libraries;datatypes;Datatypes.library;1;2008-07-19
-libraries;commodities;Commodities.library;1;2008-07-19
-libraries;camd;Camd.library;1;2008-07-19
-libraries;bullet;Bullet.library;1;2008-07-19
-libraries;asl;Asl.library;1;2008-07-19
-libraries;amigaguide;AmigaGuide.library;1;2008-07-19
-libraries_ext;reqtools;ReqTools.library;2;2008-07-25
-classes;gadgets;Gadgets;1;2003-08-26
-classes;DataType;Datatypes;1;2003-08-26
-classes;dtclass;DTClass;1;2003-08-26
-classes;boopsi;BOOPSI Classes;1;2003-08-26
-gadgets;gradientslider;Gradientslider Gadget;1;2003-08-26
-gadgets;colorwheel;Colorwheel Gadget;1;2003-08-26
-devices;input;Input.device;1;2008-08-05
-devices;timer;Timer.device;1;2008-08-09
-devices;console;Console.device;1;2008-08-04
-devices;ramdrive;Ramdrive.device;1;2008-08-07
-devices;printer;Printer.device;1;2008-08-07
-devices;audio;Audio.device;1;2008-08-06
-devices;cd_dev;Cd.device;1;2008-08-06
-devices;clipboard;Clipboard.device;1;2008-08-05
-devices;gameport;Gameport.device;1;2008-08-04
-devices;keyboard;Keyboard.device;1;2008-08-05
-devices;narrator;Narrator.device;1;2008-08-07
-devices;parallel;Parallel.device;1;2008-08-07
-devices;serial;Serial.device;1;2008-08-09
-devices;trackdisk;Trackdisk.device;1;2008-08-24
-devices;scsi;Scsi.device;1;2008-08-10
-hidds;HID;Design a new HIDD;2;2003-08-26
-hidds;HIDG;Graphics.HIDD;2;2003-08-26
-programs;prefs;Preferences;1;2003-08-26
-programs;system;System;1;2003-08-26
-programs;utilities;Utilities;1;2003-08-26
-programs;c;Shell commands;1;2003-08-26
-utilities;multiview;MultiView;1;2003-08-26
-system;rexxmast;RexxMast Program;1;2003-08-26
-resources;potgo;Potgo.resource;1;2008-09-23
-resources;misc;Misc.resource;1;2008-09-23
-resources;disk;Disk.resource;1;2008-09-23
-resources;cia;Cia.resource;1;2008-09-23
-resources;cardres;Card.resource;1;2008-09-23
-resources;battmem;Battmem.resource;1;2008-09-23
-resources;battclock;Battclock.resource;1;2008-09-23
-resources;filesysres;FileSystem.resource;1;2008-09-23
+#CATEGORIES_BEGIN (basecategory, category, description, last update date)
+amigaos;libraries;Libraries;2008-08-24
+amigaos;classes;Classes;2003-08-26
+amigaos;devices;Devices;2008-08-24
+amigaos;resources;Resources;2008-09-23
+aros;hidds;HIDDs;2003-08-26
+amigaos;programs;Programs;2003-08-26
+amigaos;linklibs;Linklibs;2008-09-24
+aros;libraries_aros;Libraries;2003-08-26
+3rdparty;libraries_3rd;Libraries;2008-07-25
+libraries_aros;clib;Arosc.library;2003-08-26
+linklibs;alib;Amiga.lib;2008-09-24
+linklibs;debuglib;Debug.lib;2008-09-24
+linklibs;ddebuglib;DDebug.lib;2008-09-24
+libraries;intuition;Intuition.library;2008-07-19
+libraries;graphics;Graphics.library;2008-07-19
+libraries;dos;Dos.library;2008-07-19
+libraries;translator;Translator.library;2008-07-22
+libraries;utility;Utility.library;2008-07-23
+libraries;wb;Workbench.library;2008-07-23
+libraries;rexxsupport;RexxSupport.library;2008-07-24
+libraries;rexxsyslib;RexxSysLib.library;2008-07-22
+libraries;realtime;RealTime.library;2008-07-21
+libraries;nonvolatile;NonVolatile.library;2008-07-21
+libraries;nvdisk;NVDisk.library;2008-07-21
+libraries;mathtrans;MathTrans.library;2008-07-20
+libraries;icon;Icon.library;2008-07-19
+libraries;iffparse;IFFParse.library;2008-07-19
+libraries;keymap;Keymap.library;2008-07-19
+libraries;layers;Layers.library;2008-07-19
+libraries;locale;Locale.library;2008-07-19
+libraries;lowlevel;LowLevel.library;2008-07-19
+libraries;mathffp;MathFFP.library;2008-07-19
+libraries;mathieeedoubbas;MathIEEEDoubleBase.library;2008-07-21
+libraries;mathieeedoubtrans;MathIEEEDoubleTrans.library;2008-08-24
+libraries;mathieeesingbas;MathIEEESingleBase.library;2008-07-21
+libraries;mathieeesingtrans;MathIEEESingleTrans.library;2008-07-21
+libraries;gadtools;GadTools.library;2008-07-19
+libraries;expansion;Expansion.library;2008-07-19
+libraries;exec;Exec.library;2008-07-19
+libraries;diskfont;Diskfont.library;2008-07-19
+libraries;datatypes;Datatypes.library;2008-07-19
+libraries;commodities;Commodities.library;2008-07-19
+libraries;camd;Camd.library;2008-07-19
+libraries;bullet;Bullet.library;2008-07-19
+libraries;asl;Asl.library;2008-07-19
+libraries;amigaguide;AmigaGuide.library;2008-07-19
+libraries_3rd;reqtools;ReqTools.library;2008-07-25
+classes;gadgets;Gadgets;2003-08-26
+classes;DataType;Datatypes;2003-08-26
+classes;dtclass;DTClass;2003-08-26
+classes;boopsi;BOOPSI Classes;2003-08-26
+gadgets;gradientslider;Gradientslider Gadget;2003-08-26
+gadgets;colorwheel;Colorwheel Gadget;2003-08-26
+devices;input;Input.device;2008-08-05
+devices;timer;Timer.device;2008-08-09
+devices;console;Console.device;2008-08-04
+devices;ramdrive;Ramdrive.device;2008-08-07
+devices;printer;Printer.device;2008-08-07
+devices;audio;Audio.device;2008-08-06
+devices;cd_dev;Cd.device;2008-08-06
+devices;clipboard;Clipboard.device;2008-08-05
+devices;gameport;Gameport.device;2008-08-04
+devices;keyboard;Keyboard.device;2008-08-05
+devices;narrator;Narrator.device;2008-08-07
+devices;parallel;Parallel.device;2008-08-07
+devices;serial;Serial.device;2008-08-09
+devices;trackdisk;Trackdisk.device;2008-08-24
+devices;scsi;Scsi.device;2008-08-10
+hidds;HID;Design a new HIDD;2003-08-26
+hidds;HIDG;Graphics.HIDD;2003-08-26
+programs;prefs;Preferences;2003-08-26
+programs;system;System;2003-08-26
+programs;utilities;Utilities;2003-08-26
+programs;c;Shell commands;2003-08-26
+utilities;multiview;MultiView;2003-08-26
+system;rexxmast;RexxMast Program;2003-08-26
+resources;potgo;Potgo.resource;2008-09-23
+resources;misc;Misc.resource;2008-09-23
+resources;disk;Disk.resource;2008-09-23
+resources;cia;Cia.resource;2008-09-23
+resources;cardres;Card.resource;2008-09-23
+resources;battmem;Battmem.resource;2008-09-23
+resources;battclock;Battclock.resource;2008-09-23
+resources;filesysres;FileSystem.resource;2008-09-23
 #CATEGORIES_END
 #CATEGORY_ITEMS_BEGIN (category, description, architecture, api version, status)
 boopsi;BOOL Gadgets;1;1;2
@@ -1085,8 +1086,8 @@ asl;AslRequest;1;1;2
 asl;FreeAslRequest;1;1;2
 asl;FreeFileRequest;1;1;2
 asl;RequestFile;1;1;2
-asl;AbortAslRequest;1;1;2
-asl;ActivateAslRequest;1;1;1
+asl;AbortAslRequest;1;2;2
+asl;ActivateAslRequest;1;2;1
 camd;AddMidiLinkA;1;1;2
 camd;CloseMidiDevice;1;1;2
 camd;CreateMidiA;1;1;2
@@ -1211,15 +1212,15 @@ icon;GetDiskObjectNew;1;1;2
 icon;MatchToolValue;1;1;2
 icon;PutDefDiskObject;1;1;2
 icon;PutDiskObject;1;1;2
-icon;ChangeToSelectedIconColor;1;1;2
-icon;DrawIconStateA;1;1;1
-icon;DupDiskObjectA;1;1;1
-icon;GetIconRectangleA;1;1;1
-icon;GetIconTagList;1;1;1
-icon;IconControlA;1;1;1
-icon;LayoutIconA;1;1;0
-icon;NewDiskObject;1;1;0
-icon;PutIconTagList;1;1;1
+icon;ChangeToSelectedIconColor;1;2;2
+icon;DrawIconStateA;1;2;1
+icon;DupDiskObjectA;1;2;1
+icon;GetIconRectangleA;1;2;1
+icon;GetIconTagList;1;2;1
+icon;IconControlA;1;2;1
+icon;LayoutIconA;1;2;0
+icon;NewDiskObject;1;2;0
+icon;PutIconTagList;1;2;1
 iffparse;AllocIFF;1;1;2
 iffparse;AllocLocalItem;1;1;2
 iffparse;CloseClipboard;1;1;2
@@ -1478,17 +1479,17 @@ translator;Translate;1;1;0
 wb;AddAppIconA;1;1;1
 wb;AddAppMenuItemA;1;1;1
 wb;AddAppWindowA;1;1;1
-wb;AddAppWindowDropZoneA;1;1;1
-wb;ChangeWorkbenchSelectionA;1;1;0
-wb;CloseWorkbenchObjectA;1;1;0
-wb;MakeWorkbenchObjectVisibleA;1;1;0
-wb;OpenWorkbenchObjectA;1;1;1
+wb;AddAppWindowDropZoneA;1;2;1
 wb;RemoveAppIcon;1;1;1
 wb;RemoveAppMenuItem;1;1;1
 wb;RemoveAppWindow;1;1;1
-wb;RemoveAppWindowDropZone;1;1;1
 wb;WBInfo;1;1;1
-wb;WorkbenchControlA;1;1;1
+wb;ChangeWorkbenchSelectionA;1;2;0
+wb;CloseWorkbenchObjectA;1;2;0
+wb;MakeWorkbenchObjectVisibleA;1;2;0
+wb;OpenWorkbenchObjectA;1;2;1
+wb;RemoveAppWindowDropZone;1;2;1
+wb;WorkbenchControlA;1;2;1
 wb;GetNextAppIcon;1;2;2
 wb;RegisterWorkbench;1;2;2
 wb;SendAppWindowMessage;1;2;2
@@ -1982,8 +1983,9 @@ ddebuglib;KCmpStr;1;1;0
 #COMMENTS_BEGIN (category, comment)
 gameport;Gameport.device supports only mouse
 bullet;Bullet.library interface is implemented in freetype.library
-aros;AROS Extensions section does not contain all subsections
-everything;AROS Extensions section does not contain all subsections
+everything;AROS section does not contain all subsections
+everything;3rd Party section does not contain all subsections
+everything;Extensions section contains all items that are extensions to modules from AmigaOS, AROS or 3rd Party sections
 trackdisk;Supports only PC-compatible 1.44 MB disk drives
 scsi;Scsi.device interface is implemented in AROS ata.device
 cardres;Card.resource is tied to the Amiga GAYLE chip

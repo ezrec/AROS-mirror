@@ -25,7 +25,7 @@ class CategoryItem( Sortable ):
     ARCH_i386 = 2
 
     API_Original = 1
-    API_AROS = 2
+    API_Extension = 2
 
     def __init__( self, description, parentcategory, status, architecture, apiversion ):
         Sortable.__init__( self, description.upper() )
@@ -44,18 +44,13 @@ class Comment( Sortable ):
 
 class Category( Sortable ):
 
-#    TYPE_General    =   0 - Removed as the distinction is now on the top-most level
-    TYPE_AmigaOS    =   1
-    TYPE_Extensions =   2
-
-    def __init__( self, category, description, parentcategory, categorytype, lastupdated ):
+    def __init__( self, category, description, parentcategory, lastupdated ):
         Sortable.__init__( self, category.upper() )
        
         self.category           =   category
         self.description        =   description
         self.parentcategory     =   parentcategory
         self.lastupdated        =   lastupdated
-        self.categorytype       =   categorytype
         
         self.completed          = 0
         self.needssomework      = 0

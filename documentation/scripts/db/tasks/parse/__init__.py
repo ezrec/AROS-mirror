@@ -3,17 +3,35 @@
 # $Id$
 
 from db.tasks.model import *
+from datetime import date
+
+
+def createExtensionCategoryName( category ):
+    index = category.rfind("_")
+    if index == -1:
+        return category + "_ext"
+    else:
+        return category[ 0:index ] + "_ext"
+
 
 def createCategories( file ):
 
-    # Root categories
+    # Root categories ( append in specif order, not sorted )
     categories = {}
-    c = Category( 'everything', 'Everything', None, 0, None )
+    root = Category( 'everything', 'Everything', None, None )
+    categories[root.category] = root
+    c = Category( 'amigaos', 'AmigaOS 3.1', 'everything', None )
     categories[c.category] = c
-    c = Category( 'amigaos', 'AmigaOS 3.1', 'everything', Category.TYPE_AmigaOS, None )
+    root.subcategories.append ( c )
+    c = Category( 'aros', 'AROS', 'everything', None )
     categories[c.category] = c
-    c = Category( 'aros', 'AROS Extensions', 'everything', Category.TYPE_Extensions, None )
+    root.subcategories.append ( c )
+    c = Category( '3rdparty', '3rd Party', 'everything', None )
     categories[c.category] = c
+    root.subcategories.append ( c )
+    c = Category( 'extensions', 'Extensions', 'everything', None )
+    categories[c.category] = c
+    root.subcategories.append ( c )
 
     # Search for startup
     file.seek(0)   
@@ -31,30 +49,37 @@ def createCategories( file ):
         parentcategory      =   words[0]
         category            =   words[1]
         description         =   words[2]
-        categorytype        =   int( words[3] )
-        lastupdated         =   words[4]
+        lastupdated         =   words[3]
 
-        c = Category( category, description, parentcategory, categorytype, lastupdated )
+        c = Category( category, description, parentcategory, lastupdated )
         categories[c.category] = c
 
-        # If category is not an Extension and there is no existing twin extension category, create it (virtual category)
-        if categorytype != Category.TYPE_Extensions:
-            category += "_ext"
-            if category not in categories:
-                if parentcategory == "amigaos":
-                    # Override top-most extension category name
-                    parentcategory = "aros"
-                else:
-                    parentcategory += "_ext"
+        # Create virtual extension category
+        category = createExtensionCategoryName( category )
+        # Override top-most extension category name
+        if ( parentcategory == "amigaos" ) or ( parentcategory == "aros" ) or ( parentcategory == "3rdparty" ):
+            parentcategory = "extensions"
+        else:
+            parentcategory = createExtensionCategoryName( parentcategory )
 
-                c = Category( category, description, parentcategory, Category.TYPE_Extensions, lastupdated )
-                categories[c.category] = c
-            
+        c = Category( category, description, parentcategory, lastupdated )
 
+        # if extension category already exists, check the lastupdated field
+        if c.category in categories:
+            existingcategory = categories[c.category]
+            tokens = existingcategory.lastupdated.split( "-" )
+            existingcategorydate = date( int ( tokens[0] ), int( tokens[1] ), int( tokens[2] ) )
+            tokens = c.lastupdated.split( "-" )
+            newcategorydate = date( int ( tokens[0] ), int( tokens[1] ), int( tokens[2] ) )
+            if newcategorydate <  existingcategorydate:
+                c = existingcategory
+
+        categories[c.category] = c
+                
 
     # Link categories
     for key, value in categories.iteritems():
-        if value.parentcategory != None:
+        if value.parentcategory != None and value.parentcategory != 'everything':
             if value.parentcategory in categories:
                 categories[value.parentcategory].subcategories.append( value )
             else:
@@ -129,10 +154,9 @@ def parse( file ):
         if category not in categories:
             category = 'everything'
         
-        # If item is an Extension and item's category is not an Extension, assign item to extension category
-        if categoryitem.apiversion == CategoryItem.API_AROS:
-            if categories[category].categorytype != Category.TYPE_Extensions:
-                category += "_ext"
+        # If item is an Extension, assign item to extension category
+        if categoryitem.apiversion == CategoryItem.API_Extension:
+            category = createExtensionCategoryName( category )
 
         categories[category].categoryitems.append( categoryitem )            
 
@@ -153,7 +177,18 @@ def parse( file ):
     everything.removeempty( )
     # Recalculate count values
     everything.recalculate( )  
-    # Sort items  
-    everything.sort( )
+    # Sort items (don't sort top most level)
+    category = categories[ 'amigaos' ]
+    if category is not None:
+        category.sort ( )
+    category = categories[ 'aros' ]
+    if category is not None:
+        category.sort ( )
+    category = categories[ '3rdparty' ]
+    if category is not None:
+        category.sort ( )
+    category = categories[ 'extensions' ]
+    if category is not None:
+        category.sort ( )
     
     return everything
