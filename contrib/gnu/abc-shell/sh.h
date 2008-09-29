@@ -34,6 +34,8 @@
 #include <string.h>
 #include <stdarg.h>
 
+#undef environ
+
 #if !defined __amigaos4__ && !defined __AROS__
 void *memmove(void *, const void *, size_t);
 #endif
