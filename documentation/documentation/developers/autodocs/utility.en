@@ -9,22 +9,22 @@ utility
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AddNamedObject`_                       `AllocateTagItems`_                     `AllocNamedObjectA`_                    `Amiga2Date`_                           
-`ApplyTagChanges`_                      `AttemptRemNamedObject`_                `CallHookPkt`_                          `CheckDate`_                            
-`CloneTagItems`_                        `Date2Amiga`_                           `FilterTagChanges`_                     `FilterTagItems`_                       
-`FindNamedObject`_                      `FindTagItem`_                          `FreeNamedObject`_                      `FreeTagItems`_                         
-`GetTagData`_                           `GetUniqueID`_                          `MapTags`_                              `NamedObjectName`_                      
-`NextTagItem`_                          `PackBoolTags`_                         `PackStructureTags`_                    `RefreshTagItemClones`_                 
-`ReleaseNamedObject`_                   `RemNamedObject`_                       `SDivMod32`_                            `SMult32`_                              
-`SMult64`_                              `Stricmp`_                              `Strnicmp`_                             `TagInArray`_                           
-`ToLower`_                              `ToUpper`_                              `UDivMod32`_                            `UMult32`_                              
-`UMult64`_                              `UnpackStructureTags`_                  
+`AddNamedObject()`_                     `AllocateTagItems()`_                   `AllocNamedObjectA()`_                  `Amiga2Date()`_                         
+`ApplyTagChanges()`_                    `AttemptRemNamedObject()`_              `CallHookPkt()`_                        `CheckDate()`_                          
+`CloneTagItems()`_                      `Date2Amiga()`_                         `FilterTagChanges()`_                   `FilterTagItems()`_                     
+`FindNamedObject()`_                    `FindTagItem()`_                        `FreeNamedObject()`_                    `FreeTagItems()`_                       
+`GetTagData()`_                         `GetUniqueID()`_                        `MapTags()`_                            `NamedObjectName()`_                    
+`NextTagItem()`_                        `PackBoolTags()`_                       `PackStructureTags()`_                  `RefreshTagItemClones()`_               
+`ReleaseNamedObject()`_                 `RemNamedObject()`_                     `SDivMod32()`_                          `SMult32()`_                            
+`SMult64()`_                            `Stricmp()`_                            `Strnicmp()`_                           `TagInArray()`_                         
+`ToLower()`_                            `ToUpper()`_                            `UDivMod32()`_                          `UMult32()`_                            
+`UMult64()`_                            `UnpackStructureTags()`_                
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-AddNamedObject
-==============
+AddNamedObject()
+================
 
 Synopsis
 ~~~~~~~~
@@ -85,16 +85,16 @@ Bugs
      because the autodocs did not say this, and they are right :)
 
 
+
 See also
 ~~~~~~~~
-::
 
-     utility/name.h, RemNamedObject()
+utility/name.h `RemNamedObject()`_ 
 
+----------
 
-
-AllocateTagItems
-================
+AllocateTagItems()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -152,16 +152,16 @@ Notes
      If the number of tags to allocate is zero, then none will be.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FreeTagsItems()
+`FreeTagItems()`_ 
 
+----------
 
-
-AllocNamedObjectA
-=================
+AllocNamedObjectA()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -233,16 +233,16 @@ Result
      due to no free memory.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FreeNamedObject()
+`FreeNamedObject()`_ 
 
+----------
 
-
-Amiga2Date
-==========
+Amiga2Date()
+============
 
 Synopsis
 ~~~~~~~~
@@ -280,8 +280,10 @@ Result
 
 
 
-ApplyTagChanges
-===============
+----------
+
+ApplyTagChanges()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -296,8 +298,10 @@ Synopsis
           TAG tag, ... );
 
 
-AttemptRemNamedObject
-=====================
+----------
+
+AttemptRemNamedObject()
+=======================
 
 Synopsis
 ~~~~~~~~
@@ -337,16 +341,16 @@ Result
      message will be returned to the owner of the NamedObject.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     utility/name.h RemNamedObject(), AddNamedObject()
+utility/name.h `RemNamedObject()`_ `AddNamedObject()`_ 
 
+----------
 
-
-CallHookPkt
-===========
+CallHookPkt()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -402,16 +406,16 @@ Bugs
      macros (See <utility/hooks.h>).
 
 
+
 See also
 ~~~~~~~~
-::
 
-     amiga.lib/CallHook()
+amiga.lib/CallHook() 
 
+----------
 
-
-CheckDate
-=========
+CheckDate()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -467,16 +471,16 @@ Bugs
      Does not check whether the 29/2 is valid outside of a leap year.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     Amiga2Date(), Date2Amiga()
+`Amiga2Date()`_ `Date2Amiga()`_ 
 
+----------
 
-
-CloneTagItems
-=============
+CloneTagItems()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -528,16 +532,16 @@ Example
      FreeTagItems( tagListClone );
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AllocateTagItems(), FreeTagItems(), RefreshTagItemClones()
+`AllocateTagItems()`_ `FreeTagItems()`_ `RefreshTagItemClones()`_ 
 
+----------
 
-
-Date2Amiga
-==========
+Date2Amiga()
+============
 
 Synopsis
 ~~~~~~~~
@@ -568,16 +572,16 @@ Result
      The number of seconds since 1.1.1978
 
 
+
 See also
 ~~~~~~~~
-::
 
-     Amiga2Date(), CheckData()
+`Amiga2Date()`_ `CheckDate()`_ 
 
+----------
 
-
-FilterTagChanges
-================
+FilterTagChanges()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -621,16 +625,16 @@ Result
      requested, the originalList will be updated.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ApplyTagChanges()
+`ApplyTagChanges()`_ 
 
+----------
 
-
-FilterTagItems
-==============
+FilterTagItems()
+================
 
 Synopsis
 ~~~~~~~~
@@ -677,16 +681,16 @@ Result
      The number of valid items left in the resulting filtered list.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     TagInArray()
+`TagInArray()`_ 
 
+----------
 
-
-FindNamedObject
-===============
+FindNamedObject()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -742,16 +746,16 @@ Notes
      to be freed, leaving you with an invalid pointer.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReleaseNamedObject()
+`ReleaseNamedObject()`_ 
 
+----------
 
-
-FindTagItem
-===========
+FindTagItem()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -766,8 +770,10 @@ Synopsis
           TAG tag, ... );
 
 
-FreeNamedObject
-===============
+----------
+
+FreeNamedObject()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -798,16 +804,16 @@ Result
      systems free memory pool.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     utility/name.h, utility/AllocNamedObject()
+utility/name.h `AllocNamedObjectA()`_ 
 
+----------
 
-
-FreeTagItems
-============
+FreeTagItems()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -865,16 +871,16 @@ Notes
      The memory will only be freed if the input is non-NULL.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     utility/tagitem.h, utility/AllocateTagItems()
+utility/tagitem.h `AllocateTagItems()`_ 
 
+----------
 
-
-GetTagData
-==========
+GetTagData()
+============
 
 Synopsis
 ~~~~~~~~
@@ -939,16 +945,16 @@ Notes
      tried to do anything special at least).
 
 
+
 See also
 ~~~~~~~~
-::
 
-     utility/tagitem.h
+utility/tagitem.h 
 
+----------
 
-
-GetUniqueID
-===========
+GetUniqueID()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -972,8 +978,10 @@ Result
 
 
 
-MapTags
-=======
+----------
+
+MapTags()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -1008,8 +1016,10 @@ Result
 
 
 
-NamedObjectName
-===============
+----------
+
+NamedObjectName()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -1051,16 +1061,16 @@ Example
      name = NamedObjectName( no );
 
 
+
 See also
 ~~~~~~~~
-::
 
-     utility/name.h
+utility/name.h 
 
+----------
 
-
-NextTagItem
-===========
+NextTagItem()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1114,8 +1124,10 @@ Notes
 
 
 
-PackBoolTags
-============
+----------
+
+PackBoolTags()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -1176,16 +1188,16 @@ Notes
      last of these tags will determine the value of that bit-flag.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetTagData(), FindTagItem(), NextTagItem()
+`GetTagData()`_ `FindTagItem()`_ `NextTagItem()`_ 
 
+----------
 
-
-PackStructureTags
-=================
+PackStructureTags()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -1229,16 +1241,16 @@ Result
      The number of TagItems packed.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     UnpackStructureTags()
+`UnpackStructureTags()`_ 
 
+----------
 
-
-RefreshTagItemClones
-====================
+RefreshTagItemClones()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -1312,16 +1324,16 @@ Bugs
      We warned you...
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CloneTagItems()
+`CloneTagItems()`_ 
 
+----------
 
-
-ReleaseNamedObject
-==================
+ReleaseNamedObject()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -1380,16 +1392,16 @@ Notes
          use problems.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     utility/name.h, utility/FindNamedObject()
+utility/name.h `FindNamedObject()`_ 
 
+----------
 
-
-RemNamedObject
-==============
+RemNamedObject()
+================
 
 Synopsis
 ~~~~~~~~
@@ -1446,16 +1458,16 @@ Notes
      must have found this object first.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AttemptRemNamedObject(), AddNamedObject()
+`AttemptRemNamedObject()`_ `AddNamedObject()`_ 
 
+----------
 
-
-SDivMod32
-=========
+SDivMod32()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -1515,16 +1527,16 @@ Bugs
      remainder. In fact, its pretty near impossible.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     SMult32(), SMult64(), UDivMod32(), UMult32(), UMult64()
+`SMult32()`_ `SMult64()`_ `UDivMod32()`_ `UMult32()`_ `UMult64()`_ 
 
+----------
 
-
-SMult32
-=======
+SMult32()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -1591,16 +1603,16 @@ Bugs
      Of limited use to C programmers.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     UMult32(), UMult64(), SMult64()
+`UMult32()`_ `UMult64()`_ `SMult64()`_ 
 
+----------
 
-
-SMult64
-=======
+SMult64()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -1647,16 +1659,16 @@ Notes
      probably of limited use to higher-level language programmers.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     utility/SMult32(), utility/UMult32(), utility/UMult64()
+`SMult32()`_ `UMult32()`_ `UMult64()`_ 
 
+----------
 
-
-Stricmp
-=======
+Stricmp()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -1691,8 +1703,10 @@ Result
 
 
 
-Strnicmp
-========
+----------
+
+Strnicmp()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -1729,8 +1743,10 @@ Result
 
 
 
-TagInArray
-==========
+----------
+
+TagInArray()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1768,16 +1784,16 @@ Result
      FALSE   otherwise
 
 
+
 See also
 ~~~~~~~~
-::
 
-     <utility/tagitem.h>, FilterTagItems()
+<utility/tagitem.h> `FilterTagItems()`_ 
 
+----------
 
-
-ToLower
-=======
+ToLower()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -1808,8 +1824,10 @@ Result
 
 
 
-ToUpper
-=======
+----------
+
+ToUpper()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -1865,16 +1883,16 @@ Notes
      languages.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     utility/ToLower()
+`ToLower()`_ 
 
+----------
 
-
-UDivMod32
-=========
+UDivMod32()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -1934,16 +1952,16 @@ Bugs
      remainder.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     SDivMod32(), SMult32(), SMult64(), UMult32(), UMult64()
+`SDivMod32()`_ `SMult32()`_ `SMult64()`_ `UMult32()`_ `UMult64()`_ 
 
+----------
 
-
-UMult32
-=======
+UMult32()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -2004,16 +2022,16 @@ Notes
      probably of limited use to higher-level language programmers.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     utility/SMult32(), utility/UMult64(), utility/SMult64()
+`SMult32()`_ `UMult64()`_ `SMult64()`_ 
 
+----------
 
-
-UMult64
-=======
+UMult64()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -2056,16 +2074,16 @@ Notes
      math for you inline.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     SMult32(), UMult32(), SMult64()
+`SMult32()`_ `UMult32()`_ `SMult64()`_ 
 
+----------
 
-
-UnpackStructureTags
-===================
+UnpackStructureTags()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -2118,11 +2136,9 @@ Notes
      PSTF_EXISTS has no effect on this function.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     PackStructureTags(), FindTagItem()
-
-
+`PackStructureTags()`_ `FindTagItem()`_ 
 

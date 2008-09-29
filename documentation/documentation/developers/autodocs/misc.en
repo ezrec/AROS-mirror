@@ -9,13 +9,13 @@ misc
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AllocMiscResource`_                    `FreeMiscResource`_                     
+`AllocMiscResource()`_                  `FreeMiscResource()`_                   
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-AllocMiscResource
-=================
+AllocMiscResource()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -51,17 +51,16 @@ Result
  allocated, the name of the holder of the resource is returned.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`FreeMiscResource()`_ 
 
- FreeMiscResource()
+----------
 
-
-
-FreeMiscResource
-================
+FreeMiscResource()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -93,12 +92,9 @@ Notes
  You must have allocated the resource to free it!
 
 
+
 See also
 ~~~~~~~~
-::
 
-
- AllocMiscResource()
-
-
+`AllocMiscResource()`_ 
 

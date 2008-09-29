@@ -9,47 +9,47 @@ intuition
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`ActivateGadget`_                       `ActivateWindow`_                       `AddClass`_                             `AddGadget`_                            
-`AddGList`_                             `AllocIntuiMessage`_                    `AllocRemember`_                        `AllocScreenBuffer`_                    
-`AlohaWorkbench`_                       `AutoRequest`_                          `BeginRefresh`_                         `BuildEasyRequestArgs`_                 
-`BuildSysRequest`_                      `ChangeDecoration`_                     `ChangeScreenBuffer`_                   `ChangeWindowBox`_                      
-`ChangeWindowShape`_                    `ClearDMRequest`_                       `ClearMenuStrip`_                       `ClearPointer`_                         
-`CloseScreen`_                          `CloseWindow`_                          `CloseWorkBench`_                       `CurrentTime`_                          
-`DisplayAlert`_                         `DisplayBeep`_                          `DisposeObject`_                        `DoGadgetMethodA`_                      
-`DoubleClick`_                          `DrawBorder`_                           `DrawImage`_                            `DrawImageState`_                       
-`DumpIntuiState`_                       `EasyRequestArgs`_                      `EndRefresh`_                           `EndRequest`_                           
-`EndScreenNotify`_                      `EraseImage`_                           `FindClass`_                            `FreeClass`_                            
-`FreeIntuiMessage`_                     `FreeRemember`_                         `FreeScreenBuffer`_                     `FreeScreenDrawInfo`_                   
-`FreeSysRequest`_                       `GadgetMouse`_                          `GetAttr`_                              `GetDefaultPubScreen`_                  
-`GetDefPrefs`_                          `GetPrefs`_                             `GetScreenData`_                        `GetScreenDrawInfo`_                    
-`HelpControl`_                          `HideWindow`_                           `InitRequester`_                        `IntuiTextLength`_                      
-`IsWindowVisible`_                      `ItemAddress`_                          `LateIntuiInit`_                        `LendMenus`_                            
-`LockIBase`_                            `lockPubClass`_                         `LockPubScreen`_                        `LockPubScreenList`_                    
-`MakeClass`_                            `MakeScreen`_                           `ModifyIDCMP`_                          `ModifyProp`_                           
-`MoveScreen`_                           `MoveWindow`_                           `MoveWindowInFrontOf`_                  `NewModifyProp`_                        
-`NewObjectA`_                           `NextObject`_                           `NextPubScreen`_                        `ObtainGIRPort`_                        
-`OffGadget`_                            `OffMenu`_                              `OnGadget`_                             `OnMenu`_                               
-`OpenScreen`_                           `OpenScreenTagList`_                    `OpenWindow`_                           `OpenWindowTagList`_                    
-`OpenWorkBench`_                        `PointInImage`_                         `PrintIText`_                           `PubScreenStatus`_                      
-`QueryOverscan`_                        `RefreshGadgets`_                       `RefreshGList`_                         `RefreshWindowFrame`_                   
-`ReleaseGIRPort`_                       `RemakeDisplay`_                        `RemoveClass`_                          `RemoveGadget`_                         
-`RemoveGList`_                          `ReportMouse`_                          `Request`_                              `ResetMenuStrip`_                       
-`RethinkDisplay`_                       `ScreenDepth`_                          `ScreenPosition`_                       `ScreenToBack`_                         
-`ScreenToFront`_                        `ScrollWindowRaster`_                   `SendIntuiMessage`_                     `SetAttrsA`_                            
-`SetDefaultPubScreen`_                  `SetDefaultScreenFont`_                 `SetDMRequest`_                         `SetEditHook`_                          
-`SetGadgetAttrsA`_                      `SetIPrefs`_                            `SetMenuStrip`_                         `SetMouseQueue`_                        
-`SetPointer`_                           `SetPrefs`_                             `SetPubScreenModes`_                    `SetWindowPointerA`_                    
-`SetWindowTitles`_                      `ShowTitle`_                            `ShowWindow`_                           `SizeWindow`_                           
-`StartScreenNotifyTagList`_             `SysReqHandler`_                        `TimedDisplayAlert`_                    `UnlockIBase`_                          
-`unlockPubClass`_                       `UnlockPubScreen`_                      `UnlockPubScreenList`_                  `ViewAddress`_                          
-`ViewPortAddress`_                      `WBenchToBack`_                         `WBenchToFront`_                        `WindowLimits`_                         
-`WindowToBack`_                         `WindowToFront`_                        `ZipWindow`_                            
+`ActivateGadget()`_                     `ActivateWindow()`_                     `AddClass()`_                           `AddGadget()`_                          
+`AddGList()`_                           `AllocIntuiMessage()`_                  `AllocRemember()`_                      `AllocScreenBuffer()`_                  
+`AlohaWorkbench()`_                     `AutoRequest()`_                        `BeginRefresh()`_                       `BuildEasyRequestArgs()`_               
+`BuildSysRequest()`_                    `ChangeDecoration()`_                   `ChangeScreenBuffer()`_                 `ChangeWindowBox()`_                    
+`ChangeWindowShape()`_                  `ClearDMRequest()`_                     `ClearMenuStrip()`_                     `ClearPointer()`_                       
+`CloseScreen()`_                        `CloseWindow()`_                        `CloseWorkBench()`_                     `CurrentTime()`_                        
+`DisplayAlert()`_                       `DisplayBeep()`_                        `DisposeObject()`_                      `DoGadgetMethodA()`_                    
+`DoubleClick()`_                        `DrawBorder()`_                         `DrawImage()`_                          `DrawImageState()`_                     
+`DumpIntuiState()`_                     `EasyRequestArgs()`_                    `EndRefresh()`_                         `EndRequest()`_                         
+`EndScreenNotify()`_                    `EraseImage()`_                         `FindClass()`_                          `FreeClass()`_                          
+`FreeIntuiMessage()`_                   `FreeRemember()`_                       `FreeScreenBuffer()`_                   `FreeScreenDrawInfo()`_                 
+`FreeSysRequest()`_                     `GadgetMouse()`_                        `GetAttr()`_                            `GetDefaultPubScreen()`_                
+`GetDefPrefs()`_                        `GetPrefs()`_                           `GetScreenData()`_                      `GetScreenDrawInfo()`_                  
+`HelpControl()`_                        `HideWindow()`_                         `InitRequester()`_                      `IntuiTextLength()`_                    
+`IsWindowVisible()`_                    `ItemAddress()`_                        `LateIntuiInit()`_                      `LendMenus()`_                          
+`LockIBase()`_                          `lockPubClass()`_                       `LockPubScreen()`_                      `LockPubScreenList()`_                  
+`MakeClass()`_                          `MakeScreen()`_                         `ModifyIDCMP()`_                        `ModifyProp()`_                         
+`MoveScreen()`_                         `MoveWindow()`_                         `MoveWindowInFrontOf()`_                `NewModifyProp()`_                      
+`NewObjectA()`_                         `NextObject()`_                         `NextPubScreen()`_                      `ObtainGIRPort()`_                      
+`OffGadget()`_                          `OffMenu()`_                            `OnGadget()`_                           `OnMenu()`_                             
+`OpenScreen()`_                         `OpenScreenTagList()`_                  `OpenWindow()`_                         `OpenWindowTagList()`_                  
+`OpenWorkBench()`_                      `PointInImage()`_                       `PrintIText()`_                         `PubScreenStatus()`_                    
+`QueryOverscan()`_                      `RefreshGadgets()`_                     `RefreshGList()`_                       `RefreshWindowFrame()`_                 
+`ReleaseGIRPort()`_                     `RemakeDisplay()`_                      `RemoveClass()`_                        `RemoveGadget()`_                       
+`RemoveGList()`_                        `ReportMouse()`_                        `Request()`_                            `ResetMenuStrip()`_                     
+`RethinkDisplay()`_                     `ScreenDepth()`_                        `ScreenPosition()`_                     `ScreenToBack()`_                       
+`ScreenToFront()`_                      `ScrollWindowRaster()`_                 `SendIntuiMessage()`_                   `SetAttrsA()`_                          
+`SetDefaultPubScreen()`_                `SetDefaultScreenFont()`_               `SetDMRequest()`_                       `SetEditHook()`_                        
+`SetGadgetAttrsA()`_                    `SetIPrefs()`_                          `SetMenuStrip()`_                       `SetMouseQueue()`_                      
+`SetPointer()`_                         `SetPrefs()`_                           `SetPubScreenModes()`_                  `SetWindowPointerA()`_                  
+`SetWindowTitles()`_                    `ShowTitle()`_                          `ShowWindow()`_                         `SizeWindow()`_                         
+`StartScreenNotifyTagList()`_           `SysReqHandler()`_                      `TimedDisplayAlert()`_                  `UnlockIBase()`_                        
+`unlockPubClass()`_                     `UnlockPubScreen()`_                    `UnlockPubScreenList()`_                `ViewAddress()`_                        
+`ViewPortAddress()`_                    `WBenchToBack()`_                       `WBenchToFront()`_                      `WindowLimits()`_                       
+`WindowToBack()`_                       `WindowToFront()`_                      `ZipWindow()`_                          
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-ActivateGadget
-==============
+ActivateGadget()
+================
 
 Synopsis
 ~~~~~~~~
@@ -78,8 +78,10 @@ Inputs
 
 
 
-ActivateWindow
-==============
+----------
+
+ActivateWindow()
+================
 
 Synopsis
 ~~~~~~~~
@@ -123,16 +125,16 @@ Notes
  it will slow down the computer a lot.
 
 
+
 See also
 ~~~~~~~~
-::
 
- ModiyIDCMP(), OpenWindow(), CloseWindow()
+`ModifyIDCMP()`_ `OpenWindow()`_ `CloseWindow()`_ 
 
+----------
 
-
-AddClass
-========
+AddClass()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -179,17 +181,16 @@ Bugs
  in this case.
 
 
+
 See also
 ~~~~~~~~
-::
 
- MakeClass(), FreeClass(), RemoveClass(), "Basic Object-Oriented
- Programming System for Intuition" and "boopsi Class Reference"
+`MakeClass()`_ `FreeClass()`_ `RemoveClass()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" 
 
+----------
 
-
-AddGadget
-=========
+AddGadget()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -235,8 +236,10 @@ Notes
 
 
 
-AddGList
-========
+----------
+
+AddGList()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -286,16 +289,16 @@ Notes
  refresh the window or the gadgets.
 
 
+
 See also
 ~~~~~~~~
-::
 
- RefreshGadgets(), RefresgGList()
+`RefreshGadgets()`_ `RefreshGList()`_ 
 
+----------
 
-
-AllocIntuiMessage
-=================
+AllocIntuiMessage()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -327,8 +330,10 @@ Result
 
 
 
-AllocRemember
-=============
+----------
+
+AllocRemember()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -363,8 +368,10 @@ Result
 
 
 
-AllocScreenBuffer
-=================
+----------
+
+AllocScreenBuffer()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -432,16 +439,16 @@ Notes
  damage menu or gadget rendering.
 
 
+
 See also
 ~~~~~~~~
-::
 
- FreeScreenBuffer(), ChangeScreenBuffer()
+`FreeScreenBuffer()`_ `ChangeScreenBuffer()`_ 
 
+----------
 
-
-AlohaWorkbench
-==============
+AlohaWorkbench()
+================
 
 Synopsis
 ~~~~~~~~
@@ -491,16 +498,16 @@ Notes
      instead!
 
 
+
 See also
 ~~~~~~~~
-::
 
-     workbench.library/RegisterWorkbench()
+`workbench.library/RegisterWorkbench() <./workbench#registerworkbench>`_ 
 
+----------
 
-
-AutoRequest
-===========
+AutoRequest()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -517,8 +524,10 @@ Synopsis
           ULONG height );
 
 
-BeginRefresh
-============
+----------
+
+BeginRefresh()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -528,8 +537,10 @@ Synopsis
           struct Window * window );
 
 
-BuildEasyRequestArgs
-====================
+----------
+
+BuildEasyRequestArgs()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -580,16 +591,16 @@ Result
      to SysReqHandler() and FreeSysRequest().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     EasyRequestArgs(), SysReqHandler(), FreeSysRequest()
+`EasyRequestArgs()`_ `SysReqHandler()`_ `FreeSysRequest()`_ 
 
+----------
 
-
-BuildSysRequest
-===============
+BuildSysRequest()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -616,17 +627,16 @@ Inputs
      width, height - The dimensions of the requester
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FreeSysRequest(), DisplayAlert(), ModifyIDCMP(), exec-library/Wait(),
-     Request(), AutoRequest(), EasyRequest(), BuildEasyRequestArgs()
+`FreeSysRequest()`_ `DisplayAlert()`_ `ModifyIDCMP()`_ `exec.library/Wait() <./exec#wait>`_ `Request()`_ `AutoRequest()`_ `EasyRequestArgs()`_ `BuildEasyRequestArgs()`_ 
 
+----------
 
-
-ChangeDecoration
-================
+ChangeDecoration()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -666,8 +676,10 @@ Notes
 
 
 
-ChangeScreenBuffer
-==================
+----------
+
+ChangeScreenBuffer()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -715,17 +727,16 @@ Notes
  a screen. Just FreeScreenBuffer() all buffers used for that screen.
 
 
+
 See also
 ~~~~~~~~
-::
 
- AllocScreenBuffer(), FreeScreenBuffer(),
- graphics.library/ChangeVPBitMap()
+`AllocScreenBuffer()`_ `FreeScreenBuffer()`_ `graphics.library/ChangeVPBitMap() <./graphics#changevpbitmap>`_ 
 
+----------
 
-
-ChangeWindowBox
-===============
+ChangeWindowBox()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -763,8 +774,10 @@ Notes
 
 
 
-ChangeWindowShape
-=================
+----------
+
+ChangeWindowShape()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -790,8 +803,10 @@ Inputs
 
 
 
-ClearDMRequest
-==============
+----------
+
+ClearDMRequest()
+================
 
 Synopsis
 ~~~~~~~~
@@ -807,16 +822,16 @@ Inputs
  window - The window from which the DMRequest is to be cleared
 
 
+
 See also
 ~~~~~~~~
-::
 
- SetDMRequest(), Request()
+`SetDMRequest()`_ `Request()`_ 
 
+----------
 
-
-ClearMenuStrip
-==============
+ClearMenuStrip()
+================
 
 Synopsis
 ~~~~~~~~
@@ -826,8 +841,10 @@ Synopsis
           struct Window * window );
 
 
-ClearPointer
-============
+----------
+
+ClearPointer()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -853,16 +870,16 @@ Inputs
  window - The window of which the mousepointer will be cleared
 
 
+
 See also
 ~~~~~~~~
-::
 
- SetPointer()
+`SetPointer()`_ 
 
+----------
 
-
-CloseScreen
-===========
+CloseScreen()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -897,8 +914,10 @@ Result
 
 
 
-CloseWindow
-===========
+----------
+
+CloseWindow()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -937,16 +956,16 @@ Notes
  The window might not have been disappeared when this function returns.
 
 
+
 See also
 ~~~~~~~~
-::
 
- OpenWindow(), OpenWindowTags()
+`OpenWindow()`_ `OpenWindowTagList()`_ 
 
+----------
 
-
-CloseWorkBench
-==============
+CloseWorkBench()
+================
 
 Synopsis
 ~~~~~~~~
@@ -977,16 +996,16 @@ Notes
      FALSE is returned.
 
 
+
 See also
 ~~~~~~~~
-::
 
- OpenWorkBench()
+`OpenWorkBench()`_ 
 
+----------
 
-
-CurrentTime
-===========
+CurrentTime()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1028,16 +1047,16 @@ Notes
  Makes use of timer.library/timer.device
 
 
+
 See also
 ~~~~~~~~
-::
 
- timer.device/TR_GETSYSTIME
+timer.device/TR_GETSYSTIME 
 
+----------
 
-
-DisplayAlert
-============
+DisplayAlert()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -1083,8 +1102,10 @@ Result
 
 
 
-DisplayBeep
-===========
+----------
+
+DisplayBeep()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1111,8 +1132,10 @@ Inputs
 
 
 
-DisposeObject
-=============
+----------
+
+DisposeObject()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -1155,18 +1178,16 @@ Notes
  This functions sends OM_DISPOSE to the oejct.
 
 
+
 See also
 ~~~~~~~~
-::
 
- NewObject(), SetAttrs((), GetAttr(), MakeClass()
- "Basic Object-Oriented Programming System for Intuition" and
- "boopsi Class Reference" Dokument.
+`NewObjectA()`_ `SetAttrsA()`_ `GetAttr()`_ `MakeClass()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
 
+----------
 
-
-DoGadgetMethodA
-===============
+DoGadgetMethodA()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -1213,8 +1234,10 @@ Result
 
 
 
-DoubleClick
-===========
+----------
+
+DoubleClick()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1250,8 +1273,10 @@ Result
 
 
 
-DrawBorder
-==========
+----------
+
+DrawBorder()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1321,8 +1346,10 @@ Example
 
 
 
-DrawImage
-=========
+----------
+
+DrawImage()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -1358,8 +1385,10 @@ Result
 
 
 
-DrawImageState
-==============
+----------
+
+DrawImageState()
+================
 
 Synopsis
 ~~~~~~~~
@@ -1408,8 +1437,10 @@ Notes
 
 
 
-DumpIntuiState
-==============
+----------
+
+DumpIntuiState()
+================
 
 Synopsis
 ~~~~~~~~
@@ -1432,8 +1463,10 @@ Result
 
 
 
-EasyRequestArgs
-===============
+----------
+
+EasyRequestArgs()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -1485,16 +1518,16 @@ Result
   n, if the n-th button from the left was clicked.
 
 
+
 See also
 ~~~~~~~~
-::
 
- BuildEasyRequestArgs()
+`BuildEasyRequestArgs()`_ 
 
+----------
 
-
-EndRefresh
-==========
+EndRefresh()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1505,8 +1538,10 @@ Synopsis
           BOOL complete );
 
 
-EndRequest
-==========
+----------
+
+EndRequest()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1539,16 +1574,16 @@ Result
  None.
 
 
+
 See also
 ~~~~~~~~
-::
 
- InitRequester(), Request()
+`InitRequester()`_ `Request()`_ 
 
+----------
 
-
-EndScreenNotify
-===============
+EndScreenNotify()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -1578,15 +1613,16 @@ Result
  BOOL - if false Notification is in use and cannot be removed, try later
 
 
+
 See also
 ~~~~~~~~
-::
 
- StartScreenNotifyTagList() 
+`StartScreenNotifyTagList()`_ 
 
+----------
 
-EraseImage
-==========
+EraseImage()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1622,16 +1658,16 @@ Result
  None.
 
 
+
 See also
 ~~~~~~~~
-::
 
- DrawImage(), DrawImageState()
+`DrawImage()`_ `DrawImageState()`_ 
 
+----------
 
-
-FindClass
-=========
+FindClass()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -1641,8 +1677,10 @@ Synopsis
           ClassID classID );
 
 
-FreeClass
-=========
+----------
+
+FreeClass()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -1721,8 +1759,10 @@ Notes
 
 
 
-FreeIntuiMessage
-================
+----------
+
+FreeIntuiMessage()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -1754,8 +1794,10 @@ Result
 
 
 
-FreeRemember
-============
+----------
+
+FreeRemember()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -1766,8 +1808,10 @@ Synopsis
           LONG reallyForget );
 
 
-FreeScreenBuffer
-================
+----------
+
+FreeScreenBuffer()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -1814,16 +1858,16 @@ Notes
  This is left to the CloseScreen() function.
 
 
+
 See also
 ~~~~~~~~
-::
 
- AllocScreenBuffer(), ChangeScreenBuffer()
+`AllocScreenBuffer()`_ `ChangeScreenBuffer()`_ 
 
+----------
 
-
-FreeScreenDrawInfo
-==================
+FreeScreenDrawInfo()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -1856,16 +1900,16 @@ Result
  None.
 
 
+
 See also
 ~~~~~~~~
-::
 
- GetScreenDrawInfo()
+`GetScreenDrawInfo()`_ 
 
+----------
 
-
-FreeSysRequest
-==============
+FreeSysRequest()
+================
 
 Synopsis
 ~~~~~~~~
@@ -1896,16 +1940,16 @@ Bugs
  BuildSysRequest() requesters not supported, yet.
 
 
+
 See also
 ~~~~~~~~
-::
 
- BuildSysRequest(), BuildEasyRequestArgs()
+`BuildSysRequest()`_ `BuildEasyRequestArgs()`_ 
 
+----------
 
-
-GadgetMouse
-===========
+GadgetMouse()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1921,7 +1965,7 @@ Function
 ::
 
  Determines the current mouse position relative to the upper-left
- corner of a cusrom gadget.
+ corner of a custom gadget.
  It is recommended not to call this function!
 
 
@@ -1951,8 +1995,10 @@ Notes
 
 
 
-GetAttr
-=======
+----------
+
+GetAttr()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -2001,19 +2047,16 @@ Notes
  This function sends OM_GET to the object.
 
 
+
 See also
 ~~~~~~~~
-::
 
- NewObject(), DisposeObject(), SetAttr(), MakeClass(),
- "Basic Object-Oriented Programming System for Intuition" and
- "boopsi Class Reference" Dokument.
+`NewObjectA()`_ `DisposeObject()`_ `SetAttrsA()`_ `MakeClass()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
 
+----------
 
-
-
-GetDefaultPubScreen
-===================
+GetDefaultPubScreen()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -2053,16 +2096,16 @@ Notes
  without specifying a name.
 
 
+
 See also
 ~~~~~~~~
-::
 
- SetDefaultPubScreen(), OpenWindow()
+`SetDefaultPubScreen()`_ `OpenWindow()`_ 
 
+----------
 
-
-GetDefPrefs
-===========
+GetDefPrefs()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -2095,16 +2138,16 @@ Result
  Returns your parameter buffer.
 
 
+
 See also
 ~~~~~~~~
-::
 
- GetPrefs(), SetPrefs()
+`GetPrefs()`_ `SetPrefs()`_ 
 
+----------
 
-
-GetPrefs
-========
+GetPrefs()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -2137,16 +2180,16 @@ Result
  Returns your parameter buffer.
 
 
+
 See also
 ~~~~~~~~
-::
 
- GetDefPrefs(), SetPrefs()
+`GetDefPrefs()`_ `SetPrefs()`_ 
 
+----------
 
-
-GetScreenData
-=============
+GetScreenData()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -2194,8 +2237,10 @@ Result
 
 
 
-GetScreenDrawInfo
-=================
+----------
+
+GetScreenDrawInfo()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -2236,16 +2281,16 @@ Notes
  This function does not prevent the screen from being closed.
 
 
+
 See also
 ~~~~~~~~
-::
 
- FreeScreenDrawInfo(), LockPubScreen(), intuition/screens.h
+`FreeScreenDrawInfo()`_ `LockPubScreen()`_ intuition/screens.h 
 
+----------
 
-
-HelpControl
-===========
+HelpControl()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -2280,16 +2325,16 @@ Result
  None. Toggles gadget-help of one or more windows to on or off.
 
 
+
 See also
 ~~~~~~~~
-::
 
- WA_HelpGroup
+`WA_HelpGroup <wa_helpgroup>`_ 
 
+----------
 
-
-HideWindow
-==========
+HideWindow()
+============
 
 Synopsis
 ~~~~~~~~
@@ -2313,8 +2358,10 @@ Inputs
 
 
 
-InitRequester
-=============
+----------
+
+InitRequester()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -2352,16 +2399,16 @@ Notes
      This function is obsolete.
 
 
+
 See also
 ~~~~~~~~
-::
 
- Request(), EndRequest()
+`Request()`_ `EndRequest()`_ 
 
+----------
 
-
-IntuiTextLength
-===============
+IntuiTextLength()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -2396,8 +2443,10 @@ Result
 
 
 
-IsWindowVisible
-===============
+----------
+
+IsWindowVisible()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -2431,8 +2480,10 @@ Result
 
 
 
-ItemAddress
-===========
+----------
+
+ItemAddress()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -2478,8 +2529,10 @@ Result
 
 
 
-LateIntuiInit
-=============
+----------
+
+LateIntuiInit()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -2520,8 +2573,10 @@ Notes
 
 
 
-LendMenus
-=========
+----------
+
+LendMenus()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -2560,16 +2615,16 @@ Result
  None.
 
 
+
 See also
 ~~~~~~~~
-::
 
- SetMenuStrip(), ClearMenuStrip()
+`SetMenuStrip()`_ `ClearMenuStrip()`_ 
 
+----------
 
-
-LockIBase
-=========
+LockIBase()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -2609,16 +2664,16 @@ Notes
  system resources like layers and LayerInfo locks.
 
 
+
 See also
 ~~~~~~~~
-::
 
- UnLockIBase()
+`UnLockIBase()`_ 
 
+----------
 
-
-lockPubClass
-============
+lockPubClass()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -2634,17 +2689,16 @@ Function
  Locks the public classes list.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`unlockPubClass()`_ 
 
- unlockPubClass().
+----------
 
-
-
-LockPubScreen
-=============
+LockPubScreen()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -2716,17 +2770,16 @@ Notes
  on it.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`OpenWindow()`_ `UnlockPubScreen()`_ `GetScreenData()`_ 
 
- OpenWindow(), UnlockPubScreen(), GetScreenData()
+----------
 
-
-
-LockPubScreenList
-=================
+LockPubScreenList()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -2752,17 +2805,16 @@ Notes
  The list's nodes are PubScreenNodes as defined in <intuition/screens.h>.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`UnlockPubScreenList()`_ 
 
- UnlockPubScreenList()
+----------
 
-
-
-MakeClass
-=========
+MakeClass()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -2833,8 +2885,10 @@ Notes
 
 
 
-MakeScreen
-==========
+----------
+
+MakeScreen()
+============
 
 Synopsis
 ~~~~~~~~
@@ -2857,16 +2911,16 @@ Result
  Zero for success, non-zero for failure.
 
 
+
 See also
 ~~~~~~~~
-::
 
- RemakeDisplay(), RethinkDisplay(), graphics.library/MakeVPort(),
+`RemakeDisplay()`_ `RethinkDisplay()`_ `graphics.library/MakeVPort() <./graphics#makevport>`_ 
 
+----------
 
-
-ModifyIDCMP
-===========
+ModifyIDCMP()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -2951,16 +3005,16 @@ Notes
  NOT create a new port!
 
 
+
 See also
 ~~~~~~~~
-::
 
- OpenWindow(), CloseWindow(), intuition_extend.h
+`OpenWindow()`_ `CloseWindow()`_ intuition_extend.h 
 
+----------
 
-
-ModifyProp
-==========
+ModifyProp()
+============
 
 Synopsis
 ~~~~~~~~
@@ -3015,16 +3069,16 @@ Notes
  use NewModifProp().
 
 
+
 See also
 ~~~~~~~~
-::
 
- NewModifyProp()
+`NewModifyProp()`_ 
 
+----------
 
-
-MoveScreen
-==========
+MoveScreen()
+============
 
 Synopsis
 ~~~~~~~~
@@ -3069,16 +3123,16 @@ Notes
  LeftEdge and TopEdge of the screen to see how far it got.
 
 
+
 See also
 ~~~~~~~~
-::
 
- RethinkDisplay()
+`RethinkDisplay()`_ 
 
+----------
 
-
-MoveWindow
-==========
+MoveWindow()
+============
 
 Synopsis
 ~~~~~~~~
@@ -3111,16 +3165,16 @@ Result
  The window will move when the next input event will be received.
 
 
+
 See also
 ~~~~~~~~
-::
 
- SizeWindow()
+`SizeWindow()`_ 
 
+----------
 
-
-MoveWindowInFrontOf
-===================
+MoveWindowInFrontOf()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -3152,16 +3206,16 @@ Result
  None.
 
 
+
 See also
 ~~~~~~~~
-::
 
- WindowToFront(), WindowToBack(), layers.library/MoveLayerInFrontOf()
+`WindowToFront()`_ `WindowToBack()`_ `hyperlayers.library/MoveLayerInFrontOf() <./hyperlayers#movelayerinfrontof>`_ 
 
+----------
 
-
-NewModifyProp
-=============
+NewModifyProp()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -3212,16 +3266,16 @@ Result
  None.
 
 
+
 See also
 ~~~~~~~~
-::
 
- NewModifyProp(), RefreshGadgets(), RefreshGList()
+`NewModifyProp()`_ `RefreshGadgets()`_ `RefreshGList()`_ 
 
+----------
 
-
-NewObjectA
-==========
+NewObjectA()
+============
 
 Synopsis
 ~~~~~~~~
@@ -3276,18 +3330,16 @@ Notes
  This functions send OM_NEW to the dispatcher of the class.
 
 
+
 See also
 ~~~~~~~~
-::
 
- DisposeObject(), SetAttrs(), GetAttr(), MakeClass(),
- "Basic Object-Oriented Programming System for Intuition" and
- "boopsi Class Reference" Dokument.
+`DisposeObject()`_ `SetAttrsA()`_ `GetAttr()`_ `MakeClass()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
 
+----------
 
-
-NextObject
-==========
+NextObject()
+============
 
 Synopsis
 ~~~~~~~~
@@ -3322,18 +3374,16 @@ Result
  A BOOPSI object, which can be manipulated.
 
 
+
 See also
 ~~~~~~~~
-::
 
- NewObject(),
- "Basic Object-Oriented Programming System for Intuition" and
- "boopsi Class Reference" Dokument.
+`NewObjectA()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
 
+----------
 
-
-NextPubScreen
-=============
+NextPubScreen()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -3385,17 +3435,16 @@ Notes
      The cycle order is undefined, so draw no conclusions based on it!
 
 
+
 See also
 ~~~~~~~~
-::
 
+`OpenScreen()`_ `PubScreenStatus()`_ 
 
- OpenScreen(), PubScreenStatus()
+----------
 
-
-
-ObtainGIRPort
-=============
+ObtainGIRPort()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -3438,16 +3487,16 @@ Notes
  needn't be called.
 
 
+
 See also
 ~~~~~~~~
-::
 
- ReleaseGIRPort()
+`ReleaseGIRPort()`_ 
 
+----------
 
-
-OffGadget
-=========
+OffGadget()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -3490,16 +3539,16 @@ Notes
  which would update all gadgets in the window).
 
 
+
 See also
 ~~~~~~~~
-::
 
- AddGadget(), RefreshGadgets()
+`AddGadget()`_ `RefreshGadgets()`_ 
 
+----------
 
-
-OffMenu
-=======
+OffMenu()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -3532,16 +3581,16 @@ Result
  None.
 
 
+
 See also
 ~~~~~~~~
-::
 
- OnMenu(), ResetMenuStrip()
+`OnMenu()`_ `ResetMenuStrip()`_ 
 
+----------
 
-
-OnGadget
-========
+OnGadget()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -3585,8 +3634,10 @@ Notes
 
 
 
-OnMenu
-======
+----------
+
+OnMenu()
+========
 
 Synopsis
 ~~~~~~~~
@@ -3619,16 +3670,16 @@ Result
  None.
 
 
+
 See also
 ~~~~~~~~
-::
 
- OffMenu(), ResetMenuStrip()
+`OffMenu()`_ `ResetMenuStrip()`_ 
 
+----------
 
-
-OpenScreen
-==========
+OpenScreen()
+============
 
 Synopsis
 ~~~~~~~~
@@ -3638,8 +3689,10 @@ Synopsis
           struct NewScreen * newScreen );
 
 
-OpenScreenTagList
-=================
+----------
+
+OpenScreenTagList()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -3654,8 +3707,10 @@ Synopsis
           TAG tag, ... );
 
 
-OpenWindow
-==========
+----------
+
+OpenWindow()
+============
 
 Synopsis
 ~~~~~~~~
@@ -3688,16 +3743,16 @@ Result
  attributes.
 
 
+
 See also
 ~~~~~~~~
-::
 
- CloseWindow(), ModifyIDCMP()
+`CloseWindow()`_ `ModifyIDCMP()`_ 
 
+----------
 
-
-OpenWindowTagList
-=================
+OpenWindowTagList()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -3712,8 +3767,10 @@ Synopsis
           TAG tag, ... );
 
 
-OpenWorkBench
-=============
+----------
+
+OpenWorkBench()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -3746,16 +3803,16 @@ Result
  If this function fails the return value is NULL.
 
 
+
 See also
 ~~~~~~~~
-::
 
- CloseWorkBench()
+`CloseWorkBench()`_ 
 
+----------
 
-
-PointInImage
-============
+PointInImage()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -3790,8 +3847,10 @@ Result
 
 
 
-PrintIText
-==========
+----------
+
+PrintIText()
+============
 
 Synopsis
 ~~~~~~~~
@@ -3829,8 +3888,10 @@ Result
 
 
 
-PubScreenStatus
-===============
+----------
+
+PubScreenStatus()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -3868,17 +3929,16 @@ Result
  The other bits in the return value are reserved for future use.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`OpenScreen()`_ 
 
- OpenScreen()
+----------
 
-
-
-QueryOverscan
-=============
+QueryOverscan()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -3890,8 +3950,10 @@ Synopsis
           WORD oscantype );
 
 
-RefreshGadgets
-==============
+----------
+
+RefreshGadgets()
+================
 
 Synopsis
 ~~~~~~~~
@@ -3935,16 +3997,16 @@ Example
  RefreshGadgets (win->FirstGadget, win, NULL);
 
 
+
 See also
 ~~~~~~~~
-::
 
- RefreshGList()
+`RefreshGList()`_ 
 
+----------
 
-
-RefreshGList
-============
+RefreshGList()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -4006,8 +4068,10 @@ Notes
 
 
 
-RefreshWindowFrame
-==================
+----------
+
+RefreshWindowFrame()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -4017,8 +4081,10 @@ Synopsis
           struct Window * window );
 
 
-ReleaseGIRPort
-==============
+----------
+
+ReleaseGIRPort()
+================
 
 Synopsis
 ~~~~~~~~
@@ -4049,8 +4115,10 @@ Result
 
 
 
-RemakeDisplay
-=============
+----------
+
+RemakeDisplay()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -4072,17 +4140,16 @@ Result
  Zero for success, non-zero for failure.
 
 
+
 See also
 ~~~~~~~~
-::
 
- RethinkDisplay(), MakeScreen(), graphics.library/MakeVPort(),
- graphics.library/MrgCop(), graphics.library/LoadView()
+`RethinkDisplay()`_ `MakeScreen()`_ `graphics.library/MakeVPort() <./graphics#makevport>`_ `graphics.library/MrgCop() <./graphics#mrgcop>`_ `graphics.library/LoadView() <./graphics#loadview>`_ 
 
+----------
 
-
-RemoveClass
-===========
+RemoveClass()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -4114,18 +4181,16 @@ Result
  None.
 
 
+
 See also
 ~~~~~~~~
-::
 
- MakeClass(), FreeClass(), AddClass(), "Basic Object-Oriented
- Programming System for Intuition" and "boopsi Class Reference"
- Dokument.
+`MakeClass()`_ `FreeClass()`_ `AddClass()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
 
+----------
 
-
-RemoveGadget
-============
+RemoveGadget()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -4159,8 +4224,10 @@ Result
 
 
 
-RemoveGList
-===========
+----------
+
+RemoveGList()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -4172,8 +4239,10 @@ Synopsis
           LONG numGad );
 
 
-ReportMouse
-===========
+----------
+
+ReportMouse()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -4215,8 +4284,10 @@ Notes
 
 
 
-Request
-=======
+----------
+
+Request()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -4248,16 +4319,16 @@ Result
  TRUE if requester was opened successfully, FALSE else.
 
 
+
 See also
 ~~~~~~~~
-::
 
- EndRequest(), InitRequester()
+`EndRequest()`_ `InitRequester()`_ 
 
+----------
 
-
-ResetMenuStrip
-==============
+ResetMenuStrip()
+================
 
 Synopsis
 ~~~~~~~~
@@ -4303,16 +4374,16 @@ Notes
  CHECKED and ITEMENABLED flags.
 
 
+
 See also
 ~~~~~~~~
-::
 
- SetMenuStrip(), ClearMenuStrip()
+`SetMenuStrip()`_ `ClearMenuStrip()`_ 
 
+----------
 
-
-RethinkDisplay
-==============
+RethinkDisplay()
+================
 
 Synopsis
 ~~~~~~~~
@@ -4341,17 +4412,16 @@ Result
  Zero for success, non-zero for failure.
 
 
+
 See also
 ~~~~~~~~
-::
 
- RemakeDisplay(), MakeScreen(), graphics.library/MakeVPort(),
- graphics.library/MrgCop(), graphics.library/LoadView()
+`RemakeDisplay()`_ `MakeScreen()`_ `graphics.library/MakeVPort() <./graphics#makevport>`_ `graphics.library/MrgCop() <./graphics#mrgcop>`_ `graphics.library/LoadView() <./graphics#loadview>`_ 
 
+----------
 
-
-ScreenDepth
-===========
+ScreenDepth()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -4401,16 +4471,16 @@ Notes
  of screen families.
 
 
+
 See also
 ~~~~~~~~
-::
 
- ScreenToBack(), ScreenToFront()
+`ScreenToBack()`_ `ScreenToFront()`_ 
 
+----------
 
-
-ScreenPosition
-==============
+ScreenPosition()
+================
 
 Synopsis
 ~~~~~~~~
@@ -4471,16 +4541,16 @@ Notes
  SPOS_FORCEDRAG should only be used by the owner of the screen.
 
 
+
 See also
 ~~~~~~~~
-::
 
- MoveScreen(), RethinkDisplay()
+`MoveScreen()`_ `RethinkDisplay()`_ 
 
+----------
 
-
-ScreenToBack
-============
+ScreenToBack()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -4516,16 +4586,16 @@ Result
  of the display, the screen will appear behind the screens.
 
 
+
 See also
 ~~~~~~~~
-::
 
- ScreenToFront(), ScreenDepth()
+`ScreenToFront()`_ `ScreenDepth()`_ 
 
+----------
 
-
-ScreenToFront
-=============
+ScreenToFront()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -4558,16 +4628,16 @@ Result
  You will see the screen move in front of all other screens.
 
 
+
 See also
 ~~~~~~~~
-::
 
- ScreenToBack(), ScreenDepth()
+`ScreenToBack()`_ `ScreenDepth()`_ 
 
+----------
 
-
-ScrollWindowRaster
-==================
+ScrollWindowRaster()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -4611,8 +4681,10 @@ Inputs
 
 
 
-SendIntuiMessage
-================
+----------
+
+SendIntuiMessage()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -4673,8 +4745,10 @@ Notes
 
 
 
-SetAttrsA
-=========
+----------
+
+SetAttrsA()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -4720,18 +4794,16 @@ Notes
  This function sends OM_SET to the object.
 
 
+
 See also
 ~~~~~~~~
-::
 
- NewObject(), DisposeObject(), GetAttr(), MakeClass(),
- "Basic Object-Oriented Programming System for Intuition" and
- "boopsi Class Reference" Dokument.
+`NewObjectA()`_ `DisposeObject()`_ `GetAttr()`_ `MakeClass()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
 
+----------
 
-
-SetDefaultPubScreen
-===================
+SetDefaultPubScreen()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -4760,17 +4832,16 @@ Inputs
            or NULL to specify the Workbench screen.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`OpenWindow()`_ `OpenScreen()`_ 
 
- OpenWindow(), OpenScreen()
+----------
 
-
-
-SetDefaultScreenFont
-====================
+SetDefaultScreenFont()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -4801,8 +4872,10 @@ Notes
  
 
 
-SetDMRequest
-============
+----------
+
+SetDMRequest()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -4851,16 +4924,16 @@ Notes
  used to fine-tune the positioning.
 
 
+
 See also
 ~~~~~~~~
-::
 
- ClearDMRequest(), Request()
+`ClearDMRequest()`_ `Request()`_ 
 
+----------
 
-
-SetEditHook
-===========
+SetEditHook()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -4892,8 +4965,10 @@ Result
 
 
 
-SetGadgetAttrsA
-===============
+----------
+
+SetGadgetAttrsA()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -4945,18 +5020,16 @@ Notes
  This function sends OM_SET to the gadget object.
 
 
+
 See also
 ~~~~~~~~
-::
 
- NewObject(), SetAttrsA(), GetAttr(), DoGadgetMethodA(),
- "Basic Object-Oriented Programming System for Intuition" and
- "boopsi Class Reference" Dokument.
+`NewObjectA()`_ `SetAttrsA()`_ `GetAttr()`_ `DoGadgetMethodA()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
 
+----------
 
-
-SetIPrefs
-=========
+SetIPrefs()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -4975,8 +5048,10 @@ Result
 
 
 
-SetMenuStrip
-============
+----------
+
+SetMenuStrip()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -5020,16 +5095,16 @@ Notes
  another MenuStrip to the Window.
 
 
+
 See also
 ~~~~~~~~
-::
 
- ResetMenuStrip(), ClearMenuStrip()
+`ResetMenuStrip()`_ `ClearMenuStrip()`_ 
 
+----------
 
-
-SetMouseQueue
-=============
+SetMouseQueue()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -5071,16 +5146,16 @@ Notes
  There should be a function for changing the repeat key queue limit, too.
 
 
+
 See also
 ~~~~~~~~
-::
 
- OpenWindow()
+`OpenWindow()`_ 
 
+----------
 
-
-SetPointer
-==========
+SetPointer()
+============
 
 Synopsis
 ~~~~~~~~
@@ -5113,16 +5188,16 @@ Inputs
      left, top edge of the bitmap.
 
 
+
 See also
 ~~~~~~~~
-::
 
- ClearPointer()
+`ClearPointer()`_ 
 
+----------
 
-
-SetPrefs
-========
+SetPrefs()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -5158,16 +5233,16 @@ Result
  Returns your parameter buffer.
 
 
+
 See also
 ~~~~~~~~
-::
 
- GetDefPrefs(), GetPrefs()
+`GetDefPrefs()`_ `GetPrefs()`_ 
 
+----------
 
-
-SetPubScreenModes
-=================
+SetPubScreenModes()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -5204,17 +5279,16 @@ Result
  The flags set before the change was made.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`OpenScreen()`_ 
 
- OpenScreen()
+----------
 
-
-
-SetWindowPointerA
-=================
+SetWindowPointerA()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -5229,8 +5303,10 @@ Synopsis
           TAG tag, ... );
 
 
-SetWindowTitles
-===============
+----------
+
+SetWindowTitles()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -5280,8 +5356,10 @@ Notes
 
 
 
-ShowTitle
-=========
+----------
+
+ShowTitle()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -5317,8 +5395,10 @@ Notes
 
 
 
-ShowWindow
-==========
+----------
+
+ShowWindow()
+============
 
 Synopsis
 ~~~~~~~~
@@ -5345,8 +5425,10 @@ Inputs
 
 
 
-SizeWindow
-==========
+----------
+
+SizeWindow()
+============
 
 Synopsis
 ~~~~~~~~
@@ -5389,8 +5471,10 @@ Notes
 
 
 
-StartScreenNotifyTagList
-========================
+----------
+
+StartScreenNotifyTagList()
+==========================
 
 Synopsis
 ~~~~~~~~
@@ -5423,15 +5507,16 @@ Result
  the value is private only a test against ZERO is allowed and means Failure
 
 
+
 See also
 ~~~~~~~~
-::
 
- EndScreenNotify() 
+`EndScreenNotify()`_ 
 
+----------
 
-SysReqHandler
-=============
+SysReqHandler()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -5492,16 +5577,16 @@ Bugs
      Does not support BuildSysRequest() requesters, yet.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     BuildSysRequest(), BuildEasyRequestArgs()
+`BuildSysRequest()`_ `BuildEasyRequestArgs()`_ 
 
+----------
 
-
-TimedDisplayAlert
-=================
+TimedDisplayAlert()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -5514,8 +5599,10 @@ Synopsis
           ULONG time );
 
 
-UnlockIBase
-===========
+----------
+
+UnlockIBase()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -5546,16 +5633,16 @@ Result
  None.
 
 
+
 See also
 ~~~~~~~~
-::
 
- LockIBase()
+`LockIBase()`_ 
 
+----------
 
-
-unlockPubClass
-==============
+unlockPubClass()
+================
 
 Synopsis
 ~~~~~~~~
@@ -5571,17 +5658,16 @@ Function
  Unlocks the public classes list.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`lockPubClass()`_ 
 
- lockPubClass().
+----------
 
-
-
-UnlockPubScreen
-===============
+UnlockPubScreen()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -5617,16 +5703,16 @@ Notes
  The screen parameter will be ignored if name is non-NULL
 
 
+
 See also
 ~~~~~~~~
-::
 
- LockPubScreen()
+`LockPubScreen()`_ 
 
+----------
 
-
-UnlockPubScreenList
-===================
+UnlockPubScreenList()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -5642,17 +5728,16 @@ Function
  Release lock made by LockPubScreenList().
 
 
+
 See also
 ~~~~~~~~
-::
 
+`LockPubScreenList()`_ 
 
- LockPubScreenList()
+----------
 
-
-
-ViewAddress
-===========
+ViewAddress()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -5683,16 +5768,16 @@ Result
  Address of the Intuition View structure
 
 
+
 See also
 ~~~~~~~~
-::
 
- graphics.library
+graphics.library 
 
+----------
 
-
-ViewPortAddress
-===============
+ViewPortAddress()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -5725,16 +5810,16 @@ Result
  window is displayed on.
 
 
+
 See also
 ~~~~~~~~
-::
 
- graphics.library
+graphics.library 
 
+----------
 
-
-WBenchToBack
-============
+WBenchToBack()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -5764,16 +5849,16 @@ Notes
  it just changes the depth-arrangement of the screens.
 
 
+
 See also
 ~~~~~~~~
-::
 
- ScreenToBack(), ScreenToFront(), WBenchToFront()
+`ScreenToBack()`_ `ScreenToFront()`_ `WBenchToFront()`_ 
 
+----------
 
-
-WBenchToFront
-=============
+WBenchToFront()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -5803,16 +5888,16 @@ Notes
  it just changes the depth-arrangement of the screens.
 
 
+
 See also
 ~~~~~~~~
-::
 
- ScreenToBack(), ScreenToFront(), WBenchToBack()
+`ScreenToBack()`_ `ScreenToFront()`_ `WBenchToBack()`_ 
 
+----------
 
-
-WindowLimits
-============
+WindowLimits()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -5851,16 +5936,16 @@ Result
  all sizes could be set.
 
 
+
 See also
 ~~~~~~~~
-::
 
- OpenWindow()
+`OpenWindow()`_ 
 
+----------
 
-
-WindowToBack
-============
+WindowToBack()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -5891,8 +5976,10 @@ Result
 
 
 
-WindowToFront
-=============
+----------
+
+WindowToFront()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -5923,8 +6010,10 @@ Result
 
 
 
-ZipWindow
-=========
+----------
+
+ZipWindow()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -5964,11 +6053,9 @@ Notes
  program depends on the new size.
 
 
+
 See also
 ~~~~~~~~
-::
 
- ChangeWindowBox(), MoveWindow(), SizeWindow()
-
-
+`ChangeWindowBox()`_ `MoveWindow()`_ `SizeWindow()`_ 
 

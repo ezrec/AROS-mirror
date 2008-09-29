@@ -9,17 +9,17 @@ gadtools
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`CreateContext`_                        `CreateGadgetA`_                        `CreateMenusA`_                         `DrawBevelBoxA`_                        
-`FreeGadgets`_                          `FreeMenus`_                            `FreeVisualInfo`_                       `GetVisualInfoA`_                       
-`GT_BeginRefresh`_                      `GT_EndRefresh`_                        `GT_FilterIMsg`_                        `GT_GetGadgetAttrsA`_                   
-`GT_GetIMsg`_                           `GT_PostFilterIMsg`_                    `GT_RefreshWindow`_                     `GT_ReplyIMsg`_                         
-`GT_SetGadgetAttrsA`_                   `LayoutMenuItemsA`_                     `LayoutMenusA`_                         
+`CreateContext()`_                      `CreateGadgetA()`_                      `CreateMenusA()`_                       `DrawBevelBoxA()`_                      
+`FreeGadgets()`_                        `FreeMenus()`_                          `FreeVisualInfo()`_                     `GetVisualInfoA()`_                     
+`GT_BeginRefresh()`_                    `GT_EndRefresh()`_                      `GT_FilterIMsg()`_                      `GT_GetGadgetAttrsA()`_                 
+`GT_GetIMsg()`_                         `GT_PostFilterIMsg()`_                  `GT_RefreshWindow()`_                   `GT_ReplyIMsg()`_                       
+`GT_SetGadgetAttrsA()`_                 `LayoutMenuItemsA()`_                   `LayoutMenusA()`_                       
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-CreateContext
-=============
+CreateContext()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -54,8 +54,10 @@ Result
 
 
 
-CreateGadgetA
-=============
+----------
+
+CreateGadgetA()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -101,16 +103,16 @@ Result
      A pointer to a gadget or NULL to indicate an error.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateContext(), FreeGadgets(), <libraries/gadtools.h>
+`CreateContext()`_ `FreeGadgets()`_ <libraries/gadtools.h> 
 
+----------
 
-
-CreateMenusA
-============
+CreateMenusA()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -157,16 +159,16 @@ Notes
      called.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FreeMenus(), LayoutMenusA()
+`FreeMenus()`_ `LayoutMenusA()`_ 
 
+----------
 
-
-DrawBevelBoxA
-=============
+DrawBevelBoxA()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -217,8 +219,10 @@ Notes
 
 
 
-FreeGadgets
-===========
+----------
+
+FreeGadgets()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -241,16 +245,16 @@ Inputs
      glist - pointer to the first gadget to be freed, may be NULL.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateGadgetA()
+`CreateGadgetA()`_ 
 
+----------
 
-
-FreeMenus
-=========
+FreeMenus()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -273,16 +277,16 @@ Inputs
      menu - pointer to the menu (or first MenuItem) to be freed, may be NULL.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateMenusA()
+`CreateMenusA()`_ 
 
+----------
 
-
-FreeVisualInfo
-==============
+FreeVisualInfo()
+================
 
 Synopsis
 ~~~~~~~~
@@ -306,16 +310,16 @@ Inputs
      vi - the visual info structure to free, may be NULL.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetVisualInfo()
+`GetVisualInfoA()`_ 
 
+----------
 
-
-GetVisualInfoA
-==============
+GetVisualInfoA()
+================
 
 Synopsis
 ~~~~~~~~
@@ -354,16 +358,16 @@ Result
      A (private) visual info structure. NULL indicates an error.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FreeVisualInfo()
+`FreeVisualInfo()`_ 
 
+----------
 
-
-GT_BeginRefresh
-===============
+GT_BeginRefresh()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -408,16 +412,16 @@ Notes
      GT_EndRefresh() only. Do not render or change any gadgets.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GT_EndRefresh(), intuition.library/BeginRefresh()
+`GT_EndRefresh()`_ `intuition.library/BeginRefresh() <./intuition#beginrefresh>`_ 
 
+----------
 
-
-GT_EndRefresh
-=============
+GT_EndRefresh()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -443,16 +447,16 @@ Inputs
      complete - TRUE, if refreshing is finished
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GT_BeginRefresh(), intuition.library/EndRefresh()
+`GT_BeginRefresh()`_ `intuition.library/EndRefresh() <./intuition#endrefresh>`_ 
 
+----------
 
-
-GT_FilterIMsg
-=============
+GT_FilterIMsg()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -488,16 +492,16 @@ Result
      case the message had only meaning to gadtools.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GT_PostFilterIMsg(), GT_GetIMsg(), intuition.library/ReplyMsg()
+`GT_PostFilterIMsg()`_ `GT_GetIMsg()`_ `exec.library/ReplyMsg() <./exec#replymsg>`_ 
 
+----------
 
-
-GT_GetGadgetAttrsA
-==================
+GT_GetGadgetAttrsA()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -542,16 +546,16 @@ Result
      The number of attributes, which were filled correctly.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GT_SetGadgetAttrsA(), intuition.library/GetAttr()
+`GT_SetGadgetAttrsA()`_ `intuition.library/GetAttr() <./intuition#getattr>`_ 
 
+----------
 
-
-GT_GetIMsg
-==========
+GT_GetIMsg()
+============
 
 Synopsis
 ~~~~~~~~
@@ -584,16 +588,16 @@ Result
      had only a meaning to gadtools.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GT_ReplyIMsg(), exec.library/GetMsg()
+`GT_ReplyIMsg()`_ `exec.library/GetMsg() <./exec#getmsg>`_ 
 
+----------
 
-
-GT_PostFilterIMsg
-=================
+GT_PostFilterIMsg()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -623,16 +627,16 @@ Result
      The original intuition message or NULL, if NULL was passed in.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GT_FilterIMsg()
+`GT_FilterIMsg()`_ 
 
+----------
 
-
-GT_RefreshWindow
-================
+GT_RefreshWindow()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -660,8 +664,10 @@ Inputs
 
 
 
-GT_ReplyIMsg
-============
+----------
+
+GT_ReplyIMsg()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -684,16 +690,16 @@ Inputs
      imsg - The message to reply.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GT_GetIMsg(), exec.library/ReplyMsg()
+`GT_GetIMsg()`_ `exec.library/ReplyMsg() <./exec#replymsg>`_ 
 
+----------
 
-
-GT_SetGadgetAttrsA
-==================
+GT_SetGadgetAttrsA()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -738,16 +744,16 @@ Result
      The gadget may be set to the specified attributes.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GT_GetGadgetAttrsA(), intuition.library/SetGadgetAttrsA()
+`GT_GetGadgetAttrsA()`_ `intuition.library/SetGadgetAttrsA() <./intuition#setgadgetattrsa>`_ 
 
+----------
 
-
-LayoutMenuItemsA
-================
+LayoutMenuItemsA()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -779,16 +785,16 @@ Result
      FALSE, if an error occured.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     LayoutMenusA(), GetVisualInfoA()
+`LayoutMenusA()`_ `GetVisualInfoA()`_ 
 
+----------
 
-
-LayoutMenusA
-============
+LayoutMenusA()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -820,11 +826,9 @@ Result
      FALSE, if an error occured.
 
 
+
 See also
 ~~~~~~~~
-::
 
-   CreateMenusA() LayoutMenuItemsA() GetVisualInfoA()
-
-
+`CreateMenusA()`_ `LayoutMenuItemsA()`_ `GetVisualInfoA()`_ 
 

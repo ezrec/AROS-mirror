@@ -9,22 +9,22 @@ camd
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AddMidiLinkA`_                         `CloseMidiDevice`_                      `CreateMidiA`_                          `DeleteMidi`_                           
-`EndClusterNotify`_                     `FindCluster`_                          `FindMidi`_                             `FlushMidi`_                            
-`GetMidi`_                              `GetMidiAttrsA`_                        `GetMidiErr`_                           `GetMidiLinkAttrsA`_                    
-`GetSysEx`_                             `GoodPutMidi`_                          `LockCAMD`_                             `Midi2Driver`_                          
-`MidiLinkConnected`_                    `MidiMsgLen`_                           `MidiMsgType`_                          `NextCluster`_                          
-`NextClusterLink`_                      `NextMidi`_                             `NextMidiLink`_                         `OpenMidiDevice`_                       
-`ParseMidi`_                            `PutMidi`_                              `PutSysEx`_                             `QuerySysEx`_                           
-`RemoveMidiLink`_                       `RethinkCAMD`_                          `SetMidiAttrsA`_                        `SetMidiLinkAttrsA`_                    
-`SkipSysEx`_                            `StartClusterNotify`_                   `UnlockCAMD`_                           `WaitMidi`_                             
+`AddMidiLinkA()`_                       `CloseMidiDevice()`_                    `CreateMidiA()`_                        `DeleteMidi()`_                         
+`EndClusterNotify()`_                   `FindCluster()`_                        `FindMidi()`_                           `FlushMidi()`_                          
+`GetMidi()`_                            `GetMidiAttrsA()`_                      `GetMidiErr()`_                         `GetMidiLinkAttrsA()`_                  
+`GetSysEx()`_                           `GoodPutMidi()`_                        `LockCAMD()`_                           `Midi2Driver()`_                        
+`MidiLinkConnected()`_                  `MidiMsgLen()`_                         `MidiMsgType()`_                        `NextCluster()`_                        
+`NextClusterLink()`_                    `NextMidi()`_                           `NextMidiLink()`_                       `OpenMidiDevice()`_                     
+`ParseMidi()`_                          `PutMidi()`_                            `PutSysEx()`_                           `QuerySysEx()`_                         
+`RemoveMidiLink()`_                     `RethinkCAMD()`_                        `SetMidiAttrsA()`_                      `SetMidiLinkAttrsA()`_                  
+`SkipSysEx()`_                          `StartClusterNotify()`_                 `UnlockCAMD()`_                         `WaitMidi()`_                           
 
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-AddMidiLinkA
-============
+AddMidiLinkA()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -56,16 +56,16 @@ Inputs
              tags - Tag-values supplied to SetMidiLinkAttrs.
 
 
+
 See also
 ~~~~~~~~
-::
 
-             CreateMidi, SetMidiLinkAttrsA
+`CreateMidiA()`_ `SetMidiLinkAttrsA()`_ 
 
+----------
 
-
-CloseMidiDevice
-===============
+CloseMidiDevice()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -81,16 +81,16 @@ Function
              Remind me to fill in things here later.
 
 
+
 See also
 ~~~~~~~~
-::
 
-             OpenMidiDevice
+`OpenMidiDevice()`_ 
 
+----------
 
-
-CreateMidiA
-===========
+CreateMidiA()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -117,8 +117,10 @@ Result
 
 
 
-DeleteMidi
-==========
+----------
+
+DeleteMidi()
+============
 
 Synopsis
 ~~~~~~~~
@@ -136,8 +138,10 @@ Function
 
 
 
-EndClusterNotify
-================
+----------
+
+EndClusterNotify()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -181,16 +185,16 @@ Bugs
              None known
 
 
+
 See also
 ~~~~~~~~
-::
 
-     StartClusterNotify();
+`StartClusterNotify()`_ 
 
+----------
 
-
-FindCluster
-===========
+FindCluster()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -227,16 +231,16 @@ Notes
              - CL_Linkages must be locked before calling.
 
 
+
 See also
 ~~~~~~~~
-::
 
-             FindMidi
+`FindMidi()`_ 
 
+----------
 
-
-FindMidi
-========
+FindMidi()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -274,8 +278,10 @@ Notes
 
 
 
-FlushMidi
-=========
+----------
+
+FlushMidi()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -298,16 +304,16 @@ Bugs
              Not tested.
 
 
+
 See also
 ~~~~~~~~
-::
 
-             GetMidi, GetSysEx
+`GetMidi()`_ `GetSysEx()`_ 
 
+----------
 
-
-GetMidi
-=======
+GetMidi()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -339,16 +345,16 @@ Result
              TRUE if message was copied, FALSE if buffer was empty.
 
 
+
 See also
 ~~~~~~~~
-::
 
-             WaitMidi
+`WaitMidi()`_ 
 
+----------
 
-
-GetMidiAttrsA
-=============
+GetMidiAttrsA()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -370,16 +376,16 @@ Notes
              Camd before calling to ensure that it wont go away.
 
 
+
 See also
 ~~~~~~~~
-::
 
-             SetMidiAttrsA
+`SetMidiAttrsA()`_ 
 
+----------
 
-
-GetMidiErr
-==========
+GetMidiErr()
+============
 
 Synopsis
 ~~~~~~~~
@@ -409,16 +415,16 @@ Result
              0 if everything was okey, not 0 else.
 
 
+
 See also
 ~~~~~~~~
-::
 
-             GetMidi, WaitMidi
+`GetMidi()`_ `WaitMidi()`_ 
 
+----------
 
-
-GetMidiLinkAttrsA
-=================
+GetMidiLinkAttrsA()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -448,16 +454,16 @@ Notes
              Theres no point in locking if you know it wont go away.
 
 
+
 See also
 ~~~~~~~~
-::
 
-             SetMidiLinkAttrsA
+`SetMidiLinkAttrsA()`_ 
 
+----------
 
-
-GetSysEx
-========
+GetSysEx()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -475,16 +481,16 @@ Function
              Remind me to fill in things here later.
 
 
+
 See also
 ~~~~~~~~
-::
 
-             SkipSysEx, QuerySysEx
+`SkipSysEx()`_ `QuerySysEx()`_ 
 
+----------
 
-
-GoodPutMidi
-===========
+GoodPutMidi()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -509,16 +515,16 @@ Result
      NULL if success, driverdata if not.
 
 
+
 See also
 ~~~~~~~~
-::
 
-             PutMidi, PutMidiMsg, Midi2Driver
+`PutMidi()`_ `PutMidiMsg()`_ `Midi2Driver()`_ 
 
+----------
 
-
-LockCAMD
-========
+LockCAMD()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -550,8 +556,10 @@ Result
 
 
 
-Midi2Driver
-===========
+----------
+
+Midi2Driver()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -576,16 +584,16 @@ Result
      TRUE if max(buffer,maxbuffer) was big enough to hold the message, FALSE if not.
 
 
+
 See also
 ~~~~~~~~
-::
 
-             PutMidi, GoodPutMidi, PutMidiMsg
+`PutMidi()`_ `GoodPutMidi()`_ `PutMidiMsg()`_ 
 
+----------
 
-
-MidiLinkConnected
-=================
+MidiLinkConnected()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -611,8 +619,10 @@ Inputs
 
 
 
-MidiMsgLen
-==========
+----------
+
+MidiMsgLen()
+============
 
 Synopsis
 ~~~~~~~~
@@ -637,8 +647,10 @@ Inputs
 
 
 
-MidiMsgType
-===========
+----------
+
+MidiMsgType()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -663,8 +675,10 @@ Inputs
 
 
 
-NextCluster
-===========
+----------
+
+NextCluster()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -757,16 +771,16 @@ Notes
                what they contain; that is all managed by camd.
 
 
+
 See also
 ~~~~~~~~
-::
 
-             NextMidiLink, NextMidi, FindCluster
+`NextMidiLink()`_ `NextMidi()`_ `FindCluster()`_ 
 
+----------
 
-
-NextClusterLink
-===============
+NextClusterLink()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -809,8 +823,10 @@ Notes
 
 
 
-NextMidi
-========
+----------
+
+NextMidi()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -843,8 +859,10 @@ Notes
 
 
 
-NextMidiLink
-============
+----------
+
+NextMidiLink()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -879,8 +897,10 @@ Notes
 
 
 
-OpenMidiDevice
-==============
+----------
+
+OpenMidiDevice()
+================
 
 Synopsis
 ~~~~~~~~
@@ -896,16 +916,16 @@ Function
              Remind me to fill in things here later.
 
 
+
 See also
 ~~~~~~~~
-::
 
-             CloseMidiDevice
+`CloseMidiDevice()`_ 
 
+----------
 
-
-ParseMidi
-=========
+ParseMidi()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -943,16 +963,16 @@ Notes
              SetMidiLinkAttrsA.
 
 
+
 See also
 ~~~~~~~~
-::
 
-             PutMidi, PutSysEx
+`PutMidi()`_ `PutSysEx()`_ 
 
+----------
 
-
-PutMidi
-=======
+PutMidi()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -997,16 +1017,16 @@ Notes
              }
 
 
+
 See also
 ~~~~~~~~
-::
 
-             PutMidiMsg
+`PutMidiMsg()`_ 
 
+----------
 
-
-PutSysEx
-========
+PutSysEx()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -1037,16 +1057,16 @@ Inputs
              buffer - message to send, must start with 0xf0 and end with 0xf7.
                       No bytes higher than 0x7f are allowed in the message.
 
+
 See also
 ~~~~~~~~
-::
 
-             GetSysEx
+`GetSysEx()`_ 
 
+----------
 
-
-QuerySysEx
-==========
+QuerySysEx()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1084,16 +1104,16 @@ Bugs
              Tested.
 
 
+
 See also
 ~~~~~~~~
-::
 
-             SkipSysEx, GetSysEx
+`SkipSysEx()`_ `GetSysEx()`_ 
 
+----------
 
-
-RemoveMidiLink
-==============
+RemoveMidiLink()
+================
 
 Synopsis
 ~~~~~~~~
@@ -1117,8 +1137,10 @@ Inputs
 
 
 
-RethinkCAMD
-===========
+----------
+
+RethinkCAMD()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1148,8 +1170,10 @@ Bugs
 
 
 
-SetMidiAttrsA
-=============
+----------
+
+SetMidiAttrsA()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -1231,16 +1255,16 @@ Notes
 
 
 
+
 See also
 ~~~~~~~~
-::
 
-             GetMidiAttrsA
+`GetMidiAttrsA()`_ 
 
+----------
 
-
-SetMidiLinkAttrsA
-=================
+SetMidiLinkAttrsA()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -1281,16 +1305,16 @@ Notes
                to change priority or change/set cluster.
 
 
+
 See also
 ~~~~~~~~
-::
 
-             GetMidiLinkAttrsA
+`GetMidiLinkAttrsA()`_ 
 
+----------
 
-
-SkipSysEx
-=========
+SkipSysEx()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -1306,16 +1330,16 @@ Function
              Remind me to fill in things here later.
 
 
+
 See also
 ~~~~~~~~
-::
 
-             QuerySysEx, GetSysEx
+`QuerySysEx()`_ `GetSysEx()`_ 
 
+----------
 
-
-StartClusterNotify
-==================
+StartClusterNotify()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -1369,16 +1393,16 @@ Notes
      Will only signal added and removed clusters, not internal state changes.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     EndClusterNotify();
+`EndClusterNotify()`_ 
 
+----------
 
-
-UnlockCAMD
-==========
+UnlockCAMD()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1408,16 +1432,16 @@ Result
              APTR to send to UnlockCAMD
 
 
+
 See also
 ~~~~~~~~
-::
 
-             LockCAMD
+`LockCAMD()`_ 
 
+----------
 
-
-WaitMidi
-========
+WaitMidi()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -1450,11 +1474,9 @@ Result
              was en error on the midinode.
 
 
+
 See also
 ~~~~~~~~
-::
 
-             GetMidi
-
-
+`GetMidi()`_ 
 

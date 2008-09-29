@@ -9,61 +9,60 @@ graphics
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AddAnimOb`_                            `AddBob`_                               `AddFont`_                              `AddVSprite`_                           
-`AllocBitMap`_                          `AllocDBufInfo`_                        `AllocRaster`_                          `AllocScreenBitMap`_                    
-`AllocSpriteDataA`_                     `AndRectRect`_                          `AndRectRegion`_                        `AndRectRegionND`_                      
-`AndRegionRegion`_                      `AndRegionRegionND`_                    `Animate`_                              `AreaDraw`_                             
-`AreaEllipse`_                          `AreaEnd`_                              `AreaMove`_                             `AreRegionsEqual`_                      
-`AskFont`_                              `AskSoftStyle`_                         `AttachPalExtra`_                       `AttemptLockLayerRom`_                  
-`BestModeIDA`_                          `BitMapScale`_                          `BltBitMap`_                            `BltBitMapRastPort`_                    
-`BltClear`_                             `BltMaskBitMapRastPort`_                `BltPattern`_                           `BltRastPortBitMap`_                    
-`BltTemplate`_                          `CalcIVG`_                              `CBump`_                                `ChangeExtSpriteA`_                     
-`ChangeSprite`_                         `ChangeVPBitMap`_                       `ClearEOL`_                             `ClearRectRegion`_                      
-`ClearRectRegionND`_                    `ClearRegion`_                          `ClearRegionRegion`_                    `ClearRegionRegionND`_                  
-`ClearScreen`_                          `ClipBlit`_                             `CloneRastPort`_                        `CloseFont`_                            
-`CloseMonitor`_                         `CMove`_                                `CoerceMode`_                           `ConvertPixelsA`_                       
-`CopyRegion`_                           `CopySBitMap`_                          `CreateRastPort`_                       `CWait`_                                
-`DeinitRastPort`_                       `DisownBlitter`_                        `DisposeRegion`_                        `DoCollision`_                          
-`Draw`_                                 `DrawEllipse`_                          `DrawGList`_                            `EraseRect`_                            
-`ExtendFont`_                           `FindColor`_                            `FindDisplayInfo`_                      `Flood`_                                
-`FontExtent`_                           `FreeBitMap`_                           `FreeColorMap`_                         `FreeCopList`_                          
-`FreeCprList`_                          `FreeDBufInfo`_                         `FreeGBuffers`_                         `FreeRaster`_                           
-`FreeRastPort`_                         `FreeSprite`_                           `FreeSpriteData`_                       `FreeVPortCopLists`_                    
-`GetAPen`_                              `GetBitMapAttr`_                        `GetBPen`_                              `GetColorMap`_                          
-`GetDisplayInfoData`_                   `GetDrMd`_                              `GetExtSpriteA`_                        `GetGBuffers`_                          
-`GetOutlinePen`_                        `GetRGB32`_                             `GetRGB4`_                              `GetRPAttrsA`_                          
-`GetSprite`_                            `GetVPModeID`_                          `GfxAssociate`_                         `GfxFree`_                              
-`GfxLookUp`_                            `GfxNew`_                               `InitArea`_                             `InitBitMap`_                           
-`InitGels`_                             `InitGfxHidd`_                          `InitGMasks`_                           `InitMasks`_                            
-`InitRastPort`_                         `InitTmpRas`_                           `InitView`_                             `InitVPort`_                            
-`IsPointInRegion`_                      `LateGfxInit`_                          `LoadRGB32`_                            `LoadRGB4`_                             
-`LoadView`_                             `LockLayerRom`_                         `MakeVPort`_                            `ModeNotAvailable`_                     
-`MouseCoordsRelative`_                  `Move`_                                 `MoveSprite`_                           `MrgCop`_                               
-`NewRectRegion`_                        `NewRegion`_                            `NextDisplayInfo`_                      `ObtainBestPenA`_                       
-`ObtainPen`_                            `OpenFont`_                             `OpenMonitor`_                          `OrRectRegion`_                         
-`OrRectRegionND`_                       `OrRegionRegion`_                       `OrRegionRegionND`_                     `OwnBlitter`_                           
-`PolyDraw`_                             `QBlit`_                                `QBSBlit`_                              `ReadPixel`_                            
-`ReadPixelArray8`_                      `ReadPixelLine8`_                       `RectFill`_                             `ReleasePen`_                           
-`RemFont`_                              `RemIBob`_                              `RemVSprite`_                           `ScalerDiv`_                            
-`ScrollRaster`_                         `ScrollRasterBF`_                       `ScrollRegion`_                         `ScrollVPort`_                          
-`SetABPenDrMd`_                         `SetAPen`_                              `SetBPen`_                              `SetChipRev`_                           
-`SetCollision`_                         `SetDrMd`_                              `SetFont`_                              `SetFrontBitMap`_                       
-`SetMaxPen`_                            `SetOutlinePen`_                        `SetPointerPos`_                        `SetPointerShape`_                      
-`SetRast`_                              `SetRegion`_                            `SetRGB32`_                             `SetRGB32CM`_                           
-`SetRGB4`_                              `SetRGB4CM`_                            `SetRGBConversionFunctionA`_            `SetRPAttrsA`_                          
-`SetSoftStyle`_                         `SetWriteMask`_                         `ShowImminentReset`_                    `SortGList`_                            
-`StripFont`_                            `SwapRegions`_                          `SyncSBitMap`_                          `Text`_                                 
-`TextExtent`_                           `TextFit`_                              `TextLength`_                           `UCopperListInit`_                      
-`UnlockLayerRom`_                       `VBeamPos`_                             `VideoControl`_                         `WaitBlit`_                             
-`WaitBOVP`_                             `WaitTOF`_                              `WeighTAMatch`_                         `WriteChunkyPixels`_                    
-`WritePixel`_                           `WritePixelArray8`_                     `WritePixelLine8`_                      `XorRectRegion`_                        
-`XorRectRegionND`_                      `XorRegionRegion`_                      `XorRegionRegionND`_                    
+`AddAnimOb()`_                          `AddBob()`_                             `AddFont()`_                            `AddVSprite()`_                         
+`AllocBitMap()`_                        `AllocDBufInfo()`_                      `AllocRaster()`_                        `AllocScreenBitMap()`_                  
+`AllocSpriteDataA()`_                   `AndRectRect()`_                        `AndRectRegion()`_                      `AndRectRegionND()`_                    
+`AndRegionRegion()`_                    `AndRegionRegionND()`_                  `Animate()`_                            `AreaCircle()`_                         
+`AreaDraw()`_                           `AreaEllipse()`_                        `AreaEnd()`_                            `AreaMove()`_                           
+`AreRegionsEqual()`_                    `AskFont()`_                            `AskSoftStyle()`_                       `AttachPalExtra()`_                     
+`AttemptLockLayerRom()`_                `BestModeIDA()`_                        `BitMapScale()`_                        `BltBitMap()`_                          
+`BltBitMapRastPort()`_                  `BltClear()`_                           `BltMaskBitMapRastPort()`_              `BltPattern()`_                         
+`BltRastPortBitMap()`_                  `BltTemplate()`_                        `CalcIVG()`_                            `CBump()`_                              
+`ChangeExtSpriteA()`_                   `ChangeSprite()`_                       `ChangeVPBitMap()`_                     `ClearEOL()`_                           
+`ClearRectRegion()`_                    `ClearRectRegionND()`_                  `ClearRegion()`_                        `ClearRegionRegion()`_                  
+`ClearRegionRegionND()`_                `ClearScreen()`_                        `ClipBlit()`_                           `CloneRastPort()`_                      
+`CloseFont()`_                          `CloseMonitor()`_                       `CMove()`_                              `CoerceMode()`_                         
+`ConvertPixelsA()`_                     `CopyRegion()`_                         `CopySBitMap()`_                        `CreateRastPort()`_                     
+`CWait()`_                              `DeinitRastPort()`_                     `DisownBlitter()`_                      `DisposeRegion()`_                      
+`DoCollision()`_                        `Draw()`_                               `DrawEllipse()`_                        `DrawGList()`_                          
+`EraseRect()`_                          `ExtendFont()`_                         `FindColor()`_                          `FindDisplayInfo()`_                    
+`Flood()`_                              `FontExtent()`_                         `FreeBitMap()`_                         `FreeColorMap()`_                       
+`FreeCopList()`_                        `FreeCprList()`_                        `FreeDBufInfo()`_                       `FreeGBuffers()`_                       
+`FreeRaster()`_                         `FreeRastPort()`_                       `FreeSprite()`_                         `FreeSpriteData()`_                     
+`FreeVPortCopLists()`_                  `GetAPen()`_                            `GetBitMapAttr()`_                      `GetBPen()`_                            
+`GetColorMap()`_                        `GetDisplayInfoData()`_                 `GetDrMd()`_                            `GetExtSpriteA()`_                      
+`GetGBuffers()`_                        `GetOutlinePen()`_                      `GetRGB32()`_                           `GetRGB4()`_                            
+`GetRPAttrsA()`_                        `GetSprite()`_                          `GetVPModeID()`_                        `GfxAssociate()`_                       
+`GfxFree()`_                            `GfxLookUp()`_                          `GfxNew()`_                             `InitArea()`_                           
+`InitBitMap()`_                         `InitGels()`_                           `InitGMasks()`_                         `InitMasks()`_                          
+`InitRastPort()`_                       `InitTmpRas()`_                         `InitView()`_                           `InitVPort()`_                          
+`IsPointInRegion()`_                    `LoadRGB32()`_                          `LoadRGB4()`_                           `LoadView()`_                           
+`LockLayerRom()`_                       `MakeVPort()`_                          `ModeNotAvailable()`_                   `Move()`_                               
+`MoveSprite()`_                         `MrgCop()`_                             `NewRectRegion()`_                      `NewRegion()`_                          
+`NextDisplayInfo()`_                    `ObtainBestPenA()`_                     `ObtainPen()`_                          `OpenFont()`_                           
+`OpenMonitor()`_                        `OrRectRegion()`_                       `OrRectRegionND()`_                     `OrRegionRegion()`_                     
+`OrRegionRegionND()`_                   `OwnBlitter()`_                         `PolyDraw()`_                           `QBlit()`_                              
+`QBSBlit()`_                            `ReadPixel()`_                          `ReadPixelArray8()`_                    `ReadPixelLine8()`_                     
+`RectFill()`_                           `ReleasePen()`_                         `RemFont()`_                            `RemIBob()`_                            
+`RemVSprite()`_                         `ScalerDiv()`_                          `ScrollRaster()`_                       `ScrollRasterBF()`_                     
+`ScrollRegion()`_                       `ScrollVPort()`_                        `SetABPenDrMd()`_                       `SetAPen()`_                            
+`SetBPen()`_                            `SetChipRev()`_                         `SetCollision()`_                       `SetDrMd()`_                            
+`SetFont()`_                            `SetFrontBitMap()`_                     `SetMaxPen()`_                          `SetOutlinePen()`_                      
+`SetRast()`_                            `SetRegion()`_                          `SetRGB32()`_                           `SetRGB32CM()`_                         
+`SetRGB4()`_                            `SetRGB4CM()`_                          `SetRGBConversionFunctionA()`_          `SetRPAttrsA()`_                        
+`SetSoftStyle()`_                       `SetWriteMask()`_                       `SortGList()`_                          `StripFont()`_                          
+`SwapRegions()`_                        `SyncSBitMap()`_                        `Text()`_                               `TextExtent()`_                         
+`TextFit()`_                            `TextLength()`_                         `UCopperListInit()`_                    `UnlockLayerRom()`_                     
+`VBeamPos()`_                           `VideoControl()`_                       `WaitBlit()`_                           `WaitBOVP()`_                           
+`WaitTOF()`_                            `WeighTAMatch()`_                       `WriteChunkyPixels()`_                  `WritePixel()`_                         
+`WritePixelArray8()`_                   `WritePixelLine8()`_                    `XorRectRegion()`_                      `XorRectRegionND()`_                    
+`XorRegionRegion()`_                    `XorRegionRegionND()`_                  
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-AddAnimOb
-=========
+AddAnimOb()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -98,16 +97,16 @@ Inputs
              structure
 
 
+
 See also
 ~~~~~~~~
-::
 
-     InitGels() Animate() graphics/rastport.h graphics/gels.h
+`InitGels()`_ `Animate()`_ graphics/rastport.h graphics/gels.h 
 
+----------
 
-
-AddBob
-======
+AddBob()
+========
 
 Synopsis
 ~~~~~~~~
@@ -134,16 +133,16 @@ Inputs
            to it (see InitGels()).
 
 
+
 See also
 ~~~~~~~~
-::
 
-     InitGels() AddVSprite() graphics/rastport.h graphics/gels.h
+`InitGels()`_ `AddVSprite()`_ graphics/rastport.h graphics/gels.h 
 
+----------
 
-
-AddFont
-=======
+AddFont()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -174,16 +173,16 @@ Result
      None.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OpenFont(), RemFont(), CloseFont(), SetFont()
+`OpenFont()`_ `RemFont()`_ `CloseFont()`_ `SetFont()`_ 
 
+----------
 
-
-AddVSprite
-==========
+AddVSprite()
+============
 
 Synopsis
 ~~~~~~~~
@@ -210,16 +209,16 @@ Inputs
           to it (see InitGels()).
 
 
+
 See also
 ~~~~~~~~
-::
 
-     InitGels()  graphics/gels.h graphics/rastport.h
+`InitGels()`_ graphics/gels.h graphics/rastport.h 
 
+----------
 
-
-AllocBitMap
-===========
+AllocBitMap()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -319,16 +318,16 @@ Notes
      family of functions.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FreeBitMap()
+`FreeBitMap()`_ 
 
+----------
 
-
-AllocDBufInfo
-=============
+AllocDBufInfo()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -359,8 +358,10 @@ Inputs
 
 
 
-AllocRaster
-===========
+----------
+
+AllocRaster()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -400,16 +401,16 @@ Notes
      AllocBitMap() instead.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AllocBitMap(), FreeRaster(), FreeBitMap()
+`AllocBitMap()`_ `FreeRaster()`_ `FreeBitMap()`_ 
 
+----------
 
-
-AllocScreenBitMap
-=================
+AllocScreenBitMap()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -447,8 +448,10 @@ Notes
 
 
 
-AllocSpriteDataA
-================
+----------
+
+AllocSpriteDataA()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -482,8 +485,10 @@ Result
 
 
 
-AndRectRect
-===========
+----------
+
+AndRectRect()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -530,16 +535,16 @@ Notes
      This function does not exist in AmigaOS.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AndRectRegion() AndRegionRegion()
+`AndRectRegion()`_ `AndRegionRegion()`_ 
 
+----------
 
-
-AndRectRegion
-=============
+AndRectRegion()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -571,17 +576,16 @@ Notes
      This is the only *RectRegion function that cannot fail
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AndRegionRegion() OrRectRegion() XorRectRegion() ClearRectRegion()
-     NewRegion()
+`AndRegionRegion()`_ `OrRectRegion()`_ `XorRectRegion()`_ `ClearRectRegion()`_ `NewRegion()`_ 
 
+----------
 
-
-AndRectRegionND
-===============
+AndRectRegionND()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -613,17 +617,16 @@ Result
      The resulting region or NULL in case there's no enough free memory
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AndRegionRegion() OrRectRegion() XorRectRegion() ClearRectRegion()
-     NewRegion()
+`AndRegionRegion()`_ `OrRectRegion()`_ `XorRectRegion()`_ `ClearRectRegion()`_ `NewRegion()`_ 
 
+----------
 
-
-AndRegionRegion
-===============
+AndRegionRegion()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -657,16 +660,16 @@ Result
      (out of memory)
 
 
+
 See also
 ~~~~~~~~
-::
 
-     XorRegionRegion(), OrRegionRegion()
+`XorRegionRegion()`_ `OrRegionRegion()`_ 
 
+----------
 
-
-AndRegionRegionND
-=================
+AndRegionRegionND()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -698,16 +701,16 @@ Result
      The resulting region or NULL in case there's no enough free memory
 
 
+
 See also
 ~~~~~~~~
-::
 
-     XorRegionRegion(), OrRegionRegion()
+`XorRegionRegion()`_ `OrRegionRegion()`_ 
 
+----------
 
-
-Animate
-=======
+Animate()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -736,16 +739,45 @@ Function
      rp    = pointer to a valid RastPort structure
 
 
+
 See also
+~~~~~~~~
+
+`AddAnimOb()`_ graphics/rastport.h graphics/gels.h 
+
+----------
+
+AreaCircle()
+============
+
+Synopsis
 ~~~~~~~~
 ::
 
-     AddAnimOb() graphics/rastport.h graphics/gels.h
+  ULONG AreaCircle(
+     struct RastPort * rp,
+     WORD cx,
+     WORD cy,
+     WORD r );
+
+
+Function
+~~~~~~~~
+::
+
+     Calls AreaEllipse with "a" and "b" set to "r".
 
 
 
-AreaDraw
-========
+See also
+~~~~~~~~
+
+`AreaEllipse()`_ 
+
+----------
+
+AreaDraw()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -781,16 +813,16 @@ Result
              -1 if the vector collection matrix is full
 
 
+
 See also
 ~~~~~~~~
-::
 
-     InitArea() AreaMove() AreaEllipse() AreaCircle() graphics/rastport.h
+`InitArea()`_ `AreaMove()`_ `AreaEllipse()`_ `AreaCircle()`_ graphics/rastport.h 
 
+----------
 
-
-AreaEllipse
-===========
+AreaEllipse()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -831,16 +863,16 @@ Result
              -1 if the vector collection matrix is full
 
 
+
 See also
 ~~~~~~~~
-::
 
-     InitArea() AreaMove() AreaDraw() AreaCircle() graphics/rastport.h
+`InitArea()`_ `AreaMove()`_ `AreaDraw()`_ `AreaCircle()`_ graphics/rastport.h 
 
+----------
 
-
-AreaEnd
-=======
+AreaEnd()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -895,16 +927,16 @@ Bugs
      
 
 
+
 See also
 ~~~~~~~~
-::
 
-     InitArea() AreaDraw() AreaEllipse() AreaCircle() graphics/rastport.h
+`InitArea()`_ `AreaDraw()`_ `AreaEllipse()`_ `AreaCircle()`_ graphics/rastport.h 
 
+----------
 
-
-AreaMove
-========
+AreaMove()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -943,16 +975,16 @@ Result
              -1 if the vector collection matrix is full
 
 
+
 See also
 ~~~~~~~~
-::
 
-     InitArea() AreaDraw() AreaEllipse() AreaCircle() graphics/rastport.h
+`InitArea()`_ `AreaDraw()`_ `AreaEllipse()`_ `AreaCircle()`_ graphics/rastport.h 
 
+----------
 
-
-AreRegionsEqual
-===============
+AreRegionsEqual()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -984,16 +1016,16 @@ Result
      TRUE if the regions are equal, FALSE otherwise.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     XorRegionRegion(), OrRegionRegion()
+`XorRegionRegion()`_ `OrRegionRegion()`_ 
 
+----------
 
-
-AskFont
-=======
+AskFont()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -1025,8 +1057,10 @@ Result
 
 
 
-AskSoftStyle
-============
+----------
+
+AskSoftStyle()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -1060,17 +1094,16 @@ Result
  Algorithmically generated style bits (bits not defined are also set).
 
 
+
 See also
 ~~~~~~~~
-::
 
+`SetSoftStyle()`_ graphics/text.h 
 
- SetSoftStyle(), graphics/text.h
+----------
 
-
-
-AttachPalExtra
-==============
+AttachPalExtra()
+================
 
 Synopsis
 ~~~~~~~~
@@ -1106,8 +1139,10 @@ Result
 
 
 
-AttemptLockLayerRom
-===================
+----------
+
+AttemptLockLayerRom()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -1143,16 +1178,16 @@ Result
      FALSE - layer could not be locked, it's locked by another task.
 
 
+
 See also
 ~~~~~~~~
-::
 
-   LockLayerRom() UnlockLayerRom(), 
+`LockLayerRom()`_ `UnlockLayerRom()`_ 
 
+----------
 
-
-BestModeIDA
-===========
+BestModeIDA()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1179,16 +1214,16 @@ Result
           could not be found
 
 
+
 See also
 ~~~~~~~~
-::
 
-     graphics/modeid.h graphics/displayinfo.h
+graphics/modeid.h graphics/displayinfo.h 
 
+----------
 
-
-BitMapScale
-===========
+BitMapScale()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1251,16 +1286,16 @@ Notes
        bitmap is left.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ScalerDiv() graphics/scales.h
+`ScalerDiv()`_ graphics/scales.h 
 
+----------
 
-
-BltBitMap
-=========
+BltBitMap()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -1349,16 +1384,16 @@ Notes
      respectively.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ClipBlit(), BltBitMapRastPort()
+`ClipBlit()`_ `BltBitMapRastPort()`_ 
 
+----------
 
-
-BltBitMapRastPort
-=================
+BltBitMapRastPort()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -1382,16 +1417,16 @@ Function
      Moves a part of a bitmap around or into another bitmaps.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ClipBlit()
+`ClipBlit()`_ 
 
+----------
 
-
-BltClear
-========
+BltClear()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -1439,16 +1474,16 @@ Notes
      some memory.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     InitGels() Animate() graphics/rastport.h graphics/gels.h
+`InitGels()`_ `Animate()`_ graphics/rastport.h graphics/gels.h 
 
+----------
 
-
-BltMaskBitMapRastPort
-=====================
+BltMaskBitMapRastPort()
+=======================
 
 Synopsis
 ~~~~~~~~
@@ -1473,16 +1508,16 @@ Function
      Copies a part of a bitmap to another bitmap with using a mask.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ClipBlit()
+`ClipBlit()`_ 
 
+----------
 
-
-BltPattern
-==========
+BltPattern()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1516,8 +1551,10 @@ Inputs
 
 
 
-BltRastPortBitMap
-=================
+----------
+
+BltRastPortBitMap()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -1562,8 +1599,10 @@ Notes
 
 
 
-BltTemplate
-===========
+----------
+
+BltTemplate()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1600,8 +1639,10 @@ Inputs
 
 
 
-CalcIVG
-=======
+----------
+
+CalcIVG()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -1636,8 +1677,10 @@ Result
 
 
 
-CBump
-=====
+----------
+
+CBump()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -1668,16 +1711,16 @@ Notes
      CWAIT() and CMOVE() automatically call this function!
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CINIT CWAIT CMOVE CEND graphics/copper.h
+CINIT CWAIT CMOVE CEND graphics/copper.h 
 
+----------
 
-
-ChangeExtSpriteA
-================
+ChangeExtSpriteA()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -1714,8 +1757,10 @@ Result
 
 
 
-ChangeSprite
-============
+----------
+
+ChangeSprite()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -1727,8 +1772,10 @@ Synopsis
           void * newdata );
 
 
-ChangeVPBitMap
-==============
+----------
+
+ChangeVPBitMap()
+================
 
 Synopsis
 ~~~~~~~~
@@ -1751,8 +1798,10 @@ Inputs
 
 
 
-ClearEOL
-========
+----------
+
+ClearEOL()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -1778,17 +1827,16 @@ Inputs
  pr   --  pointer to rastport
 
 
+
 See also
 ~~~~~~~~
-::
 
+`Text()`_ `ClearScreen()`_ `SetRast()`_ graphics/text.h graphics/rastport.h 
 
- Text(), ClearScreen(), SetRast(), graphics/text.h, graphics/rastport.h
+----------
 
-
-
-ClearRectRegion
-===============
+ClearRectRegion()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -1820,16 +1868,16 @@ Result
      FALSE if not enough memory was available, else TRUE
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AndRectRegion() OrRectRegion() XorRectRegion()
+`AndRectRegion()`_ `OrRectRegion()`_ `XorRectRegion()`_ 
 
+----------
 
-
-ClearRectRegionND
-=================
+ClearRectRegionND()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -1861,17 +1909,16 @@ Result
      The resulting region or NULL in case there's no enough free memory
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AndRegionRegion() OrRectRegion() XorRectRegion() ClearRectRegion()
-     NewRegion()
+`AndRegionRegion()`_ `OrRectRegion()`_ `XorRectRegion()`_ `ClearRectRegion()`_ `NewRegion()`_ 
 
+----------
 
-
-ClearRegion
-===========
+ClearRegion()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1901,16 +1948,16 @@ Result
      None.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     NewRegion()
+`NewRegion()`_ 
 
+----------
 
-
-ClearRegionRegion
-=================
+ClearRegionRegion()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -1950,16 +1997,16 @@ Notes
      This function does not exist in AmigaOS.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ClearRectRegion() AndRectRegion() OrRectRegion() XorRectRegion()
+`ClearRectRegion()`_ `AndRectRegion()`_ `OrRectRegion()`_ `XorRectRegion()`_ 
 
+----------
 
-
-ClearRegionRegionND
-===================
+ClearRegionRegionND()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -1991,16 +2038,16 @@ Result
      The resulting region or NULL in case there's no enough free memory
 
 
+
 See also
 ~~~~~~~~
-::
 
-     XorRegionRegion(), OrRegionRegion()
+`XorRegionRegion()`_ `OrRegionRegion()`_ 
 
+----------
 
-
-ClearScreen
-===========
+ClearScreen()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -2027,17 +2074,16 @@ Inputs
  rp   --  pointer to rastport
 
 
+
 See also
 ~~~~~~~~
-::
 
+`Text()`_ `ClearEOL()`_ `SetRast()`_ graphics/text.h graphics/rastport.h 
 
- Text(), ClearEOL(), SetRast(), graphics/text.h, graphics/rastport.h
+----------
 
-
-
-ClipBlit
-========
+ClipBlit()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -2108,16 +2154,16 @@ Result
      None
 
 
+
 See also
 ~~~~~~~~
-::
 
-     BltBitMapRastPort()
+`BltBitMapRastPort()`_ 
 
+----------
 
-
-CloneRastPort
-=============
+CloneRastPort()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -2157,16 +2203,16 @@ Notes
      function in aros.lib which does the same on Amiga.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateRastPort(), FreeRastPort()
+`CreateRastPort()`_ `FreeRastPort()`_ 
 
+----------
 
-
-CloseFont
-=========
+CloseFont()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -2190,8 +2236,10 @@ Inputs
 
 
 
-CloseMonitor
-============
+----------
+
+CloseMonitor()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -2216,16 +2264,16 @@ Result
              TRUE if MonitorSpec could not be closed
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OpenMonitor() graphics/monitor.h
+`OpenMonitor()`_ graphics/monitor.h 
 
+----------
 
-
-CMove
-=====
+CMove()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -2255,16 +2303,16 @@ Inputs
      value - 16 bit value to be moved to the hardware register
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CINIT CWAIT CEND graphics/copper.h
+CINIT CWAIT CEND graphics/copper.h 
 
+----------
 
-
-CoerceMode
-==========
+CoerceMode()
+============
 
 Synopsis
 ~~~~~~~~
@@ -2302,8 +2350,10 @@ Result
 
 
 
-ConvertPixelsA
-==============
+----------
+
+ConvertPixelsA()
+================
 
 Synopsis
 ~~~~~~~~
@@ -2357,16 +2407,16 @@ Result
      0 on failure (bad pixfmts), 1 on success.
      
 
+
 See also
 ~~~~~~~~
-::
 
-     <hidd/graphics.h>
-     
+<hidd/graphics.h>   
 
+----------
 
-CopyRegion
-==========
+CopyRegion()
+============
 
 Synopsis
 ~~~~~~~~
@@ -2403,16 +2453,16 @@ Notes
      This function does not exist in AmigaOS.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     NewRegion() DisposeRegion()
+`NewRegion()`_ `DisposeRegion()`_ 
 
+----------
 
-
-CopySBitMap
-===========
+CopySBitMap()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -2446,16 +2496,16 @@ Result
      attached to it
 
 
+
 See also
 ~~~~~~~~
-::
 
-     SyncSBitMap()
+`SyncSBitMap()`_ 
 
+----------
 
-
-CreateRastPort
-==============
+CreateRastPort()
+================
 
 Synopsis
 ~~~~~~~~
@@ -2494,8 +2544,10 @@ Notes
 
 
 
-CWait
-=====
+----------
+
+CWait()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -2533,16 +2585,16 @@ Bugs
      It's illegal to wait for horizontal values greater than 222 decimal!
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CINIT CMOVE CEND graphics/copper.h
+CINIT CMOVE CEND graphics/copper.h 
 
+----------
 
-
-DeinitRastPort
-==============
+DeinitRastPort()
+================
 
 Synopsis
 ~~~~~~~~
@@ -2582,16 +2634,16 @@ Notes
      that.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     InitRastPort()
+`InitRastPort()`_ 
 
+----------
 
-
-DisownBlitter
-=============
+DisownBlitter()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -2606,16 +2658,16 @@ Function
      The blitter is returned to usage by other tasks.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     DisownBlitter()
+`DisownBlitter()`_ 
 
+----------
 
-
-DisposeRegion
-=============
+DisposeRegion()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -2646,16 +2698,16 @@ Result
      None.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     NewRegion()
+`NewRegion()`_ 
 
+----------
 
-
-DoCollision
-===========
+DoCollision()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -2681,8 +2733,10 @@ Inputs
 
 
 
-Draw
-====
+----------
+
+Draw()
+======
 
 Synopsis
 ~~~~~~~~
@@ -2722,8 +2776,10 @@ Notes
      
 
 
-DrawEllipse
-===========
+----------
+
+DrawEllipse()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -2754,8 +2810,10 @@ Inputs
 
 
 
-DrawGList
-=========
+----------
+
+DrawGList()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -2781,8 +2839,10 @@ Inputs
 
 
 
-EraseRect
-=========
+----------
+
+EraseRect()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -2814,8 +2874,10 @@ Inputs
 
 
 
-ExtendFont
-==========
+----------
+
+ExtendFont()
+============
 
 Synopsis
 ~~~~~~~~
@@ -2850,16 +2912,16 @@ Result
                        can't be built. TRUE otherwise.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ExtendFontTags(), StripFont()
+`StripFont()`_ 
 
+----------
 
-
-FindColor
-=========
+FindColor()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -2900,8 +2962,10 @@ Result
 
 
 
-FindDisplayInfo
-===============
+----------
+
+FindDisplayInfo()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -2932,16 +2996,16 @@ Result
               or NULL if no match
 
 
+
 See also
 ~~~~~~~~
-::
 
-     graphics/displayinfo.h
+graphics/displayinfo.h 
 
+----------
 
-
-Flood
-=====
+Flood()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -2979,8 +3043,10 @@ Notes
 
 
 
-FontExtent
-==========
+----------
+
+FontExtent()
+============
 
 Synopsis
 ~~~~~~~~
@@ -3028,17 +3094,16 @@ Notes
  character when FPF_REVPATH is set), but affects the bounding box size.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`TextExtent()`_ <graphics/text.h> 
 
- TextExtent(), <graphics/text.h>
+----------
 
-
-
-FreeBitMap
-==========
+FreeBitMap()
+============
 
 Synopsis
 ~~~~~~~~
@@ -3068,16 +3133,16 @@ Result
      None.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AllocBitMap(), AllocRaster(), FreeRaster()
+`AllocBitMap()`_ `AllocRaster()`_ `FreeRaster()`_ 
 
+----------
 
-
-FreeColorMap
-============
+FreeColorMap()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -3109,16 +3174,16 @@ Result
      Memory returned to pool of free memory.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetColorMap SetRGB4() graphics/view.h
+`GetColorMap()`_ `SetRGB4()`_ graphics/view.h 
 
+----------
 
-
-FreeCopList
-===========
+FreeCopList()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -3141,16 +3206,16 @@ Inputs
      coplist - pointer to a CopList structure
 
 
+
 See also
 ~~~~~~~~
-::
 
-     graphics/copper.h
+graphics/copper.h 
 
+----------
 
-
-FreeCprList
-===========
+FreeCprList()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -3173,16 +3238,16 @@ Inputs
      cprlist - pointer to a cprlist structure
 
 
+
 See also
 ~~~~~~~~
-::
 
-     graphics/copper.h
+graphics/copper.h 
 
+----------
 
-
-FreeDBufInfo
-============
+FreeDBufInfo()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -3210,17 +3275,16 @@ Inputs
  is done).
 
 
+
 See also
 ~~~~~~~~
-::
 
+`AllocDBufInfo()`_ `ChangeVPBitMap()`_ 
 
- AllocDBufInfo(), ChangeVPBitMap()
+----------
 
-
-
-FreeGBuffers
-============
+FreeGBuffers()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -3266,16 +3330,16 @@ Notes
      buffers. (Possible incompatibility with the real thing, though)
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetGBuffers() graphics/rastport.h graphics/gels.h
+`GetGBuffers()`_ graphics/rastport.h graphics/gels.h 
 
+----------
 
-
-FreeRaster
-==========
+FreeRaster()
+============
 
 Synopsis
 ~~~~~~~~
@@ -3308,16 +3372,16 @@ Result
      The memory occupied by the bitplane will be returned to the system.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AllocRaster(), AllocBitMap(), FreeBitMap()
+`AllocRaster()`_ `AllocBitMap()`_ `FreeBitMap()`_ 
 
+----------
 
-
-FreeRastPort
-============
+FreeRastPort()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -3356,16 +3420,16 @@ Notes
      with the same name in aros.lib on Amiga.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CloneRastPort(), CreateRastPort()
+`CloneRastPort()`_ `CreateRastPort()`_ 
 
+----------
 
-
-FreeSprite
-==========
+FreeSprite()
+============
 
 Synopsis
 ~~~~~~~~
@@ -3397,16 +3461,16 @@ Result
      Machine.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetSprite() ChangeSprite() MoveSprite() graphics/sprite.h
+`GetSprite()`_ `ChangeSprite()`_ `MoveSprite()`_ graphics/sprite.h 
 
+----------
 
-
-FreeSpriteData
-==============
+FreeSpriteData()
+================
 
 Synopsis
 ~~~~~~~~
@@ -3431,8 +3495,10 @@ Inputs
 
 
 
-FreeVPortCopLists
-=================
+----------
+
+FreeVPortCopLists()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -3457,16 +3523,16 @@ Inputs
      vp - pointer to a ViewPort structure
 
 
+
 See also
 ~~~~~~~~
-::
 
-     graphics/view.h
+graphics/view.h 
 
+----------
 
-
-GetAPen
-=======
+GetAPen()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -3490,8 +3556,10 @@ Inputs
 
 
 
-GetBitMapAttr
-=============
+----------
+
+GetBitMapAttr()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -3526,16 +3594,16 @@ Result
      0 or NULL is returned.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AllocBitMap()
+`AllocBitMap()`_ 
 
+----------
 
-
-GetBPen
-=======
+GetBPen()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -3559,8 +3627,10 @@ Inputs
 
 
 
-GetColorMap
-===========
+----------
+
+GetColorMap()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -3597,16 +3667,16 @@ Result
              stored into the ViewPort.ColorMap pointer.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FreeColorMap SetRGB4() graphics/view.h
+`FreeColorMap()`_ `SetRGB4()`_ graphics/view.h 
 
+----------
 
-
-GetDisplayInfoData
-==================
+GetDisplayInfoData()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -3649,16 +3719,16 @@ Result
               if zero, no information for ID was available
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FindDisplayInfo() NextDisplayInfo() graphics/displayinfo.h
+`FindDisplayInfo()`_ `NextDisplayInfo()`_ graphics/displayinfo.h 
 
+----------
 
-
-GetDrMd
-=======
+GetDrMd()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -3682,8 +3752,10 @@ Inputs
 
 
 
-GetExtSpriteA
-=============
+----------
+
+GetExtSpriteA()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -3713,8 +3785,10 @@ Result
 
 
 
-GetGBuffers
-===========
+----------
+
+GetGBuffers()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -3768,16 +3842,16 @@ Notes
      lost in space.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FreeGBuffers() graphics/gels.h
+`FreeGBuffers()`_ graphics/gels.h 
 
+----------
 
-
-GetOutlinePen
-=============
+GetOutlinePen()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -3801,8 +3875,10 @@ Inputs
 
 
 
-GetRGB32
-========
+----------
+
+GetRGB32()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -3848,17 +3924,16 @@ Notes
      table should point to an array of at least 3*ncolors longwords.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetColorMap() FreeColorMap() SetRGB4() LoadRGB4()
-     LoadRGB32() SetRGB32CM() graphics/view.h
+`GetColorMap()`_ `FreeColorMap()`_ `SetRGB4()`_ `LoadRGB4()`_ `LoadRGB32()`_ `SetRGB32CM()`_ graphics/view.h 
 
+----------
 
-
-GetRGB4
-=======
+GetRGB4()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -3892,16 +3967,16 @@ Result
      other   : UWORD RGB value, 4 bits per electron gun, right justified
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetColorMap() FreeColorMap() SetRGB4() LoadRGB4() graphics/view.h
+`GetColorMap()`_ `FreeColorMap()`_ `SetRGB4()`_ `LoadRGB4()`_ graphics/view.h 
 
+----------
 
-
-GetRPAttrsA
-===========
+GetRPAttrsA()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -3982,17 +4057,16 @@ Bugs
      RPTAG_SoftStyle not supported, yet.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     SetRPAttrsA() GetAPen() GetBPen() GetOutLinePen() GetWriteMask()
-     graphics/rpattr.h
+`SetRPAttrsA()`_ `GetAPen()`_ `GetBPen()`_ `GetOutLinePen()`_ graphics/rpattr.h 
 
+----------
 
-
-GetSprite
-=========
+GetSprite()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -4043,16 +4117,16 @@ Bugs
      On some machines this will never return anything else than -1!
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FreeSprite() ChangeSprite() MoveSprite() GetSprite() graphics/sprite.h
+`FreeSprite()`_ `ChangeSprite()`_ `MoveSprite()`_ `GetSprite()`_ graphics/sprite.h 
 
+----------
 
-
-GetVPModeID
-===========
+GetVPModeID()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -4084,16 +4158,16 @@ Result
               with this ViewPort, or INVALID_ID
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ModeNotAvailable() graphics/displayinfo.h
+`ModeNotAvailable()`_ graphics/displayinfo.h 
 
+----------
 
-
-GfxAssociate
-============
+GfxAssociate()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -4138,16 +4212,16 @@ Notes
    several pointers. Only one pointer is allowed!
 
 
+
 See also
 ~~~~~~~~
-::
 
-   graphics/gfxnodes.h GfxFree(), GfxNew(), GfxLookUp()
+graphics/gfxnodes.h `GfxFree()`_ `GfxNew()`_ `GfxLookUp()`_ 
 
+----------
 
-
-GfxFree
-=======
+GfxFree()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -4181,16 +4255,16 @@ Result
    structure, if necessary, before freeing it (see GfxAssociate())
 
 
+
 See also
 ~~~~~~~~
-::
 
-   graphics/gfxnodes.h GfxNew(), GfxAssociate(), GfxLookUp()
+graphics/gfxnodes.h `GfxNew()`_ `GfxAssociate()`_ `GfxLookUp()`_ 
 
+----------
 
-
-GfxLookUp
-=========
+GfxLookUp()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -4224,16 +4298,16 @@ Result
             associated with the pointer
 
 
+
 See also
 ~~~~~~~~
-::
 
-   graphics/gfxnodes.h GfxNew(), GfxAssociate(), GfxFree()
+graphics/gfxnodes.h `GfxNew()`_ `GfxAssociate()`_ `GfxFree()`_ 
 
+----------
 
-
-GfxNew
-======
+GfxNew()
+========
 
 Synopsis
 ~~~~~~~~
@@ -4266,16 +4340,16 @@ Result
    failed
 
 
+
 See also
 ~~~~~~~~
-::
 
-   graphics/gfxnodes.h GfxFree(), GfxAssociate(), GfxLookUp()
+graphics/gfxnodes.h `GfxFree()`_ `GfxAssociate()`_ `GfxLookUp()`_ 
 
+----------
 
-
-InitArea
-========
+InitArea()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -4312,16 +4386,16 @@ Result
      created by AreaMove, AreaDraw and AreaEllipse (AreaCircle).
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AreaDraw() AreaMove() AreaEllipse() AreaCircle() graphics/rastport.h
+`AreaDraw()`_ `AreaMove()`_ `AreaEllipse()`_ `AreaCircle()`_ graphics/rastport.h 
 
+----------
 
-
-InitBitMap
-==========
+InitBitMap()
+============
 
 Synopsis
 ~~~~~~~~
@@ -4361,17 +4435,16 @@ Notes
  The Planes[] is not affected and must be set up the caller.
 
 
+
 See also
 ~~~~~~~~
-::
 
+<graphics/gfx.h> 
 
- <graphics/gfx.h>
+----------
 
-
-
-InitGels
-========
+InitGels()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -4401,56 +4474,16 @@ Inputs
      GInfo - pointer to the GelsInfo structure to be initialized
 
 
+
 See also
 ~~~~~~~~
-::
 
-     graphics/rastport.h  graphics/gels.h
+graphics/rastport.h  graphics/gels.h 
 
+----------
 
-
-InitGfxHidd
-===========
-
-Synopsis
-~~~~~~~~
-::
-
- BOOL InitGfxHidd(
-          struct Library * hiddBase );
-
-Function
-~~~~~~~~
-::
-
-     This function lets graphics.library initialize
-     the supplied gfx.hidd
-
-
-Inputs
-~~~~~~
-::
-
-     hiddBase - Library base of hidd to use for gfx.
-
-
-Result
-~~~~~~
-::
-
-     success - If TRUE initialization went OK.
-
-
-Notes
-~~~~~
-::
-
-     This function is private and AROS specific.
-
-
-
-InitGMasks
-==========
+InitGMasks()
+============
 
 Synopsis
 ~~~~~~~~
@@ -4474,16 +4507,16 @@ Inputs
      anOb = pointer to the AnimOb
 
 
+
 See also
 ~~~~~~~~
-::
 
-     InitGels() InitMasks() graphics/gels.h
+`InitGels()`_ `InitMasks()`_ graphics/gels.h 
 
+----------
 
-
-InitMasks
-=========
+InitMasks()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -4507,16 +4540,16 @@ Inputs
      vs = pointer to VSprite structure
 
 
+
 See also
 ~~~~~~~~
-::
 
-     InitGels() InitGMasks() graphics/gels.h
+`InitGels()`_ `InitGMasks()`_ graphics/gels.h 
 
+----------
 
-
-InitRastPort
-============
+InitRastPort()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -4558,8 +4591,10 @@ Notes
 
 
 
-InitTmpRas
-==========
+----------
+
+InitTmpRas()
+============
 
 Synopsis
 ~~~~~~~~
@@ -4607,8 +4642,10 @@ Bugs
 
 
 
-InitView
-========
+----------
+
+InitView()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -4641,8 +4678,10 @@ Result
 
 
 
-InitVPort
-=========
+----------
+
+InitVPort()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -4675,8 +4714,10 @@ Result
 
 
 
-IsPointInRegion
-===============
+----------
+
+IsPointInRegion()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -4717,60 +4758,16 @@ Notes
      This function isn't available in AmigaOS.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     XorRegionRegion(), OrRegionRegion()
+`XorRegionRegion()`_ `OrRegionRegion()`_ 
 
+----------
 
-
-LateGfxInit
+LoadRGB32()
 ===========
-
-Synopsis
-~~~~~~~~
-::
-
- BOOL LateGfxInit(
-          APTR data );
-
-Function
-~~~~~~~~
-::
-
-     This function permits late initialization
-     of Graphics (After DOS but *before* Graphics is used, i.e.
-     before the first view/screen has been set up).
-     Can be used to load Graphics HIDDs from disk and initializing it.
-     The function only passes the data through to the
-     driver.
-
-
-Inputs
-~~~~~~
-::
-
-     data - Data passed on to graphics driver.
-
-
-Result
-~~~~~~
-::
-
-     success - If TRUE initialization went OK.
-
-
-Notes
-~~~~~
-::
-
-     This function is private and AROS specific.
-
-
-
-LoadRGB32
-=========
 
 Synopsis
 ~~~~~~~~
@@ -4807,8 +4804,10 @@ Example
 
 
 
-LoadRGB4
-========
+----------
+
+LoadRGB4()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -4839,16 +4838,16 @@ Inputs
      count   - number of UWORDs in the table
      
 
+
 See also
 ~~~~~~~~
-::
 
-     LoadRGB32()
+`LoadRGB32()`_ 
 
+----------
 
-
-LoadView
-========
+LoadView()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -4866,8 +4865,10 @@ Inputs
 
 
 
-LockLayerRom
-============
+----------
+
+LockLayerRom()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -4905,16 +4906,16 @@ Bugs
     Does not save all registers.
 
 
+
 See also
 ~~~~~~~~
-::
 
-    UnlockLayerRom() LockLayer() UnLockLayer()
+`UnlockLayerRom()`_ `hyperlayers.library/LockLayer() <./hyperlayers#locklayer>`_ `hyperlayers.library/UnLockLayer() <./hyperlayers#unlocklayer>`_ 
 
+----------
 
-
-MakeVPort
-=========
+MakeVPort()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -4941,8 +4942,10 @@ Result
 
 
 
-ModeNotAvailable
-================
+----------
+
+ModeNotAvailable()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -4974,58 +4977,16 @@ Result
              or 0 if there is no reason why it should not be available
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetVPModeID() graphics/displayinfo.h
+`GetVPModeID()`_ graphics/displayinfo.h 
 
+----------
 
-
-MouseCoordsRelative
-===================
-
-Synopsis
-~~~~~~~~
-::
-
- BOOL MouseCoordsRelative();
-
-Function
-~~~~~~~~
-::
-
-     Tells whether mouse coordinates gotten from the below system are
-     relative or absolute.
-
-
-Result
-~~~~~~
-::
-
-     relative - TRUE if relative, FALSE if absolute.
-
-
-Notes
-~~~~~
-::
-
-     This function is private and AROS specific.
-
-
-Bugs
-~~~~
-::
-
-     There should not be need for such a function.
-     All coordinates gotten should be relative.
-     This is however difficult to do
-     with HIDDs base on window systems and
-     we use one window per screen.
-
-
-Move
-====
+Move()
+======
 
 Synopsis
 ~~~~~~~~
@@ -5052,8 +5013,10 @@ Inputs
 
 
 
-MoveSprite
-==========
+----------
+
+MoveSprite()
+============
 
 Synopsis
 ~~~~~~~~
@@ -5066,8 +5029,10 @@ Synopsis
           WORD y );
 
 
-MrgCop
-======
+----------
+
+MrgCop()
+========
 
 Synopsis
 ~~~~~~~~
@@ -5108,8 +5073,10 @@ Notes
 
 
 
-NewRectRegion
-=============
+----------
+
+NewRectRegion()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -5161,16 +5128,16 @@ Notes
          OrRectRegion(region, &rect);
 
 
+
 See also
 ~~~~~~~~
-::
 
-     NewRegion() OrRectRegion()
+`NewRegion()`_ `OrRectRegion()`_ 
 
+----------
 
-
-NewRegion
-=========
+NewRegion()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -5194,16 +5161,16 @@ Result
               should be freed by a call to DisposeRegion()
 
 
+
 See also
 ~~~~~~~~
-::
 
-     DisposeRegion()
+`DisposeRegion()`_ 
 
+----------
 
-
-NextDisplayInfo
-===============
+NextDisplayInfo()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -5235,16 +5202,16 @@ Result
                or INVALID_ID if no more records
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FindDisplayInfo() GetDisplayInfoData() graphics/displayinfo.h
+`FindDisplayInfo()`_ `GetDisplayInfoData()`_ graphics/displayinfo.h 
 
+----------
 
-
-ObtainBestPenA
-==============
+ObtainBestPenA()
+================
 
 Synopsis
 ~~~~~~~~
@@ -5302,8 +5269,10 @@ Notes
 
 
 
-ObtainPen
-=========
+----------
+
+ObtainPen()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -5361,8 +5330,10 @@ Notes
 
 
 
-OpenFont
-========
+----------
+
+OpenFont()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -5392,16 +5363,16 @@ Result
      Returns NULL if the font can't be found.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CloseFont() SetFont() diskfont.library/OpenDiskFont()
+`CloseFont()`_ `SetFont()`_ `diskfont.library/OpenDiskFont() <./diskfont#opendiskfont>`_ 
 
+----------
 
-
-OpenMonitor
-===========
+OpenMonitor()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -5427,16 +5398,16 @@ Result
             NULL if MonitorSpec could not be opened
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CloseMonitor() graphics/monitor.h
+`CloseMonitor()`_ graphics/monitor.h 
 
+----------
 
-
-OrRectRegion
-============
+OrRectRegion()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -5478,16 +5449,16 @@ Notes
      given rectangle after calling this function
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AndRectRegion(), XorRectRegion(), ClearRectRegion()
+`AndRectRegion()`_ `XorRectRegion()`_ `ClearRectRegion()`_ 
 
+----------
 
-
-OrRectRegionND
-==============
+OrRectRegionND()
+================
 
 Synopsis
 ~~~~~~~~
@@ -5520,17 +5491,16 @@ Result
      The resulting region or NULL in case there's no enough free memory
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AndRegionRegion() OrRectRegion() XorRectRegion() ClearRectRegion()
-     NewRegion()
+`AndRegionRegion()`_ `OrRectRegion()`_ `XorRectRegion()`_ `ClearRectRegion()`_ `NewRegion()`_ 
 
+----------
 
-
-OrRegionRegion
-==============
+OrRegionRegion()
+================
 
 Synopsis
 ~~~~~~~~
@@ -5564,16 +5534,16 @@ Result
      (out of memory)
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AndRegionRegion(), XOrRegionRegion()
+`AndRegionRegion()`_ `XOrRegionRegion()`_ 
 
+----------
 
-
-OrRegionRegionND
-================
+OrRegionRegionND()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -5605,16 +5575,16 @@ Result
      The resulting region or NULL in case there's no enough free memory
 
 
+
 See also
 ~~~~~~~~
-::
 
-     XorRegionRegion(), OrRegionRegion()
+`XorRegionRegion()`_ `OrRegionRegion()`_ 
 
+----------
 
-
-OwnBlitter
-==========
+OwnBlitter()
+============
 
 Synopsis
 ~~~~~~~~
@@ -5636,16 +5606,16 @@ Function
      use the blitter. 
 
 
+
 See also
 ~~~~~~~~
-::
 
-     DisownBlitter()
+`DisownBlitter()`_ 
 
+----------
 
-
-PolyDraw
-========
+PolyDraw()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -5674,8 +5644,10 @@ Inputs
 
 
 
-QBlit
-=====
+----------
+
+QBlit()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -5723,16 +5695,16 @@ Notes
      calls to graphics functions instead.      
 
 
+
 See also
 ~~~~~~~~
-::
 
-     QBSBlit() OwnBlitter DisownBlitter() hardware/blit.h
+`QBSBlit()`_ `OwnBlitter()`_ `DisownBlitter()`_ hardware/blit.h 
 
+----------
 
-
-QBSBlit
-=======
+QBSBlit()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -5779,16 +5751,16 @@ Notes
      calls to graphics functions instead.      
 
 
+
 See also
 ~~~~~~~~
-::
 
-     QBSBlit() OwnBlitter DisownBlitter() hardware/blit.h
+`QBSBlit()`_ `OwnBlitter()`_ `DisownBlitter()`_ hardware/blit.h 
 
+----------
 
-
-ReadPixel
-=========
+ReadPixel()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -5815,8 +5787,10 @@ Inputs
 
 
 
-ReadPixelArray8
-===============
+----------
+
+ReadPixelArray8()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -5870,8 +5844,10 @@ Notes
 
 
 
-ReadPixelLine8
-==============
+----------
+
+ReadPixelLine8()
+================
 
 Synopsis
 ~~~~~~~~
@@ -5919,8 +5895,10 @@ Notes
 
 
 
-RectFill
-========
+----------
+
+RectFill()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -5952,8 +5930,10 @@ Inputs
 
 
 
-ReleasePen
-==========
+----------
+
+ReleasePen()
+============
 
 Synopsis
 ~~~~~~~~
@@ -5992,8 +5972,10 @@ Result
 
 
 
-RemFont
-=======
+----------
+
+RemFont()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -6024,16 +6006,16 @@ Result
      None.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OpenFont(), CloseFont(), SetFont(), AddFont()
+`OpenFont()`_ `CloseFont()`_ `SetFont()`_ `AddFont()`_ 
 
+----------
 
-
-RemIBob
-=======
+RemIBob()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -6062,8 +6044,10 @@ Inputs
 
 
 
-RemVSprite
-==========
+----------
+
+RemVSprite()
+============
 
 Synopsis
 ~~~~~~~~
@@ -6086,16 +6070,16 @@ Inputs
      vs = pointer to VSprite to be removed from the gel list
 
 
+
 See also
 ~~~~~~~~
-::
 
-     InitGels() RemIBob() graphics/gels.h
+`InitGels()`_ `RemIBob()`_ graphics/gels.h 
 
+----------
 
-
-ScalerDiv
-=========
+ScalerDiv()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -6126,16 +6110,16 @@ Inputs
      denominator - a number in the range of 1..16383
 
 
+
 See also
 ~~~~~~~~
-::
 
-     BitMapScale()
+`BitMapScale()`_ 
 
+----------
 
-
-ScrollRaster
-============
+ScrollRaster()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -6178,8 +6162,10 @@ Inputs
 
 
 
-ScrollRasterBF
-==============
+----------
+
+ScrollRasterBF()
+================
 
 Synopsis
 ~~~~~~~~
@@ -6222,8 +6208,10 @@ Inputs
 
 
 
-ScrollRegion
-============
+----------
+
+ScrollRegion()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -6267,16 +6255,16 @@ Notes
     This function doesn't exist in AmigaOS
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateRegion()
+`NewRegion()`_ 
 
+----------
 
-
-ScrollVPort
-===========
+ScrollVPort()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -6286,8 +6274,10 @@ Synopsis
           struct ViewPort * vp );
 
 
-SetABPenDrMd
-============
+----------
+
+SetABPenDrMd()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -6333,8 +6323,10 @@ Notes
 
 
 
-SetAPen
-=======
+----------
+
+SetAPen()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -6360,8 +6352,10 @@ Inputs
 
 
 
-SetBPen
-=======
+----------
+
+SetBPen()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -6387,8 +6381,10 @@ Inputs
 
 
 
-SetChipRev
-==========
+----------
+
+SetChipRev()
+============
 
 Synopsis
 ~~~~~~~~
@@ -6412,8 +6408,10 @@ Result
 
 
 
-SetCollision
-============
+----------
+
+SetCollision()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -6442,16 +6440,16 @@ Inputs
      GInfo   = pointer to a GelsInfo structure
 
 
+
 See also
 ~~~~~~~~
-::
 
-     InitGels() graphics/rastport.h graphics/gels.h
+`InitGels()`_ graphics/rastport.h graphics/gels.h 
 
+----------
 
-
-SetDrMd
-=======
+SetDrMd()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -6477,8 +6475,10 @@ Inputs
 
 
 
-SetFont
-=======
+----------
+
+SetFont()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -6511,8 +6511,10 @@ Result
 
 
 
-SetFrontBitMap
-==============
+----------
+
+SetFrontBitMap()
+================
 
 Synopsis
 ~~~~~~~~
@@ -6555,8 +6557,10 @@ Notes
 
 
 
-SetMaxPen
-=========
+----------
+
+SetMaxPen()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -6588,16 +6592,16 @@ Inputs
      maxpen = longword pen value
 
 
+
 See also
 ~~~~~~~~
-::
 
-     SetWriteMask()
+`SetWriteMask()`_ 
 
+----------
 
-
-SetOutlinePen
-=============
+SetOutlinePen()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -6630,63 +6634,10 @@ Result
 
 
 
-SetPointerPos
-=============
+----------
 
-Synopsis
-~~~~~~~~
-::
-
- VOID SetPointerPos(
-          UWORD x,
-          UWORD y );
-
-Function
-~~~~~~~~
-::
-
-     Set the current mouse pointer's position.
-
-
-Notes
-~~~~~
-::
-
-     This function is private and AROS specific.
-
-
-
-SetPointerShape
-===============
-
-Synopsis
-~~~~~~~~
-::
-
- VOID SetPointerShape(
-          UWORD * shape,
-          UWORD width,
-          UWORD height,
-          UWORD xoffset,
-          UWORD yoffset );
-
-Function
-~~~~~~~~
-::
-
-     Set the current mouse pointer's shape.
-
-
-Notes
-~~~~~
-::
-
-     This function is private and AROS specific.
-
-
-
-SetRast
-=======
+SetRast()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -6722,17 +6673,16 @@ Result
  number.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`RectFill()`_ <graphics/rastport.h> 
 
- RectFill(), <graphics/rastport.h>
+----------
 
-
-
-SetRegion
-=========
+SetRegion()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -6764,17 +6714,16 @@ Result
      (out of memory).
 
 
+
 See also
 ~~~~~~~~
-::
 
-     NewRegion() DisposeRegion() DisposeRegionRectangle()
-     CopyRegion()
+`NewRegion()`_ `DisposeRegion()`_ `CopyRegion()`_ 
 
+----------
 
-
-SetRGB32
-========
+SetRGB32()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -6828,8 +6777,10 @@ Notes
 
 
 
-SetRGB32CM
-==========
+----------
+
+SetRGB32CM()
+============
 
 Synopsis
 ~~~~~~~~
@@ -6870,16 +6821,16 @@ Result
      in the ColorTable yourself, as the ColorTable is subject to change.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetColorMap() SetRGB32() GetRGB32() SetRGB4CM() graphics/view.h
+`GetColorMap()`_ `SetRGB32()`_ `GetRGB32()`_ `SetRGB4CM()`_ graphics/view.h 
 
+----------
 
-
-SetRGB4
-=======
+SetRGB4()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -6933,8 +6884,10 @@ Notes
 
 
 
-SetRGB4CM
-=========
+----------
+
+SetRGB4CM()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -6974,16 +6927,16 @@ Result
      before linking the ColorMap to a ViewPort.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetColorMap() SetRGB4() GetRGB4() graphics/view.h
+`GetColorMap()`_ `SetRGB4()`_ `GetRGB4()`_ graphics/view.h 
 
+----------
 
-
-SetRGBConversionFunctionA
-=========================
+SetRGBConversionFunctionA()
+===========================
 
 Synopsis
 ~~~~~~~~
@@ -7042,16 +6995,16 @@ Notes
      Then the fallback pixel conversion routine will be used.
      
 
+
 See also
 ~~~~~~~~
-::
 
-     <hidd/graphics.h>
-     
+<hidd/graphics.h>   
 
+----------
 
-SetRPAttrsA
-===========
+SetRPAttrsA()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -7098,8 +7051,10 @@ Inputs
 
 
 
-SetSoftStyle
-============
+----------
+
+SetSoftStyle()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -7140,17 +7095,16 @@ Result
  bits set.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`AskSoftStyle()`_ graphics/text.h 
 
- AskSoftStyle(), graphics/text.h
+----------
 
-
-
-SetWriteMask
-============
+SetWriteMask()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -7161,26 +7115,10 @@ Synopsis
           ULONG mask );
 
 
-ShowImminentReset
-=================
+----------
 
-Synopsis
-~~~~~~~~
-::
-
- void ShowImminentReset();
-
-Function
-~~~~~~~~
-::
-
-     Indicates that a reset is imminent by (usually)
-     blanking the screen.
-     
-
-
-SortGList
-=========
+SortGList()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -7206,16 +7144,16 @@ Inputs
      rp  = pointer to RastPort that has an GelsInfo linked to it
 
 
+
 See also
 ~~~~~~~~
-::
 
-     InitGels() DrawGList() DoCollision() graphics/rastport.h
+`InitGels()`_ `DrawGList()`_ `DoCollision()`_ graphics/rastport.h 
 
+----------
 
-
-StripFont
-=========
+StripFont()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -7238,15 +7176,16 @@ Inputs
      font    - font to remove extension from.
 
 
+
 See also
 ~~~~~~~~
-::
 
-             ExtendFont(), ExtendFontTags()
+`ExtendFont()`_ 
 
+----------
 
-SwapRegions
-===========
+SwapRegions()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -7277,16 +7216,16 @@ Notes
     This function doesn't exist in AmigaOS
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateRegion()
+`NewRegion()`_ 
 
+----------
 
-
-SyncSBitMap
-===========
+SyncSBitMap()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -7321,16 +7260,16 @@ Result
      really in the layer.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CopySBitMap()
+`CopySBitMap()`_ 
 
+----------
 
-
-Text
-====
+Text()
+======
 
 Synopsis
 ~~~~~~~~
@@ -7359,8 +7298,10 @@ Inputs
 
 
 
-TextExtent
-==========
+----------
+
+TextExtent()
+============
 
 Synopsis
 ~~~~~~~~
@@ -7406,8 +7347,10 @@ Inputs
 
 
 
-TextFit
-=======
+----------
+
+TextFit()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -7460,16 +7403,16 @@ Result
      tell how large the minimal bounding box for the string is.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     TextLength()
+`TextLength()`_ 
 
+----------
 
-
-TextLength
-==========
+TextLength()
+============
 
 Synopsis
 ~~~~~~~~
@@ -7510,16 +7453,16 @@ Notes
      Use the newer TextExtent() to get more information.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     Text() TextExtend()
+`Text()`_ `TextExtent()`_ 
 
+----------
 
-
-UCopperListInit
-===============
+UCopperListInit()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -7555,16 +7498,16 @@ Result
      NOTE: this is a pointer to UCopList->FirstCopList!
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CINIT CMOVE CWAIT CEND graphics/copper.h
+CINIT CMOVE CWAIT CEND graphics/copper.h 
 
+----------
 
-
-UnlockLayerRom
-==============
+UnlockLayerRom()
+================
 
 Synopsis
 ~~~~~~~~
@@ -7598,16 +7541,16 @@ Bugs
      Does not save all registers.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     LockLayerRom() LockLayer() UnLockLayer()
+`LockLayerRom()`_ `hyperlayers.library/LockLayer() <./hyperlayers#locklayer>`_ `hyperlayers.library/UnLockLayer() <./hyperlayers#unlocklayer>`_ 
 
+----------
 
-
-VBeamPos
-========
+VBeamPos()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -7630,8 +7573,10 @@ Result
 
 
 
-VideoControl
-============
+----------
+
+VideoControl()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -7661,8 +7606,10 @@ Result
              non-0 if bad colormap pointer, no tagitems or bad tag
 
 
-WaitBlit
-========
+----------
+
+WaitBlit()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -7693,8 +7640,10 @@ Result
 
 
 
-WaitBOVP
-========
+----------
+
+WaitBOVP()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -7718,8 +7667,10 @@ Result
 
 
 
-WaitTOF
-=======
+----------
+
+WaitTOF()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -7745,8 +7696,10 @@ Result
 
 
 
-WeighTAMatch
-============
+----------
+
+WeighTAMatch()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -7790,8 +7743,10 @@ Bugs
 
 
 
-WriteChunkyPixels
-=================
+----------
+
+WriteChunkyPixels()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -7827,8 +7782,10 @@ Inputs
 
 
 
-WritePixel
-==========
+----------
+
+WritePixel()
+============
 
 Synopsis
 ~~~~~~~~
@@ -7864,8 +7821,10 @@ Result
 
 
 
-WritePixelArray8
-================
+----------
+
+WritePixelArray8()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -7913,8 +7872,10 @@ Result
 
 
 
-WritePixelLine8
-===============
+----------
+
+WritePixelLine8()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -7961,8 +7922,10 @@ Result
 
 
 
-XorRectRegion
-=============
+----------
+
+XorRectRegion()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -8004,16 +7967,16 @@ Notes
      given rectangle after calling this function
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AndRectRegion(), OrRectRegion(), ClearRectRegion()
+`AndRectRegion()`_ `OrRectRegion()`_ `ClearRectRegion()`_ 
 
+----------
 
-
-XorRectRegionND
-===============
+XorRectRegionND()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -8054,16 +8017,16 @@ Notes
      given rectangle after calling this function
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AndRectRegion(), OrRectRegion(), ClearRectRegion()
+`AndRectRegion()`_ `OrRectRegion()`_ `ClearRectRegion()`_ 
 
+----------
 
-
-XorRegionRegion
-===============
+XorRegionRegion()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -8097,16 +8060,16 @@ Result
      FALSE otherwise (out of memory)
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AndRegionRegion(), OrRegionRegion()
+`AndRegionRegion()`_ `OrRegionRegion()`_ 
 
+----------
 
-
-XorRegionRegionND
-=================
+XorRegionRegionND()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -8145,11 +8108,9 @@ Notes
      This function is not present in AmigaOS
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AndRegionRegion(), OrRegionRegion()
-
-
+`AndRegionRegion()`_ `OrRegionRegion()`_ 
 

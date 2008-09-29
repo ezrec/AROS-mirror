@@ -9,20 +9,20 @@ datatypes
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AddDTObject`_                          `CopyDTMethods`_                        `CopyDTTriggerMethods`_                 `DisposeDTObject`_                      
-`DoAsyncLayout`_                        `DoDTDomainA`_                          `DoDTMethodA`_                          `DrawDTObjectA`_                        
-`FindMethod`_                           `FindToolNodeA`_                        `FindTriggerMethod`_                    `FreeDTMethods`_                        
-`GetDTAttrsA`_                          `GetDTMethods`_                         `GetDTString`_                          `GetDTTriggerMethodDataFlags`_          
-`GetDTTriggerMethods`_                  `LaunchToolA`_                          `LockDataType`_                         `NewDTObjectA`_                         
-`ObtainDataTypeA`_                      `ObtainDTDrawInfoA`_                    `PrintDTObjectA`_                       `RefreshDTObjectA`_                     
-`ReleaseDataType`_                      `ReleaseDTDrawInfo`_                    `RemoveDTObject`_                       `SaveDTObjectA`_                        
-`SetDTAttrsA`_                          `StartDragSelect`_                      
+`AddDTObject()`_                        `CopyDTMethods()`_                      `CopyDTTriggerMethods()`_               `DisposeDTObject()`_                    
+`DoAsyncLayout()`_                      `DoDTDomainA()`_                        `DoDTMethodA()`_                        `DrawDTObjectA()`_                      
+`FindMethod()`_                         `FindToolNodeA()`_                      `FindTriggerMethod()`_                  `FreeDTMethods()`_                      
+`GetDTAttrsA()`_                        `GetDTMethods()`_                       `GetDTString()`_                        `GetDTTriggerMethodDataFlags()`_        
+`GetDTTriggerMethods()`_                `LaunchToolA()`_                        `LockDataType()`_                       `NewDTObjectA()`_                       
+`ObtainDataTypeA()`_                    `ObtainDTDrawInfoA()`_                  `PrintDTObjectA()`_                     `RefreshDTObjectA()`_                   
+`ReleaseDataType()`_                    `ReleaseDTDrawInfo()`_                  `RemoveDTObject()`_                     `SaveDTObjectA()`_                      
+`SetDTAttrsA()`_                        `StartDragSelect()`_                    
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-AddDTObject
-===========
+AddDTObject()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -74,17 +74,16 @@ Notes
  set to 1 when the object is added.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`RemoveDTObject()`_ `intuition.library/AddGList() <./intuition#addglist>`_ 
 
- RemoveDTObject(), intuition.library/AddGList()
+----------
 
-
-
-CopyDTMethods
-=============
+CopyDTMethods()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -123,17 +122,16 @@ Result
  memory).
 
 
+
 See also
 ~~~~~~~~
-::
 
+`FindMethod()`_ `CopyDTTriggerMethods()`_ `FreeDTMethods()`_ 
 
- FindMethod(), CopyDTTriggerMethods(), FreeDTMethods()
+----------
 
-
-
-CopyDTTriggerMethods
-====================
+CopyDTTriggerMethods()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -185,17 +183,16 @@ Notes
  methods to its superclass.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`FindTriggerMethod()`_ `CopyDTMethods()`_ `FreeDTMethods()`_ 
 
- FindTriggerMethod(), CopyDTMethods(), FreeDTMethods()
+----------
 
-
-
-DisposeDTObject
-===============
+DisposeDTObject()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -220,17 +217,16 @@ Inputs
  o   --  The data type object to dispose of; may be NULL.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`NewDTObjectA()`_ 
 
- NewDTObjectA()
+----------
 
-
-
-DoAsyncLayout
-=============
+DoAsyncLayout()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -261,8 +257,10 @@ Inputs
 
 
 
-DoDTDomainA
-===========
+----------
+
+DoDTDomainA()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -327,17 +325,16 @@ Notes
  manually.
 
 
+
 See also
 ~~~~~~~~
-::
 
+<intuition/gadgetclass.h> 
 
- <intuition/gadgetclass.h>
+----------
 
-
-
-DoDTMethodA
-===========
+DoDTMethodA()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -382,17 +379,16 @@ Result
  The value returned by the specified method.
  
 
+
 See also
 ~~~~~~~~
-::
 
+`intuition.library/DoGadgetMethod() <./intuition#dogadgetmethod>`_ 
 
- intuition.library/DoGadgetMethod()
+----------
 
-
-
-DrawDTObjectA
-=============
+DrawDTObjectA()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -469,17 +465,16 @@ Notes
  and FALSE will be returned.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`ObtainDataTypeA()`_ 
 
- ObtainDataTypeA()
+----------
 
-
-
-FindMethod
-==========
+FindMethod()
+============
 
 Synopsis
 ~~~~~~~~
@@ -514,17 +509,16 @@ Result
  Pointer to method table entry or NULL if the method wasn't found.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`GetDTMethods()`_ `CopyDTMethods()`_ 
 
- GetDTMethods(), CopyDTMethods()
+----------
 
-
-
-FindToolNodeA
-=============
+FindToolNodeA()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -583,17 +577,16 @@ Notes
  the data type 'dt' (ObtainDataTypeA() or LockDataType()).
 
 
+
 See also
 ~~~~~~~~
-::
 
+`LaunchToolA()`_ 
 
- LaunchToolA()
+----------
 
-
-
-FindTriggerMethod
-=================
+FindTriggerMethod()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -634,17 +627,16 @@ Result
  method wasn't found.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`GetDTTriggerMethods()`_ `CopyDTTriggerMethods()`_ 
 
- GetDTTriggerMethods(), CopyDTTriggerMethods()
+----------
 
-
-
-FreeDTMethods
-=============
+FreeDTMethods()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -669,17 +661,16 @@ Inputs
  methods  --  array of methods; may be NULL
 
 
+
 See also
 ~~~~~~~~
-::
 
+`CopyDTMethods()`_ `CopyDTTriggerMethods()`_ 
 
- CopyDTMethods(), CopyDTTriggerMethods()
+----------
 
-
-
-GetDTAttrsA
-===========
+GetDTAttrsA()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -720,17 +711,16 @@ Result
  The number of attributes obtained.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`SetDTAttrsA()`_ `intuition.library/GetAttr() <./intuition#getattr>`_ 
 
- SetDTAttrsA(), intuition.library/GetAttr()
+----------
 
-
-
-GetDTMethods
-============
+GetDTMethods()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -764,17 +754,16 @@ Result
  valid until the object is disposed of.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`GetDTTriggerMethods()`_ 
 
- GetDTTriggerMethods()
+----------
 
-
-
-GetDTString
-===========
+GetDTString()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -808,8 +797,10 @@ Result
 
 
 
-GetDTTriggerMethodDataFlags
-===========================
+----------
+
+GetDTTriggerMethodDataFlags()
+=============================
 
 Synopsis
 ~~~~~~~~
@@ -854,17 +845,16 @@ Result
  One of the STMD_ identifiers defined in <datatypes/datatypesclass.h>
 
 
+
 See also
 ~~~~~~~~
-::
 
+`CopyDTTriggerMethods()`_ `FindTriggerMethod()`_ 
 
- CopyDTTriggerMethods(), FindTriggerMethod()
+----------
 
-
-
-GetDTTriggerMethods
-===================
+GetDTTriggerMethods()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -918,17 +908,16 @@ Notes
  type of the requested argument.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`GetDTMethods()`_ 
 
- GetDTMethods()
+----------
 
-
-
-LaunchToolA
-===========
+LaunchToolA()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -981,17 +970,16 @@ Result
  Zero for failure, non-zero otherwise.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`NewDTObjectA()`_ 
 
- NewDTObjectA()
+----------
 
-
-
-LockDataType
-============
+LockDataType()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -1026,17 +1014,16 @@ Notes
  ReleaseDataType() call or else problems will arise.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`ObtainDataTypeA()`_ `ReleaseDataType()`_ 
 
- ObtainDataTypeA(), ReleaseDataType()
+----------
 
-
-
-NewDTObjectA
-============
+NewDTObjectA()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -1127,18 +1114,16 @@ Notes
  longer needed.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`AddDTObject()`_ `DisposeDTObject()`_ `RemoveDTObject()`_ `intuition.library/NewObjectA() <./intuition#newobjecta>`_ 
 
- AddDTObject(), DisposeDTObject(), RemoveDTObject(),
- intuition.library/NewObjectA()
+----------
 
-
-
-ObtainDataTypeA
-===============
+ObtainDataTypeA()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -1187,17 +1172,16 @@ Result
  ERROR_NOT_IMPLEMENTED   --  Unknown handle type
 
 
+
 See also
 ~~~~~~~~
-::
 
+`ReleaseDataType()`_ 
 
- ReleaseDataType()
+----------
 
-
-
-ObtainDTDrawInfoA
-=================
+ObtainDTDrawInfoA()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -1245,17 +1229,16 @@ Result
  ADTA_Screen     --  for animationclass objects
 
 
+
 See also
 ~~~~~~~~
-::
 
+`DrawDTObjectA()`_ `ReleaseDTDrawInfo()`_ 
 
- DrawDTObjectA(), ReleaseDTDrawInfo()
+----------
 
-
-
-PrintDTObjectA
-==============
+PrintDTObjectA()
+================
 
 Synopsis
 ~~~~~~~~
@@ -1312,8 +1295,10 @@ Notes
 
 
 
-RefreshDTObjectA
-================
+----------
+
+RefreshDTObjectA()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -1350,17 +1335,16 @@ Inputs
  attrs    --  additional attributes (currently none defined)
 
 
+
 See also
 ~~~~~~~~
-::
 
+`AddDTObject()`_ `RemoveDTObject()`_ `intuition.library/RefreshGList() <./intuition#refreshglist>`_ 
 
- AddDTObject(), RemoveDTObject(), intuition.library/RefreshGList()
+----------
 
-
-
-ReleaseDataType
-===============
+ReleaseDataType()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -1386,17 +1370,16 @@ Inputs
          a valid input.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`ObtainDataTypeA()`_ 
 
- ObtainDataTypeA()
+----------
 
-
-
-ReleaseDTDrawInfo
-=================
+ReleaseDTDrawInfo()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -1439,17 +1422,16 @@ Result
  ADTA_Screen     --  for animationclass objects
 
 
+
 See also
 ~~~~~~~~
-::
 
+`DrawDTObjectA()`_ `ObtainDTDrawInfoA()`_ 
 
- DrawDTObjectA(), ObtainDTDrawInfo()
+----------
 
-
-
-RemoveDTObject
-==============
+RemoveDTObject()
+================
 
 Synopsis
 ~~~~~~~~
@@ -1487,17 +1469,16 @@ Result
  object wasn't found -1 is returned.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`AddDTObject()`_ `intuition.library/RemoveGList() <./intuition#removeglist>`_ 
 
- AddDTObject(), intuition.library/RemoveGList()
+----------
 
-
-
-SaveDTObjectA
-=============
+SaveDTObjectA()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -1560,8 +1541,10 @@ Notes
 
 
 
-SetDTAttrsA
-===========
+----------
+
+SetDTAttrsA()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1598,18 +1581,16 @@ Inputs
             tags are specified in <datatypes/datatypesclass.h>
 
 
+
 See also
 ~~~~~~~~
-::
 
+`GetDTAttrsA()`_ `intuition.library/SetGadgetAttrsA() <./intuition#setgadgetattrsa>`_ <datatypes/datatypesclass.h> 
 
- GetDTAttrsA(), intuition.library/SetGadghetAttrsA(),
- <datatypes/datatypesclass.h>
+----------
 
-
-
-StartDragSelect
-===============
+StartDragSelect()
+=================
 
 Synopsis
 ~~~~~~~~

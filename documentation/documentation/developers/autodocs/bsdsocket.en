@@ -9,24 +9,24 @@ bsdsocket
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`accept`_                               `bind`_                                 `CloseSocket`_                          `connect`_                              
-`Dup2Socket`_                           `Errno`_                                `getdtablesize`_                        `gethostbyaddr`_                        
-`gethostbyname`_                        `gethostid`_                            `gethostname`_                          `getnetbyaddr`_                         
-`getnetbyname`_                         `getpeername`_                          `getprotobyname`_                       `getprotobynumber`_                     
-`getservbyname`_                        `getservbyport`_                        `GetSocketEvents`_                      `getsockname`_                          
-`getsockopt`_                           `inet_addr`_                            `Inet_LnaOf`_                           `Inet_MakeAddr`_                        
-`Inet_NetOf`_                           `inet_network`_                         `Inet_NtoA`_                            `IoctlSocket`_                          
-`listen`_                               `ObtainSocket`_                         `recv`_                                 `recvfrom`_                             
-`recvmsg`_                              `ReleaseCopyOfSocket`_                  `ReleaseSocket`_                        `send`_                                 
-`sendmsg`_                              `sendto`_                               `SetErrnoPtr`_                          `SetSocketSignals`_                     
-`setsockopt`_                           `shutdown`_                             `socket`_                               `SocketBaseTagList`_                    
-`vsyslog`_                              `WaitSelect`_                           
+`accept()`_                             `bind()`_                               `CloseSocket()`_                        `connect()`_                            
+`Dup2Socket()`_                         `Errno()`_                              `getdtablesize()`_                      `gethostbyaddr()`_                      
+`gethostbyname()`_                      `gethostid()`_                          `gethostname()`_                        `getnetbyaddr()`_                       
+`getnetbyname()`_                       `getpeername()`_                        `getprotobyname()`_                     `getprotobynumber()`_                   
+`getservbyname()`_                      `getservbyport()`_                      `GetSocketEvents()`_                    `getsockname()`_                        
+`getsockopt()`_                         `inet_addr()`_                          `Inet_LnaOf()`_                         `Inet_MakeAddr()`_                      
+`Inet_NetOf()`_                         `inet_network()`_                       `Inet_NtoA()`_                          `IoctlSocket()`_                        
+`listen()`_                             `ObtainSocket()`_                       `recv()`_                               `recvfrom()`_                           
+`recvmsg()`_                            `ReleaseCopyOfSocket()`_                `ReleaseSocket()`_                      `send()`_                               
+`sendmsg()`_                            `sendto()`_                             `SetErrnoPtr()`_                        `SetSocketSignals()`_                   
+`setsockopt()`_                         `shutdown()`_                           `socket()`_                             `SocketBaseTagList()`_                  
+`vsyslog()`_                            `WaitSelect()`_                         
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-accept
-======
+accept()
+========
 
 Synopsis
 ~~~~~~~~
@@ -38,8 +38,10 @@ Synopsis
           int * addrlen );
 
 
-bind
-====
+----------
+
+bind()
+======
 
 Synopsis
 ~~~~~~~~
@@ -51,8 +53,10 @@ Synopsis
           int namelen );
 
 
-CloseSocket
-===========
+----------
+
+CloseSocket()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -62,8 +66,10 @@ Synopsis
           int s );
 
 
-connect
-=======
+----------
+
+connect()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -75,8 +81,10 @@ Synopsis
           int namelen );
 
 
-Dup2Socket
-==========
+----------
+
+Dup2Socket()
+============
 
 Synopsis
 ~~~~~~~~
@@ -87,8 +95,10 @@ Synopsis
           int fd2 );
 
 
-Errno
-=====
+----------
+
+Errno()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -97,8 +107,10 @@ Synopsis
  LONG Errno();
 
 
-getdtablesize
-=============
+----------
+
+getdtablesize()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -107,8 +119,10 @@ Synopsis
  int getdtablesize();
 
 
-gethostbyaddr
-=============
+----------
+
+gethostbyaddr()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -120,8 +134,10 @@ Synopsis
           int type );
 
 
-gethostbyname
-=============
+----------
+
+gethostbyname()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -131,8 +147,10 @@ Synopsis
           char * name );
 
 
-gethostid
-=========
+----------
+
+gethostid()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -141,8 +159,10 @@ Synopsis
  long gethostid();
 
 
-gethostname
-===========
+----------
+
+gethostname()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -153,8 +173,10 @@ Synopsis
           int namelen );
 
 
-getnetbyaddr
-============
+----------
+
+getnetbyaddr()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -165,8 +187,10 @@ Synopsis
           int type );
 
 
-getnetbyname
-============
+----------
+
+getnetbyname()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -176,8 +200,10 @@ Synopsis
           char * name );
 
 
-getpeername
-===========
+----------
+
+getpeername()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -189,8 +215,10 @@ Synopsis
           int * namelen );
 
 
-getprotobyname
-==============
+----------
+
+getprotobyname()
+================
 
 Synopsis
 ~~~~~~~~
@@ -200,8 +228,10 @@ Synopsis
           char * name );
 
 
-getprotobynumber
-================
+----------
+
+getprotobynumber()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -211,8 +241,10 @@ Synopsis
           int proto );
 
 
-getservbyname
-=============
+----------
+
+getservbyname()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -223,8 +255,10 @@ Synopsis
           char * proto );
 
 
-getservbyport
-=============
+----------
+
+getservbyport()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -235,8 +269,10 @@ Synopsis
           char * proto );
 
 
-GetSocketEvents
-===============
+----------
+
+GetSocketEvents()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -246,8 +282,10 @@ Synopsis
           ULONG * eventsp );
 
 
-getsockname
-===========
+----------
+
+getsockname()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -259,8 +297,10 @@ Synopsis
           int * namelen );
 
 
-getsockopt
-==========
+----------
+
+getsockopt()
+============
 
 Synopsis
 ~~~~~~~~
@@ -274,8 +314,10 @@ Synopsis
           void * optlen );
 
 
-inet_addr
-=========
+----------
+
+inet_addr()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -285,8 +327,10 @@ Synopsis
           const char * cp );
 
 
-Inet_LnaOf
-==========
+----------
+
+Inet_LnaOf()
+============
 
 Synopsis
 ~~~~~~~~
@@ -296,8 +340,10 @@ Synopsis
           unsigned long in );
 
 
-Inet_MakeAddr
-=============
+----------
+
+Inet_MakeAddr()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -308,8 +354,10 @@ Synopsis
           int lna );
 
 
-Inet_NetOf
-==========
+----------
+
+Inet_NetOf()
+============
 
 Synopsis
 ~~~~~~~~
@@ -319,8 +367,10 @@ Synopsis
           unsigned long in );
 
 
-inet_network
-============
+----------
+
+inet_network()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -330,8 +380,10 @@ Synopsis
           const char * cp );
 
 
-Inet_NtoA
-=========
+----------
+
+Inet_NtoA()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -344,8 +396,10 @@ Synopsis
           TAG tag, ... );
 
 
-IoctlSocket
-===========
+----------
+
+IoctlSocket()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -357,8 +411,10 @@ Synopsis
           char * argp );
 
 
-listen
-======
+----------
+
+listen()
+========
 
 Synopsis
 ~~~~~~~~
@@ -369,8 +425,10 @@ Synopsis
           int backlog );
 
 
-ObtainSocket
-============
+----------
+
+ObtainSocket()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -383,8 +441,10 @@ Synopsis
           LONG protocol );
 
 
-recv
-====
+----------
+
+recv()
+======
 
 Synopsis
 ~~~~~~~~
@@ -397,8 +457,10 @@ Synopsis
           int flags );
 
 
-recvfrom
-========
+----------
+
+recvfrom()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -413,8 +475,10 @@ Synopsis
           int * fromlen );
 
 
-recvmsg
-=======
+----------
+
+recvmsg()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -426,8 +490,10 @@ Synopsis
           int flags );
 
 
-ReleaseCopyOfSocket
-===================
+----------
+
+ReleaseCopyOfSocket()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -438,8 +504,10 @@ Synopsis
           LONG id );
 
 
-ReleaseSocket
-=============
+----------
+
+ReleaseSocket()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -450,8 +518,10 @@ Synopsis
           LONG id );
 
 
-send
-====
+----------
+
+send()
+======
 
 Synopsis
 ~~~~~~~~
@@ -464,8 +534,10 @@ Synopsis
           int flags );
 
 
-sendmsg
-=======
+----------
+
+sendmsg()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -477,8 +549,10 @@ Synopsis
           int flags );
 
 
-sendto
-======
+----------
+
+sendto()
+========
 
 Synopsis
 ~~~~~~~~
@@ -493,8 +567,10 @@ Synopsis
           int tolen );
 
 
-SetErrnoPtr
-===========
+----------
+
+SetErrnoPtr()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -505,8 +581,10 @@ Synopsis
           int size );
 
 
-SetSocketSignals
-================
+----------
+
+SetSocketSignals()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -518,8 +596,10 @@ Synopsis
           ULONG urgmask );
 
 
-setsockopt
-==========
+----------
+
+setsockopt()
+============
 
 Synopsis
 ~~~~~~~~
@@ -533,8 +613,10 @@ Synopsis
           int optlen );
 
 
-shutdown
-========
+----------
+
+shutdown()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -545,8 +627,10 @@ Synopsis
           int how );
 
 
-socket
-======
+----------
+
+socket()
+========
 
 Synopsis
 ~~~~~~~~
@@ -558,8 +642,10 @@ Synopsis
           int protocol );
 
 
-SocketBaseTagList
-=================
+----------
+
+SocketBaseTagList()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -572,8 +658,10 @@ Synopsis
           TAG tag, ... );
 
 
-vsyslog
-=======
+----------
+
+vsyslog()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -585,8 +673,10 @@ Synopsis
           LONG * args );
 
 
-WaitSelect
-==========
+----------
+
+WaitSelect()
+============
 
 Synopsis
 ~~~~~~~~

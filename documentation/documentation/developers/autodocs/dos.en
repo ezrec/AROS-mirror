@@ -9,52 +9,52 @@ dos
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AbortPkt`_                             `AddBuffers`_                           `AddDosEntry`_                          `AddPart`_                              
-`AddSegment`_                           `AllocDosObject`_                       `AssignAdd`_                            `AssignLate`_                           
-`AssignLock`_                           `AssignPath`_                           `AttemptLockDosList`_                   `ChangeMode`_                           
-`CheckSignal`_                          `Cli`_                                  `CliInitNewcli`_                        `CliInitRun`_                           
-`Close`_                                `CompareDates`_                         `CreateDir`_                            `CreateNewProc`_                        
-`CreateProc`_                           `CurrentDir`_                           `DateStamp`_                            `DateToStr`_                            
-`Delay`_                                `DeleteFile`_                           `DeleteVar`_                            `DeviceProc`_                           
-`DisplayError`_                         `DoPkt`_                                `DupLock`_                              `DupLockFromFH`_                        
-`EndNotify`_                            `Error`_                                `ErrorReport`_                          `ExAll`_                                
-`ExAllEnd`_                             `Examine`_                              `ExamineFH`_                            `Execute`_                              
-`Exit`_                                 `ExNext`_                               `Fault`_                                `FGetC`_                                
-`FGets`_                                `FilePart`_                             `FindArg`_                              `FindCliProc`_                          
-`FindDosEntry`_                         `FindSegment`_                          `FindVar`_                              `Flush`_                                
-`Format`_                               `FPutC`_                                `FPuts`_                                `FRead`_                                
-`FreeArgs`_                             `FreeDeviceProc`_                       `FreeDosEntry`_                         `FreeDosObject`_                        
-`FWrite`_                               `GetArgStr`_                            `GetConsoleTask`_                       `GetCurrentDirName`_                    
-`GetDeviceProc`_                        `GetFileSysTask`_                       `GetProgramDir`_                        `GetProgramName`_                       
-`GetPrompt`_                            `GetVar`_                               `Info`_                                 `Inhibit`_                              
-`Input`_                                `InternalLoadSeg`_                      `InternalUnLoadSeg`_                    `IoErr`_                                
-`IsFileSystem`_                         `IsInteractive`_                        `LoadSeg`_                              `Lock`_                                 
-`LockDosList`_                          `LockRecord`_                           `LockRecords`_                          `MakeDosEntry`_                         
-`MakeLink`_                             `MatchEnd`_                             `MatchFirst`_                           `MatchNext`_                            
-`MatchPattern`_                         `MatchPatternNoCase`_                   `MaxCli`_                               `NameFromFH`_                           
-`NameFromLock`_                         `NewLoadSeg`_                           `NextDosEntry`_                         `Open`_                                 
-`OpenFromLock`_                         `Output`_                               `ParentDir`_                            `ParentOfFH`_                           
-`ParsePattern`_                         `ParsePatternNoCase`_                   `PathPart`_                             `Pipe`_                                 
-`PrintFault`_                           `PutStr`_                               `Read`_                                 `ReadArgs`_                             
-`ReadItem`_                             `ReadLink`_                             `Relabel`_                              `RemAssignList`_                        
-`RemDosEntry`_                          `RemSegment`_                           `Rename`_                               `ReplyPkt`_                             
-`RunCommand`_                           `SameDevice`_                           `SameLock`_                             `Seek`_                                 
-`SelectError`_                          `SelectInput`_                          `SelectOutput`_                         `SendPkt`_                              
-`SetArgStr`_                            `SetComment`_                           `SetConsoleTask`_                       `SetCurrentDirName`_                    
-`SetFileDate`_                          `SetFileSize`_                          `SetFileSysTask`_                       `SetIoErr`_                             
-`SetMode`_                              `SetOwner`_                             `SetProgramDir`_                        `SetProgramName`_                       
-`SetPrompt`_                            `SetProtection`_                        `SetVar`_                               `SetVBuf`_                              
-`SplitName`_                            `StartNotify`_                          `StrToDate`_                            `StrToLong`_                            
-`SystemTagList`_                        `UnGetC`_                               `UnLoadSeg`_                            `UnLock`_                               
-`UnLockDosList`_                        `UnLockRecord`_                         `UnLockRecords`_                        `VFPrintf`_                             
-`VFWritef`_                             `VPrintf`_                              `WaitForChar`_                          `WaitPkt`_                              
-`Write`_                                `WriteChars`_                           
+`AbortPkt()`_                           `AddBuffers()`_                         `AddDosEntry()`_                        `AddPart()`_                            
+`AddSegment()`_                         `AllocDosObject()`_                     `AssignAdd()`_                          `AssignLate()`_                         
+`AssignLock()`_                         `AssignPath()`_                         `AttemptLockDosList()`_                 `ChangeMode()`_                         
+`CheckSignal()`_                        `Cli()`_                                `CliInitNewcli()`_                      `CliInitRun()`_                         
+`Close()`_                              `CompareDates()`_                       `CreateDir()`_                          `CreateNewProc()`_                      
+`CreateProc()`_                         `CurrentDir()`_                         `DateStamp()`_                          `DateToStr()`_                          
+`Delay()`_                              `DeleteFile()`_                         `DeleteVar()`_                          `DeviceProc()`_                         
+`DisplayError()`_                       `DoPkt()`_                              `DupLock()`_                            `DupLockFromFH()`_                      
+`EndNotify()`_                          `Error()`_                              `ErrorReport()`_                        `ExAll()`_                              
+`ExAllEnd()`_                           `Examine()`_                            `ExamineFH()`_                          `Execute()`_                            
+`Exit()`_                               `ExNext()`_                             `Fault()`_                              `FGetC()`_                              
+`FGets()`_                              `FilePart()`_                           `FindArg()`_                            `FindCliProc()`_                        
+`FindDosEntry()`_                       `FindSegment()`_                        `FindVar()`_                            `Flush()`_                              
+`Format()`_                             `FPutC()`_                              `FPuts()`_                              `FRead()`_                              
+`FreeArgs()`_                           `FreeDeviceProc()`_                     `FreeDosEntry()`_                       `FreeDosObject()`_                      
+`FWrite()`_                             `GetArgStr()`_                          `GetConsoleTask()`_                     `GetCurrentDirName()`_                  
+`GetDeviceProc()`_                      `GetFileSysTask()`_                     `GetProgramDir()`_                      `GetProgramName()`_                     
+`GetPrompt()`_                          `GetVar()`_                             `Info()`_                               `Inhibit()`_                            
+`Input()`_                              `InternalLoadSeg()`_                    `InternalUnLoadSeg()`_                  `IoErr()`_                              
+`IsFileSystem()`_                       `IsInteractive()`_                      `LoadSeg()`_                            `Lock()`_                               
+`LockDosList()`_                        `LockRecord()`_                         `LockRecords()`_                        `MakeDosEntry()`_                       
+`MakeLink()`_                           `MatchEnd()`_                           `MatchFirst()`_                         `MatchNext()`_                          
+`MatchPattern()`_                       `MatchPatternNoCase()`_                 `MaxCli()`_                             `NameFromFH()`_                         
+`NameFromLock()`_                       `NewLoadSeg()`_                         `NextDosEntry()`_                       `Open()`_                               
+`OpenFromLock()`_                       `Output()`_                             `ParentDir()`_                          `ParentOfFH()`_                         
+`ParsePattern()`_                       `ParsePatternNoCase()`_                 `PathPart()`_                           `Pipe()`_                               
+`PrintFault()`_                         `PutStr()`_                             `Read()`_                               `ReadArgs()`_                           
+`ReadItem()`_                           `ReadLink()`_                           `Relabel()`_                            `RemAssignList()`_                      
+`RemDosEntry()`_                        `RemSegment()`_                         `Rename()`_                             `ReplyPkt()`_                           
+`RunCommand()`_                         `SameDevice()`_                         `SameLock()`_                           `Seek()`_                               
+`SelectError()`_                        `SelectInput()`_                        `SelectOutput()`_                       `SendPkt()`_                            
+`SetArgStr()`_                          `SetComment()`_                         `SetConsoleTask()`_                     `SetCurrentDirName()`_                  
+`SetFileDate()`_                        `SetFileSize()`_                        `SetFileSysTask()`_                     `SetIoErr()`_                           
+`SetMode()`_                            `SetOwner()`_                           `SetProgramDir()`_                      `SetProgramName()`_                     
+`SetPrompt()`_                          `SetProtection()`_                      `SetVar()`_                             `SetVBuf()`_                            
+`SplitName()`_                          `StartNotify()`_                        `StrToDate()`_                          `StrToLong()`_                          
+`SystemTagList()`_                      `UnGetC()`_                             `UnLoadSeg()`_                          `UnLock()`_                             
+`UnLockDosList()`_                      `UnLockRecord()`_                       `UnLockRecords()`_                      `VFPrintf()`_                           
+`VFWritef()`_                           `VPrintf()`_                            `WaitForChar()`_                        `WaitPkt()`_                            
+`Write()`_                              `WriteChars()`_                         
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-AbortPkt
-========
+AbortPkt()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -65,8 +65,10 @@ Synopsis
           struct DosPacket * pkt );
 
 
-AddBuffers
-==========
+----------
+
+AddBuffers()
+============
 
 Synopsis
 ~~~~~~~~
@@ -100,8 +102,10 @@ Result
 
 
 
-AddDosEntry
-===========
+----------
+
+AddDosEntry()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -146,8 +150,10 @@ Notes
 
 
 
-AddPart
-=======
+----------
+
+AddPart()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -212,16 +218,16 @@ Example
      --> Work:Programming/Include/graphics/gfxmacros.h
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FilePart(), PathPart()
+`FilePart()`_ `PathPart()`_ 
 
+----------
 
-
-AddSegment
-==========
+AddSegment()
+============
 
 Synopsis
 ~~~~~~~~
@@ -273,16 +279,16 @@ Bugs
      Uses Forbid() based locking.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FindSegment(), RemSegment()
+`FindSegment()`_ `RemSegment()`_ 
 
+----------
 
-
-AllocDosObject
-==============
+AllocDosObject()
+================
 
 Synopsis
 ~~~~~~~~
@@ -321,8 +327,10 @@ Result
 
 
 
-AssignAdd
-=========
+----------
+
+AssignAdd()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -365,17 +373,16 @@ Notes
      a resolved AssignLate() assign.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     Lock(), AssignLock(), AssignPath(), AssignLate(), DupLock(),
-     RemAssignList()
+`Lock()`_ `AssignLock()`_ `AssignPath()`_ `AssignLate()`_ `DupLock()`_ `RemAssignList()`_ 
 
+----------
 
-
-AssignLate
-==========
+AssignLate()
+============
 
 Synopsis
 ~~~~~~~~
@@ -412,16 +419,16 @@ Result
      in that case.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     Lock(), AssignAdd(), AssignPath(), AssignLock()
+`Lock()`_ `AssignAdd()`_ `AssignPath()`_ `AssignLock()`_ 
 
+----------
 
-
-AssignLock
-==========
+AssignLock()
+============
 
 Synopsis
 ~~~~~~~~
@@ -458,8 +465,10 @@ Result
 
 
 
-AssignPath
-==========
+----------
+
+AssignPath()
+============
 
 Synopsis
 ~~~~~~~~
@@ -497,16 +506,16 @@ Result
      information in that case.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AssignAdd(), AssignLock(), AssignLate(), Open()
+`AssignAdd()`_ `AssignLock()`_ `AssignLate()`_ `Open()`_ 
 
+----------
 
-
-AttemptLockDosList
-==================
+AttemptLockDosList()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -541,8 +550,10 @@ Result
 
 
 
-ChangeMode
-==========
+----------
+
+ChangeMode()
+============
 
 Synopsis
 ~~~~~~~~
@@ -578,8 +589,10 @@ Result
 
 
 
-CheckSignal
-===========
+----------
+
+CheckSignal()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -612,8 +625,10 @@ Result
 
 
 
-Cli
-===
+----------
+
+Cli()
+=====
 
 Synopsis
 ~~~~~~~~
@@ -644,8 +659,10 @@ Notes
 
 
 
-CliInitNewcli
-=============
+----------
+
+CliInitNewcli()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -681,17 +698,16 @@ Notes
  startup packet interface was a pile of crap.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`CliInitRun()`_ 
 
- CliInitRun()
+----------
 
-
-
-CliInitRun
-==========
+CliInitRun()
+============
 
 Synopsis
 ~~~~~~~~
@@ -725,17 +741,16 @@ Notes
  and should not be used.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`CliInitNewCli()`_ 
 
- CliInitNewCli()
+----------
 
-
-
-Close
-=====
+Close()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -775,8 +790,10 @@ Notes
 
 
 
-CompareDates
-============
+----------
+
+CompareDates()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -816,8 +833,10 @@ Notes
 
 
 
-CreateDir
-=========
+----------
+
+CreateDir()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -850,8 +869,10 @@ Result
 
 
 
-CreateNewProc
-=============
+----------
+
+CreateNewProc()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -885,8 +906,10 @@ Result
 
 
 
-CreateProc
-==========
+----------
+
+CreateProc()
+============
 
 Synopsis
 ~~~~~~~~
@@ -950,16 +973,16 @@ Notes
      // Shouldn't use mp after this point
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateNewProc(), LoadSeg(), UnLoadSeg()
+`CreateNewProc()`_ `LoadSeg()`_ `UnLoadSeg()`_ 
 
+----------
 
-
-CurrentDir
-==========
+CurrentDir()
+============
 
 Synopsis
 ~~~~~~~~
@@ -991,8 +1014,10 @@ Result
 
 
 
-DateStamp
-=========
+----------
+
+DateStamp()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -1036,8 +1061,10 @@ Notes
 
 
 
-DateToStr
-=========
+----------
+
+DateToStr()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -1114,16 +1141,16 @@ Example
      See below.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     DateStamp(), StrtoDate()
+`DateStamp()`_ `StrtoDate()`_ 
 
+----------
 
-
-Delay
-=====
+Delay()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -1147,8 +1174,10 @@ Inputs
 
 
 
-DeleteFile
-==========
+----------
+
+DeleteFile()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1181,8 +1210,10 @@ Result
 
 
 
-DeleteVar
-=========
+----------
+
+DeleteVar()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -1240,8 +1271,10 @@ Notes
 
 
 
-DeviceProc
-==========
+----------
+
+DeviceProc()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1295,16 +1328,16 @@ Bugs
      path assigns very well.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetDeviceProc(), FreeDeviceProc().
+`GetDeviceProc()`_ `FreeDeviceProc()`_ 
 
+----------
 
-
-DisplayError
-============
+DisplayError()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -1346,8 +1379,10 @@ Notes
 
 
 
-DoPkt
-=====
+----------
+
+DoPkt()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -1381,8 +1416,10 @@ Notes
 
 
 
-DupLock
-=======
+----------
+
+DupLock()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -1422,8 +1459,10 @@ Notes
 
 
 
-DupLockFromFH
-=============
+----------
+
+DupLockFromFH()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -1462,8 +1501,10 @@ Notes
 
 
 
-EndNotify
-=========
+----------
+
+EndNotify()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -1489,17 +1530,16 @@ Inputs
  notify  --  NotifyRequest used with StartNotify()
 
 
+
 See also
 ~~~~~~~~
-::
 
+`StartNotify()`_ 
 
- StartNotify()
+----------
 
-
-
-Error
-=====
+Error()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -1530,8 +1570,10 @@ Notes
 
 
 
-ErrorReport
-===========
+----------
+
+ErrorReport()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1571,8 +1613,10 @@ Notes
 
 
 
-ExAll
-=====
+----------
+
+ExAll()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -1671,18 +1715,16 @@ Notes
                      BOOL = MatchFunc(hook, data, typeptr)
 
 
+
 See also
 ~~~~~~~~
-::
 
+`Examine()`_ `ExNext()`_ `MatchPatternNoCase()`_ `ParsePatternNoCase()`_ `AllocDosObject()`_ `ExAllEnd()`_ 
 
- Examine(), ExNext(), MatchPatternNoCase(), ParsePatternNoCase(),
- AllocDosObject(), ExAllEnd()
+----------
 
-
-
-ExAllEnd
-========
+ExAllEnd()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -1725,17 +1767,16 @@ Notes
  The control data structure must have been allocated with AllocDosObject().
 
 
+
 See also
 ~~~~~~~~
-::
 
+`ExAll()`_ `AllocDosObject()`_ 
 
- ExAll(), AllocDosObject()
+----------
 
-
-
-Examine
-=======
+Examine()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -1781,17 +1822,16 @@ Notes
  to ExNext()!
 
 
+
 See also
 ~~~~~~~~
-::
 
+`Lock()`_ `UnLock()`_ `ExNext()`_ `AllocDosObject()`_ `ExAll()`_ <dos/dos.h> 
 
- Lock(), UnLock(), ExNext(), AllocDosObject(), ExAll(), <dos/dos.h>
+----------
 
-
-
-ExamineFH
-=========
+ExamineFH()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -1802,8 +1842,10 @@ Synopsis
           struct FileInfoBlock * fib );
 
 
-Execute
-=======
+----------
+
+Execute()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -1850,17 +1892,16 @@ Result
  command(s). (This is NOT the return code of the command(s).)
 
 
+
 See also
 ~~~~~~~~
-::
 
+`SystemTagList()`_ 
 
- SystemTagList()
+----------
 
-
-
-Exit
-====
+Exit()
+======
 
 Synopsis
 ~~~~~~~~
@@ -1888,8 +1929,10 @@ Notes
 
 
 
-ExNext
-======
+----------
+
+ExNext()
+========
 
 Synopsis
 ~~~~~~~~
@@ -1961,17 +2004,16 @@ Bugs
      assigned (i.e. assign env: env).
 
 
+
 See also
 ~~~~~~~~
-::
 
+`Examine()`_ `IoErr()`_ `AllocDosObject()`_ `ExAll()`_ 
 
- Examine(), IoErr(), AllocDosObject(), ExAll()
+----------
 
-
-
-Fault
-=====
+Fault()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -2018,8 +2060,10 @@ Result
 
 
 
-FGetC
-=====
+----------
+
+FGetC()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -2053,16 +2097,16 @@ Result
      IoErr() gives additional information in that case.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     IoErr(), Flush()
+`IoErr()`_ `Flush()`_ 
 
+----------
 
-
-FGets
-=====
+FGets()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -2100,8 +2144,10 @@ Result
 
 
 
-FilePart
-========
+----------
+
+FilePart()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -2149,16 +2195,16 @@ Bugs
      None known.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     PathPart(), AddPart()
+`PathPart()`_ `AddPart()`_ 
 
+----------
 
-
-FindArg
-=======
+FindArg()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -2169,8 +2215,10 @@ Synopsis
           CONST_STRPTR keyword );
 
 
-FindCliProc
-===========
+----------
+
+FindCliProc()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -2209,16 +2257,16 @@ Notes
  The process calling this function doesn't need to do any locking.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     Cli(), MaxCli()
+`Cli()`_ `MaxCli()`_ 
 
+----------
 
-
-FindDosEntry
-============
+FindDosEntry()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -2258,8 +2306,10 @@ Result
 
 
 
-FindSegment
-===========
+----------
+
+FindSegment()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -2309,16 +2359,16 @@ Notes
      unloaded.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AddSegment(), RemSegment()
+`AddSegment()`_ `RemSegment()`_ 
 
+----------
 
-
-FindVar
-=======
+FindVar()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -2356,16 +2406,16 @@ Result
      NULL will be returned.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     DeleteVar(), GetVar(), SetVar()
+`DeleteVar()`_ `GetVar()`_ `SetVar()`_ 
 
+----------
 
-
-Flush
-=====
+Flush()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -2399,8 +2449,10 @@ Result
 
 
 
-Format
-======
+----------
+
+Format()
+========
 
 Synopsis
 ~~~~~~~~
@@ -2439,8 +2491,10 @@ Result
 
 
 
-FPutC
-=====
+----------
+
+FPutC()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -2466,16 +2520,16 @@ Result
      IoErr() gives additional information in that case.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FGetC(), IoErr()
+`FGetC()`_ `IoErr()`_ 
 
+----------
 
-
-FPuts
-=====
+FPuts()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -2509,16 +2563,16 @@ Result
      IoErr() gives additional information in that case.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FGetC(), IoErr()
+`FGetC()`_ `IoErr()`_ 
 
+----------
 
-
-FRead
-=====
+FRead()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -2556,16 +2610,16 @@ Result
      IoErr() gives additional information in case of an error.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     Open(), FWrite(), FPutc(), Close()
+`Open()`_ `FWrite()`_ `FPutc()`_ `Close()`_ 
 
+----------
 
-
-FreeArgs
-========
+FreeArgs()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -2600,16 +2654,16 @@ Result
      Some memory will have been returned to the system.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReadArgs()
+`ReadArgs()`_ 
 
+----------
 
-
-FreeDeviceProc
-==============
+FreeDeviceProc()
+================
 
 Synopsis
 ~~~~~~~~
@@ -2639,16 +2693,16 @@ Result
      Some memory and other resources returned to the system.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetDeviceProc()
+`GetDeviceProc()`_ 
 
+----------
 
-
-FreeDosEntry
-============
+FreeDosEntry()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -2672,8 +2726,10 @@ Inputs
 
 
 
-FreeDosObject
-=============
+----------
+
+FreeDosObject()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -2699,8 +2755,10 @@ Inputs
 
 
 
-FWrite
-======
+----------
+
+FWrite()
+========
 
 Synopsis
 ~~~~~~~~
@@ -2737,16 +2795,16 @@ Result
      gives additional information in case of an error.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     Open(), FRead(), FPutc(), Close()
+`Open()`_ `FRead()`_ `FPutc()`_ `Close()`_ 
 
+----------
 
-
-GetArgStr
-=========
+GetArgStr()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -2770,8 +2828,10 @@ Result
 
 
 
-GetConsoleTask
-==============
+----------
+
+GetConsoleTask()
+================
 
 Synopsis
 ~~~~~~~~
@@ -2809,16 +2869,16 @@ Notes
      or when the Process is not attached to a console.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     SetConsoleTask()
+`SetConsoleTask()`_ 
 
+----------
 
-
-GetCurrentDirName
-=================
+GetCurrentDirName()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -2855,16 +2915,16 @@ Result
      in that case.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     SetCurrentDirName()
+`SetCurrentDirName()`_ 
 
+----------
 
-
-GetDeviceProc
-=============
+GetDeviceProc()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -2912,16 +2972,16 @@ Bugs
      relative to "PROGDIR:", ":", or the current directory.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FreeDeviceProc()
+`FreeDeviceProc()`_ 
 
+----------
 
-
-GetFileSysTask
-==============
+GetFileSysTask()
+================
 
 Synopsis
 ~~~~~~~~
@@ -2950,16 +3010,16 @@ Result
      The default filesystem handler for this process.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     SetFileSysTask()
+`SetFileSysTask()`_ 
 
+----------
 
-
-GetProgramDir
-=============
+GetProgramDir()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -2989,8 +3049,10 @@ Result
 
 
 
-GetProgramName
-==============
+----------
+
+GetProgramName()
+================
 
 Synopsis
 ~~~~~~~~
@@ -3027,16 +3089,16 @@ Result
      in that case.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     SetProgramName()
+`SetProgramName()`_ 
 
+----------
 
-
-GetPrompt
-=========
+GetPrompt()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -3072,16 +3134,16 @@ Result
      in that case.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     SetPrompt()
+`SetPrompt()`_ 
 
+----------
 
-
-GetVar
-======
+GetVar()
+========
 
 Synopsis
 ~~~~~~~~
@@ -3156,16 +3218,16 @@ Bugs
      LV_VAR is the only type that can be global.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     DeleteVar(), FindVar(), SetVar()
+`DeleteVar()`_ `FindVar()`_ `SetVar()`_ 
 
+----------
 
-
-Info
-====
+Info()
+======
 
 Synopsis
 ~~~~~~~~
@@ -3202,17 +3264,16 @@ Result
  'parameterBlock' is filled with information on the volume.
 
 
+
 See also
 ~~~~~~~~
-::
 
+<dos/dos.h> 
 
- <dos/dos.h>
+----------
 
-
-
-Inhibit
-=======
+Inhibit()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -3258,8 +3319,10 @@ Notes
 
 
 
-Input
-=====
+----------
+
+Input()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -3283,8 +3346,10 @@ Result
 
 
 
-InternalLoadSeg
-===============
+----------
+
+InternalLoadSeg()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -3338,16 +3403,16 @@ Bugs
     Use of table and stack are not implemented, yet!
 
 
+
 See also
 ~~~~~~~~
-::
 
-     UnLoadSeg()
+`UnLoadSeg()`_ 
 
+----------
 
-
-InternalUnLoadSeg
-=================
+InternalUnLoadSeg()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -3358,8 +3423,10 @@ Synopsis
           VOID_FUNC freefunc );
 
 
-IoErr
-=====
+----------
+
+IoErr()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -3382,8 +3449,10 @@ Result
 
 
 
-IsFileSystem
-============
+----------
+
+IsFileSystem()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -3426,8 +3495,10 @@ Notes
      
 
 
-IsInteractive
-=============
+----------
+
+IsInteractive()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -3459,8 +3530,10 @@ Result
 
 
 
-LoadSeg
-=======
+----------
+
+LoadSeg()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -3500,16 +3573,16 @@ Notes
      This function is built on top of InternalLoadSeg()
 
 
+
 See also
 ~~~~~~~~
-::
 
-     UnLoadSeg()
+`UnLoadSeg()`_ 
 
+----------
 
-
-Lock
-====
+Lock()
+======
 
 Synopsis
 ~~~~~~~~
@@ -3555,8 +3628,10 @@ Notes
 
 
 
-LockDosList
-===========
+----------
+
+LockDosList()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -3592,8 +3667,10 @@ Result
 
 
 
-LockRecord
-==========
+----------
+
+LockRecord()
+============
 
 Synopsis
 ~~~~~~~~
@@ -3644,17 +3721,16 @@ Notes
  to LockRecord().
 
 
+
 See also
 ~~~~~~~~
-::
 
+`LockRecords()`_ `UnLockRecord()`_ 
 
- LockRecords(), UnLockRecord()
+----------
 
-
-
-LockRecords
-===========
+LockRecords()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -3701,17 +3777,16 @@ Notes
  reduce possiblities of deadlock.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`UnLockRecords()`_ 
 
- UnLockRecords()
+----------
 
-
-
-MakeDosEntry
-============
+MakeDosEntry()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -3745,18 +3820,16 @@ Result
      The new device entry, or NULL if it couldn't be created.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`AddDosEntry()`_ `RemDosEntry()`_ `FindDosEntry()`_ `LockDosList()`_ `NextDosEntry()`_ `FreeDosEntry()`_ 
 
- AddDosEntry(), RemDosEntry(), FindDosEntry(), LockDosList(),
- NextDosEntry(), FreeDosEntry()
+----------
 
-
-
-MakeLink
-========
+MakeLink()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -3810,16 +3883,16 @@ Bugs
      37.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReadLink()
+`ReadLink()`_ 
 
+----------
 
-
-MatchEnd
-========
+MatchEnd()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -3852,8 +3925,10 @@ Result
 
 
 
-MatchFirst
-==========
+----------
+
+MatchFirst()
+============
 
 Synopsis
 ~~~~~~~~
@@ -3896,17 +3971,16 @@ Result
      other = DOS error code
 
 
+
 See also
 ~~~~~~~~
-::
 
-     MatchNext(), MatchEnd(), ParsePattern(), Examine(), CurrentDir()
-     <dos/dosasl.h>
+`MatchNext()`_ `MatchEnd()`_ `ParsePattern()`_ `Examine()`_ `CurrentDir()`_ <dos/dosasl.h> 
 
+----------
 
-
-MatchNext
-=========
+MatchNext()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -3932,17 +4006,16 @@ Inputs
            MatchFirst() before.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     MatchFirst() MatchEnd() CurrentDir() Examine() ExNext()
-     ParsePattern() <dos/dosasl.h>
+MatchFirst() MatchEnd() CurrentDir() Examine() ExNext() ParsePattern() <dos/dosasl.h> 
 
+----------
 
-
-MatchPattern
-============
+MatchPattern()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -3978,17 +4051,16 @@ Result
  Boolean telling whether the string matched the pattern.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`ParsePattern()`_ `MatchPatternNoCase()`_ `MatchFirst()`_ `MatchNext()`_ 
 
- ParsePattern(), MatchPatternNoCase(), MatchFirst(), MatchNext()
+----------
 
-
-
-MatchPatternNoCase
-==================
+MatchPatternNoCase()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -4024,17 +4096,16 @@ Result
  Boolean telling whether the match was successful or not.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`MatchPattern()`_ `ParsePatternNoCase()`_ 
 
- MatchPattern(), ParsePatternNoCase().
+----------
 
-
-
-MaxCli
-======
+MaxCli()
+========
 
 Synopsis
 ~~~~~~~~
@@ -4059,8 +4130,10 @@ Result
 
 
 
-NameFromFH
-==========
+----------
+
+NameFromFH()
+============
 
 Synopsis
 ~~~~~~~~
@@ -4098,8 +4171,10 @@ Result
 
 
 
-NameFromLock
-============
+----------
+
+NameFromLock()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -4137,8 +4212,10 @@ Result
 
 
 
-NewLoadSeg
-==========
+----------
+
+NewLoadSeg()
+============
 
 Synopsis
 ~~~~~~~~
@@ -4184,16 +4261,16 @@ Bugs
      call LoadSeg()
 
 
+
 See also
 ~~~~~~~~
-::
 
-     LoadSeg(), UnLoadSeg(), InternalLoadSeg(), InternalUnloadSeg()
+`LoadSeg()`_ `UnLoadSeg()`_ `InternalLoadSeg()`_ `InternalUnloadSeg()`_ 
 
+----------
 
-
-NextDosEntry
-============
+NextDosEntry()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -4229,8 +4306,10 @@ Result
 
 
 
-Open
-====
+----------
+
+Open()
+======
 
 Synopsis
 ~~~~~~~~
@@ -4267,8 +4346,10 @@ Result
 
 
 
-OpenFromLock
-============
+----------
+
+OpenFromLock()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -4301,8 +4382,10 @@ Result
 
 
 
-Output
-======
+----------
+
+Output()
+========
 
 Synopsis
 ~~~~~~~~
@@ -4326,8 +4409,10 @@ Result
 
 
 
-ParentDir
-=========
+----------
+
+ParentDir()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -4369,8 +4454,10 @@ Bugs
 
 
 
-ParentOfFH
-==========
+----------
+
+ParentOfFH()
+============
 
 Synopsis
 ~~~~~~~~
@@ -4402,16 +4489,16 @@ Result
             
 
 
+
 See also
 ~~~~~~~~
-::
 
-     Lock(), UnLock(), Parent() 
-     
+`Lock()`_ `UnLock()`_ `ParentDir()`_   
 
+----------
 
-ParsePattern
-============
+ParsePattern()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -4465,8 +4552,10 @@ Result
 
 
 
-ParsePatternNoCase
-==================
+----------
+
+ParsePatternNoCase()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -4485,16 +4574,16 @@ Function
      for more information). For use with MatchPatternNoCase().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ParsePattern(), MatchPatternNoCase().
+`ParsePattern()`_ `MatchPatternNoCase()`_ 
 
+----------
 
-
-PathPart
-========
+PathPart()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -4534,8 +4623,10 @@ Example
 
 
 
-Pipe
-====
+----------
+
+Pipe()
+======
 
 Synopsis
 ~~~~~~~~
@@ -4571,8 +4662,10 @@ Result
 
 
 
-PrintFault
-==========
+----------
+
+PrintFault()
+============
 
 Synopsis
 ~~~~~~~~
@@ -4607,16 +4700,16 @@ Result
      Boolean success indicator.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     IoErr(), Fault(), SetIoErr()
+`IoErr()`_ `Fault()`_ `SetIoErr()`_ 
 
+----------
 
-
-PutStr
-======
+PutStr()
+========
 
 Synopsis
 ~~~~~~~~
@@ -4648,16 +4741,16 @@ Result
      error - 0 for success, -1 for any error.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FGetC(), IoErr()
+`FGetC()`_ `IoErr()`_ 
 
+----------
 
-
-Read
-====
+Read()
+======
 
 Synopsis
 ~~~~~~~~
@@ -4699,8 +4792,10 @@ Result
 
 
 
-ReadArgs
-========
+----------
+
+ReadArgs()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -4774,16 +4869,16 @@ Result
      with FreeArgs() later.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FreeArgs(), Input()
+`FreeArgs()`_ `Input()`_ 
 
+----------
 
-
-ReadItem
-========
+ReadItem()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -4835,8 +4930,10 @@ Notes
 
 
 
-ReadLink
-========
+----------
+
+ReadLink()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -4878,16 +4975,16 @@ Result
      == 0    failure, see IoErr() for more information.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     MakeLink()
+`MakeLink()`_ 
 
+----------
 
-
-Relabel
-=======
+Relabel()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -4923,8 +5020,10 @@ Result
 
 
 
-RemAssignList
-=============
+----------
+
+RemAssignList()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -4971,8 +5070,10 @@ Bugs
 
 
 
-RemDosEntry
-===========
+----------
+
+RemDosEntry()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -5015,8 +5116,10 @@ Notes
 
 
 
-RemSegment
-==========
+----------
+
+RemSegment()
+============
 
 Synopsis
 ~~~~~~~~
@@ -5051,16 +5154,16 @@ Result
      == 0    Segment was not removed (not in list, or not free).
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AddSegment(), FindSegment()
+`AddSegment()`_ `FindSegment()`_ 
 
+----------
 
-
-Rename
-======
+Rename()
+========
 
 Synopsis
 ~~~~~~~~
@@ -5095,8 +5198,10 @@ Result
 
 
 
-ReplyPkt
-========
+----------
+
+ReplyPkt()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -5118,8 +5223,10 @@ Notes
 
 
 
-RunCommand
-==========
+----------
+
+RunCommand()
+============
 
 Synopsis
 ~~~~~~~~
@@ -5172,16 +5279,16 @@ Notes
      character (ReadArgs() requires it to work properly).
 
 
+
 See also
 ~~~~~~~~
-::
 
-     SystemTagList()
+`SystemTagList()`_ 
 
+----------
 
-
-SameDevice
-==========
+SameDevice()
+============
 
 Synopsis
 ~~~~~~~~
@@ -5192,8 +5299,10 @@ Synopsis
           BPTR lock2 );
 
 
-SameLock
-========
+----------
+
+SameLock()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -5204,8 +5313,10 @@ Synopsis
           BPTR lock2 );
 
 
-Seek
-====
+----------
+
+Seek()
+======
 
 Synopsis
 ~~~~~~~~
@@ -5247,8 +5358,10 @@ Result
 
 
 
-SelectError
-===========
+----------
+
+SelectError()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -5287,8 +5400,10 @@ Notes
      
 
 
-SelectInput
-===========
+----------
+
+SelectInput()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -5320,8 +5435,10 @@ Result
 
 
 
-SelectOutput
-============
+----------
+
+SelectOutput()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -5353,8 +5470,10 @@ Result
 
 
 
-SendPkt
-=======
+----------
+
+SendPkt()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -5392,17 +5511,16 @@ Result
  This function is callable from a task.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`DoPkt()`_ `WaitPkt()`_ `AbortPkt()`_ 
 
- DoPkt(), WaitPkt(), AbortPkt()
+----------
 
-
-
-SetArgStr
-=========
+SetArgStr()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -5433,16 +5551,16 @@ Result
      The address of the previous argument string. May be NULL.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetArgStr(), RunCommand()
+`GetArgStr()`_ `RunCommand()`_ 
 
+----------
 
-
-SetComment
-==========
+SetComment()
+============
 
 Synopsis
 ~~~~~~~~
@@ -5479,8 +5597,10 @@ Result
 
 
 
-SetConsoleTask
-==============
+----------
+
+SetConsoleTask()
+================
 
 Synopsis
 ~~~~~~~~
@@ -5519,16 +5639,16 @@ Notes
      handlers were tasks (instead of Devices).
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetConsoleTask()
+`GetConsoleTask()`_ 
 
+----------
 
-
-SetCurrentDirName
-=================
+SetCurrentDirName()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -5568,16 +5688,16 @@ Bugs
      Never copies more than 255 bytes.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetCurrentDirName()
+`GetCurrentDirName()`_ 
 
+----------
 
-
-SetFileDate
-===========
+SetFileDate()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -5611,8 +5731,10 @@ Result
 
 
 
-SetFileSize
-===========
+----------
+
+SetFileSize()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -5648,8 +5770,10 @@ Result
 
 
 
-SetFileSysTask
-==============
+----------
+
+SetFileSysTask()
+================
 
 Synopsis
 ~~~~~~~~
@@ -5680,16 +5804,16 @@ Result
      The old filesystem handler.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetFileSysTask()
+`GetFileSysTask()`_ 
 
+----------
 
-
-SetIoErr
-========
+SetIoErr()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -5720,8 +5844,10 @@ Result
 
 
 
-SetMode
-=======
+----------
+
+SetMode()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -5760,8 +5886,10 @@ Result
 
 
 
-SetOwner
-========
+----------
+
+SetOwner()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -5788,8 +5916,10 @@ Result
 
 
 
-SetProgramDir
-=============
+----------
+
+SetProgramDir()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -5831,16 +5961,16 @@ Notes
      free the lock.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetProgramDir()
+`GetProgramDir()`_ 
 
+----------
 
-
-SetProgramName
-==============
+SetProgramName()
+================
 
 Synopsis
 ~~~~~~~~
@@ -5880,16 +6010,16 @@ Bugs
      Never copies more than 255 bytes.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetProgramName()
+`GetProgramName()`_ 
 
+----------
 
-
-SetPrompt
-=========
+SetPrompt()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -5928,16 +6058,16 @@ Bugs
      Never copies more than 255 bytes.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetPrompt()
+`GetPrompt()`_ 
 
+----------
 
-
-SetProtection
-=============
+SetProtection()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -5964,8 +6094,10 @@ Result
 
 
 
-SetVar
-======
+----------
+
+SetVar()
+========
 
 Synopsis
 ~~~~~~~~
@@ -6051,16 +6183,16 @@ Bugs
      variable may have still been set in ENV:.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     DeleteVar(), FindVar(), GetVar(),
+`DeleteVar()`_ `FindVar()`_ `GetVar()`_ 
 
+----------
 
-
-SetVBuf
-=======
+SetVBuf()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -6103,8 +6235,10 @@ Result
 
 
 
-SplitName
-=========
+----------
+
+SplitName()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -6155,8 +6289,10 @@ Example
 
 
 
-StartNotify
-===========
+----------
+
+StartNotify()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -6201,17 +6337,16 @@ Notes
  active.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`EndNotify()`_ <dos/notify.h> 
 
- EndNotify(), <dos/notify.h>
+----------
 
-
-
-StrToDate
-=========
+StrToDate()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -6285,16 +6420,16 @@ Result
      contains the converted values.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     DateStamp(), DateToStr()
+`DateStamp()`_ `DateToStr()`_ 
 
+----------
 
-
-StrToLong
-=========
+StrToLong()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -6342,8 +6477,10 @@ Notes
 
 
 
-SystemTagList
-=============
+----------
+
+SystemTagList()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -6424,17 +6561,16 @@ Notes
  and Output().
 
 
+
 See also
 ~~~~~~~~
-::
 
+`Execute()`_ `CreateNewProc()`_ `Input()`_ `Output()`_ <dos/dostags.h> 
 
- Execute(), CreateNewProc(), Input(), Output(), <dos/dostags.h>
+----------
 
-
-
-UnGetC
-======
+UnGetC()
+========
 
 Synopsis
 ~~~~~~~~
@@ -6470,16 +6606,16 @@ Result
      IoErr() gives additional information in that case.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FGetC(), IoErr()
+`FGetC()`_ `IoErr()`_ 
 
+----------
 
-
-UnLoadSeg
-=========
+UnLoadSeg()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -6509,16 +6645,16 @@ Result
      success = returns whether everything went ok. Returns FALSE if
                seglist was NULL.
 
+
 See also
 ~~~~~~~~
-::
 
-     LoadSeg()
+`LoadSeg()`_ 
 
+----------
 
-
-UnLock
-======
+UnLock()
+========
 
 Synopsis
 ~~~~~~~~
@@ -6549,8 +6685,10 @@ Notes
 
 
 
-UnLockDosList
-=============
+----------
+
+UnLockDosList()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -6574,8 +6712,10 @@ Inputs
 
 
 
-UnLockRecord
-============
+----------
+
+UnLockRecord()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -6613,17 +6753,16 @@ Notes
  call.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`LockRecord()`_ `UnLockRecords()`_ 
 
- LockRecord(), UnLockRecords()
+----------
 
-
-
-UnLockRecords
-=============
+UnLockRecords()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -6656,17 +6795,16 @@ Notes
  A array of records may not be modified when records are locked.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`LockRecords()`_ 
 
- LockRecords()
+----------
 
-
-
-VFPrintf
-========
+VFPrintf()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -6678,8 +6816,10 @@ Synopsis
           const IPTR * argarray );
 
 
-VFWritef
-========
+----------
+
+VFWritef()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -6731,17 +6871,16 @@ Result
  The number of bytes written or -1 if there was an error.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`VFPrintf()`_ `FPutC()`_ 
 
- VFPrintf(), FPutC()
+----------
 
-
-
-VPrintf
-=======
+VPrintf()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -6752,8 +6891,10 @@ Synopsis
           IPTR * argarray );
 
 
-WaitForChar
-===========
+----------
+
+WaitForChar()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -6798,8 +6939,10 @@ Notes
 
 
 
-WaitPkt
-=======
+----------
+
+WaitPkt()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -6836,8 +6979,10 @@ Notes
 
 
 
-Write
-=====
+----------
+
+Write()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -6878,8 +7023,10 @@ Result
 
 
 
-WriteChars
-==========
+----------
+
+WriteChars()
+============
 
 Synopsis
 ~~~~~~~~
@@ -6913,11 +7060,9 @@ Result
      additional information in that case.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FPuts(), FPutC(), FWrite(), PutStr()
-
-
+`FPuts()`_ `FPutC()`_ `FWrite()`_ `PutStr()`_ 
 

@@ -9,14 +9,14 @@ timer
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AddTime`_                              `BeginIO`_                              `CmpTime`_                              `GetSysTime`_                           
-`ReadEClock`_                           `SubTime`_                              
+`AddTime()`_                            `BeginIO()`_                            `CmpTime()`_                            `GetSysTime()`_                         
+`ReadEClock()`_                         `SubTime()`_                            
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-AddTime
-=======
+AddTime()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -58,16 +58,16 @@ Notes
      This function can be called from Interrupts.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     SubTime(), CmpTime()
+`SubTime()`_ `CmpTime()`_ 
 
+----------
 
-
-BeginIO
-=======
+BeginIO()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -101,16 +101,16 @@ Notes
      This function is safe to call from interrupts.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     exec/Abort(), exec/SendIO(), exec/DoIO()
+`exec.library/Abort() <./exec#abort>`_ `exec.library/SendIO() <./exec#sendio>`_ `exec.library/DoIO() <./exec#doio>`_ 
 
+----------
 
-
-CmpTime
-=======
+CmpTime()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -159,16 +159,16 @@ Bugs
      The registers A0 and A1 may not be preserved.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AddTime(), SubTime()
+`AddTime()`_ `SubTime()`_ 
 
+----------
 
-
-GetSysTime
-==========
+GetSysTime()
+============
 
 Synopsis
 ~~~~~~~~
@@ -206,16 +206,16 @@ Notes
      This function is safe to call from interrupts.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     TR_GETSYSTIME, TR_SETSYSTIME
+`TR_GETSYSTIME <tr_getsystime>`_ `TR_SETSYSTIME <tr_setsystime>`_ 
 
+----------
 
-
-ReadEClock
-==========
+ReadEClock()
+============
 
 Synopsis
 ~~~~~~~~
@@ -257,8 +257,10 @@ Notes
 
 
 
-SubTime
-=======
+----------
+
+SubTime()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -305,11 +307,9 @@ Bugs
      May not preserve registers.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AddTime(), CmpTime()
-
-
+`AddTime()`_ `CmpTime()`_ 
 

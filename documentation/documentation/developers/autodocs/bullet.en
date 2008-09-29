@@ -9,14 +9,14 @@ bullet
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`CloseEngine`_                          `ObtainInfoA`_                          `OpenEngine`_                           `ReleaseInfoA`_                         
-`SetInfoA`_                             
+`CloseEngine()`_                        `ObtainInfoA()`_                        `OpenEngine()`_                         `ReleaseInfoA()`_                       
+`SetInfoA()`_                           
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-CloseEngine
-===========
+CloseEngine()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -26,8 +26,10 @@ Synopsis
           struct GlyphEngine * glyphEngine );
 
 
-ObtainInfoA
-===========
+----------
+
+ObtainInfoA()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -42,8 +44,10 @@ Synopsis
           TAG tag, ... );
 
 
-OpenEngine
-==========
+----------
+
+OpenEngine()
+============
 
 Synopsis
 ~~~~~~~~
@@ -52,8 +56,10 @@ Synopsis
  struct GlyphEngine * OpenEngine();
 
 
-ReleaseInfoA
-============
+----------
+
+ReleaseInfoA()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -68,8 +74,10 @@ Synopsis
           TAG tag, ... );
 
 
-SetInfoA
-========
+----------
+
+SetInfoA()
+==========
 
 Synopsis
 ~~~~~~~~

@@ -9,16 +9,16 @@ oop
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`OOP_AddClass`_                         `OOP_DisposeObject`_                    `OOP_GetAttr`_                          `OOP_GetAttrBase`_                      
-`OOP_GetMethod`_                        `OOP_GetMethodID`_                      `OOP_NewObject`_                        `OOP_ObtainAttrBase`_                   
-`OOP_ObtainAttrBases`_                  `OOP_ParseAttrs`_                       `OOP_ReleaseAttrBase`_                  `OOP_ReleaseAttrBases`_                 
-`OOP_RemoveClass`_                      `OOP_SetAttrs`_                         
+`OOP_AddClass()`_                       `OOP_DisposeObject()`_                  `OOP_GetAttr()`_                        `OOP_GetAttrBase()`_                    
+`OOP_GetMethod()`_                      `OOP_GetMethodID()`_                    `OOP_NewObject()`_                      `OOP_ObtainAttrBase()`_                 
+`OOP_ObtainAttrBases()`_                `OOP_ParseAttrs()`_                     `OOP_ReleaseAttrBase()`_                `OOP_ReleaseAttrBases()`_               
+`OOP_RemoveClass()`_                    `OOP_SetAttrs()`_                       
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-OOP_AddClass
-============
+OOP_AddClass()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -57,16 +57,16 @@ Bugs
      Would be faster to use a hashtable to look up class IDs
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OOP_RemoveClass()
+`OOP_RemoveClass()`_ 
 
+----------
 
-
-OOP_DisposeObject
-=================
+OOP_DisposeObject()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -79,7 +79,7 @@ Function
 ~~~~~~~~
 ::
 
-     Delete an object that was previously allocated with NewObjectA().
+     Delete an object that was previously allocated with OOP_NewObject().
 
 
 Inputs
@@ -96,16 +96,16 @@ Result
      None.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OOP_NewObjectA()
+`OOP_NewObject()`_ 
 
+----------
 
-
-OOP_GetAttr
-===========
+OOP_GetAttr()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -145,16 +145,16 @@ Result
      Undefined.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OOP_SetAttrs().
+`OOP_SetAttrs()`_ 
 
+----------
 
-
-OOP_GetAttrBase
-===============
+OOP_GetAttrBase()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -193,8 +193,10 @@ Result
 
 
 
-OOP_GetMethod
-=============
+----------
+
+OOP_GetMethod()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -246,16 +248,16 @@ Bugs
      IPTR (*)(Class *, Object *, Msg)
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OOP_GetMethodID()
+`OOP_GetMethodID()`_ 
 
+----------
 
-
-OOP_GetMethodID
-===============
+OOP_GetMethodID()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -291,8 +293,10 @@ Result
 
 
 
-OOP_NewObject
-=============
+----------
+
+OOP_NewObject()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -345,16 +349,16 @@ Notes
      both. Use NULL for the unspecified one.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OOP_DisposeObject()
+`OOP_DisposeObject()`_ 
 
+----------
 
-
-OOP_ObtainAttrBase
-==================
+OOP_ObtainAttrBase()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -412,8 +416,10 @@ Notes
 
 
 
-OOP_ObtainAttrBases
-===================
+----------
+
+OOP_ObtainAttrBases()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -423,8 +429,10 @@ Synopsis
           struct OOP_ABDescr * abd );
 
 
-OOP_ParseAttrs
-==============
+----------
+
+OOP_ParseAttrs()
+================
 
 Synopsis
 ~~~~~~~~
@@ -482,8 +490,10 @@ Result
 
 
 
-OOP_ReleaseAttrBase
-===================
+----------
+
+OOP_ReleaseAttrBase()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -524,8 +534,10 @@ Notes
 
 
 
-OOP_ReleaseAttrBases
-====================
+----------
+
+OOP_ReleaseAttrBases()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -535,8 +547,10 @@ Synopsis
           struct OOP_ABDescr * abd );
 
 
-OOP_RemoveClass
-===============
+----------
+
+OOP_RemoveClass()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -567,16 +581,16 @@ Result
      None.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OOP_AddClass()
+`OOP_AddClass()`_ 
 
+----------
 
-
-OOP_SetAttrs
-============
+OOP_SetAttrs()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -616,11 +630,9 @@ Result
      Undefined.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OOP_DisposeObject()
-
-
+`OOP_DisposeObject()`_ 
 

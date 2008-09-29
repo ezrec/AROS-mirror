@@ -9,16 +9,16 @@ partition
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AddPartition`_                         `ClosePartitionTable`_                  `CloseRootPartition`_                   `CreatePartitionTable`_                 
-`DeletePartition`_                      `DestroyPartitionTable`_                `GetPartitionAttrs`_                    `GetPartitionTableAttrs`_               
-`OpenPartitionTable`_                   `OpenRootPartition`_                    `QueryPartitionAttrs`_                  `QueryPartitionTableAttrs`_             
-`SetPartitionAttrs`_                    `SetPartitionTableAttrs`_               `WritePartitionTable`_                  
+`AddPartition()`_                       `ClosePartitionTable()`_                `CloseRootPartition()`_                 `CreatePartitionTable()`_               
+`DeletePartition()`_                    `DestroyPartitionTable()`_              `GetPartitionAttrs()`_                  `GetPartitionTableAttrs()`_             
+`OpenPartitionTable()`_                 `OpenRootPartition()`_                  `QueryPartitionAttrs()`_                `QueryPartitionTableAttrs()`_           
+`SetPartitionAttrs()`_                  `SetPartitionTableAttrs()`_             `WritePartitionTable()`_                
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-AddPartition
-============
+AddPartition()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -65,8 +65,10 @@ Result
 
 
 
-ClosePartitionTable
-===================
+----------
+
+ClosePartitionTable()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -91,8 +93,10 @@ Inputs
 
 
 
-CloseRootPartition
-==================
+----------
+
+CloseRootPartition()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -116,8 +120,10 @@ Inputs
 
 
 
-CreatePartitionTable
-====================
+----------
+
+CreatePartitionTable()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -158,8 +164,10 @@ Notes
  PartitionHandle you should call ClosePartitionTable().
 
 
-DeletePartition
-===============
+----------
+
+DeletePartition()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -183,8 +191,10 @@ Inputs
 
 
 
-DestroyPartitionTable
-=====================
+----------
+
+DestroyPartitionTable()
+=======================
 
 Synopsis
 ~~~~~~~~
@@ -224,8 +234,10 @@ Notes
 
 
 
-GetPartitionAttrs
-=================
+----------
+
+GetPartitionAttrs()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -260,8 +272,10 @@ Inputs
 
 
 
-GetPartitionTableAttrs
-======================
+----------
+
+GetPartitionTableAttrs()
+========================
 
 Synopsis
 ~~~~~~~~
@@ -294,8 +308,10 @@ Inputs
 
 
 
-OpenPartitionTable
-==================
+----------
+
+OpenPartitionTable()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -329,8 +345,10 @@ Result
 
 
 
-OpenRootPartition
-=================
+----------
+
+OpenRootPartition()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -363,8 +381,10 @@ Result
 
 
 
-QueryPartitionAttrs
-===================
+----------
+
+QueryPartitionAttrs()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -395,8 +415,10 @@ Result
 
 
 
-QueryPartitionTableAttrs
-========================
+----------
+
+QueryPartitionTableAttrs()
+==========================
 
 Synopsis
 ~~~~~~~~
@@ -427,8 +449,10 @@ Result
 
 
 
-SetPartitionAttrs
-=================
+----------
+
+SetPartitionAttrs()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -463,8 +487,10 @@ Inputs
 
 
 
-SetPartitionTableAttrs
-======================
+----------
+
+SetPartitionTableAttrs()
+========================
 
 Synopsis
 ~~~~~~~~
@@ -494,8 +520,10 @@ Inputs
 
 
 
-WritePartitionTable
-===================
+----------
+
+WritePartitionTable()
+=====================
 
 Synopsis
 ~~~~~~~~

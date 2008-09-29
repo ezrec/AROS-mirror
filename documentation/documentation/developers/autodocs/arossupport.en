@@ -9,24 +9,24 @@ arossupport
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`CalcChecksum`_                         `debugmem`_                             `FindNextNodes`_                        `FindNode`_                             
-`FreeStruct`_                           `hexdump`_                              `IsDosEntryA`_                          `kprintf`_                              
-`NastyFreeMem`_                         `Purify_AddMemory`_                     `Purify_CheckAccess`_                   `Purify_Init`_                          
-`Purify_SetState`_                      `RawPutChars`_                          `ReadByte`_                             `ReadDouble`_                           
-`ReadFloat`_                            `ReadLong`_                             `ReadString`_                           `ReadStruct`_                           
-`ReadWord`_                             `RemoveSList`_                          `rkprintf`_                             `RT_FreeResource`_                      
-`RT_IntAdd`_                            `RT_IntCheck`_                          `RT_IntEnter`_                          `RT_IntExitB`_                          
-`RT_IntExitE`_                          `RT_IntFree`_                           `RT_IntInitB`_                          `RT_IntInitE`_                          
-`RT_IntLeave`_                          `RT_IntTrack`_                          `RT_ShowRTStack`_                       `RT_ShowStack`_                         
-`strrncasecmp`_                         `WriteByte`_                            `WriteDouble`_                          `WriteFloat`_                           
-`WriteLong`_                            `WriteString`_                          `WriteStruct`_                          `WriteWord`_                            
+`CalcChecksum()`_                       `debugmem()`_                           `FindNextNodes()`_                      `FindNode()`_                           
+`FreeStruct()`_                         `hexdump()`_                            `IsDosEntryA()`_                        `kprintf()`_                            
+`NastyFreeMem()`_                       `Purify_AddMemory()`_                   `Purify_CheckAccess()`_                 `Purify_Init()`_                        
+`Purify_SetState()`_                    `RawPutChars()`_                        `ReadByte()`_                           `ReadDouble()`_                         
+`ReadFloat()`_                          `ReadLong()`_                           `ReadString()`_                         `ReadStruct()`_                         
+`ReadWord()`_                           `RemoveSList()`_                        `rkprintf()`_                           `RT_FreeResource()`_                    
+`RT_IntAdd()`_                          `RT_IntCheck()`_                        `RT_IntEnter()`_                        `RT_IntExitB()`_                        
+`RT_IntExitE()`_                        `RT_IntFree()`_                         `RT_IntInitB()`_                        `RT_IntInitE()`_                        
+`RT_IntLeave()`_                        `RT_IntTrack()`_                        `RT_ShowRTStack()`_                     `RT_ShowStack()`_                       
+`strrncasecmp()`_                       `WriteByte()`_                          `WriteDouble()`_                        `WriteFloat()`_                         
+`WriteLong()`_                          `WriteString()`_                        `WriteStruct()`_                        `WriteWord()`_                          
 
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-CalcChecksum
-============
+CalcChecksum()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -85,16 +85,16 @@ Notes
      any time.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     SumKickData(), SumLibrary()
+`exec.library/SumKickData() <./exec#sumkickdata>`_ `exec.library/SumLibrary() <./exec#sumlibrary>`_ 
 
+----------
 
-
-debugmem
-========
+debugmem()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -134,8 +134,10 @@ Notes
 
 
 
-FindNextNodes
-=============
+----------
+
+FindNextNodes()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -185,8 +187,10 @@ Notes
 
 
 
-FindNode
-========
+----------
+
+FindNode()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -227,8 +231,10 @@ Notes
 
 
 
-FreeStruct
-==========
+----------
+
+FreeStruct()
+============
 
 Synopsis
 ~~~~~~~~
@@ -270,18 +276,16 @@ Example
      See ReadStruct()
 
 
+
 See also
 ~~~~~~~~
-::
 
-     Open(), Close(), ReadByte(), ReadWord(), ReadLong(), ReadFloat(),
-     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
-     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+`exec.library/Open() <./exec#open>`_ `exec.library/Close() <./exec#close>`_ `ReadByte()`_ `ReadWord()`_ `ReadLong()`_ `ReadFloat()`_ `ReadString()`_ `ReadStruct()`_ `WriteByte()`_ `WriteWord()`_ `WriteLong()`_ `WriteFloat()`_ `WriteDouble()`_ `WriteString()`_ `WriteStruct()`_ 
 
+----------
 
-
-hexdump
-=======
+hexdump()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -327,8 +331,10 @@ Result
 
 
 
-IsDosEntryA
-===========
+----------
+
+IsDosEntryA()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -399,17 +405,16 @@ Notes
      In future releases the buffer size will be set via a taglist.
 
 
+
 See also
 ~~~~~~~~
-::
 
+<dos/dosextens.h> 
 
-     <dos/dosextens.h>
+----------
 
-
-
-kprintf
-=======
+kprintf()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -452,8 +457,10 @@ Notes
 
 
 
-NastyFreeMem
-============
+----------
+
+NastyFreeMem()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -493,16 +500,16 @@ Notes
      This function depends on SysBase.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FreeMem()
+`exec.library/FreeMem() <./exec#freemem>`_ 
 
+----------
 
-
-Purify_AddMemory
-================
+Purify_AddMemory()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -545,8 +552,10 @@ Notes
 
 
 
-Purify_CheckAccess
-==================
+----------
+
+Purify_CheckAccess()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -582,8 +591,10 @@ Result
 
 
 
-Purify_Init
-===========
+----------
+
+Purify_Init()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -623,8 +634,10 @@ Notes
 
 
 
-Purify_SetState
-===============
+----------
+
+Purify_SetState()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -669,8 +682,10 @@ Result
 
 
 
-RawPutChars
-===========
+----------
+
+RawPutChars()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -704,8 +719,10 @@ Result
 
 
 
-ReadByte
-========
+----------
+
+ReadByte()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -750,18 +767,16 @@ Notes
      little endian machines.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
-     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
-     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+`ReadByte()`_ `ReadWord()`_ `ReadLong()`_ `ReadFloat()`_ `ReadDouble()`_ `ReadString()`_ `ReadStruct()`_ `WriteByte()`_ `WriteWord()`_ `WriteLong()`_ `WriteFloat()`_ `WriteDouble()`_ `WriteString()`_ `WriteStruct()`_ 
 
+----------
 
-
-ReadDouble
-==========
+ReadDouble()
+============
 
 Synopsis
 ~~~~~~~~
@@ -807,18 +822,16 @@ Notes
      little endian machines.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
-     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
-     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+`ReadByte()`_ `ReadWord()`_ `ReadLong()`_ `ReadFloat()`_ `ReadDouble()`_ `ReadString()`_ `ReadStruct()`_ `WriteByte()`_ `WriteWord()`_ `WriteLong()`_ `WriteFloat()`_ `WriteDouble()`_ `WriteString()`_ `WriteStruct()`_ 
 
+----------
 
-
-ReadFloat
-=========
+ReadFloat()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -863,18 +876,16 @@ Notes
      little endian machines.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
-     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
-     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+`ReadByte()`_ `ReadWord()`_ `ReadLong()`_ `ReadFloat()`_ `ReadDouble()`_ `ReadString()`_ `ReadStruct()`_ `WriteByte()`_ `WriteWord()`_ `WriteLong()`_ `WriteFloat()`_ `WriteDouble()`_ `WriteString()`_ `WriteStruct()`_ 
 
+----------
 
-
-ReadLong
-========
+ReadLong()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -919,18 +930,16 @@ Notes
      little endian machines.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
-     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
-     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+`ReadByte()`_ `ReadWord()`_ `ReadLong()`_ `ReadFloat()`_ `ReadDouble()`_ `ReadString()`_ `ReadStruct()`_ `WriteByte()`_ `WriteWord()`_ `WriteLong()`_ `WriteFloat()`_ `WriteDouble()`_ `WriteString()`_ `WriteStruct()`_ 
 
+----------
 
-
-ReadString
-==========
+ReadString()
+============
 
 Synopsis
 ~~~~~~~~
@@ -977,18 +986,16 @@ Notes
      little endian machines.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
-     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
-     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+`ReadByte()`_ `ReadWord()`_ `ReadLong()`_ `ReadFloat()`_ `ReadDouble()`_ `ReadString()`_ `ReadStruct()`_ `WriteByte()`_ `WriteWord()`_ `WriteLong()`_ `WriteFloat()`_ `WriteDouble()`_ `WriteString()`_ `WriteStruct()`_ 
 
+----------
 
-
-ReadStruct
-==========
+ReadStruct()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1043,18 +1050,16 @@ Notes
      little endian machines.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
-     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
-     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+`ReadByte()`_ `ReadWord()`_ `ReadLong()`_ `ReadFloat()`_ `ReadDouble()`_ `ReadString()`_ `ReadStruct()`_ `WriteByte()`_ `WriteWord()`_ `WriteLong()`_ `WriteFloat()`_ `WriteDouble()`_ `WriteString()`_ `WriteStruct()`_ 
 
+----------
 
-
-ReadWord
-========
+ReadWord()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -1099,18 +1104,16 @@ Notes
      little endian machines.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
-     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
-     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+`ReadByte()`_ `ReadWord()`_ `ReadLong()`_ `ReadFloat()`_ `ReadDouble()`_ `ReadString()`_ `ReadStruct()`_ `WriteByte()`_ `WriteWord()`_ `WriteLong()`_ `WriteFloat()`_ `WriteDouble()`_ `WriteString()`_ `WriteStruct()`_ 
 
+----------
 
-
-RemoveSList
-===========
+RemoveSList()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1160,8 +1163,10 @@ Notes
 
 
 
-rkprintf
-========
+----------
+
+rkprintf()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -1232,8 +1237,10 @@ Notes
 
 
 
-RT_FreeResource
-===============
+----------
+
+RT_FreeResource()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -1268,8 +1275,10 @@ Result
 
 
 
-RT_IntAdd
-=========
+----------
+
+RT_IntAdd()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -1313,8 +1322,10 @@ Result
 
 
 
-RT_IntCheck
-===========
+----------
+
+RT_IntCheck()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1368,8 +1379,10 @@ Notes
 
 
 
-RT_IntEnter
-===========
+----------
+
+RT_IntEnter()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1413,8 +1426,10 @@ Notes
 
 
 
-RT_IntExitB
-===========
+----------
+
+RT_IntExitB()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1447,8 +1462,10 @@ Result
 
 
 
-RT_IntExitE
-===========
+----------
+
+RT_IntExitE()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1481,8 +1498,10 @@ Result
 
 
 
-RT_IntFree
-==========
+----------
+
+RT_IntFree()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1527,8 +1546,10 @@ Notes
 
 
 
-RT_IntInitB
-===========
+----------
+
+RT_IntInitB()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1560,8 +1581,10 @@ Result
 
 
 
-RT_IntInitE
-===========
+----------
+
+RT_IntInitE()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1593,8 +1616,10 @@ Result
 
 
 
-RT_IntLeave
-===========
+----------
+
+RT_IntLeave()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1626,8 +1651,10 @@ Result
 
 
 
-RT_IntTrack
-===========
+----------
+
+RT_IntTrack()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1647,7 +1674,7 @@ Function
 
      Adds a resource to be tracked. The arguments after
      line depend on the type of resource to be traced.
-     The resource›is marked as "must not be freed by the
+     The resource is marked as "must not be freed by the
      user".
 
 
@@ -1669,8 +1696,10 @@ Result
 
 
 
-RT_ShowRTStack
-==============
+----------
+
+RT_ShowRTStack()
+================
 
 Synopsis
 ~~~~~~~~
@@ -1703,8 +1732,10 @@ Result
 
 
 
-RT_ShowStack
-============
+----------
+
+RT_ShowStack()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -1736,8 +1767,10 @@ Result
 
 
 
-strrncasecmp
-============
+----------
+
+strrncasecmp()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -1790,16 +1823,16 @@ Notes
      any time.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     strcmp(), strcasecmp(), strncasecmp(), strrchr()
+clib/strcmp() clib/strcasecmp() clib/strncasecmp() clib/strrchr() 
 
+----------
 
-
-WriteByte
-=========
+WriteByte()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -1843,18 +1876,16 @@ Notes
      endian machines.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
-     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
-     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+`ReadByte()`_ `ReadWord()`_ `ReadLong()`_ `ReadFloat()`_ `ReadDouble()`_ `ReadString()`_ `ReadStruct()`_ `WriteByte()`_ `WriteWord()`_ `WriteLong()`_ `WriteFloat()`_ `WriteDouble()`_ `WriteString()`_ `WriteStruct()`_ 
 
+----------
 
-
-WriteDouble
-===========
+WriteDouble()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1899,18 +1930,16 @@ Notes
      endian machines.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
-     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
-     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+`ReadByte()`_ `ReadWord()`_ `ReadLong()`_ `ReadFloat()`_ `ReadDouble()`_ `ReadString()`_ `ReadStruct()`_ `WriteByte()`_ `WriteWord()`_ `WriteLong()`_ `WriteFloat()`_ `WriteDouble()`_ `WriteString()`_ `WriteStruct()`_ 
 
+----------
 
-
-WriteFloat
-==========
+WriteFloat()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1954,18 +1983,16 @@ Notes
      endian machines.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
-     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
-     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+`ReadByte()`_ `ReadWord()`_ `ReadLong()`_ `ReadFloat()`_ `ReadDouble()`_ `ReadString()`_ `ReadStruct()`_ `WriteByte()`_ `WriteWord()`_ `WriteLong()`_ `WriteFloat()`_ `WriteDouble()`_ `WriteString()`_ `WriteStruct()`_ 
 
+----------
 
-
-WriteLong
-=========
+WriteLong()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -2009,18 +2036,16 @@ Notes
      endian machines.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
-     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
-     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+`ReadByte()`_ `ReadWord()`_ `ReadLong()`_ `ReadFloat()`_ `ReadDouble()`_ `ReadString()`_ `ReadStruct()`_ `WriteByte()`_ `WriteWord()`_ `WriteLong()`_ `WriteFloat()`_ `WriteDouble()`_ `WriteString()`_ `WriteStruct()`_ 
 
+----------
 
-
-WriteString
-===========
+WriteString()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -2064,18 +2089,16 @@ Notes
      endian machines.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
-     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
-     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+`ReadByte()`_ `ReadWord()`_ `ReadLong()`_ `ReadFloat()`_ `ReadDouble()`_ `ReadString()`_ `ReadStruct()`_ `WriteByte()`_ `WriteWord()`_ `WriteLong()`_ `WriteFloat()`_ `WriteDouble()`_ `WriteString()`_ `WriteStruct()`_ 
 
+----------
 
-
-WriteStruct
-===========
+WriteStruct()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -2129,18 +2152,16 @@ Notes
      endian machines.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
-     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
-     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
+`ReadByte()`_ `ReadWord()`_ `ReadLong()`_ `ReadFloat()`_ `ReadDouble()`_ `ReadString()`_ `ReadStruct()`_ `WriteByte()`_ `WriteWord()`_ `WriteLong()`_ `WriteFloat()`_ `WriteDouble()`_ `WriteString()`_ `WriteStruct()`_ 
 
+----------
 
-
-WriteWord
-=========
+WriteWord()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -2184,13 +2205,9 @@ Notes
      endian machines.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReadByte(), ReadWord(), ReadLong(), ReadFloat(), ReadDouble(),
-     ReadString(), ReadStruct(), WriteByte(), WriteWord(), WriteLong(),
-     WriteFloat(), WriteDouble(), WriteString(), WriteStruct()
-
-
+`ReadByte()`_ `ReadWord()`_ `ReadLong()`_ `ReadFloat()`_ `ReadDouble()`_ `ReadString()`_ `ReadStruct()`_ `WriteByte()`_ `WriteWord()`_ `WriteLong()`_ `WriteFloat()`_ `WriteDouble()`_ `WriteString()`_ `WriteStruct()`_ 
 

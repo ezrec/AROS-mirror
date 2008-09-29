@@ -9,17 +9,17 @@ amigaguide
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AddAmigaGuideHostA`_                   `AmigaGuideSignal`_                     `CloseAmigaGuide`_                      `ExpungeXRef`_                          
-`GetAmigaGuideAttr`_                    `GetAmigaGuideMsg`_                     `GetAmigaGuideString`_                  `LoadXRef`_                             
-`LockAmigaGuideBase`_                   `OpenAmigaGuideA`_                      `OpenAmigaGuideAsyncA`_                 `RemoveAmigaGuideHostA`_                
-`ReplyAmigaGuideMsg`_                   `SendAmigaGuideCmdA`_                   `SendAmigaGuideContextA`_               `SetAmigaGuideAttrsA`_                  
-`SetAmigaGuideContextA`_                `UnlockAmigaGuideBase`_                 
+`AddAmigaGuideHostA()`_                 `AmigaGuideSignal()`_                   `CloseAmigaGuide()`_                    `ExpungeXRef()`_                        
+`GetAmigaGuideAttr()`_                  `GetAmigaGuideMsg()`_                   `GetAmigaGuideString()`_                `LoadXRef()`_                           
+`LockAmigaGuideBase()`_                 `OpenAmigaGuideA()`_                    `OpenAmigaGuideAsyncA()`_               `RemoveAmigaGuideHostA()`_              
+`ReplyAmigaGuideMsg()`_                 `SendAmigaGuideCmdA()`_                 `SendAmigaGuideContextA()`_             `SetAmigaGuideAttrsA()`_                
+`SetAmigaGuideContextA()`_              `UnlockAmigaGuideBase()`_               
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-AddAmigaGuideHostA
-==================
+AddAmigaGuideHostA()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -36,8 +36,10 @@ Synopsis
           TAG tag, ... );
 
 
-AmigaGuideSignal
-================
+----------
+
+AmigaGuideSignal()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -47,8 +49,10 @@ Synopsis
           AMIGAGUIDECONTEXT handle );
 
 
-CloseAmigaGuide
-===============
+----------
+
+CloseAmigaGuide()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -58,8 +62,10 @@ Synopsis
           AMIGAGUIDECONTEXT handle );
 
 
-ExpungeXRef
-===========
+----------
+
+ExpungeXRef()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -68,8 +74,10 @@ Synopsis
  void ExpungeXRef();
 
 
-GetAmigaGuideAttr
-=================
+----------
+
+GetAmigaGuideAttr()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -81,8 +89,10 @@ Synopsis
           ULONG * storage );
 
 
-GetAmigaGuideMsg
-================
+----------
+
+GetAmigaGuideMsg()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -92,8 +102,10 @@ Synopsis
           AMIGAGUIDECONTEXT handle );
 
 
-GetAmigaGuideString
-===================
+----------
+
+GetAmigaGuideString()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -103,8 +115,10 @@ Synopsis
           ULONG id );
 
 
-LoadXRef
-========
+----------
+
+LoadXRef()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -115,8 +129,10 @@ Synopsis
           STRPTR name );
 
 
-LockAmigaGuideBase
-==================
+----------
+
+LockAmigaGuideBase()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -126,8 +142,10 @@ Synopsis
           AMIGAGUIDECONTEXT handle );
 
 
-OpenAmigaGuideA
-===============
+----------
+
+OpenAmigaGuideA()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -142,8 +160,10 @@ Synopsis
           TAG tag, ... );
 
 
-OpenAmigaGuideAsyncA
-====================
+----------
+
+OpenAmigaGuideAsyncA()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -158,8 +178,10 @@ Synopsis
           TAG tag, ... );
 
 
-RemoveAmigaGuideHostA
-=====================
+----------
+
+RemoveAmigaGuideHostA()
+=======================
 
 Synopsis
 ~~~~~~~~
@@ -174,8 +196,10 @@ Synopsis
           TAG tag, ... );
 
 
-ReplyAmigaGuideMsg
-==================
+----------
+
+ReplyAmigaGuideMsg()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -185,8 +209,10 @@ Synopsis
           struct AmigaGuideMsg * msg );
 
 
-SendAmigaGuideCmdA
-==================
+----------
+
+SendAmigaGuideCmdA()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -203,8 +229,10 @@ Synopsis
           TAG tag, ... );
 
 
-SendAmigaGuideContextA
-======================
+----------
+
+SendAmigaGuideContextA()
+========================
 
 Synopsis
 ~~~~~~~~
@@ -219,8 +247,10 @@ Synopsis
           TAG tag, ... );
 
 
-SetAmigaGuideAttrsA
-===================
+----------
+
+SetAmigaGuideAttrsA()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -235,8 +265,10 @@ Synopsis
           TAG tag, ... );
 
 
-SetAmigaGuideContextA
-=====================
+----------
+
+SetAmigaGuideContextA()
+=======================
 
 Synopsis
 ~~~~~~~~
@@ -253,8 +285,10 @@ Synopsis
           TAG tag, ... );
 
 
-UnlockAmigaGuideBase
-====================
+----------
+
+UnlockAmigaGuideBase()
+======================
 
 Synopsis
 ~~~~~~~~

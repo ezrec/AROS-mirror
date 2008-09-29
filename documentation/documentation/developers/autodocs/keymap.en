@@ -9,14 +9,14 @@ keymap
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AskKeyMapDefault`_                     `MapANSI`_                              `MapRawKey`_                            `SetKeyMapDefault`_                     
+`AskKeyMapDefault()`_                   `MapANSI()`_                            `MapRawKey()`_                          `SetKeyMapDefault()`_                   
 
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-AskKeyMapDefault
-================
+AskKeyMapDefault()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -38,16 +38,16 @@ Result
      Pointer to the system defaul keymap.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     SetKeyMapDefault()
+`SetKeyMapDefault()`_ 
 
+----------
 
-
-MapANSI
-=======
+MapANSI()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -94,8 +94,10 @@ Result
               an error.
 
 
-MapRawKey
-=========
+----------
+
+MapRawKey()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -139,16 +141,16 @@ Result
      -1 means buffer owerflow.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     MapAnsi()
+`MapAnsi()`_ 
 
+----------
 
-
-SetKeyMapDefault
-================
+SetKeyMapDefault()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -192,11 +194,9 @@ Bugs
      but the keymap.resource contains no semaphore for this purpose.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AskKeyMapDefault()
-
-
+`AskKeyMapDefault()`_ 
 

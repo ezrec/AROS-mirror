@@ -9,16 +9,16 @@ thread
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`BroadcastCondition`_                   `CreateCondition`_                      `CreateMutex`_                          `CreateThread`_                         
-`CurrentThread`_                        `DestroyCondition`_                     `DestroyMutex`_                         `DetachThread`_                         
-`LockMutex`_                            `SignalCondition`_                      `TryLockMutex`_                         `UnlockMutex`_                          
-`WaitAllThreads`_                       `WaitCondition`_                        `WaitThread`_                           
+`BroadcastCondition()`_                 `CreateCondition()`_                    `CreateMutex()`_                        `CreateThread()`_                       
+`CurrentThread()`_                      `DestroyCondition()`_                   `DestroyMutex()`_                       `DetachThread()`_                       
+`LockMutex()`_                          `SignalCondition()`_                    `TryLockMutex()`_                       `UnlockMutex()`_                        
+`WaitAllThreads()`_                     `WaitCondition()`_                      `WaitThread()`_                         
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-BroadcastCondition
-==================
+BroadcastCondition()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -70,17 +70,16 @@ Notes
      If no threads are waiting on the condition, nothing happens.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateCondition(), DestroyCondition(), WaitCondition(),
-     SignalCondition()
+`CreateCondition()`_ `DestroyCondition()`_ `WaitCondition()`_ `SignalCondition()`_ 
 
+----------
 
-
-CreateCondition
-===============
+CreateCondition()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -116,17 +115,16 @@ Notes
      Condition cond = CreateCondition();
 
 
+
 See also
 ~~~~~~~~
-::
 
-     DestroyCondition(), WaitCondition(), SignalCondition(),
-     BroadcastCondition()
+`DestroyCondition()`_ `WaitCondition()`_ `SignalCondition()`_ `BroadcastCondition()`_ 
 
+----------
 
-
-CreateMutex
-===========
+CreateMutex()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -162,16 +160,16 @@ Example
      Mutex mutex = CreateMutex();
 
 
+
 See also
 ~~~~~~~~
-::
 
-     DestroyMutex(), LockMutex(), TryLockMutex(), UnlockMutex()
+`DestroyMutex()`_ `LockMutex()`_ `TryLockMutex()`_ `UnlockMutex()`_ 
 
+----------
 
-
-CreateThread
-============
+CreateThread()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -215,16 +213,16 @@ Example
          printf("thread %d created\n", id);
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CurrentThread(), DetachThread(), WaitThread(), WaitAllThreads()
+`CurrentThread()`_ `DetachThread()`_ `WaitThread()`_ `WaitAllThreads()`_ 
 
+----------
 
-
-CurrentThread
-=============
+CurrentThread()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -261,16 +259,16 @@ Example
      printf("this is thread %d\n", id);
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateThread(), DetachThread(), WaitThread(), WaitAllThreads()
+`CreateThread()`_ `DetachThread()`_ `WaitThread()`_ `WaitAllThreads()`_ 
 
+----------
 
-
-DestroyCondition
-================
+DestroyCondition()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -315,17 +313,16 @@ Notes
      it.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateCondition(), WaitCondition(), SignalCondition(),
-     BroadcastCondition()
+`CreateCondition()`_ `WaitCondition()`_ `SignalCondition()`_ `BroadcastCondition()`_ 
 
+----------
 
-
-DestroyMutex
-============
+DestroyMutex()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -370,16 +367,16 @@ Notes
      waiting to lock it.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateMutex(), LockMutex(), TryLockMutex(), UnlockMutex()
+`CreateMutex()`_ `LockMutex()`_ `TryLockMutex()`_ `UnlockMutex()`_ 
 
+----------
 
-
-DetachThread
-============
+DetachThread()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -445,16 +442,16 @@ Bugs
      it.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateThread(), CurrentThread(), WaitThread(), WaitAllThreads()
+`CreateThread()`_ `CurrentThread()`_ `WaitThread()`_ `WaitAllThreads()`_ 
 
+----------
 
-
-LockMutex
-=========
+LockMutex()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -491,16 +488,16 @@ Example
      LockMutex(mutex);
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateMutex(), DestroyMutex(), TryLockMutex(), UnlockMutex()
+`CreateMutex()`_ `DestroyMutex()`_ `TryLockMutex()`_ `UnlockMutex()`_ 
 
+----------
 
-
-SignalCondition
-===============
+SignalCondition()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -554,17 +551,16 @@ Notes
      undefined.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateCondition(), DestroyCondition(), WaitCondition(),
-     BroadcastCondition()
+`CreateCondition()`_ `DestroyCondition()`_ `WaitCondition()`_ `BroadcastCondition()`_ 
 
+----------
 
-
-TryLockMutex
-============
+TryLockMutex()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -602,16 +598,16 @@ Example
      TryLockMutex(mutex);
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateMutex(), DestroyMutex(), LockMutex(), UnlockMutex()
+`CreateMutex()`_ `DestroyMutex()`_ `LockMutex()`_ `UnlockMutex()`_ 
 
+----------
 
-
-UnlockMutex
-===========
+UnlockMutex()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -648,16 +644,16 @@ Example
      UnlockMutex(mutex);
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateMutex(), DestroyMutex(), LockMutex(), TryLockMutex()
+`CreateMutex()`_ `DestroyMutex()`_ `LockMutex()`_ `TryLockMutex()`_ 
 
+----------
 
-
-WaitAllThreads
-==============
+WaitAllThreads()
+================
 
 Synopsis
 ~~~~~~~~
@@ -700,16 +696,16 @@ Notes
      This function will ignore detached threads.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateThread(), CurrentThread(), DetachThread(), WaitThread()
+`CreateThread()`_ `CurrentThread()`_ `DetachThread()`_ `WaitThread()`_ 
 
+----------
 
-
-WaitCondition
-=============
+WaitCondition()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -764,17 +760,16 @@ Notes
      more details.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateCondition(), DestroyCondition(), SignalCondition(),
-     BroadcastCondition()
+`CreateCondition()`_ `DestroyCondition()`_ `SignalCondition()`_ `BroadcastCondition()`_ 
 
+----------
 
-
-WaitThread
-==========
+WaitThread()
+============
 
 Synopsis
 ~~~~~~~~
@@ -831,11 +826,9 @@ Notes
      be notified when the thread completes, and will all receive the result.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateThread(), CurrentThread(), DetachThread()
-
-
+`CreateThread()`_ `CurrentThread()`_ `DetachThread()`_ 
 

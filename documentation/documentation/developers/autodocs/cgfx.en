@@ -9,19 +9,19 @@ cgfx
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AllocCModeListTagList`_                `BestCModeIDTagList`_                   `BltTemplateAlpha`_                     `CModeRequestTagList`_                  
-`CVideoCtrlTagList`_                    `DoCDrawMethodTagList`_                 `ExtractColor`_                         `FillPixelArray`_                       
-`FreeCModeList`_                        `GetCyberIDAttr`_                       `GetCyberMapAttr`_                      `InvertPixelArray`_                     
-`IsCyberModeID`_                        `LockBitMapTagList`_                    `MovePixelArray`_                       `ReadPixelArray`_                       
-`ReadRGBPixel`_                         `ScalePixelArray`_                      `UnLockBitMap`_                         `UnLockBitMapTagList`_                  
-`WriteLUTPixelArray`_                   `WritePixelArray`_                      `WritePixelArrayAlpha`_                 `WriteRGBPixel`_                        
+`AllocCModeListTagList()`_              `BestCModeIDTagList()`_                 `BltTemplateAlpha()`_                   `CModeRequestTagList()`_                
+`CVideoCtrlTagList()`_                  `DoCDrawMethodTagList()`_               `ExtractColor()`_                       `FillPixelArray()`_                     
+`FreeCModeList()`_                      `GetCyberIDAttr()`_                     `GetCyberMapAttr()`_                    `InvertPixelArray()`_                   
+`IsCyberModeID()`_                      `LockBitMapTagList()`_                  `MovePixelArray()`_                     `ReadPixelArray()`_                     
+`ReadRGBPixel()`_                       `ScalePixelArray()`_                    `UnLockBitMap()`_                       `UnLockBitMapTagList()`_                
+`WriteLUTPixelArray()`_                 `WritePixelArray()`_                    `WritePixelArrayAlpha()`_               `WriteRGBPixel()`_                      
 
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-AllocCModeListTagList
-=====================
+AllocCModeListTagList()
+=======================
 
 Synopsis
 ~~~~~~~~
@@ -34,8 +34,10 @@ Synopsis
           TAG tag, ... );
 
 
-BestCModeIDTagList
-==================
+----------
+
+BestCModeIDTagList()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -48,8 +50,10 @@ Synopsis
           TAG tag, ... );
 
 
-BltTemplateAlpha
-================
+----------
+
+BltTemplateAlpha()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -66,8 +70,10 @@ Synopsis
           LONG height );
 
 
-CModeRequestTagList
-===================
+----------
+
+CModeRequestTagList()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -82,8 +88,10 @@ Synopsis
           TAG tag, ... );
 
 
-CVideoCtrlTagList
-=================
+----------
+
+CVideoCtrlTagList()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -98,8 +106,10 @@ Synopsis
           TAG tag, ... );
 
 
-DoCDrawMethodTagList
-====================
+----------
+
+DoCDrawMethodTagList()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -116,8 +126,10 @@ Synopsis
           TAG tag, ... );
 
 
-ExtractColor
-============
+----------
+
+ExtractColor()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -133,8 +145,10 @@ Synopsis
           ULONG Height );
 
 
-FillPixelArray
-==============
+----------
+
+FillPixelArray()
+================
 
 Synopsis
 ~~~~~~~~
@@ -149,8 +163,10 @@ Synopsis
           ULONG pixel );
 
 
-FreeCModeList
-=============
+----------
+
+FreeCModeList()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -160,8 +176,10 @@ Synopsis
           struct List * modeList );
 
 
-GetCyberIDAttr
-==============
+----------
+
+GetCyberIDAttr()
+================
 
 Synopsis
 ~~~~~~~~
@@ -172,8 +190,10 @@ Synopsis
           ULONG DisplayModeID );
 
 
-GetCyberMapAttr
-===============
+----------
+
+GetCyberMapAttr()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -184,8 +204,10 @@ Synopsis
           ULONG attribute );
 
 
-InvertPixelArray
-================
+----------
+
+InvertPixelArray()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -199,8 +221,10 @@ Synopsis
           UWORD height );
 
 
-IsCyberModeID
-=============
+----------
+
+IsCyberModeID()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -210,8 +234,10 @@ Synopsis
           ULONG modeID );
 
 
-LockBitMapTagList
-=================
+----------
+
+LockBitMapTagList()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -226,8 +252,10 @@ Synopsis
           TAG tag, ... );
 
 
-MovePixelArray
-==============
+----------
+
+MovePixelArray()
+================
 
 Synopsis
 ~~~~~~~~
@@ -243,8 +271,10 @@ Synopsis
           UWORD SizeY );
 
 
-ReadPixelArray
-==============
+----------
+
+ReadPixelArray()
+================
 
 Synopsis
 ~~~~~~~~
@@ -263,8 +293,10 @@ Synopsis
           UBYTE dstformat );
 
 
-ReadRGBPixel
-============
+----------
+
+ReadRGBPixel()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -276,8 +308,10 @@ Synopsis
           UWORD y );
 
 
-ScalePixelArray
-===============
+----------
+
+ScalePixelArray()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -296,8 +330,10 @@ Synopsis
           UBYTE SrcFormat );
 
 
-UnLockBitMap
-============
+----------
+
+UnLockBitMap()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -307,8 +343,10 @@ Synopsis
           APTR Handle );
 
 
-UnLockBitMapTagList
-===================
+----------
+
+UnLockBitMapTagList()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -323,8 +361,10 @@ Synopsis
           TAG tag, ... );
 
 
-WriteLUTPixelArray
-==================
+----------
+
+WriteLUTPixelArray()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -344,8 +384,10 @@ Synopsis
           UBYTE CTabFormat );
 
 
-WritePixelArray
-===============
+----------
+
+WritePixelArray()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -364,8 +406,10 @@ Synopsis
           UBYTE srcformat );
 
 
-WritePixelArrayAlpha
-====================
+----------
+
+WritePixelArrayAlpha()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -384,8 +428,10 @@ Synopsis
           ULONG globalalpha );
 
 
-WriteRGBPixel
-=============
+----------
+
+WriteRGBPixel()
+===============
 
 Synopsis
 ~~~~~~~~

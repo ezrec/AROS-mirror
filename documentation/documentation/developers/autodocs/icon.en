@@ -9,18 +9,18 @@ icon
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AddFreeList`_                          `BumpRevision`_                         `ChangeToSelectedIconColor`_            `DeleteDiskObject`_                     
-`DrawIconStateA`_                       `DupDiskObjectA`_                       `FindToolType`_                         `FreeDiskObject`_                       
-`FreeFreeList`_                         `GetDefDiskObject`_                     `GetDiskObject`_                        `GetDiskObjectNew`_                     
-`GetIconRectangleA`_                    `GetIconTagList`_                       `IconControlA`_                         `LayoutIconA`_                          
-`MatchToolValue`_                       `NewDiskObject`_                        `PutDefDiskObject`_                     `PutDiskObject`_                        
-`PutIconTagList`_                       
+`AddFreeList()`_                        `BumpRevision()`_                       `ChangeToSelectedIconColor()`_          `DeleteDiskObject()`_                   
+`DrawIconStateA()`_                     `DupDiskObjectA()`_                     `FindToolType()`_                       `FreeDiskObject()`_                     
+`FreeFreeList()`_                       `GetDefDiskObject()`_                   `GetDiskObject()`_                      `GetDiskObjectNew()`_                   
+`GetIconRectangleA()`_                  `GetIconTagList()`_                     `IconControlA()`_                       `LayoutIconA()`_                        
+`MatchToolValue()`_                     `NewDiskObject()`_                      `PutDefDiskObject()`_                   `PutDiskObject()`_                      
+`PutIconTagList()`_                     
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-AddFreeList
-===========
+AddFreeList()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -57,16 +57,16 @@ Result
      FALSE on failure, else TRUE.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FreeFreeList()
+`FreeFreeList()`_ 
 
+----------
 
-
-BumpRevision
-============
+BumpRevision()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -99,8 +99,10 @@ Result
 
 
 
-ChangeToSelectedIconColor
-=========================
+----------
+
+ChangeToSelectedIconColor()
+===========================
 
 Synopsis
 ~~~~~~~~
@@ -110,8 +112,10 @@ Synopsis
           struct ColorRegister * cr );
 
 
-DeleteDiskObject
-================
+----------
+
+DeleteDiskObject()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -142,8 +146,10 @@ Bugs
 
 
 
-DrawIconStateA
-==============
+----------
+
+DrawIconStateA()
+================
 
 Synopsis
 ~~~~~~~~
@@ -167,16 +173,16 @@ Synopsis
           ULONG state,
           TAG tag, ... );
 
+
 See also
 ~~~~~~~~
-::
 
-     AddFreeList()
+`AddFreeList()`_ 
 
+----------
 
-
-DupDiskObjectA
-==============
+DupDiskObjectA()
+================
 
 Synopsis
 ~~~~~~~~
@@ -191,8 +197,10 @@ Synopsis
           TAG tag, ... );
 
 
-FindToolType
-============
+----------
+
+FindToolType()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -225,16 +233,16 @@ Result
      of the tooltype otherwise.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     MatchToolValue()
+`MatchToolValue()`_ 
 
+----------
 
-
-FreeDiskObject
-==============
+FreeDiskObject()
+================
 
 Synopsis
 ~~~~~~~~
@@ -258,16 +266,16 @@ Inputs
                  ignored.
      
 
+
 See also
 ~~~~~~~~
-::
 
-     GetDiskObject()
-     
+`GetDiskObject()`_   
 
+----------
 
-FreeFreeList
-============
+FreeFreeList()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -291,16 +299,16 @@ Inputs
      freelist  - pointer to FreeList struct. It is save to use NULL.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AddFreeList()
+`AddFreeList()`_ 
 
+----------
 
-
-GetDefDiskObject
-================
+GetDefDiskObject()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -332,16 +340,16 @@ Result
      be obtained by IoErr().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     PutDefDiskObject(), GetDiskObjectNew()
+`PutDefDiskObject()`_ `GetDiskObjectNew()`_ 
 
+----------
 
-
-GetDiskObject
-=============
+GetDiskObject()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -351,8 +359,10 @@ Synopsis
           CONST_STRPTR name );
 
 
-GetDiskObjectNew
-================
+----------
+
+GetDiskObjectNew()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -384,16 +394,16 @@ Result
      DiskObject - pointer ta diskobject struct.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetDiskObject(), GetDefDiskObject()
+`GetDiskObject()`_ `GetDefDiskObject()`_ 
 
+----------
 
-
-GetIconRectangleA
-=================
+GetIconRectangleA()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -414,8 +424,10 @@ Synopsis
           TAG tag, ... );
 
 
-GetIconTagList
-==============
+----------
+
+GetIconTagList()
+================
 
 Synopsis
 ~~~~~~~~
@@ -452,8 +464,10 @@ Inputs
 
 
 
-IconControlA
-============
+----------
+
+IconControlA()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -468,8 +482,10 @@ Synopsis
           TAG tag, ... );
 
 
-LayoutIconA
-===========
+----------
+
+LayoutIconA()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -486,8 +502,10 @@ Synopsis
           TAG tag, ... );
 
 
-MatchToolValue
-==============
+----------
+
+MatchToolValue()
+================
 
 Synopsis
 ~~~~~~~~
@@ -520,8 +538,10 @@ Result
 
 
 
-NewDiskObject
-=============
+----------
+
+NewDiskObject()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -531,8 +551,10 @@ Synopsis
           ULONG type );
 
 
-PutDefDiskObject
-================
+----------
+
+PutDefDiskObject()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -563,16 +585,16 @@ Result
      TRUE if success, else FALSE. Error may be obtained via IoErr().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetDefDiskObject(), PutDiskObject()
+`GetDefDiskObject()`_ `PutDiskObject()`_ 
 
+----------
 
-
-PutDiskObject
-=============
+PutDiskObject()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -583,8 +605,10 @@ Synopsis
           struct DiskObject * icon );
 
 
-PutIconTagList
-==============
+----------
+
+PutIconTagList()
+================
 
 Synopsis
 ~~~~~~~~

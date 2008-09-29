@@ -9,15 +9,15 @@ cgxvideo
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AttachVLayerTagList`_                  `CreateVLayerHandleTagList`_            `DeleteVLayerHandle`_                   `DetachVLayer`_                         
-`GetVLayerAttr`_                        `LockVLayer`_                           `SetVLayerAttrTagList`_                 `UnlockVLayer`_                         
+`AttachVLayerTagList()`_                `CreateVLayerHandleTagList()`_          `DeleteVLayerHandle()`_                 `DetachVLayer()`_                       
+`GetVLayerAttr()`_                      `LockVLayer()`_                         `SetVLayerAttrTagList()`_               `UnlockVLayer()`_                       
 
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-AttachVLayerTagList
-===================
+AttachVLayerTagList()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -75,16 +75,16 @@ Notes
              VOA_BottomIndent (ULONG) - additional offset from the bottom window border
 
 
+
 See also
 ~~~~~~~~
-::
 
-     DetachVLayer()
+`DetachVLayer()`_ 
 
+----------
 
-
-CreateVLayerHandleTagList
-=========================
+CreateVLayerHandleTagList()
+===========================
 
 Synopsis
 ~~~~~~~~
@@ -158,8 +158,10 @@ Notes
 
 
 
-DeleteVLayerHandle
-==================
+----------
+
+DeleteVLayerHandle()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -190,8 +192,10 @@ Result
 
 
 
-DetachVLayer
-============
+----------
+
+DetachVLayer()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -223,16 +227,16 @@ Result
      result - 0 if videolayer could be detached from the window
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AttachVLayerTagList()
+`AttachVLayerTagList()`_ 
 
+----------
 
-
-GetVLayerAttr
-=============
+GetVLayerAttr()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -282,16 +286,16 @@ Notes
                              If color keying is not enabled, -1 is returned.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     SetVLayerAttr()
+`SetVLayerAttrTagList()`_ 
 
+----------
 
-
-LockVLayer
-==========
+LockVLayer()
+============
 
 Synopsis
 ~~~~~~~~
@@ -323,16 +327,16 @@ Result
      result - TRUE if video layer could be locked, FALSE otherwise
 
 
+
 See also
 ~~~~~~~~
-::
 
-     UnlockVLayer()
+`UnlockVLayer()`_ 
 
+----------
 
-
-SetVLayerAttrTagList
-====================
+SetVLayerAttrTagList()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -388,16 +392,16 @@ Notes
                                              border
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetVLayerAttr()
+`GetVLayerAttr()`_ 
 
+----------
 
-
-UnlockVLayer
-============
+UnlockVLayer()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -427,11 +431,9 @@ Result
      none
 
 
+
 See also
 ~~~~~~~~
-::
 
-     LockVLayer()
-
-
+`LockVLayer()`_ 
 

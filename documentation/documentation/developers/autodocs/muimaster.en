@@ -9,19 +9,19 @@ muimaster
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`MUI_AddClipping`_                      `MUI_AddClipRegion`_                    `MUI_AllocAslRequest`_                  `MUI_AslRequest`_                       
-`MUI_BeginRefresh`_                     `MUI_CreateCustomClass`_                `MUI_DeleteCustomClass`_                `MUI_DisposeObject`_                    
-`MUI_EndRefresh`_                       `MUI_Error`_                            `MUI_FreeAslRequest`_                   `MUI_FreeClass`_                        
-`MUI_GetClass`_                         `MUI_Layout`_                           `MUI_MakeObjectA`_                      `MUI_NewObjectA`_                       
-`MUI_ObtainPen`_                        `MUI_Redraw`_                           `MUI_RejectIDCMP`_                      `MUI_ReleasePen`_                       
-`MUI_RemoveClipping`_                   `MUI_RemoveClipRegion`_                 `MUI_RequestA`_                         `MUI_RequestIDCMP`_                     
-`MUI_SetError`_                         
+`MUI_AddClipping()`_                    `MUI_AddClipRegion()`_                  `MUI_AllocAslRequest()`_                `MUI_AslRequest()`_                     
+`MUI_BeginRefresh()`_                   `MUI_CreateCustomClass()`_              `MUI_DeleteCustomClass()`_              `MUI_DisposeObject()`_                  
+`MUI_EndRefresh()`_                     `MUI_Error()`_                          `MUI_FreeAslRequest()`_                 `MUI_FreeClass()`_                      
+`MUI_GetClass()`_                       `MUI_Layout()`_                         `MUI_MakeObjectA()`_                    `MUI_NewObjectA()`_                     
+`MUI_ObtainPen()`_                      `MUI_Redraw()`_                         `MUI_RejectIDCMP()`_                    `MUI_ReleasePen()`_                     
+`MUI_RemoveClipping()`_                 `MUI_RemoveClipRegion()`_               `MUI_RequestA()`_                       `MUI_RequestIDCMP()`_                   
+`MUI_SetError()`_                       
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-MUI_AddClipping
-===============
+MUI_AddClipping()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -35,8 +35,10 @@ Synopsis
           WORD height );
 
 
-MUI_AddClipRegion
-=================
+----------
+
+MUI_AddClipRegion()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -47,8 +49,10 @@ Synopsis
           struct Region * r );
 
 
-MUI_AllocAslRequest
-===================
+----------
+
+MUI_AllocAslRequest()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -83,16 +87,16 @@ Result
      Pointer to AslRequest
 
 
+
 See also
 ~~~~~~~~
-::
 
-     asl.library/AllocAslRequest()
+`asl.library/AllocAslRequest() <./asl#allocaslrequest>`_ 
 
+----------
 
-
-MUI_AslRequest
-==============
+MUI_AslRequest()
+================
 
 Synopsis
 ~~~~~~~~
@@ -113,16 +117,16 @@ Function
      Interface to asl.library.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     asl.library/AslRequest()
+`asl.library/AslRequest() <./asl#aslrequest>`_ 
 
+----------
 
-
-MUI_BeginRefresh
-================
+MUI_BeginRefresh()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -133,8 +137,10 @@ Synopsis
           ULONG flags );
 
 
-MUI_CreateCustomClass
-=====================
+----------
+
+MUI_CreateCustomClass()
+=======================
 
 Synopsis
 ~~~~~~~~
@@ -148,8 +154,10 @@ Synopsis
           APTR dispatcher );
 
 
-MUI_DeleteCustomClass
-=====================
+----------
+
+MUI_DeleteCustomClass()
+=======================
 
 Synopsis
 ~~~~~~~~
@@ -180,16 +188,16 @@ Result
      FALSE : some objects or sub classes were still in use.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     MUI_CreateCustomClass()
+`MUI_CreateCustomClass()`_ 
 
+----------
 
-
-MUI_DisposeObject
-=================
+MUI_DisposeObject()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -214,8 +222,10 @@ Inputs
      
 
 
-MUI_EndRefresh
-==============
+----------
+
+MUI_EndRefresh()
+================
 
 Synopsis
 ~~~~~~~~
@@ -226,8 +236,10 @@ Synopsis
           ULONG flags );
 
 
-MUI_Error
-=========
+----------
+
+MUI_Error()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -242,16 +254,16 @@ Function
      Obsolete function. Use SetIoErr()/IoErr() instead.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     MUI_SetError()
+`MUI_SetError()`_ 
 
+----------
 
-
-MUI_FreeAslRequest
-==================
+MUI_FreeAslRequest()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -267,16 +279,16 @@ Function
      Interface to asl.library
 
 
+
 See also
 ~~~~~~~~
-::
 
-     asl.library/FreeAslRequest()
+`asl.library/FreeAslRequest() <./asl#freeaslrequest>`_ 
 
+----------
 
-
-MUI_FreeClass
-=============
+MUI_FreeClass()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -300,16 +312,16 @@ Inputs
      cl - The pointer to the class.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     MUI_GetClass(), MUI_CreateCustomClass(), MUI_DeleteCustomClass()
+`MUI_GetClass()`_ `MUI_CreateCustomClass()`_ `MUI_DeleteCustomClass()`_ 
 
+----------
 
-
-MUI_GetClass
-============
+MUI_GetClass()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -355,17 +367,16 @@ Notes
      This function is OBSOLETE, don't use it, use MUI_CreateCustomClass instead.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     MUI_FreeClass(), MUI_CreateCustomClass(), MUI_DeleteCustomClass()
+`MUI_FreeClass()`_ `MUI_CreateCustomClass()`_ `MUI_DeleteCustomClass()`_ 
 
+----------
 
-
-
-MUI_Layout
-==========
+MUI_Layout()
+============
 
 Synopsis
 ~~~~~~~~
@@ -380,8 +391,10 @@ Synopsis
           ULONG flags );
 
 
-MUI_MakeObjectA
-===============
+----------
+
+MUI_MakeObjectA()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -419,16 +432,16 @@ Result
      Pointer to object
 
 
+
 See also
 ~~~~~~~~
-::
 
-     MUI_CreateCustomClass(), MUI_DeleteCustomClass()
+`MUI_CreateCustomClass()`_ `MUI_DeleteCustomClass()`_ 
 
+----------
 
-
-MUI_NewObjectA
-==============
+MUI_NewObjectA()
+================
 
 Synopsis
 ~~~~~~~~
@@ -464,16 +477,16 @@ Result
      Pointer to object. NULL means failure.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     MUI_DisposeObject(), SetAttrs(), GetAttr()
+`MUI_DisposeObject()`_ `intuition.library/SetAttrsA() <./intuition#setattrsa>`_ `intuition.library/GetAttr() <./intuition#getattr>`_ 
 
+----------
 
-
-MUI_ObtainPen
-=============
+MUI_ObtainPen()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -492,16 +505,16 @@ Function
      a pen for SetAPen().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     MUI_ReleasePen()
+`MUI_ReleasePen()`_ 
 
+----------
 
-
-MUI_Redraw
-==========
+MUI_Redraw()
+============
 
 Synopsis
 ~~~~~~~~
@@ -512,8 +525,10 @@ Synopsis
           ULONG flags );
 
 
-MUI_RejectIDCMP
-===============
+----------
+
+MUI_RejectIDCMP()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -531,8 +546,10 @@ Bugs
 
 
 
-MUI_ReleasePen
-==============
+----------
+
+MUI_ReleasePen()
+================
 
 Synopsis
 ~~~~~~~~
@@ -543,8 +560,10 @@ Synopsis
           LONG pen );
 
 
-MUI_RemoveClipping
-==================
+----------
+
+MUI_RemoveClipping()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -555,8 +574,10 @@ Synopsis
           APTR handle );
 
 
-MUI_RemoveClipRegion
-====================
+----------
+
+MUI_RemoveClipRegion()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -576,8 +597,10 @@ Notes
 
 
 
-MUI_RequestA
-============
+----------
+
+MUI_RequestA()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -602,8 +625,10 @@ Synopsis
           TAG tag, ... );
 
 
-MUI_RequestIDCMP
-================
+----------
+
+MUI_RequestIDCMP()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -642,8 +667,10 @@ Notes
 
 
 
-MUI_SetError
-============
+----------
+
+MUI_SetError()
+==============
 
 Synopsis
 ~~~~~~~~

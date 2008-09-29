@@ -9,19 +9,19 @@ reqtools
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`rtAllocRequestA`_                      `rtChangeReqAttrA`_                     `rtCloseWindowSafely`_                  `rtEZRequestA`_                         
-`rtFileRequestA`_                       `rtFontRequestA`_                       `rtFreeFileList`_                       `rtFreeReqBuffer`_                      
-`rtFreeRequest`_                        `rtGetLongA`_                           `rtGetStringA`_                         `rtGetVScreenSize`_                     
-`rtInternalEnterPasswordA`_             `rtInternalGetPasswordA`_               `rtLockPrefs`_                          `rtLockWindow`_                         
-`rtPaletteRequestA`_                    `rtReqHandlerA`_                        `rtScreenModeRequestA`_                 `rtScreenToFrontSafely`_                
-`rtSetReqPosition`_                     `rtSetWaitPointer`_                     `rtSpread`_                             `rtUnlockPrefs`_                        
-`rtUnlockWindow`_                       
+`rtAllocRequestA()`_                    `rtChangeReqAttrA()`_                   `rtCloseWindowSafely()`_                `rtEZRequestA()`_                       
+`rtFileRequestA()`_                     `rtFontRequestA()`_                     `rtFreeFileList()`_                     `rtFreeReqBuffer()`_                    
+`rtFreeRequest()`_                      `rtGetLongA()`_                         `rtGetStringA()`_                       `rtGetVScreenSize()`_                   
+`rtInternalEnterPasswordA()`_           `rtInternalGetPasswordA()`_             `rtLockPrefs()`_                        `rtLockWindow()`_                       
+`rtPaletteRequestA()`_                  `rtReqHandlerA()`_                      `rtScreenModeRequestA()`_               `rtScreenToFrontSafely()`_              
+`rtSetReqPosition()`_                   `rtSetWaitPointer()`_                   `rtSpread()`_                           `rtUnlockPrefs()`_                      
+`rtUnlockWindow()`_                     
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-rtAllocRequestA
-===============
+rtAllocRequestA()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -74,16 +74,16 @@ Bugs
      none known
 
 
+
 See also
 ~~~~~~~~
-::
 
-     rtFreeRequest()
+`rtFreeRequest()`_ 
 
+----------
 
-
-rtChangeReqAttrA
-================
+rtChangeReqAttrA()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -210,16 +210,16 @@ Bugs
      none known
 
 
+
 See also
 ~~~~~~~~
-::
 
-     dos.library/Lock()
+`dos.library/Lock() <./dos#lock>`_ 
 
+----------
 
-
-rtCloseWindowSafely
-===================
+rtCloseWindowSafely()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -276,16 +276,16 @@ Bugs
      none known
 
 
+
 See also
 ~~~~~~~~
-::
 
-     intuition.library/CloseWindow()
+`intuition.library/CloseWindow() <./intuition#closewindow>`_ 
 
+----------
 
-
-rtEZRequestA
-============
+rtEZRequestA()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -592,16 +592,16 @@ Bugs
      none known
 
 
+
 See also
 ~~~~~~~~
-::
 
-     exec.library/RawDoFmt(), rtReqHandlerA()
+`exec.library/RawDoFmt() <./exec#rawdofmt>`_ `rtReqHandlerA()`_ 
 
+----------
 
-
-rtFileRequestA
-==============
+rtFileRequestA()
+================
 
 Synopsis
 ~~~~~~~~
@@ -870,8 +870,10 @@ Bugs
 
 
 
-rtFontRequestA
-==============
+----------
+
+rtFontRequestA()
+================
 
 Synopsis
 ~~~~~~~~
@@ -1035,8 +1037,10 @@ Bugs
 
 
 
-rtFreeFileList
-==============
+----------
+
+rtFreeFileList()
+================
 
 Synopsis
 ~~~~~~~~
@@ -1078,17 +1082,16 @@ Bugs
      none known
 
 
+
 See also
 ~~~~~~~~
-::
 
+`rtFileRequestA()`_ 
 
-     rtFileRequest()
+----------
 
-
-
-rtFreeReqBuffer
-===============
+rtFreeReqBuffer()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -1131,16 +1134,16 @@ Bugs
      none known
 
 
+
 See also
 ~~~~~~~~
-::
 
-     rtFileRequest(), rtFontRequest()
+`rtFileRequestA()`_ `rtFontRequestA()`_ 
 
+----------
 
-
-rtFreeRequest
-=============
+rtFreeRequest()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -1179,16 +1182,16 @@ Bugs
      none known
 
 
+
 See also
 ~~~~~~~~
-::
 
-     rtAllocRequestA()
+`rtAllocRequestA()`_ 
 
+----------
 
-
-rtGetLongA
-==========
+rtGetLongA()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1354,8 +1357,10 @@ Bugs
 
 
 
-rtGetStringA
-============
+----------
+
+rtGetStringA()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -1526,8 +1531,10 @@ Bugs
 
 
 
-rtGetVScreenSize
-================
+----------
+
+rtGetVScreenSize()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -1579,8 +1586,10 @@ Notes
 
 
 
-rtInternalEnterPasswordA
-========================
+----------
+
+rtInternalEnterPasswordA()
+==========================
 
 Synopsis
 ~~~~~~~~
@@ -1749,8 +1758,10 @@ Bugs
 
 
 
-rtInternalGetPasswordA
-======================
+----------
+
+rtInternalGetPasswordA()
+========================
 
 Synopsis
 ~~~~~~~~
@@ -1924,8 +1935,10 @@ Bugs
 
 
 
-rtLockPrefs
-===========
+----------
+
+rtLockPrefs()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1933,17 +1946,16 @@ Synopsis
 
  struct ReqToolsPrefs * rtLockPrefs();
 
+
 See also
 ~~~~~~~~
-::
 
+`rtUnlockPrefs()`_ 
 
- rtUnlockPrefs()
+----------
 
-
-
-rtLockWindow
-============
+rtLockWindow()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -2008,8 +2020,10 @@ Bugs
 
 
 
-rtPaletteRequestA
-=================
+----------
+
+rtPaletteRequestA()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -2128,8 +2142,10 @@ Bugs
 
 
 
-rtReqHandlerA
-=============
+----------
+
+rtReqHandlerA()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -2263,16 +2279,16 @@ Bugs
      none known
 
 
+
 See also
 ~~~~~~~~
-::
 
-     rtEZRequest() (RT_ReqHandler explanation)
+`rtEZRequestA()`_ (RT_ReqHandler explanation) 
 
+----------
 
-
-rtScreenModeRequestA
-====================
+rtScreenModeRequestA()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -2479,17 +2495,16 @@ Bugs
      none known
 
 
+
 See also
 ~~~~~~~~
-::
 
-     graphics/GetDisplayInfoData(), graphics/displayinfo.h,
-     exec.library/SetSignal(), Intuition/SA_DisplayID screen tag
+`graphics.library/GetDisplayInfoData() <./graphics#getdisplayinfodata>`_ graphics/displayinfo.h `exec.library/SetSignal() <./exec#setsignal>`_ Intuition/SA_DisplayID screen tag 
 
+----------
 
-
-rtScreenToFrontSafely
-=====================
+rtScreenToFrontSafely()
+=======================
 
 Synopsis
 ~~~~~~~~
@@ -2539,17 +2554,16 @@ Bugs
      none known
 
 
+
 See also
 ~~~~~~~~
-::
 
+`intuition.library/ScreenToFront() <./intuition#screentofront>`_ 
 
-     intuition.library/ScreenToFront()
+----------
 
-
-
-rtSetReqPosition
-================
+rtSetReqPosition()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -2627,16 +2641,16 @@ Bugs
      none known
 
 
+
 See also
 ~~~~~~~~
-::
 
-     RT_ReqPos tag
+RT_ReqPos tag 
 
+----------
 
-
-rtSetWaitPointer
-================
+rtSetWaitPointer()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -2689,16 +2703,16 @@ Bugs
      none known
 
 
+
 See also
 ~~~~~~~~
-::
 
-     rtEZRequest (RT_WaitPointer and RT_LockWindow tags), rtLockWindow()
+`rtEZRequestA()`_ (RT_WaitPointer and RT_LockWindow tags) `rtLockWindow()`_ 
 
+----------
 
-
-rtSpread
-========
+rtSpread()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -2777,8 +2791,10 @@ Bugs
 
 
 
-rtUnlockPrefs
-=============
+----------
+
+rtUnlockPrefs()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -2786,17 +2802,16 @@ Synopsis
 
  VOID rtUnlockPrefs();
 
+
 See also
 ~~~~~~~~
-::
 
+`rtLockPrefs()`_ 
 
- rtLockPrefs()
+----------
 
-
-
-rtUnlockWindow
-==============
+rtUnlockWindow()
+================
 
 Synopsis
 ~~~~~~~~
@@ -2849,11 +2864,9 @@ Bugs
      none known
 
 
+
 See also
 ~~~~~~~~
-::
 
-     rtLockWindow()
-
-
+`rtLockWindow()`_ 
 

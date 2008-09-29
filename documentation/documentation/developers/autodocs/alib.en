@@ -9,41 +9,41 @@ alib
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`__attribute__`_                        `__sprintf`_                            `AddAmigaGuideHost`_                    `AddAppIcon`_                           
-`AddAppMenuItem`_                       `AddAppWindow`_                         `AddAppWindowDropZone`_                 `AllocAslRequestTags`_                  
-`AllocDosObjectTags`_                   `AllocNamedObject`_                     `AllocSpriteData`_                      `ArgArrayDone`_                         
-`ArgArrayInit`_                         `ArgInt`_                               `ArgString`_                            `ArosInquire`_                          
-`AslRequestTags`_                       `AsmAllocPooled`_                       `AsmCreatePool`_                        `AsmDeletePool`_                        
-`AsmFreePooled`_                        `BeginIO`_                              `BestCModeIDTags`_                      `BestModeID`_                           
-`BuildEasyRequest`_                     `CallHookA`_                            `ChangeExtSprite`_                      `CheckRexxMsg`_                         
-`CloseWorkbenchObject`_                 `CoerceMethodA`_                        `CreateExtIO`_                          `CreateGadget`_                         
-`CreateLayerTags`_                      `CreateMenus`_                          `CreateNewProcTags`_                    `CreatePort`_                           
-`CreateStdIO`_                          `CreateTask`_                           `DeleteExtIO`_                          `DeletePort`_                           
-`DeleteStdIO`_                          `DeleteTask`_                           `DoDTMethod`_                           `DoGadgetMethod`_                       
-`DoMethodA`_                            `DoSuperMethodA`_                       `DoSuperNewTagList`_                    `DrawBevelBox`_                         
-`EasyRequest`_                          `ExtendFontTags`_                       `FastRand`_                             `FreeIEvents`_                          
-`FreeMsgFromStack`_                     `FreeParamsFromStack`_                  `FreeTagsFromStack`_                    `GetDTAttrs`_                           
-`GetExtSprite`_                         `GetMsgFromStack`_                      `GetParamsFromStack`_                   `GetRexxVar`_                           
-`GetRPAttrs`_                           `GetTagsFromStack`_                     `GetVisualInfo`_                        `GT_GetGadgetAttrs`_                    
-`GT_SetGadgetAttrs`_                    `HookEntry`_                            `HotKey`_                               `InvertString`_                         
-`LayoutMenuItems`_                      `LayoutMenus`_                          `LibAllocPooled`_                       `LibCreatePool`_                        
-`LibDeletePool`_                        `LibFreePooled`_                        `LockBitMapTags`_                       `MakeWorkbenchObjectVisible`_           
-`MergeSortList`_                        `NewDTObject`_                          `NewList`_                              `NewLoadSegTags`_                       
-`NewObject`_                            `NewRawDoFmt`_                          `ObtainBestPen`_                        `ObtainInfo`_                           
-`OpenAmigaGuide`_                       `OpenAmigaGuideAsync`_                  `OpenCatalog`_                          `OpenScreenTags`_                       
-`OpenWindowTags`_                       `OpenWorkbenchObject`_                  `RangeRand`_                            `ReAllocVec`_                           
-`RefreshDTObject`_                      `RefreshDTObjects`_                     `ReleaseInfo`_                          `RemoveAmigaGuideHost`_                 
-`SendAmigaGuideCmd`_                    `SendAmigaGuideContext`_                `SetAmigaGuideAttrs`_                   `SetAmigaGuideContext`_                 
-`SetAttrs`_                             `SetDTAttrs`_                           `SetGadgetAttrs`_                       `SetInfo`_                              
-`SetRexxVar`_                           `SetRPAttrs`_                           `SetSuperAttrs`_                        `SetWindowPointer`_                     
-`StrDup`_                               `SystemTags`_                           `TimeDelay`_                            `UnLockBitMapTags`_                     
-`VideoControlTags`_                     `WorkbenchControl`_                     
+`__attribute__()`_                      `__sprintf()`_                          `AddAmigaGuideHost()`_                  `AddAppIcon()`_                         
+`AddAppMenuItem()`_                     `AddAppWindow()`_                       `AddAppWindowDropZone()`_               `AllocAslRequestTags()`_                
+`AllocDosObjectTags()`_                 `AllocNamedObject()`_                   `AllocSpriteData()`_                    `ArgArrayDone()`_                       
+`ArgArrayInit()`_                       `ArgInt()`_                             `ArgString()`_                          `ArosInquire()`_                        
+`AslRequestTags()`_                     `AsmAllocPooled()`_                     `AsmCreatePool()`_                      `AsmDeletePool()`_                      
+`AsmFreePooled()`_                      `BeginIO()`_                            `BestCModeIDTags()`_                    `BestModeID()`_                         
+`BuildEasyRequest()`_                   `CallHook()`_                           `CallHookA()`_                          `ChangeExtSprite()`_                    
+`CheckRexxMsg()`_                       `CloseWorkbenchObject()`_               `CoerceMethodA()`_                      `CreateExtIO()`_                        
+`CreateGadget()`_                       `CreateLayerTags()`_                    `CreateMenus()`_                        `CreateNewProcTags()`_                  
+`CreatePort()`_                         `CreateStdIO()`_                        `CreateTask()`_                         `DeleteExtIO()`_                        
+`DeletePort()`_                         `DeleteStdIO()`_                        `DeleteTask()`_                         `DoDTMethod()`_                         
+`DoGadgetMethod()`_                     `DoMethodA()`_                          `DoSuperMethodA()`_                     `DoSuperNewTagList()`_                  
+`DrawBevelBox()`_                       `EasyRequest()`_                        `ExtendFontTags()`_                     `FastRand()`_                           
+`FreeIEvents()`_                        `FreeMsgFromStack()`_                   `FreeParamsFromStack()`_                `FreeTagsFromStack()`_                  
+`GetDTAttrs()`_                         `GetExtSprite()`_                       `GetMsgFromStack()`_                    `GetParamsFromStack()`_                 
+`GetRexxVar()`_                         `GetRPAttrs()`_                         `GetTagsFromStack()`_                   `GetVisualInfo()`_                      
+`GT_GetGadgetAttrs()`_                  `GT_SetGadgetAttrs()`_                  `HookEntry()`_                          `HotKey()`_                             
+`InvertString()`_                       `LayoutMenuItems()`_                    `LayoutMenus()`_                        `LibAllocPooled()`_                     
+`LibCreatePool()`_                      `LibDeletePool()`_                      `LibFreePooled()`_                      `LockBitMapTags()`_                     
+`MakeWorkbenchObjectVisible()`_         `MergeSortList()`_                      `NewDTObject()`_                        `NewList()`_                            
+`NewLoadSegTags()`_                     `NewObject()`_                          `NewRawDoFmt()`_                        `ObtainBestPen()`_                      
+`ObtainInfo()`_                         `OpenAmigaGuide()`_                     `OpenAmigaGuideAsync()`_                `OpenCatalog()`_                        
+`OpenScreenTags()`_                     `OpenWindowTags()`_                     `OpenWorkbenchObject()`_                `RangeRand()`_                          
+`ReAllocVec()`_                         `RefreshDTObject()`_                    `RefreshDTObjects()`_                   `ReleaseInfo()`_                        
+`RemoveAmigaGuideHost()`_               `SendAmigaGuideCmd()`_                  `SendAmigaGuideContext()`_              `SetAmigaGuideAttrs()`_                 
+`SetAmigaGuideContext()`_               `SetAttrs()`_                           `SetDTAttrs()`_                         `SetGadgetAttrs()`_                     
+`SetInfo()`_                            `SetRexxVar()`_                         `SetRPAttrs()`_                         `SetSuperAttrs()`_                      
+`SetWindowPointer()`_                   `StrDup()`_                             `SystemTags()`_                         `TimeDelay()`_                          
+`UnLockBitMapTags()`_                   `VideoControlTags()`_                   `WorkbenchControl()`_                   
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-__attribute__
-=============
+__attribute__()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -90,8 +90,10 @@ Result
  
 
 
-__sprintf
-=========
+----------
+
+__sprintf()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -117,16 +119,16 @@ Inputs
                   information on which formatting commands there are
 
 
+
 See also
 ~~~~~~~~
-::
 
-     exec.library/RawDoFmt()
+`exec.library/RawDoFmt() <./exec#rawdofmt>`_ 
 
+----------
 
-
-AddAmigaGuideHost
-=================
+AddAmigaGuideHost()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -147,16 +149,16 @@ Function
      For information see amigaguide.library/AddAmigaGuideHostA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     amigaguide/AddAmigaGuideHostA()
+`amigaguide.library/AddAmigaGuideHostA() <./amigaguide#addamigaguidehosta>`_ 
 
+----------
 
-
-AddAppIcon
-==========
+AddAppIcon()
+============
 
 Synopsis
 ~~~~~~~~
@@ -181,16 +183,16 @@ Function
      For information see workbench.library/AddAppIconA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     workbench/AddAppIconA()
+`workbench.library/AddAppIconA() <./workbench#addappicona>`_ 
 
+----------
 
-
-AddAppMenuItem
-==============
+AddAppMenuItem()
+================
 
 Synopsis
 ~~~~~~~~
@@ -213,16 +215,16 @@ Function
      For information see workbench.library/AddAppMenuItemA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     workbench/AddAppMenuItemA()
+`workbench.library/AddAppMenuItemA() <./workbench#addappmenuitema>`_ 
 
+----------
 
-
-AddAppWindow
-============
+AddAppWindow()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -245,16 +247,16 @@ Function
      For information see workbench.library/AddAppWindowA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     workbench/AddAppWindowA()
+`workbench.library/AddAppWindowA() <./workbench#addappwindowa>`_ 
 
+----------
 
-
-AddAppWindowDropZone
-====================
+AddAppWindowDropZone()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -276,16 +278,16 @@ Function
      For information see workbench.library/AddAppWindowDropZoneA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     workbench/AddAppWindowDropZoneA()
+`workbench.library/AddAppWindowDropZoneA() <./workbench#addappwindowdropzonea>`_ 
 
+----------
 
-
-AllocAslRequestTags
-===================
+AllocAslRequestTags()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -313,16 +315,16 @@ Inputs
      tag1        -   TagList of extra arguments.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     locale/AllocAslRequest()
+`asl.library/AllocAslRequest() <./asl#allocaslrequest>`_ 
 
+----------
 
-
-AllocDosObjectTags
-==================
+AllocDosObjectTags()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -342,16 +344,16 @@ Function
      For information see dos.library/AllocDosObject().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     dos/AllocDosObject()
+`dos.library/AllocDosObject() <./dos#allocdosobject>`_ 
 
+----------
 
-
-AllocNamedObject
-================
+AllocNamedObject()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -387,16 +389,16 @@ Result
      The address of a NamedObject, or NULL if the allocation failed.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     utility/AllocNamedObjectA()
+`utility.library/AllocNamedObjectA() <./utility#allocnamedobjecta>`_ 
 
+----------
 
-
-AllocSpriteData
-===============
+AllocSpriteData()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -416,16 +418,16 @@ Function
      For information see graphics.library/AllocSpriteDataA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     graphics/AllocSpriteDataA()
+`graphics.library/AllocSpriteDataA() <./graphics#allocspritedataa>`_ 
 
+----------
 
-
-ArgArrayDone
-============
+ArgArrayDone()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -459,16 +461,16 @@ Notes
      after a call to this function.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ArgArrayInit()
+`ArgArrayInit()`_ 
 
+----------
 
-
-ArgArrayInit
-============
+ArgArrayInit()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -522,16 +524,16 @@ Notes
      be valid until a call to ArgArrayDone() is made.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ArgString(), ArgInt(), ArgArrayDone(), icon.library/FindToolType()
+`ArgString()`_ `ArgInt()`_ `ArgArrayDone()`_ `icon.library/FindToolType() <./icon#findtooltype>`_ 
 
+----------
 
-
-ArgInt
-======
+ArgInt()
+========
 
 Synopsis
 ~~~~~~~~
@@ -570,16 +572,16 @@ Result
      was found; otherwise returns 'defaultval'.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ArgArrayInit()
+`ArgArrayInit()`_ 
 
+----------
 
-
-ArgString
-=========
+ArgString()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -619,16 +621,16 @@ Result
      array, or 'defaultstring' if 'entry' was not found.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ArgArrayInit()
+`ArgArrayInit()`_ 
 
+----------
 
-
-ArosInquire
-===========
+ArosInquire()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -639,16 +641,16 @@ Synopsis
      ...)
 
 
+
 See also
 ~~~~~~~~
-::
 
-     aros/ArosInquire()
+`aros.library/ArosInquire() <./aros#arosinquire>`_ 
 
+----------
 
-
-AslRequestTags
-==============
+AslRequestTags()
+================
 
 Synopsis
 ~~~~~~~~
@@ -676,16 +678,16 @@ Inputs
      tag1      - TagList of extra arguments.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     locale/AslRequest()
+`asl.library/AslRequest() <./asl#aslrequest>`_ 
 
+----------
 
-
-AsmAllocPooled
-==============
+AsmAllocPooled()
+================
 
 Synopsis
 ~~~~~~~~
@@ -697,8 +699,10 @@ Synopsis
           struct ExecBase * SysBase );
 
 
-AsmCreatePool
-=============
+----------
+
+AsmCreatePool()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -711,8 +715,10 @@ Synopsis
           struct ExecBase * SysBase );
 
 
-AsmDeletePool
-=============
+----------
+
+AsmDeletePool()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -723,8 +729,10 @@ Synopsis
           struct ExecBase * SysBase );
 
 
-AsmFreePooled
-=============
+----------
+
+AsmFreePooled()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -737,8 +745,10 @@ Synopsis
           struct ExecBase * SysBase );
 
 
-BeginIO
-=======
+----------
+
+BeginIO()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -769,16 +779,16 @@ Result
      None.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AbortIO()
+`exec.library/AbortIO() <./exec#abortio>`_ 
 
+----------
 
-
-BestCModeIDTags
-===============
+BestCModeIDTags()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -794,9 +804,9 @@ Function
 ::
 
      This is the varargs version of the cybergraphics.library call
- BestCModeIDTagList().
+     BestCModeIDTagList().
      For more information see the documentation of 
- cybergraphics.library/BestCModeIDTagList().
+     cybergraphics.library/BestCModeIDTagList().
 
 
 Inputs
@@ -807,8 +817,15 @@ Inputs
 
 
 
-BestModeID
-==========
+See also
+~~~~~~~~
+
+`cgfx.library/BestCModeIDTagList() <./cgfx#bestcmodeidtaglist>`_ 
+
+----------
+
+BestModeID()
+============
 
 Synopsis
 ~~~~~~~~
@@ -827,16 +844,16 @@ Function
      For information see graphics.library/BestModeIDA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     graphics/BestModeIDA()
+`graphics.library/BestModeIDA() <./graphics#bestmodeida>`_ 
 
+----------
 
-
-BuildEasyRequest
-================
+BuildEasyRequest()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -850,8 +867,43 @@ Synopsis
 
 
 
-CallHookA
-=========
+See also
+~~~~~~~~
+
+`intuition.library/BuildEasyRequestArgs() <./intuition#buildeasyrequestargs>`_   
+
+----------
+
+CallHook()
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  IPTR CallHook(
+     struct Hook * hook,
+     APTR object,
+     ...)
+
+
+Function
+~~~~~~~~
+::
+
+     Variadic form of CallHookA().
+
+
+
+See also
+~~~~~~~~
+
+`CallHookA()`_ 
+
+----------
+
+CallHookA()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -888,16 +940,16 @@ Result
      The return value depends on the definition of the hook.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CallHook()
+`CallHook()`_ 
 
+----------
 
-
-ChangeExtSprite
-===============
+ChangeExtSprite()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -919,16 +971,16 @@ Function
      For information see graphics.library/ChangeExtSpriteA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     graphics/ChangeExtSpriteA()
+`graphics.library/ChangeExtSpriteA() <./graphics#changeextspritea>`_ 
 
+----------
 
-
-CheckRexxMsg
-============
+CheckRexxMsg()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -959,16 +1011,16 @@ Result
      Wether this message is OK.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     SetRexxVar, GetRexxVar
+`SetRexxVar()`_ `GetRexxVar()`_ 
 
+----------
 
-
-CloseWorkbenchObject
-====================
+CloseWorkbenchObject()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -988,16 +1040,16 @@ Function
      For information see workbench.library/CloseWorkbenchObjectA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     workbench/CloseWorkbenchObjectA()
+`workbench.library/CloseWorkbenchObjectA() <./workbench#closeworkbenchobjecta>`_ 
 
+----------
 
-
-CoerceMethodA
-=============
+CoerceMethodA()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -1039,8 +1091,10 @@ Result
 
 
 
-CreateExtIO
-===========
+----------
+
+CreateExtIO()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1074,16 +1128,16 @@ Result
      A pointer to the new IORequest structure.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateStdIO(), DeleteExtIO()
+`CreateStdIO()`_ `DeleteExtIO()`_ 
 
+----------
 
-
-CreateGadget
-============
+CreateGadget()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -1105,8 +1159,15 @@ Function
 
 
 
-CreateLayerTags
-===============
+See also
+~~~~~~~~
+
+`gadtools.library/CreateGadgetA() <./gadtools#creategadgeta>`_ 
+
+----------
+
+CreateLayerTags()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -1125,8 +1186,10 @@ Synopsis
 
 
 
-CreateMenus
-===========
+----------
+
+CreateMenus()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1146,8 +1209,15 @@ Function
 
 
 
-CreateNewProcTags
-=================
+See also
+~~~~~~~~
+
+`gadtools.library/CreateMenusA() <./gadtools#createmenusa>`_ 
+
+----------
+
+CreateNewProcTags()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -1166,16 +1236,16 @@ Function
      For information see dos.library/CreateNewProc().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     dos/CreateNewProc()
+`dos.library/CreateNewProc() <./dos#createnewproc>`_ 
 
+----------
 
-
-CreatePort
-==========
+CreatePort()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1210,16 +1280,16 @@ Result
      no signal was available.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     DeletePort(), CreateMsgPort(), DeleteMsgPort()
+`DeletePort()`_ `exec.library/CreateMsgPort() <./exec#createmsgport>`_ `exec.library/DeleteMsgPort() <./exec#deletemsgport>`_ 
 
+----------
 
-
-CreateStdIO
-===========
+CreateStdIO()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1251,16 +1321,16 @@ Result
      A pointer to the new IORequest structure.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateExtIO(), DeleteStdIO()
+`CreateExtIO()`_ `DeleteStdIO()`_ 
 
+----------
 
-
-CreateTask
-==========
+CreateTask()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1304,8 +1374,10 @@ Result
 
 
 
-DeleteExtIO
-===========
+----------
+
+DeleteExtIO()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1337,16 +1409,16 @@ Result
      None.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateStdIO(), CreateExt()
+`CreateStdIO()`_ `CreateExtIO()`_ 
 
+----------
 
-
-DeletePort
-==========
+DeletePort()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1377,16 +1449,16 @@ Result
      None.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreatePort(), CreateMsgPort(), DeleteMsgPort()
+`CreatePort()`_ `exec.library/CreateMsgPort() <./exec#createmsgport>`_ `exec.library/DeleteMsgPort() <./exec#deletemsgport>`_ 
 
+----------
 
-
-DeleteStdIO
-===========
+DeleteStdIO()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1418,16 +1490,16 @@ Result
      None.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateStdIO()
+`CreateStdIO()`_ 
 
+----------
 
-
-DeleteTask
-==========
+DeleteTask()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1459,16 +1531,16 @@ Result
      None.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     RemTask()
+`exec.library/RemTask() <./exec#remtask>`_ 
 
+----------
 
-
-DoDTMethod
-==========
+DoDTMethod()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1511,8 +1583,10 @@ Result
 
 
 
-DoGadgetMethod
-==============
+----------
+
+DoGadgetMethod()
+================
 
 Synopsis
 ~~~~~~~~
@@ -1555,8 +1629,10 @@ Result
 
 
 
-DoMethodA
-=========
+----------
+
+DoMethodA()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -1595,17 +1671,16 @@ Result
      supported.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     NewObjectA(), SetAttrsA(), GetAttr(), DisposeObject(), CoerceMethodA(),
-     DoSuperMethodA(), <intuition/classusr.h>
+`boopsi.library/NewObjectA() <./boopsi#newobjecta>`_ `boopsi.library/SetAttrsA() <./boopsi#setattrsa>`_ `boopsi.library/GetAttr() <./boopsi#getattr>`_ `boopsi.library/DisposeObject() <./boopsi#disposeobject>`_ `CoerceMethodA()`_ `DoSuperMethodA()`_ <intuition/classusr.h> 
 
+----------
 
-
-DoSuperMethodA
-==============
+DoSuperMethodA()
+================
 
 Synopsis
 ~~~~~~~~
@@ -1646,17 +1721,16 @@ Result
      supported.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     NewObjectA(), SetAttrsA(), GetAttr(), DisposeObject(), DoMethodA(),
-     CoerceMethodA(), <intuition/classes.h>
+`boopsi.library/NewObjectA() <./boopsi#newobjecta>`_ `boopsi.library/SetAttrsA() <./boopsi#setattrsa>`_ `boopsi.library/GetAttr() <./boopsi#getattr>`_ `boopsi.library/DisposeObject() <./boopsi#disposeobject>`_ `DoMethodA()`_ `CoerceMethodA()`_ <intuition/classes.h> 
 
+----------
 
-
-DoSuperNewTagList
-=================
+DoSuperNewTagList()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -1670,17 +1744,16 @@ Synopsis
      )
 
 
+
 See also
 ~~~~~~~~
-::
 
-     NewObjectA(), SetAttrsA(), GetAttr(), DisposeObject(), DoMethodA(),
-     CoerceMethodA(), <intuition/classes.h>
+`boopsi.library/NewObjectA() <./boopsi#newobjecta>`_ `boopsi.library/SetAttrsA() <./boopsi#setattrsa>`_ `boopsi.library/GetAttr() <./boopsi#getattr>`_ `boopsi.library/DisposeObject() <./boopsi#disposeobject>`_ `DoMethodA()`_ `CoerceMethodA()`_ <intuition/classes.h> 
 
+----------
 
-
-DrawBevelBox
-============
+DrawBevelBox()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -1704,8 +1777,15 @@ Function
 
 
 
-EasyRequest
-===========
+See also
+~~~~~~~~
+
+`gadtools.library/DrawBevelBoxA() <./gadtools#drawbevelboxa>`_ 
+
+----------
+
+EasyRequest()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1719,8 +1799,10 @@ Synopsis
 
 
 
-ExtendFontTags
-==============
+----------
+
+ExtendFontTags()
+================
 
 Synopsis
 ~~~~~~~~
@@ -1740,16 +1822,16 @@ Function
      For information see graphics.library/ExtendFont().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     graphics/ExtendFont()
+`graphics.library/ExtendFont() <./graphics#extendfont>`_ 
 
+----------
 
-
-FastRand
-========
+FastRand()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -1760,8 +1842,10 @@ Synopsis
 
 
 
-FreeIEvents
-===========
+----------
+
+FreeIEvents()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1788,17 +1872,16 @@ Inputs
  ie    --  input event chain
 
 
+
 See also
 ~~~~~~~~
-::
 
+`commodities.library/InvertString() <./commodities#invertstring>`_ 
 
- Commodities.library/InvertString()
+----------
 
-
-
-FreeMsgFromStack
-================
+FreeMsgFromStack()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -1830,16 +1913,16 @@ Result
      None.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetMsgFromStack()
+`GetMsgFromStack()`_ 
 
+----------
 
-
-FreeParamsFromStack
-===================
+FreeParamsFromStack()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -1871,16 +1954,16 @@ Result
      None.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetParamsFromStack()
+`GetParamsFromStack()`_ 
 
+----------
 
-
-FreeTagsFromStack
-=================
+FreeTagsFromStack()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -1912,16 +1995,16 @@ Result
      None.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetTagsFromStack()
+`GetTagsFromStack()`_ 
 
+----------
 
-
-GetDTAttrs
-==========
+GetDTAttrs()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1942,8 +2025,10 @@ Function
 
 
 
-GetExtSprite
-============
+----------
+
+GetExtSprite()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -1963,16 +2048,16 @@ Function
      For information see graphics.library/GetExtSpriteA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     graphics/GetExtSpriteA()
+`graphics.library/GetExtSpriteA() <./graphics#getextspritea>`_ 
 
+----------
 
-
-GetMsgFromStack
-===============
+GetMsgFromStack()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -2021,18 +2106,16 @@ Notes
      This function fails for structures with more than 32 fields.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     NewObject(), SetAttrs(), GetAttr(), DisposeObject(), DoMethod(),
-     DoSuperMethod(), "Basic Object-Oriented Programming System for
-     Intuition" and the "boopsi Class Reference" Dokument.
+`boopsi.library/NewObject() <./boopsi#newobject>`_ `boopsi.library/SetAttrs() <./boopsi#setattrs>`_ `boopsi.library/GetAttr() <./boopsi#getattr>`_ `boopsi.library/DisposeObject() <./boopsi#disposeobject>`_ `DoMethodA()`_ `DoSuperMethodA()`_ "Basic Object-Oriented Programming System for Intuition" and the "boopsi Class Reference" Dokument. 
 
+----------
 
-
-GetParamsFromStack
-==================
+GetParamsFromStack()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -2076,16 +2159,16 @@ Notes
      This function fails for structures with more than 20 fields.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CallHook().
+`CallHook()`_ 
 
+----------
 
-
-GetRexxVar
-==========
+GetRexxVar()
+============
 
 Synopsis
 ~~~~~~~~
@@ -2132,16 +2215,16 @@ Notes
      getrexxvar call on the same running script.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CheckRexxMsg, GetRexxVar
+`CheckRexxMsg()`_ `GetRexxVar()`_ 
 
+----------
 
-
-GetRPAttrs
-==========
+GetRPAttrs()
+============
 
 Synopsis
 ~~~~~~~~
@@ -2161,16 +2244,16 @@ Function
      For information see graphics.library/GetRPAttrsA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     graphics/GetRPAttrsA()
+`graphics.library/GetRPAttrsA() <./graphics#getrpattrsa>`_ 
 
+----------
 
-
-GetTagsFromStack
-================
+GetTagsFromStack()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -2209,18 +2292,16 @@ Result
      MethodID is unknown.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     NewObject(), SetAttrs(), GetAttr(), DisposeObject(), DoMethod(),
-     DoSuperMethod(), "Basic Object-Oriented Programming System for
-     Intuition" and the "boopsi Class Reference" Dokument.
+`boopsi.library/NewObject() <./boopsi#newobject>`_ `boopsi.library/SetAttrs() <./boopsi#setattrs>`_ `boopsi.library/GetAttr() <./boopsi#getattr>`_ `boopsi.library/DisposeObject() <./boopsi#disposeobject>`_ `DoMethodA()`_ `DoSuperMethodA()`_ "Basic Object-Oriented Programming System for Intuition" and the "boopsi Class Reference" Dokument. 
 
+----------
 
-
-GetVisualInfo
-=============
+GetVisualInfo()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -2240,8 +2321,15 @@ Function
 
 
 
-GT_GetGadgetAttrs
-=================
+See also
+~~~~~~~~
+
+`gadtools.library/GetVisualInfoA() <./gadtools#getvisualinfoa>`_ 
+
+----------
+
+GT_GetGadgetAttrs()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -2262,16 +2350,16 @@ Function
      Varargs version of gadtools.library/GT_GetGadgetAttrsA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     gadtools.library/GT_GetGadgetAttrsA()
+`gadtools.library/GT_GetGadgetAttrsA() <./gadtools#gt_getgadgetattrsa>`_ 
 
+----------
 
-
-GT_SetGadgetAttrs
-=================
+GT_SetGadgetAttrs()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -2293,8 +2381,15 @@ Function
 
 
 
-HookEntry
-=========
+See also
+~~~~~~~~
+
+`gadtools.library/GT_SetGadgetAttrsA() <./gadtools#gt_setgadgetattrsa>`_ 
+
+----------
+
+HookEntry()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -2335,16 +2430,16 @@ Result
      The return value depends on the definition of the hook.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CallHookA(), CallHook()
+`CallHookA()`_ `CallHook()`_ 
 
+----------
 
-
-HotKey
-======
+HotKey()
+========
 
 Synopsis
 ~~~~~~~~
@@ -2396,17 +2491,16 @@ Notes
      Commodities.library must be open at the time of the call.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CxFilter(), CxTranslate(), CxSender(), commodities.library/SetFilter(),
-     commodities.library/CxObjError()
+`commodities.library/CxFilter() <./commodities#cxfilter>`_ `commodities.library/CxTranslate() <./commodities#cxtranslate>`_ `commodities.library/CxSender() <./commodities#cxsender>`_ `commodities.library/SetFilter() <./commodities#setfilter>`_ `commodities.library/CxObjError() <./commodities#cxobjerror>`_ 
 
+----------
 
-
-InvertString
-============
+InvertString()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -2458,16 +2552,16 @@ Example
      An example string: "Hello <shift alt a>\n"
 
 
+
 See also
 ~~~~~~~~
-::
 
-     commodities.library/ParseIX(), FreeIEvents()
+`commodities.library/ParseIX() <./commodities#parseix>`_ `FreeIEvents()`_ 
 
+----------
 
-
-LayoutMenuItems
-===============
+LayoutMenuItems()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -2488,8 +2582,15 @@ Function
 
 
 
-LayoutMenus
-===========
+See also
+~~~~~~~~
+
+`gadtools.library/LayoutMenuItemsA() <./gadtools#layoutmenuitemsa>`_ 
+
+----------
+
+LayoutMenus()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -2510,8 +2611,15 @@ Function
 
 
 
-LibAllocPooled
-==============
+See also
+~~~~~~~~
+
+`gadtools.library/LayoutMenusA() <./gadtools#layoutmenusa>`_ 
+
+----------
+
+LibAllocPooled()
+================
 
 Synopsis
 ~~~~~~~~
@@ -2523,8 +2631,10 @@ Synopsis
 
 
 
-LibCreatePool
-=============
+----------
+
+LibCreatePool()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -2537,8 +2647,10 @@ Synopsis
 
 
 
-LibDeletePool
-=============
+----------
+
+LibDeletePool()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -2549,8 +2661,10 @@ Synopsis
 
 
 
-LibFreePooled
-=============
+----------
+
+LibFreePooled()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -2563,8 +2677,10 @@ Synopsis
 
 
 
-LockBitMapTags
-==============
+----------
+
+LockBitMapTags()
+================
 
 Synopsis
 ~~~~~~~~
@@ -2577,8 +2693,15 @@ Synopsis
 
 
 
-MakeWorkbenchObjectVisible
-==========================
+See also
+~~~~~~~~
+
+`cgfx.library/LockBitMapTagList() <./cgfx#lockbitmaptaglist>`_ 
+
+----------
+
+MakeWorkbenchObjectVisible()
+============================
 
 Synopsis
 ~~~~~~~~
@@ -2598,16 +2721,16 @@ Function
      For information see workbench.library/MakeWorkbenchObjectVisibleA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     workbench/MakeWorkbenchObjectVisibleA()
+`workbench.library/MakeWorkbenchObjectVisibleA() <./workbench#makeworkbenchobjectvisiblea>`_ 
 
+----------
 
-
-MergeSortList
-=============
+MergeSortList()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -2650,8 +2773,10 @@ Result
  
 
 
-NewDTObject
-===========
+----------
+
+NewDTObject()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -2672,8 +2797,15 @@ Function
 
 
 
-NewList
-=======
+See also
+~~~~~~~~
+
+`datatypes.library/NewDTObjectA() <./datatypes#newdtobjecta>`_ 
+
+----------
+
+NewList()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -2719,17 +2851,16 @@ Notes
      You can also pass a struct MinList to this function.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     NEWLIST() macro, AddHead(), AddTail(), Insert(), Enqueue(),
-     Remove(), RemHead(), RemTail()
+NEWLIST() macro `exec.library/AddHead() <./exec#addhead>`_ `exec.library/AddTail() <./exec#addtail>`_ `exec.library/Insert() <./exec#insert>`_ `exec.library/Enqueue() <./exec#enqueue>`_ `exec.library/Remove() <./exec#remove>`_ `exec.library/RemHead() <./exec#remhead>`_ `exec.library/RemTail() <./exec#remtail>`_ 
 
+----------
 
-
-NewLoadSegTags
-==============
+NewLoadSegTags()
+================
 
 Synopsis
 ~~~~~~~~
@@ -2749,16 +2880,16 @@ Function
      For information see dos.library/NewLoadSeg().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     dos/NewLoadSeg()
+`dos.library/NewLoadSeg() <./dos#newloadseg>`_ 
 
+----------
 
-
-NewObject
-=========
+NewObject()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -2810,18 +2941,16 @@ Notes
      This functions send OM_NEW to the dispatcher of the class.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     DisposeObject(), SetAttrs(), GetAttr(), MakeClass(),
-     "Basic Object-Oriented Programming System for Intuition" and
-     "boopsi Class Reference" Dokument.
+`boopsi.library/DisposeObject() <./boopsi#disposeobject>`_ `boopsi.library/SetAttrsA() <./boopsi#setattrsa>`_ `boopsi.library/GetAttr() <./boopsi#getattr>`_ `boopsi.library/MakeClass() <./boopsi#makeclass>`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
 
+----------
 
-
-NewRawDoFmt
-===========
+NewRawDoFmt()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -2843,8 +2972,10 @@ Function
 
 
 
-ObtainBestPen
-=============
+----------
+
+ObtainBestPen()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -2867,16 +2998,16 @@ Function
      For information see graphics.library/ObtainBestPenA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     graphics/ObtainBestPenA()
+`graphics.library/ObtainBestPenA() <./graphics#obtainbestpena>`_ 
 
+----------
 
-
-ObtainInfo
-==========
+ObtainInfo()
+============
 
 Synopsis
 ~~~~~~~~
@@ -2913,16 +3044,16 @@ Result
      Bullet Error Code
 
 
+
 See also
 ~~~~~~~~
-::
 
-     bullet.library/ObtainInfoA()
+`bullet.library/ObtainInfoA() <./bullet#obtaininfoa>`_ 
 
+----------
 
-
-OpenAmigaGuide
-==============
+OpenAmigaGuide()
+================
 
 Synopsis
 ~~~~~~~~
@@ -2942,16 +3073,16 @@ Function
      For information see amigaguide.library/OpenAmigaGuideA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     amigaguide/OpenAmigaGuideA()
+`amigaguide.library/OpenAmigaGuideA() <./amigaguide#openamigaguidea>`_ 
 
+----------
 
-
-OpenAmigaGuideAsync
-===================
+OpenAmigaGuideAsync()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -2971,16 +3102,16 @@ Function
      For information see amigaguide.library/OpenAmigaGuideAsyncA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     amigaguide/OpenAmigaGuideAsyncA()
+`amigaguide.library/OpenAmigaGuideAsyncA() <./amigaguide#openamigaguideasynca>`_ 
 
+----------
 
-
-OpenCatalog
-===========
+OpenCatalog()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -3025,17 +3156,16 @@ Result
      If IoErr() != 0, then there was an error however.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     locale/OpenCatalogA(), locale/CloseCatalog(),
-     locale/GetCatalogStr()
+`locale.library/OpenCatalogA() <./locale#opencataloga>`_ `locale.library/CloseCatalog() <./locale#closecatalog>`_ `locale.library/GetCatalogStr() <./locale#getcatalogstr>`_ 
 
+----------
 
-
-OpenScreenTags
-==============
+OpenScreenTags()
+================
 
 Synopsis
 ~~~~~~~~
@@ -3048,8 +3178,15 @@ Synopsis
 
 
 
-OpenWindowTags
-==============
+See also
+~~~~~~~~
+
+`intuition.library/OpenScreenTagList() <./intuition#openscreentaglist>`_ 
+
+----------
+
+OpenWindowTags()
+================
 
 Synopsis
 ~~~~~~~~
@@ -3062,8 +3199,15 @@ Synopsis
 
 
 
-OpenWorkbenchObject
-===================
+See also
+~~~~~~~~
+
+`intuition.library/OpenWindowTagList() <./intuition#openwindowtaglist>`_ 
+
+----------
+
+OpenWorkbenchObject()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -3083,16 +3227,16 @@ Function
      For information see workbench.library/OpenWorkbenchObjectA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     workbench/OpenWorkbenchObjectA()
+`workbench.library/OpenWorkbenchObjectA() <./workbench#openworkbenchobjecta>`_ 
 
+----------
 
-
-RangeRand
-=========
+RangeRand()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -3103,8 +3247,10 @@ Synopsis
 
 
 
-ReAllocVec
-==========
+----------
+
+ReAllocVec()
+============
 
 Synopsis
 ~~~~~~~~
@@ -3159,16 +3305,16 @@ Notes
 
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AllocVec(), FreeVec(), CopyMem()
+`exec.library/AllocVec() <./exec#allocvec>`_ `exec.library/FreeVec() <./exec#freevec>`_ `exec.library/CopyMem() <./exec#copymem>`_ 
 
+----------
 
-
-RefreshDTObject
-===============
+RefreshDTObject()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -3191,8 +3337,15 @@ Function
 
 
 
-RefreshDTObjects
-================
+See also
+~~~~~~~~
+
+`datatypes.library/RefreshDTObjectA() <./datatypes#refreshdtobjecta>`_ 
+
+----------
+
+RefreshDTObjects()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -3215,8 +3368,15 @@ Function
 
 
 
-ReleaseInfo
-===========
+See also
+~~~~~~~~
+
+`datatypes.library/RefreshDTObjectA() <./datatypes#refreshdtobjecta>`_ 
+
+----------
+
+ReleaseInfo()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -3253,16 +3413,16 @@ Result
      Bullet Error Code
 
 
+
 See also
 ~~~~~~~~
-::
 
-     bullet.library/ReleaseInfoA()
+`bullet.library/ReleaseInfoA() <./bullet#releaseinfoa>`_ 
 
+----------
 
-
-RemoveAmigaGuideHost
-====================
+RemoveAmigaGuideHost()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -3282,16 +3442,16 @@ Function
      For information see amigaguide.library/RemoveAmigaGuideHostA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     amigaguide/RemoveAmigaGuideHostA()
+`amigaguide.library/RemoveAmigaGuideHostA() <./amigaguide#removeamigaguidehosta>`_ 
 
+----------
 
-
-SendAmigaGuideCmd
-=================
+SendAmigaGuideCmd()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -3312,16 +3472,16 @@ Function
      For information see amigaguide.library/SendAmigaGuideCmdA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     amigaguide/SendAmigaGuideCmdA()
+`amigaguide.library/SendAmigaGuideCmdA() <./amigaguide#sendamigaguidecmda>`_ 
 
+----------
 
-
-SendAmigaGuideContext
-=====================
+SendAmigaGuideContext()
+=======================
 
 Synopsis
 ~~~~~~~~
@@ -3341,16 +3501,16 @@ Function
      For information see amigaguide.library/SendAmigaGuideContextA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     amigaguide/SendAmigaGuideContextA()
+`amigaguide.library/SendAmigaGuideContextA() <./amigaguide#sendamigaguidecontexta>`_ 
 
+----------
 
-
-SetAmigaGuideAttrs
-==================
+SetAmigaGuideAttrs()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -3370,16 +3530,16 @@ Function
      For information see amigaguide.library/SetAmigaGuideAttrsA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     amigaguide/SetAmigaGuideAttrsA()
+`amigaguide.library/SetAmigaGuideAttrsA() <./amigaguide#setamigaguideattrsa>`_ 
 
+----------
 
-
-SetAmigaGuideContext
-====================
+SetAmigaGuideContext()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -3400,16 +3560,16 @@ Function
      For information see amigaguide.library/SetAmigaGuideContextA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     amigaguide/SetAmigaGuideContextA()
+`amigaguide.library/SetAmigaGuideContextA() <./amigaguide#setamigaguidecontexta>`_ 
 
+----------
 
-
-SetAttrs
-========
+SetAttrs()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -3456,18 +3616,16 @@ Notes
      This function sends OM_SET to the object.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     NewObject(), DisposeObject(), GetAttr(), MakeClass(),
-     "Basic Object-Oriented Programming System for Intuition" and
-     "boopsi Class Reference" Dokument.
+`boopsi.library/NewObjectA() <./boopsi#newobjecta>`_ `boopsi.library/DisposeObject() <./boopsi#disposeobject>`_ `boopsi.library/GetAttr() <./boopsi#getattr>`_ `boopsi.library/MakeClass() <./boopsi#makeclass>`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
 
+----------
 
-
-SetDTAttrs
-==========
+SetDTAttrs()
+============
 
 Synopsis
 ~~~~~~~~
@@ -3490,8 +3648,10 @@ Function
 
 
 
-SetGadgetAttrs
-==============
+----------
+
+SetGadgetAttrs()
+================
 
 Synopsis
 ~~~~~~~~
@@ -3541,18 +3701,16 @@ Notes
      This function sends OM_SET to the object.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     NewObject(), SetAttrs(),
-     "Basic Object-Oriented Programming System for Intuition" and
-     "boopsi Class Reference" Dokument.
+`NewObject()`_ `SetAttrs()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
 
+----------
 
-
-SetInfo
-=======
+SetInfo()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -3589,16 +3747,16 @@ Result
      Bullet Error Code
 
 
+
 See also
 ~~~~~~~~
-::
 
-     bullet.library/SetInfoA()
+`bullet.library/SetInfoA() <./bullet#setinfoa>`_ 
 
+----------
 
-
-SetRexxVar
-==========
+SetRexxVar()
+============
 
 Synopsis
 ~~~~~~~~
@@ -3635,16 +3793,16 @@ Result
      0 when succes, otherwise a rexx error value is returned.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CheckRexxMsg, GetRexxVar
+`CheckRexxMsg()`_ `GetRexxVar()`_ 
 
+----------
 
-
-SetRPAttrs
-==========
+SetRPAttrs()
+============
 
 Synopsis
 ~~~~~~~~
@@ -3664,16 +3822,16 @@ Function
      For information see graphics.library/SetRPAttrsA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     graphics/SetRPAttrsA()
+`graphics.library/SetRPAttrsA() <./graphics#setrpattrsa>`_ 
 
+----------
 
-
-SetSuperAttrs
-=============
+SetSuperAttrs()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -3722,18 +3880,16 @@ Notes
      This function sends OM_SET to the object.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     NewObject(), DisposeObject(), GetAttr(), MakeClass(),
-     "Basic Object-Oriented Programming System for Intuition" and
-     "boopsi Class Reference" Dokument.
+`boopsi.library/NewObjectA() <./boopsi#newobjecta>`_ `boopsi.library/DisposeObject() <./boopsi#disposeobject>`_ `boopsi.library/GetAttr() <./boopsi#getattr>`_ `boopsi.library/MakeClass() <./boopsi#makeclass>`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
 
+----------
 
-
-SetWindowPointer
-================
+SetWindowPointer()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -3753,8 +3909,15 @@ Function
 
 
 
-StrDup
-======
+See also
+~~~~~~~~
+
+`intuition.library/SetWindowPointerA() <./intuition#setwindowpointera>`_ 
+
+----------
+
+StrDup()
+========
 
 Synopsis
 ~~~~~~~~
@@ -3795,16 +3958,16 @@ Notes
      Don't forget to call FreeVec() when you're done with it.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AllocVec(), FreeVec(), CopyMem()
+`exec.library/AllocVec() <./exec#allocvec>`_ `exec.library/FreeVec() <./exec#freevec>`_ `exec.library/CopyMem() <./exec#copymem>`_ 
 
+----------
 
-
-SystemTags
-==========
+SystemTags()
+============
 
 Synopsis
 ~~~~~~~~
@@ -3824,16 +3987,16 @@ Function
      For information see dos.library/SystemTagList().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     dos/SystemTagList()
+`dos.library/SystemTagList() <./dos#systemtaglist>`_ 
 
+----------
 
-
-TimeDelay
-=========
+TimeDelay()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -3880,16 +4043,16 @@ Notes
      function. Basically: Don't use it and call this function.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     timer/TR_ADDREQUEST
+timer.device/TR_ADDREQUEST 
 
+----------
 
-
-UnLockBitMapTags
-================
+UnLockBitMapTags()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -3902,8 +4065,15 @@ Synopsis
 
 
 
-VideoControlTags
-================
+See also
+~~~~~~~~
+
+`cgfx.library/UnLockBitMapTagList() <./cgfx#unlockbitmaptaglist>`_ 
+
+----------
+
+VideoControlTags()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -3923,16 +4093,16 @@ Function
      For information see graphics.library/VideoControl().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     graphics/VideoControl()
+`graphics.library/VideoControl() <./graphics#videocontrol>`_ 
 
+----------
 
-
-WorkbenchControl
-================
+WorkbenchControl()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -3952,11 +4122,9 @@ Function
      For information see workbench.library/WorkbenchControlA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     workbench/WorkbenchControlA()
-
-
+`workbench.library/WorkbenchControlA() <./workbench#workbenchcontrola>`_ 
 

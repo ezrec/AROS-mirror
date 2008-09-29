@@ -9,23 +9,23 @@ iffparse
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AllocIFF`_                             `AllocLocalItem`_                       `CloseClipboard`_                       `CloseIFF`_                             
-`CollectionChunk`_                      `CollectionChunks`_                     `CurrentChunk`_                         `EntryHandler`_                         
-`ExitHandler`_                          `FindCollection`_                       `FindLocalItem`_                        `FindProp`_                             
-`FindPropContext`_                      `FreeIFF`_                              `FreeLocalItem`_                        `GoodID`_                               
-`GoodType`_                             `IDtoStr`_                              `InitIFF`_                              `InitIFFasClip`_                        
-`InitIFFasDOS`_                         `LocalItemData`_                        `OpenClipboard`_                        `OpenIFF`_                              
-`ParentChunk`_                          `ParseIFF`_                             `PopChunk`_                             `PropChunk`_                            
-`PropChunks`_                           `PushChunk`_                            `ReadChunkBytes`_                       `ReadChunkRecords`_                     
-`SetLocalItemPurge`_                    `StopChunk`_                            `StopChunks`_                           `StopOnExit`_                           
-`StoreItemInContext`_                   `StoreLocalItem`_                       `WriteChunkBytes`_                      `WriteChunkRecords`_                    
+`AllocIFF()`_                           `AllocLocalItem()`_                     `CloseClipboard()`_                     `CloseIFF()`_                           
+`CollectionChunk()`_                    `CollectionChunks()`_                   `CurrentChunk()`_                       `EntryHandler()`_                       
+`ExitHandler()`_                        `FindCollection()`_                     `FindLocalItem()`_                      `FindProp()`_                           
+`FindPropContext()`_                    `FreeIFF()`_                            `FreeLocalItem()`_                      `GoodID()`_                             
+`GoodType()`_                           `IDtoStr()`_                            `InitIFF()`_                            `InitIFFasClip()`_                      
+`InitIFFasDOS()`_                       `LocalItemData()`_                      `OpenClipboard()`_                      `OpenIFF()`_                            
+`ParentChunk()`_                        `ParseIFF()`_                           `PopChunk()`_                           `PropChunk()`_                          
+`PropChunks()`_                         `PushChunk()`_                          `ReadChunkBytes()`_                     `ReadChunkRecords()`_                   
+`SetLocalItemPurge()`_                  `StopChunk()`_                          `StopChunks()`_                         `StopOnExit()`_                         
+`StoreItemInContext()`_                 `StoreLocalItem()`_                     `WriteChunkBytes()`_                    `WriteChunkRecords()`_                  
 
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-AllocIFF
-========
+AllocIFF()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -55,16 +55,16 @@ Notes
      FreeIFF().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FreeIFF()
+`FreeIFF()`_ 
 
+----------
 
-
-AllocLocalItem
-==============
+AllocLocalItem()
+================
 
 Synopsis
 ~~~~~~~~
@@ -119,17 +119,16 @@ Bugs
      See notes.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FreeLocalItem(), LocalItemData(), StoreLocalItem(), StoreItemInContext(),
-     SetLocalItemPurge()
+`FreeLocalItem()`_ `LocalItemData()`_ `StoreLocalItem()`_ `StoreItemInContext()`_ `SetLocalItemPurge()`_ 
 
+----------
 
-
-CloseClipboard
-==============
+CloseClipboard()
+================
 
 Synopsis
 ~~~~~~~~
@@ -159,16 +158,16 @@ Result
      None.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OpenClipboard(), InitIFFAsClip()
+`OpenClipboard()`_ `InitIFFAsClip()`_ 
 
+----------
 
-
-CloseIFF
-========
+CloseIFF()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -202,16 +201,16 @@ Notes
      by sending it a IFFCMD_CLEANUP IFFStreamCmd.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OpenIFF(), InitIFF()
+`OpenIFF()`_ `InitIFF()`_ 
 
+----------
 
-
-CollectionChunk
-===============
+CollectionChunk()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -250,16 +249,16 @@ Result
      error - 0 if successfulle. IFFERR_#? elsewise.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CollectionChunks(), FindCollection, PropChunk
+`CollectionChunks()`_ `FindCollection()`_ `PropChunk()`_ 
 
+----------
 
-
-CollectionChunks
-================
+CollectionChunks()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -294,16 +293,16 @@ Result
      error      - 0 if successfull, IFFERR_#? otherwise.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CollectionChunk()
+`CollectionChunk()`_ 
 
+----------
 
-
-CurrentChunk
-============
+CurrentChunk()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -335,16 +334,16 @@ Result
      top - Pointer to top contextnode or NULL if none.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     PushChunk(), PopChunk(), ParseIFF(), ParentChunk()
+`PushChunk()`_ `PopChunk()`_ `ParseIFF()`_ `ParentChunk()`_ 
 
+----------
 
-
-EntryHandler
-============
+EntryHandler()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -389,18 +388,16 @@ Result
      error - 0 If successfull, IFFERR_#? elsewise.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ExitHandler(), StoreLocalItem(), StoreItemInContext()
+`ExitHandler()`_ `StoreLocalItem()`_ `StoreItemInContext()`_ 
 
+----------
 
-
-
-
-ExitHandler
-===========
+ExitHandler()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -445,16 +442,16 @@ Result
      error - 0 If successfull, IFFERR_#? elsewise.
 
 
+
 See also
 ~~~~~~~~
-::
 
-      EntryHandler(), StoreLocalItem(), StoreItemInContext()
+`EntryHandler()`_ `StoreLocalItem()`_ `StoreItemInContext()`_ 
 
+----------
 
-
-FindCollection
-==============
+FindCollection()
+================
 
 Synopsis
 ~~~~~~~~
@@ -491,16 +488,16 @@ Result
           with pointers to previous ones.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CollectionChunk(), CollectionChunks()
+`CollectionChunk()`_ `CollectionChunks()`_ 
 
+----------
 
-
-FindLocalItem
-=============
+FindLocalItem()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -539,16 +536,16 @@ Result
              none is found.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     StoreLocalItem()
+`StoreLocalItem()`_ 
 
+----------
 
-
-FindProp
-========
+FindProp()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -585,16 +582,16 @@ Result
      sp    - pointer to a storedproperty if found, NULL if none are found.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     PropChunk(), PropChunks()
+`PropChunk()`_ `PropChunks()`_ 
 
+----------
 
-
-FindPropContext
-===============
+FindPropContext()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -637,16 +634,16 @@ Notes
      This function is most for internal use.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ParentChunk(), CurrentChunk(), StoreItemInContext(), PropChunk()
+`ParentChunk()`_ `CurrentChunk()`_ `StoreItemInContext()`_ `PropChunk()`_ 
 
+----------
 
-
-FreeIFF
-=======
+FreeIFF()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -668,16 +665,16 @@ Inputs
 
      iff - pointer to an IFFHandle struct.
 
+
 See also
 ~~~~~~~~
-::
 
-     AllocIFF(), CloseIFF()
+`AllocIFF()`_ `CloseIFF()`_ 
 
+----------
 
-
-FreeLocalItem
-=============
+FreeLocalItem()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -701,16 +698,16 @@ Inputs
      localItem    -  pointer to LocalContextItem struct.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AllocLocalItem()
+`AllocLocalItem()`_ 
 
+----------
 
-
-GoodID
-======
+GoodID()
+========
 
 Synopsis
 ~~~~~~~~
@@ -749,8 +746,10 @@ Notes
 
 
 
-GoodType
-========
+----------
+
+GoodType()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -788,16 +787,16 @@ Notes
      Assumes the input type to be in local byte order.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GoodID()
+`GoodID()`_ 
 
+----------
 
-
-IDtoStr
-=======
+IDtoStr()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -848,8 +847,10 @@ Notes
 
 
 
-InitIFF
-=======
+----------
+
+InitIFF()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -878,16 +879,16 @@ Inputs
                    to be called.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     utility/hooks.h
+utility/hooks.h 
 
+----------
 
-
-InitIFFasClip
-=============
+InitIFFasClip()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -914,16 +915,16 @@ Inputs
      iff  - pointer to an IFFHandle struct.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OpenClipboard()
+`OpenClipboard()`_ 
 
+----------
 
-
-InitIFFasDOS
-============
+InitIFFasDOS()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -956,8 +957,10 @@ Inputs
 
 
 
-LocalItemData
-=============
+----------
+
+LocalItemData()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -988,16 +991,16 @@ Result
      data      - pointer to user data or NULL.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AllocLocalItem(), FreeLocalItem()
+`AllocLocalItem()`_ `FreeLocalItem()`_ 
 
+----------
 
-
-OpenClipboard
-=============
+OpenClipboard()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -1031,16 +1034,16 @@ Result
      ch          -  pointer to ClipboarHandle struct or NULL if unsuccessfull.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     InitIFFasClip(), CloseClipboard()
+`InitIFFasClip()`_ `CloseClipboard()`_ 
 
+----------
 
-
-OpenIFF
-=======
+OpenIFF()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -1083,16 +1086,16 @@ Notes
      by sending it a IFFCMD_INIT IFFStreamCmd.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CloseIFF(), InitIFF()
+`CloseIFF()`_ `InitIFF()`_ 
 
+----------
 
-
-ParentChunk
-===========
+ParentChunk()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1126,16 +1129,16 @@ Result
      parent      -  pointer to the parent context node or NULL if none.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CurrentChunk()
+`CurrentChunk()`_ 
 
+----------
 
-
-ParseIFF
-========
+ParseIFF()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -1187,18 +1190,16 @@ Result
      0 if successfull or IFFERR_#?
 
 
+
 See also
 ~~~~~~~~
-::
 
-     PushChunk(), PopChunk(), EntryHandler(), ExitHandler(), PropChunk[s](),
-     CollectionChunk[s](), StopChunk[s](), StopOnExit()
+`PushChunk()`_ `PopChunk()`_ `EntryHandler()`_ `ExitHandler()`_ PropChunk[s]() CollectionChunk[s]() StopChunk[s]() `StopOnExit()`_ 
 
+----------
 
-
-
-PopChunk
-========
+PopChunk()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -1230,16 +1231,16 @@ Result
      error  -  0 if successfull, IFFERR_#? otherwise.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     PushChunk()
+`PushChunk()`_ 
 
+----------
 
-
-PropChunk
-=========
+PropChunk()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -1277,16 +1278,16 @@ Result
      error  - 0 if successfull, IFFERR_#? otherwise.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     PropChunks(), FindProp(), CollectionChunk()
+`PropChunks()`_ `FindProp()`_ `CollectionChunk()`_ 
 
+----------
 
-
-PropChunks
-==========
+PropChunks()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1325,8 +1326,10 @@ Result
 
 
 
-PushChunk
-=========
+----------
+
+PushChunk()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -1368,16 +1371,16 @@ Result
      error  -  0 if successfull, IFFERR_#? otherwize.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     PopChunk()
+`PopChunk()`_ 
 
+----------
 
-
-ReadChunkBytes
-==============
+ReadChunkBytes()
+================
 
 Synopsis
 ~~~~~~~~
@@ -1413,16 +1416,16 @@ Result
                (negative) IFFERR_#? error code if not succesfull.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReadChunkRecords(), ParseIFF(), WriteChunkBytes()
+`ReadChunkRecords()`_ `ParseIFF()`_ `WriteChunkBytes()`_ 
 
+----------
 
-
-ReadChunkRecords
-================
+ReadChunkRecords()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -1461,16 +1464,16 @@ Result
 
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReadChunkBytes(), ParseIFF(), WriteChunkRecords()
+`ReadChunkBytes()`_ `ParseIFF()`_ `WriteChunkRecords()`_ 
 
+----------
 
-
-SetLocalItemPurge
-=================
+SetLocalItemPurge()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -1506,16 +1509,16 @@ Notes
 
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AllocLocalItem(), FreeLocalItem()
+`AllocLocalItem()`_ `FreeLocalItem()`_ 
 
+----------
 
-
-StopChunk
-=========
+StopChunk()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -1550,16 +1553,16 @@ Result
      error  -  0 if successfull, IFFERR_#? otherwise.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     StopChunks(), ParseIFF()
+`StopChunks()`_ `ParseIFF()`_ 
 
+----------
 
-
-StopChunks
-==========
+StopChunks()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1593,16 +1596,16 @@ Result
      error      - 0 if successfull, IFFERR_#? otherwise.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     StopChunk()
+`StopChunk()`_ 
 
+----------
 
-
-StopOnExit
-==========
+StopOnExit()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1637,16 +1640,16 @@ Result
      error  -  0 if successfull, IFFERR_#? otherwise.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ParseIFF()
+`ParseIFF()`_ 
 
+----------
 
-
-StoreItemInContext
-==================
+StoreItemInContext()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -1676,16 +1679,16 @@ Inputs
      contextNode  -  pointer to the context node in which the LCI will be stored.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     StoreLocalItem()
+`StoreLocalItem()`_ 
 
+----------
 
-
-StoreLocalItem
-==============
+StoreLocalItem()
+================
 
 Synopsis
 ~~~~~~~~
@@ -1725,16 +1728,16 @@ Result
      error     -  0 if succesfull, IFFERR_#? otherwise.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     StoreItemInContext(), FindLocalItem(), EntryHandler(), ExitHandler()
+`StoreItemInContext()`_ `FindLocalItem()`_ `EntryHandler()`_ `ExitHandler()`_ 
 
+----------
 
-
-WriteChunkBytes
-===============
+WriteChunkBytes()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -1770,16 +1773,16 @@ Result
      actual    -  (positive) number of bytes actually written.
                  (negative) IFFERR_#? indicating unsuccesfull write.
 
+
 See also
 ~~~~~~~~
-::
 
-     PushChunk(), PopChunk(), WriteChunkRecords()
+`PushChunk()`_ `PopChunk()`_ `WriteChunkRecords()`_ 
 
+----------
 
-
-WriteChunkRecords
-=================
+WriteChunkRecords()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -1817,11 +1820,9 @@ Result
                (negative) IFFERR_#? error code if not succesfull.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     WriteChunkBytes()
-
-
+`WriteChunkBytes()`_ 
 

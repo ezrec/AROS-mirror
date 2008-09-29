@@ -9,45 +9,45 @@ exec
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AbortIO`_                              `AddDevice`_                            `AddHead`_                              `AddIntServer`_                         
-`AddLibrary`_                           `AddMemHandler`_                        `AddMemList`_                           `AddPort`_                              
-`AddResource`_                          `AddSemaphore`_                         `AddTail`_                              `AddTask`_                              
-`Alert`_                                `AllocAbs`_                             `Allocate`_                             `AllocEntry`_                           
-`AllocMem`_                             `AllocPooled`_                          `AllocSignal`_                          `AllocTrap`_                            
-`AllocVec`_                             `AttemptSemaphore`_                     `AttemptSemaphoreShared`_               `AvailMem`_                             
-`AVL_AddNode`_                          `AVL_FindFirstNode`_                    `AVL_FindLastNode`_                     `AVL_FindNextNodeByAddress`_            
-`AVL_FindNextNodeByKey`_                `AVL_FindNode`_                         `AVL_FindPrevNodeByAddress`_            `AVL_FindPrevNodeByKey`_                
-`AVL_RemNodeByAddress`_                 `AVL_RemNodeByKey`_                     `CacheClearE`_                          `CacheClearU`_                          
-`CacheControl`_                         `CachePostDMA`_                         `CachePreDMA`_                          `Cause`_                                
-`CheckIO`_                              `ChildFree`_                            `ChildOrphan`_                          `ChildStatus`_                          
-`ChildWait`_                            `CloseDevice`_                          `CloseLibrary`_                         `ColdReboot`_                           
-`CopyMem`_                              `CopyMemQuick`_                         `CreateIORequest`_                      `CreateMsgPort`_                        
-`CreatePool`_                           `Deallocate`_                           `Debug`_                                `DeleteIORequest`_                      
-`DeleteMsgPort`_                        `DeletePool`_                           `Disable`_                              `DoIO`_                                 
-`Enable`_                               `Enqueue`_                              `FindName`_                             `FindPort`_                             
-`FindResident`_                         `FindSemaphore`_                        `FindTask`_                             `Forbid`_                               
-`FreeEntry`_                            `FreeMem`_                              `FreePooled`_                           `FreeSignal`_                           
-`FreeTrap`_                             `FreeVec`_                              `GetCC`_                                `GetMsg`_                               
-`InitCode`_                             `InitResident`_                         `InitSemaphore`_                        `InitStruct`_                           
-`Insert`_                               `MakeFunctions`_                        `MakeLibrary`_                          `NewAddTask`_                           
-`NewAllocEntry`_                        `ObtainQuickVector`_                    `ObtainSemaphoreList`_                  `ObtainSemaphoreShared`_                
-`OldOpenLibrary`_                       `OpenDevice`_                           `OpenLibrary`_                          `OpenResource`_                         
-`Permit`_                               `Procure`_                              `PutMsg`_                               `RawDoFmt`_                             
-`ReleaseSemaphoreList`_                 `RemDevice`_                            `RemHead`_                              `RemIntServer`_                         
-`RemLibrary`_                           `RemMemHandler`_                        `Remove`_                               `RemPort`_                              
-`RemResource`_                          `RemSemaphore`_                         `RemTail`_                              `RemTask`_                              
-`ReplyMsg`_                             `SendIO`_                               `SetExcept`_                            `SetFunction`_                          
-`SetIntVector`_                         `SetSignal`_                            `SetSR`_                                `SetTaskPri`_                           
-`Signal`_                               `StackSwap`_                            `SumKickData`_                          `SumLibrary`_                           
-`SuperState`_                           `Supervisor`_                           `Switch`_                               `TypeOfMem`_                            
-`UserState`_                            `Vacate`_                               `VNewRawDoFmt`_                         `Wait`_                                 
-`WaitIO`_                               `WaitPort`_                             
+`AbortIO()`_                            `AddDevice()`_                          `AddHead()`_                            `AddIntServer()`_                       
+`AddLibrary()`_                         `AddMemHandler()`_                      `AddMemList()`_                         `AddPort()`_                            
+`AddResource()`_                        `AddSemaphore()`_                       `AddTail()`_                            `AddTask()`_                            
+`Alert()`_                              `AllocAbs()`_                           `Allocate()`_                           `AllocEntry()`_                         
+`AllocMem()`_                           `AllocPooled()`_                        `AllocSignal()`_                        `AllocTrap()`_                          
+`AllocVec()`_                           `AttemptSemaphore()`_                   `AttemptSemaphoreShared()`_             `AvailMem()`_                           
+`AVL_AddNode()`_                        `AVL_FindFirstNode()`_                  `AVL_FindLastNode()`_                   `AVL_FindNextNodeByAddress()`_          
+`AVL_FindNextNodeByKey()`_              `AVL_FindNode()`_                       `AVL_FindPrevNodeByAddress()`_          `AVL_FindPrevNodeByKey()`_              
+`AVL_RemNodeByAddress()`_               `AVL_RemNodeByKey()`_                   `CacheClearE()`_                        `CacheClearU()`_                        
+`CacheControl()`_                       `CachePostDMA()`_                       `CachePreDMA()`_                        `Cause()`_                              
+`CheckIO()`_                            `ChildFree()`_                          `ChildOrphan()`_                        `ChildStatus()`_                        
+`ChildWait()`_                          `CloseDevice()`_                        `CloseLibrary()`_                       `ColdReboot()`_                         
+`CopyMem()`_                            `CopyMemQuick()`_                       `CreateIORequest()`_                    `CreateMsgPort()`_                      
+`CreatePool()`_                         `Deallocate()`_                         `Debug()`_                              `DeleteIORequest()`_                    
+`DeleteMsgPort()`_                      `DeletePool()`_                         `Disable()`_                            `DoIO()`_                               
+`Enable()`_                             `Enqueue()`_                            `FindName()`_                           `FindPort()`_                           
+`FindResident()`_                       `FindSemaphore()`_                      `FindTask()`_                           `Forbid()`_                             
+`FreeEntry()`_                          `FreeMem()`_                            `FreePooled()`_                         `FreeSignal()`_                         
+`FreeTrap()`_                           `FreeVec()`_                            `GetCC()`_                              `GetMsg()`_                             
+`InitCode()`_                           `InitResident()`_                       `InitSemaphore()`_                      `InitStruct()`_                         
+`Insert()`_                             `MakeFunctions()`_                      `MakeLibrary()`_                        `NewAddTask()`_                         
+`NewAllocEntry()`_                      `ObtainQuickVector()`_                  `ObtainSemaphoreList()`_                `ObtainSemaphoreShared()`_              
+`OldOpenLibrary()`_                     `OpenDevice()`_                         `OpenLibrary()`_                        `OpenResource()`_                       
+`Permit()`_                             `Procure()`_                            `PutMsg()`_                             `RawDoFmt()`_                           
+`ReleaseSemaphore()`_                   `ReleaseSemaphoreList()`_               `RemDevice()`_                          `RemHead()`_                            
+`RemIntServer()`_                       `RemLibrary()`_                         `RemMemHandler()`_                      `Remove()`_                             
+`RemPort()`_                            `RemResource()`_                        `RemSemaphore()`_                       `RemTail()`_                            
+`RemTask()`_                            `ReplyMsg()`_                           `SendIO()`_                             `SetExcept()`_                          
+`SetFunction()`_                        `SetIntVector()`_                       `SetSignal()`_                          `SetSR()`_                              
+`SetTaskPri()`_                         `Signal()`_                             `StackSwap()`_                          `SumKickData()`_                        
+`SumLibrary()`_                         `SuperState()`_                         `Supervisor()`_                         `Switch()`_                             
+`TypeOfMem()`_                          `UserState()`_                          `Vacate()`_                             `VNewRawDoFmt()`_                       
+`Wait()`_                               `WaitIO()`_                             `WaitPort()`_                           
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-AbortIO
-=======
+AbortIO()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -81,16 +81,16 @@ Result
      well. io_Error will then be set to IOERR_ABORTED.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OpenDevice(), CloseDevice(), DoIO(), SendIO(), WaitIO()
+`OpenDevice()`_ `CloseDevice()`_ `DoIO()`_ `SendIO()`_ `WaitIO()`_ 
 
+----------
 
-
-AddDevice
-=========
+AddDevice()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -116,16 +116,16 @@ Inputs
      device - Pointer to a ready for use device structure.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     RemDevice(), OpenDevice(), CloseDevice()
+`RemDevice()`_ `OpenDevice()`_ `CloseDevice()`_ 
 
+----------
 
-
-AddHead
-=======
+AddHead()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -168,17 +168,16 @@ Example
      AddHead (list, node);
 
 
+
 See also
 ~~~~~~~~
-::
 
-     NewList(), AddTail(), Insert(), Remove(), RemHead(), RemTail(),
-     Enqueue()
+`NewList()`_ `AddTail()`_ `Insert()`_ `Remove()`_ `RemHead()`_ `RemTail()`_ `Enqueue()`_ 
 
+----------
 
-
-AddIntServer
-============
+AddIntServer()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -197,8 +196,10 @@ Notes
 
 
 
-AddLibrary
-==========
+----------
+
+AddLibrary()
+============
 
 Synopsis
 ~~~~~~~~
@@ -233,16 +234,16 @@ Notes
      AROS does this too.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     RemLibrary(), MakeLibrary(), MakeFunctions(), InitStruct(), SumLibrary().
+`RemLibrary()`_ `MakeLibrary()`_ `MakeFunctions()`_ `InitStruct()`_ `SumLibrary()`_ 
 
+----------
 
-
-AddMemHandler
-=============
+AddMemHandler()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -267,8 +268,10 @@ Inputs
 
 
 
-AddMemList
-==========
+----------
+
+AddMemList()
+============
 
 Synopsis
 ~~~~~~~~
@@ -307,8 +310,10 @@ Notes
 
 
 
-AddPort
-=======
+----------
+
+AddPort()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -335,8 +340,10 @@ Inputs
 
 
 
-AddResource
-===========
+----------
+
+AddResource()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -359,16 +366,16 @@ Inputs
      resource - Pointer to a ready for use resource.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     RemResource(), OpenResource()
+`RemResource()`_ `OpenResource()`_ 
 
+----------
 
-
-AddSemaphore
-============
+AddSemaphore()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -402,8 +409,10 @@ Notes
 
 
 
-AddTail
-=======
+----------
+
+AddTail()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -440,8 +449,10 @@ Example
 
 
 
-AddTask
-=======
+----------
+
+AddTask()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -493,16 +504,16 @@ Result
      The address of the new task or NULL if the operation failed.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     RemTask()
+`RemTask()`_ 
 
+----------
 
-
-Alert
-=====
+Alert()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -550,8 +561,10 @@ Notes
 
 
 
-AllocAbs
-========
+----------
+
+AllocAbs()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -584,16 +597,16 @@ Result
      the memory couldn't be allocated
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FreeMem()
+`FreeMem()`_ 
 
+----------
 
-
-Allocate
-========
+Allocate()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -662,16 +675,16 @@ Notes
      are rounded up to a multiple of that size.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     Deallocate()
+`Deallocate()`_ 
 
+----------
 
-
-AllocEntry
-==========
+AllocEntry()
+============
 
 Synopsis
 ~~~~~~~~
@@ -705,16 +718,16 @@ Result
      memory that couldn't be allocated.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FreeEntry()
+`FreeEntry()`_ 
 
+----------
 
-
-AllocMem
-========
+AllocMem()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -763,16 +776,16 @@ Notes
      are rounded up to a multiple of that size.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FreeMem()
+`FreeMem()`_ 
 
+----------
 
-
-AllocPooled
-===========
+AllocPooled()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -805,16 +818,16 @@ Result
      couldn't be allocated
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreatePool(), DeletePool(), FreePooled()
+`CreatePool()`_ `DeletePool()`_ `FreePooled()`_ 
 
+----------
 
-
-AllocSignal
-===========
+AllocSignal()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -852,16 +865,16 @@ Result
      Number of the signal or -1 if the signal couldn't be allocated.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FreeSignal(), Signal(), Wait()
+`FreeSignal()`_ `Signal()`_ `Wait()`_ 
 
+----------
 
-
-AllocTrap
-=========
+AllocTrap()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -871,8 +884,10 @@ Synopsis
           long trapNum );
 
 
-AllocVec
-========
+----------
+
+AllocVec()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -907,16 +922,16 @@ Result
      couldn't be allocated
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FreeVec()
+`FreeVec()`_ 
 
+----------
 
-
-AttemptSemaphore
-================
+AttemptSemaphore()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -955,16 +970,16 @@ Notes
      The lock must be freed with ReleaseSemaphore().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReleaseSemaphore()
+`ReleaseSemaphore()`_ 
 
+----------
 
-
-AttemptSemaphoreShared
-======================
+AttemptSemaphoreShared()
+========================
 
 Synopsis
 ~~~~~~~~
@@ -997,16 +1012,16 @@ Result
      True if the semaphore could be obtained, false otherwise.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReleaseSemaphore()
+`ReleaseSemaphore()`_ 
 
+----------
 
-
-AvailMem
-========
+AvailMem()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -1061,8 +1076,10 @@ Notes
 
 
 
-AVL_AddNode
-===========
+----------
+
+AVL_AddNode()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1198,17 +1215,16 @@ Notes
      update existing items without requiring additional lookups.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AVL_FindNode(), AVL_FindNextNodeByKey(), AVL_FindPrevNodeByKey(),
-     AVL_RemNodeByAddress(), AVL_RemNodeByKey()
+`AVL_FindNode()`_ `AVL_FindNextNodeByKey()`_ `AVL_FindPrevNodeByKey()`_ `AVL_RemNodeByAddress()`_ `AVL_RemNodeByKey()`_ 
 
+----------
 
-
-AVL_FindFirstNode
-=================
+AVL_FindFirstNode()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -1256,16 +1272,16 @@ Notes
      approximately 1.44Log(N).
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AVL_AddNode(), AVL_FindNextNodeByAddress()
+`AVL_AddNode()`_ `AVL_FindNextNodeByAddress()`_ 
 
+----------
 
-
-AVL_FindLastNode
-================
+AVL_FindLastNode()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -1313,16 +1329,16 @@ Notes
      approximately 1.44Log(N).
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AVL_AddNode(), AVL_FindPrevNodeByAddress()
+`AVL_AddNode()`_ `AVL_FindPrevNodeByAddress()`_ 
 
+----------
 
-
-AVL_FindNextNodeByAddress
-=========================
+AVL_FindNextNodeByAddress()
+===========================
 
 Synopsis
 ~~~~~~~~
@@ -1389,16 +1405,16 @@ Notes
      iterate the full depth of the tree - approximately 1.44Log(N).
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AVL_AddNode(), AVL_RemNodeByAddress(), AVL_FindFirstNode()
+`AVL_AddNode()`_ `AVL_RemNodeByAddress()`_ `AVL_FindFirstNode()`_ 
 
+----------
 
-
-AVL_FindNextNodeByKey
-=====================
+AVL_FindNextNodeByKey()
+=======================
 
 Synopsis
 ~~~~~~~~
@@ -1443,16 +1459,16 @@ Notes
      This is only O(1.44log(n)) in the worst case.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AVL_AddNode(), AVL_FindNextNodeByAddress(), AVL_FindLastNode()
+`AVL_AddNode()`_ `AVL_FindNextNodeByAddress()`_ `AVL_FindLastNode()`_ 
 
+----------
 
-
-AVL_FindNode
-============
+AVL_FindNode()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -1497,17 +1513,16 @@ Example
          printf(" `%s' occurs %d times\n", node->key, node->count);
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AVL_AddNode(), AVL_RemNodeByAddress(), AVL_FindNextNodeByAddress(),
-     AVL_FindPrevNodeByAddress()
+`AVL_AddNode()`_ `AVL_RemNodeByAddress()`_ `AVL_FindNextNodeByAddress()`_ `AVL_FindPrevNodeByAddress()`_ 
 
+----------
 
-
-AVL_FindPrevNodeByAddress
-=========================
+AVL_FindPrevNodeByAddress()
+===========================
 
 Synopsis
 ~~~~~~~~
@@ -1574,16 +1589,16 @@ Notes
      iterate the full depth of the tree - approximately 1.44Log(N).
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AVL_AddNode(), AVL_RemNodeByAddress(), AVL_FindLastNode()
+`AVL_AddNode()`_ `AVL_RemNodeByAddress()`_ `AVL_FindLastNode()`_ 
 
+----------
 
-
-AVL_FindPrevNodeByKey
-=====================
+AVL_FindPrevNodeByKey()
+=======================
 
 Synopsis
 ~~~~~~~~
@@ -1628,16 +1643,16 @@ Notes
      This is only O(1.44log(n)) in the worst case.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AVL_AddNode(), AVL_FindNextNodeByAddress(), AVL_FindLastNode()
+`AVL_AddNode()`_ `AVL_FindNextNodeByAddress()`_ `AVL_FindLastNode()`_ 
 
+----------
 
-
-AVL_RemNodeByAddress
-====================
+AVL_RemNodeByAddress()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -1675,7 +1690,7 @@ Example
 ~~~~~~~
 ::
 
-     See AVL_NextNodeByAddress(), AVL_PrevNodeByAddress()
+     See AVL_FindNextNodeByAddress(), AVL_FindPrevNodeByAddress()
 
 
 Notes
@@ -1687,17 +1702,16 @@ Notes
      and no more than 1.44log(n) steps will be required.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AVL_AddNode(), AVL_FindNode(), AVL_NextNodeByAddress(),
-     AVL_PrevNodeByAddress()
+`AVL_AddNode()`_ `AVL_FindNode()`_ `AVL_FindNextNodeByAddress()`_ `AVL_FindPrevNodeByAddress()`_ 
 
+----------
 
-
-AVL_RemNodeByKey
-================
+AVL_RemNodeByKey()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -1743,16 +1757,16 @@ Notes
      See AVL_RemNodeByAddress().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AVL_AddNode(), AVL_RemNodeByAddress()
+`AVL_AddNode()`_ `AVL_RemNodeByAddress()`_ 
 
+----------
 
-
-CacheClearE
-===========
+CacheClearE()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1812,16 +1826,16 @@ Notes
      even if this was not the specific request.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CacheClearU(), CacheControl()
+`CacheClearU()`_ `CacheControl()`_ 
 
+----------
 
-
-CacheClearU
-===========
+CacheClearU()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1861,16 +1875,16 @@ Notes
      even if this was not the specific request.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CacheClearE(), CacheControl(), CachePreDMA(), CachePostDMA()
+`CacheClearE()`_ `CacheControl()`_ `CachePreDMA()`_ `CachePostDMA()`_ 
 
+----------
 
-
-CacheControl
-============
+CacheControl()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -1924,16 +1938,16 @@ Notes
      be considered as equal.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CacheClearE(), CacheClearU()
+`CacheClearE()`_ `CacheClearU()`_ 
 
+----------
 
-
-CachePostDMA
-============
+CachePostDMA()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -1977,16 +1991,16 @@ Notes
      by a call to CachePostDMA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CachePreDMA()
+`CachePreDMA()`_ 
 
+----------
 
-
-CachePreDMA
-===========
+CachePreDMA()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -2044,16 +2058,16 @@ Notes
      by a call to CachePostDMA().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CachePostDMA()
+`CachePostDMA()`_ 
 
+----------
 
-
-Cause
-=====
+Cause()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -2132,8 +2146,10 @@ Bugs
 
 
 
-CheckIO
-=======
+----------
+
+CheckIO()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -2164,16 +2180,16 @@ Result
      at work.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OpenDevice(), CloseDevice(), DoIO(), SendIO(), AbortIO(), WaitIO()
+`OpenDevice()`_ `CloseDevice()`_ `DoIO()`_ `SendIO()`_ `AbortIO()`_ `WaitIO()`_ 
 
+----------
 
-
-ChildFree
-=========
+ChildFree()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -2208,13 +2224,18 @@ Notes
 ~~~~~
 ::
 
+     This function will work correctly only for child tasks that are
+     processes created with NP_NotifyOnDeath set to TRUE.
+
      Calling ChildFree() on a running child is likely to crash your
      system badly.
 
 
 
-ChildOrphan
-===========
+----------
+
+ChildOrphan()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -2255,8 +2276,10 @@ Result
 
 
 
-ChildStatus
-===========
+----------
+
+ChildStatus()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -2288,9 +2311,20 @@ Result
      One of the CHILD_* values.
 
 
+Notes
+~~~~~
+::
 
-ChildWait
-=========
+     This function will work correctly only for child tasks that are
+     processes created with NP_NotifyOnDeath set to TRUE. Otherwise
+     it may report CHILD_NOTFOUND even if child already exited.
+
+
+
+----------
+
+ChildWait()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -2342,6 +2376,9 @@ Notes
 ~~~~~
 ::
 
+     This function will work correctly only for child tasks that are
+     processes created with NP_NotifyOnDeath set to TRUE.
+
      Calling ChildWait() on a task that isn't your child will result in
      a deadlock.
 
@@ -2354,8 +2391,10 @@ Bugs
 
 
 
-CloseDevice
-===========
+----------
+
+CloseDevice()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -2380,16 +2419,16 @@ Inputs
      iORequest - Pointer to iorequest structure.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OpenDevice().
+`OpenDevice()`_ 
 
+----------
 
-
-CloseLibrary
-============
+CloseLibrary()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -2413,16 +2452,16 @@ Inputs
      library - Pointer to library structure or NULL.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OpenLibrary().
+`OpenLibrary()`_ 
 
+----------
 
-
-ColdReboot
-==========
+ColdReboot()
+============
 
 Synopsis
 ~~~~~~~~
@@ -2461,8 +2500,10 @@ Notes
 
 
 
-CopyMem
-=======
+----------
+
+CopyMem()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -2497,16 +2538,16 @@ Notes
      The source and destination area are not allowed to overlap.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CopyMemQuick()
+`CopyMemQuick()`_ 
 
+----------
 
-
-CopyMemQuick
-============
+CopyMemQuick()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -2541,16 +2582,16 @@ Notes
      The source and destination area are not allowed to overlap.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CopyMem()
+`CopyMem()`_ 
 
+----------
 
-
-CreateIORequest
-===============
+CreateIORequest()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -2590,8 +2631,10 @@ Result
 
 
 
-CreateMsgPort
-=============
+----------
+
+CreateMsgPort()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -2615,8 +2658,10 @@ Result
 
 
 
-CreatePool
-==========
+----------
+
+CreatePool()
+============
 
 Synopsis
 ~~~~~~~~
@@ -2673,16 +2718,16 @@ Example
      }
 
 
+
 See also
 ~~~~~~~~
-::
 
-     DeletePool(), AllocPooled(), FreePooled()
+`DeletePool()`_ `AllocPooled()`_ `FreePooled()`_ 
 
+----------
 
-
-Deallocate
-==========
+Deallocate()
+============
 
 Synopsis
 ~~~~~~~~
@@ -2717,16 +2762,16 @@ Notes
      a multiple of sizeof(struct MemChunk) and to include the block.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     Allocate()
+`Allocate()`_ 
 
+----------
 
-
-Debug
-=====
+Debug()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -2736,8 +2781,10 @@ Synopsis
           unsigned long flags );
 
 
-DeleteIORequest
-===============
+----------
+
+DeleteIORequest()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -2761,8 +2808,10 @@ Inputs
 
 
 
-DeleteMsgPort
-=============
+----------
+
+DeleteMsgPort()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -2789,8 +2838,10 @@ Inputs
 
 
 
-DeletePool
-==========
+----------
+
+DeletePool()
+============
 
 Synopsis
 ~~~~~~~~
@@ -2813,16 +2864,16 @@ Inputs
      poolHeader - The pool allocated with CreatePool() or NULL.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreatePool(), AllocPooled(), FreePooled()
+`CreatePool()`_ `AllocPooled()`_ `FreePooled()`_ 
 
+----------
 
-
-Disable
-=======
+Disable()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -2885,16 +2936,16 @@ Bugs
      saved is on the Motorola mc68000 family.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     Forbid(), Permit(), Enable(), Wait()
+`Forbid()`_ `Permit()`_ `Enable()`_ `Wait()`_ 
 
+----------
 
-
-DoIO
-====
+DoIO()
+======
 
 Synopsis
 ~~~~~~~~
@@ -2918,16 +2969,16 @@ Inputs
      iORequest - Pointer to iorequest structure.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OpenDevice(), CloseDevice(), DoIO(), SendIO(), AbortIO(), WaitIO()
+`OpenDevice()`_ `CloseDevice()`_ `DoIO()`_ `SendIO()`_ `AbortIO()`_ `WaitIO()`_ 
 
+----------
 
-
-Enable
-======
+Enable()
+========
 
 Synopsis
 ~~~~~~~~
@@ -2997,16 +3048,16 @@ Bugs
      saved is on the Motorola mc68000 family.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     Forbid(), Permit(), Disable(), Wait()
+`Forbid()`_ `Permit()`_ `Disable()`_ `Wait()`_ 
 
+----------
 
-
-Enqueue
-=======
+Enqueue()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -3066,8 +3117,10 @@ Notes
 
 
 
-FindName
-========
+----------
+
+FindName()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -3116,8 +3169,10 @@ Notes
 
 
 
-FindPort
-========
+----------
+
+FindPort()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -3150,8 +3205,10 @@ Result
 
 
 
-FindResident
-============
+----------
+
+FindResident()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -3183,8 +3240,10 @@ Result
 
 
 
-FindSemaphore
-=============
+----------
+
+FindSemaphore()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -3217,8 +3276,10 @@ Result
 
 
 
-FindTask
-========
+----------
+
+FindTask()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -3253,8 +3314,10 @@ Result
 
 
 
-Forbid
-======
+----------
+
+Forbid()
+========
 
 Synopsis
 ~~~~~~~~
@@ -3319,16 +3382,16 @@ Bugs
      saved is on the Motorola mc68000 family.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     Permit(), Disable(), Enable(), Wait()
+`Permit()`_ `Disable()`_ `Enable()`_ `Wait()`_ 
 
+----------
 
-
-FreeEntry
-=========
+FreeEntry()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -3351,16 +3414,16 @@ Inputs
      entry - The MemList you got from AllocEntry().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AllocEntry()
+`AllocEntry()`_ 
 
+----------
 
-
-FreeMem
-=======
+FreeMem()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -3385,16 +3448,16 @@ Inputs
      byteSize    - Size of the block
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AllocMem()
+`AllocMem()`_ 
 
+----------
 
-
-FreePooled
-==========
+FreePooled()
+============
 
 Synopsis
 ~~~~~~~~
@@ -3421,16 +3484,16 @@ Inputs
      memSize    - Size of the memory chunk
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreatePool(), DeletePool(), AllocPooled()
+`CreatePool()`_ `DeletePool()`_ `AllocPooled()`_ 
 
+----------
 
-
-FreeSignal
-==========
+FreeSignal()
+============
 
 Synopsis
 ~~~~~~~~
@@ -3453,16 +3516,16 @@ Inputs
      signalNum - Number of the signal to free or -1 to do nothing.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AllocSignal(), Signal(), Wait()
+`AllocSignal()`_ `Signal()`_ `Wait()`_ 
 
+----------
 
-
-FreeTrap
-========
+FreeTrap()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -3472,8 +3535,10 @@ Synopsis
           long trapNum );
 
 
-FreeVec
-=======
+----------
+
+FreeVec()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -3497,16 +3562,16 @@ Inputs
                    pointer.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AllocVec()
+`AllocVec()`_ 
 
+----------
 
-
-GetCC
-=====
+GetCC()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -3546,16 +3611,16 @@ Bugs
      Motorola mc680x0 processors.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     SetSR()
+`SetSR()`_ 
 
+----------
 
-
-GetMsg
-======
+GetMsg()
+========
 
 Synopsis
 ~~~~~~~~
@@ -3587,16 +3652,16 @@ Result
      Pointer to message removed from the port.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     WaitPort(), PutMsg()
+`WaitPort()`_ `PutMsg()`_ 
 
+----------
 
-
-InitCode
-========
+InitCode()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -3624,8 +3689,10 @@ Inputs
 
 
 
-InitResident
-============
+----------
+
+InitResident()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -3674,8 +3741,10 @@ Notes
 
 
 
-InitSemaphore
-=============
+----------
+
+InitSemaphore()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -3709,8 +3778,10 @@ Notes
 
 
 
-InitStruct
-==========
+----------
+
+InitStruct()
+============
 
 Synopsis
 ~~~~~~~~
@@ -3761,8 +3832,10 @@ Inputs
 
 
 
-Insert
-======
+----------
+
+Insert()
+========
 
 Synopsis
 ~~~~~~~~
@@ -3802,17 +3875,16 @@ Example
      Insert (list, node, pred);
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AddHead(), AddTail(), Enqueue(), RemHead(), Remove(), RemTail(),
-     "AROS: Exec Lists".
+`AddHead()`_ `AddTail()`_ `Enqueue()`_ `RemHead()`_ `Remove()`_ `RemTail()`_ "AROS: Exec Lists". 
 
+----------
 
-
-MakeFunctions
-=============
+MakeFunctions()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -3853,8 +3925,10 @@ Result
 
 
 
-MakeLibrary
-===========
+----------
+
+MakeLibrary()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -3911,16 +3985,16 @@ Notes
      and double alignment restrictions.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AddLibrary(), RemLibrary(), MakeFunctions(), InitStruct(), SumLibrary().
+`AddLibrary()`_ `RemLibrary()`_ `MakeFunctions()`_ `InitStruct()`_ `SumLibrary()`_ 
 
+----------
 
-
-NewAddTask
-==========
+NewAddTask()
+============
 
 Synopsis
 ~~~~~~~~
@@ -3979,16 +4053,16 @@ Result
      The address of the new task or NULL if the operation failed.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     RemTask()
+`RemTask()`_ 
 
+----------
 
-
-NewAllocEntry
-=============
+NewAllocEntry()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -4031,16 +4105,16 @@ Result
      couldn't be allocated.
      
 
+
 See also
 ~~~~~~~~
-::
 
-     AllocEntry(), FreeEntry()
+`AllocEntry()`_ `FreeEntry()`_ 
 
+----------
 
-
-ObtainQuickVector
-=================
+ObtainQuickVector()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -4050,8 +4124,10 @@ Synopsis
           APTR interruptCode );
 
 
-ObtainSemaphoreList
-===================
+----------
+
+ObtainSemaphoreList()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -4090,8 +4166,10 @@ Result
 
 
 
-ObtainSemaphoreShared
-=====================
+----------
+
+ObtainSemaphoreShared()
+=======================
 
 Synopsis
 ~~~~~~~~
@@ -4125,16 +4203,16 @@ Notes
      This function preserves all registers.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReleaseSemaphore()
+`ReleaseSemaphore()`_ 
 
+----------
 
-
-OldOpenLibrary
-==============
+OldOpenLibrary()
+================
 
 Synopsis
 ~~~~~~~~
@@ -4151,16 +4229,16 @@ Function
      version number. This function is obsolete. Don't use it.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OpenLibrary().
+`OpenLibrary()`_ 
 
+----------
 
-
-OpenDevice
-==========
+OpenDevice()
+============
 
 Synopsis
 ~~~~~~~~
@@ -4204,16 +4282,16 @@ Result
      in the io_Error field.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OpenDevice()
+`OpenDevice()`_ 
 
+----------
 
-
-OpenLibrary
-===========
+OpenLibrary()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -4248,16 +4326,16 @@ Result
      Pointer to library structure or NULL.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CloseLibrary().
+`CloseLibrary()`_ 
 
+----------
 
-
-OpenResource
-============
+OpenResource()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -4288,16 +4366,16 @@ Result
      Pointer to resource or NULL.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AddResource(), RemResource()
+`AddResource()`_ `RemResource()`_ 
 
+----------
 
-
-Permit
-======
+Permit()
+========
 
 Synopsis
 ~~~~~~~~
@@ -4353,16 +4431,16 @@ Bugs
      saved is on the Motorola mc68000 family.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     Forbid(), Disable(), Enable(), Wait()
+`Forbid()`_ `Disable()`_ `Enable()`_ `Wait()`_ 
 
+----------
 
-
-Procure
-=======
+Procure()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -4405,16 +4483,16 @@ Notes
      Locks obtained with Procure() must be released with Vacate().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     Vacate()
+`Vacate()`_ 
 
+----------
 
-
-PutMsg
-======
+PutMsg()
+========
 
 Synopsis
 ~~~~~~~~
@@ -4452,16 +4530,16 @@ Notes
      or raise a software interrupt, depending on port->mp_Flags&PF_ACTION.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     WaitPort(), GetMsg()
+`WaitPort()`_ `GetMsg()`_ 
 
+----------
 
-
-RawDoFmt
-========
+RawDoFmt()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -4569,8 +4647,47 @@ Bugs
 
 
 
-ReleaseSemaphoreList
-====================
+----------
+
+ReleaseSemaphore()
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ void ReleaseSemaphore(
+          struct SignalSemaphore * sigSem );
+
+Function
+~~~~~~~~
+::
+
+     Releases a lock on a semaphore obtained with either ObtainSemaphore(),
+     ObtainSemaphoreShared(), AttemptSemaphore or AttemptSemaphoreShared().
+     Each call to one of those functions must be accompanied with one
+     call to ReleasSemaphore().
+
+
+Inputs
+~~~~~~
+::
+
+     sigSem - pointer to semaphore structure
+
+
+Notes
+~~~~~
+::
+
+     This function preserves all registers.
+
+
+
+----------
+
+ReleaseSemaphoreList()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -4594,8 +4711,10 @@ Inputs
 
 
 
-RemDevice
-=========
+----------
+
+RemDevice()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -4619,16 +4738,16 @@ Inputs
      device - Pointer to the device structure.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AddDevice(), OpenDevice(), CloseDevice().
+`AddDevice()`_ `OpenDevice()`_ `CloseDevice()`_ 
 
+----------
 
-
-RemHead
-=======
+RemHead()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -4670,8 +4789,10 @@ Example
 
 
 
-RemIntServer
-============
+----------
+
+RemIntServer()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -4682,8 +4803,10 @@ Synopsis
           struct Interrupt * interrupt );
 
 
-RemLibrary
-==========
+----------
+
+RemLibrary()
+============
 
 Synopsis
 ~~~~~~~~
@@ -4707,16 +4830,16 @@ Inputs
      library - Pointer to the library structure.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AddLibrary(), MakeLibrary(), MakeFunctions(), InitStruct(), SumLibrary().
+`AddLibrary()`_ `MakeLibrary()`_ `MakeFunctions()`_ `InitStruct()`_ `SumLibrary()`_ 
 
+----------
 
-
-RemMemHandler
-=============
+RemMemHandler()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -4740,8 +4863,10 @@ Inputs
 
 
 
-Remove
-======
+----------
+
+Remove()
+========
 
 Synopsis
 ~~~~~~~~
@@ -4783,8 +4908,10 @@ Notes
 
 
 
-RemPort
-=======
+----------
+
+RemPort()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -4810,8 +4937,10 @@ Inputs
 
 
 
-RemResource
-===========
+----------
+
+RemResource()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -4834,16 +4963,16 @@ Inputs
      resource - Pointer to the resource.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AddResource(), OpenResource()
+`AddResource()`_ `OpenResource()`_ 
 
+----------
 
-
-RemSemaphore
-============
+RemSemaphore()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -4875,8 +5004,10 @@ Notes
 
 
 
-RemTail
-=======
+----------
+
+RemTail()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -4918,8 +5049,10 @@ Example
 
 
 
-RemTask
-=======
+----------
+
+RemTask()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -4946,16 +5079,16 @@ Inputs
      task - Task to be removed. NULL means current task.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AddTask()
+`AddTask()`_ 
 
+----------
 
-
-ReplyMsg
-========
+ReplyMsg()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -4979,16 +5112,16 @@ Inputs
      message - a message got with GetMsg().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     WaitPort(), GetMsg(), PutMsg()
+`WaitPort()`_ `GetMsg()`_ `PutMsg()`_ 
 
+----------
 
-
-SendIO
-======
+SendIO()
+========
 
 Synopsis
 ~~~~~~~~
@@ -5013,16 +5146,16 @@ Inputs
      iORequest - Pointer to iorequest structure.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OpenDevice(), CloseDevice(), DoIO(), CheckIO(), AbortIO(), WaitIO()
+`OpenDevice()`_ `CloseDevice()`_ `DoIO()`_ `CheckIO()`_ `AbortIO()`_ `WaitIO()`_ 
 
+----------
 
-
-SetExcept
-=========
+SetExcept()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -5054,16 +5187,16 @@ Result
      Old mask of signals causing a task exception.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AllocSignal(), FreeSignal(), Wait(), SetSignal(), Signal()
+`AllocSignal()`_ `FreeSignal()`_ `Wait()`_ `SetSignal()`_ `Signal()`_ 
 
+----------
 
-
-SetFunction
-===========
+SetFunction()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -5132,16 +5265,16 @@ Bugs
      upper 16 bits. These programs should be fixed.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     MakeLibrary(), MakeFunctions(), SumLibrary().
+`MakeLibrary()`_ `MakeFunctions()`_ `SumLibrary()`_ 
 
+----------
 
-
-SetIntVector
-============
+SetIntVector()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -5152,8 +5285,10 @@ Synopsis
           struct Interrupt * interrupt );
 
 
-SetSignal
-=========
+----------
+
+SetSignal()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -5185,16 +5320,16 @@ Result
      Old signal set.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AllocSignal(), FreeSignal(), Wait(), Signal(), SetExcept()
+`AllocSignal()`_ `FreeSignal()`_ `Wait()`_ `Signal()`_ `SetExcept()`_ 
 
+----------
 
-
-SetSR
-=====
+SetSR()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -5253,8 +5388,10 @@ Bugs
 
 
 
-SetTaskPri
-==========
+----------
+
+SetTaskPri()
+============
 
 Synopsis
 ~~~~~~~~
@@ -5289,8 +5426,10 @@ Result
 
 
 
-Signal
-======
+----------
+
+Signal()
+========
 
 Synopsis
 ~~~~~~~~
@@ -5324,16 +5463,16 @@ Notes
      This function may be used from interrupts.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AllocSignal(), FreeSignal(), Wait(), SetSignal(), SetExcept()
+`AllocSignal()`_ `FreeSignal()`_ `Wait()`_ `SetSignal()`_ `SetExcept()`_ 
 
+----------
 
-
-StackSwap
-=========
+StackSwap()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -5385,16 +5524,16 @@ Notes
      unexpected results.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AddTask(), RemTask()
+`AddTask()`_ `RemTask()`_ 
 
+----------
 
-
-SumKickData
-===========
+SumKickData()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -5403,8 +5542,10 @@ Synopsis
  ULONG SumKickData();
 
 
-SumLibrary
-==========
+----------
+
+SumLibrary()
+============
 
 Synopsis
 ~~~~~~~~
@@ -5429,16 +5570,16 @@ Inputs
      library - Pointer to library structure.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AddLibrary(), RemLibrary(), MakeLibrary(), MakeFunctions(), InitStruct().
+`AddLibrary()`_ `RemLibrary()`_ `MakeLibrary()`_ `MakeFunctions()`_ `InitStruct()`_ 
 
+----------
 
-
-SuperState
-==========
+SuperState()
+============
 
 Synopsis
 ~~~~~~~~
@@ -5486,16 +5627,16 @@ Bugs
      You can easily cause your system to cease operating normally.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     Supervisor(), UserState()
+`Supervisor()`_ `UserState()`_ 
 
+----------
 
-
-Supervisor
-==========
+Supervisor()
+============
 
 Synopsis
 ~~~~~~~~
@@ -5562,16 +5703,16 @@ Bugs
      In fact it is recommended that you do not use it at all.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     SuperState(), UserState()
+`SuperState()`_ `UserState()`_ 
 
+----------
 
-
-Switch
-======
+Switch()
+========
 
 Synopsis
 ~~~~~~~~
@@ -5596,16 +5737,16 @@ Notes
      This function will preserve all its registers.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     Dispatch(), Reschedule()
+`Dispatch()`_ `Reschedule()`_ 
 
+----------
 
-
-TypeOfMem
-=========
+TypeOfMem()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -5637,8 +5778,10 @@ Result
 
 
 
-UserState
-=========
+----------
+
+UserState()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -5668,16 +5811,16 @@ Result
      The system will be back to normal.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     SuperState(), Supervisor()
+`SuperState()`_ `Supervisor()`_ 
 
+----------
 
-
-Vacate
-======
+Vacate()
+========
 
 Synopsis
 ~~~~~~~~
@@ -5705,16 +5848,16 @@ Inputs
      bidMsg - Pointer to struct SemaphoreMessage.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     Procure()
+`Procure()`_ 
 
+----------
 
-
-VNewRawDoFmt
-============
+VNewRawDoFmt()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -5824,8 +5967,10 @@ Bugs
 
 
 
-Wait
-====
+----------
+
+Wait()
+======
 
 Synopsis
 ~~~~~~~~
@@ -5868,16 +6013,16 @@ Notes
      Calling Wait() breaks an active Disable() or Forbid().
 
 
+
 See also
 ~~~~~~~~
-::
 
-     Signal(), SetSignal(), AllocSignal(), FreeSignal()
+`Signal()`_ `SetSignal()`_ `AllocSignal()`_ `FreeSignal()`_ 
 
+----------
 
-
-WaitIO
-======
+WaitIO()
+========
 
 Synopsis
 ~~~~~~~~
@@ -5909,16 +6054,16 @@ Result
      Error state of I/O request.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OpenDevice(), CloseDevice(), DoIO(), SendIO(), AbortIO(), CheckIO()
+`OpenDevice()`_ `CloseDevice()`_ `DoIO()`_ `SendIO()`_ `AbortIO()`_ `CheckIO()`_ 
 
+----------
 
-
-WaitPort
-========
+WaitPort()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -5950,11 +6095,9 @@ Result
      is _not_ removed from the port. GetMsg() does this for you.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     WaitPort(), GetMsg()
-
-
+`WaitPort()`_ `GetMsg()`_ 
 

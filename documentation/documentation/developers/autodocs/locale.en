@@ -9,16 +9,16 @@ locale
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`CloseCatalog`_                         `CloseLocale`_                          `ConvToLower`_                          `ConvToUpper`_                          
-`FormatDate`_                           `FormatString`_                         `GetCatalogStr`_                        `GetLocaleStr`_                         
-`IsXXXX`_                               `OpenCatalogA`_                         `OpenLocale`_                           `ParseDate`_                            
-`RexxHost`_                             `StrConvert`_                           `StrnCmp`_                              
+`CloseCatalog()`_                       `CloseLocale()`_                        `ConvToLower()`_                        `ConvToUpper()`_                        
+`FormatDate()`_                         `FormatString()`_                       `GetCatalogStr()`_                      `GetLocaleStr()`_                       
+`IsXXXX()`_                             `OpenCatalogA()`_                       `OpenLocale()`_                         `ParseDate()`_                          
+`RexxHost()`_                           `StrConvert()`_                         `StrnCmp()`_                            
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-CloseCatalog
-============
+CloseCatalog()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -52,16 +52,16 @@ Result
      application.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetCatalogStr(), OpenCatalog() 
+`GetCatalogStr()`_ `OpenCatalogA()`_ 
 
+----------
 
-
-CloseLocale
-===========
+CloseLocale()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -92,16 +92,16 @@ Result
      The locale is released back to the system.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OpenLocale()
+`OpenLocale()`_ 
 
+----------
 
-
-ConvToLower
-===========
+ConvToLower()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -144,8 +144,10 @@ Notes
 
 
 
-ConvToUpper
-===========
+----------
+
+ConvToUpper()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -187,16 +189,16 @@ Notes
      future multi-byte character sets.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ConvToLower
+`ConvToLower <convtolower>`_ 
 
+----------
 
-
-FormatDate
-==========
+FormatDate()
+============
 
 Synopsis
 ~~~~~~~~
@@ -273,17 +275,16 @@ Inputs
                    * pointer to locale
 
 
+
 See also
 ~~~~~~~~
-::
 
+`ParseDate()`_ <libraries/locale.h> 
 
- ParseDate(), <libraries/locale.h>
+----------
 
-
-
-FormatString
-============
+FormatString()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -296,8 +297,10 @@ Synopsis
           const struct Hook   * putCharFunc );
 
 
-GetCatalogStr
-=============
+----------
+
+GetCatalogStr()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -338,16 +341,16 @@ Result
      pointer is valid as long as the catalog remains open.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OpenCatalog(), CloseCatalog()
+`OpenCatalogA()`_ `CloseCatalog()`_ 
 
+----------
 
-
-GetLocaleStr
-============
+GetLocaleStr()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -385,8 +388,10 @@ Result
 
 
 
-IsXXXX
-======
+----------
+
+IsXXXX()
+========
 
 Synopsis
 ~~~~~~~~
@@ -447,8 +452,10 @@ Notes
 
 
 
-OpenCatalogA
-============
+----------
+
+OpenCatalogA()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -465,8 +472,10 @@ Synopsis
           TAG tag, ... );
 
 
-OpenLocale
-==========
+----------
+
+OpenLocale()
+============
 
 Synopsis
 ~~~~~~~~
@@ -511,16 +520,16 @@ Result
      If you pass NULL, you will always succeed.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CloseLocale()
+`CloseLocale()`_ 
 
+----------
 
-
-ParseDate
-=========
+ParseDate()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -600,16 +609,16 @@ Bugs
      valid strings.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FormatDate()
+`FormatDate()`_ 
 
+----------
 
-
-RexxHost
-========
+RexxHost()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -626,8 +635,10 @@ Function
 
 
 
-StrConvert
-==========
+----------
+
+StrConvert()
+============
 
 Synopsis
 ~~~~~~~~
@@ -677,16 +688,16 @@ Result
      the transformation process minus 1 (for NULL termination).
 
 
+
 See also
 ~~~~~~~~
-::
 
-     StrnCmp()
+`StrnCmp()`_ 
 
+----------
 
-
-StrnCmp
-=======
+StrnCmp()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -757,11 +768,9 @@ Result
          > 0 means   string1 > string2
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OpenLocale(), CloseLocale(), StrConvert().
-
-
+`OpenLocale()`_ `CloseLocale()`_ `StrConvert()`_ 
 

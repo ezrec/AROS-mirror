@@ -9,23 +9,23 @@ hyperlayers
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`BeginUpdate`_                          `BehindLayer`_                          `ChangeLayerShape`_                     `ChangeLayerVisibility`_                
-`CollectPixelsLayer`_                   `CreateBehindHookLayer`_                `CreateBehindLayer`_                    `CreateLayerTagList`_                   
-`CreateUpfrontHookLayer`_               `CreateUpfrontLayer`_                   `DeleteLayer`_                          `DisposeLayerInfo`_                     
-`DoHookClipRects`_                      `EndUpdate`_                            `FattenLayerInfo`_                      `GetFirstFamilyMember`_                 
-`InitLayers`_                           `InstallClipRegion`_                    `InstallLayerHook`_                     `InstallLayerInfoHook`_                 
-`IsFrontmostLayer`_                     `IsLayerHiddenBySibling`_               `IsLayerVisible`_                       `LockLayer`_                            
-`LockLayerInfo`_                        `LockLayers`_                           `MoveLayer`_                            `MoveLayerInFrontOf`_                   
-`MoveSizeLayer`_                        `NewLayerInfo`_                         `ScaleLayer`_                           `ScrollLayer`_                          
-`SizeLayer`_                            `SortLayerCR`_                          `SwapBitsRastPortClipRect`_             `ThinLayerInfo`_                        
-`UnlockLayer`_                          `UnlockLayerInfo`_                      `UnlockLayers`_                         `UpfrontLayer`_                         
-`WhichLayer`_                           
+`BeginUpdate()`_                        `BehindLayer()`_                        `ChangeLayerShape()`_                   `ChangeLayerVisibility()`_              
+`CollectPixelsLayer()`_                 `CreateBehindHookLayer()`_              `CreateBehindLayer()`_                  `CreateLayerTagList()`_                 
+`CreateUpfrontHookLayer()`_             `CreateUpfrontLayer()`_                 `DeleteLayer()`_                        `DisposeLayerInfo()`_                   
+`DoHookClipRects()`_                    `EndUpdate()`_                          `FattenLayerInfo()`_                    `GetFirstFamilyMember()`_               
+`InitLayers()`_                         `InstallClipRegion()`_                  `InstallLayerHook()`_                   `InstallLayerInfoHook()`_               
+`IsFrontmostLayer()`_                   `IsLayerHiddenBySibling()`_             `IsLayerVisible()`_                     `LockLayer()`_                          
+`LockLayerInfo()`_                      `LockLayers()`_                         `MoveLayer()`_                          `MoveLayerInFrontOf()`_                 
+`MoveSizeLayer()`_                      `NewLayerInfo()`_                       `ScaleLayer()`_                         `ScrollLayer()`_                        
+`SizeLayer()`_                          `SortLayerCR()`_                        `SwapBitsRastPortClipRect()`_           `ThinLayerInfo()`_                      
+`UnlockLayer()`_                        `UnlockLayerInfo()`_                    `UnlockLayers()`_                       `UpfrontLayer()`_                       
+`WhichLayer()`_                         
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-BeginUpdate
-===========
+BeginUpdate()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -61,16 +61,16 @@ Result
      FALSE if list could not be converted.
 
 
+
 See also
 ~~~~~~~~
-::
 
-   EndUpdate()
+`EndUpdate()`_ 
 
+----------
 
-
-BehindLayer
-===========
+BehindLayer()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -109,8 +109,10 @@ Result
 
 
 
-ChangeLayerShape
-================
+----------
+
+ChangeLayerShape()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -157,8 +159,10 @@ Result
 
 
 
-ChangeLayerVisibility
-=====================
+----------
+
+ChangeLayerVisibility()
+=======================
 
 Synopsis
 ~~~~~~~~
@@ -194,8 +198,10 @@ Result
 
 
 
-CollectPixelsLayer
-==================
+----------
+
+CollectPixelsLayer()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -231,8 +237,10 @@ Inputs
 
 
 
-CreateBehindHookLayer
-=====================
+----------
+
+CreateBehindHookLayer()
+=======================
 
 Synopsis
 ~~~~~~~~
@@ -303,8 +311,10 @@ Notes
 
 
 
-CreateBehindLayer
-=================
+----------
+
+CreateBehindLayer()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -321,8 +331,10 @@ Synopsis
           struct BitMap     * bm2 );
 
 
-CreateLayerTagList
-==================
+----------
+
+CreateLayerTagList()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -405,8 +417,10 @@ Result
      
 
 
-CreateUpfrontHookLayer
-======================
+----------
+
+CreateUpfrontHookLayer()
+========================
 
 Synopsis
 ~~~~~~~~
@@ -476,8 +490,10 @@ Notes
 
 
 
-CreateUpfrontLayer
-==================
+----------
+
+CreateUpfrontLayer()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -494,8 +510,10 @@ Synopsis
           struct BitMap     * bm2 );
 
 
-DeleteLayer
-===========
+----------
+
+DeleteLayer()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -532,8 +550,10 @@ Result
 
 
 
-DisposeLayerInfo
-================
+----------
+
+DisposeLayerInfo()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -543,8 +563,10 @@ Synopsis
           struct Layer_Info * li );
 
 
-DoHookClipRects
-===============
+----------
+
+DoHookClipRects()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -571,8 +593,10 @@ Inputs
 
 
 
-EndUpdate
-=========
+----------
+
+EndUpdate()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -607,16 +631,16 @@ Bugs
    not tested
 
 
+
 See also
 ~~~~~~~~
-::
 
-      BeginUpdate()
+`BeginUpdate()`_ 
 
+----------
 
-
-FattenLayerInfo
-===============
+FattenLayerInfo()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -626,8 +650,10 @@ Synopsis
           struct Layer_Info * li );
 
 
-GetFirstFamilyMember
-====================
+----------
+
+GetFirstFamilyMember()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -664,8 +690,10 @@ Result
      
 
 
-InitLayers
-==========
+----------
+
+InitLayers()
+============
 
 Synopsis
 ~~~~~~~~
@@ -696,16 +724,16 @@ Notes
      This function is obsolete. Use NewLayerInfo() instead.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     NewLayerInfo
+`NewLayerInfo()`_ 
 
+----------
 
-
-InstallClipRegion
-=================
+InstallClipRegion()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -736,8 +764,10 @@ Inputs
 
 
 
-InstallLayerHook
-================
+----------
+
+InstallLayerHook()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -764,8 +794,10 @@ Inputs
 
 
 
-InstallLayerInfoHook
-====================
+----------
+
+InstallLayerInfoHook()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -811,8 +843,10 @@ Notes
 
 
 
-IsFrontmostLayer
-================
+----------
+
+IsFrontmostLayer()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -853,8 +887,10 @@ Result
 
 
 
-IsLayerHiddenBySibling
-======================
+----------
+
+IsLayerHiddenBySibling()
+========================
 
 Synopsis
 ~~~~~~~~
@@ -892,8 +928,10 @@ Result
 
 
 
-IsLayerVisible
-==============
+----------
+
+IsLayerVisible()
+================
 
 Synopsis
 ~~~~~~~~
@@ -925,8 +963,10 @@ Result
 
 
 
-LockLayer
-=========
+----------
+
+LockLayer()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -954,8 +994,10 @@ Inputs
 
 
 
-LockLayerInfo
-=============
+----------
+
+LockLayerInfo()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -965,8 +1007,10 @@ Synopsis
           struct Layer_Info * li );
 
 
-LockLayers
-==========
+----------
+
+LockLayers()
+============
 
 Synopsis
 ~~~~~~~~
@@ -992,8 +1036,10 @@ Inputs
 
 
 
-MoveLayer
-=========
+----------
+
+MoveLayer()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -1033,8 +1079,10 @@ Result
 
 
 
-MoveLayerInFrontOf
-==================
+----------
+
+MoveLayerInFrontOf()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -1077,8 +1125,10 @@ Result
 
 
 
-MoveSizeLayer
-=============
+----------
+
+MoveSizeLayer()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -1122,8 +1172,10 @@ Result
 
 
 
-NewLayerInfo
-============
+----------
+
+NewLayerInfo()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -1132,8 +1184,10 @@ Synopsis
  struct Layer_Info * NewLayerInfo();
 
 
-ScaleLayer
-==========
+----------
+
+ScaleLayer()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1173,8 +1227,10 @@ Result
 
 
 
-ScrollLayer
-===========
+----------
+
+ScrollLayer()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1217,8 +1273,10 @@ Bugs
 
 
 
-SizeLayer
-=========
+----------
+
+SizeLayer()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -1262,8 +1320,10 @@ Result
 
 
 
-SortLayerCR
-===========
+----------
+
+SortLayerCR()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1299,8 +1359,10 @@ Result
 
 
 
-SwapBitsRastPortClipRect
-========================
+----------
+
+SwapBitsRastPortClipRect()
+==========================
 
 Synopsis
 ~~~~~~~~
@@ -1311,8 +1373,10 @@ Synopsis
           struct ClipRect * cr );
 
 
-ThinLayerInfo
-=============
+----------
+
+ThinLayerInfo()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -1322,8 +1386,10 @@ Synopsis
           struct Layer_Info * li );
 
 
-UnlockLayer
-===========
+----------
+
+UnlockLayer()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1349,8 +1415,10 @@ Inputs
 
 
 
-UnlockLayerInfo
-===============
+----------
+
+UnlockLayerInfo()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -1360,8 +1428,10 @@ Synopsis
           struct Layer_Info * li );
 
 
-UnlockLayers
-============
+----------
+
+UnlockLayers()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -1386,8 +1456,10 @@ Inputs
 
 
 
-UpfrontLayer
-============
+----------
+
+UpfrontLayer()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -1425,17 +1497,16 @@ Result
      FALSE - layer could not be moved (probably out of memory)
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateUpfrontLayer() CreateUpfrontHookLayer() BehindLayer()
-     CreateBehindLayer() CreateBehindHookLayer()
+`CreateUpfrontLayer()`_ `CreateUpfrontHookLayer()`_ `BehindLayer()`_ `CreateBehindLayer()`_ `CreateBehindHookLayer()`_ 
 
+----------
 
-
-WhichLayer
-==========
+WhichLayer()
+============
 
 Synopsis
 ~~~~~~~~

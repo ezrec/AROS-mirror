@@ -9,18 +9,18 @@ expansion
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AddBootNode`_                          `AddConfigDev`_                         `AddDosNode`_                           `AllocBoardMem`_                        
-`AllocConfigDev`_                       `AllocExpansionMem`_                    `ConfigBoard`_                          `ConfigChain`_                          
-`FindConfigDev`_                        `FreeBoardMem`_                         `FreeConfigDev`_                        `FreeExpansionMem`_                     
-`GetCurrentBinding`_                    `MakeDosNode`_                          `ObtainConfigBinding`_                  `ReadExpansionByte`_                    
-`ReadExpansionRom`_                     `ReleaseConfigBinding`_                 `RemConfigDev`_                         `SetCurrentBinding`_                    
-`WriteExpansionByte`_                   
+`AddBootNode()`_                        `AddConfigDev()`_                       `AddDosNode()`_                         `AllocBoardMem()`_                      
+`AllocConfigDev()`_                     `AllocExpansionMem()`_                  `ConfigBoard()`_                        `ConfigChain()`_                        
+`FindConfigDev()`_                      `FreeBoardMem()`_                       `FreeConfigDev()`_                      `FreeExpansionMem()`_                   
+`GetCurrentBinding()`_                  `MakeDosNode()`_                        `ObtainConfigBinding()`_                `ReadExpansionByte()`_                  
+`ReadExpansionRom()`_                   `ReleaseConfigBinding()`_               `RemConfigDev()`_                       `SetCurrentBinding()`_                  
+`WriteExpansionByte()`_                 
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-AddBootNode
-===========
+AddBootNode()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -114,16 +114,16 @@ Notes
      field of the BootNode structure.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AddDosNode()
+`AddDosNode()`_ 
 
+----------
 
-
-AddConfigDev
-============
+AddConfigDev()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -155,16 +155,16 @@ Result
      The device will be added to the system.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     RemConfigDev
+`RemConfigDev()`_ 
 
+----------
 
-
-AddDosNode
-==========
+AddDosNode()
+============
 
 Synopsis
 ~~~~~~~~
@@ -223,16 +223,16 @@ Notes
      construct the BootNode structure, and add it to the system.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AddBootNode(), MakeDosNode()
+`AddBootNode()`_ `MakeDosNode()`_ 
 
+----------
 
-
-AllocBoardMem
-=============
+AllocBoardMem()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -242,8 +242,10 @@ Synopsis
           ULONG slotSpec );
 
 
-AllocConfigDev
-==============
+----------
+
+AllocConfigDev()
+================
 
 Synopsis
 ~~~~~~~~
@@ -275,16 +277,16 @@ Result
      A newly created ConfigDev structure.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FreeConfigDev()
+`FreeConfigDev()`_ 
 
+----------
 
-
-AllocExpansionMem
-=================
+AllocExpansionMem()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -295,8 +297,10 @@ Synopsis
           ULONG slotAlign );
 
 
-ConfigBoard
-===========
+----------
+
+ConfigBoard()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -307,8 +311,10 @@ Synopsis
           struct ConfigDev * configDev );
 
 
-ConfigChain
-===========
+----------
+
+ConfigChain()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -318,8 +324,10 @@ Synopsis
           APTR baseAddr );
 
 
-FindConfigDev
-=============
+----------
+
+FindConfigDev()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -381,8 +389,10 @@ Example
 
 
 
-FreeBoardMem
-============
+----------
+
+FreeBoardMem()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -393,8 +403,10 @@ Synopsis
           ULONG slotSpec );
 
 
-FreeConfigDev
-=============
+----------
+
+FreeConfigDev()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -425,16 +437,16 @@ Result
      The memory will be returned to the system.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AllocConfigDev()
+`AllocConfigDev()`_ 
 
+----------
 
-
-FreeExpansionMem
-================
+FreeExpansionMem()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -445,8 +457,10 @@ Synopsis
           ULONG numSlots );
 
 
-GetCurrentBinding
-=================
+----------
+
+GetCurrentBinding()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -492,16 +506,16 @@ Result
      The size of the CurrentBinding structure returned.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     SetCurrentBinding()
+`SetCurrentBinding()`_ 
 
+----------
 
-
-MakeDosNode
-===========
+MakeDosNode()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -586,16 +600,16 @@ Notes
      should fill these in yourself.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AddBootNode(), AddDosNode(), dos/MakeDosEntry()
+`AddBootNode()`_ `AddDosNode()`_ `dos.library/MakeDosEntry() <./dos#makedosentry>`_ 
 
+----------
 
-
-ObtainConfigBinding
-===================
+ObtainConfigBinding()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -635,16 +649,16 @@ Result
      as quickly as you can.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReleaseConfigBinding()
+`ReleaseConfigBinding()`_ 
 
+----------
 
-
-ReadExpansionByte
-=================
+ReadExpansionByte()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -655,8 +669,10 @@ Synopsis
           ULONG offset );
 
 
-ReadExpansionRom
-================
+----------
+
+ReadExpansionRom()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -667,8 +683,10 @@ Synopsis
           struct ConfigDev * configDev );
 
 
-ReleaseConfigBinding
-====================
+----------
+
+ReleaseConfigBinding()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -681,7 +699,7 @@ Function
 ::
 
      This function will release the lock obtained by
-     ObtainCurrentBinding(). It will release the SignalSemaphore,
+     ObtainConfigBinding(). It will release the SignalSemaphore,
      and allow others to bind to drivers.
 
 
@@ -699,16 +717,16 @@ Result
      None.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ObtainCurrentBinding()
+`ObtainConfigBinding()`_ 
 
+----------
 
-
-RemConfigDev
-============
+RemConfigDev()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -739,16 +757,16 @@ Result
      The ConfigDev structure will be removed from the systems list.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AddConfigDev()
+`AddConfigDev()`_ 
 
+----------
 
-
-SetCurrentBinding
-=================
+SetCurrentBinding()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -794,16 +812,16 @@ Result
      The size of the CurrentBinding structure set.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     GetCurrentBinding()
+`GetCurrentBinding()`_ 
 
+----------
 
-
-WriteExpansionByte
-==================
+WriteExpansionByte()
+====================
 
 Synopsis
 ~~~~~~~~

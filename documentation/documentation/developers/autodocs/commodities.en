@@ -9,20 +9,20 @@ commodities
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`ActivateCxObj`_                        `AddIEvents`_                           `AttachCxObj`_                          `BrokerCommand`_                        
-`ClearCxObjError`_                      `CopyBrokerList`_                       `CreateCxObj`_                          `CxBroker`_                             
-`CxMsgData`_                            `CxMsgID`_                              `CxMsgType`_                            `CxObjError`_                           
-`CxObjType`_                            `DeleteCxObj`_                          `DeleteCxObjAll`_                       `DisposeCxMsg`_                         
-`DivertCxMsg`_                          `EnqueueCxObj`_                         `FreeBrokerList`_                       `InsertCxObj`_                          
-`InvertKeyMap`_                         `MatchIX`_                              `ParseIX`_                              `RemoveCxObj`_                          
-`RouteCxMsg`_                           `SetCxObjPri`_                          `SetFilter`_                            `SetFilterIX`_                          
-`SetTranslate`_                         
+`ActivateCxObj()`_                      `AddIEvents()`_                         `AttachCxObj()`_                        `BrokerCommand()`_                      
+`ClearCxObjError()`_                    `CopyBrokerList()`_                     `CreateCxObj()`_                        `CxBroker()`_                           
+`CxMsgData()`_                          `CxMsgID()`_                            `CxMsgType()`_                          `CxObjError()`_                         
+`CxObjType()`_                          `DeleteCxObj()`_                        `DeleteCxObjAll()`_                     `DisposeCxMsg()`_                       
+`DivertCxMsg()`_                        `EnqueueCxObj()`_                       `FreeBrokerList()`_                     `InsertCxObj()`_                        
+`InvertKeyMap()`_                       `MatchIX()`_                            `ParseIX()`_                            `RemoveCxObj()`_                        
+`RouteCxMsg()`_                         `SetCxObjPri()`_                        `SetFilter()`_                          `SetFilterIX()`_                        
+`SetTranslate()`_                       
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-ActivateCxObj
-=============
+ActivateCxObj()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -65,17 +65,16 @@ Result
  also returned if 'co' was NULL.)
 
 
+
 See also
 ~~~~~~~~
-::
 
+`CxBroker()`_ 
 
- CxBroker()
+----------
 
-
-
-AddIEvents
-==========
+AddIEvents()
+============
 
 Synopsis
 ~~~~~~~~
@@ -102,8 +101,10 @@ Inputs
 
 
 
-AttachCxObj
-===========
+----------
+
+AttachCxObj()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -142,17 +143,16 @@ Result
  'headObj'.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`CxObjError()`_ `ClearCxObjError()`_ 
 
- CxObjError(), ClearCxObjError()
+----------
 
-
-
-BrokerCommand
-=============
+BrokerCommand()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -199,8 +199,10 @@ Notes
 
 
 
-ClearCxObjError
-===============
+----------
+
+ClearCxObjError()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -236,17 +238,16 @@ Notes
  or don't change the error value.
  
 
+
 See also
 ~~~~~~~~
-::
 
+`CxObjError()`_ 
 
- CxObjError()
+----------
 
-
-
-CopyBrokerList
-==============
+CopyBrokerList()
+================
 
 Synopsis
 ~~~~~~~~
@@ -289,8 +290,10 @@ Notes
 
 
 
-CreateCxObj
-===========
+----------
+
+CreateCxObj()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -345,19 +348,16 @@ Notes
  objects and so on).
 
 
+
 See also
 ~~~~~~~~
-::
 
+`CxObjError()`_ `CxBroker()`_ cx_lib/CxSender() cx_lib/CxSignal() cx_lib/CxFilter() cx_lib/CxTranslate() cx_lib/CxCustom() cx_lib/CxDebug() 
 
- CxObjError(), CxBroker(), cx_lib/CxSender(), cx_lib/CxSignal(),
- cx_lib/CxFilter(), cx_lib/CxTranslate() cx_lib/CxCustom(),
- cx_lib/CxDebug()
+----------
 
-
-
-CxBroker
-========
+CxBroker()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -408,17 +408,16 @@ Result
                     library
 
 
+
 See also
 ~~~~~~~~
-::
 
+`SetCxObjPri()`_ <libraries/commodities.h> 
 
- SetCxObjPri(), <libraries/commodities.h>
+----------
 
-
-
-CxMsgData
-=========
+CxMsgData()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -454,17 +453,16 @@ Result
  of the data depends on the type of the message.
 
 
+
 See also
 ~~~~~~~~
-::
 
+cx_lib/CxSender() cx_lib/CxCustom() 
 
- cx_lib/CxSender(), cx_lib/CxCustom()
+----------
 
-
-
-CxMsgID
-=======
+CxMsgID()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -499,17 +497,16 @@ Result
  is 0.
 
 
+
 See also
 ~~~~~~~~
-::
 
+cx_lib/CxSender() cx_lib/CxCustom() 
 
- cx_lib/CxSender(), cx_lib/CxCustom()
+----------
 
-
-
-CxMsgType
-=========
+CxMsgType()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -545,8 +542,10 @@ Result
 
 
 
-CxObjError
-==========
+----------
+
+CxObjError()
+============
 
 Synopsis
 ~~~~~~~~
@@ -580,17 +579,16 @@ Result
  for the possible errors.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`ClearCxObjError()`_ 
 
- ClearCxObjError()
+----------
 
-
-
-CxObjType
-=========
+CxObjType()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -624,17 +622,16 @@ Result
  possible types. If 'co' is NULL, CX_INVALID is returned.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`CreateCxObj()`_ 
 
- CreateCxObj()
+----------
 
-
-
-DeleteCxObj
-===========
+DeleteCxObj()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -672,17 +669,16 @@ Notes
  DeleteCxObjAll() function.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`DeleteCxObjAll()`_   
 
- DeleteCxObjAll(), 
+----------
 
-
-
-DeleteCxObjAll
-==============
+DeleteCxObjAll()
+================
 
 Synopsis
 ~~~~~~~~
@@ -717,17 +713,16 @@ Notes
  The handle 'co' is invalid after the operation.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`DeleteCxObj()`_ 
 
- DeleteCxObj()
+----------
 
-
-
-DisposeCxMsg
-============
+DisposeCxMsg()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -766,8 +761,10 @@ Notes
 
 
 
-DivertCxMsg
-===========
+----------
+
+DivertCxMsg()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -811,17 +808,16 @@ Example
      DivertCxMsg(msg, filter, filter);
 
 
+
 See also
 ~~~~~~~~
-::
 
+`RouteCxMsg()`_ 
 
- RouteCxMsg()
+----------
 
-
-
-EnqueueCxObj
-============
+EnqueueCxObj()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -870,18 +866,16 @@ Notes
  a FIFO queue.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`SetCxObjPri()`_ `CxObjError()`_ `ClearCxObjError()`_ <libraries/commodities.h> 
 
- SetCxObjPri(), CxObjError(), ClearCxObjError(),
- <libraries/commodities.h>
+----------
 
-
-
-FreeBrokerList
-==============
+FreeBrokerList()
+================
 
 Synopsis
 ~~~~~~~~
@@ -915,17 +909,16 @@ Notes
  This function is present in AmigaOS too, but undocumented.
 
 
+
 See also
 ~~~~~~~~
-::
 
+cxintern.h 
 
- cxintern.h
+----------
 
-
-
-InsertCxObj
-===========
+InsertCxObj()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -967,17 +960,16 @@ Result
  in the list.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`CxObjError()`_ `ClearCxObjError()`_ 
 
- CxObjError(), ClearCxObjError()
+----------
 
-
-
-InvertKeyMap
-============
+InvertKeyMap()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -1027,17 +1019,16 @@ Bugs
  look up the high key map (keycodes with scan codes greater than 0x40).
 
 
+
 See also
 ~~~~~~~~
-::
 
+cx_lib/InvertString() 
 
- cx_lib/InvertString()
+----------
 
-
-
-MatchIX
-=======
+MatchIX()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -1082,17 +1073,16 @@ Notes
  nice to have.
 
 
+
 See also
 ~~~~~~~~
-::
 
+<libraries/commodities.h> `ParseIX()`_ 
 
- <libraries/commodities.h>, ParseIX()
+----------
 
-
-
-ParseIX
-=======
+ParseIX()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -1138,17 +1128,16 @@ Result
  -2  --  'desc' was NULL
 
 
+
 See also
 ~~~~~~~~
-::
 
+`MatchIX()`_ <libraries/commodities.h> 
 
- MatchIX(), <libraries/commodities.h>
+----------
 
-
-
-RemoveCxObj
-===========
+RemoveCxObj()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1174,17 +1163,16 @@ Inputs
  co  --  the commodity object to remove (may be NULL)
 
 
+
 See also
 ~~~~~~~~
-::
 
+`AttachCxObj()`_ `EnqueueCxObj()`_ `InsertCxObj()`_ 
 
- AttachCxObj(), EnqueueCxObj(), InsertCxObj()
+----------
 
-
-
-RouteCxMsg
-==========
+RouteCxMsg()
+============
 
 Synopsis
 ~~~~~~~~
@@ -1213,17 +1201,16 @@ Inputs
  co   -  the commodity object to route the message to (may NOT be NULL)
 
 
+
 See also
 ~~~~~~~~
-::
 
+`DivertCxMsg()`_ 
 
- DivertCxMsg()
+----------
 
-
-
-SetCxObjPri
-===========
+SetCxObjPri()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1272,17 +1259,16 @@ Bugs
  EnqueueCxObj().
 
 
+
 See also
 ~~~~~~~~
-::
 
+`EnqueueCxObj()`_ 
 
- EnqueueCxObj()
+----------
 
-
-
-SetFilter
-=========
+SetFilter()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -1318,17 +1304,16 @@ Result
  the success or failure of the operation.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`SetFilterIX()`_ `CxObjError()`_ 
 
- SetFilterIX(), CxObjError()
+----------
 
-
-
-SetFilterIX
-===========
+SetFilterIX()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -1375,17 +1360,16 @@ Notes
  the IX structure is used.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`SetFilter()`_ `CxObjError()`_ <libraries/commodities.h> 
 
- SetFilter(), CxObjError(), <libraries/commodities.h>
+----------
 
-
-
-SetTranslate
-============
+SetTranslate()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -1426,12 +1410,9 @@ Notes
  in any way corrupt the chain.
 
 
+
 See also
 ~~~~~~~~
-::
 
-
- cx_lib/CxTranslate(), <devices/inputevent.h>
-
-
+cx_lib/CxTranslate() <devices/inputevent.h> 
 

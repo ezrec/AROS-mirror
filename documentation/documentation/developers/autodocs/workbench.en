@@ -9,17 +9,17 @@ workbench
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AddAppIconA`_                          `AddAppMenuItemA`_                      `AddAppWindowA`_                        `AddAppWindowDropZoneA`_                
-`ChangeWorkbenchSelectionA`_            `CloseWorkbenchObjectA`_                `GetNextAppIcon`_                       `MakeWorkbenchObjectVisibleA`_          
-`OpenWorkbenchObjectA`_                 `RegisterWorkbench`_                    `RemoveAppIcon`_                        `RemoveAppMenuItem`_                    
-`RemoveAppWindow`_                      `RemoveAppWindowDropZone`_              `SendAppWindowMessage`_                 `UnregisterWorkbench`_                  
-`UpdateWorkbenchObjectA`_               `WBInfo`_                               `WorkbenchControlA`_                    
+`AddAppIconA()`_                        `AddAppMenuItemA()`_                    `AddAppWindowA()`_                      `AddAppWindowDropZoneA()`_              
+`ChangeWorkbenchSelectionA()`_          `CloseWorkbenchObjectA()`_              `GetNextAppIcon()`_                     `MakeWorkbenchObjectVisibleA()`_        
+`OpenWorkbenchObjectA()`_               `RegisterWorkbench()`_                  `RemoveAppIcon()`_                      `RemoveAppMenuItem()`_                  
+`RemoveAppWindow()`_                    `RemoveAppWindowDropZone()`_            `SendAppWindowMessage()`_               `UnregisterWorkbench()`_                
+`UpdateWorkbenchObjectA()`_             `WBInfo()`_                             `WorkbenchControlA()`_                  
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-AddAppIconA
-===========
+AddAppIconA()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -216,17 +216,16 @@ Notes
  application running.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`RemoveAppIcon()`_ `WorkbenchControlA()`_ `icon.library/DrawIconStateA() <./icon#drawiconstatea>`_ 
 
- RemoveAppIcon(), WorkbenchControlA(), DrawIconStateA()
+----------
 
-
-
-AddAppMenuItemA
-===============
+AddAppMenuItemA()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -298,17 +297,16 @@ Notes
  is no running workbench application.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`RemoveAppMenuItem()`_ 
 
- RemoveAppMenuItem()
+----------
 
-
-
-AddAppWindowA
-=============
+AddAppWindowA()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -375,17 +373,16 @@ Notes
  is no running workbench application.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`AddAppWindowDropZoneA()`_ `RemoveAppWindow()`_ 
 
- AddAppWindowDropZoneA(), RemoveAppWindow()
+----------
 
-
-
-AddAppWindowDropZoneA
-=====================
+AddAppWindowDropZoneA()
+=======================
 
 Synopsis
 ~~~~~~~~
@@ -498,8 +495,10 @@ Notes
 
 
 
-ChangeWorkbenchSelectionA
-=========================
+----------
+
+ChangeWorkbenchSelectionA()
+===========================
 
 Synopsis
 ~~~~~~~~
@@ -516,8 +515,10 @@ Synopsis
           TAG tag, ... );
 
 
-CloseWorkbenchObjectA
-=====================
+----------
+
+CloseWorkbenchObjectA()
+=======================
 
 Synopsis
 ~~~~~~~~
@@ -532,8 +533,10 @@ Synopsis
           TAG tag, ... );
 
 
-GetNextAppIcon
-==============
+----------
+
+GetNextAppIcon()
+================
 
 Synopsis
 ~~~~~~~~
@@ -594,17 +597,16 @@ Example
 
 
 
+
 See also
 ~~~~~~~~
-::
 
+`AddAppIconA()`_ `RemoveAppIcon()`_ `WorkbenchControlA()`_ `icon.library/DrawIconStateA() <./icon#drawiconstatea>`_ 
 
- AddAppIconA(), RemoveAppIcon(), WorkbenchControlA(), DrawIconStateA()
+----------
 
-
-
-MakeWorkbenchObjectVisibleA
-===========================
+MakeWorkbenchObjectVisibleA()
+=============================
 
 Synopsis
 ~~~~~~~~
@@ -619,8 +621,10 @@ Synopsis
           TAG tag, ... );
 
 
-OpenWorkbenchObjectA
-====================
+----------
+
+OpenWorkbenchObjectA()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -635,8 +639,10 @@ Synopsis
           TAG tag, ... );
 
 
-RegisterWorkbench
-=================
+----------
+
+RegisterWorkbench()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -705,16 +711,16 @@ Notes
      the GUI, not a program that is started using OpenWorkbenchObjectA()!
 
 
+
 See also
 ~~~~~~~~
-::
 
-     UnregisterWorkbench()
+`UnregisterWorkbench()`_ 
 
+----------
 
-
-RemoveAppIcon
-=============
+RemoveAppIcon()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -757,17 +763,16 @@ Notes
  this function.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`AddAppIconA()`_ 
 
- AddAppIcon()
+----------
 
-
-
-RemoveAppMenuItem
-=================
+RemoveAppMenuItem()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -810,17 +815,16 @@ Notes
  and the call to this function.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`AddAppMenuItemA()`_ 
 
- AddAppMenuItem()
+----------
 
-
-
-RemoveAppWindow
-===============
+RemoveAppWindow()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -866,17 +870,16 @@ Notes
  Thus there is no need to call RemoveAppWindowDropZone() explicitly.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`AddAppWindowA()`_ `RemoveAppWindowDropZone()`_ 
 
- AddAppWindow(), RemoveAppWindowDropZone()
+----------
 
-
-
-RemoveAppWindowDropZone
-=======================
+RemoveAppWindowDropZone()
+=========================
 
 Synopsis
 ~~~~~~~~
@@ -929,8 +932,10 @@ Notes
 
 
 
-SendAppWindowMessage
-====================
+----------
+
+SendAppWindowMessage()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -984,8 +989,10 @@ Example
 
 
 
-UnregisterWorkbench
-===================
+----------
+
+UnregisterWorkbench()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -1029,16 +1036,16 @@ Notes
      is started from Workbench!
 
 
+
 See also
 ~~~~~~~~
-::
 
-     RegisterWorkbench()
+`RegisterWorkbench()`_ 
 
+----------
 
-
-UpdateWorkbenchObjectA
-======================
+UpdateWorkbenchObjectA()
+========================
 
 Synopsis
 ~~~~~~~~
@@ -1091,8 +1098,10 @@ Bugs
 
 
 
-WBInfo
-======
+----------
+
+WBInfo()
+========
 
 Synopsis
 ~~~~~~~~
@@ -1104,8 +1113,10 @@ Synopsis
           struct Screen * screen );
 
 
-WorkbenchControlA
-=================
+----------
+
+WorkbenchControlA()
+===================
 
 Synopsis
 ~~~~~~~~

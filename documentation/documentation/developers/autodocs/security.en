@@ -9,24 +9,24 @@ security
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`secAccess_Control`_                    `secAddMonitor`_                        `secAllocGroupInfo`_                    `secAllocUserInfo`_                     
-`secCheckPasswd`_                       `secContextLocate`_                     `secEnumChildren`_                      `secFreeExtOwner`_                      
-`secFreeGroupInfo`_                     `secFreeUserInfo`_                      `secFreeze`_                            `secGetConfigDirLock`_                  
-`secGetDefProtection`_                  `secgetgid`_                            `secGetGroupInfo`_                      `secGetPasswdDirLock`_                  
-`secgetpgid`_                           `secGetPktDefProtection`_               `secGetPktOwner`_                       `secGetRelationshipA`_                  
-`secGetTaskExtOwner`_                   `secGetTaskOwner`_                      `secgetuid`_                            `secGetUserInfo`_                       
-`secKill`_                              `secLimitDOSSetProtection`_             `secLoadPlugin`_                        `secLocksecBase`_                       
-`secLoginA`_                            `secLogout`_                            `secPasswd`_                            `secPluginOperationComplete`_           
-`secRegisterHandler`_                   `secRemMonitor`_                        `secSetDefProtectionA`_                 `secsetegid`_                           
-`secseteuid`_                           `secsetgid`_                            `secSetProtection`_                     `secsetreuid`_                          
-`secsetuid`_                            `secUnfreeze`_                          `secUnloadPlugin`_                      `secUnlocksecBase`_                     
-`secUnRegisterHandler`_                 `secUserInfo2ExtOwner`_                 
+`secAccess_Control()`_                  `secAddMonitor()`_                      `secAllocGroupInfo()`_                  `secAllocUserInfo()`_                   
+`secCheckPasswd()`_                     `secContextLocate()`_                   `secEnumChildren()`_                    `secFreeExtOwner()`_                    
+`secFreeGroupInfo()`_                   `secFreeUserInfo()`_                    `secFreeze()`_                          `secGetConfigDirLock()`_                
+`secGetDefProtection()`_                `secgetgid()`_                          `secGetGroupInfo()`_                    `secGetPasswdDirLock()`_                
+`secgetpgid()`_                         `secGetPktDefProtection()`_             `secGetPktOwner()`_                     `secGetRelationshipA()`_                
+`secGetTaskExtOwner()`_                 `secGetTaskOwner()`_                    `secgetuid()`_                          `secGetUserInfo()`_                     
+`secKill()`_                            `secLimitDOSSetProtection()`_           `secLoadPlugin()`_                      `secLocksecBase()`_                     
+`secLoginA()`_                          `secLogout()`_                          `secPasswd()`_                          `secPluginOperationComplete()`_         
+`secRegisterHandler()`_                 `secRemMonitor()`_                      `secSetDefProtectionA()`_               `secsetegid()`_                         
+`secseteuid()`_                         `secsetgid()`_                          `secSetProtection()`_                   `secsetreuid()`_                        
+`secsetuid()`_                          `secUnfreeze()`_                        `secUnloadPlugin()`_                    `secUnlocksecBase()`_                   
+`secUnRegisterHandler()`_               `secUserInfo2ExtOwner()`_               
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-secAccess_Control
-=================
+secAccess_Control()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -39,8 +39,10 @@ Synopsis
           ULONG prot );
 
 
-secAddMonitor
-=============
+----------
+
+secAddMonitor()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -50,8 +52,10 @@ Synopsis
           struct secMonitor * monitor );
 
 
-secAllocGroupInfo
-=================
+----------
+
+secAllocGroupInfo()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -60,8 +64,10 @@ Synopsis
  struct muGroupInfo * secAllocGroupInfo();
 
 
-secAllocUserInfo
-================
+----------
+
+secAllocUserInfo()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -70,8 +76,10 @@ Synopsis
  struct muUserInfo * secAllocUserInfo();
 
 
-secCheckPasswd
-==============
+----------
+
+secCheckPasswd()
+================
 
 Synopsis
 ~~~~~~~~
@@ -84,8 +92,10 @@ Synopsis
           TAG tag, ... );
 
 
-secContextLocate
-================
+----------
+
+secContextLocate()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -98,8 +108,10 @@ Synopsis
           ULONG size );
 
 
-secEnumChildren
-===============
+----------
+
+secEnumChildren()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -111,8 +123,10 @@ Synopsis
           LONG size );
 
 
-secFreeExtOwner
-===============
+----------
+
+secFreeExtOwner()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -122,8 +136,10 @@ Synopsis
           struct secExtOwner * info );
 
 
-secFreeGroupInfo
-================
+----------
+
+secFreeGroupInfo()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -133,8 +149,10 @@ Synopsis
           struct secGroupInfo * info );
 
 
-secFreeUserInfo
-===============
+----------
+
+secFreeUserInfo()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -144,8 +162,10 @@ Synopsis
           struct secUserInfo * info );
 
 
-secFreeze
-=========
+----------
+
+secFreeze()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -155,8 +175,10 @@ Synopsis
           struct Task * task );
 
 
-secGetConfigDirLock
-===================
+----------
+
+secGetConfigDirLock()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -165,8 +187,10 @@ Synopsis
  BPTR secGetConfigDirLock();
 
 
-secGetDefProtection
-===================
+----------
+
+secGetDefProtection()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -176,8 +200,10 @@ Synopsis
           struct Task * task );
 
 
-secgetgid
-=========
+----------
+
+secgetgid()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -186,8 +212,10 @@ Synopsis
  UWORD secgetgid();
 
 
-secGetGroupInfo
-===============
+----------
+
+secGetGroupInfo()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -198,8 +226,10 @@ Synopsis
           ULONG keytype );
 
 
-secGetPasswdDirLock
-===================
+----------
+
+secGetPasswdDirLock()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -208,8 +238,10 @@ Synopsis
  BPTR secGetPasswdDirLock();
 
 
-secgetpgid
-==========
+----------
+
+secgetpgid()
+============
 
 Synopsis
 ~~~~~~~~
@@ -219,8 +251,10 @@ Synopsis
           int pid );
 
 
-secGetPktDefProtection
-======================
+----------
+
+secGetPktDefProtection()
+========================
 
 Synopsis
 ~~~~~~~~
@@ -230,8 +264,10 @@ Synopsis
           struct DosPacket * pkt );
 
 
-secGetPktOwner
-==============
+----------
+
+secGetPktOwner()
+================
 
 Synopsis
 ~~~~~~~~
@@ -241,8 +277,10 @@ Synopsis
           struct DosPacket * pkt );
 
 
-secGetRelationshipA
-===================
+----------
+
+secGetRelationshipA()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -259,8 +297,10 @@ Synopsis
           TAG tag, ... );
 
 
-secGetTaskExtOwner
-==================
+----------
+
+secGetTaskExtOwner()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -270,8 +310,10 @@ Synopsis
           struct Task * task );
 
 
-secGetTaskOwner
-===============
+----------
+
+secGetTaskOwner()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -281,8 +323,10 @@ Synopsis
           struct Task * task );
 
 
-secgetuid
-=========
+----------
+
+secgetuid()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -291,8 +335,10 @@ Synopsis
  UWORD secgetuid();
 
 
-secGetUserInfo
-==============
+----------
+
+secGetUserInfo()
+================
 
 Synopsis
 ~~~~~~~~
@@ -303,8 +349,10 @@ Synopsis
           ULONG keytype );
 
 
-secKill
-=======
+----------
+
+secKill()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -314,8 +362,10 @@ Synopsis
           struct Task * task );
 
 
-secLimitDOSSetProtection
-========================
+----------
+
+secLimitDOSSetProtection()
+==========================
 
 Synopsis
 ~~~~~~~~
@@ -325,8 +375,10 @@ Synopsis
           BOOL flag );
 
 
-secLoadPlugin
-=============
+----------
+
+secLoadPlugin()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -336,8 +388,10 @@ Synopsis
           STRPTR name );
 
 
-secLocksecBase
-==============
+----------
+
+secLocksecBase()
+================
 
 Synopsis
 ~~~~~~~~
@@ -346,8 +400,10 @@ Synopsis
  struct muPointers * secLocksecBase();
 
 
-secLoginA
-=========
+----------
+
+secLoginA()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -360,8 +416,10 @@ Synopsis
           TAG tag, ... );
 
 
-secLogout
-=========
+----------
+
+secLogout()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -370,8 +428,10 @@ Synopsis
  ULONG secLogout();
 
 
-secPasswd
-=========
+----------
+
+secPasswd()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -382,8 +442,10 @@ Synopsis
           STRPTR newpwd );
 
 
-secPluginOperationComplete
-==========================
+----------
+
+secPluginOperationComplete()
+============================
 
 Synopsis
 ~~~~~~~~
@@ -394,8 +456,10 @@ Synopsis
           ULONG result );
 
 
-secRegisterHandler
-==================
+----------
+
+secRegisterHandler()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -405,8 +469,10 @@ Synopsis
           struct plugin_ops * ops );
 
 
-secRemMonitor
-=============
+----------
+
+secRemMonitor()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -416,8 +482,10 @@ Synopsis
           struct secMonitor * monitor );
 
 
-secSetDefProtectionA
-====================
+----------
+
+secSetDefProtectionA()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -430,8 +498,10 @@ Synopsis
           TAG tag, ... );
 
 
-secsetegid
-==========
+----------
+
+secsetegid()
+============
 
 Synopsis
 ~~~~~~~~
@@ -441,8 +511,10 @@ Synopsis
           UWORD gid );
 
 
-secseteuid
-==========
+----------
+
+secseteuid()
+============
 
 Synopsis
 ~~~~~~~~
@@ -452,8 +524,10 @@ Synopsis
           UWORD uid );
 
 
-secsetgid
-=========
+----------
+
+secsetgid()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -463,8 +537,10 @@ Synopsis
           UWORD gid );
 
 
-secSetProtection
-================
+----------
+
+secSetProtection()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -475,8 +551,10 @@ Synopsis
           LONG mask );
 
 
-secsetreuid
-===========
+----------
+
+secsetreuid()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -487,8 +565,10 @@ Synopsis
           int euid );
 
 
-secsetuid
-=========
+----------
+
+secsetuid()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -498,8 +578,10 @@ Synopsis
           UWORD uid );
 
 
-secUnfreeze
-===========
+----------
+
+secUnfreeze()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -509,8 +591,10 @@ Synopsis
           struct Task * task );
 
 
-secUnloadPlugin
-===============
+----------
+
+secUnloadPlugin()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -520,8 +604,10 @@ Synopsis
           STRPTR name );
 
 
-secUnlocksecBase
-================
+----------
+
+secUnlocksecBase()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -531,8 +617,10 @@ Synopsis
           struct secPointers * muP );
 
 
-secUnRegisterHandler
-====================
+----------
+
+secUnRegisterHandler()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -542,8 +630,10 @@ Synopsis
           struct plugin_ops * ops );
 
 
-secUserInfo2ExtOwner
-====================
+----------
+
+secUserInfo2ExtOwner()
+======================
 
 Synopsis
 ~~~~~~~~

@@ -9,15 +9,15 @@ boopsi
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AddClass`_                             `DisposeObject`_                        `FindClass`_                            `FreeClass`_                            
-`GetAttr`_                              `MakeClass`_                            `NewObjectA`_                           `NextObject`_                           
-`RemoveClass`_                          `SetAttrsA`_                            
+`AddClass()`_                           `DisposeObject()`_                      `FindClass()`_                          `FreeClass()`_                          
+`GetAttr()`_                            `MakeClass()`_                          `NewObjectA()`_                         `NextObject()`_                         
+`RemoveClass()`_                        `SetAttrsA()`_                          
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-AddClass
-========
+AddClass()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -64,17 +64,16 @@ Bugs
      in this case.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     MakeClass(), FreeClass(), RemoveClass(), "Basic Object-Oriented
-     Programming System for Intuition" and "boopsi Class Reference"
+`MakeClass()`_ `FreeClass()`_ `RemoveClass()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" 
 
+----------
 
-
-DisposeObject
-=============
+DisposeObject()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -121,18 +120,16 @@ Notes
      CoerceMethod() on the current class and object instead.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     NewObject(), SetAttrs((), GetAttr(), MakeClass()
-     "Basic Object-Oriented Programming System for Intuition" and
-     "boopsi Class Reference" Dokument.
+`NewObjectA()`_ `SetAttrsA()`_ `GetAttr()`_ `MakeClass()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
 
+----------
 
-
-FindClass
-=========
+FindClass()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -142,8 +139,10 @@ Synopsis
           ClassID classID );
 
 
-FreeClass
-=========
+----------
+
+FreeClass()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -222,8 +221,10 @@ Notes
 
 
 
-GetAttr
-=======
+----------
+
+GetAttr()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -272,19 +273,16 @@ Notes
      This function sends OM_GET to the object.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     NewObject(), DisposeObject(), SetAttr(), MakeClass(),
-     "Basic Object-Oriented Programming System for Intuition" and
-     "boopsi Class Reference" Dokument.
+`NewObjectA()`_ `DisposeObject()`_ `SetAttrsA()`_ `MakeClass()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
 
+----------
 
-
-
-MakeClass
-=========
+MakeClass()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -355,8 +353,10 @@ Notes
 
 
 
-NewObjectA
-==========
+----------
+
+NewObjectA()
+============
 
 Synopsis
 ~~~~~~~~
@@ -411,18 +411,16 @@ Notes
      This functions send OM_NEW to the dispatcher of the class.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     DisposeObject(), SetAttrs(), GetAttr(), MakeClass(),
-     "Basic Object-Oriented Programming System for Intuition" and
-     "boopsi Class Reference" Dokument.
+`DisposeObject()`_ `SetAttrsA()`_ `GetAttr()`_ `MakeClass()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
 
+----------
 
-
-NextObject
-==========
+NextObject()
+============
 
 Synopsis
 ~~~~~~~~
@@ -457,18 +455,16 @@ Result
      A BOOPSI object, which can be manipulated.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     NewObject(),
-     "Basic Object-Oriented Programming System for Intuition" and
-     "boopsi Class Reference" Dokument.
+`NewObjectA()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
 
+----------
 
-
-RemoveClass
-===========
+RemoveClass()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -500,18 +496,16 @@ Result
      None.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     MakeClass(), FreeClass(), AddClass(), "Basic Object-Oriented
-     Programming System for Intuition" and "boopsi Class Reference"
-     Dokument.
+`MakeClass()`_ `FreeClass()`_ `AddClass()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
 
+----------
 
-
-SetAttrsA
-=========
+SetAttrsA()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -557,13 +551,9 @@ Notes
      This function sends OM_SET to the object.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     NewObject(), DisposeObject(), GetAttr(), MakeClass(),
-     "Basic Object-Oriented Programming System for Intuition" and
-     "boopsi Class Reference" Dokument.
-
-
+`NewObjectA()`_ `DisposeObject()`_ `GetAttr()`_ `MakeClass()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
 

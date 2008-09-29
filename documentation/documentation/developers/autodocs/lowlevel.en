@@ -9,16 +9,16 @@ lowlevel
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AddKBInt`_                             `AddTimerInt`_                          `AddVBlankInt`_                         `ElapsedTime`_                          
-`GetKey`_                               `GetLanguageSelection`_                 `QueryKeys`_                            `ReadJoyPort`_                          
-`RemKBInt`_                             `RemTimerInt`_                          `RemVBlankInt`_                         `StartTimerInt`_                        
-`StopTimerInt`_                         
+`AddKBInt()`_                           `AddTimerInt()`_                        `AddVBlankInt()`_                       `ElapsedTime()`_                        
+`GetKey()`_                             `GetLanguageSelection()`_               `QueryKeys()`_                          `ReadJoyPort()`_                        
+`RemKBInt()`_                           `RemTimerInt()`_                        `RemVBlankInt()`_                       `StartTimerInt()`_                      
+`StopTimerInt()`_                       
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-AddKBInt
-========
+AddKBInt()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -29,8 +29,10 @@ Synopsis
           APTR intData );
 
 
-AddTimerInt
-===========
+----------
+
+AddTimerInt()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -41,8 +43,10 @@ Synopsis
           APTR intData );
 
 
-AddVBlankInt
-============
+----------
+
+AddVBlankInt()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -82,17 +86,16 @@ Result
  A handle used to manipulate the interrupt or NULL if the call failed.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`RemVBlankInt()`_ 
 
- RemVBlankInt()
+----------
 
-
-
-ElapsedTime
-===========
+ElapsedTime()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -102,8 +105,10 @@ Synopsis
           struct EClockVal * context );
 
 
-GetKey
-======
+----------
+
+GetKey()
+========
 
 Synopsis
 ~~~~~~~~
@@ -112,8 +117,10 @@ Synopsis
  ULONG GetKey();
 
 
-GetLanguageSelection
-====================
+----------
+
+GetLanguageSelection()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -122,8 +129,10 @@ Synopsis
  ULONG GetLanguageSelection();
 
 
-QueryKeys
-=========
+----------
+
+QueryKeys()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -134,8 +143,10 @@ Synopsis
           UBYTE arraySize );
 
 
-ReadJoyPort
-===========
+----------
+
+ReadJoyPort()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -145,8 +156,10 @@ Synopsis
           ULONG port );
 
 
-RemKBInt
-========
+----------
+
+RemKBInt()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -156,8 +169,10 @@ Synopsis
           APTR intHandle );
 
 
-RemTimerInt
-===========
+----------
+
+RemTimerInt()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -167,8 +182,10 @@ Synopsis
           APTR intHandle );
 
 
-RemVBlankInt
-============
+----------
+
+RemVBlankInt()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -195,17 +212,16 @@ Inputs
                 this function is a no-op.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`AddVBlankInt()`_ 
 
- AddVBlankInt()
+----------
 
-
-
-StartTimerInt
-=============
+StartTimerInt()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -217,8 +233,10 @@ Synopsis
           BOOL continuous );
 
 
-StopTimerInt
-============
+----------
+
+StopTimerInt()
+==============
 
 Synopsis
 ~~~~~~~~

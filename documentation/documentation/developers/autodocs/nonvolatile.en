@@ -9,14 +9,14 @@ nonvolatile
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`DeleteNV`_                             `FreeNVData`_                           `GetCopyNV`_                            `GetNVInfo`_                            
-`GetNVList`_                            `SetNVProtection`_                      `StoreNV`_                              
+`DeleteNV()`_                           `FreeNVData()`_                         `GetCopyNV()`_                          `GetNVInfo()`_                          
+`GetNVList()`_                          `SetNVProtection()`_                    `StoreNV()`_                            
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-DeleteNV
-========
+DeleteNV()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -66,8 +66,10 @@ Notes
 
 
 
-FreeNVData
-==========
+----------
+
+FreeNVData()
+============
 
 Synopsis
 ~~~~~~~~
@@ -94,17 +96,16 @@ Inputs
            which case this function does nothing
 
 
+
 See also
 ~~~~~~~~
-::
 
+`GetCopyNV()`_ `GetNVInfo()`_ `GetNVList()`_ 
 
- GetCopyNV(), GetNVInfo(), GetNVList()
+----------
 
-
-
-GetCopyNV
-=========
+GetCopyNV()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -143,17 +144,16 @@ Result
  Pointer to the data assocated with 'itemName' as allocated by 'appName'.
  
 
+
 See also
 ~~~~~~~~
-::
 
+`FreeNVData()`_ <libraries/nonvolatile.h> 
 
- FreeNVData(), <libraries/nonvolatile.h>
+----------
 
-
-
-GetNVInfo
-=========
+GetNVInfo()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -188,17 +188,16 @@ Result
  storage device currently in use. Returns NULL in case of a failure.
  
 
+
 See also
 ~~~~~~~~
-::
 
+`FreeNVData()`_ `StoreNV()`_ <libraries/nonvolatile.h> 
 
- FreeNVData(), StoreNV(), <libraries/nonvolatile.h>
+----------
 
-
-
-GetNVList
-=========
+GetNVList()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -246,17 +245,16 @@ Notes
  system use.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`FreeNVData()`_ `SetNVProtection()`_ <libraries/nonvolatile.h> 
 
- FreeNVData(), SetNVProtection(), <libraries/nonvolatile.h>
+----------
 
-
-
-SetNVProtection
-===============
+SetNVProtection()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -306,17 +304,16 @@ Notes
  The only bit that should currently be used in the 'mask' is the DELETE bit.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`GetNVList()`_ <libraries/nonvolatile.h> 
 
- GetNVList(), <libraries/nonvolatile.h>
+----------
 
-
-
-StoreNV
-=======
+StoreNV()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -380,12 +377,9 @@ Notes
  strings is 31.
 
 
+
 See also
 ~~~~~~~~
-::
 
-
- GetCopyNV(), GetNVInfo()
-
-
+`GetCopyNV()`_ `GetNVInfo()`_ 
 

@@ -9,65 +9,81 @@ clib
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`__get_default_file`_                   `__path_a2u`_                           `__path_u2a`_                           `__spawnv`_                             
-`__vcformat`_                           `__vcscan`_                             `_exit`_                                `abort`_                                
-`abs`_                                  `access`_                               `asctime`_                              `asctime_r`_                            
-`assert`_                               `atof`_                                 `atoi`_                                 `atol`_                                 
-`bcmp`_                                 `bsearch`_                              `bzero`_                                `calloc`_                               
-`chdir`_                                `chmod`_                                `clearerr`_                             `clock`_                                
-`close`_                                `closedir`_                             `creat`_                                `ctime`_                                
-`ctime_r`_                              `difftime`_                             `dirfd`_                                `div`_                                  
-`dup`_                                  `dup2`_                                 `execl`_                                `execve`_                               
-`execvp`_                               `exit`_                                 `fchdir`_                               `fchmod`_                               
-`fclose`_                               `fdopen`_                               `feof`_                                 `ferror`_                               
-`fflush`_                               `fgetc`_                                `fgetpos`_                              `fgets`_                                
-`fileno`_                               `fopen`_                                `fprintf`_                              `fputc`_                                
-`fputs`_                                `fread`_                                `free`_                                 `freopen`_                              
-`fscanf`_                               `fseek`_                                `fsetpos`_                              `ftell`_                                
-`ftruncate`_                            `fwrite`_                               `gcvt`_                                 `getc`_                                 
-`getchar`_                              `getcwd`_                               `getegid`_                              `getenv`_                               
-`geteuid`_                              `getfsstat`_                            `getgid`_                               `getlogin`_                             
-`getpid`_                               `gets`_                                 `gettimeofday`_                         `getuid`_                               
-`gmtime`_                               `gmtime_r`_                             `isalnum`_                              `isalpha`_                              
-`isascii`_                              `isblank`_                              `iscntrl`_                              `isdigit`_                              
-`isgraph`_                              `islower`_                              `isprint`_                              `ispunct`_                              
-`isspace`_                              `isupper`_                              `isxdigit`_                             `kill`_                                 
-`labs`_                                 `ldiv`_                                 `lldiv`_                                `localtime`_                            
-`localtime_r`_                          `lseek`_                                `malloc`_                               `memchr`_                               
-`memcmp`_                               `memset`_                               `mkdir`_                                `mkstemp`_                              
-`mktemp`_                               `mktime`_                               `open`_                                 `opendir`_                              
-`pclose`_                               `perror`_                               `popen`_                                `posix_memalign`_                       
-`printf`_                               `putc`_                                 `putenv`_                               `puts`_                                 
-`qsort`_                                `rand`_                                 `read`_                                 `readdir`_                              
-`realloc`_                              `realloc_nocopy`_                       `remove`_                               `rename`_                               
-`rewind`_                               `rmdir`_                                `scanf`_                                `setbuf`_                               
-`setenv`_                               `setgid`_                               `setlinebuf`_                           `setuid`_                               
-`setvbuf`_                              `sigaction`_                            `sigaddset`_                            `sigdelset`_                            
-`sigemptyset`_                          `sigfillset`_                           `sigismember`_                          `sigpending`_                           
-`sigprocmask`_                          `sigsuspend`_                           `sleep`_                                `snprintf`_                             
-`spawnv`_                               `spawnvp`_                              `sprintf`_                              `srand`_                                
-`sscanf`_                               `statfs`_                               `stccpy`_                               `stcd_l`_                               
-`stch_l`_                               `stcl_d`_                               `stcl_h`_                               `stcl_o`_                               
-`stco_l`_                               `stcu_d`_                               `stpblk`_                               `stpcpy`_                               
-`stpsym`_                               `strcasecmp`_                           `strcasestr`_                           `strcat`_                               
-`strchr`_                               `strcmp`_                               `strcoll`_                              `strcpy`_                               
-`strcspn`_                              `strdup`_                               `strerror`_                             `strlen`_                               
-`strlwr`_                               `strncasecmp`_                          `strncat`_                              `strncmp`_                              
-`strncpy`_                              `strpbrk`_                              `strrchr`_                              `strrev`_                               
-`strsep`_                               `strspn`_                               `strstr`_                               `strtod`_                               
-`strtok`_                               `strtol`_                               `strtoll`_                              `strtoul`_                              
-`strtoull`_                             `strupr`_                               `strxfrm`_                              `system`_                               
-`time`_                                 `tmpfile`_                              `truncate`_                             `ttyname`_                              
-`uname`_                                `ungetc`_                               `unlink`_                               `unsetenv`_                             
-`updatestdio`_                          `usleep`_                               `vfprintf`_                             `vfscanf`_                              
-`vprintf`_                              `vscanf`_                               `vsnprintf`_                            `vsprintf`_                             
-`vsscanf`_                              `write`_                                
+`__get_default_file()`_                 `__path_a2u()`_                         `__path_u2a()`_                         `__spawnv()`_                           
+`__vcformat()`_                         `__vcscan()`_                           `_exit()`_                              `abort()`_                              
+`abs()`_                                `access()`_                             `asctime()`_                            `asctime_r()`_                          
+`assert()`_                             `atexit()`_                             `atof()`_                               `atoi()`_                               
+`atol()`_                               `basename()`_                           `bcmp()`_                               `bsearch()`_                            
+`bzero()`_                              `calloc()`_                             `chdir()`_                              `chmod()`_                              
+`chown()`_                              `clearerr()`_                           `clock()`_                              `close()`_                              
+`closedir()`_                           `creat()`_                              `ctime()`_                              `ctime_r()`_                            
+`difftime()`_                           `dirfd()`_                              `dirname()`_                            `div()`_                                
+`dup()`_                                `dup2()`_                               `endgrent()`_                           `endpwent()`_                           
+`execl()`_                              `execv()`_                              `execve()`_                             `execvp()`_                             
+`exit()`_                               `fchdir()`_                             `fchmod()`_                             `fchown()`_                             
+`fclose()`_                             `fcntl()`_                              `fdopen()`_                             `feof()`_                               
+`ferror()`_                             `fflush()`_                             `fgetc()`_                              `fgetpos()`_                            
+`fgets()`_                              `fileno()`_                             `fopen()`_                              `fprintf()`_                            
+`fputc()`_                              `fputs()`_                              `fread()`_                              `free()`_                               
+`freopen()`_                            `fscanf()`_                             `fseek()`_                              `fsetpos()`_                            
+`fstat()`_                              `fsync()`_                              `ftell()`_                              `ftime()`_                              
+`ftruncate()`_                          `fwrite()`_                             `gcvt()`_                               `getc()`_                               
+`getchar()`_                            `getcwd()`_                             `getegid()`_                            `getenv()`_                             
+`geteuid()`_                            `getfsstat()`_                          `getgid()`_                             `getgrent()`_                           
+`getgrgid()`_                           `getgrnam()`_                           `getgroups()`_                          `getloadavg()`_                         
+`getlogin()`_                           `getopt()`_                             `getpgrp()`_                            `getpid()`_                             
+`getppid()`_                            `getpwent()`_                           `getpwnam()`_                           `getpwuid()`_                           
+`gets()`_                               `gettimeofday()`_                       `getuid()`_                             `getw()`_                               
+`gmtime()`_                             `gmtime_r()`_                           `ioctl()`_                              `isalnum()`_                            
+`isalpha()`_                            `isascii()`_                            `isatty()`_                             `isblank()`_                            
+`iscntrl()`_                            `isdigit()`_                            `isgraph()`_                            `islower()`_                            
+`isprint()`_                            `ispunct()`_                            `isspace()`_                            `isupper()`_                            
+`isxdigit()`_                           `jrand48()`_                            `kill()`_                               `labs()`_                               
+`lcong48()`_                            `ldiv()`_                               `link()`_                               `lldiv()`_                              
+`localtime()`_                          `localtime_r()`_                        `lrand48()`_                            `lseek()`_                              
+`malloc()`_                             `mblen()`_                              `mbstowcs()`_                           `mbtowc()`_                             
+`memchr()`_                             `memcmp()`_                             `memset()`_                             `mkdir()`_                              
+`mknod()`_                              `mkstemp()`_                            `mktemp()`_                             `mktime()`_                             
+`mrand48()`_                            `nrand48()`_                            `on_exit()`_                            `open()`_                               
+`opendir()`_                            `pclose()`_                             `perror()`_                             `pipe()`_                               
+`popen()`_                              `posix_memalign()`_                     `printf()`_                             `putc()`_                               
+`putchar()`_                            `putenv()`_                             `puts()`_                               `putw()`_                               
+`qsort()`_                              `raise()`_                              `rand()`_                               `read()`_                               
+`readdir()`_                            `realloc()`_                            `realloc_nocopy()`_                     `remove()`_                             
+`rename()`_                             `rewind()`_                             `rewinddir()`_                          `rmdir()`_                              
+`scanf()`_                              `seed48()`_                             `seekdir()`_                            `setbuf()`_                             
+`setenv()`_                             `setgid()`_                             `setgrent()`_                           `setlinebuf()`_                         
+`setpwent()`_                           `setuid()`_                             `setvbuf()`_                            `sigaction()`_                          
+`sigaddset()`_                          `sigdelset()`_                          `sigemptyset()`_                        `sigfillset()`_                         
+`sigismember()`_                        `signal()`_                             `sigpending()`_                         `sigprocmask()`_                        
+`sigsuspend()`_                         `sleep()`_                              `snprintf()`_                           `spawnv()`_                             
+`spawnvp()`_                            `sprintf()`_                            `srand()`_                              `srand48()`_                            
+`sscanf()`_                             `stat()`_                               `statfs()`_                             `stccpy()`_                             
+`stcd_l()`_                             `stch_l()`_                             `stcl_d()`_                             `stcl_h()`_                             
+`stcl_o()`_                             `stco_l()`_                             `stcu_d()`_                             `stpblk()`_                             
+`stpcpy()`_                             `stpsym()`_                             `strcasecmp()`_                         `strcasestr()`_                         
+`strcat()`_                             `strchr()`_                             `strcmp()`_                             `strcoll()`_                            
+`strcpy()`_                             `strcspn()`_                            `strdup()`_                             `strerror()`_                           
+`strftime()`_                           `strlcat()`_                            `strlcpy()`_                            `strlen()`_                             
+`strlwr()`_                             `strncasecmp()`_                        `strncat()`_                            `strncmp()`_                            
+`strncpy()`_                            `strpbrk()`_                            `strrchr()`_                            `strrev()`_                             
+`strsep()`_                             `strspn()`_                             `strstr()`_                             `strtod()`_                             
+`strtok()`_                             `strtol()`_                             `strtoll()`_                            `strtoul()`_                            
+`strtoull()`_                           `strupr()`_                             `strxfrm()`_                            `swab()`_                               
+`symlink()`_                            `system()`_                             `telldir()`_                            `tempnam()`_                            
+`time()`_                               `times()`_                              `tmpfile()`_                            `tmpnam()`_                             
+`truncate()`_                           `ttyname()`_                            `umask()`_                              `uname()`_                              
+`ungetc()`_                             `unlink()`_                             `unsetenv()`_                           `updatestdio()`_                        
+`usleep()`_                             `utime()`_                              `utimes()`_                             `vfprintf()`_                           
+`vfscanf()`_                            `vprintf()`_                            `vscanf()`_                             `vsnprintf()`_                          
+`vsprintf()`_                           `vsscanf()`_                            `wait()`_                               `waitpid()`_                            
+`wcstombs()`_                           `wctomb()`_                             `write()`_                              
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-__get_default_file
-==================
+__get_default_file()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -110,8 +126,10 @@ Notes
 
 
 
-__path_a2u
-==========
+----------
+
+__path_a2u()
+============
 
 Synopsis
 ~~~~~~~~
@@ -156,8 +174,10 @@ Notes
 
 
 
-__path_u2a
-==========
+----------
+
+__path_u2a()
+============
 
 Synopsis
 ~~~~~~~~
@@ -202,8 +222,10 @@ Notes
 
 
 
-__spawnv
-========
+----------
+
+__spawnv()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -270,18 +292,16 @@ Notes
      the close-on-exec flag set.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     execl(), execle(), execlp(), execlpe(), execv(), execve(), execvp(), execvpe(), getenv(),
-     putenv(), setenv(), spawn(), spawnl(), spawnle(), spawnlp(), spawnlpe(), spawnp(),
-     spawnve(), spawnvp(), spawnvpe(), wait(), waitpid()
+`execl()`_ `execle()`_ `execlp()`_ `execlpe()`_ `execv()`_ `execve()`_ `execvp()`_ `execvpe()`_ `getenv()`_ `putenv()`_ `setenv()`_ `spawn()`_ `spawnl()`_ `spawnle()`_ `spawnlp()`_ `spawnlpe()`_ `spawnp()`_ `spawnve()`_ `spawnvp()`_ `spawnvpe()`_ `wait()`_ `waitpid()`_ 
 
+----------
 
-
-__vcformat
-==========
+__vcformat()
+============
 
 Synopsis
 ~~~~~~~~
@@ -322,8 +342,10 @@ Result
 
 
 
-__vcscan
-========
+----------
+
+__vcscan()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -371,8 +393,10 @@ Result
 
 
 
-_exit
-=====
+----------
+
+_exit()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -424,16 +448,16 @@ Bugs
      called.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     exit()
+`exit()`_ 
 
+----------
 
-
-abort
-=====
+abort()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -489,16 +513,16 @@ Bugs
      Signal handling is not implemented yet.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     signal(), exit()
+`signal()`_ `exit()`_ 
 
+----------
 
-
-abs
-===
+abs()
+=====
 
 Synopsis
 ~~~~~~~~
@@ -540,16 +564,16 @@ Example
      abs (-1);
 
 
+
 See also
 ~~~~~~~~
-::
 
-     labs(), fabs()
+`labs()`_ `fabs()`_ 
 
+----------
 
-
-access
-======
+access()
+========
 
 Synopsis
 ~~~~~~~~
@@ -590,16 +614,16 @@ Result
      otherwise a 0 value is returned.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     open(), ftruncate()
+`open()`_ `ftruncate()`_ 
 
+----------
 
-
-asctime
-=======
+asctime()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -661,16 +685,16 @@ Notes
      in a threaded application. Use asctime_r() instead.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     time(), ctime(), gmtime(), localtime()
+`time()`_ `ctime()`_ `gmtime()`_ `localtime()`_ 
 
+----------
 
-
-asctime_r
-=========
+asctime_r()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -725,16 +749,16 @@ Example
      asctime (&tm, str);
 
 
+
 See also
 ~~~~~~~~
-::
 
-     time(), ctime_r(), gmtime_r(), localtime_r()
+`time()`_ `ctime_r()`_ `gmtime_r()`_ `localtime_r()`_ 
 
+----------
 
-
-assert
-======
+assert()
+========
 
 Synopsis
 ~~~~~~~~
@@ -778,8 +802,44 @@ Example
 
 
 
-atof
-====
+----------
+
+atexit()
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  int atexit(
+     void (*func)(void))
+
+
+Function
+~~~~~~~~
+::
+
+     Registers the given function to be called at normal
+     process termination.
+     
+
+Inputs
+~~~~~~
+::
+
+     func - function to be called.
+
+
+
+See also
+~~~~~~~~
+
+`exit()`_ 
+
+----------
+
+atof()
+======
 
 Synopsis
 ~~~~~~~~
@@ -812,16 +872,16 @@ Result
      The value of string str.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     atoi(), atol(), strtod(), strtol(), strtoul()
+`atoi()`_ `atol()`_ `strtod()`_ `strtol()`_ `strtoul()`_ 
 
+----------
 
-
-atoi
-====
+atoi()
+======
 
 Synopsis
 ~~~~~~~~
@@ -868,16 +928,16 @@ Example
      atoi ("  \n -1");
 
 
+
 See also
 ~~~~~~~~
-::
 
-     atof(), atol(), strtod(), strtol(), strtoul()
+`atof()`_ `atol()`_ `strtod()`_ `strtol()`_ `strtoul()`_ 
 
+----------
 
-
-atol
-====
+atol()
+======
 
 Synopsis
 ~~~~~~~~
@@ -924,16 +984,57 @@ Example
      atol ("  \n -1");
 
 
+
 See also
+~~~~~~~~
+
+`atof()`_ `atoi()`_ `strtod()`_ `strtol()`_ `strtoul()`_ 
+
+----------
+
+basename()
+==========
+
+Synopsis
 ~~~~~~~~
 ::
 
-     atof(), atoi(), strtod(), strtol(), strtoul()
+  char *basename(
+     char *filename)
+
+
+Function
+~~~~~~~~
+::
+
+     Returns the part after the latest '/' of a path.
+     Trailing '/' are not counted as part of the path.
+     
+
+Inputs
+~~~~~~
+::
+
+     filename - Path which should be split.
+
+
+Result
+~~~~~~
+::
+
+     Rightmost part of the path.
 
 
 
-bcmp
-====
+See also
+~~~~~~~~
+
+`dirname()`_ 
+
+----------
+
+bcmp()
+======
 
 Synopsis
 ~~~~~~~~
@@ -962,8 +1063,10 @@ Inputs
 
 
 
-bsearch
-=======
+----------
+
+bsearch()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -1009,8 +1112,10 @@ Result
 
 
 
-bzero
-=====
+----------
+
+bzero()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -1037,8 +1142,10 @@ Inputs
 
 
 
-calloc
-======
+----------
+
+calloc()
+========
 
 Synopsis
 ~~~~~~~~
@@ -1082,16 +1189,16 @@ Notes
      in a threaded application.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     free(), malloc()
+`free()`_ `malloc()`_ 
 
+----------
 
-
-chdir
-=====
+chdir()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -1138,8 +1245,10 @@ Notes
 
 
 
-chmod
-=====
+----------
+
+chmod()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -1174,8 +1283,33 @@ Result
  
 
 
-clearerr
-========
+----------
+
+chown()
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int chown(
+     const char *path,
+     uid_t owner,
+     gid_t group)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
+
+----------
+
+clearerr()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -1208,16 +1342,16 @@ Result
      None.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ferror(), clearerr()
+`ferror()`_ `clearerr()`_ 
 
+----------
 
-
-clock
-=====
+clock()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -1251,16 +1385,16 @@ Notes
      in a threaded application.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     time()
+`time()`_ 
 
+----------
 
-
-close
-=====
+close()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -1301,16 +1435,16 @@ Notes
      in a threaded application.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     open(), read(), write(), fopen()
+`open()`_ `read()`_ `write()`_ `fopen()`_ 
 
+----------
 
-
-closedir
-========
+closedir()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -1342,17 +1476,16 @@ Result
      failure.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     close(), opendir(),  readdir(), rewinddir(), seekdir(),
-     telldir(), scandir()
+`close()`_ `opendir()`_ `readdir()`_ `rewinddir()`_ `seekdir()`_ `telldir()`_ `scandir()`_ 
 
+----------
 
-
-creat
-=====
+creat()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -1398,16 +1531,16 @@ Notes
      in a threaded application.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     open(), close(), write(), fopen()
+`open()`_ `close()`_ `write()`_ `fopen()`_ 
 
+----------
 
-
-ctime
-=====
+ctime()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -1465,16 +1598,16 @@ Notes
      in a threaded application. Use ctime_r() instead.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     time(), asctime(), gmtime(), localtime()
+`time()`_ `asctime()`_ `gmtime()`_ `localtime()`_ 
 
+----------
 
-
-ctime_r
-=======
+ctime_r()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -1525,16 +1658,16 @@ Example
      ctime (&tt, str);
 
 
+
 See also
 ~~~~~~~~
-::
 
-     time(), asctime_r(), gmtime_r(), localtime_r()
+`time()`_ `asctime_r()`_ `gmtime_r()`_ `localtime_r()`_ 
 
+----------
 
-
-difftime
-========
+difftime()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -1582,16 +1715,16 @@ Example
      secs = difftime(tt2, tt1);
      
 
+
 See also
 ~~~~~~~~
-::
 
-     time(), ctime(), asctime(), localtime()
+`time()`_ `ctime()`_ `asctime()`_ `localtime()`_ 
 
+----------
 
-
-dirfd
-=====
+dirfd()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -1632,17 +1765,56 @@ Notes
     automatically closed when closedir(3) is called.
 
 
+
 See also
+~~~~~~~~
+
+`open()`_ `readdir()`_ `closedir()`_ `rewinddir()`_ `seekdir()`_ `telldir()`_ `scandir()`_ 
+
+----------
+
+dirname()
+=========
+
+Synopsis
 ~~~~~~~~
 ::
 
-     open(), readdir(), closedir(), rewinddir(), seekdir(),
-     telldir(), scandir()
+  char *dirname(
+     char *filename)
 
 
+Function
+~~~~~~~~
+::
 
-div
-===
+     Returns the string up to the latest '/'.
+     
+
+Inputs
+~~~~~~
+::
+
+     filename - Path which should be split
+
+
+Result
+~~~~~~
+::
+
+     Directory part of the path.
+     
+
+
+See also
+~~~~~~~~
+
+`basename()`_ 
+
+----------
+
+div()
+=====
 
 Synopsis
 ~~~~~~~~
@@ -1683,16 +1855,16 @@ Result
 NOTES
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ldiv()
+`ldiv()`_ 
 
+----------
 
-
-dup
-===
+dup()
+=====
 
 Synopsis
 ~~~~~~~~
@@ -1744,16 +1916,16 @@ Notes
      in a threaded application.
 
 
+
 See also
 ~~~~~~~~
-::
 
-      accept(),  open(),  close(),  fcntl(),  pipe(),  socket()
+`bsdsocket.library/accept() <./bsdsocket#accept>`_ `open()`_ `close()`_ `fcntl()`_ `pipe()`_ `bsdsocket.library/socket() <./bsdsocket#socket>`_ 
 
+----------
 
-
-dup2
-====
+dup2()
+======
 
 Synopsis
 ~~~~~~~~
@@ -1804,16 +1976,58 @@ Notes
      in a threaded application.
 
 
+
 See also
+~~~~~~~~
+
+`bsdsocket.library/accept() <./bsdsocket#accept>`_ `open()`_ `close()`_ `fcntl()`_ `pipe()`_ `bsdsocket.library/socket() <./bsdsocket#socket>`_ 
+
+----------
+
+endgrent()
+==========
+
+Synopsis
 ~~~~~~~~
 ::
 
-      accept(),  open(),  close(),  fcntl(),  pipe(),  socket()
+  void endgrent(
+     void)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
 
 
 
-execl
-=====
+----------
+
+endpwent()
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  void endpwent(
+     void)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
+
+----------
+
+execl()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -1824,9 +2038,69 @@ Synopsis
      const char *arg, ...)
      
 
+Notes
+~~~~~
+::
 
-execve
-======
+     Not implemented.
+
+
+
+----------
+
+execv()
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int execv(
+     const char *path, 
+     char *const argv[])
+     
+
+Function
+~~~~~~~~
+::
+
+     Executes a file with specified arguments.
+
+
+Inputs
+~~~~~~
+::
+
+     file - Name of the file to execute.
+     argv - Array of arguments given to main() function of the executed
+     file.
+
+
+Result
+~~~~~~
+::
+
+     0 in case of success. In case of failure errno is set appropriately
+     and function returns -1.
+
+
+Bugs
+~~~~
+::
+
+     See execve documentation.
+
+
+
+See also
+~~~~~~~~
+
+`execve <execve>`_   
+
+----------
+
+execve()
+========
 
 Synopsis
 ~~~~~~~~
@@ -1861,22 +2135,14 @@ Result
 ::
 
      Returns -1 and sets errno appropriately in case of error, otherwise
-     returns 0.
-
-
-Bugs
-~~~~
-::
-
-     As opposed to *nix execve implementations, this implementation DOES
-     RETURN to caller. Its purpose is to ease porting of programs using
-     exec functions, you still have to make sure that after calling this
-     function program will behave as anticipated.
+     doesn't return.
 
 
 
-execvp
-======
+----------
+
+execvp()
+========
 
 Synopsis
 ~~~~~~~~
@@ -1918,16 +2184,16 @@ Bugs
      See execve documentation.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     execve
-     
+`execve()`_   
 
+----------
 
-exit
-====
+exit()
+======
 
 Synopsis
 ~~~~~~~~
@@ -1980,16 +2246,16 @@ EXAMPLE
          exit (20);
 
 
+
 See also
 ~~~~~~~~
-::
 
-     atexit(), on_exit()
+`atexit()`_ `on_exit()`_ 
 
+----------
 
-
-fchdir
-======
+fchdir()
+========
 
 Synopsis
 ~~~~~~~~
@@ -2032,21 +2298,55 @@ Notes
 
 
 
-fchmod
-======
+----------
+
+fchmod()
+========
 
 Synopsis
 ~~~~~~~~
 ::
 
   int fchmod(
-     int fildes,
+     int filedes,
      mode_t mode)
 
 
+Notes
+~~~~~
+::
 
-fclose
-======
+     Not implemented.
+
+
+
+----------
+
+fchown()
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  int fchown(
+     int fd,
+     uid_t owner,
+     gid_t group)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
+
+----------
+
+fclose()
+========
 
 Synopsis
 ~~~~~~~~
@@ -2087,16 +2387,32 @@ Notes
      in a threaded application.
 
 
+
 See also
+~~~~~~~~
+
+`fopen()`_ `open()`_ `close()`_ 
+
+----------
+
+fcntl()
+=======
+
+Synopsis
 ~~~~~~~~
 ::
 
-     fopen(), open(), close()
+  int fcntl(
+     int fd,
+     int cmd,
+     ...)
 
 
 
-fdopen
-======
+----------
+
+fdopen()
+========
 
 Synopsis
 ~~~~~~~~
@@ -2148,16 +2464,16 @@ Notes
      in a threaded application.
 
 
+
 See also
 ~~~~~~~~
-::
 
-      open(), fclose(), fileno()
+`open()`_ `fclose()`_ `fileno()`_ 
 
+----------
 
-
-feof
-====
+feof()
+======
 
 Synopsis
 ~~~~~~~~
@@ -2197,16 +2513,16 @@ Notes
      in a threaded application.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ferror(), clearerr()
+`ferror()`_ `clearerr()`_ 
 
+----------
 
-
-ferror
-======
+ferror()
+========
 
 Synopsis
 ~~~~~~~~
@@ -2238,16 +2554,16 @@ Result
      != 0, if the stream had an error, 0 otherwise.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ferror(), clearerr()
+`ferror()`_ `clearerr()`_ 
 
+----------
 
-
-fflush
-======
+fflush()
+========
 
 Synopsis
 ~~~~~~~~
@@ -2282,8 +2598,10 @@ Result
 
 
 
-fgetc
-=====
+----------
+
+fgetc()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -2315,16 +2633,16 @@ Result
      The character read or EOF on end of file or error.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     getc(), fputc(), putc()
+`getc()`_ `fputc()`_ `putc()`_ 
 
+----------
 
-
-fgetpos
-=======
+fgetpos()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -2361,16 +2679,16 @@ Result
      variable errno is set.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     fsetpos()
+`fsetpos()`_ 
 
+----------
 
-
-fgets
-=====
+fgets()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -2423,16 +2741,16 @@ Example
      }
 
 
+
 See also
 ~~~~~~~~
-::
 
-     fopen(), gets(), fputs(), putc()
+`fopen()`_ `gets()`_ `fputs()`_ `putc()`_ 
 
+----------
 
-
-fileno
-======
+fileno()
+========
 
 Synopsis
 ~~~~~~~~
@@ -2463,16 +2781,16 @@ Result
      The integer descriptor
 
 
+
 See also
 ~~~~~~~~
-::
 
-     open()
+`open()`_ 
 
+----------
 
-
-fopen
-=====
+fopen()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -2547,17 +2865,16 @@ Bugs
      Most modes are not supported right now.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     fclose(), fread(), fwrite(), open(), fgets(), fgetc(),
-     fputs(), fputc(), getc(), putc()
+`fclose()`_ `fread()`_ `fwrite()`_ `open()`_ `fgets()`_ `fgetc()`_ `fputs()`_ `fputc()`_ `getc()`_ `putc()`_ 
 
+----------
 
-
-fprintf
-=======
+fprintf()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -2594,8 +2911,10 @@ Result
 
 
 
-fputc
-=====
+----------
+
+fputc()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -2629,8 +2948,10 @@ Result
 
 
 
-fputs
-=====
+----------
+
+fputs()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -2663,16 +2984,16 @@ Result
      > 0 on success and EOF on error.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     puts(), fputc(), putc()
+`puts()`_ `fputc()`_ `putc()`_ 
 
+----------
 
-
-fread
-=====
+fread()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -2711,16 +3032,16 @@ Result
      returned.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     fopen(), fwrite()
+`fopen()`_ `fwrite()`_ 
 
+----------
 
-
-free
-====
+free()
+======
 
 Synopsis
 ~~~~~~~~
@@ -2761,16 +3082,16 @@ Notes
      application.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     malloc()
+`malloc()`_ 
 
+----------
 
-
-freopen
-=======
+freopen()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -2814,16 +3135,16 @@ Result
      NULL on error or stream.
 
 
+
 See also
 ~~~~~~~~
-::
 
-      open(), fclose(), fileno()
+`open()`_ `fclose()`_ `fileno()`_ 
 
+----------
 
-
-fscanf
-======
+fscanf()
+========
 
 Synopsis
 ~~~~~~~~
@@ -2859,16 +3180,16 @@ Result
      The number of converted arguments.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     scanf()
+`scanf()`_ 
 
+----------
 
-
-fseek
-=====
+fseek()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -2918,16 +3239,16 @@ Bugs
  modes
 
 
+
 See also
 ~~~~~~~~
-::
 
-     fopen(), fwrite()
+`fopen()`_ `fwrite()`_ 
 
+----------
 
-
-fsetpos
-=======
+fsetpos()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -2964,16 +3285,45 @@ Result
      variable errno is set.
 
 
+
 See also
+~~~~~~~~
+
+`fgetpos()`_ 
+
+----------
+
+fstat()
+=======
+
+Synopsis
 ~~~~~~~~
 ::
 
-     fgetpos()
+  int fstat(
+     int fd,
+     struct stat *sb)
 
 
 
-ftell
-=====
+----------
+
+fsync()
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int fsync(
+     int fd)
+
+
+
+----------
+
+ftell()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -3005,16 +3355,30 @@ Result
      If an error occurred, the global variable errno is set.
 
 
+
 See also
+~~~~~~~~
+
+`fopen()`_ `fseek()`_ `fwrite()`_ 
+
+----------
+
+ftime()
+=======
+
+Synopsis
 ~~~~~~~~
 ::
 
-     fopen(), fseek(), fwrite()
+  int ftime(
+     struct timeb *tb)
 
 
 
-ftruncate
-=========
+----------
+
+ftruncate()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -3060,16 +3424,16 @@ Notes
 
 
 
+
 See also
 ~~~~~~~~
-::
 
-     open(), truncate()
+`open()`_ `truncate()`_ 
 
+----------
 
-
-fwrite
-======
+fwrite()
+========
 
 Synopsis
 ~~~~~~~~
@@ -3107,16 +3471,16 @@ Result
      nblocks. Otherwise examine errno for the reason of the error.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     fopen(), fwrite()
+`fopen()`_ `fwrite()`_ 
 
+----------
 
-
-gcvt
-====
+gcvt()
+======
 
 Synopsis
 ~~~~~~~~
@@ -3154,16 +3518,16 @@ Result
      The address of the string pointed to by buf.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ecvt(), fcvt(), sprintf()
+`ecvt()`_ `fcvt()`_ `sprintf()`_ 
 
+----------
 
-
-getc
-====
+getc()
+======
 
 Synopsis
 ~~~~~~~~
@@ -3195,16 +3559,16 @@ Result
      The character read or EOF on end of file or error.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     fgetc(), fputc(), putc()
+`fgetc()`_ `fputc()`_ `putc()`_ 
 
+----------
 
-
-getchar
-=======
+getchar()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -3228,16 +3592,16 @@ Result
      The character read or EOF on end of file or error.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     fgetc(), getc(), fputc(), putc()
+`fgetc()`_ `getc()`_ `fputc()`_ `putc()`_ 
 
+----------
 
-
-getcwd
-======
+getcwd()
+========
 
 Synopsis
 ~~~~~~~~
@@ -3285,16 +3649,16 @@ Notes
      one given to chdir. See NOTES from chdir for more explanation.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     chdir
+`chdir()`_ 
 
+----------
 
-
-getegid
-=======
+getegid()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -3304,16 +3668,16 @@ Synopsis
      void)
 
 
+
 See also
 ~~~~~~~~
-::
 
-     setgid()
-     
+`setgid()`_   
 
+----------
 
-getenv
-======
+getenv()
+========
 
 Synopsis
 ~~~~~~~~
@@ -3352,8 +3716,10 @@ Notes
 
 
 
-geteuid
-=======
+----------
+
+geteuid()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -3363,16 +3729,16 @@ Synopsis
      void)
 
 
+
 See also
 ~~~~~~~~
-::
 
-     getuid()
-     
+`getuid()`_   
 
+----------
 
-getfsstat
-=========
+getfsstat()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -3419,8 +3785,10 @@ Bugs
 
 
 
-getgid
-======
+----------
+
+getgid()
+========
 
 Synopsis
 ~~~~~~~~
@@ -3430,16 +3798,116 @@ Synopsis
      void)
 
 
+
 See also
+~~~~~~~~
+
+`setgid()`_   
+
+----------
+
+getgrent()
+==========
+
+Synopsis
 ~~~~~~~~
 ::
 
-     setgid()
-     
+  struct group *getgrent(
+     void)
 
 
-getlogin
-========
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
+
+----------
+
+getgrgid()
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  struct group *getgrgid(
+     gid_t gid)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
+
+----------
+
+getgrnam()
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  struct group *getgrnam(
+     const char *name)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
+
+----------
+
+getgroups()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  int getgroups(
+     int gidsetlen,
+     gid_t *gidset)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
+
+----------
+
+getloadavg()
+============
+
+Synopsis
+~~~~~~~~
+::
+
+  int getloadavg(
+     double loadavg[],
+     int n)
+
+
+
+----------
+
+getlogin()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -3450,8 +3918,47 @@ Synopsis
      
 
 
-getpid
-======
+----------
+
+getopt()
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  int getopt(
+     int nargc,
+     char * const nargv[],
+     const char *ostr)
+
+
+
+----------
+
+getpgrp()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  pid_t getpgrp(
+     void)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
+
+----------
+
+getpid()
+========
 
 Synopsis
 ~~~~~~~~
@@ -3476,8 +3983,80 @@ Result
 
 
 
-gets
-====
+----------
+
+getppid()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  pid_t getppid(
+     void)
+
+
+
+----------
+
+getpwent()
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  struct passwd *getpwent(
+     void)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
+
+----------
+
+getpwnam()
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  struct passwd *getpwnam(
+     const char *name)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
+
+----------
+
+getpwuid()
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  struct passwd *getpwuid(
+     uid_t uid)
+
+
+
+----------
+
+gets()
+======
 
 Synopsis
 ~~~~~~~~
@@ -3520,16 +4099,16 @@ Bugs
      if it has not encountered a newline or EOF yet. Use fgets() instead.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     fgets()
+`fgets()`_ 
 
+----------
 
-
-gettimeofday
-============
+gettimeofday()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -3620,16 +4199,16 @@ Notes
      in a threaded application.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ctime(), asctime(), localtime(), time()
+`ctime()`_ `asctime()`_ `localtime()`_ `time()`_ 
 
+----------
 
-
-getuid
-======
+getuid()
+========
 
 Synopsis
 ~~~~~~~~
@@ -3639,16 +4218,30 @@ Synopsis
      void)
 
 
+
 See also
+~~~~~~~~
+
+`geteuid()`_   
+
+----------
+
+getw()
+======
+
+Synopsis
 ~~~~~~~~
 ::
 
-     geteuid()
-     
+  int getw(
+     FILE *stream)
 
 
-gmtime
-======
+
+----------
+
+gmtime()
+========
 
 Synopsis
 ~~~~~~~~
@@ -3707,16 +4300,16 @@ Notes
      in a threaded application. Use gmtime_r() instead.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     time(), ctime(), asctime(), localtime()
+`time()`_ `ctime()`_ `asctime()`_ `localtime()`_ 
 
+----------
 
-
-gmtime_r
-========
+gmtime_r()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -3767,16 +4360,39 @@ Example
      gmtime (&tt, &tm);
 
 
+
 See also
+~~~~~~~~
+
+`time()`_ `ctime_r()`_ `asctime_r()`_ `localtime_r()`_ 
+
+----------
+
+ioctl()
+=======
+
+Synopsis
 ~~~~~~~~
 ::
 
-     time(), ctime_r(), asctime_r(), localtime_r()
+  int ioctl(
+     int fd,
+     int request,
+     ...)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
 
 
 
-isalnum
-=======
+----------
+
+isalnum()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -3822,8 +4438,10 @@ Example
 
 
 
-isalpha
-=======
+----------
+
+isalpha()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -3869,8 +4487,10 @@ Example
 
 
 
-isascii
-=======
+----------
+
+isascii()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -3916,8 +4536,24 @@ Example
 
 
 
-isblank
-=======
+----------
+
+isatty()
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  int isatty(
+     int fd)
+     
+
+
+----------
+
+isblank()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -3964,8 +4600,10 @@ Example
 
 
 
-iscntrl
-=======
+----------
+
+iscntrl()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -4011,8 +4649,10 @@ Example
 
 
 
-isdigit
-=======
+----------
+
+isdigit()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -4058,8 +4698,10 @@ Example
 
 
 
-isgraph
-=======
+----------
+
+isgraph()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -4106,8 +4748,10 @@ Example
 
 
 
-islower
-=======
+----------
+
+islower()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -4153,8 +4797,10 @@ Example
 
 
 
-isprint
-=======
+----------
+
+isprint()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -4200,8 +4846,10 @@ Example
 
 
 
-ispunct
-=======
+----------
+
+ispunct()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -4248,8 +4896,10 @@ Example
 
 
 
-isspace
-=======
+----------
+
+isspace()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -4295,8 +4945,10 @@ Example
 
 
 
-isupper
-=======
+----------
+
+isupper()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -4342,8 +4994,10 @@ Example
 
 
 
-isxdigit
-========
+----------
+
+isxdigit()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -4390,8 +5044,24 @@ Example
 
 
 
-kill
-====
+----------
+
+jrand48()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  long jrand48(
+     unsigned short xseed[3])
+
+
+
+----------
+
+kill()
+======
 
 Synopsis
 ~~~~~~~~
@@ -4402,9 +5072,18 @@ Synopsis
      int   sig)
 
 
+Notes
+~~~~~
+::
 
-labs
-====
+     Not implemented.
+
+
+
+----------
+
+labs()
+======
 
 Synopsis
 ~~~~~~~~
@@ -4446,16 +5125,30 @@ Example
      labs (-1L);
 
 
+
 See also
+~~~~~~~~
+
+`abs()`_ `fabs()`_ 
+
+----------
+
+lcong48()
+=========
+
+Synopsis
 ~~~~~~~~
 ::
 
-     abs(), fabs()
+  void lcong48(
+     unsigned short p[7])
 
 
 
-ldiv
-====
+----------
+
+ldiv()
+======
 
 Synopsis
 ~~~~~~~~
@@ -4494,16 +5187,31 @@ Result
      } ldiv_t;
 
 
+
 See also
+~~~~~~~~
+
+`div()`_ 
+
+----------
+
+link()
+======
+
+Synopsis
 ~~~~~~~~
 ::
 
-     div()
+  int link(
+     const char *oldpath,
+     const char *newpath)
 
 
 
-lldiv
-=====
+----------
+
+lldiv()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -4542,16 +5250,16 @@ Result
      } lldiv_t;
 
 
+
 See also
 ~~~~~~~~
-::
 
-     div(), ldiv()
+`div()`_ `ldiv()`_ 
 
+----------
 
-
-localtime
-=========
+localtime()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -4608,16 +5316,16 @@ Notes
      in a threaded application. Use localtime_r() instead.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     time(), ctime(), asctime(), gmtime()
+`time()`_ `ctime()`_ `asctime()`_ `gmtime()`_ 
 
+----------
 
-
-localtime_r
-===========
+localtime_r()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -4696,16 +5404,30 @@ Example
      localtime_r (&tt, &tm);
 
 
+
 See also
+~~~~~~~~
+
+`time()`_ `ctime_r()`_ `asctime_r()`_ `gmtime_r()`_ 
+
+----------
+
+lrand48()
+=========
+
+Synopsis
 ~~~~~~~~
 ::
 
-     time(), ctime_r(), asctime_r(), gmtime_r()
+  long lrand48(
+     void)
 
 
 
-lseek
-=====
+----------
+
+lseek()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -4748,16 +5470,16 @@ Result
      variable errno is set.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     fopen(), fwrite()
+`fopen()`_ `fwrite()`_ 
 
+----------
 
-
-malloc
-======
+malloc()
+========
 
 Synopsis
 ~~~~~~~~
@@ -4799,16 +5521,77 @@ Notes
      application.
 
 
+
 See also
+~~~~~~~~
+
+`free()`_ 
+
+----------
+
+mblen()
+=======
+
+Synopsis
 ~~~~~~~~
 ::
 
-     free()
+  size_t mblen(
+     const char *s,
+     size_t n)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
 
 
 
-memchr
-======
+----------
+
+mbstowcs()
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  size_t mbstowcs(
+     wchar_t *pwcs,
+     const char *s,
+     size_t n)
+
+
+
+----------
+
+mbtowc()
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  int mbtowc(
+     wchar_t *pwc,
+     const char *s,
+     size_t n)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
+
+----------
+
+memchr()
+========
 
 Synopsis
 ~~~~~~~~
@@ -4845,8 +5628,10 @@ Result
 
 
 
-memcmp
-======
+----------
+
+memcmp()
+========
 
 Synopsis
 ~~~~~~~~
@@ -4891,16 +5676,16 @@ Notes
      any time.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     strcmp(), strncmp(), strcasecmp() strncasecmp()
+`strcmp()`_ `strncmp()`_ `strcasecmp()`_ `strncasecmp()`_ 
 
+----------
 
-
-memset
-======
+memset()
+========
 
 Synopsis
 ~~~~~~~~
@@ -4935,16 +5720,16 @@ Result
      dest.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     memmove(), memcpy()
+`memmove()`_ `memcpy()`_ 
 
+----------
 
-
-mkdir
-=====
+mkdir()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -4977,16 +5762,32 @@ Result
      0 on success or -1 on errorr.
 
 
+
 See also
+~~~~~~~~
+
+`chmod()`_ `stat()`_ `umask()`_ 
+
+----------
+
+mknod()
+=======
+
+Synopsis
 ~~~~~~~~
 ::
 
-     chmod(),  stat(),  umask()
+  int mknod(
+     const char *pathname,
+     mode_t mode,
+     dev_t dev)
 
 
 
-mkstemp
-=======
+----------
+
+mkstemp()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -5011,8 +5812,10 @@ Result
 
 
 
-mktemp
-======
+----------
+
+mktemp()
+========
 
 Synopsis
 ~~~~~~~~
@@ -5068,8 +5871,10 @@ Bugs
 
 
 
-mktime
-======
+----------
+
+mktime()
+========
 
 Synopsis
 ~~~~~~~~
@@ -5123,16 +5928,59 @@ Bugs
      structure is done
 
 
+
 See also
+~~~~~~~~
+
+`time()`_ `ctime()`_ `asctime()`_ `localtime()`_ `gmtime()`_ 
+
+----------
+
+mrand48()
+=========
+
+Synopsis
 ~~~~~~~~
 ::
 
-     time(), ctime(), asctime(), localtime(), gmtime()
+  long mrand48(
+     void)
 
 
 
-open
-====
+----------
+
+nrand48()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  long nrand48(
+     unsigned short xseed[3])
+
+
+
+----------
+
+on_exit()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  int on_exit(
+     void (*func)(int, void *),
+     void *arg)
+
+
+
+----------
+
+open()
+======
 
 Synopsis
 ~~~~~~~~
@@ -5215,16 +6063,16 @@ Bugs
      Most flags are not supported right now.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     close(), read(), write(), fopen()
+`close()`_ `read()`_ `write()`_ `fopen()`_ 
 
+----------
 
-
-opendir
-=======
+opendir()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -5255,17 +6103,16 @@ Result
      NULL for error or a directory stream
 
 
+
 See also
 ~~~~~~~~
-::
 
-     open(), readdir(), closedir(), rewinddir(), seekdir(),
-     telldir(), scandir()
+`open()`_ `readdir()`_ `closedir()`_ `rewinddir()`_ `seekdir()`_ `telldir()`_ `scandir()`_ 
 
+----------
 
-
-pclose
-======
+pclose()
+========
 
 Synopsis
 ~~~~~~~~
@@ -5275,16 +6122,16 @@ Synopsis
      FILE * stream)
 
 
+
 See also
 ~~~~~~~~
-::
 
-     popen()
+`popen()`_ 
 
+----------
 
-
-perror
-======
+perror()
+========
 
 Synopsis
 ~~~~~~~~
@@ -5312,8 +6159,24 @@ Inputs
               separated from string by a colon.
 
 
-popen
-=====
+----------
+
+pipe()
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  int pipe(
+     int *pipedes)
+
+
+
+----------
+
+popen()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -5366,16 +6229,16 @@ Notes
      in a threaded application.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     fclose(), fread(), fwrite(), pipe(), pclose()
+`fclose()`_ `fread()`_ `fwrite()`_ `pipe()`_ `pclose()`_ 
 
+----------
 
-
-posix_memalign
-==============
+posix_memalign()
+================
 
 Synopsis
 ~~~~~~~~
@@ -5428,16 +6291,16 @@ Notes
      If an error occurs, errno will not be set.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     free()
+`free()`_ 
 
+----------
 
-
-printf
-======
+printf()
+========
 
 Synopsis
 ~~~~~~~~
@@ -5706,17 +6569,16 @@ Bugs
      often impossible to assure.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     fprintf(), vprintf(), vfprintf(), sprintf(), vsprintf(),
-     vnsprintf()
+`fprintf()`_ `vprintf()`_ `vfprintf()`_ `sprintf()`_ `vsprintf()`_ `vsnprintf()`_ 
 
+----------
 
-
-putc
-====
+putc()
+======
 
 Synopsis
 ~~~~~~~~
@@ -5750,8 +6612,24 @@ Result
 
 
 
-putenv
-======
+----------
+
+putchar()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  int putchar(
+     int c)
+
+
+
+----------
+
+putenv()
+========
 
 Synopsis
 ~~~~~~~~
@@ -5794,8 +6672,10 @@ Notes
 
 
 
-puts
-====
+----------
+
+puts()
+======
 
 Synopsis
 ~~~~~~~~
@@ -5840,16 +6720,31 @@ Example
          fprintf (stderr, "Failure: errno=%d", errno);
 
 
+
 See also
+~~~~~~~~
+
+`fputs()`_ `printf()`_ `fprintf()`_ `putc()`_ `fputc()`_ 
+
+----------
+
+putw()
+======
+
+Synopsis
 ~~~~~~~~
 ::
 
-     fputs(), printf(), fprintf(), putc(), fputc()
+  int putw(
+     int word,
+     FILE *stream)
 
 
 
-qsort
-=====
+----------
+
+qsort()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -5914,16 +6809,30 @@ Example
      qsort (strings, sizeof (char *), 4, (void *)cmp_strptr);
 
 
+
 See also
+~~~~~~~~
+
+`strcmp()`_ `strncmp()`_ `memcmp()`_ `strcasecmp()`_ `strncasecmp()`_ 
+
+----------
+
+raise()
+=======
+
+Synopsis
 ~~~~~~~~
 ::
 
-     strcmp(), strncmp(), memcmp(), strcasecmp(), strncasecmp()
+  int raise(
+     int signal)
 
 
 
-rand
-====
+----------
+
+rand()
+======
 
 Synopsis
 ~~~~~~~~
@@ -5963,8 +6872,10 @@ Notes
 
 
 
-read
-====
+----------
+
+read()
+======
 
 Synopsis
 ~~~~~~~~
@@ -6000,16 +6911,16 @@ Result
      descriptor contains no more characters to count) or -1 on error.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     open(), read(), fread()
+`open()`_ `read()`_ `fread()`_ 
 
+----------
 
-
-readdir
-=======
+readdir()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -6051,17 +6962,16 @@ Result
      grams.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     read(), opendir(), closedir(), rewinddir(), seekdir(),
-     telldir(), scandir()
+`read()`_ `opendir()`_ `closedir()`_ `rewinddir()`_ `seekdir()`_ `telldir()`_ `scandir()`_ 
 
+----------
 
-
-realloc
-=======
+realloc()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -6111,16 +7021,16 @@ Notes
 
 
 
+
 See also
 ~~~~~~~~
-::
 
-     free(), malloc(), calloc()
+`free()`_ `malloc()`_ `calloc()`_ 
 
+----------
 
-
-realloc_nocopy
-==============
+realloc_nocopy()
+================
 
 Synopsis
 ~~~~~~~~
@@ -6173,16 +7083,16 @@ Notes
      This function is AROS specific.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     free(), malloc(), calloc(), realloc()
+`free()`_ `malloc()`_ `calloc()`_ `realloc()`_ 
 
+----------
 
-
-remove
-======
+remove()
+========
 
 Synopsis
 ~~~~~~~~
@@ -6220,16 +7130,16 @@ Notes
      Identical to unlink
 
 
+
 See also
 ~~~~~~~~
-::
 
-     unlink
+`unlink()`_ 
 
+----------
 
-
-rename
-======
+rename()
+========
 
 Synopsis
 ~~~~~~~~
@@ -6263,8 +7173,10 @@ Result
      
 
 
-rewind
-======
+----------
+
+rewind()
+========
 
 Synopsis
 ~~~~~~~~
@@ -6288,16 +7200,30 @@ Inputs
      stream - Modify this stream
 
 
+
 See also
+~~~~~~~~
+
+`fopen()`_ `fwrite()`_ `fseek()`_ 
+
+----------
+
+rewinddir()
+===========
+
+Synopsis
 ~~~~~~~~
 ::
 
-     fopen(), fwrite(), fseek()
+  void rewinddir(
+     DIR *dir)
 
 
 
-rmdir
-=====
+----------
+
+rmdir()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -6328,16 +7254,16 @@ Result
      0 on success and -1 on error. In case of an error, errno is set.
      
 
+
 See also
 ~~~~~~~~
-::
 
-     unlink(), remove()
+`unlink()`_ `remove()`_ 
 
+----------
 
-
-scanf
-=====
+scanf()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -6355,17 +7281,45 @@ Result
      The number of converted parameters
 
 
+
 See also
+~~~~~~~~
+
+`fscanf()`_ `vscanf()`_ `vfscanf()`_ `sscanf()`_ `vsscanf()`_ 
+
+----------
+
+seed48()
+========
+
+Synopsis
 ~~~~~~~~
 ::
 
-     fscanf(), vscanf(), vfscanf(), sscanf(), vsscanf(),
-     vnsscanf()
+  unsigned short *seed48(
+     unsigned short xseed[3])
 
 
 
-setbuf
-======
+----------
+
+seekdir()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  void seekdir(
+     DIR *dir,
+     off_t offset)
+
+
+
+----------
+
+setbuf()
+========
 
 Synopsis
 ~~~~~~~~
@@ -6384,8 +7338,10 @@ Notes
 
 
 
-setenv
-======
+----------
+
+setenv()
+========
 
 Synopsis
 ~~~~~~~~
@@ -6430,8 +7386,10 @@ Notes
 
 
 
-setgid
-======
+----------
+
+setgid()
+========
 
 Synopsis
 ~~~~~~~~
@@ -6442,8 +7400,31 @@ Synopsis
 
 
 
-setlinebuf
+----------
+
+setgrent()
 ==========
+
+Synopsis
+~~~~~~~~
+::
+
+  void setgrent(
+     void)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
+
+----------
+
+setlinebuf()
+============
 
 Synopsis
 ~~~~~~~~
@@ -6461,8 +7442,31 @@ Notes
 
 
 
-setuid
-======
+----------
+
+setpwent()
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  void setpwent(
+     void)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
+
+----------
+
+setuid()
+========
 
 Synopsis
 ~~~~~~~~
@@ -6473,8 +7477,10 @@ Synopsis
 
 
 
-setvbuf
-=======
+----------
+
+setvbuf()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -6488,8 +7494,10 @@ Synopsis
 
 
 
-sigaction
-=========
+----------
+
+sigaction()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -6502,8 +7510,10 @@ Synopsis
 
 
 
-sigaddset
-=========
+----------
+
+sigaddset()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -6515,8 +7525,10 @@ Synopsis
 
 
 
-sigdelset
-=========
+----------
+
+sigdelset()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -6528,8 +7540,10 @@ Synopsis
 
 
 
-sigemptyset
-===========
+----------
+
+sigemptyset()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -6540,8 +7554,10 @@ Synopsis
 
 
 
-sigfillset
-==========
+----------
+
+sigfillset()
+============
 
 Synopsis
 ~~~~~~~~
@@ -6552,8 +7568,10 @@ Synopsis
 
 
 
-sigismember
-===========
+----------
+
+sigismember()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -6565,8 +7583,32 @@ Synopsis
 
 
 
-sigpending
-==========
+----------
+
+signal()
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  __sighandler_t *signal(
+     int sig,
+     __sighandler_t *handler)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
+
+----------
+
+sigpending()
+============
 
 Synopsis
 ~~~~~~~~
@@ -6577,8 +7619,10 @@ Synopsis
 
 
 
-sigprocmask
-===========
+----------
+
+sigprocmask()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -6591,8 +7635,10 @@ Synopsis
 
 
 
-sigsuspend
-==========
+----------
+
+sigsuspend()
+============
 
 Synopsis
 ~~~~~~~~
@@ -6603,8 +7649,10 @@ Synopsis
 
 
 
-sleep
-=====
+----------
+
+sleep()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -6658,8 +7706,10 @@ Bugs
 
 
 
-snprintf
-========
+----------
+
+snprintf()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -6701,17 +7751,16 @@ Result
      included.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     fprintf(), vprintf(), vfprintf(), snprintf(), vsprintf(),
-     vnsprintf()
+`fprintf()`_ `vprintf()`_ `vfprintf()`_ `snprintf()`_ `vsprintf()`_ `vsnprintf()`_ 
 
+----------
 
-
-spawnv
-======
+spawnv()
+========
 
 Synopsis
 ~~~~~~~~
@@ -6778,18 +7827,16 @@ Notes
      the close-on-exec flag set.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     execl(), execle(), execlp(), execlpe(), execv(), execve(), execvp(), execvpe(), getenv(),
-     putenv(), setenv(), spawn(), spawnl(), spawnle(), spawnlp(), spawnlpe(), spawnp(),
-     spawnve(), spawnvp(), spawnvpe(), wait(), waitpid()
+`execl()`_ `execle()`_ `execlp()`_ `execlpe()`_ `execv()`_ `execve()`_ `execvp()`_ `execvpe()`_ `getenv()`_ `putenv()`_ `setenv()`_ `spawn()`_ `spawnl()`_ `spawnle()`_ `spawnlp()`_ `spawnlpe()`_ `spawnp()`_ `spawnve()`_ `spawnvp()`_ `spawnvpe()`_ `wait()`_ `waitpid()`_ 
 
+----------
 
-
-spawnvp
-=======
+spawnvp()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -6860,18 +7907,16 @@ Notes
      the close-on-exec flag set.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     execl(), execle(), execlp(), execlpe(), execv(), execve(), execvp(), execvpe(), getenv(),
-     putenv(), setenv(), spawn(), spawnl(), spawnle(), spawnlp(), spawnlpe(), spawnp(),
-     spawnve(), spawnvp(), spawnvpe(), wait(), waitpid()
+`execl()`_ `execle()`_ `execlp()`_ `execlpe()`_ `execv()`_ `execve()`_ `execvp()`_ `execvpe()`_ `getenv()`_ `putenv()`_ `setenv()`_ `spawn()`_ `spawnl()`_ `spawnle()`_ `spawnlp()`_ `spawnlpe()`_ `spawnp()`_ `spawnve()`_ `spawnvp()`_ `spawnvpe()`_ `wait()`_ `waitpid()`_ 
 
+----------
 
-
-sprintf
-=======
+sprintf()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -6915,17 +7960,16 @@ Notes
      No checks are made that str is large enough for the result.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     fprintf(), vprintf(), vfprintf(), snprintf(), vsprintf(),
-     vnsprintf()
+`fprintf()`_ `vprintf()`_ `vfprintf()`_ `snprintf()`_ `vsprintf()`_ `vsnprintf()`_ 
 
+----------
 
-
-srand
-=====
+srand()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -6965,8 +8009,24 @@ Notes
 
 
 
-sscanf
-======
+----------
+
+srand48()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  void srand48(
+     long seed)
+
+
+
+----------
+
+sscanf()
+========
 
 Synopsis
 ~~~~~~~~
@@ -7002,17 +8062,31 @@ Result
      The number of converted parameters.
 
 
+
 See also
+~~~~~~~~
+
+`fscanf()`_ `vscanf()`_ `vfscanf()`_ `vsscanf()`_ 
+
+----------
+
+stat()
+======
+
+Synopsis
 ~~~~~~~~
 ::
 
-     fscanf(), vscanf(), vfscanf(), snscanf(), vsscanf(),
-     vnsscanf()
+  int stat(
+     const char *path,
+     struct stat *sb)
 
 
 
-statfs
-======
+----------
+
+statfs()
+========
 
 Synopsis
 ~~~~~~~~
@@ -7055,8 +8129,10 @@ Bugs
 
 
 
-stccpy
-======
+----------
+
+stccpy()
+========
 
 Synopsis
 ~~~~~~~~
@@ -7101,16 +8177,16 @@ Notes
      No check is beeing made that dest is large enough for src.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     strncpy()
+`strncpy()`_ 
 
+----------
 
-
-stcd_l
-======
+stcd_l()
+========
 
 Synopsis
 ~~~~~~~~
@@ -7151,8 +8227,10 @@ Notes
      
 
 
-stch_l
-======
+----------
+
+stch_l()
+========
 
 Synopsis
 ~~~~~~~~
@@ -7193,8 +8271,10 @@ Notes
      
 
 
-stcl_d
-======
+----------
+
+stcl_d()
+========
 
 Synopsis
 ~~~~~~~~
@@ -7235,8 +8315,10 @@ Notes
      
 
 
-stcl_h
-======
+----------
+
+stcl_h()
+========
 
 Synopsis
 ~~~~~~~~
@@ -7277,8 +8359,10 @@ Notes
      
 
 
-stcl_o
-======
+----------
+
+stcl_o()
+========
 
 Synopsis
 ~~~~~~~~
@@ -7319,8 +8403,10 @@ Notes
      
 
 
-stco_l
-======
+----------
+
+stco_l()
+========
 
 Synopsis
 ~~~~~~~~
@@ -7361,8 +8447,10 @@ Notes
      
 
 
-stcu_d
-======
+----------
+
+stcu_d()
+========
 
 Synopsis
 ~~~~~~~~
@@ -7403,8 +8491,10 @@ Notes
      
 
 
-stpblk
-======
+----------
+
+stpblk()
+========
 
 Synopsis
 ~~~~~~~~
@@ -7466,16 +8556,16 @@ Notes
      to the trailing '\0' is returned (ie. an empty string).
      
 
+
 See also
 ~~~~~~~~
-::
 
-     isspace()
+`isspace()`_ 
 
+----------
 
-
-stpcpy
-======
+stpcpy()
+========
 
 Synopsis
 ~~~~~~~~
@@ -7518,16 +8608,16 @@ Notes
      No check is beeing made that dest is large enough for src.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     strcpy()
+`strcpy()`_ 
 
+----------
 
-
-stpsym
-======
+stpsym()
+========
 
 Synopsis
 ~~~~~~~~
@@ -7599,8 +8689,10 @@ Notes
 
 
 
-strcasecmp
-==========
+----------
+
+strcasecmp()
+============
 
 Synopsis
 ~~~~~~~~
@@ -7643,8 +8735,10 @@ Notes
 
 
 
-strcasestr
-==========
+----------
+
+strcasestr()
+============
 
 Synopsis
 ~~~~~~~~
@@ -7693,16 +8787,16 @@ Example
      strcasestr (buffer, "llox");
 
 
+
 See also
 ~~~~~~~~
-::
 
-     strchr(), strrchr(), strpbrk()
+`strchr()`_ `strrchr()`_ `strpbrk()`_ 
 
+----------
 
-
-strcat
-======
+strcat()
+========
 
 Synopsis
 ~~~~~~~~
@@ -7756,8 +8850,10 @@ Notes
 
 
 
-strchr
-======
+----------
+
+strchr()
+========
 
 Synopsis
 ~~~~~~~~
@@ -7806,16 +8902,16 @@ Example
      strchr (buffer, 'x');
 
 
+
 See also
 ~~~~~~~~
-::
 
-     strrchr()
+`strrchr()`_ 
 
+----------
 
-
-strcmp
-======
+strcmp()
+========
 
 Synopsis
 ~~~~~~~~
@@ -7858,8 +8954,10 @@ Notes
 
 
 
-strcoll
-=======
+----------
+
+strcoll()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -7895,8 +8993,10 @@ Result
 
 
 
-strcpy
-======
+----------
+
+strcpy()
+========
 
 Synopsis
 ~~~~~~~~
@@ -7937,16 +9037,16 @@ Notes
      No check is beeing made that dest is large enough for src.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     strncpy(), memcpy(), memmove()
+`strncpy()`_ `memcpy()`_ `memmove()`_ 
 
+----------
 
-
-strcspn
-=======
+strcspn()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -7997,8 +9097,10 @@ Example
 
 
 
-strdup
-======
+----------
+
+strdup()
+========
 
 Synopsis
 ~~~~~~~~
@@ -8031,8 +9133,10 @@ Result
 
 
 
-strerror
-========
+----------
+
+strerror()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -8064,8 +9168,59 @@ Result
 
 
 
-strlen
-======
+----------
+
+strftime()
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  size_t strftime(
+     char *s,
+     size_t maxsize,
+     const char *format,
+     const struct tm *timeptr)
+
+
+
+----------
+
+strlcat()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  size_t strlcat(
+     char *dst,
+     const char *src,
+     size_t siz)
+
+
+
+----------
+
+strlcpy()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  size_t strlcpy(
+     char *dst,
+     const char *src,
+     size_t siz)
+
+
+
+----------
+
+strlen()
+========
 
 Synopsis
 ~~~~~~~~
@@ -8097,8 +9252,10 @@ Result
 
 
 
-strlwr
-======
+----------
+
+strlwr()
+========
 
 Synopsis
 ~~~~~~~~
@@ -8132,8 +9289,10 @@ Result
 
 
 
-strncasecmp
-===========
+----------
+
+strncasecmp()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -8178,8 +9337,10 @@ Notes
 
 
 
-strncat
-=======
+----------
+
+strncat()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -8237,8 +9398,10 @@ Notes
 
 
 
-strncmp
-=======
+----------
+
+strncmp()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -8282,8 +9445,10 @@ Notes
 
 
 
-strncpy
-=======
+----------
+
+strncpy()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -8328,16 +9493,16 @@ Notes
      No check is beeing made that dest is large enough for src.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     strncpy(), memcpy(), memmove()
+`strncpy()`_ `memcpy()`_ `memmove()`_ 
 
+----------
 
-
-strpbrk
-=======
+strpbrk()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -8386,16 +9551,16 @@ Example
      strpbrk (buffer, "xyz");
 
 
+
 See also
 ~~~~~~~~
-::
 
-     strchr(), strrchr()
+`strchr()`_ `strrchr()`_ 
 
+----------
 
-
-strrchr
-=======
+strrchr()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -8444,16 +9609,16 @@ Example
      strrchr (buffer, 'x');
 
 
+
 See also
 ~~~~~~~~
-::
 
-     strrchr()
+`strrchr()`_ 
 
+----------
 
-
-strrev
-======
+strrev()
+========
 
 Synopsis
 ~~~~~~~~
@@ -8505,8 +9670,10 @@ Notes
 
 
 
-strsep
-======
+----------
+
+strsep()
+========
 
 Synopsis
 ~~~~~~~~
@@ -8577,8 +9744,10 @@ Notes
 
 
 
-strspn
-======
+----------
+
+strspn()
+========
 
 Synopsis
 ~~~~~~~~
@@ -8629,8 +9798,10 @@ Example
 
 
 
-strstr
-======
+----------
+
+strstr()
+========
 
 Synopsis
 ~~~~~~~~
@@ -8679,16 +9850,16 @@ Example
      strstr (buffer, "llox");
 
 
+
 See also
 ~~~~~~~~
-::
 
-     strchr(), strrchr(), strpbrk()
+`strchr()`_ `strrchr()`_ `strpbrk()`_ 
 
+----------
 
-
-strtod
-======
+strtod()
+========
 
 Synopsis
 ~~~~~~~~
@@ -8729,16 +9900,16 @@ Result
      returned.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     atof(), atoi(), atol(), strtol(), strtoul()
+`atof()`_ `atoi()`_ `atol()`_ `strtol()`_ `strtoul()`_ 
 
+----------
 
-
-strtok
-======
+strtok()
+========
 
 Synopsis
 ~~~~~~~~
@@ -8807,8 +9978,10 @@ Notes
 
 
 
-strtol
-======
+----------
+
+strtol()
+========
 
 Synopsis
 ~~~~~~~~
@@ -8876,16 +10049,16 @@ Example
      strol ("5z", &ptr, 36);
 
 
+
 See also
 ~~~~~~~~
-::
 
-     atof(), atoi(), atol(), strtod(), strtoul()
+`atof()`_ `atoi()`_ `atol()`_ `strtod()`_ `strtoul()`_ 
 
+----------
 
-
-strtoll
-=======
+strtoll()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -8953,16 +10126,16 @@ Example
      strtoll ("5z", &ptr, 36);
 
 
+
 See also
 ~~~~~~~~
-::
 
-     strtoull()
+`strtoull()`_ 
 
+----------
 
-
-strtoul
-=======
+strtoul()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -9030,16 +10203,16 @@ Example
      strtoul ("5z", &ptr, 36);
 
 
+
 See also
 ~~~~~~~~
-::
 
-     atoi(), atol(), strtod(), strtol(), strtoul()
+`atoi()`_ `atol()`_ `strtod()`_ `strtol()`_ `strtoul()`_ 
 
+----------
 
-
-strtoull
-========
+strtoull()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -9107,16 +10280,16 @@ Example
      strtoull ("5z", &ptr, 36);
 
 
+
 See also
 ~~~~~~~~
-::
 
-     strtoll(), strtoull()
+`strtoll()`_ `strtoull()`_ 
 
+----------
 
-
-strupr
-======
+strupr()
+========
 
 Synopsis
 ~~~~~~~~
@@ -9150,8 +10323,10 @@ Result
 
 
 
-strxfrm
-=======
+----------
+
+strxfrm()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -9197,8 +10372,41 @@ Result
 
 
 
-system
+----------
+
+swab()
 ======
+
+Synopsis
+~~~~~~~~
+::
+
+  void swab(
+     const void *from,
+     void *to,
+     size_t len)
+
+
+
+----------
+
+symlink()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  int symlink(
+     const char *oldpath,
+     const char *newpath)
+
+
+
+----------
+
+system()
+========
 
 Synopsis
 ~~~~~~~~
@@ -9209,8 +10417,39 @@ Synopsis
 
 
 
-time
-====
+----------
+
+telldir()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  long telldir(
+     DIR *dir)
+
+
+
+----------
+
+tempnam()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  char * tempnam(
+     const char *dir,
+     const char *pfx)
+
+
+
+----------
+
+time()
+======
 
 Synopsis
 ~~~~~~~~
@@ -9264,16 +10503,30 @@ Notes
      in a threaded application.
 
 
+
 See also
+~~~~~~~~
+
+`ctime()`_ `asctime()`_ `localtime()`_ 
+
+----------
+
+times()
+=======
+
+Synopsis
 ~~~~~~~~
 ::
 
-     ctime(), asctime(), localtime()
+  clock_t times(
+     struct tms *tms)
 
 
 
-tmpfile
-=======
+----------
+
+tmpfile()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -9349,16 +10602,30 @@ Bugs
 
 
 
+
 See also
+~~~~~~~~
+
+`fopen()`_ `mkstemp()`_ 
+
+----------
+
+tmpnam()
+========
+
+Synopsis
 ~~~~~~~~
 ::
 
-     fopen(), mkstemp()
+  char *tmpnam(
+     char *s)
 
 
 
-truncate
-========
+----------
+
+truncate()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -9403,16 +10670,16 @@ Notes
 
 
 
+
 See also
 ~~~~~~~~
-::
 
-     open()
+`open()`_ 
 
+----------
 
-
-ttyname
-=======
+ttyname()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -9423,8 +10690,24 @@ Synopsis
      
 
 
-uname
-=====
+----------
+
+umask()
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  mode_t umask(
+     mode_t numask)
+
+
+
+----------
+
+uname()
+=======
 
 Synopsis
 ~~~~~~~~
@@ -9458,8 +10741,10 @@ Result
 
 
 
-ungetc
-======
+----------
+
+ungetc()
+========
 
 Synopsis
 ~~~~~~~~
@@ -9497,16 +10782,16 @@ Result
      c or EOF on error.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     fgetc(), getc(), fputc(), putc()
+`fgetc()`_ `getc()`_ `fputc()`_ `putc()`_ 
 
+----------
 
-
-unlink
-======
+unlink()
+========
 
 Synopsis
 ~~~~~~~~
@@ -9553,8 +10838,10 @@ Notes
 
 
 
-unsetenv
-========
+----------
+
+unsetenv()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -9586,8 +10873,10 @@ Result
 
 
 
-updatestdio
-===========
+----------
+
+updatestdio()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -9613,8 +10902,10 @@ Notes
 
 
 
-usleep
-======
+----------
+
+usleep()
+========
 
 Synopsis
 ~~~~~~~~
@@ -9646,8 +10937,41 @@ Result
 
 
 
-vfprintf
+----------
+
+utime()
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int utime(
+     const char *filename,
+     struct utimbuf *buf)
+
+
+
+----------
+
+utimes()
 ========
+
+Synopsis
+~~~~~~~~
+::
+
+  int utimes(
+
+     const char *file,
+     struct timeval tvp[2])
+
+
+
+----------
+
+vfprintf()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -9683,8 +11007,10 @@ Result
 
 
 
-vfscanf
-=======
+----------
+
+vfscanf()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -9721,8 +11047,10 @@ Result
 
 
 
-vprintf
-=======
+----------
+
+vprintf()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -9756,8 +11084,10 @@ Result
 
 
 
-vscanf
-======
+----------
+
+vscanf()
+========
 
 Synopsis
 ~~~~~~~~
@@ -9792,8 +11122,10 @@ Result
 
 
 
-vsnprintf
-=========
+----------
+
+vsnprintf()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -9841,17 +11173,16 @@ Notes
      the result.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     printf(), sprintf(), fprintf(), vprintf(), vfprintf(), snprintf(),
-     vsnprintf()
+`printf()`_ `sprintf()`_ `fprintf()`_ `vprintf()`_ `vfprintf()`_ `snprintf()`_ `vsnprintf()`_ 
 
+----------
 
-
-vsprintf
-========
+vsprintf()
+==========
 
 Synopsis
 ~~~~~~~~
@@ -9894,17 +11225,16 @@ Notes
      the result.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     printf(), sprintf(), fprintf(), vprintf(), vfprintf(), snprintf(),
-     vsnprintf()
+`printf()`_ `sprintf()`_ `fprintf()`_ `vprintf()`_ `vfprintf()`_ `snprintf()`_ `vsnprintf()`_ 
 
+----------
 
-
-vsscanf
-=======
+vsscanf()
+=========
 
 Synopsis
 ~~~~~~~~
@@ -9940,17 +11270,91 @@ Result
      The number of arguments converted.
 
 
+
 See also
+~~~~~~~~
+
+`scanf()`_ `sscanf()`_ `fscanf()`_ `vscanf()`_ `vfscanf()`_ 
+
+----------
+
+wait()
+======
+
+Synopsis
 ~~~~~~~~
 ::
 
-     scanf(), sscanf(), fscanf(), vscanf(), vfscanf(), snscanf(),
-     vsnscanf()
+  pid_t wait(
+     int *status)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
 
 
 
-write
-=====
+----------
+
+waitpid()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  pid_t waitpid(
+     pid_t pid,
+     int *status,
+     int options)
+
+
+
+----------
+
+wcstombs()
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  size_t wcstombs(
+     char *s,
+     const wchar_t *pwcs,
+     size_t n)
+
+
+
+----------
+
+wctomb()
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  int wctomb(
+     char *s,
+     wchar_t wchar)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
+
+----------
+
+write()
+=======
 
 Synopsis
 ~~~~~~~~

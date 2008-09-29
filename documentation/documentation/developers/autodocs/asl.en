@@ -9,15 +9,15 @@ asl
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AbortAslRequest`_                      `ActivateAslRequest`_                   `AllocAslRequest`_                      `AllocFileRequest`_                     
-`AslRequest`_                           `FreeAslRequest`_                       `FreeFileRequest`_                      `RequestFile`_                          
+`AbortAslRequest()`_                    `ActivateAslRequest()`_                 `AllocAslRequest()`_                    `AllocFileRequest()`_                   
+`AslRequest()`_                         `FreeAslRequest()`_                     `FreeFileRequest()`_                    `RequestFile()`_                        
 
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-AbortAslRequest
-===============
+AbortAslRequest()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -27,8 +27,10 @@ Synopsis
           APTR requester );
 
 
-ActivateAslRequest
-==================
+----------
+
+ActivateAslRequest()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -38,8 +40,10 @@ Synopsis
           APTR requester );
 
 
-AllocAslRequest
-===============
+----------
+
+AllocAslRequest()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -54,8 +58,10 @@ Synopsis
           TAG tag, ... );
 
 
-AllocFileRequest
-================
+----------
+
+AllocFileRequest()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -70,16 +76,16 @@ Function
      Obsolete. Use AllocAslRequest() instead.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AllocAslRequest()
+`AllocAslRequest()`_ 
 
+----------
 
-
-AslRequest
-==========
+AslRequest()
+============
 
 Synopsis
 ~~~~~~~~
@@ -94,8 +100,10 @@ Synopsis
           TAG tag, ... );
 
 
-FreeAslRequest
-==============
+----------
+
+FreeAslRequest()
+================
 
 Synopsis
 ~~~~~~~~
@@ -119,8 +127,10 @@ Inputs
 
 
 
-FreeFileRequest
-===============
+----------
+
+FreeFileRequest()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -136,16 +146,16 @@ Function
      Obsolete. Use FreeAslRequest() instead.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     FreeAslRequest()
+`FreeAslRequest()`_ 
 
+----------
 
-
-RequestFile
-===========
+RequestFile()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -161,11 +171,9 @@ Function
      Obsolete. Use AslRequest() instead.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AslRequest()
-
-
+`AslRequest()`_ 
 

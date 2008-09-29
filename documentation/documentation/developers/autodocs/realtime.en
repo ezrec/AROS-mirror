@@ -9,15 +9,15 @@ realtime
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`CreatePlayerA`_                        `DeletePlayer`_                         `ExternalSync`_                         `FindConductor`_                        
-`GetPlayerAttrsA`_                      `LockRealTime`_                         `NextConductor`_                        `SetConductorState`_                    
-`SetPlayerAttrsA`_                      `UnlockRealTime`_                       
+`CreatePlayerA()`_                      `DeletePlayer()`_                       `ExternalSync()`_                       `FindConductor()`_                      
+`GetPlayerAttrsA()`_                    `LockRealTime()`_                       `NextConductor()`_                      `SetConductorState()`_                  
+`SetPlayerAttrsA()`_                    `UnlockRealTime()`_                     
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-CreatePlayerA
-=============
+CreatePlayerA()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -122,17 +122,16 @@ Result
  to by PLAYER_ErrorCode if you have specified that tag.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`DeletePlayer()`_ `GetPlayerAttrsA()`_ `SetPlayerAttrsA()`_ 
 
- DeletePlayer(), GetPlayerAttrs(), SetPlayerAttrs()
+----------
 
-
-
-DeletePlayer
-============
+DeletePlayer()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -159,17 +158,16 @@ Inputs
              does nothing.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`CreatePlayerA()`_ 
 
- CreatePlayerA()
+----------
 
-
-
-ExternalSync
-============
+ExternalSync()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -211,8 +209,10 @@ Result
 
 
 
-FindConductor
-=============
+----------
+
+FindConductor()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -255,17 +255,16 @@ Notes
  before calling this function.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`NextConductor()`_ `LockRealTime()`_ `UnlockRealTime()`_ 
 
- NextConductor(), LockRealTime(), UnlockRealTime()
+----------
 
-
-
-GetPlayerAttrsA
-===============
+GetPlayerAttrsA()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -312,17 +311,16 @@ Result
  The number of items successfully filled in.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`CreatePlayerA()`_ `SetPlayerAttrsA()`_ 
 
- CreatePlayer(), SetPlayerAttrs()
+----------
 
-
-
-LockRealTime
-============
+LockRealTime()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -357,17 +355,16 @@ Result
  is invalid, NULL is returned.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`UnlockRealTime()`_ 
 
- UnlockRealTime()
+----------
 
-
-
-NextConductor
-=============
+NextConductor()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -413,17 +410,16 @@ Notes
  before calling this function.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`FindConductor()`_ `LockRealTime()`_ `UnlockRealTime()`_ 
 
- FindConductor(), LockRealTime(), UnlockRealTime()
+----------
 
-
-
-SetConductorState
-=================
+SetConductorState()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -485,8 +481,10 @@ Notes
 
 
 
-SetPlayerAttrsA
-===============
+----------
+
+SetPlayerAttrsA()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -532,17 +530,16 @@ Result
  is provided, more information can be obtained via that pointer.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`DeletePlayer()`_ `GetPlayerAttrsA()`_ 
 
- DeletePlayer(), GetPlayerAttrs(), SetPlayerAttrs()
+----------
 
-
-
-UnlockRealTime
-==============
+UnlockRealTime()
+================
 
 Synopsis
 ~~~~~~~~
@@ -567,12 +564,9 @@ Inputs
  lockHandle  --  Handle returned by LockRealTime(); may be NULL.
 
 
+
 See also
 ~~~~~~~~
-::
 
-
- LockRealTime()
-
-
+`LockRealTime()`_ 
 

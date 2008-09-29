@@ -9,13 +9,13 @@ battclock
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`ReadBattClock`_                        `ResetBattClock`_                       `WriteBattClock`_                       
+`ReadBattClock()`_                      `ResetBattClock()`_                     `WriteBattClock()`_                     
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-ReadBattClock
-=============
+ReadBattClock()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -42,16 +42,16 @@ Result
      The number of seconds since 1.1.1978 00:00:00
 
 
+
 See also
 ~~~~~~~~
-::
 
-     WriteBattClock, ResetBattClock
+`WriteBattClock <writebattclock>`_ `ResetBattClock <resetbattclock>`_ 
 
+----------
 
-
-ResetBattClock
-==============
+ResetBattClock()
+================
 
 Synopsis
 ~~~~~~~~
@@ -89,16 +89,16 @@ Notes
      doesn't exist, or may not be writable by the operating system.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReadBattClock, WriteBattClock
+`ReadBattClock <readbattclock>`_ `WriteBattClock <writebattclock>`_ 
 
+----------
 
-
-WriteBattClock
-==============
+WriteBattClock()
+================
 
 Synopsis
 ~~~~~~~~
@@ -137,11 +137,9 @@ Notes
      up clock either doesn't exist, or may not be writable.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ReadBattClock, ResetBattClock
-
-
+`ReadBattClock <readbattclock>`_ `ResetBattClock <resetbattclock>`_ 
 

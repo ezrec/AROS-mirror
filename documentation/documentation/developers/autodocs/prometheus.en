@@ -9,16 +9,16 @@ prometheus
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`Prm_AddIntServer`_                     `Prm_AllocDMABuffer`_                   `Prm_FindBoardTagList`_                 `Prm_FreeDMABuffer`_                    
-`Prm_GetBoardAttrsTagList`_             `Prm_GetPhysicalAddr`_                  `Prm_ReadConfigByte`_                   `Prm_ReadConfigLong`_                   
-`Prm_ReadConfigWord`_                   `Prm_RemIntServer`_                     `Prm_SetBoardAttrsTagList`_             `Prm_WriteConfigByte`_                  
-`Prm_WriteConfigLong`_                  `Prm_WriteConfigWord`_                  
+`Prm_AddIntServer()`_                   `Prm_AllocDMABuffer()`_                 `Prm_FindBoardTagList()`_               `Prm_FreeDMABuffer()`_                  
+`Prm_GetBoardAttrsTagList()`_           `Prm_GetPhysicalAddr()`_                `Prm_ReadConfigByte()`_                 `Prm_ReadConfigLong()`_                 
+`Prm_ReadConfigWord()`_                 `Prm_RemIntServer()`_                   `Prm_SetBoardAttrsTagList()`_           `Prm_WriteConfigByte()`_                
+`Prm_WriteConfigLong()`_                `Prm_WriteConfigWord()`_                
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-Prm_AddIntServer
-================
+Prm_AddIntServer()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -29,8 +29,10 @@ Synopsis
           struct Interrupt * interrupt );
 
 
-Prm_AllocDMABuffer
-==================
+----------
+
+Prm_AllocDMABuffer()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -40,8 +42,10 @@ Synopsis
           ULONG size );
 
 
-Prm_FindBoardTagList
-====================
+----------
+
+Prm_FindBoardTagList()
+======================
 
 Synopsis
 ~~~~~~~~
@@ -56,8 +60,10 @@ Synopsis
           TAG tag, ... );
 
 
-Prm_FreeDMABuffer
-=================
+----------
+
+Prm_FreeDMABuffer()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -68,8 +74,10 @@ Synopsis
           ULONG size );
 
 
-Prm_GetBoardAttrsTagList
-========================
+----------
+
+Prm_GetBoardAttrsTagList()
+==========================
 
 Synopsis
 ~~~~~~~~
@@ -84,8 +92,10 @@ Synopsis
           TAG tag, ... );
 
 
-Prm_GetPhysicalAddr
-===================
+----------
+
+Prm_GetPhysicalAddr()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -95,8 +105,10 @@ Synopsis
           APTR address );
 
 
-Prm_ReadConfigByte
-==================
+----------
+
+Prm_ReadConfigByte()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -107,8 +119,10 @@ Synopsis
           UBYTE offset );
 
 
-Prm_ReadConfigLong
-==================
+----------
+
+Prm_ReadConfigLong()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -119,8 +133,10 @@ Synopsis
           UBYTE offset );
 
 
-Prm_ReadConfigWord
-==================
+----------
+
+Prm_ReadConfigWord()
+====================
 
 Synopsis
 ~~~~~~~~
@@ -131,8 +147,10 @@ Synopsis
           UBYTE offset );
 
 
-Prm_RemIntServer
-================
+----------
+
+Prm_RemIntServer()
+==================
 
 Synopsis
 ~~~~~~~~
@@ -143,8 +161,10 @@ Synopsis
           struct Interrupt * interrupt );
 
 
-Prm_SetBoardAttrsTagList
-========================
+----------
+
+Prm_SetBoardAttrsTagList()
+==========================
 
 Synopsis
 ~~~~~~~~
@@ -159,8 +179,10 @@ Synopsis
           TAG tag, ... );
 
 
-Prm_WriteConfigByte
-===================
+----------
+
+Prm_WriteConfigByte()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -172,8 +194,10 @@ Synopsis
           UBYTE offset );
 
 
-Prm_WriteConfigLong
-===================
+----------
+
+Prm_WriteConfigLong()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -185,8 +209,10 @@ Synopsis
           UBYTE offset );
 
 
-Prm_WriteConfigWord
-===================
+----------
+
+Prm_WriteConfigWord()
+=====================
 
 Synopsis
 ~~~~~~~~

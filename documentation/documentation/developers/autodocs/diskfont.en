@@ -9,14 +9,14 @@ diskfont
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AvailFonts`_                           `DisposeFontContents`_                  `NewFontContents`_                      `NewScaledDiskFont`_                    
-`OpenDiskFont`_                         
+`AvailFonts()`_                         `DisposeFontContents()`_                `NewFontContents()`_                    `NewScaledDiskFont()`_                  
+`OpenDiskFont()`_                       
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-AvailFonts
-==========
+AvailFonts()
+============
 
 Synopsis
 ~~~~~~~~
@@ -70,16 +70,16 @@ Notes
      in the AvailFontsHeader will be 0.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     OpenDiskfont(), <diskfont/diskfont.h>
+`OpenDiskfont()`_ <diskfont/diskfont.h> 
 
+----------
 
-
-DisposeFontContents
-===================
+DisposeFontContents()
+=====================
 
 Synopsis
 ~~~~~~~~
@@ -105,17 +105,16 @@ Inputs
                          NewFontContents().
 
 
+
 See also
 ~~~~~~~~
-::
 
+`NewFontContents()`_ 
 
- NewFontContents()
+----------
 
-
-
-NewFontContents
-===============
+NewFontContents()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -155,17 +154,16 @@ Result
  if something went wrong.
 
 
+
 See also
 ~~~~~~~~
-::
 
+`DisposeFontContents()`_ 
 
- DisposeFontContents()
+----------
 
-
-
-NewScaledDiskFont
-=================
+NewScaledDiskFont()
+===================
 
 Synopsis
 ~~~~~~~~
@@ -176,8 +174,10 @@ Synopsis
           struct TextAttr * destTextAttr );
 
 
-OpenDiskFont
-============
+----------
+
+OpenDiskFont()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -211,11 +211,9 @@ Result
      Pointer to a struct TextFont on success, 0 on failure.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     AvailFonts()
-
-
+`AvailFonts()`_ 
 

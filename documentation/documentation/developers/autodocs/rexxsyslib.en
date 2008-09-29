@@ -9,15 +9,15 @@ rexxsyslib
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`ClearRexxMsg`_                         `CreateArgstring`_                      `CreateRexxMsg`_                        `DeleteArgstring`_                      
-`DeleteRexxMsg`_                        `FillRexxMsg`_                          `IsRexxMsg`_                            `LengthArgstring`_                      
-`LockRexxBase`_                         `UnlockRexxBase`_                       
+`ClearRexxMsg()`_                       `CreateArgstring()`_                    `CreateRexxMsg()`_                      `DeleteArgstring()`_                    
+`DeleteRexxMsg()`_                      `FillRexxMsg()`_                        `IsRexxMsg()`_                          `LengthArgstring()`_                    
+`LockRexxBase()`_                       `UnlockRexxBase()`_                     
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-ClearRexxMsg
-============
+ClearRexxMsg()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -50,16 +50,16 @@ Result
      void
 
 
+
 See also
 ~~~~~~~~
-::
 
-      FillRexxMsg(), DeleteArgstring()
+`FillRexxMsg()`_ `DeleteArgstring()`_ 
 
+----------
 
-
-CreateArgstring
-===============
+CreateArgstring()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -101,16 +101,16 @@ Notes
      null terminated C string but should be considered read-only.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     DeleteArgstring(), LengthArgstring()
+`DeleteArgstring()`_ `LengthArgstring()`_ 
 
+----------
 
-
-CreateRexxMsg
-=============
+CreateRexxMsg()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -147,16 +147,16 @@ Result
      Pointer to the freshly allocated RexxMsg.
 
 
+
 See also
 ~~~~~~~~
-::
 
-     DeleteRexxMsg(), IsRexxMsg(), FillRexxMsg(), ClearRexxMsg()
+`DeleteRexxMsg()`_ `IsRexxMsg()`_ `FillRexxMsg()`_ `ClearRexxMsg()`_ 
 
+----------
 
-
-DeleteArgstring
-===============
+DeleteArgstring()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -187,16 +187,16 @@ Result
      void
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateArgstring()
+`CreateArgstring()`_ 
 
+----------
 
-
-DeleteRexxMsg
-=============
+DeleteRexxMsg()
+===============
 
 Synopsis
 ~~~~~~~~
@@ -226,16 +226,16 @@ Result
       void
 
 
+
 See also
 ~~~~~~~~
-::
 
-      CreateRexxMsg()
+`CreateRexxMsg()`_ 
 
+----------
 
-
-FillRexxMsg
-===========
+FillRexxMsg()
+=============
 
 Synopsis
 ~~~~~~~~
@@ -292,16 +292,16 @@ Example
      ...
 
 
+
 See also
 ~~~~~~~~
-::
 
-     ClearRexxMsg(), CreateRexxMsg(), CreateArgstring()
+`ClearRexxMsg()`_ `CreateRexxMsg()`_ `CreateArgstring()`_ 
 
+----------
 
-
-IsRexxMsg
-=========
+IsRexxMsg()
+===========
 
 Synopsis
 ~~~~~~~~
@@ -331,16 +331,16 @@ Result
      TRUE if it is one, FALSE otherwise
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateRexxMsg
+`CreateRexxMsg()`_ 
 
+----------
 
-
-LengthArgstring
-===============
+LengthArgstring()
+=================
 
 Synopsis
 ~~~~~~~~
@@ -371,16 +371,16 @@ Result
      length of the argstring
 
 
+
 See also
 ~~~~~~~~
-::
 
-     CreateArgstring()
+`CreateArgstring()`_ 
 
+----------
 
-
-LockRexxBase
-============
+LockRexxBase()
+==============
 
 Synopsis
 ~~~~~~~~
@@ -390,8 +390,10 @@ Synopsis
           ULONG resource );
 
 
-UnlockRexxBase
-==============
+----------
+
+UnlockRexxBase()
+================
 
 Synopsis
 ~~~~~~~~
