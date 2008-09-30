@@ -329,7 +329,7 @@ Notes
 See also
 ~~~~~~~~
 
-<intuition/gadgetclass.h> 
+`intuition/gadgetclass.h <../headerfiles/intuition/gadgetclass.h>`_ 
 
 ----------
 
@@ -1585,7 +1585,7 @@ Inputs
 See also
 ~~~~~~~~
 
-`GetDTAttrsA()`_ `intuition.library/SetGadgetAttrsA() <./intuition#setgadgetattrsa>`_ <datatypes/datatypesclass.h> 
+`GetDTAttrsA()`_ `intuition.library/SetGadgetAttrsA() <./intuition#setgadgetattrsa>`_ `datatypes/datatypesclass.h <../headerfiles/datatypes/datatypesclass.h>`_ 
 
 ----------
 

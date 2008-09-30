@@ -89,7 +89,7 @@ Bugs
 See also
 ~~~~~~~~
 
-utility/name.h `RemNamedObject()`_ 
+`utility/name.h <../headerfiles/utility/name.h>`_ `RemNamedObject()`_ 
 
 ----------
 
@@ -345,7 +345,7 @@ Result
 See also
 ~~~~~~~~
 
-utility/name.h `RemNamedObject()`_ `AddNamedObject()`_ 
+`utility/name.h <../headerfiles/utility/name.h>`_ `RemNamedObject()`_ `AddNamedObject()`_ 
 
 ----------
 
@@ -808,7 +808,7 @@ Result
 See also
 ~~~~~~~~
 
-utility/name.h `AllocNamedObjectA()`_ 
+`utility/name.h <../headerfiles/utility/name.h>`_ `AllocNamedObjectA()`_ 
 
 ----------
 
@@ -875,7 +875,7 @@ Notes
 See also
 ~~~~~~~~
 
-utility/tagitem.h `AllocateTagItems()`_ 
+`utility/tagitem.h <../headerfiles/utility/tagitem.h>`_ `AllocateTagItems()`_ 
 
 ----------
 
@@ -949,7 +949,7 @@ Notes
 See also
 ~~~~~~~~
 
-utility/tagitem.h 
+`utility/tagitem.h <../headerfiles/utility/tagitem.h>`_ 
 
 ----------
 
@@ -1065,7 +1065,7 @@ Example
 See also
 ~~~~~~~~
 
-utility/name.h 
+`utility/name.h <../headerfiles/utility/name.h>`_ 
 
 ----------
 
@@ -1396,7 +1396,7 @@ Notes
 See also
 ~~~~~~~~
 
-utility/name.h `FindNamedObject()`_ 
+`utility/name.h <../headerfiles/utility/name.h>`_ `FindNamedObject()`_ 
 
 ----------
 
@@ -1788,7 +1788,7 @@ Result
 See also
 ~~~~~~~~
 
-<utility/tagitem.h> `FilterTagItems()`_ 
+`utility/tagitem.h <../headerfiles/utility/tagitem.h>`_ `FilterTagItems()`_ 
 
 ----------
 

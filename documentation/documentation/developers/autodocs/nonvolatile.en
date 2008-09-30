@@ -148,7 +148,7 @@ Result
 See also
 ~~~~~~~~
 
-`FreeNVData()`_ <libraries/nonvolatile.h> 
+`FreeNVData()`_ `libraries/nonvolatile.h <../headerfiles/libraries/nonvolatile.h>`_ 
 
 ----------
 
@@ -192,7 +192,7 @@ Result
 See also
 ~~~~~~~~
 
-`FreeNVData()`_ `StoreNV()`_ <libraries/nonvolatile.h> 
+`FreeNVData()`_ `StoreNV()`_ `libraries/nonvolatile.h <../headerfiles/libraries/nonvolatile.h>`_ 
 
 ----------
 
@@ -249,7 +249,7 @@ Notes
 See also
 ~~~~~~~~
 
-`FreeNVData()`_ `SetNVProtection()`_ <libraries/nonvolatile.h> 
+`FreeNVData()`_ `SetNVProtection()`_ `libraries/nonvolatile.h <../headerfiles/libraries/nonvolatile.h>`_ 
 
 ----------
 
@@ -308,7 +308,7 @@ Notes
 See also
 ~~~~~~~~
 
-`GetNVList()`_ <libraries/nonvolatile.h> 
+`GetNVList()`_ `libraries/nonvolatile.h <../headerfiles/libraries/nonvolatile.h>`_ 
 
 ----------
 

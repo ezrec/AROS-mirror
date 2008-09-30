@@ -2499,7 +2499,7 @@ Bugs
 See also
 ~~~~~~~~
 
-`graphics.library/GetDisplayInfoData() <./graphics#getdisplayinfodata>`_ graphics/displayinfo.h `exec.library/SetSignal() <./exec#setsignal>`_ Intuition/SA_DisplayID screen tag 
+`graphics.library/GetDisplayInfoData() <./graphics#getdisplayinfodata>`_ `graphics/displayinfo.h <../headerfiles/graphics/displayinfo.h>`_ `exec.library/SetSignal() <./exec#setsignal>`_ Intuition/SA_DisplayID screen tag 
 
 ----------
 

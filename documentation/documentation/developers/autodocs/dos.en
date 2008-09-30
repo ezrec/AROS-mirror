@@ -1826,7 +1826,7 @@ Notes
 See also
 ~~~~~~~~
 
-`Lock()`_ `UnLock()`_ `ExNext()`_ `AllocDosObject()`_ `ExAll()`_ <dos/dos.h> 
+`Lock()`_ `UnLock()`_ `ExNext()`_ `AllocDosObject()`_ `ExAll()`_ `dos/dos.h <../headerfiles/dos/dos.h>`_ 
 
 ----------
 
@@ -3268,7 +3268,7 @@ Result
 See also
 ~~~~~~~~
 
-<dos/dos.h> 
+`dos/dos.h <../headerfiles/dos/dos.h>`_ 
 
 ----------
 
@@ -3975,7 +3975,7 @@ Result
 See also
 ~~~~~~~~
 
-`MatchNext()`_ `MatchEnd()`_ `ParsePattern()`_ `Examine()`_ `CurrentDir()`_ <dos/dosasl.h> 
+`MatchNext()`_ `MatchEnd()`_ `ParsePattern()`_ `Examine()`_ `CurrentDir()`_ `dos/dosasl.h <../headerfiles/dos/dosasl.h>`_ 
 
 ----------
 
@@ -4010,7 +4010,7 @@ Inputs
 See also
 ~~~~~~~~
 
-MatchFirst() MatchEnd() CurrentDir() Examine() ExNext() ParsePattern() <dos/dosasl.h> 
+MatchFirst() MatchEnd() CurrentDir() Examine() ExNext() ParsePattern() <dos/dosasl.h 
 
 ----------
 
@@ -6341,7 +6341,7 @@ Notes
 See also
 ~~~~~~~~
 
-`EndNotify()`_ <dos/notify.h> 
+`EndNotify()`_ `dos/notify.h <../headerfiles/dos/notify.h>`_ 
 
 ----------
 
@@ -6565,7 +6565,7 @@ Notes
 See also
 ~~~~~~~~
 
-`Execute()`_ `CreateNewProc()`_ `Input()`_ `Output()`_ <dos/dostags.h> 
+`Execute()`_ `CreateNewProc()`_ `Input()`_ `Output()`_ `dos/dostags.h <../headerfiles/dos/dostags.h>`_ 
 
 ----------
 

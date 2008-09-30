@@ -2285,7 +2285,7 @@ Notes
 See also
 ~~~~~~~~
 
-`FreeScreenDrawInfo()`_ `LockPubScreen()`_ intuition/screens.h 
+`FreeScreenDrawInfo()`_ `LockPubScreen()`_ `intuition/screens.h <../headerfiles/intuition/screens.h>`_ 
 
 ----------
 
@@ -3009,7 +3009,7 @@ Notes
 See also
 ~~~~~~~~
 
-`OpenWindow()`_ `CloseWindow()`_ intuition_extend.h 
+`OpenWindow()`_ `CloseWindow()`_ `intuition_extend.h <../headerfiles/intuition_extend.h>`_ 
 
 ----------
 

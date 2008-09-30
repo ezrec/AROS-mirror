@@ -279,7 +279,7 @@ Inputs
 See also
 ~~~~~~~~
 
-`ParseDate()`_ <libraries/locale.h> 
+`ParseDate()`_ `libraries/locale.h <../headerfiles/libraries/locale.h>`_ 
 
 ----------
 

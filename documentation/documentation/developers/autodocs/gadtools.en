@@ -107,7 +107,7 @@ Result
 See also
 ~~~~~~~~
 
-`CreateContext()`_ `FreeGadgets()`_ <libraries/gadtools.h> 
+`CreateContext()`_ `FreeGadgets()`_ `libraries/gadtools.h <../headerfiles/libraries/gadtools.h>`_ 
 
 ----------
 

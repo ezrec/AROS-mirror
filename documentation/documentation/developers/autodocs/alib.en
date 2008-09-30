@@ -1675,7 +1675,7 @@ Result
 See also
 ~~~~~~~~
 
-`boopsi.library/NewObjectA() <./boopsi#newobjecta>`_ `boopsi.library/SetAttrsA() <./boopsi#setattrsa>`_ `boopsi.library/GetAttr() <./boopsi#getattr>`_ `boopsi.library/DisposeObject() <./boopsi#disposeobject>`_ `CoerceMethodA()`_ `DoSuperMethodA()`_ <intuition/classusr.h> 
+`boopsi.library/NewObjectA() <./boopsi#newobjecta>`_ `boopsi.library/SetAttrsA() <./boopsi#setattrsa>`_ `boopsi.library/GetAttr() <./boopsi#getattr>`_ `boopsi.library/DisposeObject() <./boopsi#disposeobject>`_ `CoerceMethodA()`_ `DoSuperMethodA()`_ `intuition/classusr.h <../headerfiles/intuition/classusr.h>`_ 
 
 ----------
 
@@ -1725,7 +1725,7 @@ Result
 See also
 ~~~~~~~~
 
-`boopsi.library/NewObjectA() <./boopsi#newobjecta>`_ `boopsi.library/SetAttrsA() <./boopsi#setattrsa>`_ `boopsi.library/GetAttr() <./boopsi#getattr>`_ `boopsi.library/DisposeObject() <./boopsi#disposeobject>`_ `DoMethodA()`_ `CoerceMethodA()`_ <intuition/classes.h> 
+`boopsi.library/NewObjectA() <./boopsi#newobjecta>`_ `boopsi.library/SetAttrsA() <./boopsi#setattrsa>`_ `boopsi.library/GetAttr() <./boopsi#getattr>`_ `boopsi.library/DisposeObject() <./boopsi#disposeobject>`_ `DoMethodA()`_ `CoerceMethodA()`_ `intuition/classes.h <../headerfiles/intuition/classes.h>`_ 
 
 ----------
 
@@ -1748,7 +1748,7 @@ Synopsis
 See also
 ~~~~~~~~
 
-`boopsi.library/NewObjectA() <./boopsi#newobjecta>`_ `boopsi.library/SetAttrsA() <./boopsi#setattrsa>`_ `boopsi.library/GetAttr() <./boopsi#getattr>`_ `boopsi.library/DisposeObject() <./boopsi#disposeobject>`_ `DoMethodA()`_ `CoerceMethodA()`_ <intuition/classes.h> 
+`boopsi.library/NewObjectA() <./boopsi#newobjecta>`_ `boopsi.library/SetAttrsA() <./boopsi#setattrsa>`_ `boopsi.library/GetAttr() <./boopsi#getattr>`_ `boopsi.library/DisposeObject() <./boopsi#disposeobject>`_ `DoMethodA()`_ `CoerceMethodA()`_ `intuition/classes.h <../headerfiles/intuition/classes.h>`_ 
 
 ----------
 
