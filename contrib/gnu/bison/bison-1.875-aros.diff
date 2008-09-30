@@ -22,16 +22,3 @@ diff -ur bison-1.875/config/config.sub bison-1.875-aros/config/config.sub
  	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
  	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
  	      | -hiux* | -386bsd* | -netbsd* | -openbsd* | -freebsd* | -riscix* \
-diff -ur bison-1.875/lib/subpipe.c bison-1.875-aros/lib/subpipe.c
---- bison-1.875/lib/subpipe.c	2002-10-20 02:28:23.000000000 -0400
-+++ bison-1.875-aros/lib/subpipe.c	2004-09-25 23:29:04.000000000 -0400
-@@ -194,3 +194,9 @@
-     }
- #endif
- }
-+#ifdef __AROS__
-+int fork() {
-+	return -1;
-+}
-+#endif /* __AROS__ */
-+
