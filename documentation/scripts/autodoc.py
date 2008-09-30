@@ -66,17 +66,19 @@ split_regx = re.compile(r"[\n,]+", re.MULTILINE)
 # Regex for parsing a line of "see also"
 xref_regx = re.compile(r"""
 ^
-\s*
+\s*<*
 (
 (?P<libname>\w+?)\.library/(?P<funcname>\w+?)\(\)
 |
 (?P<localfuncname>\w+?)\(\)
 |
+(?P<header>[\w/-]+\.h)
+|
 (?P<command>[\w-]+)
 |
 (?P<path>.+?)
 )
-\s*
+>*\s*
 $
 """, re.VERBOSE | re.MULTILINE)
 
@@ -135,19 +137,23 @@ class autodoc:
                     localfuncname = xref.group('localfuncname')
                     path = xref.group('path')
                     command = xref.group('command')
+                    header = xref.group('header')
                     # check for allowed combinations
-                    if libname and funcname and not localfuncname and not path and not command:
+                    if libname and funcname and not localfuncname and not path and not command and not header:
                         # libname + funcname
                         self.titles["XREF"].append( (1, libname, funcname) )
-                    elif not libname and not funcname and localfuncname and not path and not command:
+                    elif not libname and not funcname and localfuncname and not path and not command and not header:
                         # localfuncname
                         self.titles["XREF"].append( (2, localfuncname, "") )
-                    elif not libname and not funcname and not localfuncname and path and not command:
+                    elif not libname and not funcname and not localfuncname and path and not command and not header:
                         # path
                         self.titles["XREF"].append( (3, path, "") )
-                    elif not libname and not funcname and not localfuncname and not path and command:
+                    elif not libname and not funcname and not localfuncname and not path and command and not header:
                         # command
                         self.titles["XREF"].append( (4, command, "") )
+                    elif not libname and not funcname and not localfuncname and not path and not command and header:
+                        # header
+                        self.titles["XREF"].append( (5, header, "") )
                     else:
                         print "*" * 20
                         print self.titles["SEE ALSO"]
@@ -179,7 +185,7 @@ class autodoc:
                     filehandle.write(lines)
                     filehandle.write("\n")
 
-    def write_xref(self, filehandle, path_to_shell, path_to_lib):
+    def write_xref(self, filehandle, path_to_shell, path_to_lib, path_to_header):
         """Write xrefs ('see also') to file.
         
         Arguments:
@@ -187,6 +193,7 @@ class autodoc:
         filehandle - filehandle of a file to write the autodoc in
         path_to_shell - relative path from target document to directory with Shell command documents
         path_to_lib - relative path from target document to directory with library documents
+        path_to_header - relative path from target document to directory with header files
         """
         
         if self.titles.has_key("XREF"):
@@ -206,6 +213,9 @@ class autodoc:
                     elif kind == 4:
                         # command
                         filehandle.write("`%s <%s>`_ " %(name1, name1.lower()) )
+                    elif kind == 5:
+                        # header
+                        filehandle.write("`%s <%s/%s>`_ " %(name1, path_to_header, name1 ) )
                 filehandle.write("\n\n")
 
 
@@ -445,7 +455,7 @@ class shelldoclist:
             print "Writing to file", filename
             filehandle = open(filename, "w")
             doc.write(filehandle, titles)
-            doc.write_xref(filehandle, ".", "../../developers/autodocs")
+            doc.write_xref(filehandle, ".", "../../developers/autodocs", "../../developers/headerfiles")
             filehandle.close()
         
         # create index page
@@ -539,7 +549,7 @@ class libdoclist:
      
             for doc in self.doclist:
                 doc.write(filehandle, titles)
-                doc.write_xref(filehandle, "../../users/shell", ".")
+                doc.write_xref(filehandle, "../../users/shell", ".", "../headerfiles")
                 # write transition
                 if doc is not self.doclist[-1]:
                     filehandle.write("----------\n\n")
