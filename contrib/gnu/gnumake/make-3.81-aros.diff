@@ -1,0 +1,50 @@
+diff -ruN make-3.81/arscan.c make-3.81.aros/arscan.c
+--- make-3.81/arscan.c	2006-02-11 23:16:04.000000000 +0100
++++ make-3.81.aros/arscan.c	2008-09-30 12:40:31.000000000 +0200
+@@ -231,7 +231,7 @@
+ #endif
+ 
+ #ifndef WINDOWS32
+-# ifndef __BEOS__
++# if !defined(__BEOS__) && !defined(__AROS__)
+ #  include <ar.h>
+ # else
+    /* BeOS 5 doesn't have <ar.h> but has archives in the same format
+diff -ruN make-3.81/main.c make-3.81.aros/main.c
+--- make-3.81/main.c	2006-03-20 03:36:37.000000000 +0100
++++ make-3.81.aros/main.c	2008-09-30 12:40:31.000000000 +0200
+@@ -886,7 +886,7 @@
+ }
+ 
+ 
+-#ifdef _AMIGA
++#if defined(_AMIGA) || defined(__AROS__)
+ int
+ main (int argc, char **argv)
+ #else
+@@ -913,6 +913,25 @@
+   no_default_sh_exe = 1;
+ #endif
+ 
++#ifdef __AROS__
++  int size = __env_get_environ (NULL, 0);
++  char **envp = (char **) malloc(size);
++  if (envp)
++  {
++    if (__env_get_environ(envp, size) != -1)
++    {
++      environ = envp;
++    }
++    else
++    {
++      free (envp);
++      exit (1);
++    }
++  }
++  else
++    exit (1);
++#endif
++
+ #ifdef SET_STACK_SIZE
+  /* Get rid of any avoidable limit on stack size.  */
+   {
