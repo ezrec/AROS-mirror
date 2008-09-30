@@ -1,0 +1,10 @@
+# Copyright © 2008, The AROS Development Team. All rights reserved.
+# $Id$
+
+-include $(TOP)/config/make.cfg
+
+##MM- contrib-pack : contrib-pack-lzo
+#MM- contrib-pack-lzo : development-lzo
+
+%fetch_and_build_gnu_development package=lzo version=2.03 patch=yes \
+	package_repo="http://www.oberhumer.com/opensource/lzo/download"
