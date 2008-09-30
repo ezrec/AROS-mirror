@@ -56,6 +56,26 @@ def remove( path ):
     if os.path.exists( path ):
         os.remove( path )
 
+# similar shutil.copytree, but ignores .svn directory
+def copytree(src, dst, symlinks=0):
+    names = os.listdir(src)
+    os.mkdir(dst)
+    for name in names:
+        srcname = os.path.join(src, name)
+        dstname = os.path.join(dst, name)
+        try:
+            if symlinks and os.path.islink(srcname):
+                linkto = os.readlink(srcname)
+                os.symlink(linkto, dstname)
+            elif os.path.isdir(srcname):
+                if os.path.basename(srcname) != ".svn":
+                    copytree(srcname, dstname, symlinks)
+            else:
+                if newer( srcname, dstname ):
+                    shutil.copy( srcname, dstname )
+        except (IOError, os.error), why:
+            print "Can't copy %s to %s: %s" % (`srcname`, `dstname`, str(why))
+
 def reportSkipping( message ):
     print '\033[1m\033[32m*\033[30m', message, '\033[0m'
 

@@ -406,20 +406,20 @@ def copyImages():
         ],
         dstpath
     )
-            
+
 
 def copySamples():
-    #TODO recursion
-    samplepath = 'documentation/developers/samplecode'
-    dstpath   = os.path.join( DSTROOT, samplepath )
-    srcpath   = samplepath
-    makedir( dstpath )
+    srcpath = os.path.join( "documentation", "developers", "samplecode")
+    dstpath = os.path.join(DSTROOT, srcpath)
+    shutil.rmtree(dstpath, True)
+    copytree(srcpath, dstpath)
 
-    files = os.listdir(srcpath)
-    for docfile in files:
-        srcfile = os.path.join(srcpath, docfile)
-        if os.path.isfile( srcfile ):
-            copy( srcfile, dstpath)
+
+def copyHeaders():
+    srcpath = os.path.join( "documentation", "developers", "headerfiles")
+    dstpath = os.path.join(DSTROOT, srcpath)
+    shutil.rmtree(dstpath, True)
+    copytree(srcpath, dstpath)
 
 
 def buildClean():
@@ -510,6 +510,7 @@ def buildWWW():
 
     copyImages()
     copySamples()
+    copyHeaders()
 
     copy( 'targets/www/docutils.css', DSTROOT )
     copy( 'targets/www/aros.css', DSTROOT )
@@ -571,6 +572,7 @@ def buildHTML():
 
     copyImages()
     copySamples()
+    copyHeaders()
 
     copy( 'targets/www/docutils.css', DSTROOT )
     copy( 'targets/www/aros.css', DSTROOT )
