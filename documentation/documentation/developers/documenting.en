@@ -226,12 +226,15 @@ The rules for an autodoc block are:
 
   - A name only is interpreted as Shell command.
   
-  - A name with round brackets (e.g. Draw()) is interpreted as function which
+  - A name with round brackets (e.g. "Draw()") is interpreted as function which
     exists in the same library.
     
   - An entry like "exec.library/FreeMem()" causes a link to the document of
     the given library.
     
+  - A path which ends with ".h" (e.g. "graphics/bitmap.h") is turned into a link
+    to a header file.
+  
   - Anything else is just interpreted as plain text.
 
 
