@@ -147,6 +147,7 @@ unsigned int alarm(unsigned int seconds)
 
 static int pipenum = 0;
 
+#if defined(USE_TEMPFILES) || !defined(__AROS__)
 int pipe(int filedes[2])
 {
         char pipe_name[1024];
@@ -189,6 +190,7 @@ int pipe(int filedes[2])
         FUNCX;
         return 0;
 }
+#endif
 
 int fork(void)
 {
@@ -205,61 +207,129 @@ int wait(int *status)
 }
 
 #if defined (NEWLIB) || defined(__AROS__)
-void __translate_path(const char *in, char *out)
+void __translate_path(const char *path, char *buf)
 {
-	int absolute = (in[0] == '/');
-	int dot = 0;
-	int slashign = 0;
+    register char dir_sep = '\0';
+    register int  makevol = 0;
+    register enum
+    {
+        S_START0,
+        S_START,
+        S_DOT1,
+        S_DOT2,
+        S_SLASH,
+    } state = S_START0;
 
-	if (absolute) in++;
+    int run = 1;
 
-	while (*in)
-	{
-		if (slashign && in[0] == '/')
-		{
-			slashign = 0;
-		}
-		else if (absolute && in[0] == '/')
-		{
-			/* Absolute path, replace first / with : */
-			*out++ = ':';
-			absolute = 0;
-		}
-		else if (dot)
-		{
-			dot = 0;
-			/* Previous char was a dot */
-			if (in[0] == '.')
-			{
-				/* Current is also a dot, make it a parent in out */
-				*out++ = '/';
-			}
-			else if (in[0] == '/')
-			{
-				/* Current dir, ignore the following slash */
-				slashign = 1;
-			}
-			else
-			{
-				/* A "solitary" dot, output it */
-				*out++ = '.';
-				*out++ = *in;
-			}
-		}
-		else
-		{
-			if (in[0] == '.')
-			{
-				dot = 1;
-			}
-			else
-				*out ++ = *in;
-		}
+    while (path[0] == '/')
+    {
+    	path++;
+    	makevol = 1;
+    }
 
-		in++;
-	}
+    while (run)
+    {
+        register char ch = path[0];
 
-	*out = '\0';
+    	switch (state)
+    	{
+    	    case S_START0:
+    	        if (ch == '.')
+    		    state = S_DOT1;
+    		else
+    		{
+    		    state = S_START;
+    		    continue;
+    		}
+    		break;
+    	    case S_START:
+    	        if (ch == '/')
+    		{
+    		    dir_sep = '/';
+    		    state = S_SLASH;
+    		}
+    		else
+    	        if (ch == ':')
+    		{
+    		    dir_sep = ':';
+    		    state = S_SLASH;
+    		}
+    		else
+    		if (ch == '\0')
+    		    run = 0;
+    		else
+    		    buf++[0] = ch;
+
+    		break;
+
+    	    case S_DOT1:
+    	        if (ch == '\0')
+    		    run = 0;
+    		else
+    	        if (ch == '.')
+    		    state = S_DOT2;
+    		else
+    		if (ch == '/')
+    		{
+    		    dir_sep = '\0';
+    		    state = S_SLASH;
+    		}
+    		else
+    		{
+    		    buf[0] = '.';
+    		    buf[1] = ch;
+    		    buf += 2;
+    		    state = S_START;
+    		}
+
+    		break;
+
+    	    case S_DOT2:
+    	        if (ch == '/' || ch == '\0')
+    		{
+    		    dir_sep = '/';
+    		    state = S_SLASH;
+    		    continue;
+    		}
+    		else
+    		{
+    		    buf[0] = '.';
+    		    buf[1] = '.';
+    		    buf[2] = ch;
+    		    buf += 3;
+    		    state = S_START;
+    		}
+
+    		break;
+
+    	    case S_SLASH:
+    	        if (ch != '/')
+    		{
+    		    if (makevol)
+    		    {
+    		        makevol = 0;
+    		        dir_sep = ':';
+    		    }
+
+    		    if (dir_sep != '\0')
+    		        buf++[0] = dir_sep;
+
+      	            state = S_START0;
+
+    		    continue;
+    		}
+
+    		break;
+    	}
+
+    	path++;
+    }
+
+    if (makevol)
+        buf++[0] = ':';
+
+    buf[0] = '\0';
 }
 #endif
 
@@ -498,9 +568,9 @@ int execve(const char *filename, char *const argv[], char *const envp[])
             {
                 interpreter_conv = convert_path_u2a(interpreter);
 #if !defined(__USE_RUNCOMMAND__)
-                sprintf(full, "%s %s %s ", interpreter_conv, interpreter_args,filename_conv);
+                sprintf(full, "%s %s %s ", interpreter_conv, interpreter_args, filename);
 #else
-                sprintf(full, "%s %s ",interpreter_args, filename_conv);
+                sprintf(full, "%s %s ",interpreter_args, filename);
 #endif
                 free(interpreter);
                 interpreter = NULL;
@@ -606,9 +676,16 @@ int execve(const char *filename, char *const argv[], char *const envp[])
                     if( ps != NULL )
                     {
 #endif
-                        SetProgramName(fname);
+                	char *oldtaskname = FindTask(NULL)->tc_Node.ln_Name;
+                	FindTask(NULL)->tc_Node.ln_Name = (interpreter ? interpreter : fname);
+                	SetProgramName(interpreter ? interpreter : fname);
+
                         lastresult=RunCommand(seglist,__get_default_stack_size(),
                                               full,strlen(full));
+
+                        FindTask(NULL)->tc_Node.ln_Name = oldtaskname;
+                        SetProgramName(oldtaskname);
+
                         errno=0;
 #ifndef __AROS__
                     }
