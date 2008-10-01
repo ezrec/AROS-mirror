@@ -226,6 +226,7 @@ main(int argc, char *argv[])
 #endif
         }
 
+#ifndef __AROS__
         /* Set MAKE. */
         {
                 struct tbl *vp = global("MAKE");
@@ -239,7 +240,8 @@ main(int argc, char *argv[])
                 /* setstr can't fail here */
                 setstr(vp, "ld", KSH_RETURN_ERROR);
         }
-
+#endif
+        
         /* Turn on brace expansion by default.  At&t ksh's that have
          * alternation always have it on.  BUT, posix doesn't have
          * brace expansion, so set this before setting up FPOSIX
