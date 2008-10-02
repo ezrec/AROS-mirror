@@ -1,0 +1,68 @@
+AROS Perl 5.7.2 port
+author: Stanislaw Szymczyk
+contact: sszymczy@gmail.com
+
+INTRODUCTION
+
+This is experimental Perl 5.7.2 AROS port intended to be built on AROS. It 
+contains the following extensions:
+
+* B
+* ByteLoader 
+* Cwd
+* Data/Dumper
+* Devel/DProf 
+* Devel/Peek
+* Digest/MD5 
+* Encode
+* Fcntl
+* File/Glob
+* Filter/Util/Call
+* IO
+* List/Util
+* MIME/Base64 
+* Opcode
+* POSIX
+* PerlIO/Scalar
+* PerlIO/Via 
+* SDBM_File
+* Storable
+* Sys/Hostname
+* Time/HiRes 
+* Time/Piece
+* XS/Typemap 
+* attrs 
+* re 
+* Errno
+
+This port doesn't support dynamically linked extensions.
+
+BUILD INSTRUCTIONS
+
+You need to have gcc, binutils, collect-aros, abc-shell, make, coreutils, sed,
+findutils, grep and yacc installed to build Perl.
+
+Build process will hang if you are using amberram.handler. The problem is
+that DupFHFromfd() function is not working with AmberRAM's handles opened in
+write mode. You have to switch to old ram.handler.
+
+For the same reason you have to build perl in Ram Disk. It's the only AROS
+filesystem besides Unix emul.handler allowing DupFHFromfd() to work for
+handles opened in write mode.
+
+Steps needed to build and install Perl:
+
+1. Download Perl 5.7.2 sources
+2. Unpack them and apply perl-5.7.2-aros-$(CPU).diff patch
+3. Copy patched sources to RAM:
+4. Run abc-shell (SYS:Development/bin/sh) and cd to Perl source directory
+5. find . -name "*.SH" -exec sh \{\} \;
+6. make
+7. make install
+
+Installation directory (/usr) is hardcoded in config.sh file.
+
+Tested on:
+
+* AROS linux-x86_64
+* AROS pc-i386 
