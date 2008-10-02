@@ -3009,7 +3009,7 @@ Notes
 See also
 ~~~~~~~~
 
-`OpenWindow()`_ `CloseWindow()`_ `intuition_extend.h <../headerfiles/intuition_extend.h>`_ 
+`OpenWindow()`_ `CloseWindow()`_ `intuition/extensions.h <../headerfiles/intuition/extensions.h>`_ 
 
 ----------
 

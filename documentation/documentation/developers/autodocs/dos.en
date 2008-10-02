@@ -16,39 +16,39 @@ dos
 `Close()`_                              `CompareDates()`_                       `CreateDir()`_                          `CreateNewProc()`_                      
 `CreateProc()`_                         `CurrentDir()`_                         `DateStamp()`_                          `DateToStr()`_                          
 `Delay()`_                              `DeleteFile()`_                         `DeleteVar()`_                          `DeviceProc()`_                         
-`DisplayError()`_                       `DoPkt()`_                              `DupLock()`_                            `DupLockFromFH()`_                      
-`EndNotify()`_                          `Error()`_                              `ErrorReport()`_                        `ExAll()`_                              
-`ExAllEnd()`_                           `Examine()`_                            `ExamineFH()`_                          `Execute()`_                            
-`Exit()`_                               `ExNext()`_                             `Fault()`_                              `FGetC()`_                              
-`FGets()`_                              `FilePart()`_                           `FindArg()`_                            `FindCliProc()`_                        
-`FindDosEntry()`_                       `FindSegment()`_                        `FindVar()`_                            `Flush()`_                              
-`Format()`_                             `FPutC()`_                              `FPuts()`_                              `FRead()`_                              
-`FreeArgs()`_                           `FreeDeviceProc()`_                     `FreeDosEntry()`_                       `FreeDosObject()`_                      
-`FWrite()`_                             `GetArgStr()`_                          `GetConsoleTask()`_                     `GetCurrentDirName()`_                  
-`GetDeviceProc()`_                      `GetFileSysTask()`_                     `GetProgramDir()`_                      `GetProgramName()`_                     
-`GetPrompt()`_                          `GetVar()`_                             `Info()`_                               `Inhibit()`_                            
-`Input()`_                              `InternalLoadSeg()`_                    `InternalUnLoadSeg()`_                  `IoErr()`_                              
-`IsFileSystem()`_                       `IsInteractive()`_                      `LoadSeg()`_                            `Lock()`_                               
-`LockDosList()`_                        `LockRecord()`_                         `LockRecords()`_                        `MakeDosEntry()`_                       
-`MakeLink()`_                           `MatchEnd()`_                           `MatchFirst()`_                         `MatchNext()`_                          
-`MatchPattern()`_                       `MatchPatternNoCase()`_                 `MaxCli()`_                             `NameFromFH()`_                         
-`NameFromLock()`_                       `NewLoadSeg()`_                         `NextDosEntry()`_                       `Open()`_                               
-`OpenFromLock()`_                       `Output()`_                             `ParentDir()`_                          `ParentOfFH()`_                         
-`ParsePattern()`_                       `ParsePatternNoCase()`_                 `PathPart()`_                           `Pipe()`_                               
-`PrintFault()`_                         `PutStr()`_                             `Read()`_                               `ReadArgs()`_                           
-`ReadItem()`_                           `ReadLink()`_                           `Relabel()`_                            `RemAssignList()`_                      
-`RemDosEntry()`_                        `RemSegment()`_                         `Rename()`_                             `ReplyPkt()`_                           
-`RunCommand()`_                         `SameDevice()`_                         `SameLock()`_                           `Seek()`_                               
-`SelectError()`_                        `SelectInput()`_                        `SelectOutput()`_                       `SendPkt()`_                            
-`SetArgStr()`_                          `SetComment()`_                         `SetConsoleTask()`_                     `SetCurrentDirName()`_                  
-`SetFileDate()`_                        `SetFileSize()`_                        `SetFileSysTask()`_                     `SetIoErr()`_                           
-`SetMode()`_                            `SetOwner()`_                           `SetProgramDir()`_                      `SetProgramName()`_                     
-`SetPrompt()`_                          `SetProtection()`_                      `SetVar()`_                             `SetVBuf()`_                            
-`SplitName()`_                          `StartNotify()`_                        `StrToDate()`_                          `StrToLong()`_                          
-`SystemTagList()`_                      `UnGetC()`_                             `UnLoadSeg()`_                          `UnLock()`_                             
-`UnLockDosList()`_                      `UnLockRecord()`_                       `UnLockRecords()`_                      `VFPrintf()`_                           
-`VFWritef()`_                           `VPrintf()`_                            `WaitForChar()`_                        `WaitPkt()`_                            
-`Write()`_                              `WriteChars()`_                         
+`DoPkt()`_                              `DupLock()`_                            `DupLockFromFH()`_                      `EndNotify()`_                          
+`Error()`_                              `ErrorReport()`_                        `ExAll()`_                              `ExAllEnd()`_                           
+`Examine()`_                            `ExamineFH()`_                          `Execute()`_                            `Exit()`_                               
+`ExNext()`_                             `Fault()`_                              `FGetC()`_                              `FGets()`_                              
+`FilePart()`_                           `FindArg()`_                            `FindCliProc()`_                        `FindDosEntry()`_                       
+`FindSegment()`_                        `FindVar()`_                            `Flush()`_                              `Format()`_                             
+`FPutC()`_                              `FPuts()`_                              `FRead()`_                              `FreeArgs()`_                           
+`FreeDeviceProc()`_                     `FreeDosEntry()`_                       `FreeDosObject()`_                      `FWrite()`_                             
+`GetArgStr()`_                          `GetConsoleTask()`_                     `GetCurrentDirName()`_                  `GetDeviceProc()`_                      
+`GetFileSysTask()`_                     `GetProgramDir()`_                      `GetProgramName()`_                     `GetPrompt()`_                          
+`GetVar()`_                             `Info()`_                               `Inhibit()`_                            `Input()`_                              
+`InternalLoadSeg()`_                    `InternalUnLoadSeg()`_                  `IoErr()`_                              `IsFileSystem()`_                       
+`IsInteractive()`_                      `LoadSeg()`_                            `Lock()`_                               `LockDosList()`_                        
+`LockRecord()`_                         `LockRecords()`_                        `MakeDosEntry()`_                       `MakeLink()`_                           
+`MatchEnd()`_                           `MatchFirst()`_                         `MatchNext()`_                          `MatchPattern()`_                       
+`MatchPatternNoCase()`_                 `MaxCli()`_                             `NameFromFH()`_                         `NameFromLock()`_                       
+`NewLoadSeg()`_                         `NextDosEntry()`_                       `Open()`_                               `OpenFromLock()`_                       
+`Output()`_                             `ParentDir()`_                          `ParentOfFH()`_                         `ParsePattern()`_                       
+`ParsePatternNoCase()`_                 `PathPart()`_                           `Pipe()`_                               `PrintFault()`_                         
+`PutStr()`_                             `Read()`_                               `ReadArgs()`_                           `ReadItem()`_                           
+`ReadLink()`_                           `Relabel()`_                            `RemAssignList()`_                      `RemDosEntry()`_                        
+`RemSegment()`_                         `Rename()`_                             `ReplyPkt()`_                           `RunCommand()`_                         
+`SameDevice()`_                         `SameLock()`_                           `Seek()`_                               `SelectError()`_                        
+`SelectInput()`_                        `SelectOutput()`_                       `SendPkt()`_                            `SetArgStr()`_                          
+`SetComment()`_                         `SetConsoleTask()`_                     `SetCurrentDirName()`_                  `SetFileDate()`_                        
+`SetFileSize()`_                        `SetFileSysTask()`_                     `SetIoErr()`_                           `SetMode()`_                            
+`SetOwner()`_                           `SetProgramDir()`_                      `SetProgramName()`_                     `SetPrompt()`_                          
+`SetProtection()`_                      `SetVar()`_                             `SetVBuf()`_                            `SplitName()`_                          
+`StartNotify()`_                        `StrToDate()`_                          `StrToLong()`_                          `SystemTagList()`_                      
+`UnGetC()`_                             `UnLoadSeg()`_                          `UnLock()`_                             `UnLockDosList()`_                      
+`UnLockRecord()`_                       `UnLockRecords()`_                      `VFPrintf()`_                           `VFWritef()`_                           
+`VPrintf()`_                            `WaitForChar()`_                        `WaitPkt()`_                            `Write()`_                              
+`WriteChars()`_                         
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -1336,51 +1336,6 @@ See also
 
 ----------
 
-DisplayError()
-==============
-
-Synopsis
-~~~~~~~~
-::
-
- LONG DisplayError(
-          CONST_STRPTR formatStr,
-          ULONG flags,
-          APTR args );
-
-Function
-~~~~~~~~
-::
-
-     Displays an error message to and gets response from a user.
-
-
-Inputs
-~~~~~~
-::
-
-     formatStr   --  printf-style formatted string
-     flags       --  arguments to EasyRequestArgs()
-     args        --  arguments to 'formatStr'
-
-
-Result
-~~~~~~
-::
-
-     Nothing
-
-
-Notes
-~~~~~
-::
-
-     This is a PRIVATE dos function.
-
-
-
-----------
-
 DoPkt()
 =======
 
@@ -1585,6 +1540,14 @@ Synopsis
           IPTR arg1,
           struct MsgPort * device );
 
+Function
+~~~~~~~~
+::
+
+ Displays a requester with Retry/Cancel buttons for an error.
+ IoErr() is set to "code".
+     
+
 Inputs
 ~~~~~~
 ::
@@ -1600,6 +1563,15 @@ Inputs
 
  arg1    --  Argument according to type (see above)
  device  --  Optional handler task address (obsolete!)
+
+
+Result
+~~~~~~
+::
+
+ DOSFALSE - user has selected "Retry"
+ DOSTRUE  - user has selected "Cancel" or code wasn't understood or
+            pr_WindowPtr is -1 or if an attempt to open the requester fails.
 
 
 Notes
@@ -2214,6 +2186,29 @@ Synopsis
           CONST_STRPTR template,
           CONST_STRPTR keyword );
 
+Function
+~~~~~~~~
+::
+
+     Search for keyword in the template string.
+     Abbreviations are handled.
+
+
+Inputs
+~~~~~~
+::
+
+     template - template string to be searched
+     keyword  - keyword to search for
+
+
+Result
+~~~~~~
+::
+
+     Index of the keyword or -1 if not found.
+
+
 
 ----------
 
@@ -2503,6 +2498,13 @@ Synopsis
  LONG FPutC(
           BPTR file,
           LONG character );
+
+Function
+~~~~~~~~
+::
+
+     Write a character to a file.
+     
 
 Inputs
 ~~~~~~
@@ -3421,6 +3423,28 @@ Synopsis
  BOOL InternalUnLoadSeg(
           BPTR seglist,
           VOID_FUNC freefunc );
+
+Function
+~~~~~~~~
+::
+
+     Unloads a seglist loaded with InternalLoadSeg().
+     
+
+Inputs
+~~~~~~
+::
+
+     seglist  - Seglist
+     freefunc - Function to be called to free memory
+
+
+Result
+~~~~~~
+::
+
+     DOSTRUE if everything wents O.K.
+
 
 
 ----------
@@ -5298,6 +5322,27 @@ Synopsis
           BPTR lock1,
           BPTR lock2 );
 
+Function
+~~~~~~~~
+::
+
+     Checks if two locks are on the same device.
+
+
+Inputs
+~~~~~~
+::
+
+     lock1, lock2 - locks
+
+
+Result
+~~~~~~
+::
+
+     DOSTRUE when they are on the same device
+
+
 
 ----------
 
@@ -5311,6 +5356,29 @@ Synopsis
  LONG SameLock(
           BPTR lock1,
           BPTR lock2 );
+
+Function
+~~~~~~~~
+::
+
+     Compares two locks.
+
+
+Inputs
+~~~~~~
+::
+
+     lock1, lock2 - locks
+
+
+Result
+~~~~~~
+::
+
+     LOCK_SAME        - locks points to the same object
+     LOCK_SAME_VOLUME - locks are on the same volume
+     LOCK_DIFFERENT   - locks are different
+
 
 
 ----------
@@ -5826,7 +5894,7 @@ Function
 ~~~~~~~~
 ::
 
-     Sets to dos error code for the current process.
+     Sets the dos error code for the current process.
 
 
 Inputs
@@ -6113,7 +6181,7 @@ Function
 ~~~~~~~~
 ::
 
-     This function will set a local of environmental variable. Although
+     This function will set a local or environmental variable. Although
      it is recommended that you only use ASCII strings within variables,
      this is not actually required.
 
@@ -6815,6 +6883,29 @@ Synopsis
           CONST_STRPTR format,
           const IPTR * argarray );
 
+Function
+~~~~~~~~
+::
+
+     Write a formatted (RawDoFmt) string to a specified file (buffered).
+
+
+Inputs
+~~~~~~
+::
+
+     file     - Filehandle to write to
+     format   - RawDoFmt() style formatting string
+     argarray - Pointer to array of formatting values
+
+
+Result
+~~~~~~
+::
+
+     Number of bytes written or -1 for an error
+
+
 
 ----------
 
@@ -6889,6 +6980,28 @@ Synopsis
  LONG VPrintf(
           CONST_STRPTR format,
           IPTR * argarray );
+
+Function
+~~~~~~~~
+::
+
+     Writes a formatted string to standard output.
+
+
+Inputs
+~~~~~~
+::
+
+     format   - RawDoFmt like format string
+     argarray - Pointer to array of formatting values
+
+
+Result
+~~~~~~
+::
+
+     Number of bytes written or -1 for an error
+
 
 
 ----------
