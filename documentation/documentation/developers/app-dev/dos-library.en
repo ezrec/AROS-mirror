@@ -344,40 +344,40 @@ Stream I/O
 ----------
 
 ============================= ======================================================
-`Open()`_
-`OpenFromLock()`_
-`Close()`_
-`FGetC()`_
-`UnGetC()`_
-`FGets()`_
-`FPutC()`_
-`FPuts()`_
-`FRead()`_
-`FWrite()`_
-`Flush()`_
-`PutStr()`_
-`Read()`_
-`WaitForChar()`_
-`Seek()`_
-`LockRecord()`_
-`LockRecords()`_
-`UnLockRecord()`_
-`UnLockRecords()`_
-`VFPrintf()`_
-`VFWritef()`_
-`VPrintf()`_
-`SetVBuf()`_
-`Write()`_
-`WriteChars()`_
-`SelectInput()`_
-`SelectOutput()`_
-`SelectError()`_
-`Input()`_
-`Output()`_
-`Error()`_
-`AddBuffers()`_
-`ChangeMode()`_
-`Pipe()`_
+`Open()`_                     Open a file with the specified mode
+`OpenFromLock()`_             Open a file from a lock
+`Close()`_                    Close a file
+`FGetC()`_                    Get a character from a buffered file
+`UnGetC()`_                   Push a character back into a read filehandle
+`FGets()`_                    Read a line from a file
+`FPutC()`_	              Write a character to a file
+`FPuts()`_                    Write a string to a file
+`FRead()`_                    Read a number of blocks from a file
+`FWrite()`_                   Write a number of blocks to a file
+`Flush()`_                    Flush buffer
+`PutStr()`_                   Write string to standard output
+`Read()`_                     Read a couple of bytes from a file
+`WaitForChar()`_              Waits for a character to arrive at a filehandle
+`Seek()`_                     Change the current read/write position in a file
+`LockRecord()`_               Lock a portion of a file for exclusive access
+`LockRecords()`_              Lock several records at the same time
+`UnLockRecord()`_             Release a lock made with LockRecord()_
+`UnLockRecords()`_            Release an array of record locks obtained with LockRecords()_
+`VFPrintf()`_                 Write a formatted (RawDoFmt) string to a specified file
+`VFWritef()`_                 Write a formatted string to a specified file
+`VPrintf()`_                  Write a formatted (RawDoFmt) string to standard output
+`SetVBuf()`_                  Change the buffering modes and buffer size for a filehandle
+`Write()`_                    Write data to a file
+`WriteChars()`_               Write data to the standard output
+`SelectInput()`_              Change the standard input stream
+`SelectOutput()`_             Change the standard output stream
+`SelectError()`_              Change the error stream
+`Input()`_                    Return current input stream
+`Output()`_                   Return current output stream
+`Error()`_                    Return current error stream
+`AddBuffers()`_               Add or remove cache memory from a filesystem
+`ChangeMode()`_               Change the mode of a filehandle or lock
+`Pipe()`_                     Create a pair of filehandles connected to each other
 ============================= ======================================================
 
 
@@ -385,37 +385,37 @@ Files/Directories
 -----------------
 
 ============================= ======================================================
-`AssignAdd()`_
-`AssignLate()`_
-`AssignLock()`_
-`AssignPath()`_
-`RemAssignList()`_
-`CreateDir()`_
-`CurrentDir()`_
-`ParentDir()`_
-`ParentOfFH()`_
-`DeleteFile()`_
-`Rename()`_
-`Relabel()`_
-`SetVar()`_
-`FindVar()`_
-`GetVar()`_
-`ScanVars()`_
-`DeleteVar()`_
-`MakeLink()`_
-`ReadLink()`_
-`SetFileSize()`_
-`SetComment()`_
-`SetFileDate()`_
-`SetProtection()`_
-`SetOwner()`_
-`AddPart()`_
-`FilePart()`_
-`PathPart()`_
-`SplitName()`_
-`Format()`_
-`StartNotify()`_
-`EndNotify()`_
+`AssignAdd()`_                Add a directory to an assign
+`AssignLate()`_               Create a late-binding (deferred) assign
+`AssignLock()`_               Create an assign from a given name to a lock
+`AssignPath()`_               Create a non-binding (path) assign
+`RemAssignList()`_            Remove an entry from a multi-dir assign
+`CreateDir()`_                Create a new directory
+`CurrentDir()`_               Set a new directory as the current directory
+`ParentDir()`_                Return a lock to the parent directory
+`ParentOfFH()`_               Lock the directory a file is located in
+`DeleteFile()`_               Delete a file or directory
+`Rename()`_                   Rename a file
+`Relabel()`_                  Change name of a volume
+`SetVar()`_                   Set a local or environmental variable
+`FindVar()`_                  Find a local variable
+`GetVar()`_                   Return the value of a local or global variable
+`ScanVars()`_                 Scan local and/or global variables accordingly to specified flags
+`DeleteVar()`_                Deletes a local or environmental variable
+`MakeLink()`_                 Create a hard- or softlink
+`ReadLink()`_                 Read the soft-link information
+`SetFileSize()`_              Change the size of a file
+`SetComment()`_               Set a filecomment
+`SetFileDate()`_              Change the date of a file
+`SetProtection()`_            Set the protection bits of a file
+`SetOwner()`_                 Set the owner of a file
+`AddPart()`_                  Connects parts of a path
+`FilePart()`_                 Get a pointer to the last component of a path
+`PathPart()`_                 Returns a pointer to the character after the last directory in path
+`SplitName()`_                Split a path into pieces
+`Format()`_                   Format a device
+`StartNotify()`_              Send a notification request to a filesystem
+`EndNotify()`_                End a notification
 ============================= ======================================================
 
 
@@ -423,23 +423,23 @@ Examination
 -----------
 
 ============================= ======================================================
-`Lock()`_
-`DupLock()`_
-`NameFromLock()`_
-`ExAll()`_
-`ExAllEnd()`_
-`ExNext()`_
-`Examine()`_
-`MatchEnd()`_
-`MatchFirst()`_
-`MatchNext()`_
-`MatchPattern()`_
-`MatchPatternNoCase()`_
-`ParsePattern()`_
-`ParsePatternNoCase()`_
-`SameDevice()`_
-`SameLock()`_
-`Info()`_
+`Lock()`_                     Lock a file or directory
+`DupLock()`_                  Clone a lock on a file or directory
+`NameFromLock()`_             Retrieve thew full pathname from a lock
+`ExAll()`_                    Examine a directory
+`ExAllEnd()`_                 Stop an ExAll()_ operation
+`ExNext()`_                   Examine the next entry in a directory
+`Examine()`_                  Fill in a FileInfoBlock structure concerning a file or directory
+`MatchEnd()`_                 Free the memory allocated by MatchFirst()_ and MatchNext()_
+`MatchFirst()`_               Search for the first file or directory that matches a given pattern
+`MatchNext()`_                Find next file or directory that matches a given pattern
+`MatchPattern()`_             Check if a string matches a pattern
+`MatchPatternNoCase()`_       Case insensitive variant of MatchPattern()_
+`ParsePattern()`_             Parse a pattern for use with MatchPattern()_
+`ParsePatternNoCase()`_       Case insensitive variant of ParsePattern()_
+`SameDevice()`_               Check if two locks are on the same device
+`SameLock()`_                 Compare two locks
+`Info()`_                     Get information about a volume in the system
 ============================= ======================================================
 
 
@@ -459,20 +459,20 @@ DOS entries
 -----------
 
 ============================= ======================================================
-`AddDosEntry()`_
-`RemDosEntry()`_
-`FreeDosEntry()`_
-`AllocDosObject()`_
-`FreeDosObject()`_
-`AttemptLockDosList()`_
-`FindDosEntry()`_
-`LockDosList()`_
-`UnLockDosList()`_
-`MakeDosEntry()`_
-`NextDosEntry()`_
-`IsFileSystem()`_
-`IsInteractive()`_
-`Inhibit()`_
+`AddDosEntry()`_              Add a given dos list entry to the dos list
+`RemDosEntry()`_              Remove a given dos list entry from the dos list
+`FreeDosEntry()`_             Free a dos list entry created with MakeDosEntry()_
+`AllocDosObject()`_           Create a new dos object of a given type
+`FreeDosObject()`_            Frees an object allocated with AllocDosObject()_
+`AttemptLockDosList()`_       Try to get a lock on some of the dos lists
+`FindDosEntry()`_             Look for the next dos list entry with the given name
+`LockDosList()`_              Lock the specified Dos Lists for use
+`UnLockDosList()`_            Free a lock on the dos lists given by LockDosList()_
+`MakeDosEntry()`_             Create an entry for the dos list
+`NextDosEntry()`_             Look for the next dos list entry with the given name
+`IsFileSystem()`_             Check if a device is a filesystem
+`IsInteractive()`_            Query a filesystem for interactiveness
+`Inhibit()`_                  Stop a filesystem from being used
 ============================= ======================================================
 
 
@@ -480,12 +480,11 @@ Error
 -----
 
 ============================= ======================================================
-`DisplayError()`_
-`ErrorReport()`_
-`Fault()`_
-`PrintFault()`_
-`IoErr()`_
-`SetIoErr()`_
+`ErrorReport()`_              Display a requester with Retry/Cancel buttons for an error
+`Fault()`_                    Get error message string for an error code
+`PrintFault()`_               Print error message to console
+`IoErr()`_                    Get the dos error code for the current process
+`SetIoErr()`_                 Set dos error code for the current process
 ============================= ======================================================
 
 
@@ -493,12 +492,12 @@ Arguments
 ---------
 
 ============================= ======================================================
-`ReadArgs()`_
-`ReadItem()`_
-`FindArg()`_
-`FreeArgs()`_
-`GetArgStr()`_
-`SetArgStr()`_
+`ReadArgs()`_                 Parse command line arguments
+`ReadItem()`_                 Read an item from a given character source
+`FindArg()`_                  Search for keyword in the template
+`FreeArgs()`_                 Free arguments structure from ReadArgs()_
+`GetArgStr()`_                Return a pointer to the argument string of the process
+`SetArgStr()`_                Set the arguments of the current process
 ============================= ======================================================
 
 
@@ -506,42 +505,41 @@ Process
 -------
 
 ============================= ======================================================
-`CreateNewProc()`_
-`CreateProc()`_
-`AddSegment()`_
-`NewLoadSeg()`_
-`LoadSeg()`_
-`UnLoadSeg()`_
-`InternalLoadSeg()`_
-`InternalUnLoadSeg()`_
-`FindSegment()`_
-`RemSegment()`_
-`DeviceProc()`_
-`CheckSignal()`_
-`SetProgramName()`_
-`GetProgramName()`_
-`SetCurrentDirName()`_
-`GetCurrentDirName()`_
-`GetProgramDir()`_
-`SetProgramDir()`_
-`RunCommand()`_
-`SystemTagList()`_
-`Execute()`_
-`Exit()`_
-`GetDeviceProc()`_
-`FreeDeviceProc()`_
-`GetConsoleTask()`_
-`SetConsoleTask()`_
-`SetFileSysTask()`_
-`GetFileSysTask()`_
-`MaxCli()`_
-`Cli()`_
-`CliInitNewcli()`_
-`CliInitRun()`_
-`FindCliProc()`_
-`SetPrompt()`_
-`GetPrompt()`_
-`SetMode()`_
+`CreateNewProc()`_            Create a new process
+`CreateProc()`_               Create a new process (in an old way)
+`AddSegment()`_               Add a segment to the resident list
+`NewLoadSeg()`_               Load an executable file into memory via LoadSeg()_
+`LoadSeg()`_                  Load an executable file into memory
+`UnLoadSeg()`_                Free a segment list allocated with LoadSeg()_
+`InternalLoadSeg()`_          Low-level load from fh
+`InternalUnLoadSeg()`_        Unload a seglist loaded with InternalLoadSeg()_
+`FindSegment()`_              Find a resident segment
+`RemSegment()`_               Remove a segment from the system list
+`DeviceProc()`_               Return a handle to a devices process
+`CheckSignal()`_              Check current task for signals
+`SetProgramName()`_           Set the name of the current program
+`GetProgramName()`_           Get the name of the current program
+`SetCurrentDirName()`_        Set the name of the current directory in the CLI structure
+`GetCurrentDirName()`_        Get the name of the current directory in the CLI structure
+`GetProgramDir()`_            Get the lock for PROGDIR:
+`SetProgramDir()`_            Set the home directory for a program (PROGDIR:)
+`RunCommand()`_               Execute a loaded command synchronously
+`SystemTagList()`_            Execute a command via a shell
+`Execute()`_                  Execute a CLI command
+`GetDeviceProc()`_            Find the filesystem for a path
+`FreeDeviceProc()`_           Clean up after calls to GetDeviceProc()_
+`GetConsoleTask()`_           Get the "task" belonging to the process's console
+`SetConsoleTask()`_           Set the console handler for the current process
+`SetFileSysTask()`_           Set the current filesystem handler for a process
+`GetFileSysTask()`_           Get the filesystem handler for a process
+`MaxCli()`_                   Return the highest Cli number currently in use
+`Cli()`_                      Return a pointer to the CLI structure of the current process
+`CliInitNewcli()`_            Set up a process to be a shell using a startup packet
+`CliInitRun()`_               Set up a process to be a shell
+`FindCliProc()`_              Find a CLI process by its task number
+`SetPrompt()`_                Set the prompt for the current CLI
+`GetPrompt()`_                Get the current prompt
+`SetMode()`_                  Set the current mode of a console device (RAW or CON)
 ============================= ======================================================
 
 
@@ -549,14 +547,12 @@ Misc.
 -----
 
 ============================= ======================================================
-`Delay()`_
-`CompareDates()`_
-`DateStamp()`_
-`DateToStr()`_
-`DosGetLocalizedString()`_
-`DosGetString()`_
-`StrToDate()`_
-`StrToLong()`_
+`Delay()`_                    Wait for at least the time specified as timeout
+`CompareDates()`_             Compare two dates
+`DateStamp()`_                Get the current date
+`DateToStr()`_                Convert a DateTime struct into strings
+`StrToDate()`_                Convert a string into a date
+`StrToLong()`_                Convert a string into a long
 ============================= ======================================================
 
 
