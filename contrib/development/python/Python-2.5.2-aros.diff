@@ -1,0 +1,141 @@
+diff -ruN Python-2.5.2/configure Python-2.5.2.new/configure
+--- Python-2.5.2/configure	2008-02-13 20:17:17.000000000 +0100
++++ Python-2.5.2.new/configure	2008-09-30 01:54:59.000000000 +0200
+@@ -6845,6 +6845,7 @@
+ 
+ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+ fi
++ac_cv_type_ssize_t=no
+ { echo "$as_me:$LINENO: result: $ac_cv_type_ssize_t" >&5
+ echo "${ECHO_T}$ac_cv_type_ssize_t" >&6; }
+ if test $ac_cv_type_ssize_t = yes; then
+diff -ruN Python-2.5.2/Lib/plat-aros12/regen Python-2.5.2.new/Lib/plat-aros12/regen
+--- Python-2.5.2/Lib/plat-aros12/regen	1970-01-01 01:00:00.000000000 +0100
++++ Python-2.5.2.new/Lib/plat-aros12/regen	2008-09-30 02:25:53.000000000 +0200
+@@ -0,0 +1,3 @@
++#! /bin/sh
++set -v
++python$EXE ../../Tools/scripts/h2py.py -i '(u_long)' /usr/netinclude/netinet/in.h
+diff -ruN Python-2.5.2/Makefile.pre.in Python-2.5.2.new/Makefile.pre.in
+--- Python-2.5.2/Makefile.pre.in	2007-12-05 21:43:57.000000000 +0100
++++ Python-2.5.2.new/Makefile.pre.in	2008-09-30 02:38:19.000000000 +0200
+@@ -658,7 +658,7 @@
+ 	then rm -f $(DESTDIR)$(BINDIR)/$(PYTHON); \
+ 	else true; \
+ 	fi
+-	(cd $(DESTDIR)$(BINDIR); $(LN) python$(VERSION)$(EXE) $(PYTHON))
++	(cd $(DESTDIR)$(BINDIR); $(LN) -s python$(VERSION)$(EXE) $(PYTHON))
+ 	-rm -f $(DESTDIR)$(BINDIR)/python-config
+ 	(cd $(DESTDIR)$(BINDIR); $(LN) -s python$(VERSION)-config python-config)
+ 
+diff -ruN Python-2.5.2/Modules/posixmodule.c Python-2.5.2.new/Modules/posixmodule.c
+--- Python-2.5.2/Modules/posixmodule.c	2008-02-03 08:20:39.000000000 +0100
++++ Python-2.5.2.new/Modules/posixmodule.c	2008-09-30 01:54:34.000000000 +0200
+@@ -34,6 +34,10 @@
+ #    include <unixio.h>
+ #endif /* defined(__VMS) */
+ 
++#if defined(__AROS__)
++#    include <sys/arosc.h>
++#endif
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+@@ -361,6 +365,25 @@
+ 	if (environ == NULL)
+ 		environ = *_NSGetEnviron();
+ #endif
++#ifdef __AROS__
++	int size = __env_get_environ (NULL, 0);
++	char **envp = (char **) malloc(size);
++	if (envp)
++	{
++		if (__env_get_environ(envp, size) != -1)
++		{
++			environ = envp;
++		}
++		else
++		{
++			free (envp);
++			return d;
++		}
++	}
++	else
++		return d;
++#endif
++
+ 	if (environ == NULL)
+ 		return d;
+ 	/* This part ignores errors */
+@@ -3467,7 +3490,7 @@
+ static PyObject *
+ posix_fork(PyObject *self, PyObject *noargs)
+ {
+-	int pid = fork();
++	int pid = vfork();
+ 	if (pid == -1)
+ 		return posix_error();
+ 	if (pid == 0)
+diff -ruN Python-2.5.2/Modules/Setup.dist Python-2.5.2.new/Modules/Setup.dist
+--- Python-2.5.2/Modules/Setup.dist	2006-08-06 09:26:21.000000000 +0200
++++ Python-2.5.2.new/Modules/Setup.dist	2008-09-30 01:53:31.000000000 +0200
+@@ -149,7 +149,7 @@
+ # modules are to be built as shared libraries (see above for more
+ # detail; also note that *static* reverses this effect):
+ 
+-#*shared*
++*static*
+ 
+ # GNU readline.  Unlike previous Python incarnations, GNU readline is
+ # now incorporated in an optional module, configured in the Setup file
+@@ -164,23 +164,23 @@
+ 
+ # Modules that should always be present (non UNIX dependent):
+ 
+-#array arraymodule.c	# array objects
+-#cmath cmathmodule.c # -lm # complex math library functions
+-#math mathmodule.c # -lm # math library functions, e.g. sin()
+-#_struct _struct.c	# binary structure packing/unpacking
+-#time timemodule.c # -lm # time operations and variables
+-#operator operator.c	# operator.add() and similar goodies
+-#_weakref _weakref.c	# basic weak reference support
+-#_testcapi _testcapimodule.c    # Python C API test module
+-#_random _randommodule.c	# Random number generator
+-#collections collectionsmodule.c # Container types
+-#itertools itertoolsmodule.c	# Functions creating iterators for efficient looping 
+-#strop stropmodule.c		# String manipulations
++array arraymodule.c	# array objects
++cmath cmathmodule.c # -lm # complex math library functions
++math mathmodule.c # -lm # math library functions, e.g. sin()
++_struct _struct.c	# binary structure packing/unpacking
++time timemodule.c # -lm # time operations and variables
++operator operator.c	# operator.add() and similar goodies
++_weakref _weakref.c	# basic weak reference support
++_testcapi _testcapimodule.c    # Python C API test module
++_random _randommodule.c	# Random number generator
++collections collectionsmodule.c # Container types
++itertools itertoolsmodule.c	# Functions creating iterators for efficient looping 
++strop stropmodule.c		# String manipulations
+ 
+-#unicodedata unicodedata.c    # static Unicode character database
++unicodedata unicodedata.c    # static Unicode character database
+ 
+ # access to ISO C locale support
+-#_locale _localemodule.c  # -lintl
++_locale _localemodule.c  # -lintl
+ 
+ 
+ # Modules with some UNIX dependencies -- on by default:
+diff -ruN Python-2.5.2/setup.py Python-2.5.2.new/setup.py
+--- Python-2.5.2/setup.py	2008-02-05 00:41:02.000000000 +0100
++++ Python-2.5.2.new/setup.py	2008-09-30 01:55:51.000000000 +0200
+@@ -15,7 +15,7 @@
+ from distutils.command.install_lib import install_lib
+ 
+ # This global variable is used to hold the list of modules to be disabled.
+-disabled_module_list = []
++disabled_module_list = ['crypt', 'grp', 'select', 'binascii', 'parser', 'cStringIO', 'cPickle', 'mmap', 'audioop', '_csv', 'getnameinfo', '_ctypes', '_ctypes_test', 'datetime', 'time', '_bisect', '_heapq', '_functools', '_hotshot', '_lsprof', 'fcntl', '_sha', '_md5', '_sha256', '_sha512', 'termios', 'resource', 'nis', 'zlib', 'bz2', 'compress', 'pyexpat', '_socket', '_elementtree', '_multibytecodec', '_codecs', 'syslog', '_codecs_kr', '_codecs_jp', '_codecs_cn', '_codecs_tw', '_codecs_hk', '_codecs_iso2022', 'audioop', 'imageop', 'rgbimg']
+ 
+ def add_dir_to_list(dirlist, dir):
+     """Add the directory 'dir' to the list 'dirlist' (at the front) if

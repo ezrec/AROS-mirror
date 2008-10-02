@@ -1,0 +1,58 @@
+AROS Python 2.5.2 port
+author: Stanislaw Szymczyk
+contact: sszymczy@gmail.com
+
+INTRODUCTION
+
+This is experimental Python 2.5.2 AROS port intended to be built on AROS. It 
+contains the following modules:
+
+* array
+* cmath
+* math
+* struct
+* time
+* operator
+* weakref
+* testcapi
+* random
+* collections
+* itertools
+* strop
+
+This port doesn't support dynamically linked extensions.
+
+BUILD INSTRUCTIONS
+
+You need to have gcc, binutils, collect-aros, abc-shell, make, coreutils, sed,
+grep and diffutils installed to build Python.
+
+Build process will hang if you are using amberram.handler. The problem is
+that DupFHFromfd() function is not working with AmberRAM's handles opened in
+write mode. You have to switch to old ram.handler.
+
+You need filesystem with working symbolic (soft) links to install Python.
+
+Steps needed to build and install Python:
+
+1. Download Python 2.5.2 sources
+2. Unpack them and apply Python-2.5.2-aros.diff patch
+3. Copy patched sources to your AROS partition
+4. Run abc-shell (SYS:Development/bin/sh) and cd to Python source directory
+5. ./configure --prefix=/usr --without-threads --disable-shared LDFLAGS=-nix
+6. touch Include/Python-ast.h Python/Python-ast.c
+7. make
+8. make install
+
+Installation directory is specified in step 5 in the --prefix option value.
+
+Step 6 is needed only if Python is not already installed in /usr.
+
+Don't worry about "Please insert home|opt|lib64" requesters appearing during
+build process, simply cancel them.
+
+Tested on:
+
+* AROS linux-x86_64
+* AROS pc-i386 (FFS Intl) - installation not completed due to symbolic links 
+not working
