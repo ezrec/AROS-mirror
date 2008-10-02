@@ -147,7 +147,6 @@ unsigned int alarm(unsigned int seconds)
 
 static int pipenum = 0;
 
-#if defined(USE_TEMPFILES) || !defined(__AROS__)
 int pipe(int filedes[2])
 {
         char pipe_name[1024];
@@ -190,7 +189,6 @@ int pipe(int filedes[2])
         FUNCX;
         return 0;
 }
-#endif
 
 int fork(void)
 {
