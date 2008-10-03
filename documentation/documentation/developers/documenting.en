@@ -265,6 +265,22 @@ within one day after a commit.
 __ building_
 
 
+Style guide
+-----------
+
++ Be consistent.
+
++ Enable 8 bit character sets like ISO8859-1 in your text editor.
+
++ Don't use slang abbreviations like "apps", "docs".
+
++ For apostrophes use only ``'`` (decimal ASCII code 39).
+  Don't use accent characters for this.
+
++ Insert line breaks. Don't make lines longer than 80 characters.
+
+
+
 Technical notes
 ===============
 
