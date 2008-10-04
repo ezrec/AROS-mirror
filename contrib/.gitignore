@@ -589,6 +589,9 @@
 # /Networking/Drivers/rtl8139/
 /Networking/Drivers/rtl8139/mmakefile
 
+# /Networking/Drivers/sis900/
+/Networking/Drivers/sis900/mmakefile
+
 # /Networking/Drivers/via-rhine/
 /Networking/Drivers/via-rhine/mmakefile
 
@@ -986,6 +989,9 @@
 # /aminet/util/wb/modifyicon/
 /aminet/util/wb/modifyicon/mmakefile
 
+# /bgui/
+/bgui/mmakefile
+
 # /bgui/CAD/doc/
 /bgui/CAD/doc/*.doc
 /bgui/CAD/doc/*.guide
@@ -1081,11 +1087,7 @@
 /bgui/examples/mmakefile
 
 # /bgui/gadgets/
-/bgui/gadgets/bgui_popbutton.gadget
-/bgui/gadgets/bgui_palette.gadget
-/bgui/gadgets/bgui_treeview.gadget
-/bgui/gadgets/bgui_layoutgroup.gadget
-/bgui/gadgets/bgui_bar.gadget
+/bgui/gadgets/mmakefile
 
 # /bgui/gadgets/Bar/
 /bgui/gadgets/Bar/BarDemo
@@ -1115,15 +1117,6 @@
 # /bgui/gadgets/common/
 /bgui/gadgets/common/*.o
 /bgui/gadgets/common/mmakefile
-
-# /bgui/o/
-/bgui/o/class-protos.h
-/bgui/o/bgui.library_rev.rev
-/bgui/o/bgui.library_rev.h
-/bgui/o/bgui.library_rev.i
-/bgui/o/*.lo
-/bgui/o/*.o
-/bgui/o/*.err
 
 # /bgui/staticlib/
 /bgui/staticlib/mmakefile
@@ -1700,6 +1693,9 @@
 /gfx/libs/renderlib/src/wb
 /gfx/libs/renderlib/src/*.map
 
+# /gfx/libs/tiff/
+/gfx/libs/tiff/mmakefile
+
 # /gfx/libs/wazp3d/
 /gfx/libs/wazp3d/mmakefile
 
@@ -1807,6 +1803,9 @@
 # /gnu/gcc/
 /gnu/gcc/mmakefile
 /gnu/gcc/.files-touched
+
+# /gnu/gnumake/
+/gnu/gnumake/mmakefile
 
 # /gnu/grep/
 /gnu/grep/.files-touched
@@ -1951,8 +1950,14 @@
 # /images/Gorilla/Icons/Medium/AROS/Extras/Networking/Apps/
 /images/Gorilla/Icons/Medium/AROS/Extras/Networking/Apps/mmakefile
 
+# /libiconv/
+/libiconv/mmakefile
+
 # /libini/
 /libini/mmakefile
+
+# /libxml2/
+/libxml2/mmakefile
 
 # /mui/classes/BWins/
 /mui/classes/BWins/mmakefile
@@ -2232,6 +2237,9 @@
 
 # /pack/libxad/portable/
 /pack/libxad/portable/mmakefile
+
+# /pack/lzo/
+/pack/lzo/mmakefile
 
 # /regina/
 /regina/mmakefile
