@@ -56,7 +56,11 @@ Inputs
          RT_FILEREQ, RT_FONTREQ or RT_SCREENMODEREQ.
      taglist - pointer to array of tags (currently always NULL).
 
- TAGS
+
+Tags
+~~~~
+::
+
      no tags defined yet
      
 
@@ -118,7 +122,11 @@ Inputs
      req     - pointer to requester.
      taglist - pointer to array of tags.
 
- TAGS
+
+Tags
+~~~~
+::
+
      For the file requester:
 
      RTFI_Dir - (char *)
@@ -394,7 +402,11 @@ Inputs
          rtAllocRequest() or NULL.
      taglist  - pointer to a TagItem array.
 
- TAGS
+
+Tags
+~~~~
+::
+
      RT_Window - (struct Window *) Window that will be used to find the
          screen to put the requester on. You *MUST* supply this if you
          are a task calling this function and not a process! This is
@@ -676,7 +688,11 @@ Inputs
      title    - pointer to requester window title (null terminated).
      taglist  - pointer to a TagItem array.
 
- TAGS
+
+Tags
+~~~~
+::
+
      RT_Window - see rtEZRequestA()
 
      RT_ReqPos - see rtEZRequestA()
@@ -905,7 +921,11 @@ Inputs
      title - pointer to requester window title (null terminated).
      taglist - pointer to a TagItem array.
 
- TAGS
+
+Tags
+~~~~
+::
+
      RT_Window - see rtEZRequestA()
 
      RT_ReqPos - see rtEZRequestA()
@@ -1233,7 +1253,11 @@ Inputs
          rtAllocRequest() or NULL.
      taglist  - pointer to a TagItem array.
 
- TAGS
+
+Tags
+~~~~
+::
+
      RT_Window - see rtEZRequestA()
 
      RT_IDCMPFlags - see rtEZRequestA()
@@ -1407,7 +1431,11 @@ Inputs
          rtAllocRequest() or NULL.
      taglist - pointer to a TagItem array.
 
- TAGS
+
+Tags
+~~~~
+::
+
      RT_Window - see rtEZRequestA()
 
      RT_IDCMPFlags - see rtEZRequestA()
@@ -1630,7 +1658,11 @@ Inputs
          rtAllocRequest() or NULL.
      taglist  - pointer to a TagItem array.
 
- TAGS
+
+Tags
+~~~~
+::
+
      RT_Window - see rtEZRequestA()
 
      RT_IDCMPFlags - see rtEZRequestA()
@@ -1806,7 +1838,11 @@ Inputs
          rtAllocRequest() or NULL.
      taglist  - pointer to a TagItem array.
 
- TAGS
+
+Tags
+~~~~
+::
+
      RT_Window - see rtEZRequestA()
 
      RT_IDCMPFlags - see rtEZRequestA()
@@ -2069,7 +2105,11 @@ Inputs
          rtAllocRequest() or NULL.
      taglist - pointer to a TagItem array.
 
- TAGS
+
+Tags
+~~~~
+::
+
      RT_Window - see rtEZRequestA()
 
      RT_ReqPos - see rtEZRequestA()
@@ -2255,7 +2295,11 @@ Inputs
          handlerinfo->DoNotWait was TRUE.
      taglist - pointer to a TagItem array.
 
- TAGS
+
+Tags
+~~~~
+::
+
      RTRH_EndRequest - supplying this tag will end the requester. The
          return code from rtReqHandlerA() will _not_ be CALL_HANDLER,
          but the requester return code. If the tagdata of this tag is
@@ -2336,7 +2380,11 @@ Inputs
      title - pointer to requester window title (null terminated).
      taglist - pointer to a TagItem array.
 
- TAGS
+
+Tags
+~~~~
+::
+
      RT_Window - see rtEZRequestA()
 
      RT_ReqPos - see rtEZRequestA()

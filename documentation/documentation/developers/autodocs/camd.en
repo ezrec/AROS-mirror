@@ -1194,7 +1194,11 @@ Inputs
  tagList  --  pointer to an array of tags describing the player's
               attributes or NULL.
 
- TAGS
+
+Tags
+~~~~
+::
+
  MIDI_Name (STRPTR) -- The name of the midinode; default is NULL or a pointer to a string.
 
  MIDI_SignalTask (struct Task *) -- Task to signal whenever a midimessage is arriving to the node;

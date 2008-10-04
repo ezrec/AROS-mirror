@@ -51,7 +51,7 @@ ad_regx = re.compile(r"""
 # Regex for a title
 titles_regx = re.compile(r"""
 ^[/\*\s]{4,4}
-(NAME|FORMAT|SYNOPSIS|LOCATION|FUNCTION|INPUTS|RESULT|EXAMPLE|NOTES|BUGS|SEE\ ALSO|INTERNALS|HISTORY|TEMPLATE)[/\*\s]*?$
+(NAME|FORMAT|SYNOPSIS|LOCATION|FUNCTION|INPUTS|TAGS|RESULT|EXAMPLE|NOTES|BUGS|SEE\ ALSO|INTERNALS|HISTORY|TEMPLATE)[/\*\s]*?$
 """, re.VERBOSE)
 
 # Regex for AROS library functions
@@ -604,8 +604,8 @@ def create_lib_docs():
     """
     
     lib_titles = ("Synopsis","Template","Function",
-        "Inputs","Result","Example","Notes","Bugs","See also")  # The titles we want
-                                                                # to be print
+        "Inputs","Tags", "Result","Example","Notes","Bugs","See also")  # The titles we want
+                                                                        # to be print
     targetdir = os.path.join("documentation", "developers", "autodocs")
     srcdirs = ( os.path.join(topdir, "rom"), os.path.join(topdir, "workbench/libs") )
     for dir in srcdirs:
@@ -668,8 +668,8 @@ def create_shell_docs():
                 
     targetdir = os.path.join("documentation", "users", "shell") # relative to main build script
     shell_titles = ("Name","Format","Template","Synopsis","Location","Function",
-        "Inputs","Result","Example","Notes","Bugs","See also")  # The titles we want
-                                                                # to be print
+        "Inputs","Tags","Result","Example","Notes","Bugs","See also")  # The titles we want
+                                                                       # to be print
     shelldocs = shelldoclist()
     for dir in srcdirs:
         shelldocs.read(dir)
@@ -685,8 +685,8 @@ def create_apps_docs():
                 
     targetdir = os.path.join("documentation", "users", "applications") # relative to main build script
     apps_titles = ("Name","Format","Template","Synopsis","Location","Function",
-        "Inputs","Result","Example","Notes","Bugs","See also")  # The titles we want
-                                                                # to be print
+        "Inputs","Tags","Result","Example","Notes","Bugs","See also")  # The titles we want
+                                                                       # to be print
     appsdocs = appsdoclist()
     for dir in srcdirs:
         appsdocs.read(dir)

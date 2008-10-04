@@ -45,7 +45,11 @@ Inputs
  tagList  --  pointer to an array of tags describing the player's
               attributes or NULL.
 
- TAGS
+
+Tags
+~~~~
+::
+
 
  PLAYER_Name (STRPTR)         --  The name of the player; default is no
                                   name.
@@ -298,7 +302,11 @@ Inputs
  tagList  --  Pointer to an array of tags describing the player's
               attributes or NULL.
 
- TAGS
+
+Tags
+~~~~
+::
+
 
  See CreatePlayerA().
 
@@ -516,7 +524,11 @@ Inputs
  tagList  --  Pointer to an array of tags describing the player's
               attributes or NULL.
 
- TAGS
+
+Tags
+~~~~
+::
+
 
  The same tags as for CreatePlayerA().
 

@@ -64,6 +64,23 @@ Synopsis
           struct MsgPort   * port,
           struct DosPacket * pkt );
 
+Function
+~~~~~~~~
+::
+
+     Tries to abort an asynchronous packet. There is no guarantee
+     that this succeeds. You must wait for the packet to return
+     before you can reuse or deallocate it.
+
+
+Inputs
+~~~~~~
+::
+
+     port - the message port to where the packet was sent
+     pkt  - the packet to be aborted
+
+
 
 ----------
 

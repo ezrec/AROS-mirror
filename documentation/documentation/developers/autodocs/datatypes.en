@@ -441,7 +441,11 @@ Inputs
  tv     --  vertical top in units
  attrs  --  additional attributes
 
- TAGS
+
+Tags
+~~~~
+::
+
 
  ADTA_Frame for animationclass objects (selects the frame that should be
  drawn.
@@ -551,7 +555,11 @@ Inputs
  attrs     --  search tags; if NULL, the result of the function will
                simply be the following node.
 
- TAGS
+
+Tags
+~~~~
+::
+
 
  TOOLA_Program     --  name of the program to search for
 
@@ -951,7 +959,11 @@ Inputs
  project  --  name of the project to execute or NULL
  attrs    --  additional attributes
 
- TAGS
+
+Tags
+~~~~
+::
+
 
  NP_Priority (BYTE) -- priority of the launched tool (default is the
                        priority of the currect process except for
@@ -1053,7 +1065,11 @@ Inputs
  name   --  name of the data source; generally an existing file name
  attrs  --  pointer to a TagList specifying additional arguments
 
- TAGS
+
+Tags
+~~~~
+::
+
 
  DTA_SourceType  --  The type of source data (defaults to DTST_FILE).
                      If the source is the clipboard the name field
@@ -1215,6 +1231,15 @@ Inputs
  attrs  --  additional attributes
 
 
+Tags
+~~~~
+::
+
+
+ PDTA_Screen     --  for pictureclass objects
+ ADTA_Screen     --  for animationclass objects
+
+
 Result
 ~~~~~~
 ::
@@ -1222,11 +1247,6 @@ Result
 
  A private handle that must be passed to ReleaseDTDrawInfo when the
  application is done drawing the object, or NULL if failure.
-
- TAGS
-
- PDTA_Screen     --  for pictureclass objects
- ADTA_Screen     --  for animationclass objects
 
 
 
@@ -1408,6 +1428,15 @@ Inputs
  handle  --  handle got from ObtainDTDrawInfoA()
 
 
+Tags
+~~~~
+::
+
+
+ PDTA_Screen     --  for pictureclass objects
+ ADTA_Screen     --  for animationclass objects
+
+
 Result
 ~~~~~~
 ::
@@ -1415,11 +1444,6 @@ Result
 
  A private handle that must be passed to ReleaseDTDrawInfo when the
  application is done drawing the object, or NULL if failure.
-
- TAGS
-
- PDTA_Screen     --  for pictureclass objects
- ADTA_Screen     --  for animationclass objects
 
 
 

@@ -10,20 +10,19 @@ intuition
 
 ======================================= ======================================= ======================================= ======================================= 
 `ActivateGadget()`_                     `ActivateWindow()`_                     `AddClass()`_                           `AddGadget()`_                          
-`AddGList()`_                           `AllocIntuiMessage()`_                  `AllocRemember()`_                      `AllocScreenBuffer()`_                  
-`AlohaWorkbench()`_                     `AutoRequest()`_                        `BeginRefresh()`_                       `BuildEasyRequestArgs()`_               
-`BuildSysRequest()`_                    `ChangeDecoration()`_                   `ChangeScreenBuffer()`_                 `ChangeWindowBox()`_                    
-`ChangeWindowShape()`_                  `ClearDMRequest()`_                     `ClearMenuStrip()`_                     `ClearPointer()`_                       
-`CloseScreen()`_                        `CloseWindow()`_                        `CloseWorkBench()`_                     `CurrentTime()`_                        
-`DisplayAlert()`_                       `DisplayBeep()`_                        `DisposeObject()`_                      `DoGadgetMethodA()`_                    
-`DoubleClick()`_                        `DrawBorder()`_                         `DrawImage()`_                          `DrawImageState()`_                     
-`DumpIntuiState()`_                     `EasyRequestArgs()`_                    `EndRefresh()`_                         `EndRequest()`_                         
-`EndScreenNotify()`_                    `EraseImage()`_                         `FindClass()`_                          `FreeClass()`_                          
-`FreeIntuiMessage()`_                   `FreeRemember()`_                       `FreeScreenBuffer()`_                   `FreeScreenDrawInfo()`_                 
-`FreeSysRequest()`_                     `GadgetMouse()`_                        `GetAttr()`_                            `GetDefaultPubScreen()`_                
-`GetDefPrefs()`_                        `GetPrefs()`_                           `GetScreenData()`_                      `GetScreenDrawInfo()`_                  
-`HelpControl()`_                        `HideWindow()`_                         `InitRequester()`_                      `IntuiTextLength()`_                    
-`IsWindowVisible()`_                    `ItemAddress()`_                        `LateIntuiInit()`_                      `LendMenus()`_                          
+`AddGList()`_                           `AllocRemember()`_                      `AllocScreenBuffer()`_                  `AlohaWorkbench()`_                     
+`AutoRequest()`_                        `BeginRefresh()`_                       `BuildEasyRequestArgs()`_               `BuildSysRequest()`_                    
+`ChangeDecoration()`_                   `ChangeScreenBuffer()`_                 `ChangeWindowBox()`_                    `ChangeWindowShape()`_                  
+`ClearDMRequest()`_                     `ClearMenuStrip()`_                     `ClearPointer()`_                       `CloseScreen()`_                        
+`CloseWindow()`_                        `CloseWorkBench()`_                     `CurrentTime()`_                        `DisplayAlert()`_                       
+`DisplayBeep()`_                        `DisposeObject()`_                      `DoGadgetMethodA()`_                    `DoubleClick()`_                        
+`DrawBorder()`_                         `DrawImage()`_                          `DrawImageState()`_                     `DumpIntuiState()`_                     
+`EasyRequestArgs()`_                    `EndRefresh()`_                         `EndRequest()`_                         `EndScreenNotify()`_                    
+`EraseImage()`_                         `FreeClass()`_                          `FreeRemember()`_                       `FreeScreenBuffer()`_                   
+`FreeScreenDrawInfo()`_                 `FreeSysRequest()`_                     `GadgetMouse()`_                        `GetAttr()`_                            
+`GetDefaultPubScreen()`_                `GetDefPrefs()`_                        `GetPrefs()`_                           `GetScreenData()`_                      
+`GetScreenDrawInfo()`_                  `HelpControl()`_                        `HideWindow()`_                         `InitRequester()`_                      
+`IntuiTextLength()`_                    `IsWindowVisible()`_                    `ItemAddress()`_                        `LendMenus()`_                          
 `LockIBase()`_                          `lockPubClass()`_                       `LockPubScreen()`_                      `LockPubScreenList()`_                  
 `MakeClass()`_                          `MakeScreen()`_                         `ModifyIDCMP()`_                        `ModifyProp()`_                         
 `MoveScreen()`_                         `MoveWindow()`_                         `MoveWindowInFrontOf()`_                `NewModifyProp()`_                      
@@ -35,15 +34,15 @@ intuition
 `ReleaseGIRPort()`_                     `RemakeDisplay()`_                      `RemoveClass()`_                        `RemoveGadget()`_                       
 `RemoveGList()`_                        `ReportMouse()`_                        `Request()`_                            `ResetMenuStrip()`_                     
 `RethinkDisplay()`_                     `ScreenDepth()`_                        `ScreenPosition()`_                     `ScreenToBack()`_                       
-`ScreenToFront()`_                      `ScrollWindowRaster()`_                 `SendIntuiMessage()`_                   `SetAttrsA()`_                          
-`SetDefaultPubScreen()`_                `SetDefaultScreenFont()`_               `SetDMRequest()`_                       `SetEditHook()`_                        
-`SetGadgetAttrsA()`_                    `SetIPrefs()`_                          `SetMenuStrip()`_                       `SetMouseQueue()`_                      
-`SetPointer()`_                         `SetPrefs()`_                           `SetPubScreenModes()`_                  `SetWindowPointerA()`_                  
-`SetWindowTitles()`_                    `ShowTitle()`_                          `ShowWindow()`_                         `SizeWindow()`_                         
-`StartScreenNotifyTagList()`_           `SysReqHandler()`_                      `TimedDisplayAlert()`_                  `UnlockIBase()`_                        
-`unlockPubClass()`_                     `UnlockPubScreen()`_                    `UnlockPubScreenList()`_                `ViewAddress()`_                        
-`ViewPortAddress()`_                    `WBenchToBack()`_                       `WBenchToFront()`_                      `WindowLimits()`_                       
-`WindowToBack()`_                       `WindowToFront()`_                      `ZipWindow()`_                          
+`ScreenToFront()`_                      `ScrollWindowRaster()`_                 `SetAttrsA()`_                          `SetDefaultPubScreen()`_                
+`SetDMRequest()`_                       `SetEditHook()`_                        `SetGadgetAttrsA()`_                    `SetIPrefs()`_                          
+`SetMenuStrip()`_                       `SetMouseQueue()`_                      `SetPointer()`_                         `SetPrefs()`_                           
+`SetPubScreenModes()`_                  `SetWindowPointerA()`_                  `SetWindowTitles()`_                    `ShowTitle()`_                          
+`ShowWindow()`_                         `SizeWindow()`_                         `StartScreenNotifyTagList()`_           `SysReqHandler()`_                      
+`TimedDisplayAlert()`_                  `UnlockIBase()`_                        `unlockPubClass()`_                     `UnlockPubScreen()`_                    
+`UnlockPubScreenList()`_                `ViewAddress()`_                        `ViewPortAddress()`_                    `WBenchToBack()`_                       
+`WBenchToFront()`_                      `WindowLimits()`_                       `WindowToBack()`_                       `WindowToFront()`_                      
+`ZipWindow()`_                          
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -297,41 +296,6 @@ See also
 
 ----------
 
-AllocIntuiMessage()
-===================
-
-Synopsis
-~~~~~~~~
-::
-
- struct IntuiMessage * AllocIntuiMessage(
-          struct Window * window );
-
-Function
-~~~~~~~~
-::
-
- Private to AROS: allocate an IntuiMessage. IntuiMessage->Window
- will be set to window by this function.
-
-
-Inputs
-~~~~~~
-::
-
- window - The window to which the IntuiMessage will be sent
-
-
-Result
-~~~~~~
-::
-
- an allocated IntuiMessage structure. Must be freed with FreeIntuiMessage
-
-
-
-----------
-
 AllocRemember()
 ===============
 
@@ -355,7 +319,8 @@ Inputs
 ~~~~~~
 ::
 
- rememberKey - Store information in this list
+ rememberKey - Store information in this list. Must be NULL for
+               initial call.
  size - How many bytes to allocate
  flags - Attributes (see AllocMem())
 
@@ -365,6 +330,16 @@ Result
 ::
 
  Pointer to the allocated memory or NULL.
+
+
+Example
+~~~~~~~
+::
+
+     struct Remember *remkey;
+     remkey = NULL;
+     AllocRemember(&remkey, BUFSIZE, MEMF_ANY);
+     FreeRemember(&remkey, TRUE);
 
 
 
@@ -536,6 +511,49 @@ Synopsis
  void BeginRefresh(
           struct Window * window );
 
+Function
+~~~~~~~~
+::
+
+     Initializes optimized refreshing. It restricts redrawing to areas which
+     need refreshing after a window has been moved or has changed size.
+     
+
+Inputs
+~~~~~~
+::
+
+     window - window which needs refreshing
+
+
+Example
+~~~~~~~
+::
+
+     somewhere in your window's event handling loop:
+     
+     case IDCMP_REFRESHWINDWOW:
+         BeginRefresh(mywindow);
+         EndRefresh(mywindow, TRUE);
+         break;
+
+
+Notes
+~~~~~
+::
+
+     Only simple graphics.library functions are allowed between
+     BeginRefresh() and EndRefresh().
+     
+     BeginRefresh()/EndRefresh() should always be called when an
+     IDCMP_REFRESHWINDWOW message happens.
+     
+
+
+See also
+~~~~~~~~
+
+`EndRefresh()`_ 
 
 ----------
 
@@ -615,6 +633,13 @@ Synopsis
           WORD width,
           WORD height );
 
+Function
+~~~~~~~~
+::
+
+     Build and display a system requester.
+
+
 Inputs
 ~~~~~~
 ::
@@ -650,7 +675,7 @@ Function
 ~~~~~~~~
 ::
 
- setup a new decorator for intuition windows, screens or menus
+ Setup a new decorator for intuition windows, screens or menus.
 
 
 Inputs
@@ -659,6 +684,7 @@ Inputs
 
  ID - identifier for decorations, see screens.h
  nd -  an ID dependent NewDecorator structure
+
 
 Result
 ~~~~~~
@@ -671,10 +697,15 @@ Notes
 ~~~~~
 ::
 
- the function fails if screens are open, use ChangeIntuition() to notify applications that
- the UI will be changed
+ The function fails if screens are open, use ChangeIntuition() to notify applications that
+ the UI will be changed.
 
 
+
+See also
+~~~~~~~~
+
+`intuition/screens.h <../headerfiles/intuition/screens.h>`_ 
 
 ----------
 
@@ -815,11 +846,25 @@ Synopsis
  BOOL ClearDMRequest(
           struct Window * window );
 
+Function
+~~~~~~~~
+::
+
+ Detach the DMRequest from the window
+
+
 Inputs
 ~~~~~~
 ::
 
  window - The window from which the DMRequest is to be cleared
+
+
+Result
+~~~~~~
+::
+
+ TRUE if requester could successfully be detached.
 
 
 
@@ -840,6 +885,26 @@ Synopsis
  void ClearMenuStrip(
           struct Window * window );
 
+Function
+~~~~~~~~
+::
+
+     Detach menu stript from a window.
+     Call this function before you change memu data.
+     
+
+Inputs
+~~~~~~
+::
+
+     window - the window from which the menu bar should be detached
+
+
+
+See also
+~~~~~~~~
+
+`SetMenuStrip()`_   
 
 ----------
 
@@ -1209,7 +1274,7 @@ Function
 ~~~~~~~~
 ::
 
- Invokes a boopsi method on a object with a GadgetInfo derived from
+ Invokes a BOOPSI method on an object with a GadgetInfo derived from
  the supplied window or requester parameter.
 
 
@@ -1418,7 +1483,7 @@ Inputs
  leftOffset, topOffset - Add this offset to the position stored in the
      image.
  state - Which state (see intuition/imageclass.h for possible
-     valued).
+     values).
  drawInfo - The DrawInfo from the screen.
 
 
@@ -1537,6 +1602,28 @@ Synopsis
           struct Window * window,
           BOOL complete );
 
+Function
+~~~~~~~~
+::
+
+     Finishes refreshing which was initialized with BeginRefresh().
+     The argument |complete| is usually TRUE, It can be useful to
+     set it to FALSE when refreshing is split in several tasks.
+
+
+Inputs
+~~~~~~
+::
+
+     window   - the window to be refreshed
+     complete - BOOL which states if all refreshing is done
+
+
+
+See also
+~~~~~~~~
+
+`BeginRefresh()`_ 
 
 ----------
 
@@ -1596,7 +1683,7 @@ Function
 ~~~~~~~~
 ::
 
- Remove a Screen Notifications from Intuitionn.
+ Remove a Screen Notifications from Intuition.
 
 
 Inputs
@@ -1617,7 +1704,7 @@ Result
 See also
 ~~~~~~~~
 
-`StartScreenNotifyTagList()`_ 
+`StartScreenNotifyTagList()`_   
 
 ----------
 
@@ -1663,19 +1750,6 @@ See also
 ~~~~~~~~
 
 `DrawImage()`_ `DrawImageState()`_ 
-
-----------
-
-FindClass()
-===========
-
-Synopsis
-~~~~~~~~
-::
-
- struct IClass * FindClass(
-          ClassID classID );
-
 
 ----------
 
@@ -1761,41 +1835,6 @@ Notes
 
 ----------
 
-FreeIntuiMessage()
-==================
-
-Synopsis
-~~~~~~~~
-::
-
- void FreeIntuiMessage(
-          struct IntuiMessage * imsg );
-
-Function
-~~~~~~~~
-::
-
- Private to AROS: free an IntuiMessage previously allocated
- with AllocIntuiMessage.
-
-
-Inputs
-~~~~~~
-::
-
- imsg - The IntuiMessage. May be NULL.
-
-
-Result
-~~~~~~
-::
-
- none
-
-
-
-----------
-
 FreeRemember()
 ==============
 
@@ -1807,6 +1846,27 @@ Synopsis
           struct Remember ** rememberKey,
           LONG reallyForget );
 
+Function
+~~~~~~~~
+::
+
+     Free memory allocated by AllocRemember().
+     
+
+Inputs
+~~~~~~
+::
+
+     rememberKey  - address of a pointer to struct Remember
+     reallyForget - TRUE  release all memory
+                    FALSE release only link nodes
+
+
+
+See also
+~~~~~~~~
+
+`AllocRemember()`_ 
 
 ----------
 
@@ -2531,50 +2591,6 @@ Result
 
 ----------
 
-LateIntuiInit()
-===============
-
-Synopsis
-~~~~~~~~
-::
-
- BOOL LateIntuiInit(
-          APTR data );
-
-Function
-~~~~~~~~
-::
-
- This function permits late initalization
- of intuition (After dos and after graphics hidds are setup,
- but before starup-sequence is run.
- Can be used to open workbench screen.
-
-
-Inputs
-~~~~~~
-::
-
- data - unused for now.
-
-
-Result
-~~~~~~
-::
-
- success - TRUE if initialization went, FALSE otherwise.
-
-
-Notes
-~~~~~
-::
-
- This function is private and AROS specific.
-
-
-
-----------
-
 LendMenus()
 ===========
 
@@ -2896,6 +2912,13 @@ Synopsis
 
  LONG MakeScreen(
           struct Screen * screen );
+
+Function
+~~~~~~~~
+::
+
+ Create viewport of the screen.
+ 
 
 Inputs
 ~~~~~~
@@ -3270,7 +3293,7 @@ Result
 See also
 ~~~~~~~~
 
-`NewModifyProp()`_ `RefreshGadgets()`_ `RefreshGList()`_ 
+`ModifyProp()`_ `RefreshGadgets()`_ `RefreshGList()`_ 
 
 ----------
 
@@ -3706,6 +3729,29 @@ Synopsis
           struct NewScreen * newScreen,
           TAG tag, ... );
 
+Function
+~~~~~~~~
+::
+
+ Open a screen
+ 
+
+Inputs
+~~~~~~
+::
+
+ newScreen - struct with screen specification. This is for compatibility
+             with OpenScreen() and usually set to NULL.
+ tagList   - tags which specify the screen
+ 
+
+Result
+~~~~~~
+::
+
+ Pointer to screen or NULL if opening fails.
+ 
+
 
 ----------
 
@@ -3765,6 +3811,31 @@ Synopsis
  struct Window * OpenWindowTags(
           struct NewWindow * newWindow,
           TAG tag, ... );
+
+Function
+~~~~~~~~
+::
+
+     Open a new window.
+
+
+Inputs
+~~~~~~
+::
+
+     NewWindow - structure with window specification. This is for
+                 compatibility with OpenWindow() and usually set to NULL
+     tagList   - tags which specify appearance and behaviour of the window
+
+
+Result
+~~~~~~
+::
+
+ A pointer to the new window or NULL if it couldn't be
+ opened. Reasons for this might be lack of memory or illegal
+ attributes.
+
 
 
 ----------
@@ -3949,6 +4020,38 @@ Synopsis
           struct Rectangle * rect,
           WORD oscantype );
 
+Function
+~~~~~~~~
+::
+
+     Query overscan dimensions. The resulting rectangle can be used
+     with SA_DisplayID.
+     
+     Overscan types:
+     OSCAN_TEXT: completely visible. Left/Top is always 0,0.
+     OSCAN_STANDARD: visible bounds of monitor. Left/Top may be negative.
+     OSCAN_MAX: The largest displayable region.
+     OSCAN_VIDEO: The absolute largest region that the graphics.library
+       can display.  This region must be used as-is.
+     
+
+Inputs
+~~~~~~
+::
+
+     displayid - ID to be queried
+     rect      - Pointer to struct Rectangle to store result
+     oscantype - OSCAN_TEXT, OSCAN_STANDARD, OSCAN_MAX, OSCAN_VIDEO
+     
+
+Result
+~~~~~~
+::
+
+     TRUE  - Monitorspec exists
+     FALSE - Monitorspec doesn't exist
+
+
 
 ----------
 
@@ -4080,6 +4183,20 @@ Synopsis
  void RefreshWindowFrame(
           struct Window * window );
 
+Function
+~~~~~~~~
+::
+
+     Redraw window borders.
+
+
+Inputs
+~~~~~~
+::
+
+     window - pointer to a window whose borders should be redrawn
+
+
 
 ----------
 
@@ -4125,6 +4242,13 @@ Synopsis
 ::
 
  LONG RemakeDisplay();
+
+Function
+~~~~~~~~
+::
+
+ Remake the entire Intuition display.
+ 
 
 Inputs
 ~~~~~~
@@ -4238,6 +4362,35 @@ Synopsis
           struct Gadget * gadget,
           LONG numGad );
 
+Function
+~~~~~~~~
+::
+
+     Remove sublist of gadgets from a window.
+     
+
+Inputs
+~~~~~~
+::
+
+     remPtr - window from which gadgets should be removed
+     gadget - pointer gadget to be removed
+     numGad - number of gadgets to remove. Use -1 to remove
+              all gadgets to the end of the list.
+
+
+Result
+~~~~~~
+::
+
+     Ordinal number of the removed gadget or -1 on failure
+
+
+
+See also
+~~~~~~~~
+
+`RemoveGadget()`_ `AddGadget()`_ `AddGList()`_ 
 
 ----------
 
@@ -4683,70 +4836,6 @@ Inputs
 
 ----------
 
-SendIntuiMessage()
-==================
-
-Synopsis
-~~~~~~~~
-::
-
- void SendIntuiMessage(
-          struct Window * window,
-          struct IntuiMessage * imsg );
-
-Function
-~~~~~~~~
-::
-
- Private: send an IntuiMessage to an Intuition window
-
-
-Inputs
-~~~~~~
-::
-
- window - The window to which the IntuiMessage shall be sent
-     imsg   - The IntuiMessage to send, which must have been allocated with
-      AllocIntuiMessage.
-
-
-Result
-~~~~~~
-::
-
-     none
-
-
-Notes
-~~~~~
-::
-
-     The caller of this function should first check himself
- whether window->UserPort is NULL. And in this case do not
- call this function at all.
-
- If inside this function the window->UserPort turns out to
- be NULL, then what happens is, that the IntuiMessage is
- immediately ReplyMessage()ed in here, just like if this was
- done by the app whose window was supposed to get the
- IntuiMessage.
-
- The protection with Forbid() is necessary, because of the
- way shared window userports are handled, when one of this
- windows is closed, where there is also just a protection with
- Forbid() when stripping those IntuiMessages from the port
- which belong to the window which is going to be closed.
-
- This function does not check whether the window to which
- the IntuiMessage is supposed to be sent, really wants to
- get the IDCMP in question, that is, whether the corresponding
- flag in window->IDCMPFLags is set.
-
-
-
-
-----------
-
 SetAttrsA()
 ===========
 
@@ -4837,40 +4926,6 @@ See also
 ~~~~~~~~
 
 `OpenWindow()`_ `OpenScreen()`_ 
-
-----------
-
-SetDefaultScreenFont()
-======================
-
-Synopsis
-~~~~~~~~
-::
-
- void SetDefaultScreenFont(
-          struct TextFont * textfont );
-
-Function
-~~~~~~~~
-::
-
-     Set the default Font.
-
-
-Inputs
-~~~~~~
-::
-
- textfont - The Font to be used.
-
-
-Notes
-~~~~~
-::
-
-     PRIVATE(!!!!) Do not use
- 
-
 
 ----------
 
@@ -5490,14 +5545,22 @@ Function
 ~~~~~~~~
 ::
 
- Add Notifications to Intuitionn.
+ Add Notifications to Intuition.
 
 
 Inputs
 ~~~~~~
 ::
 
- taglist - A OS4 Styled Taglist for 
+ taglist - 
+     SNA_PubName   STRPTR
+     SNA_MsgPort   struct MsgPort*
+     SNA_SigBit    BYTE
+     SNA_SigTask   struct Task*
+     SNA_Notify    ULONG
+     SNA_UserData  IPTR
+     SNA_Hook      struct Hook*
+     SNA_Priority  Byte
 
 
 Result
@@ -5598,6 +5661,18 @@ Synopsis
           UWORD height,
           ULONG time );
 
+Function
+~~~~~~~~
+::
+
+     Display an alert with automatic time-out.
+ 
+
+
+See also
+~~~~~~~~
+
+`DisplayAlert()`_   
 
 ----------
 

@@ -151,14 +151,14 @@ Reset of area pattern::
 `GetAPen()`_          Get primary pen
 `SetBPen()`_          Set secondary pen
 `GetBPen()`_          Get secondary pen
-SetOPen()             Set area outline pen and switch on outline mode (macro in graphics/gfxmacros.h)
+SetOPen()             Set area outline pen and switch on outline mode (macro in `graphics/gfxmacros.h`_)
 `SetOutlinePen()`_    Get area outline pen
 `GetOutlinePen()`_    Get area outline pen
-BNDRYOFF()            Switch off area outline mode (macro in graphics/gfxmacros.h)
+BNDRYOFF()            Switch off area outline mode (macro in `graphics/gfxmacros.h`_)
 `SetDrMd()`_          Set drawing mode
 `GetDrMd()`_          Get drawing mode
-SetDrPt()             Set line pattern (macro in graphics/gfxmacros.h)
-SetAfPt()             Set area pattern (macro in graphics/gfxmacros.h)
+SetDrPt()             Set line pattern (macro in `graphics/gfxmacros.h`_)
+SetAfPt()             Set area pattern (macro in `graphics/gfxmacros.h`_)
 `SetABPenDrMd()`_     Set primary pen, secondary pen and drawing mode in one step
 `SetRPAttrsA()`_      Set misc. drawing attributes
 `GetRPAttrsA()`_      Get misc. drawing attributes
@@ -180,7 +180,7 @@ explained unter `Area operations`_.
 `Move()`_               Change pen position
 `Draw()`_               Draw a line from current pen position to given coordinate
 `DrawEllipse()`_        Draw an ellipse
-DrawCircle()            Draw a circle (macro in graphics/gfxmacros.h)
+DrawCircle()            Draw a circle (macro in `graphics/gfxmacros.h`_)
 `PolyDraw()`_           Draw connected lines from an array of points
 `WritePixel()`_         Write a single pixel
 `ReadPixel()`_          Read the pen value of a pixel
@@ -257,9 +257,9 @@ Text
 ----
 
 ==================  =============================================================================
-`OpenFont()`_       Open a font which is in the system font list. Better use OpenDiskFont()
+`OpenFont()`_       Open a font which is in the system font list. Better use `OpenDiskFont()`_
                     from the diskfont library.
-`CloseFont()`_      Close font, which had been opened by `OpenFont()`_ or OpenDiskFont()
+`CloseFont()`_      Close font, which had been opened by `OpenFont()`_ or `OpenDiskFont()`_
 `AddFont()`_        Add font to the system list
 `RemFont()`_        Remove font from system list
 `SetFont()`_        Set current font of rastport
@@ -433,11 +433,11 @@ Blitter
 -------
 
 ======================== ===========================================================================
-`DisownBlitter()`_
-`OwnBlitter()`_
-`QBSBlit()`_
-`QBlit()`_
-`WaitBlit()`_
+`DisownBlitter()`_       Release the bitter from private usage
+`OwnBlitter()`_          Try to own the blitter for private usage
+`QBSBlit()`_             Queue a beam-synchronized Blit
+`QBlit()`_               Queue a blit
+`WaitBlit()`_            Wait for the blitter to finish
 ======================== ===========================================================================
 
 
@@ -445,14 +445,14 @@ Copper
 ------
 
 ======================== ===========================================================================
-`CBump()`_
-`CMove()`_
-`CWait()`_
-`FreeCopList()`_
-`FreeCprList()`_
-`FreeVPortCopLists()`_
-`MrgCop()`_
-`UCopperListInit()`_
+`CBump()`_               Increment user copper list pointer
+`CMove()`_               Add a copper move instruction to the given user copper list
+`CWait()`_               Add a copper wait instruction to the given user copper list
+`FreeCopList()`_         Deallocate all memory associated with this copper list
+`FreeCprList()`_         Deallocate all memory associated with this cprlist structure
+`FreeVPortCopLists()`_   Deallocate copperlist from viewport
+`MrgCop()`_              Merge together copper instructions
+`UCopperListInit()`_     Allocates and initializes copperlist structures and buffers
 ======================== ===========================================================================
 
 
@@ -478,6 +478,7 @@ Misc
 ============================== ======================================================================
 
 
+.. Hyperlinks to graphics.library autodocs
 
 .. _AddAnimOb(): ../autodocs/graphics#addanimob
 .. _AddBob(): ../autodocs/graphics#addbob
@@ -673,3 +674,13 @@ Misc
 .. _XorRectRegionND(): ../autodocs/graphics#xorrectregionnd
 .. _XorRegionRegion(): ../autodocs/graphics#xorregionregion
 .. _XorRegionRegionND(): ../autodocs/graphics#xorregionregionnd
+
+
+.. Hyperlinks to diskfont.library autodocs
+
+.. _OpenDiskFont(): ../autodocs/diskfont#opendiskfont
+
+
+.. Hyperlinks to headerfiles
+
+.. _graphics/gfxmacros.h: ../headerfiles/graphics/gfxmacros.h

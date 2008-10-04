@@ -122,7 +122,11 @@ Inputs
 
  taglist  --  tags (see below)
 
- TAGS
+
+Tags
+~~~~
+::
+
  
  WBAPPICONA_SupportsOpen (BOOL)
  Set to TRUE if the AppIcon should respond to the "Open" menu.
@@ -269,7 +273,11 @@ Inputs
                item will be sent
  taglist   --  tags (see below)
 
- TAGS
+
+Tags
+~~~~
+::
+
 
  WBAPPMENUA_CommandKeyString (STRPTR)
  Command key assigned to this menu item. If the string is empty, it will
@@ -420,7 +428,11 @@ Inputs
                workbench.library)
  taglist   --  tags (see below)
 
- TAGS
+
+Tags
+~~~~
+::
+
 
  WBDZA_Left (WORD)
  Left edge of the drop zone relative to the left window edge.
@@ -1077,7 +1089,11 @@ Inputs
      type - Type of object (WBDISK, WBTOOL, ...).
      tags - Additional options.
      
- TAGS
+
+Tags
+~~~~
+::
+
      No tags are defined at this time.
 
 

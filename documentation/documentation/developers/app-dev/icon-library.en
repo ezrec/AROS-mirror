@@ -29,23 +29,23 @@ DiskObject
 ----------
 
 =============================== ==========================================================
-`NewDiskObject()`_
-`GetDiskObject()`_
-`GetDiskObjectNew()`_
-`PutDiskObject()`_
-`GetIconTagList()`_
-`PutIconTagList()`_
-`GetDefDiskObject()`_
-`PutDefDiskObject()`_
-`DupDiskObjectA()`_
+`NewDiskObject()`_              Create empty diskobject structure
+`GetDiskObject()`_              Open an icon from disk
+`GetDiskObjectNew()`_           Open an icon from disk, use default icon if not found
+`PutDiskObject()`_              Write icon to disk
+`GetIconTagList()`_             Open icon from disk, use default icon if not found
+`PutIconTagList()`_             Write icon to disk
+`GetDefDiskObject()`_           Get the default icon for the supplied type of icon
+`PutDefDiskObject()`_           Write icon as default icon
+`DupDiskObjectA()`_             Duplicate icon
 `DeleteDiskObject()`_           Deletes .info file from disk
 `FreeDiskObject()`_             Free the DiskObject created by GetDiskObject()_
-`GetIconRectangleA()`_
-`IconControlA()`_
-`LayoutIconA()`_
-`DrawIconStateA()`_
-`ChangeToSelectedIconColor()`_
-`BumpRevision()`_              
+`GetIconRectangleA()`_          Query size of icon
+`IconControlA()`_               Set and get icon and icon.library options
+`LayoutIconA()`_                Adapt a palette-mapped icon for display
+`DrawIconStateA()`_             Draw an icon like an image
+`ChangeToSelectedIconColor()`_  Change a color register for selected icon state
+`BumpRevision()`_               Compute the right copy revision for a file name
 =============================== ==========================================================
 
 
@@ -62,8 +62,8 @@ Misc.
 -----
 
 =============================== ==========================================================
-`AddFreeList()`_
-`FreeFreeList()`_
+`AddFreeList()`_                Add supplied memory chunk to the supplied freelist
+`FreeFreeList()`_               Free all memory chunks in the freelist inserted by `AddFreeList()`_
 =============================== ==========================================================
 
 

@@ -361,8 +361,8 @@ Stream I/O
 `Seek()`_                     Change the current read/write position in a file
 `LockRecord()`_               Lock a portion of a file for exclusive access
 `LockRecords()`_              Lock several records at the same time
-`UnLockRecord()`_             Release a lock made with LockRecord()_
-`UnLockRecords()`_            Release an array of record locks obtained with LockRecords()_
+`UnLockRecord()`_             Release a lock made with `LockRecord()`_
+`UnLockRecords()`_            Release an array of record locks obtained with `LockRecords()`_
 `VFPrintf()`_                 Write a formatted (RawDoFmt) string to a specified file
 `VFWritef()`_                 Write a formatted string to a specified file
 `VPrintf()`_                  Write a formatted (RawDoFmt) string to standard output
@@ -427,16 +427,16 @@ Examination
 `DupLock()`_                  Clone a lock on a file or directory
 `NameFromLock()`_             Retrieve thew full pathname from a lock
 `ExAll()`_                    Examine a directory
-`ExAllEnd()`_                 Stop an ExAll()_ operation
+`ExAllEnd()`_                 Stop an `ExAll()`_ operation
 `ExNext()`_                   Examine the next entry in a directory
 `Examine()`_                  Fill in a FileInfoBlock structure concerning a file or directory
-`MatchEnd()`_                 Free the memory allocated by MatchFirst()_ and MatchNext()_
+`MatchEnd()`_                 Free the memory allocated by `MatchFirst()`_ and `MatchNext()`_
 `MatchFirst()`_               Search for the first file or directory that matches a given pattern
 `MatchNext()`_                Find next file or directory that matches a given pattern
 `MatchPattern()`_             Check if a string matches a pattern
-`MatchPatternNoCase()`_       Case insensitive variant of MatchPattern()_
-`ParsePattern()`_             Parse a pattern for use with MatchPattern()_
-`ParsePatternNoCase()`_       Case insensitive variant of ParsePattern()_
+`MatchPatternNoCase()`_       Case insensitive variant of `MatchPattern()`_
+`ParsePattern()`_             Parse a pattern for use with `MatchPattern()`_
+`ParsePatternNoCase()`_       Case insensitive variant of `ParsePattern()`_
 `SameDevice()`_               Check if two locks are on the same device
 `SameLock()`_                 Compare two locks
 `Info()`_                     Get information about a volume in the system
@@ -447,11 +447,11 @@ Packets
 -------
 
 ============================= ======================================================
-`AbortPkt()`_
-`DoPkt()`_
-`ReplyPkt()`_
-`SendPkt()`_
-`WaitPkt()`_
+`AbortPkt()`_                 Abort an asynchronous packet
+`DoPkt()`_                    Send a dos packet to a filesystem and wait for the action to complete
+`ReplyPkt()`_                 Reply packet
+`SendPkt()`_                  Send a packet to a handler without waiting for the result
+`WaitPkt()`_                  Wait for a packet to arrive
 ============================= ======================================================
 
 
@@ -461,13 +461,13 @@ DOS entries
 ============================= ======================================================
 `AddDosEntry()`_              Add a given dos list entry to the dos list
 `RemDosEntry()`_              Remove a given dos list entry from the dos list
-`FreeDosEntry()`_             Free a dos list entry created with MakeDosEntry()_
+`FreeDosEntry()`_             Free a dos list entry created with `MakeDosEntry()`_
 `AllocDosObject()`_           Create a new dos object of a given type
-`FreeDosObject()`_            Frees an object allocated with AllocDosObject()_
+`FreeDosObject()`_            Frees an object allocated with `AllocDosObject()`_
 `AttemptLockDosList()`_       Try to get a lock on some of the dos lists
 `FindDosEntry()`_             Look for the next dos list entry with the given name
 `LockDosList()`_              Lock the specified Dos Lists for use
-`UnLockDosList()`_            Free a lock on the dos lists given by LockDosList()_
+`UnLockDosList()`_            Free a lock on the dos lists given by `LockDosList()`_
 `MakeDosEntry()`_             Create an entry for the dos list
 `NextDosEntry()`_             Look for the next dos list entry with the given name
 `IsFileSystem()`_             Check if a device is a filesystem
@@ -495,7 +495,7 @@ Arguments
 `ReadArgs()`_                 Parse command line arguments
 `ReadItem()`_                 Read an item from a given character source
 `FindArg()`_                  Search for keyword in the template
-`FreeArgs()`_                 Free arguments structure from ReadArgs()_
+`FreeArgs()`_                 Free arguments structure from `ReadArgs()`_
 `GetArgStr()`_                Return a pointer to the argument string of the process
 `SetArgStr()`_                Set the arguments of the current process
 ============================= ======================================================
@@ -508,11 +508,11 @@ Process
 `CreateNewProc()`_            Create a new process
 `CreateProc()`_               Create a new process (in an old way)
 `AddSegment()`_               Add a segment to the resident list
-`NewLoadSeg()`_               Load an executable file into memory via LoadSeg()_
+`NewLoadSeg()`_               Load an executable file into memory via `LoadSeg()`_
 `LoadSeg()`_                  Load an executable file into memory
-`UnLoadSeg()`_                Free a segment list allocated with LoadSeg()_
+`UnLoadSeg()`_                Free a segment list allocated with `LoadSeg()`_
 `InternalLoadSeg()`_          Low-level load from fh
-`InternalUnLoadSeg()`_        Unload a seglist loaded with InternalLoadSeg()_
+`InternalUnLoadSeg()`_        Unload a seglist loaded with `InternalLoadSeg()`_
 `FindSegment()`_              Find a resident segment
 `RemSegment()`_               Remove a segment from the system list
 `DeviceProc()`_               Return a handle to a devices process
@@ -527,7 +527,7 @@ Process
 `SystemTagList()`_            Execute a command via a shell
 `Execute()`_                  Execute a CLI command
 `GetDeviceProc()`_            Find the filesystem for a path
-`FreeDeviceProc()`_           Clean up after calls to GetDeviceProc()_
+`FreeDeviceProc()`_           Clean up after calls to `GetDeviceProc()`_
 `GetConsoleTask()`_           Get the "task" belonging to the process's console
 `SetConsoleTask()`_           Set the console handler for the current process
 `SetFileSysTask()`_           Set the current filesystem handler for a process

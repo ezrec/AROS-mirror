@@ -256,6 +256,20 @@ INPUTS
     There is no point in explaining the parameter twice in FUNCTION and here.
     If the function has no parameters, say "None." here.
 
+TAGS
+    Optional for functions with taglists.
+    
+    Format::
+    
+        name (type) - description
+        
+    or::
+    
+        name (type)
+        description
+    
+    Don't forget the default value.
+
 RESULT
     What the function passes back. This includes return values
     and values passed in arguments of the function. If the function may fail,

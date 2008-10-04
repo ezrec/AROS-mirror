@@ -834,20 +834,20 @@ FIXME: AddMemHandler()/RemMemHandler()
 
 ============================== ================================================================
 `AllocMem()`_                  Allocate some memory
-`FreeMem()`_                   Free memory allocated by AllocMem()_
+`FreeMem()`_                   Free memory allocated by `AllocMem()`_
 `AllocVec()`_                  Allocate block of memory and remember its size
 `FreeVec()`_                   Free memory allocated by AllocVec()
 `AllocEntry()`_                Allocate a number of blocks
-`NewAllocEntry()`_             Allocate a number of blocks. Improved version of AllocEntry()_
-`FreeEntry()`_                 Free memory allocated with AllocEntry()_/NewAllocEntry()_
+`NewAllocEntry()`_             Allocate a number of blocks. Improved version of `AllocEntry()`_
+`FreeEntry()`_                 Free memory allocated with `AllocEntry()`_/`NewAllocEntry()`_
 `AddMemList()`_                Add memory to the public list of memory
 `AllocAbs()`_                  Allocate memory at given address
 `Allocate()`_                  Allocate memory from a specific MemHeader
-`Deallocate()`_                Free memory allocated by Allocate()_
+`Deallocate()`_                Free memory allocated by `Allocate()`_
 `AllocPooled()`_               Allocate memory in a pool
-`FreePooled()`_                Free memory allocated by AllocPooled()_
+`FreePooled()`_                Free memory allocated by `AllocPooled()`_
 `AllocVecPooled()`_            Allocate memory in a pool and remember its size
-`FreeVecPooled()`_             Free memory allocated by AllocVecPooled()_
+`FreeVecPooled()`_             Free memory allocated by `AllocVecPooled()`_
 `CreatePool()`_                Create a memory pool
 `DeletePool()`_                Delete a memory pool including all its memory
 `AvailMem()`_                  Tell how much memory is available
@@ -1036,7 +1036,7 @@ Interrups
 `RemIntServer()`_              Remove an interrupt handler
 `Cause()`_                     Cause a software interrupt
 `Disable()`_                   Stop interrupts from occurring
-`Enable()`_                    Allow interrupts to occur after Disable()_
+`Enable()`_                    Allow interrupts to occur after `Disable()`_
 `SetIntVector()`_              Install an interrupt handler
 `ObtainQuickVector()`_         Obtain and install a Quick Interrupt vector
 ============================== ===========================================================

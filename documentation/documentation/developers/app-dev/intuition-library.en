@@ -28,32 +28,27 @@ Windows
 -------
 
 ============================= =======================================================
-`OpenWindowTagList()`_
-`OpenWindow()`_
-`CloseWindow()`_
-`BeginRefresh()`_
-`EndRefresh()`_
-`RefreshWindowFrame()`_
-`ActivateWindow()`_
-`SizeWindow()`_
-`MoveWindow()`_
-`ChangeWindowBox()`_
-`WindowLimits()`_
-`WindowToBack()`_
-`WindowToFront()`_
-`MoveWindowInFrontOf()`_
-`ZipWindow()`_
-`SetWindowTitles()`_
-`SetWindowPointerA()`_
-`SetPointerBounds()`_
-`ShowWindow()`_
-`HideWindow()`_
-`IsWindowVisible()`_
-
-`ChangeWindowShape()`_
-`ScrollWindowRaster()`_
-`ScrollWindowRasterNoFill()`_
-`WindowAction()`_
+`OpenWindowTagList()`_        Open a window
+`OpenWindow()`_               Open a window (deprecated)
+`CloseWindow()`_              Close a window
+`BeginRefresh()`_             Initializes optimized refreshing
+`EndRefresh()`_               Finishes refreshing
+`RefreshWindowFrame()`_       Redraw window borders
+`ActivateWindow()`_           Make a window active
+`SizeWindow()`_               Change size of a window
+`MoveWindow()`_               Move a window
+`ChangeWindowBox()`_          Change size and position of a window
+`WindowLimits()`_             Change the width and height limits of a window
+`WindowToBack()`_             Move a window behind other windows
+`WindowToFront()`_            Make a window the frontmost one
+`MoveWindowInFrontOf()`_      Move window in front of a given window
+`ZipWindow()`_                Change window to alternative size and position
+`SetWindowTitles()`_          Set title string of a window
+`SetWindowPointerA()`_        Change pointer state
+`ShowWindow()`_               Make a hidden window visiable
+`HideWindow()`_               Make a window invisible
+`IsWindowVisible()`_          Check if window is visible
+`ScrollWindowRaster()`_       Scrolls the content of a rectangle within a window
 ============================= =======================================================
 
 
@@ -101,20 +96,19 @@ Complex Requesters
 FIXME
 
 ============================= =======================================================
-`Request()`_
-`EndRequest()`_
-`InitRequester()`_
-`EasyRequestArgs()`_
-`BuildEasyRequestArgs()`_
-`SysReqHandler()`_
-`AutoRequest()`_
-`BuildSysRequest()`_
-`FreeSysRequest()`_
-`SetDMRequest()`_
-`ClearDMRequest()`_
-`DisplayAlert()`_
-`TimedDisplayAlert()`_
-`DisplayBeep()`_
+`Request()`_                  Add a requester to specified window and display it
+`EndRequest()`_               Remove a requester from the specified window
+`EasyRequestArgs()`_          Open and handles a requester with one or more choices
+`BuildEasyRequestArgs()`_     Open a requester with one or more choices
+`SysReqHandler()`_            Handle EasyRequests
+`AutoRequest()`_              Build and handle simple requesters
+`BuildSysRequest()`_          Build and display a system requester
+`FreeSysRequest()`_           Free a requester.
+`SetDMRequest()`_             Setup a requester which is shown on double menu button click
+`ClearDMRequest()`_           Detach the DMRequest from the window
+`DisplayAlert()`_             Bring up an alert with the given message
+`TimedDisplayAlert()`_        Display an alert with automatic time-out
+`DisplayBeep()`_              Flashes background of screen as signal
 ============================= =======================================================
 
 
@@ -122,66 +116,65 @@ Screens
 -------
 
 ============================= =======================================================
-`OpenScreenTagList()`_
-`OpenScreen()`_
-`CloseScreen()`_
-`MoveScreen()`_
-`ScreenPosition()`_
-`ScreenToBack()`_
-`ScreenToFront()`_
-`ScreenDepth()`_
-`ShowTitle()`_
-`GetScreenDrawInfo()`_
-`FreeScreenDrawInfo()`_
-`GetScreenData()`_
-`QueryOverscan()`_
-`LockPubScreen()`_
-`UnlockPubScreen()`_
-`NextPubScreen()`_
-`PubScreenStatus()`_
-`LockPubScreenList()`_
-`UnlockPubScreenList()`_
-`SetDefaultPubScreen()`_
-`SetPubScreenModes()`_
-`GetDefaultPubScreen()`_
-`StartScreenNotifyTagList()`_
-`EndScreenNotify()`_
-`OpenWorkBench()`_
-`CloseWorkBench()`_
-`WBenchToBack()`_
-`WBenchToFront()`_
-`AlohaWorkbench()`_
-`ViewAddress()`_
-`ViewPortAddress()`_
-`MakeScreen()`_
-`RethinkDisplay()`_
-`RemakeDisplay()`_
-`AllocScreenBuffer()`_
-`ChangeScreenBuffer()`_
-`FreeScreenBuffer()`_
-`SetDefaultScreenFont()`_
+`OpenScreenTagList()`_        Open a screen
+`OpenScreen()`_               Open a screen (obsolete)
+`CloseScreen()`_              Close a screen
+`MoveScreen()`_               Move a screen
+`ScreenPosition()`_           Move a screen
+`ScreenToBack()`_             Move a screen behind all other screens
+`ScreenToFront()`_            Move a screen in front of all other screens
+`ScreenDepth()`_              Move the specified screen to the front or back
+`ShowTitle()`_                Show screen title in front of backdrop windows
+`GetScreenDrawInfo()`_        Returns a pointer to struct DrawInfo of the passed screen
+`FreeScreenDrawInfo()`_       Free data obtained with `GetScreenDrawInfo()`_
+`GetScreenData()`_            Obsolete method of getting info about a screen
+`QueryOverscan()`_            Query overscan dimensions
+`LockPubScreen()`_            Lock a public screen
+`UnlockPubScreen()`_          Release public screen
+`NextPubScreen()`_            Get the next public screen in the system
+`PubScreenStatus()`_          Change the status flags for a given public screen
+`LockPubScreenList()`_        Arbitrates access to the system public screen list
+`UnlockPubScreenList()`_      Release lock made by `LockPubScreenList()`_
+`SetDefaultPubScreen()`_      Specifies the default public screen
+`SetPubScreenModes()`_        Specify global intuition public screen handling
+`GetDefaultPubScreen()`_      Returns the name of the current default public screen
+`StartScreenNotifyTagList()`_ Add Notifications to Intuition
+`EndScreenNotify()`_          Remove a Screen Notifications from Intuition
+`OpenWorkBench()`_            Attempt to open the Workbench screen
+`CloseWorkBench()`_           Attempt to close the Workbench screen
+`WBenchToBack()`_             Bring the WorkBench behind all other screens
+`WBenchToFront()`_            Make the WorkBench screen the frontmost
+`ViewAddress()`_              Return the address of the Intuition View structure
+`ViewPortAddress()`_          Return the address of the viewport of a given window
+`MakeScreen()`_               Create viewport of the screen
+`RethinkDisplay()`_           Redisplay the whole Intuition display
+`RemakeDisplay()`_            Remake the entire Intuition display
+`AllocScreenBuffer()`_        Allocate a ScreenBuffer multiple buffering
+`ChangeScreenBuffer()`_       Change current buffer
+`FreeScreenBuffer()`_         Frees a ScreenBuffer allocated by `AllocScreenBuffer()`_
 ============================= =======================================================
 
 
 
 Gadgets
--------------
+-------
 
 ============================= =======================================================
-`AddGadget()`_
-`AddGList()`_
-`RemoveGadget()`_
-`RemoveGList()`_
-`RefreshGList()`_
-`RefreshGadgets()`_
-`ModifyProp()`_
-`NewModifyProp()`_
-`OffGadget()`_
-`OnGadget()`_
-`ActivateGadget()`_
-`SetEditHook()`_
-`GadgetMouse()`_
-`HelpControl()`_
+`AddGadget()`_                Add a single gadget to a window
+`AddGList()`_                 Add some gadgets to a window
+`RemoveGadget()`_             Remove a gadget from the list of gadgets in a window
+`RemoveGList()`_              Remove sublist of gadgets from a window
+`RefreshGList()`_             Refresh (draw anew) the specified number of gadgets
+`RefreshGadgets()`_           Refresh all gadgets starting at the specified gadget
+`ModifyProp()`_               Change the values of a proportional gadget
+`NewModifyProp()`_            Change the values of a proportional gadget
+`OffGadget()`_                Disable a gadget
+`OnGadget()`_                 Enable a gadget
+`ActivateGadget()`_           Activate the specified gadget
+`SetEditHook()`_              Set the string editing hook of string gadgets
+`GadgetMouse()`_              Determines the current mouse position relative to the upper-left
+                              corner of a custom gadget
+`HelpControl()`_              Turn on or off Gadget-Help for your window
 ============================= =======================================================
 
 
@@ -189,13 +182,13 @@ Menus
 -----
 
 ============================= =======================================================
-`SetMenuStrip()`_
-`ClearMenuStrip()`_
-`ResetMenuStrip()`_
-`ItemAddress()`_
-`OffMenu()`_
-`OnMenu()`_
-`LendMenus()`_
+`SetMenuStrip()`_             This function adds a MenuStrip to the Window
+`ClearMenuStrip()`_           Detach menu stript from a window
+`ResetMenuStrip()`_           Refresh menu stript after some status changes
+`ItemAddress()`_              Return the address of the menuitem
+`OffMenu()`_                  Disable a whole menu, an item or a sub-item
+`OnMenu()`_                   Enable a whole menu, an item or a sub-item
+`LendMenus()`_                Lend the menus of one window to another
 ============================= =======================================================
 
 
@@ -203,15 +196,15 @@ Images/Line Drawing
 -------------------
 
 ============================= =======================================================
-`DrawBorder()`_
-`DrawImage()`_
-`DrawImageState()`_
-`EraseImage()`_
-`PrintIText()`_
-`IntuiTextLength()`_
-`GetScreenDrawInfo()`_
-`FreeScreenDrawInfo()`_
-`PointInImage()`_
+`DrawBorder()`_               Draw one or more borders in the specified RastPort
+`DrawImage()`_                Draw an image
+`DrawImageState()`_           Render an image in a certain state
+`EraseImage()`_               Erase an image on the screen
+`PrintIText()`_               Render an IntuiText in the specified RastPort
+`IntuiTextLength()`_          Measure the length of the IntuiText passed to the function
+`GetScreenDrawInfo()`_        Return a pointer to struct DrawInfo of the passed screen
+`FreeScreenDrawInfo()`_       Release data from `GetScreenDrawInfo`_
+`PointInImage()`_             Check whether a point is inside an image
 ============================= =======================================================
 
 
@@ -219,10 +212,7 @@ Input/Output
 ------------
 
 ============================= =======================================================
-`ModifyIDCMP()`_
-`AllocIntuiMessage()`_
-`FreeIntuiMessage()`_
-`SendIntuiMessage()`_
+`ModifyIDCMP()`_              Modify the state of your window's IDCMP port
 ============================= =======================================================
 
 
@@ -230,8 +220,8 @@ Mouse/Keyboard
 --------------
 
 ============================= =======================================================
-`DoubleClick()`_
-`SetPointer()`_
+`DoubleClick()`_              Check if two times are within the doubleclick intervall
+`SetPointer()`_               Change the shape of the mouse pointer for a given window
 `ClearPointer()`_
 `SetMouseQueue()`_
 `ReportMouse()`_
@@ -242,23 +232,19 @@ BOOPSI
 ------
 
 ============================= =======================================================
-`NewObjectA()`_
-`DisposeObject()`_
-`SetAttrsA()`_
-`SetGadgetAttrsA()`_
-`GetAttr()`_
-`MakeClass()`_
-`FreeClass()`_
-`AddClass()`_
-`RemoveClass()`_
-`ObtainGIRPort()`_
-`ReleaseGIRPort()`_
-`DoGadgetMethodA()`_
-`DoNotify()`_
-`FindClass()`_
-`FreeICData()`_
-`NextObject()`_
-
+`NewObjectA()`_               Create BOOPSI object
+`DisposeObject()`_            Delete BOOPSI object created with `NewObjectA()`_
+`SetAttrsA()`_                Change several attributes of an object
+`SetGadgetAttrsA()`_          Change several attributes of a gadget
+`GetAttr()`_                  Ask the specified object for the value of an attribute
+`MakeClass()`_                Create a new public BOOPSI class
+`FreeClass()`_                Free a class which has been created by `MakeClass()`_
+`AddClass()`_                 Make a class publically available
+`RemoveClass()`_              Make a public class inaccessible
+`ObtainGIRPort()`_            Get a rastport for gadget imagery
+`ReleaseGIRPort()`_           Release a RastPort previously obtained by `ObtainGIRPort()`_
+`DoGadgetMethodA()`_          Invoke a BOOPSI method on an object
+`NextObject()`_               Iterate through a list of BOOPSI objects
 ============================= =======================================================
 
 
@@ -266,17 +252,15 @@ Misc.
 -----
 
 ============================= =======================================================
-`AllocRemember()`_
-`FreeRemember()`_
-`LockIBase()`_
-`UnlockIBase()`_
-`CurrentTime()`_
-`ChangeDecoration()`_
-`SetIPrefs()`_
-`SetPrefs()`_
-`GetPrefs()`_
-`GetDefPrefs()`_
-`LateIntuiInit()`_
+`AllocRemember()`_            Allocate some memory and remeber it in the Remember-List
+`FreeRemember()`_             Free memory allocated by `AllocRemember()`_
+`LockIBase()`_                Lock Intuition
+`UnlockIBase()`_              Release a lock obtained with `LockIBase()`_
+`CurrentTime()`_              Copies the current time into the argument pointers
+`ChangeDecoration()`_         Setup a new decorator for intuition windows, screens or menus
+`SetPrefs()`_                 Set the current Preferences structure
+`GetPrefs()`_                 Get a copy of the current Preferences structure
+`GetDefPrefs()`_              Get a copy of the Intuition default Preferences structure
 ============================= =======================================================
 
 

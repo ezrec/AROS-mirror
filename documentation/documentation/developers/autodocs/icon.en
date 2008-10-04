@@ -111,6 +111,20 @@ Synopsis
  VOID ChangeToSelectedIconColor(
           struct ColorRegister * cr );
 
+Function
+~~~~~~~~
+::
+
+     Change a color register for selected icon state.
+     
+
+Inputs
+~~~~~~
+::
+
+     cr - colorregister to be changed.
+
+
 
 ----------
 
@@ -173,11 +187,37 @@ Synopsis
           ULONG state,
           TAG tag, ... );
 
+Function
+~~~~~~~~
+::
+
+     Draw an icon like an image.
+     
+
+Inputs
+~~~~~~
+::
+
+     rp       - rastport to draw into
+     icon     - the icon
+     label    - label string
+     leftEdge, 
+     topEdge  - drawing position 
+     state    - drawing state, see intuition/imageclass.h
+ 
+
+Notes
+~~~~~
+::
+
+     Only very limited implemented.
+
+
 
 See also
 ~~~~~~~~
 
-`AddFreeList()`_ 
+`intuition/imageclass.h <../headerfiles/intuition/imageclass.h>`_ 
 
 ----------
 
@@ -358,6 +398,27 @@ Synopsis
  struct DiskObject * GetDiskObject(
           CONST_STRPTR name );
 
+Function
+~~~~~~~~
+::
+
+     Opens an icon from disk.
+     
+
+Inputs
+~~~~~~
+::
+
+     name - filename without ".info" or NULL for an empty diskobject.
+
+
+Result
+~~~~~~
+::
+
+     Pointer to diskobject.
+
+
 
 ----------
 
@@ -423,6 +484,37 @@ Synopsis
           struct Rectangle * rectangle,
           TAG tag, ... );
 
+Function
+~~~~~~~~
+::
+
+     Query size of icon.
+     
+
+Inputs
+~~~~~~
+::
+
+     rp        - reference RastPort (for font)
+     icon      - icon to be queried
+     label     - label string
+     rectangle - resulting size
+
+
+Result
+~~~~~~
+::
+
+     TRUE success
+
+
+Notes
+~~~~~
+::
+
+     Only very limited implemented.
+
+
 
 ----------
 
@@ -441,12 +533,16 @@ Synopsis
           CONST_STRPTR name,
           TAG tag, ... );
 
-Inputs
-~~~~~~
+Function
+~~~~~~~~
 ::
 
+     Open icon from disk
 
- TAGS
+Tags
+~~~~
+::
+
      ICONA_ErrorCode (LONG *)
      ICONGETA_GetDefaultType (LONG) - Default icon type to get. This
              overrides the "name" paramter.
@@ -481,6 +577,27 @@ Synopsis
           struct DiskObject * icon,
           TAG tag, ... );
 
+Function
+~~~~~~~~
+::
+
+     Set and get icon and icon.library options.
+     
+
+Inputs
+~~~~~~
+::
+
+     icon - icon to be queried
+
+
+Result
+~~~~~~
+::
+
+     Number of processed tags.
+
+
 
 ----------
 
@@ -500,6 +617,20 @@ Synopsis
           struct DiskObject * icon,
           struct Screen * screen,
           TAG tag, ... );
+
+Function
+~~~~~~~~
+::
+
+     Adapt a palette-mapped icon for display.
+     
+
+Notes
+~~~~~
+::
+
+     Not implemented.
+
 
 
 ----------
@@ -549,6 +680,28 @@ Synopsis
 
  struct DiskObject * NewDiskObject(
           ULONG type );
+
+Function
+~~~~~~~~
+::
+
+     Create empty diskobject structure.
+     
+
+Inputs
+~~~~~~
+::
+
+     type - WBDISK, WBDRAWER, WBTOOL, WBPROJECT,
+            WBGARBAGE, WBDEVICE or WBKICK
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
+
 
 
 ----------
@@ -603,6 +756,28 @@ Synopsis
  BOOL PutDiskObject(
           CONST_STRPTR name,
           struct DiskObject * icon );
+
+Function
+~~~~~~~~
+::
+
+     Writes icon to disk.
+     
+
+Inputs
+~~~~~~
+::
+
+     name - filename, ".info" will be appended.
+     icon - diskobject to write
+     
+
+Result
+~~~~~~
+::
+
+     TRUE on success, FALSE on error
+     
 
 
 ----------
