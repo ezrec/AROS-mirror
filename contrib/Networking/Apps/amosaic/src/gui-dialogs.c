@@ -65,7 +65,7 @@
 
 #include "amosaic_cat.h"
 
-extern ULONG HookEntry();
+extern IPTR HookEntry();
 
 extern Widget toplevel;
 extern mo_window *current_win;

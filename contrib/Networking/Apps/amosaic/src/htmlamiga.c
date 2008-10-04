@@ -87,7 +87,7 @@ AROS_UFP3(ULONG, ScrollHookFunc,
     
 #endif
 
-extern ULONG HookEntry();
+extern IPTR HookEntry();
 extern mo_window window;
 
 extern char *DBGstr; /* mjw*/

@@ -38,11 +38,11 @@ FILES := globals \
 #	rexx
 #
 
-EXEDIR := $(AROSDIR)/AMosaic
+EXEDIR := $(CONTRIBDIR)/Networking/Apps/AMosaic
 
-USER_INCLUDES := -I../libwww2
+USER_INCLUDES := -I../libwww2 -I$(AROS_DEVELOPMENT)/netinclude
 
-#MM mui-amosaic : includes linklibs 
+#MM mui-amosaic : includes linklibs linklibs-www2
 
 %build_prog mmake=mui-amosaic \
     progname=AMosaic targetdir=$(EXEDIR) \

@@ -274,6 +274,7 @@ Regular BSD unix versions
   #define NETREAD(s,b,l)  (recv((s),(b),(l),0))
   #define NETWRITE(s,b,l) (send((s),(b),(l),0))
   #define NETCLOSE(s)	  (CloseSocket(s))
+  #include <proto/socket.h>
  #else	  /* MWM */
   #undef NETREAD
   #undef NETWRITE

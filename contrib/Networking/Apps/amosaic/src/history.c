@@ -63,7 +63,7 @@
 #include "XtoI.h"
 #include "protos.h"
 
-extern ULONG HookEntry();
+extern IPTR HookEntry();
 
 /* ------------------------------------------------------------------------ */
 /* ----------------------------- HISTORY LIST ----------------------------- */

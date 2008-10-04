@@ -19,7 +19,7 @@ struct Library *LocaleBase;
 
 void __regargs _CXBRK(void);
 
-extern ULONG HookEntry();
+extern IPTR HookEntry();
 
 extern AppData Rdata;
 extern __far int WWW_TraceFlag;
