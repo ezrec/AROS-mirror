@@ -1,9 +1,5 @@
 <?php
 echo "<img src=\"/images/rsfeed.gif\"><a href 
-=\"http://thenostromo.com/teamaros2/index.php?query=rss\">Team AROS 
-News</a>";
-echo "<br>";
-echo "<img src=\"/images/rsfeed.gif\"><a href 
 =\"http://archives.aros-exec.org/modules/rssfeed.php\">Archives - 
 Recent submissions</a>";
 echo "<br>";
