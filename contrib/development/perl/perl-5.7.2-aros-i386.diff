@@ -1,6 +1,6 @@
 diff -ruN perl-5.7.2/config.sh perl-5.7.2.aros/config.sh
 --- perl-5.7.2/config.sh	1970-01-01 01:00:00.000000000 +0100
-+++ perl-5.7.2.aros/config.sh	2008-10-02 20:31:21.000000000 +0200
++++ perl-5.7.2.aros/config.sh	2008-10-05 18:00:41.000000000 +0200
 @@ -0,0 +1,865 @@
 +#!/bin/sh
 +#
@@ -81,7 +81,7 @@ diff -ruN perl-5.7.2/config.sh perl-5.7.2.aros/config.sh
 +cpp='cpp'
 +cpp_stuff='42'
 +cppccsymbols=''
-+cppflags='-Wall -DDEBUGGING -fno-strict-aliasing -I/SYS/Development/netinclude'
++cppflags='-Wall -fno-strict-aliasing -I/SYS/Development/netinclude'
 +cpplast='-'
 +cppminus='-'
 +cpprun='/bin/gcc -E'
@@ -265,7 +265,7 @@ diff -ruN perl-5.7.2/config.sh perl-5.7.2.aros/config.sh
 +d_mymalloc='undef'
 +d_nice='undef'
 +d_nl_langinfo='undef'
-+d_nv_preserves_uv='undef'
++d_nv_preserves_uv='define'
 +d_nv_preserves_uv_bits='32'
 +d_off64_t='undef'
 +d_old_pthread_create_joinable='undef'
@@ -706,19 +706,19 @@ diff -ruN perl-5.7.2/config.sh perl-5.7.2.aros/config.sh
 +rmail=''
 +run=''
 +runnm='false'
-+sPRIEUldbl=''
-+sPRIFUldbl=''
-+sPRIGUldbl=''
-+sPRIXU64='"lX"'
-+sPRId64='"ld"'
-+sPRIeldbl=''
-+sPRIfldbl=''
-+sPRIgldbl=''
-+sPRIi64='"li"'
-+sPRIo64='"lo"'
-+sPRIu64='"lu"'
-+sPRIx64='"lx"'
-+sSCNfldbl=''
++sPRIEUldbl='"LE"'
++sPRIFUldbl='"LF"'
++sPRIGUldbl='"LG"'
++sPRIXU64='"LX"'
++sPRId64='"Ld"'
++sPRIeldbl='"Le"'
++sPRIfldbl='"Lf"'
++sPRIgldbl='"Lg"'
++sPRIi64='"Li"'
++sPRIo64='"Lo"'
++sPRIu64='"Lu"'
++sPRIx64='"Lx"'
++sSCNfldbl='"Lf"'
 +sched_yield='undef'
 +scriptdir='/usr/bin'
 +scriptdirexp='/usr/bin'
@@ -798,7 +798,7 @@ diff -ruN perl-5.7.2/config.sh perl-5.7.2.aros/config.sh
 +u64type='unsigned long long'
 +u8size='1'
 +u8type='unsigned char'
-+uidformat='"u"'
++uidformat='"lu"'
 +uidsign='1'
 +uidsize='4'
 +uidtype='uid_t'
@@ -869,7 +869,7 @@ diff -ruN perl-5.7.2/config.sh perl-5.7.2.aros/config.sh
 +PERL_CONFIG_SH=true
 diff -ruN perl-5.7.2/ext/POSIX/POSIX.xs perl-5.7.2.aros/ext/POSIX/POSIX.xs
 --- perl-5.7.2/ext/POSIX/POSIX.xs	2001-07-09 16:10:10.000000000 +0200
-+++ perl-5.7.2.aros/ext/POSIX/POSIX.xs	2008-10-02 20:23:26.000000000 +0200
++++ perl-5.7.2.aros/ext/POSIX/POSIX.xs	2008-10-05 18:00:43.000000000 +0200
 @@ -85,6 +85,11 @@
  #endif
  #endif
@@ -884,7 +884,7 @@ diff -ruN perl-5.7.2/ext/POSIX/POSIX.xs perl-5.7.2.aros/ext/POSIX/POSIX.xs
  #  include <lib$routines.h> /* prototype for lib$ediv() */
 diff -ruN perl-5.7.2/lib/Cwd.pm perl-5.7.2.aros/lib/Cwd.pm
 --- perl-5.7.2/lib/Cwd.pm	2001-07-09 16:10:28.000000000 +0200
-+++ perl-5.7.2.aros/lib/Cwd.pm	2008-10-02 20:23:26.000000000 +0200
++++ perl-5.7.2.aros/lib/Cwd.pm	2008-10-05 18:00:44.000000000 +0200
 @@ -384,6 +384,13 @@
      	*fastcwd    = \&cwd;
      	*abs_path   = \&fast_abs_path;
@@ -901,7 +901,7 @@ diff -ruN perl-5.7.2/lib/Cwd.pm perl-5.7.2.aros/lib/Cwd.pm
  # package main; eval join('',<DATA>) || die $@;	# quick test
 diff -ruN perl-5.7.2/lib/ExtUtils/MM_Unix.pm perl-5.7.2.aros/lib/ExtUtils/MM_Unix.pm
 --- perl-5.7.2/lib/ExtUtils/MM_Unix.pm	2001-07-09 16:10:29.000000000 +0200
-+++ perl-5.7.2.aros/lib/ExtUtils/MM_Unix.pm	2008-10-02 20:23:26.000000000 +0200
++++ perl-5.7.2.aros/lib/ExtUtils/MM_Unix.pm	2008-10-05 18:00:44.000000000 +0200
 @@ -288,7 +288,7 @@
      push @m, '
  .C$(OBJ_EXT):
@@ -913,7 +913,7 @@ diff -ruN perl-5.7.2/lib/ExtUtils/MM_Unix.pm perl-5.7.2.aros/lib/ExtUtils/MM_Uni
  	$(CCCMD) $(CCCDLFLAGS) -I$(PERL_INC) $(DEFINE) $*.cpp
 diff -ruN perl-5.7.2/lib/File/Find.pm perl-5.7.2.aros/lib/File/Find.pm
 --- perl-5.7.2/lib/File/Find.pm	2001-07-09 16:10:34.000000000 +0200
-+++ perl-5.7.2.aros/lib/File/Find.pm	2008-10-02 20:23:26.000000000 +0200
++++ perl-5.7.2.aros/lib/File/Find.pm	2008-10-05 18:00:45.000000000 +0200
 @@ -1090,7 +1090,7 @@
  $File::Find::current_dir = File::Spec->curdir || '.';
  
@@ -925,7 +925,7 @@ diff -ruN perl-5.7.2/lib/File/Find.pm perl-5.7.2.aros/lib/File/Find.pm
  # Set dont_use_nlink in your hint file if your system's stat doesn't
 diff -ruN perl-5.7.2/makedepend.SH perl-5.7.2.aros/makedepend.SH
 --- perl-5.7.2/makedepend.SH	2001-07-09 16:11:05.000000000 +0200
-+++ perl-5.7.2.aros/makedepend.SH	2008-10-02 20:23:26.000000000 +0200
++++ perl-5.7.2.aros/makedepend.SH	2008-10-05 18:00:44.000000000 +0200
 @@ -159,6 +159,8 @@
          $sed \
  	    -e '1d' \
@@ -937,7 +937,7 @@ diff -ruN perl-5.7.2/makedepend.SH perl-5.7.2.aros/makedepend.SH
  	    -e 's/^[	 ]*#[	 ]*line/#/' \
 diff -ruN perl-5.7.2/perl.h perl-5.7.2.aros/perl.h
 --- perl-5.7.2/perl.h	2001-07-13 06:28:49.000000000 +0200
-+++ perl-5.7.2.aros/perl.h	2008-10-02 20:23:26.000000000 +0200
++++ perl-5.7.2.aros/perl.h	2008-10-05 18:00:45.000000000 +0200
 @@ -1723,6 +1723,12 @@
  #             endif
  #           else
@@ -953,7 +953,7 @@ diff -ruN perl-5.7.2/perl.h perl-5.7.2.aros/perl.h
  #       endif
 diff -ruN perl-5.7.2/pp_sys.c perl-5.7.2.aros/pp_sys.c
 --- perl-5.7.2/pp_sys.c	2001-07-12 03:36:35.000000000 +0200
-+++ perl-5.7.2.aros/pp_sys.c	2008-10-02 20:23:26.000000000 +0200
++++ perl-5.7.2.aros/pp_sys.c	2008-10-05 18:00:42.000000000 +0200
 @@ -3979,7 +3979,7 @@
  	}
      }
@@ -965,7 +965,7 @@ diff -ruN perl-5.7.2/pp_sys.c perl-5.7.2.aros/pp_sys.c
  	 int status;
 diff -ruN perl-5.7.2/util.c perl-5.7.2.aros/util.c
 --- perl-5.7.2/util.c	2001-07-12 15:59:49.000000000 +0200
-+++ perl-5.7.2.aros/util.c	2008-10-02 20:23:26.000000000 +0200
++++ perl-5.7.2.aros/util.c	2008-10-05 18:00:42.000000000 +0200
 @@ -1504,6 +1504,14 @@
      }
  }
