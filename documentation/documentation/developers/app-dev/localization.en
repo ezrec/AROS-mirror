@@ -15,9 +15,9 @@ Introduction
 ''''''''''''
 
 The *locale.library* provides us tools to localize applications. Localized strings are stored
-in separate language catalog files. An user can enable a language in the preferences editor
-"Locale". When a localized application is started, it first tries to open a catalog for the
-enabled language. If this fails it falls back to the application's build-in language, which
+in separate language catalog files. A user can enable one ore more languages in the preferences
+editor "Locale". When a localized application is started, it first tries to open a catalog for the
+selected languages. If this fails it falls back to the application's build-in language, which
 is usually English.
 
 An important support tool for localization is *FlexCat*. It performs the following tasks:
@@ -50,6 +50,9 @@ string for a given message ID. It is written in such a way that it falls back to
 language when a catalog can't be opened. "__" additionally casts the string to an IPTR. This is
 useful for many Zune applications.
 
+Note that a version number of 0 means that any version of the catalog can be openend, while
+any positive number means: open the catalog with the given version number.
+
 locale.c::
 
     #include <exec/types.h>
@@ -59,7 +62,7 @@ locale.c::
     #include "strings.h"
 
     #define CATALOG_NAME     "myapp.catalog"
-    #define CATALOG_VERSION  0
+    #define CATALOG_VERSION  3
 
     struct Catalog *catalog;
 
@@ -210,8 +213,8 @@ Bevor we can start translation we have to check if our language is already
 supported by AROS. Look in *LOCALE:Languages/*. 
 
 Now we can finally translate our application into another languages. Enter the
-`catalogs` subdirectory and create a language translation file with the FlexCat
-tool. FlexCat must be in the search path. The file name must be same name as in
+`catalogs` subdirectory and create a language translation file with the *FlexCat*
+tool. *FlexCat* must be in the search path. The file name must be same name as in
 `LOCALE:Languages` without the `language` suffix.  
 
 e.g.::
@@ -244,9 +247,11 @@ Sometimes the strings to be translated contain placeholders like %d, %s etc. It'
 important that you keep this placeholders in the translated strings in the same order.
 
 *FlexCat* allows some control sequences like \\n (newline), \\f (formfeed). See the
-*Flexcat* documentation for more possibilities::
+*Flexcat* documentation for more possibilities.
 
-    ## version $VER: myapp.catalog 0.1 (18.04.2006)
+Complete translation file::
+
+    ## version $VER: myapp.catalog 3.1 (18.04.2006)
     ## language deutsch
     ## codeset 0
     ;
@@ -263,6 +268,8 @@ important that you keep this placeholders in the translated strings in the same 
     Abbrechen
     ; Cancel
 
+Note that the version number (in our case "3") must be synchronal with
+the version number used in `OpenCatalog()`_.
 
 Now you can call again `make` to test if the catalogs are created.
 
