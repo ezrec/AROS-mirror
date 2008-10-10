@@ -47,9 +47,13 @@ libraries;asl;Asl.library;2008-07-19
 libraries;amigaguide;AmigaGuide.library;2008-07-19
 libraries_3rd;reqtools;ReqTools.library;2008-07-25
 classes;gadgets;Gadgets;2003-08-26
-classes;DataType;Datatypes;2003-08-26
-classes;dtclass;DTClass;2003-08-26
-classes;boopsi;BOOPSI Classes;2003-08-26
+classes;dtypes;Datatypes;2003-08-26
+classes;boopsi;Intuition;2003-08-26
+dtypes;dtclass;DataTypeClass;2008-10-09
+dtypes;sounddtc;Sound.datatype;2008-10-10
+dtypes;8svxdtc;8svx.datatype;2008-10-10
+boopsi;rootclass;RootClass;2008-10-08
+boopsi;gadgetclass;GadgetClass;2008-10-09
 gadgets;gradientslider;Gradientslider Gadget;2003-08-26
 gadgets;colorwheel;Colorwheel Gadget;2003-08-26
 devices;input;Input.device;2008-08-05
@@ -89,7 +93,6 @@ boopsi;BOOL Gadgets;1;1;2
 boopsi;BOOPSI ButtonGadgetClass;1;1;2
 boopsi;BOOPSI FrameIClass;1;1;2
 boopsi;BOOPSI FrButtonClass;1;1;2
-boopsi;BOOPSI GadgetClass;1;1;2
 boopsi;BOOPSI GroupGClass;1;1;2
 boopsi;BOOPSI ICClass;1;1;2
 boopsi;BOOPSI ITextIClass;1;1;0
@@ -98,7 +101,6 @@ boopsi;BOOPSI ModelClass;1;1;2
 boopsi;BOOPSI PointerClass;1;1;0
 boopsi;BOOPSI PropGClass;1;1;2
 boopsi;PROP Gadgets;1;1;2
-boopsi;BOOPSI RootClass;1;1;2
 boopsi;BOOPSI StrGClass;1;1;2
 boopsi;BOOPSI FillRectClass;1;1;2
 clib;abort;1;1;1
@@ -341,16 +343,13 @@ colorwheel;ConvertHSBToRGB;1;1;2
 colorwheel;ConvertRGBToHSB;1;1;2
 colorwheel;colorwheel.gadget class;1;1;2
 gradientslider;gradientslider.gadget class;1;1;2
-DataType;8svx.datatype;1;1;0
-DataType;amigaguide.datatype;1;1;0
-DataType;animation.datatype;1;1;0
-DataType;ascii.datatype;1;1;2
-DataType;ilbm.datatype;1;1;0
-DataType;picture.datatype;1;1;0
-DataType;sound.datatype;1;1;0
-DataType;text.datatype;1;1;2
-DataType;binary.datatype;1;1;2
-dtclass;ObtainEngine;1;1;2
+dtypes;amigaguide.datatype;1;1;0
+dtypes;animation.datatype;1;1;0
+dtypes;ascii.datatype;1;1;2
+dtypes;ilbm.datatype;1;1;0
+dtypes;picture.datatype;1;1;0
+dtypes;text.datatype;1;1;2
+dtypes;binary.datatype;1;1;2
 HID;Alarm.hidd;1;1;0
 HID;Timer.hidd;1;1;0
 HID;Serial.hidd;1;1;2
@@ -1979,6 +1978,85 @@ ddebuglib;DPutChar;1;1;0
 ddebuglib;DPutFmt;1;1;0
 ddebuglib;DPutStr;1;1;0
 ddebuglib;KCmpStr;1;1;0
+sounddtc;OM_NEW;1;1;2
+sounddtc;OM_GET;1;1;2
+sounddtc;OM_SET;1;1;2
+sounddtc;OM_UPDATE;1;1;2
+sounddtc;OM_DISPOSE;1;1;2
+sounddtc;GM_LAYOUT;1;1;2
+sounddtc;GM_HITTEST;1;1;2
+sounddtc;GM_GOACTIVE;1;1;2
+sounddtc;GM_GOINACTIVE;1;1;2
+sounddtc;GM_HELPTEST;1;1;2
+sounddtc;GM_HANDLEINPUT;1;1;2
+sounddtc;GM_RENDER;1;1;2
+sounddtc;GM_DOMAIN;1;2;2
+sounddtc;DTM_COPY;1;1;2
+sounddtc;DTM_TRIGGER;1;1;2
+sounddtc;DTM_WRITE;1;1;2
+sounddtc;DTM_CLEARSELECTED;1;1;2
+sounddtc;DTM_SELECT;1;1;2
+sounddtc;DTM_PROCLAYOUT;1;1;2
+sounddtc;DTM_DRAW;1;1;2
+sounddtc;DTM_OBTAINDRAWINFO;1;1;2
+sounddtc;DTM_RELEASEDRAWINFO;1;1;2
+sounddtc;DTM_REMOVEDTOBJECT;1;1;2
+rootclass;OM_NEW;1;1;2
+rootclass;OM_ADDTAIL;1;1;2
+rootclass;OM_DISPOSE;1;1;2
+rootclass;OM_REMOVE;1;1;2
+rootclass;OM_ADDMEMBER;1;1;2
+rootclass;OM_REMMEMBER;1;1;2
+rootclass;OM_GET;1;1;2
+rootclass;OM_SET;1;1;2
+rootclass;OM_UPDATE;1;1;2
+rootclass;OM_NOTIFY;1;1;2
+gadgetclass;GM_HITTEST;1;1;2
+gadgetclass;GM_RENDER;1;1;2
+gadgetclass;GM_GOACTIVE;1;1;2
+gadgetclass;GM_HANDLEINPUT;1;1;2
+gadgetclass;GM_GOINACTIVE;1;1;2
+gadgetclass;OM_NEW;1;1;2
+gadgetclass;OM_NOTIFY;1;1;2
+gadgetclass;OM_SET;1;1;2
+gadgetclass;OM_UPDATE;1;1;2
+gadgetclass;OM_DISPOSE;1;1;2
+gadgetclass;OM_GET;1;1;2
+gadgetclass;GM_LAYOUT;1;1;2
+gadgetclass;GM_DOMAIN;1;2;2
+gadgetclass;GM_HELPTEST;1;1;2
+gadgetclass;ICM_SETLOOP;1;2;2
+gadgetclass;ICM_CLEARLOOP;1;2;2
+gadgetclass;ICM_CHECKLOOP;1;2;2
+dtclass;DTM_FRAMEBOX;1;1;2
+dtclass;DTM_PROCLAYOUT;1;1;2
+dtclass;DTM_ASYNCLAYOUT;1;1;0
+dtclass;DTM_REMOVEDTOBJECT;1;1;0
+dtclass;DTM_SELECT;1;1;0
+dtclass;DTM_CLEARSELECTED;1;1;0
+dtclass;DTM_COPY;1;1;0
+dtclass;DTM_PRINT;1;1;0
+dtclass;DTM_ABORTPRINT;1;1;2
+dtclass;DTM_NEWMEMBER;1;1;0
+dtclass;DTM_DISPOSEMEMBER;1;1;0
+dtclass;DTM_GOTO;1;1;0
+dtclass;DTM_TRIGGER;1;1;0
+dtclass;DTM_OBTAINDRAWINFO;1;1;0
+dtclass;DTM_DRAW;1;1;0
+dtclass;DTM_RELEASEDRAWINFO;1;1;0
+dtclass;DTM_WRITE;1;1;0
+dtclass;OM_NEW;1;1;2
+dtclass;OM_UPDATE;1;1;2
+dtclass;OM_SET;1;1;2
+dtclass;OM_GET;1;1;2
+dtclass;OM_DISPOSE;1;1;2
+dtclass;GM_HITTEST;1;1;2
+dtclass;GM_GOACTIVE;1;1;2
+dtclass;GM_HANDLEINPUT;1;1;2
+dtclass;GM_GOINACTIVE;1;1;2
+dtclass;GM_DOMAIN;1;2;0
+dtclass;GM_LAYOUT;1;1;2
+8svxdtc;OM_NEW;1;1;2
 #CATEGORY_ITEMS_END
 #COMMENTS_BEGIN (category, comment)
 gameport;Gameport.device supports only mouse
