@@ -60,11 +60,11 @@ a specifický zpùsob funkce menu. Proto se vyhýbáme implementování tìchto
 funkcí zcela stejným zpùsobem. Na druhou stranu v¹ak musí být hlavièkové soubory
 kompatibilní, ale odli¹né od originálu, jak je to jen mo¾né.
 
-Abychom se vyhli problémùm, po¾ádali jsme o oficiální souhlas od Amiga Inc. Jedná
-se o velmi pozitivní úsilí, ale velmi nesnadné vzhledem k právním
-dùsledkùm. Doporuèujeme ti vzít na vìdomí, ¾e Amiga Inc nám dosud neposlala
-¾ádný dopis "cease and desist" jako pozitivní znamení. Bohu¾el je¹tì nedo¹lo
-k dohodì o legálnosti, i pøes dobré úmysly na obou stranách.
+Abychom se vyhli problémùm, po¾ádali jsme o oficiální souhlas od Amiga Inc. Oni
+na¹i snahu vidí pozitivnì, ale nejsou si jisti s právními dùsledky.
+Podotýkáme, ¾e Amiga Inc nám dosud neposlala ¾ádný dopis "cease and desist",
+co¾ bereme jako pozitivní znamení. Bohu¾el je¹tì nedo¹lo
+k právní dohodì, a to bez ohledu na dobré úmysly obou stran.
 
 
 Proè vám jde pouze o kompatibilitu s 3.1?
@@ -72,10 +72,10 @@ Proè vám jde pouze o kompatibilitu s 3.1?
 
 Hodnì se diskutovalo o napsání moderního operaèního systému s vlastnostmi
 AmigaOS. Z dobrého dùvodu bylo od toho upu¹tìno. Zaprvé, v¹ichni se shodují,
-¾e souèasná AmigaOS by mìla být roz¹íøena, ale nikdo neví jak to udìlat, nebo
-se dokonce shodují na tom, co má být roz¹íøeno nebo co je dùle¾ité. Nìkteøí tøeba
-chtìjí ochranu pamìti, ale nechtìjí za to platit (major rewrite of the
-available software and speed decrease).
+¾e souèasná AmigaOS by mohla být vylep¹ena, ale nikdo neví, jak to udìlat, nebo
+se dokonce shodují na tom, co má být vylep¹eno nebo co je dùle¾ité. Nìkteøí
+napøíklad chtìjí ochranu pamìti, ale nechtìjí za to platit (pøepsání
+dostupného softwaru a zmen¹ení rychlosti).
 
 In the end, the discussions ended in either flame wars or reiteration of the
 same old arguments over and over again. So we decided to start with something we

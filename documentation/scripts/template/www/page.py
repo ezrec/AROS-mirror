@@ -20,6 +20,9 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             Img( src = '%(ROOT)simages/englishlogo.png', width = 16, height = 10),
             A( 'English', href='%(BASE)s.' )]),
         P ( contents = [
+            Img( src = '%(ROOT)simages/czechlogo.png', width = 16, height = 10),
+            A( '&#268;esky', href='%(BASE)scs/' )]),
+        P ( contents = [
             Img( src = '%(ROOT)simages/germanylogo.png', width = 16, height = 10),
             A( 'Deutsch', href='%(BASE)sde/' )]),
             P ( contents = [
@@ -51,10 +54,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             A( 'Suomi', href='%(BASE)sfi/' )]),
         P ( contents = [
             Img( src = '%(ROOT)simages/swedenlogo.png', width = 16, height = 10),
-            A( 'Svenska', href='%(BASE)ssv/' )]),
-        P ( contents = [
-            Img( src = '%(ROOT)simages/czechlogo.png', width = 16, height = 10),
-            A( '&#268;esky', href='%(BASE)scs/' )])        
+            A( 'Svenska', href='%(BASE)ssv/' )])
         ] ),
         BR(),
     P ( contents = [
