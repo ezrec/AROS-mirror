@@ -74,7 +74,7 @@ NLOOP(ButtonCount)
         /* create a button gadget centered below the window title */
         ng.ng_TextAttr   = &Topaz80;
         ng.ng_VisualInfo = vi;
-        ng.ng_LeftEdge   = 200;
+        ng.ng_LeftEdge   = 200 + mysc->WBorLeft;
         ng.ng_TopEdge    = 12*n+6 + mysc->WBorTop + (mysc->Font->ta_YSize + 1);
         ng.ng_Width      = 24;
         ng.ng_Height     = 12;
@@ -89,7 +89,7 @@ NLOOP(ButtonCount)
             if ( (mywin = OpenWindowTags(NULL,
                     WA_Title,     (ULONG)"Wazp3D settings(A.THELLIER-2006)",
                     WA_Gadgets, (ULONG)  glist,      WA_AutoAdjust,    TRUE,
-                    WA_Width,       240,      WA_InnerHeight,    20+12*ButtonCount,
+                    WA_InnerWidth,  240,      WA_InnerHeight,    20+12*ButtonCount,
                     WA_DragBar,    TRUE,      WA_DepthGadget,   TRUE,
                     WA_Activate,   TRUE,      WA_CloseGadget,   TRUE,
                     WA_IDCMP, IDCMP_CLOSEWINDOW |IDCMP_REFRESHWINDOW | BUTTONIDCMP,
