@@ -52,6 +52,9 @@ classes;boopsi;Intuition;2003-08-26
 dtypes;dtclass;DataTypeClass;2008-10-09
 dtypes;sounddtc;Sound.datatype;2008-10-10
 dtypes;8svxdtc;8svx.datatype;2008-10-10
+dtypes;textdtc;Text.datatype;2008-10-12
+dtypes;asciidtc;Ascii.datatype;2008-10-12
+dtypes;aminationdtc;Animation.datatype;2008-10-12
 boopsi;rootclass;RootClass;2008-10-08
 boopsi;gadgetclass;GadgetClass;2008-10-09
 gadgets;gradientslider;Gradientslider Gadget;2003-08-26
@@ -344,11 +347,8 @@ colorwheel;ConvertRGBToHSB;1;1;2
 colorwheel;colorwheel.gadget class;1;1;2
 gradientslider;gradientslider.gadget class;1;1;2
 dtypes;amigaguide.datatype;1;1;0
-dtypes;animation.datatype;1;1;0
-dtypes;ascii.datatype;1;1;2
 dtypes;ilbm.datatype;1;1;0
 dtypes;picture.datatype;1;1;0
-dtypes;text.datatype;1;1;2
 dtypes;binary.datatype;1;1;2
 HID;Alarm.hidd;1;1;0
 HID;Timer.hidd;1;1;0
@@ -2032,19 +2032,9 @@ dtclass;DTM_FRAMEBOX;1;1;2
 dtclass;DTM_PROCLAYOUT;1;1;2
 dtclass;DTM_ASYNCLAYOUT;1;1;0
 dtclass;DTM_REMOVEDTOBJECT;1;1;0
-dtclass;DTM_SELECT;1;1;0
-dtclass;DTM_CLEARSELECTED;1;1;0
-dtclass;DTM_COPY;1;1;0
-dtclass;DTM_PRINT;1;1;0
+dtclass;DTM_PRINT;1;1;2
 dtclass;DTM_ABORTPRINT;1;1;2
-dtclass;DTM_NEWMEMBER;1;1;0
-dtclass;DTM_DISPOSEMEMBER;1;1;0
-dtclass;DTM_GOTO;1;1;0
-dtclass;DTM_TRIGGER;1;1;0
-dtclass;DTM_OBTAINDRAWINFO;1;1;0
-dtclass;DTM_DRAW;1;1;0
-dtclass;DTM_RELEASEDRAWINFO;1;1;0
-dtclass;DTM_WRITE;1;1;0
+dtclass;DTM_WRITE;1;1;2
 dtclass;OM_NEW;1;1;2
 dtclass;OM_UPDATE;1;1;2
 dtclass;OM_SET;1;1;2
@@ -2057,6 +2047,51 @@ dtclass;GM_GOINACTIVE;1;1;2
 dtclass;GM_DOMAIN;1;2;0
 dtclass;GM_LAYOUT;1;1;2
 8svxdtc;OM_NEW;1;1;2
+textdtc;OM_NEW;1;1;2
+textdtc;OM_GET;1;1;2
+textdtc;OM_SET;1;1;2
+textdtc;OM_UPDATE;1;1;2
+textdtc;OM_DISPOSE;1;1;2
+textdtc;GM_LAYOUT;1;1;2
+textdtc;GM_HITTEST;1;1;0
+textdtc;GM_GOACTIVE;1;1;2
+textdtc;GM_HANDLEINPUT;1;1;2
+textdtc;GM_RENDER;1;1;2
+textdtc;DTM_PROCLAYOUT;1;1;2
+textdtc;DTM_FRAMEBOX;1;1;0
+textdtc;DTM_SELECT;1;1;0
+textdtc;DTM_CLEARSELECTED;1;1;2
+textdtc;DTM_COPY;1;1;2
+textdtc;DTM_PRINT;1;1;2
+textdtc;DTM_WRITE;1;1;2
+asciidtc;OM_NEW;1;1;2
+asciidtc;OM_SET;1;1;2
+asciidtc;OM_UPDATE;1;1;2
+asciidtc;OM_DISPOSE;1;1;2
+asciidtc;GM_LAYOUT;1;1;2
+asciidtc;DTM_ASYNCLAYOUT;1;1;2
+asciidtc;DTM_PROCLAYOUT;1;1;2
+aminationdtc;OM_NEW;1;1;0
+aminationdtc;OM_GET;1;1;0
+aminationdtc;OM_SET;1;1;0
+aminationdtc;OM_UPDATE;1;1;0
+aminationdtc;OM_DISPOSE;1;1;0
+aminationdtc;GM_LAYOUT;1;1;0
+aminationdtc;GM_HITTEST;1;1;0
+aminationdtc;GM_GOACTIVE;1;1;0
+aminationdtc;GM_HANDLEINPUT;1;1;0
+aminationdtc;GM_RENDER;1;1;0
+aminationdtc;DTM_FRAMEBOX;1;1;0
+aminationdtc;DTM_TRIGGER;1;1;0
+aminationdtc;DTM_COPY;1;1;0
+aminationdtc;DTM_WRITE;1;1;0
+aminationdtc;DTM_PRINT;1;1;0
+aminationdtc;ADTM_LOADFRAME;1;1;0
+aminationdtc;ADTM_UNLOADFRAME;1;1;0
+aminationdtc;ADTM_START;1;1;0
+aminationdtc;ADTM_PAUSE;1;1;0
+aminationdtc;ADTM_STOP;1;1;0
+aminationdtc;ADTM_LOCATE;1;1;0
 #CATEGORY_ITEMS_END
 #COMMENTS_BEGIN (category, comment)
 gameport;Gameport.device supports only mouse
