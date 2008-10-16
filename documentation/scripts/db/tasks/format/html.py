@@ -253,7 +253,7 @@ def format( root, directory, template, lang, extension, parent = None ):
        content_Comments += '<li>' + item.comment + '</li>'
     content_Comments += '</ul>'
 
-    contentstr = ''
+    contentstr = '<h2 align="center" style="font-size:large">Status of AROS implementation</h2>'
 
     if parent is not None:
         contentstr += str( formatReturnLink( parent, extension ) )
@@ -276,7 +276,6 @@ def format( root, directory, template, lang, extension, parent = None ):
         # Different formatting for main page (show two levels of subcategories)
         
         # Format subcategories
-        contentstr += '<h2 align="center" style="font-size:large">Status of AROS implementation</h2>'
 
         for item in root.subcategories:
             contentstr += '\n<br/>' + str( formatHeader( item ) )

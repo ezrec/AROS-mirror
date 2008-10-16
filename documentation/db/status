@@ -47,7 +47,7 @@ libraries;asl;Asl.library;2008-07-19
 libraries;amigaguide;AmigaGuide.library;2008-07-19
 libraries_3rd;reqtools;ReqTools.library;2008-07-25
 classes;gadgets;Gadgets;2003-08-26
-classes;dtypes;Datatypes;2003-08-26
+classes;dtypes;Datatypes;2008-10-16
 classes;boopsi;Intuition;2003-08-26
 dtypes;dtclass;DataTypeClass;2008-10-09
 dtypes;sounddtc;Sound.datatype;2008-10-10
@@ -55,6 +55,9 @@ dtypes;8svxdtc;8svx.datatype;2008-10-10
 dtypes;textdtc;Text.datatype;2008-10-12
 dtypes;asciidtc;Ascii.datatype;2008-10-12
 dtypes;aminationdtc;Animation.datatype;2008-10-12
+dtypes;amigaguidedtc;AmigaGuide.datatype;2008-10-15
+dtypes;picturedtc;Picture.datatype;2008-10-16
+dtypes;ilbmdtc;Ilbm.datatype;2008-10-16
 boopsi;rootclass;RootClass;2008-10-08
 boopsi;gadgetclass;GadgetClass;2008-10-09
 gadgets;gradientslider;Gradientslider Gadget;2003-08-26
@@ -346,10 +349,6 @@ colorwheel;ConvertHSBToRGB;1;1;2
 colorwheel;ConvertRGBToHSB;1;1;2
 colorwheel;colorwheel.gadget class;1;1;2
 gradientslider;gradientslider.gadget class;1;1;2
-dtypes;amigaguide.datatype;1;1;0
-dtypes;ilbm.datatype;1;1;0
-dtypes;picture.datatype;1;1;0
-dtypes;binary.datatype;1;1;2
 HID;Alarm.hidd;1;1;0
 HID;Timer.hidd;1;1;0
 HID;Serial.hidd;1;1;2
@@ -2092,6 +2091,64 @@ aminationdtc;ADTM_START;1;1;0
 aminationdtc;ADTM_PAUSE;1;1;0
 aminationdtc;ADTM_STOP;1;1;0
 aminationdtc;ADTM_LOCATE;1;1;0
+amigaguidedtc;OM_NEW;1;1;2
+amigaguidedtc;OM_GET;1;1;2
+amigaguidedtc;OM_SET;1;1;1
+amigaguidedtc;OM_UPDATE;1;1;2
+amigaguidedtc;OM_DISPOSE;1;1;2
+amigaguidedtc;GM_LAYOUT;1;1;2
+amigaguidedtc;GM_HITTEST;1;1;0
+amigaguidedtc;GM_GOACTIVE;1;1;2
+amigaguidedtc;GM_HANDLEINPUT;1;1;2
+amigaguidedtc;GM_RENDER;1;1;2
+amigaguidedtc;DTM_GOTO;1;1;1
+amigaguidedtc;DTM_TRIGGER;1;1;2
+amigaguidedtc;DTM_PROCLAYOUT;1;1;2
+amigaguidedtc;DTM_FRAMEBOX;1;1;0
+amigaguidedtc;DTM_SELECT;1;1;0
+amigaguidedtc;DTM_CLEARSELECTED;1;1;0
+amigaguidedtc;DTM_COPY;1;1;0
+amigaguidedtc;DTM_PRINT;1;1;0
+amigaguidedtc;DTM_WRITE;1;1;0
+amigaguidedtc;DTM_ASYNCLAYOUT;1;1;1
+amigaguidedtc;DTM_REMOVEDTOBJECT;1;1;2
+amigaguidedtc;ARREX_BEEP;1;1;2
+amigaguidedtc;ARREX_CLOSE;1;1;2
+amigaguidedtc;ARREX_CONTENTS;1;1;2
+amigaguidedtc;ARREX_GETNODECOUNT;1;1;2
+amigaguidedtc;ARREX_INDEX;1;1;2
+amigaguidedtc;ARREX_LINK;1;1;2
+amigaguidedtc;ARREX_NEXT;1;1;2
+amigaguidedtc;ARREX_PREVIOUS;1;1;2
+amigaguidedtc;ARREX_PRINT;1;1;0
+amigaguidedtc;ARREX_QUIT;1;1;2
+amigaguidedtc;ARREX_RETRACE;1;1;2
+amigaguidedtc;ARREX_RX;1;1;2
+picturedtc;OM_NEW;1;1;2
+picturedtc;OM_GET;1;1;2
+picturedtc;OM_SET;1;1;2
+picturedtc;OM_UPDATE;1;1;2
+picturedtc;OM_DISPOSE;1;1;2
+picturedtc;GM_LAYOUT;1;1;2
+picturedtc;GM_HITTEST;1;1;0
+picturedtc;GM_GOACTIVE;1;1;2
+picturedtc;GM_HANDLEINPUT;1;1;2
+picturedtc;GM_RENDER;1;1;2
+picturedtc;DTM_PROCLAYOUT;1;1;2
+picturedtc;DTM_FRAMEBOX;1;1;1
+picturedtc;DTM_SELECT;1;1;0
+picturedtc;DTM_CLEARSELECTED;1;1;0
+picturedtc;DTM_COPY;1;1;0
+picturedtc;DTM_PRINT;1;1;0
+picturedtc;DTM_WRITE;1;1;0
+picturedtc;DTM_OBTAINDRAWINFO;1;1;2
+picturedtc;DTM_RELEASEDRAWINFO;1;1;2
+picturedtc;DTM_DRAW;1;1;2
+picturedtc;DTM_ASYNCLAYOUT;1;1;1
+picturedtc;PDTM_WRITEPIXELARRAY;1;2;2
+picturedtc;PDTM_SCALE;1;2;1
+picturedtc;PDTM_READPIXELARRAY;1;2;2
+ilbmdtc;OM_NEW;1;1;2
 #CATEGORY_ITEMS_END
 #COMMENTS_BEGIN (category, comment)
 gameport;Gameport.device supports only mouse
