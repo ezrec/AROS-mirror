@@ -1,0 +1,70 @@
+========
+Examples
+========
+
+.. contents
+
+
+Introduction
+------------
+
+
+=================== =====================================================
+helloworld.c__      Prints some text to standard output
+=================== =====================================================
+
+__ samplecode/helloworld.c
+
+
+Graphics
+--------
+
+=================== =====================================================
+simple.c__          Some simple drawing functions
+bitmap.c__          Creates a bitmap, draws in it and blit its content
+                    to a window.
+area.c__            Renders some shapes with the area functions
+font.c__            Opens a font and writes some text
+=================== =====================================================
+
+__ samplecode/graphics_simple.c
+__ samplecode/graphics_bitmap.c
+__ samplecode/graphics_area.c
+__ samplecode/graphics_font.c
+
+
+Intuition
+---------
+
+=================== =====================================================
+events.c__          Event handling
+refresh.c__         Examine difference between simplerefresh and
+                    smartrefresh windows
+appscreen.c__       Opens a screen for applications
+customscreen.c__    Opens a screen with a backdrop window
+=================== =====================================================
+
+__ samplecode/intuition_events.c
+__ samplecode/intuition_refresh.c
+__ samplecode/intuition_appscreen.c
+__ samplecode/intuition_customscreen.c
+
+
+ASL
+---
+
+=================== =====================================================
+asl.c__             File-, Font- and Screenmoderequester
+=================== =====================================================
+
+__ samplecode/asl.c
+
+
+DOS
+---
+
+=================== =====================================================
+dos_file.c__        Reads a file and writes content to another file
+=================== =====================================================
+
+__ samplecode/dos_file.c

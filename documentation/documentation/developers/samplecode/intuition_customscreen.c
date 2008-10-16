@@ -26,7 +26,7 @@ static void handle_events(void);
 */
 static struct ColorSpec colors[] =
 {
-    {0, 240, 100, 0},      // Color 0 is background
+    {0, 240, 100, 0},  // Color 0 is background
     {1, 240, 0, 0},
     {2, 0, 0, 240},
     {-1}               // Array must be terminated with -1
@@ -50,6 +50,7 @@ int main(void)
 	WA_Backdrop,      TRUE,
 	WA_IDCMP,         IDCMP_VANILLAKEY,
 	WA_RMBTrap,       TRUE,
+	WA_NoCareRefresh, TRUE,   // We don't want to listen to refresh messages
 	WA_CustomScreen,  screen, // Link to screen
 	TAG_END);
 

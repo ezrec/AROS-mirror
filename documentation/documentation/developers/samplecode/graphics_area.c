@@ -44,11 +44,12 @@ int main(void)
 	WA_Title,         "Area Graphics",
 	WA_Activate,      TRUE,
 	WA_SmartRefresh,  TRUE,
+    	WA_NoCareRefresh, TRUE,
 	WA_GimmeZeroZero, TRUE,
 	WA_CloseGadget,   TRUE,
 	WA_DragBar,       TRUE,
-	WA_IDCMP,         IDCMP_CLOSEWINDOW,
 	WA_DepthGadget,   TRUE,
+	WA_IDCMP,         IDCMP_CLOSEWINDOW,
 	TAG_END);
     
     if (! window) clean_exit("Can't open window\n");
@@ -56,7 +57,7 @@ int main(void)
     rp = window->RPort;
     cm = window->WScreen->ViewPort.ColorMap;
 
-    // Let's obtain two some pens
+    // Let's obtain two pens
     pen1 = ObtainBestPen(cm, 0xFFFF0000 , 0 , 0 , TAG_END);
     pen2 = ObtainBestPen(cm, 0 , 0 , 0xFFFF0000 , TAG_END);
 

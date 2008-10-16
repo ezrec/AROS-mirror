@@ -31,6 +31,7 @@ Table of Contents
 + `Multitasking`__
 + `Localization`__
 + `Writing portable software`__
++ `Examples`__
 
 __ introduction
 __ buildsystem
@@ -42,3 +43,4 @@ __ resource-tracking
 __ multitasking
 __ localization
 __ portable
+__ ../samples

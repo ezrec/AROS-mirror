@@ -39,11 +39,12 @@ int main(void)
 	WA_Title,         "Fonts",
 	WA_Activate,      TRUE,
 	WA_SmartRefresh,  TRUE,
+	WA_NoCareRefresh, TRUE,
 	WA_GimmeZeroZero, TRUE,
 	WA_CloseGadget,   TRUE,
 	WA_DragBar,       TRUE,
-	WA_IDCMP,         IDCMP_CLOSEWINDOW,
 	WA_DepthGadget,   TRUE,
+	WA_IDCMP,         IDCMP_CLOSEWINDOW,
 	TAG_END);
     
     if (! window) clean_exit("Can't open window\n");

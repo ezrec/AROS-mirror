@@ -30,9 +30,10 @@ int main(void)
 	WA_CloseGadget,   TRUE,
 	WA_DragBar,       TRUE,
 	WA_GimmeZeroZero, TRUE,
+	WA_DepthGadget,   TRUE,
+	WA_NoCareRefresh, TRUE, // we don't want to listen to refresh messages
 	WA_IDCMP,         IDCMP_CLOSEWINDOW | IDCMP_MOUSEBUTTONS | 
                           IDCMP_VANILLAKEY | IDCMP_RAWKEY,
-	WA_DepthGadget,   TRUE,
 	TAG_END);
 
     if (! window) clean_exit("Can't open window\n");

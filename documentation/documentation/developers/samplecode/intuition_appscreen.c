@@ -54,8 +54,10 @@ int main(void)
 	WA_Activate,      TRUE,
 	WA_CloseGadget,   TRUE,
 	WA_DragBar,       TRUE,
-	WA_IDCMP,         IDCMP_CLOSEWINDOW,
 	WA_DepthGadget,   TRUE,
+	WA_IDCMP,         IDCMP_CLOSEWINDOW,
+	WA_SmartRefresh,  TRUE,   // Let's Intuition handle exposed regions
+	WA_NoCareRefresh, TRUE,   // We don't want to listen to refresh messages
 	WA_CustomScreen,  screen, // Link to screen
 	TAG_END);
 

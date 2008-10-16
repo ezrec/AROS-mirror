@@ -42,20 +42,26 @@ int main(void)
 	WA_Top,           70,
 	WA_InnerWidth,    300,
 	WA_InnerHeight,   300,
+	
+	/*
+	    When we have a size gadget we must additionally
+	    define the limits.
+	*/
 	WA_MinWidth,      100,
 	WA_MinHeight,     100,
 	WA_MaxWidth,      -1,
 	WA_MaxHeight,     -1,
+	
 	WA_Title,         "Simplerefresh window",
 	WA_Activate,      TRUE,
 	WA_SimpleRefresh, TRUE,
 	WA_CloseGadget,   TRUE,
 	WA_SizeGadget,    TRUE,
 	WA_DragBar,       TRUE,
+	WA_DepthGadget,   TRUE,
 	WA_GimmeZeroZero, TRUE,
 	WA_IDCMP,         IDCMP_CLOSEWINDOW | IDCMP_CHANGEWINDOW | IDCMP_NEWSIZE |
                           IDCMP_REFRESHWINDOW | IDCMP_SIZEVERIFY,
-	WA_DepthGadget,   TRUE,
 	TAG_END);
 
     if (! window1) clean_exit("Can't open window 1\n");
@@ -70,15 +76,14 @@ int main(void)
 	WA_MaxWidth,      -1,
 	WA_MaxHeight,     -1,
 	WA_Title,         "Smartrefresh window",
-	WA_Activate,      TRUE,
 	WA_SmartRefresh,  TRUE,
 	WA_CloseGadget,   TRUE,
 	WA_SizeGadget,    TRUE,
 	WA_DragBar,       TRUE,
+	WA_DepthGadget,   TRUE,
 	WA_GimmeZeroZero, TRUE,
 	WA_IDCMP,         IDCMP_CLOSEWINDOW | IDCMP_CHANGEWINDOW | IDCMP_NEWSIZE |
                           IDCMP_REFRESHWINDOW | IDCMP_SIZEVERIFY,
-	WA_DepthGadget,   TRUE,
 	TAG_END);
 
     if (! window2) clean_exit("Can't open window 2\n");

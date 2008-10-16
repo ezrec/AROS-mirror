@@ -1,3 +1,7 @@
+/*
+    File-, Font- and Screenmoderequester
+*/
+
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/intuition.h>
@@ -110,8 +114,10 @@ int main(void)
 	WA_Activate,      TRUE,
 	WA_CloseGadget,   TRUE,
 	WA_DragBar,       TRUE,
-	WA_IDCMP,         IDCMP_CLOSEWINDOW,
 	WA_DepthGadget,   TRUE,
+	WA_SmartRefresh,  TRUE,
+	WA_NoCareRefresh, TRUE,
+	WA_IDCMP,         IDCMP_CLOSEWINDOW,
 	WA_GimmeZeroZero, TRUE,
 	WA_CustomScreen,  screen, // Link to screen
 	TAG_END);
