@@ -1,0 +1,272 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src 28659 2008-05-10 20:49:16Z sszymczy $
+
+-include $(TOP)/config/make.cfg
+
+##MM- contrib-gnu : contrib-gnu-autoconf
+#MM- contrib-gnu-autoconf : development-autoconf
+
+
+#MM- development : development-autoconf
+
+
+
+GNU_REPOSITORY := gnu://
+
+
+#MM- development-autoconf-quick : development-autoconf--quick
+#MM- development-autoconf--quick : development-autoconf--fetch
+#MM- development-autoconf-fetch : development-autoconf--fetch
+ 
+development-autoconf-archbase  := autoconf-2.62
+
+ifeq (target,host)
+    development-autoconf-portdir  := $(HOSTDIR)/Ports/autoconf
+else
+    development-autoconf-portdir  := $(PORTSDIR)/autoconf
+endif
+
+ifeq ($(AROS_DEVELOPMENT),)
+    development-autoconf-prefix := $(CONTRIB_DIR)/autoconf
+else
+    development-autoconf-prefix := $(AROS_DEVELOPMENT)
+endif
+
+ifneq (,)
+    development-autoconf--archbase  := autoconf--2.62
+else
+    development-autoconf--archbase  := autoconf-2.62
+endif
+
+ifneq (,)
+    development-autoconf--srcdir  := 
+else
+    development-autoconf--srcdir  := $(development-autoconf-archbase)
+endif
+
+ifeq (yes,yes)
+    development-autoconf--patches_specs := $(development-autoconf--archbase)-aros.diff:$(development-autoconf--srcdir):-p1    
+else
+    development-autoconf--patches_specs := ::
+endif
+
+.PHONY : development-autoconf--fetch
+#MM
+development-autoconf--fetch :
+	$(FETCH) -ao ".  $(GNU_REPOSITORY)autoconf" -a $(development-autoconf--archbase) -s "tar.bz2 tar.gz" -l $(PORTSSOURCEDIR) -d $(development-autoconf-portdir) \
+        -po ". " -p $(development-autoconf--patches_specs)
+
+#MM- development-autoconf : development-autoconf-
+
+development-autoconf--package-dir := $(development-autoconf-portdir)/$(development-autoconf--archbase)
+
+development-autoconf--package-basename := \
+    $(DISTDIR)/Packages/$(development-autoconf--archbase)-aros.$(AROS_TARGET_CPU)
+
+
+ifneq ($(development-autoconf-prefix),)
+    development-autoconf--prefix := $(development-autoconf-prefix)
+else
+    development-autoconf--prefix := $(AROS_CONTRIB)
+endif
+
+ifneq (/Development,)
+    development-autoconf--aros_prefix := /Development
+else
+    development-autoconf--aros_prefix := $(development-autoconf--prefix)
+endif
+
+ifeq (yes,yes)
+    development-autoconf--nix    := -nix
+    development-autoconf--volpfx := /
+    development-autoconf--volsfx := /
+    
+    ifeq (,)
+        development-autoconf--nix_dir_layout := yes
+    endif
+else
+    development-autoconf--volsfx := :
+    
+    ifeq (,)
+        development-autoconf--nix_dir_layout := no
+    endif
+endif
+
+development-autoconf--volfunc = $(development-autoconf--volpfx)$(notdir $1)$(development-autoconf--volsfx)
+
+development-autoconf--install_opts := prefix=$(development-autoconf--prefix) \
+	exec_prefix=$(development-autoconf--prefix) 
+
+# Check if chosen compiler is valid
+ifeq ($(findstring target,host target kernel),)
+  $(error unknown compiler target)
+endif
+
+# Set legacy 'host' variable based on chosen compiler
+ifeq (target,host)
+    host := yes
+	ifeq (autoconf,)
+		development-autoconf--pkgdir := $(HOSTGENDIR)/$(CURDIR)
+	else
+		development-autoconf--pkgdir := $(HOSTGENDIR)/$(CURDIR)/autoconf
+	endif
+else
+    host := no
+	ifeq (autoconf,)
+		development-autoconf--pkgdir := $(GENDIR)/$(CURDIR)
+	else
+		development-autoconf--pkgdir := $(GENDIR)/$(CURDIR)/autoconf
+	endif
+endif
+
+development-autoconf--configflag := $(development-autoconf--pkgdir)/.configured
+development-autoconf--installflag := $(development-autoconf--pkgdir)/.installed
+
+ifeq ($(filter yes, $(development-autoconf--nix_dir_layout) $(host)),yes)
+    development-autoconf--PROGDIR      := $(development-autoconf--aros_prefix)/bin
+    development-autoconf--config_opts  := --prefix=$(development-autoconf--aros_prefix)
+else
+    ifeq (yes,yes)
+        development-autoconf--config_opts := --prefix=/PROGDIR  --bindir=/PROGDIR --sbindir=/PROGDIR \
+        --libdir=/LIB --includedir=/INCLUDE --oldincludedir=/INCLUDE   
+    else
+        development-autoconf--config_opts  := --prefix=$(development-autoconf--aros_prefix)
+    endif
+
+    development-autoconf--PROGDIR := $(development-autoconf--aros_prefix)
+    
+    development-autoconf--install_opts := bindir=$(development-autoconf--prefix) \
+	sbindir=$(development-autoconf--prefix) \
+	libdir=$(AROS_LIB) includedir=$(AROS_INCLUDES) \
+	oldincludedir=$(AROS_INCLUDES) 
+endif
+
+
+.PHONY : development-autoconf- development-autoconf--clean development-autoconf--build_and_install-quick
+
+#MM- development-autoconf- : setup includes linklibs-core development-autoconf--quick
+
+ifneq (install,)
+    development-autoconf--install_command = \
+        $(MAKE) PROGDIR="$(development-autoconf--PROGDIR)/" $(development-autoconf--install_opts) \
+        -C $(development-autoconf--pkgdir) install && \
+        $(TOUCH) $(development-autoconf--installflag)
+
+    development-autoconf--uninstall_command = \
+    $(RM) $(development-autoconf--installflag) && \
+    $(MAKE) PROGDIR="$(development-autoconf--PROGDIR)/" $(development-autoconf--install_opts) \
+    -C $(development-autoconf--pkgdir) uninstall
+else
+    development-autoconf--install_command   := true
+    development-autoconf--uninstall_command := true
+endif
+
+#MM- development-autoconf--quick : development-autoconf--configure  development-autoconf--build_and_install-quick       development-autoconf--make-package
+
+#MM
+development-autoconf--build_and_install-quick :  $(development-autoconf--configflag)
+	if ! $(MAKE) PROGDIR="$(call development-autoconf--volfunc, PROGDIR)" -q -C $(development-autoconf--pkgdir); then \
+            $(RM)  $(development-autoconf--installflag) && \
+	    $(MAKE) PROGDIR="$(call development-autoconf--volfunc, PROGDIR)" -C $(development-autoconf--pkgdir) && \
+	    $(development-autoconf--install_command); \
+        fi
+
+$(development-autoconf-portdir)/$(development-autoconf--srcdir)/.files-touched:
+	find $(development-autoconf-portdir)/$(development-autoconf--srcdir) -exec $(TOUCH) -r $(development-autoconf-portdir)/$(development-autoconf--srcdir)/configure '{}' \; && \
+	$(TOUCH) $@
+
+#MM
+development-autoconf--uninstall :
+	$(development-autoconf--uninstall_command)
+
+ifneq ($(DEBUG),yes)
+    development-autoconf--s_flag = -s
+endif
+
+#MM
+development-autoconf--configure : $(development-autoconf--configflag)
+
+ifeq (target,host)
+$(development-autoconf--configflag) : $(development-autoconf-portdir)/$(development-autoconf--srcdir)/.files-touched $(TOP)/$(CURDIR)/mmakefile
+	$(RM) $@ 
+	@$(FOR) dir in $(development-autoconf--pkgdir) ; do \
+	    $(IF) $(TEST) ! -d $$dir ; then $(MKDIR) $$dir ; else $(NOP) ; fi ; \
+	done
+	cd $(development-autoconf--pkgdir) && \
+	find . -name config.cache -exec $(RM) '{}' \; && \
+	CC="$(HOST_CC)" \
+	    $(development-autoconf-portdir)/$(development-autoconf--srcdir)/configure $(development-autoconf--config_opts)  && \
+	    $(TOUCH) $@
+endif
+ifeq (target,target)
+$(development-autoconf--configflag) : $(development-autoconf-portdir)/$(development-autoconf--srcdir)/.files-touched $(TOP)/$(CURDIR)/mmakefile
+	$(RM) $@
+	@$(FOR) dir in $(development-autoconf--pkgdir) ; do \
+	    $(IF) $(TEST) ! -d $$dir ; then $(MKDIR) $$dir ; else $(NOP) ; fi ; \
+	done
+	cd $(development-autoconf--pkgdir) && \
+	find . -name config.cache -exec $(RM) '{}' \; && \
+	CC="$(TARGET_CC) $(development-autoconf--nix) $(development-autoconf--s_flag)" \
+	    AS="$(TARGET_AS)" CC_FOR_BUILD="$(HOST_CC)" RANLIB="$(RANLIB)" \
+	    $(development-autoconf-portdir)/$(development-autoconf--srcdir)/configure $(development-autoconf--config_opts)  \
+	    --build=$(AROS_HOST_CPU)-$(AROS_HOST_ARCH) \
+	    --host=$(AROS_TARGET_CPU)-aros \
+	    --target=$(AROS_TARGET_CPU)-aros \
+	    --disable-nls \
+	    --without-x --without-pic --disable-shared && \
+	    $(TOUCH) $@
+endif
+ifeq (target,kernel)
+$(development-autoconf--configflag) : $(development-autoconf-portdir)/$(development-autoconf--srcdir)/.files-touched $(TOP)/$(CURDIR)/mmakefile
+	$(RM) $@
+	@$(FOR) dir in $(development-autoconf--pkgdir) ; do \
+	    $(IF) $(TEST) ! -d $$dir ; then $(MKDIR) $$dir ; else $(NOP) ; fi ; \
+	done
+	cd $(development-autoconf--pkgdir) && \
+	find . -name config.cache -exec $(RM) '{}' \; && \
+	CC="$(KERNEL_CC) $(KERNEL_CFLAGS) $(development-autoconf--nix) $(development-autoconf--s_flag)" \
+	    AS="$(TARGET_AS)" CC_FOR_BUILD="$(HOST_CC)" RANLIB="$(RANLIB)" \
+	    $(development-autoconf-portdir)/$(development-autoconf--srcdir)/configure $(development-autoconf--config_opts)  \
+	    --build=$(AROS_HOST_CPU)-$(AROS_HOST_ARCH) \
+	    --host=$(AROS_TARGET_CPU)-aros \
+	    --target=$(AROS_TARGET_CPU)-aros --disable-nls \
+	    --without-x --without-pic --disable-shared && \
+	    $(TOUCH) $@
+endif
+	
+#MM
+development-autoconf--clean : development-autoconf--uninstall
+	@$(RM) $(development-autoconf--pkgdir)
+
+.PHONY : development-autoconf--make-package
+#MM development-autoconf--make-package : development-autoconf--quick
+
+#MM
+development-autoconf--make-package : $(development-autoconf--package-basename).tar.bz2
+ 
+#There seems to be a bug, either with my clock or with make, 'cause it may happen
+#that $^ and $@ have exactly the same mtime, and in that case make tries
+#to rebuild $@ again, which would fail because the directory where
+#the package got installed would not exist anymore. 
+#We work this around by using an if statement to manually check the mtimes.
+$(development-autoconf--package-basename).tar.bz2 :
+	@$(IF) test $(development-autoconf-installflag) -nt $@ || ! test -f $@; then \
+        $(RM) $@ ; \
+        $(ECHO) "Building \`$(development-autoconf--package-basename).tar.bz2'" ; \
+        mkdir -p "$(DISTDIR)/Packages" ; \
+        mkdir -p "$(development-autoconf-prefix)" ; \
+        cd $(development-autoconf--package-dir) ; \
+        tar -cvf $(development-autoconf--package-basename).tar * ; \
+        bzip2 -9 -f $(development-autoconf--package-basename).tar ; \
+    fi
+
+    
+
+# Delete generated makefiles
+#MM
+clean ::
+	@$(RM) $(TOP)/$(CURDIR)/mmakefile $(TOP)/$(CURDIR)/mmakefile.bak
+
+include $(SRCDIR)/config/make.tail
+
+BDID := $(BDTARGETID)

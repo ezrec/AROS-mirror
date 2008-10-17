@@ -1,0 +1,23 @@
+diff -ruN autoconf-2.62/bin/autoconf.as autoconf-2.62.aros/bin/autoconf.as
+--- autoconf-2.62/bin/autoconf.as	2008-04-06 01:04:48.000000000 +0200
++++ autoconf-2.62.aros/bin/autoconf.as	2008-10-07 11:59:10.000000000 +0200
+@@ -84,7 +84,7 @@
+ ' # restore font-lock: "
+ 
+ # Variables.
+-: ${AUTOM4TE='@bindir@/@autom4te-name@'}
++: ${AUTOM4TE='/bin/autom4te'}
+ autom4te_options=
+ outfile=
+ verbose=false
+diff -ruN autoconf-2.62/configure autoconf-2.62.aros/configure
+--- autoconf-2.62/configure	2008-04-06 00:57:12.000000000 +0200
++++ autoconf-2.62.aros/configure	2008-10-07 11:58:44.000000000 +0200
+@@ -2419,7 +2419,6 @@
+   $as_echo_n "(cached) " >&6
+ else
+   case `$M4 --help < /dev/null 2>&1` in
+-      *debugfile*) ac_cv_prog_gnu_m4_debugfile=--debugfile ;;
+       *) ac_cv_prog_gnu_m4_debugfile=--error-output ;;
+     esac
+ fi
