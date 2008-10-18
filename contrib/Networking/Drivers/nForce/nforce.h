@@ -45,11 +45,8 @@
 #define NFORCE_TASK_NAME	"NForce task"
 #define NFORCE_PORT_NAME	"NForce port"
 
-extern struct Library *OOPBase;
-
 struct NFBase {
     struct Device       nf_Device;
-    struct Library      *nf_UtilityBase;
     struct MsgPort      *nf_syncport;
 
     OOP_Object          *nf_pci;
@@ -59,8 +56,6 @@ struct NFBase {
     struct Sana2DeviceQuery nf_Sana2Info;
     struct NFUnit       *nf_unit;
 };
-
-#define UtilityBase (LIBBASE->nf_UtilityBase)
 
 #undef HiddPCIDeviceAttrBase
 #define HiddPCIDeviceAttrBase   (LIBBASE->nf_pciDeviceAttrBase)

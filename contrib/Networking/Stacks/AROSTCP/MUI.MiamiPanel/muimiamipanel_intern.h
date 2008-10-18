@@ -1,5 +1,5 @@
 /*
-    Copyright © 2002, The AROS Development Team. 
+    Copyright © 2002-2008, The AROS Development Team. 
     All rights reserved.
     
     $Id$
@@ -35,17 +35,6 @@ extern struct TagItem scales[];
 struct MiamiPanelBase_intern
 {
     struct Library		                 mpb_library;
-    struct ExecBase		             *mpb_sysbase;
-    BPTR			                             mpb_seglist;
-
-    struct Library		                 *mpb_DOSBase;
-    struct Library		                 *mpb_GfxBase;
-    struct Library		                 *mpb_UtilityBase;
-    struct Library		                 *mpb_IntuitionBase;
-    struct Library		                 *mpb_MUIMasterBase;
-    struct Library		                 *mpb_IconBase;
-    struct Library		                 *mpb_IFFParseBase;
-    struct Library		                 *mpb_LocaleBase;
 	
 	struct SignalSemaphore       mpb_libSem;
 	struct SignalSemaphore       mpb_procSem;
@@ -88,26 +77,6 @@ enum
 
 #undef MUIPB
 #define MUIPB(b)	((struct MiamiPanelBase_intern *)(b))
-
-//#undef SysBase
-//#define SysBase     	(MUIPB(MiamiPanelBaseIntern)->mpb_sysbase)
-
-#undef DOSBase
-#define DOSBase     	(MUIPB(MiamiPanelBaseIntern)->mpb_DOSBase)
-#undef GfxBase
-#define GfxBase     	(MUIPB(MiamiPanelBaseIntern)->mpb_GfxBase)
-#undef UtilityBase
-#define UtilityBase     	(MUIPB(MiamiPanelBaseIntern)->mpb_UtilityBase)
-#undef IntuitionBase
-#define IntuitionBase     	(MUIPB(MiamiPanelBaseIntern)->mpb_IntuitionBase)
-#undef MUIMasterBase
-#define MUIMasterBase     	(MUIPB(MiamiPanelBaseIntern)->mpb_MUIMasterBase)
-#undef IconBase
-#define IconBase     	(MUIPB(MiamiPanelBaseIntern)->mpb_IconBase)
-#undef IFFParseBase
-#define IFFParseBase     	(MUIPB(MiamiPanelBaseIntern)->mpb_IFFParseBase)
-#undef LocaleBase
-#define LocaleBase     	(MUIPB(MiamiPanelBaseIntern)->mpb_LocaleBase)
 
 /****************************************************************************************/
 #undef MESSAGE

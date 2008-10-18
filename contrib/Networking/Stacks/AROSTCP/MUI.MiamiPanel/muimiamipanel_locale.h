@@ -2,13 +2,13 @@
 #define _LOCALE_H_
 
 /*
-    Copyright © 2003-2004, The AROS Development Team. All rights reserved.
+    Copyright © 2003-2008, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 #include <exec/types.h>
 #include <libraries/gadtools.h>
-#include <MUI/TheBar_mcc.h>
+#include <mui/TheBar_mcc.h>
 
 #define CATCOMP_NUMBERS
 #include "strings.h"

@@ -49,8 +49,6 @@
 #include "unit.h"
 #include LC_LIBDEFS_FILE
 
-struct Library *OOPBase;
-
 AROS_UFH3(void, PCI_Enumerator,
     AROS_UFHA(struct Hook *,    hook,       A0),
     AROS_UFHA(OOP_Object *,     pciDevice,  A2),
@@ -119,49 +117,36 @@ D(bug("[SiS900] Init()\n"));
 
     NEWLIST(&LIBBASE->sis900b_Units);
 
-    OOPBase = OpenLibrary("oop.library",0);
+    LIBBASE->sis900b_PCIDeviceAttrBase = OOP_ObtainAttrBase(IID_Hidd_PCIDevice);
 
-    if (OOPBase != NULL)
+    if (LIBBASE->sis900b_PCIDeviceAttrBase != 0)
     {
-        D(bug("[SiS900] oop.library opened @ %p\n", OOPBase));
+        D(bug("[SiS900] HiddPCIDeviceAttrBase @ %p\n", LIBBASE->sis900b_PCIDeviceAttrBase));
 
-        LIBBASE->sis900b_UtilityBase = OpenLibrary("utility.library",0);
+        LIBBASE->sis900b_PCI = OOP_NewObject(NULL, CLID_Hidd_PCI, NULL);
 
-        if (LIBBASE->sis900b_UtilityBase != NULL)
+        if (LIBBASE->sis900b_PCI)
         {
-            D(bug("[SiS900] utility.library opened @ %p\n", LIBBASE->sis900b_UtilityBase));
+            D(bug("[SiS900] PCI Subsystem HIDD object @ %p\n", LIBBASE->sis900b_PCI));
 
-            LIBBASE->sis900b_PCIDeviceAttrBase = OOP_ObtainAttrBase(IID_Hidd_PCIDevice);
+            struct Hook FindHook = {
+                h_Entry:    (IPTR (*)())PCI_Enumerator,
+                h_Data:     LIBBASE,
+            };
 
-            if (LIBBASE->sis900b_PCIDeviceAttrBase != 0)
+            struct TagItem Requirements[] = {
+                { tHidd_PCI_VendorID,   0x1039  },
+                { TAG_DONE,             0UL }
+            };
+
+            HIDD_PCI_EnumDevices(LIBBASE->sis900b_PCI,
+                                 &FindHook,
+                                 (struct TagItem *)&Requirements
+            );
+
+            if (!(IsListEmpty(&LIBBASE->sis900b_Units)))
             {
-                D(bug("[SiS900] HiddPCIDeviceAttrBase @ %p\n", LIBBASE->sis900b_PCIDeviceAttrBase));
-
-                LIBBASE->sis900b_PCI = OOP_NewObject(NULL, CLID_Hidd_PCI, NULL);
-
-                if (LIBBASE->sis900b_PCI)
-                {
-                    D(bug("[SiS900] PCI Subsystem HIDD object @ %p\n", LIBBASE->sis900b_PCI));
-
-                    struct Hook FindHook = {
-                        h_Entry:    (IPTR (*)())PCI_Enumerator,
-                        h_Data:     LIBBASE,
-                    };
-
-                    struct TagItem Requirements[] = {
-                        { tHidd_PCI_VendorID,   0x1039  },
-                        { TAG_DONE,             0UL }
-                    };
-
-                    HIDD_PCI_EnumDevices(LIBBASE->sis900b_PCI,
-                                            &FindHook,
-                                            (struct TagItem *)&Requirements);
-
-                    if (!(IsListEmpty(&LIBBASE->sis900b_Units)))
-                    {
-                        return TRUE;
-                    }
-                }
+                return TRUE;
             }
         }
     }
@@ -190,12 +175,6 @@ D(bug("[SiS900] Expunge()\n"));
 
     if (LIBBASE->sis900b_PCI != NULL)
         OOP_DisposeObject(LIBBASE->sis900b_PCI);
-
-    if (OOPBase != NULL)
-        CloseLibrary(OOPBase);
-
-    if (LIBBASE->sis900b_UtilityBase != NULL)
-        CloseLibrary(LIBBASE->sis900b_UtilityBase);
 
     return TRUE;
 }

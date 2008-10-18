@@ -36,6 +36,7 @@
 #include <devices/sana2specialstats.h>
 
 #include <proto/exec.h>
+#include <proto/oop.h>
 
 #include <oop/oop.h>
 
@@ -53,17 +54,12 @@ typedef UQUAD u64;
 
 #define __iomem
 
-extern struct Library *OOPBase;
-
 #define e1000_TASK_NAME	"%s.task"
 #define e1000_PORT_NAME	"%s.port"
 
 struct e1000Base
 {
     struct Device            e1kb_Device;
-    struct ExecBase          *e1kb_SysBase;
-    BPTR                     e1kb_SegList;
-    struct Library           *e1kb_UtilityBase;
 
     OOP_Object               *e1kb_PCI;
     OOP_AttrBase             e1kb_PCIDeviceAttrBase;
@@ -77,8 +73,6 @@ struct e1000Startup
     struct MsgPort           *e1ksm_SyncPort;
     struct e1000Unit        *e1ksm_Unit;
 };
-
-#define UtilityBase (LIBBASE->e1kb_UtilityBase)
 
 #undef HiddPCIDeviceAttrBase
 #define HiddPCIDeviceAttrBase   (LIBBASE->e1kb_PCIDeviceAttrBase)

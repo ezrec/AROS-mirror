@@ -4,7 +4,7 @@
 #include <proto/muimaster.h>
 #include <proto/utility.h>
 
-#include <MUI/Urltext_mcc.h>
+#include <mui/Urltext_mcc.h>
 
 #include "muimiamipanel_intern.h"
 #include "muimiamipanel_misc.h"

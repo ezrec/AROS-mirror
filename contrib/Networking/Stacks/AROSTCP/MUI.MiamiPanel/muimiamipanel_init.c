@@ -1,5 +1,5 @@
 /*
-    Copyright © 2002-2006, The AROS Development Team. 
+    Copyright © 2002-2008, The AROS Development Team. 
     All rights reserved.
     
     $Id$
@@ -109,56 +109,6 @@ D(bug("[MiamiPanel] freeMiamiPanelBase(%x)\n", LIBBASE));
         LIBBASE->mpb_appClass = NULL;
     }
 
-    if (LIBBASE->mpb_MUIMasterBase)
-    {
-        CloseLibrary(LIBBASE->mpb_MUIMasterBase);
-        LIBBASE->mpb_MUIMasterBase = NULL;
-    }
-
-    if (LIBBASE->mpb_LocaleBase)
-    {
-		Locale_Deinitialize(LIBBASE);
-
-        CloseLibrary((struct Library *)LIBBASE->mpb_LocaleBase);
-        LIBBASE->mpb_LocaleBase = NULL;
-    }
-
-    if (LIBBASE->mpb_IFFParseBase)
-    {
-        CloseLibrary((struct Library *)LIBBASE->mpb_IFFParseBase);
-        LIBBASE->mpb_IFFParseBase = NULL;
-    }
-
-    if (LIBBASE->mpb_IconBase)
-    {
-        CloseLibrary(LIBBASE->mpb_IconBase);
-        LIBBASE->mpb_IconBase = NULL;
-    }
-
-    if (LIBBASE->mpb_IntuitionBase)
-    {
-        CloseLibrary((struct Library *)LIBBASE->mpb_IntuitionBase);
-        LIBBASE->mpb_IntuitionBase = NULL;
-    }
-
-    if (LIBBASE->mpb_UtilityBase)
-    {
-        CloseLibrary(LIBBASE->mpb_UtilityBase);
-        LIBBASE->mpb_UtilityBase = NULL;
-    }
-
-    if (LIBBASE->mpb_GfxBase)
-    {
-        CloseLibrary((struct Library *)LIBBASE->mpb_GfxBase);
-        LIBBASE->mpb_GfxBase = NULL;
-    }
-
-    if (LIBBASE->mpb_DOSBase)
-    {
-        CloseLibrary((struct Library *)LIBBASE->mpb_DOSBase);
-        LIBBASE->mpb_DOSBase = NULL;
-    }
-
     if (LIBBASE->mpb_pool)
     {
         DeletePool(LIBBASE->mpb_pool);
@@ -173,16 +123,7 @@ initMiamiPanelBase(LIBBASETYPEPTR LIBBASE)
 {
 D(bug("[MiamiPanel] initMiamiPanelBase(%x)\n", LIBBASE));
 
-    if ((LIBBASE->mpb_pool = CreatePool(MEMF_ANY|MEMF_CLEAR, 256, 64))
-		&& (LIBBASE->mpb_DOSBase = OpenLibrary("dos.library", 0))
-		&& (LIBBASE->mpb_GfxBase = OpenLibrary("graphics.library", 0))
-		&& (LIBBASE->mpb_UtilityBase = OpenLibrary("utility.library", 0))
-		&& (LIBBASE->mpb_IntuitionBase = OpenLibrary("intuition.library", 0))
-		&& (LIBBASE->mpb_MUIMasterBase = OpenLibrary("muimaster.library", 0))
-		&& (LIBBASE->mpb_IconBase = OpenLibrary("icon.library", 0))
-		&& (LIBBASE->mpb_IFFParseBase = OpenLibrary("iffparse.library", 0))
-		&& (LIBBASE->mpb_LocaleBase = OpenLibrary("locale.library", 0))
-		)
+    if ((LIBBASE->mpb_pool = CreatePool(MEMF_ANY|MEMF_CLEAR, 256, 64)))
     {
 D(bug("[MiamiPanel] initMiamiPanelBase: mem pool allocated @ %x\n", LIBBASE->mpb_pool));
         NEWLIST(&LIBBASE->mpb_msgList);
@@ -218,12 +159,10 @@ D(bug("[MiamiPanel] Open(%x)\n", LIBBASE));
 
     ObtainSemaphore(&LIBBASE->mpb_libSem);
 
-    LIBBASE->mpb_library.lib_OpenCnt++;
-    LIBBASE->mpb_library.lib_Flags &= ~LIBF_DELEXP;
-
     if (!(LIBBASE->mpb_flags & BASEFLG_Init) && !initMiamiPanelBase(LIBBASE))
     {
-        LIBBASE->mpb_library.lib_OpenCnt--;
+        ReleaseSemaphore(&LIBBASE->mpb_libSem);
+        return FALSE;
     }
 
     ReleaseSemaphore(&LIBBASE->mpb_libSem);
@@ -237,26 +176,13 @@ static int ExpungeMiamiPanel(LIBBASETYPEPTR LIBBASE)
 {
 D(bug("[MiamiPanel] Expunge(%x)\n", LIBBASE));
 
-    BOOL          success;
-
     ObtainSemaphore(&LIBBASE->mpb_libSem);
 
-    if (!(LIBBASE->mpb_library.lib_OpenCnt || LIBBASE->mpb_use))
-    {
-//        Remove((struct Node *)LIBBASE);
-//        FreeMem((UBYTE *)LIBBASE-LIBBASE->mpb_library.lib_NegSize, LIBBASE->mpb_library.lib_NegSize + LIBBASE->mpb_library.lib_PosSize);
-
-        success = TRUE;
-    }
-    else
-    {
-        LIBBASE->mpb_library.lib_Flags |= LIBF_DELEXP;
-        success = FALSE;
-    }
+    freeMiamiPanelBase(LIBBASE);
 
     ReleaseSemaphore(&LIBBASE->mpb_libSem);
 	
-    return success;
+    return TRUE;
 }
 
 ADD2INITLIB(InitMiamiPanel, 0);

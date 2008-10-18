@@ -56,13 +56,8 @@
 
 /** Device Driver Structures **/
 
-extern struct Library *OOPBase;
-
 struct SiS900Base {
     struct Device       sis900b_Device;
-    struct ExecBase     *sis900b_SysBase;
-    BPTR                sis900b_SegList;
-    struct Library      *sis900b_UtilityBase;
 
     OOP_Object          *sis900b_PCI;
     OOP_AttrBase        sis900b_PCIDeviceAttrBase;
@@ -70,8 +65,6 @@ struct SiS900Base {
     ULONG               sis900b_UnitCount;
     struct List         sis900b_Units;
 };
-
-#define UtilityBase (LIBBASE->sis900b_UtilityBase)
 
 #undef HiddPCIDeviceAttrBase
 #define HiddPCIDeviceAttrBase   (LIBBASE->sis900b_PCIDeviceAttrBase)

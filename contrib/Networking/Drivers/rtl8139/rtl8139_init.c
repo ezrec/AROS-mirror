@@ -50,8 +50,6 @@
 #include "unit.h"
 #include LC_LIBDEFS_FILE
 
-struct Library *OOPBase;
-
 AROS_UFH3(void, PCI_Enumerator,
 	AROS_UFHA(struct Hook *,    hook,       A0),
 	AROS_UFHA(OOP_Object *,     pciDevice,  A2),
@@ -164,49 +162,35 @@ D(bug("[rtl8139] Init()\n"));
 
     NEWLIST(&LIBBASE->rtl8139b_Units);
 
-	OOPBase = OpenLibrary("oop.library",0);
+    LIBBASE->rtl8139b_PCIDeviceAttrBase = OOP_ObtainAttrBase(IID_Hidd_PCIDevice);
 
-	if (OOPBase != NULL)
-	{
-		D(bug("[rtl8139] Init: oop.library opened @ %p\n", OOPBase));
+    if (LIBBASE->rtl8139b_PCIDeviceAttrBase != 0)
+    {
+        D(bug("[rtl8139] Init: HiddPCIDeviceAttrBase @ %p\n", LIBBASE->rtl8139b_PCIDeviceAttrBase));
 
-		LIBBASE->rtl8139b_UtilityBase = OpenLibrary("utility.library",0);
+        LIBBASE->rtl8139b_PCI = OOP_NewObject(NULL, CLID_Hidd_PCI, NULL);
 
-		if (LIBBASE->rtl8139b_UtilityBase != NULL)
-		{
-			D(bug("[rtl8139] Init: utility.library opened @ %p\n", LIBBASE->rtl8139b_UtilityBase));
+        if (LIBBASE->rtl8139b_PCI)
+        {
+            D(bug("[rtl8139] Init: PCI Subsystem HIDD object @ %p\n", LIBBASE->rtl8139b_PCI));
 
-			LIBBASE->rtl8139b_PCIDeviceAttrBase = OOP_ObtainAttrBase(IID_Hidd_PCIDevice);
+            struct Hook FindHook = {
+                h_Entry:    (IPTR (*)())PCI_Enumerator,
+                h_Data:     LIBBASE,
+            };
 
-			if (LIBBASE->rtl8139b_PCIDeviceAttrBase != 0)
-			{
-				D(bug("[rtl8139] Init: HiddPCIDeviceAttrBase @ %p\n", LIBBASE->rtl8139b_PCIDeviceAttrBase));
+            HIDD_PCI_EnumDevices(   LIBBASE->rtl8139b_PCI,
+                                    &FindHook,
+                                    NULL
+            );
 
-				LIBBASE->rtl8139b_PCI = OOP_NewObject(NULL, CLID_Hidd_PCI, NULL);
-
-				if (LIBBASE->rtl8139b_PCI)
-				{
-					D(bug("[rtl8139] Init: PCI Subsystem HIDD object @ %p\n", LIBBASE->rtl8139b_PCI));
-
-					struct Hook FindHook = {
-						h_Entry:    (IPTR (*)())PCI_Enumerator,
-						h_Data:     LIBBASE,
-					};
-
-					HIDD_PCI_EnumDevices(   LIBBASE->rtl8139b_PCI,
-											&FindHook,
-											NULL);
-
-                    if (!(IsListEmpty(&LIBBASE->rtl8139b_Units)))
-                    {
-                        return TRUE;
-                    }
-				}
-			}
-		}
+            if (!(IsListEmpty(&LIBBASE->rtl8139b_Units)))
+            {
+                return TRUE;
+            }
 	}
-
-	return FALSE;
+    }
+    return FALSE;
 }
 
 static int GM_UNIQUENAME(Expunge)(LIBBASETYPEPTR LIBBASE)
@@ -223,21 +207,15 @@ D(bug("[rtl8139] Expunge()\n"));
         }
     }
 
-	if (LIBBASE->rtl8139b_PCIDeviceAttrBase != 0)
-		OOP_ReleaseAttrBase(IID_Hidd_PCIDevice);
+    if (LIBBASE->rtl8139b_PCIDeviceAttrBase != 0)
+        OOP_ReleaseAttrBase(IID_Hidd_PCIDevice);
 
-	LIBBASE->rtl8139b_PCIDeviceAttrBase = 0;
+    LIBBASE->rtl8139b_PCIDeviceAttrBase = 0;
 
-	if (LIBBASE->rtl8139b_PCI != NULL)
-		OOP_DisposeObject(LIBBASE->rtl8139b_PCI);
+    if (LIBBASE->rtl8139b_PCI != NULL)
+        OOP_DisposeObject(LIBBASE->rtl8139b_PCI);
 
-	if (OOPBase != NULL)
-		CloseLibrary(OOPBase);
-
-	if (LIBBASE->rtl8139b_UtilityBase != NULL)
-		CloseLibrary(LIBBASE->rtl8139b_UtilityBase);
-
-	return TRUE;
+    return TRUE;
 }
 
 static const ULONG rx_tags[] = {

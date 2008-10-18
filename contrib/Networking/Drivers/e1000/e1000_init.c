@@ -50,8 +50,6 @@
 #include "unit.h"
 #include LC_LIBDEFS_FILE
 
-struct Library *OOPBase;
-
 struct pci_device_ids
 {
     IPTR deviceid;
@@ -153,49 +151,36 @@ D(bug("[e1000] Init()\n"));
 
     NEWLIST(&LIBBASE->e1kb_Units);
 
-    OOPBase = OpenLibrary("oop.library",0);
+    LIBBASE->e1kb_PCIDeviceAttrBase = OOP_ObtainAttrBase(IID_Hidd_PCIDevice);
 
-    if (OOPBase != NULL)
+    if (LIBBASE->e1kb_PCIDeviceAttrBase != 0)
     {
-        D(bug("[e1000] oop.library opened @ %p\n", OOPBase));
+        D(bug("[e1000] HiddPCIDeviceAttrBase @ %p\n", LIBBASE->e1kb_PCIDeviceAttrBase));
 
-        LIBBASE->e1kb_UtilityBase = OpenLibrary("utility.library",0);
-
-        if (LIBBASE->e1kb_UtilityBase != NULL)
+        LIBBASE->e1kb_PCI = OOP_NewObject(NULL, CLID_Hidd_PCI, NULL);
+        
+        if (LIBBASE->e1kb_PCI)
         {
-            D(bug("[e1000] utility.library opened @ %p\n", LIBBASE->e1kb_UtilityBase));
+            D(bug("[e1000] PCI Subsystem HIDD object @ %p\n", LIBBASE->e1kb_PCI));
 
-            LIBBASE->e1kb_PCIDeviceAttrBase = OOP_ObtainAttrBase(IID_Hidd_PCIDevice);
+            struct Hook FindHook = {
+                h_Entry:    (IPTR (*)())PCI_Enumerator,
+                h_Data:     LIBBASE,
+            };
 
-            if (LIBBASE->e1kb_PCIDeviceAttrBase != 0)
+            struct TagItem Requirements[] = {
+                { tHidd_PCI_VendorID,   0x8086  },
+                { TAG_DONE,             0UL }
+            };
+
+            HIDD_PCI_EnumDevices(LIBBASE->e1kb_PCI,
+                                 &FindHook,
+                                 (struct TagItem *)&Requirements
+            );
+
+            if (!(IsListEmpty(&LIBBASE->e1kb_Units)))
             {
-                D(bug("[e1000] HiddPCIDeviceAttrBase @ %p\n", LIBBASE->e1kb_PCIDeviceAttrBase));
-
-                LIBBASE->e1kb_PCI = OOP_NewObject(NULL, CLID_Hidd_PCI, NULL);
-
-                if (LIBBASE->e1kb_PCI)
-                {
-                    D(bug("[e1000] PCI Subsystem HIDD object @ %p\n", LIBBASE->e1kb_PCI));
-
-                    struct Hook FindHook = {
-                        h_Entry:    (IPTR (*)())PCI_Enumerator,
-                        h_Data:     LIBBASE,
-                    };
-
-                    struct TagItem Requirements[] = {
-                        { tHidd_PCI_VendorID,   0x8086  },
-                        { TAG_DONE,             0UL }
-                    };
-
-                    HIDD_PCI_EnumDevices(LIBBASE->e1kb_PCI,
-                                            &FindHook,
-                                            (struct TagItem *)&Requirements);
-
-                    if (!(IsListEmpty(&LIBBASE->e1kb_Units)))
-                    {
-                        return TRUE;
-                    }
-                }
+                return TRUE;
             }
         }
     }
@@ -224,12 +209,6 @@ D(bug("[e1000] Expunge()\n"));
 
     if (LIBBASE->e1kb_PCI != NULL)
         OOP_DisposeObject(LIBBASE->e1kb_PCI);
-
-    if (OOPBase != NULL)
-        CloseLibrary(OOPBase);
-
-    if (LIBBASE->e1kb_UtilityBase != NULL)
-        CloseLibrary(LIBBASE->e1kb_UtilityBase);
 
     return TRUE;
 }

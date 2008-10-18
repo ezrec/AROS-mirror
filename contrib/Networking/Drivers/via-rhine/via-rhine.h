@@ -57,11 +57,8 @@
 
 /** Device Driver Structures **/
 
-extern struct Library *OOPBase;
-
 struct VIARHINEBase {
     struct Device       rhineb_Device;
-    struct Library      *rhineb_UtilityBase;
     struct MsgPort      *rhineb_syncport;
 
     OOP_Object          *rhineb_pci;
@@ -74,8 +71,6 @@ struct VIARHINEBase {
     /* UnitCount is used to assign unit ID's to found hardware ..*/
     unsigned int                    rhineb_UnitCount;
 };
-
-#define UtilityBase (LIBBASE->rhineb_UtilityBase)
 
 #undef HiddPCIDeviceAttrBase
 #define HiddPCIDeviceAttrBase   (LIBBASE->rhineb_pciDeviceAttrBase)

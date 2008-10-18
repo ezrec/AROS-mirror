@@ -48,11 +48,8 @@
 #define PCNET32_TASK_NAME	"PCNet32 task"
 #define PCNET32_PORT_NAME	"PCNet32 port"
 
-extern struct Library *OOPBase;
-
 struct PCN32Base {
     struct Device       pcnb_Device;
-    struct Library      *pcnb_UtilityBase;
     struct MsgPort      *pcnb_syncport;
 
     OOP_Object          *pcnb_pci;
@@ -62,8 +59,6 @@ struct PCN32Base {
     struct Sana2DeviceQuery pcnb_Sana2Info;
     struct PCN32Unit       *pcnb_unit;
 };
-
-#define UtilityBase (LIBBASE->pcnb_UtilityBase)
 
 #undef HiddPCIDeviceAttrBase
 #define HiddPCIDeviceAttrBase   (LIBBASE->pcnb_pciDeviceAttrBase)

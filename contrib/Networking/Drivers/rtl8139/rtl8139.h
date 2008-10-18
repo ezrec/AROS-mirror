@@ -77,19 +77,14 @@
 extern struct Library *OOPBase;
 
 struct RTL8139Base {
-	struct Device       rtl8139b_Device;
-    struct ExecBase     *rtl8139b_SysBase;
-    BPTR                rtl8139b_SegList;
-    struct Library      *rtl8139b_UtilityBase;
+    struct Device       rtl8139b_Device;
 
-	OOP_Object          *rtl8139b_PCI;
-	OOP_AttrBase        rtl8139b_PCIDeviceAttrBase;
+    OOP_Object          *rtl8139b_PCI;
+    OOP_AttrBase        rtl8139b_PCIDeviceAttrBase;
 
     ULONG               rtl8139b_UnitCount;
     struct List         rtl8139b_Units;
 };
-
-#define UtilityBase (LIBBASE->rtl8139b_UtilityBase)
 
 #undef HiddPCIDeviceAttrBase
 #define HiddPCIDeviceAttrBase   (LIBBASE->rtl8139b_PCIDeviceAttrBase)

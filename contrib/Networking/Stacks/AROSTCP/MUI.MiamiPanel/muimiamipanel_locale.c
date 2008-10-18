@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2004, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -13,7 +13,7 @@
 #define CATALOG_VERSION  0
 
 #include <libraries/gadtools.h>
-#include <MUI/TheBar_mcc.h>
+#include <mui/TheBar_mcc.h>
 
 #include "muimiamipanel_intern.h"
 

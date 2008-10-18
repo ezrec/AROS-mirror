@@ -47,8 +47,6 @@
 #include "unit.h"
 #include LC_LIBDEFS_FILE
 
-struct Library *OOPBase;
-
 AROS_UFH3(void, Enumerator,
     AROS_UFHA(struct Hook *,    hook,       A0),
     AROS_UFHA(OOP_Object *,     pciDevice,  A2),
@@ -125,49 +123,36 @@ D(bug("[VIA-RHINE] init.Init()\n"));
     LIBBASE->rhineb_Sana2Info.MTU = ETH_MTU;
     LIBBASE->rhineb_Sana2Info.AddrFieldSize = 8 * ETH_ADDRESSSIZE;
 
-    OOPBase = OpenLibrary("oop.library",0);
+    LIBBASE->rhineb_pciDeviceAttrBase = OOP_ObtainAttrBase(IID_Hidd_PCIDevice);
 
-    if (OOPBase != NULL)
+    if (LIBBASE->rhineb_pciDeviceAttrBase != 0)
     {
-        D(bug("[VIA-RHINE] Got oop.library\n"));
+        D(bug("[VIA-RHINE] Got HiddPCIDeviceAttrBase\n"));
 
-        LIBBASE->rhineb_UtilityBase = OpenLibrary("utility.library",0);
+        LIBBASE->rhineb_pci = OOP_NewObject(NULL, CLID_Hidd_PCI, NULL);
 
-        if (LIBBASE->rhineb_UtilityBase != NULL)
+        if (LIBBASE->rhineb_pci)
         {
-            D(bug("[VIA-RHINE] Got utility.library\n"));
+            D(bug("[VIA-RHINE] Got PCI object\n"));
 
-            LIBBASE->rhineb_pciDeviceAttrBase = OOP_ObtainAttrBase(IID_Hidd_PCIDevice);
+            struct Hook FindHook = {
+                h_Entry:    (IPTR (*)())Enumerator,
+                h_Data:     LIBBASE,
+            };
 
-            if (LIBBASE->rhineb_pciDeviceAttrBase != 0)
+            struct TagItem Requirements[] = {
+                { tHidd_PCI_VendorID,   0x1106 },
+                { TAG_DONE,             0UL }
+            };
+
+            HIDD_PCI_EnumDevices(   LIBBASE->rhineb_pci,
+                                    &FindHook,
+                                    (struct TagItem *)&Requirements
+            );
+
+            if (LIBBASE->rhineb_unit)
             {
-                D(bug("[VIA-RHINE] Got HiddPCIDeviceAttrBase\n"));
-
-                LIBBASE->rhineb_pci = OOP_NewObject(NULL, CLID_Hidd_PCI, NULL);
-
-                if (LIBBASE->rhineb_pci)
-                {
-                    D(bug("[VIA-RHINE] Got PCI object\n"));
-
-                    struct Hook FindHook = {
-                        h_Entry:    (IPTR (*)())Enumerator,
-                        h_Data:     LIBBASE,
-                    };
-
-                    struct TagItem Requirements[] = {
-                        { tHidd_PCI_VendorID,   0x1106 },
-                        { TAG_DONE,             0UL }
-                    };
-
-                    HIDD_PCI_EnumDevices(   LIBBASE->rhineb_pci,
-                                            &FindHook,
-                                            (struct TagItem *)&Requirements);
-
-                    if (LIBBASE->rhineb_unit)
-                    {
-                        return TRUE;
-                    }
-                }
+                return TRUE;
             }
         }
     }
@@ -192,12 +177,6 @@ D(bug("[VIA-RHINE] init.Expunge\n"));
 
     if (LIBBASE->rhineb_pci != NULL)
         OOP_DisposeObject(LIBBASE->rhineb_pci);
-
-    if (OOPBase != NULL)
-        CloseLibrary(OOPBase);
-
-    if (LIBBASE->rhineb_UtilityBase != NULL)
-        CloseLibrary(LIBBASE->rhineb_UtilityBase);
 
     return TRUE;
 }
