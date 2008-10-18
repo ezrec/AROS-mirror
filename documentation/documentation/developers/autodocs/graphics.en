@@ -474,6 +474,24 @@ Inputs
      tags   - pointer to a taglist
 
 
+Tags
+~~~~
+::
+
+     SPRITEA_Width (ULONG)        - Width of the sprite. If bitmap is smaller it will
+                                    be filled on the right side with transparent
+                                    pixels. Defaults to 16.
+     SPRITEA_XReplication (LONG)  -  0 - perform a 1 to 1 conversion
+                                     1 - each pixel from the source is replicated twice
+                                     2 - each pixel is replicated 4 times.
+                                    -1 - skip every 2nc pixel in the source bitmap
+                                    -2 - only include every fourth pixel from the source.
+     SPRITEA_YReplication (LONG)  - like SPRITEA_YReplication, but for vertical direction.
+     SPRITEA_OutputHeight (ULONG) - Output height of the sprite. Must be at least as high
+                                    as the bitmap. Defaults to bitmap height.
+     SPRITEA_Attach               - (Not implemented)
+
+
 Result
 ~~~~~~
 ::
@@ -1206,6 +1224,36 @@ Inputs
      TagItems - pointer to an array of TagItems
 
 
+Tags
+~~~~
+::
+
+     BIDTAG_ViewPort (struct ViewPort *) - Viewport for which a mode is searched. Default: NULL
+     BIDTAG_MonitorID (ULONG)            - Returned ID must use this monitor
+     BIDTAG_SourceID (ULONG)             - Use this ModeID instead of a ViewPort.
+                                           DIPFMustHave mask is made up of the
+                                           ((DisplayInfo->PropertyFlags of this ID & SPECIAL_FLAGS) |
+                                           DIPFMustHave flags).
+                                           Default:
+                                           if BIDTAG_ViewPort was passed: VPModeID(vp), else the
+                                           DIPFMustHave and DIPFMustNotHave are unchanged.
+     BIDTAG_Depth (UBYTE)                - Minimal depth. Default:
+                                           if BIDTAG_ViewPort is passed: vp->RasInfo->BitMap->Depth,
+                                           else 1.
+     BIDTAG_NominalWidth (UWORD),
+     BIDTAG_NominalHeight (UWORD)        - Aspect radio. Default:
+                                           if BIDTAG_SourceID: SourceID NominalDimensionInfo
+                                           if BIDTAG_ViewPort: vp->DWidth and vp->DHeight
+                                           or 640 x 200.
+     BIDTAG_DesiredWidth (UWORD)         - Width. Default: DIBTAG_NominalWidth.
+     BIDTAG_DesiredHeight (UWORD)        - Height. Default: BIDTAG_NominalHeight.
+     BIDTAG_RedBits (UBYTE),
+     BIDTAG_GreenBits (UBYTE),
+     BIDTAG_BlueBits (UBYTE)             - Bits per gun the mode must support. Default: 4
+     BIDTAG_DIPFMustHave (ULONG)         - DIPF flags the resulting mode must have
+     BIDTAG_DIPFMustNotHave (ULONG)      - DIPF flags the resulting mode must not have
+
+
 Result
 ~~~~~~
 ::
@@ -1754,6 +1802,13 @@ Result
 ::
 
      success - 0 if there was an error
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
 
 
 
@@ -3784,6 +3839,13 @@ Result
      Sprite_number - a sprite number or -1 for an error
 
 
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
 
 ----------
 
@@ -4000,37 +4062,6 @@ Function
      ti_Data field points to an address where to store the result.
      All results are stored as IPTRs!
 
-     Available tags:
-
-             RPTAG_Font              Font for Text()
-             RPTAG_APen              Primary rendering pen
-             RPTAG_BPen              Secondary rendering pen
-             RPTAG_DrMd              Drawing mode (graphics/rastport.h)
-             RPTAG_OutlinePen        Area Outline pen
-             RPTAG_WriteMask         Bit Mask for writing
-             RPTAG_MaxPen            Maximum pen to render (see SetMaxPen())
-             RPTAG_DrawBounds        Determine the area that will be rendered
-                                     into by rendering commands. Can be used
-                                     to optimize window refresh. Pass a pointer
-                                     to a rectangle in the ti_Data field. On
-                                     return the rectangle's MinX will be
-                                     greater than its MaxX if there are no
-                                     active cliprects.
-             RPTAG_FgColor           Primary rendering color in A8R8G8B8 format.
-                                     Only working on hicolor/truecolor bitmaps/
-                                     screens. (MorphOS extension)
-             RPTAG_BgColor           Secondary rendering color in A8R8G8B8 format.
-                                     Only working on hicolor/truecolor bitmaps/
-                                     screens. (MorphOS extension)
-             RPTAG_PatternOriginX    X Origin of fill pattern. (AROS extension)
-             RPTAG_PatternOriginY    Y Origin of fill pattern. (AROS extension)
-             RPTAG_ClipRectangle     Rectangle to clip rendering to. Rectangle will
-                                     be cloned. (AROS extension)
-             RPTAG_ClipRectangleFlags See <graphics/rpattr.h> (AROS extension)
-             RPTAG_RemapColorFonts   Automatically remap colorfonts to their color
-                                     on hicolor/truecolor screens.
-                    
-
 
 Inputs
 ~~~~~~
@@ -4040,6 +4071,32 @@ Inputs
      tags = pointer to a taglist specifying the attributes to read and
             the addresses to store the results
 
+
+Tags
+~~~~
+::
+
+     RPTAG_Font (UBYTE)              - Font for Text()
+     RPTAG_APen (UBYTE)              - Primary rendering pen
+     RPTAG_BPen (UBYTE)              - Secondary rendering pen
+     RPTAG_DrMd (UBYTE)              - Drawing mode (graphics/rastport.h)
+     RPTAG_OutlinePen (UBYTE)        - Area Outline pen
+     RPTAG_WriteMask (ULONG)         - Bit Mask for writing
+     RPTAG_MaxPen (ULONG)            - Maximum pen to render (see SetMaxPen())
+
+     AROS extensions
+     RPTAG_FgColor (ULONG)           - Primary rendering color in A8R8G8B8 format.
+                                       Only working on hicolor/truecolor bitmaps/screens.
+     RPTAG_BgColor (ULONG)           - Secondary rendering color in A8R8G8B8 format.
+                                       Only working on hicolor/truecolor bitmaps/screens.
+     RPTAG_PatternOriginX (WORD)     - X Origin of fill pattern.
+     RPTAG_PatternOriginY (WORD)     - Y Origin of fill pattern.
+     RPTAG_ClipRectangle (struct Rectangle *) - Rectangle to clip rendering to. Rectangle will
+                                                be cloned.
+     RPTAG_ClipRectangleFlags (LONG) - RPCRF_RELRIGHT | RPCRF_RELBOTTOM (see <graphics/rpattr.h>)
+     RPTAG_RemapColorFonts (BOOL)    - Automatically remap colorfonts to their color
+                                       on hicolor/truecolor screens.
+             
 
 Notes
 ~~~~~
@@ -7030,26 +7087,38 @@ Inputs
 ::
 
      rp   - RastPort
-     tags - tagarray
-            - RPTAG_Font:       text font
-            - RPTAG_APen:       primary pen
-            - RPTAG_BPen:       secondary pen
-            - RPTAG_DrMd:       draw mode
-            - RPTAG_OutlinePen: outline pen
-            - RPTAG_WriteMask:  bit mask
-            - RPTAG_MaxPen:     see SetMaxPen()
-            
-            AROS extensions
-            - RPTAG_DrawBounds: 
-            - RPTAG_FgColor:
-            - RPTAG_BgColor:
-            - RPTAG_PatternOriginX:
-            - RPTAG_PatternOriginY:
-            - RPTAG_ClipRectangle:       (struct Rectangle *)
-            - RPTAG_ClipRectangleFlags:  RPCRF_RELRIGHT | RPCRF_RELBOTTOM
-            - RPTAG_RemapColorFonts:     (BOOL)
+     tags - see below
 
 
+Tags
+~~~~
+::
+
+     RPTAG_Font (struct TextFont *)        - Font for Text()
+     RPTAG_APen (UBYTE)                    - Primary rendering pen
+     RPTAG_BPen (UBYTE)                    - Secondary rendering pen
+     RPTAG_DrMd (UBYTE)                    - Drawing mode (graphics/rastport.h)
+     RPTAG_OutlinePen (UBYTE)              - Area Outline pen
+     RPTAG_WriteMask (ULONG)               - Bit mask for writing
+     
+     AROS extensions
+     RPTAG_FgColor (ULONG)                 - Primary rendering color in A8R8G8B8 format.
+                                             Only working on hicolor/truecolor bitmaps/screens.
+     RPTAG_BgColor (ULONG)                 - Secondary rendering color in A8R8G8B8 format.
+                                             Only working on hicolor/truecolor bitmaps/screens.
+     RPTAG_PatternOriginX (WORD)           - X origin of pattern
+     RPTAG_PatternOriginY (WORD)           - Y origin of pattern
+     RPTAG_ClipRectangle (struct Rectangle *) - Clipping rectangle
+     RPTAG_ClipRectangleFlags (LONG)       - RPCRF_RELRIGHT | RPCRF_RELBOTTOM (see graphics/rpattrs.h)
+     RPTAG_RemapColorFonts (BOOL)          - Automatically remap colorfonts to their color
+                                             on hicolor/truecolor screens.
+
+
+
+See also
+~~~~~~~~
+
+`GetRPAttrsA()`_ `graphics/rpattr.h <../headerfiles/graphics/rpattr.h>`_ 
 
 ----------
 
@@ -7604,6 +7673,13 @@ Result
 
      error - 0 if no error ocurred in the control operation
              non-0 if bad colormap pointer, no tagitems or bad tag
+
+Notes
+~~~~~
+::
+
+     Not implemented
+
 
 
 ----------

@@ -11,8 +11,9 @@ thread
 ======================================= ======================================= ======================================= ======================================= 
 `BroadcastCondition()`_                 `CreateCondition()`_                    `CreateMutex()`_                        `CreateThread()`_                       
 `CurrentThread()`_                      `DestroyCondition()`_                   `DestroyMutex()`_                       `DetachThread()`_                       
-`LockMutex()`_                          `SignalCondition()`_                    `TryLockMutex()`_                       `UnlockMutex()`_                        
-`WaitAllThreads()`_                     `WaitCondition()`_                      `WaitThread()`_                         
+`ExitThread()`_                         `LockMutex()`_                          `SignalCondition()`_                    `TryLockMutex()`_                       
+`UnlockMutex()`_                        `WaitAllThreads()`_                     `WaitCondition()`_                      `WaitThread()`_                         
+
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -447,6 +448,60 @@ See also
 ~~~~~~~~
 
 `CreateThread()`_ `CurrentThread()`_ `WaitThread()`_ `WaitAllThreads()`_ 
+
+----------
+
+ExitThread()
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void ExitThread(
+          void * result );
+
+Function
+~~~~~~~~
+::
+
+     Exits the calling thread.
+
+
+Inputs
+~~~~~~
+::
+
+     result    - pointer to storage for the thread's return value. You can
+                 pass NULL here if you don't care about the return value.
+
+
+Result
+~~~~~~
+::
+
+     None, this function never returns.
+
+
+Example
+~~~~~~~
+::
+
+     ExitThread(5);
+
+
+Notes
+~~~~~
+::
+
+     This function is similar to the exit() function of arosc library.
+
+
+
+See also
+~~~~~~~~
+
+`WaitThread()`_ `WaitAllThreads()`_ `exit()`_ 
 
 ----------
 

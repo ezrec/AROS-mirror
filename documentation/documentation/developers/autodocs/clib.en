@@ -19,57 +19,58 @@ clib
 `closedir()`_                           `creat()`_                              `ctime()`_                              `ctime_r()`_                            
 `difftime()`_                           `dirfd()`_                              `dirname()`_                            `div()`_                                
 `dup()`_                                `dup2()`_                               `endgrent()`_                           `endpwent()`_                           
-`execl()`_                              `execv()`_                              `execve()`_                             `execvp()`_                             
-`exit()`_                               `fchdir()`_                             `fchmod()`_                             `fchown()`_                             
-`fclose()`_                             `fcntl()`_                              `fdopen()`_                             `feof()`_                               
-`ferror()`_                             `fflush()`_                             `fgetc()`_                              `fgetpos()`_                            
-`fgets()`_                              `fileno()`_                             `fopen()`_                              `fprintf()`_                            
-`fputc()`_                              `fputs()`_                              `fread()`_                              `free()`_                               
-`freopen()`_                            `fscanf()`_                             `fseek()`_                              `fsetpos()`_                            
-`fstat()`_                              `fsync()`_                              `ftell()`_                              `ftime()`_                              
-`ftruncate()`_                          `fwrite()`_                             `gcvt()`_                               `getc()`_                               
-`getchar()`_                            `getcwd()`_                             `getegid()`_                            `getenv()`_                             
-`geteuid()`_                            `getfsstat()`_                          `getgid()`_                             `getgrent()`_                           
-`getgrgid()`_                           `getgrnam()`_                           `getgroups()`_                          `getloadavg()`_                         
-`getlogin()`_                           `getopt()`_                             `getpgrp()`_                            `getpid()`_                             
-`getppid()`_                            `getpwent()`_                           `getpwnam()`_                           `getpwuid()`_                           
-`gets()`_                               `gettimeofday()`_                       `getuid()`_                             `getw()`_                               
-`gmtime()`_                             `gmtime_r()`_                           `ioctl()`_                              `isalnum()`_                            
-`isalpha()`_                            `isascii()`_                            `isatty()`_                             `isblank()`_                            
-`iscntrl()`_                            `isdigit()`_                            `isgraph()`_                            `islower()`_                            
-`isprint()`_                            `ispunct()`_                            `isspace()`_                            `isupper()`_                            
-`isxdigit()`_                           `jrand48()`_                            `kill()`_                               `labs()`_                               
-`lcong48()`_                            `ldiv()`_                               `link()`_                               `lldiv()`_                              
-`localtime()`_                          `localtime_r()`_                        `lrand48()`_                            `lseek()`_                              
-`malloc()`_                             `mblen()`_                              `mbstowcs()`_                           `mbtowc()`_                             
-`memchr()`_                             `memcmp()`_                             `memset()`_                             `mkdir()`_                              
-`mknod()`_                              `mkstemp()`_                            `mktemp()`_                             `mktime()`_                             
-`mrand48()`_                            `nrand48()`_                            `on_exit()`_                            `open()`_                               
-`opendir()`_                            `pclose()`_                             `perror()`_                             `pipe()`_                               
-`popen()`_                              `posix_memalign()`_                     `printf()`_                             `putc()`_                               
-`putchar()`_                            `putenv()`_                             `puts()`_                               `putw()`_                               
-`qsort()`_                              `raise()`_                              `rand()`_                               `read()`_                               
-`readdir()`_                            `realloc()`_                            `realloc_nocopy()`_                     `remove()`_                             
-`rename()`_                             `rewind()`_                             `rewinddir()`_                          `rmdir()`_                              
-`scanf()`_                              `seed48()`_                             `seekdir()`_                            `setbuf()`_                             
-`setenv()`_                             `setgid()`_                             `setgrent()`_                           `setlinebuf()`_                         
-`setpwent()`_                           `setuid()`_                             `setvbuf()`_                            `sigaction()`_                          
-`sigaddset()`_                          `sigdelset()`_                          `sigemptyset()`_                        `sigfillset()`_                         
-`sigismember()`_                        `signal()`_                             `sigpending()`_                         `sigprocmask()`_                        
-`sigsuspend()`_                         `sleep()`_                              `snprintf()`_                           `spawnv()`_                             
-`spawnvp()`_                            `sprintf()`_                            `srand()`_                              `srand48()`_                            
-`sscanf()`_                             `stat()`_                               `statfs()`_                             `stccpy()`_                             
-`stcd_l()`_                             `stch_l()`_                             `stcl_d()`_                             `stcl_h()`_                             
-`stcl_o()`_                             `stco_l()`_                             `stcu_d()`_                             `stpblk()`_                             
-`stpcpy()`_                             `stpsym()`_                             `strcasecmp()`_                         `strcasestr()`_                         
-`strcat()`_                             `strchr()`_                             `strcmp()`_                             `strcoll()`_                            
-`strcpy()`_                             `strcspn()`_                            `strdup()`_                             `strerror()`_                           
-`strftime()`_                           `strlcat()`_                            `strlcpy()`_                            `strlen()`_                             
-`strlwr()`_                             `strncasecmp()`_                        `strncat()`_                            `strncmp()`_                            
-`strncpy()`_                            `strpbrk()`_                            `strrchr()`_                            `strrev()`_                             
-`strsep()`_                             `strspn()`_                             `strstr()`_                             `strtod()`_                             
-`strtok()`_                             `strtol()`_                             `strtoll()`_                            `strtoul()`_                            
-`strtoull()`_                           `strupr()`_                             `strxfrm()`_                            `swab()`_                               
+`execl()`_                              `execlp()`_                             `execv()`_                              `execve()`_                             
+`execvp()`_                             `exit()`_                               `fchdir()`_                             `fchmod()`_                             
+`fchown()`_                             `fclose()`_                             `fcntl()`_                              `fdopen()`_                             
+`feof()`_                               `ferror()`_                             `fflush()`_                             `fgetc()`_                              
+`fgetpos()`_                            `fgets()`_                              `fileno()`_                             `flock()`_                              
+`fopen()`_                              `fprintf()`_                            `fputc()`_                              `fputs()`_                              
+`fread()`_                              `free()`_                               `freopen()`_                            `fscanf()`_                             
+`fseek()`_                              `fsetpos()`_                            `fstat()`_                              `fsync()`_                              
+`ftell()`_                              `ftime()`_                              `ftruncate()`_                          `fwrite()`_                             
+`gcvt()`_                               `getc()`_                               `getchar()`_                            `getcwd()`_                             
+`getegid()`_                            `getenv()`_                             `geteuid()`_                            `getfsstat()`_                          
+`getgid()`_                             `getgrent()`_                           `getgrgid()`_                           `getgrnam()`_                           
+`getgroups()`_                          `getloadavg()`_                         `getlogin()`_                           `getopt()`_                             
+`getpgrp()`_                            `getpid()`_                             `getppid()`_                            `getpwent()`_                           
+`getpwnam()`_                           `getpwuid()`_                           `gets()`_                               `gettimeofday()`_                       
+`getuid()`_                             `getw()`_                               `gmtime()`_                             `gmtime_r()`_                           
+`ioctl()`_                              `isalnum()`_                            `isalpha()`_                            `isascii()`_                            
+`isatty()`_                             `isblank()`_                            `iscntrl()`_                            `isdigit()`_                            
+`isgraph()`_                            `islower()`_                            `isprint()`_                            `ispunct()`_                            
+`isspace()`_                            `isupper()`_                            `isxdigit()`_                           `jrand48()`_                            
+`kill()`_                               `labs()`_                               `lcong48()`_                            `ldiv()`_                               
+`link()`_                               `lldiv()`_                              `localtime()`_                          `localtime_r()`_                        
+`lrand48()`_                            `lseek()`_                              `malloc()`_                             `mblen()`_                              
+`mbstowcs()`_                           `mbtowc()`_                             `memchr()`_                             `memcmp()`_                             
+`memset()`_                             `mkdir()`_                              `mknod()`_                              `mkstemp()`_                            
+`mktemp()`_                             `mktime()`_                             `mrand48()`_                            `nrand48()`_                            
+`on_exit()`_                            `open()`_                               `opendir()`_                            `pclose()`_                             
+`perror()`_                             `pipe()`_                               `popen()`_                              `posix_memalign()`_                     
+`printf()`_                             `putc()`_                               `putchar()`_                            `putenv()`_                             
+`puts()`_                               `putw()`_                               `qsort()`_                              `raise()`_                              
+`rand()`_                               `read()`_                               `readdir()`_                            `realloc()`_                            
+`realloc_nocopy()`_                     `remove()`_                             `rename()`_                             `rewind()`_                             
+`rewinddir()`_                          `rmdir()`_                              `scanf()`_                              `seed48()`_                             
+`seekdir()`_                            `setbuf()`_                             `setenv()`_                             `setgid()`_                             
+`setgrent()`_                           `setlinebuf()`_                         `setpwent()`_                           `setuid()`_                             
+`setvbuf()`_                            `sigaction()`_                          `sigaddset()`_                          `sigdelset()`_                          
+`sigemptyset()`_                        `sigfillset()`_                         `sigismember()`_                        `signal()`_                             
+`sigpending()`_                         `sigprocmask()`_                        `sigsuspend()`_                         `sleep()`_                              
+`snprintf()`_                           `spawnv()`_                             `spawnvp()`_                            `sprintf()`_                            
+`srand()`_                              `srand48()`_                            `sscanf()`_                             `stat()`_                               
+`statfs()`_                             `stccpy()`_                             `stcd_l()`_                             `stch_l()`_                             
+`stcl_d()`_                             `stcl_h()`_                             `stcl_o()`_                             `stco_l()`_                             
+`stcu_d()`_                             `stpblk()`_                             `stpcpy()`_                             `stpsym()`_                             
+`strcasecmp()`_                         `strcasestr()`_                         `strcat()`_                             `strchr()`_                             
+`strcmp()`_                             `strcoll()`_                            `strcpy()`_                             `strcspn()`_                            
+`strdup()`_                             `strerror()`_                           `strftime()`_                           `strlcat()`_                            
+`strlcpy()`_                            `strlen()`_                             `strlwr()`_                             `strncasecmp()`_                        
+`strncat()`_                            `strncmp()`_                            `strncpy()`_                            `strpbrk()`_                            
+`strrchr()`_                            `strrev()`_                             `strsep()`_                             `strspn()`_                             
+`strstr()`_                             `strtod()`_                             `strtoimax()`_                          `strtok()`_                             
+`strtol()`_                             `strtoll()`_                            `strtoul()`_                            `strtoull()`_                           
+`strtoumax()`_                          `strupr()`_                             `strxfrm()`_                            `swab()`_                               
 `symlink()`_                            `system()`_                             `telldir()`_                            `tempnam()`_                            
 `time()`_                               `times()`_                              `tmpfile()`_                            `tmpnam()`_                             
 `truncate()`_                           `ttyname()`_                            `umask()`_                              `uname()`_                              
@@ -2048,6 +2049,21 @@ Notes
 
 ----------
 
+execlp()
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  int execlp(
+     const char *file, 
+     const char *arg, ...)
+     
+
+
+----------
+
 execv()
 =======
 
@@ -2786,6 +2802,21 @@ See also
 ~~~~~~~~
 
 `open()`_ 
+
+----------
+
+flock()
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int flock(
+     int fd,
+     int operation)
+
+
 
 ----------
 
@@ -5468,6 +5499,17 @@ Result
 
      The new position on success and -1 on error. If an error occurred, the global
      variable errno is set.
+
+
+Bugs
+~~~~
+::
+
+     File is extended with zeros if desired position is beyond the end of 
+     file.
+
+     Since it's not possible to use Seek() for directories, this 
+     implementation fails with EISDIR for directory file descriptors.
 
 
 
@@ -9908,6 +9950,57 @@ See also
 
 ----------
 
+strtoimax()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  intmax_t strtoimax(
+     const char * nptr,
+     char      ** endptr,
+     int          base)
+
+
+Function
+~~~~~~~~
+::
+
+     Convert a string of digits into an integer according to the
+     given base. This function is like strtol() except the fact,
+     that it returns a value of type intmax_t.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The string which should be converted.
+     endptr - If this is non-NULL, then the address of the first
+             character after the number in the string is stored
+             here.
+     base - The base for the number.
+
+
+Result
+~~~~~~
+::
+
+     The value of the string. The first character after the number
+     is returned in *endptr, if endptr is non-NULL. If no digits can
+     be converted, *endptr contains str (if non-NULL) and 0 is
+     returned.
+
+
+
+See also
+~~~~~~~~
+
+`strtol()`_ `strtoll()`_ 
+
+----------
+
 strtok()
 ========
 
@@ -10285,6 +10378,57 @@ See also
 ~~~~~~~~
 
 `strtoll()`_ `strtoull()`_ 
+
+----------
+
+strtoumax()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  uintmax_t strtoumax(
+     const char * nptr,
+     char      ** endptr,
+     int          base)
+
+
+Function
+~~~~~~~~
+::
+
+     Convert a string of digits into an integer according to the
+     given base. This function is like strtoul() except the fact,
+     that it returns a value of type uintmax_t.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The string which should be converted.
+     endptr - If this is non-NULL, then the address of the first
+             character after the number in the string is stored
+             here.
+     base - The base for the number.
+
+
+Result
+~~~~~~
+::
+
+     The value of the string. The first character after the number
+     is returned in *endptr, if endptr is non-NULL. If no digits can
+     be converted, *endptr contains str (if non-NULL) and 0 is
+     returned.
+
+
+
+See also
+~~~~~~~~
+
+`strtoul()`_ `strtoull()`_ 
 
 ----------
 
