@@ -340,7 +340,9 @@ AROS_UFH2( void,
 	   AROS_UFHA( struct ExecBase*, sysbase, A3 ) )
 {
   AROS_USERFUNC_INIT
-  __RawPutChar_WB( sysbase, c );
+  
+  AROS_LC1NR(void, RawPutChar, AROS_LCA(UBYTE, c, D0), struct ExecBase *, sysbase, 86, Exec);
+
   AROS_USERFUNC_EXIT  
 }
 
