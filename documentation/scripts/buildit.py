@@ -466,24 +466,24 @@ def buildWWW():
             'targets/www/images/noeupatents-small.png',
             'targets/www/images/bullet.gif',
             'targets/www/images/toplogomenu.png',
-	    'targets/www/images/toplogomenu.gif',
+            'targets/www/images/toplogomenu.gif',
             'targets/www/images/kittymascot.png',
-	    'targets/www/images/kittymascot.gif',
+            'targets/www/images/kittymascot.gif',
             'targets/www/images/backgroundtop.png',
             'targets/www/images/disk.png',
             'targets/www/images/arosthubmain.png',
-	    'targets/www/images/bgcolormain.png',
+            'targets/www/images/bgcolormain.png',
             'targets/www/images/mainpagespacer.png',
             'targets/www/images/rsfeed.gif',
             'targets/www/images/sidespacer.png',
             'targets/www/images/textdocu.gif',
-	    'targets/www/images/archivedownloadicon.gif',
-	    'targets/www/images/archivedownloadicon.png',
-	    'targets/www/images/bgcolorright.png',
-	    'targets/www/images/bountyicon1.gif',
-	    'targets/www/images/bountyicon1.png',
-	    'targets/www/images/bountyicon2.gif',
-	    'targets/www/images/bountyicon2.png',
+            'targets/www/images/archivedownloadicon.gif',
+            'targets/www/images/archivedownloadicon.png',
+            'targets/www/images/bgcolorright.png',
+            'targets/www/images/bountyicon1.gif',
+            'targets/www/images/bountyicon1.png',
+            'targets/www/images/bountyicon2.gif',
+            'targets/www/images/bountyicon2.png',
             'targets/www/images/communityicon.gif',
             'targets/www/images/communityicon.png',
             'targets/www/images/directdownloadicon.gif',
@@ -528,18 +528,18 @@ def buildWWW():
     cgi_dest = os.path.join( DSTROOT, 'cgi-bin' )
     if os.path.exists( cgi_dest ):
         shutil.rmtree( cgi_dest )
-    shutil.copytree( 'targets/www/cgi-bin', cgi_dest )
+    copytree( 'targets/www/cgi-bin', cgi_dest )
 
     thub_dest = os.path.join( DSTROOT, 'images/thubs' )
     if os.path.exists( thub_dest ):
        shutil.rmtree ( thub_dest )
-    shutil.copytree( 'targets/www/images/thubs', thub_dest )
+    copytree( 'targets/www/images/thubs', thub_dest )
 
 
     rsfeed_dest = os.path.join( DSTROOT, 'rsfeed' )
     if os.path.exists( rsfeed_dest ):
        shutil.rmtree ( rsfeed_dest )
-    shutil.copytree( 'targets/www/rsfeed', rsfeed_dest )   
+    copytree( 'targets/www/rsfeed', rsfeed_dest )   
 
     toolpath = os.path.join( DSTROOT, 'tools' )
     makedir( toolpath )
