@@ -80,13 +80,13 @@ Windows
 файлах. Примерами редакторов, умеющих указывать подобный EOL, являются следующие
 бесплатные программы: TigerPAD__ (сохранять как текст UNIX), 
 `DOS Navigator <http://dnosp.com/>`__ (в свойствах редактора проставить LF), 
-утилиту `dos2unix <http://www.bastet.com/>`__(конвертор), `NotePad++`__ 
+утилиту `dos2unix <http://www.bastet.com/>`__(конвертор), 
+`NotePad++ <http://notepad-plus.sourceforge.net>`__
 (Кодировки - Преобразовать в UNIX-формат) и многие другие. Упомянутый выше 
 RapidSVN тоже это умеет.
 
 __ http://tortoisesvn.sourceforge.net
 __ http://tigerpad.narod.ru
-__ http://notepad-plus.sourceforge.net
 
 Mac OS X
 --------
