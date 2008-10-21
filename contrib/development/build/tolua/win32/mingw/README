@@ -1,0 +1,6 @@
+Note 2007-01-04
+
+For MSYS 1.0.10, copying to /usr/bin doesn't work for tolua++, the
+program arguments are not recognized at all. Moving to /usr/local/bin
+fixes this problem.
+
