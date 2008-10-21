@@ -1,0 +1,20 @@
+#   $Id$$
+#
+#   Makefile to make tolua linklib.
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-development-build-tolua-lib : copy_includes
+
+LIBNAME := tolua++
+FILES := tolua_event tolua_is tolua_map tolua_push tolua_to
+USER_INCLUDES := -I$(AROS_INCLUDES)/lua
+
+%build_linklib mmake=contrib-development-build-tolua-lib \
+  libname=$(LIBNAME) files=$(FILES)
+
+#MM
+includes-copy :
+%copy_includes includes=../../include/tolua++.h path=lua dir=../../include
+
+%common
