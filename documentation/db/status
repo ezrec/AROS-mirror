@@ -60,6 +60,9 @@ dtypes;picturedtc;Picture.datatype;2008-10-16
 dtypes;ilbmdtc;Ilbm.datatype;2008-10-16
 boopsi;rootclass;RootClass;2008-10-08
 boopsi;gadgetclass;GadgetClass;2008-10-09
+boopsi;propgclass;PropGClass;2008-10-21
+boopsi;strgclass;StrGClass;2008-10-21
+boopsi;buttongclass;ButtonGClass;2008-10-21
 gadgets;gradientslider;Gradientslider Gadget;2003-08-26
 gadgets;colorwheel;Colorwheel Gadget;2003-08-26
 devices;input;Input.device;2008-08-05
@@ -96,7 +99,6 @@ resources;filesysres;FileSystem.resource;2008-09-23
 #CATEGORIES_END
 #CATEGORY_ITEMS_BEGIN (category, description, architecture, api version, status)
 boopsi;BOOL Gadgets;1;1;2
-boopsi;BOOPSI ButtonGadgetClass;1;1;2
 boopsi;BOOPSI FrameIClass;1;1;2
 boopsi;BOOPSI FrButtonClass;1;1;2
 boopsi;BOOPSI GroupGClass;1;1;2
@@ -105,9 +107,7 @@ boopsi;BOOPSI ITextIClass;1;1;0
 boopsi;BOOPSI ImageClass;1;1;2
 boopsi;BOOPSI ModelClass;1;1;2
 boopsi;BOOPSI PointerClass;1;1;0
-boopsi;BOOPSI PropGClass;1;1;2
 boopsi;PROP Gadgets;1;1;2
-boopsi;BOOPSI StrGClass;1;1;2
 boopsi;BOOPSI FillRectClass;1;1;2
 clib;abort;1;1;1
 clib;abs;1;1;2
@@ -2149,6 +2149,31 @@ picturedtc;PDTM_WRITEPIXELARRAY;1;2;2
 picturedtc;PDTM_SCALE;1;2;1
 picturedtc;PDTM_READPIXELARRAY;1;2;2
 ilbmdtc;OM_NEW;1;1;2
+propgclass;GM_HANDLEINPUT;1;1;1
+propgclass;OM_SET;1;1;2
+propgclass;OM_UPDATE;1;1;2
+propgclass;OM_NEW;1;1;2
+propgclass;OM_GET;1;1;2
+propgclass;GM_RENDER;1;1;1
+propgclass;GM_GOACTIVE;1;1;1
+propgclass;GM_GOINACTIVE;1;1;1
+strgclass;OM_NEW;1;1;2
+strgclass;OM_DISPOSE;1;1;2
+strgclass;OM_SET;1;1;2
+strgclass;OM_UPDATE;1;1;2
+strgclass;OM_GET;1;1;2
+strgclass;GM_RENDER;1;1;2
+strgclass;GM_GOACTIVE;1;1;1
+strgclass;GM_HANDLEINPUT;1;1;1
+strgclass;GM_GOINACTIVE;1;1;2
+buttongclass;GM_HITTEST;1;1;2
+buttongclass;GM_HANDLEINPUT;1;1;2
+buttongclass;GM_RENDER;1;1;2
+buttongclass;OM_NEW;1;1;2
+buttongclass;OM_SET;1;1;2
+buttongclass;OM_UPDATE;1;1;2
+buttongclass;GM_GOACTIVE;1;1;2
+buttongclass;GM_GOINACTIVE;1;1;2
 #CATEGORY_ITEMS_END
 #COMMENTS_BEGIN (category, comment)
 gameport;Gameport.device supports only mouse
