@@ -84,8 +84,8 @@ The AROS website is build up from text-only files, stored in an online SVN
 archive. These are later put into a template, creating the AROS website you know. 
 
 To summarize, it is highly recommended that you:
-+ make your intentions know to the developer ML and see if your services are 
-  needed (to be on the safe side)
+
++ make your intentions know to the developer ML and see if your services are needed (to be on the safe side)
 + read this whole page
 + read the `Working with SVN <svn>`__ page
 + apply for SVN access
