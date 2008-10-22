@@ -1,0 +1,71 @@
+=============
+Status update
+=============
+
+:Author:   Paolo Besser
+:Date:     2008-10-22
+
+Latest updates
+--------------
+
+Many things happened during the last summer and AROS developers
+are costantly improving the operating system:
+
+Paolo Besser has released the new 0.9.1 beta version of his VmwAROS
+distribution, which introduces improvements in the GUI style and
+all the following enhancements to system files. New software has 
+been added or updated as well. 
+Once again, the distribution is available in two flavours: a
+`live CD`__ which runs on top of any X86 hardware and can be
+installed on the hard drive, and a `virtual environment`__ for
+VMware.
+
+Pavel Fedin is working on a Windows-hosted version of AROS. You
+can read something about his progresses `here`__. Michal Schulz
+has completed porting AROS to the SAM 440EP board and now he's
+porting AROS to the Efika PPC platform.
+
+João Ralha is helping us translating catalogs to Portuguese.
+
+Krzysztof Smiechowicz has enabled GRUB2 in the nightly builds,
+changing the bootloader AROS used from the beginning. GRUB2 allows
+more options and is much more compatible with modern hardware than
+its olf version, so this change should also reduce glitches AROS
+had on some configurations at boot time.
+
+Nick Andrews has released Sis 900 and e1000 network drivers for
+AROS. People with these network cards can now conncect to the
+Internet and communicate with local area networks.
+
+Nick Andrews has also enabled snapshot function in Wanderer, 
+allowing people to fix windows size and behavior.
+
+Markus Weiss has ported GCC/G++ 4.2.2 to i386 AROS Native. This
+should help other people developing and porting their software to
+AROS.
+
+Stanislaw Szymczyk has made huge progresses towards AROS self 
+compilation. There are still some glitches to fix, but the day
+AROS can build itself is near. You can read something about his
+work at `Cogville`__.
+
+Krzysztof Smiechowicz has completed reviewing AROS API
+completeness, and now he's working on libraries and other system
+components. Results are available in our `status`__ page.
+
+Randy Vice has quit collecting bounties for AROS: TeamAROS has
+been closed but all the opened bounties are now managed by a new
+non-profit organization, `Power-2-People`__. We would like to thank
+Randy for all the support and time he dedicated to AROS in the past,
+and give P2P a great welcome. Please keep on supporting AROS through
+the `new bounty system`__.
+
+
+__ http://live.vmwaros.org
+__ http://ve.vmwaros.org
+__ http://aros-exec.org/modules/newbb/viewtopic.php?viewmode=flat&topic_id=3017&forum=2
+__ http://sszymczy.rootnode.net/index.php?menu=projects&submenu=aroscompilation
+__ http://aros.sourceforge.net/introduction/status/everything.php
+__ http://www.power2people.org
+__ http://www.power2people.org/projects.html
+
