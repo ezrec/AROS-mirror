@@ -3,7 +3,7 @@
     $Id$
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU Library General Public License as 
+    it under the terms of the GNU Library General Public License as
     published by the Free Software Foundation; either version 2 of the
     License, or (at your option) any later version.
 
@@ -50,6 +50,7 @@ AROS_UFH3(void, Enumerator,
     ohci_registers_t *regs;
     static int counter;
     struct timerequest *tr = ohci_CreateTimer();
+    intptr_t tmp;
 
     if (counter == MAX_OHCI_DEVICES)
         return;
@@ -61,46 +62,49 @@ AROS_UFH3(void, Enumerator,
             { aHidd_PCIDevice_isMaster, TRUE },
             { TAG_DONE, 0UL },
     };
-    
+
     OOP_SetAttrs(pciDevice, (struct TagItem *)attrs);
     OOP_GetAttr(pciDevice, aHidd_PCIDevice_Base0, &LIBBASE->sd.ramBase[counter]);
     OOP_GetAttr(pciDevice, aHidd_PCIDevice_Driver, (void *)&LIBBASE->sd.pciDriver[counter]);
+    OOP_GetAttr(pciDevice, aHidd_PCIDevice_INTLine, &tmp);
+
+    LIBBASE->sd.intNum[counter] = tmp;
     LIBBASE->sd.pciDevice[counter] = pciDevice;
 
     regs = (ohci_registers_t *)LIBBASE->sd.ramBase[counter];
 
-    LIBBASE->sd.numPorts[counter] = HC_RHA_GET_NDP(AROS_LE2LONG(mmio(regs->HcRhDescriptorA)));
-    
+    LIBBASE->sd.numPorts[counter] = HC_RHA_GET_NDP(AROS_OHCI2LONG(mmio(regs->HcRhDescriptorA)));
+
     D(bug("[OHCI]   %d-port Device %d @ %08x with MMIO @ %08x\n", LIBBASE->sd.numPorts[counter], counter + 1, pciDevice, LIBBASE->sd.ramBase[counter]));
-    
-    uint32_t ctrl = AROS_LE2LONG(mmio(regs->HcControl));
+
+    uint32_t ctrl = AROS_OHCI2LONG(mmio(regs->HcControl));
     if (ctrl & HC_CTRL_IR)
     {
         D(bug("[OHCI]   Performing BIOS handoff\n"));
         int delay = 500; /* 0.5 second */
-        mmio(regs->HcInterruptEnable) = AROS_LONG2LE(HC_INTR_OC);
-        mmio(regs->HcCommandStatus) = AROS_LONG2LE(HC_CS_OCR);
-        
+        mmio(regs->HcInterruptEnable) = AROS_LONG2OHCI(HC_INTR_OC);
+        mmio(regs->HcCommandStatus) = AROS_LONG2OHCI(HC_CS_OCR);
+
         /* Loop */
-        while ((delay > 0) && AROS_LE2LONG(mmio(regs->HcControl) & HC_CTRL_IR))
+        while ((delay > 0) && AROS_OHCI2LONG(mmio(regs->HcControl) & HC_CTRL_IR))
         {
             delay -= 2;
             ohci_Delay(tr, 2);
         }
         if (delay < 0)
             D(bug("[OHCI]   BIOS handoff failed!\n"));
-        
-        mmio(regs->HcControl) = AROS_LONG2LE(ctrl & HC_CTRL_RWC);
+
+        mmio(regs->HcControl) = AROS_LONG2OHCI(ctrl & HC_CTRL_RWC);
     }
-    
+
     /* Disable all interrupts */
-    mmio(regs->HcInterruptDisable) = AROS_LONG2LE(0xffffffff);
-    mmio(regs->HcInterruptStatus)  = AROS_LONG2LE(0xffffffff);
-    
+    mmio(regs->HcInterruptDisable) = AROS_LONG2OHCI(0xffffffff);
+    mmio(regs->HcInterruptStatus)  = AROS_LONG2OHCI(0xffffffff);
+
     LIBBASE->sd.numDevices = ++counter;
 
     ohci_DeleteTimer(tr);
-    
+
     AROS_USERFUNC_EXIT
 }
 
@@ -113,7 +117,7 @@ static int OHCI_Init(LIBBASETYPEPTR LIBBASE)
 
     NEWLIST(&LIBBASE->sd.tdList);
     InitSemaphore(&LIBBASE->sd.tdLock);
-    
+
     if (!LIBBASE->sd.usb)
     {
         bug("[OHCI] Cannot create the instance of base USB class\n");
@@ -176,8 +180,8 @@ static int OHCI_Expunge(LIBBASETYPEPTR LIBBASE)
     };
 
     OOP_ReleaseAttrBases(attrbases);
-    
-    return TRUE;        
+
+    return TRUE;
 }
 
 ADD2INITLIB(OHCI_Init, 0)

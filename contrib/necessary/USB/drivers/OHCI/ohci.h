@@ -6,7 +6,7 @@
     $Id$
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU Library General Public License as 
+    it under the terms of the GNU Library General Public License as
     published by the Free Software Foundation; either version 2 of the
     License, or (at your option) any later version.
 
@@ -32,6 +32,22 @@
 #include <hidd/irq.h>
 
 #include LC_LIBDEFS_FILE
+
+#ifndef BIG_ENDIAN_OHCI
+#define BIG_ENDIAN_OHCI 0
+#endif
+
+#if BIG_ENDIAN_OHCI
+#define AROS_LONG2OHCI(x)	(AROS_LONG2BE(x))
+#define AROS_WORD2OHCI(x)	(AROS_WORD2BE(x))
+#define AROS_OHCI2LONG(x)	(AROS_BE2LONG(x))
+#define AROS_OHCI2WORD(x)	(AROS_BE2WORD(x))
+#else
+#define AROS_LONG2OHCI(x)	(AROS_LONG2LE(x))
+#define AROS_WORD2OHCI(x)	(AROS_WORD2LE(x))
+#define AROS_OHCI2LONG(x)	(AROS_LE2LONG(x))
+#define AROS_OHCI2WORD(x)	(AROS_LE2WORD(x))
+#endif
 
 #define mmio(var) (*(volatile uint32_t *)&(var))
 
@@ -220,23 +236,23 @@ typedef struct ohci_intr {
 struct ohci_pipe {
     struct Node         node;
     struct SignalSemaphore lock;
-    
+
     ohci_intr_t         *interrupt;
     ohci_ed_t           *ed;
     ohci_ed_t           *location;
-    
+
     ohci_td_t           *tail;
-    
+
     uint8_t             type;
     uint8_t             interval;
     uint8_t             endpoint;
     uint8_t             address;
-    
+
     struct timerequest  *timeout;
     uint32_t            timeoutVal;
     struct Task         *sigTask;
     uint8_t             signal;
-    
+
     uint32_t            errorCode;
 };
 
@@ -247,22 +263,23 @@ struct ohci_staticdata
     OOP_Object          *irq;
     OOP_Object          *usb;
     OOP_Object          *pci;
-    
+
     OOP_AttrBase        HiddPCIDeviceAB;
     OOP_AttrBase        HiddUSBDeviceAB;
     OOP_AttrBase        HiddUSBHubAB;
     OOP_AttrBase        HiddUSBDrvAB;
     OOP_AttrBase        HiddOHCIAB;
     OOP_AttrBase        HiddAB;
-    
+
     void                *memPool;
-    
+
     struct SignalSemaphore      tdLock;
     struct List                 tdList;
-    
+
     uint8_t             numDevices;
     intptr_t            ramBase[MAX_OHCI_DEVICES];
     uint8_t             numPorts[MAX_OHCI_DEVICES];
+    uint8_t				irqNum[MAX_OHCI_DEVICES];
     OOP_Object          *pciDevice[MAX_OHCI_DEVICES];
     OOP_Object          *pciDriver[MAX_OHCI_DEVICES];
     OOP_Object          *ohciDevice[MAX_OHCI_DEVICES];
@@ -281,33 +298,33 @@ typedef struct ohci_data {
     usb_hub_descriptor_t        hubDescr;
     uint8_t                     running;
     uint8_t                     pendingRHSC;
-        
+
     struct List                 intList;
     struct Interrupt            *tmp;
-    
+
     struct MsgPort              timerPort;
     struct Interrupt            timerInt;
     struct timerequest          *timerReq;
-    
+
     struct timerequest          *tr;
-    
+
     HIDDT_IRQ_Handler           *irqHandler;
     intptr_t                    irqNum;
-    
+
     OOP_Object                  *pciDriver;
     OOP_Object                  *pciDevice;
-    
+
     ohci_ed_t                   *ctrl_head;
     ohci_ed_t                   *bulk_head;
     ohci_ed_t                   *isoc_head;
-    
+
     ohci_ed_t                   *int01;
     ohci_ed_t                   *int02[2];
     ohci_ed_t                   *int04[4];
     ohci_ed_t                   *int08[8];
     ohci_ed_t                   *int16[16];
     ohci_ed_t                   *int32[32];
-    
+
 } ohci_data_t;
 
 typedef struct td_node {
@@ -326,6 +343,7 @@ enum {
     aoHidd_OHCI_MemBase,
     aoHidd_OHCI_PCIDriver,
     aoHidd_OHCI_PCIDevice,
+    aoHidd_OHCI_IRQ,
 
     num_Hidd_OHCI_Attrs
 };
@@ -333,6 +351,7 @@ enum {
 #define aHidd_OHCI_MemBase      (HiddOHCIAttrBase + aoHidd_OHCI_MemBase)
 #define aHidd_OHCI_PCIDriver    (HiddOHCIAttrBase + aoHidd_OHCI_PCIDriver)
 #define aHidd_OHCI_PCIDevice    (HiddOHCIAttrBase + aoHidd_OHCI_PCIDevice)
+#define aHidd_OHCI_IRQ			 (HiddOHCIAttrBase + aoHidd_OHCI_IRQ)
 #define IS_OHCI_ATTR(attr, idx) (((idx)=(attr)-HiddOHCIAttrBase) < num_Hidd_OHCI_Attrs)
 
 #define PCI_BASE_CLASS_SERIAL   0x0c
