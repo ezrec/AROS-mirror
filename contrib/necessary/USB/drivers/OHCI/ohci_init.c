@@ -68,7 +68,7 @@ AROS_UFH3(void, Enumerator,
     OOP_GetAttr(pciDevice, aHidd_PCIDevice_Driver, (void *)&LIBBASE->sd.pciDriver[counter]);
     OOP_GetAttr(pciDevice, aHidd_PCIDevice_INTLine, &tmp);
 
-    LIBBASE->sd.intNum[counter] = tmp;
+    LIBBASE->sd.irqNum[counter] = tmp;
     LIBBASE->sd.pciDevice[counter] = pciDevice;
 
     regs = (ohci_registers_t *)LIBBASE->sd.ramBase[counter];
