@@ -30,7 +30,7 @@ João Ralha is helping us translating catalogs to Portuguese.
 Krzysztof Smiechowicz has enabled GRUB2 in the nightly builds,
 changing the bootloader AROS used from the beginning. GRUB2 allows
 more options and is much more compatible with modern hardware than
-its olf version, so this change should also reduce glitches AROS
+its old version, so this change should also reduce glitches AROS
 had on some configurations at boot time.
 
 Nick Andrews has released Sis 900 and e1000 network drivers for
