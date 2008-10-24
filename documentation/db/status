@@ -48,7 +48,7 @@ libraries;amigaguide;AmigaGuide.library;2008-07-19
 libraries_3rd;reqtools;ReqTools.library;2008-07-25
 classes;gadgets;Gadgets;2003-08-26
 classes;dtypes;Datatypes;2008-10-16
-classes;boopsi;Intuition;2003-08-26
+classes;boopsi;Intuition;2008-10-24
 dtypes;dtclass;DataTypeClass;2008-10-09
 dtypes;sounddtc;Sound.datatype;2008-10-10
 dtypes;8svxdtc;8svx.datatype;2008-10-10
@@ -67,6 +67,12 @@ boopsi;frbuttonclass;FrButtonClass;2008-10-22
 boopsi;groupgclass;GroupGClass;2008-10-22
 boopsi;icclass;ICClass;2008-10-22
 boopsi;modelclass;ModelClass;2008-10-22
+boopsi;imageclass;ImageClass;2008-10-23
+boopsi;frameiclass;FrameIClass;2008-10-23
+boopsi;sysiclass;SysIClass;2008-10-23
+boopsi;fillrectclass;FillRectClass;2008-10-23
+boopsi;itexticlass;ITextIClass;2008-10-23
+boopsi;pointerclass;PointerClass;2008-10-23
 gadgets;gradientslider;Gradientslider Gadget;2003-08-26
 gadgets;colorwheel;Colorwheel Gadget;2003-08-26
 devices;input;Input.device;2008-08-05
@@ -102,13 +108,6 @@ resources;battclock;Battclock.resource;2008-09-23
 resources;filesysres;FileSystem.resource;2008-09-23
 #CATEGORIES_END
 #CATEGORY_ITEMS_BEGIN (category, description, architecture, api version, status)
-boopsi;BOOL Gadgets;1;1;2
-boopsi;BOOPSI FrameIClass;1;1;2
-boopsi;BOOPSI ITextIClass;1;1;0
-boopsi;BOOPSI ImageClass;1;1;2
-boopsi;BOOPSI PointerClass;1;1;0
-boopsi;PROP Gadgets;1;1;2
-boopsi;BOOPSI FillRectClass;1;1;2
 clib;abort;1;1;1
 clib;abs;1;1;2
 clib;asctime;1;1;2
@@ -2205,6 +2204,33 @@ modelclass;OM_DISPOSE;1;1;2
 modelclass;OM_NOTIFY;1;1;2
 modelclass;OM_UPDATE;1;1;2
 modelclass;OM_NEW;1;1;2
+imageclass;IM_DRAW;1;1;0
+imageclass;IM_HITTEST;1;1;2
+imageclass;IM_ERASE;1;1;2
+imageclass;IM_DRAWFRAME;1;1;0
+imageclass;IM_HITFRAME;1;1;2
+imageclass;IM_ERASEFRAME;1;1;2
+imageclass;OM_NEW;1;1;2
+imageclass;OM_SET;1;1;2
+imageclass;OM_GET;1;1;2
+frameiclass;IM_DRAW;1;1;2
+frameiclass;IM_DRAWFRAME;1;1;2
+frameiclass;IM_FRAMEBOX;1;1;2
+frameiclass;OM_NEW;1;1;2
+frameiclass;OM_SET;1;1;2
+sysiclass;OM_NEW;1;1;2
+sysiclass;OM_SET;1;1;2
+sysiclass;OM_DISPOSE;1;1;2
+sysiclass;IM_DRAW;1;1;2
+fillrectclass;IM_DRAW;1;1;2
+fillrectclass;IM_DRAWFRAME;1;1;2
+fillrectclass;OM_NEW;1;1;2
+fillrectclass;OM_SET;1;1;2
+itexticlass;IM_DRAW;1;1;2
+itexticlass;IM_DRAWFRAME;1;1;0
+pointerclass;OM_NEW;1;1;1
+pointerclass;OM_GET;1;1;2
+pointerclass;OM_DISPOSE;1;1;2
 #CATEGORY_ITEMS_END
 #COMMENTS_BEGIN (category, comment)
 gameport;Gameport.device supports only mouse
