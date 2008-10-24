@@ -1,0 +1,113 @@
+diff -ruN tar-1.18/lib/rtapelib.c tar-1.18.aros/lib/rtapelib.c
+--- tar-1.18/lib/rtapelib.c	2007-06-27 15:49:45.000000000 +0200
++++ tar-1.18.aros/lib/rtapelib.c	2008-10-18 16:22:35.000000000 +0200
+@@ -474,7 +474,7 @@
+ 	return -1;
+       }
+ 
+-    status = fork ();
++    status = vfork ();
+     if (status == -1)
+       {
+ 	int e = errno;
+diff -ruN tar-1.18/src/misc.c tar-1.18.aros/src/misc.c
+--- tar-1.18/src/misc.c	2007-06-27 15:30:32.000000000 +0200
++++ tar-1.18.aros/src/misc.c	2008-10-18 16:22:36.000000000 +0200
+@@ -706,7 +706,7 @@
+ pid_t
+ xfork (void)
+ {
+-  pid_t p = fork ();
++  pid_t p = vfork ();
+   if (p == (pid_t) -1)
+     call_arg_fatal ("fork", _("child process"));
+   return p;
+@@ -739,7 +739,7 @@
+ void *
+ page_aligned_alloc (void **ptr, size_t size)
+ {
+-  size_t alignment = getpagesize ();
++  size_t alignment = 2048;
+   size_t size1 = size + alignment;
+   if (size1 < size)
+     xalloc_die ();
+diff -ruN tar-1.18/src/system.c tar-1.18.aros/src/system.c
+--- tar-1.18/src/system.c	2007-06-27 15:30:32.000000000 +0200
++++ tar-1.18.aros/src/system.c	2008-10-18 16:22:36.000000000 +0200
+@@ -210,7 +210,9 @@
+   const char *shell = getenv ("SHELL");
+   if (! shell)
+     shell = "/bin/sh";
+-  child = xfork ();
++  child = vfork ();
++  if (child == (pid_t) -1)
++    call_arg_fatal ("fork", _("child process"));
+   if (child == 0)
+     {
+       execlp (shell, "-sh", "-i", (char *) 0);
+@@ -315,7 +317,9 @@
+   int wait_status;
+ 
+   xpipe (parent_pipe);
+-  child_pid = xfork ();
++  child_pid = vfork ();
++  if (child_pid == (pid_t) -1)
++    call_arg_fatal ("fork", _("child process"));
+ 
+   if (child_pid > 0)
+     {
+@@ -366,7 +370,9 @@
+   /* We do need a grandchild tar.  */
+ 
+   xpipe (child_pipe);
+-  grandchild_pid = xfork ();
++  grandchild_pid = vfork ();
++  if (grandchild_pid == (pid_t) -1)
++    call_arg_fatal ("fork", _("child process"));
+ 
+   if (grandchild_pid == 0)
+     {
+@@ -476,7 +482,9 @@
+   int wait_status;
+ 
+   xpipe (parent_pipe);
+-  child_pid = xfork ();
++  child_pid = vfork ();
++  if (child_pid == (pid_t) -1)
++    call_arg_fatal ("fork", _("child process"));
+ 
+   if (child_pid > 0)
+     {
+@@ -518,7 +526,9 @@
+   /* We do need a grandchild tar.  */
+ 
+   xpipe (child_pipe);
+-  grandchild_pid = xfork ();
++  grandchild_pid = vfork ();
++  if (grandchild_pid == (pid_t) -1)
++    call_arg_fatal ("fork", _("child process"));
+ 
+   if (grandchild_pid == 0)
+     {
+@@ -708,7 +718,9 @@
+ 
+   xpipe (p);
+   pipe_handler = signal (SIGPIPE, SIG_IGN);
+-  pid = xfork ();
++  pid = vfork ();
++  if (pid == (pid_t) -1)
++    call_arg_fatal ("fork", _("child process"));
+ 
+   if (pid != 0)
+     {
+@@ -778,7 +790,9 @@
+   xpipe (p);
+   pipe_handler = signal (SIGPIPE, SIG_IGN);
+ 
+-  pid = xfork ();
++  pid = vfork ();
++  if (pid == (pid_t) -1)
++    call_arg_fatal ("fork", _("child process"));
+ 
+   if (pid != 0)
+     {
