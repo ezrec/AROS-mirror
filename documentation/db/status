@@ -1,6 +1,6 @@
 #CATEGORIES_BEGIN (basecategory, category, description, last update date)
 amigaos;libraries;Libraries;2008-08-24
-amigaos;classes;Classes;2003-08-26
+amigaos;classes;Classes;2008-10-25
 amigaos;devices;Devices;2008-08-24
 amigaos;resources;Resources;2008-09-23
 aros;hidds;HIDDs;2003-08-26
@@ -46,7 +46,7 @@ libraries;bullet;Bullet.library;2008-07-19
 libraries;asl;Asl.library;2008-07-19
 libraries;amigaguide;AmigaGuide.library;2008-07-19
 libraries_3rd;reqtools;ReqTools.library;2008-07-25
-classes;gadgets;Gadgets;2003-08-26
+classes;gadgets;Gadgets;2008-10-25
 classes;dtypes;Datatypes;2008-10-16
 classes;boopsi;Intuition;2008-10-24
 dtypes;dtclass;DataTypeClass;2008-10-09
@@ -73,8 +73,8 @@ boopsi;sysiclass;SysIClass;2008-10-23
 boopsi;fillrectclass;FillRectClass;2008-10-23
 boopsi;itexticlass;ITextIClass;2008-10-23
 boopsi;pointerclass;PointerClass;2008-10-23
-gadgets;gradientslider;Gradientslider Gadget;2003-08-26
-gadgets;colorwheel;Colorwheel Gadget;2003-08-26
+gadgets;gradientslider;GradientSlider.gadget;2008-10-25
+gadgets;colorwheel;ColorWheel.gadget;2008-10-25
 devices;input;Input.device;2008-08-05
 devices;timer;Timer.device;2008-08-09
 devices;console;Console.device;2008-08-04
@@ -344,10 +344,6 @@ c;C:Which;1;1;2
 c;C:Why;1;1;2
 c;C:Beep;1;1;2
 c;C:IPrefs;1;1;1
-colorwheel;ConvertHSBToRGB;1;1;2
-colorwheel;ConvertRGBToHSB;1;1;2
-colorwheel;colorwheel.gadget class;1;1;2
-gradientslider;gradientslider.gadget class;1;1;2
 HID;Alarm.hidd;1;1;0
 HID;Timer.hidd;1;1;0
 HID;Serial.hidd;1;1;2
@@ -2231,6 +2227,27 @@ itexticlass;IM_DRAWFRAME;1;1;0
 pointerclass;OM_NEW;1;1;1
 pointerclass;OM_GET;1;1;2
 pointerclass;OM_DISPOSE;1;1;2
+colorwheel;ConvertHSBToRGB;1;1;2
+colorwheel;ConvertRGBToHSB;1;1;2
+colorwheel;OM_NEW;1;1;2
+colorwheel;OM_GET;1;1;2
+colorwheel;OM_DISPOSE;1;1;2
+colorwheel;OM_SET;1;1;2
+colorwheel;OM_UPDATE;1;1;2
+colorwheel;GM_DOMAIN;1;2;2
+colorwheel;GM_GOACTIVE;1;1;2
+colorwheel;GM_HANDLEINPUT;1;1;2
+colorwheel;GM_HITTEST;1;1;2
+colorwheel;GM_RENDER;1;1;2
+gradientslider;OM_NEW;1;1;2
+gradientslider;OM_DISPOSE;1;1;2
+gradientslider;OM_GET;1;1;2
+gradientslider;OM_SET;1;1;2
+gradientslider;GM_DOMAIN;1;2;2
+gradientslider;GM_GOACTIVE;1;1;2
+gradientslider;GM_HANDLEINPUT;1;1;2
+gradientslider;GM_HITTEST;1;1;2
+gradientslider;GM_RENDER;1;1;2
 #CATEGORY_ITEMS_END
 #COMMENTS_BEGIN (category, comment)
 gameport;Gameport.device supports only mouse
