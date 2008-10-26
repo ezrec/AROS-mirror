@@ -243,6 +243,7 @@ struct ohci_pipe {
 
     ohci_td_t           *tail;
 
+    uint16_t			maxpacket;
     uint8_t             type;
     uint8_t             interval;
     uint8_t             endpoint;

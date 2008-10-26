@@ -333,9 +333,11 @@ void ohci_Handler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
             if (td->tdPipe)
             {
                 ohci_pipe_t *pipe = td->tdPipe;
+                D(bug("[OHCI] Pipe=%08x HeadP=%08x TailP=%08x SigTask=%08x\n", pipe, AROS_OHCI2LONG(pipe->ed->edHeadP),
+                		AROS_OHCI2LONG(pipe->ed->edTailP), pipe->sigTask));
 
                 CacheClearE(pipe->ed, sizeof(ohci_ed_t), CACRF_InvalidateD);
-                if (pipe->ed->edHeadP == pipe->ed->edTailP)
+                if ((pipe->ed->edHeadP & AROS_OHCI2LONG(0xfffffff0)) == pipe->ed->edTailP)
                 {
                     if (pipe->sigTask)
                         Signal(pipe->sigTask, 1 << pipe->signal);
@@ -644,6 +646,7 @@ void *METHOD(OHCI, Hidd_USBDrv, CreatePipe)
         pipe->address = msg->address;
         pipe->endpoint = msg->endpoint;
         pipe->interval = msg->period;
+        pipe->maxpacket = msg->maxpacket;
 
         pipe->ed->edPipe = pipe;
         pipe->ed->edFlags = AROS_LONG2OHCI((msg->address & ED_FA_MASK) |
@@ -936,6 +939,7 @@ BOOL METHOD(OHCI, Hidd_USBDrv, ControlTransfer)
              * No timeout occured. Remove the timeout request and report success. In this case,
              * the TD's are freed automatically by the interrupt handler.
              */
+
             if (!CheckIO((struct IORequest *)pipe->timeout))
                 AbortIO((struct IORequest *)pipe->timeout);
             WaitIO((struct IORequest *)pipe->timeout);
@@ -961,6 +965,169 @@ BOOL METHOD(OHCI, Hidd_USBDrv, ControlTransfer)
     }
 
     D(bug("[OHCI] ControlTransfer() %s\n", retval?"OK":"FAILED"));
+
+    ReleaseSemaphore(&pipe->lock);
+
+    return retval;
+}
+
+BOOL METHOD(OHCI, Hidd_USBDrv, BulkTransfer)
+{
+    ohci_data_t *ohci = OOP_INST_DATA(cl, o);
+    ohci_pipe_t *pipe = msg->pipe;
+    int8_t sig = AllocSignal(-1);
+    int8_t toutsig = AllocSignal(-1);
+    int32_t msec = pipe->timeoutVal;
+    uint32_t length = msg->length;
+    uint8_t *buff = msg->buffer;
+    BOOL retval = FALSE;
+
+    D(bug("[OHCI] BulkTransfer()\n"));
+    D(bug("[OHCI] Pipe %x %s endpoint %02x addr %02x\n", pipe, UE_GET_DIR(pipe->endpoint) == UE_DIR_IN ? "IN":"OUT",
+				pipe->endpoint, pipe->address));
+
+    ObtainSemaphore(&pipe->lock);
+
+    if (sig >= 0 && toutsig >= 0)
+    {
+        ohci_td_t *td, *first_td, *tail;
+        const uint32_t maxpacket = (8192 / pipe->maxpacket) * pipe->maxpacket;
+
+        pipe->signal = sig;
+        pipe->sigTask = FindTask(NULL);
+
+        first_td = td = pipe->tail;
+
+        tail = ohci_AllocTD(cl, o);
+        tail->tdFlags = 0;
+        tail->tdCurrentBufferPointer = 0;
+        tail->tdBufferEnd = 0;
+        tail->tdNextTD = 0;
+        tail->tdPipe = pipe;
+
+        while (length > 0)
+        {
+        	uint32_t len = length > maxpacket ? maxpacket : length;
+
+        	td->tdFlags = AROS_LONG2OHCI(0xf0000000);
+        	td->tdFlags |= AROS_LONG2OHCI(TD_R);
+
+        	if (len == maxpacket)
+            	td->tdFlags |= AROS_LONG2OHCI(0x00e00000);
+
+        	if (UE_GET_DIR(pipe->endpoint) == UE_DIR_IN)
+        		td->tdFlags |= AROS_LONG2OHCI(0x00100000);
+        	else
+        		td->tdFlags |= AROS_LONG2OHCI(0x00080000);
+
+        	td->tdPipe = pipe;
+        	td->tdCurrentBufferPointer = AROS_LONG2OHCI(buff);
+        	td->tdBufferEnd = AROS_LONG2OHCI(buff + len - 1);
+
+        	buff += len;
+        	length -= len;
+        	if (length)
+        	{
+        		ohci_td_t *newtd = ohci_AllocTD(cl, o);
+        		td->tdNextTD = AROS_LONG2OHCI((uint32_t)newtd);
+                CacheClearE(td, sizeof(ohci_td_t), CACRF_ClearD);
+                td = newtd;
+        	}
+        }
+        td->tdNextTD = AROS_LONG2OHCI(tail);
+        CacheClearE(td, sizeof(ohci_td_t), CACRF_ClearD);
+
+        D(bug("[OHCI] Transfer:\n"));
+        for (td = first_td; td; td = AROS_OHCI2LONG(td->tdNextTD))
+        {
+            D(bug("[OHCI]   DATA=%p (%p %p %p %p)\n", td, AROS_OHCI2LONG(td->tdFlags), AROS_OHCI2LONG(td->tdCurrentBufferPointer), AROS_OHCI2LONG(td->tdBufferEnd), AROS_OHCI2LONG(td->tdNextTD)));
+        }
+        pipe->errorCode = 0;
+
+        length = msg->length;
+
+        if (UE_GET_DIR(pipe->endpoint) == UE_DIR_IN)
+        	CachePreDMA(msg->buffer, &length, 0);
+        else
+        	CachePreDMA(msg->buffer, &length, DMA_ReadFromRAM);
+
+        /* Fire the transfer */
+        if (pipe->timeoutVal != 0)
+        {
+            pipe->timeout->tr_node.io_Message.mn_ReplyPort->mp_SigBit = toutsig;
+            pipe->timeout->tr_node.io_Message.mn_ReplyPort->mp_SigTask = FindTask(NULL);
+
+            pipe->timeout->tr_node.io_Command = TR_ADDREQUEST;
+            pipe->timeout->tr_time.tv_secs = msec / 1000;
+            pipe->timeout->tr_time.tv_micro = 1000 * (msec % 1000);
+
+            SendIO((struct IORequest *)pipe->timeout);
+        }
+
+        pipe->ed->edTailP = AROS_LONG2OHCI((uint32_t)tail);
+        pipe->tail = tail;
+        CacheClearE(pipe->ed, sizeof(ohci_ed_t), CACRF_ClearD);
+
+        mmio(ohci->regs->HcCommandStatus) |= AROS_LONG2OHCI(HC_CS_BLF);
+
+        /* Wait for completion signals */
+        if (Wait((1 << sig) | (1 << toutsig)) & (1 << toutsig))
+        {
+            /* Timeout. Pipe stall. */
+            bug("[OHCI] !!!TIMEOUT!!!\n");
+
+            GetMsg(pipe->timeout->tr_node.io_Message.mn_ReplyPort);
+
+            /* Remove any TD's pending */
+
+            D(bug("[OHCI] HeadP=%p TailP=%p\n", AROS_OHCI2LONG(pipe->ed->edHeadP), AROS_OHCI2LONG(pipe->ed->edTailP)));
+            D(bug("[OHCI] TD's in ED: \n"));
+            ohci_td_t *td = (ohci_td_t*)(AROS_OHCI2LONG(pipe->ed->edHeadP) & 0xfffffff0);
+            while (td)
+            {
+                D(bug("[OHCI] TD @ %p (%p %p %p %p)\n", td, AROS_OHCI2LONG(td->tdFlags), AROS_OHCI2LONG(td->tdCurrentBufferPointer), AROS_OHCI2LONG(td->tdBufferEnd), AROS_OHCI2LONG(td->tdNextTD)));
+                td = (ohci_td_t *)(AROS_OHCI2LONG(td->tdNextTD) & 0xfffffff0);
+            }
+
+            while((AROS_OHCI2LONG(pipe->ed->edTailP) & 0xfffffff0) != (AROS_OHCI2LONG(pipe->ed->edHeadP) & 0xfffffff0))
+            {
+                ohci_td_t *t = (ohci_td_t*)(AROS_OHCI2LONG(pipe->ed->edHeadP) & 0xfffffff0);
+                pipe->ed->edHeadP = AROS_LONG2OHCI(AROS_OHCI2LONG(t->tdNextTD) & 0xfffffff0);
+                ohci_FreeTD(cl, o, t);
+            }
+
+            /* Reenable the ED */
+            pipe->ed->edHeadP &= AROS_LONG2OHCI(0xfffffff0);
+            CacheClearE(pipe->ed, sizeof(ohci_ed_t), CACRF_ClearD);
+
+            retval = FALSE;
+        }
+        else
+        {
+            /*
+             * No timeout occured. Remove the timeout request and report success. In this case,
+             * the TD's are freed automatically by the interrupt handler.
+             */
+
+            if (!CheckIO((struct IORequest *)pipe->timeout))
+                AbortIO((struct IORequest *)pipe->timeout);
+            WaitIO((struct IORequest *)pipe->timeout);
+
+            if (!pipe->errorCode)
+                retval = TRUE;
+        }
+
+		length = msg->length;
+		if (UE_GET_DIR(pipe->endpoint) == UE_DIR_IN)
+			CachePostDMA(msg->buffer, &length, 0);
+		else
+			CachePostDMA(msg->buffer, &length, DMA_ReadFromRAM);
+
+        FreeSignal(sig);
+        FreeSignal(toutsig);
+    }
+
+    D(bug("[OHCI] BulkTransfer() %s\n", retval?"OK":"FAILED"));
 
     ReleaseSemaphore(&pipe->lock);
 
