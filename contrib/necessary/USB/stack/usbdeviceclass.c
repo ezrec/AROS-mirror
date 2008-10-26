@@ -3,7 +3,7 @@
     $Id$
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU Library General Public License as 
+    it under the terms of the GNU Library General Public License as
     published by the Free Software Foundation; either version 2 of the
     License, or (at your option) any later version.
 
@@ -53,7 +53,7 @@ static BOOL usb_SetAddress(OOP_Class *cl, OOP_Object *o, uint8_t address)
 
     if (dev->default_pipe)
         pipe = dev->default_pipe;
-    else          
+    else
         pipe = HIDD_USBDrv_CreatePipe(dev->bus, PIPE_Control, dev->fast, dev->address, 0, 0, dev->maxpacket, 100);
 
     BOOL ret = HIDD_USBDrv_ControlTransfer(dev->bus, pipe, &request, NULL, 0);
@@ -75,7 +75,7 @@ static BOOL usb_SetAddress(OOP_Class *cl, OOP_Object *o, uint8_t address)
                 wIndex:         AROS_WORD2LE(0),
                 wLength:        AROS_WORD2LE(USB_DEVICE_DESCRIPTOR_SIZE)
         };
-        ret = HIDD_USBDrv_ControlTransfer(dev->bus, pipe, &request, &descriptor, sizeof(descriptor));        
+        ret = HIDD_USBDrv_ControlTransfer(dev->bus, pipe, &request, &descriptor, sizeof(descriptor));
 
         if (ret)
         {
@@ -90,7 +90,7 @@ static BOOL usb_SetAddress(OOP_Class *cl, OOP_Object *o, uint8_t address)
             return FALSE;
         }
     }
-    else return FALSE;    
+    else return FALSE;
 }
 
 
@@ -139,7 +139,7 @@ OOP_Object *METHOD(USBDevice, Root, New)
         int i;
 
         dev->tr = USBCreateTimer();
-        
+
         dev->address = GetTagData(aHidd_USBDevice_Address, 0, msg->attrList);
         dev->hub = (OOP_Object *)GetTagData(aHidd_USBDevice_Hub, 0, msg->attrList);
         dev->bus = (OOP_Object *)GetTagData(aHidd_USBDevice_Bus, 0, msg->attrList);
@@ -149,12 +149,12 @@ OOP_Object *METHOD(USBDevice, Root, New)
         dev->default_pipe = NULL;
         dev->config = USB_UNCONFIG_NO;
         dev->next = (OOP_Object *)GetTagData(aHidd_USBDevice_Next, 0, msg->attrList);
-        
-        /* 
+
+        /*
          * The USB bus object not in attrList. Try to get it from itself, with help of GetAttr call.
-         * It sounds ridiculous, but it might happen that the GetAttr is overrided already (it is 
+         * It sounds ridiculous, but it might happen that the GetAttr is overrided already (it is
          * the case of HUB embedded in the driver
-         */   
+         */
 
         if (!dev->bus && dev->hub)
             OOP_GetAttr(dev->hub, aHidd_USBDevice_Bus, (IPTR*)&dev->bus);
@@ -163,13 +163,13 @@ OOP_Object *METHOD(USBDevice, Root, New)
 
         if (dev->bus)
         {
-            if (!dev->default_pipe) 
+            if (!dev->default_pipe)
             {
                 dev->default_pipe = HIDD_USBDevice_CreatePipe(o, PIPE_Control, 0, 0, 100);
             }
 
             /* Address was either unknown or equals zero. In such case the right address has
-             * to be set */ 
+             * to be set */
             if (dev->address == 0)
             {
                 D(bug("[USBDevice::New] fetching new device address\n"));
@@ -184,7 +184,7 @@ OOP_Object *METHOD(USBDevice, Root, New)
             {
                 OOP_MethodID disp_mid = OOP_GetMethodID((STRPTR)IID_Root, moRoot_Dispose);
                 OOP_CoerceMethod(cl, o, &disp_mid);
-                o = NULL;            
+                o = NULL;
             }
         }
 
@@ -236,7 +236,7 @@ OOP_Object *METHOD(USBDevice, Root, New)
         D(bug("[USBDevice::New] iProduct = \"%s\"\n", dev->product_name));
         D(bug("[USBDevice::New] iManufacturer = \"%s\"\n", dev->manufacturer_name));
         D(bug("[USBDevice::New] iSerial = \"%s\"\n", dev->serialnumber_name));
-    }    
+    }
 
     D(bug("[USB] USBDevice::New() = %p\n",o));
 
@@ -250,7 +250,7 @@ BOOL METHOD(USBDevice, Hidd_USBDevice, GetDescriptor)
 {
     USBDevice_Request req;
     BOOL ret;
-    
+
     req.bmRequestType = UT_READ_DEVICE;
     req.bRequest = UR_GET_DESCRIPTOR;
     req.wValue = AROS_WORD2LE(msg->type << 8 | msg->index);
@@ -258,7 +258,7 @@ BOOL METHOD(USBDevice, Hidd_USBDevice, GetDescriptor)
     req.wLength = AROS_WORD2LE(msg->length);
 
     ret = HIDD_USBDevice_ControlMessage(o, NULL, &req, msg->descriptor, msg->length);
-    
+
     return ret;
 }
 
@@ -273,7 +273,7 @@ BOOL METHOD(USBDevice, Hidd_USBDevice, GetDeviceDescriptor)
 }
 
 BOOL METHOD(USBDevice, Hidd_USBDevice, GetStatus)
-{  
+{
     USBDevice_Request req;
 
     req.bmRequestType = UT_READ_DEVICE;
@@ -282,7 +282,7 @@ BOOL METHOD(USBDevice, Hidd_USBDevice, GetStatus)
     req.wIndex = AROS_WORD2LE(0);
     req.wLength = AROS_WORD2LE(sizeof(usb_status_t));
 
-    return HIDD_USBDevice_ControlMessage(o, NULL, &req, msg->status, sizeof(usb_status_t)); 
+    return HIDD_USBDevice_ControlMessage(o, NULL, &req, msg->status, sizeof(usb_status_t));
 }
 
 
@@ -308,6 +308,17 @@ BOOL METHOD(USBDevice, Hidd_USBDevice, ControlMessage)
     return HIDD_USBDrv_ControlTransfer(dev->bus, pipe, msg->request, msg->buffer, msg->length);
 }
 
+BOOL METHOD(USBDevice, Hidd_USBDevice, BulkTransfer)
+{
+    DeviceData *dev = OOP_INST_DATA(cl, o);
+    APTR pipe = msg->pipe;
+
+    if (pipe)
+    	return HIDD_USBDrv_BulkTransfer(dev->bus, pipe, msg->buffer, msg->length);
+    else
+    	return FALSE;
+}
+
 static BOOL set_config(OOP_Object *o, int c)
 {
     USBDevice_Request req;
@@ -318,7 +329,7 @@ static BOOL set_config(OOP_Object *o, int c)
     req.wIndex = AROS_WORD2LE(0);
     req.wLength = AROS_WORD2LE(0);
 
-    return HIDD_USBDevice_ControlMessage(o, NULL, &req, NULL, 0);     
+    return HIDD_USBDevice_ControlMessage(o, NULL, &req, NULL, 0);
 }
 
 static usb_interface_descriptor_t *find_idesc(usb_config_descriptor_t *cd, int ifaceidx, int altidx)
@@ -391,7 +402,7 @@ static BOOL fill_iface(OOP_Class *cl, OOP_Object *o, int ifaceidx, int altidx)
     InterfaceData  *ifc = &dev->interfaces[ifaceidx];
     usb_interface_descriptor_t *idesc;
     int endpt, nendpt;
-    
+
     D(bug("[USBDevice] fill_iface: ifaceidx=%d altidx=%d\n",
             ifaceidx, altidx));
 
@@ -402,11 +413,11 @@ static BOOL fill_iface(OOP_Class *cl, OOP_Object *o, int ifaceidx, int altidx)
     ifc->interface = idesc;
     ifc->index = ifaceidx;
     ifc->altindex = altidx;
-    
+
     nendpt = ifc->interface->bNumEndpoints;
-    
+
     D(bug("[USBDevice] fill_iface: found idesc nendpt=%d\n", nendpt));
-    
+
     if (nendpt != 0)
     {
         ifc->endpoints = AllocVecPooled(SD(cl)->MemPool, nendpt * sizeof(EndpointData));
@@ -467,9 +478,9 @@ BOOL METHOD(USBDevice, Hidd_USBDevice, Configure)
     usb_config_descriptor_t cd, *cdp;
     int i, length;
     BOOL err;
-    
+
     D(bug("[USBDevice::Configure] Configure(%d)\n", msg->configNr));
-    
+
     if (dev->config != USB_UNCONFIG_NO)
     {
         int i, ifaces = dev->config_desc->bNumInterface;
@@ -481,7 +492,7 @@ BOOL METHOD(USBDevice, Hidd_USBDevice, Configure)
         dev->config_desc = NULL;
         dev->config = USB_UNCONFIG_NO;
     }
-    
+
     if (msg->configNr == USB_UNCONFIG_INDEX)
     {
         D(bug("[USBDevice::Configure] Unconfiguring "));
@@ -491,16 +502,16 @@ BOOL METHOD(USBDevice, Hidd_USBDevice, Configure)
             D(bug("with ERROR\n"));
         return err;
     }
-    
-    HIDD_USBDevice_GetConfigDescriptor(o, 0, &cd);  
+
+    HIDD_USBDevice_GetConfigDescriptor(o, 0, &cd);
     length = AROS_LE2WORD(cd.wTotalLength);
-    
+
     D(bug("[USBDevice::Configure] Fetching config descriptor of length %d\n", length));
-    
+
     cdp = AllocVecPooled(SD(cl)->MemPool, length);
     if (cdp == NULL)
         return FALSE;
-   
+
     for (i=0; i < 3; i++)
     {
         if (HIDD_USBDevice_GetDescriptor(o, UDESC_CONFIG, msg->configNr, length, cdp))
@@ -508,25 +519,25 @@ BOOL METHOD(USBDevice, Hidd_USBDevice, Configure)
         D(bug("[USBDevice::Configure]  retry...\n"));
         USBDelay(dev->tr, 200);
     }
-    
+
     if (i == 3)
     {
         D(bug("[USBDevice::Configure]  failed...\n"));
     }
-    
+
     /* TODO: Power! Self powered? */
     err = set_config(o, cdp->bConfigurationValue);
-    
+
     D(bug("[USBDevice::Configure] Allocating %d interfaces\n", cdp->bNumInterface ));
     dev->interfaces = AllocVecPooled(SD(cl)->MemPool, sizeof(InterfaceData) * cdp->bNumInterface);
     if (!dev->interfaces)
     {
         /* NOMEM! */
     }
-    
+
     dev->config_desc = cdp;
     dev->config = cdp->bConfigurationValue;
-     
+
     for (i = 0; i < cdp->bNumInterface; i++)
     {
         err = fill_iface(cl, o, i, 0);
@@ -538,7 +549,7 @@ BOOL METHOD(USBDevice, Hidd_USBDevice, Configure)
             return FALSE;
         }
     }
-    
+
     return TRUE;
 }
 
@@ -546,7 +557,7 @@ usb_interface_descriptor_t * METHOD(USBDevice, Hidd_USBDevice, GetInterface)
 {
     DeviceData *dev = OOP_INST_DATA(cl, o);
     usb_interface_descriptor_t *d = NULL;
-    
+
     if (dev->config != USB_UNCONFIG_NO)
     {
         if (msg->interface < dev->config_desc->bNumInterface)
@@ -554,7 +565,7 @@ usb_interface_descriptor_t * METHOD(USBDevice, Hidd_USBDevice, GetInterface)
             d = dev->interfaces[msg->interface].interface;
         }
     }
-    
+
     return d;
 }
 
@@ -562,7 +573,7 @@ usb_endpoint_descriptor_t * METHOD(USBDevice, Hidd_USBDevice, GetEndpoint)
 {
     DeviceData *dev = OOP_INST_DATA(cl, o);
     usb_endpoint_descriptor_t *d = NULL;
-    
+
     if (dev->config != USB_UNCONFIG_NO)
     {
         if (msg->interface < dev->config_desc->bNumInterface)
@@ -573,9 +584,9 @@ usb_endpoint_descriptor_t * METHOD(USBDevice, Hidd_USBDevice, GetEndpoint)
             }
         }
     }
-    
+
     DumpDescriptor(d);
-    
+
     return d;
 }
 
@@ -587,15 +598,15 @@ void METHOD(USBDevice, Root, Dispose)
 {
     DeviceData *dev = OOP_INST_DATA(cl, o);
     struct Library *base = &BASE(cl->UserData)->LibNode;
-    
+
     D(bug("[USB] USBDevice::Dispose\n"));
 
     if (dev->next)
         OOP_DisposeObject(dev->next);
 
-//   Do not unconfigure. The device may not exist already...    
+//   Do not unconfigure. The device may not exist already...
 //    HIDD_USBDevice_Configure(o, USB_UNCONFIG_INDEX);
-    
+
     if (dev->product_name)
         FreeVecPooled(SD(cl)->MemPool, dev->product_name);
 
@@ -609,9 +620,9 @@ void METHOD(USBDevice, Root, Dispose)
         HIDD_USBDrv_DeletePipe(dev->bus, dev->default_pipe);
 
     USBDeleteTimer(dev->tr);
-    
+
     OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
-    
+
     base->lib_OpenCnt--;
 }
 
@@ -663,7 +674,7 @@ void METHOD(USBDevice, Root, Get)
             case aoHidd_USBDevice_SerialNumber:
                 *msg->storage = (intptr_t)dev->serialnumber_name;
                 break;
-            
+
             case aoHidd_USBDevice_Next:
                 *msg->storage = (intptr_t)dev->next;
                 break;
@@ -671,11 +682,11 @@ void METHOD(USBDevice, Root, Get)
             case aoHidd_USBDevice_Interface:
                 *msg->storage = (intptr_t)dev->iface;
                 break;
-            
+
             case aoHidd_USBDevice_InterfaceNumber:
                 *msg->storage = dev->interfaces[dev->iface].interface->bInterfaceNumber;
                 break;
-                
+
             default:
                 OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
                 break;

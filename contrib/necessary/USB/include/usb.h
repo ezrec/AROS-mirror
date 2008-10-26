@@ -6,7 +6,7 @@
     $Id$
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU Library General Public License as 
+    it under the terms of the GNU Library General Public License as
     published by the Free Software Foundation; either version 2 of the
     License, or (at your option) any later version.
 
@@ -64,7 +64,7 @@ enum {
 
 enum {
     aoHidd_USB_Bus,
-    
+
     num_Hidd_USB_Attrs
 };
 
@@ -132,6 +132,7 @@ enum {
     moHidd_USBDevice_Configure,
     moHidd_USBDevice_GetInterface,
     moHidd_USBDevice_GetEndpoint,
+    moHidd_USBDevice_BulkTransfer,
 
     NUM_HIDD_USBDEVICE_METHODS
 };
@@ -151,7 +152,7 @@ enum {
 
     aoHidd_USBDevice_Fast,
     aoHidd_USBDevice_MaxPacketSize,
-    
+
     aoHidd_USBDevice_Next,
 
     num_Hidd_USBDevice_Attrs
@@ -242,6 +243,13 @@ struct pHidd_USBDevice_GetEndpoint {
     OOP_MethodID        mID;
     uint8_t             interface;
     uint8_t             endpoint;
+};
+
+struct pHidd_USBDevice_BulkTransfer {
+	OOP_MethodID	mID;
+	APTR			pipe;
+	APTR			buffer;
+	uint32_t		length;
 };
 
 /*
@@ -336,7 +344,7 @@ enum {
     aoHidd_USBHub_IsRoot,
     aoHidd_USBHub_IsCompound,
     aoHidd_USBHub_HubCurrent,
-    aoHidd_USBHub_NumPorts,	
+    aoHidd_USBHub_NumPorts,
 
     num_Hidd_USBHub_Attrs
 };
@@ -365,6 +373,7 @@ enum {
     moHidd_USBDrv_ControlTransfer,
     moHidd_USBDrv_AddInterrupt,
     moHidd_USBDrv_RemInterrupt,
+    moHidd_USBDrv_BulkTransfer,
 
     NUM_HIDD_USBDRV_METHODS
 };
@@ -397,7 +406,14 @@ struct pHidd_USBDrv_ControlTransfer {
     APTR				pipe;
     USBDevice_Request	*request;
     APTR				buffer;
-    uint32_t				length;
+    uint32_t			length;
+};
+
+struct pHidd_USBDrv_BulkTransfer {
+	OOP_MethodID	mID;
+	APTR			pipe;
+	APTR			buffer;
+	uint32_t		length;
 };
 
 struct pHidd_USBDrv_AddInterrupt {
@@ -433,6 +449,7 @@ BOOL HIDD_USBDevice_ControlMessage(OOP_Object *obj, APTR pipe, USBDevice_Request
 BOOL HIDD_USBDevice_Configure(OOP_Object *obj, uint8_t configNr);
 usb_interface_descriptor_t *HIDD_USBDevice_GetInterface(OOP_Object *obj, uint8_t interface);
 usb_endpoint_descriptor_t *HIDD_USBDevice_GetEndpoint(OOP_Object *obj, uint8_t interface, uint8_t endpoint);
+BOOL HIDD_USBDevice_BulkTransfer(OOP_Object *obj, APTR pipe, APTR buffer, uint32_t length);
 
 BOOL HIDD_USBHub_OnOff(OOP_Object *obj, BOOL on);
 OOP_Object *HIDD_USBHub_GetChild(OOP_Object *obj, uint8_t port);
@@ -451,5 +468,6 @@ void HIDD_USBDrv_DeletePipe(OOP_Object *obj, APTR pipe);
 BOOL HIDD_USBDrv_ControlTransfer(OOP_Object *obj, APTR pipe, USBDevice_Request *request, APTR buffer, uint32_t length);
 BOOL HIDD_USBDrv_AddInterrupt(OOP_Object *obj, void *pipe, void *buffer, uint8_t length, struct Interrupt *interrupt);
 BOOL HIDD_USBDrv_RemInterrupt(OOP_Object *obj, void *pipe, struct Interrupt *interrupt);
+BOOL HIDD_USBDrv_BulkTransfer(OOP_Object *obj, APTR pipe, APTR buffer, uint32_t length);
 
 #endif /*USB_USB_H*/

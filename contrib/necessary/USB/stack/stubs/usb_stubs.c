@@ -1,5 +1,5 @@
 /*
-    Copyright © 2004, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 2004, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Stub functions for PCI subsystem
@@ -233,6 +233,21 @@ BOOL HIDD_USBDevice_ControlMessage(OOP_Object *obj, APTR pipe, USBDevice_Request
     return OOP_DoMethod(obj, &p.mID);
 }
 
+BOOL HIDD_USBDevice_BulkTransfer(OOP_Object *obj, APTR pipe, APTR buffer, uint32_t length)
+{
+    STATIC_MID;
+    struct pHidd_USBDevice_BulkTransfer p;
+
+    if (!mid) mid = OOP_GetMethodID((STRPTR)IID_Hidd_USBDevice, moHidd_USBDevice_BulkTransfer);
+
+    p.mID = mid;
+    p.pipe = pipe;
+    p.buffer = buffer;
+    p.length = length;
+
+    return OOP_DoMethod(obj, &p.mID);
+}
+
 BOOL HIDD_USBDevice_Configure(OOP_Object *obj, uint8_t configNr)
 {
     STATIC_MID;
@@ -242,7 +257,7 @@ BOOL HIDD_USBDevice_Configure(OOP_Object *obj, uint8_t configNr)
 
     p.mID = mid;
     p.configNr = configNr;
-    
+
     return OOP_DoMethod(obj, &p.mID);
 }
 
@@ -255,8 +270,8 @@ usb_interface_descriptor_t *HIDD_USBDevice_GetInterface(OOP_Object *obj, uint8_t
 
     p.mID = mid;
     p.interface = interface;
-    
-    return (usb_interface_descriptor_t *)OOP_DoMethod(obj, &p.mID);    
+
+    return (usb_interface_descriptor_t *)OOP_DoMethod(obj, &p.mID);
 }
 
 usb_endpoint_descriptor_t *HIDD_USBDevice_GetEndpoint(OOP_Object *obj, uint8_t interface, uint8_t endpoint)
@@ -269,8 +284,8 @@ usb_endpoint_descriptor_t *HIDD_USBDevice_GetEndpoint(OOP_Object *obj, uint8_t i
     p.mID = mid;
     p.interface = interface;
     p.endpoint = endpoint;
-    
-    return (usb_endpoint_descriptor_t *)OOP_DoMethod(obj, &p.mID);   
+
+    return (usb_endpoint_descriptor_t *)OOP_DoMethod(obj, &p.mID);
 }
 
 BOOL HIDD_USBHub_OnOff(OOP_Object *obj, BOOL on)
@@ -418,7 +433,7 @@ OOP_Object *HIDD_USBHub_GetChild(OOP_Object *obj, uint8_t port)
     p.port = port;
 
     return OOP_DoMethod(obj, &p.mID);
-   
+
 }
 
 APTR HIDD_USBDrv_CreatePipe(OOP_Object *obj, enum USB_PipeType	type,
@@ -454,7 +469,7 @@ void HIDD_USBDrv_DeletePipe(OOP_Object *obj, APTR pipe)
     OOP_DoMethod(obj, &p.mID);
 }
 
-BOOL HIDD_USBDrv_ControlTransfer(OOP_Object *obj, APTR pipe, USBDevice_Request *request, 
+BOOL HIDD_USBDrv_ControlTransfer(OOP_Object *obj, APTR pipe, USBDevice_Request *request,
         APTR buffer, uint32_t length)
 {
     STATIC_MID;
@@ -465,6 +480,21 @@ BOOL HIDD_USBDrv_ControlTransfer(OOP_Object *obj, APTR pipe, USBDevice_Request *
     p.mID = mid;
     p.pipe = pipe;
     p.request = request;
+    p.buffer = buffer;
+    p.length = length;
+
+    return OOP_DoMethod(obj, &p.mID);
+}
+
+BOOL HIDD_USBDrv_BulkTransfer(OOP_Object *obj, APTR pipe, APTR buffer, uint32_t length)
+{
+    STATIC_MID;
+    struct pHidd_USBDrv_BulkTransfer p;
+
+    if (!mid) mid = OOP_GetMethodID((STRPTR)IID_Hidd_USBDrv, moHidd_USBDrv_BulkTransfer);
+
+    p.mID = mid;
+    p.pipe = pipe;
     p.buffer = buffer;
     p.length = length;
 
