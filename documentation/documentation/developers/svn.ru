@@ -80,7 +80,7 @@ Windows
 файлах. Примерами редакторов, умеющих указывать подобный EOL, являются следующие
 бесплатные программы: TigerPAD__ (сохранять как текст UNIX), 
 `DOS Navigator <http://dnosp.com/>`__ (в свойствах редактора проставить LF), 
-утилиту `dos2unix <http://www.bastet.com/>`__(конвертор), 
+утилиту(конвертор) `dos2unix <http://www.bastet.com/>`__ , 
 `NotePad++ <http://notepad-plus.sourceforge.net>`__
 (Кодировки - Преобразовать в UNIX-формат) и многие другие. Упомянутый выше 
 RapidSVN тоже это умеет.
