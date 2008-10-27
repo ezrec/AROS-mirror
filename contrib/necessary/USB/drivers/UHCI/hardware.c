@@ -3,7 +3,7 @@
     $Id$
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU Library General Public License as 
+    it under the terms of the GNU Library General Public License as
     published by the Free Software Foundation; either version 2 of the
     License, or (at your option) any later version.
 
@@ -61,11 +61,11 @@ void uhci_sleep(OOP_Class *cl, OOP_Object *o, uint32_t msec)
 }
 
 /*
- * This function allocats new 16-bit Transfer Descriptor from the 
- * pool of 4K-aligned PCI-accessible memory regions. Within each 4K page, 
+ * This function allocats new 16-bit Transfer Descriptor from the
+ * pool of 4K-aligned PCI-accessible memory regions. Within each 4K page,
  * a bitmap is used to determine, which of the TD elements are available
  * for use.
- * 
+ *
  * This function returns NULL if no free TD's are found and no more memory
  * is available.
  */
@@ -235,9 +235,9 @@ void uhci_globalreset(OOP_Class *cl, OOP_Object *o)
 {
     UHCIData *uhci = OOP_INST_DATA(cl, o);
 
-    outw(UHCI_CMD_GRESET, uhci->iobase + UHCI_CMD);	
+    outw(UHCI_CMD_GRESET, uhci->iobase + UHCI_CMD);
     uhci_sleep(cl, o, USB_BUS_RESET_DELAY);
-    outw(0, uhci->iobase + UHCI_CMD);	
+    outw(0, uhci->iobase + UHCI_CMD);
 }
 
 void uhci_reset(OOP_Class *cl, OOP_Object *o)
@@ -326,7 +326,7 @@ void uhci_RebuildList(OOP_Class *cl, OOP_Object *o)
             qh->qh_HLink = (uint32_t)p->p_Queue | UHCI_PTR_QH;
             qh = p->p_Queue;
         }
-    }	
+    }
 
     if (!IsListEmpty(&uhci->Bulk))
     {
@@ -339,7 +339,7 @@ void uhci_RebuildList(OOP_Class *cl, OOP_Object *o)
                 qh->qh_HLink = (uint32_t)p->p_Queue | UHCI_PTR_QH;
                 qh = p->p_Queue;
             }
-    }	
+    }
 
     /*
      * If the first fast node exists, make a loop of FullSpeed control and bulk queue
@@ -361,7 +361,7 @@ void uhci_RebuildList(OOP_Class *cl, OOP_Object *o)
 }
 
 void uhci_DeletePipe(OOP_Class *cl, OOP_Object *o, UHCI_Pipe *pipe)
-{   
+{
     D(bug("[UHCI] DeletePipe(%p)\n", pipe));
 
     if (pipe)
@@ -456,7 +456,7 @@ void uhci_InsertIntr(UHCIData *uhci, UHCI_Pipe *pipe)
     q[bestat]->qh_VLink = ((uint32_t)pipe->p_Queue) | UHCI_PTR_QH;
 }
 
-UHCI_Pipe *uhci_CreatePipe(OOP_Class *cl, OOP_Object *o, enum USB_PipeType type, BOOL fullspeed, 
+UHCI_Pipe *uhci_CreatePipe(OOP_Class *cl, OOP_Object *o, enum USB_PipeType type, BOOL fullspeed,
         uint8_t addr, uint8_t endp, uint8_t period, uint32_t maxp, uint32_t timeout)
 {
     UHCIData *uhci = OOP_INST_DATA(cl, o);
@@ -464,7 +464,7 @@ UHCI_Pipe *uhci_CreatePipe(OOP_Class *cl, OOP_Object *o, enum USB_PipeType type,
 
     pipe = AllocPooled(SD(cl)->MemPool, sizeof(UHCI_Pipe));
 
-    D(bug("[UHCI] CreatePipe(%d, %d, %d, %d, %d)\n",
+    (bug("[UHCI] CreatePipe(%d, %d, %d, %d, %d)\n",
             type, fullspeed, addr, endp, maxp));
 
     if (pipe)
@@ -479,13 +479,13 @@ UHCI_Pipe *uhci_CreatePipe(OOP_Class *cl, OOP_Object *o, enum USB_PipeType type,
         pipe->p_MaxTransfer = maxp;
         pipe->p_Interval = period;
         pipe->p_FirstTD = (APTR)UHCI_PTR_T;
-        pipe->p_LastTD = (APTR)UHCI_PTR_T;		
+        pipe->p_LastTD = (APTR)UHCI_PTR_T;
         pipe->p_Queue->qh_VLink = UHCI_PTR_T;
         pipe->p_Queue->qh_Data1 = (IPTR)pipe;
         pipe->p_Queue->qh_Data2 = 0;
 
         NEWLIST(&pipe->p_Intr);
-        
+
         pipe->p_TimeoutVal = timeout;
         pipe->p_Timeout = (struct timerequest *)CreateIORequest(
                 CreateMsgPort(), sizeof(struct timerequest));
@@ -552,6 +552,7 @@ void uhci_QueuedTransfer(OOP_Class *cl, OOP_Object *o, UHCI_Pipe *pipe, VOID *bu
         }
 
         td->td_Buffer = (uint32_t)ptr;
+        td->td_LinkPtr = UHCI_PTR_T;
         td->td_Status = UHCI_TD_ZERO_ACTLEN(UHCI_TD_SET_ERRCNT(3) | UHCI_TD_ACTIVE);
         if (in)
             td->td_Token = UHCI_TD_IN(len, pipe->p_EndPoint, pipe->p_DevAddr, dt);
@@ -565,8 +566,13 @@ void uhci_QueuedTransfer(OOP_Class *cl, OOP_Object *o, UHCI_Pipe *pipe, VOID *bu
 
         dt ^= 1;
         ptr += len;
+
+		bug("[UHCI]     TD=%p (%08x %08x %08x %08x)\n", td,
+				td->td_LinkPtr, td->td_Status, td->td_Token, td->td_Buffer);
     }
-    
+
+    td->td_Status |= UHCI_TD_IOC;
+
     Disable();
     if (pipe->p_FirstTD == (APTR)UHCI_PTR_T)
     {
@@ -584,8 +590,6 @@ void uhci_QueuedTransfer(OOP_Class *cl, OOP_Object *o, UHCI_Pipe *pipe, VOID *bu
         pipe->p_Queue->qh_VLink = (uint32_t)t | UHCI_PTR_TD;
     }
     Enable();
-
-    td->td_Status |= UHCI_TD_IOC;
 }
 
 void uhci_QueuedWrite(OOP_Class *cl, OOP_Object *o, UHCI_Pipe *pipe, VOID *buffer, uint32_t length)
@@ -630,35 +634,35 @@ void uhci_ControlTransfer(OOP_Class *cl, OOP_Object *o, UHCI_Pipe *pipe,
             stat->td_Status |= UHCI_TD_LS;
 
         if (buffer)
-        {	      
+        {
             uint8_t d = 1;
             UHCI_TransferDesc *prev = req;
             uint8_t *buff = buffer;
             length = len;
-            
+
             while (length > 0)
             {
                 len = (length > pipe->p_MaxTransfer) ? pipe->p_MaxTransfer : length;
-                
+
                 td = uhci_AllocTD(cl, o);
 
                 td->td_Token = isread ? UHCI_TD_IN (len, pipe->p_EndPoint, pipe->p_DevAddr, d)
                     : UHCI_TD_OUT(len, pipe->p_EndPoint, pipe->p_DevAddr, d);
                 td->td_Status = UHCI_TD_ZERO_ACTLEN(UHCI_TD_SET_ERRCNT(3) | UHCI_TD_ACTIVE  | UHCI_TD_SPD);
                 td->td_Buffer = (uint32_t)buff;
-    
+
                 if (!pipe->p_FullSpeed)
                     td->td_Status |= UHCI_TD_LS;
-    
+
                 td->td_Status |= UHCI_TD_SPD;
                 prev->td_LinkPtr = (uint32_t)td | UHCI_PTR_TD | UHCI_PTR_VF;
-                
+
                 d ^= 1;
                 prev = td;
                 buff += len;
                 length -= len;
             }
-            
+
             td->td_LinkPtr = (uint32_t)stat | UHCI_PTR_TD | UHCI_PTR_VF;
         }
         else
@@ -672,11 +676,11 @@ void uhci_ControlTransfer(OOP_Class *cl, OOP_Object *o, UHCI_Pipe *pipe,
                 while ((uint32_t)t != UHCI_PTR_T)
                 {
                     bug("[UHCI]     TD=%p (%08x %08x %08x %08x)\n", t,
-                            t->td_LinkPtr, t->td_Status, t->td_Token, t->td_Buffer);                
+                            t->td_LinkPtr, t->td_Status, t->td_Token, t->td_Buffer);
                     t = (UHCI_TransferDesc *)(t->td_LinkPtr & 0xfffffff1);
-                } 
+                }
         );
-    
+
         Disable();
         if (pipe->p_FirstTD == (APTR)UHCI_PTR_T)
         {
