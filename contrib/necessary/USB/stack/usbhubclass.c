@@ -146,7 +146,7 @@ OOP_Object *METHOD(USBHub, Root, New)
             {
                 hub->interrupt.is_Data = hub;
                 hub->interrupt.is_Code = HubInterrupt;
-                hub->intr_pipe = HIDD_USBDevice_CreatePipe(o, PIPE_Interrupt, ep->bEndpointAddress, ep->bInterval, ep->wMaxPacketSize, 0);
+                hub->intr_pipe = HIDD_USBDevice_CreatePipe(o, PIPE_Interrupt, ep->bEndpointAddress, ep->bInterval, AROS_LE2WORD(ep->wMaxPacketSize), 0);
                 HIDD_USBDrv_AddInterrupt(drv, hub->intr_pipe, &hub->status[0], AROS_LE2WORD(ep->wMaxPacketSize), &hub->interrupt);
             }
 

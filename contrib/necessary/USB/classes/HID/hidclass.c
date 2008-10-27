@@ -310,7 +310,7 @@ OOP_Object *METHOD(HID, Root, New)
                 {
                     hid->interrupt.is_Data = hid;
                     hid->interrupt.is_Code = HidInterrupt;
-                    hid->intr_pipe = HIDD_USBDevice_CreatePipe(o, PIPE_Interrupt, ep->bEndpointAddress, ep->bInterval, ep->wMaxPacketSize, 0);
+                    hid->intr_pipe = HIDD_USBDevice_CreatePipe(o, PIPE_Interrupt, ep->bEndpointAddress, ep->bInterval, AROS_LE2WORD(ep->wMaxPacketSize), 0);
                     HIDD_USBDrv_AddInterrupt(drv, hid->intr_pipe, hid->buffer, hid->buflen, &hid->interrupt);
                 }
 
