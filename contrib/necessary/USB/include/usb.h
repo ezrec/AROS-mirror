@@ -218,10 +218,11 @@ struct pHidd_USBDevice_ControlMessage {
 
 struct pHidd_USBDevice_CreatePipe {
     OOP_MethodID        mID;
-    enum USB_PipeType   type;
-    uint8_t               endpoint;
-    uint8_t               period;
-    uint32_t               timeout;
+    enum USB_PipeType  type;
+    uint8_t             endpoint;
+    uint8_t             period;
+    uint16_t			maxpacket;
+    uint32_t            timeout;
 };
 
 struct pHidd_USBDevice_DeletePipe {
@@ -442,7 +443,7 @@ BOOL HIDD_USBDevice_GetDescriptor(OOP_Object *obj, uint8_t type, uint8_t index, 
 BOOL HIDD_USBDevice_GetConfigDescriptor(OOP_Object *obj, uint8_t index, usb_config_descriptor_t *descriptor);
 BOOL HIDD_USBDevice_GetDeviceDescriptor(OOP_Object *obj, usb_device_descriptor_t *descriptor);
 BOOL HIDD_USBDevice_GetStatus(OOP_Object *obj, usb_status_t *status);
-APTR HIDD_USBDevice_CreatePipe(OOP_Object *obj, enum USB_PipeType type, uint8_t endpoint, uint8_t period, uint32_t timeout);
+APTR HIDD_USBDevice_CreatePipe(OOP_Object *obj, enum USB_PipeType type, uint8_t endpoint, uint8_t period, uint16_t maxpacket, uint32_t timeout);
 void HIDD_USBDevice_DeletePipe(OOP_Object *obj, APTR pipe);
 BOOL HIDD_USBDevice_GetString(OOP_Object *obj, int8_t id, uint16_t language, usb_string_descriptor_t *string);
 BOOL HIDD_USBDevice_ControlMessage(OOP_Object *obj, APTR pipe, USBDevice_Request *request, APTR buffer, uint32_t length);

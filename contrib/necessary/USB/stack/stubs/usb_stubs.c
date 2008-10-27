@@ -188,7 +188,7 @@ BOOL HIDD_USBDevice_GetString(OOP_Object *obj, int8_t id, uint16_t language, usb
     return OOP_DoMethod(obj, &p.mID);
 }
 
-void * HIDD_USBDevice_CreatePipe(OOP_Object *obj, enum USB_PipeType type, uint8_t endpoint, uint8_t period, uint32_t timeout)
+void * HIDD_USBDevice_CreatePipe(OOP_Object *obj, enum USB_PipeType type, uint8_t endpoint, uint8_t period, uint16_t maxpacket, uint32_t timeout)
 {
     STATIC_MID;
     struct pHidd_USBDevice_CreatePipe p;
@@ -199,6 +199,7 @@ void * HIDD_USBDevice_CreatePipe(OOP_Object *obj, enum USB_PipeType type, uint8_
     p.type = type;
     p.endpoint = endpoint;
     p.period = period;
+    p.maxpacket = maxpacket;
     p.timeout = timeout;
 
     return (void *) OOP_DoMethod(obj, &p.mID);

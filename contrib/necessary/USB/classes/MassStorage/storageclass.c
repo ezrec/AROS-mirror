@@ -186,13 +186,13 @@ OOP_Object *METHOD(Storage, Root, New)
 					{
 						D(bug("[MSS] IN endpoint found\n"));
 						mss->ep_in = ep;
-						mss->pipe_in = HIDD_USBDevice_CreatePipe(o, PIPE_Bulk, ep->bEndpointAddress, 0, 10000);
+						mss->pipe_in = HIDD_USBDevice_CreatePipe(o, PIPE_Bulk, ep->bEndpointAddress, 0, ep->wMaxPacketSize, 10000);
 					}
 					else if (UE_GET_DIR(ep->bEndpointAddress) == UE_DIR_OUT)
 					{
 						D(bug("[MSS] OUT endpoint found\n"));
 						mss->ep_out = ep;
-						mss->pipe_out = HIDD_USBDevice_CreatePipe(o, PIPE_Bulk, ep->bEndpointAddress, 0, 10000);
+						mss->pipe_out = HIDD_USBDevice_CreatePipe(o, PIPE_Bulk, ep->bEndpointAddress, 0, ep->wMaxPacketSize, 10000);
 					}
 				}
 			}

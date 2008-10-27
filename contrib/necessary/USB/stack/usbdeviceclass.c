@@ -165,7 +165,7 @@ OOP_Object *METHOD(USBDevice, Root, New)
         {
             if (!dev->default_pipe)
             {
-                dev->default_pipe = HIDD_USBDevice_CreatePipe(o, PIPE_Control, 0, 0, 100);
+                dev->default_pipe = HIDD_USBDevice_CreatePipe(o, PIPE_Control, 0, 0, 0, 100);
             }
 
             /* Address was either unknown or equals zero. In such case the right address has
@@ -290,7 +290,7 @@ void * METHOD(USBDevice, Hidd_USBDevice, CreatePipe)
 {
     DeviceData *dev = OOP_INST_DATA(cl, o);
 
-    return HIDD_USBDrv_CreatePipe(dev->bus, msg->type, dev->fast, dev->address, msg->endpoint, msg->period, dev->maxpacket, msg->timeout);
+    return HIDD_USBDrv_CreatePipe(dev->bus, msg->type, dev->fast, dev->address, msg->endpoint, msg->period, msg->maxpacket ? msg->maxpacket : dev->maxpacket, msg->timeout);
 }
 
 void METHOD(USBDevice, Hidd_USBDevice, DeletePipe)
