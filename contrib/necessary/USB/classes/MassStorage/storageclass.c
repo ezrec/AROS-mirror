@@ -30,10 +30,209 @@
 #include <usb/usb.h>
 #include <usb/usb_core.h>
 #include <usb/hid.h>
+#include <stdio.h>
+
 #include "storage.h"
 
 #include <proto/oop.h>
 #include <proto/dos.h>
+
+/*
+ * Initialize the USBStorage instance
+ */
+OOP_Object *METHOD(Storage, Root, New)
+{
+    D(bug("[MSS] Storage::New()\n"));
+
+    /* Prevent the class from being expunged */
+    BASE(cl->UserData)->LibNode.lib_OpenCnt++;
+
+    o = (OOP_Object *)OOP_DoSuperMethod(cl, o, (OOP_Msg) msg);
+    if (o)
+    {
+    	StorageData *mss = OOP_INST_DATA(cl, o);
+        usb_config_descriptor_t cdesc;
+        intptr_t iface;
+    	int i;
+
+        mss->sd = SD(cl);
+        mss->o = o;
+
+        /* Get the interface number */
+        OOP_GetAttr(o, aHidd_USBDevice_Interface, &iface);
+
+        /* Configure MSS device */
+        HIDD_USBDevice_Configure(o, 0);
+
+        /* Get device and config descriptors */
+        D(bug("[MSS] Getting device descriptor\n"));
+        HIDD_USBDevice_GetDeviceDescriptor(o, &mss->ddesc);
+        D(bug("[MSS] Getting initial config descriptor\n"));
+        HIDD_USBDevice_GetConfigDescriptor(o, 0, &cdesc);
+        /* How many LUNs this device supports? */
+        mss->maxLUN = HIDD_USBStorage_GetMaxLUN(o);
+        D(bug("[MSS] GetMaxLUN returns %d\n", mss->maxLUN));
+
+        if (AROS_LE2WORD(cdesc.wTotalLength))
+        	mss->cdesc = AllocVecPooled(SD(cl)->MemPool, AROS_LE2WORD(cdesc.wTotalLength));
+
+        if (mss->cdesc)
+        {
+        	D(bug("[MSS] Getting config descriptor of size %d\n", AROS_LE2WORD(cdesc.wTotalLength)));
+			HIDD_USBDevice_GetDescriptor(o, UDESC_CONFIG, 0, AROS_LE2WORD(cdesc.wTotalLength), mss->cdesc);
+
+			D(bug("[MSS] Getting descriptor of interface %d\n", iface));
+			mss->iface = HIDD_USBDevice_GetInterface(o, iface);
+
+			D(bug("[MSS] Interface has %d endpoints\n", mss->iface->bNumEndpoints));
+
+			/*
+			 * Iterate through the possible endpoints and look for IN and OUT endpoints for BULK
+			 * transfers.
+			 */
+			for (i=0; i < mss->iface->bNumEndpoints; i++)
+			{
+				usb_endpoint_descriptor_t *ep;
+				ep = HIDD_USBDevice_GetEndpoint(o, iface, i);
+
+				D(bug("[MSS] endpoint %d: addr %02x, interval %02x, length %02x attr %02x maxpacket %04x\n", i,
+						ep->bEndpointAddress,
+						ep->bInterval,
+						ep->bLength,
+						ep->bmAttributes,
+						AROS_LE2WORD(ep->wMaxPacketSize)));
+
+				/* Use only BULK endpoints */
+				if (UE_GET_XFERTYPE(ep->bmAttributes) == UE_BULK)
+				{
+					if (!mss->pipe_in && UE_GET_DIR(ep->bEndpointAddress) == UE_DIR_IN)
+					{
+						D(bug("[MSS] IN endpoint found\n"));
+						mss->ep_in = ep;
+						mss->pipe_in = HIDD_USBDevice_CreatePipe(o, PIPE_Bulk, ep->bEndpointAddress, 0, AROS_LE2WORD(ep->wMaxPacketSize), 10000);
+					}
+					else if (!mss->pipe_out && UE_GET_DIR(ep->bEndpointAddress) == UE_DIR_OUT)
+					{
+						D(bug("[MSS] OUT endpoint found\n"));
+						mss->ep_out = ep;
+						mss->pipe_out = HIDD_USBDevice_CreatePipe(o, PIPE_Bulk, ep->bEndpointAddress, 0, AROS_LE2WORD(ep->wMaxPacketSize), 10000);
+					}
+				}
+			}
+
+			/* Pipes are there. Let's start the handler task */
+			if (mss->pipe_in && mss->pipe_out)
+			{
+				struct Task *t;
+				struct MemList *ml;
+				uint32_t unit_number;
+
+				/*
+				 * Unit number allocation.
+				 *
+				 * The unit number allocation proposed here is a very simple variant. It uses the
+				 * counter which increases upon every query. The better approach would be to cache
+				 * the assignment based on iProduct iManufacturer and iSerial strings.
+				 */
+				ObtainSemaphore(&SD(cl)->Lock);
+				unit_number = SD(cl)->unitNum;
+				SD(cl)->unitNum += 16;
+				ReleaseSemaphore(&SD(cl)->Lock);
+
+				/*
+				 * For each LUN create a separate task. The unit number will be created as combination of
+				 * unitNum and the LUN: unit 0x00 is Unit 0 LUN 0, 0x12 is Unit 1 LUN 2.
+				 */
+				for (i=0; i <= HIDD_USBStorage_GetMaxLUN(o); i++)
+				{
+					struct TagItem tags[] = {
+										{ TASKTAG_ARG1,   (IPTR)cl },
+										{ TASKTAG_ARG2,   (IPTR)o },
+										{ TASKTAG_ARG3,	  i },
+										{ TASKTAG_ARG4,	  (IPTR)FindTask(NULL) },
+										{ TAG_DONE,       0UL }};
+
+					t = AllocMem(sizeof(struct Task), MEMF_PUBLIC|MEMF_CLEAR);
+					ml = AllocMem(sizeof(struct MemList) + 2*sizeof(struct MemEntry), MEMF_PUBLIC|MEMF_CLEAR);
+
+					if (t && ml)
+					{
+						uint8_t *sp = AllocMem(10240, MEMF_PUBLIC|MEMF_CLEAR);
+						uint8_t *name = AllocMem(16, MEMF_PUBLIC|MEMF_CLEAR);
+
+						/* Create individual name */
+						snprintf(name, 15, "USB MSS %02x.%x",unit_number >> 4, i);
+
+						t->tc_SPLower = sp;
+						t->tc_SPUpper = sp + 10240;
+#if AROS_STACK_GROWS_DOWNWARDS
+						t->tc_SPReg = (char *)t->tc_SPUpper - SP_OFFSET;
+#else
+						t->tc_SPReg = (char *)t->tc_SPLower + SP_OFFSET;
+#endif
+
+						ml->ml_NumEntries = 3;
+						ml->ml_ME[0].me_Addr = t;
+						ml->ml_ME[0].me_Length = sizeof(struct Task);
+						ml->ml_ME[1].me_Addr = sp;
+						ml->ml_ME[1].me_Length = 10240;
+						ml->ml_ME[2].me_Addr = name;
+						ml->ml_ME[2].me_Length = 16;
+
+						NEWLIST(&t->tc_MemEntry);
+						ADDHEAD(&t->tc_MemEntry, &ml->ml_Node);
+
+						t->tc_Node.ln_Name = name;
+						t->tc_Node.ln_Type = NT_TASK;
+						t->tc_Node.ln_Pri = 20;     /* same priority as input.device */
+
+						/* Add task. It will get back in touch soon */
+						NewAddTask(t, StorageTask, NULL, &tags);
+						/* Keep the initialization synchronous */
+						Wait(SIGF_SINGLE);
+						mss->handler[i] = t;
+					}
+				}
+			}
+        }
+    }
+
+    D(bug("[MSS] Storage::New() = %p\n", o));
+
+    if (!o)
+        BASE(cl->UserData)->LibNode.lib_OpenCnt--;
+
+    return o;
+}
+
+struct pRoot_Dispose {
+    OOP_MethodID        mID;
+};
+
+void METHOD(Storage, Root, Dispose)
+{
+    StorageData *mss = OOP_INST_DATA(cl, o);
+    OOP_Object *drv = NULL;
+    int i;
+    struct Library *base = &BASE(cl->UserData)->LibNode;
+
+    if (mss)
+    {
+    	for (i=0; i <= mss->maxLUN; i++)
+    	{
+    		if (mss->handler[i])
+    	    	Signal(mss->handler[i], SIGBREAKF_CTRL_C);
+    	}
+    }
+
+    OOP_GetAttr(o, aHidd_USBDevice_Bus, (intptr_t *)&drv);
+
+    FreeVecPooled(SD(cl)->MemPool, mss->cdesc);
+
+    OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
+
+    base->lib_OpenCnt--;
+}
 
 BOOL METHOD(Storage, Hidd_USBStorage, Reset)
 {
@@ -77,6 +276,7 @@ uint32_t METHOD(Storage, Hidd_USBStorage, DirectSCSI)
 	cbw_t cbw;
 	csw_t csw;
 	int i;
+	uint32_t retval = 0;
 
 	for (i=0; i < msg->cmdLen; i++)
 		cbw.CBWCB[i] = msg->cmd[i];
@@ -87,6 +287,8 @@ uint32_t METHOD(Storage, Hidd_USBStorage, DirectSCSI)
 	cbw.dCBWDataTransferLength = AROS_LONG2LE(msg->dataLen);
 	cbw.bmCBWFlags = msg->read ? CBW_FLAGS_IN : CBW_FLAGS_OUT;
 	cbw.bCBWCBLength = msg->cmdLen;
+
+	ObtainSemaphore(&SD(cl)->Lock);
 
 	D(bug("[MSS] DirectSCSI -> (%08x,%08x,%08x,%02x,%02x,%02x)\n",
 			AROS_LONG2LE(cbw.dCBWSignature),
@@ -116,158 +318,82 @@ uint32_t METHOD(Storage, Hidd_USBStorage, DirectSCSI)
 			{
 				if (csw.dCSWTag == cbw.dCBWTag)
 				{
-					return 1;
+					retval = 1;
 				}
 			}
 		}
 	}
 
-	return 0;
+	ReleaseSemaphore(&SD(cl)->Lock);
+
+	return retval;
 }
 
-OOP_Object *METHOD(Storage, Root, New)
+BOOL METHOD(Storage, Hidd_USBStorage, Read)
 {
-    D(bug("[MSS] Storage::New()\n"));
+	StorageData *mss = OOP_INST_DATA(cl, o);
+	uint8_t cmd[10] = {0x28, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-    BASE(cl->UserData)->LibNode.lib_OpenCnt++;
+	if (msg->lun > mss->maxLUN)
+		return FALSE;
 
-    o = (OOP_Object *)OOP_DoSuperMethod(cl, o, (OOP_Msg) msg);
-    if (o)
-    {
-    	StorageData *mss = OOP_INST_DATA(cl, o);
-    	int i;
-        intptr_t iface;
-        usb_config_descriptor_t cdesc;
+	cmd[2] = msg->block >>24;
+	cmd[3] = msg->block >>16;
+	cmd[4] = msg->block >>8;
+	cmd[5] = msg->block;
 
-        mss->sd = SD(cl);
-        mss->o = o;
+	cmd[7] = msg->count >> 8;
+	cmd[8] = msg->count;
 
-        OOP_GetAttr(o, aHidd_USBDevice_Interface, &iface);
-
-        /* Configure MSS device */
-        HIDD_USBDevice_Configure(o, 0);
-
-        /* Get device and config descriptors */
-        D(bug("[MSS] Getting device descriptor\n"));
-        HIDD_USBDevice_GetDeviceDescriptor(o, &mss->ddesc);
-        D(bug("[MSS] Getting initial config descriptor\n"));
-        HIDD_USBDevice_GetConfigDescriptor(o, 0, &cdesc);
-        D(bug("[MSS] GetMaxLUN returns %d\n", HIDD_USBStorage_GetMaxLUN(o)));
-
-        if (AROS_LE2WORD(cdesc.wTotalLength))
-        	mss->cdesc = AllocVecPooled(SD(cl)->MemPool, AROS_LE2WORD(cdesc.wTotalLength));
-
-        if (mss->cdesc)
-        {
-        	D(bug("[MSS] Getting config descriptor of size %d\n", AROS_LE2WORD(cdesc.wTotalLength)));
-			HIDD_USBDevice_GetDescriptor(o, UDESC_CONFIG, 0, AROS_LE2WORD(cdesc.wTotalLength), mss->cdesc);
-
-			D(bug("[MSS] Getting descriptor of interface %d\n", iface));
-			mss->iface = HIDD_USBDevice_GetInterface(o, iface);
-
-			D(bug("[MSS] Interface is supposed to have %d endpoints\n", mss->iface->bNumEndpoints));
-
-			for (i=0; i < mss->iface->bNumEndpoints; i++)
-			{
-				usb_endpoint_descriptor_t *ep;
-				ep = HIDD_USBDevice_GetEndpoint(o, iface, i);
-
-				D(bug("[MSS] endpoint %d: addr %02x, interval %02x, length %02x attr %02x maxpacket %04x\n", i,
-						ep->bEndpointAddress,
-						ep->bInterval,
-						ep->bLength,
-						ep->bmAttributes,
-						AROS_LE2WORD(ep->wMaxPacketSize)));
-
-				/* Use only BULK endpoints */
-				if (UE_GET_XFERTYPE(ep->bmAttributes) == UE_BULK)
-				{
-					if (UE_GET_DIR(ep->bEndpointAddress) == UE_DIR_IN)
-					{
-						D(bug("[MSS] IN endpoint found\n"));
-						mss->ep_in = ep;
-						mss->pipe_in = HIDD_USBDevice_CreatePipe(o, PIPE_Bulk, ep->bEndpointAddress, 0, AROS_LE2WORD(ep->wMaxPacketSize), 10000);
-					}
-					else if (UE_GET_DIR(ep->bEndpointAddress) == UE_DIR_OUT)
-					{
-						D(bug("[MSS] OUT endpoint found\n"));
-						mss->ep_out = ep;
-						mss->pipe_out = HIDD_USBDevice_CreatePipe(o, PIPE_Bulk, ep->bEndpointAddress, 0, AROS_LE2WORD(ep->wMaxPacketSize), 10000);
-					}
-				}
-			}
-
-			uint32_t capacity[2];
-			uint8_t cmd[10] = {0x25, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
-			HIDD_USBStorage_DirectSCSI(o, 0, cmd, 10, capacity, 8, 1);
-
-			D(bug("[MSS] Detected capacity: %dMB\n", ((capacity[0]+1)*capacity[1]) >> 20));
-
-			uint8_t buff[1024];
-			D(bug("[MSS] trying Read\n"));
-			cmd[0] = 0x28;
-			cmd[2] = 0;
-			cmd[3] = 0;
-			cmd[4] = 0;
-			cmd[5] = 0;
-			cmd[7] = 0;
-			cmd[8] = 2;
-			cmd[9] = 0;
-
-			HIDD_USBStorage_DirectSCSI(o, 0, cmd, 10, buff, 1024, 1);
-
-			int x,y;
-			for (y=0; y < 1024/16; y++)
-			{
-				D(bug("[MSS] %04x:  ", y*16));
-				for (x=0; x < 16; x++)
-				{
-					D(bug("%02x ", buff[16*y + x]));
-				}
-				D(bug("    "));
-				for (x=0; x < 16; x++)
-				{
-					if (buff[16*y + x] >= 0x20 && buff[16*y + x] <= 0x7e)
-						D(bug("%c", (buff[16*y + x]) ));
-					else
-						D(bug("."));
-				}
-				D(bug("\n"));
-			}
-        }
-    }
-
-    D(bug("[MSS] Storage::New() = %p\n", o));
-
-    if (!o)
-        BASE(cl->UserData)->LibNode.lib_OpenCnt--;
-
-    return o;
+	if (msg->buffer)
+		return HIDD_USBStorage_DirectSCSI(o, msg->lun, cmd, 10, msg->buffer, msg->count * mss->blocksize[msg->lun], 1);
 }
 
-struct pRoot_Dispose {
-    OOP_MethodID        mID;
-};
-
-void METHOD(Storage, Root, Dispose)
+BOOL METHOD(Storage, Hidd_USBStorage, Write)
 {
-    StorageData *mss = OOP_INST_DATA(cl, o);
-    OOP_Object *drv = NULL;
-    struct Library *base = &BASE(cl->UserData)->LibNode;
+	StorageData *mss = OOP_INST_DATA(cl, o);
+	uint8_t cmd[10] = {0x2a, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-    OOP_GetAttr(o, aHidd_USBDevice_Bus, (intptr_t *)&drv);
+	if (msg->lun > mss->maxLUN)
+		return FALSE;
 
-    FreeVecPooled(SD(cl)->MemPool, mss->cdesc);
+	cmd[2] = msg->block >>24;
+	cmd[3] = msg->block >>16;
+	cmd[4] = msg->block >>8;
+	cmd[5] = msg->block;
 
-    OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
+	cmd[7] = msg->count >> 8;
+	cmd[8] = msg->count;
 
-    base->lib_OpenCnt--;
+	if (msg->buffer)
+		return HIDD_USBStorage_DirectSCSI(o, msg->lun, cmd, 10, msg->buffer, msg->count * mss->blocksize[msg->lun], 0);
+
 }
 
+BOOL METHOD(Storage, Hidd_USBStorage, ReadCapacity)
+{
+	StorageData *mss = OOP_INST_DATA(cl, o);
+	uint8_t cmd[10] = {0x25, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	uint8_t capacity[8];
+	BOOL retval = FALSE;
 
+	if (msg->lun > mss->maxLUN)
+		return FALSE;
 
+	if (HIDD_USBStorage_DirectSCSI(o, msg->lun, cmd, 10, capacity, 8, 1))
+	{
+		mss->blocksize[msg->lun] = capacity[4] << 24 | capacity[5] << 16 | capacity[6] << 8 | capacity[7];
 
+		if (msg->blockTotal)
+			*msg->blockTotal = capacity[0] << 24 | capacity[1] << 16 | capacity[2] << 8 | capacity[3];
+		if (msg->blockSize)
+			*msg->blockSize = mss->blocksize[msg->lun];
+
+		retval = TRUE;
+	}
+
+	return retval;
+}
 
 static usb_interface_descriptor_t *find_idesc(usb_config_descriptor_t *cd, int ifaceidx, int altidx)
 {

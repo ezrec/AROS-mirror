@@ -64,6 +64,7 @@ static int Storage_Init(LIBBASETYPEPTR LIBBASE)
         {
             D(bug("[MSS] Init done.\n"));
             LIBBASE->sd.tid = 1;
+            LIBBASE->sd.unitNum = 0;
 
             OOP_Object *usb = OOP_NewObject(NULL, CLID_Hidd_USB, NULL);
             if (usb)

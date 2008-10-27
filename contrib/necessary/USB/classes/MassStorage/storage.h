@@ -94,6 +94,7 @@ struct mss_staticdata
     OOP_Class               *mssClass;
 
     uint32_t				tid;
+    uint32_t				unitNum;
 
     OOP_AttrBase            HiddPCIDeviceAB;
     OOP_AttrBase            HiddUSBDeviceAB;
@@ -117,6 +118,9 @@ typedef struct MSSData {
 
 	void						*pipe_in;
 	void						*pipe_out;
+	struct Task					*handler[16];
+	uint32_t					blocksize[16];
+	uint8_t						maxLUN;
 
 } StorageData;
 
@@ -138,5 +142,7 @@ static volatile uint32_t getTID(struct mss_staticdata *sd)
 	Disable(); id = sd->tid++; Enable();
 	return id;
 }
+
+extern void StorageTask(OOP_Class *cl, OOP_Object *o, uint8_t LUN, struct Task *parent);
 
 #endif /* STORAGE_H_ */
