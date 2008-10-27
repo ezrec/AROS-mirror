@@ -3,7 +3,7 @@
 
 -include $(TOP)/config/make.cfg
 
-##MM- contrib-gnu : contrib-gnu-sed
+#MM- contrib-gnu : contrib-gnu-sed
 #MM- contrib-gnu-sed : development-sed
 
 %fetch_and_build_gnu_development package=sed version=4.1.5 patch=yes
