@@ -567,8 +567,8 @@ void uhci_QueuedTransfer(OOP_Class *cl, OOP_Object *o, UHCI_Pipe *pipe, VOID *bu
         dt ^= 1;
         ptr += len;
 
-		bug("[UHCI]     TD=%p (%08x %08x %08x %08x)\n", td,
-				td->td_LinkPtr, td->td_Status, td->td_Token, td->td_Buffer);
+		D(bug("[UHCI]     TD=%p (%08x %08x %08x %08x)\n", td,
+				td->td_LinkPtr, td->td_Status, td->td_Token, td->td_Buffer));
     }
 
     td->td_Status |= UHCI_TD_IOC;
