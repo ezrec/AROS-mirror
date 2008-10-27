@@ -702,8 +702,7 @@ D(bug("[asfs] the next one\n"));
                     (asfshandle ==  &asfshandle->device->rootfh) ?
                     0 :
                     (IPTR)MKBADDR(asfshandle->handle);
-                packet.dp_Arg2 = 0;
-#warning "VERY FIXME: READ_LINK missing parameter"
+                packet.dp_Arg2 = (IPTR)iofs->io_Union.io_READ_SOFTLINK.io_Filename;
                 packet.dp_Arg3 = (IPTR)iofs->io_Union.io_READ_SOFTLINK.io_Buffer;
                 packet.dp_Arg4 = (IPTR)iofs->io_Union.io_READ_SOFTLINK.io_Size;
                 sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
