@@ -97,21 +97,28 @@ int main(void)
     
     D(bug("[lsusb] USB object @ %p\n", usb));
     
-    PutStr("USB device tree:\n");
-    
-    do {
-        OOP_GetAttr(usb, aHidd_USB_Bus, &bus);
-        if (bus)
-        {
-            D(bug("[lsusb] bus=%p\n", bus));
+    if(usb)
+    {
+        PutStr("USB device tree:\n");
+
+        do {
+            OOP_GetAttr(usb, aHidd_USB_Bus, &bus);
+            if (bus)
+            {
+                D(bug("[lsusb] bus=%p\n", bus));
             
-            printf("Bus %p:\n", bus);
-            scan_hub(bus, 1);
-        }
+                printf("Bus %p:\n", bus);
+                scan_hub(bus, 1);
+            }
                 
-    } while(bus);
-    
-    OOP_DisposeObject(usb);
+        } while(bus);
+        OOP_DisposeObject(usb);
+ 
+    }else
+    {
+        PutStr("Please use C:LoadResource...\n");
+    }
+
     OOP_ReleaseAttrBases(attrbases);
     
     return RETURN_OK;
