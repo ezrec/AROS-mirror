@@ -1,6 +1,15 @@
 diff -ruN tar-1.18/lib/rtapelib.c tar-1.18.aros/lib/rtapelib.c
 --- tar-1.18/lib/rtapelib.c	2007-06-27 15:49:45.000000000 +0200
-+++ tar-1.18.aros/lib/rtapelib.c	2008-10-18 16:22:35.000000000 +0200
++++ tar-1.18.aros/lib/rtapelib.c	2008-10-28 01:09:18.000000000 +0100
+@@ -97,7 +97,7 @@
+ 
+ /* If true, always consider file names to be local, even if they contain
+    colons */
+-bool force_local_option;
++bool force_local_option = true;
+ 
+ 
+ 
 @@ -474,7 +474,7 @@
  	return -1;
        }
@@ -12,7 +21,7 @@ diff -ruN tar-1.18/lib/rtapelib.c tar-1.18.aros/lib/rtapelib.c
  	int e = errno;
 diff -ruN tar-1.18/src/misc.c tar-1.18.aros/src/misc.c
 --- tar-1.18/src/misc.c	2007-06-27 15:30:32.000000000 +0200
-+++ tar-1.18.aros/src/misc.c	2008-10-18 16:22:36.000000000 +0200
++++ tar-1.18.aros/src/misc.c	2008-10-28 01:01:03.000000000 +0100
 @@ -706,7 +706,7 @@
  pid_t
  xfork (void)
@@ -33,7 +42,7 @@ diff -ruN tar-1.18/src/misc.c tar-1.18.aros/src/misc.c
      xalloc_die ();
 diff -ruN tar-1.18/src/system.c tar-1.18.aros/src/system.c
 --- tar-1.18/src/system.c	2007-06-27 15:30:32.000000000 +0200
-+++ tar-1.18.aros/src/system.c	2008-10-18 16:22:36.000000000 +0200
++++ tar-1.18.aros/src/system.c	2008-10-28 01:01:03.000000000 +0100
 @@ -210,7 +210,9 @@
    const char *shell = getenv ("SHELL");
    if (! shell)
