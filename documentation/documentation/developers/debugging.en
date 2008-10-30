@@ -31,6 +31,9 @@ the native port.
 Application developers need to ensure that their programs release all
 the resources they take. AROS provides some tools for this.
 
+If you need to debug a problem that only arises without ``--enable-debug``
+you can try to ``./configure --enable-debug --with-optimization=-O2``.
+
 -------------------------
 Printing debug statements
 -------------------------
