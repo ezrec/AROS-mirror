@@ -1,20 +1,14 @@
-# Copyright © 2004, The AROS Development Team. All rights reserved.
+# Copyright © 2004, 2008 The AROS Development Team. All rights reserved.
 # $Id$
 
 -include $(TOP)/config/make.cfg
 
+# Override faked target compiler with real cross compiler.
+TARGET_CC := $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-gcc
+
 ##MM- contrib-gnu : contrib-gnu-gcc
-#MM- contrib-gnu-gcc : development-gcc
+#MM- contrib-gnu-gcc : contrib-gnu-crosstools development-collect-aros development-gcc
 
-VERSION      := 3.3.1
-REPOSITORIES = sf://aros $(GNU_REPOSITORY)/gcc/gcc-$(VERSION)
-
-%fetch_and_build_gnu_development package=gcc subpackage=core version=$(VERSION) patch=yes \
-    package_repo=$(REPOSITORIES) extraoptions="--enable-longlong --enable-sjlj-exceptions"  \
-    postinstall=development-gcc-core-delete-specs
-
-#MM
-development-gcc-core-delete-specs :
-	$(RM) $(development-gcc-core-package-dir)/lib/gcc-lib/$(AROS_TARGET_CPU)-aros/$(VERSION)/specs
-
+%fetch_and_build_gnu_development package=gcc version=4.2.2 patch=yes \
+    extraoptions="--enable-languages=c,c++ --enable-longlong --enable-sjlj-exceptions --enable-version-specific-runtime-libs --disable-libssp"
 

@@ -1,0 +1,26 @@
+# Copyright © 2008, The AROS Development Team. All rights reserved.
+# $Id$
+
+-include $(TOP)/config/make.cfg
+
+GCC_VERSION = 4.2.2
+BINUTILS_VERSION = 2.19
+
+GCC_LANGUAGES = c,c++
+
+GNU_REPOSITORY := gnu://
+
+##MM- contrib-gnu : contrib-gnu-crosstools
+#MM- contrib-gnu-crosstools : contrib-gnu-crosstools-binutils contrib-gnu-crosstools-gcc
+
+%fetch_and_build mmake=contrib-gnu-crosstools-binutils package=binutils version=$(BINUTILS_VERSION) compiler=host \
+	package_repo="$(GNU_REPOSITORY)/binutils" \
+	patch_repo="$(TOP)/contrib/gnu/binutils" patch=yes \
+	prefix="$(TOOLDIR)" \
+	extraoptions="--target=$(AROS_TARGET_CPU)-aros --bindir=$(TOOLDIR)"
+
+%fetch_and_build mmake=contrib-gnu-crosstools-gcc package=gcc version=$(GCC_VERSION) compiler=host \
+	package_repo="$(GNU_REPOSITORY)/gcc/gcc-$(GCC_VERSION)" \
+	patch_repo="$(TOP)/contrib/gnu/gcc" patch=yes \
+	prefix="$(TOOLDIR)" \
+	extraoptions="--target=$(AROS_TARGET_CPU)-aros --bindir=$(TOOLDIR) --enable-languages=$(GCC_LANGUAGES) --enable-sjlj-exceptions --enable-long-long --enable-version-specific-runtime-libs --with-headers=$(AROS_DEVELOPMENT)/include --with-libs=$(AROS_DEVELOPMENT)/lib"
