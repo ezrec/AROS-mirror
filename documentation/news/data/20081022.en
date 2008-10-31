@@ -9,7 +9,7 @@ Latest updates
 --------------
 
 Many things happened during the last summer and AROS developers
-are costantly improving the operating system:
+are constantly improving the operating system:
 
 Paolo Besser has released the new 0.9.1 beta version of his VmwAROS
 distribution, which introduces improvements in the GUI style and
@@ -34,17 +34,17 @@ its old version, so this change should also reduce glitches AROS
 had on some configurations at boot time.
 
 Nick Andrews has released Sis 900 and e1000 network drivers for
-AROS. People with these network cards can now conncect to the
+AROS. People with these network cards can now connect to the
 Internet and communicate with local area networks.
 
-Nick Andrews has also enabled snapshot function in Wanderer, 
+Nick Andrews has also enabled a snapshot function in Wanderer, 
 allowing people to fix windows size and behavior.
 
 Markus Weiss has ported GCC/G++ 4.2.2 to i386 AROS Native. This
 should help other people developing and porting their software to
 AROS.
 
-Stanislaw Szymczyk has made huge progresses towards AROS self 
+Stanislaw Szymczyk has made huge progress towards AROS self 
 compilation. There are still some glitches to fix, but the day
 AROS can build itself is near. You can read something about his
 work at `Cogville`__.
