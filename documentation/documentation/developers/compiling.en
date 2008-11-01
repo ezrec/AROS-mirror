@@ -45,8 +45,8 @@ following is also required:
 
 + X11 development headers and libraries
 
-If you want to build the ISO image of i386-pc or x86-64-pc ports having GRUB2
-bootloader (default), the following is also required:
+If you want to build the ISO image of i386-pc or x86-64-pc ports with
+the GRUB 2 bootloader (the default), the following is also required:
 
 + ncurses
 + development files for lzo library
@@ -94,6 +94,7 @@ Lastly, there is a missing symbolic link that needs to be created::
 
     > cd /opt/local/bin
     > sudo ln -s i386-elf-gcc-3.4.3 i386-elf-gcc
+
 
 Sources
 =======
@@ -148,6 +149,8 @@ available for all targets:
     ``modules``
         Enables modules debug.
     
+Also, you can run ``./configure --help`` to see details of additional
+options.
 
 Hosted AROS/i386-linux or AROS/i386-freebsd
 """""""""""""""""""""""""""""""""""""""""""
@@ -175,6 +178,12 @@ Additionally, the following i386-pc specific options are available:
 ``--with-serial-debug=N [default: disabled]``
     Enable serial debug, sending the output to port ``N``.
 
+``--with-bootloader=NAME [default: grub2]``
+    Use a specific bootloader.
+
+.. Note:: Since the default bootloader, GRUB 2, cannot be built in a
+          cross-compilation environment, GRUB 1 must be used if compiling
+          under Mac OS X. To do this, use ``--with-bootloader=grub``.
 
 Compiling
 ---------
