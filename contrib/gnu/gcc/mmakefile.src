@@ -6,9 +6,19 @@
 # Override faked target compiler with real cross compiler.
 TARGET_CC := $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-gcc
 
-##MM- contrib-gnu : contrib-gnu-gcc
+GCC_VERSION := 4.2.2
+
+#MM- contrib-gnu : contrib-gnu-gcc
 #MM- contrib-gnu-gcc : contrib-gnu-crosstools development-collect-aros development-gcc
 
-%fetch_and_build_gnu_development package=gcc version=4.2.2 patch=yes \
-    extraoptions="--enable-languages=c,c++ --enable-longlong --enable-sjlj-exceptions --enable-version-specific-runtime-libs --disable-libssp"
+%fetch_and_build_gnu_development package=gcc version=$(GCC_VERSION) patch=yes \
+    extraoptions="--enable-languages=c,c++ --enable-longlong --enable-sjlj-exceptions --enable-version-specific-runtime-libs --disable-libssp --disable-libstdcxx-pch" \
+    postconfigure=contrib-gnu-gcc-fixincludes
 
+TEMP_EMPTY_DIR := $(shell mktemp -d)
+
+#MM
+contrib-gnu-gcc-fixincludes:
+	if [ -d $(TEMP_EMPTY_DIR) ]; then \
+	$(SED) -i -e "s@\(^NATIVE_SYSTEM_HEADER_DIR =\).*@\1 $(TEMP_EMPTY_DIR)@" $(PORTSDIR)/gcc/gcc-$(GCC_VERSION)/gcc/Makefile.in; \
+	fi
