@@ -2097,10 +2097,10 @@ index f9713c2..9059660 100644
  AC_SUBST(pexecute)
 diff --git gcc-4.2.2/libiberty/pex-aros.c gcc-4.2.2/libiberty/pex-aros.c
 new file mode 100644
-index 0000000..63ae24c
+index 0000000..a1647e2
 --- /dev/null
 +++ gcc-4.2.2/libiberty/pex-aros.c
-@@ -0,0 +1,304 @@
+@@ -0,0 +1,303 @@
 +/* Utilities to execute a program in a subprocess (possibly linked by pipes
 +   with other subprocesses), and wait for it.  OS/2 specialization.
 +   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003
@@ -2158,6 +2158,7 @@ index 0000000..63ae24c
 +#include <sys/stat.h>
 +#endif
 +
++#include <process.h>
 +#include <ctype.h>
 +
 +static int pex_aros_open_read (struct pex_obj *, const char *, int);
@@ -2226,160 +2227,158 @@ index 0000000..63ae24c
 +
 +/* Execute a child. */
 +
-+const unsigned char __shell_escape_character = '\\';
-+
 +static long
-+pex_aros_exec_child (struct pex_obj *obj, int flags ATTRIBUTE_UNUSED, const char *executable ATTRIBUTE_UNUSED,
++pex_aros_exec_child (struct pex_obj *obj, int flags, const char *executable,
 +                     char * const * argv, char * const * env ATTRIBUTE_UNUSED,
-+                     int in ATTRIBUTE_UNUSED, int out ATTRIBUTE_UNUSED, int errdes ATTRIBUTE_UNUSED,
++                     int in, int out, int errdes,
 +                     int toclose ATTRIBUTE_UNUSED, const char **errmsg, int *err)
 +{
-+  int rc;
-+  char *scmd,*s;
-+  int i,j,c,len,arglen;
-+  int need_quote;
-+  int already_have_quote;
-+  int escaped;
++  int org_in, org_out, org_errdes;
++  int status;
 +  int *statuses;
 +
-+  len = 0;
++  org_in = -1;
++  org_out = -1;
++  org_errdes = -1;
 +
-+  for(i = 0 ; argv[i] != NULL ; i++)
-+  {
-+    arglen = strlen(argv[i]);
-+
-+    len += 1 + arglen;
-+
-+    need_quote = already_have_quote = 0;
-+
-+    /* Check if this parameter is already surrounded by double quotes.
-+       What counts is that the first character is a double quote. We
-+       hope that the last character is an unescaped double quote, but
-+       don't check for it. */
-+    if(argv[i][0] == '\"')
++  if (in != STDIN_FILE_NO)
 +    {
-+      already_have_quote = 1;
-+    }
-+    else
-+    {
-+      /* Check if there's a blank space in the argument. If so, we will
-+         need to add double quote characters. */
-+      for (j = 0 ; j < arglen ; j++)
-+      {
-+        c = argv[i][j];
-+
-+        if (isspace(c))
-+        {
-+          need_quote = 1;
-+          break;
-+        }
-+      }
-+
-+      /* Make room for the double quote characters that we will have to add. */
-+      if(need_quote)
-+        len += 2;
++      org_in = dup (STDIN_FILE_NO);
++      if (org_in < 0)
++	{
++	  *err = errno;
++	  *errmsg = "dup";
++	  return -1;
++	}
++      if (dup2 (in, STDIN_FILE_NO) < 0)
++	{
++	  *err = errno;
++	  *errmsg = "dup2";
++	  return -1;
++	}
++      if (close (in) < 0)
++	{
++	  *err = errno;
++	  *errmsg = "close";
++	  return -1;
++	}
 +    }
 +
-+    /* Check if there are " or * characters in the quoted string which
-+       may have to be escaped. */
-+    if (need_quote || already_have_quote)
++  if (out != STDOUT_FILE_NO)
 +    {
-+      for (j = 0 ; j < arglen ; j++)
-+      {
-+        c = argv[i][j];
-+
-+        /* We just might have to add an escape character in front of these two. */
-+        if (c == '\"' || c == '*')
-+          len++;
-+      }
-+    }
-+  }
-+
-+  s = scmd = (char *) xmalloc (len+1);
-+
-+  for(i = 0 ; argv[i] != NULL ; i++)
-+  {
-+    arglen = strlen(argv[i]);
-+
-+    need_quote = already_have_quote = 0;
-+
-+    if (argv[i][0] == '\"')
-+    {
-+      already_have_quote = 1;
-+    }
-+    else
-+    {
-+      for (j = 0 ; j < arglen ; j++)
-+      {
-+        c = argv[i][j];
-+
-+        if (isspace(c))
-+        {
-+          need_quote = 1;
-+          break;
-+        }
-+      }
++      org_out = dup (STDOUT_FILE_NO);
++      if (org_out < 0)
++	{
++	  *err = errno;
++	  *errmsg = "dup";
++	  return -1;
++	}
++      if (dup2 (out, STDOUT_FILE_NO) < 0)
++	{
++	  *err = errno;
++	  *errmsg = "dup2";
++	  return -1;
++	}
++      if (close (out) < 0)
++	{
++	  *err = errno;
++	  *errmsg = "close";
++	  return -1;
++	}
 +    }
 +
-+    if(s != scmd)
-+      (*s++) = ' ';
-+
-+    if(need_quote)
-+      (*s++) = '\"';
-+
-+    escaped = 0;
-+
-+    for(j = 0 ; j < arglen ; j++)
++  if (errdes != STDERR_FILE_NO
++      || (flags & PEX_STDERR_TO_STDOUT) != 0)
 +    {
-+      c = argv[i][j];
-+
-+      /* If this is a " or * and the parameter is quoted, try to
-+         add an escape character in front of it. */
-+      if((c == '\"' || c == '*') && (need_quote || already_have_quote))
-+      {
-+        /* Careful, don't escape the first double
-+           quote character by mistake. */
-+        if(!already_have_quote || j > 0)
-+        {
-+          /* Don't add an escape character here if the previous character
-+             already was an escape character. */
-+          if(!escaped)
-+            (*s++) = '*';
-+        }
-+      }
-+
-+      (*s++) = c;
-+
-+      /* Remember if the last character read was an escape character. */
-+      if (escaped)
-+        escaped = 0;
-+      else
-+        escaped = (c == __shell_escape_character && c != '*');
++      org_errdes = dup (STDERR_FILE_NO);
++      if (org_errdes < 0)
++	{
++	  *err = errno;
++	  *errmsg = "dup";
++	  return -1;
++	}
++      if (dup2 ((flags & PEX_STDERR_TO_STDOUT) != 0 ? STDOUT_FILE_NO : errdes,
++		 STDERR_FILE_NO) < 0)
++	{
++	  *err = errno;
++	  *errmsg = "dup2";
++	  return -1;
++	}
++      if (errdes != STDERR_FILE_NO)
++	{
++	  if (close (errdes) < 0)
++	    {
++	      *err = errno;
++	      *errmsg = "close";
++	      return -1;
++	    }
++	}
 +    }
 +
-+    if(need_quote)
-+      (*s++) = '\"';
-+  }
++  status = (((flags & PEX_SEARCH) != 0 ? spawnvp : spawnv)
++	    (P_WAIT, executable, (char * const *) argv));
 +
-+  (*s) = '\0';
++  if (status == -1)
++    {
++      *err = errno;
++      *errmsg = ((flags & PEX_SEARCH) != 0) ? "spawnvp" : "spawnv";
++    }
 +
-+  rc = system (scmd);
++  if (in != STDIN_FILE_NO)
++    {
++      if (dup2 (org_in, STDIN_FILE_NO) < 0)
++	{
++	  *err = errno;
++	  *errmsg = "dup2";
++	  return -1;
++	}
++      if (close (org_in) < 0)
++	{
++	  *err = errno;
++	  *errmsg = "close";
++	  return -1;
++	}
++    }
 +
-+  free (scmd);
++  if (out != STDOUT_FILE_NO)
++    {
++      if (dup2 (org_out, STDOUT_FILE_NO) < 0)
++	{
++	  *err = errno;
++	  *errmsg = "dup2";
++	  return -1;
++	}
++      if (close (org_out) < 0)
++	{
++	  *err = errno;
++	  *errmsg = "close";
++	  return -1;
++	}
++    }
 +
-+  if (rc == -1)
-+  {
-+    *err = errno;
-+    *errmsg = install_error_msg;
-+    return -1;
-+  }
++  if (errdes != STDERR_FILE_NO
++      || (flags & PEX_STDERR_TO_STDOUT) != 0)
++    {
++      if (dup2 (org_errdes, STDERR_FILE_NO) < 0)
++	{
++	  *err = errno;
++	  *errmsg = "dup2";
++	  return -1;
++	}
++      if (close (org_errdes) < 0)
++	{
++	  *err = errno;
++	  *errmsg = "close";
++	  return -1;
++	}
++    }
 +
 +  /* Save the exit status for later.  When we are called, obj->count
 +     is the number of children which have executed before this
 +     one.  */
 +  statuses = (int *) obj->sysdep;
 +  statuses = XRESIZEVEC (int, statuses, obj->count + 1);
-+  statuses[obj->count] = (rc << 8); /* Tuck the status away for pwait */
++  statuses[obj->count] = status;
 +  obj->sysdep = (void *) statuses;
 +
 +  return obj->count;
