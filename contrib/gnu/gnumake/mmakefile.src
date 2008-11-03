@@ -3,7 +3,7 @@
 
 -include $(TOP)/config/make.cfg
 
-##MM- contrib-gnu : contrib-gnu-gnumake
+#MM- contrib-gnu : contrib-gnu-gnumake
 #MM- contrib-gnu-gnumake : development-make
 
 %fetch_and_build_gnu_development package=make version=3.81 patch=yes \
