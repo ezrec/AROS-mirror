@@ -931,7 +931,7 @@ diff -ruN perl-5.7.2/makedepend.SH perl-5.7.2.aros/makedepend.SH
  	    -e '1d' \
  	    -e '/^#.*<stdin>/d' \
 +	    -e '/^#.*<built-in>/d' \
-+	    -e '/^#.*<command line>/d' \
++	    -e '/^#.*<command.line>/d' \
  	    -e '/^#.*"-"/d' \
  	    -e 's#\.[0-9][0-9]*\.c#'"$file.c#" \
  	    -e 's/^[	 ]*#[	 ]*line/#/' \
