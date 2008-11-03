@@ -50,8 +50,11 @@ static const char *const initcoms [] = {
          /* Aliases that are builtin commands in at&t */
           "newgrp=exec newgrp",
          /* Aliases that are AmigaOS4 specific - coreutils renames */
+#ifdef __amigaos4__
           "date=gdate", "dir=gdir", "install=ginstall", "env=genv",
-          "make=gmake", "info=ginfo", "/dev/null=/nil",
+          "make=gmake", "info=ginfo", 
+#endif
+	"/dev/null=/nil",
           NULL,
         /* this is what at&t ksh seems to track, with the addition of emacs */
         "alias", "-tU",
@@ -133,7 +136,7 @@ main(int argc, char *argv[])
         init_histvec();
 
 #if defined(__AROS__)
-        def_path = "/SYS/Development/bin:/SYS/Development:/C:.";
+        def_path = "/Development/bin:/Development/usr/bin:/C:.";
 #else
         def_path = "/gcc/bin:/SDK/C:/SDK/Local/C:/SDK/Local/newlib/bin:/SDK/Local/clib2/bin:/C:.";
 #endif
