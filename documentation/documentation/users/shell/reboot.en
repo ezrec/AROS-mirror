@@ -4,7 +4,7 @@ Reboot
 
 .. This document is automatically generated. Don't edit it!
 
-`Index <index>`_ `Prev <quitaros>`_ `Next <relabel>`_ 
+`Index <index>`_ `Prev <quit>`_ `Next <relabel>`_ 
 
 ---------------
 
@@ -21,7 +21,7 @@ Synopsis
 ::
 
 
-     (N/A)
+     COLD/S
 
 
 Location
@@ -37,7 +37,16 @@ Function
 ::
 
 
-     It reboots the machine ( performs a cold reboot - Coldreboot() )
+     It reboots the machine
+
+
+Inputs
+~~~~~~
+::
+
+
+     COLD --  tells to perform cold (complete) reboot of the machine.
+              Otherwise only AROS is restarted.
 
 
 Notes
@@ -54,5 +63,5 @@ Notes
 See also
 ~~~~~~~~
 
-`QuitAROS <quitaros>`_ 
+`Shutdown <shutdown>`_ 
 

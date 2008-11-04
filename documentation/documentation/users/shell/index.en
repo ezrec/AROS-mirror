@@ -74,6 +74,7 @@ Shell Commands
 + `setenv <setenv>`_
 + `setkeyboard <setkeyboard>`_
 + `shell <shell>`_
++ `shutdown <shutdown>`_
 + `skip <skip>`_
 + `sort <sort>`_
 + `stack <stack>`_

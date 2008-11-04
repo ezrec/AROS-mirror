@@ -38,10 +38,11 @@ exec
 `RemPort()`_                            `RemResource()`_                        `RemSemaphore()`_                       `RemTail()`_                            
 `RemTask()`_                            `ReplyMsg()`_                           `SendIO()`_                             `SetExcept()`_                          
 `SetFunction()`_                        `SetIntVector()`_                       `SetSignal()`_                          `SetSR()`_                              
-`SetTaskPri()`_                         `Signal()`_                             `StackSwap()`_                          `SumKickData()`_                        
-`SumLibrary()`_                         `SuperState()`_                         `Supervisor()`_                         `Switch()`_                             
-`TypeOfMem()`_                          `UserState()`_                          `Vacate()`_                             `VNewRawDoFmt()`_                       
-`Wait()`_                               `WaitIO()`_                             `WaitPort()`_                           
+`SetTaskPri()`_                         `ShutdownA()`_                          `Signal()`_                             `StackSwap()`_                          
+`SumKickData()`_                        `SumLibrary()`_                         `SuperState()`_                         `Supervisor()`_                         
+`Switch()`_                             `TypeOfMem()`_                          `UserState()`_                          `Vacate()`_                             
+`VNewRawDoFmt()`_                       `Wait()`_                               `WaitIO()`_                             `WaitPort()`_                           
+
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -4572,10 +4573,8 @@ Inputs
                     maxwidth  - maximum width of field (for strings only).
                                 Defaults to no limit.
 
-                    size      - 'w' means WORD.
-                                'l' means IPTR (LONG on 32-bit architectures and QUAD on 64-bit).
-
-                                defaults to WORD, if nothing is specified.
+                    size      - 'l' means IPTR (LONG on 32-bit architectures and QUAD on 64-bit).
+                                Defaults to WORD, if nothing is specified.
 
                     type      - 'b' BSTR. It will use the internal representation
                                     of the BSTR defined by the ABI.
@@ -4594,6 +4593,10 @@ Inputs
                     AROS_UFC2(void, PutChProc,
                               AROS_UFCA(UBYTE, char,      D0),
                               AROS_UFCA(APTR , PutChData, A3));
+                 
+                    The argument may be NULL. This makes RawDoFmt() use an internal
+                    function. If you want to be compatible with AmigaOS you
+                    should check that exec.library has at least version 45.
 
      PutChData    - Data propagated to each call of the callback hook.
 
@@ -4634,8 +4637,15 @@ Notes
 ~~~~~
 ::
 
-     The field size defaults to words which may be different from the
-     default integer size of the compiler.
+     The field size defaults to WORD which may be different from the
+     default integer size of the compiler. If you don't take care about
+     this the result will be messy.
+     
+     There are different solutions for GCC:
+     - Define Datastream between #pragma pack(2) / #pragma pack().
+     - Use __attribute__((packed)) for Datastream.
+     - Only use type of LONG/ULONG for integer variables. Additionally only use
+       %ld/%lu in FormatString.
 
 
 Bugs
@@ -5425,6 +5435,60 @@ Result
      Old task priority.
 
 
+
+----------
+
+ShutdownA()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG ShutdownA(
+          ULONG action );
+ 
+ ULONG Shutdown(
+          TAG tag, ... );
+
+Function
+~~~~~~~~
+::
+
+     This function will shut down the operating system.
+
+
+Inputs
+~~~~~~
+::
+
+     action - what to do:
+      * SD_ACTION_POWEROFF   - power off the machine.
+      * SD_ACTION_COLDREBOOT - cold reboot the machine (not only AROS).
+
+
+Result
+~~~~~~
+::
+
+     This function does not return in case of success. Otherwise is returns
+     zero.
+
+
+Notes
+~~~~~
+::
+
+     It can be quite harmful to call this function. It may be possible that
+     you will lose data from other tasks not having saved, or disk buffers
+     not being flushed. Plus you could annoy the (other) users.
+
+
+
+See also
+~~~~~~~~
+
+`ColdReboot()`_ 
 
 ----------
 
