@@ -92,7 +92,7 @@ devices;trackdisk;Trackdisk.device;2008-08-24
 devices;scsi;Scsi.device;2008-08-10
 hidds;HID;Design a new HIDD;2003-08-26
 hidds;HIDG;Graphics.HIDD;2003-08-26
-programs;prefs;Preferences;2003-08-26
+programs;prefs;Preferences;2008-11-04
 programs;system;System;2003-08-26
 programs;utilities;Utilities;2003-08-26
 programs;c;Shell commands;2008-11-01
@@ -323,17 +323,6 @@ HIDG;HIDDV_Graphics_Cmd_FillSpan;1;1;0
 HIDG;HIDDV_Graphics_Cmd_Clear;1;1;0
 HIDG;HIDDV_Graphics_Cmd_Special;1;1;0
 multiview;MultiView;1;1;1
-prefs;Locale prefs program;1;1;2
-prefs;Font prefs program;1;1;1
-prefs;Input prefs program;1;1;1
-prefs;IControl prefs program;1;1;0
-prefs;Palette prefs program;1;1;0
-prefs;Pointer prefs program;1;1;0
-prefs;Screenmode prefs program;1;1;1
-prefs;Serial prefs program;1;1;1
-prefs;Time prefs program;1;1;1
-prefs;WBPattern prefs program;1;1;1
-prefs;Printer prefs program;1;1;0
 rexxmast;RexxMast with the "REXX" port;1;1;2
 system;System/Format;1;1;0
 exec;AbortIO;1;1;2
@@ -2271,6 +2260,21 @@ c;Unalias;1;1;2
 c;Unset;1;1;2
 c;Unsetenv;1;1;2
 c;Why;1;1;2
+prefs;Font;1;1;1
+prefs;IControl;1;1;2
+prefs;Input;1;1;1
+prefs;Locale;1;1;2
+prefs;Overscan;1;1;5
+prefs;Palette;1;1;5
+prefs;Pointer;1;1;0
+prefs;Printer;1;1;0
+prefs;PrinterGfx;1;1;0
+prefs;PrinterPS;1;1;0
+prefs;Screenmode;1;1;1
+prefs;Serial;1;1;2
+prefs;Sound;1;1;2
+prefs;Time;1;1;2
+prefs;WBPattern;1;1;2
 #CATEGORY_ITEMS_END
 #COMMENTS_BEGIN (category, comment)
 gameport;Gameport.device supports only mouse
@@ -2285,4 +2289,10 @@ alib;CxCustom, CxDebug, CxFilter, CxSender, CxSignal and CxTranslate are macros 
 debuglib;KPrintF and KPutChar are implemented in arossupport.lib
 c;Echo does not support handling of all ANSI escape sequences
 c;Edit is an alias for JanoEditor
+prefs;Font preferences do not support command line arguments
+prefs;Input preferences do not support command line arguments
+prefs;Palette preferences are not needed as AROS works in 16/24 bit modes
+prefs;ScreenMode preferences do not support command line arguments
+prefs;Sound preferences are substituted by AHI preferences
+prefs;WBPattern preferences are substituted by Wanderer preferences
 #COMMENTS_END
