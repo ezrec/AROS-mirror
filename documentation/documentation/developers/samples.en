@@ -42,7 +42,7 @@ refresh.c__         Examine difference between simplerefresh and
                     smartrefresh windows
 appscreen.c__       Opens a screen for applications
 customscreen.c__    Opens a screen with a backdrop window
-easyreq.c           Demonstrates EasyRequesters
+easyreq.c__         Demonstrates EasyRequesters
 =================== =====================================================
 
 __ samplecode/intuition_events.c
