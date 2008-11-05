@@ -42,12 +42,14 @@ refresh.c__         Examine difference between simplerefresh and
                     smartrefresh windows
 appscreen.c__       Opens a screen for applications
 customscreen.c__    Opens a screen with a backdrop window
+easyreq.c           Demonstrates EasyRequesters
 =================== =====================================================
 
 __ samplecode/intuition_events.c
 __ samplecode/intuition_refresh.c
 __ samplecode/intuition_appscreen.c
 __ samplecode/intuition_customscreen.c
+__ samplecode/intuition_easyreq.c
 
 
 ASL
@@ -64,7 +66,17 @@ DOS
 ---
 
 =================== =====================================================
-dos_file.c__        Reads a file and writes content to another file
+file.c__            Reads a file and writes content to another file
 =================== =====================================================
 
 __ samplecode/dos_file.c
+
+
+Exec
+----
+
+=================== =====================================================
+rawdofmt.c__        RawDoFmt allows printf()-like formatting
+=================== =====================================================
+
+__ samplecode/exec_rawdofmt.c
