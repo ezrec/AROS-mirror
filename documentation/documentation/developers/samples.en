@@ -67,9 +67,13 @@ DOS
 
 =================== =====================================================
 file.c__            Reads a file and writes content to another file
+readargs.c__        Command line parsing with ReadArgs()
+readargs_help.c__   ReadArgs() with help text
 =================== =====================================================
 
 __ samplecode/dos_file.c
+__ samplecode/dos_readargs.c
+__ samplecode/dos_readargs_help.c
 
 
 Exec
