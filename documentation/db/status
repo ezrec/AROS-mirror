@@ -93,14 +93,12 @@ devices;scsi;Scsi.device;2008-08-10
 hidds;HID;Design a new HIDD;2003-08-26
 hidds;HIDG;Graphics.HIDD;2003-08-26
 programs;prefs;Preferences;2008-11-04
-programs;system;System;2003-08-26
-programs;utilities;Utilities;2003-08-26
+programs;system;System;2008-11-05
+programs;utilities;Utilities;2008-11-05
 programs;c;Shell commands;2008-11-01
-programs;rexxc;Rexxc;2003-08-26
+programs;rexxc;Rexxc;2008-11-05
 programs;tools;Tools;2003-08-26
 programs;commoditiesprogs;Commodities;2003-08-26
-utilities;multiview;MultiView;2003-08-26
-system;rexxmast;RexxMast Program;2003-08-26
 resources;potgo;Potgo.resource;2008-09-23
 resources;misc;Misc.resource;2008-09-23
 resources;disk;Disk.resource;2008-09-23
@@ -323,8 +321,6 @@ HIDG;HIDDV_Graphics_Cmd_FillSpan;1;1;0
 HIDG;HIDDV_Graphics_Cmd_Clear;1;1;0
 HIDG;HIDDV_Graphics_Cmd_Special;1;1;0
 multiview;MultiView;1;1;1
-rexxmast;RexxMast with the "REXX" port;1;1;2
-system;System/Format;1;1;0
 exec;AbortIO;1;1;2
 exec;AddDevice;1;1;2
 exec;AddHead;1;1;2
@@ -2275,6 +2271,26 @@ prefs;Serial;1;1;2
 prefs;Sound;1;1;2
 prefs;Time;1;1;2
 prefs;WBPattern;1;1;2
+rexxc;HI;1;1;0
+rexxc;RX;1;1;2
+rexxc;RXC;1;1;0
+rexxc;RXLIB;1;1;2
+rexxc;RXSET;1;1;0
+rexxc;TCC;1;1;0
+rexxc;TCO;1;1;0
+rexxc;TE;1;1;0
+rexxc;TS;1;1;0
+rexxc;WaitForPort;1;1;2
+system;CLI;1;1;2
+system;DiskCopy;1;1;5
+system;FixFonts;1;1;2
+system;Format;1;1;1
+system;Intellifont;1;1;5
+system;NoFastMem;1;1;5
+system;RexxMast;1;1;2
+utilities;Clock;1;1;1
+utilities;More;1;1;2
+utilities;MultiView;1;1;2
 #CATEGORY_ITEMS_END
 #COMMENTS_BEGIN (category, comment)
 gameport;Gameport.device supports only mouse
@@ -2295,4 +2311,7 @@ prefs;Palette preferences are not needed as AROS works in 16/24 bit modes
 prefs;ScreenMode preferences do not support command line arguments
 prefs;Sound preferences are substituted by AHI preferences
 prefs;WBPattern preferences are substituted by Wanderer preferences
+system;CLI(Shell) is available from Wanderer menu
+system;Format is not working in GUI mode
+utilities;Clock is missing digital display and support for some parameters
 #COMMENTS_END
