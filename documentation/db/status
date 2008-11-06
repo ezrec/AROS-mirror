@@ -4,7 +4,7 @@ amigaos;classes;Classes;2008-10-25
 amigaos;devices;Devices;2008-08-24
 amigaos;resources;Resources;2008-09-23
 aros;hidds;HIDDs;2003-08-26
-amigaos;programs;Programs;2003-08-26
+amigaos;programs;Programs;2008-11-06
 amigaos;linklibs;Linklibs;2008-09-24
 aros;libraries_aros;Libraries;2003-08-26
 3rdparty;libraries_3rd;Libraries;2008-07-25
@@ -97,8 +97,8 @@ programs;system;System;2008-11-05
 programs;utilities;Utilities;2008-11-05
 programs;c;Shell commands;2008-11-01
 programs;rexxc;Rexxc;2008-11-05
-programs;tools;Tools;2003-08-26
-programs;commoditiesprogs;Commodities;2003-08-26
+programs;tools;Tools;2008-11-06
+programs;commoditiesprogs;Commodities;2008-11-06
 resources;potgo;Potgo.resource;2008-09-23
 resources;misc;Misc.resource;2008-09-23
 resources;disk;Disk.resource;2008-09-23
@@ -320,7 +320,6 @@ HIDG;HIDDV_Graphics_Cmd_FillText;1;1;0
 HIDG;HIDDV_Graphics_Cmd_FillSpan;1;1;0
 HIDG;HIDDV_Graphics_Cmd_Clear;1;1;0
 HIDG;HIDDV_Graphics_Cmd_Special;1;1;0
-multiview;MultiView;1;1;1
 exec;AbortIO;1;1;2
 exec;AddDevice;1;1;2
 exec;AddHead;1;1;2
@@ -2282,7 +2281,7 @@ rexxc;TE;1;1;0
 rexxc;TS;1;1;0
 rexxc;WaitForPort;1;1;2
 system;CLI;1;1;2
-system;DiskCopy;1;1;5
+system;DiskCopy;1;1;0
 system;FixFonts;1;1;2
 system;Format;1;1;1
 system;Intellifont;1;1;5
@@ -2291,6 +2290,28 @@ system;RexxMast;1;1;2
 utilities;Clock;1;1;1
 utilities;More;1;1;2
 utilities;MultiView;1;1;2
+tools;BRU;1;1;0
+tools;Calculator;1;1;2
+tools;CMD;1;1;0
+tools;GraphicDump;1;1;1
+tools;HDBackup;1;1;0
+tools;HDToolBox;1;1;2
+tools;IconEdit;1;1;0
+tools;InitPrinter;1;1;0
+tools;KeyShow;1;1;0
+tools;Lacer;1;1;0
+tools;MEmacs;1;1;0
+tools;PrepCard;1;1;5
+tools;PrintFiles;1;1;0
+tools;ShowConfig;1;1;1
+commoditiesprogs;AutoPoint;1;1;2
+commoditiesprogs;Blanker;1;1;1
+commoditiesprogs;ClickToFront;1;1;2
+commoditiesprogs;CrossDOS;1;1;5
+commoditiesprogs;Exchange;1;1;2
+commoditiesprogs;FKey;1;1;2
+commoditiesprogs;MouseBlanker;1;1;0
+commoditiesprogs;NoCapsLock;1;1;2
 #CATEGORY_ITEMS_END
 #COMMENTS_BEGIN (category, comment)
 gameport;Gameport.device supports only mouse
@@ -2314,4 +2335,7 @@ prefs;WBPattern preferences are substituted by Wanderer preferences
 system;CLI(Shell) is available from Wanderer menu
 system;Format is not working in GUI mode
 utilities;Clock is missing digital display and support for some parameters
+commoditiesprogs;Blanker is not supporting all command line options
+tools;ShowConfig is partially substituted by PCITool
+tools;GraphicDump is replaced by ScreenGrabber, however the tool saves data to disk, not printer
 #COMMENTS_END
