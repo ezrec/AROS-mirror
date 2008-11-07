@@ -5012,8 +5012,9 @@ Result
 ~~~~~~
 ::
 
-     != 0    success
-     == 0    failure, see IoErr() for more information.
+     >= 0    length of resolved filename in case of success
+     == -1   failure, see IoErr() for more information
+     == -2   buffer size was too small to store resolved filename
 
 
 

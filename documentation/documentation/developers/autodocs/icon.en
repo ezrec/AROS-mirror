@@ -255,6 +255,7 @@ Function
 ::
 
      Finds the supplied typeName inside the given toolTypeArray.
+     Search is case-insensitive.
 
 
 Inputs
@@ -651,6 +652,7 @@ Function
 ::
 
      Checks if the given tooltype has the supplied value.
+     Search is case-insensitive.
 
 
 Inputs
