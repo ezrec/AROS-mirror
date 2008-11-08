@@ -1,5 +1,5 @@
 #CATEGORIES_BEGIN (basecategory, category, description, last update date)
-amigaos;libraries;Libraries;2008-08-24
+amigaos;libraries;Libraries;2008-11-08
 amigaos;classes;Classes;2008-10-25
 amigaos;devices;Devices;2008-08-24
 amigaos;resources;Resources;2008-09-23
@@ -14,7 +14,7 @@ linklibs;debuglib;Debug.lib;2008-09-24
 linklibs;ddebuglib;DDebug.lib;2008-09-24
 libraries;intuition;Intuition.library;2008-07-19
 libraries;graphics;Graphics.library;2008-07-19
-libraries;dos;Dos.library;2008-07-19
+libraries;dos;Dos.library;2008-11-08
 libraries;translator;Translator.library;2008-07-22
 libraries;utility;Utility.library;2008-07-23
 libraries;wb;Workbench.library;2008-07-23
@@ -37,7 +37,7 @@ libraries;mathieeesingbas;MathIEEESingleBase.library;2008-07-21
 libraries;mathieeesingtrans;MathIEEESingleTrans.library;2008-07-21
 libraries;gadtools;GadTools.library;2008-07-19
 libraries;expansion;Expansion.library;2008-07-19
-libraries;exec;Exec.library;2008-07-19
+libraries;exec;Exec.library;2008-11-08
 libraries;diskfont;Diskfont.library;2008-07-19
 libraries;datatypes;Datatypes.library;2008-07-19
 libraries;commodities;Commodities.library;2008-07-19
@@ -455,6 +455,7 @@ exec;RemTask;2;1;2
 exec;StackSwap;2;1;2
 exec;SuperState;2;1;2
 exec;UserState;2;1;2
+exec;ShutdownA;2;2;1
 amigaguide;AddAmigaGuideHostA;1;1;0
 amigaguide;AmigaGuideSignal;1;1;0
 amigaguide;CloseAmigaGuide;1;1;0
@@ -540,7 +541,7 @@ dos;DupLock;1;1;2
 dos;DupLockFromFH;1;1;2
 dos;EndNotify;1;1;2
 dos;ErrorReport;1;1;1
-dos;ExAll;1;1;1
+dos;ExAll;1;1;2
 dos;ExAllEnd;1;1;2
 dos;Examine;1;1;2
 dos;ExamineFH;1;1;2
