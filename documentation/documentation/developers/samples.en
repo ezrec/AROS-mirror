@@ -76,6 +76,17 @@ __ samplecode/dos_readargs.c
 __ samplecode/dos_readargs_help.c
 
 
+Icon
+----
+=================== =====================================================
+start.c__           Reads ToolTypes from icons
+change.c__          Shows how to change ToolTypes
+=================== =====================================================
+
+__ samplecode/icon_start.c
+__ samplecode/icon_change.c
+
+
 Exec
 ----
 
