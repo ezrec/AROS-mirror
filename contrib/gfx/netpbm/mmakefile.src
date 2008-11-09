@@ -3,7 +3,7 @@
 
 include $(TOP)/config/make.cfg
 
-##MM- contrib-gfx : contrib-gfx-netpbm
+#MM- contrib-gfx : contrib-gfx-netpbm
 #MM- contrib-gfx-netpbm : contrib-gfx-netpbm-pngtopnm contrib-gfx-netpbm-ppmtoilbm
 #MM- contrib-gfx-netpbm-pngtopnm : contrib-gfx-netpbm-fetch
 #MM- contrib-gfx-netpbm-ppmtoilbm : contrib-gfx-netpbm-fetch
