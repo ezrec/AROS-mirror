@@ -60,7 +60,7 @@ diff -ruN perl-5.7.2/config.sh perl-5.7.2.aros/config.sh
 +cc='/bin/gcc'
 +cccdlflags=''
 +ccdlflags=''
-+ccflags='-Wall -DDEBUGGING -fno-strict-aliasing -I/SYS/Development/netinclude'
++ccflags='-Wall -fno-strict-aliasing -I/SYS/Development/netinclude'
 +ccflags_uselargefiles=''
 +ccname='gcc'
 +ccsymbols=''
