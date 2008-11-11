@@ -707,8 +707,8 @@ static void Exit(const tsd_t *TSD)
 
       memcpy(h,TSD->protect_return,sizeof(jmp_buf));
       /* cheat about the const, we go away anyway :-) */
-      *((int*) &TSD->delayed_error_type) = PROTECTED_DelayedExit;
-      *((int*) &TSD->expected_exit_error) = 1;
+      ((tsd_t *)TSD)->delayed_error_type = PROTECTED_DelayedExit;
+      ((tsd_t *)TSD)->expected_exit_error = 1;
       longjmp( h, 1 ) ;
    }
    TSD->MTExit( 1 ) ;
