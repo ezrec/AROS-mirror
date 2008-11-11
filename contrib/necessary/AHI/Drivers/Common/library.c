@@ -504,10 +504,10 @@ _LibExpunge( struct DriverBase* AHIsubBase )
 #endif
     
     /* Close libraries */
-    CloseLibrary( (struct Library*) IntuitionBase );
-    CloseLibrary( (struct Library*) UtilityBase );
+    CloseLibrary(&IntuitionBase->LibNode );
+    CloseLibrary(&UtilityBase->ub_LibNode );
 
-    DeleteLibrary((struct Library *) AHIsubBase);
+    DeleteLibrary(&AHIsubBase->library);
   }
   else
   {

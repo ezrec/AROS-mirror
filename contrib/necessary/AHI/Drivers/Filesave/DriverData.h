@@ -16,9 +16,9 @@ struct FilesaveBase
 {
     struct DriverBase driverbase;
     struct Library*   aslbase;
-    struct Library*   dosbase;
+    struct DosLibrary*   dosbase;
     struct Library*   dtsbase;
-    struct Library*   gfxbase;
+    struct GfxBase*   gfxbase;
 #ifdef __AMIGAOS4__
     struct AslIFace*       iasl;
     struct DOSIFace*       idos;
@@ -29,9 +29,9 @@ struct FilesaveBase
 #define DRIVERBASE_SIZEOF (sizeof (struct FilesaveBase))
 
 #define AslBase           (FilesaveBase->aslbase)
-#define DOSBase           (*(struct DosLibrary**) &FilesaveBase->dosbase)
+#define DOSBase           (FilesaveBase->dosbase)
 #define DataTypesBase     (FilesaveBase->dtsbase)
-#define GfxBase           (*(struct GfxBase**) &FilesaveBase->gfxbase)
+#define GfxBase           (FilesaveBase->gfxbase)
 
 #ifdef __AMIGAOS4__
 #define IDOS              (FilesaveBase->idos)

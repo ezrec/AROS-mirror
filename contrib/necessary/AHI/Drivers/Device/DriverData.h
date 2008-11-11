@@ -3,13 +3,14 @@
 
 #include <devices/ahi.h>
 #include <exec/libraries.h>
+#include <dos/dosextens.h>
 
 #include "DriverBase.h"
 
 struct DeviceBase
 {
     struct DriverBase driverbase;
-    struct Library*   dosbase;
+    struct DosLibrary*   dosbase;
 #ifdef __AMIGAOS4__
     struct DOSIFace*  idos;
 #endif
@@ -17,7 +18,7 @@ struct DeviceBase
 
 #define DRIVERBASE_SIZEOF (sizeof (struct DeviceBase))
 
-#define DOSBase  *((struct DosLibrary**) &DeviceBase->dosbase)
+#define DOSBase  (DeviceBase->dosbase)
 
 #ifdef __AMIGAOS4__
 # define IDOS (DeviceBase->idos)

@@ -10,7 +10,7 @@
 struct VoidBase
 {
     struct DriverBase driverbase;
-    struct Library*   dosbase;
+    struct DosLibrary*   dosbase;
 #ifdef __AMIGAOS4__
     struct DOSIFace*  idos;
 #endif

@@ -19,7 +19,7 @@
 #include "library.h"
 #include "DriverData.h"
 
-#define dd (*((struct DeviceData**) &AudioCtrl->ahiac_DriverData))
+#define dd ((struct DeviceData*) AudioCtrl->ahiac_DriverData)
 
 void
 SlaveEntry( void );
@@ -49,7 +49,7 @@ _AHIsub_AllocAudio( struct TagItem*         taglist,
   struct DeviceBase* DeviceBase = (struct DeviceBase*) AHIsubBase;
   int freq = AudioCtrl->ahiac_MixFreq;
   
-  dd = AllocVec( sizeof( struct DeviceData ),
+  AudioCtrl->ahiac_DriverData = AllocVec( sizeof( struct DeviceData ),
 		 MEMF_CLEAR | MEMF_PUBLIC );
 
   if( dd != NULL )

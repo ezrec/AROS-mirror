@@ -2,6 +2,9 @@
 #define AHI_Drivers_Common_DriverBase_h
 
 #include <dos/dos.h>
+#include <exec/execbase.h>
+#include <intuition/intuitionbase.h>
+#include <utility/utility.h>
 #include <proto/exec.h>
 #include <proto/intuition.h>
 #include <proto/utility.h>
@@ -12,10 +15,10 @@ struct DriverBase
     UWORD           pad;
     BPTR            seglist;
 #ifndef DRIVER_NEEDS_GLOBAL_EXECBASE
-    struct Library* execbase;
+    struct ExecBase* execbase;
 #endif
-    struct Library* intuitionbase;
-    struct Library* utilitybase;
+    struct IntuitionBase* intuitionbase;
+    struct UtilityBase* utilitybase;
 
 #ifdef __AMIGAOS4__
 # ifndef DRIVER_NEEDS_GLOBAL_EXECBASE
@@ -28,7 +31,7 @@ struct DriverBase
 };
 
 #ifndef DRIVER_NEEDS_GLOBAL_EXECBASE
-# define SysBase      (*((struct ExecBase**)   &AHIsubBase->execbase))
+# define SysBase      (AHIsubBase->execbase)
 #endif
 
 #define IntuitionBase ((struct IntuitionBase*) AHIsubBase->intuitionbase)

@@ -20,7 +20,7 @@
 #include "library.h"
 #include "DriverData.h"
 
-#define dd (*(struct VoidData**) &AudioCtrl->ahiac_DriverData)
+#define dd ((struct VoidData*) AudioCtrl->ahiac_DriverData)
 
 void
 SlaveEntry( void );
@@ -86,7 +86,7 @@ _AHIsub_AllocAudio( struct TagItem*         taglist,
   // and the hardware is not capable of handling several audio streams
   // at the same time, return AHISF_ERROR now!
   
-  dd = AllocVec( sizeof( struct VoidData ),
+  AudioCtrl->ahiac_DriverData = AllocVec( sizeof( struct VoidData ),
 		 MEMF_CLEAR | MEMF_PUBLIC );
 
   if( dd != NULL )

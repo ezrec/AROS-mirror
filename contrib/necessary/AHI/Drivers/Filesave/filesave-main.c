@@ -23,7 +23,7 @@
 #include "FileFormats.h"
 #include "library.h"
 
-#define dd (*((struct FilesaveData**) &AudioCtrl->ahiac_DriverData))
+#define dd ((struct FilesaveData*) AudioCtrl->ahiac_DriverData)
 
 void PlaySlaveEntry(void);
 void RecSlaveEntry(void);
@@ -78,7 +78,7 @@ ULONG _AHIsub_AllocAudio(
     return AHISF_ERROR;
   }
 
-  dd = AllocVec(sizeof(struct FilesaveData),MEMF_CLEAR);
+  AudioCtrl->ahiac_DriverData = AllocVec(sizeof(struct FilesaveData),MEMF_CLEAR);
   
   if( dd != NULL )
   {
