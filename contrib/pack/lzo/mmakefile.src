@@ -3,7 +3,7 @@
 
 -include $(TOP)/config/make.cfg
 
-##MM- contrib-pack : contrib-pack-lzo
+#MM- contrib-pack : contrib-pack-lzo
 #MM- contrib-pack-lzo : development-lzo
 
 %fetch_and_build_gnu_development package=lzo version=2.03 patch=yes \
