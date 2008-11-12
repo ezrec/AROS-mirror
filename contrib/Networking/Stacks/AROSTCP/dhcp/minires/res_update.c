@@ -85,7 +85,10 @@ void tkey_free (ns_tsig_key **);
 isc_result_t
 res_nupdate(res_state statp, ns_updrec *rrecp_in) {
 	ns_updrec *rrecp;
-	double answer[PACKETSZ / sizeof (double)];
+	union {
+	    double answer[PACKETSZ / sizeof (double)];
+	    HEADER h;
+	} __tmp;
 	double packet[2*PACKETSZ / sizeof (double)];
 	struct zonegrp *zptr, tgrp;
 	int nzones = 0, nscount = 0;
@@ -163,16 +166,16 @@ res_nupdate(res_state statp, ns_updrec *rrecp_in) {
 	rcode = find_tsig_key (&key, zptr->z_origin, zcookie);
 	if (rcode == ISC_R_SUCCESS) {
 		rcode = res_nsendsigned(statp, packet, n, key,
-					answer, sizeof answer, &rval);
+					__tmp.answer, sizeof __tmp.answer, &rval);
 		tkey_free (&key);
 	} else if (rcode == ISC_R_NOTFOUND || rcode == ISC_R_KEY_UNKNOWN) {
 		rcode = res_nsend(statp, packet, n,
-				  answer, sizeof answer, &rval);
+				  __tmp.answer, sizeof __tmp.answer, &rval);
 	}
 	if (rcode != ISC_R_SUCCESS)
 		goto undone;
 
-	rcode = ns_rcode_to_isc (((HEADER *)answer)->rcode);
+	rcode = ns_rcode_to_isc (__tmp.h.rcode);
 	if (zcookie && rcode == ISC_R_BADSIG) {
 		repudiate_zone (&zcookie);
 	}

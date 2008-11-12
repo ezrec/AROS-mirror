@@ -1323,13 +1323,19 @@ pr_addr(l)
 {
 	struct hostent *hp;
 	static char buf[80];
-
+	union {
+	    struct in_addr addr;
+	    u_long l;
+	} __tmp;
+	
+	__tmp.l = l;
+	
 	if ((options & F_NUMERIC) ||
 	    !(hp = gethostbyaddr((char *)&l, 4, AF_INET)))
-		(void)sprintf(buf, "%s", inet_ntoa(*(struct in_addr *)&l));
+		(void)sprintf(buf, "%s", inet_ntoa(__tmp.addr));
 	else
 		(void)sprintf(buf, "%s (%s)", hp->h_name,
-		    inet_ntoa(*(struct in_addr *)&l));
+		    inet_ntoa(__tmp.addr));
 	return(buf);
 }
 

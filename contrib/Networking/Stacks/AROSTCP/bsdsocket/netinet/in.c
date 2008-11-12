@@ -84,7 +84,10 @@ in_makeaddr(net, host)
 {
 	register struct in_ifaddr *ia;
 	register u_long mask;
-	u_long addr;
+	union {
+	    u_long addr;
+	    struct in_addr in_addr;
+	} __tmp;
 
 	if (IN_CLASSA(net))
 		mask = IN_CLASSA_HOST;
@@ -97,8 +100,8 @@ in_makeaddr(net, host)
 			mask = ~ia->ia_subnetmask;
 			break;
 		}
-	addr = htonl(net | (host & mask));
-	return (*(struct in_addr *)&addr);
+	__tmp.addr = htonl(net | (host & mask));
+	return __tmp.in_addr;
 }
 
 /*
