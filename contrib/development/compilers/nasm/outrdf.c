@@ -140,10 +140,11 @@ static void membufwrite(memorybuffer *b, void *data, int bytes) {
     break;
 
   default:
-    while(bytes--) {
-      b->buffer[b->length++] = *(* (unsigned char **) &data);
-
-      (* (unsigned char **) &data)++ ;
+    {
+      unsigned char *__data = (unsigned char *)data;
+      while(bytes--) {
+        b->buffer[b->length++] = *__data++;
+      }
     }
     break;
   }
