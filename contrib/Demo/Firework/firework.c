@@ -197,6 +197,12 @@ static void ticker(void)
         {
             struct Particle *p;
             float f;
+            
+            union {
+                WORD i[2];
+                float f;
+	    } __tmp; 
+	    
             WORD xspeed;
             WORD yspeed;
 
@@ -206,9 +212,12 @@ static void ticker(void)
             p->speed = RANDOM >> 6;
             p->counter = ecx;
 
+	    __tmp.i[0] = p->speed;
+	    __tmp.i[1] = p->counter;
+	    
             #warning: endianess
 
-            f = (float)(*(ULONG *)(&p->speed));
+            f = __tmp.f;
 
             p->ypos = y;
 
