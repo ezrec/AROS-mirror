@@ -706,10 +706,17 @@ D(bug("[asfs] the next one\n"));
                 packet.dp_Arg3 = (IPTR)iofs->io_Union.io_READ_SOFTLINK.io_Buffer;
                 packet.dp_Arg4 = (IPTR)iofs->io_Union.io_READ_SOFTLINK.io_Size;
                 sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
-                if (packet.dp_Res1 == -2)
-                    error = ERROR_BUFFER_OVERFLOW;
-                else if (packet.dp_Res1 == -1)
+
+                if (packet.dp_Res1 == DOSFALSE && packet.dp_Res2 == ERROR_NO_FREE_STORE)
+                {
+                    error = 0;
+                    iofs->io_Union.io_READ_SOFTLINK.io_Size = -2;                    
+                } 
+                else if(packet.dp_Res1 == DOSFALSE)
+                {
                     error = packet.dp_Res2;
+                    iofs->io_Union.io_READ_SOFTLINK.io_Size = -1;
+                }
                 else
                 {
                     error = 0;
