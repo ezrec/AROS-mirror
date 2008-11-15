@@ -177,7 +177,7 @@ main(int argc, char *argv[])
                 struct tbl *vp = global("SHELL");
                 /* setstr can't fail here */
 #if defined(__AROS__)
-                setstr(vp, "/SYS/Development/bin/sh", KSH_RETURN_ERROR);
+                setstr(vp, "/Development/bin/sh", KSH_RETURN_ERROR);
 #else
                 setstr(vp, "/SDK/C/sh", KSH_RETURN_ERROR);
 #endif
@@ -223,7 +223,7 @@ main(int argc, char *argv[])
                 struct tbl *vp = global("HISTFILE");
                 /* setstr can't fail here */
 #if defined(__AROS__)
-                setstr(vp, "/SYS/Development/Data/abc-shell/history", KSH_RETURN_ERROR);
+                setstr(vp, "/Development/Data/abc-shell/history", KSH_RETURN_ERROR);
 #else
                 setstr(vp, "/SDK/Data/abc-shell/history", KSH_RETURN_ERROR);
 #endif
@@ -399,7 +399,7 @@ main(int argc, char *argv[])
         /* If env isn't set, include default environment */
         if (env_file == null)
 #if defined(__AROS__)
-                env_file = strdup("/SYS/Development/Data/abc-shell/variables");
+                env_file = strdup("/Development/Data/abc-shell/variables");
 #else
                 env_file = strdup("/SDK/Data/abc-shell/variables");
 #endif
