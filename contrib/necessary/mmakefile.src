@@ -7,11 +7,9 @@ include $(TOP)/config/make.cfg
 
 #MM- contrib-necessary-common : contrib-AHI
 #DISABLE MM- contrib-necessary-common : contrib-amberram
-#MM- contrib-necessary-common : contrib-zune-classes-nlist
 
 #MM- contrib-necessary-common-quick : contrib-AHI-quick
 #DISABLE MM- contrib-necessary-common-quick : contrib-amberram-quick
-#MM- contrib-necessary-common-quick : contrib-zune-classes-nlist-quick
 
 #MM- contrib-necessary-pc-i386 : \
 #MM	contrib-sfs-kobj \
