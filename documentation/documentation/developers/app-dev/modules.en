@@ -1,0 +1,444 @@
+===================================
+AROS Application Development Manual
+===================================
+
+:Authors:   Matthias Rustler (some parts copied from other documents)
+:Copyright: Copyright (C) 2008, The AROS Development Team
+:Version:   $Revision$
+:Date:      $Date$
+:Status:    Unfinished
+:ToDo:      Complete...
+
+`Index <index>`__
+
+.. Contents::
+
+-------
+Modules
+-------
+
+Introduction
+============
+
+Modules are shared binaries. Their main purpose is to deliver tables of functions and
+classes for object oriented access to GUI elements and multimedia data.
+
+Building modules consists of two parts. First is a macro to use in
+mmakefile.src files. Another is a configuration file that describes the
+contents of the module.
+
+Metamake
+========
+
+The build system has the macro "build_module" for the task of creating modules. The
+parameters are:
+
+``mmake=/A``
+    This is the name of the metatarget that will build the module. Also a
+    ``%(mmake)-quick`` and ``%(mmake)-clean`` metatarget will be defined.
+
+``modname=/A``
+    Name of the generated module without the suffix.
+
+''modtype=/A``
+    Type of the generated module. Possible values: library, mcc, mui, mcp,
+    device, resource, gadget, datatype, hidd.
+
+``modsuffix``
+    You don't normally need to specify this as the build system has a default
+    suffix for every type of module.
+
+``conffile``
+    The name if the configuration file. Default is <modname>.conf.
+
+``files="$(basename $(wildcard *.c))"``
+    A list of all the C source files without the .c suffix that contain the
+    code for this module. By default all the .c files in the current
+    directory will be taken.
+
+``linklibfiles``
+    FIXME
+
+``linklibobjs``
+    FIXME
+
+``cflags=$(CFLAGS)``
+    The flags to use when compiling the .c files. By default the standard
+    AROS cflags (e.g. ``$(CFLAGS)``) are taken. This also
+    means that some flags can be added by assigning these to the
+    USER_CFLAGS and USER_INCLUDES make variables before using this macro.
+
+``dflags=%(cflags)``
+    The flags to add when doing the dependency check. Default is the same
+    as the ``cflags``.
+
+
+``objdir=$(OBJDIR)``
+    The directory where to generate all the intermediate files. The
+    default value is ``$(OBJDIR)`` which in itself is by default equal to
+    ``$(GENDIR)/$(CURDIR)``.
+
+``moduledir``
+    Target directory. See table "Defaults" below.
+
+``prefix``
+    FIXME
+
+``reffile``
+    FIXME
+
+``noref``
+    FIXME
+
+``linklibname=%(modname)``
+    The name to be used for the static link library that contains the
+    library autoinit code and the stubs converting C stack calling
+    convention to a call off the function from the library functable with
+    the appropriate calling mechanism. These stubs are normally not needed
+    when the AROS defines for module functions are not disabled.
+
+    There will always be a file generated with the name
+    ``$(LIBDIR)/lib%(linklibname).a`` and by default linklibname will be
+    the same as modname.
+
+``uselibs``
+    A list of static libraries to add when linking the module. This is the
+    name of the library without the `lib` prefix or the `.a` suffix and
+    without the `-l` prefix for the use in the flags for the C compiler.
+
+    By default no libraries are used when linking the module.
+
+``usehostlibs``
+    FIXME
+
+``compiler``
+    FIXME
+
+
+Module Types
+============
+
+``library``
+    Collection of functions.
+
+``mcc``
+    MUI custom class.
+
+``mui``
+    FIXME: Difference between mcc and mui???
+
+``mcp``
+    MUI preferences class. This kind of Zune classes are shown in the Zune preferences
+    Editor.
+
+``device``
+    Device driver.
+
+``resource``
+    FIXME
+
+``gadget``
+    Intuition GUI elements.
+
+``datatype``
+    The datatypes system allow loading of all kind of data (graphics, music, text etc.) into
+    your application.
+
+``hidd``
+    Object oriented access to the hardware.
+
+
+Configuration File
+==================
+
+The build system calls the tool "genmodule" in order to create some additional C source
+and header files. This tool is driven be a configuration file which allows to set a lot
+of options for the fine tuning if the generated files. Configuration files contain named
+sections with definitions::
+
+    ##begin <sectionname>
+    <definitions>
+    ##end <sectionname>
+
+Sectionname can be "config", "class", "cdefprivate", "cdef", "functionlist"
+or "methodlist".
+
+
+Section "config"
+----------------
+
+The lines in this section have all the same format::
+
+    optionname string
+
+with the string starting from the first non white-space after optionname
+to the last non white-space character on that line.
+
+``basename``
+    Followed by the base name for this module. This will be used as a
+    prefix for a lot of symbols. By default the modname specified in the
+    makefile is taken with the first letter capitalized.
+
+``libbase``
+    The name of the variable to the library base in. By default the
+    basename will be taken with "Base" added to the end.
+
+``libbasetype``
+    The type to use for the libbase for use internally for the library code.
+    E.g. the sizeof operator applied to this type has to yield the real
+    size of the object. Be aware that it may not be specified as a pointer.
+    By default 'struct Library' is taken.
+
+``libbasetypeextern``
+    The type to use for the libbase for code using the library externally.
+    See table below for defaults.
+
+``version``
+    The version to compile into the module. This has to be specified as
+    <major>.<minor>. By default 0.0 will be used.
+
+``date``
+    The date that this library was made. This has to have the format of
+    DD.MM.YYYY. As a default the current date is taken.
+
+``copyright``
+    Example: ``copyright Copyright (C) 2006 Foobar team``
+
+``libcall``
+    The argument passing mechanism used for the functions in this module.
+    It can be either 'stack' or 'register'. By default 'stack' will be used.
+
+    FIXME: seams to be wrong. Default depends on if functions are written
+    with register spec.
+
+``forcebase``
+    This will force the use of a certain base variable in the static
+    link library for auto opening the module. Thus it is only valid for
+    module that support auto opening. This option can be present more then
+    once in the config section and then all these base will be in the link
+    library. By default no base variable will be present in the link
+    library.
+
+``residentpri``
+    FIXME
+    
+``options``
+    Comma separated list of options.
+
+    ``noautolib``
+        FIXME
+
+    ``noexpunge``
+        FIXME
+
+    ``noresident``
+        FIXME
+
+    ``peropenerbase``
+        FIXME
+
+    ``peridbase``
+        FIXME
+
+    ``includes``
+        FIXME
+
+    ``noincludes``
+        FIXME
+
+    ``nostubs``
+        FIXME
+
+    ``autoinit``
+        FIXME
+
+    ``noautoinit``
+        FIXME
+
+    ``private``
+        FIXME
+
+``sysbase_field``
+    FIXME
+
+``seglist_field``
+    FIXME
+
+``rootbase_field``
+    FIXME
+
+``beginio_func``
+    FIXME
+
+``abortio_func``
+    FIXME
+
+``initpri``
+    FIXME
+
+``getidfunc``
+    FIXME
+
+
+section "class"
+---------------
+
+You need "class" sections only when you want to define additional classes in
+your module. If you create a module for e.g. a gadget a class for a gadget
+is automatically created. This means you can use the definitions below
+in the "config" section.
+
+``type``
+    Type of the class.
+    
+    ``mcc``
+    
+    ``mui``
+    
+    ``mcp``
+    
+    ``image``
+    
+    ``gadget``
+    
+    ``datatype``
+    
+    ``class``
+    
+    ``hidd``
+
+``superclass``
+    Name of the parent class. Example: ``superclass MUIC_Group``.
+
+``superclass_field``
+    FIXME.
+
+``classptr_field``
+    FIXME
+
+``classptr_var``
+    FIXME
+
+``classid``
+    FIXME
+
+``classdatatype``
+    Example: ``classdatatype struct Data``.
+
+``dispatcher``
+    Use this if you want to use a dispatcher which exists in
+    the source code instead of one generated by the build system.
+    Additionally you have to define the methods in the "methodlist"
+    section.
+
+
+Section "cdef"
+--------------
+
+In this section all the C code has to be written that will declare all the
+type of the arguments of the function listed in the function. All valid C
+code is possible including the use of #include.
+
+
+Section "cdefprivate"
+---------------------
+
+Like "cdef" but for all declarations which must not be visible for the
+module user.
+
+
+Section "functionlist"
+----------------------
+
+In this section are all the functions that are externally accessible by programs.
+    
+For stack based argument passing only a list of the functions has to be
+given::
+
+    ##begin functionlist
+    void func1(LONG a, LONG b)
+    int func2(char *s, ULONG a)
+    ##end functionlist
+
+For register based argument passing the names of the register have
+to be given between rounded brackets::
+
+    ##begin functionlist
+    ULONG func5(ULONG a, STRPTR b) (D0,A0)
+    ##end functionlist
+
+There are some tags which influence the previously defined function.
+
+``.skip n``
+    Every function gets an index number, the Library Vector Offset.
+    With this tag you can increase the LVO without inserting empty
+    lines in the "functionlist" section.
+
+``.alias name``
+    Define an alternate name for the function.
+
+``.cfunction``
+    FIXME
+
+``.private``
+    FIXME
+
+``.novararg``
+    FIXME
+
+
+Section "methodlist"
+--------------------
+
+Here you can list all you methods for an automatic creation of a dispatcher.
+The real function name for a method "name" must become <basename>__<name>
+in the source code.
+
+There are some tags which influence the previously defined method.
+
+``.alias name``
+    Alternative name for the method
+
+``.function name``
+    FIXME
+
+``.interface``
+    FIXME
+
+
+Defaults
+========
+
+Modules
+-------
+
+======== ================= =======
+Type     Target directory  1st LVO
+======== ================= =======
+library  Libs              5
+mcc      Classes/Zune      6
+mui      Classes/Zune      6
+mcp      Classes/Zune      6
+device   Devs              7
+resource Devs              1
+gadget   Classes/Gadgets   5
+datatype Classes/Datatypes 6
+hidd     Devs/Drivers      5
+======== ================= =======
+
+
+Classes
+-------
+
+======== =================
+Type     Superclass
+======== =================
+mcc      MUIC_Area
+mui      MUIC_Area
+mcp      MUIC_Mccprefs
+image    IMAGECLASS
+gadget   GADGETCLASS
+datatype DATATYPESCLASS
+class    ROOTCLASS
+hidd     CLID_Root
+======== =================
