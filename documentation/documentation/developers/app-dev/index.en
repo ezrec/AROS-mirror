@@ -22,7 +22,10 @@ Table of Contents
 -----------------
 
 + `Introduction`__
-+ `Build system`__
++ Build system
+    + `Introduction`__
+    + `Modules`__
+    + `Libraries`__
 + `Exec library`__
 + `Dos library`__
 + `Graphics library`__
@@ -35,6 +38,8 @@ Table of Contents
 
 __ introduction
 __ buildsystem
+__ modules
+__ libraries
 __ exec-library
 __ dos-library
 __ graphics-library
