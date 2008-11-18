@@ -15,10 +15,9 @@ Compiling AROS
 :Status:    Done.
 :Abstract:  
     This document will explain how to compile AROS. Development of AROS is 
-    currently not self-hosted, which means that you cannot compile AROS from 
-    inside AROS. To compile and develop for AROS, you will need a Linux,
-    FreeBSD or Mac OS X system.
-
+    possible in two ways. First, you can use Linux, FreeBSD or Max OS X system
+    to cross compile AROS. The other option is to perform the compilation
+    directly under AROS, which is also explained in this document.
 
 .. Contents::
 
