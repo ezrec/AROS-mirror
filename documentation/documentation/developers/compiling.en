@@ -226,6 +226,73 @@ finished. Additionally, you can create a bootable ISO image by running::
 
 The ISO image can be found at ``distfiles/aros-pc-i386.iso``.
 
+Building AROS on AROS
+=====================
+
+Starting from 2008-11-17 it's possible to build i386-pc and x86_64-pc AROS on
+AROS. Only building on SFS partitions is possible at this moment. To do it,
+you need to install a few additional packages from The AROS Archives (file
+names for i386 architecture):
+
+* autoconf-2.62.i386.tar.gz
+* automake-1.9.6.all.tar.gz
+* perl-5.7.2.i386-aros.tar.gz
+* python-2.5.2.i386-aros.tar.gz
+* lzo-2.03.i386.tar.gz
+
+Install these packages by unpacking them in the parent directory of Development::
+
+    > Cd Development:
+    > tar -xzf RAM:autoconf-2.62.i386.tar.gz
+    > tar -xzf RAM:automake-1.9.6.all.tar.gz
+    > tar -xzf RAM:perl-5.7.2.i386-aros.tar.gz
+    > tar -xzf RAM:python-2.5.2.i386-aros.tar.gz
+    > tar -xzf RAM:lzo-2.03.i386.tar.gz
+
+Now download and unpack the AROS source code and contributed software source
+code. To unpack you need to have bzip2 installed. In nightly builds it should
+be present in Extras:Misc/aminet/C/bzip2. Instead of using bzip2 to manually
+unpack sources you can copy bzip2 to bin: and let tar take care of this::
+
+    > Copy Extras:Misc/aminet/C/bzip2 bin:
+    > tar --exclude=contrib -xjf AROS-20081117-source.tar.bz2
+
+Note the --exclude=contrib option. It's necessary because there's a symbolic
+link named contrib in the source code snapshots pointing to non-existent 
+Contrib directory. Once it's extracted to SFS filesystem there's no way to
+delete it without removing the whole directory, so it's best to skip it.
+
+Contributed software is not guaranteed to build on AROS except the special
+set of packages contained in necessary directory. It's recommended to extract
+only this directory when building AROS on AROS and copy it somewhere inside
+the unpacked AROS source tree. Suggested location is contrib directory::
+
+    > tar -xjf AROS-20081117-contrib-source.tar.bz2 AROS-20081117-contrib-source/necessary
+    > MakeDir AROS-20081117-source/contrib
+    > Rename AROS-20081117-contrib-source/necessary AROS-20081117-source/contrib/necessary
+
+Now run configure script setting appropriate target, CFLAGS, LDFLAGS and
+host-side strip command::
+
+    > Cd AROS-20081117-source
+    > bin:sh
+    > ./configure --target=pc-i386 LDFLAGS="-nix" CFLAGS="-nix -I/Development/netinclude" 
+      aros_host_strip="strip --strip-unneeded"
+
+When configure finishes, run make::
+
+    > make
+
+Some requesters asking to insert volumes HOME: or DEV: to any drive may appear
+during the build process, they can be safely cancelled.
+
+Building AROS on AROS takes more time than on Linux (from 1.5 to several hours
+depending on your CPU and hard disk performance). To shorten the build time,
+try increasing the number of buffers and cache size for your SFS partitions.
+
+Since grub2 still hasn't been ported to AROS, creating an ISO image containing
+the resulting binaries by making the bootiso target is not possible yet.
+
 Appendix
 ========
 
