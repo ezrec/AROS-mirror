@@ -241,7 +241,7 @@ names for i386 architecture):
 
 Install these packages by unpacking them in the parent directory of Development::
 
-    > Cd Development:
+    > Cd Development:/
     > tar -xzf RAM:autoconf-2.62.i386.tar.gz
     > tar -xzf RAM:automake-1.9.6.all.tar.gz
     > tar -xzf RAM:perl-5.7.2.i386-aros.tar.gz
