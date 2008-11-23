@@ -29,7 +29,7 @@ Location
 ::
 
 
-     SYS:C
+     C:
 
 
 Function
@@ -58,7 +58,7 @@ Result
 
 
      Standard DOS error codes.
-     
+
 
 Example
 ~~~~~~~
@@ -67,13 +67,14 @@ Example
 
      Makelink ls c:list
       Creates an 'ls' file with a symlink to the 'list' command in C:.
-     
+
 
 Notes
 ~~~~~
 ::
 
 
-     Avoid using hard links in FFS disk devices. AROS FFS may not hande these in proper manner
-     
+     Avoid using hard links in FFS disk devices. AROS FFS may not hande
+     these in a proper manner.
+
 
