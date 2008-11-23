@@ -3888,14 +3888,13 @@ Function
      MakeLink() will create a link between two files or directories.
      A link is a filesystem object that refers to another file.
 
-     A soft link refers to another file by name, and is resolved by
-     the filesystem and the caller. Soft links are not restricted to
-     the same volume. The |dest| argument is a NUL terminated pathname
-     to the pre-existing object. Soft links can be used on directories.
+     A soft link refers to another file or directory by name, and is
+     resolved by the filesystem and the caller. Soft links are not
+     restricted to the same volume and the target does not have to exist.
 
      A hard link refers to another file by the location on a disk, and
      is resolved by the filesystem. Hard links are restricted to files
-     on the same volume. The |dest| argument is a lock on another file.
+     or directories on the same volume.
 
 
 Inputs
@@ -3903,9 +3902,9 @@ Inputs
 ::
 
      name - The name of the link to create
-     dest - If 'soft' is TRUE this must be a filename, if it is FALSE a BPTR
+     dest - If 'soft' is TRUE this must be a filename; if it is FALSE a lock
             pointing to the file to be hard-linked must be provided
-     soft - TRUE, if a soft-link is to be created, FALSE for an hard-link
+     soft - TRUE, if a soft link is to be created, FALSE for a hard link
 
 
 Result
@@ -3988,12 +3987,11 @@ Function
      MatchFirst() initializes the AnchorPath structure for you but you
      must initilize the following fields: ap_Flags, ap_Strlen, ap_BreakBits
      and ap_FoundBreak. The first call to MatchFirst() also passes you
-     the first matching file which you can examine in ap_Info and the directory
-     the files is in in ap_Current->an_Lock. After the first call to
-     MatchFirst(), call MatchNext().
-     The search begins wherever the current directory is set to. See
-     CurrentDir();
-     For more info on patterns see ParsePattern().
+     the first matching file, which you can examine in ap_Info, and
+     the directory the file is in, in ap_Current->an_Lock. After the first
+     call to MatchFirst(), call MatchNext(). The search begins wherever the
+     current directory is set to (see CurrentDir()). For more info on
+     patterns, see ParsePattern().
 
 
 Inputs
@@ -4038,13 +4036,19 @@ Function
      See <dos/dosasl.h> for more docs and how to control MatchNext().
 
 
-
 Inputs
 ~~~~~~
 ::
 
      AP  - pointer to Anchor Path structure which had been passed to
            MatchFirst() before.
+
+
+Result
+~~~~~~
+::
+
+     Zero on success, or error code on failure.
 
 
 
