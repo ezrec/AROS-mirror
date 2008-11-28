@@ -13,74 +13,76 @@ Contribute
 .. Include:: contribute-abstract.cs
 
 
-Available tasks
-===============
+Aktuální úkoly
+==============
 
-This is a list of some tasks that we need help with and which nobody is 
-currently working on. It is by no means a complete list, it simply contains
-the most prominent things that we need help with in AROS.
+Zde je seznam nìkterých úkolù, se kterými potøebujeme pomoci, a na kterých
+momentálnì nikdo nedìlá. Nejedná se o kompletní seznam v¹ech úkolù, ale
+obsahuje ty úkoly, které pova¾ujeme za dùle¾ité.
 
 
-Programming
------------
+Programování
+------------
 
-+ Implementing missing libraries, resources, devices or parts of these. 
-  See the detailed status report for more information what bits are missing.
++ Implementace chybìjících knihoven, zdrojù, zaøízení nebo jejich souèástí.
+  Podívej se na detailní zprávu o vývoji, aby jsi zjistil více informací
+  o èástech, které chybí.
 
-+ Implementing or improving hardware device drivers:
+
++ Implementace nebo zdokonalení ovladaèù hardware zaøízení:
   
   - AROS/m68k-pp:
     
-    + Graphics
-    + Input (touchscreen, buttons)
-    + Sound
+    + Grafika
+    + Vstup (dotyková obrazovka, tlaèítka)
+    + Zvuk
  
   - AROS/i386-pc:
-    
-    + Specific graphic card drivers (we only have general, not very well
-      accelerated ones). A short wishlist:
+
+    + Konkrétní ovladaèe grafických karet (máme pouze obecné, ne zrovna
+    pøíli¹ akcelerované). Krátký seznam pøání:
       
-      - nVidia TNT/TNT2/GeForce (started, but incomplete) 
+      - nVidia TNT/TNT2/GeForce (zaèlo se, ale nedokonèilo) 
       - S3 Virge
       - Matrox Millenium
     
-    + missing USB classes
+    + chybí USB classes
     + SCSI
-    + Specific IDE chipsets
-    + Sound
-    + ...anything else you can think of.
+    + Konkrétní IDE èipsety
+    + Zvuk
+    + ... cokoliv, na co bys mohl pøijít.
 
-  - Generic printer support.
+  - V¹eobecná podpora tiskáren.
  
-+ Porting to other architectures. Some examples of hardware for which no 
-  maintained AROS port exists or has been started:
++ Portování na dal¹í architektury. Nìkolik pøíkladù hardwaru, pro
+  který AROS je¹tì nemá port nebo zaèal být portován:
 
-  - Amiga, both m68k and PPC.
+  - Amiga, m68k i PPC.
   - Atari.
   - HP 300 series.
   - SUN Sparc.
   - iPaq.
-  - Macintosh, both m68k and PPC.
+  - Macintosh, m68k i PPC.
 
-+ Implementing missing Preferences editors:
++ Implementace chybìjících editorù nastavení:
 
   - Overscan
-  - Palette
+  - Paleta
   - Pointer
-  - Printer
+  - Tiskárna
  
-+ Improving the C link library
++ Zdokonalování knihovny C link
 
-  This means implementing missing ANSI (and some POSIX) functions in the clib,
-  to make it easier to port UNIX software (eg. GCC, make and binutils). The 
-  biggest thing missing is support for POSIX style signaling, but there's some 
-  other functions too.
+  Tedy implementace chybìjících ANSI (a nìkterých POSIX) funkcí v clib,
+  aby se usnadnilo portování UNIX softwaru (napø. GCC, make a binutils).
+  Nejdùle¾itìj¹í vìc, která chybí, je podpora POSIX style signaling,
+  ale i jiné funkce.
 
-+ Implementing more datatypes and improve existing ones
++ Implementace více datatypù a vylep¹ení tìch stávajících
 
-  The number of datatypes available in AROS is quite small. Some examples of
-  datatypes that need improvement to become usable or need implementing from 
-  scratch:
+  Poèet datatypù obsa¾ených v AROSu je pomìrnì malý. Nìkteré datatypy,
+  které potøebují vylep¹ení, aby byly pou¾itelné nebo potøebují
+  implementaci úplnì od základu:
 
   - amigaguide.datatype
   - sound.datatype
@@ -93,94 +95,94 @@ Programming
     + cdxl.datatype
     
   
-+ Porting third-party programs:
++ Portování programù tøetích stran:
 
-  - Text editors like ViM and Emacs.
-  - The development tool chain, which includes GCC, make, binutils and other
-    GNU development tools.
-  - AmigaOS Open Source software like SimpleMail, YAM, Jabbwerwocky
+  - Textové editory jako jsou ViM a Emacs.
+  - Balík vývojových nástrojù, které zahrnují GCC, make, binutils a dal¹í
+    GNU vývojáøské nástroje.
+  - AmigaOS Open Source software jako je SimpleMail, YAM, Jabbwerwocky
 
 
-Documentation
--------------
+Dokumentace
+-----------
 
-+ Writing user documentation. This consists of writing an general User's 
-  Guide for novices and experts, and also reference documentation for all 
-  standard AROS programs.
++ Psaní u¾ivatelské dokumentace. Týká se psaní hlavních U¾ivatelských
+  pøíruèek pro zaèáteèníky a experty, a také dokumentace na v¹echny
+  standardní AROS programy.
 
-+ Writing developer documentation. Although this is in a bit better state
-  than user documentation, there is still a lot of work to do. For example,
-  there is really no good tutorial for novice programmers yet. The equivalent
-  of the ROM Kernel Manuals for AROS would be really nice to have.
++ Psaní vývojáøské dokumentace. Tøeba¾e je tato práce v pokroèilej¹ím
+  stádiu ne¾ u¾ivatelská dokumentace, stále je toho je¹tì hodnì zpracovávat.
+  Pro pøíklad, zatím nemáme ¾ádnou dobrou pøíruèku pro zaèínající programátory.
+  Bylo by taky hezké mít ekvivalent k ROM Kernel manuálùm pro AROS.
 
 
 Pøeklad
 -------
 
-+ Translating AROS itself to more languages. Currently, only the following 
-  languages are more or less completely supported:
++ Pøekládání samotného AROSu do více jazykù. Nyní jsou více èi ménì kompletnì
+  podporovány pouze tyto jazyky:
 
-  - English
-  - Deutsch
-  - Svenska
-  - Norsk
-  - Italiano
-  - French
-  - Russian
+  - Angliètina
+  - Nìmèina
+  - ©véd¹tina
+  - Nor¹tina
+  - Ital¹tina
+  - Francouz¹tina
+  - Ru¹tina
 
-+ Translating the documentation and website to more languages. Currently, it 
-  is only completely available in English. Parts have been translated to 
-  other languages, but there is still much work to do.
-
-
-Other
------
-
-+ Coordinating GUI design for AROS programs, such as prefs program,
-  tools and utilities.
++ Pøeklad dokumentace a internetových stránek do více jazykù. Aktuálnì je
+  web kompletní pouze v angliètinì. Pøekládá se pozvolna i do dal¹ích jazykù,
+  ale zbývá je¹tì hodnì práce.
 
 
-Joining the Team
+Ostatní
+-------
+
++ Koordinace GUI designu pro AROS programy, jako jsou prefs programy,
+  nástroje a utility.
+
+
+Pøipoj se k týmu
 ================
 
-Want to join the development effort? Great! Then join the `development mailing
-lists`__ you are interested in (at least joining the main development list is
-*highly* recommended) and request access to the Subversion repository.
-That's it. :)
+Chce¹ se pøipojit k vývojáøskému týmu? Skvìle! V tom pøípadì se pøihla¹ k
+`vývojáøskému mailing listu`__, o který se zajímá¹ (*vøele* doporuèujeme pøipojit
+se alespoò k hlavnímu vývojáøskému listu) a po¾ádej o pøístup k Subversion
+repozitáøi. A je to. :)
 
-Writing a short mail to the development list containing an introduction about
-yourself and what you want to help out with is encouraged. If you have any
-problems, please don't hesitate to send a mail to the list or ask around on the
-`IRC channels`__. Also, before starting to work on something specific, please
-write a mail to the list stating what you are about to do or update the task
-database. This way we can make sure people don't work on the same thing by
-mistake...
+Napi¹ krátký mejlík na vývojáøský list, nìco o sobì, co dìlá¹ a jakým zpùsobem
+bys rád pomohl. Pokud bude¹ mít nìjaký problém, neváhej poslat email do listu
+nebo se zeptej na nìkterém z `IRC kanálù`__. Také, ne¾ zaène¹ dìlat na nìèem
+konkrétním, napi¹ email do listu s tím, co bude¹ dìlat, nebo aktualizuj
+databázi úkolù. Takto se dá pøedejít tomu, aby nìkolik lidí dìlalo
+nedopatøením na jednom a tom samém úkolu...
+
 
 __ ../../contact#mailing-lists
 __ ../../contact#irc-channels
 
 
-The Subversion repository
--------------------------
+Subversion repozitáø
+--------------------
 
-The AROS repository is running with password protected Subversion server, which means
-that you need to request access to it to be able to collaborate in the
-development. The passwords are in encrypted form, which you can generate with
-our `online password encryption tool`__.
+AROS repozitáø bì¾í na Subversion serveru, který je chránìný heslem,
+co¾ znamená, ¾e musí¹ po¾ádat o pøístup, aby jsi se mohl podílet na vývoji.
+Hesla jsou kryptována, kryptované heslo si mù¾e¹ vytvoøit pomocí na¹eho
+`online kryptovacího nástroje hesla`__.
 
-Please mail the encrypted password together with your preferred username and
-your real name to `Aaron Digulla`__ and wait for a reply. To facilitate a quick
-response, please set the subject to "Access to the AROS SVN server" and the body
-to "Please add <username> <password>", eg.::
+Po¹li prosím kryptované heslo spoleènì s tvým vlastním u¾ivatelským jménem
+a skuteèným jménem na adresu `Aarona Digully`__ a poèkej na odezvu. Aby jsi
+urychlil proces pøístupu, napi¹ do pøedmìtu zprávy toto "Access to the
+AROS SVN server" a do tìla napi¹ "Please add <username> <password>", napø.::
 
     Please add digulla xx1LtbDbOY4/E
 
-It might take a couple of days as Aaron is quite busy, so please be patient. 
+Mù¾e to trvat nìkolik dní, jeliko¾ Aaron je hodnì vytí¾ený, tak¾e mìj trpìlivost. 
 
-For information on how to use the AROS SVN server, please read "`Working with
-SVN`__". Even if you already know how to use SVN it is useful to look it through,
-as it contains information and tips specific to the AROS repository (such as how
-to log into it).
+Abys vìdìl, jak pou¾ívat AROS SVN server, pøeèti si prosím "`Práce s
+SVN`__". I pokud u¾ ví¹ jak pou¾ívat SVN, je stále u¾iteèné jej prostudovat,
+proto¾e obsahuje informace a rady urèené pro AROS repozitáø
+(napø. jak se do nìj zalogovat).
 
 __ http://aros.sourceforge.net/tools/password.html 
 __ mailto:digulla@aros.org?subject=[Access%20to%20the%20AROS%20SVN%20server]
