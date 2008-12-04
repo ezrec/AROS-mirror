@@ -1271,18 +1271,44 @@ Inputs
 ~~~~~~
 ::
 
-     path - path to the file
-     mode - permission bits
+     path - Pathname of the file
+     mode - Bit mask created by ORing zero or more of the following
+            permission bit masks:
+
+            S_ISUID - set user id on execution
+            S_ISGID - set group id on execution
+            S_ISVTX - sticky bit (restricted deletion flag)
+            S_IRUSR - allow owner to read
+            S_IWUSR - allow owner to write
+            S_IXUSR - allow owner to execute/search directory
+            S_IRGRP - allow group to read
+            S_IWGRP - allow group to write
+            S_IXGRP - allow group to execute/search directory
+            S_IROTH - allow others to read
+            S_IWOTH - allow others to write
+            S_IXOTH - allow others to execute/search directory
  
 
 Result
 ~~~~~~
 ::
 
-     Permission bits of the file given by path are changed accordingly
-     to given mode.
+     0 on success and -1 on error. If an error occurred, the global
+     variable errno is set.
  
 
+Bugs
+~~~~
+::
+
+     S_ISUID and S_ISGID are silently ignored.
+
+
+
+See also
+~~~~~~~~
+
+`fchmod()`_ 
 
 ----------
 
@@ -2039,13 +2065,35 @@ Synopsis
      const char *arg, ...)
      
 
-Notes
-~~~~~
+Function
+~~~~~~~~
 ::
 
-     Not implemented.
+     Executes a file located in given path with specified arguments.
 
 
+Inputs
+~~~~~~
+::
+
+     path - Pathname of the file to execute.
+     arg - First argument passed to the executed file.
+     ... - Other arguments passed to the executed file.
+
+
+Result
+~~~~~~
+::
+
+     Returns -1 and sets errno appropriately in case of error, otherwise
+     doesn't return.
+
+
+
+See also
+~~~~~~~~
+
+`execve()`_ `execlp()`_ `execv()`_ `execvp()`_   
 
 ----------
 
@@ -2061,6 +2109,36 @@ Synopsis
      const char *arg, ...)
      
 
+Function
+~~~~~~~~
+::
+
+     Executes a file with given name. The search paths for the executed
+     file are paths specified in the PATH environment variable.
+
+
+Inputs
+~~~~~~
+::
+
+     file - Name of the file to execute.
+     arg - First argument passed to the executed file.
+     ... - Other arguments passed to the executed file.
+
+
+Result
+~~~~~~
+::
+
+     Returns -1 and sets errno appropriately in case of error, otherwise
+     doesn't return.
+
+
+
+See also
+~~~~~~~~
+
+`execve()`_ `execl()`_ `execv()`_ `execvp()`_   
 
 ----------
 
@@ -2080,14 +2158,14 @@ Function
 ~~~~~~~~
 ::
 
-     Executes a file with specified arguments.
+     Executes a file located in given path with specified arguments.
 
 
 Inputs
 ~~~~~~
 ::
 
-     file - Name of the file to execute.
+     path - Pathname of the file to execute.
      argv - Array of arguments given to main() function of the executed
      file.
 
@@ -2096,22 +2174,15 @@ Result
 ~~~~~~
 ::
 
-     0 in case of success. In case of failure errno is set appropriately
-     and function returns -1.
-
-
-Bugs
-~~~~
-::
-
-     See execve documentation.
+     Returns -1 and sets errno appropriately in case of error, otherwise
+     doesn't return.
 
 
 
 See also
 ~~~~~~~~
 
-`execve <execve>`_   
+`execve()`_ `execl()`_ `execlp()`_ `execvp()`_   
 
 ----------
 
@@ -2173,7 +2244,8 @@ Function
 ~~~~~~~~
 ::
 
-     Executes a file with specified arguments.
+     Executes a file with given name. The search paths for the executed
+     file are paths specified in the PATH environment variable.
 
 
 Inputs
@@ -2189,22 +2261,15 @@ Result
 ~~~~~~
 ::
 
-     0 in case of success. In case of failure errno is set appropriately
-     and function returns -1.
-
-
-Bugs
-~~~~
-::
-
-     See execve documentation.
+     Returns -1 and sets errno appropriately in case of error, otherwise
+     doesn't return.
 
 
 
 See also
 ~~~~~~~~
 
-`execve()`_   
+`execve()`_ `execl()`_ `execlp()`_ `execv()`_   
 
 ----------
 
@@ -2328,13 +2393,41 @@ Synopsis
      mode_t mode)
 
 
+Function
+~~~~~~~~
+::
+
+     Change permission bits of a file specified by an open file descriptor.
+
+
+Inputs
+~~~~~~
+::
+
+     filedes - File descriptor of the file
+     mode - Permission bits to set
+
+
+Result
+~~~~~~
+::
+
+     0 on success and -1 on error. If an error occurred, the global
+     variable errno is set.
+
+
 Notes
 ~~~~~
 ::
 
-     Not implemented.
+     See chmod() documentation for more details about the mode parameter.
 
 
+
+See also
+~~~~~~~~
+
+`chmod()`_ 
 
 ----------
 
@@ -3336,6 +3429,37 @@ Synopsis
      struct stat *sb)
 
 
+Function
+~~~~~~~~
+::
+
+     Returns information about a file specified by an open file descriptor.
+     Information is stored in stat structure. Consult stat() documentation
+     for detailed description of that structure.
+
+
+Inputs
+~~~~~~
+::
+
+     filedes - File descriptor of the file
+     sb - Pointer to stat structure that will be filled by the fstat()
+     call.
+
+
+Result
+~~~~~~
+::
+
+     0 on success and -1 on error. If an error occurred, the global
+     variable errno is set.
+
+
+
+See also
+~~~~~~~~
+
+`stat()`_ 
 
 ----------
 
@@ -8124,6 +8248,50 @@ Synopsis
      struct stat *sb)
 
 
+Function
+~~~~~~~~
+::
+
+     Returns information about a file. Information is stored in stat
+     structure having the following fields:
+     
+     dev_t           st_dev;     - ID of device containing the file
+     ino_t           st_ino;     - inode number
+     mode_t          st_mode;    - protection mode
+     nlink_t         st_nlink;   - number of hard links
+     uid_t           st_uid;     - user ID of the file's owner
+     gid_t           st_gid;     - group ID of the file's group
+     dev_t           st_rdev;    - device ID (if the file is character
+                                   or block special file)
+     off_t           st_size;    - file size, in bytes
+     time_t          st_atime;   - time of last acces
+     time_t          st_mtime;   - time of last data modification
+     time_t          st_ctime;   - time of last file status change
+     blksize_t       st_blksize; - optimal blocksize for I/O
+     blkcnt_t        st_blocks;  - number of blocks allocated for file
+
+
+Inputs
+~~~~~~
+::
+
+     path - Pathname of the file
+     sb - Pointer to stat structure that will be filled by the stat() call.
+
+
+Result
+~~~~~~
+::
+
+     0 on success and -1 on error. If an error occurred, the global
+     variable errno is set.
+
+
+
+See also
+~~~~~~~~
+
+`fstat()`_ 
 
 ----------
 
