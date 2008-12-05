@@ -42,14 +42,6 @@ BUILD INSTRUCTIONS
 You need to have gcc, binutils, collect-aros, abc-shell, make, coreutils, sed,
 findutils, grep and yacc installed to build Perl.
 
-Build process will hang if you are using amberram.handler. The problem is
-that DupFHFromfd() function is not working with AmberRAM's handles opened in
-write mode. You have to switch to old ram.handler.
-
-For the same reason you have to build perl in Ram Disk. It's the only AROS
-filesystem besides Unix emul.handler allowing DupFHFromfd() to work for
-handles opened in write mode.
-
 Steps needed to build and install Perl:
 
 1. Download Perl 5.7.2 sources
@@ -66,3 +58,4 @@ Tested on:
 
 * AROS linux-x86_64
 * AROS pc-i386 
+* AROS linux-powerpc
