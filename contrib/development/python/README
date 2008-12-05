@@ -27,11 +27,8 @@ BUILD INSTRUCTIONS
 You need to have gcc, binutils, collect-aros, abc-shell, make, coreutils, sed,
 grep and diffutils installed to build Python.
 
-Build process will hang if you are using amberram.handler. The problem is
-that DupFHFromfd() function is not working with AmberRAM's handles opened in
-write mode. You have to switch to old ram.handler.
-
-You need filesystem with working symbolic (soft) links to install Python.
+You need filesystem with working symbolic (soft) links to install Python. SFS
+will do just fine.
 
 Steps needed to build and install Python:
 
