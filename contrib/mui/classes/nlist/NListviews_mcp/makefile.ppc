@@ -1,0 +1,36 @@
+#
+# GCC makefile
+#
+
+SHELL = /bin/sh
+CC = gcc
+
+CFLAGS = -O -fomit-frame-pointer -I../common/ -DMORPHOS
+# -DWITH_DEBUG
+LDFLAGS = -noixemul -nostartfiles
+
+%.oPPC: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+#
+
+NListviews.mcp.elf: library.oPPC NListviews.oPPC
+	$(CC) $(LDFLAGS) $^ -o $@ -lstringio
+
+library.oPPC: library.c ../common/mccheader.c NListviews_mcp.h private.h icon.bh rev.h
+
+NListviews.oPPC: NListviews.c NListviews_mcp.h private.h ../common/mcc_common.h rev.h
+
+#
+
+.PHONY : clean
+clean:
+	rm -f *.oPPC
+
+.PHONY : install
+install:
+	cp NListviews.mcp.elf MUI:libs/mui/
+
+.PHONY : uninstall
+uninstall:
+	rm -f MUI:libs/mui/NListviews.mcp.elf

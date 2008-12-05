@@ -1,0 +1,60 @@
+#
+# SAS makefile
+#
+
+MAKE = smake
+
+#
+
+all:
+	@echo >t:nlist_smake_all "cd NList_mcc*n$(MAKE) all*ncd /"
+	@echo >>t:nlist_smake_all "cd NListview_mcc*n$(MAKE) all*ncd /"
+	@echo >>t:nlist_smake_all "cd NFloattext_mcc*n$(MAKE) all*ncd /"
+	@echo >>t:nlist_smake_all "cd NListviews_mcp*n$(MAKE) all*ncd /"
+	@echo >>t:nlist_smake_all "cd Floattext_mui*n$(MAKE) all*ncd /"
+	@execute t:nlist_smake_all
+	@delete >nil: t:nlist_smake_all
+
+install:
+	@echo >t:nlist_smake_install "cd NList_mcc*n$(MAKE) install*ncd /"
+	@echo >>t:nlist_smake_install "cd NListview_mcc*n$(MAKE) install*ncd /"
+	@echo >>t:nlist_smake_install "cd NFloattext_mcc*n$(MAKE) install*ncd /"
+	@echo >>t:nlist_smake_install "cd NListviews_mcp*n$(MAKE) install*ncd /"
+	@echo >>t:nlist_smake_install "cd Floattext_mui*n$(MAKE) install*ncd /"
+	@execute t:nlist_smake_install
+	@delete >nil: t:nlist_smake_install
+
+uninstall:
+	@echo >t:nlist_smake_uninstall "cd NList_mcc*n$(MAKE) uninstall*ncd /"
+	@echo >>t:nlist_smake_uninstall "cd NListview_mcc*n$(MAKE) uninstall*ncd /"
+	@echo >>t:nlist_smake_uninstall "cd NFloattext_mcc*n$(MAKE) uninstall*ncd /"
+	@echo >>t:nlist_smake_uninstall "cd NListviews_mcp*n$(MAKE) uninstall*ncd /"
+	@echo >>t:nlist_smake_uninstall "cd Floattext_mui*n$(MAKE) uninstall*ncd /"
+	@execute t:nlist_smake_uninstall
+	@delete >nil: t:nlist_smake_uninstall
+
+clean:
+	@echo >t:nlist_smake_clean "cd NList_mcc*n$(MAKE) clean*ncd /"
+	@echo >>t:nlist_smake_clean "cd NListview_mcc*n$(MAKE) clean*ncd /"
+	@echo >>t:nlist_smake_clean "cd NFloattext_mcc*n$(MAKE) clean*ncd /"
+	@echo >>t:nlist_smake_clean "cd NListviews_mcp*n$(MAKE) clean*ncd /"
+	@echo >>t:nlist_smake_clean "cd Floattext_mui*n$(MAKE) clean*ncd /"
+	@execute t:nlist_smake_clean
+	@delete >nil: t:nlist_smake_clean
+
+# create a patch between mod and cvs
+create-patch:
+  -execute <<
+    cd /
+    diff -Nur -U 4 -X nlist-mod/diff_ignore nlist-cvs nlist-mod >ram:nlist.diff
+    multiview ram:nlist.diff
+<
+
+# create a patch between cvs and mod
+create-latest:
+  -execute <<
+    cd /
+    diff -Nr -U 4 -X nlist-mod/diff_ignore nlist-mod nlist-cvs >ram:nlist_latest.diff
+    multiview ram:nlist_latest.diff
+<
+
