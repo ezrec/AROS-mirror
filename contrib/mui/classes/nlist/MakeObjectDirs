@@ -1,6 +1,0 @@
-FailAt 21
-MakeDir Floattext_mui/objects
-MakeDir NFloattext_mcc/objects
-MakeDir NListview_mcc/objects
-MakeDir NListviews_mcp/objects
-MakeDir NList_mcc/objects
