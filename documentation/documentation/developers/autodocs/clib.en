@@ -2517,6 +2517,76 @@ Synopsis
      ...)
 
 
+Function
+~~~~~~~~
+::
+
+     Perform operation specified in cmd on the file descriptor fd.
+     Some operations require additional arguments, in this case they
+     follow the cmd argument. The following operations are available:
+     
+     F_DUPFD (int)  - Duplicate file descriptor fd as the lowest numbered
+                      file descriptor greater or equal to the operation
+                      argument.
+
+     F_GETFD (void) - Read the file descriptor flags
+
+     F_SETFD (int)  - Set the file descriptor flags to value given in
+                      the operation argument
+
+     F_GETFL (void) - Read the file status flags
+
+     F_SETFL (int)  - Set the file status flags to value given in the 
+                      operation argument.
+
+     File descriptor flags are zero or more ORed constants:
+     
+     FD_CLOEXEC - File descriptor will be closed during execve()
+     
+     File descriptor flags are not copied during duplication of file
+     descriptors.
+     
+     File status flags are the flags given as mode parameter to open()
+     function call. You can change only a few file status flags in opened
+     file descriptor: O_NONBLOCK, O_APPEND and O_ASYNC. Any other file
+     status flags passed in F_SETFL argument will be ignored.
+     
+     All duplicated file descriptors share the same set of file status
+     flags.
+
+
+Inputs
+~~~~~~
+::
+
+     fd - File descriptor to perform operation on.
+     cmd - Operation specifier.
+     ... - Operation arguments.
+
+
+Result
+~~~~~~
+::
+
+     The return value of the function depends on the performed operation:
+
+     F_DUPFD  - New duplicated file descriptor
+
+     F_GETFD  - File descriptor flags
+     
+     F_SETFD  - 0
+
+     F_GETFL  - File status flags
+
+     F_SETFL  - 0 on success, -1 on error. In case of error a global errno
+                variable is set.
+
+
+
+See also
+~~~~~~~~
+
+`open()`_ 
 
 ----------
 
@@ -2908,6 +2978,64 @@ Synopsis
   int flock(
      int fd,
      int operation)
+
+
+Function
+~~~~~~~~
+::
+
+     Apply or remove an advisory lock on open file descriptor fd. Operation
+     argument can be one of the following constants:
+     
+     LOCK_SH - Place a shared lock on the file specified by fd. More that
+               one process can hold a shared lock on a given file at a
+               time.
+     
+     LOCK_EX - Place an exclusive lock on the file specified by fd. Only
+               one process can hold an exclusive lock on a given file at
+               a time.
+     
+     LOCK_UN - Remove an existing lock from the file specified by fd.
+
+     LOCK_EX operation blocks if there is a lock already placed on the
+     file. LOCK_SH blocks if there is an exclusive lock already placed
+     on the file. If you want to do a non-blocking request, OR the
+     operation specifier with LOCK_NB constant. In this case flock() will
+     return -1 instead of blocking and set errno to EWOULDBLOCK.
+     
+     Advisory locks created with flock() are shared among duplicated file
+     descriptors.
+     
+
+Inputs
+~~~~~~
+::
+
+     fd - File descriptor of the file you want to place or remove lock from.
+     operation - Lock operation to be performed.
+
+
+Result
+~~~~~~
+::
+
+     0 on success, -1 on error. In case of error a global errno variable
+     is set.
+
+
+Notes
+~~~~~
+::
+
+     Locks placed with flock() are only advisory, they place no
+     restrictions to any file or file descriptor operations.
+
+
+Bugs
+~~~~
+::
+
+     It's currently possible to remove lock placed by another process.
 
 
 
@@ -11263,6 +11391,57 @@ Synopsis
      struct utimbuf *buf)
 
 
+Function
+~~~~~~~~
+::
+
+     Change last access and last modification time of the given file to
+     times specified in given utimbuf structure. If buf is NULL, the
+     current time will be used instead.
+
+     The utimbuf structure contains of two fields:
+
+     time_t actime;  - last access time
+     time_t modtime; - last modification time
+
+
+Inputs
+~~~~~~
+::
+
+     filename - Name of the file
+     buf - Pointer to utimbuf structure describing specified time.
+
+
+Result
+~~~~~~
+::
+
+     0 on success and -1 on error. If an error occurred, the global
+     variable errno is set.
+
+
+Notes
+~~~~~
+::
+
+     This function can be used to set access and modification times with
+     a resolution of 1 second, use utimes() if you need better precision.
+
+
+Bugs
+~~~~
+::
+
+     Since AROS has no notion of last access time, actime field is silently
+     ignored, only modification time of the file is set.
+
+
+
+See also
+~~~~~~~~
+
+`utimes()`_ 
 
 ----------
 
@@ -11279,6 +11458,54 @@ Synopsis
      struct timeval tvp[2])
 
 
+Function
+~~~~~~~~
+::
+
+     Change last access and last modification time of the given file to
+     times specified in tvp array. If tvp is NULL, the current time will be
+     used instead.
+
+
+Inputs
+~~~~~~
+::
+
+     filename - Name of the file
+     buf - Pointer to an array of two timeval structures. First structure
+             specifies the last access time, second specifies the last
+             modification time
+
+
+Result
+~~~~~~
+::
+
+     0 on success and -1 on error. If an error occurred, the global
+     variable errno is set.
+
+
+Notes
+~~~~~
+::
+
+     The timeval structure has microsecond resolution, but in reality
+     this function has time resolution of 1 tick.
+
+
+Bugs
+~~~~
+::
+
+     Since AROS has no notion of last access time, it's silently ignored
+     and only modification time of the file is set.
+
+
+
+See also
+~~~~~~~~
+
+`utime()`_ 
 
 ----------
 
@@ -11601,6 +11828,68 @@ Synopsis
      int *status)
 
 
+Function
+~~~~~~~~
+::
+
+     Waits for child process to change state. State change is one of the
+     following events: child has exited, child was terminated by a signal,
+     child was stopped by a signal, child was resumed by a signal.
+     
+     The function stores status of the process that changed state in the
+     pointer given as status argument.
+
+     The following macros can be used to extract information from the
+     status value:
+
+     WIFEXITED(status)    - true if the process has exited
+     WEXITSTATUS(status)  - exit status of the exited process
+     WIFSIGNALED(status)  - true if the child process was terminated by a
+                            signal
+     WTERMSIG(status)     - number of the signal that caused process
+                            termination
+     WIFSTOPPED(status)   - true if the child process was stopped by a
+                            signal
+     WSTOPSIG(status)     - number of the signal that caused child process
+                            stop
+     WIFCONTINUED(status) - true if the child process was resumed by the
+                            SIGCONT signal.
+     
+     Parent process will be suspended until a child changes state. If a
+     child process has already changed state, function returns immediately.
+
+
+Inputs
+~~~~~~
+::
+
+     status - Pointer to int where child return status will be stored or
+     NULL if you don't want to store status.
+
+
+Result
+~~~~~~
+::
+
+     Process id of the child process on success or -1 on error. If an error
+     occurred, the global variable errno is set.
+
+
+Notes
+~~~~~
+::
+
+     This function will work only for child processeses notifying parent
+     process of their death, for example processes created by vfork() call.
+     If you want to use it for other processes, remember to set the
+     NP_NotifyOnDeath tag value to TRUE during child process creation.
+
+
+
+See also
+~~~~~~~~
+
+`waitpid()`_ 
 
 ----------
 
@@ -11617,6 +11906,75 @@ Synopsis
      int options)
 
 
+Function
+~~~~~~~~
+::
+
+     Waits for child process with given process id to change state. State
+     change is one of the following events: child has exited, child was
+     terminated by a signal, child was stopped by a signal, child was
+     resumed by a signal.
+     
+     The function stores status of the process that changed state in the
+     pointer given as status argument.
+
+     The following macros can be used to extract information from the
+     status value:
+
+     WIFEXITED(status)    - true if the process has exited
+     WEXITSTATUS(status)  - exit status of the exited process
+     WIFSIGNALED(status)  - true if the child process was terminated by a
+                            signal
+     WTERMSIG(status)     - number of the signal that caused process
+                            termination
+     WIFSTOPPED(status)   - true if the child process was stopped by a
+                            signal
+     WSTOPSIG(status)     - number of the signal that caused child process
+                            stop
+     WIFCONTINUED(status) - true if the child process was resumed by the
+                            SIGCONT signal.
+
+     Unless WNOHANG option is set, parent process will be suspended until a
+     child changes state. If a child process has already changed state,
+     function returns immediately.
+
+
+Inputs
+~~~~~~
+::
+
+     pid - Process id of the process you want to wait for or -1 to wait for
+             any child process
+     status - Pointer to int where child status will be stored or NULL if
+             you don't want to store status.
+     options - ORed zero or more of the following constants:
+     
+         WNOHANG - return immediately if no child process changed state
+
+
+Result
+~~~~~~
+::
+
+     Process id of the child process on success or -1 on error. If an error
+     occurred, the global variable errno is set.
+
+
+Notes
+~~~~~
+::
+
+     This function will work only for child processeses notifying parent
+     process of their death, for example processes created by vfork() call.
+     If you want to use it for other processes, remember to set the
+     NP_NotifyOnDeath tag value to TRUE during child process creation.
+
+
+
+See also
+~~~~~~~~
+
+`wait()`_ 
 
 ----------
 
