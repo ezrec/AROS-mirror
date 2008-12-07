@@ -83,11 +83,11 @@ static char *CopyText(char *textin)
 static IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...) __stackparm;
 static IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...)
 {
-  AROS_SLOWSTACKMETHODS_PRE(tag1)
+  AROS_SLOWSTACKTAGS_PRE(tag1)
   
-  retval = DoSuperNewTagList(cl, obj, NULL,  (struct TagItem *) AROS_SLOWSTACKMETHODS_ARG(tag1));
+  retval = DoSuperNewTagList(cl, obj, NULL, AROS_SLOWSTACKTAGS_ARG(tag1));
 
-  AROS_SLOWSTACKMETHODS_POST
+  AROS_SLOWSTACKTAGS_POST
 }
 #elif !defined(__MORPHOS__)
 Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)

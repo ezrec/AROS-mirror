@@ -225,11 +225,11 @@ LONG xget(Object *obj, ULONG attribute)
 IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...) __stackparm;
 IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...)
 {
-  AROS_SLOWSTACKMETHODS_PRE(tag1)
+  AROS_SLOWSTACKTAGS_PRE(tag1)
   
-  retval = DoSuperNewTagList(cl, obj, NULL,  (struct TagItem *) AROS_SLOWSTACKMETHODS_ARG(tag1));
+  retval = DoSuperNewTagList(cl, obj, NULL, AROS_SLOWSTACKTAGS_ARG(tag1));
 
-  AROS_SLOWSTACKMETHODS_POST
+  AROS_SLOWSTACKTAGS_POST
 }
 #elif !defined(__MORPHOS__)
 Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
@@ -843,23 +843,12 @@ INLINE ASM ULONG MyCallHookA(REG(a0, struct Hook *hook), REG(a2, struct NListtre
 }
 
 #ifdef __AROS__
-#if defined(__PPC__)
-/* weissms: don't ask me why but it has to be done like this, there is a similar
-   thing in nlist class
-*/
-static IPTR MyCallHook(struct Hook *hook, struct NListtree_Data *data, ...) __stackparm;
-static IPTR MyCallHook(struct Hook *hook, struct NListtree_Data *data, ...)
-{
-    return CallHookPkt(hook, data->Obj, ((IPTR *) &data)+1);
-}
-#else
 static IPTR MyCallHook(struct Hook *hook, struct NListtree_Data *data, ...)
 {
     AROS_SLOWSTACKHOOKS_PRE(data)
     retval = CallHookPkt(hook, data->Obj, AROS_SLOWSTACKHOOKS_ARG(data));
     AROS_SLOWSTACKHOOKS_POST
 }
-#endif
 #else
 static ULONG STDARGS VARARGS68K MyCallHook(struct Hook *hook, struct NListtree_Data *data, ...)
 {
