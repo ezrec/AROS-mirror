@@ -148,7 +148,7 @@ LONG lockobject2(struct fsObject *o, LONG accessmode, struct ExtFileLock **retur
   struct ExtFileLock *lock;
 
   /* This function locks the passed object and returns an
-     ExtFileLock structure if succesful. */
+     ExtFileLock structure if successful. */
 
   if(BE2L(o->be_objectnode)==ROOTNODE && accessmode==EXCLUSIVE_LOCK) {
     /* Exclusive locks on the ROOT directory are not allowed */
@@ -302,10 +302,10 @@ LONG locateobject2(UBYTE **io_path, struct CacheBuffer **io_cb, struct fsObject 
   UBYTE *path=*io_path;
   LONG errorcode=0;
 
-  /* Path is a normal C string.  It may include a colon.  Everything upto the
+  /* Path is a normal C string.  It may include a colon.  Everything up to the
      last colon found in the string (if any) will be ignored.
 
-     This function parses the path passed in and locates the object it referres
+     This function parses the path passed in and locates the object it refers
      to relative to the passed in object.
      This function returns an AmigaDOS errorcode in case of a problem, or zero
      if everything went okay.

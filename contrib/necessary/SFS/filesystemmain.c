@@ -64,7 +64,7 @@ LONG step(void);
 
 #define BNODE
 
-#define BITMAPFILL 0xFFFFFFFF    /* should be 0xFFFFFFFF !  Carefull.. admin containers are 32 blocks! */
+#define BITMAPFILL 0xFFFFFFFF    /* should be 0xFFFFFFFF !  Careful.. admin containers are 32 blocks! */
 
 /* defines: */
 
@@ -81,7 +81,7 @@ LONG step(void);
 struct fsNotifyRequest {
   UBYTE *nr_Name;
   UBYTE *nr_FullName;           /* set by dos - don't touch */
-  ULONG nr_UserData;            /* for applications use */
+  ULONG nr_UserData;            /* for application's use */
   ULONG nr_Flags;
 
   union {
@@ -1307,7 +1307,7 @@ void mainloop(void) {
                   }
 
                   if((errorcode=readobject(objectnode, &cb, &o))==0) {
-                    UBYTE *path=(UBYTE *)globals->packet->dp_Arg2;
+                    UBYTE *path=(UBYTE *)globals->packet->dp_Arg2, *prefix=path;
 
                     _DEBUG(("ACTION_READ_LINK: path = '%s', errorcode = %ld\n",path,errorcode));
 
@@ -1318,6 +1318,9 @@ void mainloop(void) {
                     }
                     else {
                       struct CacheBuffer *cb2;
+                      UBYTE *p=path;
+
+                      /* Move on to remainder of path after the link */
 
                       while(*path!=0) {
                         if(*path=='/') {
@@ -1331,7 +1334,7 @@ void mainloop(void) {
                       if((errorcode=readcachebuffercheck(&cb2, BE2L(o->object.file.be_data), SOFTLINK_ID))==0) {
                         struct fsSoftLink *sl=cb2->data;
                         LONG length=globals->packet->dp_Arg4;
-                        UBYTE *src=sl->string;
+                        UBYTE *src=sl->string, ch;
                         UBYTE *s=globals->string;
 
                         while((*s++=*path++)!=0) {        // Work-around for bug in ixemul, which sometimes provides the same pointer for dp_Arg2 (path) and dp_Arg3 (soft-link buffer)
@@ -1343,29 +1346,64 @@ void mainloop(void) {
 
                         /* cb is no longer valid at this point. */
 
-                        while(length-->0 && (*dest++=*src++)!=0) {
+                        /* Check if link target is an absolute path */
+
+                        while((ch=*src++)!='\0') {
+                          if(ch==':')
+                            break;
+                        }
+                        src=sl->string;
+
+                        /* If target is a relative path, put path preceding
+                           link into buffer so that result is relative to
+                           lock passed in */
+
+                        if(ch!=':') {
+                          while(prefix!=p && length-->0) {
+                            *dest++=*prefix++;
+                          }
                         }
 
+                        /* Copy link target to buffer */
+
+                        while(length-->0 && (*dest++=*src++)!=0) {
+                        }
                         dest--;
                         length++;
+
+                        /* Ensure we don't insert an extraneous slash */
+
+                        if(length!=globals->packet->dp_Arg4 && *(dest-1)=='/') {
+                          *--dest='\0';
+                          length++;
+                        }
+                        if(*(dest-1)==':' && *s=='/') {
+                          s++;
+                        }
+
+                        /* Append remainder of original path */
 
                         while(length-->0 && (*dest++=*s++)!=0) {
                         }
 
                         if(length<0) {
-                          errorcode=ERROR_NO_FREE_STORE;
+                          errorcode=ERROR_LINE_TOO_LONG;
                         }
                       }
                     }
                   }
 
                   if(errorcode!=0) {
-                    returnpacket(DOSFALSE, errorcode);
+                    if(errorcode==ERROR_LINE_TOO_LONG) {
+                      returnpacket(-2, errorcode);
+                    }
+                    else {
+                      returnpacket(-1, errorcode);
+                    }
                   }
                   else {
-//                    returnpacket(DOSTRUE, 0);
-//                    returnpacket(packet->dp_Arg4,0);  /* hack! */
-                    returnpacket((LONG)(dest - globals->packet->dp_Arg3 - 1), 0);  /* hack!   Sep 19 1999: Why the hell did I do this??? -> Seems like FFS does it that way as well. */
+                    returnpacket((LONG)(dest - globals->packet->dp_Arg3 - 1),
+                      0);
                   }
                 }
                 break;
