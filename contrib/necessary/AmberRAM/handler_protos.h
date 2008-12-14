@@ -2,7 +2,7 @@
 
 File: handler_protos.h
 Author: Neil Cafferkey
-Copyright (C) 2001-2003 Neil Cafferkey
+Copyright (C) 2001-2008 Neil Cafferkey
 
 This file is free software; you can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License as
@@ -82,6 +82,8 @@ struct DosList *CmdCurrentVolume(struct Handler *handler);
 BOOL CmdChangeMode(ULONG type, APTR thing, ULONG new_mode);
 BOOL CmdMakeLink(struct Handler *handler, struct Lock *lock, STRPTR name,
    APTR reference, LONG link_type);
+LONG CmdReadLink(struct Handler *handler, struct Lock *lock,
+   const TEXT *name, TEXT *buffer, LONG buffer_size);
 BOOL CmdWriteProtect(struct Handler *handler, BOOL on, ULONG key);
 BOOL CmdFlush();
 BOOL CmdAddNotify(struct Handler *handler, struct NotifyRequest *request);
@@ -94,8 +96,10 @@ struct Object *CreateObject(struct Handler *handler, const TEXT *name,
 BOOL AttemptDeleteObject(struct Handler *handler, struct Object *object,
    BOOL notify);
 VOID DeleteObject(struct Handler *handler, struct Object *object);
+struct Object *GetHardObject(struct Handler *handler, struct Lock *lock,
+   const TEXT *name, struct Object **parent);
 struct Object *GetObject(struct Handler *handler, struct Lock *lock,
-    const TEXT *name, struct Object **parent);
+   const TEXT *name, struct Object **parent, LONG *remainder_pos);
 PINT ChangeFileSize(struct Handler *handler, struct Opening *opening,
    PINT offset, LONG mode);
 UPINT ReadData(struct Opening *opening, UBYTE *buffer, UPINT length);

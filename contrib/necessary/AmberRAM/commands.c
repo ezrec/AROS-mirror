@@ -327,7 +327,7 @@ BOOL CmdFind(struct Handler *handler, struct FileHandle *handle,
 
    if(error == 0)
    {
-      file = GetObject(handler, lock, name, &parent);
+      file = GetHardObject(handler, lock, name, &parent);
       if(parent == NULL)
          error = IoErr();
    }
@@ -869,7 +869,7 @@ struct Lock *CmdLocateObject(struct Handler *handler, struct Lock *lock,
 
    /* Find the object and lock it */
 
-   object = GetObject(handler, lock, name, NULL);
+   object = GetHardObject(handler, lock, name, NULL);
 
    if(object != NULL)
       lock = LockObject(handler, object, mode);
@@ -1173,7 +1173,7 @@ struct Lock *CmdCreateDir(struct Handler *handler,
 
    /* Find parent directory and possible name clash */
 
-   dir = GetObject(handler, lock, name, &parent);
+   dir = GetHardObject(handler, lock, name, &parent);
    lock = NULL;
 
    /* Create a new directory */
@@ -1206,7 +1206,7 @@ struct Lock *CmdCreateDir(struct Handler *handler,
             error = ERROR_DISK_WRITE_PROTECTED;
       }
       else
-         error = ERROR_OBJECT_NOT_FOUND;
+         error = IoErr();
    }
    else
       error = ERROR_OBJECT_EXISTS;
@@ -1656,7 +1656,7 @@ BOOL CmdSetProtect(struct Handler *handler, struct Lock *lock,
 
    /* Set new protection flags if object isn't in use */
 
-   object = GetObject(handler, lock, name, NULL);
+   object = GetHardObject(handler, lock, name, NULL);
    if(object != NULL)
    {
       if(handler->locked)
@@ -1665,13 +1665,8 @@ BOOL CmdSetProtect(struct Handler *handler, struct Lock *lock,
       if(error == 0)
       {
          object = GetRealObject(object);
-         if(object->lock == NULL)
-         {
-            object->protection = flags;
-            NotifyAll(handler, object, TRUE);
-         }
-         else
-            error = ERROR_OBJECT_IN_USE;
+         object->protection = flags;
+         NotifyAll(handler, object, TRUE);
       }
    }
    else
@@ -1725,7 +1720,7 @@ BOOL CmdSetComment(struct Handler *handler, struct Lock *lock,
 
    /* Get object */
 
-   object = GetObject(handler, lock, name, NULL);
+   object = GetHardObject(handler, lock, name, NULL);
    if(object == NULL)
       error = IoErr();
 
@@ -1739,7 +1734,7 @@ BOOL CmdSetComment(struct Handler *handler, struct Lock *lock,
 
    locale = handler->locale;
    for(p = comment; (ch = *p) != '\0'; p++)
-      if(!IsPrint(locale, ch) || IsCntrl(locale, ch))
+      if((ch & 0x80) == 0 && (!IsPrint(locale, ch) || IsCntrl(locale, ch)))
          error = ERROR_INVALID_COMPONENT_NAME;
 
    /* Check volume isn't write-protected */
@@ -1814,14 +1809,14 @@ BOOL CmdRenameObject(struct Handler *handler, struct Lock *old_lock,
 
    /* Get object to be moved */
 
-   object = GetObject(handler, old_lock, old_name, NULL);
+   object = GetHardObject(handler, old_lock, old_name, NULL);
    if(object == NULL)
       error = IoErr();
 
    /* Get destination directory and check if a different object already has
       the target name */
 
-   duplicate = GetObject(handler, new_lock, new_name, &parent);
+   duplicate = GetHardObject(handler, new_lock, new_name, &parent);
    if(duplicate != NULL && duplicate != object)
       error = ERROR_OBJECT_EXISTS;
    if(parent == NULL)
@@ -1980,7 +1975,7 @@ BOOL CmdSetDate(struct Handler *handler, struct Lock *lock, STRPTR name,
 
    if(error == 0)
    {
-      object = GetObject(handler, lock, name, NULL);
+      object = GetHardObject(handler, lock, name, NULL);
       if(object != NULL)
       {
          object = GetRealObject(object);
@@ -2036,13 +2031,13 @@ BOOL CmdSetDate(struct Handler *handler, struct Lock *lock, STRPTR name,
 BOOL CmdDeleteObject(struct Handler *handler, struct Lock *lock,
    STRPTR name)
 {
-   LONG error = 0;
+   LONG error = 0, pos = -1;
    struct Object *object;
 
    /* Find object and check it can be deleted */
 
-   object = GetObject(handler, lock, name, NULL);
-   if(object == NULL)
+   object = GetObject(handler, lock, name, NULL, &pos);
+   if(object == NULL || pos != -1)
       error = IoErr();
 
    if(handler->locked)
@@ -2212,9 +2207,11 @@ BOOL CmdMakeLink(struct Handler *handler, struct Lock *lock, STRPTR name,
 
    /* Find parent directory and possible name clash */
 
-   link = GetObject(handler, lock, name, &parent);
+   link = GetHardObject(handler, lock, name, &parent);
    if(link != NULL)
       error = ERROR_OBJECT_EXISTS;
+   else if(parent == NULL)
+      error = IoErr();
 
    /* Determine link type */
 
@@ -2227,10 +2224,7 @@ BOOL CmdMakeLink(struct Handler *handler, struct Lock *lock, STRPTR name,
          object_type = ST_LINKDIR;
    }
    else
-   {
       object_type = ST_SOFTLINK;
-      error = ERROR_NOT_IMPLEMENTED;
-   }
 
    /* Check volume isn't write-protected */
 
@@ -2244,14 +2238,9 @@ BOOL CmdMakeLink(struct Handler *handler, struct Lock *lock, STRPTR name,
 
    if(error == 0)
    {
-      if(parent != NULL)
-      {
-         link = CreateObject(handler, FilePart(name), object_type, parent);
-         if(link == NULL)
-            error = IoErr();
-      }
-      else
-         error = ERROR_OBJECT_NOT_FOUND;
+      link = CreateObject(handler, FilePart(name), object_type, parent);
+      if(link == NULL)
+         error = IoErr();
    }
 
    /* Store link target */
@@ -2272,7 +2261,8 @@ BOOL CmdMakeLink(struct Handler *handler, struct Lock *lock, STRPTR name,
       }
       else
       {
-         block_diff = SetString(handler, (APTR)&link->lock, reference);
+         block_diff =
+            SetString(handler, (APTR)&link->soft_link_target, reference);
          if(block_diff == -1)
             error = IoErr();
          else
@@ -2292,6 +2282,109 @@ BOOL CmdMakeLink(struct Handler *handler, struct Lock *lock, STRPTR name,
 
    SetIoErr(error);
    return error == 0;
+}
+
+
+
+/****i* ram.handler/CmdReadLink ********************************************
+*
+*   NAME
+*	CmdReadLink --
+*
+*   SYNOPSIS
+*	success = CmdReadLink(handler, lock, name, buffer,
+*	    buffer_size)
+*
+*	BOOL CmdReadLink(struct Handler *, struct Lock *, const TEXT *,
+*	    TEXT *, LONG);
+*
+*   FUNCTION
+*
+*   INPUTS
+*
+*   RESULT
+*
+*   EXAMPLE
+*
+*   NOTES
+*
+*   BUGS
+*
+*   SEE ALSO
+*
+****************************************************************************
+*
+*/
+
+LONG CmdReadLink(struct Handler *handler, struct Lock *lock,
+   const TEXT *name, TEXT *buffer, LONG buffer_size)
+{
+   struct Object *link;
+   LONG error = 0, pos, length;
+   const TEXT *p;
+
+   /* Get link object */
+
+   link = GetObject(handler, lock, name, NULL, &pos);
+   if(link == NULL)
+      error = IoErr();
+   else if(((struct Node *)link)->ln_Pri != ST_SOFTLINK)
+      error = ERROR_OBJECT_WRONG_TYPE;
+
+   if(error == 0)
+   {
+      /* Copy part of path preceding link to buffer so that returned path
+         will be relative to lock passed in */
+
+      if(pos == -1)
+         p = name + StrLen(name) - 1;
+      else
+         p = name + pos - 2;
+
+      while(p != name && *p != '/' && *p != ':')
+         p--;
+
+      length = p - name;
+      if(*p == '/' || *p == ':')
+         length++;
+      if(buffer_size >= length + 1)
+      {
+         CopyMem(name, buffer, length);
+         buffer[length] = '\0';
+      }
+      else
+         error = ERROR_BUFFER_OVERFLOW;
+   }
+
+   if(error == 0)
+   {
+      /* Add link target to link's parent path */
+
+      if(AddPart(buffer, link->soft_link_target, buffer_size))
+      {
+         /* Add remainder of original path after link */
+
+         if(pos != -1)
+         {
+            if(!AddPart(buffer, name + pos, buffer_size))
+               error = ERROR_LINE_TOO_LONG;
+         }
+      }
+      else
+         error = ERROR_BUFFER_OVERFLOW;
+   }
+
+   /* Return path length or error indicator */
+
+   if(error == ERROR_BUFFER_OVERFLOW)
+      length = -2;
+   else if(error != 0)
+      length = -1;
+   else
+      length = StrLen(buffer);
+
+   SetIoErr(error);
+   return length;
 }
 
 
@@ -2436,7 +2529,7 @@ BOOL CmdAddNotify(struct Handler *handler, struct NotifyRequest *request)
       notification->request = request;
       request->nr_Flags &= ~NRF_MAGIC;
 
-      object = GetObject(handler, NULL, request->nr_FullName, NULL);
+      object = GetHardObject(handler, NULL, request->nr_FullName, NULL);
 
       if(object != NULL)
       {

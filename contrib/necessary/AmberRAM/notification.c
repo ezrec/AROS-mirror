@@ -70,8 +70,8 @@ VOID MatchNotifyRequests(struct Handler *handler)
       notification = next_notification;
       next_notification = (APTR)((struct MinNode *)notification)->mln_Succ;
 
-      object =
-         GetObject(handler, NULL, notification->request->nr_FullName, NULL);
+      object = GetHardObject(handler, NULL,
+         notification->request->nr_FullName, NULL);
       if(object != NULL)
       {
          Remove((APTR)notification);
@@ -290,7 +290,7 @@ struct Notification *FindNotification(struct Handler *handler,
 
    /* Find which list the request should be in */
 
-   object = GetObject(handler, NULL, request->nr_FullName, NULL);
+   object = GetHardObject(handler, NULL, request->nr_FullName, NULL);
    if(object != NULL)
       list = &object->notifications;
    else

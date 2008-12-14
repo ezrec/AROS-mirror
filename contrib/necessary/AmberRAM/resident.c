@@ -51,7 +51,7 @@ MA 02111-1307, USA.
 #define HANDLER_NAME "amberram.handler"
 #define VERSION 1
 #define REVISION 9
-#define DATE "6.1.2008"
+#define DATE "14.12.2008"
 
 #ifdef __AROS__
 #define rom_tag Ram_ROMTag

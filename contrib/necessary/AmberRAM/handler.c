@@ -347,6 +347,13 @@ LONG Main()
                result = DOSFALSE;
             break;
 
+         case ACTION_READ_LINK:
+
+            result = CmdReadLink(handler, BADDR(packet->dp_Arg1),
+               (APTR)packet->dp_Arg2, (APTR)packet->dp_Arg3,
+               packet->dp_Arg4);
+            break;
+
          case ACTION_WRITE_PROTECT:
 
             if(!CmdWriteProtect(handler, packet->dp_Arg1,

@@ -8,7 +8,7 @@ TO DO:
  - Fix rollback problems in ACTION_RENAME_DISK.
  - Implement soft links?
  - Respect R and W flags for directories?
- - Should opening with MODE_READWRITE succeed when disc is locked?
+ - Should opening with MODE_READWRITE succeed when disk is locked?
 
 
 DESIGN NOTES:

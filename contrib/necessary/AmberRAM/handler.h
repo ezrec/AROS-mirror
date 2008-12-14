@@ -110,6 +110,7 @@ struct Object
    struct MinList notifications;
    struct Block start_block;   /* a zero-length block */
 };
+#define soft_link_target comment
 
 
 struct Opening

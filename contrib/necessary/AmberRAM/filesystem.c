@@ -413,27 +413,83 @@ VOID DeleteObject(struct Handler *handler, struct Object *object)
 
 
 
-/****i* ram.handler/GetObject **********************************************
+/****i* ram.handler/GetHardObject ******************************************
 *
 *   NAME
-*	GetObject -- Find an object given a lock and a path relative to it.
+*	GetHardObject -- Find a non-soft-link object given a lock and path.
 *
 *   SYNOPSIS
-*	object = GetObject(handler, lock, name,
+*	object = GetHardObject(handler, lock, name,
 *	    parent)
 *
-*	struct Object *GetObject(struct Handler *, struct Lock *, TEXT *,
+*	struct Object *GetHardObject(struct Handler *, struct Lock *, TEXT *,
 *	    struct Object **);
 *
 *   FUNCTION
+*	Looks for the object corresponding to the specified lock and path
+*	combination. If any part of the path is a soft link, NULL is returned
+*	and the appropriate error code is set.
 *
 *   INPUTS
 *	lock - .
 *	name - .
-*	parent - parent directory will be returned here (may be NULL).
+*	parent - parent directory will be returned here (will be NULL if
+*	    path is invalid or contains a soft link).
 *
 *   RESULT
-*	object - The located object.
+*	object - The located object, or NULL if not found.
+*
+*   EXAMPLE
+*
+*   NOTES
+*
+*   BUGS
+*
+*   SEE ALSO
+*
+****************************************************************************
+*
+*/
+
+struct Object *GetHardObject(struct Handler *handler, struct Lock *lock,
+   const TEXT *name, struct Object **parent)
+{
+   struct Object *object;
+
+   object = GetObject(handler, lock, name, parent, NULL);
+   if(IoErr() == ERROR_IS_SOFT_LINK)
+      object = NULL;
+
+   return object;
+}
+
+
+/****i* ram.handler/GetObject **********************************************
+*
+*   NAME
+*	GetObject -- Find an object given a lock and path.
+*
+*   SYNOPSIS
+*	object = GetObject(handler, lock, name,
+*	    parent, remainder_pos)
+*
+*	struct Object *GetObject(struct Handler *, struct Lock *, TEXT *,
+*	    struct Object **, LONG *);
+*
+*   FUNCTION
+*	Looks for the object corresponding to the specified lock and path
+*	combination. If any part of the path is a soft link, the link object
+*	is returned and ERROR_IS_SOFT_LINK is set. IoErr() will be zero if a
+*	hard object is returned.
+*
+*   INPUTS
+*	lock - .
+*	name - .
+*	parent - parent directory will be returned here (will be NULL if
+*	    path is invalid or contains a soft link).
+*
+*   RESULT
+*	object - The located object, or NULL if not found.
 *
 *   EXAMPLE
 *
@@ -448,16 +504,18 @@ VOID DeleteObject(struct Handler *handler, struct Object *object)
 */
 
 struct Object *GetObject(struct Handler *handler, struct Lock *lock,
-    const TEXT *name, struct Object **parent)
+   const TEXT *name, struct Object **parent, LONG *remainder_pos)
 {
    const TEXT *p;
    TEXT ch, buffer[MAX_NAME_SIZE + 1];
-   PINT pos;
+   LONG error = 0, pos = 0;
    struct Object *object, *old_object;
+
+   /* Skip device name */
 
    for(ch = *(p = name); ch != ':' && ch != '\0'; ch = *(++p));
    if(ch == ':')
-      name = p + 1;
+      pos = p - name + 1;
 
    /* Get object referenced by lock */
 
@@ -467,21 +525,34 @@ struct Object *GetObject(struct Handler *handler, struct Lock *lock,
 
    /* Traverse textual portion of path */
 
-   pos = 0;
-   while(pos != -1 && object != NULL)
+   while(pos != -1 && error == 0)
    {
       pos = SplitName(name, '/', buffer, pos, MAX_NAME_SIZE);
       if(*buffer != '\0')
       {
-         old_object = object;
          if(((struct Node *)object)->ln_Pri > 0)
          {
+            old_object = object;
             object = GetRealObject(object);
             object = (struct Object *)
                FindNameNoCase((struct List *)&object->elements, buffer);
+            if(object != NULL)
+            {
+               /* Check for and handle a soft link */
+
+               if(((struct Node *)object)->ln_Pri == ST_SOFTLINK)
+               {
+                  if(remainder_pos != NULL)
+                     *remainder_pos = pos;
+                  error = ERROR_IS_SOFT_LINK;
+               }
+            }
+            else
+               error = ERROR_OBJECT_NOT_FOUND;
          }
          else
          {
+            error = ERROR_OBJECT_NOT_FOUND;
             object = NULL;
             old_object = NULL;
          }
@@ -489,6 +560,8 @@ struct Object *GetObject(struct Handler *handler, struct Lock *lock,
       else if(pos != -1)
       {
          object = object->parent;
+         if(object == NULL)
+            error = ERROR_OBJECT_NOT_FOUND;
       }
    }
 
@@ -496,7 +569,7 @@ struct Object *GetObject(struct Handler *handler, struct Lock *lock,
 
    if(parent != NULL)
    {
-      if(pos == -1)
+      if(pos == -1 && error != ERROR_IS_SOFT_LINK)
          *parent = old_object;
       else
          *parent = NULL;
@@ -504,7 +577,7 @@ struct Object *GetObject(struct Handler *handler, struct Lock *lock,
 
    /* Return the located object */
 
-   SetIoErr(ERROR_OBJECT_NOT_FOUND);
+   SetIoErr(error);
    return object;
 }
 
@@ -1137,7 +1210,8 @@ BOOL SetName(struct Handler *handler, struct Object *object,
 
    locale = handler->locale;
    for(p = name; (ch = *p) != '\0'; p++)
-      if(!IsPrint(locale, ch) || IsCntrl(locale, ch) || ch == ':')
+      if((ch & 0x80) == 0
+         && (!IsPrint(locale, ch) || IsCntrl(locale, ch) || ch == ':'))
          error = ERROR_INVALID_COMPONENT_NAME;
 
    /* Store new name */
@@ -1289,7 +1363,7 @@ static VOID FreeDataBlock(struct Handler *handler, struct Object *file,
 /****i* ram.handler/GetRealObject ******************************************
 *
 *   NAME
-*	GetRealObject --
+*	GetRealObject -- Dereference a hard link if necessary.
 *
 *   SYNOPSIS
 *	real_object = GetRealObject(object)
@@ -1297,6 +1371,9 @@ static VOID FreeDataBlock(struct Handler *handler, struct Object *file,
 *	struct Object *GetRealObject(struct Object *);
 *
 *   FUNCTION
+*	If the specified object is a file, directory or soft link, the same
+*	object is returned. If the object is a hard link, the link target is
+*	returned instead.
 *
 *   INPUTS
 *
