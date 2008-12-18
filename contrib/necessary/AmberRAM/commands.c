@@ -1406,7 +1406,10 @@ BOOL CmdExamineAll(struct Handler *handler, struct Lock *lock,
          struct_size = examine_sizes[type - 1];
          name = ((struct Node *)object)->ln_Name;
          name_size = StrSize(name);
-         comment = object->comment;
+         if(((struct Node *)object)->ln_Pri == ST_SOFTLINK)
+            comment = &((struct Node *)object)->ln_Type;
+         else
+            comment = object->comment;
          comment_size = StrSize(comment);
          entry_size = struct_size + name_size;
          if(type >= ED_COMMENT)

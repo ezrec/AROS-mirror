@@ -1086,7 +1086,7 @@ BOOL ExamineObject(struct Handler *handler, struct Object *object,
       s = ((struct Node *)object)->ln_Name;
       CopyMem(MkBStr(s), &info->fib_FileName, StrSize(s));
       s = object->comment;
-      if(s != NULL)
+      if(s != NULL && ((struct Node *)object)->ln_Pri != ST_SOFTLINK)
          CopyMem(MkBStr(s), &info->fib_Comment, StrSize(s));
       else
          info->fib_Comment[0] = '\0';
