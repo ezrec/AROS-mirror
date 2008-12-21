@@ -6,7 +6,7 @@
     $Id$
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU Library General Public License as 
+    it under the terms of the GNU Library General Public License as
     published by the Free Software Foundation; either version 2 of the
     License, or (at your option) any later version.
 
@@ -82,7 +82,7 @@ typedef struct {
 struct uhci_staticdata
 {
     struct SignalSemaphore  global_lock;
-    
+
     APTR                    MemPool;
 
     IPTR                        iobase[MAX_DEVS];
@@ -98,7 +98,7 @@ struct uhci_staticdata
 
     struct SignalSemaphore	td_lock;
     struct List				td_list;
-    
+
     OOP_AttrBase        HiddPCIDeviceAB;
     OOP_AttrBase        HiddUSBDeviceAB;
     OOP_AttrBase        HiddUSBHubAB;
@@ -136,7 +136,7 @@ typedef struct UHCI_Pipe {
     uint8_t                     p_DevAddr;
     uint8_t                     p_EndPoint;
     uint8_t                     p_NextToggle;
-    uint8_t                     p_MaxTransfer;
+    uint16_t                    p_MaxTransfer;
     uint8_t                     p_Interval;
 
     uint8_t                     p_QHNode;
@@ -150,18 +150,18 @@ typedef struct UHCI_Pipe {
     uint8_t                     p_Signal;
 
     volatile UHCI_TransferDesc  *p_FirstTD;
-    volatile UHCI_TransferDesc  *p_LastTD;	
+    volatile UHCI_TransferDesc  *p_LastTD;
 } UHCI_Pipe;
 
 typedef struct {
     struct uhci_staticdata	*sd;
-    
+
     struct List         intList;
     struct Interrupt    *tmp;
-    
+
     uint8_t             reset;
     uint8_t             running;
-    
+
     struct MsgPort      mport;
     struct timerequest  *timereq;
     struct Interrupt    timerint;
@@ -186,14 +186,14 @@ typedef struct {
 
     UHCI_TransferDesc	*dummy_td;
 
-    /* Interrupt queue headers */	
+    /* Interrupt queue headers */
     UHCI_QueueHeader	*qh01;
     UHCI_QueueHeader	*qh02[2];
     UHCI_QueueHeader	*qh04[4];
     UHCI_QueueHeader	*qh08[8];
     UHCI_QueueHeader	*qh16[16];
     UHCI_QueueHeader	*qh32[32];
-} UHCIData; 
+} UHCIData;
 
 enum {
     aoHidd_UHCI_IOBase,
@@ -352,9 +352,9 @@ void uhci_reset(OOP_Class *cl, OOP_Object *o);
 BOOL uhci_run(OOP_Class *cl, OOP_Object *o, BOOL run);
 
 void uhci_RebuildList(OOP_Class *cl, OOP_Object *o);
-UHCI_Pipe *uhci_CreatePipe(OOP_Class *cl, OOP_Object *o, enum USB_PipeType type, BOOL fullspeed, 
+UHCI_Pipe *uhci_CreatePipe(OOP_Class *cl, OOP_Object *o, enum USB_PipeType type, BOOL fullspeed,
         uint8_t addr, uint8_t endp, uint8_t period, uint32_t maxp, uint32_t timeout);
-void uhci_DeletePipe(OOP_Class *cl, OOP_Object *o, UHCI_Pipe *pipe); 
+void uhci_DeletePipe(OOP_Class *cl, OOP_Object *o, UHCI_Pipe *pipe);
 void uhci_QueuedTransfer(OOP_Class *cl, OOP_Object *o, UHCI_Pipe *pipe, VOID *buffer, uint32_t length, BOOL in);
 void uhci_QueuedWrite(OOP_Class *cl, OOP_Object *o, UHCI_Pipe *pipe, VOID *buffer, uint32_t length);
 void uhci_QueuedRead(OOP_Class *cl, OOP_Object *o, UHCI_Pipe *pipe, VOID *buffer, uint32_t length);
