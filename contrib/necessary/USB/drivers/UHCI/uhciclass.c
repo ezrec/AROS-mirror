@@ -115,7 +115,7 @@ static void uhci_Handler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
     uint16_t cmd = inw(uhci->iobase + UHCI_CMD);
     uint16_t sof = inb(uhci->iobase + UHCI_SOF);
 
-    outw(status, uhci->iobase + UHCI_STS);
+//    outw(status, uhci->iobase + UHCI_STS);
 
     D(bug("[UHCI] INTR Cmd=%04x, SOF=%04x, Status = %04x, Frame=%04x, PortSC1=%04x, PortSC2=%04x\n",
             cmd, sof, status, frame, port1, port2));
@@ -881,6 +881,7 @@ BOOL METHOD(UHCI, Hidd_USBHub, OnOff)
     if (!CheckIO((struct IORequest *)uhci->timereq))
         AbortIO((struct IORequest *)uhci->timereq);
     GetMsg(&uhci->mport);
+    SetSignal(0, 1 << uhci->mport.mp_SigBit);
 
     uhci->running = msg->on;
 

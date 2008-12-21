@@ -203,8 +203,8 @@ BOOL METHOD(OHCI, Hidd_USBHub, ClearPortFeature)
         case UHF_C_PORT_RESET:
             if (!CheckIO((struct IORequest *)ohci->timerReq))
                 AbortIO((struct IORequest *)ohci->timerReq);
-
             GetMsg(&ohci->timerPort);
+            SetSignal(0, 1 << ohci->timerPort.mp_SigBit);
 
             D(bug("[OHCI] Reenabling the RHSC interrupt\n"));
             mmio(ohci->regs->HcInterruptEnable) = mmio(ohci->regs->HcInterruptEnable) | AROS_LONG2OHCI(HC_INTR_RHSC);
