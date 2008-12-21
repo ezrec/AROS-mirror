@@ -55,6 +55,7 @@ OOP_Object *METHOD(Storage, Root, New)
         intptr_t iface;
     	int i;
 
+    	InitSemaphore(&mss->lock);
         mss->sd = SD(cl);
         mss->o = o;
 
@@ -71,6 +72,11 @@ OOP_Object *METHOD(Storage, Root, New)
         HIDD_USBDevice_GetConfigDescriptor(o, 0, &cdesc);
         /* How many LUNs this device supports? */
         mss->maxLUN = HIDD_USBStorage_GetMaxLUN(o);
+        if (mss->maxLUN > 15)
+        {
+        	D(bug("[MSS] GetMaxLUN FAILED.\n"));
+        	mss->maxLUN = 0;
+        }
         D(bug("[MSS] GetMaxLUN returns %d\n", mss->maxLUN));
 
         if (AROS_LE2WORD(cdesc.wTotalLength))
@@ -135,7 +141,7 @@ OOP_Object *METHOD(Storage, Root, New)
 				 * the assignment based on iProduct iManufacturer and iSerial strings.
 				 */
 				ObtainSemaphore(&SD(cl)->Lock);
-				unit_number = SD(cl)->unitNum;
+				mss->unitNum = unit_number = SD(cl)->unitNum;
 				SD(cl)->unitNum += 16;
 				ReleaseSemaphore(&SD(cl)->Lock);
 
@@ -143,12 +149,12 @@ OOP_Object *METHOD(Storage, Root, New)
 				 * For each LUN create a separate task. The unit number will be created as combination of
 				 * unitNum and the LUN: unit 0x00 is Unit 0 LUN 0, 0x12 is Unit 1 LUN 2.
 				 */
-				for (i=0; i <= HIDD_USBStorage_GetMaxLUN(o); i++)
+				for (i=0; i <= mss->maxLUN; i++)
 				{
 					struct TagItem tags[] = {
 										{ TASKTAG_ARG1,   (IPTR)cl },
 										{ TASKTAG_ARG2,   (IPTR)o },
-										{ TASKTAG_ARG3,	  i },
+										{ TASKTAG_ARG3,	  unit_number | i },
 										{ TASKTAG_ARG4,	  (IPTR)FindTask(NULL) },
 										{ TAG_DONE,       0UL }};
 
@@ -184,7 +190,7 @@ OOP_Object *METHOD(Storage, Root, New)
 
 						t->tc_Node.ln_Name = name;
 						t->tc_Node.ln_Type = NT_TASK;
-						t->tc_Node.ln_Pri = 20;     /* same priority as input.device */
+						t->tc_Node.ln_Pri = 1;     /* same priority as input.device */
 
 						/* Add task. It will get back in touch soon */
 						NewAddTask(t, StorageTask, NULL, &tags);
@@ -236,9 +242,11 @@ void METHOD(Storage, Root, Dispose)
 
 BOOL METHOD(Storage, Hidd_USBStorage, Reset)
 {
+    StorageData *mss = OOP_INST_DATA(cl, o);
 	USBDevice_Request req;
 	intptr_t ifnr;
 
+	ObtainSemaphore(&mss->lock);
 	OOP_GetAttr(o, aHidd_USBDevice_InterfaceNumber, &ifnr);
 
 	req.bmRequestType = UT_WRITE_CLASS_INTERFACE;
@@ -248,6 +256,7 @@ BOOL METHOD(Storage, Hidd_USBStorage, Reset)
 	req.wLength = 0;
 
 	HIDD_USBDevice_ControlMessage(o, NULL, &req, NULL, 0);
+	ReleaseSemaphore(&mss->lock);
 }
 
 uint8_t METHOD(Storage, Hidd_USBStorage, GetMaxLUN)
@@ -288,7 +297,7 @@ uint32_t METHOD(Storage, Hidd_USBStorage, DirectSCSI)
 	cbw.bmCBWFlags = msg->read ? CBW_FLAGS_IN : CBW_FLAGS_OUT;
 	cbw.bCBWCBLength = msg->cmdLen;
 
-	ObtainSemaphore(&SD(cl)->Lock);
+	ObtainSemaphore(&mss->lock);
 
 	D(bug("[MSS] DirectSCSI -> (%08x,%08x,%08x,%02x,%02x,%02x)\n",
 			AROS_LONG2LE(cbw.dCBWSignature),
@@ -318,15 +327,46 @@ uint32_t METHOD(Storage, Hidd_USBStorage, DirectSCSI)
 			{
 				if (csw.dCSWTag == cbw.dCBWTag)
 				{
-					retval = 1;
+					if (!csw.bCSWStatus)
+						retval = 1;
 				}
 			}
 		}
 	}
 
-	ReleaseSemaphore(&SD(cl)->Lock);
+	ReleaseSemaphore(&mss->lock);
 
 	return retval;
+}
+
+BOOL METHOD(Storage, Hidd_USBStorage, TestUnitReady)
+{
+	StorageData *mss = OOP_INST_DATA(cl, o);
+	uint8_t cmd[10] = {0};
+
+	if (msg->lun > mss->maxLUN)
+		return FALSE;
+
+	if (HIDD_USBStorage_DirectSCSI(o, msg->lun, cmd, 10, NULL, 0, 1))
+		return TRUE;
+	else
+		return FALSE;
+}
+
+BOOL METHOD(Storage, Hidd_USBStorage, RequestSense)
+{
+	StorageData *mss = OOP_INST_DATA(cl, o);
+	uint8_t cmd[6] = {0x03, 0, 0, 0, 0, 0};
+
+	if (msg->lun > mss->maxLUN)
+		return FALSE;
+
+	cmd[4] = msg->bufferLength;
+
+	if (msg->buffer)
+		return HIDD_USBStorage_DirectSCSI(o, msg->lun, cmd, 6, msg->buffer, msg->bufferLength, 1);
+	else
+		return FALSE;
 }
 
 BOOL METHOD(Storage, Hidd_USBStorage, Read)
@@ -336,6 +376,8 @@ BOOL METHOD(Storage, Hidd_USBStorage, Read)
 
 	if (msg->lun > mss->maxLUN)
 		return FALSE;
+
+	D(bug("[MSS] ::Read(%08x, %04x) => %p\n", msg->block, msg->count, msg->buffer));
 
 	cmd[2] = msg->block >>24;
 	cmd[3] = msg->block >>16;
@@ -347,6 +389,8 @@ BOOL METHOD(Storage, Hidd_USBStorage, Read)
 
 	if (msg->buffer)
 		return HIDD_USBStorage_DirectSCSI(o, msg->lun, cmd, 10, msg->buffer, msg->count * mss->blocksize[msg->lun], 1);
+	else
+		return FALSE;
 }
 
 BOOL METHOD(Storage, Hidd_USBStorage, Write)
@@ -356,6 +400,8 @@ BOOL METHOD(Storage, Hidd_USBStorage, Write)
 
 	if (msg->lun > mss->maxLUN)
 		return FALSE;
+
+	D(bug("[MSS] ::Write(%08x, %04x) <= %p\n", msg->block, msg->count, msg->buffer));
 
 	cmd[2] = msg->block >>24;
 	cmd[3] = msg->block >>16;
@@ -367,7 +413,8 @@ BOOL METHOD(Storage, Hidd_USBStorage, Write)
 
 	if (msg->buffer)
 		return HIDD_USBStorage_DirectSCSI(o, msg->lun, cmd, 10, msg->buffer, msg->count * mss->blocksize[msg->lun], 0);
-
+	else
+		return FALSE;
 }
 
 BOOL METHOD(Storage, Hidd_USBStorage, ReadCapacity)
@@ -380,17 +427,27 @@ BOOL METHOD(Storage, Hidd_USBStorage, ReadCapacity)
 	if (msg->lun > mss->maxLUN)
 		return FALSE;
 
+	D(bug("[MSS] ReadCapacity(%d, %x, %x)\n", msg->lun, msg->blockTotal, msg->blockSize));
+
 	if (HIDD_USBStorage_DirectSCSI(o, msg->lun, cmd, 10, capacity, 8, 1))
 	{
-		mss->blocksize[msg->lun] = capacity[4] << 24 | capacity[5] << 16 | capacity[6] << 8 | capacity[7];
+		mss->blocksize[msg->lun] = (capacity[4] << 24) | (capacity[5] << 16) | (capacity[6] << 8) | capacity[7];
 
 		if (msg->blockTotal)
-			*msg->blockTotal = capacity[0] << 24 | capacity[1] << 16 | capacity[2] << 8 | capacity[3];
+			*msg->blockTotal = (capacity[0] << 24) | (capacity[1] << 16) | (capacity[2] << 8) | capacity[3];
 		if (msg->blockSize)
 			*msg->blockSize = mss->blocksize[msg->lun];
 
 		retval = TRUE;
 	}
+
+	D(bug("[MSS] == "));
+
+	int i;
+	for (i=0; i < 8; i++)
+		D(bug("%02x ", capacity[i]));
+
+	D(bug("\n"));
 
 	return retval;
 }

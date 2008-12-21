@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-FILES := storage_init storageclass storage_task
+FILES := storage_init storageclass storage_task storage_device
 STUBS := storage_stubs
 
 %build_module mmake=hidd-usb-classes-storage	\

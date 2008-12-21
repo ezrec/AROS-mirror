@@ -58,6 +58,19 @@ uint8_t HIDD_USBStorage_GetMaxLUN(OOP_Object *o)
 	return OOP_DoMethod(o, &p.mID);
 }
 
+BOOL HIDD_USBStorage_TestUnitReady(OOP_Object *o, uint8_t lun)
+{
+	STATIC_MID;
+	struct pHidd_USBStorage_TestUnitReady p;
+
+	if (!mid) mid = OOP_GetMethodID((STRPTR)IID_Hidd_USBStorage, moHidd_USBStorage_TestUnitReady);
+
+	p.mID = mid;
+	p.lun = lun;
+
+	return OOP_DoMethod(o, &p.mID);
+}
+
 uint32_t HIDD_USBStorage_DirectSCSI(OOP_Object *o, uint8_t lun, uint8_t *cmd, uint8_t cmdLen, void *data, uint32_t dataLen, uint8_t read)
 {
 	STATIC_MID;
@@ -87,6 +100,21 @@ BOOL HIDD_USBStorage_ReadCapacity(OOP_Object *o, uint8_t lun, uint32_t *blockTot
 	p.lun = lun;
 	p.blockTotal = blockTotal;
 	p.blockSize = blockSize;
+
+	return OOP_DoMethod(o, &p.mID);
+}
+
+BOOL HIDD_USBStorage_RequestSense(OOP_Object *o, uint8_t lun, void *buffer, uint32_t bufferLength)
+{
+	STATIC_MID;
+	struct pHidd_USBStorage_RequestSense p;
+
+	if (!mid) mid = OOP_GetMethodID((STRPTR)IID_Hidd_USBStorage, moHidd_USBStorage_RequestSense);
+
+	p.mID = mid;
+	p.lun = lun;
+	p.buffer = buffer;
+	p.bufferLength = bufferLength;
 
 	return OOP_DoMethod(o, &p.mID);
 }

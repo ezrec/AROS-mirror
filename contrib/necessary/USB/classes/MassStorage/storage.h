@@ -29,6 +29,7 @@
 #include <exec/lists.h>
 #include <exec/semaphores.h>
 #include <exec/ports.h>
+#include <exec/devices.h>
 #include <exec/interrupts.h>
 #include <dos/bptr.h>
 #include <dos/dosextens.h>
@@ -84,7 +85,7 @@ typedef struct __attribute__((packed)) {
 
 #define CSW_SIGNATURE		0x53425355
 #define CSW_STATUS_OK		0x00
-#define CSW_STATUS_FAIL	0x01
+#define CSW_STATUS_FAIL		0x01
 #define CSW_STATUS_PHASE	0x02
 
 struct mss_staticdata
@@ -92,6 +93,8 @@ struct mss_staticdata
     struct SignalSemaphore  Lock;
     void                    *MemPool;
     OOP_Class               *mssClass;
+
+	struct MinList			unitList;
 
     uint32_t				tid;
     uint32_t				unitNum;
@@ -106,6 +109,8 @@ struct mss_staticdata
 };
 
 typedef struct MSSData {
+	struct SignalSemaphore  	lock;
+
 	struct mss_staticdata		*sd;
 	OOP_Object					*o;
 
@@ -121,7 +126,7 @@ typedef struct MSSData {
 	struct Task					*handler[16];
 	uint32_t					blocksize[16];
 	uint8_t						maxLUN;
-
+	uint32_t					unitNum;
 } StorageData;
 
 struct mssbase
@@ -136,6 +141,9 @@ struct mssbase
 #define BASE(lib)((struct mssbase*)(lib))
 #define SD(cl) (&BASE(cl->UserData)->sd)
 
+#define IOStdReq(io) ((struct IOStdReq *)io)
+
+
 static volatile uint32_t getTID(struct mss_staticdata *sd)
 {
 	uint32_t id;
@@ -143,6 +151,24 @@ static volatile uint32_t getTID(struct mss_staticdata *sd)
 	return id;
 }
 
-extern void StorageTask(OOP_Class *cl, OOP_Object *o, uint8_t LUN, struct Task *parent);
+/* exec device interface */
+
+typedef struct {
+	struct Device			mss_device;
+	struct mss_staticdata	*mss_static;
+} mss_device_t;
+
+typedef struct {
+	struct Unit		msu_unit;
+	uint32_t		msu_unitNum;
+	uint32_t		msu_blockSize;
+	uint32_t		msu_blockCount;
+	OOP_Class		*msu_class;
+	OOP_Object		*msu_object;
+	struct List		msu_diskChangeList;
+} mss_unit_t;
+
+extern void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t unitnum, struct Task *parent);
+extern void HandleIO(struct IORequest *io, mss_device_t *device, mss_unit_t *unit);
 
 #endif /* STORAGE_H_ */
