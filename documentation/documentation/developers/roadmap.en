@@ -1,9 +1,9 @@
 ================
-AROS 1.0 roadmap
+AROS 1.0 Roadmap
 ================
 
 :Authors:   Adam Chodorowski, Sergey Mineychev
-:Copyright: Copyright ¦ 2007, The AROS Development Team
+:Copyright: Copyright ¦ 2008, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 
@@ -15,7 +15,6 @@ AROS 1.0 roadmap
     where we would like people to focus their efforts. Hopefully, this will
     help organize the development effort and make us all work more in the
     same direction.
-
 
 Ports
 -----
@@ -29,137 +28,252 @@ down.
 Requirements
 ------------
 
-As the current status can`t be objectively estimated in percents, we can try
-to give only the qualitative estimation for these points. Also the further
-recomendations can be highlited.
-
-1.  AmigaOS 3.1 API compatibility, excluding parts which are deemed to be
-    non-portable or obsolete and not worth the effort. 
+1.  **AmigaOS 3.1 API compatibility.**
     
+    We exclude parts which are deemed to be non-portable or obsolete 
+    and not worth the effort and implement the remaining API.
+
     To mark something as obsolete even though it is possible to implement in a
     portable way should require good reasons; for example if it is very rarely
     used by applications and the effort required to implement it is
     substantial.  
     
-    Current status: Most of the AmigaOS 3.1 API was implemented and even superceeded in some 
-    parts. (Not that missing hardware Amiga parts like lowlevel.lib, card.device, gameport, audio.device 
-    have not been implemented or been replaced). Although, it needs a good bugfixing work done.
-
-
-2.  Partial AmigaOS 3.5 and 3.9 API compatibility. We choose the parts that 
-    we feel are useful and worthwhile to have, and ditch the rest. 
-    
-    For example, it seems *very* unlikely that we want ReAction compatibility
-    since we have already chosen to standardize on Zune for the GUI toolkit
-    (and implementing the ReAction API is not a trivial undertaking). Of
-    course, this will have to be discussed properly before a detailed list is
-    agreed upon.
-    
-    Current status: <?>
+    Current status: **In Progress**, 80% Completed, see `Status page`__
     
 
-3.  Completed GUI toolkit. This means Zune must have complete MUI API
-    compatability and a finished preferences program.
+2.  **Partial AmigaOS 3.5 and 3.9 API compatibility.**
+
+    We choose the parts that we feel are useful and worthwhile to have, and 
+    ditch the rest. For example, it seems *very* unlikely that we want 
+    ReAction compatibility since we have already chosen to standardize on Zune 
+    for the GUI toolkit (and implementing the ReAction API is not a 
+    trivial undertaking).
+
+    Some parts of 3.5 and 3.9 are already implemented. They can be found in
+    `Extensions`__ section of Status page
     
-    Current status: Almost done. Preferences editor misses some functions.
+    Current status: **Skipped**
+    
+    *Reasoning: This goal is defined a in way that does not allow benchmarking
+    its completeness.*
+    
+
+3.  **Completed GUI toolkit.**
+
+    This means Zune must have complete MUI 3.8 API compatability and a finished 
+    preferences program.
+    
+    Current status: **In Progress**
 
 
-4.  Standard applications comparable to those which come with AmigaOS 3.1.
+4.  **Standard applications comparable to those which come with AmigaOS 3.1.**
     
     This does *not* mean that we have to have the exact same applications which
     work exactly the same as in AmigaOS, but the functionality available to the
     user should be roughly equivalent.
 
-    Current status: Most of that basic applications have been developed. 
+    Current status: **In Progress**, 72% Completed, see `Programs page`__
 
-+ Missing are: 
-
-  - Overscan (FIXME:not really needed)
-  - Palette (FIXME:not really needed)
-  - Pointer 
-  - Printer (absent)
-  - Sound (it`s different - we have AHI prefs)
-  - WBPattern (we have Wanderer prefs, which is in works)
-  - Workbench (we have Wanderer prefs, which is in works)
                   
-5.  Sound support, meaning API compatibility and basic applications. There 
-    should be at least one driver for each mandatory port. 
+5.  **Sound support.**
+
+    API compatibility and basic applications. There should be at least one driver 
+    for each mandatory port. 
     
-    Current status: Currently AHI is ported, and there`s some drivers (a few)
-    for i386-port. Applications are in development; Madahi and MP3 player are 
-    available). (FIXME: to clear out - must those applications code be included to 
-    the system or just made available, or isn`t that necessary?).
+    Current status: **Completed**
+
+    *Reasoning: Currently AHI is ported, and there`s some drivers (a few)
+    for i386-port. AHI Preferences editor as well as MP3 player are available.*
+
         
-6.  Networking support. This includes a TCP/IP-stack and some basic
-    applications like email and SSH clients, and also a *simple* web browser.
-    There should be at least one NIC driver for each mandatory port. 
+6.  **Networking support.**
+
+    This includes a TCP/IP-stack and some basicapplications like email and 
+    SSH clients, and also a web browser. There should be at least one NIC 
+    driver for each mandatory port. 
     
     The requirements on the web browser should not be high, but it should be
-    possible to at least browse the web in some way (even if it is only in text
-    mode).
+    possible to at least browse the web in some way.
     
-    Current status: AROSTCP we got now is ancient but working implementation of
-    AmiTCP stack. Some applications was developed (i.e. the FTP and telnet client,
-    IRC-client) but it isn`t a part of the system itself. Other applications
-    including some possible browser implementations is in works.
+    Current status: **In Progress**
+
+    *Reasoning: AROSTCP we got now is ancient but working implementation of
+    AmiTCP stack. Some applications were developed (i.e. the FTP and telnet client,
+    IRC-client).*
     
     
-7.  Self-hosted development environment and SDK for developers. Specifically,
-    this includes all software required to build AROS like GCC, GNU binutils,
-    GNU make and the rest. It must be possible to compile AROS on AROS. 
+7.  **Self-hosted development environment and SDK for developers.**
+
+    Specifically, this includes all software required to build AROS like 
+    GCC, GNU binutils, GNU make and the rest. It must be possible to compile 
+    AROS on AROS. 
     
     The ABI for the supported architectures (only i386 at this point) must be
     finalized before 1.0. Once 1.0 is released, the ABI should be stable for a
     considerable time.
    
-    Current status: AROS got a full gcc port, allowing to compile applications
-    but some GNU tools are still missing, so the self-compiling isn`t possible
-    at the moment.
-
-+ Missing are: (Fixme) 
- 
-  - GNU AWK (GAWK) or other awks
-  - Python 2.2.1+ (an old port of python is available though)
-  - Bison
-  - Flex
-  - pngtopnm and ppmtoilbm (part of the netpbm package)
-  - Autoconf
-  - Automake
-  - Common unix utilities like cp, mv, sort, uniq, head, ...
-    
-8.  Comprehensive documentation for developers. This includes complete reference
-    manuals over all libraries, devices, classes and development tools and also
-    guides and tutorials to introduce whole subsystems and give an overview.
-    Also, a migration/porting guide should be available.
-    
-    Current status: <?>
+    Current status: **In Progress**
 
     
-9.  Comprehensive documentation for users. This includes a complete command 
-    reference, tutorials and installation-, configuration- and other guides.
+8.  **Comprehensive documentation for developers.**
+
+    This includes reference manuals over all libraries, devices, 
+    classes and development tools and also guides and tutorials to 
+    introduce whole subsystems and give an overview. Also, a migration/porting 
+    guide should be available.
     
-    Current status: Documentation exists and extensively translated to
-    different languages. Still needs the tutorials and guides, and the help
-    system to be complete.
+    Current status: **In Progress**
+
+    
+9.  **Comprehensive documentation for users.**
+
+    This includes a complete command reference, tutorials and installation-, 
+    configuration- and other guides.
+    
+    Current status: **In Progress**
+
+    *Reasoning: Documentation exists and extensively translated to different 
+    languages. Still needs the tutorials and guides, and the help system to 
+    be complete.*
 
 
-10. Substantial testing and bug hunting complete. The 1.0 release should be
-    virtually free of bugs, and be a *very* stable release. We should not have
-    the fiascos some open source projects have had with their ".0" releases. 
+10. **Substantial testing and bug hunting complete.**
+
+    The 1.0 release should be virtually free of bugs, and be a *very* stable 
+    release. We should not have the fiascos some open source projects 
+    have had with their ".0" releases. 
         
     This will probably require an extended feature freeze, followed by a code
     freeze and several intermediate milestones for user feedback and testing.
+
     Feature requests are not regarded as bugs, unless it is something required
     (but missed) in the preceding milestones. For example, "we need a movie
     player" does not qualify, but "the text editor should have a 'save' menu
     option" does.
 
-    Current status: Currently no freeze can be done as features isn`t complete
+    Current status: **Not Started**
+
+    *Reasoning: Currently no freeze can be done as features aren't complete
     yet. There`s still lot of unfixed bugs, but increasing users activity looks 
-    promising. Bug hunting and accounting procedures and services are wanted.
-    
+    promising. Bug hunting and accounting procedures and services are wanted.*
+
+__ ../../introduction/status/everything
+__ ../../introduction/status/extensions
+__ ../../introduction/status/programs
+
+--------------
+
 Overall Status
-<to be done>
+--------------
+
+As of 2008-11-13:
+
+The main goal of AmigaOS 3.1 source compatibility is almost complete. Several modules
+are still missing, but most of them will not be required to reach the goal. Out of 10
+roadmap requirements, 1 is completed, 1 is skipped, 7 are in progress and 1 is not started.
+
+Looking closer at the requirements in progress, the greatest amount of programming work
+need to be performed to implement the ABI_V1 and complete Zune - the GUI toolkit.
+
+Concerning the documentation, both topics (developer and user) require more work to
+reach completion. From developer standpoint, a set of documents outlining creation
+of basic software componens is required. User documentation needs to focus on
+installation and configuration.
+
+--------------
 
 Recomendations
-<to be done>
+--------------
+
+This section lists items that *still* need to be completed before each requirement
+can be considered completed. This list is considered valid until next review of
+AROS roadmap. During such periodic review, completed items are removed from the list.
+It can also happen that some new items are added to the list or existing items are 
+removed from the list - the decision should however be made carefully not to leave
+out important features or prelong the release of 1.0 indefinatelly.
+
+Next review of AROS 1.0 Roadmap: **June 2009**
+
+Current recomentations:
+
+1.  AmigaOS 3.1 API compatibility.
+    
++ Implement printer.device and a PDF-printer driver
++ Implement FileSys.resource
++ Complete workbench.library
+
+3.  Completed GUI toolkit. 
+
++ API completeness review
++ Further decision made after review
+
+4.  Standard applications comparable to those which come with AmigaOS 3.1.
+    
++ Implement printer preferences editor
++ Add AppIcon support to Wanderer
++ Add GUI for Format utility
+        
+6.  Networking support. 
+
++ Modern web browser - must adhere to modern HTML standards, JavaScript support
+  is suggested but not required. Must have minimal usable GUI (prev/next/adress bar)
+  Possible candidates: OWB, NetSurf, Rob's WebKit port.
++ Implement AROSTCP preferences editor
+    
+7.  Self-hosted development environment and SDK for developers. 
+
++ `ABI_V1`__ implemented and merged with main trunk
+    - C library and ETask
+    - dos.library compatibility
+    - Retest changes on x86 natice
+    - Write (i386) ABI reference manual
+    - SysBase location
+    - How to extend OS3.x shared libraries
+    - Varargs handling
+    - C library
++ Backport modular kernel architecture from x86_64 to i386 (mandatory ports)
+
+__ http://aros.wiki.sourceforge.net/ABI_V1
+
+8.  Comprehensive documentation for developers. 
+
++ Maintain up-to-date autodocs
++ Maintain up-to-date HIDD subsystem documentation
++ Write description of modular kernel architecture
++ Write explanation of AROS basic data type, use and relation to C data types
++ Write explanation of differences between resources, libraries, devices and handlers
++ Write description of graphics and usb HIDDs
++ Write following "How to" documents - these documents should cover the defined topic
+  and be accompanied with a source code example of working modules:
+
+    - How to compile modules and interact with AROS build system
+    - How to compile modules outside AROS build system
+    - How to write command line application
+    - How to write BOOPSI application
+    - How to write Zune application
+    - How to write network application
+    - How to write a commodity application
+    - How to write a datatype
+    - How to write AROSTCP network driver
+    - How to write GFX HIDD driver
+    - How to write AHI sound driver
+    - How to write printer driver
+    - How to write AROS dynamic library
+    - How to write BOOPSI/Zune class
+    - How to port \*nix software to AROS - Basics
+
++ Further topics definition needed
+    
+9.  Comprehensive documentation for users. 
+
++ Write following "How to" documents:
+    - How to configure network manually
+    - How to configure network with DHCP client
+    - How to write AmigaOS scripts
++ Further topics definition needed
+
+10. Substantial testing and bug hunting complete.
+
++ Complete items: 1, 3, 4, 6, 7
++ Feature freeze
++ Deliver release candidates schedule
