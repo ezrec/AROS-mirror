@@ -23,7 +23,7 @@ about this straight from `Cogville`__.
 Krzysztof Smiechowicz is making many usefulf things for AROS. He
 just `ported MPlayer`__, so we can now watch our favorite movie
 files in many compression formats including AVI, MPEG, MOV, DIVX,
-XVID and many others. MPlayer is good also as music player too.
+XVID and many others. MPlayer is a good music player, too.
 
 Paolo Besser has released version 1.0 of his VmwAROS distribution,
 both as bootable and installable `Live-DVD`__, and as
@@ -34,12 +34,12 @@ clients and a complete AROS development chain. Former Amiga users
 might be interested in `AmiBridge`__, a scripting tool which
 allows launching AmigaOS applications in UAE straight from AROS.
 
-Michal Schulz has found a issue which prevented AROS from
+Michal Schulz has found an issue which prevented AROS from
 correctly booting on VirtualBOX, and he introduced a workaround.
 Pavel Fedin has corrected a really annoying bug in our ata.device,
 and now we can use CDs and DVDs flawlessly again. But all AROS
-developers are spotting bugs and trying to fix them. You might
-help us using the `bug thracker`__ when you find one.
+developers are spotting bugs and trying to fix them. You are welcome
+to help us using the `bug thracker`__ when you find one.
 
 
 Soon (or late) on an AROS box near you...
@@ -54,7 +54,8 @@ projects AROS developers are working on.
 Michal Schulz is working on the `mass storage bounty`__, whose
 goal is "producing a DOS device that we can mount to use a filesystem 
 on a USB stick". Michal has already got some interesting result. He
-talks about this in his personal `blog`__. Michal Schulz is also still porting AROS to the Efika PPC platform.
+talks about this in his personal `blog`__. Michal Schulz is also still
+porting AROS to the Efika PPC platform.
 
 Stanislaw Szymczyk is working on the `port an open source browser
 to AROS`__ bounty. He started with Netsurf, but he turned to OWB. He
@@ -69,6 +70,13 @@ Matthias Rustler is porting Ignition to AROS, a spreadsheet
 application recently re-released under the termps of the GPL license.
 He has already made some interesting progresses. `This screenshot`__
 looks great.
+
+
+And last but not least...
+-------------------------
+
+The whole AROS team wishes you a Merry Christmas and a Happy New Year
+2009!
 
 __ http://archives.aros-exec.org
 __ http://sszymczy.rootnode.net/index.php?menu=projects&submenu=aroscompilation
