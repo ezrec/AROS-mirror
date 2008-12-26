@@ -4,8 +4,8 @@ Spou¹tìní klasických Amiga aplikací z Wandereru
 
 :Authors:   Matthias Rustler
 :Copyright: Copyright © 2007, The AROS Development Team
-:Version:   $Revision: 28022 $
-:Date:      $Date: 2008-03-15 01:59:55 +0100 (so, 15 III 2008) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Done.
 
 .. Contents::
