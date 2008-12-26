@@ -5,10 +5,10 @@ Xmas update
 :Author:   Paolo Besser
 :Date:     2008-12-21
 
-First of all, we wish you a Merry Christams and an Happy New
+First of all, we wish you a Merry Christams and a Happy New
 Year 2009! 2008 has been an important year for AROS development, since
 many things happened during the last 12 months and many projects
-has been started in the meanwhile. Here is a summary of the...
+have been started in the meanwhile. Here is a summary of them...
 
 Latest updates
 --------------
@@ -20,13 +20,13 @@ already available on our nightly builds, while some of the needed
 tools are available through `The Archives`__. You may read more 
 about this straight from `Cogville`__.
 
-Krzysztof Smiechowicz is making many usefulf things for AROS. He
+Krzysztof Smiechowicz is making many useful things for AROS. He
 just `ported MPlayer`__, so we can now watch our favorite movie
-files in many compression formats including AVI, MPEG, MOV, DIVX,
+files in many compression formats, including AVI, MPEG, MOV, DIVX,
 XVID and many others. MPlayer is a good music player, too.
 
 Paolo Besser has released version 1.0 of his VmwAROS distribution,
-both as bootable and installable `Live-DVD`__, and as
+both as a bootable and installable `Live-DVD`__, and as a
 pre-configured `virtual machine for VMware`__, introducing many
 `new features`__. VmwAROS is tailored both to end users
 and developers, since it includes games, applications, network
@@ -36,10 +36,10 @@ allows launching AmigaOS applications in UAE straight from AROS.
 
 Michal Schulz has found an issue which prevented AROS from
 correctly booting on VirtualBOX, and he introduced a workaround.
-Pavel Fedin has corrected a really annoying bug in our ata.device,
+Tomasz Wiszkowski has corrected a really annoying bug in our ata.device,
 and now we can use CDs and DVDs flawlessly again. But all AROS
 developers are spotting bugs and trying to fix them. You are welcome
-to help us using the `bug thracker`__ when you find one.
+to help us using the `bug tracker`__ when you find one.
 
 
 Soon (or late) on an AROS box near you...
@@ -53,8 +53,8 @@ projects AROS developers are working on.
 
 Michal Schulz is working on the `mass storage bounty`__, whose
 goal is "producing a DOS device that we can mount to use a filesystem 
-on a USB stick". Michal has already got some interesting result. He
-talks about this in his personal `blog`__. Michal Schulz is also still
+on a USB stick". Michal has already got some interesting results, which he
+talks about in his personal `blog`__. Michal Schulz is also still
 porting AROS to the Efika PPC platform.
 
 Stanislaw Szymczyk is working on the `port an open source browser
@@ -67,8 +67,8 @@ working on the AROS v1 ABI. You can see some progress in its
 documentation `here`__.
 
 Matthias Rustler is porting Ignition to AROS, a spreadsheet
-application recently re-released under the termps of the GPL license.
-He has already made some interesting progresses. `This screenshot`__
+application recently re-released under the terms of the GPL license.
+He has already made some interesting progress. `This screenshot`__
 looks great.
 
 
