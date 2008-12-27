@@ -68,7 +68,7 @@ Slave( struct ExecBase* SysBase )
 //    outb(0x1e, ac97Base->dmabase + PO_CR);
 //    outl(ac97Base->PCM_out, ac97Base->dmabase + PO_BDBAR);
 
-D(bug("SR=%04x CR=%04x CIV=%02x LVI=%02x\n", inw(ac97Base->dmabase + PO_SR), 
+D(bug("SR=%04x CR=%04x CIV=%02x LVI=%02x\n", inw(ac97Base->dmabase + ac97Base->off_po_sr), 
     inw(ac97Base->dmabase + PO_CR),
     inb(ac97Base->dmabase + PO_CIV),
     inb(ac97Base->dmabase + PO_LVI)));
@@ -103,9 +103,9 @@ D(bug("SR=%04x CR=%04x CIV=%02x LVI=%02x\n", inw(ac97Base->dmabase + PO_SR),
         CallHookPkt( AudioCtrl->ahiac_MixerFunc, AudioCtrl, dd->mixbuffer );
         
 	i = AudioCtrl->ahiac_BuffSamples << 1;
+    i <<= ac97Base->size_shift; /* For SIS 7012 size must be in bytes */
 	j = tail;
 	buff = dd->mixbuffer;
-
 
 	while (i > 0)
 	{
@@ -113,7 +113,8 @@ D(bug("SR=%04x CR=%04x CIV=%02x LVI=%02x\n", inw(ac97Base->dmabase + PO_SR),
 	    ac97Base->PCM_out[j].sample_size = (i > 65532) ? 65532 : i;
 	    
 	    i -= ac97Base->PCM_out[j].sample_size;
-	    buff += ac97Base->PCM_out[j].sample_size << 1;
+	    buff += ac97Base->PCM_out[j].sample_size 
+                    << (1 - ac97Base->size_shift); /* SIS 7012: size already in bytes */
 	    j++;
 	    tail++;
 	    tail &= 0x1f;
@@ -126,22 +127,22 @@ D(bug("SR=%04x CR=%04x CIV=%02x LVI=%02x\n", inw(ac97Base->dmabase + PO_SR),
 
 	D(bug("SR=%08x ",inl(ac97Base->dmabase + PO_CIV)));
 */
-//	outw(4, ac97Base->dmabase + PO_SR);
+//	outw(4, ac97Base->dmabase + ac97Base->off_po_sr);
 	outb((j-1) & 0x1f, ac97Base->dmabase + PO_LVI);
-	outb(0x11, ac97Base->dmabase + PO_CR);
+	outb(0x11, ac97Base->dmabase + PO_CR); /* Enable busmaster + interrupt on completition */
 
-//	outw(0x1c, ac97Base->dmabase + PO_SR);
-//	D(bug("SR=%04x ",inw(ac97Base->dmabase + PO_SR)));
-//	while (!(inw(ac97Base->dmabase + PO_SR) & 8)) { 
-//	    D(bug("SR=%04x ",inw(ac97Base->dmabase + PO_SR)));
+//	outw(0x1c, ac97Base->dmabase + ac97Base->off_po_sr);
+//	D(bug("SR=%04x ",inw(ac97Base->dmabase + ac97Base->off_po_sr)));
+//	while (!(inw(ac97Base->dmabase + ac97Base->off_po_sr) & 8)) { 
+//	    D(bug("SR=%04x ",inw(ac97Base->dmabase + ac97Base->off_po_sr)));
 
     D(bug("Waiting for int..."));    
     Wait(SIGBREAKF_CTRL_E); 
     D(bug("Got it\n"));
 
 //	 }
-//	D(bug("SR=%04x\n",inw(ac97Base->dmabase + PO_SR)));
-//        outw(inw(ac97Base->dmabase + PO_SR), ac97Base->dmabase + PO_SR);
+//	D(bug("SR=%04x\n",inw(ac97Base->dmabase + ac97Base->off_po_sr)));
+//        outw(inw(ac97Base->dmabase + ac97Base->off_po_sr), ac97Base->dmabase + ac97Base->off_po_sr);
 	outb(0x11, ac97Base->dmabase + PO_CR);
 	
 //	ac97Base->PCM_out

@@ -1,4 +1,4 @@
-#define DEBUG 1
+#define DEBUG 0
 #include <aros/debug.h>
 #include <asm/io.h>
 
@@ -22,14 +22,20 @@ static const struct {
     { 0x8086, 0x2485, "Intel ICH3"	},
     { 0x8086, 0x24c5, "Intel ICH4"	},
     { 0x8086, 0x24d5, "Intel ICH5"	},
+	{ 0x8086, 0x25a6, "ESB"         },
     { 0x8086, 0x266e, "Intel ICH6"	},
     { 0x8086, 0x27de, "Intel ICH7"	},
+	{ 0x8086, 0x2698, "ESB2"        },
     { 0x8086, 0x7195, "Intel 440MX"	},
     { 0x1039, 0x7012, "SIS 7012"	},
     { 0x10de, 0x01b1, "NVIDIA nForce"	},
+	{ 0x10de, 0x003a, "MCP04"       },
     { 0x10de, 0x006a, "NVIDIA nForce2"	},
+	{ 0x10de, 0x0059, "CK804"       },
     { 0x10de, 0x008a, "MCP2S AC'97 Audio Controller" },
     { 0x10de, 0x00da, "NVIDIA nForce3"	},
+	{ 0x10de, 0x00ea, "CK8S"        },
+	{ 0x10de, 0x026b, "MCP51"       },
     { 0x1022, 0x746d, "AMD 8111"	},
     { 0x1022, 0x7445, "AMD 768"		},
     { 0x10b9, 0x5455, "Ali 5455"	},
@@ -97,7 +103,22 @@ static AROS_UFH3(void, Enumerator,
 	    OOP_GetAttr(device, aHidd_PCIDevice_INTLine, &ac97Base->irq_num);
 
 	    D(bug("[ac97] Mixer IO base %x\n", ac97Base->mixerbase));
-    	    D(bug("[ac97] DMA IO base %x\n", ac97Base->dmabase));
+    	D(bug("[ac97] DMA IO base %x\n", ac97Base->dmabase));
+
+        if (VendorID == 0x1039 && ProductID == 0x7012)
+        {
+            /* SIS 7012 */
+            ac97Base->off_po_sr     = DEFAULT_PO_PICB; /* swap registers */
+            ac97Base->off_po_picb   = DEFAULT_PO_SR;
+            ac97Base->size_shift    = 1; /* chip requires size in bytes, not samples */
+        }
+        else
+        {
+            /* All other cards */
+            ac97Base->off_po_sr     = DEFAULT_PO_SR; /* swap registers */
+            ac97Base->off_po_picb   = DEFAULT_PO_PICB;
+            ac97Base->size_shift    = 0;
+        }
 
 	    outl(2, ac97Base->dmabase + GLOB_CNT);
 	    
@@ -124,7 +145,7 @@ static AROS_UFH3(void, Enumerator,
 	    
 	    D(bug("[ac97] PO_BDBAR=%08x\n", inl(ac97Base->dmabase + PO_BDBAR)));
 	    D(bug("[ac97] PO_REGS=%08x\n", inl(ac97Base->dmabase + PO_CIV)));
-	    D(bug("[ac97] PO_PICB=%04x\n", inw(ac97Base->dmabase + PO_PICB)));
+	    D(bug("[ac97] PO_PICB=%04x\n", inw(ac97Base->dmabase + ac97Base->off_po_picb)));
 	    D(bug("[ac97] PO_PIV=%02x\n", inb(ac97Base->dmabase + PO_PIV)));
 	    D(bug("[ac97] PO_CR=%02x\n", inb(ac97Base->dmabase + PO_CR)));
 	}

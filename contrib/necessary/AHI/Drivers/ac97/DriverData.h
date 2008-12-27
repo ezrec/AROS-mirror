@@ -23,6 +23,12 @@ struct ac97Base
     ULONG		dmabase;
     ULONG		irq_num;
 
+    /* card specific data */
+    ULONG       off_po_sr;
+    ULONG       off_po_picb;
+    ULONG       size_shift;
+    /* card specific data ends */
+
     struct {
 	APTR		sample_address;
 	ULONG		sample_size;
@@ -77,8 +83,8 @@ struct VoidData
 #define PO_BDBAR		0x10
 #define PO_CIV			0x14
 #define PO_LVI			0x15
-#define PO_SR			0x16
-#define PO_PICB			0x18
+#define DEFAULT_PO_SR   0x16
+#define DEFAULT_PO_PICB 0x18
 #define PO_PIV			0x1a
 #define PO_CR			0x1b
 

@@ -161,6 +161,9 @@ D(bug("AHI: AllocAudio: Everything OK\n"));
     return AHISF_ERROR;
   }
 
+  /* Setting the only working frequency for AC97 */
+  AudioCtrl->ahiac_MixFreq = 48000;
+
   return ( AHISF_KNOWSTEREO |
 	   AHISF_MIXING |
 	   AHISF_TIMING );
@@ -224,7 +227,7 @@ _AHIsub_Disable( struct AHIAudioCtrlDrv* AudioCtrl,
 
   // V6 drivers do not have to preserve all registers
 
-  Forbid();
+  Disable();
 }
 
 
@@ -240,7 +243,7 @@ _AHIsub_Enable( struct AHIAudioCtrlDrv* AudioCtrl,
 
   // V6 drivers do not have to preserve all registers
 
-  Permit();
+  Enable();
 }
 
 
@@ -389,7 +392,7 @@ _AHIsub_GetAttr( ULONG                   attribute,
   switch( attribute )
   {
     case AHIDB_Bits:
-      return 32;
+      return 16;
 
     case AHIDB_Frequencies:
       return FREQUENCIES;
@@ -513,13 +516,12 @@ static void play_int(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
     ac97Base   = (struct ac97Base*) AHIsubBase;
     SysBase    = (struct SysBase*) ac97Base->sysbase;
 
-    dd->old_SR = inw(ac97Base->dmabase + PO_SR);
-    outw(dd->old_SR & 0x1c, ac97Base->dmabase + PO_SR);
+    dd->old_SR = inw(ac97Base->dmabase + ac97Base->off_po_sr);
+    outw(dd->old_SR & 0x1c, ac97Base->dmabase + ac97Base->off_po_sr);
     
     if ((dd->old_SR & 0x1c) && dd->slavetask)
     {
-//        bug("signalling slave task\n");
-
-	Signal((struct Task *)dd->slavetask, SIGBREAKF_CTRL_E);
+        /* Signaling the slave task */
+        Signal((struct Task *)dd->slavetask, SIGBREAKF_CTRL_E);
     }
 }
