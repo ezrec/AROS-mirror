@@ -203,7 +203,7 @@ Images/Line Drawing
 `PrintIText()`_               Render an IntuiText in the specified RastPort
 `IntuiTextLength()`_          Measure the length of the IntuiText passed to the function
 `GetScreenDrawInfo()`_        Return a pointer to struct DrawInfo of the passed screen
-`FreeScreenDrawInfo()`_       Release data from `GetScreenDrawInfo`_
+`FreeScreenDrawInfo()`_       Release data from `GetScreenDrawInfo()`_
 `PointInImage()`_             Check whether a point is inside an image
 ============================= =======================================================
 

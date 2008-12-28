@@ -40,7 +40,7 @@ Programování
   - AROS/i386-pc:
 
     + Konkrétní ovladaèe grafických karet (máme pouze obecné, ne zrovna
-    pøíli¹ akcelerované). Krátký seznam pøání:
+      pøíli¹ akcelerované). Krátký seznam pøání:
       
       - nVidia TNT/TNT2/GeForce (zaèlo se, ale nedokonèilo) 
       - S3 Virge

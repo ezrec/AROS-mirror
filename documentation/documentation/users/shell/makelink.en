@@ -37,7 +37,7 @@ Function
 ::
 
 
-     Create a link to a file
+     Create a link to a file.
 
 
 Inputs
@@ -47,8 +47,8 @@ Inputs
 
      FROM   --  The name of the link
      TO     --  The name of the file or directory to link to
-     HARD   --  If specified, the link will be a hard-link; default is
-                to create a soft-link
+     HARD   --  If specified, the link will be a hard link; default is
+                to create a soft link
      FORCE  --  Allow a hard-link to point to a directory
 
 
@@ -65,8 +65,8 @@ Example
 ::
 
 
-     Makelink ls c:list
-      Creates an 'ls' file with a symlink to the 'list' command in C:.
+     Makelink ls C:List
+      Creates an 'ls' file with a soft link to the 'List' command in C:.
 
 
 Notes
@@ -74,7 +74,6 @@ Notes
 ::
 
 
-     Avoid using hard links in FFS disk devices. AROS FFS may not hande
-     these in a proper manner.
+     Not all file systems support links.
 
 

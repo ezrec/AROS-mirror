@@ -114,7 +114,7 @@ ve Wandereru, klikni na ikonu skriptu a zvol si *Icon/Information*
 v menu. Napi¹ *c:iconx* jako default tool. (IconX tool spou¹tí textové soubory
 jako DOSové skripty). Na stránce Tooltypes information o ikonì napi¹
 *WINDOW=con:0/20//600/Zarathrusta/AUTO*. Toto má za následek vytvoøení
-*vìt¹ího výstupního okna, tak¾e nebude problém se ètením chybových hlá¹ek.
+vìt¹ího výstupního okna, tak¾e nebude problém se ètením chybových hlá¹ek.
 
 Dvojklikem na ikonu spustí¹ E-UAE s danou aplikací.
 
@@ -149,4 +149,4 @@ Nìkolik rad, jak získat lep¹í rozli¹ení a výkon:
 + Zvol si High Res Laced v nastavení Screenmodu v Prefs.
 + Pou¾ívej nejvy¹¹í mo¾né nastavení v Overscanu v Prefs.
 + Nainstaluj si nástroj *FBlit*. který vyu¾ívá urèité patche k tomu,
-aby se pou¾ívala Fast Ram namísto Chip RAM.
+  aby se pou¾ívala Fast Ram namísto Chip RAM.

@@ -1,6 +1,6 @@
-==============
+======================
 Ressources Utilisateur
-==============
+======================
 
 + `Comment installer`__
 + `Comment utiliser`__
