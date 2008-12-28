@@ -18,9 +18,9 @@ Kehittäjien Resurssit
 __ contribute
 __ cvs
 __ compiling
-__ application-development
-__ zune-application-development
-__ system-development
+__ app-dev/index
+__ zune-dev/index
+__ sys-dev/index
 __ hardware/pci
 __ debugging
 __ specifications/index

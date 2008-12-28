@@ -370,7 +370,7 @@ def copyImages():
         dstpath
     )
     
-    imagepath = 'documentation/developers/zune/images'
+    imagepath = 'documentation/developers/zune-dev/images'
     dstpath   = os.path.join( DSTROOT, imagepath )
     srcpath   = imagepath
     

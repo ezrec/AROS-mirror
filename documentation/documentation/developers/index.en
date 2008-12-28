@@ -25,8 +25,8 @@ __ roadmap
 __ svn
 __ compiling
 __ app-dev/index
-__ zune-application-development
-__ system-development
+__ zune-dev/index
+__ sys-dev/index
 __ hardware/pci
 __ debugging
 __ autodocs/index
