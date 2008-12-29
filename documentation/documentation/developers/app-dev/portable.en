@@ -137,7 +137,6 @@ Register based::
     int main(void)
     {
         myhook.h_Entry = (HOOKFUNC)myfunction;
-	myhook.h_SubEntry = 0;
         ...
         DoMethod(button, MUIM_Notify, MUIA_Pressed, FALSE,
             (IPTR)app, 2, MUIM_CallHook, (IPTR)&myhook);
@@ -304,6 +303,41 @@ For variadic hook functions exists similar macros in `clib/alib_protos.h`. Examp
 
 Also in `clib/alib_protos.h` there are defined AROS_SLOWSTACKMETHODS_XXX macros. DoMethod() is implemented with this.
 As an application developer you'll normally not come in touch with this macros.
+
+
+Node
+====
+
+The order of elements of ``struct Node`` differs on some AROS platforms from the orignial
+AmigaOS version. See `exec/nodes.h`_. This is considered a bug and will be changed
+for the V1 ABI. But for now we have to live with it. There are two cases which you have
+to look at:
+
+* Initialization like ``struct Node node = {0, 0, type, pri,name};``
+* Nodes with exposed structure elements like::
+  
+    struct Mynode {
+        struct Node * mn_succ;
+        struct Node * mn_pred;
+        UBYTE  mn_Type;
+        BYTE   mn_pri;
+        char   mn_Name;
+        ULONG  mn_color;
+    };
+
+You're on the save side if you have ``struct Node`` at the beginning::
+  
+    struct Mynode {
+        struct Node mn;
+        ULONG  mn_color;
+    } mynode;
+
+Then set the elements explicitely::
+  
+    mynode.mn->ln_Type = type;
+    mynode.mn->ln_Pri = pri;
+    mynode.mn->ln_Name = name;
+    mynode.mn_color = color;
 
 
 Include files
@@ -482,6 +516,7 @@ AROS, so you have to replace them by AROS macros.
 .. _aros/io.h:          ../headerfiles/aros/io.h
 .. _aros/64bit.h:       ../headerfiles/aros/64bit.h
 .. _exec/types.h:       ../headerfiles/exec/types.h
+.. _exec/nodes.h:       ../headerfiles/exec/nodes.h
 .. _utility/tagitem.h:  ../headerfiles/utility/tagitem.h
 
 
