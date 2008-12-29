@@ -308,14 +308,14 @@ As an application developer you'll normally not come in touch with this macros.
 Node
 ====
 
-The order of elements of ``struct Node`` differs on some AROS platforms from the orignial
-AmigaOS version. See `exec/nodes.h`_. This is considered a bug and will be changed
-for the V1 ABI. But for now we have to live with it. There are two cases which you have
-to look at:
+The order of elements of ``struct Node`` differs on some AROS platforms
+from the orignial AmigaOS version. See `exec/nodes.h`_. This is
+considered a bug and will be changed for the V1 ABI. But for now we have
+to live with it. There are two cases which you have to look at:
 
 * Initialization like ``struct Node node = {0, 0, type, pri,name};``
 * Nodes with exposed structure elements like::
-  
+
     struct Mynode {
         struct Node * mn_succ;
         struct Node * mn_pred;
@@ -325,15 +325,15 @@ to look at:
         ULONG  mn_color;
     };
 
-You're on the save side if you have ``struct Node`` at the beginning::
+You're on the safe side if you have ``struct Node`` at the beginning::
   
     struct Mynode {
         struct Node mn;
         ULONG  mn_color;
     } mynode;
 
-Then set the elements explicitely::
-  
+Then set the elements explicitly::
+
     mynode.mn->ln_Type = type;
     mynode.mn->ln_Pri = pri;
     mynode.mn->ln_Name = name;
