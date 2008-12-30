@@ -19,21 +19,21 @@ Introduction
 
 Back in the old days it was easy: both integer and address types had a size of
 32 bit and the bytes were ordered in big-endian. But because AROS is portable,
-developers have to take care about some things or their source code will not run
-on all AROS ports.
+developers have to take care about some things or their source code will not
+run on all AROS ports.
 
 
 Endianness
 ==========
 
-Computer architectures differ in the order the bytes of integer values are stored
-in memory, i.e. their endianness_. On little-endian systems the least significant
-byte is stored first, i.e. on systems where a byte has 8 bits the bits 0 to 7 are
-stored in address n, 8 to 15 in address n+1, 16 to 23 in n+2 and so on. On big-endian
-it's the other way round.
+Computer architectures differ in the order the bytes of integer values are
+stored in memory, i.e. their endianness_. On little-endian systems the least
+significant byte is stored first, i.e. on systems where a byte has 8 bits the
+bits 0 to 7 are stored in address n, 8 to 15 in address n+1, 16 to 23 in n+2
+and so on. On big-endian it's the other way round.
 
-Endianess becomes important when you store
-binary data to files or try to access hardware like graphics cards etc.
+Endianess becomes important when you store binary data to files or try to
+access hardware like graphics cards etc.
 
 You can query the endianness this way::
 
@@ -46,13 +46,14 @@ You can query the endianness this way::
     }
 
 
-AROS_BIG_ENDIAN is always defined if you include `aros/cpu.h`_. It has a value of 1 on big
-endian systems and 0 on little-endian systems. This makes it possible to query the
-define with both C "if" and preprocessor "#if". This means you must not use "#ifdef".
+AROS_BIG_ENDIAN is always defined if you include `aros/cpu.h`_. It has a value
+of 1 on big endian systems and 0 on little-endian systems. This makes it
+possible to query the define with both C "if" and preprocessor "#if". This
+means you must not use "#ifdef".
 
-You can find some conversion macros like *AROS_WORD2BE* in the header `aros/macros.h`_.
-If you need some peek and poke functions with build-in endianness conversion look in
-`aros/io.h`_.
+You can find some conversion macros like *AROS_WORD2BE* in the header
+`aros/macros.h`_. If you need some peek and poke functions with build-in
+endianness conversion look in `aros/io.h`_.
 
 .. _Endianness: http://en.wikipedia.org/wiki/Endianness
 
@@ -62,7 +63,8 @@ Data Types
 
 The AROS data types are defined in the header `exec/types.h`_.
 
-The fundamental integer data types have a defined size on both 32-bit and 64-bit systems:
+The fundamental integer data types have a defined size on both 32-bit and
+64-bit systems:
 
 ===========  ============
 Type         sizeof(Type)
@@ -79,8 +81,8 @@ This is opposed to C types like *int* and *long* which are depending on hardware
 IPTR
 ----
 
-*IPTR* is defined as unsigned integer type which is large enough to store a pointer.
-You must use it when you want to store an address in an integer type.
+*IPTR* is defined as unsigned integer type which is large enough to store a
+pointer. You must use it when you want to store an address in an integer type.
 The following source code::
 
     ...
@@ -114,8 +116,8 @@ Hooks
 =====
 
 Hooks are used when a system function needs a pointer to a callback function
-as argument. They are used quite often in Zune user interfaces. There are two ways
-how you can define them:
+as argument. They are used quite often in Zune user interfaces. There are two
+ways how you can define them:
 
 Register based::
 
@@ -143,8 +145,8 @@ Register based::
         ...
     }
 
-UFH3 means User Function Head with 3 arguments. You can append an "S" if you want
-to make the function static.
+UFH3 means User Function Head with 3 arguments. You can append an "S" if you
+want to make the function static.
 
 Stack based::
 
@@ -169,15 +171,15 @@ Stack based::
         ...
     }
 
-*HookEntry* is defined in amiga.lib. This function forwards the register arguments
-to stack arguments.
+*HookEntry* is defined in amiga.lib. This function forwards the register
+arguments to stack arguments.
 
 
 User Function Prototype
 -----------------------
 
-If you want to define a prototype for a register based user function you have to
-use the AROS_UFP (User Function Prototype) macro like this::
+If you want to define a prototype for a register based user function you have
+to use the AROS_UFP (User Function Prototype) macro like this::
 
     AROS_UFP3(ULONG, myfunction,
 	AROS_UFPA(struct Hook *, h, A0),
@@ -188,15 +190,15 @@ use the AROS_UFP (User Function Prototype) macro like this::
 Hints
 ------
 
-So far we've only discussed user functions with 3 arguments. The UFxx macros are way more
-flexible. You can define functions with 0 to 15 arguments as you can see in the header
-`aros/asmcall.h`_. But if you need a hook function for the system (e.g. for Zune callback
-functions) you need the special case with 3 arguments and they must be given in the order
-A0, A2, A1.
+So far we've only discussed user functions with 3 arguments. The UFxx macros
+are way more flexible. You can define functions with 0 to 15 arguments as you
+can see in the header `aros/asmcall.h`_. But if you need a hook function for
+the system (e.g. for Zune callback functions) you need the special case with
+3 arguments and they must be given in the order A0, A2, A1.
 
-You're probably wondering what this A0, A1, A2 is. Well, this are register names of the
-68k architecture. On other platforms they are forwarded to other registers or even put
-on the stack.
+You're probably wondering what this A0, A1, A2 is. Well, this are register
+names of the 68k architecture. On other platforms they are forwarded to other
+registers or even put on the stack.
 
 
 Calling User Functions
@@ -220,21 +222,24 @@ the user function with more than 3 arguments::
 Variadic Functions with Structure Parameters
 ============================================
 
-Messages for BOOPSI/Zune methods are defined as structs. The structure elements are then
-used as arguments for the variadic function *DoMethod()*, e.g.::
+Messages for BOOPSI/Zune methods are defined as structs. The structure elements
+are then used as arguments for the variadic function *DoMethod()*, e.g.::
 
     struct MUIP_Application_SetMenuCheck { ULONG MethodID; ULONG MenuID; LONG stat; };
     DoMethod(obj, MUIM_Application_SetMenuCheck, 10, 20);
 
 This causes problems on AROS for several reasons:
 
-* small data types like WORD aren't expanded correctly, i.e. some bytes contain trash data
+* small data types like WORD aren't expanded correctly, i.e. some bytes
+  contain trash data
 * on some CPUs the stack grows upwards
-* on some architectures the parameters are passed on stack, in registers, or even in both
+* on some architectures the parameters are passed on stack, in registers, or
+  even in both
 
 The solution is to prefix all elements in the struct with *STACKED*::
 
-    struct MUIP_Application_SetMenuCheck { STACKED ULONG MethodID; STACKED ULONG MenuID; STACKED LONG stat; };
+    struct MUIP_Application_SetMenuCheck { STACKED ULONG MethodID;
+            STACKED ULONG MenuID; STACKED LONG stat; };
 
 
 Tag Identifiers/Values
@@ -249,18 +254,19 @@ ones from the system. The file `utility/tagitem.h`_ now contains
 the basic offsets for the various parts of the OS. In the future, it might be
 possible for users to allocate ranges of tags for specific uses.
 
-To write programs easily portable to 64-bit architectures make sure that all variadic arguments to functions
-using AROS_SLOWSTACKTAGS macros (for example NewObject(), MUI_NewObject(), CreateNewProcTags()
-and many more) are of type with size equal to *Tag* type for tag identifiers and *IPTR* type for tag values. If you
-use any arguments with smaller types, mentioned functions may receive randomly corrupted
-argument values.
+To write programs easily portable to 64-bit architectures make sure that all
+variadic arguments to functions using AROS_SLOWSTACKTAGS macros (for example
+NewObject(), MUI_NewObject(), CreateNewProcTags() and many more) are of type
+with size equal to *Tag* type for tag identifiers and *IPTR* type for tag
+values. If you use any arguments with smaller types, mentioned functions may
+receive randomly corrupted argument values.
 
 This can be reached by adding *UL* to tag identifiers::
 
     #define MUIA_NList_Horiz_DeltaFactor  0x9d510032UL
 
-You don't have to care about this when you're OR'ing with TAG_USER or derivates like MUIB_MUI, MUIB_RSVD,
-MUIB_ZUNE and MUIB_AROS::
+You don't have to care about this when you're OR'ing with TAG_USER or derivates
+like MUIB_MUI, MUIB_RSVD, MUIB_ZUNE and MUIB_AROS::
 
     #define MUIA_Application_Active  (MUIB_MUI|0x004260ab)
 
@@ -268,7 +274,9 @@ MUIB_ZUNE and MUIB_AROS::
 Forwarding Variadic Parameters to a Variadic Function
 =====================================================
 
-Sometimes you have to write variadic functions which forwards its parameters to a variadic system function.
+Sometimes you have to write variadic functions which forwards its parameters to
+a variadic system function.
+
 On 68k this was often done like this::
 
     APTR DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1, ...)
@@ -276,7 +284,8 @@ On 68k this was often done like this::
         return (APTR)(DoSuperMethod(cl,obj,OM_NEW,&tag1,TAG_DONE));
     }
 
-This isn't portable because you can't control how the compiler stores the variadic parameters.
+This isn't portable because you can't control how the compiler stores the
+variadic parameters.
 
 You have to write it this way::
 
@@ -287,12 +296,15 @@ You have to write it this way::
         AROS_SLOWSTACKTAGS_POST
     }
 
-Note that the name of the return variable "retval" is defined by the macros and can't be changed.
+Note that the name of the return variable "retval" is defined by the macros and
+can't be changed.
 
-For functions with no return value there are the macros *AROS_NR_SLOWSTACKTAGS_PRE* and *AROS_NR_SLOWSTACKTAGS_POST*.
-All this slowstacktags macros are defined in `utility/tagitem.h`_.
+For functions with no return value there are the macros *AROS_NR_SLOWSTACKTAGS_PRE*
+and *AROS_NR_SLOWSTACKTAGS_POST*. All this slowstacktags macros are defined in
+`utility/tagitem.h`_.
 
-For variadic hook functions exists similar macros in `clib/alib_protos.h`. Example usage::
+For variadic hook functions exists similar macros in `clib/alib_protos.h`.
+Example usage::
 
     ULONG MyCallHookPktA(Object *obj, struct Hook *hook, ...)
     {
@@ -301,15 +313,16 @@ For variadic hook functions exists similar macros in `clib/alib_protos.h`. Examp
         AROS_SLOWSTACKHOOKS_POST
     }
 
-Also in `clib/alib_protos.h` there are defined AROS_SLOWSTACKMETHODS_XXX macros. DoMethod() is implemented with this.
-As an application developer you'll normally not come in touch with this macros.
+Also in `clib/alib_protos.h` there are defined AROS_SLOWSTACKMETHODS_XXX
+macros. DoMethod() is implemented with this. As an application developer
+you'll normally not come in touch with this macros.
 
 
 Node
 ====
 
 The order of elements of ``struct Node`` differs on some AROS platforms
-from the orignial AmigaOS version. See `exec/nodes.h`_. This is
+from the original AmigaOS version. See `exec/nodes.h`_. This is
 considered a bug and will be changed for the V1 ABI. But for now we have
 to live with it. There are two cases which you have to look at:
 
@@ -338,6 +351,12 @@ Then set the elements explicitly::
     mynode.mn->ln_Pri = pri;
     mynode.mn->ln_Name = name;
     mynode.mn_color = color;
+
+
+.. Note::
+
+   This is only a temporary requirement. When V1 ABI is released ``struct Node``
+   is the same on all platforms.
 
 
 Include files
@@ -484,8 +503,9 @@ AROS_SLOWSTACKMETHODS
 Porting from AmigaOS
 ====================
 
-AmigaOS source code often contains compiler attributes like *__asm* and  *__saveds* to use register
-for parameters etc. Sometimes macros like *ASM* and *SAVEDS* are used to get some platform/compiler independence.
+AmigaOS source code often contains compiler attributes like *__asm* and  *__saveds*
+to use register for parameters etc. Sometimes macros like *ASM* and *SAVEDS* are
+used to get some platform/compiler independence.
 
 The following macros/attributes can be removed or replaced by empty macros:
 
@@ -501,9 +521,9 @@ VARARGS68K is for variadic functions and has to be defined this way::
 SDI
 ---
 
-Another famous macro set for compatibility between different Amiga-like operating
-systems and compilers are the SDI_ macros. Currently, they aren't fully compatible with
-AROS, so you have to replace them by AROS macros.
+Another famous macro set for compatibility between different Amiga-like
+operating systems and compilers are the SDI_ macros. Currently, they aren't
+fully compatible with AROS, so you have to replace them by AROS macros.
 
 .. _SDI: http://sditools.cvs.sourceforge.net/sditools/sditools/headers/
 
