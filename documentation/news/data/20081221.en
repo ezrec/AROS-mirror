@@ -63,7 +63,7 @@ recently posted a very initial, but promising `screenshot`__ on
 AROS-EXEC. 
 
 Krzysztof Smiechowicz, Staf Verhaegen, Markus Weiss and others are
-working on the AROS v1 ABI. You can see some progress in its
+working on the AROS ABI v1. You can see some progress in its
 documentation `here`__.
 
 Matthias Rustler is porting Ignition to AROS, a spreadsheet
