@@ -1168,6 +1168,9 @@
 # /development/build/makedepend/
 /development/build/makedepend/mmakefile
 
+# /development/build/tolua/src/lib/
+/development/build/tolua/src/lib/mmakefile
+
 # /development/compilers/false/
 /development/compilers/false/mmakefile
 
@@ -1381,15 +1384,6 @@
 
 # /emu/uae/src/od-aros/uae-gui/catalogs/
 /emu/uae/src/od-aros/uae-gui/catalogs/mmakefile
-
-# /emu/uae-config/
-/emu/uae-config/mmakefile
-
-# /emu/uae-config/catalogs/
-/emu/uae-config/catalogs/mmakefile
-
-# /emu/uae-config/icons/
-/emu/uae-config/icons/mmakefile
 
 # /fish/304_clines/
 /fish/304_clines/mmakefile
@@ -1762,6 +1756,12 @@
 # /gnu/abc-shell/
 /gnu/abc-shell/mmakefile
 
+# /gnu/autoconf/
+/gnu/autoconf/mmakefile
+
+# /gnu/automake/
+/gnu/automake/mmakefile
+
 # /gnu/bc/
 /gnu/bc/mmakefile
 /gnu/bc/.files-touched
@@ -1779,6 +1779,9 @@
 
 # /gnu/cpuid/
 /gnu/cpuid/mmakefile
+
+# /gnu/crosstools/
+/gnu/crosstools/mmakefile
 
 # /gnu/diffutils/
 /gnu/diffutils/mmakefile
@@ -1901,6 +1904,9 @@
 /gnu/sed/mmakefile
 /gnu/sed/.files-touched
 
+# /gnu/tar/
+/gnu/tar/mmakefile
+
 # /gnu/termcap/
 /gnu/termcap/mmakefile
 
@@ -1982,6 +1988,98 @@
 
 # /mui/classes/mailtext/s/
 /mui/classes/mailtext/s/mmakefile
+
+# /mui/classes/nlist/
+/mui/classes/nlist/*.o
+/mui/classes/nlist/*.oPPC
+/mui/classes/nlist/*.mcc
+/mui/classes/nlist/*.mcc.elf
+/mui/classes/nlist/*.mcp
+/mui/classes/nlist/*.mcp.elf
+/mui/classes/nlist/Test
+/mui/classes/nlist/*.rej
+/mui/classes/nlist/*.orig
+/mui/classes/nlist/mmakefile
+
+# /mui/classes/nlist/Floattext_mui/
+/mui/classes/nlist/Floattext_mui/*.o
+/mui/classes/nlist/Floattext_mui/*.oPPC
+/mui/classes/nlist/Floattext_mui/*.mcc
+/mui/classes/nlist/Floattext_mui/*.mcc.elf
+/mui/classes/nlist/Floattext_mui/SCOPTIONS
+
+# /mui/classes/nlist/NFloattext_mcc/
+/mui/classes/nlist/NFloattext_mcc/*.o
+/mui/classes/nlist/NFloattext_mcc/*.oPPC
+/mui/classes/nlist/NFloattext_mcc/*.mcc
+/mui/classes/nlist/NFloattext_mcc/*.mcc.elf
+/mui/classes/nlist/NFloattext_mcc/SCOPTIONS
+/mui/classes/nlist/NFloattext_mcc/mmakefile
+
+# /mui/classes/nlist/NList_mcc/
+/mui/classes/nlist/NList_mcc/*.o
+/mui/classes/nlist/NList_mcc/*.oPPC
+/mui/classes/nlist/NList_mcc/*.mcc
+/mui/classes/nlist/NList_mcc/*.mcc.elf
+/mui/classes/nlist/NList_mcc/*.old
+/mui/classes/nlist/NList_mcc/SCOPTIONS
+/mui/classes/nlist/NList_mcc/*.bak
+/mui/classes/nlist/NList_mcc/*.info
+/mui/classes/nlist/NList_mcc/nlist.mcc.lib
+/mui/classes/nlist/NList_mcc/mmakefile
+
+# /mui/classes/nlist/NListview_mcc/
+/mui/classes/nlist/NListview_mcc/*.o
+/mui/classes/nlist/NListview_mcc/*.oPPC
+/mui/classes/nlist/NListview_mcc/*.mcc
+/mui/classes/nlist/NListview_mcc/*.mcc.elf
+/mui/classes/nlist/NListview_mcc/SCOPTIONS
+/mui/classes/nlist/NListview_mcc/*.info
+/mui/classes/nlist/NListview_mcc/*.bak
+/mui/classes/nlist/NListview_mcc/*.mdbi
+/mui/classes/nlist/NListview_mcc/nlistview.mcc.lib
+/mui/classes/nlist/NListview_mcc/mmakefile
+
+# /mui/classes/nlist/NListviews_mcp/
+/mui/classes/nlist/NListviews_mcp/*.o
+/mui/classes/nlist/NListviews_mcp/*.oPPC
+/mui/classes/nlist/NListviews_mcp/*.mcc
+/mui/classes/nlist/NListviews_mcp/*.mcc.elf
+/mui/classes/nlist/NListviews_mcp/SCOPTIONS
+/mui/classes/nlist/NListviews_mcp/mmakefile
+
+# /mui/classes/nlist/common/
+/mui/classes/nlist/common/*.o
+/mui/classes/nlist/common/*.oPPC
+/mui/classes/nlist/common/*.info
+/mui/classes/nlist/common/*.bak
+
+# /mui/classes/nlist/commonaros/
+/mui/classes/nlist/commonaros/*.o
+/mui/classes/nlist/commonaros/*.oPPC
+/mui/classes/nlist/commonaros/*.info
+/mui/classes/nlist/commonaros/*.bak
+
+# /mui/classes/nlist/demo/
+/mui/classes/nlist/demo/*.o
+/mui/classes/nlist/demo/*.oPPC
+/mui/classes/nlist/demo/NList-Demo
+/mui/classes/nlist/demo/mmakefile
+
+# /mui/classes/nlist/misc/
+/mui/classes/nlist/misc/*.o
+/mui/classes/nlist/misc/*.oPPC
+/mui/classes/nlist/misc/*.mui
+/mui/classes/nlist/misc/TEST0
+
+# /mui/classes/nlist/nlisttree_mcc/
+/mui/classes/nlist/nlisttree_mcc/mmakefile
+
+# /mui/classes/nlist/nlisttree_mcp/
+/mui/classes/nlist/nlisttree_mcp/mmakefile
+
+# /mui/classes/nlist/s/
+/mui/classes/nlist/s/mmakefile
 
 # /mui/classes/popph/
 /mui/classes/popph/mmakefile
@@ -2116,6 +2214,12 @@
 # /necessary/USB/classes/HID/include/
 /necessary/USB/classes/HID/include/mmakefile
 
+# /necessary/USB/classes/MassStorage/
+/necessary/USB/classes/MassStorage/mmakefile
+
+# /necessary/USB/classes/MassStorage/include/
+/necessary/USB/classes/MassStorage/include/mmakefile
+
 # /necessary/USB/drivers/
 /necessary/USB/drivers/mmakefile
 
@@ -2142,98 +2246,6 @@
 
 # /necessary/USB/tools/lsusb/
 /necessary/USB/tools/lsusb/mmakefile
-
-# /necessary/mui/classes/nlist/
-/necessary/mui/classes/nlist/*.o
-/necessary/mui/classes/nlist/*.oPPC
-/necessary/mui/classes/nlist/*.mcc
-/necessary/mui/classes/nlist/*.mcc.elf
-/necessary/mui/classes/nlist/*.mcp
-/necessary/mui/classes/nlist/*.mcp.elf
-/necessary/mui/classes/nlist/Test
-/necessary/mui/classes/nlist/*.rej
-/necessary/mui/classes/nlist/*.orig
-/necessary/mui/classes/nlist/mmakefile
-
-# /necessary/mui/classes/nlist/Floattext_mui/
-/necessary/mui/classes/nlist/Floattext_mui/*.o
-/necessary/mui/classes/nlist/Floattext_mui/*.oPPC
-/necessary/mui/classes/nlist/Floattext_mui/*.mcc
-/necessary/mui/classes/nlist/Floattext_mui/*.mcc.elf
-/necessary/mui/classes/nlist/Floattext_mui/SCOPTIONS
-
-# /necessary/mui/classes/nlist/NFloattext_mcc/
-/necessary/mui/classes/nlist/NFloattext_mcc/*.o
-/necessary/mui/classes/nlist/NFloattext_mcc/*.oPPC
-/necessary/mui/classes/nlist/NFloattext_mcc/*.mcc
-/necessary/mui/classes/nlist/NFloattext_mcc/*.mcc.elf
-/necessary/mui/classes/nlist/NFloattext_mcc/SCOPTIONS
-/necessary/mui/classes/nlist/NFloattext_mcc/mmakefile
-
-# /necessary/mui/classes/nlist/NList_mcc/
-/necessary/mui/classes/nlist/NList_mcc/*.o
-/necessary/mui/classes/nlist/NList_mcc/*.oPPC
-/necessary/mui/classes/nlist/NList_mcc/*.mcc
-/necessary/mui/classes/nlist/NList_mcc/*.mcc.elf
-/necessary/mui/classes/nlist/NList_mcc/*.old
-/necessary/mui/classes/nlist/NList_mcc/SCOPTIONS
-/necessary/mui/classes/nlist/NList_mcc/*.bak
-/necessary/mui/classes/nlist/NList_mcc/*.info
-/necessary/mui/classes/nlist/NList_mcc/nlist.mcc.lib
-/necessary/mui/classes/nlist/NList_mcc/mmakefile
-
-# /necessary/mui/classes/nlist/NListview_mcc/
-/necessary/mui/classes/nlist/NListview_mcc/*.o
-/necessary/mui/classes/nlist/NListview_mcc/*.oPPC
-/necessary/mui/classes/nlist/NListview_mcc/*.mcc
-/necessary/mui/classes/nlist/NListview_mcc/*.mcc.elf
-/necessary/mui/classes/nlist/NListview_mcc/SCOPTIONS
-/necessary/mui/classes/nlist/NListview_mcc/*.info
-/necessary/mui/classes/nlist/NListview_mcc/*.bak
-/necessary/mui/classes/nlist/NListview_mcc/*.mdbi
-/necessary/mui/classes/nlist/NListview_mcc/nlistview.mcc.lib
-/necessary/mui/classes/nlist/NListview_mcc/mmakefile
-
-# /necessary/mui/classes/nlist/NListviews_mcp/
-/necessary/mui/classes/nlist/NListviews_mcp/*.o
-/necessary/mui/classes/nlist/NListviews_mcp/*.oPPC
-/necessary/mui/classes/nlist/NListviews_mcp/*.mcc
-/necessary/mui/classes/nlist/NListviews_mcp/*.mcc.elf
-/necessary/mui/classes/nlist/NListviews_mcp/SCOPTIONS
-/necessary/mui/classes/nlist/NListviews_mcp/mmakefile
-
-# /necessary/mui/classes/nlist/common/
-/necessary/mui/classes/nlist/common/*.o
-/necessary/mui/classes/nlist/common/*.oPPC
-/necessary/mui/classes/nlist/common/*.info
-/necessary/mui/classes/nlist/common/*.bak
-
-# /necessary/mui/classes/nlist/commonaros/
-/necessary/mui/classes/nlist/commonaros/*.o
-/necessary/mui/classes/nlist/commonaros/*.oPPC
-/necessary/mui/classes/nlist/commonaros/*.info
-/necessary/mui/classes/nlist/commonaros/*.bak
-
-# /necessary/mui/classes/nlist/demo/
-/necessary/mui/classes/nlist/demo/*.o
-/necessary/mui/classes/nlist/demo/*.oPPC
-/necessary/mui/classes/nlist/demo/NList-Demo
-/necessary/mui/classes/nlist/demo/mmakefile
-
-# /necessary/mui/classes/nlist/misc/
-/necessary/mui/classes/nlist/misc/*.o
-/necessary/mui/classes/nlist/misc/*.oPPC
-/necessary/mui/classes/nlist/misc/*.mui
-/necessary/mui/classes/nlist/misc/TEST0
-
-# /necessary/mui/classes/nlist/nlisttree_mcc/
-/necessary/mui/classes/nlist/nlisttree_mcc/mmakefile
-
-# /necessary/mui/classes/nlist/nlisttree_mcp/
-/necessary/mui/classes/nlist/nlisttree_mcp/mmakefile
-
-# /necessary/mui/classes/nlist/s/
-/necessary/mui/classes/nlist/s/mmakefile
 
 # /pack/libxad/portable/
 /pack/libxad/portable/mmakefile
