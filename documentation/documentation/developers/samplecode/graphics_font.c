@@ -31,21 +31,21 @@ static void handle_events(void);
 int main(void)
 {
     window = OpenWindowTags(NULL,
-	WA_Left,   50,
-	WA_Top,    70,
-	WA_Width,  400,
-	WA_Height, 350,
+        WA_Left,   50,
+        WA_Top,    70,
+        WA_Width,  400,
+        WA_Height, 350,
     
-	WA_Title,         "Fonts",
-	WA_Activate,      TRUE,
-	WA_SmartRefresh,  TRUE,
-	WA_NoCareRefresh, TRUE,
-	WA_GimmeZeroZero, TRUE,
-	WA_CloseGadget,   TRUE,
-	WA_DragBar,       TRUE,
-	WA_DepthGadget,   TRUE,
-	WA_IDCMP,         IDCMP_CLOSEWINDOW,
-	TAG_END);
+        WA_Title,         "Fonts",
+        WA_Activate,      TRUE,
+        WA_SmartRefresh,  TRUE,
+        WA_NoCareRefresh, TRUE,
+        WA_GimmeZeroZero, TRUE,
+        WA_CloseGadget,   TRUE,
+        WA_DragBar,       TRUE,
+        WA_DepthGadget,   TRUE,
+        WA_IDCMP,         IDCMP_CLOSEWINDOW,
+        TAG_END);
     
     if (! window) clean_exit("Can't open window\n");
     
@@ -70,15 +70,15 @@ static void draw_font(void)
 {
     ULONG style;
     struct TextAttr ta = {
-	"arial.font",             // Font name
-	15,                       // Font size
-	FSF_ITALIC | FSF_BOLD,    // Font style
-	0
+        "arial.font",             // Font name
+        15,                       // Font size
+        FSF_ITALIC | FSF_BOLD,    // Font style
+        0
     };
 
     if ( ! (font = OpenDiskFont(&ta)))
     {
-	clean_exit("Can't open font\n");
+        clean_exit("Can't open font\n");
     }
     
     SetAPen(rp, pen1);
@@ -88,24 +88,24 @@ static void draw_font(void)
     
     
     /*
-	In the TextAttr above we've queried a font with the styles italic and bold.
-	OpenDiskFont() tries to open a font with this styles. If this fails
-	the styles have to be generated algorithmically. To avoid that a
-	style will be added to a font which has already the style intrinsically,
-	we've first to ask. AskSoftStyle() returns a mask where all bits for styles
-	which have to be added algorithmically are set.
+        In the TextAttr above we've queried a font with the styles italic and bold.
+        OpenDiskFont() tries to open a font with this styles. If this fails
+        the styles have to be generated algorithmically. To avoid that a
+        style will be added to a font which has already the style intrinsically,
+        we've first to ask. AskSoftStyle() returns a mask where all bits for styles
+        which have to be added algorithmically are set.
     */
     style = AskSoftStyle(rp);
     
     /*
-	We finally set the style. SetSoftStyle() compares with the mask from
-	AskSoftStyle() to avoid that an intrinsic style is applied again.
+        We finally set the style. SetSoftStyle() compares with the mask from
+        AskSoftStyle() to avoid that an intrinsic style is applied again.
     */
     SetSoftStyle(rp, style, FSF_ITALIC | FSF_BOLD);
     
     /*
-	Now we write some text. Additionally the effects of the
-	rastport modes are demonstrated.
+        Now we write some text. Additionally the effects of the
+        rastport modes are demonstrated.
     */
     write_text("JAM1", 100, 60, JAM1);
     write_text("JAM2", 100, 80, JAM2);
@@ -128,26 +128,26 @@ static void write_text(CONST_STRPTR txt, WORD x, WORD y, ULONG mode)
 static void handle_events(void)
 {
     /*
-	A simple event handler. This will be explained more detailed
-	in the Intuition examples.
+        A simple event handler. This will be explained more detailed
+        in the Intuition examples.
     */
     struct IntuiMessage *imsg;
     struct MsgPort *port = window->UserPort;
     BOOL terminated = FALSE;
-	
+        
     while (!terminated)
     {
-	Wait(1L << port->mp_SigBit);
-	if ((imsg = (struct IntuiMessage *)GetMsg(port)) != NULL)
-	{
-	    switch (imsg->Class)
-	    {
-		case IDCMP_CLOSEWINDOW:
-		    terminated = TRUE;
-		    break;
-	    }
-	    ReplyMsg((struct Message *)imsg);
-	}
+        Wait(1L << port->mp_SigBit);
+        if ((imsg = (struct IntuiMessage *)GetMsg(port)) != NULL)
+        {
+            switch (imsg->Class)
+            {
+                case IDCMP_CLOSEWINDOW:
+                    terminated = TRUE;
+                    break;
+            }
+            ReplyMsg((struct Message *)imsg);
+        }
     }
 }
 

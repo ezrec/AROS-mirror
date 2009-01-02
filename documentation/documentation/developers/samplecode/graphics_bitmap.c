@@ -36,21 +36,21 @@ static void handle_events(void);
 int main(void)
 {
     window = OpenWindowTags(NULL,
-	WA_Left,   50,
-	WA_Top,    70,
-	WA_Width,  400,
-	WA_Height, 350,
+        WA_Left,   50,
+        WA_Top,    70,
+        WA_Width,  400,
+        WA_Height, 350,
     
-	WA_Title,         "Bitmap Graphics",
-	WA_Activate,      TRUE,
-	WA_SmartRefresh,  TRUE,
-	WA_NoCareRefresh, TRUE,
-	WA_GimmeZeroZero, TRUE,
-	WA_CloseGadget,   TRUE,
-	WA_DragBar,       TRUE,
-	WA_DepthGadget,   TRUE,
-	WA_IDCMP,         IDCMP_CLOSEWINDOW,
-	TAG_END);
+        WA_Title,         "Bitmap Graphics",
+        WA_Activate,      TRUE,
+        WA_SmartRefresh,  TRUE,
+        WA_NoCareRefresh, TRUE,
+        WA_GimmeZeroZero, TRUE,
+        WA_CloseGadget,   TRUE,
+        WA_DragBar,       TRUE,
+        WA_DepthGadget,   TRUE,
+        WA_IDCMP,         IDCMP_CLOSEWINDOW,
+        TAG_END);
     
     if (! window) clean_exit("Can't open window\n");
     
@@ -74,14 +74,14 @@ int main(void)
 static void draw_bitmap(void)
 {
     /*
-	Get the depth of the screen. Don't peek in the structures, always use
-	GetBitMapAttr().
+        Get the depth of the screen. Don't peek in the structures, always use
+        GetBitMapAttr().
     */
     UWORD depth = GetBitMapAttr(win_rp->BitMap, BMA_DEPTH);
 
     /*
-	Create new bitmap. With BMF_MINPLANES and the bitmap pointer we are saying
-	that we want a bitmap which is similar than the target bitmap.
+        Create new bitmap. With BMF_MINPLANES and the bitmap pointer we are saying
+        that we want a bitmap which is similar than the target bitmap.
     */
     bm = AllocBitMap(BMWIDTH , BMHEIGHT, depth, BMF_MINPLANES, win_rp->BitMap);
     if (!bm) clean_exit("Can't allocate bitmap\n");
@@ -91,8 +91,8 @@ static void draw_bitmap(void)
     bm_rp->BitMap = bm;            // Link bitmap to rastport
 
     /*
-	Now we can draw into our bitmap. Take care that the bitmap has no
-	clipping rectangle. This means we must not draw over the limits.
+        Now we can draw into our bitmap. Take care that the bitmap has no
+        clipping rectangle. This means we must not draw over the limits.
     */
     SetRast(bm_rp, 0);                // fill whole bitmap with color 0
     SetAPen(bm_rp, pen1);
@@ -110,8 +110,8 @@ static void draw_bitmap(void)
     int x;
     for (x=20; x<400 ; x+=30)
     {
-	// Blit the bitmap into the window
-	ClipBlit(bm_rp, 0, 0, win_rp, x, x/2, BMWIDTH, BMHEIGHT, 0xC0);
+        // Blit the bitmap into the window
+        ClipBlit(bm_rp, 0, 0, win_rp, x, x/2, BMWIDTH, BMHEIGHT, 0xC0);
     }
 }
 
@@ -119,26 +119,26 @@ static void draw_bitmap(void)
 static void handle_events(void)
 {
     /*
-	A simple event handler. This will be explained more detailed
-	in the Intuition examples.
+        A simple event handler. This will be explained more detailed
+        in the Intuition examples.
     */
     struct IntuiMessage *imsg;
     struct MsgPort *port = window->UserPort;
     BOOL terminated = FALSE;
-	
+        
     while (!terminated)
     {
-	Wait(1L << port->mp_SigBit);
-	if ((imsg = (struct IntuiMessage *)GetMsg(port)) != NULL)
-	{
-	    switch (imsg->Class)
-	    {
-		case IDCMP_CLOSEWINDOW:
-		    terminated = TRUE;
-		    break;
-	    }
-	    ReplyMsg((struct Message *)imsg);
-	}
+        Wait(1L << port->mp_SigBit);
+        if ((imsg = (struct IntuiMessage *)GetMsg(port)) != NULL)
+        {
+            switch (imsg->Class)
+            {
+                case IDCMP_CLOSEWINDOW:
+                    terminated = TRUE;
+                    break;
+            }
+            ReplyMsg((struct Message *)imsg);
+        }
     }
 }
 

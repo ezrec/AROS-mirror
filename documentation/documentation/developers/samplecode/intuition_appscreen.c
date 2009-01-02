@@ -35,36 +35,36 @@ static UWORD pens[] = {~0};
 int main(void)
 {
     screen = OpenScreenTags(NULL,
-	SA_Width,  800,
-	SA_Height, 600,
-	SA_Depth,  16,
-	SA_Pens,   pens, // Enables default 3D look
-	SA_Title,  "Default screen title",
-	TAG_END);
+        SA_Width,  800,
+        SA_Height, 600,
+        SA_Depth,  16,
+        SA_Pens,   pens, // Enables default 3D look
+        SA_Title,  "Default screen title",
+        TAG_END);
 
     if (! screen) clean_exit("Can't open screen\n");
     
     window = OpenWindowTags(NULL,
-	WA_Left,          100,
-	WA_Top,           70,
-	WA_InnerWidth,    600,
-	WA_InnerHeight,   300,
-	WA_Title,         "Custom screen",
-	WA_ScreenTitle,   "Screen title", // Screen title when window is active
-	WA_Activate,      TRUE,
-	WA_CloseGadget,   TRUE,
-	WA_DragBar,       TRUE,
-	WA_DepthGadget,   TRUE,
-	WA_IDCMP,         IDCMP_CLOSEWINDOW,
-	WA_SmartRefresh,  TRUE,   // Let's Intuition handle exposed regions
-	WA_NoCareRefresh, TRUE,   // We don't want to listen to refresh messages
-	WA_CustomScreen,  screen, // Link to screen
-	TAG_END);
+        WA_Left,          100,
+        WA_Top,           70,
+        WA_InnerWidth,    600,
+        WA_InnerHeight,   300,
+        WA_Title,         "Custom screen",
+        WA_ScreenTitle,   "Screen title", // Screen title when window is active
+        WA_Activate,      TRUE,
+        WA_CloseGadget,   TRUE,
+        WA_DragBar,       TRUE,
+        WA_DepthGadget,   TRUE,
+        WA_IDCMP,         IDCMP_CLOSEWINDOW,
+        WA_SmartRefresh,  TRUE,   // Let's Intuition handle exposed regions
+        WA_NoCareRefresh, TRUE,   // We don't want to listen to refresh messages
+        WA_CustomScreen,  screen, // Link to screen
+        TAG_END);
 
     if (! window) clean_exit("Can't open window\n");
     
     if ( ! (drawinfo = GetScreenDrawInfo(screen)))
-	clean_exit("Can't get screendrawinfo\n");
+        clean_exit("Can't get screendrawinfo\n");
     
     rp = window->RPort;
     cm = screen->ViewPort.ColorMap;
@@ -110,19 +110,19 @@ static void handle_events(void)
     
     while (! terminated)
     {
-	signals = Wait(1L << port->mp_SigBit);
+        signals = Wait(1L << port->mp_SigBit);
 
-	while ((imsg = (struct IntuiMessage *)GetMsg(port)) != NULL)
-	{
-	    switch (imsg->Class)
-	    {
-		case IDCMP_CLOSEWINDOW:
-		    terminated = TRUE;
-		    break;
+        while ((imsg = (struct IntuiMessage *)GetMsg(port)) != NULL)
+        {
+            switch (imsg->Class)
+            {
+                case IDCMP_CLOSEWINDOW:
+                    terminated = TRUE;
+                    break;
 
-	    }
-	    ReplyMsg((struct Message *)imsg);
-	}
+            }
+            ReplyMsg((struct Message *)imsg);
+        }
     }
 }
 

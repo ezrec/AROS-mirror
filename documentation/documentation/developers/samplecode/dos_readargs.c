@@ -42,47 +42,47 @@ int main(int argc, char **argv)
 {
     if (argc)
     {
-	/*
-	    Storage place for the result. It's important to initialize
-	    the array with default values.
-	*/
-	IPTR args[ARG_COUNT] = {0};
-	
-	rda = ReadArgs(ARG_TEMPLATE, args, NULL);
-	if (!rda)
-	{
-	    PrintFault(IoErr(), argv[0]);
-	    clean_exit("ReadArgs() failed.");
-	}
-	
-	if (args[ARG_STRING])
-	{
-	    /* Array element is a pointer to a string */
-	    printf("Argument 'STRING' %s\n", (STRPTR)args[ARG_STRING]);
-	}
-	else
-	{
-	    puts("Argument 'STRING' wasn't given.");
-	}
-	
-	if (args[ARG_NUMBER])
-	{
-	    /* Array element is a pointer to a number */
-	    printf("Argument 'NUMBER' %d\n", *(LONG *)args[ARG_NUMBER]);
-	}
-	else
-	{
-	    puts("Argument 'NUMBER' wasn't given.");
-	}
-	
-	/* Array element contains the boolean result */
-	printf("Argument 'BOOL' %s.\n", args[ARG_BOOL] ? "TRUE" : "FALSE");
-	
+        /*
+            Storage place for the result. It's important to initialize
+            the array with default values.
+        */
+        IPTR args[ARG_COUNT] = {0};
+        
+        rda = ReadArgs(ARG_TEMPLATE, args, NULL);
+        if (!rda)
+        {
+            PrintFault(IoErr(), argv[0]);
+            clean_exit("ReadArgs() failed.");
+        }
+        
+        if (args[ARG_STRING])
+        {
+            /* Array element is a pointer to a string */
+            printf("Argument 'STRING' %s\n", (STRPTR)args[ARG_STRING]);
+        }
+        else
+        {
+            puts("Argument 'STRING' wasn't given.");
+        }
+        
+        if (args[ARG_NUMBER])
+        {
+            /* Array element is a pointer to a number */
+            printf("Argument 'NUMBER' %d\n", *(LONG *)args[ARG_NUMBER]);
+        }
+        else
+        {
+            puts("Argument 'NUMBER' wasn't given.");
+        }
+        
+        /* Array element contains the boolean result */
+        printf("Argument 'BOOL' %s.\n", args[ARG_BOOL] ? "TRUE" : "FALSE");
+        
     }
     else
     {
-	started_from_wanderer = TRUE;
-	clean_exit("Application must be started from Shell.");
+        started_from_wanderer = TRUE;
+        clean_exit("Application must be started from Shell.");
     }
 
     clean_exit(NULL);
@@ -96,25 +96,25 @@ static void clean_exit(CONST_STRPTR s)
 {
     if (s)
     {
-	if (started_from_wanderer)
-	{
-	    /* 
-		We use an EasyRequest because applications started
-		from Wanderer don't have an output console by default.
-	    */
-	    struct EasyStruct es = {
-		sizeof(struct EasyStruct),
-		0,
-		"Error",
-		s,
-		"OK"
-	    };
-	    EasyRequest(NULL, &es, NULL);
-	}
-	else
-	{
-	    puts(s);
-	}
+        if (started_from_wanderer)
+        {
+            /* 
+                We use an EasyRequest because applications started
+                from Wanderer don't have an output console by default.
+            */
+            struct EasyStruct es = {
+                sizeof(struct EasyStruct),
+                0,
+                "Error",
+                s,
+                "OK"
+            };
+            EasyRequest(NULL, &es, NULL);
+        }
+        else
+        {
+            puts(s);
+        }
     }
     
     // Give back allocated resourses

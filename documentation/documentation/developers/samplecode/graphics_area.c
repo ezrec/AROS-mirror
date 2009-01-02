@@ -36,21 +36,21 @@ static void handle_events(void);
 int main(void)
 {
     window = OpenWindowTags(NULL,
-	WA_Left,   50,
-	WA_Top,    70,
-	WA_Width,  400,
-	WA_Height, 350,
+        WA_Left,   50,
+        WA_Top,    70,
+        WA_Width,  400,
+        WA_Height, 350,
     
-	WA_Title,         "Area Graphics",
-	WA_Activate,      TRUE,
-	WA_SmartRefresh,  TRUE,
-    	WA_NoCareRefresh, TRUE,
-	WA_GimmeZeroZero, TRUE,
-	WA_CloseGadget,   TRUE,
-	WA_DragBar,       TRUE,
-	WA_DepthGadget,   TRUE,
-	WA_IDCMP,         IDCMP_CLOSEWINDOW,
-	TAG_END);
+        WA_Title,         "Area Graphics",
+        WA_Activate,      TRUE,
+        WA_SmartRefresh,  TRUE,
+        WA_NoCareRefresh, TRUE,
+        WA_GimmeZeroZero, TRUE,
+        WA_CloseGadget,   TRUE,
+        WA_DragBar,       TRUE,
+        WA_DepthGadget,   TRUE,
+        WA_IDCMP,         IDCMP_CLOSEWINDOW,
+        TAG_END);
     
     if (! window) clean_exit("Can't open window\n");
     
@@ -75,28 +75,28 @@ int main(void)
 static void draw_area(void)
 {
     /*
-	The area drawing functions need two additional
-	structures, which have to be linked with the rastport.
+        The area drawing functions need two additional
+        structures, which have to be linked with the rastport.
     
-	First we set the AreaInfo.
-	The size of 'aibuf' must be at least 5 times the number
-	of vertexes.
-	Take care: when you define the variable 'aibuf' locally, you
-	have to set all fields to 0.
+        First we set the AreaInfo.
+        The size of 'aibuf' must be at least 5 times the number
+        of vertexes.
+        Take care: when you define the variable 'aibuf' locally, you
+        have to set all fields to 0.
     */
     InitArea(&ai, aibuf, sizeof(aibuf) / 5);
 
     /*
-	Then we allocate a raster. It must have the size of
-	the drawing area. We have a GimmeZeroZero window with
-	no size gadget, therefore we can use the GZZ sizes.
+        Then we allocate a raster. It must have the size of
+        the drawing area. We have a GimmeZeroZero window with
+        no size gadget, therefore we can use the GZZ sizes.
     */
     trbuf = AllocRaster(window->GZZWidth, window->GZZHeight);
     if (!trbuf) clean_exit("TmpRas buffer allocation failed!\n");
     
     /*
-	The raster must be initialized. The reason for RASSIZE() is
-	that we must round up the width to a 16 bit value.
+        The raster must be initialized. The reason for RASSIZE() is
+        that we must round up the width to a 16 bit value.
     */
     InitTmpRas(&tr, trbuf, RASSIZE(window->GZZWidth, window->GZZHeight));
 
@@ -123,26 +123,26 @@ static void draw_area(void)
 static void handle_events(void)
 {
     /*
-	A simple event handler. This will be explained more detailed
-	in the Intuition examples.
+        A simple event handler. This will be explained more detailed
+        in the Intuition examples.
     */
     struct IntuiMessage *imsg;
     struct MsgPort *port = window->UserPort;
     BOOL terminated = FALSE;
-	
+        
     while (!terminated)
     {
-	Wait(1L << port->mp_SigBit);
-	if ((imsg = (struct IntuiMessage *)GetMsg(port)) != NULL)
-	{
-	    switch (imsg->Class)
-	    {
-		case IDCMP_CLOSEWINDOW:
-		    terminated = TRUE;
-		    break;
-	    }
-	    ReplyMsg((struct Message *)imsg);
-	}
+        Wait(1L << port->mp_SigBit);
+        if ((imsg = (struct IntuiMessage *)GetMsg(port)) != NULL)
+        {
+            switch (imsg->Class)
+            {
+                case IDCMP_CLOSEWINDOW:
+                    terminated = TRUE;
+                    break;
+            }
+            ReplyMsg((struct Message *)imsg);
+        }
     }
 }
 

@@ -36,23 +36,23 @@ static struct ColorSpec colors[] =
 int main(void)
 {
     screen = OpenScreenTags(NULL,
-	SA_Width,  800,
-	SA_Height, 600,
-	SA_Depth,  16,
-	SA_Colors, colors,
-	TAG_END);
+        SA_Width,  800,
+        SA_Height, 600,
+        SA_Depth,  16,
+        SA_Colors, colors,
+        TAG_END);
 
     if (! screen) clean_exit("Can't open screen\n");
     
     window = OpenWindowTags(NULL,
-	WA_Activate,      TRUE,
-	WA_Borderless,    TRUE,
-	WA_Backdrop,      TRUE,
-	WA_IDCMP,         IDCMP_VANILLAKEY,
-	WA_RMBTrap,       TRUE,
-	WA_NoCareRefresh, TRUE,   // We don't want to listen to refresh messages
-	WA_CustomScreen,  screen, // Link to screen
-	TAG_END);
+        WA_Activate,      TRUE,
+        WA_Borderless,    TRUE,
+        WA_Backdrop,      TRUE,
+        WA_IDCMP,         IDCMP_VANILLAKEY,
+        WA_RMBTrap,       TRUE,
+        WA_NoCareRefresh, TRUE,   // We don't want to listen to refresh messages
+        WA_CustomScreen,  screen, // Link to screen
+        TAG_END);
 
     if (! window) clean_exit("Can't open window\n");
     
@@ -81,15 +81,15 @@ static void draw_stuff(void)
     Draw(rp, 500, 200);
     
     /*
-	We can change single colors with SetRGB32() or a range of
-	colors with LoadRGB32(). In contrast to the color table above
-	we need 32 bit values for the color components.
+        We can change single colors with SetRGB32() or a range of
+        colors with LoadRGB32(). In contrast to the color table above
+        we need 32 bit values for the color components.
     */
     SetRGB32(&screen->ViewPort, 2, 0, 0xFFFFFFFF, 0);
     
     /*
-	Even when we use the same pen number as before we have to
-	set it again.
+        Even when we use the same pen number as before we have to
+        set it again.
     */
     SetAPen(rp, 2);
     Move(rp, 100, 300);
@@ -108,18 +108,18 @@ static void handle_events(void)
     
     while (! terminated)
     {
-	signals = Wait(1L << port->mp_SigBit);
+        signals = Wait(1L << port->mp_SigBit);
 
-	while ((imsg = (struct IntuiMessage *)GetMsg(port)) != NULL)
-	{
-	    switch (imsg->Class)
-	    {
-		case IDCMP_VANILLAKEY:
-		    terminated = TRUE;
-		    break;
-	    }
-	    ReplyMsg((struct Message *)imsg);
-	}
+        while ((imsg = (struct IntuiMessage *)GetMsg(port)) != NULL)
+        {
+            switch (imsg->Class)
+            {
+                case IDCMP_VANILLAKEY:
+                    terminated = TRUE;
+                    break;
+            }
+            ReplyMsg((struct Message *)imsg);
+        }
     }
 }
 

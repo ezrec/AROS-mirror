@@ -30,21 +30,21 @@ static void handle_events(void);
 int main(void)
 {
     window = OpenWindowTags(NULL,
-	WA_Left,   50,
-	WA_Top,    70,
-	WA_Width,  400,
-	WA_Height, 350,
+        WA_Left,   50,
+        WA_Top,    70,
+        WA_Width,  400,
+        WA_Height, 350,
     
-	WA_Title,         "Simple Graphics",
-	WA_Activate,      TRUE,
-	WA_SmartRefresh,  TRUE,
-	WA_NoCareRefresh, TRUE,
-	WA_GimmeZeroZero, TRUE,
-	WA_CloseGadget,   TRUE,
-	WA_DragBar,       TRUE,
-	WA_DepthGadget,   TRUE,
-	WA_IDCMP,         IDCMP_CLOSEWINDOW,
-	TAG_END);
+        WA_Title,         "Simple Graphics",
+        WA_Activate,      TRUE,
+        WA_SmartRefresh,  TRUE,
+        WA_NoCareRefresh, TRUE,
+        WA_GimmeZeroZero, TRUE,
+        WA_CloseGadget,   TRUE,
+        WA_DragBar,       TRUE,
+        WA_DepthGadget,   TRUE,
+        WA_IDCMP,         IDCMP_CLOSEWINDOW,
+        TAG_END);
     
     if (! window) clean_exit("Can't open window\n");
     
@@ -68,10 +68,10 @@ int main(void)
 static void draw_simple(void)
 {
     WORD array[] = {                // Polygon for PolyDraw()
-	50, 200,
-	80, 180,
-	90, 220,
-	50, 200,
+        50, 200,
+        80, 180,
+        90, 220,
+        50, 200,
     };
     
     SetAPen(rp, pen1);              // Set foreground color
@@ -88,8 +88,8 @@ static void draw_simple(void)
     DrawEllipse(rp, 70,30, 15, 10); // Draw an ellipse
 
     /*
-	Draw a polygon. Note that the first line is draw from the
-	end of the last Move() or Draw() command.
+        Draw a polygon. Note that the first line is draw from the
+        end of the last Move() or Draw() command.
     */
     PolyDraw(rp, sizeof(array)/sizeof(WORD)/2, array);
     
@@ -104,26 +104,26 @@ static void draw_simple(void)
 static void handle_events(void)
 {
     /*
-	A simple event handler. This will be explained more detailed
-	in the Intuition examples.
+        A simple event handler. This will be explained more detailed
+        in the Intuition examples.
     */
     struct IntuiMessage *imsg;
     struct MsgPort *port = window->UserPort;
     BOOL terminated = FALSE;
-	
+        
     while (!terminated)
     {
-	Wait(1L << port->mp_SigBit);
-	if ((imsg = (struct IntuiMessage *)GetMsg(port)) != NULL)
-	{
-	    switch (imsg->Class)
-	    {
-		case IDCMP_CLOSEWINDOW:
-		    terminated = TRUE;
-		    break;
-	    }
-	    ReplyMsg((struct Message *)imsg);
-	}
+        Wait(1L << port->mp_SigBit);
+        if ((imsg = (struct IntuiMessage *)GetMsg(port)) != NULL)
+        {
+            switch (imsg->Class)
+            {
+                case IDCMP_CLOSEWINDOW:
+                    terminated = TRUE;
+                    break;
+            }
+            ReplyMsg((struct Message *)imsg);
+        }
     }
 }
 

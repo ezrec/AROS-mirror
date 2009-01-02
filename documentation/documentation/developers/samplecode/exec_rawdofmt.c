@@ -13,16 +13,16 @@
 int main(void)
 {
     /*
-	RawDoFmt() expects WORD alignment but the C compiler
-	aligns to LONG by default. GCC can be forced to use
-	WORD alignment by #pragma pack(2)
+        RawDoFmt() expects WORD alignment but the C compiler
+        aligns to LONG by default. GCC can be forced to use
+        WORD alignment by #pragma pack(2)
     */
 #pragma pack(2)
     struct Data
     {
-	LONG longval;
-	WORD wordval;
-	STRPTR str;
+        LONG longval;
+        WORD wordval;
+        STRPTR str;
     } data = {10000000,1001,"Hello"};
 #pragma pack()
 
@@ -32,24 +32,24 @@ int main(void)
     /* The data which will be inserted in the placeholders. */
     APTR datastream = &data;
     
-    /*	Storage place for result. Note that there is no boundary check. */
+    /*  Storage place for result. Note that there is no boundary check. */
     TEXT putchdata[1000]; 
     
     RawDoFmt(
-	formatstring, // CONST_STRPTR FormatString
-	datastream,   // APTR DataStream
+        formatstring, // CONST_STRPTR FormatString
+        datastream,   // APTR DataStream
         NULL,         // VOID_FUNC PutChProc
-	putchdata     // APTR PutChData
+        putchdata     // APTR PutChData
     );
 
     puts(putchdata);
 
     
     /*
-	The pragma trick doesn't work with variadic functions like
-	Printf(), EasyRequest() etc. Here you have to use for integers
-	%ld/%lu for the placeholders and the type must be converted
-	to LONG/ULONG.
+        The pragma trick doesn't work with variadic functions like
+        Printf(), EasyRequest() etc. Here you have to use for integers
+        %ld/%lu for the placeholders and the type must be converted
+        to LONG/ULONG.
     */
     
     WORD wordval = 1000;
