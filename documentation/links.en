@@ -3,7 +3,7 @@ Links
 =====
 
 :Authors:   Aaron Digulla, Adam Chodorowski, Matthias Rustler 
-:Copyright: Copyright © 1995-2007, The AROS Development Team
+:Copyright: Copyright (C) 1995-2009, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -14,11 +14,11 @@ Links
 AROS resources
 ==============
 
-+ `Team AROS`__ 
++ `Power2People`__ 
 
-  TeamAROS is a grass roots support group for AROS.
+  Power2People is a grass roots support group for AROS.
   
-+  `AROS-Exec`__
++ `AROS-Exec`__
 
   AROS Community website, forums, news, galleries
 
@@ -30,7 +30,7 @@ AROS resources
 
 + `AROS on ohloh.net`__
 
-  Ohlow is showing AROS development activity in a nice graphical way.
+  OHLOH is showing AROS development activity in a nice graphical way.
 
 + `Map of AROS users`__
 
@@ -45,7 +45,7 @@ AROS resources
 
 + `AROS documentation on WikiBooks`__
   
-__ http://www.teamaros.org/
+__ http://www.power2people.org/
 __ http://aros-exec.org
 __ http://archives.aros-exec.org/
 __ http://aros.aminet.net/
