@@ -3,7 +3,7 @@ AROS Installation Guide
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
-:Copyright: Copyright © 1995-2008, The AROS Development Team
+:Copyright: Copyright (C) 1995-2009, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Needs to be updated for some AROS ports. In works, being updating to the current status.
@@ -45,14 +45,15 @@ Installation
 ============
 
 
-AROS/i386-linux and AROS/i386-freebsd-hosted
---------------------------------------------
+AROS/linux-i386, AROS/linux-x86-64 and AROS/freebsd-i386
+--------------------------------------------------------
 
 
 Requirements
 """"""""""""
 
-To run AROS/i386-linux or AROS/i386-freebsd you will need the following:
+To run AROS/linux-i386, AROS/linux-x86-64 or AROS/freebsd-i386 you will need
+the following:
 
 + A working FreeBSD 5.x or Linux installation (doesn't really matter which
   distribution you run, as long as it's relatively recent).
@@ -65,16 +66,16 @@ That's it.
 Extracting
 """"""""""
 
-Since AROS/i386-linux and AROS/i386-freebsd are hosted flavors of AROS,
+Since AROS/linux-i386, AROS/linux-x86-64 and AROS/freebsd-i386 are hosted flavors of AROS,
 installation is simple. Simply get the appropriate archives for your platform
 from the `download page`_ and extract them where you want them::
 
-    > tar -vxjf AROS-<version>-i386-<platform>-system.tar.bz2
+    > tar -vxjf AROS-<version>-<platform>-<cpu>-system.tar.bz2
 
 If you downloaded the contrib archive, you may want to extract it too (but
 now it's contents is already included in the system archive and LiveCD)::
 
-    > tar -vxjf AROS-<version>-i386-all-contrib.tar.bz2
+    > tar -vxjf AROS-<version>-pc-<cpu>-contrib.tar.bz2
 
 
 Running
@@ -112,8 +113,8 @@ Also there's an sdl.hidd, allowing you to run AROS-Hosted without any X-server
 ever installed. It's known to be working, but is in testing stage.
 
 
-AROS/i386-pc and AROS/X86-64x Native
-------------------------------------
+AROS/pc-i386 and AROS/pc-X86-64
+-------------------------------
 
 
 Requirements
@@ -157,7 +158,7 @@ any bugs found.
 Installation media
 """"""""""""""""""
 
-The recommended installation media for AROS/i386-pc is CDROM, since we can fit
+The recommended installation media for AROS/pc-i386 is CDROM, since we can fit
 the whole system onto a single disc (and also all the contributed software).
 This also makes the installation easier, since you don't have to go through
 hoops transferring the software on several floppies.
@@ -217,7 +218,7 @@ the `download page`_, extract the archive, and write the boot image to a floppy
 disk. If you are using a UNIX-like operating system (such as Linux or FreeBSD), 
 you can do this with the following command::
 
-    > cd AROS-<version>-i386-pc-boot-floppy
+    > cd AROS-<version>-pc-i386-boot-floppy
     > dd if=aros.bin of=/dev/fd0
 
 If you are using Windows, you will need to get rawrite_ to write the image to
@@ -254,7 +255,7 @@ For a real drive, this may involve plugging it into the machine (always
 a good start) and setting it up in the BIOS. For a virtualiser's or
 emulator's virtual drive, you probably just need to select an option to
 create a new drive image, and set it as one of the virtual PC's boot
-devices (the CD drive must be the first boot device during installtion
+devices (the CD drive must be the first boot device during installation
 of AROS however).
 
 The following options are depending on what you want to do.
@@ -583,7 +584,7 @@ After reboot, you may notice that you can see our AROS HD on the desktop
 now, and it's empty. Now we need to fill it with files.
 
 Now after the Drag 'n' Drop support developed in AROS the whole system can be 
-easily copyed from LiveCD by just dragging files to DH0: drawer. It's only
+easily copyied from LiveCD by just dragging files to DH0: drawer. It's only
 left to replace the file dh0:boot/grub/menu.lst with dh0:boot/grub/menu_dh.lst.DH0
 then.
 
@@ -651,7 +652,7 @@ Well, if you use fresh nightly build then 'GRUB <http://en.wikipedia.org/wiki/GR
 must be already installed
 and working, you can skip this step. If not, please read.
 
-For older versions (before nov. 2006)
+For older versions (before Nov. 2006)
 there were a bug in GRUB, preventing it from installing correctly from the
 first try. So if you can't boot now and get messages like GRUB GRUB FRUB etc
 please read the following.
@@ -681,10 +682,10 @@ booting from CD in VM) and check it out. Hear the drum roll? ;)
 **Troubleshooting**
 
 Installation process is the one of most frequently ones asked about on forums,
-mostly by newbees. You can check the FAQ if there an answer to your questions.
+mostly by newbies. You can check the FAQ if there an answer to your questions.
 
 
-AROS/PPC-linux
+AROS/linux-ppc
 --------------
 
 Requirements
@@ -698,7 +699,7 @@ Extracting
 Simply get the appropriate archives for your platform
 from the `download page`_ and extract them where you want them::
 
-    > tar -vxjf AROS-<version>-ppc-<platform>-system.tar.bz2
+    > tar -vxjf AROS-<version>-<platform>-ppc-system.tar.bz2
 
 If you downloaded the contrib archive, you may want to extract it too (but
 now its contents are already included in the system archive and LiveCD)::
