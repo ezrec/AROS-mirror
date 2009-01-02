@@ -321,8 +321,8 @@ static void NLV_Scrollers(Object *obj,struct NLVData *data,LONG vert,LONG horiz)
 }
 
 #ifdef __AROS__
-static IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...) __stackparm;
-static IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...)
+IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...) __stackparm;
+IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...)
 {
   AROS_SLOWSTACKTAGS_PRE(tag1)
   
