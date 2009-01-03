@@ -3,14 +3,10 @@ Translating
 ===========
 
 :Authors:   William Ouwehand, Keen
-:Copyright: Copyright Š 1995-2007, The AROS Development Team
+:Copyright: Copyright (C) 1995-2009, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Work in progress.
-
-.. Warning:: 
-    
-    Almost finished.    
 
 
 .. Contents::
@@ -20,7 +16,7 @@ Introduction
 ------------
 Translating the OS and website helps AROS reach more people internationally, and
 helps making the OS easier to use. Making estimates is impossible, but one
-cannot deny that there is a potentially huge user base who are unable to speak,
+cannot deny that there is a potentially huge user base which is unable to speak,
 read or write English. Reaching out to those people can *possibly* help get more
 users and developers alike. For this purpose we are still actively looking for
 new translators or people who would like to help out with the current efforts on
@@ -44,12 +40,12 @@ to verify whether you can contribute (just to be on the safe side).
 Translating is as basic as it implicates. All you need to start translating with
 AROS is a suitable text-editor, access to the AROS 'SVN sources' and a feel for
 your language and grammar. Information about the first two can be found here on
-the `Working with SVN <svn>`__ page, the latter is up to you of course. Know
-that you don't even need to use AROS to work on either the site or OS - also
+the `Working with SVN <svn>`__ page, the latter is up to you of course.
+You don't even need to use AROS to work on either the site or OS - also
 Linux, Windows or OS X will do.  
 
 The translating work itself can be divided into the website (news/documentation)
-and the localization of the AR(OS) operating system. The website has a higher
+and the localization of the AROS operating system. The website has a higher
 priority as it's the first thing new users will come across, and because it
 carries important and helpful documentation for users. Localizing the OS is no
 less important, but can always happen on a later date. Besides, the most basic
@@ -59,8 +55,8 @@ a big job anyway.
 
 Translating the website
 =======================
-The website is AROS official online presence. It carries general information 
-about AROS, news, downloads (OS) and the user and developer guides. It 
+The website is AROS's official online presence. It carries general information 
+about AROS, news, downloads and the user and developer guides. It 
 plays an important role in informing people about AROS, and serving as a 
 reference guide for both users and developers. Of the last two, the user guides 
 are the most important to be translated. 
@@ -74,7 +70,7 @@ documentation and the other main site pages.
 Of all the content, the developer section is less important. Generally
 developers tend to speak English well, making it not worth the effort to
 translate; users will also require more attention generally. Exception to the
-rule are the 'working with SVN' and 'contribute pages', which can prove useful
+rule are the 'working with SVN' and 'contribute pages', which can be useful
 when you recruit other people in your country.
 
 
@@ -85,7 +81,8 @@ archive. These are later put into a template, creating the AROS website you know
 
 To summarize, it is highly recommended that you:
 
-+ make your intentions know to the developer ML and see if your services are needed (to be on the safe side)
++ make your intentions known to the developer ML and see if your services are
+  needed (to be on the safe side)
 + read this whole page
 + read the `Working with SVN <svn>`__ page
 + apply for SVN access
@@ -101,14 +98,14 @@ keep a full (and synchronized) copy of the sources on your harddisk. You then
 work offline on these files, and when wished, synchronize your local changes
 with the main repository on the server. The named source files you will be
 working with are plain text-files (no HTML). The fancy looks of the AROS
-website, together with the menu's, are added in a separate process on the server
+website, together with the menus, are added in a separate process on the server
 which transforms these text files into a full HTML website. This will be covered
 later to some extend.
 
-It is highly recommended to wait until you get SVN access before start. It makes
+It is highly recommended to wait until you get SVN access before you start. It makes
 it easier to send in and change your translated files later. Problem is however,
-that it can a long time before you receive your actual SVN access - sometimes
-even several weeks after your initial request. It can be a try for patience,
+that it can take a long time before you receive your actual SVN access - sometimes
+even several weeks after your initial request. It can be a challenge for patience,
 should you be really enthusiastic... luckily for you, you can make a head-start
 by downloading a copy of the website sources from the AROS website. This is
 simply a copy of the website SVN repository just mentioned. Besides, it also
@@ -152,11 +149,11 @@ typical logmessages like "German translations" or "updated German X page" and
 try to bundle more than 1 file into a commit (when related). Key changes can
 better be committed separately: should an error be made, the change can be
 easily undone by the administrators without throwing away your other work for
-that particular commit (and know, since the system synchronizes all copies, you
+that particular commit (take care, since the system synchronizes all copies, you
 can even loose your work locally!).
 
-With the plain text files on the server what then creates the website as you can
-see it? It's a script, that takes the source texts and converts them into
+How are the plain text files on the server turned into the website? It's a script,
+that takes the source texts and converts them into
 HTML/PHP pages suitable for browsing. This process is called 'building', and can
 also be done on your machine for testing purposes - more on that later. The
 website performs builds once every few hours (or days), after which your pages
@@ -179,20 +176,19 @@ Checking your texts is advised on two points: spelling and markup errors.
 
 Spellchecks should be considered obligatory, optionally re-reading your work can
 help. These combined should catch 99% of spelling and grammar errors, and
-involve little work. We won't complain, but correct language use does add to the
-representativeness of the site.
+involve little work. Correct language use does add to the representativeness
+of the site.
 
 Markup errors are another story. These are mistakes made in tags used in the 
 source document. Tags are special symbols/codes, like links or lines like '===' 
 that indicate another line is a header. When present, these mistakes break the 
 'building' process for that page. Despite these errors, the page will still be 
 generated and put online -but- with nasty error messages and the broken parts. 
-It's not nice, but the problems are limited when you make a mistake ;-) The 
-building process does report all errors automatically to the website Mailing 
+The building process does report all errors automatically to the website Mailing 
 List (ML). Extra information is also displayed making fixing the problem easier. 
 (You should therefor always be signed up to the website ML.) You can also wait 
 for one of the other developers to correct the error, but it generates extra 
-work for others, and you don't learn from your mistakes. Know it's quite usual 
+work for others, and you don't learn from your mistakes. It's quite usual 
 to make errors in your first works, most later being the casual mistake.
 
 *Building the website locally*
@@ -202,8 +198,8 @@ in a way 'flying blind'. How can you (reasonably) prevent faulty pages ending up
 on the website in the first place? By building the website yourself too, just 
 like it's done on the server. It requires installing some extra software 
 (Python), but afterwards you can check your work with the same script that 
-creates the website HTML files on the server; it's no magic =). You work more 
-efficient this way, keep the site tidy and save other devs some time. For a 
+creates the website HTML files on the server; it's no magic. You work more 
+efficient this way, keep the site tidy and save other developers some time. For a 
 how-to on building locally and the required tools, please check the 
 `documenting page <documenting>`__.
 
@@ -212,11 +208,11 @@ website.
 
 Localizing AROS or applications
 ===============================
-Localizing the OS and it's applications adds much to the usability and
+Localizing the OS and its applications adds much to the usability and
 experience of non-English speaking users, maybe even making AROS usable for them
 in the first place. The procedure for localizing the OS is basically the same as
-for the site, but differs in it's details. As with the website even a basic
-translation suffices, encompassing the Workbench and it's
+for the site, but differs in its details. As with the website even a basic
+translation suffices, encompassing the Workbench and its
 applications/utilities. These make a good start/base for further localization.
 You can later always progress to the extra OS applications and contributed
 files. 
@@ -229,14 +225,13 @@ in a separate file, allowing easy and efficient localization. The catalog files
 for AROS are located mostly within the main code repository, which is different
 from the website repository. In this case you can either perform a complete SVN
 checkout, or browse the SVN repository trough your browser and download specific
-files. You will be needing SVN access for this as, unlike with the website
-sources, the complete OS source is not available separately. 
+files.
 
 The OS repository can be accessed by browser using this link
-https://svn.aros.org:8080/svn/aros/trunk/AROS allowing you get one or two files
+https://svn.aros.org/svn/aros/trunk/AROS allowing you get one or two files
 efficiently. A complete SVN checkout needs to be performed by::
 
-  https://svn.aros.org:8080/svn/aros/trunk/AROS
+    svn checkout https://svn.aros.org/svn/aros/trunk/AROS
 
 Note the SVN checkout is quite large (200MB) and thus takes some time till
 completion. Don't get intimidated by the size of the repository: you only need
@@ -246,7 +241,7 @@ confused, don't hesitate to ask for help on AROS-exec or the ML.
 *Language definitions and fonts*
 
 First, you must check for your country in Locale/Countries and language
-definition file in Locale/Languages. Most languages are added already BTW. If
+definition file in Locale/Languages. Most languages are added already. If
 you can`t find anything like <your_language>.c there, then you must create it.
 Try to avoid the special characters in the name of the file, this can help
 prevent problems with some non-utf programs (remember, AROS is meant to be
@@ -257,37 +252,39 @@ can find tables with descriptions of chars in these files (collation tables),
 you can skip them for the first time. After compiling, your locale must appear
 in list of locales of Locale Pref.
 
-What`s next ? If your language uses non-ISO fonts, you`d
+What's next? If your language uses non-ISO fonts, you'd
 need them. Search on the Internet for open-sourced AmigaOS bitmap or True Type
 Fonts, which can be included to the system. Put them to the /Fonts or 
 /Fonts/Truetype and fix the mmakefile (be **careful** with mmakefiles!)
 
 *Creating CT files*
 
-Now comes the actual translating work. Know that localizing in AROS is done
-similar to the AmigaOS. This means you can find some.cd and.ct files along with
-the code (usually in Catalog drawer). <name>.CD Files contains catalog
-definitions and shouldn`t be touched unless you know you changed the program
-itself. The .CT files contains all the translated strings, and are the object of
+Now comes the actual translating work. Localizing in AROS is done
+similar to the AmigaOS. This means you can find some \*.cd and \*.ct files along with
+the code (usually in Catalog drawer). <name>.cd files contain catalog
+definitions and shouldn't be touched unless you have changed the program
+itself. The CT files contain all the translated strings, and are the object of
 your work. Browse the SVN Tree for these files and translate them: find the most
 recent <name>.ct file (look for version and date in header), copy to
-<your_lang>.ct (much easier to translate than from <lang>.CD file) and edit it.
-Try to put the words in correct times, which will require you check where they
-are used.
+<your_lang>.ct (much easier to translate than from <lang>.cd file) and edit it.
+Try to put the words in correct times, which will require you to check where they
+are used. It's important to keep placeholders like %s, %d etc., or the application
+will crash later.
 
 To aid you with this copy and rename work, there is the CLI/Terminal application
-Flexcat. It can generate.CT files automatically from.CD files for your language.
-It's useful in the sense that it also comments the original text out (for
+Flexcat. It can generate \*.ct files automatically from \*.cd files for your language.
+It's useful in the sense that it also keeps the original text as comments (for
 checking) and creates empty lines for your translations. It also offers
 compiling options needed for testing catalogs, which will be covered later.
-Flexcat can be found in the AROSTrunk/Tools but needs to be compiled for either
-AmigaOS or Linux. You can also check Aminet or ask the Developer ML.
+The source code of Flexcat can be found in the SVN repository in AROS/tools but
+needs to be compiled for either AmigaOS or Linux. You can also check Aminet or ask
+the Developer ML.
 
 *Using Flexcat*
 
-Before generating CT files, put Flexcat in the same location as your CD files
-(or on AROS/AmigaOS, put it into the "C" drawer). Now browse to the location
-with Shell/Terminal and issue Flexcat to create a .CT file from the original .CD
+Before generating CT files, put Flexcat in the search path of your OS.
+(e.g. on AROS/AmigaOS in the "C:" drawer). Now browse to the location
+with Shell/Terminal and issue Flexcat to create a CT file from the original CD
 file using the following command::
 
     FlexCat <application>.cd NEWCTFILE=deutsch.ct  
@@ -307,26 +304,32 @@ Flexcat documentation has additional information.
 
 Checking your work
 ~~~~~~~~~~~~~~~~~~
-Again, perform prior spellchecks and re-read texts as mentioned. Testing is
+Again, perform spellchecks and re-read texts as mentioned. Testing is
 possible by several methods: (1) submit them to the SVN server and wait for the
 next nightly build. Or (2), more immediate, you can compile the locales yourself
 using Flexcat, then copy them to the AROS locale drawer and check with the
-involved application. Compiling the 'end' catalog files with Flexcat is done
+involved application. Compiling the catalog files with Flexcat is done
 with the following statement::
 
-    Flexcat <application>.cd <yourlanguage>.ct CATALOG <File>.catalog
+    FlexCat <application>.cd <yourlanguage>.ct CATALOG <File>.catalog
 
-Note that <yourlanguage> is not always the English equalevent for your language;
-verify this with existing locales. Besides verifying correct text-use it is also
-recommended to test translations on smaller screensizes to see if the text is
-still legible.
+Look in locale:languages for the name of your language. The catalog file name is
+usually the name of your application. Choose the same name as existing catalogs
+for the application. Besides verifying correct text-use it is also recommended
+to test translations on smaller screensizes to see if the text is still legible.
+
+..Note::
+
+    Don't commit the catalogs to the SVN. They are automatically generated
+    by the build system.
+
 
 Maintenance
 -----------
 As with most things, information tends to get outdated or updated frequently,
 requiring subsequent synchronization of the translated documents. It's not a
-thankful job (except from a endusers POV), but one necessary. Whether you hang
-around or the frequency of your updates is fully up to you.
+thankful job (except from a end-user's POV), but necessary. The frequency of
+your updates is fully up to you.
 
 Tracking changes can be done with the SVN changelogs, available trough your SVN
 client. This list displays *all* changes ever made to the repository. Judge from
@@ -335,10 +338,7 @@ and synchronizing documents afterwards can be somewhat cumbersome. Some
 text-editors offer a synchronized window scrolling option, which can be of some
 help when comparing two pages. For example, the TortoiseSVN client provides 
 split merge window for two files being merged and color text markup, making 
-it easier to see what`s got changed in the file. Also you can subscribe to CVS 
-mailing list to receive the changelogs of each SVN revision (alas it`s limited to
+it easier to see what's got changed in the file. Also you can subscribe to CVS 
+mailing list to receive the changelogs of each SVN revision (alas it's limited to
 ISO text at this time).
 FIXME: is there an easier way with SVN?
-
-When updating the catalogs for the OS, the same applies about the SVN changelogs,
-except now you've got Flexcat, which will prove an indispensable tool.
