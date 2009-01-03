@@ -3,7 +3,7 @@ Working with Subversion
 =======================
 
 :Authors:   Aaron Digulla, Adam Chodorowski, Neil Cafferkey
-:Copyright: Copyright (C) 1995-2008, The AROS Development Team
+:Copyright: Copyright (C) 1995-2009, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -152,7 +152,7 @@ Getting the extra sources
 =========================
 
 Apart from the AROS main sources which we checked out in the previous section,
-there is also other things on the SVN server not directly related to the core
+there are also other things on the SVN server not directly related to the core
 of the operating system. For example, the "binaries" module which
 contains images like screenshots, backdrops and similar, and the
 "documentation" module which contains the sources to the website.
@@ -205,8 +205,8 @@ to input a log message. This log message should contain a brief description of
 what you have changed and in certain cases a rationale for them. Well written 
 log messages are very important, since they make it much easier for the other 
 developers quickly can see what you have done and perhaps why. The log messages
-are collected and then sent in a daily mail to the development mailing list so
-everyone can keep up with developments to the code base.
+are sent to the development mailing list, so everyone can keep up with developments
+to the code base.
 
 Before committing your changes in a directory, you should first do an
 update there to see if anyone else has changed the files in the meantime
@@ -324,8 +324,28 @@ in the SVN manual is quite poorly written, so an example is in order:
    the "contrib/development/versioning/svn" directory::
 
       > cd subversion-1.1.3
-      > svn import -m "Initial import of SVN 1.11.12" 
-      \ https://svn.aros.org/svn/aros/trunk/contrib/development/versioning/svn
+      > svn import -m "Initial import of SVN 1.11.12" \
+        https://svn.aros.org/svn/aros/trunk/contrib/development/versioning/svn
+
+
+Copying
+=======
+
+Never use the copy functions of your console or filemanager to copy directories
+within your working copy. Subversion creates hidden ".svn" directories to
+store some metadata. These would be copied, too, and corrupt your working copy.
+Depending on the task you want to do you might use:
+
+``svn copy``
+
+``svn move``
+    Moves files to another place, but keeps history.
+
+``svn export``
+    Makes a copy without the metadata. This is recommended if you want
+    to include files from another SVN repository or revert to an older
+    version.
+
 
 Further reading
 ===============
