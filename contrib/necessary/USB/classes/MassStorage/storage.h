@@ -108,6 +108,20 @@ struct mss_staticdata
     OOP_AttrBase            HiddAB;
 };
 
+
+typedef struct {
+	struct Unit		msu_unit;
+	uint32_t		msu_unitNum;
+	uint32_t		msu_blockSize;
+	uint32_t		msu_blockCount;
+	uint32_t		msu_changeNum;
+	uint8_t			msu_blockShift;
+	uint8_t			msu_flags;
+	OOP_Class		*msu_class;
+	OOP_Object		*msu_object;
+	struct List		msu_diskChangeList;
+} mss_unit_t;
+
 typedef struct MSSData {
 	struct SignalSemaphore  	lock;
 
@@ -124,6 +138,8 @@ typedef struct MSSData {
 	void						*pipe_in;
 	void						*pipe_out;
 	struct Task					*handler[16];
+	mss_unit_t					*unit[16];
+
 	uint32_t					blocksize[16];
 	uint8_t						maxLUN;
 	uint32_t					unitNum;
@@ -158,15 +174,9 @@ typedef struct {
 	struct mss_staticdata	*mss_static;
 } mss_device_t;
 
-typedef struct {
-	struct Unit		msu_unit;
-	uint32_t		msu_unitNum;
-	uint32_t		msu_blockSize;
-	uint32_t		msu_blockCount;
-	OOP_Class		*msu_class;
-	OOP_Object		*msu_object;
-	struct List		msu_diskChangeList;
-} mss_unit_t;
+
+#define MSF_DiskChanged		1
+#define MSF_DiskPresent		2
 
 extern void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t unitnum, struct Task *parent);
 extern void HandleIO(struct IORequest *io, mss_device_t *device, mss_unit_t *unit);

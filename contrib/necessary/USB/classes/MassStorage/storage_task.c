@@ -7,6 +7,7 @@
 
 #define DEBUG 1
 #include <aros/debug.h>
+#include <aros/macros.h>
 #include <devices/timer.h>
 #include <devices/trackdisk.h>
 #include <devices/scsidisk.h>
@@ -47,6 +48,8 @@ void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t unitnum, struct Task *pa
 	unit->msu_unit.unit_MsgPort.mp_Node.ln_Type = NT_MSGPORT;
 	unit->msu_class = cl;
 	unit->msu_object = o;
+	unit->msu_flags = 0;
+	unit->msu_changeNum = 0;
 	NEWLIST(&unit->msu_unit.unit_MsgPort.mp_MsgList);
 	NEWLIST(&unit->msu_diskChangeList);
 
@@ -56,10 +59,32 @@ void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t unitnum, struct Task *pa
 	{
 		D(bug("[%s] Good morning!\n", name));
 
-		if (HIDD_USBStorage_ReadCapacity(o, unitnum & 0xf, &unit->msu_blockCount, &unit->msu_blockSize))
+		if (HIDD_USBStorage_TestUnitReady(o, unitnum & 0xf))
 		{
-			D(bug("[MSS] Detected capacity: %dMB\n", (((unit->msu_blockCount+1) >> 10)*unit->msu_blockSize) >> 10));
+			unit->msu_flags = MSF_DiskPresent | MSF_DiskChanged;
+
+			if (HIDD_USBStorage_ReadCapacity(o, unitnum & 0xf, &unit->msu_blockCount, &unit->msu_blockSize))
+			{
+				D(bug("[%s] Detected capacity: %dMB\n", name, (((unit->msu_blockCount+1) >> 10)*unit->msu_blockSize) >> 10));
+
+				unit->msu_blockShift = AROS_LEAST_BIT_POS(unit->msu_blockSize);
+
+				D(bug("[MSS] Block size: 0x%x, Shift: %d\n", unit->msu_blockSize, unit->msu_blockShift));
+			}
 		}
+		else
+		{
+			uint8_t sense[19];
+			HIDD_USBStorage_RequestSense(o, unitnum & 0xf, sense, 19);
+
+			if (sense[2] == 0x02 && sense[12] == 0x3a)
+			{
+				D(bug("[%s] Unit is not ready. No media present.\n", name));
+
+				unit->msu_flags = 0;
+			}
+		}
+
 
 		unit->msu_unitNum = unitnum;
 
@@ -80,14 +105,14 @@ void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t unitnum, struct Task *pa
 		timer_io->tr_time.tv_micro = 0;
 		SendIO(timer_io);
 
+		mss->unit[lun] = unit;
+
 		/* Tell the initiator that we're done with setup */
 		Signal(parent, SIGF_SINGLE);
 
 		/* Enter almost endless loop */
 		do {
 			rcvd = Wait(sigset);
-
-			D(bug("[%s] sigset=%08x, got %08x\n", name, sigset, rcvd));
 
 			/* Got a timer request? Handle it (TestUnitReady) now */
 			if (rcvd & (1 << timer_io->tr_node.io_Message.mn_ReplyPort->mp_SigBit))
@@ -98,7 +123,6 @@ void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t unitnum, struct Task *pa
 
 				uint8_t unit_ready;
 				/* Device is idling. Do media change sense */
-				D(bug("[%s] Idle: Sensing...\n", name));
 
 				unit_ready = HIDD_USBStorage_TestUnitReady(o, unitnum & 0xf);
 
@@ -106,6 +130,9 @@ void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t unitnum, struct Task *pa
 				{
 					uint8_t sense[19];
 					int i;
+					int p1;
+					int p2 = (unit->msu_flags & MSF_DiskPresent) ? 1:0;
+
 					D(bug("[%s] Unit was not ready. Requesting sense.\n", name));
 
 					HIDD_USBStorage_RequestSense(o, unitnum & 0xf, sense, 19);
@@ -114,6 +141,36 @@ void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t unitnum, struct Task *pa
 					for (i=0; i < 19; i++)
 						D(bug("%02x ", sense[i]));
 					D(bug("\n"));
+
+					p1 = (sense[2] == 0x02) ? 1:0;
+
+					if (p1 == p2)
+					{
+						if (p1 == 0)
+						{
+							unit->msu_flags |= MSF_DiskPresent;
+
+							D(bug("[%s] Media inserted!\n", name));
+
+							if (HIDD_USBStorage_ReadCapacity(o, unitnum & 0xf, &unit->msu_blockCount, &unit->msu_blockSize))
+							{
+								D(bug("[%s] Detected capacity: %dMB\n", name, (((unit->msu_blockCount+1) >> 10)*unit->msu_blockSize) >> 10));
+
+								unit->msu_blockShift = AROS_LEAST_BIT_POS(unit->msu_blockSize);
+
+								D(bug("[MSS] Block size: 0x%x, Shift: %d\n", unit->msu_blockSize, unit->msu_blockShift));
+							}
+						}
+						else
+						{
+							D(bug("[%s] Media removed\n", name));
+
+							unit->msu_flags &= ~MSF_DiskPresent;
+						}
+
+						unit->msu_flags |= MSF_DiskChanged;
+						unit->msu_changeNum++;
+					}
 				}
 			}
 			else
@@ -121,11 +178,28 @@ void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t unitnum, struct Task *pa
 				/*
 				 * Something else appeared? Cancel the timer request.
 				 */
-				D(bug("[%s] Aborting timer io\n", name));
 				if (!CheckIO(timer_io))
 					AbortIO(timer_io);
 				WaitIO(timer_io);
 				SetSignal(0, 1 << timer_io->tr_node.io_Message.mn_ReplyPort->mp_SigBit);
+			}
+
+			/*
+			 * If DiskChanged flag is set, call the change ints
+			 */
+
+			if (unit->msu_flags & MSF_DiskChanged)
+			{
+				struct IORequest *msg;
+
+				Forbid();
+				ForeachNode(&unit->msu_diskChangeList, msg)
+				{
+					Cause((struct Intertupt *)IOStdReq(msg)->io_Data);
+				}
+				Permit();
+
+				unit->msu_flags &= ~ MSF_DiskChanged;
 			}
 
 			/* Message in IORequest queue? */
@@ -140,8 +214,6 @@ void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t unitnum, struct Task *pa
 					/* Empty the queue */
 					while ((msg = (struct IORequest *)GetMsg(&unit->msu_unit.unit_MsgPort)))
 					{
-						D(bug("[%s] CMD=%04x\n", name, msg->io_Command));
-
 						HandleIO(msg, msg->io_Device, unit);
 
 						if (msg->io_Command != TD_ADDCHANGEINT)

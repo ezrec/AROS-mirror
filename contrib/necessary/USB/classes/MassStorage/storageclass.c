@@ -37,6 +37,8 @@
 #include <proto/oop.h>
 #include <proto/dos.h>
 
+BOOL USBMSS_AddVolume(mss_unit_t *unit);
+
 /*
  * Initialize the USBStorage instance
  */
@@ -197,6 +199,10 @@ OOP_Object *METHOD(Storage, Root, New)
 						/* Keep the initialization synchronous */
 						Wait(SIGF_SINGLE);
 						mss->handler[i] = t;
+
+						/* Detect partitions here? */
+						if (mss->unit[i]->msu_flags & MSF_DiskPresent)
+							USBMSS_AddVolume(mss->unit[i]);
 					}
 				}
 			}
@@ -299,11 +305,11 @@ uint32_t METHOD(Storage, Hidd_USBStorage, DirectSCSI)
 
 	ObtainSemaphore(&mss->lock);
 
-	D(bug("[MSS] DirectSCSI -> (%08x,%08x,%08x,%02x,%02x,%02x)\n",
-			AROS_LONG2LE(cbw.dCBWSignature),
-			cbw.dCBWTag,
-			AROS_LONG2LE(cbw.dCBWDataTransferLength),
-			cbw.bCBWLUN, cbw.bmCBWFlags, cbw.bCBWCBLength));
+//	D(bug("[MSS] DirectSCSI -> (%08x,%08x,%08x,%02x,%02x,%02x)\n",
+//			AROS_LONG2LE(cbw.dCBWSignature),
+//			cbw.dCBWTag,
+//			AROS_LONG2LE(cbw.dCBWDataTransferLength),
+//			cbw.bCBWLUN, cbw.bmCBWFlags, cbw.bCBWCBLength));
 
 	if (HIDD_USBDevice_BulkTransfer(o, mss->pipe_out, &cbw, 31))
 	{
@@ -317,11 +323,11 @@ uint32_t METHOD(Storage, Hidd_USBStorage, DirectSCSI)
 
 		if (HIDD_USBDevice_BulkTransfer(o, mss->pipe_in, &csw, 13))
 		{
-			D(bug("[MSS] DirectSCSI <- (%08x,%08x,%08x,%02x)\n",
-					AROS_LONG2LE(csw.dCSWSignature),
-					csw.dCSWTag,
-					AROS_LONG2LE(csw.dCSWDataResidue),
-					csw.bCSWStatus));
+//			D(bug("[MSS] DirectSCSI <- (%08x,%08x,%08x,%02x)\n",
+//					AROS_LONG2LE(csw.dCSWSignature),
+//					csw.dCSWTag,
+//					AROS_LONG2LE(csw.dCSWDataResidue),
+//					csw.bCSWStatus));
 
 			if (csw.dCSWSignature == AROS_LONG2LE(CSW_SIGNATURE))
 			{
@@ -377,7 +383,7 @@ BOOL METHOD(Storage, Hidd_USBStorage, Read)
 	if (msg->lun > mss->maxLUN)
 		return FALSE;
 
-	D(bug("[MSS] ::Read(%08x, %04x) => %p\n", msg->block, msg->count, msg->buffer));
+	//D(bug("[MSS] ::Read(%08x, %04x) => %p\n", msg->block, msg->count, msg->buffer));
 
 	cmd[2] = msg->block >>24;
 	cmd[3] = msg->block >>16;
@@ -401,7 +407,7 @@ BOOL METHOD(Storage, Hidd_USBStorage, Write)
 	if (msg->lun > mss->maxLUN)
 		return FALSE;
 
-	D(bug("[MSS] ::Write(%08x, %04x) <= %p\n", msg->block, msg->count, msg->buffer));
+//	D(bug("[MSS] ::Write(%08x, %04x) <= %p\n", msg->block, msg->count, msg->buffer));
 
 	cmd[2] = msg->block >>24;
 	cmd[3] = msg->block >>16;

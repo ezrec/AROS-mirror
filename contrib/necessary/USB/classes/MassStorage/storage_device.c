@@ -46,7 +46,7 @@
 static void cmd_Invalid(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit)
 {
 	D(bug("[MSS-dev] Invalid command %d for unit %04x\n", io->io_Command, unit->msu_unitNum));
-    io->io_Error = IOERR_NOCMD;
+	io->io_Error = IOERR_NOCMD;
 }
 
 /* NULL commad - always success. */
@@ -63,42 +63,57 @@ static void cmd_Reset(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit)
 
 static void cmd_AddChangeInt(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit)
 {
-    Forbid();
-    AddHead(&unit->msu_diskChangeList, (struct Node *)io);
-    Permit();
+	Forbid();
+	AddHead(&unit->msu_diskChangeList, (struct Node *)io);
+	Permit();
 
-    io->io_Flags &= ~IOF_QUICK;
-    unit->msu_unit.unit_flags &= ~UNITF_ACTIVE;
+	io->io_Flags &= ~IOF_QUICK;
+	unit->msu_unit.unit_flags &= ~UNITF_ACTIVE;
 }
 
 static void cmd_RemChangeInt(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit)
 {
-    Forbid();
-    Remove((struct Node *)io);
-    Permit();
+	Forbid();
+	Remove((struct Node *)io);
+	Permit();
 }
+
+static void cmd_ChangeNum(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit)
+{
+	IOStdReq(io)->io_Actual = unit->msu_changeNum;
+}
+
+static void cmd_ChangeState(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit)
+{
+	IOStdReq(io)->io_Actual = unit->msu_flags & MSF_DiskPresent ? 0:1;
+}
+
 
 static void cmd_GetGeometry(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit)
 {
-    if (IOStdReq(io)->io_Length == sizeof(struct DriveGeometry))
-    {
-        struct DriveGeometry *dg = (struct DriveGeometry *)IOStdReq(io)->io_Data;
+	if (!(unit->msu_flags & MSF_DiskPresent))
+	{
+		io->io_Error = TDERR_DiskChanged;
+	}
+	else if (IOStdReq(io)->io_Length == sizeof(struct DriveGeometry))
+	{
+		struct DriveGeometry *dg = (struct DriveGeometry *)IOStdReq(io)->io_Data;
 
-        dg->dg_SectorSize       = unit->msu_blockSize;
-        dg->dg_TotalSectors		= unit->msu_blockCount;
-        dg->dg_Cylinders		= unit->msu_blockCount / (255*63);
-        dg->dg_Heads			= 255;
-        dg->dg_TrackSectors		= 63;
-        dg->dg_CylSectors		= 255*63;
-        dg->dg_BufMemType		= MEMF_PUBLIC;
-        dg->dg_DeviceType		= DG_DIRECT_ACCESS;
-        dg->dg_Flags			= 0;
-        dg->dg_Reserved			= 0;
+		dg->dg_SectorSize       = unit->msu_blockSize;
+		dg->dg_TotalSectors		= unit->msu_blockCount;
+		dg->dg_Cylinders		= unit->msu_blockCount / (255*63);
+		dg->dg_Heads			= 255;
+		dg->dg_TrackSectors		= 63;
+		dg->dg_CylSectors		= 255*63;
+		dg->dg_BufMemType		= MEMF_PUBLIC;
+		dg->dg_DeviceType		= DG_DIRECT_ACCESS;
+		dg->dg_Flags			= 0;
+		dg->dg_Reserved			= 0;
 
-        IOStdReq(io)->io_Actual = sizeof(struct DriveGeometry);
-    }
-    else
-    	io->io_Error = TDERR_NotSpecified;
+		IOStdReq(io)->io_Actual = sizeof(struct DriveGeometry);
+	}
+	else
+		io->io_Error = TDERR_NotSpecified;
 }
 
 static void cmd_Read32(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit)
@@ -106,33 +121,40 @@ static void cmd_Read32(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit
 	uint32_t block = IOStdReq(io)->io_Offset;
 	uint32_t count = IOStdReq(io)->io_Length;
 
-	D(bug("[MSS-dev] Read32(%08x, %08x) with bs %d\n", IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length, unit->msu_blockSize));
-
-	if (!IOStdReq(io)->io_Data)
+	if (!(unit->msu_flags & MSF_DiskPresent))
 	{
-		D(bug("[MSS-dev] No buffer!\n"));
-		io->io_Error = IOERR_BADADDRESS;
-	}
-	else if ((block % unit->msu_blockSize) || (count % unit->msu_blockSize))
-	{
-		D(bug("[MSS-dev] offset or length not sector-aligned\n"));
-		cmd_Invalid(io, dev, unit);
+		io->io_Error = TDERR_DiskChanged;
 	}
 	else
 	{
-		block /= unit->msu_blockSize;
-		count /= unit->msu_blockSize;
-		uint32_t cnt = 0;
+		D(bug("[MSS-dev] Read32(%08x, %08x)\n", IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length));
 
-		if (block + count > unit->msu_blockCount)
+		if (!IOStdReq(io)->io_Data)
 		{
-			D(bug("[MSS-dev] ERROR! Requested read outside the available area\n"));
+			D(bug("[MSS-dev] No buffer!\n"));
 			io->io_Error = IOERR_BADADDRESS;
+		}
+		else if ((block & ((1 <<  unit->msu_blockShift) - 1)) || (count & ((1 <<  unit->msu_blockShift) - 1)))
+		{
+			D(bug("[MSS-dev] offset or length not sector-aligned\n"));
+			cmd_Invalid(io, dev, unit);
 		}
 		else
 		{
-			HIDD_USBStorage_Read(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count);
-			IOStdReq(io)->io_Actual = IOStdReq(io)->io_Length;
+			block >>= unit->msu_blockShift;
+			count >>= unit->msu_blockShift;
+			uint32_t cnt = 0;
+
+			if (block + count - 1> unit->msu_blockCount)
+			{
+				D(bug("[MSS-dev] ERROR! Requested read outside the available area\n"));
+				io->io_Error = IOERR_BADADDRESS;
+			}
+			else
+			{
+				HIDD_USBStorage_Read(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count);
+				IOStdReq(io)->io_Actual = IOStdReq(io)->io_Length;
+			}
 		}
 	}
 }
@@ -142,39 +164,45 @@ static void cmd_Read64(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit
 	uint64_t block = (uint64_t)(IOStdReq(io)->io_Offset) | ((uint64_t)(IOStdReq(io)->io_Actual) << 32);
 	uint32_t count = IOStdReq(io)->io_Length;
 
-	D(bug("[MSS-dev] Read64(%04x%08x, %08x) with bs %d\n", IOStdReq(io)->io_Actual, IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length, unit->msu_blockSize));
-
-	io->io_Error = 0;
-
-	if (!IOStdReq(io)->io_Data)
+	if (!(unit->msu_flags & MSF_DiskPresent))
 	{
-		D(bug("[MSS-dev] No buffer!\n"));
-		io->io_Error = IOERR_BADADDRESS;
-	}
-	else if ((block % unit->msu_blockSize) || (count % unit->msu_blockSize))
-	{
-		D(bug("[MSS-dev] offset or length not sector-aligned\n"));
-		cmd_Invalid(io, dev, unit);
+		io->io_Error = TDERR_DiskChanged;
 	}
 	else
 	{
-		block /= unit->msu_blockSize;
-		count /= unit->msu_blockSize;
-		uint32_t cnt = 0;
 
-		if (block + count > unit->msu_blockCount)
+		D(bug("[MSS-dev] Read64(%04x%08x, %08x)\n", IOStdReq(io)->io_Actual, IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length));
+
+		io->io_Error = 0;
+
+		if (!IOStdReq(io)->io_Data)
 		{
-			D(bug("[MSS-dev] ERROR! Requested read outside the available area\n"));
+			D(bug("[MSS-dev] No buffer!\n"));
 			io->io_Error = IOERR_BADADDRESS;
+		}
+		else if ((block & ((1 <<  unit->msu_blockShift) - 1)) || (count & ((1 <<  unit->msu_blockShift) - 1)))
+		{
+			D(bug("[MSS-dev] offset or length not sector-aligned\n"));
+			cmd_Invalid(io, dev, unit);
 		}
 		else
 		{
-			HIDD_USBStorage_Read(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count);
-			IOStdReq(io)->io_Actual = IOStdReq(io)->io_Length;
+			block >>= unit->msu_blockShift;
+			count >>= unit->msu_blockShift;
+			uint32_t cnt = 0;
+
+			if (block + count - 1> unit->msu_blockCount)
+			{
+				D(bug("[MSS-dev] ERROR! Requested read outside the available area\n"));
+				io->io_Error = IOERR_BADADDRESS;
+			}
+			else
+			{
+				HIDD_USBStorage_Read(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count);
+				IOStdReq(io)->io_Actual = IOStdReq(io)->io_Length;
+			}
 		}
 	}
-
-	D(bug("[MSS-dev] Read64 returns %d\n", io->io_Error));
 }
 
 static void cmd_Write32(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit)
@@ -182,33 +210,41 @@ static void cmd_Write32(struct IORequest *io, mss_device_t *dev, mss_unit_t *uni
 	uint32_t block = IOStdReq(io)->io_Offset;
 	uint32_t count = IOStdReq(io)->io_Length;
 
-	D(bug("[MSS-dev] Write32(%08x, %08x) with bs %d\n", IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length, unit->msu_blockSize));
-
-	if (!IOStdReq(io)->io_Data)
+	if (!(unit->msu_flags & MSF_DiskPresent))
 	{
-		D(bug("[MSS-dev] No buffer!\n"));
-		io->io_Error = IOERR_BADADDRESS;
-	}
-	else if ((block % unit->msu_blockSize) || (count % unit->msu_blockSize))
-	{
-		D(bug("[MSS-dev] offset or length not sector-aligned\n"));
-		cmd_Invalid(io, dev, unit);
+		io->io_Error = TDERR_DiskChanged;
 	}
 	else
 	{
-		block /= unit->msu_blockSize;
-		count /= unit->msu_blockSize;
-		uint32_t cnt = 0;
 
-		if (block + count > unit->msu_blockCount)
+		D(bug("[MSS-dev] Write32(%08x, %08x)\n", IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length));
+
+		if (!IOStdReq(io)->io_Data)
 		{
-			D(bug("[MSS-dev] ERROR! Requested read outside the available area\n"));
+			D(bug("[MSS-dev] No buffer!\n"));
 			io->io_Error = IOERR_BADADDRESS;
+		}
+		else if ((block & ((1 <<  unit->msu_blockShift) - 1)) || (count & ((1 <<  unit->msu_blockShift) - 1)))
+		{
+			D(bug("[MSS-dev] offset or length not sector-aligned\n"));
+			cmd_Invalid(io, dev, unit);
 		}
 		else
 		{
-			HIDD_USBStorage_Write(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count);
-			IOStdReq(io)->io_Actual = IOStdReq(io)->io_Length;
+			block >>= unit->msu_blockShift;
+			count >>= unit->msu_blockShift;
+			uint32_t cnt = 0;
+
+			if (block + count - 1> unit->msu_blockCount)
+			{
+				D(bug("[MSS-dev] ERROR! Requested read outside the available area\n"));
+				io->io_Error = IOERR_BADADDRESS;
+			}
+			else
+			{
+				HIDD_USBStorage_Write(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count);
+				IOStdReq(io)->io_Actual = IOStdReq(io)->io_Length;
+			}
 		}
 	}
 }
@@ -218,39 +254,45 @@ static void cmd_Write64(struct IORequest *io, mss_device_t *dev, mss_unit_t *uni
 	uint64_t block = (uint64_t)(IOStdReq(io)->io_Offset) | ((uint64_t)(IOStdReq(io)->io_Actual) << 32);
 	uint32_t count = IOStdReq(io)->io_Length;
 
-	D(bug("[MSS-dev] Write64(%04x%08x, %08x) with bs %d\n", IOStdReq(io)->io_Actual, IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length, unit->msu_blockSize));
-
-	io->io_Error = 0;
-
-	if (!IOStdReq(io)->io_Data)
+	if (!(unit->msu_flags & MSF_DiskPresent))
 	{
-		D(bug("[MSS-dev] No buffer!\n"));
-		io->io_Error = IOERR_BADADDRESS;
-	}
-	else if ((block % unit->msu_blockSize) || (count % unit->msu_blockSize))
-	{
-		D(bug("[MSS-dev] offset or length not sector-aligned\n"));
-		cmd_Invalid(io, dev, unit);
+		io->io_Error = TDERR_DiskChanged;
 	}
 	else
 	{
-		block /= unit->msu_blockSize;
-		count /= unit->msu_blockSize;
-		uint32_t cnt = 0;
 
-		if (block + count > unit->msu_blockCount)
+		D(bug("[MSS-dev] Write64(%04x%08x, %08x)\n", IOStdReq(io)->io_Actual, IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length));
+
+		io->io_Error = 0;
+
+		if (!IOStdReq(io)->io_Data)
 		{
-			D(bug("[MSS-dev] ERROR! Requested read outside the available area\n"));
+			D(bug("[MSS-dev] No buffer!\n"));
 			io->io_Error = IOERR_BADADDRESS;
+		}
+		else if ((block & ((1 <<  unit->msu_blockShift) - 1)) || (count & ((1 <<  unit->msu_blockShift) - 1)))
+		{
+			D(bug("[MSS-dev] offset or length not sector-aligned\n"));
+			cmd_Invalid(io, dev, unit);
 		}
 		else
 		{
-			HIDD_USBStorage_Write(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count);
-			IOStdReq(io)->io_Actual = IOStdReq(io)->io_Length;
+			block >>= unit->msu_blockShift;
+			count >>= unit->msu_blockShift;
+			uint32_t cnt = 0;
+
+			if (block + count - 1 > unit->msu_blockCount)
+			{
+				D(bug("[MSS-dev] ERROR! Requested read outside the available area\n"));
+				io->io_Error = IOERR_BADADDRESS;
+			}
+			else
+			{
+				HIDD_USBStorage_Write(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count);
+				IOStdReq(io)->io_Actual = IOStdReq(io)->io_Length;
+			}
 		}
 	}
-
-	D(bug("[MSS-dev] Write64 returns %d\n", io->io_Error));
 }
 
 static const uint16_t supported_commands[] = {
@@ -265,33 +307,33 @@ static const uint16_t supported_commands[] = {
 
 static const void (*map32[HD_SCSICMD+1])(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit) = {
 		[CMD_INVALID]		= cmd_Invalid,
-	    [CMD_RESET]     	= cmd_Reset,
-	    [CMD_READ]      	= cmd_Read32,
-	    [CMD_WRITE]     	= cmd_Write32,
-	    [CMD_UPDATE]    	= cmd_Invalid,
-	    [CMD_CLEAR]     	= cmd_Invalid,
-	    [CMD_STOP]      	= cmd_Invalid,
-	    [CMD_START]     	= cmd_Invalid,
-	    [CMD_FLUSH]     	= cmd_Invalid,
-	    [TD_MOTOR]      	= cmd_NULL,
-	    [TD_SEEK]       	= cmd_NULL,
-	    [TD_FORMAT]     	= cmd_Write32,
-	    [TD_REMOVE]     	= cmd_Invalid,
-	    [TD_CHANGENUM]  	= cmd_Invalid,
-	    [TD_CHANGESTATE]	= cmd_Invalid,
-	    [TD_PROTSTATUS] 	= cmd_Invalid,
-	    [TD_RAWREAD]    	= cmd_Invalid,
-	    [TD_RAWWRITE]   	= cmd_Invalid,
-	    [TD_GETNUMTRACKS]   = cmd_Invalid,
-	    [TD_ADDCHANGEINT]   = cmd_AddChangeInt,
-	    [TD_REMCHANGEINT]   = cmd_RemChangeInt,
-	    [TD_GETGEOMETRY]	= cmd_GetGeometry,
-	    [TD_EJECT]      	= cmd_Invalid,
-	    [TD_READ64]     	= cmd_Read64,
-	    [TD_WRITE64]    	= cmd_Write64,
-	    [TD_SEEK64]     	= cmd_NULL,
-	    [TD_FORMAT64]   	= cmd_Write64,
-	    [HD_SCSICMD]    	= cmd_Invalid,
+		[CMD_RESET]     	= cmd_Reset,
+		[CMD_READ]      	= cmd_Read32,
+		[CMD_WRITE]     	= cmd_Write32,
+		[CMD_UPDATE]    	= cmd_Reset,
+		[CMD_CLEAR]     	= cmd_Reset,
+		[CMD_STOP]      	= cmd_Reset,
+		[CMD_START]     	= cmd_Reset,
+		[CMD_FLUSH]     	= cmd_Reset, /* Implement flush! */
+		[TD_MOTOR]      	= cmd_NULL,
+		[TD_SEEK]       	= cmd_NULL,
+		[TD_FORMAT]     	= cmd_Write32,
+		[TD_REMOVE]     	= cmd_Invalid,
+		[TD_CHANGENUM]  	= cmd_ChangeNum,
+		[TD_CHANGESTATE]	= cmd_ChangeState,
+		[TD_PROTSTATUS] 	= cmd_Invalid,
+		[TD_RAWREAD]    	= cmd_Invalid,
+		[TD_RAWWRITE]   	= cmd_Invalid,
+		[TD_GETNUMTRACKS]   = cmd_Invalid,
+		[TD_ADDCHANGEINT]   = cmd_AddChangeInt,
+		[TD_REMCHANGEINT]   = cmd_RemChangeInt,
+		[TD_GETGEOMETRY]	= cmd_GetGeometry,
+		[TD_EJECT]      	= cmd_Invalid,
+		[TD_READ64]     	= cmd_Read64,
+		[TD_WRITE64]    	= cmd_Write64,
+		[TD_SEEK64]     	= cmd_NULL,
+		[TD_FORMAT64]   	= cmd_Write64,
+		[HD_SCSICMD]    	= cmd_Invalid,
 };
 
 static const void (*map64[4])(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit) = {
@@ -312,47 +354,47 @@ void HandleIO(struct IORequest *io, mss_device_t *device, mss_unit_t *unit)
 	/* Some commands will be handled directly */
 	switch (io->io_Command)
 	{
-		/*
+	/*
 			New Style Devices query. Introduce self as trackdisk and provide list of
 			commands supported
-		 */
-		case NSCMD_DEVICEQUERY:
-		{
-			struct NSDeviceQueryResult *nsdq = (struct NSDeviceQueryResult *)IOStdReq(io)->io_Data;
-			nsdq->DevQueryFormat    = 0;
-			nsdq->SizeAvailable     = sizeof(struct NSDeviceQueryResult);
-			nsdq->DeviceType        = NSDEVTYPE_TRACKDISK;
-			nsdq->DeviceSubType     = 0;
-			nsdq->SupportedCommands = (uint16_t *)supported_commands;
-			IOStdReq(io)->io_Actual = sizeof(struct NSDeviceQueryResult);
-			break;
-		}
+	 */
+	case NSCMD_DEVICEQUERY:
+	{
+		struct NSDeviceQueryResult *nsdq = (struct NSDeviceQueryResult *)IOStdReq(io)->io_Data;
+		nsdq->DevQueryFormat    = 0;
+		nsdq->SizeAvailable     = sizeof(struct NSDeviceQueryResult);
+		nsdq->DeviceType        = NSDEVTYPE_TRACKDISK;
+		nsdq->DeviceSubType     = 0;
+		nsdq->SupportedCommands = (uint16_t *)supported_commands;
+		IOStdReq(io)->io_Actual = sizeof(struct NSDeviceQueryResult);
+		break;
+	}
 
-		/*
+	/*
 			New Style Devices report here the 'NSTY' - only if such value is
 			returned here, the NSCMD_DEVICEQUERY might be called. Otherwice it should
 			report error.
-		 */
-		case TD_GETDRIVETYPE:
-			IOStdReq(io)->io_Actual = DRIVE_NEWSTYLE;
-			break;
+	 */
+	case TD_GETDRIVETYPE:
+		IOStdReq(io)->io_Actual = DRIVE_NEWSTYLE;
+		break;
 
-		default:
-			if (io->io_Command <= HD_SCSICMD)
-			{
-				if (map32[io->io_Command])
-					map32[io->io_Command](io, device, unit);
-				else
-					cmd_Invalid(io, device, unit);
-			}
-			else if (io->io_Command >= NSCMD_TD_READ64 && io->io_Command <= NSCMD_TD_FORMAT64)
-			{
-				if (map64[io->io_Command - NSCMD_TD_READ64])
-					map64[io->io_Command - NSCMD_TD_READ64](io, device, unit);
-				else
-					cmd_Invalid(io, device, unit);
-			}
-			break;
+	default:
+		if (io->io_Command <= HD_SCSICMD)
+		{
+			if (map32[io->io_Command])
+				map32[io->io_Command](io, device, unit);
+			else
+				cmd_Invalid(io, device, unit);
+		}
+		else if (io->io_Command >= NSCMD_TD_READ64 && io->io_Command <= NSCMD_TD_FORMAT64)
+		{
+			if (map64[io->io_Command - NSCMD_TD_READ64])
+				map64[io->io_Command - NSCMD_TD_READ64](io, device, unit);
+			else
+				cmd_Invalid(io, device, unit);
+		}
+		break;
 	}
 }
 
@@ -364,11 +406,11 @@ void HandleIO(struct IORequest *io, mss_device_t *device, mss_unit_t *unit)
 
 static
 AROS_LH3 (void, dev_OpenLib,
-    AROS_LHA(struct IORequest *, ioreq, A1),
-    AROS_LHA(ULONG, unitnum, D0),
-    AROS_LHA(ULONG, flags, D1),
-    mss_device_t *, lh, 1, Storage)
-{
+		AROS_LHA(struct IORequest *, ioreq, A1),
+		AROS_LHA(ULONG, unitnum, D0),
+		AROS_LHA(ULONG, flags, D1),
+		mss_device_t *, lh, 1, Storage)
+		{
 	AROS_LIBFUNC_INIT
 
 	mss_unit_t *unit, *found = NULL;
@@ -400,17 +442,17 @@ AROS_LH3 (void, dev_OpenLib,
 	D(bug("[MSS-dev] %sfound unit %d at %p\n", found?"":"not ", unitnum, found));
 
 	AROS_LIBFUNC_EXIT
-}
+		}
 
 static
 AROS_LH1(BPTR, dev_CloseLib,
-    AROS_LHA(struct IORequest *, ioreq, A1),
-    mss_device_t *, lh, 2, Storage)
-{
-    AROS_LIBFUNC_INIT
+		AROS_LHA(struct IORequest *, ioreq, A1),
+		mss_device_t *, lh, 2, Storage)
+		{
+	AROS_LIBFUNC_INIT
 
-    /* Release the unit */
-    ObtainSemaphore(&lh->mss_static->Lock);
+	/* Release the unit */
+	ObtainSemaphore(&lh->mss_static->Lock);
 	mss_unit_t *unit = (mss_unit_t *)ioreq->io_Unit;
 
 	ioreq->io_Unit = (struct Unit *)~0;
@@ -419,29 +461,29 @@ AROS_LH1(BPTR, dev_CloseLib,
 
 	ReleaseSemaphore(&lh->mss_static->Lock);
 
-    return NULL;
+	return NULL;
 
-    AROS_LIBFUNC_EXIT
-}
+	AROS_LIBFUNC_EXIT
+		}
 
 static
 AROS_LH1 (BPTR, dev_ExpungeLib,
-    AROS_LHA(mss_device_t *, extralh, D0),
-    mss_device_t *, lh, 3, Storage)
-{
-    AROS_LIBFUNC_INIT
-    return NULL;
-    AROS_LIBFUNC_EXIT
-}
+		AROS_LHA(mss_device_t *, extralh, D0),
+		mss_device_t *, lh, 3, Storage)
+		{
+	AROS_LIBFUNC_INIT
+	return NULL;
+	AROS_LIBFUNC_EXIT
+		}
 
 static
 AROS_LH0 (LIBBASETYPEPTR, dev_ExtFuncLib,
-    mss_device_t *, lh, 4, Storage)
-{
-    AROS_LIBFUNC_INIT
-    return NULL;
-    AROS_LIBFUNC_EXIT
-}
+		mss_device_t *, lh, 4, Storage)
+		{
+	AROS_LIBFUNC_INIT
+	return NULL;
+	AROS_LIBFUNC_EXIT
+		}
 
 /*
  * Helper function used to test, whether the specified command is slow or not.
@@ -451,18 +493,20 @@ AROS_LH0 (LIBBASETYPEPTR, dev_ExtFuncLib,
  * NOTE: Every command performing *any* USB transfer/operation is considered slow.
  */
 static const uint64_t immediate_cmds = (
-			(1 << CMD_INVALID) |
-			(1 << CMD_CLEAR) |
-			(1 << TD_MOTOR) |
-			(1 << TD_SEEK) |
-			(1 << TD_RAWREAD) |
-			(1 << TD_RAWWRITE) |
-			(1 << TD_ADDCHANGEINT) |
-			(1 << TD_REMCHANGEINT) |
-			(1 << TD_GETGEOMETRY) |
-			(1 << TD_SEEK64) |
-			(1 << TD_GETDRIVETYPE)
-		);
+		(1 << CMD_INVALID) |
+		(1 << CMD_CLEAR) |
+		(1 << TD_MOTOR) |
+		(1 << TD_SEEK) |
+		(1 << TD_RAWREAD) |
+		(1 << TD_RAWWRITE) |
+		(1 << TD_CHANGENUM) |
+		(1 << TD_CHANGESTATE) |
+		(1 << TD_ADDCHANGEINT) |
+		(1 << TD_REMCHANGEINT) |
+		(1 << TD_GETGEOMETRY) |
+		(1 << TD_SEEK64) |
+		(1 << TD_GETDRIVETYPE)
+);
 
 static BOOL isSlow(uint32_t cmd)
 {
@@ -476,97 +520,97 @@ static BOOL isSlow(uint32_t cmd)
 	else if (cmd == NSCMD_TD_SEEK64 || cmd == NSCMD_DEVICEQUERY)
 		slow = FALSE;
 
-	D(bug("[MSS-dev] isSlow(%04x) = %d\n", cmd, slow));
+//	D(bug("[MSS-dev] isSlow(%04x) = %d\n", cmd, slow));
 
 	return slow;
 }
 
 static
 AROS_LH1(void, dev_BeginIO,
-    AROS_LHA(struct IORequest *, io, A1),
-    mss_device_t *, mss_dev, 5, Storage)
-{
-    AROS_LIBFUNC_INIT
+		AROS_LHA(struct IORequest *, io, A1),
+		mss_device_t *, mss_dev, 5, Storage)
+		{
+	AROS_LIBFUNC_INIT
 
-    D(bug("[MSS-dev] BeginIO. CMD=%04x\n", io->io_Command));
+//	D(bug("[MSS-dev] BeginIO. CMD=%04x\n", io->io_Command));
 
-    if (io)
-    {
-    	mss_unit_t *unit = (mss_unit_t *)io->io_Unit;
+	if (io)
+	{
+		mss_unit_t *unit = (mss_unit_t *)io->io_Unit;
 
-    	if (unit && unit != (void *)0xffffffff)
-    	{
-    		if (isSlow(io->io_Command))
-    		{
-				D(bug("[MSS-dev] Forwarding IO call to device task\n"));
+		if (unit && unit != (void *)0xffffffff)
+		{
+			if (isSlow(io->io_Command))
+			{
+//				D(bug("[MSS-dev] Forwarding IO call to device task\n"));
 				unit->msu_unit.unit_flags |= UNITF_INTASK;
 				io->io_Flags &= ~IOF_QUICK;
 
 				PutMsg(&unit->msu_unit.unit_MsgPort, &io->io_Message);
 
 				unit->msu_unit.unit_flags &= ~UNITF_INTASK;
-    		}
-    		else
-    			HandleIO(io, mss_dev, unit);
-    	}
-    }
+			}
+			else
+				HandleIO(io, mss_dev, unit);
+		}
+	}
 
-    AROS_LIBFUNC_EXIT
-}
+	AROS_LIBFUNC_EXIT
+		}
 
 static
 AROS_LH1(LONG, dev_AbortIO,
-    AROS_LHA(struct IORequest *, io, A1),
-    mss_device_t *, mss_dev, 6, Storage)
-{
-    AROS_LIBFUNC_INIT
+		AROS_LHA(struct IORequest *, io, A1),
+		mss_device_t *, mss_dev, 6, Storage)
+		{
+	AROS_LIBFUNC_INIT
 
-    /* Cannot Abort IO */
-    return 0;
+	/* Cannot Abort IO */
+	return 0;
 
-    AROS_LIBFUNC_EXIT
-}
+	AROS_LIBFUNC_EXIT
+		}
 
 static
 AROS_LH1(ULONG, dev_GetRdskLba,
-    AROS_LHA(struct IORequest *, io, A1),
-    mss_device_t *, mss_dev, 7, Storage)
-{
-    AROS_LIBFUNC_INIT
+		AROS_LHA(struct IORequest *, io, A1),
+		mss_device_t *, mss_dev, 7, Storage)
+		{
+	AROS_LIBFUNC_INIT
 
-    return 0;
+	return 0;
 
-    AROS_LIBFUNC_EXIT
-}
+	AROS_LIBFUNC_EXIT
+		}
 
 static
 AROS_LH1(ULONG, dev_GetBlkSize,
-    AROS_LHA(struct IORequest *, io, A1),
-    mss_device_t *, mss_dev, 8, Storage)
-{
-    AROS_LIBFUNC_INIT
+		AROS_LHA(struct IORequest *, io, A1),
+		mss_device_t *, mss_dev, 8, Storage)
+		{
+	AROS_LIBFUNC_INIT
 
-    mss_unit_t *unit = (mss_unit_t *)io->io_Unit;
+	mss_unit_t *unit = (mss_unit_t *)io->io_Unit;
 
-    if (unit->msu_blockSize)
-    	return AROS_LEAST_BIT_POS(unit->msu_blockSize);
-    else
-    	return 9;
+	if (unit->msu_blockSize)
+		return AROS_LEAST_BIT_POS(unit->msu_blockSize);
+	else
+		return 9;
 
-    AROS_LIBFUNC_EXIT
-}
+	AROS_LIBFUNC_EXIT
+		}
 
 static const APTR Storage_dev_FuncTable[]=
 {
-    &AROS_SLIB_ENTRY(dev_OpenLib,Storage),
-    &AROS_SLIB_ENTRY(dev_CloseLib,Storage),
-    &AROS_SLIB_ENTRY(dev_ExpungeLib,Storage),
-    &AROS_SLIB_ENTRY(dev_ExtFuncLib,Storage),
-    &AROS_SLIB_ENTRY(dev_BeginIO,Storage),
-    &AROS_SLIB_ENTRY(dev_AbortIO,Storage),
-    &AROS_SLIB_ENTRY(dev_GetRdskLba,Storage),
-    &AROS_SLIB_ENTRY(dev_GetBlkSize,Storage),
-    (void *)-1
+		&AROS_SLIB_ENTRY(dev_OpenLib,Storage),
+		&AROS_SLIB_ENTRY(dev_CloseLib,Storage),
+		&AROS_SLIB_ENTRY(dev_ExpungeLib,Storage),
+		&AROS_SLIB_ENTRY(dev_ExtFuncLib,Storage),
+		&AROS_SLIB_ENTRY(dev_BeginIO,Storage),
+		&AROS_SLIB_ENTRY(dev_AbortIO,Storage),
+		&AROS_SLIB_ENTRY(dev_GetRdskLba,Storage),
+		&AROS_SLIB_ENTRY(dev_GetBlkSize,Storage),
+		(void *)-1
 };
 
 static int StorageDev_Init(LIBBASETYPEPTR LIBBASE)
@@ -574,8 +618,8 @@ static int StorageDev_Init(LIBBASETYPEPTR LIBBASE)
 	D(bug("[MSS] USB Mass Storage device layer init\n"));
 
 	mss_device_t *dev = (mss_device_t *)
-		((intptr_t)AllocPooled(SD(LIBBASE)->MemPool,
-				sizeof(mss_device_t) + sizeof(Storage_dev_FuncTable)) + sizeof(Storage_dev_FuncTable));
+	((intptr_t)AllocPooled(SD(LIBBASE)->MemPool,
+			sizeof(mss_device_t) + sizeof(Storage_dev_FuncTable)) + sizeof(Storage_dev_FuncTable));
 
 	dev->mss_static = SD(LIBBASE);
 
