@@ -28,6 +28,8 @@
 #include <hidd/hidd.h>
 #include <usb/usb.h>
 
+#include <devices/timer.h>
+
 #define DEBUG 1
 
 #include <proto/exec.h>
@@ -45,6 +47,53 @@ OOP_AttrBase HiddUSBDrvAttrBase;
 OOP_AttrBase HiddAttrBase;
 
 void usb_process();
+
+static void USB_ProcessStarter(struct usb_staticdata *sd)
+{
+	struct DOSBase *DOSBase = NULL;
+	struct MsgPort *msgPort = CreateMsgPort();
+	struct timerequest *tr = CreateIORequest(msgPort, sizeof(struct timerequest));
+
+	OpenDevice("timer.device", UNIT_VBLANK, tr, 0);
+
+	D(bug("[USB] Process starter\n"));
+
+	do {
+		tr->tr_time.tv_usec = 0;
+		tr->tr_time.tv_sec = 2;
+		tr->tr_node.io_Command = TR_ADDREQUEST;
+
+		DoIO(tr);
+
+		DOSBase = OpenLibrary("dos.library", 0);
+	} while (!DOSBase);
+
+	D(bug("[USB] Process starter: dos.library up and running\n"));
+	D(bug("[USB] Process starter: Creating the main USB process\n"));
+	struct usbEvent message;
+
+	struct TagItem tags[] = {
+			{ NP_Entry,		(IPTR)usb_process },
+			{ NP_UserData,	(IPTR)sd },
+			{ NP_Priority,	5 },
+			{ NP_Name,		(IPTR)"USB" },
+			{ NP_WindowPtr, -1 },
+			{ TAG_DONE, 	0UL },
+	};
+
+	message.ev_Message.mn_ReplyPort = CreateMsgPort();
+	message.ev_Type = evt_Startup;
+
+	sd->usbProcess = CreateNewProc(tags);
+	PutMsg(&sd->usbProcess->pr_MsgPort, (struct Message *)&message);
+	WaitPort(message.ev_Message.mn_ReplyPort);
+	DeleteMsgPort(message.ev_Message.mn_ReplyPort);
+
+	CloseLibrary(DOSBase);
+	CloseDevice(tr);
+	DeleteIORequest(tr);
+	DeleteMsgPort(msgPort);
+}
 
 static int USB_Init(LIBBASETYPEPTR LIBBASE)
 {
@@ -68,27 +117,44 @@ static int USB_Init(LIBBASETYPEPTR LIBBASE)
     {
         if ((LIBBASE->sd.MemPool = CreatePool(MEMF_PUBLIC|MEMF_CLEAR|MEMF_SEM_PROTECTED, 8192, 4096)) != NULL)
         {
-            D(bug("[USB] USB::New(): Creating the main USB process\n"));
-            struct usbEvent message;
+        	struct TagItem tags[] = {
+        			{ TASKTAG_ARG1,   (IPTR)&LIBBASE->sd },
+        			{ TAG_DONE,       0UL }};
 
-            struct TagItem tags[] = {
-                    { NP_Entry,		(IPTR)usb_process },
-                    { NP_UserData,	(IPTR)&LIBBASE->sd },
-                    { NP_Priority,	5 },
-                    { NP_Name,		(IPTR)"USB" },
-                    { NP_WindowPtr,     -1 },
-                    { TAG_DONE, 	0UL },
-            };
+        	struct Task *t = AllocMem(sizeof(struct Task), MEMF_PUBLIC|MEMF_CLEAR);
+        	struct MemList *ml = AllocMem(sizeof(struct MemList) + sizeof(struct MemEntry), MEMF_PUBLIC|MEMF_CLEAR);
 
-            message.ev_Message.mn_ReplyPort = CreateMsgPort();
-            message.ev_Type = evt_Startup;
+        	if (t && ml)
+        	{
+        		uint8_t *sp = AllocMem(10240, MEMF_PUBLIC|MEMF_CLEAR);
+        		uint8_t *name = "USB Process starter";
 
-            LIBBASE->sd.usbProcess = CreateNewProc(tags);
-            PutMsg(&LIBBASE->sd.usbProcess->pr_MsgPort, (struct Message *)&message);
-            WaitPort(message.ev_Message.mn_ReplyPort);
-            DeleteMsgPort(message.ev_Message.mn_ReplyPort);
+        		t->tc_SPLower = sp;
+        		t->tc_SPUpper = sp + 10240;
+#if AROS_STACK_GROWS_DOWNWARDS
+        		t->tc_SPReg = (char *)t->tc_SPUpper - SP_OFFSET;
+#else
+        		t->tc_SPReg = (char *)t->tc_SPLower + SP_OFFSET;
+#endif
 
-            return TRUE;
+        		ml->ml_NumEntries = 2;
+        		ml->ml_ME[0].me_Addr = t;
+        		ml->ml_ME[0].me_Length = sizeof(struct Task);
+        		ml->ml_ME[1].me_Addr = sp;
+        		ml->ml_ME[1].me_Length = 10240;
+
+        		NEWLIST(&t->tc_MemEntry);
+        		ADDHEAD(&t->tc_MemEntry, &ml->ml_Node);
+
+        		t->tc_Node.ln_Name = name;
+        		t->tc_Node.ln_Type = NT_TASK;
+        		t->tc_Node.ln_Pri = 1;     /* same priority as input.device */
+
+        		/* Add task. It will get back in touch soon */
+        		NewAddTask(t, USB_ProcessStarter, NULL, &tags);
+
+        		return TRUE;
+        	}
         }
         OOP_ReleaseAttrBases(attrbases);
     }

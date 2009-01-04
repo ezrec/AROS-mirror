@@ -3,7 +3,7 @@
     $Id$
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU Library General Public License as 
+    it under the terms of the GNU Library General Public License as
     published by the Free Software Foundation; either version 2 of the
     License, or (at your option) any later version.
 
@@ -92,7 +92,7 @@ void setBitmap(uint32_t *bmp, uint8_t addr)
     }
 }
 
-static void ScanDirectory(struct usb_staticdata *sd, STRPTR dir)
+static void ScanDirectory(struct DOSBase *DOSBase, struct usb_staticdata *sd, STRPTR dir)
 {
     struct AnchorPath   ap;
     uint8_t               match[2048];
@@ -114,7 +114,7 @@ static void ScanDirectory(struct usb_staticdata *sd, STRPTR dir)
 
             D(bug("[USB] found USB class file \"%s\"\n",
                     ap.ap_Info.fib_FileName));
-            
+
             snprintf(match, sizeof(match)-1, "%s/%s", dir, ap.ap_Info.fib_FileName);
 
             ForeachNode(&sd->extClassList, ec)
@@ -125,7 +125,7 @@ static void ScanDirectory(struct usb_staticdata *sd, STRPTR dir)
                     break;
                 }
             }
-            
+
             if (!found)
             {
 
@@ -156,7 +156,7 @@ static void ScanDirectory(struct usb_staticdata *sd, STRPTR dir)
     MatchEnd(&ap);
 }
 
-void UpdatePaths(struct usb_staticdata *sd)
+void UpdatePaths(struct DOSBase *DOSBase, struct usb_staticdata *sd)
 {
     struct DosList *dl = LockDosList(LDF_READ | LDF_ASSIGNS);
 
@@ -171,7 +171,7 @@ void UpdatePaths(struct usb_staticdata *sd)
             {
                 D(bug("[USB] Scanning '%s'\n", dirName));
 
-                ScanDirectory(sd, dirName);
+                ScanDirectory(DOSBase, sd, dirName);
             }
 
             nextAssign = dl->dol_misc.dol_assign.dol_List;
@@ -181,7 +181,7 @@ void UpdatePaths(struct usb_staticdata *sd)
                 {
                     D(bug("[USB] Scanning '%s'\n", dirName));
 
-                    ScanDirectory(sd, dirName);
+                    ScanDirectory(DOSBase, sd, dirName);
                 }
 
                 nextAssign = nextAssign->al_Next;
@@ -200,38 +200,40 @@ void usb_process()
 {
     struct usb_staticdata *sd = (struct usb_staticdata *)(FindTask(NULL)->tc_UserData);
     struct Process *usbProcess = (struct Process *)FindTask(NULL);
-    struct usbEvent *ev = NULL;	
+    struct usbEvent *ev = NULL;
     struct MsgPort *port;
     struct timerequest *tr;
-    
+
+    struct DOSBase *DOSBase = OpenLibrary("dos.library", 0);
+
     port = CreateMsgPort();
     tr = CreateIORequest(port, sizeof(struct timerequest));
     OpenDevice("timer.device", UNIT_VBLANK, tr, 0);
-    
+
     tr->tr_node.io_Command = TR_ADDREQUEST;
     tr->tr_time.tv_sec = 10;
     tr->tr_time.tv_usec = 0;
     SendIO(tr);
-    
+
     D(bug("[USB Process] Hello. Task @ %p, signals = %08x\n", FindTask(NULL), FindTask(NULL)->tc_SigAlloc));
 
-    UpdatePaths(sd);
+    UpdatePaths(DOSBase, sd);
 
     for(;;)
     {
         Wait((1 << usbProcess->pr_MsgPort.mp_SigBit) |
              (1 << port->mp_SigBit));
-        
+
         if (GetMsg(port))
-        {            
-            UpdatePaths(sd);
-            
+        {
+            UpdatePaths(DOSBase, sd);
+
             tr->tr_node.io_Command = TR_ADDREQUEST;
             tr->tr_time.tv_sec = 10;
             tr->tr_time.tv_usec = 0;
             SendIO(tr);
         }
-        
+
         while ((ev = (struct usbEvent *)GetMsg(&usbProcess->pr_MsgPort)) != NULL)
         {
             switch (ev->ev_Type)
@@ -257,6 +259,7 @@ void usb_process()
                     D(bug("[USB Process] Cleanup MSG\n"));
                     CleanupProcess();
                     ReplyMsg(&ev->ev_Message);
+                    CloseLibrary(DOSBase);
                     return;
 
                 default:
