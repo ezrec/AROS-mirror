@@ -41,7 +41,6 @@
 
 #include <proto/oop.h>
 #include <proto/utility.h>
-#include <proto/dos.h>
 
 #include "uhci.h"
 
@@ -376,7 +375,7 @@ void uhci_DeletePipe(OOP_Class *cl, OOP_Object *o, UHCI_Pipe *pipe)
         Enable();
 
         /* FIXME: Don't delay. Just wait for the incomplete TD's */
-        Delay(1);
+        //Delay(1);
 
         /* At this stage the transfer nodes may be safely deleted from the queue */
         while ((uint32_t)td != UHCI_PTR_T)
