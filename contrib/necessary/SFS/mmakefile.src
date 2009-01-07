@@ -22,6 +22,7 @@ FILES := 	adminspaces \
 USER_CFLAGS := -DAROS_KERNEL -DSFS_BE
 
 #MM contrib-sfs: contrib-sfs-c
+#MM contrib-sfs-kobj: contrib-sfs-c
 
 %build_module mmake=contrib-sfs \
 	modname=sfs modtype=device modsuffix=handler \
