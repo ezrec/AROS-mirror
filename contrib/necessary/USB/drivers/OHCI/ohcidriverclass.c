@@ -991,7 +991,7 @@ BOOL METHOD(OHCI, Hidd_USBDrv, BulkTransfer)
     if (sig >= 0 && toutsig >= 0)
     {
         ohci_td_t *td, *first_td, *tail;
-        const uint32_t maxpacket = (8192 / pipe->maxpacket) * pipe->maxpacket;
+        const uint32_t maxpacket = 4096; //(8192 / pipe->maxpacket) * pipe->maxpacket;
 
         pipe->signal = sig;
         pipe->sigTask = FindTask(NULL);
@@ -1012,7 +1012,7 @@ BOOL METHOD(OHCI, Hidd_USBDrv, BulkTransfer)
         	td->tdFlags = AROS_LONG2OHCI(0xf0000000);
         	td->tdFlags |= AROS_LONG2OHCI(TD_R);
 
-        	if (len == maxpacket)
+        	if (length > len)
             	td->tdFlags |= AROS_LONG2OHCI(0x00e00000);
 
         	if (UE_GET_DIR(pipe->endpoint) == UE_DIR_IN)
