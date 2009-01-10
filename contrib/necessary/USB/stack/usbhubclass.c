@@ -666,13 +666,13 @@ static void hub_process(HubData *hub, OOP_Object *o, struct Task *parent)
 
             D(bug("[USBHub Process] Interrupt signalled\n"));
 
-            ObtainSemaphore(&SD(cl)->driverListLock);
-            ForeachNode(&SD(cl)->driverList, d)
+            ObtainSemaphore(&sd->driverListLock);
+            ForeachNode(&sd->driverList, d)
             {
                 if (d->d_Driver == drv)
                     break;
             }
-            ReleaseSemaphore(&SD(cl)->driverListLock);
+            ReleaseSemaphore(&sd->driverListLock);
 
             if (d)
             {
