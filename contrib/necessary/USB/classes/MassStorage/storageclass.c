@@ -39,6 +39,80 @@
 
 BOOL USBMSS_AddVolume(mss_unit_t *unit);
 
+static unit_cache_t *GetUnitFromCache(OOP_Class *cl, OOP_Object *o, uint8_t create)
+{
+	StorageData *mss = OOP_INST_DATA(cl, o);
+	struct mss_staticdata *sd = SD(cl);
+	unit_cache_t *unit, *u = NULL;
+
+	intptr_t tmp;
+	uint16_t pid, vid;
+	char *product, *manufacturer, *serial;
+
+	/* Get some basic info about the device */
+	OOP_GetAttr(o, aHidd_USBDevice_ProductID, &tmp);
+	pid = tmp;
+	OOP_GetAttr(o, aHidd_USBDevice_ProductID, &tmp);
+	vid = tmp;
+	OOP_GetAttr(o, aHidd_USBDevice_ProductName, &tmp);
+	product = (char *)tmp;
+	OOP_GetAttr(o, aHidd_USBDevice_ManufacturerName, &tmp);
+	manufacturer = (char *)tmp;
+	OOP_GetAttr(o, aHidd_USBDevice_SerialNumber, &tmp);
+	serial = (char *)tmp;
+
+	D(bug("[MSS] GetUnitFromCache(%04x:%04x, '%s', '%s', '%s')\n", pid, vid, manufacturer, product, serial));
+
+	/* Check the cache list. If unit was here already, use it */
+	ObtainSemaphore(&sd->Lock);
+	ForeachNode(&sd->unitCache, unit)
+	{
+		if (pid == unit->productID && vid == unit->vendorID)
+		{
+			if (strcmp(serial, unit->serialNumber) == 0 &&
+				strcmp(product, unit->productName) == 0 &&
+				strcmp(manufacturer, unit->manufacturerName) == 0)
+			{
+				u = unit;
+				break;
+			}
+		}
+	}
+	ReleaseSemaphore(&sd->Lock);
+
+	if (u)
+	{
+		D(bug("[MSS] Found the device in cache already. Reassigning the old unit number %d\n",
+				u->unitNumber));
+	}
+	else if (create)
+	{
+		D(bug("[MSS] Unit is new to the system. Creating new cache object\n"));
+
+		u = AllocVecPooled(sd->MemPool, sizeof(unit_cache_t));
+		NEWLIST(&u->units);
+		u->productID = pid;
+		u->vendorID = vid;
+		u->productName = AllocVecPooled(sd->MemPool, strlen(product) + 1);
+		if (u->productName)
+			strcpy(u->productName, product);
+		u->manufacturerName = AllocVecPooled(sd->MemPool, strlen(manufacturer) + 1);
+		if (u->manufacturerName)
+			strcpy(u->manufacturerName, manufacturer);
+		u->serialNumber = AllocVecPooled(sd->MemPool, strlen(serial) + 1);
+		if (u->serialNumber)
+			strcpy(u->serialNumber, serial);
+
+		ObtainSemaphore(&sd->Lock);
+		u->unitNumber = sd->unitNum;
+		sd->unitNum += mss->maxLUN + 1;
+		AddTail(&sd->unitCache, u);
+		ReleaseSemaphore(&sd->Lock);
+	}
+
+	return u;
+}
+
 /*
  * Initialize the USBStorage instance
  */
@@ -133,76 +207,101 @@ OOP_Object *METHOD(Storage, Root, New)
 			{
 				struct Task *t;
 				struct MemList *ml;
-				uint32_t unit_number;
+
+				HIDD_USBStorage_Reset(o);
+
+				/* Get the unit from cache, in case it was used before */
+				mss->cache = GetUnitFromCache(cl, o, 0);
 
 				/*
-				 * Unit number allocation.
-				 *
-				 * The unit number allocation proposed here is a very simple variant. It uses the
-				 * counter which increases upon every query. The better approach would be to cache
-				 * the assignment based on iProduct iManufacturer and iSerial strings.
+				 * Reuse the unit, i.e. do not create the tasks, just signal them and update
+				 * unit structures
 				 */
-				ObtainSemaphore(&SD(cl)->Lock);
-				mss->unitNum = unit_number = SD(cl)->unitNum;
-				SD(cl)->unitNum += 16;
-				ReleaseSemaphore(&SD(cl)->Lock);
-
-				/*
-				 * For each LUN create a separate task. The unit number will be created as combination of
-				 * unitNum and the LUN: unit 0x00 is Unit 0 LUN 0, 0x12 is Unit 1 LUN 2.
-				 */
-				for (i=0; i <= mss->maxLUN; i++)
+				if (mss->cache)
 				{
-					struct TagItem tags[] = {
-										{ TASKTAG_ARG1,   (IPTR)cl },
-										{ TASKTAG_ARG2,   (IPTR)o },
-										{ TASKTAG_ARG3,	  unit_number | i },
-										{ TASKTAG_ARG4,	  (IPTR)FindTask(NULL) },
-										{ TAG_DONE,       0UL }};
+					mss->unitNum = mss->cache->unitNumber;
 
-					t = AllocMem(sizeof(struct Task), MEMF_PUBLIC|MEMF_CLEAR);
-					ml = AllocMem(sizeof(struct MemList) + 2*sizeof(struct MemEntry), MEMF_PUBLIC|MEMF_CLEAR);
-
-					if (t && ml)
+					for (i=0; i <= mss->maxLUN; i++)
 					{
-						uint8_t *sp = AllocMem(10240, MEMF_PUBLIC|MEMF_CLEAR);
-						uint8_t *name = AllocMem(16, MEMF_PUBLIC|MEMF_CLEAR);
+						mss->unit[i] = REMHEAD(&mss->cache->units);
+						if (mss->unit[i])
+						{
+							mss->unit[i]->msu_object = o;
 
-						/* Create individual name */
-						snprintf(name, 15, "USB MSS %02x.%x",unit_number >> 4, i);
+							if (mss->unit[i])
+							{
+								mss->handler[i] = mss->unit[i]->msu_handler;
 
-						t->tc_SPLower = sp;
-						t->tc_SPUpper = sp + 10240;
+								AddTail(&SD(cl)->unitList, mss->unit[i]);
+							}
+						}
+						if (mss->handler[i])
+							Signal(mss->handler[i], SIGF_SINGLE);
+					}
+				}
+				else
+				{
+					/* There was no such device used before. Create the cache element and tasks */
+
+					mss->cache = GetUnitFromCache(cl, o, 1);
+					mss->unitNum = mss->cache->unitNumber;
+
+					/*
+					 * For each LUN create a separate task. The unit number will be created as combination of
+					 * unitNum and the LUN: unit 0x00 is Unit 0 LUN 0, 0x12 is Unit 1 LUN 2.
+					 */
+					for (i=0; i <= mss->maxLUN; i++)
+					{
+						struct TagItem tags[] = {
+											{ TASKTAG_ARG1,   (IPTR)cl },
+											{ TASKTAG_ARG2,   (IPTR)o },
+											{ TASKTAG_ARG3,	  i },
+											{ TASKTAG_ARG4,	  (IPTR)FindTask(NULL) },
+											{ TAG_DONE,       0UL }};
+
+						t = AllocMem(sizeof(struct Task), MEMF_PUBLIC|MEMF_CLEAR);
+						ml = AllocMem(sizeof(struct MemList) + 2*sizeof(struct MemEntry), MEMF_PUBLIC|MEMF_CLEAR);
+
+						if (t && ml)
+						{
+							uint8_t *sp = AllocMem(10240, MEMF_PUBLIC|MEMF_CLEAR);
+							uint8_t *name = AllocMem(16, MEMF_PUBLIC|MEMF_CLEAR);
+
+							/* Create individual name */
+							snprintf(name, 15, "USB MSS %02x.%x",mss->unitNum, i);
+
+							t->tc_SPLower = sp;
+							t->tc_SPUpper = sp + 10240;
 #if AROS_STACK_GROWS_DOWNWARDS
-						t->tc_SPReg = (char *)t->tc_SPUpper - SP_OFFSET;
+							t->tc_SPReg = (char *)t->tc_SPUpper - SP_OFFSET;
 #else
-						t->tc_SPReg = (char *)t->tc_SPLower + SP_OFFSET;
+							t->tc_SPReg = (char *)t->tc_SPLower + SP_OFFSET;
 #endif
 
-						ml->ml_NumEntries = 3;
-						ml->ml_ME[0].me_Addr = t;
-						ml->ml_ME[0].me_Length = sizeof(struct Task);
-						ml->ml_ME[1].me_Addr = sp;
-						ml->ml_ME[1].me_Length = 10240;
-						ml->ml_ME[2].me_Addr = name;
-						ml->ml_ME[2].me_Length = 16;
+							ml->ml_NumEntries = 3;
+							ml->ml_ME[0].me_Addr = t;
+							ml->ml_ME[0].me_Length = sizeof(struct Task);
+							ml->ml_ME[1].me_Addr = sp;
+							ml->ml_ME[1].me_Length = 10240;
+							ml->ml_ME[2].me_Addr = name;
+							ml->ml_ME[2].me_Length = 16;
 
-						NEWLIST(&t->tc_MemEntry);
-						ADDHEAD(&t->tc_MemEntry, &ml->ml_Node);
+							NEWLIST(&t->tc_MemEntry);
+							ADDHEAD(&t->tc_MemEntry, &ml->ml_Node);
 
-						t->tc_Node.ln_Name = name;
-						t->tc_Node.ln_Type = NT_TASK;
-						t->tc_Node.ln_Pri = 1;     /* same priority as input.device */
+							t->tc_Node.ln_Name = name;
+							t->tc_Node.ln_Type = NT_TASK;
+							t->tc_Node.ln_Pri = 1;     /* same priority as input.device */
 
-						/* Add task. It will get back in touch soon */
-						NewAddTask(t, StorageTask, NULL, &tags);
-						/* Keep the initialization synchronous */
-						Wait(SIGF_SINGLE);
-						mss->handler[i] = t;
+							/* Add task. It will get back in touch soon */
+							NewAddTask(t, StorageTask, NULL, &tags);
+							/* Keep the initialization synchronous */
+							Wait(SIGF_SINGLE);
+							mss->handler[i] = t;
 
-						/* Detect partitions here? */
-						if (mss->unit[i]->msu_flags & MSF_DiskPresent)
+							/* Detect partitions here? */
 							USBMSS_AddVolume(mss->unit[i]);
+						}
 					}
 				}
 			}
@@ -225,15 +324,28 @@ void METHOD(Storage, Root, Dispose)
 {
     StorageData *mss = OOP_INST_DATA(cl, o);
     OOP_Object *drv = NULL;
+
     int i;
     struct Library *base = &BASE(cl->UserData)->LibNode;
 
+    D(bug("[MSS] ::Dispose()\n"));
+
     if (mss)
     {
+    	HIDD_USBDevice_DeletePipe(o, mss->pipe_in);
+    	HIDD_USBDevice_DeletePipe(o, mss->pipe_out);
+
     	for (i=0; i <= mss->maxLUN; i++)
     	{
+    		if (mss->unit[i])
+    		{
+    			REMOVE(mss->unit[i]);
+    			ADDTAIL(&mss->cache->units, mss->unit[i]);
+    		}
     		if (mss->handler[i])
-    	    	Signal(mss->handler[i], SIGBREAKF_CTRL_C);
+    		{
+    	    	Signal(mss->handler[i], SIGF_SINGLE);
+    		}
     	}
     }
 
@@ -383,7 +495,7 @@ BOOL METHOD(Storage, Hidd_USBStorage, Read)
 	if (msg->lun > mss->maxLUN)
 		return FALSE;
 
-	//D(bug("[MSS] ::Read(%08x, %04x) => %p\n", msg->block, msg->count, msg->buffer));
+//	D(bug("[MSS] ::Read(%08x, %04x) => %p\n", msg->block, msg->count, msg->buffer));
 
 	cmd[2] = msg->block >>24;
 	cmd[3] = msg->block >>16;

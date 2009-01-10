@@ -127,7 +127,7 @@ static void cmd_Read32(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit
 	}
 	else
 	{
-		D(bug("[MSS-dev] Read32(%08x, %08x)\n", IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length));
+//		D(bug("[MSS-dev] Read32(%08x, %08x)\n", IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length));
 
 		if (!IOStdReq(io)->io_Data)
 		{
@@ -152,7 +152,20 @@ static void cmd_Read32(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit
 			}
 			else
 			{
-				HIDD_USBStorage_Read(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count);
+				if (!HIDD_USBStorage_Read(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count))
+				{
+					D(bug("[MSS-dev] READ ERROR"));
+
+					HIDD_USBStorage_Reset(unit->msu_object);
+
+					if (!HIDD_USBStorage_Read(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count))
+					{
+						IOStdReq(io)->io_Error = TDERR_NotSpecified;
+						IOStdReq(io)->io_Actual = 0;
+
+						return;
+					}
+				}
 				IOStdReq(io)->io_Actual = IOStdReq(io)->io_Length;
 			}
 		}
@@ -171,7 +184,7 @@ static void cmd_Read64(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit
 	else
 	{
 
-		D(bug("[MSS-dev] Read64(%04x%08x, %08x)\n", IOStdReq(io)->io_Actual, IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length));
+//		D(bug("[MSS-dev] Read64(%04x%08x, %08x)\n", IOStdReq(io)->io_Actual, IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length));
 
 		io->io_Error = 0;
 
@@ -198,7 +211,20 @@ static void cmd_Read64(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit
 			}
 			else
 			{
-				HIDD_USBStorage_Read(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count);
+				if (!HIDD_USBStorage_Read(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count))
+				{
+					D(bug("[MSS-dev] READ ERROR"));
+
+					HIDD_USBStorage_Reset(unit->msu_object);
+
+					if (!HIDD_USBStorage_Read(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count))
+					{
+						IOStdReq(io)->io_Error = TDERR_NotSpecified;
+						IOStdReq(io)->io_Actual = 0;
+
+						return;
+					}
+				}
 				IOStdReq(io)->io_Actual = IOStdReq(io)->io_Length;
 			}
 		}
@@ -217,7 +243,7 @@ static void cmd_Write32(struct IORequest *io, mss_device_t *dev, mss_unit_t *uni
 	else
 	{
 
-		D(bug("[MSS-dev] Write32(%08x, %08x)\n", IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length));
+//		D(bug("[MSS-dev] Write32(%08x, %08x)\n", IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length));
 
 		if (!IOStdReq(io)->io_Data)
 		{
@@ -237,12 +263,25 @@ static void cmd_Write32(struct IORequest *io, mss_device_t *dev, mss_unit_t *uni
 
 			if (block + count - 1> unit->msu_blockCount)
 			{
-				D(bug("[MSS-dev] ERROR! Requested read outside the available area\n"));
+				D(bug("[MSS-dev] ERROR! Requested write outside the available area\n"));
 				io->io_Error = IOERR_BADADDRESS;
 			}
 			else
 			{
-				HIDD_USBStorage_Write(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count);
+				if (!HIDD_USBStorage_Write(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count))
+				{
+					D(bug("[MSS-dev] WRITE ERROR"));
+
+					HIDD_USBStorage_Reset(unit->msu_object);
+
+					if (!HIDD_USBStorage_Write(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count))
+					{
+						IOStdReq(io)->io_Error = TDERR_NotSpecified;
+						IOStdReq(io)->io_Actual = 0;
+
+						return;
+					}
+				}
 				IOStdReq(io)->io_Actual = IOStdReq(io)->io_Length;
 			}
 		}
@@ -261,7 +300,7 @@ static void cmd_Write64(struct IORequest *io, mss_device_t *dev, mss_unit_t *uni
 	else
 	{
 
-		D(bug("[MSS-dev] Write64(%04x%08x, %08x)\n", IOStdReq(io)->io_Actual, IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length));
+//		D(bug("[MSS-dev] Write64(%04x%08x, %08x)\n", IOStdReq(io)->io_Actual, IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length));
 
 		io->io_Error = 0;
 
@@ -283,12 +322,25 @@ static void cmd_Write64(struct IORequest *io, mss_device_t *dev, mss_unit_t *uni
 
 			if (block + count - 1 > unit->msu_blockCount)
 			{
-				D(bug("[MSS-dev] ERROR! Requested read outside the available area\n"));
+				D(bug("[MSS-dev] ERROR! Requested write outside the available area\n"));
 				io->io_Error = IOERR_BADADDRESS;
 			}
 			else
 			{
-				HIDD_USBStorage_Write(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count);
+				if (!HIDD_USBStorage_Write(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count))
+				{
+					D(bug("[MSS-dev] WRITE ERROR"));
+
+					HIDD_USBStorage_Reset(unit->msu_object);
+
+					if (!HIDD_USBStorage_Write(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count))
+					{
+						IOStdReq(io)->io_Error = TDERR_NotSpecified;
+						IOStdReq(io)->io_Actual = 0;
+
+						return;
+					}
+				}
 				IOStdReq(io)->io_Actual = IOStdReq(io)->io_Length;
 			}
 		}

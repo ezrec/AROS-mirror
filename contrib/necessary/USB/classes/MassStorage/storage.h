@@ -88,6 +88,20 @@ typedef struct __attribute__((packed)) {
 #define CSW_STATUS_FAIL		0x01
 #define CSW_STATUS_PHASE	0x02
 
+typedef struct {
+	struct Unit		msu_unit;
+	uint32_t		msu_unitNum;
+	uint32_t		msu_blockSize;
+	uint32_t		msu_blockCount;
+	uint32_t		msu_changeNum;
+	uint8_t			msu_blockShift;
+	uint8_t			msu_flags;
+	OOP_Class		*msu_class;
+	OOP_Object		*msu_object;
+	struct List		msu_diskChangeList;
+	struct Task		*msu_handler;
+} mss_unit_t;
+
 struct mss_staticdata
 {
     struct SignalSemaphore  Lock;
@@ -95,6 +109,7 @@ struct mss_staticdata
     OOP_Class               *mssClass;
 
 	struct MinList			unitList;
+	struct MinList			unitCache;
 
     uint32_t				tid;
     uint32_t				unitNum;
@@ -108,22 +123,22 @@ struct mss_staticdata
     OOP_AttrBase            HiddAB;
 };
 
-
 typedef struct {
-	struct Unit		msu_unit;
-	uint32_t		msu_unitNum;
-	uint32_t		msu_blockSize;
-	uint32_t		msu_blockCount;
-	uint32_t		msu_changeNum;
-	uint8_t			msu_blockShift;
-	uint8_t			msu_flags;
-	OOP_Class		*msu_class;
-	OOP_Object		*msu_object;
-	struct List		msu_diskChangeList;
-} mss_unit_t;
+	struct MinNode	node;
+	struct List		units;
+
+	uint16_t		productID;
+	uint16_t		vendorID;
+	char			*productName;
+	char			*manufacturerName;
+	char			*serialNumber;
+
+	uint32_t		unitNumber;
+} unit_cache_t;
 
 typedef struct MSSData {
 	struct SignalSemaphore  	lock;
+	unit_cache_t				*cache;
 
 	struct mss_staticdata		*sd;
 	OOP_Object					*o;
@@ -144,6 +159,9 @@ typedef struct MSSData {
 	uint8_t						maxLUN;
 	uint32_t					unitNum;
 } StorageData;
+
+
+
 
 struct mssbase
 {
@@ -177,6 +195,7 @@ typedef struct {
 
 #define MSF_DiskChanged		1
 #define MSF_DiskPresent		2
+#define MSF_DeviceRemoved	4
 
 extern void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t unitnum, struct Task *parent);
 extern void HandleIO(struct IORequest *io, mss_device_t *device, mss_unit_t *unit);
