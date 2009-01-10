@@ -152,13 +152,13 @@ static void cmd_Read32(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit
 			}
 			else
 			{
-				if (!HIDD_USBStorage_Read(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count))
+				if (!HIDD_USBStorage_Read(unit->msu_object, unit->msu_lun, IOStdReq(io)->io_Data, block, count))
 				{
-					D(bug("[MSS-dev] READ ERROR"));
+					D(bug("[MSS-dev] READ ERROR: block=0x%08x count=0x%08x\n", block, count));
 
 					HIDD_USBStorage_Reset(unit->msu_object);
 
-					if (!HIDD_USBStorage_Read(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count))
+					if (!HIDD_USBStorage_Read(unit->msu_object, unit->msu_lun, IOStdReq(io)->io_Data, block, count))
 					{
 						IOStdReq(io)->io_Error = TDERR_NotSpecified;
 						IOStdReq(io)->io_Actual = 0;
@@ -211,13 +211,13 @@ static void cmd_Read64(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit
 			}
 			else
 			{
-				if (!HIDD_USBStorage_Read(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count))
+				if (!HIDD_USBStorage_Read(unit->msu_object, unit->msu_lun, IOStdReq(io)->io_Data, block, count))
 				{
-					D(bug("[MSS-dev] READ ERROR"));
+					D(bug("[MSS-dev] READ ERROR: block=0x%08x count=0x%08x\n", (int32_t)block, count));
 
 					HIDD_USBStorage_Reset(unit->msu_object);
 
-					if (!HIDD_USBStorage_Read(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count))
+					if (!HIDD_USBStorage_Read(unit->msu_object, unit->msu_lun, IOStdReq(io)->io_Data, block, count))
 					{
 						IOStdReq(io)->io_Error = TDERR_NotSpecified;
 						IOStdReq(io)->io_Actual = 0;
@@ -268,13 +268,13 @@ static void cmd_Write32(struct IORequest *io, mss_device_t *dev, mss_unit_t *uni
 			}
 			else
 			{
-				if (!HIDD_USBStorage_Write(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count))
+				if (!HIDD_USBStorage_Write(unit->msu_object, unit->msu_lun, IOStdReq(io)->io_Data, block, count))
 				{
-					D(bug("[MSS-dev] WRITE ERROR"));
+					D(bug("[MSS-dev] WRITE ERROR: block=0x%08x count=0x%08x\n", block, count));
 
 					HIDD_USBStorage_Reset(unit->msu_object);
 
-					if (!HIDD_USBStorage_Write(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count))
+					if (!HIDD_USBStorage_Write(unit->msu_object, unit->msu_lun, IOStdReq(io)->io_Data, block, count))
 					{
 						IOStdReq(io)->io_Error = TDERR_NotSpecified;
 						IOStdReq(io)->io_Actual = 0;
@@ -327,13 +327,13 @@ static void cmd_Write64(struct IORequest *io, mss_device_t *dev, mss_unit_t *uni
 			}
 			else
 			{
-				if (!HIDD_USBStorage_Write(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count))
+				if (!HIDD_USBStorage_Write(unit->msu_object, unit->msu_lun, IOStdReq(io)->io_Data, block, count))
 				{
-					D(bug("[MSS-dev] WRITE ERROR"));
+					D(bug("[MSS-dev] WRITE ERROR: block=0x%08x count=0x%08x\n", (int32_t)block, count));
 
 					HIDD_USBStorage_Reset(unit->msu_object);
 
-					if (!HIDD_USBStorage_Write(unit->msu_object, unit->msu_unitNum & 0xf, IOStdReq(io)->io_Data, block, count))
+					if (!HIDD_USBStorage_Write(unit->msu_object, unit->msu_lun, IOStdReq(io)->io_Data, block, count))
 					{
 						IOStdReq(io)->io_Error = TDERR_NotSpecified;
 						IOStdReq(io)->io_Actual = 0;

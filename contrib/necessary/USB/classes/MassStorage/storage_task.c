@@ -50,6 +50,7 @@ void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t lun, struct Task *parent
 	unit->msu_object = o;
 	unit->msu_flags = 0;
 	unit->msu_changeNum = 0;
+	unit->msu_lun = lun;
 	unit->msu_handler = FindTask(NULL);
 	NEWLIST(&unit->msu_unit.unit_MsgPort.mp_MsgList);
 	NEWLIST(&unit->msu_diskChangeList);

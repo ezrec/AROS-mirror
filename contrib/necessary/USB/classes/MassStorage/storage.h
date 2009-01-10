@@ -96,6 +96,7 @@ typedef struct {
 	uint32_t		msu_changeNum;
 	uint8_t			msu_blockShift;
 	uint8_t			msu_flags;
+	uint8_t			msu_lun;
 	OOP_Class		*msu_class;
 	OOP_Object		*msu_object;
 	struct List		msu_diskChangeList;
