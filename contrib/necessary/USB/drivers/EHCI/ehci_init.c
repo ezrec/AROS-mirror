@@ -99,10 +99,10 @@ AROS_UFH3(void, Enumerator,
         rl.reg = offset;
         cap = OOP_DoMethod(driver, &rl.mID);
 
-        D(bug("[EHCI]  cap=%08x\n", cap));
-
         if ((cap & 0xff) == 1)
         {
+            D(bug("[EHCI]  cap=%08x\n", cap));
+
             D(bug("[EHCI]  LEGSUP capability found\n"));
             uint8_t delay = 200;
 
