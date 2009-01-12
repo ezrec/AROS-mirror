@@ -48,7 +48,7 @@ OOP_AttrBase HiddAttrBase;
 
 void usb_process();
 
-static void USB_ProcessStarter(struct usb_staticdata *sd)
+static void USB_ProcessStarter(struct usb_staticdata *sd, struct Task *parent)
 {
 	struct DOSBase *DOSBase = NULL;
 	struct MsgPort *msgPort = CreateMsgPort();
@@ -58,15 +58,14 @@ static void USB_ProcessStarter(struct usb_staticdata *sd)
 
 	D(bug("[USB] Process starter\n"));
 
-	do {
+	while(!(DOSBase = OpenLibrary("dos.library", 0)))
+	{
 		tr->tr_time.tv_usec = 0;
 		tr->tr_time.tv_sec = 2;
 		tr->tr_node.io_Command = TR_ADDREQUEST;
 
 		DoIO(tr);
-
-		DOSBase = OpenLibrary("dos.library", 0);
-	} while (!DOSBase);
+	};
 
 	D(bug("[USB] Process starter: dos.library up and running\n"));
 	D(bug("[USB] Process starter: Creating the main USB process\n"));
@@ -93,6 +92,9 @@ static void USB_ProcessStarter(struct usb_staticdata *sd)
 	CloseDevice(tr);
 	DeleteIORequest(tr);
 	DeleteMsgPort(msgPort);
+
+	if (parent)
+		Signal(parent, SIGF_SINGLE);
 }
 
 static int USB_Init(LIBBASETYPEPTR LIBBASE)
@@ -117,9 +119,15 @@ static int USB_Init(LIBBASETYPEPTR LIBBASE)
     {
         if ((LIBBASE->sd.MemPool = CreatePool(MEMF_PUBLIC|MEMF_CLEAR|MEMF_SEM_PROTECTED, 8192, 4096)) != NULL)
         {
+        	struct DOSBase *DOSBase = OpenLibrary("dos.library", 0);
+
         	struct TagItem tags[] = {
         			{ TASKTAG_ARG1,   (IPTR)&LIBBASE->sd },
+        			{ TASKTAG_ARG2,   0UL },
         			{ TAG_DONE,       0UL }};
+
+        	if (DOSBase)
+        		tags[1].ti_Data = (IPTR)FindTask(NULL);
 
         	struct Task *t = AllocMem(sizeof(struct Task), MEMF_PUBLIC|MEMF_CLEAR);
         	struct MemList *ml = AllocMem(sizeof(struct MemList) + sizeof(struct MemEntry), MEMF_PUBLIC|MEMF_CLEAR);
@@ -153,8 +161,14 @@ static int USB_Init(LIBBASETYPEPTR LIBBASE)
         		/* Add task. It will get back in touch soon */
         		NewAddTask(t, USB_ProcessStarter, NULL, &tags);
 
+        		if (DOSBase)
+        			Wait(SIGF_SINGLE);
+
         		return TRUE;
         	}
+
+        	if (DOSBase)
+        		CloseLibrary(DOSBase);
         }
         OOP_ReleaseAttrBases(attrbases);
     }
