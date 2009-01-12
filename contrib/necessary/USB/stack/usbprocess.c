@@ -18,7 +18,7 @@
     59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#define DEBUG 1
+#define DEBUG 0
 
 #include <aros/debug.h>
 
@@ -111,9 +111,6 @@ static void ScanDirectory(struct DOSBase *DOSBase, struct usb_staticdata *sd, ST
         {
             struct usb_ExtClass *ec = NULL;
             int found = 0;
-
-            D(bug("[USB] found USB class file \"%s\"\n",
-                    ap.ap_Info.fib_FileName));
 
             snprintf(match, sizeof(match)-1, "%s/%s", dir, ap.ap_Info.fib_FileName);
 
