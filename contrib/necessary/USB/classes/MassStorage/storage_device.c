@@ -61,6 +61,14 @@ static void cmd_Reset(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit)
 	IOStdReq(io)->io_Actual = 0;
 }
 
+static void cmd_Remove(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit)
+{
+	if (unit->msu_removeInt)
+		io->io_Error = TDERR_DriveInUse;
+	else
+		unit->msu_removeInt = (struct Interrupt *)IOStdReq(io)->io_Data;
+}
+
 static void cmd_AddChangeInt(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit)
 {
 	Forbid();
@@ -106,8 +114,8 @@ static void cmd_GetGeometry(struct IORequest *io, mss_device_t *dev, mss_unit_t 
 		dg->dg_TrackSectors		= 63;
 		dg->dg_CylSectors		= 255*63;
 		dg->dg_BufMemType		= MEMF_PUBLIC;
-		dg->dg_DeviceType		= DG_DIRECT_ACCESS;
-		dg->dg_Flags			= 0;
+		dg->dg_DeviceType		= unit->msu_inquiry[0] & 0x1f;
+		dg->dg_Flags			= unit->msu_inquiry[0] & 0x1f == DG_CDROM ? DGF_REMOVABLE : 0;
 		dg->dg_Reserved			= 0;
 
 		IOStdReq(io)->io_Actual = sizeof(struct DriveGeometry);
@@ -370,7 +378,7 @@ static const void (*map32[HD_SCSICMD+1])(struct IORequest *io, mss_device_t *dev
 		[TD_MOTOR]      	= cmd_NULL,
 		[TD_SEEK]       	= cmd_NULL,
 		[TD_FORMAT]     	= cmd_Write32,
-		[TD_REMOVE]     	= cmd_Invalid,
+		[TD_REMOVE]     	= cmd_Remove,
 		[TD_CHANGENUM]  	= cmd_ChangeNum,
 		[TD_CHANGESTATE]	= cmd_ChangeState,
 		[TD_PROTSTATUS] 	= cmd_Invalid,
