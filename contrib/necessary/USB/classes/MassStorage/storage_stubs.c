@@ -119,6 +119,21 @@ BOOL HIDD_USBStorage_RequestSense(OOP_Object *o, uint8_t lun, void *buffer, uint
 	return OOP_DoMethod(o, &p.mID);
 }
 
+BOOL HIDD_USBStorage_Inquiry(OOP_Object *o, uint8_t lun, void *buffer, uint32_t bufferLength)
+{
+	STATIC_MID;
+	struct pHidd_USBStorage_Inquiry p;
+
+	if (!mid) mid = OOP_GetMethodID((STRPTR)IID_Hidd_USBStorage, moHidd_USBStorage_Inquiry);
+
+	p.mID = mid;
+	p.lun = lun;
+	p.buffer = buffer;
+	p.bufferLength = bufferLength;
+
+	return OOP_DoMethod(o, &p.mID);
+}
+
 BOOL HIDD_USBStorage_Read(OOP_Object *o, uint8_t lun, void *buffer, uint32_t lba, uint16_t count)
 {
 	STATIC_MID;
