@@ -40,6 +40,7 @@ enum {
 	moHidd_USBStorage_Read,
 	moHidd_USBStorage_Write,
 	moHidd_USBStorage_ReadCapacity,
+	moHidd_USBStorage_Inquiry,
 
     NUM_HIDD_USBStorage_METHODS
 };
@@ -97,6 +98,13 @@ struct pHidd_USBStorage_ReadCapacity {
 	uint32_t		*blockSize;
 };
 
+struct pHidd_USBStorage_Inquiry {
+	OOP_MethodID	mID;
+	uint8_t			lun;
+	void 			*buffer;
+	uint32_t		bufferLength;
+};
+
 BOOL HIDD_USBStorage_Reset(OOP_Object *o);
 uint8_t HIDD_USBStorage_GetMaxLUN(OOP_Object *o);
 uint32_t HIDD_USBStorage_DirectSCSI(OOP_Object *o, uint8_t lun, uint8_t *cmd, uint8_t cmdLen, void *data, uint32_t dataLen, uint8_t read);
@@ -105,5 +113,6 @@ BOOL HIDD_USBStorage_RequestSense(OOP_Object *o, uint8_t lun, void *buffer, uint
 BOOL HIDD_USBStorage_Read(OOP_Object *o, uint8_t lun, void *buffer, uint32_t lba, uint16_t count);
 BOOL HIDD_USBStorage_Write(OOP_Object *o, uint8_t lun, void *buffer, uint32_t lba, uint16_t count);
 BOOL HIDD_USBStorage_ReadCapacity(OOP_Object *o, uint8_t lun, uint32_t *blockTotal, uint32_t *blockSize);
+BOOL HIDD_USBStorage_Inquiry(OOP_Object *o, uint8_t lun, void *buffer, uint32_t bufferLength);
 
 #endif /* USB_STORAGE_H */

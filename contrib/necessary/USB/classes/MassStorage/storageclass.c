@@ -471,6 +471,22 @@ BOOL METHOD(Storage, Hidd_USBStorage, TestUnitReady)
 		return FALSE;
 }
 
+BOOL METHOD(Storage, Hidd_USBStorage, Inquiry)
+{
+	StorageData *mss = OOP_INST_DATA(cl, o);
+	uint8_t cmd[6] = {0x12, 0, 0, 0, 0, 0};
+
+	if (msg->lun > mss->maxLUN)
+		return FALSE;
+
+	cmd[4] = msg->bufferLength;
+
+	if (msg->buffer)
+		return HIDD_USBStorage_DirectSCSI(o, msg->lun, cmd, 6, msg->buffer, msg->bufferLength, 1);
+	else
+		return FALSE;
+}
+
 BOOL METHOD(Storage, Hidd_USBStorage, RequestSense)
 {
 	StorageData *mss = OOP_INST_DATA(cl, o);
