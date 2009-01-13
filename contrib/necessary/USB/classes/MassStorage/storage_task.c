@@ -18,6 +18,45 @@
 #include <exec/errors.h>
 #include "storage.h"
 
+static void DoChangeInt(mss_unit_t *unit)
+{
+	struct IORequest *msg;
+
+	if (unit->msu_removeInt)
+		Cause(unit->msu_removeInt);
+
+	Forbid();
+	ForeachNode(&unit->msu_diskChangeList, msg)
+	{
+		Cause((struct Intertupt *)IOStdReq(msg)->io_Data);
+	}
+	Permit();
+
+	unit->msu_flags &= ~ MSF_DiskChanged;
+}
+
+
+/* Allocate and initialize the unit structure */
+static mss_unit_t *CreateUnit(OOP_Class *cl, OOP_Object *o, uint32_t lun)
+{
+	mss_unit_t *unit = (mss_unit_t *)AllocVecPooled(SD(cl)->MemPool, sizeof(mss_unit_t));
+	unit->msu_unit.unit_MsgPort.mp_SigBit = AllocSignal(-1);
+	unit->msu_unit.unit_MsgPort.mp_Flags = PA_SIGNAL;
+	unit->msu_unit.unit_MsgPort.mp_SigTask = FindTask(NULL);
+	unit->msu_unit.unit_MsgPort.mp_Node.ln_Type = NT_MSGPORT;
+	unit->msu_class = cl;
+	unit->msu_object = o;
+	unit->msu_flags = 0;
+	unit->msu_changeNum = 0;
+	unit->msu_lun = lun;
+	unit->msu_handler = FindTask(NULL);
+	unit->msu_removeInt = NULL;
+	NEWLIST(&unit->msu_unit.unit_MsgPort.mp_MsgList);
+	NEWLIST(&unit->msu_diskChangeList);
+
+	return unit;
+}
+
 /*
  * Unit task.
  * Every single mass storage unit in the system becomes it's own handler task.
@@ -40,41 +79,42 @@ void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t lun, struct Task *parent
 	/* Make sure the access is exclusive as long as the init is not ready */
 	ObtainSemaphore(&mss->lock);
 
-	/* Initialize the unit */
-	unit = (mss_unit_t *)AllocVecPooled(SD(cl)->MemPool, sizeof(mss_unit_t));
-	unit->msu_unit.unit_MsgPort.mp_SigBit = AllocSignal(-1);
-	unit->msu_unit.unit_MsgPort.mp_Flags = PA_SIGNAL;
-	unit->msu_unit.unit_MsgPort.mp_SigTask = FindTask(NULL);
-	unit->msu_unit.unit_MsgPort.mp_Node.ln_Type = NT_MSGPORT;
-	unit->msu_class = cl;
-	unit->msu_object = o;
-	unit->msu_flags = 0;
-	unit->msu_changeNum = 0;
-	unit->msu_lun = lun;
-	unit->msu_handler = FindTask(NULL);
-	NEWLIST(&unit->msu_unit.unit_MsgPort.mp_MsgList);
-	NEWLIST(&unit->msu_diskChangeList);
-
-	sigset |= 1 << unit->msu_unit.unit_MsgPort.mp_SigBit;
+	unit = CreateUnit(cl, o, lun);
 
 	if (unit)
 	{
+		sigset |= 1 << unit->msu_unit.unit_MsgPort.mp_SigBit;
+
 		D(bug("[%s] Good morning!\n", name));
 
+		HIDD_USBStorage_Inquiry(o, lun, unit->msu_inquiry, 8);
+
+		D(bug("[%s] Inquiry results: %02x %02x %02x %02x %02x %02x %02x %02x\n", name,
+				unit->msu_inquiry[0], unit->msu_inquiry[1], unit->msu_inquiry[2], unit->msu_inquiry[3],
+				unit->msu_inquiry[4], unit->msu_inquiry[5], unit->msu_inquiry[6], unit->msu_inquiry[7]
+				));
+
+		/* Check whether the unit is ready */
 		if (HIDD_USBStorage_TestUnitReady(o, lun))
 		{
 			D(bug("[%s] TestUnitReady OK\n", name));
 
+			/* Success. The capacity should be read soon */
 			unit->msu_flags = MSF_DiskPresent | MSF_DiskChanged;
 		}
 		else
 		{
 			uint8_t sense[19];
 
+			/* Unit was not ready? Get the sense */
 			D(bug("[%s] TestUnitReady NOT OK\n", name));
 
 			HIDD_USBStorage_RequestSense(o, lun, sense, 19);
 
+			/*
+			 * If sense reports no media, clear the flags. Otherwise, the unit was OK, just wanted
+			 * to report its sense data.
+			 */
 			if (sense[2] == 0x02 && sense[12] == 0x3a)
 			{
 				D(bug("[%s] Unit is not ready. No media present.\n", name));
@@ -95,11 +135,10 @@ void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t lun, struct Task *parent
 				D(bug("[%s] Detected capacity: %dMB\n", name, (((unit->msu_blockCount+1) >> 10)*unit->msu_blockSize) >> 10));
 
 				unit->msu_blockShift = AROS_LEAST_BIT_POS(unit->msu_blockSize);
-
-				D(bug("[%s] Block size: 0x%x, Shift: %d\n", name, unit->msu_blockSize, unit->msu_blockShift));
 			}
 			else {
 				D(bug("[%s] Failed to get the capacity\n", name));
+				unit->msu_flags &= ~MSF_DiskPresent;
 			}
 		}
 
@@ -176,6 +215,13 @@ void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t lun, struct Task *parent
 					unit->msu_flags |= MSF_DeviceRemoved | MSF_DiskChanged;
 					unit->msu_flags &= ~MSF_DiskPresent;
 				}
+
+				/*
+				 * If DiskChanged flag is set, call the change ints
+				 */
+
+				if (unit->msu_flags & MSF_DiskChanged)
+					DoChangeInt(unit);
 			}
 
 			if (!(unit->msu_flags & MSF_DeviceRemoved))
@@ -188,8 +234,8 @@ void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t lun, struct Task *parent
 					while (GetMsg(timer_io->tr_node.io_Message.mn_ReplyPort));
 
 					uint8_t unit_ready;
-					/* Device is idling. Do media change sense */
 
+					/* Device is idling. Do media change sense */
 					unit_ready = HIDD_USBStorage_TestUnitReady(o, lun);
 
 					if (!unit_ready)
@@ -255,18 +301,7 @@ void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t lun, struct Task *parent
 				 */
 
 				if (unit->msu_flags & MSF_DiskChanged)
-				{
-					struct IORequest *msg;
-
-					Forbid();
-					ForeachNode(&unit->msu_diskChangeList, msg)
-					{
-						Cause((struct Intertupt *)IOStdReq(msg)->io_Data);
-					}
-					Permit();
-
-					unit->msu_flags &= ~ MSF_DiskChanged;
-				}
+					DoChangeInt(unit);
 
 				/* Message in IORequest queue? */
 				if (rcvd & (1 << unit->msu_unit.unit_MsgPort.mp_SigBit))
@@ -308,7 +343,7 @@ void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t lun, struct Task *parent
 		DeleteMsgPort(timer_io->tr_node.io_Message.mn_ReplyPort);
 		DeleteIORequest(timer_io);
 
-		unit->msu_object = NULL;
+		FreeVecPooled(SD(cl)->MemPool, unit);
 	}
 
 	D(bug("[%s] Goodbye!\n", name));
