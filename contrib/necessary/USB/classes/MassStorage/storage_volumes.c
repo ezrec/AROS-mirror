@@ -392,7 +392,7 @@ BOOL USBMSS_AddVolume(mss_unit_t *unit)
     struct BootNode *bn;
 
     IPTR *pp;
-    TEXT dosdevname[4] = "USB0", *handler;
+    TEXT dosdevname[5] = "USB0", *handler;
     UWORD len;
 
     ExpansionBase = (struct ExpansionBase *)OpenLibrary("expansion.library",
