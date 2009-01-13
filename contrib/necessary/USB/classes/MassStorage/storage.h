@@ -99,8 +99,10 @@ typedef struct {
 	uint8_t			msu_lun;
 	OOP_Class		*msu_class;
 	OOP_Object		*msu_object;
+	struct Interrupt *msu_removeInt;
 	struct List		msu_diskChangeList;
 	struct Task		*msu_handler;
+	uint8_t			msu_inquiry[8];
 } mss_unit_t;
 
 struct mss_staticdata
