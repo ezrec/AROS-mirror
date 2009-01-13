@@ -345,7 +345,16 @@ static VOID CheckPartitions
             fssm->fssm_Unit);
         if (pt)
         {
-            if (IsRemovable(SysBase, pt->bd->ioreq))
+        	/*
+        	 * OpenRootPartition may success even if partition table is invalid.
+        	 * Attempt to open the partition table (which performs validity checks),
+        	 * and if it fails, add the boot node as a whole.
+        	 */
+        	LONG table = OpenPartitionTable(pt);
+        	if (table == 0)
+        		ClosePartitionTable(pt);
+
+            if (table || IsRemovable(SysBase, pt->bd->ioreq))
             {
                 /* don't check removable devices for partition tables */
                 Enqueue(&ExpansionBase->MountList, (struct Node *)bn);
@@ -427,7 +436,11 @@ BOOL USBMSS_AddVolume(mss_unit_t *unit)
             	bn->bn_Node.ln_Type = NT_BOOTNODE;
 				bn->bn_Node.ln_Pri = 20;
 
-				handler = "afs.handler";
+				if ((unit->msu_inquiry[0] & 0x1f) == DG_CDROM)
+					handler = "cdrom.handler";
+				else
+					handler = "fat.handler";
+
                 len = strlen(handler);
                 if ((devnode->dn_Handler =
                      MKBADDR(AllocMem(AROS_BSTR_MEMSIZE4LEN(len),
