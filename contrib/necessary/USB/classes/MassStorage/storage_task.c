@@ -195,6 +195,8 @@ void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t lun, struct Task *parent
 							unit->msu_blockShift = AROS_LEAST_BIT_POS(unit->msu_blockSize);
 
 							D(bug("[%s] Block size: 0x%x, Shift: %d\n", name, unit->msu_blockSize, unit->msu_blockShift));
+
+							unit->msu_flags |= MSF_DiskPresent;
 						}
 						else {
 							D(bug("[%s] Failed to get the capacity\n", name));
