@@ -472,13 +472,21 @@ What are the AROS-native kernel options used in GRUB line?
 
 Here's some::
 
-    nofdc           - Disables the floppy driver completely.
-    noclick         - Disables the floppy disk change detection (and clicking)
-    ATA=32bit       - Enables 32-bit I/O in the hdd driver (safe)
-    forcedma        - Forces DMA to be active in the hdd driver (should be safe, but       
+	floppy=<disabled/nomount>	Sets the trackdisk device options
+	disabled		- completely disable trackdisk.device initialisation
+	nomount			- initialise trackdisk.device but do not create DOS devices
+	
+    ATA=32bit		- Enables 32-bit I/O in the hdd driver (safe)
+    forcedma 		- Forces DMA to be active in the hdd driver (should be safe, but       
                       might not be)
     gfx=<hidd name> - Use the named HIDD as the gfx driver
     lib=<name>      - Load and initiate the named library/HIDD
+	
+And some older ones, if you're using older build (from r28786)::
+	
+    nofdc           - Disables the floppy driver completely.
+    noclick         - Disables the floppy disk change detection (and clicking)
+
 
 Please note that they are case-sensitive.
 
@@ -643,6 +651,9 @@ where DOSVOLUME is DH0:, DF0:, etc
 How to mount a FAT Floppy with the FAT.handler?
 -----------------------------------------------
 
+Currently the FAT volumes are autodetected and automounted,
+but here`s how to manually mount it.
+
 Create a mountfile (text file) with the 3 magic lines::
 
     device = trackdisk.device
@@ -658,6 +669,9 @@ Create a mountfile (text file) with the 3 magic lines::
 
 How to mount a real HD FAT partition with the FAT.handler?
 ----------------------------------------------------------
+
+Currently the FAT volumes are autodetected and automounted,
+but here`s how to manually mount it.
 
 First you`d need to read the drive`s geometry and write down some values. 
 You can use HDToolbox or Linux fdisk for that. The BlocksPerTrack value is taken 

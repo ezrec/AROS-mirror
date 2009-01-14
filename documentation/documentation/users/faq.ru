@@ -394,13 +394,20 @@ What are the AROS-native kernel options used in GRUB line?
 
 Here`s some::
 
-    nofdc - Disables the floppy driver completely.
-    noclick - Disabled the floppy disk change detection (and clicking)
+    floppy=<disabled/nomount>	Sets the trackdisk device options
+	disabled		- completely disable trackdisk.device initialisation
+	nomount			- initialise trackdisk.device but do not create DOS devices
+		
     ATA=32bit - Enables 32-bit I/O in the hdd driver (safe)
     forcedma - Forces DMA to be active in the hdd driver (should be safe, but       
     might not be)
     gfx=<hidd name> - Use the named hidd as the gfx driver
     lib=<name> - Load and init the named library/hidd
+	
+На прежних сборках (от r28786)::
+
+	nofdc - Disables the floppy driver completely.
+    noclick - Disabled the floppy disk change detection (and clicking)
 
 Please note that they are case-sensitive.
 
@@ -623,8 +630,8 @@ block = ((highcyl - lowcyl) x surfaces + head) x blockspertrack + sec
 
 
 
-"Железные" вопросы (hardware)
-=============================
+Вопросы по оборудованию (hardware)
+==================================
 
 
 Где найти список совместимого оборудования для AROS?                   
