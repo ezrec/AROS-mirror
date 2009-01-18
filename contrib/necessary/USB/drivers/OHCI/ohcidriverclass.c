@@ -979,7 +979,7 @@ BOOL METHOD(OHCI, Hidd_USBDrv, BulkTransfer)
     int8_t toutsig = AllocSignal(-1);
     int32_t msec = pipe->timeoutVal;
     uint32_t length = msg->length;
-    uint8_t *buff = msg->buffer;
+    uint8_t *buff;
     BOOL retval = FALSE;
 
     D(bug("[OHCI] BulkTransfer()\n"));
@@ -1004,6 +1004,11 @@ BOOL METHOD(OHCI, Hidd_USBDrv, BulkTransfer)
         tail->tdBufferEnd = 0;
         tail->tdNextTD = 0;
         tail->tdPipe = pipe;
+
+        if (UE_GET_DIR(pipe->endpoint) == UE_DIR_IN)
+        	buff = CachePreDMA(msg->buffer, &length, 0);
+        else
+        	buff = CachePreDMA(msg->buffer, &length, DMA_ReadFromRAM);
 
         while (length > 0)
         {
@@ -1045,11 +1050,6 @@ BOOL METHOD(OHCI, Hidd_USBDrv, BulkTransfer)
         pipe->errorCode = 0;
 
         length = msg->length;
-
-        if (UE_GET_DIR(pipe->endpoint) == UE_DIR_IN)
-        	CachePreDMA(msg->buffer, &length, 0);
-        else
-        	CachePreDMA(msg->buffer, &length, DMA_ReadFromRAM);
 
         /* Fire the transfer */
         if (pipe->timeoutVal != 0)
