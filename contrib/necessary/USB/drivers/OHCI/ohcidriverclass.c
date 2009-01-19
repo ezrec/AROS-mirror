@@ -819,6 +819,8 @@ BOOL METHOD(OHCI, Hidd_USBDrv, ControlTransfer)
         ohci_td_t *setup;
         ohci_td_t *status;
         ohci_td_t *td, *tail;
+        void *request;
+        void *buffer;
 
         pipe->signal = sig;
         pipe->sigTask = FindTask(NULL);
@@ -830,11 +832,14 @@ BOOL METHOD(OHCI, Hidd_USBDrv, ControlTransfer)
         tail->tdNextTD = 0;
         tail->tdPipe = pipe;
 
+        length = sizeof(USBDevice_Request);
+        request = CachePreDMA(msg->request, &length, DMA_ReadFromRAM);
+
         /* Do the right control transfer */
         setup = td = pipe->tail;
         setup->tdFlags = AROS_LONG2OHCI(0xf0000000 | 0x02000000 | 0x00e00000);
-        setup->tdCurrentBufferPointer = AROS_LONG2OHCI((uint32_t)msg->request);
-        setup->tdBufferEnd = AROS_LONG2OHCI((uint32_t)msg->request + sizeof(USBDevice_Request) - 1);
+        setup->tdCurrentBufferPointer = AROS_LONG2OHCI((uint32_t)request);
+        setup->tdBufferEnd = AROS_LONG2OHCI((uint32_t)request + sizeof(USBDevice_Request) - 1);
         setup->tdPipe = pipe;
 
         status = ohci_AllocTD(cl, o);
@@ -846,13 +851,19 @@ BOOL METHOD(OHCI, Hidd_USBDrv, ControlTransfer)
 
         if (msg->buffer && msg->length < 8192)
         {
+        	length = msg->length;
+        	if (msg->request->bmRequestType & UT_READ)
+        		buffer = CachePreDMA(msg->buffer, &length, 0);
+        	else
+        		buffer = CachePreDMA(msg->buffer, &length, DMA_ReadFromRAM);
+
             /* Get new TD and link it immediatelly with the previous one */
             td->tdNextTD = AROS_LONG2OHCI((uint32_t)ohci_AllocTD(cl, o));
             td = (ohci_td_t *)AROS_OHCI2LONG(td->tdNextTD);
 
             td->tdFlags = AROS_LONG2OHCI(0xf3e00000 | ((msg->request->bmRequestType & UT_READ) ? 0x00100000 : 0x00080000));
-            td->tdCurrentBufferPointer = AROS_LONG2OHCI((uint32_t)msg->buffer);
-            td->tdBufferEnd = AROS_LONG2OHCI((uint32_t)msg->buffer + msg->length - 1);
+            td->tdCurrentBufferPointer = AROS_LONG2OHCI((uint32_t)buffer);
+            td->tdBufferEnd = AROS_LONG2OHCI((uint32_t)buffer + msg->length - 1);
             td->tdPipe = pipe;
         }
 
@@ -871,16 +882,6 @@ BOOL METHOD(OHCI, Hidd_USBDrv, ControlTransfer)
         CacheClearE(status, sizeof(ohci_td_t), CACRF_ClearD);
         CacheClearE(td, sizeof(ohci_td_t), CACRF_ClearD);
         CacheClearE(tail, sizeof(ohci_td_t), CACRF_ClearD);
-        length = sizeof(USBDevice_Request);
-        CachePreDMA(msg->request, &length, DMA_ReadFromRAM);
-        if (msg->buffer && msg->length)
-        {
-            length = msg->length;
-            if (msg->request->bmRequestType & UT_READ)
-                CachePreDMA(msg->buffer, &length, 0);
-            else
-                CachePreDMA(msg->buffer, &length, DMA_ReadFromRAM);
-        }
 
         /* Fire the transfer */
         if (pipe->timeoutVal != 0)
@@ -943,6 +944,7 @@ BOOL METHOD(OHCI, Hidd_USBDrv, ControlTransfer)
             if (!CheckIO((struct IORequest *)pipe->timeout))
                 AbortIO((struct IORequest *)pipe->timeout);
             WaitIO((struct IORequest *)pipe->timeout);
+            SetSignal(0, 1 << toutsig);
 
             if (!pipe->errorCode)
                 retval = TRUE;
@@ -1112,6 +1114,7 @@ BOOL METHOD(OHCI, Hidd_USBDrv, BulkTransfer)
             if (!CheckIO((struct IORequest *)pipe->timeout))
                 AbortIO((struct IORequest *)pipe->timeout);
             WaitIO((struct IORequest *)pipe->timeout);
+            SetSignal(0, 1 << toutsig);
 
             if (!pipe->errorCode)
                 retval = TRUE;

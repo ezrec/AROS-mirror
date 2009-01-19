@@ -785,6 +785,7 @@ BOOL METHOD(UHCI, Hidd_USBDrv, ControlTransfer)
             if (!CheckIO((struct IORequest *)p->p_Timeout))
                 AbortIO((struct IORequest *)p->p_Timeout);
             WaitIO((struct IORequest *)p->p_Timeout);
+            SetSignal(0, 1 << toutsig);
 
             if (p->p_ErrorCode)
                 retval = FALSE;
@@ -854,6 +855,7 @@ BOOL METHOD(UHCI, Hidd_USBDrv, BulkTransfer)
             if (!CheckIO((struct IORequest *)p->p_Timeout))
                 AbortIO((struct IORequest *)p->p_Timeout);
             WaitIO((struct IORequest *)p->p_Timeout);
+            SetSignal(0, 1 << toutsig);
 
             if (p->p_ErrorCode)
                 retval = FALSE;
