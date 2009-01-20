@@ -355,6 +355,38 @@ static void cmd_Write64(struct IORequest *io, mss_device_t *dev, mss_unit_t *uni
 	}
 }
 
+static void cmd_DirectSCSI(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit)
+{
+	struct SCSICmd *cmd = (struct SCSICmd *)IOStdReq(io)->io_Data;
+
+	IOStdReq(io)->io_Error = 0;
+
+	if (cmd)
+	{
+		cmd->scsi_Actual = 0;
+
+		if (!HIDD_USBStorage_DirectSCSI(unit->msu_object, unit->msu_lun, cmd->scsi_Command, cmd->scsi_CmdLength, cmd->scsi_Data, cmd->scsi_Length, cmd->scsi_Flags & SCSIF_READ))
+		{
+			int i;
+			char *c = cmd->scsi_Command;
+			D(bug("[MSS-dev] DirectSCSI failed: "));
+
+			for (i=0; i < cmd->scsi_CmdLength; i++)
+				D(bug("%02x ", c[i]));
+
+			D(bug("data=%08x len=%08x\n", cmd->scsi_Data, cmd->scsi_Length));
+
+			IOStdReq(io)->io_Error = TDERR_NotSpecified;
+		}
+		else
+		{
+			IOStdReq(io)->io_Error = 0;
+			cmd->scsi_Actual = cmd->scsi_Length;
+			IOStdReq(io)->io_Actual = IOStdReq(io)->io_Length;
+		}
+	}
+}
+
 static const uint16_t supported_commands[] = {
 		CMD_RESET, CMD_READ, CMD_WRITE, CMD_UPDATE, CMD_CLEAR, CMD_START, CMD_STOP, CMD_FLUSH,
 		TD_MOTOR, TD_SEEK, TD_FORMAT, TD_REMOVE, TD_CHANGENUM, TD_CHANGESTATE, TD_PROTSTATUS,
@@ -393,7 +425,7 @@ static const void (*map32[HD_SCSICMD+1])(struct IORequest *io, mss_device_t *dev
 		[TD_WRITE64]    	= cmd_Write64,
 		[TD_SEEK64]     	= cmd_NULL,
 		[TD_FORMAT64]   	= cmd_Write64,
-		[HD_SCSICMD]    	= cmd_Invalid,
+		[HD_SCSICMD]    	= cmd_DirectSCSI,
 };
 
 static const void (*map64[4])(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit) = {
