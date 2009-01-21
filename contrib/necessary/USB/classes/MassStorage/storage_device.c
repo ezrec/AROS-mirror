@@ -365,6 +365,31 @@ static void cmd_DirectSCSI(struct IORequest *io, mss_device_t *dev, mss_unit_t *
 	{
 		cmd->scsi_Actual = 0;
 
+		/* 
+		   Handle the USB SCSI quirks. The code is bad because it assumes the 
+		   cmd->scsi_Command is writable
+		*/
+		switch(cmd->scsi_Command[0])
+		{
+		    case 0x12:	/* INQUIRY: USB devices deliver the first 36 bytes only */
+			if (cmd->scsi_Command[4] > 36)
+			    cmd->scsi_Command[4] = 36;
+			break;
+		
+		    case 0x5a:	/* MODE SENSE 10: Only 8 bytes are delivered */
+			if (((cmd->scsi_Command[7] << 8) | cmd->scsi_Command[8]) > 8)
+			{
+			    cmd->scsi_Command[7] = 0;
+			    cmd->scsi_Command[8] = 8;
+			}
+			break;
+		
+		    case 0x03:	/* REQUEST SENSE: USB devices deliver up to 18 bytes only*/
+			if (cmd->scsi_Command[4] > 18)
+    			    cmd->scsi_Command[4] = 18;
+			break;
+		}
+
 		if (!HIDD_USBStorage_DirectSCSI(unit->msu_object, unit->msu_lun, cmd->scsi_Command, cmd->scsi_CmdLength, cmd->scsi_Data, cmd->scsi_Length, cmd->scsi_Flags & SCSIF_READ))
 		{
 			int i;
