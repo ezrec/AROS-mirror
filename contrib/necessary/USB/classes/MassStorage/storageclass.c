@@ -52,7 +52,7 @@ static unit_cache_t *GetUnitFromCache(OOP_Class *cl, OOP_Object *o, uint8_t crea
 	/* Get some basic info about the device */
 	OOP_GetAttr(o, aHidd_USBDevice_ProductID, &tmp);
 	pid = tmp;
-	OOP_GetAttr(o, aHidd_USBDevice_ProductID, &tmp);
+	OOP_GetAttr(o, aHidd_USBDevice_VendorID, &tmp);
 	vid = tmp;
 	OOP_GetAttr(o, aHidd_USBDevice_ProductName, &tmp);
 	product = (char *)tmp;
@@ -93,15 +93,33 @@ static unit_cache_t *GetUnitFromCache(OOP_Class *cl, OOP_Object *o, uint8_t crea
 		NEWLIST(&u->units);
 		u->productID = pid;
 		u->vendorID = vid;
-		u->productName = AllocVecPooled(sd->MemPool, strlen(product) + 1);
-		if (u->productName)
-			strcpy(u->productName, product);
-		u->manufacturerName = AllocVecPooled(sd->MemPool, strlen(manufacturer) + 1);
-		if (u->manufacturerName)
-			strcpy(u->manufacturerName, manufacturer);
-		u->serialNumber = AllocVecPooled(sd->MemPool, strlen(serial) + 1);
-		if (u->serialNumber)
-			strcpy(u->serialNumber, serial);
+
+		if (product)
+		{
+			u->productName = AllocVecPooled(sd->MemPool, strlen(product) + 1);
+			if (u->productName)
+				strcpy(u->productName, product);
+		}
+		else
+			u->productName = NULL;
+
+		if (manufacturer)
+		{
+			u->manufacturerName = AllocVecPooled(sd->MemPool, strlen(manufacturer) + 1);
+			if (u->manufacturerName)
+				strcpy(u->manufacturerName, manufacturer);
+		}
+		else
+			u->manufacturerName = NULL;
+
+		if (serial)
+		{
+			u->serialNumber = AllocVecPooled(sd->MemPool, strlen(serial) + 1);
+			if (u->serialNumber)
+				strcpy(u->serialNumber, serial);
+		}
+		else
+			u->serialNumber = NULL;
 
 		ObtainSemaphore(&sd->Lock);
 		u->unitNumber = sd->unitNum;
