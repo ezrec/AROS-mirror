@@ -9,7 +9,7 @@
  * non-commercial purposes, provided this notice is included.
  * ----------------------------------------------------------------------
  * History:
- * 
+ *
  * 06-Jun-08 sonic     - Fixed to compile with gcc v2
  * 30-Mar-08 error     - Updated 'Find_Last_Session' with a generic command
  *                       mandatory for all MMC devices; corrected major flaw
@@ -22,7 +22,7 @@
  * 07-Jul-02 sheutlin  various changes when porting to AROS
  *                     - global variables are now in a struct Globals *global
  * 02-Sep-94   fmu   Display READ TOC for Apple CD 150 drives.
- * 01-Sep-94   fmu   Workaround for bad NEC 3X READ TOC command in 
+ * 01-Sep-94   fmu   Workaround for bad NEC 3X READ TOC command in
  *		     Has_Audio_Tracks() and Data_Tracks().
  * 20-Aug-94   fmu   New function Find_Last_Session ().
  * 23-Jul-94   fmu   Last index modified from 99 to 1 in Start_Play_Audio().
@@ -49,6 +49,8 @@
  * 24-Sep-93   fmu   - SCSI buffers may now reside in fast or chip memory.
  *                   - TD_CHANGESTATE instead of CMD_READ in Test_Unit_Ready
  */
+
+#include <aros/debug.h>
 
 #include <proto/alib.h>
 #include <proto/exec.h>
@@ -155,7 +157,7 @@ int bufs = p_std_buffers + p_file_buffers + 1;
 	}
 
 	/*
-		make the buffer quad-word aligned. This greatly helps 
+		make the buffer quad-word aligned. This greatly helps
 		performance on '040-powered systems with DMA SCSI
 		controllers.
 	*/
@@ -450,13 +452,26 @@ t_toc_data *Read_TOC
 static unsigned char cmd[10] =
 	{ 0x43, 0, 0, 0, 0, 0, 0, TOC_SIZE >> 8, TOC_SIZE & 0xff, 0 };
 int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
+unsigned int toc_len = 0;
 
 	if (p_cd->model == MODEL_CDU_8002) /* READ TOC not supported by this drive */
 		return NULL;
 
+	cmd[7] = 0;
+	cmd[8] = 4;
 	if (
 			!Do_SCSI_Command
-				(p_cd,p_cd->buffers[dummy_buf],TOC_SIZE,cmd,10,SCSIF_READ)
+				(p_cd,p_cd->buffers[dummy_buf],4,cmd,10,SCSIF_READ)
+		)
+		return NULL;
+
+	toc_len = 2 + (p_cd->buffers[dummy_buf][0] << 8) | (p_cd->buffers[dummy_buf][1]);
+	cmd[7] = toc_len >> 8;
+	cmd[8] = toc_len;
+
+	if (
+			!Do_SCSI_Command
+				(p_cd,p_cd->buffers[dummy_buf],toc_len,cmd,10,SCSIF_READ)
 		)
 		return NULL;
 
@@ -469,7 +484,7 @@ t_toc_header hdr;
 t_toc_data *toc;
 int i, len;
 
-	
+
 	toc = Read_TOC (p_cd, &hdr);
 	if (!toc)
 		return FALSE;
@@ -617,7 +632,7 @@ int Find_Last_Session(CDROM *p_cd, uint32_t *p_result)
 {
     static uint8_t cmd[] = {0x43, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, SCSI_BUFSIZE>>8, 0x00, 0x00};
     uint8_t *buf;
-    
+
     /*
      * first, make the initiator use the logical offset of 0 in case the above fails;
      * this method will do one of:
