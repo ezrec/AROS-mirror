@@ -630,8 +630,9 @@ void Clear_Sector_Buffers (CDROM *p_cd)
 
 int Find_Last_Session(CDROM *p_cd, uint32_t *p_result)
 {
-    static uint8_t cmd[] = {0x43, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, SCSI_BUFSIZE>>8, 0x00, 0x00};
+    static uint8_t cmd[] = {0x43, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     uint8_t *buf;
+    uint16_t length = 0;
 
     /*
      * first, make the initiator use the logical offset of 0 in case the above fails;
@@ -645,10 +646,22 @@ int Find_Last_Session(CDROM *p_cd, uint32_t *p_result)
     *p_result = 0;
     buf = p_cd->buffers[p_cd->std_buffers + p_cd->file_buffers];
 
+    /* Ask the scsi device for the length of this TOC */
+    cmd[7] = 0;
+    cmd[8] = 4;
+
+    if (!Do_SCSI_Command(p_cd, buf, 4, cmd, sizeof(cmd), SCSIF_READ))
+       return FALSE;
+
+    length = 2 + ((buf[0] << 8) | buf[1]);
+
     /*
      * now that we have a spare buffer, try to fetch some data from that CD
      */
-    if (!Do_SCSI_Command(p_cd, buf, SCSI_BUFSIZE, cmd, sizeof(cmd), SCSIF_READ))
+    cmd[7] = length >> 8;
+    cmd[8] = length & 0xff;
+
+    if (!Do_SCSI_Command(p_cd, buf, length, cmd, sizeof(cmd), SCSIF_READ))
        return FALSE;
 
     /*
