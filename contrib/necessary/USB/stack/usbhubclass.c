@@ -444,10 +444,10 @@ BOOL METHOD(USBHub, Hidd_USBHub, GetHubDescriptor)
             bRequest:       UR_GET_DESCRIPTOR,
             wValue:         AROS_WORD2LE(((uint8_t)UDESC_HUB) << 8),
             wIndex:         AROS_WORD2LE(0),
-            wLength:        AROS_WORD2LE(USB_HUB_DESCRIPTOR_SIZE)
+            wLength:        AROS_WORD2LE(USB_HUB_DESCRIPTOR_SIZE-1)
     };
 
-    return HIDD_USBDevice_ControlMessage(o, NULL, &request, msg->descriptor, sizeof(usb_hub_descriptor_t));
+    return HIDD_USBDevice_ControlMessage(o, NULL, &request, msg->descriptor, USB_HUB_DESCRIPTOR_SIZE-1);
 }
 
 
