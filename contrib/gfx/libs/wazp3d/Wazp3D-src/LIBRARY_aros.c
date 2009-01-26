@@ -7,6 +7,7 @@
 #include <proto/dos.h>
 #include <proto/graphics.h>
 #include <proto/asl.h>
+#include <proto/timer.h>
 
 #include <exec/resident.h>
 #include <exec/initializers.h>
@@ -18,6 +19,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cybergraphx/cybergraphics.h>
+
+struct Device *TimerBase;
+static struct timerequest tr;
+ULONG StartTime=0;
 
 /*======================================================================================*/
 #define REM(t) LibAlert(#t);
@@ -148,11 +153,30 @@ BPTR file;
     }
 }
 /*==================================================================================*/
+ULONG LibMilliTimer(void)
+{
+struct timeval tv;
+ULONG	MilliFrequence1=1000;
+ULONG	MilliFrequence2=1000000/MilliFrequence1;
+ULONG MilliTime;
+
+	GetSysTime(&tv);
+	if(StartTime==0)	StartTime=tv.tv_secs;
+	MilliTime  = (tv.tv_secs-StartTime) *  MilliFrequence1 + tv.tv_micro/MilliFrequence2;
+	return(MilliTime);
+}
+/*==================================================================================*/
 static int OpenAmigaLibraries(struct Library *lh)
 {
-/* Initialize the standards libraries We assume that ROM libraries open OK */
+/* Initialize the standards libraries. We assume that ROM libraries open OK */
 
 REM(OpenAmigaLibraries)
+
+    if (OpenDevice(TIMERNAME, UNIT_MICROHZ, (struct IORequest *)&tr, 0L) != 0)
+        {REM(Error opening timer.device);return(FALSE);}
+
+    TimerBase = (struct Device  *) tr.tr_node.io_Device;
+
     WAZP3D_Init();
     return(TRUE);
 }
@@ -160,8 +184,8 @@ REM(OpenAmigaLibraries)
 /*======================================================================================*/
 static void CloseAmigaLibraries(struct Library *lh)
 {
-#define LIBCLOSE(Lbase)     if(Lbase!=NULL)    {CloseLibrary( ((struct Library *)Lbase) );Lbase=NULL;}
-    
+    CloseDevice((struct IORequest *)&tr); 
+
     WAZP3D_Close();
     LibDebug=FALSE;    /* with OS libraries closed cant print anymore */
 }
