@@ -104,12 +104,12 @@ void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t lun, struct Task *parent
 		}
 		else
 		{
-			uint8_t sense[19];
+			uint8_t sense[18];
 
 			/* Unit was not ready? Get the sense */
 			D(bug("[%s] TestUnitReady NOT OK\n", name));
 
-			HIDD_USBStorage_RequestSense(o, lun, sense, 19);
+			HIDD_USBStorage_RequestSense(o, lun, sense, 18);
 
 			/*
 			 * If sense reports no media, clear the flags. Otherwise, the unit was OK, just wanted
