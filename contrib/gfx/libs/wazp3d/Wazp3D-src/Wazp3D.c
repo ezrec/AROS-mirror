@@ -49,7 +49,7 @@ struct memory3D *firstME=NULL;		/* Tracked memory-allocation	  		*/
 /*==================================================================================*/
 #define DRIVERNAME "Wazp3D soft renderer - Alain Thellier - Paris France 2009 - gamma 41"
 UBYTE Wazp3DPrefsName[] = {"Wazp3D Prefs.Gamma 41.Alain Thellier 2009"};
-ULONG Wazp3DPrefsNameTag=(ULONG) Wazp3DPrefsName;
+IPTR Wazp3DPrefsNameTag=(IPTR) Wazp3DPrefsName;
 /*==================================================================================*/
 struct vertex3D{
 	float x,y,z;
