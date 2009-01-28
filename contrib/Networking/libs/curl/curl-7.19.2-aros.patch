@@ -1,0 +1,527 @@
+diff -ruN curl-7.19.2/acinclude.m4 curl-7.19.2-aros/acinclude.m4
+--- curl-7.19.2/acinclude.m4	2008-10-28 23:12:01.000000000 +0100
++++ curl-7.19.2-aros/acinclude.m4	2009-01-28 22:03:04.000000000 +0100
+@@ -1359,6 +1359,13 @@
+ #ifdef HAVE_SYS_SOCKET_H
+ #include <sys/socket.h>
+ #endif
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++#endif
++#endif
++    ],[
++#ifdef __AROS__
++      void *SocketBase;
+ #endif
+     ]],[[
+       recv(0, 0, 0, 0);
+@@ -1493,6 +1500,13 @@
+ #ifdef HAVE_SYS_SOCKET_H
+ #include <sys/socket.h>
+ #endif
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++#endif
++#endif
++    ],[
++#ifdef __AROS__
++      void *SocketBase;
+ #endif
+     ]],[[
+       send(0, 0, 0, 0);
+diff -ruN curl-7.19.2/configure curl-7.19.2-aros/configure
+--- curl-7.19.2/configure	2008-11-10 16:23:17.000000000 +0100
++++ curl-7.19.2-aros/configure	2009-01-28 22:03:04.000000000 +0100
+@@ -27953,6 +27953,59 @@
+ 
+ fi
+ 
++if test "$HAVE_GETHOSTBYNAME" != "1"
++then
++    { echo "$as_me:$LINENO: checking for gethostbyname in bsdsocket.library" >&5
++echo $ECHO_N "checking for gethostbyname in bsdsocket.library... $ECHO_C" >&6; }
++  cat >conftest.$ac_ext <<_ACEOF
++/* confdefs.h.  */
++_ACEOF
++cat confdefs.h >>conftest.$ac_ext
++cat >>conftest.$ac_ext <<_ACEOF
++/* end confdefs.h.  */
++#include <proto/bsdsocket.h>
++int
++main ()
++{
++void *SocketBase; gethostbyname("");
++  ;
++  return 0;
++}
++_ACEOF
++rm -f conftest.$ac_objext conftest$ac_exeext
++if { (ac_try="$ac_link"
++case "(($ac_try" in
++  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
++  *) ac_try_echo=$ac_try;;
++esac
++eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
++  (eval "$ac_link") 2>conftest.er1
++  ac_status=$?
++  grep -v '^ *+' conftest.er1 >conftest.err
++  rm -f conftest.er1
++  cat conftest.err >&5
++  echo "$as_me:$LINENO: \$? = $ac_status" >&5
++  (exit $ac_status); } && {
++	 test -z "$ac_c_werror_flag" ||
++	 test ! -s conftest.err
++       } && test -s conftest$ac_exeext &&
++       $as_test_x conftest$ac_exeext; then
++                 { echo "$as_me:$LINENO: result: yes" >&5
++echo "${ECHO_T}yes" >&6; }
++              HAVE_GETHOSTBYNAME="1"
++else
++  echo "$as_me: failed program was:" >&5
++sed 's/^/| /' conftest.$ac_ext >&5
++
++	{ echo "$as_me:$LINENO: result: no" >&5
++echo "${ECHO_T}no" >&6; }
++
++fi
++
++rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
++      conftest$ac_exeext conftest.$ac_ext
++fi
++
+ 
+ if test "$HAVE_GETHOSTBYNAME" = "1"; then
+ 
+@@ -32676,8 +32729,63 @@
+             { echo "$as_me:$LINENO: result: yes" >&5
+ echo "${ECHO_T}yes" >&6; }
+         fi
++    fi
+ 
+-    else
++    if test "$ac_cv_lib_ssl_SSL_connect" != yes; then
++                { echo "$as_me:$LINENO: checking for ssl with SocketBase available" >&5
++echo $ECHO_N "checking for ssl with SocketBase available... $ECHO_C" >&6; }
++        OLIBS=$LIBS
++        LIBS="-lssl $LIBS"
++        cat >conftest.$ac_ext <<_ACEOF
++/* confdefs.h.  */
++_ACEOF
++cat confdefs.h >>conftest.$ac_ext
++cat >>conftest.$ac_ext <<_ACEOF
++/* end confdefs.h.  */
++void *SocketBase;
++int
++main ()
++{
++SSL_connect(0);
++  ;
++  return 0;
++}
++_ACEOF
++rm -f conftest.$ac_objext conftest$ac_exeext
++if { (ac_try="$ac_link"
++case "(($ac_try" in
++  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
++  *) ac_try_echo=$ac_try;;
++esac
++eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
++  (eval "$ac_link") 2>conftest.er1
++  ac_status=$?
++  grep -v '^ *+' conftest.er1 >conftest.err
++  rm -f conftest.er1
++  cat conftest.err >&5
++  echo "$as_me:$LINENO: \$? = $ac_status" >&5
++  (exit $ac_status); } && {
++	 test -z "$ac_c_werror_flag" ||
++	 test ! -s conftest.err
++       } && test -s conftest$ac_exeext &&
++       $as_test_x conftest$ac_exeext; then
++  ac_cv_lib_ssl_SSL_connect="yes"
++                     { echo "$as_me:$LINENO: result: yes" >&5
++echo "${ECHO_T}yes" >&6; }
++else
++  echo "$as_me: failed program was:" >&5
++sed 's/^/| /' conftest.$ac_ext >&5
++
++	LIBS=$OLIBS
++                     { echo "$as_me:$LINENO: result: no" >&5
++echo "${ECHO_T}no" >&6; }
++fi
++
++rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
++      conftest$ac_exeext conftest.$ac_ext
++    fi
++
++    if test "$ac_cv_lib_ssl_SSL_connect" = yes; then
+ 
+ 
+ 
+@@ -39149,6 +39257,11 @@
+ #endif
+ #endif
+ 
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++struct Library *SocketBase;
++#endif
++
+ int
+ main ()
+ {
+@@ -40273,12 +40386,18 @@
+ #ifdef HAVE_SYS_SOCKET_H
+ #include <sys/socket.h>
+ #endif
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++#endif
+ #endif
+ 
+ int
+ main ()
+ {
+ 
++#ifdef __AROS__
++      void *SocketBase;
++#endif
+       recv(0, 0, 0, 0);
+ 
+   ;
+@@ -41103,12 +41222,18 @@
+ #ifdef HAVE_SYS_SOCKET_H
+ #include <sys/socket.h>
+ #endif
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++#endif
+ #endif
+ 
+ int
+ main ()
+ {
+ 
++#ifdef __AROS__
++      void *SocketBase;
++#endif
+       send(0, 0, 0, 0);
+ 
+   ;
+diff -ruN curl-7.19.2/configure.ac curl-7.19.2-aros/configure.ac
+--- curl-7.19.2/configure.ac	2008-11-10 16:22:59.000000000 +0100
++++ curl-7.19.2-aros/configure.ac	2009-01-28 22:03:05.000000000 +0100
+@@ -657,6 +657,19 @@
+                ])
+ fi
+ 
++if test "$HAVE_GETHOSTBYNAME" != "1"
++then
++  dnl AROS gets to gethostbyname via bsdsocket.library
++  AC_MSG_CHECKING([for gethostbyname in bsdsocket.library])
++  AC_TRY_LINK([#include <proto/bsdsocket.h>],
++              [void *SocketBase; gethostbyname("");],
++              [ dnl worked!
++              AC_MSG_RESULT([yes])
++              HAVE_GETHOSTBYNAME="1"],
++              AC_MSG_RESULT(no)
++             )
++fi
++
+ 
+ if test "$HAVE_GETHOSTBYNAME" = "1"; then
+   AC_DEFINE(HAVE_GETHOSTBYNAME, 1, [If you have gethostbyname])
+@@ -1278,8 +1291,22 @@
+         else
+             AC_MSG_RESULT(yes)
+         fi
++    fi
+ 
+-    else
++    if test "$ac_cv_lib_ssl_SSL_connect" != yes; then
++        dnl on AROS, libssl needs SocketBase
++        AC_MSG_CHECKING(for ssl with SocketBase available)
++        OLIBS=$LIBS
++        LIBS="-lssl $LIBS"
++        AC_TRY_LINK([void *SocketBase;],
++                    [SSL_connect(0);],
++                    [ac_cv_lib_ssl_SSL_connect="yes"
++                     AC_MSG_RESULT([yes])],
++                    [LIBS=$OLIBS
++                     AC_MSG_RESULT([no])])
++    fi
++
++    if test "$ac_cv_lib_ssl_SSL_connect" = yes; then
+ 
+       dnl Have the libraries--check for SSLeay/OpenSSL headers
+       AC_CHECK_HEADERS(openssl/x509.h openssl/rsa.h openssl/crypto.h \
+diff -ruN curl-7.19.2/lib/connect.c curl-7.19.2-aros/lib/connect.c
+--- curl-7.19.2/lib/connect.c	2008-11-06 22:30:18.000000000 +0100
++++ curl-7.19.2-aros/lib/connect.c	2009-01-28 22:03:04.000000000 +0100
+@@ -80,6 +80,10 @@
+ #define _MPRINTF_REPLACE /* use our functions only */
+ #include <curl/mprintf.h>
+ 
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++#endif
++
+ #include "urldata.h"
+ #include "sendf.h"
+ #include "if2ip.h"
+diff -ruN curl-7.19.2/lib/ftp.c curl-7.19.2-aros/lib/ftp.c
+--- curl-7.19.2/lib/ftp.c	2008-11-06 22:30:18.000000000 +0100
++++ curl-7.19.2-aros/lib/ftp.c	2009-01-28 22:03:04.000000000 +0100
+@@ -61,6 +61,10 @@
+ #define in_addr_t unsigned long
+ #endif
+ 
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++#endif
++
+ #include <curl/curl.h>
+ #include "urldata.h"
+ #include "sendf.h"
+diff -ruN curl-7.19.2/lib/getinfo.c curl-7.19.2-aros/lib/getinfo.c
+--- curl-7.19.2/lib/getinfo.c	2008-10-07 23:55:20.000000000 +0200
++++ curl-7.19.2-aros/lib/getinfo.c	2009-01-28 22:03:04.000000000 +0100
+@@ -36,6 +36,10 @@
+ #include "sslgen.h"
+ #include "connect.h" /* Curl_getconnectinfo() */
+ 
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++#endif
++
+ /* Make this the last #include */
+ #include "memdebug.h"
+ 
+diff -ruN curl-7.19.2/lib/hostip4.c curl-7.19.2-aros/lib/hostip4.c
+--- curl-7.19.2/lib/hostip4.c	2008-11-06 22:30:18.000000000 +0100
++++ curl-7.19.2-aros/lib/hostip4.c	2009-01-28 22:03:04.000000000 +0100
+@@ -57,6 +57,10 @@
+ #include <process.h>
+ #endif
+ 
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++#endif
++
+ #include "urldata.h"
+ #include "sendf.h"
+ #include "hostip.h"
+diff -ruN curl-7.19.2/lib/http.c curl-7.19.2-aros/lib/http.c
+--- curl-7.19.2/lib/http.c	2008-11-11 23:19:27.000000000 +0100
++++ curl-7.19.2-aros/lib/http.c	2009-01-28 22:03:04.000000000 +0100
+@@ -73,6 +73,10 @@
+ 
+ #endif
+ 
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++#endif
++
+ #include "urldata.h"
+ #include <curl/curl.h>
+ #include "transfer.h"
+diff -ruN curl-7.19.2/lib/http_ntlm.c curl-7.19.2-aros/lib/http_ntlm.c
+--- curl-7.19.2/lib/http_ntlm.c	2008-10-23 13:49:19.000000000 +0200
++++ curl-7.19.2-aros/lib/http_ntlm.c	2009-01-28 22:03:04.000000000 +0100
+@@ -52,6 +52,10 @@
+ #include <netdb.h>
+ #endif
+ 
++#if (defined(__AROS__))
++#include <proto/bsdsocket.h>
++#endif
++
+ #include "urldata.h"
+ #include "easyif.h"  /* for Curl_convert_... prototypes */
+ #include "sendf.h"
+diff -ruN curl-7.19.2/lib/if2ip.c curl-7.19.2-aros/lib/if2ip.c
+--- curl-7.19.2/lib/if2ip.c	2008-11-10 16:22:59.000000000 +0100
++++ curl-7.19.2-aros/lib/if2ip.c	2009-01-28 22:03:04.000000000 +0100
+@@ -40,7 +40,7 @@
+ #if !defined(WIN32) && !defined(__BEOS__) && !defined(__CYGWIN__) && \
+     !defined(__riscos__) && !defined(__INTERIX) && !defined(NETWARE) && \
+     !defined(__AMIGA__) && !defined(__minix) && !defined(__SYMBIAN32__) && \
+-    !defined(__WATCOMC__)
++    !defined(__WATCOMC__) && !defined(__AROS__)
+ 
+ #if defined(HAVE_GETIFADDRS)
+ 
+@@ -138,6 +138,11 @@
+ #include <inet.h>
+ #endif
+ 
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++#include "aros.h"
++#endif
++
+ #include "inet_ntop.h"
+ 
+ #define _MPRINTF_REPLACE /* use our functions only */
+diff -ruN curl-7.19.2/lib/inet_ntop.c curl-7.19.2-aros/lib/inet_ntop.c
+--- curl-7.19.2/lib/inet_ntop.c	2008-09-23 22:54:53.000000000 +0200
++++ curl-7.19.2-aros/lib/inet_ntop.c	2009-01-28 22:03:04.000000000 +0100
+@@ -37,6 +37,10 @@
+ #include <string.h>
+ #include <errno.h>
+ 
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++#endif
++
+ #define _MPRINTF_REPLACE /* use our functions only */
+ #include <curl/mprintf.h>
+ 
+diff -ruN curl-7.19.2/lib/multi.c curl-7.19.2-aros/lib/multi.c
+--- curl-7.19.2/lib/multi.c	2008-10-30 20:06:12.000000000 +0100
++++ curl-7.19.2-aros/lib/multi.c	2009-01-28 22:03:04.000000000 +0100
+@@ -30,6 +30,10 @@
+ #include <unistd.h>
+ #endif
+ 
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++#endif
++
+ #include <curl/curl.h>
+ 
+ #include "urldata.h"
+diff -ruN curl-7.19.2/lib/select.c curl-7.19.2-aros/lib/select.c
+--- curl-7.19.2/lib/select.c	2008-05-26 17:16:34.000000000 +0200
++++ curl-7.19.2-aros/lib/select.c	2009-01-28 22:03:04.000000000 +0100
+@@ -39,6 +39,10 @@
+ #include <socket.h>
+ #endif
+ 
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++#endif
++
+ #ifdef MSDOS
+ #include <dos.h>  /* delay() */
+ #endif
+@@ -491,3 +495,9 @@
+    return(rc);
+ }
+ #endif /* TPF */
++
++#ifdef __AROS__
++#include <aros/symbolsets.h>
++#include <exec/libraries.h>
++ADD2LIBS("bsdsocket.library", 0, struct Library *, SocketBase);
++#endif
+diff -ruN curl-7.19.2/lib/sendf.c curl-7.19.2-aros/lib/sendf.c
+--- curl-7.19.2/lib/sendf.c	2008-11-13 11:47:29.000000000 +0100
++++ curl-7.19.2-aros/lib/sendf.c	2009-01-28 22:03:04.000000000 +0100
+@@ -36,6 +36,10 @@
+ #include <unistd.h>
+ #endif
+ 
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++#endif
++
+ #include <curl/curl.h>
+ #include "urldata.h"
+ #include "sendf.h"
+diff -ruN curl-7.19.2/lib/setup.h curl-7.19.2-aros/lib/setup.h
+--- curl-7.19.2/lib/setup.h	2008-09-24 16:24:24.000000000 +0200
++++ curl-7.19.2-aros/lib/setup.h	2009-01-28 22:03:04.000000000 +0100
+@@ -379,6 +379,14 @@
+ #    define sclose(x) CloseSocket(x)
+ #  endif
+ 
++#  ifdef __AROS__
++#   undef HAVE_ALARM
++#   undef HAVE_SIGNAL
++#   undef HAVE_SIGACTION
++#   undef sclose
++#   define sclose(x) CloseSocket(x)
++#  endif
++
+ #  ifdef __minix
+      /* Minix 3 versions up to at least 3.1.3 are missing these prototypes */
+      extern char * strtok_r(char *s, const char *delim, char **last);
+diff -ruN curl-7.19.2/lib/telnet.c curl-7.19.2-aros/lib/telnet.c
+--- curl-7.19.2/lib/telnet.c	2008-10-23 13:49:19.000000000 +0200
++++ curl-7.19.2-aros/lib/telnet.c	2009-01-28 22:03:04.000000000 +0100
+@@ -58,6 +58,10 @@
+ #include <sys/param.h>
+ #endif
+ 
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++#endif
++
+ #endif  /* WIN32 */
+ 
+ #include "urldata.h"
+diff -ruN curl-7.19.2/lib/tftp.c curl-7.19.2-aros/lib/tftp.c
+--- curl-7.19.2/lib/tftp.c	2008-09-29 23:45:38.000000000 +0200
++++ curl-7.19.2-aros/lib/tftp.c	2009-01-28 22:03:04.000000000 +0100
+@@ -58,6 +58,10 @@
+ #include <sys/param.h>
+ #endif
+ 
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++#endif
++
+ #endif /* WIN32 */
+ 
+ #include "urldata.h"
+diff -ruN curl-7.19.2/lib/transfer.c curl-7.19.2-aros/lib/transfer.c
+--- curl-7.19.2/lib/transfer.c	2008-10-29 23:40:14.000000000 +0100
++++ curl-7.19.2-aros/lib/transfer.c	2009-01-28 22:03:04.000000000 +0100
+@@ -79,6 +79,10 @@
+ 
+ #endif  /* WIN32 */
+ 
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++#endif
++
+ #include "urldata.h"
+ #include <curl/curl.h>
+ #include "netrc.h"
+diff -ruN curl-7.19.2/lib/url.c curl-7.19.2-aros/lib/url.c
+--- curl-7.19.2/lib/url.c	2008-11-11 14:20:02.000000000 +0100
++++ curl-7.19.2-aros/lib/url.c	2009-01-28 22:03:04.000000000 +0100
+@@ -76,6 +76,10 @@
+ 
+ #endif  /* WIN32 */
+ 
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++#endif
++
+ #ifdef USE_LIBIDN
+ #include <idna.h>
+ #include <tld.h>
+diff -ruN curl-7.19.2/src/main.c curl-7.19.2-aros/src/main.c
+--- curl-7.19.2/src/main.c	2008-10-28 23:12:02.000000000 +0100
++++ curl-7.19.2-aros/src/main.c	2009-01-28 22:03:04.000000000 +0100
+@@ -94,6 +94,10 @@
+ #include <locale.h> /* for setlocale() */
+ #endif
+ 
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++#endif
++
+ #define ENABLE_CURLX_PRINTF
+ /* make the curlx header define all printf() functions to use the curlx_*
+    versions instead */
+@@ -5101,8 +5105,6 @@
+ #endif
+ }
+ 
+-
+-
+ int main(int argc, char *argv[])
+ {
+   int res;
