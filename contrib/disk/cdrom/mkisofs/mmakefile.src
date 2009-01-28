@@ -1,0 +1,10 @@
+# Copyright © 2009, The AROS Development Team. All rights reserved.
+# $Id$
+
+-include $(TOP)/config/make.cfg
+
+#MM- disk-cdrom : disk-cdrom-mkisofs
+
+%fetch_and_build_gnu mmake=disk-cdrom-mkisofs package=mkisofs version=1.11.3 \
+	patch=yes prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development \
+	package_repo=ftp://ftp.berlios.de/pub/cdrecord/mkisofs/old/

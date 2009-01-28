@@ -1,0 +1,85 @@
+diff -ruN mkisofs-1.11.3/Makefile.in mkisofs-1.11.3-aros/Makefile.in
+--- mkisofs-1.11.3/Makefile.in	2009-01-28 23:18:23.000000000 +0100
++++ mkisofs-1.11.3-aros/Makefile.in	2009-01-28 23:18:37.000000000 +0100
+@@ -28,7 +28,7 @@
+ 
+ #### End of system configuration section. ####
+ 
+-CFLAGS=@CFLAGS@ -I.
++CFLAGS=@CFLAGS@ -I$(srcdir) -I.
+ LDFLAGS=@LDFLAGS@
+ OBJS=mkisofs.o tree.o write.o hash.o rock.o exclude.o multi.o \
+ 		files.o match.o name.o fnmatch.o eltorito.o
+@@ -49,45 +49,45 @@
+ 
+ install: mkisofs mkisofs.8
+ 	[ -d $(bindir) ] || mkdir -p $(bindir)
+-	[ -d $(mandir) ] || mkdir $(mandir)
++	[ -d $(mandir) ] || mkdir -p $(mandir)
+ 	$(INSTALL_PROGRAM) mkisofs $(bindir)/mkisofs
+ 	-$(INSTALL_DATA) $(srcdir)/mkisofs.8 $(mandir)/mkisofs.$(manext)
+ 
+ tree.o: tree.c mkisofs.h iso9660.h exclude.h config.h Makefile
+-	$(CC) -c $(CFLAGS) tree.c
++	$(CC) -c $(CFLAGS) $(srcdir)/tree.c
+ 
+ write.o: write.c mkisofs.h iso9660.h config.h Makefile
+-	$(CC) -c $(CFLAGS) write.c
++	$(CC) -c $(CFLAGS) $(srcdir)/write.c
+ 
+ hash.o: hash.c mkisofs.h  config.h Makefile
+-	$(CC) -c $(CFLAGS) hash.c
++	$(CC) -c $(CFLAGS) $(srcdir)/hash.c
+ 
+ rock.o: rock.c mkisofs.h iso9660.h config.h Makefile
+-	$(CC) -c $(CFLAGS) rock.c
++	$(CC) -c $(CFLAGS) $(srcdir)/rock.c
+ 
+ exclude.o: exclude.c exclude.h config.h Makefile
+-	$(CC) -c $(CFLAGS) exclude.c
++	$(CC) -c $(CFLAGS) $(srcdir)/exclude.c
+ 
+ match.o: match.c match.h config.h Makefile
+-	$(CC) -c $(CFLAGS) match.c
++	$(CC) -c $(CFLAGS) $(srcdir)/match.c
+ 
+ files.o: files.c iso9660.h mkisofs.h config.h Makefile
+-	$(CC) -c $(CFLAGS) files.c
++	$(CC) -c $(CFLAGS) $(srcdir)/files.c
+ 
+ fnmatch.o: fnmatch.c fnmatch.h config.h Makefile
+-	$(CC) -c $(CFLAGS) fnmatch.c
++	$(CC) -c $(CFLAGS) $(srcdir)/fnmatch.c
+ 
+ multi.o: multi.c iso9660.h mkisofs.h config.h Makefile
+-	$(CC) -c $(CFLAGS) multi.c
++	$(CC) -c $(CFLAGS) $(srcdir)/multi.c
+ 
+ name.o: name.c iso9660.h mkisofs.h config.h Makefile
+-	$(CC) -c $(CFLAGS) name.c
++	$(CC) -c $(CFLAGS) $(srcdir)/name.c
+ 
+ mkisofs.o: mkisofs.c iso9660.h mkisofs.h exclude.h config.h Makefile
+-	$(CC) -c $(CFLAGS) mkisofs.c
++	$(CC) -c $(CFLAGS) $(srcdir)/mkisofs.c
+ 
+ eltorito.o: eltorito.c iso9660.h mkisofs.h config.h Makefile
+-	$(CC) -c $(CFLAGS) eltorito.c
++	$(CC) -c $(CFLAGS) $(srcdir)/eltorito.c
+ 
+ clean:
+ 	/bin/rm -f *.o core mkisofs *~ #*#
+diff -ruN mkisofs-1.11.3/mkisofs.h mkisofs-1.11.3-aros/mkisofs.h
+--- mkisofs-1.11.3/mkisofs.h	1997-05-17 17:50:28.000000000 +0200
++++ mkisofs-1.11.3-aros/mkisofs.h	2009-01-28 22:50:52.000000000 +0100
+@@ -38,6 +38,10 @@
+ #define NON_UNIXFS
+ #endif
+ 
++#ifdef __AROS__
++#define NON_UNIXFS
++#endif
++
+ #ifdef VMS
+ #include <sys/dir.h>
+ #define dirent direct
