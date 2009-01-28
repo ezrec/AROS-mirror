@@ -1,0 +1,32 @@
+# Copyright © 2008, The AROS Development Team. All rights reserved.
+# $Id$
+
+-include $(TOP)/config/make.cfg
+
+OPENSSL_SOURCE := $(TOP)/$(CURDIR)
+OPENSSL_BUILD_DIR := $(GENDIR)/$(CURDIR)
+
+#MM- contrib-networking-openssl : contrib-networking-openssl-setup contrib-networking-openssl-configure contrib-networking-openssl-build contrib-networking-openssl-install
+
+#MM
+contrib-networking-openssl-setup :
+	%mkdir_q dir=$(OPENSSL_BUILD_DIR)
+	cd $(OPENSSL_SOURCE); \
+	find . -type d -exec mkdir -p $(OPENSSL_BUILD_DIR)/\{\} \;;\
+	find . -type f -exec ln -fs $(OPENSSL_SOURCE)/\{\} $(OPENSSL_BUILD_DIR)/\{\} \;; 
+
+#MM
+contrib-networking-openssl-configure :
+	cd $(OPENSSL_BUILD_DIR); \
+	env -i ./Configure "aros-$(AROS_TARGET_CPU)-cross" no-threads --prefix=/Development --openssldir=/Development/etc/ssl 
+
+#MM
+contrib-networking-openssl-build :
+	cd $(OPENSSL_BUILD_DIR); \
+	env -i PATH=$$PATH make 
+
+#MM
+contrib-networking-openssl-install :
+	cd $(OPENSSL_BUILD_DIR); \
+	env -i PATH=$$PATH make install INSTALL_PREFIX=$(AROS_DEVELOPMENT)/../
+
