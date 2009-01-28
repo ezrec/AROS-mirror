@@ -65,6 +65,8 @@
 					Added example for W3D_QueryDriver
 	20-Feb-99       ClearZBuffer is now executed inside a hardware lock,
 					so this shouldn't cause anymore problems (fingers crossed)
+	28-Jan-09	Port to AROS, double buffering implemented with BlitBitMapRastPort().
+			Warnings and unused code removed.
 
 */
 ;// Includes
@@ -86,31 +88,15 @@
 ;;//
 ;// Stuff
 
+char version[] = "$VER: WarpTest 3.0 (28.01.2009)";
 
-
-#ifdef __STORM__
-char version[] = "$VER: WarpTest_StormC 2.0 (6-Aug-98)";
-#else
-char version[] = "$VER: WarpTest 2.0 (6-Aug-98)";
-#endif
-
-#ifndef __STORM__
-#pragma msg 193 ignore
-#pragma msg  93 ignore
-#endif
-
-#ifndef __PPC__
 struct Library *Warp3DBase;
-#else
-struct Library *Warp3DPPCBase;
-#endif
 struct Library *CyberGfxBase;
 struct IntuitionBase *IntuitionBase;
 struct GfxBase *GfxBase;
 struct DosLibrary *DOSBase;
 struct Screen *screen;
 struct Window *window;
-int bufnum = 0;
 BOOL outline = FALSE;
 BOOL zb = FALSE;
 
@@ -120,7 +106,7 @@ struct RDArgs *rda = NULL;
 ULONG texturesize;
 UBYTE *texture;
 UBYTE *lightmap;
-LONG result[10];
+IPTR result[10];
 
 W3D_Texture *tex, *lighttex = NULL;
 W3D_Triangle tri;
@@ -250,7 +236,6 @@ void Transform(Vector3 Pos, float theta)
 // Transform the wall to the desired orientation
 {
 	Matrix3 M;
-	Vector3 r;
 	int i;
 
 	RotYMat(&M, theta);     // Create rotation matrix;
@@ -262,6 +247,7 @@ void Transform(Vector3 Pos, float theta)
 		Project(&TempSquare[i]);
 	}
 }
+
 ;;//
 ;// "LoadTextureFromPPM"
 #define ARGB8888toARGB1555(ic) (0x8000 | ((ic&0xF8)>>3) | ((ic&0xF800)>>6) | ((ic&0xF80000)>>9))
@@ -275,7 +261,6 @@ UBYTE *LoadTextureFromPPM(APTR where, char *filename, UBYTE Opacity, int *w, int
 	FILE *f;
 	int i,j;
 	UBYTE r,g,b;
-	UWORD a;
 	unsigned long x,y;
 	int opqy, opqx, o;
 
@@ -340,45 +325,19 @@ UBYTE *LoadTextureFromPPM(APTR where, char *filename, UBYTE Opacity, int *w, int
 	fclose(f);
 	return (UBYTE *)map2;
 }
-;;//
-;// GenTexture
-int log2(int x)
-{
-	// Kludgy but fast :)
-	// floats are too small for log(x)/log(2)...
-	switch(x) {
-	case 65536: return 16;
-	case 32768: return 15;
-	case 16384: return 14;
-	case 8192: return 13;
-	case 4096: return 12;
-	case 2048: return 11;
-	case 1024: return 10;
-	case 512: return 9;
-	case 256: return 8;
-	case 128: return 7;
-	case 64:  return 6;
-	case 32:  return 5;
-	case 16:  return 4;
-	case 8:   return 3;
-	case 4:   return 2;
-	case 2:   return 1;
-	case 1:   return 0;
-	}
-}
 
 BOOL GenTexture(W3D_Context* context, char* name, LONG repeat)
 {
 	UBYTE *where;
 	int w, h;
 	ULONG error;
-	int maps,i;
+	int i;
 
 	// This loads a ppm (24 bit) texture file from disk, and sets
 	// it to 50% transparency (0x7F)...
 	where = LoadTextureFromPPM(NULL, name, 0x7F, &w, &h);
 	if (!where) return FALSE;
-	printf("Size: %ld×%ld\n", w,h);
+	printf("Size: %d×%d\n", w,h);
 
 	// This sets the square's texture coordinates to the right pixel values
 	for (i=0;i<4; i++) {
@@ -431,6 +390,7 @@ BOOL GenTexture(W3D_Context* context, char* name, LONG repeat)
 
 	return TRUE;
 }
+
 ;;//
 ;// GenLightmap
 // Ok, this is a cheap, but who cares :)
@@ -441,14 +401,14 @@ BOOL GenLightmap(W3D_Context* context, char* name, LONG repeat)
 	UBYTE *where, *here;
 	int w, h;
 	ULONG error;
-	int maps,i;
+	int i;
 	int a;
 
 	// This loads a ppm (24 bit) texture file from disk, and sets
 	// it to 50% transparency (0x7F)...
 	where = LoadTextureFromPPM(NULL, name, 0x7F, &w, &h);
 	if (!where) return FALSE;
-	printf("Size: %ld×%ld\n", w,h);
+	printf("Size: %d×%d\n", w,h);
 
 	// Convert it to pure alpha
 	// Should really use a W3D_A8 here, but I'm too lazy
@@ -484,7 +444,7 @@ BOOL GenLightmap(W3D_Context* context, char* name, LONG repeat)
 		W3D_ATO_MIPMAP,     0xffff,         // Mipmap mask - see autodocs
 	TAG_DONE);
 
-	if (!tex || error != W3D_SUCCESS) {
+	if (!lighttex || error != W3D_SUCCESS) {
 		printf("Error generating light texture: ");
 		switch(error) {
 		case W3D_ILLEGALINPUT:
@@ -509,50 +469,50 @@ BOOL GenLightmap(W3D_Context* context, char* name, LONG repeat)
 	}
 	return TRUE;
 }
+
 ;;//
 ;// PrintInfo
-void PrintInfo(W3D_Context* context)
+void PrintInfo(W3D_Context* context, struct RastPort *rp)
 {
 	int x,y;
 	static char buffer[256];
 
-	SetAPen(window->RPort, 2);
-	SetDrMd(window->RPort, JAM1);
+	SetAPen(rp, 2);
+	SetDrMd(rp, JAM1);
 	x=450; y=100;
-	if (bufnum == 0)    y += 480;
 
 	if (W3D_GetState(context, W3D_FAST) == W3D_ENABLED)
 					   sprintf(buffer, "Fast mode");
 	else               sprintf(buffer, " ");
-	Move(window->RPort, x,y); Text(window->RPort, buffer, strlen(buffer)); y+=14;
+	Move(rp, x,y); Text(rp, buffer, strlen(buffer)); y+=14;
 
 	if (outline)       sprintf(buffer, "Outline mode");
 	else               sprintf(buffer, " ");
-	Move(window->RPort, x,y); Text(window->RPort, buffer, strlen(buffer)); y+=14;
+	Move(rp, x,y); Text(rp, buffer, strlen(buffer)); y+=14;
 
 	if (aflag)         sprintf(buffer, "Show MipMaps");
 	else               sprintf(buffer, " ");
-	Move(window->RPort, x,y); Text(window->RPort, buffer, strlen(buffer)); y+=14;
+	Move(rp, x,y); Text(rp, buffer, strlen(buffer)); y+=14;
 
 	if (bflag)         sprintf(buffer, "Vertex coordinates");
 	else               sprintf(buffer, " ");
-	Move(window->RPort, x,y); Text(window->RPort, buffer, strlen(buffer)); y+=14;
+	Move(rp, x,y); Text(rp, buffer, strlen(buffer)); y+=14;
 
 	if (cflag)         sprintf(buffer, "Slow motion");
 	else               sprintf(buffer, " ");
-	Move(window->RPort, x,y); Text(window->RPort, buffer, strlen(buffer)); y+=14;
+	Move(rp, x,y); Text(rp, buffer, strlen(buffer)); y+=14;
 
 	if (W3D_GetState(context, W3D_PERSPECTIVE) == W3D_ENABLED)
 		sprintf(buffer, "Perspective");
 	else
 		sprintf(buffer, "Linear");
-	Move(window->RPort, x,y); Text(window->RPort, buffer, strlen(buffer)); y+=14;
+	Move(rp, x,y); Text(rp, buffer, strlen(buffer)); y+=14;
 
 	if (W3D_GetState(context,W3D_TEXMAPPING) == W3D_ENABLED)
 		sprintf(buffer, "Texture Mapping");
 	else
 		sprintf(buffer, "Gouraud Shading");
-	Move(window->RPort, x,y); Text(window->RPort, buffer, strlen(buffer)); y+=14;
+	Move(rp, x,y); Text(rp, buffer, strlen(buffer)); y+=14;
 
 	switch(CurrentBlend) {
 	case 0:
@@ -570,16 +530,16 @@ void PrintInfo(W3D_Context* context)
 	default:
 		sprintf(buffer, "Blend UNKNOWN");
 	}
-	Move(window->RPort, x,y); Text(window->RPort, buffer, strlen(buffer)); y+=14;
+	Move(rp, x,y); Text(rp, buffer, strlen(buffer)); y+=14;
 
 	sprintf(buffer, "theta=%3.1f", theta);
-	Move(window->RPort, x,y); Text(window->RPort, buffer, strlen(buffer)); y+=14;
+	Move(rp, x,y); Text(rp, buffer, strlen(buffer)); y+=14;
 
 	sprintf(buffer, "pos=(%3.1f %3.1f %3.1f)", Pos.x, Pos.y, Pos.z);
-	Move(window->RPort, x,y); Text(window->RPort, buffer, strlen(buffer)); y+=14;
+	Move(rp, x,y); Text(rp, buffer, strlen(buffer)); y+=14;
 
 	sprintf(buffer, "Z-Clipping Plane %3.2f", zdepth);
-	Move(window->RPort, x,y); Text(window->RPort, buffer, strlen(buffer)); y+=14;
+	Move(rp, x,y); Text(rp, buffer, strlen(buffer)); y+=14;
 	{
 		char *zm;
 		switch(zmode) {
@@ -594,17 +554,17 @@ void PrintInfo(W3D_Context* context)
 		case W3D_Z_ALWAYS:  zm = "Z-Buffer always pass";break;
 		default:            zm = "??? Unknown Z-Mode";  break;
 		}
-		Move(window->RPort, x,y); Text(window->RPort, zm, strlen(zm)); y+=14;
+		Move(rp, x,y); Text(rp, zm, strlen(zm)); y+=14;
 	}
 
 	sprintf(buffer, "Last Z: %3.2f", LastZ);
-	Move(window->RPort, x,y); Text(window->RPort, buffer, strlen(buffer)); y+=14;
+	Move(rp, x,y); Text(rp, buffer, strlen(buffer)); y+=14;
 
 	if (W3D_GetState(context,W3D_BLENDING) == W3D_ENABLED)
 		sprintf(buffer, "Alpha Blending");
 	else
 		sprintf(buffer, "No Blending");
-	Move(window->RPort, x,y); Text(window->RPort, buffer, strlen(buffer)); y+=14;
+	Move(rp, x,y); Text(rp, buffer, strlen(buffer)); y+=14;
 
 	switch (CurrentFog) {
 		case 0: sprintf(buffer, "Fog off");             break;
@@ -613,11 +573,11 @@ void PrintInfo(W3D_Context* context)
 		case 3: sprintf(buffer, "Fog exponential 2");   break;
 		case 4: sprintf(buffer, "Fog interpolated");    break;
 	}
-	Move(window->RPort, x,y); Text(window->RPort, buffer, strlen(buffer)); y+=14;
+	Move(rp, x,y); Text(rp, buffer, strlen(buffer)); y+=14;
 
 	sprintf(buffer, "(%3.2f - %3.2f)",
 		context->fog.fog_start, context->fog.fog_end);
-	Move(window->RPort, x,y); Text(window->RPort, buffer, strlen(buffer)); y+=14;
+	Move(rp, x,y); Text(rp, buffer, strlen(buffer)); y+=14;
 
 	switch(curfilt) {
 		case 1: sprintf(buffer, "W3D_NEAREST"); break;
@@ -625,46 +585,46 @@ void PrintInfo(W3D_Context* context)
 		case 3: sprintf(buffer, "W3D_NEAREST_MIP_NEAREST"); break;
 		case 4: sprintf(buffer, "W3D_LINEAR_MIP_LINEAR"); break;
 	}
-	Move(window->RPort, x,y); Text(window->RPort, buffer, strlen(buffer)); y+=14;
+	Move(rp, x,y); Text(rp, buffer, strlen(buffer)); y+=14;
 
-	y=430; if (bufnum == 0) y+=480;
+	y=430;
 	x=10;
 
 	sprintf(buffer, "A - Mipmap view  B - Vertex coords  C - Slow Motion  P - Perspective Mapping");
-	Move(window->RPort, x,y); Text(window->RPort, buffer, strlen(buffer)); y+=14;
+	Move(rp, x,y); Text(rp, buffer, strlen(buffer)); y+=14;
 	sprintf(buffer, "T - Texture Mapping  F - Fogging  L - Alpha  1..4 - Filter");
-	Move(window->RPort, x,y); Text(window->RPort, buffer, strlen(buffer)); y+=14;
+	Move(rp, x,y); Text(rp, buffer, strlen(buffer)); y+=14;
 	sprintf(buffer, "E - Blendmode  ESC - Quit");
-	Move(window->RPort, x,y); Text(window->RPort, buffer, strlen(buffer)); y+=14;
+	Move(rp, x,y); Text(rp, buffer, strlen(buffer)); y+=14;
 
 }
+
 ;;//
 ;// ClearWindow
-void ClearWindow(W3D_Context *context,struct Window *window)
+void ClearWindow(W3D_Context *context, struct RastPort *drawrp)
 {
-	UWORD *t = tex->texdest;
 	int i,j,k;
 	int w = tex->texwidth;
 	int h = tex->texheight;
 
-	EraseRect(window->RPort, 0, (1-bufnum) * 480, 639, (1-bufnum) * 480 + 479);
+	EraseRect(drawrp, 0, 0, 639, 479);
 
 	if (dflag) {
-		int blah = (1-bufnum)*480;
-		SetAPen(window->RPort,10);
+		int blah = 0;
+		SetAPen(drawrp,10);
 		for (i=30; i<480; i+=30) {
-			Move(window->RPort, 0, i+blah);
-			Draw(window->RPort, 639, i+blah);
+			Move(drawrp, 0, i+blah);
+			Draw(drawrp, 639, i+blah);
 		}
 		for (i=30; i<640; i+=30) {
-			Move(window->RPort, i, blah);
-			Draw(window->RPort, i, blah+479);
+			Move(drawrp, i, blah);
+			Draw(drawrp, i, blah+479);
 		}
 	}
 	if (aflag) {
 		// If AFlag is set, draw the mipmap
 		WritePixelArray(tex->texsource, 0,0, w*4,
-			window->RPort, 0,(1-bufnum)*480, w,h, RECTFMT_ARGB);
+			drawrp, 0,0, w,h, RECTFMT_ARGB);
 		if (w>h) {
 			j = w/2;
 			k = w;
@@ -676,19 +636,19 @@ void ClearWindow(W3D_Context *context,struct Window *window)
 		i=0;
 		while (j) {
 			WritePixelArray(tex->mipmaps[i++],0,0,w*2,
-				window->RPort,
-				k,(1-bufnum)*480, w/2,h/2, RECTFMT_ARGB);
+				drawrp,
+				k,0, w/2,h/2, RECTFMT_ARGB);
 			k+=w/2;
 			j/=2;
 			w/=2; if (w == 0) w = 1;
 			h/=2; if (h == 0) h = 1;
 		}
 	}
-	PrintInfo(context);
 }
+
 ;;//
 ;// DrawWall
-void DrawWall(W3D_Context *context)
+void DrawWall(W3D_Context *context, struct RastPort *drawrp)
 {
 	static char buffer[512];
 	int i;
@@ -851,31 +811,6 @@ void DrawWall(W3D_Context *context)
 		W3D_SetState(context, W3D_BLENDING, Blend);
 	}
 
-#if 0
-	if (outline) {
-		static W3D_Color col[4] = {
-			{0.9, 0.9, 0.0, 1.0},
-			{0.9, 0.0, 0.1, 0.2},
-			{0.0, 0.0, 0.9, 0.5},
-			{0.9, 0.9, 0.9, 1.0}
-		};
-		static W3D_Lines temp;
-		static W3D_Vertex v[4];
-		for(i = 0; i < 4; i++) {
-			v[i].x = TempSquare[i].x;
-			v[i].y = TempSquare[i].y;
-			v[i].z = TempSquare[i].z;    //  Needed for zbuffer
-			v[i].w = TempSquare[i].iz;   //  Needed for fogging
-			v[i].color.r = col[i].r;
-			v[i].color.g = col[i].g;
-			v[i].color.b = col[i].b;
-			v[i].color.a = col[i].a;
-		}
-		temp.v = v;
-		temp.vertexcount = 4;
-		W3D_DrawLineLoop(context, &temp);
-	}
-#endif
 	if (second_wall) {
 		float t2;
 
@@ -961,44 +896,26 @@ void DrawWall(W3D_Context *context)
 
 	W3D_UnLockHardware(context);
 
-	SetAPen(window->RPort, 249);
-	RectFill(window->RPort, 638,0,639,1);
+	SetAPen(drawrp, 249);
+	RectFill(drawrp, 638,0,639,1);
 
 	// If the user flipped the bflag on, draw the coordinates at the
 	// polygon vertices
 	if (bflag) {
-		SetAPen(window->RPort, 255);
+		SetAPen(drawrp, 255);
 		for (i=0; i<4; i++) {
-#ifndef __STORM__
-			Move(window->RPort,(long)TempSquare[i].x, (long)TempSquare[i].y+(1-bufnum)*480);
+			Move(drawrp, (long)TempSquare[i].x, (long)TempSquare[i].y);
 			sprintf(buffer, "%3.2f,%3.2f", TempSquare[i].z, TempSquare[i].iz);
-			Text(window->RPort, buffer, strlen(buffer));
-#else           /* compiler bug workaround */
-			float temp, temp2;
-
-			temp = TempSquare[i].iz;
-			temp2 = TempSquare[i].z;
-			Move(window->RPort,(long)TempSquare[i].x, (long)TempSquare[i].y+(1-bufnum)*480);
-			sprintf(buffer, "%3.2f,%3.2f", temp2, temp);
-			Text(window->RPort, buffer, strlen(buffer));
-#endif
+			Text(drawrp, buffer, strlen(buffer));
 		}
 	}
 }
 
 ;;//
-;// dummy
-void dummy(void)
-{
-	volatile int dont_optimize_me_away;
-	return;
-}
-;;//
 ;// SwitchBuffer
-void SwitchBuffer(W3D_Context *context, struct BitMap *bm, struct Screen *scr, BOOL clip)
+void SwitchBuffer(W3D_Context *context, struct RastPort *drawrp, struct RastPort *windowrp, BOOL clip)
 {
 	W3D_Scissor s = {0, 0, 640, 480};
-	struct ViewPort *vp = &(scr->ViewPort);
 
 	if (clip) {
 		s.left = 10;
@@ -1007,27 +924,17 @@ void SwitchBuffer(W3D_Context *context, struct BitMap *bm, struct Screen *scr, B
 		s.height = 300;
 	}
 
-//	if (bufnum == 0) {
-//		W3D_SetDrawRegion(context, bm, 0, &s);
-//		vp->RasInfo->RyOffset = 480;
-//		ScrollVPort(vp);
-// AROS doesn't have WaitBOPVP(). So we're just using Delay() to decrease flickering
-//		Delay(3);
-		//WaitBOVP(vp);
-//		bufnum = 1-bufnum;
-//		if (clip)   W3D_SetScissor(context, &s);
-//	} else {
-		W3D_SetDrawRegion(context, bm, 0, &s);
-//		vp->RasInfo->RyOffset = 0;
-//		ScrollVPort(vp);
-//		Delay(3);
-		//WaitBOVP(vp);
-		WaitTOF();
-		bufnum = 1-bufnum;
-		if (clip)   W3D_SetScissor(context, &s);
-//	}
+	PrintInfo(context, drawrp);
 
+	W3D_WaitIdle(context);
+	W3D_FlushFrame(context);	/* force any software driver to finish drawing */
+
+	BltBitMapRastPort(drawrp->BitMap, 0, 0, windowrp, 0, 0, 640, 480, 0xC0);
+
+	W3D_SetDrawRegion(context, drawrp->BitMap, 0, &s);
+	if (clip)   W3D_SetScissor(context, &s);
 }
+
 ;;//
 ;// PrintDriverInfo
 void PrintDriverInfo(void)
@@ -1042,7 +949,7 @@ void PrintDriverInfo(void)
 	}
 	printf("Available drivers:\n");
 	while (*drivers) {
-		printf("%s\n\tSupports format 0x%lX\n\t",
+		printf("%s\n\tSupports format 0x%X\n\t",
 			drivers[0]->name, drivers[0]->formats);
 		if (drivers[0]->swdriver) printf("CPU Driver\n");
 		else                      printf("Hardware Driver\n");
@@ -1071,20 +978,19 @@ void PrintDriverInfo(void)
 }
 ;;//
 ;// main
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
-	ULONG ModeID, ID, format;
+	ULONG ModeID;
 	ULONG OpenErr, CError, res, ret;
 	struct BitMap *bm = NULL;
+	struct BitMap *buffer = NULL;
+	struct RastPort *drawrp = NULL;
 	W3D_Context *context = NULL;
 	BOOL running=TRUE, clip = FALSE;
 	struct IntuiMessage *imsg;
-	int i,j,k;
 	ULONG flags;
 	int update;
-	float f;
 	UBYTE *newm;
-	UBYTE *hit = 0;
 	int si;
 	LONG repeat = 1;
 	W3D_Scissor s = {0, 0, 640, 480};
@@ -1115,16 +1021,10 @@ void main(int argc, char **argv)
 		goto panic;
 	}
 
-#ifndef __PPC__
 	Warp3DBase = OpenLibrary("Warp3D.library", 2L);
 	if (!Warp3DBase) {
 		printf("Error opening Warp3D library\n");
 		goto panic;
-#else
-	Warp3DPPCBase = OpenLibrary("Warp3DPPC.library", 2L);
-	if (!Warp3DPPCBase) {
-		printf("Error opening Warp3DPPC.library\n");
-#endif
 	}
 
 	// Check for availability of drivers
@@ -1138,17 +1038,6 @@ void main(int argc, char **argv)
 
 	PrintDriverInfo();
 
-	// Get a screen mode
-	// Due to the current limitations of the virge, this
-	// Screen must be 15 bit deep (NOT 16!)
-#if 0
-	ModeID = BestCModeIDTags(
-		CYBRBIDTG_Depth,            15L,
-		CYBRBIDTG_NominalWidth,     640,
-		CYBRBIDTG_NominalHeight,    480,
-		CYBRBIDTG_BoardName,        "CVision3D",
-	TAG_DONE);
-#else
 	/*
 	** New in V2: The Screenmode requester
 	** This requester will ask for any screenmode the installed
@@ -1164,7 +1053,6 @@ void main(int argc, char **argv)
 		ASLSM_MinHeight,    480,
 		ASLSM_MaxHeight,    481,
 	TAG_DONE);
-#endif
 
 	if (ModeID == INVALID_ID) {
 		printf("Error: No ModeID found\n");
@@ -1173,7 +1061,7 @@ void main(int argc, char **argv)
 
 	// Open Screen
 	screen = OpenScreenTags(NULL,
-		SA_Height,    960,
+		//SA_Height,    640,
 		SA_DisplayID, ModeID,
 		SA_Depth,     8,
 		SA_ErrorCode, (ULONG)&OpenErr,
@@ -1213,11 +1101,25 @@ void main(int argc, char **argv)
 		goto panic;
 	}
 
-	// We want to use this bitmap
 	bm = window->RPort->BitMap;
 
 	SetAPen(window->RPort, 249);
 	RectFill(window->RPort, 0, 0, 639, 959);
+
+	buffer = AllocBitMap(screen->Width, screen->Height, 8, BMF_DISPLAYABLE|BMF_MINPLANES, bm);
+	if (!buffer) {
+		printf("Unable to create buffer bitmap.\n");
+		goto panic;
+	}
+	
+	// We want to use this bitmap
+	drawrp = CreateRastPort();
+	if (!drawrp) {
+		printf("Unable to create rastport.\n");
+		goto panic;
+	}
+	
+	drawrp->BitMap = buffer;
 
 	// Go ahead and create the context. We need a context for every drawing
 	// operation, so this is done quite early in the program.
@@ -1227,11 +1129,11 @@ void main(int argc, char **argv)
 
 	context = W3D_CreateContextTags(&CError,
 		W3D_CC_MODEID,      ModeID,             // Mandatory for non-pubscreen
-		W3D_CC_BITMAP,      (ULONG)bm,          // The bitmap we'll use
+		W3D_CC_BITMAP,      (ULONG)buffer,      // The bitmap we'll use
 		W3D_CC_YOFFSET,     0,                  // We don't do dbuffering
 		W3D_CC_DRIVERTYPE,  W3D_DRIVER_BEST,    // Let Warp3D decide
 // I had the change the following to FALSE to make it work with AROS		
-		W3D_CC_DOUBLEHEIGHT,FALSE,               // Double height screen
+		W3D_CC_DOUBLEHEIGHT,FALSE,              // Double height screen
 		W3D_CC_FAST,        TRUE,               // Fast drawing
 	TAG_DONE);
 
@@ -1306,7 +1208,7 @@ void main(int argc, char **argv)
 	// Set Texture mapping
 	W3D_SetState(context, W3D_TEXMAPPING, W3D_ENABLE);
 	// Set Drawing region
-	W3D_SetDrawRegion(context, bm, 0, &s);
+	W3D_SetDrawRegion(context, buffer, 0, &s);
 	// Set current color
 	W3D_SetCurrentColor(context, &ccol);
 	if (result[1]) {
@@ -1326,14 +1228,14 @@ void main(int argc, char **argv)
 	printf("Going into main loop\n");
 
 	// Clear window, then draw our first wall.
-	ClearWindow(context, window);
-	DrawWall(context);
+	ClearWindow(context, drawrp);
+	DrawWall(context, drawrp);
 
 	running=TRUE;
 
 	while (running) {
 //        WaitPort(window->UserPort);
-		while (imsg = (struct IntuiMessage *)GetMsg(window->UserPort)) {
+		while ((imsg = (struct IntuiMessage *)GetMsg(window->UserPort))) {
 			if (imsg == NULL) break;
 			switch(imsg->Class) {
 			case IDCMP_MOUSEBUTTONS:
@@ -1610,9 +1512,9 @@ void main(int argc, char **argv)
 				imsg = NULL;
 			}
 		}
-		SwitchBuffer(context, bm, screen, clip);
-		ClearWindow(context, window);
-		DrawWall(context);
+		SwitchBuffer(context, drawrp, window->RPort, clip);
+		ClearWindow(context, drawrp);
+		DrawWall(context, drawrp);
 		if (zb && W3D_SUCCESS == W3D_LockHardware(context)) {
 			W3D_ClearZBuffer(context, &zdepth);
 			W3D_UnLockHardware(context);
@@ -1621,6 +1523,8 @@ void main(int argc, char **argv)
 
 panic:
 	printf("Closing down...\n");
+	if (buffer)         FreeBitMap(buffer);
+	if (drawrp)         FreeRastPort(drawrp);
 	if (context)        W3D_FreeZBuffer(context);
 	if (tex)            W3D_FreeTexObj(context, tex);
 	if (lighttex)       W3D_FreeTexObj(context, lighttex);
@@ -1628,11 +1532,7 @@ panic:
 	if (texmap)         FreeVec(texmap);
 	if (window)         CloseWindow(window);
 	if (screen)         CloseScreen(screen);
-#ifndef __PPC__
 	if (Warp3DBase)     CloseLibrary(Warp3DBase);
-#else
-	if (Warp3DPPCBase)  CloseLibrary(Warp3DPPCBase);
-#endif
 	if (CyberGfxBase)   CloseLibrary((struct Library *)CyberGfxBase);
 	if (IntuitionBase)  CloseLibrary((struct Library *)IntuitionBase);
 	if (GfxBase)        CloseLibrary((struct Library *)GfxBase);
