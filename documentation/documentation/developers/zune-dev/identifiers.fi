@@ -555,12 +555,8 @@ Metodit
 -------------------------------------------------------------------------------
 Tunniste                  Nimi                                                P
 ========================  ==================================================  =
-(MUIB_List | 0x00000000)  MUIM_List_Construct                                 X
-(MUIB_List | 0x00000001)  MUIM_List_Destruct                                  X
-(MUIB_List | 0x00000002)  MUIM_List_Compare                                   X
-(MUIB_List | 0x00000003)  MUIM_List_Display                                   X
 (MUIB_List | 0x00000004)  MUIM_List_SelectChange                              X
-(MUIB_List | 0x00000005)  MUIM_List_InsertSingleAsTree
+(MUIB_List | 0x00000005)  MUIM_List_InsertSingleAsTree (removed)
 ========================  ==================================================  =
 
 ========================  ===============================  =  =  =  =  ====================
@@ -1176,8 +1172,12 @@ Metodit
 Tunniste                 Nimi                                                P
 =======================  ==================================================  =
 (MUIB_MUI | 0x0042ad89)  MUIM_List_Clear
+(MUIB_MUI | 0x00421b68)  MUIM_List_Compare
+(MUIB_MUI | 0x0042d662)  MUIM_List_Construct
 (MUIB_MUI | 0x00429804)  MUIM_List_CreateImage
 (MUIB_MUI | 0x00420f58)  MUIM_List_DeleteImage
+(MUIB_MUI | 0x00427d51)  MUIM_List_Destruct
+(MUIB_MUI | 0x00425377)  MUIM_List_Display
 (MUIB_MUI | 0x0042468c)  MUIM_List_Exchange
 (MUIB_MUI | 0x004280ec)  MUIM_List_GetEntry
 (MUIB_MUI | 0x00426c87)  MUIM_List_Insert
