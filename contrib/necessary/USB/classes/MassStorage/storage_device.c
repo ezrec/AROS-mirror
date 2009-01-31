@@ -91,11 +91,15 @@ static void cmd_ChangeNum(struct IORequest *io, mss_device_t *dev, mss_unit_t *u
 	IOStdReq(io)->io_Actual = unit->msu_changeNum;
 }
 
+static void cmd_ProtStatus(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit)
+{
+	IOStdReq(io)->io_Actual = unit->msu_inquiry[0] & 0x1f == DG_CDROM ? -1 : 0;
+}
+
 static void cmd_ChangeState(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit)
 {
 	IOStdReq(io)->io_Actual = unit->msu_flags & MSF_DiskPresent ? 0:1;
 }
-
 
 static void cmd_GetGeometry(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit)
 {
@@ -395,6 +399,14 @@ static void cmd_DirectSCSI(struct IORequest *io, mss_device_t *dev, mss_unit_t *
 					cmd->scsi_Length = 18;
 				}
 				break;
+
+			case 0xec:	/* Hack to issue ATA Inquiry call. Ignore it. */
+				if (cmd->scsi_CmdLength == 1)
+				{
+					IOStdReq(io)->io_Error = IOERR_NOCMD;
+					return;
+				}
+				break;
 		}
 
 		if (!HIDD_USBStorage_DirectSCSI(unit->msu_object, unit->msu_lun, cmd->scsi_Command, cmd->scsi_CmdLength, cmd->scsi_Data, cmd->scsi_Length, cmd->scsi_Flags & SCSIF_READ))
@@ -445,7 +457,7 @@ static const void (*map32[HD_SCSICMD+1])(struct IORequest *io, mss_device_t *dev
 		[TD_REMOVE]     	= cmd_Remove,
 		[TD_CHANGENUM]  	= cmd_ChangeNum,
 		[TD_CHANGESTATE]	= cmd_ChangeState,
-		[TD_PROTSTATUS] 	= cmd_Invalid,
+		[TD_PROTSTATUS] 	= cmd_ProtStatus,
 		[TD_RAWREAD]    	= cmd_Invalid,
 		[TD_RAWWRITE]   	= cmd_Invalid,
 		[TD_GETNUMTRACKS]   = cmd_Invalid,
