@@ -1,7 +1,7 @@
 #   $Id$
 include $(TOP)/config/make.cfg
 
-USER_CFLAGS := -Wno-uninitialized -Wno-parentheses -I$(AROS_DEVELOPMENT)/netinclude
+USER_CFLAGS := -Wno-uninitialized -Wno-parentheses
 
 %build_progs mmake=contrib-networking-utils-daytime \
     files="daytime dayserv" \

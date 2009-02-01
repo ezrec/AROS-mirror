@@ -15,7 +15,7 @@ diff -ruN Python-2.5.2/Lib/plat-aros12/regen Python-2.5.2.new/Lib/plat-aros12/re
 @@ -0,0 +1,3 @@
 +#! /bin/sh
 +set -v
-+python$EXE ../../Tools/scripts/h2py.py -i '(u_long)' /usr/netinclude/netinet/in.h
++python$EXE ../../Tools/scripts/h2py.py -i '(u_long)' /usr/netinet/in.h
 diff -ruN Python-2.5.2/Makefile.pre.in Python-2.5.2.new/Makefile.pre.in
 --- Python-2.5.2/Makefile.pre.in	2007-12-05 21:43:57.000000000 +0100
 +++ Python-2.5.2.new/Makefile.pre.in	2008-09-30 02:38:19.000000000 +0200

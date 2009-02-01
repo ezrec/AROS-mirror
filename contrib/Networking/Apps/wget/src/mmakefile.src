@@ -8,7 +8,7 @@ EXE := wget
 TARGETDIR := $(AROS_CONTRIB)/Networking/Apps/WGet
 
 USER_CFLAGS := -DHAVE_CONFIG_H -DAMIGA -D__amigaos__ -D__BUILDER="\"AROS Dev Team\""
-USER_INCLUDES := -I. -I../aros -I$(AROS_DEVELOPMENT)/netinclude
+USER_INCLUDES := -I. -I../aros
 
 FILES := cmpt connect convert cookies \
       ftp ftp-basic ftp-ls ftp-opie getopt hash \

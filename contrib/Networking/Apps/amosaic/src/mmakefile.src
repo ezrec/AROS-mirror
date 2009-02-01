@@ -40,7 +40,7 @@ FILES := globals \
 
 EXEDIR := $(CONTRIBDIR)/Networking/Apps/AMosaic
 
-USER_INCLUDES := -I../libwww2 -I$(AROS_DEVELOPMENT)/netinclude
+USER_INCLUDES := -I../libwww2
 
 #MM mui-amosaic : includes linklibs linklibs-www2
 

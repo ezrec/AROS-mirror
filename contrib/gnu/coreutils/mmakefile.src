@@ -9,5 +9,4 @@ TARGET_CC := $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-gcc
 #MM- contrib-gnu : contrib-gnu-coreutils
 #MM- contrib-gnu-coreutils : contrib-gnu-crosstools development-coreutils
 
-%fetch_and_build_gnu_development package=coreutils version=6.9 patch=yes \
-	extraoptions="CPPFLAGS='-I$(AROS_DEVELOPMENT)/netinclude'"
+%fetch_and_build_gnu_development package=coreutils version=6.9 patch=yes
