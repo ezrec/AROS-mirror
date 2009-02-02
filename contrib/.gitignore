@@ -621,6 +621,9 @@
 # /Networking/Utils/daytime/
 /Networking/Utils/daytime/mmakefile
 
+# /Networking/libs/openssl/
+/Networking/libs/openssl/mmakefile
+
 # /SDL/
 /SDL/mmakefile
 
@@ -1208,6 +1211,9 @@
 
 # /development/pthread/
 /development/pthread/mmakefile
+
+# /disk/cdrom/mkisofs/
+/disk/cdrom/mkisofs/mmakefile
 
 # /dopus/Config/
 /dopus/Config/*.err
