@@ -5,6 +5,8 @@
 #include <proto/exec.h>
 #include <proto/utility.h>
 
+#include <utility/tagitem.h>
+
 #include "objects.h"
 #include "objects_protos.h"
 
@@ -675,7 +677,7 @@ static LONG dehashobjectquick(NODE objectnode, UBYTE *name, NODE parentobjectnod
 
 
 
-static LONG createobjecttags(struct CacheBuffer **io_cb, struct fsObject **io_o, UBYTE *objectname, ULONG tags, ... ) {
+static LONG createobjecttagitem(struct CacheBuffer **io_cb, struct fsObject **io_o, UBYTE *objectname, struct TagItem *tags) {
   struct CacheBuffer *cb=*io_cb;
   struct fsObject *o=*io_o;
   LONG errorcode;
@@ -702,7 +704,7 @@ static LONG createobjecttags(struct CacheBuffer **io_cb, struct fsObject **io_o,
 
     /* Either duplicates are allowed or the object doesn't exist yet: */
 
-    if(((tag=FindTagItem(CO_ALLOWDUPLICATES, (struct TagItem *)&tags))!=0 && tag->ti_Data!=FALSE) || (errorcode=locateobject(objectname, &cb, &o))==ERROR_OBJECT_NOT_FOUND) {
+    if(((tag=FindTagItem(CO_ALLOWDUPLICATES, tags))!=0 && tag->ti_Data!=FALSE) || (errorcode=locateobject(objectname, &cb, &o))==ERROR_OBJECT_NOT_FOUND) {
 
       unlockcachebuffer(*io_cb);
 
@@ -710,7 +712,7 @@ static LONG createobjecttags(struct CacheBuffer **io_cb, struct fsObject **io_o,
 
       errorcode=0;
 
-      if((tag=FindTagItem(CO_UPDATEPARENT, (struct TagItem *)&tags))!=0 && tag->ti_Data!=FALSE) {
+      if((tag=FindTagItem(CO_UPDATEPARENT, tags))!=0 && tag->ti_Data!=FALSE) {
         errorcode=bumpobject(*io_cb, *io_o);  /* Update the date and the ARCHIVE bit of the parent directory. */
       }
 
@@ -720,19 +722,19 @@ static LONG createobjecttags(struct CacheBuffer **io_cb, struct fsObject **io_o,
 
         objectsize=sizeof(struct fsObject)+strlen(objectname)+2;
 
-        if((tag=FindTagItem(CO_COMMENT, (struct TagItem *)&tags))!=0) {
+        if((tag=FindTagItem(CO_COMMENT, tags))!=0) {
           objectsize+=strlen((UBYTE *)tag->ti_Data);
         }
 
         if((errorcode=findobjectspace(io_cb, io_o, objectsize))==0) {
-          struct TagItem *tstate=(struct TagItem *)&tags;
+          struct TagItem *tstate=tags;
           struct fsObject *o=*io_o;
           UBYTE *name=o->name;
           UBYTE *objname=objectname;
 
           o->bits=0;
 
-          if((tag=FindTagItem(CO_BITS, (struct TagItem *)&tags))!=0) {
+          if((tag=FindTagItem(CO_BITS, tags))!=0) {
             o->bits=tag->ti_Data;
           }
 
@@ -795,7 +797,7 @@ static LONG createobjecttags(struct CacheBuffer **io_cb, struct fsObject **io_o,
             struct CacheBuffer *cbnode;
             struct fsObjectNode *on;
 
-            if((tag=FindTagItem(CO_OBJECTNODE, (struct TagItem *)&tags))!=0) {
+            if((tag=FindTagItem(CO_OBJECTNODE, tags))!=0) {
 
               o->be_objectnode=L2BE(tag->ti_Data);
 
@@ -817,7 +819,7 @@ static LONG createobjecttags(struct CacheBuffer **io_cb, struct fsObject **io_o,
 
               on->node.be_data=L2BE((*io_cb)->blckno);
 
-              if((tag=FindTagItem(CO_HASHOBJECT, (struct TagItem *)&tags))!=0 && tag->ti_Data!=FALSE) {
+              if((tag=FindTagItem(CO_HASHOBJECT, tags))!=0 && tag->ti_Data!=FALSE) {
                 errorcode=hashobject(hashblock, on, BE2L(o->be_objectnode), objectname);
               }
 
@@ -834,7 +836,7 @@ static LONG createobjecttags(struct CacheBuffer **io_cb, struct fsObject **io_o,
             if((o->bits & OTYPE_DIR)!=0) {
               struct CacheBuffer *hashcb;
 
-              if((tag=FindTagItem(CO_HASHBLOCK, (struct TagItem *)&tags))!=0) {
+              if((tag=FindTagItem(CO_HASHBLOCK, tags))!=0) {
                 o->object.dir.be_hashtable=L2BE(tag->ti_Data);
               }
               else if((errorcode=allocadminspace(&hashcb))==0) {  // Create a new HashTable block.
@@ -853,7 +855,7 @@ static LONG createobjecttags(struct CacheBuffer **io_cb, struct fsObject **io_o,
 
           if(errorcode==0) {  // SoftLink creation:
             if((o->bits & (OTYPE_LINK|OTYPE_HARDLINK))==OTYPE_LINK) {
-              if((tag=FindTagItem(CO_SOFTLINK, (struct TagItem *)&tags))!=0) {
+              if((tag=FindTagItem(CO_SOFTLINK, tags))!=0) {
                 struct CacheBuffer *cb;
 
                 if((errorcode=allocadminspace(&cb))==0) {
@@ -974,16 +976,20 @@ LONG setcomment2(struct CacheBuffer *cb, struct fsObject *o, UBYTE *comment) {
 
             /* In goes the Parent cb & o, out comes the New object's cb & o :-) */
 
-            if((errorcode=createobjecttags(&cb, &o, oldo->name, CO_ALLOWDUPLICATES, TRUE,
-                                                                CO_COMMENT, comment,
-                                                                CO_OBJECTNODE, BE2L(oldo->be_objectnode),
-                                                                CO_PROTECTION, BE2L(oldo->be_protection),
-                                                                CO_DATEMODIFIED, BE2L(oldo->be_datemodified),
-                                                                CO_OWNER, (BE2W(oldo->be_owneruid)<<16) + BE2W(oldo->be_ownergid),
-                                                                CO_BITS, oldo->bits,
-                                                                tag1, val1,
-                                                                tag2, val2,
-                                                                TAG_DONE))==0) {
+            struct TagItem tags[] = {
+            		{	CO_ALLOWDUPLICATES, TRUE },
+            		{	CO_COMMENT, comment },
+            		{	CO_OBJECTNODE, BE2L(oldo->be_objectnode) },
+            		{	CO_PROTECTION, BE2L(oldo->be_protection) },
+            		{	CO_DATEMODIFIED, BE2L(oldo->be_datemodified) },
+            		{	CO_OWNER, (BE2W(oldo->be_owneruid)<<16) + BE2W(oldo->be_ownergid) },
+            		{	CO_BITS, oldo->bits },
+            		{	tag1, val1 },
+            		{	tag2, val2 },
+            		{	TAG_DONE, 0 }
+            };
+
+            if((errorcode=createobjecttagitem(&cb, &o, oldo->name, tags))==0) {
 
               if((errorcode=storecachebuffer(cb))==0) {
                 checknotifyforobject(cb,o,TRUE);
@@ -1228,11 +1234,15 @@ LONG findcreate(struct ExtFileLock **returned_lock, UBYTE *path, LONG packettype
               bits|=OTYPE_LINK;
             }
 
-            if((errorcode=createobjecttags(&cb, &o, FilePart(path), CO_BITS, bits,
-                                                                    CO_HASHOBJECT, TRUE,
-                                                                    CO_SOFTLINK, softlink,
-                                                                    CO_UPDATEPARENT, TRUE,
-                                                                    TAG_DONE))==0) {
+            struct TagItem tags[] = {
+            		{ CO_BITS, bits },
+            		{ CO_HASHOBJECT, TRUE },
+            		{ CO_SOFTLINK, softlink },
+            		{ CO_UPDATEPARENT, TRUE },
+            		{ TAG_DONE, 0 }
+            };
+
+            if((errorcode=createobjecttagitem(&cb, &o, FilePart(path), tags))==0) {
 
               _XDEBUG((DEBUG_OBJECTS,"findcreate: New object is now complete\n"));
 
@@ -1890,17 +1900,21 @@ LONG renameobject2(struct CacheBuffer *cb, struct fsObject *o, struct CacheBuffe
 
         /* In goes the Parent cb & o, out comes the New object's cb & o :-) */
 
-        if((errorcode=createobjecttags(&cb, &o, newname, CO_COMMENT, comment,
-                                                         CO_OBJECTNODE, BE2L(oldo->be_objectnode),
-                                                         CO_PROTECTION, BE2L(oldo->be_protection),
-                                                         CO_DATEMODIFIED, BE2L(oldo->be_datemodified),
-                                                         CO_OWNER, (BE2W(oldo->be_owneruid)<<16) + BE2W(oldo->be_ownergid),
-                                                         CO_BITS, oldo->bits,
-                                                         CO_HASHOBJECT, TRUE,
-                                                         CO_UPDATEPARENT, TRUE,
-                                                         tag1, val1,
-                                                         tag2, val2,
-                                                         TAG_DONE))==0) {
+        struct TagItem tags[] = {
+        		{ CO_COMMENT, comment },
+        		{ CO_OBJECTNODE, BE2L(oldo->be_objectnode) },
+        		{ CO_PROTECTION, BE2L(oldo->be_protection) },
+        		{ CO_DATEMODIFIED, BE2L(oldo->be_datemodified) },
+        		{ CO_OWNER, (BE2W(oldo->be_owneruid)<<16) + BE2W(oldo->be_ownergid) },
+        		{ CO_BITS, oldo->bits },
+        		{ CO_HASHOBJECT, TRUE },
+        		{ CO_UPDATEPARENT, TRUE },
+        		{ tag1, val1 },
+        		{ tag2, val2 },
+        		{ TAG_DONE, 0 }
+        };
+
+        if((errorcode=createobjecttagitem(&cb, &o, newname, tags))==0) {
 
           if((errorcode=storecachebuffer(cb))==0 && sendnotify!=FALSE) {    // Object itself has been completed.
 
