@@ -9,7 +9,7 @@
 #include <utility/tagitem.h>
 
 #include <stddef.h>
-#include <string.h> 
+#include <string.h>
 
 #ifdef DEBUG
 #undef DEBUG
@@ -116,16 +116,16 @@ D(bug("AddFileSystemTask\n"));
 	if (newglobal)
 	{
         newglobal->sysBase = SysBase;
-        
+
 	    node = AllocMem(sizeof(struct ProcNode), MEMF_PUBLIC | MEMF_CLEAR);
 	    if (node)
 	    {
 		Forbid();
 		AddTail(&asfsbase->process_list, &node->ln);
 		Permit();
-		
+
 		node->data = newglobal;
-		
+
 		proc = CreateNewProc(tags);
 		if (proc)
 		{
@@ -164,7 +164,7 @@ D(bug("AddFileSystemTask\n"));
 			iofs->IOFS.io_Unit=(struct Unit *)&device->rootfh;
 			return;
 		    }
-			
+
 		} /* if (proc) */
 		else
 		{
@@ -178,21 +178,21 @@ D(bug("AddFileSystemTask\n"));
 		iofs->io_DosError = ERROR_NO_FREE_STORE;
 	    }
 	    FreeMem(newglobal, sizeof(struct Globals));
-		
+
 	} /* if (newglobal) */
 	else
 	{
 	    iofs->io_DosError = ERROR_NO_FREE_STORE;
 	}
 	FreeMem(device, sizeof(struct ASFSDeviceInfo));
-	
+
     } /* if (device) */
     else
     {
 #warning "maybe use another error here"
 	iofs->io_DosError = ERROR_NO_FREE_STORE;
     }
-    
+
     iofs->IOFS.io_Unit=0;
 }
 
@@ -209,7 +209,7 @@ void ASFS_work(struct ASFSBase *asfsbase)
     asfsbase->port.mp_Flags = PA_SIGNAL;
     asfsbase->prport.mp_SigBit = AllocSignal(-1);    /* should never fail! */
     packet.dp_Link = &msg;
-    
+
     for (;;)
     {
         while ((iofs=(struct IOFileSys *)GetMsg(&asfsbase->port)))
@@ -245,13 +245,13 @@ void ASFS_work(struct ASFSBase *asfsbase)
                 sendPacket(asfsbase, iofs->io_PacketEmulation, asfshandle->device->taskmp);
                 error = 0;
                 break;
-              
+
             case FSA_OPEN:
                 {
                     struct ASFSHandle *new;
 D(bug("[asfs] open: lock %08x (%s) %s\n",
       asfshandle->handle,
-      (asfshandle == &asfshandle->device->rootfh) ? "root" : (asfshandle->flags & AHF_IS_LOCK) ? "lock" : "handle", 
+      (asfshandle == &asfshandle->device->rootfh) ? "root" : (asfshandle->flags & AHF_IS_LOCK) ? "lock" : "handle",
       iofs->io_Union.io_OPEN_FILE.io_Filename));
 
                     new = AllocMem(sizeof(struct ASFSHandle), MEMF_PUBLIC | MEMF_CLEAR);
@@ -259,7 +259,7 @@ D(bug("[asfs] open: lock %08x (%s) %s\n",
                     {
 		    	struct ExtFileLock dummyfl;
 		    	void *handle;
-			
+
 //		    	if (!(asfshandle->flags & AHF_IS_LOCK))
 //			{
 //			    dummyfl.link = asfshandle->handle;
@@ -269,7 +269,7 @@ D(bug("[asfs] open: lock %08x (%s) %s\n",
 			{
 			    handle = asfshandle->handle;
 			}
-		    	
+
                         packet.dp_Arg1 =
                             (asfshandle ==  &asfshandle->device->rootfh) ?
                             0 :
@@ -284,11 +284,11 @@ D(bug("[asfs] open: ACTION_COPY_DIR %x result in ", packet.dp_Arg1));
                         {
                             packet.dp_Type = ACTION_LOCATE_OBJECT;
                             packet.dp_Arg2 =(IPTR)iofs->io_Union.io_OPEN_FILE.io_Filename;
-                            packet.dp_Arg3 = 
+                            packet.dp_Arg3 =
                                 (iofs->io_Union.io_OPEN.io_FileMode == FMF_LOCK) ?
                                 EXCLUSIVE_LOCK :
                                 SHARED_LOCK;
-                            
+
 D(bug("[asfs] open: ACTION_LOCATE_OBJECT %x %x %x result in ", packet.dp_Arg1, packet.dp_Arg2, packet.dp_Arg3));
                         }
                         sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
@@ -325,30 +325,38 @@ D(bug("[asfs] open: lock = %p\n", new->handle));
 
 
                     D(bug("[asfs] openfile: %s, %lx, %lx\n", iofs->io_Union.io_OPEN_FILE.io_Filename, mode, iofs->io_Union.io_OPEN_FILE.io_Protection));
-                    if (
-                            (mode == FMF_MODE_OLDFILE) ||
-                            (mode == FMF_READ)
-                    )
-                        packet.dp_Type = ACTION_FINDINPUT;
-                    else if (mode == FMF_MODE_READWRITE)
-                        packet.dp_Type = ACTION_FINDUPDATE;
-                    else if (mode == FMF_MODE_NEWFILE)
-                        packet.dp_Type = ACTION_FINDOUTPUT;
-                    else
-                    {
-                        /* Only write */
-                        if (((mode & (FMF_WRITE|FMF_READ)) == FMF_WRITE) || (mode & FMF_CLEAR))
-                            packet.dp_Type = ACTION_FINDOUTPUT;
-                        /* Read/Write */
-                        else if (mode & FMF_WRITE)
-                            packet.dp_Type = ACTION_FINDUPDATE;
-                        /* Read only */
-                        else
-                            packet.dp_Type = ACTION_FINDINPUT;
 
-                        //                        error = ERROR_BAD_NUMBER;
-                        //                        break; /* switch statement */
-                    }
+                    if ((mode & FMF_CLEAR) != 0)
+                    	packet.dp_Type = ACTION_FINDOUTPUT;
+                    else if ((mode & FMF_CREATE) != 0)
+                    	packet.dp_Type = ACTION_FINDUPDATE;
+                    else
+                    	packet.dp_Type = ACTION_FINDINPUT;
+
+//                    if (
+//                            (mode == FMF_MODE_OLDFILE) ||
+//                            (mode == FMF_READ)
+//                    )
+//                        packet.dp_Type = ACTION_FINDINPUT;
+//                    else if (mode == FMF_MODE_READWRITE)
+//                        packet.dp_Type = ACTION_FINDUPDATE;
+//                    else if (mode == FMF_MODE_NEWFILE)
+//                        packet.dp_Type = ACTION_FINDOUTPUT;
+//                    else
+//                    {
+//                        /* Only write */
+//                        if (((mode & (FMF_WRITE|FMF_READ)) == FMF_WRITE) || (mode & FMF_CLEAR))
+//                            packet.dp_Type = ACTION_FINDOUTPUT;
+//                        /* Read/Write */
+//                        else if (mode & FMF_WRITE)
+//                            packet.dp_Type = ACTION_FINDUPDATE;
+//                        /* Read only */
+//                        else
+//                            packet.dp_Type = ACTION_FINDINPUT;
+//
+//                        //                        error = ERROR_BAD_NUMBER;
+//                        //                        break; /* switch statement */
+//                    }
                     new = AllocMem(sizeof(struct ASFSHandle), MEMF_PUBLIC | MEMF_CLEAR);
                     if (new)
                     {
@@ -480,14 +488,14 @@ D(bug("[asfs] close: handle=%p\n", asfshandle->handle));
                 iofs->io_Union.io_IS_INTERACTIVE.io_IsInteractive = FALSE;
                 error = 0;
                 break;
-                
+
             case FSA_IS_FILESYSTEM:
                 packet.dp_Type = ACTION_IS_FILESYSTEM;
                 sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
                 iofs->io_Union.io_IS_FILESYSTEM.io_IsFilesystem = packet.dp_Res1;
                 error = packet.dp_Res2;
                 break;
-		
+
             case FSA_EXAMINE:
                 {
                     struct FileInfoBlock fib;
@@ -506,7 +514,7 @@ D(bug("[asfs] examine: lock=%p\n", asfshandle->handle));
                     error = packet.dp_Res2;
 
 D(bug("[asfs] examine: error=%d, packet.dp_Res1=%p\n", error, packet.dp_Res1));
-		    
+
                     if (packet.dp_Res1)
                     {
                 	struct ExAllData    *ead = iofs->io_Union.io_EXAMINE.io_ead;
@@ -520,9 +528,9 @@ D(bug("[asfs] examine: error=%d, packet.dp_Res1=%p\n", error, packet.dp_Res1));
                         if (next<=end)
                         {
                             iofs->io_DirPos = fib.fib_DiskKey;
-                            
+
 //                            if (iofs->io_DirPos == 1) iofs->io_DirPos = 0;
-                            
+
 //kprintf("****************acdr examine: pos = %lx\n", iofs->io_DirPos);
 D(bug("[asfs] examine: pos=%d, mode=%d\n", iofs->io_DirPos, mode));
 
@@ -562,6 +570,7 @@ D(bug("[asfs] examine: size=%d\n", ead->ed_Size));
 
                             case ED_TYPE:
                                 ead->ed_Type = fib.fib_EntryType;
+D(bug("[asfs] examine: type=%d\n", ead->ed_Type));
 
                             case ED_NAME:
                                 len = AROS_BSTR_strlen(fib.fib_FileName)+1;
@@ -581,7 +590,7 @@ D(bug("[asfs] examine: name=%s ([0]=%x)\n", ead->ed_Name, ead->ed_Name[0]));
                                 error = 0;
 D(bug("[asfs] examine: no error\n"));
                                 break;
-				
+
                             default:
                                 error = ERROR_BAD_NUMBER;
 D(bug("[asfs] examine: ERROR_BAD_NUMBER\n"));
@@ -593,9 +602,9 @@ D(bug("[asfs] the next one\n"));
                         {
                             error = ERROR_BUFFER_OVERFLOW;
                         }
-			
+
                     } /* if (packet.dp_Res1) */
-		    
+
                 } /**/
                 break;
 
@@ -615,7 +624,7 @@ D(bug("[asfs] the next one\n"));
             case FSA_ADD_NOTIFY:
                 packet.dp_Type = ACTION_ADD_NOTIFY;
                 packet.dp_Arg1 = (IPTR)BADDR(iofs->io_Union.io_NOTIFY.io_NotificationRequest);
-                sendPacket(asfsbase, &packet, asfshandle->device->taskmp);              
+                sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
                 if (packet.dp_Res1)
                     error = 0;
                 else
@@ -631,7 +640,7 @@ D(bug("[asfs] the next one\n"));
                 else
                     error = packet.dp_Res2;
                 break;
-                              
+
             case FSA_CREATE_DIR:
                 {
                 struct ASFSHandle *new;
@@ -669,7 +678,7 @@ D(bug("[asfs] the next one\n"));
             case FSA_CREATE_HARDLINK:
             case FSA_CREATE_SOFTLINK:
                 packet.dp_Type = ACTION_MAKE_LINK;
-                packet.dp_Arg1 = 
+                packet.dp_Arg1 =
                     (asfshandle ==  &asfshandle->device->rootfh) ?
                     0 :
                     (IPTR)MKBADDR(asfshandle->handle);
@@ -698,7 +707,7 @@ D(bug("[asfs] the next one\n"));
 
             case FSA_READ_SOFTLINK:
                 packet.dp_Type = ACTION_READ_LINK;
-                packet.dp_Arg1 = 
+                packet.dp_Arg1 =
                     (asfshandle ==  &asfshandle->device->rootfh) ?
                     0 :
                     (IPTR)MKBADDR(asfshandle->handle);
@@ -715,7 +724,7 @@ D(bug("[asfs] the next one\n"));
                 break;
 
             case FSA_RENAME:
-D(bug("[SFS] FSA_RENAME %s %s\n", iofs->io_Union.io_RENAME.io_Filename, iofs->io_Union.io_RENAME.io_NewName));                
+D(bug("[SFS] FSA_RENAME %s %s\n", iofs->io_Union.io_RENAME.io_Filename, iofs->io_Union.io_RENAME.io_NewName));
                 packet.dp_Type = ACTION_RENAME_OBJECT;
                 packet.dp_Arg1 =
                     (asfshandle ==  &asfshandle->device->rootfh) ?
@@ -836,7 +845,7 @@ D(bug("[SFS] FSA_RENAME %s %s\n", iofs->io_Union.io_RENAME.io_Filename, iofs->io
                 else
                     error = ERROR_UNKNOWN;
                 break;
- 
+
             case FSA_DISK_INFO:
                 packet.dp_Type = ACTION_DISK_INFO;
                 packet.dp_Arg1 = (IPTR)MKBADDR(iofs->io_Union.io_INFO.io_Info);
@@ -867,22 +876,22 @@ D(bug("[SFS] FSA_RENAME %s %s\n", iofs->io_Union.io_RENAME.io_Filename, iofs->io
                 retval = iofs->io_PacketEmulation->dp_Res1;
                 error = iofs->io_PacketEmulation->dp_Res2;
                 break;
-                
+
             default:
                 D(bug("[acdr] unkown fsa %d\n", iofs->IOFS.io_Command));
                 retval = DOSFALSE;
                 error = ERROR_ACTION_NOT_KNOWN;
 		break;
-		
+
             } /* switch (iofs->IOFS.io_Command) */
-	    
+
             iofs->io_DosError = error;
             ReplyMsg(&iofs->IOFS.io_Message);
-	    
+
         } /* ((iofs=(struct IOFileSys *)GetMsg(&acdrbase->port))) */
-	
+
         Wait(1<<asfsbase->port.mp_SigBit);
-	
+
     } /* for (;;) */
 }
 
@@ -893,7 +902,7 @@ void *ASFS_GetData(struct ASFSBase *asfsbase)
 
     proc = (struct Process *)FindTask(NULL);
     node = (struct ProcNode *)asfsbase->process_list.lh_Head;
-    
+
     while (node->ln.ln_Succ)
     {
 	if (node->proc == proc)
