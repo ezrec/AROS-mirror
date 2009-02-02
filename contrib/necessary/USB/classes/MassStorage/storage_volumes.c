@@ -420,7 +420,7 @@ BOOL USBMSS_AddVolume(mss_unit_t *unit)
             pp[DE_RESERVEDBLKS + 4] = 2;
             pp[DE_LOWCYL + 4] = 0;
             pp[DE_HIGHCYL + 4] = unit->msu_blockCount;
-            pp[DE_NUMBUFFERS + 4] = 10;
+            pp[DE_NUMBUFFERS + 4] = 100;
             pp[DE_BUFMEMTYPE + 4] = MEMF_PUBLIC | MEMF_CHIP;
             pp[DE_MAXTRANSFER + 4] = 0x00200000;
             pp[DE_MASK + 4] = 0x7FFFFFFE;
