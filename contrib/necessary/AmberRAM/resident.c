@@ -76,7 +76,7 @@ const struct Resident rom_tag =
    RTF_AFTERDOS,
    VERSION,
    NT_PROCESS,
-   -128,
+   -125,
    (STRPTR)handler_name,
    (STRPTR)version_string,
    (APTR)Init
