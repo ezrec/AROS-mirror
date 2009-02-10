@@ -1104,7 +1104,7 @@ int main(int argc, char **argv)
 	bm = window->RPort->BitMap;
 
 	SetAPen(window->RPort, 249);
-	RectFill(window->RPort, 0, 0, 639, 959);
+	RectFill(window->RPort, 0, 0, 639, 479);
 
 	buffer = AllocBitMap(screen->Width, screen->Height, 8, BMF_DISPLAYABLE|BMF_MINPLANES, bm);
 	if (!buffer) {
