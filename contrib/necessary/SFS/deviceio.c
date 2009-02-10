@@ -133,15 +133,14 @@ UBYTE isdiskpresent(void)
 
 #ifdef __AROS__
 static
-AROS_UFH4(LONG, changeintserver,
-    AROS_UFHA(ULONG, dummy, A0),
+AROS_UFH3(LONG, changeintserver,
     AROS_UFHA(struct IntData *, intdata, A1),
     AROS_UFHA(ULONG, dummy2, A5),
     AROS_UFHA(ULONG, dummy3, A6))
 {
     AROS_USERFUNC_INIT
  
-    *intdata->diskchanged=1;
+    intdata->diskchanged=1;
     Signal(intdata->task, intdata->signal);
     return(0);
      
