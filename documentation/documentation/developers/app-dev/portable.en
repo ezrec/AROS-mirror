@@ -171,8 +171,9 @@ Stack based::
         ...
     }
 
-*HookEntry* is defined in amiga.lib. This function forwards the register
-arguments to stack arguments.
+In contrast to register based you have to use the function address in h_SubEntry
+and *HookEntry* from amiga.lib in h_Entry. *HookEntry* is a function which
+forwards the register arguments to stack arguments.
 
 
 User Function Prototype
@@ -195,6 +196,32 @@ are way more flexible. You can define functions with 0 to 15 arguments as you
 can see in the header `aros/asmcall.h`_. But if you need a hook function for
 the system (e.g. for Zune callback functions) you need the special case with
 3 arguments and they must be given in the order A0, A2, A1.
+
+-----
+
+When porting old Amiga software to AROS you will sometimes find code for hooks
+which omits arguments, e.g.::
+
+    ULONG ASM RenderHookFunc(reg (a1) struct LVDrawMsg *msg, reg (a2) struct ImageNode *in)
+
+This doesn't work on AROS because
+
++ the arguments aren't in the order A0, A2, A1.
++ the argument for A0 is missing at all.
+
+A valid translation of the line above with register macros would be::
+
+    AROS_UFH3(ULONG, RenderHookFunc,
+    AROS_UFHA(struct Hook *, h, A0),
+    AROS_UFHA(struct ImageNode *, in, A2),
+    AROS_UFHA(struct LVDrawMsg *, msg, A1))
+
+You can only omit arguments which come after the arguments you need, e.g.:
+
++ you can omit A1 if you need only A0 and A2
++ you can omit A1 and A2 if you need only A0
+
+-----
 
 You're probably wondering what this A0, A1, A2 is. Well, this are register
 names of the 68k architecture. On other platforms they are forwarded to other
@@ -324,7 +351,7 @@ Node
 The order of elements of ``struct Node`` differs on some AROS platforms
 from the original AmigaOS version. See `exec/nodes.h`_. This is
 considered a bug and will be changed for the V1 ABI. But for now we have
-to live with it. There are two cases which you have to look at:
+to live with it. There are three cases which you have to look at:
 
 * Initialization like ``struct Node node = {0, 0, type, pri,name};``
 * Nodes with exposed structure elements like::
@@ -334,9 +361,20 @@ to live with it. There are two cases which you have to look at:
         struct Node * mn_pred;
         UBYTE  mn_Type;
         BYTE   mn_pri;
-        char   mn_Name;
+        char   * mn_Name;
         ULONG  mn_color;
     };
+
+* Nodes which are based on MinNodes, e.g.::
+
+    struct Mynode {
+        struct MinNode * mn;
+        char           * id;
+    };
+    ...
+    struct Mynode *node;
+    ...
+    ((struct Node*)node)->ln_Name = "XYZ";
 
 You're on the safe side if you have ``struct Node`` at the beginning::
   
