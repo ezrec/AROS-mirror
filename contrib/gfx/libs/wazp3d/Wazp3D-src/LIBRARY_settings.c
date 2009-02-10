@@ -10,7 +10,7 @@ struct MyButton{
     UBYTE name[30];
     };
 #define NLOOP(nbre) for(n=0;n<nbre;n++)
-extern ULONG Wazp3DPrefsNameTag;
+extern IPTR Wazp3DPrefsNameTag;
 static struct TextAttr Topaz80 = { "topaz.font", 8, 0, 0, };
 
 static void
