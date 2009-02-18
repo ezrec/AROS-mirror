@@ -35,5 +35,7 @@ ICONS := back.png close.png download.png find.png forward.png go.png home.png pr
 
 %copy_files_q files="$(ICONS)" src="icons" dst="$(EXEDIR)/icons" maketarget=aros-tcpip-apps-owb-icons
 
+%copy_dir_recursive src="fonts" dst="$(EXEDIR)/fonts" mmake=aros-tcpip-apps-owb-fonts
+
 %common
 %include_deps
