@@ -5,8 +5,10 @@
 
 #include <exec/types.h>
 #include <libraries/mui.h>
+#include <dos/var.h>
 
 #include <proto/exec.h>
+#include <proto/dos.h>
 #include <proto/intuition.h>
 #include <proto/muimaster.h>
 #include <proto/alib.h>
@@ -53,7 +55,7 @@ static IPTR NewTabFunc(struct Hook *hook, Object *sender, void *data)
 
 static void CloseTabFunc(struct Hook *hook, Object *obj, void *data)
 {
-    Object *deletedWebView = XGET(tabbed, MUIA_TabbedView_ActiveObject);
+    Object *deletedWebView = (Object*) XGET(tabbed, MUIA_TabbedView_ActiveObject);
 
     DoMethod(deletedWebView, MUIM_KillNotify, MUIA_WebView_Title);    
 
@@ -61,7 +63,7 @@ static void CloseTabFunc(struct Hook *hook, Object *obj, void *data)
     DoMethod(tabbed, OM_REMMEMBER, (IPTR) deletedWebView);
     DoMethod(tabbed, MUIM_Group_ExitChange);
 
-    Object *deletedTab = XGET(tabs, MUIA_Tabs_ActiveTabObject);
+    Object *deletedTab = (Object*) XGET(tabs, MUIA_Tabs_ActiveTabObject);
     DoMethod(tabs, MUIM_Group_InitChange);
     LONG removed = DoMethod(tabs, OM_REMMEMBER, (IPTR) deletedTab);
     DoMethod(tabs, MUIM_Group_ExitChange);
@@ -200,6 +202,8 @@ int main(void)
     struct Hook goHook, goAcknowledgeHook, webSearchHook, webSearchAcknowledgeHook, closeTabHook, textSearchHook, updateURLHook;
     
     Locale_Initialize();
+    
+    SetVar("FONTCONFIG_PATH", "PROGDIR:fonts/config", -1, LV_VAR | GVF_LOCAL_ONLY);
     
     closeTabHook.h_Entry = HookEntry;
     closeTabHook.h_SubEntry = (HOOKFUNC) CloseTabFunc;
