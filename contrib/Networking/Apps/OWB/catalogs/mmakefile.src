@@ -1,0 +1,9 @@
+include $(TOP)/config/make.cfg
+
+EXEDIR := $(CONTRIBDIR)/Networking/Apps/OWB
+CATDIR := $(EXEDIR)/Catalogs
+
+#MM aros-tcpip-apps-owb-catalogs : aros-tcpip-apps-owb-catalogs-owb
+
+%build_catalogs mmake=aros-tcpip-apps-owb-catalogs-owb \
+    source="../strings.h" name=owb subdir= dir=$(CATDIR)

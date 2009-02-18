@@ -1,0 +1,464 @@
+## version $VER: owb.catalog 1.0 (16.02.2009)
+## language polski
+## codeset 0
+;
+MSG_OWB
+OWB
+; OWB
+;
+MSG_SubmitButtonDefaultLabel
+Wy¶lij
+; Submit
+;
+MSG_InputElementAltText
+Wy¶lij
+; Submit
+;
+MSG_ResetButtonDefaultLabel
+Wyczy¶æ
+; Reset
+;
+MSG_SearchableIndexIntroduction
+Indeks
+; Searchable Index
+;
+MSG_FileButtonChooseFileLabel
+Wybierz plik
+; Choose File
+;
+MSG_FileButtonNoFileSelectedLabel
+(Brak)
+; (None)
+;
+MSG_ContextMenuItemTagOpenLinkInNewWindow
+Otwórz w nowym oknie
+; Open Link in New Window
+;
+MSG_ContextMenuItemTagDownloadLinkToDisk
+Pobierz plik z linku
+; Download Linked File
+;
+MSG_ContextMenuItemTagCopyLinkToClipboard
+Kopiuj adres linku
+; Copy Link Location
+;
+MSG_ContextMenuItemTagOpenImageInNewWindow
+Otwórz obraz w nowym oknie
+; Open Image in New Window
+;
+MSG_ContextMenuItemTagDownloadImageToDisk
+Zapisz obraz jako
+; Save Image As
+;
+MSG_ContextMenuItemTagCopyImageToClipboard
+Kopiuj obraz
+; Copy Image
+;
+MSG_ContextMenuItemTagOpenFrameInNewWindow
+Otwórz ramkê w nowym oknie
+; Open Frame in New Window
+;
+MSG_ContextMenuItemTagCopy
+kopiuj
+; copy
+;
+MSG_ContextMenuItemTagDelete
+usuñ
+; delete
+;
+MSG_ContextMenuItemTagSelectAll
+Wybierz wszystkie
+; Select All
+;
+MSG_ContextMenuItemTagUnicode
+Wstaw znak kontrolny Unicode
+; Insert Unicode Control Character
+;
+MSG_ContextMenuItemTagInputMethods
+Metody wej¶ciowe
+; Input Methods
+;
+MSG_ContextMenuItemTagGoBack
+wstecz
+; back
+;
+MSG_ContextMenuItemTagGoForward
+naprzód
+; forward
+;
+MSG_ContextMenuItemTagStop
+stop
+; stop
+;
+MSG_ContextMenuItemTagReload
+wczytaj ponownie
+; Reload
+;
+MSG_ContextMenuItemTagCut
+wytnij
+; cut
+;
+MSG_ContextMenuItemTagPaste
+wklej
+; paste
+;
+MSG_ContextMenuItemTagNoGuessesFound
+Nie znaleziono podpowiedzi
+; No Guesses Found
+;
+MSG_ContextMenuItemTagIgnoreSpelling
+Ignoruj pisowniê
+; Ignore Spelling
+;
+MSG_ContextMenuItemTagLearnSpelling
+Naucz siê pisowni
+; Learn Spelling
+;
+MSG_ContextMenuItemTagSearchWeb
+Przeszukuj sieæ
+; Search the Web
+;
+MSG_ContextMenuItemTagLookUpInDictionary
+Wyszukaj w s³owniku
+; Look Up in Dictionary
+;
+MSG_ContextMenuItemTagOpenLink
+Otwórz link
+; Open Link
+;
+MSG_ContextMenuItemTagIgnoreGrammar
+Ignoruj gramatykê
+; Ignore Grammar
+;
+MSG_ContextMenuItemTagSpellingMenu
+Pisownia i gramatyka
+; Spelling and Grammar
+;
+MSG_ContextMenuItemTagShowSpellingPanel
+Poka¿ pisowniê i gramatykê
+; Show Spelling and Grammar
+;
+MSG_ContextMenuItemTagHideSpellingPanel
+Schowaj pisowniê i gramatykê
+; Hide Spelling and Grammar
+;
+MSG_ContextMenuItemTagCheckSpelling
+Sprawd¼ dokument teraz
+; Check Document Now
+;
+MSG_ContextMenuItemTagCheckSpellingWhileTyping
+Sprawdaj pisowniê na bie¿±co
+; Check Spelling While Typing
+;
+MSG_ContextMenuItemTagCheckGrammarWithSpelling
+Sprawdzaj gramatykê z pisowni±
+; Check Grammar With Spelling
+;
+MSG_ContextMenuItemTagFontMenu
+Font
+; Font
+;
+MSG_ContextMenuItemTagBold
+Pogrubiony
+; Bold
+;
+MSG_ContextMenuItemTagItalic
+Pochylony
+; Italic
+;
+MSG_ContextMenuItemTagUnderline
+Podkre¶lony
+; Underline
+;
+MSG_ContextMenuItemTagOutline
+Z obwódk±
+; Outline
+;
+MSG_ContextMenuItemTagInspectElement
+Sprawd¼ element
+; Inspect Element
+;
+MSG_searchMenuNoRecentSearchesText
+Brak ostatno wyszukiwanych
+; No recent searches
+;
+MSG_searchMenuRecentSearchesText
+Ostatnio wyszukiwane
+; Recent searches
+;
+MSG_searchMenuClearRecentSearchesText
+Wyczy¶æ ostatnio wyszukiwane
+; Clear recent searches
+;
+MSG_AXDefinitionListTermText
+termin
+; term
+;
+MSG_AXDefinitionListDefinitionText
+definicja
+; definition
+;
+MSG_AXButtonActionVerb
+
+; 
+;
+MSG_AXRadioButtonActionVerb
+
+; 
+;
+MSG_AXTextFieldActionVerb
+
+; 
+;
+MSG_AXCheckedCheckBoxActionVerb
+
+; 
+;
+MSG_AXUncheckedCheckBoxActionVerb
+
+; 
+;
+MSG_AXLinkActionVerb
+
+; 
+;
+MSG_unknownFileSizeText
+Nieznany
+; Unknown
+;
+MSG_imageTitle
+
+; 
+;
+MSG_ContextMenuItemTagLeftToRight
+
+; Left to Right context menu item
+;
+MSG_ContextMenuItemTagDefaultDirection
+
+; Default writing direction context menu item
+;
+MSG_ContextMenuItemTagRightToLeft
+
+; Right to Left context menu item
+;
+MSG_ContextMenuItemTagWritingDirectionMenu
+
+; Writing direction context sub-menu item
+;
+MSG_ContextMenuItemTagTextDirectionMenu
+
+; Text direction context sub-menu item
+;
+MSG_MultipleFileUploadText
+
+; 
+;
+MSG_Loading
+£adujê...
+; Loading...
+;
+MSG_NotLoading
+
+; 
+;
+MSG_Untitled
+(Bez nazwy)
+; (Untitled)
+;
+MSG_DownloadState_Starting
+£±czenie
+; Starting
+;
+MSG_DownloadState_Active
+Pobieranie
+; Downloading
+;
+MSG_DownloadState_Failed
+B³±d
+; Error
+;
+MSG_DownloadState_Finished
+Zakoñczone
+; Finished
+;
+MSG_UnknownFileSize
+nieznany
+; unknown
+;
+MSG_UnknownFileName
+nieznana
+; unknown
+;
+MSG_DownloadFileSize
+Rozmiar pliku
+; File size
+;
+MSG_DownloadFileName
+Nazwa pliku
+; File name
+;
+MSG_DownloadState
+Status
+; Status
+;
+MSG_DownloadProgress
+Postêp
+; Progress
+;
+MSG_DownloadManager_Title
+OWB Zarz±dzanie pobieraniem plików
+; OWB Download Manager
+;
+MSG_DownloadManager_Cancel
+Anuluj pobieranie
+; Cancel
+;
+MSG_DownloadManager_ClearFinished
+Wyczy¶æ zakoñczone
+; Clear finished
+;
+MSG_SearchWindow_Title
+OWB Okno wyszukiwania
+; OWB Search Window
+;
+MSG_SearchWindow_Locate
+Wyszukaj:
+; Locate:
+;
+MSG_SearchWindow_CaseSensitive
+Uwzglêdnij wielko¶æ znaków:
+; Case Sensitive
+;
+MSG_SearchWindow_FindNext
+Znajd¼ nastêpny
+; Find next
+;
+MSG_SearchWindow_FindPrevious
+Znajd¼ poprzedni
+; Find previous
+;
+MSG_PreferencesManager_Title
+OWB Ustawienia
+; OWB Preferences
+;
+MSG_PreferencesManager_Main
+G³ówne
+; Main
+;
+MSG_PreferencesManager_Downloads
+Pobieranie
+; Downloads
+;
+MSG_PreferencesManager_SaveFilesTo
+Zapisuj pliki do:
+; Save files to:
+;
+MSG_PreferencesManager_Content
+Zawarto¶æ
+; Content
+;
+MSG_PreferencesManager_JavaScript
+JavaScript
+; JavaScript
+;
+MSG_PreferencesManager_EnableJavaScript
+W³±cz JavaScript:
+; Enable JavaScript:
+;
+MSG_PreferencesManager_Images
+Obrazy
+; Images
+;
+MSG_PreferencesManager_LoadImagesAutomatically
+£aduj obrazy automatycznie:
+; Load images automatically:
+;
+MSG_PreferencesManager_AllowAnimatedImages
+Dopuszczaj animowane obrazy:
+; Allow animated images:
+;
+MSG_PreferencesManager_AllowLoopedAnimation
+Dopuszczaj zapêtlon± animacjê:
+; Allow looped animation:
+;
+MSG_PreferencesManager_DecodeBMPWithDatatypes
+Dekoduj BMP za pomoc± datatype'ów:
+; Decode BMP with Datatypes:
+;
+MSG_PreferencesManager_DecodePNGWithDatatypes
+Dekoduj PNG za pomoc± datatype'ów:
+; Decode PNG with Datatypes:
+;
+MSG_PreferencesManager_DecodeGIFWithDatatypes
+Dekoduj GIF za pomoc± datatype'ów:
+; Decode GIF with Datatypes:
+;
+MSG_PreferencesManager_DecodeJPGWithDatatypes
+Dekoduj JPG za pomoc± datatype'ów:
+; Decode JPG with Datatypes:
+;
+MSG_PreferencesManager_Fonts
+Czcionki
+; Fonts
+;
+MSG_PreferencesManager_DefaultFontSize
+Domy¶lny rozmiar czcionek:
+; Default font size:
+;
+MSG_PreferencesManager_MinimumFontSize
+Minimalny rozmiar czcionek:
+; Minimum font size:
+;
+MSG_PreferencesManager_StandardFontFamily
+Czcionka standardowa:
+; Standard font family:
+;
+MSG_PreferencesManager_DefaultFixedFontSize
+Domy¶lny rozmiar czcionki linearnej:
+; Default fixed font size:
+;
+MSG_PreferencesManager_FixedFontFamily
+Czcionka linearna:
+; Fixed font family:
+;
+MSG_PreferencesManager_SerifFontFamily
+Czcionka szeryfowa:
+; Serif font family:
+;
+MSG_PreferencesManager_SansSerifFontFamily
+Czcionka bezszeryfowa:
+; Sans-serif font family:
+;
+MSG_PreferencesManager_CursiveFontFamily
+Czcionka "Cursive":
+; Cursive font family:
+;
+MSG_PreferencesManager_FantasyFontFamily
+Czcionka "Fantasy":
+; Fantasy font family:
+;
+MSG_PreferencesManager_Save
+Zapisz
+; Save
+;
+MSG_PreferencesManager_Use
+U¿yj
+; Use
+;
+MSG_PreferencesManager_Cancel
+Anuluj
+; Cancel
+;
+MSG_Tabs
+Zak³adki
+; Tabs
+;
+MSG_Tabs_OpenNew
+Otwórz now± zak³adkê
+; Open new tab
+;
+MSG_Tabs_CloseActive
+Zamknij aktywn± zak³adkê
+; Close active tab
+;
