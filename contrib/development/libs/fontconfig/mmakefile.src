@@ -1,0 +1,11 @@
+# Copyright © 2009, The AROS Development Team. All rights reserved.
+# $Id$
+
+-include $(TOP)/config/make.cfg
+
+#MM- contrib-fontconfig : contrib-libiconv contrib-libxml2 development-fontconfig
+
+%fetch_and_build_gnu_development package=fontconfig version=2.6.0 \
+    srcdir=fontconfig-2.6.0 patch=yes suffixes="tar.gz" \
+    package_repo="http://fontconfig.org/release" \
+    extraoptions="--with-default-fonts=Fonts:TrueType --disable-shared --with-arch=$(TARGET_CPU)-aros FREETYPE_CFLAGS='-I$(AROS_INCLUDES)/freetype' FREETYPE_LIBS='-L$(AROS_LIB) -lfreetype2' LIBXML2_CFLAGS='-I$(AROS_INCLUDES)/libxml2' LIBXML2_LIBS='-L$(AROS_LIB) -lxml2' lt_sys_lib_search_path_spec='$(AROS_DEVELOPMENT)/lib/'"
