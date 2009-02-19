@@ -1,0 +1,34 @@
+# Copyright © 2009, The AROS Development Team. All rights reserved.
+# $Id$
+
+-include $(TOP)/config/make.cfg
+
+#MM- contrib-networking-curl : contrib-networking-openssl development-curl
+
+%fetch_and_build_gnu_development package=curl version=7.19.2 \
+    patch=yes package_repo="http://curl.haxx.se/download" \
+    extraoptions="--without-random" \
+    postconfigure="development-curl-fixconfig"
+
+#MM
+development-curl-fixconfig :
+	for file in $(GENDIR)/$(CURDIR)/curl/lib/config.h $(GENDIR)/$(CURDIR)/curl/src/config.h; \
+	do \
+	$(SED) -i 's@/\* #undef HAVE_SOCKET \*/@#define HAVE_SOCKET 1@' $$file; \
+	$(SED) -i 's@/\* #undef HAVE_SELECT \*/@#define HAVE_SELECT 1@' $$file; \
+	$(SED) -i 's@/\* #undef RECVFROM_TYPE_ARG1 \*/@#define RECVFROM_TYPE_ARG1 int@' $$file; \
+	$(SED) -i 's@/\* #undef RECVFROM_TYPE_ARG2 \*/@#define RECVFROM_TYPE_ARG2 void *@' $$file; \
+	$(SED) -i 's@/\* #undef RECVFROM_TYPE_ARG3 \*/@#define RECVFROM_TYPE_ARG3 int@' $$file; \
+	$(SED) -i 's@/\* #undef RECVFROM_TYPE_ARG4 \*/@#define RECVFROM_TYPE_ARG4 int@' $$file; \
+	$(SED) -i 's@/\* #undef RECVFROM_TYPE_ARG5 \*/@#define RECVFROM_TYPE_ARG5 struct sockaddr *@' $$file; \
+	$(SED) -i 's@/\* #undef RECVFROM_TYPE_ARG6 \*/@#define RECVFROM_TYPE_ARG6 int *@' $$file; \
+	$(SED) -i 's@/\* #undef RECVFROM_TYPE_RETV \*/@#define RECVFROM_TYPE_RETV int@' $$file; \
+	$(SED) -i 's@/\* #undef SELECT_TYPE_ARG1 \*/@#define SELECT_TYPE_ARG1 int@' $$file; \
+	$(SED) -i 's@/\* #undef SELECT_TYPE_ARG234 \*/@#define SELECT_TYPE_ARG234 fd_set *@' $$file; \
+	$(SED) -i 's@/\* #undef SELECT_TYPE_ARG5 \*/@#define SELECT_TYPE_ARG5 struct timeval *@' $$file; \
+	$(SED) -i 's@/\* #undef SELECT_TYPE_RETV \*/@#define SELECT_TYPE_RETV int@' $$file; \
+	$(SED) -i 's@/\* #undef HAVE_GETHOSTBYADDR \*/@#define HAVE_GETHOSTBYADDR 1@' $$file; \
+	$(SED) -i 's@/\* #undef HAVE_GETHOSTNAME \*/@#define HAVE_GETHOSTNAME 1@' $$file; \
+	$(SED) -i 's@/\* #undef HAVE_PROTOBYNAME \*/@#define HAVE_PROTOBYNAME 1@' $$file; \
+	$(SED) -i 's@/\* #undef HAVE_INET_ADDR \*/@#define HAVE_INET_ADDR 1@' $$file; \
+	done
