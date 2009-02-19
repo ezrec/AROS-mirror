@@ -2,10 +2,6 @@ This is a port of openssl-0.9.8j to AROS operating system. It's based on
 earlier openssl-0.9.8g port done by Rob Norris. Some bugs were fixed and
 support for building on x86-64 AROS was added.
 
-To build openssl-0.9.8j with the AROS build system you need to download and
-patch openssl-0.9.8j sources first and place them in this directory. Then
-make contrib-networking-openssl should do the job.
-
 Stanislaw Szymczyk
 sszymczy@gmail.com
 

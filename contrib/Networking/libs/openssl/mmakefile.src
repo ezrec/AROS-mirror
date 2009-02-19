@@ -3,10 +3,19 @@
 
 -include $(TOP)/config/make.cfg
 
-OPENSSL_SOURCE := $(TOP)/$(CURDIR)
+REPOSITORIES = http://www.openssl.org/source
+ARCHBASE := openssl-0.9.8j
+OPENSSL_SOURCE := $(PORTSDIR)/openssl/$(ARCHBASE)
 OPENSSL_BUILD_DIR := $(GENDIR)/$(CURDIR)
 
-#MM- contrib-networking-openssl : contrib-networking-openssl-setup contrib-networking-openssl-configure contrib-networking-openssl-build contrib-networking-openssl-install
+#MM- contrib-networking-openssl : contrib-networking-openssl-fetch contrib-networking-openssl-setup contrib-networking-openssl-configure contrib-networking-openssl-build contrib-networking-openssl-install
+
+#MM
+contrib-networking-openssl-fetch :
+	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/openssl \
+	location=$(PORTSSOURCEDIR) \
+	archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+	patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
 
 #MM
 contrib-networking-openssl-setup :
@@ -18,7 +27,7 @@ contrib-networking-openssl-setup :
 #MM
 contrib-networking-openssl-configure :
 	cd $(OPENSSL_BUILD_DIR); \
-	env -i ./Configure "aros-$(AROS_TARGET_CPU)-cross" no-threads --prefix=/Development --openssldir=/Development/etc/ssl 
+	env -i ./Configure "aros-$(AROS_TARGET_CPU)-cross" no-threads no-sse2 --prefix=/Development --openssldir=/Development/etc/ssl 
 
 #MM
 contrib-networking-openssl-build :
