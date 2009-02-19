@@ -1,0 +1,23 @@
+INTRODUCTION
+
+This is a port of ICU 4.0.1 to AROS operating system. It's based on earlier
+ICU 3.8 port done by Rob Norris. Some magic tricks are needed to cross-compile
+ICU, therefore this port is intended to be built on AROS.
+
+BUILDING
+
+For i386 AROS:
+
+bin:sh
+cd icu
+patch -p1 <icu4c-4.0.1-aros.diff
+cd source
+./configure --prefix=/usr --enable-static --disable-shared --disable-threads --with-data-packaging=library --build=i386-aros LDFLAGS=-nix
+make
+make install
+
+CONTACT
+
+Stanislaw Szymczyk
+sszymczy@gmail.com
+
