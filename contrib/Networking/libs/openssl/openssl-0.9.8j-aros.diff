@@ -1,6 +1,6 @@
 diff -ruN openssl-0.9.8j/apps/apps.h openssl-0.9.8j-aros/apps/apps.h
 --- openssl-0.9.8j/apps/apps.h	2008-11-24 17:14:13.000000000 +0100
-+++ openssl-0.9.8j-aros/apps/apps.h	2009-01-28 14:50:30.000000000 +0100
++++ openssl-0.9.8j-aros/apps/apps.h	2009-02-21 00:06:56.000000000 +0100
 @@ -166,7 +166,7 @@
  
  #endif
@@ -12,7 +12,7 @@ diff -ruN openssl-0.9.8j/apps/apps.h openssl-0.9.8j-aros/apps/apps.h
  
 diff -ruN openssl-0.9.8j/apps/ca.c openssl-0.9.8j-aros/apps/ca.c
 --- openssl-0.9.8j/apps/ca.c	2008-01-03 23:53:03.000000000 +0100
-+++ openssl-0.9.8j-aros/apps/ca.c	2009-01-28 14:50:30.000000000 +0100
++++ openssl-0.9.8j-aros/apps/ca.c	2009-02-21 00:06:56.000000000 +0100
 @@ -83,7 +83,7 @@
  #    else
  #      include <unixlib.h>
@@ -22,9 +22,27 @@ diff -ruN openssl-0.9.8j/apps/ca.c openssl-0.9.8j-aros/apps/ca.c
  #    include <sys/file.h>
  #  endif
  #endif
+diff -ruN openssl-0.9.8j/apps/Makefile openssl-0.9.8j-aros/apps/Makefile
+--- openssl-0.9.8j/apps/Makefile	2008-11-19 17:03:48.000000000 +0100
++++ openssl-0.9.8j-aros/apps/Makefile	2009-02-21 00:06:56.000000000 +0100
+@@ -153,12 +153,12 @@
+ 	shlib_target=; if [ -n "$(SHARED_LIBS)" ]; then \
+ 		shlib_target="$(SHLIB_TARGET)"; \
+ 	elif [ -n "$(FIPSCANLIB)" ]; then \
+-	  FIPSLD_CC=$(CC); CC=$(TOP)/fips/fipsld; export CC FIPSLD_CC; \
++	  FIPSLD_CC="$(CC)"; CC=$(TOP)/fips/fipsld; export CC FIPSLD_CC; \
+ 	fi; \
+ 	LIBRARIES="$(LIBSSL) $(LIBKRB5) $(LIBCRYPTO)" ; \
+ 	[ "x$(FIPSCANLIB)" = "xlibfips" ] && LIBRARIES="$$LIBRARIES -lfips"; \
+ 	$(MAKE) -f $(TOP)/Makefile.shared -e \
+-		CC=$${CC} APPNAME=$(EXE) OBJECTS="$(PROGRAM).o $(E_OBJ)" \
++		CC="$${CC}" APPNAME=$(EXE) OBJECTS="$(PROGRAM).o $(E_OBJ)" \
+ 		LIBDEPS="$(PEX_LIBS) $$LIBRARIES $(EX_LIBS)" \
+ 		link_app.$${shlib_target}
+ 	-(cd ..; \
 diff -ruN openssl-0.9.8j/apps/ocsp.c openssl-0.9.8j-aros/apps/ocsp.c
 --- openssl-0.9.8j/apps/ocsp.c	2008-11-05 19:36:35.000000000 +0100
-+++ openssl-0.9.8j-aros/apps/ocsp.c	2009-01-28 14:50:30.000000000 +0100
++++ openssl-0.9.8j-aros/apps/ocsp.c	2009-02-21 00:06:56.000000000 +0100
 @@ -65,6 +65,10 @@
  #include <openssl/ssl.h>
  #include <openssl/err.h>
@@ -38,7 +56,7 @@ diff -ruN openssl-0.9.8j/apps/ocsp.c openssl-0.9.8j-aros/apps/ocsp.c
  
 diff -ruN openssl-0.9.8j/apps/openssl.c openssl-0.9.8j-aros/apps/openssl.c
 --- openssl-0.9.8j/apps/openssl.c	2008-09-16 00:24:39.000000000 +0200
-+++ openssl-0.9.8j-aros/apps/openssl.c	2009-01-28 14:50:30.000000000 +0100
++++ openssl-0.9.8j-aros/apps/openssl.c	2009-02-21 00:06:56.000000000 +0100
 @@ -130,6 +130,17 @@
  #include "s_apps.h"
  #include <openssl/err.h>
@@ -96,7 +114,7 @@ diff -ruN openssl-0.9.8j/apps/openssl.c openssl-0.9.8j-aros/apps/openssl.c
  	arg.count=0;
 diff -ruN openssl-0.9.8j/apps/s_client.c openssl-0.9.8j-aros/apps/s_client.c
 --- openssl-0.9.8j/apps/s_client.c	2008-12-20 18:04:08.000000000 +0100
-+++ openssl-0.9.8j-aros/apps/s_client.c	2009-01-28 14:50:30.000000000 +0100
++++ openssl-0.9.8j-aros/apps/s_client.c	2009-02-21 00:06:56.000000000 +0100
 @@ -127,6 +127,10 @@
  typedef unsigned int u_int;
  #endif
@@ -110,7 +128,7 @@ diff -ruN openssl-0.9.8j/apps/s_client.c openssl-0.9.8j-aros/apps/s_client.c
  #include <openssl/x509.h>
 diff -ruN openssl-0.9.8j/apps/speed.c openssl-0.9.8j-aros/apps/speed.c
 --- openssl-0.9.8j/apps/speed.c	2009-01-07 11:48:22.000000000 +0100
-+++ openssl-0.9.8j-aros/apps/speed.c	2009-01-28 14:50:30.000000000 +0100
++++ openssl-0.9.8j-aros/apps/speed.c	2009-02-21 00:06:56.000000000 +0100
 @@ -104,7 +104,7 @@
  #include OPENSSL_UNISTD
  #endif
@@ -131,7 +149,7 @@ diff -ruN openssl-0.9.8j/apps/speed.c openssl-0.9.8j-aros/apps/speed.c
  
 diff -ruN openssl-0.9.8j/apps/s_server.c openssl-0.9.8j-aros/apps/s_server.c
 --- openssl-0.9.8j/apps/s_server.c	2008-12-20 18:04:08.000000000 +0100
-+++ openssl-0.9.8j-aros/apps/s_server.c	2009-01-28 14:50:30.000000000 +0100
++++ openssl-0.9.8j-aros/apps/s_server.c	2009-02-21 00:06:56.000000000 +0100
 @@ -144,6 +144,10 @@
  typedef unsigned int u_int;
  #endif
@@ -145,7 +163,7 @@ diff -ruN openssl-0.9.8j/apps/s_server.c openssl-0.9.8j-aros/apps/s_server.c
  #define USE_SOCKETS
 diff -ruN openssl-0.9.8j/apps/s_socket.c openssl-0.9.8j-aros/apps/s_socket.c
 --- openssl-0.9.8j/apps/s_socket.c	2005-06-13 05:21:00.000000000 +0200
-+++ openssl-0.9.8j-aros/apps/s_socket.c	2009-01-28 14:50:30.000000000 +0100
++++ openssl-0.9.8j-aros/apps/s_socket.c	2009-02-21 00:06:56.000000000 +0100
 @@ -91,6 +91,10 @@
  #include "netdb.h"
  #endif
@@ -159,7 +177,7 @@ diff -ruN openssl-0.9.8j/apps/s_socket.c openssl-0.9.8j-aros/apps/s_socket.c
  static void ssl_sock_cleanup(void);
 diff -ruN openssl-0.9.8j/apps/s_time.c openssl-0.9.8j-aros/apps/s_time.c
 --- openssl-0.9.8j/apps/s_time.c	2003-12-27 15:40:17.000000000 +0100
-+++ openssl-0.9.8j-aros/apps/s_time.c	2009-01-28 14:50:30.000000000 +0100
++++ openssl-0.9.8j-aros/apps/s_time.c	2009-02-21 00:06:56.000000000 +0100
 @@ -89,6 +89,10 @@
  #define TIMES
  #endif
@@ -173,13 +191,13 @@ diff -ruN openssl-0.9.8j/apps/s_time.c openssl-0.9.8j-aros/apps/s_time.c
  #endif
 diff -ruN openssl-0.9.8j/BUILD.AROS openssl-0.9.8j-aros/BUILD.AROS
 --- openssl-0.9.8j/BUILD.AROS	1970-01-01 01:00:00.000000000 +0100
-+++ openssl-0.9.8j-aros/BUILD.AROS	2009-01-28 14:50:29.000000000 +0100
++++ openssl-0.9.8j-aros/BUILD.AROS	2009-02-21 00:06:56.000000000 +0100
 @@ -0,0 +1,2 @@
 +% ./Configure aros-x86-cross no-threads no-zlib --prefix=/home/rob/code/aros/port/usr --openssldir=/home/rob/code/aros/port/usr/ssl
 +% make
 diff -ruN openssl-0.9.8j/Configure openssl-0.9.8j-aros/Configure
 --- openssl-0.9.8j/Configure	2008-12-29 01:18:23.000000000 +0100
-+++ openssl-0.9.8j-aros/Configure	2009-01-28 14:50:31.000000000 +0100
++++ openssl-0.9.8j-aros/Configure	2009-02-21 00:06:56.000000000 +0100
 @@ -540,6 +540,10 @@
  ##### Compaq Non-Stop Kernel (Tandem)
  "tandem-c89","c89:-Ww -D__TANDEM -D_XOPEN_SOURCE -D_XOPEN_SOURCE_EXTENDED=1 -D_TANDEM_SOURCE -DB_ENDIAN::(unknown):::THIRTY_TWO_BIT:::",
@@ -193,7 +211,7 @@ diff -ruN openssl-0.9.8j/Configure openssl-0.9.8j-aros/Configure
  my @MK1MF_Builds=qw(VC-WIN64I VC-WIN64A
 diff -ruN openssl-0.9.8j/crypto/bf/bf_opts.c openssl-0.9.8j-aros/crypto/bf/bf_opts.c
 --- openssl-0.9.8j/crypto/bf/bf_opts.c	2003-11-28 14:10:54.000000000 +0100
-+++ openssl-0.9.8j-aros/crypto/bf/bf_opts.c	2009-01-28 14:50:28.000000000 +0100
++++ openssl-0.9.8j-aros/crypto/bf/bf_opts.c	2009-02-21 00:06:56.000000000 +0100
 @@ -69,7 +69,7 @@
  #include OPENSSL_UNISTD_IO
  OPENSSL_DECLARE_EXIT
@@ -205,7 +223,7 @@ diff -ruN openssl-0.9.8j/crypto/bf/bf_opts.c openssl-0.9.8j-aros/crypto/bf/bf_op
  
 diff -ruN openssl-0.9.8j/crypto/bf/bfspeed.c openssl-0.9.8j-aros/crypto/bf/bfspeed.c
 --- openssl-0.9.8j/crypto/bf/bfspeed.c	2003-11-28 14:10:54.000000000 +0100
-+++ openssl-0.9.8j-aros/crypto/bf/bfspeed.c	2009-01-28 14:50:28.000000000 +0100
++++ openssl-0.9.8j-aros/crypto/bf/bfspeed.c	2009-02-21 00:06:56.000000000 +0100
 @@ -69,7 +69,7 @@
  #include OPENSSL_UNISTD_IO
  OPENSSL_DECLARE_EXIT
@@ -217,7 +235,7 @@ diff -ruN openssl-0.9.8j/crypto/bf/bfspeed.c openssl-0.9.8j-aros/crypto/bf/bfspe
  
 diff -ruN openssl-0.9.8j/crypto/bio/b_sock.c openssl-0.9.8j-aros/crypto/bio/b_sock.c
 --- openssl-0.9.8j/crypto/bio/b_sock.c	2008-01-03 23:53:03.000000000 +0100
-+++ openssl-0.9.8j-aros/crypto/bio/b_sock.c	2009-01-28 14:50:28.000000000 +0100
++++ openssl-0.9.8j-aros/crypto/bio/b_sock.c	2009-02-21 00:06:56.000000000 +0100
 @@ -90,6 +90,10 @@
  static int wsa_init_done=0;
  #endif
@@ -231,7 +249,7 @@ diff -ruN openssl-0.9.8j/crypto/bio/b_sock.c openssl-0.9.8j-aros/crypto/bio/b_so
  static unsigned long BIO_ghbn_miss=0L;
 diff -ruN openssl-0.9.8j/crypto/bio/bss_acpt.c openssl-0.9.8j-aros/crypto/bio/bss_acpt.c
 --- openssl-0.9.8j/crypto/bio/bss_acpt.c	2003-03-21 00:18:10.000000000 +0100
-+++ openssl-0.9.8j-aros/crypto/bio/bss_acpt.c	2009-01-28 14:50:28.000000000 +0100
++++ openssl-0.9.8j-aros/crypto/bio/bss_acpt.c	2009-02-21 00:06:56.000000000 +0100
 @@ -75,6 +75,10 @@
  #undef FIONBIO
  #endif
@@ -245,7 +263,7 @@ diff -ruN openssl-0.9.8j/crypto/bio/bss_acpt.c openssl-0.9.8j-aros/crypto/bio/bs
  	int state;
 diff -ruN openssl-0.9.8j/crypto/bio/bss_conn.c openssl-0.9.8j-aros/crypto/bio/bss_conn.c
 --- openssl-0.9.8j/crypto/bio/bss_conn.c	2006-02-02 23:16:45.000000000 +0100
-+++ openssl-0.9.8j-aros/crypto/bio/bss_conn.c	2009-01-28 14:50:28.000000000 +0100
++++ openssl-0.9.8j-aros/crypto/bio/bss_conn.c	2009-02-21 00:06:56.000000000 +0100
 @@ -75,6 +75,10 @@
  #undef FIONBIO
  #endif
@@ -259,7 +277,7 @@ diff -ruN openssl-0.9.8j/crypto/bio/bss_conn.c openssl-0.9.8j-aros/crypto/bio/bs
  	{
 diff -ruN openssl-0.9.8j/crypto/bio/bss_dgram.c openssl-0.9.8j-aros/crypto/bio/bss_dgram.c
 --- openssl-0.9.8j/crypto/bio/bss_dgram.c	2008-09-15 07:45:36.000000000 +0200
-+++ openssl-0.9.8j-aros/crypto/bio/bss_dgram.c	2009-01-28 14:50:28.000000000 +0100
++++ openssl-0.9.8j-aros/crypto/bio/bss_dgram.c	2009-02-21 00:06:56.000000000 +0100
 @@ -74,6 +74,10 @@
  #define sock_puts  SockPuts
  #endif
@@ -273,7 +291,7 @@ diff -ruN openssl-0.9.8j/crypto/bio/bss_dgram.c openssl-0.9.8j-aros/crypto/bio/b
  static int dgram_puts(BIO *h, const char *str);
 diff -ruN openssl-0.9.8j/crypto/bio/bss_log.c openssl-0.9.8j-aros/crypto/bio/bss_log.c
 --- openssl-0.9.8j/crypto/bio/bss_log.c	2003-11-28 14:10:54.000000000 +0100
-+++ openssl-0.9.8j-aros/crypto/bio/bss_log.c	2009-01-28 14:50:28.000000000 +0100
++++ openssl-0.9.8j-aros/crypto/bio/bss_log.c	2009-02-21 00:06:56.000000000 +0100
 @@ -84,6 +84,10 @@
  #  include <syslog.h>
  #endif
@@ -287,7 +305,7 @@ diff -ruN openssl-0.9.8j/crypto/bio/bss_log.c openssl-0.9.8j-aros/crypto/bio/bss
  
 diff -ruN openssl-0.9.8j/crypto/bio/bss_sock.c openssl-0.9.8j-aros/crypto/bio/bss_sock.c
 --- openssl-0.9.8j/crypto/bio/bss_sock.c	2003-11-28 14:10:54.000000000 +0100
-+++ openssl-0.9.8j-aros/crypto/bio/bss_sock.c	2009-01-28 14:50:28.000000000 +0100
++++ openssl-0.9.8j-aros/crypto/bio/bss_sock.c	2009-02-21 00:06:56.000000000 +0100
 @@ -62,6 +62,10 @@
  #include "cryptlib.h"
  #include <openssl/bio.h>
@@ -301,7 +319,7 @@ diff -ruN openssl-0.9.8j/crypto/bio/bss_sock.c openssl-0.9.8j-aros/crypto/bio/bs
  #define sock_read  SockRead
 diff -ruN openssl-0.9.8j/crypto/bn/bn_gf2m.c.rej openssl-0.9.8j-aros/crypto/bn/bn_gf2m.c.rej
 --- openssl-0.9.8j/crypto/bn/bn_gf2m.c.rej	1970-01-01 01:00:00.000000000 +0100
-+++ openssl-0.9.8j-aros/crypto/bn/bn_gf2m.c.rej	2009-01-28 14:50:27.000000000 +0100
++++ openssl-0.9.8j-aros/crypto/bn/bn_gf2m.c.rej	2009-02-21 00:06:56.000000000 +0100
 @@ -0,0 +1,16 @@
 +***************
 +*** 385,390 ****
@@ -321,7 +339,7 @@ diff -ruN openssl-0.9.8j/crypto/bn/bn_gf2m.c.rej openssl-0.9.8j-aros/crypto/bn/b
 +  		for (k = 1; p[k] != 0; k++)
 diff -ruN openssl-0.9.8j/crypto/cast/castopts.c openssl-0.9.8j-aros/crypto/cast/castopts.c
 --- openssl-0.9.8j/crypto/cast/castopts.c	2003-11-28 14:10:52.000000000 +0100
-+++ openssl-0.9.8j-aros/crypto/cast/castopts.c	2009-01-28 14:50:28.000000000 +0100
++++ openssl-0.9.8j-aros/crypto/cast/castopts.c	2009-02-21 00:06:56.000000000 +0100
 @@ -69,7 +69,7 @@
  #include OPENSSL_UNISTD_IO
  OPENSSL_DECLARE_EXIT
@@ -333,7 +351,7 @@ diff -ruN openssl-0.9.8j/crypto/cast/castopts.c openssl-0.9.8j-aros/crypto/cast/
  
 diff -ruN openssl-0.9.8j/crypto/cast/cast_spd.c openssl-0.9.8j-aros/crypto/cast/cast_spd.c
 --- openssl-0.9.8j/crypto/cast/cast_spd.c	2003-11-28 14:10:52.000000000 +0100
-+++ openssl-0.9.8j-aros/crypto/cast/cast_spd.c	2009-01-28 14:50:28.000000000 +0100
++++ openssl-0.9.8j-aros/crypto/cast/cast_spd.c	2009-02-21 00:06:56.000000000 +0100
 @@ -69,7 +69,7 @@
  #include OPENSSL_UNISTD_IO
  OPENSSL_DECLARE_EXIT
@@ -345,7 +363,7 @@ diff -ruN openssl-0.9.8j/crypto/cast/cast_spd.c openssl-0.9.8j-aros/crypto/cast/
  
 diff -ruN openssl-0.9.8j/crypto/des/des_opts.c openssl-0.9.8j-aros/crypto/des/des_opts.c
 --- openssl-0.9.8j/crypto/des/des_opts.c	2003-11-28 14:10:51.000000000 +0100
-+++ openssl-0.9.8j-aros/crypto/des/des_opts.c	2009-01-28 14:50:27.000000000 +0100
++++ openssl-0.9.8j-aros/crypto/des/des_opts.c	2009-02-21 00:06:56.000000000 +0100
 @@ -72,7 +72,7 @@
  extern void exit();
  #endif
@@ -357,7 +375,7 @@ diff -ruN openssl-0.9.8j/crypto/des/des_opts.c openssl-0.9.8j-aros/crypto/des/de
  
 diff -ruN openssl-0.9.8j/crypto/des/speed.c openssl-0.9.8j-aros/crypto/des/speed.c
 --- openssl-0.9.8j/crypto/des/speed.c	2003-11-28 14:10:51.000000000 +0100
-+++ openssl-0.9.8j-aros/crypto/des/speed.c	2009-01-28 14:50:27.000000000 +0100
++++ openssl-0.9.8j-aros/crypto/des/speed.c	2009-02-21 00:06:56.000000000 +0100
 @@ -69,7 +69,7 @@
  #include OPENSSL_UNISTD_IO
  OPENSSL_DECLARE_EXIT
@@ -369,7 +387,7 @@ diff -ruN openssl-0.9.8j/crypto/des/speed.c openssl-0.9.8j-aros/crypto/des/speed
  #endif
 diff -ruN openssl-0.9.8j/crypto/idea/idea_spd.c openssl-0.9.8j-aros/crypto/idea/idea_spd.c
 --- openssl-0.9.8j/crypto/idea/idea_spd.c	2003-11-28 14:10:50.000000000 +0100
-+++ openssl-0.9.8j-aros/crypto/idea/idea_spd.c	2009-01-28 14:50:28.000000000 +0100
++++ openssl-0.9.8j-aros/crypto/idea/idea_spd.c	2009-02-21 00:06:56.000000000 +0100
 @@ -69,7 +69,7 @@
  #include OPENSSL_UNISTD_IO
  OPENSSL_DECLARE_EXIT
@@ -381,7 +399,7 @@ diff -ruN openssl-0.9.8j/crypto/idea/idea_spd.c openssl-0.9.8j-aros/crypto/idea/
  
 diff -ruN openssl-0.9.8j/crypto/rand/rand_egd.c openssl-0.9.8j-aros/crypto/rand/rand_egd.c
 --- openssl-0.9.8j/crypto/rand/rand_egd.c	2005-02-19 11:19:07.000000000 +0100
-+++ openssl-0.9.8j-aros/crypto/rand/rand_egd.c	2009-01-28 14:50:27.000000000 +0100
++++ openssl-0.9.8j-aros/crypto/rand/rand_egd.c	2009-02-21 00:06:56.000000000 +0100
 @@ -95,7 +95,7 @@
   *   RAND_egd() is a wrapper for RAND_egd_bytes() with numbytes=255.
   */
@@ -393,7 +411,7 @@ diff -ruN openssl-0.9.8j/crypto/rand/rand_egd.c openssl-0.9.8j-aros/crypto/rand/
  	return(-1);
 diff -ruN openssl-0.9.8j/crypto/rand/rand_unix.c openssl-0.9.8j-aros/crypto/rand/rand_unix.c
 --- openssl-0.9.8j/crypto/rand/rand_unix.c	2006-06-30 10:14:50.000000000 +0200
-+++ openssl-0.9.8j-aros/crypto/rand/rand_unix.c	2009-01-28 14:50:27.000000000 +0100
++++ openssl-0.9.8j-aros/crypto/rand/rand_unix.c	2009-02-21 00:06:56.000000000 +0100
 @@ -150,6 +150,23 @@
  
  	return 1;
@@ -420,7 +438,7 @@ diff -ruN openssl-0.9.8j/crypto/rand/rand_unix.c openssl-0.9.8j-aros/crypto/rand
  {
 diff -ruN openssl-0.9.8j/crypto/rc2/rc2speed.c openssl-0.9.8j-aros/crypto/rc2/rc2speed.c
 --- openssl-0.9.8j/crypto/rc2/rc2speed.c	2006-02-28 21:08:46.000000000 +0100
-+++ openssl-0.9.8j-aros/crypto/rc2/rc2speed.c	2009-01-28 14:50:26.000000000 +0100
++++ openssl-0.9.8j-aros/crypto/rc2/rc2speed.c	2009-02-21 00:06:56.000000000 +0100
 @@ -69,7 +69,7 @@
  #include OPENSSL_UNISTD_IO
  OPENSSL_DECLARE_EXIT
@@ -432,7 +450,7 @@ diff -ruN openssl-0.9.8j/crypto/rc2/rc2speed.c openssl-0.9.8j-aros/crypto/rc2/rc
  
 diff -ruN openssl-0.9.8j/crypto/rc4/rc4speed.c openssl-0.9.8j-aros/crypto/rc4/rc4speed.c
 --- openssl-0.9.8j/crypto/rc4/rc4speed.c	2003-11-28 14:10:45.000000000 +0100
-+++ openssl-0.9.8j-aros/crypto/rc4/rc4speed.c	2009-01-28 14:50:29.000000000 +0100
++++ openssl-0.9.8j-aros/crypto/rc4/rc4speed.c	2009-02-21 00:06:56.000000000 +0100
 @@ -69,7 +69,7 @@
  #include OPENSSL_UNISTD_IO
  OPENSSL_DECLARE_EXIT
@@ -444,7 +462,7 @@ diff -ruN openssl-0.9.8j/crypto/rc4/rc4speed.c openssl-0.9.8j-aros/crypto/rc4/rc
  
 diff -ruN openssl-0.9.8j/crypto/rc5/rc5speed.c openssl-0.9.8j-aros/crypto/rc5/rc5speed.c
 --- openssl-0.9.8j/crypto/rc5/rc5speed.c	2003-11-28 14:10:45.000000000 +0100
-+++ openssl-0.9.8j-aros/crypto/rc5/rc5speed.c	2009-01-28 14:50:28.000000000 +0100
++++ openssl-0.9.8j-aros/crypto/rc5/rc5speed.c	2009-02-21 00:06:56.000000000 +0100
 @@ -69,7 +69,7 @@
  #include OPENSSL_UNISTD_IO
  OPENSSL_DECLARE_EXIT
@@ -456,7 +474,7 @@ diff -ruN openssl-0.9.8j/crypto/rc5/rc5speed.c openssl-0.9.8j-aros/crypto/rc5/rc
  
 diff -ruN openssl-0.9.8j/crypto/ui/ui_openssl.c openssl-0.9.8j-aros/crypto/ui/ui_openssl.c
 --- openssl-0.9.8j/crypto/ui/ui_openssl.c	2008-12-30 14:30:56.000000000 +0100
-+++ openssl-0.9.8j-aros/crypto/ui/ui_openssl.c	2009-01-28 14:50:28.000000000 +0100
++++ openssl-0.9.8j-aros/crypto/ui/ui_openssl.c	2009-02-21 00:06:56.000000000 +0100
 @@ -122,7 +122,16 @@
   * sigaction and fileno included. -pedantic would be more appropriate for
   * the intended purposes, but we can't prevent users from adding -ansi.
@@ -498,7 +516,7 @@ diff -ruN openssl-0.9.8j/crypto/ui/ui_openssl.c openssl-0.9.8j-aros/crypto/ui/ui
   * and this is only a trick to get it compiled.
 diff -ruN openssl-0.9.8j/e_os2.h openssl-0.9.8j-aros/e_os2.h
 --- openssl-0.9.8j/e_os2.h	2005-12-18 19:57:07.000000000 +0100
-+++ openssl-0.9.8j-aros/e_os2.h	2009-01-28 14:50:29.000000000 +0100
++++ openssl-0.9.8j-aros/e_os2.h	2009-02-21 00:06:56.000000000 +0100
 @@ -202,6 +202,12 @@
  # define OPENSSL_SYS_VXWORKS
  #endif
@@ -514,7 +532,7 @@ diff -ruN openssl-0.9.8j/e_os2.h openssl-0.9.8j-aros/e_os2.h
   *****************************************************************************/
 diff -ruN openssl-0.9.8j/e_os.h openssl-0.9.8j-aros/e_os.h
 --- openssl-0.9.8j/e_os.h	2008-12-30 14:30:54.000000000 +0100
-+++ openssl-0.9.8j-aros/e_os.h	2009-01-28 14:50:26.000000000 +0100
++++ openssl-0.9.8j-aros/e_os.h	2009-02-21 00:06:56.000000000 +0100
 @@ -109,6 +109,12 @@
  # endif
  #endif
@@ -542,9 +560,30 @@ diff -ruN openssl-0.9.8j/e_os.h openssl-0.9.8j-aros/e_os.h
  #else
  #define get_last_socket_error()	errno
  #define clear_socket_error()	errno=0
+diff -ruN openssl-0.9.8j/Makefile openssl-0.9.8j-aros/Makefile
+--- openssl-0.9.8j/Makefile	2009-01-07 12:57:01.000000000 +0100
++++ openssl-0.9.8j-aros/Makefile	2009-02-21 00:06:56.000000000 +0100
+@@ -359,7 +359,7 @@
+ 			$(AR) libcrypto.a fips/fipscanister.o ; \
+ 		else \
+ 			if [ "$(FIPSCANLIB)" = "libcrypto" ]; then \
+-				FIPSLD_CC=$(CC); CC=fips/fipsld; \
++				FIPSLD_CC="$(CC)"; CC=fips/fipsld; \
+ 				export CC FIPSLD_CC; \
+ 			fi; \
+ 			$(MAKE) -e SHLIBDIRS='crypto' build-shared; \
+@@ -382,7 +382,7 @@
+ fips/fipscanister.o:	build_fips
+ libfips$(SHLIB_EXT):		fips/fipscanister.o
+ 	@if [ "$(SHLIB_TARGET)" != "" ]; then \
+-		FIPSLD_CC=$(CC); CC=fips/fipsld; export CC FIPSLD_CC; \
++		FIPSLD_CC="$(CC)"; CC=fips/fipsld; export CC FIPSLD_CC; \
+ 		$(MAKE) -f Makefile.shared -e $(BUILDENV) \
+ 			CC=$${CC} LIBNAME=fips THIS=$@ \
+ 			LIBEXTRAS=fips/fipscanister.o \
 diff -ruN openssl-0.9.8j/ssl/ssltest.c openssl-0.9.8j-aros/ssl/ssltest.c
 --- openssl-0.9.8j/ssl/ssltest.c	2009-01-07 11:48:23.000000000 +0100
-+++ openssl-0.9.8j-aros/ssl/ssltest.c	2009-01-28 14:50:30.000000000 +0100
++++ openssl-0.9.8j-aros/ssl/ssltest.c	2009-02-21 00:06:56.000000000 +0100
 @@ -166,6 +166,17 @@
  #include OPENSSL_UNISTD
  #endif
@@ -610,3 +649,34 @@ diff -ruN openssl-0.9.8j/ssl/ssltest.c openssl-0.9.8j-aros/ssl/ssltest.c
  	verbose = 0;
  	debug = 0;
  	cipher = 0;
+diff -ruN openssl-0.9.8j/test/Makefile openssl-0.9.8j-aros/test/Makefile
+--- openssl-0.9.8j/test/Makefile	2008-12-13 13:22:47.000000000 +0100
++++ openssl-0.9.8j-aros/test/Makefile	2009-02-21 00:06:56.000000000 +0100
+@@ -402,11 +402,11 @@
+ 	if [ "$(FIPSCANLIB)" = "libfips" ]; then \
+ 		LIBRARIES="-L$(TOP) -lfips"; \
+ 	elif [ -n "$(FIPSCANLIB)" ]; then \
+-		FIPSLD_CC=$(CC); CC=$(TOP)/fips/fipsld; export CC FIPSLD_CC; \
++		FIPSLD_CC="$(CC)"; CC=$(TOP)/fips/fipsld; export CC FIPSLD_CC; \
+ 		LIBRARIES="$${FIPSLIBDIR:-$(TOP)/fips/}fipscanister.o"; \
+ 	fi; \
+ 	$(MAKE) -f $(TOP)/Makefile.shared -e \
+-		CC=$${CC} APPNAME=$$target$(EXE_EXT) OBJECTS="$$target.o" \
++		CC="$${CC}" APPNAME=$$target$(EXE_EXT) OBJECTS="$$target.o" \
+ 		LIBDEPS="$(PEX_LIBS) $$LIBRARIES $(EX_LIBS)" \
+ 		link_app.$${shlib_target}
+ 
+@@ -415,11 +415,11 @@
+ 	fi; \
+ 	LIBRARIES="$(LIBSSL) $(LIBCRYPTO) $(LIBKRB5)"; \
+ 	if [ -z "$(SHARED_LIBS)" -a -n "$(FIPSCANLIB)" ] ; then \
+-		FIPSLD_CC=$(CC); CC=$(TOP)/fips/fipsld; export CC FIPSLD_CC; \
++		FIPSLD_CC="$(CC)"; CC=$(TOP)/fips/fipsld; export CC FIPSLD_CC; \
+ 	fi; \
+ 	[ "$(FIPSCANLIB)" = "libfips" ] && LIBRARIES="$$LIBRARIES -lfips"; \
+ 	$(MAKE) -f $(TOP)/Makefile.shared -e \
+-		CC=$${CC} APPNAME=$$target$(EXE_EXT) OBJECTS="$$target.o" \
++		CC="$${CC}" APPNAME=$$target$(EXE_EXT) OBJECTS="$$target.o" \
+ 		LIBDEPS="$(PEX_LIBS) $$LIBRARIES $(EX_LIBS)" \
+ 		link_app.$${shlib_target}
+ 
