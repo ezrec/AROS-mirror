@@ -3,8 +3,8 @@
 
 -include $(TOP)/config/make.cfg
 
-# We need some hosting space to store packaged OWB revisions, localhost below is only temporary.
-REPOSITORIES = http://localhost
+# We need some hosting space to store packaged OWB revisions, my web page below is only temporary.
+REPOSITORIES = http://sszymczy.rootnode.net/projects/owb
 ARCHBASE := OWB-r847
 OWB_SOURCE := $(PORTSDIR)/OWB/$(ARCHBASE)
 OWB_BUILD_DIR := $(GENDIR)/$(CURDIR)
@@ -13,7 +13,7 @@ OWB_BUILD_DIR := $(GENDIR)/$(CURDIR)
 aros-tcpip-apps-owb-webview-fetch :
 	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/OWB \
 	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+	archive_origins=$(REPOSITORIES) suffixes="tar.gz tar.bz2" \
 	patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p0
 	
 #MM
