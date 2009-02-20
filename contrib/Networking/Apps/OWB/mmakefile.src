@@ -16,8 +16,9 @@ FILES :=               \
 	preferencesmanager \
 	tabbedview         
 	
-
 EXEDIR := $(CONTRIBDIR)/Networking/Apps/OWB
+
+#MM- aros-tcpip-apps-owb : aros-tcpip-apps-owb-webview aros-tcpip-apps-owb-icons aros-tcpip-apps-owb-catalogs
 
 LDFLAGS += -Wl,-whole-archive -lwebkit-owb -lwtf -ljsc -lwebcore -Wl,-no-whole-archive
 AROS_CC := $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-g++ -specs=$(GENDIR)/config/specs
