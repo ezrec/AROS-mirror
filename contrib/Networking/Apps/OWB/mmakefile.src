@@ -27,7 +27,7 @@ AROS_CC := $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-g++ -specs=$(GENDIR)/config/specs
 %build_prog mmake=aros-tcpip-apps-owb \
     files=$(FILES) targetdir=$(EXEDIR) \
     progname="owb" uselibs="sicui18n sicuuc sicudata codesets thread xml2 fontconfig freetype2 SDL SDL_gfx png jpeg curl iconv z amiga arosc m mui ssl crypto" \
-    cflags="$(CFLAGS) -DZUNE_BUILTIN_SCROLLGROUP=0 -DWTF_PLATFORM_AROS=1 -Itabs -I$(AROS_INCLUDES)/SDL -I$(AROS_INCLUDES)/WebKit"
+    cflags="$(CFLAGS) -DZUNE_BUILTIN_SCROLLGROUP=0 -DWTF_PLATFORM_AROS=1 -Itabs -I$(AROS_INCLUDES)/SDL -I$(AROS_INCLUDES)/webkit-owb"
 
 ICONS := back.png close.png download.png find.png forward.png go.png home.png preferences.png reload.png search.png stop.png
 
