@@ -1,0 +1,71 @@
+# Copyright © 2008, The AROS Development Team. All rights reserved.
+# $Id$
+
+-include $(TOP)/config/make.cfg
+
+# We need some hosting space to store packaged OWB revisions, localhost below is only temporary.
+REPOSITORIES = http://localhost
+ARCHBASE := OWB-r847
+OWB_SOURCE := $(PORTSDIR)/OWB/$(ARCHBASE)
+OWB_BUILD_DIR := $(GENDIR)/$(CURDIR)
+
+#MM
+aros-tcpip-apps-owb-webview-fetch :
+	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/OWB \
+	location=$(PORTSSOURCEDIR) \
+	archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+	patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p0
+	
+#MM
+aros-tcpip-apps-owb-webview-setup :
+	%mkdir_q dir=$(OWB_BUILD_DIR)
+	cd $(OWB_BUILD_DIR); \
+	cmake \
+	-DCMAKE_SYSTEM_NAME=AROS \
+	-DCMAKE_SYSTEM_VERSION=1 \
+	-DCMAKE_C_COMPILER=$(TOOLDIR)/$(AROS_TARGET_CPU)-aros-gcc \
+	-DCMAKE_C_COMPILER_WORKS:INTERNAL=TRUE \
+	-DCMAKE_CXX_COMPILER=$(TOOLDIR)/$(AROS_TARGET_CPU)-aros-g++ \
+	-DCMAKE_CXX_COMPILER_WORKS:INTERNAL=TRUE \
+	-DCMAKE_FIND_ROOT_PATH=$(AROS_DEVELOPMENT) \
+	-DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
+	-DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
+	-DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
+	-DCMAKE_INSTALL_PREFIX=$(AROS_DEVELOPMENT) \
+	-DJPEG_LIBRARY=$(AROS_DEVELOPMENT)/lib/libjpeg.a \
+	-DJPEG_INCLUDE_DIR=$(AROS_DEVELOPMENT)/include/ \
+	-DLIBXML2_LIBRARIES=$(AROS_DEVELOPMENT)/lib/libxml2.a \
+	-DLIBXML2_INCLUDE_DIRS=$(AROS_DEVELOPMENT)/include/libxml2 \
+	-DCURL_LIBRARIES="$(AROS_DEVELOPMENT)/lib/libcurl.a;$(AROS_DEVELOPMENT)/lib/libiconv.a;$(AROS_DEVELOPMENT)/lib/libz.a;$(AROS_DEVELOPMENT)/lib/libssl.a;$(AROS_DEVELOPMENT)/lib/libcrypto.a;" \
+	-DCURL_INCLUDE_DIRS=$(AROS_DEVELOPMENT)/include/ \
+	-DPNG12_LIBRARIES=$(AROS_DEVELOPMENT)/lib/libpng.a \
+	-DPNG12_INCLUDE_DIRS=$(AROS_DEVELOPMENT)/include/ \
+	-DLIBXSLT_LIBRARIES=$(AROS_DEVELOPMENT)/lib/libxslt.a \
+	-DLIBXSLT_INCLUDE_DIRS=$(AROS_DEVELOPMENT)/include/ \
+	-DSDL_LIBRARIES=$(AROS_DEVELOPMENT)/lib/libSDL.a \
+	-DSDL_LDFLAGS=-lSDL \
+	-DSDL_INCLUDE_DIRS=$(AROS_DEVELOPMENT)/include/SDL \
+	-DSDLGFX_LIBRARY=$(AROS_DEVELOPMENT)/lib/libSDL_gfx.a \
+	-DSDLGFX_INCLUDE_DIR=$(AROS_DEVELOPMENT)/include/SDL \
+	-DFREETYPE_LIBRARIES=$(AROS_DEVELOPMENT)/lib/libfreetype2.a \
+	-DFREETYPE_INCLUDE_DIRS=$(AROS_DEVELOPMENT)/include \
+	-DFONTCONFIG_LIBRARIES=$(AROS_DEVELOPMENT)/lib/libfontconfig.a \
+	-DFONTCONFIG_INCLUDE_DIRS=$(AROS_DEVELOPMENT)/include \
+	-DTHREAD_LIBRARIES=$(AROS_DEVELOPMENT)/lib/libthread.a \
+	-DCMAKE_LIBRARY_PATH_FLAG=$(AROS_DEVELOPMENT)/lib \
+	-DCMAKE_C_FLAGS="$(CFLAGS)" \
+	-DCMAKE_CXX_FLAGS="$(CFLAGS)" \
+	-DAROS_NETINCLUDE=$(AROS_DEVELOPMENT)/netinclude \
+	-DICU_LIBRARY="-lsicui18n -lsicuuc -lsicudata" \
+	-DICU_INCLUDE="$(AROS_DEVELOPMENT)/include" \
+	$(OWB_SOURCE)
+	
+#MM
+aros-tcpip-apps-owb-webview-build :
+	cd $(OWB_BUILD_DIR); \
+	$(MAKE)
+
+#MM
+aros-tcpip-apps-owb-webview-install :
+	cd $(OWB_BUILD_DIR); \
+	$(MAKE) install
