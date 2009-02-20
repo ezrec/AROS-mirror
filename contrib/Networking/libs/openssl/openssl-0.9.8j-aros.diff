@@ -185,8 +185,8 @@ diff -ruN openssl-0.9.8j/Configure openssl-0.9.8j-aros/Configure
  "tandem-c89","c89:-Ww -D__TANDEM -D_XOPEN_SOURCE -D_XOPEN_SOURCE_EXTENDED=1 -D_TANDEM_SOURCE -DB_ENDIAN::(unknown):::THIRTY_TWO_BIT:::",
  
 +##### AROS
-+"aros-i386-cross","i386-linux-aros-gcc:-DL_ENDIAN -g -Wall:::AROS::BN_LLONG ${x86_gcc_des} ${x86_gcc_opts}:${x86_elf_asm}::i386-linux-aros-ranlib",
-+"aros-x86_64-cross","x86_64-linux-aros-gcc:-DL_ENDIAN -DMD32_REG_T=int -g -Wall:::AROS::SIXTY_FOUR_BIT_LONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${no_asm}::x86_64-linux-aros-",
++"aros-i386-cross","$ENV{'AROS_CC'}:-DL_ENDIAN -g -Wall:::AROS::BN_LLONG ${x86_gcc_des} ${x86_gcc_opts}:${x86_elf_asm}::$ENV{'AROS_RANLIB'}",
++"aros-x86_64-cross","$ENV{'AROS_CC'}:-DL_ENDIAN -DMD32_REG_T=int -g -Wall:::AROS::SIXTY_FOUR_BIT_LONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${no_asm}::$ENV{'AROS_RANLIB'}",
 +
  );
  
