@@ -524,6 +524,16 @@
 # /Networking/Apps/AiRcOS/icons/
 /Networking/Apps/AiRcOS/icons/mmakefile
 
+# /Networking/Apps/OWB/
+/Networking/Apps/OWB/strings.h
+/Networking/Apps/OWB/mmakefile
+
+# /Networking/Apps/OWB/WebView/
+/Networking/Apps/OWB/WebView/mmakefile
+
+# /Networking/Apps/OWB/catalogs/
+/Networking/Apps/OWB/catalogs/mmakefile
+
 # /Networking/Apps/aaedt/icons/
 /Networking/Apps/aaedt/icons/mmakefile
 
@@ -620,6 +630,9 @@
 
 # /Networking/Utils/daytime/
 /Networking/Utils/daytime/mmakefile
+
+# /Networking/libs/curl/
+/Networking/libs/curl/mmakefile
 
 # /Networking/libs/openssl/
 /Networking/libs/openssl/mmakefile
@@ -1201,6 +1214,9 @@
 
 # /development/gui/pui/
 /development/gui/pui/mmakefile
+
+# /development/libs/fontconfig/
+/development/libs/fontconfig/mmakefile
 
 # /development/parsers/expat/lib/
 /development/parsers/expat/lib/mmakefile
