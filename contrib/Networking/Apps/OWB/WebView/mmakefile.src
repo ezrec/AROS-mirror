@@ -9,7 +9,7 @@ ARCHBASE := OWB-r847
 OWB_SOURCE := $(PORTSDIR)/OWB/$(ARCHBASE)
 OWB_BUILD_DIR := $(GENDIR)/$(CURDIR)
 
-#MM- aros-tcpip-apps-owb-libs : contrib-fontconfig contrib-networking-curl contrib-sdl contrib-sdl-sdl-gfx
+#MM- aros-tcpip-apps-owb-libs : contrib-fontconfig contrib-networking-curl development-SDL development-SDL_gfx-quick
 #MM- aros-tcpip-apps-owb-webview : aros-tcpip-apps-owb-libs aros-tcpip-apps-owb-webview-fetch aros-tcpip-apps-owb-webview-setup aros-tcpip-apps-owb-webview-build aros-tcpip-apps-owb-webview-install
 
 #MM
