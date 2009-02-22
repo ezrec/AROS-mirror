@@ -17,12 +17,15 @@ contrib-networking-openssl-fetch :
 	archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
 	patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
 
-#MM
-contrib-networking-openssl-setup :
+$(OPENSSL_BUILD_DIR)/.links-created :
 	%mkdir_q dir=$(OPENSSL_BUILD_DIR)
 	cd $(OPENSSL_SOURCE); \
 	find . -type d -exec mkdir -p $(OPENSSL_BUILD_DIR)/\{\} \;;\
 	find . -type f -exec ln -fs $(OPENSSL_SOURCE)/\{\} $(OPENSSL_BUILD_DIR)/\{\} \;; 
+	$(TOUCH) $@;
+
+#MM
+contrib-networking-openssl-setup : $(OPENSSL_BUILD_DIR)/.links-created
 
 #MM
 contrib-networking-openssl-configure :
