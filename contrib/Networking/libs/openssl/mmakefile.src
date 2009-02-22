@@ -27,10 +27,13 @@ $(OPENSSL_BUILD_DIR)/.links-created :
 #MM
 contrib-networking-openssl-setup : $(OPENSSL_BUILD_DIR)/.links-created
 
-#MM
-contrib-networking-openssl-configure :
+$(OPENSSL_BUILD_DIR)/.build-configured :
 	cd $(OPENSSL_BUILD_DIR); \
 	env -i AROS_CC="$(TARGET_CC)" AROS_RANLIB="$(RANLIB)" ./Configure "aros-$(AROS_TARGET_CPU)-cross" no-threads no-sse2 --prefix=/Development --openssldir=/Development/etc/ssl 
+	$(TOUCH) $@;
+
+#MM
+contrib-networking-openssl-configure : $(OPENSSL_BUILD_DIR)/.build-configured
 
 #MM
 contrib-networking-openssl-build :
