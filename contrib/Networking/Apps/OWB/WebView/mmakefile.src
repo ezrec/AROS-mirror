@@ -24,6 +24,7 @@ aros-tcpip-apps-owb-webview-setup :
 	%mkdir_q dir=$(OWB_BUILD_DIR)
 	cd $(OWB_BUILD_DIR); \
 	cmake \
+	-DCMAKE_MODULE_PATH=$(SRCDIR)/$(CURDIR)/cmake \
 	-DCMAKE_SYSTEM_NAME=AROS \
 	-DCMAKE_SYSTEM_VERSION=1 \
 	-DCMAKE_C_COMPILER=$(TOOLDIR)/$(AROS_TARGET_CPU)-aros-gcc \
