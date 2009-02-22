@@ -72,4 +72,6 @@ aros-tcpip-apps-owb-webview-build :
 #MM
 aros-tcpip-apps-owb-webview-install :
 	cd $(OWB_BUILD_DIR); \
-	$(MAKE) install
+	$(MAKE) install; \
+	$(CP) lib/libjsc.a lib/libwebcore.a lib/libwtf.a $(AROS_LIB)
+	
