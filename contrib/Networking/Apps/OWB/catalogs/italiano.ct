@@ -1,0 +1,453 @@
+MSG_OWB (//)
+;OWB
+OWB
+;
+MSG_submitButtonDefaultLabel (//)
+;Submit
+Invia
+;
+MSG_inputElementAltText (//)
+;Submit
+Invia
+;
+MSG_resetButtonDefaultLabel (//)
+;Reset
+Annulla
+;
+MSG_searchableIndexIntroduction (//)
+;Searchable Index
+Indice
+;
+MSG_fileButtonChooseFileLabel (//)
+;Choose File
+Scegli File
+;
+MSG_fileButtonNoFileSelectedLabel (//)
+;(None)
+(Nessuno)
+;
+MSG_contextMenuItemTagOpenLinkInNewWindow (//)
+;Open Link in New Window
+Apri in una nuova finestra
+;
+MSG_contextMenuItemTagDownloadLinkToDisk (//)
+;Download Linked File
+Scarica il file
+;
+MSG_contextMenuItemTagCopyLinkToClipboard (//)
+;Copy Link Location
+Copia il link in memoria
+;
+MSG_contextMenuItemTagOpenImageInNewWindow (//)
+;Open Image in New Window
+Apri l'immagine in una nuova finestra
+;
+MSG_contextMenuItemTagDownloadImageToDisk (//)
+;Save Image As
+Salva l'immagine come
+;
+MSG_contextMenuItemTagCopyImageToClipboard (//)
+;Copy Image
+Copia l'immagine
+;
+MSG_contextMenuItemTagOpenFrameInNewWindow (//)
+;Open frame in new window
+Apri frame in una nuova finestra
+;
+MSG_contextMenuItemTagCopy (//)
+;copy
+copia
+;
+MSG_contextMenuItemTagDelete (//)
+;delete
+elimina
+;
+MSG_contextMenuItemTagSelectAll (//)
+;Select All
+Seleziona tutto
+;
+MSG_contextMenuItemTagUnicode (//)
+;Insert Unicode Control Character
+Inserisci il carattere di controllo unicode
+;
+MSG_contextMenuItemTagInputMethods (//)
+;Input Methods
+Metodo di inserimento
+;
+MSG_contextMenuItemTagGoBack (//)
+;back
+indietro
+;
+MSG_contextMenuItemTagGoForward (//)
+;forward
+avanti
+;
+MSG_contextMenuItemTagStop (//)
+;stop
+stop
+;
+MSG_contextMenuItemTagReload (//)
+;Reload
+Aggiorna
+;
+MSG_contextMenuItemTagCut (//)
+;cut
+taglia
+;
+MSG_contextMenuItemTagPaste (//)
+;paste
+incolla
+;
+MSG_contextMenuItemTagNoGuessesFound (//)
+No Guesses Found
+Nessuna occorrenza trovata
+;
+MSG_contextMenuItemTagIgnoreSpelling (//)
+;Ignore Spelling
+Ignora ortografia
+;
+MSG_contextMenuItemTagLearnSpelling (//)
+;Learn Spelling
+Impara ortografia
+;
+MSG_contextMenuItemTagSearchWeb (//)
+;Search the Web
+Cerca sul Web
+;
+MSG_contextMenuItemTagLookUpInDictionary (//)
+;Look Up in Dictionary
+Cerca nel dizionario
+;
+MSG_contextMenuItemTagOpenLink (//)
+;Open Link
+Apri collegamento
+;
+MSG_contextMenuItemTagIgnoreGrammar (//)
+;Ignore Grammar
+Ignora grammatica
+;
+MSG_contextMenuItemTagSpellingMenu (//)
+;Spelling and Grammar
+Ortografia e grammatica
+;
+MSG_contextMenuItemTagShowSpellingPanel (//)
+;Show Spelling and Grammar
+Mostra ortografia e grammatica
+;
+MSG_contextMenuItemTagHideSpellingPanel (//)
+;Hide Spelling and Grammar
+Nascondi ortografia e grammatica
+;
+MSG_contextMenuItemTagCheckSpelling (//)
+;Check Document Now
+Controlla il documento
+;
+MSG_contextMenuItemTagCheckSpellingWhileTyping (//)
+;Check Spelling While Typing
+Controllo ortografico durante la digitazione
+;
+MSG_contextMenuItemTagCheckGrammarWithSpelling (//)
+;Check Grammar With Spelling
+Controllo ortografico con grammatica
+;
+MSG_contextMenuItemTagFontMenu (//)
+;Font
+Font
+;
+MSG_contextMenuItemTagBold (//)
+;Bold
+Grassetto
+;
+MSG_contextMenuItemTagItalic (//)
+;Italic
+Corsivo
+;
+MSG_contextMenuItemTagUnderline (//)
+;Underline
+Sottolineato
+;
+MSG_contextMenuItemTagOutline (//)
+;Outline
+Bordato
+;
+MSG_contextMenuItemTagInspectElement (//)
+;Inspect Element
+Ispeziona elemento
+;
+MSG_searchMenuNoRecentSearchesText (//)
+;No recent searches
+Nessuna ricerca recente
+;
+MSG_searchMenuRecentSearchesText (//)
+;Recent searches
+Ricerche recenti
+;
+MSG_searchMenuClearRecentSearchesText (//)
+;Clear recent searches
+Elimina ricerche recenti
+;
+MSG_AXDefinitionListTermText (//)
+;term
+termine
+;
+MSG_AXDefinitionListDefinitionText (//)
+;definition
+definizione
+;
+MSG_AXButtonActionVerb (//)
+
+;
+MSG_AXRadioButtonActionVerb (//)
+
+;
+MSG_AXTextFieldActionVerb (//)
+
+;
+MSG_AXCheckedCheckBoxActionVerb (//)
+
+;
+MSG_AXUncheckedCheckBoxActionVerb (//)
+
+;
+MSG_AXLinkActionVerb (//)
+
+;
+MSG_unknownFileSizeText (//)
+;Unknown
+Sconosciuto
+;
+MSG_imageTitle (//)
+
+;
+MSG_contextMenuItemTagLeftToRight (//)
+;Left to Right context menu item
+Voce contestuale da sinistra a destra
+;
+MSG_contextMenuItemTagDefaultDirection (//)
+;Default writing direction context menu item
+Voce contestuale direzione della scrittura
+;
+MSG_contextMenuItemTagRightToLeft (//)
+;Right to Left context menu item
+Voce contestuale da destra a sinistra
+;
+MSG_contextMenuItemTagWritingDirectionMenu (//)
+;Writing direction context sub-menu item
+Elemento menu secondario direzione scrittura
+;
+MSG_contextMenuItemTagTextDirectionMenu (//)
+;Text direction context sub-menu item
+Elemento menu secondario direzione testo
+;
+MSG_multipleFileUploadText (//)
+;
+
+;
+MSG_Loading (//)
+;Loading...
+Caricamento...
+;
+MSG_NotLoading (//)
+;
+
+;
+MSG_Untitled (//)
+(Untitled)
+;
+MSG_DownloadState_Starting (//)
+;Starting
+Inizio
+;
+MSG_DownloadState_Active (//)
+;Downloading
+Trasferimento
+;
+MSG_DownloadState_Failed (//)
+;Error
+Errore
+;
+MSG_DownloadState_Finished (//)
+;Finished
+Completo
+;
+MSG_UnknownFileSize (//)
+;unknown
+sconosciuto
+;
+MSG_UnknownFileName (//)
+;unknown
+sconosciuto
+;
+MSG_DownloadFileSize (//)
+;File size
+Dimensione file
+;
+MSG_DownloadFileName (//)
+;File name
+Nome file
+;
+MSG_DownloadState (//)
+;Status
+Stato
+;
+MSG_DownloadProgress (//)
+;Progress
+Progresso
+;
+MSG_DownloadManager_Title (//)
+;OWB Download Manager
+Gestione trasferimenti
+;
+MSG_DownloadManager_Cancel (//)
+;Cancel
+Annulla
+;
+MSG_DownloadManager_ClearFinished (//)
+;Clear finished
+Elimina completati
+;
+MSG_SearchWindow_Title (//)
+;OWB Search Window
+Ricerca
+;
+MSG_SearchWindow_Locate (//)
+;Locate:
+Trova:
+;
+MSG_SearchWindow_CaseSensitive (//)
+;Case Sensitive
+Maiuscole e minuscole
+;
+MSG_SearchWindow_FindNext (//)
+;Find next
+Trova successivo
+;
+MSG_SearchWindow_FindPrevious (//)
+;Find previous
+Trova precedente
+;
+MSG_PreferencesManager_Title (//)
+;OWB Preferences
+Impostazioni OWB
+;
+MSG_PreferencesManager_Main (//)
+;Main
+Principale
+;
+MSG_PreferencesManager_Downloads (//)
+;Downloads
+Trasferimenti
+;
+MSG_PreferencesManager_SaveFilesTo (//)
+;Save files to:
+Destinazione salvataggi:
+;
+MSG_PreferencesManager_Content (//)
+;Content
+Contenuto
+;
+MSG_PreferencesManager_JavaScript (//)
+;JavaScript
+JavaScript
+;
+MSG_PreferencesManager_EnableJavaScript (//)
+;Enable JavaScript:
+Abilita JavaScript:
+;
+MSG_PreferencesManager_Images (//)
+;Images
+Immagini
+;
+MSG_PreferencesManager_LoadImagesAutomatically (//)
+;Load images automatically:
+Carica immagini automaticamente:
+;
+MSG_PreferencesManager_AllowAnimatedImages (//)
+;Allow animated images:
+Abilita animazioni:
+;
+MSG_PreferencesManager_AllowLoopedAnimation (//)
+;Allow looped animation:
+Abilita animazioni continue:
+;
+MSG_PreferencesManager_DecodeBMPWithDatatypes (//)
+;Decode BMP with Datatypes:
+Decodifica BMP usando Datatype:
+;
+MSG_PreferencesManager_DecodePNGWithDatatypes (//)
+;Decode PNG with Datatypes:
+Decodifica PNG usando Datatype:
+;
+MSG_PreferencesManager_DecodeGIFWithDatatypes (//)
+;Decode GIF with Datatypes:
+Decodifica GIF usando Datatype:
+;
+MSG_PreferencesManager_DecodeJPGWithDatatypes (//)
+;Decode JPG with Datatypes:
+Decodifica JPG usando Datatype:
+;
+MSG_PreferencesManager_Fonts (//)
+;Fonts
+Font
+;
+MSG_PreferencesManager_DefaultFontSize (//)
+;Default font size:
+Dimensioni predefinite:
+;
+MSG_PreferencesManager_MinimumFontSize (//)
+;Minimum font size:
+Dimensioni minime:
+;
+MSG_PreferencesManager_StandardFontFamily (//)
+;Standard font family:
+Famiglia di caratteri standard:
+;
+MSG_PreferencesManager_DefaultFixedFontSize (//)
+;Default fixed font size:
+Dimensioni caratteri fissi:
+;
+MSG_PreferencesManager_FixedFontFamily (//)
+;Fixed font family:
+Famiglia di caratteri fissi:
+;
+MSG_PreferencesManager_SerifFontFamily (//)
+;Serif font family:
+Famiglia di caratteri serif:
+;
+MSG_PreferencesManager_SansSerifFontFamily (//)
+;Sans-serif font family:
+Famiglia di caratteri sans-serif:
+;
+MSG_PreferencesManager_CursiveFontFamily (//)
+Cursive font family:
+Famiglia di caratteri in corsivo:
+;
+MSG_PreferencesManager_FantasyFontFamily (//)
+;Fantasy font family:
+Famgilia di caratteri fantasy:
+;
+MSG_PreferencesManager_Save (//)
+;Save
+Salva
+;
+MSG_PreferencesManager_Use (//)
+;Use
+Usa
+;
+MSG_PreferencesManager_Cancel (//)
+;Cancel
+Annulla
+;
+MSG_Tabs (//)
+;Tabs
+Schede
+;
+MSG_Tabs_OpenNew (//)
+;Open new tab
+Apri una nuova scheda
+;
+MSG_Tabs_CloseActive (//)
+;Close active tab
+Chiudi la scheda attiva
+;
+
