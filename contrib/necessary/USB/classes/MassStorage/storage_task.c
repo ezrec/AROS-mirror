@@ -75,6 +75,7 @@ void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t lun, struct Task *parent
 	uint32_t rcvd;
 	mss_unit_t *unit;
 	struct timerequest *timer_io;
+	char tmp[512];
 
 	/* Make sure the access is exclusive as long as the init is not ready */
 	ObtainSemaphore(&mss->lock);
@@ -84,8 +85,11 @@ void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t lun, struct Task *parent
 	if (unit)
 	{
 		sigset |= 1 << unit->msu_unit.unit_MsgPort.mp_SigBit;
+		char cmd[6] = {0x1b, 0, 0, 0, 1, 0};
 
 		D(bug("[%s] Good morning!\n", name));
+
+		HIDD_USBStorage_DirectSCSI(o, lun, cmd, 6, NULL, 0, 1);
 
 		HIDD_USBStorage_Inquiry(o, lun, unit->msu_inquiry, 8);
 
@@ -228,6 +232,29 @@ void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t lun, struct Task *parent
 
 			if (!(unit->msu_flags & MSF_DeviceRemoved))
 			{
+
+				/* Message in IORequest queue? */
+				if (rcvd & (1 << unit->msu_unit.unit_MsgPort.mp_SigBit))
+				{
+//					/* If unit is active, do not handle the IO request */
+//					if (!(unit->msu_unit.unit_flags & UNITF_ACTIVE))
+//					{
+//						unit->msu_unit.unit_flags |= UNITF_ACTIVE;
+						struct IORequest *msg = NULL;
+
+						/* Empty the queue */
+						while ((msg = (struct IORequest *)GetMsg(&unit->msu_unit.unit_MsgPort)))
+						{
+							HandleIO(msg, msg->io_Device, unit);
+
+							if (msg->io_Command != TD_ADDCHANGEINT)
+								ReplyMsg((struct Message *)msg);
+						}
+
+//						unit->msu_unit.unit_flags &= ~(UNITF_ACTIVE);
+//					}
+				}
+
 				/* Got a timer request? Handle it (TestUnitReady) now */
 				if (rcvd & (1 << timer_io->tr_node.io_Message.mn_ReplyPort->mp_SigBit))
 				{
@@ -242,17 +269,17 @@ void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t lun, struct Task *parent
 
 					if (!unit_ready)
 					{
-						uint8_t sense[19];
+						uint8_t sense[18];
 						int i;
 						int p1;
 						int p2 = (unit->msu_flags & MSF_DiskPresent) ? 1:0;
 
 						D(bug("[%s] Unit was not ready. Requesting sense.\n", name));
 
-						HIDD_USBStorage_RequestSense(o, lun, sense, 19);
+						HIDD_USBStorage_RequestSense(o, lun, sense, 18);
 
 						D(bug("[%s] Sense: ", name));
-						for (i=0; i < 19; i++)
+						for (i=0; i < 18; i++)
 							D(bug("%02x ", sense[i]));
 						D(bug("\n"));
 
@@ -305,27 +332,6 @@ void StorageTask(OOP_Class *cl, OOP_Object *o, uint32_t lun, struct Task *parent
 				if (unit->msu_flags & MSF_DiskChanged)
 					DoChangeInt(unit);
 
-				/* Message in IORequest queue? */
-				if (rcvd & (1 << unit->msu_unit.unit_MsgPort.mp_SigBit))
-				{
-					/* If unit is active, do not handle the IO request */
-					if (!(unit->msu_unit.unit_flags & UNITF_ACTIVE))
-					{
-						unit->msu_unit.unit_flags |= UNITF_ACTIVE;
-						struct IORequest *msg = NULL;
-
-						/* Empty the queue */
-						while ((msg = (struct IORequest *)GetMsg(&unit->msu_unit.unit_MsgPort)))
-						{
-							HandleIO(msg, msg->io_Device, unit);
-
-							if (msg->io_Command != TD_ADDCHANGEINT)
-								ReplyMsg((struct Message *)msg);
-						}
-
-						unit->msu_unit.unit_flags &= ~(UNITF_ACTIVE);
-					}
-				}
 				/*
 				 * Set up idle timer. The main loop of the task will be waken up
 				 * after two seconds

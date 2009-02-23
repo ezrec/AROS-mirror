@@ -139,16 +139,16 @@ static void cmd_Read32(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit
 	}
 	else
 	{
-//		D(bug("[MSS-dev] Read32(%08x, %08x)\n", IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length));
+//		D(bug("[%s] Read32(%08x, %08x)\n", FindTask(NULL)->tc_Node.ln_Name, IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length));
 
 		if (!IOStdReq(io)->io_Data)
 		{
-			D(bug("[MSS-dev] No buffer!\n"));
+			D(bug("[%s] No buffer!\n", FindTask(NULL)->tc_Node.ln_Name));
 			io->io_Error = IOERR_BADADDRESS;
 		}
 		else if ((block & ((1 <<  unit->msu_blockShift) - 1)) || (count & ((1 <<  unit->msu_blockShift) - 1)))
 		{
-			D(bug("[MSS-dev] offset or length not sector-aligned\n"));
+			D(bug("[%s] offset or length not sector-aligned\n", FindTask(NULL)->tc_Node.ln_Name));
 			cmd_Invalid(io, dev, unit);
 		}
 		else
@@ -159,14 +159,14 @@ static void cmd_Read32(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit
 
 			if (block + count - 1> unit->msu_blockCount)
 			{
-				D(bug("[MSS-dev] ERROR! Requested read outside the available area\n"));
+				D(bug("[%s] ERROR! Requested read outside the available area\n", FindTask(NULL)->tc_Node.ln_Name));
 				io->io_Error = IOERR_BADADDRESS;
 			}
 			else
 			{
 				if (!HIDD_USBStorage_Read(unit->msu_object, unit->msu_lun, IOStdReq(io)->io_Data, block, count))
 				{
-					D(bug("[MSS-dev] READ ERROR: block=0x%08x count=0x%08x\n", block, count));
+					D(bug("[%s] READ ERROR: block=0x%08x count=0x%08x\n", FindTask(NULL)->tc_Node.ln_Name, block, count));
 
 					HIDD_USBStorage_Reset(unit->msu_object);
 
@@ -196,18 +196,18 @@ static void cmd_Read64(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit
 	else
 	{
 
-//		D(bug("[MSS-dev] Read64(%04x%08x, %08x)\n", IOStdReq(io)->io_Actual, IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length));
+//		D(bug("[%s] Read64(%04x%08x, %08x)\n", FindTask(NULL)->tc_Node.ln_Name, IOStdReq(io)->io_Actual, IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length));
 
 		io->io_Error = 0;
 
 		if (!IOStdReq(io)->io_Data)
 		{
-			D(bug("[MSS-dev] No buffer!\n"));
+			D(bug("[%s] No buffer!\n", FindTask(NULL)->tc_Node.ln_Name));
 			io->io_Error = IOERR_BADADDRESS;
 		}
 		else if ((block & ((1 <<  unit->msu_blockShift) - 1)) || (count & ((1 <<  unit->msu_blockShift) - 1)))
 		{
-			D(bug("[MSS-dev] offset or length not sector-aligned\n"));
+			D(bug("[%s] offset or length not sector-aligned\n", FindTask(NULL)->tc_Node.ln_Name));
 			cmd_Invalid(io, dev, unit);
 		}
 		else
@@ -218,14 +218,14 @@ static void cmd_Read64(struct IORequest *io, mss_device_t *dev, mss_unit_t *unit
 
 			if (block + count - 1> unit->msu_blockCount)
 			{
-				D(bug("[MSS-dev] ERROR! Requested read outside the available area\n"));
+				D(bug("[%s] ERROR! Requested read outside the available area\n", FindTask(NULL)->tc_Node.ln_Name));
 				io->io_Error = IOERR_BADADDRESS;
 			}
 			else
 			{
 				if (!HIDD_USBStorage_Read(unit->msu_object, unit->msu_lun, IOStdReq(io)->io_Data, block, count))
 				{
-					D(bug("[MSS-dev] READ ERROR: block=0x%08x count=0x%08x\n", (int32_t)block, count));
+					D(bug("[%s] READ ERROR: block=0x%08x count=0x%08x\n", FindTask(NULL)->tc_Node.ln_Name, (int32_t)block, count));
 
 					HIDD_USBStorage_Reset(unit->msu_object);
 
@@ -255,16 +255,16 @@ static void cmd_Write32(struct IORequest *io, mss_device_t *dev, mss_unit_t *uni
 	else
 	{
 
-//		D(bug("[MSS-dev] Write32(%08x, %08x)\n", IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length));
+	//	D(bug("[%s] Write32(%08x, %08x)\n", FindTask(NULL)->tc_Node.ln_Name, IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length));
 
 		if (!IOStdReq(io)->io_Data)
 		{
-			D(bug("[MSS-dev] No buffer!\n"));
+			D(bug("[%s] No buffer!\n", FindTask(NULL)->tc_Node.ln_Name));
 			io->io_Error = IOERR_BADADDRESS;
 		}
 		else if ((block & ((1 <<  unit->msu_blockShift) - 1)) || (count & ((1 <<  unit->msu_blockShift) - 1)))
 		{
-			D(bug("[MSS-dev] offset or length not sector-aligned\n"));
+			D(bug("[%s] offset or length not sector-aligned\n", FindTask(NULL)->tc_Node.ln_Name));
 			cmd_Invalid(io, dev, unit);
 		}
 		else
@@ -275,14 +275,14 @@ static void cmd_Write32(struct IORequest *io, mss_device_t *dev, mss_unit_t *uni
 
 			if (block + count - 1> unit->msu_blockCount)
 			{
-				D(bug("[MSS-dev] ERROR! Requested write outside the available area\n"));
+				D(bug("[%s] ERROR! Requested write outside the available area\n", FindTask(NULL)->tc_Node.ln_Name));
 				io->io_Error = IOERR_BADADDRESS;
 			}
 			else
 			{
 				if (!HIDD_USBStorage_Write(unit->msu_object, unit->msu_lun, IOStdReq(io)->io_Data, block, count))
 				{
-					D(bug("[MSS-dev] WRITE ERROR: block=0x%08x count=0x%08x\n", block, count));
+					D(bug("[%s] WRITE ERROR: block=0x%08x count=0x%08x\n", FindTask(NULL)->tc_Node.ln_Name, block, count));
 
 					HIDD_USBStorage_Reset(unit->msu_object);
 
@@ -311,19 +311,18 @@ static void cmd_Write64(struct IORequest *io, mss_device_t *dev, mss_unit_t *uni
 	}
 	else
 	{
-
-//		D(bug("[MSS-dev] Write64(%04x%08x, %08x)\n", IOStdReq(io)->io_Actual, IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length));
+//		D(bug("[%s] Write64(%04x%08x, %08x)\n", FindTask(NULL)->tc_Node.ln_Name, IOStdReq(io)->io_Actual, IOStdReq(io)->io_Offset, IOStdReq(io)->io_Length));
 
 		io->io_Error = 0;
 
 		if (!IOStdReq(io)->io_Data)
 		{
-			D(bug("[MSS-dev] No buffer!\n"));
+			D(bug("[%s] No buffer!\n", FindTask(NULL)->tc_Node.ln_Name));
 			io->io_Error = IOERR_BADADDRESS;
 		}
 		else if ((block & ((1 <<  unit->msu_blockShift) - 1)) || (count & ((1 <<  unit->msu_blockShift) - 1)))
 		{
-			D(bug("[MSS-dev] offset or length not sector-aligned\n"));
+			D(bug("[%s] offset or length not sector-aligned\n", FindTask(NULL)->tc_Node.ln_Name));
 			cmd_Invalid(io, dev, unit);
 		}
 		else
@@ -334,14 +333,14 @@ static void cmd_Write64(struct IORequest *io, mss_device_t *dev, mss_unit_t *uni
 
 			if (block + count - 1 > unit->msu_blockCount)
 			{
-				D(bug("[MSS-dev] ERROR! Requested write outside the available area\n"));
+				D(bug("[%s] ERROR! Requested write outside the available area\n", FindTask(NULL)->tc_Node.ln_Name));
 				io->io_Error = IOERR_BADADDRESS;
 			}
 			else
 			{
 				if (!HIDD_USBStorage_Write(unit->msu_object, unit->msu_lun, IOStdReq(io)->io_Data, block, count))
 				{
-					D(bug("[MSS-dev] WRITE ERROR: block=0x%08x count=0x%08x\n", (int32_t)block, count));
+					D(bug("[%s] WRITE ERROR: block=0x%08x count=0x%08x\n", FindTask(NULL)->tc_Node.ln_Name, (int32_t)block, count));
 
 					HIDD_USBStorage_Reset(unit->msu_object);
 
@@ -364,6 +363,14 @@ static void cmd_DirectSCSI(struct IORequest *io, mss_device_t *dev, mss_unit_t *
 	struct SCSICmd *cmd = (struct SCSICmd *)IOStdReq(io)->io_Data;
 
 	IOStdReq(io)->io_Error = 0;
+	int i;
+
+	D(bug("[%s] DirectSCSI(", FindTask(NULL)->tc_Node.ln_Name));
+	for (i=0; i < cmd->scsi_CmdLength; i++)
+	{
+		D(bug("%02x%c", cmd->scsi_Command[i], i < (cmd->scsi_CmdLength-1) ? ',':')'));
+	}
+	D(bug("\n"));
 
 	if (cmd)
 	{
@@ -485,6 +492,8 @@ static const void (*map64[4])(struct IORequest *io, mss_device_t *dev, mss_unit_
  */
 void HandleIO(struct IORequest *io, mss_device_t *device, mss_unit_t *unit)
 {
+	unit->msu_unit.unit_flags |= UNITF_ACTIVE;
+
 	io->io_Error = 0;
 
 	/* Some commands will be handled directly */
@@ -532,6 +541,8 @@ void HandleIO(struct IORequest *io, mss_device_t *device, mss_unit_t *unit)
 		}
 		break;
 	}
+
+	unit->msu_unit.unit_flags &= ~(UNITF_ACTIVE);
 }
 
 

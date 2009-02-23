@@ -350,9 +350,6 @@ void METHOD(Storage, Root, Dispose)
 
     if (mss)
     {
-    	HIDD_USBDevice_DeletePipe(o, mss->pipe_in);
-    	HIDD_USBDevice_DeletePipe(o, mss->pipe_out);
-
     	for (i=0; i <= mss->maxLUN; i++)
     	{
     		if (mss->unit[i])
@@ -365,6 +362,9 @@ void METHOD(Storage, Root, Dispose)
     	    	Signal(mss->handler[i], SIGF_SINGLE);
     		}
     	}
+
+    	HIDD_USBDevice_DeletePipe(o, mss->pipe_in);
+    	HIDD_USBDevice_DeletePipe(o, mss->pipe_out);
     }
 
     OOP_GetAttr(o, aHidd_USBDevice_Bus, (intptr_t *)&drv);
@@ -430,16 +430,23 @@ uint32_t METHOD(Storage, Hidd_USBStorage, DirectSCSI)
 	cbw.dCBWSignature = AROS_LONG2LE(CBW_SIGNATURE);
 	cbw.dCBWTag = getTID(SD(cl));
 	cbw.dCBWDataTransferLength = AROS_LONG2LE(msg->dataLen);
-	cbw.bmCBWFlags = msg->read ? CBW_FLAGS_IN : CBW_FLAGS_OUT;
+	cbw.bmCBWFlags = msg->dataLen ? (msg->read ? CBW_FLAGS_IN : CBW_FLAGS_OUT) : 0;
 	cbw.bCBWCBLength = msg->cmdLen;
 
 	ObtainSemaphore(&mss->lock);
 
-//	D(bug("[MSS] DirectSCSI -> (%08x,%08x,%08x,%02x,%02x,%02x)\n",
+//	D(bug("[MSS] DirectSCSI -> (%08x,%08x,%08x,%02x,%02x,%02x) @ %08x ",
 //			AROS_LONG2LE(cbw.dCBWSignature),
 //			cbw.dCBWTag,
 //			AROS_LONG2LE(cbw.dCBWDataTransferLength),
-//			cbw.bCBWLUN, cbw.bmCBWFlags, cbw.bCBWCBLength));
+//			cbw.bCBWLUN, cbw.bmCBWFlags, cbw.bCBWCBLength,
+//			msg->dataLen? msg->data:0));
+//
+//	for (i=0; i < msg->cmdLen; i++)
+//	{
+//		D(bug("%02x%c", msg->cmd[i], i < (msg->cmdLen) ? ',':')'));
+//	}
+//	D(bug("\n"));
 
 	if (HIDD_USBDevice_BulkTransfer(o, mss->pipe_out, &cbw, 31))
 	{
@@ -478,12 +485,12 @@ uint32_t METHOD(Storage, Hidd_USBStorage, DirectSCSI)
 BOOL METHOD(Storage, Hidd_USBStorage, TestUnitReady)
 {
 	StorageData *mss = OOP_INST_DATA(cl, o);
-	uint8_t cmd[10] = {0};
+	uint8_t cmd[12] = {0};
 
 	if (msg->lun > mss->maxLUN)
 		return FALSE;
 
-	if (HIDD_USBStorage_DirectSCSI(o, msg->lun, cmd, 10, NULL, 0, 1))
+	if (HIDD_USBStorage_DirectSCSI(o, msg->lun, cmd, 12, NULL, 0, 1))
 		return TRUE;
 	else
 		return FALSE;
@@ -526,21 +533,39 @@ BOOL METHOD(Storage, Hidd_USBStorage, Read)
 	StorageData *mss = OOP_INST_DATA(cl, o);
 	uint8_t cmd[10] = {0x28, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
+	ULONG count = msg->count;
+	ULONG block = msg->block;
+	UBYTE *buf = msg->buffer;
+
 	if (msg->lun > mss->maxLUN)
 		return FALSE;
 
 //	D(bug("[MSS] ::Read(%08x, %04x) => %p\n", msg->block, msg->count, msg->buffer));
 
-	cmd[2] = msg->block >>24;
-	cmd[3] = msg->block >>16;
-	cmd[4] = msg->block >>8;
-	cmd[5] = msg->block;
+	if (buf)
+	{
+		while(count)
+		{
+			ULONG cnt = count > 1024 ? 1024 : count;
 
-	cmd[7] = msg->count >> 8;
-	cmd[8] = msg->count;
+			cmd[2] = block >>24;
+			cmd[3] = block >>16;
+			cmd[4] = block >>8;
+			cmd[5] = block;
 
-	if (msg->buffer)
-		return HIDD_USBStorage_DirectSCSI(o, msg->lun, cmd, 10, msg->buffer, msg->count * mss->blocksize[msg->lun], 1);
+			cmd[7] = cnt >> 8;
+			cmd[8] = cnt;
+
+			if (!HIDD_USBStorage_DirectSCSI(o, msg->lun, cmd, 10, buf, cnt * mss->blocksize[msg->lun], 1))
+				return FALSE;
+
+			block += cnt;
+			buf += cnt * mss->blocksize[msg->lun];
+			count -= cnt;
+		}
+
+		return TRUE;
+	}
 	else
 		return FALSE;
 }
@@ -550,21 +575,39 @@ BOOL METHOD(Storage, Hidd_USBStorage, Write)
 	StorageData *mss = OOP_INST_DATA(cl, o);
 	uint8_t cmd[10] = {0x2a, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
+	ULONG count = msg->count;
+	ULONG block = msg->block;
+	UBYTE *buf = msg->buffer;
+
 	if (msg->lun > mss->maxLUN)
 		return FALSE;
 
 //	D(bug("[MSS] ::Write(%08x, %04x) <= %p\n", msg->block, msg->count, msg->buffer));
 
-	cmd[2] = msg->block >>24;
-	cmd[3] = msg->block >>16;
-	cmd[4] = msg->block >>8;
-	cmd[5] = msg->block;
+	if (buf)
+	{
+		while(count)
+		{
+			ULONG cnt = count > 1024 ? 1024 : count;
 
-	cmd[7] = msg->count >> 8;
-	cmd[8] = msg->count;
+			cmd[2] = block >>24;
+			cmd[3] = block >>16;
+			cmd[4] = block >>8;
+			cmd[5] = block;
 
-	if (msg->buffer)
-		return HIDD_USBStorage_DirectSCSI(o, msg->lun, cmd, 10, msg->buffer, msg->count * mss->blocksize[msg->lun], 0);
+			cmd[7] = cnt >> 8;
+			cmd[8] = cnt;
+
+			if (!HIDD_USBStorage_DirectSCSI(o, msg->lun, cmd, 10, msg->buffer, msg->count * mss->blocksize[msg->lun], 0))
+				return FALSE;
+
+			block += cnt;
+			buf += cnt * mss->blocksize[msg->lun];
+			count -= cnt;
+		}
+
+		return TRUE;
+	}
 	else
 		return FALSE;
 }
