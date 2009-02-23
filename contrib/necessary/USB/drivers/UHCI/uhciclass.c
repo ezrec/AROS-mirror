@@ -603,6 +603,14 @@ void METHOD(UHCI, Hidd_USBDrv, DeletePipe)
     return uhci_DeletePipe(cl, o, msg->pipe);
 }
 
+void METHOD(UHCI, Hidd_USBDrv, SetTimeout)
+{
+    UHCI_Pipe	*p = msg->pipe;
+
+    if (p)
+    	p->p_TimeoutVal = msg->timeout;
+}
+
 BOOL METHOD(UHCI, Hidd_USBDrv, AddInterrupt)
 {
     BOOL retval = FALSE;
@@ -1187,6 +1195,10 @@ APTR METHOD(UHCI, Hidd_USBDevice, CreatePipe)
 }
 
 void METHOD(UHCI, Hidd_USBDevice, DeletePipe)
+{
+}
+
+void METHOD(UHCI, Hidd_USBDevice, SetTimeout)
 {
 }
 

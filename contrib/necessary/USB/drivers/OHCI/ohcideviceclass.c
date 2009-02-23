@@ -3,7 +3,7 @@
     $Id$
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU Library General Public License as 
+    it under the terms of the GNU Library General Public License as
     published by the Free Software Foundation; either version 2 of the
     License, or (at your option) any later version.
 
@@ -107,7 +107,7 @@ BOOL METHOD(OHCI, Hidd_USBDevice, GetString)
 const usb_endpoint_descriptor_t * METHOD(OHCI, Hidd_USBDevice, GetEndpoint)
 {
     endpoint_descriptor.wMaxPacketSize = AROS_WORD2LE(1);
-    
+
     if (msg->interface == 0 && msg->endpoint == 0)
         return &endpoint_descriptor;
     else
@@ -136,5 +136,9 @@ APTR METHOD(OHCI, Hidd_USBDevice, CreatePipe)
 }
 
 void METHOD(OHCI, Hidd_USBDevice, DeletePipe)
+{
+}
+
+void METHOD(OHCI, Hidd_USBDevice, SetTimeout)
 {
 }
