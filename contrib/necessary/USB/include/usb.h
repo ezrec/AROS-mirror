@@ -133,6 +133,7 @@ enum {
     moHidd_USBDevice_GetInterface,
     moHidd_USBDevice_GetEndpoint,
     moHidd_USBDevice_BulkTransfer,
+    moHidd_USBDevice_SetTimeout,
 
     NUM_HIDD_USBDEVICE_METHODS
 };
@@ -252,6 +253,13 @@ struct pHidd_USBDevice_BulkTransfer {
 	APTR			buffer;
 	uint32_t		length;
 };
+
+struct pHidd_USBDevice_SetTimeout {
+    OOP_MethodID        mID;
+    APTR                pipe;
+    uint32_t			timeout;
+};
+
 
 /*
  * USB Hub Class
@@ -375,6 +383,7 @@ enum {
     moHidd_USBDrv_AddInterrupt,
     moHidd_USBDrv_RemInterrupt,
     moHidd_USBDrv_BulkTransfer,
+    moHidd_USBDrv_SetTimeout,
 
     NUM_HIDD_USBDRV_METHODS
 };
@@ -431,6 +440,13 @@ struct pHidd_USBDrv_RemInterrupt {
     struct Interrupt    *interrupt;
 };
 
+struct pHidd_USBDrv_SetTimeout {
+    OOP_MethodID    mID;
+    void            *pipe;
+    uint32_t		timeout;
+};
+
+
 /* USB stubs */
 BOOL HIDD_USB_AttachDriver(OOP_Object *obj, OOP_Object *driver);
 BOOL HIDD_USB_DetachDriver(OOP_Object *obj, OOP_Object *driver);
@@ -451,6 +467,7 @@ BOOL HIDD_USBDevice_Configure(OOP_Object *obj, uint8_t configNr);
 usb_interface_descriptor_t *HIDD_USBDevice_GetInterface(OOP_Object *obj, uint8_t interface);
 usb_endpoint_descriptor_t *HIDD_USBDevice_GetEndpoint(OOP_Object *obj, uint8_t interface, uint8_t endpoint);
 BOOL HIDD_USBDevice_BulkTransfer(OOP_Object *obj, APTR pipe, APTR buffer, uint32_t length);
+void HIDD_USBDevice_SetTimeout(OOP_Object *obj, APTR pipe, uint32_t timeout);
 
 BOOL HIDD_USBHub_OnOff(OOP_Object *obj, BOOL on);
 OOP_Object *HIDD_USBHub_GetChild(OOP_Object *obj, uint8_t port);
@@ -470,5 +487,6 @@ BOOL HIDD_USBDrv_ControlTransfer(OOP_Object *obj, APTR pipe, USBDevice_Request *
 BOOL HIDD_USBDrv_AddInterrupt(OOP_Object *obj, void *pipe, void *buffer, uint8_t length, struct Interrupt *interrupt);
 BOOL HIDD_USBDrv_RemInterrupt(OOP_Object *obj, void *pipe, struct Interrupt *interrupt);
 BOOL HIDD_USBDrv_BulkTransfer(OOP_Object *obj, APTR pipe, APTR buffer, uint32_t length);
+void HIDD_USBDrv_SetTimeout(OOP_Object *obj, APTR pipe, uint32_t timeout);
 
 #endif /*USB_USB_H*/

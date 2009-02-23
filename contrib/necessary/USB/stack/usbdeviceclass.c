@@ -200,42 +200,47 @@ OOP_Object *METHOD(USBDevice, Root, New)
         D(bug("[USBDevice::New] Default LangID=%04x\n", string.bString[0]));
         langid = string.bString[0];
 
-        if (dev->descriptor.iProduct)
+        if (dev->descriptor.iProduct && HIDD_USBDevice_GetString(o, dev->descriptor.iProduct, langid, &string))
         {
-            HIDD_USBDevice_GetString(o, dev->descriptor.iProduct, langid, &string);
             dev->product_name = AllocVecPooled(SD(cl)->MemPool, 1 + ((string.bLength - 2) >> 1));
 
             for (i=0; i < (string.bLength - 2) >> 1; i++) {
                 dev->product_name[i] = AROS_LE2WORD(string.bString[i]);
             }
             dev->product_name[(string.bLength - 2) >> 1] = 0;
-        }
 
-        if (dev->descriptor.iManufacturer)
+            D(bug("[USBDevice::New] iProduct = \"%s\"\n", dev->product_name));
+        }
+        else
+        	dev->product_name = "? unknown name ?";
+
+        if (dev->descriptor.iManufacturer && HIDD_USBDevice_GetString(o, dev->descriptor.iManufacturer, langid, &string))
         {
-            HIDD_USBDevice_GetString(o, dev->descriptor.iManufacturer, langid, &string);
             dev->manufacturer_name = AllocVecPooled(SD(cl)->MemPool, 1 + ((string.bLength - 2) >> 1));
 
             for (i=0; i < (string.bLength - 2) >> 1; i++) {
                 dev->manufacturer_name[i] = AROS_LE2WORD(string.bString[i]);
             }
             dev->manufacturer_name[(string.bLength - 2) >> 1] = 0;
-        }
 
-        if (dev->descriptor.iSerialNumber)
+            D(bug("[USBDevice::New] iManufacturer = \"%s\"\n", dev->manufacturer_name));
+        }
+        else
+			dev->manufacturer_name = "? unknown manufacturer ?";
+
+        if (dev->descriptor.iSerialNumber && HIDD_USBDevice_GetString(o, dev->descriptor.iSerialNumber, langid, &string))
         {
-            HIDD_USBDevice_GetString(o, dev->descriptor.iSerialNumber, langid, &string);
             dev->serialnumber_name = AllocVecPooled(SD(cl)->MemPool, 1 + ((string.bLength - 2) >> 1));
 
             for (i=0; i < (string.bLength - 2) >> 1; i++) {
                 dev->serialnumber_name[i] = AROS_LE2WORD(string.bString[i]);
             }
             dev->serialnumber_name[(string.bLength - 2) >> 1] = 0;
-        }
 
-        D(bug("[USBDevice::New] iProduct = \"%s\"\n", dev->product_name));
-        D(bug("[USBDevice::New] iManufacturer = \"%s\"\n", dev->manufacturer_name));
-        D(bug("[USBDevice::New] iSerial = \"%s\"\n", dev->serialnumber_name));
+            D(bug("[USBDevice::New] iSerial = \"%s\"\n", dev->serialnumber_name));
+        }
+        else
+        	dev->serialnumber_name = "? unknown serial ?";
     }
 
     D(bug("[USB] USBDevice::New() = %p\n",o));
@@ -298,6 +303,13 @@ void METHOD(USBDevice, Hidd_USBDevice, DeletePipe)
     DeviceData *dev = OOP_INST_DATA(cl, o);
 
     HIDD_USBDrv_DeletePipe(dev->bus, msg->pipe);
+}
+
+void METHOD(USBDevice, Hidd_USBDevice, SetTimeout)
+{
+    DeviceData *dev = OOP_INST_DATA(cl, o);
+
+    HIDD_USBDrv_SetTimeout(dev->bus, msg->pipe ? msg->pipe : dev->default_pipe, msg->timeout);
 }
 
 BOOL METHOD(USBDevice, Hidd_USBDevice, ControlMessage)

@@ -218,6 +218,20 @@ void HIDD_USBDevice_DeletePipe(OOP_Object *obj, APTR pipe)
     OOP_DoMethod(obj, &p.mID);
 }
 
+void HIDD_USBDevice_SetTimeout(OOP_Object *obj, APTR pipe, uint32_t timeout)
+{
+    STATIC_MID;
+    struct pHidd_USBDevice_SetTimeout p;
+
+    if (!mid) mid = OOP_GetMethodID((STRPTR)IID_Hidd_USBDevice, moHidd_USBDevice_SetTimeout);
+
+    p.mID = mid;
+    p.pipe = pipe;
+    p.timeout = timeout;
+
+    OOP_DoMethod(obj, &p.mID);
+}
+
 BOOL HIDD_USBDevice_ControlMessage(OOP_Object *obj, APTR pipe, USBDevice_Request *request, APTR buffer, uint32_t length)
 {
     STATIC_MID;
@@ -466,6 +480,20 @@ void HIDD_USBDrv_DeletePipe(OOP_Object *obj, APTR pipe)
 
     p.mID = mid;
     p.pipe = pipe;
+
+    OOP_DoMethod(obj, &p.mID);
+}
+
+void HIDD_USBDrv_SetTimeout(OOP_Object *obj, APTR pipe, uint32_t timeout)
+{
+    STATIC_MID;
+    struct pHidd_USBDrv_SetTimeout p;
+
+    if (!mid) mid = OOP_GetMethodID((STRPTR)IID_Hidd_USBDrv, moHidd_USBDrv_SetTimeout);
+
+    p.mID = mid;
+    p.pipe = pipe;
+    p.timeout = timeout;
 
     OOP_DoMethod(obj, &p.mID);
 }

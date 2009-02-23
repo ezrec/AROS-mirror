@@ -91,6 +91,9 @@ OOP_Object *METHOD(USBHub, Root, New)
         HubData *hub = OOP_INST_DATA(cl, o);
         STRPTR name;
 
+        /* HUB devices do need a bit longer timeout than anything else */
+        HIDD_USBDevice_SetTimeout(o, NULL, 5000);
+
         hub->root = GetTagData(aHidd_USBHub_IsRoot, FALSE, msg->attrList);
         hub->enabled = FALSE;
         hub->got_descriptor = FALSE;
@@ -117,10 +120,10 @@ OOP_Object *METHOD(USBHub, Root, New)
         D(bug("[USB] USBHub has name \"%s\"\n", name));
 
         hub->sd = SD(cl);
-        hub->hub_name = name;
-        hub->proc_name = AllocVecPooled(SD(cl)->MemPool, 10 + strlen(name));
+        hub->hub_name = name ? name : "unknown";
+        hub->proc_name = AllocVecPooled(SD(cl)->MemPool, 10 + strlen(name ? name : "unknown"));
 
-        sprintf(hub->proc_name, "USBHub (%s)", name);
+        sprintf(hub->proc_name, "USBHub (%s)", name ? name : "unknown");
 
         HIDD_USBDevice_Configure(o, 0);
 
@@ -444,10 +447,10 @@ BOOL METHOD(USBHub, Hidd_USBHub, GetHubDescriptor)
             bRequest:       UR_GET_DESCRIPTOR,
             wValue:         AROS_WORD2LE(((uint8_t)UDESC_HUB) << 8),
             wIndex:         AROS_WORD2LE(0),
-            wLength:        AROS_WORD2LE(USB_HUB_DESCRIPTOR_SIZE-1)
+            wLength:        AROS_WORD2LE(USB_HUB_DESCRIPTOR_SIZE)
     };
 
-    return HIDD_USBDevice_ControlMessage(o, NULL, &request, msg->descriptor, USB_HUB_DESCRIPTOR_SIZE-1);
+    return HIDD_USBDevice_ControlMessage(o, NULL, &request, msg->descriptor, USB_HUB_DESCRIPTOR_SIZE);
 }
 
 
