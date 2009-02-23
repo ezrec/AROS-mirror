@@ -9,7 +9,7 @@
    require to associate themselves with another structure do so using BLCK
    pointers.  Byte pointers are not used. */
 
-typedef unsigned long BLCK;
+typedef ULONG BLCK;
 typedef BLCK BLCKn;
 
 
