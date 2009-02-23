@@ -19,11 +19,14 @@ aros-tcpip-apps-owb-webview-fetch :
 	archive_origins=$(REPOSITORIES) suffixes="tar.gz tar.bz2" \
 	patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p0
 	
+# Change USE_I18N value from GENERIC to ICU if you have ICU installed
+
 #MM
 aros-tcpip-apps-owb-webview-setup :
 	%mkdir_q dir=$(OWB_BUILD_DIR)
 	cd $(OWB_BUILD_DIR); \
 	cmake \
+	-DUSE_I18N:STRING=GENERIC \
 	-DCMAKE_MODULE_PATH=$(SRCDIR)/$(CURDIR)/cmake \
 	-DCMAKE_SYSTEM_NAME=AROS \
 	-DCMAKE_SYSTEM_VERSION=1 \
