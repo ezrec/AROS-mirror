@@ -18,7 +18,7 @@ FILES :=               \
 	
 EXEDIR := $(CONTRIBDIR)/Networking/Apps/OWB
 
-#MM- aros-tcpip-apps-owb : aros-tcpip-apps-owb-webview aros-tcpip-apps-owb-icons aros-tcpip-apps-owb-catalogs
+#MM- aros-tcpip-apps-owb : aros-tcpip-apps-owb-webview aros-tcpip-apps-owb-icons aros-tcpip-apps-owb-catalogs aros-tcpip-apps-owb-resources
 
 LDFLAGS += -Wl,-whole-archive -lwebkit-owb -lwtf -ljsc -lwebcore -Wl,-no-whole-archive
 AROS_CC := $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-g++ -specs=$(GENDIR)/config/specs
@@ -37,6 +37,7 @@ ICONS := back.png close.png download.png find.png forward.png go.png home.png pr
 %copy_files_q files="$(ICONS)" src="icons" dst="$(EXEDIR)/icons" maketarget=aros-tcpip-apps-owb-icons
 
 %copy_dir_recursive src="fonts" dst="$(EXEDIR)/fonts" mmake=aros-tcpip-apps-owb-fonts
+%copy_dir_recursive src="$(AROS_DEVELOPMENT)/share/webkit-owb/resources" dst="$(EXEDIR)/resources" mmake=aros-tcpip-apps-owb-resources
 
 %common
 %include_deps
