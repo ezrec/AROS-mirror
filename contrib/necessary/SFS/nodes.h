@@ -10,7 +10,7 @@
 
 /* a NODE is the number of a fsNode structure in a fsNodeContainer */
 
-typedef unsigned long NODE;
+typedef ULONG NODE;
 
 /* Structures used by Node trees */
 

@@ -22,7 +22,7 @@
                     bug x;                                         \
                 } while (0)
 
-        #define _DEBUG(x) bug x
+        #define _DEBUG(x) bug("[SFS]"); bug x
 
         #define xdebug(type,x...)                                   \
                 do {                                                \

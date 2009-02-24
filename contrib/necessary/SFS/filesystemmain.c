@@ -28,6 +28,7 @@
 
 #define DEBUG 1
 #include <aros/debug.h>
+//#define DEBUGCODE
 
 #include <math.h>
 
@@ -307,7 +308,7 @@ LONG __saveds mainprogram() {
     APTR newdata;
 #endif
 
-    D(bug("Filesystem main\n"));
+    D(bug("[SFS] Filesystem main\n"));
 
 #ifdef __AROS__
     initGlobals();
@@ -331,15 +332,15 @@ LONG __saveds mainprogram() {
   
   if((DOSBase=(struct DosLibrary *)OpenLibrary("dos.library",37))!=0) {
 
-  D(bug("DOSBase = %p\n", DOSBase));
+  D(bug("[SFS] DOSBase = %p\n", DOSBase));
 
     globals->mytask=(struct Process *)FindTask(0);
 
-  D(bug("mytask = %p\n", globals->mytask));
+  D(bug("[SFS] mytask = %p\n", globals->mytask));
 
     globals->packet=waitpacket(globals->mytask);
 
-  D(bug("packet = %p\n", globals->packet));
+  D(bug("[SFS] packet = %p\n", globals->packet));
 
 
 
@@ -352,8 +353,8 @@ LONG __saveds mainprogram() {
     globals->startupmsg=BADDR(globals->packet->dp_Arg3);
     globals->devnode->dn_Name = BADDR(globals->packet->dp_Arg2);
 #endif
-  D(bug("devnode = %p\n", globals->devnode));
-  D(bug("startupmsg = %p\n", globals->startupmsg));
+  D(bug("[SFS] devnode = %p\n", globals->devnode));
+  D(bug("[SFS] startupmsg = %p\n", globals->startupmsg));
 
     if(initcachebuffers()==0) {
 
@@ -2743,8 +2744,11 @@ _DEBUG(("examine ED_TYPE, o->bits=%x, o->objectnode=%d\n", o->bits, BE2L(o->be_o
                   else {
                     lock=(struct ExtFileLock *)globals->packet->dp_Arg1;
                   }
-  
+
+                _DEBUG(("ACTION_COPY_DIR: lock=%p\n", lock));
+
                   if((errorcode=lockobject(lock,"",SHARED_LOCK,&lock))!=0) {
+                    _DEBUG(("ACTION_COPY_DIR: Failed to obtain lock!\n"));
                     returnpacket(0,errorcode);
                   }
                   else {
@@ -3347,19 +3351,21 @@ LONG readroots(void) {
   rb2=cb2->data;
 
   if(checkchecksum(cb1)==DOSFALSE || rb1->bheader.id!=DOSTYPE_ID || rb1->bheader.be_ownblock!=0) {
+  _DEBUG(("cb1/rb1 not ok!\n"));
     rb1okay=FALSE;
   }
   
-  _DEBUG(("checkchecksum(cb1)=%d, rb1->bheader.id=%08x, rb1->bheader.ownblock=%d, %d\n",
-    checkchecksum(cb1),rb1->bheader.id, BE2L(rb1->bheader.be_ownblock)
+  _DEBUG(("checkchecksum(cb1)=%d, rb1->bheader.id=%08x (wanted %08x), rb1->bheader.ownblock=%d\n",
+    checkchecksum(cb1),rb1->bheader.id, DOSTYPE_ID, BE2L(rb1->bheader.be_ownblock)
     ));
 
   if(checkchecksum(cb2)==DOSFALSE || rb2->bheader.id!=DOSTYPE_ID || BE2L(rb2->bheader.be_ownblock)!=BE2L(rb2->be_totalblocks)-1) {
+  _DEBUG(("cb2/rb2 not ok!\n"));
     rb2okay=FALSE;
   }
 
-  _DEBUG(("checkchecksum(cb2)=%d, rb2->bheader.id=%08x, rb2->bheader.ownblock=%d, %d\n",
-    checkchecksum(cb2),rb2->bheader.id, BE2L(rb2->bheader.be_ownblock)
+  _DEBUG(("checkchecksum(cb2)=%d, rb2->bheader.id=%08x, rb2->bheader.ownblock=%d, rb2->be_totalblocks =%d\n",
+    checkchecksum(cb2),rb2->bheader.id, BE2L(rb2->bheader.be_ownblock), BE2L(rb2->be_totalblocks)
     ));
 
   if(rb1okay!=FALSE && rb2okay!=FALSE) {
@@ -3372,10 +3378,12 @@ LONG readroots(void) {
     */
 
     if(rb1->be_blocksize!=L2BE(globals->bytes_block)) {
+  _DEBUG(("bad size in rb1!\n"));
       return(ERROR_NOT_A_DOS_DISK);
     }
 
     if(rb1->be_firstbyteh!=L2BE(globals->byte_lowh) || rb1->be_firstbyte!=L2BE(globals->byte_low) || rb1->be_lastbyteh!=L2BE(globals->byte_highh) || rb1->be_lastbyte!=L2BE(globals->byte_high) || rb1->be_totalblocks!=L2BE(globals->blocks_total)) {
+  _DEBUG(("bad value in rb1!\n"));
       return(ERROR_NOT_A_DOS_DISK);
     }
 

@@ -103,11 +103,11 @@ static void AddFileSystemTask(struct ASFSBase *asfsbase, struct IOFileSys *iofs)
     const struct TagItem 	     tags[]=
     {
         {NP_Entry  , (IPTR)ASFSOldEntry    	    	},
-        {NP_Name   , (IPTR)"ASFS - packet style Process"},
+        {NP_Name   , (IPTR)"SFS - packet style Process"},
         {TAG_END   , 0     	    	    	    	}
     };
 
-D(bug("AddFileSystemTask\n"));
+D(bug("[SFS] AddFileSystemTask\n"));
 
     device = AllocMem(sizeof(struct ASFSDeviceInfo),MEMF_PUBLIC | MEMF_CLEAR);
     if (device)
@@ -214,7 +214,7 @@ void ASFS_work(struct ASFSBase *asfsbase)
     {
         while ((iofs=(struct IOFileSys *)GetMsg(&asfsbase->port)))
         {
-            D(bug("[asfs] got command %ld\n",iofs->IOFS.io_Command));
+            D(bug("[SFS] got command %ld\n",iofs->IOFS.io_Command));
             error=0;
             asfshandle = (struct ASFSHandle *)iofs->IOFS.io_Unit;
             if (asfshandle)
@@ -224,7 +224,7 @@ void ASFS_work(struct ASFSBase *asfsbase)
             else
             {
                     if (iofs->IOFS.io_Command != (UWORD)-1)
-                        bug("[asfs] no acdrhandle!!!\n");
+                        bug("[SFS] no acdrhandle!!!\n");
             }
 #endif
 #endif
@@ -249,7 +249,7 @@ void ASFS_work(struct ASFSBase *asfsbase)
             case FSA_OPEN:
                 {
                     struct ASFSHandle *new;
-D(bug("[asfs] open: lock %08x (%s) %s\n",
+D(bug("[SFS] open: lock %08x (%s) %s\n",
       asfshandle->handle,
       (asfshandle == &asfshandle->device->rootfh) ? "root" : (asfshandle->flags & AHF_IS_LOCK) ? "lock" : "handle",
       iofs->io_Union.io_OPEN_FILE.io_Filename));
@@ -278,7 +278,7 @@ D(bug("[asfs] open: lock %08x (%s) %s\n",
                         if (iofs->io_Union.io_OPEN_FILE.io_Filename[0] == '\0')
                         {
                             packet.dp_Type = ACTION_COPY_DIR;
-D(bug("[asfs] open: ACTION_COPY_DIR %x result in ", packet.dp_Arg1));
+D(bug("[SFS] open: ACTION_COPY_DIR %x result in ", packet.dp_Arg1));
                         }
                         else
                         {
@@ -289,7 +289,7 @@ D(bug("[asfs] open: ACTION_COPY_DIR %x result in ", packet.dp_Arg1));
                                 EXCLUSIVE_LOCK :
                                 SHARED_LOCK;
 
-D(bug("[asfs] open: ACTION_LOCATE_OBJECT %x %x %x result in ", packet.dp_Arg1, packet.dp_Arg2, packet.dp_Arg3));
+D(bug("[SFS] open: ACTION_LOCATE_OBJECT %x %x %x result in ", packet.dp_Arg1, packet.dp_Arg2, packet.dp_Arg3));
                         }
                         sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
                         error = packet.dp_Res2;
@@ -299,10 +299,11 @@ D(bug(" %d\n", error));
                             new->handle = (void *)packet.dp_Res1;
                             new->flags |= AHF_IS_LOCK;
                             new->device = asfshandle->device;
-D(bug("[asfs] open: lock = %p\n", new->handle));
+D(bug("[SFS] open: lock = %p\n", new->handle));
                         }
                         else
                         {
+D(bug("[SFS] open: error = %d\n", error));
                             FreeMem(new, sizeof(struct ASFSHandle));
                             new = 0;
                         }
@@ -324,7 +325,7 @@ D(bug("[asfs] open: lock = %p\n", new->handle));
                     ULONG mode=iofs->io_Union.io_OPEN_FILE.io_FileMode;
 
 
-                    D(bug("[asfs] openfile: %s, %lx, %lx\n", iofs->io_Union.io_OPEN_FILE.io_Filename, mode, iofs->io_Union.io_OPEN_FILE.io_Protection));
+                    D(bug("[SFS] openfile: %s, %lx, %lx\n", iofs->io_Union.io_OPEN_FILE.io_Filename, mode, iofs->io_Union.io_OPEN_FILE.io_Protection));
 
                     if ((mode & FMF_CLEAR) != 0)
                     	packet.dp_Type = ACTION_FINDOUTPUT;
@@ -380,14 +381,14 @@ D(bug("[asfs] open: lock = %p\n", new->handle));
                                         (IPTR)MKBADDR(asfshandle->handle);
                         packet.dp_Arg3 = (IPTR)iofs->io_Union.io_OPEN_FILE.io_Filename;
                         sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
-                        D(bug("[asfs] openfile: dp_Res1=%d dp_Res2=%d\n", packet.dp_Res1, packet.dp_Res2));
+                        D(bug("[SFS] openfile: dp_Res1=%d dp_Res2=%d\n", packet.dp_Res1, packet.dp_Res2));
 
                         if (packet.dp_Res1)
                         {
                             new->handle = (void *)fh.fh_Arg1;
                             new->flags |= AHF_IS_FH;
                             new->device = asfshandle->device;
-                            D(bug("[asfs] openfile: handle = %lp\n", new->handle));
+                            D(bug("[SFS] openfile: handle = %lp\n", new->handle));
                             error = 0;
                         }
                         else
@@ -408,13 +409,13 @@ D(bug("[asfs] open: lock = %p\n", new->handle));
                 {
                     packet.dp_Type = ACTION_FREE_LOCK;
                     packet.dp_Arg1 = (IPTR)asfshandle->handle;
-D(bug("[asfs] close: lock=%p\n", asfshandle->handle));
+D(bug("[SFS] close: lock=%p\n", asfshandle->handle));
                 }
                 else
                 {
                     packet.dp_Type = ACTION_END;
                     packet.dp_Arg1 = (IPTR)asfshandle->handle;
-D(bug("[asfs] close: handle=%p\n", asfshandle->handle));
+D(bug("[SFS] close: handle=%p\n", asfshandle->handle));
                 }
                 sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
                 error = packet.dp_Res2;
@@ -504,16 +505,16 @@ D(bug("[asfs] close: handle=%p\n", asfshandle->handle));
 #ifdef DEBUG
 #if DEBUG!=0
 if ((asfshandle->flags & AHF_IS_LOCK)==0)
-bug("[asfs] examine called on a lock!!!\n");
+bug("[SFS] examine called on a lock!!!\n");
 #endif
 #endif
-D(bug("[asfs] examine: lock=%p\n", asfshandle->handle));
+D(bug("[SFS] examine: lock=%p\n", asfshandle->handle));
                     packet.dp_Arg1 = (IPTR)asfshandle->handle;
                     packet.dp_Arg2 = (IPTR)MKBADDR(&fib);
                     sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
                     error = packet.dp_Res2;
 
-D(bug("[asfs] examine: error=%d, packet.dp_Res1=%p\n", error, packet.dp_Res1));
+D(bug("[SFS] examine: error=%d, packet.dp_Res1=%p\n", error, packet.dp_Res1));
 
                     if (packet.dp_Res1)
                     {
@@ -532,14 +533,14 @@ D(bug("[asfs] examine: error=%d, packet.dp_Res1=%p\n", error, packet.dp_Res1));
 //                            if (iofs->io_DirPos == 1) iofs->io_DirPos = 0;
 
 //kprintf("****************acdr examine: pos = %lx\n", iofs->io_DirPos);
-D(bug("[asfs] examine: pos=%d, mode=%d\n", iofs->io_DirPos, mode));
+D(bug("[SFS] examine: pos=%d, mode=%d\n", iofs->io_DirPos, mode));
 
                             switch (mode)
                             {
                             case ED_OWNER:
                                 ead->ed_OwnerUID = fib.fib_OwnerUID;
                                 ead->ed_OwnerGID = fib.fib_OwnerGID;
-D(bug("[asfs] examine: UID=%d, GID=%d\n", ead->ed_OwnerUID, ead->ed_OwnerGID));
+D(bug("[SFS] examine: UID=%d, GID=%d\n", ead->ed_OwnerUID, ead->ed_OwnerGID));
 
 
                             case ED_COMMENT:
@@ -552,25 +553,25 @@ D(bug("[asfs] examine: UID=%d, GID=%d\n", ead->ed_OwnerUID, ead->ed_OwnerGID));
                                 ead->ed_Comment = next;
                                 CopyMem(AROS_BSTR_ADDR(fib.fib_Comment), ead->ed_Comment, len);
                                 next += len;
-D(bug("[asfs] examine: comment=%s\n", ead->ed_Comment));
+D(bug("[SFS] examine: comment=%s\n", ead->ed_Comment));
 
                             case ED_DATE:
                                 ead->ed_Days = fib.fib_Date.ds_Days;
                                 ead->ed_Mins = fib.fib_Date.ds_Minute;
                                 ead->ed_Ticks = fib.fib_Date.ds_Tick;
-D(bug("[asfs] examine: date=%d %d %d\n", ead->ed_Days, ead->ed_Mins, ead->ed_Ticks));
+D(bug("[SFS] examine: date=%d %d %d\n", ead->ed_Days, ead->ed_Mins, ead->ed_Ticks));
 
                             case ED_PROTECTION:
                                 ead->ed_Prot = fib.fib_Protection;
-D(bug("[asfs] examine: protection=%08x\n", ead->ed_Prot));
+D(bug("[SFS] examine: protection=%08x\n", ead->ed_Prot));
 
                             case ED_SIZE:
                                 ead->ed_Size = fib.fib_Size;
-D(bug("[asfs] examine: size=%d\n", ead->ed_Size));
+D(bug("[SFS] examine: size=%d\n", ead->ed_Size));
 
                             case ED_TYPE:
                                 ead->ed_Type = fib.fib_EntryType;
-D(bug("[asfs] examine: type=%d\n", ead->ed_Type));
+D(bug("[SFS] examine: type=%d\n", ead->ed_Type));
 
                             case ED_NAME:
                                 len = AROS_BSTR_strlen(fib.fib_FileName)+1;
@@ -583,20 +584,20 @@ D(bug("[asfs] examine: type=%d\n", ead->ed_Type));
                                 CopyMem(AROS_BSTR_ADDR(fib.fib_FileName), ead->ed_Name, len);
                                 ead->ed_Name[len]=0;
                                 next += len;
-D(bug("[asfs] examine: name=%s ([0]=%x)\n", ead->ed_Name, ead->ed_Name[0]));
+D(bug("[SFS] examine: name=%s ([0]=%x)\n", ead->ed_Name, ead->ed_Name[0]));
 
                             case 0:
                                 ead->ed_Next = 0;
                                 error = 0;
-D(bug("[asfs] examine: no error\n"));
+D(bug("[SFS] examine: no error\n"));
                                 break;
 
                             default:
                                 error = ERROR_BAD_NUMBER;
-D(bug("[asfs] examine: ERROR_BAD_NUMBER\n"));
+D(bug("[SFS] examine: ERROR_BAD_NUMBER\n"));
 				break;
                             }
-D(bug("[asfs] the next one\n"));
+D(bug("[SFS] the next one\n"));
                         } /* if (next<=end) */
                         else
                         {
@@ -878,7 +879,7 @@ D(bug("[SFS] FSA_RENAME %s %s\n", iofs->io_Union.io_RENAME.io_Filename, iofs->io
                 break;
 
             default:
-                D(bug("[acdr] unkown fsa %d\n", iofs->IOFS.io_Command));
+                D(bug("[SFS] unkown fsa %d\n", iofs->IOFS.io_Command));
                 retval = DOSFALSE;
                 error = ERROR_ACTION_NOT_KNOWN;
 		break;
