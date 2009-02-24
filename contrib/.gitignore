@@ -646,6 +646,9 @@
 # /SDL/SDL_image/
 /SDL/SDL_image/mmakefile
 
+# /SDL/SDL_main/
+/SDL/SDL_main/mmakefile
+
 # /SDL/SDL_mixer/
 /SDL/SDL_mixer/mmakefile
 
