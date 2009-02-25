@@ -38,9 +38,10 @@ AROS_CC := $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-g++ -specs=$(GENDIR)/config/specs
 ICONS := back.png close.png download.png find.png forward.png go.png home.png preferences.png reload.png search.png stop.png
 
 #MM aros-tcpip-apps-owb-icons
-
 %copy_files_q files="$(ICONS)" src="icons" dst="$(EXEDIR)/resources" maketarget=aros-tcpip-apps-owb-icons
-%copy_files_q files="README" src="icons" dst="$(EXEDIR)/" maketarget=aros-tcpip-apps-owb-readme
+
+#MM aros-tcpip-apps-owb-readme
+%copy_files_q files="README" dst="$(EXEDIR)/" maketarget=aros-tcpip-apps-owb-readme
 
 %copy_dir_recursive src="fonts" dst="$(EXEDIR)/fonts" mmake=aros-tcpip-apps-owb-fonts
 %copy_dir_recursive src="$(AROS_DEVELOPMENT)/share/webkit-owb/resources" dst="$(EXEDIR)/resources" mmake=aros-tcpip-apps-owb-resources
