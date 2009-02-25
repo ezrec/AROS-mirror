@@ -1,456 +1,464 @@
 ## version $VER: owb.catalog 1.0 (24.02.2009)
 ## language italiano
 ## codeset 0
-MSG_OWB (//)
-;OWB
+;
+MSG_OWB
 OWB
+; OWB
 ;
-MSG_submitButtonDefaultLabel (//)
-;Submit
+MSG_SubmitButtonDefaultLabel
 Invia
+; Submit
 ;
-MSG_inputElementAltText (//)
-;Submit
+MSG_InputElementAltText
 Invia
+; Submit
 ;
-MSG_resetButtonDefaultLabel (//)
-;Reset
+MSG_ResetButtonDefaultLabel
 Annulla
+; Reset
 ;
-MSG_searchableIndexIntroduction (//)
-;Searchable Index
+MSG_SearchableIndexIntroduction
 Indice
+; Searchable Index
 ;
-MSG_fileButtonChooseFileLabel (//)
-;Choose File
+MSG_FileButtonChooseFileLabel
 Scegli File
+; Choose File
 ;
-MSG_fileButtonNoFileSelectedLabel (//)
-;(None)
+MSG_FileButtonNoFileSelectedLabel
 (Nessuno)
+; (None)
 ;
-MSG_contextMenuItemTagOpenLinkInNewWindow (//)
-;Open Link in New Window
+MSG_ContextMenuItemTagOpenLinkInNewWindow
 Apri in una nuova finestra
+; Open Link in New Window
 ;
-MSG_contextMenuItemTagDownloadLinkToDisk (//)
-;Download Linked File
+MSG_ContextMenuItemTagDownloadLinkToDisk
 Scarica il file
+; Download Linked File
 ;
-MSG_contextMenuItemTagCopyLinkToClipboard (//)
-;Copy Link Location
+MSG_ContextMenuItemTagCopyLinkToClipboard
 Copia il link in memoria
+; Copy Link Location
 ;
-MSG_contextMenuItemTagOpenImageInNewWindow (//)
-;Open Image in New Window
+MSG_ContextMenuItemTagOpenImageInNewWindow
 Apri l'immagine in una nuova finestra
+; Open Image in New Window
 ;
-MSG_contextMenuItemTagDownloadImageToDisk (//)
-;Save Image As
+MSG_ContextMenuItemTagDownloadImageToDisk
 Salva l'immagine come
+; Save Image As
 ;
-MSG_contextMenuItemTagCopyImageToClipboard (//)
-;Copy Image
+MSG_ContextMenuItemTagCopyImageToClipboard
 Copia l'immagine
+; Copy Image
 ;
-MSG_contextMenuItemTagOpenFrameInNewWindow (//)
-;Open frame in new window
+MSG_ContextMenuItemTagOpenFrameInNewWindow
 Apri frame in una nuova finestra
+; Open frame in new window
 ;
-MSG_contextMenuItemTagCopy (//)
-;copy
+MSG_ContextMenuItemTagCopy
 copia
+; copy
 ;
-MSG_contextMenuItemTagDelete (//)
-;delete
+MSG_ContextMenuItemTagDelete
 elimina
+; delete
 ;
-MSG_contextMenuItemTagSelectAll (//)
-;Select All
+MSG_ContextMenuItemTagSelectAll
 Seleziona tutto
+; Select All
 ;
-MSG_contextMenuItemTagUnicode (//)
-;Insert Unicode Control Character
+MSG_ContextMenuItemTagUnicode
 Inserisci il carattere di controllo unicode
+; Insert Unicode Control Character
 ;
-MSG_contextMenuItemTagInputMethods (//)
-;Input Methods
+MSG_ContextMenuItemTagInputMethods
 Metodo di inserimento
+; Input Methods
 ;
-MSG_contextMenuItemTagGoBack (//)
-;back
+MSG_ContextMenuItemTagGoBack
 indietro
+; back
 ;
-MSG_contextMenuItemTagGoForward (//)
-;forward
+MSG_ContextMenuItemTagGoForward
 avanti
+; forward
 ;
-MSG_contextMenuItemTagStop (//)
-;stop
+MSG_ContextMenuItemTagStop
 stop
+; stop
 ;
-MSG_contextMenuItemTagReload (//)
-;Reload
+MSG_ContextMenuItemTagReload
 Aggiorna
+; Reload
 ;
-MSG_contextMenuItemTagCut (//)
-;cut
+MSG_ContextMenuItemTagCut
 taglia
+; cut
 ;
-MSG_contextMenuItemTagPaste (//)
-;paste
+MSG_ContextMenuItemTagPaste
 incolla
+; paste
 ;
-MSG_contextMenuItemTagNoGuessesFound (//)
-No Guesses Found
+MSG_ContextMenuItemTagNoGuessesFound
 Nessuna occorrenza trovata
+;  No Guesses Found
 ;
-MSG_contextMenuItemTagIgnoreSpelling (//)
-;Ignore Spelling
+MSG_ContextMenuItemTagIgnoreSpelling
 Ignora ortografia
+; Ignore Spelling
 ;
-MSG_contextMenuItemTagLearnSpelling (//)
-;Learn Spelling
+MSG_ContextMenuItemTagLearnSpelling
 Impara ortografia
+; Learn Spelling
 ;
-MSG_contextMenuItemTagSearchWeb (//)
-;Search the Web
+MSG_ContextMenuItemTagSearchWeb
 Cerca sul Web
+; Search the Web
 ;
-MSG_contextMenuItemTagLookUpInDictionary (//)
-;Look Up in Dictionary
+MSG_ContextMenuItemTagLookUpInDictionary
 Cerca nel dizionario
+; Look Up in Dictionary
 ;
-MSG_contextMenuItemTagOpenLink (//)
-;Open Link
+MSG_ContextMenuItemTagOpenLink
 Apri collegamento
+; Open Link
 ;
-MSG_contextMenuItemTagIgnoreGrammar (//)
-;Ignore Grammar
+MSG_ContextMenuItemTagIgnoreGrammar
 Ignora grammatica
+; Ignore Grammar
 ;
-MSG_contextMenuItemTagSpellingMenu (//)
-;Spelling and Grammar
+MSG_ContextMenuItemTagSpellingMenu
 Ortografia e grammatica
+; Spelling and Grammar
 ;
-MSG_contextMenuItemTagShowSpellingPanel (//)
-;Show Spelling and Grammar
+MSG_ContextMenuItemTagShowSpellingPanel
 Mostra ortografia e grammatica
+; Show Spelling and Grammar
 ;
-MSG_contextMenuItemTagHideSpellingPanel (//)
-;Hide Spelling and Grammar
+MSG_ContextMenuItemTagHideSpellingPanel
 Nascondi ortografia e grammatica
+; Hide Spelling and Grammar
 ;
-MSG_contextMenuItemTagCheckSpelling (//)
-;Check Document Now
+MSG_ContextMenuItemTagCheckSpelling
 Controlla il documento
+; Check Document Now
 ;
-MSG_contextMenuItemTagCheckSpellingWhileTyping (//)
-;Check Spelling While Typing
+MSG_ContextMenuItemTagCheckSpellingWhileTyping
 Controllo ortografico durante la digitazione
+; Check Spelling While Typing
 ;
-MSG_contextMenuItemTagCheckGrammarWithSpelling (//)
-;Check Grammar With Spelling
+MSG_ContextMenuItemTagCheckGrammarWithSpelling
 Controllo ortografico con grammatica
+; Check Grammar With Spelling
 ;
-MSG_contextMenuItemTagFontMenu (//)
-;Font
+MSG_ContextMenuItemTagFontMenu
 Font
+; Font
 ;
-MSG_contextMenuItemTagBold (//)
-;Bold
+MSG_ContextMenuItemTagBold
 Grassetto
+; Bold
 ;
-MSG_contextMenuItemTagItalic (//)
-;Italic
+MSG_ContextMenuItemTagItalic
 Corsivo
+; Italic
 ;
-MSG_contextMenuItemTagUnderline (//)
-;Underline
+MSG_ContextMenuItemTagUnderline
 Sottolineato
+; Underline
 ;
-MSG_contextMenuItemTagOutline (//)
-;Outline
+MSG_ContextMenuItemTagOutline
 Bordato
+; Outline
 ;
-MSG_contextMenuItemTagInspectElement (//)
-;Inspect Element
+MSG_ContextMenuItemTagInspectElement
 Ispeziona elemento
+; Inspect Element
 ;
-MSG_searchMenuNoRecentSearchesText (//)
-;No recent searches
+MSG_searchMenuNoRecentSearchesText
 Nessuna ricerca recente
+; No recent searches
 ;
-MSG_searchMenuRecentSearchesText (//)
-;Recent searches
+MSG_searchMenuRecentSearchesText
 Ricerche recenti
+; Recent searches
 ;
-MSG_searchMenuClearRecentSearchesText (//)
-;Clear recent searches
+MSG_searchMenuClearRecentSearchesText
 Elimina ricerche recenti
+; Clear recent searches
 ;
-MSG_AXDefinitionListTermText (//)
-;term
+MSG_AXDefinitionListTermText
 termine
+; term
 ;
-MSG_AXDefinitionListDefinitionText (//)
-;definition
+MSG_AXDefinitionListDefinitionText
 definizione
+; definition
 ;
-MSG_AXButtonActionVerb (//)
+MSG_AXButtonActionVerb
 
 ;
-MSG_AXRadioButtonActionVerb (//)
+;
+MSG_AXRadioButtonActionVerb
 
 ;
-MSG_AXTextFieldActionVerb (//)
+;
+MSG_AXTextFieldActionVerb
 
 ;
-MSG_AXCheckedCheckBoxActionVerb (//)
+;
+MSG_AXCheckedCheckBoxActionVerb
 
 ;
-MSG_AXUncheckedCheckBoxActionVerb (//)
+;
+MSG_AXUncheckedCheckBoxActionVerb
 
 ;
-MSG_AXLinkActionVerb (//)
+;
+MSG_AXLinkActionVerb
 
 ;
-MSG_unknownFileSizeText (//)
-;Unknown
+;
+MSG_unknownFileSizeText
 Sconosciuto
+; Unknown
 ;
-MSG_imageTitle (//)
+MSG_imageTitle
 
 ;
-MSG_contextMenuItemTagLeftToRight (//)
-;Left to Right context menu item
+;
+MSG_ContextMenuItemTagLeftToRight
 Voce contestuale da sinistra a destra
+; Left to Right context menu item
 ;
-MSG_contextMenuItemTagDefaultDirection (//)
-;Default writing direction context menu item
+MSG_ContextMenuItemTagDefaultDirection
 Voce contestuale direzione della scrittura
+; Default writing direction context menu item
 ;
-MSG_contextMenuItemTagRightToLeft (//)
-;Right to Left context menu item
+MSG_ContextMenuItemTagRightToLeft
 Voce contestuale da destra a sinistra
+; Right to Left context menu item
 ;
-MSG_contextMenuItemTagWritingDirectionMenu (//)
-;Writing direction context sub-menu item
+MSG_ContextMenuItemTagWritingDirectionMenu
 Elemento menu secondario direzione scrittura
+; Writing direction context sub-menu item
 ;
-MSG_contextMenuItemTagTextDirectionMenu (//)
-;Text direction context sub-menu item
+MSG_ContextMenuItemTagTextDirectionMenu
 Elemento menu secondario direzione testo
+; Text direction context sub-menu item
 ;
-MSG_multipleFileUploadText (//)
-;
+MSG_MultipleFileUploadText
 
 ;
-MSG_Loading (//)
-;Loading...
+;
+MSG_Loading
 Caricamento...
+; Loading...
 ;
-MSG_NotLoading (//)
-;
+MSG_NotLoading
 
 ;
-MSG_Untitled (//)
-(Untitled)
 ;
-MSG_DownloadState_Starting (//)
-;Starting
+MSG_Untitled
+Senza titolo
+; (Untitled)
+;
+MSG_DownloadState_Starting
 Inizio
+; Starting
 ;
-MSG_DownloadState_Active (//)
-;Downloading
+MSG_DownloadState_Active
 Trasferimento
+; Downloading
 ;
-MSG_DownloadState_Failed (//)
-;Error
+MSG_DownloadState_Failed
 Errore
+; Error
 ;
-MSG_DownloadState_Finished (//)
-;Finished
+MSG_DownloadState_Finished
 Completo
+; Finished
 ;
-MSG_UnknownFileSize (//)
-;unknown
+MSG_UnknownFileSize
 sconosciuto
+; unknown
 ;
-MSG_UnknownFileName (//)
-;unknown
+MSG_UnknownFileName
 sconosciuto
+; unknown
 ;
-MSG_DownloadFileSize (//)
-;File size
+MSG_DownloadFileSize
 Dimensione file
+; File size
 ;
-MSG_DownloadFileName (//)
-;File name
+MSG_DownloadFileName
 Nome file
+; File name
 ;
-MSG_DownloadState (//)
-;Status
+MSG_DownloadState
 Stato
+; Status
 ;
-MSG_DownloadProgress (//)
-;Progress
+MSG_DownloadProgress
 Progresso
+; Progress
 ;
-MSG_DownloadManager_Title (//)
-;OWB Download Manager
+MSG_DownloadManager_Title
 Gestione trasferimenti
+; OWB Download Manager
 ;
-MSG_DownloadManager_Cancel (//)
-;Cancel
+MSG_DownloadManager_Cancel
 Annulla
+; Cancel
 ;
-MSG_DownloadManager_ClearFinished (//)
-;Clear finished
+MSG_DownloadManager_ClearFinished
 Elimina completati
+; Clear finished
 ;
-MSG_SearchWindow_Title (//)
-;OWB Search Window
+MSG_SearchWindow_Title
 Ricerca
+; OWB Search Window
 ;
-MSG_SearchWindow_Locate (//)
-;Locate:
+MSG_SearchWindow_Locate
 Trova:
+; Locate:
 ;
-MSG_SearchWindow_CaseSensitive (//)
-;Case Sensitive
+MSG_SearchWindow_CaseSensitive
 Maiuscole e minuscole
+; Case Sensitive
 ;
-MSG_SearchWindow_FindNext (//)
-;Find next
+MSG_SearchWindow_FindNext
 Trova successivo
+; Find next
 ;
-MSG_SearchWindow_FindPrevious (//)
-;Find previous
+MSG_SearchWindow_FindPrevious
 Trova precedente
+; Find previous
 ;
-MSG_PreferencesManager_Title (//)
-;OWB Preferences
+MSG_PreferencesManager_Title
 Impostazioni OWB
+; OWB Preferences
 ;
-MSG_PreferencesManager_Main (//)
-;Main
+MSG_PreferencesManager_Main
 Principale
+; Main
 ;
-MSG_PreferencesManager_Downloads (//)
-;Downloads
+MSG_PreferencesManager_Downloads
 Trasferimenti
+; Downloads
 ;
-MSG_PreferencesManager_SaveFilesTo (//)
-;Save files to:
+MSG_PreferencesManager_SaveFilesTo
 Destinazione salvataggi:
+; Save files to:
 ;
-MSG_PreferencesManager_Content (//)
-;Content
+MSG_PreferencesManager_Content
 Contenuto
+; Content
 ;
-MSG_PreferencesManager_JavaScript (//)
-;JavaScript
+MSG_PreferencesManager_JavaScript
 JavaScript
+; JavaScript
 ;
-MSG_PreferencesManager_EnableJavaScript (//)
-;Enable JavaScript:
+MSG_PreferencesManager_EnableJavaScript
 Abilita JavaScript:
+; Enable JavaScript:
 ;
-MSG_PreferencesManager_Images (//)
-;Images
+MSG_PreferencesManager_Images
 Immagini
+; Images
 ;
-MSG_PreferencesManager_LoadImagesAutomatically (//)
-;Load images automatically:
+MSG_PreferencesManager_LoadImagesAutomatically
 Carica immagini automaticamente:
+; Load images automatically:
 ;
-MSG_PreferencesManager_AllowAnimatedImages (//)
-;Allow animated images:
+MSG_PreferencesManager_AllowAnimatedImages
 Abilita animazioni:
+; Allow animated images:
 ;
-MSG_PreferencesManager_AllowLoopedAnimation (//)
-;Allow looped animation:
+MSG_PreferencesManager_AllowLoopedAnimation
 Abilita animazioni continue:
+; Allow looped animation:
 ;
-MSG_PreferencesManager_DecodeBMPWithDatatypes (//)
-;Decode BMP with Datatypes:
+MSG_PreferencesManager_DecodeBMPWithDatatypes
 Decodifica BMP usando Datatype:
+; Decode BMP with Datatypes:
 ;
-MSG_PreferencesManager_DecodePNGWithDatatypes (//)
-;Decode PNG with Datatypes:
+MSG_PreferencesManager_DecodePNGWithDatatypes
 Decodifica PNG usando Datatype:
+; Decode PNG with Datatypes:
 ;
-MSG_PreferencesManager_DecodeGIFWithDatatypes (//)
-;Decode GIF with Datatypes:
+MSG_PreferencesManager_DecodeGIFWithDatatypes
 Decodifica GIF usando Datatype:
+; Decode GIF with Datatypes:
 ;
-MSG_PreferencesManager_DecodeJPGWithDatatypes (//)
-;Decode JPG with Datatypes:
+MSG_PreferencesManager_DecodeJPGWithDatatypes
 Decodifica JPG usando Datatype:
+; Decode JPG with Datatypes:
 ;
-MSG_PreferencesManager_Fonts (//)
-;Fonts
+MSG_PreferencesManager_Fonts
 Font
+; Fonts
 ;
-MSG_PreferencesManager_DefaultFontSize (//)
-;Default font size:
+MSG_PreferencesManager_DefaultFontSize
 Dimensioni predefinite:
+; Default font size:
 ;
-MSG_PreferencesManager_MinimumFontSize (//)
-;Minimum font size:
+MSG_PreferencesManager_MinimumFontSize
 Dimensioni minime:
+; Minimum font size:
 ;
-MSG_PreferencesManager_StandardFontFamily (//)
-;Standard font family:
+MSG_PreferencesManager_StandardFontFamily
 Famiglia di caratteri standard:
+; Standard font family:
 ;
-MSG_PreferencesManager_DefaultFixedFontSize (//)
-;Default fixed font size:
+MSG_PreferencesManager_DefaultFixedFontSize
 Dimensioni caratteri fissi:
+; Default fixed font size:
 ;
-MSG_PreferencesManager_FixedFontFamily (//)
-;Fixed font family:
+MSG_PreferencesManager_FixedFontFamily
 Famiglia di caratteri fissi:
+; Fixed font family:
 ;
-MSG_PreferencesManager_SerifFontFamily (//)
-;Serif font family:
+MSG_PreferencesManager_SerifFontFamily
 Famiglia di caratteri serif:
+; Serif font family:
 ;
-MSG_PreferencesManager_SansSerifFontFamily (//)
-;Sans-serif font family:
+MSG_PreferencesManager_SansSerifFontFamily
 Famiglia di caratteri sans-serif:
+; Sans-serif font family:
 ;
-MSG_PreferencesManager_CursiveFontFamily (//)
-Cursive font family:
+MSG_PreferencesManager_CursiveFontFamily
 Famiglia di caratteri in corsivo:
+; Cursive font family:
 ;
-MSG_PreferencesManager_FantasyFontFamily (//)
-;Fantasy font family:
+MSG_PreferencesManager_FantasyFontFamily
 Famgilia di caratteri fantasy:
+; Fantasy font family:
 ;
-MSG_PreferencesManager_Save (//)
-;Save
+MSG_PreferencesManager_Save
 Salva
+; Save
 ;
-MSG_PreferencesManager_Use (//)
-;Use
+MSG_PreferencesManager_Use
 Usa
+; Use
 ;
-MSG_PreferencesManager_Cancel (//)
-;Cancel
+MSG_PreferencesManager_Cancel
 Annulla
+; Cancel
 ;
-MSG_Tabs (//)
-;Tabs
+MSG_Tabs
 Schede
+; Tabs
 ;
-MSG_Tabs_OpenNew (//)
-;Open new tab
+MSG_Tabs_OpenNew
 Apri una nuova scheda
+; Open new tab
 ;
-MSG_Tabs_CloseActive (//)
-;Close active tab
+MSG_Tabs_CloseActive
 Chiudi la scheda attiva
+; Close active tab
 ;
-
