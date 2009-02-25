@@ -93,26 +93,8 @@ static void GoFunc(struct Hook *hook, Object *urlString, void *data)
 static void GoAcknowledgeFunc(struct Hook *hook, Object *urlString, STRPTR *url)
 {   
     char *buf = *url;
-    const char *filePrefix = "file://";
     const char *httpPrefix = "http://";
-    if(strncmp(buf, filePrefix, strlen(filePrefix)) == 0)
-    {
-        char *escapedPath = curl_escape(&buf[strlen(filePrefix)], 0);
-        if(escapedPath)
-        {
-            char *escapedURL = AllocVec(strlen(escapedPath) + strlen(filePrefix) + 1, MEMF_ANY);
-            if(escapedURL)
-            {
-        	strcpy(escapedURL, filePrefix);
-        	strcat(escapedURL, escapedPath);
-        	bug("setting URL: %s\n", escapedURL);
-        	DoMethod(tabbed, MUIM_WebView_LoadURL, escapedURL);
-        	FreeVec(escapedURL);
-            }
-            curl_free(escapedPath);
-        }
-    }
-    else if(!strstr(buf, "://"))
+    if(!strstr(buf, "://"))
     {
 	/* No protocol is specified, assume it's http */
 	char *url = AllocVec(strlen(buf) + strlen(httpPrefix) + 1, MEMF_ANY);
@@ -169,26 +151,7 @@ static void TextSearchFunc(struct Hook *hook, Object *searchWindow, struct OWB_S
 
 static void UpdateURLFunc(struct Hook *hook, Object *urlString, STRPTR *url)
 {
-    char *buf = *url;
-    const char *filePrefix = "file://";
-    if(strncmp(buf, filePrefix, strlen(filePrefix)) == 0)
-    {
-        char *unescapedPath = curl_unescape(&buf[strlen(filePrefix)], 0);
-        if(unescapedPath)
-        {
-            char *unescapedURL = AllocVec(strlen(unescapedPath) + strlen(filePrefix) + 1, MEMF_ANY);
-            if(unescapedURL)
-            {
-        	strcpy(unescapedURL, filePrefix);
-        	strcat(unescapedURL, unescapedPath);
-        	set(urlString, MUIA_String_Contents, unescapedURL);
-        	FreeVec(unescapedURL);
-            }
-            curl_free(unescapedPath);
-        }
-    }
-    else
-        set(urlString, MUIA_String_Contents, buf);
+    set(urlString, MUIA_String_Contents, *url);
 }
 
 int main(void)
