@@ -1,0 +1,114 @@
+OWB 0.9.1 for AROS
+
+INTRODUCTION
+
+Origyn Web Browser is a web browser designed for CE devices such as mobile
+phones, portable media players, Set Top Boxes and TV decoders, and any other
+consumer electronic product (GPS, home-gateways, Web-radios, PVR, DVD
+recorders, wireless devices etc.) 
+
+AROS port of Origyn Web Browser is a Zune-based application created by
+Stanislaw Szymczyk as one of the requirements of "Port an Open Source Browser
+To AROS" bounty. It's using OWB encapsulated in a Zune class as a rendering
+engine. 
+
+The AROS port extends default OWB in numerous ways, most important are:
+
+* Support for file downloads
+* Ability to open multiple tabs
+* Graphical preferences manager
+* Localization
+
+REQUIREMENTS
+
+OWB for AROS requires AROS build from 19.02.2009 or newer to run. If your AROS
+installation is older and you don't want to reinstall the whole system, you
+can try updating only arosc.library and muimaster.library, but there's no
+guarantee that it will work correctly.
+
+OWB needs a running TCP/IP stack to work. It's needed even if you only want to
+browse some files offline. See AROS documentation for more information about
+configuring the stack.
+
+USAGE
+
+When running OWB from a Shell you can specify an URL to open in argument.
+
+During the first run OWB is generating a font cache. This process may take
+some time, but it's done only once. Generated cache is stored in fonts/cache
+directory.
+
+To manage tabs use context menu in the tabs section.
+
+To download a file use link context menu and choose "Download Linked File".
+
+To access files located on disk use paths in the following form:
+
+file:///System:S/Startup-Sequence
+
+The following keyboard shortcuts are implemented:
+
+F1 - go back
+F2 - go forward
+F3 - zoom page in
+F4 - zoom page out
+
+TROUBLESHOOTING
+
+If OWB appears to be hanged and you've just executed it for the first time,
+it's most likely still generating the font cache, so be patient.
+
+If OWB is crashing, make sure you are using an appropriate AROS build. See
+REQUIREMENTS section for more details. Another cause of crashes may be too
+small stack size. Increase your stack size to at least 1MB and try again 
+before reporting a bug.
+
+If OWB says it can't open bsdsocket.library, then you most likely don't
+have a TCP/IP stack running. See REQUIREMENTS section for more details.
+
+CONTACT
+
+You can contact me on this e-mail address: sszymczy@gmail.com. Don't write
+me e-mails about bugs in OWB or new features, report them on this page
+instead:
+
+http://code.google.com/p/owb-aros/issues/list
+
+LICENSING
+
+Zune-based browser code is licensed under AROS PUBLIC LICENSE (APL)
+Version 1.1.
+
+OWB is licensed under BSD license, unless specified otherwise in
+WebCore/JSCore code where the original licenses apply (APSL, LGPL and BSD).
+
+See Licenses directory for more details.
+
+HISTORY
+
+OWB 0.9.1 (25.02.2009) 
+  - Disabled some debug messages.
+  - Fixed bug #6: attaching a file does not work from yahoo and gmail
+  - Fixed bug #2: A scrollbar is still active even though the left mouse
+    button is already up
+  - Fixed bug #11: Downloads are corrupted
+  - Fixed bug #4: Pages with looped animated gifs are eating memory
+  - Fixed bug #16: Offline browsing seems almost broken
+  - Implemented feature 14: Reading url to open from command-line arguments
+
+OWB 0.9 (23.02.2009)
+  - First public release.
+
+LINKS
+
+Visit http://code.google.com/p/owb-aros/issues/list to report bugs and request
+new features.
+
+Visit http://www.sand-labs.org/owb for more information about OWB.
+
+Visit http://www.power2people.org/bounty_020.html for more information about
+the browser bounty.
+
+Visit http://aros.sourceforge.net/documentation/users/using.php and
+http://en.wikibooks.org/wiki/Aros/User/Networking for more information about
+setting up networking in AROS.
