@@ -1,6 +1,6 @@
 diff -ruN curl-7.19.2/acinclude.m4 curl-7.19.2-aros/acinclude.m4
 --- curl-7.19.2/acinclude.m4	2008-10-28 23:12:01.000000000 +0100
-+++ curl-7.19.2-aros/acinclude.m4	2009-01-28 22:03:04.000000000 +0100
++++ curl-7.19.2-aros/acinclude.m4	2009-02-25 15:41:32.000000000 +0100
 @@ -1359,6 +1359,13 @@
  #ifdef HAVE_SYS_SOCKET_H
  #include <sys/socket.h>
@@ -31,7 +31,7 @@ diff -ruN curl-7.19.2/acinclude.m4 curl-7.19.2-aros/acinclude.m4
        send(0, 0, 0, 0);
 diff -ruN curl-7.19.2/configure curl-7.19.2-aros/configure
 --- curl-7.19.2/configure	2008-11-10 16:23:17.000000000 +0100
-+++ curl-7.19.2-aros/configure	2009-01-28 22:03:04.000000000 +0100
++++ curl-7.19.2-aros/configure	2009-02-25 15:41:32.000000000 +0100
 @@ -27953,6 +27953,59 @@
  
  fi
@@ -209,7 +209,7 @@ diff -ruN curl-7.19.2/configure curl-7.19.2-aros/configure
    ;
 diff -ruN curl-7.19.2/configure.ac curl-7.19.2-aros/configure.ac
 --- curl-7.19.2/configure.ac	2008-11-10 16:22:59.000000000 +0100
-+++ curl-7.19.2-aros/configure.ac	2009-01-28 22:03:05.000000000 +0100
++++ curl-7.19.2-aros/configure.ac	2009-02-25 15:41:32.000000000 +0100
 @@ -657,6 +657,19 @@
                 ])
  fi
@@ -256,7 +256,7 @@ diff -ruN curl-7.19.2/configure.ac curl-7.19.2-aros/configure.ac
        AC_CHECK_HEADERS(openssl/x509.h openssl/rsa.h openssl/crypto.h \
 diff -ruN curl-7.19.2/lib/connect.c curl-7.19.2-aros/lib/connect.c
 --- curl-7.19.2/lib/connect.c	2008-11-06 22:30:18.000000000 +0100
-+++ curl-7.19.2-aros/lib/connect.c	2009-01-28 22:03:04.000000000 +0100
++++ curl-7.19.2-aros/lib/connect.c	2009-02-25 15:41:32.000000000 +0100
 @@ -80,6 +80,10 @@
  #define _MPRINTF_REPLACE /* use our functions only */
  #include <curl/mprintf.h>
@@ -268,9 +268,36 @@ diff -ruN curl-7.19.2/lib/connect.c curl-7.19.2-aros/lib/connect.c
  #include "urldata.h"
  #include "sendf.h"
  #include "if2ip.h"
+diff -ruN curl-7.19.2/lib/file.c curl-7.19.2-aros/lib/file.c
+--- curl-7.19.2/lib/file.c	2008-11-04 10:57:36.000000000 +0100
++++ curl-7.19.2-aros/lib/file.c	2009-02-25 15:41:32.000000000 +0100
+@@ -188,7 +188,7 @@
+   char *real_path = curl_easy_unescape(data, data->state.path, 0, NULL);
+   struct FILEPROTO *file;
+   int fd;
+-#ifdef DOS_FILESYSTEM
++#if defined DOS_FILESYSTEM || defined __AROS__
+   int i;
+   char *actual_path;
+ #endif
+@@ -250,6 +250,14 @@
+ 
+   fd = open(actual_path, O_RDONLY | O_BINARY);  /* no CR/LF translation! */
+   file->path = actual_path;
++#elif defined __AROS__
++  /* On AROS paths can start with volume name, skip slash in this case */
++  actual_path = real_path;
++  if(actual_path[0] == '/' && strchr(actual_path, ':'))
++    actual_path++;
++
++  fd = open(actual_path, O_RDONLY);
++  file->path = actual_path;
+ #else
+   fd = open(real_path, O_RDONLY);
+   file->path = real_path;
 diff -ruN curl-7.19.2/lib/ftp.c curl-7.19.2-aros/lib/ftp.c
 --- curl-7.19.2/lib/ftp.c	2008-11-06 22:30:18.000000000 +0100
-+++ curl-7.19.2-aros/lib/ftp.c	2009-01-28 22:03:04.000000000 +0100
++++ curl-7.19.2-aros/lib/ftp.c	2009-02-25 15:41:32.000000000 +0100
 @@ -61,6 +61,10 @@
  #define in_addr_t unsigned long
  #endif
@@ -284,7 +311,7 @@ diff -ruN curl-7.19.2/lib/ftp.c curl-7.19.2-aros/lib/ftp.c
  #include "sendf.h"
 diff -ruN curl-7.19.2/lib/getinfo.c curl-7.19.2-aros/lib/getinfo.c
 --- curl-7.19.2/lib/getinfo.c	2008-10-07 23:55:20.000000000 +0200
-+++ curl-7.19.2-aros/lib/getinfo.c	2009-01-28 22:03:04.000000000 +0100
++++ curl-7.19.2-aros/lib/getinfo.c	2009-02-25 15:41:32.000000000 +0100
 @@ -36,6 +36,10 @@
  #include "sslgen.h"
  #include "connect.h" /* Curl_getconnectinfo() */
@@ -298,7 +325,7 @@ diff -ruN curl-7.19.2/lib/getinfo.c curl-7.19.2-aros/lib/getinfo.c
  
 diff -ruN curl-7.19.2/lib/hostip4.c curl-7.19.2-aros/lib/hostip4.c
 --- curl-7.19.2/lib/hostip4.c	2008-11-06 22:30:18.000000000 +0100
-+++ curl-7.19.2-aros/lib/hostip4.c	2009-01-28 22:03:04.000000000 +0100
++++ curl-7.19.2-aros/lib/hostip4.c	2009-02-25 15:41:32.000000000 +0100
 @@ -57,6 +57,10 @@
  #include <process.h>
  #endif
@@ -312,7 +339,7 @@ diff -ruN curl-7.19.2/lib/hostip4.c curl-7.19.2-aros/lib/hostip4.c
  #include "hostip.h"
 diff -ruN curl-7.19.2/lib/http.c curl-7.19.2-aros/lib/http.c
 --- curl-7.19.2/lib/http.c	2008-11-11 23:19:27.000000000 +0100
-+++ curl-7.19.2-aros/lib/http.c	2009-01-28 22:03:04.000000000 +0100
++++ curl-7.19.2-aros/lib/http.c	2009-02-25 15:41:32.000000000 +0100
 @@ -73,6 +73,10 @@
  
  #endif
@@ -326,7 +353,7 @@ diff -ruN curl-7.19.2/lib/http.c curl-7.19.2-aros/lib/http.c
  #include "transfer.h"
 diff -ruN curl-7.19.2/lib/http_ntlm.c curl-7.19.2-aros/lib/http_ntlm.c
 --- curl-7.19.2/lib/http_ntlm.c	2008-10-23 13:49:19.000000000 +0200
-+++ curl-7.19.2-aros/lib/http_ntlm.c	2009-01-28 22:03:04.000000000 +0100
++++ curl-7.19.2-aros/lib/http_ntlm.c	2009-02-25 15:41:32.000000000 +0100
 @@ -52,6 +52,10 @@
  #include <netdb.h>
  #endif
@@ -340,7 +367,7 @@ diff -ruN curl-7.19.2/lib/http_ntlm.c curl-7.19.2-aros/lib/http_ntlm.c
  #include "sendf.h"
 diff -ruN curl-7.19.2/lib/if2ip.c curl-7.19.2-aros/lib/if2ip.c
 --- curl-7.19.2/lib/if2ip.c	2008-11-10 16:22:59.000000000 +0100
-+++ curl-7.19.2-aros/lib/if2ip.c	2009-01-28 22:03:04.000000000 +0100
++++ curl-7.19.2-aros/lib/if2ip.c	2009-02-25 15:41:32.000000000 +0100
 @@ -40,7 +40,7 @@
  #if !defined(WIN32) && !defined(__BEOS__) && !defined(__CYGWIN__) && \
      !defined(__riscos__) && !defined(__INTERIX) && !defined(NETWARE) && \
@@ -364,7 +391,7 @@ diff -ruN curl-7.19.2/lib/if2ip.c curl-7.19.2-aros/lib/if2ip.c
  #define _MPRINTF_REPLACE /* use our functions only */
 diff -ruN curl-7.19.2/lib/inet_ntop.c curl-7.19.2-aros/lib/inet_ntop.c
 --- curl-7.19.2/lib/inet_ntop.c	2008-09-23 22:54:53.000000000 +0200
-+++ curl-7.19.2-aros/lib/inet_ntop.c	2009-01-28 22:03:04.000000000 +0100
++++ curl-7.19.2-aros/lib/inet_ntop.c	2009-02-25 15:41:32.000000000 +0100
 @@ -37,6 +37,10 @@
  #include <string.h>
  #include <errno.h>
@@ -376,9 +403,23 @@ diff -ruN curl-7.19.2/lib/inet_ntop.c curl-7.19.2-aros/lib/inet_ntop.c
  #define _MPRINTF_REPLACE /* use our functions only */
  #include <curl/mprintf.h>
  
+diff -ruN curl-7.19.2/lib/memdebug.c curl-7.19.2-aros/lib/memdebug.c
+--- curl-7.19.2/lib/memdebug.c	2008-10-23 11:18:45.000000000 +0200
++++ curl-7.19.2-aros/lib/memdebug.c	2009-02-25 15:41:32.000000000 +0100
+@@ -30,6 +30,10 @@
+ #include <sys/socket.h>
+ #endif
+ 
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++#endif
++
+ #define _MPRINTF_REPLACE
+ #include <curl/mprintf.h>
+ #include "urldata.h"
 diff -ruN curl-7.19.2/lib/multi.c curl-7.19.2-aros/lib/multi.c
 --- curl-7.19.2/lib/multi.c	2008-10-30 20:06:12.000000000 +0100
-+++ curl-7.19.2-aros/lib/multi.c	2009-01-28 22:03:04.000000000 +0100
++++ curl-7.19.2-aros/lib/multi.c	2009-02-25 15:41:32.000000000 +0100
 @@ -30,6 +30,10 @@
  #include <unistd.h>
  #endif
@@ -392,7 +433,7 @@ diff -ruN curl-7.19.2/lib/multi.c curl-7.19.2-aros/lib/multi.c
  #include "urldata.h"
 diff -ruN curl-7.19.2/lib/select.c curl-7.19.2-aros/lib/select.c
 --- curl-7.19.2/lib/select.c	2008-05-26 17:16:34.000000000 +0200
-+++ curl-7.19.2-aros/lib/select.c	2009-01-28 22:03:04.000000000 +0100
++++ curl-7.19.2-aros/lib/select.c	2009-02-25 15:41:32.000000000 +0100
 @@ -39,6 +39,10 @@
  #include <socket.h>
  #endif
@@ -416,7 +457,7 @@ diff -ruN curl-7.19.2/lib/select.c curl-7.19.2-aros/lib/select.c
 +#endif
 diff -ruN curl-7.19.2/lib/sendf.c curl-7.19.2-aros/lib/sendf.c
 --- curl-7.19.2/lib/sendf.c	2008-11-13 11:47:29.000000000 +0100
-+++ curl-7.19.2-aros/lib/sendf.c	2009-01-28 22:03:04.000000000 +0100
++++ curl-7.19.2-aros/lib/sendf.c	2009-02-25 15:41:32.000000000 +0100
 @@ -36,6 +36,10 @@
  #include <unistd.h>
  #endif
@@ -430,7 +471,7 @@ diff -ruN curl-7.19.2/lib/sendf.c curl-7.19.2-aros/lib/sendf.c
  #include "sendf.h"
 diff -ruN curl-7.19.2/lib/setup.h curl-7.19.2-aros/lib/setup.h
 --- curl-7.19.2/lib/setup.h	2008-09-24 16:24:24.000000000 +0200
-+++ curl-7.19.2-aros/lib/setup.h	2009-01-28 22:03:04.000000000 +0100
++++ curl-7.19.2-aros/lib/setup.h	2009-02-25 15:41:32.000000000 +0100
 @@ -379,6 +379,14 @@
  #    define sclose(x) CloseSocket(x)
  #  endif
@@ -448,7 +489,7 @@ diff -ruN curl-7.19.2/lib/setup.h curl-7.19.2-aros/lib/setup.h
       extern char * strtok_r(char *s, const char *delim, char **last);
 diff -ruN curl-7.19.2/lib/telnet.c curl-7.19.2-aros/lib/telnet.c
 --- curl-7.19.2/lib/telnet.c	2008-10-23 13:49:19.000000000 +0200
-+++ curl-7.19.2-aros/lib/telnet.c	2009-01-28 22:03:04.000000000 +0100
++++ curl-7.19.2-aros/lib/telnet.c	2009-02-25 15:41:32.000000000 +0100
 @@ -58,6 +58,10 @@
  #include <sys/param.h>
  #endif
@@ -462,7 +503,7 @@ diff -ruN curl-7.19.2/lib/telnet.c curl-7.19.2-aros/lib/telnet.c
  #include "urldata.h"
 diff -ruN curl-7.19.2/lib/tftp.c curl-7.19.2-aros/lib/tftp.c
 --- curl-7.19.2/lib/tftp.c	2008-09-29 23:45:38.000000000 +0200
-+++ curl-7.19.2-aros/lib/tftp.c	2009-01-28 22:03:04.000000000 +0100
++++ curl-7.19.2-aros/lib/tftp.c	2009-02-25 15:41:32.000000000 +0100
 @@ -58,6 +58,10 @@
  #include <sys/param.h>
  #endif
@@ -476,7 +517,7 @@ diff -ruN curl-7.19.2/lib/tftp.c curl-7.19.2-aros/lib/tftp.c
  #include "urldata.h"
 diff -ruN curl-7.19.2/lib/transfer.c curl-7.19.2-aros/lib/transfer.c
 --- curl-7.19.2/lib/transfer.c	2008-10-29 23:40:14.000000000 +0100
-+++ curl-7.19.2-aros/lib/transfer.c	2009-01-28 22:03:04.000000000 +0100
++++ curl-7.19.2-aros/lib/transfer.c	2009-02-25 15:41:32.000000000 +0100
 @@ -79,6 +79,10 @@
  
  #endif  /* WIN32 */
@@ -490,7 +531,7 @@ diff -ruN curl-7.19.2/lib/transfer.c curl-7.19.2-aros/lib/transfer.c
  #include "netrc.h"
 diff -ruN curl-7.19.2/lib/url.c curl-7.19.2-aros/lib/url.c
 --- curl-7.19.2/lib/url.c	2008-11-11 14:20:02.000000000 +0100
-+++ curl-7.19.2-aros/lib/url.c	2009-01-28 22:03:04.000000000 +0100
++++ curl-7.19.2-aros/lib/url.c	2009-02-25 15:41:32.000000000 +0100
 @@ -76,6 +76,10 @@
  
  #endif  /* WIN32 */
@@ -504,7 +545,7 @@ diff -ruN curl-7.19.2/lib/url.c curl-7.19.2-aros/lib/url.c
  #include <tld.h>
 diff -ruN curl-7.19.2/src/main.c curl-7.19.2-aros/src/main.c
 --- curl-7.19.2/src/main.c	2008-10-28 23:12:02.000000000 +0100
-+++ curl-7.19.2-aros/src/main.c	2009-01-28 22:03:04.000000000 +0100
++++ curl-7.19.2-aros/src/main.c	2009-02-25 15:41:32.000000000 +0100
 @@ -94,6 +94,10 @@
  #include <locale.h> /* for setlocale() */
  #endif
