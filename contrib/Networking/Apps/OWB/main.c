@@ -200,7 +200,24 @@ int main(void)
     Object *toolTips, *progressBar, *urlString;
     Object *bt_back, *bt_forward, *bt_search, *bt_go, *bt_download, *bt_preferences, *bt_find, *bt_reload, *bt_stop;
     struct Hook goHook, goAcknowledgeHook, webSearchHook, webSearchAcknowledgeHook, closeTabHook, textSearchHook, updateURLHook;
-    
+    IPTR argArray[] = { 0 };
+    struct RDArgs *args = NULL;
+    const char *url = NULL;
+
+    if((args = ReadArgs("URL", argArray, NULL)) != NULL)
+    {
+	if(argArray[0])
+	{
+	    url = StrDup((const char*) argArray[0]);
+	    if(!url)
+	    {
+		FreeArgs(args);
+		return 1;
+	    }
+	}
+	FreeArgs(args);
+    }
+
     Locale_Initialize();
     
     SetVar("FONTCONFIG_PATH", "PROGDIR:fonts/config", -1, LV_VAR | GVF_LOCAL_ONLY);
@@ -226,6 +243,11 @@ int main(void)
   
     // GUI creation
     app = ApplicationObject,
+        MUIA_Application_Title, "Origyn Web Browser",
+        MUIA_Application_Version, "$VER: OWB 0.9.1 (25.02.09)",
+        MUIA_Application_Author, "Stanislaw Szymczyk",
+        MUIA_Application_Copyright, "Copyright © 2009, The AROS Development Team. All rights reserved.",
+        MUIA_Application_Description, "Port of Origyn Web Browser to AROS",
         MUIA_Application_Base, "OWB",
         SubWindow, wnd = WindowObject,
             MUIA_Window_Title, _(MSG_OWB),
@@ -546,6 +568,9 @@ int main(void)
         /* Check that the window opened */
         if (XGET(wnd, MUIA_Window_Open))
         {
+            if(url)
+        	CallHook(&goAcknowledgeHook, urlString, url);
+            
             /* Main loop */
             while((LONG)DoMethod(app, MUIM_Application_NewInput, (IPTR)&sigs)
                   != MUIV_Application_ReturnID_Quit)
@@ -565,5 +590,8 @@ int main(void)
     }
 
     Locale_Deinitialize();
+    
+    if(url)
+	FreeVec(url);
     return 0;
 }
