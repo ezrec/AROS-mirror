@@ -31,4 +31,6 @@ development-curl-fixconfig :
 	$(SED) -i 's@/\* #undef HAVE_GETHOSTNAME \*/@#define HAVE_GETHOSTNAME 1@' $$file; \
 	$(SED) -i 's@/\* #undef HAVE_PROTOBYNAME \*/@#define HAVE_PROTOBYNAME 1@' $$file; \
 	$(SED) -i 's@/\* #undef HAVE_INET_ADDR \*/@#define HAVE_INET_ADDR 1@' $$file; \
+	$(SED) -i 's@/\* #undef HAVE_IOCTLSOCKET_CASE \*/@#define HAVE_IOCTLSOCKET_CASE 1@' $$file; \
+	$(SED) -i 's@#define HAVE_O_NONBLOCK 1@/\* #undef HAVE_O_NONBLOCK \*/@' $$file; \
 	done
