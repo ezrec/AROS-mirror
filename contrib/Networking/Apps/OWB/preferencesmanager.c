@@ -225,71 +225,71 @@ IPTR PreferencesManager__OM_NEW(struct IClass *cl, Object *self, struct opSet *m
     data->fontFamilies = fontFamilies;
     
     /* Initialize default values and ObjectIDs */
-    set(javaScriptEnabled, MUIA_Selected, XGET(preferences, MUIA_WebPreferenes_JavaScriptEnabled));
+    set(javaScriptEnabled, MUIA_Selected, XGET(preferences, MUIA_WebPreferences_JavaScriptEnabled));
     set(javaScriptEnabled, MUIA_ObjectID, 1);
     data->javaScriptEnabled = javaScriptEnabled;
 
-    set(loadsImagesAutomatically, MUIA_Selected, XGET(preferences, MUIA_WebPreferenes_LoadsImagesAutomatically));
+    set(loadsImagesAutomatically, MUIA_Selected, XGET(preferences, MUIA_WebPreferences_LoadsImagesAutomatically));
     set(loadsImagesAutomatically, MUIA_ObjectID, 2);
     data->loadsImagesAutomatically = loadsImagesAutomatically;
 
-    set(defaultFontSize, MUIA_Numeric_Value, XGET(preferences, MUIA_WebPreferenes_DefaultFontSize));
+    set(defaultFontSize, MUIA_Numeric_Value, XGET(preferences, MUIA_WebPreferences_DefaultFontSize));
     set(defaultFontSize, MUIA_ObjectID, 3);
     data->defaultFontSize = defaultFontSize;
 
-    set(defaultFixedFontSize, MUIA_Numeric_Value, XGET(preferences, MUIA_WebPreferenes_DefaultFixedFontSize));
+    set(defaultFixedFontSize, MUIA_Numeric_Value, XGET(preferences, MUIA_WebPreferences_DefaultFixedFontSize));
     set(defaultFixedFontSize, MUIA_ObjectID, 4);
     data->defaultFixedFontSize = defaultFixedFontSize;
 
-    set(minimumFontSize, MUIA_Numeric_Value, XGET(preferences, MUIA_WebPreferenes_MinimumFontSize));
+    set(minimumFontSize, MUIA_Numeric_Value, XGET(preferences, MUIA_WebPreferences_MinimumFontSize));
     set(minimumFontSize, MUIA_ObjectID, 5);
     data->minimumFontSize = minimumFontSize;
 
-    set(allowsAnimatedImages, MUIA_Selected, XGET(preferences, MUIA_WebPreferenes_AllowsAnimatedImages));
+    set(allowsAnimatedImages, MUIA_Selected, XGET(preferences, MUIA_WebPreferences_AllowsAnimatedImages));
     set(allowsAnimatedImages, MUIA_ObjectID, 6);
     data->allowsAnimatedImages = allowsAnimatedImages;
 
-    set(allowAnimatedImageLooping, MUIA_Selected, XGET(preferences, MUIA_WebPreferenes_AllowAnimatedImageLooping));
+    set(allowAnimatedImageLooping, MUIA_Selected, XGET(preferences, MUIA_WebPreferences_AllowAnimatedImageLooping));
     set(allowAnimatedImageLooping, MUIA_ObjectID, 7);
     data->allowAnimatedImageLooping = allowAnimatedImageLooping;
 
-    set(standardFontFamily, MUIA_String_Contents, XGET(preferences, MUIA_WebPreferenes_StandardFontFamily));
+    set(standardFontFamily, MUIA_String_Contents, XGET(preferences, MUIA_WebPreferences_StandardFontFamily));
     set(standardFontFamily, MUIA_ObjectID, 8);
     data->standardFontFamily = standardFontFamily;
 
-    set(fixedFontFamily, MUIA_String_Contents, XGET(preferences, MUIA_WebPreferenes_FixedFontFamily));
+    set(fixedFontFamily, MUIA_String_Contents, XGET(preferences, MUIA_WebPreferences_FixedFontFamily));
     set(fixedFontFamily, MUIA_ObjectID, 9);
     data->fixedFontFamily = fixedFontFamily;
 
-    set(serifFontFamily, MUIA_String_Contents, XGET(preferences, MUIA_WebPreferenes_SerifFontFamily));
+    set(serifFontFamily, MUIA_String_Contents, XGET(preferences, MUIA_WebPreferences_SerifFontFamily));
     set(serifFontFamily, MUIA_ObjectID, 10);
     data->serifFontFamily = serifFontFamily;
 
-    set(sansSerifFontFamily, MUIA_String_Contents, XGET(preferences, MUIA_WebPreferenes_SansSerifFontFamily));
+    set(sansSerifFontFamily, MUIA_String_Contents, XGET(preferences, MUIA_WebPreferences_SansSerifFontFamily));
     set(sansSerifFontFamily, MUIA_ObjectID, 11);
     data->sansSerifFontFamily = sansSerifFontFamily;
 
-    set(cursiveFontFamily, MUIA_String_Contents, XGET(preferences, MUIA_WebPreferenes_CursiveFontFamily));
+    set(cursiveFontFamily, MUIA_String_Contents, XGET(preferences, MUIA_WebPreferences_CursiveFontFamily));
     set(cursiveFontFamily, MUIA_ObjectID, 12);
     data->cursiveFontFamily = cursiveFontFamily;
 
-    set(fantasyFontFamily, MUIA_String_Contents, XGET(preferences, MUIA_WebPreferenes_FantasyFontFamily));
+    set(fantasyFontFamily, MUIA_String_Contents, XGET(preferences, MUIA_WebPreferences_FantasyFontFamily));
     set(fantasyFontFamily, MUIA_ObjectID, 13);
     data->fantasyFontFamily = fantasyFontFamily;
 
-    set(decodesBMPWithDatatypes, MUIA_Selected, XGET(preferences, MUIA_WebPreferenes_DecodesBMPWithDatatypes));
+    set(decodesBMPWithDatatypes, MUIA_Selected, XGET(preferences, MUIA_WebPreferences_DecodesBMPWithDatatypes));
     set(decodesBMPWithDatatypes, MUIA_ObjectID, 14);
     data->decodesBMPWithDatatypes = decodesBMPWithDatatypes;
 
-    set(decodesJPGWithDatatypes, MUIA_Selected, XGET(preferences, MUIA_WebPreferenes_DecodesJPGWithDatatypes));
+    set(decodesJPGWithDatatypes, MUIA_Selected, XGET(preferences, MUIA_WebPreferences_DecodesJPGWithDatatypes));
     set(decodesJPGWithDatatypes, MUIA_ObjectID, 15);
     data->decodesJPGWithDatatypes = decodesJPGWithDatatypes;
 
-    set(decodesGIFWithDatatypes, MUIA_Selected, XGET(preferences, MUIA_WebPreferenes_DecodesGIFWithDatatypes));
+    set(decodesGIFWithDatatypes, MUIA_Selected, XGET(preferences, MUIA_WebPreferences_DecodesGIFWithDatatypes));
     set(decodesGIFWithDatatypes, MUIA_ObjectID, 16);
     data->decodesGIFWithDatatypes = decodesGIFWithDatatypes;
 
-    set(decodesPNGWithDatatypes, MUIA_Selected, XGET(preferences, MUIA_WebPreferenes_DecodesPNGWithDatatypes));
+    set(decodesPNGWithDatatypes, MUIA_Selected, XGET(preferences, MUIA_WebPreferences_DecodesPNGWithDatatypes));
     set(decodesPNGWithDatatypes, MUIA_ObjectID, 17);
     data->decodesPNGWithDatatypes = decodesPNGWithDatatypes;
     
@@ -335,24 +335,25 @@ IPTR PreferencesManager__MUIM_PreferencesManager_Save(Class *cl, Object *obj, Ms
 static void SetPreferenceData(Class *cl, Object *obj)
 {
     struct PreferencesManager_DATA *data = (struct PreferencesManager_DATA *) INST_DATA(cl, obj);
-    set(data->preferences, MUIA_WebPreferenes_JavaScriptEnabled, XGET(data->javaScriptEnabled, MUIA_Selected));
-    set(data->preferences, MUIA_WebPreferenes_LoadsImagesAutomatically, XGET(data->loadsImagesAutomatically, MUIA_Selected));
-    set(data->preferences, MUIA_WebPreferenes_DefaultFontSize, XGET(data->defaultFontSize, MUIA_Numeric_Value));
-    set(data->preferences, MUIA_WebPreferenes_DefaultFixedFontSize, XGET(data->defaultFixedFontSize, MUIA_Numeric_Value));
-    set(data->preferences, MUIA_WebPreferenes_MinimumFontSize, XGET(data->minimumFontSize, MUIA_Numeric_Value));
-    set(data->preferences, MUIA_WebPreferenes_AllowsAnimatedImages, XGET(data->allowsAnimatedImages, MUIA_Selected));
-    set(data->preferences, MUIA_WebPreferenes_AllowAnimatedImageLooping, XGET(data->allowAnimatedImageLooping, MUIA_Selected));
-    set(data->preferences, MUIA_WebPreferenes_StandardFontFamily, XGET(data->standardFontFamily, MUIA_String_Contents));
-    set(data->preferences, MUIA_WebPreferenes_FixedFontFamily, XGET(data->fixedFontFamily, MUIA_String_Contents));
-    set(data->preferences, MUIA_WebPreferenes_SerifFontFamily, XGET(data->serifFontFamily, MUIA_String_Contents));
-    set(data->preferences, MUIA_WebPreferenes_SansSerifFontFamily, XGET(data->sansSerifFontFamily, MUIA_String_Contents));
-    set(data->preferences, MUIA_WebPreferenes_CursiveFontFamily, XGET(data->cursiveFontFamily, MUIA_String_Contents));
-    set(data->preferences, MUIA_WebPreferenes_FantasyFontFamily, XGET(data->fantasyFontFamily, MUIA_String_Contents));
-    set(data->preferences, MUIA_WebPreferenes_DecodesPNGWithDatatypes, XGET(data->decodesPNGWithDatatypes, MUIA_Selected));
-    set(data->preferences, MUIA_WebPreferenes_DecodesJPGWithDatatypes, XGET(data->decodesJPGWithDatatypes, MUIA_Selected));
-    set(data->preferences, MUIA_WebPreferenes_DecodesGIFWithDatatypes, XGET(data->decodesGIFWithDatatypes, MUIA_Selected));
-    set(data->preferences, MUIA_WebPreferenes_DecodesBMPWithDatatypes, XGET(data->decodesBMPWithDatatypes, MUIA_Selected));
+    set(data->preferences, MUIA_WebPreferences_JavaScriptEnabled, XGET(data->javaScriptEnabled, MUIA_Selected));
+    set(data->preferences, MUIA_WebPreferences_LoadsImagesAutomatically, XGET(data->loadsImagesAutomatically, MUIA_Selected));
+    set(data->preferences, MUIA_WebPreferences_DefaultFontSize, XGET(data->defaultFontSize, MUIA_Numeric_Value));
+    set(data->preferences, MUIA_WebPreferences_DefaultFixedFontSize, XGET(data->defaultFixedFontSize, MUIA_Numeric_Value));
+    set(data->preferences, MUIA_WebPreferences_MinimumFontSize, XGET(data->minimumFontSize, MUIA_Numeric_Value));
+    set(data->preferences, MUIA_WebPreferences_AllowsAnimatedImages, XGET(data->allowsAnimatedImages, MUIA_Selected));
+    set(data->preferences, MUIA_WebPreferences_AllowAnimatedImageLooping, XGET(data->allowAnimatedImageLooping, MUIA_Selected));
+    set(data->preferences, MUIA_WebPreferences_StandardFontFamily, XGET(data->standardFontFamily, MUIA_String_Contents));
+    set(data->preferences, MUIA_WebPreferences_FixedFontFamily, XGET(data->fixedFontFamily, MUIA_String_Contents));
+    set(data->preferences, MUIA_WebPreferences_SerifFontFamily, XGET(data->serifFontFamily, MUIA_String_Contents));
+    set(data->preferences, MUIA_WebPreferences_SansSerifFontFamily, XGET(data->sansSerifFontFamily, MUIA_String_Contents));
+    set(data->preferences, MUIA_WebPreferences_CursiveFontFamily, XGET(data->cursiveFontFamily, MUIA_String_Contents));
+    set(data->preferences, MUIA_WebPreferences_FantasyFontFamily, XGET(data->fantasyFontFamily, MUIA_String_Contents));
+    set(data->preferences, MUIA_WebPreferences_DecodesPNGWithDatatypes, XGET(data->decodesPNGWithDatatypes, MUIA_Selected));
+    set(data->preferences, MUIA_WebPreferences_DecodesJPGWithDatatypes, XGET(data->decodesJPGWithDatatypes, MUIA_Selected));
+    set(data->preferences, MUIA_WebPreferences_DecodesGIFWithDatatypes, XGET(data->decodesGIFWithDatatypes, MUIA_Selected));
+    set(data->preferences, MUIA_WebPreferences_DecodesBMPWithDatatypes, XGET(data->decodesBMPWithDatatypes, MUIA_Selected));
     set(data->preferences, MUIA_BrowserPreferences_DownloadDestination, XGET(data->downloadDestination, MUIA_String_Contents));
+    set(data->preferences, MUIA_WebPreferences_CookieJarFileName, "PROGDIR:cookies.txt"); /* Hardcoded for now */
 }
 
 IPTR PreferencesManager__MUIM_PreferencesManager_Use(Class *cl, Object *obj, Msg message)
