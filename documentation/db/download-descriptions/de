@@ -47,6 +47,10 @@ freebsd-i386-system:
 linux-i386-system:
     Die gehostete Version für Linux/i386. Dieses Archiv enthält
     alle AROS-System-Binärdateien aus dem Subversion-Archiv.
+mingw32-i386-system:
+    The gehostete Version für Microsoft Windows auf der i386-Plattform.
+    Sie wurde entwickelt und kompiliert unter Windows XP, sollte jedoch unter
+    allen 32-bit Windowsversionen ab Windows 98 laufen.
 linux-x86_64-system:
     Die gehostete Version für Linux/x86_64. Dieses Archiv enthält
     alle AROS-System-Binärdateien aus dem Subversion-Archiv.
