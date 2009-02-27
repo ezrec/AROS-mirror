@@ -198,12 +198,11 @@ for group in groups.keys():
 		else:
 		    path = path + '.php'
 		    file = file + '.php'
-
-# What was this for? - Pavel Fedin <sonic.amiga@gmail.com>
-#		if dltype == "nightly":
+		
+		if dltype == "nightly":
 		    url  = 'http://aros.sourceforge.net/cgi-bin/%s-download?%s/%s/%s' % (dltype, date, group, file)
-#		else:
-#		    url  = 'http://prdownloads.sourceforge.net/aros/%s?download' % (file)
+		else:
+		    url  = 'http://prdownloads.sourceforge.net/aros/%s?download' % (file)
                 size = formatSize( os.path.getsize( path ) )
                 print '''
                 <table class="layout" border="0" cellspacing="0" cellpadding="0">
