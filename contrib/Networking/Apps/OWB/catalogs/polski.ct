@@ -258,9 +258,17 @@ MSG_Loading
 £adujê...
 ; Loading...
 ;
-MSG_NotLoading
-
-; 
+MSG_Ready
+Gotowy
+;
+;
+MSG_Connecting
+Nawi±zujê po³±czenie...
+;
+;
+MSG_Error
+B³±d
+;
 ;
 MSG_Untitled
 (Bez nazwy)
