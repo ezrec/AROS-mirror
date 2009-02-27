@@ -297,6 +297,11 @@ IPTR PreferencesManager__OM_NEW(struct IClass *cl, Object *self, struct opSet *m
     set(downloadDestination, MUIA_ObjectID, 18);
     data->downloadDestination = downloadDestination;
     
+    /* Close window with close gadget */
+    DoMethod(self, MUIM_Notify, MUIA_Window_CloseRequest, (IPTR) TRUE,
+        (IPTR) self,  (IPTR) 3,
+        MUIM_Set, MUIA_Window_Open, (IPTR) FALSE);
+
     DoMethod(bt_save, MUIM_Notify, MUIA_Pressed, FALSE,
 	(IPTR) self, 1,
 	MUIM_PreferencesManager_Save);
