@@ -190,8 +190,14 @@ MSG_MultipleFileUploadText (//)
 MSG_Loading (//)
 Loading...
 ;
-MSG_NotLoading (//)
-
+MSG_Ready (//)
+Ready
+;
+MSG_Connecting (//)
+Connecting...
+;
+MSG_Error (//)
+Error
 ;
 MSG_Untitled (//)
 (Untitled)

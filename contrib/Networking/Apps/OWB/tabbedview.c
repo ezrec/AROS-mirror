@@ -25,8 +25,8 @@
 IPTR forwardedAttributes[] = 
 { 
     MUIA_WebView_ToolTip, 
+    MUIA_WebView_State,
     MUIA_WebView_EstimatedProgress,
-    MUIA_WebView_IsLoading,
     MUIA_WebView_URL,
     MUIA_WebView_Title,
     MUIA_WebView_CanGoBack,

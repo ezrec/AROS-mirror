@@ -154,6 +154,48 @@ static void UpdateURLFunc(struct Hook *hook, Object *urlString, STRPTR *url)
     set(urlString, MUIA_String_Contents, *url);
 }
 
+static void UpdateStatusBarFunc(struct Hook *hook, Object *toolTips, STRPTR *tooltip)
+{
+    STRPTR value = *tooltip;
+    
+    /* Display state information only if there's no tooltip text to show */
+    if(!value || value[0] == '\0')
+    {
+        switch(XGET(tabbed, MUIA_WebView_State))
+        {
+            case MUIV_WebView_State_Ready:
+        	value = _(MSG_Ready);
+        	break;
+            case MUIV_WebView_State_Connecting:
+        	value = _(MSG_Connecting);
+        	break;
+            case MUIV_WebView_State_Loading:
+        	value = _(MSG_Loading);
+        	break;
+            case MUIV_WebView_State_Error:
+        	value = _(MSG_Error);
+        	break;
+        }
+    }
+    set(toolTips, MUIA_Text_Contents, value);
+}
+
+static void UpdateProgressBarFunc(struct Hook *hook, Object *gauge, LONG *current)
+{
+    LONG value = *current;
+    
+    /* Display progress information only when loading */
+    switch(XGET(tabbed, MUIA_WebView_State))
+    {
+        case MUIV_WebView_State_Loading:
+            break;
+        default:
+            value = 0;
+            break;
+    }
+    set(gauge, MUIA_Gauge_Current, value);
+}
+
 int main(void)
 {
     Object *bt_close, *menuclosetab, *menunewtab, *tabContextMenu;
@@ -162,7 +204,8 @@ int main(void)
     Object *webView, *tab;
     Object *toolTips, *progressBar, *urlString;
     Object *bt_back, *bt_forward, *bt_search, *bt_go, *bt_download, *bt_preferences, *bt_find, *bt_reload, *bt_stop;
-    struct Hook goHook, goAcknowledgeHook, webSearchHook, webSearchAcknowledgeHook, closeTabHook, textSearchHook, updateURLHook;
+    struct Hook goHook, goAcknowledgeHook, webSearchHook, webSearchAcknowledgeHook, closeTabHook, textSearchHook, updateURLHook, updateStatusBarHook;
+    struct Hook updateProgressBarHook;
     IPTR argArray[] = { 0 };
     struct RDArgs *args = NULL;
     const char *url = NULL;
@@ -201,6 +244,10 @@ int main(void)
     textSearchHook.h_SubEntry = (HOOKFUNC) TextSearchFunc;
     updateURLHook.h_Entry = HookEntry;
     updateURLHook.h_SubEntry = (HOOKFUNC) UpdateURLFunc;
+    updateStatusBarHook.h_Entry = HookEntry;
+    updateStatusBarHook.h_SubEntry = (HOOKFUNC) UpdateStatusBarFunc;
+    updateProgressBarHook.h_Entry = HookEntry;
+    updateProgressBarHook.h_SubEntry = (HOOKFUNC) UpdateProgressBarFunc;
 
     preferences = NewObject(BrowserPreferences_CLASS->mcc_Class, NULL, TAG_END);
   
@@ -468,37 +515,42 @@ int main(void)
         /* Set tooltips */
         DoMethod(tabbed, MUIM_Notify, MUIA_WebView_ToolTip, MUIV_EveryTime,
         	 (IPTR) toolTips, 3,
-        	 MUIM_Set, MUIA_Text_Contents, MUIV_TriggerValue);
-    
-        /* Display info text while loading */
-        DoMethod(tabbed, MUIM_Notify, MUIA_WebView_IsLoading, 1,
-                 (IPTR) progressBar, 3,
-                 MUIM_Set, MUIA_Gauge_InfoText, _(MSG_Loading));
-    
-        /* Clear info text if not loading */
-        DoMethod(tabbed, MUIM_Notify, MUIA_WebView_IsLoading, 0,
-                 (IPTR) progressBar, 3,
-                 MUIM_Set, MUIA_Gauge_InfoText, _(MSG_NotLoading));
-    
-        /* Set progress bar value to 0 if not loading */
-        DoMethod(tabbed, MUIM_Notify, MUIA_WebView_IsLoading, 0,
-                 (IPTR) progressBar, 3,
-                 MUIM_Set, MUIA_Gauge_Current, 0);
-    
-        /* Disable stop button if not loading */
-        DoMethod(tabbed, MUIM_Notify, MUIA_WebView_IsLoading, 0,
+        	 MUIM_CallHook, &updateStatusBarHook, MUIV_TriggerValue);
+
+        /* Display state info */
+        DoMethod(tabbed, MUIM_Notify, MUIA_WebView_State, MUIV_EveryTime,
+                 (IPTR) toolTips, 3,
+                 MUIM_CallHook, &updateStatusBarHook, "");
+
+        /* Disable stop button if ready */
+        DoMethod(tabbed, MUIM_Notify, MUIA_WebView_State, MUIV_WebView_State_Ready,
                  (IPTR) bt_stop, 3,
                  MUIM_Set, MUIA_Disabled, TRUE);
-    
-        /* Enable stop button if loading */
-        DoMethod(tabbed, MUIM_Notify, MUIA_WebView_IsLoading, 1,
+
+        /* Disable stop button if error */
+        DoMethod(tabbed, MUIM_Notify, MUIA_WebView_State, MUIV_WebView_State_Error,
+                 (IPTR) bt_stop, 3,
+                 MUIM_Set, MUIA_Disabled, TRUE);
+
+        /* Enable stop button if connecting */
+        DoMethod(tabbed, MUIM_Notify, MUIA_WebView_State, MUIV_WebView_State_Connecting,
                  (IPTR) bt_stop, 3,
                  MUIM_Set, MUIA_Disabled, FALSE);
-    
+
+        /* Enable stop button if loading */
+        DoMethod(tabbed, MUIM_Notify, MUIA_WebView_State, MUIV_WebView_State_Loading,
+                 (IPTR) bt_stop, 3,
+                 MUIM_Set, MUIA_Disabled, FALSE);
+
+        /* Set progress bar value to 0 when changing states */
+        DoMethod(tabbed, MUIM_Notify, MUIA_WebView_State, MUIV_EveryTime,
+                 (IPTR) progressBar, 3,
+                 MUIM_Set, MUIA_Gauge_Current, 0);
+
         /* Update progress bar */
         DoMethod(tabbed, MUIM_Notify, MUIA_WebView_EstimatedProgress, MUIV_EveryTime,
                  (IPTR) progressBar, 3,
-                 MUIM_Set, MUIA_Gauge_Current, MUIV_TriggerValue);
+                 MUIM_CallHook, &updateProgressBarHook, MUIV_TriggerValue);
     
         /* Update URL */
         DoMethod(tabbed, MUIM_Notify, MUIA_WebView_URL, MUIV_EveryTime,
@@ -531,6 +583,9 @@ int main(void)
         /* Check that the window opened */
         if (XGET(wnd, MUIA_Window_Open))
         {
+            /* Display initial state information */
+            CallHook(&updateStatusBarHook, toolTips, "");
+            
             if(url)
         	CallHook(&goAcknowledgeHook, urlString, url);
             
