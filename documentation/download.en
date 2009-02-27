@@ -65,12 +65,16 @@ __ http://amidevcpp.amiga-world.de/WinAros.php
 Snapshots
 =========
 
-Starting from March 1st 2007, Snapshots of AROS won't be available 
-anymore. We'd encourage everyone who would try AROS to download 
-either a distribution, or the latest nightly build instead. AROS is
-growing really fast, and Snapshots often contained obsolete code. We
-also think that nightly builds are more useful from a beta-testing 
-point of view: please use the `bug tracker`__ to report bugs.
+Snapshots are non-periodic, non-automated builds of AROS. They are done
+by developers who can't set up a nightly build for some technical or
+political reason.
+
+These ports are not unmaintained, so please use the `bug tracker`__ to report
+bugs.
+
+.. raw:: html
+
+   <?php virtual( "/cgi-bin/files?type=snapshots&lang=en" ); ?>
 
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 
