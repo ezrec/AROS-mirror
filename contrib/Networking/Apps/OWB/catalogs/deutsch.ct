@@ -1,0 +1,464 @@
+## version $VER: owb.catalog 1.0 (27.2.2009)
+## language deutsch
+## codeset 0
+;
+MSG_OWB
+OWB
+; OWB
+;
+MSG_SubmitButtonDefaultLabel
+Senden
+; Submit
+;
+MSG_InputElementAltText
+Senden
+; Submit
+;
+MSG_ResetButtonDefaultLabel
+Zurücksetzen
+; Reset
+;
+MSG_SearchableIndexIntroduction
+Suchbarer Index
+; Searchable Index
+;
+MSG_FileButtonChooseFileLabel
+Datei wählen
+; Choose File
+;
+MSG_FileButtonNoFileSelectedLabel
+(Kein)
+; (None)
+;
+MSG_ContextMenuItemTagOpenLinkInNewWindow
+Link in neuem Fenster öffnen
+; Open Link in New Window
+;
+MSG_ContextMenuItemTagDownloadLinkToDisk
+Verlinkte Datei herunterladen
+; Download Linked File
+;
+MSG_ContextMenuItemTagCopyLinkToClipboard
+Linkadresse kopieren
+; Copy Link Location
+;
+MSG_ContextMenuItemTagOpenImageInNewWindow
+Bild in neuem Fenster öffnen
+; Open Image in New Window
+;
+MSG_ContextMenuItemTagDownloadImageToDisk
+Bild speichern unter
+; Save Image As
+;
+MSG_ContextMenuItemTagCopyImageToClipboard
+Bild kopieren
+; Copy Image
+;
+MSG_ContextMenuItemTagOpenFrameInNewWindow
+Frame in neuem Fenster öffnen
+; Open Frame in New Window
+;
+MSG_ContextMenuItemTagCopy
+kopieren
+; copy
+;
+MSG_ContextMenuItemTagDelete
+löschen
+; delete
+;
+MSG_ContextMenuItemTagSelectAll
+Alles auswählen
+; Select All
+;
+MSG_ContextMenuItemTagUnicode
+Unicode-Zeichen einfügen
+; Insert Unicode Control Character
+;
+MSG_ContextMenuItemTagInputMethods
+Eingabemethoden
+; Input Methods
+;
+MSG_ContextMenuItemTagGoBack
+Zurück
+; back
+;
+MSG_ContextMenuItemTagGoForward
+Vorwärts
+; forward
+;
+MSG_ContextMenuItemTagStop
+Stopp
+; stop
+;
+MSG_ContextMenuItemTagReload
+Neu laden
+; Reload
+;
+MSG_ContextMenuItemTagCut
+ausschneiden
+; cut
+;
+MSG_ContextMenuItemTagPaste
+einfügen
+; paste
+;
+MSG_ContextMenuItemTagNoGuessesFound
+Nichts ähnliches gefunden
+; No Guesses Found
+;
+MSG_ContextMenuItemTagIgnoreSpelling
+Rechtschreibung ignorieren
+; Ignore Spelling
+;
+MSG_ContextMenuItemTagLearnSpelling
+Schreibweise lernen
+; Learn Spelling
+;
+MSG_ContextMenuItemTagSearchWeb
+Das Netz durchsuchen
+; Search the Web
+;
+MSG_ContextMenuItemTagLookUpInDictionary
+Im Wörterbuch nachschlagen
+; Look Up in Dictionary
+;
+MSG_ContextMenuItemTagOpenLink
+Link öffnen
+; Open Link
+;
+MSG_ContextMenuItemTagIgnoreGrammar
+Grammatik ignorieren
+; Ignore Grammar
+;
+MSG_ContextMenuItemTagSpellingMenu
+Rechtschreibung und Grammatik
+; Spelling and Grammar
+;
+MSG_ContextMenuItemTagShowSpellingPanel
+Zeige Rechtschreibung und Grammatik
+; Show Spelling and Grammar
+;
+MSG_ContextMenuItemTagHideSpellingPanel
+Verberge Rechtschreibung und Grammatik
+; Hide Spelling and Grammar
+;
+MSG_ContextMenuItemTagCheckSpelling
+Dokument jetzt prüfen
+; Check Document Now
+;
+MSG_ContextMenuItemTagCheckSpellingWhileTyping
+Dokument während der Eingabe prüfen
+; Check Spelling While Typing
+;
+MSG_ContextMenuItemTagCheckGrammarWithSpelling
+Grammatik mit Rechtschreibung prüfen
+; Check Grammar With Spelling
+;
+MSG_ContextMenuItemTagFontMenu
+Schrift
+; Font
+;
+MSG_ContextMenuItemTagBold
+Fett
+; Bold
+;
+MSG_ContextMenuItemTagItalic
+Kursiv
+; Italic
+;
+MSG_ContextMenuItemTagUnderline
+Unterstrichen
+; Underline
+;
+MSG_ContextMenuItemTagOutline
+Outline
+; Outline
+;
+MSG_ContextMenuItemTagInspectElement
+Element untersuchen
+; Inspect Element
+;
+MSG_searchMenuNoRecentSearchesText
+Keine frühere Suchvorgänge
+; No recent searches
+;
+MSG_searchMenuRecentSearchesText
+Vorangegange Suchvorgänge
+; Recent searches
+;
+MSG_searchMenuClearRecentSearchesText
+Lösche vorangegangene Suchvorgänge
+; Clear recent searches
+;
+MSG_AXDefinitionListTermText
+Term
+; term
+;
+MSG_AXDefinitionListDefinitionText
+Definition
+; definition
+;
+MSG_AXButtonActionVerb
+
+; 
+;
+MSG_AXRadioButtonActionVerb
+
+; 
+;
+MSG_AXTextFieldActionVerb
+
+; 
+;
+MSG_AXCheckedCheckBoxActionVerb
+
+; 
+;
+MSG_AXUncheckedCheckBoxActionVerb
+
+; 
+;
+MSG_AXLinkActionVerb
+
+; 
+;
+MSG_unknownFileSizeText
+Unbekannt
+; Unknown
+;
+MSG_imageTitle
+
+; 
+;
+MSG_ContextMenuItemTagLeftToRight
+Links-nach-rechts Kontextmenüeintrag
+; Left to Right context menu item
+;
+MSG_ContextMenuItemTagDefaultDirection
+Standardschreibrichtung Kontextmenüeintrag
+; Default writing direction context menu item
+;
+MSG_ContextMenuItemTagRightToLeft
+Rechts-nach-links Kontextmenüeintrag
+; Right to Left context menu item
+;
+MSG_ContextMenuItemTagWritingDirectionMenu
+Schreibrichtung Kontextuntermenüeintrag
+; Writing direction context sub-menu item
+;
+MSG_ContextMenuItemTagTextDirectionMenu
+Textrichtung Kontextuntermenüeintrag
+; Text direction context sub-menu item
+;
+MSG_MultipleFileUploadText
+
+; 
+;
+MSG_Loading
+Laden ...
+; Loading...
+;
+MSG_NotLoading
+
+; 
+;
+MSG_Untitled
+(kein Titel)
+; (Untitled)
+;
+MSG_DownloadState_Starting
+Start
+; Starting
+;
+MSG_DownloadState_Active
+Herunterladen
+; Downloading
+;
+MSG_DownloadState_Failed
+Fehler
+; Error
+;
+MSG_DownloadState_Finished
+Abgeschlossen
+; Finished
+;
+MSG_UnknownFileSize
+unbekannt
+; unknown
+;
+MSG_UnknownFileName
+unbekannt
+; unknown
+;
+MSG_DownloadFileSize
+Dateigröße
+; File size
+;
+MSG_DownloadFileName
+Dateiname
+; File name
+;
+MSG_DownloadState
+Status
+; Status
+;
+MSG_DownloadProgress
+Fortschritt
+; Progress
+;
+MSG_DownloadManager_Title
+OWB Downloadmanager
+; OWB Download Manager
+;
+MSG_DownloadManager_Cancel
+Abbrechen
+; Cancel
+;
+MSG_DownloadManager_ClearFinished
+Abgeschlossene löschen
+; Clear finished
+;
+MSG_SearchWindow_Title
+OWB Suchfenster
+; OWB Search Window
+;
+MSG_SearchWindow_Locate
+Suchen:
+; Locate:
+;
+MSG_SearchWindow_CaseSensitive
+Groß-/Kleinschreibung
+; Case Sensitive
+;
+MSG_SearchWindow_FindNext
+Nächstes finden
+; Find next
+;
+MSG_SearchWindow_FindPrevious
+Vorhergehendes finden
+; Find previous
+;
+MSG_PreferencesManager_Title
+OWB Einstellungen
+; OWB Preferences
+;
+MSG_PreferencesManager_Main
+Haupt
+; Main
+;
+MSG_PreferencesManager_Downloads
+Downloads
+; Downloads
+;
+MSG_PreferencesManager_SaveFilesTo
+Dateien speichern unter:
+; Save files to:
+;
+MSG_PreferencesManager_Content
+Inhalt
+; Content
+;
+MSG_PreferencesManager_JavaScript
+Javascript
+; JavaScript
+;
+MSG_PreferencesManager_EnableJavaScript
+Javascript aktivieren
+; Enable JavaScript:
+;
+MSG_PreferencesManager_Images
+Bilder
+; Images
+;
+MSG_PreferencesManager_LoadImagesAutomatically
+Bilder automatisch laden:
+; Load images automatically:
+;
+MSG_PreferencesManager_AllowAnimatedImages
+Animierte Bilder zulassen:
+; Allow animated images:
+;
+MSG_PreferencesManager_AllowLoopedAnimation
+Endlos-Animation ermöglichen:
+; Allow looped animation:
+;
+MSG_PreferencesManager_DecodeBMPWithDatatypes
+BMP mit Datatypes dekodieren:
+; Decode BMP with Datatypes:
+;
+MSG_PreferencesManager_DecodePNGWithDatatypes
+PNG mit Datatypes dekodieren:
+; Decode PNG with Datatypes:
+;
+MSG_PreferencesManager_DecodeGIFWithDatatypes
+GIF mit Datatypes dekodieren:
+; Decode GIF with Datatypes:
+;
+MSG_PreferencesManager_DecodeJPGWithDatatypes
+JPG mit Datatypes dekodieren:
+; Decode JPG with Datatypes:
+;
+MSG_PreferencesManager_Fonts
+Schriftarten
+; Fonts
+;
+MSG_PreferencesManager_DefaultFontSize
+Standardschriftgröße
+; Default font size:
+;
+MSG_PreferencesManager_MinimumFontSize
+Kleinste Schriftgröße
+; Minimum font size:
+;
+MSG_PreferencesManager_StandardFontFamily
+Standardschriftfamilie:
+; Standard font family:
+;
+MSG_PreferencesManager_DefaultFixedFontSize
+Standard Schriftgröße:
+; Default fixed font size:
+;
+MSG_PreferencesManager_FixedFontFamily
+Dicktengleich:
+; Fixed font family:
+;
+MSG_PreferencesManager_SerifFontFamily
+Serif:
+; Serif font family:
+;
+MSG_PreferencesManager_SansSerifFontFamily
+Sans-serif:
+; Sans-serif font family:
+;
+MSG_PreferencesManager_CursiveFontFamily
+Kursiv:
+; Cursive font family:
+;
+MSG_PreferencesManager_FantasyFontFamily
+Fantasy:
+; Fantasy font family:
+;
+MSG_PreferencesManager_Save
+Speichern
+; Save
+;
+MSG_PreferencesManager_Use
+Verwenden
+; Use
+;
+MSG_PreferencesManager_Cancel
+Abbrechen
+; Cancel
+;
+MSG_Tabs
+Tabs
+; Tabs
+;
+MSG_Tabs_OpenNew
+Neuen Tab öffnen
+; Open new tab
+;
+MSG_Tabs_CloseActive
+Aktiven Tab schließen
+; Close active tab
+;
