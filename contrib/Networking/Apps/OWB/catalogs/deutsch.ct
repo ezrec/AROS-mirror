@@ -258,9 +258,17 @@ MSG_Loading
 Laden ...
 ; Loading...
 ;
-MSG_NotLoading
-
-; 
+MSG_Ready
+Fertig
+; Ready
+;
+MSG_Connecting
+Verbinden ...
+; Connecting...
+;
+MSG_Error
+Fehler
+; Error
 ;
 MSG_Untitled
 (kein Titel)
