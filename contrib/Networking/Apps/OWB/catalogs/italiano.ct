@@ -258,9 +258,17 @@ MSG_Loading
 Caricamento...
 ; Loading...
 ;
-MSG_NotLoading
-
+MSG_Ready (//)
+Pronto
+;Ready
 ;
+MSG_Connecting (//)
+Connessione...
+;Connecting...
+;
+MSG_Error (//)
+Errore
+;Error
 ;
 MSG_Untitled
 (Senza titolo)
