@@ -1,6 +1,6 @@
 -include $(TOP)/config/make.cfg
 
-#MM- contrib-libxslt : development-libxslt : development-libxml2
+#MM- contrib-libxslt : development-libxml2 development-libxslt
 
 %fetch_and_build_gnu_development package=libxslt version=1.1.24 \
     patch="yes" suffixes="tar.gz" package_repo="http://xmlsoft.org/sources" \
