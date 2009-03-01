@@ -38,6 +38,10 @@
 
 /******************** Local utility functions area ********************/
 
+static const char *unknown_name = "? unknown name ?";
+static const char *unknown_manufacturer = "? unknown manufacturer ?";
+static const char *unknown_serial = "? unknown serial ?";
+
 static BOOL usb_SetAddress(OOP_Class *cl, OOP_Object *o, uint8_t address)
 {
     DeviceData *dev = OOP_INST_DATA(cl, o);
@@ -212,7 +216,7 @@ OOP_Object *METHOD(USBDevice, Root, New)
             D(bug("[USBDevice::New] iProduct = \"%s\"\n", dev->product_name));
         }
         else
-        	dev->product_name = "? unknown name ?";
+        	dev->product_name = unknown_name;
 
         if (dev->descriptor.iManufacturer && HIDD_USBDevice_GetString(o, dev->descriptor.iManufacturer, langid, &string))
         {
@@ -226,7 +230,7 @@ OOP_Object *METHOD(USBDevice, Root, New)
             D(bug("[USBDevice::New] iManufacturer = \"%s\"\n", dev->manufacturer_name));
         }
         else
-			dev->manufacturer_name = "? unknown manufacturer ?";
+			dev->manufacturer_name = unknown_manufacturer;
 
         if (dev->descriptor.iSerialNumber && HIDD_USBDevice_GetString(o, dev->descriptor.iSerialNumber, langid, &string))
         {
@@ -240,7 +244,7 @@ OOP_Object *METHOD(USBDevice, Root, New)
             D(bug("[USBDevice::New] iSerial = \"%s\"\n", dev->serialnumber_name));
         }
         else
-        	dev->serialnumber_name = "? unknown serial ?";
+        	dev->serialnumber_name = unknown_serial;
     }
 
     D(bug("[USB] USBDevice::New() = %p\n",o));
@@ -619,13 +623,13 @@ void METHOD(USBDevice, Root, Dispose)
 //   Do not unconfigure. The device may not exist already...
 //    HIDD_USBDevice_Configure(o, USB_UNCONFIG_INDEX);
 
-    if (dev->product_name)
+    if (dev->product_name && dev->product_name != unknown_name)
         FreeVecPooled(SD(cl)->MemPool, dev->product_name);
 
-    if (dev->manufacturer_name)
+    if (dev->manufacturer_name && dev->manufacturer_name != unknown_manufacturer)
         FreeVecPooled(SD(cl)->MemPool, dev->manufacturer_name);
 
-    if (dev->serialnumber_name)
+    if (dev->serialnumber_name && dev->serialnumber_name != unknown_serial)
         FreeVecPooled(SD(cl)->MemPool, dev->serialnumber_name);
 
     if (dev->default_pipe)
