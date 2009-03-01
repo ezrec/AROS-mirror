@@ -1,4 +1,4 @@
-/* config.h.  Generated automatically by configure.  */
+/* config.h.  Generated from config.h.in by configure.  */
 /* config.h.in */
 
 /* default directory to search for format files */
@@ -13,17 +13,8 @@
 /* Define to handle the european A4 format.  */
 #define A4_FORMAT 1
 
-/* Define to let the B note have always its stem down.  */
-/* #undef BSTEM_DOWN */
-
-/* Define to have clef definition changing the note pitch.  */
-/* #undef CLEF_TRANSPOSE */
-
 /* Define to have ~ as roll instead of twiddle.  */
 /* #undef DECO_IS_ROLL */
 
-/* Define the PostScript language level (1, 2, 3) */
-#define PS_LEVEL 2
-
-#define VERSION "4.0.1"
-#define VDATE "November 7, 2003"
+#define VERSION "5.9.3"
+#define VDATE "December 25, 2008"

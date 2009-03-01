@@ -1,19 +1,21 @@
-			--- abcm2ps version 4.x.x ---
+		--- abcm2ps version 5.x.x ---
 
 Overview
 ========
 
-abcm2ps is a program which converts music tunes from ABC format to PostScript.
-Based on abc2ps version 1.2.5 (see Contacts below), it was developped mainly to
-print barock organ scores which have independant voices played on one or many
-keyboards and a pedal-board.
+abcm2ps is a program which converts music tunes from ABC format to
+PostScript. Based on abc2ps version 1.2.5 (see Contacts below), it was
+developped mainly to print barock organ scores which have independant
+voices played on one or many keyboards and a pedal-board.
 
 
 Features
 ========
 
-The main features of abcm2ps are quite the same as the abc2ps ones and the
-file 'features.txt' contains an updated description of these ones.
+The main features of abcm2ps are quite the same as the abc2ps ones,
+but they are closer to the current ABC standard (draft IV - 14/8/2003):
+
+	http://abc.sourceforge.net/standard/abc2-draft.html
 
 
 Installation and usage
@@ -34,33 +36,45 @@ Documentation
 =============
 
 - options.txt contains the list of the command line options.
+
 - format.txt contains the list of the format parameters.
-- features.txt lists some differences from, and extensions to
-  the ABC standard.
 
-abcm2ps tries to follow the ABC standard version 2.0:
-
-	http://abc.sourceforge.net/standard/abc2-draft.html
+- features.txt lists the differences from the current ABC standard.
 
 
 Differences with abc2ps
 =======================
 
-- the algorithms relative to voice and staff handling are different and may
-  give better or worse results depending on the tunes.
+- the algorithms relative to voice and staff handling are different and
+  may give better or worse results depending on the tunes.
+
 - abcm2ps does not print the list of tunes and has different filtering
   functions. On the command line:
 	- '-o' is implicit
 	- '-e' accepts only one parameter.
 	- '-C', '-R', '-S', '-T' don't exist anymore. If you want such
-	  filtering, you should to use some external script or program instead.
-- abcm2ps has no interactive mode ('-i').
+	  filtering, you should to use some external script or program
+	  instead.
+
+- There is no interactive mode ('-i').
+
+- The scale is global (it was restricted to the music part in abc2ps).
+
+- The characters '\\' don't do a line break.
+
+- In landscape format, the values of 'pagewidth' and 'pageheight'
+  are internally exchanged, so there is no need to set them explicitely.
+
+- The format 'staffwidth' is obsolete. Use 'pagewidth' instead.
+
+- Look also in the file 'sample.abc' for other incompatibilities.
 
 
 Limits
 ======
 
-Many limits may be changed at compilation time (number of voices, staves, ..).
+Many limits may be changed at compilation time (number of voices, staves,
+..).
 
 
 Contacts
@@ -70,7 +84,8 @@ The primary abcm2ps site is:
 
 	http://moinejf.free.fr/
 
-Guido Gonzatto maintains Win32 and RedHat binaries at:
+Guido Gonzatto maintains Win32 and RedHat binaries and some more
+documentation at:
 
 	http://abcplus.sourceforge.net/
 
@@ -81,7 +96,7 @@ abc2ps was developped by Michael Methfessel:
 
 To know more about the ABC notation, have a look at:
 
-	 http://abc.sourceforge.net/
+	http://abc.sourceforge.net/
 
 For any comment:
-	mailto:moinejf@free.fr
+	mailto:moinejf (at) free (dot) fr
