@@ -1,4 +1,4 @@
-OWB 0.9.1 for AROS
+OWB 0.9.2 for AROS
 
 INTRODUCTION
 
@@ -52,6 +52,9 @@ F1 - go back
 F2 - go forward
 F3 - zoom page in
 F4 - zoom page out
+ctrl+c or amiga+c - copy
+ctrl+x or amiga+x - cut
+ctrl+v or amiga+v - paste
 
 TROUBLESHOOTING
 
@@ -74,6 +77,18 @@ instead:
 
 http://www.sand-labs.org:3789/.Aros/trac
 
+If you are going to use this tracker on OWB for AROS then note that OWB
+currently doesn't support authentication challenges. Until support for this
+feature is implemented, you have log in to the bug tracker by writing your
+username and password directly in the URL:
+
+http://username:password@www.sand-labs.org:3789/.Aros/trac
+
+Then simply click Login button and you will be logged in.
+
+Note that some characters in login and password may need additional encoding,
+you can use some online url encoding tool for that purpose. 
+
 LICENSING
 
 Zune-based browser code is licensed under AROS PUBLIC LICENSE (APL)
@@ -86,9 +101,20 @@ See Licenses directory for more details.
 
 HISTORY
 
+OWB 0.9.2 (01.03.2009) 
+  - Fixed bug #1: TGM Online's forum makes OWB crash
+  - Implemented feature #22: Cookie saving
+  - Fixed bug #25: Close gadget of preferences window doesn't work
+  - Fixed bug #2: A scrollbar is still active even though the left mouse
+    button is already up (it was still happening sometimes)
+  - Implemented feature #24: Show the browser state more clearly.
+  - Implemented feature #19: Keyboard shortcuts (only cut / copy / paste for
+    now)
+  - Fixed bug #29: OWB fails to execute on FFS filesystem
+
 OWB 0.9.1 (25.02.2009) 
   - Disabled some debug messages.
-  - Fixed bug #6: attaching a file does not work from yahoo and gmail
+  - Fixed bug #6: Attaching a file does not work from yahoo and gmail
   - Fixed bug #2: A scrollbar is still active even though the left mouse
     button is already up
   - Fixed bug #11: Downloads are corrupted
