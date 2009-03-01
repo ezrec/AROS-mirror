@@ -258,15 +258,15 @@ MSG_Loading
 Caricamento...
 ; Loading...
 ;
-MSG_Ready (//)
+MSG_Ready
 Pronto
 ;Ready
 ;
-MSG_Connecting (//)
+MSG_Connecting
 Connessione...
 ;Connecting...
 ;
-MSG_Error (//)
+MSG_Error
 Errore
 ;Error
 ;
