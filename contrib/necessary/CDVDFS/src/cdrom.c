@@ -465,7 +465,7 @@ unsigned int toc_len = 0;
 		)
 		return NULL;
 
-	toc_len = 2 + (p_cd->buffers[dummy_buf][0] << 8) | (p_cd->buffers[dummy_buf][1]);
+	toc_len = 2 + ((p_cd->buffers[dummy_buf][0] << 8) | (p_cd->buffers[dummy_buf][1]));
 	cmd[7] = toc_len >> 8;
 	cmd[8] = toc_len;
 
