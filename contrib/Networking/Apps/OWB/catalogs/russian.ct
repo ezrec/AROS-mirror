@@ -246,10 +246,20 @@ MSG_MultipleFileUploadText
 
 ;
 MSG_Loading
-;Loading...
+Загружается...
+; Loading...
 ;
-MSG_NotLoading
-
+MSG_Ready
+Готов
+; Ready
+;
+MSG_Connecting
+Соединяется...
+; Connecting...
+;
+MSG_Error
+Ошибка
+; Error
 ;
 MSG_Untitled
 (Без имени)
