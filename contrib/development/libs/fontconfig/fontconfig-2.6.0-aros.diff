@@ -1,6 +1,6 @@
 diff -ruN fontconfig-2.6.0/configure fontconfig-2.6.0-aros/configure
 --- fontconfig-2.6.0/configure	2008-06-01 04:31:02.000000000 +0200
-+++ fontconfig-2.6.0-aros/configure	2009-02-19 00:18:41.000000000 +0100
++++ fontconfig-2.6.0-aros/configure	2009-03-01 13:50:57.000000000 +0100
 @@ -22249,76 +22249,6 @@
  
  
@@ -87,9 +87,23 @@ diff -ruN fontconfig-2.6.0/configure fontconfig-2.6.0-aros/configure
  do
  as_ac_var=`echo "ac_cv_func_$ac_func" | $as_tr_sh`
  { echo "$as_me:$LINENO: checking for $ac_func" >&5
+diff -ruN fontconfig-2.6.0/fc-cache/fc-cache.c fontconfig-2.6.0-aros/fc-cache/fc-cache.c
+--- fontconfig-2.6.0/fc-cache/fc-cache.c	2008-05-04 09:34:13.000000000 +0200
++++ fontconfig-2.6.0-aros/fc-cache/fc-cache.c	2009-03-01 13:50:57.000000000 +0100
+@@ -289,8 +289,8 @@
+ 	    continue;
+ 	/* skip cache files for different architectures and */
+ 	/* files which are not cache files at all */
+-	if (strlen(ent->d_name) != 32 + strlen ("-" FC_ARCHITECTURE FC_CACHE_SUFFIX) ||
+-	    strcmp(ent->d_name + 32, "-" FC_ARCHITECTURE FC_CACHE_SUFFIX))
++	if (strlen(ent->d_name) != 8 + strlen ("-" FC_ARCHITECTURE FC_CACHE_SUFFIX) ||
++	    strcmp(ent->d_name + 8, "-" FC_ARCHITECTURE FC_CACHE_SUFFIX))
+ 	    continue;
+ 	
+ 	file_name = FcStrPlus (dir_base, (FcChar8 *) ent->d_name);
 diff -ruN fontconfig-2.6.0/fc-cache/Makefile.am fontconfig-2.6.0-aros/fc-cache/Makefile.am
 --- fontconfig-2.6.0/fc-cache/Makefile.am	2008-05-04 02:20:34.000000000 +0200
-+++ fontconfig-2.6.0-aros/fc-cache/Makefile.am	2009-02-18 21:46:14.000000000 +0100
++++ fontconfig-2.6.0-aros/fc-cache/Makefile.am	2009-03-01 13:50:57.000000000 +0100
 @@ -30,10 +30,10 @@
  if OS_WIN32
  else
@@ -105,7 +119,7 @@ diff -ruN fontconfig-2.6.0/fc-cache/Makefile.am fontconfig-2.6.0-aros/fc-cache/M
  INCLUDES=-I${top_srcdir} -I${top_srcdir}/src $(WARN_CFLAGS)
 diff -ruN fontconfig-2.6.0/fc-cache/Makefile.in fontconfig-2.6.0-aros/fc-cache/Makefile.in
 --- fontconfig-2.6.0/fc-cache/Makefile.in	2008-06-01 04:30:58.000000000 +0200
-+++ fontconfig-2.6.0-aros/fc-cache/Makefile.in	2009-02-18 21:46:14.000000000 +0100
++++ fontconfig-2.6.0-aros/fc-cache/Makefile.in	2009-03-01 13:50:57.000000000 +0100
 @@ -583,10 +583,10 @@
  
  
@@ -121,7 +135,7 @@ diff -ruN fontconfig-2.6.0/fc-cache/Makefile.in fontconfig-2.6.0-aros/fc-cache/M
  @USEDOCBOOK_TRUE@	$(RM) $@
 diff -ruN fontconfig-2.6.0/Makefile.am fontconfig-2.6.0-aros/Makefile.am
 --- fontconfig-2.6.0/Makefile.am	2008-05-25 01:55:45.000000000 +0200
-+++ fontconfig-2.6.0-aros/Makefile.am	2009-02-18 21:46:14.000000000 +0100
++++ fontconfig-2.6.0-aros/Makefile.am	2009-03-01 13:50:57.000000000 +0100
 @@ -82,7 +82,7 @@
  .PHONY: ChangeLog
  
@@ -133,7 +147,7 @@ diff -ruN fontconfig-2.6.0/Makefile.am fontconfig-2.6.0-aros/Makefile.am
  	  mv $(DESTDIR)$(configdir)/fonts.conf $(DESTDIR)$(configdir)/fonts.conf.bak; \
 diff -ruN fontconfig-2.6.0/Makefile.in fontconfig-2.6.0-aros/Makefile.in
 --- fontconfig-2.6.0/Makefile.in	2008-06-01 04:31:00.000000000 +0200
-+++ fontconfig-2.6.0-aros/Makefile.in	2009-02-18 21:46:14.000000000 +0100
++++ fontconfig-2.6.0-aros/Makefile.in	2009-03-01 13:50:57.000000000 +0100
 @@ -789,7 +789,7 @@
  .PHONY: ChangeLog
  
@@ -145,7 +159,7 @@ diff -ruN fontconfig-2.6.0/Makefile.in fontconfig-2.6.0-aros/Makefile.in
  	  mv $(DESTDIR)$(configdir)/fonts.conf $(DESTDIR)$(configdir)/fonts.conf.bak; \
 diff -ruN fontconfig-2.6.0/src/fcatomic.c fontconfig-2.6.0-aros/src/fcatomic.c
 --- fontconfig-2.6.0/src/fcatomic.c	2008-05-04 10:18:31.000000000 +0200
-+++ fontconfig-2.6.0-aros/src/fcatomic.c	2009-02-18 21:46:14.000000000 +0100
++++ fontconfig-2.6.0-aros/src/fcatomic.c	2009-03-01 13:50:57.000000000 +0100
 @@ -104,7 +104,7 @@
      int		ret;
      struct stat	lck_stat;
@@ -173,9 +187,30 @@ diff -ruN fontconfig-2.6.0/src/fcatomic.c fontconfig-2.6.0-aros/src/fcatomic.c
      unlink ((char *) atomic->lck);
  #else
      rmdir ((char *) atomic->lck);
+diff -ruN fontconfig-2.6.0/src/fccache.c fontconfig-2.6.0-aros/src/fccache.c
+--- fontconfig-2.6.0/src/fccache.c	2007-11-14 01:36:41.000000000 +0100
++++ fontconfig-2.6.0-aros/src/fccache.c	2009-03-01 13:50:57.000000000 +0100
+@@ -52,7 +52,7 @@
+ static void MD5Final(unsigned char digest[16], struct MD5Context *ctx);
+ static void MD5Transform(FcChar32 buf[4], FcChar32 in[16]);
+ 
+-#define CACHEBASE_LEN (1 + 32 + 1 + sizeof (FC_ARCHITECTURE) + sizeof (FC_CACHE_SUFFIX))
++#define CACHEBASE_LEN (1 + 8 + 1 + sizeof (FC_ARCHITECTURE) + sizeof (FC_CACHE_SUFFIX))
+ 
+ #ifdef _WIN32
+ 
+@@ -158,7 +158,7 @@
+ 
+     cache_base[0] = '/';
+     hex_hash = cache_base + 1;
+-    for (cnt = 0; cnt < 16; ++cnt)
++    for (cnt = 0; cnt < 4; ++cnt)
+     {
+ 	hex_hash[2*cnt  ] = bin2hex[hash[cnt] >> 4];
+ 	hex_hash[2*cnt+1] = bin2hex[hash[cnt] & 0xf];
 diff -ruN fontconfig-2.6.0/src/fccfg.c fontconfig-2.6.0-aros/src/fccfg.c
 --- fontconfig-2.6.0/src/fccfg.c	2008-05-25 01:14:15.000000000 +0200
-+++ fontconfig-2.6.0-aros/src/fccfg.c	2009-02-18 21:46:14.000000000 +0100
++++ fontconfig-2.6.0-aros/src/fccfg.c	2009-03-01 13:50:57.000000000 +0100
 @@ -1750,6 +1750,11 @@
  	goto absolute_path;
  #endif
@@ -200,7 +235,7 @@ diff -ruN fontconfig-2.6.0/src/fccfg.c fontconfig-2.6.0-aros/src/fccfg.c
  	break;
 diff -ruN fontconfig-2.6.0/src/fcint.h fontconfig-2.6.0-aros/src/fcint.h
 --- fontconfig-2.6.0/src/fcint.h	2008-05-04 04:31:41.000000000 +0200
-+++ fontconfig-2.6.0-aros/src/fcint.h	2009-02-18 21:46:14.000000000 +0100
++++ fontconfig-2.6.0-aros/src/fcint.h	2009-03-01 13:50:57.000000000 +0100
 @@ -54,7 +54,7 @@
  #define FC_CONFIG_PATH "fonts.conf"
  #endif
@@ -212,7 +247,7 @@ diff -ruN fontconfig-2.6.0/src/fcint.h fontconfig-2.6.0-aros/src/fcint.h
  #define FC_SEARCH_PATH_SEPARATOR ':'
 diff -ruN fontconfig-2.6.0/src/fcstr.c fontconfig-2.6.0-aros/src/fcstr.c
 --- fontconfig-2.6.0/src/fcstr.c	2008-05-04 09:49:41.000000000 +0200
-+++ fontconfig-2.6.0-aros/src/fcstr.c	2009-02-18 21:46:14.000000000 +0100
++++ fontconfig-2.6.0-aros/src/fcstr.c	2009-03-01 13:50:57.000000000 +0100
 @@ -976,7 +976,7 @@
      FcConvertDosPath (full);
      return FcStrCanonAbsoluteFilename (full);
@@ -224,7 +259,7 @@ diff -ruN fontconfig-2.6.0/src/fcstr.c fontconfig-2.6.0-aros/src/fcstr.c
      {
 diff -ruN fontconfig-2.6.0/src/Makefile.in fontconfig-2.6.0-aros/src/Makefile.in
 --- fontconfig-2.6.0/src/Makefile.in	2008-06-01 04:31:00.000000000 +0200
-+++ fontconfig-2.6.0-aros/src/Makefile.in	2009-02-18 21:46:14.000000000 +0100
++++ fontconfig-2.6.0-aros/src/Makefile.in	2009-03-01 13:50:57.000000000 +0100
 @@ -118,7 +118,7 @@
  CCDEPMODE = @CCDEPMODE@
  CC_FOR_BUILD = @CC_FOR_BUILD@
