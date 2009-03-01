@@ -1,451 +1,453 @@
 ## version $VER: owb.catalog 1.0 (25.02.2009)
 ## language russian
 ## codeset 1251
-MSG_OWB (//)
+;
+MSG_OWB
 OWB
+; OWB
 ;
-MSG_SubmitButtonDefaultLabel (//)
+MSG_SubmitButtonDefaultLabel
 Отправить
 ;Submit
 ;
-MSG_InputElementAltText (//)
+MSG_InputElementAltText
 Отправить
 ;Submit
 ;
-MSG_ResetButtonDefaultLabel (//)
+MSG_ResetButtonDefaultLabel
 Сброс
 ;Reset
 ;
-MSG_SearchableIndexIntroduction (//)
+MSG_SearchableIndexIntroduction
 Список с поиском
 ;Searchable Index
 ;
-MSG_FileButtonChooseFileLabel (//)
+MSG_FileButtonChooseFileLabel
 Выберите файл
 ;Choose File
 ;
-MSG_FileButtonNoFileSelectedLabel (//)
+MSG_FileButtonNoFileSelectedLabel
 (не выбран)
 ;(None)
 ;
-MSG_ContextMenuItemTagOpenLinkInNewWindow (//)
+MSG_ContextMenuItemTagOpenLinkInNewWindow
 Открыть ссылку в новом окне
 ;Open Link in New Window
 ;
-MSG_ContextMenuItemTagDownloadLinkToDisk (//)
+MSG_ContextMenuItemTagDownloadLinkToDisk
 Сохранить объект как...
 ;Download Linked File
 ;
-MSG_ContextMenuItemTagCopyLinkToClipboard (//)
+MSG_ContextMenuItemTagCopyLinkToClipboard
 Копировать ссылку
 ;Copy Link Location
 ;
-MSG_ContextMenuItemTagOpenImageInNewWindow (//)
+MSG_ContextMenuItemTagOpenImageInNewWindow
 Открыть изображение в новом окне
 ;Open Image in New Window
 ;
-MSG_ContextMenuItemTagDownloadImageToDisk (//)
+MSG_ContextMenuItemTagDownloadImageToDisk
 Сохранить изображение как...
 ;Save Image As
 ;
-MSG_ContextMenuItemTagCopyImageToClipboard (//)
+MSG_ContextMenuItemTagCopyImageToClipboard
 Копировать изображение
 ;Copy Image
 ;
-MSG_ContextMenuItemTagOpenFrameInNewWindow (//)
+MSG_ContextMenuItemTagOpenFrameInNewWindow
 Открыть фрэйм в новом окне
 ;Open Frame in New Window
 ;
-MSG_ContextMenuItemTagCopy (//)
+MSG_ContextMenuItemTagCopy
 Копировать
 ;copy
 ;
-MSG_ContextMenuItemTagDelete (//)
+MSG_ContextMenuItemTagDelete
 Удалить
 ;delete
 ;
-MSG_ContextMenuItemTagSelectAll (//)
+MSG_ContextMenuItemTagSelectAll
 Выделить всё
 ;Select All
 ;
-MSG_ContextMenuItemTagUnicode (//)
+MSG_ContextMenuItemTagUnicode
 Вставить управляющий символ в уникоде
 ;Insert Unicode Control Character
 ;
-MSG_ContextMenuItemTagInputMethods (//)
+MSG_ContextMenuItemTagInputMethods
 Методы ввода
 ;Input Methods
 ;
-MSG_ContextMenuItemTagGoBack (//)
+MSG_ContextMenuItemTagGoBack
 Назад
 ;back
 ;
-MSG_ContextMenuItemTagGoForward (//)
+MSG_ContextMenuItemTagGoForward
 Вперед
 ;forward
 ;
-MSG_ContextMenuItemTagStop (//)
+MSG_ContextMenuItemTagStop
 Стоп
 ;stop
 ;
-MSG_ContextMenuItemTagReload (//)
+MSG_ContextMenuItemTagReload
 Обновить
 ;Reload
 ;
-MSG_ContextMenuItemTagCut (//)
+MSG_ContextMenuItemTagCut
 Вырезать
 ;cut
 ;
-MSG_ContextMenuItemTagPaste (//)
+MSG_ContextMenuItemTagPaste
 Вставить
 ;paste
 ;
-MSG_ContextMenuItemTagNoGuessesFound (//)
+MSG_ContextMenuItemTagNoGuessesFound
 Не найдено
 ;No Guesses Found
 ;
-MSG_ContextMenuItemTagIgnoreSpelling (//)
+MSG_ContextMenuItemTagIgnoreSpelling
 Любое написание
 ;Ignore Spelling
 ;
-MSG_ContextMenuItemTagLearnSpelling (//)
+MSG_ContextMenuItemTagLearnSpelling
 Запомнить написание
 ;Learn Spelling
 ;
-MSG_ContextMenuItemTagSearchWeb (//)
+MSG_ContextMenuItemTagSearchWeb
 Поиск в Сети
 ;Search the Web
 ;
-MSG_ContextMenuItemTagLookUpInDictionary (//)
+MSG_ContextMenuItemTagLookUpInDictionary
 Поиск в словаре
 ;Look Up in Dictionary
 ;
-MSG_ContextMenuItemTagOpenLink (//)
+MSG_ContextMenuItemTagOpenLink
 Открыть ссылку
 ;Open Link
 ;
-MSG_ContextMenuItemTagIgnoreGrammar (//)
+MSG_ContextMenuItemTagIgnoreGrammar
 Без учёта грамматики
 ;Ignore Grammar
 ;
-MSG_ContextMenuItemTagSpellingMenu (//)
+MSG_ContextMenuItemTagSpellingMenu
 Правописание и грамматика
 ;Spelling and Grammar
 ;
-MSG_ContextMenuItemTagShowSpellingPanel (//)
+MSG_ContextMenuItemTagShowSpellingPanel
 Показывать правописание и грамматику
 ;Show Spelling and Grammar
 ;
-MSG_ContextMenuItemTagHideSpellingPanel (//)
+MSG_ContextMenuItemTagHideSpellingPanel
 Не показывать правописание и грамматику
 ;Hide Spelling and Grammar
 ;
-MSG_ContextMenuItemTagCheckSpelling (//)
+MSG_ContextMenuItemTagCheckSpelling
 Проверить документ
 ;Check Document Now
 ;
-MSG_ContextMenuItemTagCheckSpellingWhileTyping (//)
+MSG_ContextMenuItemTagCheckSpellingWhileTyping
 Проверка при наборе
 ;Check Spelling While Typing
 ;
-MSG_ContextMenuItemTagCheckGrammarWithSpelling (//)
+MSG_ContextMenuItemTagCheckGrammarWithSpelling
 Проверять грамматику с правописанием
 ;Check Grammar With Spelling
 ;
-MSG_ContextMenuItemTagFontMenu (//)
+MSG_ContextMenuItemTagFontMenu
 Шрифт
 ;Font
 ;
-MSG_ContextMenuItemTagBold (//)
+MSG_ContextMenuItemTagBold
 Жирный
 ;Bold
 ;
-MSG_ContextMenuItemTagItalic (//)
+MSG_ContextMenuItemTagItalic
 Курсив
 ;Italic
 ;
-MSG_ContextMenuItemTagUnderline (//)
+MSG_ContextMenuItemTagUnderline
 Подчеркнутый
 ;Underline
 ;
-MSG_ContextMenuItemTagOutline (//)
+MSG_ContextMenuItemTagOutline
 Контурный
 ;Outline
 ;
-MSG_ContextMenuItemTagInspectElement (//)
+MSG_ContextMenuItemTagInspectElement
 Проверить элемент
 ;Inspect Element
 ;
-MSG_searchMenuNoRecentSearchesText (//)
+MSG_searchMenuNoRecentSearchesText
 История поиска пуста
 ;No recent searches
 ;
-MSG_searchMenuRecentSearchesText (//)
+MSG_searchMenuRecentSearchesText
 История поиска
 ;Recent searches
 ;
-MSG_searchMenuClearRecentSearchesText (//)
+MSG_searchMenuClearRecentSearchesText
 Очистить историю поиска
 ;Clear recent searches
 ;
-MSG_AXDefinitionListTermText (//)
+MSG_AXDefinitionListTermText
 Слово
 ;term
 ;
-MSG_AXDefinitionListDefinitionText (//)
+MSG_AXDefinitionListDefinitionText
 Определение
 ;definition
 ;
-MSG_AXButtonActionVerb (//)
+MSG_AXButtonActionVerb
 
 ;
-MSG_AXRadioButtonActionVerb (//)
+MSG_AXRadioButtonActionVerb
 
 ;
-MSG_AXTextFieldActionVerb (//)
+MSG_AXTextFieldActionVerb
 
 ;
-MSG_AXCheckedCheckBoxActionVerb (//)
+MSG_AXCheckedCheckBoxActionVerb
 
 ;
-MSG_AXUncheckedCheckBoxActionVerb (//)
+MSG_AXUncheckedCheckBoxActionVerb
 
 ;
-MSG_AXLinkActionVerb (//)
+MSG_AXLinkActionVerb
 
 ;
-MSG_unknownFileSizeText (//)
+MSG_unknownFileSizeText
 Неизвестно
 ;
-MSG_imageTitle (//)
+MSG_imageTitle
 
 ;
-MSG_ContextMenuItemTagLeftToRight (//)
+MSG_ContextMenuItemTagLeftToRight
 Направление письма слева направо
 ;Left to Right context menu item
 ;
-MSG_ContextMenuItemTagDefaultDirection (//)
+MSG_ContextMenuItemTagDefaultDirection
 Элемент меню направления письма по умолчанию
 ;Default writing direction context menu item
 ;
-MSG_ContextMenuItemTagRightToLeft (//)
+MSG_ContextMenuItemTagRightToLeft
 Направление письма справа налево
 ;Right to Left context menu item
 ;
-MSG_ContextMenuItemTagWritingDirectionMenu (//)
+MSG_ContextMenuItemTagWritingDirectionMenu
 Элемент подменю направления письма по умолчанию
 ;Writing direction context sub-menu item
 ;
-MSG_ContextMenuItemTagTextDirectionMenu (//)
+MSG_ContextMenuItemTagTextDirectionMenu
 Элемент подменю направления текста по умолчанию
 ;Text direction context sub-menu item
 ;
-MSG_MultipleFileUploadText (//)
+MSG_MultipleFileUploadText
 
 ;
-MSG_Loading (//)
+MSG_Loading
 ;Loading...
 ;
-MSG_NotLoading (//)
+MSG_NotLoading
 
 ;
-MSG_Untitled (//)
+MSG_Untitled
 (Без имени)
 ;(Untitled)
 ;
-MSG_DownloadState_Starting (//)
+MSG_DownloadState_Starting
 Запускается
 ;Starting
 ;
-MSG_DownloadState_Active (//)
+MSG_DownloadState_Active
 Активна
 ;Downloading
 ;
-MSG_DownloadState_Failed (//)
+MSG_DownloadState_Failed
 Ошибка
 ;Error
 ;
-MSG_DownloadState_Finished (//)
+MSG_DownloadState_Finished
 Завершено
 ;Finished
 ;
-MSG_UnknownFileSize (//)
+MSG_UnknownFileSize
 Неизвестно
 ;unknown
 ;
-MSG_UnknownFileName (//)
+MSG_UnknownFileName
 Неизвестно
 ;unknown
 ;
-MSG_DownloadFileSize (//)
+MSG_DownloadFileSize
 Размер файла
 ;File size
 ;
-MSG_DownloadFileName (//)
+MSG_DownloadFileName
 Имя файла
 ;File name
 ;
-MSG_DownloadState (//)
+MSG_DownloadState
 Состояние
 ;Status
 ;
-MSG_DownloadProgress (//)
+MSG_DownloadProgress
 Выполнение
 ;Progress
 ;
-MSG_DownloadManager_Title (//)
+MSG_DownloadManager_Title
 Менеджер закачек
 ;OWB Download Manager
 ;
-MSG_DownloadManager_Cancel (//)
+MSG_DownloadManager_Cancel
 Отмена
 ;Cancel
 ;
-MSG_DownloadManager_ClearFinished (//)
+MSG_DownloadManager_ClearFinished
 Очистить список
 ;Clear finished
 ;
-MSG_SearchWindow_Title (//)
+MSG_SearchWindow_Title
 Окно поиска
 ;OWB Search Window
 ;
-MSG_SearchWindow_Locate (//)
+MSG_SearchWindow_Locate
 Найти:
 ;Locate:
 ;
-MSG_SearchWindow_CaseSensitive (//)
+MSG_SearchWindow_CaseSensitive
 Учитывать регистр
 ;Case Sensitive
 ;
-MSG_SearchWindow_FindNext (//)
+MSG_SearchWindow_FindNext
 Найти ниже
 ;Find next
 ;
-MSG_SearchWindow_FindPrevious (//)
+MSG_SearchWindow_FindPrevious
 Найти выше
 ;Find previous
 ;
-MSG_PreferencesManager_Title (//)
+MSG_PreferencesManager_Title
 Настройки
 ;OWB Preferences
 ;
-MSG_PreferencesManager_Main (//)
+MSG_PreferencesManager_Main
 Основные
 ;Main
 ;
-MSG_PreferencesManager_Downloads (//)
+MSG_PreferencesManager_Downloads
 Закачки
 ;Downloads
 ;
-MSG_PreferencesManager_SaveFilesTo (//)
+MSG_PreferencesManager_SaveFilesTo
 Сохранять файлы в:
 ;Save files to:
 ;
-MSG_PreferencesManager_Content (//)
+MSG_PreferencesManager_Content
 Содержание
 ;Content
 ;
-MSG_PreferencesManager_JavaScript (//)
+MSG_PreferencesManager_JavaScript
 JavaScript
 ;JavaScript
 ;
-MSG_PreferencesManager_EnableJavaScript (//)
+MSG_PreferencesManager_EnableJavaScript
 Включить JavaScript
 ;Enable JavaScript:
 ;
-MSG_PreferencesManager_Images (//)
+MSG_PreferencesManager_Images
 Изображения
 ;Images
 ;
-MSG_PreferencesManager_LoadImagesAutomatically (//)
+MSG_PreferencesManager_LoadImagesAutomatically
 Загружать изображения автоматически
 ;Load images automatically:
 ;
-MSG_PreferencesManager_AllowAnimatedImages (//)
+MSG_PreferencesManager_AllowAnimatedImages
 Загружать анимацию
 ;Allow animated images:
 ;
-MSG_PreferencesManager_AllowLoopedAnimation (//)
+MSG_PreferencesManager_AllowLoopedAnimation
 Зацикливать анимацию
 ;Allow looped animation:
 ;
-MSG_PreferencesManager_DecodeBMPWithDatatypes (//)
+MSG_PreferencesManager_DecodeBMPWithDatatypes
 Декодировать BMP средствами ОС
 ;Decode BMP with Datatypes:
 ;
-MSG_PreferencesManager_DecodePNGWithDatatypes (//)
+MSG_PreferencesManager_DecodePNGWithDatatypes
 Декодировать PNG средствами ОС
 ;Decode PNG with Datatypes:
 ;
-MSG_PreferencesManager_DecodeGIFWithDatatypes (//)
+MSG_PreferencesManager_DecodeGIFWithDatatypes
 Декодировать GIF средствами ОС
 ;Decode GIF with Datatypes:
 ;
-MSG_PreferencesManager_DecodeJPGWithDatatypes (//)
+MSG_PreferencesManager_DecodeJPGWithDatatypes
 Декодировать JPG средствами ОС
 ;Decode JPG with Datatypes:
 ;
-MSG_PreferencesManager_Fonts (//)
+MSG_PreferencesManager_Fonts
 Шрифты
 ;Fonts
 ;
-MSG_PreferencesManager_DefaultFontSize (//)
+MSG_PreferencesManager_DefaultFontSize
 Размер шрифта по умолчанию
 ;Default font size:
 ;
-MSG_PreferencesManager_MinimumFontSize (//)
+MSG_PreferencesManager_MinimumFontSize
 Минимальный размер шрифта
 ;Minimum font size:
 ;
-MSG_PreferencesManager_StandardFontFamily (//)
+MSG_PreferencesManager_StandardFontFamily
 Выбор стандартной группы шрифтов
 ;Standard font family:
 ;
-MSG_PreferencesManager_DefaultFixedFontSize (//)
+MSG_PreferencesManager_DefaultFixedFontSize
 Размер фиксированного шрифта по умолчанию
 ;Default fixed font size:
 ;
-MSG_PreferencesManager_FixedFontFamily (//)
+MSG_PreferencesManager_FixedFontFamily
 Выбор фиксированной группы шрифтов
 ;Fixed font family:
 ;
-MSG_PreferencesManager_SerifFontFamily (//)
+MSG_PreferencesManager_SerifFontFamily
 Группа шрифтов с засечками
 ;Serif font family:
 ;
-MSG_PreferencesManager_SansSerifFontFamily (//)
+MSG_PreferencesManager_SansSerifFontFamily
 Группа шрифтов без засечек
 ;Sans-serif font family:
 ;
-MSG_PreferencesManager_CursiveFontFamily (//)
+MSG_PreferencesManager_CursiveFontFamily
 Группа курсивных шрифтов
 ;Cursive font family:
 ;
-MSG_PreferencesManager_FantasyFontFamily (//)
+MSG_PreferencesManager_FantasyFontFamily
 Группа шрифтов Fantasy
 ;Fantasy font family:
 ;
-MSG_PreferencesManager_Save (//)
+MSG_PreferencesManager_Save
 Сохранить
 ;Save
 ;
-MSG_PreferencesManager_Use (//)
+MSG_PreferencesManager_Use
 Применить
 ;Use
 ;
-MSG_PreferencesManager_Cancel (//)
+MSG_PreferencesManager_Cancel
 Отменить
 ;Cancel
 ;
-MSG_Tabs (//)
+MSG_Tabs
 Вкладки
 ;Tabs
 ;
-MSG_Tabs_OpenNew (//)
+MSG_Tabs_OpenNew
 Открыть новую вкладку
 ;Open new tab
 ;
-MSG_Tabs_CloseActive (//)
+MSG_Tabs_CloseActive
 Закрыть активную вкладку
 ;Close active tab
 ;
