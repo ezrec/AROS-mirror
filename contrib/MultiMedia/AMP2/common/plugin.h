@@ -7,10 +7,6 @@
 #ifndef PLUGIN_H
 #define PLUGIN_H
 
-#if defined(__AROS__)
-#include "string.h"
-#endif
-
 /* Types and FOURCCs */
 #include "core_types.h"
 

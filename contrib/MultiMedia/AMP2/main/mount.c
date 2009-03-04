@@ -189,7 +189,9 @@ int mount_cd(int *lba_start, int *lba_stop)
       break;
     }
 
-    (unsigned char *)pt += sizeof(struct path_table) + ((pt->name_len[0] - 1) & 0xfffffffe) + 2;
+    unsigned char *tmp = (unsigned char*) pt;
+    tmp += sizeof(struct path_table) + ((pt->name_len[0] - 1) & 0xfffffffe) + 2;
+    pt = (struct path_table *) tmp;
     current++;
   }
 
