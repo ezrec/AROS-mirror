@@ -147,7 +147,7 @@ BOOL METHOD(USB, Hidd_USB, AttachDriver)
             AddTail(&SD(cl)->driverList, &drv->d_Node);
             ReleaseSemaphore(&SD(cl)->driverListLock);
 
-            HIDD_USBHub_OnOff(drv->d_Driver, FALSE);
+            //HIDD_USBHub_OnOff(drv->d_Driver, FALSE);
             HIDD_USBHub_OnOff(drv->d_Driver, TRUE);
 
             retval = TRUE;
