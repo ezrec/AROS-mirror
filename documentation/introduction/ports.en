@@ -41,8 +41,8 @@ without wasting time on constant reboots to try out new code.
 Naming
 ------
 
-The different AROS ports are named on the form <platform>-<cpu>, where <cpu> is
-the CPU architecture and <platform> is a symbolic name of the platform. The
+The different AROS ports are named on the form <platform>-<cpu>, where 
+<platform> is a symbolic name of the platform and <cpu> is the CPU architecture. The
 platform of a port can either be a hardware one for native ports, such as "pc"
 or "amiga", or an operating system for hosted ports, such as "linux" or
 "freebsd". In cases when it is not obvious that the topic is AROS it is common
@@ -150,6 +150,14 @@ running on the PPC family of processors.
 
 Rebuilding requires a patched gcc3.4.3. The diff file can be found in contrib/gnu/gcc.
 
+AROS/mingw32-i386
+------------------
+
+This port is intended to run on Microsoft Windows (beginning from Windows 98)
+as the hosted system. The port is in it`s early days but is developed contantly.
+The port maintainer is Pavel Fedin. GDI is used to make the screen output.
+
+This port can be downloaded from our download page.
 
 Footnotes
 =========
