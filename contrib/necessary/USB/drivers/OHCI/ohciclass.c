@@ -67,6 +67,7 @@ OOP_Object *METHOD(OHCI, Root, New)
 
         ohci->pendingRHSC = 1;
         ohci->tr = ohci_CreateTimer();
+        ohci->running = 0;
 
         NEWLIST(&ohci->intList);
 
@@ -197,6 +198,11 @@ OOP_Object *METHOD(OHCI, Root, New)
 
         D(bug("[OHCI] ctl=%08x fm=%08x desca=%08x descb=%08x\n", ctl,fm,desca,descb));
 
+        desca &= ~HC_RHA_NPS;
+        desca |= HC_RHA_PSM;
+        descb |= 0x7fff0000;
+
+
         for (i=0; i < ohci->hubDescr.bNbrPorts; i++)
         {
             mmio(ohci->regs->HcRhPortStatus[i]) = AROS_LONG2OHCI(UPS_LOW_SPEED);
@@ -245,7 +251,7 @@ OOP_Object *METHOD(OHCI, Root, New)
 	D(bug("[OHCI] periodic start=%08x\n", per));
 
         mmio(ohci->regs->HcRhDescriptorA) = AROS_LONG2OHCI(desca | HC_RHA_NOCP);
-        mmio(ohci->regs->HcRhStatus) = AROS_LONG2OHCI(HC_RHS_LPSC);
+        mmio(ohci->regs->HcRhStatus) = AROS_LONG2OHCI(HC_RHS_LPS);
         ohci_Delay(ohci->tr, 5);
         mmio(ohci->regs->HcRhDescriptorA) = AROS_LONG2OHCI(desca);
         mmio(ohci->regs->HcRhDescriptorB) = AROS_LONG2OHCI(descb);

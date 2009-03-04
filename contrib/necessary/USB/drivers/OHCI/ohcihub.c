@@ -59,7 +59,12 @@ BOOL METHOD(OHCI, Hidd_USBHub, OnOff)
 {
     ohci_data_t *ohci = OOP_INST_DATA(cl, o);
     BOOL retval = FALSE;
+    int i;
+
     D(bug("[OHCI] USBHub::OnOff(%d)\n", msg->on));
+
+    if (msg->on)
+    	retval = OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
 
     uint32_t ctl = AROS_OHCI2LONG(mmio(ohci->regs->HcControl));
     ctl &= ~HC_CTRL_HCFS_MASK;
@@ -85,7 +90,8 @@ BOOL METHOD(OHCI, Hidd_USBHub, OnOff)
         Enable();
     }
 
-    retval = OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
+    if (!msg->on)
+    	retval = OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
 
     return retval;
 }
