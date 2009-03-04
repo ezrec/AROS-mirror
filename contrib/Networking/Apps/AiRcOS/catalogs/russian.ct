@@ -1,0 +1,196 @@
+## version $VER: aircos.catalog 1.0 (04.03.2009)
+## language russian
+## codeset 1251
+;
+MSG_TITLE
+AiRcOS
+;
+MSG_WIN_TITLE
+Транслируемый интернет-чат AiRcOS
+;
+MSG_DESCRIPTION
+Клиент IRC для AROS!
+;
+MSG_SERVER_CONNECT
+Подключить к...
+;Connect to ...
+;
+MSG_SERVER_ADDRESS
+Адрес сервера
+;IRC Server Address
+;
+MSG_SERVER_PORT
+Порт
+;...connect on Port
+;
+MSG_USERNAME
+Имя пользователя
+;Login Username
+;
+MSG_PASSWORD
+Пароль
+;Login Password ...
+;
+MSG_NICKNAME
+Ник
+;Nickname ...
+;
+MSG_JOIN
+Канал
+;Join Channel
+;
+MSG_CONNECT
+Подключить
+;Connect
+;
+MSG_DEFAULT_SERVER
+chat.freenode.net
+;
+MSG_DEFAULT_USERNAME
+aircosuser
+;
+MSG_DEFAULT_NICKNAME
+aircos_guest
+;
+MSG_DEFAULT_CHAN
+#AROS
+;
+MSG_USER_JOINED
+*** %s вошёл в комнату %s\n
+;*** %s has joined %s\n
+;
+MSG_ADMINS
+Админы
+;Admins
+;
+MSG_VOICE
+Голос
+;Voice
+;
+MSG_NORMAL
+Нормальный
+;Normal
+;
+MSG_SET_MODE
+*** %s установил режим: %s %s\n
+;*** %s sets mode: %s %s\n
+;
+MSG_CHANGED_NICK
+*** %s сменил ник на %s\n
+;*** %s has changed nick to %s\n
+;
+MSG_DO_NOTICE
+-%s- %s\n
+;-%s- %s\n
+;
+MSG_HAS_LEFT
+*** %s покинул комнату %s\n
+;*** %s has left %s\n
+;
+MSG_HANDLE_ACTION
+*** %s %s\n
+;*** %s %s\n
+;
+MSG_HAS_QUIT
+*** %s вышел с IRC ('%s')\n
+;*** %s has quit IRC ('%s')\n
+;
+MSG_CHANGES_TOPIC
+*** %s сменил тему на %s\n
+;*** %s changes topic to %s\n
+;
+MSG_INITIAL_TOPIC
+*** Предыдущая тема: %s\n
+;*** Initial topic: %s\n
+;
+MSG_UNHANDLED_COMMAND
+*** # Неизвестная команда '%s'\n
+;*** # Unhandled command '%s'\n
+;
+MSG_SERVER_LOG
+Лог сервера
+;Server Log
+;
+MSG_SEND
+Отправить
+;send
+;
+MSG_CLOSE_IRC
+ X
+;
+MSG_CLOSE_USERLIST
+ X
+;
+MSG_USERS
+Пользователи
+;Users
+;
+MSG_FROM_TO
+От %s к %s
+;From %s to %s
+;
+MSG_TOPIC
+Тема:
+;Topic:
+;
+MENU_PROJECT
+Проект
+;Project
+;
+MENU_CONNECT
+Подключение...
+;Connect...
+;
+MENU_CONNECT_SC
+C
+;
+MENU_CLOSE
+Закрыть подключение
+;Close connection
+;
+MENU_CLOSE_SC
+X
+;
+MENU_QUIT
+Выход
+;Quit
+;
+MENU_QUIT_SC
+Q
+;
+MENU_SETTINGS
+Настройки
+;Settings
+;
+MENU_APP_OPTIONS
+Свойства программы
+;Application Options
+;
+MENU_APP_OPTIONS_SC
+P
+;
+MENU_SERVER_MANAGER
+Серверы
+;Server Manager
+;
+MENU_SERVER_MANAGER_SC
+С
+;
+MENU_HELP
+Помощь
+;Help
+;
+MENU_APP_HELP
+Помощь по AiRcOS
+;Application Help
+;
+MENU_APP_HELP_SC
+П
+;
+MENU_ABOUT
+О программе
+;About...
+;
+MENU_ABOUT_SC
+?
+;
