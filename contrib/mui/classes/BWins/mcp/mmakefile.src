@@ -10,7 +10,7 @@ FILES := libinit_aros \
 	 shape \
 	 class
 
-USER_INCLUDES := -I../include
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include
 
 %build_module mmake=contrib-zune-classes-bwin-mcp \
   modname=BWin modtype=mcp moduledir=Extras/Zune/MCC_BWin/Classes/Zune \

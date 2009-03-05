@@ -16,7 +16,7 @@ FILES := \
 	keywords \
 	param
 	
-USER_CFLAGS := -DAROS -I../include -O2 -fstrength-reduce -ffast-math -fomit-frame-pointer -funroll-loops
+USER_CFLAGS := -DAROS -I$(SRCDIR)/$(CURDIR)/../include -I../include -O2 -fstrength-reduce -ffast-math -fomit-frame-pointer -funroll-loops
 
 %build_linklib mmake=linklibs-xaosui libname=xaosui files=$(FILES)
 

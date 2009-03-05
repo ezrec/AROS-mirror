@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
-include make.cfg
+include $(SRCDIR)/$(CURDIR)/make.cfg
 
 ## Set the next line to "S" for standard build and "E" for enhanced ..
 BUILD_TYPE=E
@@ -17,7 +17,7 @@ OBJDIR          := $(GENDIR)/$(CURDIR)
 
 OS_INCLUDES     := -I$(AROS_INCLUDES)
 
-USER_INCLUDES   := -I. -I$(INCLUDES_DIR)
+USER_INCLUDES   := -I$(SRCDIR)/$(CURDIR) -I$(INCLUDES_DIR)
 
 INCLUDES        := $(USER_INCLUDES) $(OS_INCLUDES)
 CFLAGS          := $(INCLUDES)
@@ -77,8 +77,8 @@ OBJECTS =  \
 
 #MM bgui-setup
 bgui-setup : makedirs
-	@$(CP) s/Package-Startup $(BGUISDIR)
-	@$(CP) s/Package-Shutdown $(BGUISDIR)
+	@$(CP) $(SRCDIR)/$(CURDIR)/s/Package-Startup $(BGUISDIR)
+	@$(CP) $(SRCDIR)/$(CURDIR)/s/Package-Shutdown $(BGUISDIR)
 	$(MKDIR) $(AROS_PACKAGES)
 	$(ECHO) "Extras:BGUI" >$(AROS_PACKAGES)/BGUI
         
@@ -109,58 +109,58 @@ makedirs :
 
         
 $(OBJDIR)/bgui.library_rev.h: bgui.library_rev.rev
-	@$(CP) bgui.library_rev.rev $(OBJDIR)/bgui.library_rev.h
+	@$(CP) $< $(OBJDIR)/bgui.library_rev.h
 
 $(INCLUDES_DIR)/libraries/bgui.h : include/libraries_bgui.h
-	@$(CP) include/libraries_bgui.h $@
+	@$(CP) $< $@
 
 $(INCLUDES_DIR)/libraries/bgui_macros.h : include/libraries_bgui_macros.h
-	@$(CP) include/libraries_bgui_macros.h $@
+	@$(CP) $< $@
 
 $(INCLUDES_DIR)/bgui/bgui_compilerspecific.h : include/bgui_compilerspecific.h
-	@$(CP) include/bgui_compilerspecific.h $@
+	@$(CP) $< $@
 
 $(INCLUDES_DIR)/bgui/bgui.h : include/bgui.h
-	@$(CP) include/bgui.h $@
+	@$(CP) $< $@
 
 $(INCLUDES_DIR)/bgui/bgui_image.h : include/bgui_image.h
-	@$(CP) include/bgui_image.h $@
+	@$(CP) $< $@
 
 $(INCLUDES_DIR)/bgui/bgui_locale.h : include/bgui_locale.h
-	@$(CP) include/bgui_locale.h $@
+	@$(CP) $< $@
 
 $(INCLUDES_DIR)/bgui/bgui_asl.h : include/bgui_asl.h
-	@$(CP) include/bgui_asl.h $@
+	@$(CP) $< $@
 
 $(INCLUDES_DIR)/bgui/bgui_arexx.h : include/bgui_arexx.h
-	@$(CP) include/bgui_arexx.h $@
+	@$(CP) $< $@
 
 $(INCLUDES_DIR)/bgui/bgui_cx.h : include/bgui_cx.h
-	@$(CP) include/bgui_cx.h $@
+	@$(CP) $< $@
 
 $(INCLUDES_DIR)/bgui/bgui_obsolete.h : include/bgui_obsolete.h
-	@$(CP) include/bgui_obsolete.h $@
+	@$(CP) $< $@
 
 $(INCLUDES_DIR)/bgui/bgui_macros.h : include/bgui_macros.h
-	@$(CP) include/bgui_macros.h $@
+	@$(CP) $< $@
 
 $(INCLUDES_DIR)/bgui/bgui_proto.h : include/bgui_proto.h
-	@$(CP) include/bgui_proto.h $@
+	@$(CP) $< $@
 
 $(INCLUDES_DIR)/bgui/bgui_pragmas.h : include/bgui_pragmas.h
-	@$(CP) include/bgui_pragmas.h $@
+	@$(CP) $< $@
 
 $(INCLUDES_DIR)/pragma/bgui_lib.h : include/pragma/bgui_lib.h
-	@$(CP) include/pragma/bgui_lib.h $@
+	@$(CP) $< $@
 
 $(INCLUDES_DIR)/bgui/bgui_lib.fd : include/bgui_lib.fd
-	@$(CP) include/bgui_lib.fd $@
+	@$(CP) $< $@
 
 $(INCLUDES_DIR)/clib/bgui_protos.h : include/aros/bgui_protos_clib.h
-	@$(CP) include/aros/bgui_protos_clib.h $@
+	@$(CP) $< $@
 
 $(INCLUDES_DIR)/defines/bgui.h : include/aros/bgui_defines.h
-	@$(CP) include/aros/bgui_defines.h $@
+	@$(CP) $< $@
 
 $(INCLUDES_DIR)/proto/bgui.h : include/bgui_proto_aros.h
 	@$(CP) $^ $@
@@ -198,7 +198,7 @@ $(OBJDIR)/bin/bgui.library.$(BUILD_TYPE) : $(OBJDIR)/libtag.o \
 		$(OBJDIR)/plaslclasses$(o) \
 		$(OBJDIR)/endtag.o
 #	if ($(BUILD_TYPE) eq D)
-	@$(CC) $(DEBUG_OPTIONS) $(DEFINES) -c ver.c -o $(OBJDIR)/ver.o
+	@$(CC) $(DEBUG_OPTIONS) $(DEFINES) -c $(SRCDIR)/$(CURDIR)/ver.c -o $(OBJDIR)/ver.o
 #	endif
 #	ifeq ($(BUILD_TYPE),S)
 #	@$(CC) $(STANDARD_OPTIONS) $(DEFINES) -c ver.c -o $(OBJDIR)/ver.o

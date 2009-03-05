@@ -31,7 +31,7 @@ $(EXEDIR)/test/arostest.README : test/arostest.README | $(EXEDIR)
 contrib-development-nasm-asm-includes: | $(EXEDIR)/include
 	$(foreach f, \
 		$(wildcard $(AROS_INCLUDES)/defines/*.h), \
-		$(AWK) -f genasminc.awk $(f) \
+		$(AWK) -f $(SRCDIR)/$(CURDIR)/genasminc.awk $(f) \
 			>$(EXEDIR)/include/$(notdir $(f:%.h=%.i)) ; )
 	$(foreach f, \
 		$(wildcard $(EXEDIR)/include/*.i), \

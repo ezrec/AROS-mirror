@@ -15,12 +15,12 @@ GNU_REPOSITORY := gnu://
 
 %fetch_and_build mmake=contrib-gnu-crosstools-binutils package=binutils version=$(BINUTILS_VERSION) compiler=host \
 	package_repo="$(GNU_REPOSITORY)/binutils" \
-	patch_repo="$(TOP)/contrib/gnu/binutils" patch=yes \
+	patch_repo="$(SRCDIR)/contrib/gnu/binutils" patch=yes \
 	prefix="$(TOOLDIR)" \
 	extraoptions="--target=$(AROS_TARGET_CPU)-aros --bindir=$(TOOLDIR)"
 
 %fetch_and_build mmake=contrib-gnu-crosstools-gcc package=gcc version=$(GCC_VERSION) compiler=host \
 	package_repo="$(GNU_REPOSITORY)/gcc/gcc-$(GCC_VERSION)" \
-	patch_repo="$(TOP)/contrib/gnu/gcc" patch=yes \
+	patch_repo="$(SRCDIR)/contrib/gnu/gcc" patch=yes \
 	prefix="$(TOOLDIR)" \
 	extraoptions="--target=$(AROS_TARGET_CPU)-aros --bindir=$(TOOLDIR) --enable-languages=$(GCC_LANGUAGES) --enable-sjlj-exceptions --enable-long-long --enable-version-specific-runtime-libs --with-headers=$(AROS_DEVELOPMENT)/include --with-libs=$(AROS_DEVELOPMENT)/lib"

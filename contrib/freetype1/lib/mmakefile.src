@@ -27,7 +27,7 @@ FILESDIR := \
       extend/ftxsbit \
       extend/ftxwidth
 
-USER_INCLUDES := -I. -Iarch/amigaos -I$(AROS_INCLUDES)/freetype1
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR) -I$(SRCDIR)/$(CURDIR)/arch/amigaos -I$(AROS_INCLUDES)/freetype1
 
 %build_linklib mmake=contrib-freetype1-linklib libname=freetype1 files=$(FILESDIR)
 

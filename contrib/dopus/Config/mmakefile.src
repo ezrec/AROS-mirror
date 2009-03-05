@@ -1,5 +1,5 @@
 # $Id$
-include ../make.cfg
+include $(SRCDIR)/$(CURDIR)/../make.cfg
 
 FILES := main main1 main2 main3 main4 main5 \
          screen screen_arrows screen_colors screen_fonts screen_palette \

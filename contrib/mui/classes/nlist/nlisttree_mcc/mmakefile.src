@@ -3,7 +3,7 @@ include $(TOP)/config/make.cfg
 
 #MM contrib-zune-classes-nlisttree-class : includes linklibs
 
-USER_INCLUDES = -I../commonaros
+USER_INCLUDES = -I$(SRCDIR)/$(CURDIR)/../commonaros
 
 %build_module_simple mmake=contrib-zune-classes-nlisttree-class \
   modname=NListtree modtype=mcc moduledir=$(CONTRIBDIR)/Zune/MCC_NList/Classes/Zune \

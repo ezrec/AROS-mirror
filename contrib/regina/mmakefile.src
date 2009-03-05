@@ -30,7 +30,7 @@ OFILES := \
   instore extlib yaccsrc lexsrc wrappers options \
   rexxbif arscmd arxfuncs amifuncs
 
-USER_INCLUDES := -I.
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)
 USER_CFLAGS := -DNO_EXTERNAL_QUEUES -DAREXXIO
 
 FILES := $(OFILES) rexx nosaa mt_notmt

@@ -3,7 +3,7 @@ include $(TOP)/config/make.cfg
 
 #MM contrib-zune-classes-nfloattext-class : setup includes linklibs contrib-zune-classes-nlist
 
-USER_INCLUDES = -I../commonaros
+USER_INCLUDES = -I$(SRCDIR)/$(CURDIR)/../commonaros
 
 %build_module_simple mmake=contrib-zune-classes-nfloattext-class \
   modname=NFloattext modtype=mcc moduledir=$(CONTRIBDIR)/Zune/MCC_NList/Classes/Zune \

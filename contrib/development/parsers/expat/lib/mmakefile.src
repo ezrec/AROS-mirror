@@ -12,7 +12,7 @@ INCLUDE_FILES := expat.h
 
 %copy_includes
 
-USER_CFLAGS   := -I.. -D'VERSION="1.95.2"'
+USER_CFLAGS   := -I$(SRCDIR)/$(CURDIR)/.. -D'VERSION="1.95.2"'
 
 %build_linklib mmake=linklibs-expat libname=expat files="xmlparse xmlrole xmltok"
 

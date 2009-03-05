@@ -12,7 +12,7 @@ FILES := library \
 	 scale \
 	 utils
 
-USER_INCLUDES := -I../../include/aros
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../../include/aros
 
 %build_module mmake=contrib-zune-classes-thebutton-mcc \
   modname=TheButton modtype=mcc moduledir=Extras/Zune/MCC_TheBar/Classes/Zune \

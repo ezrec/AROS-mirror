@@ -1,7 +1,7 @@
 # Copyright © 2004, The AROS Development Team. All rights reserved.
 # $Id$
 
-include make.cfg
+include $(SRCDIR)/$(CURDIR)/make.cfg
 
 SFILES := Package-Startup
 

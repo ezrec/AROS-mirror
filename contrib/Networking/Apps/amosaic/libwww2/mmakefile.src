@@ -54,8 +54,8 @@ USER_CFLAGS := $(USER_CFLAGS) -DUSE_DIRENT
 #MM
 includes-copy :
 	$(MKDIR) $(GENINCDIR)/libwww2
-	@$(CP) *.h $(GENINCDIR)/libwww2
+	@$(CP) $(SRCDIR)/$(CURDIR)/*.h $(GENINCDIR)/libwww2
 	$(MKDIR) $(AROS_INCLUDES)/libwww2
-	@$(CP) *.h $(AROS_INCLUDES)/libwww2
+	@$(CP) $(SRCDIR)/$(CURDIR)/*.h $(AROS_INCLUDES)/libwww2
 
 %common

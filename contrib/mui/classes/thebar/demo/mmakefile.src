@@ -18,7 +18,7 @@ FILES := demo1 \
 	 demo8 \
 	 demo9
 
-USER_INCLUDES := -I../include/aros
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include/aros
 
 %build_progs mmake=contrib-zune-classes-thebar-demos files=$(FILES) \
     targetdir=$(TARGETDIR) \

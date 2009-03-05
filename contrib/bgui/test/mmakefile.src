@@ -3,7 +3,7 @@
 # Makefile for the BGUI Test programs
 
 include $(TOP)/config/make.cfg
-include ../make.cfg
+include $(SRCDIR)/$(CURDIR)/../make.cfg
 
 FILES = test1 \
 	test2 \

@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-LOCALINCLUDES = -I. -I../Include
+LOCALINCLUDES = -I$(SRCDIR)/$(CURDIR) -I$(SRCDIR)/$(CURDIR)/../Include
 
 LIBS := -L$(LIBDIR) -lamiga
 
@@ -16,7 +16,7 @@ $(AROS_INCLUDES)/proto/xem.h : aros/xem_proto.h
 
 $(OBJDIR)/ASCII/%_aros.c : source/ASCII/%.c
 	@$(ECHO) Generating $@...
-	@$(ARCHTOOL) -R include/xem_proto.h  $^ $@ aros/xem_defines_aros.h >/dev/null
+	@cd $(SRCDIR)/$(CURDIR); $(ARCHTOOL) -R include/xem_proto.h  $^ $@ aros/xem_defines_aros.h >/dev/null
 
 $(OBJDIR)/%.o : $(OBJDIR)/aros_src/%_aros.c
 	%compile_q opt="$(CFLAGS) $(LOCALINCLUDES) $(DEFINES)"

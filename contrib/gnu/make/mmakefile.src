@@ -29,7 +29,7 @@ include $(TOP)/config/make.cfg
 TARGETDIR := $(AROS_DEVELOPMENT)/bin
 
 USER_CFLAGS := -DHAVE_CONFIG_H -D__AROS__ -D_AMIGA \
-    -DFILE_TIMESTAMP_HI_RES=0 -DINCLUDEDIR="\".\"" -DLIBDIR="\".\"" -DNO_ARCHIVES -I. -Iglob
+    -DFILE_TIMESTAMP_HI_RES=0 -DINCLUDEDIR="\".\"" -DLIBDIR="\".\"" -DNO_ARCHIVES -I$(SRCDIR)/$(CURDIR) -I$(SRCDIR)/$(CURDIR)/glob
 
 FILES := commands job dir file misc main read remake \
     rule implicit default variable expand function \

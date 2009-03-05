@@ -18,7 +18,7 @@ FILES := About \
 	 Cardgame
 
 EXEDIR := $(CONTRIBDIR)/Games/Soliton
-USER_INCLUDES := -I../images
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../images
 
 #MM aminet-games-think-soliton-program : setup-soliton-catalogs
 

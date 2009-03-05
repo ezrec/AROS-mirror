@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 DESTDIR	:= $(CONTRIBDIR)/DiskSpeed
 
-USER_CFLAGS := -I./ -I./diskspeed -I./scsispeed
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR) -I$(SRCDIR)/$(CURDIR)/diskspeed -I$(SRCDIR)/$(CURDIR)/scsispeed
 
 DISKSHARED := locale diskspeed/DiskSpeedCPU
 

@@ -8,7 +8,7 @@ FILES := main alloctab libs madmatrix
 
 EXEDIR := $(CONTRIBDIR)/aminet
 
-USER_INCLUDES := -I../libs/muimaster
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../libs/muimaster
 
 #MM contrib-aminet-games-think-madmatrix : includes linklibs
 

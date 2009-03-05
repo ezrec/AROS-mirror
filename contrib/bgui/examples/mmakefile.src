@@ -3,7 +3,7 @@
 # Makefile for the BGUI Example programs
 
 include $(TOP)/config/make.cfg
-include ../make.cfg
+include $(SRCDIR)/$(CURDIR)/../make.cfg
 
 FILES = AddButtons \
 	Area \

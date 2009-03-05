@@ -1,13 +1,13 @@
 include $(TOP)/config/make.cfg
-include ../make.cfg
+include $(SRCDIR)/$(CURDIR)/../make.cfg
 
 BINDIR = $(AROSDIR)
 LIBDIR = $(AROS_LIB)
 OBJDIR = $(GENDIR)/$(CURDIR)
 
-COMMONINCLUDES := -Iinclude -I../
-LAYOUTGROUPINCLUDES := $(COMMONINCLUDES) -Iinclude -I./LayoutGroup
-TREEVIEWINCLUDES := $(COMMONINCLUDES) -I./TreeView/include
+COMMONINCLUDES := -I$(SRCDIR)/$(CURDIR)/include -I$(SRCDIR)/$(CURDIR)/../
+LAYOUTGROUPINCLUDES := $(COMMONINCLUDES) -I$(SRCDIR)/$(CURDIR)/include -I$(SRCDIR)/$(CURDIR)/LayoutGroup
+TREEVIEWINCLUDES := $(COMMONINCLUDES) -I$(SRCDIR)/$(CURDIR)/TreeView/include
 
 EXELIBS = -L$(LIBDIR) -lamiga -larossupport -larosc -larosm -lbgui -lautoinit
 

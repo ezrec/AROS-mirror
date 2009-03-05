@@ -1,5 +1,5 @@
 # $Id$
-include ../make.cfg
+include $(SRCDIR)/$(CURDIR)/../make.cfg
 
 FILES	:= data
 

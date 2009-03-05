@@ -15,7 +15,7 @@ FILES := backgroundadjust \
 	 poppen \
 	 utils
 
-USER_INCLUDES := -I../include/aros
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include/aros
 
 %build_module mmake=contrib-zune-classes-thebar-mcp \
   modname=TheBar modtype=mcp moduledir=Extras/Zune/MCC_TheBar/Classes/Zune \
@@ -40,24 +40,24 @@ contrib-zune-classes-thebar-mcp-catalogs : loc.h loc.c \
     $(TARGETDIR)/français/TheBar.catalog
 
 loc.h: TheBar.cd loc_h.sd
-	@$(FLEXCAT) TheBar.cd loc.h=loc_h.sd
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/TheBar.cd loc.h=$(SRCDIR)/$(CURDIR)/loc_h.sd
 
 $(TARGETDIR)/deutsch/TheBar.catalog: locale/german.ct
 	@$(MKDIR) $(TARGETDIR)/deutsch
-	@$(FLEXCAT) TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/TheBar.cd $< CATALOG $@
 
 $(TARGETDIR)/czech/TheBar.catalog: locale/czech.ct
 	@$(MKDIR) $(TARGETDIR)/czech
-	@$(FLEXCAT) TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/TheBar.cd $< CATALOG $@
 
 $(TARGETDIR)/français/TheBar.catalog: locale/french.ct
 	@$(MKDIR) $(TARGETDIR)/français
-	@$(FLEXCAT) TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/TheBar.cd $< CATALOG $@
 
 $(TARGETDIR)/svenska/TheBar.catalog: locale/swedish.ct
 	@$(MKDIR) $(TARGETDIR)/svenska
-	@$(FLEXCAT) TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/TheBar.cd $< CATALOG $@
 
 $(TARGETDIR)/italiano/TheBar.catalog: locale/italian.ct
 	@$(MKDIR) $(TARGETDIR)/italiano
-	@$(FLEXCAT) TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/TheBar.cd $< CATALOG $@

@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 #MM linklibs-xaosengine : includes setup-gfx-xaos
 
-USER_CFLAGS := -DAROS -I../include -O2 -fstrength-reduce -ffast-math -fomit-frame-pointer -funroll-loops
+USER_CFLAGS := -DAROS -I$(SRCDIR)/$(CURDIR)/../include -I../include -O2 -fstrength-reduce -ffast-math -fomit-frame-pointer -funroll-loops
 
 FILES := \
 	formulas \

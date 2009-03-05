@@ -16,7 +16,7 @@ FILES := brc1 \
 	 spacer \
 	 utils
 
-USER_INCLUDES := -I../mcp -I../include/aros
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../mcp -I$(SRCDIR)/$(CURDIR)/../include/aros
 
 %build_module mmake=contrib-zune-classes-thebar-mcc \
   modname=TheBar modtype=mcc moduledir=Extras/Zune/MCC_TheBar/Classes/Zune \

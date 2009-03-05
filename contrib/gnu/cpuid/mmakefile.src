@@ -1,4 +1,4 @@
-include ../make.cfg
+include $(SRCDIR)/$(CURDIR)/../make.cfg
 
 EXEDIR := $(GNUDIR)/cpuid/bin
 FILES  := cpuid

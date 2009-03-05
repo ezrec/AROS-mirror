@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 #MM linklibs-xaosuiaros : includes setup-gfx-xaos
 
-USER_CFLAGS := -DAROS -I../../../include
+USER_CFLAGS := -DAROS -I$(SRCDIR)/$(CURDIR)/../../../include -I../../../include
 
 %build_linklib mmake=linklibs-xaosuiaros libname=xaosuiaros files=ui_aros
 

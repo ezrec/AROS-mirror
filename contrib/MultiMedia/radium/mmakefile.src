@@ -109,7 +109,7 @@ FILES := $(OBJ)
 
 EXEDIR := $(CONTRIBDIR)/MultiMedia/Audio/Radium
 
-USER_CFLAGS := -I$(AD) -I$(AR) $(DEFINES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/$(AD) -I$(SRCDIR)/$(CURDIR)/$(AR) $(DEFINES)
 
 %build_prog mmake=contrib-radium \
     progname=Radium targetdir=$(EXEDIR) \

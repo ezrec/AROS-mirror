@@ -1,7 +1,7 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-INCLUDE_FILES := $(wildcard *.h)
+INCLUDE_FILES := $(call WILDCARD, *.h)
 %copy_includes path=usb
 
 %common

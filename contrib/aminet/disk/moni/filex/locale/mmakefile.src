@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 DESTDIR := $(CONTRIBDIR)/Misc/aminet/FileX/Catalogs
 
-CATALOGS 	:= $(basename $(wildcard *.ct))
+CATALOGS 	:= $(basename $(call WILDCARD, *.ct))
 CATDESC 	:= FileX
 CATSUBDIR	:= 
 CATNAME 	:= FileX
@@ -22,14 +22,14 @@ create_catalogs: $(OBJS)
 	
 $(DESTDIR)/%/$(CATSUBDIR)$(CATNAME).catalog : %.ct $(CATDESC).cd
 	@$(ECHO) "Creating $(CATNAME) catalog for language $*."
-	@$(IF) $(FLEXCAT) $(CATDESC).cd $*.ct CATALOG=$(DESTDIR)/$*/$(CATSUBDIR)$(CATNAME).catalog ; then $(NOP) ; else $(NOP) ; fi ;
+	@$(IF) $(FLEXCAT) $(SRCDIR)/$(CURDIR)/$(CATDESC).cd $< CATALOG=$(DESTDIR)/$*/$(CATSUBDIR)$(CATNAME).catalog ; then $(NOP) ; else $(NOP) ; fi ;
 	
 create_include : $(INCLUDE).h
 	@$(NOP)
 
 $(INCLUDE).h : $(CATDESC).cd
 	@$(ECHO) "Creating $(CATNAME) catalog include file $(INCLUDE).h"
-	@$(FLEXCAT) $(CATDESC).cd $(INCLUDE).h=FileX.sd
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/$(CATDESC).cd $(INCLUDE).h=$(SRCDIR)/$(CURDIR)/FileX.sd
 
 create_dirs:
 	@$(FOR) dir in $(CATDIRS) ; do \

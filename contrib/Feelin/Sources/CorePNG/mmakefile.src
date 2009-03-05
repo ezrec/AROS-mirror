@@ -8,7 +8,7 @@ LIBPNGDIR = libpng
 CLASSCOREPNGFILES = Project \
 	    object
 
-USER_CFLAGS := -I$(FEELINTOP)/Include -I./
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)../../Include -I$(SRCDIR)/$(CURDIR)
 
 CLASSCOREPNG_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSCOREPNGFILES))))
 

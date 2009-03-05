@@ -7,10 +7,10 @@ CATALOGDIR	:= $(DATADIR)/catalogs
 EXAMPLEDIR	:= $(DATADIR)/examples
 TUTORIALDIR	:= $(DATADIR)/tutorial
 
-INCLUDES	:= src/include/config.h src/include/aconfig.h
-CATALOGS	:= $(filter-out catalogs/CVS, $(wildcard catalogs/*))
-EXAMPLES	:= $(filter-out examples/CVS, $(wildcard examples/*))
-TUTORIALS	:= $(filter-out tutorial/CVS, $(wildcard tutorial/*))
+INCLUDES	:= $(TOP)/$(CURDIR)/src/include/config.h $(TOP)/$(CURDIR)/src/include/aconfig.h
+CATALOGS	:= $(filter-out catalogs/CVS, $(call WILDCARD, catalogs/*))
+EXAMPLES	:= $(filter-out examples/CVS, $(call WILDCARD, examples/*))
+TUTORIALS	:= $(filter-out tutorial/CVS, $(call WILDCARD, tutorial/*))
 
 CATALOGFILES	:= $(foreach f, $(CATALOGS), $(CATALOGDIR)/$(notdir $(f)))
 EXAMPLEFILES	:= $(foreach f, $(EXAMPLES), $(EXAMPLEDIR)/$(notdir $(f)))
@@ -43,12 +43,12 @@ setup-gfx-xaos : $(INCLUDES) $(CATALOGFILES) $(EXAMPLEFILES) $(TUTORIALFILES) $(
 
 #MM
 setup-gfx-xaos-directories :
-	%mkdirs_q $(DESTDIR) $(DATADIR) $(CATALOGDIR) $(EXAMPLEDIR) $(TUTORIALDIR) $(OBJDIR)
+	%mkdirs_q $(DESTDIR) $(DATADIR) $(CATALOGDIR) $(EXAMPLEDIR) $(TUTORIALDIR) $(OBJDIR) $(TOP)/$(CURDIR)/src/include
 
-src/include/config.h : src/include/config/config.aros
+$(TOP)/$(CURDIR)/src/include/config.h : src/include/config/config.aros
 	@$(CP) $< $@
 
-src/include/aconfig.h : src/include/config/aconfig.aros
+$(TOP)/$(CURDIR)/src/include/aconfig.h : src/include/config/aconfig.aros
 	@$(CP) $< $@
 
 $(CATALOGDIR)/% : catalogs/%

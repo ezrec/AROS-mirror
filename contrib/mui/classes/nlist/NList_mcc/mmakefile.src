@@ -21,7 +21,7 @@ FILES := NList_mcc  	\
 	 NList_img  	\
 	 NList_img2 	
 	 
-USER_INCLUDES := -I../commonaros
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../commonaros
 
 %build_module_simple mmake=contrib-zune-classes-nlist-class \
   modname=NList modtype=mcc moduledir=$(CONTRIBDIR)/Zune/MCC_NList/Classes/Zune \

@@ -3,7 +3,7 @@
 # Makefile to make BGUI Prefs program.
 
 include $(TOP)/config/make.cfg
-include ../make.cfg
+include $(SRCDIR)/$(CURDIR)/../make.cfg
 
 FILES := BGUIPrefs
 

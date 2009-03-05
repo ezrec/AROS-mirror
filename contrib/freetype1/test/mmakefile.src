@@ -20,7 +20,7 @@ EXEDIR := $(CONTRIBDIR)/freetype1
 #MM      contrib-freetype1-test-ftzoom
 
 
-USER_INCLUDES := -I. -I../lib -I../lib/extend -I../lib/arch/amigaos #-Iarch/amigaos
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR) -I$(SRCDIR)/$(CURDIR)/../lib -I$(SRCDIR)/$(CURDIR)/../lib/extend -I$(SRCDIR)/$(CURDIR)/../lib/arch/amigaos #-Iarch/amigaos
 
 GFILES := gmain display blitter arch/amigaos/gw_amiga
 
