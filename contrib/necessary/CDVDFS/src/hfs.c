@@ -10,6 +10,7 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 06-Mar-09 error   - Removed madness, fixed insanity. Cleanup started
  * 03-Nov-94   fmu   - Fixed bug in HFS_Read_From_File().
  *                   - Truncate file names to 30 characters.
  * 15-Apr-93   fmu   - Improved conversion routines.
@@ -107,16 +108,7 @@ void Convert_HFS_Spaces (char *p_buf, int p_buf_len)
 }
 
 t_uchar *Read_Block(CDROM *p_cdrom, t_ulong p_block) {
-	if (!Read_Sector(p_cdrom, p_block >> 2))
-		return NULL;
-
-	return p_cdrom->buffer + ((p_block & 3) << 9);
-}
-
-t_uchar *Read_Contiguous_Blocks
-	(CDROM *p_cdrom, t_ulong p_block, t_ulong p_last_block)
-{
-	if (!Read_Contiguous_Sectors(p_cdrom, p_block >> 2, p_last_block >> 2))
+	if (!Read_Chunk(p_cdrom, p_block >> 2))
 		return NULL;
 
 	return p_cdrom->buffer + ((p_block & 3) << 9);
@@ -629,64 +621,107 @@ void HFS_Close_Obj(CDROM_OBJ *p_obj)
 	FreeMem (p_obj, sizeof (CDROM_OBJ));
 }
 
-int HFS_Read_From_File(CDROM_OBJ *p_file, char *p_buffer, int p_buffer_length) {
-uint32_t block;
-int remain_block, remain_file, remain;
-int len;
-CDROM *cd;
-int pos;
-int buf_pos = 0;
-int todo;
-t_bool data_fork = OBJ(p_file,data_fork);
-t_ulong first_block;
-t_ulong last_block;
-t_ulong data_length = (data_fork ? OBJ(p_file,cat_rec).f.LgLen :
-		OBJ(p_file,cat_rec).f.RLgLen);
+int HFS_Read_From_File(CDROM_OBJ *p_file, char *p_buffer, int p_buffer_length) 
+{
+    uint32_t block;
+    int remain_block, remain_file, remain;
+    int len;
+    CDROM *cd;
+    int pos;
+    int buf_pos = 0;
+    int todo;
+    t_bool data_fork = OBJ(p_file,data_fork);
+    t_ulong first_block;
+    t_ulong last_block;
+    t_ulong data_length = (data_fork ? OBJ(p_file,cat_rec).f.LgLen :
+	    OBJ(p_file,cat_rec).f.RLgLen);
 
-	if (p_file->pos == data_length)
-	{
-		/* at end of file: */
-		return 0;
-	}
+    if (p_file->pos == data_length)
+    {
+	/* at end of file: */
+	return 0;
+    }
 
-	cd = p_file->volume->cd;
-	first_block = AB_to_Block
-		(
-			p_file->volume,
-			data_fork ?
-				OBJ(p_file,cat_rec).f.ExtRec[0].StABN :
-				OBJ(p_file,cat_rec).f.RExtRec[0].StABN
-		);
-	block = first_block + (p_file->pos >> 9);
-	last_block = first_block + ((data_length-1) >> 9);
-	todo = p_buffer_length;
+    cd = p_file->volume->cd;
+    first_block = AB_to_Block
+	(
+	 p_file->volume,
+	 data_fork ?
+	 OBJ(p_file,cat_rec).f.ExtRec[0].StABN :
+	 OBJ(p_file,cat_rec).f.RExtRec[0].StABN
+	);
+    block = first_block + (p_file->pos >> 9);
+    last_block = first_block + ((data_length-1) >> 9);
+    todo = p_buffer_length;
 
-	while (todo)
-	{
+    while (todo)
+    {
 	t_uchar *data;
 
-		if (!(data = Read_Contiguous_Blocks(cd, block, last_block)))
-		{
-			global->iso_errno = ISOERR_SCSI_ERROR;
-			return -1;
-		}
-
-		remain_block = 512 - (pos = (p_file->pos & 511));
-		remain_file = data_length - p_file->pos;
-		remain = (remain_block < remain_file) ? remain_block : remain_file;
-		len = (todo < remain) ? todo : remain;
-		CopyMem ((APTR) (data + pos), (APTR) (p_buffer + buf_pos), len);
-		buf_pos += len;
-		p_file->pos += len;
-		todo -= len;
-
-		if (p_file->pos >= data_length)
-			break;
-
-		block++;
+	if (0 == Read_Chunk(cd, block >> 2))
+	{
+	    global->iso_errno = ISOERR_SCSI_ERROR;
+	    return -1;
 	}
 
-	return buf_pos;
+	data = cd->buffer + ((block & 3) << 9);
+
+	/*
+	 * this is offset within first block
+	 */
+	pos = p_file->pos & 511;
+
+	/*
+	 * depending on logical block location, we will have up to 32kB of data here.
+	 * we always read in 32768bytes chunks, so the first of 16 sectors in group yields largest amount
+	 */
+	remain_block = (SCSI_BUFSIZE << 4) - ((block << 9) & ((SCSI_BUFSIZE << 4) - 1)) - pos;
+
+	/*
+	 * how much data left in a file do we have?
+	 */
+	remain_file = data_length - p_file->pos;
+
+	/*
+	 * and how much can we read (file vs block)
+	 */
+	remain = (remain_block < remain_file) ? remain_block : remain_file;
+
+	/*
+	 * last: how much the *user* wants to read?
+	 */
+	len = (todo < remain) ? todo : remain;
+
+	/*
+	 * copy memory block
+	 */
+	CopyMem ((APTR) (data + pos), (APTR) (p_buffer + buf_pos), len);
+
+	/*
+	 * update position in user buffer
+	 * and file offset
+	 * reduce amount of bytes to be read
+	 */
+	buf_pos += len;
+	p_file->pos += len;
+	todo -= len;
+
+	/*
+	 * fin?
+	 */
+	if (p_file->pos >= data_length)
+	    break;
+
+	/*
+	 * here's the trick:
+	 * - HFS block size is 512bytes (so we have up to 64 such blocks in a chunk)
+	 * - block + 64 moves us to next chunk, while
+	 * - &~63 puts us at the beginning of it.
+	 */
+	block = (block + 64) &~ 63 ;
+    }
+
+    return buf_pos;
 }
 
 t_bool HFS_Cdrom_Info(CDROM_OBJ *p_obj, CDROM_INFO *p_info) {

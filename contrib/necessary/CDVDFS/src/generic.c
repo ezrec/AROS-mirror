@@ -89,15 +89,6 @@ t_protocol Which_Protocol
 	(CDROM *p_cdrom,t_bool p_use_rock_ridge, t_bool p_use_joliet, int *p_skip,
 	 t_ulong *p_offset, t_ulong *p_svd_offset)
 {
-
-	if (p_cdrom->model == MODEL_TOSHIBA_3401)
-	{
-		if (Is_XA_Mode_Disk(p_cdrom))
-			Mode_Select(p_cdrom, 0x81, 2048);
-		else
-			Mode_Select(p_cdrom, 0x00, 2048);
-	}
-
 	if (global->g_hfs_first && Uses_HFS_Protocol(p_cdrom, p_skip))
 		return PRO_HFS;
 

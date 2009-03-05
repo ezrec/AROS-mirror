@@ -11,6 +11,7 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 06-Mar-09 error     - Removed madness, fixed insanity. Cleanup started
  * 18-Aug-07 sonic     - Now builds on AROS.
  * 08-Apr-07 sonic     - Removed "TRACKDISK" option.
  *                     - Removed dealing with block length.
@@ -119,13 +120,13 @@ void Check_Optional_Path_Tables (void)
 
     for (;;) {
     
-      if (!Read_Sector (global->g_cd, loc1)) {
+      if (!Read_Chunk (global->g_cd, loc1)) {
         printf ("ERROR: illegal sector %lu\n", loc1);
         exit (1);
       }
       buf1 = global->g_cd->buffer;
     
-      if (!Read_Sector (global->g_cd, loc2)) {
+      if (!Read_Chunk (global->g_cd, loc2)) {
         printf ("ERROR: illegal sector %lu\n", loc2);
         exit (1);
       }
@@ -154,7 +155,7 @@ void Get_Path_Table_Record (t_uchar *p_buf, t_ulong p_loc, t_ulong *p_offset)
   t_ulong sector = p_loc + (*p_offset >> 11);
   int len;
 
-  if (!Read_Sector (global->g_cd, sector)) {
+  if (!Read_Chunk (global->g_cd, sector)) {
     printf ("ERROR: illegal sector %lu\n", sector);
     exit (1);
   }
@@ -165,7 +166,7 @@ void Get_Path_Table_Record (t_uchar *p_buf, t_ulong p_loc, t_ulong *p_offset)
   if (len + (*p_offset & 2047) > 2048) {
     int part1_len = 2048 - (*p_offset & 2047);
     memcpy (p_buf, global->g_cd->buffer + (*p_offset & 2047), part1_len);
-    if (!Read_Sector (global->g_cd, sector+1)) {
+    if (!Read_Chunk (global->g_cd, sector+1)) {
       printf ("ERROR: illegal sector %lu\n", sector+1);
       exit (1);
     }
@@ -296,7 +297,7 @@ void Check_PVD (void)
   prim_vol_desc *pvd;
 
   do {
-    if (!Read_Sector (global->g_cd, loc)) {
+    if (!Read_Chunk (global->g_cd, loc)) {
       printf ("ERROR: illegal sector %d\n", loc);
       exit (1);
     }
@@ -314,7 +315,7 @@ void Check_PVD (void)
     loc++;
   } while (pvd->type != 255);
 
-  if (!Read_Sector (global->g_cd, pvd_pos)) {
+  if (!Read_Chunk (global->g_cd, pvd_pos)) {
     printf ("ERROR: illegal sector %d\n", loc);
     exit (1);
   }

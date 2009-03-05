@@ -9,6 +9,12 @@
 #include "globals.h"
 #include "aros_stuff.h"
 #include "clib_stuff.h"
+ 
+/*
+ * History:
+ *
+ * 06-Mar-09 error   - Removed madness, fixed insanity. Cleanup started
+ */
 
 extern struct Globals *global;
 
@@ -24,7 +30,7 @@ t_bool Uses_Joliet_Protocol(CDROM *p_cdrom, t_ulong offset, t_ulong *p_svdoffset
 
 	for (svd_offset = 17;;svd_offset++)
 	{
-		if (!Read_Sector(p_cdrom, svd_offset + offset))
+		if (!Read_Chunk(p_cdrom, svd_offset + offset))
 			return FALSE;
 		svd = (sup_vol_desc *)p_cdrom->buffer;
 		if (StrNCmp(svd->id, "CD001", 5) != 0)

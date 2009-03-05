@@ -1,5 +1,11 @@
 /* cdrom.h: */
 
+/*
+ * History:
+ *
+ * 06-Mar-09 error     - Removed madness, fixed insanity. Cleanup started
+ */
+
 #ifndef _CDROM_H_
 #define _CDROM_H_
 
@@ -14,21 +20,14 @@
 
 #define SCSI_BUFSIZE 2048
 
-typedef enum model {
-  MODEL_ANY,
-  MODEL_TOSHIBA_3401,
-  MODEL_CDU_8002,
-} t_model;
-
 typedef struct CDROM {
   unsigned char 	*buffer;
   unsigned char		**buffers;
   unsigned char 	*buffer_data;
+  unsigned char		*buffer_io;
   unsigned char		sense[20];
-  t_model		model;
   short			lun;
-  short			std_buffers;
-  short			file_buffers;
+  short			buffers_cnt;
   uint32_t		t_changeint;
   uint32_t		t_changeint2;
   long 			*current_sectors;
@@ -75,18 +74,12 @@ CDROM *Open_CDROM
 		int p_std_buffers,
 		int p_file_buffers
 	);
-int Read_Sector(CDROM *p_cd, long p_sector);
-int Read_Contiguous_Sectors
-	(
-		CDROM *p_cd,
-		long p_sector,
-		long p_last_sector
-	);
+
+int Read_Chunk(CDROM *p_cd, long p_sector);
 void Cleanup_CDROM(CDROM *p_cd);
 int Test_Unit_Ready(CDROM *p_cd);
 int Mode_Select(CDROM *p_cd, int p_on, int p_block_length);
 int Inquire(CDROM *p_cd, t_inquiry_data *p_data);
-int Is_XA_Mode_Disk(CDROM *p_cd);
 t_toc_data *Read_TOC
 	(
 		CDROM *p_cd,
@@ -97,7 +90,6 @@ int Data_Tracks(CDROM *p_cd, uint32_t** p_buf);
 void block2msf (uint32_t blk, unsigned char *msf);
 int Start_Play_Audio(CDROM *p_cd);
 int Stop_Play_Audio(CDROM *p_cd);
-int Block_Length(CDROM *p_cd);
 void Clear_Sector_Buffers (CDROM *p_cd);
 int Find_Last_Session(CDROM *p_cd, uint32_t *p_result);
 

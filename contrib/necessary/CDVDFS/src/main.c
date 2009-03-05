@@ -11,6 +11,7 @@
  * ----------------------------------------------------------------------
  * History:
  *
+ * 06-Mar-09  error  - Removed madness, fixed insanity. Cleanup started
  * 18-Aug-07  sonic  - Now builds on AROS.
  * 06-May-07  sonic  - Added separate "g" option for listing directories in Joliet format.
  *                   - Added support for protection bits and file comments.
@@ -49,8 +50,7 @@
 extern struct Library *SysBase, *DOSBase;
 #endif
 
-#define STD_BUFFERS 10
-#define FILE_BUFFERS 5
+#define STD_BUFFERS 20
 
 #ifdef DEBUG_SECTORS
 void dbprintf (char *p_dummy, ...)
@@ -172,7 +172,7 @@ void Find_Block_Starting_With (CDROM *p_cd, int p_val)
   int i;
   
   for (;;) {
-    if (!Read_Sector (p_cd, sec)) {
+    if (!Read_Chunk (p_cd, sec)) {
       fprintf (stderr, "cannot read sector 16\n");
       exit (1);
     }
@@ -223,7 +223,7 @@ void Show_Primary_Volume_Descriptor (CDROM *p_cd)
 
   if (protocol == PRO_ISO || protocol == PRO_ROCK || protocol == PRO_JOLIET) {
 
-    if (!Read_Sector (p_cd, 16 + offset)) {
+    if (!Read_Chunk (p_cd, 16 + offset)) {
       fprintf (stderr, "cannot read sector %lu\n", 16 + offset);
       exit (1);
     }
@@ -305,7 +305,7 @@ void Show_Directory (CDROM *p_cd, uint32_t p_location, uint32_t p_length)
   int cnt = 0;
   int pos = 0;
   
-  if (!Read_Sector (p_cd, p_location)) {
+  if (!Read_Chunk (p_cd, p_location)) {
     fprintf (stderr, "cannot read sector %lu\n", p_location);
     exit (1);
   }
@@ -321,7 +321,7 @@ void Show_Directory (CDROM *p_cd, uint32_t p_location, uint32_t p_length)
     if (cnt < p_length) {
       printf ("------------------------------------------------------------\n");
       if (pos >= 2048) {
-        if (!Read_Sector (p_cd, ++p_location)) {
+        if (!Read_Chunk (p_cd, ++p_location)) {
           fprintf (stderr, "cannot read sector %lu\n", p_location);
           exit (1);
         }
@@ -335,7 +335,7 @@ void Show_Root_Directory (CDROM *p_cd)
 {
   prim_vol_desc *pvd;
   
-  if (!Read_Sector (p_cd, 16)) {
+  if (!Read_Chunk (p_cd, 16)) {
     fprintf (stderr, "cannot read sector 16\n");
     exit (1);
   }
@@ -531,7 +531,7 @@ void Print_System_Use_Fields (CDROM *p_cd, directory_record *p_dir,
       memcpy (&newloc, buf + system_use_pos + 8, 4);
       memcpy (&offset, buf + system_use_pos + 16, 4);
       memcpy (&length, buf + system_use_pos + 24, 4);
-      if (!Read_Sector (p_cd, newloc))
+      if (!Read_Chunk (p_cd, newloc))
         return;
       buf = p_cd->buffer;
       system_use_pos = offset;
@@ -694,7 +694,7 @@ void Show_Sectors (CDROM *p_cd, int p_sector, int p_cnt)
     return;
   
   for (s=0; s<p_cnt; s++) {
-    if (!Read_Sector (p_cd, p_sector + s)) {
+    if (!Read_Chunk (p_cd, p_sector + s)) {
       fprintf (stderr, "cannot read sector %d\n", p_sector + s);
       exit (1);
     }
@@ -1009,7 +1009,7 @@ int main (int argc, char *argv[])
     ReadUnicodeTable(global->g_unicodetable_name);
 
   global->g_cd = Open_CDROM (global->g_device, global->g_unit, global->g_memory_type,
-  		   STD_BUFFERS, FILE_BUFFERS);
+  		   STD_BUFFERS, 0);
   if (!global->g_cd) {
     fprintf (stderr, "cannot open CDROM, error code = %d\n", global->g_cdrom_errno);
     exit (1);

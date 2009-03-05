@@ -10,6 +10,7 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 06-Mar-09 error   - Removed madness, fixed insanity. Cleanup started
  * 18-Aug-07 sonic   Fixed reading CL and PL fields on little-endian machines
  * 04-Jun-07 sonic   Fixed endianess check in Is_A_Symbolic_Link()
  * 05-May-07 sonic   Added support for RockRidge protection bits and file comments
@@ -144,7 +145,7 @@ unsigned char *buf = (unsigned char *) p_dir;
 			CopyMem(buf + system_use_pos + 8, &newloc, 4);
 			CopyMem(buf + system_use_pos + 16, &offset, 4);
 			CopyMem(buf + system_use_pos + 24, &length, 4);
-			if (!Read_Sector(p_volume->cd, newloc))
+			if (!Read_Chunk(p_volume->cd, newloc))
 				return 0;
 			buf = p_volume->cd->buffer;
 			system_use_pos = offset;
