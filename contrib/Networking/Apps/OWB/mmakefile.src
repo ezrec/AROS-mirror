@@ -25,6 +25,7 @@ EXEDIR := $(CONTRIBDIR)/Networking/Apps/OWB
 #MM                        aros-tcpip-apps-owb-fonts     \
 #MM                        aros-tcpip-apps-owb-licenses
 
+CFLAGS  += -I $(SRCDIR)/$(CURDIR)/tabs
 LDFLAGS += -Wl,-whole-archive -lwebkit-owb -lwtf -ljsc -lwebcore -Wl,-no-whole-archive
 AROS_CC := $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-g++ -specs=$(GENDIR)/config/specs
 
