@@ -30,5 +30,8 @@ void DumpDescriptor(usb_descriptor_t *desc);
 void USBDelay(struct timerequest *tr, uint32_t msec);
 struct timerequest *USBCreateTimer();
 void USBDeleteTimer(struct timerequest *tr);
+uint32_t USBTimer(struct timerequest *tr, uint32_t msec);
+void USBTimerDone(struct timerequest *tr);
+
 
 #endif /*MISC_H_*/

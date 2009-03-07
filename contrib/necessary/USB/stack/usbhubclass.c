@@ -21,6 +21,8 @@
  * CHANGELOG:
  * DATE        NAME                ENTRY
  * ----------  ------------------  -------------------------------------------------------------------
+ * 2009-03-07  T. Wiszkowski       Taught hub to re-attempt device discovery at later time 
+ *                                 if no suitable driver is present initially
  * 2008-06-02  T. Wiszkowski       Updated device detection mechanism so the stack is aware of already
  *                                 connected devices
  */
@@ -493,9 +495,10 @@ static void hub_disable(OOP_Class *cl, OOP_Object *o)
     }
 }
 
-static void hub_explore(OOP_Class *cl, OOP_Object *o)
+static BOOL hub_explore(OOP_Class *cl, OOP_Object *o)
 {
     HubData *hub = OOP_INST_DATA(cl, o);
+    BOOL more = FALSE;
     int port;
 
     D(bug("[USBHub Process] hub_explore()\n"));
@@ -556,8 +559,14 @@ static void hub_explore(OOP_Class *cl, OOP_Object *o)
         if (!(status & UPS_PORT_POWER))
             D(bug("[USBHub Process]   Port %d without power???\n", port));
 
+	/*
+	 * i am not sure we want to keep restarting USB ports
+	 * in case where we have no driver to utilize the device
+	 * however i will leave it here for now
+	 */
         USBDelay(hub->tr, USB_PORT_POWERUP_DELAY);
-
+	
+	D(bug("[USBHub Process]\tRestarting device in port %d\n", port));
         if (!HIDD_USBHub_PortReset(o, port))
         {
             D(bug("[USBHub Process]   Port %d reset failed\n", port));
@@ -582,7 +591,15 @@ static void hub_explore(OOP_Class *cl, OOP_Object *o)
         }
 
         hub->children[port-1] = HIDD_USB_NewDevice(SD(cl)->usb, o, !(status & UPS_LOW_SPEED));
+	if (NULL == hub->children[port-1])
+	{
+	    D(bug("[USBHub Process]\tNo known handler for selected drive. Restoring connection flag.\n"));
+	    more = TRUE;
+	    //HIDD_USBHub_SetPortFeature(o, port, UHF_C_PORT_CONNECTION);
+	}
     }
+
+    return more;
 }
 
 static void hub_process(HubData *hub, OOP_Object *o, struct Task *parent)
@@ -592,10 +609,14 @@ static void hub_process(HubData *hub, OOP_Object *o, struct Task *parent)
     OOP_Object *drv = NULL;
     OOP_Class *cl = sd->hubClass;
     struct usbEvent *ev = NULL;
-    uint32_t sigset;
+    struct timerequest *rescan;
+    uint32_t sigset = 0;
+    uint32_t sigmask = 0;
 
     hub->tr = USBCreateTimer();
     hub->hub_port = CreateMsgPort();
+
+    rescan = USBCreateTimer();
 
     OOP_GetAttr(o, aHidd_USBDevice_Bus, &drv);
     SetTaskPri(FindTask(NULL), 10);
@@ -609,6 +630,7 @@ static void hub_process(HubData *hub, OOP_Object *o, struct Task *parent)
         D(bug("[USBHub Process] YAWN...\n"));
 
         sigset = Wait( (1 << hub->hub_port->mp_SigBit) |
+		       (sigmask) |
                        (1 << hub->sigInterrupt)
                      );
         D(bug("[USBHub Process] signals rcvd: %p\n", sigset));
@@ -663,10 +685,14 @@ static void hub_process(HubData *hub, OOP_Object *o, struct Task *parent)
         D(bug("----->MARKER 4<-----\n"));
 
         /* handle signals */
-        if (sigset & (1 << hub->sigInterrupt))
+        if ((sigset & (1 << hub->sigInterrupt)) ||
+	    (sigset & sigmask))
         {
             struct usb_driver *d = NULL;
             uint8_t addr = 0;
+
+	    if (sigset & sigmask)
+		USBTimerDone(rescan);
 
             D(bug("[USBHub Process] Interrupt signalled\n"));
 
@@ -681,9 +707,24 @@ static void hub_process(HubData *hub, OOP_Object *o, struct Task *parent)
             if (d)
             {
                 ObtainSemaphore(&d->d_Lock);
-                hub_explore(cl, o);
+
+		/*
+		 * new:
+		 * check if some devices failed to be created
+		 * if so, attempt to re-detect in 10 seconds,
+		 * maybe we will have adequate drivers available
+		 */
+                if (hub_explore(cl, o))
+		{
+		    /* wake up in 5 secs and check again */
+		    sigmask = USBTimer(rescan, 10000);
+		}
                 ReleaseSemaphore(&d->d_Lock);
             }
         }
+	else
+	{
+	    sigset = 0;
+	}
     }
 }

@@ -18,7 +18,7 @@
     59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#define DEBUG 1
+#define DEBUG 0
 
 #include <aros/debug.h>
 #include <aros/libcall.h>
@@ -377,9 +377,6 @@ OOP_Object *METHOD(USB, Hidd_USB, NewDevice)
                         }
                     }
                 }
-
-                if (!new_device)
-                    new_device = OOP_NewObject(NULL, (STRPTR)CLID_Hidd_USBDevice, tags);
 
                 break;
             }

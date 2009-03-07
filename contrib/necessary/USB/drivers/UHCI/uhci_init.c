@@ -30,7 +30,7 @@
 
 #include <usb/usb.h>
 
-#define DEBUG 1
+#define DEBUG 0
 
 #include <proto/exec.h>
 #include <proto/oop.h>

@@ -22,6 +22,10 @@
 
 #include <proto/exec.h>
 
+/*
+ * TODO: fix up all the mess below. too many resource allocations, a bit too complex
+ */
+
 void DumpDescriptor(usb_descriptor_t *desc)
 {
     bug("[USB] Descriptor dump:\n");
@@ -107,6 +111,40 @@ void USBDelay(struct timerequest *tr, uint32_t msec)
     /* Wait */
     DoIO((struct IORequest *)tr);
     
+    /* The signal is not needed anymore */
+    FreeSignal(tr->tr_node.io_Message.mn_ReplyPort->mp_SigBit);
+    tr->tr_node.io_Message.mn_ReplyPort->mp_SigTask = NULL;
+}
+
+/*
+ * usbtimer() sets a timer to wake the process up after timeout expires
+ * NOTE: it assumes your task and sigbit fields are filled in already
+ */
+uint32_t USBTimer(struct timerequest *tr, uint32_t msec)
+{
+    /* Allocate a signal within this task context */
+    tr->tr_node.io_Message.mn_ReplyPort->mp_SigBit = AllocSignal(-1);
+    tr->tr_node.io_Message.mn_ReplyPort->mp_SigTask = FindTask(NULL);
+    
+    /* Specify the request */
+    tr->tr_node.io_Command = TR_ADDREQUEST;
+    tr->tr_time.tv_secs = msec / 1000;
+    tr->tr_time.tv_micro = 1000 * (msec % 1000);
+
+    /* Wait */
+    SendIO((struct IORequest *)tr);
+    
+    return (tr->tr_node.io_Message.mn_ReplyPort->mp_SigBit);
+}
+
+/*
+ * usbtimerdone() completes the above
+ */
+void USBTimerDone(struct timerequest *tr)
+{
+    WaitPort(tr->tr_node.io_Message.mn_ReplyPort);
+    /* since we created port and we issued only one request, it's only one message */
+    GetMsg(tr->tr_node.io_Message.mn_ReplyPort);
     /* The signal is not needed anymore */
     FreeSignal(tr->tr_node.io_Message.mn_ReplyPort->mp_SigBit);
     tr->tr_node.io_Message.mn_ReplyPort->mp_SigTask = NULL;
