@@ -7,6 +7,13 @@
 
 #MM- development-SDL_gfx : linklibs-SDL
 
+ifeq ($(AROS_TARGET_CPU), ppc)
+DISABLE_MMX := "--disable-mmx"
+else
+DISABLE_MMX :=
+endif
+
 %fetch_and_build_gnu_development package=SDL_gfx version=2.0.18 patch=no \
+    extraoptions=$(DISABLE_MMX) \
     package_repo=http://www.ferzkopp.net/Software/SDL_gfx-2.0/
 
