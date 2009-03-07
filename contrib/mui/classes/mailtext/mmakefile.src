@@ -1,16 +1,36 @@
 #   $Id$
-include $(TOP)/config/make.cfg
-
 # mmakefile.src for MUI custom class 'Mailtext'
+
+include $(TOP)/config/make.cfg
 
 #MM- contrib : contrib-zune-classes-mailtext
 
-#MM  contrib-zune-classes-mailtext-demo : includes linklibs contrib-zune-classes-mailtext-mcc
+#MM  contrib-zune-classes-mailtext-demo : includes \
+#MM 					    linklibs \
+#MM 					    contrib-zune-classes-mailtext-mcc
 
-#MM  contrib-zune-classes-mailtext-mcc : includes linklibs contrib-zune-classes-nlist-class \
-#MM    contrib-zune-classes-mailtext-catalogs-mcc
+#MM  contrib-zune-classes-mailtext-mcc : includes \
+#MM 					    linklibs \
+#MM 					    contrib-zune-classes-nlist-class \
+#MM 					    contrib-zune-classes-mailtext-catalogs-mcc
 
-#MM- contrib-zune-classes-mailtext : contrib-zune-classes-mailtext-mcc contrib-zune-classes-mailtext-mcp contrib-zune-classes-mailtext-demo
+#MM  contrib-zune-classes-mailtext-mcp : includes \
+#MM 					    linklibs \
+#MM 					    contrib-zune-classes-nlist-class \
+#MM 					    contrib-zune-classes-mailtext-catalogs-mcp
+
+#MM- contrib-zune-classes-mailtext : contrib-zune-classes-mailtext-mcc \
+#MM 					    contrib-zune-classes-mailtext-mcp \
+#MM 					    contrib-zune-classes-mailtext-demo
+
+#MM contrib-zune-classes-mailtext-catalogs-mcc : contrib-zune-classes-mailtext-catalogs-setup
+#MM contrib-zune-classes-mailtext-catalogs-mcp : contrib-zune-classes-mailtext-catalogs-setup
+
+#MM- contrib-zune-classes-mailtext-catalogs : \
+#MM 					    contrib-zune-classes-mailtext-catalogs-mcc \
+#MM 					    contrib-zune-classes-mailtext-catalogs-mcp
+
+#MM- clean :  mailtext-clean
 
 MCCFILES := AttributesEngine \
 	 Bitfield \
@@ -18,51 +38,51 @@ MCCFILES := AttributesEngine \
 	 Mailtext \
 	 URLs \
 	 Mailtext_mcc_locale
-	 
+
+MCPFILES := MailtextP \
+	 Mailtext_mcp_locale
+
+INCLUDE_FILES := mui/Mailtext_mcc.h
+
 %build_module mmake=contrib-zune-classes-mailtext-mcc \
   modname=Mailtext modtype=mcc conffile=Mailtext_mcc.conf \
   files="$(MCCFILES)" objdir=$(OBJDIR)/mcc moduledir=Extras/Zune/MCC_Mailtext/Classes/Zune \
   uselibs="amiga mui rom m"
 
-#MM  contrib-zune-classes-mailtext-mcp : includes linklibs contrib-zune-classes-nlist-class \
-#MM    contrib-zune-classes-mailtext-catalogs-mcp
-
-MCPFILES := MailtextP \
-	 Mailtext_mcp_locale
-	 
 %build_module mmake=contrib-zune-classes-mailtext-mcp \
   modname=Mailtext modtype=mcp conffile=Mailtext_mcp.conf \
   files=$(MCPFILES) objdir=$(OBJDIR)/mcp moduledir=Extras/Zune/MCC_Mailtext/Classes/Zune \
   uselibs="amiga mui rom m"
 
-  
 %build_prog mmake=contrib-zune-classes-mailtext-demo progname=Show_Mailtext files=show_mailtext \
     targetdir=$(CONTRIBDIR)/Zune/MCC_Mailtext/Demos \
     uselibs="amiga mui m"
 
+#MM contrib-zune-classes-mailtext-catalogs-setup :
+%rule_makedirs dirs=$(TOP)/$(CURDIR)/loc setuptarget=contrib-zune-classes-mailtext-catalogs-setup
 
 #MM includes-copy
-
-INCLUDE_FILES := mui/Mailtext_mcc.h
 %copy_includes path=mui dir=mui
 
-#MM- contrib-zune-classes-mailtext-catalogs : contrib-zune-classes-mailtext-mcc-catalogs
-
 #MM contrib-zune-classes-mailtext-catalogs-mcc :
-contrib-zune-classes-mailtext-catalogs-mcc : Mailtext_mcc_locale.c loc/Mailtext_mcc.h
+contrib-zune-classes-mailtext-catalogs-mcc : $(TOP)/$(CURDIR)/Mailtext_mcc_locale.c $(TOP)/$(CURDIR)/loc/Mailtext_mcc.h
 
-loc/Mailtext_mcc.h : Mailtext_mcc_locale.c
-Mailtext_mcc_locale.c : loc/Mailtext_mcc.cd loc/C_h.sd loc/C_c.sd
+$(TOP)/$(CURDIR)/loc/Mailtext_mcc.h : $(TOP)/$(CURDIR)/Mailtext_mcc_locale.c
+$(TOP)/$(CURDIR)/Mailtext_mcc_locale.c :$(SRCDIR)/$(CURDIR)/loc/Mailtext_mcc.cd $(SRCDIR)/$(CURDIR)/loc/C_h.sd $(SRCDIR)/$(CURDIR)/loc/C_c.sd
 	@$(ECHO) "Generating locale file $@..."
-	@$(FLEXCAT) loc/Mailtext_mcc.cd loc/Mailtext_mcc.h=loc/C_h.sd Mailtext_mcc_locale.c=loc/C_c.sd
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/loc/Mailtext_mcc.cd loc/Mailtext_mcc.h=$(SRCDIR)/$(CURDIR)/loc/C_h.sd Mailtext_mcc_locale.c=$(SRCDIR)/$(CURDIR)/loc/C_c.sd
 
 #MM contrib-zune-classes-mailtext-catalogs-mcp :
-contrib-zune-classes-mailtext-catalogs-mcp : Mailtext_mcp_locale.c loc/Mailtext_mcp.h
+contrib-zune-classes-mailtext-catalogs-mcp : $(TOP)/$(CURDIR)/Mailtext_mcp_locale.c $(TOP)/$(CURDIR)/loc/Mailtext_mcp.h
 
-loc/Mailtext_mcp.h : Mailtext_mcp_locale.c
-Mailtext_mcp_locale.c : loc/Mailtext_mcp.cd loc/C_h.sd loc/C_c.sd
+$(TOP)/$(CURDIR)/loc/Mailtext_mcp.h : $(TOP)/$(CURDIR)/Mailtext_mcp_locale.c
+$(TOP)/$(CURDIR)/Mailtext_mcp_locale.c : $(SRCDIR)/$(CURDIR)/loc/Mailtext_mcp.cd $(SRCDIR)/$(CURDIR)/loc/C_h.sd $(SRCDIR)/$(CURDIR)/loc/C_c.sd
 	@$(ECHO) "Generating locale file $@..."
-	@$(FLEXCAT) loc/Mailtext_mcp.cd loc/Mailtext_mcp.h=loc/C_h.sd Mailtext_mcp_locale.c=loc/C_c.sd
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/loc/Mailtext_mcp.cd loc/Mailtext_mcp.h=$(SRCDIR)/$(CURDIR)/loc/C_h.sd Mailtext_mcp_locale.c=$(SRCDIR)/$(CURDIR)/loc/C_c.sd
+
+#MM
+mailtext-clean :
+	-$(RM) $(TOP)/$(CURDIR)/loc/Mailtext_mcc.h $(TOP)/$(CURDIR)/Mailtext_mcc_locale.c $(TOP)/$(CURDIR)/loc/Mailtext_mcp.h $(TOP)/$(CURDIR)/Mailtext_mcp_locale.c
 
 %common
 
