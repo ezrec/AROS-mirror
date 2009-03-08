@@ -196,7 +196,7 @@
 
 #define MUID_Mailtext_UseContextMenu         TRUE
 
-#define MUID_Mailtext_NonIntroducingChars    " :.,^+\\|?([{&%$ï¿½\"!/*_#"
+#define MUID_Mailtext_NonIntroducingChars    " :.,^+\\|?([{&%$§\"!/*_#"
 #define MUID_Mailtext_TerminatingChars       " )]}.,:+-'&\"!?*/_#"
 #define MUID_Mailtext_WhitespaceChars        " ([{\"'&+*/_#"
 
@@ -280,8 +280,8 @@
 *        character that switches off a certain textattribute.
 *
 *    AUTHOR
-*        Mailtext.mcc/Mailtext.mcp is written and ï¿½ 1996-2001 by Olaf Peters
-*        Mailtext.mcc/Mailtext.mcp is ï¿½ 2006 by Mailtext Open Source Team
+*        Mailtext.mcc/Mailtext.mcp is written and © 1996-2001 by Olaf Peters
+*        Mailtext.mcc/Mailtext.mcp is © 2006 by Mailtext Open Source Team
 *
 *    USAGE RESTRICTIONS
 *        This program is free software; you can redistribute it and/or modify
