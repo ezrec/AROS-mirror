@@ -398,8 +398,6 @@ int Handle_Control_Packet (ULONG p_type, ULONG p_par1, ULONG p_par2)
   return 0;
 }
 
-#if !defined(NDEBUG) || defined(DEBUG_SECTORS)
-
 char *typetostr (int ty)
 {
     switch(ty) {
@@ -580,4 +578,3 @@ int __fflush(void)
 }
 
 #endif /* !(__AROS__ || __MORPHOS__) */
-#endif /* !NDEBUG || DEBUG_SECTORS */

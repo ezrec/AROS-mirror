@@ -10,6 +10,7 @@
  * ----------------------------------------------------------------------
  * History:
  *
+ * 08-Mar-09 error     - Corrected Test_Unit_Ready returning only NO_DISC state
  * 06-Mar-09 error     - Removed madness, fixed insanity. Cleanup started
  * 06-Jun-08 sonic     - Fixed to compile with gcc v2
  * 30-Mar-08 error     - Updated 'Find_Last_Session' with a generic command
@@ -358,7 +359,7 @@ int Test_Unit_Ready(CDROM *p_cd)
 	(0 != p_cd->scsireq->io_Error))
 	return FALSE;
 
-    return FALSE;
+    return TRUE;
 }
 
 int Mode_Select

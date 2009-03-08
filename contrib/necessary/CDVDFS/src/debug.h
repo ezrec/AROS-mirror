@@ -1,6 +1,7 @@
 #ifndef ACDR_DEBUG_H
 #define ACDR_DEBUG_H
 
+#define DEBUG 0
 #if defined(__AROS__) || defined(__MORPHOS__)
 #ifdef __AROS__
 #	include <aros/debug.h>

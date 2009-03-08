@@ -83,7 +83,7 @@ void Register_Lock (LOCK *p_lock)
   new->next = global->g_lock_list;
   global->g_lock_list = new;
   
-  BUG(dbprintf ("[Installing lock on '%s']", pathname);)
+  BUG(dbprintf ("[CDVDFS]\tInstalling lock on '%s'", pathname);)
 }
 
 /*  Remove the entry for p_lock in the list g_lock_list.

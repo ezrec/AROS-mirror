@@ -142,6 +142,7 @@
 #include "prefs.h"
 #include "aros_stuff.h"
 
+
 #define ID_CDFS_DISK 0x43444653
 
 /*
@@ -458,7 +459,7 @@ UBYTE   notdone = 1;
 		packet->dp_Res2 = 0;
 		error = 0;	
 		BUG(dbprintf(
-			"Packet: %3ld %08lx %08lx %08lx %10s ",
+			"[CDVDFS]\tPacket: %3ld %08lx %08lx %08lx %10s ",
 			packet->dp_Type,
 			packet->dp_Arg1,
 			packet->dp_Arg2,
@@ -1476,28 +1477,28 @@ void Unmount (void)
 
 int Mount_Check (void)
 {
-  if (!global->g_disk_inserted) {
-   /*
-    * No disk was inserted up to now: we will check whether
-    * a disk has been inserted by sending the test unit ready
-    * command. We have to send the command twice because
-    * the first SCSI command after inserting a new disk is
-    * always rejected.
-    */
-    if (Test_Unit_Ready (global->g_cd)) {
-      global->g_disk_inserted = TRUE;
-      Mount ();
-    } else {
-      return 0;
+    D(bug("[CDVDFS]\tMount_Check\n"));
+    if (!global->g_disk_inserted) {
+	/*
+	 * No disk was inserted up to now: we will check whether
+	 * a disk has been inserted by sending the test unit ready
+	 * command. We have to send the command twice because
+	 * the first SCSI command after inserting a new disk is
+	 * always rejected.
+	 */
+	if (0 == Test_Unit_Ready (global->g_cd)) 
+	{
+	    D(bug("[CDVDFS]\tDrive not ready, not mounting\n"));
+	    return 0;
+	}
+
+	D(bug("[CDVDFS]\tDrive ready, mounting disc\n"));
+	global->g_disk_inserted = TRUE;
+	Mount ();
+	return global->DevList ? 1 : 0;
     }
-    if (global->DevList)
-      return 1;
-    else {
-      /* Mount() did not succeed: */
-      return 0;
-    }
-  }
-  return 1;
+    D(bug("[CDVDFS]\tDisc already mounted.\n"));
+    return 1;
 }
 
 /*
@@ -1580,35 +1581,37 @@ void Send_Timer_Request (void)
  *  Check whether the disk has been removed or inserted.
  */
 
-void Check_Disk (void) {
-int i;
-ULONG l1, l2;
+void Check_Disk (void) 
+{
+    int i;
+    ULONG l1, l2;
 
-	BUG(dbprintf ("Checking Disk... ");)
+    BUG(dbprintf ("[CDVDFS]\tChecking Disk... ");)
 	i = Test_Unit_Ready (global->g_cd);
-	l1 = global->g_cd->t_changeint;
-	l2 = global->g_cd->t_changeint2;
-	BUG(if (l1==l2 && i) dbprintf ("no disk change (T %ld)", l1);)
+
+    l1 = global->g_cd->t_changeint;
+    l2 = global->g_cd->t_changeint2;
+    BUG(if (l1==l2 && i) dbprintf ("no disk change (T %ld)", l1);)
 	if (l1!=l2 && i)
 	{
-		global->g_disk_inserted = TRUE;
-		BUG(dbprintf ("disk has been inserted (T %ld)", l1);)
+	    global->g_disk_inserted = TRUE;
+	    BUG(dbprintf ("disk has been inserted (T %ld)", l1);)
 		if (global->DevList)
-			Unmount ();
-		Delay (50);
-		Clear_Sector_Buffers (global->g_cd);
-		Mount ();
+		    Unmount ();
+	    Delay (50);
+	    Clear_Sector_Buffers (global->g_cd);
+	    Mount ();
 	}
-	BUG(if (l1==l2 && !i) dbprintf ("no disk in drive (T %ld)", l1);)
+    BUG(if (l1==l2 && !i) dbprintf ("no disk in drive (T %ld)", l1);)
 	if (l1!=l2 && !i)
 	{
-		global->g_disk_inserted = FALSE;
-		BUG(dbprintf ("disk has been removed (T %ld)", l1);)
+	    global->g_disk_inserted = FALSE;
+	    BUG(dbprintf ("disk has been removed (T %ld)", l1);)
 		global->playing = FALSE;
-		Unmount ();
-		global->g_cd->t_changeint2 = global->g_cd->t_changeint;
+	    Unmount ();
+	    global->g_cd->t_changeint2 = global->g_cd->t_changeint;
 	}
-	BUG(dbprintf ("\n");)
+    BUG(dbprintf ("\n");)
 }
 
 /* The following lines will generate a `disk inserted/removed' event, in order

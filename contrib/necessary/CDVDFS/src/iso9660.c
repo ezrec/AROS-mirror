@@ -115,14 +115,16 @@ int Get_File_Name(VOLUME *volume, directory_record *dir, char *buf, int buflen)
 	    break;
 
 	case PRO_JOLIET:
-	    return Get_Joliet_Name(dir->file_id, buf, dir->file_id_length);
+	    len = Get_Joliet_Name(dir->file_id, buf, dir->file_id_length);
+	    break;
 
 	default:
+	    len = dir->file_id_length;
+	    CopyMem(dir->file_id, buf, len);
 	    break;
     }
-    CopyMem(dir->file_id, buf, dir->file_id_length);
-    buf[dir->file_id_length] = 0;
-    return dir->file_id_length;
+    buf[len] = 0;
+    return len;
 }
 
 /* Check whether the given volume uses the ISO 9660 Protocol.
