@@ -37,59 +37,69 @@ contrib-source:
 docs-html:
     Documentación en formato HTML. Contiene todo lo que está disponible
     en el sitio web adaptado para la lectura en desconexión.
-i386-freebsd5-system:
+freebsd5-i386-system:
     La versión alojada en FreeBSD/i386 5.x. Fíjate que no
     andará en los sistemas FreeBSD 4.x.
-i386-freebsd-system:
+freebsd-i386-system:
     La versión alojada en FreeBSD/i386 5.x. Fíjate que no
     andará en los sistemas FreeBSD 4.x.
-i386-linux-system:
+linux-i386-system:
     La versión alojada en Linux/i386. Este es el puerto más
     completo y maduro, o sea que tú puedes ejecutar todos
     los programas y demos incluidos en él. Este archivo
     contiene todos los binarios del sistema AROS compilados
     del árbol de Subversion.
-ppc-linux-system:
+mingw32-i386-system:
+    The hosted version for Microsoft Windows on i386 platform. Developed
+    and compiled under Windows XP, but should work on all 32-bit Windows
+    versions starting from Windows 98.
+linux-x86_64-system:
+    La versión alojada en Linux/x86_64. Este es el puerto más
+    completo y maduro, o sea que tú puedes ejecutar todos
+    los programas y demos incluidos en él. Este archivo
+    contiene todos los binarios del sistema AROS compilados
+    del árbol de Subversion.
+linux-ppc-system:
     La versión alojada en Linux/PowerPC. Este archivo contiene todos
     los binarios del sistema AROS compilados del árbol de Subversion.
-i386-pc-boot-floppy:
+pc-i386-boot-floppy:
     La versión nativa para las computadoras PC AT basadas en i386
     y compatibles. Este archivo contiene la imagen del disquete
     de arranque que puedes rápidamente escribir a un disquete y
     arrancar AROS con él.
-i386-pc-boot-iso:
+pc-i386-boot-iso:
     La versión nativa para las computadoras PC AT basadas en i386 y
     compatibles. Ésta es la imagen ISO de CDROM para arrancar,
     que contiene todo el sistema AROS y los programas contribuídos.
-i386-all-contrib:
+pc-x86_64-boot-iso:
+    La versión nativa para las computadoras PC de 64-bit (amd64, x86_64).
+    Ésta es la imagen ISO de CDROM de arranque, que 
+    contiene todo el sistema AROS más los programas contribuídos.
+pc-i386-contrib:
     Este archivo contiene todos los programas contribuídos
     compilados para la arquitectura i386. Éstos funcionarán en
     la versión apropiada sea alojada (p.e. i386-linux) o nativa
     (i386-pc).
-x86_64-pc-boot-iso:
-	La versión nativa para las computadoras PC de 64-bit (amd64, x86_64).
-	Ésta es la imagen ISO de CDROM de arranque, que 
-	contiene todo el sistema AROS más los programas contribuídos.
-x86_64-all-contrib:
-	Este archivo contiene todos los programas contribuídos
-	compilados para la arquitectura x86_64, para usar con la
-	versión nativa x86_64.
-ppc-all-contrib:
+pc-x86_64-contrib:
+    Este archivo contiene todos los programas contribuídos
+    compilados para la arquitectura x86_64, para usar con la
+    versión nativa x86_64.
+linux-ppc-contrib:
     Este archivo contiene todos los programas contribuídos
     compilados para la arquitectura PowerPC, para usar con 
     el puerto Linux/PowerPC.
-i386-all-sdk:
+pc-i386-sdk:
     El conjunto de archivos y herramientas para construir tus
     propios programas AROS en tu máquina preferida. También
     necesitarás gcc y binutils configurados para producir
     ejecutables i386-elf.
-ppc-all-sdk:
+linux-ppc-sdk:
     El conjunto de archivos y herramientas para construir tus
     propios programas AROS en tu máquina preferida. También
     necesitarás gcc y binutils configurados para producir
     ejecutables ppc-elf.
-x86_64-all-sdk:
-	El conjunto de los archivos y herramientas para armar tus
-	propios programas AROS en tu máquina preferida. También
-	necesitarás gcc y binutils configurados para producir los
-	ejecutables x86_64-elf.
+pc-x86_64-sdk:
+    El conjunto de los archivos y herramientas para armar tus
+    propios programas AROS en tu máquina preferida. También
+    necesitarás gcc y binutils configurados para producir los
+    ejecutables x86_64-elf.

@@ -38,52 +38,61 @@ contrib-source:
 docs-html:
     Engelstalig documentatie in HTML formaat. Bevat alle documentatie
     die op de website staat, maar nu aangepast voor het offline lezen.
-i386-freebsd5-system:
+freebsd5-i386-system:
     De gehoste versie voor FreeBSD/i386 5.x. Deze werkt overigens
     niet onder FreeBSD 4.x systemen.
-i386-freebsd-system:
+freebsd-i386-system:
     De gehoste versie voor FreeBSD/i386 5.x. Deze werkt niet onder
     FreeBSD 4.x systemen.
-i386-linux-system:
+linux-i386-system:
     De gehoste versie voor Linux/i386. Dit is de meest complete en
     capabele versie, wat betekend dat je hiermee alle bijgesloten
     programma's en demo's kunt draaien. Dit archief bevat ook alle AROS
     systeem binaries gecompileerd vanuit de Subversion tak. 
-ppc-linux-system:
+mingw32-i386-system:
+    The hosted version for Microsoft Windows on i386 platform. Developed
+    and compiled under Windows XP, but should work on all 32-bit Windows
+    versions starting from Windows 98.
+linux-i386-system:
+    De gehoste versie voor Linux/x86_64. Dit is de meest complete en
+    capabele versie, wat betekend dat je hiermee alle bijgesloten
+    programma's en demo's kunt draaien. Dit archief bevat ook alle AROS
+    systeem binaries gecompileerd vanuit de Subversion tak. 
+linux-ppc-system:
     De gehoste versie voor Linux/PowerPC. Dit archief bevat alle AROS
     systeem binaries gecompileerd vanuit de Subversion tak.
-i386-pc-boot-floppy:
+pc-i386-boot-floppy:
     De native versie voor i368-gebaseerde PC AT compatibele
     computers. Dit archief bevat de boot floppy disk image, welke naar een
     schijf te schrijven is om AROS mee te starten. 
-i386-pc-boot-iso:
+pc-i386-boot-iso:
     De native versie voor i386-gebaseerde PC AT compatibele computers.
     Dit is een opstartbaar CDROM ISO bestand, dat alle AROS systeem en
     gecontribueerde programma's bevat.
-i386-all-contrib:
+pc-i386-contrib:
     Dit archief bevat alle gecontribueerde programma's gecompileerd voor
     de i386 architectuur. Deze werken zowel in de gehoste (bijv. i386-linux)
     als native (i386-pc) versies. 
-x86_64-pc-boot-iso:
+pc-x86_64-boot-iso:
     De native versie voor 64-bit (x86_64, amd64) PC computers. Dit omvat een
     opstartbare CD-ROM ISO image, welke alle AROS systeem en contributie
     programmatuur bevat.
-x86_64-all-contrib:
+pc-x86_64-contrib:
     This archive contains all the contributed programs
     compiled for the x86_64 architecture, for use with the
     x86_64 native version.
-ppc-all-contrib:
+linux-ppc-contrib:
     Dit archief bevat alle gecontribueerde programma's gecompileerd voor
     de PowerPC architectuur, voor gebruik met Linux/PowerPC port.
-i386-all-sdk:
+pc-i386-sdk:
     Een set van bestanden en tools waarmee u eigen AROS programma's kunt
     bouwen op een machine naar uw keuze. Benodigd zijn ook gcc en binutils,
     beiden geconfigureerd voor het produceren van i386-elf executables.
-ppc-all-sdk:
+linux-ppc-sdk:
     Een set van bestanden en tools waarmee u eigen AROS programma's kunt
     bouwen op een machine naar uw keuze. Benodigd zijn ook gcc en binutils,
     beiden geconfigureerd voor het produceren van ppc-elf executables.
-x86_64-all-sdk:
+pc-x86_64-sdk:
     Een set van bestanden en tools waarmee u eigen AROS programma's kunt
     bouwen op een machine naar uw keuze. Benodigd zijn ook gcc en binutils,
     beiden geconfigureerd voor het produceren van x86_64-elf executables.

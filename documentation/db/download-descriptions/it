@@ -48,6 +48,10 @@ linux-i386-system:
     La versione hosted per Linux/i386. Questo archivio
     contiene tutti i file di sistema compilati
     dall'albero di SVN.
+mingw32-i386-system:
+    The hosted version for Microsoft Windows on i386 platform. Developed
+    and compiled under Windows XP, but should work on all 32-bit Windows
+    versions starting from Windows 98.
 linux-x86_64-system:
     La versione hosted per Linux/x86_64. Questo archivio contiene
     tutti i file di sistema di AROS compilati dall'albero di SVN.

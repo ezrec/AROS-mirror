@@ -48,6 +48,10 @@ linux-i386-system:
     Hostovaná verze pro Linux/i386. Tento archív
     obsahuje v¹echny binárky systému AROS kompilované z SVN
     stromu.
+mingw32-i386-system:
+    The hosted version for Microsoft Windows on i386 platform. Developed
+    and compiled under Windows XP, but should work on all 32-bit Windows
+    versions starting from Windows 98.
 linux-x86_64-system:
     Hostovaná verze pro Linux/x86_64. Tento archív
     obsahuje v¹echny binárky systému AROS kompilované z SVN
