@@ -1,0 +1,16 @@
+# Metamakefile for MUIbase for AROS
+
+include $(TOP)/config/make.cfg
+
+# Use "make contrib-extern-muibase" to checkout MUIbase from
+# Sourceforge. Run "make" to build MUIbase. This double make is
+# necessary because the repository has an embedded mmakefile.src.
+
+REPO  := https://muibase.svn.sourceforge.net/svnroot/muibase/tags/release-2.7 
+
+#MM- contrib : contrib-muibase
+
+#MM
+contrib-extern-muibase :
+	svn co $(REPO) $(TOP)/extern/muibase
+	@$(ECHO) "Run 'make' to build MUIbase"
