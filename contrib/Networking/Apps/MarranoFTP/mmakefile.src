@@ -1,0 +1,25 @@
+# $Id: mmakefile.src 30794 2009-03-08 02:19:07Z neil $
+#
+# Makefile for MarranoFTP
+
+include $(TOP)/config/make.cfg
+
+FILES  := main
+
+EXEDIR := $(CONTRIBDIR)/Networking/Apps/MarranoFTP
+
+USER_CFLAGS := -Wno-uninitialized -Wno-parentheses
+
+#MM aros-tcpip-apps-marranoftp : \
+#MM contrib-networking-caf \
+#MM aros-tcpip-apps-marranoftp-catalogs \
+#MM aros-tcpip-apps-marranoftp-gadgets \
+#MM themes-gorilla-icons-marranoftp
+
+#MM- aros-tcpip-apps : aros-tcpip-apps-marranoftp
+
+%build_prog mmake=aros-tcpip-apps-marranoftp \
+    progname=MarranoFTP targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="caf mui arossupport amiga arosc"
+
+%common

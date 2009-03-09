@@ -1,0 +1,10 @@
+#   $Id: mmakefile.src 30794 2009-03-08 02:19:07Z neil $
+#
+include $(TOP)/config/make.cfg
+
+INCLUDE_FILES := caf/caf_debugging.h caf/caf_types.h caf/networking_helpers.h caf/thread_helpers.h caf/errors.h
+
+#MM libcaf-includes-copy
+%copy_includes path= dir= mmake=libcaf-includes-copy
+
+%common

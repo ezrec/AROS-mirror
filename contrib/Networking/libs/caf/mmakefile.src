@@ -1,0 +1,14 @@
+#   $Id: mmakefile.src 30794 2009-03-08 02:19:07Z neil $
+#
+include $(TOP)/config/make.cfg
+
+FILES :=    debugging     \
+		   networking_helpers     \
+		   thread_helpers     \
+		   errors
+ 
+#MM contrib-networking-caf : libcaf-includes-copy
+
+%build_linklib mmake=contrib-networking-caf libname=caf files=$(FILES)
+
+%common
