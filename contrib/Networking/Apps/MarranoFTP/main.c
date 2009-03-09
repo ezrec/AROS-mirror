@@ -1,3 +1,13 @@
+/*
+    Copyright © 2009, The AROS Development Team.
+    All rights reserved.
+
+    $Id$
+*/
+
+/* MarranoFTP - written by Stefano Crosara */
+/* This code is released under APL         */
+
 /* Generic Amiga includes */
 // #define MUIMASTER_YES_INLINE_STDARG 1
 #include <exec/types.h>
@@ -978,7 +988,7 @@ int main(int argc,char *argv[])
         MUIA_Application_Version, (IPTR) "$VER: MarranoFTP 0.66 (29.03.2008 15:56 am) © Stefano Crosara aka Suppah at marranosoft@gmail.com",
         MUIA_Application_Copyright, (IPTR) "© Stefano Crosara aka Suppah",
         MUIA_Application_Author, (IPTR) "Stefano Crosara",
-        MUIA_Application_Description,  (IPTR) "A very 'marrano' ftp client",
+        MUIA_Application_Description,  (IPTR) "A very 'marrano' FTP client",
         MUIA_Application_Base, (IPTR) "MarranoFTP",
         MUIA_Application_SingleTask, FALSE,
         MUIA_Application_Menustrip, (IPTR)(MUIMenu = MUI_MakeObject(MUIO_MenustripNM,Menus,0)),
