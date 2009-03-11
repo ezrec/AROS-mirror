@@ -28,7 +28,7 @@ EXEDIR := $(CONTRIBDIR)/Networking/Apps/OWB
 LDFLAGS += -Wl,-whole-archive -lwebkit-owb -lwtf -ljsc -lwebcore -Wl,-no-whole-archive
 AROS_CC := $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-g++ -specs=$(GENDIR)/config/specs
 
-#MM aros-tcpip-apps-owb-resources : aros-tcpip-apps-owb-icons themes-gorilla-contrib-icons-owb aros-tcpip-apps-owb-readme
+#MM aros-tcpip-apps-owb-resources : aros-tcpip-apps-owb-icons iconset-$(AROS_TARGET_ICONSET)-contrib-icons-owb aros-tcpip-apps-owb-readme
 
 %build_prog mmake=aros-tcpip-apps-owb \
     files=$(FILES) targetdir=$(EXEDIR) \
