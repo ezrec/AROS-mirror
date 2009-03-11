@@ -14,7 +14,7 @@ USER_CFLAGS := -Wno-uninitialized -Wno-parentheses
 #MM contrib-networking-caf \
 #MM aros-tcpip-apps-marranoftp-catalogs \
 #MM aros-tcpip-apps-marranoftp-gadgets \
-#MM themes-gorilla-icons-marranoftp
+#MM themes-gorilla-contrib-icons-marranoftp
 
 #MM- aros-tcpip-apps : aros-tcpip-apps-marranoftp
 
