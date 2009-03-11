@@ -13,7 +13,7 @@ USER_CFLAGS := -Wno-uninitialized -Wno-parentheses
 #MM aros-tcpip-apps-aircos : \
 #MM aros-tcpip-apps-aircos-catalogs \
 #MM aros-tcpip-apps-aircos-gadgets \
-#MM themes-gorilla-icons-aircos
+#MM themes-gorilla-contrib-icons-aircos
 
 #MM- aros-tcpip-apps : aros-tcpip-apps-aircos
 
