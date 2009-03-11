@@ -970,6 +970,16 @@ void CleanUp()
     CloseLibs();
 }
 
+static const UBYTE MSG_logtab_TransferQueue[] = "Transfer Queue...";
+static const UBYTE MSG_logtab_Log[] = "Log...";
+
+static UBYTE *logtabs[] =
+{
+    (UBYTE *)MSG_logtab_TransferQueue,
+    (UBYTE *)MSG_logtab_Log,
+    NULL
+};
+
 int main(int argc,char *argv[])
 {
     Connection *cn = &g_Connection;
@@ -981,11 +991,11 @@ int main(int argc,char *argv[])
         return RETURN_FAIL;
 
     strcpy(cn->lv.CurrentPath, "ram:");
-    
+
     /* MUI Gui Definition */    
     app = ApplicationObject,
         MUIA_Application_Title, (IPTR) "MarranoFTP",
-        MUIA_Application_Version, (IPTR) "$VER: MarranoFTP 0.66 (29.03.2008 15:56 am) © Stefano Crosara aka Suppah at marranosoft@gmail.com",
+        MUIA_Application_Version, (IPTR) "$VER: MarranoFTP 0.70 (10.03.2009) © Stefano Crosara aka Suppah at marranosoft@gmail.com",
         MUIA_Application_Copyright, (IPTR) "© Stefano Crosara aka Suppah",
         MUIA_Application_Author, (IPTR) "Stefano Crosara",
         MUIA_Application_Description,  (IPTR) "A very 'marrano' FTP client",
@@ -995,30 +1005,16 @@ int main(int argc,char *argv[])
 
         // Main FTP Browse Window(s)
         SubWindow, (IPTR)(cn->Window = WindowObject,
-            MUIA_Window_Title, (IPTR) "MarranoFTP 0.66 (03.02.2008 11:58 am) © Stefano Crosara aka Suppah at marranosoft@gmail.com",
+            MUIA_Window_Title, (IPTR) "MarranoFTP 0.70 (10.03.2009) © Stefano Crosara aka Suppah at marranosoft@gmail.com",
             MUIA_Window_Width, MUIV_Window_Width_MinMax(100),
             MUIA_Window_Height, MUIV_Window_Height_MinMax(100),
             MUIA_Window_ID, MAKE_ID('M','F','T','P'),
             WindowContents, VGroup,
-                Child, HGroup, 
-                    MUIA_Weight, 25,
-                    Child, (IPTR)(cn->LV_STATUS = NListviewObject, 
-                        MUIA_Listview_Input, FALSE, 
-                        MUIA_Listview_List, NListObject,
-                            MUIA_CycleChain, 1, 
-                            ReadListFrame,
-                            MUIA_List_ConstructHook, MUIV_NList_ConstructHook_String,
-                            MUIA_List_DestructHook, MUIV_NList_DestructHook_String,
-                            MUIA_List_AutoVisible, TRUE,
-                        End, // NListObject
-                    End), // NListviewObject
-                End, // HGroup
 
                 Child, HGroup,
                     MUIA_Weight, 53,
                     Child, VGroup,
-                        Child, (IPTR)(cn->S_LEFT_VIEW_PATH = (APTR)StringObject, StringFrame, MUIA_CycleChain, 1, MUIA_String_MaxLen, 512, End),
-
+                        MUIA_Group_VertSpacing, 1,
                         Child, (IPTR)(cn->lv.ListView = NListviewObject,
                             MUIA_NListview_NList, NListObject,
                                 MUIA_CycleChain, 1, 
@@ -1034,11 +1030,12 @@ int main(int argc,char *argv[])
                                 MUIA_NList_MinColSortable, 0,
                             End, // NListObject
                         End), // NListviewObject
+
+                        Child, (IPTR)(cn->S_LEFT_VIEW_PATH = (APTR)StringObject, StringFrame, MUIA_CycleChain, 1, MUIA_String_MaxLen, 512, End),
                     End, // VGroup
 
                     Child, VGroup,
-                        Child, (IPTR)(cn->S_RIGHT_VIEW_PATH = (APTR) StringObject, StringFrame, MUIA_CycleChain, 1, MUIA_String_MaxLen, 512, End),
-
+                        MUIA_Group_VertSpacing, 1,
                         Child, (IPTR)(cn->rv.ListView = NListviewObject, 
                             MUIA_NListview_NList, NListObject,
                                 MUIA_CycleChain, 1, 
@@ -1054,29 +1051,45 @@ int main(int argc,char *argv[])
                                 MUIA_NList_MinColSortable, 0,
                             End, // NListObject
                         End), // NListviewObject
+
+                        Child, (IPTR)(cn->S_RIGHT_VIEW_PATH = (APTR) StringObject, StringFrame, MUIA_CycleChain, 1, MUIA_String_MaxLen, 512, End),
                     End, // VGroup
                 End, // HGroup
-                    
-                Child, VGroup,
-                    MUIA_Weight, 20,
-                    Child, TextObject, MUIA_Text_Contents, "Transfer Queue", End,
+                Child, RegisterObject,
+                    MUIA_Background,    MUII_RegisterBack,
+                    MUIA_CycleChain,    TRUE,
+                    MUIA_Register_Titles, logtabs,
+                    Child, HGroup,
+                        Child, (IPTR)(cn->QueueLV = NListviewObject, 
+                            MUIA_NListview_NList, NListObject,
+                                MUIA_CycleChain, 1, 
+                                MUIA_NList_Format, "MAXW=50,MAXW=20,MAXW=20",
+                                MUIA_NList_TypeSelect, MUIV_NList_TypeSelect_Line,
+                                MUIA_NList_MultiSelect, MUIV_NList_MultiSelect_Shifted, 
+                                MUIA_Font, MUIV_Font_Fixed,
+                                MUIA_NList_DisplayHook, &QueueDisplayHook,
+                                MUIA_NList_Title, TRUE,
+                                MUIA_NList_TitleSeparator, TRUE,
+                                MUIA_NList_AutoVisible, TRUE,
+                                MUIA_NList_EntryValueDependent, TRUE,
+                                MUIA_NList_MinColSortable, 0,
+                            End, // NListObject
+                        End), // NListviewObject
+                    End, // VGroup
 
-                    Child, (IPTR)(cn->QueueLV = NListviewObject, 
-                        MUIA_NListview_NList, NListObject,
-                            MUIA_CycleChain, 1, 
-                            MUIA_NList_Format, "MAXW=50,MAXW=20,MAXW=20",
-                            MUIA_NList_TypeSelect, MUIV_NList_TypeSelect_Line,
-                            MUIA_NList_MultiSelect, MUIV_NList_MultiSelect_Shifted, 
-                            MUIA_Font, MUIV_Font_Fixed,
-                            MUIA_NList_DisplayHook, &QueueDisplayHook,
-                            MUIA_NList_Title, TRUE,
-                            MUIA_NList_TitleSeparator, TRUE,
-                            MUIA_NList_AutoVisible, TRUE,
-                            MUIA_NList_EntryValueDependent, TRUE,
-                            MUIA_NList_MinColSortable, 0,
-                        End, // NListObject
-                    End), // NListviewObject
-                End, // VGroup
+                    Child, HGroup, 
+                        Child, (IPTR)(cn->LV_STATUS = NListviewObject, 
+                            MUIA_Listview_Input, FALSE, 
+                            MUIA_Listview_List, NListObject,
+                                MUIA_CycleChain, 1, 
+                                ReadListFrame,
+                                MUIA_List_ConstructHook, MUIV_NList_ConstructHook_String,
+                                MUIA_List_DestructHook, MUIV_NList_DestructHook_String,
+                                MUIA_List_AutoVisible, TRUE,
+                            End, // NListObject
+                        End), // NListviewObject
+                    End, // HGroup
+                End,
 
                 Child, (IPTR)(cn->S_TRANSFER_INFO =  StringObject, StringFrame, 
                     MUIA_InputMode, MUIV_InputMode_None,
@@ -4229,10 +4242,10 @@ void LoadConfig(Connection *cn)
         myproc->pr_WindowPtr = (APTR) -1;
 
         // Tries to open the file
-        iff->iff_Stream = (ULONG) Open(g_config_filename, MODE_OLDFILE);
+        iff->iff_Stream = (IPTR) Open(g_config_filename, MODE_OLDFILE);
         if (!iff->iff_Stream) {
             caf_strncpy(g_config_filename, "PROGDIR:marranoftp.moo", 512);
-            iff->iff_Stream = (ULONG) Open(g_config_filename, MODE_OLDFILE);
+            iff->iff_Stream = (IPTR) Open(g_config_filename, MODE_OLDFILE);
         }
 
         // Re-enables system assign request
@@ -4393,10 +4406,10 @@ void LoadConfig2(Connection *cn)
         myproc->pr_WindowPtr = (APTR)-1;
 
         // Tries to open the file
-        iff->iff_Stream = (ULONG) Open(g_config_filename, MODE_OLDFILE);
+        iff->iff_Stream = (IPTR) Open(g_config_filename, MODE_OLDFILE);
         if (!iff->iff_Stream) {
             caf_strncpy(g_config_filename, "PROGDIR:marranoftp.moo", 512);
-            iff->iff_Stream = (ULONG) Open(g_config_filename, MODE_OLDFILE);
+            iff->iff_Stream = (IPTR) Open(g_config_filename, MODE_OLDFILE);
         }
 
         // Re-enables system assign request
@@ -4534,10 +4547,10 @@ BOOL SaveConfig()
         oldptr = myproc->pr_WindowPtr;
         myproc->pr_WindowPtr = (APTR)-1;
 
-        iff->iff_Stream = (ULONG) Open(g_config_filename, MODE_NEWFILE);
+        iff->iff_Stream = (IPTR) Open(g_config_filename, MODE_NEWFILE);
         if (!iff->iff_Stream) {
             caf_strncpy(g_config_filename, "PROGDIR:marranoftp.moo", 512);
-            iff->iff_Stream = (ULONG) Open(g_config_filename, MODE_NEWFILE);
+            iff->iff_Stream = (IPTR) Open(g_config_filename, MODE_NEWFILE);
         }
 
         // Re-enables system assign request
