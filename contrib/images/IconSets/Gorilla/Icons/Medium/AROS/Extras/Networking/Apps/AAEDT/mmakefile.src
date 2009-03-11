@@ -3,8 +3,10 @@
 
 include $(TOP)/config/make.cfg
 
+#MM- iconset-Gorilla-contrib-icons-aaedt : iconset-Gorilla-contrib-icons-aaedt-app
+
 ICONS := AAEDT
 
-%build_icons mmake=aros-tcpip-apps-aaedt-icons \
+%build_icons mmake=iconset-Gorilla-contrib-icons-aaedt-app \
              icons=$(ICONS) dir=$(AROS_CONTRIB)/Networking/Apps/AAEDT
 
