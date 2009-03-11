@@ -6,5 +6,5 @@ include $(TOP)/config/make.cfg
 ICONS := AAEDT
 
 %build_icons mmake=aros-tcpip-apps-aaedt-icons \
-             icons=$(ICONS) dir=$(AROS_CONTRIB)/Networking/Apps
+             icons=$(ICONS) dir=$(AROS_CONTRIB)/Networking/Apps/AAEDT
 

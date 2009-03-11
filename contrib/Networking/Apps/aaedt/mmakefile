@@ -7,7 +7,7 @@ include $(TOP)/config/make.cfg
 #MM aros-tcpip-apps-aaedt : aros-tcpip-apps-aaedt-icons \
 #MM aros-tcpip-apps-wget contrib-networking-stacks-arostcp contrib-development-lua
 
-TARGETDIR := $(AROS_CONTRIB)/Networking/Apps
+TARGETDIR := $(AROS_CONTRIB)/Networking/Apps/AAEDT
 FILE := AAEDT
 
 #MM
