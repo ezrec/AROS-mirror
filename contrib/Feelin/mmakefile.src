@@ -11,6 +11,7 @@ FEELINDIR = $(CONTRIBDIR)/Feelin
 USER_CFLAGS := -I$(FEELINTOP)/Include
 
 #MM- contrib-feelin : feelin-linklib feelin-library feelin-classes feelin-prefs feelin-demos feelin-files
+#MM- contrib-feelin : iconset-$(AROS_TARGET_ICONSET)-contrib-icons-extras-feelin
 #MM- feelin-classes : feelin-classes-setup
 #MM- feelin-files : feelin-dictionary feelin-fonts feelin-images feelin-resources feelin-xmlsources
 
