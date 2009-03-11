@@ -3,9 +3,9 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- themes-gorilla-contrib-icons-extras : themes-gorilla-contrib-icons-extras-development
+#MM- iconset-Gorilla-contrib-icons-extras : iconset-Gorilla-contrib-icons-extras-development
 
 ICONS := Build False Lua nasm
 
-#MM- themes-gorilla-contrib-icons-extras-clean : themes-gorilla-contrib-icons-extras-development-clean
-%build_icons mmake=themes-gorilla-contrib-icons-extras-development icons=$(ICONS) dir=$(CONTRIBDIR)/Development
+#MM- iconset-Gorilla-contrib-icons-extras-clean : iconset-Gorilla-contrib-icons-extras-development-clean
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-development icons=$(ICONS) dir=$(CONTRIBDIR)/Development

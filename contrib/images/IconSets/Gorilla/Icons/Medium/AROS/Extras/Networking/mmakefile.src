@@ -3,9 +3,9 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- themes-gorilla-contrib-icons-extras : themes-gorilla-contrib-icons-extras-networking
+#MM- iconset-Gorilla-contrib-icons-extras : iconset-Gorilla-contrib-icons-extras-networking
 
 ICONS := Apps
 
-#MM- themes-gorilla-contrib-icons-extras-clean : themes-gorilla-contrib-icons-extras-networking-clean
-%build_icons mmake=themes-gorilla-contrib-icons-extras-networking icons=$(ICONS) dir=$(CONTRIBDIR)/Networking
+#MM- iconset-Gorilla-contrib-icons-extras-clean : iconset-Gorilla-contrib-icons-extras-networking-clean
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-networking icons=$(ICONS) dir=$(CONTRIBDIR)/Networking

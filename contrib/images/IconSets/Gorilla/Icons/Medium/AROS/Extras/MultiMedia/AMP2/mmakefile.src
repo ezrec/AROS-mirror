@@ -3,9 +3,9 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- themes-gorilla-contrib-icons-extras-mmedia: themes-gorilla-contrib-icons-extras-mmedia-amp2
+#MM- iconset-Gorilla-contrib-icons-extras-mmedia: iconset-Gorilla-contrib-icons-extras-mmedia-amp2
 
 ICONS := Plugin AMP
 
-#MM- themes-gorilla-contrib-icons-extras-mmedia-clean : themes-gorilla-contrib-icons-extras-mmedia-amp2-clean
-%build_icons mmake=themes-gorilla-contrib-icons-extras-mmedia-amp2 icons=$(ICONS) dir=$(CONTRIBDIR)/MultiMedia/AMP2
+#MM- iconset-Gorilla-contrib-icons-extras-mmedia-clean : iconset-Gorilla-contrib-icons-extras-mmedia-amp2-clean
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-mmedia-amp2 icons=$(ICONS) dir=$(CONTRIBDIR)/MultiMedia/AMP2

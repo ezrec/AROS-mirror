@@ -3,8 +3,8 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- themes-gorilla-contrib-icons-owb : themes-gorilla-contrib-icons-owb-app
+#MM- iconset-Gorilla-contrib-icons-owb : iconset-Gorilla-contrib-icons-owb-app
 
 ICONS := OWB
 
-%build_icons mmake=themes-gorilla-contrib-icons-owb-app icons=$(ICONS) dir=$(CONTRIBDIR)/Networking/Apps/OWB
+%build_icons mmake=iconset-Gorilla-contrib-icons-owb-app icons=$(ICONS) dir=$(CONTRIBDIR)/Networking/Apps/OWB

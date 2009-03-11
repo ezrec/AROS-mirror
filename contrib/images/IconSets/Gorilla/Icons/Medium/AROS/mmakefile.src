@@ -3,10 +3,10 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib-complete : themes-gorilla-contrib-icons
+#MM- contrib-complete : iconset-Gorilla-contrib-icons
 
 ICONS := Extras
 
-#MM- themes-gorilla-icons-clean : themes-gorilla-contrib-icons-clean
-#MM- themes-gorilla-icons : themes-gorilla-contrib-icons
-%build_icons mmake=themes-gorilla-contrib-icons icons=$(ICONS) dir=$(AROSDIR)
+#MM- iconset-Gorilla-icons-clean : iconset-Gorilla-contrib-icons-clean
+#MM- iconset-Gorilla-icons : iconset-Gorilla-contrib-icons
+%build_icons mmake=iconset-Gorilla-contrib-icons icons=$(ICONS) dir=$(AROSDIR)

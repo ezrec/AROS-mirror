@@ -3,9 +3,9 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- themes-gorilla-contrib-icons : themes-gorilla-contrib-icons-extras
+#MM- iconset-Gorilla-contrib-icons : iconset-Gorilla-contrib-icons-extras
 
 ICONS := MultiMedia DOpus Demos Development Emu Games Networking
 
-#MM- themes-gorilla-contrib-icons-clean : themes-gorilla-contrib-icons-extras-clean
-%build_icons mmake=themes-gorilla-contrib-icons-extras icons=$(ICONS) dir=$(CONTRIBDIR)
+#MM- iconset-Gorilla-contrib-icons-clean : iconset-Gorilla-contrib-icons-extras-clean
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras icons=$(ICONS) dir=$(CONTRIBDIR)

@@ -3,9 +3,9 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- themes-gorilla-contrib-icons-extras-mmedia : themes-gorilla-contrib-icons-extras-mmedia-gfx
+#MM- iconset-Gorilla-contrib-icons-extras-mmedia : iconset-Gorilla-contrib-icons-extras-mmedia-gfx
 
 ICONS := POVRay XaoS
 
-#MM- themes-gorilla-contrib-icons-extras-mmedia-clean : themes-gorilla-contrib-icons-extras-mmedia-gfx-clean
-%build_icons mmake=themes-gorilla-contrib-icons-extras-mmedia-gfx icons=$(ICONS) dir=$(CONTRIBDIR)/MultiMedia/Gfx
+#MM- iconset-Gorilla-contrib-icons-extras-mmedia-clean : iconset-Gorilla-contrib-icons-extras-mmedia-gfx-clean
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-mmedia-gfx icons=$(ICONS) dir=$(CONTRIBDIR)/MultiMedia/Gfx

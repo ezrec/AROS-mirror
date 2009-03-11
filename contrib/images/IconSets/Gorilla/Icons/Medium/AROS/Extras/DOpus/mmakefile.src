@@ -3,9 +3,9 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- themes-gorilla-contrib-icons-extras : themes-gorilla-contrib-icons-extras-dopus
+#MM- iconset-Gorilla-contrib-icons-extras : iconset-Gorilla-contrib-icons-extras-dopus
 
 ICONS := DirectoryOpus ConfigOpus
 
-#MM- themes-gorilla-contrib-icons-extras-clean : themes-gorilla-contrib-icons-extras-dopus-clean
-%build_icons mmake=themes-gorilla-contrib-icons-extras-dopus icons=$(ICONS) dir=$(CONTRIBDIR)/DOpus
+#MM- iconset-Gorilla-contrib-icons-extras-clean : iconset-Gorilla-contrib-icons-extras-dopus-clean
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-dopus icons=$(ICONS) dir=$(CONTRIBDIR)/DOpus

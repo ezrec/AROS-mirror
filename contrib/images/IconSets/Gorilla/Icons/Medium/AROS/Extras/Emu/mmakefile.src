@@ -3,9 +3,9 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- themes-gorilla-contrib-icons-extras : themes-gorilla-contrib-icons-extras-emu
+#MM- iconset-Gorilla-contrib-icons-extras : iconset-Gorilla-contrib-icons-extras-emu
 
 ICONS := E-UAE UAE
 
-#MM- themes-gorilla-contrib-icons-extras-clean : themes-gorilla-contrib-icons-extras-emu-clean
-%build_icons mmake=themes-gorilla-contrib-icons-extras-emu icons=$(ICONS) dir=$(CONTRIBDIR)/Emu
+#MM- iconset-Gorilla-contrib-icons-extras-clean : iconset-Gorilla-contrib-icons-extras-emu-clean
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-emu icons=$(ICONS) dir=$(CONTRIBDIR)/Emu

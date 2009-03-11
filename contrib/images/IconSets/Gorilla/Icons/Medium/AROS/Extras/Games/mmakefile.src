@@ -3,7 +3,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- themes-gorilla-contrib-icons-extras : themes-gorilla-contrib-icons-extras-games
+#MM- iconset-Gorilla-contrib-icons-extras : iconset-Gorilla-contrib-icons-extras-games
 
 ICONS := AmiChess \
          Backgammon Bomber \
@@ -19,5 +19,5 @@ ICONS := AmiChess \
          XInvaders3D \
          Yahzee
 
-#MM- themes-gorilla-contrib-icons-extras-clean : themes-gorilla-contrib-icons-extras-games-clean
-%build_icons mmake=themes-gorilla-contrib-icons-extras-games icons=$(ICONS) dir=$(CONTRIBDIR)/Games
+#MM- iconset-Gorilla-contrib-icons-extras-clean : iconset-Gorilla-contrib-icons-extras-games-clean
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-games icons=$(ICONS) dir=$(CONTRIBDIR)/Games

@@ -3,7 +3,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- themes-gorilla-contrib-icons-extras : themes-gorilla-contrib-icons-extras-demos
+#MM- iconset-Gorilla-contrib-icons-extras : iconset-Gorilla-contrib-icons-extras-demos
 
 ICONS := BlackHole \
          DawaFire \
@@ -24,5 +24,5 @@ ICONS := BlackHole \
 	 startsomedemos \
 	 startsomedemos2
 
-#MM- themes-gorilla-contrib-icons-extras-clean : themes-gorilla-contrib-icons-extras-demos-clean
-%build_icons mmake=themes-gorilla-contrib-icons-extras-demos icons=$(ICONS) dir=$(CONTRIBDIR)/Demos
+#MM- iconset-Gorilla-contrib-icons-extras-clean : iconset-Gorilla-contrib-icons-extras-demos-clean
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-demos icons=$(ICONS) dir=$(CONTRIBDIR)/Demos

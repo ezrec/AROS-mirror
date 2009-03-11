@@ -3,8 +3,8 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- themes-gorilla-contrib-icons-aircos : themes-gorilla-contrib-icons-aircos-app
+#MM- iconset-Gorilla-contrib-icons-aircos : iconset-Gorilla-contrib-icons-aircos-app
 
 ICONS := AiRcOS
 
-%build_icons mmake=themes-gorilla-contrib-icons-aircos-app icons=$(ICONS) dir=$(CONTRIBDIR)/Networking/Apps/AiRcOS
+%build_icons mmake=iconset-Gorilla-contrib-icons-aircos-app icons=$(ICONS) dir=$(CONTRIBDIR)/Networking/Apps/AiRcOS
