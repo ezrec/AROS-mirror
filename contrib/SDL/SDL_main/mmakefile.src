@@ -3,13 +3,25 @@
 
 -include $(TOP)/config/make.cfg
 
+SDLVERSION := 1.2.11
+
 ##MM- contrib-sdl : development-SDL
 
-%fetch_and_build_gnu_development package=SDL version=1.2.11 \
+%fetch_and_build_gnu_development package=SDL version=$(SDLVERSION) \
     patch=yes package_repo="http://www.libsdl.org/release" \
-    postinstall=$(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-aros-sdl-config
+    postinstall=linklibs-SDL-config
 
-$(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-aros-sdl-config: $(PORTSDIR)/SDL/SDL-1.2.11/sdl-config.in
+#MM
+linklibs-SDL-config : \
+    $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-aros-sdl-config \
+    $(AROS_DEVELOPMENT)/bin/sdl-config
+
+$(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-aros-sdl-config: $(PORTSDIR)/SDL/SDL-$(SDLVERSION)/sdl-config.in
 	@sed 's,@AROS_INCLUDE@,$(AROS_INCLUDES),g; s,@AROS_LIB@,$(AROS_LIB),g' $< > $@
 	@chmod a+x $@
 	ln -sf $@ $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)/sdl-config
+
+$(AROS_DEVELOPMENT)/bin/sdl-config: $(PORTSDIR)/SDL/SDL-$(SDLVERSION)/sdl-config.in
+	%mkdir_q dir=$(AROS_DEVELOPMENT)/bin
+	@sed 's,@AROS_INCLUDE@,/$(AROS_DIR_INCLUDE),g; s,@AROS_LIB@,/$(AROS_DIR_LIB),g' $< > $@
+	@chmod a+x $@
