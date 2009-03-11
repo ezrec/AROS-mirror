@@ -4,8 +4,15 @@
 include $(TOP)/config/make.cfg
 
 #MM- themes-gorilla-contrib-icons-extras-networking : themes-gorilla-contrib-icons-extras-networking-apps
+#MM- themes-gorilla-contrib-icons-extras-networking-apps : themes-gorilla-contrib-icons-aircos
+#MM- themes-gorilla-contrib-icons-extras-networking-apps : themes-gorilla-contrib-icons-owb
+#MM- themes-gorilla-contrib-icons-extras-networking-apps : themes-gorilla-contrib-icons-marranoftp
 
-ICONS := AiRcOS
+AIRCOSICON := AiRcOS
+OWBICON := OWB
+MARRANOFTPICON := MarranoFTP
 
 #MM- themes-gorilla-contrib-icons-extras-networking-clean : themes-gorilla-contrib-icons-extras-networking-apps-clean
-%build_icons mmake=themes-gorilla-contrib-icons-extras-networking-apps icons=$(ICONS) dir=$(CONTRIBDIR)/Networking/Apps
+%build_icons mmake=themes-gorilla-contrib-icons-aircos icons=$(AIRCOSICON) dir=$(CONTRIBDIR)/Networking/Apps
+%build_icons mmake=themes-gorilla-contrib-icons-owb icons=$(OWBICON) dir=$(CONTRIBDIR)/Networking/Apps
+%build_icons mmake=themes-gorilla-contrib-icons-marranoftp icons=$(MARRANOFTPICON) dir=$(CONTRIBDIR)/Networking/Apps

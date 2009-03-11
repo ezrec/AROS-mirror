@@ -1,0 +1,10 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src 30794 2009-03-08 02:19:07Z neil $
+
+include $(TOP)/config/make.cfg
+
+#MM- themes-gorilla-contrib-icons-aircos : themes-gorilla-contrib-icons-aircos-app
+
+ICONS := AiRcOS
+
+%build_icons mmake=themes-gorilla-contrib-icons-aircos-app icons=$(ICONS) dir=$(CONTRIBDIR)/Networking/Apps/AiRcOS

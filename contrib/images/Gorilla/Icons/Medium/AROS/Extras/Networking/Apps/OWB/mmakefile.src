@@ -1,0 +1,10 @@
+# Copyright © 2009, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src 30600 2009-02-24 13:14:09Z sszymczy $
+
+include $(TOP)/config/make.cfg
+
+#MM- themes-gorilla-contrib-icons-owb : themes-gorilla-contrib-icons-owb-app
+
+ICONS := OWB
+
+%build_icons mmake=themes-gorilla-contrib-icons-owb-app icons=$(ICONS) dir=$(CONTRIBDIR)/Networking/Apps/OWB
