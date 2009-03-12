@@ -32,7 +32,7 @@
 struct MUI_CustomClass *NGR_Class = NULL;
 
 
-static ULONG mNGR_New(struct IClass *cl,Object *obj,struct opSet *msg)
+static IPTR mNGR_New(struct IClass *cl,Object *obj,struct opSet *msg)
 {
   register struct NGRData *data;
 
@@ -42,11 +42,11 @@ static ULONG mNGR_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data = INST_DATA(cl,obj);
   data->DoDraw = FALSE;
 
-  return((ULONG) obj);
+  return((IPTR) obj);
 }
 
 /*
- * static ULONG mNGR_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
+ * static IPTR mNGR_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
  * {
  *   register struct NGRData *data = INST_DATA(cl,obj);
  *
@@ -62,7 +62,7 @@ static ULONG mNGR_New(struct IClass *cl,Object *obj,struct opSet *msg)
  */
 
 /*
-static ULONG mNGR_Set(struct IClass *cl,Object *obj,Msg msg)
+static IPTR mNGR_Set(struct IClass *cl,Object *obj,Msg msg)
 {
   register struct NGRData *data = INST_DATA(cl,obj);
   struct TagItem *tags,*tag;
@@ -78,7 +78,7 @@ static ULONG mNGR_Set(struct IClass *cl,Object *obj,Msg msg)
 }
 */
 
-static ULONG mNGR_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
+static IPTR mNGR_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
 //  register struct NLData *data = INST_DATA(cl,obj);
 /*D(bug("%lx|grp_AskMinMax() 1 \n",obj));*/

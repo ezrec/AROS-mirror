@@ -385,7 +385,7 @@ void NL_UpdateScrollersValues(Object *obj,struct NLData *data)
 }
 
 
-ULONG NL_UpdateScrollers(Object *obj,struct NLData *data,BOOL force)
+IPTR NL_UpdateScrollers(Object *obj,struct NLData *data,BOOL force)
 {
   if (!data->SHOW || !data->DRAW)
     return (FALSE);
@@ -1179,44 +1179,44 @@ BYTE *NL_Columns(Object *obj,struct NLData *data,BYTE *columns)
 }
 
 
-ULONG mNL_ColToColumn(struct IClass *cl,Object *obj,struct MUIP_NList_ColToColumn *msg)
+IPTR mNL_ColToColumn(struct IClass *cl,Object *obj,struct MUIP_NList_ColToColumn *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
-  return ((ULONG) NL_ColToColumn(obj,data,msg->col));
+  return ((IPTR) NL_ColToColumn(obj,data,msg->col));
 }
 
 
-ULONG mNL_ColumnToCol(struct IClass *cl,Object *obj,struct MUIP_NList_ColumnToCol *msg)
+IPTR mNL_ColumnToCol(struct IClass *cl,Object *obj,struct MUIP_NList_ColumnToCol *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
-  return ((ULONG) NL_ColumnToCol(obj,data,msg->column));
+  return ((IPTR) NL_ColumnToCol(obj,data,msg->column));
 }
 
 
-ULONG mNL_SetColumnCol(struct IClass *cl,Object *obj,struct MUIP_NList_SetColumnCol *msg)
+IPTR mNL_SetColumnCol(struct IClass *cl,Object *obj,struct MUIP_NList_SetColumnCol *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
-  LONG retval;
+  IPTR retval;
   retval = NL_SetCol(obj,data,msg->column,msg->col);
   DONE_NOTIFY(NTF_Columns);
-  return ((ULONG) retval);
+  return ((IPTR) retval);
 }
 
 
-ULONG mNL_List_ColWidth(struct IClass *cl,Object *obj,struct MUIP_NList_ColWidth *msg)
+IPTR mNL_List_ColWidth(struct IClass *cl,Object *obj,struct MUIP_NList_ColWidth *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
-  return ((ULONG) NL_ColWidth(obj,data,msg->col,msg->width));
+  return ((IPTR) NL_ColWidth(obj,data,msg->col,msg->width));
 }
 
 
 
-ULONG mNL_ContextMenuBuild(struct IClass *cl,Object *obj,struct MUIP_ContextMenuBuild *msg)
+IPTR mNL_ContextMenuBuild(struct IClass *cl,Object *obj,struct MUIP_ContextMenuBuild *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   Object *MenuObj = NULL;
   LONG column;
-  LONG mo = 0;
+  IPTR mo = 0;
   BOOL do_it = FALSE;
   BOOL order_it = FALSE;
 
@@ -1262,7 +1262,7 @@ ULONG mNL_ContextMenuBuild(struct IClass *cl,Object *obj,struct MUIP_ContextMenu
 
       MenuObj = (Object *) DoMethod(obj,MUIM_NList_ContextMenuBuild,msg->mx,msg->my,res.entry,column,flags,ontop);
 
-      if ((LONG) (MenuObj) == -1)
+      if ((IPTR) (MenuObj) == -1)
         return (0);
 
       if (!MenuObj)
@@ -1307,7 +1307,7 @@ ULONG mNL_ContextMenuBuild(struct IClass *cl,Object *obj,struct MUIP_ContextMenu
         { nnset(mithis,MUIA_Menuitem_Enabled,FALSE);
         }
       }
-      return ((ULONG) MenuObj);
+      return ((IPTR) MenuObj);
     }
   }
 
@@ -1316,7 +1316,7 @@ ULONG mNL_ContextMenuBuild(struct IClass *cl,Object *obj,struct MUIP_ContextMenu
 
 
 
-ULONG mNL_ContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMenuChoice *msg)
+IPTR mNL_ContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMenuChoice *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
 
@@ -1400,10 +1400,10 @@ void NL_Stack_Alert(Object *obj,struct NLData *data,LONG why)
         sizeof (struct EasyStruct),
         0,
         "Stack Size Problem",
-        "MUI NList object \'0x%08lx\' have found that\n"
+        "MUI NList object \'0x%08lx\' has found that\n"
         "the real stacksize of the task \'%s\'\n"
         "is only %ld bytes.\n\n"
-        "Actually %ld bytes of the stack have been used\n"
+        "%ld bytes of the stack have been used\n"
         "at some point of the object where it has been\n"
         "tested, so you should increase the stack value\n"
         "if you don't want to get a guru...",
@@ -1423,7 +1423,7 @@ void NL_Stack_Alert(Object *obj,struct NLData *data,LONG why)
         sizeof (struct EasyStruct),
         0,
         "Stack Size Problem",
-        "MUI NList object \'0x%08lx\' have found that\n"
+        "MUI NList object \'0x%08lx\' has found that\n"
         "the real stacksize of the task \'%s\'\n"
         "is only %ld bytes.\n\n"
         "The minimum stack size for MUI programs is 8 Kb,\n"

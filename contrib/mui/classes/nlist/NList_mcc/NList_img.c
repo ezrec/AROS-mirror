@@ -29,7 +29,7 @@
 
 struct MUI_CustomClass *NLI_Class = NULL;
 
-static ULONG mNLI_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
+static IPTR mNLI_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
   register struct NLIData *data = INST_DATA(cl,obj);
   if (data->DoDraw)
@@ -39,7 +39,7 @@ static ULONG mNLI_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 }
 
 
-static ULONG mNLI_New(struct IClass *cl,Object *obj,struct opSet *msg)
+static IPTR mNLI_New(struct IClass *cl,Object *obj,struct opSet *msg)
 {
   register struct NLIData *data;
 
@@ -49,11 +49,11 @@ static ULONG mNLI_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data = INST_DATA(cl,obj);
   data->DoDraw = FALSE;
 
-  return((ULONG) obj);
+  return((IPTR) obj);
 }
 
 
-static ULONG mNLI_Set(struct IClass *cl,Object *obj,Msg msg)
+static IPTR mNLI_Set(struct IClass *cl,Object *obj,Msg msg)
 {
   register struct NLIData *data = INST_DATA(cl,obj);
   struct TagItem *tags,*tag;

@@ -637,7 +637,7 @@ static void disposeBitMapImage(struct NLData *data,Object *obj,struct BitMapImag
 }
 
 
-ULONG NL_CreateImage2(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
+IPTR NL_CreateImage2(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
 {
   struct BitMapImage *bmimg = NULL;
   if (imgobj)
@@ -669,13 +669,13 @@ ULONG NL_CreateImage2(Object *obj,struct NLData *data,Object *imgobj,ULONG flags
     if (!bmimg)
       MUI_DisposeObject((APTR) imgobj);
   }
-  return ((ULONG) bmimg);
+  return ((IPTR) bmimg);
 }
 
 
-ULONG NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
+IPTR NL_CreateImage(Object *obj, struct NLData *data, Object *imgobj, ULONG flags)
 {
-  LONG CI_BM_Width = 0;
+  IPTR CI_BM_Width = 0;
 
   if (!imgobj)
     return(0);
@@ -691,14 +691,14 @@ ULONG NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
     WORD  *obtainpens = NULL;
     UBYTE  newdepth = 0;
     UBYTE *CI_BC_Body = NULL;
-    LONG   CI_BC_Depth = 0;
-    LONG   CI_BC_Compression = 0;
-    LONG   CI_BC_Masking = 0;
-    LONG   CI_BM_Height = 0;
+    IPTR   CI_BC_Depth = 0;
+    IPTR   CI_BC_Compression = 0;
+    IPTR   CI_BC_Masking = 0;
+    IPTR   CI_BM_Height = 0;
     UBYTE *CI_BM_MappingTable = NULL;
     ULONG *CI_BM_SourceColors = NULL;
-    LONG   CI_BM_Precision = 0;
-    LONG   CI_BM_Transparent = 0;
+    IPTR   CI_BM_Precision = 0;
+    IPTR   CI_BM_Transparent = 0;
     get(imgobj,MUIA_Bitmap_Bitmap,&CI_BM_Bitmap);
     get(imgobj,MUIA_Bitmap_Width,&CI_BM_Width);
     get(imgobj,MUIA_Bitmap_Height,&CI_BM_Height);
@@ -980,14 +980,14 @@ ULONG NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
     }
     if (bmimg && (data->MinImageHeight < bmimg->height) && !flags)
       data->MinImageHeight = bmimg->height;
-    return ((ULONG) bmimg);
+    return ((IPTR) bmimg);
   }
 
   return (0);
 }
 
 
-ULONG NL_DeleteImage(Object *obj,struct NLData *data,APTR listimg)
+IPTR NL_DeleteImage(Object *obj,struct NLData *data,APTR listimg)
 { struct BitMapImage *bmimg = (struct BitMapImage *) listimg;
   if (bmimg && (bmimg->control == MUIM_NList_CreateImage))
   { bmimg->control = 0L;
@@ -1025,7 +1025,7 @@ ULONG NL_DeleteImage(Object *obj,struct NLData *data,APTR listimg)
 }
 
 
-ULONG NL_CreateImages(Object *obj,struct NLData *data)
+IPTR NL_CreateImages(Object *obj,struct NLData *data)
 {
   if (data->NList_UseImages && data->SETUP)
   { LONG pos = 0;
@@ -1043,7 +1043,7 @@ ULONG NL_CreateImages(Object *obj,struct NLData *data)
 }
 
 
-ULONG NL_DeleteImages(Object *obj,struct NLData *data)
+IPTR NL_DeleteImages(Object *obj,struct NLData *data)
 {
   if (data->NList_UseImages)
   { LONG pos = 0;
@@ -1059,7 +1059,7 @@ ULONG NL_DeleteImages(Object *obj,struct NLData *data)
 }
 
 
-ULONG NL_UseImage(Object *obj,struct NLData *data,Object *imgobj,LONG imgnum,ULONG flags)
+IPTR NL_UseImage(Object *obj,struct NLData *data,Object *imgobj,LONG imgnum,ULONG flags)
 {
   BOOL redraw = FALSE;
   LONG retval = FALSE;
@@ -1140,11 +1140,11 @@ ULONG NL_UseImage(Object *obj,struct NLData *data,Object *imgobj,LONG imgnum,ULO
   { data->do_draw_all = data->do_draw_title = data->do_draw = TRUE;
     data->do_parse = data->do_setcols = data->do_updatesb = data->do_wwrap = TRUE;
   }
-  return ((ULONG)retval);
+  return ((IPTR)retval);
 }
 
 
-ULONG mNL_CreateImage(struct IClass *cl,Object *obj,struct MUIP_NList_CreateImage *msg)
+IPTR mNL_CreateImage(struct IClass *cl,Object *obj,struct MUIP_NList_CreateImage *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
@@ -1152,7 +1152,7 @@ ULONG mNL_CreateImage(struct IClass *cl,Object *obj,struct MUIP_NList_CreateImag
 }
 
 
-ULONG mNL_DeleteImage(struct IClass *cl,Object *obj,struct MUIP_NList_DeleteImage *msg)
+IPTR mNL_DeleteImage(struct IClass *cl,Object *obj,struct MUIP_NList_DeleteImage *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
@@ -1160,7 +1160,7 @@ ULONG mNL_DeleteImage(struct IClass *cl,Object *obj,struct MUIP_NList_DeleteImag
 }
 
 
-ULONG mNL_UseImage(struct IClass *cl,Object *obj,struct MUIP_NList_UseImage *msg)
+IPTR mNL_UseImage(struct IClass *cl,Object *obj,struct MUIP_NList_UseImage *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/

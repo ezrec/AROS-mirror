@@ -357,7 +357,7 @@ D(bug("qsort stat: %ld exchanges, %ld follows.\n",numexch,numfollow));
 }
 
 
-ULONG NL_List_Sort(Object *obj,struct NLData *data)
+IPTR NL_List_Sort(Object *obj,struct NLData *data)
 {
   LONG has_changed;
 
@@ -378,7 +378,7 @@ ULONG NL_List_Sort(Object *obj,struct NLData *data)
   }
 
 /*  do_notifies(NTF_AllChanges|NTF_MinMax);*/
-  return ((ULONG)has_changed);
+  return ((IPTR)has_changed);
 }
 
 
@@ -444,7 +444,7 @@ static ULONG NL_List_SortMore(Object *obj,struct NLData *data,LONG newpos)
 
 
 //$$$ARRAY+
-ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LONG pos,LONG wrapcol,LONG align,ULONG flags)
+IPTR NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LONG pos,LONG wrapcol,LONG align,ULONG flags)
 {
   LONG newpos,count2;
   BOOL is_string = FALSE;
@@ -801,7 +801,7 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
 }
 
 
-ULONG NL_List_Replace(struct NLData *data,Object *obj,APTR entry,LONG pos,LONG wrapcol,LONG align)
+IPTR NL_List_Replace(struct NLData *data,Object *obj,APTR entry,LONG pos,LONG wrapcol,LONG align)
 {
   LONG ent;
   wrapcol &= TE_Wrap_TmpMask;
@@ -898,7 +898,7 @@ ULONG NL_List_Replace(struct NLData *data,Object *obj,APTR entry,LONG pos,LONG w
 
 
 //$$$ARRAY+
-ULONG NL_List_Clear(struct NLData *data,Object *obj)
+IPTR NL_List_Clear(struct NLData *data,Object *obj)
 {
   LONG ent = data->NList_Entries - 1;
   DONE_NOTIFY(NTF_Select | NTF_LV_Select);
@@ -972,7 +972,7 @@ ULONG NL_List_Clear(struct NLData *data,Object *obj)
 
 
 //$$$ARRAY+
-ULONG NL_List_Remove(struct NLData *data,Object *obj,LONG pos)
+IPTR NL_List_Remove(struct NLData *data,Object *obj,LONG pos)
 {
   LONG ent,ent2,skip,nlentries;
   if (pos == MUIV_NList_Remove_First)
@@ -1152,7 +1152,7 @@ ULONG NL_List_Remove(struct NLData *data,Object *obj,LONG pos)
 }
 
 
-ULONG NL_List_Exchange(struct NLData *data,Object *obj,LONG pos1,LONG pos2)
+IPTR NL_List_Exchange(struct NLData *data,Object *obj,LONG pos1,LONG pos2)
 {
   LONG ent1, ent2;
   switch (pos1)
@@ -1241,7 +1241,7 @@ ULONG NL_List_Exchange(struct NLData *data,Object *obj,LONG pos1,LONG pos2)
 
 
 //$$$ARRAY+
-ULONG NL_List_Move_Selected(struct NLData *data,Object *obj,LONG to)
+IPTR NL_List_Move_Selected(struct NLData *data,Object *obj,LONG to)
 {
   LONG num_sel = 0;
   long first,last,ent,ent2,ent3,act,act2,dest;
@@ -1419,7 +1419,7 @@ ULONG NL_List_Move_Selected(struct NLData *data,Object *obj,LONG to)
 
 
 //$$$ARRAY+
-ULONG NL_List_Move(struct NLData *data,Object *obj,LONG from,LONG to)
+IPTR NL_List_Move(struct NLData *data,Object *obj,LONG from,LONG to)
 {
   LONG ent1, ent2;
 
@@ -1544,7 +1544,7 @@ ULONG NL_List_Move(struct NLData *data,Object *obj,LONG from,LONG to)
 
 
 
-ULONG mNL_List_Sort(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort *msg)
+IPTR mNL_List_Sort(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
@@ -1552,7 +1552,7 @@ ULONG mNL_List_Sort(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort *msg)
 }
 
 
-ULONG mNL_List_Sort2(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort2 *msg)
+IPTR mNL_List_Sort2(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort2 *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   if ((msg->sort_type_add) && ((data->NList_SortType & ~MUIV_NList_SortTypeAdd_Mask) == msg->sort_type))
@@ -1564,7 +1564,7 @@ ULONG mNL_List_Sort2(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort2 *msg
 }
 
 
-ULONG mNL_List_Sort3(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort3 *msg)
+IPTR mNL_List_Sort3(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort3 *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   if (msg->which == MUIV_NList_Sort3_SortType_2)
@@ -1594,7 +1594,7 @@ ULONG mNL_List_Sort3(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort3 *msg
 }
 
 
-ULONG mNL_List_Insert(struct IClass *cl,Object *obj,struct  MUIP_NList_Insert *msg)
+IPTR mNL_List_Insert(struct IClass *cl,Object *obj,struct  MUIP_NList_Insert *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
@@ -1602,7 +1602,7 @@ ULONG mNL_List_Insert(struct IClass *cl,Object *obj,struct  MUIP_NList_Insert *m
 }
 
 
-ULONG mNL_List_InsertSingle(struct IClass *cl,Object *obj,struct  MUIP_NList_InsertSingle *msg)
+IPTR mNL_List_InsertSingle(struct IClass *cl,Object *obj,struct  MUIP_NList_InsertSingle *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
@@ -1612,7 +1612,7 @@ ULONG mNL_List_InsertSingle(struct IClass *cl,Object *obj,struct  MUIP_NList_Ins
 }
 
 
-ULONG mNL_List_InsertWrap(struct IClass *cl,Object *obj,struct  MUIP_NList_InsertWrap *msg)
+IPTR mNL_List_InsertWrap(struct IClass *cl,Object *obj,struct  MUIP_NList_InsertWrap *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
@@ -1620,7 +1620,7 @@ ULONG mNL_List_InsertWrap(struct IClass *cl,Object *obj,struct  MUIP_NList_Inser
 }
 
 
-ULONG mNL_List_InsertSingleWrap(struct IClass *cl,Object *obj,struct  MUIP_NList_InsertSingleWrap *msg)
+IPTR mNL_List_InsertSingleWrap(struct IClass *cl,Object *obj,struct  MUIP_NList_InsertSingleWrap *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
@@ -1630,7 +1630,7 @@ ULONG mNL_List_InsertSingleWrap(struct IClass *cl,Object *obj,struct  MUIP_NList
 }
 
 
-ULONG mNL_List_ReplaceSingle(struct IClass *cl,Object *obj,struct  MUIP_NList_ReplaceSingle *msg)
+IPTR mNL_List_ReplaceSingle(struct IClass *cl,Object *obj,struct  MUIP_NList_ReplaceSingle *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
@@ -1638,7 +1638,7 @@ ULONG mNL_List_ReplaceSingle(struct IClass *cl,Object *obj,struct  MUIP_NList_Re
 }
 
 
-ULONG mNL_List_Exchange(struct IClass *cl,Object *obj,struct MUIP_NList_Exchange *msg)
+IPTR mNL_List_Exchange(struct IClass *cl,Object *obj,struct MUIP_NList_Exchange *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
@@ -1646,7 +1646,7 @@ ULONG mNL_List_Exchange(struct IClass *cl,Object *obj,struct MUIP_NList_Exchange
 }
 
 
-ULONG mNL_List_Move(struct IClass *cl,Object *obj,struct MUIP_NList_Move *msg)
+IPTR mNL_List_Move(struct IClass *cl,Object *obj,struct MUIP_NList_Move *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
@@ -1654,7 +1654,7 @@ ULONG mNL_List_Move(struct IClass *cl,Object *obj,struct MUIP_NList_Move *msg)
 }
 
 
-ULONG mNL_List_Clear(struct IClass *cl,Object *obj,struct  MUIP_NList_Clear *msg)
+IPTR mNL_List_Clear(struct IClass *cl,Object *obj,struct  MUIP_NList_Clear *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
@@ -1662,7 +1662,7 @@ ULONG mNL_List_Clear(struct IClass *cl,Object *obj,struct  MUIP_NList_Clear *msg
 }
 
 
-ULONG mNL_List_Remove(struct IClass *cl,Object *obj,struct MUIP_NList_Remove *msg)
+IPTR mNL_List_Remove(struct IClass *cl,Object *obj,struct MUIP_NList_Remove *msg)
 {
   struct NLData *data = INST_DATA(cl,obj);
   /*DoSuperMethodA(cl,obj,(Msg) msg);*/
@@ -1676,7 +1676,7 @@ ULONG mNL_List_Remove(struct IClass *cl,Object *obj,struct MUIP_NList_Remove *ms
 
 
 
-ULONG mNL_DragQuery(struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg)
+IPTR mNL_DragQuery(struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   STACK_CHECK;
@@ -1695,7 +1695,7 @@ ULONG mNL_DragQuery(struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg)
 }
 
 
-ULONG mNL_DragBegin(struct IClass *cl,Object *obj,struct MUIP_DragBegin *msg)
+IPTR mNL_DragBegin(struct IClass *cl,Object *obj,struct MUIP_DragBegin *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   data->NList_DropMark = DROPMARK_START;
@@ -1707,7 +1707,7 @@ ULONG mNL_DragBegin(struct IClass *cl,Object *obj,struct MUIP_DragBegin *msg)
 }
 
 
-ULONG mNL_DragReport(struct IClass *cl,Object *obj,struct MUIP_DragReport *msg)
+IPTR mNL_DragReport(struct IClass *cl,Object *obj,struct MUIP_DragReport *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   LONG mdy,type,lyl = DROPMARK_NONE;
@@ -1850,7 +1850,7 @@ ULONG mNL_DragReport(struct IClass *cl,Object *obj,struct MUIP_DragReport *msg)
 }
 
 
-ULONG mNL_DragFinish(struct IClass *cl,Object *obj,struct MUIP_DragFinish *msg)
+IPTR mNL_DragFinish(struct IClass *cl,Object *obj,struct MUIP_DragFinish *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   if (data->NList_DropMark == DROPMARK_START)
@@ -1875,7 +1875,7 @@ ULONG mNL_DragFinish(struct IClass *cl,Object *obj,struct MUIP_DragFinish *msg)
 }
 
 
-ULONG mNL_DragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
+IPTR mNL_DragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   LONG ent = data->NList_DropMark;
@@ -1899,13 +1899,13 @@ ULONG mNL_DragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
 }
 
 
-ULONG mNL_DropType(struct IClass *cl,Object *obj,struct MUIP_NList_DropType *msg)
+IPTR mNL_DropType(struct IClass *cl,Object *obj,struct MUIP_NList_DropType *msg)
 {
   /*register struct NLData *data = INST_DATA(cl,obj);*/
   return(0);
 }
 
-ULONG mNL_DropEntryDrawErase(struct IClass *cl,Object *obj,struct MUIP_NList_DropEntryDrawErase *msg)
+IPTR mNL_DropEntryDrawErase(struct IClass *cl,Object *obj,struct MUIP_NList_DropEntryDrawErase *msg)
 {
   /*register struct NLData *data = INST_DATA(cl,obj);*/
   return(MUIM_NList_DropEntryDrawErase);

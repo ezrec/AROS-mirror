@@ -331,7 +331,7 @@ Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 }
 #endif
 
-ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
+IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct NLData *data;
   //$$$$Sensei: msg->ops_AttrList is changed to taglist EVERYWHERE in OM_NEW!!!
@@ -1025,11 +1025,11 @@ kprintf("NGR_Class = %x\n", NGR_Class);
 
 /*D(bug("%lx|NEW 9 \n",obj));*/
 
-  return((ULONG)obj);
+  return((IPTR)obj);
 }
 
 
-ULONG mNL_Dispose(struct IClass *cl,Object *obj,Msg msg)
+IPTR mNL_Dispose(struct IClass *cl,Object *obj,Msg msg)
 {
   register struct NLData *data;
   data = INST_DATA(cl,obj);
@@ -1077,7 +1077,7 @@ ULONG mNL_Dispose(struct IClass *cl,Object *obj,Msg msg)
 
 
 
-ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
+IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 {
   register struct NLData *data;
   LONG ent;
@@ -1252,7 +1252,7 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     while (o)
     { if (get(o,MUIA_Listview_List,&tagobj))
       { if ((tagobj == obj) && !get(o,MUIA_NListview_NList,&tagobj))
-        { LONG tagval;
+        { IPTR tagval;
           data->listobj = o;
           WANT_NOTIFY(NTF_LV_Select);
           WANT_NOTIFY(NTF_LV_Doubleclick);
@@ -1453,7 +1453,7 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 
   {
     Object *o = obj;
-    LONG virtleft,virttop;
+    IPTR virtleft,virttop;
     data->VirtGroup = NULL;
     data->VirtGroup2 = NULL;
     if (!get(o,MUIA_Parent,&o))
@@ -1502,10 +1502,10 @@ ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 
 
 
-ULONG mNL_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
+IPTR mNL_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
-  ULONG retval;
+  IPTR retval;
 
 /*D(bug("%lx|mNL_Cleanup() 1 \n",obj));*/
 

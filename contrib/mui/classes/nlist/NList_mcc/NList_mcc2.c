@@ -106,7 +106,7 @@ static void NL_RejectIDCMP(Object *obj,struct NLData *data,LONG IDCMP_val,BOOL r
   }
 }
 
-ULONG mNL_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+IPTR mNL_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   ULONG NotNotify = data->DoNotify;
@@ -235,10 +235,10 @@ ULONG mNL_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
 
 
 
-ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+IPTR mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
-  ULONG retval = 0;
+  IPTR retval = 0;
   ULONG NotNotify = data->DoNotify;
   LONG tempbutton;
   LONG tempbuttonline;
@@ -285,7 +285,7 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
   /*D(bug("NL: mNL_HandleEvent() /before \n"));*/
 
   if (msg->imsg && !data->NList_Quiet && !data->NList_Disabled)
-  { LONG tagval,tagval2;
+  { IPTR tagval,tagval2;
     LONG drag_ok = FALSE;
     WORD hfirst = data->NList_Horiz_AffFirst & ~1;
     WORD hfirsthpos = hfirst - data->hpos;
@@ -758,9 +758,9 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
               }
               if (data->NList_DefaultObjectOnClick)
               {
-                ULONG tst;
+                IPTR tst;
                 get(_win(obj), MUIA_Window_ActiveObject, &tst);
-                if ((tst != MUIV_Window_ActiveObject_None) && (tst != data->NList_KeepActive) && (tst != (ULONG) obj))
+                if ((tst != MUIV_Window_ActiveObject_None) && (tst != data->NList_KeepActive) && (tst != (IPTR) obj))
                 { if (data->NList_MakeActive)
                     set(_win(obj), MUIA_Window_ActiveObject, data->NList_MakeActive);
                   else
@@ -841,7 +841,7 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
 
             if (do_else && (data->adjustbar == -1) && (data->affbutton < 0) && (ly >= 0) && (lyl >= 0) && (lyl < data->NList_Visible))
             {
-              long lactive = lyl + data->NList_First;
+              LONG lactive = lyl + data->NList_First;
               if ((lactive >= 0) && (lactive < data->NList_Entries))
               {
                 if (data->NList_Input && !data->NList_TypeSelect)
@@ -886,9 +886,9 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
           else
           {
             if ((msg->imsg->Code==SELECTDOWN) && data->NList_DefaultObjectOnClick) /* click not in _isinobject2() */
-            { ULONG tst;
+            { IPTR tst;
               get(_win(obj), MUIA_Window_DefaultObject, &tst);
-              if (tst == (ULONG) obj)
+              if (tst == (IPTR) obj)
               { set(_win(obj), MUIA_Window_DefaultObject, NULL);
               }
             }
@@ -1718,10 +1718,10 @@ ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
 }
 
 
-ULONG mNL_CreateDragImage(struct IClass *cl,Object *obj,struct MUIP_CreateDragImage *msg)
+IPTR mNL_CreateDragImage(struct IClass *cl,Object *obj,struct MUIP_CreateDragImage *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
-  ULONG retval;
+  IPTR retval;
   if (data->DragRPort)
   { _rp(obj) = data->DragRPort;
     _left(obj) = 0;
@@ -1743,10 +1743,10 @@ ULONG mNL_CreateDragImage(struct IClass *cl,Object *obj,struct MUIP_CreateDragIm
 }
 
 
-ULONG mNL_DeleteDragImage(struct IClass *cl,Object *obj,struct MUIP_DeleteDragImage *msg)
+IPTR mNL_DeleteDragImage(struct IClass *cl,Object *obj,struct MUIP_DeleteDragImage *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
-  ULONG retval = DoSuperMethodA(cl,obj,(Msg) msg);
+  IPTR retval = DoSuperMethodA(cl,obj,(Msg) msg);
   if (data->DragRPort)
     DisposeDragRPort(obj,data);
   return (retval);
@@ -1816,7 +1816,7 @@ BOOL NL_Prop_First_Adjust(Object *obj,struct NLData *data)
 }
 
 
-ULONG mNL_Trigger(struct IClass *cl,Object *obj,Msg msg)
+IPTR mNL_Trigger(struct IClass *cl,Object *obj,Msg msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   /* attention, can be called with msg = NULL */

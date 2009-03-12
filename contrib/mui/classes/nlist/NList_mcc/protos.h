@@ -30,10 +30,10 @@
 
 extern void release_pen(struct MUI_RenderInfo *mri, ULONG *pen);
 extern void obtain_pen(struct MUI_RenderInfo *mri, ULONG *pen, struct MUI_PenSpec *ps);
-extern ULONG mNL_New(struct IClass *cl,Object *obj,struct opSet *msg);
-extern ULONG mNL_Dispose(struct IClass *cl,Object *obj,Msg msg);
-extern ULONG mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg);
-extern ULONG mNL_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg);
+extern IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg);
+extern IPTR mNL_Dispose(struct IClass *cl,Object *obj,Msg msg);
+extern IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg);
+extern IPTR mNL_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg);
 
 /* NList_mcc0.c */
 
@@ -43,25 +43,25 @@ extern ULONG mNL_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
 
 /* NList_mcc1.c */
 
-extern ULONG mNL_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg);
-extern ULONG mNL_Notify(struct IClass *cl,Object *obj,struct MUIP_Notify *msg);
-extern ULONG mNL_Set(struct IClass *cl,Object *obj,Msg msg);
-extern ULONG mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg);
+extern IPTR mNL_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg);
+extern IPTR mNL_Notify(struct IClass *cl,Object *obj,struct MUIP_Notify *msg);
+extern IPTR mNL_Set(struct IClass *cl,Object *obj,Msg msg);
+extern IPTR mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg);
 
 /* NList_mcc2.c */
 
-extern ULONG mNL_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg);
-extern ULONG mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg);
-extern ULONG mNL_CreateDragImage(struct IClass *cl,Object *obj,struct MUIP_CreateDragImage *msg);
-extern ULONG mNL_DeleteDragImage(struct IClass *cl,Object *obj,struct MUIP_DeleteDragImage *msg);
+extern IPTR mNL_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg);
+extern IPTR mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg);
+extern IPTR mNL_CreateDragImage(struct IClass *cl,Object *obj,struct MUIP_CreateDragImage *msg);
+extern IPTR mNL_DeleteDragImage(struct IClass *cl,Object *obj,struct MUIP_DeleteDragImage *msg);
 extern BOOL  NL_Prop_First_Adjust(Object *obj,struct NLData *data);
-extern ULONG mNL_Trigger(struct IClass *cl,Object *obj,Msg msg);
+extern IPTR mNL_Trigger(struct IClass *cl,Object *obj,Msg msg);
 
 /* NList_mcc3.c */
 
 extern void NL_SetObjInfos(Object *obj,struct NLData *data,BOOL setall);
-extern ULONG mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg);
-extern ULONG mNL_DropDraw(struct IClass *cl,Object *obj,struct MUIP_NList_DropDraw *msg);
+extern IPTR mNL_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg);
+extern IPTR mNL_DropDraw(struct IClass *cl,Object *obj,struct MUIP_NList_DropDraw *msg);
 
 /* NList_mcc4.c */
 
@@ -83,7 +83,7 @@ extern void NL_SetColsRem(Object *obj,struct NLData *data,LONG ent);
 extern void NL_SetCols(Object *obj,struct NLData *data);
 extern LONG NL_DoNotifies(Object *obj,struct NLData *data,LONG which);
 extern void NL_UpdateScrollersValues(Object *obj,struct NLData *data);
-extern ULONG NL_UpdateScrollers(Object *obj,struct NLData *data,BOOL force);
+extern IPTR NL_UpdateScrollers(Object *obj,struct NLData *data,BOOL force);
 extern LONG NL_DrawQuietBG(Object *obj,struct NLData *data,LONG dowhat,LONG bg);
 extern void NL_Select(Object *obj,struct NLData *data,LONG dowhat,LONG ent,BYTE sel);
 extern void ScrollVert(Object *obj,struct NLData *data,WORD dy,LONG LPVisible);
@@ -93,12 +93,12 @@ extern LONG  NL_ColumnToCol(Object *obj,struct NLData *data,LONG column);
 extern LONG  NL_SetCol(Object *obj,struct NLData *data,LONG column,LONG col);
 extern LONG  NL_ColWidth(Object *obj,struct NLData *data,LONG col,LONG width);
 extern BYTE *NL_Columns(Object *obj,struct NLData *data,BYTE *columns);
-extern ULONG mNL_ColToColumn(struct IClass *cl,Object *obj,struct MUIP_NList_ColToColumn *msg);
-extern ULONG mNL_ColumnToCol(struct IClass *cl,Object *obj,struct MUIP_NList_ColumnToCol *msg);
-extern ULONG mNL_SetColumnCol(struct IClass *cl,Object *obj,struct MUIP_NList_SetColumnCol *msg);
-extern ULONG mNL_List_ColWidth(struct IClass *cl,Object *obj,struct MUIP_NList_ColWidth *msg);
-extern ULONG mNL_ContextMenuBuild(struct IClass *cl,Object *obj,struct MUIP_ContextMenuBuild *msg);
-extern ULONG mNL_ContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMenuChoice *msg);
+extern IPTR mNL_ColToColumn(struct IClass *cl,Object *obj,struct MUIP_NList_ColToColumn *msg);
+extern IPTR mNL_ColumnToCol(struct IClass *cl,Object *obj,struct MUIP_NList_ColumnToCol *msg);
+extern IPTR mNL_SetColumnCol(struct IClass *cl,Object *obj,struct MUIP_NList_SetColumnCol *msg);
+extern IPTR mNL_List_ColWidth(struct IClass *cl,Object *obj,struct MUIP_NList_ColWidth *msg);
+extern IPTR mNL_ContextMenuBuild(struct IClass *cl,Object *obj,struct MUIP_ContextMenuBuild *msg);
+extern IPTR mNL_ContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMenuChoice *msg);
 extern void NL_Stack_Alert(Object *obj,struct NLData *data,LONG why);
 
 /* NList_mcc6.c */
@@ -123,58 +123,58 @@ extern void NL_List_First(Object *obj,struct NLData *data,LONG lf,struct TagItem
 extern void NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,LONG newactsel,LONG acceptsame);
 extern void NL_List_Horiz_First(Object *obj,struct NLData *data,LONG hf,struct TagItem *tag);
 extern LONG NList_Compare(Object *obj,struct NLData *data,APTR s1,APTR s2);
-extern ULONG NL_List_SelectChar(Object *obj,struct NLData *data,LONG pos,LONG seltype,LONG *state);
-extern ULONG NL_List_Select(Object *obj,struct NLData *data,LONG pos,LONG pos2,LONG seltype,LONG *state);
-extern ULONG NL_List_TestPosOld(Object *obj,struct NLData *data,LONG x,LONG y,struct MUI_List_TestPos_Result *res);
-extern ULONG NL_List_TestPos(Object *obj,struct NLData *data,LONG x,LONG y,struct MUI_NList_TestPos_Result *res);
+extern IPTR NL_List_SelectChar(Object *obj,struct NLData *data,LONG pos,LONG seltype,LONG *state);
+extern IPTR NL_List_Select(Object *obj,struct NLData *data,LONG pos,LONG pos2,LONG seltype,LONG *state);
+extern IPTR NL_List_TestPosOld(Object *obj,struct NLData *data,LONG x,LONG y,struct MUI_List_TestPos_Result *res);
+extern IPTR NL_List_TestPos(Object *obj,struct NLData *data,LONG x,LONG y,struct MUI_NList_TestPos_Result *res);
 
-extern ULONG mNL_List_GetEntry(struct IClass *cl,Object *obj,struct  MUIP_NList_GetEntry *msg);
-extern ULONG mNL_List_GetEntryInfo(struct IClass *cl,Object *obj,struct  MUIP_NList_GetEntryInfo *msg);
-extern ULONG mNL_List_Jump(struct IClass *cl,Object *obj,struct  MUIP_NList_Jump *msg);
-extern ULONG mNL_List_Select(struct IClass *cl,Object *obj,struct  MUIP_NList_Select *msg);
-extern ULONG mNL_List_TestPos(struct IClass *cl,Object *obj,struct MUIP_NList_TestPos *msg);
-extern ULONG mNL_List_TestPosOld(struct IClass *cl,Object *obj,struct MUIP_List_TestPos *msg);
-extern ULONG mNL_List_Redraw(struct IClass *cl,Object *obj,struct MUIP_NList_Redraw *msg);
-extern ULONG mNL_List_RedrawEntry(struct IClass *cl,Object *obj,struct MUIP_NList_RedrawEntry *msg);
-extern ULONG mNL_List_NextSelected(struct IClass *cl,Object *obj,struct MUIP_NList_NextSelected *msg);
-extern ULONG mNL_List_PrevSelected(struct IClass *cl,Object *obj,struct MUIP_NList_PrevSelected *msg);
-extern ULONG mNL_List_GetSelectInfo(struct IClass *cl,Object *obj,struct MUIP_NList_GetSelectInfo *msg);
-extern ULONG mNL_List_DoMethod(struct IClass *cl,Object *obj,struct MUIP_NList_DoMethod *msg);
-extern ULONG mNL_List_GetPos(struct IClass *cl,Object *obj,struct MUIP_NList_GetPos *msg);
+extern IPTR mNL_List_GetEntry(struct IClass *cl,Object *obj,struct  MUIP_NList_GetEntry *msg);
+extern IPTR mNL_List_GetEntryInfo(struct IClass *cl,Object *obj,struct  MUIP_NList_GetEntryInfo *msg);
+extern IPTR mNL_List_Jump(struct IClass *cl,Object *obj,struct  MUIP_NList_Jump *msg);
+extern IPTR mNL_List_Select(struct IClass *cl,Object *obj,struct  MUIP_NList_Select *msg);
+extern IPTR mNL_List_TestPos(struct IClass *cl,Object *obj,struct MUIP_NList_TestPos *msg);
+extern IPTR mNL_List_TestPosOld(struct IClass *cl,Object *obj,struct MUIP_List_TestPos *msg);
+extern IPTR mNL_List_Redraw(struct IClass *cl,Object *obj,struct MUIP_NList_Redraw *msg);
+extern IPTR mNL_List_RedrawEntry(struct IClass *cl,Object *obj,struct MUIP_NList_RedrawEntry *msg);
+extern IPTR mNL_List_NextSelected(struct IClass *cl,Object *obj,struct MUIP_NList_NextSelected *msg);
+extern IPTR mNL_List_PrevSelected(struct IClass *cl,Object *obj,struct MUIP_NList_PrevSelected *msg);
+extern IPTR mNL_List_GetSelectInfo(struct IClass *cl,Object *obj,struct MUIP_NList_GetSelectInfo *msg);
+extern IPTR mNL_List_DoMethod(struct IClass *cl,Object *obj,struct MUIP_NList_DoMethod *msg);
+extern IPTR mNL_List_GetPos(struct IClass *cl,Object *obj,struct MUIP_NList_GetPos *msg);
 
 /* NList_func2.c */
 
 extern LONG  NL_GetSelects(struct NLData *data,Object *obj,LONG ent);
 extern BOOL  NL_InsertTmpLine(struct NLData *data,Object *obj,LONG pos);
 extern void  NL_DeleteTmpLine(struct NLData *data,Object *obj,LONG pos);
-extern ULONG NL_List_Sort(Object *obj,struct NLData *data);
-extern ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LONG pos,LONG wrapcol,LONG align,ULONG flags);
-extern ULONG NL_List_Replace(struct NLData *data,Object *obj,APTR entry,LONG pos,LONG wrapcol,LONG align);
-extern ULONG NL_List_Clear(struct NLData *data,Object *obj);
-extern ULONG NL_List_Remove(struct NLData *data,Object *obj,LONG pos);
-extern ULONG NL_List_Exchange(struct NLData *data,Object *obj,LONG pos1,LONG pos2);
-extern ULONG NL_List_Move_Selected(struct NLData *data,Object *obj,LONG to);
-extern ULONG NL_List_Move(struct NLData *data,Object *obj,LONG from,LONG to);
+extern IPTR NL_List_Sort(Object *obj,struct NLData *data);
+extern IPTR NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LONG pos,LONG wrapcol,LONG align,ULONG flags);
+extern IPTR NL_List_Replace(struct NLData *data,Object *obj,APTR entry,LONG pos,LONG wrapcol,LONG align);
+extern IPTR NL_List_Clear(struct NLData *data,Object *obj);
+extern IPTR NL_List_Remove(struct NLData *data,Object *obj,LONG pos);
+extern IPTR NL_List_Exchange(struct NLData *data,Object *obj,LONG pos1,LONG pos2);
+extern IPTR NL_List_Move_Selected(struct NLData *data,Object *obj,LONG to);
+extern IPTR NL_List_Move(struct NLData *data,Object *obj,LONG from,LONG to);
 
-extern ULONG mNL_List_Sort(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort *msg);
-extern ULONG mNL_List_Sort2(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort2 *msg);
-extern ULONG mNL_List_Sort3(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort3 *msg);
-extern ULONG mNL_List_Insert(struct IClass *cl,Object *obj,struct  MUIP_NList_Insert *msg);
-extern ULONG mNL_List_InsertSingle(struct IClass *cl,Object *obj,struct  MUIP_NList_InsertSingle *msg);
-extern ULONG mNL_List_InsertWrap(struct IClass *cl,Object *obj,struct  MUIP_NList_InsertWrap *msg);
-extern ULONG mNL_List_InsertSingleWrap(struct IClass *cl,Object *obj,struct  MUIP_NList_InsertSingleWrap *msg);
-extern ULONG mNL_List_ReplaceSingle(struct IClass *cl,Object *obj,struct  MUIP_NList_ReplaceSingle *msg);
-extern ULONG mNL_List_Exchange(struct IClass *cl,Object *obj,struct MUIP_NList_Exchange *msg);
-extern ULONG mNL_List_Move(struct IClass *cl,Object *obj,struct MUIP_NList_Move *msg);
-extern ULONG mNL_List_Clear(struct IClass *cl,Object *obj,struct  MUIP_NList_Clear *msg);
-extern ULONG mNL_List_Remove(struct IClass *cl,Object *obj,struct MUIP_NList_Remove *msg);
-extern ULONG mNL_DragQuery(struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg);
-extern ULONG mNL_DragBegin(struct IClass *cl,Object *obj,struct MUIP_DragBegin *msg);
-extern ULONG mNL_DragReport(struct IClass *cl,Object *obj,struct MUIP_DragReport *msg);
-extern ULONG mNL_DragFinish(struct IClass *cl,Object *obj,struct MUIP_DragFinish *msg);
-extern ULONG mNL_DragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg);
-extern ULONG mNL_DropType(struct IClass *cl,Object *obj,struct MUIP_NList_DropType *msg);
-extern ULONG mNL_DropEntryDrawErase(struct IClass *cl,Object *obj,struct MUIP_NList_DropEntryDrawErase *msg);
+extern IPTR mNL_List_Sort(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort *msg);
+extern IPTR mNL_List_Sort2(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort2 *msg);
+extern IPTR mNL_List_Sort3(struct IClass *cl,Object *obj,struct  MUIP_NList_Sort3 *msg);
+extern IPTR mNL_List_Insert(struct IClass *cl,Object *obj,struct  MUIP_NList_Insert *msg);
+extern IPTR mNL_List_InsertSingle(struct IClass *cl,Object *obj,struct  MUIP_NList_InsertSingle *msg);
+extern IPTR mNL_List_InsertWrap(struct IClass *cl,Object *obj,struct  MUIP_NList_InsertWrap *msg);
+extern IPTR mNL_List_InsertSingleWrap(struct IClass *cl,Object *obj,struct  MUIP_NList_InsertSingleWrap *msg);
+extern IPTR mNL_List_ReplaceSingle(struct IClass *cl,Object *obj,struct  MUIP_NList_ReplaceSingle *msg);
+extern IPTR mNL_List_Exchange(struct IClass *cl,Object *obj,struct MUIP_NList_Exchange *msg);
+extern IPTR mNL_List_Move(struct IClass *cl,Object *obj,struct MUIP_NList_Move *msg);
+extern IPTR mNL_List_Clear(struct IClass *cl,Object *obj,struct  MUIP_NList_Clear *msg);
+extern IPTR mNL_List_Remove(struct IClass *cl,Object *obj,struct MUIP_NList_Remove *msg);
+extern IPTR mNL_DragQuery(struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg);
+extern IPTR mNL_DragBegin(struct IClass *cl,Object *obj,struct MUIP_DragBegin *msg);
+extern IPTR mNL_DragReport(struct IClass *cl,Object *obj,struct MUIP_DragReport *msg);
+extern IPTR mNL_DragFinish(struct IClass *cl,Object *obj,struct MUIP_DragFinish *msg);
+extern IPTR mNL_DragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg);
+extern IPTR mNL_DropType(struct IClass *cl,Object *obj,struct MUIP_NList_DropType *msg);
+extern IPTR mNL_DropEntryDrawErase(struct IClass *cl,Object *obj,struct MUIP_NList_DropEntryDrawErase *msg);
 
 /* NList_func3.c */
 
@@ -199,8 +199,8 @@ extern void NL_Free_Format(Object *obj,struct NLData *data);
 extern BOOL NL_Read_Format(Object *obj,struct NLData *data,char *strformat,BOOL oldlist);
 extern LONG NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG clipnum,APTR *entries,struct Hook *hook);
 
-extern ULONG mNL_CopyToClip(struct IClass *cl,Object *obj,struct MUIP_NList_CopyToClip *msg);
-extern ULONG mNL_CopyTo(struct IClass *cl,Object *obj,struct MUIP_NList_CopyTo *msg);
+extern IPTR mNL_CopyToClip(struct IClass *cl,Object *obj,struct MUIP_NList_CopyToClip *msg);
+extern IPTR mNL_CopyTo(struct IClass *cl,Object *obj,struct MUIP_NList_CopyTo *msg);
 
 /* NList_func4.c */
 
@@ -216,14 +216,14 @@ extern void GetNImage_Sizes(Object *obj,struct NLData *data);
 extern void GetNImage_End(Object *obj,struct NLData *data);
 extern void GetImages(Object *obj,struct NLData *data);
 
-extern ULONG NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags);
-extern ULONG NL_DeleteImage(Object *obj,struct NLData *data,APTR listimg);
-extern ULONG NL_CreateImages(Object *obj,struct NLData *data);
-extern ULONG NL_DeleteImages(Object *obj,struct NLData *data);
-extern ULONG NL_UseImage(Object *obj,struct NLData *data,Object *imgobj,LONG imgnum,ULONG flags);
-extern ULONG mNL_CreateImage(struct IClass *cl,Object *obj,struct MUIP_NList_CreateImage *msg);
-extern ULONG mNL_DeleteImage(struct IClass *cl,Object *obj,struct MUIP_NList_DeleteImage *msg);
-extern ULONG mNL_UseImage(struct IClass *cl,Object *obj,struct MUIP_NList_UseImage *msg);
+extern IPTR NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags);
+extern IPTR NL_DeleteImage(Object *obj,struct NLData *data,APTR listimg);
+extern IPTR NL_CreateImages(Object *obj,struct NLData *data);
+extern IPTR NL_DeleteImages(Object *obj,struct NLData *data);
+extern IPTR NL_UseImage(Object *obj,struct NLData *data,Object *imgobj,LONG imgnum,ULONG flags);
+extern IPTR mNL_CreateImage(struct IClass *cl,Object *obj,struct MUIP_NList_CreateImage *msg);
+extern IPTR mNL_DeleteImage(struct IClass *cl,Object *obj,struct MUIP_NList_DeleteImage *msg);
+extern IPTR mNL_UseImage(struct IClass *cl,Object *obj,struct MUIP_NList_UseImage *msg);
 
 /* Move.c */
 

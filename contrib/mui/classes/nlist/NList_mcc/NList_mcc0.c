@@ -29,9 +29,9 @@
 
 #define MAKE_ID(a,b,c,d) ((ULONG) (a)<<24 | (ULONG) (b)<<16 | (ULONG) (c)<<8 | (ULONG) (d))
 
-static ULONG mNL_Show(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+static IPTR mNL_Show(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
-  ULONG retval;
+  IPTR retval;
   register struct NLData *data = INST_DATA(cl,obj);
 
   STACK_CHECK;
@@ -90,10 +90,10 @@ static ULONG mNL_Show(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
 }
 
 
-static ULONG mNL_Hide(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+static IPTR mNL_Hide(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
-  ULONG retval;
+  IPTR retval;
   STACK_CHECK;
   D(bug("NL: mNL_Hide() \n"));
 /*D(bug("%lx|mNL_Hide() 1 \n",obj));*/
@@ -114,7 +114,7 @@ static ULONG mNL_Hide(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
 
 
 
-static ULONG mNL_Import(struct IClass *cl,Object *obj,struct MUIP_Import *msg)
+static IPTR mNL_Import(struct IClass *cl,Object *obj,struct MUIP_Import *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   ULONG id;
@@ -222,7 +222,7 @@ static ULONG mNL_Import(struct IClass *cl,Object *obj,struct MUIP_Import *msg)
 
 
 
-static ULONG mNL_Export(struct IClass *cl,Object *obj,struct MUIP_Export *msg)
+static IPTR mNL_Export(struct IClass *cl,Object *obj,struct MUIP_Export *msg)
 {
   register struct NLData *data = INST_DATA(cl,obj);
   ULONG id;
@@ -350,7 +350,7 @@ static ULONG mNL_Export(struct IClass *cl,Object *obj,struct MUIP_Export *msg)
 }
 
 //$$$Sensei
-static ULONG mNL_List_Construct( struct IClass *cl, Object *obj, struct MUIP_NList_Construct *msg )
+static IPTR mNL_List_Construct( struct IClass *cl, Object *obj, struct MUIP_NList_Construct *msg )
 {
 
     APTR entry = msg->entry;
@@ -375,12 +375,12 @@ static ULONG mNL_List_Construct( struct IClass *cl, Object *obj, struct MUIP_NLi
 
     }
 
-    return( (ULONG) entry );
+    return( (IPTR) entry );
 
 }
 
 //$$$Sensei
-static ULONG mNL_List_Destruct( struct IClass *cl, Object *obj, struct MUIP_NList_Destruct *msg )
+static IPTR mNL_List_Destruct( struct IClass *cl, Object *obj, struct MUIP_NList_Destruct *msg )
 {
 
     APTR entry = msg->entry;
@@ -411,7 +411,7 @@ static ULONG mNL_List_Destruct( struct IClass *cl, Object *obj, struct MUIP_NLis
 
 //$$$Sensei
 // Function directly stolen from original NList_Compare().
-static ULONG mNL_List_Compare( struct IClass *cl, Object *obj, struct MUIP_NList_Compare *msg )
+static IPTR mNL_List_Compare( struct IClass *cl, Object *obj, struct MUIP_NList_Compare *msg )
 {
 	struct NLData	*data	= INST_DATA( cl, obj );
 	APTR	s1	= msg->entry1;
@@ -424,11 +424,11 @@ static ULONG mNL_List_Compare( struct IClass *cl, Object *obj, struct MUIP_NList
 			return ((ULONG) MyCallHookPkt(obj,TRUE,data->NList_CompareHook,s2,s1));
 	}
 	else
-		return ((ULONG) Stricmp(s1,s2));
+		return ((IPTR) Stricmp(s1,s2));
 }
 
 //$$$Sensei
-static ULONG mNL_List_Display( struct IClass *cl, Object *obj, struct MUIP_NList_Display *msg )
+static IPTR mNL_List_Display( struct IClass *cl, Object *obj, struct MUIP_NList_Display *msg )
 {
 	struct NLData *data = INST_DATA( cl, obj );
 
@@ -456,7 +456,7 @@ DISPATCHERPROTO(_Dispatcher)
   DISPATCHER_INIT
   
   register struct NLData *data = NULL;
-  ULONG retval = 0;
+  IPTR retval = 0;
   ULONG NotNotify = ~0;
 
   switch (msg->MethodID)
