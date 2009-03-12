@@ -1011,84 +1011,90 @@ int main(int argc,char *argv[])
             MUIA_Window_ID, MAKE_ID('M','F','T','P'),
             WindowContents, VGroup,
 
-                Child, HGroup,
-                    MUIA_Weight, 53,
-                    Child, VGroup,
-                        MUIA_Group_VertSpacing, 1,
-                        Child, (IPTR)(cn->lv.ListView = NListviewObject,
-                            MUIA_NListview_NList, NListObject,
-                                MUIA_CycleChain, 1, 
-                                MUIA_NList_Format, "MAXW=50,MAXW=20,MAXW=20,MAXW=10",
-                                MUIA_NList_TypeSelect, MUIV_NList_TypeSelect_Line,
-                                MUIA_NList_MultiSelect, MUIV_NList_MultiSelect_Shifted, 
-                                MUIA_Font, MUIV_Font_Fixed,
-                                MUIA_NList_DisplayHook, &LeftViewDispHook,
-                                MUIA_NList_Title, TRUE,
-                                MUIA_NList_TitleSeparator, TRUE,
-                                MUIA_NList_AutoVisible, TRUE,
-                                MUIA_NList_EntryValueDependent, TRUE,
-                                MUIA_NList_MinColSortable, 0,
-                            End, // NListObject
-                        End), // NListviewObject
-
-                        Child, (IPTR)(cn->S_LEFT_VIEW_PATH = (APTR)StringObject, StringFrame, MUIA_CycleChain, 1, MUIA_String_MaxLen, 512, End),
-                    End, // VGroup
-
-                    Child, VGroup,
-                        MUIA_Group_VertSpacing, 1,
-                        Child, (IPTR)(cn->rv.ListView = NListviewObject, 
-                            MUIA_NListview_NList, NListObject,
-                                MUIA_CycleChain, 1, 
-                                MUIA_NList_Format, "MAXW=50,MAXW=20,MAXW=20,MAXW=10",
-                                MUIA_NList_TypeSelect, MUIV_NList_TypeSelect_Line,
-                                MUIA_NList_MultiSelect, MUIV_NList_MultiSelect_Shifted, 
-                                MUIA_Font, MUIV_Font_Fixed,
-                                MUIA_NList_DisplayHook, &RightViewDispHook,
-                                MUIA_NList_Title, TRUE,
-                                MUIA_NList_TitleSeparator, TRUE,
-                                MUIA_NList_AutoVisible, TRUE,
-                                MUIA_NList_EntryValueDependent, TRUE,
-                                MUIA_NList_MinColSortable, 0,
-                            End, // NListObject
-                        End), // NListviewObject
-
-                        Child, (IPTR)(cn->S_RIGHT_VIEW_PATH = (APTR) StringObject, StringFrame, MUIA_CycleChain, 1, MUIA_String_MaxLen, 512, End),
-                    End, // VGroup
-                End, // HGroup
-                Child, RegisterObject,
-                    MUIA_Background,    MUII_RegisterBack,
-                    MUIA_CycleChain,    TRUE,
-                    MUIA_Register_Titles, logtabs,
+                Child, VGroup,
                     Child, HGroup,
-                        Child, (IPTR)(cn->QueueLV = NListviewObject, 
-                            MUIA_NListview_NList, NListObject,
-                                MUIA_CycleChain, 1, 
-                                MUIA_NList_Format, "MAXW=50,MAXW=20,MAXW=20",
-                                MUIA_NList_TypeSelect, MUIV_NList_TypeSelect_Line,
-                                MUIA_NList_MultiSelect, MUIV_NList_MultiSelect_Shifted, 
-                                MUIA_Font, MUIV_Font_Fixed,
-                                MUIA_NList_DisplayHook, &QueueDisplayHook,
-                                MUIA_NList_Title, TRUE,
-                                MUIA_NList_TitleSeparator, TRUE,
-                                MUIA_NList_AutoVisible, TRUE,
-                                MUIA_NList_EntryValueDependent, TRUE,
-                                MUIA_NList_MinColSortable, 0,
-                            End, // NListObject
-                        End), // NListviewObject
-                    End, // VGroup
+                        MUIA_VertWeight, 60,
+                        Child, VGroup,
+                            MUIA_Group_VertSpacing, 1,
+                            Child, (IPTR)(cn->lv.ListView = NListviewObject,
+                                MUIA_NListview_NList, NListObject,
+                                    MUIA_CycleChain, 1, 
+                                    MUIA_NList_Format, "MAXW=50,MAXW=20,MAXW=20,MAXW=10",
+                                    MUIA_NList_TypeSelect, MUIV_NList_TypeSelect_Line,
+                                    MUIA_NList_MultiSelect, MUIV_NList_MultiSelect_Shifted, 
+                                    MUIA_Font, MUIV_Font_Fixed,
+                                    MUIA_NList_DisplayHook, &LeftViewDispHook,
+                                    MUIA_NList_Title, TRUE,
+                                    MUIA_NList_TitleSeparator, TRUE,
+                                    MUIA_NList_AutoVisible, TRUE,
+                                    MUIA_NList_EntryValueDependent, TRUE,
+                                    MUIA_NList_MinColSortable, 0,
+                                End, // NListObject
+                            End), // NListviewObject
 
-                    Child, HGroup, 
-                        Child, (IPTR)(cn->LV_STATUS = NListviewObject, 
-                            MUIA_Listview_Input, FALSE, 
-                            MUIA_Listview_List, NListObject,
-                                MUIA_CycleChain, 1, 
-                                ReadListFrame,
-                                MUIA_List_ConstructHook, MUIV_NList_ConstructHook_String,
-                                MUIA_List_DestructHook, MUIV_NList_DestructHook_String,
-                                MUIA_List_AutoVisible, TRUE,
-                            End, // NListObject
-                        End), // NListviewObject
+                            Child, (IPTR)(cn->S_LEFT_VIEW_PATH = (APTR)StringObject, StringFrame, MUIA_CycleChain, 1, MUIA_String_MaxLen, 512, End),
+                        End, // VGroup
+
+                        Child, VGroup,
+                            MUIA_Group_VertSpacing, 1,
+                            Child, (IPTR)(cn->rv.ListView = NListviewObject, 
+                                MUIA_NListview_NList, NListObject,
+                                    MUIA_CycleChain, 1, 
+                                    MUIA_NList_Format, "MAXW=50,MAXW=20,MAXW=20,MAXW=10",
+                                    MUIA_NList_TypeSelect, MUIV_NList_TypeSelect_Line,
+                                    MUIA_NList_MultiSelect, MUIV_NList_MultiSelect_Shifted, 
+                                    MUIA_Font, MUIV_Font_Fixed,
+                                    MUIA_NList_DisplayHook, &RightViewDispHook,
+                                    MUIA_NList_Title, TRUE,
+                                    MUIA_NList_TitleSeparator, TRUE,
+                                    MUIA_NList_AutoVisible, TRUE,
+                                    MUIA_NList_EntryValueDependent, TRUE,
+                                    MUIA_NList_MinColSortable, 0,
+                                End, // NListObject
+                            End), // NListviewObject
+
+                            Child, (IPTR)(cn->S_RIGHT_VIEW_PATH = (APTR) StringObject, StringFrame, MUIA_CycleChain, 1, MUIA_String_MaxLen, 512, End),
+                        End, // VGroup
                     End, // HGroup
+
+                    Child, BalanceObject, End,
+
+                    Child, RegisterObject,
+                        MUIA_VertWeight,    40,
+                        MUIA_Background,    MUII_RegisterBack,
+                        MUIA_CycleChain,    TRUE,
+                        MUIA_Register_Titles, logtabs,
+                        Child, HGroup,
+                            Child, (IPTR)(cn->QueueLV = NListviewObject, 
+                                MUIA_NListview_NList, NListObject,
+                                    MUIA_CycleChain, 1, 
+                                    MUIA_NList_Format, "MAXW=50,MAXW=20,MAXW=20",
+                                    MUIA_NList_TypeSelect, MUIV_NList_TypeSelect_Line,
+                                    MUIA_NList_MultiSelect, MUIV_NList_MultiSelect_Shifted, 
+                                    MUIA_Font, MUIV_Font_Fixed,
+                                    MUIA_NList_DisplayHook, &QueueDisplayHook,
+                                    MUIA_NList_Title, TRUE,
+                                    MUIA_NList_TitleSeparator, TRUE,
+                                    MUIA_NList_AutoVisible, TRUE,
+                                    MUIA_NList_EntryValueDependent, TRUE,
+                                    MUIA_NList_MinColSortable, 0,
+                                End, // NListObject
+                            End), // NListviewObject
+                        End, // VGroup
+
+                        Child, HGroup, 
+                            Child, (IPTR)(cn->LV_STATUS = NListviewObject, 
+                                MUIA_Listview_Input, FALSE, 
+                                MUIA_Listview_List, NListObject,
+                                    MUIA_CycleChain, 1, 
+                                    ReadListFrame,
+                                    MUIA_List_ConstructHook, MUIV_NList_ConstructHook_String,
+                                    MUIA_List_DestructHook, MUIV_NList_DestructHook_String,
+                                    MUIA_List_AutoVisible, TRUE,
+                                End, // NListObject
+                            End), // NListviewObject
+                        End, // HGroup
+                    End,
                 End,
 
                 Child, (IPTR)(cn->S_TRANSFER_INFO =  StringObject, StringFrame, 
@@ -1102,63 +1108,63 @@ int main(int argc,char *argv[])
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, 	TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Download  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Download  ", End,
                     End),
 
                     Child, (IPTR)(cn->BTN_UPLOAD = HGroup,
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, 	TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Upload  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Upload  ", End,
                     End),
 
                     Child, (IPTR)(cn->BTN_DELETE = HGroup,
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, 	TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Delete  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Delete  ", End,
                     End),
 
                     Child, (IPTR)(cn->BTN_STOP = HGroup,
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, 	TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Stop  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Stop  ", End,
                     End),
 
                     Child, (IPTR)(cn->BTN_RUN_QUEUE = HGroup,
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, 	TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Run Queue  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Run Queue  ", End,
                     End),
 
                     Child, (IPTR)(cn->BTN_STEP_QUEUE = HGroup,
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, 	TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Step Queue  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Step Queue  ", End,
                     End),
 
                     Child, (IPTR)(cn->BTN_CLEAR_QUEUE = HGroup,
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, 	TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Clear Queue  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Clear Queue  ", End,
                     End),
 
                     Child, (IPTR)(cn->BTN_RENAME = HGroup,
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, 	TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Rename  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Rename  ", End,
                     End),
 
                     Child, (IPTR)(cn->BTN_MAKEDIR = HGroup,
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, 	TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Makedir  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Makedir  ", End,
                     End),
 
                     //
@@ -1175,28 +1181,28 @@ int main(int argc,char *argv[])
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, 	TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Disconnect  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Disconnect  ", End,
                     End),
 
                     Child, (IPTR)(cn->BTN_QUIT = HGroup,
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, 	TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Quit  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Quit  ", End,
                     End),
 
                     Child, (IPTR)(cn->BTN_REFRESH_L = HGroup,
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, 	TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  RefreshL  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  RefreshL  ", End,
                     End),
 
                     Child, (IPTR)(cn->BTN_REFRESH_R = HGroup,
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, 	TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  RefreshR  ", End,
+                        Child,  TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  RefreshR  ", End,
                     End),
                 End,
             End,
@@ -2292,820 +2298,824 @@ BOOL FtpConnect(Connection *cn)
 
 int SockConnect(CSOCK *csock)
 {
-        int ret, status, socket = 1;
-        struct sockaddr_in sockaddr;
-        
-        csock->socket = INVALID_SOCKET;
-        csock->csockerr = 0;
-        csock->sockerr  = 0;
-        
-        if (csock->ip_i == 0 || csock->port == 0) {
-                csock->csockerr = CSOCKERR_WRONGPARAMS;
-                return CSOCKSTATUS_ERROR;
-        }
-        
-        #ifdef DEBUG
-        DebugOutput("SockConnect()\n");
-        #endif
-        
-        socket = socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
-        if (socket != INVALID_SOCKET)
+    int ret, status, socket = 1;
+    struct sockaddr_in sockaddr;
+
+    csock->socket = INVALID_SOCKET;
+    csock->csockerr = 0;
+    csock->sockerr  = 0;
+
+    if (csock->ip_i == 0 || csock->port == 0) {
+            csock->csockerr = CSOCKERR_WRONGPARAMS;
+            return CSOCKSTATUS_ERROR;
+    }
+
+#ifdef DEBUG
+    DebugOutput("SockConnect()\n");
+#endif
+
+    socket = socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
+    if (socket != INVALID_SOCKET)
+    {
+#ifdef DEBUG
+        printf("SockConnect(): socket = %d\n", socket);
+        DebugOutput("SockConnect(): Socket created\n");
+#endif
+        csock->socket = socket;
+
+        /* server address  */
+        sockaddr.sin_family = AF_INET;
+        sockaddr.sin_addr.s_addr = INADDR_ANY;
+        sockaddr.sin_port = 0;
+
+        status = bind(socket, (struct sockaddr *) &sockaddr, sizeof(struct sockaddr_in));
+        if (status != INVALID_SOCKET)
         {
-                #ifdef DEBUG
-                printf("SockConnect(): socket = %d\n", socket);
-                DebugOutput("SockConnect(): Socket created\n");
-                #endif
+#ifdef DEBUG
+            DebugOutput("SockConnect(): Socket binded\n");
+#endif
+
+            if (SetBlocking(socket, FALSE) == FALSE) {
+                // If SetBlocking fails, we can't continue because later
+                // code is made for non blocking sockets
+                csock->csockerr = CSOCKERR_SETNONBLOCKFAILED;
+                return CSOCKSTATUS_ERROR;
+            }
+
+#ifdef DEBUG
+            DebugOutput("SockConnect(): Socket set to non blocking\n");
+            printf("SockConnect() connecting to %s\n", IpToStr(csock->ip_i, '.'));
+#endif
+
+            sockaddr.sin_addr.s_addr = csock->ip_i;
+            sockaddr.sin_family = AF_INET;
+            sockaddr.sin_port = htons(csock->port);
+
+#ifdef DEBUG
+            DebugOutput("SockConnect(): Trying to connect..\n");
+#endif
+
+            ret = connect(socket, (struct sockaddr *) &sockaddr, sizeof(struct sockaddr_in));
+            if (ret == -1) {
+                int local_errno = errno;
+
+#ifdef DEBUG
+                printf("SockConnect(): connect() = %d\n", ret);
+                printf("SockConnect(): Errno = %d\n", local_errno);
+#endif
+
+#ifdef __AROS__
+                // ASD: Shouldn't local_errno be EINPROGRESS ?...
+                if (local_errno == 0)
+                    return CSOCKSTATUS_PENDING;
+#elif __MORPHOS__
+                if (local_errno == EINPROGRESS)
+                    return CSOCKSTATUS_PENDING;
+#endif
+
+                csock->csockerr = CSOCKERR_NATIVE;
+                csock->sockerr  = ret;
                 csock->socket = socket;
-                
-                /* server address  */
-                sockaddr.sin_family = AF_INET;
-                sockaddr.sin_addr.s_addr = INADDR_ANY;
-                sockaddr.sin_port = 0;
-                
-                status = bind(socket, (struct sockaddr *) &sockaddr, sizeof(struct sockaddr_in));
-                if (status != INVALID_SOCKET)
-                {
-                        #ifdef DEBUG
-                        DebugOutput("SockConnect(): Socket binded\n");
-                        #endif
-                        
-                        if (SetBlocking(socket, FALSE) == FALSE) {
-                                // If SetBlocking fails, we can't continue because later
-                                // code is made for non blocking sockets
-                                csock->csockerr = CSOCKERR_SETNONBLOCKFAILED;
-                                return CSOCKSTATUS_ERROR;
-                        }
-                        
-                        #ifdef DEBUG
-                        DebugOutput("SockConnect(): Socket set to non blocking\n");
-                        printf("SockConnect() connecting to %s\n", IpToStr(csock->ip_i, '.'));
-                        #endif
-                        
-                        sockaddr.sin_addr.s_addr = csock->ip_i;
-                        sockaddr.sin_family = AF_INET;
-                        sockaddr.sin_port = htons(csock->port);
-                        
-                        #ifdef DEBUG
-                        DebugOutput("SockConnect(): Trying to connect..\n");
-                        #endif
-                        
-                        ret = connect(socket, (struct sockaddr *) &sockaddr, sizeof(struct sockaddr_in));
-                        if (ret == -1) {
-                                int local_errno = errno;
-                                
-                                #ifdef DEBUG
-                                printf("SockConnect(): connect() = %d\n", ret);
-                                printf("SockConnect(): Errno = %d\n", local_errno);
-                                #endif
-                                
-                                #ifdef __AROS__
-                                // ASD: Shouldn't local_errno be EINPROGRESS ?...
-                                if (local_errno == 0)
-                                        return CSOCKSTATUS_PENDING;
-                                #elif __MORPHOS__
-                                if (local_errno == EINPROGRESS)
-                                        return CSOCKSTATUS_PENDING;
-                                #endif
-                                
-                                csock->csockerr = CSOCKERR_NATIVE;
-                                csock->sockerr  = ret;
-                                csock->socket = socket;
-                                return CSOCKSTATUS_ERROR;
-                        } else if (ret == 0) {
-                                // Connect already connected us to the ftp server
-                                #ifdef DEBUG
-                                DebugOutput("SockConnect(): Already accepted a connection\n");
-                                #endif
-                                
-                                csock->socket = socket;
-                                return CSOCKSTATUS_EARLYCONNECT;
-                        } else {
-                                csock->csockerr = CSOCKERR_NATIVE;
-                                csock->sockerr  = errno;
-                                csock->socket = socket;
-                                return CSOCKSTATUS_ERROR;
-                        }
-                } else
-                        csock->csockerr = CSOCKERR_BINDFAILED;
+                return CSOCKSTATUS_ERROR;
+            } else if (ret == 0) {
+                // Connect already connected us to the ftp server
+#ifdef DEBUG
+                DebugOutput("SockConnect(): Already accepted a connection\n");
+#endif
+
+                csock->socket = socket;
+                return CSOCKSTATUS_EARLYCONNECT;
+            } else {
+                csock->csockerr = CSOCKERR_NATIVE;
+                csock->sockerr  = errno;
+                csock->socket = socket;
+                return CSOCKSTATUS_ERROR;
+            }
         } else
-                csock->csockerr = CSOCKERR_SOCKCREATFAILED;
-        
-        return CSOCKSTATUS_ERROR;
+            csock->csockerr = CSOCKERR_BINDFAILED;
+    } else
+        csock->csockerr = CSOCKERR_SOCKCREATFAILED;
+    
+    return CSOCKSTATUS_ERROR;
 }
 
 BOOL CheckSocket(SOCKET socket)
 {
-        int ret, optlen;
-        #ifdef DEBUGLV2
-        char temp[512];
-        #endif
-        
-        // Let's check SO_ERROR
-        optlen = sizeof(ret);
+    int ret, optlen;
+#ifdef DEBUGLV2
+    char temp[512];
+#endif
+
+    // Let's check SO_ERROR
+    optlen = sizeof(ret);
     if (getsockopt (socket, SOL_SOCKET, SO_ERROR, &ret, &optlen) != SOCKET_ERROR) {
-                if (ret == 0) {
-                        #ifdef DEBUGLV2
-                        DebugOutput("CheckSocket(): getsockopt() no error\n");
-                        #endif
-                        // No error
-                        return TRUE;
-                }
-                
-                #ifdef DEBUGLV2
-                snprintf(temp, 511, "\nCheckSocket(): Error code(ret) = %d Error code(hex(ret)) %08x string = '%s'\n", ret, ret, GetErrnoDesc(ret));
-                DebugOutput(temp);
-                #endif
-                return TRUE;
-        } 
-        #ifdef DEBUG
-        else
-                DebugOutput("CheckSocket(): getsockopt() failed\n");
-        #endif
-        
-        // Errors
-        return FALSE;
+        if (ret == 0) {
+#ifdef DEBUGLV2
+            DebugOutput("CheckSocket(): getsockopt() no error\n");
+#endif
+            // No error
+            return TRUE;
+        }
+
+#ifdef DEBUGLV2
+        snprintf(temp, 511, "\nCheckSocket(): Error code(ret) = %d Error code(hex(ret)) %08x string = '%s'\n", ret, ret, GetErrnoDesc(ret));
+        DebugOutput(temp);
+#endif
+        return TRUE;
+    } 
+#ifdef DEBUG
+    else
+        DebugOutput("CheckSocket(): getsockopt() failed\n");
+#endif
+
+    // Errors
+    return FALSE;
 }
 
 BOOL CheckConnect(Connection *cn)
 {
-        ClientInfo *ci = &cn->ci;
-        HostInfo   *hi = &cn->hi;
-        BOOL b_retflag = FALSE;
-        int ret, optlen;
-        char temp[512];
-        
-        // Socket has returned Writeable, but we still do not known if connect worked
-        // we need to check SO_ERROR as well
-        optlen = sizeof(ret);
+    ClientInfo *ci = &cn->ci;
+    HostInfo   *hi = &cn->hi;
+    BOOL b_retflag = FALSE;
+    int ret, optlen;
+    char temp[512];
+
+    // Socket has returned Writeable, but we still do not known if connect worked
+    // we need to check SO_ERROR as well
+    optlen = sizeof(ret);
     getsockopt (ci->cmd_socket, SOL_SOCKET, SO_ERROR, &ret, &optlen);
-        if (ret == 0) {
-                snprintf(temp, 511, "STATUS: Connected to %s", hi->hostname);
-                MUI_AddStatusWindow(cn, temp);
-                b_retflag = TRUE;
-        } else {
-                snprintf(temp, 511, "STATUS: Connection failed, error: '%s'", GetErrnoDesc(ret));
-                MUI_AddStatusWindow(cn, temp);
-                #ifdef DEBUG
-                DebugOutput("CheckConnect(): Connection failed, ");
-                DebugOutput(GetErrnoDesc(ret));
-                DebugOutput("\n");
-                #endif
-        }
-        
-        cn->ci.b_connecting = FALSE;
-        SetConnected(cn, b_retflag);
-        return b_retflag;
+    if (ret == 0) {
+        snprintf(temp, 511, "STATUS: Connected to %s", hi->hostname);
+        MUI_AddStatusWindow(cn, temp);
+        b_retflag = TRUE;
+    } else {
+        snprintf(temp, 511, "STATUS: Connection failed, error: '%s'", GetErrnoDesc(ret));
+        MUI_AddStatusWindow(cn, temp);
+#ifdef DEBUG
+        DebugOutput("CheckConnect(): Connection failed, ");
+        DebugOutput(GetErrnoDesc(ret));
+        DebugOutput("\n");
+#endif
+    }
+
+    cn->ci.b_connecting = FALSE;
+    SetConnected(cn, b_retflag);
+    return b_retflag;
 }
 
 void FormatFtpListing(Connection *cn, buffer *buffer, BOOL b_last_data)
 {
-        ClientInfo *ci = &cn->ci;
-        int i, start_of_line = 0;
-        char *dest = buffer->ptr;
-        #ifdef DEBUG
-        char temp[512];
-        #endif
-        
-        // First line always start at 0, of course
-        cn->rv.lines_start[0] = 0;
-        cn->rv.num_lines = 0;
-        
-        for (i = 0; dest[i] != 0 && i < ci->bytes_transfered; i++) {
-                if (dest[i] == '\r') {
-                        dest[i] = 0;
-                        continue;
-                }
-                
-                if (dest[i] == '\n') {
-                        // Terminate this line
-                        dest[i] = 0;
-                        
-                        // Add the start of the line in the lines database
-                        cn->rv.num_lines++;
-                        cn->rv.lines_start[cn->rv.num_lines-1] = start_of_line;
-                        start_of_line = 1+i;
-                }
+    ClientInfo *ci = &cn->ci;
+    int i, start_of_line = 0;
+    char *dest = buffer->ptr;
+#ifdef DEBUG
+    char temp[512];
+#endif
+
+    // First line always start at 0, of course
+    cn->rv.lines_start[0] = 0;
+    cn->rv.num_lines = 0;
+
+    for (i = 0; dest[i] != 0 && i < ci->bytes_transfered; i++) {
+        if (dest[i] == '\r') {
+            dest[i] = 0;
+            continue;
         }
-        
-        #ifdef DEBUG
-        snprintf(temp, 511, "FormatFtpListing(): parsed %d bytes", i);
-        DebugOutput(temp);
-        #endif
+
+        if (dest[i] == '\n') {
+            // Terminate this line
+            dest[i] = 0;
+            
+            // Add the start of the line in the lines database
+            cn->rv.num_lines++;
+            cn->rv.lines_start[cn->rv.num_lines-1] = start_of_line;
+            start_of_line = 1+i;
+        }
+    }
+
+#ifdef DEBUG
+    snprintf(temp, 511, "FormatFtpListing(): parsed %d bytes", i);
+    DebugOutput(temp);
+#endif
 }
 
 void GetPathFromRawData(char *text)
 {
-        char *dest = g_temp;
-        BOOL b_copy = FALSE;
-        int i;
+    char *dest = g_temp;
+    BOOL b_copy = FALSE;
+    int i;
+
+    for (i = 0; text[i] != 0; i++) {
+        if (b_copy && text[i] != '"')
+            *dest++ = text[i];
         
-        for (i = 0; text[i] != 0; i++) {
-                if (b_copy && text[i] != '"')
-                        *dest++ = text[i];
-                
-                if (text[i] == '"') {
-                        if (b_copy == FALSE)
-                                b_copy = TRUE;
-                        else
-                                b_copy = FALSE;
-                }
+        if (text[i] == '"') {
+            if (b_copy == FALSE)
+                b_copy = TRUE;
+            else
+                b_copy = FALSE;
         }
-        
-        *dest++ = 0;
+    }
+
+    *dest++ = 0;
 }
 
 int FtpDisconnect(Connection *cn)
 {
-        ClientInfo *ci = &cn->ci;
-        
-        // Disconnecting...
-        if (ci->b_transfering) {
-                // If we are transfering a file, let's abort it
-                AbortFileTransfer(cn);
+    ClientInfo *ci = &cn->ci;
+
+    // Disconnecting...
+    if (ci->b_transfering) {
+        // If we are transfering a file, let's abort it
+        AbortFileTransfer(cn);
         // SendFtpCommand(cn, "ABOR", FALSE);
-                ci->b_request_disconn = TRUE;
-        } else {
-                // Otherwise, just quit
-                SendFtpCommand(cn, "QUIT", FALSE);
-        }
-        
-        #ifdef DEBUG
-        DebugOutput("FtpDisconnect(): disconnected\n");
-        #endif
-        
-        return 0;
+        ci->b_request_disconn = TRUE;
+    } else {
+        // Otherwise, just quit
+        SendFtpCommand(cn, "QUIT", FALSE);
+    }
+
+#ifdef DEBUG
+    DebugOutput("FtpDisconnect(): disconnected\n");
+#endif
+
+    return 0;
 }
 
 void InvalidateSocket(int *socket)
 {
-        #ifdef DEBUG
-        char temp[512];
-        sprintf(temp, "InvalidateSocket(): Closing socket %d\n", *socket);
-        DebugOutput(temp);
-        #endif
-        
-        if (*socket != INVALID_SOCKET) {
-                shutdown(*socket, 0);
-                CloseSocket(*socket);
-        }
-        
-        *socket = INVALID_SOCKET;
+#ifdef DEBUG
+    char temp[512];
+    sprintf(temp, "InvalidateSocket(): Closing socket %d\n", *socket);
+    DebugOutput(temp);
+#endif
+
+    if (*socket != INVALID_SOCKET) {
+        shutdown(*socket, 0);
+        CloseSocket(*socket);
+    }
+
+    *socket = INVALID_SOCKET;
 }
 
 int SetTransferMode(Connection *cn, char mode)
 {
-        char cmd[512], t2[3];
-        int answer;
-        
-        t2[0] = mode;	t2[1] = 0;
-        caf_strncpy(cmd, "TYPE ", 511);
-        caf_strncat(cmd, t2, 511);
-        answer = SendFtpCommand(cn, cmd, FALSE);
-        return answer;
+    char cmd[512], t2[3];
+    int answer;
+
+    t2[0] = mode;	t2[1] = 0;
+    caf_strncpy(cmd, "TYPE ", 511);
+    caf_strncat(cmd, t2, 511);
+    answer = SendFtpCommand(cn, cmd, FALSE);
+    return answer;
 }
 
 int SetTransferPort(Connection *cn)
 {
-        ClientInfo *ci = &cn->ci;
-        int answer, port;
-        char cmd[512];
-        
-        port = ci->port;
-        snprintf(cmd, 511, "PORT %s,%02d,%02d", ci->ip_s, (port >> 8)&0xFF, port & 0xFF);
-        answer = SendFtpCommand(cn, cmd, FALSE);
-        ci->b_passive = FALSE;
-        return answer;
+    ClientInfo *ci = &cn->ci;
+    int answer, port;
+    char cmd[512];
+
+    port = ci->port;
+    snprintf(cmd, 511, "PORT %s,%02d,%02d", ci->ip_s, (port >> 8)&0xFF, port & 0xFF);
+    answer = SendFtpCommand(cn, cmd, FALSE);
+    ci->b_passive = FALSE;
+    return answer;
 }
 
 int SendLISTCMD(Connection *cn)
 {
-        ClientInfo *ci = &cn->ci;
-        
-        ci->b_file_transfer = FALSE;
-        cn->ci.b_directory_processed = FALSE;
-        cn->ci.b_last_data = FALSE;
-        #ifdef DEBUG
-        DebugOutput("SendLISTCMD(): b_directory_processed = FALSE\n");
-        #endif
-        MUI_ClearListbox(cn->rv.ListView);
-        return SendFtpCommand(cn, "LIST", FALSE);
+    ClientInfo *ci = &cn->ci;
+
+    ci->b_file_transfer = FALSE;
+    cn->ci.b_directory_processed = FALSE;
+    cn->ci.b_last_data = FALSE;
+#ifdef DEBUG
+    DebugOutput("SendLISTCMD(): b_directory_processed = FALSE\n");
+#endif
+    MUI_ClearListbox(cn->rv.ListView);
+    return SendFtpCommand(cn, "LIST", FALSE);
 }
 
 int SendRETRCMD(Connection *cn, char *filename)
 {
-        ClientInfo *ci = &cn->ci;
-        char temp[512];
-        IPTR itemp;
-        int chr;
-        
-        // Open the file on disk
-        get(cn->S_LEFT_VIEW_PATH, MUIA_String_Contents, &itemp);
-        
-        chr = caf_getlastchar((char *) itemp);
-        if (chr == '/' || chr == ':')
-                snprintf(temp, 511, "%s%s", (char *) itemp, filename);
-        else
-                snprintf(temp, 511, "%s/%s",(char *) itemp, filename);
-        
-        ci->filehandle = Open(temp, MODE_NEWFILE);
-        if (ci->filehandle == 0) {
-                ci->b_file_transfer = FALSE;
-                cn->ci.b_last_data = FALSE;
-                MUI_AddStatusWindow(cn, "ERROR: Cannot create the local file");
-                return 0;
-        }
-        
-        ci->b_eof = FALSE;
-        ci->b_file_transfer = TRUE;
+    ClientInfo *ci = &cn->ci;
+    char temp[512];
+    IPTR itemp;
+    int chr;
+
+    // Open the file on disk
+    get(cn->S_LEFT_VIEW_PATH, MUIA_String_Contents, &itemp);
+
+    chr = caf_getlastchar((char *) itemp);
+    if (chr == '/' || chr == ':')
+        snprintf(temp, 511, "%s%s", (char *) itemp, filename);
+    else
+        snprintf(temp, 511, "%s/%s",(char *) itemp, filename);
+
+    ci->filehandle = Open(temp, MODE_NEWFILE);
+    if (ci->filehandle == 0) {
+        ci->b_file_transfer = FALSE;
         cn->ci.b_last_data = FALSE;
-        snprintf(temp, 511, "RETR %s", filename);
-        #ifdef DEBUGLV2
-        DebugOutput(temp);
-        DebugOutput("SendRETRCMD\n");
-        #endif
-        return SendFtpCommand(cn, temp, FALSE);
+        MUI_AddStatusWindow(cn, "ERROR: Cannot create the local file");
+        return 0;
+    }
+
+    ci->b_eof = FALSE;
+    ci->b_file_transfer = TRUE;
+    cn->ci.b_last_data = FALSE;
+    snprintf(temp, 511, "RETR %s", filename);
+#ifdef DEBUGLV2
+    DebugOutput(temp);
+    DebugOutput("SendRETRCMD\n");
+#endif
+    return SendFtpCommand(cn, temp, FALSE);
 }
 
 int SendSTORCMD(Connection *cn, char *filename)
 {
-        char temp[512], temp2[512], temp3[512];
-        ClientInfo *ci = &cn->ci;
-        int chr, ioerr;
-        IPTR itemp;
-        
-        // Open the file on disk
-        if (cn->ci.b_processing_queue == TRUE)
-                itemp = (IPTR) &cn->lv.CurrentPath;
-        else
-                get(cn->S_LEFT_VIEW_PATH, MUIA_String_Contents, &itemp);
-        
-        chr = caf_getlastchar((char *) itemp);
-        if (chr == '/' || chr == ':')
-                snprintf(temp, 511, "%s%s", (char *) itemp, filename);
-        else
-                snprintf(temp, 511, "%s/%s",(char *) itemp, filename);
-        
-        ci->file_readed = ci->file_size = ci->file_sent = 0;
-        ci->filehandle = Open(temp, MODE_OLDFILE);
-        if (ci->filehandle == 0) {
-                ioerr = IoErr();
-                Fault(ioerr, "", temp3, 511);
-                ci->b_file_transfer = FALSE;
-                sprintf(temp2, "ERROR: Cannot open local file '%s', Open() failed, error '%s'", temp, temp3);
-                MUI_AddStatusWindow(cn, temp2);
-                CloseListenSocket(cn);
-                CloseDataSocket(cn);
-                return 0;
-        }
-        
-        ci->b_eof = FALSE;
-        ci->b_file_transfer = TRUE;
-        ci->b_file_download = FALSE;
-        cn->ci.b_last_data = FALSE;
-        snprintf(temp, 511, "STOR %s", filename);
-        #ifdef DEBUGLV2
-        DebugOutput(temp);
-        DebugOutput("SendSTORCMD\n");
-        #endif
-        return SendFtpCommand(cn, temp, FALSE);
+    char temp[512], temp2[512], temp3[512];
+    ClientInfo *ci = &cn->ci;
+    int chr, ioerr;
+    IPTR itemp;
+
+    // Open the file on disk
+    if (cn->ci.b_processing_queue == TRUE)
+        itemp = (IPTR) &cn->lv.CurrentPath;
+    else
+        get(cn->S_LEFT_VIEW_PATH, MUIA_String_Contents, &itemp);
+
+    chr = caf_getlastchar((char *) itemp);
+    if (chr == '/' || chr == ':')
+        snprintf(temp, 511, "%s%s", (char *) itemp, filename);
+    else
+        snprintf(temp, 511, "%s/%s",(char *) itemp, filename);
+
+    ci->file_readed = ci->file_size = ci->file_sent = 0;
+    ci->filehandle = Open(temp, MODE_OLDFILE);
+    if (ci->filehandle == 0) {
+        ioerr = IoErr();
+        Fault(ioerr, "", temp3, 511);
+        ci->b_file_transfer = FALSE;
+        sprintf(temp2, "ERROR: Cannot open local file '%s', Open() failed, error '%s'", temp, temp3);
+        MUI_AddStatusWindow(cn, temp2);
+        CloseListenSocket(cn);
+        CloseDataSocket(cn);
+        return 0;
+    }
+
+    ci->b_eof = FALSE;
+    ci->b_file_transfer = TRUE;
+    ci->b_file_download = FALSE;
+    cn->ci.b_last_data = FALSE;
+    snprintf(temp, 511, "STOR %s", filename);
+#ifdef DEBUGLV2
+    DebugOutput(temp);
+    DebugOutput("SendSTORCMD\n");
+#endif
+    return SendFtpCommand(cn, temp, FALSE);
 }
 
 int SendPWDCMD(Connection *cn)
 {
-        return SendFtpCommand(cn, "PWD", FALSE);
+    return SendFtpCommand(cn, "PWD", FALSE);
 }
 
 int SendCWDCMD(Connection *cn, char *path)
 {
-        char temp[511];
-        
-        snprintf(temp, 511, "CWD %s", path);
-        return SendFtpCommand(cn, temp, FALSE);
+    char temp[511];
+
+    snprintf(temp, 511, "CWD %s", path);
+    return SendFtpCommand(cn, temp, FALSE);
 }
 
 int GetFtpCommandValue(char *buffer)
 {
-        char command[32];
-        int slen, numba;
-        
-        slen = caf_strlen(buffer);
-        command[0] = 0;
-        
-        // The buffer string must be at lest four bytes
-        if (slen < 4)
-                // Cannot get the command, string too short
-                return 0;
-        
-        // Copy the command to the receiving string
-        command[0] = buffer[0];
-        command[1] = buffer[1];
-        command[2] = buffer[2];
-        command[3] = buffer[3];
-        command[4] = 0;
-        
-        numba = caf_atol(command);
-        if (command[3] == '-')
-                numba = -numba;
-        
-        return numba;
+    char command[32];
+    int slen, numba;
+
+    slen = caf_strlen(buffer);
+    command[0] = 0;
+
+    // The buffer string must be at lest four bytes
+    if (slen < 4)
+    {
+        // Cannot get the command, string too short
+        return 0;
+    }
+
+    // Copy the command to the receiving string
+    command[0] = buffer[0];
+    command[1] = buffer[1];
+    command[2] = buffer[2];
+    command[3] = buffer[3];
+    command[4] = 0;
+
+    numba = caf_atol(command);
+    if (command[3] == '-')
+        numba = -numba;
+
+    return numba;
 }
 
 int GetFtpCommand(struct buffer *buffer, Connection *cn)
 {
-        BOOL need_break_after_newline = FALSE, done = FALSE;
-        int readed = 0, linestart = 0, command = 0, ret = -1;
-        ClientInfo *ci = &cn->ci;
-        
-        // First line always start at 0, of course
-        cn->rv.lines_start[0] = 0;
-        cn->rv.num_lines = 1;
-        
-        caf_memset(buffer->ptr, 0, buffer->size);
-        
+    BOOL need_break_after_newline = FALSE, done = FALSE;
+    int readed = 0, linestart = 0, command = 0, ret = -1;
+    ClientInfo *ci = &cn->ci;
+
+    // First line always start at 0, of course
+    cn->rv.lines_start[0] = 0;
+    cn->rv.num_lines = 1;
+
+    caf_memset(buffer->ptr, 0, buffer->size);
+
 //	while ((ret = ReadSocketNB(&buffer->ptr[readed], ci->cmd_socket, 1, g_GlobalSettings.socket_timeout, 0)) == TRUE) {
-        while (CanReadSocket(ci->cmd_socket, 0, 0) == SOCKET_SELECT_OK) {
-                ret = recv(ci->cmd_socket, &buffer->ptr[readed], 1, 0);
-                if (need_break_after_newline == FALSE) {
-                        command = GetFtpCommandValue(&buffer->ptr[linestart]);
-                        if (command > 0) {
-                                // We found a valid command, go out
-                                need_break_after_newline = TRUE;
-                        }
-                }
-                
-                if (buffer->ptr[readed] == '\n') {
-                        // Terminate this line
-                        buffer->ptr[readed] = 0;
-                        
-                        // We found a new line
-                        if (need_break_after_newline == FALSE) {
-                                // If the server is still sending data, we add each line in the array
-                                linestart = 1+readed;
-                                cn->rv.num_lines++;
-                                cn->rv.lines_start[cn->rv.num_lines-1] = linestart;
-                        } else {
-                                // Server finished sending data
-                                done = TRUE;
-                                break;
-                        }
-                }
-                
-                // Skip carriage return
-                if (buffer->ptr[readed] == '\r')
-                        continue;
-                
-                readed++;
-                if (readed == buffer->size-3)
-                        break;
+    while (CanReadSocket(ci->cmd_socket, 0, 0) == SOCKET_SELECT_OK) {
+        ret = recv(ci->cmd_socket, &buffer->ptr[readed], 1, 0);
+        if (need_break_after_newline == FALSE) {
+            command = GetFtpCommandValue(&buffer->ptr[linestart]);
+            if (command > 0) {
+                // We found a valid command, go out
+                need_break_after_newline = TRUE;
+            }
         }
-        
-        if (ret == 0) {
-                // Command socket has been closed, let's go away
-                CleanSockAndFlags(cn);
-                MUI_AddStatusWindow(cn, "STATUS: closed control connection");
+
+        if (buffer->ptr[readed] == '\n') {
+            // Terminate this line
+            buffer->ptr[readed] = 0;
+
+            // We found a new line
+            if (need_break_after_newline == FALSE) {
+                // If the server is still sending data, we add each line in the array
+                linestart = 1+readed;
+                cn->rv.num_lines++;
+                cn->rv.lines_start[cn->rv.num_lines-1] = linestart;
+            } else {
+                // Server finished sending data
+                done = TRUE;
+                break;
+            }
         }
-        
-        #ifdef DEBUG
-        if (!readed) {
-                DebugOutput("GetFtpCommand(): Readed = 0\n");
-        }
-        
-        if (!done) {
-                DebugOutput("GetFtpCommand(): Valid command not found\n");
-                DebugOutput(buffer->ptr);
-        } 
-        #endif
-        
-        return command;
+
+        // Skip carriage return
+        if (buffer->ptr[readed] == '\r')
+            continue;
+
+        readed++;
+        if (readed == buffer->size-3)
+            break;
+    }
+
+    if (ret == 0) {
+        // Command socket has been closed, let's go away
+        CleanSockAndFlags(cn);
+        MUI_AddStatusWindow(cn, "STATUS: closed control connection");
+    }
+
+#ifdef DEBUG
+    if (!readed) {
+        DebugOutput("GetFtpCommand(): Readed = 0\n");
+    }
+
+    if (!done) {
+        DebugOutput("GetFtpCommand(): Valid command not found\n");
+        DebugOutput(buffer->ptr);
+    } 
+#endif
+    
+    return command;
 }
 
 int SendFtpCommand(Connection *cn, char *CMD, BOOL b_block)
 {
-        ClientInfo *ci = &cn->ci;
-        int to_write, written;
-        char temp[512];
-        
-        if (strcmp(CMD, "ABOR")) {
-                if (cn->ci.b_can_send_command == FALSE) {
-                        if (cn->ci.b_connected == TRUE) {
-                                MUI_AddStatusWindow(cn, STR_CANT_SEND);
-                                return ANSWER_PENDING;
-                        } else {
-                                MUI_AddStatusWindow(cn, STR_CANT_SEND_NOT_CONNECTED);
-                                return NOT_CONNECTED;
-                        }
-                }
+    ClientInfo *ci = &cn->ci;
+    int to_write, written;
+    char temp[512];
+
+    if (strcmp(CMD, "ABOR")) {
+        if (cn->ci.b_can_send_command == FALSE) {
+            if (cn->ci.b_connected == TRUE) {
+                MUI_AddStatusWindow(cn, STR_CANT_SEND);
+                return ANSWER_PENDING;
+            } else {
+                MUI_AddStatusWindow(cn, STR_CANT_SEND_NOT_CONNECTED);
+                return NOT_CONNECTED;
+            }
         }
-        
-        // Send Command
-        caf_strncpy(temp, CMD, 511);
-        MUI_AddListboxCMDText(cn, temp);
-        caf_strncat(temp, "\r\n", 511);
-        
-        to_write = caf_strlen(temp); 
-        written = 0;
-        while ((CanWriteSocket(ci->cmd_socket, 0, 0) == SOCKET_SELECT_OK) && (to_write > written)) {
-                written += send(ci->cmd_socket, &temp[written], to_write-written, 0);
-        }
-        
-        SentStackPush(CMD);
-        
-        // Each command needs to wait for server response
-        // ci->b_can_send_command = FALSE;
-        return 0;
+    }
+
+    // Send Command
+    caf_strncpy(temp, CMD, 511);
+    MUI_AddListboxCMDText(cn, temp);
+    caf_strncat(temp, "\r\n", 511);
+
+    to_write = caf_strlen(temp); 
+    written = 0;
+    while ((CanWriteSocket(ci->cmd_socket, 0, 0) == SOCKET_SELECT_OK) && (to_write > written)) {
+        written += send(ci->cmd_socket, &temp[written], to_write-written, 0);
+    }
+
+    SentStackPush(CMD);
+
+    // Each command needs to wait for server response
+    // ci->b_can_send_command = FALSE;
+    return 0;
 }
 
 BOOL ProcessError(Connection *cn, int command)
 {
-        switch (command) {
-                case SELECT_ERROR:
-                        MUI_AddStatusWindow(cn, "STATUS: cannot send command, select() failed");
-                        return TRUE;
-                        
-                case ANSWER_PENDING:
-                        MUI_AddStatusWindow(cn, STR_CANT_SEND);
-                        return TRUE;
-                        
-                        // General FTP Error
-        }
-        
-        return FALSE;
+    switch (command) {
+        case SELECT_ERROR:
+                MUI_AddStatusWindow(cn, "STATUS: cannot send command, select() failed");
+                return TRUE;
+
+        case ANSWER_PENDING:
+                MUI_AddStatusWindow(cn, STR_CANT_SEND);
+                return TRUE;
+
+                // General FTP Error
+    }
+
+    return FALSE;
 }
 
 void ProcessCommand(Connection *cn, int command, int *mui_res)
 {
-        ClientInfo *ci = &cn->ci;
-        HostInfo *hi = &cn->hi;
-        char temp[512], digit;
-        BOOL b_goon;
-        int ret;
-        
-        digit = GetCommandDigit(command, 1);
-        switch (digit) {
-                case 1:
+    ClientInfo *ci = &cn->ci;
+    HostInfo *hi = &cn->hi;
+    char temp[512], digit;
+    BOOL b_goon;
+    int ret;
+
+    digit = GetCommandDigit(command, 1);
+    switch (digit) {
+        case 1:
 /*********************************************	DIGIT 1 *****************************************/
-                        // Positive Preliminary reply, expect another reply before sending commands
-                        cn->ci.b_can_send_command = FALSE;
-                        if (IsLastSentCmd("LIST")) {
-                        } else if (IsLastSentCmd("RETR")) {
-                        }
-                        break;
-                        
-                case 2:
+                // Positive Preliminary reply, expect another reply before sending commands
+                cn->ci.b_can_send_command = FALSE;
+                if (IsLastSentCmd("LIST")) {
+                } else
+                    if (IsLastSentCmd("RETR")) {
+                    }
+                break;
+                
+        case 2:
 /*********************************************	DIGIT 2 *****************************************/
-                        // Positive Completion reply, we can send commands
-                        cn->ci.b_can_send_command = TRUE;
-                        if (IsLastSentCmd("CONN")) {
-                                caf_strncpy(temp, "user ", 511);	caf_strncat(temp, hi->username, 511);
-                                SendFtpCommand(cn, temp, FALSE);
-                        } else if (IsLastSentCmd("pass")) {
-                                cn->ci.b_pass_accepted = TRUE;
-                                SendPWDCMD(cn);
-                        } else if (IsLastSentCmd("PWD")) {
-                                GetPathFromRawData(cn->cmd_buffer.ptr);
-                                set(cn->S_RIGHT_VIEW_PATH, MUIA_String_Contents, (IPTR) g_temp);
-                                InitiateListTransfer(cn);
-                        } else if (IsLastSentCmd("LIST") && cn->ci.b_last_data == TRUE) {
-                                #ifdef DEBUG
-                                DebugOutput("ProcessCommand(): ProcessDirectoryData() called from 226 case\n");
-                                #endif
-                                ProcessDirectoryData(cn);
-                        } else if (IsLastSentCmd("ABOR") && cn->ci.b_request_disconn == TRUE) {
-                                SendFtpCommand(cn, "QUIT", FALSE);
-                        } else if (IsLastSentCmd("STOR")) {
-                                AfterSTOR(cn);
-                        } else if (IsLastSentCmd("RETR")) {
-                                AfterRETR(cn);
-                        } else if (IsLastSentCmd("DELE")) {
-                                AfterDELE(cn);
-                        } else if (IsLastSentCmd("CWD") || IsLastSentCmd("CDUP")) {
-                                AfterCWD(cn);
-                        } else if (IsLastSentCmd("MKD")) {
-                                AfterMKD(cn);
-                        } else if (IsLastSentCmd("ABOR") && cn->ci.b_request_disconn == TRUE) {
-                                SendFtpCommand(cn, "QUIT", FALSE);
-                        } else if (IsLastSentCmd("QUIT")) {
-                                CleanSockAndFlags(cn);
-                                if (cn->ci.b_request_quit)
-                                        *mui_res = MUIV_Application_ReturnID_Quit;
-                        } else if (IsLastSentCmd("PORT") || IsLastSentCmd("PASV")) {
+                // Positive Completion reply, we can send commands
+                cn->ci.b_can_send_command = TRUE;
+                if (IsLastSentCmd("CONN")) {
+                    caf_strncpy(temp, "user ", 511);	caf_strncat(temp, hi->username, 511);
+                    SendFtpCommand(cn, temp, FALSE);
+                } else if (IsLastSentCmd("pass")) {
+                    cn->ci.b_pass_accepted = TRUE;
+                    SendPWDCMD(cn);
+                } else if (IsLastSentCmd("PWD")) {
+                    GetPathFromRawData(cn->cmd_buffer.ptr);
+                    set(cn->S_RIGHT_VIEW_PATH, MUIA_String_Contents, (IPTR) g_temp);
+                    InitiateListTransfer(cn);
+                } else if (IsLastSentCmd("LIST") && cn->ci.b_last_data == TRUE) {
+#ifdef DEBUG
+                    DebugOutput("ProcessCommand(): ProcessDirectoryData() called from 226 case\n");
+#endif
+                    ProcessDirectoryData(cn);
+                } else if (IsLastSentCmd("ABOR") && cn->ci.b_request_disconn == TRUE) {
+                    SendFtpCommand(cn, "QUIT", FALSE);
+                } else if (IsLastSentCmd("STOR")) {
+                    AfterSTOR(cn);
+                } else if (IsLastSentCmd("RETR")) {
+                    AfterRETR(cn);
+                } else if (IsLastSentCmd("DELE")) {
+                    AfterDELE(cn);
+                } else if (IsLastSentCmd("CWD") || IsLastSentCmd("CDUP")) {
+                    AfterCWD(cn);
+                } else if (IsLastSentCmd("MKD")) {
+                    AfterMKD(cn);
+                } else if (IsLastSentCmd("ABOR") && cn->ci.b_request_disconn == TRUE) {
+                    SendFtpCommand(cn, "QUIT", FALSE);
+                } else if (IsLastSentCmd("QUIT")) {
+                    CleanSockAndFlags(cn);
+                    if (cn->ci.b_request_quit)
+                        *mui_res = MUIV_Application_ReturnID_Quit;
+                } else if (IsLastSentCmd("PORT") || IsLastSentCmd("PASV")) {
+                    b_goon = TRUE;
+                    if (hi->conn_type == CTYPE_PASV) {
+#ifdef DEBUG
+                        printf("conn_type = CTYPE_PASV\n");
+#endif
+
+                        // Gets detail for passive connection
+                        if (GatherIpPortNumber(cn) != 0) {
+                            // Tries to connect to specified ip - port
+                            // ASD
+                            ret = PasvConnection(cn);
+                            if (ret == CSOCKSTATUS_EARLYCONNECT) {
+                                // connect() connected at first call
+                                ci->transfer_socket = cn->hi.pasvsettings.socket;
+                                ci->b_waitingfordataport = TRUE;
+                                StartTimer(&g_listen_timer);
                                 b_goon = TRUE;
-                                if (hi->conn_type == CTYPE_PASV) {
-                    #ifdef DEBUG
-                                        printf("conn_type = CTYPE_PASV\n");
-                                        #endif
-                                        
-                                        // Gets detail for passive connection
-                                        if (GatherIpPortNumber(cn) != 0) {
-                                                // Tries to connect to specified ip - port
-                                                // ASD
-                                                ret = PasvConnection(cn);
-                                                if (ret == CSOCKSTATUS_EARLYCONNECT) {
-                                                        // connect() connected at first call
-                                                        ci->transfer_socket = cn->hi.pasvsettings.socket;
-                                                        ci->b_waitingfordataport = TRUE;
-                                                        StartTimer(&g_listen_timer);
-                                                        b_goon = TRUE;
-                            #ifdef DEBUG
-                                                printf("PasvConnection(): CSOCKSTATUS_EARLYCONNECT\n");
-                            #endif
-                                                } else if (ret == CSOCKSTATUS_PENDING) {
-                                                        // connect() is in progress, pending...
-                                                        // we have to wait the socket in the select() loop
-                                                        ci->transfer_socket = cn->hi.pasvsettings.socket;
-                                                        ci->b_waitingfordataport = TRUE;
-                                                        StartTimer(&g_listen_timer);
-                                                        b_goon = TRUE;
-                            #ifdef DEBUG
-                                                printf("PasvConnection(): CSOCKSTATUS_PENDING\n");
-                            #endif
-                                                } else if (ret == CSOCKSTATUS_ERROR) {
-                                                        // connect() failed
-                                                        DisplaySockErrs(cn, &cn->hi.pasvsettings);
-                                                        b_goon = FALSE;
-                                                }
-                                        } else
-                                                b_goon = FALSE;
-                                }
-                                
-                                if (b_goon) {
-                                        if (cn->ci.b_request_list)
-                                                SendLISTCMD(cn);
-                                        else if (cn->ci.b_request_download) {
-                                                if (ci->b_file_download)
-                                                        SendRETRCMD(cn, ci->filename);
-                                                else {
-                                                        SendSTORCMD(cn, ci->filename);
-                                                }
-                                        }
-                                }
-                        } else if (IsLastSentCmd("TYPE")) {
-                                if (hi->conn_type == CTYPE_ACTV) {
-                                        // Active transfer mode
-                                        SetTransferPort(cn);
-                                } else {
-                                        // Passive transfer mode
-                                        SendPASVCMD(cn);
-                                }
+#ifdef DEBUG
+                                printf("PasvConnection(): CSOCKSTATUS_EARLYCONNECT\n");
+#endif
+                            } else if (ret == CSOCKSTATUS_PENDING) {
+                                // connect() is in progress, pending...
+                                // we have to wait the socket in the select() loop
+                                ci->transfer_socket = cn->hi.pasvsettings.socket;
+                                ci->b_waitingfordataport = TRUE;
+                                StartTimer(&g_listen_timer);
+                                b_goon = TRUE;
+#ifdef DEBUG
+                                printf("PasvConnection(): CSOCKSTATUS_PENDING\n");
+#endif
+                            } else if (ret == CSOCKSTATUS_ERROR) {
+                                // connect() failed
+                                DisplaySockErrs(cn, &cn->hi.pasvsettings);
+                                b_goon = FALSE;
+                            }
+                        } else
+                            b_goon = FALSE;
+                    }
+
+                    if (b_goon) {
+                        if (cn->ci.b_request_list)
+                            SendLISTCMD(cn);
+                        else if (cn->ci.b_request_download) {
+                            if (ci->b_file_download)
+                                SendRETRCMD(cn, ci->filename);
+                            else {
+                                SendSTORCMD(cn, ci->filename);
+                            }
                         }
-                        break;
-                        
-                case 3:
-                        // Positive Intermediate reply
-                        cn->ci.b_can_send_command = TRUE;
+                    }
+                } else if (IsLastSentCmd("TYPE")) {
+                    if (hi->conn_type == CTYPE_ACTV) {
+                        // Active transfer mode
+                        SetTransferPort(cn);
+                    } else {
+                        // Passive transfer mode
+                        SendPASVCMD(cn);
+                    }
+                }
+                break;
+
+        case 3:
+                // Positive Intermediate reply
+                cn->ci.b_can_send_command = TRUE;
 /*********************************************	DIGIT 3 *****************************************/
-                        if (IsLastSentCmd("user")) {
-                                cn->ci.b_user_accepted = TRUE;
-                                caf_strncpy(temp, "pass ", 511);	caf_strncat(temp, hi->password, 511);
-                                SendFtpCommand(cn, temp, FALSE);
-                        }
-                        break;
-                        
-                case 4:
-                        // Transient Negative Completion reply;
-                        cn->ci.b_can_send_command = TRUE;
+                if (IsLastSentCmd("user")) {
+                    cn->ci.b_user_accepted = TRUE;
+                    caf_strncpy(temp, "pass ", 511);	caf_strncat(temp, hi->password, 511);
+                    SendFtpCommand(cn, temp, FALSE);
+                }
+                break;
+
+        case 4:
+                // Transient Negative Completion reply;
+                cn->ci.b_can_send_command = TRUE;
 /********************************************* DIGIT 4 *****************************************/
-                        if (IsLastSentCmd("RETR") || IsLastSentCmd("LIST") || IsLastSentCmd("STOR")) {
-                                if (ci->port != 0)
-                                        snprintf(temp, 511, "STATUS: Server error encountered, Transfer failed, closed port %d", ci->port); 
-                                else
-                                        caf_strncpy(temp, "STATUS: Server error encountered, Transfer failed", 512); 
-                                
-                                MUI_AddStatusWindow(cn, temp);
-                                CloseListenSocket(cn);
-                                CloseDataSocket(cn);
-                        } else if (IsLastSentCmd("DELE")) {
-                        }
-                        break;
-                        
-                case 5:
-                        // Permanent Negative Completion reply
-                        cn->ci.b_can_send_command = TRUE;
+                if (IsLastSentCmd("RETR") || IsLastSentCmd("LIST") || IsLastSentCmd("STOR")) {
+                    if (ci->port != 0)
+                        snprintf(temp, 511, "STATUS: Server error encountered, Transfer failed, closed port %d", ci->port); 
+                    else
+                        caf_strncpy(temp, "STATUS: Server error encountered, Transfer failed", 512); 
+                    
+                    MUI_AddStatusWindow(cn, temp);
+                    CloseListenSocket(cn);
+                    CloseDataSocket(cn);
+                } else
+                    if (IsLastSentCmd("DELE")) {
+                    }
+                break;
+
+        case 5:
+                // Permanent Negative Completion reply
+                cn->ci.b_can_send_command = TRUE;
 /********************************************* DIGIT 5 *****************************************/
-                        if (IsLastSentCmd("RETR") || IsLastSentCmd("LIST") || IsLastSentCmd("STOR")) {
-                                snprintf(temp, 511, "STATUS: Server error encountered, file unavailable, closed port %d", ci->port); 
-                                MUI_AddStatusWindow(cn, temp);
-                                CloseListenSocket(cn);
-                                CloseDataSocket(cn);
-                        } else if (IsLastSentCmd("DELE")) {
-                                if (ci->b_processing_queue) {
-                                }
-                        }
-                        break;
-        }
-        
-        #ifdef DEBUGLV2
-        sprintf(temp, "ProcessCommand(): CMD(%d) = %s digit = %d\n", command, (ci->b_can_send_command) ? "TRUE" : "FALSE", digit);
-        DebugOutput(temp);
-        #endif
+                if (IsLastSentCmd("RETR") || IsLastSentCmd("LIST") || IsLastSentCmd("STOR")) {
+                    snprintf(temp, 511, "STATUS: Server error encountered, file unavailable, closed port %d", ci->port); 
+                    MUI_AddStatusWindow(cn, temp);
+                    CloseListenSocket(cn);
+                    CloseDataSocket(cn);
+                } else if (IsLastSentCmd("DELE")) {
+                    if (ci->b_processing_queue) {
+                    }
+                }
+                break;
+    }
+    
+#ifdef DEBUGLV2
+    sprintf(temp, "ProcessCommand(): CMD(%d) = %s digit = %d\n", command, (ci->b_can_send_command) ? "TRUE" : "FALSE", digit);
+    DebugOutput(temp);
+#endif
 }
 
 BOOL OpenListenSocket(Connection *cn)
 {
-        int status, socket = INVALID_SOCKET, ret;
-        struct sockaddr_in sockaddr;
-        ClientInfo *ci = &cn->ci;
-        BOOL b_ret = FALSE;
-        char temp[512];
-        u_long opt;
+    int status, socket = INVALID_SOCKET, ret;
+    struct sockaddr_in sockaddr;
+    ClientInfo *ci = &cn->ci;
+    BOOL b_ret = FALSE;
+    char temp[512];
+    u_long opt;
+
+    if (cn->ci.b_waitingfordataport == TRUE) {
+        MUI_AddStatusWindow(cn, "WARNING: Already listening for connection...");
+        return FALSE;
+    }
+
+    cn->ci.b_transfering = FALSE;
+    ci->bytes_transfered = 0;
+    InvalidateSocket(&ci->listen_socket);
+    InvalidateSocket(&ci->transfer_socket);
+#ifdef DEBUG
+    DebugOutput("OpenListenSocket(): Creating listen socket\n");
+#endif
+    socket = socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
+    if (socket != INVALID_SOCKET)
+    {	
+#ifdef DEBUG
+        DebugOutput("OpenListenSocket(): Socket created\n");
+#endif
         
-        if (cn->ci.b_waitingfordataport == TRUE) {
-                MUI_AddStatusWindow(cn, "WARNING: Already listening for connection...");
+        /* server address  */
+        sockaddr.sin_family = AF_INET;
+        sockaddr.sin_addr.s_addr = INADDR_ANY;
+        sockaddr.sin_port = 0;
+        
+        status = bind(socket, (struct sockaddr *) &sockaddr, sizeof(struct sockaddr_in));
+        if (status != INVALID_SOCKET)
+        {
+#ifdef DEBUG
+            DebugOutput("OpenListenSocket(): Socket binded\n");
+#endif
+            
+            // Get the port of the socket 
+            status = sizeof(struct sockaddr);
+            getsockname(socket, (struct sockaddr *) &sockaddr, &status);
+            ci->port = htons(sockaddr.sin_port);
+            
+            if (SetBlocking(socket, FALSE) == FALSE) {
+                // If SetBlocking fails, we can't continue because later
+                // code is made for non blocking sockets
+#ifdef DEBUG
+                DebugOutput("OpenListenSocket(): SetBlocking() failed\n");
+#endif
+                CleanUp();
                 return FALSE;
+            }
+            
+            opt = 1;
+            if (setsockopt(socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1) {
+#ifdef DEBUG
+                DebugOutput("OpenListenSocket(): Cannot set addr to reuse\n");
+#endif
+            } else {
+#ifdef DEBUG
+                DebugOutput("OpenListenSocket(): Addr set to reuse\n");
+#endif
+            }
+            
+#ifndef __AROS__
+            opt = 1;
+            if (setsockopt(socket, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt)) == -1) {
+#ifdef DEBUG
+                DebugOutput("OpenListenSocket(): Cannot set port to reuse\n");
+#endif
+            } else {
+#ifdef DEBUG
+                DebugOutput("OpenListenSocket(): Port set to reuse\n");
+#endif
+            }
+#endif
+            
+            // Setting the socket to listen state
+            ret = listen(socket, 1);
+            if (ret == 0) {
+                cn->ci.b_waitingfordataport = TRUE;
+                snprintf(temp, 511, "STATUS: Listening on port %d", ci->port);
+                MUI_AddStatusWindow(cn, temp);
+#ifdef DEBUG
+                DebugOutput("OpenListenSocket(): Socket listening()....\n");
+#endif
+                b_ret = TRUE;
+                StartTimer(&g_listen_timer);
+            } else {
+                cn->ci.b_waitingfordataport = FALSE;
+                CloseSocket(socket);
+                socket = INVALID_SOCKET;
+#ifdef DEBUG
+                DebugOutput("OpenListenSocket(): Listen() failed on data socket\n");
+#endif
+                snprintf(temp, 511, "STATUS: failed listening on port %d", ci->port);
+                ci->port = 0;
+                MUI_AddStatusWindow(cn, temp);
+            }
         }
-        
-        cn->ci.b_transfering = FALSE;
-        ci->bytes_transfered = 0;
-        InvalidateSocket(&ci->listen_socket);
-        InvalidateSocket(&ci->transfer_socket);
-        #ifdef DEBUG
-        DebugOutput("OpenListenSocket(): Creating listen socket\n");
-        #endif
-        socket = socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
-        if (socket != INVALID_SOCKET)
-        {	
-                #ifdef DEBUG
-                DebugOutput("OpenListenSocket(): Socket created\n");
-                #endif
-                
-                /* server address  */
-                sockaddr.sin_family = AF_INET;
-                sockaddr.sin_addr.s_addr = INADDR_ANY;
-                sockaddr.sin_port = 0;
-                
-                status = bind(socket, (struct sockaddr *) &sockaddr, sizeof(struct sockaddr_in));
-                if (status != INVALID_SOCKET)
-                {
-                        #ifdef DEBUG
-                        DebugOutput("OpenListenSocket(): Socket binded\n");
-                        #endif
-                        
-                        // Get the port of the socket 
-                        status = sizeof(struct sockaddr);
-                        getsockname(socket, (struct sockaddr *) &sockaddr, &status);
-                        ci->port = htons(sockaddr.sin_port);
-                        
-                        if (SetBlocking(socket, FALSE) == FALSE) {
-                                // If SetBlocking fails, we can't continue because later
-                                // code is made for non blocking sockets
-                                #ifdef DEBUG
-                                DebugOutput("OpenListenSocket(): SetBlocking() failed\n");
-                                #endif
-                                CleanUp();
-                                return FALSE;
-                        }
-                        
-                        opt = 1;
-                        if (setsockopt(socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1) {
-                                #ifdef DEBUG
-                                DebugOutput("OpenListenSocket(): Cannot set addr to reuse\n");
-                                #endif
-                        } else {
-                                #ifdef DEBUG
-                                DebugOutput("OpenListenSocket(): Addr set to reuse\n");
-                                #endif
-                        }
-                        
-                        #ifndef __AROS__
-                        opt = 1;
-                        if (setsockopt(socket, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt)) == -1) {
-                                #ifdef DEBUG
-                                DebugOutput("OpenListenSocket(): Cannot set port to reuse\n");
-                                #endif
-                        } else {
-                                #ifdef DEBUG
-                                DebugOutput("OpenListenSocket(): Port set to reuse\n");
-                                #endif
-                        }
-                        #endif
-                        
-                        // Setting the socket to listen state
-                        ret = listen(socket, 1);
-                        if (ret == 0) {
-                                cn->ci.b_waitingfordataport = TRUE;
-                                snprintf(temp, 511, "STATUS: Listening on port %d", ci->port);
-                                MUI_AddStatusWindow(cn, temp);
-                                #ifdef DEBUG
-                                DebugOutput("OpenListenSocket(): Socket listening()....\n");
-                                #endif
-                                b_ret = TRUE;
-                                StartTimer(&g_listen_timer);
-                        } else {
-                                cn->ci.b_waitingfordataport = FALSE;
-                                CloseSocket(socket);
-                                socket = INVALID_SOCKET;
-                                #ifdef DEBUG
-                                DebugOutput("OpenListenSocket(): Listen() failed on data socket\n");
-                                #endif
-                                snprintf(temp, 511, "STATUS: failed listening on port %d", ci->port);
-                                ci->port = 0;
-                                MUI_AddStatusWindow(cn, temp);
-                        }
-                }
-        }
-        
-        ci->listen_socket = socket;
-        return b_ret;
+    }
+    
+    ci->listen_socket = socket;
+    return b_ret;
 }
 
 BOOL PasvConnection(Connection *cn)
