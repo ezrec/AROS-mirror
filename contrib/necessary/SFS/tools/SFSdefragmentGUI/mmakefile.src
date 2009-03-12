@@ -3,7 +3,7 @@
 
 include $(TOP)/config/make.cfg
     
-USER_CFLAGS     := -I$(TOP)/rom/dos
+USER_CFLAGS := -I $(SRCDIR)/$(CURDIR)/../..
 
 %build_prog mmake=contrib-sfs-c-sfsquery \
     files=SFSdefragmentGUI progname=SFSdefragmentGUI targetdir=$(AROS_C) \
