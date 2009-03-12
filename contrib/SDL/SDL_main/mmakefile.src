@@ -16,12 +16,11 @@ development-SDL-config : \
     $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-aros-sdl-config \
     $(AROS_DEVELOPMENT)/bin/sdl-config
 
-$(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-aros-sdl-config: $(PORTSDIR)/SDL/SDL-$(SDLVERSION)/sdl-config.in
-	@sed 's,@AROS_INCLUDE@,$(AROS_INCLUDES),g; s,@AROS_LIB@,$(AROS_LIB),g' $< > $@
+$(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-aros-sdl-config: $(GENDIR)/$(CURDIR)/SDL/sdl-config
+	@sed 's,prefix=/Development,prefix=$(AROS_DEVELOPMENT),g' $< > $@
 	@chmod a+x $@
 	ln -sf $@ $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)/sdl-config
 
-$(AROS_DEVELOPMENT)/bin/sdl-config: $(PORTSDIR)/SDL/SDL-$(SDLVERSION)/sdl-config.in
+$(AROS_DEVELOPMENT)/bin/sdl-config: $(GENDIR)/$(CURDIR)/SDL/sdl-config
 	%mkdir_q dir=$(AROS_DEVELOPMENT)/bin
-	@sed 's,@AROS_INCLUDE@,/$(AROS_DIR_INCLUDE),g; s,@AROS_LIB@,/$(AROS_DIR_LIB),g' $< > $@
-	@chmod a+x $@
+	@$(CP) $< $@
