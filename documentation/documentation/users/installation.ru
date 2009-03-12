@@ -3,7 +3,7 @@
 =============================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
-:Copyright: Copyright К 1995-2008, The AROS Development Team
+:Copyright: Copyright К 1995-2009, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    ƒополн€етс€. 
@@ -341,13 +341,13 @@ of /boot/grub/menu.lst file to enable AROS menu entry::
 
     title AROS VBE  640x480  16bpp
     root (hd0,0)
-    kernel /boot/aros-pc-i386.gz vesa=640x480x16 ATA=32bit,forcedma nofdc
+    kernel /boot/aros-pc-i386.gz vesa=640x480x16 ATA=32bit floppy=disabled
     quiet
     boot
 
-You can change the kernel`s parameters to set the screen resolution. The 'nofdc'
-option disables the floppy trackdisk device, which is not too useful these days
-but can cause troubles in some cases.
+You can change the kernel`s parameters to set the screen resolution. The
+'floppy=disabled' option disables the floppy trackdisk device, which is not
+too useful these days but can cause troubles in some cases.
 
 If you happen to use lilo or any other booloader, this trick won`t be that easy.
 (is hard to make lilo booting AROS kernel). You will need to somehow 
