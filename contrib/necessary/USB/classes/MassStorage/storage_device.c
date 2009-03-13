@@ -375,6 +375,7 @@ static void cmd_DirectSCSI(struct IORequest *io, mss_device_t *dev, mss_unit_t *
 	if (cmd)
 	{
 		cmd->scsi_Actual = 0;
+		cmd->scsi_Status = 0;
 
 		/*
 		   Handle the USB SCSI quirks. The code is bad because it assumes the
@@ -427,7 +428,31 @@ static void cmd_DirectSCSI(struct IORequest *io, mss_device_t *dev, mss_unit_t *
 
 			D(bug("data=%08x len=%08x\n", cmd->scsi_Data, cmd->scsi_Length));
 
-			IOStdReq(io)->io_Error = TDERR_NotSpecified;
+			IOStdReq(io)->io_Error = HFERR_BadStatus;
+
+			cmd->scsi_Status = 2;
+
+			if (cmd->scsi_Flags & SCSIF_AUTOSENSE)
+			{
+				if (cmd->scsi_SenseData && cmd->scsi_SenseLength > 0)
+				{
+					uint8_t sense[18];
+
+					if (HIDD_USBStorage_RequestSense(unit->msu_object, unit->msu_lun, sense, 18))
+					{
+						if (cmd->scsi_SenseLength >= 18)
+						{
+							CopyMem(sense, cmd->scsi_SenseData, 18);
+							cmd->scsi_SenseActual = 18;
+						}
+						else
+						{
+							CopyMem(sense, cmd->scsi_SenseData, cmd->scsi_SenseLength);
+							cmd->scsi_SenseActual = cmd->scsi_SenseLength;
+						}
+					}
+				}
+			}
 		}
 		else
 		{
