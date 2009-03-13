@@ -72,9 +72,6 @@
 # /Feelin/AROS/
 /Feelin/AROS/mmakefile
 
-# /Feelin/AROS/Icon/
-/Feelin/AROS/Icon/mmakefile
-
 # /Feelin/Demos/
 /Feelin/Demos/mmakefile
 
@@ -518,9 +515,6 @@
 # /Networking/Apps/AiRcOS/catalogs/
 /Networking/Apps/AiRcOS/catalogs/mmakefile
 
-# /Networking/Apps/AiRcOS/icon/
-/Networking/Apps/AiRcOS/icon/mmakefile
-
 # /Networking/Apps/AiRcOS/icons/
 /Networking/Apps/AiRcOS/icons/mmakefile
 
@@ -533,9 +527,6 @@
 
 # /Networking/Apps/OWB/catalogs/
 /Networking/Apps/OWB/catalogs/mmakefile
-
-# /Networking/Apps/aaedt/icons/
-/Networking/Apps/aaedt/icons/mmakefile
 
 # /Networking/Apps/amosaic/libwww2/
 /Networking/Apps/amosaic/libwww2/mmakefile
@@ -1221,6 +1212,9 @@
 # /development/libs/fontconfig/
 /development/libs/fontconfig/mmakefile
 
+# /development/libs/libxslt/
+/development/libs/libxslt/mmakefile
+
 # /development/parsers/expat/lib/
 /development/parsers/expat/lib/mmakefile
 
@@ -1328,6 +1322,9 @@
 
 # /emu/uae/src/od-aros/uae-gui/catalogs/
 /emu/uae/src/od-aros/uae-gui/catalogs/mmakefile
+
+# /extern/finder/
+/extern/finder/mmakefile
 
 # /fish/304_clines/
 /fish/304_clines/mmakefile
@@ -1858,47 +1855,47 @@
 /gnu/which/mmakefile
 /gnu/which/.files-touched
 
-# /images/Gorilla/Icons/Medium/AROS/
-/images/Gorilla/Icons/Medium/AROS/mmakefile
+# /images/IconSets/Gorilla/Icons/Medium/AROS/
+/images/IconSets/Gorilla/Icons/Medium/AROS/mmakefile
 
-# /images/Gorilla/Icons/Medium/AROS/Extras/
-/images/Gorilla/Icons/Medium/AROS/Extras/mmakefile
+# /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/
+/images/IconSets/Gorilla/Icons/Medium/AROS/Extras/mmakefile
 
-# /images/Gorilla/Icons/Medium/AROS/Extras/DOpus/
-/images/Gorilla/Icons/Medium/AROS/Extras/DOpus/mmakefile
+# /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/DOpus/
+/images/IconSets/Gorilla/Icons/Medium/AROS/Extras/DOpus/mmakefile
 
-# /images/Gorilla/Icons/Medium/AROS/Extras/Demos/
-/images/Gorilla/Icons/Medium/AROS/Extras/Demos/mmakefile
+# /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Demos/
+/images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Demos/mmakefile
 
-# /images/Gorilla/Icons/Medium/AROS/Extras/Development/
-/images/Gorilla/Icons/Medium/AROS/Extras/Development/mmakefile
+# /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Development/
+/images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Development/mmakefile
 
-# /images/Gorilla/Icons/Medium/AROS/Extras/Emu/
-/images/Gorilla/Icons/Medium/AROS/Extras/Emu/mmakefile
+# /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Emu/
+/images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Emu/mmakefile
 
-# /images/Gorilla/Icons/Medium/AROS/Extras/Emu/E-UAE/
-/images/Gorilla/Icons/Medium/AROS/Extras/Emu/E-UAE/mmakefile
+# /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Emu/E-UAE/
+/images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Emu/E-UAE/mmakefile
 
-# /images/Gorilla/Icons/Medium/AROS/Extras/Emu/UAE/
-/images/Gorilla/Icons/Medium/AROS/Extras/Emu/UAE/mmakefile
+# /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Emu/UAE/
+/images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Emu/UAE/mmakefile
 
-# /images/Gorilla/Icons/Medium/AROS/Extras/Games/
-/images/Gorilla/Icons/Medium/AROS/Extras/Games/mmakefile
+# /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Games/
+/images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Games/mmakefile
 
-# /images/Gorilla/Icons/Medium/AROS/Extras/MultiMedia/
-/images/Gorilla/Icons/Medium/AROS/Extras/MultiMedia/mmakefile
+# /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/MultiMedia/
+/images/IconSets/Gorilla/Icons/Medium/AROS/Extras/MultiMedia/mmakefile
 
-# /images/Gorilla/Icons/Medium/AROS/Extras/MultiMedia/AMP2/
-/images/Gorilla/Icons/Medium/AROS/Extras/MultiMedia/AMP2/mmakefile
+# /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/MultiMedia/AMP2/
+/images/IconSets/Gorilla/Icons/Medium/AROS/Extras/MultiMedia/AMP2/mmakefile
 
-# /images/Gorilla/Icons/Medium/AROS/Extras/MultiMedia/Gfx/
-/images/Gorilla/Icons/Medium/AROS/Extras/MultiMedia/Gfx/mmakefile
+# /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/MultiMedia/Gfx/
+/images/IconSets/Gorilla/Icons/Medium/AROS/Extras/MultiMedia/Gfx/mmakefile
 
-# /images/Gorilla/Icons/Medium/AROS/Extras/Networking/
-/images/Gorilla/Icons/Medium/AROS/Extras/Networking/mmakefile
+# /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Networking/
+/images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Networking/mmakefile
 
-# /images/Gorilla/Icons/Medium/AROS/Extras/Networking/Apps/
-/images/Gorilla/Icons/Medium/AROS/Extras/Networking/Apps/mmakefile
+# /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Networking/Apps/
+/images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Networking/Apps/mmakefile
 
 # /libiconv/
 /libiconv/mmakefile
