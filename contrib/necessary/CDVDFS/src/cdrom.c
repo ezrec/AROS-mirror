@@ -52,8 +52,6 @@
  *                   - TD_CHANGESTATE instead of CMD_READ in Test_Unit_Ready
  */
 
-//#define DEBUG 1
-
 #include <aros/debug.h>
 
 #include <proto/alib.h>

@@ -121,7 +121,6 @@
  *
  *  See Documentation for a detailed discussion.
  */
-
 #include <proto/dos.h>
 #include <proto/exec.h>
 #include <proto/utility.h>
@@ -319,10 +318,11 @@ ULONG signals;
     global->g_dos_sigbit = 1L << global->DosProc->pr_MsgPort.mp_SigBit;
     returnpacket(packet);
     Prefs_Init();
+    global->g_disk_inserted = 0;
 
     if (global->g_cd) {
       /* Mount volume (if any disk is inserted): */
-      Mount ();
+      Mount_Check ();
     }
 
     /*

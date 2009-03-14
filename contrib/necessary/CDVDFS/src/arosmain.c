@@ -11,10 +11,6 @@
 #include <stddef.h>
 #include <string.h> 
 
-#ifdef DEBUG
-#undef DEBUG
-#endif
-#define DEBUG 0
 #include <aros/debug.h>
 
 #include "filehandles.h"
