@@ -70,7 +70,7 @@ void HIDD_USB_AddClass(OOP_Object *obj, const char *className)
     p.mID = mid;
     p.className = className;
 
-    return OOP_DoMethod(obj, &p.mID);
+    OOP_DoMethod(obj, &p.mID);
 }
 
 uint8_t HIDD_USB_AllocAddress(OOP_Object *obj, OOP_Object *driver)
