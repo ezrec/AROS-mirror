@@ -76,7 +76,7 @@ endif
 all:		$(TARGETS)
 
 clean:
-	$(RM) -r $(TARGETS) gcc-include.stamp gcc
+	$(RM) -r $(TARGETS) gcc-include-*.stamp gcc
 
 distclean:	clean
 	$(RM) Makefile
