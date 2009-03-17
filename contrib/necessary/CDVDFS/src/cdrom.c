@@ -649,8 +649,8 @@ int Find_Last_Session(CDROM *p_cd, uint32_t *p_result)
      * Ask the scsi device for the length of this TOC 
      */
     cmd[7] = 0;
-    cmd[8] = 12;
-    if (!Do_SCSI_Command(p_cd, data, 12, cmd, sizeof(cmd), SCSIF_READ))
+    cmd[8] = 20;
+    if (!Do_SCSI_Command(p_cd, data, 20, cmd, sizeof(cmd), SCSIF_READ))
 	return FALSE;
 
     /*
