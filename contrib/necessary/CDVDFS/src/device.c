@@ -5,13 +5,15 @@
  *
  * ----------------------------------------------------------------------
  * This code is (C) Copyright 1993,1994 by Frank Munkert.
- *              (C) Copyright 2007 - 2008 by Pavel Fedin.
+ *              (C) Copyright 2002-2009 The AROS Development Team
  * All rights reserved.
  * This software may be freely distributed and redistributed for
  * non-commercial purposes, provided this notice is included.
  * ----------------------------------------------------------------------
  * History:
  *
+ * 18-Mar-09 sonic     - Numerous BSTR handling adjustments, now can be compiled as a
+ *			 packet-type handler for AROS
  * 27-Aug-07 sonic     - Register_Volume_Node() now takes separate pointer to a volume name.
  *                     - Now reports correct DOS type for volumes ('CDFS').
  * 29-May-07 sonic     - Replies FileSysStartupMsg and loads character
@@ -152,7 +154,6 @@
  */
 
 LONG handler(struct ExecBase *);
-void btos(BSTR, char *);
 LOCK *cdlock(CDROM_OBJ *, int);
 void cdunlock (LOCK *);
 CDROM_OBJ *getlockfile (LONG);
@@ -175,19 +176,22 @@ void Uninstall_TD_Interrupt (void);
 void Remove_Volume_Node (struct DeviceList *);
 LONG handlemessage(ULONG);
 
-#ifdef AROS_FAST_BPTR
+#ifdef USE_FAST_BSTR
 #define MAX_NAME_LEN    107
 #define MAX_COMMENT_LEN 79
+#define btos(bstr, buf) strcpy(buf, bstr)
 #else
 #define MAX_NAME_LEN 106
 #define MAX_COMMENT_LEN 78
+
+void btos(BSTR, char *);
 #endif
 
 #ifdef __MORPHOS__
 ULONG __abox__ = 1;
 #endif
 
-#ifdef __AROS__
+#ifdef AROS_KERNEL
 extern struct Globals *global;
 
 #define Remove_Seglist()
@@ -199,10 +203,22 @@ void Remove_Seglist (void);
 
 char __version__[] = "\0$VER: CDVDFS 1.4 (16-Jun-2008)";
 
+#ifdef __AROS__
+AROS_UFH1(__startup LONG, Main,
+	  AROS_UFHA(struct ExecBase *, sBase, A6))
+{
+    AROS_USERFUNC_INIT
+
+    return handler(sBase);
+
+    AROS_USERFUNC_EXIT
+}
+#else
 LONG SAVEDS Main(void)
 {
     return handler(*(struct ExecBase **)4L);
 }
+#endif
 #endif
 
 LONG handler(struct ExecBase *SysBase)
@@ -256,7 +272,7 @@ ULONG signals;
      *  Set dn_Task field which tells DOS not to startup a new
      *  process on every reference.
      */
-#ifndef __AROS__
+#ifndef AROS_KERNEL
     global->DosNode->dn_Task = &global->DosProc->pr_MsgPort;
 #endif
 
@@ -389,7 +405,7 @@ char    buf[256];
 register WORD   error;
 UBYTE   notdone = 1;
  
-#ifdef __AROS__
+#ifdef AROS_KERNEL
 	global = global->acdrbase->GetData(global->acdrbase);
 #endif
 	if (signals & global->g_timer_sigbit)
@@ -1105,21 +1121,21 @@ int packetsqueued (void)
 	    (void *)&global->DosProc->pr_MsgPort.mp_MsgList.lh_Tail);
 }
 
+#ifndef USE_FAST_BSTR
 /*
  *  Convert a BSTR into a normal string.. copying the string into buf.
  *  I use normal strings for internal storage, and convert back and forth
  *  when required.
  */
-
 void btos(BSTR bstr, char *buf)
 {
-    LONG len = AROS_BSTR_strlen(bstr);
+    UBYTE *src = BADDR(bstr);
+    UBYTE len = *src++;
+
+    memcpy(buf, src, len);
     buf[len] = 0;
-    while (len--)
-    {
-        buf[len] = AROS_BSTR_getchar(bstr, len);
-    }
 }
+#endif
 
 /*
  *  The lock function.	The file has already been checked to see if it
@@ -1213,9 +1229,6 @@ void Fill_FileInfoBlock (FIB *p_fib, CDROM_INFO *p_info, VOLUME *p_volume)
 
 	if (len > MAX_NAME_LEN)
 		len = MAX_NAME_LEN;
-#ifndef AROS_FAST_BPTR
-	*dest++ = len;
-#endif
 	if (p_info->symlink_f)
 		p_fib->fib_DirEntryType = ST_SOFTLINK;
 	else
@@ -1227,6 +1240,9 @@ void Fill_FileInfoBlock (FIB *p_fib, CDROM_INFO *p_info, VOLUME *p_volume)
 		p_fib->fib_DirEntryType = ST_ROOT;
 		/* file name == volume name: */
 		len = global->g_vol_name[0];
+#ifndef USE_FAST_BSTR
+		*dest++ = len;
+#endif
 		strncpy(dest, global->g_vol_name+1, len);
 	}
 	else
@@ -1243,6 +1259,9 @@ void Fill_FileInfoBlock (FIB *p_fib, CDROM_INFO *p_info, VOLUME *p_volume)
 				}
 			}
 		}
+#ifndef USE_FAST_BSTR
+		*dest++ = len;
+#endif
 		strncpy(dest, src, len);
 
 		if ((global->g_map_to_lowercase && p_volume->protocol == PRO_ISO) ||
@@ -1274,7 +1293,7 @@ void Fill_FileInfoBlock (FIB *p_fib, CDROM_INFO *p_info, VOLUME *p_volume)
 	len = p_info->comment_length;
 	if (len > MAX_COMMENT_LEN)
 		len = MAX_COMMENT_LEN;
-#ifndef AROS_FAST_BPTR
+#ifndef USE_FAST_BSTR
 	*dest++ = len;
 #endif
 	strncpy(dest, p_info->comment, len);
@@ -1297,7 +1316,7 @@ void Create_Volume_Node (LONG p_disk_type, ULONG p_volume_date) {
 		BUG(dbprintf("[Reusing old volume node]");)
 		Forbid ();
 		global->DevList = dl;
-#ifdef __AROS__
+#ifdef AROS_KERNEL
 		dl->dl_Ext.dl_AROS.dl_Device = &global->acdrbase->device;
 		dl->dl_Ext.dl_AROS.dl_Unit = (struct Unit *)&global->device->rootfh;
 #else
@@ -1308,7 +1327,7 @@ void Create_Volume_Node (LONG p_disk_type, ULONG p_volume_date) {
 	else
 	{
 		global->DevList = dl = (struct DeviceList *)MakeDosEntry(global->g_vol_name+1, DLT_VOLUME);
-#ifdef __AROS__
+#ifdef AROS_KERNEL
 		dl->dl_Ext.dl_AROS.dl_Device = &global->acdrbase->device;
 		dl->dl_Ext.dl_AROS.dl_Unit = (struct Unit *)&global->device->rootfh;
 #else
@@ -1387,7 +1406,7 @@ void Mount (void)
   Send_Event (TRUE);
 }
 
-#ifndef __AROS__
+#ifndef AROS_KERNEL
 void Remove_Seglist (void)
 {
 struct DosList *dl;
@@ -1448,7 +1467,7 @@ void Unmount (void)
       		   global->g_volume->locks);)
       BUG(dbprintf("[there are still %d file handles on this volume]",
       		   global->g_volume->file_handles);)
-#ifdef __AROS__
+#ifdef AROS_KERNEL
       global->DevList->dl_Ext.dl_AROS.dl_Unit = NULL;
 #else
       global->DevList->dl_Task = NULL;

@@ -4,12 +4,14 @@
  *
  * ----------------------------------------------------------------------
  * This code is (C) Copyright 1993,1994 by Frank Munkert.
+ *		(C) Copyright 2002-2009 The AROS Development Team
  * All rights reserved.
  * This software may be freely distributed and redistributed for
  * non-commercial purposes, provided this notice is included.
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 18-Mar-09 sonic     AROS_KERNEL definition is used instead of __AROS__
  * 15-May-07 sonic     Show_CDDA_Icon() behaves better if called twice
  * 08-Apr-07 sonic     Removed DEBUG definition
  * 31-Mar-03 sonic     - fixed warnings
@@ -217,7 +219,7 @@ static struct EasyStruct req =
 	va_start (arg, p_message);
 	if (IntuitionBase)
 	{
-#ifdef __AROS__
+#ifdef AROS_KERNEL
 		if (IntuitionBase->FirstScreen)
 		{
 #endif
@@ -225,11 +227,11 @@ static struct EasyStruct req =
 			EasyRequestArgs (NULL, &req, NULL, arg);
 			va_end (p_message);
 			return;
-#ifdef __AROS__
+#ifdef AROS_KERNEL
 		}
 #endif
 	}
-#ifdef __AROS__
+#ifdef AROS_KERNEL
 	kprintf("cdrom.handler error: ");
 	vkprintf(p_message, arg);
 	va_end (p_message);

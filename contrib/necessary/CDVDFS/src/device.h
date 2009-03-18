@@ -17,7 +17,7 @@
 #include "filehandles.h"
 #include "generic.h"
 
-#ifdef __AROS__
+#ifdef AROS_KERNEL
 struct ACDRDeviceInfo {
 	struct MsgPort *taskmp;
 	struct FileSysStartupMsg fssm;

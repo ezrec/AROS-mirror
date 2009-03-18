@@ -3,6 +3,12 @@
 #include <aros/macros.h>
 #include <dos/bptr.h>
 
+#ifdef AROS_KERNEL
+#ifdef AROS_FAST_BSTR
+#define USE_FAST_BSTR
+#endif
+#endif
+
 #else
 
 #define AROS_BE2WORD(x) x
