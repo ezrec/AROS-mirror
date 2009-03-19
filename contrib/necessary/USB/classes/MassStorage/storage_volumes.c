@@ -22,6 +22,7 @@
 #include <devices/bootblock.h>
 
 #include <proto/exec.h>
+#include <proto/dos.h>
 #include <proto/expansion.h>
 #include <proto/partition.h>
 
@@ -142,7 +143,7 @@ static VOID AddPartitionVolume
 	struct ExecBase * SysBase
     )
 {
-    UBYTE name[32];
+    UBYTE name[64];
     ULONG i, blockspercyl;
     const struct PartitionAttribute *attrs;
     IPTR tags[7];
@@ -260,6 +261,8 @@ static VOID AddPartitionVolume
                     strlen(handler)), MEMF_PUBLIC | MEMF_CLEAR));
                 if (devnode->dn_Handler)
                 {
+                	struct Library *DOSBase = OpenLibrary("dos.library", 0);
+                	strcat(name, ":");
                     i = 0;
                     while (handler[i] != '\0')
                     {
@@ -271,6 +274,10 @@ static VOID AddPartitionVolume
                     D(bug("[Boot] AddBootNode(%s,0x%lx,'%s')\n",
                         devnode->dn_Ext.dn_AROS.dn_DevName,
                         pp[4 + DE_DOSTYPE], handler));
+
+                    DeviceProc(name);
+
+                    CloseLibrary(DOSBase);
 
                     return;
                 }
