@@ -4,7 +4,7 @@
  *
  * ----------------------------------------------------------------------
  * This code is (C) Copyright 1993,1994 by Frank Munkert.
- *              (C) Copyright 2007 by Pavel Fedin.
+ *              (C) Copyright 2007-2009 The AROS Development Team.
  * All rights reserved.
  * This software may be freely distributed and redistributed for
  * non-commercial purposes, provided this notice is included.
@@ -48,8 +48,6 @@
  *                     - global variables are now in a struct Globals *global
  */
 
-//#define DEBUG 1
-
 #include <proto/exec.h>
 #include <proto/utility.h>
 #include <exec/types.h>
@@ -90,8 +88,9 @@ extern struct Globals *global;
 
 int Get_Volume_Name(VOLUME *p_volume, char *buf, int buflen)
 {
-    D(bug("[CDVDFS]\tGet_Volume_Name()\n"));
     char *iso_name = VOL(p_volume,pvd).volume_id;
+
+    D(bug("[CDVDFS]\tGet_Volume_Name()\n"));
     if (p_volume->protocol == PRO_JOLIET)
 	return Get_Joliet_Name(iso_name, buf, 32);
     else {

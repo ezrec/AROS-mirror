@@ -12,6 +12,8 @@
  * ----------------------------------------------------------------------
  * History:
  *
+ * 20-Mar-09 sonic     - Fixed ID_CDFS_DISK redefinition warning when building with new
+ *                       MorphOS SDK
  * 18-Mar-09 sonic     - Numerous BSTR handling adjustments, now can be compiled as a
  *			 packet-type handler for AROS
  * 27-Aug-07 sonic     - Register_Volume_Node() now takes separate pointer to a volume name.
@@ -143,8 +145,9 @@
 #include "prefs.h"
 #include "aros_stuff.h"
 
-
+#ifndef ID_CDFS_DISK
 #define ID_CDFS_DISK 0x43444653
+#endif
 
 /*
  *  Since this code might be called several times in a row without being

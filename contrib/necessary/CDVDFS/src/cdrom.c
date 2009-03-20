@@ -4,12 +4,14 @@
  *
  * ----------------------------------------------------------------------
  * This code is (C) Copyright 1993,1994 by Frank Munkert.
+ *              (C) Copyright 2002-2009 The AROS Development Team
  * All rights reserved.
  * This software may be freely distributed and redistributed for
  * non-commercial purposes, provided this notice is included.
  * ----------------------------------------------------------------------
  * History:
  *
+ * 20-Mar-09 sonic     - Removed usage of AROS-specific include
  * 08-Mar-09 error     - Corrected Test_Unit_Ready returning only NO_DISC state
  * 06-Mar-09 error     - Removed madness, fixed insanity. Cleanup started
  * 06-Jun-08 sonic     - Fixed to compile with gcc v2
@@ -51,8 +53,6 @@
  * 24-Sep-93   fmu   - SCSI buffers may now reside in fast or chip memory.
  *                   - TD_CHANGESTATE instead of CMD_READ in Test_Unit_Ready
  */
-
-#include <aros/debug.h>
 
 #include <proto/alib.h>
 #include <proto/exec.h>

@@ -29,4 +29,11 @@
 #	endif
 #endif
 
+#ifndef D
+#define D BUG
+#endif
+#ifndef bug
+#define bug dbprintf
+#endif
+
 #endif /* ACDR_DEBUG_H */
