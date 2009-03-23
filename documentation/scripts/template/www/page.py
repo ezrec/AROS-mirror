@@ -193,10 +193,11 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                     (
                         Img \
                         (
-                            src = 'http://sflogo.sourceforge.net/sflogo.php?group_id=43586&type=1', 
-                            width = 88, height = 31, border = 0, alt = 'SourceForge Logo'
+                            src = 'http://sflogo.sourceforge.net/sflogo.php?group_id=43586&type=10', 
+                            width = 88, height = 16, border = 0, alt = 'Get AROS Research Operating System at SourceForge.net. '
+                                'Fast, secure and Free Open Source software downloads'
                         ),
-                        href = 'http://sourceforge.net/'
+                        href = 'http://sourceforge.net/projects/aros/'
                     )
                 )
             )
@@ -253,7 +254,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
         echo "<map name=\\"map\\">";
               echo "<area shape=\\"rect\\" coords=\\"11,80,82,95\\" alt=\\"http://www.aros.org\\" href=\\"http://www.aros.org\\">";
               echo "<area shape=\\"rect\\" coords=\\"87,78,165,95\\" alt=\\"AROS-Exec\\" href=\\"http://www.aros-exec.org\\">";
-              echo "<area shape=\\"rect\\" coords=\\"244,77,323,95166,77,240,95\\" alt=\\"Team AROS\\" href=\\"http://www.teamaros.org\\">";
+              echo "<area shape=\\"rect\\" coords=\\"244,77,323,95166,77,240,95\\" alt=\\"Power2People\\" href=\\"http://www.power2people.org\\">";
               echo "<area shape=\\"rect\\" coords=\\"166,77,240,95\\" alt=\\"AROS-Exec Archives\\" href=\\"http://archives.aros-exec.org\\">";
               echo "</map>"; 
     ?>
