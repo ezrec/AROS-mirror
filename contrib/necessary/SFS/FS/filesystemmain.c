@@ -25,7 +25,7 @@
 #include <proto/timer.h>
 #include <proto/utility.h>
 
-#define DEBUG 1
+//#define DEBUG 1
 //#define DEBUGCODE
 
 #include <math.h>
