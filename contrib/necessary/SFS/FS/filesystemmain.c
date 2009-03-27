@@ -24,10 +24,10 @@
 #include <proto/intuition.h>
 #include <proto/timer.h>
 #include <proto/utility.h>
-
-//#define DEBUG 1
-//#define DEBUGCODE
-
+/*
+#define DEBUG 1
+#define DEBUGCODE
+*/
 #include <math.h>
 
 #include "sysdep.h"
@@ -264,7 +264,9 @@ extern const _LinkerDB;
 extern const NEWDATAL;
 #endif
 
-LONG mainprogram(void);
+LONG mainprogram(struct ExecBase *);
+
+#undef SysBase
 
 #ifndef AROS_KERNEL
 #ifdef __AROS__
@@ -273,15 +275,21 @@ AROS_UFH1(__startup LONG, start,
 {
     AROS_USERFUNC_INIT
 
-    globals->sysBase = sBase;
-    return mainprogram();
+    return mainprogram(sBase);
 
     AROS_USERFUNC_EXIT
 }
 #else
+LONG __saveds trampoline(void)
+{
+    struct ExecBase *sBase = (*((struct ExecBase **)4));
+    
+    return mainprogram(sBase);
+}
+
 LONG start(void)
 {
-  return(STACKSWAP(4096, mainprogram));
+  return(STACKSWAP(4096, trampoline));
 /*  if(STACKSWAP()==0) {
     return(ERROR_NO_FREE_STORE);
   }
@@ -298,7 +306,7 @@ void dreq(UBYTE *fmt, ... );
 
 // #define STARTDEBUG
 
-LONG __saveds mainprogram()
+LONG mainprogram(struct ExecBase *SysBase)
 {
 #ifndef __AROS__
   ULONG reslen;
@@ -308,15 +316,16 @@ LONG __saveds mainprogram()
 
   D(bug("[SFS] Filesystem main\n"));
 
+#ifndef AROS_KERNEL
+  globals = AllocMem(sizeof(struct Globals), MEMF_PUBLIC | MEMF_CLEAR);
+#endif
+  globals->sysBase = SysBase;
+  initGlobals();
+
 #undef SysBase
 #define SysBase (globals->sysBase)
 
-#ifdef __AROS__
-  initGlobals();
-#else
-  globals = AllocMem(sizeof(struct Globals), MEMF_PUBLIC | MEMF_CLEAR);
-    
-  SysBase=(*((struct ExecBase **)4));
+#ifndef __AROS__
   old_a4=(APTR)getreg(REG_A4);
   reslen=((ULONG)&RESLEN-(ULONG)old_a4)+64;
 

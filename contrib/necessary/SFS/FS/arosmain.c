@@ -23,7 +23,7 @@
 #include "aros_stuff.h"
 #include "locks.h"
 
-LONG mainprogram();
+LONG mainprogram(struct ExecBase *);
 void *ASFS_GetData(struct ASFSBase *);
 
 static const ULONG sizes[]=
@@ -52,8 +52,7 @@ AROS_UFH3(void, ASFSOldEntry,
     /* Wait until global for this process is setup */
     Wait(SIGBREAKF_CTRL_F);
 
-    globals->sysBase = SysBase;
-    mainprogram();
+    mainprogram(SysBase);
     AROS_USERFUNC_EXIT
 }
 
