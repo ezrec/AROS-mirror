@@ -46,7 +46,7 @@ const struct FC_Type _msgFreqFmt = { 25, "%lu Hz" };
 static struct Catalog *ahi_Catalog = NULL;
 
 static const struct TagItem ahi_tags[] = {
-  { OC_BuiltInLanguage, (ULONG)"english" },
+  { OC_BuiltInLanguage, (IPTR)"english" },
   { OC_Version,         4 },
   { TAG_DONE,           0  }
 };
@@ -56,7 +56,7 @@ void OpenahiCatalog(struct Locale *loc, STRPTR language)
   if(LocaleBase != NULL  &&  ahi_Catalog == NULL)
   {
     ahi_Catalog = OpenCatalog(loc, (STRPTR) "ahi.catalog",
-        language ? OC_Language : TAG_IGNORE, (ULONG)language,
+        language ? OC_Language : TAG_IGNORE, (IPTR)language,
         TAG_MORE, (ULONG)&ahi_tags[0]);
   }
 }
@@ -66,7 +66,7 @@ struct Catalog *ExtOpenCatalog(struct Locale *loc, STRPTR language)
   if(LocaleBase != NULL)
   {
     return OpenCatalog(loc, (STRPTR) "ahi.catalog",
-        language ? OC_Language : TAG_IGNORE, (ULONG)language,
+        language ? OC_Language : TAG_IGNORE, (IPTR)language,
         TAG_MORE, (ULONG)&ahi_tags[0]);
   }
   return NULL;

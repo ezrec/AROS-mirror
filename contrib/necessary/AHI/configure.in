@@ -5,7 +5,7 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_REVISION( $Revision$ )
 dnl
-AC_INIT( TODO )
+AC_INIT(TODO)
 
 
 dnl General

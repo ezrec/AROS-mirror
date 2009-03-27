@@ -599,7 +599,7 @@ PACKAGE_VERSION=
 PACKAGE_STRING=
 PACKAGE_BUGREPORT=
 
-ac_unique_file="TODO "
+ac_unique_file="TODO"
 ac_default_prefix=/
 # Factoring default headers for most tests.
 ac_includes_default="\
