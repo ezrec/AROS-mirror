@@ -8,7 +8,7 @@
 #include <dos/filesystem.h>
 #endif
 
-#include "../../packets.h"
+#include "../FS/packets.h"
 
 #ifdef __AROS__
 #define __AMIGADATE__   "(29.11.2005)"

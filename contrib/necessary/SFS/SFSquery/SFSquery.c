@@ -9,8 +9,8 @@
 #include <dos/filesystem.h>
 #endif
 
-#include "../../packets.h"
-#include "../../query.h"
+#include "../FS/packets.h"
+#include "../FS/query.h"
 
 #ifdef __AROS__
 #define __AMIGADATE__   "(29.11.2005)"

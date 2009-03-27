@@ -22,13 +22,13 @@
 #include <aros/debug.h>
 
 #include "support.h"
-#include "../../packets.h"
-#include "../../query.h"
+#include "../FS/packets.h"
+#include "../FS/query.h"
 
 #include <dos/filesystem.h>
 
 #define _DEBUG_H
-#include "../../asmsupport.c"
+#include "../FS/asmsupport.c"
 
 #include <stdio.h>
 #include <stdlib.h>

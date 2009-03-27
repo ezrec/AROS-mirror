@@ -7,15 +7,15 @@
 #include <proto/graphics.h>
 #include <proto/intuition.h>
 #include <utility/tagitem.h>
-#include "../../packets.h"
-#include "../../query.h"
+#include "../FS/packets.h"
+#include "../FS/query.h"
 #include <stdio.h>
 
 #ifdef __AROS__
 #include <dos/filesystem.h>
 #endif
 
-#include "../../asmsupport.c"
+#include "../FS/asmsupport.c"
 #undef SysBase
 #undef IntuitionBase
 #undef DOSBase
