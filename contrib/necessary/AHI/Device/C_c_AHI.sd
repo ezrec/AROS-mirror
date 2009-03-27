@@ -23,7 +23,7 @@ const struct FC_Type _%i = { %d, %s };
 static struct Catalog *%b_Catalog = NULL;
 
 static const struct TagItem %b_tags[] = {
-  { OC_BuiltInLanguage, (ULONG)%l },
+  { OC_BuiltInLanguage, (IPTR)%l },
   { OC_Version,         %v },
   { TAG_DONE,           0  }
 };
