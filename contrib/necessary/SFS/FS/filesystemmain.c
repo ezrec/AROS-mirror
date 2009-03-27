@@ -337,9 +337,7 @@ LONG __saveds mainprogram()
     D(bug("[SFS] packet = %p\n", globals->packet));
 
     globals->devnode=(struct DeviceNode *)BADDR(globals->packet->dp_Arg3);
-/*  Modifying dn_Task currently crashes Wanderer, need to find out why.
-    Disabled until done.
-    globals->devnode->dn_Task=&globals->mytask->pr_MsgPort; */
+    globals->devnode->dn_Task=&globals->mytask->pr_MsgPort;
     globals->startupmsg=BADDR(globals->devnode->dn_Startup);
     D(bug("[SFS] devnode = %p\n", globals->devnode));
     D(bug("[SFS] startupmsg = %p\n", globals->startupmsg));
@@ -3709,8 +3707,7 @@ LONG initdisk() {
           vn->dl_Ext.dl_AROS.dl_Device = &globals->asfsbase->device;
           vn->dl_Ext.dl_AROS.dl_Unit = (struct Unit *)&globals->device->rootfh;
 #endif
-/* Changing dl_Task kills Wanderer, need to find out why
-          vn->dl_Task=globals->devnode->dn_Task;*/
+          vn->dl_Task=globals->devnode->dn_Task;
           vn->dl_DiskType=globals->dosenvec->de_DosType;
           globals->volumenode=vn;
         }
