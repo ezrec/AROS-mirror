@@ -1,6 +1,6 @@
 /****************************************************************
-   This file was created automatically by `FlexCat 2.6.6'
-   from "../../ahisrc/AHI/ahiprefs.cd".
+   This file was created automatically by `FlexCat 2.4'
+   from "/cygdrive/e/Private/Projects/AROS-Win32/contrib/necessary/AHI/AHI/ahiprefs.cd".
 
    Do NOT edit by hand!
 ****************************************************************/
@@ -134,8 +134,8 @@ VOID OpenahiprefsCatalog(VOID)
 
 {
     if (LocaleBase) {
-	struct TagItem ahiprefs_tags[] = {
-	  { OC_BuiltInLanguage, "english" },
+	static const struct TagItem ahiprefs_tags[] = {
+	  { OC_BuiltInLanguage, (ULONG)"english" },
 	  { OC_Version,         4 },
 	  { TAG_DONE,           0  }
 	};

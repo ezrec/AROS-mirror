@@ -1,7 +1,7 @@
 
 /****************************************************************
-   This file was created automatically by `FlexCat 2.6.6'
-   from "../../ahisrc/Device/ahi.cd".
+   This file was created automatically by `FlexCat 2.4'
+   from "/cygdrive/e/Private/Projects/AROS-Win32/contrib/necessary/AHI/Device/ahi.cd".
 
    Do NOT edit by hand!
 ****************************************************************/
@@ -45,8 +45,8 @@ const struct FC_Type _msgFreqFmt = { 25, "%lu Hz" };
 
 static struct Catalog *ahi_Catalog = NULL;
 
-static struct TagItem ahi_tags[] = {
-  { OC_BuiltInLanguage, "english" },
+static const struct TagItem ahi_tags[] = {
+  { OC_BuiltInLanguage, (ULONG)"english" },
   { OC_Version,         4 },
   { TAG_DONE,           0  }
 };

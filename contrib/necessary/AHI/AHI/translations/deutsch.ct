@@ -3,8 +3,6 @@
 ## codeset 0
 ;
 ## chunk AUTH Translated by Uwe Bojartschuk
-;#language english
-;#version 4
 ;
 ;    AHI - Hardware independent audio subsystem
 ;    Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
@@ -140,7 +138,7 @@ _Kanäle
 ;
 msgOptNoChannels
 Selbsttätig
-;Automatic 
+; 
 ;
 msgOptVolume
 _Lautstärke
@@ -282,7 +280,7 @@ Kann `%s' nicht finden!
 ;
 msgTextNoOpen
 Kann `%s' Version %ld nicht öffnen.
-; Unable to open `%s' version %ld.
+; Unable to open `%s´ version %ld.
 ;
 ; *** Additions
 ;

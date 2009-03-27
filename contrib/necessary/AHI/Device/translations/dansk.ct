@@ -3,8 +3,6 @@
 ## codeset 0
 ;
 ## chunk AUTH Translated by Thomas Petersen/ATO <thomaslp@post1.tele.dk>
-;#language english
-;#version 4
 ;
 ;    AHI - Hardware independent audio subsystem
 ;    Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
