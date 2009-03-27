@@ -8,57 +8,67 @@
 #include "fs.h"
 #include "globals.h"
 
-#ifdef DEBUGCODE
-
-  #ifdef __AROS__
-
-        #include <aros/debug.h>
-        
-        #define _TDEBUG(x)                                           \
-                do {                                                \
-                    struct DateStamp ds;                            \
-                    DateStamp(&ds);                                 \
-                    bug("%4ld.%4ld ", ds.ds_Minute, ds.ds_Tick*2);  \
-                    bug x;                                         \
-                } while (0)
-
-        #define _DEBUG(x) bug("[SFS]"); bug x
-
-        #define xdebug(type,x...)                                   \
-                do {                                                \
-                    ULONG debug=globals->mask_debug;                 \
-                    ULONG debugdetailed=globals->mask_debug &        \
-                        ~(DEBUG_CACHEBUFFER|DEBUG_NODES|DEBUG_LOCK|DEBUG_BITMAP);   \
-                    if((debugdetailed & type)!=0 || ((type & 1)==0 && (debug & type)!=0)) \
-                    {                                               \
-                        bug(x);                                     \
-                    }                                               \
-                } while (0)
-  
-        #define _XDEBUG(x) xdebug x
-  
-  
-  #else
-
-      #ifndef DEBUGKPRINTF
-    
-        #define _TDEBUG(x) tdebug x
-        #define _DEBUG(x) debug x
-        #define _XDEBUG(x) xdebug x
-    
-      #else
-        #define _TDEBUG(x) kprintf x
-        #define _DEBUG(x) kprintf x
-        #define _XDEBUG(x) xkprintf x
-    
-      #endif
-      
-  #endif
+#ifdef __AROS__
+#include <aros/debug.h>
 #else
 
-  #define _TDEBUG(x)
-  #define _DEBUG(x)
-  #define _XDEBUG(x)
+#ifdef DEBUG
+#define D(x) x
+#else
+#define D(x)
+#endif
+
+#define bug _DEBUG
+
+#endif
+
+#ifdef DEBUGCODE
+
+#ifdef __AROS__
+        
+#define _TDEBUG(x)                                  \
+do {                                                \
+    struct DateStamp ds;                            \
+    DateStamp(&ds);                                 \
+    bug("%4ld.%4ld ", ds.ds_Minute, ds.ds_Tick*2);  \
+    bug x;                                          \
+} while (0)
+
+#define _DEBUG(x) bug("[SFS]"); bug x
+
+#define xdebug(type,x...)                                                                                 \
+do {                                                                                                      \
+    ULONG debug=globals->mask_debug;                                                                      \
+    ULONG debugdetailed=globals->mask_debug & ~(DEBUG_CACHEBUFFER|DEBUG_NODES|DEBUG_LOCK|DEBUG_BITMAP);   \
+    if((debugdetailed & type)!=0 || ((type & 1)==0 && (debug & type)!=0))                                 \
+    {                                                                                                     \
+        bug(x);                                                                                           \
+    }                                                                                                     \
+} while (0)
+  
+#define _XDEBUG(x) xdebug x
+
+#else
+
+#ifndef DEBUGKPRINTF
+    
+#define _TDEBUG(x) tdebug x
+#define _DEBUG(x) debug x
+#define _XDEBUG(x) xdebug x
+    
+#else
+#define _TDEBUG(x) kprintf x
+#define _DEBUG(x) kprintf x
+#define _XDEBUG(x) xkprintf x
+    
+#endif
+      
+#endif
+#else
+
+#define _TDEBUG(x)
+#define _DEBUG(x)
+#define _XDEBUG(x)
 
 #endif
 

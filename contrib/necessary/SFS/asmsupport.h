@@ -1,6 +1,12 @@
 #ifndef ASMSUPPORT_H_
 #define ASMSUPPORT_H_
 
+#ifdef __AROS__
+#include <exec/rawfmt.h>
+#endif
+#ifdef __MORPHOS__
+#include <exec/rawfmt.h>
+#endif
 #include <exec/types.h>
 
 inline WORD bfffo(ULONG data, WORD bitoffset);
@@ -24,8 +30,8 @@ ULONG bmcntz(ULONG *bitmap, LONG bitoffset, LONG bits);
 
 ULONG CALCCHECKSUM(ULONG, ULONG *);
 
-#ifdef __AROS__
-#define putChProc   (NULL)
+#ifdef RAWFMTFUNC_STRING
+#define putChProc   RAWFMTFUNC_STRING
 #else
 #define putChProc   (void (*)())"\x16\xC0\x4E\x75"
 #endif

@@ -6,7 +6,6 @@
 #include <devices/inputevent.h>
 #include <devices/timer.h>
 #include <devices/trackdisk.h>
-//#include <dos.h>
 #include <dos/dos.h>
 #include <dos/dosextens.h>
 #include <dos/dostags.h>
@@ -27,11 +26,11 @@
 #include <proto/utility.h>
 
 #define DEBUG 1
-#include <aros/debug.h>
 //#define DEBUGCODE
 
 #include <math.h>
 
+#include "sysdep.h"
 #include "fs.h"
 #include "adminspaces.h"
 #include "bitmap.h"
@@ -247,16 +246,13 @@ void mainloop(void);
 #define MAJOR_VERSION (1)
 #define MINOR_VERSION (84)
 
-#ifdef __AROS__
+#ifdef __GNUC__
 static const char ver_version[]={"\0$VER: " PROGRAMNAMEVER " 1.84 " __DATE__ "\r\n"};
 #else
 static const char ver_version[]={"\0$VER: " PROGRAMNAMEVER " 1.84 " __AMIGADATE__ "\r\n"};
-#endif
-
-#ifndef __AROS__
 static const struct Resident resident={RTC_MATCHWORD,&resident,&resident+sizeof(struct Resident),0,1,0,-81,PROGRAMNAME,&ver_version[7],0};
-#endif
 //                                                                                                 ^ version insist on using this as the first part of the version number.
+#endif
 
 
 /* Main */
@@ -268,26 +264,32 @@ extern const _LinkerDB;
 extern const NEWDATAL;
 #endif
 
-#ifdef __AROS__
-LONG mainprogram(struct ExecBase *);
-#else
 LONG mainprogram(void);
-#endif
 
-
-LONG start(void) {
+#ifndef AROS_KERNEL
 #ifdef __AROS__
-    return mainprogram(NULL);
+AROS_UFH1(__startup LONG, start,
+	  AROS_UFHA(struct ExecBase *, sBase, A6))
+{
+    AROS_USERFUNC_INIT
+
+    globals->sysBase = sBase;
+    return mainprogram();
+
+    AROS_USERFUNC_EXIT
+}
 #else
+LONG start(void)
+{
   return(STACKSWAP(4096, mainprogram));
 /*  if(STACKSWAP()==0) {
     return(ERROR_NO_FREE_STORE);
   }
 
   return(mainprogram()); */
-#endif
 }
-
+#endif
+#endif
 
 void request2(UBYTE *text);
 LONG req(UBYTE *fmt, UBYTE *gads, ... );
@@ -296,73 +298,59 @@ void dreq(UBYTE *fmt, ... );
 
 // #define STARTDEBUG
 
-#ifdef __AROS__
+LONG __saveds mainprogram()
+{
+#ifndef __AROS__
+  ULONG reslen;
+  APTR old_a4;
+  APTR newdata;
+#endif
+
+  D(bug("[SFS] Filesystem main\n"));
+
 #undef SysBase
-LONG mainprogram(struct ExecBase *SysBase) {
-    {
-#else
-LONG __saveds mainprogram() {
-      {
-    ULONG reslen;
-    APTR old_a4;
-    APTR newdata;
-#endif
-
-    D(bug("[SFS] Filesystem main\n"));
+#define SysBase (globals->sysBase)
 
 #ifdef __AROS__
-    initGlobals();
-    globals->sysBase = SysBase;
-    globals->devnode = AllocMem(sizeof(struct DeviceNode), MEMF_PUBLIC | MEMF_CLEAR);
-    #define SysBase (globals->sysBase)
+  initGlobals();
 #else
-    globals = AllocMem(sizeof(struct Globals), MEMF_PUBLIC | MEMF_CLEAR);
+  globals = AllocMem(sizeof(struct Globals), MEMF_PUBLIC | MEMF_CLEAR);
     
-    SysBase=(*((struct ExecBase **)4));
-    old_a4=(APTR)getreg(REG_A4);
-    reslen=((ULONG)&RESLEN-(ULONG)old_a4)+64;
+  SysBase=(*((struct ExecBase **)4));
+  old_a4=(APTR)getreg(REG_A4);
+  reslen=((ULONG)&RESLEN-(ULONG)old_a4)+64;
 
-    newdata=AllocMem(reslen,MEMF_CLEAR|MEMF_PUBLIC);
+  newdata=AllocMem(reslen,MEMF_CLEAR|MEMF_PUBLIC);
 
-    CopyMem(old_a4,newdata,*(((ULONG *)old_a4)-2));
+  CopyMem(old_a4,newdata,*(((ULONG *)old_a4)-2));
 
-    putreg(REG_A4,(LONG)newdata);
+  putreg(REG_A4,(LONG)newdata);
 #endif
-  }
   
   if((DOSBase=(struct DosLibrary *)OpenLibrary("dos.library",37))!=0) {
-
-  D(bug("[SFS] DOSBase = %p\n", DOSBase));
+    D(bug("[SFS] DOSBase = %p\n", DOSBase));
 
     globals->mytask=(struct Process *)FindTask(0);
-
-  D(bug("[SFS] mytask = %p\n", globals->mytask));
+    D(bug("[SFS] mytask = %p\n", globals->mytask));
 
     globals->packet=waitpacket(globals->mytask);
+    D(bug("[SFS] packet = %p\n", globals->packet));
 
-  D(bug("[SFS] packet = %p\n", globals->packet));
-
-
-
-
-#ifndef __AROS__
     globals->devnode=(struct DeviceNode *)BADDR(globals->packet->dp_Arg3);
-    globals->devnode->dn_Task=&mytask->pr_MsgPort;
+/*  Modifying dn_Task currently crashes Wanderer, need to find out why.
+    Disabled until done.
+    globals->devnode->dn_Task=&globals->mytask->pr_MsgPort; */
     globals->startupmsg=BADDR(globals->devnode->dn_Startup);
-#else
-    globals->startupmsg=BADDR(globals->packet->dp_Arg3);
-    globals->devnode->dn_Name = BADDR(globals->packet->dp_Arg2);
-#endif
-  D(bug("[SFS] devnode = %p\n", globals->devnode));
-  D(bug("[SFS] startupmsg = %p\n", globals->startupmsg));
+    D(bug("[SFS] devnode = %p\n", globals->devnode));
+    D(bug("[SFS] startupmsg = %p\n", globals->startupmsg));
 
     if(initcachebuffers()==0) {
 
       if((IntuitionBase=OpenLibrary("intuition.library",37))!=0) {
 
-        #ifdef STARTDEBUG
+#ifdef STARTDEBUG
           dreq("(1) Filesystem initializing...");
-        #endif
+#endif
 
         if((UtilityBase=OpenLibrary("utility.library",37))!=0) {
 
@@ -374,9 +362,9 @@ LONG __saveds mainprogram() {
                 if((globals->inactivitytimer_ioreq=(struct timerequest *)CreateIORequest(globals->msgporttimer, sizeof(struct timerequest)))!=0) {
                   if((globals->activitytimer_ioreq=(struct timerequest *)CreateIORequest(globals->msgportflushtimer, sizeof(struct timerequest)))!=0) {
 
-                    #ifdef STARTDEBUG
+#ifdef STARTDEBUG
                       dreq("(2) Message ports and iorequests created");
-                    #endif
+#endif
 
                     if(OpenDevice("timer.device",UNIT_VBLANK,&globals->inactivitytimer_ioreq->tr_node,0)==0) {
                       if(OpenDevice("timer.device",UNIT_VBLANK,&globals->activitytimer_ioreq->tr_node,0)==0) {
@@ -389,14 +377,14 @@ LONG __saveds mainprogram() {
 
                         initlist((struct List *)&globals->globalhandles);
 
-                        #ifdef STARTDEBUG
+#ifdef STARTDEBUG
                           dreq("(3) Timer.device opened");
-                        #endif
+#endif
 
                         if(initcachedio(AROS_BSTR_ADDR(globals->startupmsg->fssm_Device), globals->startupmsg->fssm_Unit, globals->startupmsg->fssm_Flags, globals->dosenvec)==0) {
-                          #ifdef STARTDEBUG
+#ifdef STARTDEBUG
                             dreq("(4) Cached IO layer started");
-                          #endif
+#endif
 
                           globals->shifts_block32=globals->shifts_block-BLCKFACCURACY;
 
@@ -412,11 +400,7 @@ LONG __saveds mainprogram() {
                             ULONG blocks512, reserve;
 
                             blocks512=globals->blocks_total<<(globals->shifts_block-9);
-#ifdef __AROS__
-                            reserve=sqrt(blocks512);
-#else
                             reserve=SQRT(blocks512);
-#endif
                             reserve=(reserve<<2) + reserve;
 
                             if(reserve > blocks512/100) {      // Do not use more than 1% of the disk.
@@ -1605,11 +1589,10 @@ void mainloop(void) {
 #endif
                       if((errorcode=storecachebuffer(cb))==0 && globals->volumenode!=0) {
                         s=BADDR(globals->packet->dp_Arg1);
-#ifdef __AROS__
                         d=BADDR(globals->volumenode->dl_Name);
+#ifdef USE_FAST_BSTR
                         copystr(s, d, 30);
 #else
-                        d=BADDR(globals->volumenode->dl_Name);
                         len=*s++;
 
                         if(len>30) {
@@ -2408,7 +2391,7 @@ _DEBUG(("examine ED_TYPE, o->bits=%x, o->objectnode=%d\n", o->bits, BE2L(o->be_o
                 }
                 break;
 #if 0
-/******** OLD EXAMINE_NEXT CODE!
+/******** OLD EXAMINE_NEXT CODE! */
               case ACTION_EXAMINE_NEXT:
                 // _DEBUG(("ACTION_EXAMINE_NEXT(0x%08lx,0x%08lx)\n",BADDR(packet->dp_Arg1),BADDR(packet->dp_Arg2)));
 
@@ -3685,11 +3668,10 @@ LONG initdisk() {
 
           if((vn=(struct DeviceList *)MakeDosEntry("                              ",DLT_VOLUME))!=0) {
             struct SFSMessage *sfsm;
-#ifdef __AROS__
             UBYTE *d2=(UBYTE *)BADDR(vn->dl_Name);
+#ifdef USE_FAST_BSTR
             copystr(oc->object[0].name, d2, 30);
 #else
-            UBYTE *d2=(UBYTE *)BADDR(vn->dl_Name);
             UBYTE *d=d2+1;
             UBYTE *s=oc->object[0].name;
             UBYTE len=0;
@@ -3723,12 +3705,12 @@ LONG initdisk() {
         _DEBUG(("initdisk: Using new or old volumenode.\n"));
 
         if(errorcode==0) {    /* Reusing the found VolumeNode or using the new VolumeNode */
-#ifdef __AROS__
+#ifdef AROS_KERNEL
           vn->dl_Ext.dl_AROS.dl_Device = &globals->asfsbase->device;
           vn->dl_Ext.dl_AROS.dl_Unit = (struct Unit *)&globals->device->rootfh;
-#else
-          vn->dl_Task=devnode->dn_Task;
 #endif
+/* Changing dl_Task kills Wanderer, need to find out why
+          vn->dl_Task=globals->devnode->dn_Task;*/
           vn->dl_DiskType=globals->dosenvec->de_DosType;
           globals->volumenode=vn;
         }
@@ -3823,11 +3805,10 @@ static void deinitdisk() {
 
       Forbid();
 
-#ifdef __AROS__
+#ifdef AROS_KERNEL
       globals->volumenode->dl_Ext.dl_AROS.dl_Unit = NULL;
-#else
-      globals->volumenode->dl_Task=0;    /* This seems to be necessary */
 #endif
+      globals->volumenode->dl_Task=0;
       globals->volumenode->dl_LockList=(LONG)globals->locklist;
       globals->volumenode->dl_unused=(LONG)globals->notifyrequests;
 
@@ -6806,12 +6787,9 @@ LONG step(void) {
 #undef SysBase
 #undef DOSBase
 
-static void sdlhtask(void) {
-#ifdef __AROS__
+static void sdlhtask(void)
+{
   struct ExecBase *SysBase=globals->sysBase;
-#else
-  struct ExecBase *SysBase=(*((struct ExecBase **)4));
-#endif
   struct DosLibrary *DOSBase;
 
   if((DOSBase=(struct DosLibrary *)OpenLibrary("dos.library",37))!=0) {

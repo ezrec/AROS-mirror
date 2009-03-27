@@ -1,3 +1,5 @@
+#define DEBUG 1
+
 #include <devices/scsidisk.h>
 #include <devices/trackdisk.h>
 #include <dos/filehandler.h>
@@ -287,6 +289,7 @@ void changegeometry(struct DosEnvec *de)
 
         if(totalsectors!=0)
         {
+            D(bug("[SFS] Given Sector size %lu, detected %lu\n", sectorsize, globals->bytes_sector));
             if(sectorsize==globals->bytes_sector) {
                 globals->sector_high=totalsectors;
             }

@@ -1,10 +1,6 @@
 #ifndef _AROS_STUFF_H
 #define _AROS_STUFF_H
 
-#ifndef __AROS__
-#define dl_OldName dl_Name
-#endif
-
 #include <exec/types.h>
 #include <exec/memory.h>
 #include <exec/execbase.h>
@@ -28,7 +24,6 @@ struct ASFSHandle {
 
 struct ASFSDeviceInfo {
         struct MsgPort *taskmp;
-        struct FileSysStartupMsg fssm;
         struct Globals *global;
         struct ASFSHandle rootfh;
 };

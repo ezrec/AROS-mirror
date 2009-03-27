@@ -23,7 +23,7 @@
 #include "aros_stuff.h"
 #include "locks.h"
 
-LONG mainprogram(struct ExecBase *);
+LONG mainprogram();
 void *ASFS_GetData(struct ASFSBase *);
 
 static const ULONG sizes[]=
@@ -52,7 +52,8 @@ AROS_UFH3(void, ASFSOldEntry,
     /* Wait until global for this process is setup */
     Wait(SIGBREAKF_CTRL_F);
 
-    mainprogram(SysBase);
+    globals->sysBase = SysBase;
+    mainprogram();
     AROS_USERFUNC_EXIT
 }
 
@@ -107,7 +108,7 @@ static void AddFileSystemTask(struct ASFSBase *asfsbase, struct IOFileSys *iofs)
         {TAG_END   , 0     	    	    	    	}
     };
 
-D(bug("[SFS] AddFileSystemTask\n"));
+    D(bug("[SFS] AddFileSystemTask\n"));
 
     device = AllocMem(sizeof(struct ASFSDeviceInfo),MEMF_PUBLIC | MEMF_CLEAR);
     if (device)
@@ -137,14 +138,7 @@ D(bug("[SFS] AddFileSystemTask\n"));
 		    node->proc = proc;
 		    device->taskmp = &proc->pr_MsgPort;
 		    packet.dp_Link = &msg;
-		    packet.dp_Arg2 = (IPTR)MKBADDR(iofs->io_Union.io_OpenDevice.io_DosName);
-//            packet.dp_Arg2 = (IPTR)NULL;
-//		    packet.dp_Arg3 = &device->pseudoDevNode;
-		    device->fssm.fssm_Unit = iofs->io_Union.io_OpenDevice.io_Unit;
-		    device->fssm.fssm_Device = MKBADDR(iofs->io_Union.io_OpenDevice.io_DeviceName);
-		    device->fssm.fssm_Environ = MKBADDR((struct DosEnvec *)iofs->io_Union.io_OpenDevice.io_Environ);
-		    device->fssm.fssm_Flags = 0;
-		    packet.dp_Arg3 = (IPTR)&device->fssm;
+                    packet.dp_Arg3 = (IPTR)MKBADDR(iofs->io_Union.io_OpenDevice.io_DeviceNode);
 		    newglobal->asfsbase = asfsbase;
 		    newglobal->device = device;
 
@@ -159,12 +153,11 @@ D(bug("[SFS] AddFileSystemTask\n"));
 
 		    if (packet.dp_Res1 == DOSTRUE)
 		    {
-			device->global = newglobal;
+		        device->global = newglobal;
 			device->rootfh.device = device;
 			iofs->IOFS.io_Unit=(struct Unit *)&device->rootfh;
-			return;
+		        return;
 		    }
-
 		} /* if (proc) */
 		else
 		{

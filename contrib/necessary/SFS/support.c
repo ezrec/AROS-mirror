@@ -623,10 +623,7 @@ UWORD hash(UBYTE *name, WORD casesensitive) {
 
 #ifdef __AROS__
 
-UWORD bstrlen(BSTR bstr)
-{
-        return AROS_BSTR_strlen(bstr);
-}
+#define bstrlen AROS_BSTR_strlen
 
 #else
 
