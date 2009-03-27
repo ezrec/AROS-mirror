@@ -2,6 +2,8 @@
 ## language czech
 ## codeset 0
 ;
+;#language english
+;#version 4
 ;
 ;    AHI - Hardware independent audio subsystem
 ;    Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
