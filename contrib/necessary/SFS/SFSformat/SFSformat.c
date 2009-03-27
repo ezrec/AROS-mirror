@@ -13,7 +13,7 @@
 #ifdef __AROS__
 #define __AMIGADATE__   "(29.11.2005)"
 
-#include "../dosdoio.c"
+#include "../aros/dosdoio.c"
 
 BYTE AROS_DoPkt(struct IOFileSys *iofs, LONG action, LONG Arg1, LONG Arg2, LONG Arg3, LONG Arg4, LONG Arg5)
 {

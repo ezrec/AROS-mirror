@@ -136,7 +136,7 @@ LONG xget(Object * obj, ULONG attr)
     return x;
 }
 
-#include "../dosdoio.c"
+#include "../aros/dosdoio.c"
 
 BYTE AROS_DoPkt(struct IOFileSys *iofs, LONG action, LONG Arg1, LONG Arg2, LONG Arg3, LONG Arg4, LONG Arg5)
 {
