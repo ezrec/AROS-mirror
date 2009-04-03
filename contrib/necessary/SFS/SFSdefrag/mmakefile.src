@@ -6,7 +6,7 @@ FILES = main support locale
 
 EXEDIR = $(AROSDIR)/Tools
 
-USER_CFLAGS := -I $(SRCDIR)/$(CURDIR)/../..
+USER_CFLAGS := -I $(SRCDIR)/$(CURDIR)/../FS
 
 #MM contrib-sfs-c-sfsdefrag : includes symlinks \
 #MM contrib-sfs-c-sfsdefrag-catalogs \
