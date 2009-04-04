@@ -3,7 +3,6 @@
 
 -include $(TOP)/config/make.cfg
 
-# We need some hosting space to store packaged OWB revisions, my web page below is only temporary.
 REPOSITORIES = http://www.sand-labs.org/aros_downloads/OWB%20Source%20Snapshots
 ARCHBASE := OWB-r905
 OWB_SOURCE := $(PORTSDIR)/OWB/$(ARCHBASE)
