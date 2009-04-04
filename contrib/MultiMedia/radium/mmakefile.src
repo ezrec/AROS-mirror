@@ -109,7 +109,8 @@ FILES := $(OBJ)
 
 EXEDIR := $(CONTRIBDIR)/MultiMedia/Audio/Radium
 
-USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/$(AD) -I$(SRCDIR)/$(CURDIR)/$(AR) $(DEFINES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/$(AD) -I$(SRCDIR)/$(CURDIR)/$(AR) \
+    -I$(SRCDIR)/$(CURDIR)/$(CD) $(DEFINES)
 
 %build_prog mmake=contrib-radium \
     progname=Radium targetdir=$(EXEDIR) \
@@ -120,10 +121,3 @@ setup-contrib-radium : setup $(CONTRIBDIR)/radium/Execute.Me
 
 $(CONTRIBDIR)/radium/Execute.Me : RADIUM.RUN
 	$(CP) $< $@
-
-
-
-
-
-
-
