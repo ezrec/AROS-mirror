@@ -349,3 +349,33 @@ Open new tab
 MSG_Tabs_CloseActive (//)
 Close active tab
 ;
+MSG_JavaScript_Alert (//)
+OWB JavaScript Alert
+;
+MSG_JavaScript_AlertOK (//)
+OK
+;
+MSG_JavaScript_Confirm (//)
+OWB JavaScript Confirm
+;
+MSG_JavaScript_ConfirmOptions (//)
+Cancel|OK
+;
+MSG_JavaScript_Prompt (//)
+OWB JavaScript Prompt
+;
+MSG_JavaScript_PromptOK (//)
+OK
+;
+MSG_JavaScript_PromptCancel (//)
+Cancel
+;
+MSG_RequestPolicy_Title (//)
+Opening file with unknown MIME type
+;
+MSG_RequestPolicy_Message (//)
+You are about to open file '%s' having MIME type '%s'.\nWhat should OWB do with this file?
+;
+MSG_RequestPolicy_Options (//)
+Download|Show|Cancel
+;

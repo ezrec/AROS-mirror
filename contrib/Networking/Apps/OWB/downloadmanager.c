@@ -224,7 +224,7 @@ IPTR DownloadManager__OM_DISPOSE(struct IClass *cl, Object *obj, Msg msg)
     return DoSuperMethodA(cl,obj,msg);
 }
 
-IPTR DownloadManager__MUIM_DownloadDelegate_DidCreateDownload(Class *cl, Object *obj, struct  MUIP_DownloadDelegate_DidCreateDownload* message)
+IPTR DownloadManager__MUIM_DownloadDelegate_DidBeginDownload(Class *cl, Object *obj, struct  MUIP_DownloadDelegate_DidBeginDownload* message)
 {
     struct DownloadManager_DATA *manager = (struct DownloadManager_DATA *) INST_DATA(cl, obj);
 
@@ -236,31 +236,17 @@ IPTR DownloadManager__MUIM_DownloadDelegate_DidCreateDownload(Class *cl, Object 
     download->manager = obj;
     download->filename = NULL;
     download->filesize = NULL;
-    sprintf(download->progress, "%ld %%", (long) (download->sizeTotal > 0 ? 100 * download->sizeDownloaded / download->sizeTotal : 0));
-    
+    sprintf(download->progress, "%ld %%", 0);
+
     if(!download)
 	return FALSE;
-    
+
     AddHead(&manager->downloads, (struct Node*) download);
 
     DoMethod(manager->list, MUIM_List_InsertSingle, download, 0);
     SetAttrs(obj, MUIA_Window_Open, TRUE);
-    
-    return TRUE;
-}
-
-IPTR DownloadManager__MUIM_DownloadDelegate_DidBeginDownload(Class *cl, Object *obj, struct  MUIP_DownloadDelegate_DidBeginDownload* message)
-{
-    struct DownloadManager_DATA *manager = (struct DownloadManager_DATA *) INST_DATA(cl, obj);
-
-    struct Download *download = GetDownload(manager, message->download);
-    if(!download)
-	return FALSE;
- 
-    download->state = DOWNLOAD_ACTIVE;
-    DoMethod(manager->list, MUIM_List_Redraw, MUIV_List_Redraw_All);
     DoMethod(obj, MUIM_DownloadManager_UpdateInterface);
-    
+
     return TRUE;
 }
 
@@ -416,7 +402,10 @@ IPTR DownloadManager__MUIM_DownloadDelegate_DidReceiveDataOfLength(Class *cl, Ob
     struct Download *download = GetDownload(manager, message->download);
     if(!download)
 	return FALSE;
-    
+
+    if(download->state == DOWNLOAD_CREATED)
+	download->state = DOWNLOAD_ACTIVE;
+
     download->sizeDownloaded += message->length;
     sprintf(download->progress, "%ld %%", (long) (download->sizeTotal > 0 ? 100 * download->sizeDownloaded / download->sizeTotal : 0));
 
@@ -447,11 +436,10 @@ IPTR DownloadManager__MUIM_DownloadManager_UpdateInterface(Class *cl, Object *ob
     return TRUE;
 }
 
-ZUNE_CUSTOMCLASS_10(
+ZUNE_CUSTOMCLASS_9(
     DownloadManager, NULL, NULL, DownloadDelegate_CLASS,
     OM_NEW, struct opSet*,
     OM_DISPOSE, Msg,
-    MUIM_DownloadDelegate_DidCreateDownload, struct  MUIP_DownloadDelegate_DidCreateDownload*,
     MUIM_DownloadDelegate_DidBeginDownload, struct  MUIP_DownloadDelegate_DidBeginDownload*,
     MUIM_DownloadDelegate_DidFinishDownload, struct  MUIP_DownloadDelegate_DidFinishDownload*,
     MUIM_DownloadDelegate_DidFailWithError, struct  MUIP_DownloadDelegate_DidFailWithError*,

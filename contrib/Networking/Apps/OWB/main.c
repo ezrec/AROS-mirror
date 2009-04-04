@@ -31,7 +31,7 @@
 
 /* Evil global variables */
 Object *tabs, *tabbed;
-struct Hook openTabHook;
+struct Hook openTabHook, alertHook, confirmHook, promptHook, policyHook;
 
 static IPTR NewTabFunc(struct Hook *hook, Object *sender, void *data)
 {
@@ -43,7 +43,14 @@ static IPTR NewTabFunc(struct Hook *hook, Object *sender, void *data)
     DoMethod(tabs, MUIM_Group_ExitChange);
     
     DoMethod(tabbed, MUIM_Group_InitChange);
-    DoMethod(tabbed, OM_ADDMEMBER, newWebView = NewObject(WebView_CLASS->mcc_Class, NULL, MUIA_WebView_CreateNewHook, &openTabHook, TAG_END));
+    DoMethod(tabbed, OM_ADDMEMBER, newWebView = NewObject(
+	    WebView_CLASS->mcc_Class, NULL, 
+	    MUIA_WebView_CreateNewHook, &openTabHook, 
+	    MUIA_WebView_AlertHook, &alertHook,
+	    MUIA_WebView_ConfirmHook, &confirmHook,
+	    MUIA_WebView_PromptHook, &promptHook,
+	    MUIA_WebView_PolicyHook, &policyHook,
+	    TAG_END));
     DoMethod(tabbed, MUIM_Group_ExitChange);
 
     DoMethod(newWebView, MUIM_Notify, MUIA_WebView_Title, MUIV_EveryTime,
@@ -196,6 +203,118 @@ static void UpdateProgressBarFunc(struct Hook *hook, Object *gauge, LONG *curren
     set(gauge, MUIA_Gauge_Current, value);
 }
 
+static IPTR AlertFunc(struct Hook *hook, Object *webView, STRPTR *message)
+{
+    return MUI_Request(_app(webView), _win(webView), 0, _(MSG_JavaScript_Alert), _(MSG_JavaScript_AlertOK), "%s", (char*) *message);
+}
+
+static IPTR ConfirmFunc(struct Hook *hook, Object *webView, STRPTR *message)
+{
+    return !MUI_Request(_app(webView), _win(webView), 0, _(MSG_JavaScript_Confirm), _(MSG_JavaScript_ConfirmOptions), "%s", (char*) *message);
+}
+
+static IPTR PromptFunc(struct Hook *hook, Object *webView, STRPTR **args)
+{
+    Object *req_wnd, *bt_cancel, *bt_ok, *str;
+    STRPTR answer = NULL;
+    
+    req_wnd = (Object*) WindowObject,
+        MUIA_Window_Title, (IPTR) _(MSG_JavaScript_Prompt),
+        MUIA_Window_RefWindow, (IPTR) _win(webView),
+        MUIA_Window_LeftEdge, MUIV_Window_LeftEdge_Centered,
+        MUIA_Window_TopEdge, MUIV_Window_TopEdge_Centered,
+        MUIA_Window_CloseGadget, FALSE,
+        MUIA_Window_SizeGadget, FALSE,
+        WindowContents, VGroup,
+            MUIA_Background, MUII_RequesterBack,
+            Child, HGroup,
+                Child, TextObject,
+                    TextFrame,
+                    MUIA_InnerBottom, 8,
+                    MUIA_InnerLeft, 8,
+                    MUIA_InnerRight, 8,
+                    MUIA_InnerTop, 8,
+                    MUIA_Background, MUII_TextBack,
+                    MUIA_Text_SetMax, TRUE,
+                    MUIA_Text_Contents, (IPTR) (*args)[0],
+                    End,
+                End,
+            Child, (IPTR) VSpace(2),
+            Child, (IPTR) (str = (Object*) StringObject,
+                MUIA_Frame, MUIV_Frame_String,
+                MUIA_String_Contents, (IPTR) (*args)[1],
+                End),
+            Child, (IPTR) VSpace(2),
+            Child, (IPTR) HGroup, 
+                Child, (IPTR) (bt_cancel = (Object*) SimpleButton(_(MSG_JavaScript_PromptCancel))),
+                Child, (IPTR) HSpace(0),
+                Child, (IPTR) (bt_ok = (Object*) SimpleButton(_(MSG_JavaScript_PromptOK))),
+                End,
+            End,
+        End;
+    
+    if (!req_wnd)
+        return NULL;
+
+    DoMethod(_app(webView), OM_ADDMEMBER, (IPTR)req_wnd);
+
+    DoMethod(bt_cancel, MUIM_Notify, MUIA_Pressed, FALSE,
+    	(IPTR)_app(webView), 2, MUIM_Application_ReturnID, 1);
+
+    DoMethod(bt_ok, MUIM_Notify, MUIA_Pressed, FALSE,
+    	(IPTR)_app(webView), 2, MUIM_Application_ReturnID, 2);
+
+    set(req_wnd, MUIA_Window_ActiveObject, bt_ok);
+    set(req_wnd, MUIA_Window_Open, TRUE);
+
+    LONG result = -1;
+
+    if (XGET(req_wnd, MUIA_Window_Open))
+    {
+        ULONG sigs = 0;
+        
+        while (result == -1)
+        {
+            ULONG ret = DoMethod(_app(webView), MUIM_Application_NewInput, (IPTR)&sigs);
+            if(ret == 1 || ret == 2)
+            {
+                result = ret;
+                break;
+            }
+            
+            if (sigs)
+                sigs = Wait(sigs);
+        }
+    }
+
+    if (result == 2)
+    {
+        STRPTR value = XGET(str, MUIA_String_Contents);
+        if(value)
+            answer = StrDup(value);
+    }
+
+    set(req_wnd, MUIA_Window_Open, FALSE);
+    DoMethod(_app(webView), OM_REMMEMBER, (IPTR)req_wnd);
+    MUI_DisposeObject(req_wnd);
+    
+    return answer;
+}
+
+static IPTR PolicyFunc(struct Hook *hook, Object *webView, CONST_STRPTR **args)
+{
+    switch(MUI_Request(_app(webView), _win(webView), 0, _(MSG_RequestPolicy_Title), _(MSG_RequestPolicy_Options), _(MSG_RequestPolicy_Message), (IPTR) (*args)[0], (IPTR) (*args)[1]))
+    {
+    default:
+    case 0:
+	return MUIV_WebView_Policy_Ignore;
+    case 1:
+	return MUIV_WebView_Policy_Download;
+    case 2:
+	return MUIV_WebView_Policy_Use;
+    }
+}
+
 int main(void)
 {
     Object *bt_close, *menuclosetab, *menunewtab, *tabContextMenu;
@@ -248,6 +367,14 @@ int main(void)
     updateStatusBarHook.h_SubEntry = (HOOKFUNC) UpdateStatusBarFunc;
     updateProgressBarHook.h_Entry = HookEntry;
     updateProgressBarHook.h_SubEntry = (HOOKFUNC) UpdateProgressBarFunc;
+    alertHook.h_Entry = HookEntry;
+    alertHook.h_SubEntry = (HOOKFUNC) AlertFunc;
+    confirmHook.h_Entry = HookEntry;
+    confirmHook.h_SubEntry = (HOOKFUNC) ConfirmFunc;
+    promptHook.h_Entry = HookEntry;
+    promptHook.h_SubEntry = (HOOKFUNC) PromptFunc;
+    policyHook.h_Entry = HookEntry;
+    policyHook.h_SubEntry = (HOOKFUNC) PolicyFunc;
 
     preferences = NewObject(BrowserPreferences_CLASS->mcc_Class, NULL, TAG_END);
   
@@ -362,7 +489,13 @@ int main(void)
         	        MUIA_InnerLeft, 5,
         	        MUIA_InnerRight, 5,
         	        MUIA_InnerBottom, 5,
-                        Child, webView = NewObject(WebView_CLASS->mcc_Class, NULL, MUIA_WebView_CreateNewHook, &openTabHook, TAG_END),
+                        Child, webView = NewObject(WebView_CLASS->mcc_Class, NULL, 
+                            MUIA_WebView_CreateNewHook, &openTabHook,
+                            MUIA_WebView_AlertHook, &alertHook,
+                            MUIA_WebView_ConfirmHook, &confirmHook,
+                            MUIA_WebView_PromptHook, &promptHook,
+                            MUIA_WebView_PolicyHook, &policyHook,
+                            TAG_END),
                         TAG_END),
                     End,
                 Child, HGroup,
