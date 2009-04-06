@@ -54,31 +54,32 @@ clib
 `rewinddir()`_                          `rmdir()`_                              `scanf()`_                              `seed48()`_                             
 `seekdir()`_                            `setbuf()`_                             `setenv()`_                             `setgid()`_                             
 `setgrent()`_                           `setlinebuf()`_                         `setpwent()`_                           `setuid()`_                             
-`setvbuf()`_                            `sigaction()`_                          `sigaddset()`_                          `sigdelset()`_                          
-`sigemptyset()`_                        `sigfillset()`_                         `sigismember()`_                        `signal()`_                             
-`sigpending()`_                         `sigprocmask()`_                        `sigsuspend()`_                         `sleep()`_                              
-`snprintf()`_                           `spawnv()`_                             `spawnvp()`_                            `sprintf()`_                            
-`srand()`_                              `srand48()`_                            `sscanf()`_                             `stat()`_                               
-`statfs()`_                             `stccpy()`_                             `stcd_l()`_                             `stch_l()`_                             
-`stcl_d()`_                             `stcl_h()`_                             `stcl_o()`_                             `stco_l()`_                             
-`stcu_d()`_                             `stpblk()`_                             `stpcpy()`_                             `stpsym()`_                             
-`strcasecmp()`_                         `strcasestr()`_                         `strcat()`_                             `strchr()`_                             
-`strcmp()`_                             `strcoll()`_                            `strcpy()`_                             `strcspn()`_                            
-`strdup()`_                             `strerror()`_                           `strftime()`_                           `strlcat()`_                            
-`strlcpy()`_                            `strlen()`_                             `strlwr()`_                             `strncasecmp()`_                        
-`strncat()`_                            `strncmp()`_                            `strncpy()`_                            `strpbrk()`_                            
-`strrchr()`_                            `strrev()`_                             `strsep()`_                             `strspn()`_                             
-`strstr()`_                             `strtod()`_                             `strtoimax()`_                          `strtok()`_                             
-`strtol()`_                             `strtoll()`_                            `strtoul()`_                            `strtoull()`_                           
-`strtoumax()`_                          `strupr()`_                             `strxfrm()`_                            `swab()`_                               
-`symlink()`_                            `system()`_                             `telldir()`_                            `tempnam()`_                            
-`time()`_                               `times()`_                              `tmpfile()`_                            `tmpnam()`_                             
-`truncate()`_                           `ttyname()`_                            `umask()`_                              `uname()`_                              
-`ungetc()`_                             `unlink()`_                             `unsetenv()`_                           `updatestdio()`_                        
-`usleep()`_                             `utime()`_                              `utimes()`_                             `vfprintf()`_                           
-`vfscanf()`_                            `vprintf()`_                            `vscanf()`_                             `vsnprintf()`_                          
-`vsprintf()`_                           `vsscanf()`_                            `wait()`_                               `waitpid()`_                            
-`wcstombs()`_                           `wctomb()`_                             `write()`_                              
+`setvbuf()`_                            `sharecontextwithchild()`_              `sigaction()`_                          `sigaddset()`_                          
+`sigdelset()`_                          `sigemptyset()`_                        `sigfillset()`_                         `sigismember()`_                        
+`signal()`_                             `sigpending()`_                         `sigprocmask()`_                        `sigsuspend()`_                         
+`sleep()`_                              `snprintf()`_                           `spawnv()`_                             `spawnvp()`_                            
+`sprintf()`_                            `srand()`_                              `srand48()`_                            `sscanf()`_                             
+`stat()`_                               `statfs()`_                             `stccpy()`_                             `stcd_l()`_                             
+`stch_l()`_                             `stcl_d()`_                             `stcl_h()`_                             `stcl_o()`_                             
+`stco_l()`_                             `stcu_d()`_                             `stpblk()`_                             `stpcpy()`_                             
+`stpsym()`_                             `strcasecmp()`_                         `strcasestr()`_                         `strcat()`_                             
+`strchr()`_                             `strcmp()`_                             `strcoll()`_                            `strcpy()`_                             
+`strcspn()`_                            `strdup()`_                             `strerror()`_                           `strftime()`_                           
+`strlcat()`_                            `strlcpy()`_                            `strlen()`_                             `strlwr()`_                             
+`strncasecmp()`_                        `strncat()`_                            `strncmp()`_                            `strncpy()`_                            
+`strpbrk()`_                            `strrchr()`_                            `strrev()`_                             `strsep()`_                             
+`strspn()`_                             `strstr()`_                             `strtod()`_                             `strtoimax()`_                          
+`strtok()`_                             `strtol()`_                             `strtoll()`_                            `strtoul()`_                            
+`strtoull()`_                           `strtoumax()`_                          `strupr()`_                             `strxfrm()`_                            
+`swab()`_                               `symlink()`_                            `system()`_                             `telldir()`_                            
+`tempnam()`_                            `time()`_                               `times()`_                              `tmpfile()`_                            
+`tmpnam()`_                             `truncate()`_                           `ttyname()`_                            `umask()`_                              
+`uname()`_                              `ungetc()`_                             `unlink()`_                             `unsetenv()`_                           
+`updatestdio()`_                        `usleep()`_                             `utime()`_                              `utimes()`_                             
+`vfprintf()`_                           `vfscanf()`_                            `vprintf()`_                            `vscanf()`_                             
+`vsnprintf()`_                          `vsprintf()`_                           `vsscanf()`_                            `wait()`_                               
+`waitpid()`_                            `wcstombs()`_                           `wctomb()`_                             `write()`_                              
+
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -234,7 +235,8 @@ Synopsis
 
   int __spawnv(
       int         mode,
-      BPTR        seg,
+      const char *filename,
+      int         searchpath,
       char *const argv[])
 
 
@@ -262,7 +264,9 @@ Inputs
                         execute the child. The parent program will never be resumed. This
                         mode is equivalent to calling one of the exec*() functions.
 
-     seg  - the LoadSeg()'s executable. The segment is UnloadSeg()'d by this function.
+     filename  - command to execute
+
+     searchpath - boolean to indicate if path should be searched for command
 
      argv - a pointer to a NULL terminated array of strings representing arguments to pass
             to the child process. The first entry in the array is conventionally the name of
@@ -5901,24 +5905,24 @@ Function
 ~~~~~~~~
 ::
 
-     Copy the contents of a part of memory to another. Both areas
-     must not overlap. If they do, use memmove().
+     Locate the first occurence of c which is converted to an unsigned
+     char in the first n bytes of the memory pointed to by mem.
 
 
 Inputs
 ~~~~~~
 ::
 
-     dest - The first byte of the destination area in memory
-     src - The first byte of the source area in memory
-     count - How many bytes to copy
+     mem - pointer to memory that is searched for c
+       c - the character to search for
+       n - how many bytes to search through starting at mem
 
 
 Result
 ~~~~~~
 ::
 
-     dest.
+     pointer to the located byte or null if c was not found
 
 
 
@@ -7790,6 +7794,63 @@ Synopsis
 
 ----------
 
+sharecontextwithchild()
+=======================
+
+Synopsis
+~~~~~~~~
+::
+
+  void sharecontextwithchild(
+     int share) 
+     
+
+Function
+~~~~~~~~
+::
+
+     Controls sharing parent arosc context with child processes.
+     Must be called by parent process.
+
+
+Inputs
+~~~~~~
+::
+
+     share - TRUE/FALSE - should parent share context with children
+
+
+Notes
+~~~~~
+::
+
+     By calling this function the user of arosc.library controls how
+     new child processes use parent's arosc.library context.
+
+     When sharing is enabled, a child process will never create its
+     own arosc.library context and will alway use parent's context.
+
+     If you have a parent and child process allocating/dealocating
+     (malloc/free) memory for the same pointer, you must use this
+     function so that the memory will always be allocated in the
+     same arosc.libray context. Failure to do so will result with
+     GURU during free.
+
+     Things to be aware off:
+     - this function is dangeruos - you as a programmer must take care
+     of thread synchronization
+     - a child process cannot have life span longer than a parent process
+     - a child process may not call vfork or exec* functions - if such
+     feature is required, the vfork and exec* functions need to be 
+     modified to work with flag set by this function
+     - once enabled, the sharing can be disabled at any time - when 
+     the sharing is disabled, all child processes will acquire their 
+     own arosc contexts when such need arises.
+
+
+
+----------
+
 sigaction()
 ===========
 
@@ -8040,9 +8101,12 @@ Result
 ~~~~~~
 ::
 
-     The number of characters written into the string. If this is
-     -1, then there was not enough room. The 0 byte at the end is not
-     included.
+     The number of characters written into the string. The 0 byte at the
+     end is not included. If this is greater than or equal to n then
+     there was not enough room to write all characters. In this case the
+     output string is not null-terminated, and the return value is the
+     number of characters which would have been written if enough space had
+     been available.
 
 
 
@@ -11700,16 +11764,12 @@ Result
 ~~~~~~
 ::
 
-     The number of characters written or -1 if the string was too small.
-     In this case, the string is not 0-terminated.
-
-
-Notes
-~~~~~
-::
-
-     No check is beeing made that str is large enough to contain
-     the result.
+     The number of characters written into the string. The 0 byte at the
+     end is not included. If this is greater than or equal to n then
+     there was not enough room to write all characters. In this case the
+     output string is not null-terminated, and the return value is the
+     number of characters which would have been written if enough space had
+     been available.
 
 
 
