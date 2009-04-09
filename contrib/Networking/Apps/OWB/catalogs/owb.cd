@@ -268,6 +268,12 @@ Downloads
 MSG_PreferencesManager_SaveFilesTo (//)
 Save files to:
 ;
+MSG_PreferencesManager_ZuneSettings (//)
+Zune Settings
+;
+MSG_PreferencesManager_OpenZuneSettings (//)
+Open Zune Settings
+;
 MSG_PreferencesManager_Content (//)
 Content
 ;
@@ -371,11 +377,29 @@ MSG_JavaScript_PromptCancel (//)
 Cancel
 ;
 MSG_RequestPolicy_Title (//)
-Opening file with unknown MIME type
+OWB Policy Requester
 ;
 MSG_RequestPolicy_Message (//)
 You are about to open file '%s' having MIME type '%s'.\nWhat should OWB do with this file?
 ;
 MSG_RequestPolicy_Options (//)
 Download|Show|Cancel
+;
+MSG_RequestCredentials_Title (//)
+OWB Authentication Requester
+;
+MSG_RequestCredentials_Message (//)
+Please enter username and password to access realm %s at host %s.
+;
+MSG_RequestCredentials_Username (//)
+Username:
+;
+MSG_RequestCredentials_Password (//)
+Password:
+;
+MSG_RequestCredentials_OK (//)
+OK
+;
+MSG_RequestCredentials_Cancel (//)
+Cancel
 ;

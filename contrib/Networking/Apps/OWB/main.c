@@ -31,7 +31,7 @@
 
 /* Evil global variables */
 Object *tabs, *tabbed;
-struct Hook openTabHook, alertHook, confirmHook, promptHook, policyHook;
+struct Hook openTabHook, alertHook, confirmHook, promptHook, policyHook, credentialsHook;
 
 static IPTR NewTabFunc(struct Hook *hook, Object *sender, void *data)
 {
@@ -50,6 +50,7 @@ static IPTR NewTabFunc(struct Hook *hook, Object *sender, void *data)
 	    MUIA_WebView_ConfirmHook, &confirmHook,
 	    MUIA_WebView_PromptHook, &promptHook,
 	    MUIA_WebView_PolicyHook, &policyHook,
+	    MUIA_WebView_CredentialsHook, &credentialsHook,
 	    TAG_END));
     DoMethod(tabbed, MUIM_Group_ExitChange);
 
@@ -315,6 +316,110 @@ static IPTR PolicyFunc(struct Hook *hook, Object *webView, CONST_STRPTR **args)
     }
 }
 
+static IPTR CredentialsFunc(struct Hook *hook, Object *webView, IPTR **args)
+{
+    Object *req_wnd, *bt_cancel, *bt_ok, *username_str, *password_str;
+    CONST_STRPTR hostname = (*args)[0];
+    CONST_STRPTR realm = (*args)[1];
+    CONST_STRPTR *username = (*args)[2];
+    CONST_STRPTR *password = (*args)[3];
+    BOOL ret = FALSE;
+    char msg[1024];
+    
+    snprintf(msg, sizeof(msg), _(MSG_RequestCredentials_Message), realm, hostname);
+    
+    req_wnd = (Object*) WindowObject,
+        MUIA_Window_Title, (IPTR) _(MSG_RequestCredentials_Title),
+        MUIA_Window_RefWindow, (IPTR) _win(webView),
+        MUIA_Window_LeftEdge, MUIV_Window_LeftEdge_Centered,
+        MUIA_Window_TopEdge, MUIV_Window_TopEdge_Centered,
+        MUIA_Window_CloseGadget, FALSE,
+        MUIA_Window_SizeGadget, FALSE,
+        WindowContents, VGroup,
+            MUIA_Background, MUII_RequesterBack,
+            Child, HGroup,
+                Child, TextObject,
+                    TextFrame,
+                    MUIA_InnerBottom, 8,
+                    MUIA_InnerLeft, 8,
+                    MUIA_InnerRight, 8,
+                    MUIA_InnerTop, 8,
+                    MUIA_Background, MUII_TextBack,
+                    MUIA_Text_SetMax, TRUE,
+                    MUIA_Text_Contents, (IPTR) msg,
+                    End,
+                End,
+            Child, (IPTR) VSpace(2),
+            Child, (IPTR) ColGroup(2),
+                Child, (IPTR) Label1(_(MSG_RequestCredentials_Username)),
+		Child, (IPTR) (username_str = (Object*) StringObject,
+		    MUIA_Frame, MUIV_Frame_String,
+		    MUIA_CycleChain, 1,
+		    End),
+                Child, (IPTR) Label1(_(MSG_RequestCredentials_Password)),
+		Child, (IPTR) (password_str = (Object*) StringObject,
+		    MUIA_Frame, MUIV_Frame_String,
+		    MUIA_String_Secret, TRUE,
+		    MUIA_CycleChain, 1,
+		    End),
+		End,
+            Child, (IPTR) VSpace(2),
+            Child, (IPTR) HGroup, 
+                Child, (IPTR) (bt_cancel = (Object*) SimpleButton(_(MSG_RequestCredentials_Cancel))),
+                Child, (IPTR) HSpace(0),
+                Child, (IPTR) (bt_ok = (Object*) SimpleButton(_(MSG_RequestCredentials_OK))),
+                End,
+            End,
+        End;
+    
+    if (!req_wnd)
+        return NULL;
+
+    DoMethod(_app(webView), OM_ADDMEMBER, (IPTR)req_wnd);
+
+    DoMethod(bt_cancel, MUIM_Notify, MUIA_Pressed, FALSE,
+    	(IPTR)_app(webView), 2, MUIM_Application_ReturnID, 1);
+
+    DoMethod(bt_ok, MUIM_Notify, MUIA_Pressed, FALSE,
+    	(IPTR)_app(webView), 2, MUIM_Application_ReturnID, 2);
+
+    set(req_wnd, MUIA_Window_ActiveObject, bt_ok);
+    set(req_wnd, MUIA_Window_Open, TRUE);
+
+    LONG result = -1;
+
+    if (XGET(req_wnd, MUIA_Window_Open))
+    {
+        ULONG sigs = 0;
+        
+        while (result == -1)
+        {
+            ULONG ret = DoMethod(_app(webView), MUIM_Application_NewInput, (IPTR)&sigs);
+            if(ret == 1 || ret == 2)
+            {
+                result = ret;
+                break;
+            }
+            
+            if (sigs)
+                sigs = Wait(sigs);
+        }
+    }
+
+    if (result == 2)
+    {
+        *username = strdup(XGET(username_str, MUIA_String_Contents));
+        *password = strdup(XGET(password_str, MUIA_String_Contents));
+        ret = TRUE;
+    }
+
+    set(req_wnd, MUIA_Window_Open, FALSE);
+    DoMethod(_app(webView), OM_REMMEMBER, (IPTR)req_wnd);
+    MUI_DisposeObject(req_wnd);
+    
+    return (IPTR) ret;
+}
+
 int main(void)
 {
     Object *bt_close, *menuclosetab, *menunewtab, *tabContextMenu;
@@ -375,6 +480,8 @@ int main(void)
     promptHook.h_SubEntry = (HOOKFUNC) PromptFunc;
     policyHook.h_Entry = HookEntry;
     policyHook.h_SubEntry = (HOOKFUNC) PolicyFunc;
+    credentialsHook.h_Entry = HookEntry;
+    credentialsHook.h_SubEntry = (HOOKFUNC) CredentialsFunc;
 
     preferences = NewObject(BrowserPreferences_CLASS->mcc_Class, NULL, TAG_END);
   
@@ -495,6 +602,7 @@ int main(void)
                             MUIA_WebView_ConfirmHook, &confirmHook,
                             MUIA_WebView_PromptHook, &promptHook,
                             MUIA_WebView_PolicyHook, &policyHook,
+                            MUIA_WebView_CredentialsHook, &credentialsHook,
                             TAG_END),
                         TAG_END),
                     End,

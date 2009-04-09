@@ -80,7 +80,7 @@ static void freeFontFamilies(STRPTR *families)
 
 IPTR PreferencesManager__OM_NEW(struct IClass *cl, Object *self, struct opSet *msg)
 {
-    Object *bt_save, *bt_use, *bt_cancel, *javaScriptEnabled, *loadsImagesAutomatically;
+    Object *bt_save, *bt_use, *bt_cancel, *bt_zune, *javaScriptEnabled, *loadsImagesAutomatically;
     Object *defaultFontSize, *defaultFixedFontSize, *minimumFontSize;
     Object *allowsAnimatedImages, *allowAnimatedImageLooping;
     Object *standardFontFamily, *fixedFontFamily, *serifFontFamily, *sansSerifFontFamily, *cursiveFontFamily, *fantasyFontFamily;
@@ -124,7 +124,7 @@ IPTR PreferencesManager__OM_NEW(struct IClass *cl, Object *self, struct opSet *m
     	    MUIA_InnerBottom, 5,
     	    Child, RegisterObject,
     	        MUIA_Register_Titles, titles,
-    	        Child, HGroup,
+    	        Child, VGroup,
     	            Child, ColGroup(2), GroupFrameT(_(MSG_PreferencesManager_Downloads)),
     	                Child, Label2(_(MSG_PreferencesManager_SaveFilesTo)), 
     	                Child, PopaslObject, 
@@ -133,6 +133,9 @@ IPTR PreferencesManager__OM_NEW(struct IClass *cl, Object *self, struct opSet *m
     	                    MUIA_Popstring_Button, PopButton(MUII_PopFile),
     	                    ASLFR_DrawersOnly, TRUE,
     	                    End,
+    	                End,
+    	            Child, VGroup, GroupFrameT(_(MSG_PreferencesManager_ZuneSettings)),
+    	                Child, bt_zune = SimpleButton(_(MSG_PreferencesManager_OpenZuneSettings)),
     	                End,
     	            End,
     	        Child, HGroup,
@@ -313,6 +316,10 @@ IPTR PreferencesManager__OM_NEW(struct IClass *cl, Object *self, struct opSet *m
     DoMethod(bt_cancel, MUIM_Notify, MUIA_Pressed, FALSE,
 	(IPTR) self, 3,
 	MUIM_Set, MUIA_Window_Open, (IPTR) FALSE);
+
+    DoMethod(bt_zune, MUIM_Notify, MUIA_Pressed, FALSE,
+	(IPTR) MUIV_Notify_Application, 1,
+	MUIM_Application_OpenConfigWindow);
 
     DoMethod(self, MUIM_Notify, MUIA_Window_Open, TRUE,
 	(IPTR) self, 1,
