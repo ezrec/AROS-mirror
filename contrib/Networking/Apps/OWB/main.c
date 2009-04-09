@@ -451,6 +451,7 @@ int main(void)
     Locale_Initialize();
     
     SetVar("FONTCONFIG_PATH", "PROGDIR:fonts/config", -1, LV_VAR | GVF_LOCAL_ONLY);
+    SetVar("DISABLE_NI_WARNING", "1", -1, LV_VAR | GVF_LOCAL_ONLY);
     
     closeTabHook.h_Entry = HookEntry;
     closeTabHook.h_SubEntry = (HOOKFUNC) CloseTabFunc;
@@ -488,7 +489,7 @@ int main(void)
     // GUI creation
     app = ApplicationObject,
         MUIA_Application_Title, "Origyn Web Browser",
-        MUIA_Application_Version, "$VER: OWB 0.93 (09.04.2009)",
+        MUIA_Application_Version, "$VER: OWB 0.93 (10.04.2009)",
         MUIA_Application_Author, "Stanislaw Szymczyk",
         MUIA_Application_Copyright, "Copyright © 2009, The AROS Development Team. All rights reserved.",
         MUIA_Application_Description, "Port of Origyn Web Browser to AROS",
