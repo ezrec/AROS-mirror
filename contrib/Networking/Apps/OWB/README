@@ -1,4 +1,4 @@
-OWB 0.9.2 for AROS
+OWB 0.9.3 for AROS
 
 INTRODUCTION
 
@@ -75,19 +75,9 @@ You can contact me on this e-mail address: sszymczy@gmail.com. Don't write
 me e-mails about bugs in OWB or new features, report them on this page
 instead:
 
-http://www.sand-labs.org:3789/.Aros/trac
+http://www.sand-labs.org/aros
 
-If you are going to use this tracker on OWB for AROS then note that OWB
-currently doesn't support authentication challenges. Until support for this
-feature is implemented, you have log in to the bug tracker by writing your
-username and password directly in the URL:
-
-http://username:password@www.sand-labs.org:3789/.Aros/trac
-
-Then simply click Login button and you will be logged in.
-
-Note that some characters in login and password may need additional encoding,
-you can use some online url encoding tool for that purpose. 
+You have to register to be able to create new tickets.
 
 LICENSING
 
@@ -100,6 +90,16 @@ WebCore/JSCore code where the original licenses apply (APSL, LGPL and BSD).
 See Licenses directory for more details.
 
 HISTORY
+
+OWB 0.9.3 (09.04.2009) 
+  - Implemented feature #21: Placeholders for missing images and plug-ins
+  - Fixed bug #23: Frame title set in JavaScript is not cleared when loading a new page
+  - Implemented feature #26: Automatic download after clicking on the link
+  - Fixed bug #27: Challenge-response authentication is not working
+  - Implemented feature #34: JavaScript prompt requester
+  - Fixed bug #36: Redrawing problems with dynamic menu
+  - Fixed bug #42: Memory leak during drawing transparent images
+  - Fixed bug #44: After about ten executions OWB starts to behave weird
 
 OWB 0.9.2 (01.03.2009) 
   - Fixed bug #1: TGM Online's forum makes OWB crash
@@ -127,7 +127,7 @@ OWB 0.9 (23.02.2009)
 
 LINKS
 
-Visit http://www.sand-labs.org:3789/.Aros/trac to report bugs and request
+Visit http://www.sand-labs.org/aros to report bugs and request
 new features.
 
 Visit http://www.sand-labs.org/owb for more information about OWB.

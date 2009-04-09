@@ -488,7 +488,7 @@ int main(void)
     // GUI creation
     app = ApplicationObject,
         MUIA_Application_Title, "Origyn Web Browser",
-        MUIA_Application_Version, "$VER: OWB 0.9.2 (01.03.09)",
+        MUIA_Application_Version, "$VER: OWB 0.9.3 (01.03.2009)",
         MUIA_Application_Author, "Stanislaw Szymczyk",
         MUIA_Application_Copyright, "Copyright © 2009, The AROS Development Team. All rights reserved.",
         MUIA_Application_Description, "Port of Origyn Web Browser to AROS",
