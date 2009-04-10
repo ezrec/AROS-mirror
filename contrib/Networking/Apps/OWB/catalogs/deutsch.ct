@@ -1,4 +1,4 @@
-## version $VER: owb.catalog 1.0 (27.2.2009)
+## version $VER: owb.catalog 2.0 (10.4.2009)
 ## language deutsch
 ## codeset 0
 ;
@@ -362,6 +362,14 @@ MSG_PreferencesManager_SaveFilesTo
 Dateien speichern unter:
 ; Save files to:
 ;
+MSG_PreferencesManager_ZuneSettings
+Zune-Einstellungen
+; Zune Settings
+;
+MSG_PreferencesManager_OpenZuneSettings
+Zune-Einstellungen öffnen
+; Open Zune Settings
+;
 MSG_PreferencesManager_Content
 Inhalt
 ; Content
@@ -469,4 +477,68 @@ Neuen Tab öffnen
 MSG_Tabs_CloseActive
 Aktiven Tab schließen
 ; Close active tab
+;
+MSG_JavaScript_Alert
+OWB JavaScript-Meldung
+; OWB JavaScript Alert
+;
+MSG_JavaScript_AlertOK
+OK
+; OK
+;
+MSG_JavaScript_Confirm
+OWB JavaScript-Bestätigung
+; OWB JavaScript Confirm
+;
+MSG_JavaScript_ConfirmOptions
+Abbruch|OK
+; Cancel|OK
+;
+MSG_JavaScript_Prompt
+OWB JavaScript-Eingabeaufforderung
+; OWB JavaScript Prompt
+;
+MSG_JavaScript_PromptOK
+OK
+; OK
+;
+MSG_JavaScript_PromptCancel
+Abbrechen
+; Cancel
+;
+MSG_RequestPolicy_Title
+OWB Richtlinien-Anfrage
+; OWB Policy Requester
+;
+MSG_RequestPolicy_Message
+Sie versuchen, die Datei '%s' mit dem Mime-Typ '%s' zu öffnen.\nWas soll OWB mit dieser Datei machen?
+; You are about to open file '%s' having MIME type '%s'.\nWhat should OWB do with this file?
+;
+MSG_RequestPolicy_Options
+Herunterladen|Anzeigen|Abbrechen
+; Download|Show|Cancel
+;
+MSG_RequestCredentials_Title
+OWB Berechtigungsanfrage
+; OWB Authentication Requester
+;
+MSG_RequestCredentials_Message
+Bitte Benutzername und Passwort eingeben, um den Bereich %s bei Host %s aufzurufen.
+; Please enter username and password to access realm %s at host %s.
+;
+MSG_RequestCredentials_Username
+Benutzername:
+; Username:
+;
+MSG_RequestCredentials_Password
+Passwort:
+; Password:
+;
+MSG_RequestCredentials_OK
+OK
+; OK
+;
+MSG_RequestCredentials_Cancel
+Abbrechen
+; Cancel
 ;
