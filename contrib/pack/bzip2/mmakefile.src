@@ -1,37 +1,53 @@
-#  $Id$
-#
+# Copyright © 2009, The AROS Development Team. All rights reserved.
+# $Id$
 
-include $(TOP)/config/make.cfg
+-include $(TOP)/config/make.cfg
 
-FILES := bzip2recover bzip2
+FILES     := bzip2recover bzip2
+SH_FILES  := bzdiff bzgrep bzmore
+MAN_FILES := bzdiff.1 bzgrep.1 bzip2.1 bzmore.1
 
-USER_CFLAGS  := -Wall -Winline
-USER_LDFLAGS := -nix
+USER_CFLAGS  += -Wall -Winline
+USER_LDFLAGS += -nix
 
-#MM- contrib-pack-bzip2 : pack-bzip2
-#MM- pack-bzip2 : linklibs-bz2 pack-bzip2-build pack-bzip2-install1 pack-bzip2-install2
+BIN_DIR := $(AROS_DEVELOPMENT)/bin
+MAN_DIR := $(AROS_DEVELOPMENT)/man/man1
 
-%build_progs mmake=pack-bzip2-build \
-    targetdir=$(AROS_DEVELOPMENT)/bin \
-    files=$(FILES) uselibs=bz2
+#MM- contrib-pack       : contrib-pack-bzip2
+#MM- contrib-pack-bzip2 : \
+#MM-    linklibs-bz2 \
+#MM     pack-bzip2 \
+#MM     pack-bzip2-install-sh \
+#MM     pack-bzip2-install-aliases \
+#MM     pack-bzip2-install-man
 
-#MM pack-bzip2-install1
-%copy_files_q files="bzdiff bzgrep bzmore" dst=$(AROS_DEVELOPMENT)/bin/ maketarget=pack-bzip2-install1
+%build_progs mmake=pack-bzip2 targetdir=$(BIN_DIR) files=$(FILES) uselibs=bz2
+
+#MM pack-bzip2-install-sh
+%copy_files_q files=$(SH_FILES) dst=$(BIN_DIR) maketarget=pack-bzip2-install-sh
 
 #MM
-pack-bzip2-install2 : \
-	$(AROS_DEVELOPMENT)/bin/bzcat \
-	$(AROS_DEVELOPMENT)/bin/bunzip \
-	$(AROS_DEVELOPMENT)/bin/bzegrep \
-	$(AROS_DEVELOPMENT)/bin/bzfgrep \
-	$(AROS_DEVELOPMENT)/bin/bzless \
-	$(AROS_DEVELOPMENT)/bin/bzcmp
+pack-bzip2-install-aliases : \
+        $(BIN_DIR)/bzcat \
+        $(BIN_DIR)/bunzip \
+        $(BIN_DIR)/bzegrep \
+        $(BIN_DIR)/bzfgrep \
+        $(BIN_DIR)/bzless \
+        $(BIN_DIR)/bzcmp
 
-%rule_copy from=$(AROS_DEVELOPMENT)/bin/bzip2  to=$(AROS_DEVELOPMENT)/bin/bzcat
-%rule_copy from=$(AROS_DEVELOPMENT)/bin/bzip2  to=$(AROS_DEVELOPMENT)/bin/bunzip
-%rule_copy from=$(AROS_DEVELOPMENT)/bin/bzgrep to=$(AROS_DEVELOPMENT)/bin/bzegrep
-%rule_copy from=$(AROS_DEVELOPMENT)/bin/bzgrep to=$(AROS_DEVELOPMENT)/bin/bzfgrep
-%rule_copy from=$(AROS_DEVELOPMENT)/bin/bzmore to=$(AROS_DEVELOPMENT)/bin/bzless
-%rule_copy from=$(AROS_DEVELOPMENT)/bin/bzdiff to=$(AROS_DEVELOPMENT)/bin/bzcmp
+%rule_copy from=$(BIN_DIR)/bzip2  to=$(BIN_DIR)/bzcat
+%rule_copy from=$(BIN_DIR)/bzip2  to=$(BIN_DIR)/bunzip
+%rule_copy from=$(BIN_DIR)/bzgrep to=$(BIN_DIR)/bzegrep
+%rule_copy from=$(BIN_DIR)/bzgrep to=$(BIN_DIR)/bzfgrep
+%rule_copy from=$(BIN_DIR)/bzmore to=$(BIN_DIR)/bzless
+%rule_copy from=$(BIN_DIR)/bzdiff to=$(BIN_DIR)/bzcmp
+
+#MM pack-bzip2-install-man :
+	echo ".so man1/bzgrep.1" > $(MAN_DIR)/bzegrep.1
+	echo ".so man1/bzgrep.1" > $(MAN_DIR)/bzfgrep.1
+	echo ".so man1/bzmore.1" > $(MAN_DIR)/bzless.1
+	echo ".so man1/bzdiff.1" > $(MAN_DIR)/bzcmp.1
+
+%copy_files_q files=$(MAN_FILES) dst=$(MAN_DIR) maketarget=pack-bzip2-install-man
 
 %common
