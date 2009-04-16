@@ -2934,10 +2934,13 @@ _DEBUG(("examine ED_TYPE, o->bits=%x, o->objectnode=%d\n", o->bits, BE2L(o->be_o
 
 
 
-static void fillfib(struct FileInfoBlock *fib,struct fsObject *o) {
+static void fillfib(struct FileInfoBlock *fib,struct fsObject *o)
+{
   UBYTE *src;
   UBYTE *dest;
+#ifndef USE_FAST_BSTR
   UBYTE length;
+#endif
 
   if (o->be_objectnode==L2BE(ROOTNODE)) {
     fib->fib_DirEntryType=ST_ROOT;
@@ -2945,7 +2948,7 @@ static void fillfib(struct FileInfoBlock *fib,struct fsObject *o) {
     fib->fib_NumBlocks=(BE2L(o->object.file.be_size)+globals->bytes_block-1) >> globals->shifts_block;
   } else if((o->bits & OTYPE_LINK)!=0) {
     fib->fib_DirEntryType=ST_SOFTLINK;
-//    fib->fib_DirEntryType=ST_USERDIR;   // For compatibility with Diavolo 3.4 -> screw it, DOpus fails...
+//  fib->fib_DirEntryType=ST_USERDIR;   // For compatibility with Diavolo 3.4 -> screw it, DOpus fails...
     fib->fib_Size=BE2L(o->object.file.be_size);
     fib->fib_NumBlocks=0;
   }
@@ -2967,25 +2970,43 @@ static void fillfib(struct FileInfoBlock *fib,struct fsObject *o) {
   datetodatestamp(BE2L(o->be_datemodified),&fib->fib_Date);
 
   src=o->name;
-  dest=AROS_BSTR_ADDR(fib->fib_FileName);
+  dest = fib->fib_FileName;
+#ifndef USE_FAST_BSTR
+  dest++;
   length=0;
+#endif
 
   while(*src!=0) {
     *dest++=*src++;
+#ifndef USE_FAST_BSTR
     length++;
+#endif
   }
-  AROS_BSTR_setstrlen(fib->fib_FileName,length);
+#ifdef USE_FAST_BSTR
+  *dest = 0;
+#else
+  fib->fib_FileName[0]=length;
+#endif
 
   src++;  /* comment follows name, so just skip the null-byte seperating them */
 
-  dest=AROS_BSTR_ADDR(fib->fib_Comment);
+  dest = fib->fib_Comment;
+#ifndef USE_FAST_BSTR
+  dest++;
   length=0;
+#endif
 
   while(*src!=0) {
     *dest++=*src++;
+#ifndef USE_FAST_BSTR
     length++;
+#endif
   }
-  AROS_BSTR_setstrlen(fib->fib_Comment,length);
+#ifdef USE_FAST_BSTR
+  *dest = 0;
+#else
+  fib->fib_Comment[0]=length;
+#endif
 }
 
 
@@ -3039,9 +3060,12 @@ static void returnpacket(LONG res1,LONG res2) {
 
 
 
-static void returnpacket2(struct DosPacket *packet, LONG res1, LONG res2) {
+static void returnpacket2(struct DosPacket *packet, LONG res1, LONG res2)
+{
   struct Message *msg;
   struct MsgPort *replyport;
+
+  D(bug("[SFS] Replying, results are %ld/%ld\n", res1, res2));
 
   packet->dp_Res1=res1;  /* set return codes */
   packet->dp_Res2=res2;
@@ -3676,7 +3700,7 @@ LONG initdisk() {
           if((vn=(struct DeviceList *)MakeDosEntry("                              ",DLT_VOLUME))!=0) {
             struct SFSMessage *sfsm;
             UBYTE *d2=(UBYTE *)BADDR(vn->dl_Name);
-#ifdef USE_FAST_BSTR
+#ifdef AROS_FAST_BSTR
             copystr(oc->object[0].name, d2, 30);
 #else
             UBYTE *d=d2+1;
@@ -4006,7 +4030,7 @@ static void actionsamelock(struct DosPacket *packet) {
 static void actiondiskinfo(struct DosPacket *packet) {
   struct InfoData *id=BADDR(packet->dp_Arg1);
 
-//  _DEBUG(("ACTION_DISK_INFO\n"));
+  _DEBUG(("ACTION_DISK_INFO\n"));
 
   fillinfodata(id);
 
@@ -4038,11 +4062,11 @@ static void fillinfodata(struct InfoData *id) {
   id->id_BytesPerBlock=globals->bytes_block;
   id->id_DiskType=globals->disktype;
 
-//  kprintf("Filling InfoData structure with a volumenode ptr to address %ld.  Disktype = 0x%08lx\n",volumenode,disktype);
+  D(kprintf("Filling InfoData structure with a volumenode ptr to address %ld.  Disktype = 0x%08lx\n", globals->volumenode, globals->disktype));
 
   id->id_VolumeNode=TOBADDR(globals->volumenode);
 
-//  _DEBUG(("fillinfodata: volumenode = %ld, disktype = 0x%08lx\n",volumenode,disktype));
+  _DEBUG(("fillinfodata: volumenode = %ld, disktype = 0x%08lx\n", globals->volumenode, globals->disktype));
 
   if(globals->locklist!=0) {
     id->id_InUse=DOSTRUE;

@@ -1,3 +1,4 @@
+#include "sysdep.h"
 #include "asmsupport.h"
 
 #include <dos/dos.h>
@@ -621,26 +622,6 @@ UWORD hash(UBYTE *name, WORD casesensitive) {
 }
 
 
-#ifdef __AROS__
-
-#define bstrlen AROS_BSTR_strlen
-
-#else
-
-UWORD bstrlen(BSTR bstr) {
-  UWORD len;
-  UBYTE *str=BADDR(bstr);
-
-  len=str[0];
-  if(len!=0 && str[len]==0) {
-    len--;
-  }
-  return(len);
-}
-
-#endif
-
-
 UBYTE *validatepath(UBYTE *string) {
   UBYTE *d;
   UBYTE *r;
@@ -708,26 +689,25 @@ void copystr(UBYTE *src,UBYTE *dest,WORD maxlen) {
 
 
 
-#ifdef __AROS__
+#ifdef USE_FAST_BSTR
 
-UWORD copybstrasstr(BSTR bstr,UBYTE *str,UWORD maxlen) {
-  UBYTE *srcstr=AROS_BSTR_ADDR(bstr);
+UWORD copybstrasstr(BSTR bstr,UBYTE *str,UWORD maxlen)
+{
+  UBYTE *srcstr = BADDR(bstr);
   UWORD srclen;
-  ULONG l=0;
 
   /* maxlen is the maximum stringlength the destination can become, excluding zero
      termination.  The return value is the length of the destination string also
      excluding termination. */
 
-  srclen=AROS_BSTR_strlen(bstr);
+  srclen = strlen(bstr);
   if(srclen<maxlen) {
     maxlen=srclen;
   }
   srclen=maxlen;
 
   while(maxlen--!=0) {
-    *str++=AROS_BSTR_getchar(srcstr,l);
-    l++;
+    *str++ = *srcstr++;
   }
   *str=0;
 
@@ -735,6 +715,17 @@ UWORD copybstrasstr(BSTR bstr,UBYTE *str,UWORD maxlen) {
 }
 
 #else
+
+UWORD bstrlen(BSTR bstr) {
+  UWORD len;
+  UBYTE *str=BADDR(bstr);
+
+  len=str[0];
+  if(len!=0 && str[len]==0) {
+    len--;
+  }
+  return(len);
+}
 
 UWORD copybstrasstr(BSTR bstr,UBYTE *str,UWORD maxlen) {
   UBYTE *srcstr=BADDR(bstr);
