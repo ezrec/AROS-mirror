@@ -21,7 +21,7 @@ MODULE_FILES := arosdevice arosmain
 
 #MM contrib-sfs: contrib-sfs-c
 #MM contrib-sfs-kobj: contrib-sfs-c
-#MM contrib-packet: contrib-sfs-c
+#MM contrib-sfs-packet: contrib-sfs-c
 
 USER_CFLAGS := -DSFS_BE
 
