@@ -10,36 +10,13 @@
 #include "../FS/packets.h"
 #include "../FS/query.h"
 #include <stdio.h>
-
-#ifdef __AROS__
-#include <dos/filesystem.h>
-#endif
-
 #include "../FS/asmsupport.c"
 #undef SysBase
 #undef IntuitionBase
 #undef DOSBase
 
 #ifdef __AROS__
-#define __AMIGADATE__   "(29.11.2005)"
-
-#include "../aros/dosdoio.c"
-
-BYTE AROS_DoPkt(struct IOFileSys *iofs, LONG action, LONG Arg1, LONG Arg2, LONG Arg3, LONG Arg4, LONG Arg5)
-{
-    iofs->IOFS.io_Command = SFS_SPECIFIC_MESSAGE;
-    iofs->io_PacketEmulation->dp_Type = action;
-    iofs->io_PacketEmulation->dp_Arg1 = Arg1;
-    iofs->io_PacketEmulation->dp_Arg2 = Arg2;
-    iofs->io_PacketEmulation->dp_Arg3 = Arg3;
-    iofs->io_PacketEmulation->dp_Arg4 = Arg4;
-    iofs->io_PacketEmulation->dp_Arg5 = Arg5;
-    
-    DosDoIO((struct IORequest *)iofs, SysBase);
-    
-    return iofs->io_PacketEmulation->dp_Res1;
-}
-#else
+#define __AMIGADATE__  "(" __DATE__ ")"
 #endif 
 
 /* Note to people who wish to use this source:
@@ -102,9 +79,6 @@ int main() {
     struct MsgPort *msgport;
     struct DosList *dl;
     UBYTE *devname=arglist.name;
-#ifdef __AROS__
-    struct IOFileSys *IOFS;
-#endif
 
     while(*devname!=0) {
       if(*devname==':') {
@@ -118,15 +92,7 @@ int main() {
     if((dl=FindDosEntry(dl, arglist.name, LDF_DEVICES))!=0) {
       LONG errorcode;
 
-#ifdef __AROS__
-        msgport=CreateMsgPort();
-        IOFS = (struct IOFileSys *)CreateIORequest(msgport, sizeof(struct IOFileSys));
-        IOFS->io_PacketEmulation = AllocVec(sizeof(struct DosPacket), MEMF_PUBLIC|MEMF_CLEAR);
-        IOFS->IOFS.io_Device = dl->dol_Ext.dol_AROS.dol_Device;
-        IOFS->IOFS.io_Unit   = dl->dol_Ext.dol_AROS.dol_Unit;
-#else
         msgport=dl->dol_Task;
-#endif
       UnLockDosList(LDF_DEVICES|LDF_READ);
 
       {
@@ -134,26 +100,13 @@ int main() {
                                ASQ_VERSION, 0,
                                TAG_END, 0};
 
-#ifdef __AROS__
-        if((errorcode=AROS_DoPkt(IOFS, ACTION_SFS_QUERY, (LONG)&tags, 0, 0, 0, 0))!=DOSFALSE) {
-#else
         if((errorcode=DoPkt(msgport, ACTION_SFS_QUERY, (LONG)&tags, 0, 0, 0, 0))!=DOSFALSE) {
-#endif
           ULONG blocks_total=tags[0].ti_Data;
 
           if(tags[1].ti_Data >= (1<<16) + 83) {
-
-#ifdef __AROS__
-            if((errorcode=AROS_DoPkt(IOFS, ACTION_SFS_DEFRAGMENT_INIT, 0, 0, 0, 0, 0))!=DOSFALSE) {
-#else
             if((errorcode=DoPkt(msgport, ACTION_SFS_DEFRAGMENT_INIT, 0, 0, 0, 0, 0))!=DOSFALSE) {
-#endif
               if((bitmap=AllocVec(blocks_total / 8 + 32, MEMF_CLEAR))!=0) {
-#ifdef __AROS__
-                if((errorcode=AROS_DoPkt(IOFS, ACTION_SFS_READ_BITMAP, (LONG)bitmap, 0, blocks_total, 0, 0))!=DOSFALSE) {
-#else
                 if((errorcode=DoPkt(msgport, ACTION_SFS_READ_BITMAP, (LONG)bitmap, 0, blocks_total, 0, 0))!=DOSFALSE) {
-#endif
                   if((mywindow=OpenWindowTags(0, WA_Width, dw+16,
                                                  WA_Height, dh+16,
                                                  WA_MinWidth, 100,
@@ -184,11 +137,7 @@ int main() {
                       UWORD class,code,qualifier;
 
                       if(defragmented==FALSE) {
-#ifdef __AROS__
-                        if((errorcode=AROS_DoPkt(IOFS, ACTION_SFS_DEFRAGMENT_STEP, (LONG)steps, 190, 0, 0, 0))!=DOSFALSE) {
-#else
                         if((errorcode=DoPkt(msgport, ACTION_SFS_DEFRAGMENT_STEP, (LONG)steps, 190, 0, 0, 0))!=DOSFALSE) {
-#endif
                           struct DefragmentStep *ds=(struct DefragmentStep *)steps;
                           WORD e;
 
@@ -269,11 +218,6 @@ int main() {
           }
         }
       }
-#ifdef __AROS__
-                FreeVec(IOFS->io_PacketEmulation);
-                DeleteIORequest((struct IORequest *)IOFS);
-                DeleteMsgPort(msgport);
-#endif  
     }
     else {
       VPrintf("Couldn't find device '%s:'.\n",&arglist.name);

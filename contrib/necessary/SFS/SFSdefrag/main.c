@@ -59,7 +59,6 @@ ULONG steps[200];
 
 struct Library *MUIMasterBase = NULL;
 struct UtilityBase *UtilityBase = NULL;
-struct IOFileSys *iofs;
 struct MsgPort *mp;
     
 int openLibs()
@@ -68,20 +67,7 @@ int openLibs()
     {
         if ((UtilityBase=(struct UtilityBase*)OpenLibrary("utility.library", 0)) != NULL)
         {
-            if ((mp=CreateMsgPort())!=NULL)
-            {
-                if ((iofs=(struct IOFileSys *)CreateIORequest(mp, sizeof(struct IOFileSys)))!=NULL)
-                {
-                    if ((iofs->io_PacketEmulation = AllocVec(sizeof(struct DosPacket), MEMF_PUBLIC|MEMF_CLEAR))!=NULL)
-                    {
-                        return 1;
-    //                    FreeVec(iofs->io_PacketEmulation);
-                    }
-                    DeleteIORequest((struct IORequest *)iofs);
-                }
-                DeleteMsgPort(mp);
-            }
-            CloseLibrary((struct Library *)UtilityBase);
+            return 1;
         }
         CloseLibrary(MUIMasterBase);
     }
@@ -90,17 +76,6 @@ int openLibs()
 
 void closeLibs()
 {
-    if (iofs != NULL)
-    {
-        if (iofs->io_PacketEmulation != NULL)
-            FreeVec(iofs->io_PacketEmulation);
-        
-        DeleteIORequest((struct IORequest *)iofs);
-    }
-    
-    if (mp != NULL)
-        DeleteMsgPort(mp);
-    
     if (UtilityBase != NULL)
         CloseLibrary((struct Library *)UtilityBase);
 
@@ -134,23 +109,6 @@ LONG xget(Object * obj, ULONG attr)
     LONG x = 0;
     get(obj, attr, &x);
     return x;
-}
-
-#include "../aros/dosdoio.c"
-
-BYTE AROS_DoPkt(struct IOFileSys *iofs, LONG action, LONG Arg1, LONG Arg2, LONG Arg3, LONG Arg4, LONG Arg5)
-{
-    iofs->IOFS.io_Command = SFS_SPECIFIC_MESSAGE;
-    iofs->io_PacketEmulation->dp_Type = action;
-    iofs->io_PacketEmulation->dp_Arg1 = Arg1;
-    iofs->io_PacketEmulation->dp_Arg2 = Arg2;
-    iofs->io_PacketEmulation->dp_Arg3 = Arg3;
-    iofs->io_PacketEmulation->dp_Arg4 = Arg4;
-    iofs->io_PacketEmulation->dp_Arg5 = Arg5;
-    
-    DosDoIO((struct IORequest *)iofs, SysBase);
-    
-    return iofs->io_PacketEmulation->dp_Res1;
 }
 
 struct Hook select_hook;
@@ -208,12 +166,11 @@ void getDeviceData(STRPTR device)
             { TAG_DONE,         0}
         };
         
-        iofs->IOFS.io_Device = dl->dol_Ext.dol_AROS.dol_Device;
-        iofs->IOFS.io_Unit   = dl->dol_Ext.dol_AROS.dol_Unit;
+        mp = dl->dol_Task;
         
         UnLockDosList(LDF_DEVICES|LDF_READ);
         
-        if(AROS_DoPkt(iofs, ACTION_SFS_QUERY, (LONG)&tags, 0, 0, 0, 0)!=DOSFALSE)
+        if(DoPkt(mp, ACTION_SFS_QUERY, (LONG)&tags, 0, 0, 0, 0)!=DOSFALSE)
         {
             blocks_total=tags[0].ti_Data;
             blocks_inone=(blocks_total + 19255)/19256;
@@ -224,7 +181,7 @@ void getDeviceData(STRPTR device)
             
             if ((bitmap = AllocVec(blocks_total / 8 + 32, MEMF_CLEAR))!=0)
             {
-                if(AROS_DoPkt(iofs, ACTION_SFS_READ_BITMAP, (LONG)bitmap, 0, blocks_total, 0, 0)!=DOSFALSE)
+                if(DoPkt(mp, ACTION_SFS_READ_BITMAP, (LONG)bitmap, 0, blocks_total, 0, 0)!=DOSFALSE)
                 {
                     updateBitmap(0, blocks_total);
                 }
@@ -251,13 +208,13 @@ AROS_UFH3(void, start_function,
 
     stop_me = FALSE;
 
-    if(AROS_DoPkt(iofs, ACTION_SFS_DEFRAGMENT_INIT, 0, 0, 0, 0, 0)!=DOSFALSE)
+    if(DoPkt(mp, ACTION_SFS_DEFRAGMENT_INIT, 0, 0, 0, 0, 0)!=DOSFALSE)
     {
         do {
             ULONG clrlo=blocks_total,clrhi=0;
             ULONG setlo=blocks_total,sethi=0;
             
-            if(AROS_DoPkt(iofs, ACTION_SFS_DEFRAGMENT_STEP, (LONG)steps, 190, 0, 0, 0)!=DOSFALSE)
+            if(DoPkt(mp, ACTION_SFS_DEFRAGMENT_STEP, (LONG)steps, 190, 0, 0, 0)!=DOSFALSE)
             {
                 struct DefragmentStep *ds=(struct DefragmentStep *)steps;
                 
@@ -320,7 +277,7 @@ AROS_UFH3(void, refresh_function,
     
     if (active != MUIV_List_Active_Off)
     {
-        if(AROS_DoPkt(iofs, ACTION_SFS_READ_BITMAP, (LONG)bitmap, 0, blocks_total, 0, 0)!=DOSFALSE)
+        if(DoPkt(mp, ACTION_SFS_READ_BITMAP, (LONG)bitmap, 0, blocks_total, 0, 0)!=DOSFALSE)
         {
             updateBitmap(0, blocks_total);
         }
@@ -418,9 +375,8 @@ BOOL GUIinit()
                 { TAG_DONE,         0}
             };
         
-            iofs->IOFS.io_Device = dll->dol_Ext.dol_AROS.dol_Device;
-            iofs->IOFS.io_Unit   = dll->dol_Ext.dol_AROS.dol_Unit;
-            if(AROS_DoPkt(iofs, ACTION_SFS_QUERY, (LONG)&tags, 0, 0, 0, 0)!=DOSFALSE)
+            mp = dll->dol_Task;
+            if(DoPkt(mp, ACTION_SFS_QUERY, (LONG)&tags, 0, 0, 0, 0)!=DOSFALSE)
             {
                 if(tags[0].ti_Data >= (1<<16) + 83)
                     DoMethod(DevList, MUIM_List_InsertSingle, (IPTR)dll->dol_Ext.dol_AROS.dol_DevName, MUIV_List_Insert_Bottom);

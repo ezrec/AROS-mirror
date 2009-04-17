@@ -5,34 +5,12 @@
 #include <utility/tagitem.h>
 #include <stdio.h>
 
-#ifdef __AROS__
-#include <dos/filesystem.h>
-#endif
-
 #include "../FS/packets.h"
 #include "../FS/query.h"
 
 #ifdef __AROS__
-#define __AMIGADATE__   "(29.11.2005)"
-
-#include "../aros/dosdoio.c"
-
-BYTE AROS_DoPkt(struct IOFileSys *iofs, LONG action, LONG Arg1, LONG Arg2, LONG Arg3, LONG Arg4, LONG Arg5)
-{
-    iofs->IOFS.io_Command = SFS_SPECIFIC_MESSAGE;
-    iofs->io_PacketEmulation->dp_Type = action;
-    iofs->io_PacketEmulation->dp_Arg1 = Arg1;
-    iofs->io_PacketEmulation->dp_Arg2 = Arg2;
-    iofs->io_PacketEmulation->dp_Arg3 = Arg3;
-    iofs->io_PacketEmulation->dp_Arg4 = Arg4;
-    iofs->io_PacketEmulation->dp_Arg5 = Arg5;
-    
-    DosDoIO((struct IORequest *)iofs, SysBase);
-    
-    return iofs->io_PacketEmulation->dp_Res1;
-}
-#else
-#endif 
+#define __AMIGADATE__  "(" __DATE__ ")"
+#endif
 
 static const char version[]={"\0$VER: SFSquery 1.0 " __AMIGADATE__ "\r\n"};
 
@@ -46,9 +24,6 @@ LONG main() {
     if((readarg=ReadArgs(template,(LONG *)&arglist,0))!=0) {
       struct MsgPort *msgport;
       struct DosList *dl;
-#ifdef __AROS__
-      struct IOFileSys *IOFS;
-#endif
       UBYTE *devname=arglist.name;
 
       while(*devname!=0) {
@@ -63,15 +38,7 @@ LONG main() {
       if((dl=FindDosEntry(dl,arglist.name,LDF_DEVICES))!=0) {
         LONG errorcode;
 
-#ifdef __AROS__
-        msgport=CreateMsgPort();
-        IOFS = (struct IOFileSys *)CreateIORequest(msgport, sizeof(struct IOFileSys));
-        IOFS->io_PacketEmulation = AllocVec(sizeof(struct DosPacket), MEMF_PUBLIC|MEMF_CLEAR);
-        IOFS->IOFS.io_Device = dl->dol_Ext.dol_AROS.dol_Device;
-        IOFS->IOFS.io_Unit   = dl->dol_Ext.dol_AROS.dol_Unit;
-#else
         msgport=dl->dol_Task;
-#endif
         UnLockDosList(LDF_DEVICES|LDF_READ);
 
         {
@@ -104,12 +71,7 @@ LONG main() {
 
 
           printf("SFSquery information for %s:\n", arglist.name);
-
-#ifdef __AROS__
-          if((errorcode=AROS_DoPkt(IOFS, ACTION_SFS_QUERY, (LONG)&tags, 0, 0, 0, 0))!=DOSFALSE) {
-#else
           if((errorcode=DoPkt(msgport, ACTION_SFS_QUERY, (LONG)&tags, 0, 0, 0, 0))!=DOSFALSE) {
-#endif
             ULONG perc;
 
             if(tags[0].ti_Data!=0) {
@@ -163,11 +125,6 @@ LONG main() {
             printf("\n");
           }
         }
-#ifdef __AROS__
-                FreeVec(IOFS->io_PacketEmulation);
-                DeleteIORequest((struct IORequest *)IOFS);
-                DeleteMsgPort(msgport);
-#endif  
       }
       else {
         VPrintf("Couldn't find device '%s:'.\n",&arglist.name);
