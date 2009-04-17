@@ -5,7 +5,7 @@ OBJECTDIR	:= $(DESTDIR)/objects
 RAWDIR		:= $(DESTDIR)/raw
 BMPDIR		:= $(DESTDIR)/bmp
 
-BMPNAMES	:= brush1.bmp cir.bmp env.bmp test.bmp tv.bmp
+BMPNAMES	:= brush1.bmp cir.bmp env.bmp test.bmp tv.bmp shade1.bmp shade2.bmp
 RAWNAMES	:= tg-1.raw tg-2.raw tg.raw
 OBJECTNAMES	:= cube.3d cube2.3d lwhead1.3d test.3d torus3.3d
 
@@ -17,7 +17,7 @@ EXEFILES	:= $(foreach f, $(EXES), $(DESTDIR)/$(f))
 
 #MM- demo-kdp : \
 #MM     demo-kdp-bob \
-##MM     demo-kdp-bump \
+#MM     demo-kdp-bump \
 #MM     demo-kdp-grav \
 #MM     demo-kdp-grav2 \
 #MM	demo-kdp-motionblur \
