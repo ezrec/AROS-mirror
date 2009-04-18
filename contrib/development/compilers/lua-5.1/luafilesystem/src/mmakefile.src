@@ -1,0 +1,18 @@
+#   $Id$
+
+include $(TOP)/config/make.cfg
+
+# files to build the linker lib 'lualfs'
+LFSLIBFILES := lfs
+HEADERS := lfs.h
+
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../../src
+
+#MM contrib-development-lualfs-lib :
+%build_linklib mmake=contrib-development-lualfs-lib libname=lualfs files=$(LFSLIBFILES)
+
+#MM
+includes-copy :
+%copy_includes includes=$(HEADERS) path=lua
+
+%common

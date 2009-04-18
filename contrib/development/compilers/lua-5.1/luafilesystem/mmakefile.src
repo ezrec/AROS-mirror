@@ -1,0 +1,17 @@
+#   $Id$
+
+include $(TOP)/config/make.cfg
+
+EXEDIR := $(CONTRIBDIR)/Development/Lua
+
+#MM- contrib-development : \
+#MM  contrib-development-lua-lfs-doc \
+#MM  contrib-development-lua-lfs-tests
+
+%copy_dir_recursive mmake=contrib-development-lua-lfs-doc \
+    src=doc dst=$(EXEDIR)/lfs/doc
+
+%copy_dir_recursive mmake=contrib-development-lua-lfs-tests \
+    src=tests dst=$(EXEDIR)/lfs/tests
+
+%common

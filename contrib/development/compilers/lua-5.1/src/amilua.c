@@ -38,6 +38,7 @@
 #include "lualib.h"
 #include "lsiamigalib.h"
 #include "lmuilib.h"
+#include "lfs.h"
 
 #include <proto/dos.h>
 #include <proto/asl.h>
@@ -415,6 +416,7 @@ static int pmain (lua_State *L) {
   luaL_openlibs(L);  /* open libraries */
   luaopen_siamigalib(L);
   luaopen_muilib(L);
+  luaopen_lfs(L);
   lua_gc(L, LUA_GCRESTART, 0);
   s->status = handle_luainit(L);
   if (s->status != 0) return 0;
