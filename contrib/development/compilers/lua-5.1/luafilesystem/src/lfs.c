@@ -647,7 +647,7 @@ static int file_info (lua_State *L) {
 /*
 ** Get symbolic link information using lstat.
 */
-#ifndef _WIN32
+#if !defined(_WIN32) && !defined(__AROS__)
 static int link_info (lua_State *L) {
 	return _file_info_ (L, LSTAT_FUNC);
 }
