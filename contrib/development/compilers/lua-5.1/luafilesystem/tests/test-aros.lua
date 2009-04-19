@@ -10,7 +10,7 @@ print (lfs._VERSION)
 function attrdir (path)
 	for file in lfs.dir(path) do
 		local f
-		if string.sub(path,-1) == ":" then
+		if path == "" or string.sub(path,-1) == ":" then
 			f = path..file
 		else
 			f = path..sep..file
@@ -117,4 +117,8 @@ print"Ok!"
 
 print"Scan RAM: recursively"
 attrdir("ram:")
+print"Done"
+
+print"Scan current directory recursively"
+attrdir("")
 print"Done"
