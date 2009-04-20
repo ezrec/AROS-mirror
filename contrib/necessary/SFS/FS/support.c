@@ -1,4 +1,3 @@
-#include "sysdep.h"
 #include "asmsupport.h"
 
 #include <dos/dos.h>
@@ -10,6 +9,7 @@
 
 #include <strings.h>
 
+#include "sysdep.h"
 #include "blockstructure.h"
 #include "fs.h"
 
@@ -700,7 +700,7 @@ UWORD copybstrasstr(BSTR bstr,UBYTE *str,UWORD maxlen)
      termination.  The return value is the length of the destination string also
      excluding termination. */
 
-  srclen = strlen(bstr);
+  srclen = strlen(srcstr);
   if(srclen<maxlen) {
     maxlen=srclen;
   }
@@ -716,9 +716,8 @@ UWORD copybstrasstr(BSTR bstr,UBYTE *str,UWORD maxlen)
 
 #else
 
-UWORD bstrlen(BSTR bstr) {
+UWORD bstrlen(UBYTE *str) {
   UWORD len;
-  UBYTE *str=BADDR(bstr);
 
   len=str[0];
   if(len!=0 && str[len]==0) {
@@ -736,7 +735,7 @@ UWORD copybstrasstr(BSTR bstr,UBYTE *str,UWORD maxlen) {
      excluding termination. */
 
   srcstr++;
-  srclen=bstrlen(bstr);
+  srclen=bstrlen(srcstr);
   if(srclen<maxlen) {
     maxlen=srclen;
   }
