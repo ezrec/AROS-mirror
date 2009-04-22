@@ -55,7 +55,7 @@ Slave( struct ExecBase* SysBase )
   struct AHIAudioCtrlDrv* AudioCtrl;
   struct DriverBase*      AHIsubBase;
   struct ac97Base*        ac97Base;
-  BOOL                    running;
+  BOOL                    running, firstTime = TRUE;
   ULONG                   signals;
 
   AudioCtrl  = (struct AHIAudioCtrlDrv*) FindTask( NULL )->tc_UserData;
@@ -129,7 +129,12 @@ D(bug("SR=%04x CR=%04x CIV=%02x LVI=%02x\n", inw(ac97Base->dmabase + ac97Base->o
 */
 //	outw(4, ac97Base->dmabase + ac97Base->off_po_sr);
 	outb((j-1) & 0x1f, ac97Base->dmabase + PO_LVI);
-	outb(0x11, ac97Base->dmabase + PO_CR); /* Enable busmaster + interrupt on completition */
+	if (firstTime)
+	{
+	    outb(0x11, ac97Base->dmabase + PO_CR);
+		/* Enable busmaster + interrupt on completion */
+	    firstTime = FALSE;
+	}
 
 //	outw(0x1c, ac97Base->dmabase + ac97Base->off_po_sr);
 //	D(bug("SR=%04x ",inw(ac97Base->dmabase + ac97Base->off_po_sr)));
@@ -143,7 +148,6 @@ D(bug("SR=%04x CR=%04x CIV=%02x LVI=%02x\n", inw(ac97Base->dmabase + ac97Base->o
 //	 }
 //	D(bug("SR=%04x\n",inw(ac97Base->dmabase + ac97Base->off_po_sr)));
 //        outw(inw(ac97Base->dmabase + ac97Base->off_po_sr), ac97Base->dmabase + ac97Base->off_po_sr);
-	outb(0x11, ac97Base->dmabase + PO_CR);
 	
 //	ac97Base->PCM_out
         // The mixing buffer is now filled with AudioCtrl->ahiac_BuffSamples
@@ -153,6 +157,7 @@ D(bug("SR=%04x CR=%04x CIV=%02x LVI=%02x\n", inw(ac97Base->dmabase + ac97Base->o
     }
   }
 
+  outb(0, ac97Base->dmabase + PO_CR);
   FreeSignal( dd->slavesignal );
   dd->slavesignal = -1;
 
@@ -165,6 +170,6 @@ D(bug("SR=%04x CR=%04x CIV=%02x LVI=%02x\n", inw(ac97Base->dmabase + ac97Base->o
 
   dd->slavetask = NULL;
 
-  // Multitaking will resume when we are dead.
+  // Multitasking will resume when we are dead.
 }
 
