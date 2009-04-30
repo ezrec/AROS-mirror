@@ -4,6 +4,7 @@ include $(TOP)/config/make.cfg
 #MM- contrib-cdvdfs: includes linklibs
 #MM- contrib-cdvdfs-checkcd: includes linklibs
 #MM- contrib-cdvdfs-cdrom: includes linklibs
+#MM- contrib-cdvdfs-cdcontrol: includes linklibs
 #MM- contrib-cdvdfs-packet: includes linklibs
 
 TESTSDIR := $(AROS_TESTS)/cdrom
@@ -12,6 +13,7 @@ MODULE_FILES := arosdevice arosmain
 HANDLER_FILES := device cdrom devsupp generic \
 	hfs iso9660 intui path rock volumes \
 	joliet prefs charset
+CDCONTROL_FILES := cdcontrol
 CDROM_FILES := main cdrom iso9660 rock joliet \
 	hfs generic path charset
 CHECKCD_FILES := checkcd cdrom iso9660 rock joliet \
@@ -26,6 +28,10 @@ USER_CFLAGS := -DNDEBUG -DDEBUG=0
 %build_prog mmake=contrib-cdvdfs-packet \
     progname=cdrom.handler targetdir=$(AROS_DEVS) \
     files="$(HANDLER_FILES)" usestartup=no uselibs="arossupport rom"
+
+%build_prog mmake=contrib-cdvdfs-cdcontrol \
+    progname=cdcontrol targetdir=$(AROS_C) \
+    files=$(CDCONTROL_FILES) uselibs="amiga arosc"
 
 %build_prog mmake=contrib-cdvdfs-cdrom \
     progname=cdrom targetdir=$(TESTSDIR) \

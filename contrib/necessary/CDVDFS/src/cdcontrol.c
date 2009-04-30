@@ -26,7 +26,11 @@ extern struct Library *DOSBase;
 
 #include "cdcontrol.h"
 
+#ifdef __AROS__
+struct UtilityBase *UtilityBase = NULL;
+#else
 struct Library *UtilityBase = NULL;
+#endif
 
 struct MsgPort *g_device_proc;
 
@@ -129,14 +133,14 @@ struct par {
   enum partype par2;
   void (*func)(void *, void *);
 } g_par[] = {
-  "lowercase",	   "l",  PAR_ON_OFF,	PAR_NONE,	Cmd_Lowercase,
-  "mactoiso",	   "mi", PAR_ON_OFF,	PAR_NONE,	Cmd_Mactoiso,
-  "convertspaces", "cs", PAR_ON_OFF,	PAR_NONE,	Cmd_Convertspaces,
-  "showversion",   "sv", PAR_ON_OFF,	PAR_NONE,	Cmd_Showversion,
-  "hfsfirst",	   "hf", PAR_ON_OFF,	PAR_NONE,	Cmd_Hfsfirst,
-  "dataext",	   "de", PAR_ANY,	PAR_NONE,	Cmd_Dataext,
-  "resourceext",   "re", PAR_ANY,	PAR_NONE,	Cmd_Resourceext,
-  "unicodetable",  "ut", PAR_ANY,	PAR_NONE,	Cmd_Unicodetable
+  {"lowercase",	   "l",  PAR_ON_OFF,	PAR_NONE,	Cmd_Lowercase},
+  {"mactoiso",	   "mi", PAR_ON_OFF,	PAR_NONE,	Cmd_Mactoiso},
+  {"convertspaces", "cs", PAR_ON_OFF,	PAR_NONE,	Cmd_Convertspaces},
+  {"showversion",   "sv", PAR_ON_OFF,	PAR_NONE,	Cmd_Showversion},
+  {"hfsfirst",	   "hf", PAR_ON_OFF,	PAR_NONE,	Cmd_Hfsfirst},
+  {"dataext",	   "de", PAR_ANY,	PAR_NONE,	Cmd_Dataext},
+  {"resourceext",   "re", PAR_ANY,	PAR_NONE,	Cmd_Resourceext},
+  {"unicodetable",  "ut", PAR_ANY,	PAR_NONE,	Cmd_Unicodetable}
 };
 
 void Usage (void)
@@ -167,6 +171,7 @@ void Usage (void)
 int main (int argc, char *argv[])
 {
   int i;
+  struct DevProc *dvp;
 
   atexit (Cleanup);
 
@@ -178,19 +183,30 @@ int main (int argc, char *argv[])
     exit (1);
   }  
 
-  g_device_proc = DeviceProc ((UBYTE *) argv[1]);
-  if (!g_device_proc) {
+  dvp = GetDeviceProc(argv[1], NULL);
+  if (!dvp) {
     fprintf (stderr, "ERROR: cannot find device \"%s\"\n", argv[1]);
     exit (1);
   }
-
+#ifdef __AROS__
+  g_device_proc = dvp->dvp_DevNode->dol_Task;
+#else
+  g_device_proc = dvp->dvp_Port;
+#endif
+  FreeDeviceProc(dvp);
+#ifdef __AROS__
+  if (!g_device_proc) {
+    fprintf(stderr, "ERROR: \"%s\" is not a CDVDFS device\n", argv[1]);
+    exit(1);
+  }
+#endif
   for (i=0; i < (sizeof (g_par) / sizeof (struct par)); i++) {
     if (Stricmp ((UBYTE *) argv[2], (UBYTE *) g_par[i].name) == 0 ||
         Stricmp ((UBYTE *) argv[2], (UBYTE *) g_par[i].abbrev) == 0) {
       void *a = argv[3];
       void *b = NULL;
 
-      if (g_par[i].par1 == PAR_ON_OFF)
+      if (g_par[i].par1 == PAR_ON_OFF) {
         if (Stricmp ((UBYTE *) argv[3], (UBYTE *) "on") == 0)
           a = (void *) 1;
         else if (Stricmp ((UBYTE *) argv[3], (UBYTE *) "off") == 0)
@@ -199,11 +215,12 @@ int main (int argc, char *argv[])
 	  fprintf (stderr, "ERROR: \"on\" or \"off\" expected\n");
 	  exit (1);
         }
-
+      }
       g_par[i].func (a, b);
       exit (0);
     }
   }
   Usage ();
+  return 0;
 }
 
