@@ -8,59 +8,38 @@ Distributions
 =============
 
 Distributions are preconfigured and tested versions of AROS. They 
-contain a number of usefull user applications that dont come with the
+contain a number of useful user applications that don't come with the
 main AROS.org binaries and will be of great interest to users. They may
 not have the latest core system, but their stability and user friendliness
-is much greater than those of the nightly builds. If you are a user, interested
+is much greater than those of the nightly builds. If you are a user interested
 in checking what AROS has to offer, use the distributions to get the most
 complete AROS experience.
 
-VmwAROS VE
-----------
-VmwAROS VE is distibuted as harddisk image file(s) that can be run in VMware
-virtualization software (`Player`__, Fusion, Server, Workstation). The distribution
-contains a number of preinstaled software packages, including email application,
-text editor, image editor, development environment, compilers pack, web browser,
-IRC client and much more! It delivers network connectivity either via
-manual configuration or DHCP client and you can run it on your Windows,
-Linux or Mac box! You can also upload and download files from AROS using the
-distribution`s built-in ftp server.
+Icaros Desktop LIVE!
+--------------------
 
-You will find information about the latest release `here`__. General distribution
-page is located `here`__
+`Icaros Desktop LIVE!`__ is a complete distribution of the AROS desktop
+operating system. It comes on a bootable live DVD-ROM that runs directly
+on your PC (its hardware components must already be supported by AROS).
+It can be installed on the hard drive and can coexist with Microsoft
+Windows XP, in a dedicated partition. A quick reference guide and some
+AROS PDF manuals are included. This version also comes with a Qemu-based
+virtual machine that allows Windows users to test the distribution in a
+safer (but slower) environment.
 
-VmwAROS Live!
--------------
+Icaros Desktop VE
+-----------------
 
-Based on the same technologies as VmwAROS, the VmwAROS Live! distribution delivers
-a highly preconfigured and ready-to-use environment in the form of a LiveCD.
-You can run the CD on any AROS-supported PC-x86 hardware and enjoy the system running
-without the overhead of virtualization software. If you want to get more out of
-AROS, this distribution lets you install itself to your real harddrive, and
-become an alternative system for your Windows or Linux.
+`Icaros Desktop VE (Virtual Environment)`__ is a complete AROS desktop
+environment running on `VMware`__ virtual machines. Targeted at final users
+and at developers, Icaros Desktop VE allows testing and using the AROS
+Research Operating System without really installing it on the hard
+drive. It can be a reliable way to access this interesting OS for people
+with powerful, but not yet natively-supported, hardware.
 
-You will find information about the latest release `here`__. General distribution
-page is located `here`__
-
-WinAROS
--------
-
-WinAROS is a distribution targeting the QEMU virtualization software as its host.
-This distribution can be run under qemu either on Windows or Linux. The distribution
-contains a preconfigured C/C++ compilers package as well as the Murks!IDE - the best
-(and only) Integrated Development Environment for native AROS, which also makes it
-a good beginner developer`s choice.
-
-General distribution page is located `here`__
-
-__ http://vmware.com/products/player
-__ http://ve.vmwaros.org
-__ http://www.vmwaros.org
-
-__ http://live.vmwaros.org
-__ http://www.vmwaros.org
-
-__ http://amidevcpp.amiga-world.de/WinAros.php
+__ http://live.icarosdesktop.org/
+__ http://ve.icarosdesktop.org/
+__ http://vmware.com/
 
 Snapshots
 =========
@@ -92,7 +71,7 @@ through the `AROS-Exec`__ forums.
 
 .. Note::
 
-   When downloading nightly builds, you must use a download manager
+   When downloading nightly builds or snapshots, you must use a download manager
    that can continue an interrupted download, or a command line utility such
    as wget (you can use "wget -c" to get the rest of a file partially
    downloaded by another program).
