@@ -11,6 +11,7 @@ date: Data
 
 build-logs: Construir registo
 download: Descarregar
+md5: MD5
 
 [units]
 
@@ -53,6 +54,12 @@ mingw32-i386-system:
     The hosted version for Microsoft Windows on i386 platform. Developed
     and compiled under Windows XP, but should work on all 32-bit Windows
     versions starting from Windows 98.
+linux-x86_64-system:
+    A versão hospedada para Linux/x86_64. Este é o mais
+    completo e maturo porto, que significa que pode correr
+    todos os programas incluídos e demos com ele. Este arquivo
+    contém todo o sistema de binários AROS compilados a partir da
+    árvore de Subversão.
 linux-ppc-system:
     A versão hospedada para Linux/PowerPC. Este arquivo contém todo
     o sistema de binários AROS compilados a partir da árvore de Subversão.
@@ -65,7 +72,7 @@ pc-i386-boot-iso:
     A versão nativa para Computadores PC-AT baseados em i386 e
     compativeis. Este é a imagem ISO para arranque em CD-ROM, que
     contém todo o sistema AROS e programas contribuídos.
-x86_64-pc-boot-iso:
+pc-x86_64-boot-iso:
     The native version for 64-bit (x86_64, amd64) PC computers.
     This is the bootable CDROM ISO image, which
     contains all AROS system and contributed programs.

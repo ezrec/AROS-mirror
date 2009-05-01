@@ -2,7 +2,7 @@
 
 package: Paket
 documentation: Dokumentation
-sources: KÃ¤llkod
+sources: Källkod
 binaries: Binaries
 development-tools: Utvecklingsverktyg
 date: Datum
@@ -11,6 +11,7 @@ date: Datum
 
 build-logs: build logs
 download: Ladda ner
+md5: MD5
 
 [units]
 
@@ -23,70 +24,80 @@ decimal-point: ,
 [descriptions]
 
 ChangeLog-AROS:
-    ChangeLog fÃ¶r kÃ¤llkoden till AROS kÃ¤rna.
+    ChangeLog för källkoden till AROS kärna.
 ChangeLog-contrib:
-    ChangeLog fÃ¶r kÃ¤llkoden till bidragande program.
+    ChangeLog för källkoden till bidragande program.
 ChangeLog-docs:
-    ChangeLog fÃ¶r dokumentationen.
+    ChangeLog för dokumentationen.
 source:
-    KÃ¤llkoden fÃ¶r AROS kÃ¤rna.
+    Källkoden för AROS kärna.
 docs-source:
-    KÃ¤llkoden fÃ¶r dokumentationen.
+    Källkoden för dokumentationen.
 contrib-source:
-    KÃ¤llkoden till bidragande program.
+    Källkoden till bidragande program.
 docs-html:
-    Dokumentation i HTML-format. InnehÃ¥ller allt som finns
-    tillgÃ¤ngligt pÃ¥ hemsidan, men anpassat fÃ¶r offline-lÃ¤sning.
-i386-freebsd5-system:
-    Hostad version fÃ¶r FreeBSD/i386 5.x. Notera att det inte
-    kommer att fungera pÃ¥ FreeBSD 4.x-system.
-i386-freebsd-system:
-    Hostad version fÃ¶r FreeBSD/i386 5.x. Notera att det inte
-    kommer att fungera pÃ¥ FreeBSD 4.x-system.
-i386-linux-system:
-    Hostad version fÃ¶r Linux/i386. Det hÃ¤r Ã¤r den mest
+    Dokumentation i HTML-format. Innehåller allt som finns
+    tillgängligt på hemsidan, men anpassat för offline-läsning.
+freebsd5-i386-system:
+    Hostad version för FreeBSD/i386 5.x. Notera att det inte
+    kommer att fungera på FreeBSD 4.x-system.
+freebsd-i386-system:
+    Hostad version för FreeBSD/i386 5.x. Notera att det inte
+    kommer att fungera på FreeBSD 4.x-system.
+linux-i386-system:
+    Hostad version för Linux/i386. Det här är den mest
     kompletta och mogna versionen, vilket menas att du kan
-    kÃ¶ra alla inkluderade program och demon med den. Det hÃ¤r
-    arkivet innehÃ¥ller alla AROS system binaries kompilerade frÃ¥n
-    subversions-trÃ¤det.
-ppc-linux-system:
-    Hostad version fÃ¶r Linux/PowerPC. Det hÃ¤r arkivet innehÃ¥ller alla
-    AROS system binaries kompilerade frÃ¥n subversions-trÃ¤det.
-i386-pc-boot-floppy:
-    Native version fÃ¶r i386-baserade PC AT datorer och kompatibla.
-    Det hÃ¤r arkivet innehÃ¥ller en startdiskett-image som du snabbt
+    köra alla inkluderade program och demon med den. Det här
+    arkivet innehåller alla AROS system binaries kompilerade från
+    subversions-trädet.
+mingw32-i386-system:
+    The hosted version for Microsoft Windows on i386 platform. Developed
+    and compiled under Windows XP, but should work on all 32-bit Windows
+    versions starting from Windows 98.
+linux-x86_64-system:
+    Hostad version för Linux/x86_64. Det här är den mest
+    kompletta och mogna versionen, vilket menas att du kan
+    köra alla inkluderade program och demon med den. Det här
+    arkivet innehåller alla AROS system binaries kompilerade från
+    subversions-trädet.
+linux-ppc-system:
+    Hostad version för Linux/PowerPC. Det här arkivet innehåller alla
+    AROS system binaries kompilerade från subversions-trädet.
+pc-i386-boot-floppy:
+    Native version för i386-baserade PC AT datorer och kompatibla.
+    Det här arkivet innehåller en startdiskett-image som du snabbt
     kan skriva till diskett och starta upp AROS med.
-i386-pc-boot-iso:
-    Native version fÃ¶r i386-baserade PC AT datorer och kompatibla.
-    Detta Ã¤r en bootbar CDROM ISO image, som innehÃ¥ller alla
+pc-i386-boot-iso:
+    Native version för i386-baserade PC AT datorer och kompatibla.
+    Detta är en bootbar CDROM ISO image, som innehåller alla
     AROS-system och bidragande program. 
-i386-all-contrib:
-    Detta arkiv innehÃ¥ller alla bidragande program komplierade
-    fÃ¶r i386-arkitekturen. Dom fungerar bÃ¥de i (i386-linux)
+pc-i386-contrib:
+    Detta arkiv innehåller alla bidragande program komplierade
+    för i386-arkitekturen. Dom fungerar både i (i386-linux)
     och native (i386-pc) versioner.
-x86_64-pc-boot-iso:
+pc-x86_64-boot-iso:
     The native version for 64-bit (x86_64, amd64) PC computers.
     This is the bootable CDROM ISO image, which
     contains all AROS system and contributed programs.
-x86_64-all-contrib:
+pc-x86_64-contrib:
     This archive contains all the contributed programs
     compiled for the x86_64 architecture, for use with the
     x86_64 native version.
-ppc-all-contrib:
-    Detta arkiv innehÃ¥ller alla bidragande program
-    kompilerade fÃ¶r PowerPC-arkitekturen, fÃ¶r anvÃ¤ndning
+linux-ppc-contrib:
+    Detta arkiv innehåller alla bidragande program
+    kompilerade för PowerPC-arkitekturen, för användning
     med Linux/PowerPC portningen.
-i386-all-sdk:
-    Ett antal filer och verktyg fÃ¶r att utveckla dina egna
-    AROS-program pÃ¥ valfri dator och operativ. Du mÃ¥ste Ã¤ven ha
-    gcc och binutils konfigurerade fÃ¶r att producera 
+pc-i386-sdk:
+    Ett antal filer och verktyg för att utveckla dina egna
+    AROS-program på valfri dator och operativ. Du måste även ha
+    gcc och binutils konfigurerade för att producera 
     i386-elf exekverbara filer.
-ppc-all-sdk:
-    Ett antal filer och verktyg fÃ¶r att utveckla dina egna
-    AROS-program pÃ¥ valfri dator och operativ. Du mÃ¥Ã¥ste Ã¤ven ha
-    gcc och binutils konfigurerade fÃ¶r att producera
+linux-ppc-sdk:
+    Ett antal filer och verktyg för att utveckla dina egna
+    AROS-program på valfri dator och operativ. Du mååste även ha
+    gcc och binutils konfigurerade för att producera
     ppc-elf exekverbara filer.
-x86_64-all-sdk:
+pc-x86_64-sdk:
     Set of files and tools to build your own AROS programs
     on your preferred machine. You'll need also gcc and the
     binutils configured to produce x86_64-elf executables.

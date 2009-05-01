@@ -11,6 +11,7 @@ date: Ημερομηνία
 
 build-logs: build logs
 download: Λήψη
+md5: MD5
 
 [units]
 

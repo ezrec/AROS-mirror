@@ -11,6 +11,7 @@ date: Fecha
 
 build-logs: Registros de build
 download: Descargar
+md5: MD5
 
 [units]
 
