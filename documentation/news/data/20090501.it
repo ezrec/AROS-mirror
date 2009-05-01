@@ -1,0 +1,106 @@
+=============
+Aggiornamento
+=============
+
+:Author:   Simone Bernacchia
+:Date:     01-05-2009
+
+Ultime notizie
+--------------
+
+Dall'ultimo aggiornamento pre-natalizio, moltissimi aggiornamenti 
+sono stati fatti in AROS, sia nel sistema stesso che per quel che 
+riguarda le applicazioni: finalmente AROS è molto vicino ad essere 
+un sistema usabile per gli scopi di ogni giorno.
+
+Oliver Brunner ha rilasciato recentemente la versione 0.3 di 
+Janus-UAE, la versione di E-UAE specifica per AROS figlia della 
+Integration Bounty Phase 1: AROS può aprire applicazioni Amiga OS
+in finestre e schermi AROS indipendenti; l'integrazione dei menu è
+attualmente in corso.
+
+La notizia più importante è che AROS ha finalmente il suo browser! 
+Grazie all'opera di Stanislaw Szymczyk, OWB è finalmente disponibile 
+per AROS, consegnandogli piena compatibilità CSS e Javascript, tabbed 
+browsing e download manager. Stanislaw ha inoltre permesso a versioni 
+alternative delle applicazioni di AROS di poter essere compilate al 
+di fuori del source tree principale. OWB è già alla versione 0.9.3 
+Beta e, per farlo girare correttamente, servono delle versioni
+recenti di arosc.library, muimaster.library e codesets.library.
+OWB può essere scaricato dalla `sua pagina su sand-labs`__.
+
+Pavel "Sonic" Fedin sta continuando a lavorare sulla versione Hosted 
+di Windows; nel portarla avanti cerca soluzioni per astrarre il modo 
+in cui AROS dialoga con l'hardware e, questo, lo ha portato anche a 
+lavorare sull'ata.device e su altri componenti che necessitano di 
+avere un accesso più astratto al file system e all'hardware, 
+inclusa, recentemente, l'idea di implementare una gestione "a 
+pacchetti" di SFS. Inoltre Pavel, insieme a Jens Langner, sta 
+cercando di far cross-compilare le versioni più aggiornate delle 
+classi Mui mcc.BetterString e mcc.TextEditor, in modo da essere non 
+più incluse in contrib ma di essere allineate con le loro versioni
+originali.
+
+Matthias "Mazze" Ruster ha rilasciato una versione alpha di Ignition; 
+al momento non può salvare dati ma è comunque una buona occasione 
+per dare un'occhiata a questa applicazione, sottovalutata nella sua 
+presenza su Amiga ma piuttosto potente e ben fatta; unico problema, 
+l'applicazione è tradotta solo parzialmente dal tedesco; per usarla 
+con il sistema in inglese è necessario rinominare il file 
+ignition_english.prefs in ignition.prefs. Potete provarla
+prelevandola `da qui`__.
+
+Nik "Kalamatee" Andrews sta operando per migliorare Wanderer: nei 
+mesi scorsi il suo lavoro ha visto migliorare la stabilità 
+intrinseca di Wanderer, apparire una status bar sul fondo delle 
+finestre, ha fatto esperimenti per un albero dei cassetti a lato 
+delle finestre e, per il prossimo futuro, oltre alla richiesta
+visione in modalità elenco, conta di avere Wanderer strutturato in
+maniera modulare, dove le varie aggiunte saranno gestite appunto
+come moduli esterni.
+
+La distribuzione VmwAROS ha cambiato nome: ora si chiama 
+`Icaros Desktop`__ e, con il rilascio della `versione 1.1.1`__
+consegna i più recenti aggiornamenti del sistema, una stabilità notevolmente migliorata, quasi tutte le applicazioni presenti sono state ricompilate in modo da richiedere solo una versione di 
+muimaster.library - facendo venire finalmente meno il bisogno di 
+usare switchmuimaster - è stata aggiunto lo script IconDress - che 
+consente di cambiare il tema icone da uno stile all'altro con un solo 
+clic. La versione più recente è stata installata con successo in una
+macchina virtuale su un netbook, mantenendo una velocità ragionevole
+e permettendo l'uso dell'audio e della rete wireless. Maggiori
+informazioni `qui`__.
+
+Michal Schulz ha continuato a lavorare sul suo port su Efika e, 
+parallelamente, sulla USB mass storage bounty; verso dicembre 
+quest'ultima era in grado di montare chiavette USB ed effettuare il boot da CD esterno correttamente; vanno inoltre registrati
+progressi anche sul fronte del port Efika, che 
+hanno portato a una maggiore robustezza del sistema, a un debug 
+report dettagliato e a una feature simile al Grim Reaper di OS4, che 
+porta il sistema in caso di errore a non crashare del tutto. Michal 
+è anche riuscito ad accelerare in parte il driver video ATI. 
+Parallelamente, Neil Cafferkey sta cercando di risolvere i problemi
+di ata.device con sistemi SATA, raggiungendo già da ora una migliore
+compatibilità con i controller per gli hard drive.
+
+Recentemente ci sono stati anche alcuni cambiamenti nel modo di fare 
+boot con AROS: in sostanza se si aggiorna il sistema è necessario 
+copiare "a mano" il file aros.boot nella root del disco che contiene 
+il sistema, altrimenti quest'ultimo non sarà riconosciuto come 
+bootabile.
+
+Infine l'arrivo di Steve "ClusterUK" Jones: in passato impegnato 
+nello sviluppo del Siamese System, propone il suo sistema desktop 
+`iMica`__, dotato di un Intel Atom, che monta Icaros in una delle 
+partizioni; iMica offre una delle migliori esperienze su hardware 
+reale, per la scelta di montare come scheda sonora una 
+soundblaster con chip EMU10k supportato da AROS e, grazie al 
+lavoro di Kalamatee che ne ha scritto il driver, per l'uso della
+scheda di rete RTL8168. 
+
+__ http://www.sand-labs.org/aros
+__ http://www.mazze-online.de/files/ignition.i386-aros.zip
+__ http://www.icarosdesktop.org
+__ http://vmwaros.blogspot.com/2009/04/icaros-desktop-111-update-ready-for.html
+__ http://vmwaros.blogspot.com/2009/04/running-icaros-desktop-on-netbook.html
+__ http://www.clusteruk.com
+
