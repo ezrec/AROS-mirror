@@ -1,8 +1,8 @@
 #CATEGORIES_BEGIN (basecategory, category, description, last update date)
-amigaos;libraries;Libraries;2008-11-08
+amigaos;libraries;Libraries;2009-05-01
 amigaos;classes;Classes;2008-10-25
 amigaos;devices;Devices;2008-08-24
-amigaos;resources;Resources;2008-09-23
+amigaos;resources;Resources;2009-05-01
 aros;hidds;HIDDs;2003-08-26
 amigaos;programs;Programs;2008-11-06
 amigaos;linklibs;Linklibs;2008-09-24
@@ -13,7 +13,7 @@ linklibs;alib;Amiga.lib;2008-09-24
 linklibs;debuglib;Debug.lib;2008-09-24
 linklibs;ddebuglib;DDebug.lib;2008-09-24
 libraries;intuition;Intuition.library;2008-07-19
-libraries;graphics;Graphics.library;2008-07-19
+libraries;graphics;Graphics.library;2009-05-01
 libraries;dos;Dos.library;2008-11-08
 libraries;translator;Translator.library;2008-07-22
 libraries;utility;Utility.library;2008-07-23
@@ -105,7 +105,7 @@ resources;disk;Disk.resource;2008-09-23
 resources;cia;Cia.resource;2008-09-23
 resources;cardres;Card.resource;2008-09-23
 resources;battmem;Battmem.resource;2008-09-23
-resources;battclock;Battclock.resource;2008-09-23
+resources;battclock;Battclock.resource;2009-05-01
 resources;filesysres;FileSystem.resource;2008-09-23
 #CATEGORIES_END
 #CATEGORY_ITEMS_BEGIN (category, description, architecture, api version, status)
@@ -718,7 +718,7 @@ graphics;DoCollision;1;1;2
 graphics;Draw;1;1;1
 graphics;DrawEllipse;1;1;2
 graphics;DrawGList;1;1;1
-graphics;EraseRect;1;1;1
+graphics;EraseRect;1;1;2
 graphics;ExtendFont;1;1;2
 graphics;FindColor;1;1;2
 graphics;FindDisplayInfo;1;1;2
@@ -1711,9 +1711,9 @@ scsi;TD_PROTSTATUS;1;1;2
 scsi;TD_CHANGESTATE;1;1;2
 scsi;TD_SEEK;1;1;0
 scsi;TD_FORMAT;1;1;2
-battclock;ResetBattClock;1;1;0
+battclock;ResetBattClock;1;1;2
 battclock;ReadBattClock;2;1;2
-battclock;WriteBattClock;1;1;0
+battclock;WriteBattClock;2;1;2
 battmem;ObtainBattSemaphore;1;1;0
 battmem;ReleaseBattSemaphore;1;1;0
 battmem;ReadBattMem;1;1;0
