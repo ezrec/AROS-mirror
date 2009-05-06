@@ -2,92 +2,97 @@
 Status update
 =============
 
-:Author:   Simone Bernacchia
+:Author:   Simone Bernacchia & Neil Cafferkey
 :Date:     2009-05-01
 
 Latest updates
 --------------
 
-Since the latest update before christmas, AROS gained a lot of great 
-improvements, both in system files and for the applications: 
-AROS is getting really close to be suitable for daily usage.
+Since the last update before Christmas, AROS has gained a lot of
+improvements, both in system components and applications: AROS is
+getting really close to being suitable for daily usage.
 
-Oliver Brunner recently released the version 0.3 of Janus-UAE, the 
-AROS-specific version required by the phase 1 of the UAE Integration 
-Bounty; now AROS can open Amiga OS applications in their own AROS 
-screen or window; Oliver is actually working in integrating menus.
+Oliver Brunner recently released version 0.3 of Janus-UAE, the
+AROS-specific version of UAE required by phase 1 of the UAE Integration
+Bounty. Now AROS can open AmigaOS applications in their own AROS screen
+or window. Oliver is currently working on integrating menus.
 
-The most important new is that AROS has finally got its own modern 
-browser! Thanks to the hard work of Stanislaw Sszymczyk, OWB is 
-available for AROS delivering full CSS and Javascript compatibility, 
-tabbed browsing and a download manager. Stanislaw also worked in 
-allowing the compiling of alternate versions of applications outside 
-the main source tree. OWB is at the version 0.9.3 Beta and in order 
-to run correctly requires recent versions of muimaster.library, 
-arosc.library and codesets.library. OWB can be downloaded at its own 
-`page at sand-labs`__.
+But the most important news is that AROS has finally got its own modern
+web browser! Thanks to the hard work of Stanislaw Sszymczyk, OWB is
+available for AROS, delivering full CSS and Javascript compatibility,
+tabbed browsing and a download manager. OWB is at version 0.9.3 Beta,
+and in order to run correctly requires recent versions of
+muimaster.library, arosc.library and codesets.library. OWB can be
+downloaded at its own `page at sand-labs`__. Stanislaw has also finished
+work on allowing the compilation of multiple versions of AROS using a
+single copy of the source tree.
 
-Pavel "Sonic" Fedin is still working on the Windows Hosted version 
-and, while is going on with its work, is also trying to solve several 
-problems on the way AROS talk to the hardware in order to abstract 
-it; this brought him into modifying ata.device and other components 
-that require an abstraction layer in order to work hosted, such as 
-file system access and hardware; this includes a packet handling 
-method for SFS. Also Pavel, together with Jens Langner, is trying to 
-make cross-compile the most updated versions of the mcc.BetterString 
-and mcc.TextEditor MUI classes so that those will be taken straight 
-from mainstream instead to be included in contrib.
+Pavel "Sonic" Fedin is still working on the Windows Hosted version of
+AROS and, in the course of this work, is also trying to solve several
+problems in the way AROS talks to the hardware, in order to abstract it;
+this led to his modifying components that require an abstraction layer
+in order to work in hosted AROS versions, such as file systems and
+hardware; this includes a packet handling method for SFS. Also, Pavel,
+together with Jens Langner, is trying to cross-compile the most
+up-to-date versions of the mcc.BetterString and mcc.TextEditor MUI
+classes so that they will be taken straight from the mainstream source
+instead of being included in the AROS source tree.
 
-Matthias "Mazze" Ruster has released an alpha version of Ignition; at 
-the moment data cannot be saved but it is still a good occasion to 
-give a look at this application,underestimated on Amiga but quite 
-powerful and well realised; just a couple of major glitches: the 
-applicaiton is just partially translated from german; in order to be 
-used in english the file ignition_english.prefs has to be renamed in 
-ignition.prefs. The link where to download it to try it is here__.
+Matthias "Mazze" Rustler has released an `alpha version`__ of the
+Ignition spreadsheet application. At the moment data cannot be saved but
+it is still a good occasion to have a look at this application,
+underestimated on AmigaOS but quite powerful and well realised. There
+are just a couple of major glitches: the applicaiton is only partially
+translated from German; in order to be used in English the file
+ignition_english.prefs has to be renamed to ignition.prefs.
 
-Nik "Kalamatee" Andrews is improving Wanderer: in the 
-previous months its job delivered a better intrinsic Wanderer 
-stability, he added a status bar to windows, he experimented a 
-directory tree in the left side of them and, for the 
-future, beside the most awaited list view, he plans to make Wanderer 
-modular, so that the various components can be added or subtracted at 
-will and implemented also with third-party modules.
+Nik "Kalamatee" Andrews is improving Wanderer: in recent months his work
+delivered better stability, he added a status bar to windows, and he
+experimented with a directory tree in the left-hand side of windows. In
+the future, besides the introduction of the much awaited list view, he
+plans to make Wanderer more modular, so that various components can be
+added or subtracted at will and implemented also with third-party
+modules.
 
-The well known VmwAROS distribution changed name to `Icaros
-Desktop`__; the version 1.1 (`updated recently to 1.1.1`__) 
-delivers the most updated system files, a better stability - almost 
-all applications were recompiled in order to use the most recent 
-muimaster.library build - getting finally rid of the old 
-switchmuimaster application. Available as usual both as Live DVD and
-virtual environment, the Live! version has been installed on top of
-Windows XP on a netbook, running at a reasonable speed with full
-audio and wireless networking support. More infos `here`__
+The well known VmwAROS distribution has changed name to `Icaros
+Desktop`__; version 1.1 (`updated recently to 1.1.1`__) delivers updated
+system files and better stability. Almost all applications were
+recompiled in order to use the most recent muimaster.library build -
+finally getting rid of the old switchmuimaster application. As usual,
+Icaros is available as both a Live DVD and a virtual environment (VE).
+The VE version has been installed on top of Windows XP on a netbook,
+running at a reasonable speed with full audio and wireless networking
+support. More info `here`__
 
-Michal Schulz still continues to work on its Efika port and, in 
-parrallel, on the USB mass sotrage bounty; in December AROS was able 
-to mount USB sticks and boot from an external CD-ROM drive; further 
-progresses on the Efika front too; its progresses brought a more 
-robust kernel, a detailed debug report and a feature quite similar to 
-Grim Reaper on OS4 that prevents the machine from freezing in case of 
-crash. At the same time Neil Cafferkey is working, in the same rail 
-as Pavel Fedin, on solving the iussues of ata.device with SATA
-drives.
+Michal Schulz still continues to work on his Efika port and, in
+parallel, on the USB mass storage bounty. In December AROS was able to
+mount USB sticks and boot from an external CD-ROM drive. Progress on the
+Efika port brought a more robust kernel, a detailed debug report and a
+feature quite similar to Grim Reaper on AmigaOS 4 that prevents the
+machine from freezing in case of a crash.
 
-Some changes occured also in the way AROS boots: if the system is 
-updated with a build after march 20, it is required to copy "by 
-hand" the aros.boot file in the system disk root directory else the 
-disk is not recognised as bootable.
+Neil Cafferkey has been working on improving the compatibility of the
+ATA driver, so that it works with a greater variety of PCs and drives.
+These changes were not ready in time for Icaros 1.1.1, but they will
+probably be included in the next release.
 
-And, last but not least, the coming  of Steve "ClusterUK" Jones: a 
-Siamese System developer in the past, now comes back on Amigaland 
-proposing its AROS box for sale. `iMica`__, an atom based small desktop 
-system with Icaros Desktop pre-instaled; iMica offers actually one 
-among the best AROS experiences in real hardware, due to the choice 
-to use as sound card a soundblaster with EMU10k chipset supported by 
-AROS and, thanks to Kalamatee work who wrote the driver, a RTL8168 
-Network card.
+Some changes also occured in the way AROS boots: it is now possible to
+install 32-bit and 64-bit versions of AROS side-by-side on the same
+computer. As a result of this, all bootable AROS partitions are required
+to have a file called AROS.boot containing the architecture type of the
+AROS system files on that partition. If you want to upgrade the kernel
+on a system installed prior to March 20, you need to manually copy this
+file to the root of your system partition, or create it yourself (e.g.
+run the command "Echo pc-i386 TO DH0:AROS.boot" for a 32-bit system)
 
+And, last but not least, the coming of Steve "ClusterUK" Jones: a
+Siamese System developer in the past, he now comes back to Amigaland
+proposing his AROS box for sale. The `iMica`__ is an Intel Atom-based
+small desktop system with Icaros Desktop pre-installed. iMica currently
+offers one of the best AROS experiences on real hardware, due to the
+inclusion of a Creative Labs SoundBlaster card with EMU10k chipset that
+is supported by AROS, and an RTL8168 Network card, supported by
+Kalamatee's new driver.
 
 __ http://www.sand-labs.org/aros
 __ http://www.mazze-online.de/files/ignition.i386-aros.zip
