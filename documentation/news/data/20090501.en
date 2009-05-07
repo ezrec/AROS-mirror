@@ -30,7 +30,7 @@ single copy of the source tree.
 Pavel "Sonic" Fedin is still working on the Windows Hosted version of
 AROS and, in the course of this work, is also trying to solve several
 problems in the way AROS talks to the hardware, in order to abstract it;
-this made him modifying components that require an abstraction layer
+this led to his modifying components that require an abstraction layer
 in order to work in hosted AROS versions, such as file systems and
 hardware; this includes a packet handling method for SFS. Also, Pavel,
 together with Jens Langner, is trying to cross-compile the most
