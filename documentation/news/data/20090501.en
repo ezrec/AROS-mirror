@@ -30,7 +30,7 @@ single copy of the source tree.
 Pavel "Sonic" Fedin is still working on the Windows Hosted version of
 AROS and, in the course of this work, is also trying to solve several
 problems in the way AROS talks to the hardware, in order to abstract it;
-this led to his modifying components that require an abstraction layer
+this made him modifying components that require an abstraction layer
 in order to work in hosted AROS versions, such as file systems and
 hardware; this includes a packet handling method for SFS. Also, Pavel,
 together with Jens Langner, is trying to cross-compile the most
@@ -62,7 +62,7 @@ finally getting rid of the old switchmuimaster application. As usual,
 Icaros is available as both a Live DVD and a virtual environment (VE).
 The VE version has been installed on top of Windows XP on a netbook,
 running at a reasonable speed with full audio and wireless networking
-support. More info `here`__
+support. More info `here`__.
 
 Michal Schulz still continues to work on his Efika port and, in
 parallel, on the USB mass storage bounty. In December AROS was able to
@@ -83,7 +83,7 @@ to have a file called AROS.boot containing the architecture type of the
 AROS system files on that partition. If you want to upgrade the kernel
 on a system installed prior to March 20, you need to manually copy this
 file to the root of your system partition, or create it yourself (e.g.
-run the command "Echo pc-i386 TO DH0:AROS.boot" for a 32-bit system)
+run the command "Echo pc-i386 TO DH0:AROS.boot" for a 32-bit system).
 
 And, last but not least, the coming of Steve "ClusterUK" Jones: a
 Siamese System developer in the past, he now comes back to Amigaland
