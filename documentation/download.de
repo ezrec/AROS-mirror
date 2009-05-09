@@ -7,96 +7,75 @@ Download
 Distributionen
 ==============
 
-Distributionen sind AROS-Versionen, die getestet und voreingestellt sind und
-ein paar nützliche Anwenderprogramme enthalten. Sie sind zwar nicht auf dem
-neusten Stand, aber ihre Stabilität und Benutzerfreundlichkeit ist viel
-größer als die der 'Nightly Builds'. Falls Du ein Anwender bist, der
-die Fähigkeiten von AROS ausprobieren will: verwende die Distributionen, um die 
-umfangreichtste AROS-Erfahrung sammeln zu können.
+Distributionen sind vorkonfigurierte und getestete AROS-Versionen. Sie kommen
+mit ein paar nützlichen Anwenderprogrammen, die nicht in den Haupt-Binaries von
+AROS.org vorhanden sind. Sie sind deshalb vor allem für Anwender interessant.
+Sie enthalten nicht das neuste Kernsystem, aber ihre Stabilität und
+Benutzerfreundlichkeit ist viel größer als die der Nightly Builds. Falls Du
+ein Anwender bist, der herausfinden will was AROS zu bieten hat: nimm die
+Distributionen um das beste AROS-Erlebnis zu bekommen.
 
+Icaros Desktop LIVE!
+--------------------
 
-VmwAROS VE
-----------
+`Icaros Desktop LIVE!`__ ist eine vollständige Distribution des AROS-Betriebssystems.
+Sie kommt auf einer boot-fähigen DVD-ROM und läuft direkt auf Deinem PC (die
+Hardware muss von AROS unterstützt werden). Sie kann auf eine Festplatte
+in eine eigene Partition installiert werden und mit Windows XP koexistieren.
+Eine Kurzreferenz und ein paar PDF-Handbücher sind enthalten. Diese Version
+kommt auch mit einer Qemu-basierten virtuellen Maschine, die es Windows-Anwendern
+ermöglicht, die Distribution in einer sichereren (aber langsameren) Umgebung
+zu testen.
 
-VmAROS VE wird als Diskimage vertrieben, welches unter der VMware-Virtualisierungssoftware
-(`Player`__, Fusion, Server, Workstation) läuft. Diese Distribution enthält ein
-paar vorinstallierte Programme, darunter ein E-Mail-Klient, Texteditor,
-Grafikeditor, Entwicklungsumgebung, Kompilerpaket, Webbrowser, IRC-Klient
-und noch viel mehr! Die Netzwerkverbindung kann manuell oder per DHCP-Klient
-hergestellt werden. Es läuft unter Windows, Linux or Mac! Du kannst auch Dateien
-mit dem FTP-Server hoch- und herunterladen.
+Icaros Desktop VE
+-----------------
 
-Allgemeine Informationen kannst Du `hier`__ finden. Heruntergeladen werden kann es
-von `hier`__.
+`Icaros Desktop VE (Virtual Environment)`__ ist eine vollständige AROS-
+Umgebung, die unter der virtuellen Maschine `VMware`__ läuft. An Anwendern
+und Entwicklern gerichtet, ermöglicht Icaros Desktop VE das Testen und
+Benutzen des AROS-Betriebssystems, ohne es wirklich auf eine Festplatte
+zu installieren. Es ist ein sicherer Weg, um AROS auf Hardware zu testen,
+die zwar leistungsstark ist, aber noch nicht direkt von AROS unterstützt
+wird.
 
-VmwAROS Live!
--------------
-
-Basierend auf der gleichen Technologie wie VmAROS liefert die VmwAROS Live!
-Distribution eine voreingestellte und nutzungsbereite Umgebung in Form einer
-LiveCD. Du kannst die CD auf jeder von AROS unterstützten PC-x86-Hardware
-laufen lassen, ohne dabei eine Virtualisierungssoftware zu benötigen. Falls
-Du mehr aus AROS herausholen willst, kannst Du AROS von dieser Distribution
-auch auf Deine Festplatte installieren. Damit wird es ein alternatives System
-zu Windows und Linux.
-
-Informationen über die neuste Ausgabe gibt es `hier`__. Heruntergeladen werden kann es
-von `hier`__.
-
-WinAROS
--------
-
-WinAROS ist eine Distribution für die QEMU-Virtualisierungssoftware. Diese 
-Distribution kann unter QEMU sowohl mit Windows als auch Linux laufen. Sie
-enthält ein C/C++-Kompilerpaket und die Murk!IDE, die beste (und einzige)
-integrierte Entwicklungsumgebung für das "einheimische" AROS. Dies macht es
-eine gute Wahl für Anfänger in der Softwareentwicklung.
-
-Bezogen werden kan es von `hier`__.
-
-__ http://vmware.com/products/player/
-__ http://ve.vmwaros.org
-__ http://www.vmwaros.org/
-
-__ http://live.vmwaros.org
-__ http://www.vmwaros.org/
-
-__ http://amidevcpp.amiga-world.de/WinAros.php
+__ http://live.icarosdesktop.org/
+__ http://ve.icarosdesktop.org/
+__ http://vmware.com/
 
 
 Snapshots
 =========
 
-'Snapshots' sind manuell gebaute Versionen von AROS. 
-Sie werden von Entwicklern erzeugt, die aus technischen oder
+'Snapshots' sind in unregelmäßigen Abständen manuell gebaute Versionen
+von AROS. Sie werden von Entwicklern erzeugt, die aus technischen oder
 politischen Gründen keine 'Nightly Builds' erstellen können.
 
 Verwende bitte den `Bug Tracker`__ um Fehler zu melden.
 
 .. raw:: html
 
-   <?php virtual( "/cgi-bin/files?type=snapshots&lang=en" ); ?>
+   <?php virtual( "/cgi-bin/files?type=snapshots&lang=de" ); ?>
 
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
-
 
 Nightly builds
 ==============
 
 'Nightly Builds' werden, wie der Name schon sagt, automatische jede Nacht
-aus dem Subversion-Baum erstellt. Sie enthalten den neusten Kode. Jedoch wurden
-sie nicht getestet und können unbrauchbar und fehlerhaft sein, wenn Du Pech hast.
-Jedoch funktionieren sie meistens ganz gut.
+aus dem Subversion-Baum erstellt. Sie enthalten den neusten Kode. Jedoch
+wurden sie nicht getestet und können fehlerhaft sein. Aber meistens
+funktionieren sie ganz gut.
 
-Melde bitte Fehler, die Du beim Benutzen der 'Nightly Builds' entdeckst, an den 
-`bug tracker`__. Für andere Anforderungen bitte die Foren von `AROS-Exec`__ verwenden.
+Melde bitte Fehler, die Du beim Benutzen der 'Nightly Builds' entdeckst, an
+den `bug tracker`__. Für andere Anforderungen bitte die Foren von
+`AROS-Exec`__ verwenden.
 
 .. Note::
 
-   Zum Herunterladen von 'Nightly Builds' brauchst Du einen Downloadmanager,
-   der einen unterbrochenen Download fortsetzen kann, oder ein Shellprogramm
-   wie wget (Du kannst mit "wget -c" den Rest einer von einem anderen Programm
-   nur teilweise heruntergeladen Datei anfordern)
+   Zum Herunterladen von 'Nightly Builds' oder 'Snapshots' brauchst Du einen
+   Downloadmanager, der einen unterbrochenen Download fortsetzen kann, oder
+   ein Shellprogramm wie wget (Du kannst mit "wget -c" den Rest einer von
+   einem anderen Programm nur teilweise heruntergeladen Datei anfordern)
 
 .. raw:: html
 
