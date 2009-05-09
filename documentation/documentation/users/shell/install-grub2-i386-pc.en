@@ -29,7 +29,7 @@ Location
 ::
 
 
-     SYS:C
+     C:
 
 
 Function
@@ -37,7 +37,8 @@ Function
 ::
 
 
-     Installs the GRUB bootloader to the bootblock of the specified disk.
+     Installs the GRUB 2 bootloader to the boot block of the specified
+     disk or partition.
 
 
 Inputs
@@ -45,9 +46,11 @@ Inputs
 ::
 
 
-     DEVICE --  Device name (eg. ata.device)
+     DEVICE --  Device name (e.g. ata.device)
      UNIT  --  Unit number
-     PN  --  Partition number (advice: the first AROS FFS partition)
+     PN  --  Specifies a partition number. If specified, GRUB is installed
+         to this partition's boot block. Otherwise, GRUB is installed to
+         the disk's boot block.
      GRUB -- Path to GRUB directory.
      FORCELBA --  Force use of LBA mode.
 
@@ -57,7 +60,7 @@ Example
 ::
 
 
-     install-pc device ata.device unit 0 PN 1 grub dh0:boot/grub
+     Install-grub2-i386-pc device ata.device unit 0 grub dh0:boot/grub
 
 
 See also

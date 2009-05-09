@@ -21,7 +21,7 @@ Synopsis
 ::
 
 
-     COMMAND/F
+     EXECUTE/S,QUIET/S,COMMAND/F
 
 
 Location
@@ -45,6 +45,10 @@ Inputs
 ~~~~~~
 ::
 
+
+     EXECUTE  --  allows a script to be executed in the background
+
+     QUIET    --  avoids printing of the background CLI's number 
 
      COMMAND  --  the program to run together with its arguments
 

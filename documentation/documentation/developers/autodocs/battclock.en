@@ -63,7 +63,7 @@ Function
 ~~~~~~~~
 ::
 
-     Reset the system battery backed up clock. This will reset the clock
+     Reset the system battery-backed-up clock. This will reset the clock
      back to 0 seconds (or midnight, 1st Jan 1978).
 
 
@@ -111,7 +111,7 @@ Function
 ~~~~~~~~
 ::
 
-     Set the systems battery backed up clock to the time specified. The
+     Set the system's battery backed up clock to the time specified. The
      value should be the number of seconds since 00:00:00 on 1.1.1978.
 
 
@@ -119,7 +119,7 @@ Inputs
 ~~~~~~
 ::
 
-     time    -   The number of seconds elapsed since 00:00:00 1.1.1978
+     time - The number of seconds elapsed since 00:00:00 1.1.1978
 
 
 Result

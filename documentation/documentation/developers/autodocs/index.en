@@ -37,6 +37,7 @@ Autodocs for Modules
 + `lowlevel <lowlevel>`_
 + `misc <misc>`_
 + `muimaster <muimaster>`_
++ `muiscreen <muiscreen>`_
 + `nonvolatile <nonvolatile>`_
 + `oop <oop>`_
 + `partition <partition>`_
