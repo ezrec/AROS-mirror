@@ -728,14 +728,13 @@ UWORD bstrlen(UBYTE *str) {
 
 UWORD copybstrasstr(BSTR bstr,UBYTE *str,UWORD maxlen) {
   UBYTE *srcstr=BADDR(bstr);
-  UWORD srclen;
+  UWORD srclen=bstrlen(srcstr);
 
   /* maxlen is the maximum stringlength the destination can become, excluding zero
      termination.  The return value is the length of the destination string also
      excluding termination. */
 
   srcstr++;
-  srclen=bstrlen(srcstr);
   if(srclen<maxlen) {
     maxlen=srclen;
   }
