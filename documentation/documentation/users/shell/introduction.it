@@ -164,3 +164,11 @@ File info
 I file con estensione '.info' giocano un ruolo importante in Wanderer.
 Contengono le immagini delle icone e altre informazioni aggiuntive. Quando
 lavorate con i comandi di shell dovete tenere conto dei file Info.
+
+Scripts
+-------
+Puoi scrivere programmi di comandi da shell in un editor di testo. Quindi possono essere
+eseguiti dal comando `Execute <execute>`_ command. Un altra possibilità è quella
+di mettere la flag 's' col comando `Protect <protect>`_. Basta scrivere il nome dello
+script per avviarlo. Se ci sono dei comandi che si vuole avviare ogni volta AROS parte, 
+vanno scritti in un file col nome 's:user-startup'.
