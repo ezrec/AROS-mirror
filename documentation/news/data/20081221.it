@@ -1,0 +1,88 @@
+=======================
+Aggiornamento natalizio
+=======================
+
+:Autore:   Paolo Besser
+:Data:     2008-12-21
+
+Per prima cosa, vi auguriamo un Buon Natale ed un Felice  2009! 
+Il 2008 è stato un anno importante per lo sviluppo di AROS, dato
+che tante cose sono successe negli ultimi dodici mesi e tanti progetti 
+sono stati fondati nel frattempo. Ecco un sommario di essi...
+
+Ultimi Aggiornamenti
+--------------------
+
+Stanislaw Szymczyk ha reso AROS auto-compilabile. Questo vuol dire
+che si potrà compilare AROS (o le sue parti) su AROS stesso, senza il 
+bisogno di uno strumento esterno. Una catena di sviluppo quasi completa 
+è già disponibilenelle nightly builds, mentre alcuni strumenti necessari
+sono disponibili attraverso `Gli archivi`__. Puoi leggere altro su questo 
+da `Cogville`__.
+
+Krzysztof Smiechowicz sta facendo cose molto utili per AROS. Ha appena
+portato `MPlayer`__, così ci possiamo guardare i nostri filmati 
+in vari formati di compressione, tra i quali AVI, MPEG, MOV, DIVX,
+XVID e molti altri. MPlayer è oltretutto anche un buon riproduttore musicale.
+
+Paolo Besser ha rilasciato la versione 1.0 della sua distribuzione VmwAROS,
+sia un `Live-DVD`__ avviabile e installabile , che una macchina virtuale 
+preconfigurata (`qui`__), introducendo tante (`nuove caratteristiche`__.)  
+VmwAROS è adattata sia agli utenti finali che agli sviluppatori, dato che 
+include giochi, applicazioni, networking e una suite completa 
+per lo sviluppo sulla piattaforma AROS. Gli utenti Amiga Former Amiga 
+users possono essere interessati in `AmiBridge`__, uno 
+strumento di scripting che permette di lanciare applicazioni AmigaOS in UAE 
+direttamente da AROS
+
+Michal Schulz ha trovato un problema che non faceva fare boot correttamente
+ad AROS in VirtualBox, e ha introdotto una soluzione.
+Tomasz Wiszkowski ha corretto un bug molto fastidioso in ata.device
+e ora si possono utilizzare ancora i CD e i DVD senza problemi.
+Ma gli sviluppatori AROS stanno trovando bugs e stanno provando a ripararli;
+ti saremmo grati se ci aiutassi utilizzando il `bug tracker`__ quando ne 
+trovi uno.
+
+
+Presto (o tardi) su una casella AROS vicina a te ...                            ???
+--------------------------------------------------------
+
+Di solito non parliamo di progetti in attesa in questa pagina.
+Preferiamo annunciare solo risultati concreti che abbiamo già raggiunto.
+Ma dato che è natale un'eccezione sarebbe carina; Ecco alcuni dei progetti 
+in AROS nei quali stiamo lavorando.
+
+Michal Schulz sta lavorando alla `mass storage bounty`__, il quale obiettivo è 
+quello di "produzione di un dispositivo DOS che possiamo utilizzare per montare 
+un filesystem su una chiavetta USB". Michal ha già ha già raggiunto dei risultati 
+interessanti, dei quali parla nel suo `blog`__ personale. Michal Schulz sta anche 
+ancora portando AROSalle piattaforme Efika PPC.
+
+Stanislaw Szymczyk sta lavorando al `port di un browser open source su AROS`__. 
+E' partito con Netsurf, ma ha scelto OWB. Ha postato di recente
+uno `screenshot`__ molto iniziale ma ben promettente su AROS-EXEC.
+
+Krzysztof Smiechowicz, Staf Verhaegen, Markus Weiss e altri stanno lavorando su
+AROS ABI v1. Si possono vedere alcuni progressi nella sua documentazione `here`__.
+
+Matthias Rustler sta portanto Ignition su AROS, una applicazione da foglio di calcolo 
+recentemente ri-rilasciata sotto i termini della licenza GPL.
+Ha già fatto progressi interessanti. `Questo screenshot`__
+sembra fantastico.
+
+
+__ http://archives.aros-exec.org
+__ http://sszymczy.rootnode.net/index.php?menu=projects&submenu=aroscompilation
+__ http://aros-exec.org/modules/newbb/viewtopic.php?viewmode=flat&topic_id=3141&forum=2
+__ http://live.vmwaros.org
+__ http://ve.vmwaros.org
+__ http://vmwaros.blogspot.com/2008/12/vmwaros-version-10-released.html
+__ http://vmwaros.blogspot.com/2008/11/introducing-amibridge.html
+__ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
+__ http://www.power2people.org/bounty_025.html
+__ http://msaros.blogspot.com/
+__ http://www.power2people.org/bounty_020.html
+__ http://sszymczy.rootnode.net/pictures/AROS_OWB.png
+__ http://aros.wiki.sourceforge.net/ABI_V1
+__ http://www.mazze-online.de/aros/pictures/ignition4.jpg
+
