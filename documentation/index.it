@@ -4,7 +4,7 @@
 
 .. Include:: introduction/index-abstract.it
 
-`Read more... <introduction/index>`__
+`Leggi altro... <introduction/index>`__
 
 .. raw:: html
 
@@ -17,7 +17,7 @@
 
 .. Include:: documentation/developers/contribute-abstract.it
 
-`Read more... <documentation/developers/contribute>`__
+`Leggi altro... <documentation/developers/contribute>`__
 
 .. raw:: html
 
@@ -39,7 +39,7 @@
 
    <td style="width: 243px; vertical-align: top;"><table style="text-align: justify; width:100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
    <?php if ($win_ie56) { echo "<img alt=\"Direct download Icon\" src=\"/images/directdownloadicon.gif\" align=\"middle\">";} 
-   else { echo "<img alt=\"Direct download Icon\" src=\"/images/directdownloadicon.png\" align=\"middle\">";} ?>Direct Downloads:<br>
+   else { echo "<img alt=\"Direct download Icon\" src=\"/images/directdownloadicon.png\" align=\"middle\">";} ?>Downloads Diretti:<br>
    <img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
    Le Nightly build vengono create automaticamente ogni notte, direttamente dal codice sorgente più aggiornato. 
    Se volete provare una versione di AROS che parta da CD, scaricate la 
@@ -48,18 +48,18 @@
    <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
    <?php if ($win_ie56) { echo "<img alt=\"Archive Icon\" src=\"/images/archivedownloadicon.gif\" align=\"middle\">"; } 
    else { echo "<img alt=\"Archive Icon\" src=\"/images/archivedownloadicon.png\" align=\"middle\">"; } ?>
-   Latest ARCHIVE submissions:<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
+   Ultimi inoltri nell'ARCHIVIO:<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
    <a href=http://archives.aros-exec.org>Gli Archivi</a> raccolgono tutto il materiale prodotto dalla nostra community, ed è il primo luogo dove cercare applicazioni, temi per il desktop, icone, strumenti e ulteriore documentazione.<br><br>
    <?php include("../rsfeed/archives.php"); ?><br></td></tr></table>
    <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
    <?php if ($win_ie56) { echo "<img alt=\"Community Icon\" src=\"/images/communityicon.gif\" align=\"middle\">"; } 
    else { echo "<img alt=\"Community Icon\" src=\"/images/communityicon.png\" align=\"middle\">"; } ?> 
-   Latest AROS-EXEC forum posts:<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
+   Ultimi post nel forum AROS-EXEC:<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
    <a href=http://www.aros-exec.org>AROS-EXEC</a> è il portale principale della community degli utenti di AROS. Il suo forum è il posto giusto per ricevere aiuto, 
    inviare commenti e conoscere altri utenti di AROS.<br><br>
    <?php include("../rsfeed/aeforum.php"); ?><br></td></tr></tbody></table>
    <table style="width: 100%; text-align: justify; margin-left: auto; margin-right: auto;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td style="vertical-align: top;">
    <?php if ($win_ie56) { echo "<img alt=\"Syndication Icon\" src=\"/images/rssicon1.gif\" align=\"middle\">"; } else { echo "<img alt=\"Syndication Icon\" src=\"/images/rssicon1.png\" align=\"middle\">"; } ?>
-   Syndication Feeds:<br><img style="width: 177px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
+   Feeds RSS:<br><img style="width: 177px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
    <?php  include("../rsfeed/synfeed.php");  ?><br></td></tr></table>
    </td></tr></table>
