@@ -140,8 +140,7 @@ There are generic 2D-accelerated drivers (HIDDs) for some ATI and nVidia cards.
 Also, most PC-compatible emulators/VMs (virtual machines) can be used. QEMU,
 VMware (Server/Workstation/Fusion), Q, Bochs and MS VPC are known to work.
 A notable exception is VirtualBox.
-There's an AROS distribution called `VmwAROS <http://vmwaros.org>`_, which is
-AROS-native preinstalled in a VMware VM with some extra programs included.
+IcAros is a distribution already configured with Qemu (windows)
 
 AROS has drivers for several different network cards.
 Further details are available in the FAQ.
