@@ -42,7 +42,7 @@ documenti di Word in testo ASCII).
 Ci sono ovviamente delle limitazioni: non sei autorizzato a
 disassemblare il software se l'informazione che vuoi ottenere così
 facendo può essere ottenuta in altri modi. Inoltre non puoi comunicare
-ad altri ciò che hai imparato. Un libro come "Dentro Windows" è quindi
+ad altri ciò che hai imparato. Un libro come "Windows Inside" è quindi
 illegale o al limite della legalità.
 
 Poichè noi evitiamo le tecniche di disassemblaggio e al loro posto
@@ -102,7 +102,7 @@ Potete implementare la caratteristica XYZ?
 No, per le seguenti ragioni:
 
 a) Se era veramente importante, sarebbe già nell'OS originale. :-)
-b) Perchè non la implementi tu e ci mandi una patch?
+b) Potresti implementarla tu e mandarci una patch!
 
 La ragione di questo punto di vista è che ci sono un sacco di persone in
 giro che pensano che quella caratteristica è la più importante e che AROS
@@ -183,7 +183,7 @@ usando un sistema orientato agli oggetti che rende semplice sostituire
 gli HIDD e riusare il codice.
 
 
-Perchè pensate che AROS riuscirà a farlo?
+Perchè pensate che AROS ce la farà?
 -----------------------------------------
 
 Sentiamo ogni giorno da un sacco di gente che AROS non ci riuscirà. Molti
@@ -482,15 +482,22 @@ Quali sono le opzioni del kernel di AROS usate nella riga di GRUB?
 
 Eccone alcune::
 
-    nofdc - Disabilita completamente il lettore floppy.
-    noclick - Disabilita il controllo del cambio floppy (e il relativo
-    click)
+    floppy=<disabled/nomount> - definisce le opzioni di trackdisc.device
+	disabled		- disabilita completamente l'inizializzazione di trackdisk.device
+	nomount			- initialise trackdisk.device but do not create DOS devices
+	
     ATA=32bit - Abilita l' I/O a 32 bit nel driver hdd (sicuro)
     forcedma - Forza l'attivazione del DMA nel driver hdd (dovrebbe
-    essere sicuro, ma potrebbe non esserlo)
+              essere sicuro, ma potrebbe non esserlo)  
     gfx=<nome hidd> - Usa l'hidd specificato come driver grafico
     lib=<nome> - Carica e inizializza la libreria/hidd specificata.
 
+E alcune più vecchie se stai usando una build non recente (dalla r28786):: 
+
+    nofdc - Disabilita completamente il lettore floppy.
+    noclick - Disabilita il controllo del cambio floppy (e il relativo
+           click)
+    
 Nota che tutto è case-sensitive.
 
 Come posso trasferire file a una macchina virtuale con AROS?
@@ -504,6 +511,215 @@ Quindi puoi usare un client FTP per AROS per trasferire i file (dai
 un'occhiata al MarranoFTP). Fermiamoci qui come complessità. La
 documentazione utente contiene un capitolo sul nerworking, guarda lì.
 
+Errori di compilazione
+----------------------
+
+D: HO compilato AROS con gcc4 ma ho visto che ho compilato segfaults opsitati da AROS
+   con -m > 20 e se compilo nativo con AROS non parte e fa schermo nero
+
+R: Aggiungi -fno-strict-aliasing a scripts/aros-gcc.in e riprova a compilare.
+
+
+E' possibile fare uno script per DOS che si possa autocaricare quando un pacchetto viene installato? 
+----------------------------------------------------------------------------------------------------
+
+Lo script dovrebbefare alcune assegnazioni e aggiungere una stringa alla variabile PATH.
+
+1) Crea una sottodirectory S e aggiungi un file col nome 'Package-Startup' con i 
+   comandi DOS
+
+2) Creat una variable nel file envarc:sys/packages che contenga la path per la cartella S 
+   del tuo pacchetto.
+
+Esempio di layout delle directory::
+
+    sys:Extras/myappdir
+    sys:Extras/myappdir/S
+    sys:Extras/myappdir/S/Package-Startup
+    
+La variabile in envarc:sys/packages può avere il nome 'myapp' (il nome non importa),
+il contenuto sarebbe poi 'sys:extras/myappdir'
+
+Lo script Package-Startup sarà poi chiamato dalla sequenza di startup.
+    
+
+Come pulisco la finestra di shell? Come la definisco permanentemente?
+---------------------------------------------------------------------
+
+Scrivi questo comando nella shell::
+
+    Echo "*E[0;0H*E[J* "
+    
+Puoi modificare il tuo S:Shell-Startup e inserire la linea da qualche parte, così  
+avrai un nuovo comando "Cls"::
+
+    Alias Cls "Echo *"*E[0;0H*E[J*" "
+
+BTW: ecco la mia nuova S:Shell-Startup modificata per far partire la shell in nero e
+con un prompt modificato::
+
+    Alias Edit SYS:Tools/Editor
+    Alias Cls "Echo *"*E[0;0H*E[J*" "
+    Echo "*e[>1m*e[32;41m*e[0;0H*e[J"
+    Prompt "*n*e[>1m*e[33;41m*e[1m%N/%R - *e[30;41m%S>*e[0m*e[32;41m "
+    date
+
+Più sulle stampe di sequenze di escape::
+
+    Esc[0m
+    Standard Set
+
+    Esc[1m and Esc[22m
+    Bold
+
+    Esc[3m and Esc[23m
+    Italics
+
+    Esc[4m and Esc[24m
+    Underline
+
+    Esc[30m to Esc[39m
+    Set Front Color
+
+    Esc[40m to Esc[49m
+    Set Background Color
+
+Significati dei valori::
+
+    30 grigio char -- 40 grigio cell -- >0 grigio sfondo ---- 0 tutti attributi spenti
+    31 nero char - 41 nero cell - >1 nero sfondo --- 1 boldface
+    32 bianco char - 42 bianco cell - >2 bianco sfondo --- 2 faint
+    33 blu char -- 43 blu cell -- >3 blu sfondo ---- 3 italic
+    34 grigio char -- 44 grigio cell -- >4 grigio sfondo ---- 4 underscore
+    35 nero char - 45 nero cell - >5 nero sfondo --- 7 reverse video
+    36 bianco char - 46 bianco cell - >6 bianco sfondo --- 8 invisible
+    37 blu char -- 47 blu cell -- >7 blu sfondo
+
+I codici possono essere combinati separandoli con un semicolon.                            ??
+
+
+Come lancio AROS-hosted in tutto schermo?
+-----------------------------------------
+
+Chiama "export AROS_X11_FULLSCREEN=1" in una shell. Fai partire AROS e cambia la risoluzione
+dello schermo nelle preferenze schermo. Riavvia AROS.
+
+
+Come creo icone a 2 stati per AROS?
+------------------------------------
+
+Le icone per AROS sono attualmente files PNG rinominate. Ma se vuoi icone per AROS 
+in due stati (normale/selezionato) usa questo comando::
+
+    join img_1.png img_2.png TO img.info
+    
+
+Come monto un immagine ISO in AROS? E posso aggiornare la mia nightly build in questa maniera?
+----------------------------------------------------------------------------------------------
+
++ Metti l'ISO dentro AROS (con wget o altri modi)
++ Copia l'ISO in sys:DiskImages (Drawer deve essere creato se non esiste). 
++ Rinomina l'ISO in Unit0 in quella directory.
++ Devi aggiungere questo nel tuo Devs:Mountlist ::
+
+    ISO:
+    FileSystem = cdrom.handler
+    Device = fdsk.device
+    Unit = 0
+
++ L'ISO è montato:
+  Puoi copiare qualunque cosa dall'ISO:. In più puoi creare uno script per 
+  aggiornare la nightly build come questo::
+
+        copy ISO:boot/aros-pc-i386.gz sys:boot/
+        copy ISO:C sys:C all quiet
+        copy ISO:Classes sys:Classes all quiet
+        copy ISO:Demos sys:Demos all quiet
+
+E così via tutte le directory (tranne le preferenze), Extras:Networking/Stacks, e lo stesso
+devs:mountlist. Le preferenze devono essere mantenute se ne hai bisogno. Inoltre puoi settare
+AROSTcp per tenerne le configurazioni in una cartella separata.
+
+Se vuoi solo riscrivere tutto, fai solo::
+
+    copy ISO:C sys:C all quiet newer  
+    
+Come smontare un volume?
+------------------------
+
+Lancia queszti due commandi da CLI::
+    
+    assign DOSVOLUME: dismount
+    assign DOSVOLUME: remove
+
+dove DOSVOLUME è DH0:, DF0:, ecc...
+
+
+Come montare un floppy FAT con FAT.handler?
+-------------------------------------------
+
+Correntemente i volumi FAT sono automaticamente trovati e montati,
+ma si possono anche montare manualmente.
+
+Creat  un mountfile (text file) con tre linee magiche::
+
+    device = trackdisk.device
+    filesystem = fat.handler
+    unit = 0
+
++ Chiamalo in qualche maniera, PC0 per esempio. Definisci questo file lo strumento predefinito
+  in c:mount nelle proprietà (o metti il mountfile in devs:dosdrivers o sys:storage/dosdrivers)
++ Fai doppio click su esso.
++ Inserisci un floppy formattato FAT.
++ Guarda l'icona apparire del desktop di Wanderer.
+
+
+Come montare una vera partizione HD FAT con FAT.handler?
+--------------------------------------------------------
+
+Correntemente i volumi FAT sono autorilevati e automontati, ma c'è una amniera 
+per montarli manualmente.
+
+Per prima cosa hai bisogno di leggere la geometria del drive e scrivere alcuni valori.
+Puoi usare HDToolbox o Linux fdisk per questo lavoro. Il valore BlocksPerTrack è preso 
+dal valore settori/traccia. Nota che non ha assolutamente niente a che fare con la 
+geometria fisica del disco - FAT la usa solo con moltiplicatore.
+Se trovi i cilindri per esempio da HDToolbox o usando fdisk di Linux come questo::
+
+    sudo fdisk -u -l /dev/hda, 
+    
+Quindi hai bisogno di mettere BlocksPerTrack=63. 
+Assicurati di avere numeri nella vista dei cilindri per Units=Cylinders nell'output. Se
+hai l'output da fdisk in settori (Unità=settori), setta BlocksPerTrack=1.
+
+LowCyl e HighCyl sono cilindri della partizione come::
+
+    mark@ubuntu:~$ sudo fdisk -l -u /dev/hda
+    ...
+    /dev/hda1 * 63 20980889 10490413+ c W95 FAT32 (LBA)
+
+Quindi, LowCyl is 63, and HighCyl is 20980889, blockspertrack=1
+
+Crea un mountfile (file di testo) con queste linee::
+
+    
+    device = ata.device
+    filesystem = fat.handler,
+    Unit = 0
+
+    BlocksPerTrack = 1
+    LowCyl = 63
+    HighCyl = 20980889
+    Blocksize=512
+
++ Chiamalo n qualche maniera, FAT0 per esempio
++ Definisci lo strumento predefinito c:mount in proprietà
+ (o metti il mountfile in devs:dosdrivers o sys:storage/dosdrivers)
++ Doppio click su di esso
++ Guarda l'icona comparire sul Wanderer
+
+Nota: Formula per contare questi blocchi:
+block = ((highcyl - lowcyl) x surfaces + head) x blockspertrack + sec
 
 Domande sull'hardware
 =====================
@@ -528,3 +744,6 @@ Questo problema potrebbe essere dovuto all'uso di un mouse seriale (che
 non sono ancora supportati). Devi usare un mouse PS/2 con AROS al
 momento. Un'altra potrebbe essere che hai scelto una modalità video non
 supportata dal tuo hardware nel menu di boot. Riavvia e provane un'altra.
+
+
+Mk
