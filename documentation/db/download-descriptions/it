@@ -16,9 +16,9 @@ md5: MD5
 [units]
 
 byte-unit: B
-kilobyte-unit: KB
-megabyte-unit: MB
-gigabyte-unit: GB
+kilobyte-unit: Kb
+megabyte-unit: Mb
+gigabyte-unit: Gb
 decimal-point: ,
 
 [descriptions]
