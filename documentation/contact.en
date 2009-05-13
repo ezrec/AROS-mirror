@@ -29,11 +29,6 @@ There are a couple of AROS related mailing lists available, which are the main
 channels of information and discussion about AROS for developers. The following 
 mailings lists are available:
 
-+ `AROS Announce`__
-  
-  A low-traffic mailing list which only reports most important news. 
-  
-  
 + `AROS Developer`__
 
   This is the developer mailing list, where discussions about the development
@@ -50,13 +45,6 @@ mailings lists are available:
             might be some delay from the time you send a subscription request 
             to when you actually have become a member.
 
-+ `AROS Bugs`__
-
-  A read-only mailing list where database bug changes are submitten.
-  It's raccomanded to developers to subscribe to this list too, so the reported errors 
-  can be quickly corrected.
-  Usually the traffic is extremely limited.
-  
 + `AROS CVS`__
 
   This is a read-only developer mailing list where Subversion logs are automatically
@@ -70,23 +58,13 @@ mailings lists are available:
   so those who commit changes to the documentation or can fix stuff
   if something explodes should subscribe to it.
 
-+ `AROS Bootlogs`__
-    
-  A mailing list created for receiving Aros' bootlogs for simplifyng diagnosis 
-  and "native" versions corrections.
-  **It's not possible** to normally chat in this typer of list. When you decide
-  to send a bootlog to this list don't forget to describe every detail of your computer!
-
 
 Follow the links to the administrative pages for information on how to
 subscribe, unsubscribe, accessing the archives and other useful functions.
 
-__ http://mail.aros.org/mailman/listinfo/aros-announce/
 __ http://mail.aros.org/mailman/listinfo/aros-dev/
-__ http://lists.sourceforge.net/mailman/listinfo/aros-bugs
 __ http://lists.sourceforge.net/mailman/listinfo/aros-cvs
 __ http://lists.sourceforge.net/mailman/listinfo/aros-website
-__ http://lists.sourceforge.net/mailman/listinfo/aros-bootlogs
 
 .. _`bug database`: http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 
