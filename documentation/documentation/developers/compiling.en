@@ -37,6 +37,7 @@ The following software is required for compiling AROS:
 + pngtopnm and ppmtoilbm (part of the netpbm package)
 + Autoconf 2.61+
 + Automake
++ C library development files (libc)
 + Common utilities like cp, mv, sort, uniq, head, ...
 
 If you want to compile the hosted i386-linux or i386-freebsd ports, the 
