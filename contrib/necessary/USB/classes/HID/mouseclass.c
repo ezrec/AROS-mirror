@@ -68,33 +68,26 @@ void METHOD(USBMouse, Hidd_USBHID, ParseReport)
 				if (hid_get_data(msg->report, &mouse->loc_btn[i]))
 					buttons |= (1 << i);
 
-			if (fill > (RING_SIZE - 1))
+			if (fill >= (RING_SIZE - 1))
 			{
 				bug("[Mouse] EVENT QUEUE FULL.\n");
 				return;
 			}
 
 			/*
-			 *  Store the parsed event into the ring. Do it in Disable() state, since the semaphore
-			 * locking in Cause()'d code does not make much sence.
+			 * Store the parsed event in the ring.
 			 */
-
-			Disable();
-
 			mouse->report_ring[mouse->head].dx = x;
 			mouse->report_ring[mouse->head].dy = y;
 			mouse->report_ring[mouse->head].dz = z;
 			mouse->report_ring[mouse->head].btn = buttons;
 			mouse->head = (mouse->head+1) % RING_SIZE;
 
-			Enable();
-
 			/*
-			 * If there is a mouse task, signal it. Once triggered it should pop all events from the rihg
-			 * and pass them to the input.device
+			 * Signal mouse task. Once triggered it should pop all events
+			 * from the ring and pass them to the input.device
 			 */
-			if (mouse->mouse_task)
-				Signal(mouse->mouse_task, SIGBREAKF_CTRL_F);
+			Signal(mouse->mouse_task, SIGBREAKF_CTRL_F);
 		}
 		else
 		{
@@ -179,11 +172,10 @@ OOP_Object *METHOD(USBMouse, Root, New)
 			{
 				if (!hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_BUTTON, mouse->loc_btncnt),
 						i, hid_input, &mouse->loc_btn[mouse->loc_btncnt-1], &flags, NULL)) {
-
-					mouse->loc_btncnt--;
 					break;
 				}
 			}
+			mouse->loc_btncnt--;
 
 			if (mouse->mouse_report != -1)
 				break;
@@ -205,7 +197,7 @@ OOP_Object *METHOD(USBMouse, Root, New)
 			t->tc_SPLower = sp;
 			t->tc_SPUpper = sp + 10240;
 #if AROS_STACK_GROWS_DOWNWARDS
-t->tc_SPReg = (char *)t->tc_SPUpper - SP_OFFSET;
+	t->tc_SPReg = (char *)t->tc_SPUpper - SP_OFFSET;
 #else
 	t->tc_SPReg = (char *)t->tc_SPLower + SP_OFFSET;
 #endif
@@ -309,16 +301,12 @@ static void mouse_process(OOP_Class *cl, OOP_Object *o)
 					int i;
 					int iec = 0;
 
-					Disable();
-
 					x = mouse->report_ring[mouse->tail].dx;
 					y = mouse->report_ring[mouse->tail].dy;
 					z = mouse->report_ring[mouse->tail].dz;
 					buttons = mouse->report_ring[mouse->tail].btn;
 
 					mouse->tail = (mouse->tail + 1 ) % RING_SIZE;
-
-					Enable();
 
 					b_down = (buttons^mouse->buttonstate) & buttons;
 					b_up = (buttons^mouse->buttonstate) & ~buttons;
