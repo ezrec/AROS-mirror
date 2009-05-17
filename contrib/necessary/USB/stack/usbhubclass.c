@@ -54,7 +54,7 @@
 #include "usb.h"
 #include "misc.h"
 
-#define STACK_SIZE (1024 * 100)
+#define STACK_SIZE 10240
 
 static void hub_process();
 
@@ -160,17 +160,43 @@ OOP_Object *METHOD(USBHub, Root, New)
 
         }
 
-        APTR params[] = {hub, o, FindTask(NULL)};
         struct TagItem tags[] = {
-            {NP_Entry, (IPTR)hub_process},
-            {NP_StackSize, STACK_SIZE},
-            {NP_Name, (IPTR)hub->proc_name},
-            {NP_Priority, 0},
-            {NP_UserData, (IPTR)params},
-            {TAG_DONE, 0}
+                { TASKTAG_ARG1,   (IPTR)hub },
+                { TASKTAG_ARG2,   (IPTR)o   },
+                { TASKTAG_ARG3,   (IPTR)FindTask(NULL) },
+                { TAG_DONE,       0UL },
         };
 
-        hub->hub_task = CreateNewProc(&tags);
+        t = AllocMem(sizeof(struct Task), MEMF_PUBLIC|MEMF_CLEAR);
+        ml = AllocMem(sizeof(struct MemList) + sizeof(struct MemEntry), MEMF_PUBLIC|MEMF_CLEAR);
+
+        if (t && ml)
+        {
+            char *sp = AllocMem(STACK_SIZE, MEMF_PUBLIC|MEMF_CLEAR);
+            t->tc_SPLower = sp;
+            t->tc_SPUpper = sp + STACK_SIZE;
+#if AROS_STACK_GROWS_DOWNWARDS
+            t->tc_SPReg = (char *)t->tc_SPUpper - SP_OFFSET;
+#else
+            t->tc_SPReg = (char *)t->tc_SPLower + SP_OFFSET;
+#endif
+
+            ml->ml_NumEntries = 2;
+            ml->ml_ME[0].me_Addr = t;
+            ml->ml_ME[0].me_Length = sizeof(struct Task);
+            ml->ml_ME[1].me_Addr = sp;
+            ml->ml_ME[1].me_Length = STACK_SIZE;
+
+            NEWLIST(&t->tc_MemEntry);
+            ADDHEAD(&t->tc_MemEntry, &ml->ml_Node);
+
+            t->tc_Node.ln_Name = hub->proc_name;
+            t->tc_Node.ln_Type = NT_TASK;
+            t->tc_Node.ln_Pri = 0;
+
+            NewAddTask(t, hub_process, NULL, &tags);
+            hub->hub_task = t;
+        }
 
         Wait(SIGF_SINGLE);
     }
@@ -581,13 +607,9 @@ static BOOL hub_explore(OOP_Class *cl, OOP_Object *o)
     return more;
 }
 
-static void hub_process()
+static void hub_process(HubData *hub, OOP_Object *o, struct Task *parent)
 {
     struct Task *hub_task = FindTask(NULL);
-    APTR *params = (APTR *)hub_task->tc_UserData;
-    HubData *hub = params[0];
-    OOP_Object *o = params[1];
-    struct Task *parent = params[2];
     struct usb_staticdata *sd = hub->sd;
     OOP_Object *drv = NULL;
     OOP_Class *cl = sd->hubClass;
