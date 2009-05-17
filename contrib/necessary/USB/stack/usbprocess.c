@@ -41,7 +41,7 @@
 #include "usb.h"
 
 /*
- * Alloc an unique 7-bit address for a device
+ * Alloc a unique 7-bit address for a device
  */
 uint8_t allocBitmap(uint32_t *bmp)
 {
@@ -65,7 +65,7 @@ uint8_t allocBitmap(uint32_t *bmp)
 }
 
 /*
- * Make an 7-bit address free for use
+ * Make a 7-bit address free for use
  */
 void freeBitmap(uint32_t *bmp, uint8_t addr)
 {

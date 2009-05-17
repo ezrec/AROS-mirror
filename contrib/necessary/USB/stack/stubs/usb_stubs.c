@@ -2,7 +2,7 @@
     Copyright © 2004, The AROS Development Team. All rights reserved.
     $Id$
 
-    Desc: Stub functions for PCI subsystem
+    Desc: Stub functions for USB subsystem
     Lang: English
  */
 

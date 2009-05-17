@@ -117,6 +117,8 @@ static int USB_Init(LIBBASETYPEPTR LIBBASE)
 
     if (OOP_ObtainAttrBases(attrbases))
     {
+        LIBBASE->sd.usb = OOP_NewObject(NULL, CLID_Hidd_USB, NULL);
+
         if ((LIBBASE->sd.MemPool = CreatePool(MEMF_PUBLIC|MEMF_CLEAR|MEMF_SEM_PROTECTED, 8192, 4096)) != NULL)
         {
         	struct DOSBase *DOSBase = OpenLibrary("dos.library", 0);

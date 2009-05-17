@@ -54,11 +54,13 @@
 #include "usb.h"
 #include "misc.h"
 
+#define STACK_SIZE (1024 * 100)
+
 static void hub_process();
 
 /*
- * The HubInterrupt() is a tiny software interrupt routine signals the hub
- * process about the need of hub exploration
+ * The HubInterrupt() is a tiny software interrupt routine that signals the
+ * hub process about the need of hub exploration
  */
 static AROS_UFH3(void, HubInterrupt,
           AROS_UFHA(APTR, interruptData, A1),
@@ -158,43 +160,17 @@ OOP_Object *METHOD(USBHub, Root, New)
 
         }
 
+        APTR params[] = {hub, o, FindTask(NULL)};
         struct TagItem tags[] = {
-                { TASKTAG_ARG1,   (IPTR)hub },
-                { TASKTAG_ARG2,   (IPTR)o   },
-                { TASKTAG_ARG3,   (IPTR)FindTask(NULL) },
-                { TAG_DONE,       0UL },
+            {NP_Entry, (IPTR)hub_process},
+            {NP_StackSize, STACK_SIZE},
+            {NP_Name, (IPTR)hub->proc_name},
+            {NP_Priority, 0},
+            {NP_UserData, (IPTR)params},
+            {TAG_DONE, 0}
         };
 
-        t = AllocMem(sizeof(struct Task), MEMF_PUBLIC|MEMF_CLEAR);
-        ml = AllocMem(sizeof(struct MemList) + sizeof(struct MemEntry), MEMF_PUBLIC|MEMF_CLEAR);
-
-        if (t && ml)
-        {
-            char *sp = AllocMem(10240, MEMF_PUBLIC|MEMF_CLEAR);
-            t->tc_SPLower = sp;
-            t->tc_SPUpper = sp + 10240;
-#if AROS_STACK_GROWS_DOWNWARDS
-            t->tc_SPReg = (char *)t->tc_SPUpper - SP_OFFSET;
-#else
-            t->tc_SPReg = (char *)t->tc_SPLower + SP_OFFSET;
-#endif
-
-            ml->ml_NumEntries = 2;
-            ml->ml_ME[0].me_Addr = t;
-            ml->ml_ME[0].me_Length = sizeof(struct Task);
-            ml->ml_ME[1].me_Addr = sp;
-            ml->ml_ME[1].me_Length = 10240;
-
-            NEWLIST(&t->tc_MemEntry);
-            ADDHEAD(&t->tc_MemEntry, &ml->ml_Node);
-
-            t->tc_Node.ln_Name = hub->proc_name;
-            t->tc_Node.ln_Type = NT_TASK;
-            t->tc_Node.ln_Pri = 0;
-
-            NewAddTask(t, hub_process, NULL, &tags);
-            hub->hub_task = t;
-        }
+        hub->hub_task = CreateNewProc(&tags);
 
         Wait(SIGF_SINGLE);
     }
@@ -530,6 +506,12 @@ static BOOL hub_explore(OOP_Class *cl, OOP_Object *o)
 #warning: TODO: Extend
         }
 
+        if (change & UPS_C_CONNECT_STATUS)
+        {
+            D(bug("[USBHub Process]   C_CONNECT_STATUS\n"));
+            HIDD_USBHub_ClearPortFeature(o, port, UHF_C_PORT_CONNECTION);
+        }
+
 	/*
 	 * if connection status has not changed and device is still disconnected skip port.
 	 * the original method did not analyse ports after reset.
@@ -541,13 +523,10 @@ static BOOL hub_explore(OOP_Class *cl, OOP_Object *o)
             continue;
         }
 
-        HIDD_USBHub_ClearPortFeature(o, port, UHF_C_PORT_CONNECTION);
-
         if (hub->children[port-1])
         {
             OOP_DisposeObject(hub->children[port-1]);
             hub->children[port-1] = NULL;
-            HIDD_USBHub_ClearPortFeature(o, port, UHF_C_PORT_CONNECTION);
         }
 
         if (!(status & UPS_CURRENT_CONNECT_STATUS))
@@ -602,9 +581,13 @@ static BOOL hub_explore(OOP_Class *cl, OOP_Object *o)
     return more;
 }
 
-static void hub_process(HubData *hub, OOP_Object *o, struct Task *parent)
+static void hub_process()
 {
     struct Task *hub_task = FindTask(NULL);
+    APTR *params = (APTR *)hub_task->tc_UserData;
+    HubData *hub = params[0];
+    OOP_Object *o = params[1];
+    struct Task *parent = params[2];
     struct usb_staticdata *sd = hub->sd;
     OOP_Object *drv = NULL;
     OOP_Class *cl = sd->hubClass;
@@ -619,7 +602,7 @@ static void hub_process(HubData *hub, OOP_Object *o, struct Task *parent)
     rescan = USBCreateTimer();
 
     OOP_GetAttr(o, aHidd_USBDevice_Bus, &drv);
-    SetTaskPri(FindTask(NULL), 10);
+    SetTaskPri(hub_task, 10);
 
     D(bug("[USBHub Process] HUB process (%p)\n", FindTask(NULL)));
 
@@ -688,7 +671,7 @@ static void hub_process(HubData *hub, OOP_Object *o, struct Task *parent)
         if ((sigset & (1 << hub->sigInterrupt)) ||
 	    (sigset & sigmask))
         {
-            struct usb_driver *d = NULL;
+            struct usb_driver *d = NULL, *d2 = NULL;
             uint8_t addr = 0;
 
 	    if (sigset & sigmask)
@@ -700,26 +683,28 @@ static void hub_process(HubData *hub, OOP_Object *o, struct Task *parent)
             ForeachNode(&sd->driverList, d)
             {
                 if (d->d_Driver == drv)
+                {
+                    d2 = d;
                     break;
+                }
             }
             ReleaseSemaphore(&sd->driverListLock);
 
-            if (d)
+            if (d2)
             {
-                ObtainSemaphore(&d->d_Lock);
+                ObtainSemaphore(&d2->d_Lock);
 
 		/*
-		 * new:
 		 * check if some devices failed to be created
 		 * if so, attempt to re-detect in 10 seconds,
 		 * maybe we will have adequate drivers available
 		 */
                 if (hub_explore(cl, o))
 		{
-		    /* wake up in 5 secs and check again */
+		    /* wake up in 10 secs and check again */
 		    sigmask = USBTimer(rescan, 10000);
 		}
-                ReleaseSemaphore(&d->d_Lock);
+                ReleaseSemaphore(&d2->d_Lock);
             }
         }
 	else

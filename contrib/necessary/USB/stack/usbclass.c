@@ -46,11 +46,6 @@ OOP_Object *METHOD(USB, Root, New)
     BASE(cl->UserData)->LibNode.lib_OpenCnt++;
 
     o = (OOP_Object *)OOP_DoSuperMethod(cl, o, (OOP_Msg) msg);
-    if (o)
-    {
-        SD(cl)->usb = o;
-    }
-
     D(bug("[USB] USB::New() = %p\n", o));
 
     if (!o)
@@ -278,6 +273,10 @@ OOP_Object *METHOD(USB, Hidd_USB, NewDevice)
         pipe = HIDD_USBDrv_CreatePipe(bus, PIPE_Control, msg->fast, 0, 0, 0, 8, 100);
 
         HIDD_USBDrv_ControlTransfer(bus, pipe, &request, &descriptor, 8);
+        D(bug("[USB] USB::NewDevice()\n"));
+        D(
+          DumpDescriptor(&descriptor);
+        );
 
         if ((address = HIDD_USB_AllocAddress(o, bus)))
         {
@@ -316,11 +315,6 @@ OOP_Object *METHOD(USB, Hidd_USB, NewDevice)
 
         HIDD_USBDrv_DeletePipe(bus, pipe);
 
-        D(bug("[USB] USB::NewDevice()\n"));
-        D(
-          DumpDescriptor(&descriptor);
-        );
-
         struct TagItem tags[] = {
                 { aHidd_USBDevice_Interface,        0 },
                 { aHidd_USBDevice_Address,          address },
@@ -345,11 +339,11 @@ OOP_Object *METHOD(USB, Hidd_USB, NewDevice)
                 /* Try a match for every interface */
                 for (i = config.bNumInterface; i > 0; i--)
                 {
+                    D(bug("[USB] Looking for a driver for interface no. %d\n", i));
                     tags[0].ti_Data = i - 1;
 
                     ForeachNode(&SD(cl)->extClassList, ec)
                     {
-
                         D(bug("[USB] Trying external class \"%s\"\n", ec->ec_Node.ln_Name));
 
                         if (!ec->ec_LibBase)
@@ -357,8 +351,6 @@ OOP_Object *METHOD(USB, Hidd_USB, NewDevice)
 
                         if (ec->ec_LibBase)
                         {
-                            new_device = NULL;
-
                             void *clid = AROS_LVO_CALL3(void *,
                                                           AROS_LCA(usb_device_descriptor_t *, &descriptor, A0),
                                                           AROS_LCA(usb_config_descriptor_t *, cdesc, A1),
