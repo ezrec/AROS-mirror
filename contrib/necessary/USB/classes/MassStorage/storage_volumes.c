@@ -212,7 +212,7 @@ static VOID AddPartitionVolume
                 name[i++] = '0' + (UBYTE)(ppos / 10);
             name[i++] = '0' + (UBYTE)(ppos % 10);
             name[i] = '\0';
-	    D(bug("[Boot] Parition name: %s type: %lu bootable: %d\n", name, ptyp.id[0], bootable));
+	    D(bug("[Boot] Partition name: %s type: %lu bootable: %d\n", name, ptyp.id[0], bootable));
             /* set DOSTYPE based on the partition type */
             pp[4 + DE_DOSTYPE] = MatchPartType(ptyp.id[0]);
             /* set some common DOSENV fields */

@@ -681,7 +681,8 @@ static const char *subclass[] = {
 /*
  * The MatchCLID library call gets the device descriptor and full config
  * descriptor (including the interface and endpoint descriptors). It will
- * return CLID_Hidd_USBHID if the requested interface confirms to HID.
+ * return CLID_Hidd_USBStorage if the requested interface conforms to Mass
+ * Storage.
  */
 AROS_LH3(void *, MatchCLID,
          AROS_LHA(usb_device_descriptor_t *, dev,       A0),
