@@ -60,7 +60,7 @@ void uhci_sleep(OOP_Class *cl, OOP_Object *o, uint32_t msec)
 }
 
 /*
- * This function allocats new 16-bit Transfer Descriptor from the
+ * This function allocates a new 16-byte Transfer Descriptor from the
  * pool of 4K-aligned PCI-accessible memory regions. Within each 4K page,
  * a bitmap is used to determine, which of the TD elements are available
  * for use.
@@ -75,7 +75,7 @@ UHCI_TransferDesc *uhci_AllocTD(OOP_Class *cl, OOP_Object *o)
     uint32_t node_num = 32;
     uint32_t bmp_pos = 8;
 
-    ObtainSemaphore(&SD(cl)->td_lock);
+    Disable();
 
     /* Walk through the list of already available 4K pages */
     ForeachNode(&SD(cl)->td_list, n)
@@ -89,14 +89,13 @@ UHCI_TransferDesc *uhci_AllocTD(OOP_Class *cl, OOP_Object *o)
             {
                 for (node_num = 0; node_num < 32; node_num++)
                 {
-                    /* Free TD */
                     if (!(n->td_Bitmap[bmp_pos] & (1 << node_num)))
                     {
                         UHCI_TransferDesc * td = (UHCI_TransferDesc *)&n->td_Page[(bmp_pos*32 + node_num) * 16];
                         /* Mark the TD as used and return a pointer to it */
                         n->td_Bitmap[bmp_pos] |= 1 << node_num;
 
-                        ReleaseSemaphore(&SD(cl)->td_lock);
+                        Enable();
 
                         return td;
                     }
@@ -120,21 +119,21 @@ UHCI_TransferDesc *uhci_AllocTD(OOP_Class *cl, OOP_Object *o)
             /* Mark first TD as used and return a pointer to it */
             n->td_Bitmap[0] |= 1;
 
-            ReleaseSemaphore(&SD(cl)->td_lock);
+            Enable();
 
             return td;
         }
         FreePooled(SD(cl)->MemPool, n, sizeof(struct TDNode));
     }
 
-    ReleaseSemaphore(&SD(cl)->td_lock);
+    Enable();
 
     /* Everything failed? Out of memory, most likely */
     return NULL;
 }
 
 /*
- * This function allocats new 8-bit Queue Header aligned at the 16-byte boundary.
+ * This function allocates a new 8-bit Queue Header aligned at the 16-byte boundary.
  * See uhci_AllocTD for more details.
  */
 UHCI_QueueHeader *uhci_AllocQH(OOP_Class *cl, OOP_Object *o)
@@ -190,7 +189,7 @@ void uhci_FreeTD(OOP_Class *cl, OOP_Object *o, UHCI_TransferDesc *td)
     struct TDNode *t, *next;
     UHCIData *uhci = OOP_INST_DATA(cl, o);
 
-    ObtainSemaphore(&SD(cl)->td_lock);
+    Disable();
 
     /* traverse through the list of 4K pages */
     ForeachNodeSafe(&SD(cl)->td_list, t, next)
@@ -205,13 +204,13 @@ void uhci_FreeTD(OOP_Class *cl, OOP_Object *o, UHCI_TransferDesc *td)
             /* Free the node */
             t->td_Bitmap[bmp] &= ~(1 << node);
 
-            /* Check, if all TD nodes are freee within the 4K page */
+            /* Check if all TD nodes are free within the 4K page */
             int i;
             for (i=0; i < 8; i++)
                 if (t->td_Bitmap[i] != 0)
                     break;
 
-            /* So is it. Free the 4K page */
+            /* So it is. Free the 4K page */
             if (i==8)
             {
                 Remove((struct Node*)t);
@@ -222,7 +221,7 @@ void uhci_FreeTD(OOP_Class *cl, OOP_Object *o, UHCI_TransferDesc *td)
             break;
         }
     }
-    ReleaseSemaphore(&SD(cl)->td_lock);
+    Enable();
 }
 
 void uhci_FreeQH(OOP_Class *cl, OOP_Object *o, UHCI_QueueHeader *qh)

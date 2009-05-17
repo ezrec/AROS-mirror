@@ -96,7 +96,6 @@ struct uhci_staticdata
     OOP_Object				*irq;
     OOP_Class               *uhciClass;
 
-    struct SignalSemaphore	td_lock;
     struct List				td_list;
 
     OOP_AttrBase        HiddPCIDeviceAB;

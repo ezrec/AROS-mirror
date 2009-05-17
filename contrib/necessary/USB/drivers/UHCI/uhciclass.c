@@ -115,7 +115,12 @@ static void uhci_Handler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
     uint16_t cmd = inw(uhci->iobase + UHCI_CMD);
     uint16_t sof = inb(uhci->iobase + UHCI_SOF);
 
-//    outw(status, uhci->iobase + UHCI_STS);
+    /* Check if there's really an interrupt for us */
+    if((status & UHCI_STS_USBINT) == 0)
+    {
+        outw(status, uhci->iobase + UHCI_STS);
+        return;
+    }
 
     D(bug("[UHCI] INTR Cmd=%04x, SOF=%04x, Status = %04x, Frame=%04x, PortSC1=%04x, PortSC2=%04x\n",
             cmd, sof, status, frame, port1, port2));
@@ -126,7 +131,7 @@ static void uhci_Handler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
         ForeachNode(&uhci->Interrupts, p)
         {
             /* If the Linkptr of queue does not point to the first transfer descriptor, an interrupt
-             * has occured. Unfortunatelly, only the first one, who has added the interrupt to this
+             * has occured. Unfortunately, only the first one, who has added the interrupt to this
              * pipe may receive data */
             if ((p->p_Queue->qh_VLink & 0xfffffff1) != (uint32_t)p->p_FirstTD)
             {
@@ -203,6 +208,7 @@ static void uhci_Handler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
         }
         Enable();
     }
+
     if (!IsListEmpty(&uhci->ControlFS))
     {
         Disable();
@@ -211,13 +217,13 @@ static void uhci_Handler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
             UHCI_TransferDesc *td = p->p_FirstTD;
             BOOL changed = FALSE;
 
-            if (p->p_Queue->qh_VLink == UHCI_PTR_T)
+            if (p->p_Queue->qh_VLink & UHCI_PTR_T)
                 p->p_LastTD = (APTR)UHCI_PTR_T;
 
             D(
                     UHCI_TransferDesc *t = (UHCI_TransferDesc *)(p->p_Queue->qh_VLink & 0xfffffff1);
                     bug("[UHCI] Control Fast:  p->p_Queue->qh_VLink=%p\n", p->p_Queue->qh_VLink);
-                    while ((uint32_t)t != UHCI_PTR_T)
+                    while (!((uint32_t)t & UHCI_PTR_T))
                     {
                         bug("[UHCI]     TD=%p (%08x %08x %08x %08x)\n", t,
                                 t->td_LinkPtr, t->td_Status, t->td_Token, t->td_Buffer);
@@ -248,6 +254,7 @@ static void uhci_Handler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
         }
         Enable();
     }
+
     if (!IsListEmpty(&uhci->Bulk))
     {
         Disable();

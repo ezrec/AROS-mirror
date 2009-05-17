@@ -38,6 +38,7 @@
 
 #include "uhci.h"
 
+#undef SD
 #define SD(x) (&LIBBASE->sd)
 
 /*
@@ -93,7 +94,7 @@ static void USBDeleteTimer(struct timerequest *tr)
     if (tr)
     {
         tr->tr_node.io_Message.mn_ReplyPort->mp_SigBit = AllocSignal(-1);
-        CloseDevice(tr);
+        CloseDevice((struct IORequest *)tr);
         DeleteMsgPort(tr->tr_node.io_Message.mn_ReplyPort);
         DeleteIORequest((struct IORequest *)tr);
     }
@@ -195,7 +196,6 @@ static int UHCI_Init(LIBBASETYPEPTR LIBBASE)
 
         NEWLIST(&LIBBASE->sd.td_list);
         InitSemaphore(&LIBBASE->sd.global_lock);
-        InitSemaphore(&LIBBASE->sd.td_lock);
 
         OOP_ObtainAttrBases(attrbases);
 
