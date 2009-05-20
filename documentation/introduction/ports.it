@@ -6,7 +6,7 @@ Porting
 :Copyright: Copyright © 1995-2002, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
-:Status:    Done.
+:Stato:    Done.
 
 .. Contents::
 
@@ -73,7 +73,7 @@ AROS/i386-pc
 ------------
 
 :Flavour:    Native
-:Status:     Funziona, supporto incompleto per i driver
+:Stato:     Funziona, supporto incompleto per i driver
 :Maintenuta: Sì
 
 AROS/i386-pc è il porting nativo di AROS che funziona sui comuni PC IBM 
@@ -95,7 +95,7 @@ AROS/m68k-pp
 ------------
 
 :Flavour:    Native 
-:Status:     Funziona parzialmente in un emulatore, driver incompleti
+:Stato:     Funziona parzialmente in un emulatore, driver incompleti
 :Mantenuto: Sì
 
 AROS/m68k-pp è il porting nativo di AROS per la linea di palmari Palm 
@@ -113,7 +113,7 @@ AROS/i386-linux
 ---------------
 
 :Flavour:    Hosted
-:Status:     Funziona
+:Stato:     Funziona
 :Mantenuto: Sì
 
 AROS/i386-linux è la versione hosted di AROS per il sistema operativo Linux[#]_
@@ -130,7 +130,7 @@ AROS/i386-freebsd
 -----------------
 
 :Flavour:    Hosted
-:Status:     Funziona
+:Stato:     Funziona
 :Mantenuto: Sì (5.x)
 
 AROS/i386-freebsd è la versione di AROS per FreeBSD su processori x86. 
@@ -145,7 +145,7 @@ AROS/ppc-linux
 ---------------
 
 :Flavour:    Hosted
-:Status:     Funziona
+:Stato:     Funziona
 :Maintained: Sì
 
 AROS/ppc-linux è la versione hosted di AROS per Linux che funziona 
@@ -156,6 +156,17 @@ Per ricompilarla serve una versione patchata di gcc3.4.3.
 I file diff sono disponibili nella directory contrib/gnu/gcc.
 
 __ http://sourceforge.net/project/showfiles.php?group_id=43586&package_id=194077
+
+
+AROS/mingw32-i386
+------------------
+
+Questo port è stato inteso per andare in Microsoft Windows (ad iniziare da Windows 98)
+come sistema di base. Naturalmente il port è ancora ai primi giorni, ma p tutt'ora in 
+continuo sviluppo. Il mantenitore del port è Pavel Fedin. Per fare l'output a schermo 
+viene usato GDI.
+
+Il port può essere scaricato dalla Pagina di Download.
 
 
 Nota 
