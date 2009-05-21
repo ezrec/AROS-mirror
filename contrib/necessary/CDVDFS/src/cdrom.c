@@ -11,6 +11,9 @@
  * ----------------------------------------------------------------------
  * History:
  *
+ * 09-May-09 weissms   - Let Do_SCSI_Command result depend on DoIO result.
+ *                     - Removed redundant checks of io_Error, some code reuse
+ *                       (Clear_Sector_Buffers).
  * 20-Mar-09 sonic     - Removed usage of AROS-specific include
  * 08-Mar-09 error     - Corrected Test_Unit_Ready returning only NO_DISC state
  * 06-Mar-09 error     - Removed madness, fixed insanity. Cleanup started
@@ -219,12 +222,10 @@ int Do_SCSI_Command
 
     p_command[1] |= p_cd->lun << 5;
 
-    DoIO ((struct IORequest *) p_cd->scsireq);
-    if (p_cd->cmd.scsi_Status)
+    if (0 != DoIO((struct IORequest *) p_cd->scsireq) ||
+        0 != p_cd->cmd.scsi_Status)
     {
-	int i;
-	for (i=0; i < p_cd->buffers_cnt; i++)
-	    p_cd->current_sectors[i] = -1;
+        Clear_Sector_Buffers(p_cd);
 	return 0;
     }
     else
@@ -249,13 +250,10 @@ int Read_From_Drive
 
     D(bug("[CDVDFS]\tAccessing sectors %ld:%ld\n", p_sector, p_number_of_sectors));
 
-    if ((0 != DoIO((struct IORequest*) p_cd->scsireq)) ||
-	    (0 != p_cd->scsireq->io_Error))
+    if (0 != DoIO((struct IORequest*) p_cd->scsireq))
     {
-	int i;
 	D(bug("[CDVDFS]\tTransfer failed: %ld\n", p_cd->scsireq->io_Error));
-	for (i=0; i<p_cd->buffers_cnt; i++)
-	    p_cd->current_sectors[i] = -1;
+        Clear_Sector_Buffers(p_cd);
 	return 0;
     }
 
@@ -345,16 +343,14 @@ int Test_Unit_Ready(CDROM *p_cd)
 {
     p_cd->scsireq->io_Command = TD_CHANGENUM;
 
-    if ((0 != DoIO ((struct IORequest *) p_cd->scsireq)) ||
-	(0 != p_cd->scsireq->io_Error))
+    if (0 != DoIO ((struct IORequest *) p_cd->scsireq))
 	return FALSE;
 
     p_cd->t_changeint = p_cd->scsireq->io_Actual;
 
     p_cd->scsireq->io_Command = TD_CHANGESTATE;
     if ((0 != DoIO ((struct IORequest *) p_cd->scsireq)) || 
-	(0 != p_cd->scsireq->io_Actual) || 
-	(0 != p_cd->scsireq->io_Error))
+	(0 != p_cd->scsireq->io_Actual))
 	return FALSE;
 
     return TRUE;
