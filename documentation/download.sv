@@ -36,7 +36,7 @@ Rapportera gärna buggar som du hittar när du använder "nightly builds" till
 
 .. raw:: html
 
-   <?php virtual( "/cgi-bin/files?type=nightly&lang=en" ); ?>
+   <?php virtual( "/cgi-bin/files?type=nightly&lang=sv" ); ?>
 
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 __ http://aros-exec.org/
