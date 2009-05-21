@@ -39,7 +39,7 @@ siéntete en libertad de comunicarte con nosotros a través de los foros de `AROS-
 
 .. raw:: html
 
-   <?php virtual( "/cgi-bin/files?type=nightly&lang=en" ); ?>
+   <?php virtual( "/cgi-bin/files?type=nightly&lang=es" ); ?>
 
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 __ http://aros-exec.org/
