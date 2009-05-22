@@ -45,9 +45,11 @@ struct memory3D{
 #define PIXBUFFERSIZE 10000			/* Pixels buffer 					*/
 extern BOOL LibDebug;				/* Enable Library Debugger (global)		*/
 struct memory3D *firstME=NULL;		/* Tracked memory-allocation	  		*/
+UBYTE text1[2];
+UBYTE text2[2];
 /*==================================================================================*/
-#define DRIVERNAME "Wazp3D soft renderer - Alain Thellier - Paris France 2009 - beta 41"
-UBYTE Wazp3DPrefsName[] = {"Wazp3D Prefs.Beta 41.Alain Thellier 2009"};
+#define DRIVERNAME "Wazp3D soft renderer - Alain Thellier - Paris France 2009 - beta 42"
+UBYTE Wazp3DPrefsName[] = {"Wazp3D Prefs.Beta 42.Alain Thellier 2009"};
 IPTR Wazp3DPrefsNameTag=(IPTR) Wazp3DPrefsName;
 /*==================================================================================*/
 struct vertex3D{
@@ -109,14 +111,17 @@ struct MyButton DoMipMaps;		/* v41: mipmapping emulation */
 
 struct MyButton DebugWazp3D;		/* global on/off for printing debug */
 struct MyButton DisplayFPS;
-struct MyButton DebugFunction;
+
+struct MyButton DebugFunction;	/* usefull debug messages*/
 struct MyButton DebugCalls;
 struct MyButton DebugState;
 struct MyButton DebugVar;
 struct MyButton DebugVal;
-struct MyButton DebugSOFT3D;
 struct MyButton DebugPoint;
-struct MyButton DebugDoc;
+struct MyButton DebugSOFT3D;
+struct MyButton DebugClipper;
+
+struct MyButton DebugDoc;		/* useless debug messages*/
 struct MyButton DebugAsJSR;
 struct MyButton DebugDriver;
 struct MyButton DebugContext;
@@ -124,7 +129,6 @@ struct MyButton DebugTexture;
 struct MyButton DebugError;
 struct MyButton DebugWC;
 struct MyButton DebugWT;
-struct MyButton DebugClipper;
 struct MyButton DebugSC;
 struct MyButton DebugST;
 struct MyButton DebugTexNumber;	/* v40: print texture number in bitmap */
@@ -134,6 +138,7 @@ struct MyButton DumpObject;
 struct MyButton StepFunction;		/* Step a Warp3D function call */
 struct MyButton StepSOFT3D;		/* Step a SOFT3D function call */
 struct MyButton StepUpdate;		/* Step at update (Wazp3D's RGBA buffer-->screen) */
+struct MyButton StepDrawPoly;		/* V42: Step each DrawPolyP() */
 struct MyButton DebugMemList;
 struct MyButton DebugMemUsage;
 } Wazp3D;
@@ -478,7 +483,7 @@ struct SOFT3D_context{
 	struct point3D *DumpP;
 	UBYTE ZMode;
 	UBYTE ColMode;
-	UBYTE TexMode;
+	UBYTE TexMode,zero2;
 	UBYTE UseTex;
 	UBYTE UseFog;
 	UBYTE UseGouraud;	
@@ -746,8 +751,10 @@ void Pixels32B(struct SOFT3D_context *SC);
 void SOFT3D_SetEnvColor(struct SOFT3D_context *SC,UBYTE  *RGBA);
 void SOFT3D_SetCurrentColor(struct SOFT3D_context *SC,UBYTE  *RGBA);
 void SOFT3D_SetBitmap(struct SOFT3D_context *SC,void *bm,WORD large,WORD high,ULONG yoffset);
+void ImagePlot(struct SOFT3D_context *SC,UWORD x,UWORD y);
+void SetTexture(W3D_Context* context,W3D_Texture *texture);
 /*==========================================================================*/
-void pf(float x)		/* emulate printf() from a float */
+void pf(float x)		/* emulate printf() from a float %f */
 {
 LONG high,low;
 
@@ -757,6 +764,13 @@ LONG high,low;
 	low =(LONG)(1000000.0*x);
 	Libprintf("%ld.%ld ",high,low);
 
+}
+/*==========================================================================*/
+UBYTE *pc(UBYTE c,UBYTE *t)		/* emulate printf() from a char %c */
+{
+	t[0]=c;
+	t[1]=0;
+	return(t);
 }
 /*==================================================================================*/
 #ifdef WAZP3DDEBUG
@@ -926,7 +940,7 @@ void PrintRGBA(UBYTE *RGBA)
 void PrintP(struct point3D *P)
 {
 	if (!Wazp3D.DebugPoint.ON) return;
-	Libprintf(" P XYZ, %ld, %ld, %ld, UV, %ld, %ld, ",(WORD)P->x,(WORD)P->y,(WORD)(1024.0*P->z),(WORD)(256.0*P->u),(WORD)(256.0*P->v));
+	Libprintf(" P XYZ, %ld, %ld, %ld, UV, %ld, %ld, ",(WORD)P->x,(WORD)P->y,(WORD)(1024.0*P->z),(WORD)(P->u),(WORD)(P->v));
 	if (Wazp3D.DebugVal.ON)
 		PrintRGBA((UBYTE *)&P->RGBA);
 	else
@@ -943,7 +957,7 @@ void PrintST(struct SOFT3D_texture *ST)
 {
 	if (!Wazp3D.DebugPoint.ON) return;
 	if (!Wazp3D.DebugST.ON) return;
-	Libprintf("SOFT3D_texture(%ld) %ldX%ldX%ld  pt %ld pt2 %ld NextST(%ld) MipMapped %ld TexMode:%ld \n",ST,ST->large,ST->high,ST->bits,ST->pt,ST->pt2,ST->nextST,ST->MipMapped,ST->TexMode);
+	Libprintf("SOFT3D_texture(%ld) %ldX%ldX%ld  pt %ld pt2 %ld NextST(%ld) MipMapped %ld TexMode:%s \n",ST,ST->large,ST->high,ST->bits,ST->pt,ST->pt2,ST->nextST,ST->MipMapped,ST->TexMode);
 }
 /*=================================================================*/
 void PrintPIXfull(union pixel3D *PIX)
@@ -1023,7 +1037,7 @@ void *Image32;
 UWORD x,y;
 ULONG n;
 UBYTE FogRGBA[4];
-float m=5.0;	/* set a margin for clipper so show if 3Dprog never setted scissor */
+float m=0.0;	/*for debug: set a margin for clipper so show if 3Dprog never setted scissor */
 
 SFUNCTION(SOFT3D_Start)
 	SC=MYmalloc(sizeof(struct SOFT3D_context),"SOFT3D_context");
@@ -1508,6 +1522,7 @@ Pixels:
 	Cf=Dst->RGBA; Ct=Src->RGBA;
 	if (AT > ALPHAMIN)					/* if source visible ? */
 		COPYRGBA(Cf,Ct);
+
 	Dst++;
 	Src++;
 	if(Dst!=End)	 goto Pixels;
@@ -2283,13 +2298,17 @@ void SOFT3D_SetDrawFunctions(struct SOFT3D_context *SC,struct SOFT3D_texture *ST
 UBYTE FillMode;
 BOOL tex24;
 
+	if(!SC->ColorChange)					/* then dont truly need gouraud shading */
+		UseGouraud=FALSE;
+
 	if(Wazp3D.HackRGBA1.ON)
 		{ColMode=TexMode;		UseFog=FALSE;	TexMode='0'; UseGouraud=TRUE;}
 	if(Wazp3D.HackRGBA2.ON)
 		{ColMode='R';		UseFog=FALSE;	TexMode='0'; UseGouraud=FALSE;}
 
-	if(UseGouraud==FALSE)		/* flat color from current color */
+	if(UseGouraud==FALSE)					/* flat color come from current color  */
 		COPYRGBA(SC->FlatRGBA,SC->CurrentRGBA);
+
 
 	if(ST!=NULL)
 		PrintST(ST);
@@ -2308,7 +2327,7 @@ BOOL tex24;
 		TexMode=ST->TexMode;	/* then use current tex blendmode (A/a) */
 
 	if(SC->ST!=NULL)
-		SC->MM=&SC->ST->MMs[0];		/* default to biggest mipmap */
+		SC->MM=&SC->ST->MMs[0];	/* default to biggest mipmap */
 
 /* if nothing change ==> return */
 	if(SC->ST	  	==ST)
@@ -2320,7 +2339,7 @@ BOOL tex24;
 		return;
 
 SREM(SOFT3D_SetDrawFunctions)
-SREM(==> flush remaining pixels)
+SREM( ==> flush remaining pixels)
 	SOFT3D_DrawPixels(SC);		/* flush remaining pixels*/
 
 /* else update */
@@ -2331,27 +2350,16 @@ SREM(==> flush remaining pixels)
 	SC->UseFog		=UseFog;
 	SC->UseGouraud	=UseGouraud;
 	SC->UseTex		=0;
+
+
 	if(TexMode!='0')
 		SC->UseTex=1;
-
-	if(UseGouraud==TRUE)
-	if(!SC->ColorChange)		/* = dont truly need gouraud shading */
-		{
-		UseGouraud=0;
-		COPYRGBA(SC->FlatRGBA,SC->PolyP->RGBA); /* flat color from current points */
-		}
 
 	FillMode=SC->ZMode*4+SC->UseTex*2+SC->UseGouraud*1;
 	if(UseFog)	FillMode=16+SC->ZMode;
 
-VAR(SC->ZMode)
-VAR(SC->ColMode)
-VAR(SC->TexMode)
-VAR(SC->UseTex)
-VAR(SC->ColorChange)
-VAR(SC->UseGouraud)
-VAR(SC->UseFog)
-VAR(FillMode)
+	if(Wazp3D.DebugSOFT3D.ON) 
+		Libprintf(" SC: FillMode%ld ZMode%ld TexMode%s ColMode%s UseFog%ld UseTex%ld UseGouraud%ld ColorChange%ld\n",FillMode,SC->ZMode,pc(SC->TexMode,text1),pc(SC->ColMode,text2),SC->UseFog,SC->UseTex,SC->UseGouraud,SC->ColorChange);
 
 	SC->FillFunction=(HOOKEDFUNCTION)Fill_Nothing;
 	SC->PixelsFunctionTex= NULL;
@@ -2396,6 +2404,11 @@ VAR(FillMode)
 	else
 		SC->PixelsFunctionTex=(HOOKEDFUNCTION)Pixels32R;
 	}
+
+	if(ColMode!='0')		/* with a coloring function a tex can become transparent */ 
+	if(TexMode=='a')
+		TexMode='A';
+
 	if(TexMode=='A')	SC->PixelsFunctionTex=(HOOKEDFUNCTION)Pixels32A;
 	if(TexMode=='a')	SC->PixelsFunctionTex=(HOOKEDFUNCTION)Pixels32a;
 
@@ -2458,6 +2471,7 @@ VAR(FillMode)
 		SC->PixelsFunctionIn =(HOOKEDFUNCTION)PixelsBGRA;
 		SC->PixelsFunctionOut=(HOOKEDFUNCTION)PixelsBGRA;
 		}
+
 }
 /*=============================================================*/
 void SOFT3D_DrawPixels(struct SOFT3D_context *SC)
@@ -2467,7 +2481,7 @@ register ULONG PixBufferSize;
 struct rgbabuffer3D *CurrentImage8=(struct rgbabuffer3D *)&PixBuffer->Image8;
 
 SREM(SOFT3D_DrawPixels)
-	if(SC->PixBuffer == SC->PixBufferDone) {SREM(Nothing to Draw);return;}
+	if(SC->PixBuffer == SC->PixBufferDone) {SREM( ==> nothing to Draw);return;}
 	PixBufferSize=SC->PixBufferDone - SC->PixBuffer;
 	VAR(PixBufferSize)
 
@@ -2567,7 +2581,7 @@ register WORD xmin,xmax,ymin,ymax,y;
 register WORD R;
 
 SFUNCTION(DrawPointPIX)
-	SOFT3D_SetDrawFunctions(SC,NULL,'0',SC->ZMode,FALSE,'0',FALSE); /* no tex & no color=flat */
+	SOFT3D_SetDrawFunctions(SC,NULL,'0',SC->ZMode,FALSE,'R',FALSE); /* no tex & color=R */
 
 	if(SC->PointSize==1)
 		{DrawPointSimplePIX(SC,P);return;}
@@ -2601,7 +2615,7 @@ float a,b,z0,rz,z2,n,td;
 float u0,u1,u2,du,ddu;
 float v0,v1,v2,dv,ddv;
 
-	if(size==0)	return;
+	if(size<1)	return;
 	Delta->L.z=(P2->L.z - P0->L.z)/size;
 
 /*	if(SC->UseGouraud) */
@@ -2654,17 +2668,17 @@ float v0,v1,v2,dv,ddv;
 
 }
 /*=============================================================*/
-void DoLine(struct SOFT3D_context *SC,union pixel3D *P,union pixel3D *P2,WORD high)
+void DoLine(struct SOFT3D_context *SC,union pixel3D *P,union pixel3D *P2,WORD size)
 {
 WORD n;
 union pixel3D Ydelta;
 
-	if (high < 2) return;
+	if(size<1)	return;
 
-	Ydelta.L.x=(P2->L.x - P->L.x)/high;
-	DoDeltas(SC,P,P2,&Ydelta,high);
-	high--;						/* ne pas recalculer les points extremites */
-	NLOOP(high)
+	Ydelta.L.x=(P2->L.x - P->L.x)/size;
+	DoDeltas(SC,P,P2,&Ydelta,size);
+	size--;						/* ne pas recalculer les points extremites */
+	NLOOP(size)
 	{
 		P[1].L.x=P[0].L.x+Ydelta.L.x;
 		P[1].L.z=P[0].L.z+Ydelta.L.z;
@@ -2803,13 +2817,11 @@ register WORD size;
 register WORD PolyLarge;
 register WORD PolyYmin;
 register WORD PolyYmax;
-WORD resize=1; 	/* v41: will awoid to redraw same edges for transp tristrips */
 
 	SFUNCTION(DrawPolyPIX)
 	VAR(SC->PolyPnb)
 	PolyYmin=PolyYmax=PIX[0].W.y;
-	if(SC->TexMode=='R')	resize=0;
-	if(SC->ColMode=='R')	resize=0;
+
 
 /* Loop du Polygone */
 NLOOP(Pnb)
@@ -2862,18 +2874,18 @@ tracer_suivante:
 	side2=&(side2[PolyYmin]);
 	SC->Pix=side1;
 	SC->Xdelta=&(SC->Xdeltas[PolyYmin]);
-	SC->PolyHigh= 1 + PolyYmax - PolyYmin - resize; 
+	SC->PolyHigh= PolyYmax - PolyYmin ; 
 
-	if ((SC->PolyHigh  < 2   ) ou (SC->PolyHigh  > MAXSCREEN))
-		return;
+	if(PolyYmax==(SC->high-1))	/* PATCH: if last line of screen then dont crop it */
+		SC->PolyHigh++;
 
 	NLOOP(SC->PolyHigh)
 		{
-		size= 1 + side2->W.x - side1->W.x ;
-		side1->W.large = size - resize; 	
+		size = side2->W.x - side1->W.x ;
+		side1->W.large = size ; 	
 	
 		if(PolyLarge < size)
-			{Pmin=side1; Pmax=side2; PolyLarge=size;}
+			{Pmin=side1; Pmax=side2; PolyLarge=size;}	
 
 		if(!Wazp3D.NoPerspective.ON)
 			DoDeltas(SC,side1,side2,&SC->Xdelta[n],size);
@@ -2897,14 +2909,12 @@ tracer_suivante:
 	SC->Xdelta[n].L.ddv=SC->Xdelta[0].L.ddv;
 	}
 	}
-	SFUNCTION(DrawPolyPIX-OK!)
 
 	SelectMM(SC,SC->Xdelta[SC->PolyHigh/2].L.u,SC->Xdelta[SC->PolyHigh/2].L.v);
 
-	if(PolyLarge > 1   )
-	if(PolyLarge < MAXSCREEN)
 	SC->FillFunction(SC);
 
+	SFUNCTION(-----------)
 }
 /*==================================================================================*/
 void SOFT3D_Fog(struct SOFT3D_context *SC,WORD FogMode,float FogZmin,float FogZmax,float FogDensity,UBYTE *FogRGBA)
@@ -3031,7 +3041,7 @@ if(Wazp3D.DebugSOFT3D.ON) Libprintf("DrawPolyP Pnb %ld  \n",SC->PolyPnb);
 	if(Pnb>=3)
 		BackFace=! (0.0 > (P[1].x - P[0].x)*(P[2].y - P[0].y)-(P[2].x - P[0].x)*(P[1].y - P[0].y));
 #ifdef WAZP3DDEBUG
-	if(Wazp3D.DebugSOFT3D.ON) Libprintf("Backface %ld Culling %ld\n",BackFace,SC->Culling);
+	if(Wazp3D.DebugSOFT3D.ON) Libprintf(" Backface %ld Culling %ld\n",BackFace,SC->Culling);
 #endif
 
 	if(Wazp3D.UseCullingHack.ON)
@@ -3048,7 +3058,8 @@ if(Wazp3D.DebugSOFT3D.ON) Libprintf("DrawPolyP Pnb %ld  \n",SC->PolyPnb);
 
 	memset(PIX,0,Pnb*sizeof(union pixel3D));
 
-	if(Wazp3D.HackRGBA2.ON)		/* use face center as color */
+	COPYRGBA(SC->FlatRGBA,SC->PolyP->RGBA); 		/* default: flat color from current points */
+	if(Wazp3D.HackRGBA2.ON)					/* then use face center as flat color */
 	if(Pnb>=3)
 		UVtoRGBA(SC->ST,(P[0].u+P[1].u+P[2].u)/3.0,(P[0].v+P[1].v+P[2].v)/3.0,SC->FlatRGBA);
 
@@ -3067,8 +3078,8 @@ if(Wazp3D.DebugSOFT3D.ON) Libprintf("DrawPolyP Pnb %ld  \n",SC->PolyPnb);
 	PIX->W.y	= P->y;
 	PIX->W.z	= P->z *  CONVERTZ;
 /*xxx*/
-	PIX->L.u	= P->u ;	PIX->L.u=PIX->L.u <<16;
-	PIX->L.v	= P->v ;	PIX->L.v=PIX->L.v <<16;
+	PIX->L.u	= P->u ;	PIX->L.u=(P->u+0.5) * 65536 ;	/* add 0.5 to texture coordinate for better rounding */
+	PIX->L.v	= P->v ;	PIX->L.v=(P->v+0.5) * 65536 ;
 	PIX->W.R	= P->RGBA[0];
 	PIX->W.G	= P->RGBA[1];
 	PIX->W.B	= P->RGBA[2];
@@ -3121,6 +3132,14 @@ if(Wazp3D.DebugSOFT3D.ON) Libprintf("DrawPolyP Pnb %ld  \n",SC->PolyPnb);
 	default: DrawPolyPIX(SC);  break;
 	}
 
+	if(Wazp3D.StepDrawPoly.ON) 
+		{
+		SOFT3D_DrawPixels(SC);	/* flush buffer = finish this poly */
+		NLOOP(Pnb)
+			ImagePlot(SC,SC->PolyPIX[n].W.x,SC->PolyPIX[n].W.y);
+		LibAlert("DrawPolyP() done !!");
+		}
+
 }
 /*=============================================================*/
 void DrawTriP(struct SOFT3D_context *SC,register struct point3D *A,register struct point3D *B,register struct point3D *C)
@@ -3151,9 +3170,7 @@ register WORD x,y;
 	y=(WORD)(((float)ST->high ) * v);
 	offset=(ST->large*y + x)  * ST->bits / 8;
 	pt=&(ST->pt[offset]);
-#ifdef WAZP3DDEBUG
-	if(Wazp3D.DebugSOFT3D.ON) Libprintf("UVtoRGBA x y %ld %ld --> %ld",x,y,offset);
-#endif
+
 	RGBA[0]=pt[0];
 	RGBA[1]=pt[1];
 	RGBA[2]=pt[2];
@@ -3162,7 +3179,22 @@ register WORD x,y;
 }
 /*=============================================================*/
 #ifdef WAZP3DDEBUG
-void TexturePlot(struct SOFT3D_texture *ST,UWORD x,UWORD y,UBYTE *ColorRGB)
+void ImagePlot(struct SOFT3D_context *SC,UWORD x,UWORD y)
+{
+UBYTE *RGB;
+ULONG offset;
+
+#ifdef WAZP3DDEBUG
+	if(Wazp3D.DebugSOFT3D.ON) Libprintf("ImagePlot x y %ld %ld \n",x,y);
+#endif
+	offset=(SC->large*y + x);
+	RGB=(UBYTE *)&(SC->Image32[offset]);
+	RGB[0]=10;
+	RGB[1]=255;
+	RGB[2]=10;
+}
+/*=============================================================*/
+void TexturePlot(struct SOFT3D_texture *ST,UWORD x,UWORD y,UBYTE *ColorRGBA)
 {
 UBYTE *RGB;
 ULONG offset;
@@ -3172,21 +3204,24 @@ ULONG offset;
 	{
 	offset=(ST->large*y + x)  * ST->bits / 8;
 	RGB=&(ST->pt[offset]);
-	RGB[0]=ColorRGB[0];
-	RGB[1]=ColorRGB[1];
-	RGB[2]=ColorRGB[2];
+	RGB[0]=ColorRGBA[0];
+	RGB[1]=ColorRGBA[1];
+	RGB[2]=ColorRGBA[2];
+	if(ST->bits==32)
+		RGB[3]=ColorRGBA[3];
 	}
 }
 /*=============================================================*/
 void TexturePrint(struct SOFT3D_texture *ST,WORD x,WORD y,UBYTE *texte)
 {
 UBYTE *F;
-UBYTE RGB[3];
+UBYTE RGBA[4];
 UWORD m,n,c;
 UBYTE Bit[] = {128,64,32,16,8,4,2,1};
 #define FONTSIZE 8
 #define FONTLARGE (128/8)
 
+	RGBA[3]=255;
 	while(*texte!=0)
 	{
 	c=*texte++;
@@ -3196,10 +3231,10 @@ UBYTE Bit[] = {128,64,32,16,8,4,2,1};
 		{
 		NLOOP(FONTSIZE)
 			{
-			RGB[0]=RGB[1]=RGB[2]=0;
+			RGBA[0]=RGBA[1]=RGBA[2]=0;
 			if (F[0] AND Bit[n]) 
-				RGB[0]=RGB[1]=RGB[2]=255;
-			TexturePlot(ST,x+n,y+m,RGB);
+				RGBA[0]=RGBA[1]=RGBA[2]=255;
+			TexturePlot(ST,x+n,y+m,RGBA);
 			}
 		F+=FONTLARGE;
 		}
@@ -3218,7 +3253,7 @@ WORD n,nb;
 	if(Wazp3D.DebugSOFT3D.ON)
 	{
 	Libprintf("SOFT3D_DrawPrimitive Pnb %ld (%ld)\n",Pnb,primitive);
-	if(SC->ST!=NULL) Libprintf("%s\n",SC->ST->name);
+	if(SC->ST!=NULL) Libprintf(" %s\n",SC->ST->name);
 	}
 #endif
 
@@ -3370,16 +3405,16 @@ WORD n,nb;
 void SOFT3D_SetPointSize(struct SOFT3D_context *SC,UWORD PointSize)
 {
 register WORD *PointLarge=SC->PointLarge;
-register WORD x,y,R;
+register WORD x,y,D;
 
 SFUNCTION(SOFT3D_SetPointSize)
+	VAR(PointSize);
 	if(PointSize!=SC->PointSize)
 	{
-	VAR(PointSize);
-	R=PointSize/2;
+	D=PointSize;
 	YLOOP(PointSize)
-	XLOOP(R)
-	if( ( (y-R)*(y-R) + x*x) < R*R ) PointLarge[y]=x*2;
+	XLOOP(D)
+		if( ( (2*y-D)*(2*y-D) + 2*2*x*x) < D*D ) PointLarge[y]=x*2;
 	SC->PointSize=PointSize;
 	}
 }
@@ -3389,6 +3424,7 @@ void TextureAlphaUsage(struct SOFT3D_texture *ST)
 ULONG size,n,AllAnb,RatioA;
 ULONG Anb[256];
 UBYTE *RGBA;
+UBYTE A;
 #define RATIOALPHA 20
 
 SFUNCTION(TextureAlphaUsage)
@@ -3403,13 +3439,22 @@ SFUNCTION(TextureAlphaUsage)
 		{
 		NLOOP(256)
 			Anb[n]=0;
-
+		AllAnb=0;
 		size=ST->large*ST->high;
 		RGBA=ST->pt;
 		NLOOP(size)
-			{Anb[RGBA[3]]++; RGBA+=4;}
+			{
+			A=RGBA[3];
+			Anb[A]++; 
+			if(A > ALPHAMIN)				/* if source visible   ? */
+			if(A < ALPHAMAX)				/* if source not solid ? */
+				AllAnb++;
+			RGBA+=4;
+			}
 
-		AllAnb=size-Anb[0]-Anb[255];
+		if(!Wazp3D.UseAlphaMinMax.ON)			/* then all A values are transparents, except 0 & 255 */ 
+			AllAnb=size-Anb[0]-Anb[255];
+
 		if(AllAnb!=0) RatioA=(100*AllAnb)/size; else RatioA=0;
 
 		if(RatioA<RATIOALPHA)
@@ -3421,7 +3466,7 @@ SFUNCTION(TextureAlphaUsage)
 	}
 #ifdef WAZP3DDEBUG
 	if(Wazp3D.DebugSOFT3D.ON)
-		Libprintf("T [%ld] %ld bytes(A0:%ld A255:%ld) AllAnb %ld RatioA %ld %\n",ST->TexMode,size,Anb[0],Anb[255],AllAnb,RatioA);
+		Libprintf("Tex: %ld pixels A=0:%ld A=255:%ld A=All:%ld RatioA=%ld %\n",size,Anb[0],Anb[255],AllAnb,RatioA);
 #endif
 }
 /*==================================================================*/
@@ -3451,7 +3496,7 @@ SFUNCTION(SOFT3D_CreateTexture)
 
 	TextureAlphaUsage(ST);
 
-SREM(Create tex index)
+/* Create texture index */
 	Nbytes=bits/8;
 	Xratio=((float)ST->large)/256.0;
 	Yratio=((float)ST->high )/256.0;
@@ -3502,7 +3547,8 @@ SREM(Create tex index)
 		Libsavefile(ST->name,ST->pt,ST->large*ST->high*Nbytes);
 
 	Libsprintf(ST->name,"Texture%ld_%ldX%ldX%ld.RAW",ST->Tnum,ST->large,ST->high,ST->bits);
-	Libsprintf(BitmapName,"Tex%ld",ST->Tnum);
+
+	Libsprintf(BitmapName,"Tex%ld %s",ST->Tnum,pc(ST->TexMode,text1));
 
 	if(Wazp3D.ReloadTextures.ON)
 		Libloadfile(ST->name,ST->pt,ST->large*ST->high*Nbytes);
@@ -3515,6 +3561,7 @@ SREM(Create tex index)
 		TexturePrint(ST,0,ST->high/2,BitmapName);
 #endif
 
+	Libprintf("%s is done, TexMode(%s)\n",ST->name,pc(ST->TexMode,text1));
 	return( (void *) ST);
 }
 /*==================================================================*/
@@ -3908,6 +3955,7 @@ struct MyButton *ButtonsList=(struct MyButton *)&Wazp3D.HardwareLie;
 	Libstrcpy(Wazp3D.DebugWT.name,"Debug WT");
 	Libstrcpy(Wazp3D.DebugSOFT3D.name,"Debug SOFT3D");
 	Libstrcpy(Wazp3D.StepUpdate.name,"[Step] Update");
+	Libstrcpy(Wazp3D.StepDrawPoly.name,"[Step] DrawPoly");
 	Libstrcpy(Wazp3D.StepSOFT3D.name, "[Step]  SOFT3D");
 	Libstrcpy(Wazp3D.DebugSC.name,"Debug SC");
 	Libstrcpy(Wazp3D.DebugST.name,"Debug ST");
@@ -4046,13 +4094,14 @@ if(format==W3D_CHUNKY)
 	RGBA  +=offset2;
 	}
 
+/* A1=one bit alpha. If this alpha is one, the pixel is fully opaque. If the alpha is zero, the pixel is invisible/fully transparent. */            
 if(format==W3D_A1R5G5B5)
 	YLOOP(high)
 	{
 		XLOOP(large)
 		{
 		RGBA16=color8[0]*256+color8[1];
-		a=(RGBA16 >> 15) << (8-1);
+		a=(RGBA16 >> 15) *   255 ;
 		r=(RGBA16 >> 10) << (8-5);
 		g=(RGBA16 >>  5) << (8-5);
 		b=(RGBA16 >>  0) << (8-5);
@@ -4258,7 +4307,7 @@ register float c0,c1;
 /*=================================================================*/
 void PrintP2(struct point3D *P)
 {
-	Libprintf("ClipXYZ; %ld; %ld; %ld; UV; %ld; %ld\n",(WORD)P->x,(WORD)P->y,(WORD)(1024.0*P->z),(WORD)(256.0*P->u),(WORD)(256.0*P->v));
+	Libprintf("ClipXYZ; %ld; %ld; %ld; UV; %ld; %ld\n",(WORD)P->x,(WORD)P->y,(WORD)(1024.0*P->z),(WORD)(P->u),(WORD)(P->v));
 }
 /*=================================================================*/
 void ClipPoly(struct SOFT3D_context *SC)
@@ -4399,6 +4448,8 @@ SwapBuffers
 }
 /*=================================*/
 if(SC->ZMode==0)	goto DontClipZ;
+if(Wazp3D.QuakePatch.ON)	goto DontClipZ;
+
 
 NewPnb=InsidePnb=0;
 NLOOP(Pnb)
@@ -4509,7 +4560,7 @@ LONG offset;
 
 	RGB1=pt;
 	RGB2=pt2;
-SREM(Reducing ...)
+
 	YLOOP(high)
 	{
 	XLOOP(large)
@@ -4542,7 +4593,7 @@ SREM(Reducing ...)
 		RGB2=&(RGB2[P]);
 		}
 	}
-SREM(ReduceBitmap OK)
+
 }
 /*==================================================================================*/
 void CreateMipmaps(struct SOFT3D_texture *ST)
@@ -4681,8 +4732,8 @@ struct point3D *P;
 
 	if(UVformat==W3D_TEXCOORD_NORMALIZED)
 	{
-	P->u=u[0] * 255.0;
-	P->v=v[0] * 255.0;
+	P->u=u[0] * 256.0;
+	P->v=v[0] * 256.0;
 	}
 	else
 	{
@@ -5118,18 +5169,16 @@ SREM(DoUpdate-------------------------)
 	if(SC->Pxmax==0) return;
 	if(SC->Pymax==0) return;
 	SOFT3D_DrawPixels(WC->SC);
-	if(Wazp3D.DirectBitmap.ON)	goto ClearZBuffer;
-
 	if(Wazp3D.StepUpdate.ON) LibAlert("Update will occurs now !!");
-
+	if(Wazp3D.DirectBitmap.ON)	goto ClearZBuffer;
 
 SREM(MinUpdate)
 	if(Wazp3D.UseMinUpdate.ON)
 	{
 	SC->xUpdate	=SC->Pxmin;	/* should also be used to clear the previous drawing */
 	SC->yUpdate	=SC->Pymin;
-	SC->largeUpdate=SC->Pxmax-SC->Pxmin+1;
-	SC->highUpdate =SC->Pymax-SC->Pymin+1;
+	SC->largeUpdate=SC->Pxmax-SC->Pxmin;
+	SC->highUpdate =SC->Pymax-SC->Pymin;
 	}
 	else
 	{
@@ -6586,7 +6635,7 @@ struct WAZP3D_context *WC=context->driver;
 
 	WAZP3D_Function(35);
 	WC->Pnb=0;
-	W3D_BindTexture(context,0,line->tex);
+	SetTexture(context,line->tex);
 	GetVertex(WC,&line->v1);
 	GetVertex(WC,&line->v2);
 
@@ -6602,7 +6651,7 @@ struct WAZP3D_context *WC=context->driver;
 	WC->PointSize=point->pointsize;
 	 if(WC->PointSize<1.0)	WC->PointSize=1.0;	/* PATCH: skulpt dont set pointsize*/
 	WC->Pnb=0;
-	W3D_BindTexture(context,0,point->tex);
+	SetTexture(context,point->tex);
 	GetVertex(WC,&point->v1);
 
 	SOFT3D_SetPointSize(WC->SC,(UWORD)WC->PointSize);
@@ -6616,7 +6665,7 @@ struct WAZP3D_context *WC=context->driver;
 
 	WAZP3D_Function(37);
 	WC->Pnb=0;
-	W3D_BindTexture(context,0,triangle->tex);
+	SetTexture(context,triangle->tex);
 	GetVertex(WC,&triangle->v1);
 	GetVertex(WC,&triangle->v2);
 	GetVertex(WC,&triangle->v3);
@@ -6634,7 +6683,7 @@ LONG n;;
 	WAZP3D_Function(38);
 	v=triangles->v;
 	WC->Pnb=0;
-	W3D_BindTexture(context,0,triangles->tex);
+	SetTexture(context,triangles->tex);
 NLOOP(triangles->vertexcount)
 	GetVertex(WC,v++);
 
@@ -6651,7 +6700,7 @@ LONG n;;
 	WAZP3D_Function(39);
 	v=triangles->v;
 	WC->Pnb=0;
-	W3D_BindTexture(context,0,triangles->tex);
+	SetTexture(context,triangles->tex);
 NLOOP(triangles->vertexcount)
 	GetVertex(WC,v++);
 
@@ -6677,7 +6726,7 @@ LONG n;;
 	WAZP3D_Function(41);
 	v=lines->v;
 	WC->Pnb=0;
-	W3D_BindTexture(context,0,lines->tex);
+	SetTexture(context,lines->tex);
 NLOOP(lines->vertexcount)
 	GetVertex(WC,v++);
 
@@ -6694,7 +6743,7 @@ LONG n;;
 	WAZP3D_Function(42);
 	v=lines->v;
 	WC->Pnb=0;
-	W3D_BindTexture(context,0,lines->tex);
+	SetTexture(context,lines->tex);
 NLOOP(lines->vertexcount)
 	GetVertex(WC,v++);
 
@@ -6791,8 +6840,8 @@ struct WAZP3D_context *WC=context->driver;
 	if(WC->SrcFunc==W3D_ZERO)
 	if(WC->DstFunc==W3D_ZERO)
 		{
-		Wazp3D.UseClearImage.ON=Wazp3D.UseMinUpdate.ON=FALSE;
-		Wazp3D.UseColoringGL.ON=TRUE;	
+		Wazp3D.UseClearImage.ON=FALSE;	/* allways draw on the buffer  without clearing*/
+		Wazp3D.UseColoringGL.ON=TRUE;		/* allways do true coloring */
 		}
 
 	WRETURN(W3D_SUCCESS);
@@ -6804,7 +6853,7 @@ struct WAZP3D_context *WC=context->driver;
 W3D_Bitmap  *w3dbm;
 
 	if(bm==NULL) return;
-REM(SetBitmap)
+SREM(SetBitmap)
 	if(context->w3dbitmap)
 	{
 	w3dbm=(W3D_Bitmap  *)bm;
@@ -6875,12 +6924,12 @@ struct WAZP3D_context *WC=context->driver;
 	Libmemcpy(&context->scissor,scissor,sizeof(W3D_Scissor));
 	WC->Xmin=scissor->left;
 	WC->Ymin=scissor->top;
-	WC->Xmax=WC->Xmin+scissor->width-1;
-	WC->Ymax=WC->Ymin+scissor->height-1;
+	WC->Xmax=WC->Xmin+scissor->width;
+	WC->Ymax=WC->Ymin+scissor->height;
 	if(WC->Xmin<0) WC->Xmin=0;
 	if(WC->Ymin<0) WC->Ymin=0;
-	if(WC->large<=WC->Xmax) WC->Xmax=WC->large-1;
-	if(WC->high <=WC->Ymax) WC->Ymax=WC->high -1;
+	if(WC->large<=WC->Xmax) WC->Xmax=WC->large;
+	if(WC->high <=WC->Ymax) WC->Ymax=WC->high ;
 VAR(WC->Xmin)
 VAR(WC->Ymin)
 VAR(WC->Xmax)
@@ -7383,7 +7432,7 @@ struct WAZP3D_context *WC=context->driver;
 
 	WAZP3D_Function(75);
 	WC->Pnb=0;
-	W3D_BindTexture(context,0,triangle->tex);
+	SetTexture(context,triangle->tex);
 	GetVertex(WC,triangle->v1);
 	GetVertex(WC,triangle->v2);
 	GetVertex(WC,triangle->v3);
@@ -7399,7 +7448,7 @@ LONG n;
 
 	WAZP3D_Function(76);
 	WC->Pnb=0;
-	W3D_BindTexture(context,0,triangles->tex);
+	SetTexture(context,triangles->tex);
 NLOOP(triangles->vertexcount)
 	GetVertex(WC,triangles->v[n]);
 
@@ -7414,7 +7463,7 @@ LONG n;
 
 	WAZP3D_Function(77);
 	WC->Pnb=0;
-	W3D_BindTexture(context,0,triangles->tex);
+	SetTexture(context,triangles->tex);
 NLOOP(triangles->vertexcount)
 	GetVertex(WC,triangles->v[n]);
 	SOFT3D_DrawPrimitive(WC->SC,WC->P,WC->Pnb,W3D_PRIMITIVE_TRISTRIP);
@@ -7591,7 +7640,7 @@ struct WAZP3D_context *WC=context->driver;
 	WRETURN(W3D_SUCCESS);
 }
 /*==========================================================================*/
-ULONG W3D_BindTexture(W3D_Context* context, ULONG tmu, W3D_Texture *texture)
+void SetTexture(W3D_Context* context,W3D_Texture *texture)
 {
 struct WAZP3D_context *WC=context->driver;
 struct WAZP3D_texture *WT=NULL;
@@ -7599,26 +7648,16 @@ void *ST=NULL;
 BOOL blended;
 ULONG TexEnvMode;
 UBYTE EnvRGBA[4];
-UBYTE TexModeS[2];
-UBYTE ColModeS[2];
 
-	WAZP3D_Function(85);
-	VAR(tmu)
-	VAR(texture)
-	PrintTexture(texture);
-
-	if(W3D_MAX_TMU <= tmu)
-		WRETURN(W3D_ILLEGALINPUT);
-	context->CurrentTex[tmu]=texture;
-
+SREM(SetTexture)
 	if(texture==NULL)
 		{
 SREM(TEXTURE_NULL)
 		WT=NULL;
 		WC->WT=WT;
 		ST=NULL;
-		WC->uresize=255.0;
-		WC->vresize=255.0;
+		WC->uresize=256.0;
+		WC->vresize=256.0;
 		}
 	else
 		{
@@ -7626,8 +7665,8 @@ SREM(TEXTURE_NOT_NULL)
 		WT=texture->driver;
 		WC->WT=WT;
 		ST=WT->ST;
-		WC->uresize=255.0/(float)(WT->large - 1);
-		WC->vresize=255.0/(float)(WT->high  - 1);
+		WC->uresize=256.0/(float)(WT->large);
+		WC->vresize=256.0/(float)(WT->high );
 		PrintWT(WT);
 		}
 
@@ -7703,14 +7742,25 @@ SREM(TEXTURE_NOT_NULL)
 
 
 #ifdef WAZP3DDEBUG
-	TexModeS[0]=WC->TexMode;
-	ColModeS[0]=WC->ColMode;
-	TexModeS[1]=ColModeS[1]=0;
-	if(Wazp3D.DebugSOFT3D.ON) Libprintf(" ZMode%ld TexMode%s ColMode%s UseFog%ld UseTex%ld blended%ld UseGouraud%d\n",WC->ZMode,TexModeS,ColModeS,WC->UseFog,WC->UseTex,blended,WC->UseGouraud);
+	if(Wazp3D.DebugSOFT3D.ON) Libprintf(" WC: ZMode%ld TexMode%s ColMode%s UseFog%ld UseTex%ld Blended%ld UseGouraud%ld\n",WC->ZMode,pc(WC->TexMode,text1),pc(WC->ColMode,text2),WC->UseFog,WC->UseTex,blended,WC->UseGouraud);
 #endif
 
 	SOFT3D_SetDrawFunctions(WC->SC,ST,WC->TexMode,WC->ZMode,WC->UseFog,WC->ColMode,WC->UseGouraud);
 	SOFT3D_SetEnvColor(WC->SC,EnvRGBA);
+}
+/*==========================================================================*/
+ULONG W3D_BindTexture(W3D_Context* context, ULONG tmu, W3D_Texture *texture)
+{
+	WAZP3D_Function(85);
+	VAR(tmu)
+	VAR(texture)
+	PrintTexture(texture);
+
+	if(W3D_MAX_TMU <= tmu)
+		WRETURN(W3D_ILLEGALINPUT);
+	context->CurrentTex[tmu]=texture;
+
+	SetTexture(context,texture);
 
 	WRETURN(W3D_SUCCESS);
 }
@@ -7738,7 +7788,7 @@ ULONG n;
 	VAR(count)
 	if(primitive==W3D_PRIMITIVE_POINTS) SOFT3D_SetPointSize(WC->SC,1);
 /* MiniGL bug = it change context->CurrentTex without using W3D_BindTexture */
-		if(context->CurrentTex[0]!=NULL) W3D_BindTexture(context,0,context->CurrentTex[0]);
+		if(context->CurrentTex[0]!=NULL) 	SetTexture(context,context->CurrentTex[0]);
 	SOFT3D_DrawPrimitive(WC->SC,WC->P,WC->Pnb,WC->primitive);
 	WRETURN(W3D_SUCCESS);
 }
@@ -7782,7 +7832,7 @@ ULONG n;
 
 	if(primitive==W3D_PRIMITIVE_POINTS) SOFT3D_SetPointSize(WC->SC,1);
 /* MiniGL bug = it change context->CurrentTex without using W3D_BindTexture */
-		if(context->CurrentTex[0]!=NULL) W3D_BindTexture(context,0,context->CurrentTex[0]);
+		if(context->CurrentTex[0]!=NULL) 	SetTexture(context,context->CurrentTex[0]);
 	SOFT3D_DrawPrimitive(WC->SC,WC->P,WC->Pnb,WC->primitive);
 
 	WRETURN(W3D_SUCCESS);
