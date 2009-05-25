@@ -392,6 +392,31 @@ static VOID CheckPartitions
     }
 }
 
+static void USBMSS_Automounter()
+{
+	struct ExpansionBase *ExpansionBase;
+	struct BootNode *bn;
+
+	ExpansionBase = OpenLibrary("expansion.library", 0);
+
+	D(bug("[MSS] Automounter process\n"));
+
+	if (ExpansionBase)
+	{
+		bn = (struct BootNode *)FindTask(NULL)->tc_UserData;
+
+		if (bn)
+		{
+			D(bug("[MSS] Checking partitions.\n"));
+        	CheckPartitions(ExpansionBase, SysBase, bn);
+		}
+
+		CloseLibrary(ExpansionBase);
+	}
+
+	D(bug("[MSS] Automounter did the job.\n"));
+}
+
 /* Add a bootnode using expansion.library */
 BOOL USBMSS_AddVolume(mss_unit_t *unit)
 {
@@ -457,17 +482,27 @@ BOOL USBMSS_AddVolume(mss_unit_t *unit)
                      )
                 ))
                 {
-                	struct Library *dosbase = OpenLibrary("dos.library", 0);
+                	struct Library *DOSBase = OpenLibrary("dos.library", 0);
 
                     CopyMem(handler, AROS_BSTR_ADDR(devnode->dn_Handler), len);
                     AROS_BSTR_setstrlen(devnode->dn_Handler, len);
 
-                    if (dosbase)
+                    if (DOSBase)
                     {
+                    	struct TagItem tags[] = {
+                    			{ NP_UserData,		bn },
+                    			{ NP_StackSize,		10240 },
+                    			{ NP_Name,			(IPTR)"Automounter process" },
+                    			{ NP_Entry,			(IPTR)USBMSS_Automounter },
+                    			{ NP_Synchronous, 	TRUE },
+                    			{ TAG_DONE, 0UL }
+                    	};
                     	D(bug("[MSS] dos.library is up. Do the job a volume.resource should!\n"));
 #warning FIXME: AROS needs volume.resource, which would perform the job done here....
-                    	CheckPartitions(ExpansionBase, SysBase, bn);
-                    	CloseLibrary(dosbase);
+
+                    	CreateNewProc(tags);
+
+                    	CloseLibrary(DOSBase);
                     }
                     else
                     {
