@@ -72,7 +72,7 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
     }
     else if(button->img==MUIV_TheBar_ImageSpacer)
     {
-      if(data->brushes &&((LONG)data->spacer>=0) && (!button->class) &&
+      if(isFlagClear(data->flags, FLG_TextOnly) && data->brushes &&((LONG)data->spacer>=0) && (data->viewMode!=MUIV_TheBar_ViewMode_Text) &&
          (o = (Object *)TheButtonObject,
                MUIA_TheButton_MinVer,                                       16,
                MUIA_Group_Horiz,                                            isFlagSet(flags, FLG_Horiz),
@@ -87,31 +87,8 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
                MUIA_TheButton_Sunny,                                        isFlagSet(flags, FLG_Sunny),
                MUIA_TheButton_Scaled,                                       isFlagSet(flags, FLG_Scaled),
                MUIA_TheButton_Spacer,                                       MUIV_TheButton_Spacer_Image,
-               MUIA_TheButton_ID,                                           button->ID,
                isFlagSet(flags, FLG_FreeStrip) ? MUIA_TheButton_Strip : TAG_IGNORE, (IPTR)&data->strip,
           End))
-      {
-        RETURN(o);
-        return o;
-      }
-      else if(data->brushes &&((LONG)data->spacer>=0) && (button->class) &&
-         (o =  NewObject(button->class,NULL,
-               MUIA_TheButton_MinVer,                                       16,
-               MUIA_Group_Horiz,                                            isFlagSet(flags, FLG_Horiz),
-               MUIA_TheButton_TheBar,                                       (IPTR)obj,
-               MUIA_TheButton_NoClick,                                      TRUE,
-               MUIA_TheButton_Image,                                        (IPTR)data->brushes[data->spacer],
-               data->sbrushes ? MUIA_TheButton_SelImage : TAG_IGNORE,       (IPTR)(data->sbrushes ? data->sbrushes[data->spacer] : NULL),
-               data->dbrushes ? MUIA_TheButton_DisImage : TAG_IGNORE,       (IPTR)(data->dbrushes ? data->dbrushes[data->spacer] : NULL),
-               MUIA_TheButton_ViewMode,                                     MUIV_TheButton_ViewMode_Gfx,
-               MUIA_TheButton_Borderless,                                   TRUE,
-               MUIA_TheButton_Raised,                                       FALSE,
-               MUIA_TheButton_Sunny,                                        isFlagSet(flags, FLG_Sunny),
-               MUIA_TheButton_Scaled,                                       isFlagSet(flags, FLG_Scaled),
-               MUIA_TheButton_Spacer,                                       MUIV_TheButton_Spacer_Image,
-               MUIA_TheButton_ID,                                           button->ID,
-               isFlagSet(flags, FLG_FreeStrip) ? MUIA_TheButton_Strip : TAG_IGNORE, (IPTR)&data->strip,
-          TAG_DONE)))
       {
         RETURN(o);
         return o;
@@ -2291,9 +2268,9 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     }
     else
     {
-      #if defined(__amigaos4__)
-      FreeSysObject(ASOT_MEMPOOL, pool);
-      #else
+    	#if defined(__amigaos4__)
+    	FreeSysObject(ASOT_MEMPOOL, pool);
+    	#else
         DeletePool(pool);
         #endif
     }
