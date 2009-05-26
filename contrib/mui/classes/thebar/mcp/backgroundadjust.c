@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -16,6 +16,8 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
+ $Id$
+
 ***************************************************************************/
 
 #include "class.h"
@@ -26,39 +28,19 @@
 /***********************************************************************/
 
 static struct MUI_CustomClass *patterns = NULL;
-#ifdef __AROS__
-#define patternsObject BOOPSIOBJMACRO_START(patterns->mcc_Class)
-#else
 #define patternsObject NewObject(patterns->mcc_Class,NULL
-#endif
 
 static struct MUI_CustomClass *dtpic = NULL;
-#ifdef __AROS__
-#define dtpicObject BOOPSIOBJMACRO_START(dtpic->mcc_Class)
-#else
 #define dtpicObject NewObject(dtpic->mcc_Class,NULL
-#endif
 
 static struct MUI_CustomClass *bitmap = NULL;
-#ifdef __AROS__
-#define bitmapObject BOOPSIOBJMACRO_START(bitmap->mcc_Class)
-#else
 #define bitmapObject NewObject(bitmap->mcc_Class,NULL
-#endif
 
 static struct MUI_CustomClass *gradientfield;
-#ifdef __AROS__
-#define gradientfieldObject BOOPSIOBJMACRO_START(gradientfield->mcc_Class)
-#else
 #define gradientfieldObject NewObject(gradientfield->mcc_Class,NULL
-#endif
 
 static struct MUI_CustomClass *gradient = NULL;
-#ifdef __AROS__
-#define gradientObject BOOPSIOBJMACRO_START(gradient->mcc_Class)
-#else
 #define gradientObject NewObject(gradient->mcc_Class,NULL
-#endif
 
 /***********************************************************************/
 
@@ -85,7 +67,7 @@ mPatternsNew(struct IClass *cl,Object *obj,struct opSet *msg)
             Child, owspace(1),
             Child, HGroup,
                 Child, owspace(1),
-                Child, pgroup = RowGroup(3), End,
+                Child, (IPTR)(pgroup = (Object *)RowGroup(3), End),
                 Child, owspace(1),
             End,
             Child, owspace(1),
@@ -96,9 +78,9 @@ mPatternsNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
         for (i = 0; i<18; i++)
         {
-            msnprintf(data->specs[i], sizeof(data->specs[i]), (STRPTR)"0:%d", i+MUII_BACKGROUND);
+            snprintf(data->specs[i], sizeof(data->specs[i]), (STRPTR)"0:%d", (int)(i+MUII_BACKGROUND));
 
-            data->patterns[i] = ImageObject,
+            data->patterns[i] = (Object *)ImageObject,
                 ButtonFrame,
                 MUIA_Background,      MUII_ButtonBack,
                 MUIA_InputMode,       MUIV_InputMode_Immediate,
@@ -110,7 +92,7 @@ mPatternsNew(struct IClass *cl,Object *obj,struct opSet *msg)
                 MUIA_FixHeight,       24,
                 MUIA_Image_FreeHoriz, TRUE,
                 MUIA_Image_FreeVert,  TRUE,
-                MUIA_Image_Spec,      data->specs[i],
+                MUIA_Image_Spec,      (IPTR)data->specs[i],
             End;
 
             if (data->patterns[i])
@@ -271,7 +253,7 @@ mPatternsGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpec
 
     if (data->pattern>=0)
     {
-        msprintf(msg->spec, (STRPTR)"0:%ld", data->pattern+MUII_BACKGROUND);
+        sprintf(msg->spec, (STRPTR)"0:%ld", data->pattern+MUII_BACKGROUND);
         return MUIV_Popbackground_GetSpec_Spec;
     }
 
@@ -300,11 +282,7 @@ mPatternsSelectPattern(struct IClass *cl,Object *obj,struct MUIP_Popbackground_S
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,patternsDispatcher,cl,obj,msg)
-#else
 DISPATCHER(patternsDispatcher)
-#endif
 {
   switch (msg->MethodID)
   {
@@ -318,9 +296,6 @@ DISPATCHER(patternsDispatcher)
     default:                               return DoSuperMethodA(cl,obj,msg);
   }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
 
@@ -473,14 +448,14 @@ static IPTR
 mDTPicSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct dtpicData *data = INST_DATA(cl, obj);
-    struct TagItem *tags;
+    const struct TagItem *tags;
     struct TagItem *tag;
-    ULONG rebuild, redraw;
+    BOOL rebuild, redraw;
     IPTR  res;
 
     rebuild = redraw = FALSE;
 
-    for(tags = msg->ops_AttrList; (tag = NextTagItem(&tags)); )
+    for(tags = msg->ops_AttrList; (tag = NextTagItem((APTR)&tags)); )
     {
         IPTR tidata = tag->ti_Data;
 
@@ -621,11 +596,7 @@ mDTPicDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,dtpicDispatcher,cl,obj,msg)
-#else
 DISPATCHER(dtpicDispatcher)
-#endif
 {
   switch(msg->MethodID)
   {
@@ -639,9 +610,6 @@ DISPATCHER(dtpicDispatcher)
     default:             return DoSuperMethodA(cl,obj,msg);
   }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
 
@@ -691,21 +659,21 @@ mBitmapNew(struct IClass *cl,Object *obj,struct opSet *msg)
             Child, ScrollgroupObject,
                 MUIA_Scrollgroup_Contents, VirtgroupObject,
                     MUIA_Frame, MUIV_Frame_Virtual,
-                    Child, pic = dtpicObject, End,
+                    Child, (IPTR)(pic = (Object *)dtpicObject, End),
                 End,
             End,
             Child, HGroup,
                 MUIA_Group_HorizSpacing, 1,
                 Child, PopaslObject,
-                    MUIA_Popstring_String, bitmap = StringObject,
+                    MUIA_Popstring_String, (IPTR)(bitmap = (Object *)StringObject,
                         MUIA_CycleChain,   TRUE,
                         StringFrame,
                         MUIA_String_MaxLen, 256,
-                    End,
-                    MUIA_Popstring_Button, abt = PopButton(MUII_PopFile),
+                    End),
+                    MUIA_Popstring_Button, (IPTR)(abt = PopButton(MUII_PopFile)),
                     MUIA_Popasl_Type,      ASL_FileRequest,
                 End,
-                Child, pbt = PopButton(MUII_PopUp),
+                Child, (IPTR)(pbt = PopButton(MUII_PopUp)),
             End,
             TAG_MORE, msg->ops_AttrList)))
     {
@@ -745,7 +713,7 @@ mBitmapGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpec *
     STRPTR                      x;
 
     get(data->bitmap,MUIA_String_Contents,&x);
-    msprintf(msg->spec,(STRPTR)"5:%s",x);
+    sprintf(msg->spec,(STRPTR)"5:%s",x);
     return MUIV_Popbackground_GetSpec_Spec;
 }
 
@@ -765,11 +733,7 @@ mBitmapShowBitmap(struct IClass *cl,Object *obj, UNUSED Msg msg)
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,bitmapDispatcher,cl,obj,msg)
-#else
 DISPATCHER(bitmapDispatcher)
-#endif
 {
     switch (msg->MethodID)
     {
@@ -780,9 +744,6 @@ DISPATCHER(bitmapDispatcher)
         default:                            return DoSuperMethodA(cl,obj,msg);
     }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
 
@@ -860,11 +821,11 @@ static IPTR
 mGradientFieldSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct gradientFieldData *data = INST_DATA(cl,obj);
-    struct TagItem           *tag;
-    struct TagItem                    *tstate;
-    ULONG                    redraw = FALSE;
+    struct TagItem *tag;
+    const struct TagItem *tstate;
+    BOOL redraw = FALSE;
 
-    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem((APTR)&tstate)); )
     {
         IPTR tidata = tag->ti_Data;
 
@@ -927,11 +888,7 @@ mGradientFieldDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,gradientFieldDispatcher,cl,obj,msg)
-#else
 DISPATCHER(gradientFieldDispatcher)
-#endif
 {
   switch (msg->MethodID)
   {
@@ -942,9 +899,6 @@ DISPATCHER(gradientFieldDispatcher)
     default:         return DoSuperMethodA(cl,obj,msg);
   }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
 
@@ -994,8 +948,8 @@ mGradientNew(struct IClass *cl,Object *obj,struct opSet *msg)
     if((obj = (Object *)DoSuperNew(cl,obj,
             MUIA_Group_Horiz, TRUE,
 
-            Child, vgrad = gradientfieldObject,
-                MUIA_ShortHelp,           tr(Msg_Popback_VertGradientHelp),
+            Child, vgrad = (Object *)gradientfieldObject,
+                MUIA_ShortHelp,           (IPTR)tr(Msg_Popback_VertGradientHelp),
                 ButtonFrame,
                 MUIA_Background,          MUII_ButtonBack,
                 MUIA_InputMode,           MUIV_InputMode_Immediate,
@@ -1004,8 +958,8 @@ mGradientNew(struct IClass *cl,Object *obj,struct opSet *msg)
             End,
 
             Child, VGroup,
-                Child, hgrad = gradientfieldObject,
-                    MUIA_ShortHelp,  tr(Msg_Popback_HorizGradientHelp),
+                Child, hgrad = (Object *)gradientfieldObject,
+                    MUIA_ShortHelp,  (IPTR)tr(Msg_Popback_HorizGradientHelp),
                     ButtonFrame,
                     MUIA_Background, MUII_ButtonBack,
                     MUIA_InputMode,  MUIV_InputMode_Immediate,
@@ -1160,11 +1114,7 @@ mGradientSwap(struct IClass *cl,Object *obj, UNUSED Msg msg)
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,gradientDispatcher,cl,obj,msg)
-#else
 DISPATCHER(gradientDispatcher)
-#endif
 {
   switch (msg->MethodID)
   {
@@ -1176,9 +1126,6 @@ DISPATCHER(gradientDispatcher)
     default:                             return DoSuperMethodA(cl,obj,msg);
   }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
 
@@ -1416,10 +1363,10 @@ static IPTR
 mBackSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct backData *data = INST_DATA(cl,obj);
-    struct TagItem  *tag;
-    struct TagItem           *tstate;
+    struct TagItem *tag;
+    const struct TagItem *tstate;
 
-    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem((APTR)&tstate)); )
     {
         IPTR tidata = tag->ti_Data;
 
@@ -1464,7 +1411,7 @@ static IPTR
 mBackDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
 {
     struct backData *data = INST_DATA(cl,obj);
-    IPTR x = (IPTR)NULL;
+    IPTR x = 0;
 
     if ((data->flags & FLG_Gradient) && get(msg->obj,MUIA_Popbackground_Grad,&x))
         set(obj,MUIA_Popbackground_Grad,x);
@@ -1475,7 +1422,7 @@ mBackDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
             {
                 char buf[32];
 
-                msnprintf(buf,sizeof(buf),(STRPTR)"2:%s",x);
+                snprintf(buf,sizeof(buf),(STRPTR)"2:%s",(char *)x);
                 set(obj,MUIA_Imagedisplay_Spec,buf);
             }
 
@@ -1484,11 +1431,7 @@ mBackDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,backDispatcher,cl,obj,msg)
-#else
 DISPATCHER(backDispatcher)
-#endif
 {
     switch (msg->MethodID)
     {
@@ -1500,9 +1443,6 @@ DISPATCHER(backDispatcher)
         default:             return DoSuperMethodA(cl,obj,msg);
     }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
 

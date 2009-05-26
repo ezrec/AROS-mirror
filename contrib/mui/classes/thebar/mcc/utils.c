@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -16,6 +16,8 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
+ $Id$
+
 ***************************************************************************/
 
 #include "class.h"
@@ -27,7 +29,7 @@
 #ifdef __MORPHOS__
 
 #elif defined(__AROS__)
-Object * DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...)
+IPTR DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...)
 {
   AROS_SLOWSTACKTAGS_PRE(tag1)
   retval = DoSuperMethod(cl, obj, OM_NEW, AROS_SLOWSTACKTAGS_ARG(tag1));

@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -16,11 +16,9 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
-***************************************************************************/
+ $Id: class.h 299 2009-05-24 10:28:06Z damato $
 
-#ifdef __AROS__
-#define MUIMASTER_YES_INLINE_STDARG
-#endif
+***************************************************************************/
 
 #define __NOLIBBASE__
 #include <proto/exec.h>
@@ -67,7 +65,11 @@ extern struct DosLibrary      *DOSBase;
 extern struct IntuitionBase   *IntuitionBase;
 extern struct GfxBase         *GfxBase;
 #endif
+#if defined(__AROS__)
+extern struct UtilityBase     *UtilityBase;
+#else
 extern struct Library         *UtilityBase;
+#endif
 extern struct Library         *MUIMasterBase;
 
 extern struct Library         *DataTypesBase;
@@ -128,30 +130,21 @@ Object *MUI_NewObject(CONST_STRPTR classname,Tag tag1,...);
 
 // xget()
 // Gets an attribute value from a MUI object
-#ifdef __AROS__
-#define xget XGET
-#else
-ULONG xget(Object *obj, const ULONG attr);
+ULONG xget(Object *obj, const IPTR attr);
 #if defined(__GNUC__)
   // please note that we do not evaluate the return value of GetAttr()
   // as some attributes (e.g. MUIA_Selected) always return FALSE, even
   // when they are supported by the object. But setting b=0 right before
   // the GetAttr() should catch the case when attr doesn't exist at all
-  #define xget(OBJ, ATTR) ({ULONG b=0; GetAttr(ATTR, OBJ, &b); b;})
+  #define xget(OBJ, ATTR) ({IPTR b=0; GetAttr(ATTR, OBJ, &b); b;})
 #endif
-#endif /* __AROS__ */
 
 #if !defined(IsMinListEmpty)
 #define IsMinListEmpty(x)     (((x)->mlh_TailPred) == (struct MinNode *)(x))
 #endif
 
-#ifdef __AROS__
-    #define spacerObject  BOOPSIOBJMACRO_START(lib_spacerClass->mcc_Class)
-    #define dragBarObject BOOPSIOBJMACRO_START(lib_dragBarClass->mcc_Class)
-#else
-    #define spacerObject  NewObject(lib_spacerClass->mcc_Class,NULL
-    #define dragBarObject NewObject(lib_dragBarClass->mcc_Class,NULL
-#endif
+#define spacerObject  NewObject(lib_spacerClass->mcc_Class,NULL
+#define dragBarObject NewObject(lib_dragBarClass->mcc_Class,NULL
 
 /***********************************************************************/
 
@@ -186,12 +179,12 @@ enum
 #endif
 
 #ifndef MUIM_Backfill
-#define MUIM_Backfill 0x80428d73
-struct  MUIP_Backfill        { ULONG MethodID; LONG left; LONG top; LONG right; LONG bottom; LONG xoffset; LONG yoffset; LONG lum; };
+#define MUIM_Backfill 0x80428d73UL
+struct  MUIP_Backfill        { STACKED ULONG MethodID; STACKED LONG left; STACKED LONG top; STACKED LONG right; STACKED LONG bottom; STACKED LONG xoffset; STACKED LONG yoffset; STACKED LONG lum; };
 #endif
 
 #ifndef MUIA_CustomBackfill
-#define MUIA_CustomBackfill  0x80420a63
+#define MUIA_CustomBackfill  0x80420a63UL
 #endif
 
 #ifndef MUIM_CustomBackfill  
@@ -203,8 +196,8 @@ struct  MUIP_Backfill        { ULONG MethodID; LONG left; LONG top; LONG right; 
 #endif
 
 #ifndef MUIM_CreateDragImage
-#define MUIM_CreateDragImage 0x8042eb6f /* V18 */ /* Custom Class */
-struct  MUIP_CreateDragImage { ULONG MethodID; LONG touchx; LONG touchy; ULONG flags; }; /* Custom Class */
+#define MUIM_CreateDragImage 0x8042eb6fUL /* V18 */ /* Custom Class */
+struct  MUIP_CreateDragImage { STACKED ULONG MethodID; STACKED LONG touchx; STACKED LONG touchy; STACKED ULONG flags; }; /* Custom Class */
 struct MUI_DragImage
 {
     struct BitMap *bm;
@@ -217,26 +210,9 @@ struct MUI_DragImage
 #endif
 
 #ifndef MUIM_DeleteDragImage 
-#define MUIM_DeleteDragImage 0x80423037
+#define MUIM_DeleteDragImage 0x80423037UL
 struct MUIP_DeleteDragImage {ULONG MethodID; struct MUI_DragImage *di;};
 #endif
-
-/*
-// xget()
-// Gets an attribute value from a MUI object
-#ifdef __AROS__
-    #define xget XGET
-#else
-    ULONG xget(Object *obj, const ULONG attr);
-#if defined(__GNUC__)
-  // please note that we do not evaluate the return value of GetAttr()
-  // as some attributes (e.g. MUIA_Selected) always return FALSE, even
-  // when they are supported by the object. But setting b=0 right before
-  // the GetAttr() should catch the case when attr doesn't exist at all
-  #define xget(OBJ, ATTR) ({ULONG b=0; GetAttr(ATTR, OBJ, &b); b;})
-#endif
-#endif
-*/
 
 /****************************************************************************/
 

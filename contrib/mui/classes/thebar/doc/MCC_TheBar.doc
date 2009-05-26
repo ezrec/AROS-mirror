@@ -78,9 +78,9 @@ TheBar.mcc/MUIM_TheBar_Remove
 TheBar.mcc/MUIM_TheBar_SetAttr
 TheBar.mcc/MUIM_TheBar_Sort
 
-TheBar.mcc/TheBar.mcc
+TheBar.mcc/TheBar.mcc
 
-    $Id: MCC_TheBar.doc 230 2008-03-01 14:26:26Z damato $
+    $Id: MCC_TheBar.doc 316 2009-05-26 10:39:52Z damato $
     $URL: https://thebar.svn.sourceforge.net/svnroot/thebar/trunk/doc/MCC_TheBar.doc $
 
     Copyright (c) 2003-2008 by Alfonso Ranieri
@@ -147,7 +147,7 @@ TheBar.mcc/MUIM_TheBar_Sort
     may automatically vanish without a further notice. They are only
     for internal use of TheBar itself.
 
-TheBar.mcc/MUIA_TheBar_Active
+TheBar.mcc/MUIA_TheBar_Active
 
     NAME
      MUIA_TheBar_Active -- ULONG, [ISGN], v11
@@ -173,7 +173,7 @@ TheBar.mcc/MUIM_TheBar_Sort
 
     SEE ALSO
 
-TheBar.mcc/MUIA_TheBar_Appearance
+TheBar.mcc/MUIA_TheBar_Appearance
 
     NAME
      MUIA_TheBar_Appearance -- struct MUIS_TheBar_Appearance, [..G.]
@@ -221,7 +221,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_ViewMode
      MUIA_TheBar_LabelPos
 
-TheBar.mcc/MUIA_TheBar_BarPos
+TheBar.mcc/MUIA_TheBar_BarPos
 
     NAME
      MUIA_TheBar_BarPos -- ULONG, [ISGN], v11
@@ -243,7 +243,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      -- cut here --
      set(toolbar,MUIA_TheBar_Pos,MUIV_TheBar_BarPos_Center);
 
-TheBar.mcc/MUIA_TheBar_BarSpacer
+TheBar.mcc/MUIA_TheBar_BarSpacer
 
     NAME
      MUIA_TheBar_BarSpacer -- BOOL, [ISGN], v11
@@ -259,7 +259,7 @@ TheBar.mcc/MUIM_TheBar_Sort
     SEE ALSO
      MUIA_TheBar_BarSpacerSpacing
 
-TheBar.mcc/MUIA_TheBar_BarSpacerSpacing
+TheBar.mcc/MUIA_TheBar_BarSpacerSpacing
 
     NAME
      MUIA_TheBar_BarSpacerSpacing -- ULONG, [I...], v12
@@ -278,7 +278,7 @@ TheBar.mcc/MUIM_TheBar_Sort
     SEE ALSO
      MUIA_TheBar_BarSpacer
 
-TheBar.mcc/MUIA_TheBar_Borderless
+TheBar.mcc/MUIA_TheBar_Borderless
 
     NAME
      MUIA_TheBar_Borderless -- BOOL, [ISGN], v11
@@ -294,7 +294,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      This overwrites the user preferences and so must be used
      wisely. If in doubt, don't use it.
 
-TheBar.mcc/MUIA_TheBar_BottomBarFrameSpacing
+TheBar.mcc/MUIA_TheBar_BottomBarFrameSpacing
 
     NAME
      MUIA_TheBar_BottomBarFrameSpacing -- ULONG, [I...], v12
@@ -312,7 +312,7 @@ TheBar.mcc/MUIM_TheBar_Sort
     SEE ALSO
      MUIA_TheBar_BottomBarInnerSpacing
 
-TheBar.mcc/MUIA_TheBar_BottomInnerSpacing
+TheBar.mcc/MUIA_TheBar_BottomInnerSpacing
 
     NAME
      MUIA_TheBar_BottomInnerSpacing -- ULONG, [I...], v12
@@ -331,7 +331,7 @@ TheBar.mcc/MUIM_TheBar_Sort
     SEE ALSO
      MUIA_TheBar_BottomBarFrameSpacing
 
-TheBar.mcc/MUIA_TheBar_Buttons
+TheBar.mcc/MUIA_TheBar_Buttons
 
     NAME
      MUIA_TheBar_Buttons -- struct MUIS_TheBar_Button *, [I...]
@@ -427,21 +427,17 @@ TheBar.mcc/MUIM_TheBar_Sort
          the button it the mutual exclude mask
 
        struct IClass *_class
-         If you want to subclass TheButton.mcc to add drag'n'drop
-         or what else, place the pointer to your class here: TheBar
-         will know how to recreate your buttons correctly.
-         Otherwise leave it NULL!
+         If you want to subclass TheButton.mcc to add drag'n drop
+         or whatever, place the pointer to your class here: TheBar
+         will know how to recreate your buttons correctly. Please
+         note, that this must be a pointer to a BOOPSI class. So
+         if you subclass from within an mcc you will have to use
+         the address of the mcc_Class pointer in struct MUI_CustomClass.
 
        Object *obj
          This will be filled after the creation of the bar with a
          pointer to the button. Remember not to cache it. Just
          get it and use it.
-
-       To create a 2 buttons mutual exclude group:
-       ...
-       {0, 4, "_Matches", "Matches page.", MUIV_TheBar_ButtonFlag_Immediate|MUIV_TheBar_ButtonFlag_Selected, 1<<5},
-       {1, 5, "_Edit", "Edit page.", MUIV_TheBar_ButtonFlag_Immediate, 1<<4},
-       ...
 
     EXAMPLE
      The following code will create a toolbar with two mutual
@@ -478,7 +474,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_StripBrush
      MUIA_TheBar_StripButtons
 
-TheBar.mcc/MUIA_TheBar_Columns
+TheBar.mcc/MUIA_TheBar_Columns
 
     NAME
      MUIA_TheBar_Columns -- ULONG, [ISGN], v11
@@ -495,7 +491,7 @@ TheBar.mcc/MUIM_TheBar_Sort
     SEE ALSO
      MUIA_TheBar_Rows
 
-TheBar.mcc/MUIA_TheBar_DisMode
+TheBar.mcc/MUIA_TheBar_DisMode
 
     NAME
      MUIA_TheBar_DisMode -- ULONG, [I...], v12
@@ -535,7 +531,7 @@ TheBar.mcc/MUIM_TheBar_Sort
     SEE ALSO
      MUIA_TheBar_DisPics
 
-TheBar.mcc/MUIA_TheBar_DisImages
+TheBar.mcc/MUIA_TheBar_DisImages
 
     NAME
      MUIA_TheBar_DisImages -- struct MUIS_TheBar_Brush **, [I.G.], v12
@@ -562,7 +558,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_SelImages
 
 
-TheBar.mcc/MUIA_TheBar_DisPics
+TheBar.mcc/MUIA_TheBar_DisPics
 
     NAME
      MUIA_TheBar_DisPics -- STRPTR *, [I...], v12
@@ -586,7 +582,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_Pics
      MUIA_TheBar_SelPics
 
-TheBar.mcc/MUIA_TheBar_DisStrip
+TheBar.mcc/MUIA_TheBar_DisStrip
 
     NAME
      MUIA_TheBar_DisStrip -- STRPTR, [I...], v12
@@ -609,7 +605,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_StripBrush
      MUIA_TheBar_StripButtons
 
-TheBar.mcc/MUIA_TheBar_DisStripBrush
+TheBar.mcc/MUIA_TheBar_DisStripBrush
 
     NAME
      MUIA_TheBar_DisStripBrush -- struct MUIS_TheBar_Brush *, [I...], v12
@@ -632,7 +628,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_StripBrush
      MUIA_TheBar_StripButtons
 
-TheBar.mcc/MUIA_TheBar_DontMove
+TheBar.mcc/MUIA_TheBar_DontMove
 
     NAME
      MUIA_TheBar_DontMove -- BOOL, [I...], v15
@@ -649,7 +645,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      wisely. If in doubt, don't use it.
 
 
-TheBar.mcc/MUIA_TheBar_DragBar
+TheBar.mcc/MUIA_TheBar_DragBar
 
     NAME
      MUIA_TheBar_DragBar -- BOOL, [ISGN], v11
@@ -662,7 +658,7 @@ TheBar.mcc/MUIM_TheBar_Sort
 
      Default: FALSE
 
-TheBar.mcc/MUIA_TheBar_EnableKeys
+TheBar.mcc/MUIA_TheBar_EnableKeys
 
     NAME
      MUIA_TheBar_EnableKeys -- BOOL, [ISGN], v11
@@ -679,7 +675,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      This overwrites the user preferences and so must be used
      wisely. If in doubt, don't use it.
 
-TheBar.mcc/MUIA_TheBar_Frame
+TheBar.mcc/MUIA_TheBar_Frame
 
     NAME
      MUIA_TheBar_Frame -- BOOL, [ISGN], v12
@@ -699,7 +695,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      for 68k version of TheBar.mcc and TheBarVirt.mcc; MorphOS
      versions simply ignores it!!!
 
-TheBar.mcc/MUIA_TheBar_Free
+TheBar.mcc/MUIA_TheBar_Free
 
     NAME
      MUIA_TheBar_Free -- BOOL, [ISGN], v11
@@ -726,7 +722,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_FreeHoriz
      MUIA_TheBar_FreeVert
 
-TheBar.mcc/MUIA_TheBar_FreeHoriz
+TheBar.mcc/MUIA_TheBar_FreeHoriz
 
     NAME
      MUIA_TheBar_FreeHoriz -- BOOL, [ISGN], v11
@@ -753,7 +749,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_Free
      MUIA_TheBar_FreeVert
 
-TheBar.mcc/MUIA_TheBar_FreeVert
+TheBar.mcc/MUIA_TheBar_FreeVert
 
     NAME
      MUIA_TheBar_FreeVert -- BOOL, [ISGN], v11
@@ -779,7 +775,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_Free
      MUIA_TheBar_FreeHoriz
 
-TheBar.mcc/MUIA_TheBar_HorizInnerSpacing
+TheBar.mcc/MUIA_TheBar_HorizInnerSpacing
 
     NAME
      MUIA_TheBar_HorizInnerSpacing -- ULONG, [I...], v12
@@ -799,7 +795,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_HorizSpacing
      MUIA_TheBar_HorizTextGfxSpacing
 
-TheBar.mcc/MUIA_TheBar_HorizSpacing
+TheBar.mcc/MUIA_TheBar_HorizSpacing
 
     NAME
      MUIA_TheBar_HorizSpacing -- ULONG, [I...], v12
@@ -818,7 +814,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_HorizInnerSpacing
      MUIA_TheBar_HorizTextGfxSpacing
 
-TheBar.mcc/MUIA_TheBar_HorizTextGfxSpacing
+TheBar.mcc/MUIA_TheBar_HorizTextGfxSpacing
 
     NAME
      MUIA_TheBar_HorizTextGfxSpacing -- ULONG, [I...], v12
@@ -838,7 +834,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_HorizSpacing
      MUIA_TheBar_HorizInnerSpacing
 
-TheBar.mcc/MUIA_TheBar_IgnoreAppearance
+TheBar.mcc/MUIA_TheBar_IgnoreAppearance
 
     NAME
      MUIA_TheBar_IgnoreAppearance -- BOOL, [ISGN], v19
@@ -863,7 +859,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      really necessary.
 
 
-TheBar.mcc/MUIA_TheBar_IgnoreDisImages
+TheBar.mcc/MUIA_TheBar_IgnoreDisImages
 
     NAME
      MUIA_TheBar_IgnoreDisImages -- BOOL, [I...], v12
@@ -884,7 +880,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_DisImages
 
 
-TheBar.mcc/MUIA_TheBar_IgnoreSelImages
+TheBar.mcc/MUIA_TheBar_IgnoreSelImages
 
     NAME
      MUIA_TheBar_IgnoreSelImages -- BOOL, [I...], v12
@@ -905,7 +901,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_SelImages
 
 
-TheBar.mcc/MUIA_TheBar_Images
+TheBar.mcc/MUIA_TheBar_Images
 
     NAME
      MUIA_TheBar_Images -- struct MUIS_TheBar_Brush **, [I.G.], v11
@@ -1052,7 +1048,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_StripBrush
      MUIA_TheBar_StripButtons
 
-TheBar.mcc/MUIA_TheBar_LabelPos
+TheBar.mcc/MUIA_TheBar_LabelPos
 
     NAME
      MUIA_TheBar_LabelPos -- ULONG, [ISGN], v11
@@ -1073,7 +1069,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      This overwrites the user preferences and so must be used
      wisely. If in doubt, don't use it.
 
-TheBar.mcc/MUIA_TheBar_LeftBarFrameSpacing
+TheBar.mcc/MUIA_TheBar_LeftBarFrameSpacing
 
     NAME
      MUIA_TheBar_LeftBarFrameSpacing -- ULONG, [I...], v12
@@ -1088,7 +1084,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      This overwrites the user preferences and so must be used
      wisely. If in doubt, don't use it.
 
-TheBar.mcc/MUIA_TheBar_Limbo
+TheBar.mcc/MUIA_TheBar_Limbo
 
     NAME
      MUIA_TheBar_Limbo -- BOOL, [.S..], v11
@@ -1123,7 +1119,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      set(bar,MUIA_TheBar_Limbo,FASE);
      -- cut here --
 
-TheBar.mcc/MUIA_TheBar_MinVer
+TheBar.mcc/MUIA_TheBar_MinVer
 
     NAME
      MUIA_TheBar_MinVer -- ULONG, [I...], v11
@@ -1134,7 +1130,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      creation of the object the minimum version wasn't found
      NULL will be returned.
 
-TheBar.mcc/MUIA_TheBar_MouseOver
+TheBar.mcc/MUIA_TheBar_MouseOver
 
     NAME
      MUIA_TheBar_MouseOver -- ULONG, [ISGN], v18
@@ -1144,7 +1140,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      this attribute contains the id of the last button
      where the mouse was over.
 
-TheBar.mcc/MUIA_TheBar_NtRaiseActive
+TheBar.mcc/MUIA_TheBar_NtRaiseActive
 
     NAME
      MUIA_TheBar_NtRaiseActive -- BOOL, [ISGN], v18
@@ -1159,7 +1155,7 @@ TheBar.mcc/MUIM_TheBar_Sort
 
      Default: FALSE
 
-TheBar.mcc/MUIA_TheBar_Pics
+TheBar.mcc/MUIA_TheBar_Pics
 
     NAME
      MUIA_TheBar_Pics -- STRPTR *, [I...], v11
@@ -1232,7 +1228,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_StripBrush
      MUIA_TheBar_StripButtons
 
-TheBar.mcc/MUIA_TheBar_PicsDrawer
+TheBar.mcc/MUIA_TheBar_PicsDrawer
 
     NAME
      MUIA_TheBar_PicsDrawer -- STRPTR, [I...], v11
@@ -1258,7 +1254,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_StripBrush
      MUIA_TheBar_StripButtons
 
-TheBar.mcc/MUIA_TheBar_Precision
+TheBar.mcc/MUIA_TheBar_Precision
 
     NAME
      MUIA_TheBar_Precision -- ULONG, [I...], v12
@@ -1278,7 +1274,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      This overwrites the user preferences and so must be used
      wisely. If in doubt, don't use it.
 
-TheBar.mcc/MUIA_TheBar_Raised
+TheBar.mcc/MUIA_TheBar_Raised
 
     NAME
      MUIA_TheBar_Raised -- BOOL, [ISGN], v11
@@ -1297,7 +1293,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      This overwrites the user preferences and so must be used
      wisely. If in doubt, don't use it.
 
-TheBar.mcc/MUIA_TheBar_RemoveSpacers
+TheBar.mcc/MUIA_TheBar_RemoveSpacers
 
     NAME
      MUIA_TheBar_RemoveSpacers -- ULONG, [ISGN], v11
@@ -1328,7 +1324,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_Columns
      MUIA_TheBar_Rows
 
-TheBar.mcc/MUIA_TheBar_RightBarFrameSpacing
+TheBar.mcc/MUIA_TheBar_RightBarFrameSpacing
 
     NAME
      MUIA_TheBar_RightBarFrameSpacing -- ULONG, [I...], v12
@@ -1343,7 +1339,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      This overwrites the user preferences and so must be used
      wisely. If in doubt, don't use it.
 
-TheBar.mcc/MUIA_TheBar_Rows
+TheBar.mcc/MUIA_TheBar_Rows
 
     NAME
      MUIA_TheBar_Rows -- ULONG, [ISGN], v11
@@ -1361,7 +1357,7 @@ TheBar.mcc/MUIM_TheBar_Sort
     SEE ALSO
      MUIA_TheBar_Columns
 
-TheBar.mcc/MUIA_TheBar_Scale
+TheBar.mcc/MUIA_TheBar_Scale
 
     NAME
      MUIA_TheBar_Scale -- ULONG, [IGSN], v12
@@ -1379,7 +1375,7 @@ TheBar.mcc/MUIM_TheBar_Sort
     SEE ALSO
      MUIA_TheBar_Scaled
 
-TheBar.mcc/MUIA_TheBar_Scaled
+TheBar.mcc/MUIA_TheBar_Scaled
 
     NAME
      MUIA_TheBar_Scaled -- BOOL, [ISGN], v11
@@ -1399,7 +1395,7 @@ TheBar.mcc/MUIM_TheBar_Sort
     SEE ALSO
      MUIA_TheBar_Scale
 
-TheBar.mcc/MUIA_TheBar_SelImages
+TheBar.mcc/MUIA_TheBar_SelImages
 
     NAME
      MUIA_TheBar_SelImages -- struct MUIS_TheBar_Brush **, [I.G.], v12
@@ -1433,7 +1429,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_Images
      MUIA_TheBar_DisImages
 
-TheBar.mcc/MUIA_TheBar_SelPics
+TheBar.mcc/MUIA_TheBar_SelPics
 
     NAME
      MUIA_TheBar_SelPics -- STRPTR *, [I...], v12
@@ -1468,7 +1464,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_DisPics
 
 
-TheBar.mcc/MUIA_TheBar_SelStrip
+TheBar.mcc/MUIA_TheBar_SelStrip
 
     NAME
      MUIA_TheBar_SelStrip -- STRPTR, [I...], v12
@@ -1483,7 +1479,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_DisStrip
      MUIA_TheBar_PicsDrawer
 
-TheBar.mcc/MUIA_TheBar_SelStripBrush
+TheBar.mcc/MUIA_TheBar_SelStripBrush
 
     NAME
      MUIA_TheBar_SelStripBrush -- struct MUIS_TheBar_Brush *, [I...], v12
@@ -1497,7 +1493,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_StripBrush
      MUIA_TheBar_DisStripBrush
 
-TheBar.mcc/MUIA_TheBar_SpacerIndex
+TheBar.mcc/MUIA_TheBar_SpacerIndex
 
     NAME
      MUIA_TheBar_SpacerIndex -- ULONG, [I.G.], v11
@@ -1514,7 +1510,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_Images
      MUIA_TheBar_BarSpacer
 
-TheBar.mcc/MUIA_TheBar_SpacersSize
+TheBar.mcc/MUIA_TheBar_SpacersSize
 
     NAME
      MUIA_TheBar_SpacersSize -- ULONG, [ISGN], v18
@@ -1538,7 +1534,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_SpacerIndex
 
 
-TheBar.mcc/MUIA_TheBar_SpecialSelect
+TheBar.mcc/MUIA_TheBar_SpecialSelect
 
     NAME
      MUIA_TheBar_SpecialSelect -- BOOL, [I...], v12
@@ -1554,7 +1550,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      This overwrites the user preferences and so must be used
      wisely. If in doubt, don't use it.
 
-TheBar.mcc/MUIA_TheBar_Strip
+TheBar.mcc/MUIA_TheBar_Strip
 
     NAME
      MUIA_TheBar_Strip -- STRPTR, [I...], v11
@@ -1606,7 +1602,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_StripBrush
      MUIA_TheBar_StripButtons
 
-TheBar.mcc/MUIA_TheBar_StripBrush
+TheBar.mcc/MUIA_TheBar_StripBrush
 
     NAME
      MUIA_TheBar_StripBrush -- struct MUIS_TheBar_Brush *, [I...], v11
@@ -1661,7 +1657,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_Strip
      MUIA_TheBar_StripButtons
 
-TheBar.mcc/MUIA_TheBar_StripCols
+TheBar.mcc/MUIA_TheBar_StripCols
 
     NAME
      MUIA_TheBar_StripCols -- ULONG [I...], v12
@@ -1686,7 +1682,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_Strip
      MUIA_TheBar_StripBrush
 
-TheBar.mcc/MUIA_TheBar_StripHSpace
+TheBar.mcc/MUIA_TheBar_StripHSpace
 
     NAME
      MUIA_TheBar_StripHSpace -- ULONG, [I...], v12
@@ -1711,7 +1707,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_Strip
      MUIA_TheBar_StripBrush
 
-TheBar.mcc/MUIA_TheBar_StripRows
+TheBar.mcc/MUIA_TheBar_StripRows
 
     NAME
      MUIA_TheBar_StripRows -- ULONG, [I...], v12
@@ -1735,7 +1731,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_Strip
      MUIA_TheBar_StripBrush
 
-TheBar.mcc/MUIA_TheBar_StripVSpace
+TheBar.mcc/MUIA_TheBar_StripVSpace
 
     NAME
      MUIA_TheBar_StripVSpace -- ULONG, [I...], v12
@@ -1760,7 +1756,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      MUIA_TheBar_Strip
      MUIA_TheBar_StripBrush
 
-TheBar.mcc/MUIA_TheBar_Sunny
+TheBar.mcc/MUIA_TheBar_Sunny
 
     NAME
      MUIA_TheBar_Sunny -- BOOL, [ISGN], v11
@@ -1776,7 +1772,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      This overwrites the user preferences and so must be used
      wisely. If in doubt, don't use it.
 
-TheBar.mcc/MUIA_TheBar_TextOnly
+TheBar.mcc/MUIA_TheBar_TextOnly
 
     NAME
      MUIA_TheBar_TextOnly -- BOOL, [..G.], v11
@@ -1787,7 +1783,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      reason, the bar is forced to text-only and this attribute
      is TRUE.
 
-TheBar.mcc/MUIA_TheBar_TextOverUseShine
+TheBar.mcc/MUIA_TheBar_TextOverUseShine
 
     NAME
      MUIA_TheBar_TextOverUseShine -- BOOL, [I...], v12
@@ -1801,7 +1797,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      This overwrites the user preferences and so must be used
      wisely. If in doubt, don't use it.
 
-TheBar.mcc/MUIA_TheBar_TopBarFrameSpacing
+TheBar.mcc/MUIA_TheBar_TopBarFrameSpacing
 
     NAME
      MUIA_TheBar_TopBarFrameSpacing -- ULONG, [I...], v12
@@ -1816,7 +1812,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      This overwrites the user preferences and so must be used
      wisely. If in doubt, don't use it.
 
-TheBar.mcc/MUIA_TheBar_TopInnerSpacing
+TheBar.mcc/MUIA_TheBar_TopInnerSpacing
 
     NAME
      MUIA_TheBar_TopInnerSpacing -- ULONG, [I...], v12
@@ -1832,7 +1828,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      This overwrites the user preferences and so must be used
      wisely. If in doubt, don't use it.
 
-TheBar.mcc/MUIA_TheBar_ViewMode
+TheBar.mcc/MUIA_TheBar_ViewMode
 
     NAME
      MUIA_TheBar_ViewMode -- UWORD, [ISGN], v11
@@ -1857,7 +1853,7 @@ TheBar.mcc/MUIM_TheBar_Sort
     SEE ALSO
      MUIA_TheBar_TextOnly
 
-TheBar.mcc/MUIA_TheBar_VertSpacing
+TheBar.mcc/MUIA_TheBar_VertSpacing
 
     NAME
      MUIA_TheBar_VertSpacing -- ULONG, [I...], v12
@@ -1872,7 +1868,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      This overwrites the user preferences and so must be used
      wisely. If in doubt, don't use it.
 
-TheBar.mcc/MUIA_TheBar_VertTextGfxSpacing
+TheBar.mcc/MUIA_TheBar_VertTextGfxSpacing
 
     NAME
      MUIA_TheBar_VertTextGfxSpacing -- ULONG, [I...], v12
@@ -1888,7 +1884,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      This overwrites the user preferences and so must be used
      wisely. If in doubt, don't use it.
 
-TheBar.mcc/MUIM_TheBar_AddButton
+TheBar.mcc/MUIM_TheBar_AddButton
 
     NAME
      MUIM_TheBar_AddButton, v11
@@ -1920,7 +1916,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      itself without any notice. Please always directly use the
      supplied methods of TheBar itself.
 
-TheBar.mcc/MUIM_TheBar_Clear
+TheBar.mcc/MUIM_TheBar_Clear
 
     NAME
      MUIM_TheBar_Clear, v11
@@ -1938,7 +1934,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      The method itself takes care of required InitChange/ExitChange states
      so that you don't have to care of that yourself.
 
-TheBar.mcc/MUIM_TheBar_DoOnButton
+TheBar.mcc/MUIM_TheBar_DoOnButton
 
     NAME
      MUIM_TheBar_DoOnButton, v11
@@ -1980,7 +1976,7 @@ TheBar.mcc/MUIM_TheBar_Sort
     SEE ALSO
      MUIM_TheBar_SetAttr
 
-TheBar.mcc/MUIM_TheBar_GetAttr
+TheBar.mcc/MUIM_TheBar_GetAttr
 
     NAME
      MUIM_TheBar_GetAttr, v11
@@ -2018,7 +2014,7 @@ TheBar.mcc/MUIM_TheBar_Sort
     SEE ALSO
      MUIM_TheBar_SetAttr
 
-TheBar.mcc/MUIM_TheBar_GetDragImage
+TheBar.mcc/MUIM_TheBar_GetDragImage
 
     NAME
      MUIM_TheBar_GetDragImage, v11
@@ -2050,7 +2046,7 @@ TheBar.mcc/MUIM_TheBar_Sort
     SEE ALSO
      MUIA_TheBar_DragBar
 
-TheBar.mcc/MUIM_TheBar_GetObject
+TheBar.mcc/MUIM_TheBar_GetObject
 
     NAME
      MUIM_TheBar_GetObject, v11
@@ -2083,7 +2079,7 @@ TheBar.mcc/MUIM_TheBar_Sort
     SEE ALSO
      MUIM_TheBar_DoOnButton
 
-TheBar.mcc/MUIM_TheBar_KillNotify
+TheBar.mcc/MUIM_TheBar_KillNotify
 
     NAME
      MUIM_TheBar_KillNotify, v21
@@ -2119,7 +2115,7 @@ TheBar.mcc/MUIM_TheBar_Sort
     SEE ALSO
      MUIM_TheBar_Notify
 
-TheBar.mcc/MUIM_TheBar_Notify
+TheBar.mcc/MUIM_TheBar_Notify
 
     NAME
      MUIM_TheBar_Notify, v21
@@ -2192,7 +2188,7 @@ TheBar.mcc/MUIM_TheBar_Sort
     SEE ALSO
      MUIM_TheBar_KillNotify
 
-TheBar.mcc/MUIM_TheBar_Remove
+TheBar.mcc/MUIM_TheBar_Remove
 
     NAME
      MUIM_TheBar_Remove, v11
@@ -2219,7 +2215,7 @@ TheBar.mcc/MUIM_TheBar_Sort
     SEE ALSO
      MUIA_TheBar_RemoveSpacers
 
-TheBar.mcc/MUIM_TheBar_SetAttr
+TheBar.mcc/MUIM_TheBar_SetAttr
 
     NAME
      MUIM_TheBar_SetAttr, v11
@@ -2257,7 +2253,7 @@ TheBar.mcc/MUIM_TheBar_Sort
     SEE ALSO
      MUIM_TheBar_GetAttr
 
-TheBar.mcc/MUIM_TheBar_Sort
+TheBar.mcc/MUIM_TheBar_Sort
 
     NAME
      MUIM_TheBar_Sort, v11

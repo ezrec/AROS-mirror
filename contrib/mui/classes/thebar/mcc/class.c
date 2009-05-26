@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -22,7 +22,7 @@
 
 #include "class.h"
 #include "private.h"
-#include "rev.h"
+#include "version.h"
 
 /***********************************************************************/
 
@@ -47,10 +47,10 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
     {
         Object *spacer;
 
-        spacer = spacerObject,
+        spacer = (Object *)spacerObject,
             MUIA_Group_Horiz, isFlagSet(flags, FLG_Horiz),
             isFlagSet(userFlags, UFLG_UserBarSpacerSpacing) ? MUIA_TheBar_BarSpacerSpacing : TAG_IGNORE, data->barSpacerSpacing,
-            MUIA_TheButton_TheBar, obj,
+            MUIA_TheButton_TheBar, (IPTR)obj,
         End;
 
         RETURN(spacer);
@@ -60,11 +60,11 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
     {
       Object *spacer;
 
-      spacer = spacerObject,
+      spacer = (Object *)spacerObject,
                MUIA_Group_Horiz, isFlagSet(flags, FLG_Horiz),
                isFlagSet(flags, FLG_BarSpacer) ? TAG_IGNORE : MUIA_TheButton_Spacer, MUIV_TheButton_Spacer_Button,
                isFlagSet(userFlags, UFLG_UserBarSpacerSpacing) ? MUIA_TheBar_BarSpacerSpacing : TAG_IGNORE, data->barSpacerSpacing,
-               MUIA_TheButton_TheBar, obj,
+               MUIA_TheButton_TheBar, (IPTR)obj,
       End;
 
       RETURN(spacer);
@@ -72,8 +72,8 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
     }
     else if(button->img==MUIV_TheBar_ImageSpacer)
     {
-      if(isFlagClear(data->flags, FLG_TextOnly) && data->brushes &&((LONG)data->spacer>=0) && (data->viewMode!=MUIV_TheBar_ViewMode_Text) &&
-         (o = TheButtonObject,
+      if(data->brushes &&((LONG)data->spacer>=0) && (!button->class) &&
+         (o = (Object *)TheButtonObject,
                MUIA_TheButton_MinVer,                                       16,
                MUIA_Group_Horiz,                                            isFlagSet(flags, FLG_Horiz),
                MUIA_TheButton_TheBar,                                       (IPTR)obj,
@@ -87,8 +87,31 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
                MUIA_TheButton_Sunny,                                        isFlagSet(flags, FLG_Sunny),
                MUIA_TheButton_Scaled,                                       isFlagSet(flags, FLG_Scaled),
                MUIA_TheButton_Spacer,                                       MUIV_TheButton_Spacer_Image,
+               MUIA_TheButton_ID,                                           button->ID,
                isFlagSet(flags, FLG_FreeStrip) ? MUIA_TheButton_Strip : TAG_IGNORE, (IPTR)&data->strip,
           End))
+      {
+        RETURN(o);
+        return o;
+      }
+      else if(data->brushes &&((LONG)data->spacer>=0) && (button->class) &&
+         (o =  NewObject(button->class,NULL,
+               MUIA_TheButton_MinVer,                                       16,
+               MUIA_Group_Horiz,                                            isFlagSet(flags, FLG_Horiz),
+               MUIA_TheButton_TheBar,                                       (IPTR)obj,
+               MUIA_TheButton_NoClick,                                      TRUE,
+               MUIA_TheButton_Image,                                        (IPTR)data->brushes[data->spacer],
+               data->sbrushes ? MUIA_TheButton_SelImage : TAG_IGNORE,       (IPTR)(data->sbrushes ? data->sbrushes[data->spacer] : NULL),
+               data->dbrushes ? MUIA_TheButton_DisImage : TAG_IGNORE,       (IPTR)(data->dbrushes ? data->dbrushes[data->spacer] : NULL),
+               MUIA_TheButton_ViewMode,                                     MUIV_TheButton_ViewMode_Gfx,
+               MUIA_TheButton_Borderless,                                   TRUE,
+               MUIA_TheButton_Raised,                                       FALSE,
+               MUIA_TheButton_Sunny,                                        isFlagSet(flags, FLG_Sunny),
+               MUIA_TheButton_Scaled,                                       isFlagSet(flags, FLG_Scaled),
+               MUIA_TheButton_Spacer,                                       MUIV_TheButton_Spacer_Image,
+               MUIA_TheButton_ID,                                           button->ID,
+               isFlagSet(flags, FLG_FreeStrip) ? MUIA_TheButton_Strip : TAG_IGNORE, (IPTR)&data->strip,
+          TAG_DONE)))
       {
         RETURN(o);
         return o;
@@ -97,10 +120,10 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
       {
         Object *spacer;
 
-        spacer = spacerObject,
+        spacer = (Object *)spacerObject,
                  MUIA_Group_Horiz, isFlagSet(flags, FLG_Horiz),
                  isFlagSet(userFlags, UFLG_UserBarSpacerSpacing) ? MUIA_TheBar_BarSpacerSpacing : TAG_IGNORE, data->barSpacerSpacing,
-                 MUIA_TheButton_TheBar, obj,
+                 MUIA_TheButton_TheBar, (IPTR)obj,
                End;
 
         RETURN(spacer);
@@ -401,17 +424,8 @@ orderButtons(struct IClass *cl,Object *obj,struct InstData *data)
 
 /***********************************************************************/
 
-#ifdef __AROS__
-AROS_UFH3S(ULONG, LayoutFunc,
-AROS_UFHA(struct Hook *         , h  , A0),
-AROS_UFHA(Object *              , obj, A2),
-AROS_UFHA(struct MUI_LayoutMsg *, lm , A1))
-{
-    AROS_USERFUNC_INIT
-#else
 HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 {
-#endif
     struct InstData *data = INST_DATA(lib_thisClass->mcc_Class,obj);
 
     ENTER();
@@ -1128,9 +1142,6 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 
     RETURN(MUILM_UNKNOWN);
     return MUILM_UNKNOWN;
-#ifdef __AROS__
-    AROS_USERFUNC_EXIT
-#endif
 }
 MakeStaticHook(LayoutHook, LayoutFunc);
 
@@ -2000,9 +2011,25 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
     ENTER();
 
-    if ((GetTagData(MUIA_TheBar_MinVer,0,attrs) > LIB_VERSION) ||
-        (pool = CreatePool(MEMF_ANY,2048,1024)) == NULL)
-        return 0;
+    if(GetTagData(MUIA_TheBar_MinVer, 0 ,attrs) > LIB_VERSION)
+    {
+      RETURN(0);
+      return 0;
+    }
+
+    #if defined(__amigaos4__)
+    pool = AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
+                                                            ASOPOOL_Puddle, 2048,
+                                                            ASOPOOL_Threshold, 1024,
+                                                            TAG_DONE);
+    #else
+    pool = CreatePool(MEMF_ANY,2048,1024);
+    #endif
+    if(pool == NULL)
+    {
+      RETURN(0);
+      return 0;
+    }
 
     memset(&pt,0,sizeof(pt));
 
@@ -2223,7 +2250,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
         if (isFlagSet(data->flags, FLG_DragBar))
         {
-            if((data->db = dragBarObject,
+            if((data->db = (Object *)dragBarObject,
                     MUIA_Group_Horiz,      isFlagSet(data->flags, FLG_Horiz),
                     MUIA_TheButton_TheBar, (IPTR)obj,
                 End))
@@ -2264,7 +2291,11 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     }
     else
     {
+      #if defined(__amigaos4__)
+      FreeSysObject(ASOT_MEMPOOL, pool);
+      #else
         DeletePool(pool);
+        #endif
     }
 
     RETURN((IPTR)obj);
@@ -2299,7 +2330,14 @@ mDispose(struct IClass *cl, Object *obj, Msg msg)
   res = DoSuperMethodA(cl, obj, msg);
 
   // delete our previously allocated memory pool
-  DeletePool(pool);
+  if(pool != NULL)
+  {
+    #if defined(__amigaos4__)
+    FreeSysObject(ASOT_MEMPOOL, pool);
+    #else
+    DeletePool(pool);
+    #endif
+  }
 
   RETURN(res);
   return res;
@@ -2425,12 +2463,12 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
     struct TagItem *tag;
-    struct TagItem          *tstate;
-    ULONG          flags = 0, res;
+    const struct TagItem *tstate;
+    ULONG flags = 0, res;
 
     ENTER();
 
-    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem((APTR)&tstate)); )
     {
         IPTR tidata = tag->ti_Data;
 
@@ -2529,7 +2567,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                     {
                         setFlag(data->flags, FLG_DragBar);
 
-                        if((data->db = dragBarObject,
+                        if((data->db = (Object *)dragBarObject,
                                 MUIA_Group_Horiz,      isFlagSet(data->flags, FLG_Horiz),
                                 MUIA_TheButton_TheBar, (IPTR)obj,
                             End))
@@ -4555,11 +4593,7 @@ mHandleEvent(struct IClass *cl, Object *obj, UNUSED struct MUIP_HandleEvent *msg
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,_Dispatcher,cl,obj,msg)
-#else
 DISPATCHER(_Dispatcher)
-#endif
 {
   switch(msg->MethodID)
   {
@@ -4607,8 +4641,5 @@ DISPATCHER(_Dispatcher)
     default:                            return DoSuperMethodA(cl,obj,msg);
   }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /**********************************************************************/

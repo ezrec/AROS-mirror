@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -16,6 +16,8 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
+ $Id: class.h 299 2009-05-24 10:28:06Z damato $
+
 ***************************************************************************/
 
 #ifndef _CLASS_H
@@ -25,10 +27,6 @@
 /*
 ** Includes
 */
-
-#ifdef __AROS__
-#define MUIMASTER_YES_INLINE_STDARG
-#endif
 
 #define __NOLIBBASE__
 #include <proto/exec.h>
@@ -48,11 +46,7 @@
 #include <mui/TheBar_mcc.h>
 #include <mui/TheBar_mcp.h>
 
-#if defined(__amigaos4__) || defined(__AROS__)
 #include <stdio.h>
-#define msprintf sprintf
-#define msnprintf snprintf
-#endif
 #include <string.h>
 #include <stdlib.h>
 
@@ -62,7 +56,7 @@
 
 #include "debug.h"
 #define CATCOMP_NUMBERS
-#include "loc.h"
+#include "locale.h"
 
 /***********************************************************************/
 /*
@@ -80,7 +74,11 @@ extern struct DosLibrary      *DOSBase;
 extern struct IntuitionBase   *IntuitionBase;
 extern struct GfxBase         *GfxBase;
 #endif
+#if defined(__AROS__)
+extern struct UtilityBase     *UtilityBase;
+#else
 extern struct Library         *UtilityBase;
+#endif
 extern struct Library         *MUIMasterBase;
 
 extern struct Library         *DataTypesBase;
@@ -121,18 +119,13 @@ enum
 extern STRPTR regs[], frames[], precisions[], dismodes[],
               spacersSizes[], viewModes[], labelPoss[];
 
-#if defined(__amigaos4__) || defined(__AROS__)
-#define msprintf sprintf
-#define msnprintf snprintf
-#endif
-
 /***************************************************************************/
 /*
 ** Coloradjust class
 */
 
 /* Tag base */
-#define COLORADJBASE 0xF76B1000
+#define COLORADJBASE 0xF76B1000UL
 
 /* Attributes */
 #define MUIA_Coloradj_RedComp    COLORADJBASE+0
@@ -267,46 +260,33 @@ struct MUIS_Popbackground_Status
 ** Macros
 */
 
-#ifdef __AROS__
-#define coloradjustObject       BOOPSIOBJMACRO_START(lib_coloradjust->mcc_Class)
-#define penadjustObject         BOOPSIOBJMACRO_START(lib_penadjust->mcc_Class)
-#define backgroundadjustObject  BOOPSIOBJMACRO_START(lib_backgroundadjust->mcc_Class)
-#define poppenObject            BOOPSIOBJMACRO_START(lib_poppen->mcc_Class)
-#define popbackObject           BOOPSIOBJMACRO_START(lib_popbackground->mcc_Class)
-#else
 #define coloradjustObject       NewObject(lib_coloradjust->mcc_Class,NULL
 #define penadjustObject         NewObject(lib_penadjust->mcc_Class,NULL
 #define backgroundadjustObject  NewObject(lib_backgroundadjust->mcc_Class,NULL
 #define poppenObject            NewObject(lib_poppen->mcc_Class,NULL
 #define popbackObject           NewObject(lib_popbackground->mcc_Class,NULL
-#endif
 
 #define superget(cl,obj,tag,storage)    DoSuperMethod(cl,obj,OM_GET,tag,(IPTR)(storage))
 #define superset(cl,obj,tag,val)        SetSuperAttrs(cl,obj,tag,(IPTR)(val),TAG_DONE)
 #define addconfigitem(cfg,value,size,item) DoMethod(cfg,MUIM_Dataspace_Add,(IPTR)(value),size,item)
 
 #undef get
-#define get(obj,attr,store)            GetAttr((ULONG)(attr),(APTR)obj,(ULONG *)((ULONG)(store)))
+#define get(obj,attr,store)            GetAttr((ULONG)(attr),(APTR)obj,(IPTR *)((IPTR)(store)))
 #undef set
-#define set(obj,attr,value)            SetAttrs((Object *)(obj),(ULONG)(attr),(ULONG)(value),TAG_DONE)
+#define set(obj,attr,value)            SetAttrs((Object *)(obj),(ULONG)(attr),(IPTR)(value),TAG_DONE)
 #undef nnset
-#define nnset(obj,attr,value)          SetAttrs((Object *)(obj),MUIA_NoNotify,TRUE,(ULONG)(attr),(ULONG)(value),TAG_DONE)
+#define nnset(obj,attr,value)          SetAttrs((Object *)(obj),MUIA_NoNotify,TRUE,(ULONG)(attr),(IPTR)(value),TAG_DONE)
 
 // xget()
 // Gets an attribute value from a MUI object
-#ifdef __AROS__
-#define xget XGET
-#else
-ULONG xget(Object *obj, const ULONG attr);
+ULONG xget(Object *obj, const IPTR attr);
 #if defined(__GNUC__)
   // please note that we do not evaluate the return value of GetAttr()
   // as some attributes (e.g. MUIA_Selected) always return FALSE, even
   // when they are supported by the object. But setting b=0 right before
   // the GetAttr() should catch the case when attr doesn't exist at all
-  #define xget(OBJ, ATTR) ({ULONG b=0; GetAttr(ATTR, OBJ, &b); b;})
+  #define xget(OBJ, ATTR) ({IPTR b=0; GetAttr(ATTR, OBJ, &b); b;})
 #endif
-#endif
-
 
 #define olabel(id)    Label(tr(id))
 #define olabel1(id)   Label1(tr(id))
@@ -316,7 +296,6 @@ ULONG xget(Object *obj, const ULONG attr);
 #define oclabel(id)   CLabel(tr(id))
 #define owspace(w)    RectangleObject, MUIA_Weight, (w), End
 #define ofhspace(str) RectangleObject, MUIA_FixHeightTxt, (str), End
-
 
 #ifdef __MORPHOS__
 #undef NewObject
@@ -331,37 +310,43 @@ Object *MUI_NewObject(CONST_STRPTR classname,Tag tag1,...);
 ** MUI undoc stuff
 */
 
+#ifdef __AROS__
+#define MUIA_Text_Copy               0x80427727UL
+#warning MUIA_Text_Copy doesn't exist in Zune's mui.h.
+#warning Examine if this can cause trouble!
+#endif
+
 #ifndef MUIA_Window_MenuGadget
-#define MUIA_Window_MenuGadget       0x8042324E
+#define MUIA_Window_MenuGadget       0x8042324EUL
 #endif
 
 #ifndef MUIA_Window_SnapshotGadget
-#define MUIA_Window_SnapshotGadget   0x80423C55
+#define MUIA_Window_SnapshotGadget   0x80423C55UL
 #endif
 
 #ifndef MUIA_Window_ConfigGadget
-#define MUIA_Window_ConfigGadget     0x8042E262
+#define MUIA_Window_ConfigGadget     0x8042E262UL
 #endif
 
 #ifndef MUIA_Window_IconifyGadget
-#define MUIA_Window_IconifyGadget    0x8042BC26
+#define MUIA_Window_IconifyGadget    0x8042BC26UL
 #endif
 
 
 #ifndef MUIA_Imagedisplay_Spec
-#define MUIA_Imagedisplay_Spec 0x8042a547 
+#define MUIA_Imagedisplay_Spec 0x8042a547UL
 #endif
 
 #ifndef MUIA_Imageadjust_Type
-#define MUIA_Imageadjust_Type 0x80422f2b
+#define MUIA_Imageadjust_Type 0x80422f2bUL
 #endif
 
 #ifndef MUIA_Framedisplay_Spec
-#define MUIA_Framedisplay_Spec 0x80421794
+#define MUIA_Framedisplay_Spec 0x80421794UL
 #endif
 
 #ifndef MUIM_Mccprefs_RegisterGadget
-#define MUIM_Mccprefs_RegisterGadget 0x80424828
+#define MUIM_Mccprefs_RegisterGadget 0x80424828UL
 #endif
 
 #ifndef MUII_PopFont
@@ -390,8 +375,8 @@ Object *MUI_NewObject(CONST_STRPTR classname,Tag tag1,...);
 #endif
 
 #ifndef MUIM_CreateDragImage
-#define MUIM_CreateDragImage 0x8042eb6f /* V18 */ /* Custom Class */
-struct  MUIP_CreateDragImage { ULONG MethodID; LONG touchx; LONG touchy; ULONG flags; }; /* Custom Class */
+#define MUIM_CreateDragImage 0x8042eb6fUL /* V18 */ /* Custom Class */
+struct  MUIP_CreateDragImage { STACKED ULONG MethodID; STACKED LONG touchx; STACKED LONG touchy; STACKED ULONG flags; }; /* Custom Class */
 
 struct MUI_DragImage
 {
@@ -406,8 +391,8 @@ struct MUI_DragImage
 #endif
 
 #ifndef MUIM_DeleteDragImage 
-#define MUIM_DeleteDragImage 0x80423037
-struct MUIP_DeleteDragImage {ULONG MethodID; struct MUI_DragImage *di;}; 
+#define MUIM_DeleteDragImage 0x80423037UL
+struct MUIP_DeleteDragImage {STACKED ULONG MethodID; STACKED struct MUI_DragImage *di;}; 
 #endif
 
 /***********************************************************************/

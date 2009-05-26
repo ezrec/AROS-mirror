@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -16,11 +16,13 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
+ $Id$
+
 ***************************************************************************/
 
 #include "class.h"
 #include "private.h"
-#include "rev.h"
+#include "version.h"
 
 /******************************************************************************/
 
@@ -32,7 +34,7 @@
 
 #define INSTDATA      InstData
 
-#define USERLIBID     CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
+#define USERLIBID     CLASS " " LIB_REV_STRING " [" SYSTEMSHORT "/" CPU "] (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION 19
 
 #define USEDCLASSESP  used_classesP
@@ -76,7 +78,14 @@ static BOOL ClassInit(UNUSED struct Library *base)
 {
     ENTER();
 
+    #if defined(__amigaos4__)
+    if ((lib_pool = AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
+                                                     ASOPOOL_Puddle, 2048,
+                                                     ASOPOOL_Threshold, 1024,
+                                                     TAG_DONE)) != NULL)
+    #else
     if ((lib_pool = CreatePool(MEMF_ANY, 2048, 1024)))
+    #endif
     {
         InitSemaphore(&lib_poolSem);
 
@@ -150,6 +159,16 @@ static BOOL ClassExpunge(UNUSED struct Library *base)
         DataTypesBase = NULL;
     }
 
+    if (lib_pool != NULL)
+    {
+    	#if defined(__amigaos4__)
+    	FreeSysObject(ASOT_MEMPOOL, lib_pool);
+    	#else
+    	DeletePool(lib_pool);
+    	#endif
+    	lib_pool =  NULL;
+    }
+
     clearFlag(lib_flags, BASEFLG_Init|BASEFLG_MUI20|BASEFLG_MUI4);
 
     RETURN(TRUE);
@@ -157,12 +176,3 @@ static BOOL ClassExpunge(UNUSED struct Library *base)
 }
 
 /******************************************************************************/
-
-#ifdef __AROS__
-#include <aros/symbolsets.h>
-ADD2INITLIB(ClassInit, 0);
-ADD2EXPUNGELIB(ClassExpunge, 0);
-#endif
-
-/******************************************************************************/
-

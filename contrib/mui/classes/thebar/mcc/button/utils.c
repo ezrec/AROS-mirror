@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -16,6 +16,8 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
+ $Id$
+
 ***************************************************************************/
 
 #include "class.h"
@@ -28,7 +30,7 @@
 #ifdef __MORPHOS__
 
 #elif defined(__AROS__)
-Object * DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...)
+IPTR DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...)
 {
   AROS_SLOWSTACKTAGS_PRE(tag1)
   retval = DoSuperMethod(cl, obj, OM_NEW, AROS_SLOWSTACKTAGS_ARG(tag1));
@@ -313,11 +315,21 @@ ULONG peekQualifier(void)
 
   ENTER();
 
+  #if defined(__amigaos4__)
+  if((port = AllocSysObject(ASOT_PORT, TAG_DONE)) != NULL)
+  #else
   if((port = CreateMsgPort()) != NULL)
+  #endif
   {
     struct IOStdReq *iorequest;
 
+    #if defined(__amigaos4__)
+    if((iorequest = AllocSysObjectTags(ASOT_IOREQUEST, ASOIOR_ReplyPort, port,
+                                                       ASOIOR_Size, sizeof(*iorequest),
+                                                       TAG_DONE)) != NULL)
+    #else
     if((iorequest = (struct IOStdReq *)CreateIORequest(port, sizeof(*iorequest))) != NULL)
+    #endif
     {
       if(OpenDevice("input.device", 0, (struct IORequest*)iorequest, 0) == 0)
       {
@@ -331,9 +343,19 @@ ULONG peekQualifier(void)
         DROPINTERFACE(IInput);
         CloseDevice((struct IORequest*)iorequest);
       }
+
+      #if defined(__amigaos4__)
+      FreeSysObject(ASOT_IOREQUEST, iorequest);
+      #else
       DeleteIORequest((struct IORequest *)iorequest);
+      #endif
     }
+
+    #if defined(__amigaos4__)
+    FreeSysObject(ASOT_PORT, port);
+    #else
     DeleteMsgPort(port);
+    #endif
   }
 
   RETURN(rc);

@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -58,7 +58,11 @@ struct Library *PictureDTBase = NULL;
 struct GfxBase *GfxBase = NULL;
 struct IntuitionBase *IntuitionBase = NULL;
 struct Library *MUIMasterBase = NULL;
+#if defined(__AROS__)
+struct UtilityBase *UtilityBase = NULL;
+#else
 struct Library *UtilityBase = NULL;
+#endif
 struct Library *CyberGfxBase = NULL;
 struct Library *DataTypesBase = NULL;
 struct Library *PictureDTBase = NULL;
@@ -106,7 +110,7 @@ void closeAll(void)
     if (UtilityBase)
     {
         DROPINTERFACE(IUtility);
-        CloseLibrary(UtilityBase);
+        CloseLibrary((struct Library *)UtilityBase);
     }
 
     D(DBF_STARTUP,"cleaning up IntuitionBase...");
@@ -131,7 +135,7 @@ ULONG initAll(void)
         (IntuitionBase = (APTR)OpenLibrary("intuition.library", 38)) &&
         GETINTERFACE(IIntuition, IntuitionBase) &&
 		#ifndef __amigaos4__
-        (UtilityBase = OpenLibrary("utility.library", 38)) &&
+        (UtilityBase = (APTR)OpenLibrary("utility.library", 38)) &&
         GETINTERFACE(IUtility, UtilityBase) &&
 		#endif        
 		(DataTypesBase = OpenLibrary("datatypes.library", 37)) &&
@@ -293,18 +297,18 @@ int main(void)
 
             set(win,MUIA_Window_Open,TRUE);
 
-            while ((LONG)(id = DoMethod(app,MUIM_Application_NewInput,(ULONG)&sigs)) != MUIV_Application_ReturnID_Quit)
+            while((LONG)(id = DoMethod(app,MUIM_Application_NewInput,(ULONG)&sigs)) != (LONG)MUIV_Application_ReturnID_Quit)
             {
                 if (id==TAG_USER)
                 {
                     ULONG appearanceV, labelPosV, borderlessV, sunnyV, raisedV, scaledV;
 
-                    get(appearance,MUIA_Cycle_Active,&appearanceV);
-                    get(labelPos,MUIA_Cycle_Active,&labelPosV);
-                    get(borderless,MUIA_Selected,&borderlessV);
-                    get(sunny,MUIA_Selected,&sunnyV);
-                    get(raised,MUIA_Selected,&raisedV);
-                    get(scaled,MUIA_Selected,&scaledV);
+                    appearanceV = xget(appearance, MUIA_Cycle_Active);
+                    labelPosV = xget(labelPos, MUIA_Cycle_Active);
+                    borderlessV = xget(borderless, MUIA_Selected);
+                    sunnyV = xget(sunny, MUIA_Selected);
+                    raisedV = xget(raised, MUIA_Selected);
+                    scaledV = xget(scaled, MUIA_Selected);
 
                     SetAttrs(sb,MUIA_TheBar_ViewMode,   appearanceV,
                                 MUIA_TheBar_LabelPos,   labelPosV,

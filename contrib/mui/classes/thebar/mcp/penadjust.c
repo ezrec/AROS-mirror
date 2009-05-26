@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -16,23 +16,16 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
-***************************************************************************/
+ $Id$
 
-#ifdef __AROS__
-#define MUIMASTER_YES_INLINE_STDARG
-#endif
+***************************************************************************/
 
 #include "class.h"
 
 /***********************************************************************/
 
 static struct MUI_CustomClass *penslist = NULL;
-
-#ifdef __AROS__
-#define penslistObject BOOPSIOBJMACRO_START(penslist->mcc_Class)
-#else
 #define penslistObject NewObject(penslist->mcc_Class,NULL
-#endif
 
 /***********************************************************************/
 
@@ -53,7 +46,7 @@ mPenslistNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
     if((obj = (Object *)DoSuperNew(cl,obj,
             MUIA_CycleChain,    TRUE,
-            MUIA_Listview_List, list = ListObject,
+            MUIA_Listview_List, list = (Object *)ListObject,
                 InputListFrame,
                 MUIA_Background,         MUII_ListBack,
                 MUIA_List_ConstructHook, MUIV_List_ConstructHook_String,
@@ -75,11 +68,11 @@ mPenslistNew(struct IClass *cl,Object *obj,struct opSet *msg)
 static IPTR
 mPenslistSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    struct penslistData *data = INST_DATA(cl,obj);
-    struct TagItem      *tag;
-    struct TagItem               *tstate;
+    struct penslistData  *data = INST_DATA(cl,obj);
+    struct TagItem *tag;
+    const struct TagItem *tstate;
 
-    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem((APTR)&tstate)); )
     {
         IPTR tidata = tag->ti_Data;
 
@@ -130,9 +123,9 @@ mPenslistSetup(struct IClass *cl,Object *obj,Msg msg)
     {
         char buf[64];
 
-        msnprintf(buf,sizeof(buf),(STRPTR)"2:m%ld",i);
+        snprintf(buf,sizeof(buf),(STRPTR)"2:m%d",i);
 
-        data->pens[i] = ImageObject,
+        data->pens[i] = (Object *)ImageObject,
             MUIA_Image_FreeHoriz, TRUE,
             MUIA_Image_FreeVert,  TRUE,
             MUIA_FixWidth,        w,
@@ -143,7 +136,11 @@ mPenslistSetup(struct IClass *cl,Object *obj,Msg msg)
         if (data->pens[i])
         {
             data->pimages[i] = (APTR)DoMethod(data->list,MUIM_List_CreateImage,data->pens[i],0);
-            msnprintf(buf,sizeof(buf),(STRPTR)"\33O[%08lx] %s",data->pimages[i],pens[i]);
+            #if defined(__LP64__)
+            snprintf(buf,sizeof(buf),(STRPTR)"\33O[%016lx] %s",(long unsigned int)data->pimages[i],pens[i]);
+            #else
+            snprintf(buf,sizeof(buf),(STRPTR)"\33O[%08lx] %s",data->pimages[i],pens[i]);
+            #endif
             DoMethod(data->list,MUIM_List_InsertSingle,buf,MUIV_List_Insert_Bottom);
         }
     }
@@ -194,11 +191,7 @@ mPenslistShow(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,penslistDispatcher,cl,obj,msg)
-#else
 DISPATCHER(penslistDispatcher)
-#endif
 {
   switch (msg->MethodID)
   {
@@ -210,9 +203,6 @@ DISPATCHER(penslistDispatcher)
     default:           return DoSuperMethodA(cl,obj,msg);
   }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
 
@@ -269,7 +259,7 @@ mPenadjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
             MUIA_CycleChain,      TRUE,
 
             /* MUI */
-            Child, mui = penslistObject, End,
+            Child, mui = (Object *)penslistObject, End,
 
             /* Colormap */
             Child, VGroup,
@@ -279,7 +269,7 @@ mPenadjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
             End,
 
             /* RGB */
-            Child, rgb = coloradjustObject, End,
+            Child, rgb = (Object *)coloradjustObject, End,
 
             TAG_MORE, msg->ops_AttrList)))
     {
@@ -323,10 +313,10 @@ static ULONG
 mPenadjustSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct penadjustData *data = INST_DATA(cl,obj);
-    struct TagItem       *tag;
-    struct TagItem                *tstate;
+    struct TagItem *tag;
+    const struct TagItem *tstate;
 
-    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem((APTR)&tstate)); )
     {
         IPTR tidata = tag->ti_Data;
 
@@ -384,7 +374,7 @@ mPenadjustDragDrop(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragDrop *ms
                 g = (c>>8) & 0xff;
                 b = c & 0xff;
 
-                msnprintf(spec, sizeof(spec), (STRPTR)"r%08lx,%08lx,%08lx",(r<<24)|(r<<16)|(r<<8)|r,(g<<24)|(g<<16)|(g<<8)|g,(b<<24)|(b<<16)|(b<<8)|b);
+                snprintf(spec, sizeof(spec), (STRPTR)"r%08x,%08x,%08x",(r<<24)|(r<<16)|(r<<8)|r,(g<<24)|(g<<16)|(g<<8)|g,(b<<24)|(b<<16)|(b<<8)|b);
                 set(obj,MUIA_Pendisplay_Spec,spec);
             }
 
@@ -444,18 +434,18 @@ mPenadjustSetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_SetSpe
             p = strchr(spec,',');
             if (!p) return MUIV_Popbackground_SetSpec_Fail;
             *p = 0;
-            if (stch_l(spec,(LONG *)&rgb.red)!=8) return MUIV_Popbackground_SetSpec_Fail;
+            if (stch_l(spec,(long *)&rgb.red)!=8) return MUIV_Popbackground_SetSpec_Fail;
             *p++ = ',';
 
             s = p;
             p = strchr(s,',');
             if (!p) return MUIV_Popbackground_SetSpec_Fail;
             *p = 0;
-            if (stch_l(s,(LONG *)&rgb.green)!=8) return MUIV_Popbackground_SetSpec_Fail;
+            if (stch_l(s,(long *)&rgb.green)!=8) return MUIV_Popbackground_SetSpec_Fail;
             *p++ = ',';
 
             s = p;
-            if (stch_l(s,(LONG *)&rgb.blue)!=8) return MUIV_Popbackground_SetSpec_Fail;
+            if (stch_l(s,(long *)&rgb.blue)!=8) return MUIV_Popbackground_SetSpec_Fail;
 
             set(data->rgb,MUIA_Coloradjust_RGB,&rgb);
             superset(cl,obj,MUIA_Group_ActivePage,PAGE_RGB);
@@ -485,7 +475,7 @@ mPenadjustGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpe
         {
           x = xget(data->mui, MUIA_List_Active);
           if(x>=0)
-            msnprintf(spec, sizeof(spec), (STRPTR)"m%ld",x);
+            snprintf(spec, sizeof(spec), (STRPTR)"m%d",x);
           else
             res = MUIV_Popbackground_GetSpec_Fail;
 
@@ -496,7 +486,7 @@ mPenadjustGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpe
         case PAGE_Colormap:
         {
           x = xget(data->colormap, MUIA_Numeric_Value);
-          msnprintf(spec, sizeof(spec), (STRPTR)"p%ld",x);
+          snprintf(spec, sizeof(spec), (STRPTR)"p%d",x);
         }
         break;
 
@@ -505,7 +495,7 @@ mPenadjustGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpe
         {
           struct MUI_RGBcolor *rgb = (struct MUI_RGBcolor *)xget(data->rgb, MUIA_Coloradjust_RGB);
 
-          msnprintf(spec, sizeof(spec), (STRPTR)"r%08lx,%08lx,%08lx", rgb->red, rgb->green, rgb->blue);
+          snprintf(spec, sizeof(spec), (STRPTR)"r%08x,%08x,%08x", rgb->red, rgb->green, rgb->blue);
         }
         break;
     }
@@ -514,7 +504,7 @@ mPenadjustGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpe
     else
     {
         if (msg->flags & MUIV_Popbackground_GetSpec_Image)
-          msprintf(msg->spec, (STRPTR)"2:%s", spec);
+          sprintf(msg->spec, (STRPTR)"2:%s", spec);
         else
           strcpy(msg->spec, spec);
     }
@@ -524,11 +514,7 @@ mPenadjustGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpe
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,penadjustDispatcher,cl,obj,msg)
-#else
 DISPATCHER(penadjustDispatcher)
-#endif
 {
   switch (msg->MethodID)
   {
@@ -542,9 +528,6 @@ DISPATCHER(penadjustDispatcher)
     default:                         return DoSuperMethodA(cl,obj,msg);
   }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
 

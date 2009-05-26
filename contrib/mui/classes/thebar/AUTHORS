@@ -17,7 +17,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: AUTHORS 168 2008-01-19 17:52:48Z alforan $
+ $Id: AUTHORS 258 2008-03-19 13:54:15Z marust $
 
 ***************************************************************************/
 
@@ -26,6 +26,7 @@ design provided by the following people:
 
 Alfonso Ranieri   <alforan@tin.it>
 Jens Langner      <Jens.Langner@light-speed.de>
+Matthias Rustler  <mrustler@gmx.de>
 Thore Boeckelmann <thboeckel@users.sourceforge.net>
 
 The development of TheBar.mcc is hosted by SourceForge http://www.sf.net/

@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -16,12 +16,14 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
+ $Id$
+
 ***************************************************************************/
 
 /* utils.c */
 #ifdef __MORPHOS__
 #elif defined(__AROS__)
-Object * DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
+IPTR DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
 #else
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
 int stch_l(const char *chr_ptr, long *u_ptr);
@@ -37,10 +39,6 @@ Object *opopfri(ULONG key,ULONG title,ULONG help);
 Object *opopback(ULONG gradient,ULONG key,ULONG title,ULONG help);
 Object *opopframe(ULONG key,ULONG title,ULONG help);
 void drawGradient(Object *obj, struct MUIS_TheBar_Gradient *grad);
-#if !defined(__amigaos4__) && !defined(__AROS__)
-STDARGS void msprintf(STRPTR buf,STRPTR fmt,...);
-STDARGS int msnprintf(STRPTR buf,int size,STRPTR fmt,...);
-#endif
 
 /* loc.c */
 struct Catalog *openCatalogVR(CONST_STRPTR name,ULONG minVer,ULONG minRev);

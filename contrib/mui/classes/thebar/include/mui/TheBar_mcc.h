@@ -19,7 +19,7 @@
 **
 ** TheBar class Support Site: http://www.sf.net/projects/thebar
 **
-** $Id: TheBar_mcc.h 230 2008-03-01 14:26:26Z damato $
+** $Id: TheBar_mcc.h 295 2009-05-23 12:02:04Z marust $
 ** $URL: https://thebar.svn.sourceforge.net/svnroot/thebar/trunk/include/mui/TheBar_mcc.h $
 **
 **/
@@ -28,7 +28,7 @@
 #include <libraries/mui.h>
 #endif
 
-#if defined(__PPC__)
+#if !defined(__AROS__) && defined(__PPC__)
   #if defined(__GNUC__)
     #pragma pack(2)
   #elif defined(__VBCC__)
@@ -49,7 +49,7 @@
 #define MUIC_TheBar       "TheBar.mcc"
 #define MUIC_TheBarVirt   "TheBarVirt.mcc"
 
-#ifdef __AROS__
+#if defined(__AROS__) && !defined(NO_INLINE_STDARG)
 #define TheButtonObject   MUIOBJMACRO_START(MUIC_TheButton)
 #define TheBarObject      MUIOBJMACRO_START(MUIC_TheBar)
 #define TheBarVirtObject  MUIOBJMACRO_START(MUIC_TheBarVirt)
@@ -65,8 +65,8 @@
 
 /***********************************************************************/
 
-#define TBUTTAGBASE 0xF76B01C8
-#define TBTAGBASE   0xF76B022C
+#define TBUTTAGBASE 0xF76B01C8UL
+#define TBTAGBASE   0xF76B022CUL
 
 /***********************************************************************/
 /*
@@ -567,7 +567,7 @@ enum
 /***********************************************************************/
 
 
-#if defined(__PPC__)
+#if !defined(__AROS__) && defined(__PPC__)
   #if defined(__GNUC__)
     #pragma pack()
   #elif defined(__VBCC__)

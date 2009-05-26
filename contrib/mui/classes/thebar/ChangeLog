@@ -2,6 +2,165 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+$Id: ChangeLog 315 2009-05-26 09:11:53Z shinkuro $
+$URL: https://thebar.svn.sourceforge.net/svnroot/thebar/trunk/ChangeLog $
+
+2009-05-26  Gianfranco Gignina <sh1nkur0@libero.it>
+
+  * mcc/class.c: When TheButton class is subclassed and pointer to this 
+    subclass is added to struct MUIS_TheBar_Button like documentation said, 
+    this subclass is not used for image spaces. More precisely, If it's used 
+    as space MUIV_TheBar_ImageSpacer value, you should obtain setting 
+    MUIA_TheBar_SpacerIndex to a right image number a TheButton object
+    which has same features of your TheButton subclass, and this 
+    didn't happen. This fix solve this problem without damage normal behaviour 
+    of TheBar. This fix permit to have a d&d space in case of
+    MUIV_TheBar_ImageSpacer and MUIA_TheBar_SpacerIndex right setted. 
+    Now it's possible to sort, remove and add an (image) space button.
+  * doc/MCC_TheBar.doc: Specified an important step to use a TheButton subclass 
+    with TheBar.
+
+#### v26.3 RELEASE ############################################################
+
+2009-05-25 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: bumped version date/revision and updated all readme files for the
+    new 26.3 release - Now with AROS binaries ;)
+
+2009-05-25 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mccinit.c: fixed the last compiler warning for OS3. AROS uses an APTR type
+    for StackSwapStruct->stk_Upper while all other systems use ULONG.
+
+2009-05-24 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: fixed all the rest of the compiler warnings when compiling for
+    AROS. Now the compilation should be clean and the binaries should work
+    on all supported platforms. Time for a new release? ;)
+  * include/mccinit.c: added some minor fixes to get rid of all the still
+    existing compiler warnings when compiling for AROS.
+  * misc: reverted the latest TAGSTATE change and used (APTR) casts in each
+    NextTagItem() call which also fixes the issue and also utilises the const
+    TagItem pointer for other platforms than AROS.
+
+2009-05-24 Thore Böckelmann <tboeckel@gmx.de>
+
+  * #?/class.h, misc: introduced new macro TAGSTATE, because the argument of
+    NextTagItem() seems to be very different on the various systems and the
+    latest changes produce warnings about incompatible pointer types on OS4
+    again.
+
+2009-05-23 Matthias Rustler <mrustler@gmx.de>
+
+  * Get rid of all warnings like
+    passing argument 1 of '(struct TagItem *
+    (*)(const struct TagItem **, void *))(void *)*(ULONG *)(unsigned char
+    *)&((struct JumpVec *)UtilityBase + 4294967264u)->vec' from incompatible
+    pointer type
+    (Under AROS the argument of NextItem() is a "const struct TagItem **")
+  * Don't use #pragma packed on AROS-PPC. 
+  * Get rid of all warnings for format strings (e.g. %ld requires long int
+    but LONG given)
+
+2009-05-22 Jens Langner <Jens.Langner@light-speed.de>
+
+  * include/mui/TheBar_mcc.h: we only use the xxx_OBJMACRO_START
+    macros in our public header in case NO_INLINE_STDARG is not
+    specified. This finally allows to compile TheBar with an AROS
+    cross compiler again.
+
+2009-05-22 Matthias Rustler <mrustler@gmx.de>
+
+  * Bugfix: wrong order of arguments for GetAttr (only on AROS)
+  * Some 64-bit fixes
+  * Some warnings removed (integer <=> pointer conversion)
+  * Using of -DNO_INLINE_STDARG in the AROS metamakefiles made
+    it almost needless to use xxx_OBJMACRO_START together with
+    MUIMASTER_YES_INLINE_STDARG. The only place where I still
+    have to keep them are the public headers, because if an
+    application developer sets the MUIMASTER_YES... macro it
+    will not compile.
+  * Renamed TheBar*t*Virt.mcc to TheBarVirt.mcc
+  * Made the AROS version compiling with the normal Makefiles.
+    Copied AROS version of mui.h into include/libraries. If I
+    compile with the standard mui.h TheBar.mcp refuses to start
+    with strange error message (can't find crawler). As I wasn't
+    able to find the reason I copied the whole file.
+    Adjusted the Makefile for the demos.
+    Sync'd demos/vastubs.c with those for mcc/mcp
+
+2009-05-18 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/coloradjust.c: added missing macro for creating ColorWheels and
+    GradientSliders.
+
+2009-05-17 Matthias Rustler <mrustler@gmx.de>
+
+  * misc: Made TheBar buildable by the AROS build-system again. Use the
+    build_module_simple macro instead of build_module. This means that the
+    library initialisation code is used from TheBar instead of the AROS
+    build-system. Some minor 64-bit fixes (STACKED, IPTR).
+
+2009-05-06 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: adapted all sources to be compilable with an AROS cross compiler
+    rather than having to directly use the AROS build system. Now also SDI
+    is completely used for AROS compatibility. However, we have to still
+    investigate if the cross-compiler compiled AROS binaries work as
+    expected. But this is a clear step forward in getting everything
+    compiled out-of-the-box with our own build system.
+
+2009-05-04 Thore Böckelmann <tboeckel@gmx.de>
+
+  * include/SDI_lib.h: updated to the latest version.
+
+2009-04-30  Thore Böckelmann <tboeckel@gmx.de>
+
+  * updated the SDI headers to their latest fixed versions.
+
+2009-04-08  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/class.c: changed the about string to match our other public classes and
+    to point out that the version displayed is the version of TheBar.mcp and of
+    nothing else.
+
+2009-04-05  Thore Böckelmann <tboeckel@gmx.de>
+
+  * updated the SDI headers and mccinit.c to their latest fixed versions.
+
+2009-01-19  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/library.c: added another missing TAG_DONE.
+
+2009-01-16  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/class.c: added missing TAG_DONE.
+
+2009-01-15  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/libary.c: replaced the obsolete CreatePool() and DeletePool()
+    calls with AllocSysObject() and FreeSysObject() calls for the OS4 build.
+    Additionally the pool is now deleted upon expunge. This was never done
+    before!!
+  * mcc/button/class.c, mcc/button/utils.c: replace the remaining deprecated
+    function calls by AllocSysObject() calls.
+
+2008-12-17  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c: replaced the obsolete CreatePool() and DeletePool() calls with
+    AllocSysObject() and FreeSysObject() calls for the OS4 build.
+
+#### v26.2 RELEASE ############################################################
+
+2008-06-19 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final preparations for the upcoming release of v26.2
+
+2008-04-15  Thore Böckelmann <tboeckel@gmx.de>
+
+  * demo/vastubs.c, demo/Makefile: added vararg stubs for OS3 to be able to link
+    against clib2.
+
 2008-03-19  Matthias Rustler <mrustler@gmx.de>
 
   * AROS port updated

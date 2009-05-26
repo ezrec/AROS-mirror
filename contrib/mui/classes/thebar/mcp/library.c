@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -16,11 +16,13 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
+ $Id$
+
 ***************************************************************************/
 
 #include "class.h"
 #include "private.h"
-#include "rev.h"
+#include "version.h"
 #include <mcc_common.h>
 
 /******************************************************************************/
@@ -33,7 +35,7 @@
 
 #define INSTDATAP     InstData
 
-#define USERLIBID     CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
+#define USERLIBID     CLASS " " LIB_REV_STRING " [" SYSTEMSHORT "/" CPU "] (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION 19
 
 #define CLASSINIT
@@ -222,12 +224,3 @@ ClassExpunge(UNUSED struct Library *base)
 }
 
 /******************************************************************************/
-
-#ifdef __AROS__
-#include <aros/symbolsets.h>
-ADD2INITLIB(ClassInit, 0);
-ADD2EXPUNGELIB(ClassExpunge, 0);
-#endif
-
-/******************************************************************************/
-

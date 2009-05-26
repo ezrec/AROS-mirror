@@ -1,17 +1,16 @@
 Short:    TheBar.mcc - Next Generation Toolbar MUI Custom Class
-Author:   Alfonso Ranieri and TheBar.mcc Open Source Team
+Author:   Alfonso Ranieri and TheBar Open Source Team
 Uploader: Jens Langner <Jens.Langner@light-speed.de>
-Version:  26.1
+Version:  26.3
 Type:     dev/mui
 Requires: AmigaOS 3.0+ or MorphOS, MUI 3.8+, 68020+/PPC604e+
-Replaces: dev/mui/MCC_TheBar-21.5.lha
-Architecture: ppc-amigaos >= 4.0.0; m68k-amigaos >= 3.0; ppc-morphos >= 1.4.2
+Replaces: dev/mui/MCC_TheBar-26.2.lha
+Architecture: ppc-amigaos >= 4.0.0; m68k-amigaos >= 3.0; ppc-morphos >= 1.4.2; i386-aros; ppc-aros; x86_64-aros
 
 Introduction
 ~~~~~~~~~~~~
-Copyright (c) 2003-2008 by Alfonso Ranieri
-
-TheBar is developed by TheBar.mcc Open Source Team
+Copyright (C) 2003-2005 Alfonso Ranieri
+Copyright (C) 2005-2009 by TheBar Open Source Team
 
 TheBar.mcc is a MUI custom class for management of multiple buttons in a
 toolbar-like environment. It allows to group multiple button together, allows
@@ -22,9 +21,9 @@ preferences system.
 
 TheBar.mcc class was originally developed by Alfonso Ranieri. Since November
 2005 it was released under the LGPL license and is now freely available and
-further developed by an indepdent open source developer group.
+further developed by an independent open source developer group.
 
-TheBar.mcc is available for OS3, OS4 and MorphOS.
+TheBar.mcc is available for OS3, OS4, MorphOS and AROS.
 
 The TheBar.mcc class project is hosted on SourceForge. Its project
 name is "thebar".
@@ -52,4 +51,3 @@ Manual Installation
    > copy #?.mcp MUI:Libs/mui/
 
 4) reboot and enjoy the new version ;)
-

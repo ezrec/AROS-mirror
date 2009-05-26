@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -16,10 +16,12 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
+ $Id$
+
 ***************************************************************************/
 
-#if defined(__VBCC__) || defined(NO_INLINE_STDARG)
-#if !defined(__PPC__)
+#if !defined(__AROS__) && (defined(__VBCC__) || defined(NO_INLINE_STDARG))
+#if defined(_M68000) || defined(__M68000) || defined(__mc68000)
 
 #include <exec/types.h>
 

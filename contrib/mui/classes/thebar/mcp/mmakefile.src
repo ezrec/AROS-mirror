@@ -4,21 +4,19 @@ include $(TOP)/config/make.cfg
 
 #MM contrib-zune-classes-thebar-mcp : includes linklibs contrib-zune-classes-thebar-mcp-catalogs
 
-FILES := backgroundadjust \
-	 class \
-	 coloradjust \
-	 debug \
+FILES := \
 	 library \
-	 loc \
-	 penadjust \
-	 popbackground \
-	 poppen \
-	 utils
+	 utils \
+	 locale \
+	 class \
+	 debug \
+	 vastubs
 
-USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include/aros
+USER_INCLUDES := -I../include
+USER_CFLAGS := -DNO_INLINE_STDARG
 
-%build_module mmake=contrib-zune-classes-thebar-mcp \
-  modname=TheBar modtype=mcp moduledir=Extras/Zune/MCC_TheBar/Classes/Zune \
+%build_module_simple mmake=contrib-zune-classes-thebar-mcp \
+  modname=TheBar modtype=mcp moduledir=$(AROS_CONTRIB)/Zune/MCC_TheBar/Classes/Zune \
   files=$(FILES) \
   uselibs="amiga mui rom m"
 
@@ -32,32 +30,32 @@ INCLUDE_FILES := ../include/mui/TheBar_mcc.h
 TARGETDIR := $(AROS_CONTRIB)/Zune/MCC_TheBar/Locale/Catalogs
 
 #MM
-contrib-zune-classes-thebar-mcp-catalogs : loc.h loc.c \
+contrib-zune-classes-thebar-mcp-catalogs : locale.h locale.c \
     $(TARGETDIR)/deutsch/TheBar.catalog \
     $(TARGETDIR)/czech/TheBar.catalog \
     $(TARGETDIR)/svenska/TheBar.catalog \
     $(TARGETDIR)/italiano/TheBar.catalog \
     $(TARGETDIR)/français/TheBar.catalog
 
-loc.h: TheBar.cd loc_h.sd
-	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/TheBar.cd loc.h=$(SRCDIR)/$(CURDIR)/loc_h.sd
+locale.h: locale/TheBar.cd locale_h.sd
+	@$(FLEXCAT) locale/TheBar.cd locale.h=locale_h.sd
 
 $(TARGETDIR)/deutsch/TheBar.catalog: locale/german.ct
 	@$(MKDIR) $(TARGETDIR)/deutsch
-	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) locale/TheBar.cd $< CATALOG $@
 
 $(TARGETDIR)/czech/TheBar.catalog: locale/czech.ct
 	@$(MKDIR) $(TARGETDIR)/czech
-	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) locale/TheBar.cd $< CATALOG $@
 
 $(TARGETDIR)/français/TheBar.catalog: locale/french.ct
 	@$(MKDIR) $(TARGETDIR)/français
-	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) locale/TheBar.cd $< CATALOG $@
 
 $(TARGETDIR)/svenska/TheBar.catalog: locale/swedish.ct
 	@$(MKDIR) $(TARGETDIR)/svenska
-	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) locale/TheBar.cd $< CATALOG $@
 
 $(TARGETDIR)/italiano/TheBar.catalog: locale/italian.ct
 	@$(MKDIR) $(TARGETDIR)/italiano
-	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) locale/TheBar.cd $< CATALOG $@

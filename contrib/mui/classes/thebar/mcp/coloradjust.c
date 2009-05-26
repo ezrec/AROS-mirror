@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -16,11 +16,9 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
-***************************************************************************/
+ $Id$
 
-#ifdef __AROS__
-#define MUIMASTER_YES_INLINE_STDARG
-#endif
+***************************************************************************/
 
 #include "class.h"
 #include <proto/colorwheel.h>
@@ -35,18 +33,10 @@ struct Library *ColorWheelBase = NULL;
 struct Library *GradientSliderBase = NULL;
 
 static struct MUI_CustomClass *gradientslider = NULL;
-#ifdef __AROS__
-#define gradientsliderObject BOOPSIOBJMACRO_START(gradientslider->mcc_Class)
-#else
-#define gradientsliderObject NewObject(gradientslider->mcc_Class,NULL
-#endif
+#define gradientsliderObject NewObject(gradientslider->mcc_Class, NULL
 
 static struct MUI_CustomClass *colorwheel = NULL;
-#ifdef __AROS__
-#define colorwheelObject BOOPSIOBJMACRO_START(colorwheel->mcc_Class)
-#else
-#define colorwheelObject NewObject(colorwheel->mcc_Class,NULL
-#endif
+#define colorwheelObject NewObject(colorwheel->mcc_Class, NULL
 
 /***********************************************************************/
 
@@ -106,10 +96,10 @@ static IPTR
 mColorWheelSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct colorWheelData *data = INST_DATA(cl,obj);
-    struct TagItem        *tag;
-    struct TagItem                 *tstate;
+    struct TagItem *tag;
+    const struct TagItem *tstate;
 
-    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem((APTR)&tstate)); )
     {
         IPTR tidata = tag->ti_Data;
 
@@ -201,7 +191,7 @@ mColorWheelHide(struct IClass *cl,Object *obj,Msg msg)
 
     #ifdef __AROS__
     // AROS's get() doesn't like a structure as storage pointer
-    GetAttr(obj,WHEEL_HSB, (IPTR*)&data->hsb);
+    GetAttr(WHEEL_HSB, obj, (IPTR*)&data->hsb);
     #else
     get(obj,WHEEL_HSB, (ULONG)&data->hsb);
     #endif
@@ -224,7 +214,7 @@ mColorWheelHandleEvent(UNUSED struct IClass *cl,Object *obj,struct MUIP_HandleEv
 
         #ifdef __AROS__
         // AROS's get() doesn't like a structure as storage pointer
-        GetAttr(obj,WHEEL_HSB,(IPTR*)&hsb);
+        GetAttr(WHEEL_HSB,obj,(IPTR*)&hsb);
         #else
         get(obj,WHEEL_HSB,(ULONG)&hsb);
         #endif
@@ -236,11 +226,7 @@ mColorWheelHandleEvent(UNUSED struct IClass *cl,Object *obj,struct MUIP_HandleEv
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,colorWheelDispatcher,cl,obj,msg)
-#else
 DISPATCHER(colorWheelDispatcher)
-#endif
 {
   switch (msg->MethodID)
   {
@@ -252,9 +238,6 @@ DISPATCHER(colorWheelDispatcher)
     default:               return DoSuperMethodA(cl,obj,msg);
   }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
 
@@ -345,11 +328,11 @@ static IPTR
 mGradientSliderSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct gradientSliderData *data = INST_DATA(cl,obj);
-    struct TagItem            *tag;
-    struct TagItem                     *tstate;
-    ULONG                     rgb = FALSE;
+    struct TagItem *tag;
+    const struct TagItem *tstate;
+    BOOL rgb = FALSE;
 
-    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem((APTR)&tstate)); )
     {
         IPTR tidata = tag->ti_Data;
 
@@ -489,11 +472,7 @@ mGradientSliderHandleEvent(UNUSED struct IClass *cl,Object *obj,struct MUIP_Hand
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,gradientSliderDispatcher,cl,obj,msg)
-#else
 DISPATCHER(gradientSliderDispatcher)
-#endif
 {
   switch (msg->MethodID)
   {
@@ -508,9 +487,6 @@ DISPATCHER(gradientSliderDispatcher)
     default:               return DoSuperMethodA(cl,obj,msg);
   }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
 
@@ -560,7 +536,7 @@ mColoradjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
         }
         else
         {
-            data->color = ColorfieldObject,
+            data->color = (Object *)ColorfieldObject,
                 TextFrame,
                 MUIA_Background,  MUII_ButtonBack,
                 MUIA_InnerLeft,   2,
@@ -577,14 +553,14 @@ mColoradjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
             DoMethod(obj,OM_ADDMEMBER,data->color);
         }
 
-        o = VGroup,
+        o = (Object *)VGroup,
             Child, (IPTR)(data->red   = oslider(0,Msg_Coloradjust_RedHelp,0,255)),
             Child, (IPTR)(data->green = oslider(0,Msg_Coloradjust_GreenHelp,0,255)),
             Child, (IPTR)(data->blue  = oslider(0,Msg_Coloradjust_BlueHelp,0,255)),
             Child, HGroup,
                 MUIA_Group_HorizSpacing, 1,
-                Child, data->colorwheel = colorwheelObject, End,
-                Child, data->slider = gradientsliderObject, End,
+                Child, (IPTR)(data->colorwheel = (Object *)colorwheelObject, End),
+                Child, (IPTR)(data->slider = (Object *)gradientsliderObject, End),
             End,
         End;
         if (!o)
@@ -659,11 +635,11 @@ static IPTR
 mColoradjustSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct coloradjustData *data = INST_DATA(cl,obj);
-    struct TagItem         *tag;
-    struct TagItem                  *tstate;
-    ULONG                  nonotify = FALSE, wheel = FALSE, hsb = FALSE, rgb = FALSE, grad = FALSE, comp = FALSE;
+    struct TagItem *tag;
+    const struct TagItem *tstate;
+    BOOL nonotify = FALSE, wheel = FALSE, hsb = FALSE, rgb = FALSE, grad = FALSE, comp = FALSE;
 
-    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem((APTR)&tstate)); )
     {
         IPTR tidata = tag->ti_Data;
 
@@ -920,7 +896,7 @@ mColoradjustDragDrop(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragDrop *
             if((p = strchr(spec,',')))
             {
                 *p = 0;
-                if (stch_l(spec,(LONG *)&rgb.cw_Red)==8)
+                if (stch_l(spec,(long *)&rgb.cw_Red)==8)
                 {
                     char *s;
 
@@ -928,10 +904,10 @@ mColoradjustDragDrop(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragDrop *
                     if((p = strchr(s,',')))
                     {
                         *p = 0;
-                        if (stch_l(s,(LONG *)&rgb.cw_Green)==8)
+                        if (stch_l(s,(long *)&rgb.cw_Green)==8)
                         {
                             s = ++p;
-                            if (stch_l(s,(LONG *)&rgb.cw_Blue)==8) set(obj,MUIA_Coloradjust_RGB,&rgb);
+                            if (stch_l(s,(long *)&rgb.cw_Blue)==8) set(obj,MUIA_Coloradjust_RGB,&rgb);
                         }
                     }
                 }
@@ -961,11 +937,7 @@ mColoradjustDragDrop(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragDrop *
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,coloradjustDispatcher,cl,obj,msg)
-#else
 DISPATCHER(coloradjustDispatcher)
-#endif
 {
   switch (msg->MethodID)
   {
@@ -979,9 +951,6 @@ DISPATCHER(coloradjustDispatcher)
     default:             return DoSuperMethodA(cl,obj,msg);
   }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
 

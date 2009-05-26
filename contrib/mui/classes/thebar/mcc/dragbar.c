@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -15,6 +15,8 @@
  Lesser General Public License for more details.
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
+
+ $Id$
 
 ***************************************************************************/
 
@@ -88,13 +90,14 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 static IPTR
 mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    struct data    *data = INST_DATA(cl,obj);
-    struct TagItem *tag, *tstate;
-    IPTR           result = 0;
+    struct data *data = INST_DATA(cl,obj);
+    struct TagItem *tag;
+    const struct TagItem *tstate;
+    IPTR result = 0;
 
     ENTER();
 
-    for (tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem((APTR)&tstate)); )
     {
         ULONG tidata = tag->ti_Data;
 
@@ -330,11 +333,7 @@ mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,DragBarDispatcher,cl,obj,msg)
-#else
 DISPATCHER(DragBarDispatcher)
-#endif
 {
     switch(msg->MethodID)
     {
@@ -349,9 +348,6 @@ DISPATCHER(DragBarDispatcher)
         default:                  return DoSuperMethodA(cl,obj,msg);
     }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
 

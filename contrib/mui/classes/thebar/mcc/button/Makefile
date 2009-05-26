@@ -2,7 +2,7 @@
 #
 # TheBar.mcc - Next Generation Toolbar MUI Custom Class
 # Copyright (C) 2003-2005 Alfonso Ranieri
-# Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
+# Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -16,7 +16,7 @@
 #
 # TheBar class Support Site:  http://www.sf.net/projects/thebar
 #
-# $Id: Makefile 300 2009-05-24 12:25:11Z damato $
+# $Id: version.h 277 2009-04-20 18:24:07Z damato $
 #
 #***************************************************************************/
 
@@ -147,39 +147,41 @@ endif
 # none - because we want to compile with -Wall all the time
 
 # Common Directories
-OBJDIR = .obj_$(OS)
-BINDIR = bin_$(OS)
+PREFIX   = $(CDTHIS)
+OBJDIR   = .obj_$(OS)
+BINDIR   = bin_$(OS)
+VPATH    = $(OBJDIR)
+DEPFILE  = Makefile.dep
+DESTDIR  = MUI:Libs/MUI
 
 # target definition
-DEMO1TARGET  = $(BINDIR)/demo1
-
-DEMO2TARGET  = $(BINDIR)/demo2
-
-DEMO3TARGET  = $(BINDIR)/demo3
-
-DEMO4TARGET  = $(BINDIR)/demo4
-
-DEMO5TARGET  = $(BINDIR)/demo5
-
-DEMO6TARGET  = $(BINDIR)/demo6
-
-DEMO7TARGET  = $(BINDIR)/demo7
-
-DEMO8TARGET  = $(BINDIR)/demo8
-
-DEMO9TARGET  = $(BINDIR)/demo9
-
-DEMO10TARGET = $(BINDIR)/demo10
+TARGET    = $(BINDIR)/TheButton.mcc
+TESTTARGET= $(BINDIR)/TheButton-Test
 
 # Common compiler/linker flags
 WARN     = -W -Wall -Wwrite-strings -Wpointer-arith -Wsign-compare
 OPTFLAGS = -O3 -fomit-frame-pointer -funroll-loops
 DEBUG    = -DDEBUG -O0
 DEBUGSYM = -gstabs
-CFLAGS   = -I. -I../include $(CPU) $(WARN) $(OPTFLAGS) \
-           $(DEBUG) $(DEBUGSYM) -c
+CFLAGS   = -I. -I../../include $(CPU) $(WARN) $(OPTFLAGS) \
+           $(DEBUG) $(DEBUGSYM) $(USER_CFLAGS) -c
 LDFLAGS  = $(CPU) $(DEBUGSYM)
 LDLIBS   =
+
+###########################################################################
+# object files definition
+#
+
+MCCOBJS = library.o \
+          utils.o \
+          brc1.o \
+          scale.o \
+          build.o \
+          class.o \
+          debug.o \
+          vastubs.o
+
+OBJS = $(addprefix $(OBJDIR)/,$(MCCOBJS))
 
 # different options per target OS
 ifeq ($(OS), os4)
@@ -188,9 +190,11 @@ ifeq ($(OS), os4)
   # AmigaOS4
 
   # Compiler/link/strip commands
-  CC      = ppc-amigaos-gcc
-  STRIP   = ppc-amigaos-strip
-  OBJDUMP = ppc-amigaos-objdump
+  ifneq ($(HOST), AmigaOS4)
+    CC      = ppc-amigaos-gcc
+    STRIP   = ppc-amigaos-strip
+    OBJDUMP = ppc-amigaos-objdump
+  endif
 
   # Compiler/Linker flags
   CRT      = newlib
@@ -200,6 +204,9 @@ ifeq ($(OS), os4)
               -DNO_PPCINLINE_STDARG -Wa,-mregnames
   LDFLAGS  += -mcrt=$(CRT)
 
+  # additional object files required
+  M68KSTUBS = $(OBJDIR)/mccclass_68k.o
+
 else
 ifeq ($(OS), os3)
 
@@ -207,12 +214,14 @@ ifeq ($(OS), os3)
   # AmigaOS3
 
   # Compiler/link/strip commands
-  CC      = m68k-amigaos-gcc
-  STRIP   = m68k-amigaos-strip
-  OBJDUMP = m68k-amigaos-objdump
+  ifneq ($(HOST), AmigaOS)
+    CC      = m68k-amigaos-gcc
+    STRIP   = m68k-amigaos-strip
+    OBJDUMP = m68k-amigaos-objdump
+  endif
 
   # Compiler/Linker flags
-  CPU	    = -m68020-60 -msoft-float
+  CPU     = -m68020-60 -msoft-float
   CFLAGS  += -noixemul -DNO_INLINE_STDARG
   LDFLAGS += -noixemul
   LDLIBS  += -ldebug -lmui
@@ -223,10 +232,14 @@ ifeq ($(OS), mos)
   ##############################
   # MorphOS
 
+  DESTDIR = SYS:Classes/MUI
+
   # Compiler/link/strip commands
-  CC      = ppc-morphos-gcc
-  STRIP   = ppc-morphos-strip
-  OBJDUMP = ppc-morphos-objdump
+  ifneq ($(HOST), MorphOS)
+    CC      = ppc-morphos-gcc
+    STRIP   = ppc-morphos-strip
+    OBJDUMP = ppc-morphos-objdump
+  endif
 
   # Compiler/Linker flags
   CPU     = -mcpu=powerpc
@@ -240,6 +253,8 @@ ifeq ($(OS), aros-i386)
   ##############################
   # AROS (i386)
 
+  DESTDIR = SYS:Classes/Zune
+
   ifneq ($(HOST), AROS)
     CC      = i386-aros-gcc
     STRIP   = i386-aros-strip
@@ -248,13 +263,15 @@ ifeq ($(OS), aros-i386)
 
   # Compiler/Linker flags
   CFLAGS += -Wno-pointer-sign -DNO_INLINE_STDARG
-  LDLIBS += -larossupport -lamiga -lmui
+  LDLIBS += -larossupport -lrom -lmui
 
 else
 ifeq ($(OS), aros-ppc)
 
   ##############################
   # AROS (PPC)
+
+  DESTDIR = SYS:Classes/Zune
 
   ifneq ($(HOST), AROS)
     CC      = ppc-aros-gcc
@@ -264,13 +281,15 @@ ifeq ($(OS), aros-ppc)
 
   # Compiler/Linker flags
   CFLAGS += -Wno-pointer-sign -DNO_INLINE_STDARG
-  LDLIBS += -larossupport -lamiga -lmui
+  LDLIBS += -larossupport -lrom -lmui
 
 else
 ifeq ($(OS), aros-x86_64)
 
   ##############################
   # AROS (x86_64)
+
+  DESTDIR = SYS:Classes/Zune
 
   ifneq ($(HOST), AROS)
     CC      = x86_64-aros-gcc
@@ -280,7 +299,7 @@ ifeq ($(OS), aros-x86_64)
 
   # Compiler/Linker flags
   CFLAGS += -Wno-pointer-sign -DNO_INLINE_STDARG
-  LDLIBS += -larossupport -lamiga -lmui
+  LDLIBS += -larossupport -lrom -lmui
 
 endif
 endif
@@ -293,125 +312,102 @@ endif
 # Here starts all stuff that is common for all target platforms and
 # hosts.
 
-DEMO1OBJS  = $(OBJDIR)/demo1.o $(OBJDIR)/vastubs.o
-
-DEMO2OBJS  = $(OBJDIR)/demo2.o $(OBJDIR)/vastubs.o
-
-DEMO3OBJS  = $(OBJDIR)/demo3.o $(OBJDIR)/vastubs.o
-
-DEMO4OBJS  = $(OBJDIR)/demo4.o $(OBJDIR)/vastubs.o
-
-DEMO5OBJS  = $(OBJDIR)/demo5.o $(OBJDIR)/vastubs.o
-
-DEMO6OBJS  = $(OBJDIR)/demo6.o $(OBJDIR)/vastubs.o
-
-DEMO7OBJS  = $(OBJDIR)/demo7.o $(OBJDIR)/vastubs.o
-
-DEMO8OBJS  = $(OBJDIR)/demo8.o $(OBJDIR)/vastubs.o
-
-DEMO9OBJS  = $(OBJDIR)/demo9.o $(OBJDIR)/vastubs.o
-
-DEMO10OBJS = $(OBJDIR)/demo10.o $(OBJDIR)/vastubs.o
-
-#
-
-all: $(BINDIR) $(OBJDIR) $(DEMO1TARGET) $(DEMO2TARGET) $(DEMO3TARGET) $(DEMO4TARGET) $(DEMO5TARGET) $(DEMO6TARGET) $(DEMO7TARGET) $(DEMO8TARGET) $(DEMO9TARGET) $(DEMO10TARGET)
+# main target
+.PHONY: all
+ifeq ($(wildcard $(DEPFILE)),$(DEPFILE))
+# great, we have a dependecies file, let's make our target
+all: $(BINDIR) $(OBJDIR) $(M68KSTUBS) $(TARGET)
+else
+# no dependecies, create it and then call make again
+all: depend
+	@make --no-print-directory all
+endif
 
 # make the object directories
 $(OBJDIR):
 	@echo "  MK $@"
 	@$(MKDIR) $(OBJDIR)
 
-
 # make the binary directories
 $(BINDIR):
 	@echo "  MK $@"
 	@$(MKDIR) $(BINDIR)
 
-#
-
+# for compiling single .c files
 $(OBJDIR)/%.o: %.c
 	@echo "  CC $<"
 	@$(CC) $(CFLAGS) $< -o $@
 
-#
+$(OBJDIR)/mccclass_68k.o: ../../include/mccclass_68k.c
+	@echo "  CC $<"
+	@$(CC) $(CFLAGS) $< -o $@
 
-$(DEMO1TARGET): $(DEMO1OBJS)
+# for linking the target
+$(TARGET): $(M68KSTUBS) $(OBJS)
 	@echo "  LD $@.debug"
-	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO1OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@$(CC) -nostartfiles $(LDFLAGS) -o $@.debug $(OBJS) $(M68KSTUBS) $(LDLIBS) -Wl,--cref,-M,-Map=$@.map
 	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
-$(DEMO2TARGET): $(DEMO2OBJS)
+# for linking the target
+$(TESTTARGET): $(TESTOBJS)
 	@echo "  LD $@.debug"
-	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO2OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@$(CC) $(LDFLAGS) -o $@.debug $(TESTOBJS) $(LDLIBS) -Wl,--cref,-M,-Map=$@.map
 	@echo "  LD $@"
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
-$(DEMO3TARGET): $(DEMO3OBJS)
-	@echo "  LD $@.debug"
-	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO3OBJS) $(LDLIBS) -Wl,-Map,$@.map
-	@echo "  LD $@"
-	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
+$(OBJDIR)/library.o: library.c ../../include/mccinit.c \
+  ../../include/mui/TheBar_mcc.h private.h version.h
 
-$(DEMO4TARGET): $(DEMO4OBJS)
-	@echo "  LD $@.debug"
-	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO4OBJS) $(LDLIBS) -Wl,-Map,$@.map
-	@echo "  LD $@"
-	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
-
-$(DEMO5TARGET): $(DEMO5OBJS)
-	@echo "  LD $@.debug"
-	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO5OBJS) $(LDLIBS) -Wl,-Map,$@.map
-	@echo "  LD $@"
-	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
-
-$(DEMO6TARGET): $(DEMO6OBJS)
-	@echo "  LD $@.debug"
-	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO6OBJS) $(LDLIBS) -Wl,-Map,$@.map
-	@echo "  LD $@"
-	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
-
-$(DEMO7TARGET): $(DEMO7OBJS)
-	@echo "  LD $@.debug"
-	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO7OBJS) $(LDLIBS) -Wl,-Map,$@.map
-	@echo "  LD $@"
-	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
-
-$(DEMO8TARGET): $(DEMO8OBJS)
-	@echo "  LD $@.debug"
-	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO8OBJS) $(LDLIBS) -Wl,-Map,$@.map
-	@echo "  LD $@"
-	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
-
-$(DEMO9TARGET): $(DEMO9OBJS)
-	@echo "  LD $@.debug"
-	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO9OBJS) $(LDLIBS) -Wl,-Map,$@.map
-	@echo "  LD $@"
-	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
-
-$(DEMO10TARGET): $(DEMO10OBJS)
-	@echo "  LD $@.debug"
-	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO10OBJS) $(LDLIBS) -Wl,-Map,$@.map
-	@echo "  LD $@"
-	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
-
-#
+.PHONY: dump
+dump:
+	-$(OBJDUMP) --section-headers --all-headers --reloc --disassemble-all $(TARGET) > $(TARGET).dump
 
 .PHONY: clean
 clean:
-	-$(RM) $(DEMO1OBJS) $(DEMO1TARGET) $(DEMO1TARGET).debug $(DEMO1TARGET).map
-	-$(RM) $(DEMO2OBJS) $(DEMO2TARGET) $(DEMO2TARGET).debug $(DEMO2TARGET).map
-	-$(RM) $(DEMO3OBJS) $(DEMO3TARGET) $(DEMO3TARGET).debug $(DEMO3TARGET).map
-	-$(RM) $(DEMO4OBJS) $(DEMO4TARGET) $(DEMO4TARGET).debug $(DEMO4TARGET).map
-	-$(RM) $(DEMO5OBJS) $(DEMO5TARGET) $(DEMO5TARGET).debug $(DEMO5TARGET).map
-	-$(RM) $(DEMO6OBJS) $(DEMO6TARGET) $(DEMO6TARGET).debug $(DEMO6TARGET).map
-	-$(RM) $(DEMO7OBJS) $(DEMO7TARGET) $(DEMO7TARGET).debug $(DEMO7TARGET).map
-	-$(RM) $(DEMO8OBJS) $(DEMO8TARGET) $(DEMO8TARGET).debug $(DEMO8TARGET).map
-	-$(RM) $(DEMO9OBJS) $(DEMO9TARGET) $(DEMO9TARGET).debug $(DEMO9TARGET).map
-	-$(RM) $(DEMO10OBJS) $(DEMO10TARGET) $(DEMO10TARGET).debug $(DEMO10TARGET).map
+	-$(RM) $(TARGET) $(TARGET).debug $(TARGET).map
+	-$(RM) $(TESTTARGET) $(TESTTARGET).debug $(TESTTARGET).map
+	-$(RM) $(OBJS) $(M68KSTUBS)
 
 .PHONY: distclean
 distclean: clean
+	-$(RM) locale.h
+	-$(RM) $(LOCALE)/*.catalog
 	-$(RMDIR) $(OBJDIR)
 	-$(RMDIR) $(BINDIR)
+
+# install
+.PHONY: install
+install: all
+	@echo "  IN $(TARGET)"
+	@$(CP) $(TARGET) $(DESTDIR)
+
+.PHONY: help
+help:
+	@echo "Cleaning targets:"
+	@echo "  clean     - Cleanup working directory for clean compile"
+	@echo "  distclean - Also cleanup autogenerated files"
+	@echo ""
+	@echo "Other generic targets:"
+	@echo "  all      - Build $(TARGET)"
+	@echo "  catalogs - Build all available catalogs"
+	@echo ""
+	@echo "Install targets:"
+	@echo "  install  - Install $(TARGET) into $(DESTDIR)"
+	@echo ""
+	@echo "Parameters:"
+	@echo "  make OS=os3|os4|mos|aros-i386|aros-i686|aros-ppc|aros-x86_64"
+	@echo "  make DEBUG= : build $(TARGET) without debugging information"
+	@echo ""
+
+## DEPENDENCY GENERATION ##############
+
+.PHONY: depend
+depend: 
+	@echo "  MK $(DEPFILE)"
+	@echo "# AUTOGENERATED! DO NOT EDIT!!!" >$(DEPFILE)
+	@$(CC) -MM $(CFLAGS) $(patsubst %.o,%.c, $(MCCOBJS)) >>$(DEPFILE)
+	@echo "# AUTOGENERATED! DO NOT EDIT!!!" >>$(DEPFILE)
+
+# include dependencies file
+-include $(DEPFILE)

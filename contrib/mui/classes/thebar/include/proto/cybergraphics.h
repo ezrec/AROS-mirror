@@ -51,11 +51,15 @@ extern struct Library * CyberGfxBase;
   #include <clib/cybergraphics_protos.h>
  #endif /* CLIB_CYBERGRAPHICS_PROTOS_H */
  #if defined(__GNUC__)
-  #ifndef __PPC__
-   #include <inline/cybergraphics.h>
+  #ifdef __AROS__
+   #include <defines/cybergraphics.h>
   #else
-   #include <ppcinline/cybergraphics.h>
-  #endif /* __PPC__ */
+   #ifndef __PPC__
+    #include <inline/cybergraphics.h>
+   #else
+    #include <ppcinline/cybergraphics.h>
+   #endif /* __PPC__ */
+  #endif /* __AROS__ */
  #elif defined(__VBCC__)
   #ifndef __PPC__
    #include <inline/cybergraphics_protos.h>

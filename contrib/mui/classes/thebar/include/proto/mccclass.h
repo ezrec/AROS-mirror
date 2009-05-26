@@ -2,7 +2,7 @@
 #define PROTO_MCCCLASS_H
 
 /*
-**	$Id: mccclass.h 82 2005-04-10 08:23:48Z damato $
+**	$Id: mccclass.h 326 2009-04-19 22:38:26Z damato $
 **	Includes Release 50.1
 **
 **	Prototype/inline/pragma header file combo
@@ -39,11 +39,15 @@
   #include <clib/mccclass_protos.h>
  #endif /* CLIB_MCCCLASS_PROTOS_H */
  #if defined(__GNUC__)
-  #ifndef __PPC__
-   #include <inline/mccclass.h>
+  #ifdef __AROS__
+   #include <defines/muimaster.h>
   #else
-   #include <ppcinline/mccclass.h>
-  #endif /* __PPC__ */
+    #ifndef __PPC__
+     #include <inline/mccclass.h>
+    #else
+     #include <ppcinline/mccclass.h>
+    #endif /* __PPC__ */
+  #endif /* __AROS__ */
  #elif defined(__VBCC__)
   #ifndef __PPC__
    #include <inline/mccclass_protos.h>

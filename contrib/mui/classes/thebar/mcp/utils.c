@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -16,6 +16,8 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
+ $Id$
+
 ***************************************************************************/
 
 #include "class.h"
@@ -24,16 +26,14 @@
 
 // DoSuperNew()
 // Calls parent NEW method within a subclass
-#ifdef __MORPHOS__
-
-#elif defined(__AROS__)
-Object * DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...)
+#if defined(__AROS__)
+IPTR DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...)
 {
   AROS_SLOWSTACKTAGS_PRE(tag1)
   retval = DoSuperMethod(cl, obj, OM_NEW, AROS_SLOWSTACKTAGS_ARG(tag1));
   AROS_SLOWSTACKTAGS_POST
 }
-#else
+#elif !defined(__MORPHOS__)
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
   Object *rc;
@@ -467,77 +467,3 @@ drawGradient(Object *obj,struct MUIS_TheBar_Gradient *grad)
 #endif
 
 /***********************************************************************/
-
-#if !defined(__amigaos4__) && !defined(__AROS__)
-
-#if !defined(__MORPHOS__)
-static UWORD fmtfunc[] = {0x16c0,0x4e75};
-#endif
-
-STDARGS void
-msprintf(STRPTR buf,STRPTR fmt,...)
-{
-    #ifdef __MORPHOS__
-    va_list va;
-    va_start(va,fmt);
-    VNewRawDoFmt(fmt,(APTR)0,buf,va);
-    va_end(va);
-    #else
-    RawDoFmt(fmt,&fmt+1,(APTR)fmtfunc,buf);
-    #endif
-}
-
-struct stream
-{
-    UBYTE   *buf;
-    int     size;
-    int     counter;
-    int     stop;
-};
-
-static void
-#ifdef __MORPHOS__
-msnprintfStuff(struct stream *st,UBYTE c)
-#else
-ASM msnprintfStuff(REG(d0,UBYTE c),REG(a3,struct stream *st))
-#endif
-{
-    if (!st->stop)
-    {
-        if (++st->counter>=st->size)
-        {
-            *(st->buf) = 0;
-            st->stop   = 1;
-        }
-        else *(st->buf++) = c;
-    }
-}
-
-STDARGS int
-msnprintf(STRPTR buf,int size,STRPTR fmt,...)
-{
-    struct stream st;
-    #ifdef __MORPHOS__
-    va_list       va;
-    va_start(va,fmt);
-    #endif
-
-    st.buf     = buf;
-    st.size    = size;
-    st.counter = 0;
-    st.stop    = 0;
-
-    #ifdef __MORPHOS__
-    VNewRawDoFmt(fmt,(APTR)msnprintfStuff,(STRPTR)&st,va);
-    va_end(va);
-    #else
-    RawDoFmt(fmt,&fmt+1,(APTR)msnprintfStuff,&st);
-    #endif
-
-    return st.counter-1;
-}
-
-#endif /* !__amigaos4__ && !__AROS__ */
-
-/***********************************************************************/
-

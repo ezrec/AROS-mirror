@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -15,6 +15,8 @@
  Lesser General Public License for more details.
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
+
+ $Id$
 
 ***************************************************************************/
 
@@ -97,12 +99,12 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 static IPTR
 mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    struct data    *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
     struct TagItem *tag;
-    struct TagItem          *tstate;
-    ULONG          redraw = FALSE;
+    const struct TagItem *tstate;
+    BOOL redraw = FALSE;
 
-    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem((APTR)&tstate)); )
     {
         IPTR tidata = tag->ti_Data;
 
@@ -259,7 +261,7 @@ mOpen(struct IClass *cl,Object *obj, UNUSED Msg msg)
     {
         Object *ok, *cancel;
 
-        data->win = WindowObject,
+        data->win = (Object *)WindowObject,
             MUIA_Window_Title,          (IPTR)data->title,
             MUIA_Window_LeftEdge,       _left(obj),
             MUIA_Window_TopEdge,        _bottom(obj)+1,
@@ -270,10 +272,10 @@ mOpen(struct IClass *cl,Object *obj, UNUSED Msg msg)
             MUIA_Window_ConfigGadget,   FALSE,
             MUIA_Window_IconifyGadget,  FALSE,
             WindowContents, VGroup,
-                Child, data->back = backgroundadjustObject,
+                Child, (IPTR)(data->back = (Object *)backgroundadjustObject,
                     MUIA_Popbackground_PopObj,   (IPTR)obj,
                     MUIA_Popbackground_Gradient, data->flags & FLG_Gradient,
-                End,
+                End),
                 Child, HGroup,
                     Child, (IPTR)(ok = obutton(Msg_Pop_OK,Msg_Pop_OK_Help)),
                     Child, (IPTR)HSpace(0),
@@ -351,7 +353,7 @@ static IPTR
 mDragDrop(struct IClass *cl, Object *obj,struct MUIP_DragDrop *msg)
 {
   struct data *data = INST_DATA(cl,obj);
-  ULONG                x;
+  IPTR                x;
 
   if((x = xget(msg->obj, MUIA_Imagedisplay_Spec)))
     set(obj,MUIA_Imagedisplay_Spec,x);
@@ -359,7 +361,7 @@ mDragDrop(struct IClass *cl, Object *obj,struct MUIP_DragDrop *msg)
   {
     char spec[sizeof(struct MUI_PenSpec)+2];
 
-    msnprintf(spec,sizeof(spec),(STRPTR)"2:%s",x);
+    snprintf(spec,sizeof(spec),(STRPTR)"2:%s",(char *)x);
     set(obj,MUIA_Imagedisplay_Spec,spec);
   }
   else if((x = xget(msg->obj,MUIA_Popbackground_Grad)))
@@ -376,7 +378,7 @@ mDragDrop(struct IClass *cl, Object *obj,struct MUIP_DragDrop *msg)
       g = (c>>8) & 0xff;
       b = c & 0xff;
 
-      msnprintf(spec, sizeof(spec), (STRPTR)"2:r%08lx,%08lx,%08lx",(r<<24)|(r<<16)|(r<<8)|r,(g<<24)|(g<<16)|(g<<8)|g,(b<<24)|(b<<16)|(b<<8)|b);
+      snprintf(spec, sizeof(spec), (STRPTR)"2:r%08x,%08x,%08x",(r<<24)|(r<<16)|(r<<8)|r,(g<<24)|(g<<16)|(g<<8)|g,(b<<24)|(b<<16)|(b<<8)|b);
       set(obj,MUIA_Imagedisplay_Spec,spec);
     }
   }
@@ -386,11 +388,7 @@ mDragDrop(struct IClass *cl, Object *obj,struct MUIP_DragDrop *msg)
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,PopbackgroundDispatcher,cl,obj,msg)
-#else
 DISPATCHER(PopbackgroundDispatcher)
-#endif
 {
   switch (msg->MethodID)
   {
@@ -411,9 +409,6 @@ DISPATCHER(PopbackgroundDispatcher)
     default:                       return DoSuperMethodA(cl,obj,msg);
   }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
 

@@ -18,7 +18,7 @@
 
 ***************************************************************************/
 
-#if defined(__VBCC__) || defined(NO_INLINE_STDARG)
+#if !defined(__AROS__) && (defined(__VBCC__) || defined(NO_INLINE_STDARG))
 #if !defined(__PPC__)
 
 #include <exec/types.h>

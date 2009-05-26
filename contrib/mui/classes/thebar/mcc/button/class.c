@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -22,7 +22,7 @@
 
 #include "class.h"
 #include "private.h"
-#include "rev.h"
+#include "version.h"
 
 #undef GetOutlinePen
 #include <graphics/gfxmacros.h>
@@ -202,7 +202,14 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
       return 0;
     }
 
-    if((pool = CreatePool(MEMF_ANY, 2048, 1024)) == NULL)
+    #if defined(__amigaos4__)
+    if ((pool = AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
+                                                 ASOPOOL_Puddle, 2048,
+                                                 ASOPOOL_Threshold, 1024,
+                                                 TAG_DONE)) == NULL)
+    #else
+    if ((pool = CreatePool(MEMF_ANY, 2048, 1024)) == NULL)
+    #endif
     {
       RETURN(0);
       return 0;
@@ -376,7 +383,11 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     }
     else
     {
+      #if defined(__amigaos4__)
+      FreeSysObject(ASOT_MEMPOOL, pool);
+      #else
       DeletePool(pool);
+      #endif
     }
 
     RETURN(obj);
@@ -414,7 +425,11 @@ mDispose(struct IClass *cl, Object *obj, Msg msg)
   res = DoSuperMethodA(cl, obj, msg);
 
   // delete our memory pool
+  #if defined(__amigaos4__)
+  FreeSysObject(ASOT_MEMPOOL, pool);
+  #else
   DeletePool(pool);
+  #endif
 
   RETURN(res);
   return res;
@@ -537,16 +552,16 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
     struct TagItem  *tag, *vmt, *rat, *sct, *sut, *lpt, *ekt, *ract;
-    struct TagItem  *tstate;
-    ULONG           redraw, setidcmp, back, sel, pressed, over;
-    IPTR            res;
+    const struct TagItem *tstate;
+    BOOL redraw, setidcmp, back, sel, pressed, over;
+    IPTR res;
 
     ENTER();
 
     redraw = setidcmp = back = sel = pressed = over = FALSE;
     vmt = rat = sct = sut = lpt = ekt = ract = NULL;
 
-    for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
+    for(tstate = msg->ops_AttrList; (tag = NextTagItem((APTR)&tstate)); )
     {
         IPTR tidata = tag->ti_Data;
 
@@ -2486,7 +2501,7 @@ mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
     IPTR            result = 0; //gcc
 
     ENTER();
-    
+
     p = (Object *)xget(obj,MUIA_Parent);
     if (p)
     {
@@ -2521,11 +2536,7 @@ mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
 
 /***********************************************************************/
 
-#ifdef __AROS__
-BOOPSI_DISPATCHER(IPTR,_Dispatcher,cl,obj,msg)
-#else
 DISPATCHER(_Dispatcher)
-#endif
 {
   switch(msg->MethodID)
   {
@@ -2554,8 +2565,5 @@ DISPATCHER(_Dispatcher)
       return DoSuperMethodA(cl, obj, msg);
   }
 }
-#ifdef __AROS__
-BOOPSI_DISPATCHER_END
-#endif
 
 /***********************************************************************/
