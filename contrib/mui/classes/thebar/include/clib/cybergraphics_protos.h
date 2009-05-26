@@ -2,7 +2,7 @@
 #define  CLIB_CYBERGRAPHICS_PROTOS_H
 
 /*
-**	$Id: cybergraphics_protos.h,v 1.2 2004/03/20 13:46:20 jens.langner-light-speed.de Exp $
+**	$Id$
 **
 **	C prototypes. For use with 32 bit integers only.
 **

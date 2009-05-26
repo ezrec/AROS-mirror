@@ -16,7 +16,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: version.h 311 2009-05-25 16:05:04Z damato $
+ $Id$
 
 ***************************************************************************/
 

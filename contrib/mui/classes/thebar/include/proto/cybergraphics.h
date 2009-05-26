@@ -2,7 +2,7 @@
 #define PROTO_CYBERGRAPHICS_H
 
 /*
-**	$Id: cybergraphics.h,v 1.3 2004/03/20 13:46:22 jens.langner-light-speed.de Exp $
+**	$Id$
 **	Includes Release 50.1
 **
 **	Prototype/inline/pragma header file combo

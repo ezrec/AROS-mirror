@@ -16,7 +16,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: README 22 2007-01-02 21:30:56Z damato $
+ $Id$
 
 ***************************************************************************/
 

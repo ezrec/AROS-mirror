@@ -1,6 +1,6 @@
 /*
     Copyright  2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 #ifndef LIBRARIES_MUIAROS_H
@@ -27,7 +27,7 @@
 #else
 /*
     Copyright © 2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 #ifndef _MUIMASTER_SUPPORT_AMIGAOS_H_
@@ -302,7 +302,7 @@ for                                            \
 
 /*
     Copyright © 2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 #include <utility/tagitem.h>
@@ -388,7 +388,7 @@ struct __MUIBuiltinClass {
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 struct MUI_NotifyData
@@ -494,7 +494,7 @@ enum
     Copyright © 2002-2003, The AROS Development Team.
     All rights reserved.
 
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -532,7 +532,7 @@ struct MUIP_Family_Transfer    {STACKED ULONG MethodID; STACKED Object *family;}
     Copyright © 2002-2003, The AROS Development Team.
     All rights reserved.
 
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 #ifndef _MUI_CLASSES_APPLICATION_H
@@ -951,7 +951,7 @@ struct MUI_RGBcolor
     Copyright  2002-2003, The AROS Development Team.
     All rights reserved.
 
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -1215,7 +1215,7 @@ struct MUI_EventHandlerNode
     Copyright  2002, The AROS Development Team.
     All rights reserved.
 
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 #ifndef _MUI_CLASSES_AREA_H
@@ -1508,7 +1508,7 @@ void __area_finish_minmax(Object *obj, struct MUI_MinMax *MinMaxInfo);
     Copyright © 2002-2003, The AROS Development Team.
     All rights reserved.
 
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -1593,7 +1593,7 @@ enum
     Copyright © 2002-2003, The AROS Development Team.
     All rights reserved.
 
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -1620,7 +1620,7 @@ enum
     Copyright © 2002-2003, The AROS Development Team.
     All rights reserved.
 
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -1665,7 +1665,7 @@ enum
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -1715,7 +1715,7 @@ struct MUIP_Numeric_ValueToScaleExt   {STACKED ULONG MethodID; STACKED LONG valu
     Copyright © 2002-2003, The AROS Development Team.
     All rights reserved.
 
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -1746,7 +1746,7 @@ struct MUIP_Numeric_ValueToScaleExt   {STACKED ULONG MethodID; STACKED LONG valu
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -1809,7 +1809,7 @@ struct MUIP_String_Insert        {STACKED ULONG MethodID; STACKED STRPTR text; S
 #ifndef _MUI_CLASSES_BOOPSI_H
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 #ifndef _MUI_CLASSES_BOOPSI_H
@@ -1847,7 +1847,7 @@ struct MUIP_String_Insert        {STACKED ULONG MethodID; STACKED STRPTR text; S
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -1893,7 +1893,7 @@ enum
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -1924,7 +1924,7 @@ enum
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -1950,7 +1950,7 @@ enum
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /****************************************************************************/
@@ -2012,7 +2012,7 @@ enum
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -2052,7 +2052,7 @@ struct MUIP_Dataspace_WriteIFF    {STACKED ULONG MethodID; STACKED struct IFFHan
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -2080,7 +2080,7 @@ struct MUIP_Dataspace_WriteIFF    {STACKED ULONG MethodID; STACKED struct IFFHan
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -2105,7 +2105,7 @@ struct MUIP_Dataspace_WriteIFF    {STACKED ULONG MethodID; STACKED struct IFFHan
 #ifndef _MUI_CLASSES_SCROLLBUTTON_H
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 #ifndef _MUI_CLASSES_SCROLLBUTTON_H
@@ -2137,7 +2137,7 @@ struct MUIP_Dataspace_WriteIFF    {STACKED ULONG MethodID; STACKED struct IFFHan
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -2166,7 +2166,7 @@ struct MUIP_Semaphore_Release        {STACKED ULONG MethodID;};
 #ifndef _MUI_CLASSES_BITMAP_H
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 #ifndef _MUI_CLASSES_BITMAP_H
@@ -2196,7 +2196,7 @@ struct MUIP_Semaphore_Release        {STACKED ULONG MethodID;};
 #ifndef _MUI_CLASSES_BODYCHUNK_H
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 #ifndef _MUI_CLASSES_BODYCHUNK_H
@@ -2225,7 +2225,7 @@ struct MUIP_Semaphore_Release        {STACKED ULONG MethodID;};
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -2251,7 +2251,7 @@ struct MUIP_Semaphore_Release        {STACKED ULONG MethodID;};
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -2304,7 +2304,7 @@ enum
 
 /*
     Copyright © 2002-2009, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /****************************************************************************/
@@ -2528,7 +2528,7 @@ enum
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -2561,7 +2561,7 @@ struct  MUIP_Popstring_Open   {STACKED ULONG MethodID; };
 
 /*
     Copyright © 2002-2006, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /****************************************************************************/
@@ -2591,7 +2591,7 @@ struct  MUIP_Popstring_Open   {STACKED ULONG MethodID; };
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -2620,7 +2620,7 @@ enum
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -2649,7 +2649,7 @@ enum
 
 /*
     Copyright  2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -2679,7 +2679,7 @@ enum
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -2706,7 +2706,7 @@ enum
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -2733,7 +2733,7 @@ enum
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -2759,7 +2759,7 @@ struct MUIP_Settingsgroup_GadgetsToConfig  {STACKED ULONG MethodID; STACKED Obje
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -2776,7 +2776,7 @@ struct MUIP_Settingsgroup_GadgetsToConfig  {STACKED ULONG MethodID; STACKED Obje
 #ifndef _MUI_CLASSES_ABOUTMUI_H
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 #ifndef _MUI_CLASSES_ABOUTMUI_H
@@ -2799,7 +2799,7 @@ struct MUIP_Settingsgroup_GadgetsToConfig  {STACKED ULONG MethodID; STACKED Obje
 #ifndef _MUI_CLASSES_CONFIGDATA_H
 /*
     Copyright  2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 #ifndef _MUI_CLASSES_CONFIGDATA_H
@@ -3015,7 +3015,7 @@ struct MUIP_Configdata_SetString       {STACKED ULONG MethodID; STACKED ULONG id
 
 /* 
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -3049,7 +3049,7 @@ enum
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -3071,7 +3071,7 @@ enum
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -3094,7 +3094,7 @@ enum
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -3115,7 +3115,7 @@ enum
 #ifndef _MUI_CLASSES_BALANCE_H
 /* 
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 #ifndef _MUI_CLASSES_BALANCE_H
@@ -3141,7 +3141,7 @@ enum
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -3175,7 +3175,7 @@ struct MUIP_Pendisplay_SetRGB        {STACKED ULONG MethodID; STACKED ULONG r; S
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -3199,7 +3199,7 @@ struct MUIP_Pendisplay_SetRGB        {STACKED ULONG MethodID; STACKED ULONG r; S
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -3218,7 +3218,7 @@ struct MUIP_Pendisplay_SetRGB        {STACKED ULONG MethodID; STACKED ULONG r; S
 #ifndef _MUI_CLASSES_COLORFIELD_H
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 #ifndef _MUI_CLASSES_COLORFIELD_H
@@ -3245,7 +3245,7 @@ struct MUIP_Pendisplay_SetRGB        {STACKED ULONG MethodID; STACKED ULONG r; S
 #ifndef _MUI_CLASSES_COLORADJUST_H
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 #ifndef _MUI_CLASSES_COLORADJUST_H
@@ -3272,7 +3272,7 @@ struct MUIP_Pendisplay_SetRGB        {STACKED ULONG MethodID; STACKED ULONG r; S
 #ifndef _MUI_CLASSES_MCCPREFS_H
 /*
     Copyright © 2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 #ifndef _MUI_CLASSES_MCCPREFS_H
@@ -3290,7 +3290,7 @@ struct MUIP_Pendisplay_SetRGB        {STACKED ULONG MethodID; STACKED ULONG r; S
 
 /* 
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -3313,7 +3313,7 @@ struct MUIP_Pendisplay_SetRGB        {STACKED ULONG MethodID; STACKED ULONG r; S
 
 /*
     Copyright © 2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -3335,7 +3335,7 @@ struct MUIP_Pendisplay_SetRGB        {STACKED ULONG MethodID; STACKED ULONG r; S
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -3357,7 +3357,7 @@ struct MUIP_Pendisplay_SetRGB        {STACKED ULONG MethodID; STACKED ULONG r; S
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -3376,7 +3376,7 @@ struct MUIP_Pendisplay_SetRGB        {STACKED ULONG MethodID; STACKED ULONG r; S
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /****************************************************************************/
@@ -3438,7 +3438,7 @@ enum {
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -3457,7 +3457,7 @@ enum {
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /****************************************************************************/
@@ -3480,7 +3480,7 @@ enum {
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /****************************************************************************/
@@ -3501,7 +3501,7 @@ enum {
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /****************************************************************************/
@@ -3521,7 +3521,7 @@ enum {
 
 /*
     Copyright © 2002-2006, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -3544,7 +3544,7 @@ enum {
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -3563,7 +3563,7 @@ enum {
 
 /*
     Copyright © 2002-2009, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -3582,7 +3582,7 @@ enum {
 
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 */
 
 /*** Name *******************************************************************/
@@ -3706,7 +3706,7 @@ struct MUI_Command
 
 /*
     Copyright © 2002-2007, The AROS Development Team. All rights reserved.
-    $Id: muiaros.h 292 2009-05-22 20:22:12Z marust $
+    $Id$
 
     Macros available in original MUI and also some additional ones.
 */
