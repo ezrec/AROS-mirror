@@ -12,7 +12,7 @@ FILES := \
 	 debug \
 	 vastubs
 
-USER_INCLUDES := -I../include
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include
 USER_CFLAGS := -DNO_INLINE_STDARG
 
 %build_module_simple mmake=contrib-zune-classes-thebar-mcp \
@@ -38,24 +38,24 @@ contrib-zune-classes-thebar-mcp-catalogs : locale.h locale.c \
     $(TARGETDIR)/français/TheBar.catalog
 
 locale.h: locale/TheBar.cd locale_h.sd
-	@$(FLEXCAT) locale/TheBar.cd locale.h=locale_h.sd
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd locale.h=locale_h.sd
 
 $(TARGETDIR)/deutsch/TheBar.catalog: locale/german.ct
 	@$(MKDIR) $(TARGETDIR)/deutsch
-	@$(FLEXCAT) locale/TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd $< CATALOG $@
 
 $(TARGETDIR)/czech/TheBar.catalog: locale/czech.ct
 	@$(MKDIR) $(TARGETDIR)/czech
-	@$(FLEXCAT) locale/TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd $< CATALOG $@
 
 $(TARGETDIR)/français/TheBar.catalog: locale/french.ct
 	@$(MKDIR) $(TARGETDIR)/français
-	@$(FLEXCAT) locale/TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd $< CATALOG $@
 
 $(TARGETDIR)/svenska/TheBar.catalog: locale/swedish.ct
 	@$(MKDIR) $(TARGETDIR)/svenska
-	@$(FLEXCAT) locale/TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd $< CATALOG $@
 
 $(TARGETDIR)/italiano/TheBar.catalog: locale/italian.ct
 	@$(MKDIR) $(TARGETDIR)/italiano
-	@$(FLEXCAT) locale/TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd $< CATALOG $@
