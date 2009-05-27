@@ -438,6 +438,11 @@ createvars(char * const* envp)
     }
 }
 
+static bool is_empty_arg(char *string)
+{
+    return strlen(string) == 0;
+}
+
 static bool contains_whitespace(char *string)
 {
     if(strchr(string,' ')) return true;
@@ -501,7 +506,9 @@ int execve(const char *filename, char *const argv[], char *const envp[])
         size = 0;
         for (cur = (char **)argv+1; *cur; cur++)
         {
-            size += strlen(*cur) + 1 + (contains_whitespace(*cur)?(2 + no_of_escapes(*cur)):0);
+            size += strlen(*cur) + 1
+	          + (contains_whitespace(*cur)?(2 + no_of_escapes(*cur)):0)
+		  + (is_empty_arg(*cur)?2:0);
         }
 
         /* Check if it's a script file */
@@ -603,10 +610,10 @@ int execve(const char *filename, char *const argv[], char *const envp[])
 
             for (cur = (char**)argv+1; *cur != 0; cur++)
             {
-                if(contains_whitespace(*cur))
+                if(contains_whitespace(*cur) || is_empty_arg(*cur))
                 {
                     int esc = no_of_escapes(*cur);
-                    if(esc > 0)
+                    if(esc > 0 || is_empty_arg(*cur) == 0)
                     {
                         char *buff=malloc(strlen(*cur) + 4 + esc);
                         char *p = *cur;
