@@ -529,7 +529,7 @@ void cleanupdeviceio()
     }
 }
 
-LONG handleioerror(LONG errorcode, UWORD action)
+LONG handleioerror(LONG errorcode, UWORD action, struct IOStdReq *ioreq)
 {
     if(errorcode==TDERR_DiskChanged) {
         if(req("You MUST reinsert this volume!\n"\
@@ -553,7 +553,10 @@ LONG handleioerror(LONG errorcode, UWORD action)
                "io_Command = %ld\n"\
                "io_Offset = %ld\n"\
                "io_Length = %ld\n"\
-               "io_Actual = %ld\n", "Retry|Cancel", errordescription(errorcode), errorcode, (ULONG)globals->ioreq->io_Command, globals->ioreq->io_Offset, globals->ioreq->io_Length, globals->ioreq->io_Actual)<=0) {
+               "io_Actual = %ld\n", "Retry|Cancel",
+               errordescription(errorcode), errorcode,
+               (ULONG)ioreq->io_Command, ioreq->io_Offset,
+               ioreq->io_Length, ioreq->io_Actual)<=0) {
             return(errorcode);
         }
     }
@@ -646,10 +649,11 @@ LONG transfer_buffered(UWORD action, UBYTE *buffer, ULONG blockoffset, ULONG blo
          always (re)set the timeout even if doio() would return an error. */
 
         starttimeout();
-        globals->retries=3;
+        globals->retries=MAX_RETRIES;
 
         while((errorcode=DoIO((struct IORequest *)globals->fsioreq.ioreq))!=0) {
-            if((errorcode=handleioerror(errorcode, action))!=0) {
+            if((errorcode=
+                handleioerror(errorcode, action, globals->fsioreq.ioreq))!=0) {
                 return(errorcode);
             }
         }
@@ -681,7 +685,8 @@ LONG waittransfers(void)
         struct fsIORequest *next=globals->iolist->next;
 
         if((errorcode=WaitIO((struct IORequest *)globals->iolist->ioreq))!=0 && firsterrorcode==0) {
-            while((errorcode=handleioerror(errorcode, globals->iolist->action))==0) {
+            while((errorcode=handleioerror(errorcode, globals->iolist->action,
+                globals->iolist->ioreq))==0) {
                 if((errorcode=DoIO((struct IORequest *)globals->iolist->ioreq))==0) {
                     break;
                 }
@@ -697,6 +702,7 @@ LONG waittransfers(void)
     return(firsterrorcode);
 }
 
+#if 0
 static LONG asynctransfer(UWORD action, UBYTE *buffer, ULONG blockoffset, ULONG blocklength)
 {
     /* Does asynchronous transfers, and returns before the transfer is completed.
@@ -746,6 +752,7 @@ static LONG asynctransfer(UWORD action, UBYTE *buffer, ULONG blockoffset, ULONG 
         return(ERROR_OUTSIDE_PARTITION);
     }
 }
+#endif
 
 LONG transfer(UWORD action, UBYTE *buffer, ULONG blockoffset, ULONG blocklength)
 {
@@ -769,10 +776,11 @@ LONG transfer(UWORD action, UBYTE *buffer, ULONG blockoffset, ULONG blocklength)
                always (re)set the timeout even if doio() would return an error. */
 
             starttimeout();
-            globals->retries=3;
+            globals->retries=MAX_RETRIES;
 
             while((errorcode=DoIO((struct IORequest *)globals->fsioreq.ioreq))!=0) {
-                if((errorcode=handleioerror(errorcode, action))!=0) {
+                if((errorcode=handleioerror(errorcode, action,
+                    globals->fsioreq.ioreq))!=0) {
                     return(errorcode);
                 }
             }

@@ -143,7 +143,7 @@ void initGlobals()
     globals->max_name_length = MAX_NAME_LENGTH;
     globals->activity_timeout = FLUSHTIMEOUT;
     globals->inactivity_timeout = TIMEOUT;
-    globals->retries = 3;
+    globals->retries = MAX_RETRIES;
     globals->scsidirect = FALSE;
     globals->does64bit = FALSE;
     globals->newstyledevice = FALSE;
@@ -3239,9 +3239,7 @@ LONG req(UBYTE *fmt, UBYTE *gads, ... ) {
 
     {
       struct EasyStruct es;
-      APTR args=&gads;
-
-      args++;
+      APTR args=&gads+1;
 
       es.es_StructSize=sizeof(struct EasyStruct);
       es.es_Flags=0;
@@ -5467,7 +5465,7 @@ latest version of a block at any time.
 
 At any time you can use readcachebuffer() to get the latest
 version of a block.  This could be a partially modified
-version if your in the middle of a transaction, the latest
+version if you're in the middle of a transaction, the latest
 version stored in the transaction buffer or the original
 version from disk.
 

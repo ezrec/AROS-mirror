@@ -31,6 +31,7 @@
 
 #define MAX_NAME_LENGTH          (100)
 #define MAX_TRANSACTIONPOOLSIZE  (32768)
+#define MAX_RETRIES              (0)
 
 #define ALWAYSFREE            (3)    // The number of blocks SFS always tries to keep free.
 
