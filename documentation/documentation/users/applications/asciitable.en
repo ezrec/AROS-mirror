@@ -1,10 +1,10 @@
-========
-Exchange
-========
+==========
+ASCIITable
+==========
 
 .. This document is automatically generated. Don't edit it!
 
-`Index <index>`_ `Prev <depthmenu>`_ `Next <nocapslock>`_ 
+`Index <index>`_ `Prev <altkeyq>`_ `Next <autopoint>`_ 
 
 ---------------
 
@@ -13,7 +13,7 @@ Name
 ::
 
 
-     Exchange
+     ASCIITable
 
 
 Synopsis
@@ -37,7 +37,7 @@ Function
 ::
 
 
-     Manages the commodities in the system
+     Insert characters to clipboard from GUI
 
 
 Inputs
@@ -45,8 +45,8 @@ Inputs
 ::
 
 
-     CX_PRIORITY  --  Priority of the Exchange broker
-     CX_POPKEY    --  Hotkey combination for Exchange
+     CX_PRIORITY  --  Priority of the ASCIITable broker
+     CX_POPKEY    --  Hotkey combination for ASCIITable
      CX_POPUP     --  Appear at startup
 
 
