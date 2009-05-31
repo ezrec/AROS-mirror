@@ -1,0 +1,83 @@
+=====
+Alias
+=====
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Precedente <adddatatypes>`_ `Successivo <ask>`_ 
+
+---------------
+
+Nome
+~~~~
+::
+
+
+     Alias
+
+
+Synopsis
+~~~~~~~~
+::
+
+
+     NAME,STRING/F
+
+
+Ubicazione
+~~~~~~~~~~
+::
+
+
+     Sys:c
+
+
+Funzione
+~~~~~~~~
+::
+
+
+     Alias ti permette di creare dei nomi alternativi per gli altri 
+     comandi di DOS. Se Alias è usato senza parametri, visualizzerà
+     la lista corrente di Aliases definiti nella shell corrente.
+
+     Usando due parentesi quadre con dentro un alias ti permette di 
+     fornire il nuovo comando si DOS con i parametri.
+
+
+Inputs
+~~~~~~
+::
+
+
+     NAME    - Il nome da dare all'Alias.
+
+     STRING  - Il nome dell'alias NAME.
+
+
+Risultati
+~~~~~~~~~
+::
+
+
+     Errori comuni di DOS.
+
+
+Esempio
+~~~~~~~
+::
+
+
+     Alias DF "Type [] number"
+
+         Scrivendo "DF S:Shell-Startup" nella shell, stai eseguendo il 
+         comando "Type S:Shell-Startup number". Questo visualizzerà i contenuti
+         del file S:Shell-Startup nella shell con i numeri delle linee dalla
+         parte a sinistra.
+
+
+Vedi anche
+~~~~~~~~~~
+
+`Unalias <unalias>`_ 
+

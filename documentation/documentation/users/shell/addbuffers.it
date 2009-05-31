@@ -1,0 +1,58 @@
+==========
+AddBuffers
+==========
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prossimo <adddatatypes>`_ 
+
+---------------
+
+Nome
+~~~~
+::
+
+
+     AddBuffers (drive) [(N)]
+
+
+Synopsis
+~~~~~~~~
+::
+
+
+     DRIVE/A, BUFFERS/N
+
+
+Ubicazione
+~~~~~~~~~~
+::
+
+
+     Sys:C
+
+
+Funzione
+~~~~~~~~
+::
+
+
+     Aggiunge buffers alla lista di buffers disponibili per un drive
+     specifico. Aggiungendo buffers si accelera l'accessosul disco ma ha uno
+     svnataggio sull'uso della memoria di sistema (512 bytes per buffer).
+     Specificando un numero negativo si sottraggono buffers dal drive.
+     Se solo l'argomento  DRIVE è specificato, sarà solo visualizzato
+     il numero di buffers per quel drive senza alcun reale cambiamento
+     all'allocazione.
+
+
+Inputs
+~~~~~~
+::
+
+
+     DRIVE    --  il drive dove verrà alterata l'allocazione dei buffers
+     BUFFERS  --  il numero di buffers da aggiungere (o sottrarre nel caso 
+     			  di numeri negativi) da un drive.
+
+
