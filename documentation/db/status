@@ -6,10 +6,11 @@ amigaos;resources;Resources;2009-05-01
 aros;hidds;HIDDs;2003-08-26
 amigaos;programs;Programs;2008-11-06
 amigaos;linklibs;Linklibs;2008-09-24
-aros;libraries_aros;Libraries;2003-08-26
+aros;libraries_aros;Libraries;2009-06-01
 aros;programs_aros;Programs;2009-05-29
 3rdparty;libraries_3rd;Libraries;2008-07-25
 libraries_aros;clib;Arosc.library;2003-08-26
+libraries_aros;muimaster;MuiMaster.library;2009-06-01
 linklibs;alib;Amiga.lib;2008-09-24
 linklibs;debuglib;Debug.lib;2008-09-24
 linklibs;ddebuglib;DDebug.lib;2008-09-24
@@ -2319,6 +2320,31 @@ commoditiesprogs;MouseBlanker;1;1;0
 commoditiesprogs;NoCapsLock;1;1;2
 commoditiesprogs_aros;ASCIITable;1;1;2
 commoditiesprogs_aros;AltKeyQ;1;1;2
+muimaster;MUI_AddClipping;1;1;2
+muimaster;MUI_AddClipRegion;1;1;1
+muimaster;MUI_AllocAslRequest;1;1;2
+muimaster;MUI_AslRequest;1;1;2
+muimaster;MUI_BeginRefresh;1;1;2
+muimaster;MUI_CreateCustomClass;1;1;2
+muimaster;MUI_DeleteCustomClass;1;1;2
+muimaster;MUI_DisposeObject;1;1;2
+muimaster;MUI_EndRefresh;1;1;2
+muimaster;MUI_Error;1;1;0
+muimaster;MUI_FreeAslRequest;1;1;2
+muimaster;MUI_FreeClass;1;1;2
+muimaster;MUI_GetClass;1;1;2
+muimaster;MUI_Layout;1;1;1
+muimaster;MUI_MakeObjectA;1;1;2
+muimaster;MUI_NewObjectA;1;1;2
+muimaster;MUI_ObtainPen;1;1;2
+muimaster;MUI_Redraw;1;1;1
+muimaster;MUI_RejectIDCM;1;1;2
+muimaster;MUI_ReleasePen;1;1;2
+muimaster;MUI_RemoveClipping;1;1;2
+muimaster;MUI_RemoveClipRegion;1;1;1
+muimaster;MUI_RequestA;1;1;2
+muimaster;MUI_RequestIDCMP;1;1;2
+muimaster;MUI_SetError;1;1;0
 #CATEGORY_ITEMS_END
 #COMMENTS_BEGIN (category, comment)
 gameport;Gameport.device supports only mouse
