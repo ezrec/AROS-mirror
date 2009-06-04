@@ -3,7 +3,7 @@ Contact Information
 ===================
 
 :Authors:   Adam Chodorowski, Paolo Besser 
-:Copyright: Copyright © 1995-2006, The AROS Development Team
+:Copyright: Copyright © 1995-2009, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -28,11 +28,6 @@ Mailing List
 Gli sviluppatori di AROS si tengono costantemente informati e dialogano fra di 
 loro principalmente tramite queste mailing list:
 
-+ `AROS Announce`__
-  
-  Una mailing list a bassissimo traffico che riporta soltanto le novità più 
-  importanti. Praticamente una replica delle news del sito.
-
 + `AROS Developer`__
 
   La mailing list ufficiale degli sviluppatori di AROS, dove si discutono le 
@@ -49,13 +44,6 @@ loro principalmente tramite queste mailing list:
             passare un po' di tempo dal momento della richiesta di iscrizione 
             all'effettiva possibilità di parteciparvi.
 
-+ `AROS Bugs`__
-
-  Una mailing list a sola lettura dove vengono inoltrati i cambiamenti al nostro 
-  `database dei bug`_ . Si *raccomanda* agli sviluppatori di iscriversi anche a 
-  questa lista, in modo che sia possibile correggere al più presto gli errori che 
-  vengono riportati. Il traffico è di norma estremamente limitato.
-
 + `AROS CVS`__
 
   Una mailing list a sola lettura in cui vengono spediti tutti i cambiamenti 
@@ -69,23 +57,12 @@ loro principalmente tramite queste mailing list:
   Chiunque decida di apportare modifiche ad aros.org dovrebbe iscrivercisi, in 
   modo da ottenere anche aiuto se qualcosa va clamorosamente storto.
 
-+ `AROS Bootlogs`__
-    
-  Una mailing list creata allo scopo di ricevere i bootlog di AROS, in modo 
-  da semplificare diagnosi e correzioni delle versioni "native" del sistema. 
-  **Non è possibile** dialogare normalmente su questa lista. Quando decidete di 
-  inviare un bootlog a questa lista, non dimenticatevi di descrivere in ogni 
-  dettaglio la configurazione del vostro computer.
-
 Seguite i link alle pagine di amministrazione delle mailing list per iscrivervi, 
 rimuovervi, chiedere informazioni, varie ed eventuali.
 
-__ http://mail.aros.org/mailman/listinfo/aros-announce/
-__ http://mail.aros.org/mailman/listinfo/aros-dev/
-__ http://lists.sourceforge.net/mailman/listinfo/aros-bugs
+__ https://www.hepe.com/mailman/listinfo/aros-dev/
 __ http://lists.sourceforge.net/mailman/listinfo/aros-cvs
 __ http://lists.sourceforge.net/mailman/listinfo/aros-website
-__ http://lists.sourceforge.net/mailman/listinfo/aros-bootlogs
 
 .. _`database dei bug`: http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 

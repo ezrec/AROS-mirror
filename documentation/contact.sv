@@ -3,7 +3,7 @@ Kontaktinformation
 ==================
 
 :Authors:   Adam Chodorowski, Matthias Rustler 
-:Copyright: Copyright © 1995-2006, The AROS Development Team
+:Copyright: Copyright © 1995-2009, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -28,12 +28,6 @@ Det finns ett antal AROS-relaterade mailinglistor, vilka är de viktigaste kanale
 för information och diskussion om AROS för utvecklare. Följande mailinglistor finns
 tillgängliga:
 
-+ `AROS Announce`__
-
-  Detta är en lista för nyheter och viktiga meddelanden. Den har låg volym på
-  email och speglar i princip nyhetsdelen av hemsidan. Normal postning är inte
-  tillåten.
-
 + `AROS Developer`__
 
   Det här är listan för utvecklare där diskussioner om utvecklingen av AROS sker.
@@ -48,13 +42,6 @@ tillgängliga:
             innebär att det kan ta ett litet tag från det att du skickar in 
             en begäran tills dess att du blir en medlem.
   
-+ `AROS Bugs`__
-
-  Det här är en lista där ändringar och tillägg till `buggdatabasen`_ automatiskt
-  postas. Det **rekommenderas** att utvecklare prenumererar på den här listan så
-  att vi kan hålla oss ajour med bugrapporer.
-  Mängden email på den här listan är liten, och den går inte att posta till.
-
 + `AROS CVS`__
 
   På denna lista för utvecklare postas loggar från Subversion-servern så fort något
@@ -71,23 +58,13 @@ tillgängliga:
   De som jobbar med dokumentationen eller kan laga saker om  något händer
   med websidan bör prenumerera på denna.
 
-+ `AROS Bootlogs`__
-
-  Den här mailinglistan är till för att ta emot bootloggar från AROS. De hjälper
-  oss att diagnostisera problem och förbättra ?Native port?. Vanliga diskussioner
-  är **inte** tillåtna på denna lista. När du postar en bootlog till den här listan,
-  vänligen skicka med så detaljerad information som du kan om din hårdvara.
-    
 Följ länkarna till de administrativa sidorna för information om hur man
 prenumererar, avbryter prenumerationerer, listarkiv och andra användbara
 funktioner.
 
-__ http://mail.aros.org/mailman/listinfo/aros-announce/
-__ http://mail.aros.org/mailman/listinfo/aros-dev/
-__ http://lists.sourceforge.net/mailman/listinfo/aros-bugs
+__ https://www.hepe.com/mailman/listinfo/aros-dev/
 __ http://lists.sourceforge.net/mailman/listinfo/aros-cvs
 __ http://lists.sourceforge.net/mailman/listinfo/aros-website
-__ http://lists.sourceforge.net/mailman/listinfo/aros-bootlogs
 
 .. _`buggdatabasen`: http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 

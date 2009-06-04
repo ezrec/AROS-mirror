@@ -3,7 +3,7 @@ Kontaktní informace
 ===================
 
 :Authors:   Adam Chodorowski, Matthias Rustler 
-:Copyright: Copyright © 1995-2006, The AROS Development Team
+:Copyright: Copyright © 1995-2009, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -28,12 +28,6 @@ Mailing listy
 Máme nìkolik mailing listù týkajících se AROSu, které jsou hlavními informaèními
 a diskuzními kanály o AROSu pro vývojáøe. K dispozici jsou následující:
 
-+ `AROS Announce`__
-  
-  Mailing list nízkého objemu pro novinky a dùle¾itá oznámení, který
-  v podstatì zrcadlí obsah sekce zpráv z webu. Není dovoleno
-  posílat obyèejné zprávy.
-
 + `AROS Developer`__
 
   Vývojáøský mailing list, kde se konají diskuze o vývoji AROSu. Do tohoto listu
@@ -47,13 +41,6 @@ a diskuzními kanály o AROSu pro vývojáøe. K dispozici jsou následující:
                 ale ka¾dý po¾adavek je ovìøen administrátorem listu, tak¾e
                 mù¾e být urèité spo¾dìní mezi po¾adavkem o pøihlá¹ení k odbìru
                 a okam¾ikem, kdy se opravdu stane¹ èlenem.
-
-+ `AROS Bugs`__
-
-  Read-only mailing list pro vývojáøe, kam jsou automaticky zasílány
-  zmìny a doplnìní v `databázi chyb`_. Vývojáøùm je *doporuèeno* se k tomuto
-  listu pøipojit, aby mìli dobrý pøehled o chybách, které se objeví.
-  Objem tohoto listu je nízký.
 
 + `AROS CVS`__
 
@@ -71,23 +58,13 @@ a diskuzními kanály o AROSu pro vývojáøe. K dispozici jsou následující:
   tak¾e ti, kteøí provádí zmìny v dokumentaci nebo doká¾í opravit
   nefunkèní vìci, by se mìli pøihlásit k jeho odbìru.
 
-+ `AROS Bootlogs`__
-    
-  Mailing list zøízený pro pøíjem AROS bootlogù, které nám pomáhají
-  diagnostikovat a zdokonalovat nativní porty. Bì¾ná diskuze zde **není** dovolena.
-  Pøi zasílání bootlogu do tohoto listu uvádìj prosím detailní popis
-  tvé hardwarové konfigurace.
-
 Pou¾ij následující odkazy na administraèní stránky pro získání informací
 o pøihlá¹ení k mailing listu a odhlá¹ení se z nìj, pøístupu k archivùm
 a dal¹ích u¾iteèných funkcích.
 
-__ http://mail.aros.org/mailman/listinfo/aros-announce/
-__ http://mail.aros.org/mailman/listinfo/aros-dev/
-__ http://lists.sourceforge.net/mailman/listinfo/aros-bugs
+__ https://www.hepe.com/mailman/listinfo/aros-dev/
 __ http://lists.sourceforge.net/mailman/listinfo/aros-cvs
 __ http://lists.sourceforge.net/mailman/listinfo/aros-website
-__ http://lists.sourceforge.net/mailman/listinfo/aros-bootlogs
 
 .. _`databázi chyb`: http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 

@@ -3,7 +3,7 @@ Información de contacto
 =======================
 
 :Authors:   Adam Chodorowski, Matthias Rustler 
-:Copyright: Copyright © 1995-2006, The AROS Development Team
+:Copyright: Copyright © 1995-2009, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -29,12 +29,6 @@ Hay disponibles un par de listas de correo relacionadas con AROS, que
 son los principales canales de información y discusión sobre AROS
 que tienen los desarrolladores. Están disponibles las siguientes listas de correo:
 
-+ `AROS Announce`__
-  
-  Esta es una lista de poco volumen para las noticias y los anuncios importantes, 
-  que básicamente, reflejan el contenido de la sección noticias del sitio web. 
-  Los anuncios normales no están permitidos.
-
 + `AROS Developer`__
 
   Esta es la lista de correo del desarrollador, donde ocurren las discusiones 
@@ -49,13 +43,6 @@ que tienen los desarrolladores. Están disponibles las siguientes listas de corre
             sino que cada pedido es verificado por el administrador de la lista. 
             Así que podría haber alguna demora desde el momento en que tú envías 
             un pedido de suscripción hasta que en realidad te conviertes en miembro.
-
-+ `AROS Bugs`__
-
-  Esta es una lista únicamente de lectura para el desarrollador donde los 
-  agregados y los cambios a la `base de datos de errores`_ son automáticamente puestos. 
-  Se *recomienda* a los desarrolladores que se unan a esta lista, así podamos 
-  enterarnos de los últimos informes de errores. El volumen de esta lista es pequeño.
 
 + `AROS CVS`__
 
@@ -81,22 +68,12 @@ que tienen los desarrolladores. Están disponibles las siguientes listas de corre
   que sometan cambios a la documentación o puedan reparar el material si algo 
   explota deberían suscribirse a ésta.
 
-+ `AROS Bootlogs`__
-    
-  Esta es una lista de correo establecida para recibir los registro del arranque de AROS, 
-  los cuales nos ayudarán a diagnosticar y mejorar los puertos nativos. La discusión 
-  normal de las listas **no** se permite. Cuando envíes un registro del arranque a esta lista, 
-  por favor incluye una descripción detallada de la configuración de tu máquina.
-
 Sigue los enlaces a las páginas administrativas para información sobre cómo 
 suscribirse, retirarse, acceder a los archivos y otras funciones útiles.
 
-__ http://mail.aros.org/mailman/listinfo/aros-announce/
-__ http://mail.aros.org/mailman/listinfo/aros-dev/
-__ http://lists.sourceforge.net/mailman/listinfo/aros-bugs
+__ https://www.hepe.com/mailman/listinfo/aros-dev/
 __ http://lists.sourceforge.net/mailman/listinfo/aros-cvs
 __ http://lists.sourceforge.net/mailman/listinfo/aros-website
-__ http://lists.sourceforge.net/mailman/listinfo/aros-bootlogs
 
 .. _`base de datos de errores`: http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 

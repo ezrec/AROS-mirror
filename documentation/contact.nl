@@ -3,7 +3,7 @@ Contact Informatie
 ==================
 
 :Authors:   Adam Chodorowski, Matthias Rustler 
-:Copyright: Copyright © 1995-2006, The AROS Development Team
+:Copyright: Copyright © 1995-2009, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -31,12 +31,6 @@ hoofdkanalen voor informatie en discussies tussen AROS ontwikkelaars. De
 voertaal is Engels, hou hier a.u.b. rekening mee. De volgende mailing
 lijsten zijn beschikbaar:
 
-+ `AROS Aankondigingen`__
-  
-  Dit is een kleine mailing lijst voor nieuws en belangrijke aankondigingen,
-  wat typisch kopieën bevat van de berichten in de nieuws afdeling op de
-  website. Berichten insturen is niet toegestaan.
-
 + `AROS Ontwikkelaars`__
 
   Dit is de mailing lijst voor ontwikkelaars, waar over de ontwikkeling
@@ -53,14 +47,6 @@ lijsten zijn beschikbaar:
                  worden door de administrateur van de lijst. Het kan dus zijn 
                  dat er enige vertraging zit tussen de aanvraag en het 
                  tijdstip waarop u lid wordt.
-
-+ `AROS Bugs`__
-
-  Dit is een alleen-lezen mailing lijst voor ontwikkelaars, waar
-  toevoegingen en veranderingen in de `bug database`_ automatisch gepost
-  worden. Het is *aangeraden* voor ontwikkelaars om zich op deze lijst te
-  abonneren, zodat we goed oog kunnen houden op gemelde 'bugs'. 
-  Het verkeer op deze lijst is vrij laag. 
 
 + `AROS CVS`__
 
@@ -79,24 +65,12 @@ lijsten zijn beschikbaar:
   die wijzigingen maken in de documentatie of fouten kunnen verhelpen als
   er iets mis gaat, is aan te raden zich te abonneren op deze lijst. 
 
-
-+ `AROS Bootlogs`__
-  
-  Dit is een mailing lijst opgezet voor de ontvangst van AROS bootlogs. 
-  Deze helpen ons om de native ports te diagnoseren en te verbeteren. 
-  Gewone discussies zijn hier **niet** toegestaan. Mocht u een bootlog naar de 
-  lijst posten, voeg dan a.u.b. ook gedetailleerde informatie toe van uw hardware
-  configuratie.
-  
 Volg de links naar de administratieve pagina's voor informatie over hoe u uzelf
 kunt aan- en afmelden, archieven kunt inzien en enkele andere handige functies. 
 
-__ http://mail.aros.org/mailman/listinfo/aros-announce/
-__ http://mail.aros.org/mailman/listinfo/aros-dev/
-__ http://lists.sourceforge.net/mailman/listinfo/aros-bugs
+__ https://www.hepe.com/mailman/listinfo/aros-dev/
 __ http://lists.sourceforge.net/mailman/listinfo/aros-cvs
 __ http://lists.sourceforge.net/mailman/listinfo/aros-website
-__ http://lists.sourceforge.net/mailman/listinfo/aros-bootlogs
 
 .. _`bug database`: http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 

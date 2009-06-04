@@ -3,7 +3,7 @@ Informação de Contacto
 ======================
 
 :Autor:			Adam Chodorowski, Matthias Rustler 
-:Direito de Cópia:	Copyright © 1995-2006, A equipa de desenvolvidores AROS
+:Direito de Cópia:	Copyright © 1995-2009, A equipa de desenvolvidores AROS
 :Versão:		$Revision$
 :Date:			$Date$
 :Estado:		Feito.
@@ -29,12 +29,6 @@ Existe um conjunto Caixas de eCorreio disponíveis, pelo que são o principal
 canal de informação e discussão sobre AROS para desenvolvidores. A seguinte 
 lista de eCorreio está disponivel:
 
-+ `Anúncios AROS`__
-  
-  Esta é uma lista curta para novidades e anúncios importantes, que
-  basicamente espelha o conteúdo da secção das notícias da página AROS.
-  O envio normal não é permitido.
-
 + `Desenvolvidores AROS`__
 
   Esta é a lista de eCorreio do desenvolvidor, onde discussões sobre desenvolvimento
@@ -49,13 +43,6 @@ lista de eCorreio está disponivel:
             mas todo  requerimento é verificado pelo administrador da lista. Poderá 
             então ocorrer um atraso desde o tempo do requerimento de subscrição 
             até se tornar um membro.
-
-+ `Erros AROS`__
-
-  Esta é uma lista de eCorreio só de leitura onde adicções e alterações à
-  `Base de dados de Erros`_ são afixados automáticamente. É *recomendado* a desenvolvidores
-  subscrever esta lista, para que possamos ficar a par do relatório de erros que apareçam. O
-  volume nesta lista é baixo.
 
 + `Sistema de Versões Concorrentes (CVS) AROS`__
 
@@ -73,22 +60,12 @@ lista de eCorreio está disponivel:
   assim todos aqueles que depositam alterações a documentação ou resolvem problemas
   se algo se danificar deverão subscreve-la.
 
-+ `Registos de arranque (Bootlogs) AROS`__
-    
-  Esta é uma lista de eCorrespondência preparada para receber os registos de arranque (bootlogs) AROS,
-  no qual nos irá ajudar a diagnosticar e improvisar os portos nativos. Discussão normal **não** é permitida
-  aqui. Quando afixando um registo de arranque para esta lista, inclua por favor descrições detalhadas
-  da configuração do seu equipamento.
-
 Siga as ligações para as páginas administrativas para obter informação em como
 subscrever, desistir de subscrição, acesso a arquivos e outras funções úteis.
 
-__ http://mail.aros.org/mailman/listinfo/aros-announce/
-__ http://mail.aros.org/mailman/listinfo/aros-dev/
-__ http://lists.sourceforge.net/mailman/listinfo/aros-bugs
+__ https://www.hepe.com/mailman/listinfo/aros-dev/
 __ http://lists.sourceforge.net/mailman/listinfo/aros-cvs
 __ http://lists.sourceforge.net/mailman/listinfo/aros-website
-__ http://lists.sourceforge.net/mailman/listinfo/aros-bootlogs
 
 .. _`Base de Dados de Erros`: http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 
