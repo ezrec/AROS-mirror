@@ -1,0 +1,80 @@
+diff -ruN sqlite-3.6.14.2/shell.c sqlite-3.6.14.2-aros/shell.c
+--- sqlite-3.6.14.2/shell.c	2009-05-07 02:37:55.000000000 +0200
++++ sqlite-3.6.14.2-aros/shell.c	2009-06-06 08:37:58.000000000 +0200
+@@ -69,7 +69,7 @@
+ #define isatty(x) 1
+ #endif
+ 
+-#if !defined(_WIN32) && !defined(WIN32) && !defined(__OS2__) && !defined(__RTP__) && !defined(_WRS_KERNEL)
++#if !defined(_WIN32) && !defined(WIN32) && !defined(__OS2__) && !defined(__RTP__) && !defined(_WRS_KERNEL) && !defined(__AROS__)
+ #include <sys/time.h>
+ #include <sys/resource.h>
+ 
+diff -ruN sqlite-3.6.14.2/sqlite3.c sqlite-3.6.14.2-aros/sqlite3.c
+--- sqlite-3.6.14.2/sqlite3.c	2009-05-25 21:34:36.000000000 +0200
++++ sqlite-3.6.14.2-aros/sqlite3.c	2009-06-06 10:43:06.000000000 +0200
+@@ -21347,7 +21347,7 @@
+   struct vxworksFileId *pCandidate;   /* For looping over existing file IDs */
+   int n;                              /* Length of zAbsoluteName string */
+ 
+-  assert( zAbsoluteName[0]=='/' );
++  assert( zAbsoluteName[0]=='/' || strchr(zAbsoluteName, ':');
+   n = (int)strlen(zAbsoluteName);
+   pNew = sqlite3_malloc( sizeof(*pNew) + (n+1) );
+   if( pNew==0 ) return 0;
+@@ -24382,7 +24382,7 @@
+   char zDirname[MAX_PATHNAME+1];
+ 
+   sqlite3_snprintf(MAX_PATHNAME, zDirname, "%s", zFilename);
+-  for(ii=(int)strlen(zDirname); ii>1 && zDirname[ii]!='/'; ii--);
++  for(ii=(int)strlen(zDirname); ii>1 && zDirname[ii]!='/' && zDirname[ii-1]!=':'; ii--);
+   if( ii>0 ){
+     zDirname[ii] = '\0';
+     fd = open(zDirname, O_RDONLY|O_BINARY, 0);
+@@ -24749,7 +24749,7 @@
+   UNUSED_PARAMETER(pVfs);
+ 
+   zOut[nOut-1] = '\0';
+-  if( zPath[0]=='/' ){
++  if( zPath[0]=='/' || strchr(zPath, ':') ){
+     sqlite3_snprintf(nOut, zOut, "%s", zPath);
+   }else{
+     int nCwd;
+@@ -24866,6 +24866,18 @@
+   return nBuf;
+ }
+ 
++/*
++** Write nBuf bytes of random data to the supplied buffer zBuf.
++*/
++static int arosRandomness(sqlite3_vfs *NotUsed, int nBuf, char *zBuf){
++  UNUSED_PARAMETER(NotUsed);
++  assert((size_t)nBuf>=(sizeof(time_t)+sizeof(int)));
++  int i;
++  srand(time(NULL));
++  for( i=0; i<nBuf; i++ )
++    zBuf[i] = rand() % 0xFF; 
++  return nBuf;
++}
+ 
+ /*
+ ** Sleep for a little while.  Return the amount of time slept.
+@@ -25931,7 +25943,7 @@
+     unixDlError,          /* xDlError */                    \
+     unixDlSym,            /* xDlSym */                      \
+     unixDlClose,          /* xDlClose */                    \
+-    unixRandomness,       /* xRandomness */                 \
++    arosRandomness,       /* xRandomness */                 \
+     unixSleep,            /* xSleep */                      \
+     unixCurrentTime,      /* xCurrentTime */                \
+     unixGetLastError      /* xGetLastError */               \
+@@ -25945,6 +25957,9 @@
+   ** array cannot be const.
+   */
+   static sqlite3_vfs aVfs[] = {
++#if defined(__AROS__)
++    UNIXVFS("unix-none",     nolockIoFinder ),
++#endif
+ #if SQLITE_ENABLE_LOCKING_STYLE && (OS_VXWORKS || defined(__APPLE__))
+     UNIXVFS("unix",          autolockIoFinder ),
+ #else
