@@ -365,7 +365,7 @@ static void SetPreferenceData(Class *cl, Object *obj)
     set(data->preferences, MUIA_WebPreferences_DecodesGIFWithDatatypes, XGET(data->decodesGIFWithDatatypes, MUIA_Selected));
     set(data->preferences, MUIA_WebPreferences_DecodesBMPWithDatatypes, XGET(data->decodesBMPWithDatatypes, MUIA_Selected));
     set(data->preferences, MUIA_BrowserPreferences_DownloadDestination, XGET(data->downloadDestination, MUIA_String_Contents));
-    set(data->preferences, MUIA_WebPreferences_CookieJarFileName, "PROGDIR:cookies.txt"); /* Hardcoded for now */
+    set(data->preferences, MUIA_WebPreferences_CookieJarFileName, "PROGDIR:cookies.db"); /* Hardcoded for now */
 }
 
 IPTR PreferencesManager__MUIM_PreferencesManager_Use(Class *cl, Object *obj, Msg message)
