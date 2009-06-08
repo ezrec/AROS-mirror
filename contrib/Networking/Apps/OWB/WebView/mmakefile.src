@@ -4,11 +4,11 @@
 -include $(TOP)/config/make.cfg
 
 REPOSITORIES = http://www.sand-labs.org/aros_downloads/OWB%20Source%20Snapshots
-ARCHBASE := OWB-r905
+ARCHBASE := OWB-r994
 OWB_SOURCE := $(PORTSDIR)/OWB/$(ARCHBASE)
 OWB_BUILD_DIR := $(GENDIR)/$(CURDIR)
 
-#MM- aros-tcpip-apps-owb-libs : contrib-fontconfig contrib-networking-curl development-SDL development-SDL_gfx-quick
+#MM- aros-tcpip-apps-owb-libs : contrib-fontconfig contrib-networking-curl development-SDL development-SDL_gfx-quick contrib-sqlite
 #MM- aros-tcpip-apps-owb-webview : aros-tcpip-apps-owb-libs aros-tcpip-apps-owb-webview-fetch aros-tcpip-apps-owb-webview-setup aros-tcpip-apps-owb-webview-build aros-tcpip-apps-owb-webview-install
 
 #MM
@@ -25,6 +25,7 @@ aros-tcpip-apps-owb-webview-setup :
 	%mkdir_q dir=$(OWB_BUILD_DIR)
 	cd $(OWB_BUILD_DIR); \
 	cmake \
+	-DENABLE_DATABASE:BOOL=ON \
 	-DUSE_I18N:STRING=GENERIC \
 	-DCMAKE_MODULE_PATH=$(SRCDIR)/$(CURDIR)/cmake \
 	-DCMAKE_SYSTEM_NAME=AROS \
@@ -58,6 +59,9 @@ aros-tcpip-apps-owb-webview-setup :
 	-DFONTCONFIG_LIBRARIES=$(AROS_DEVELOPMENT)/lib/libfontconfig.a \
 	-DFONTCONFIG_INCLUDE_DIRS=$(AROS_DEVELOPMENT)/include \
 	-DTHREAD_LIBRARIES=$(AROS_DEVELOPMENT)/lib/libthread.a \
+	-DSQLITE3_INCLUDE_DIR=$(AROS_DEVELOPMENT)/include/ \
+	-DSQLITE3_LIBRARIES=$(AROS_DEVELOPMENT)/lib/libsqlite3.a \
+	-DSQLITE3_LDFLAGS=-lsqlite3 \
 	-DCMAKE_LIBRARY_PATH_FLAG=$(AROS_DEVELOPMENT)/lib \
 	-DCMAKE_C_FLAGS="$(CFLAGS)" \
 	-DCMAKE_CXX_FLAGS="$(CFLAGS)" \
