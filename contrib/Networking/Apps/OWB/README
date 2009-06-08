@@ -1,4 +1,4 @@
-OWB 0.9.3 for AROS
+OWB 0.9.4 for AROS
 
 INTRODUCTION
 
@@ -29,6 +29,10 @@ guarantee that it will work correctly.
 Starting from 24.03.2009 AROS contains updated codesets.library that is not
 compatible with the previous version. Updated library will cause OWB version
 0.9.2 and older to crash. OWB 0.9.3 should work correctly.
+
+Before bugfixes from 06.06.2009 AROS C library returned time in local time
+zone instead of UTC. Using OWB 0.9.4 and newer with AROS versions older than
+06.06.2009 may cause premature expiration of cookies.
 
 OWB needs a running TCP/IP stack to work. It's needed even if you only want to
 browse some files offline. See AROS documentation for more information about
@@ -95,6 +99,13 @@ See Licenses directory for more details.
 
 HISTORY
 
+OWB 0.9.4 (06.06.2009)
+  - Switched OWB to new cookie manager, now cookies are kept in cookies.db
+    (sqlite3 database file)
+  - Fixed bug #47: Requester asking for volume "file:" appears when opening local files.
+  - Fixed a couple of bugs causing memory corruption.
+  - Updated OWB source code to revision 994
+
 OWB 0.9.3 (10.04.2009) 
   - Implemented feature #21: Placeholders for missing images and plug-ins
   - Fixed bug #23: Frame title set in JavaScript is not cleared when loading a new page
@@ -105,6 +116,7 @@ OWB 0.9.3 (10.04.2009)
   - Fixed bug #42: Memory leak during drawing transparent images
   - Fixed bug #44: After about ten executions OWB starts to behave weird
   - Disabled debug messages
+  - Updated OWB source code to revision 905
 
 OWB 0.9.2 (01.03.2009) 
   - Fixed bug #1: TGM Online's forum makes OWB crash
@@ -126,6 +138,7 @@ OWB 0.9.1 (25.02.2009)
   - Fixed bug #4: Pages with looped animated gifs are eating memory
   - Fixed bug #16: Offline browsing seems almost broken
   - Implemented feature 14: Reading url to open from command-line arguments
+  - Updated OWB source code to revision 847
 
 OWB 0.9 (23.02.2009)
   - First public release.
