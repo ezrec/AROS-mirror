@@ -89,7 +89,7 @@ MacOS X
 
 Se state usando MaxOS X potete usare uno dei tanti port SVN disponibili, come
 il `Port subversion`__ di Martin Ott. Dopo aver fatto questo, potreste volere
-installare una GUI SVN aggiuntiva come `svnX`__. svnX è il client SVN più
+installare una GUI SVN aggiuntiva come Versions o `svnX`__. svnX è il client SVN più
 aggiornato e supporta anche l'integrazione, fra gli altri, del texteditor
 freeware `Textwrangler`__ (precedentemente noto come BBedit Lite).
 Notate che quando usare Textwrangler o altri editor di testo Mac, dovete
