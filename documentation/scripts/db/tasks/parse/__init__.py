@@ -44,6 +44,10 @@ def createCategories( file ):
         if line.find( "CATEGORIES_END" ) != -1:
             break
 
+        # Skip commented out lines
+        if line[0] == '#':
+            continue
+
         words = line.strip().split( ';' )
         
         parentcategory      =   words[0]
@@ -101,6 +105,10 @@ def createCategoryItems( file ):
     for line in file:
         if line.find( "CATEGORY_ITEMS_END" ) != -1:
             break
+
+        # Skip commented out lines
+        if line[0] == '#':
+            continue
     
         words = line.strip().split( ';' )
         
@@ -128,6 +136,10 @@ def createComments( file ):
     for line in file:
         if line.find( "COMMENTS_END" ) != -1:
             break
+
+        # Skip commented out lines
+        if line[0] == '#':
+            continue
     
         words = line.strip().split( ';' )
         
