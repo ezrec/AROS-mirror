@@ -320,11 +320,7 @@ IPTR PreferencesManager__OM_NEW(struct IClass *cl, Object *self, struct opSet *m
     DoMethod(bt_zune, MUIM_Notify, MUIA_Pressed, FALSE,
 	(IPTR) MUIV_Notify_Application, 1,
 	MUIM_Application_OpenConfigWindow);
-
-    DoMethod(self, MUIM_Notify, MUIA_Window_Open, TRUE,
-	(IPTR) self, 1,
-	MUIM_PreferencesManager_Load);
-    
+   
     return (IPTR) self;
 }
 
