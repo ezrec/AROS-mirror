@@ -1,4 +1,4 @@
-OWB 0.9.4 for AROS
+OWB 0.9.5 for AROS
 
 INTRODUCTION
 
@@ -98,6 +98,13 @@ WebCore/JSCore code where the original licenses apply (APSL, LGPL and BSD).
 See Licenses directory for more details.
 
 HISTORY
+
+OWB 0.9.5 (10.06.2009)
+  - Fixed bugs introduced in the previous release: 
+    * no more crashes during closing tabs when more than one tab is present
+    * slashdot.org is working again
+    * Yahoo mail is working again
+  - Updated OWB source code to revision 1000
 
 OWB 0.9.4 (06.06.2009)
   - Switched OWB to new cookie manager, now cookies are kept in cookies.db
