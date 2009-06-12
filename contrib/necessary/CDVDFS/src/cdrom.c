@@ -11,6 +11,8 @@
  * ----------------------------------------------------------------------
  * History:
  *
+ * 12-Jun-09 neil    If drive returns incorrect TOC length, calculate it
+ *                   based on the number of tracks.
  * 09-May-09 weissms   - Let Do_SCSI_Command result depend on DoIO result.
  *                     - Removed redundant checks of io_Error, some code reuse
  *                       (Clear_Sector_Buffers).
@@ -408,8 +410,13 @@ t_toc_data *Read_TOC
 
     /*
      * toc len = len field + field contents
+     * Some drives don't return the full TOC length when the buffer is too
+     * small for the whole TOC: in this case, calculate it based on the
+     * number of tracks
      */
     toc_len = 2 + ((buf[0] << 8) | (buf[1]));
+    if (toc_len < 12)
+        toc_len = 4 + (buf[3] - buf[2] + 2) * 8;
 
     /*
      * make sure it never happens (shouldn't)
