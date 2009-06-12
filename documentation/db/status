@@ -1,15 +1,15 @@
-#CATEGORIES_BEGIN (basecategory, category, description, last update date)
-amigaos;libraries;Libraries;2009-05-01
-amigaos;classes;Classes;2008-10-25
-amigaos;devices;Devices;2008-08-24
-amigaos;resources;Resources;2009-05-01
-amigaos;programs;Programs;2008-11-06
-amigaos;linklibs;Linklibs;2008-09-24
-#aros;hidds;HIDDs;2003-08-26
-aros;libraries_aros;Libraries;2009-06-01
-aros;programs_aros;Programs;2009-05-29
-aros;classes_aros;Classes;2009-06-11
-3rdparty;libraries_3rd;Libraries;2008-07-25
+#CATEGORIES_BEGIN (basecategory, category, description, last update date(YYYY-MM-DD or "AUTO"))
+amigaos;libraries;Libraries;AUTO
+amigaos;classes;Classes;AUTO
+amigaos;devices;Devices;AUTO
+amigaos;resources;Resources;AUTO
+amigaos;programs;Programs;AUTO
+amigaos;linklibs;Linklibs;AUTO
+#aros;hidds;HIDDs;AUTO
+aros;libraries_aros;Libraries;AUTO
+aros;programs_aros;Programs;AUTO
+aros;classes_aros;Classes;AUTO
+3rdparty;libraries_3rd;Libraries;AUTO
 linklibs;alib;Amiga.lib;2008-09-24
 linklibs;debuglib;Debug.lib;2008-09-24
 linklibs;ddebuglib;DDebug.lib;2008-09-24
@@ -49,10 +49,10 @@ libraries;amigaguide;AmigaGuide.library;2008-07-19
 #libraries_aros;clib;Arosc.library;2003-08-26
 libraries_aros;muimaster;MuiMaster.library;2009-06-01
 libraries_3rd;reqtools;ReqTools.library;2008-07-25
-classes;gadgets;Gadgets;2008-10-25
-classes;dtypes;Datatypes;2008-10-16
-classes;boopsi;Intuition;2008-10-24
-classes_aros;zune;Zune (MUI 3.8);2009-06-11
+classes;gadgets;Gadgets;AUTO
+classes;dtypes;Datatypes;AUTO
+classes;boopsi;Intuition;AUTO
+classes_aros;zune;Zune (MUI 3.8);AUTO
 dtypes;dtclass;DataTypeClass;2008-10-09
 dtypes;sounddtc;Sound.datatype;2008-10-10
 dtypes;8svxdtc;8svx.datatype;2008-10-10
@@ -81,6 +81,9 @@ gadgets;gradientslider;GradientSlider.gadget;2008-10-25
 gadgets;colorwheel;ColorWheel.gadget;2008-10-25
 zune;notify;Notify.mui;2009-06-11
 zune;family;Family.mui;2009-06-11
+zune;menustrip;Menustrip.mui;2009-06-12
+zune;menu;Menu.mui;2009-06-12
+zune;menuitem;Menuitem.mui;2009-06-12
 devices;input;Input.device;2008-08-05
 devices;timer;Timer.device;2008-08-09
 devices;console;Console.device;2008-08-04
@@ -2401,6 +2404,39 @@ family;MUIM_FindUData;1;1;2
 family;MUIM_GetUData;1;1;2
 family;MUIM_SetUData;1;1;2
 family;MUIM_SetUDataOnce;1;1;2
+menustrip;MUIA_Menustrip_Enabled;1;1;0
+menustrip;MUIM_ConnectParent;1;2;2
+menustrip;MUIM_DisconnectParent;1;2;2
+menustrip;OM_NEW;1;1;2
+menustrip;OM_DISPOSE;1;1;2
+menustrip;OM_SET;1;1;2
+menustrip;OM_GET;1;1;2
+menu;MUIA_Menu_Enabled;1;1;2
+menu;MUIA_Menu_Title;1;1;2
+menu;MUIM_ConnectParent;1;2;2
+menu;MUIM_DisconnectParent;1;2;2
+menu;OM_NEW;1;1;2
+menu;OM_DISPOSE;1;1;2
+menu;OM_SET;1;1;2
+menu;OM_GET;1;1;2
+menuitem;MUIA_Menuitem_Checked;1;1;2
+menuitem;MUIA_Menuitem_Checkit;1;1;2
+menuitem;MUIA_Menuitem_CommandString;1;1;2
+menuitem;MUIA_Menuitem_Enabled;1;1;2
+menuitem;MUIA_Menuitem_Exclude;1;1;2
+menuitem;MUIA_Menuitem_Shortcut;1;1;1
+menuitem;MUIA_Menuitem_Title;1;1;1
+menuitem;MUIA_Menuitem_Toggle;1;1;2
+menuitem;MUIA_Menuitem_Trigger;1;1;2
+menuitem;MUIA_Menuitem_NewMenu;1;2;2
+menuitem;MUIM_ConnectParent;1;2;2
+menuitem;MUIM_DisconnectParent;1;2;2
+menuitem;OM_NEW;1;1;2
+menuitem;OM_DISPOSE;1;1;2
+menuitem;OM_SET;1;1;2
+menuitem;OM_GET;1;1;2
+menuitem;MUIM_Export;1;1;0
+menuitem;MUIM_Import;1;1;0
 #CATEGORY_ITEMS_END
 #COMMENTS_BEGIN (category, comment)
 gameport;Gameport.device supports only mouse
@@ -2429,4 +2465,7 @@ tools;ShowConfig is partially substituted by PCITool
 tools;GraphicDump is replaced by ScreenGrabber, however the tool saves data to disk, not printer
 muimaster;MUI_RequestA - bugreport #2155786
 notify;MUIA_AppMessage - bugreport #1985769
+menuitem;MUIA_Menuitem_Shortcut - MUIV_Menuitem_Shortcut_Check not implemented
+menuitem;MUIA_Menuitem_Title - bugreport 1985757
+menuitem;MUIM_Import/MUIM_Export - MUIA_Menuitem_Checked needs to be exportable/importable
 #COMMENTS_END

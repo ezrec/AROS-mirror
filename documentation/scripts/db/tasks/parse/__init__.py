@@ -3,8 +3,6 @@
 # $Id$
 
 from db.tasks.model import *
-from datetime import date
-
 
 def createExtensionCategoryName( category ):
     index = category.rfind("_")
@@ -55,31 +53,25 @@ def createCategories( file ):
         description         =   words[2]
         lastupdated         =   words[3]
 
+        # Force recalculation of last updated based on child categories
+        if lastupdated == "AUTO":
+            lastupdated = None
+
         c = Category( category, description, parentcategory, lastupdated )
         categories[c.category] = c
 
-        # Create virtual extension category
+        # For each normal category, create an empty, virtual extension category
         category = createExtensionCategoryName( category )
-        # Override top-most extension category name
-        if ( parentcategory == "amigaos" ) or ( parentcategory == "aros" ) or ( parentcategory == "3rdparty" ):
-            parentcategory = "extensions"
-        else:
-            parentcategory = createExtensionCategoryName( parentcategory )
 
-        c = Category( category, description, parentcategory, lastupdated )
+        if not category in categories:
+            # Override top-most extension category name
+            if ( parentcategory == "amigaos" ) or ( parentcategory == "aros" ) or ( parentcategory == "3rdparty" ):
+                parentcategory = "extensions"
+            else:
+                parentcategory = createExtensionCategoryName( parentcategory )
 
-        # if extension category already exists, check the lastupdated field
-        if c.category in categories:
-            existingcategory = categories[c.category]
-            tokens = existingcategory.lastupdated.split( "-" )
-            existingcategorydate = date( int ( tokens[0] ), int( tokens[1] ), int( tokens[2] ) )
-            tokens = c.lastupdated.split( "-" )
-            newcategorydate = date( int ( tokens[0] ), int( tokens[1] ), int( tokens[2] ) )
-            if newcategorydate <  existingcategorydate:
-                c = existingcategory
-
-        categories[c.category] = c
-                
+            c = Category( category, description, parentcategory, lastupdated )
+            categories[c.category] = c
 
     # Link categories
     for key, value in categories.iteritems():

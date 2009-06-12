@@ -2,6 +2,8 @@
 # Copyright © 2002, The AROS Development Team. All rights reserved.
 # $Id$
 
+from datetime import date
+
 class Sortable:
     def __init__( self, sortkey ):
         self.sortkey = sortkey
@@ -96,6 +98,19 @@ class Category( Sortable ):
             self.skipped                += item.skipped
             self.amigaonly              += item.amigaonly
             self.total                  += item.total
+
+            # Last updated is either value from category, or newest of subcategories
+            if self.lastupdated is None:
+                self.lastupdated = item.lastupdated
+                continue
+
+            tokens = self.lastupdated.split( "-" )
+            selflastupdateddate = date( int ( tokens[0] ), int( tokens[1] ), int( tokens[2] ) )
+            tokens = item.lastupdated.split( "-" )
+            itemlastupdateddate = date( int ( tokens[0] ), int( tokens[1] ), int( tokens[2] ) )
+
+            if selflastupdateddate < itemlastupdateddate:
+                self.lastupdated = item.lastupdated
 
     def removeempty( self ):
 
