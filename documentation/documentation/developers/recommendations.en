@@ -1,0 +1,106 @@
+================================
+AROS 1.0 Roadmap Recommendations
+================================
+
+:Abstract: 
+
+    This section lists items that *still* need to be completed before each
+    requirement can be considered completed. This list is considered valid
+    until next review of AROS roadmap. During such periodic review, completed
+    items are removed from the list. It can also happen that some new items
+    are added to the list or existing items are removed from the list - the
+    decision should however be made carefully not to leave out important
+    features or prelong the release of 1.0 indefinatelly.
+
+Recomendations
+==============
+
+1.  AmigaOS 3.1 API compatibility.
+----------------------------------
+
++ Implement printer.device and a PDF-printer driver
++ Implement FileSys.resource
++ Complete workbench.library
+
+3.  Completed GUI toolkit.
+--------------------------
+
++ API completeness review
++ Further decision made after review
+
+4.  Standard applications comparable to those which come with AmigaOS 3.1.
+--------------------------------------------------------------------------
+    
++ Implement printer preferences editor
++ Add AppIcon support to Wanderer
++ Add GUI for Format utility
+        
+6.  Networking support.
+-----------------------
+
++ Modern web browser - must adhere to modern HTML standards, JavaScript support
+  is suggested but not required. Must have minimal usable GUI (prev/next/adress bar)
+  Possible candidates: OWB, NetSurf, Rob's WebKit port.
++ Implement AROSTCP preferences editor
+    
+7.  Self-hosted development environment and SDK for developers.
+---------------------------------------------------------------
+
++ `ABI_V1`__ implemented and merged with main trunk
+    - C library and ETask
+    - dos.library compatibility
+    - Retest changes on x86 natice
+    - Write (i386) ABI reference manual
+    - SysBase location
+    - How to extend OS3.x shared libraries
+    - Varargs handling
+    - C library
++ Backport modular kernel architecture from x86_64 to i386 (mandatory ports)
+
+__ http://aros.wiki.sourceforge.net/ABI_V1
+
+8.  Comprehensive documentation for developers.
+-----------------------------------------------
+
++ Maintain up-to-date autodocs
++ Maintain up-to-date HIDD subsystem documentation
++ Write description of modular kernel architecture
++ Write explanation of AROS basic data type, use and relation to C data types
++ Write explanation of differences between resources, libraries, devices and handlers
++ Write description of graphics and usb HIDDs
++ Write following "How to" documents - these documents should cover the defined topic
+  and be accompanied with a source code example of working modules:
+
+    - How to compile modules and interact with AROS build system
+    - How to compile modules outside AROS build system
+    - How to write command line application
+    - How to write BOOPSI application
+    - How to write Zune application
+    - How to write network application
+    - How to write a commodity application
+    - How to write a datatype
+    - How to write AROSTCP network driver
+    - How to write GFX HIDD driver
+    - How to write AHI sound driver
+    - How to write printer driver
+    - How to write AROS dynamic library
+    - How to write BOOPSI/Zune class
+    - How to port \*nix software to AROS - Basics
+
++ Further topics definition needed
+    
+9.  Comprehensive documentation for users.
+------------------------------------------
+
++ Write following "How to" documents:
+    - How to configure network manually
+    - How to configure network with DHCP client
+    - How to write AmigaOS scripts
++ Further topics definition needed
+
+10. Substantial testing and bug hunting complete.
+-------------------------------------------------
+
++ Complete items: 1, 3, 4, 6, 7
++ Feature freeze
++ Deliver release candidates schedule
