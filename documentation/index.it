@@ -37,14 +37,16 @@
 
 .. raw:: html
 
-   <td style="width: 243px; vertical-align: top;"><table style="text-align: justify; width:100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
+   <td style="width: 243px; vertical-align: top;">
+   <!-- The direct downloads block is disabled so that users go to the downloads section where they should learn about using distribution instead of nightly
+   <table style="text-align: justify; width:100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
    <?php if ($win_ie56) { echo "<img alt=\"Direct download Icon\" src=\"/images/directdownloadicon.gif\" align=\"middle\">";} 
    else { echo "<img alt=\"Direct download Icon\" src=\"/images/directdownloadicon.png\" align=\"middle\">";} ?>Downloads Diretti:<br>
    <img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
    Le Nightly build vengono create automaticamente ogni notte, direttamente dal codice sorgente più aggiornato. 
    Se volete provare una versione di AROS che parta da CD, scaricate la 
    "boot ISO" per la vostra piattaforma (i386 o PPC).<br><br>
-   <?php virtual("/cgi-bin/files2") ?> <br></td></tr></tbody></table>
+   <?php virtual("/cgi-bin/files2") ?> <br></td></tr></tbody></table>-->
    <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
    <?php if ($win_ie56) { echo "<img alt=\"Archive Icon\" src=\"/images/archivedownloadicon.gif\" align=\"middle\">"; } 
    else { echo "<img alt=\"Archive Icon\" src=\"/images/archivedownloadicon.png\" align=\"middle\">"; } ?>

@@ -38,11 +38,13 @@
 
 .. raw:: html
 
-   <td style="width: 243px; vertical-align: top;"><table style="text-align: justify; width:100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
+   <td style="width: 243px; vertical-align: top;">
+   <!-- The direct downloads block is disabled so that users go to the downloads section where they should learn about using distribution instead of nightly
+   <table style="text-align: justify; width:100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
    <?php if ($win_ie56) { echo "<img alt=\"Direct download Icon\" src=\"/images/directdownloadicon.gif\" align=\"middle\">";} else { echo "<img alt=\"Direct download Icon\" src=\"/images/directdownloadicon.png\" align=\"middle\">";} ?>
    —качать:<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
    Ќочные сборки собираютс€ автоматически каждую ночь из самых свежих исходников и содержат все последние изменени€ в коде. „тобы опробовать загрузочный диск с AROS, выберите "boot ISO" нужной вам архитектуры (i386 или PPC).<br><br>
-   <?php virtual("/cgi-bin/files2") ?> <br></td></tr></tbody></table>
+   <?php virtual("/cgi-bin/files2") ?> <br></td></tr></tbody></table>-->
    <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
    <?php if ($win_ie56) { echo "<img alt=\"Archive Icon\" src=\"/images/archivedownloadicon.gif\" align=\"middle\">"; } else { echo "<img alt=\"Archive Icon\" src=\"/images/archivedownloadicon.png\" align=\"middle\">"; } ?>
    ѕоследние файлы<br>на AROS-Archives:<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br><a href=http://archives.aros-exec.org>

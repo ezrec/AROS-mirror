@@ -37,18 +37,20 @@
 
 .. raw:: html
 
-   <td style="width: 243px; vertical-align: top;"><table style="text-align: justify; width:100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
+   <td style="width: 243px; vertical-align: top;">
+   <!-- The direct downloads block is disabled so that users go to the downloads section where they should learn about using distribution instead of nightly
+   <table style="text-align: justify; width:100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
    <?php if ($win_ie56) { echo "<img alt=\"Direct download Icon\" src=\"/images/directdownloadicon.gif\" align=\"middle\">";} 
    else { echo "<img alt=\"Direct download Icon\" src=\"/images/directdownloadicon.png\" align=\"middle\">";} ?>Direct Downloads:<br>
    <img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
    Nightly builds skapas automatiskt varje natt, direkt från den senaste källkoden. Om du vill prova en AROS live CD, ladda ner "boot ISO" för din plattform (i386 or PPC).<br><br>
-   <?php virtual("/cgi-bin/files2") ?> <br></td></tr></tbody></table>
+   <?php virtual("/cgi-bin/files2") ?> <br></td></tr></tbody></table>-->
    <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
    <?php if ($win_ie56) { echo "<img alt=\"Archive Icon\" src=\"/images/archivedownloadicon.gif\" align=\"middle\">"; } 
    else { echo "<img alt=\"Archive Icon\" src=\"/images/archivedownloadicon.png\" align=\"middle\">"; } ?>
    Latest ARCHIVE submissions:<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
    På <a href=http://archives.aros-exec.org>The AROS archives</a> hittar du det nyaste materialet för AROS, här hittar du program, teman, grafik och ytterligare dokumentation.<br><br>
-   <?php include("rsfeed/archives.php"); ?><br></td></tr></table>
+   <?php include("../rsfeed/archives.php"); ?><br></td></tr></table>
    <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
    <?php if ($win_ie56) { echo "<img alt=\"Community Icon\" src=\"/images/communityicon.gif\" align=\"middle\">"; } 
    else { echo "<img alt=\"Community Icon\" src=\"/images/communityicon.png\" align=\"middle\">"; } ?> 

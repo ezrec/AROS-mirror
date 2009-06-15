@@ -1,6 +1,13 @@
 ========
 Download
 ========
+.. Note::
+
+   **If you are a user** willing to try AROS, please use the links in **Distributions**
+   section to download a fully featured AROS distribution. The nightly builds you
+   will find at the bottom of the page are only meant for developers. The nighly builds
+   are not configured to be easily used, sometimes are not stable and they miss most 
+   of the applications essential to regular user experience.
 
 .. Contents::
 
