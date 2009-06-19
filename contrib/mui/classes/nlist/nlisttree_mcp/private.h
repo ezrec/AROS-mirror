@@ -3,10 +3,9 @@
 
 /***************************************************************************
 
- NListtree.mcp - New Listtree MUI Custom Class Preferences
- Copyright (C) 1999-2004 by Carsten Scholling <aphaso@aphaso.de>,
-                            Sebastian Bauer <sebauer@t-online.de>,
-                            Jens Langner <Jens.Langner@light-speed.de>
+ NListtree.mcc - New Listtree MUI Custom Class
+ Copyright (C) 1999-2001 by Carsten Scholling
+ Copyright (C) 2001-2005 by NList Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -24,22 +23,13 @@
 
 ***************************************************************************/
 
-#ifndef MUI_MUI_H
-  #include "mui.h"
-#endif
+#include "amiga-align.h"
+#include "../nlisttree_mcc/private.h"
+#include "default-align.h"
 
-#if defined(__AROS__)
-  #include "../nlisttree_mcc/private.h"
-#elif defined(__PPC__)
-  #pragma pack(2)
-  #include "../nlisttree_mcc/private.h"
-  #pragma pack()
-#else
-  #include "../nlisttree_mcc/private.h"
-#endif
+#include "Debug.h"
 
 #include <mcc_common.h>
-#include <mcc_debug.h>
 
 #define PREFSIMAGEOBJECT \
   BodychunkObject,\
@@ -59,38 +49,21 @@
 
 struct NListtreeP_Data
 {
-	Object
-			*WI_Sample,
-				*NLT_Sample,
-				*BT_Sample_Expand,
-				*BT_Sample_Collapse,
-				*BT_Sample_Close,
-
-			*WI_Copyright,
-				*BT_Copyright_Close,
-
-			*GR_Prefs,
-				*PI_ImageClosed,
-				*PI_ImageOpen,
-				*PI_ImageSpecial,
-
-				*PP_LinePen,
-				*PP_ShadowPen,
-				*PP_DrawPen,
-				*PP_Draw2Pen,
-
-				*CY_Style,
-				*SL_Space,
-				*CH_RememberStatus,
-				*CH_OpenAutoScroll,
-
-			*BT_OpenSample,
-			*BT_OpenCopyright;
-	//Object	*BT_Test;
-
-	BOOL	SampleWasOpen,
-			CopyrightWasOpen;
+	Object *NLT_Sample;
+  Object *BT_Sample_Expand;
+  Object *BT_Sample_Collapse;
+  Object *GR_Prefs;
+	Object *PI_ImageClosed;
+	Object *PI_ImageOpen;
+  Object *PI_ImageSpecial;
+  Object *PP_LinePen;
+  Object *PP_ShadowPen;
+  Object *PP_DrawPen;
+  Object *PP_Draw2Pen;
+  Object *CY_Style;
+  Object *SL_Space;
+  Object *CH_RememberStatus;
+  Object *CH_OpenAutoScroll;
 };
 
 #endif /* MUI_NLISTTREE_priv_MCP_H */
-

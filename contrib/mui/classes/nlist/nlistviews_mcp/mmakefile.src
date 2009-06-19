@@ -1,0 +1,58 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+#MM contrib-zune-classes-nlistviews-mcp : includes linklibs contrib-zune-classes-nlistviews-mcp-catalogs
+#MM contrib-zune-classes-nlistviews-mcp-test : includes linklibs
+
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../nlistview_mcc
+USER_CFLAGS := -DNO_INLINE_STDARG
+
+FILES := locale NListviews Debug vastubs
+
+%build_module_simple mmake=contrib-zune-classes-nlistviews-mcp \
+  modname=NListviews modtype=mcp moduledir=$(CONTRIBDIR)/Zune/MCC_NList/Classes/Zune \
+  files="library $(FILES)" uselibs="amiga mui rom m"
+
+
+%build_prog mmake=contrib-zune-classes-nlistviews-mcp-test progname=NListviews-Prefs \
+    files="NListviews-Prefs $(FILES)" targetdir=$(AROS_TESTS)/NList \
+    uselibs="amiga mui arosc m"
+
+
+#MM includes-copy
+
+INCLUDE_FILES := NListviews_mcp.h
+%copy_includes path=mui
+
+
+TARGETDIR := $(AROS_CONTRIB)/Zune/MCC_NList/Locale/Catalogs
+LOCALE_H := $(SRCDIR)/$(CURDIR)/locale.h
+LOCALE_C := $(SRCDIR)/$(CURDIR)/locale.c
+
+#MM
+contrib-zune-classes-nlistviews-mcp-catalogs : locale.h locale.c \
+    $(TARGETDIR)/czech/NListviews_mcp.catalog \
+    $(TARGETDIR)/svenska/NListviews_mcp.catalog \
+    $(TARGETDIR)/français/NListviews_mcp.catalog
+
+
+$(LOCALE_H): locale/NListviews_mcp.cd C_h.sd
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListviews_mcp.cd $(LOCALE_H)=$(SRCDIR)/$(CURDIR)/C_h.sd
+
+$(LOCALE_C): locale/NListviews_mcp.cd C_c.sd
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListviews_mcp.cd $(LOCALE_C)=$(SRCDIR)/$(CURDIR)/C_c.sd
+
+
+$(TARGETDIR)/czech/NListviews_mcp.catalog: locale/czech.ct
+	@$(MKDIR) $(TARGETDIR)/czech
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListviews_mcp.cd $< CATALOG $@
+
+$(TARGETDIR)/français/NListviews_mcp.catalog: locale/french.ct
+	@$(MKDIR) $(TARGETDIR)/français
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListviews_mcp.cd $< CATALOG $@
+
+$(TARGETDIR)/svenska/NListviews_mcp.catalog: locale/swedish.ct
+	@$(MKDIR) $(TARGETDIR)/svenska
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListviews_mcp.cd $< CATALOG $@
+
+%common

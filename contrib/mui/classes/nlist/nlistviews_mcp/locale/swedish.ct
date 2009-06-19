@@ -1,0 +1,572 @@
+## chunk AUTH Pär Boberg
+## language svenska
+## version $VER: NListviews_mcp.ct 2.1 (09.03.08)
+MSG_FONTS
+Typsnitt
+;#DEF Fonts
+;#SET (0//)
+MSG_NORMAL_FONT
+Normalt typsnitt:
+;#DEF Normal Font:
+;#SET (1//)
+MSG_NORMAL_FONT_HELP
+Välj normalt NList typsnitt.
+;#DEF Choose the normal NList font.
+;#SET (2//)
+MSG_NORMAL_FONT_ASL
+Var god välj normalt typsnitt...
+;#DEF Please select the normal font...
+;#SET (3//)
+MSG_SMALL_FONT
+Litet typsnitt:
+;#DEF Small Font:
+;#SET (4//)
+MSG_SMALL_FONT_HELP
+Välj litet NList typsnitt.
+;#DEF Choose the small NList font.
+;#SET (5//)
+MSG_SMALL_FONT_ASL
+Var god välj litet typsnitt...
+;#DEF Please select a small font...
+;#SET (6//)
+MSG_FIXED_FONT
+Fast typsnitt:
+;#DEF Fixed Font:
+;#SET (7//)
+MSG_FIXED_FONT_HELP
+Välj fast NList typsnitt.
+;#DEF Choose the fixed NList font.
+;#SET (8//)
+MSG_FIXED_FONT_ASL
+Var god välj ett fast typsnitt...
+;#DEF Please select a fixed font...
+;#SET (9//)
+MSG_FONT_MARGIN
+Typsnittsmarginal
+;#DEF Font Margin
+;#SET (10//)
+MSG_FONT_MARGIN_HELP
+Tillåter att sätta en vertikal marginal\nsom läggs till på typsnitts\nhöjden och resulterar i den förvalda\nlinjehöjden i ett NList objekt.
+;#DEF Allows to set a vertical margin\nwhich will be added to the font\nheight and result in the default\nline height in an NList object.
+;#SET (11//)
+MSG_COLORS
+Färger
+;#DEF Colors
+;#SET (12//)
+MSG_TEXTCOLOR
+Text penna
+;#DEF Text Pen
+;#SET (13//)
+MSG_BACKGROUNDCOLOR
+Bakgrund
+;#DEF Background
+;#SET (14//)
+MSG_TITLE_PEN_WIN
+Titel penna
+;#DEF Title Pen
+;#SET (15//)
+MSG_TITLE_PEN_HELP
+För justering av pennfärgen för\nen titel.
+;#DEF For adjusting the pen color of\na title.
+;#SET (16//)
+MSG_PBG_TITLE
+\ecTitel
+;#DEF \ecTitle
+;#SET (17//)
+MSG_TITLE_BG_WIN
+Titelbakgrund
+;#DEF Title Background
+;#SET (18//)
+MSG_TITLE_BG_HELP
+För justering av bakgrundsfärgen\nför en titel.
+;#DEF For adjusting the background color\nof a title.
+;#SET (19//)
+MSG_LIST_PEN_WIN
+List penna
+;#DEF List Pen
+;#SET (20//)
+MSG_LIST_PEN_HELP
+För justering av pennfärgen\nför en lista.
+;#DEF For adjusting the pen color of\na list.
+;#SET (21//)
+MSG_PBG_LIST
+\ecLista
+;#DEF \ecList
+;#SET (22//)
+MSG_LIST_BG_WIN
+Listbakgrund
+;#DEF List Background
+;#SET (23//)
+MSG_LIST_BG_HELP
+För justering av bakgrundsfärgen\nför en lista.
+;#DEF For adjusting the background color\nof a list.
+;#SET (24//)
+MSG_SELECT_PEN_WIN
+Vald post
+;#DEF Selected Entry
+;#SET (25//)
+MSG_SELECT_PEN_HELP
+För justering av pennfärgen\nför valda poster.
+;#DEF For adjusting the pen color of\nselected entries.
+;#SET (26//)
+MSG_PBG_SELECT
+\ecVald
+;#DEF \ecSelected
+;#SET (27//)
+MSG_SELECT_BG_WIN
+Vald post
+;#DEF Selected Entry
+;#SET (28//)
+MSG_SELECT_BG_HELP
+För justering av bakgrundsfärgen\nför valda poster.
+;#DEF For adjusting the background color\nof selected entries.
+;#SET (29//)
+MSG_CURSOR_PEN_WIN
+Vald markör
+;#DEF Selected Cursor
+;#SET (30//)
+MSG_CURSOR_PEN_HELP
+För justering av pennfärgen\nför vald markör.
+;#DEF For adjusting the pen color of\na selected cursor.
+;#SET (31//)
+MSG_PBG_CURSOR
+\ecMarkör
+;#DEF \ecCursor
+;#SET (32//)
+MSG_CURSOR_BG_WIN
+Vald markör
+;#DEF Selected Cursor
+;#SET (33//)
+MSG_CURSOR_BG_HELP
+För justering av bakgrundsfärgen\nför vald markör.
+;#DEF For adjusting the background color\nof a selected cursor.
+;#SET (34//)
+MSG_UNSEL_PEN_WIN
+Ovald markör
+;#DEF Unselected Cursor
+;#SET (35//)
+MSG_UNSEL_PEN_HELP
+För justering av pennfärgen\nför en ovald markör.
+;#DEF For adjusting the pen color of\nan unselected cursor.
+;#SET (36//)
+MSG_PBG_UNSEL
+\ecOvald
+;#DEF \ecUnselected
+;#SET (37//)
+MSG_UNSEL_BG_WIN
+Ovald markör
+;#DEF Unselected Cursor
+;#SET (38//)
+MSG_UNSEL_BG_HELP
+För justering av bakgrundsfärgen\nför en ovald markör.
+;#DEF For adjusting the background color\nof an unselected cursor.
+;#SET (39//)
+MSG_INACT_PEN_WIN
+Inaktiv markör
+;#DEF Inactive Cursor
+;#SET (40//)
+MSG_INACT_PEN_HELP
+För justering av pennfärgen\nför en inaktiv markör.
+;#DEF For adjusting the pen color of\nan inactive cursor.
+;#SET (41//)
+MSG_PBG_INACT
+\ecInaktiv
+;#DEF \ecInactive
+;#SET (42//)
+MSG_INACT_BG_WIN
+Inaktiv markör
+;#DEF Inactive Cursor
+;#SET (43//)
+MSG_INACT_BG_HELP
+För justering av bakgrundsfärgen\nför en inaktiv markör.
+;#DEF For adjusting the background color\nof an inactive cursor.
+;#SET (44//)
+MSG_MULTISELECT
+Flerval
+;#DEF MultiSelection
+;#SET (45//)
+MSG_MULTISELECT_QUAL
+via kvalificering
+;#DEF via Qualifier
+;#SET (46//)
+MSG_MULTISELECT_ALWAYS
+Alltid
+;#DEF Always
+;#SET (47//)
+MSG_MULTISELECT_HELP
+Tillåter att specifiera förvalt\nflervalsläge.
+;#DEF Allows to specify the default\nmultiselection mode.
+;#SET (48//)
+MSG_MMB_MULTISEL
+MMK flerval
+;#DEF MMB multiselection
+;#SET (49//)
+MSG_MMB_MULTISEL_HELP
+Välj om du vill använda mittenmusknappen\n(MMK) som flervalskvalificerare.
+;#DEF Set it if you want to use the middle\nmouse button (MMB) as a multiselection\nqualifier.
+;#SET (50//)
+MSG_DRAGDROP
+Dra&släpp
+;#DEF Drag&Drop
+;#SET (51//)
+MSG_DRAGTYPE_IMMEDIATE
+Omeddelbar
+;#DEF Immediate
+;#SET (52//)
+MSG_DRAGTYPE_BORDERS
+vid kanter
+;#DEF at Borders
+;#SET (53//)
+MSG_DRAGTYPE_QUALIFIER
+via kvalificerare
+;#DEF via Qualifier
+;#SET (54//)
+MSG_DRAGTYPE_HELP
+Välj dragläge. 'Omeddelbar' startar\ndra&släpp så fort du drar ett objekt.\n'vid kanter' för att visa en dra-operation\nså snart du passerat vänster/höger kanter\noch 'via kvalificerare' för att endast tillåta\ndra&släpp via en kvalificeringstangent\n(se 'Tangenter').\n\n'Omeddelbar' används endast i icke-flervalsläge.
+;#DEF Set the drag mode. 'Immediate' will start\ndrag&drop as soon as you drag an object.\n'at Borders' for showing a drag operation\nas soon as you passed the left/right borders\nand 'via Qualifier' for only allowing to\ndrag&drop via a qualifier key (see 'Keys').\n\n'Immediate' is used only when in no-multiselect\nmode.
+;#SET (55//)
+MSG_DRAG_LINES
+Synliga linjer
+;#DEF Visible lines
+;#SET (56//)
+MSG_DRAG_LINES_HELP
+Ange max antal linjer som\nkommer att visas vid dra&släpp.\nOm fler linjer är valda, kommer\ndu att se ett meddelande\nliknande: 'Drar xx objekt...'.
+;#DEF Give the max. number of lines\nwhich will be shown when\ndoing drag&drop. If more lines\nare selected, you'll get a message\nsimilar to: 'Dragging xx Items...'.
+;#SET (57//)
+MSG_PAGE_FONTS
+Typsnitt
+;#DEF Fonts
+;#SET (58//)
+MSG_PAGE_COLORS
+Färger
+;#DEF Colors
+;#SET (59//)
+MSG_PAGE_OPTIONS
+Alternativ
+;#DEF Options
+;#SET (60//)
+MSG_PAGE_SCROLLING
+Skrollning
+;#DEF Scrolling
+;#SET (61//)
+MSG_PAGE_KEYBINDINGS
+Tangentbindningar
+;#DEF Keybindings
+;#SET (62//)
+MSG_SB_HORIZONTAL
+Horisontellt dragreglage 
+;#DEF Horizontal Scrollbar
+;#SET (63//)
+MSG_SB_HORIZONTAL_HELP
+Välj förvalt läge\nför horisontellt dragreglage.\n(kan ändras av ett program)
+;#DEF Set the default mode\nfor the horizontal scrollbar.\n(may be overwritten by an\napplication)
+;#SET (64//)
+MSG_SB_VERTICAL
+Vertikalt dragreglage
+;#DEF Vertical Scrollbar
+;#SET (65//)
+MSG_SB_VERTICAL_HELP
+Välj förvalt läge\nför vertikalt dragreglage.\n(kan ändras av ett program)
+;#DEF Set the default mode\nfor the vertical scrollbar.\n(may be overwritten by an\napplication)
+;#SET (66//)
+MSG_SCROLLCONTROL
+Skrollkontroll
+;#DEF Scolling Control
+;#SET (67//)
+MSG_SMOOTH_SCROLLING
+Mjuk skrollning
+;#DEF Smooth Scrolling
+;#SET (68//)
+MSG_SMOOTH_SCROLLING_HELP
+Om vald, kommer mjuk skrollning\natt användas för NList objekt.\nSom tillägg, vid användning av\n'mjuk' reglaget i normala MUI 'Listview'\nkonfigurationssidan kan hastigheten\nkontrolleras.
+;#DEF If enabled, smoothing scrolling\nwill be used for NList objects.\nIn addition, by using the 'smooth'\nslider in the normal MUI 'Listview'\nconfiguration page the speed of\nthe smooth scrolling can be controled.
+;#SET (69//)
+MSG_MMB_FASTWHEEL
+MMK Snabbhjul
+;#DEF MMB Fast Wheel
+;#SET (70//)
+MSG_MMB_FASTWHEEL_HELP
+Om vald, kommer mittenmusknappen\natt användas som en kvalificerare för\natt utföra en snabb hjulskroll.\n(Se 'tangentbindningar' sidan också\nför fler hjulkvalificerare)
+;#DEF If enabled, the middle mouse button\ncan be used as a qualifier to perform\na fast scroll wheel action.\n(See 'Keybindings' page as well for\nmore wheel qualifiers)
+;#SET (71//)
+MSG_WHEEL_STEP
+Mushjul steg
+;#DEF Mouse Wheel Step
+;#SET (72//)
+MSG_WHEEL_STEP_HELP
+Tillåter att specifiera antal linjer\nsom skrollas vid användning\nav en mus med skrollhjul.
+;#DEF Allows to specify the amount of lines\nthat should be scrolled when using a\nwheel mouse.
+;#SET (73//)
+MSG_WHEEL_FAST
+Mushjul snabbsteg
+;#DEF Mouse Wheel Fast Step
+;#SET (74//)
+MSG_WHEEL_FAST_HELP
+Tillåter att specifiera antal linjer\nsom skrollas vid användning\nav en mus med skrollhjul och\nnär snabbhjulskvalificeraren\när nedtryckt.
+;#DEF Allows to specify the amount of lines\nthat should be scrolled when using a\nwheel mouse and when the fast wheel\nqualifier is pressed.
+;#SET (75//)
+MSG_LAYOUT
+Layout
+;#DEF Layout
+;#SET (76//)
+MSG_PARTIAL_COL_MARK
+Delvis kolumnmarkering
+;#DEF Partial column mark
+;#SET (77//)
+MSG_PARTIAL_COL_MARK_HELP
+Om vald, kommer en speciell markering\natt visas på höger sida av en\nkolumn, ifall texten inte ryms.
+;#DEF If enabled, a special mark will be drawn\nat the right side of a column in case the\ntext didn't completly fit into it.
+;#SET (78//)
+MSG_PARTIAL_CHARS_DRAWN
+Tecken delvis ritade
+;#DEF Partial chars drawn
+;#SET (79//)
+MSG_PARTIAL_CHARS_DRAWN_HELP
+Om vald, så kommer tecken som inte är\nfullt synliga vid vänster och höger\nhörn av ett NList objekt att inte ritas delvis.
+;#DEF If enabled, characters that are not fully\nvisible at the left and right corner of\nan NList object will not be drawn partially.
+;#SET (80//)
+MSG_VERT_CENTERED
+Vertikalt centrerade linjer
+;#DEF Vertical centered lines
+;#SET (81//)
+MSG_VERT_CENTERED_HELP
+Om aktiverat, så kommer textlinjer att\ncentreras vertikalt i ett NList objekt.
+;#DEF If activated, the text lines are centered\nvertically in a NList object.
+;#SET (82//)
+MSG_BALANCING_COLS
+Balancerade kolumner
+;#DEF Balancing Columns
+;#SET (83//)
+MSG_BALANCING_COLS_HELP
+NList tillåter att ändra kolumnbredden\nvia mus, genom att dra i kolumnseparatorn\ni titelraden. Den flyttade raden kan visas\nantingen endast i titeln, genom hela linjer\neller så kan ändringarna visas direkt.
+;#DEF NList permits to change the column width\nvia mouse dragging the column separator in\nthe title bar. The moved bar can be visible\neither only in the title, throughout the\nwhole lines or the column width changes can\nbe made visible instantly.
+;#SET (84//)
+MSG_COLWIDTHDRAG_TITLE
+Titelrad
+;#DEF Title Bar
+;#SET (85//)
+MSG_COLWIDTHDRAG_FULLBAR
+Full rad
+;#DEF Full Bar
+;#SET (86//)
+MSG_COLWIDTHDRAG_VISIBLE
+Synlig
+;#DEF Visible
+;#SET (87//)
+MSG_COLOR_OPTIONS
+Alternativ
+;#DEF Options
+;#SET (88//)
+MSG_FORCE_SELECT_PEN
+Tvinga vald penna
+;#DEF Force select pen
+;#SET (89//)
+MSG_FORCE_SELECT_PEN_HELP
+Om vald, kommer NList att kontrollera\natt 'vald', 'markör' och 'ovald'\nfärg tvingas.
+;#DEF If enabled, NList will make sure that\nthe 'Selected', 'Cursor' and 'Unselected'\ncolor will be forced.
+;#SET (90//)
+MSG_MULTISEL_MOVEACTIVE
+Tangentbord flyttar markör
+;#DEF Keyboard moves cursor
+;#SET (91//)
+MSG_MULTISEL_MOVEACTIVE_HELP
+Om vald, kommer tangentbordet som\nanvänds i ett NList objekt att\nflytta den aktiva markören, istället\nför den ovalda.
+;#DEF If enabled, a keyboard use in an NList\nobject will move the active cursor\nrather than the unselected one.
+;#SET (92//)
+MSG_GROUP_MISC
+Övrigt
+;#DEF Miscellaneous
+;#SET (93//)
+MSG_GROUP_EXAMPLE
+Exempel
+;#DEF Example
+;#SET (94//)
+MSG_SERMOUSE_FIX
+Seriell musfix
+;#DEF Serial Mouse Fix
+;#SET (95//)
+MSG_SERMOUSE_FIX_HELP
+Om vald, försöker NList att fixa vanliga\ndra&släpp problem som är vanligt vid\nanvändning av en seriell mus.
+;#DEF If enabled, NList tries to fix common\ndrag&drop issues that are related to using\na serial mouse.
+;#SET (96//)
+MSG_SELECT_POINTER
+Specialpekare för val
+;#DEF Custom Select Pointer
+;#SET (97//)
+MSG_SELECT_POINTER_HELP
+Om vald och ett NList objekt är i\nteckenvist väljläge, kommer en speciell\npekare för val att visas, istället för\nworkbench standard pekare.
+;#DEF If enabled, and an NList object is in\ncharwise selection mode a custom select\npointer will be displayed instead of the\ndefault workbench mouse pointer image.
+;#SET (98//)
+MSG_BAR_CONTEXTMENU
+Kontextmeny
+;#DEF Context Menu
+;#SET (99//)
+MSG_DEFAULT_CONTEXT_MENU_HELP
+NList tillåter att dess förvalda\nkontextmeny, slås av eller på,\neller endast när muspekaren\när vid toppen av NList objektet.
+;#DEF NList permits to have its default\ncontext menu being disabled or enabled\nor only in case the mouse is at the top\nof the NList object.
+;#SET (100//)
+MSG_SNOOP
+Läs av
+;#DEF Snoop
+;#SET (101//)
+MSG_SNOOP_KEY
+Börja avläsning av snabbtangent.
+;#DEF Start the grab of a hotkey.
+;#SET (102//)
+MSG_BUTTON_INSERT
+Sätt in
+;#DEF Insert
+;#SET (103//)
+MSG_BUTTON_INSERT_HELP
+Tillåter insättning av en ny snabbtangent.
+;#DEF Allows to insert a new hotkey.
+;#SET (104//)
+MSG_BUTTON_REMOVE
+Ta bort
+;#DEF Remove
+;#SET (105//)
+MSG_BUTTON_REMOVE_HELP
+Tillåter borttagning av en existerande snabbtangent.
+;#DEF Allows to remove an existing hotkey.
+;#SET (106//)
+MSG_BUTTON_UPDATEKEYS
+Uppdatera tangenter
+;#DEF Update keys
+;#SET (107//)
+MSG_BUTTON_UPDATEKEYS_HELP
+Lägg till förvalda snabbtangenter\nför de funktioner som förnärvarande\ninte finns i listan.
+;#DEF Add the default hotkeys for\nthe functions which are not\ncurrently in the list.
+;#SET (108//)
+MSG_BUTTON_DEFAULTKEYS
+Förvalda tangenter
+;#DEF Default keys
+;#SET (109//)
+MSG_BUTTON_DEFAULTKEYS_HELP
+Återställer alla snabbtangenter till de förvalda.
+;#DEF Resets all hotkeys to default ones.
+;#SET (110//)
+MSG_FUNC_MULTISELQUAL
+Flerval/block kvalificerare
+;#DEF Multiselect/Block Qualifier
+;#SET (111//)
+MSG_FUNC_DRAGQUAL
+Dra&släpp kvalificerare
+;#DEF Drag&Drop Qualifier
+;#SET (112//)
+MSG_FUNC_BALANCEQUAL
+Balans kvalificerare
+;#DEF Balance Qualifier
+;#SET (113//)
+MSG_FUNC_COPYCLIP
+Kopiera till klippbordet
+;#DEF Copy to clipboard
+;#SET (114//)
+MSG_FUNC_DEFCOLWIDTH
+Förvald kolumnbredd
+;#DEF Default width column
+;#SET (115//)
+MSG_FUNC_DEFALLCOLWIDTH
+Förvald bredd alla kolumner
+;#DEF Default width all columns
+;#SET (116//)
+MSG_FUNC_DEFORDERCOL
+Förvald kolumnordning
+;#DEF Default order column
+;#SET (117//)
+MSG_FUNC_DEFALLORDERCOL
+Förvald ordning alla kolumner
+;#DEF Fefault order all columns
+;#SET (118//)
+MSG_FUNC_SELECTTOP
+Välj för överst
+;#DEF Select to top
+;#SET (119//)
+MSG_FUNC_SELECTBOTTOM
+Välj för nederst
+;#DEF Select to bottom
+;#SET (120//)
+MSG_FUNC_SELECTPAGEUP
+Välj för sida upp
+;#DEF Select to page up
+;#SET (121//)
+MSG_FUNC_SELECTPAGEDOWN
+Välj för sida ned
+;#DEF Select to page down
+;#SET (122//)
+MSG_FUNC_SELECTUP
+Välj upp
+;#DEF Select up
+;#SET (123//)
+MSG_FUNC_SELECTDOWN
+Välj ned
+;#DEF Select down
+;#SET (124//)
+MSG_FUNC_TOGGLEACTIVE
+Växla aktiv
+;#DEF Toggle active
+;#SET (125//)
+MSG_FUNC_FASTWHEELQUAL
+Snabb mushjulkvalificerare
+;#DEF Fast MouseWheel Qualifier
+;#SET (126//)
+MSG_FUNC_HORIZWHEELQUAL
+Horisontell mushjulkvalificerare
+;#DEF Horiz MouseWheel Qualifier
+;#SET (127//)
+MSG_FUNC_TITLECLICKQUAL
+Titelklick kvalificerare
+;#DEF Title Click Qualifier
+;#SET (128//)
+MSG_VSB_ALWAYS
+Alltid
+;#DEF Always
+;#SET (129//)
+MSG_VSB_AUTO
+Auto
+;#DEF Auto
+;#SET (130//)
+MSG_VSB_FULLAUTO
+Fullauto
+;#DEF FullAuto
+;#SET (131//)
+MSG_HSB_ALWAYS
+Alltid
+;#DEF Always
+;#SET (132//)
+MSG_HSB_AUTO
+Auto
+;#DEF Auto
+;#SET (133//)
+MSG_HSB_FULLAUTO
+Fullauto
+;#DEF FullAuto
+;#SET (134//)
+MSG_HSB_NONE
+Ingen
+;#DEF None
+;#SET (135//)
+MSG_CMENU_ALWAYS
+Alltid
+;#DEF Always
+;#SET (136//)
+MSG_CMENU_TOPONLY
+Endast topp
+;#DEF TopOnly
+;#SET (137//)
+MSG_CMENU_NEVER
+Aldrig
+;#DEF Never
+;#SET (138//)
+MSG_HOTKEYS_KEY
+Tangent
+;#DEF Key
+;#SET (139//)
+MSG_HOTKEYS_ACTION
+Händelse
+;#DEF Action
+;#SET (140//)
+MSG_EXAMPLE_TEXT
+Om du har problem, försök öka stackvärdet\ni ikon informationen om du startar programmet\nvia ikonen. Stacken för CLI om du startar det\nfrån CLI Shell och om du startar det från något\nannat verktyg, läs dess dokumentation hur du\nökar stackstorleken.\nEn stack på 12kb, 16kb eller 20kb räcker vanligtvis.\n\nOm du fortfarande har problem, se om de händer\nmed demo programmet, kontakta mig sedan.\n\033C\nSenaste release kan hittas på Aminet (dev/mui).\nAlla releaser finns på\nhttp://www.sourceforge.net/projects/nlist-classes/\n\033C\n\033r\0333(C) 2001-2008 av NList Open Source Team\n\033r\0333(C)1996-1998 av Gilles Masson\n\033r\0333http://www.sourceforge.net/projects/nlist-classes/\n\033C\n\033cDenna nya list/listvy specialklass\n\033chanterar sin egen konfigurerbara bakgrunder,\n\033cpennor, typsnitt, rullister, tangenter och kvalifiserare\n\033C\n\033CTidigare sätt att hantera markör med flerval\n\033cär inte exakt samma som listvyn !\n\033cDra&släpp stöds, båda rullisterna kan\
+ konfigureras\n\033catt försvinna automatiskt när de inte behövs\n\033ceftersom allt är synligt. Prova det...\n\033C\n\033cDu kan rulla horisontellt med tangenterna\n\033celler gå till höger och vänster om listen\n\033coch samtidigt välja med musen.\n\033cProva klicka på vänster/höger ramar !\n\033C\n\033cDu kan ändra kolumnernas bredd med att dra\n\033ci den vertikala separatorn mellan kolumntitlarna\n\033c(prova med att använda balanskvalifiseraren också).\n\033C\n\033cDu kan ändra kolumnernas ordning genom att dra i kolumntitlarna.\n\033C\n\033cDet finns inbyggt kopiera till klippbordet\n\033coch klassisk tecken val kapacitet.\n\033C\n\033cProva demo programmet för att testa allt det...\n\n\n\033r\033bGe feedback om det ! :-)\n\033C\n**************************************************************************************************\n
+;#DEF If you have problems, try to increase the stack value,\nin the icon infos if you launch the program from icon,\nstack of CLI if you start it from CLI/Shell,\nand if you launch it from some utility read its docs\nto see how to increase it.\nA stack of 12Kb, 16Kb or 20Kb is most of time a good idea.\n\nIf you still have problems, try to see if they happen with the Demo prog, then tell me.\n\033C\nLatest public release can be found on aminet (dev/mui).\nAll releases are available on\nhttp://www.sourceforge.net/projects/nlist-classes/\n\033C\n\033r\0333(C) 2001-2007 by NList Open Source Team\n\033r\0333(C) 1996-1998 by Gilles Masson\n\033r\0333http://www.sourceforge.net/projects/nlist-classes/\n\033C\n\033cThis new list/listview custom class\n\033chandles its own configurable backgrounds,\n\033cpens, fonts, scrollbars, keys and qualifiers\n\033C\n\033cThe way used to handle cursor with multiselection\n\033cis not exactly as the listview one !\n\033cDrag&Drop is supported, both scrollbars\n\033ccan be configured to disappear automatically\n\033cwhen not needed because all is visible.\n\033cJust try it...\n\033C\n\033cYou can horizontaly scroll with cursor keys,\n\033cor going on the right and left of the list\n\033cwhile selecting with the mouse.\n\033cTry just clicking on the left/right borders !\n\033C\n\033cYou can change columns widths just dragging\n\033cthe vertical separator between columns titles\n\033c(try it using the balancing qualifier too).\n\033C\n\033cYou can change columns order just dragging\n\033cthe column titles.\n\033C\n\033cThere is builtin copy to clipboard stuff\n\033cand classic char selection capability.\n\033C\n\033cTry the Demo program to test all that...\n\n\n\033r\033bGive some feedback about it ! :-)\n\033C\n**************************************************************************************************\n
+;#SET (141//)

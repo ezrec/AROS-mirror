@@ -1,0 +1,32 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+#MM contrib-zune-classes-nbitmap-class : includes linklibs
+#MM contrib-zune-classes-nbitmap-test : includes linklibs contrib-zune-classes-nbitmap-test-cpy
+
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include
+USER_CFLAGS := -DNO_INLINE_STDARG
+
+FILES := dispatcher NBitmap Debug vastubs
+
+%build_module_simple mmake=contrib-zune-classes-nbitmap-class \
+  modname=NBitmap modtype=mcc moduledir=$(CONTRIBDIR)/Zune/MCC_NList/Classes/Zune \
+  files="library $(FILES)" uselibs="amiga mui rom m"
+
+
+%build_prog mmake=contrib-zune-classes-nbitmap-test progname=NBitmap-Test \
+    files="NBitmap-Test $(FILES)" targetdir=$(AROS_TESTS)/NList \
+    uselibs="amiga mui arosc m"
+
+
+#MM includes-copy
+
+INCLUDE_FILES := ../include/mui/NBitmap_mcc.h
+%copy_includes path=mui dir=../include/mui
+
+#MM contrib-zune-classes-nbitmap-test-cpy
+
+%copy_files_q files=icon.png src=. dst=$(AROS_TESTS)/NList \
+    maketarget=contrib-zune-classes-nbitmap-test-cpy
+
+%common

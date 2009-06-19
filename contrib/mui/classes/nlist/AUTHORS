@@ -1,0 +1,41 @@
+/***************************************************************************
+
+ NList MUI custom classes
+
+ Copyright (C) 1996-2001 by Gilles Masson (NList.mcc)
+ Copyright (C) 1999-2001 by Carsten Scholling (NListtree.mcc)
+ Copyright (C) 2006      by Daniel Allsopp (NBitmap.mcc)
+ Copyright (C) 2001-2008 by NList Open Source Team
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id: AUTHORS 340 2009-06-15 00:31:00Z marust $
+
+***************************************************************************/
+
+The NList classes are an Open Source development effort with the code base
+and design provided by the following people (alphabetical order):
+
+Carsten Scholling     <cs@aphaso.de>
+Daniel Allsopp        <daniel@the-snakepit.co.uk>
+Gilles Masson
+Gunther Nikl          <gnikl@users.sourceforge.net>
+Jens Langner          <damato@users.sourceforge.net>
+Przemyslaw Grunchala  <sensei@box43.gnet.pl>
+Richard Poser         <whomiga@missingpiece.com>
+Sebastian Bauer       <sba@users.sourceforge.net>
+Thore Boeckelmann     <tboeckel@gmx.de>
+Matthias Rustler      <mrustler@gmx.de>
+
+The development of the NList classes are hosted by
+SourceForge http://www.sf.net/

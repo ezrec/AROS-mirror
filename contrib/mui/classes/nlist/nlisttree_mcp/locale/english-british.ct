@@ -1,0 +1,36 @@
+## version $VER: NListtree_mcp.catalog 2.1 (7.12.2007)
+## language english-british
+## codeset 4
+;
+MSG_GROUP_IMAGES_COLORS
+Images/Colours
+; Images/Colors
+;
+MSG_HELP_LINES_COLOR
+Colour to use for lines.
+; Color to use for lines.
+;
+MSG_WIN_TITLE_LINES_COLOR
+Adjust lines colour
+; Adjust lines color
+;
+MSG_HELP_SHADOW_COLOR
+Colour to use to cast\n\
+shadows after lines.
+; Color to use to cast\n\
+; shadows after lines.
+;
+MSG_WIN_TITLE_SHADOW_COLOR
+Adjust shadow colour
+; Adjust shadow color
+;
+MSG_HELP_DRAW_COLOR
+A draw colour to be combined\n\
+with the lines colour.
+; A draw color to be combined\n\
+; with the lines color.
+;
+MSG_WIN_TITLE_DRAW_COLOR
+Adjust draw colour
+; Adjust draw color
+;

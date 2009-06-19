@@ -1,9 +1,8 @@
 /***************************************************************************
 
  NListtree.mcc - New Listtree MUI Custom Class
- Copyright (C) 2001-2004 by Carsten Scholling <aphaso@aphaso.de>,
-                            Sebastian Bauer <sebauer@t-online.de>,
-                            Jens Langner <Jens.Langner@light-speed.de>
+ Copyright (C) 1999-2001 by Carsten Scholling
+ Copyright (C) 2001-2005 by NList Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -31,16 +30,13 @@
 ** Jens Langner <jens.langner@light-speed.de>, 2003
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-
 #include <clib/alib_protos.h>
 #include <proto/utility.h>
 
 #include "NListtree.h"
 
 #define SWAP(a,b)     temp=(a);(a)=(b);(b)=temp
-#define COMPARE(a,b)  CallHook(chook, data->Obj, MUIA_NListtree_CompareHook, (a), (b))
+#define COMPARE(a,b)  (LONG)CallHook(chook, data->Obj, MUIA_NListtree_CompareHook, (a), (b))
 
 void qsort2(struct MUI_NListtree_TreeNode **table, ULONG entries, struct Hook *chook, struct NListtree_Data *data)
 {

@@ -1,0 +1,255 @@
+## chunk AUTH Carsten Scholling
+## language deutsch
+## version $VER: NListtree.mcp.ct 18.3 (22.2.1)
+MSG_BT_COLLAPSE
+Falten
+;#DEF Collapse
+;#SET (//)
+MSG_BT_COLLAPSE_KEY
+e
+;#DEF e
+;#SET (//)
+MSG_BT_EXPAND
+Entfalten
+;#DEF Expand
+;#SET (//)
+MSG_BT_EXPAND_KEY
+n
+;#DEF n
+;#SET (//)
+MSG_BT_OPENCOPYRIGHT
+Copyright
+;#DEF Copyright
+;#SET (//)
+MSG_BT_OPENCOPYRIGHT_KEY
+r
+;#DEF r
+;#SET (//)
+MSG_BT_OPENSAMPLE
+Beispiel
+;#DEF Sample (b)
+;#SET (//)
+MSG_BT_OPENSAMPLE_KEY
+b
+;#DEF b
+;#SET (//)
+MSG_CLOSED
+Geschlossen:
+;#DEF Closed:
+;#SET (//)
+MSG_CLOSED_KEY
+c
+;#DEF c
+;#SET (//)
+MSG_COPYRIGHT
+Copyright
+;#DEF Copyright
+;#SET (//)
+MSG_COPYRIGHTTEXT
+\033c\033bNListtree.mcc %s\033n\n\033cCopyright ©1999-2000 by Carsten Scholling\n\033cAlle Rechte vorbehalten.\n\n\n\Um Entwickler-Unterstützung zu bekommen, Fehlerreporte oder Vorschläge zu senden schreiben Sie bitte an:\n\n\033c\033bcs@aphaso.de\033n\n\n\033cSchauen sie bitte auch auf meine Homepage unter\n\033c\033bhttp://www.aphaso.de\n
+;#DEF \033c\033bNListtree.mcc %s\033n\n\033cCopyright ©1999-2000 by Carsten Scholling\nAll rights reserved.\n\n\nFor developer information, bug reports and suggestions please send an email to:\n\n\033c\033bcs@aphaso.de\033n\n\nAlso check out my homepage:\n\033bhttp://www.aphaso.de\n
+;#SET (//)
+MSG_DRAW
+Zeichnen:
+;#DEF Draw:
+;#SET (//)
+MSG_DRAW_KEY
+d
+;#DEF d
+;#SET (//)
+MSG_LINES
+Linien:
+;#DEF Lines:
+;#SET (//)
+MSG_LINES_KEY
+l
+;#DEF l
+;#SET (//)
+MSG_LV_SHORTHELP
+Dieses NListtree Objekt reagiert auf\ndie Änderungen der Einstellungen.
+;#DEF This NListtree object reacts on\nthe preferences changes.
+;#SET (//)
+MSG_OPEN
+Geöffnet:
+;#DEF Open:
+;#SET (//)
+MSG_OPEN_AUTOSCROLL
+Scr. beim Öffnen:
+;#DEF Open scroll:
+;#SET (//)
+MSG_OPEN_AUTOSCROLL_KEY
+s
+;#DEF s
+;#SET (//)
+MSG_OPEN_KEY
+o
+;#DEF o
+;#SET (//)
+MSG_PREFS
+Einstellungen
+;#DEF Preferences
+;#SET (//)
+MSG_REMEMBER_STATUS
+Merken:
+;#DEF Remember:
+;#SET (//)
+MSG_REMEMBER_STATUS_KEY
+m
+;#DEF m
+;#SET (//)
+MSG_SAMPLE
+NListtree Beispiel
+;#DEF NListtree sample
+;#SET (//)
+MSG_SHADOW
+Schatten:
+;#DEF Shadow:
+;#SET (//)
+MSG_SHADOW_KEY
+w
+;#DEF w
+;#SET (//)
+MSG_SHORTHELP_CLOSED_IMAGE
+Bild der geschlossenen Node.
+;#DEF Image for a closed node.
+;#SET (//)
+MSG_SHORTHELP_DRAWPEN
+Zeichenfarbe.
+;#DEF Custom draw color.
+;#SET (//)
+MSG_SHORTHELP_LINEPEN
+Linienfarbe.
+;#DEF Custom line color.
+;#SET (//)
+MSG_SHORTHELP_OPEN_AUTOSCROLL
+Scrollt das Listview beim Öffnen von Nodes so, dass\nalle Einträge in den sichtbaren Bereich kommen.
+;#DEF Auto scroll listview when opening\nnodes to fit in visible area.
+;#SET (//)
+MSG_SHORTHELP_OPEN_IMAGE
+Bild der offenen Node.
+;#DEF Image for an opened node.
+;#SET (//)
+MSG_SHORTHELP_REMEMBER_STATUS
+Zustand der Nodes innerhalb\ngeschlossener Nodes merken.
+;#DEF Remember status of nodes\nafter closing.
+;#SET (//)
+MSG_SHORTHELP_SHADOWPEN
+Schattenfarbe.
+;#DEF Custom shadow color.
+;#SET (//)
+MSG_SHORTHELP_SPACE
+Anzahl Leerpixel.
+;#DEF Number of space pixels.
+;#SET (//)
+MSG_SHORTHELP_SPECIAL_IMAGE
+Spezial Bild.
+;#DEF Special image.
+;#SET (//)
+MSG_SHORTHELP_STYLE
+Globales Aussehen des Baumes.
+;#DEF Global style of the tree.
+;#SET (//)
+MSG_SPACE
+Leerpixel:
+;#DEF Space:
+;#SET (//)
+MSG_SPACE_KEY
+p
+;#DEF p
+;#SET (//)
+MSG_SPECIAL
+Spezial:
+;#DEF Special:
+;#SET (//)
+MSG_SPECIAL_KEY
+a
+;#DEF a
+;#SET (//)
+MSG_STR_PREFS_IMAGESLINES
+Bilder/Linien
+;#DEF Images/Lines
+;#SET (//)
+MSG_STR_PREFS_STYLE
+Stil
+;#DEF Style
+;#SET (//)
+MSG_STYLE
+Stil:
+;#DEF Style:
+;#SET (//)
+MSG_STYLE_INSERTED
+Eingerückt
+;#DEF Inserted
+;#SET (//)
+MSG_STYLE_KEY
+y
+;#DEF y
+;#SET (//)
+MSG_STYLE_LINES
+Linien
+;#DEF Lines
+;#SET (//)
+MSG_STYLE_LINES3D
+3D Linien
+;#DEF Lines 3D
+;#SET (//)
+MSG_STYLE_MAC
+Mac
+;#DEF Mac
+;#SET (//)
+MSG_STYLE_NORMAL
+Normal
+;#DEF Normal
+;#SET (//)
+MSG_STYLE_WIN98
+Win98
+;#DEF Win98
+;#SET (//)
+MSG_STYLE_WIN98PLUS
+Win98+
+;#DEF Win98+
+;#SET (//)
+MSG_WIN_TITLE_CLOSED_IMAGE
+Bild der 'geschlossenen Node' ändern
+;#DEF Adjust 'closed node' image
+;#SET (//)
+MSG_WIN_TITLE_DRAWPEN
+Zeichenfarbe ändern
+;#DEF Adjust `Draw' pen
+;#SET (//)
+MSG_WIN_TITLE_LINEPEN
+Linienfarbe ändern
+;#DEF Adjust `Lines' pen
+;#SET (//)
+MSG_WIN_TITLE_OPEN_IMAGE
+Bild der 'geöffneten Node' ändern
+;#DEF Adjust 'opened node' image
+;#SET (//)
+MSG_WIN_TITLE_SHADOWPEN
+Schattenfarbe ändern
+;#DEF Adjust `Shadow' pen
+;#SET (//)
+MSG_WIN_TITLE_SPECIAL_IMAGE
+Spezial Bild ändern
+;#DEF Adjust special image
+;#SET (//)
+MSG_BT_CLOSE
+Schließen
+;#DEF Close
+;#SET (//)
+MSG_BT_CLOSE_KEY
+s
+;#DEF c
+;#SET (//)
+MSG_STYLE_GLOW
+Glühen
+;#DEF Glow
+;#SET (//)
+MSG_DRAW2
+Zeichnen2:
+;#DEF Draw2:
+;#SET (//)
+MSG_DRAW2_KEY
+2
+;#DEF 2
+;#SET (//)

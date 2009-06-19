@@ -2,6 +2,7 @@ TABLE OF CONTENTS
 
 NList.mcc/NList.mcc
 NList.mcc/MUIA_NList_Active
+NList.mcc/MUIA_NList_ActiveObjectOnClick
 NList.mcc/MUIA_NList_AdjustHeight
 NList.mcc/MUIA_NList_AdjustWidth
 NList.mcc/MUIA_NList_AutoCopyToClip
@@ -42,10 +43,15 @@ NList.mcc/MUIA_NList_Horiz_DeltaFactor
 NList.mcc/MUIA_NList_Horiz_Entries
 NList.mcc/MUIA_NList_Horiz_First
 NList.mcc/MUIA_NList_Horiz_Visible
+NList.mcc/MUIA_NList_IgnoreSpecialChars
 NList.mcc/MUIA_NList_Imports
 NList.mcc/MUIA_NList_Input
 NList.mcc/MUIA_NList_InsertPosition
 NList.mcc/MUIA_NList_KeepActive
+NList.mcc/MUIA_NList_KeyUpFocus
+NList.mcc/MUIA_NList_KeyDownFocus
+NList.mcc/MUIA_NList_KeyLeftFocus
+NList.mcc/MUIA_NList_KeyRightFocus
 NList.mcc/MUIA_NList_LineHeight
 NList.mcc/MUIA_NList_MakeActive
 NList.mcc/MUIA_NList_MinColSortable
@@ -71,7 +77,6 @@ NList.mcc/MUIA_NList_SortType2
 NList.mcc/MUIA_NList_SourceArray
 NList.mcc/MUIA_NList_SourceInsert
 NList.mcc/MUIA_NList_SourceString
-NList.mcc/MUIA_NList_StackCheck
 NList.mcc/MUIA_NList_TabSize
 NList.mcc/MUIA_NList_Title
 NList.mcc/MUIA_NList_TitleClick
@@ -127,29 +132,33 @@ NList.mcc/MUIM_NList_TestPos
 NList.mcc/MUIM_NList_UseImage
 NList.mcc/NList.mcc
 
-        That MCC public custom class is very similar to the
-        MUI's list class.
+    *******************************************************************
+    Copyright (C) 2001-2007 by NList Open Source Team
+    $Id$
 
-        It handles directly most attributes which are handled
-        by Listview in the original couple List/Listview.
+    This MCC public custom class is very similar to the MUI's list
+    class.
 
-        The NListview exist anyway to provide a complete
-        object with scrollbars, so you should use it as child
-        of NListview. Anyway, you can use NList without NListview
-        if you don't want any builtin scrollbar.
+    It handles directly most attributes which are handled by Listview
+    in the original couple List/Listview.
 
-        NOTE: NList class will not work with Listview without
-              some conflicts, and NListview class can't use List
-              as child but only NList or a NList subclass.
+    The NListview exist anyway to provide a complete object with
+    scrollbars, so you should use it as child of NListview. Anyway,
+    you can use NList without NListview if you don't want any builtin
+    scrollbar.
 
-              MUIM_NList_TestPos and MUIM_List_TestPos are similar
-              but use a different struct to store data.
-              MUIM_List_TestPos works like with a List object.
+    NOTE: NList class will not work with Listview without some
+          conflicts, and NListview class can't use List as child but
+          only NList or a NList subclass.
 
-        NOTE: Avoid as possible to do many things in MUIM_Show and
-              MUIM_Hide methods because when an object is in
-              a virtual group, your object will receive them
-              for each one of its moves !!!
+          MUIM_NList_TestPos and MUIM_List_TestPos are similar
+          but use a different struct to store data.
+          MUIM_List_TestPos works like with a List object.
+
+    NOTE: Avoid as possible to do many things in MUIM_Show and
+          MUIM_Hide methods because when an object is in
+          a virtual group, your object will receive them
+          for each one of its moves !!!
 
 
     Standard tags with NList special values :
@@ -177,7 +186,18 @@ NList.mcc/MUIM_NList_UseImage
         MUIM_ContextMenuChoice
                           read MUIM_NList_ContextMenuBuild.
 
-    Author: Gilles Masson    (c) 1996-1997    email: masson@iut-soph.unice.fr
+
+    The gadget was originally written in 1996 by Gilles Masson. In 2001
+    it was released under the LGPL license and is now maintained by a
+    free Open Source Team.
+
+    It is released and distributed under the terms of the GNU Lesser
+    General Public License (LGPL) and available free of charge.
+
+    Please visit http://www.sf.net/projects/nlist-classes/ for
+    the very latest version and information regarding NList
+    *******************************************************************
+
 NList.mcc/MUIA_NList_Active
 
     NAME
@@ -197,6 +217,27 @@ NList.mcc/MUIM_NList_UseImage
 
     SEE ALSO
         MUIA_NList_Entries, MUIA_NList_First, MUIA_NList_Visible
+NList.mcc/MUIA_NList_ActiveObjectOnClick
+
+    NAME
+        MUIA_NList_ActiveObjectOnClick -- [IS.], BOOL
+
+    FUNCTION
+        If set to TRUE, the NList object will become the
+        MUIA_Window_ActiveObject of its window when you
+        click on it. In addition, the active selected entries
+        will switch an inactive color (e.g. grey) in case the
+        NList object isn't currently active. As soon as the
+        object is active it will then also receive all user
+        keys pressed.
+
+    DEFAULT
+        FALSE
+
+    SEE ALSO
+        MUIA_NList_DefaultObjectOnClick
+        MUIA_NList_KeepActive
+        MUIA_NList_MakeActive
 NList.mcc/MUIA_NList_AdjustHeight
 
     NAME
@@ -235,6 +276,34 @@ NList.mcc/MUIM_NList_UseImage
 
     SEE ALSO
         MUIA_List_AdjustWidth, MUIA_NList_AdjustHeight
+
+NList.mcc/MUIA_NList_AutoClip
+
+    NAME
+        MUIA_NList_AutoClip -- [ISG], BOOL
+
+    FUNCTION
+        If set to TRUE and the NList object is in read-only (NoInput) mode and
+        is set to select char-wide rather than by line, the selected content is
+        immediately copied to the clipboard as soon as it is selected via the
+        mouse.
+
+    DEFAULT
+        TRUE
+
+    WARNING
+        Please note that due to historical reasons this feature is turned
+        on per default. However, due to violating the Amiga style guides, new
+        or revised applications are adviced to disable auto clipping as
+        manually performing the copy operation should be the preferred method.
+
+    SEE ALSO
+        MUIA_NList_Input
+        MUIA_NList_TypeSelect
+        MUIA_NList_AutoCopyToClip
+        MUIA_NList_CopyColumnToClipHook
+        MUIA_NList_CopyEntryToClipHook
+        MUIM_NList_CopyToClip
 NList.mcc/MUIA_NList_AutoCopyToClip
 
     NAME
@@ -244,13 +313,20 @@ NList.mcc/MUIM_NList_UseImage
         If set to TRUE you can copy the selected area to the
         clipboard 0 with Amiga-C and Amiga-X (Amiga-X because
         i have seen that sometimes Amiga-C is a shortcut !).
-        (work with both Right-Amiga and Left-Amiga keys)
+        (works with both Right-Amiga and Left-Amiga keys)
+
+        MUIA_NList_AutoCopyToClip == TRUE also requires that the NList object
+        is either the window's active object (see MUIA_Window_ActiveObject) or
+        the attached list object is window's default object (see
+        MUIA_Window_DefaultObject). Otherwise nothing will ever be copied!
 
     DEFAULT
         TRUE
 
     SEE ALSO
-        MUIA_NList_CopyColumnToClipHook, MUIA_NList_CopyEntryToClipHook,
+        MUIA_NList_AutoClip
+        MUIA_NList_CopyColumnToClipHook
+        MUIA_NList_CopyEntryToClipHook
         MUIM_NList_CopyToClip
 NList.mcc/MUIA_NList_AutoVisible
 
@@ -1105,6 +1181,22 @@ NList.mcc/MUIM_NList_UseImage
 
     SEE ALSO
         MUIA_NList_Horiz_DeltaFactor, MUIA_NList_Horiz_Entries, MUIA_NList_Horiz_First
+NList.mcc/MUIA_NList_IgnoreSpecialChars
+
+    NAME
+        MUIA_NList_IgnoreSpecialChars -- [ISG], const char *
+
+    FUNCTION
+        Used to let NList ignore a list of user definable characters during
+        string parsing. Some greek fonts need the 0xA0 character to display
+        an Alpha characters. In this case the string "\xa0" should be supplied
+        to make NList ignore this character and not treat 0xA0 as a "non
+        breaking space".
+        This string will *NOT* be copied by NList and must remain valid as long
+        as the object exists!
+
+    DEFAULT
+        NULL
 NList.mcc/MUIA_NList_Imports
 
     NAME
@@ -1163,6 +1255,70 @@ NList.mcc/MUIM_NList_UseImage
 
     SEE ALSO
         MUIA_NList_DefaultObjectOnClick,MUIA_NList_MakeActive
+NList.mcc/MUIA_NList_KeyUpFocus
+
+    NAME
+        MUIA_NList_KeyUpFocus -- [ISG], Object *
+
+    FUNCTION
+        Allows to specify a specific object that will be set as the new
+        window's active object in case the user pressed the UP cursor key
+        and the NList object itself doesn't have anything further to
+        scroll up.
+
+    SEE ALSO
+        MUIA_NList_KeyDownFocus
+        MUIA_NList_KeyLeftFocus
+        MUIA_NList_KeyRightFocus
+
+NList.mcc/MUIA_NList_KeyDownFocus
+
+    NAME
+        MUIA_NList_KeyDownFocus -- [ISG], Object *
+
+    FUNCTION
+        Allows to specify a specific object that will be set as the new
+        window's active object in case the user pressed the DOWN cursor key
+        and the NList object itself doesn't have anything further to
+        scroll down.
+
+    SEE ALSO
+        MUIA_NList_KeyUpFocus
+        MUIA_NList_KeyLeftFocus
+        MUIA_NList_KeyRightFocus
+
+NList.mcc/MUIA_NList_KeyLeftFocus
+
+    NAME
+        MUIA_NList_KeyLeftFocus -- [ISG], Object *
+
+    FUNCTION
+        Allows to specify a specific object that will be set as the new
+        window's active object in case the user pressed the LEFT cursor key
+        and the NList object itself doesn't have anything further to
+        scroll to the left.
+
+    SEE ALSO
+        MUIA_NList_KeyUpFocus
+        MUIA_NList_KeyDownFocus
+        MUIA_NList_KeyRightFocus
+
+NList.mcc/MUIA_NList_KeyRightFocus
+
+    NAME
+        MUIA_NList_KeyRightFocus -- [ISG], Object *
+
+    FUNCTION
+        Allows to specify a specific object that will be set as the new
+        window's active object in case the user pressed the RIGHT cursor key
+        and the NList object itself doesn't have anything further to
+        scroll to the right.
+
+    SEE ALSO
+        MUIA_NList_KeyUpFocus
+        MUIA_NList_KeyDownFocus
+        MUIA_NList_KeyLeftFocus
+
 NList.mcc/MUIA_NList_LineHeight
 
     NAME
@@ -1522,19 +1678,6 @@ NList.mcc/MUIM_NList_UseImage
 
     SEE ALSO
         MUIM_List_Insert
-NList.mcc/MUIA_NList_StackCheck
-
-    NAME
-        MUIA_NList_StackCheck -- [I..], BOOL
-
-    FUNCTION
-        Can be used to disable the stack checking done by NList.
-        You should use it only if you make a stack exchange or if
-        the stack has been changed for some other reason and is
-        not compatible with the check.
-
-    DEFAULT
-        TRUE
 NList.mcc/MUIA_NList_TabSize
 
     NAME
@@ -2681,7 +2824,7 @@ NList.mcc/MUIM_NList_UseImage
         MUIM_NList_Insert --
 
     SYNOPSIS
-        DoMethod(obj,MUIM_NList_Insert,APTR *entries, LONG count, LONG pos);
+        DoMethod(obj,MUIM_NList_Insert,APTR *entries, LONG count, LONG pos, LONG flags);
 
     FUNCTION
         Same function as List.mui/MUIM_List_Insert.
@@ -2711,6 +2854,13 @@ NList.mcc/MUIM_NList_UseImage
                 MUIV_NList_Insert_Sorted  insert sorted (all entries will be
                                           sorted if necessary).
                 MUIV_NList_Insert_Bottom  insert as last entry.
+
+        flags   - Special flags for the insert operation or 0.
+                MUIV_NList_Insert_Flag_Raw insert the entries without the automatic
+                                           reordering of the columns. This could
+                                           speed up the insert of entries very
+                                           significant but will not automatically
+                                           change the width of a column.
 
     SEE ALSO
         MUIM_NList_Remove, MUIA_NList_ConstructHook, MUIM_NList_InsertSingle

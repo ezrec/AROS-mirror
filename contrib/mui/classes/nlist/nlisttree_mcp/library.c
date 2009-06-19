@@ -1,9 +1,8 @@
 /***************************************************************************
 
- NListtree.mcp - New Listtree MUI Custom Class Preferences
- Copyright (C) 1999-2004 by Carsten Scholling <aphaso@aphaso.de>,
-                            Sebastian Bauer <sebauer@t-online.de>,
-                            Jens Langner <Jens.Langner@light-speed.de>
+ NListtree.mcc - New Listtree MUI Custom Class
+ Copyright (C) 1999-2001 by Carsten Scholling
+ Copyright (C) 2001-2005 by NList Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -27,14 +26,8 @@
 /*                                                                            */
 /******************************************************************************/
 
-#include <exec/types.h>
-#include <exec/resident.h>
-#include <exec/execbase.h>
-#include <dos/dosextens.h>
-#include <libraries/mui.h>
-#include <exec/libraries.h>
 #include <proto/exec.h>
-#include <proto/muimaster.h>
+#include <proto/intuition.h>
 
 /******************************************************************************/
 /*                                                                            */
@@ -45,7 +38,7 @@
 /******************************************************************************/
 
 #include "private.h"
-#include "rev.h"
+#include "version.h"
 
 #define	VERSION				LIB_VERSION
 #define	REVISION			LIB_REVISION
@@ -55,18 +48,64 @@
 
 #define	INSTDATAP     NListtreeP_Data
 
-#define UserLibID			"$VER: NListtree.mcp " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
+#define USERLIBID			CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION	19
 
-/******************************************************************************/
-/*                                                                            */
-/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
-/*                                                                            */
-/******************************************************************************/
+#define	CLASSINIT
+#define	CLASSEXPUNGE
 
+#define MIN_STACKSIZE 8192
+
+#include "locale.h"
+
+struct Library *LocaleBase = NULL;
+
+#if defined(__amigaos4__)
+struct LocaleIFace *ILocale = NULL;
+#endif
+
+/******************************************************************************/
+/* define the functions used by the startup code ahead of including mccinit.c */
+/******************************************************************************/
+static BOOL ClassInit(UNUSED struct Library *base);
+static VOID ClassExpunge(UNUSED struct Library *base);
+
+/******************************************************************************/
+/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
+/******************************************************************************/
 #define USE_IM_PREFS_BODY   1
 #define USE_IM_PREFS_COLORS 1
 #include "icon.bh"
+#include "mccinit.c"
 
-#include "mccheader.c"
+/******************************************************************************/
+/* define all implementations of our user functions                           */
+/******************************************************************************/
 
+static BOOL ClassInit(UNUSED struct Library *base)
+{
+  if((LocaleBase = OpenLibrary("locale.library", 38)) &&
+    GETINTERFACE(ILocale, struct LocaleIFace *, LocaleBase))
+  {
+    // open the NListtree_mcp catalog
+    OpenCat();
+
+    return(TRUE);
+  }
+
+	return(FALSE);
+}
+
+
+static VOID ClassExpunge(UNUSED struct Library *base)
+{
+  // close the catalog
+	CloseCat();
+
+  if(LocaleBase)
+	{
+    DROPINTERFACE(ILocale);
+		CloseLibrary(LocaleBase);
+		LocaleBase	= NULL;
+	}
+}

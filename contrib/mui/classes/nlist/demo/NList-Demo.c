@@ -1,3 +1,27 @@
+/***************************************************************************
+
+ NList.mcc - New List MUI Custom Class
+ Registered MUI class, Serial Number: 1d51 0x9d510030 to 0x9d5100A0
+                                           0x9d5100C0 to 0x9d5100FF
+
+ Copyright (C) 1996-2001 by Gilles Masson
+ Copyright (C) 2001-2006 by NList Open Source Team
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ NList classes Support Site:  http://www.sf.net/projects/nlist-classes
+
+ $Id$
+
+***************************************************************************/
 
 #include <stdlib.h>
 #include <string.h>
@@ -16,64 +40,49 @@
 #include <workbench/workbench.h>
 #include <intuition/intuition.h>
 #include <intuition/classusr.h>
-#include <graphics/gfxmacros.h>
 
-#ifdef __GNUC__
-#include <proto/alib.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/gadtools.h>
 #include <proto/asl.h>
-#include <clib/muimaster_protos.h>
-#endif
-
-#ifdef __SASC
-#include <clib/alib_protos.h>
-#include <clib/exec_protos.h>
-#include <clib/dos_protos.h>
-#include <clib/icon_protos.h>
-#include <clib/graphics_protos.h>
-#include <clib/intuition_protos.h>
-#include <clib/gadtools_protos.h>
-#include <clib/utility_protos.h>
-#include <clib/asl_protos.h>
-#define REG(x) register __ ## x
-#define ASM    __asm
-#define SAVEDS __saveds
-#include <pragmas/exec_sysbase_pragmas.h>
-#include <pragmas/dos_pragmas.h>
-#include <pragmas/icon_pragmas.h>
-#include <pragmas/graphics_pragmas.h>
-#include <pragmas/intuition_pragmas.h>
-#include <pragmas/gadtools_pragmas.h>
-#include <pragmas/utility_pragmas.h>
-#include <pragmas/asl_pragmas.h>
-#include <pragmas/muimaster_pragmas.h>
-extern struct Library *SysBase,*IntuitionBase,*UtilityBase,*GfxBase,*DOSBase,*IconBase;
-ULONG __stack = 16384;
-int CXBRK(void) { return(0); }
-int _CXBRK(void) { return(0); }
-void chkabort(void) {}
-#endif
-
-struct Library *MUIMasterBase;
-
-#ifdef __AROS__
-#define MUIMASTER_VMIN 1
+#include <proto/muimaster.h>
+#include <proto/graphics.h>
 #include <proto/intuition.h>
-#include <mui/NList_mcc.h>
+#include <proto/utility.h>
+
+#if !defined(__amigaos4__)
+#include <clib/alib_protos.h>
+#endif
+
+struct Library *MUIMasterBase = NULL;
+#if defined(__AROS__)
+struct UtilityBase *UtilityBase = NULL;
+#else
+struct Library *UtilityBase = NULL;
+#endif
+
+#if defined(__amigaos4__)
+struct Library *IntuitionBase = NULL;
+struct Library *GfxBase = NULL;
+#else
+struct IntuitionBase *IntuitionBase = NULL;
+struct GfxBase *GfxBase = NULL;
+#endif
+
+#if defined(__amigaos4__)
+struct GraphicsIFace *IGraphics = NULL;
+struct IntuitionIFace *IIntuition = NULL;
+struct MUIMasterIFace *IMUIMaster = NULL;
+struct UtilityIFace *IUtility = NULL;
 #endif
 
 #include <mui/NListview_mcc.h>
-
 #include <mui/NFloattext_mcc.h>
-
-#include <proto/muimaster.h>
-
 
 #include "NList-Demo2.h"
 #include "NList-Demo3.h"
 
+#include "SDI_compiler.h"
 
 /* *********************************************** */
 
@@ -217,7 +226,7 @@ const UBYTE list2_body[156] = {
 
 /* *********************************************** */
 
-char MainTextString2[] =
+const char MainTextString2[] =
 {
   "This new list/listview custom class has its own backgrounds" NL2
   "and pens setables from mui prefs with NListviews.mcp !" NL2
@@ -231,11 +240,11 @@ char MainTextString2[] =
   "Try just clicking on the left/right borders !" NL
   "\033C" NL
   "\033r\033uGive some feedback about it ! :-)" NL
-  "\033r\033b(masson@iut-soph.unice.fr)"
+  "\033r\033bhttp://www.sf.net/projects/nlist-classes/"
 };
 
 /* *********************************************** */
-char MainTextString[] =
+const char MainTextString[] =
 {
   "\033cNList.mcc \033o[0] NListview.mcc \033o[1] NListviews.mcp" NL
   "\033E\033t\033c\033o[2@1]" NL
@@ -253,12 +262,12 @@ char MainTextString[] =
   "\033cTry just clicking on the left/right borders !" NL
   "" NL
   "\033r\033uGive some feedback about it ! :-)" NL
-  "\033r\033b(masson@iut-soph.unice.fr)"
+  "\033r\033bhttp://www.sf.net/projects/nlist-classes/"
 };
 
 /* *********************************************** */
 
-char *MainTextArray[] =
+const char *MainTextArray[] =
 {
   "\033c\033nThis new list/listview custom class has its own backgrounds",
   "\033cand pens setables from mui prefs with NListviews.mcp !",
@@ -273,7 +282,7 @@ char *MainTextArray[] =
   "\033cTry just clicking on the left/right borders !",
   "",
   "\033r\033uGive some feedback about it ! :-)",
-  "\033r\033b(masson@iut-soph.unice.fr)",
+  "\033r\033bhttp://www.sf.net/projects/nlist-classes/"
   "",
   "",
   "",
@@ -442,14 +451,44 @@ char *MainTextArray[] =
 
 /* *********************************************** */
 
+#if defined(__amigaos4__)
+#define GETINTERFACE(iface, base)	(iface = (APTR)GetInterface((struct Library *)(base), "main", 1L, NULL))
+#define DROPINTERFACE(iface)			(DropInterface((struct Interface *)iface), iface = NULL)
+#else
+#define GETINTERFACE(iface, base)	TRUE
+#define DROPINTERFACE(iface)
+#endif
 
-static VOID fail(APTR APP_Main,char *str)
+static VOID fail(APTR APP_Main,const char *str)
 {
   if (APP_Main)
     MUI_DisposeObject(APP_Main);
   NLI_Delete();
-  if (MUIMasterBase)
+
+  if(MUIMasterBase)
+  {
+    DROPINTERFACE(IMUIMaster);
     CloseLibrary(MUIMasterBase);
+  }
+
+  if(IntuitionBase)
+  {
+    DROPINTERFACE(IIntuition);
+    CloseLibrary((struct Library *)IntuitionBase);
+  }
+
+  if(GfxBase)
+  {
+    DROPINTERFACE(IGraphics);
+    CloseLibrary((struct Library *)GfxBase);
+  }
+
+  if(UtilityBase)
+  {
+    DROPINTERFACE(IUtility);
+    CloseLibrary((struct Library *)UtilityBase);
+  }
+
   if (str)
   { puts(str);
     exit(20);
@@ -457,21 +496,45 @@ static VOID fail(APTR APP_Main,char *str)
   exit(0);
 }
 
-
 static VOID init(VOID)
 {
   APP_Main = NULL;
-  if (!(MUIMasterBase = (struct Library *) OpenLibrary(MUIMASTER_NAME,MUIMASTER_VMIN-1)))
-    fail(NULL,"Failed to open "MUIMASTER_NAME".");
-  if (!NLI_Create())
-    fail(NULL,"Failed to create NLI class.");
+
+  if((UtilityBase = (APTR)OpenLibrary("utility.library", 36)) &&
+     GETINTERFACE(IUtility, UtilityBase))
+  {
+    if((GfxBase = (APTR)OpenLibrary("graphics.library", 36)) &&
+       GETINTERFACE(IGraphics, GfxBase))
+    {
+      if((IntuitionBase = (APTR)OpenLibrary("intuition.library", 36)) &&
+         GETINTERFACE(IIntuition, IntuitionBase))
+      {
+        if((MUIMasterBase = OpenLibrary("muimaster.library", 19)) &&
+           GETINTERFACE(IMUIMaster, MUIMasterBase))
+        {
+
+          if(!NLI_Create())
+            fail(NULL,"Failed to create NLI class.");
+        }
+        else
+          fail(NULL,"Failed to open muimaster.library.");
+      }
+      else
+        fail(NULL,"Failed to open intuition.library.");
+    }
+    else
+      fail(NULL,"Failed to open graphics.library.");
+  }
+  else
+    fail(NULL,"Failed to open utility.library.");
+
 }
 
 
 /* *********************************************** */
 
 
-int main(int argc,char *argv[])
+int main(UNUSED int argc, UNUSED char *argv[])
 {
   LONG win_opened;
   LONG result;
@@ -480,14 +543,14 @@ int main(int argc,char *argv[])
 
   APP_Main = ApplicationObject,
     MUIA_Application_Title      , "NList-Demo",
-    MUIA_Application_Version    , "$VER: NList-Demo 0.8 (" __DATE__ ")",
-    MUIA_Application_Copyright  , "Written by Gilles Masson, 1996-1998",
-    MUIA_Application_Author     , "Gilles Masson",
+    MUIA_Application_Version    , "$VER: NList-Demo 1.0 (" __DATE__ ")",
+    MUIA_Application_Copyright  , "Copyright (C) 2001-2006 by NList Open Source Team",
+    MUIA_Application_Author     , "NList Open Source Team",
     MUIA_Application_Description, "NList-Demo",
     MUIA_Application_Base       , "NList-Demo",
 
     SubWindow, WIN_Main = WindowObject,
-      MUIA_Window_Title, "NList-Demo 1996-1998",
+      MUIA_Window_Title, "NList-Demo 1996-2006",
       MUIA_Window_ID   , MAKE_ID('T','W','I','N'),
       WindowContents, VGroup,
         Child, HGroup,
@@ -542,7 +605,7 @@ int main(int argc,char *argv[])
       End,
     End,
     SubWindow, WIN_2 = WindowObject,
-      MUIA_Window_Title, "NList-Demo 1996-1998 Win 2",
+      MUIA_Window_Title, "NList-Demo 1996-2006 Win 2",
       MUIA_Window_ID   , MAKE_ID('W','I','N','2'),
       MUIA_Window_UseBottomBorderScroller, TRUE,
       WindowContents, VGroup,
@@ -709,7 +772,8 @@ int main(int argc,char *argv[])
 
   /* *** If need to be sorted, sort then restore the active and first *** */
   /* ***            which were set in the Application_Load            *** */
-  { LONG active,first,sorttype;
+  {
+    ULONG active,first,sorttype;
     get(LI_Text,MUIA_NList_SortType,&sorttype);
     if (sorttype != MUIV_NList_SortType_None)
     { get(LI_Text,MUIA_NList_Active,&active);
@@ -725,10 +789,12 @@ int main(int argc,char *argv[])
 
   get(WIN_Main,MUIA_Window_Open,&win_opened);
   if (win_opened)
-  { ULONG id,sigs = 0;
+  {
+    LONG id;
+    ULONG sigs = 0;
     char *line;
 
-    while ((id = DoMethod(APP_Main,MUIM_Application_NewInput,&sigs)) != MUIV_Application_ReturnID_Quit)
+    while ((id = DoMethod(APP_Main,MUIM_Application_NewInput,&sigs)) != (LONG)MUIV_Application_ReturnID_Quit)
     {
       if (id == ID_LIST2_ACTIVE)
       { DoMethod(LI_Text2, MUIM_NList_GetEntry, MUIV_NList_GetEntry_Active, &line);
@@ -753,5 +819,7 @@ int main(int argc,char *argv[])
   DoMethod(LI_Text2,MUIM_NList_UseImage,NULL,-1,0);
 
   fail(APP_Main,NULL);
+
+  return 0;
 }
 
