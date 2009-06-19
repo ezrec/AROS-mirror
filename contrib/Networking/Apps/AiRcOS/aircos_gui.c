@@ -1906,7 +1906,8 @@ D(bug("[AiRcOS](addchannel) ## allocated private record for %s\n",new_ircChannel
                         MUIA_NList_ListBackground, MUII_SHINE,
                         MUIA_NList_MinLineHeight, 18,
                         MUIA_NListtree_ShowTree, FALSE,
-                        MUIA_NListtree_NoRootTree, TRUE,
+                        /* FIXME: doesn't exist anymore in current NList */
+                        /* MUIA_NListtree_NoRootTree, TRUE, */
                         MUIA_NListtree_MultiSelect, MUIV_NListtree_MultiSelect_Shifted,
                         MUIA_NListtree_DoubleClick, MUIV_NListtree_DoubleClick_Tree,
                         MUIA_NListtree_EmptyNodes, FALSE,
