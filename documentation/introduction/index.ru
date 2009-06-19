@@ -3,24 +3,13 @@
 =======================
 
 :Authors:   Aaron Digulla, Stefan Rieken, Matt Parsons, Adam Chodorowski 
-:Copyright: Copyright К 1995-2002, The AROS Development Team
+:Copyright: Copyright (C) 1995-2009, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Almost finished, I think...
 
 
-.. raw:: html
-   
-   <h1>¬ведение<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"></h1>
-
-AROS Research Operating System - легковесна€, эффективна€ и гибка€ 
-операционна€ система дл€ персонального ("десктопного") применени€, 
-позвол€юща€ выжать максимум способностей из вашего компьютера. 
-Ёто независимый, переносимый и свободный проект, стрем€щийс€ к достижению 
-максимальной совместимости с AmigaOS 3.1 на уровне API (на уровне исходного кода)
-, при этом превосход€ еЄ во многих област€х. »сходный код доступен по открытой 
-лицензии APL, позвол€ющей любому желающему свободно прин€ть участие в 
-разработке.
+.. Include:: index-abstract.ru
 
 
 ÷ели проекта

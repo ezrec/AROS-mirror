@@ -3,23 +3,13 @@
 =========================
 
 :Authors:   Aaron Digulla, Stefan Rieken, Matt Parsons, Adam Chodorowski 
-:Copyright: Copyright © 1995-2002, The AROS Development Team
+:Copyright: Copyright © 1995-2009, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Almost finished, I think...
 
 
-.. raw:: html
-
-   <h1>Εισαγωγή<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"></h1>
-
-Το AROS Research Operating System είναι ένα "ελαφρύ", αποτελεσματικό 
-και ευέλικτο λειτουργικό σύστημα, σχεδιασμένο να σας βοηθήσει να εκμεταλευτείτε 
-στο έπακρο τον υπολογιστή σας. Είναι ένα αναξάρτητο, μεταφέρσιμο και δωρεάν 
-λειτουργικό που σκοπεύει να είναι συμβατό με το AmigaOS 3.1 σε επίπεδο API 
-(όπως το Wine, όχι σαν το UAE), ενώ ταυτόχρονα το βελτιώνει σε πολλούς τομείς.
-Ο πηγαίος κώδικας είναι διαθέσιμος σύμφωνα με μία άδεια ανοιχτού λογισμικού 
-(open source license) που επιτρέπει στον καθένα να τον τροποποιήσει ελεύθερα.
+.. Include:: index-abstract.el
 
 
 Στόχοι

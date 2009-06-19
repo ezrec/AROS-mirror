@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright © 2002-2008, The AROS Development Team. All rights reserved.
+# Copyright © 2002-2009, The AROS Development Team. All rights reserved.
 # $Id$
 
 import os, sys, shutil, glob
@@ -402,7 +402,9 @@ def copyImages():
             os.path.join( srcpath, 'trustec.png' ),
             os.path.join( srcpath, 'sourceforge.png' ),
             os.path.join( srcpath, 'phoenix.jpeg' ),
-            os.path.join( srcpath, 'bttr.jpeg' )
+            os.path.join( srcpath, 'bttr.jpeg' ),
+            os.path.join( srcpath, 'icaroslive_logo.png' ),
+            os.path.join( srcpath, 'icarosve_logo.png' )
         ],
         dstpath
     )

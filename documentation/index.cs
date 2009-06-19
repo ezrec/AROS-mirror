@@ -15,9 +15,9 @@
 
    <table style="width: 100%; text-align: justify; margin-left: auto; margin-right: auto;" background="/images/bgcolormain.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
 
-.. Include:: documentation/developers/contribute-abstract.cs
+.. Include:: download-abstract.en
 
-`Více zde... <documentation/developers/contribute>`__
+`Více zde... <download>`__
 
 .. raw:: html
 

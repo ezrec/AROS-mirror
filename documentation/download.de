@@ -11,19 +11,13 @@ Download
 
 .. Contents::
 
-Distributionen
-==============
-
-Distributionen sind vorkonfigurierte und getestete AROS-Versionen. Sie kommen
-mit ein paar nützlichen Anwenderprogrammen, die nicht in den Haupt-Binaries von
-AROS.org vorhanden sind. Sie sind deshalb vor allem für Anwender interessant.
-Sie enthalten nicht das neuste Kernsystem, aber ihre Stabilität und
-Benutzerfreundlichkeit ist viel größer als die der Nightly Builds. Falls Du
-ein Anwender bist, der herausfinden will was AROS zu bieten hat: nimm die
-Distributionen um das beste AROS-Erlebnis zu bekommen.
+.. Include:: download-abstract.de
 
 Icaros Desktop LIVE!
 --------------------
+
+.. image:: /images/icaroslive_logo.png
+   :align: left
 
 `Icaros Desktop LIVE!`__ ist eine vollständige Distribution des AROS-Betriebssystems.
 Sie kommt auf einer boot-fähigen DVD-ROM und läuft direkt auf Deinem PC (die
@@ -36,6 +30,9 @@ zu testen.
 
 Icaros Desktop VE
 -----------------
+
+.. image:: /images/icarosve_logo.png
+   :align: left
 
 `Icaros Desktop VE (Virtual Environment)`__ ist eine vollständige AROS-
 Umgebung, die unter der virtuellen Maschine `VMware`__ läuft. An Anwendern

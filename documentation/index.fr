@@ -3,8 +3,8 @@
 
 `En savoir plus... <introduction/index>`__
 
-.. Include:: documentation/developers/contribute-abstract.fr
+.. Include:: download-abstract.en
 
-`En savoir plus... <documentation/developers/contribute>`__
+`En savoir plus... <download>`__
 
 .. Include:: news/index.fr

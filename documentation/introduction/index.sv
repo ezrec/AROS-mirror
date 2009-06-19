@@ -3,20 +3,13 @@ Kort introduktion till AROS
 ===========================
 
 :Authors:   Aaron Digulla, Stefan Rieken, Matt Parsons, Adam Chodorowski 
-:Copyright: Copyright © 1995-2002, The AROS Development Team
+:Copyright: Copyright © 1995-2009, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Almost finished, I think...
 
 
-.. raw:: html
-
-   <h1>Introduction<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"></h1>
-
-AROS är ett portabelt och fritt operativsystem för desktop med syfte på
-att vara kompatibelt med AmigaOS 3.1, och samtidigt förbättra det i
-många områden. Källkoden är tillgänglig under en open source-licens, vilket
-tillåter alla friheten att förbättra det.
+.. Include:: index-abstract.sv
 
 
 Mål
