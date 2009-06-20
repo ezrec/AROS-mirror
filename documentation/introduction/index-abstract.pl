@@ -4,7 +4,7 @@
 
 .. raw:: html
 
-  <?php include('../rsfeed/randimg.php');  random_image("/images/thubs/","100","76"); ?>
+  <?php include('/home/groups/a/ar/aros/htdocs/rsfeed/randimg.php');  random_image("/images/thubs/","100","76"); ?>
 
 AROS jest przeno¶nym i ogólnodostêpnym systemem operacyjnym,
 posiadaj±cym graficzny interfejs u¿ytkownika, d±¿±cym do kompatybilno¶ci

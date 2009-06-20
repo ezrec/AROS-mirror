@@ -444,6 +444,7 @@ def buildWWW():
         else:
             filename = os.path.join( lang, 'index.php' )
         remove( os.path.join( DSTROOT, filename ) )
+        remove( os.path.join( DSTROOT, 'introduction', filename ) )
 
     makeNews()
     makeTemplates()
