@@ -440,11 +440,12 @@ def buildWWW():
     # Hack to get around dependency problems
     for lang in LANGUAGES:
         if lang == 'en':
-            filename = 'index.php'
+            dstpath = DSTROOT
         else:
-            filename = os.path.join( lang, 'index.php' )
-        remove( os.path.join( DSTROOT, filename ) )
-        remove( os.path.join( DSTROOT, 'introduction', filename ) )
+            dstpath = os.path.join( DSTROOT, lang )
+        remove( os.path.join( dstpath, 'index.php' ) )
+        remove( os.path.join( dstpath, 'introduction/index.php' ) )
+        remove( os.path.join( dstpath, 'download.php' ) )
 
     makeNews()
     makeTemplates()
