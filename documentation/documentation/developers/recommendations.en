@@ -25,15 +25,26 @@ Recomendations
 3.  Completed GUI toolkit.
 --------------------------
 
-+ API completeness review
-+ Further decision made after review
++ Finish API completeness review
++ Implement MUIA_AppMessage support
++ Implement MUIM_Import/MUIM_Export for classes and properties listed in documentation of MUIM_Application_Load
++ ARexx support in Application class (MUIA_Application_RexxHook, MUIA_Application_RexxMsg, MUIA_Application_RexxString)
++ Support for opening windows on custom screens specified in Zune Prefs
++ Drag & Drop support in Listviews and Lists (MUIA_Listview_DragType, MUIA_List_DragSortable, MUIA_List_DropMark, MUIA_List_ShowDropMarks)
++ Further decision made after review finished
 
 4.  Standard applications comparable to those which come with AmigaOS 3.1.
 --------------------------------------------------------------------------
     
 + Implement printer preferences editor
 + Add AppIcon support to Wanderer
-+ Add GUI for Format utility
++ Add AppMenus support to Wanderer
++ Add AppWindows support to Wanderer
++ Add DropZones support to Wanderer
++ Add support for displaying icons for NDOS volumes
++ Add support for positioning icons by coordinates
++ Add support for editing default icons properties via Icon->Information
++ Implement IconEdit application
         
 6.  Networking support.
 -----------------------
