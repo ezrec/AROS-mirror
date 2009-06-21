@@ -1,8 +1,6 @@
-## version $VER: owb.catalog 1.0 (16.02.2009)
+## version $VER: owb.catalog 3.0 (21.06.2009)
 ## language polski
 ## codeset 0
-;
-; TODO: Update translation and bumb version to 2
 ;
 MSG_OWB
 OWB
@@ -262,15 +260,15 @@ MSG_Loading
 ;
 MSG_Ready
 Gotowy
-;
+; Ready
 ;
 MSG_Connecting
 Nawi±zujê po³±czenie...
-;
+; Connecting...
 ;
 MSG_Error
 B³±d
-;
+; Error
 ;
 MSG_Untitled
 (Bez nazwy)
@@ -363,6 +361,14 @@ Pobieranie
 MSG_PreferencesManager_SaveFilesTo
 Zapisuj pliki do:
 ; Save files to:
+;
+MSG_PreferencesManager_ZuneSettings
+Ustawienia Zune
+; Zune Settings
+;
+MSG_PreferencesManager_OpenZuneSettings
+Otwórz ustawienia Zune
+; Open Zune Settings
 ;
 MSG_PreferencesManager_Content
 Zawarto¶æ
@@ -471,4 +477,108 @@ Otwórz now± zak³adkê
 MSG_Tabs_CloseActive
 Zamknij aktywn± zak³adkê
 ; Close active tab
+;
+MSG_Tabs_Bookmark
+Dodaj do ulubionych
+; Bookmark this tab
+;
+MSG_JavaScript_Alert
+Okno dialogowe JavaScript
+; OWB JavaScript Alert
+;
+MSG_JavaScript_AlertOK
+OK
+; OK
+;
+MSG_JavaScript_Confirm
+Okno dialogowe JavaScript
+; OWB JavaScript Confirm
+;
+MSG_JavaScript_ConfirmOptions
+Anuluj|OK
+; Cancel|OK
+;
+MSG_JavaScript_Prompt
+Okno dialogowe JavaScript
+; OWB JavaScript Prompt
+;
+MSG_JavaScript_PromptOK
+OK
+; OK
+;
+MSG_JavaScript_PromptCancel
+Anuluj
+; Cancel
+;
+MSG_RequestPolicy_Title
+Okno wyboru sposobu postêpowania
+; OWB Policy Requester
+;
+MSG_RequestPolicy_Message
+Chcesz otworzyæ plik '%s' o typie MIME '%s'. Co OWB ma zrobiæ z tym plikiem?
+; You are about to open file '%s' having MIME type '%s'.\nWhat should OWB do with this file?
+;
+MSG_RequestPolicy_Options
+Pobierz|Wy¶wietl|Anuluj
+; Download|Show|Cancel
+;
+MSG_RequestCredentials_Title
+Okno dialogowe uwierzytelniania
+; OWB Authentication Requester
+;
+MSG_RequestCredentials_Message
+Wprowad¼ nazwê u¿ytkownika i has³o w celu uzyskania dostêpu do domeny %s na ho¶cie %s.
+; Please enter username and password to access realm %s at host %s.
+;
+MSG_RequestCredentials_Username
+Nazwa u¿ytkownika:
+; Username:
+;
+MSG_RequestCredentials_Password
+Has³o:
+; Password:
+;
+MSG_RequestCredentials_OK
+OK
+; OK
+;
+MSG_RequestCredentials_Cancel
+Anuluj
+; Cancel
+;
+MSG_BookmarkManager_Title
+Zarz±dzanie ulubionymi stronami
+; Bookmark Manager
+;
+MSG_BookmarkManager_Label
+Etykieta
+; Label
+;
+MSG_BookmarkManager_URL
+URL
+; URL
+;
+MSG_BookmarkManager_Insert
+Dodaj
+; Insert
+;
+MSG_BookmarkManager_Change
+Zmieñ
+; Change
+;
+MSG_BookmarkManager_Remove
+Usuñ
+; Remove
+;
+MSG_BookmarkManager_MenuTitle
+Ulubione
+; Bookmarks
+;
+MSG_BookmarkManager_MoveUp
+Przesuñ w górê
+; Move up
+;
+MSG_BookmarkManager_MoveDown
+Przesuñ w dó³
+; Move down
 ;
