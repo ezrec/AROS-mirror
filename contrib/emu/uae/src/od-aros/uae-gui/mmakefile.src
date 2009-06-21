@@ -14,7 +14,7 @@ FILES  := \
 STRIP := $(NOP)
 
 %build_prog mmake=uae-gui \
-    progname=uae-gui.o targetdir=$(EXEDIR) \
-    files=$(FILES) ldflags="-Wl,-r" uselibs=""
+    progname=uae-gui.o targetdir=$(EXEDIR) files=$(FILES) \
+    ldflags="$(NOSTARTUP_LDFLAGS) $(NOSTDLIB_LDFLAGS) -Wl,-r" uselibs=""
 
 %common

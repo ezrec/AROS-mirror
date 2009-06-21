@@ -24,7 +24,7 @@ USER_CFLAGS := -O2  -Wall -Wno-unused\
 STRIP := $(NOP)
 
 %build_prog mmake=uae-od-aros \
-    progname=od-aros.o targetdir=$(EXEDIR) \
-    files=$(FILES) ldflags="-Wl,-r" uselibs=""
+    progname=od-aros.o targetdir=$(EXEDIR) files=$(FILES) \
+    ldflags="$(NOSTARTUP_LDFLAGS) $(NOSTDLIB_LDFLAGS) -Wl,-r" uselibs=""
 
 %common

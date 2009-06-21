@@ -27,7 +27,7 @@ Moria3D : $(EXE)
 	@$(NOP)
 
 $(EXE) : $(OBJS) $(DEPLIBS)
-	$(CC) $(ILDFLAGS) -o $(EXE) $(STARTUP) $(OBJS) $(ARCHIVE) $(LIBS)
+	$(TARGET_LD) -o $(EXE) $(STARTUP) $(OBJS) $(ARCHIVE) $(LIBS)
 
 #MM
 Moria3D-setup :
