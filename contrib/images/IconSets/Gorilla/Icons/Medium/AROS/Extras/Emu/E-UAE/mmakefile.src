@@ -3,7 +3,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- iconset-Gorilla-contrib-icons-extras : iconset-Gorilla-contrib-icons-extras-emu-euae
+##MM- iconset-Gorilla-contrib-icons-extras : iconset-Gorilla-contrib-icons-extras-emu-euae
 
 ICONS := i386-aros-uae
 
