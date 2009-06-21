@@ -24,6 +24,7 @@
 #include "searchwindow.h"
 #include "preferencesmanager.h"
 #include "browserpreferences.h"
+#include "bookmarkmanager.h"
 #include "tabs.h"
 #include "tabbedview.h"
 
@@ -89,6 +90,15 @@ static void CloseTabFunc(struct Hook *hook, Object *obj, void *data)
     /* Destroy the closed tab */
     MUI_DisposeObject(deletedTab);
     MUI_DisposeObject(deletedWebView);
+}
+
+static IPTR BookmarkTabFunc(struct Hook *hook, Object *obj, Object **bookmarkManager)
+{
+    Object *webView = (Object*) XGET(tabbed, MUIA_TabbedView_ActiveObject);
+    Object *tab = (Object*) XGET(tabs, MUIA_Tabs_ActiveTabObject);
+    STRPTR title = XGET(tab, MUIA_BrowserTab_Title);
+    STRPTR url = XGET(webView, MUIA_WebView_URL);
+    return DoMethod(*bookmarkManager, MUIM_BookmarkManager_Bookmark, title, url);
 }
 
 static void GoFunc(struct Hook *hook, Object *urlString, void *data)
@@ -422,14 +432,14 @@ static IPTR CredentialsFunc(struct Hook *hook, Object *webView, IPTR **args)
 
 int main(void)
 {
-    Object *bt_close, *menuclosetab, *menunewtab, *tabContextMenu;
-    Object *searchCriteria, *searchWindow, *downloadManager, *preferencesManager;
+    Object *bt_close, *menuclosetab, *menunewtab, *menubookmarktab, *tabContextMenu;
+    Object *searchCriteria, *searchWindow, *downloadManager, *preferencesManager, *bookmarkManager;
     Object *app, *preferences, *wnd;
     Object *webView, *tab;
     Object *toolTips, *progressBar, *urlString;
-    Object *bt_back, *bt_forward, *bt_search, *bt_go, *bt_download, *bt_preferences, *bt_find, *bt_reload, *bt_stop;
+    Object *bt_back, *bt_forward, *bt_search, *bt_go, *bt_download, *bt_preferences, *bt_find, *bt_reload, *bt_stop, *bt_bookmarks;
     struct Hook goHook, goAcknowledgeHook, webSearchHook, webSearchAcknowledgeHook, closeTabHook, textSearchHook, updateURLHook, updateStatusBarHook;
-    struct Hook updateProgressBarHook;
+    struct Hook bookmarkTabHook, updateProgressBarHook;
     IPTR argArray[] = { 0 };
     struct RDArgs *args = NULL;
     const char *url = NULL;
@@ -457,6 +467,8 @@ int main(void)
     closeTabHook.h_SubEntry = (HOOKFUNC) CloseTabFunc;
     openTabHook.h_Entry = HookEntry;
     openTabHook.h_SubEntry = (HOOKFUNC) NewTabFunc;
+    bookmarkTabHook.h_Entry = HookEntry;
+    bookmarkTabHook.h_SubEntry = (HOOKFUNC) BookmarkTabFunc;
     goHook.h_Entry = HookEntry;
     goHook.h_SubEntry = (HOOKFUNC) GoFunc;
     goAcknowledgeHook.h_Entry = HookEntry;
@@ -489,7 +501,7 @@ int main(void)
     // GUI creation
     app = ApplicationObject,
         MUIA_Application_Title, "Origyn Web Browser",
-        MUIA_Application_Version, "$VER: OWB 0.96 (11.06.2009)",
+        MUIA_Application_Version, "$VER: OWB 0.97 (21.06.2009)",
         MUIA_Application_Author, "Stanislaw Szymczyk",
         MUIA_Application_Copyright, "Copyright © 2009, The AROS Development Team. All rights reserved.",
         MUIA_Application_Description, "Port of Origyn Web Browser to AROS",
@@ -497,6 +509,10 @@ int main(void)
         SubWindow, wnd = WindowObject,
             MUIA_Window_Title, _(MSG_OWB),
             MUIA_Window_NoMenus, TRUE,
+            MUIA_Window_Width, MUIV_Window_AltWidth_Screen(100),
+            MUIA_Window_Height, MUIV_Window_AltHeight_Screen(100),
+            MUIA_Window_AltWidth, MUIV_Window_AltWidth_Screen(75),
+            MUIA_Window_AltHeight, MUIV_Window_AltHeight_Screen(75),
             WindowContents, VGroup,
                 Child, HGroup,
                     Child, HGroup,
@@ -578,6 +594,9 @@ int main(void)
                                 MUIA_Family_Child, menunewtab = MenuitemObject,
                                     MUIA_Menuitem_Title, _(MSG_Tabs_OpenNew),
                                     End,
+                                MUIA_Family_Child, menubookmarktab = MenuitemObject,
+                                    MUIA_Menuitem_Title, _(MSG_Tabs_Bookmark),
+                                    End,
                                 End,
                             End,
         	    	MUIA_Tabs_Location, MUIV_Tabs_Top,
@@ -630,6 +649,13 @@ int main(void)
                 	        MUIA_Image_Spec, "3:PROGDIR:resources/find.png",
                 	        End,
                 	    End,
+                        Child, bt_bookmarks = HGroup,
+                	    MUIA_Frame, MUIV_Frame_None,
+                	    MUIA_InputMode, MUIV_InputMode_Toggle,
+                	    Child, ImageObject,
+                	        MUIA_Image_Spec, "3:PROGDIR:resources/bookmarks.png",
+                	        End,
+                	    End,
                     	End,
                     Child, toolTips = TextObject,
                         MUIA_Frame, MUIV_Frame_Text,
@@ -649,12 +675,16 @@ int main(void)
         SubWindow, preferencesManager = NewObject(PreferencesManager_CLASS->mcc_Class, NULL, 
             MUIA_PreferencesManager_Preferences, preferences,
             TAG_END),
+        SubWindow, bookmarkManager = NewObject(BookmarkManager_CLASS->mcc_Class, NULL, 
+            TAG_END),
         End;
 
     if (app != NULL)
     {
         ULONG sigs = 0;
 
+        set(urlString, MUIA_ContextMenu, XGET(bookmarkManager, MUIA_BookmarkManager_BookmarkMenu));
+        
         DoMethod(preferencesManager, MUIM_PreferencesManager_Load);
         
         /* Click Close gadget or hit Escape to quit */
@@ -667,10 +697,23 @@ int main(void)
         	(IPTR) tabs, 3,
         	MUIM_CallHook, &closeTabHook, NULL);
 
+        DoMethod(wnd, MUIM_Notify, MUIA_Window_InputEvent, "control w",
+        	(IPTR) tabs, 3,
+        	MUIM_CallHook, &closeTabHook, NULL);
+
         /* Open new tab */
         DoMethod(menunewtab, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
         	(IPTR) tabs, 3,
         	MUIM_CallHook, &openTabHook, NULL);
+
+        DoMethod(wnd, MUIM_Notify, MUIA_Window_InputEvent, "control t",
+        	(IPTR) tabs, 3,
+        	MUIM_CallHook, &openTabHook, NULL);
+
+        /* Bookmark tab */
+        DoMethod(menubookmarktab, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
+        	(IPTR) tabs, 3,
+        	MUIM_CallHook, &bookmarkTabHook, bookmarkManager);
 
         /* Switch active tab */
 	DoMethod(tabs, MUIM_Notify, MUIA_Tabs_ActiveTab, MUIV_EveryTime,
@@ -689,6 +732,15 @@ int main(void)
 
         /* Go acknowledged */
         DoMethod(urlString, MUIM_Notify, MUIA_String_Acknowledge, MUIV_EveryTime,
+        	 (IPTR) urlString, 3,
+        	 MUIM_CallHook, &goAcknowledgeHook, MUIV_TriggerValue);
+
+        /* Bookmark chosen */
+        DoMethod(bookmarkManager, MUIM_Notify, MUIA_BookmarkManager_SelectedURL, MUIV_EveryTime,
+        	 (IPTR) urlString, 3,
+        	 MUIM_Set, MUIA_String_Contents, MUIV_TriggerValue);
+        
+        DoMethod(bookmarkManager, MUIM_Notify, MUIA_BookmarkManager_SelectedURL, MUIV_EveryTime,
         	 (IPTR) urlString, 3,
         	 MUIM_CallHook, &goAcknowledgeHook, MUIV_TriggerValue);
 
@@ -729,6 +781,15 @@ int main(void)
                  (IPTR) bt_preferences, 3,
                  MUIM_Set, MUIA_Selected, MUIV_TriggerValue);
 
+        /* Bookmark manager */
+        DoMethod(bt_bookmarks, MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
+                 (IPTR) bookmarkManager, 3,
+                 MUIM_Set, MUIA_Window_Open, MUIV_TriggerValue);
+
+        DoMethod(bookmarkManager, MUIM_Notify, MUIA_Window_Open, MUIV_EveryTime,
+                 (IPTR) bt_bookmarks, 3,
+                 MUIM_Set, MUIA_Selected, MUIV_TriggerValue);
+        
         /* Connect initial webView title with the tab title */
         DoMethod(webView, MUIM_Notify, MUIA_WebView_Title, MUIV_EveryTime,
                  (IPTR) tab, 3,

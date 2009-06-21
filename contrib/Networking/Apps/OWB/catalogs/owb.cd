@@ -355,6 +355,9 @@ Open new tab
 MSG_Tabs_CloseActive (//)
 Close active tab
 ;
+MSG_Tabs_Bookmark (//)
+Bookmark this tab
+;
 MSG_JavaScript_Alert (//)
 OWB JavaScript Alert
 ;
@@ -402,4 +405,31 @@ OK
 ;
 MSG_RequestCredentials_Cancel (//)
 Cancel
+;
+MSG_BookmarkManager_Title (//)
+Bookmark Manager
+;
+MSG_BookmarkManager_Label (//)
+Label
+;
+MSG_BookmarkManager_URL (//)
+URL
+;
+MSG_BookmarkManager_Insert (//)
+Insert
+;
+MSG_BookmarkManager_Change (//)
+Change
+;
+MSG_BookmarkManager_Remove (//)
+Remove
+;
+MSG_BookmarkManager_MenuTitle (//)
+Bookmarks
+;
+MSG_BookmarkManager_MoveUp (//)
+Move up
+;
+MSG_BookmarkManager_MoveDown (//)
+Move down
 ;
