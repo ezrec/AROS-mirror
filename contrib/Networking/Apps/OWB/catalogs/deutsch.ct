@@ -1,4 +1,4 @@
-## version $VER: owb.catalog 2.0 (10.4.2009)
+## version $VER: owb.catalog 3.0 (21.06.2009)
 ## language deutsch
 ## codeset 0
 ;
@@ -478,6 +478,10 @@ MSG_Tabs_CloseActive
 Aktiven Tab schließen
 ; Close active tab
 ;
+MSG_Tabs_Bookmark
+Diesen Tab zu den Lesezeichen hinzufügen
+; Bookmark this tab
+;
 MSG_JavaScript_Alert
 OWB JavaScript-Meldung
 ; OWB JavaScript Alert
@@ -541,4 +545,40 @@ OK
 MSG_RequestCredentials_Cancel
 Abbrechen
 ; Cancel
+;
+MSG_BookmarkManager_Title
+Lesezeichen-Verwalter
+; Bookmark Manager
+;
+MSG_BookmarkManager_Label
+Bezeichnung
+; Label
+;
+MSG_BookmarkManager_URL
+URL
+; URL
+;
+MSG_BookmarkManager_Insert
+Einfügen
+; Insert
+;
+MSG_BookmarkManager_Change
+Ändern
+; Change
+;
+MSG_BookmarkManager_Remove
+Entfernen
+; Remove
+;
+MSG_BookmarkManager_MenuTitle
+Lesezeichen
+; Bookmarks
+;
+MSG_BookmarkManager_MoveUp
+Nach oben verschieben
+; Move up
+;
+MSG_BookmarkManager_MoveDown
+Nach unten verschieben
+; Move down
 ;
