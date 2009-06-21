@@ -1,4 +1,4 @@
-OWB 0.9.6 for AROS
+OWB 0.9.7 for AROS
 
 INTRODUCTION
 
@@ -34,6 +34,11 @@ Before bugfixes from 06.06.2009 AROS C library returned time in local time
 zone instead of UTC. Using OWB 0.9.4 and newer with AROS versions older than
 06.06.2009 may cause premature expiration of cookies.
 
+MUIM_List_Move was not implemented in Zune until 18.06.2009. Because of that,
+moving bookmark manager list entries won't work correctly in AROS builds from 
+18.06.2009 and older. Using AROS builds from 19.06.2009 or later is 
+recommended.
+
 OWB needs a running TCP/IP stack to work. It's needed even if you only want to
 browse some files offline. See AROS documentation for more information about
 configuring the stack.
@@ -54,6 +59,10 @@ To access files located on disk use paths in the following form:
 
 file:///System:S/Startup-Sequence
 
+To bookmark a tab use tab's context menu.
+
+Bookmark menu is present in URL string input context menu.
+
 The following keyboard shortcuts are implemented:
 
 F1 - go back
@@ -63,6 +72,8 @@ F4 - zoom page out
 ctrl+c or amiga+c - copy
 ctrl+x or amiga+x - cut
 ctrl+v or amiga+v - paste
+ctrl+t - open new tab
+ctrl+w - close active tab
 
 TROUBLESHOOTING
 
@@ -76,6 +87,9 @@ before reporting a bug.
 
 If OWB says it can't open bsdsocket.library, then you most likely don't
 have a TCP/IP stack running. See REQUIREMENTS section for more details.
+
+If you can't move bookmark entries in bookmark manager you have too old
+muimaster.library. Version from 19.06.2009 or newer is needed.
 
 CONTACT
 
@@ -99,6 +113,17 @@ See Licenses directory for more details.
 
 HISTORY
 
+OWB 0.9.7 (21.06.2009)
+  - Implemented remaining keyboard shortcuts from feature request #9:
+    keyboard shortcuts
+  - Implemented feature #28: Bookmark manager and menu
+  - Fixed bug #55: File corruption when downloading multiple files 
+    simultaneously
+  - Fixed bug #60: submit button does not work correctly in certain
+    circumstances
+  - OWB window now opens maximized by default
+  - Updated OWB source code to revision 1012
+
 OWB 0.9.6 (11.06.2009)
   - Fixed crashes when opening preferences window
 
@@ -112,13 +137,15 @@ OWB 0.9.5 (10.06.2009)
 OWB 0.9.4 (06.06.2009)
   - Switched OWB to new cookie manager, now cookies are kept in cookies.db
     (sqlite3 database file)
-  - Fixed bug #47: Requester asking for volume "file:" appears when opening local files.
+  - Fixed bug #47: Requester asking for volume "file:" appears when opening 
+    local files.
   - Fixed a couple of bugs causing memory corruption.
   - Updated OWB source code to revision 994
 
 OWB 0.9.3 (10.04.2009) 
   - Implemented feature #21: Placeholders for missing images and plug-ins
-  - Fixed bug #23: Frame title set in JavaScript is not cleared when loading a new page
+  - Fixed bug #23: Frame title set in JavaScript is not cleared when loading 
+    a new page
   - Implemented feature #26: Automatic download after clicking on the link
   - Fixed bug #27: Challenge-response authentication is not working
   - Implemented feature #34: JavaScript prompt requester
