@@ -1,2 +1,2 @@
-Migration to Grub2 enables graphical boot console, but most importantly
+Migration to GRUB2 enables graphical boot console, but most importantly
 usage of SFS as a default file system for AROS.

@@ -5,9 +5,9 @@ Download
 
    **If you are a user** willing to try AROS, please use the links in **Distributions**
    section to download a fully featured AROS distribution. The nightly builds you
-   will find at the bottom of the page are only meant for developers. The nighly builds
-   are not configured to be easily used, sometimes are not stable and they miss most 
-   of the applications essential to regular user experience.
+   will find at the bottom of the page are only meant for developers and testers. The 
+   nighly builds are not configured to be easily used, sometimes are not stable 
+   and they miss most of the applications essential to regular user experience.
 
 .. Contents::
 
@@ -22,11 +22,11 @@ Icaros Desktop LIVE!
 `Icaros Desktop LIVE!`__ is a complete distribution of the AROS desktop
 operating system. It comes on a bootable live DVD-ROM that runs directly
 on your PC (its hardware components must already be supported by AROS).
-It can be installed on the hard drive and can coexist with Microsoft
-Windows XP, in a dedicated partition. A quick reference guide and some
-AROS PDF manuals are included. This version also comes with a Qemu-based
-virtual machine that allows Windows users to test the distribution in a
-safer (but slower) environment.
+It can be installed on the hard drive and can coexist with installed OS
+such as Microsoft Windows XP, in a dedicated partition. A quick reference 
+guide and some AROS PDF manuals are included. This version also comes 
+with a Qemu-based virtual machine that allows Windows users to test the 
+distribution in a safer (but slower) environment.
 
 Icaros Desktop VE
 -----------------
