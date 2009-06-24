@@ -115,13 +115,13 @@ Requirements
     The requirements on the web browser should not be high, but it should be
     possible to at least browse the web in some way.
     
-    Current status: **In Progress**
-
-    Current recommendations: see `Recommendations`__
+    Current status: **Completed**
 
     *Reasoning: AROSTCP we got now is ancient but working implementation of
-    AmiTCP stack. Some applications were developed (i.e. the FTP and telnet client,
-    IRC-client).*
+    AmiTCP stack. There are several network drivers available for both real
+    hardware and linux hosted TAP device. AROSTCP preferences editor is
+    available. Network applications are available: ftp client, irc client,
+    mail program, modern web browser, etc.*
     
 7.  **Self-hosted development environment and SDK for developers.**
 
@@ -190,7 +190,6 @@ __ ../../introduction/status/zune
 __ recommendations#completed-gui-toolkit
 __ ../../introduction/status/programs
 __ recommendations#standard-applications-comparable-to-those-which-come-with-amigaos-3-1
-__ recommendations#networking-support
 __ recommendations#self-hosted-development-environment-and-sdk-for-developers
 __ recommendations#comprehensive-documentation-for-developers
 __ recommendations#comprehensive-documentation-for-users

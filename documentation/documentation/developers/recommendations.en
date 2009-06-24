@@ -46,14 +46,6 @@ Recomendations
 + Add support for editing default icons properties via Icon->Information
 + Implement IconEdit application
         
-6.  Networking support.
------------------------
-
-+ Modern web browser - must adhere to modern HTML standards, JavaScript support
-  is suggested but not required. Must have minimal usable GUI (prev/next/adress bar)
-  Possible candidates: OWB, NetSurf, Rob's WebKit port.
-+ Implement AROSTCP preferences editor
-    
 7.  Self-hosted development environment and SDK for developers.
 ---------------------------------------------------------------
 
@@ -66,7 +58,7 @@ Recomendations
     - How to extend OS3.x shared libraries
     - Varargs handling
     - C library
-+ Backport modular kernel architecture from x86_64 to i386 (mandatory ports)
++ Port svn client tools to AROS
 
 __ http://aros.wiki.sourceforge.net/ABI_V1
 
