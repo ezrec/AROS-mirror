@@ -174,7 +174,7 @@ IPTR BookmarkManager__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
     set(data->bookmarks_list, MUIA_List_DisplayHook, &data->display_hook);
     set(data->bookmarks_list, MUIA_List_DestructHook, &data->destroy_hook);
 
-    if(sqlite3_open("PROGDIR:bookmarks.db", &data->db))
+    if(sqlite3_open("PROGDIR:bookmarks.db", &data->db) && sqlite3_open(":memory:", &data->db))
     {
 	CoerceMethod(CLASS, self, OM_DISPOSE);
 	return (IPTR) NULL;
