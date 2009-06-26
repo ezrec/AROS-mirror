@@ -100,14 +100,16 @@ Sources
 =======
 
 You can download the AROS sources either from the `download page`__ or by 
-using SVN (which requires that you `apply for access`__ though; see `subversion documentation`__ 
-as well).
+using SVN (which requires that you `apply for access`__ though; see 
+`subversion documentation`__ as well).
 
-In both cases you need to get both the ``source`` and ``contrib`` packages. Extract
-or download ``source`` package sources into a directory of your choice. Next, extract or download
-``contrib`` package sources into a ``./contrib`` subdirectory of ``source`` package directory tree.
+In both cases you need to get both the ``source`` and ``contrib`` packages.
+Extract or download ``source`` package sources into a directory of your
+choice. Next, extract or download ``contrib`` package sources into a
+``./contrib`` subdirectory of ``source`` package directory tree.
 
-You don't need have all ``contrib`` sources. The minimal set is located in ``./contrib/necessary``.
+You don't need have all ``contrib`` sources. The minimal set is located in
+``./contrib/necessary``.
 
 __ ../../download
 __ ../../documentation/developers/contribute#the-subversion-repository
@@ -120,7 +122,10 @@ Building
 Configuring
 -----------
 
-First of all, you need to run configure in the root of the AROS sources::
+There are two ways to build AROS. The prefered method is described in 
+the Appendix: Building AROS in different directories, however here 
+we will build AROS within the source directory.  To do this we will 
+first need to configure the AROS build using the following steps::
 
     > cd AROS
     > ./configure
@@ -319,6 +324,70 @@ specify ``AROS_TARGET_ARCH`` as the CPU will stay the same.
 After you`ve made "make" once, and some changes were made to the files, you 
 can use quick compilation of changes using make <target-name>-quick command. 
 
+Building AROS in different directories
+--------------------------------------
+
+It is possible to configure and build AROS in a directory other than the 
+working copy. For example::
+
+   > svn co https://svn.aros.org/svn/aros/trunk/AROS aros-src
+   > cd aros-src
+   > mkdir ../build
+   > cd ../build
+   > ../aros-src/configure [...with options as appropriate...]
+   > make
+
+puts the AROS working copy in the directory "aros-src" and builds it in a 
+separate, parallel directory "build".
+
+Why would you want to do this? Well there are a number of reasons:
+
++   You may want to separate the source and object code and only
+    backup the source / avoid "polluting" the working copy with
+    files generated during the build.
++   You may want to put the build directory and the working
+    copy on different physical disks to improve performance.
++   You may want to remote mount the working copy on multiple
+    machines, and build for different machines from the same
+    working copy.
++   You may want to build multiple configurations from the
+    same working copy.
+
+The last reason above is possibly the most useful. For instance you
+can have builds for separate architectures and/or debug builds each
+using the same working copy. Using multiple build directories you can
+rebuild any or all configurations after an edit without the need to
+either clean and reconfigure, or identify and copy changes into another
+working copy.
+
+.. Note::
+
+   If you have previously built AROS inside the working copy you will
+   need to delete all obsolete generated files from the source tree
+   before attempting to configure/build in another directory. The reason
+   for this is some parts will detect the existing file in the source tree
+   before the correct version and attempt to use that. It is best to delete
+   the bin/ directory aswell as all files that shouldnt exist when the
+   following command is used:
+
+   svn status --no-ignore
+
+   Delete any files which are ignored/not supposed to be there 
+   (unless they are your own projects files).
+
+.. Note::
+
+   If you are compiling multiple AROS builds from the same working dir, the
+   following configure option will make them use a common location to
+   download external sources to
+   
+   --with-portssources=<path to common location>
+ 
+   It is best to use a seperate directory outside of both the working dir
+   and build dir(s) to store these files - so that if you delete a build
+   or the working dir you will still have the files and not need to download
+   them every time.
+
 Compiling HowTos
 -----------------
 
@@ -332,7 +401,8 @@ Getting the needed packages
 
 Because the Live CD misses needed packages we have to get them from internet::
 
-    > sudo apt-get install subversion gcc-3.4 gawk bison flex netpbm autoconf automake1.4 libx11-dev libc6-dev
+    > sudo apt-get install subversion gcc-3.4 gawk bison flex netpbm autoconf automake1.4
+    libx11-dev libc6-dev
 
 You will need to enter your user password at the prompt.
 
