@@ -85,6 +85,9 @@ zune;menustrip;Menustrip.mui;2009-06-12
 zune;menu;Menu.mui;2009-06-12
 zune;menuitem;Menuitem.mui;2009-06-12
 zune;application;Application.mui;2009-06-18
+zune;window;Window.mui;2009-06-24
+zune;aboutmui;Aboutmui.mui;2009-06-25
+zune;area;Area.mui;2009-06-25
 devices;input;Input.device;2008-08-05
 devices;timer;Timer.device;2008-08-09
 devices;console;Console.device;2008-08-04
@@ -2494,6 +2497,7 @@ application;MUIM_Application_Load;1;1;2
 application;MUIM_Application_NewInput;1;1;2
 application;MUIM_Application_OpenConfigWindow;1;1;2
 application;MUIM_Application_PushMethod;1;1;1
+application;MUIM_Application_KillPushMethod;1;1;0
 application;MUIM_Application_RemInputHandler;1;1;2
 application;MUIM_Application_ReturnID;1;1;2
 application;MUIM_Application_Save;1;1;2
@@ -2504,7 +2508,7 @@ application;MUIM_Application_ShowHelp;1;1;0
 application;MUIM_Application_SetConfigdata;1;2;2
 application;MUIM_Application_OpenWindows;1;2;2
 application;MUIM_Application_Iconify;1;2;0
-application;Application__MUIM_Execute;1;2;2
+application;MUIM_Application_Execute;1;2;2
 application;MUIM_Application_UpdateMenus;1;2;2
 application;OM_NEW;1;1;2
 application;OM_DISPOSE;1;1;2
@@ -2516,6 +2520,99 @@ application;MUIM_FindUData;1;1;2
 application;MUIM_GetUData;1;1;2
 application;MUIM_SetUData;1;1;2
 application;MUIM_SetUDataOnce;1;1;2
+window;MUIA_Window_Active;1;1;2
+window;MUIA_Window_ActiveObject;1;1;1
+window;MUIA_Window_AltHeight;1;1;1
+window;MUIA_Window_AltLeftEdge;1;1;1
+window;MUIA_Window_AltTopEdge;1;1;1
+window;MUIA_Window_AltWidth;1;1;1
+window;MUIA_Window_AppWindow;1;1;0
+window;MUIA_Window_Backdrop;1;1;2
+window;MUIA_Window_Borderless;1;1;2
+window;MUIA_Window_CloseGadget;1;1;2
+window;MUIA_Window_CloseRequest;1;1;2
+window;MUIA_Window_DefaultObject;1;1;2
+window;MUIA_Window_DepthGadget;1;1;2
+window;MUIA_Window_DisableKeys;1;1;2
+window;MUIA_Window_DragBar;1;1;2
+window;MUIA_Window_FancyDrawing;1;1;0
+window;MUIA_Window_Height;1;1;2
+window;MUIA_Window_ID;1;1;2
+window;MUIA_Window_InputEvent;1;1;1
+window;MUIA_Window_IsSubWindow;1;1;0
+window;MUIA_Window_LeftEdge;1;1;2
+window;MUIA_Window_Menu;1;1;0
+window;MUIA_Window_MenuAction;1;1;0
+window;MUIA_Window_Menustrip;1;1;2
+window;MUIA_Window_MouseObject;1;1;0
+window;MUIA_Window_NeedsMouseObject;1;1;0
+window;MUIA_Window_NoMenus;1;1;2
+window;MUIA_Window_Open;1;1;1
+window;MUIA_Window_PublicScreen;1;1;2
+window;MUIA_Window_RefWindow;1;1;2
+window;MUIA_Window_RootObject;1;1;2
+window;MUIA_Window_Screen;1;1;2
+window;MUIA_Window_ScreenTitle;1;1;2
+window;MUIA_Window_SizeGadget;1;1;2
+window;MUIA_Window_SizeRight;1;1;2
+window;MUIA_Window_Sleep;1;1;0
+window;MUIA_Window_Title;1;1;2
+window;MUIA_Window_TopEdge;1;1;2
+window;MUIA_Window_UseBottomBorderScroller;1;1;1
+window;MUIA_Window_UseLeftBorderScroller;1;1;0
+window;MUIA_Window_UseRightBorderScroller;1;1;1
+window;MUIA_Window_Width;1;1;2
+window;MUIA_Window_Window;1;1;2
+window;MUIA_Window_EraseArea;1;2;2
+window;MUIA_Window_ZoomGadget;1;2;2
+window;MUIA_Window_ToolBox;1;2;2
+window;MUIA_ShowMe;1;1;2
+window;MUIA_Version;1;1;2
+window;MUIA_Revision;1;1;2
+window;MUIM_Window_ActionIconify;1;1;2
+window;MUIM_Window_AddEventHandler;1;1;2
+window;MUIM_Window_Cleanup;1;1;2
+window;MUIM_Window_GetMenuCheck;1;1;2
+window;MUIM_Window_GetMenuState;1;1;2
+window;MUIM_Window_RemEventHandler;1;1;2
+window;MUIM_Window_ScreenToBack;1;1;2
+window;MUIM_Window_ScreenToFront;1;1;2
+window;MUIM_Window_SetCycleChain;1;1;0
+window;MUIM_Window_SetMenuCheck;1;1;2
+window;MUIM_Window_SetMenuState;1;1;2
+window;MUIM_Window_Setup;1;1;1
+window;MUIM_Window_Snapshot;1;1;0
+window;MUIM_Window_ToBack;1;1;2
+window;MUIM_Window_ToFront;1;1;2
+window;MUIM_Window_AddControlCharHandler;1;2;2
+window;MUIM_Window_AllocGadgetID;1;2;2
+window;MUIM_Window_DrawBackground;1;2;2
+window;MUIM_Window_DragObject;1;2;2
+window;MUIM_Window_FreeGadgetID;1;2;2
+window;MUIM_Window_RecalcDisplay;1;2;2
+window;MUIM_Window_RemControlCharHandler;1;2;2
+window;MUIM_Window_UpdateMenu;1;2;2
+window;OM_NEW;1;1;2
+window;OM_DISPOSE;1;1;2
+window;OM_SET;1;1;1
+window;OM_GET;1;1;2
+window;MUIM_FindUData;1;1;2
+window;MUIM_GetUData;1;1;2
+window;MUIM_SetUData;1;1;2
+window;MUIM_SetUDataOnce;1;1;2
+window;MUIM_ConnectParent;1;2;2
+window;MUIM_DisconnectParent;1;2;2
+window;MUIM_Export;1;1;2
+window;MUIM_Import;1;1;2
+aboutmui;MUIA_Aboutmui_Application;1;1;2
+aboutmui;OM_NEW;1;1;2
+area;MUIA_Background;1;1;2
+area;MUIA_BottomEdge;1;1;2
+area;MUIA_ContextMenu;1;1;2
+area;MUIA_ContextMenuTrigger;1;1;1
+area;MUIA_ControlChar;1;1;2
+area;MUIA_CustomBackfill;1;1;0
+area;MUIA_CycleChain;1;1;2
 #CATEGORY_ITEMS_END
 #COMMENTS_BEGIN (category, comment)
 gameport;Gameport.device supports only mouse
@@ -2545,4 +2642,11 @@ notify;MUIA_AppMessage - bugreport #1985769
 menuitem;MUIA_Menuitem_Shortcut - MUIV_Menuitem_Shortcut_Check not implemented
 menuitem;MUIA_Menuitem_Title - bugreport 1985757
 menuitem;MUIM_Import/MUIM_Export - MUIA_Menuitem_Checked needs to be exportable/importable
+application;MUIM_Application_KillPushMethod is a private method with signature 0x80429954
+window;MUIA_Window_ActiveObject - bugreport #2807849
+window;MUIA_Window_AltWidth, MUIA_Window_AltTopEdge, MUIA_Window_AltLeftEdge and MUIA_Window_AltHeight are missing getters
+window;MUIA_Window_AppWindow - flag set but no real implementation
+window;MUIA_Window_IsSubWindow - flag set but no real implementation
+window;MUIA_Window_UseBottomBorderScroller and MUIA_Window_UseRightBorderScroller are missing getters
+area;MUIA_ContextMenuTrigger - bugreport #2807847
 #COMMENTS_END
