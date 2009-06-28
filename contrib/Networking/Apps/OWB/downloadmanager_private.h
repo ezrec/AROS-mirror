@@ -6,6 +6,8 @@
     $Id$
 */
 
+#include <time.h>
+
 struct Download {
     struct Node node;
     long long sizeTotal;
@@ -16,6 +18,9 @@ struct Download {
     void *identifier;
     char progress[8];
     Object *manager;
+    char *speed;
+    time_t speedMeasureTime;
+    long long speedSizeDownloaded;
 };
 
 struct DownloadManager_DATA {

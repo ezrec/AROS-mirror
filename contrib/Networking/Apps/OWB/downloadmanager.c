@@ -33,29 +33,31 @@ static IPTR ManagerDisplayFunc(struct Hook *hook, char **columns, struct Downloa
 	columns[0] = (char*) _(MSG_DownloadFileName);
 	columns[1] = (char*) _(MSG_DownloadFileSize);
 	columns[2] = (char*) _(MSG_DownloadProgress);
-	columns[3] = (char*) _(MSG_DownloadState);
+	columns[3] = (char*) _(MSG_DownloadSpeed);
+	columns[4] = (char*) _(MSG_DownloadState);
     }
     else
     {
         columns[0] = (download->filename ? download->filename : (char*) _(MSG_UnknownFileName));
         columns[1] = (download->filesize ? download->filesize : (char*) _(MSG_UnknownFileSize));
         columns[2] = download->progress;
+        columns[3] = (download->speed ? download->speed : (char*) _(MSG_UnknownDownloadSpeed));
         switch(download->state)
         {
         case DOWNLOAD_CREATED:
-            columns[3] = (char*) _(MSG_DownloadState_Starting);
+            columns[4] = (char*) _(MSG_DownloadState_Starting);
             break;
         case DOWNLOAD_ACTIVE:
-            columns[3] = (char*) _(MSG_DownloadState_Active);
+            columns[4] = (char*) _(MSG_DownloadState_Active);
             break;
         case DOWNLOAD_ERROR:
-            columns[3] = (char*) _(MSG_DownloadState_Failed);
+            columns[4] = (char*) _(MSG_DownloadState_Failed);
             break;
         case DOWNLOAD_FINISHED:
-            columns[3] = (char*) _(MSG_DownloadState_Finished);
+            columns[4] = (char*) _(MSG_DownloadState_Finished);
             break;
         default:
-            columns[3] = "";
+            columns[4] = "";
             break;
         }
     }
@@ -71,6 +73,7 @@ static IPTR ManagerDestroyFunc(struct Hook *hook, APTR pool, struct Download *do
     download->state = DOWNLOAD_DESTROYED;
     FreeVec(download->filename);
     FreeVec(download->filesize);
+    FreeVec(download->speed);
     Remove((struct Node*) download);
     FreeVec(download);
     
@@ -160,7 +163,7 @@ IPTR DownloadManager__OM_NEW(struct IClass *cl, Object *self, struct opSet *msg)
     	    MUIA_InnerBottom, 5,
     	    Child, ListviewObject,
                 MUIA_Listview_List, list = ListObject,
-            	    MUIA_List_Format, "BAR,BAR,BAR,",
+            	    MUIA_List_Format, "BAR,BAR,BAR,BAR,",
             	    MUIA_List_Title, TRUE,
 		    End,
 	        End,
@@ -236,6 +239,9 @@ IPTR DownloadManager__MUIM_DownloadDelegate_DidBeginDownload(Class *cl, Object *
     download->manager = obj;
     download->filename = NULL;
     download->filesize = NULL;
+    download->speed = NULL;
+    download->speedMeasureTime = time(NULL);
+    download->speedSizeDownloaded = 0;
     sprintf(download->progress, "%ld %%", 0);
 
     if(!download)
@@ -409,6 +415,46 @@ IPTR DownloadManager__MUIM_DownloadDelegate_DidReceiveDataOfLength(Class *cl, Ob
     download->sizeDownloaded += message->length;
     sprintf(download->progress, "%ld %%", (long) (download->sizeTotal > 0 ? 100 * download->sizeDownloaded / download->sizeTotal : 0));
 
+    time_t currentTime = time(NULL);
+    if(currentTime > download->speedMeasureTime)
+    {
+	long long downloaded = download->sizeDownloaded - download->speedSizeDownloaded;
+	download->speedSizeDownloaded = download->sizeDownloaded;
+	int elapsed = currentTime - download->speedMeasureTime;
+	download->speedMeasureTime = currentTime;
+	
+	if(download->speed)
+	    FreeVec(download->speed);
+    
+	char *template;
+	double scaledspeed;
+    
+	if(downloaded < 1024)
+	{
+	    template = "%.0lf b/s";
+	    scaledspeed = downloaded / elapsed;
+	}
+	else if(downloaded < 1024 * 1024)
+	{
+	    template = "%.2lf kB/s";
+	    scaledspeed = 1.0 * downloaded / (1024 * elapsed); 
+	}
+	else
+	{
+	    template = "%.2lf MB/s";
+	    scaledspeed = 1.0 * downloaded / (1024 * 1024 * elapsed);
+	}
+	
+	char c;
+	int length = snprintf(&c, 0, template, scaledspeed) + 1;
+	char *transferspeed = AllocVec(length, MEMF_ANY);
+	if(transferspeed)
+	{
+	    snprintf(transferspeed, length, template, scaledspeed);
+	    download->speed = transferspeed;
+	}
+    }
+    
     DoMethod(manager->list, MUIM_List_Redraw, MUIV_List_Redraw_All);
     
     return TRUE;
