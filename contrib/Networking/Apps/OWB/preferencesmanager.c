@@ -12,6 +12,7 @@
 #include <proto/utility.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <aros/debug.h>
 #include <zune/customclasses.h>
 #include <fontconfig/fontconfig.h>
@@ -85,7 +86,7 @@ IPTR PreferencesManager__OM_NEW(struct IClass *cl, Object *self, struct opSet *m
     Object *allowsAnimatedImages, *allowAnimatedImageLooping;
     Object *standardFontFamily, *fixedFontFamily, *serifFontFamily, *sansSerifFontFamily, *cursiveFontFamily, *fantasyFontFamily;
     Object *decodesPNGWithDatatypes, *decodesBMPWithDatatypes, *decodesGIFWithDatatypes, *decodesJPGWithDatatypes;
-    Object *downloadDestination;
+    Object *downloadDestination, *httpProxy, *useHttpProxy;
     Object *preferences = NULL;
     STRPTR *fontFamilies;
     struct TagItem *tag, *tags;
@@ -134,6 +135,11 @@ IPTR PreferencesManager__OM_NEW(struct IClass *cl, Object *self, struct opSet *m
     	                    ASLFR_DrawersOnly, TRUE,
     	                    End,
     	                End,
+    	            Child, ColGroup(3), GroupFrameT(_(MSG_PreferencesManager_ProxySettings)),
+        	    	Child, useHttpProxy = MUI_MakeObject(MUIO_Checkmark, FALSE),
+    	                Child, Label2(_(MSG_PreferencesManager_HttpProxy)), 
+    	                Child, httpProxy = StringObject, MUIA_Frame, MUIV_Frame_String, End,
+    	                End,
     	            Child, VGroup, GroupFrameT(_(MSG_PreferencesManager_ZuneSettings)),
     	                Child, bt_zune = SimpleButton(_(MSG_PreferencesManager_OpenZuneSettings)),
     	                End,
@@ -169,7 +175,7 @@ IPTR PreferencesManager__OM_NEW(struct IClass *cl, Object *self, struct opSet *m
         	    	Child, Label2(_(MSG_PreferencesManager_StandardFontFamily)), 
         	    	Child, PoplistObject, 
         	    	    MUIA_Poplist_Array, fontFamilies, 
-        	    	    MUIA_Popstring_String, standardFontFamily = StringObject, MUIA_Frame, MUIV_Frame_String, End,
+        	    	    MUIA_Popstring_String, standardFontFamily = StringObject, MUIA_Frame, MUIV_Frame_String, MUIA_Disabled, TRUE, End,
         	    	    MUIA_Popstring_Button, PopButton(MUII_PopUp),
         	    	    End,
         	    	Child, Label2(_(MSG_PreferencesManager_DefaultFixedFontSize)), 
@@ -299,7 +305,13 @@ IPTR PreferencesManager__OM_NEW(struct IClass *cl, Object *self, struct opSet *m
     set(downloadDestination, MUIA_String_Contents, XGET(preferences, MUIA_BrowserPreferences_DownloadDestination));
     set(downloadDestination, MUIA_ObjectID, 18);
     data->downloadDestination = downloadDestination;
-    
+
+    set(useHttpProxy, MUIA_ObjectID, 19);
+    data->useHttpProxy = useHttpProxy;
+
+    set(httpProxy, MUIA_ObjectID, 20);
+    data->httpProxy = httpProxy;
+
     /* Close window with close gadget */
     DoMethod(self, MUIM_Notify, MUIA_Window_CloseRequest, (IPTR) TRUE,
         (IPTR) self,  (IPTR) 3,
@@ -320,7 +332,11 @@ IPTR PreferencesManager__OM_NEW(struct IClass *cl, Object *self, struct opSet *m
     DoMethod(bt_zune, MUIM_Notify, MUIA_Pressed, FALSE,
 	(IPTR) MUIV_Notify_Application, 1,
 	MUIM_Application_OpenConfigWindow);
-   
+
+    DoMethod(useHttpProxy, MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
+	(IPTR) httpProxy, 3,
+	MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
+
     return (IPTR) self;
 }
 
@@ -362,6 +378,10 @@ static void SetPreferenceData(Class *cl, Object *obj)
     set(data->preferences, MUIA_WebPreferences_DecodesBMPWithDatatypes, XGET(data->decodesBMPWithDatatypes, MUIA_Selected));
     set(data->preferences, MUIA_BrowserPreferences_DownloadDestination, XGET(data->downloadDestination, MUIA_String_Contents));
     set(data->preferences, MUIA_WebPreferences_CookieJarFileName, "PROGDIR:cookies.db"); /* Hardcoded for now */
+    if(XGET(data->useHttpProxy, MUIA_Selected))
+	setenv("http_proxy", XGET(data->httpProxy, MUIA_String_Contents), 1);
+    else
+	unsetenv("http_proxy");
 }
 
 IPTR PreferencesManager__MUIM_PreferencesManager_Use(Class *cl, Object *obj, Msg message)

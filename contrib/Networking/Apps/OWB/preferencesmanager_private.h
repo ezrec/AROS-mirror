@@ -24,7 +24,7 @@ struct PreferencesManager_DATA
     Object *allowAnimatedImageLooping;
     Object *standardFontFamily, *fixedFontFamily, *serifFontFamily, *sansSerifFontFamily, *cursiveFontFamily, *fantasyFontFamily;
     Object *decodesPNGWithDatatypes, *decodesBMPWithDatatypes, *decodesGIFWithDatatypes, *decodesJPGWithDatatypes;
-    Object *downloadDestination;
+    Object *downloadDestination, *useHttpProxy, *httpProxy;
 };
 
 #endif /* _PREFERENCES_PRIVATE_H_ */
