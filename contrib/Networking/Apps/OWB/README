@@ -1,4 +1,4 @@
-OWB 0.9.7 for AROS
+OWB 0.9.8 for AROS
 
 INTRODUCTION
 
@@ -112,6 +112,16 @@ WebCore/JSCore code where the original licenses apply (APSL, LGPL and BSD).
 See Licenses directory for more details.
 
 HISTORY
+
+OWB 0.9.8 (28.06.2009)
+  - Implemented download speed indicator
+  - Added HTTP proxy settings
+  - Fixed bug #48: Can't send messages on imo.im
+  - Fixed bug #70: Blocked mouse wheel and text area forms when using bookmarks
+  - Fixed bug #73: OWB doesn't run from DVD anymore
+  - Fixed bug #65: OWB doesn't display all select options when an empty option is present
+  - Fixed bug #77: Caret is still blinking in deactivated text editor fields causing confusion
+  - Fixed bug #79: OWB crashes on exit after cancelling file download started from menu
 
 OWB 0.9.7 (21.06.2009)
   - Implemented remaining keyboard shortcuts from feature request #9:
