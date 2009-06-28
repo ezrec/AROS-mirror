@@ -112,6 +112,9 @@ static void GoAcknowledgeFunc(struct Hook *hook, Object *urlString, STRPTR *url)
 {   
     char *buf = *url;
     const char *httpPrefix = "http://";
+    
+    set(tabbed, MUIA_WebView_Active, TRUE);
+    
     if(!strstr(buf, "://"))
     {
 	/* No protocol is specified, assume it's http */
@@ -501,7 +504,7 @@ int main(void)
     // GUI creation
     app = ApplicationObject,
         MUIA_Application_Title, "Origyn Web Browser",
-        MUIA_Application_Version, "$VER: OWB 0.97 (21.06.2009)",
+        MUIA_Application_Version, "$VER: OWB 0.98 (28.06.2009)",
         MUIA_Application_Author, "Stanislaw Szymczyk",
         MUIA_Application_Copyright, "Copyright © 2009, The AROS Development Team. All rights reserved.",
         MUIA_Application_Description, "Port of Origyn Web Browser to AROS",
@@ -513,6 +516,7 @@ int main(void)
             MUIA_Window_Height, MUIV_Window_AltHeight_Screen(100),
             MUIA_Window_AltWidth, MUIV_Window_AltWidth_Screen(75),
             MUIA_Window_AltHeight, MUIV_Window_AltHeight_Screen(75),
+            MUIA_Window_ID, 1,
             WindowContents, VGroup,
                 Child, HGroup,
                     Child, HGroup,
