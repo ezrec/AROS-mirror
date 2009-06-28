@@ -31,6 +31,7 @@ IPTR forwardedAttributes[] =
     MUIA_WebView_Title,
     MUIA_WebView_CanGoBack,
     MUIA_WebView_CanGoForward,
+    MUIA_WebView_Active,
 }; 
 
 /*** Methods ****************************************************************/
@@ -117,6 +118,42 @@ IPTR TabbedView__OM_GET(Class *cl, Object *obj, struct opGet *msg)
     return retval;
 }
 
+IPTR TabbedView__OM_SET(Class *cl, Object *obj, struct opSet *msg)
+{
+    struct Tab_DATA *data = INST_DATA(cl, obj);
+    struct TagItem *tags  = msg->ops_AttrList;
+    struct TagItem *tag;
+    
+    while ((tag = NextTagItem((const struct TagItem **)&tags)) != NULL)
+    {
+    	switch(tag->ti_Tag)
+	{
+    	    case MUIA_Group_ActivePage:
+    	    {
+		int currentPage = tag->ti_Data;
+		struct List *children = (struct List *) XGET(obj, MUIA_Group_ChildList);
+		Object *activeView;
+		
+		/* Set previously visible WebView to unactive state */
+		get(obj, MUIA_TabbedView_ActiveObject, &activeView);
+		set(activeView, MUIA_WebView_Active, FALSE);
+	    
+		IPTR ret = DoSuperMethodA(cl, obj, (Msg)msg);
+
+		/* Activate currently visible WebView */
+		get(obj, MUIA_TabbedView_ActiveObject, &activeView);
+		DoMethod(_app(activeView), MUIM_Application_PushMethod, activeView, (IPTR) 3, MUIM_Set, MUIA_WebView_Active, TRUE);
+
+    		return ret;
+    	    }
+    	    default:
+    		continue;
+	}
+    }
+    
+    return DoSuperMethodA(cl, obj, (Msg)msg);
+}
+
 IPTR TabbedView__MUIM_TabbedView_ForwardMethod(Class *cl, Object *obj, Msg message)
 {
     Object *activeView = (Object*) XGET(obj, MUIA_TabbedView_ActiveObject);
@@ -157,6 +194,7 @@ static IPTR TabbedView__MUIM_TabbedView_TriggerNotifications(Class *cl, Object *
 __ZUNE_CUSTOMCLASS_START(TabbedView)
 __ZUNE_CUSTOMCLASS_METHOD(TabbedView__OM_NEW, OM_NEW, struct opSet*);
 __ZUNE_CUSTOMCLASS_METHOD(TabbedView__OM_GET, OM_GET, struct opGet*);
+__ZUNE_CUSTOMCLASS_METHOD(TabbedView__OM_SET, OM_SET, struct opSet*);
 __ZUNE_CUSTOMCLASS_METHOD(TabbedView__OM_ADDMEMBER, OM_ADDMEMBER, struct opMember*);
 __ZUNE_CUSTOMCLASS_METHOD(TabbedView__MUIM_TabbedView_ForwardMethod, MUIM_WebView_LoadURL, Msg);
 __ZUNE_CUSTOMCLASS_METHOD(TabbedView__MUIM_TabbedView_ForwardMethod, MUIM_WebView_GoBack, Msg);
