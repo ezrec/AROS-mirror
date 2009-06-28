@@ -220,11 +220,17 @@ unknown
 MSG_UnknownFileName (//)
 unknown
 ;
+MSG_UnknownDownloadSpeed (//)
+unknown
+;
 MSG_DownloadFileSize (//)
 File size
 ;
 MSG_DownloadFileName (//)
 File name
+;
+MSG_DownloadSpeed (//)
+Speed
 ;
 MSG_DownloadState (//)
 Status
@@ -273,6 +279,12 @@ Zune Settings
 ;
 MSG_PreferencesManager_OpenZuneSettings (//)
 Open Zune Settings
+;
+MSG_PreferencesManager_ProxySettings (//)
+Proxy Settings
+;
+MSG_PreferencesManager_HttpProxy (//)
+HTTP Proxy:
 ;
 MSG_PreferencesManager_Content (//)
 Content
