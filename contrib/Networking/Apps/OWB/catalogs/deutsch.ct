@@ -1,4 +1,4 @@
-## version $VER: owb.catalog 3.0 (21.06.2009)
+## version $VER: owb.catalog 4.0 (29.06.2009)
 ## language deutsch
 ## codeset 0
 ;
@@ -298,6 +298,10 @@ MSG_UnknownFileName
 unbekannt
 ; unknown
 ;
+MSG_UnknownDownloadSpeed
+unbekannt
+; unknown
+;
 MSG_DownloadFileSize
 Dateigröße
 ; File size
@@ -305,6 +309,10 @@ Dateigröße
 MSG_DownloadFileName
 Dateiname
 ; File name
+;
+MSG_DownloadSpeed
+Geschwindigkeit
+; Speed
 ;
 MSG_DownloadState
 Status
@@ -369,6 +377,14 @@ Zune-Einstellungen
 MSG_PreferencesManager_OpenZuneSettings
 Zune-Einstellungen öffnen
 ; Open Zune Settings
+;
+MSG_PreferencesManager_ProxySettings
+Proxy-Einstellungen
+; Proxy Settings
+;
+MSG_PreferencesManager_HttpProxy
+HTTP-Proxy:
+; HTTP Proxy:
 ;
 MSG_PreferencesManager_Content
 Inhalt
