@@ -5,7 +5,7 @@ AROS 1.0 Roadmap Recommendations
 :Abstract: 
 
     This section lists items that *still* need to be completed before each
-    requirement can be considered completed. This list is considered valid
+    requirement can be considered closed. This list is considered valid
     until next review of AROS roadmap. During such periodic review, completed
     items are removed from the list. It can also happen that some new items
     are added to the list or existing items are removed from the list - the
@@ -50,14 +50,16 @@ Recomendations
 ---------------------------------------------------------------
 
 + `ABI_V1`__ implemented and merged with main trunk
-    - C library and ETask
-    - dos.library compatibility
-    - Retest changes on x86 natice
-    - Write (i386) ABI reference manual
-    - SysBase location
-    - How to extend OS3.x shared libraries
-    - Varargs handling
-    - C library
+
+  - C library and ETask
+  - dos.library compatibility
+  - Retest changes on x86 natice
+  - Write (i386) ABI reference manual
+  - SysBase location
+  - How to extend OS3.x shared libraries
+  - Varargs handling
+  - C library
+
 + Port svn client tools to AROS
 
 __ http://aros.wiki.sourceforge.net/ABI_V1
@@ -71,39 +73,41 @@ __ http://aros.wiki.sourceforge.net/ABI_V1
 + Write explanation of AROS basic data type, use and relation to C data types
 + Write explanation of differences between resources, libraries, devices and handlers
 + Write description of graphics and usb HIDDs
-+ Write following "How to" documents - these documents should cover the defined topic
++ Write following "How to" documents - these documents should cover the defined topic 
   and be accompanied with a source code example of working modules:
 
-    - How to compile modules and interact with AROS build system
-    - How to compile modules outside AROS build system
-    - How to write command line application
-    - How to write BOOPSI application
-    - How to write Zune application
-    - How to write network application
-    - How to write a commodity application
-    - How to write a datatype
-    - How to write AROSTCP network driver
-    - How to write GFX HIDD driver
-    - How to write AHI sound driver
-    - How to write printer driver
-    - How to write AROS dynamic library
-    - How to write BOOPSI/Zune class
-    - How to port \*nix software to AROS - Basics
+  - How to compile modules and interact with AROS build system
+  - How to compile modules outside AROS build system
+  - How to write command line application
+  - How to write BOOPSI application
+  - How to write Zune application
+  - How to write network application
+  - How to write a commodity application
+  - How to write a datatype
+  - How to write AROSTCP network driver
+  - How to write GFX HIDD driver
+  - How to write AHI sound driver
+  - How to write printer driver
+  - How to write AROS dynamic library
+  - How to write BOOPSI/Zune class
+  - How to port \*nix software to AROS - Basics
 
-+ Further topics definition needed
-    
++ Further topics definition needed    
+
 9.  Comprehensive documentation for users.
 ------------------------------------------
 
 + Write following "How to" documents:
-    - How to configure network manually
-    - How to configure network with DHCP client
-    - How to write AmigaOS scripts
+    
+  - How to configure network manually
+  - How to configure network with DHCP client
+  - How to write AmigaOS scripts
+
 + Further topics definition needed
 
 10. Substantial testing and bug hunting complete.
 -------------------------------------------------
 
-+ Complete items: 1, 3, 4, 6, 7
++ Complete items: 1, 3, 4, 7
 + Feature freeze
 + Deliver release candidates schedule
