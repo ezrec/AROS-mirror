@@ -154,6 +154,33 @@ limited. This port is in the early stages of development, so please report
 any bugs found.
 
 
+BIOS Settings
+"""""""""""""
+
+AROS relies on the BIOS to do some hardware configuration that other 
+operating systems handle by themselves. Because of this, the BIOS 
+settings are more important when using AROS. Listed below are some of 
+the common BIOS options that affect AROS, and advice on how to set them.
+
++ **Plug 'n' Play OS:** If it exists, choose the option for a
+  **non**-plug-'n'-play OS.
+
++ **Bus mastering:** If there's an option to enable or disable PCI bus 
+  mastering, it must be enabled.
+
++ **ATA mode:** In most cases, you should set the transfer mode for every
+  disk drive to the best mode possible. Only set a slower mode if you have 
+  trouble with disk access in AROS.
+
++ **SATA mode:** On some computers with SATA disk drives, you may need to 
+  select a legacy/compatiblity mode for disk access.
+
+In most cases, the BIOS options selected for AROS will also be 
+compatible with other OSs on your computer. However, changing the SATA 
+mode may require you to change some settings in these other OSs or even 
+reinstall them.
+
+
 Installation media
 """"""""""""""""""
 
