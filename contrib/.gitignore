@@ -518,6 +518,9 @@
 # /Networking/Apps/AiRcOS/icons/
 /Networking/Apps/AiRcOS/icons/mmakefile
 
+# /Networking/Apps/MarranoFTP/
+/Networking/Apps/MarranoFTP/mmakefile
+
 # /Networking/Apps/OWB/
 /Networking/Apps/OWB/strings.h
 /Networking/Apps/OWB/mmakefile
@@ -622,6 +625,12 @@
 # /Networking/Utils/daytime/
 /Networking/Utils/daytime/mmakefile
 
+# /Networking/libs/caf/
+/Networking/libs/caf/mmakefile
+
+# /Networking/libs/caf/include/
+/Networking/libs/caf/include/mmakefile
+
 # /Networking/libs/curl/
 /Networking/libs/curl/mmakefile
 
@@ -645,6 +654,9 @@
 
 # /SDL/SDL_net/
 /SDL/SDL_net/mmakefile
+
+# /SDL/SDL_sound/
+/SDL/SDL_sound/mmakefile
 
 # /SDL/SDL_ttf/
 /SDL/SDL_ttf/mmakefile
@@ -1159,6 +1171,12 @@
 
 # /development/compilers/lua-5.1/icons/
 /development/compilers/lua-5.1/icons/mmakefile
+
+# /development/compilers/lua-5.1/luafilesystem/
+/development/compilers/lua-5.1/luafilesystem/mmakefile
+
+# /development/compilers/lua-5.1/luafilesystem/src/
+/development/compilers/lua-5.1/luafilesystem/src/mmakefile
 
 # /development/compilers/lua-5.1/src/
 /development/compilers/lua-5.1/src/mmakefile
@@ -1897,6 +1915,15 @@
 # /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Networking/Apps/
 /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Networking/Apps/mmakefile
 
+# /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Networking/Apps/AAEDT/
+/images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Networking/Apps/AAEDT/mmakefile
+
+# /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Networking/Apps/AiRcOS/
+/images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Networking/Apps/AiRcOS/mmakefile
+
+# /images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Networking/Apps/OWB/
+/images/IconSets/Gorilla/Icons/Medium/AROS/Extras/Networking/Apps/OWB/mmakefile
+
 # /libiconv/
 /libiconv/mmakefile
 
@@ -1917,6 +1944,12 @@
 
 # /mui/classes/BWins/mcp/
 /mui/classes/BWins/mcp/mmakefile
+
+# /mui/classes/commonaros/
+/mui/classes/commonaros/*.o
+/mui/classes/commonaros/*.oPPC
+/mui/classes/commonaros/*.info
+/mui/classes/commonaros/*.bak
 
 # /mui/classes/mailtext/
 /mui/classes/mailtext/mmakefile
@@ -1942,85 +1975,17 @@
 /mui/classes/nlist/*.orig
 /mui/classes/nlist/mmakefile
 
-# /mui/classes/nlist/Floattext_mui/
-/mui/classes/nlist/Floattext_mui/*.o
-/mui/classes/nlist/Floattext_mui/*.oPPC
-/mui/classes/nlist/Floattext_mui/*.mcc
-/mui/classes/nlist/Floattext_mui/*.mcc.elf
-/mui/classes/nlist/Floattext_mui/SCOPTIONS
-
-# /mui/classes/nlist/NFloattext_mcc/
-/mui/classes/nlist/NFloattext_mcc/*.o
-/mui/classes/nlist/NFloattext_mcc/*.oPPC
-/mui/classes/nlist/NFloattext_mcc/*.mcc
-/mui/classes/nlist/NFloattext_mcc/*.mcc.elf
-/mui/classes/nlist/NFloattext_mcc/SCOPTIONS
-/mui/classes/nlist/NFloattext_mcc/mmakefile
-
-# /mui/classes/nlist/NList_mcc/
-/mui/classes/nlist/NList_mcc/*.o
-/mui/classes/nlist/NList_mcc/*.oPPC
-/mui/classes/nlist/NList_mcc/*.mcc
-/mui/classes/nlist/NList_mcc/*.mcc.elf
-/mui/classes/nlist/NList_mcc/*.old
-/mui/classes/nlist/NList_mcc/SCOPTIONS
-/mui/classes/nlist/NList_mcc/*.bak
-/mui/classes/nlist/NList_mcc/*.info
-/mui/classes/nlist/NList_mcc/nlist.mcc.lib
-/mui/classes/nlist/NList_mcc/mmakefile
-
-# /mui/classes/nlist/NListview_mcc/
-/mui/classes/nlist/NListview_mcc/*.o
-/mui/classes/nlist/NListview_mcc/*.oPPC
-/mui/classes/nlist/NListview_mcc/*.mcc
-/mui/classes/nlist/NListview_mcc/*.mcc.elf
-/mui/classes/nlist/NListview_mcc/SCOPTIONS
-/mui/classes/nlist/NListview_mcc/*.info
-/mui/classes/nlist/NListview_mcc/*.bak
-/mui/classes/nlist/NListview_mcc/*.mdbi
-/mui/classes/nlist/NListview_mcc/nlistview.mcc.lib
-/mui/classes/nlist/NListview_mcc/mmakefile
-
-# /mui/classes/nlist/NListviews_mcp/
-/mui/classes/nlist/NListviews_mcp/*.o
-/mui/classes/nlist/NListviews_mcp/*.oPPC
-/mui/classes/nlist/NListviews_mcp/*.mcc
-/mui/classes/nlist/NListviews_mcp/*.mcc.elf
-/mui/classes/nlist/NListviews_mcp/SCOPTIONS
-/mui/classes/nlist/NListviews_mcp/mmakefile
-
-# /mui/classes/nlist/common/
-/mui/classes/nlist/common/*.o
-/mui/classes/nlist/common/*.oPPC
-/mui/classes/nlist/common/*.info
-/mui/classes/nlist/common/*.bak
-
-# /mui/classes/nlist/commonaros/
-/mui/classes/nlist/commonaros/*.o
-/mui/classes/nlist/commonaros/*.oPPC
-/mui/classes/nlist/commonaros/*.info
-/mui/classes/nlist/commonaros/*.bak
-
 # /mui/classes/nlist/demo/
 /mui/classes/nlist/demo/*.o
 /mui/classes/nlist/demo/*.oPPC
 /mui/classes/nlist/demo/NList-Demo
 /mui/classes/nlist/demo/mmakefile
 
-# /mui/classes/nlist/misc/
-/mui/classes/nlist/misc/*.o
-/mui/classes/nlist/misc/*.oPPC
-/mui/classes/nlist/misc/*.mui
-/mui/classes/nlist/misc/TEST0
-
 # /mui/classes/nlist/nlisttree_mcc/
 /mui/classes/nlist/nlisttree_mcc/mmakefile
 
 # /mui/classes/nlist/nlisttree_mcp/
 /mui/classes/nlist/nlisttree_mcp/mmakefile
-
-# /mui/classes/nlist/s/
-/mui/classes/nlist/s/mmakefile
 
 # /mui/classes/popph/
 /mui/classes/popph/mmakefile
@@ -2115,30 +2080,30 @@
 # /necessary/SFS/
 /necessary/SFS/mmakefile
 
-# /necessary/SFS/tools/
-/necessary/SFS/tools/mmakefile
+# /necessary/SFS/FS/
+/necessary/SFS/FS/mmakefile
 
-# /necessary/SFS/tools/SFSdefrag/
-/necessary/SFS/tools/SFSdefrag/mmakefile
-/necessary/SFS/tools/SFSdefrag/strings.h
+# /necessary/SFS/SFSdefrag/
+/necessary/SFS/SFSdefrag/mmakefile
+/necessary/SFS/SFSdefrag/strings.h
 
-# /necessary/SFS/tools/SFSdefrag/Catalogs/
-/necessary/SFS/tools/SFSdefrag/Catalogs/mmakefile
+# /necessary/SFS/SFSdefrag/Catalogs/
+/necessary/SFS/SFSdefrag/Catalogs/mmakefile
 
-# /necessary/SFS/tools/SFSdefrag/Icons/
-/necessary/SFS/tools/SFSdefrag/Icons/mmakefile
+# /necessary/SFS/SFSdefrag/Icons/
+/necessary/SFS/SFSdefrag/Icons/mmakefile
 
-# /necessary/SFS/tools/SFSdefragmentGUI/
-/necessary/SFS/tools/SFSdefragmentGUI/mmakefile
+# /necessary/SFS/SFSdefragmentGUI/
+/necessary/SFS/SFSdefragmentGUI/mmakefile
 
-# /necessary/SFS/tools/SFSformat/
-/necessary/SFS/tools/SFSformat/mmakefile
+# /necessary/SFS/SFSformat/
+/necessary/SFS/SFSformat/mmakefile
 
-# /necessary/SFS/tools/SFSquery/
-/necessary/SFS/tools/SFSquery/mmakefile
+# /necessary/SFS/SFSquery/
+/necessary/SFS/SFSquery/mmakefile
 
-# /necessary/SFS/tools/SetCache/
-/necessary/SFS/tools/SetCache/mmakefile
+# /necessary/SFS/SetCache/
+/necessary/SFS/SetCache/mmakefile
 
 # /necessary/USB/
 /necessary/USB/.cdtproject
