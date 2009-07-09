@@ -29,7 +29,8 @@ FILES := \
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../nlistviews_mcp \
     -I$(SRCDIR)/$(CURDIR)/../nlistview_mcc
 
-USER_CFLAGS := -DNO_INLINE_STDARG
+# gcc 4.3.1 with -O2 produces bad code when trying to inline DoSuperNew() 
+USER_CFLAGS := -DNO_INLINE_STDARG -fno-inline
 
 %build_module_simple mmake=contrib-zune-classes-nlist-class \
   modname=NList modtype=mcc moduledir=$(CONTRIBDIR)/Zune/MCC_NList/Classes/Zune \
