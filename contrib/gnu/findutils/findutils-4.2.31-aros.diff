@@ -1,6 +1,6 @@
 diff -Naur findutils-4.2.31-org/configure findutils-4.2.31-aros/configure
 --- findutils-4.2.31-org/configure	2007-05-30 22:06:17.000000000 +0200
-+++ findutils-4.2.31-aros/configure	2009-07-05 10:18:06.000000000 +0200
++++ findutils-4.2.31-aros/configure	2009-07-10 08:25:22.000000000 +0200
 @@ -1847,13 +1847,9 @@
  gl_func_list="$gl_func_list resolvepath"
  gl_header_list="$gl_header_list fcntl.h"
@@ -31,24 +31,6 @@ diff -Naur findutils-4.2.31-org/configure findutils-4.2.31-aros/configure
  gl_header_list="$gl_header_list string.h"
  gl_func_list="$gl_func_list lstat"
  gl_header_list="$gl_header_list sys/stat.h"
-@@ -7311,7 +7303,7 @@
- 
- 
- 
--
-+gl_cv_func_getcwd_null=yes
-    { echo "$as_me:$LINENO: checking whether getcwd (NULL, 0) allocates memory for result" >&5
- echo $ECHO_N "checking whether getcwd (NULL, 0) allocates memory for result... $ECHO_C" >&6; }
- if test "${gl_cv_func_getcwd_null+set}" = set; then
-@@ -13207,7 +13199,7 @@
- 
- 
- 
--
-+gl_cv_func_getcwd_path_max='no, but it is partly working'
-   { echo "$as_me:$LINENO: checking whether getcwd handles long file names properly" >&5
- echo $ECHO_N "checking whether getcwd handles long file names properly... $ECHO_C" >&6; }
- if test "${gl_cv_func_getcwd_path_max+set}" = set; then
 @@ -18260,6 +18252,7 @@
  
  	gl_cv_func_mbrtowc=no
@@ -67,43 +49,19 @@ diff -Naur findutils-4.2.31-org/configure findutils-4.2.31-aros/configure
  fi
 diff -Naur findutils-4.2.31-org/find/pred.c findutils-4.2.31-aros/find/pred.c
 --- findutils-4.2.31-org/find/pred.c	2007-04-22 17:43:17.000000000 +0200
-+++ findutils-4.2.31-aros/find/pred.c	2009-07-05 10:33:11.000000000 +0200
-@@ -1563,7 +1563,18 @@
++++ findutils-4.2.31-aros/find/pred.c	2009-07-10 08:26:25.000000000 +0200
+@@ -1563,7 +1563,7 @@
        signal (SIGCHLD, SIG_DFL);
      }
  
 -  child_pid = fork ();
-+  char* dir;
-+  if (!execp->use_current_dir)
-+    {
-+      /* The child is going to change the current working directory
-+       * so better make a copy and restore it in the parent.
-+       */
-+      dir = xgetcwd();
-+      if (!dir)
-+	error (1, errno, "cannot save cwd");
-+    }
-+
 +  child_pid = vfork ();
    if (child_pid == -1)
      error (1, errno, _("cannot fork"));
    if (child_pid == 0)
-@@ -1596,6 +1607,12 @@
-       _exit (1);
-     }
- 
-+  if (!execp->use_current_dir)
-+    {
-+      if (chdir(dir))
-+	error (1, errno, "cannot restore cwd");
-+      free(dir);
-+    }
- 
-   /* In parent; set up for next time. */
-   bc_clear_args(ctl, buildstate);
 diff -Naur findutils-4.2.31-org/lib/buildcmd.c findutils-4.2.31-aros/lib/buildcmd.c
 --- findutils-4.2.31-org/lib/buildcmd.c	2007-02-27 11:23:17.000000000 +0100
-+++ findutils-4.2.31-aros/lib/buildcmd.c	2009-07-05 10:18:06.000000000 +0200
++++ findutils-4.2.31-aros/lib/buildcmd.c	2009-07-06 14:53:05.000000000 +0200
 @@ -92,8 +92,8 @@
  
  #include "buildcmd.h"
@@ -147,7 +105,7 @@ diff -Naur findutils-4.2.31-org/lib/buildcmd.c findutils-4.2.31-aros/lib/buildcm
  }
 diff -Naur findutils-4.2.31-org/xargs/xargs.c findutils-4.2.31-aros/xargs/xargs.c
 --- findutils-4.2.31-org/xargs/xargs.c	2007-03-02 01:14:25.000000000 +0100
-+++ findutils-4.2.31-aros/xargs/xargs.c	2009-07-05 10:18:06.000000000 +0200
++++ findutils-4.2.31-aros/xargs/xargs.c	2009-07-06 14:53:05.000000000 +0200
 @@ -1018,7 +1018,7 @@
  	print_args (false);
        /* If we run out of processes, wait for a child to return and
