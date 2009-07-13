@@ -102,8 +102,8 @@ To convert between a normal pointer and a `BPTR` use the macros::
 
     #include <dos/bptr.h>
 
-    APTR MKBADDR( BPTR bptr );
-    BPTR BADDR( APTR ptr );
+    APTR BADDR( BPTR bptr );
+    BPTR MKBADDR( APTR ptr );
 
 There also exists something called `BSTR` which is a special kind of string.
 We will not discuss this here, though, because it is used only very rarely.

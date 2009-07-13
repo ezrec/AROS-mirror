@@ -103,8 +103,8 @@ Per la conversione tra un puntatore normale e un `BPTR` usate questa macro::
 
     #include <dos/bptr.h>
 
-    APTR MKBADDR( BPTR bptr );
-    BPTR BADDR( APTR ptr );
+    APTR BADDR( BPTR bptr );
+    BPTR MKBADDR( APTR ptr );
 
 Esiste anche una cosa chiamata `BSTR` che è un tipo speciale di stringa. Non ne
 parleremo qui perchè è una cosa usata molto raramente.
