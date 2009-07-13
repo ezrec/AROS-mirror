@@ -1,0 +1,14 @@
+# $Id$
+#
+# Makefile to contributed development tool getconf.
+
+include $(TOP)/config/make.cfg
+
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)
+
+#MM- contrib-development : contrib-development-getconf
+
+%build_prog mmake=contrib-development-getconf targetdir=$(AROS_DEVELOPMENT)/bin \
+	progname=getconf files="err getconf" uselibs=arosc
+
+%common
