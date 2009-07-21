@@ -17,7 +17,11 @@
      Free Software Foundation, Inc., 59 Temple Place - Suite 330, Cambridge,
      MA 02139, USA.
 */
-
+/*
+** WHEN        WHO            WHAT
+** ----------  -------------  -------------------------------------------------
+** 2009-07-21  T. Wiszkowski  Corrected SprintfA to prevent bad crashes on aros
+*/
 #include <config.h>
 
 #include <stdarg.h>
@@ -118,9 +122,9 @@ ReqA( const char* text, APTR args )
 ******************************************************************************/
 
 char*
-SprintfA( char *dst, const char *fmt, ULONG* args )
+SprintfA( char *dst, const char *fmt, IPTR* args )
 {
-#ifndef __AMIGAOS4__
+#if !defined(__AMIGAOS4__) && !defined(__AROS__)
   static const UWORD struffChar[] =
   {
     0x16c0,     // moveb %d0,%a3@+

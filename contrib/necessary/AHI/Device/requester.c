@@ -1341,345 +1341,345 @@ _AHI_AudioRequestA( struct AHIAudioModeRequester* req_in,
 		    struct TagItem*               tags,
 		    struct AHIBase*               AHIBase )
 {
-  struct AHIAudioModeRequesterExt *req=(struct AHIAudioModeRequesterExt *)req_in;
-  struct MinList list;
-  struct IDnode *node = NULL, *node2 = NULL;
-  struct Screen *pub_screen = NULL;
-  struct Screen *screen     = NULL;
-  ULONG id=AHI_INVALID_ID;
-  BOOL  rc=TRUE;
-  struct Requester lockreq;
-  BOOL  locksuxs = FALSE;
-  WORD zipcoords[4];
+    struct AHIAudioModeRequesterExt *req=(struct AHIAudioModeRequesterExt *)req_in;
+    struct MinList list;
+    struct IDnode *node = NULL, *node2 = NULL;
+    struct Screen *pub_screen = NULL;
+    struct Screen *screen     = NULL;
+    ULONG id=AHI_INVALID_ID;
+    BOOL  rc=TRUE;
+    struct Requester lockreq;
+    BOOL  locksuxs = FALSE;
+    WORD zipcoords[4];
 
-  if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)
-  {
-    Debug_AudioRequestA(req_in,tags);
-  }
-
-  SetIoErr( 0 );
-
-  if(!req)
-  {
-    SetIoErr( ERROR_REQUIRED_ARG_MISSING );
-    return FALSE;
-  }
-
-// Update requester structure
-  FillReqStruct(req,tags);
-  req->tempAudioID=req->Req.ahiam_AudioID;
-  req->tempFrequency=req->Req.ahiam_MixFreq;
-
-// Open the catalog
-
-  req->Catalog = ExtOpenCatalog(req->Locale, NULL);
-
-  if(req->PositiveText == NULL)
-    req->PositiveText = GetString(msgReqOK, req->Catalog);
-  if(req->NegativeText == NULL)
-    req->NegativeText = GetString(msgReqCancel, req->Catalog);
-
-
-// Scan audio database for modes and create list
-  req->list=&list;
-  NewList((struct List *)req->list);
-  while(AHI_INVALID_ID != (id=AHI_NextAudioID(id)))
-  {
-    // Check FilterTags
-    if(req->FilterTags)
-      if(!TestAudioID(id,req->FilterTags))
-        continue;
-    if(req->FilterFunc)
-      if(!CallHookPkt(req->FilterFunc,req,(APTR)id))
-        continue;
-    // Add mode to list
-    if((node=AllocVec(sizeof(struct IDnode),MEMF_ANY)))
+    if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)
     {
-      node->node.ln_Type=NT_USER;
-      node->node.ln_Pri=0;
-      node->node.ln_Name=node->name;
-      node->ID=id;
+	Debug_AudioRequestA(req_in,tags);
+    }
+
+    SetIoErr( 0 );
+
+    if(!req)
+    {
+	SetIoErr( ERROR_REQUIRED_ARG_MISSING );
+	return FALSE;
+    }
+
+    // Update requester structure
+    FillReqStruct(req,tags);
+    req->tempAudioID=req->Req.ahiam_AudioID;
+    req->tempFrequency=req->Req.ahiam_MixFreq;
+
+    // Open the catalog
+
+    req->Catalog = ExtOpenCatalog(req->Locale, NULL);
+
+    if(req->PositiveText == NULL)
+	req->PositiveText = GetString(msgReqOK, req->Catalog);
+    if(req->NegativeText == NULL)
+	req->NegativeText = GetString(msgReqCancel, req->Catalog);
+
+
+    // Scan audio database for modes and create list
+    req->list=&list;
+    NewList((struct List *)req->list);
+    while(AHI_INVALID_ID != (id=AHI_NextAudioID(id)))
+    {
+	// Check FilterTags
+	if(req->FilterTags)
+	    if(!TestAudioID(id,req->FilterTags))
+		continue;
+	if(req->FilterFunc)
+	    if(!CallHookPkt(req->FilterFunc,req,(APTR)id))
+		continue;
+	// Add mode to list
+	if((node=AllocVec(sizeof(struct IDnode),MEMF_ANY)))
+	{
+	    node->node.ln_Type=NT_USER;
+	    node->node.ln_Pri=0;
+	    node->node.ln_Name=node->name;
+	    node->ID=id;
 #ifndef __AMIGAOS4__
-      Sprintf(node->node.ln_Name, GetString(msgUnknown, req->Catalog),id);
+	    Sprintf(node->node.ln_Name, GetString(msgUnknown, req->Catalog),id);
 #endif
-      AHI_GetAudioAttrs(id, NULL,
-          AHIDB_BufferLen,80,
-          AHIDB_Name, (ULONG) node->node.ln_Name,
-          TAG_DONE);
-      // Insert node alphabetically
-      for(node2=(struct IDnode *)req->list->mlh_Head;node2->node.ln_Succ;node2=(struct IDnode *) node2->node.ln_Succ)
-        if(Stricmp(node->node.ln_Name,node2->node.ln_Name) < 0)
-          break;
-      Insert((struct List *) req->list,(struct Node *)node,node2->node.ln_Pred);
+	    AHI_GetAudioAttrs(id, NULL,
+		    AHIDB_BufferLen,80,
+		    AHIDB_Name, (ULONG) node->node.ln_Name,
+		    TAG_DONE);
+	    // Insert node alphabetically
+	    for(node2=(struct IDnode *)req->list->mlh_Head;node2->node.ln_Succ;node2=(struct IDnode *) node2->node.ln_Succ)
+		if(Stricmp(node->node.ln_Name,node2->node.ln_Name) < 0)
+		    break;
+	    Insert((struct List *) req->list,(struct Node *)node,node2->node.ln_Pred);
+	}
     }
-  }
 
-// Add the users preferred mode
+    // Add the users preferred mode
 
-  if((req->Flags & defaultmode) && (AHIBase->ahib_AudioMode != AHI_INVALID_ID)) do
-  {
-    if(req->FilterTags)
-      if(!TestAudioID(AHIBase->ahib_AudioMode,req->FilterTags))
-        continue;
-    if(req->FilterFunc)
-      if(!CallHookPkt(req->FilterFunc,req,(APTR)AHIBase->ahib_AudioMode))
-        continue;
-
-    if((node=AllocVec(sizeof(struct IDnode),MEMF_ANY)))
+    if((req->Flags & defaultmode) && (AHIBase->ahib_AudioMode != AHI_INVALID_ID)) do
     {
-      node->node.ln_Type=NT_USER;
-      node->node.ln_Pri=0;
-      node->node.ln_Name=node->name;
-      node->ID = AHI_DEFAULT_ID;
-      Sprintf(node->node.ln_Name, GetString(msgDefaultMode, req->Catalog));
-      AddTail((struct List *) req->list, (struct Node *)node);
-    }
-  } while(FALSE);
+	if(req->FilterTags)
+	    if(!TestAudioID(AHIBase->ahib_AudioMode,req->FilterTags))
+		continue;
+	if(req->FilterFunc)
+	    if(!CallHookPkt(req->FilterFunc,req,(APTR)AHIBase->ahib_AudioMode))
+		continue;
 
-  if(NULL == ((struct IDnode *)req->list->mlh_Head)->node.ln_Succ)
-  {
-    // List is empty, no audio modes!
-    // Return immediately (no nodes to free)
-    SetIoErr(ERROR_NO_MORE_ENTRIES);
+	if((node=AllocVec(sizeof(struct IDnode),MEMF_ANY)))
+	{
+	    node->node.ln_Type=NT_USER;
+	    node->node.ln_Pri=0;
+	    node->node.ln_Name=node->name;
+	    node->ID = AHI_DEFAULT_ID;
+	    Sprintf(node->node.ln_Name, GetString(msgDefaultMode, req->Catalog));
+	    AddTail((struct List *) req->list, (struct Node *)node);
+	}
+    } while(FALSE);
+
+    if(NULL == ((struct IDnode *)req->list->mlh_Head)->node.ln_Succ)
+    {
+	// List is empty, no audio modes!
+	// Return immediately (no nodes to free)
+	SetIoErr(ERROR_NO_MORE_ENTRIES);
+	ExtCloseCatalog(req->Catalog);
+	req->Catalog = FALSE;
+	return FALSE;
+    }
+
+    // Find our screen
+    if(req->Screen)
+    {
+	pub_screen = NULL;
+	screen     = req->Screen;
+    }
+    else if(req->PubScreenName != (STRPTR) -1)
+    {
+	pub_screen = LockPubScreen( req->PubScreenName );
+	screen     = pub_screen;
+    }
+    else if(req->SrcWindow)
+    {
+	pub_screen = NULL;
+	screen     = req->SrcWindow->WScreen;
+    }
+
+    if( screen == NULL )
+    {
+	pub_screen = LockPubScreen( NULL );
+	screen     = pub_screen;
+    }
+
+    CalculateWindowSizePos( req, screen );
+
+    // Clear ownIDCMP flag
+    req->Flags &= ~ownIDCMP;
+
+    if( req->SrcWindow != NULL )
+    {
+	if(req->Flags & haveIDCMP)
+	    req->Flags |= ownIDCMP;
+    }
+
+    zipcoords[0]=req->Req.ahiam_LeftEdge;
+    zipcoords[1]=req->Req.ahiam_TopEdge;
+    zipcoords[2]=1;
+    zipcoords[3]=1;
+
+    req->Window=OpenWindowTags(
+	    NULL,
+	    WA_Left,req->Req.ahiam_LeftEdge,
+	    WA_Top,req->Req.ahiam_TopEdge,
+	    WA_Width,req->Req.ahiam_Width,
+	    WA_Height,req->Req.ahiam_Height,
+	    WA_Zoom, (ULONG) zipcoords,
+	    WA_MaxWidth,~0,
+	    WA_MaxHeight,~0,
+	    WA_Title, (ULONG) req->TitleText,
+	    ( pub_screen != NULL ? WA_PubScreen : WA_CustomScreen ), (ULONG) screen,
+	    WA_PubScreenFallBack,TRUE,
+	    WA_SizeGadget,TRUE,
+	    WA_SizeBBottom,TRUE,
+	    WA_DragBar,TRUE,
+	    WA_DepthGadget,TRUE,
+	    WA_CloseGadget,TRUE,
+	    WA_Activate,TRUE,
+	    WA_SimpleRefresh,TRUE,
+	    WA_AutoAdjust,TRUE,
+	    WA_IDCMP,(req->Flags & ownIDCMP ? 0 : MY_IDCMPS),
+	    WA_NewLookMenus, TRUE,
+	    TAG_DONE);
+
+    if( pub_screen != NULL )
+    {
+	UnlockPubScreen( NULL, pub_screen);
+    }
+
+    if(req->Window)
+    {
+	// Topaz80: "Frequency"+INTERWIDTH+MINSLIDERWIDTH+INTERWIDTH+"99999 Hz" gives...
+	WORD min_width = (req->Window->BorderLeft+4)+
+	    strlen( GetString(msgReqFrequency, req->Catalog))*8+
+	    INTERWIDTH+MINSLIDERWIDTH+INTERWIDTH+
+	    FREQLEN2*8+
+	    (req->Window->BorderRight+4);
+
+	// Topaz80: 5 lines, freq & buttons gives...
+	WORD min_height = (req->Window->BorderTop+2)+
+	    (5*8+6)+2+(8+6)+2+(8+6)+
+	    (req->Window->BorderBottom+2);
+
+	if( req->Window->Width < min_width ||
+		req->Window->Height < min_height )
+	{
+	    ChangeWindowBox( req->Window,
+		    req->Window->LeftEdge,
+		    req->Window->TopEdge,
+		    max( req->Window->Width, min_width ),
+		    max( req->Window->Height, min_height ) );
+	    Delay( 5 );
+	}
+
+	WindowLimits( req->Window, min_width, min_height, 0, 0 );
+
+	if((req->vi=GetVisualInfoA(req->Window->WScreen, NULL)))
+	{
+	    if(!(LayOutReq(req,req->TextAttr)))
+		if(!(LayOutReq(req,&Topaz80)))
+		    rc=FALSE;
+
+	    if(rc) // Layout OK?
+	    {
+		struct NewMenu reqnewmenu[] =
+		{
+		    { NM_TITLE, NULL        , 0 ,0,0,(APTR) 0,            },
+		    {  NM_ITEM, NULL        , 0 ,0,0,(APTR) LASTMODEITEM, },
+		    {  NM_ITEM, NULL        , 0 ,0,0,(APTR) NEXTMODEITEM, },
+		    {  NM_ITEM, NM_BARLABEL , 0 ,0,0,(APTR) 0,            },
+		    {  NM_ITEM, NULL        , 0 ,0,0,(APTR) PROPERTYITEM, },
+		    {  NM_ITEM, NULL        , 0 ,0,0,(APTR) RESTOREITEM , },
+		    {  NM_ITEM, NM_BARLABEL , 0 ,0,0,(APTR) 0,            },
+		    {  NM_ITEM, NULL        , 0 ,0,0,(APTR) OKITEM,       },
+		    {  NM_ITEM, NULL        , 0 ,0,0,(APTR) CANCELITEM,   },
+		    {   NM_END, NULL        , 0 ,0,0,(APTR) 0,            },
+		};
+		static const APTR strings[] =
+		{
+		    msgMenuControl,
+		    msgMenuLastMode,
+		    msgMenuNextMode,
+		    msgMenuPropertyList,
+		    msgMenuRestore,
+		    msgMenuOK,
+		    msgMenuCancel,
+		};
+
+		struct NewMenu *menuptr;
+		APTR           *stringptr;
+
+		menuptr   = (struct NewMenu *) &reqnewmenu;
+		stringptr = (APTR *) &strings;
+
+		while(menuptr->nm_Type != NM_END)
+		{
+		    if(menuptr->nm_Label == NULL)
+		    {
+			menuptr->nm_CommKey = GetString(*stringptr, req->Catalog);
+			menuptr->nm_Label = menuptr->nm_CommKey + 2;
+			stringptr++;
+		    }
+		    menuptr++;
+		}
+
+		if(req->Flags & ownIDCMP)
+		{
+		    req->Window->UserPort=req->SrcWindow->UserPort;
+		    ModifyIDCMP(req->Window,MY_IDCMPS);
+		}
+
+		if((req->Flags & lockwin) && req->SrcWindow)
+		{
+		    InitRequester(&lockreq);
+		    locksuxs=Request(&lockreq,req->SrcWindow);
+		    if(IntuitionBase->LibNode.lib_Version >= 39)
+			SetWindowPointer(req->SrcWindow,
+				WA_BusyPointer,TRUE,
+				TAG_DONE);
+		}
+
+		// Add menus
+		if((req->Menu=CreateMenus(reqnewmenu, 
+				GTMN_FullMenu, TRUE,
+				GTMN_NewLookMenus, TRUE,
+				TAG_DONE )))
+		{
+		    if(LayoutMenus(req->Menu,req->vi, TAG_DONE))
+		    {
+			if(SetMenuStrip(req->Window, req->Menu))
+			{
+			    if(req->Req.ahiam_InfoOpened)
+			    {
+				OpenInfoWindow(req);
+			    }
+
+			    rc=HandleReq(req);
+
+			    CloseInfoWindow(req);
+			    ClearMenuStrip(req->Window);
+			}
+		    } // else LayoutMenus failed
+		    FreeMenus(req->Menu);
+		    req->Menu=NULL;
+		} // else CreateMenus failed
+
+
+		if((req->Flags & lockwin) && req->SrcWindow)
+		{
+		    if(locksuxs)
+			EndRequest(&lockreq,req->SrcWindow);
+		    if(IntuitionBase->LibNode.lib_Version >= 39)
+			SetWindowPointer(req->SrcWindow,
+				WA_BusyPointer,FALSE,
+				TAG_DONE);
+		}
+
+		req->Req.ahiam_LeftEdge = req->Window->LeftEdge;
+		req->Req.ahiam_TopEdge  = req->Window->TopEdge;
+		req->Req.ahiam_Width    = req->Window->Width;
+		req->Req.ahiam_Height   = req->Window->Height;
+	    } // else LayOutReq failed
+	}
+	else // no vi
+	{
+	    SetIoErr(ERROR_NO_FREE_STORE);
+	    rc=FALSE;
+	}
+
+	if(req->Flags & ownIDCMP)
+	    CloseWindowSafely(req->Window);
+	else
+	    CloseWindow(req->Window);
+	req->Window=NULL;
+	FreeVisualInfo(req->vi);
+	req->vi=NULL;
+	FreeGadgets(req->Gadgets);
+	req->Gadgets=NULL;
+	FreeVec(node);
+    }
+    else // no window
+    {
+	SetIoErr(ERROR_NO_FREE_STORE);
+	rc=FALSE;
+    }
+
     ExtCloseCatalog(req->Catalog);
-    req->Catalog = FALSE;
-    return FALSE;
-  }
+    req->Catalog = NULL;
+    req->PositiveText = req->NegativeText = NULL;
 
-  // Find our screen
-  if(req->Screen)
-  {
-    pub_screen = NULL;
-    screen     = req->Screen;
-  }
-  else if(req->PubScreenName != (STRPTR) -1)
-  {
-    pub_screen = LockPubScreen( req->PubScreenName );
-    screen     = pub_screen;
-  }
-  else if(req->SrcWindow)
-  {
-    pub_screen = NULL;
-    screen     = req->SrcWindow->WScreen;
-  }
-
-  if( screen == NULL )
-  {
-    pub_screen = LockPubScreen( NULL );
-    screen     = pub_screen;
-  }
-
-  CalculateWindowSizePos( req, screen );
-
-  // Clear ownIDCMP flag
-  req->Flags &= ~ownIDCMP;
-
-  if( req->SrcWindow != NULL )
-  {
-    if(req->Flags & haveIDCMP)
-      req->Flags |= ownIDCMP;
-  }
-  
-  zipcoords[0]=req->Req.ahiam_LeftEdge;
-  zipcoords[1]=req->Req.ahiam_TopEdge;
-  zipcoords[2]=1;
-  zipcoords[3]=1;
-
-  req->Window=OpenWindowTags(
-    NULL,
-    WA_Left,req->Req.ahiam_LeftEdge,
-    WA_Top,req->Req.ahiam_TopEdge,
-    WA_Width,req->Req.ahiam_Width,
-    WA_Height,req->Req.ahiam_Height,
-    WA_Zoom, (ULONG) zipcoords,
-    WA_MaxWidth,~0,
-    WA_MaxHeight,~0,
-    WA_Title, (ULONG) req->TitleText,
-    ( pub_screen != NULL ? WA_PubScreen : WA_CustomScreen ), (ULONG) screen,
-    WA_PubScreenFallBack,TRUE,
-    WA_SizeGadget,TRUE,
-    WA_SizeBBottom,TRUE,
-    WA_DragBar,TRUE,
-    WA_DepthGadget,TRUE,
-    WA_CloseGadget,TRUE,
-    WA_Activate,TRUE,
-    WA_SimpleRefresh,TRUE,
-    WA_AutoAdjust,TRUE,
-    WA_IDCMP,(req->Flags & ownIDCMP ? 0 : MY_IDCMPS),
-    WA_NewLookMenus, TRUE,
-    TAG_DONE);
-
-  if( pub_screen != NULL )
-  {
-    UnlockPubScreen( NULL, pub_screen);
-  }
-
-  if(req->Window)
-  {
-    // Topaz80: "Frequency"+INTERWIDTH+MINSLIDERWIDTH+INTERWIDTH+"99999 Hz" gives...
-    WORD min_width = (req->Window->BorderLeft+4)+
-      strlen( GetString(msgReqFrequency, req->Catalog))*8+
-      INTERWIDTH+MINSLIDERWIDTH+INTERWIDTH+
-      FREQLEN2*8+
-      (req->Window->BorderRight+4);
-
-    // Topaz80: 5 lines, freq & buttons gives...
-    WORD min_height = (req->Window->BorderTop+2)+
-      (5*8+6)+2+(8+6)+2+(8+6)+
-      (req->Window->BorderBottom+2);
-
-    if( req->Window->Width < min_width ||
-	req->Window->Height < min_height )
+    if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)
     {
-      ChangeWindowBox( req->Window,
-		       req->Window->LeftEdge,
-		       req->Window->TopEdge,
-		       max( req->Window->Width, min_width ),
-		       max( req->Window->Height, min_height ) );
-      Delay( 5 );
+	KPrintF("=>%s\n",rc ? (ULONG) "TRUE" : (ULONG) "FALSE" );
     }
-
-    WindowLimits( req->Window, min_width, min_height, 0, 0 );
-
-    if((req->vi=GetVisualInfoA(req->Window->WScreen, NULL)))
-    {
-      if(!(LayOutReq(req,req->TextAttr)))
-        if(!(LayOutReq(req,&Topaz80)))
-          rc=FALSE;
-
-      if(rc) // Layout OK?
-      {
-        struct NewMenu reqnewmenu[] =
-        {
-          { NM_TITLE, NULL        , 0 ,0,0,(APTR) 0,            },
-          {  NM_ITEM, NULL        , 0 ,0,0,(APTR) LASTMODEITEM, },
-          {  NM_ITEM, NULL        , 0 ,0,0,(APTR) NEXTMODEITEM, },
-          {  NM_ITEM, NM_BARLABEL , 0 ,0,0,(APTR) 0,            },
-          {  NM_ITEM, NULL        , 0 ,0,0,(APTR) PROPERTYITEM, },
-          {  NM_ITEM, NULL        , 0 ,0,0,(APTR) RESTOREITEM , },
-          {  NM_ITEM, NM_BARLABEL , 0 ,0,0,(APTR) 0,            },
-          {  NM_ITEM, NULL        , 0 ,0,0,(APTR) OKITEM,       },
-          {  NM_ITEM, NULL        , 0 ,0,0,(APTR) CANCELITEM,   },
-          {   NM_END, NULL        , 0 ,0,0,(APTR) 0,            },
-        };
-        static const APTR strings[] =
-        {
-          msgMenuControl,
-          msgMenuLastMode,
-          msgMenuNextMode,
-          msgMenuPropertyList,
-          msgMenuRestore,
-          msgMenuOK,
-          msgMenuCancel,
-        };
-
-        struct NewMenu *menuptr;
-        APTR           *stringptr;
-        
-        menuptr   = (struct NewMenu *) &reqnewmenu;
-        stringptr = (APTR *) &strings;
-
-        while(menuptr->nm_Type != NM_END)
-        {
-          if(menuptr->nm_Label == NULL)
-          {
-            menuptr->nm_CommKey = GetString(*stringptr, req->Catalog);
-            menuptr->nm_Label = menuptr->nm_CommKey + 2;
-            stringptr++;
-          }
-          menuptr++;
-        }
-
-        if(req->Flags & ownIDCMP)
-        {
-          req->Window->UserPort=req->SrcWindow->UserPort;
-          ModifyIDCMP(req->Window,MY_IDCMPS);
-        }
-
-        if((req->Flags & lockwin) && req->SrcWindow)
-        {
-          InitRequester(&lockreq);
-          locksuxs=Request(&lockreq,req->SrcWindow);
-          if(IntuitionBase->LibNode.lib_Version >= 39)
-            SetWindowPointer(req->SrcWindow,
-                WA_BusyPointer,TRUE,
-                TAG_DONE);
-        }
-        
-        // Add menus
-        if((req->Menu=CreateMenus(reqnewmenu, 
-            GTMN_FullMenu, TRUE,
-            GTMN_NewLookMenus, TRUE,
-            TAG_DONE )))
-        {
-          if(LayoutMenus(req->Menu,req->vi, TAG_DONE))
-          {
-            if(SetMenuStrip(req->Window, req->Menu))
-            {
-              if(req->Req.ahiam_InfoOpened)
-              {
-                OpenInfoWindow(req);
-              }
-
-              rc=HandleReq(req);
-
-              CloseInfoWindow(req);
-              ClearMenuStrip(req->Window);
-            }
-          } // else LayoutMenus failed
-          FreeMenus(req->Menu);
-          req->Menu=NULL;
-        } // else CreateMenus failed
-
-
-        if((req->Flags & lockwin) && req->SrcWindow)
-        {
-          if(locksuxs)
-            EndRequest(&lockreq,req->SrcWindow);
-          if(IntuitionBase->LibNode.lib_Version >= 39)
-            SetWindowPointer(req->SrcWindow,
-                WA_BusyPointer,FALSE,
-                TAG_DONE);
-        }
-
-        req->Req.ahiam_LeftEdge = req->Window->LeftEdge;
-        req->Req.ahiam_TopEdge  = req->Window->TopEdge;
-        req->Req.ahiam_Width    = req->Window->Width;
-        req->Req.ahiam_Height   = req->Window->Height;
-      } // else LayOutReq failed
-    }
-    else // no vi
-    {
-      SetIoErr(ERROR_NO_FREE_STORE);
-      rc=FALSE;
-    }
-
-    if(req->Flags & ownIDCMP)
-      CloseWindowSafely(req->Window);
-    else
-      CloseWindow(req->Window);
-    req->Window=NULL;
-    FreeVisualInfo(req->vi);
-    req->vi=NULL;
-    FreeGadgets(req->Gadgets);
-    req->Gadgets=NULL;
-      FreeVec(node);
-  }
-  else // no window
-  {
-    SetIoErr(ERROR_NO_FREE_STORE);
-    rc=FALSE;
-  }
-
-  ExtCloseCatalog(req->Catalog);
-  req->Catalog = NULL;
-  req->PositiveText = req->NegativeText = NULL;
-
-  if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)
-  {
-    KPrintF("=>%s\n",rc ? (ULONG) "TRUE" : (ULONG) "FALSE" );
-  }
-  return (ULONG) rc;
+    return (ULONG) rc;
 }
 
 

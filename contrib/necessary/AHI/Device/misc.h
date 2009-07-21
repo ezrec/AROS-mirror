@@ -42,13 +42,13 @@ void
 ReqA( const char* text, APTR args );
 
 #define Req(a0, args...) \
-        ({ULONG _args[] = { args }; ReqA((a0), (APTR)_args);})
+        ({IPTR _args[] = { args }; ReqA((a0), (APTR)_args);})
 
 char*
-SprintfA( char *dst, const char *fmt, ULONG* args );
+SprintfA( char *dst, const char *fmt, IPTR* args );
 
 #define Sprintf(a0, a1, args...) \
-        ({ULONG _args[] = { args }; SprintfA((a0), (a1), (ULONG*)_args);})
+        ({IPTR _args[] = { args }; SprintfA((a0), (a1), (IPTR*)_args);})
 
 
 
