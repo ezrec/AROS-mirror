@@ -65,6 +65,7 @@ Shell Commands
 + `rename <rename>`_
 + `requestchoice <requestchoice>`_
 + `requestfile <requestfile>`_
++ `requeststring <requeststring>`_
 + `run <run>`_
 + `search <search>`_
 + `set <set>`_

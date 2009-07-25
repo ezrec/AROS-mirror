@@ -71,15 +71,15 @@ clib
 `strspn()`_                             `strstr()`_                             `strtod()`_                             `strtoimax()`_                          
 `strtok()`_                             `strtol()`_                             `strtoll()`_                            `strtoul()`_                            
 `strtoull()`_                           `strtoumax()`_                          `strupr()`_                             `strxfrm()`_                            
-`swab()`_                               `symlink()`_                            `system()`_                             `telldir()`_                            
-`tempnam()`_                            `time()`_                               `times()`_                              `tmpfile()`_                            
-`tmpnam()`_                             `truncate()`_                           `ttyname()`_                            `umask()`_                              
-`uname()`_                              `ungetc()`_                             `unlink()`_                             `unsetenv()`_                           
-`updatestdio()`_                        `usleep()`_                             `utime()`_                              `utimes()`_                             
-`vfprintf()`_                           `vfscanf()`_                            `vprintf()`_                            `vscanf()`_                             
-`vsnprintf()`_                          `vsprintf()`_                           `vsscanf()`_                            `wait()`_                               
-`waitpid()`_                            `wcstombs()`_                           `wctomb()`_                             `write()`_                              
-
+`swab()`_                               `symlink()`_                            `sysconf()`_                            `system()`_                             
+`telldir()`_                            `tempnam()`_                            `time()`_                               `times()`_                              
+`tmpfile()`_                            `tmpnam()`_                             `truncate()`_                           `ttyname()`_                            
+`umask()`_                              `uname()`_                              `ungetc()`_                             `unlink()`_                             
+`unsetenv()`_                           `updatestdio()`_                        `usleep()`_                             `utime()`_                              
+`utimes()`_                             `vfprintf()`_                           `vfscanf()`_                            `vprintf()`_                            
+`vscanf()`_                             `vsnprintf()`_                          `vsprintf()`_                           `vsscanf()`_                            
+`wait()`_                               `waitpid()`_                            `wcstombs()`_                           `wctomb()`_                             
+`write()`_                              
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -10904,6 +10904,20 @@ Synopsis
   int symlink(
      const char *oldpath,
      const char *newpath)
+
+
+
+----------
+
+sysconf()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  long sysconf(
+     int name)
 
 
 

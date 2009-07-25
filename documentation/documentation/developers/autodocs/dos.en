@@ -1319,7 +1319,7 @@ Inputs
 ~~~~~~
 ::
 
-     name - The name of the DOS device, without the ':'.
+     name - The name of the DOS device, INCLUDING the ':'.
 
 
 Result

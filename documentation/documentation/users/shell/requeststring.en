@@ -1,0 +1,71 @@
+=============
+RequestString
+=============
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <requestfile>`_ `Next <run>`_ 
+
+---------------
+
+Name
+~~~~
+::
+
+
+     RequestString [STRING] [TEXT] [TITLE] [NOGADS] [WIDTH] [SAFE] [PERSIST]
+                   [ENCRYPT] [COMPARE] [PUBSCREEN]
+
+
+Synopsis
+~~~~~~~~
+::
+
+
+     STRING, TEXT/K, TITLE/K, NOGADS/S, WIDTH/N, SAFE/S, PERSIST/S,
+     ENCRYPT/S, COMPARE/K, PUBSCREEN/K
+
+
+Location
+~~~~~~~~
+::
+
+
+     C:
+
+
+Function
+~~~~~~~~
+::
+
+
+     Shows a requester with a string gadget for user input.
+
+
+Inputs
+~~~~~~
+::
+
+
+     STRING     -- Initial content of string gadget.
+     TEXT       -- Label string.
+     TITLE      -- Title string of requester. This also adds dragbar, closegadget
+                   and a depthgadget.
+     NOGADS     -- Suppress gadgets when TITLE argument is given.
+     WIDTH      -- Minimal width as number of characters.
+     SAFE       -- Hide user input with "*".
+     PERSIST    -- Intuition is blocked until requester is quitted.
+     ENCRYPT    -- Encrypt result before returning. Requires that one of these
+                   environment variables is set: USER, USERNAME or LOGIN.
+     COMPARE    -- If the input string is not equal to the argument
+                   of COMPARE return WARN.
+     PUBSCREEN  -- Open requester on given pubscreen.
+
+
+Notes
+~~~~~
+::
+
+     TODO: improve layout
+
+
