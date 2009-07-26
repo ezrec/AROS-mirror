@@ -39,11 +39,6 @@ Executable file formats
   specifications common to all platforms where the ELF standard is adopted,
   it also contains parts specific to the Intel architecture.
 
-+ `ELF - Executable and Linking Format - html version`__
-
-  An HTML version of the ELF specifications. It only contains the specifications
-  common to all platforms where the ELF standard is adopted.
-
 + `Amiga Portable Binaries`__
 
   A research project about creating a system for portable binaries for the
@@ -53,7 +48,6 @@ Executable file formats
   we would like to see in AROS.
 
 __ http://refspecs.freestandards.org/elf/elf.pdf
-__ http://www.cs.ucdavis.edu/~haungs/paper/node10.html
 __ http://greywire.8m.com/greywire/amigasde.htm
 
 
@@ -78,7 +72,7 @@ Miscellaneous Operating System resources
   also contains some useful tidbits about filesystems, networking, executable
   formats and other things...
 
-+ `Write your own operating system [FAQ]`__
++ `Write your own operating system [WIKI]`__
 
   Even more information about writing operating systems, although also geared
   towards the x86 architecture. Much information about the hardware, but also
@@ -86,9 +80,9 @@ Miscellaneous Operating System resources
   useful books, tools and sources.
 
 __ http://www.nondot.org/sabre/os/articles/
-__ http://x86.ddj.com/articles/pmbasics/tspec_a1_doc.htm
-__ http://my.execpc.com/~geezer/osd/index.htm
-__ http://www.mega-tokyo.com/osfaq2/
+__ http://www.rcollins.org/articles/pmbasics/tspec_a1_doc.html
+__ http://files.osdev.org/mirrors/geezer/osd/index.htm
+__ http://wiki.osdev.org/Main_Page/
 
 
 Tools

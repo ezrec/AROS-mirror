@@ -230,7 +230,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                             src = '%(ROOT)simages/noeupatents-small.png', 
                             border = 0
                         ),
-                        href = 'http://petition.eurolinux.org/'
+                        href = 'http://stopsoftwarepatents.eu/'
                     )
                 )
             )

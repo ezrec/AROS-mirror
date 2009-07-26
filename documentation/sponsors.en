@@ -24,7 +24,7 @@ The following companies, organizations and individuals have donated resources:
 
   .. RAW:: html
   
-     <a href="http://www.pegasosppc.com/"><img border="0" src="/images/genesi.gif"></a>
+     <a href="http://www.genesi-usa.com/"><img border="0" src="/images/genesi.gif"></a>
 
   Genesi have generously donated a Pegasos motherboard, in an effort to bring
   AROS to that hardware platform. Thanks!
@@ -45,7 +45,8 @@ The following companies, organizations and individuals have donated resources:
 
 The following organizations and individuals have sponsored development work:
 
-+ `Team AROS`__
++ Team AROS
++ `Power2People`__
 + `Norsk Amigaforening`__
 + Timothy Rue
 + Jakob Eriksson
@@ -61,7 +62,7 @@ The following organizations and individuals have sponsored development work:
 + Jean-Pierre Rivière
 
 __ http://www.trustsec.de/
-__ http://www.pegasosppc.com/
+__ http://www.genesi-usa.com/
 __ http://www.sourceforge.net/
-__ http://www.thenostromo.com/teamaros/
-__ http://www.naf.as/
+__ http://www.power2people.org/
+__ http://amiga.no/

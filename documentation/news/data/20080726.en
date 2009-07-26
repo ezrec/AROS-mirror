@@ -19,7 +19,7 @@ vendor of the SAM440EP board is now bundling an AROS Live CD with
 their flagship product. Early buyers of the Samantha platform can
 download their version of AROS from `Michal's page`__. People 
 interested in buying this alternative platform can get it this 
-summer at `discounted price`__.
+summer at discounted price.
 
 Krzysztof Smiechowicz has completed his efforts to review actual
 libraries completeness and compatibility with original AmigaOS 3.1
@@ -27,6 +27,5 @@ API, with an overall score of 89%. This means that one of the AROS
 goals is almost reached. You can see the current status `here`__.
 
 __ http://msaros.blogspot.com/2008/07/sam440-bounty.html
-__ http://www.sam440.com/eng/summerfollies.html
 __ http://aros.sourceforge.net/introduction/status/libraries.php
 

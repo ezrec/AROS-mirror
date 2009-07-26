@@ -43,7 +43,7 @@ The most easy way to port to AROS is from a Linux box, because it
 usually has all the needed development tools. Look in the `Development Guide`__
 for some information on how about to install the SDK.
 
-__ app-dev/introduction.php#compiling-on-linux-with-gcc
+__ app-dev/introduction.php#compiling-on-linux-with-the-fake-gcc
 
 
 The basics
