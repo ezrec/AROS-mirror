@@ -162,7 +162,7 @@ for group in groups.keys():
                 <td class="layout" align="left" colspan="%(groupSpan)s"><b>%(groupHeading)s</b></td>
             </tr>    ''' % vars()
 
-    for package in groups[group].keys():
+    for package in sorted(groups[group].keys()):
         description = descriptions.get( 'descriptions', package, '' )
 
         print '''
