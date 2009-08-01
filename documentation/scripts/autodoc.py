@@ -434,9 +434,13 @@ class shelldoclist:
         filehandle.write("==============\n")
         filehandle.write("Shell Commands\n")
         filehandle.write("==============\n\n")
-        filehandle.write("`Introduction <introduction>`_\n\n")
+        filehandle.write("+ `Introduction <introduction>`_\n\n")
 
-        write_index(filehandle, targetdir)
+        filehandle.write("+ Commands\n\n")
+
+        write_index(filehandle, targetdir, 4)
+
+        filehandle.write("\n+ `Scripts <scripts>`_\n")
     
     def write(self, targetdir, titles):
         """Write autodocs to directory.
@@ -578,17 +582,18 @@ class appsdoclist(shelldoclist):
         filehandle.write("==============\n")
         filehandle.write("Applications\n")
         filehandle.write("==============\n\n")
-        write_index(filehandle, targetdir)
+        write_index(filehandle, targetdir, 0)
         filehandle.close()
 
 
-def write_index(filehandle, targetdir):
+def write_index(filehandle, targetdir, indent):
     """Append directory listing to index file
     
     Arguments:
     
     filehandle - file where directory listing should be appended
     targedir - directory which should be listed
+    indent - number of spaces before output
     """
         
     files = os.listdir(targetdir)
@@ -597,7 +602,7 @@ def write_index(filehandle, targetdir):
     for doc in files:
         if doc[-3:] == ".en" and doc[:5] != "index" and doc != ".svn" and doc[:12] != "introduction":
             docname = doc[:-3]
-            filehandle.write("+ `%s <%s>`_\n" %(docname, docname))
+            filehandle.write("%s+ `%s <%s>`_\n" %(indent * " ", docname, docname))
     
 def create_lib_docs():
     """Create only the library docs.
@@ -629,7 +634,7 @@ def create_lib_docs():
     filehandle.write("======================\n\n")
     filehandle.write(".. This document is automatically generated. Don't edit it!\n\n")
 
-    write_index(filehandle, targetdir)
+    write_index(filehandle, targetdir, 0)
     filehandle.close()
     print "Done"
 
