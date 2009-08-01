@@ -4,88 +4,93 @@
 Shell Commands
 ==============
 
-`Introduction <introduction>`_
++ `Introduction <introduction>`_
 
-+ `addbuffers <addbuffers>`_
-+ `adddatatypes <adddatatypes>`_
-+ `alias <alias>`_
-+ `ask <ask>`_
-+ `assign <assign>`_
-+ `avail <avail>`_
-+ `beep <beep>`_
-+ `break <break>`_
-+ `cd <cd>`_
-+ `changetaskpri <changetaskpri>`_
-+ `conclip <conclip>`_
-+ `copy <copy>`_
-+ `copytopar <copytopar>`_
-+ `date <date>`_
-+ `decoration <decoration>`_
-+ `delay <delay>`_
-+ `delete <delete>`_
-+ `dir <dir>`_
-+ `diskchange <diskchange>`_
-+ `echo <echo>`_
-+ `else <else>`_
-+ `endcli <endcli>`_
-+ `endif <endif>`_
-+ `endshell <endshell>`_
-+ `endskip <endskip>`_
-+ `eval <eval>`_
-+ `execute <execute>`_
-+ `failat <failat>`_
-+ `fault <fault>`_
-+ `filenote <filenote>`_
-+ `get <get>`_
-+ `getenv <getenv>`_
-+ `iconx <iconx>`_
-+ `identify <identify>`_
-+ `if <if>`_
-+ `info <info>`_
-+ `install-grub2-i386-pc <install-grub2-i386-pc>`_
-+ `install-i386-pc <install-i386-pc>`_
-+ `install <install>`_
-+ `iprefs <iprefs>`_
-+ `join <join>`_
-+ `lab <lab>`_
-+ `list <list>`_
-+ `lock <lock>`_
-+ `makedir <makedir>`_
-+ `makelink <makelink>`_
-+ `mount <mount>`_
-+ `newshell <newshell>`_
-+ `partition <partition>`_
-+ `path <path>`_
-+ `prompt <prompt>`_
-+ `protect <protect>`_
-+ `quit <quit>`_
-+ `quitaros <quitaros>`_
-+ `reboot <reboot>`_
-+ `relabel <relabel>`_
-+ `rename <rename>`_
-+ `requestchoice <requestchoice>`_
-+ `requestfile <requestfile>`_
-+ `requeststring <requeststring>`_
-+ `run <run>`_
-+ `search <search>`_
-+ `set <set>`_
-+ `setclock <setclock>`_
-+ `setdate <setdate>`_
-+ `setdefaultfont <setdefaultfont>`_
-+ `setenv <setenv>`_
-+ `setkeyboard <setkeyboard>`_
-+ `shell <shell>`_
-+ `shutdown <shutdown>`_
-+ `skip <skip>`_
-+ `sort <sort>`_
-+ `stack <stack>`_
-+ `status <status>`_
-+ `type <type>`_
-+ `unalias <unalias>`_
-+ `unset <unset>`_
-+ `unsetenv <unsetenv>`_
-+ `uuidgen <uuidgen>`_
-+ `version <version>`_
-+ `wait <wait>`_
-+ `which <which>`_
-+ `why <why>`_
++ Commands
+
+    + `addbuffers <addbuffers>`_
+    + `adddatatypes <adddatatypes>`_
+    + `alias <alias>`_
+    + `ask <ask>`_
+    + `assign <assign>`_
+    + `avail <avail>`_
+    + `beep <beep>`_
+    + `break <break>`_
+    + `cd <cd>`_
+    + `changetaskpri <changetaskpri>`_
+    + `conclip <conclip>`_
+    + `copy <copy>`_
+    + `copytopar <copytopar>`_
+    + `date <date>`_
+    + `decoration <decoration>`_
+    + `delay <delay>`_
+    + `delete <delete>`_
+    + `dir <dir>`_
+    + `diskchange <diskchange>`_
+    + `echo <echo>`_
+    + `else <else>`_
+    + `endcli <endcli>`_
+    + `endif <endif>`_
+    + `endshell <endshell>`_
+    + `endskip <endskip>`_
+    + `eval <eval>`_
+    + `execute <execute>`_
+    + `failat <failat>`_
+    + `fault <fault>`_
+    + `filenote <filenote>`_
+    + `get <get>`_
+    + `getenv <getenv>`_
+    + `iconx <iconx>`_
+    + `identify <identify>`_
+    + `if <if>`_
+    + `info <info>`_
+    + `install-grub2-i386-pc <install-grub2-i386-pc>`_
+    + `install-i386-pc <install-i386-pc>`_
+    + `install <install>`_
+    + `iprefs <iprefs>`_
+    + `join <join>`_
+    + `lab <lab>`_
+    + `list <list>`_
+    + `lock <lock>`_
+    + `makedir <makedir>`_
+    + `makelink <makelink>`_
+    + `mount <mount>`_
+    + `newshell <newshell>`_
+    + `partition <partition>`_
+    + `path <path>`_
+    + `prompt <prompt>`_
+    + `protect <protect>`_
+    + `quit <quit>`_
+    + `quitaros <quitaros>`_
+    + `reboot <reboot>`_
+    + `relabel <relabel>`_
+    + `rename <rename>`_
+    + `requestchoice <requestchoice>`_
+    + `requestfile <requestfile>`_
+    + `requeststring <requeststring>`_
+    + `run <run>`_
+    + `scripts <scripts>`_
+    + `search <search>`_
+    + `set <set>`_
+    + `setclock <setclock>`_
+    + `setdate <setdate>`_
+    + `setdefaultfont <setdefaultfont>`_
+    + `setenv <setenv>`_
+    + `setkeyboard <setkeyboard>`_
+    + `shell <shell>`_
+    + `shutdown <shutdown>`_
+    + `skip <skip>`_
+    + `sort <sort>`_
+    + `stack <stack>`_
+    + `status <status>`_
+    + `type <type>`_
+    + `unalias <unalias>`_
+    + `unset <unset>`_
+    + `unsetenv <unsetenv>`_
+    + `uuidgen <uuidgen>`_
+    + `version <version>`_
+    + `wait <wait>`_
+    + `which <which>`_
+    + `why <why>`_
+
++ `Scripts <scripts>`_
