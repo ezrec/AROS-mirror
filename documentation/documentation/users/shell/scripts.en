@@ -1,0 +1,262 @@
+=======
+Scripts
+=======
+
+:Authors:   Matthias Rustler 
+:Copyright: Copyright (C) 2009, The AROS Development Team
+:Version:   $Revision$
+:Date:      $Date$
+:Status:    Draft
+
+-------------
+
+`Index <index>`_
+
+-------------
+
+.. Contents::
+
+
+Introduction
+------------
+Scripts are programs which are build of commands. Those commands can
+be Shell commands which you can find in the ``C:`` directory or any
+other AROS application which can be started from Shell. Example::
+
+    CD ram:
+    DIR
+    sys:tools/editor
+
+You can create the scripts with any text editor,
+e.g. ``sys:tools/Editor``.
+
+The default storage place for scripts is ``S:``, but you can use any
+directory. The search path of the Shell is used to find the script.
+
+
+Execution
+---------
+Scripts can be executed from Shell with the Execute command, e.g.::
+
+    execute myscript
+
+Alternatively, you can set the ``s`` bit. This allows to execute
+the script by just entering the name, e.g.::
+
+    protect myscript s add
+    myscript
+
+You can start scripts from Wanderer if you add an icon to it and
+set the default tool to ``c:iconx``.
+
+
+Special script characters
+-------------------------
+``;``
+    Comments; anything following the ``;`` is ignored, e.g.::
+    
+        ASSIGN foo: sys:c ; Create an assign
+
+``$``
+    Expand environment variables, e.g.::
+
+        ECHO "Current language is $LANGUAGE"
+
+
+Dot commands
+------------
+Dot commands are keywords which start with a dot. Their usage
+will be explained in the chapter about parameter substitution.
+
+``.KEY <template>``
+    Argument template. The arguments must be separated by comma,
+    no space is allowed. You can add ``/A`` and ``/K`` to
+    the arguments.
+
+    ``/A``
+        required argument.
+    ``/K``
+        argument name must be written.
+
+    Example::
+
+        .KEY FILENAME/A,TO/K
+
+``.DOT <char>``
+    Changes the dot character to the given argument.
+
+``.BRA <char>``
+    Changes the character for the opening bracket.
+    Default is ``<``.
+
+``.KET <char>``
+    Changes the character for the closing bracket.
+    Default is ``>``.
+
+``.DOLLAR <char>``
+    Changes the character for the dollar sign.
+
+``.DEF <parameter> <default value>``
+    Sets default value for a parameter.
+
+``.<space><comment>``
+    Comment line, better use ``;``.
+
+``.``
+    Empty comment line.
+
+
+Parameter substitution
+----------------------
+Scripts can be called with parameters. To be able to handle the
+parameters the script must start with a dot command (preferable .KEY)::
+
+    .KEY text/A
+    .BRA {
+    .KET }
+    ECHO "{text}"
+
+.. Note::
+    Because of a bug in the Shell you always have to
+    overwrite the angle brackets ``<``, ``>`` with .BRA and .KEY
+    (preferable with curley brackets ``{``, ``}``).
+
+If the Shell executes a script it looks first if it has parameter
+substitution (i.e. starts with a dot command). If this is the case
+a temporar copy of the script is created where all parameters within
+parameter brackets are replaced by their value.
+
+
+Condition flags
+---------------
+Commands are returning a number which indicates condition of
+execution.
+
+``0...4``
+    Success.
+
+``5...9``
+    Warn.
+
+``10...19``
+    Error.
+
+``20...``
+    Failure.
+
+You can set the limit where execution of the script is stopped
+with the Failat command.
+
+Some query commands use the flag to tell what option has been
+used, e.g.::
+
+    ASK "Continue?"
+    IF WARN
+    COPY a.dat b.dat
+    ENDIF
+
+
+Conditional blocks
+------------------
+The IF command allows to define blocks which are only executed
+if the given condition is met, e.g.::
+
+    IF WARN
+    IF ERROR
+    IF FAILURE
+    IF NOT EXISTS "ram:abc"
+    IF $var EG "FOOBAR"
+
+Example with alternative ELSE block::
+
+    IF EXISTS "ram:file.txt"
+    TYPE "rame:file.txt"
+    ELSE
+    ECHO "File doesn't exist"
+    ENDIF
+
+
+Skipping
+--------
+You can jump with SKIP to labels which you have defined with LAB::
+
+    IF EXISTS "ram:file.txt"
+    SKIP message
+    ELSE
+    ECHO "File doesn't exist."
+    QUIT
+    ENDIF
+    LAB message
+    ECHO "File exists."
+
+
+Interactivity
+-------------
+Some commands interrupt the script execution until the user has
+given some input.
+
+The Ask commands prints a message and sets the condition flag to
+WARN if the input was "y(es)".
+
+RequestChoice, RequestFile and RequestString are printing the
+result to the standard output, to be able to use it you have
+to redirect the output to a file, e.g.::
+
+    REQUESTSTRING >ENV:reqstrres "Enter a string"
+
+Storing in ENV: has the advantage, that it can be handled as
+an environment variable as explained below.
+
+
+Environment variables
+---------------------
+Variables can be set with SET and SETENV.
+
+SET creates local variables which exist only in the current Shell
+and all Shells created from the current Shell.
+
+SETENV creates global variables which are available in all Shells.
+The content is stored in files in the ENV: directory with the
+variable name as file name.
+
+To use the variable's contend you have to prefix it with a
+``$`` sign, e.g.::
+
+    ECHO "Contend $reqstrres"
+
+This isn't limited to scripts. You can use environment variables
+directly in the Shell.
+
+.. Hint::
+    Enclose expanded variables in double quotes to avoid troubles
+    when the variable contains whitespace as whitespace is used
+    for command separation, e.g.: better use ``TYPE "$FILE"``
+    than ``TYPE $FILE``.
+
+.. FIXME: what about argument expansion?
+
+
+Quitting
+--------
+You can use the QUIT command if you want to exit the script before
+it has reached the last line.
+
+
+Automatic script creation
+-------------------------
+
+The LFORMAT option of the List command makes it possible to create
+the output in such a way that it can be executed as script::
+
+    LIST #? TO T:typeall LFORMAT="TYPE %P%N"
+    EXECUTE T:typeall
+
+
+Special scripts
+---------------
+During booting AROS executes the script ``s:startup-sequence``.
+That file is supposed to be read-only. If you have your own commands
+you want to be called during startup add them to the file
+``s:user-startup``.
+
+.. TODO add links to commands, write something about missing features
