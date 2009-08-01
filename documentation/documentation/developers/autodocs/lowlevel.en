@@ -11,8 +11,8 @@ lowlevel
 ======================================= ======================================= ======================================= ======================================= 
 `AddKBInt()`_                           `AddTimerInt()`_                        `AddVBlankInt()`_                       `ElapsedTime()`_                        
 `GetKey()`_                             `GetLanguageSelection()`_               `QueryKeys()`_                          `ReadJoyPort()`_                        
-`RemKBInt()`_                           `RemTimerInt()`_                        `RemVBlankInt()`_                       `StartTimerInt()`_                      
-`StopTimerInt()`_                       
+`RemKBInt()`_                           `RemTimerInt()`_                        `RemVBlankInt()`_                       `SetJoyPortAttrsA()`_                   
+`StartTimerInt()`_                      `StopTimerInt()`_                       
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -217,6 +217,24 @@ See also
 ~~~~~~~~
 
 `AddVBlankInt()`_ 
+
+----------
+
+SetJoyPortAttrsA()
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL SetJoyPortAttrsA(
+          ULONG portNumber,
+          struct TagItem * tagList );
+ 
+ BOOL SetJoyPortAttrs(
+          ULONG portNumber,
+          TAG tag, ... );
+
 
 ----------
 
