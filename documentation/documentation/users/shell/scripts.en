@@ -36,7 +36,7 @@ directory. The search path of the Shell is used to find the script.
 
 Execution
 ---------
-Scripts can be executed from Shell with the Execute command, e.g.::
+Scripts can be executed from Shell with the Execute_ command, e.g.::
 
     execute myscript
 
@@ -58,15 +58,30 @@ Special script characters
         ASSIGN foo: sys:c ; Create an assign
 
 ``$``
-    Expand environment variables, e.g.::
+    a) Expand environment variables, e.g.::
 
         ECHO "Current language is $LANGUAGE"
+
+    b) Within brackets: set default value for parameters. The
+       brackets can be changed with the dot commands
+       .BRA and .KET::
+
+        <param$default>
+
+    The ``$`` can be changed with the .DOLLAR command
+
+``$$``
+    ``<$$>`` is replaced by the current process number. There must
+    be a .KEY command in the script. The angle brackets can be
+    changed with .BRA and .KET commands. You can change the ``$``
+    with the .DOLLAR command.
 
 
 Dot commands
 ------------
 Dot commands are keywords which start with a dot. Their usage
-will be explained in the chapter about parameter substitution.
+will be explained in the chapter about `parameter substitution`_.
+Dot commands are case insensitive.
 
 ``.KEY <template>``
     Argument template. The arguments must be separated by comma,
@@ -119,12 +134,21 @@ parameters the script must start with a dot command (preferable .KEY)::
 .. Note::
     Because of a bug in the Shell you always have to
     overwrite the angle brackets ``<``, ``>`` with .BRA and .KEY
-    (preferable with curley brackets ``{``, ``}``).
+    (preferable with curly brackets ``{``, ``}``).
+
+Another reason for always overwriting the angle brackets is to
+avoid confusion with input/output redirection.
 
 If the Shell executes a script it looks first if it has parameter
 substitution (i.e. starts with a dot command). If this is the case
-a temporar copy of the script is created where all parameters within
+a temporary copy of the script is created where all parameters within
 parameter brackets are replaced by their value.
+
+.. Hint::
+    Enclose parameters in double quotes to avoid troubles
+    when the parameter contains white-space as white-space is used
+    for command separation, e.g.: better use ``TYPE "{FILE}"``
+    than ``TYPE {FILE}``.
 
 
 Condition flags
@@ -144,21 +168,21 @@ execution.
 ``20...``
     Failure.
 
-You can set the limit where execution of the script is stopped
-with the Failat command.
+Shell commands return only the values 0, 5, 10 and 20. You can
+set the limit where execution of the script is stopped with the
+FailAt_ command.
 
-Some query commands use the flag to tell what option has been
-used, e.g.::
+Some query commands use the flag to tell about the result, e.g.::
 
     ASK "Continue?"
     IF WARN
-    COPY a.dat b.dat
+        COPY a.dat b.dat
     ENDIF
 
 
 Conditional blocks
 ------------------
-The IF command allows to define blocks which are only executed
+The If_ command allows to define blocks which are only executed
 if the given condition is met, e.g.::
 
     IF WARN
@@ -167,24 +191,24 @@ if the given condition is met, e.g.::
     IF NOT EXISTS "ram:abc"
     IF $var EG "FOOBAR"
 
-Example with alternative ELSE block::
+Example with alternative Else_ block::
 
     IF EXISTS "ram:file.txt"
-    TYPE "rame:file.txt"
+        TYPE "ram:file.txt"
     ELSE
-    ECHO "File doesn't exist"
+        ECHO "File doesn't exist"
     ENDIF
 
 
 Skipping
 --------
-You can jump with SKIP to labels which you have defined with LAB::
+You can jump with Skip_ to labels which you have defined with Lab_::
 
     IF EXISTS "ram:file.txt"
-    SKIP message
+        SKIP message
     ELSE
-    ECHO "File doesn't exist."
-    QUIT
+        ECHO "File doesn't exist."
+        QUIT
     ENDIF
     LAB message
     ECHO "File exists."
@@ -195,27 +219,27 @@ Interactivity
 Some commands interrupt the script execution until the user has
 given some input.
 
-The Ask commands prints a message and sets the condition flag to
+The Ask_ commands prints a message and sets the condition flag to
 WARN if the input was "y(es)".
 
-RequestChoice, RequestFile and RequestString are printing the
-result to the standard output, to be able to use it you have
+RequestChoice_, RequestFile_ and RequestString_ are printing the
+result to the standard output. To be able to use it you have
 to redirect the output to a file, e.g.::
 
     REQUESTSTRING >ENV:reqstrres "Enter a string"
 
-Storing in ENV: has the advantage, that it can be handled as
+Storing in ENV: has the advantage that it can be handled as
 an environment variable as explained below.
 
 
 Environment variables
 ---------------------
-Variables can be set with SET and SETENV.
+Variables can be set with Set_ and SetEnv_.
 
-SET creates local variables which exist only in the current Shell
+Set_ creates local variables which exist only in the current Shell
 and all Shells created from the current Shell.
 
-SETENV creates global variables which are available in all Shells.
+SetEnv_ creates global variables which are available in all Shells.
 The content is stored in files in the ENV: directory with the
 variable name as file name.
 
@@ -229,23 +253,28 @@ directly in the Shell.
 
 .. Hint::
     Enclose expanded variables in double quotes to avoid troubles
-    when the variable contains whitespace as whitespace is used
+    when the variable contains white-space as white-space is used
     for command separation, e.g.: better use ``TYPE "$FILE"``
     than ``TYPE $FILE``.
 
-.. FIXME: what about argument expansion?
+Some variables are handled by the Shell:
+
+``ECHO``
+    Setting it to ``ON`` (``SET ECHO ON``) enables command echoing,
+    i.e. all commands are print before they are executed. This
+    can be used for debugging.
 
 
 Quitting
 --------
-You can use the QUIT command if you want to exit the script before
+You can use the Quit_ command if you want to exit the script before
 it has reached the last line.
 
 
 Automatic script creation
 -------------------------
 
-The LFORMAT option of the List command makes it possible to create
+The LFORMAT option of the List_ command makes it possible to create
 the output in such a way that it can be executed as script::
 
     LIST #? TO T:typeall LFORMAT="TYPE %P%N"
@@ -256,7 +285,92 @@ Special scripts
 ---------------
 During booting AROS executes the script ``s:startup-sequence``.
 That file is supposed to be read-only. If you have your own commands
-you want to be called during startup add them to the file
+you want to be called during start-up add them to the file
 ``s:user-startup``.
 
-.. TODO add links to commands, write something about missing features
+
+.. _addbuffers: addbuffers
+.. _adddatatypes: adddatatypes
+.. _alias: alias
+.. _ask: ask
+.. _assign: assign
+.. _avail: avail
+.. _beep: beep
+.. _break: break
+.. _cd: cd
+.. _changetaskpri: changetaskpri
+.. _conclip: conclip
+.. _copy: copy
+.. _copytopar: copytopar
+.. _date: date
+.. _decoration: decoration
+.. _delay: delay
+.. _delete: delete
+.. _dir: dir
+.. _diskchange: diskchange
+.. _echo: echo
+.. _else: else
+.. _endcli: endcli
+.. _endif: endif
+.. _endshell: endshell
+.. _endskip: endskip
+.. _eval: eval
+.. _execute: execute
+.. _failat: failat
+.. _fault: fault
+.. _filenote: filenote
+.. _get: get
+.. _getenv: getenv
+.. _iconx: iconx
+.. _identify: identify
+.. _if: if
+.. _info: info
+.. _install-grub2-i386-pc: install-grub2-i386-pc
+.. _install-i386-pc: install-i386-pc
+.. _install: install
+.. _introduction: introduction
+.. _iprefs: iprefs
+.. _join: join
+.. _lab: lab
+.. _list: list
+.. _lock: lock
+.. _makedir: makedir
+.. _makelink: makelink
+.. _mount: mount
+.. _newshell: newshell
+.. _partition: partition
+.. _path: path
+.. _prompt: prompt
+.. _protect: protect
+.. _quit: quit
+.. _quitaros: quitaros
+.. _reboot: reboot
+.. _relabel: relabel
+.. _rename: rename
+.. _requestchoice: requestchoice
+.. _requestfile: requestfile
+.. _requeststring: requeststring
+.. _run: run
+.. _search: search
+.. _set: set
+.. _setclock: setclock
+.. _setdate: setdate
+.. _setdefaultfont: setdefaultfont
+.. _setenv: setenv
+.. _setkeyboard: setkeyboard
+.. _shell: shell
+.. _shutdown: shutdown
+.. _skip: skip
+.. _sort: sort
+.. _stack: stack
+.. _status: status
+.. _type: type
+.. _unalias: unalias
+.. _unset: unset
+.. _unsetenv: unsetenv
+.. _uuidgen: uuidgen
+.. _version: version
+.. _wait: wait
+.. _which: which
+.. _why: why
+
