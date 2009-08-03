@@ -147,7 +147,7 @@ parameter brackets are replaced by their value.
 .. Hint::
     Enclose parameters in double quotes to avoid troubles
     when the parameter contains white-space as white-space is used
-    for command separation, e.g.: better use ``TYPE "{FILE}"``
+    for parameter separation, e.g.: better use ``TYPE "{FILE}"``
     than ``TYPE {FILE}``.
 
 
@@ -254,7 +254,7 @@ directly in the Shell.
 .. Hint::
     Enclose expanded variables in double quotes to avoid troubles
     when the variable contains white-space as white-space is used
-    for command separation, e.g.: better use ``TYPE "$FILE"``
+    for parameter separation, e.g.: better use ``TYPE "$FILE"``
     than ``TYPE $FILE``.
 
 Some variables are handled by the Shell:
@@ -277,8 +277,11 @@ Automatic script creation
 The LFORMAT option of the List_ command makes it possible to create
 the output in such a way that it can be executed as script::
 
-    LIST #? TO T:typeall LFORMAT="TYPE %P%N"
+    LIST #? TO T:typeall LFORMAT="TYPE *"%P%N*""
     EXECUTE T:typeall
+
+The reason for \*" is to ensure that the paths in the generated file
+are enclosed in double quotes.
 
 
 Special scripts
