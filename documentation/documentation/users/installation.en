@@ -84,7 +84,7 @@ Running
 After having extracted all files you can launch AROS like this::
 
     > cd AROS
-    > boo/aros-unix -m <size of mem, used for AROS in MB, number>
+    > boot/aros-unix -m <size of mem, used for AROS in MB, number>
 
 
 .. Note:: 
