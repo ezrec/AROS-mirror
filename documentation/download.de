@@ -3,11 +3,13 @@ Download
 ========
 .. Note::
 
-   **If you are a user** willing to try AROS, please use the links in **Distributions**
-   section to download a fully featured AROS distribution. The nightly builds you
-   will find at the bottom of the page are only meant for developers. The nighly builds
-   are not configured to be easily used, sometimes are not stable and they miss most 
-   of the applications essential to regular user experience.
+   Falls Du ein **Anwender** bist, der AROS ausprobieren will, verwende
+   bitte die Links im **Distributionen**-Abschnitt, um eine gut
+   ausgestattete AROS-Distribution herunterzuladen. Die 'Nightly Builds',
+   die Du am Ende dieser Seite findest, sind nur für Entwickler und Tester
+   gedacht. Die 'Nightly Builds' sind nicht für Anwender konfiguriert,
+   sie sind manchmal instabil und es fehlen die ganzen Programme, die
+   die Verwendung von AROS für Endbenutzer interessant machen.
 
 .. Contents::
 
@@ -19,14 +21,15 @@ Icaros Desktop LIVE!
 .. image:: /images/icaroslive_logo.png
    :align: left
 
-`Icaros Desktop LIVE!`__ ist eine vollständige Distribution des AROS-Betriebssystems.
-Sie kommt auf einer boot-fähigen DVD-ROM und läuft direkt auf Deinem PC (die
-Hardware muss von AROS unterstützt werden). Sie kann auf eine Festplatte
-in eine eigene Partition installiert werden und mit Windows XP koexistieren.
-Eine Kurzreferenz und ein paar PDF-Handbücher sind enthalten. Diese Version
-kommt auch mit einer Qemu-basierten virtuellen Maschine, die es Windows-Anwendern
-ermöglicht, die Distribution in einer sichereren (aber langsameren) Umgebung
-zu testen.
+`Icaros Desktop LIVE!`__ ist eine vollständige Distribution des
+AROS-Betriebssystems. Sie kommt auf einer boot-fähigen DVD-ROM und läuft
+direkt auf Deinem PC (die Hardware muss von AROS unterstützt werden). Sie
+kann auf eine Festplatte in eine eigene Partition installiert werden und
+kann mit anderen Betriebssystemen wie Windows XP koexistieren. Eine
+Kurzreferenz und ein paar PDF-Handbücher sind enthalten. Diese Version
+kommt auch mit einer Qemu-basierten virtuellen Maschine, die es
+Windows-Anwendern ermöglicht, die Distribution in einer sichereren (aber
+langsameren) Umgebung zu testen.
 
 Icaros Desktop VE
 -----------------
