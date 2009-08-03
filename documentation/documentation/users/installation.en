@@ -27,8 +27,8 @@ Downloading
 ===========
 
 AROS is currently under heavy development, and there's no more stable snapshots 
-available at this time, because the ones existed before become too obsolete
-and not reflected the current status of AROS. The users are encouraged 
+available at this time, because the ones that existed before became too obsolete
+and didn't reflect the current status of AROS. The users are encouraged 
 to download the nightly builds instead.
 
 Nightly builds are done, as the name implies, automatically every night directly
@@ -84,7 +84,7 @@ Running
 After having extracted all files you can launch AROS like this::
 
     > cd AROS
-    > ./aros -m <size of mem, used for AROS in MB, number>
+    > boo/aros-unix -m <size of mem, used for AROS in MB, number>
 
 
 .. Note:: 
@@ -674,7 +674,7 @@ will reboot with the same settings as before, from Live CD.
 Now we still see our AROS disk, and all files are there. Haven't we
 already installed the bootloader in previous steps, what are we
 missing? 
-Well, if you use fresh nightly build then 'GRUB <http://en.wikipedia.org/wiki/GRUB>'__ 
+Well, if you use fresh nightly build then `GRUB <http://en.wikipedia.org/wiki/GRUB>`__ 
 must be already installed
 and working, you can skip this step. If not, please read.
 
@@ -777,9 +777,6 @@ Antialiased TTF fonts rendering speed is currently not the best, it is not
 optimized (see aatext source code), but there's a hope it is fast enough 
 to be usable even on a 060/50MHz.
 
-
-Footnotes
-=========
 
 .. _`download page`: ../../download
 
