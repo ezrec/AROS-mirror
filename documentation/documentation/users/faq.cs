@@ -28,7 +28,7 @@ Co je vlastnì AROS?
 
 Pøeèti si prosím úvod_.
 
-.. _introduction: ../../introduction/index
+.. _úvod: ../../introduction/index
 
 
 Jaký je právní stav AROSu?

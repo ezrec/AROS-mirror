@@ -714,7 +714,7 @@ Crea un mountfile (file di testo) con queste linee::
 
 + Chiamalo n qualche maniera, FAT0 per esempio
 + Definisci lo strumento predefinito c:mount in proprietà
- (o metti il mountfile in devs:dosdrivers o sys:storage/dosdrivers)
+  (o metti il mountfile in devs:dosdrivers o sys:storage/dosdrivers)
 + Doppio click su di esso
 + Guarda l'icona comparire sul Wanderer
 

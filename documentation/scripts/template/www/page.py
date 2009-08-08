@@ -181,7 +181,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                     A
                     ( 
                         Img( src = '%(ROOT)simages/genesi-small.gif', border = 0 ), 
-                        href = 'http://www.pegasosppc.com/' 
+                        href = 'http://www.genesi-usa.com/' 
                     )
                 )
             ),
@@ -308,7 +308,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
         Body( 
             style = 'margin: 0px;',
             bgcolor = '#ffffff', contents = [
-        statsPHP3,
+                statsPHP3,
                 Table(
                     border = 0, cellspacing = 0, cellpadding = 0, 
                     width = '100%%', contents = [
@@ -326,40 +326,39 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                         ] ),
             
                         TR(
-                Table(
-            border = 0, cellspacing = 0, cellpadding = 0, 
-                    width = '100%%', contents = [
-               TR( contents = [
-                            TD(
-                               width = 171, border= 0, cellpadding="2", 
-                cellspacing="2", contents = [ bar ]
-                                )
-                           ,
-                            TD( border= 0, width="100%%", cellpadding="1", cellspacing="1", 
-                                contents =  '%(CONTENT)s' 
-                            ),
-                        ]),
-                        ] )), 
+                            Table(
+                                border = 0, cellspacing = 0, cellpadding = 0,
+                                width = '100%%', contents = [
+                                    TR( contents = [
+                                        TD(
+                                            width = 171, border= 0, cellpadding="2",
+                                            cellspacing="2", contents = [ bar ]
+                                        ),
+                                        TD( border= 0, width="100%%", cellpadding="1", cellspacing="1",
+                                            contents =  '%(CONTENT)s'
+                                        ),
+                                    ]),
+                                ]
+                            )
+                        ), 
                         TR( [
-                           
                             TD(
                                 width = '100%%', colspan = 3, valign = 'bottom', align = 'center',
                                 contents = Font(
                                     size = '-1', color = '#aaaaaa',
                                     contents = [
                                         BR(),
-                    statsPHP4,
+                                        statsPHP4,
                                         _M['copyright'],
                                         BR(),
                                         _M['trademarks'],
-                    statsPHP6,
+                                        statsPHP6,
                                         BR(),
                                         BR()
                                     ]
                                 )
-                            )                                
-                        
-            ] )
+                            )
+                        ] )
                     ]
                 ),
                 statsPHP
