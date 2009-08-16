@@ -1,0 +1,19 @@
+#   $Id: mmakefile.src 31202 2009-05-12 16:53:32Z deadwood $
+#
+#   Makefile to make TCP prefs program.
+
+include $(TOP)/config/make.cfg
+
+FILES 	    :=  mesasimplerendering \
+                mesagetprocaddress
+                
+EXEDIR      := $(AROSDIR)/Tests
+
+#MM- contrib-gfx-libs-mesa-tests : contrib-gfx-libs-mesa-includes includes contrib-gfx-libs-mesa-mesa-shared
+#MM- contrib-gfx-libs-mesa-tests : contrib-gfx-libs-mesa-tests-simplerendering
+
+%build_progs mmake=contrib-gfx-libs-mesa-tests \
+    targetdir=$(EXEDIR) \
+    files="$(FILES)" uselibs="GL"
+
+%common

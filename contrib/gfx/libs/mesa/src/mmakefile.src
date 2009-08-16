@@ -1,0 +1,5 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+#MM- contrib-gfx-libs : contrib-gfx-libs-mesa
+#MM- contrib-gfx-libs-mesa : contrib-gfx-libs-mesa-mesa-shared contrib-gfx-libs-mesa-tests

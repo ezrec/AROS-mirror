@@ -1,0 +1,53 @@
+1. Function prototypes
+
+The prototypes in aros_libapi.c and respective entries in
+arosmesa.conf/mangle_undef.h are generated AUTOMATIC from gl.h/glext.h
+found in release 7.5.0 of MESA.
+
+The codes of the autogeneration tool (C#) are attached.
+
+When updating to newer version please do the following:
+
+a. generate new aros_libapi.c/arosmesa.conf/mangle_undef.files
+b. MANUALLY apply differenced to current files. Doing this by just copying
+   new files over old, might end up with LVO positiong changes and lack
+   of backward compatibility
+
+2. Solution for global context
+
+Mesa uses a global variable to store current rendering context. This
+leads to a problem when Mesa is a shared library as this context should
+be different for each opener or Mesa.
+
+The implemented solution uses peropener Mesa library libbase. This libbase
+contains a pointer to current opener Mesa rendering context.
+
+For each glXXX public function a stub is generated in aros_libapi.c. This
+stub takes a form of AROS library function which gets the Mesa libbase
+passed as the last parameter. Once this stub is called, it puts the Mesa
+libbase into the EBX register and calls the real glXXX function - which due
+to name mangling is now named mglXXX. The EBX register is reserved via a
+global variable REGMesaBase (glapi.h) and via -ffixed-ebx compile option.
+The Mesa libbase is put into EBX via PUT_MESABASE_IN_REG macro (glapi.h).
+The real function reads the Mesa 'global' rendering context via
+GET_CURRENT_CONTEXT macro which is redefined in glapi.h.
+
+The call sequence is as follows:
+
+Client calls glA() functions. This is a stub in linklib.
+The glA() function calls Mesa_glA() functions. This is a shared function
+   in mesa.library which now receives opener Mesa libbase.
+The Mesa_glA() function puts received Mesa libbase into EBX
+The Mesa_glA() function calls mglA() function.
+
+3. AROSMesaGetProcAddress
+
+This function can return a pointer to gl function by specifying name as
+string. This function is compiled direclty into the mesa shared library
+linklib and not found in the shared library itself. This is due to a fact
+that the returned pointer must point to a stub gl function not its
+implementation in shared library, because in the later case, the Mesa 
+libbase would not be filled correclty. Using the example above, calling
+
+AROSMesaGetProcAddress("glA") must return the pointer to glA, and not
+to Mesa_glA or mglA function.
