@@ -1,5 +1,0 @@
-# $Id$
-include $(TOP)/config/make.cfg
-
-#MM- contrib-games : contrib-sdl
-    

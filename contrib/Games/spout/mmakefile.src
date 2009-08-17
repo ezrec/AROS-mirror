@@ -2,6 +2,7 @@ include $(TOP)/config/make.cfg
 
 #MM- contrib-games : contrib-games-spout
 #MM- spout : contrib-games-spout-quick
+#MM contrib-games-spout : contrib-sdl
 
 #MM- contrib-games-quick : contrib-games-spout-quick
 #MM- spout-quick : contrib-games-spout-quick
