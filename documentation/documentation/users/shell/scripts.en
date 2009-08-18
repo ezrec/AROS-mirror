@@ -139,11 +139,6 @@ parameters the script must start with a dot command (preferable .KEY)::
 Another reason for always overwriting the angle brackets is to
 avoid confusion with input/output redirection.
 
-If the Shell executes a script it looks first if it has parameter
-substitution (i.e. starts with a dot command). If this is the case
-a temporary copy of the script is created where all parameters within
-parameter brackets are replaced by their value.
-
 .. Hint::
     Enclose parameters in double quotes to avoid troubles
     when the parameter contains white-space as white-space is used
@@ -190,6 +185,8 @@ if the given condition is met, e.g.::
     IF FAILURE
     IF NOT EXISTS "ram:abc"
     IF $var EG "FOOBAR"
+        ...
+    ENDIF
 
 Example with alternative Else_ block::
 
@@ -289,7 +286,8 @@ Special scripts
 During booting AROS executes the script ``s:startup-sequence``.
 That file is supposed to be read-only. If you have your own commands
 you want to be called during start-up add them to the file
-``s:user-startup``.
+``s:user-startup``. The script ``s:shell-startup`` is executed
+every time you open a new Shell.
 
 
 .. _addbuffers: addbuffers

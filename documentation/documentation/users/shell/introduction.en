@@ -3,7 +3,7 @@ Introduction to AROS Shell
 ==========================
 
 :Authors:   Matthias Rustler 
-:Copyright: Copyright (C) 2006-2008, The AROS Development Team
+:Copyright: Copyright (C) 2006-2009, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Draft
@@ -116,10 +116,11 @@ Some commands allow patterns for file name parameters::
   #? -- zero or more arbitrary characters
   #x -- zero or more x
   ~  -- negation
+  %  -- matches the null string (no characters).
   |  -- or
   () -- group
   [] -- range
-  `  -- disable the following special character
+  '  -- disable the following special character
 
 Examples::
 
@@ -127,6 +128,7 @@ Examples::
   dir #?~(.info)
   dir a(b|c)d
   dir [a-c]e
+  dir a(b|d|%)#c
 
 Redirection
 -----------
