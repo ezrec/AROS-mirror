@@ -1,4 +1,4 @@
-# Copyright © 2004-2006, The AROS Development Team. All rights reserved.
+# Copyright 2004-2009, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(TOP)/config/make.cfg
@@ -11,7 +11,7 @@ HEADERS:=SDL_ttf.h
 
 #MM- contrib-sdl-sdl-ttf : development-sdl-ttf-test
 
-#MM development-sdl-ttf-test : development-sdl-ttf
+#MM development-sdl-ttf-test : development-sdl-ttf workbench-libs-freetype-linklib
 %build_prog mmake=development-sdl-ttf-test progname=sdl_ttf_showfont files=$(FILES) \
     targetdir=$(AROS_TESTS) uselibs="SDL SDL_ttf freetype2"
 
