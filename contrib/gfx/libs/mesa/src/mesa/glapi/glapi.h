@@ -61,7 +61,12 @@ register struct MesaBase * REGMesaBase __asm__("ebx");
 #elif defined(__x86_64__)
 register struct MesaBase * REGMesaBase __asm__("rbx");
 #elif defined(PPC) || defined (__powerpc__)
-register struct MesaBase * REGMesaBase __asm__("r12");
+/*
+ * r11 or r12 emit call clobbered register warnings
+ * r13 works as well, but is small data area pointer
+ * in SysV ABI, which we might use in the future
+ */
+register struct MesaBase * REGMesaBase __asm__("r14");
 #else
 #error Select register for your architecture
 #endif

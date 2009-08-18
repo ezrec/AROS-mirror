@@ -233,6 +233,8 @@ extern "C" {
 #elif defined(__APPLE__)
 #include <CoreFoundation/CFByteOrder.h>
 #define CPU_TO_LE32( x )	CFSwapInt32HostToLittle( x )
+#elif defined(__AROS__)
+#define CPU_TO_LE32( x )        AROS_BE2LONG( x )
 #else /*__linux__ __APPLE__*/
 #include <sys/endian.h>
 #define CPU_TO_LE32( x )	bswap32( x )

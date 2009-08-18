@@ -356,7 +356,8 @@ ifeq ($(AROS_TARGET_CPU), "sparc?")
 endif
 
 ifeq ($(AROS_TARGET_CPU), "ppc")
-  FFIXED = -ffixed-r12
+  # global register variable in glapi.h should be enough
+  FFIXED =
 endif
 
 LIBMESAM = $(COMMON_DRIVER_SOURCES) \

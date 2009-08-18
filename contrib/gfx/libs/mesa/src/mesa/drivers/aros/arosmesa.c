@@ -77,7 +77,7 @@ struct Library * AROSMesaCyberGfxBase = NULL;    /* Base address for cybergfx */
 #include <cybergraphx/cybergraphics.h>
 
 #if (AROS_BIG_ENDIAN == 1)
-#define AROS_PIXFMT RECFMT_ARGB    /* Big Endian Archs. */
+#define AROS_PIXFMT RECTFMT_ARGB32   /* Big Endian Archs. */
 #else
 #define AROS_PIXFMT RECTFMT_BGRA32   /* Little Endian Archs. */
 #endif
