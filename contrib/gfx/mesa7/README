@@ -1,8 +1,0 @@
-Experimental software driver sources for Mesa 7.0.3
-
-You will need a real i386 C and C++ crosscompilers
-installed (tested with version 3.3.1).
-
-To build the mesa linklibs (libGL.a, libGLU.a), copy
-the contents of lib directory over Mesa 7.0.3 sources
-and invoke 'make aros-x86-static'
