@@ -4,9 +4,9 @@
 #
 include $(TOP)/config/make.cfg
 
-#MM contrib-gfx-libs-mesa-mesa-shared : includes contrib-gfx-libs-mesa-includes linklibs
+#MM contrib-gfx-libs-mesa-mesa-module : includes contrib-gfx-libs-mesa-includes linklibs
 
-#MM contrib-gfx-libs-mesa-mesa-static : includes contrib-gfx-libs-mesa-includes
+#MM contrib-gfx-libs-mesa-mesa-linklib : includes contrib-gfx-libs-mesa-includes
 
 SHAREDLIB_SOURCES = \
             aros_libapi \
@@ -386,13 +386,13 @@ USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../../include \
             -I$(SRCDIR)/$(CURDIR)/swrast \
             -I$(SRCDIR)/$(CURDIR)/tnl
 
-%build_linklib mmake=contrib-gfx-libs-mesa-mesa-static libname=GLStatic \
-    files="$(LIBMESAM) arosmesa_getprocaddress" objdir=$(GENDIR)/$(CURDIR)/static
+%build_linklib mmake=contrib-gfx-libs-mesa-mesa-linklib libname=GLStatic \
+    files="$(LIBMESAM) arosmesa_getprocaddress" objdir=$(GENDIR)/$(CURDIR)/linklib
 
 USER_CFLAGS := -DUSE_MGL_NAMESPACE -DAROS_MESA_SHARED -ffast-math $(FFIXED)
 
-%build_module mmake=contrib-gfx-libs-mesa-mesa-shared \
+%build_module mmake=contrib-gfx-libs-mesa-mesa-module \
     modname=mesa modtype=library linklibname=GL conffile=arosmesa.conf linklibfiles="arosmesa_getprocaddress" \
-    files="$(SHAREDLIB_SOURCES) $(LIBMESAM)" objdir=$(GENDIR)/$(CURDIR)/shared uselibs="arossupport amiga rom m"
+    files="$(SHAREDLIB_SOURCES) $(LIBMESAM)" objdir=$(GENDIR)/$(CURDIR)/module uselibs="arossupport amiga rom m"
 
 %common
