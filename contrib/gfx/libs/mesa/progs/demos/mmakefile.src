@@ -1,0 +1,20 @@
+#   $Id$
+#
+
+include $(TOP)/config/make.cfg
+
+FILES 	    :=  bounce \
+                gearbox \
+                gears \
+                morph3d \
+                tessdemo
+                
+EXEDIR      := $(CONTRIBDIR)/Demos/Mesa
+
+#MM- contrib-gfx-libs-mesa-demos : contrib-gfx-libs-mesa-includes includes contrib-gfx-libs-mesa-mesa-shared contrib-gfx-libs-mesa-glut-linklib
+
+%build_progs mmake=contrib-gfx-libs-mesa-demos \
+    targetdir=$(EXEDIR) \
+    files="$(FILES)" uselibs="glut GL GLU"
+
+%common
