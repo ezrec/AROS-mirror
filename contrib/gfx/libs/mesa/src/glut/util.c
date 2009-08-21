@@ -32,43 +32,25 @@ extern struct AROSMesaGLUTBase *AMGLInternalBase;
 
 #include <aros/debug.h>
 
-IPTR
-_glut_font (IPTR font)
+void *
+_glut_font (void * font)
 {
    D(bug("[AMGLUT] In _glut_font(font = %d:%x)\n", font, font));
 
-   switch ((int)font) {
-      case GLUT_STROKE_ROMAN_ID:
-         return AMGLInternalBase->_glutStrokeRoman;
-      case GLUT_STROKE_MONO_ROMAN_ID:
-         return AMGLInternalBase->_glutStrokeMonoRoman;
-      case GLUT_BITMAP_9_BY_15_ID:
-         return AMGLInternalBase->_glutBitmap9By15;
-      case GLUT_BITMAP_8_BY_13_ID:
-         return AMGLInternalBase->_glutBitmap8By13;
-      case GLUT_BITMAP_TIMES_ROMAN_10_ID:
-         return AMGLInternalBase->_glutBitmapTimesRoman10;
-      case GLUT_BITMAP_TIMES_ROMAN_24_ID:
-         return AMGLInternalBase->_glutBitmapTimesRoman24;
-      case GLUT_BITMAP_HELVETICA_10_ID:
-         return AMGLInternalBase->_glutBitmapHelvetica10;
-      case GLUT_BITMAP_HELVETICA_12_ID:
-         return AMGLInternalBase->_glutBitmapHelvetica12;
-      case GLUT_BITMAP_HELVETICA_18_ID:
-         return AMGLInternalBase->_glutBitmapHelvetica18;
-      default:
-         if ((font == AMGLInternalBase->_glutStrokeRoman) ||
-             (font == AMGLInternalBase->_glutStrokeMonoRoman) ||
-             (font == AMGLInternalBase->_glutBitmap9By15) ||
-             (font == AMGLInternalBase->_glutBitmap8By13) ||
-             (font == AMGLInternalBase->_glutBitmapTimesRoman10) ||
-             (font == AMGLInternalBase->_glutBitmapTimesRoman24) ||
-             (font == AMGLInternalBase->_glutBitmapHelvetica10) ||
-             (font == AMGLInternalBase->_glutBitmapHelvetica12) ||
-             (font == AMGLInternalBase->_glutBitmapHelvetica18)) {
-            return font;
-         }
-         _glut_fatal("bad font!");
-   }
-   return (IPTR)NULL;
+    if ((font == &glutStrokeRoman) ||
+        (font == &glutStrokeMonoRoman) ||
+        (font == &glutBitmap9By15) ||
+        (font == &glutBitmap8By13) ||
+        (font == &glutBitmapTimesRoman10) ||
+        (font == &glutBitmapTimesRoman24) ||
+        (font == &glutBitmapHelvetica10) ||
+        (font == &glutBitmapHelvetica12) ||
+        (font == &glutBitmapHelvetica18)) 
+    {
+        return font;
+    }
+    
+    _glut_fatal("bad font!");
+
+    return NULL;
 }

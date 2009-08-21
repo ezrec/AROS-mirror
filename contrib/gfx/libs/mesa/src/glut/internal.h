@@ -89,20 +89,6 @@ typedef void (GLUTCALLBACK *GLUTmenuDestroyCB) (void);
 #include <proto/glut.h>
 #endif
 
-/** font constants (use these in GLUT program). **/
-#define GLUT_STROKE_ROMAN_ID		      0
-#define GLUT_STROKE_MONO_ROMAN_ID		1
-/* Bitmap fonts */
-#define GLUT_BITMAP_9_BY_15_ID		   2
-#define GLUT_BITMAP_8_BY_13_ID		   3
-#define GLUT_BITMAP_TIMES_ROMAN_10_ID	4
-#define GLUT_BITMAP_TIMES_ROMAN_24_ID	5
-#if (GLUT_API_VERSION >= 3)
-#define GLUT_BITMAP_HELVETICA_10_ID	   6
-#define GLUT_BITMAP_HELVETICA_12_ID	   7
-#define GLUT_BITMAP_HELVETICA_18_ID	   8
-#endif
-
 typedef struct {
    GLuint bpp, alpha;
    GLuint depth, stencil;
@@ -293,6 +279,6 @@ extern int _glut_mouse_x, _glut_mouse_y; /* mouse coords, relative to current wi
 
 extern void _glut_mouse_init (void);
 extern void _glut_fatal(char *format,...);
-extern IPTR _glut_font (IPTR font);
+extern void * _glut_font (void * font);
 
 #endif

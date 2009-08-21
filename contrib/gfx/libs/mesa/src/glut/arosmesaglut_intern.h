@@ -44,18 +44,6 @@ struct AROSMesaGLUTBase
     struct Library      _glutLib;
 #endif
     struct List         _glutPertasklist;
-    
-    /* Setup default global settings ---------------------------------------*/
-    
-    IPTR                _glutStrokeRoman;
-    IPTR                _glutStrokeMonoRoman;
-    IPTR                _glutBitmap8By13;
-    IPTR                _glutBitmap9By15;
-    IPTR                _glutBitmapTimesRoman10;
-    IPTR                _glutBitmapTimesRoman24;
-    IPTR                _glutBitmapHelvetica10;
-    IPTR                _glutBitmapHelvetica12;
-    IPTR                _glutBitmapHelvetica18;    
 };
 
 #endif /* AROSMESAGLUT_INTERN_H */

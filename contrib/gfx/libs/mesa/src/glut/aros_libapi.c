@@ -23,9 +23,6 @@ LIBBASETYPE *AMGLInternalBase;
 
 /****************************************************************************************/
 
-GLUTAPI void *glutStrokeRoman, *glutStrokeMonoRoman;
-GLUTAPI void *glutBitmap8By13, *glutBitmap9By15, *glutBitmapTimesRoman10, *glutBitmapTimesRoman24, *glutBitmapHelvetica10, *glutBitmapHelvetica12, *glutBitmapHelvetica18;
-
 #if !defined(AROSSHAREDGLUT)
 int AMGLInit(LIBBASETYPEPTR lh)
 #else
@@ -35,18 +32,6 @@ static int AMGLInit(LIBBASETYPEPTR lh)
     D(bug("[sharedGLUT] In LibInit(base @ %p)\n", lh));
 
     NewList((struct List *)&lh->_glutPertasklist);
-
-    /* Setup default global settings ---------------------------------------*/
-
-    lh->_glutStrokeRoman        = (IPTR)glutStrokeRoman;
-    lh->_glutStrokeMonoRoman    = (IPTR)glutStrokeMonoRoman;
-    lh->_glutBitmap8By13        = (IPTR)glutBitmap8By13;
-    lh->_glutBitmap9By15        = (IPTR)glutBitmap9By15;
-    lh->_glutBitmapTimesRoman10 = (IPTR)glutBitmapTimesRoman10;
-    lh->_glutBitmapTimesRoman24 = (IPTR)glutBitmapTimesRoman24;
-    lh->_glutBitmapHelvetica10  = (IPTR)glutBitmapHelvetica10;
-    lh->_glutBitmapHelvetica12  = (IPTR)glutBitmapHelvetica12;
-    lh->_glutBitmapHelvetica18  = (IPTR)glutBitmapHelvetica18;    
 
     return TRUE;
 }
