@@ -36,6 +36,8 @@
 #include "internal.h"
 #include "arosmesaglut_intern.h"
 
+#include <aros/debug.h>
+
 #if !defined(AROSSHAREDGLUT)
 struct AROSMesaGLUTBase *AMGLInternalBase;
 #endif
@@ -73,7 +75,7 @@ _glut_findtask(struct Task *thisTask)
 void
 _glut_fatal (char *format,...)
 {
-D(bug("[AMGLUT] In _glut_fatal()\n"));
+  D(bug("[AMGLUT] In _glut_fatal()\n"));
 
   va_list args;
 
@@ -135,15 +137,14 @@ glutInit (int *argc, char **argv)
 
    __glutTask = _glut_findtask(task_Current);
 
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutInit(Task @ %x)\n", task_Current));
-#endif
+
+   D(bug("[AMGLUT] In glutInit(Task @ %x)\n", task_Current));
+
 
    if (__glutTask == NULL)
    {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] glutInit: No internal task record found!\n"));
-#endif
+      D(bug("[AMGLUT] glutInit: No internal task record found!\n"));
+
       return;
    }
 
@@ -190,9 +191,8 @@ D(bug("[AMGLUT] glutInit: No internal task record found!\n"));
 void APIENTRY
 glutInitDisplayMode (unsigned int mode)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutInitDisplayMode()\n"));
-#endif
+   D(bug("[AMGLUT] In glutInitDisplayMode()\n"));
+
    _glut_default.mode = mode;
 }
 
@@ -200,9 +200,8 @@ D(bug("[AMGLUT] In glutInitDisplayMode()\n"));
 void APIENTRY
 glutInitWindowPosition (int x, int y)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutInitWindowPosition(x:%d, y:%d)\n", x, y));
-#endif
+   D(bug("[AMGLUT] In glutInitWindowPosition(x:%d, y:%d)\n", x, y));
+
    _glut_default.x = x;
    _glut_default.y = y;
 }
@@ -211,9 +210,8 @@ D(bug("[AMGLUT] In glutInitWindowPosition(x:%d, y:%d)\n", x, y));
 void APIENTRY
 glutInitWindowSize (int width, int height)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutInitWindowSize(width:%d, height:%d)\n", width, height));
-#endif
+   D(bug("[AMGLUT] In glutInitWindowSize(width:%d, height:%d)\n", width, height));
+
    _glut_default.width = width;
    _glut_default.height = height;
 }
@@ -222,9 +220,8 @@ D(bug("[AMGLUT] In glutInitWindowSize(width:%d, height:%d)\n", width, height));
 void APIENTRY
 glutInitDisplayString (const char *string)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutInitDisplayString()\n"));
-#endif
+   D(bug("[AMGLUT] In glutInitDisplayString()\n"));
+
    init_string = _glut_strdup(string);
 }
 
@@ -232,9 +229,8 @@ D(bug("[AMGLUT] In glutInitDisplayString()\n"));
 void APIENTRY
 glutSetOption (GLenum pname, int value)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutSetOption()\n"));
-#endif
+   D(bug("[AMGLUT] In glutSetOption()\n"));
+
    switch (pname) {
       case GLUT_INIT_WINDOW_X:
          _glut_default.x = value;
@@ -249,45 +245,36 @@ D(bug("[AMGLUT] In glutSetOption()\n"));
 void APIENTRY
 glutForceJoystickFunc (void)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutForceJoystickFunc() #\n"));
-#endif
+   D(bug("[AMGLUT] In glutForceJoystickFunc() #\n"));
 }
 
 
 void APIENTRY
 glutIgnoreKeyRepeat (int ignore)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutIgnoreKeyRepeat() #\n"));
-#endif
+   D(bug("[AMGLUT] In glutIgnoreKeyRepeat() #\n"));
 }
 
 
 void APIENTRY
 glutSetKeyRepeat (int repeatMode)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutSetKeyRepeat() #\n"));
-#endif
+   D(bug("[AMGLUT] In glutSetKeyRepeat() #\n"));
 }
 
 
 void APIENTRY
 glutVideoPan (int x, int y, int w, int h)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutVideoPan() #\n"));
-#endif
+   D(bug("[AMGLUT] In glutVideoPan() #\n"));
 }
 
 
 int APIENTRY
 glutVideoResizeGet( GLenum eWhat )
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutVideoResizeGet() #\n"));
-#endif
+   D(bug("[AMGLUT] In glutVideoResizeGet() #\n"));
+
    return 0;
 }
 
@@ -295,27 +282,21 @@ D(bug("[AMGLUT] In glutVideoResizeGet() #\n"));
 void APIENTRY
 glutSetupVideoResizing (void)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutSetupVideoResizing() #\n"));
-#endif
+   D(bug("[AMGLUT] In glutSetupVideoResizing() #\n"));
 }
 
 
 void APIENTRY
 glutStopVideoResizing (void)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutStopVideoResizing() #\n"));
-#endif
+   D(bug("[AMGLUT] In glutStopVideoResizing() #\n"));
 }
 
 
 void APIENTRY
 glutVideoResize (int x, int y, int w, int h)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutVideoResize() #\n"));
-#endif
+   D(bug("[AMGLUT] In glutVideoResize() #\n"));
 }
 
 static void
@@ -323,9 +304,7 @@ __glut_exit_atexit (void)
 {
   int i;
 
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In __glut_exit_atexit() *#*#\n"));
-#endif
+  D(bug("[AMGLUT] In __glut_exit_atexit() *#*#\n"));
 
   GLUTwindow *found_GLUTwin = NULL;
   struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));

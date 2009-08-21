@@ -25,6 +25,8 @@
 
 #include "internal.h"
 
+#include <aros/debug.h>
+
 extern struct AROSMesaGLUT_TaskNode     *_glut_findtask(struct Task *);
 
 GLUTmenuStatusCB _glut_menu_status_func = NULL;
@@ -64,9 +66,9 @@ ULONG _glut_create_newmenu(struct NewMenu *menustrip_newmenu, GLUTmenu *glut_men
   struct NewMenu *current_newmenuentry = menustrip_newmenu;
   ULONG          _menu_strip_itemcount = 0;
 
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] _glut_create_newmenu: menustrip_newmenu = %x\n", menustrip_newmenu));
-#endif
+
+  D(bug("[AMGLUT] _glut_create_newmenu: menustrip_newmenu = %x\n", menustrip_newmenu));
+
 
   if (!(submenu))
   {
@@ -79,9 +81,9 @@ D(bug("[AMGLUT] _glut_create_newmenu: menustrip_newmenu = %x\n", menustrip_newme
   ForeachNode(&glut_menu->_gmn_Entries, menuentrynode)
   {
     current_newmenuentry = &menustrip_newmenu[_menu_strip_itemcount];
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] _glut_create_newmenu: current_newmenu = %x\n", current_newmenuentry));
-#endif
+
+    D(bug("[AMGLUT] _glut_create_newmenu: current_newmenu = %x\n", current_newmenuentry));
+
 
     if ((menuentrynode->_gme_type == GLUT_MENU_ENTRY_ITEM))
     {
@@ -114,9 +116,9 @@ D(bug("[AMGLUT] _glut_create_newmenu: current_newmenu = %x\n", current_newmenuen
 /* Update the displayed windows for the current windows (using the current menus) */
 void _glut_update_window_menus (void)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In _glut_update_window_menus()\n"));
-#endif
+
+  D(bug("[AMGLUT] In _glut_update_window_menus()\n"));
+
   struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
   if ((__glutTask->AMGLUTTN_WindowCurrent) && (__glutTask->AMGLUTTN_WindowCurrent->amglutwin_WindowGlutMenu))
   {
@@ -127,26 +129,23 @@ D(bug("[AMGLUT] In _glut_update_window_menus()\n"));
     
     _menu_strip_itemcount = _glut_count_menuentries(__glutTask->AMGLUTTN_WindowCurrent->amglutwin_WindowGlutMenu);
 
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] _glut_update_window_menus: Allocating NewMenu struct for %d items\n", _menu_strip_itemcount));
-#endif
+    D(bug("[AMGLUT] _glut_update_window_menus: Allocating NewMenu struct for %d items\n", _menu_strip_itemcount));
+
 
     if ((_menu_strip_NewMenu = (struct NewMenu *)AllocVec(sizeof(struct NewMenu) * (_menu_strip_itemcount + 2), MEMF_CLEAR|MEMF_PUBLIC)) == NULL) {
       return;
     }
 
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] _glut_update_window_menus: temp NewMenu struct  @ %x\n", _menu_strip_NewMenu));
-#endif
+    D(bug("[AMGLUT] _glut_update_window_menus: temp NewMenu struct  @ %x\n", _menu_strip_NewMenu));
+
 
     _glut_create_newmenu(_menu_strip_NewMenu, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_WindowGlutMenu, GL_FALSE);
     _window_menu_strip = CreateMenusA(_menu_strip_NewMenu, NULL);
 
     if (_window_menu_strip)
     {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] _glut_update_window_menus: menu strip created  @ %x\n", _window_menu_strip));
-#endif
+      D(bug("[AMGLUT] _glut_update_window_menus: menu strip created  @ %x\n", _window_menu_strip));
+
       APTR vi = GetVisualInfoA(__glutTask->AMGLUTTN_WindowCurrent->amglutwin_Window->WScreen, NULL);
       if (vi)
       {
@@ -189,9 +188,8 @@ glutCreateMenu (GLUTselectCB func)
 {
   int i;
 
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutCreateMenu()\n"));
-#endif
+  D(bug("[AMGLUT] In glutCreateMenu()\n"));
+
 
   /* Search for an empty slot. */
   for (i = 0; i < MAX_MENUS; i++)
@@ -208,9 +206,8 @@ D(bug("[AMGLUT] In glutCreateMenu()\n"));
       NEWLIST(&menunode->_gmn_Entries);
       menunode->_gmn_CB = func;
       menunode->_gmn_ID = ++i;
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] glutCreateMenu: GLUTMenu Node @ %x [ID %d, callback @ %x]\n", menunode, menunode->_gmn_ID, menunode->_gmn_CB));
-#endif
+      D(bug("[AMGLUT] glutCreateMenu: GLUTMenu Node @ %x [ID %d, callback @ %x]\n", menunode, menunode->_gmn_ID, menunode->_gmn_CB));
+
       return i;
     }
   }
@@ -240,9 +237,9 @@ glutSetMenu (int menu)
 void APIENTRY
 glutAddMenuEntry (const char *label, int value)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutAddMenuEntry('%s')\n", label));
-#endif
+
+  D(bug("[AMGLUT] In glutAddMenuEntry('%s')\n", label));
+
   if (_glut_menu_current)
   {
     GLUTmenuentry *menuentrynode = NULL;      
@@ -256,9 +253,9 @@ D(bug("[AMGLUT] In glutAddMenuEntry('%s')\n", label));
     strcpy(menuentrynode->_gme_label, label);
     menuentrynode->_gme_value = value;    
 
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] glutAddMenuEntry: GLUTmenuentry Node @ %x ['%s' value %d]\n", menuentrynode, menuentrynode->_gme_label, menuentrynode->_gme_value));
-#endif
+
+    D(bug("[AMGLUT] glutAddMenuEntry: GLUTmenuentry Node @ %x ['%s' value %d]\n", menuentrynode, menuentrynode->_gme_label, menuentrynode->_gme_value));
+
 
     _glut_menu_current->_gmn_Entry_Count ++;
     AddTail(&_glut_menu_current->_gmn_Entries, &menuentrynode->_gme_Node);
@@ -269,9 +266,8 @@ D(bug("[AMGLUT] glutAddMenuEntry: GLUTmenuentry Node @ %x ['%s' value %d]\n", me
 void APIENTRY
 glutAddSubMenu (const char *label, int submenu)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutAddSubMenu('%s')\n", label));
-#endif
+  D(bug("[AMGLUT] In glutAddSubMenu('%s')\n", label));
+
   if (_glut_menu_current)
   {
     GLUTmenuentry *menuentrynode = NULL;      
@@ -285,9 +281,8 @@ D(bug("[AMGLUT] In glutAddSubMenu('%s')\n", label));
     strcpy(menuentrynode->_gme_label, label);
     menuentrynode->_gme_value = _glut_menus[submenu-1];
     
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] glutAddSubMenu: GLUTmenuentry Node @ %x ['%s' SubMenu @ %x]\n", menuentrynode, menuentrynode->_gme_label, menuentrynode->_gme_value));
-#endif
+    D(bug("[AMGLUT] glutAddSubMenu: GLUTmenuentry Node @ %x ['%s' SubMenu @ %x]\n", menuentrynode, menuentrynode->_gme_label, menuentrynode->_gme_value));
+
     _glut_menu_current->_gmn_Entry_Count ++;
     AddTail(&_glut_menu_current->_gmn_Entries, &menuentrynode->_gme_Node);
   }
@@ -315,23 +310,18 @@ glutRemoveMenuItem (int item)
 void APIENTRY
 glutAttachMenu (int button)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutAttachMenu()\n"));
-#endif
+  D(bug("[AMGLUT] In glutAttachMenu()\n"));
+
   struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
   if ((__glutTask->AMGLUTTN_WindowCurrent) && (_glut_menu_current))
   {
     if ((button == GLUT_LEFT_BUTTON) || (button == GLUT_MIDDLE_BUTTON))
     {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] glutAttachMenu: WARNING: Unsupported menu button\n"));
-#endif
+      D(bug("[AMGLUT] glutAttachMenu: WARNING: Unsupported menu button\n"));
     }
     else if ((button == GLUT_RIGHT_BUTTON))
     {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] glutAttachMenu: Updating menu for right mouse button\n"));
-#endif
+      D(bug("[AMGLUT] glutAttachMenu: Updating menu for right mouse button\n"));
       __glutTask->AMGLUTTN_WindowCurrent->amglutwin_WindowGlutMenu = _glut_menu_current;
       _glut_update_window_menus();
     }
@@ -342,25 +332,21 @@ D(bug("[AMGLUT] glutAttachMenu: Updating menu for right mouse button\n"));
 void APIENTRY
 glutDetachMenu (int button)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutDetachMenu()\n"));
-#endif
+  D(bug("[AMGLUT] In glutDetachMenu()\n"));
+
   struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
   if ((__glutTask->AMGLUTTN_WindowCurrent))
   {
     if ((button == GLUT_LEFT_BUTTON) || (button == GLUT_MIDDLE_BUTTON))
     {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] glutDetachMenu: WARNING: Unsupported menu button\n"));
-#endif
+      D(bug("[AMGLUT] glutDetachMenu: WARNING: Unsupported menu button\n"));
     }
     else if ((button == GLUT_RIGHT_BUTTON))
     {
       if ((__glutTask->AMGLUTTN_WindowCurrent->amglutwin_WindowMenuStrip))
       {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] glutDetachMenu: Detaching menu for right mouse button\n"));
-#endif
+        D(bug("[AMGLUT] glutDetachMenu: Detaching menu for right mouse button\n"));
+
         ClearMenuStrip(__glutTask->AMGLUTTN_WindowCurrent->amglutwin_Window);
         __glutTask->AMGLUTTN_WindowCurrent->amglutwin_WindowGlutMenu = NULL;
         __glutTask->AMGLUTTN_WindowCurrent->amglutwin_WindowMenuStrip = NULL;

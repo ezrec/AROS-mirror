@@ -10,6 +10,8 @@
 
 #include <GL/glut.h>
 
+#include <aros/debug.h>
+
 #if !defined(AROSSHAREDGLUT)
 #include "arosmesaglut_intern.h"
 #define LIBBASETYPE struct AROSMesaGLUTBase

@@ -26,6 +26,8 @@
 
 #include "internal.h"
 
+#include <aros/debug.h>
+
 extern struct AROSMesaGLUT_TaskNode     *_glut_findtask(struct Task *);
 
 static int timer_installed;
@@ -36,88 +38,70 @@ static struct timeval time_start;
 int APIENTRY
 glutGet (GLenum type)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutGet(type:%d) ", type));
-#endif
+
+   D(bug("[AMGLUT] In glutGet(type:%d) ", type));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
 
    switch (type) {
       case GLUT_WINDOW_X:
       {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("GLUT_WINDOW_X = %d\n", __glutTask->AMGLUTTN_WindowCurrent->amglutwin_xpos));
-#endif
+         D(bug("GLUT_WINDOW_X = %d\n", __glutTask->AMGLUTTN_WindowCurrent->amglutwin_xpos));
+
          return __glutTask->AMGLUTTN_WindowCurrent->amglutwin_xpos;
       }
       case GLUT_WINDOW_Y:
       {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("GLUT_WINDOW_Y = %d\n", __glutTask->AMGLUTTN_WindowCurrent->amglutwin_ypos));
-#endif
+         D(bug("GLUT_WINDOW_Y = %d\n", __glutTask->AMGLUTTN_WindowCurrent->amglutwin_ypos));
+
          return __glutTask->AMGLUTTN_WindowCurrent->amglutwin_ypos;
       }
       case GLUT_WINDOW_WIDTH:
       {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("GLUT_WINDOW_WIDTH = %d\n", __glutTask->AMGLUTTN_WindowCurrent->amglutwin_width));
-#endif
+         D(bug("GLUT_WINDOW_WIDTH = %d\n", __glutTask->AMGLUTTN_WindowCurrent->amglutwin_width));
+
          return __glutTask->AMGLUTTN_WindowCurrent->amglutwin_width;
       }
       case GLUT_WINDOW_HEIGHT:
       {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("GLUT_WINDOW_HEIGHT = %d\n", __glutTask->AMGLUTTN_WindowCurrent->amglutwin_height));
-#endif
+         D(bug("GLUT_WINDOW_HEIGHT = %d\n", __glutTask->AMGLUTTN_WindowCurrent->amglutwin_height));
+
          return __glutTask->AMGLUTTN_WindowCurrent->amglutwin_height;
       }
       case GLUT_WINDOW_STENCIL_SIZE:
       {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("GLUT_STENCIL_SIZE = %d\n", _glut_visual.stencil));
-#endif
+         D(bug("GLUT_STENCIL_SIZE = %d\n", _glut_visual.stencil));
+
          return _glut_visual.stencil;
       }
       case GLUT_WINDOW_DEPTH_SIZE:
       {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("GLUT_DEPTH_SIZE = %d\n", _glut_visual.depth));
-#endif
+         D(bug("GLUT_DEPTH_SIZE = %d\n", _glut_visual.depth));
+
          return _glut_visual.depth;
       }
       case GLUT_WINDOW_RGBA:
       {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("GLUT_WINDOW_RGBA ="));
-if (!(_glut_default.mode & GLUT_INDEX))
-{
-D(bug(" TRUE\n"));
-}
-else
-{
-D(bug(" FALSE\n"));
-}
-#endif
+         D(bug("GLUT_WINDOW_RGBA = %d", !(_glut_default.mode & GLUT_INDEX)));
+
          return !(_glut_default.mode & GLUT_INDEX);
       }
       case GLUT_WINDOW_COLORMAP_SIZE:
       {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("GLUT_WINDOW_COLORMAP_SIZE\n"));
-#endif
+         D(bug("GLUT_WINDOW_COLORMAP_SIZE\n"));
+
          return (_glut_default.mode & GLUT_INDEX) ? (256 - RESERVED_COLORS) : 0;
       }
       case GLUT_SCREEN_WIDTH:
       {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("GLUT_SCREEN_WIDTH = %d\n", _glut_visual.geometry[0]));
-#endif
+         D(bug("GLUT_SCREEN_WIDTH = %d\n", _glut_visual.geometry[0]));
+
          return _glut_visual.geometry[0];
       }
       case GLUT_SCREEN_HEIGHT:
       {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("GLUT_SCREEN_HEIGHT = %d\n", _glut_visual.geometry[1]));
-#endif
+        D(bug("GLUT_SCREEN_HEIGHT = %d\n", _glut_visual.geometry[1]));
+
          return _glut_visual.geometry[1];
       }
       case GLUT_INIT_WINDOW_X:
@@ -132,9 +116,8 @@ D(bug("GLUT_SCREEN_HEIGHT = %d\n", _glut_visual.geometry[1]));
          return _glut_default.mode;
       case GLUT_ELAPSED_TIME:
       {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("GLUT_ELAPSED_TIME\n"));
-#endif
+         D(bug("GLUT_ELAPSED_TIME\n"));
+
          if (!timer_installed) {
             timer_installed = GL_TRUE;
 /*            gettimeofday(&then, NULL);*/
@@ -152,9 +135,8 @@ D(bug("GLUT_ELAPSED_TIME\n"));
       }
       default:
       {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("UNKNOWN VALUE!\n"));
-#endif
+         D(bug("UNKNOWN VALUE!\n"));
+
          return -1;
       }
    }
@@ -164,9 +146,8 @@ D(bug("UNKNOWN VALUE!\n"));
 int APIENTRY
 glutDeviceGet (GLenum type)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutDeviceGet()\n"));
-#endif
+   D(bug("[AMGLUT] In glutDeviceGet()\n"));
+   
    switch (type) {
       case GLUT_HAS_KEYBOARD:
          return GL_TRUE;
@@ -193,9 +174,9 @@ int APIENTRY
 glutGetModifiers (void)
 {
    int mod = 0;
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutGetModifiers()\n"));
-#endif
+
+   D(bug("[AMGLUT] In glutGetModifiers()\n"));
+
 //   int shifts = pc_keyshifts();
 
 /*   if (shifts & (KB_SHIFT_FLAG | KB_CAPSLOCK_FLAG)) {
@@ -217,9 +198,8 @@ D(bug("[AMGLUT] In glutGetModifiers()\n"));
 void APIENTRY
 glutReportErrors (void)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutReportErrors()\n"));
-#endif
+   D(bug("[AMGLUT] In glutReportErrors()\n"));
+
    /* reports all the OpenGL errors that happened till now */
 }
 
@@ -239,9 +219,8 @@ static GLuint game_refresh;
 void APIENTRY
 glutGameModeString (const char *string)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutGameModeString()\n"));
-#endif
+   D(bug("[AMGLUT] In glutGameModeString()\n"));
+
    if (sscanf(string, "%ux%u:%u@%u", &game_width, &game_height, &game_bpp, &game_refresh) == 4) {
       game_possible = GL_TRUE;
    }
@@ -251,9 +230,8 @@ D(bug("[AMGLUT] In glutGameModeString()\n"));
 int APIENTRY
 glutGameModeGet (GLenum mode)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutGameModeGet()\n"));
-#endif
+   D(bug("[AMGLUT] In glutGameModeGet()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    switch (mode) {
       case GLUT_GAME_MODE_ACTIVE:
@@ -277,9 +255,8 @@ D(bug("[AMGLUT] In glutGameModeGet()\n"));
 int APIENTRY
 glutEnterGameMode (void)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutEnterGameMode()\n"));
-#endif
+   D(bug("[AMGLUT] In glutEnterGameMode()\n"));
+
    if (glutGameModeGet(GLUT_GAME_MODE_POSSIBLE)) {
       _glut_visual.bpp = game_bpp;
       _glut_visual.refresh = game_refresh;
@@ -300,9 +277,8 @@ D(bug("[AMGLUT] In glutEnterGameMode()\n"));
 void GLUTAPIENTRY
 glutLeaveGameMode (void)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutLeaveGameMode()\n"));
-#endif
+   D(bug("[AMGLUT] In glutLeaveGameMode()\n"));
+
    if (glutGameModeGet(GLUT_GAME_MODE_ACTIVE)) {
       game_active = GL_FALSE;
 

@@ -25,6 +25,8 @@
 
 #include "internal.h"
 
+#include <aros/debug.h>
+
 extern struct AROSMesaGLUT_TaskNode     *_glut_findtask(struct Task *);
 
 int _glut_mouse;
@@ -33,9 +35,8 @@ int _glut_mouse_x = 0, _glut_mouse_y = 0;
 void
 _glut_mouse_init (void)
 {
-#if defined(DEBUG_AROSMESAGLUT)
-D(bug("[AMGLUT] In _glut_mouse_init()\n"));
-#endif
+   D(bug("[AMGLUT] In _glut_mouse_init()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
 
 //   if ((_glut_mouse = pc_install_mouse())) {
@@ -50,9 +51,9 @@ D(bug("[AMGLUT] In _glut_mouse_init()\n"));
 void APIENTRY
 glutSetCursor (int cursor)
 {
-#if defined(DEBUG_AROSMESAGLUT)
-D(bug("[AMGLUT] In glutSetCursor()\n"));
-#endif
+
+   D(bug("[AMGLUT] In glutSetCursor()\n"));
+
    /* XXX completely futile until full mouse support (maybe never) */
 }
 
@@ -60,8 +61,8 @@ D(bug("[AMGLUT] In glutSetCursor()\n"));
 void APIENTRY
 glutWarpPointer (int x, int y)
 {
-#if defined(DEBUG_AROSMESAGLUT)
-D(bug("[AMGLUT] In glutWarpPointer()\n"));
-#endif
+
+   D(bug("[AMGLUT] In glutWarpPointer()\n"));
+
 //   pc_warp_mouse(x, y);
 }

@@ -24,6 +24,8 @@
 
 #include "internal.h"
 
+#include <aros/debug.h>
+
 extern struct AROSMesaGLUT_TaskNode     *_glut_findtask(struct Task *);
 
 GLUTSShotCB               _glut_timer_cb[MAX_TIMER_CB];
@@ -33,9 +35,8 @@ GLUTidleCB                _glut_idle_func = NULL;
 void APIENTRY
 glutDisplayFunc (GLUTdisplayCB func)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutDisplayFunc()\n"));
-#endif
+   D(bug("[AMGLUT] In glutDisplayFunc()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    __glutTask->AMGLUTTN_WindowCurrent->display = func;
    __glut_modify_windowIDCMP(__glutTask, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num);
@@ -45,9 +46,8 @@ D(bug("[AMGLUT] In glutDisplayFunc()\n"));
 void APIENTRY
 glutReshapeFunc (GLUTreshapeCB func)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutReshapeFunc()\n"));
-#endif
+   D(bug("[AMGLUT] In glutReshapeFunc()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    __glutTask->AMGLUTTN_WindowCurrent->reshape = func;
    __glut_modify_windowIDCMP(__glutTask, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num);
@@ -57,9 +57,8 @@ D(bug("[AMGLUT] In glutReshapeFunc()\n"));
 void APIENTRY
 glutKeyboardFunc (GLUTkeyboardCB func)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutKeyboardFunc()\n"));
-#endif
+   D(bug("[AMGLUT] In glutKeyboardFunc()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    __glutTask->AMGLUTTN_WindowCurrent->keyboard = func;
    __glut_modify_windowIDCMP(__glutTask, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num);
@@ -70,9 +69,8 @@ void APIENTRY
 glutMouseFunc (GLUTmouseCB func)
 {
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutMouseFunc(win:%d)\n", __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num));
-#endif
+   D(bug("[AMGLUT] In glutMouseFunc(win:%d)\n", __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num));
+
    __glutTask->AMGLUTTN_WindowCurrent->mouse = func;
    __glut_modify_windowIDCMP(__glutTask, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num);
 }
@@ -81,9 +79,8 @@ D(bug("[AMGLUT] In glutMouseFunc(win:%d)\n", __glutTask->AMGLUTTN_WindowCurrent-
 void APIENTRY
 glutMotionFunc (GLUTmotionCB func)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutMotionFunc()\n"));
-#endif
+   D(bug("[AMGLUT] In glutMotionFunc()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    __glutTask->AMGLUTTN_WindowCurrent->motion = func;
    __glut_modify_windowIDCMP(__glutTask, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num);
@@ -93,9 +90,8 @@ D(bug("[AMGLUT] In glutMotionFunc()\n"));
 void APIENTRY
 glutPassiveMotionFunc (GLUTpassiveCB func)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutPassiveMotionFunc()\n"));
-#endif
+   D(bug("[AMGLUT] In glutPassiveMotionFunc()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    __glutTask->AMGLUTTN_WindowCurrent->passive = func;
    __glut_modify_windowIDCMP(__glutTask, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num);
@@ -105,9 +101,8 @@ D(bug("[AMGLUT] In glutPassiveMotionFunc()\n"));
 void APIENTRY
 glutEntryFunc (GLUTentryCB func)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutEntryFunc()\n"));
-#endif
+   D(bug("[AMGLUT] In glutEntryFunc()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    __glutTask->AMGLUTTN_WindowCurrent->entry = func;
    __glut_modify_windowIDCMP(__glutTask, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num);
@@ -117,9 +112,8 @@ D(bug("[AMGLUT] In glutEntryFunc()\n"));
 void APIENTRY
 glutVisibilityFunc (GLUTvisibilityCB func)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutVisibilityFunc()\n"));
-#endif
+   D(bug("[AMGLUT] In glutVisibilityFunc()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    __glutTask->AMGLUTTN_WindowCurrent->visibility = func;
    __glut_modify_windowIDCMP(__glutTask, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num);
@@ -129,9 +123,8 @@ D(bug("[AMGLUT] In glutVisibilityFunc()\n"));
 void APIENTRY
 glutWindowStatusFunc (GLUTwindowStatusCB func)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutWindowStatusFunc()\n"));
-#endif
+   D(bug("[AMGLUT] In glutWindowStatusFunc()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    __glutTask->AMGLUTTN_WindowCurrent->windowStatus = func;
    __glut_modify_windowIDCMP(__glutTask, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num);
@@ -141,9 +134,8 @@ D(bug("[AMGLUT] In glutWindowStatusFunc()\n"));
 void APIENTRY
 glutIdleFunc (GLUTidleCB func)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutIdleFunc()\n"));
-#endif
+   D(bug("[AMGLUT] In glutIdleFunc()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    _glut_idle_func = func;
    __glut_modify_windowIDCMP(__glutTask, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num);
@@ -155,9 +147,8 @@ glutTimerFunc (unsigned int millis, GLUTtimerCB func, int value)
 {
    int i;
 
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutTimerFunc()\n"));
-#endif
+   D(bug("[AMGLUT] In glutTimerFunc()\n"));
+
 
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
 
@@ -179,9 +170,8 @@ D(bug("[AMGLUT] In glutTimerFunc()\n"));
 void APIENTRY
 glutSpecialFunc (GLUTspecialCB func)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutSpecialFunc()\n"));
-#endif
+   D(bug("[AMGLUT] In glutSpecialFunc()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    __glutTask->AMGLUTTN_WindowCurrent->special = func;
    __glut_modify_windowIDCMP(__glutTask, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num);
@@ -191,9 +181,8 @@ D(bug("[AMGLUT] In glutSpecialFunc()\n"));
 void APIENTRY
 glutSpaceballMotionFunc (GLUTspaceMotionCB func)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutSpaceballMotionFunc()\n"));
-#endif
+   D(bug("[AMGLUT] In glutSpaceballMotionFunc()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    __glutTask->AMGLUTTN_WindowCurrent->spaceMotion = func;
    __glut_modify_windowIDCMP(__glutTask, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num);
@@ -203,9 +192,8 @@ D(bug("[AMGLUT] In glutSpaceballMotionFunc()\n"));
 void APIENTRY
 glutSpaceballRotateFunc (GLUTspaceRotateCB func)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutSpaceballRotateFunc()\n"));
-#endif
+   D(bug("[AMGLUT] In glutSpaceballRotateFunc()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    __glutTask->AMGLUTTN_WindowCurrent->spaceRotate = func;
    __glut_modify_windowIDCMP(__glutTask, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num);
@@ -215,9 +203,8 @@ D(bug("[AMGLUT] In glutSpaceballRotateFunc()\n"));
 void APIENTRY
 glutSpaceballButtonFunc (GLUTspaceButtonCB func)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutSpaceballButtonFunc()\n"));
-#endif
+   D(bug("[AMGLUT] In glutSpaceballButtonFunc()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    __glutTask->AMGLUTTN_WindowCurrent->spaceButton = func;
    __glut_modify_windowIDCMP(__glutTask, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num);
@@ -227,9 +214,8 @@ D(bug("[AMGLUT] In glutSpaceballButtonFunc()\n"));
 void APIENTRY
 glutDialsFunc (GLUTdialsCB func)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutDialsFunc()\n"));
-#endif
+   D(bug("[AMGLUT] In glutDialsFunc()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    __glutTask->AMGLUTTN_WindowCurrent->dials = func;
    __glut_modify_windowIDCMP(__glutTask, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num);
@@ -239,9 +225,8 @@ D(bug("[AMGLUT] In glutDialsFunc()\n"));
 void APIENTRY
 glutButtonBoxFunc (GLUTbuttonBoxCB func)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutButtonBoxFunc()\n"));
-#endif
+   D(bug("[AMGLUT] In glutButtonBoxFunc()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    __glutTask->AMGLUTTN_WindowCurrent->buttonBox = func;
    __glut_modify_windowIDCMP(__glutTask, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num);
@@ -251,9 +236,8 @@ D(bug("[AMGLUT] In glutButtonBoxFunc()\n"));
 void APIENTRY
 glutTabletMotionFunc (GLUTtabletMotionCB func)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutTabletMotionFunc()\n"));
-#endif
+   D(bug("[AMGLUT] In glutTabletMotionFunc()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    __glutTask->AMGLUTTN_WindowCurrent->tabletMotion = func;
    __glut_modify_windowIDCMP(__glutTask, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num);
@@ -263,9 +247,8 @@ D(bug("[AMGLUT] In glutTabletMotionFunc()\n"));
 void APIENTRY
 glutTabletButtonFunc (GLUTtabletButtonCB func)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutTabletButtonFunc()\n"));
-#endif
+   D(bug("[AMGLUT] In glutTabletButtonFunc()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    __glutTask->AMGLUTTN_WindowCurrent->tabletButton = func;
    __glut_modify_windowIDCMP(__glutTask, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num);
@@ -275,9 +258,8 @@ D(bug("[AMGLUT] In glutTabletButtonFunc()\n"));
 void APIENTRY
 glutJoystickFunc (GLUTjoystickCB func, int interval)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutJoystickFunc()\n"));
-#endif
+   D(bug("[AMGLUT] In glutJoystickFunc()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    __glutTask->AMGLUTTN_WindowCurrent->joystick = func;
    __glut_modify_windowIDCMP(__glutTask, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num);
@@ -287,9 +269,8 @@ D(bug("[AMGLUT] In glutJoystickFunc()\n"));
 void APIENTRY
 glutKeyboardUpFunc (GLUTkeyboardCB func)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutKeyboardUpFunc()\n"));
-#endif
+   D(bug("[AMGLUT] In glutKeyboardUpFunc()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    __glutTask->AMGLUTTN_WindowCurrent->keyboardUp = func;
    __glut_modify_windowIDCMP(__glutTask, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num);
@@ -299,9 +280,8 @@ D(bug("[AMGLUT] In glutKeyboardUpFunc()\n"));
 void APIENTRY
 glutSpecialUpFunc (GLUTspecialCB func)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutSpecialUpFunc()\n"));
-#endif
+   D(bug("[AMGLUT] In glutSpecialUpFunc()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    __glutTask->AMGLUTTN_WindowCurrent->specialUp = func;
    __glut_modify_windowIDCMP(__glutTask, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num);
@@ -311,9 +291,8 @@ D(bug("[AMGLUT] In glutSpecialUpFunc()\n"));
 void APIENTRY
 glutMouseWheelFunc (GLUTmouseWheelCB func)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutMouseWheelFunc()\n"));
-#endif
+   D(bug("[AMGLUT] In glutMouseWheelFunc()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    __glutTask->AMGLUTTN_WindowCurrent->mouseWheel = func;
    __glut_modify_windowIDCMP(__glutTask, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num);

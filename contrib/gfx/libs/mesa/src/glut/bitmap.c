@@ -23,6 +23,8 @@
  */
 
  #include "internal.h"
+ 
+ #include <aros/debug.h>
 
 void APIENTRY
 glutBitmapCharacter (void *font, int c)
@@ -30,9 +32,7 @@ glutBitmapCharacter (void *font, int c)
    const GLUTBitmapFont *bfp = _glut_font(font);
    const GLUTBitmapChar *bcp;
 
-#if defined(DEBUG_AROSMESAGLUT)
-D(bug("[AMGLUT] In glutBitmapCharacter()\n"));
-#endif
+   D(bug("[AMGLUT] In glutBitmapCharacter()\n"));
 
    if (c >= bfp->num || !(bcp = bfp->table[c]))
       return;
@@ -59,9 +59,7 @@ glutBitmapString (void *font, const unsigned char *string)
    const GLUTBitmapChar *bcp;
    unsigned char c;
 
-#if defined(DEBUG_AROSMESAGLUT)
-D(bug("[AMGLUT] In glutBitmapString()\n"));
-#endif
+   D(bug("[AMGLUT] In glutBitmapString()\n"));
 
    glPushClientAttrib(GL_CLIENT_PIXEL_STORE_BIT);
 
@@ -88,9 +86,7 @@ glutBitmapWidth (void *font, int c)
    const GLUTBitmapFont *bfp = _glut_font(font);
    const GLUTBitmapChar *bcp;
 
-#if defined(DEBUG_AROSMESAGLUT)
-D(bug("[AMGLUT] In glutBitmapWidth()\n"));
-#endif
+   D(bug("[AMGLUT] In glutBitmapWidth()\n"));
 
    if (c >= bfp->num || !(bcp = bfp->table[c]))
       return 0;
@@ -107,9 +103,7 @@ glutBitmapLength (void *font, const unsigned char *string)
    unsigned char c;
    int length = 0;
 
-#if defined(DEBUG_AROSMESAGLUT)
-D(bug("[AMGLUT] In glutBitmapLength()\n"));
-#endif
+   D(bug("[AMGLUT] In glutBitmapLength()\n"));
 
    while ((c = *(string++))) {
       if (c < bfp->num && (bcp = bfp->table[c]))
@@ -125,9 +119,7 @@ glutBitmapHeight (void *font)
 {
    const GLUTBitmapFont *bfp = _glut_font(font);
 
-#if defined(DEBUG_AROSMESAGLUT)
-D(bug("[AMGLUT] In glutBitmapHeight()\n"));
-#endif
+   D(bug("[AMGLUT] In glutBitmapHeight()\n"));
 
    return bfp->height;
 }

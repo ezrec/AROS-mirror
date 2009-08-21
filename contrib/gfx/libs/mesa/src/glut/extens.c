@@ -26,15 +26,17 @@
 
 #include "internal.h"
 
+#include <aros/debug.h>
+
 int APIENTRY
 glutExtensionSupported (const char *extension)
 {
    static const GLubyte *extensions = NULL;
    const GLubyte *last, *where;
 
-#if defined(DEBUG_AROSMESAGLUT)
-D(bug("[AMGLUT] In glutExtensionSupported()\n"));
-#endif
+
+   D(bug("[AMGLUT] In glutExtensionSupported()\n"));
+
 
    /* Extension names should not have spaces. */
    if (strchr(extension, ' ') || *extension == '\0') {
@@ -67,9 +69,8 @@ D(bug("[AMGLUT] In glutExtensionSupported()\n"));
 GLUTproc APIENTRY
 glutGetProcAddress (const char *procName)
 {
-#if defined(DEBUG_AROSMESAGLUT)
-D(bug("[AMGLUT] In glutGetProcAddress()\n"));
-#endif
+   D(bug("[AMGLUT] In glutGetProcAddress()\n"));
+
    /* TODO - handle glut namespace */
    return (GLUTproc)AROSMesaGetProcAddress(procName);
 }

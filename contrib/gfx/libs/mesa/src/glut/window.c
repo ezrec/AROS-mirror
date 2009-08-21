@@ -30,6 +30,8 @@
 
 #include "internal.h"
 
+#include <aros/debug.h>
+
 extern struct AROSMesaGLUT_TaskNode *_glut_findtask(struct Task *thisTask);
 extern struct MsgPort	        *_glut_init_global_msgport(void);
 
@@ -128,9 +130,8 @@ ULONG __glut_modify_windowIDCMP(struct AROSMesaGLUT_TaskNode *__glutTask, int wi
       ModifyIDCMP(_glut_setwindow->amglutwin_Window, new_mask);
       if ((new_mask & IDCMP_MENUPICK))
       {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] __glut_modify_windowIDCMP: Clearing WFLG_RMBTRAP\n"));
-#endif
+        D(bug("[AMGLUT] __glut_modify_windowIDCMP: Clearing WFLG_RMBTRAP\n"));
+
         _glut_setwindow->amglutwin_Window->Flags = _glut_setwindow->amglutwin_Window->Flags & ~WFLG_RMBTRAP;
       }
       return new_mask;
@@ -142,9 +143,8 @@ D(bug("[AMGLUT] __glut_modify_windowIDCMP: Clearing WFLG_RMBTRAP\n"));
 int APIENTRY
 glutCreateWindow (const char *title)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutCreateWindow()\n"));
-#endif
+   D(bug("[AMGLUT] In glutCreateWindow()\n"));
+
 
   GLUTwindow *w = NULL;      
   GLenum   RGB_Flag  = GL_TRUE;
@@ -196,14 +196,11 @@ D(bug("[AMGLUT] In glutCreateWindow()\n"));
         if (w->amglutwin_Window)
         {
 
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] glutCreateWindow: Window UserPort = %x\n", w->amglutwin_Window->UserPort));
-#endif
+          D(bug("[AMGLUT] glutCreateWindow: Window UserPort = %x\n", w->amglutwin_Window->UserPort));
 
           w->amglutwin_Window->UserPort = __glutTask->AMGLUTTN_MsgPort;
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] glutCreateWindow: changed to %x\n", w->amglutwin_Window->UserPort));
-#endif
+          D(bug("[AMGLUT] glutCreateWindow: changed to %x\n", w->amglutwin_Window->UserPort));
+
 
           __glut_modify_windowIDCMP(__glutTask, w->amglutwin_num);
         
@@ -212,24 +209,21 @@ D(bug("[AMGLUT] glutCreateWindow: changed to %x\n", w->amglutwin_Window->UserPor
           w->amglutwin_InternalMessage->Class        = GLUT_MSG_WINDOWVIRGIN;
           ((struct Message *)w->amglutwin_InternalMessage)->mn_ReplyPort = w->amglutwin_Window->UserPort;
 
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] glutCreateWindow: Allocated internal window message @ %x\n", w->amglutwin_InternalMessage));
-#endif
+          D(bug("[AMGLUT] glutCreateWindow: Allocated internal window message @ %x\n", w->amglutwin_InternalMessage));
+
 
           if (_glut_default.mode & GLUT_INDEX)
           {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutCreateWindow: Indexed Color (IGNORED)\n"));
-#endif
+            D(bug("[AMGLUT] In glutCreateWindow: Indexed Color (IGNORED)\n"));
+
             RGB_Flag = GL_FALSE;
           }
 
           w->amglutwin_FlagDB = GL_FALSE;
           if (_glut_default.mode & GLUT_DOUBLE)
           {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutCreateWindow: Double Buffered\n"));
-#endif
+            D(bug("[AMGLUT] In glutCreateWindow: Double Buffered\n"));
+
             w->amglutwin_FlagDB = GL_TRUE;
           }
 
@@ -248,9 +242,8 @@ D(bug("[AMGLUT] In glutCreateWindow: Double Buffered\n"));
               AMA_RGBMode, RGB_Flag,                                                  
               TAG_DONE,0)) == NULL)
           {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutCreateWindow: ERROR: Failed to create a GL Context\n"));
-#endif
+            D(bug("[AMGLUT] In glutCreateWindow: ERROR: Failed to create a GL Context\n"));
+
             FreeVec(w);
             return 0;
           }
@@ -265,9 +258,8 @@ D(bug("[AMGLUT] In glutCreateWindow: ERROR: Failed to create a GL Context\n"));
 
           AROSMesaMakeCurrent(w->amglutwin_context);
 
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutCreateWindow: Window successfully opened\n"));
-#endif
+          D(bug("[AMGLUT] In glutCreateWindow: Window successfully opened\n"));
+
 
           AddTail((struct List *)&__glutTask->AMGLUTTN_WindowList, (struct Node *)&w->amglutwin_Node);
           
@@ -282,9 +274,7 @@ D(bug("[AMGLUT] In glutCreateWindow: Window successfully opened\n"));
 int APIENTRY
 glutCreateSubWindow (int win, int x, int y, int width, int height)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutCreateSubWindow()\n"));
-#endif
+   D(bug("[AMGLUT] In glutCreateSubWindow()\n"));
    return GL_FALSE;
 }
 
@@ -294,9 +284,8 @@ glutDestroyWindow (int win)
 {
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    GLUTwindow *w = _glut_window(__glutTask, win);
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutDestroyWindow(id:%d)\n", win));
-#endif
+   D(bug("[AMGLUT] In glutDestroyWindow(id:%d)\n", win));
+
    if (w != NULL) {
       Remove((struct Node *)&w->amglutwin_Node);
       if (w->destroy) {
@@ -331,9 +320,8 @@ D(bug("[AMGLUT] In glutDestroyWindow(id:%d)\n", win));
 void APIENTRY
 glutPostRedisplay (void)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutPostRedisplay()\n"));
-#endif
+   D(bug("[AMGLUT] In glutPostRedisplay()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    __glutTask->AMGLUTTN_WindowCurrent->amglutwin_FlagReDisplay = GL_TRUE;
 }
@@ -342,9 +330,8 @@ D(bug("[AMGLUT] In glutPostRedisplay()\n"));
 void APIENTRY
 glutSwapBuffers (void)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutSwapBuffers()\n"));
-#endif
+  D(bug("[AMGLUT] In glutSwapBuffers()\n"));
+
   struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
 
   if (__glutTask->AMGLUTTN_WindowCurrent)
@@ -380,9 +367,8 @@ D(bug("[AMGLUT] In glutSwapBuffers()\n"));
 int APIENTRY
 glutGetWindow (void)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutGetWindow()\n"));
-#endif
+  D(bug("[AMGLUT] In glutGetWindow()\n"));
+
   struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
   if (__glutTask->AMGLUTTN_WindowCurrent)
    return __glutTask->AMGLUTTN_WindowCurrent->amglutwin_num;
@@ -396,9 +382,9 @@ glutSetWindow (int win)
 {
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    GLUTwindow *w = _glut_window(__glutTask, win);
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutSetWindow(id %d)\n", win));
-#endif
+   
+   D(bug("[AMGLUT] In glutSetWindow(id %d)\n", win));
+
   if (w != NULL)
   {
     __glutTask->AMGLUTTN_WindowCurrent = w;
@@ -414,27 +400,21 @@ D(bug("[AMGLUT] In glutSetWindow(id %d)\n", win));
 void APIENTRY
 glutSetWindowTitle (const char *title)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutSetWindowTitle('%s')\n", title));
-#endif
+  D(bug("[AMGLUT] In glutSetWindowTitle('%s')\n", title));
 }
 
 
 void APIENTRY
 glutSetIconTitle (const char *title)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutSetIconTitle('%s')\n", title));
-#endif
+  D(bug("[AMGLUT] In glutSetIconTitle('%s')\n", title));
 }
 
 
 void APIENTRY
 glutPositionWindow (int x, int y)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutPositionWindow(x:%d, y:%d)\n", x, y));
-#endif
+  D(bug("[AMGLUT] In glutPositionWindow(x:%d, y:%d)\n", x, y));
 /*   if (DMesaMoveBuffer(x, y)) {
       __glutTask->AMGLUTTN_WindowCurrent->xpos = x;
       __glutTask->AMGLUTTN_WindowCurrent->ypos = y;
@@ -445,9 +425,8 @@ D(bug("[AMGLUT] In glutPositionWindow(x:%d, y:%d)\n", x, y));
 void APIENTRY
 glutReshapeWindow (int width, int height)
 { 
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutReshapeWindow(width:%d, height:%d)\n", width, height));
-#endif
+   D(bug("[AMGLUT] In glutReshapeWindow(width:%d, height:%d)\n", width, height));
+ 
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
 /*   if (DMesaResizeBuffer(width, height)) {
       __glutTask->AMGLUTTN_WindowCurrent->amglutwin_width = width;
@@ -464,63 +443,50 @@ D(bug("[AMGLUT] In glutReshapeWindow(width:%d, height:%d)\n", width, height));
 void APIENTRY
 glutFullScreen (void)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutFullScreen()\n"));
-#endif
+  D(bug("[AMGLUT] In glutFullScreen()\n"));
 }
 
 
 void APIENTRY
 glutPopWindow (void)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutPopWindow()\n"));
-#endif
+  D(bug("[AMGLUT] In glutPopWindow()\n"));
 }
 
 
 void APIENTRY
 glutPushWindow (void)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutPushWindow()\n"));
-#endif
+  D(bug("[AMGLUT] In glutPushWindow()\n"));
 }
 
 
 void APIENTRY
 glutIconifyWindow (void)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutIconifyWindow()\n"));
-#endif
+  D(bug("[AMGLUT] In glutIconifyWindow()\n"));
 }
 
 
 void APIENTRY
 glutShowWindow (void)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutShowWindow()\n"));
-#endif
+  D(bug("[AMGLUT] In glutShowWindow()\n"));
 }
 
 
 void APIENTRY
 glutHideWindow (void)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutHideWindow()\n"));
-#endif
+  D(bug("[AMGLUT] In glutHideWindow()\n"));
 }
 
 
 void APIENTRY
 glutCloseFunc (GLUTdestroyCB destroy)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutCloseFunc()\n"));
-#endif
+   D(bug("[AMGLUT] In glutCloseFunc()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    __glutTask->AMGLUTTN_WindowCurrent->destroy = destroy;
 }
@@ -529,9 +495,8 @@ D(bug("[AMGLUT] In glutCloseFunc()\n"));
 void APIENTRY
 glutPostWindowRedisplay (int win)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutPostWindowRedisplay(id=%d)\n", win));
-#endif
+   D(bug("[AMGLUT] In glutPostWindowRedisplay(id=%d)\n", win));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    GLUTwindow *w = _glut_window(__glutTask, win);
    if (w != NULL) {
@@ -543,9 +508,8 @@ D(bug("[AMGLUT] In glutPostWindowRedisplay(id=%d)\n", win));
 void * APIENTRY
 glutGetWindowData (void)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutGetWindowData()\n"));
-#endif
+   D(bug("[AMGLUT] In glutGetWindowData()\n"));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    return __glutTask->AMGLUTTN_WindowCurrent->data;
 }
@@ -554,9 +518,8 @@ D(bug("[AMGLUT] In glutGetWindowData()\n"));
 void APIENTRY
 glutSetWindowData (void *data)
 {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutSetWindowData( data = %x)\n", data));
-#endif
+   D(bug("[AMGLUT] In glutSetWindowData( data = %x)\n", data));
+
    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
    __glutTask->AMGLUTTN_WindowCurrent->data = data;
 }

@@ -47,18 +47,6 @@
 #include <GL/arosmesa.h>
 #include <GL/gl.h>
 
-//#define DEBUG_AROSMESAGLUT
-//#define DEBUG_AROSMESAGLUTFUNCS
-//#define DEBUG_AROSMESAGLUTCALLBACKS
-
-#if defined(DEBUG_AROSMESAGLUT)
-#define DEBUG 1
-#else
-#define DEBUG 0
-#endif
-
-#include <aros/debug.h>
-
 #define MAX_WINDOWS     15 /* Obsolete */
 #define MAX_TIMER_CB    8  /* Obsolete */
 #define RESERVED_COLORS 0  /* Unused */

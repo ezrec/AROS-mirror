@@ -25,6 +25,7 @@
  
 #include "internal.h"
 
+#include <aros/debug.h>
 
 #define CLAMP(i) ((i) > 1.0F ? 1.0F : ((i) < 0.0F ? 0.0F : (i)))
 
@@ -32,9 +33,8 @@
 void APIENTRY
 glutSetColor (int ndx, GLfloat red, GLfloat green, GLfloat blue)
 {
-#if defined(DEBUG_AROSMESAGLUT)
-D(bug("[AMGLUT] In glutSetColor()\n"));
-#endif
+   D(bug("[AMGLUT] In glutSetColor()\n"));
+
    if (_glut_default.mode & GLUT_INDEX) {
       if ((ndx >= 0) && (ndx < (256 - RESERVED_COLORS))) {
 //         DMesaSetCI(ndx, CLAMP(red), CLAMP(green), CLAMP(blue));
@@ -46,9 +46,8 @@ D(bug("[AMGLUT] In glutSetColor()\n"));
 GLfloat APIENTRY
 glutGetColor (int ndx, int component)
 {
-#if defined(DEBUG_AROSMESAGLUT)
-D(bug("[AMGLUT] In glutGetColor()\n"));
-#endif
+   D(bug("[AMGLUT] In glutGetColor()\n"));
+
    return 0.0;
 }
 
@@ -56,7 +55,5 @@ D(bug("[AMGLUT] In glutGetColor()\n"));
 void APIENTRY
 glutCopyColormap (int win)
 {
-#if defined(DEBUG_AROSMESAGLUT)
-D(bug("[AMGLUT] In glutCopyColormap()\n"));
-#endif
+   D(bug("[AMGLUT] In glutCopyColormap()\n"));
 }

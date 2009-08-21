@@ -30,12 +30,13 @@
 
 extern struct AROSMesaGLUTBase *AMGLInternalBase;
 
+#include <aros/debug.h>
+
 IPTR
 _glut_font (IPTR font)
 {
-#if defined(DEBUG_AROSMESAGLUT)
-D(bug("[AMGLUT] In _glut_font(font = %d:%x)\n", font, font));
-#endif
+   D(bug("[AMGLUT] In _glut_font(font = %d:%x)\n", font, font));
+
    switch ((int)font) {
       case GLUT_STROKE_ROMAN_ID:
          return AMGLInternalBase->_glutStrokeRoman;
