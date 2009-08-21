@@ -294,9 +294,6 @@ glutDestroyWindow (int win)
 
 	   if (w->amglutwin_context) 
 		{
-//      AROSMesaMakeCurrent(NULL);
-//      AROSMesaDestroyBuffers(w->buffer);
-//      AROSMesaDestroyContext(w->context);
 		  AROSMesaDestroyContext(w->amglutwin_context);
 		  w->amglutwin_context = NULL;
 		}
@@ -312,7 +309,6 @@ glutDestroyWindow (int win)
 		  w->amglutwin_Window = NULL;
 		}
       FreeVec(w);
-//      _glut_windows[win - 1] = NULL;
    }
 }
 

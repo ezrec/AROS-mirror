@@ -367,7 +367,6 @@ glutMainLoopEvent (void)
               }
             case IDCMP_CLOSEWINDOW:
               {
-                  asm("int3");
                 if (w != __glutTask->AMGLUTTN_WindowCurrent) AROSMesaMakeCurrent(w->amglutwin_context);
                 if (w->destroy) {
                   w->amglutwin_FlagIdle = GL_FALSE;
@@ -438,12 +437,14 @@ glutMainLoopEvent (void)
     __glutTask->AMGLUTTN_TaskIdle = GL_TRUE;
   }
   
-mainloop_end:
+
   if ((w != NULL) && (w->amglutwin_InternalMessage->Class != 0))
   {
     PutMsg(w->amglutwin_Window->UserPort, (struct Message *)w->amglutwin_InternalMessage);
   }
 
+mainloop_end:
+  /* If were are here from 'case IDCMP_CLOSEWINDOW' the window is already destroyed */
   if (_glut_TimeEvent_Count > 0)
   {
     _glut_DoTimeEvents();
