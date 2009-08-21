@@ -157,10 +157,11 @@ AMA_WindowID: A windowID to use when I alloc AMA_Buffer for you if
 
 typedef void (*AROSMesaProc)();
 
-GLAPI AROSMesaContext           GLAPIENTRY AROSMesaCreateContextTags(long Tag1, ...);
-GLAPI AROSMesaContext           GLAPIENTRY AROSMesaCreateContext(struct TagItem *tagList);
-GLAPI void GLAPIENTRY           AROSMesaDestroyContext(AROSMesaContext amesa);
-GLAPI void GLAPIENTRY           AROSMesaMakeCurrent(AROSMesaContext amesa);
-GLAPI void GLAPIENTRY           AROSMesaSwapBuffers(AROSMesaContext amesa);
-GLAPI AROSMesaProc GLAPIENTRY   AROSMesaGetProcAddress(const GLubyte * procname);
+GLAPI AROSMesaContext       GLAPIENTRY AROSMesaCreateContextTags(long Tag1, ...);
+GLAPI AROSMesaContext       GLAPIENTRY AROSMesaCreateContext(struct TagItem *tagList);
+GLAPI void                  GLAPIENTRY AROSMesaDestroyContext(AROSMesaContext amesa);
+GLAPI void                  GLAPIENTRY AROSMesaMakeCurrent(AROSMesaContext amesa);
+GLAPI void                  GLAPIENTRY AROSMesaSwapBuffers(AROSMesaContext amesa);
+GLAPI AROSMesaProc          GLAPIENTRY AROSMesaGetProcAddress(const GLubyte * procname);
+GLAPI AROSMesaContext       GLAPIENTRY AROSMesaGetCurrentContext();
 #endif /* AROSMESA_H */

@@ -498,3 +498,24 @@ void AROSMesaDestroyContext(AROSMesaContext amesa)
     AROS_LIBFUNC_EXIT
 #endif
 }
+
+
+#if defined (AROS_MESA_SHARED)
+AROS_LH0(AROSMesaContext, AROSMesaGetCurrentContext,
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+    
+    PUT_MESABASE_IN_REG
+#else
+AROSMesaContext AROSMesaGetCurrentContext()
+{
+#endif
+    GET_CURRENT_CONTEXT(ctx);
+    
+    return ctx;
+
+#if defined (AROS_MESA_SHARED)
+    AROS_LIBFUNC_EXIT
+#endif
+}

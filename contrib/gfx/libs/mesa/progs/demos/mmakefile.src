@@ -11,7 +11,7 @@ FILES 	    :=  bounce \
                 
 EXEDIR      := $(CONTRIBDIR)/Demos/Mesa
 
-#MM- contrib-gfx-libs-mesa-demos : contrib-gfx-libs-mesa-includes includes contrib-gfx-libs-mesa-mesa-shared contrib-gfx-libs-mesa-glut-linklib
+#MM contrib-gfx-libs-mesa-demos : contrib-gfx-libs-mesa-includes includes contrib-gfx-libs-mesa-mesa-module contrib-gfx-libs-mesa-glut-linklib
 
 %build_progs mmake=contrib-gfx-libs-mesa-demos \
     targetdir=$(EXEDIR) \

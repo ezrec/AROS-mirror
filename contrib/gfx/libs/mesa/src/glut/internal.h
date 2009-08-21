@@ -169,11 +169,6 @@ typedef struct GLUTwindow {
 
 /***** GL Related items */
    AROSMesaContext        amglutwin_context;
-   IPTR                   amglutwin_ctx_visual;    
-   IPTR                   amglutwin_ctx_def_visual;
-   IPTR                   amglutwin_ctx_overlay_visual;
-   IPTR                   amglutwin_ctx_def_buffer;
-   IPTR                   amglutwin_ctx_overlay_buffer;
 
 /***** GLUT settable or visible window state. */
    GLboolean              amglutwin_Virgin;

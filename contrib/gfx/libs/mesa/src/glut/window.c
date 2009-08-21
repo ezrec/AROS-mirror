@@ -238,67 +238,14 @@ D(bug("[AMGLUT] In glutCreateWindow: Double Buffered\n"));
           w->amglutwin_cliprect.MaxX = -w->amglutwin_Window->BorderRight;
           w->amglutwin_cliprect.MaxY = -w->amglutwin_Window->BorderBottom;
 
-#if 0
-          /* Allocate the rendering Context. */
-          if ((w->amglutwin_context = AROSMesaCreateContextTags(
-//              AMA_RastPort, (IPTR)w->amglutwin_Window->RPort,
-//              AMA_DoubleBuf, w->amglutwin_FlagDB,
-              TAG_DONE,0)) == NULL)
-          {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutCreateWindow: ERROR: Failed to create a GL Context\n"));
-#endif
-            FreeVec(w);
-            return 0;
-          }
-
-//            if (win.type & TK_OVERLAY)
-//            {
-//              w->amglutwin_ctx_overlay_visual = AROSMesaCreateVisualTags(
-//                w->amglutwin_context,
-//                AMA_RastPort,                   (IPTR)w->amglutwin_Window->RPort,
-//                hiddMesaGL_TAG_RastVisible,     GL_FALSE,
-//                AMA_DoubleBuf,                  GL_FALSE,
-//                RPTAG_ClipRectangle,            &w->amglutwin_cliprect,
-//                TAG_DONE,0);
-//            }
-
-          if ((w->amglutwin_ctx_def_visual = AROSMesaCreateVisualTags(
-              w->amglutwin_context,
-//              AMA_RastPort,                   (IPTR)w->amglutwin_Window->RPort,
-              RPTAG_ClipRectangle,            &w->amglutwin_cliprect,
-//              AMA_DoubleBuf,                  w->amglutwin_FlagDB,
-              TAG_DONE,0)) == (IPTR)NULL)
-          {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutCreateWindow: ERROR: Failed to create a GL Visual\n"));
-#endif
-            return 0;
-          }
-          w->amglutwin_ctx_visual = w->amglutwin_ctx_def_visual;
-
-          AROSMesaInitContext(w->amglutwin_context, w->amglutwin_ctx_visual);
-
-//            if (win.type & TK_OVERLAY)
-//            {
-//              w->amglutwin_ctx_overlay_buffer = AROSMesaCreateBuffers(w->amglutwin_context, w->amglutwin_ctx_overlay_visual);
-//            }
-          if ((w->amglutwin_ctx_def_buffer = AROSMesaCreateBuffers(w->amglutwin_context, w->amglutwin_ctx_visual)) == (IPTR)NULL)
-          {
-#if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
-D(bug("[AMGLUT] In glutCreateWindow: ERROR: Failed to create a GL Buffers\n"));
-#endif
-            return 0;
-          }
-
-//           win.cur_level = TK_RGB;
-
-#endif /* 0 */
-
-
           if ((w->amglutwin_context = AROSMesaCreateContextTags(
               AMA_Window, (IPTR)w->amglutwin_Window,
-//              AMA_DoubleBuf, w->amglutwin_FlagDB,
+              AMA_DoubleBuf, w->amglutwin_FlagDB,
+              AMA_Left, w->amglutwin_Window->BorderLeft,
+              AMA_Top, w->amglutwin_Window->BorderTop,
+              AMA_Width, w->amglutwin_Window->Width-w->amglutwin_Window->BorderLeft-w->amglutwin_Window->BorderRight,
+              AMA_Height, w->amglutwin_Window->Height-w->amglutwin_Window->BorderBottom-w->amglutwin_Window->BorderTop,
+              AMA_RGBMode, RGB_Flag,                                                  
               TAG_DONE,0)) == NULL)
           {
 #if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
@@ -316,7 +263,6 @@ D(bug("[AMGLUT] In glutCreateWindow: ERROR: Failed to create a GL Context\n"));
           w->amglutwin_width =  _glut_default.width;
           w->amglutwin_height = _glut_default.height;
 
-//          AROSMesaMakeCurrent(w->amglutwin_context, w->amglutwin_ctx_visual);
           AROSMesaMakeCurrent(w->amglutwin_context);
 
 #if defined(DEBUG_AROSMESAGLUT) && defined(DEBUG_AROSMESAGLUTFUNCS)
@@ -359,7 +305,7 @@ D(bug("[AMGLUT] In glutDestroyWindow(id:%d)\n", win));
 
 	   if (w->amglutwin_context) 
 		{
-//      AROSMesaMakeCurrent(NULL, NULL);
+//      AROSMesaMakeCurrent(NULL);
 //      AROSMesaDestroyBuffers(w->buffer);
 //      AROSMesaDestroyContext(w->context);
 		  AROSMesaDestroyContext(w->amglutwin_context);
@@ -456,9 +402,9 @@ D(bug("[AMGLUT] In glutSetWindow(id %d)\n", win));
   if (w != NULL)
   {
     __glutTask->AMGLUTTN_WindowCurrent = w;
-//    if (__glutTask->AMGLUTTN_WindowCurrent->amglutwin_context != AROSMesaGetCurrentContext())
+ 
+    if (__glutTask->AMGLUTTN_WindowCurrent->amglutwin_context != AROSMesaGetCurrentContext())
     {
-//      AROSMesaMakeCurrent(__glutTask->AMGLUTTN_WindowCurrent->amglutwin_context, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_ctx_visual);
       AROSMesaMakeCurrent(__glutTask->AMGLUTTN_WindowCurrent->amglutwin_context);
     }
   }
