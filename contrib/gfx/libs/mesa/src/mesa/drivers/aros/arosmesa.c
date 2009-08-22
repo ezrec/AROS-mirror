@@ -374,12 +374,13 @@ AROS_LH1(void, AROSMesaMakeCurrent,
     struct Library *, MesaBase, 0, Mesa)
 {
     AROS_LIBFUNC_INIT
-    
-    PUT_MESABASE_IN_REG
 #else
 void AROSMesaMakeCurrent(AROSMesaContext amesa)
 {
 #endif
+    SAVE_REG
+    
+    PUT_MESABASE_IN_REG
     
     /* Make the specified context the current one */
     /* the order of operations here is very important! */
@@ -417,6 +418,8 @@ void AROSMesaMakeCurrent(AROSMesaContext amesa)
 
         D(bug("[AROSMESA] AROSMesaMakeCurrent: initialised rasterizer driver functions\n"));
     }
+
+    RESTORE_REG
 #if defined (AROS_MESA_SHARED)
     AROS_LIBFUNC_EXIT
 #endif
@@ -428,12 +431,13 @@ AROS_LH1(void, AROSMesaSwapBuffers,
     struct Library *, MesaBase, 0, Mesa)
 {
     AROS_LIBFUNC_INIT
-    
-    PUT_MESABASE_IN_REG
 #else
 void AROSMesaSwapBuffers(AROSMesaContext amesa)
 {        
 #endif
+    SAVE_REG
+    
+    PUT_MESABASE_IN_REG
     /* copy/swap back buffer to front if applicable */
 
     D(bug("[AROSMESA] AROSMesaSwapBuffers(amesa @ %x)\n", amesa));
@@ -449,7 +453,8 @@ void AROSMesaSwapBuffers(AROSMesaContext amesa)
         amesa->width, 
         amesa->height, 
         AROS_PIXFMT);
-
+        
+    RESTORE_REG
 #if defined (AROS_MESA_SHARED)
     AROS_LIBFUNC_EXIT
 #endif
@@ -462,17 +467,22 @@ AROS_LH1(void, AROSMesaDestroyContext,
     struct Library *, MesaBase, 0, Mesa)
 {
     AROS_LIBFUNC_INIT
-    
-    PUT_MESABASE_IN_REG
 #else
 void AROSMesaDestroyContext(AROSMesaContext amesa)
 {
 #endif
+    SAVE_REG
+    
+    PUT_MESABASE_IN_REG
+
     /* destroy a AROS/Mesa context */
     D(bug("[AROSMESA] AROSMesaDestroyContext(amesa @ %x)\n", amesa));
 
     if (!amesa)
+    {
+        RESTORE_REG
         return;
+    }
 
     GLcontext * ctx = GET_GL_CTX_PTR(amesa);
 
@@ -494,6 +504,8 @@ void AROSMesaDestroyContext(AROSMesaContext amesa)
 
         aros_delete_context(amesa);
     }
+    
+    RESTORE_REG
 #if defined (AROS_MESA_SHARED)
     AROS_LIBFUNC_EXIT
 #endif
@@ -505,15 +517,19 @@ AROS_LH0(AROSMesaContext, AROSMesaGetCurrentContext,
     struct Library *, MesaBase, 0, Mesa)
 {
     AROS_LIBFUNC_INIT
-    
-    PUT_MESABASE_IN_REG
 #else
 AROSMesaContext AROSMesaGetCurrentContext()
 {
 #endif
-    GET_CURRENT_CONTEXT(ctx);
+    SAVE_REG
     
-    return ctx;
+    PUT_MESABASE_IN_REG
+
+    GET_CURRENT_CONTEXT(ctx);
+
+    RESTORE_REG;
+    
+    return (AROSMesaContext)ctx;
 
 #if defined (AROS_MESA_SHARED)
     AROS_LIBFUNC_EXIT

@@ -28,8 +28,9 @@ passed as the last parameter. Once this stub is called, it puts the Mesa
 libbase into the EBX register and calls the real glXXX function - which due
 to name mangling is now named mglXXX. The EBX register is reserved via a
 global variable REGMesaBase (glapi.h) and via -ffixed-ebx compile option.
-The Mesa libbase is put into EBX via PUT_MESABASE_IN_REG macro (glapi.h).
-The real function reads the Mesa 'global' rendering context via
+The Mesa libbase is put into EBX via PUT_MESABASE_IN_REG macro (glapi.h)
+while the original EBX value is preserved using SAVE_REG/RESTORE_REG macro
+pair. The real function reads the Mesa 'global' rendering context via
 GET_CURRENT_CONTEXT macro which is redefined in glapi.h.
 
 The call sequence is as follows:
@@ -37,8 +38,13 @@ The call sequence is as follows:
 Client calls glA() functions. This is a stub in linklib.
 The glA() function calls Mesa_glA() functions. This is a shared function
    in mesa.library which now receives opener Mesa libbase.
+The Mesa_glA() function saves current EBX value
 The Mesa_glA() function puts received Mesa libbase into EBX
 The Mesa_glA() function calls mglA() function.
+The Mesa_glA() function restores the previous EBX value
+
+Note: this is temporary solution until ABI V1 is available. Once this
+happens, ABI V1 mechanisms should be used for handling the global context
 
 3. AROSMesaGetProcAddress
 

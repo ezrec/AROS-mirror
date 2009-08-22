@@ -71,12 +71,16 @@ register struct MesaBase * REGMesaBase __asm__("r14");
 #error Select register for your architecture
 #endif
 
+#define SAVE_REG            struct MesaBase * reg = REGMesaBase;
 #define PUT_MESABASE_IN_REG REGMesaBase = (struct MesaBase *)MesaBase;
+#define RESTORE_REG         REGMesaBase = reg;
 extern void                     **GETMESABASECTX(void);
 extern struct _glapi_table      **GETMESABASEDDISPATCH(void);
 #else
 
+#define SAVE_REG
 #define PUT_MESABASE_IN_REG
+#define RESTORE_REG
 
 #endif
 #endif

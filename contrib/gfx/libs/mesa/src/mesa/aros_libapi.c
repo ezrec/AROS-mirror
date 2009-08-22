@@ -26,9 +26,13 @@ AROS_LH1(void, glClearIndex,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglClearIndex(c);
+    mglClearIndex(c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -42,9 +46,13 @@ AROS_LH4(void, glClearColor,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglClearColor(red, green, blue, alpha);
+    mglClearColor(red, green, blue, alpha);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -55,9 +63,13 @@ AROS_LH1(void, glClear,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglClear(mask);
+    mglClear(mask);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -68,9 +80,13 @@ AROS_LH1(void, glIndexMask,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIndexMask(mask);
+    mglIndexMask(mask);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -84,9 +100,13 @@ AROS_LH4(void, glColorMask,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColorMask(red, green, blue, alpha);
+    mglColorMask(red, green, blue, alpha);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -98,9 +118,13 @@ AROS_LH2(void, glAlphaFunc,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglAlphaFunc(func, ref);
+    mglAlphaFunc(func, ref);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -112,9 +136,13 @@ AROS_LH2(void, glBlendFunc,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBlendFunc(sfactor, dfactor);
+    mglBlendFunc(sfactor, dfactor);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -125,9 +153,13 @@ AROS_LH1(void, glLogicOp,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglLogicOp(opcode);
+    mglLogicOp(opcode);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -138,9 +170,13 @@ AROS_LH1(void, glCullFace,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCullFace(mode);
+    mglCullFace(mode);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -151,9 +187,13 @@ AROS_LH1(void, glFrontFace,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFrontFace(mode);
+    mglFrontFace(mode);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -164,9 +204,13 @@ AROS_LH1(void, glPointSize,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPointSize(size);
+    mglPointSize(size);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -177,9 +221,13 @@ AROS_LH1(void, glLineWidth,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglLineWidth(width);
+    mglLineWidth(width);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -191,9 +239,13 @@ AROS_LH2(void, glLineStipple,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglLineStipple(factor, pattern);
+    mglLineStipple(factor, pattern);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -205,9 +257,13 @@ AROS_LH2(void, glPolygonMode,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPolygonMode(face, mode);
+    mglPolygonMode(face, mode);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -219,9 +275,13 @@ AROS_LH2(void, glPolygonOffset,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPolygonOffset(factor, units);
+    mglPolygonOffset(factor, units);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -232,9 +292,13 @@ AROS_LH1(void, glPolygonStipple,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPolygonStipple(mask);
+    mglPolygonStipple(mask);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -245,9 +309,13 @@ AROS_LH1(void, glGetPolygonStipple,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetPolygonStipple(mask);
+    mglGetPolygonStipple(mask);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -258,9 +326,13 @@ AROS_LH1(void, glEdgeFlag,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEdgeFlag(flag);
+    mglEdgeFlag(flag);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -271,9 +343,13 @@ AROS_LH1(void, glEdgeFlagv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEdgeFlagv(flag);
+    mglEdgeFlagv(flag);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -287,9 +363,13 @@ AROS_LH4(void, glScissor,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglScissor(x, y, width, height);
+    mglScissor(x, y, width, height);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -301,9 +381,13 @@ AROS_LH2(void, glClipPlane,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglClipPlane(plane, equation);
+    mglClipPlane(plane, equation);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -315,9 +399,13 @@ AROS_LH2(void, glGetClipPlane,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetClipPlane(plane, equation);
+    mglGetClipPlane(plane, equation);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -328,9 +416,13 @@ AROS_LH1(void, glDrawBuffer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDrawBuffer(mode);
+    mglDrawBuffer(mode);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -341,9 +433,13 @@ AROS_LH1(void, glReadBuffer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglReadBuffer(mode);
+    mglReadBuffer(mode);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -354,9 +450,13 @@ AROS_LH1(void, glEnable,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEnable(cap);
+    mglEnable(cap);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -367,9 +467,13 @@ AROS_LH1(void, glDisable,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDisable(cap);
+    mglDisable(cap);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -380,9 +484,15 @@ AROS_LH1(GLboolean, glIsEnabled,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIsEnabled(cap);
+    GLboolean _return = mglIsEnabled(cap);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -393,9 +503,13 @@ AROS_LH1(void, glEnableClientState,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEnableClientState(cap);
+    mglEnableClientState(cap);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -406,9 +520,13 @@ AROS_LH1(void, glDisableClientState,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDisableClientState(cap);
+    mglDisableClientState(cap);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -420,9 +538,13 @@ AROS_LH2(void, glGetBooleanv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetBooleanv(pname, params);
+    mglGetBooleanv(pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -434,9 +556,13 @@ AROS_LH2(void, glGetDoublev,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetDoublev(pname, params);
+    mglGetDoublev(pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -448,9 +574,13 @@ AROS_LH2(void, glGetFloatv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetFloatv(pname, params);
+    mglGetFloatv(pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -462,9 +592,13 @@ AROS_LH2(void, glGetIntegerv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetIntegerv(pname, params);
+    mglGetIntegerv(pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -475,9 +609,13 @@ AROS_LH1(void, glPushAttrib,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPushAttrib(mask);
+    mglPushAttrib(mask);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -487,9 +625,13 @@ AROS_LH0(void, glPopAttrib,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPopAttrib();
+    mglPopAttrib();
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -500,9 +642,13 @@ AROS_LH1(void, glPushClientAttrib,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPushClientAttrib(mask);
+    mglPushClientAttrib(mask);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -512,9 +658,13 @@ AROS_LH0(void, glPopClientAttrib,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPopClientAttrib();
+    mglPopClientAttrib();
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -525,9 +675,15 @@ AROS_LH1(GLint, glRenderMode,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRenderMode(mode);
+    GLint _return = mglRenderMode(mode);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -537,9 +693,15 @@ AROS_LH0(GLenum, glGetError,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetError();
+    GLenum _return = mglGetError();
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -550,9 +712,15 @@ AROS_LH1(const GLubyte *, glGetString,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetString(name);
+    const GLubyte * _return = mglGetString(name);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -562,9 +730,13 @@ AROS_LH0(void, glFinish,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFinish();
+    mglFinish();
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -574,9 +746,13 @@ AROS_LH0(void, glFlush,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFlush();
+    mglFlush();
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -588,9 +764,13 @@ AROS_LH2(void, glHint,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglHint(target, mode);
+    mglHint(target, mode);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -601,9 +781,13 @@ AROS_LH1(void, glClearDepth,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglClearDepth(depth);
+    mglClearDepth(depth);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -614,9 +798,13 @@ AROS_LH1(void, glDepthFunc,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDepthFunc(func);
+    mglDepthFunc(func);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -627,9 +815,13 @@ AROS_LH1(void, glDepthMask,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDepthMask(flag);
+    mglDepthMask(flag);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -641,9 +833,13 @@ AROS_LH2(void, glDepthRange,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDepthRange(near_val, far_val);
+    mglDepthRange(near_val, far_val);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -657,9 +853,13 @@ AROS_LH4(void, glClearAccum,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglClearAccum(red, green, blue, alpha);
+    mglClearAccum(red, green, blue, alpha);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -671,9 +871,13 @@ AROS_LH2(void, glAccum,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglAccum(op, value);
+    mglAccum(op, value);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -684,9 +888,13 @@ AROS_LH1(void, glMatrixMode,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMatrixMode(mode);
+    mglMatrixMode(mode);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -702,9 +910,13 @@ AROS_LH6(void, glOrtho,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglOrtho(left, right, bottom, top, near_val, far_val);
+    mglOrtho(left, right, bottom, top, near_val, far_val);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -720,9 +932,13 @@ AROS_LH6(void, glFrustum,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFrustum(left, right, bottom, top, near_val, far_val);
+    mglFrustum(left, right, bottom, top, near_val, far_val);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -736,9 +952,13 @@ AROS_LH4(void, glViewport,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglViewport(x, y, width, height);
+    mglViewport(x, y, width, height);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -748,9 +968,13 @@ AROS_LH0(void, glPushMatrix,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPushMatrix();
+    mglPushMatrix();
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -760,9 +984,13 @@ AROS_LH0(void, glPopMatrix,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPopMatrix();
+    mglPopMatrix();
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -772,9 +1000,13 @@ AROS_LH0(void, glLoadIdentity,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglLoadIdentity();
+    mglLoadIdentity();
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -785,9 +1017,13 @@ AROS_LH1(void, glLoadMatrixd,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglLoadMatrixd(m);
+    mglLoadMatrixd(m);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -798,9 +1034,13 @@ AROS_LH1(void, glLoadMatrixf,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglLoadMatrixf(m);
+    mglLoadMatrixf(m);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -811,9 +1051,13 @@ AROS_LH1(void, glMultMatrixd,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultMatrixd(m);
+    mglMultMatrixd(m);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -824,9 +1068,13 @@ AROS_LH1(void, glMultMatrixf,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultMatrixf(m);
+    mglMultMatrixf(m);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -840,9 +1088,13 @@ AROS_LH4(void, glRotated,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRotated(angle, x, y, z);
+    mglRotated(angle, x, y, z);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -856,9 +1108,13 @@ AROS_LH4(void, glRotatef,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRotatef(angle, x, y, z);
+    mglRotatef(angle, x, y, z);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -871,9 +1127,13 @@ AROS_LH3(void, glScaled,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglScaled(x, y, z);
+    mglScaled(x, y, z);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -886,9 +1146,13 @@ AROS_LH3(void, glScalef,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglScalef(x, y, z);
+    mglScalef(x, y, z);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -901,9 +1165,13 @@ AROS_LH3(void, glTranslated,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTranslated(x, y, z);
+    mglTranslated(x, y, z);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -916,9 +1184,13 @@ AROS_LH3(void, glTranslatef,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTranslatef(x, y, z);
+    mglTranslatef(x, y, z);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -929,9 +1201,15 @@ AROS_LH1(GLboolean, glIsList,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIsList(list);
+    GLboolean _return = mglIsList(list);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -943,9 +1221,13 @@ AROS_LH2(void, glDeleteLists,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDeleteLists(list, range);
+    mglDeleteLists(list, range);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -956,9 +1238,15 @@ AROS_LH1(GLuint, glGenLists,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGenLists(range);
+    GLuint _return = mglGenLists(range);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -970,9 +1258,13 @@ AROS_LH2(void, glNewList,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglNewList(list, mode);
+    mglNewList(list, mode);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -982,9 +1274,13 @@ AROS_LH0(void, glEndList,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEndList();
+    mglEndList();
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -995,9 +1291,13 @@ AROS_LH1(void, glCallList,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCallList(list);
+    mglCallList(list);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1010,9 +1310,13 @@ AROS_LH3(void, glCallLists,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCallLists(n, type, lists);
+    mglCallLists(n, type, lists);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1023,9 +1327,13 @@ AROS_LH1(void, glListBase,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglListBase(base);
+    mglListBase(base);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1036,9 +1344,13 @@ AROS_LH1(void, glBegin,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBegin(mode);
+    mglBegin(mode);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1048,9 +1360,13 @@ AROS_LH0(void, glEnd,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEnd();
+    mglEnd();
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1062,9 +1378,13 @@ AROS_LH2(void, glVertex2d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex2d(x, y);
+    mglVertex2d(x, y);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1076,9 +1396,13 @@ AROS_LH2(void, glVertex2f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex2f(x, y);
+    mglVertex2f(x, y);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1090,9 +1414,13 @@ AROS_LH2(void, glVertex2i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex2i(x, y);
+    mglVertex2i(x, y);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1104,9 +1432,13 @@ AROS_LH2(void, glVertex2s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex2s(x, y);
+    mglVertex2s(x, y);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1119,9 +1451,13 @@ AROS_LH3(void, glVertex3d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex3d(x, y, z);
+    mglVertex3d(x, y, z);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1134,9 +1470,13 @@ AROS_LH3(void, glVertex3f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex3f(x, y, z);
+    mglVertex3f(x, y, z);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1149,9 +1489,13 @@ AROS_LH3(void, glVertex3i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex3i(x, y, z);
+    mglVertex3i(x, y, z);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1164,9 +1508,13 @@ AROS_LH3(void, glVertex3s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex3s(x, y, z);
+    mglVertex3s(x, y, z);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1180,9 +1528,13 @@ AROS_LH4(void, glVertex4d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex4d(x, y, z, w);
+    mglVertex4d(x, y, z, w);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1196,9 +1548,13 @@ AROS_LH4(void, glVertex4f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex4f(x, y, z, w);
+    mglVertex4f(x, y, z, w);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1212,9 +1568,13 @@ AROS_LH4(void, glVertex4i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex4i(x, y, z, w);
+    mglVertex4i(x, y, z, w);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1228,9 +1588,13 @@ AROS_LH4(void, glVertex4s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex4s(x, y, z, w);
+    mglVertex4s(x, y, z, w);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1241,9 +1605,13 @@ AROS_LH1(void, glVertex2dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex2dv(v);
+    mglVertex2dv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1254,9 +1622,13 @@ AROS_LH1(void, glVertex2fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex2fv(v);
+    mglVertex2fv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1267,9 +1639,13 @@ AROS_LH1(void, glVertex2iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex2iv(v);
+    mglVertex2iv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1280,9 +1656,13 @@ AROS_LH1(void, glVertex2sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex2sv(v);
+    mglVertex2sv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1293,9 +1673,13 @@ AROS_LH1(void, glVertex3dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex3dv(v);
+    mglVertex3dv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1306,9 +1690,13 @@ AROS_LH1(void, glVertex3fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex3fv(v);
+    mglVertex3fv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1319,9 +1707,13 @@ AROS_LH1(void, glVertex3iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex3iv(v);
+    mglVertex3iv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1332,9 +1724,13 @@ AROS_LH1(void, glVertex3sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex3sv(v);
+    mglVertex3sv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1345,9 +1741,13 @@ AROS_LH1(void, glVertex4dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex4dv(v);
+    mglVertex4dv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1358,9 +1758,13 @@ AROS_LH1(void, glVertex4fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex4fv(v);
+    mglVertex4fv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1371,9 +1775,13 @@ AROS_LH1(void, glVertex4iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex4iv(v);
+    mglVertex4iv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1384,9 +1792,13 @@ AROS_LH1(void, glVertex4sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertex4sv(v);
+    mglVertex4sv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1399,9 +1811,13 @@ AROS_LH3(void, glNormal3b,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglNormal3b(nx, ny, nz);
+    mglNormal3b(nx, ny, nz);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1414,9 +1830,13 @@ AROS_LH3(void, glNormal3d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglNormal3d(nx, ny, nz);
+    mglNormal3d(nx, ny, nz);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1429,9 +1849,13 @@ AROS_LH3(void, glNormal3f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglNormal3f(nx, ny, nz);
+    mglNormal3f(nx, ny, nz);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1444,9 +1868,13 @@ AROS_LH3(void, glNormal3i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglNormal3i(nx, ny, nz);
+    mglNormal3i(nx, ny, nz);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1459,9 +1887,13 @@ AROS_LH3(void, glNormal3s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglNormal3s(nx, ny, nz);
+    mglNormal3s(nx, ny, nz);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1472,9 +1904,13 @@ AROS_LH1(void, glNormal3bv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglNormal3bv(v);
+    mglNormal3bv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1485,9 +1921,13 @@ AROS_LH1(void, glNormal3dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglNormal3dv(v);
+    mglNormal3dv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1498,9 +1938,13 @@ AROS_LH1(void, glNormal3fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglNormal3fv(v);
+    mglNormal3fv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1511,9 +1955,13 @@ AROS_LH1(void, glNormal3iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglNormal3iv(v);
+    mglNormal3iv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1524,9 +1972,13 @@ AROS_LH1(void, glNormal3sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglNormal3sv(v);
+    mglNormal3sv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1537,9 +1989,13 @@ AROS_LH1(void, glIndexd,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIndexd(c);
+    mglIndexd(c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1550,9 +2006,13 @@ AROS_LH1(void, glIndexf,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIndexf(c);
+    mglIndexf(c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1563,9 +2023,13 @@ AROS_LH1(void, glIndexi,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIndexi(c);
+    mglIndexi(c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1576,9 +2040,13 @@ AROS_LH1(void, glIndexs,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIndexs(c);
+    mglIndexs(c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1589,9 +2057,13 @@ AROS_LH1(void, glIndexub,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIndexub(c);
+    mglIndexub(c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1602,9 +2074,13 @@ AROS_LH1(void, glIndexdv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIndexdv(c);
+    mglIndexdv(c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1615,9 +2091,13 @@ AROS_LH1(void, glIndexfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIndexfv(c);
+    mglIndexfv(c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1628,9 +2108,13 @@ AROS_LH1(void, glIndexiv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIndexiv(c);
+    mglIndexiv(c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1641,9 +2125,13 @@ AROS_LH1(void, glIndexsv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIndexsv(c);
+    mglIndexsv(c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1654,9 +2142,13 @@ AROS_LH1(void, glIndexubv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIndexubv(c);
+    mglIndexubv(c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1669,9 +2161,13 @@ AROS_LH3(void, glColor3b,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor3b(red, green, blue);
+    mglColor3b(red, green, blue);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1684,9 +2180,13 @@ AROS_LH3(void, glColor3d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor3d(red, green, blue);
+    mglColor3d(red, green, blue);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1699,9 +2199,13 @@ AROS_LH3(void, glColor3f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor3f(red, green, blue);
+    mglColor3f(red, green, blue);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1714,9 +2218,13 @@ AROS_LH3(void, glColor3i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor3i(red, green, blue);
+    mglColor3i(red, green, blue);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1729,9 +2237,13 @@ AROS_LH3(void, glColor3s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor3s(red, green, blue);
+    mglColor3s(red, green, blue);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1744,9 +2256,13 @@ AROS_LH3(void, glColor3ub,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor3ub(red, green, blue);
+    mglColor3ub(red, green, blue);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1759,9 +2275,13 @@ AROS_LH3(void, glColor3ui,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor3ui(red, green, blue);
+    mglColor3ui(red, green, blue);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1774,9 +2294,13 @@ AROS_LH3(void, glColor3us,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor3us(red, green, blue);
+    mglColor3us(red, green, blue);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1790,9 +2314,13 @@ AROS_LH4(void, glColor4b,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor4b(red, green, blue, alpha);
+    mglColor4b(red, green, blue, alpha);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1806,9 +2334,13 @@ AROS_LH4(void, glColor4d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor4d(red, green, blue, alpha);
+    mglColor4d(red, green, blue, alpha);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1822,9 +2354,13 @@ AROS_LH4(void, glColor4f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor4f(red, green, blue, alpha);
+    mglColor4f(red, green, blue, alpha);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1838,9 +2374,13 @@ AROS_LH4(void, glColor4i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor4i(red, green, blue, alpha);
+    mglColor4i(red, green, blue, alpha);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1854,9 +2394,13 @@ AROS_LH4(void, glColor4s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor4s(red, green, blue, alpha);
+    mglColor4s(red, green, blue, alpha);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1870,9 +2414,13 @@ AROS_LH4(void, glColor4ub,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor4ub(red, green, blue, alpha);
+    mglColor4ub(red, green, blue, alpha);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1886,9 +2434,13 @@ AROS_LH4(void, glColor4ui,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor4ui(red, green, blue, alpha);
+    mglColor4ui(red, green, blue, alpha);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1902,9 +2454,13 @@ AROS_LH4(void, glColor4us,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor4us(red, green, blue, alpha);
+    mglColor4us(red, green, blue, alpha);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1915,9 +2471,13 @@ AROS_LH1(void, glColor3bv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor3bv(v);
+    mglColor3bv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1928,9 +2488,13 @@ AROS_LH1(void, glColor3dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor3dv(v);
+    mglColor3dv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1941,9 +2505,13 @@ AROS_LH1(void, glColor3fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor3fv(v);
+    mglColor3fv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1954,9 +2522,13 @@ AROS_LH1(void, glColor3iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor3iv(v);
+    mglColor3iv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1967,9 +2539,13 @@ AROS_LH1(void, glColor3sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor3sv(v);
+    mglColor3sv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1980,9 +2556,13 @@ AROS_LH1(void, glColor3ubv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor3ubv(v);
+    mglColor3ubv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -1993,9 +2573,13 @@ AROS_LH1(void, glColor3uiv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor3uiv(v);
+    mglColor3uiv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2006,9 +2590,13 @@ AROS_LH1(void, glColor3usv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor3usv(v);
+    mglColor3usv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2019,9 +2607,13 @@ AROS_LH1(void, glColor4bv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor4bv(v);
+    mglColor4bv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2032,9 +2624,13 @@ AROS_LH1(void, glColor4dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor4dv(v);
+    mglColor4dv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2045,9 +2641,13 @@ AROS_LH1(void, glColor4fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor4fv(v);
+    mglColor4fv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2058,9 +2658,13 @@ AROS_LH1(void, glColor4iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor4iv(v);
+    mglColor4iv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2071,9 +2675,13 @@ AROS_LH1(void, glColor4sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor4sv(v);
+    mglColor4sv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2084,9 +2692,13 @@ AROS_LH1(void, glColor4ubv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor4ubv(v);
+    mglColor4ubv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2097,9 +2709,13 @@ AROS_LH1(void, glColor4uiv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor4uiv(v);
+    mglColor4uiv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2110,9 +2726,13 @@ AROS_LH1(void, glColor4usv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColor4usv(v);
+    mglColor4usv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2123,9 +2743,13 @@ AROS_LH1(void, glTexCoord1d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord1d(s);
+    mglTexCoord1d(s);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2136,9 +2760,13 @@ AROS_LH1(void, glTexCoord1f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord1f(s);
+    mglTexCoord1f(s);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2149,9 +2777,13 @@ AROS_LH1(void, glTexCoord1i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord1i(s);
+    mglTexCoord1i(s);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2162,9 +2794,13 @@ AROS_LH1(void, glTexCoord1s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord1s(s);
+    mglTexCoord1s(s);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2176,9 +2812,13 @@ AROS_LH2(void, glTexCoord2d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord2d(s, t);
+    mglTexCoord2d(s, t);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2190,9 +2830,13 @@ AROS_LH2(void, glTexCoord2f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord2f(s, t);
+    mglTexCoord2f(s, t);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2204,9 +2848,13 @@ AROS_LH2(void, glTexCoord2i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord2i(s, t);
+    mglTexCoord2i(s, t);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2218,9 +2866,13 @@ AROS_LH2(void, glTexCoord2s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord2s(s, t);
+    mglTexCoord2s(s, t);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2233,9 +2885,13 @@ AROS_LH3(void, glTexCoord3d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord3d(s, t, r);
+    mglTexCoord3d(s, t, r);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2248,9 +2904,13 @@ AROS_LH3(void, glTexCoord3f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord3f(s, t, r);
+    mglTexCoord3f(s, t, r);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2263,9 +2923,13 @@ AROS_LH3(void, glTexCoord3i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord3i(s, t, r);
+    mglTexCoord3i(s, t, r);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2278,9 +2942,13 @@ AROS_LH3(void, glTexCoord3s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord3s(s, t, r);
+    mglTexCoord3s(s, t, r);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2294,9 +2962,13 @@ AROS_LH4(void, glTexCoord4d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord4d(s, t, r, q);
+    mglTexCoord4d(s, t, r, q);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2310,9 +2982,13 @@ AROS_LH4(void, glTexCoord4f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord4f(s, t, r, q);
+    mglTexCoord4f(s, t, r, q);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2326,9 +3002,13 @@ AROS_LH4(void, glTexCoord4i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord4i(s, t, r, q);
+    mglTexCoord4i(s, t, r, q);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2342,9 +3022,13 @@ AROS_LH4(void, glTexCoord4s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord4s(s, t, r, q);
+    mglTexCoord4s(s, t, r, q);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2355,9 +3039,13 @@ AROS_LH1(void, glTexCoord1dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord1dv(v);
+    mglTexCoord1dv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2368,9 +3056,13 @@ AROS_LH1(void, glTexCoord1fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord1fv(v);
+    mglTexCoord1fv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2381,9 +3073,13 @@ AROS_LH1(void, glTexCoord1iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord1iv(v);
+    mglTexCoord1iv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2394,9 +3090,13 @@ AROS_LH1(void, glTexCoord1sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord1sv(v);
+    mglTexCoord1sv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2407,9 +3107,13 @@ AROS_LH1(void, glTexCoord2dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord2dv(v);
+    mglTexCoord2dv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2420,9 +3124,13 @@ AROS_LH1(void, glTexCoord2fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord2fv(v);
+    mglTexCoord2fv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2433,9 +3141,13 @@ AROS_LH1(void, glTexCoord2iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord2iv(v);
+    mglTexCoord2iv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2446,9 +3158,13 @@ AROS_LH1(void, glTexCoord2sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord2sv(v);
+    mglTexCoord2sv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2459,9 +3175,13 @@ AROS_LH1(void, glTexCoord3dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord3dv(v);
+    mglTexCoord3dv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2472,9 +3192,13 @@ AROS_LH1(void, glTexCoord3fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord3fv(v);
+    mglTexCoord3fv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2485,9 +3209,13 @@ AROS_LH1(void, glTexCoord3iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord3iv(v);
+    mglTexCoord3iv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2498,9 +3226,13 @@ AROS_LH1(void, glTexCoord3sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord3sv(v);
+    mglTexCoord3sv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2511,9 +3243,13 @@ AROS_LH1(void, glTexCoord4dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord4dv(v);
+    mglTexCoord4dv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2524,9 +3260,13 @@ AROS_LH1(void, glTexCoord4fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord4fv(v);
+    mglTexCoord4fv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2537,9 +3277,13 @@ AROS_LH1(void, glTexCoord4iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord4iv(v);
+    mglTexCoord4iv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2550,9 +3294,13 @@ AROS_LH1(void, glTexCoord4sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoord4sv(v);
+    mglTexCoord4sv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2564,9 +3312,13 @@ AROS_LH2(void, glRasterPos2d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos2d(x, y);
+    mglRasterPos2d(x, y);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2578,9 +3330,13 @@ AROS_LH2(void, glRasterPos2f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos2f(x, y);
+    mglRasterPos2f(x, y);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2592,9 +3348,13 @@ AROS_LH2(void, glRasterPos2i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos2i(x, y);
+    mglRasterPos2i(x, y);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2606,9 +3366,13 @@ AROS_LH2(void, glRasterPos2s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos2s(x, y);
+    mglRasterPos2s(x, y);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2621,9 +3385,13 @@ AROS_LH3(void, glRasterPos3d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos3d(x, y, z);
+    mglRasterPos3d(x, y, z);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2636,9 +3404,13 @@ AROS_LH3(void, glRasterPos3f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos3f(x, y, z);
+    mglRasterPos3f(x, y, z);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2651,9 +3423,13 @@ AROS_LH3(void, glRasterPos3i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos3i(x, y, z);
+    mglRasterPos3i(x, y, z);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2666,9 +3442,13 @@ AROS_LH3(void, glRasterPos3s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos3s(x, y, z);
+    mglRasterPos3s(x, y, z);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2682,9 +3462,13 @@ AROS_LH4(void, glRasterPos4d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos4d(x, y, z, w);
+    mglRasterPos4d(x, y, z, w);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2698,9 +3482,13 @@ AROS_LH4(void, glRasterPos4f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos4f(x, y, z, w);
+    mglRasterPos4f(x, y, z, w);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2714,9 +3502,13 @@ AROS_LH4(void, glRasterPos4i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos4i(x, y, z, w);
+    mglRasterPos4i(x, y, z, w);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2730,9 +3522,13 @@ AROS_LH4(void, glRasterPos4s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos4s(x, y, z, w);
+    mglRasterPos4s(x, y, z, w);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2743,9 +3539,13 @@ AROS_LH1(void, glRasterPos2dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos2dv(v);
+    mglRasterPos2dv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2756,9 +3556,13 @@ AROS_LH1(void, glRasterPos2fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos2fv(v);
+    mglRasterPos2fv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2769,9 +3573,13 @@ AROS_LH1(void, glRasterPos2iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos2iv(v);
+    mglRasterPos2iv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2782,9 +3590,13 @@ AROS_LH1(void, glRasterPos2sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos2sv(v);
+    mglRasterPos2sv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2795,9 +3607,13 @@ AROS_LH1(void, glRasterPos3dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos3dv(v);
+    mglRasterPos3dv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2808,9 +3624,13 @@ AROS_LH1(void, glRasterPos3fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos3fv(v);
+    mglRasterPos3fv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2821,9 +3641,13 @@ AROS_LH1(void, glRasterPos3iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos3iv(v);
+    mglRasterPos3iv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2834,9 +3658,13 @@ AROS_LH1(void, glRasterPos3sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos3sv(v);
+    mglRasterPos3sv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2847,9 +3675,13 @@ AROS_LH1(void, glRasterPos4dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos4dv(v);
+    mglRasterPos4dv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2860,9 +3692,13 @@ AROS_LH1(void, glRasterPos4fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos4fv(v);
+    mglRasterPos4fv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2873,9 +3709,13 @@ AROS_LH1(void, glRasterPos4iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos4iv(v);
+    mglRasterPos4iv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2886,9 +3726,13 @@ AROS_LH1(void, glRasterPos4sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRasterPos4sv(v);
+    mglRasterPos4sv(v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2902,9 +3746,13 @@ AROS_LH4(void, glRectd,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRectd(x1, y1, x2, y2);
+    mglRectd(x1, y1, x2, y2);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2918,9 +3766,13 @@ AROS_LH4(void, glRectf,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRectf(x1, y1, x2, y2);
+    mglRectf(x1, y1, x2, y2);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2934,9 +3786,13 @@ AROS_LH4(void, glRecti,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRecti(x1, y1, x2, y2);
+    mglRecti(x1, y1, x2, y2);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2950,9 +3806,13 @@ AROS_LH4(void, glRects,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRects(x1, y1, x2, y2);
+    mglRects(x1, y1, x2, y2);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2964,9 +3824,13 @@ AROS_LH2(void, glRectdv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRectdv(v1, v2);
+    mglRectdv(v1, v2);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2978,9 +3842,13 @@ AROS_LH2(void, glRectfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRectfv(v1, v2);
+    mglRectfv(v1, v2);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -2992,9 +3860,13 @@ AROS_LH2(void, glRectiv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRectiv(v1, v2);
+    mglRectiv(v1, v2);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3006,9 +3878,13 @@ AROS_LH2(void, glRectsv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRectsv(v1, v2);
+    mglRectsv(v1, v2);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3022,9 +3898,13 @@ AROS_LH4(void, glVertexPointer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexPointer(size, type, stride, ptr);
+    mglVertexPointer(size, type, stride, ptr);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3037,9 +3917,13 @@ AROS_LH3(void, glNormalPointer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglNormalPointer(type, stride, ptr);
+    mglNormalPointer(type, stride, ptr);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3053,9 +3937,13 @@ AROS_LH4(void, glColorPointer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColorPointer(size, type, stride, ptr);
+    mglColorPointer(size, type, stride, ptr);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3068,9 +3956,13 @@ AROS_LH3(void, glIndexPointer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIndexPointer(type, stride, ptr);
+    mglIndexPointer(type, stride, ptr);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3084,9 +3976,13 @@ AROS_LH4(void, glTexCoordPointer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoordPointer(size, type, stride, ptr);
+    mglTexCoordPointer(size, type, stride, ptr);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3098,9 +3994,13 @@ AROS_LH2(void, glEdgeFlagPointer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEdgeFlagPointer(stride, ptr);
+    mglEdgeFlagPointer(stride, ptr);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3112,9 +4012,13 @@ AROS_LH2(void, glGetPointerv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetPointerv(pname, params);
+    mglGetPointerv(pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3125,9 +4029,13 @@ AROS_LH1(void, glArrayElement,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglArrayElement(i);
+    mglArrayElement(i);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3140,9 +4048,13 @@ AROS_LH3(void, glDrawArrays,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDrawArrays(mode, first, count);
+    mglDrawArrays(mode, first, count);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3156,9 +4068,13 @@ AROS_LH4(void, glDrawElements,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDrawElements(mode, count, type, indices);
+    mglDrawElements(mode, count, type, indices);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3171,9 +4087,13 @@ AROS_LH3(void, glInterleavedArrays,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglInterleavedArrays(format, stride, pointer);
+    mglInterleavedArrays(format, stride, pointer);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3184,9 +4104,13 @@ AROS_LH1(void, glShadeModel,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglShadeModel(mode);
+    mglShadeModel(mode);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3199,9 +4123,13 @@ AROS_LH3(void, glLightf,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglLightf(light, pname, param);
+    mglLightf(light, pname, param);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3214,9 +4142,13 @@ AROS_LH3(void, glLighti,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglLighti(light, pname, param);
+    mglLighti(light, pname, param);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3229,9 +4161,13 @@ AROS_LH3(void, glLightfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglLightfv(light, pname, params);
+    mglLightfv(light, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3244,9 +4180,13 @@ AROS_LH3(void, glLightiv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglLightiv(light, pname, params);
+    mglLightiv(light, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3259,9 +4199,13 @@ AROS_LH3(void, glGetLightfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetLightfv(light, pname, params);
+    mglGetLightfv(light, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3274,9 +4218,13 @@ AROS_LH3(void, glGetLightiv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetLightiv(light, pname, params);
+    mglGetLightiv(light, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3288,9 +4236,13 @@ AROS_LH2(void, glLightModelf,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglLightModelf(pname, param);
+    mglLightModelf(pname, param);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3302,9 +4254,13 @@ AROS_LH2(void, glLightModeli,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglLightModeli(pname, param);
+    mglLightModeli(pname, param);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3316,9 +4272,13 @@ AROS_LH2(void, glLightModelfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglLightModelfv(pname, params);
+    mglLightModelfv(pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3330,9 +4290,13 @@ AROS_LH2(void, glLightModeliv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglLightModeliv(pname, params);
+    mglLightModeliv(pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3345,9 +4309,13 @@ AROS_LH3(void, glMaterialf,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMaterialf(face, pname, param);
+    mglMaterialf(face, pname, param);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3360,9 +4328,13 @@ AROS_LH3(void, glMateriali,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMateriali(face, pname, param);
+    mglMateriali(face, pname, param);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3375,9 +4347,13 @@ AROS_LH3(void, glMaterialfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMaterialfv(face, pname, params);
+    mglMaterialfv(face, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3390,9 +4366,13 @@ AROS_LH3(void, glMaterialiv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMaterialiv(face, pname, params);
+    mglMaterialiv(face, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3405,9 +4385,13 @@ AROS_LH3(void, glGetMaterialfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetMaterialfv(face, pname, params);
+    mglGetMaterialfv(face, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3420,9 +4404,13 @@ AROS_LH3(void, glGetMaterialiv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetMaterialiv(face, pname, params);
+    mglGetMaterialiv(face, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3434,9 +4422,13 @@ AROS_LH2(void, glColorMaterial,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColorMaterial(face, mode);
+    mglColorMaterial(face, mode);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3448,9 +4440,13 @@ AROS_LH2(void, glPixelZoom,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPixelZoom(xfactor, yfactor);
+    mglPixelZoom(xfactor, yfactor);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3462,9 +4458,13 @@ AROS_LH2(void, glPixelStoref,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPixelStoref(pname, param);
+    mglPixelStoref(pname, param);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3476,9 +4476,13 @@ AROS_LH2(void, glPixelStorei,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPixelStorei(pname, param);
+    mglPixelStorei(pname, param);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3490,9 +4494,13 @@ AROS_LH2(void, glPixelTransferf,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPixelTransferf(pname, param);
+    mglPixelTransferf(pname, param);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3504,9 +4512,13 @@ AROS_LH2(void, glPixelTransferi,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPixelTransferi(pname, param);
+    mglPixelTransferi(pname, param);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3519,9 +4531,13 @@ AROS_LH3(void, glPixelMapfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPixelMapfv(map, mapsize, values);
+    mglPixelMapfv(map, mapsize, values);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3534,9 +4550,13 @@ AROS_LH3(void, glPixelMapuiv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPixelMapuiv(map, mapsize, values);
+    mglPixelMapuiv(map, mapsize, values);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3549,9 +4569,13 @@ AROS_LH3(void, glPixelMapusv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPixelMapusv(map, mapsize, values);
+    mglPixelMapusv(map, mapsize, values);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3563,9 +4587,13 @@ AROS_LH2(void, glGetPixelMapfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetPixelMapfv(map, values);
+    mglGetPixelMapfv(map, values);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3577,9 +4605,13 @@ AROS_LH2(void, glGetPixelMapuiv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetPixelMapuiv(map, values);
+    mglGetPixelMapuiv(map, values);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3591,9 +4623,13 @@ AROS_LH2(void, glGetPixelMapusv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetPixelMapusv(map, values);
+    mglGetPixelMapusv(map, values);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3610,9 +4646,13 @@ AROS_LH7(void, glBitmap,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBitmap(width, height, xorig, yorig, xmove, ymove, bitmap);
+    mglBitmap(width, height, xorig, yorig, xmove, ymove, bitmap);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3629,9 +4669,13 @@ AROS_LH7(void, glReadPixels,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglReadPixels(x, y, width, height, format, type, pixels);
+    mglReadPixels(x, y, width, height, format, type, pixels);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3646,9 +4690,13 @@ AROS_LH5(void, glDrawPixels,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDrawPixels(width, height, format, type, pixels);
+    mglDrawPixels(width, height, format, type, pixels);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3663,9 +4711,13 @@ AROS_LH5(void, glCopyPixels,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCopyPixels(x, y, width, height, type);
+    mglCopyPixels(x, y, width, height, type);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3678,9 +4730,13 @@ AROS_LH3(void, glStencilFunc,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglStencilFunc(func, ref, mask);
+    mglStencilFunc(func, ref, mask);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3691,9 +4747,13 @@ AROS_LH1(void, glStencilMask,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglStencilMask(mask);
+    mglStencilMask(mask);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3706,9 +4766,13 @@ AROS_LH3(void, glStencilOp,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglStencilOp(fail, zfail, zpass);
+    mglStencilOp(fail, zfail, zpass);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3719,9 +4783,13 @@ AROS_LH1(void, glClearStencil,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglClearStencil(s);
+    mglClearStencil(s);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3734,9 +4802,13 @@ AROS_LH3(void, glTexGend,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexGend(coord, pname, param);
+    mglTexGend(coord, pname, param);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3749,9 +4821,13 @@ AROS_LH3(void, glTexGenf,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexGenf(coord, pname, param);
+    mglTexGenf(coord, pname, param);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3764,9 +4840,13 @@ AROS_LH3(void, glTexGeni,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexGeni(coord, pname, param);
+    mglTexGeni(coord, pname, param);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3779,9 +4859,13 @@ AROS_LH3(void, glTexGendv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexGendv(coord, pname, params);
+    mglTexGendv(coord, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3794,9 +4878,13 @@ AROS_LH3(void, glTexGenfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexGenfv(coord, pname, params);
+    mglTexGenfv(coord, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3809,9 +4897,13 @@ AROS_LH3(void, glTexGeniv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexGeniv(coord, pname, params);
+    mglTexGeniv(coord, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3824,9 +4916,13 @@ AROS_LH3(void, glGetTexGendv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetTexGendv(coord, pname, params);
+    mglGetTexGendv(coord, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3839,9 +4935,13 @@ AROS_LH3(void, glGetTexGenfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetTexGenfv(coord, pname, params);
+    mglGetTexGenfv(coord, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3854,9 +4954,13 @@ AROS_LH3(void, glGetTexGeniv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetTexGeniv(coord, pname, params);
+    mglGetTexGeniv(coord, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3869,9 +4973,13 @@ AROS_LH3(void, glTexEnvf,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexEnvf(target, pname, param);
+    mglTexEnvf(target, pname, param);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3884,9 +4992,13 @@ AROS_LH3(void, glTexEnvi,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexEnvi(target, pname, param);
+    mglTexEnvi(target, pname, param);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3899,9 +5011,13 @@ AROS_LH3(void, glTexEnvfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexEnvfv(target, pname, params);
+    mglTexEnvfv(target, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3914,9 +5030,13 @@ AROS_LH3(void, glTexEnviv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexEnviv(target, pname, params);
+    mglTexEnviv(target, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3929,9 +5049,13 @@ AROS_LH3(void, glGetTexEnvfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetTexEnvfv(target, pname, params);
+    mglGetTexEnvfv(target, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3944,9 +5068,13 @@ AROS_LH3(void, glGetTexEnviv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetTexEnviv(target, pname, params);
+    mglGetTexEnviv(target, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3959,9 +5087,13 @@ AROS_LH3(void, glTexParameterf,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexParameterf(target, pname, param);
+    mglTexParameterf(target, pname, param);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3974,9 +5106,13 @@ AROS_LH3(void, glTexParameteri,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexParameteri(target, pname, param);
+    mglTexParameteri(target, pname, param);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -3989,9 +5125,13 @@ AROS_LH3(void, glTexParameterfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexParameterfv(target, pname, params);
+    mglTexParameterfv(target, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4004,9 +5144,13 @@ AROS_LH3(void, glTexParameteriv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexParameteriv(target, pname, params);
+    mglTexParameteriv(target, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4019,9 +5163,13 @@ AROS_LH3(void, glGetTexParameterfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetTexParameterfv(target, pname, params);
+    mglGetTexParameterfv(target, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4034,9 +5182,13 @@ AROS_LH3(void, glGetTexParameteriv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetTexParameteriv(target, pname, params);
+    mglGetTexParameteriv(target, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4050,9 +5202,13 @@ AROS_LH4(void, glGetTexLevelParameterfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetTexLevelParameterfv(target, level, pname, params);
+    mglGetTexLevelParameterfv(target, level, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4066,9 +5222,13 @@ AROS_LH4(void, glGetTexLevelParameteriv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetTexLevelParameteriv(target, level, pname, params);
+    mglGetTexLevelParameteriv(target, level, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4086,9 +5246,13 @@ AROS_LH8(void, glTexImage1D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexImage1D(target, level, internalFormat, width, border, format, type, pixels);
+    mglTexImage1D(target, level, internalFormat, width, border, format, type, pixels);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4107,9 +5271,13 @@ AROS_LH9(void, glTexImage2D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexImage2D(target, level, internalFormat, width, height, border, format, type, pixels);
+    mglTexImage2D(target, level, internalFormat, width, height, border, format, type, pixels);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4124,9 +5292,13 @@ AROS_LH5(void, glGetTexImage,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetTexImage(target, level, format, type, pixels);
+    mglGetTexImage(target, level, format, type, pixels);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4138,9 +5310,13 @@ AROS_LH2(void, glGenTextures,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGenTextures(n, textures);
+    mglGenTextures(n, textures);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4152,9 +5328,13 @@ AROS_LH2(void, glDeleteTextures,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDeleteTextures(n, textures);
+    mglDeleteTextures(n, textures);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4166,9 +5346,13 @@ AROS_LH2(void, glBindTexture,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBindTexture(target, texture);
+    mglBindTexture(target, texture);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4181,9 +5365,13 @@ AROS_LH3(void, glPrioritizeTextures,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPrioritizeTextures(n, textures, priorities);
+    mglPrioritizeTextures(n, textures, priorities);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4196,9 +5384,15 @@ AROS_LH3(GLboolean, glAreTexturesResident,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglAreTexturesResident(n, textures, residences);
+    GLboolean _return = mglAreTexturesResident(n, textures, residences);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -4209,9 +5403,15 @@ AROS_LH1(GLboolean, glIsTexture,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIsTexture(texture);
+    GLboolean _return = mglIsTexture(texture);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -4228,9 +5428,13 @@ AROS_LH7(void, glTexSubImage1D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexSubImage1D(target, level, xoffset, width, format, type, pixels);
+    mglTexSubImage1D(target, level, xoffset, width, format, type, pixels);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4249,9 +5453,13 @@ AROS_LH9(void, glTexSubImage2D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels);
+    mglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4268,9 +5476,13 @@ AROS_LH7(void, glCopyTexImage1D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCopyTexImage1D(target, level, internalformat, x, y, width, border);
+    mglCopyTexImage1D(target, level, internalformat, x, y, width, border);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4288,9 +5500,13 @@ AROS_LH8(void, glCopyTexImage2D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCopyTexImage2D(target, level, internalformat, x, y, width, height, border);
+    mglCopyTexImage2D(target, level, internalformat, x, y, width, height, border);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4306,9 +5522,13 @@ AROS_LH6(void, glCopyTexSubImage1D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCopyTexSubImage1D(target, level, xoffset, x, y, width);
+    mglCopyTexSubImage1D(target, level, xoffset, x, y, width);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4326,9 +5546,13 @@ AROS_LH8(void, glCopyTexSubImage2D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCopyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height);
+    mglCopyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4344,9 +5568,13 @@ AROS_LH6(void, glMap1d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMap1d(target, u1, u2, stride, order, points);
+    mglMap1d(target, u1, u2, stride, order, points);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4362,9 +5590,13 @@ AROS_LH6(void, glMap1f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMap1f(target, u1, u2, stride, order, points);
+    mglMap1f(target, u1, u2, stride, order, points);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4384,9 +5616,13 @@ AROS_LH10(void, glMap2d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMap2d(target, u1, u2, ustride, uorder, v1, v2, vstride, vorder, points);
+    mglMap2d(target, u1, u2, ustride, uorder, v1, v2, vstride, vorder, points);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4406,9 +5642,13 @@ AROS_LH10(void, glMap2f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMap2f(target, u1, u2, ustride, uorder, v1, v2, vstride, vorder, points);
+    mglMap2f(target, u1, u2, ustride, uorder, v1, v2, vstride, vorder, points);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4421,9 +5661,13 @@ AROS_LH3(void, glGetMapdv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetMapdv(target, query, v);
+    mglGetMapdv(target, query, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4436,9 +5680,13 @@ AROS_LH3(void, glGetMapfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetMapfv(target, query, v);
+    mglGetMapfv(target, query, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4451,9 +5699,13 @@ AROS_LH3(void, glGetMapiv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetMapiv(target, query, v);
+    mglGetMapiv(target, query, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4464,9 +5716,13 @@ AROS_LH1(void, glEvalCoord1d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEvalCoord1d(u);
+    mglEvalCoord1d(u);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4477,9 +5733,13 @@ AROS_LH1(void, glEvalCoord1f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEvalCoord1f(u);
+    mglEvalCoord1f(u);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4490,9 +5750,13 @@ AROS_LH1(void, glEvalCoord1dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEvalCoord1dv(u);
+    mglEvalCoord1dv(u);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4503,9 +5767,13 @@ AROS_LH1(void, glEvalCoord1fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEvalCoord1fv(u);
+    mglEvalCoord1fv(u);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4517,9 +5785,13 @@ AROS_LH2(void, glEvalCoord2d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEvalCoord2d(u, v);
+    mglEvalCoord2d(u, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4531,9 +5803,13 @@ AROS_LH2(void, glEvalCoord2f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEvalCoord2f(u, v);
+    mglEvalCoord2f(u, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4544,9 +5820,13 @@ AROS_LH1(void, glEvalCoord2dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEvalCoord2dv(u);
+    mglEvalCoord2dv(u);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4557,9 +5837,13 @@ AROS_LH1(void, glEvalCoord2fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEvalCoord2fv(u);
+    mglEvalCoord2fv(u);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4572,9 +5856,13 @@ AROS_LH3(void, glMapGrid1d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMapGrid1d(un, u1, u2);
+    mglMapGrid1d(un, u1, u2);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4587,9 +5875,13 @@ AROS_LH3(void, glMapGrid1f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMapGrid1f(un, u1, u2);
+    mglMapGrid1f(un, u1, u2);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4605,9 +5897,13 @@ AROS_LH6(void, glMapGrid2d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMapGrid2d(un, u1, u2, vn, v1, v2);
+    mglMapGrid2d(un, u1, u2, vn, v1, v2);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4623,9 +5919,13 @@ AROS_LH6(void, glMapGrid2f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMapGrid2f(un, u1, u2, vn, v1, v2);
+    mglMapGrid2f(un, u1, u2, vn, v1, v2);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4636,9 +5936,13 @@ AROS_LH1(void, glEvalPoint1,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEvalPoint1(i);
+    mglEvalPoint1(i);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4650,9 +5954,13 @@ AROS_LH2(void, glEvalPoint2,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEvalPoint2(i, j);
+    mglEvalPoint2(i, j);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4665,9 +5973,13 @@ AROS_LH3(void, glEvalMesh1,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEvalMesh1(mode, i1, i2);
+    mglEvalMesh1(mode, i1, i2);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4682,9 +5994,13 @@ AROS_LH5(void, glEvalMesh2,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEvalMesh2(mode, i1, i2, j1, j2);
+    mglEvalMesh2(mode, i1, i2, j1, j2);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4696,9 +6012,13 @@ AROS_LH2(void, glFogf,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFogf(pname, param);
+    mglFogf(pname, param);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4710,9 +6030,13 @@ AROS_LH2(void, glFogi,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFogi(pname, param);
+    mglFogi(pname, param);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4724,9 +6048,13 @@ AROS_LH2(void, glFogfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFogfv(pname, params);
+    mglFogfv(pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4738,9 +6066,13 @@ AROS_LH2(void, glFogiv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFogiv(pname, params);
+    mglFogiv(pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4753,9 +6085,13 @@ AROS_LH3(void, glFeedbackBuffer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFeedbackBuffer(size, type, buffer);
+    mglFeedbackBuffer(size, type, buffer);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4766,9 +6102,13 @@ AROS_LH1(void, glPassThrough,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPassThrough(token);
+    mglPassThrough(token);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4780,9 +6120,13 @@ AROS_LH2(void, glSelectBuffer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSelectBuffer(size, buffer);
+    mglSelectBuffer(size, buffer);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4792,9 +6136,13 @@ AROS_LH0(void, glInitNames,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglInitNames();
+    mglInitNames();
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4805,9 +6153,13 @@ AROS_LH1(void, glLoadName,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglLoadName(name);
+    mglLoadName(name);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4818,9 +6170,13 @@ AROS_LH1(void, glPushName,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPushName(name);
+    mglPushName(name);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4830,9 +6186,13 @@ AROS_LH0(void, glPopName,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPopName();
+    mglPopName();
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4848,9 +6208,13 @@ AROS_LH6(void, glDrawRangeElements,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDrawRangeElements(mode, start, end, count, type, indices);
+    mglDrawRangeElements(mode, start, end, count, type, indices);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4870,9 +6234,13 @@ AROS_LH10(void, glTexImage3D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels);
+    mglTexImage3D(target, level, internalFormat, width, height, depth, border, format, type, pixels);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4893,9 +6261,13 @@ AROS_LH11(void, glTexSubImage3D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
+    mglTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4914,9 +6286,13 @@ AROS_LH9(void, glCopyTexSubImage3D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCopyTexSubImage3D(target, level, xoffset, yoffset, zoffset, x, y, width, height);
+    mglCopyTexSubImage3D(target, level, xoffset, yoffset, zoffset, x, y, width, height);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4932,9 +6308,13 @@ AROS_LH6(void, glColorTable,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColorTable(target, internalformat, width, format, type, table);
+    mglColorTable(target, internalformat, width, format, type, table);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4950,9 +6330,13 @@ AROS_LH6(void, glColorSubTable,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColorSubTable(target, start, count, format, type, data);
+    mglColorSubTable(target, start, count, format, type, data);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4965,9 +6349,13 @@ AROS_LH3(void, glColorTableParameteriv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColorTableParameteriv(target, pname, params);
+    mglColorTableParameteriv(target, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4980,9 +6368,13 @@ AROS_LH3(void, glColorTableParameterfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColorTableParameterfv(target, pname, params);
+    mglColorTableParameterfv(target, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -4997,9 +6389,13 @@ AROS_LH5(void, glCopyColorSubTable,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCopyColorSubTable(target, start, x, y, width);
+    mglCopyColorSubTable(target, start, x, y, width);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5014,9 +6410,13 @@ AROS_LH5(void, glCopyColorTable,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCopyColorTable(target, internalformat, x, y, width);
+    mglCopyColorTable(target, internalformat, x, y, width);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5030,9 +6430,13 @@ AROS_LH4(void, glGetColorTable,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetColorTable(target, format, type, table);
+    mglGetColorTable(target, format, type, table);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5045,9 +6449,13 @@ AROS_LH3(void, glGetColorTableParameterfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetColorTableParameterfv(target, pname, params);
+    mglGetColorTableParameterfv(target, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5060,9 +6468,13 @@ AROS_LH3(void, glGetColorTableParameteriv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetColorTableParameteriv(target, pname, params);
+    mglGetColorTableParameteriv(target, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5073,9 +6485,13 @@ AROS_LH1(void, glBlendEquation,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBlendEquation(mode);
+    mglBlendEquation(mode);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5089,9 +6505,13 @@ AROS_LH4(void, glBlendColor,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBlendColor(red, green, blue, alpha);
+    mglBlendColor(red, green, blue, alpha);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5105,9 +6525,13 @@ AROS_LH4(void, glHistogram,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglHistogram(target, width, internalformat, sink);
+    mglHistogram(target, width, internalformat, sink);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5118,9 +6542,13 @@ AROS_LH1(void, glResetHistogram,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglResetHistogram(target);
+    mglResetHistogram(target);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5135,9 +6563,13 @@ AROS_LH5(void, glGetHistogram,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetHistogram(target, reset, format, type, values);
+    mglGetHistogram(target, reset, format, type, values);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5150,9 +6582,13 @@ AROS_LH3(void, glGetHistogramParameterfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetHistogramParameterfv(target, pname, params);
+    mglGetHistogramParameterfv(target, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5165,9 +6601,13 @@ AROS_LH3(void, glGetHistogramParameteriv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetHistogramParameteriv(target, pname, params);
+    mglGetHistogramParameteriv(target, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5180,9 +6620,13 @@ AROS_LH3(void, glMinmax,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMinmax(target, internalformat, sink);
+    mglMinmax(target, internalformat, sink);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5193,9 +6637,13 @@ AROS_LH1(void, glResetMinmax,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglResetMinmax(target);
+    mglResetMinmax(target);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5210,9 +6658,13 @@ AROS_LH5(void, glGetMinmax,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetMinmax(target, reset, format, types, values);
+    mglGetMinmax(target, reset, format, types, values);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5225,9 +6677,13 @@ AROS_LH3(void, glGetMinmaxParameterfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetMinmaxParameterfv(target, pname, params);
+    mglGetMinmaxParameterfv(target, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5240,9 +6696,13 @@ AROS_LH3(void, glGetMinmaxParameteriv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetMinmaxParameteriv(target, pname, params);
+    mglGetMinmaxParameteriv(target, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5258,9 +6718,13 @@ AROS_LH6(void, glConvolutionFilter1D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglConvolutionFilter1D(target, internalformat, width, format, type, image);
+    mglConvolutionFilter1D(target, internalformat, width, format, type, image);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5277,9 +6741,13 @@ AROS_LH7(void, glConvolutionFilter2D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglConvolutionFilter2D(target, internalformat, width, height, format, type, image);
+    mglConvolutionFilter2D(target, internalformat, width, height, format, type, image);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5292,9 +6760,13 @@ AROS_LH3(void, glConvolutionParameterf,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglConvolutionParameterf(target, pname, params);
+    mglConvolutionParameterf(target, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5307,9 +6779,13 @@ AROS_LH3(void, glConvolutionParameterfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglConvolutionParameterfv(target, pname, params);
+    mglConvolutionParameterfv(target, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5322,9 +6798,13 @@ AROS_LH3(void, glConvolutionParameteri,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglConvolutionParameteri(target, pname, params);
+    mglConvolutionParameteri(target, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5337,9 +6817,13 @@ AROS_LH3(void, glConvolutionParameteriv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglConvolutionParameteriv(target, pname, params);
+    mglConvolutionParameteriv(target, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5354,9 +6838,13 @@ AROS_LH5(void, glCopyConvolutionFilter1D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCopyConvolutionFilter1D(target, internalformat, x, y, width);
+    mglCopyConvolutionFilter1D(target, internalformat, x, y, width);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5372,9 +6860,13 @@ AROS_LH6(void, glCopyConvolutionFilter2D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCopyConvolutionFilter2D(target, internalformat, x, y, width, height);
+    mglCopyConvolutionFilter2D(target, internalformat, x, y, width, height);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5388,9 +6880,13 @@ AROS_LH4(void, glGetConvolutionFilter,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetConvolutionFilter(target, format, type, image);
+    mglGetConvolutionFilter(target, format, type, image);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5403,9 +6899,13 @@ AROS_LH3(void, glGetConvolutionParameterfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetConvolutionParameterfv(target, pname, params);
+    mglGetConvolutionParameterfv(target, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5418,9 +6918,13 @@ AROS_LH3(void, glGetConvolutionParameteriv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetConvolutionParameteriv(target, pname, params);
+    mglGetConvolutionParameteriv(target, pname, params);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5438,9 +6942,13 @@ AROS_LH8(void, glSeparableFilter2D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSeparableFilter2D(target, internalformat, width, height, format, type, row, column);
+    mglSeparableFilter2D(target, internalformat, width, height, format, type, row, column);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5456,9 +6964,13 @@ AROS_LH6(void, glGetSeparableFilter,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetSeparableFilter(target, format, type, row, column, span);
+    mglGetSeparableFilter(target, format, type, row, column, span);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5469,9 +6981,13 @@ AROS_LH1(void, glActiveTexture,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglActiveTexture(texture);
+    mglActiveTexture(texture);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5482,9 +6998,13 @@ AROS_LH1(void, glClientActiveTexture,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglClientActiveTexture(texture);
+    mglClientActiveTexture(texture);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5501,9 +7021,13 @@ AROS_LH7(void, glCompressedTexImage1D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCompressedTexImage1D(target, level, internalformat, width, border, imageSize, data);
+    mglCompressedTexImage1D(target, level, internalformat, width, border, imageSize, data);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5521,9 +7045,13 @@ AROS_LH8(void, glCompressedTexImage2D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
+    mglCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5542,9 +7070,13 @@ AROS_LH9(void, glCompressedTexImage3D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, data);
+    mglCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, data);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5561,9 +7093,13 @@ AROS_LH7(void, glCompressedTexSubImage1D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, data);
+    mglCompressedTexSubImage1D(target, level, xoffset, width, format, imageSize, data);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5582,9 +7118,13 @@ AROS_LH9(void, glCompressedTexSubImage2D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data);
+    mglCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5605,9 +7145,13 @@ AROS_LH11(void, glCompressedTexSubImage3D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data);
+    mglCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5620,9 +7164,13 @@ AROS_LH3(void, glGetCompressedTexImage,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetCompressedTexImage(target, lod, img);
+    mglGetCompressedTexImage(target, lod, img);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5634,9 +7182,13 @@ AROS_LH2(void, glMultiTexCoord1d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord1d(target, s);
+    mglMultiTexCoord1d(target, s);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5648,9 +7200,13 @@ AROS_LH2(void, glMultiTexCoord1dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord1dv(target, v);
+    mglMultiTexCoord1dv(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5662,9 +7218,13 @@ AROS_LH2(void, glMultiTexCoord1f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord1f(target, s);
+    mglMultiTexCoord1f(target, s);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5676,9 +7236,13 @@ AROS_LH2(void, glMultiTexCoord1fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord1fv(target, v);
+    mglMultiTexCoord1fv(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5690,9 +7254,13 @@ AROS_LH2(void, glMultiTexCoord1i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord1i(target, s);
+    mglMultiTexCoord1i(target, s);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5704,9 +7272,13 @@ AROS_LH2(void, glMultiTexCoord1iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord1iv(target, v);
+    mglMultiTexCoord1iv(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5718,9 +7290,13 @@ AROS_LH2(void, glMultiTexCoord1s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord1s(target, s);
+    mglMultiTexCoord1s(target, s);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5732,9 +7308,13 @@ AROS_LH2(void, glMultiTexCoord1sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord1sv(target, v);
+    mglMultiTexCoord1sv(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5747,9 +7327,13 @@ AROS_LH3(void, glMultiTexCoord2d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord2d(target, s, t);
+    mglMultiTexCoord2d(target, s, t);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5761,9 +7345,13 @@ AROS_LH2(void, glMultiTexCoord2dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord2dv(target, v);
+    mglMultiTexCoord2dv(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5776,9 +7364,13 @@ AROS_LH3(void, glMultiTexCoord2f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord2f(target, s, t);
+    mglMultiTexCoord2f(target, s, t);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5790,9 +7382,13 @@ AROS_LH2(void, glMultiTexCoord2fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord2fv(target, v);
+    mglMultiTexCoord2fv(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5805,9 +7401,13 @@ AROS_LH3(void, glMultiTexCoord2i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord2i(target, s, t);
+    mglMultiTexCoord2i(target, s, t);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5819,9 +7419,13 @@ AROS_LH2(void, glMultiTexCoord2iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord2iv(target, v);
+    mglMultiTexCoord2iv(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5834,9 +7438,13 @@ AROS_LH3(void, glMultiTexCoord2s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord2s(target, s, t);
+    mglMultiTexCoord2s(target, s, t);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5848,9 +7456,13 @@ AROS_LH2(void, glMultiTexCoord2sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord2sv(target, v);
+    mglMultiTexCoord2sv(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5864,9 +7476,13 @@ AROS_LH4(void, glMultiTexCoord3d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord3d(target, s, t, r);
+    mglMultiTexCoord3d(target, s, t, r);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5878,9 +7494,13 @@ AROS_LH2(void, glMultiTexCoord3dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord3dv(target, v);
+    mglMultiTexCoord3dv(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5894,9 +7514,13 @@ AROS_LH4(void, glMultiTexCoord3f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord3f(target, s, t, r);
+    mglMultiTexCoord3f(target, s, t, r);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5908,9 +7532,13 @@ AROS_LH2(void, glMultiTexCoord3fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord3fv(target, v);
+    mglMultiTexCoord3fv(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5924,9 +7552,13 @@ AROS_LH4(void, glMultiTexCoord3i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord3i(target, s, t, r);
+    mglMultiTexCoord3i(target, s, t, r);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5938,9 +7570,13 @@ AROS_LH2(void, glMultiTexCoord3iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord3iv(target, v);
+    mglMultiTexCoord3iv(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5954,9 +7590,13 @@ AROS_LH4(void, glMultiTexCoord3s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord3s(target, s, t, r);
+    mglMultiTexCoord3s(target, s, t, r);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5968,9 +7608,13 @@ AROS_LH2(void, glMultiTexCoord3sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord3sv(target, v);
+    mglMultiTexCoord3sv(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5985,9 +7629,13 @@ AROS_LH5(void, glMultiTexCoord4d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord4d(target, s, t, r, q);
+    mglMultiTexCoord4d(target, s, t, r, q);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -5999,9 +7647,13 @@ AROS_LH2(void, glMultiTexCoord4dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord4dv(target, v);
+    mglMultiTexCoord4dv(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6016,9 +7668,13 @@ AROS_LH5(void, glMultiTexCoord4f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord4f(target, s, t, r, q);
+    mglMultiTexCoord4f(target, s, t, r, q);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6030,9 +7686,13 @@ AROS_LH2(void, glMultiTexCoord4fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord4fv(target, v);
+    mglMultiTexCoord4fv(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6047,9 +7707,13 @@ AROS_LH5(void, glMultiTexCoord4i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord4i(target, s, t, r, q);
+    mglMultiTexCoord4i(target, s, t, r, q);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6061,9 +7725,13 @@ AROS_LH2(void, glMultiTexCoord4iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord4iv(target, v);
+    mglMultiTexCoord4iv(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6078,9 +7746,13 @@ AROS_LH5(void, glMultiTexCoord4s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord4s(target, s, t, r, q);
+    mglMultiTexCoord4s(target, s, t, r, q);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6092,9 +7764,13 @@ AROS_LH2(void, glMultiTexCoord4sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord4sv(target, v);
+    mglMultiTexCoord4sv(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6105,9 +7781,13 @@ AROS_LH1(void, glLoadTransposeMatrixd,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglLoadTransposeMatrixd(m);
+    mglLoadTransposeMatrixd(m);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6118,9 +7798,13 @@ AROS_LH1(void, glLoadTransposeMatrixf,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglLoadTransposeMatrixf(m);
+    mglLoadTransposeMatrixf(m);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6131,9 +7815,13 @@ AROS_LH1(void, glMultTransposeMatrixd,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultTransposeMatrixd(m);
+    mglMultTransposeMatrixd(m);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6144,9 +7832,13 @@ AROS_LH1(void, glMultTransposeMatrixf,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultTransposeMatrixf(m);
+    mglMultTransposeMatrixf(m);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6158,9 +7850,13 @@ AROS_LH2(void, glSampleCoverage,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSampleCoverage(value, invert);
+    mglSampleCoverage(value, invert);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6171,9 +7867,13 @@ AROS_LH1(void, glActiveTextureARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglActiveTextureARB(texture);
+    mglActiveTextureARB(texture);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6184,9 +7884,13 @@ AROS_LH1(void, glClientActiveTextureARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglClientActiveTextureARB(texture);
+    mglClientActiveTextureARB(texture);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6198,9 +7902,13 @@ AROS_LH2(void, glMultiTexCoord1dARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord1dARB(target, s);
+    mglMultiTexCoord1dARB(target, s);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6212,9 +7920,13 @@ AROS_LH2(void, glMultiTexCoord1dvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord1dvARB(target, v);
+    mglMultiTexCoord1dvARB(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6226,9 +7938,13 @@ AROS_LH2(void, glMultiTexCoord1fARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord1fARB(target, s);
+    mglMultiTexCoord1fARB(target, s);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6240,9 +7956,13 @@ AROS_LH2(void, glMultiTexCoord1fvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord1fvARB(target, v);
+    mglMultiTexCoord1fvARB(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6254,9 +7974,13 @@ AROS_LH2(void, glMultiTexCoord1iARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord1iARB(target, s);
+    mglMultiTexCoord1iARB(target, s);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6268,9 +7992,13 @@ AROS_LH2(void, glMultiTexCoord1ivARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord1ivARB(target, v);
+    mglMultiTexCoord1ivARB(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6282,9 +8010,13 @@ AROS_LH2(void, glMultiTexCoord1sARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord1sARB(target, s);
+    mglMultiTexCoord1sARB(target, s);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6296,9 +8028,13 @@ AROS_LH2(void, glMultiTexCoord1svARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord1svARB(target, v);
+    mglMultiTexCoord1svARB(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6311,9 +8047,13 @@ AROS_LH3(void, glMultiTexCoord2dARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord2dARB(target, s, t);
+    mglMultiTexCoord2dARB(target, s, t);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6325,9 +8065,13 @@ AROS_LH2(void, glMultiTexCoord2dvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord2dvARB(target, v);
+    mglMultiTexCoord2dvARB(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6340,9 +8084,13 @@ AROS_LH3(void, glMultiTexCoord2fARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord2fARB(target, s, t);
+    mglMultiTexCoord2fARB(target, s, t);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6354,9 +8102,13 @@ AROS_LH2(void, glMultiTexCoord2fvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord2fvARB(target, v);
+    mglMultiTexCoord2fvARB(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6369,9 +8121,13 @@ AROS_LH3(void, glMultiTexCoord2iARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord2iARB(target, s, t);
+    mglMultiTexCoord2iARB(target, s, t);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6383,9 +8139,13 @@ AROS_LH2(void, glMultiTexCoord2ivARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord2ivARB(target, v);
+    mglMultiTexCoord2ivARB(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6398,9 +8158,13 @@ AROS_LH3(void, glMultiTexCoord2sARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord2sARB(target, s, t);
+    mglMultiTexCoord2sARB(target, s, t);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6412,9 +8176,13 @@ AROS_LH2(void, glMultiTexCoord2svARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord2svARB(target, v);
+    mglMultiTexCoord2svARB(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6428,9 +8196,13 @@ AROS_LH4(void, glMultiTexCoord3dARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord3dARB(target, s, t, r);
+    mglMultiTexCoord3dARB(target, s, t, r);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6442,9 +8214,13 @@ AROS_LH2(void, glMultiTexCoord3dvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord3dvARB(target, v);
+    mglMultiTexCoord3dvARB(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6458,9 +8234,13 @@ AROS_LH4(void, glMultiTexCoord3fARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord3fARB(target, s, t, r);
+    mglMultiTexCoord3fARB(target, s, t, r);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6472,9 +8252,13 @@ AROS_LH2(void, glMultiTexCoord3fvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord3fvARB(target, v);
+    mglMultiTexCoord3fvARB(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6488,9 +8272,13 @@ AROS_LH4(void, glMultiTexCoord3iARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord3iARB(target, s, t, r);
+    mglMultiTexCoord3iARB(target, s, t, r);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6502,9 +8290,13 @@ AROS_LH2(void, glMultiTexCoord3ivARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord3ivARB(target, v);
+    mglMultiTexCoord3ivARB(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6518,9 +8310,13 @@ AROS_LH4(void, glMultiTexCoord3sARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord3sARB(target, s, t, r);
+    mglMultiTexCoord3sARB(target, s, t, r);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6532,9 +8328,13 @@ AROS_LH2(void, glMultiTexCoord3svARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord3svARB(target, v);
+    mglMultiTexCoord3svARB(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6549,9 +8349,13 @@ AROS_LH5(void, glMultiTexCoord4dARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord4dARB(target, s, t, r, q);
+    mglMultiTexCoord4dARB(target, s, t, r, q);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6563,9 +8367,13 @@ AROS_LH2(void, glMultiTexCoord4dvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord4dvARB(target, v);
+    mglMultiTexCoord4dvARB(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6580,9 +8388,13 @@ AROS_LH5(void, glMultiTexCoord4fARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord4fARB(target, s, t, r, q);
+    mglMultiTexCoord4fARB(target, s, t, r, q);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6594,9 +8406,13 @@ AROS_LH2(void, glMultiTexCoord4fvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord4fvARB(target, v);
+    mglMultiTexCoord4fvARB(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6611,9 +8427,13 @@ AROS_LH5(void, glMultiTexCoord4iARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord4iARB(target, s, t, r, q);
+    mglMultiTexCoord4iARB(target, s, t, r, q);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6625,9 +8445,13 @@ AROS_LH2(void, glMultiTexCoord4ivARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord4ivARB(target, v);
+    mglMultiTexCoord4ivARB(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6642,9 +8466,13 @@ AROS_LH5(void, glMultiTexCoord4sARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord4sARB(target, s, t, r, q);
+    mglMultiTexCoord4sARB(target, s, t, r, q);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6656,9 +8484,13 @@ AROS_LH2(void, glMultiTexCoord4svARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiTexCoord4svARB(target, v);
+    mglMultiTexCoord4svARB(target, v);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6672,9 +8504,13 @@ AROS_LH4(void, glBlendFuncSeparate,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBlendFuncSeparate(a, b, c, d);
+    mglBlendFuncSeparate(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6685,9 +8521,13 @@ AROS_LH1(void, glFogCoordf,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFogCoordf(a);
+    mglFogCoordf(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6698,9 +8538,13 @@ AROS_LH1(void, glFogCoordfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFogCoordfv(a);
+    mglFogCoordfv(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6711,9 +8555,13 @@ AROS_LH1(void, glFogCoordd,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFogCoordd(a);
+    mglFogCoordd(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6724,9 +8572,13 @@ AROS_LH1(void, glFogCoorddv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFogCoorddv(a);
+    mglFogCoorddv(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6739,9 +8591,13 @@ AROS_LH3(void, glFogCoordPointer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFogCoordPointer(a, b, c);
+    mglFogCoordPointer(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6755,9 +8611,13 @@ AROS_LH4(void, glMultiDrawArrays,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiDrawArrays(a, b, c, d);
+    mglMultiDrawArrays(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6772,9 +8632,13 @@ AROS_LH5(void, glMultiDrawElements,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiDrawElements(a, b, c, d, e);
+    mglMultiDrawElements(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6786,9 +8650,13 @@ AROS_LH2(void, glPointParameterf,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPointParameterf(a, b);
+    mglPointParameterf(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6800,9 +8668,13 @@ AROS_LH2(void, glPointParameterfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPointParameterfv(a, b);
+    mglPointParameterfv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6814,9 +8686,13 @@ AROS_LH2(void, glPointParameteri,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPointParameteri(a, b);
+    mglPointParameteri(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6828,9 +8704,13 @@ AROS_LH2(void, glPointParameteriv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPointParameteriv(a, b);
+    mglPointParameteriv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6843,9 +8723,13 @@ AROS_LH3(void, glSecondaryColor3b,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3b(a, b, c);
+    mglSecondaryColor3b(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6856,9 +8740,13 @@ AROS_LH1(void, glSecondaryColor3bv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3bv(a);
+    mglSecondaryColor3bv(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6871,9 +8759,13 @@ AROS_LH3(void, glSecondaryColor3d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3d(a, b, c);
+    mglSecondaryColor3d(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6884,9 +8776,13 @@ AROS_LH1(void, glSecondaryColor3dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3dv(a);
+    mglSecondaryColor3dv(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6899,9 +8795,13 @@ AROS_LH3(void, glSecondaryColor3f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3f(a, b, c);
+    mglSecondaryColor3f(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6912,9 +8812,13 @@ AROS_LH1(void, glSecondaryColor3fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3fv(a);
+    mglSecondaryColor3fv(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6927,9 +8831,13 @@ AROS_LH3(void, glSecondaryColor3i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3i(a, b, c);
+    mglSecondaryColor3i(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6940,9 +8848,13 @@ AROS_LH1(void, glSecondaryColor3iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3iv(a);
+    mglSecondaryColor3iv(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6955,9 +8867,13 @@ AROS_LH3(void, glSecondaryColor3s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3s(a, b, c);
+    mglSecondaryColor3s(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6968,9 +8884,13 @@ AROS_LH1(void, glSecondaryColor3sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3sv(a);
+    mglSecondaryColor3sv(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6983,9 +8903,13 @@ AROS_LH3(void, glSecondaryColor3ub,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3ub(a, b, c);
+    mglSecondaryColor3ub(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -6996,9 +8920,13 @@ AROS_LH1(void, glSecondaryColor3ubv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3ubv(a);
+    mglSecondaryColor3ubv(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7011,9 +8939,13 @@ AROS_LH3(void, glSecondaryColor3ui,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3ui(a, b, c);
+    mglSecondaryColor3ui(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7024,9 +8956,13 @@ AROS_LH1(void, glSecondaryColor3uiv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3uiv(a);
+    mglSecondaryColor3uiv(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7039,9 +8975,13 @@ AROS_LH3(void, glSecondaryColor3us,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3us(a, b, c);
+    mglSecondaryColor3us(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7052,9 +8992,13 @@ AROS_LH1(void, glSecondaryColor3usv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3usv(a);
+    mglSecondaryColor3usv(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7068,9 +9012,13 @@ AROS_LH4(void, glSecondaryColorPointer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColorPointer(a, b, c, d);
+    mglSecondaryColorPointer(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7082,9 +9030,13 @@ AROS_LH2(void, glWindowPos2d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2d(a, b);
+    mglWindowPos2d(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7095,9 +9047,13 @@ AROS_LH1(void, glWindowPos2dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2dv(a);
+    mglWindowPos2dv(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7109,9 +9065,13 @@ AROS_LH2(void, glWindowPos2f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2f(a, b);
+    mglWindowPos2f(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7122,9 +9082,13 @@ AROS_LH1(void, glWindowPos2fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2fv(a);
+    mglWindowPos2fv(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7136,9 +9100,13 @@ AROS_LH2(void, glWindowPos2i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2i(a, b);
+    mglWindowPos2i(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7149,9 +9117,13 @@ AROS_LH1(void, glWindowPos2iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2iv(a);
+    mglWindowPos2iv(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7163,9 +9135,13 @@ AROS_LH2(void, glWindowPos2s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2s(a, b);
+    mglWindowPos2s(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7176,9 +9152,13 @@ AROS_LH1(void, glWindowPos2sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2sv(a);
+    mglWindowPos2sv(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7191,9 +9171,13 @@ AROS_LH3(void, glWindowPos3d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3d(a, b, c);
+    mglWindowPos3d(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7204,9 +9188,13 @@ AROS_LH1(void, glWindowPos3dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3dv(a);
+    mglWindowPos3dv(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7219,9 +9207,13 @@ AROS_LH3(void, glWindowPos3f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3f(a, b, c);
+    mglWindowPos3f(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7232,9 +9224,13 @@ AROS_LH1(void, glWindowPos3fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3fv(a);
+    mglWindowPos3fv(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7247,9 +9243,13 @@ AROS_LH3(void, glWindowPos3i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3i(a, b, c);
+    mglWindowPos3i(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7260,9 +9260,13 @@ AROS_LH1(void, glWindowPos3iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3iv(a);
+    mglWindowPos3iv(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7275,9 +9279,13 @@ AROS_LH3(void, glWindowPos3s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3s(a, b, c);
+    mglWindowPos3s(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7288,9 +9296,13 @@ AROS_LH1(void, glWindowPos3sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3sv(a);
+    mglWindowPos3sv(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7302,9 +9314,13 @@ AROS_LH2(void, glGenQueries,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGenQueries(a, b);
+    mglGenQueries(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7316,9 +9332,13 @@ AROS_LH2(void, glDeleteQueries,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDeleteQueries(a, b);
+    mglDeleteQueries(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7329,9 +9349,15 @@ AROS_LH1(GLboolean, glIsQuery,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIsQuery(a);
+    GLboolean _return = mglIsQuery(a);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -7343,9 +9369,13 @@ AROS_LH2(void, glBeginQuery,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBeginQuery(a, b);
+    mglBeginQuery(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7356,9 +9386,13 @@ AROS_LH1(void, glEndQuery,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEndQuery(a);
+    mglEndQuery(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7371,9 +9405,13 @@ AROS_LH3(void, glGetQueryiv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetQueryiv(a, b, c);
+    mglGetQueryiv(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7386,9 +9424,13 @@ AROS_LH3(void, glGetQueryObjectiv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetQueryObjectiv(a, b, c);
+    mglGetQueryObjectiv(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7401,9 +9443,13 @@ AROS_LH3(void, glGetQueryObjectuiv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetQueryObjectuiv(a, b, c);
+    mglGetQueryObjectuiv(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7415,9 +9461,13 @@ AROS_LH2(void, glBindBuffer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBindBuffer(a, b);
+    mglBindBuffer(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7429,9 +9479,13 @@ AROS_LH2(void, glDeleteBuffers,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDeleteBuffers(a, b);
+    mglDeleteBuffers(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7443,9 +9497,13 @@ AROS_LH2(void, glGenBuffers,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGenBuffers(a, b);
+    mglGenBuffers(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7456,9 +9514,15 @@ AROS_LH1(GLboolean, glIsBuffer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIsBuffer(a);
+    GLboolean _return = mglIsBuffer(a);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -7472,9 +9536,13 @@ AROS_LH4(void, glBufferData,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBufferData(a, b, c, d);
+    mglBufferData(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7488,9 +9556,13 @@ AROS_LH4(void, glBufferSubData,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBufferSubData(a, b, c, d);
+    mglBufferSubData(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7504,9 +9576,13 @@ AROS_LH4(void, glGetBufferSubData,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetBufferSubData(a, b, c, d);
+    mglGetBufferSubData(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7518,9 +9594,15 @@ AROS_LH2(GLvoid*, glMapBuffer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMapBuffer(a, b);
+    GLvoid* _return = mglMapBuffer(a, b);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -7531,9 +9613,15 @@ AROS_LH1(GLboolean, glUnmapBuffer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUnmapBuffer(a);
+    GLboolean _return = mglUnmapBuffer(a);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -7546,9 +9634,13 @@ AROS_LH3(void, glGetBufferParameteriv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetBufferParameteriv(a, b, c);
+    mglGetBufferParameteriv(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7561,9 +9653,13 @@ AROS_LH3(void, glGetBufferPointerv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetBufferPointerv(a, b, c);
+    mglGetBufferPointerv(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7575,9 +9671,13 @@ AROS_LH2(void, glBlendEquationSeparate,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBlendEquationSeparate(a, b);
+    mglBlendEquationSeparate(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7589,9 +9689,13 @@ AROS_LH2(void, glDrawBuffers,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDrawBuffers(a, b);
+    mglDrawBuffers(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7605,9 +9709,13 @@ AROS_LH4(void, glStencilOpSeparate,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglStencilOpSeparate(a, b, c, d);
+    mglStencilOpSeparate(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7621,9 +9729,13 @@ AROS_LH4(void, glStencilFuncSeparate,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglStencilFuncSeparate(a, b, c, d);
+    mglStencilFuncSeparate(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7635,9 +9747,13 @@ AROS_LH2(void, glStencilMaskSeparate,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglStencilMaskSeparate(a, b);
+    mglStencilMaskSeparate(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7649,9 +9765,13 @@ AROS_LH2(void, glAttachShader,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglAttachShader(a, b);
+    mglAttachShader(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7664,9 +9784,13 @@ AROS_LH3(void, glBindAttribLocation,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBindAttribLocation(a, b, c);
+    mglBindAttribLocation(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7677,9 +9801,13 @@ AROS_LH1(void, glCompileShader,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCompileShader(a);
+    mglCompileShader(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7689,9 +9817,15 @@ AROS_LH0(GLuint, glCreateProgram,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCreateProgram();
+    GLuint _return = mglCreateProgram();
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -7702,9 +9836,15 @@ AROS_LH1(GLuint, glCreateShader,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCreateShader(a);
+    GLuint _return = mglCreateShader(a);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -7715,9 +9855,13 @@ AROS_LH1(void, glDeleteProgram,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDeleteProgram(a);
+    mglDeleteProgram(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7728,9 +9872,13 @@ AROS_LH1(void, glDeleteShader,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDeleteShader(a);
+    mglDeleteShader(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7742,9 +9890,13 @@ AROS_LH2(void, glDetachShader,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDetachShader(a, b);
+    mglDetachShader(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7755,9 +9907,13 @@ AROS_LH1(void, glDisableVertexAttribArray,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDisableVertexAttribArray(a);
+    mglDisableVertexAttribArray(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7768,9 +9924,13 @@ AROS_LH1(void, glEnableVertexAttribArray,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEnableVertexAttribArray(a);
+    mglEnableVertexAttribArray(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7787,9 +9947,13 @@ AROS_LH7(void, glGetActiveAttrib,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetActiveAttrib(a, b, c, d, e, f, g);
+    mglGetActiveAttrib(a, b, c, d, e, f, g);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7806,9 +9970,13 @@ AROS_LH7(void, glGetActiveUniform,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetActiveUniform(a, b, c, d, e, f, g);
+    mglGetActiveUniform(a, b, c, d, e, f, g);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7822,9 +9990,13 @@ AROS_LH4(void, glGetAttachedShaders,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetAttachedShaders(a, b, c, d);
+    mglGetAttachedShaders(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7836,9 +10008,15 @@ AROS_LH2(GLint, glGetAttribLocation,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetAttribLocation(a, b);
+    GLint _return = mglGetAttribLocation(a, b);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -7851,9 +10029,13 @@ AROS_LH3(void, glGetProgramiv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetProgramiv(a, b, c);
+    mglGetProgramiv(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7867,9 +10049,13 @@ AROS_LH4(void, glGetProgramInfoLog,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetProgramInfoLog(a, b, c, d);
+    mglGetProgramInfoLog(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7882,9 +10068,13 @@ AROS_LH3(void, glGetShaderiv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetShaderiv(a, b, c);
+    mglGetShaderiv(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7898,9 +10088,13 @@ AROS_LH4(void, glGetShaderInfoLog,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetShaderInfoLog(a, b, c, d);
+    mglGetShaderInfoLog(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7914,9 +10108,13 @@ AROS_LH4(void, glGetShaderSource,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetShaderSource(a, b, c, d);
+    mglGetShaderSource(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7928,9 +10126,15 @@ AROS_LH2(GLint, glGetUniformLocation,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetUniformLocation(a, b);
+    GLint _return = mglGetUniformLocation(a, b);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -7943,9 +10147,13 @@ AROS_LH3(void, glGetUniformfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetUniformfv(a, b, c);
+    mglGetUniformfv(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7958,9 +10166,13 @@ AROS_LH3(void, glGetUniformiv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetUniformiv(a, b, c);
+    mglGetUniformiv(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7973,9 +10185,13 @@ AROS_LH3(void, glGetVertexAttribdv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetVertexAttribdv(a, b, c);
+    mglGetVertexAttribdv(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -7988,9 +10204,13 @@ AROS_LH3(void, glGetVertexAttribfv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetVertexAttribfv(a, b, c);
+    mglGetVertexAttribfv(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8003,9 +10223,13 @@ AROS_LH3(void, glGetVertexAttribiv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetVertexAttribiv(a, b, c);
+    mglGetVertexAttribiv(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8018,9 +10242,13 @@ AROS_LH3(void, glGetVertexAttribPointerv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetVertexAttribPointerv(a, b, c);
+    mglGetVertexAttribPointerv(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8031,9 +10259,15 @@ AROS_LH1(GLboolean, glIsProgram,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIsProgram(a);
+    GLboolean _return = mglIsProgram(a);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -8044,9 +10278,15 @@ AROS_LH1(GLboolean, glIsShader,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIsShader(a);
+    GLboolean _return = mglIsShader(a);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -8057,9 +10297,13 @@ AROS_LH1(void, glLinkProgram,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglLinkProgram(a);
+    mglLinkProgram(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8073,9 +10317,13 @@ AROS_LH4(void, glShaderSource,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglShaderSource(a, b, c, d);
+    mglShaderSource(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8086,9 +10334,13 @@ AROS_LH1(void, glUseProgram,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUseProgram(a);
+    mglUseProgram(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8100,9 +10352,13 @@ AROS_LH2(void, glUniform1f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform1f(a, b);
+    mglUniform1f(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8115,9 +10371,13 @@ AROS_LH3(void, glUniform2f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform2f(a, b, c);
+    mglUniform2f(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8131,9 +10391,13 @@ AROS_LH4(void, glUniform3f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform3f(a, b, c, d);
+    mglUniform3f(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8148,9 +10412,13 @@ AROS_LH5(void, glUniform4f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform4f(a, b, c, d, e);
+    mglUniform4f(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8162,9 +10430,13 @@ AROS_LH2(void, glUniform1i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform1i(a, b);
+    mglUniform1i(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8177,9 +10449,13 @@ AROS_LH3(void, glUniform2i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform2i(a, b, c);
+    mglUniform2i(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8193,9 +10469,13 @@ AROS_LH4(void, glUniform3i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform3i(a, b, c, d);
+    mglUniform3i(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8210,9 +10490,13 @@ AROS_LH5(void, glUniform4i,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform4i(a, b, c, d, e);
+    mglUniform4i(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8225,9 +10509,13 @@ AROS_LH3(void, glUniform1fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform1fv(a, b, c);
+    mglUniform1fv(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8240,9 +10528,13 @@ AROS_LH3(void, glUniform2fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform2fv(a, b, c);
+    mglUniform2fv(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8255,9 +10547,13 @@ AROS_LH3(void, glUniform3fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform3fv(a, b, c);
+    mglUniform3fv(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8270,9 +10566,13 @@ AROS_LH3(void, glUniform4fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform4fv(a, b, c);
+    mglUniform4fv(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8285,9 +10585,13 @@ AROS_LH3(void, glUniform1iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform1iv(a, b, c);
+    mglUniform1iv(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8300,9 +10604,13 @@ AROS_LH3(void, glUniform2iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform2iv(a, b, c);
+    mglUniform2iv(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8315,9 +10623,13 @@ AROS_LH3(void, glUniform3iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform3iv(a, b, c);
+    mglUniform3iv(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8330,9 +10642,13 @@ AROS_LH3(void, glUniform4iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform4iv(a, b, c);
+    mglUniform4iv(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8346,9 +10662,13 @@ AROS_LH4(void, glUniformMatrix2fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniformMatrix2fv(a, b, c, d);
+    mglUniformMatrix2fv(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8362,9 +10682,13 @@ AROS_LH4(void, glUniformMatrix3fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniformMatrix3fv(a, b, c, d);
+    mglUniformMatrix3fv(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8378,9 +10702,13 @@ AROS_LH4(void, glUniformMatrix4fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniformMatrix4fv(a, b, c, d);
+    mglUniformMatrix4fv(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8391,9 +10719,13 @@ AROS_LH1(void, glValidateProgram,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglValidateProgram(a);
+    mglValidateProgram(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8405,9 +10737,13 @@ AROS_LH2(void, glVertexAttrib1d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib1d(a, b);
+    mglVertexAttrib1d(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8419,9 +10755,13 @@ AROS_LH2(void, glVertexAttrib1dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib1dv(a, b);
+    mglVertexAttrib1dv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8433,9 +10773,13 @@ AROS_LH2(void, glVertexAttrib1f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib1f(a, b);
+    mglVertexAttrib1f(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8447,9 +10791,13 @@ AROS_LH2(void, glVertexAttrib1fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib1fv(a, b);
+    mglVertexAttrib1fv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8461,9 +10809,13 @@ AROS_LH2(void, glVertexAttrib1s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib1s(a, b);
+    mglVertexAttrib1s(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8475,9 +10827,13 @@ AROS_LH2(void, glVertexAttrib1sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib1sv(a, b);
+    mglVertexAttrib1sv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8490,9 +10846,13 @@ AROS_LH3(void, glVertexAttrib2d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib2d(a, b, c);
+    mglVertexAttrib2d(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8504,9 +10864,13 @@ AROS_LH2(void, glVertexAttrib2dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib2dv(a, b);
+    mglVertexAttrib2dv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8519,9 +10883,13 @@ AROS_LH3(void, glVertexAttrib2f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib2f(a, b, c);
+    mglVertexAttrib2f(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8533,9 +10901,13 @@ AROS_LH2(void, glVertexAttrib2fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib2fv(a, b);
+    mglVertexAttrib2fv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8548,9 +10920,13 @@ AROS_LH3(void, glVertexAttrib2s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib2s(a, b, c);
+    mglVertexAttrib2s(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8562,9 +10938,13 @@ AROS_LH2(void, glVertexAttrib2sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib2sv(a, b);
+    mglVertexAttrib2sv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8578,9 +10958,13 @@ AROS_LH4(void, glVertexAttrib3d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib3d(a, b, c, d);
+    mglVertexAttrib3d(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8592,9 +10976,13 @@ AROS_LH2(void, glVertexAttrib3dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib3dv(a, b);
+    mglVertexAttrib3dv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8608,9 +10996,13 @@ AROS_LH4(void, glVertexAttrib3f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib3f(a, b, c, d);
+    mglVertexAttrib3f(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8622,9 +11014,13 @@ AROS_LH2(void, glVertexAttrib3fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib3fv(a, b);
+    mglVertexAttrib3fv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8638,9 +11034,13 @@ AROS_LH4(void, glVertexAttrib3s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib3s(a, b, c, d);
+    mglVertexAttrib3s(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8652,9 +11052,13 @@ AROS_LH2(void, glVertexAttrib3sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib3sv(a, b);
+    mglVertexAttrib3sv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8666,9 +11070,13 @@ AROS_LH2(void, glVertexAttrib4Nbv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4Nbv(a, b);
+    mglVertexAttrib4Nbv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8680,9 +11088,13 @@ AROS_LH2(void, glVertexAttrib4Niv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4Niv(a, b);
+    mglVertexAttrib4Niv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8694,9 +11106,13 @@ AROS_LH2(void, glVertexAttrib4Nsv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4Nsv(a, b);
+    mglVertexAttrib4Nsv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8711,9 +11127,13 @@ AROS_LH5(void, glVertexAttrib4Nub,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4Nub(a, b, c, d, e);
+    mglVertexAttrib4Nub(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8725,9 +11145,13 @@ AROS_LH2(void, glVertexAttrib4Nubv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4Nubv(a, b);
+    mglVertexAttrib4Nubv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8739,9 +11163,13 @@ AROS_LH2(void, glVertexAttrib4Nuiv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4Nuiv(a, b);
+    mglVertexAttrib4Nuiv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8753,9 +11181,13 @@ AROS_LH2(void, glVertexAttrib4Nusv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4Nusv(a, b);
+    mglVertexAttrib4Nusv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8767,9 +11199,13 @@ AROS_LH2(void, glVertexAttrib4bv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4bv(a, b);
+    mglVertexAttrib4bv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8784,9 +11220,13 @@ AROS_LH5(void, glVertexAttrib4d,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4d(a, b, c, d, e);
+    mglVertexAttrib4d(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8798,9 +11238,13 @@ AROS_LH2(void, glVertexAttrib4dv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4dv(a, b);
+    mglVertexAttrib4dv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8815,9 +11259,13 @@ AROS_LH5(void, glVertexAttrib4f,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4f(a, b, c, d, e);
+    mglVertexAttrib4f(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8829,9 +11277,13 @@ AROS_LH2(void, glVertexAttrib4fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4fv(a, b);
+    mglVertexAttrib4fv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8843,9 +11295,13 @@ AROS_LH2(void, glVertexAttrib4iv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4iv(a, b);
+    mglVertexAttrib4iv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8860,9 +11316,13 @@ AROS_LH5(void, glVertexAttrib4s,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4s(a, b, c, d, e);
+    mglVertexAttrib4s(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8874,9 +11334,13 @@ AROS_LH2(void, glVertexAttrib4sv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4sv(a, b);
+    mglVertexAttrib4sv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8888,9 +11352,13 @@ AROS_LH2(void, glVertexAttrib4ubv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4ubv(a, b);
+    mglVertexAttrib4ubv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8902,9 +11370,13 @@ AROS_LH2(void, glVertexAttrib4uiv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4uiv(a, b);
+    mglVertexAttrib4uiv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8916,9 +11388,13 @@ AROS_LH2(void, glVertexAttrib4usv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4usv(a, b);
+    mglVertexAttrib4usv(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8934,9 +11410,13 @@ AROS_LH6(void, glVertexAttribPointer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttribPointer(a, b, c, d, e, f);
+    mglVertexAttribPointer(a, b, c, d, e, f);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8950,9 +11430,13 @@ AROS_LH4(void, glUniformMatrix2x3fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniformMatrix2x3fv(a, b, c, d);
+    mglUniformMatrix2x3fv(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8966,9 +11450,13 @@ AROS_LH4(void, glUniformMatrix3x2fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniformMatrix3x2fv(a, b, c, d);
+    mglUniformMatrix3x2fv(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8982,9 +11470,13 @@ AROS_LH4(void, glUniformMatrix2x4fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniformMatrix2x4fv(a, b, c, d);
+    mglUniformMatrix2x4fv(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -8998,9 +11490,13 @@ AROS_LH4(void, glUniformMatrix4x2fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniformMatrix4x2fv(a, b, c, d);
+    mglUniformMatrix4x2fv(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9014,9 +11510,13 @@ AROS_LH4(void, glUniformMatrix3x4fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniformMatrix3x4fv(a, b, c, d);
+    mglUniformMatrix3x4fv(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9030,9 +11530,13 @@ AROS_LH4(void, glUniformMatrix4x3fv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniformMatrix4x3fv(a, b, c, d);
+    mglUniformMatrix4x3fv(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9043,9 +11547,13 @@ AROS_LH1(void, glLoadTransposeMatrixfARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglLoadTransposeMatrixfARB(a);
+    mglLoadTransposeMatrixfARB(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9056,9 +11564,13 @@ AROS_LH1(void, glLoadTransposeMatrixdARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglLoadTransposeMatrixdARB(a);
+    mglLoadTransposeMatrixdARB(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9069,9 +11581,13 @@ AROS_LH1(void, glMultTransposeMatrixfARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultTransposeMatrixfARB(a);
+    mglMultTransposeMatrixfARB(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9082,9 +11598,13 @@ AROS_LH1(void, glMultTransposeMatrixdARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultTransposeMatrixdARB(a);
+    mglMultTransposeMatrixdARB(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9096,9 +11616,13 @@ AROS_LH2(void, glSampleCoverageARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSampleCoverageARB(a, b);
+    mglSampleCoverageARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9117,9 +11641,13 @@ AROS_LH9(void, glCompressedTexImage3DARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCompressedTexImage3DARB(a, b, c, d, e, f, g, h, i);
+    mglCompressedTexImage3DARB(a, b, c, d, e, f, g, h, i);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9137,9 +11665,13 @@ AROS_LH8(void, glCompressedTexImage2DARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCompressedTexImage2DARB(a, b, c, d, e, f, g, h);
+    mglCompressedTexImage2DARB(a, b, c, d, e, f, g, h);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9156,9 +11688,13 @@ AROS_LH7(void, glCompressedTexImage1DARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCompressedTexImage1DARB(a, b, c, d, e, f, g);
+    mglCompressedTexImage1DARB(a, b, c, d, e, f, g);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9179,9 +11715,13 @@ AROS_LH11(void, glCompressedTexSubImage3DARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCompressedTexSubImage3DARB(a, b, c, d, e, f, g, h, i, j, k);
+    mglCompressedTexSubImage3DARB(a, b, c, d, e, f, g, h, i, j, k);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9200,9 +11740,13 @@ AROS_LH9(void, glCompressedTexSubImage2DARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCompressedTexSubImage2DARB(a, b, c, d, e, f, g, h, i);
+    mglCompressedTexSubImage2DARB(a, b, c, d, e, f, g, h, i);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9219,9 +11763,13 @@ AROS_LH7(void, glCompressedTexSubImage1DARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCompressedTexSubImage1DARB(a, b, c, d, e, f, g);
+    mglCompressedTexSubImage1DARB(a, b, c, d, e, f, g);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9234,9 +11782,13 @@ AROS_LH3(void, glGetCompressedTexImageARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetCompressedTexImageARB(a, b, c);
+    mglGetCompressedTexImageARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9248,9 +11800,13 @@ AROS_LH2(void, glPointParameterfARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPointParameterfARB(a, b);
+    mglPointParameterfARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9262,9 +11818,13 @@ AROS_LH2(void, glPointParameterfvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPointParameterfvARB(a, b);
+    mglPointParameterfvARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9276,9 +11836,13 @@ AROS_LH2(void, glWindowPos2dARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2dARB(a, b);
+    mglWindowPos2dARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9289,9 +11853,13 @@ AROS_LH1(void, glWindowPos2dvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2dvARB(a);
+    mglWindowPos2dvARB(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9303,9 +11871,13 @@ AROS_LH2(void, glWindowPos2fARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2fARB(a, b);
+    mglWindowPos2fARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9316,9 +11888,13 @@ AROS_LH1(void, glWindowPos2fvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2fvARB(a);
+    mglWindowPos2fvARB(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9330,9 +11906,13 @@ AROS_LH2(void, glWindowPos2iARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2iARB(a, b);
+    mglWindowPos2iARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9343,9 +11923,13 @@ AROS_LH1(void, glWindowPos2ivARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2ivARB(a);
+    mglWindowPos2ivARB(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9357,9 +11941,13 @@ AROS_LH2(void, glWindowPos2sARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2sARB(a, b);
+    mglWindowPos2sARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9370,9 +11958,13 @@ AROS_LH1(void, glWindowPos2svARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2svARB(a);
+    mglWindowPos2svARB(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9385,9 +11977,13 @@ AROS_LH3(void, glWindowPos3dARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3dARB(a, b, c);
+    mglWindowPos3dARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9398,9 +11994,13 @@ AROS_LH1(void, glWindowPos3dvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3dvARB(a);
+    mglWindowPos3dvARB(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9413,9 +12013,13 @@ AROS_LH3(void, glWindowPos3fARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3fARB(a, b, c);
+    mglWindowPos3fARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9426,9 +12030,13 @@ AROS_LH1(void, glWindowPos3fvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3fvARB(a);
+    mglWindowPos3fvARB(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9441,9 +12049,13 @@ AROS_LH3(void, glWindowPos3iARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3iARB(a, b, c);
+    mglWindowPos3iARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9454,9 +12066,13 @@ AROS_LH1(void, glWindowPos3ivARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3ivARB(a);
+    mglWindowPos3ivARB(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9469,9 +12085,13 @@ AROS_LH3(void, glWindowPos3sARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3sARB(a, b, c);
+    mglWindowPos3sARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9482,9 +12102,13 @@ AROS_LH1(void, glWindowPos3svARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3svARB(a);
+    mglWindowPos3svARB(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9496,9 +12120,13 @@ AROS_LH2(void, glVertexAttrib1dARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib1dARB(a, b);
+    mglVertexAttrib1dARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9510,9 +12138,13 @@ AROS_LH2(void, glVertexAttrib1dvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib1dvARB(a, b);
+    mglVertexAttrib1dvARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9524,9 +12156,13 @@ AROS_LH2(void, glVertexAttrib1fARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib1fARB(a, b);
+    mglVertexAttrib1fARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9538,9 +12174,13 @@ AROS_LH2(void, glVertexAttrib1fvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib1fvARB(a, b);
+    mglVertexAttrib1fvARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9552,9 +12192,13 @@ AROS_LH2(void, glVertexAttrib1sARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib1sARB(a, b);
+    mglVertexAttrib1sARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9566,9 +12210,13 @@ AROS_LH2(void, glVertexAttrib1svARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib1svARB(a, b);
+    mglVertexAttrib1svARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9581,9 +12229,13 @@ AROS_LH3(void, glVertexAttrib2dARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib2dARB(a, b, c);
+    mglVertexAttrib2dARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9595,9 +12247,13 @@ AROS_LH2(void, glVertexAttrib2dvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib2dvARB(a, b);
+    mglVertexAttrib2dvARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9610,9 +12266,13 @@ AROS_LH3(void, glVertexAttrib2fARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib2fARB(a, b, c);
+    mglVertexAttrib2fARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9624,9 +12284,13 @@ AROS_LH2(void, glVertexAttrib2fvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib2fvARB(a, b);
+    mglVertexAttrib2fvARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9639,9 +12303,13 @@ AROS_LH3(void, glVertexAttrib2sARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib2sARB(a, b, c);
+    mglVertexAttrib2sARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9653,9 +12321,13 @@ AROS_LH2(void, glVertexAttrib2svARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib2svARB(a, b);
+    mglVertexAttrib2svARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9669,9 +12341,13 @@ AROS_LH4(void, glVertexAttrib3dARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib3dARB(a, b, c, d);
+    mglVertexAttrib3dARB(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9683,9 +12359,13 @@ AROS_LH2(void, glVertexAttrib3dvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib3dvARB(a, b);
+    mglVertexAttrib3dvARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9699,9 +12379,13 @@ AROS_LH4(void, glVertexAttrib3fARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib3fARB(a, b, c, d);
+    mglVertexAttrib3fARB(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9713,9 +12397,13 @@ AROS_LH2(void, glVertexAttrib3fvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib3fvARB(a, b);
+    mglVertexAttrib3fvARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9729,9 +12417,13 @@ AROS_LH4(void, glVertexAttrib3sARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib3sARB(a, b, c, d);
+    mglVertexAttrib3sARB(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9743,9 +12435,13 @@ AROS_LH2(void, glVertexAttrib3svARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib3svARB(a, b);
+    mglVertexAttrib3svARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9757,9 +12453,13 @@ AROS_LH2(void, glVertexAttrib4NbvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4NbvARB(a, b);
+    mglVertexAttrib4NbvARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9771,9 +12471,13 @@ AROS_LH2(void, glVertexAttrib4NivARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4NivARB(a, b);
+    mglVertexAttrib4NivARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9785,9 +12489,13 @@ AROS_LH2(void, glVertexAttrib4NsvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4NsvARB(a, b);
+    mglVertexAttrib4NsvARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9802,9 +12510,13 @@ AROS_LH5(void, glVertexAttrib4NubARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4NubARB(a, b, c, d, e);
+    mglVertexAttrib4NubARB(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9816,9 +12528,13 @@ AROS_LH2(void, glVertexAttrib4NubvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4NubvARB(a, b);
+    mglVertexAttrib4NubvARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9830,9 +12546,13 @@ AROS_LH2(void, glVertexAttrib4NuivARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4NuivARB(a, b);
+    mglVertexAttrib4NuivARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9844,9 +12564,13 @@ AROS_LH2(void, glVertexAttrib4NusvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4NusvARB(a, b);
+    mglVertexAttrib4NusvARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9858,9 +12582,13 @@ AROS_LH2(void, glVertexAttrib4bvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4bvARB(a, b);
+    mglVertexAttrib4bvARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9875,9 +12603,13 @@ AROS_LH5(void, glVertexAttrib4dARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4dARB(a, b, c, d, e);
+    mglVertexAttrib4dARB(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9889,9 +12621,13 @@ AROS_LH2(void, glVertexAttrib4dvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4dvARB(a, b);
+    mglVertexAttrib4dvARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9906,9 +12642,13 @@ AROS_LH5(void, glVertexAttrib4fARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4fARB(a, b, c, d, e);
+    mglVertexAttrib4fARB(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9920,9 +12660,13 @@ AROS_LH2(void, glVertexAttrib4fvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4fvARB(a, b);
+    mglVertexAttrib4fvARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9934,9 +12678,13 @@ AROS_LH2(void, glVertexAttrib4ivARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4ivARB(a, b);
+    mglVertexAttrib4ivARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9951,9 +12699,13 @@ AROS_LH5(void, glVertexAttrib4sARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4sARB(a, b, c, d, e);
+    mglVertexAttrib4sARB(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9965,9 +12717,13 @@ AROS_LH2(void, glVertexAttrib4svARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4svARB(a, b);
+    mglVertexAttrib4svARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9979,9 +12735,13 @@ AROS_LH2(void, glVertexAttrib4ubvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4ubvARB(a, b);
+    mglVertexAttrib4ubvARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -9993,9 +12753,13 @@ AROS_LH2(void, glVertexAttrib4uivARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4uivARB(a, b);
+    mglVertexAttrib4uivARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10007,9 +12771,13 @@ AROS_LH2(void, glVertexAttrib4usvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4usvARB(a, b);
+    mglVertexAttrib4usvARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10025,9 +12793,13 @@ AROS_LH6(void, glVertexAttribPointerARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttribPointerARB(a, b, c, d, e, f);
+    mglVertexAttribPointerARB(a, b, c, d, e, f);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10038,9 +12810,13 @@ AROS_LH1(void, glEnableVertexAttribArrayARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEnableVertexAttribArrayARB(a);
+    mglEnableVertexAttribArrayARB(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10051,9 +12827,13 @@ AROS_LH1(void, glDisableVertexAttribArrayARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDisableVertexAttribArrayARB(a);
+    mglDisableVertexAttribArrayARB(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10067,9 +12847,13 @@ AROS_LH4(void, glProgramStringARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglProgramStringARB(a, b, c, d);
+    mglProgramStringARB(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10081,9 +12865,13 @@ AROS_LH2(void, glBindProgramARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBindProgramARB(a, b);
+    mglBindProgramARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10095,9 +12883,13 @@ AROS_LH2(void, glDeleteProgramsARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDeleteProgramsARB(a, b);
+    mglDeleteProgramsARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10109,9 +12901,13 @@ AROS_LH2(void, glGenProgramsARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGenProgramsARB(a, b);
+    mglGenProgramsARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10127,9 +12923,13 @@ AROS_LH6(void, glProgramEnvParameter4dARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglProgramEnvParameter4dARB(a, b, c, d, e, f);
+    mglProgramEnvParameter4dARB(a, b, c, d, e, f);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10142,9 +12942,13 @@ AROS_LH3(void, glProgramEnvParameter4dvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglProgramEnvParameter4dvARB(a, b, c);
+    mglProgramEnvParameter4dvARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10160,9 +12964,13 @@ AROS_LH6(void, glProgramEnvParameter4fARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglProgramEnvParameter4fARB(a, b, c, d, e, f);
+    mglProgramEnvParameter4fARB(a, b, c, d, e, f);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10175,9 +12983,13 @@ AROS_LH3(void, glProgramEnvParameter4fvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglProgramEnvParameter4fvARB(a, b, c);
+    mglProgramEnvParameter4fvARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10193,9 +13005,13 @@ AROS_LH6(void, glProgramLocalParameter4dARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglProgramLocalParameter4dARB(a, b, c, d, e, f);
+    mglProgramLocalParameter4dARB(a, b, c, d, e, f);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10208,9 +13024,13 @@ AROS_LH3(void, glProgramLocalParameter4dvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglProgramLocalParameter4dvARB(a, b, c);
+    mglProgramLocalParameter4dvARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10226,9 +13046,13 @@ AROS_LH6(void, glProgramLocalParameter4fARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglProgramLocalParameter4fARB(a, b, c, d, e, f);
+    mglProgramLocalParameter4fARB(a, b, c, d, e, f);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10241,9 +13065,13 @@ AROS_LH3(void, glProgramLocalParameter4fvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglProgramLocalParameter4fvARB(a, b, c);
+    mglProgramLocalParameter4fvARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10256,9 +13084,13 @@ AROS_LH3(void, glGetProgramEnvParameterdvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetProgramEnvParameterdvARB(a, b, c);
+    mglGetProgramEnvParameterdvARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10271,9 +13103,13 @@ AROS_LH3(void, glGetProgramEnvParameterfvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetProgramEnvParameterfvARB(a, b, c);
+    mglGetProgramEnvParameterfvARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10286,9 +13122,13 @@ AROS_LH3(void, glGetProgramLocalParameterdvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetProgramLocalParameterdvARB(a, b, c);
+    mglGetProgramLocalParameterdvARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10301,9 +13141,13 @@ AROS_LH3(void, glGetProgramLocalParameterfvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetProgramLocalParameterfvARB(a, b, c);
+    mglGetProgramLocalParameterfvARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10316,9 +13160,13 @@ AROS_LH3(void, glGetProgramivARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetProgramivARB(a, b, c);
+    mglGetProgramivARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10331,9 +13179,13 @@ AROS_LH3(void, glGetProgramStringARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetProgramStringARB(a, b, c);
+    mglGetProgramStringARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10346,9 +13198,13 @@ AROS_LH3(void, glGetVertexAttribdvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetVertexAttribdvARB(a, b, c);
+    mglGetVertexAttribdvARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10361,9 +13217,13 @@ AROS_LH3(void, glGetVertexAttribfvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetVertexAttribfvARB(a, b, c);
+    mglGetVertexAttribfvARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10376,9 +13236,13 @@ AROS_LH3(void, glGetVertexAttribivARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetVertexAttribivARB(a, b, c);
+    mglGetVertexAttribivARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10391,9 +13255,13 @@ AROS_LH3(void, glGetVertexAttribPointervARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetVertexAttribPointervARB(a, b, c);
+    mglGetVertexAttribPointervARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10404,9 +13272,15 @@ AROS_LH1(GLboolean, glIsProgramARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIsProgramARB(a);
+    GLboolean _return = mglIsProgramARB(a);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -10418,9 +13292,13 @@ AROS_LH2(void, glBindBufferARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBindBufferARB(a, b);
+    mglBindBufferARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10432,9 +13310,13 @@ AROS_LH2(void, glDeleteBuffersARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDeleteBuffersARB(a, b);
+    mglDeleteBuffersARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10446,9 +13328,13 @@ AROS_LH2(void, glGenBuffersARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGenBuffersARB(a, b);
+    mglGenBuffersARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10459,9 +13345,15 @@ AROS_LH1(GLboolean, glIsBufferARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIsBufferARB(a);
+    GLboolean _return = mglIsBufferARB(a);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -10475,9 +13367,13 @@ AROS_LH4(void, glBufferDataARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBufferDataARB(a, b, c, d);
+    mglBufferDataARB(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10491,9 +13387,13 @@ AROS_LH4(void, glBufferSubDataARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBufferSubDataARB(a, b, c, d);
+    mglBufferSubDataARB(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10507,9 +13407,13 @@ AROS_LH4(void, glGetBufferSubDataARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetBufferSubDataARB(a, b, c, d);
+    mglGetBufferSubDataARB(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10521,9 +13425,15 @@ AROS_LH2(GLvoid*, glMapBufferARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMapBufferARB(a, b);
+    GLvoid* _return = mglMapBufferARB(a, b);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -10534,9 +13444,15 @@ AROS_LH1(GLboolean, glUnmapBufferARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUnmapBufferARB(a);
+    GLboolean _return = mglUnmapBufferARB(a);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -10549,9 +13465,13 @@ AROS_LH3(void, glGetBufferParameterivARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetBufferParameterivARB(a, b, c);
+    mglGetBufferParameterivARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10564,9 +13484,13 @@ AROS_LH3(void, glGetBufferPointervARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetBufferPointervARB(a, b, c);
+    mglGetBufferPointervARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10578,9 +13502,13 @@ AROS_LH2(void, glGenQueriesARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGenQueriesARB(a, b);
+    mglGenQueriesARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10592,9 +13520,13 @@ AROS_LH2(void, glDeleteQueriesARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDeleteQueriesARB(a, b);
+    mglDeleteQueriesARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10605,9 +13537,15 @@ AROS_LH1(GLboolean, glIsQueryARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIsQueryARB(a);
+    GLboolean _return = mglIsQueryARB(a);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -10619,9 +13557,13 @@ AROS_LH2(void, glBeginQueryARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBeginQueryARB(a, b);
+    mglBeginQueryARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10632,9 +13574,13 @@ AROS_LH1(void, glEndQueryARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEndQueryARB(a);
+    mglEndQueryARB(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10647,9 +13593,13 @@ AROS_LH3(void, glGetQueryivARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetQueryivARB(a, b, c);
+    mglGetQueryivARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10662,9 +13612,13 @@ AROS_LH3(void, glGetQueryObjectivARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetQueryObjectivARB(a, b, c);
+    mglGetQueryObjectivARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10677,9 +13631,13 @@ AROS_LH3(void, glGetQueryObjectuivARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetQueryObjectuivARB(a, b, c);
+    mglGetQueryObjectuivARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10690,9 +13648,13 @@ AROS_LH1(void, glDeleteObjectARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDeleteObjectARB(a);
+    mglDeleteObjectARB(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10703,9 +13665,15 @@ AROS_LH1(GLhandleARB, glGetHandleARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetHandleARB(a);
+    GLhandleARB _return = mglGetHandleARB(a);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -10717,9 +13685,13 @@ AROS_LH2(void, glDetachObjectARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDetachObjectARB(a, b);
+    mglDetachObjectARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10730,9 +13702,15 @@ AROS_LH1(GLhandleARB, glCreateShaderObjectARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCreateShaderObjectARB(a);
+    GLhandleARB _return = mglCreateShaderObjectARB(a);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -10746,9 +13724,13 @@ AROS_LH4(void, glShaderSourceARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglShaderSourceARB(a, b, c, d);
+    mglShaderSourceARB(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10759,9 +13741,13 @@ AROS_LH1(void, glCompileShaderARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCompileShaderARB(a);
+    mglCompileShaderARB(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10771,9 +13757,15 @@ AROS_LH0(GLhandleARB, glCreateProgramObjectARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCreateProgramObjectARB();
+    GLhandleARB _return = mglCreateProgramObjectARB();
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -10785,9 +13777,13 @@ AROS_LH2(void, glAttachObjectARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglAttachObjectARB(a, b);
+    mglAttachObjectARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10798,9 +13794,13 @@ AROS_LH1(void, glLinkProgramARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglLinkProgramARB(a);
+    mglLinkProgramARB(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10811,9 +13811,13 @@ AROS_LH1(void, glUseProgramObjectARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUseProgramObjectARB(a);
+    mglUseProgramObjectARB(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10824,9 +13828,13 @@ AROS_LH1(void, glValidateProgramARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglValidateProgramARB(a);
+    mglValidateProgramARB(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10838,9 +13846,13 @@ AROS_LH2(void, glUniform1fARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform1fARB(a, b);
+    mglUniform1fARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10853,9 +13865,13 @@ AROS_LH3(void, glUniform2fARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform2fARB(a, b, c);
+    mglUniform2fARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10869,9 +13885,13 @@ AROS_LH4(void, glUniform3fARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform3fARB(a, b, c, d);
+    mglUniform3fARB(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10886,9 +13906,13 @@ AROS_LH5(void, glUniform4fARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform4fARB(a, b, c, d, e);
+    mglUniform4fARB(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10900,9 +13924,13 @@ AROS_LH2(void, glUniform1iARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform1iARB(a, b);
+    mglUniform1iARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10915,9 +13943,13 @@ AROS_LH3(void, glUniform2iARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform2iARB(a, b, c);
+    mglUniform2iARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10931,9 +13963,13 @@ AROS_LH4(void, glUniform3iARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform3iARB(a, b, c, d);
+    mglUniform3iARB(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10948,9 +13984,13 @@ AROS_LH5(void, glUniform4iARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform4iARB(a, b, c, d, e);
+    mglUniform4iARB(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10963,9 +14003,13 @@ AROS_LH3(void, glUniform1fvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform1fvARB(a, b, c);
+    mglUniform1fvARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10978,9 +14022,13 @@ AROS_LH3(void, glUniform2fvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform2fvARB(a, b, c);
+    mglUniform2fvARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -10993,9 +14041,13 @@ AROS_LH3(void, glUniform3fvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform3fvARB(a, b, c);
+    mglUniform3fvARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11008,9 +14060,13 @@ AROS_LH3(void, glUniform4fvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform4fvARB(a, b, c);
+    mglUniform4fvARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11023,9 +14079,13 @@ AROS_LH3(void, glUniform1ivARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform1ivARB(a, b, c);
+    mglUniform1ivARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11038,9 +14098,13 @@ AROS_LH3(void, glUniform2ivARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform2ivARB(a, b, c);
+    mglUniform2ivARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11053,9 +14117,13 @@ AROS_LH3(void, glUniform3ivARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform3ivARB(a, b, c);
+    mglUniform3ivARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11068,9 +14136,13 @@ AROS_LH3(void, glUniform4ivARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniform4ivARB(a, b, c);
+    mglUniform4ivARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11084,9 +14156,13 @@ AROS_LH4(void, glUniformMatrix2fvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniformMatrix2fvARB(a, b, c, d);
+    mglUniformMatrix2fvARB(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11100,9 +14176,13 @@ AROS_LH4(void, glUniformMatrix3fvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniformMatrix3fvARB(a, b, c, d);
+    mglUniformMatrix3fvARB(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11116,9 +14196,13 @@ AROS_LH4(void, glUniformMatrix4fvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUniformMatrix4fvARB(a, b, c, d);
+    mglUniformMatrix4fvARB(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11131,9 +14215,13 @@ AROS_LH3(void, glGetObjectParameterfvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetObjectParameterfvARB(a, b, c);
+    mglGetObjectParameterfvARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11146,9 +14234,13 @@ AROS_LH3(void, glGetObjectParameterivARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetObjectParameterivARB(a, b, c);
+    mglGetObjectParameterivARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11162,9 +14254,13 @@ AROS_LH4(void, glGetInfoLogARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetInfoLogARB(a, b, c, d);
+    mglGetInfoLogARB(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11178,9 +14274,13 @@ AROS_LH4(void, glGetAttachedObjectsARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetAttachedObjectsARB(a, b, c, d);
+    mglGetAttachedObjectsARB(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11192,9 +14292,15 @@ AROS_LH2(GLint, glGetUniformLocationARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetUniformLocationARB(a, b);
+    GLint _return = mglGetUniformLocationARB(a, b);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -11211,9 +14317,13 @@ AROS_LH7(void, glGetActiveUniformARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetActiveUniformARB(a, b, c, d, e, f, g);
+    mglGetActiveUniformARB(a, b, c, d, e, f, g);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11226,9 +14336,13 @@ AROS_LH3(void, glGetUniformfvARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetUniformfvARB(a, b, c);
+    mglGetUniformfvARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11241,9 +14355,13 @@ AROS_LH3(void, glGetUniformivARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetUniformivARB(a, b, c);
+    mglGetUniformivARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11257,9 +14375,13 @@ AROS_LH4(void, glGetShaderSourceARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetShaderSourceARB(a, b, c, d);
+    mglGetShaderSourceARB(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11272,9 +14394,13 @@ AROS_LH3(void, glBindAttribLocationARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBindAttribLocationARB(a, b, c);
+    mglBindAttribLocationARB(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11291,9 +14417,13 @@ AROS_LH7(void, glGetActiveAttribARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetActiveAttribARB(a, b, c, d, e, f, g);
+    mglGetActiveAttribARB(a, b, c, d, e, f, g);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11305,9 +14435,15 @@ AROS_LH2(GLint, glGetAttribLocationARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetAttribLocationARB(a, b);
+    GLint _return = mglGetAttribLocationARB(a, b);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -11319,9 +14455,13 @@ AROS_LH2(void, glDrawBuffersARB,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDrawBuffersARB(a, b);
+    mglDrawBuffersARB(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11332,9 +14472,15 @@ AROS_LH1(GLboolean, glIsRenderbuffer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIsRenderbuffer(a);
+    GLboolean _return = mglIsRenderbuffer(a);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -11346,9 +14492,13 @@ AROS_LH2(void, glBindRenderbuffer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBindRenderbuffer(a, b);
+    mglBindRenderbuffer(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11360,9 +14510,13 @@ AROS_LH2(void, glDeleteRenderbuffers,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDeleteRenderbuffers(a, b);
+    mglDeleteRenderbuffers(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11374,9 +14528,13 @@ AROS_LH2(void, glGenRenderbuffers,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGenRenderbuffers(a, b);
+    mglGenRenderbuffers(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11390,9 +14548,13 @@ AROS_LH4(void, glRenderbufferStorage,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRenderbufferStorage(a, b, c, d);
+    mglRenderbufferStorage(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11405,9 +14567,13 @@ AROS_LH3(void, glGetRenderbufferParameteriv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetRenderbufferParameteriv(a, b, c);
+    mglGetRenderbufferParameteriv(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11418,9 +14584,15 @@ AROS_LH1(GLboolean, glIsFramebuffer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIsFramebuffer(a);
+    GLboolean _return = mglIsFramebuffer(a);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -11432,9 +14604,13 @@ AROS_LH2(void, glBindFramebuffer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBindFramebuffer(a, b);
+    mglBindFramebuffer(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11446,9 +14622,13 @@ AROS_LH2(void, glDeleteFramebuffers,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDeleteFramebuffers(a, b);
+    mglDeleteFramebuffers(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11460,9 +14640,13 @@ AROS_LH2(void, glGenFramebuffers,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGenFramebuffers(a, b);
+    mglGenFramebuffers(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11473,9 +14657,15 @@ AROS_LH1(GLenum, glCheckFramebufferStatus,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCheckFramebufferStatus(a);
+    GLenum _return = mglCheckFramebufferStatus(a);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -11490,9 +14680,13 @@ AROS_LH5(void, glFramebufferTexture1D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFramebufferTexture1D(a, b, c, d, e);
+    mglFramebufferTexture1D(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11507,9 +14701,13 @@ AROS_LH5(void, glFramebufferTexture2D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFramebufferTexture2D(a, b, c, d, e);
+    mglFramebufferTexture2D(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11525,9 +14723,13 @@ AROS_LH6(void, glFramebufferTexture3D,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFramebufferTexture3D(a, b, c, d, e, f);
+    mglFramebufferTexture3D(a, b, c, d, e, f);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11541,9 +14743,13 @@ AROS_LH4(void, glFramebufferRenderbuffer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFramebufferRenderbuffer(a, b, c, d);
+    mglFramebufferRenderbuffer(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11557,9 +14763,13 @@ AROS_LH4(void, glGetFramebufferAttachmentParameteriv,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetFramebufferAttachmentParameteriv(a, b, c, d);
+    mglGetFramebufferAttachmentParameteriv(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11570,9 +14780,13 @@ AROS_LH1(void, glGenerateMipmap,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGenerateMipmap(a);
+    mglGenerateMipmap(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11592,9 +14806,13 @@ AROS_LH10(void, glBlitFramebuffer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBlitFramebuffer(a, b, c, d, e, f, g, h, i, j);
+    mglBlitFramebuffer(a, b, c, d, e, f, g, h, i, j);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11609,9 +14827,13 @@ AROS_LH5(void, glRenderbufferStorageMultisample,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRenderbufferStorageMultisample(a, b, c, d, e);
+    mglRenderbufferStorageMultisample(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11626,9 +14848,13 @@ AROS_LH5(void, glFramebufferTextureLayer,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFramebufferTextureLayer(a, b, c, d, e);
+    mglFramebufferTextureLayer(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11642,9 +14868,13 @@ AROS_LH4(void, glBlendColorEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBlendColorEXT(a, b, c, d);
+    mglBlendColorEXT(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11656,9 +14886,13 @@ AROS_LH2(void, glPolygonOffsetEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPolygonOffsetEXT(a, b);
+    mglPolygonOffsetEXT(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11678,9 +14912,13 @@ AROS_LH10(void, glTexImage3DEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexImage3DEXT(a, b, c, d, e, f, g, h, i, j);
+    mglTexImage3DEXT(a, b, c, d, e, f, g, h, i, j);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11701,9 +14939,13 @@ AROS_LH11(void, glTexSubImage3DEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexSubImage3DEXT(a, b, c, d, e, f, g, h, i, j, k);
+    mglTexSubImage3DEXT(a, b, c, d, e, f, g, h, i, j, k);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11720,9 +14962,13 @@ AROS_LH7(void, glTexSubImage1DEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexSubImage1DEXT(a, b, c, d, e, f, g);
+    mglTexSubImage1DEXT(a, b, c, d, e, f, g);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11741,9 +14987,13 @@ AROS_LH9(void, glTexSubImage2DEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexSubImage2DEXT(a, b, c, d, e, f, g, h, i);
+    mglTexSubImage2DEXT(a, b, c, d, e, f, g, h, i);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11760,9 +15010,13 @@ AROS_LH7(void, glCopyTexImage1DEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCopyTexImage1DEXT(a, b, c, d, e, f, g);
+    mglCopyTexImage1DEXT(a, b, c, d, e, f, g);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11780,9 +15034,13 @@ AROS_LH8(void, glCopyTexImage2DEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCopyTexImage2DEXT(a, b, c, d, e, f, g, h);
+    mglCopyTexImage2DEXT(a, b, c, d, e, f, g, h);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11798,9 +15056,13 @@ AROS_LH6(void, glCopyTexSubImage1DEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCopyTexSubImage1DEXT(a, b, c, d, e, f);
+    mglCopyTexSubImage1DEXT(a, b, c, d, e, f);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11818,9 +15080,13 @@ AROS_LH8(void, glCopyTexSubImage2DEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCopyTexSubImage2DEXT(a, b, c, d, e, f, g, h);
+    mglCopyTexSubImage2DEXT(a, b, c, d, e, f, g, h);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11839,9 +15105,13 @@ AROS_LH9(void, glCopyTexSubImage3DEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCopyTexSubImage3DEXT(a, b, c, d, e, f, g, h, i);
+    mglCopyTexSubImage3DEXT(a, b, c, d, e, f, g, h, i);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11854,9 +15124,15 @@ AROS_LH3(GLboolean, glAreTexturesResidentEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglAreTexturesResidentEXT(a, b, c);
+    GLboolean _return = mglAreTexturesResidentEXT(a, b, c);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -11868,9 +15144,13 @@ AROS_LH2(void, glBindTextureEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBindTextureEXT(a, b);
+    mglBindTextureEXT(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11882,9 +15162,13 @@ AROS_LH2(void, glDeleteTexturesEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDeleteTexturesEXT(a, b);
+    mglDeleteTexturesEXT(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11896,9 +15180,13 @@ AROS_LH2(void, glGenTexturesEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGenTexturesEXT(a, b);
+    mglGenTexturesEXT(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11909,9 +15197,15 @@ AROS_LH1(GLboolean, glIsTextureEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIsTextureEXT(a);
+    GLboolean _return = mglIsTextureEXT(a);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -11924,9 +15218,13 @@ AROS_LH3(void, glPrioritizeTexturesEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPrioritizeTexturesEXT(a, b, c);
+    mglPrioritizeTexturesEXT(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11937,9 +15235,13 @@ AROS_LH1(void, glArrayElementEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglArrayElementEXT(a);
+    mglArrayElementEXT(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11954,9 +15256,13 @@ AROS_LH5(void, glColorPointerEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColorPointerEXT(a, b, c, d, e);
+    mglColorPointerEXT(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11969,9 +15275,13 @@ AROS_LH3(void, glDrawArraysEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDrawArraysEXT(a, b, c);
+    mglDrawArraysEXT(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11984,9 +15294,13 @@ AROS_LH3(void, glEdgeFlagPointerEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEdgeFlagPointerEXT(a, b, c);
+    mglEdgeFlagPointerEXT(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -11998,9 +15312,13 @@ AROS_LH2(void, glGetPointervEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetPointervEXT(a, b);
+    mglGetPointervEXT(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12014,9 +15332,13 @@ AROS_LH4(void, glIndexPointerEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIndexPointerEXT(a, b, c, d);
+    mglIndexPointerEXT(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12030,9 +15352,13 @@ AROS_LH4(void, glNormalPointerEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglNormalPointerEXT(a, b, c, d);
+    mglNormalPointerEXT(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12047,9 +15373,13 @@ AROS_LH5(void, glTexCoordPointerEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexCoordPointerEXT(a, b, c, d, e);
+    mglTexCoordPointerEXT(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12064,9 +15394,13 @@ AROS_LH5(void, glVertexPointerEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexPointerEXT(a, b, c, d, e);
+    mglVertexPointerEXT(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12077,9 +15411,13 @@ AROS_LH1(void, glBlendEquationEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBlendEquationEXT(a);
+    mglBlendEquationEXT(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12091,9 +15429,13 @@ AROS_LH2(void, glPointParameterfEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPointParameterfEXT(a, b);
+    mglPointParameterfEXT(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12105,9 +15447,13 @@ AROS_LH2(void, glPointParameterfvEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPointParameterfvEXT(a, b);
+    mglPointParameterfvEXT(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12123,9 +15469,13 @@ AROS_LH6(void, glColorTableEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColorTableEXT(a, b, c, d, e, f);
+    mglColorTableEXT(a, b, c, d, e, f);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12139,9 +15489,13 @@ AROS_LH4(void, glGetColorTableEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetColorTableEXT(a, b, c, d);
+    mglGetColorTableEXT(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12154,9 +15508,13 @@ AROS_LH3(void, glGetColorTableParameterivEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetColorTableParameterivEXT(a, b, c);
+    mglGetColorTableParameterivEXT(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12169,9 +15527,13 @@ AROS_LH3(void, glGetColorTableParameterfvEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetColorTableParameterfvEXT(a, b, c);
+    mglGetColorTableParameterfvEXT(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12183,9 +15545,13 @@ AROS_LH2(void, glLockArraysEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglLockArraysEXT(a, b);
+    mglLockArraysEXT(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12195,9 +15561,13 @@ AROS_LH0(void, glUnlockArraysEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglUnlockArraysEXT();
+    mglUnlockArraysEXT();
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12213,9 +15583,13 @@ AROS_LH6(void, glDrawRangeElementsEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDrawRangeElementsEXT(a, b, c, d, e, f);
+    mglDrawRangeElementsEXT(a, b, c, d, e, f);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12228,9 +15602,13 @@ AROS_LH3(void, glSecondaryColor3bEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3bEXT(a, b, c);
+    mglSecondaryColor3bEXT(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12241,9 +15619,13 @@ AROS_LH1(void, glSecondaryColor3bvEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3bvEXT(a);
+    mglSecondaryColor3bvEXT(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12256,9 +15638,13 @@ AROS_LH3(void, glSecondaryColor3dEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3dEXT(a, b, c);
+    mglSecondaryColor3dEXT(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12269,9 +15655,13 @@ AROS_LH1(void, glSecondaryColor3dvEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3dvEXT(a);
+    mglSecondaryColor3dvEXT(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12284,9 +15674,13 @@ AROS_LH3(void, glSecondaryColor3fEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3fEXT(a, b, c);
+    mglSecondaryColor3fEXT(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12297,9 +15691,13 @@ AROS_LH1(void, glSecondaryColor3fvEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3fvEXT(a);
+    mglSecondaryColor3fvEXT(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12312,9 +15710,13 @@ AROS_LH3(void, glSecondaryColor3iEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3iEXT(a, b, c);
+    mglSecondaryColor3iEXT(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12325,9 +15727,13 @@ AROS_LH1(void, glSecondaryColor3ivEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3ivEXT(a);
+    mglSecondaryColor3ivEXT(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12340,9 +15746,13 @@ AROS_LH3(void, glSecondaryColor3sEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3sEXT(a, b, c);
+    mglSecondaryColor3sEXT(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12353,9 +15763,13 @@ AROS_LH1(void, glSecondaryColor3svEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3svEXT(a);
+    mglSecondaryColor3svEXT(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12368,9 +15782,13 @@ AROS_LH3(void, glSecondaryColor3ubEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3ubEXT(a, b, c);
+    mglSecondaryColor3ubEXT(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12381,9 +15799,13 @@ AROS_LH1(void, glSecondaryColor3ubvEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3ubvEXT(a);
+    mglSecondaryColor3ubvEXT(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12396,9 +15818,13 @@ AROS_LH3(void, glSecondaryColor3uiEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3uiEXT(a, b, c);
+    mglSecondaryColor3uiEXT(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12409,9 +15835,13 @@ AROS_LH1(void, glSecondaryColor3uivEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3uivEXT(a);
+    mglSecondaryColor3uivEXT(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12424,9 +15854,13 @@ AROS_LH3(void, glSecondaryColor3usEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3usEXT(a, b, c);
+    mglSecondaryColor3usEXT(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12437,9 +15871,13 @@ AROS_LH1(void, glSecondaryColor3usvEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColor3usvEXT(a);
+    mglSecondaryColor3usvEXT(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12453,9 +15891,13 @@ AROS_LH4(void, glSecondaryColorPointerEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSecondaryColorPointerEXT(a, b, c, d);
+    mglSecondaryColorPointerEXT(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12469,9 +15911,13 @@ AROS_LH4(void, glMultiDrawArraysEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiDrawArraysEXT(a, b, c, d);
+    mglMultiDrawArraysEXT(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12486,9 +15932,13 @@ AROS_LH5(void, glMultiDrawElementsEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglMultiDrawElementsEXT(a, b, c, d, e);
+    mglMultiDrawElementsEXT(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12499,9 +15949,13 @@ AROS_LH1(void, glFogCoordfEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFogCoordfEXT(a);
+    mglFogCoordfEXT(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12512,9 +15966,13 @@ AROS_LH1(void, glFogCoordfvEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFogCoordfvEXT(a);
+    mglFogCoordfvEXT(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12525,9 +15983,13 @@ AROS_LH1(void, glFogCoorddEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFogCoorddEXT(a);
+    mglFogCoorddEXT(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12538,9 +16000,13 @@ AROS_LH1(void, glFogCoorddvEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFogCoorddvEXT(a);
+    mglFogCoorddvEXT(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12553,9 +16019,13 @@ AROS_LH3(void, glFogCoordPointerEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFogCoordPointerEXT(a, b, c);
+    mglFogCoordPointerEXT(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12569,9 +16039,13 @@ AROS_LH4(void, glBlendFuncSeparateEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBlendFuncSeparateEXT(a, b, c, d);
+    mglBlendFuncSeparateEXT(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12581,9 +16055,13 @@ AROS_LH0(void, glFlushVertexArrayRangeNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFlushVertexArrayRangeNV();
+    mglFlushVertexArrayRangeNV();
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12595,9 +16073,13 @@ AROS_LH2(void, glVertexArrayRangeNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexArrayRangeNV(a, b);
+    mglVertexArrayRangeNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12609,9 +16091,13 @@ AROS_LH2(void, glCombinerParameterfvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCombinerParameterfvNV(a, b);
+    mglCombinerParameterfvNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12623,9 +16109,13 @@ AROS_LH2(void, glCombinerParameterfNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCombinerParameterfNV(a, b);
+    mglCombinerParameterfNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12637,9 +16127,13 @@ AROS_LH2(void, glCombinerParameterivNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCombinerParameterivNV(a, b);
+    mglCombinerParameterivNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12651,9 +16145,13 @@ AROS_LH2(void, glCombinerParameteriNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCombinerParameteriNV(a, b);
+    mglCombinerParameteriNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12669,9 +16167,13 @@ AROS_LH6(void, glCombinerInputNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCombinerInputNV(a, b, c, d, e, f);
+    mglCombinerInputNV(a, b, c, d, e, f);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12691,9 +16193,13 @@ AROS_LH10(void, glCombinerOutputNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCombinerOutputNV(a, b, c, d, e, f, g, h, i, j);
+    mglCombinerOutputNV(a, b, c, d, e, f, g, h, i, j);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12707,9 +16213,13 @@ AROS_LH4(void, glFinalCombinerInputNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFinalCombinerInputNV(a, b, c, d);
+    mglFinalCombinerInputNV(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12724,9 +16234,13 @@ AROS_LH5(void, glGetCombinerInputParameterfvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetCombinerInputParameterfvNV(a, b, c, d, e);
+    mglGetCombinerInputParameterfvNV(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12741,9 +16255,13 @@ AROS_LH5(void, glGetCombinerInputParameterivNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetCombinerInputParameterivNV(a, b, c, d, e);
+    mglGetCombinerInputParameterivNV(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12757,9 +16275,13 @@ AROS_LH4(void, glGetCombinerOutputParameterfvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetCombinerOutputParameterfvNV(a, b, c, d);
+    mglGetCombinerOutputParameterfvNV(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12773,9 +16295,13 @@ AROS_LH4(void, glGetCombinerOutputParameterivNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetCombinerOutputParameterivNV(a, b, c, d);
+    mglGetCombinerOutputParameterivNV(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12788,9 +16314,13 @@ AROS_LH3(void, glGetFinalCombinerInputParameterfvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetFinalCombinerInputParameterfvNV(a, b, c);
+    mglGetFinalCombinerInputParameterfvNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12803,9 +16333,13 @@ AROS_LH3(void, glGetFinalCombinerInputParameterivNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetFinalCombinerInputParameterivNV(a, b, c);
+    mglGetFinalCombinerInputParameterivNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12815,9 +16349,13 @@ AROS_LH0(void, glResizeBuffersMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglResizeBuffersMESA();
+    mglResizeBuffersMESA();
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12829,9 +16367,13 @@ AROS_LH2(void, glWindowPos2dMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2dMESA(a, b);
+    mglWindowPos2dMESA(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12842,9 +16384,13 @@ AROS_LH1(void, glWindowPos2dvMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2dvMESA(a);
+    mglWindowPos2dvMESA(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12856,9 +16402,13 @@ AROS_LH2(void, glWindowPos2fMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2fMESA(a, b);
+    mglWindowPos2fMESA(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12869,9 +16419,13 @@ AROS_LH1(void, glWindowPos2fvMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2fvMESA(a);
+    mglWindowPos2fvMESA(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12883,9 +16437,13 @@ AROS_LH2(void, glWindowPos2iMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2iMESA(a, b);
+    mglWindowPos2iMESA(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12896,9 +16454,13 @@ AROS_LH1(void, glWindowPos2ivMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2ivMESA(a);
+    mglWindowPos2ivMESA(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12910,9 +16472,13 @@ AROS_LH2(void, glWindowPos2sMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2sMESA(a, b);
+    mglWindowPos2sMESA(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12923,9 +16489,13 @@ AROS_LH1(void, glWindowPos2svMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos2svMESA(a);
+    mglWindowPos2svMESA(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12938,9 +16508,13 @@ AROS_LH3(void, glWindowPos3dMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3dMESA(a, b, c);
+    mglWindowPos3dMESA(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12951,9 +16525,13 @@ AROS_LH1(void, glWindowPos3dvMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3dvMESA(a);
+    mglWindowPos3dvMESA(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12966,9 +16544,13 @@ AROS_LH3(void, glWindowPos3fMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3fMESA(a, b, c);
+    mglWindowPos3fMESA(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12979,9 +16561,13 @@ AROS_LH1(void, glWindowPos3fvMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3fvMESA(a);
+    mglWindowPos3fvMESA(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -12994,9 +16580,13 @@ AROS_LH3(void, glWindowPos3iMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3iMESA(a, b, c);
+    mglWindowPos3iMESA(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13007,9 +16597,13 @@ AROS_LH1(void, glWindowPos3ivMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3ivMESA(a);
+    mglWindowPos3ivMESA(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13022,9 +16616,13 @@ AROS_LH3(void, glWindowPos3sMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3sMESA(a, b, c);
+    mglWindowPos3sMESA(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13035,9 +16633,13 @@ AROS_LH1(void, glWindowPos3svMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos3svMESA(a);
+    mglWindowPos3svMESA(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13051,9 +16653,13 @@ AROS_LH4(void, glWindowPos4dMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos4dMESA(a, b, c, d);
+    mglWindowPos4dMESA(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13064,9 +16670,13 @@ AROS_LH1(void, glWindowPos4dvMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos4dvMESA(a);
+    mglWindowPos4dvMESA(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13080,9 +16690,13 @@ AROS_LH4(void, glWindowPos4fMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos4fMESA(a, b, c, d);
+    mglWindowPos4fMESA(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13093,9 +16707,13 @@ AROS_LH1(void, glWindowPos4fvMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos4fvMESA(a);
+    mglWindowPos4fvMESA(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13109,9 +16727,13 @@ AROS_LH4(void, glWindowPos4iMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos4iMESA(a, b, c, d);
+    mglWindowPos4iMESA(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13122,9 +16744,13 @@ AROS_LH1(void, glWindowPos4ivMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos4ivMESA(a);
+    mglWindowPos4ivMESA(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13138,9 +16764,13 @@ AROS_LH4(void, glWindowPos4sMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos4sMESA(a, b, c, d);
+    mglWindowPos4sMESA(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13151,9 +16781,13 @@ AROS_LH1(void, glWindowPos4svMESA,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglWindowPos4svMESA(a);
+    mglWindowPos4svMESA(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13166,9 +16800,15 @@ AROS_LH3(GLboolean, glAreProgramsResidentNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglAreProgramsResidentNV(a, b, c);
+    GLboolean _return = mglAreProgramsResidentNV(a, b, c);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -13180,9 +16820,13 @@ AROS_LH2(void, glBindProgramNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBindProgramNV(a, b);
+    mglBindProgramNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13194,9 +16838,13 @@ AROS_LH2(void, glDeleteProgramsNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDeleteProgramsNV(a, b);
+    mglDeleteProgramsNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13209,9 +16857,13 @@ AROS_LH3(void, glExecuteProgramNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglExecuteProgramNV(a, b, c);
+    mglExecuteProgramNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13223,9 +16875,13 @@ AROS_LH2(void, glGenProgramsNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGenProgramsNV(a, b);
+    mglGenProgramsNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13239,9 +16895,13 @@ AROS_LH4(void, glGetProgramParameterdvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetProgramParameterdvNV(a, b, c, d);
+    mglGetProgramParameterdvNV(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13255,9 +16915,13 @@ AROS_LH4(void, glGetProgramParameterfvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetProgramParameterfvNV(a, b, c, d);
+    mglGetProgramParameterfvNV(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13270,9 +16934,13 @@ AROS_LH3(void, glGetProgramivNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetProgramivNV(a, b, c);
+    mglGetProgramivNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13285,9 +16953,13 @@ AROS_LH3(void, glGetProgramStringNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetProgramStringNV(a, b, c);
+    mglGetProgramStringNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13301,9 +16973,13 @@ AROS_LH4(void, glGetTrackMatrixivNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetTrackMatrixivNV(a, b, c, d);
+    mglGetTrackMatrixivNV(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13316,9 +16992,13 @@ AROS_LH3(void, glGetVertexAttribdvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetVertexAttribdvNV(a, b, c);
+    mglGetVertexAttribdvNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13331,9 +17011,13 @@ AROS_LH3(void, glGetVertexAttribfvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetVertexAttribfvNV(a, b, c);
+    mglGetVertexAttribfvNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13346,9 +17030,13 @@ AROS_LH3(void, glGetVertexAttribivNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetVertexAttribivNV(a, b, c);
+    mglGetVertexAttribivNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13361,9 +17049,13 @@ AROS_LH3(void, glGetVertexAttribPointervNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetVertexAttribPointervNV(a, b, c);
+    mglGetVertexAttribPointervNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13374,9 +17066,15 @@ AROS_LH1(GLboolean, glIsProgramNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIsProgramNV(a);
+    GLboolean _return = mglIsProgramNV(a);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -13390,9 +17088,13 @@ AROS_LH4(void, glLoadProgramNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglLoadProgramNV(a, b, c, d);
+    mglLoadProgramNV(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13408,9 +17110,13 @@ AROS_LH6(void, glProgramParameter4dNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglProgramParameter4dNV(a, b, c, d, e, f);
+    mglProgramParameter4dNV(a, b, c, d, e, f);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13423,9 +17129,13 @@ AROS_LH3(void, glProgramParameter4dvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglProgramParameter4dvNV(a, b, c);
+    mglProgramParameter4dvNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13441,9 +17151,13 @@ AROS_LH6(void, glProgramParameter4fNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglProgramParameter4fNV(a, b, c, d, e, f);
+    mglProgramParameter4fNV(a, b, c, d, e, f);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13456,9 +17170,13 @@ AROS_LH3(void, glProgramParameter4fvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglProgramParameter4fvNV(a, b, c);
+    mglProgramParameter4fvNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13472,9 +17190,13 @@ AROS_LH4(void, glProgramParameters4dvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglProgramParameters4dvNV(a, b, c, d);
+    mglProgramParameters4dvNV(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13488,9 +17210,13 @@ AROS_LH4(void, glProgramParameters4fvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglProgramParameters4fvNV(a, b, c, d);
+    mglProgramParameters4fvNV(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13502,9 +17228,13 @@ AROS_LH2(void, glRequestResidentProgramsNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRequestResidentProgramsNV(a, b);
+    mglRequestResidentProgramsNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13518,9 +17248,13 @@ AROS_LH4(void, glTrackMatrixNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTrackMatrixNV(a, b, c, d);
+    mglTrackMatrixNV(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13535,9 +17269,13 @@ AROS_LH5(void, glVertexAttribPointerNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttribPointerNV(a, b, c, d, e);
+    mglVertexAttribPointerNV(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13549,9 +17287,13 @@ AROS_LH2(void, glVertexAttrib1dNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib1dNV(a, b);
+    mglVertexAttrib1dNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13563,9 +17305,13 @@ AROS_LH2(void, glVertexAttrib1dvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib1dvNV(a, b);
+    mglVertexAttrib1dvNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13577,9 +17323,13 @@ AROS_LH2(void, glVertexAttrib1fNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib1fNV(a, b);
+    mglVertexAttrib1fNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13591,9 +17341,13 @@ AROS_LH2(void, glVertexAttrib1fvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib1fvNV(a, b);
+    mglVertexAttrib1fvNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13605,9 +17359,13 @@ AROS_LH2(void, glVertexAttrib1sNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib1sNV(a, b);
+    mglVertexAttrib1sNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13619,9 +17377,13 @@ AROS_LH2(void, glVertexAttrib1svNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib1svNV(a, b);
+    mglVertexAttrib1svNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13634,9 +17396,13 @@ AROS_LH3(void, glVertexAttrib2dNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib2dNV(a, b, c);
+    mglVertexAttrib2dNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13648,9 +17414,13 @@ AROS_LH2(void, glVertexAttrib2dvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib2dvNV(a, b);
+    mglVertexAttrib2dvNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13663,9 +17433,13 @@ AROS_LH3(void, glVertexAttrib2fNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib2fNV(a, b, c);
+    mglVertexAttrib2fNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13677,9 +17451,13 @@ AROS_LH2(void, glVertexAttrib2fvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib2fvNV(a, b);
+    mglVertexAttrib2fvNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13692,9 +17470,13 @@ AROS_LH3(void, glVertexAttrib2sNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib2sNV(a, b, c);
+    mglVertexAttrib2sNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13706,9 +17488,13 @@ AROS_LH2(void, glVertexAttrib2svNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib2svNV(a, b);
+    mglVertexAttrib2svNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13722,9 +17508,13 @@ AROS_LH4(void, glVertexAttrib3dNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib3dNV(a, b, c, d);
+    mglVertexAttrib3dNV(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13736,9 +17526,13 @@ AROS_LH2(void, glVertexAttrib3dvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib3dvNV(a, b);
+    mglVertexAttrib3dvNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13752,9 +17546,13 @@ AROS_LH4(void, glVertexAttrib3fNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib3fNV(a, b, c, d);
+    mglVertexAttrib3fNV(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13766,9 +17564,13 @@ AROS_LH2(void, glVertexAttrib3fvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib3fvNV(a, b);
+    mglVertexAttrib3fvNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13782,9 +17584,13 @@ AROS_LH4(void, glVertexAttrib3sNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib3sNV(a, b, c, d);
+    mglVertexAttrib3sNV(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13796,9 +17602,13 @@ AROS_LH2(void, glVertexAttrib3svNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib3svNV(a, b);
+    mglVertexAttrib3svNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13813,9 +17623,13 @@ AROS_LH5(void, glVertexAttrib4dNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4dNV(a, b, c, d, e);
+    mglVertexAttrib4dNV(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13827,9 +17641,13 @@ AROS_LH2(void, glVertexAttrib4dvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4dvNV(a, b);
+    mglVertexAttrib4dvNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13844,9 +17662,13 @@ AROS_LH5(void, glVertexAttrib4fNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4fNV(a, b, c, d, e);
+    mglVertexAttrib4fNV(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13858,9 +17680,13 @@ AROS_LH2(void, glVertexAttrib4fvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4fvNV(a, b);
+    mglVertexAttrib4fvNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13875,9 +17701,13 @@ AROS_LH5(void, glVertexAttrib4sNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4sNV(a, b, c, d, e);
+    mglVertexAttrib4sNV(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13889,9 +17719,13 @@ AROS_LH2(void, glVertexAttrib4svNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4svNV(a, b);
+    mglVertexAttrib4svNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13906,9 +17740,13 @@ AROS_LH5(void, glVertexAttrib4ubNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4ubNV(a, b, c, d, e);
+    mglVertexAttrib4ubNV(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13920,9 +17758,13 @@ AROS_LH2(void, glVertexAttrib4ubvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttrib4ubvNV(a, b);
+    mglVertexAttrib4ubvNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13935,9 +17777,13 @@ AROS_LH3(void, glVertexAttribs1dvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttribs1dvNV(a, b, c);
+    mglVertexAttribs1dvNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13950,9 +17796,13 @@ AROS_LH3(void, glVertexAttribs1fvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttribs1fvNV(a, b, c);
+    mglVertexAttribs1fvNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13965,9 +17815,13 @@ AROS_LH3(void, glVertexAttribs1svNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttribs1svNV(a, b, c);
+    mglVertexAttribs1svNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13980,9 +17834,13 @@ AROS_LH3(void, glVertexAttribs2dvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttribs2dvNV(a, b, c);
+    mglVertexAttribs2dvNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -13995,9 +17853,13 @@ AROS_LH3(void, glVertexAttribs2fvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttribs2fvNV(a, b, c);
+    mglVertexAttribs2fvNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14010,9 +17872,13 @@ AROS_LH3(void, glVertexAttribs2svNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttribs2svNV(a, b, c);
+    mglVertexAttribs2svNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14025,9 +17891,13 @@ AROS_LH3(void, glVertexAttribs3dvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttribs3dvNV(a, b, c);
+    mglVertexAttribs3dvNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14040,9 +17910,13 @@ AROS_LH3(void, glVertexAttribs3fvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttribs3fvNV(a, b, c);
+    mglVertexAttribs3fvNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14055,9 +17929,13 @@ AROS_LH3(void, glVertexAttribs3svNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttribs3svNV(a, b, c);
+    mglVertexAttribs3svNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14070,9 +17948,13 @@ AROS_LH3(void, glVertexAttribs4dvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttribs4dvNV(a, b, c);
+    mglVertexAttribs4dvNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14085,9 +17967,13 @@ AROS_LH3(void, glVertexAttribs4fvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttribs4fvNV(a, b, c);
+    mglVertexAttribs4fvNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14100,9 +17986,13 @@ AROS_LH3(void, glVertexAttribs4svNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttribs4svNV(a, b, c);
+    mglVertexAttribs4svNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14115,9 +18005,13 @@ AROS_LH3(void, glVertexAttribs4ubvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglVertexAttribs4ubvNV(a, b, c);
+    mglVertexAttribs4ubvNV(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14129,9 +18023,13 @@ AROS_LH2(void, glTexBumpParameterivATI,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexBumpParameterivATI(a, b);
+    mglTexBumpParameterivATI(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14143,9 +18041,13 @@ AROS_LH2(void, glTexBumpParameterfvATI,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglTexBumpParameterfvATI(a, b);
+    mglTexBumpParameterfvATI(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14157,9 +18059,13 @@ AROS_LH2(void, glGetTexBumpParameterivATI,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetTexBumpParameterivATI(a, b);
+    mglGetTexBumpParameterivATI(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14171,9 +18077,13 @@ AROS_LH2(void, glGetTexBumpParameterfvATI,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetTexBumpParameterfvATI(a, b);
+    mglGetTexBumpParameterfvATI(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14184,9 +18094,15 @@ AROS_LH1(GLuint, glGenFragmentShadersATI,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGenFragmentShadersATI(a);
+    GLuint _return = mglGenFragmentShadersATI(a);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -14197,9 +18113,13 @@ AROS_LH1(void, glBindFragmentShaderATI,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBindFragmentShaderATI(a);
+    mglBindFragmentShaderATI(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14210,9 +18130,13 @@ AROS_LH1(void, glDeleteFragmentShaderATI,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDeleteFragmentShaderATI(a);
+    mglDeleteFragmentShaderATI(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14222,9 +18146,13 @@ AROS_LH0(void, glBeginFragmentShaderATI,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBeginFragmentShaderATI();
+    mglBeginFragmentShaderATI();
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14234,9 +18162,13 @@ AROS_LH0(void, glEndFragmentShaderATI,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglEndFragmentShaderATI();
+    mglEndFragmentShaderATI();
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14249,9 +18181,13 @@ AROS_LH3(void, glPassTexCoordATI,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPassTexCoordATI(a, b, c);
+    mglPassTexCoordATI(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14264,9 +18200,13 @@ AROS_LH3(void, glSampleMapATI,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSampleMapATI(a, b, c);
+    mglSampleMapATI(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14283,9 +18223,13 @@ AROS_LH7(void, glColorFragmentOp1ATI,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColorFragmentOp1ATI(a, b, c, d, e, f, g);
+    mglColorFragmentOp1ATI(a, b, c, d, e, f, g);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14305,9 +18249,13 @@ AROS_LH10(void, glColorFragmentOp2ATI,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColorFragmentOp2ATI(a, b, c, d, e, f, g, h, i, j);
+    mglColorFragmentOp2ATI(a, b, c, d, e, f, g, h, i, j);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14330,9 +18278,13 @@ AROS_LH13(void, glColorFragmentOp3ATI,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglColorFragmentOp3ATI(a, b, c, d, e, f, g, h, i, j, k, l, m);
+    mglColorFragmentOp3ATI(a, b, c, d, e, f, g, h, i, j, k, l, m);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14348,9 +18300,13 @@ AROS_LH6(void, glAlphaFragmentOp1ATI,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglAlphaFragmentOp1ATI(a, b, c, d, e, f);
+    mglAlphaFragmentOp1ATI(a, b, c, d, e, f);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14369,9 +18325,13 @@ AROS_LH9(void, glAlphaFragmentOp2ATI,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglAlphaFragmentOp2ATI(a, b, c, d, e, f, g, h, i);
+    mglAlphaFragmentOp2ATI(a, b, c, d, e, f, g, h, i);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14393,9 +18353,13 @@ AROS_LH12(void, glAlphaFragmentOp3ATI,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglAlphaFragmentOp3ATI(a, b, c, d, e, f, g, h, i, j, k, l);
+    mglAlphaFragmentOp3ATI(a, b, c, d, e, f, g, h, i, j, k, l);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14407,9 +18371,13 @@ AROS_LH2(void, glSetFragmentShaderConstantATI,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglSetFragmentShaderConstantATI(a, b);
+    mglSetFragmentShaderConstantATI(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14421,9 +18389,13 @@ AROS_LH2(void, glPointParameteriNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPointParameteriNV(a, b);
+    mglPointParameteriNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14435,9 +18407,13 @@ AROS_LH2(void, glPointParameterivNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglPointParameterivNV(a, b);
+    mglPointParameterivNV(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14449,9 +18425,13 @@ AROS_LH2(void, glDrawBuffersATI,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDrawBuffersATI(a, b);
+    mglDrawBuffersATI(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14468,9 +18448,13 @@ AROS_LH7(void, glProgramNamedParameter4fNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglProgramNamedParameter4fNV(a, b, c, d, e, f, g);
+    mglProgramNamedParameter4fNV(a, b, c, d, e, f, g);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14487,9 +18471,13 @@ AROS_LH7(void, glProgramNamedParameter4dNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglProgramNamedParameter4dNV(a, b, c, d, e, f, g);
+    mglProgramNamedParameter4dNV(a, b, c, d, e, f, g);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14503,9 +18491,13 @@ AROS_LH4(void, glProgramNamedParameter4fvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglProgramNamedParameter4fvNV(a, b, c, d);
+    mglProgramNamedParameter4fvNV(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14519,9 +18511,13 @@ AROS_LH4(void, glProgramNamedParameter4dvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglProgramNamedParameter4dvNV(a, b, c, d);
+    mglProgramNamedParameter4dvNV(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14535,9 +18531,13 @@ AROS_LH4(void, glGetProgramNamedParameterfvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetProgramNamedParameterfvNV(a, b, c, d);
+    mglGetProgramNamedParameterfvNV(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14551,9 +18551,13 @@ AROS_LH4(void, glGetProgramNamedParameterdvNV,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetProgramNamedParameterdvNV(a, b, c, d);
+    mglGetProgramNamedParameterdvNV(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14564,9 +18568,15 @@ AROS_LH1(GLboolean, glIsRenderbufferEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIsRenderbufferEXT(a);
+    GLboolean _return = mglIsRenderbufferEXT(a);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -14578,9 +18588,13 @@ AROS_LH2(void, glBindRenderbufferEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBindRenderbufferEXT(a, b);
+    mglBindRenderbufferEXT(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14592,9 +18606,13 @@ AROS_LH2(void, glDeleteRenderbuffersEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDeleteRenderbuffersEXT(a, b);
+    mglDeleteRenderbuffersEXT(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14606,9 +18624,13 @@ AROS_LH2(void, glGenRenderbuffersEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGenRenderbuffersEXT(a, b);
+    mglGenRenderbuffersEXT(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14622,9 +18644,13 @@ AROS_LH4(void, glRenderbufferStorageEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglRenderbufferStorageEXT(a, b, c, d);
+    mglRenderbufferStorageEXT(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14637,9 +18663,13 @@ AROS_LH3(void, glGetRenderbufferParameterivEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetRenderbufferParameterivEXT(a, b, c);
+    mglGetRenderbufferParameterivEXT(a, b, c);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14650,9 +18680,15 @@ AROS_LH1(GLboolean, glIsFramebufferEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglIsFramebufferEXT(a);
+    GLboolean _return = mglIsFramebufferEXT(a);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -14664,9 +18700,13 @@ AROS_LH2(void, glBindFramebufferEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglBindFramebufferEXT(a, b);
+    mglBindFramebufferEXT(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14678,9 +18718,13 @@ AROS_LH2(void, glDeleteFramebuffersEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglDeleteFramebuffersEXT(a, b);
+    mglDeleteFramebuffersEXT(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14692,9 +18736,13 @@ AROS_LH2(void, glGenFramebuffersEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGenFramebuffersEXT(a, b);
+    mglGenFramebuffersEXT(a, b);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14705,9 +18753,15 @@ AROS_LH1(GLenum, glCheckFramebufferStatusEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglCheckFramebufferStatusEXT(a);
+    GLenum _return = mglCheckFramebufferStatusEXT(a);
+
+    RESTORE_REG
+
+    return _return;
 
     AROS_LIBFUNC_EXIT
 }
@@ -14722,9 +18776,13 @@ AROS_LH5(void, glFramebufferTexture1DEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFramebufferTexture1DEXT(a, b, c, d, e);
+    mglFramebufferTexture1DEXT(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14739,9 +18797,13 @@ AROS_LH5(void, glFramebufferTexture2DEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFramebufferTexture2DEXT(a, b, c, d, e);
+    mglFramebufferTexture2DEXT(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14757,9 +18819,13 @@ AROS_LH6(void, glFramebufferTexture3DEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFramebufferTexture3DEXT(a, b, c, d, e, f);
+    mglFramebufferTexture3DEXT(a, b, c, d, e, f);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14773,9 +18839,13 @@ AROS_LH4(void, glFramebufferRenderbufferEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFramebufferRenderbufferEXT(a, b, c, d);
+    mglFramebufferRenderbufferEXT(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14789,9 +18859,13 @@ AROS_LH4(void, glGetFramebufferAttachmentParameterivEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGetFramebufferAttachmentParameterivEXT(a, b, c, d);
+    mglGetFramebufferAttachmentParameterivEXT(a, b, c, d);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14802,9 +18876,13 @@ AROS_LH1(void, glGenerateMipmapEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglGenerateMipmapEXT(a);
+    mglGenerateMipmapEXT(a);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }
@@ -14819,9 +18897,13 @@ AROS_LH5(void, glFramebufferTextureLayerEXT,
 {
     AROS_LIBFUNC_INIT
 
+    SAVE_REG
+
     PUT_MESABASE_IN_REG
 
-    return mglFramebufferTextureLayerEXT(a, b, c, d, e);
+    mglFramebufferTextureLayerEXT(a, b, c, d, e);
+
+    RESTORE_REG
 
     AROS_LIBFUNC_EXIT
 }

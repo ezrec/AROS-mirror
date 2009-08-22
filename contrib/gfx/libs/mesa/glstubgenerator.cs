@@ -59,6 +59,14 @@ namespace glstubgenerator
 			if (correctioMade)
 				Console.WriteLine("Correction for array arguments: {0}", this.Name);
 		}
+		
+		public bool ReturnsVoid()
+		{
+			if (ReturnType.Equals("void"))
+				return true;
+			else
+				return false;
+		}
 	}
 	
 	class FunctionList : List<Function>
@@ -408,9 +416,19 @@ namespace glstubgenerator
 				swStubs.WriteLine("{");
 				swStubs.WriteLine("    AROS_LIBFUNC_INIT");
 				swStubs.WriteLine();
+				swStubs.WriteLine("    SAVE_REG");
+				swStubs.WriteLine();
 				swStubs.WriteLine("    PUT_MESABASE_IN_REG");
 				swStubs.WriteLine();
-				swStubs.Write("    return m{0}(", f.Name);
+				if (!f.ReturnsVoid())
+				{
+					swStubs.Write("    {0} _return = m{1}(", f.ReturnType, f.Name);
+				}
+				else
+				{
+					
+					swStubs.Write("    m{0}(", f.Name);
+				}
 				if (f.Arguments.Count > 0)
 				{
 					int i = 0;
@@ -420,6 +438,13 @@ namespace glstubgenerator
 				}
 				swStubs.WriteLine(");");
 				swStubs.WriteLine();
+				swStubs.WriteLine("    RESTORE_REG");
+				swStubs.WriteLine();
+				if (!f.ReturnsVoid())
+				{
+					swStubs.WriteLine("    return _return;");
+					swStubs.WriteLine();
+				}
 				swStubs.WriteLine("    AROS_LIBFUNC_EXIT");
 				swStubs.WriteLine("}");
 				swStubs.WriteLine();
@@ -485,13 +510,9 @@ namespace glstubgenerator
 
 		public static void Main(string[] args)
 		{
-			/*GLApiTableParser apiParser = new GLApiTableParser();
-			FunctionNameDictionary implementedFunctions = 
-				apiParser.Parse(@"/data/deadwood/AROS/AROS/contrib/gfx/mesa75/src/mesa/glapi/glapioffsets.h");*/
-			
 			GLApiTempParser apiParser = new GLApiTempParser();
 			FunctionNameDictionary implementedFunctions = 
-				apiParser.Parse(@"/data/deadwood/AROS/AROS/contrib/gfx/mesa75/src/mesa/glapi/glapitemp.h");
+				apiParser.Parse(@"/data/deadwood/AROS/AROS/contrib/gfx/libs/mesa/src/mesa/glapi/glapitemp.h");
 			
 			
 			Console.WriteLine("Implemented functions: {0}", implementedFunctions.Keys.Count);
@@ -499,10 +520,10 @@ namespace glstubgenerator
 			GLHeaderParser p = new GLHeaderParser();
 			
 			p.HeaderType = HeaderType.GL_H;
-			FunctionList functionsglh = p.Parse(@"/data/deadwood/AROS/AROS/contrib/gfx/mesa75/include/GL/gl.h");
+			FunctionList functionsglh = p.Parse(@"/data/deadwood/AROS/AROS/contrib/gfx/libs/mesa/include/GL/gl.h");
 			
 			p.HeaderType = HeaderType.GLEXT_H;
-			FunctionList functionsglexth = p.Parse(@"/data/deadwood/AROS/AROS/contrib/gfx/mesa75/include/GL/glext.h");
+			FunctionList functionsglexth = p.Parse(@"/data/deadwood/AROS/AROS/contrib/gfx/libs//mesa/include/GL/glext.h");
 			
 			Console.WriteLine("Initial parse results: GL: {0} GLEXT: {1}", functionsglh.Count, functionsglexth.Count);
 			
