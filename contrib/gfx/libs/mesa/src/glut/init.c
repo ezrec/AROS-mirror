@@ -302,20 +302,23 @@ glutVideoResize (int x, int y, int w, int h)
 static void
 __glut_exit_atexit (void)
 {
-  int i;
+    D(bug("[AMGLUT] In __glut_exit_atexit() *#*#\n"));
 
-  D(bug("[AMGLUT] In __glut_exit_atexit() *#*#\n"));
+    GLUTwindow *found_GLUTwin = NULL;
+    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
 
-  GLUTwindow *found_GLUTwin = NULL;
-  struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
+    if (__glutTask->AMGLUTTN_MsgPort != NULL)
+    { 
+        struct Node * tail = GetTail(&__glutTask->AMGLUTTN_WindowList);
+        
+        while (tail != NULL)
+        {
+            /* This call modifies the __glutTask->AMGLUTTN_WindowList. ForeachNode cannot be used */
+            glutDestroyWindow(((struct GLUTwindow *)tail)->amglutwin_num);
 
-  if (__glutTask->AMGLUTTN_MsgPort != NULL)
-  { 
-    ForeachNode(&__glutTask->AMGLUTTN_WindowList, found_GLUTwin)
-    {
-      glutDestroyWindow(found_GLUTwin->amglutwin_num);
+            tail = GetTail(&__glutTask->AMGLUTTN_WindowList);
+        }
     }
-  }
 }
 
 ADD2EXIT(__glut_exit_atexit, 10);
