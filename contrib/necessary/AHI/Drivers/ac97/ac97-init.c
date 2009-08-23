@@ -168,7 +168,7 @@ BOOL DriverInit( struct DriverBase* AHIsubBase )
     if(DOSBase)
     {
 	ac97Base->oopbase = OpenLibrary(AROSOOP_NAME, 0);
-	if (ac97Base)
+	if (OOPBase)
 	{
 	    __IHidd_PCIDev = OOP_ObtainAttrBase(IID_Hidd_PCIDevice);
 
