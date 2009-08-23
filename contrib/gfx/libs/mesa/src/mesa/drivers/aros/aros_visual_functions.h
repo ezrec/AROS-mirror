@@ -10,6 +10,6 @@
 #include "arosmesa_internal.h"
 
 AROSMesaVisual aros_new_visual(GLboolean db_flag);
-void aros_delete_visual(AROSMesaVisual aros_vis);
+void _aros_destroy_visual(AROSMesaVisual aros_vis);
 
 #endif /* AROS_VISUAL_FUNCTIONS_H */

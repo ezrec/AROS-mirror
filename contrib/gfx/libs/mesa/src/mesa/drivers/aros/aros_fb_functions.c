@@ -6,8 +6,21 @@
 #include "aros_fb_functions.h"
 #include "aros_rb_functions.h"
 
+
 #include <aros/debug.h>
 #include "framebuffer.h"
+
+static void
+_aros_destroy_framebuffer(struct gl_framebuffer * fb)
+{
+    D(bug("[AROSMESA] _aros_destroy_framebuffer\n"));
+
+    if (fb)
+    {
+        _mesa_free_framebuffer_data(fb);
+        FreeVec(GET_AROS_FB_PTR(fb));
+    }
+}
 
 
 AROSMesaFrameBuffer aros_new_framebuffer(GLvisual * visual)
@@ -28,13 +41,8 @@ AROSMesaFrameBuffer aros_new_framebuffer(GLvisual * visual)
     /* Initialize mesa structure */
     _mesa_initialize_framebuffer(fb, visual);
 
+    fb->Delete = _aros_destroy_framebuffer;
+    
     return aros_fb;
 }
 
-void aros_delete_framebuffer(AROSMesaFrameBuffer aros_fb)
-{
-    if (!aros_fb)
-        return;
-
-    FreeVec(aros_fb);
-}

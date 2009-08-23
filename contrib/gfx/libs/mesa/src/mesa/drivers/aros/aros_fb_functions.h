@@ -11,6 +11,5 @@
 #include "arosmesa_internal.h"
 
 AROSMesaFrameBuffer aros_new_framebuffer(GLvisual * visual);
-void aros_delete_framebuffer(AROSMesaFrameBuffer aros_fb);
 
 #endif /* AROS_FB_FUNCTIONS_H */

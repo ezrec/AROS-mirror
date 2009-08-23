@@ -5,7 +5,6 @@
 
 #include "aros_rb_functions.h"
 
-
 #include <aros/debug.h>
 
 #include <GL/arosmesa.h>
@@ -43,7 +42,7 @@ static void aros_renderbuffer_putrow(GLcontext *ctx, struct gl_renderbuffer *rb,
     GLubyte * rgba = (GLubyte*)values;
     GLubyte * p_get;
 
-    D(bug("[AROSMESA] aros_renderbuffer_putrow_buffer(count=%d,x=%d,y=%d)", count, x, y));
+    D(bug("[AROSMESA] aros_renderbuffer_putrow_buffer(count=%d,x=%d,y=%d)\n", count, x, y));
 
 
     y = CorrectY(y);
@@ -53,7 +52,6 @@ static void aros_renderbuffer_putrow(GLcontext *ctx, struct gl_renderbuffer *rb,
 
     if (mask)
     {
-        D(bug("mask\n"));
         /* draw some pixels */
         for (i = 0; i < count; i++, dp++)
         {
@@ -65,7 +63,6 @@ static void aros_renderbuffer_putrow(GLcontext *ctx, struct gl_renderbuffer *rb,
     }
     else
     {
-        D(bug("nomask\n"));
         /* draw all pixels */
         for (i = 0; i < count; i++, dp++)
         {
@@ -88,7 +85,7 @@ static void aros_renderbuffer_putrowrgb(GLcontext *ctx, struct gl_renderbuffer *
     GLubyte * rgba = (GLubyte*)values;
     GLubyte * p_get;
 
-    D(bug("[AROSMESA] aros_renderbuffer_putrow_buffer(count=%d,x=%d,y=%d)", count, x, y));
+    D(bug("[AROSMESA] aros_renderbuffer_putrow_buffer(count=%d,x=%d,y=%d)\n", count, x, y));
 
 
     y = CorrectY(y);
@@ -98,7 +95,6 @@ static void aros_renderbuffer_putrowrgb(GLcontext *ctx, struct gl_renderbuffer *
 
     if (mask)
     {
-        D(bug("mask\n"));
         /* draw some pixels */
         for (i = 0; i < count; i++, dp++)
         {
@@ -110,7 +106,6 @@ static void aros_renderbuffer_putrowrgb(GLcontext *ctx, struct gl_renderbuffer *
     }
     else
     {
-        D(bug("nomask\n"));
         /* draw all pixels */
         for (i = 0; i < count; i++, dp++)
         {
@@ -208,11 +203,11 @@ static void aros_renderbuffer_getrow(GLcontext* ctx, struct gl_renderbuffer *rb,
     }
 }
 
-
-GLboolean aros_renderbuffer_allocstorage(GLcontext *ctx, struct gl_renderbuffer *rb,
+static GLboolean 
+_aros_renderbuffer_allocstorage(GLcontext *ctx, struct gl_renderbuffer *rb,
                             GLenum internalFormat, GLuint width, GLuint height)
 {
-    D(bug("[AROSMESA] aros_renderbuffer_storage\n"));
+    D(bug("[AROSMESA] _aros_renderbuffer_storage\n"));
     
     rb->PutRow = aros_renderbuffer_putrow;
     rb->PutRowRGB = aros_renderbuffer_putrowrgb;
@@ -240,10 +235,22 @@ GLboolean aros_renderbuffer_allocstorage(GLcontext *ctx, struct gl_renderbuffer 
     return GL_TRUE;
 }
 
-void aros_renderbuffer_delete(struct gl_renderbuffer *rb)
+static void 
+_aros_renderbuffer_delete(struct gl_renderbuffer *rb)
 {
-    D(bug("[AROSMESA] aros_renderbuffer_delete\n"));
-    /* No op */
+    D(bug("[AROSMESA] _aros_renderbuffer_delete\n"));
+    AROSMesaRenderBuffer aros_rb = GET_AROS_RB_PTR(rb);
+    
+    if (aros_rb && aros_rb->buffer)
+    {
+        FreeVec(aros_rb->buffer);
+        aros_rb->buffer = NULL;
+    }
+    
+    if (aros_rb)
+    {
+        FreeVec(aros_rb);
+    }
 }
 
 AROSMesaRenderBuffer aros_new_renderbuffer(void)
@@ -266,8 +273,8 @@ AROSMesaRenderBuffer aros_new_renderbuffer(void)
         rb->_BaseFormat = GL_RGBA;
         rb->_ActualFormat = GL_RGBA;
         rb->DataType = GL_UNSIGNED_BYTE;
-        rb->AllocStorage = aros_renderbuffer_allocstorage;
-        rb->Delete = aros_renderbuffer_delete;
+        rb->AllocStorage = _aros_renderbuffer_allocstorage;
+        rb->Delete = _aros_renderbuffer_delete;
         /* This will trigger AllocStorage */
         rb->Width = 0;
         rb->Height = 0;
@@ -277,15 +284,4 @@ AROSMesaRenderBuffer aros_new_renderbuffer(void)
     aros_rb->buffer = NULL;
 
     return aros_rb;
-}
-
-void aros_delete_renderbuffer(AROSMesaRenderBuffer aros_rb)
-{
-    D(bug("[AROSMESA] aros_delete_renderbuffer\n"));
-    
-    if (aros_rb && aros_rb->buffer)
-    {
-        FreeVec(aros_rb->buffer);
-        aros_rb->buffer = NULL;
-    }
 }

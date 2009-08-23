@@ -53,7 +53,7 @@ AROSMesaVisual aros_new_visual(GLboolean db_flag)
                                 accumBits,
                                 1))
     {
-        aros_delete_visual(aros_vis);
+        _aros_destroy_visual(aros_vis);
         return NULL;
     }
 
@@ -63,10 +63,10 @@ AROSMesaVisual aros_new_visual(GLboolean db_flag)
     return aros_vis;
 }
 
-void aros_delete_visual(AROSMesaVisual aros_vis)
+void _aros_destroy_visual(AROSMesaVisual aros_vis)
 {
-    if (!aros_vis)
-        return;
-
-    FreeVec(aros_vis);
+    if (aros_vis)
+    {
+        FreeVec(aros_vis);
+    }
 }

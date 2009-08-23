@@ -306,7 +306,7 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
                                     &functions,
                                     (void *) amesa))
     {
-        aros_delete_visual(amesa->visual);
+        _aros_destroy_visual(amesa->visual);
         FreeVec(amesa);
         return NULL;
     }
@@ -333,7 +333,7 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
 
     amesa->renderbuffer = aros_new_renderbuffer();   
 
-    _mesa_add_renderbuffer(GET_GL_FB_PTR(amesa->framebuffer), BUFFER_FRONT_LEFT, 
+    _mesa_add_renderbuffer(GET_GL_FB_PTR(amesa->framebuffer), BUFFER_FRONT_LEFT,
         GET_GL_RB_PTR(amesa->renderbuffer));
 
     /* Set draw buffer as front */
@@ -373,9 +373,9 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
 
 amccontextclean:
     if (amesa->visual)
-        aros_delete_visual(amesa->visual);
+        _aros_destroy_visual(amesa->visual);
 
-    aros_delete_context(amesa);
+    _aros_destroy_context(amesa);
 
     return NULL;
 }
@@ -415,8 +415,6 @@ void AROSMesaMakeCurrent(AROSMesaContext amesa)
         struct gl_framebuffer * fb = GET_GL_FB_PTR(amesa->framebuffer);
         GLcontext * ctx = GET_GL_CTX_PTR(amesa);
         _glapi_check_multithread();
-
-        //osmesa->rb->Width = osmesa->rb->Height = 0;
 
         /* Set the framebuffer's size.  This causes the
         * osmesa_renderbuffer_storage() function to get called.
@@ -511,7 +509,13 @@ void AROSMesaDestroyContext(AROSMesaContext amesa)
 
     if (ctx)
     {
-        _mesa_make_current(NULL, NULL, NULL);
+        GET_CURRENT_CONTEXT(cur_ctx);
+
+        if (cur_ctx == ctx)
+        {
+            /* Unbind if current */
+            _mesa_make_current(NULL, NULL, NULL);
+        }
 
 
         _swsetup_DestroyContext(ctx);
@@ -519,13 +523,9 @@ void AROSMesaDestroyContext(AROSMesaContext amesa)
         _tnl_DestroyContext(ctx);
         _vbo_DestroyContext(ctx);
 
-
-        aros_delete_visual(amesa->visual);
-        aros_delete_framebuffer(amesa->framebuffer);
-
-        aros_delete_renderbuffer(amesa->renderbuffer);
-
-        aros_delete_context(amesa);
+        _aros_destroy_visual(amesa->visual);
+        _mesa_reference_framebuffer(&amesa->framebuffer, NULL); /* So that reference count goes to 0 */
+        _aros_destroy_context(amesa);
     }
     
     RESTORE_REG
