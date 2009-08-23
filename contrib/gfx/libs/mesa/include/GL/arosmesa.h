@@ -42,13 +42,14 @@ typedef struct arosmesa_context * AROSMesaContext;
  */
 #define AMA_Dummy               (TAG_USER + 32)
 
-#define AMA_Context             (AMA_Dummy + 0x0001)
+/* Not handled */
+/* #define AMA_Context             (AMA_Dummy + 0x0001) */
 
 /*
 Offset to use. WARNING AMA_Left, AMA_Bottom Specifies the low left corner
 of the drawing area in deltapixles from the lowest left corner
 typical AMA_Left,window->BorderLeft
-        AMA_Bottom,window->BorderBottom + 1
+        AMA_Bottom,window->BorderBottom
 This is since ALL gl drawing actions is specified with this point as 0,0
 and with y positive uppwards (like in real graphs).
 
@@ -100,8 +101,9 @@ else
    here should all needed gfx-card tagitem be specified
 */
 
-enum DrawModeID                 {AMESA_AGA,AMESA_AGA_C2P /*,AMESA_CYBERGFX,AMESA_RETINA*/};
-#define AMA_DrawMode            (AMA_Dummy + 0x0010)    /* Not handled */
+/* Not handled */
+/* enum DrawModeID                 {AMESA_AGA, AMESA_AGA_C2P, AMESA_CYBERGFX, AMESA_RETINA}; */
+/* #define AMA_DrawMode            (AMA_Dummy + 0x0010) */
 #define AMA_Screen              (AMA_Dummy + 0x0011)
 #define AMA_Window              (AMA_Dummy + 0x0012)
 #define AMA_RastPort            (AMA_Dummy + 0x0013)
@@ -124,13 +126,14 @@ AMA_NoDepth:    don't allocate ZBuffer if GL_TRUE
 AMA_NoStencil:  don't allocate StencilBuffer if GL_TRUE
 AMA_NoAccum:    don't allocate AccumulationBuffer if GL_TRUE
 */
-#define AMA_DoubleBuf           (AMA_Dummy + 0x0030)
+#define AMA_DoubleBuf           (AMA_Dummy + 0x0030)    /* Not handled */ /* Always GL_TRUE */
 #define AMA_RGBMode             (AMA_Dummy + 0x0031)    /* Not handled */ /* Always GL_TRUE */
 #define AMA_AlphaFlag           (AMA_Dummy + 0x0032)    /* Not handled */ /* Always GL_TRUE */
-#define AMA_DirectRender        (AMA_Dummy + 0x0035)    /* Not handled */
-#define AMA_NoDepth             (AMA_Dummy + 0x0039)    /* Not handled */
-#define AMA_NoStencil           (AMA_Dummy + 0x003a)    /* Not handled */
-#define AMA_NoAccum             (AMA_Dummy + 0x003b)    /* Not handled */
+/* Not handled */
+/* #define AMA_DirectRender        (AMA_Dummy + 0x0035) */
+/* #define AMA_NoDepth             (AMA_Dummy + 0x0039) */
+/* #define AMA_NoStencil           (AMA_Dummy + 0x003a) */
+/* #define AMA_NoAccum             (AMA_Dummy + 0x003b) */
 
 /** Special **/
 /*
@@ -142,10 +145,11 @@ AMA_WindowID: A windowID to use when I alloc AMA_Buffer for you if
               you didn't supply one.(default=1)
 */
 
-#define AMA_ShareGLContext      (AMA_Dummy + 0x0040)    /* Not handled */
-#define AMA_Visual              (AMA_Dummy + 0x0041)    /* Not handled */
-#define AMA_Buffer              (AMA_Dummy + 0x0042)    /* Not handled */
-#define AMA_WindowID            (AMA_Dummy + 0x0043)    /* Not handled */
+/* Not handled */
+/* #define AMA_ShareGLContext      (AMA_Dummy + 0x0040) */
+/* #define AMA_Visual              (AMA_Dummy + 0x0041) */
+/* #define AMA_Buffer              (AMA_Dummy + 0x0042) */
+/* #define AMA_WindowID            (AMA_Dummy + 0x0043) */
 
 #ifdef __cplusplus
 }

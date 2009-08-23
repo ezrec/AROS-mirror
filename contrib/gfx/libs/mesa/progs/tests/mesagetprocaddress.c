@@ -45,20 +45,17 @@ void initmesa()
     int i = 0;
     
     // default config. Always used...
-    attributes[i].ti_Tag = AMA_Window;  attributes[i++].ti_Data = (unsigned long)win;
+    attributes[i].ti_Tag = AMA_Window;      attributes[i++].ti_Data = (IPTR)win;
     attributes[i].ti_Tag = AMA_Left;        attributes[i++].ti_Data = win->BorderLeft;
-    attributes[i].ti_Tag = AMA_Top;  attributes[i++].ti_Data = win->BorderTop;
-    attributes[i].ti_Tag = AMA_Width;   attributes[i++].ti_Data = win->Width-win->BorderLeft-win->BorderRight;
-    attributes[i].ti_Tag = AMA_Height;  attributes[i++].ti_Data = win->Height-win->BorderBottom-win->BorderTop;
-    attributes[i].ti_Tag = AMA_DirectRender; attributes[i++].ti_Data = GL_TRUE;
+    attributes[i].ti_Tag = AMA_Top;         attributes[i++].ti_Data = win->BorderTop;
+    attributes[i].ti_Tag = AMA_Bottom;      attributes[i++].ti_Data = win->BorderBottom;
+    attributes[i].ti_Tag = AMA_Right;       attributes[i++].ti_Data = win->BorderRight;
 
     // double buffer ?
-    attributes[i].ti_Tag = AMA_DoubleBuf;
-    attributes[i++].ti_Data = GL_TRUE;
+    attributes[i].ti_Tag = AMA_DoubleBuf;   attributes[i++].ti_Data = GL_TRUE;
 
     // RGB(A) Mode ?
-    attributes[i].ti_Tag = AMA_RGBMode;
-    attributes[i++].ti_Data = GL_TRUE;
+    attributes[i].ti_Tag = AMA_RGBMode;     attributes[i++].ti_Data = GL_TRUE;
     
     // done...
     attributes[i].ti_Tag    = TAG_DONE;

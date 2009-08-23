@@ -83,7 +83,7 @@ struct arosmesa_context
     ULONG                   clearpixel;             /* pixel for clearing the color buffers */
 
     struct Window           *window;                /* Intuition window */
-    struct Screen           *Screen;                /* Current screen*/
+    struct Screen           *screen;                /* Current screen*/
     
     /* Rastport 'visible' to user (window rasport, screen rastport)*/
     struct RastPort         *visible_rp;            
@@ -93,9 +93,11 @@ struct arosmesa_context
 
     /* Buffer information */
     GLuint                  depth;                  /* bits per pixel (1, 8, 24, etc) */
-    GLuint                  width, height;          /* drawable area on rastport excluding borders */
+    GLuint                  width, height;          /* drawable area on rastport defined by borders and requested width */
     GLuint                  top, bottom;            /* offsets due to window border */
     GLuint                  left, right;            /* offsets due to window border */
+    GLfloat                 width_initial_ratio;    /* initial ratio between requested width and maximum drawable width */
+    GLfloat                 height_initial_ratio;   /* initial ratio between requested height and maximum drawable height */
 };
 
 /* typedef struct arosmesa_context * AROSMesaContext; */ /* Defined in AROSMesa.h */

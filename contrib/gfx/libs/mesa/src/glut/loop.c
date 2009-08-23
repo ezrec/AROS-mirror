@@ -201,13 +201,8 @@ glutMainLoopEvent (void)
               }
             case IDCMP_NEWSIZE:
               {
-                w->amglutwin_width = w->amglutwin_Window->Width - w->amglutwin_Window->BorderLeft - w->amglutwin_Window->BorderRight - 2;
-                w->amglutwin_height = w->amglutwin_Window->Height - w->amglutwin_Window->BorderTop - w->amglutwin_Window->BorderBottom - 2;
-                  
-                w->amglutwin_cliprect.MinX = w->amglutwin_Window->BorderLeft;
-                w->amglutwin_cliprect.MinY = w->amglutwin_Window->BorderTop;
-                w->amglutwin_cliprect.MaxX = w->amglutwin_Window->BorderRight;
-                w->amglutwin_cliprect.MaxY = w->amglutwin_Window->BorderBottom;
+                w->amglutwin_width = w->amglutwin_Window->Width - w->amglutwin_Window->BorderLeft - w->amglutwin_Window->BorderRight;
+                w->amglutwin_height = w->amglutwin_Window->Height - w->amglutwin_Window->BorderTop - w->amglutwin_Window->BorderBottom;
                   
                 if (w->reshape) {
                   D(bug("[AMGLUT] glutMainLoopEvent: Calling w->reshape\n"));

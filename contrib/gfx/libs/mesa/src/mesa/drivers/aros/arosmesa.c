@@ -54,21 +54,8 @@ GLenum         LastError;                       /* The last error generated*/
 struct Library * AROSMesaCyberGfxBase = NULL;    /* Base address for cybergfx */
 
 /**********************************************************************/
-/*****          AROS/Mesa API Functions          *****/
+/*****          AROSMesa API Functions                            *****/
 /**********************************************************************/
-/*
- * Implement the client-visible AROS/Mesa interface functions defined
- * in Mesa/include/GL/AROSmesa.h
- *
- **********************************************************************/
-/*
- * Implement the public AROS/Mesa interface functions defined
- * in Mesa/include/GL/AROSMesa.h
- */
-
-//UBYTE Version[]="$VER: AROSMesa (linklib) 3.4.2";
-
-
 
 
 /* Main AROSMesa API Functions */
@@ -82,84 +69,173 @@ struct Library * AROSMesaCyberGfxBase = NULL;    /* Base address for cybergfx */
 #define AROS_PIXFMT RECTFMT_BGRA32   /* Little Endian Archs. */
 #endif
 
-static BOOL
-aros_Standard_init(AROSMesaContext amesa, struct TagItem *tagList)
+static void
+aros_calculate_initial_dimentions_ratio(AROSMesaContext amesa, GLsizei requestedwidth, GLsizei requestedheight)
 {
-	struct Rectangle rastcliprect;
-	struct TagItem crptags[] =
-	{
-	    { RPTAG_ClipRectangle      , (IPTR)&rastcliprect },
-	    { RPTAG_ClipRectangleFlags , (RPCRF_RELRIGHT | RPCRF_RELBOTTOM) },
-	    { TAG_DONE }
-	};
+    /* This function should only be called at context creation */
+    GLsizei maximumwidth = 0;
+    GLsizei maximumheight = 0;
+    GLsizei visible_rp_width = 0;
+    GLsizei visible_rp_height = 0;
+    
+    D(bug("[AROSMESA] aros_calculate_initial_dimentions_ratio\n"));
+    
+    visible_rp_width = 
+        amesa->visible_rp->Layer->bounds.MaxX - amesa->visible_rp->Layer->bounds.MinX + 1;
 
-    D(bug("[AROSMESA] aros_Standard_init(amesa @ %x, taglist @ %x)\n", amesa, tagList));
+    visible_rp_height = 
+        amesa->visible_rp->Layer->bounds.MaxY - amesa->visible_rp->Layer->bounds.MinY + 1;
+
+
+    maximumwidth = visible_rp_width - amesa->left - amesa->right;
+    maximumheight = visible_rp_height - amesa->top - amesa->bottom;
+    
+    /* Sanity checks and clipping */
+    
+    if (maximumwidth < 0) maximumwidth = 1; /* For 0,0 rastport the ratio will be 1 */
+    if (maximumheight < 0) maximumheight = 1;
+    
+    if (requestedwidth < 0) requestedwidth = maximumwidth;
+    if (requestedheight < 0) requestedheight = maximumheight;
+    
+    if (requestedwidth > maximumwidth) requestedwidth = maximumwidth;
+    if (requestedheight > maximumheight) requestedheight = maximumheight;
+    
+    D(bug("[AROSMESA] aros_calculate_initial_dimentions_ratio: requstedwidth     =   %d\n", requestedwidth));
+    D(bug("[AROSMESA] aros_calculate_initial_dimentions_ratio: requstedheight    =   %d\n", requestedheight));
+    D(bug("[AROSMESA] aros_calculate_initial_dimentions_ratio: maximumwidth      =   %d\n", maximumwidth));
+    D(bug("[AROSMESA] aros_calculate_initial_dimentions_ratio: maximumheight     =   %d\n", maximumheight));
+    
+    amesa->width_initial_ratio = (GLfloat) requestedwidth / (GLfloat) maximumwidth;
+    amesa->height_initial_ratio = (GLfloat) requestedheight / (GLfloat) maximumheight;
+}
+
+static BOOL
+aros_standard_init(AROSMesaContext amesa, struct TagItem *tagList)
+{
+    GLint requestedwidth = 0, requestedheight = 0;
+    
+    D(bug("[AROSMESA] aros_standard_init(amesa @ %x, taglist @ %x)\n", amesa, tagList));
 
     if (!(amesa->visible_rp))
     {
-        D(bug("[AROSMESA] aros_Standard_init: WARNING - NULL RastPort in context\n"));
+        D(bug("[AROSMESA] aros_standard_init: WARNING - NULL RastPort in context\n"));
         if (!(amesa->visible_rp = (struct RastPort *)GetTagData(AMA_RastPort, 0, tagList)))
         {
-            D(bug("[AROSMESA] aros_Standard_init: ERROR - Launched with NULL RastPort\n"));
+            D(bug("[AROSMESA] aros_standard_init: ERROR - Launched with NULL RastPort\n"));
             return FALSE;
         }
     }	  
     
-    D(bug("[AROSMESA] aros_Standard_init: Using RastPort @ %x\n", amesa->visible_rp));
+    D(bug("[AROSMESA] aros_standard_init: Using RastPort @ %x\n", amesa->visible_rp));
 
     amesa->visible_rp = CloneRastPort(amesa->visible_rp);
 
-    D(bug("[AROSMESA] aros_Standard_init: Cloned RastPort @ %x\n", amesa->visible_rp));
-
-    amesa->visible_rp_width = 
-        amesa->visible_rp->Layer->bounds.MaxX - amesa->visible_rp->Layer->bounds.MinX + 1;
-
-    amesa->visible_rp_height = 
-        amesa->visible_rp->Layer->bounds.MaxY - amesa->visible_rp->Layer->bounds.MinY + 1;
+    D(bug("[AROSMESA] aros_standard_init: Cloned RastPort @ %x\n", amesa->visible_rp));
 
     amesa->left = GetTagData(AMA_Left, 0, tagList);
     amesa->right = GetTagData(AMA_Right, 0, tagList);
     amesa->top = GetTagData(AMA_Top, 0, tagList);
     amesa->bottom = GetTagData(AMA_Bottom, 0, tagList);
 
-    amesa->width = GetTagData(AMA_Width, (amesa->visible_rp_width - amesa->left - amesa->right), tagList);
-    amesa->height = GetTagData(AMA_Height, (amesa->visible_rp_height - amesa->top - amesa->bottom), tagList);
+    requestedwidth = GetTagData(AMA_Width, -1 , tagList);
+    requestedheight = GetTagData(AMA_Height, -1 , tagList);
+    
+    aros_calculate_initial_dimentions_ratio(amesa, requestedwidth, requestedheight);
+    
+    _aros_recalculate_width_height(GET_GL_CTX_PTR(amesa), requestedwidth, requestedheight);
 
     amesa->clearpixel = 0;   /* current drawing/clearing pens */
-
-    if (amesa->window)
-    {
-        D(bug("[AROSMESA] aros_Standard_init: Clipping Rastport to Window's dimensions\n"));
-        /* Clip the rastport to the visible area */
-        rastcliprect.MinX = amesa->left;
-        rastcliprect.MinY = amesa->top;
-        rastcliprect.MaxX = amesa->left + amesa->width;
-        rastcliprect.MaxY = amesa->top + amesa->height;
-        SetRPAttrsA(amesa->visible_rp, crptags);
-    }
-
-    D(bug("[AROSMESA] aros_Standard_init: Context Base dimensions set -:\n"));
-    D(bug("[AROSMESA] aros_Standard_init:    amesa->visible_rp_width    = %d\n", amesa->visible_rp_width));
-    D(bug("[AROSMESA] aros_Standard_init:    amesa->visible_rp_height   = %d\n", amesa->visible_rp_height));
-    D(bug("[AROSMESA] aros_Standard_init:    amesa->width               = %d\n", amesa->width));
-    D(bug("[AROSMESA] aros_Standard_init:    amesa->height              = %d\n", amesa->height));
-    D(bug("[AROSMESA] aros_Standard_init:    amesa->left                = %d\n", amesa->left));
-    D(bug("[AROSMESA] aros_Standard_init:    amesa->right               = %d\n", amesa->right));
-    D(bug("[AROSMESA] aros_Standard_init:    amesa->top                 = %d\n", amesa->top));
-    D(bug("[AROSMESA] aros_Standard_init:    amesa->bottom              = %d\n", amesa->bottom));
-    D(bug("[AROSMESA] aros_Standard_init:    amesa->depth               = %d\n", amesa->depth));
-
-    if (amesa->Screen)
+    
+    if (amesa->screen)
     {
         if (amesa->depth == 0)
         {
-            D(bug("[AROSMESA] aros_Standard_init: WARNING - Illegal RastPort Depth, attempting to correct\n"));
+            D(bug("[AROSMESA] aros_standard_init: WARNING - Illegal RastPort Depth, attempting to correct\n"));
             amesa->depth = GetCyberMapAttr(amesa->visible_rp->BitMap, CYBRMATTR_DEPTH);
         }
     }
+    
+    D(bug("[AROSMESA] aros_standard_init: Context Base dimensions set -:\n"));
+    D(bug("[AROSMESA] aros_standard_init:    amesa->visible_rp_width        = %d\n", amesa->visible_rp_width));
+    D(bug("[AROSMESA] aros_standard_init:    amesa->visible_rp_height       = %d\n", amesa->visible_rp_height));
+    D(bug("[AROSMESA] aros_standard_init:    amesa->width                   = %d\n", amesa->width));
+    D(bug("[AROSMESA] aros_standard_init:    amesa->width_initial_ratio     = %d\n", (GLint)(amesa->width_initial_ratio * 100)));
+    D(bug("[AROSMESA] aros_standard_init:    amesa->height                  = %d\n", amesa->height));
+    D(bug("[AROSMESA] aros_standard_init:    amesa->height_initial_ratio    = %d\n", (GLint)(amesa->height_initial_ratio * 100)));
+    D(bug("[AROSMESA] aros_standard_init:    amesa->left                    = %d\n", amesa->left));
+    D(bug("[AROSMESA] aros_standard_init:    amesa->right                   = %d\n", amesa->right));
+    D(bug("[AROSMESA] aros_standard_init:    amesa->top                     = %d\n", amesa->top));
+    D(bug("[AROSMESA] aros_standard_init:    amesa->bottom                  = %d\n", amesa->bottom));
+    D(bug("[AROSMESA] aros_standard_init:    amesa->depth                   = %d\n", amesa->depth));
 
     return TRUE;
 }
+
+static void 
+aros_select_rastport(AROSMesaContext amesa, struct TagItem * tagList)
+{
+    amesa->screen = (struct Screen *)GetTagData(AMA_Screen, 0, tagList);
+    amesa->window = (struct Window *)GetTagData(AMA_Window, 0, tagList);
+    amesa->visible_rp = (struct RastPort *)GetTagData(AMA_RastPort, 0, tagList);
+
+    if (amesa->screen)
+    {
+        D(bug("[AROSMESA] aros_select_rastport: Screen @ %x\n", amesa->screen));
+        if (amesa->window)
+        {
+            D(bug("[AROSMESA] aros_select_rastport: Window @ %x\n", amesa->window));
+            if (!(amesa->visible_rp))
+            {
+                /* Use the windows rastport */
+                amesa->visible_rp = amesa->window->RPort;
+                D(bug("[AROSMESA] aros_select_rastport: Windows RastPort @ %x\n", amesa->visible_rp));
+            }
+        }
+        else
+        {
+            if (!(amesa->visible_rp))
+            {
+                /* Use the screens rastport */
+                amesa->visible_rp = &amesa->screen->RastPort;
+                D(bug("[AROSMESA] aros_select_rastport: Screens RastPort @ %x\n", amesa->visible_rp));
+            }
+        }
+    }
+    else
+    {
+        /* Not passed a screen */
+        if (amesa->window)
+        {
+            D(bug("[AROSMESA] aros_select_rastport: Window @ %x\n", amesa->window));
+            /* Use the windows Screen */
+            amesa->screen = amesa->window->WScreen;
+            D(bug("[AROSMESA] aros_select_rastport: Windows Screen @ %x\n", amesa->screen));
+
+            if (!(amesa->visible_rp))
+            {
+                /* Use the windows rastport */
+                amesa->visible_rp = amesa->window->RPort;
+                D(bug("[AROSMESA] aros_select_rastport: Windows RastPort @ %x\n", amesa->visible_rp));
+            }
+        }
+        else
+        {
+            /* Only Passed A Rastport */
+            D(bug("[AROSMESA] aros_select_rastport: Using RastPort only!\n"));
+        }
+    }
+
+    D(bug("[AROSMESA] aros_select_rastport: Using RastPort @ %x\n", amesa->visible_rp));
+}
+
+
+
+
+
+
+
+
 
 
 AROSMesaContext AROSMesaCreateContextTags(long Tag1, ...)
@@ -174,162 +250,109 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
     LastError = 0;
     struct dd_function_table functions;
     GLboolean db_flag = GL_FALSE;
-
-
-    D(bug("[AROSMESA] AROSMesaCreateContext(taglist @ %x)\n", tagList));
-
-    /* try to open cybergraphics.library */
+    
+    /* Try to open cybergraphics.library */
     if (CyberGfxBase == NULL)
     {
         if (!(CyberGfxBase = OpenLibrary((UBYTE*)"cybergraphics.library",0)))
             return NULL;
     }
 
-    if (!(amesa = (AROSMesaContext)GetTagData(AMA_Context, GL_FALSE, tagList)))
+    /* Allocate arosmesa_context struct initialized to zeros */
+    if (!(amesa = (AROSMesaContext)AllocVec(sizeof(struct arosmesa_context), MEMF_PUBLIC|MEMF_CLEAR)))
     {
-        
+        D(bug("[AROSMESA] AROSMesaCreateContext: Failed to allocate AROSMesaContext\n"));
+        LastError = AMESA_OUT_OF_MEM;
+        return NULL;
+    }
 
-        /* allocate arosmesa_context struct initialized to zeros */
-        if (!(amesa = (AROSMesaContext)AllocVec(sizeof(struct arosmesa_context), MEMF_PUBLIC|MEMF_CLEAR)))
-        {
-            D(bug("[AROSMESA] AROSMesaCreateContext: Failed to allocate AROSMesaContext\n"));
-            LastError = AMESA_OUT_OF_MEM;
-            return NULL;
-        }
-        
-        ctx = GET_GL_CTX_PTR(amesa);
+    ctx = GET_GL_CTX_PTR(amesa);
 
-        D(bug("[AROSMESA] AROSMesaCreateContext: AROSMesaContext Allocated @ %x\n", amesa));
-        D(bug("[AROSMESA] AROSMesaCreateContext:          gl_ctx Allocated @ %x\n", ctx));
+    D(bug("[AROSMESA] AROSMesaCreateContext: AROSMesaContext Allocated @ %x\n", amesa));
+    D(bug("[AROSMESA] AROSMesaCreateContext:          gl_ctx Allocated @ %x\n", ctx));
 
-        /* CHANGE TO WORK EXCLUSIVELY WITH RASTPORTS! */
-        amesa->Screen = (struct Screen *)GetTagData(AMA_Screen, 0, tagList);
-        amesa->window = (struct Window *)GetTagData(AMA_Window, 0, tagList);
-        amesa->visible_rp = (struct RastPort *)GetTagData(AMA_RastPort, 0, tagList);
+    aros_select_rastport(amesa, tagList);
 
-        if (amesa->Screen)
-        {
-            D(bug("[AROSMESA] AROSMesaCreateContext: Screen @ %x\n", amesa->Screen));
-            if (amesa->window)
-            {
-                D(bug("[AROSMESA] AROSMesaCreateContext: window @ %x\n", amesa->window));
-                if (!(amesa->visible_rp))
-                {
-                    /* Use the windows rastport */
-                    amesa->visible_rp = amesa->window->RPort;
-                    D(bug("[AROSMESA] AROSMesaCreateContext: Windows RastPort @ %x\n", amesa->visible_rp));
-                }
-            }
-            else
-            {
-                if (!(amesa->visible_rp))
-                {
-                    /* Use the screens rastport */
-                    amesa->visible_rp = &amesa->Screen->RastPort;
-                    D(bug("[AROSMESA] AROSMesaCreateContext: Screens RastPort @ %x\n", amesa->visible_rp));
-                }
-            }
-        }
-        else
-        {
-            /* Not passed a screen */
-            if (amesa->window)
-            {
-                D(bug("[AROSMESA] AROSMesaCreateContext: Window @ %x\n", amesa->window));
-                /* Use the windows Screen */
-                amesa->Screen = amesa->window->WScreen;
-                D(bug("[AROSMESA] AROSMesaCreateContext: Windows Screen @ %x\n", amesa->Screen));
+    if (!amesa->visible_rp)
+    {
+        D(bug("[AROSMESA] AROSMesaCreateContext : No rastport provided. Exiting."));
+        LastError = AMESA_RASTPORT_TAG_MISSING;
+        FreeVec( amesa );
+        return NULL;
+    }
 
-                if (!(amesa->visible_rp))
-                {
-                    /* Use the windows rastport */
-                    amesa->visible_rp = amesa->window->RPort;
-                    D(bug("[AROSMESA] AROSMesaCreateContext: Windows RastPort @ %x\n", amesa->visible_rp));
-                }
-            }
-            else
-            {
-    		    /* Only Passed A Rastport */
-                D(bug("[AROSMESA] AROSMesaCreateContext: Experimental: Using RastPort only!\n"));
-            }
-        }
+    D(bug("[AROSMESA] AROSMesaCreateContext: Creating new AROSMesaVisual\n"));
+    if (((BOOL)GetTagData(AMA_DoubleBuf, TRUE, tagList) == TRUE))
+        db_flag = GL_TRUE;
 
-        D(bug("[AROSMESA] AROSMesaCreateContext: Using RastPort @ %x\n", amesa->visible_rp));
+    if (!(amesa->visual = aros_new_visual(db_flag)))
+    {
+        D(bug("[AROSMESA] AROSMesaCreateContext: ERROR -  failed to create AROSMesaVisual\n"));
+        FreeVec( amesa );
+        LastError = AMESA_OUT_OF_MEM;
+        return NULL;
+    }
 
-        D(bug("[AROSMESA] AROSMesaCreateContext: Creating new AROSMesaVisual\n"));
-        if (((BOOL)GetTagData(AMA_DoubleBuf, TRUE, tagList) == TRUE))
-            db_flag = GL_TRUE;
+    /* build table of device driver functions */
+    _mesa_init_driver_functions(&functions);
+    _aros_init_driver_functions(&functions);
 
-        if (!(amesa->visual = aros_new_visual(db_flag)))
-        {
-            D(bug("[AROSMESA] AROSMesaCreateContext: ERROR -  failed to create AROSMesaVisual\n"));
-            FreeVec( amesa );
-            LastError = AMESA_OUT_OF_MEM;
-            return NULL;
-        }
 
-        D(bug("[AROSMESA] AROSMesaCreateContext: [ASSERT] RastPort @ %x\n", amesa->visible_rp));
 
-        /* build table of device driver functions */
-        _mesa_init_driver_functions(&functions);
-        _aros_init_driver_functions(&functions);
+
+    if (!_mesa_initialize_context(  ctx,
+                                    GET_GL_VIS_PTR(amesa->visual),
+                                    NULL,
+                                    &functions,
+                                    (void *) amesa))
+    {
+        aros_delete_visual(amesa->visual);
+        FreeVec(amesa);
+        return NULL;
+    }
+
+    _mesa_enable_sw_extensions(ctx);
+    _mesa_enable_1_3_extensions(ctx);
+    _mesa_enable_1_4_extensions(ctx);
+    _mesa_enable_1_5_extensions(ctx);
+    _mesa_enable_2_0_extensions(ctx);
+    _mesa_enable_2_1_extensions(ctx);
+
+
+    if ((aros_standard_init(amesa, tagList)) == FALSE)
+    {
+        goto amccontextclean;
+    }
+
+
+    if(!(amesa->framebuffer = aros_new_framebuffer(GET_GL_VIS_PTR(amesa->visual))))
+    {
+        LastError = AMESA_OUT_OF_MEM;
+        goto amccontextclean;
+    }
+
+    amesa->renderbuffer = aros_new_renderbuffer();   
+
+    _mesa_add_renderbuffer(GET_GL_FB_PTR(amesa->framebuffer), BUFFER_FRONT_LEFT, 
+        GET_GL_RB_PTR(amesa->renderbuffer));
+
+    /* Set draw buffer as front */
+    ctx->Color.DrawBuffer[0] = GL_FRONT;
+
+
+    /* AROSMesa is always "double buffered" */
+    /* if (amesa->visual->db_flag == GL_TRUE) */
+
+    _mesa_add_soft_renderbuffers(GET_GL_FB_PTR(amesa->framebuffer),
+                                GL_FALSE, /* color */
+                                (GET_GL_VIS_PTR(amesa->visual))->haveDepthBuffer,
+                                (GET_GL_VIS_PTR(amesa->visual))->haveStencilBuffer,
+                                (GET_GL_VIS_PTR(amesa->visual))->haveAccumBuffer,
+                                GL_FALSE, /* alpha */
+                                GL_FALSE /* aux */ );
 
 
    
-
-        if (!_mesa_initialize_context(  ctx,
-                                        GET_GL_VIS_PTR(amesa->visual),
-                                        NULL,
-                                        &functions,
-                                        (void *) amesa))
-        {
-	        aros_delete_visual(amesa->visual);
-            FreeVec(amesa);
-            return NULL;
-        }
-
-        _mesa_enable_sw_extensions(ctx);
-        _mesa_enable_1_3_extensions(ctx);
-        _mesa_enable_1_4_extensions(ctx);
-        _mesa_enable_1_5_extensions(ctx);
-        _mesa_enable_2_0_extensions(ctx);
-        _mesa_enable_2_1_extensions(ctx);
-
-
-        if ((aros_Standard_init(amesa, tagList)) == FALSE)
-        {
-            goto amccontextclean;
-        }
-
-  
-        if(!(amesa->framebuffer = aros_new_framebuffer(GET_GL_VIS_PTR(amesa->visual))))
-        {
-            LastError = AMESA_OUT_OF_MEM;
-            goto amccontextclean;
-        }
-    
-        amesa->renderbuffer = aros_new_renderbuffer();   
-
-        _mesa_add_renderbuffer(GET_GL_FB_PTR(amesa->framebuffer), BUFFER_FRONT_LEFT, 
-            GET_GL_RB_PTR(amesa->renderbuffer));
-        
-        /* Set draw buffer as front */
-        ctx->Color.DrawBuffer[0] = GL_FRONT;
-
-
-        /* AROSMesa is always "double buffered" */
-        /* if (amesa->visual->db_flag == GL_TRUE) */
-
-        _mesa_add_soft_renderbuffers(GET_GL_FB_PTR(amesa->framebuffer),
-                                   GL_FALSE, /* color */
-                                   (GET_GL_VIS_PTR(amesa->visual))->haveDepthBuffer,
-                                   (GET_GL_VIS_PTR(amesa->visual))->haveStencilBuffer,
-                                   (GET_GL_VIS_PTR(amesa->visual))->haveAccumBuffer,
-                                   GL_FALSE, /* alpha */
-                                   GL_FALSE /* aux */ );
-
-
-    } /* if(!(amesa = (AROSMesaContext)GetTagData(AMA_Context, GL_FALSE, tagList))) */
  
     ctx = GET_GL_CTX_PTR(amesa);
 

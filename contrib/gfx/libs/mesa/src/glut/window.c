@@ -227,18 +227,13 @@ glutCreateWindow (const char *title)
             w->amglutwin_FlagDB = GL_TRUE;
           }
 
-          w->amglutwin_cliprect.MinX = w->amglutwin_Window->BorderLeft;   /* AROS: Clip the rastport to the visible area */
-          w->amglutwin_cliprect.MinY = w->amglutwin_Window->BorderTop;
-          w->amglutwin_cliprect.MaxX = -w->amglutwin_Window->BorderRight;
-          w->amglutwin_cliprect.MaxY = -w->amglutwin_Window->BorderBottom;
-
           if ((w->amglutwin_context = AROSMesaCreateContextTags(
               AMA_Window, (IPTR)w->amglutwin_Window,
               AMA_DoubleBuf, w->amglutwin_FlagDB,
               AMA_Left, w->amglutwin_Window->BorderLeft,
               AMA_Top, w->amglutwin_Window->BorderTop,
-              AMA_Width, w->amglutwin_Window->Width-w->amglutwin_Window->BorderLeft-w->amglutwin_Window->BorderRight,
-              AMA_Height, w->amglutwin_Window->Height-w->amglutwin_Window->BorderBottom-w->amglutwin_Window->BorderTop,
+              AMA_Right, w->amglutwin_Window->BorderRight,
+              AMA_Bottom, w->amglutwin_Window->BorderBottom,
               AMA_RGBMode, RGB_Flag,                                                  
               TAG_DONE,0)) == NULL)
           {
@@ -421,18 +416,16 @@ glutPositionWindow (int x, int y)
 void APIENTRY
 glutReshapeWindow (int width, int height)
 { 
-   D(bug("[AMGLUT] In glutReshapeWindow(width:%d, height:%d)\n", width, height));
- 
-   struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
-/*   if (DMesaResizeBuffer(width, height)) {
-      __glutTask->AMGLUTTN_WindowCurrent->amglutwin_width = width;
-      __glutTask->AMGLUTTN_WindowCurrent->amglutwin_height = height;*/
-      if (__glutTask->AMGLUTTN_WindowCurrent->reshape) {
-         __glutTask->AMGLUTTN_WindowCurrent->reshape(__glutTask->AMGLUTTN_WindowCurrent->amglutwin_width, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_height);
-      } else {
-         glViewport(0, 0, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_width, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_height);
-      }
-/*   }*/
+    D(bug("[AMGLUT] In glutReshapeWindow(width:%d, height:%d)\n", width, height));
+
+    struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
+    if (__glutTask->AMGLUTTN_WindowCurrent->reshape) 
+    {
+        __glutTask->AMGLUTTN_WindowCurrent->reshape(__glutTask->AMGLUTTN_WindowCurrent->amglutwin_width, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_height);
+    } else 
+    {
+        glViewport(0, 0, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_width, __glutTask->AMGLUTTN_WindowCurrent->amglutwin_height);
+    }
 }
 
 

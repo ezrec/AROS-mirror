@@ -139,8 +139,6 @@ typedef struct GLUTwindow {
    GLboolean              amglutwin_FlagReDisplay;
    GLboolean              amglutwin_FlagIdle;
 
-   struct Rectangle       amglutwin_cliprect;
-
 /***** GL Related items */
    AROSMesaContext        amglutwin_context;
 

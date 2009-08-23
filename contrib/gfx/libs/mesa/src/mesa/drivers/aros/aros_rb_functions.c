@@ -281,6 +281,8 @@ AROSMesaRenderBuffer aros_new_renderbuffer(void)
 
 void aros_delete_renderbuffer(AROSMesaRenderBuffer aros_rb)
 {
+    D(bug("[AROSMESA] aros_delete_renderbuffer\n"));
+    
     if (aros_rb && aros_rb->buffer)
     {
         FreeVec(aros_rb->buffer);
