@@ -1,0 +1,7 @@
+cd Mesa
+stack 512000
+run bounce x=0 y=20
+run morph3d x=340 y=20
+run gears x=680 y=20
+cd /
+

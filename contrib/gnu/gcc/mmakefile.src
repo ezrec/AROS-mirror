@@ -8,7 +8,7 @@ TARGET_CC := $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-gcc
 
 GCC_VERSION := 4.2.2
 
-#MM- contrib-gnu : contrib-gnu-gcc
+# #MM- contrib-gnu : contrib-gnu-gcc
 #MM- contrib-gnu-gcc : contrib-gnu-crosstools development-collect-aros development-gcc
 
 %fetch_and_build_gnu_development package=gcc version=$(GCC_VERSION) patch=yes \

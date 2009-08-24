@@ -1,3 +1,6 @@
+#   $Id$
+#
+
 include $(TOP)/config/make.cfg
 
 #MM- contrib-demos : \
@@ -19,15 +22,12 @@ include $(TOP)/config/make.cfg
 #MM		demo-kitty \
 #MM		demo-powerzoom
 
-SCRIPTFILES := startsomedemos startsomedemos2
-DESTSCRIPTFILES := $(foreach f, $(SCRIPTFILES), $(CONTRIBDIR)/Demos/$(f))
+SCRIPTFILES = startsomedemos startsomedemos2 StartMesaDemos
+DSTDIR := $(CONTRIBDIR)/Demos
 
-#MM demo-startscripts :
-demo-startscripts : setup-demo-startscripts $(DESTSCRIPTFILES)
-	@$(NOP)
+#MM 
+demo-startscripts:
 
-setup-demo-startscripts : 
-	@$(MKDIR) $(CONTRIBDIR)/Demos
+%copy_files_q files=$(SCRIPTFILES) dst=$(DSTDIR) maketarget=demo-startscripts
 
-$(CONTRIBDIR)/Demos/% : %
-	@$(CP) $< $@
+%common

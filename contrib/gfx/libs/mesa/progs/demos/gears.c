@@ -383,13 +383,51 @@ visible(int vis)
    update_idle_func();
 }
 
+
+#include <proto/exec.h>
+#include <proto/dos.h>
+
+#define ARG_TEMPLATE "WINPOSX=X/N/K,WINPOSY=Y/N/K"
+#define ARG_X 0
+#define ARG_Y 1
+#define NUM_ARGS 2
+
+static IPTR args[NUM_ARGS];
+WORD                    winx = -1, winy = -1;
+#define W 200
+#define H 200
+
+static void correctpos(void)
+{
+    if (winx == -1) winx = 100;
+    if (winy == -1) winy = 100;
+}
+
+static void getarguments(void)
+{
+    struct RDArgs *myargs;
+    
+    if ((myargs = ReadArgs(ARG_TEMPLATE, args, NULL)))
+    {
+        
+        if (args[ARG_X]) winx = *(IPTR *)args[ARG_X];
+        if (args[ARG_Y]) winy = *(IPTR *)args[ARG_Y];
+    
+        FreeArgs(myargs);
+    }
+}    
+
+
 int main(int argc, char *argv[])
 {
+  getarguments();
+  correctpos();
+  
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
 
-  glutInitWindowPosition(0, 0);
-  glutInitWindowSize(300, 300);
+  glutInitWindowPosition(winx, winy);
+  glutInitWindowSize(W, H);
   win = glutCreateWindow("Gears");
   init(argc, argv);
 

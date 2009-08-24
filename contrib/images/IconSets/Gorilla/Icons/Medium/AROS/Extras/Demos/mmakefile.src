@@ -1,4 +1,4 @@
-# Copyright © 2004, The AROS Development Team. All rights reserved.
+# Copyright 2004, The AROS Development Team. All rights reserved.
 # $Id: mmakefile.src 25968 2007-05-02 13:23:34Z paolone $
 
 include $(TOP)/config/make.cfg
@@ -14,6 +14,7 @@ ICONS := BlackHole \
          Kitty \
          Galaxy \
          InfPlane \
+         Mesa \
          Metaballs \
          NewVox \
          Parallax \
@@ -21,8 +22,9 @@ ICONS := BlackHole \
          RubberStrings \
          Tunnel \
          Voxel \
-	 startsomedemos \
-	 startsomedemos2
+         startsomedemos \
+	     startsomedemos2 \
+         StartMesaDemos
 
 #MM- iconset-Gorilla-contrib-icons-extras-clean : iconset-Gorilla-contrib-icons-extras-demos-clean
 %build_icons mmake=iconset-Gorilla-contrib-icons-extras-demos icons=$(ICONS) dir=$(CONTRIBDIR)/Demos

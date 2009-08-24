@@ -20,7 +20,7 @@
 
 #define RED 1
 #define WHITE 2
-#define CYAN 3
+#define VIOLET 3
 
 GLboolean IndexMode = GL_FALSE;
 GLuint Ball;
@@ -37,7 +37,7 @@ make_ball(void)
 {
   GLuint list;
   GLfloat a, b;
-  GLfloat da = 18.0, db = 18.0;
+  GLfloat da = 22.5, db = 22.5;
   GLfloat radius = 1.0;
   GLuint color;
   GLfloat x, y, z;
@@ -107,10 +107,12 @@ draw(void)
 {
   GLint i;
 
+  glClearColor(0.6f, 0.6f, 0.6f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
 
-  glIndexi(CYAN);
-  glColor3f(0, 1, 1);
+  glIndexi(VIOLET);
+  glColor3f(0.7, 0.45, 0.7);
+  glLineWidth(2.5);
   glBegin(GL_LINES);
   for (i = -5; i <= 5; i++) {
     glVertex2i(i, -5);
@@ -129,11 +131,12 @@ draw(void)
   glVertex2f(-5.75, -5.9);
   glVertex2f(5.75, -5.9);
   glEnd();
+  glLineWidth(1.0);
 
   glPushMatrix();
   glTranslatef(Xpos, Ypos, 0.0);
   glScalef(2.0, 2.0, 2.0);
-  glRotatef(8.0, 0.0, 0.0, 1.0);
+  glRotatef(-20.0, 0.0, 0.0, 1.0);
   glRotatef(90.0, 1.0, 0.0, 0.0);
   glRotatef(Zrot, 0.0, 0.0, 1.0);
 
@@ -157,7 +160,7 @@ idle(void)
   dt = t - t0;
   t0 = t;
 
-  Zrot += Zstep*dt;
+  Zrot -= Zstep*dt;
 
   Xpos += Xvel*dt;
   if (Xpos >= Xmax) {
@@ -190,11 +193,48 @@ visible(int vis)
     glutIdleFunc(NULL);
 }
 
+#include <proto/exec.h>
+#include <proto/dos.h>
+
+#define ARG_TEMPLATE "WINPOSX=X/N/K,WINPOSY=Y/N/K"
+#define ARG_X 0
+#define ARG_Y 1
+#define NUM_ARGS 2
+
+static IPTR args[NUM_ARGS];
+WORD                    winx = -1, winy = -1;
+#define W 320
+#define H 200
+
+static void correctpos(void)
+{
+    if (winx == -1) winx = 100;
+    if (winy == -1) winy = 100;
+}
+
+static void getarguments(void)
+{
+    struct RDArgs *myargs;
+    
+    if ((myargs = ReadArgs(ARG_TEMPLATE, args, NULL)))
+    {
+        
+        if (args[ARG_X]) winx = *(IPTR *)args[ARG_X];
+        if (args[ARG_Y]) winy = *(IPTR *)args[ARG_Y];
+    
+        FreeArgs(myargs);
+    }
+}    
+
+
 int main(int argc, char *argv[])
 {
+  getarguments();
+  correctpos();
+  
   glutInit(&argc, argv);
-  glutInitWindowPosition(0, 0);
-  glutInitWindowSize(600, 450);
+  glutInitWindowPosition(winx, winy);
+  glutInitWindowSize(W, H);
 
 
   IndexMode = argc > 1 && strcmp(argv[1], "-ci") == 0;
@@ -218,7 +258,7 @@ int main(int argc, char *argv[])
   if (IndexMode) {
     glutSetColor(RED, 1.0, 0.0, 0.0);
     glutSetColor(WHITE, 1.0, 1.0, 1.0);
-    glutSetColor(CYAN, 0.0, 1.0, 1.0);
+    glutSetColor(VIOLET, 0.7, 0.45, 0.7);
   }
 
   glutMainLoop();

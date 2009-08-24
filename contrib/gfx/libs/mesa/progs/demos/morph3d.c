@@ -826,6 +826,40 @@ static void pinit(void)
 
 }
 
+#include <proto/exec.h>
+#include <proto/dos.h>
+
+#define ARG_TEMPLATE "WINPOSX=X/N/K,WINPOSY=Y/N/K"
+#define ARG_X 0
+#define ARG_Y 1
+#define NUM_ARGS 2
+
+static IPTR args[NUM_ARGS];
+WORD                    winx = -1, winy = -1;
+#define W 320
+#define H 200
+
+static void correctpos(void)
+{
+    if (winx == -1) winx = 100;
+    if (winy == -1) winy = 100;
+}
+
+static void getarguments(void)
+{
+    struct RDArgs *myargs;
+    
+    if ((myargs = ReadArgs(ARG_TEMPLATE, args, NULL)))
+    {
+        
+        if (args[ARG_X]) winx = *(IPTR *)args[ARG_X];
+        if (args[ARG_Y]) winy = *(IPTR *)args[ARG_Y];
+    
+        FreeArgs(myargs);
+    }
+}    
+
+
 int main(int argc, char **argv)
 {
   printf("Morph 3D - Shows morphing platonic polyhedra\n");
@@ -841,9 +875,12 @@ int main(int argc, char **argv)
 
   object=1;
 
+  getarguments();
+  correctpos();
+  
   glutInit(&argc, argv);
-  glutInitWindowPosition(0,0);
-  glutInitWindowSize(640,480);
+  glutInitWindowPosition(winx, winy);
+  glutInitWindowSize(W, H);
 
   glutInitDisplayMode( GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB );
 
@@ -888,4 +925,5 @@ int main(int argc, char **argv)
   glutDisplayFunc( draw );
   glutMainLoop();
   
+  return 0;
 }

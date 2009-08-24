@@ -7,7 +7,7 @@ FILES 	    :=  bounce \
                 gearbox \
                 gears \
                 morph3d \
-                spectex
+                glinfo \
                 
                 
 EXEDIR      := $(CONTRIBDIR)/Demos/Mesa
@@ -17,7 +17,7 @@ EXEDIR      := $(CONTRIBDIR)/Demos/Mesa
 
 #MM contrib-gfx-libs-mesa-demos : contrib-gfx-libs-mesa-demos-prerequisites \
 #MM     contrib-gfx-libs-mesa-demos-teapot contrib-gfx-libs-mesa-demos-fire contrib-gfx-libs-mesa-demos-textures \
-#MM     contrib-gfx-libs-mesa-demos-tunnel2
+#MM     contrib-gfx-libs-mesa-demos-tunnel
 
 #MM contrib-gfx-libs-mesa-demos-teapot : contrib-gfx-libs-mesa-demos-prerequisites
 
@@ -25,7 +25,7 @@ EXEDIR      := $(CONTRIBDIR)/Demos/Mesa
 
 #MM contrib-gfx-libs-mesa-demos-textures : contrib-gfx-libs-mesa-demos-prerequisites
 
-#MM contrib-gfx-libs-mesa-demos-tunnel2 : contrib-gfx-libs-mesa-demos-prerequisites
+#MM contrib-gfx-libs-mesa-demos-tunnel : contrib-gfx-libs-mesa-demos-prerequisites
 
 
 %build_progs mmake=contrib-gfx-libs-mesa-demos \
@@ -44,8 +44,8 @@ EXEDIR      := $(CONTRIBDIR)/Demos/Mesa
     targetdir=$(EXEDIR) progname="textures" \
     files="textures readtex" uselibs="glut GL GLU"
 
-%build_prog mmake=contrib-gfx-libs-mesa-demos-tunnel2 \
-    targetdir=$(EXEDIR) progname="tunnel2" \
-    files="tunnel2 readtex" uselibs="glut GL GLU"
+%build_prog mmake=contrib-gfx-libs-mesa-demos-tunnel \
+    targetdir=$(EXEDIR) progname="tunnel" \
+    files="tunnel readtex" uselibs="glut GL GLU "
 
 %common

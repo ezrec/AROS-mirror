@@ -128,7 +128,7 @@ contrib-gfx-libs-mesa-glu-cpp : contrib-gfx-libs-mesa-glu-cpp-directories-setup 
 
 #MM
 contrib-gfx-libs-mesa-glu-cpp-directories-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%mkdir_q dir=$(GENDIR)/$(CURDIR)
 
 %build_linklib mmake=contrib-gfx-libs-mesa-glu-linklib libname=GLU \
     files="$(LIBGLU)" objs="$(LIBNURBS_OBJS)" objdir=$(GENDIR)/$(CURDIR)/linklib
