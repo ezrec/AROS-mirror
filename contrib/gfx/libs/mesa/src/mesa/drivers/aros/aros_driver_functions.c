@@ -38,14 +38,14 @@ static const GLubyte * _aros_get_string(GLcontext *ctx, GLenum name)
 static void _aros_clear_color( GLcontext *ctx, const GLfloat color[4] )
 {
     AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
-    amesa->clearpixel = TC_ARGB((GLbyte)(color[RCOMP] * 255), 
-                                (GLbyte)(color[GCOMP] * 255), 
-                                (GLbyte)(color[BCOMP] * 255), 
-                                (GLbyte)(color[ACOMP] * 255));
+    amesa->clearpixel = TC_ARGB((GLubyte)(color[RCOMP] * 255), 
+                                (GLubyte)(color[GCOMP] * 255), 
+                                (GLubyte)(color[BCOMP] * 255), 
+                                (GLubyte)(color[ACOMP] * 255));
     
     D(bug("[AROSMESA] aros_clear_color(c=%x,r=%d,g=%d,b=%d,a=%d) = %x\n", 
-        ctx, (GLbyte)(color[RCOMP] * 255), (GLbyte)(color[GCOMP] * 255), (GLbyte)(color[BCOMP] * 255),
-        (GLbyte)(color[ACOMP] * 255), amesa->clearpixel));
+        ctx, (GLubyte)(color[RCOMP] * 255), (GLubyte)(color[GCOMP] * 255), (GLubyte)(color[BCOMP] * 255),
+        (GLubyte)(color[ACOMP] * 255), amesa->clearpixel));
 }
 
 
