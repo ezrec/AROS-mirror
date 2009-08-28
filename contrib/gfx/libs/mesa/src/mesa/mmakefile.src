@@ -284,80 +284,63 @@ STATETRACKER_SOURCES = \
 
 ARCHEXTRASRCS :=
 
-ifeq ($(AROS_TARGET_CPU), "i386")
-  $(ECHO)  "Mesa: Using i386 optimizations"
-  TNL_SOURCES = $(TNL_SOURCES) tnl/t_vertex_sse
-  ASM_C_SOURCES =	$(ASM_C_SOURCES) \
-              x86/common_x86 \
-              x86/x86 \
-              x86/3dnow \
-              x86/sse \
-              x86/rtasm/x86sse \
-              shader/slang/slang_execute_x86
-  
-  X86_SOURCES = $(X86_SOURCES) \
-              x86/common_x86_asm \
-              x86/x86_xform2 \
-              x86/x86_xform3 \
-              x86/x86_xform4 \
-              x86/x86_cliptest \
-              x86/mmx_blend \
-              x86/3dnow_xform1 \
-              x86/3dnow_xform2 \
-              x86/3dnow_xform3 \
-              x86/3dnow_xform4 \
-              x86/3dnow_normal \
-              x86/sse_xform1 \
-              x86/sse_xform2 \
-              x86/sse_xform3 \
-              x86/sse_xform4 \
-              x86/sse_normal \
-              x86/read_rgba_span_x86 \
-              tnl/t_vtx_x86_gcc
- 
-  X86_API = $(X86_API) \
-              x86/glapi_x86
-  
-  ARCHEXTRASRCS = $(ARCHEXTRASRCS)
+ifeq ($(AROS_TARGET_CPU), i386)
+#  $(ECHO)  "Mesa: Using i386 optimizations"
+#  TNL_SOURCES = $(TNL_SOURCES) tnl/t_vertex_sse
+#  ASM_C_SOURCES =	$(ASM_C_SOURCES) \
+#              x86/common_x86 \
+#              x86/x86 \
+#              x86/3dnow \
+#              x86/sse \
+#              x86/rtasm/x86sse \
+#              shader/slang/slang_execute_x86
+#  
+#  X86_SOURCES = $(X86_SOURCES) \
+#              x86/common_x86_asm \
+#              x86/x86_xform2 \
+#              x86/x86_xform3 \
+#              x86/x86_xform4 \
+#              x86/x86_cliptest \
+#              x86/mmx_blend \
+#              x86/3dnow_xform1 \
+#              x86/3dnow_xform2 \
+#              x86/3dnow_xform3 \
+#              x86/3dnow_xform4 \
+#              x86/3dnow_normal \
+#              x86/sse_xform1 \
+#              x86/sse_xform2 \
+#              x86/sse_xform3 \
+#              x86/sse_xform4 \
+#              x86/sse_normal \
+#              x86/read_rgba_span_x86 \
+#              tnl/t_vtx_x86_gcc
+# 
+#  X86_API = $(X86_API) \
+#              x86/glapi_x86
+#  
+#  ARCHEXTRASRCS = $(ARCHEXTRASRCS)
   
   FFIXED = -ffixed-ebx
 endif
 
-ifeq ($(AROS_TARGET_CPU), "x86_64")
-  $(ECHO)  "Mesa: Using X86_64 optimizations"
-  ASM_C_SOURCES =	$(ASM_C_SOURCES) \
-              x86-64/x86-64 \
-  
-  X86-64_SOURCES = $(X86-64_SOURCES) \
-              x86-64/xform4
-  
-  X86-64_API = $(X86-64_API) \
-              x86-64/glapi_x86-64
-  
-  ARCHEXTRASRCS = $(ARCHEXTRASRCS) $(ASM_C_SOURCES) $(X86-64_SOURCES) $(X86-64_API)
-endif
-
-ifeq ($(AROS_TARGET_CPU), "sparc?")
-  ASM_C_SOURCES +=	\
-              sparc/sparc \
-              ppc/common_ppc \
-  
-  SPARC_SOURCES = \
-              sparc/clip \
-              sparc/norm \
-              sparc/xform
-  
-  SPARC_API = \
-              sparc/glapi_sparc
-  
-  ARCHEXTRASRCS +=
-  
+ifeq ($(AROS_TARGET_CPU), x86_64)
+#  $(ECHO)  "Mesa: Using X86_64 optimizations"
+#  ASM_C_SOURCES =	$(ASM_C_SOURCES) \
+#              x86-64/x86-64 \
+#  
+#  X86-64_SOURCES = $(X86-64_SOURCES) \
+#              x86-64/xform4
+#  
+#  X86-64_API = $(X86-64_API) \
+#              x86-64/glapi_x86-64
+#  
+#  ARCHEXTRASRCS = $(ARCHEXTRASRCS) $(ASM_C_SOURCES) $(X86-64_SOURCES) $(X86-64_API)
+#  
   FFIXED = -ffixed-rbx
 endif
 
-ifeq ($(AROS_TARGET_CPU), "ppc")
-  # global register variable in glapi.h should be enough
-  FFIXED =
+ifeq ($(AROS_TARGET_CPU), ppc)
+  FFIXED = -ffixed-r14
 endif
 
 LIBMESAM = $(COMMON_DRIVER_SOURCES) \
