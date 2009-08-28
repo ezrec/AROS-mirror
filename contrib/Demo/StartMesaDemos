@@ -1,7 +1,10 @@
 cd Mesa
 stack 512000
 run bounce x=0 y=20
-run morph3d x=340 y=20
-run gears x=680 y=20
+run morph3d x=360 y=20
+run gears x=720 y=20
+run arbfslight x=0 y=280
+run teapot x=240 y=280
+run ray x=600 y=280
 cd /
 

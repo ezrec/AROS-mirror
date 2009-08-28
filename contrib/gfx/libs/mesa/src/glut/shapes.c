@@ -127,8 +127,7 @@ static void circleTable(double **sint,double **cost,const int n)
 
     /* Table size, the sign of n flips the circle direction */
 
-//    const int size = abs(n);
-    const int size = n;
+    const int size = abs(n);
 
     /* Determine the angle between samples */
 
