@@ -391,7 +391,14 @@ glutSetWindow (int win)
 void APIENTRY
 glutSetWindowTitle (const char *title)
 {
+  struct AROSMesaGLUT_TaskNode *__glutTask = _glut_findtask(FindTask(NULL));
+  
   D(bug("[AMGLUT] In glutSetWindowTitle('%s')\n", title));
+  
+  if (__glutTask->AMGLUTTN_WindowCurrent != NULL)
+  {
+      SetWindowTitles(__glutTask->AMGLUTTN_WindowCurrent->amglutwin_Window, title, ((UBYTE *)~0L));
+  }
 }
 
 

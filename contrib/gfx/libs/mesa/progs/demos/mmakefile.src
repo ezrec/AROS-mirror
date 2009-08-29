@@ -18,7 +18,7 @@ EXEDIR      := $(CONTRIBDIR)/Demos/Mesa
 
 #MM contrib-gfx-libs-mesa-demos : contrib-gfx-libs-mesa-demos-prerequisites \
 #MM     contrib-gfx-libs-mesa-demos-teapot contrib-gfx-libs-mesa-demos-fire contrib-gfx-libs-mesa-demos-textures \
-#MM     contrib-gfx-libs-mesa-demos-tunnel
+#MM     contrib-gfx-libs-mesa-demos-tunnel contrib-gfx-libs-mesa-demos-ipers contrib-gfx-libs-mesa-demos-reflect
 
 #MM contrib-gfx-libs-mesa-demos-teapot : contrib-gfx-libs-mesa-demos-prerequisites
 
@@ -48,5 +48,13 @@ EXEDIR      := $(CONTRIBDIR)/Demos/Mesa
 %build_prog mmake=contrib-gfx-libs-mesa-demos-tunnel \
     targetdir=$(EXEDIR) progname="tunnel" \
     files="tunnel readtex" uselibs="glut GL GLU "
+
+%build_prog mmake=contrib-gfx-libs-mesa-demos-ipers \
+    targetdir=$(EXEDIR) progname="ipers" \
+    files="ipers readtex" uselibs="glut GL GLU "
+
+%build_prog mmake=contrib-gfx-libs-mesa-demos-reflect \
+    targetdir=$(EXEDIR) progname="reflect" \
+    files="reflect readtex showbuffer" uselibs="glut GL GLU "
 
 %common
