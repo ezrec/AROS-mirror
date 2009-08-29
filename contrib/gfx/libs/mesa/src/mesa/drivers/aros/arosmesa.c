@@ -69,81 +69,64 @@ struct Library * AROSMesaCyberGfxBase = NULL;    /* Base address for cybergfx */
 #define AROS_PIXFMT RECTFMT_BGRA32   /* Little Endian Archs. */
 #endif
 
-static void
-aros_calculate_initial_dimentions_ratio(AROSMesaContext amesa, GLsizei requestedwidth, GLsizei requestedheight)
-{
-    /* This function should only be called at context creation */
-    GLsizei maximumwidth = 0;
-    GLsizei maximumheight = 0;
-    GLsizei visible_rp_width = 0;
-    GLsizei visible_rp_height = 0;
-    
-    D(bug("[AROSMESA] aros_calculate_initial_dimentions_ratio\n"));
-    
-    visible_rp_width = 
-        amesa->visible_rp->Layer->bounds.MaxX - amesa->visible_rp->Layer->bounds.MinX + 1;
-
-    visible_rp_height = 
-        amesa->visible_rp->Layer->bounds.MaxY - amesa->visible_rp->Layer->bounds.MinY + 1;
-
-
-    maximumwidth = visible_rp_width - amesa->left - amesa->right;
-    maximumheight = visible_rp_height - amesa->top - amesa->bottom;
-    
-    /* Sanity checks and clipping */
-    
-    if (maximumwidth < 0) maximumwidth = 1; /* For 0,0 rastport the ratio will be 1 */
-    if (maximumheight < 0) maximumheight = 1;
-    
-    if (requestedwidth < 0) requestedwidth = maximumwidth;
-    if (requestedheight < 0) requestedheight = maximumheight;
-    
-    if (requestedwidth > maximumwidth) requestedwidth = maximumwidth;
-    if (requestedheight > maximumheight) requestedheight = maximumheight;
-    
-    D(bug("[AROSMESA] aros_calculate_initial_dimentions_ratio: requstedwidth     =   %d\n", requestedwidth));
-    D(bug("[AROSMESA] aros_calculate_initial_dimentions_ratio: requstedheight    =   %d\n", requestedheight));
-    D(bug("[AROSMESA] aros_calculate_initial_dimentions_ratio: maximumwidth      =   %d\n", maximumwidth));
-    D(bug("[AROSMESA] aros_calculate_initial_dimentions_ratio: maximumheight     =   %d\n", maximumheight));
-    
-    amesa->width_initial_ratio = (GLfloat) requestedwidth / (GLfloat) maximumwidth;
-    amesa->height_initial_ratio = (GLfloat) requestedheight / (GLfloat) maximumheight;
-}
-
 static BOOL
 aros_standard_init(AROSMesaContext amesa, struct TagItem *tagList)
 {
     GLint requestedwidth = 0, requestedheight = 0;
+    GLint requestedright = 0, requestedbottom = 0;
     
     D(bug("[AROSMESA] aros_standard_init(amesa @ %x, taglist @ %x)\n", amesa, tagList));
-
-    if (!(amesa->visible_rp))
-    {
-        D(bug("[AROSMESA] aros_standard_init: WARNING - NULL RastPort in context\n"));
-        if (!(amesa->visible_rp = (struct RastPort *)GetTagData(AMA_RastPort, 0, tagList)))
-        {
-            D(bug("[AROSMESA] aros_standard_init: ERROR - Launched with NULL RastPort\n"));
-            return FALSE;
-        }
-    }	  
-    
     D(bug("[AROSMESA] aros_standard_init: Using RastPort @ %x\n", amesa->visible_rp));
 
     amesa->visible_rp = CloneRastPort(amesa->visible_rp);
 
     D(bug("[AROSMESA] aros_standard_init: Cloned RastPort @ %x\n", amesa->visible_rp));
 
+    /* We assume left and top are given or set to 0 */
     amesa->left = GetTagData(AMA_Left, 0, tagList);
-    amesa->right = GetTagData(AMA_Right, 0, tagList);
     amesa->top = GetTagData(AMA_Top, 0, tagList);
-    amesa->bottom = GetTagData(AMA_Bottom, 0, tagList);
-
+    
+    requestedright = GetTagData(AMA_Right, -1, tagList);
+    requestedbottom = GetTagData(AMA_Bottom, -1, tagList);
     requestedwidth = GetTagData(AMA_Width, -1 , tagList);
     requestedheight = GetTagData(AMA_Height, -1 , tagList);
+
+    /* Calculate rastport dimensions */
+    amesa->visible_rp_width = 
+        amesa->visible_rp->Layer->bounds.MaxX - amesa->visible_rp->Layer->bounds.MinX + 1;
+
+    amesa->visible_rp_height = 
+        amesa->visible_rp->Layer->bounds.MaxY - amesa->visible_rp->Layer->bounds.MinY + 1;
     
-    aros_calculate_initial_dimentions_ratio(amesa, requestedwidth, requestedheight);
+    /* right will be either passed or calculated from width or 0 */
+    amesa->right = 0;
+    if (requestedright < 0)
+    {
+        if (requestedwidth >= 0)
+        {
+            requestedright = amesa->visible_rp_width - amesa->left - requestedwidth;
+            if (requestedright < 0) requestedright = 0;
+        }
+        else
+            requestedright = 0;
+    }
+    amesa->right = requestedright;
     
-    _aros_recalculate_width_height(GET_GL_CTX_PTR(amesa), requestedwidth, requestedheight);
+    /* bottom will be either passed or calculated from height or 0 */
+    amesa->bottom = 0;
+    if (requestedbottom < 0)
+    {
+        if (requestedheight >= 0)
+        {
+            requestedbottom = amesa->visible_rp_height - amesa->top - requestedheight;
+            if (requestedbottom < 0) requestedbottom = 0;
+        }
+        else
+            requestedbottom = 0;
+    }
+    amesa->bottom = requestedbottom;
+
+    _aros_recalculate_buffer_width_height(GET_GL_CTX_PTR(amesa));
 
     amesa->clearpixel = 0;   /* current drawing/clearing pens */
     
@@ -160,9 +143,7 @@ aros_standard_init(AROSMesaContext amesa, struct TagItem *tagList)
     D(bug("[AROSMESA] aros_standard_init:    amesa->visible_rp_width        = %d\n", amesa->visible_rp_width));
     D(bug("[AROSMESA] aros_standard_init:    amesa->visible_rp_height       = %d\n", amesa->visible_rp_height));
     D(bug("[AROSMESA] aros_standard_init:    amesa->width                   = %d\n", amesa->width));
-    D(bug("[AROSMESA] aros_standard_init:    amesa->width_initial_ratio     = %d\n", (GLint)(amesa->width_initial_ratio * 100)));
     D(bug("[AROSMESA] aros_standard_init:    amesa->height                  = %d\n", amesa->height));
-    D(bug("[AROSMESA] aros_standard_init:    amesa->height_initial_ratio    = %d\n", (GLint)(amesa->height_initial_ratio * 100)));
     D(bug("[AROSMESA] aros_standard_init:    amesa->left                    = %d\n", amesa->left));
     D(bug("[AROSMESA] aros_standard_init:    amesa->right                   = %d\n", amesa->right));
     D(bug("[AROSMESA] aros_standard_init:    amesa->top                     = %d\n", amesa->top));
@@ -419,6 +400,7 @@ void AROSMesaMakeCurrent(AROSMesaContext amesa)
         /* Set the framebuffer's size.  This causes the
         * osmesa_renderbuffer_storage() function to get called.
         */
+        _aros_recalculate_buffer_width_height(ctx);
         _mesa_resize_framebuffer(ctx, fb, amesa->width, amesa->height);
         fb->Initialized = GL_TRUE; /* XXX TEMPORARY? */
 

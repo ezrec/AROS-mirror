@@ -376,6 +376,6 @@ USER_CFLAGS := -DUSE_MGL_NAMESPACE -DAROS_MESA_SHARED -ffast-math $(FFIXED)
 
 %build_module mmake=contrib-gfx-libs-mesa-mesa-module \
     modname=mesa modtype=library linklibname=GL conffile=arosmesa.conf linklibfiles="arosmesa_getprocaddress" \
-    files="$(SHAREDLIB_SOURCES) $(LIBMESAM)" objdir=$(GENDIR)/$(CURDIR)/module uselibs="arossupport amiga rom m"
+    files="$(SHAREDLIB_SOURCES) $(LIBMESAM)" objdir=$(GENDIR)/$(CURDIR)/module 
 
 %common

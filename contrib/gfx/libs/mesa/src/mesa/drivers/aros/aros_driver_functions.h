@@ -10,6 +10,6 @@
 #include "context.h"
 
 void _aros_init_driver_functions(struct dd_function_table * functions);
-void _aros_recalculate_width_height(GLcontext *ctx, GLint requestedwidth, GLint requestedheight);
+GLboolean _aros_recalculate_buffer_width_height(GLcontext *ctx);
 
 #endif /* AROS_DRIVER_FUNCTIONS_H */

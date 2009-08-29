@@ -231,6 +231,8 @@ _aros_renderbuffer_allocstorage(GLcontext *ctx, struct gl_renderbuffer *rb,
     
     GET_AROS_RB_PTR(rb)->buffer = AllocVec(rb->Width * rb->Height * 4, MEMF_ANY);
 
+    if (GET_AROS_RB_PTR(rb)->buffer == NULL)
+        return GL_FALSE;
 
     return GL_TRUE;
 }
