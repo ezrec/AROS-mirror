@@ -1,0 +1,7 @@
+These are the source codes of old AROS driver. The new
+drivers partially bases on these codes. The are kept for
+reference as they contain 8bit rendering code which is
+missing in the new driver.
+
+The old mesa port was located at:
+/contrib/gfx/mesa
