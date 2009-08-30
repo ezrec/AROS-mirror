@@ -63,7 +63,7 @@ static int fog = 1;
 static int bfcull = 1;
 static int usetex = 1;
 static int cstrip = 0;
-static int help = 1;
+static int help = 0;
 static int joyavailable = 0;
 static int joyactive = 0;
 
@@ -481,7 +481,38 @@ idle(void)
    glutPostRedisplay();
 }
 
+#include <proto/exec.h>
+#include <proto/dos.h>
 
+#define ARG_TEMPLATE "WINPOSX=X/N/K,WINPOSY=Y/N/K"
+#define ARG_X 0
+#define ARG_Y 1
+#define NUM_ARGS 2
+
+static IPTR args[NUM_ARGS];
+WORD                    winx = -1, winy = -1;
+#define W 320
+#define H 200
+
+static void correctpos(void)
+{
+    if (winx == -1) winx = 100;
+    if (winy == -1) winy = 100;
+}
+
+static void getarguments(void)
+{
+    struct RDArgs *myargs;
+    
+    if ((myargs = ReadArgs(ARG_TEMPLATE, args, NULL)))
+    {
+        
+        if (args[ARG_X]) winx = *(IPTR *)args[ARG_X];
+        if (args[ARG_Y]) winy = *(IPTR *)args[ARG_Y];
+    
+        FreeArgs(myargs);
+    }
+}  
 
 int
 main(int ac, char **av)
@@ -491,8 +522,11 @@ main(int ac, char **av)
    fprintf(stderr,
 	   "Tunnel V1.5\nWritten by David Bucciarelli (tech.hmw@plus.it)\n");
 
-   glutInitWindowPosition(0, 0);
-   glutInitWindowSize(WIDTH, HEIGHT);
+   getarguments();
+   correctpos();
+   
+   glutInitWindowPosition(winx, winy);
+   glutInitWindowSize(W, H);
    glutInit(&ac, av);
 
    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);

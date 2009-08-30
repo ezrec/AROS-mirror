@@ -125,7 +125,7 @@ static float eject_r, dt, maxage, eject_vy, eject_vl;
 static short shadows;
 static float ridtri;
 static int fog = 1;
-static int help = 1;
+static int help = 0;
 static int joyavailable = 0;
 static int joyactive = 0;
 

@@ -559,7 +559,7 @@ Usage(void)
 
 static IPTR args[NUM_ARGS];
 WORD                    winx = -1, winy = -1;
-#define W 200
+#define W 320
 #define H 200
 
 static void correctpos(void)

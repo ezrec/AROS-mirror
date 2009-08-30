@@ -59,7 +59,7 @@ static GLfloat lightalpha=0.0;
 static int fog=1;
 static int bfcull=1;
 static int usetex=1;
-static int help=1;
+static int help=0;
 static int joyavailable=0;
 static int joyactive=0;
 
