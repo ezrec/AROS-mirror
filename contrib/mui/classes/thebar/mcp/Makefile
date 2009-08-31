@@ -163,7 +163,7 @@ TESTTARGET= $(BINDIR)/TheBar-Test
 WARN     = -W -Wall -Wwrite-strings -Wpointer-arith -Wsign-compare
 OPTFLAGS = -O3 -fomit-frame-pointer -funroll-loops
 DEBUG    = -DDEBUG -O0
-DEBUGSYM = -gstabs
+DEBUGSYM = -g -gstabs
 CFLAGS   = -I. -I../include $(CPU) $(WARN) \
            $(OPTFLAGS) $(DEBUG) $(DEBUGSYM) $(USER_CFLAGS) -c
 LDFLAGS  = $(CPU) $(DEBUGSYM)
@@ -242,7 +242,7 @@ ifeq ($(OS), mos)
 
   ##############################
   # MorphOS
-  
+
   DESTDIR = SYS:Classes/MUI
 
   # Compiler/link/strip commands
@@ -384,7 +384,7 @@ $(OBJDIR)/library.o: library.c ../include/mccinit.c \
 
 locale.h: $(LOCALE)/TheBar.cd locale_h.sd
 	@echo "  MK $@"
-	@$(FC) $(LOCALE)/TheBar.cd locale.h=locale_h.sd 
+	@$(FC) $(LOCALE)/TheBar.cd locale.h=locale_h.sd
 
 ## CATALOG GENERATION #################
 

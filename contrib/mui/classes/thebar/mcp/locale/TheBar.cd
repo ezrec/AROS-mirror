@@ -261,11 +261,11 @@ Msg_Scaled_Help (//)
 If selected, buttons are scaled.
 ;
 Msg_BarSpacer (//)
-Bar spacer
+Force Bar spacer
 ;
 Msg_BarSpacer_Help (//)
 If selected, a bar spacer is used\n\
-as buttons separator.
+for all kind of separators.
 ;
 Msg_EnableKeys (//)
 Enable keys

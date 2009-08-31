@@ -17,16 +17,17 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: AUTHORS 258 2008-03-19 13:54:15Z marust $
+ $Id: AUTHORS 325 2009-08-30 10:08:52Z damato $
 
 ***************************************************************************/
 
 TheBar.mcc is an Open Source development effort with the code base and
 design provided by the following people:
 
-Alfonso Ranieri   <alforan@tin.it>
-Jens Langner      <Jens.Langner@light-speed.de>
-Matthias Rustler  <mrustler@gmx.de>
-Thore Boeckelmann <thboeckel@users.sourceforge.net>
+Alfonso Ranieri    <alforan@tin.it>
+Gianfranco Gignina <sh1nkur0@libero.it>
+Jens Langner       <Jens.Langner@light-speed.de>
+Matthias Rustler   <mrustler@gmx.de>
+Thore Boeckelmann  <thboeckel@users.sourceforge.net>
 
 The development of TheBar.mcc is hosted by SourceForge http://www.sf.net/

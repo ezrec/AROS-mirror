@@ -20,7 +20,7 @@
 ** TheBar class Support Site: http://www.sf.net/projects/thebar
 **
 ** $Id$
-** $URL: https://thebar.svn.sourceforge.net/svnroot/thebar/releases/26.3/include/mui/TheBar_mcc.h $
+** $URL: https://thebar.svn.sourceforge.net/svnroot/thebar/releases/26.4/include/mui/TheBar_mcc.h $
 **
 **/
 
@@ -565,7 +565,6 @@ enum
 #define TB_MAXLABELLEN 32
 
 /***********************************************************************/
-
 
 #if !defined(__AROS__) && defined(__PPC__)
   #if defined(__GNUC__)
