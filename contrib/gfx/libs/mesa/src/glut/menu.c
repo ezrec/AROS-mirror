@@ -249,7 +249,7 @@ glutAddMenuEntry (const char *label, int value)
     }
 
     menuentrynode->_gme_type = GLUT_MENU_ENTRY_ITEM;
-    menuentrynode->_gme_label = AllocVec(strlen(label), MEMF_CLEAR|MEMF_PUBLIC);
+    menuentrynode->_gme_label = AllocVec(strlen(label) + 1, MEMF_CLEAR|MEMF_PUBLIC);
     strcpy(menuentrynode->_gme_label, label);
     menuentrynode->_gme_value = value;    
 
