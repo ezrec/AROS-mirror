@@ -131,9 +131,9 @@ AMA_NoAccum:    don't allocate AccumulationBuffer if GL_TRUE
 #define AMA_AlphaFlag           (AMA_Dummy + 0x0032)    /* Not handled */ /* Always GL_TRUE */
 /* Not handled */
 /* #define AMA_DirectRender        (AMA_Dummy + 0x0035) */
-/* #define AMA_NoDepth             (AMA_Dummy + 0x0039) */
-/* #define AMA_NoStencil           (AMA_Dummy + 0x003a) */
-/* #define AMA_NoAccum             (AMA_Dummy + 0x003b) */
+#define AMA_NoDepth             (AMA_Dummy + 0x0039)
+#define AMA_NoStencil           (AMA_Dummy + 0x003a)
+#define AMA_NoAccum             (AMA_Dummy + 0x003b)
 
 /** Special **/
 /*

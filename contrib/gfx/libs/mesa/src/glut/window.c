@@ -36,7 +36,6 @@ extern struct AROSMesaGLUT_TaskNode *_glut_findtask(struct Task *thisTask);
 extern struct MsgPort	        *_glut_init_global_msgport(void);
 
 static GLuint swaptime, swapcount;
-static IPTR visual = (IPTR)NULL;
 
 extern struct MsgPort	*_glut_global_msgport;
 
@@ -147,8 +146,7 @@ glutCreateWindow (const char *title)
 
 
   GLUTwindow *w = NULL;      
-  GLenum   RGB_Flag  = GL_TRUE;
-
+  
   if ((w = (GLUTwindow *)AllocVec(sizeof(GLUTwindow), MEMF_CLEAR|MEMF_PUBLIC)) == NULL) {
     return 0;
   }
@@ -212,29 +210,18 @@ glutCreateWindow (const char *title)
           D(bug("[AMGLUT] glutCreateWindow: Allocated internal window message @ %x\n", w->amglutwin_InternalMessage));
 
 
-          if (_glut_default.mode & GLUT_INDEX)
-          {
-            D(bug("[AMGLUT] In glutCreateWindow: Indexed Color (IGNORED)\n"));
-
-            RGB_Flag = GL_FALSE;
-          }
-
-          w->amglutwin_FlagDB = GL_FALSE;
-          if (_glut_default.mode & GLUT_DOUBLE)
-          {
-            D(bug("[AMGLUT] In glutCreateWindow: Double Buffered\n"));
-
-            w->amglutwin_FlagDB = GL_TRUE;
-          }
-
           if ((w->amglutwin_context = AROSMesaCreateContextTags(
               AMA_Window, (IPTR)w->amglutwin_Window,
-              AMA_DoubleBuf, w->amglutwin_FlagDB,
+              AMA_DoubleBuf, (_glut_default.mode & GLUT_DOUBLE),
               AMA_Left, w->amglutwin_Window->BorderLeft,
               AMA_Top, w->amglutwin_Window->BorderTop,
               AMA_Right, w->amglutwin_Window->BorderRight,
               AMA_Bottom, w->amglutwin_Window->BorderBottom,
-              AMA_RGBMode, RGB_Flag,                                                  
+              AMA_RGBMode, _glut_default.mode & GLUT_RGB,
+              AMA_NoStencil, !(_glut_default.mode & GLUT_STENCIL),
+              AMA_NoAccum, !(_glut_default.mode & GLUT_ACCUM),
+              AMA_NoDepth, !(_glut_default.mode & GLUT_DEPTH),
+              AMA_AlphaFlag, (_glut_default.mode & GLUT_ALPHA),
               TAG_DONE,0)) == NULL)
           {
             D(bug("[AMGLUT] In glutCreateWindow: ERROR: Failed to create a GL Context\n"));

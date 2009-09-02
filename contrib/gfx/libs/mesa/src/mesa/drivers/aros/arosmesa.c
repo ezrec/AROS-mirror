@@ -230,7 +230,6 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
     GLcontext * ctx = NULL;
     LastError = 0;
     struct dd_function_table functions;
-    GLboolean db_flag = GL_FALSE;
     
     /* Try to open cybergraphics.library */
     if (CyberGfxBase == NULL)
@@ -263,10 +262,8 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
     }
 
     D(bug("[AROSMESA] AROSMesaCreateContext: Creating new AROSMesaVisual\n"));
-    if (((BOOL)GetTagData(AMA_DoubleBuf, TRUE, tagList) == TRUE))
-        db_flag = GL_TRUE;
 
-    if (!(amesa->visual = aros_new_visual(db_flag)))
+    if (!(amesa->visual = aros_new_visual(tagList)))
     {
         D(bug("[AROSMESA] AROSMesaCreateContext: ERROR -  failed to create AROSMesaVisual\n"));
         FreeVec( amesa );

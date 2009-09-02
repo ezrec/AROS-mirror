@@ -9,7 +9,7 @@
 #include <GL/gl.h>
 #include "arosmesa_internal.h"
 
-AROSMesaVisual aros_new_visual(GLboolean db_flag);
+AROSMesaVisual aros_new_visual(struct TagItem *tagList);
 void _aros_destroy_visual(AROSMesaVisual aros_vis);
 
 #endif /* AROS_VISUAL_FUNCTIONS_H */

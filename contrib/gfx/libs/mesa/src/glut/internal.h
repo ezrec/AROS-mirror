@@ -135,7 +135,6 @@ typedef struct GLUTwindow {
 
    GLenum                 amglutwin_type;
    GLenum                 amglutwin_curLevel;
-   GLboolean              amglutwin_FlagDB;
    GLboolean              amglutwin_FlagReDisplay;
    GLboolean              amglutwin_FlagIdle;
 

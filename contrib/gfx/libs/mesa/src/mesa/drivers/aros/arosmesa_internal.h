@@ -61,8 +61,6 @@ typedef struct arosmesa_framebuffer * AROSMesaFrameBuffer;
 struct arosmesa_visual
 {
     GLvisual Base;                  /* Base class - must be first */
-    /* TODO use dbflag from GLvisual */
-    GLboolean               db_flag;          /* double buffered?   */
 };
 
 typedef struct arosmesa_visual * AROSMesaVisual;
