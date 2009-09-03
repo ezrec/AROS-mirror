@@ -1764,7 +1764,16 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  	/* Map them both and go fullscreen, if requested */
  	if ( ! SDL_windowid ) {
  		if ( flags & SDL_FULLSCREEN ) {
-@@ -885,6 +854,8 @@
+@@ -875,6 +844,8 @@
+ 				screen->flags |= SDL_OPENGL;
+ 		}
+ 	}
++    
++    return 0;
+ }
+ 
+ int CGX_ResizeWindow(_THIS,
+@@ -885,6 +856,8 @@
  	if ( ! SDL_windowid ) {
  		/* Resize the window manager window */
  		CGX_SetSizeHints(this, w, h, flags);
@@ -1773,7 +1782,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  
  		ChangeWindowBox(SDL_Window,SDL_Window->LeftEdge,SDL_Window->TopEdge, w+SDL_Window->BorderLeft+SDL_Window->BorderRight,
  					h+SDL_Window->BorderTop+SDL_Window->BorderBottom);
-@@ -894,7 +865,8 @@
+@@ -894,7 +867,8 @@
  		screen->pitch = SDL_CalculatePitch(screen);
  		CGX_ResizeImage(this, screen, flags);
  	}
@@ -1783,7 +1792,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  }
  
  static SDL_Surface *CGX_SetVideoMode(_THIS, SDL_Surface *current,
-@@ -903,15 +875,19 @@
+@@ -903,15 +877,19 @@
  	Uint32 saved_flags;
  	int needcreate=0;
  
@@ -1805,7 +1814,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  
  // Check if we need to close an already existing videomode...
  
-@@ -947,9 +923,9 @@
+@@ -947,9 +925,9 @@
  		if ( SDL_windowid ) {
  			flags &= ~SDL_FULLSCREEN;
  		}
@@ -1818,7 +1827,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  				(this->hidden && this->hidden->depth!=bpp))
  			{
  				D(bug("Deleting previous window...\n"));
-@@ -969,7 +945,7 @@
+@@ -969,7 +947,7 @@
  
  			GFX_Display=NULL;
  
@@ -1827,7 +1836,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  
  			if(okid!=INVALID_ID)
  				GFX_Display=OpenScreenTags(NULL,
-@@ -980,24 +956,28 @@
+@@ -980,24 +958,28 @@
  								SA_DisplayID,okid,
  								TAG_DONE);
  
@@ -1861,7 +1870,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  							extern struct MsgPort *safeport,*dispport;
  
  							safeport=CreateMsgPort();
-@@ -1030,7 +1010,8 @@
+@@ -1030,7 +1012,8 @@
  								ok=1;
  								D(bug("Dbuffering enabled!\n"));
  								this->hidden->dbuffer=1;
@@ -1871,7 +1880,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  							}
  						}
  						else {
-@@ -1039,16 +1020,23 @@
+@@ -1039,16 +1022,23 @@
  						}
  					}
  
@@ -1900,7 +1909,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  		D(bug("Setting screen depth to: %ld\n",this->hidden->depth));
  
  		for ( i = 0; i < this->hidden->nvisuals; i++ )
-@@ -1067,29 +1055,20 @@
+@@ -1067,29 +1057,20 @@
  	saved_flags = current->flags;
  
  	if (SDL_Window && (saved_flags&SDL_OPENGL) == (flags&SDL_OPENGL)
@@ -1933,7 +1942,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  	current->flags |= (flags&SDL_RESIZABLE); // Resizable only if the user asked it
  
    done:
-@@ -1135,74 +1114,6 @@
+@@ -1135,74 +1116,6 @@
  	return(1);
  }
  
@@ -2008,7 +2017,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  /* Update the current mouse state and position */
  static void CGX_UpdateMouse(_THIS)
  {
-@@ -1246,12 +1157,10 @@
+@@ -1246,12 +1159,10 @@
  		xcmap[0]=(ncolors<<16);
  		xcmap[0]+=firstcolor;
  
@@ -2024,7 +2033,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  		}
  		xcmap[ncolors*3+1]=0;
  		LoadRGB32(&GFX_Display->ViewPort,xcmap);
-@@ -1266,37 +1175,23 @@
+@@ -1266,37 +1177,23 @@
  
  		if(this->hidden->depth==8)
  		{
