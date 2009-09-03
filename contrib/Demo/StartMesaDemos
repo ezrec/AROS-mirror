@@ -5,13 +5,14 @@ run gears x=720 y=20
 run arbfslight x=0 y=280
 run ray x=600 y=280
 run morph3d x=360 y=20
-delay 200
+delay 400
 run reflect x=600 y=520
-delay 200
+delay 500
 run tunnel x=0 y=520
-delay 100
+delay 500
+stack 768000
 run ipers x=360 y=520
-delay 200
+delay 500
 run teapot x=240 y=280
 cd /
 
