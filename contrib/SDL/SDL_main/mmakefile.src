@@ -10,7 +10,7 @@ SDLVERSION := 1.2.11
 
 %fetch_and_build_gnu_development package=SDL version=$(SDLVERSION) \
     patch=yes package_repo="http://www.libsdl.org/release" \
-    postinstall=development-SDL-config
+    postinstall=development-SDL-config extraoptions="--disable-video-opengl"
 
 #MM
 development-SDL-config : \
@@ -25,3 +25,5 @@ $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-aros-sdl-
 $(AROS_DEVELOPMENT)/bin/sdl-config: $(GENDIR)/$(CURDIR)/SDL/sdl-config
 	%mkdir_q dir=$(AROS_DEVELOPMENT)/bin
 	@$(CP) $< $@
+
+%common
