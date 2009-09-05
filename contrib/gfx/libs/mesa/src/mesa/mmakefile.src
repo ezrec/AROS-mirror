@@ -4,15 +4,17 @@
 #
 include $(TOP)/config/make.cfg
 
+include $(SRCDIR)/$(CURDIR)/sources.mak
+
 #MM contrib-gfx-libs-mesa-mesa-module : includes contrib-gfx-libs-mesa-includes linklibs
 
 #MM contrib-gfx-libs-mesa-mesa-linklib : includes contrib-gfx-libs-mesa-includes
 
-SHAREDLIB_SOURCES = \
+SHARED_LIB_SOURCES = \
             aros_libapi \
             aros_libinit
             
-AROSDRIVER = \
+AROS_DRIVER_SOURCES = \
             drivers/aros/arosmesa \
             drivers/aros/aros_context_functions \
             drivers/aros/aros_driver_functions \
@@ -21,321 +23,11 @@ AROSDRIVER = \
             drivers/aros/aros_swrast_functions \
             drivers/aros/aros_visual_functions
 
-MAIN_SOURCES = \
-            main/api_arrayelt \
-            main/api_exec \
-            main/api_loopback \
-            main/api_noop \
-            main/api_validate \
-            main/accum \
-            main/arrayobj \
-            main/attrib \
-            main/blend \
-            main/bufferobj \
-            main/buffers \
-            main/clear \
-            main/clip \
-            main/colortab \
-            main/context \
-            main/convolve \
-            main/cpuinfo \
-            main/debug \
-            main/depth \
-            main/depthstencil \
-            main/dlist \
-            main/dlopen \
-            main/drawpix \
-            main/enable \
-            main/enums \
-            main/eval \
-            main/execmem \
-            main/extensions \
-            main/fbobject \
-            main/feedback \
-            main/ffvertex_prog \
-            main/fog \
-            main/framebuffer \
-            main/get \
-            main/getstring \
-            main/hash \
-            main/hint \
-            main/histogram \
-            main/image \
-            main/imports \
-            main/light \
-            main/lines \
-            main/matrix \
-            main/mipmap \
-            main/mm \
-            main/multisample \
-            main/pixel \
-            main/pixelstore \
-            main/points \
-            main/polygon \
-            main/queryobj \
-            main/rastpos \
-            main/rbadaptors \
-            main/readpix \
-            main/renderbuffer \
-            main/scissor \
-            main/shaders \
-            main/shared \
-            main/state \
-            main/stencil \
-            main/texcompress \
-            main/texcompress_fxt1 \
-            main/texcompress_s3tc \
-            main/texenv \
-            main/texenvprogram \
-            main/texformat \
-            main/texgen \
-            main/texgetimage \
-            main/teximage \
-            main/texobj \
-            main/texparam \
-            main/texrender \
-            main/texstate \
-            main/texstore \
-            main/varray \
-            main/viewport \
-            main/vtxfmt
-
-GLAPI_SOURCES = \
-            main/dispatch \
-            glapi/glapi \
-            glapi/glapi_getproc \
-            glapi/glthread
-
-MATH_SOURCES = \
-            math/m_debug_clip \
-            math/m_debug_norm \
-            math/m_debug_xform \
-            math/m_eval \
-            math/m_matrix \
-            math/m_translate \
-            math/m_vector
-
-MATH_XFORM_SOURCES = \
-            math/m_xform
-
-SWRAST_SOURCES = \
-            swrast/s_aaline \
-            swrast/s_aatriangle \
-            swrast/s_accum \
-            swrast/s_alpha \
-            swrast/s_atifragshader \
-            swrast/s_bitmap \
-            swrast/s_blend \
-            swrast/s_blit \
-            swrast/s_clear \
-            swrast/s_context \
-            swrast/s_copypix \
-            swrast/s_depth \
-            swrast/s_drawpix \
-            swrast/s_feedback \
-            swrast/s_fog \
-            swrast/s_fragprog \
-            swrast/s_imaging \
-            swrast/s_lines \
-            swrast/s_logic \
-            swrast/s_masking \
-            swrast/s_points \
-            swrast/s_readpix \
-            swrast/s_span \
-            swrast/s_stencil \
-            swrast/s_texcombine \
-            swrast/s_texfilter \
-            swrast/s_texstore \
-            swrast/s_triangle \
-            swrast/s_zoom
-
-SWRAST_SETUP_SOURCES = \
-            swrast_setup/ss_context \
-            swrast_setup/ss_triangle
-
-TNL_SOURCES = \
-            tnl/t_context \
-            tnl/t_draw \
-            tnl/t_pipeline \
-            tnl/t_rasterpos \
-            tnl/t_vb_cull \
-            tnl/t_vb_fog \
-            tnl/t_vb_light \
-            tnl/t_vb_normals \
-            tnl/t_vb_points \
-            tnl/t_vb_program \
-            tnl/t_vb_render \
-            tnl/t_vb_texgen \
-            tnl/t_vb_texmat \
-            tnl/t_vb_vertex \
-            tnl/t_vertex \
-            tnl/t_vertex_generic \
-            tnl/t_vp_build
-
-VBO_SOURCES = \
-            vbo/vbo_context \
-            vbo/vbo_exec \
-            vbo/vbo_exec_api \
-            vbo/vbo_exec_array \
-            vbo/vbo_exec_draw \
-            vbo/vbo_exec_eval \
-            vbo/vbo_rebase \
-            vbo/vbo_save \
-            vbo/vbo_save_api \
-            vbo/vbo_save_draw \
-            vbo/vbo_save_loopback \
-            vbo/vbo_split \
-            vbo/vbo_split_copy \
-            vbo/vbo_split_inplace
-
-SHADER_SOURCES = \
-            shader/arbprogparse \
-            shader/arbprogram \
-            shader/atifragshader \
-            shader/nvfragparse \
-            shader/nvprogram \
-            shader/nvvertparse \
-            shader/prog_cache \
-            shader/prog_execute \
-            shader/prog_instruction \
-            shader/prog_noise \
-            shader/prog_optimize \
-            shader/prog_parameter \
-            shader/prog_print \
-            shader/program \
-            shader/programopt \
-            shader/prog_statevars \
-            shader/prog_uniform \
-            shader/shader_api \
-            shader/grammar/grammar_mesa
-
-SLANG_SOURCES =	\
-            shader/slang/slang_builtin \
-            shader/slang/slang_codegen \
-            shader/slang/slang_compile \
-            shader/slang/slang_compile_function \
-            shader/slang/slang_compile_operation \
-            shader/slang/slang_compile_struct \
-            shader/slang/slang_compile_variable \
-            shader/slang/slang_emit \
-            shader/slang/slang_ir \
-            shader/slang/slang_label \
-            shader/slang/slang_link \
-            shader/slang/slang_log \
-            shader/slang/slang_mem \
-            shader/slang/slang_preprocess \
-            shader/slang/slang_print \
-            shader/slang/slang_simplify \
-            shader/slang/slang_storage \
-            shader/slang/slang_typeinfo \
-            shader/slang/slang_utility \
-            shader/slang/slang_vartable
-
-COMMON_DRIVER_SOURCES = \
-            drivers/common/driverfuncs
-
-OSMESA_DRIVER_SOURCES = \
-            drivers/osmesa/osmesa
-
-STATETRACKER_SOURCES = \
-            state_tracker/st_atom \
-            state_tracker/st_atom_blend \
-            state_tracker/st_atom_clip \
-            state_tracker/st_atom_constbuf \
-            state_tracker/st_atom_depth \
-            state_tracker/st_atom_framebuffer \
-            state_tracker/st_atom_pixeltransfer \
-            state_tracker/st_atom_sampler \
-            state_tracker/st_atom_scissor \
-            state_tracker/st_atom_shader \
-            state_tracker/st_atom_rasterizer \
-            state_tracker/st_atom_stipple \
-            state_tracker/st_atom_texture \
-            state_tracker/st_atom_viewport \
-            state_tracker/st_cb_accum \
-            state_tracker/st_cb_bitmap \
-            state_tracker/st_cb_blit \
-            state_tracker/st_cb_bufferobjects \
-            state_tracker/st_cb_clear \
-            state_tracker/st_cb_flush \
-            state_tracker/st_cb_get \
-            state_tracker/st_cb_drawpixels \
-            state_tracker/st_cb_fbo \
-            state_tracker/st_cb_feedback \
-            state_tracker/st_cb_program \
-            state_tracker/st_cb_queryobj \
-            state_tracker/st_cb_rasterpos \
-            state_tracker/st_cb_readpixels \
-            state_tracker/st_cb_strings \
-            state_tracker/st_cb_texture \
-            state_tracker/st_cb_viewport \
-            state_tracker/st_api \
-            state_tracker/st_context \
-            state_tracker/st_debug \
-            state_tracker/st_draw \
-            state_tracker/st_draw_feedback \
-            state_tracker/st_extensions \
-            state_tracker/st_format \
-            state_tracker/st_framebuffer \
-            state_tracker/st_gen_mipmap \
-            state_tracker/st_mesa_to_tgsi \
-            state_tracker/st_program \
-            state_tracker/st_texture
-
-ARCHEXTRASRCS :=
-
 ifeq ($(AROS_TARGET_CPU), i386)
-#  $(ECHO)  "Mesa: Using i386 optimizations"
-#  TNL_SOURCES = $(TNL_SOURCES) tnl/t_vertex_sse
-#  ASM_C_SOURCES =	$(ASM_C_SOURCES) \
-#              x86/common_x86 \
-#              x86/x86 \
-#              x86/3dnow \
-#              x86/sse \
-#              x86/rtasm/x86sse \
-#              shader/slang/slang_execute_x86
-#  
-#  X86_SOURCES = $(X86_SOURCES) \
-#              x86/common_x86_asm \
-#              x86/x86_xform2 \
-#              x86/x86_xform3 \
-#              x86/x86_xform4 \
-#              x86/x86_cliptest \
-#              x86/mmx_blend \
-#              x86/3dnow_xform1 \
-#              x86/3dnow_xform2 \
-#              x86/3dnow_xform3 \
-#              x86/3dnow_xform4 \
-#              x86/3dnow_normal \
-#              x86/sse_xform1 \
-#              x86/sse_xform2 \
-#              x86/sse_xform3 \
-#              x86/sse_xform4 \
-#              x86/sse_normal \
-#              x86/read_rgba_span_x86 \
-#              tnl/t_vtx_x86_gcc
-# 
-#  X86_API = $(X86_API) \
-#              x86/glapi_x86
-#  
-#  ARCHEXTRASRCS = $(ARCHEXTRASRCS)
-  
   FFIXED = -ffixed-ebx
 endif
 
 ifeq ($(AROS_TARGET_CPU), x86_64)
-#  $(ECHO)  "Mesa: Using X86_64 optimizations"
-#  ASM_C_SOURCES =	$(ASM_C_SOURCES) \
-#              x86-64/x86-64 \
-#  
-#  X86-64_SOURCES = $(X86-64_SOURCES) \
-#              x86-64/xform4
-#  
-#  X86-64_API = $(X86-64_API) \
-#              x86-64/glapi_x86-64
-#  
-#  ARCHEXTRASRCS = $(ARCHEXTRASRCS) $(ASM_C_SOURCES) $(X86-64_SOURCES) $(X86-64_API)
-#  
   FFIXED = -ffixed-rbx
 endif
 
@@ -343,19 +35,10 @@ ifeq ($(AROS_TARGET_CPU), ppc)
   FFIXED = -ffixed-r14
 endif
 
-LIBMESAM = $(COMMON_DRIVER_SOURCES) \
-            $(GLAPI_SOURCES) \
-            $(MAIN_SOURCES) \
-            $(MATH_SOURCES) \
-            $(MATH_XFORM_SOURCES) \
-            $(TNL_SOURCES) \
-            $(VBO_SOURCES) \
-            $(SHADER_SOURCES) \
-            $(SWRAST_SOURCES) \
-            $(SWRAST_SETUP_SOURCES) \
-            $(ARCHEXTRASRCS) \
-            $(SLANG_SOURCES) \
-            $(AROSDRIVER)
+LIB_MESA_SOURCES = \
+            $(MESA_SOURCES:.c=)\
+            $(GLAPI_SOURCES:.c=) \
+            $(AROS_DRIVER_SOURCES)
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../../include \
             -I$(SRCDIR)/$(CURDIR)/ \
@@ -370,12 +53,12 @@ USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../../include \
             -I$(SRCDIR)/$(CURDIR)/tnl
 
 %build_linklib mmake=contrib-gfx-libs-mesa-mesa-linklib libname=GLStatic \
-    files="$(LIBMESAM) arosmesa_getprocaddress" objdir=$(GENDIR)/$(CURDIR)/linklib
+    files="$(LIB_MESA_SOURCES) arosmesa_getprocaddress" objdir=$(GENDIR)/$(CURDIR)/linklib
 
 USER_CFLAGS := -DUSE_MGL_NAMESPACE -DAROS_MESA_SHARED -ffast-math $(FFIXED)
 
 %build_module mmake=contrib-gfx-libs-mesa-mesa-module \
     modname=mesa modtype=library linklibname=GL conffile=arosmesa.conf linklibfiles="arosmesa_getprocaddress" \
-    files="$(SHAREDLIB_SOURCES) $(LIBMESAM)" objdir=$(GENDIR)/$(CURDIR)/module 
+    files="$(SHARED_LIB_SOURCES) $(LIB_MESA_SOURCES)" objdir=$(GENDIR)/$(CURDIR)/module 
 
 %common
