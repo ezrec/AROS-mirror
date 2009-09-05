@@ -5,12 +5,15 @@
 
 #include "aros_swrast_functions.h"
 
-#define FAST_RASTERIZATION 0 /* Set this to 0 to get default MESA rasterization !!!!DOES NOT WORK ANYMORE with 7.5 (was with 7.0.3)!!! */
+#define FAST_RASTERIZATION 0 /* Set this to 0 to get default MESA rasterization */
 
 #include <aros/debug.h>
 #include "swrast/swrast.h"
 
 #if FAST_RASTERIZATION == 1
+
+#define CHAN_PRODUCT(a, b)  ((GLubyte) (((GLint)(a) * ((GLint)(b) + 1)) >> 8))
+
 
 #include "swrast/s_context.h"
 
@@ -27,7 +30,7 @@
 
 #define SETUP_CODE							\
    struct gl_renderbuffer *rb = GET_GL_RB_PTR(GET_AROS_CTX_PTR(ctx)->renderbuffer);\
-   struct gl_texture_object *obj = ctx->Texture.Unit[0].Current2D;	\
+   struct gl_texture_object *obj = ctx->Texture.Unit[0].CurrentTex[TEXTURE_2D_INDEX];	\
    const GLint b = obj->BaseLevel;					\
    const GLfloat twidth = (GLfloat) obj->Image[0][b]->Width;		\
    const GLfloat theight = (GLfloat) obj->Image[0][b]->Height;		\
@@ -75,7 +78,7 @@
 
 #define SETUP_CODE							\
    struct gl_renderbuffer *rb = GET_GL_RB_PTR(GET_AROS_CTX_PTR(ctx)->renderbuffer);\
-   struct gl_texture_object *obj = ctx->Texture.Unit[0].Current2D;	\
+   struct gl_texture_object *obj = ctx->Texture.Unit[0].CurrentTex[TEXTURE_2D_INDEX];	\
    const GLint b = obj->BaseLevel;					\
    const GLfloat twidth = (GLfloat) obj->Image[0][b]->Width;		\
    const GLfloat theight = (GLfloat) obj->Image[0][b]->Height;		\
