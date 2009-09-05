@@ -9,6 +9,8 @@ SDLVERSION := 1.2.11
 # libSDLGL is identical as libSDL but it has support for OpenGL enabled
 # For applications requiring SDL but not GL, use libSDL
 
+#MM- contrib-sdl : development-SDLGL
+
 #MM development-SDLGL : development-SDL
 
 %build_with_configure mmake=development-SDLGL package=SDL srcdir=$(PORTSDIR)/SDL/SDL-$(SDLVERSION) \

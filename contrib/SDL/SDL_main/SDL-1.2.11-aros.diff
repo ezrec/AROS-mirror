@@ -1,6 +1,6 @@
 diff -ruN SDL-1.2.11/configure SDL-1.2.11-aros/configure
 --- SDL-1.2.11/configure	2006-06-27 06:48:54.000000000 +0200
-+++ SDL-1.2.11-aros/configure	2009-09-04 20:51:02.000000000 +0200
++++ SDL-1.2.11-aros/configure	2009-09-05 12:21:30.000000000 +0200
 @@ -485,6 +485,7 @@
  verbose=
  x_includes=NONE
@@ -30,12 +30,21 @@ diff -ruN SDL-1.2.11/configure SDL-1.2.11-aros/configure
  SOURCES="$SOURCES $srcdir/src/timer/*.c"
  SOURCES="$SOURCES $srcdir/src/video/*.c"
  
-@@ -33095,6 +33101,53 @@
+@@ -33095,6 +33101,62 @@
          # The RISC OS platform requires special setup.
          EXTRA_LDFLAGS="$EXTRA_LDFLAGS -ljpeg -ltiff -lpng -lz"
          ;;
 +    *-aros)
 +        ARCH=amigaos
++        # Set up files for the audio library
++        if test x$enable_audio = xyes; then
++            cat >>confdefs.h <<\_ACEOF
++#define SDL_AUDIO_DRIVER_AHI 1
++_ACEOF
++
++            SOURCES="$SOURCES $srcdir/src/audio/amigaos/*.c"
++            have_audio=yes
++        fi
 +        # Set up files for the video library
 +        if test x$enable_video = xyes; then
 +            cat >>confdefs.h <<\_ACEOF
@@ -84,7 +93,7 @@ diff -ruN SDL-1.2.11/configure SDL-1.2.11-aros/configure
      *)
          { { echo "$as_me:$LINENO: error:
  *** Unsupported host:  Please add to configure.in
-@@ -33933,6 +33986,7 @@
+@@ -33933,6 +33995,7 @@
  s,@ENABLE_STATIC_FALSE@,$ENABLE_STATIC_FALSE,;t t
  s,@ac_aux_dir@,$ac_aux_dir,;t t
  s,@INCLUDE@,$INCLUDE,;t t
@@ -148,9 +157,36 @@ diff -ruN SDL-1.2.11/Makefile.in SDL-1.2.11-aros/Makefile.in
  	rm -f $(libdir)/$(SDLMAIN_TARGET)
  uninstall-data:
  	rm -f $(datadir)/aclocal/sdl.m4
+diff -ruN SDL-1.2.11/src/audio/amigaos/mydebug.h SDL-1.2.11-aros/src/audio/amigaos/mydebug.h
+--- SDL-1.2.11/src/audio/amigaos/mydebug.h	1970-01-01 01:00:00.000000000 +0100
++++ SDL-1.2.11-aros/src/audio/amigaos/mydebug.h	2009-09-05 13:08:14.000000000 +0200
+@@ -0,0 +1,14 @@
++#ifndef MYDEBUG
++
++#ifndef NO_AMIGADEBUG
++#define D(x) x
++#define bug kprintf
++extern void kprintf(const char *,...);
++#else
++#define D(x)
++#endif
++
++#define MAKE_HIT() {char *a=NULL,b;b=*a;}
++
++#define MYDEBUG
++#endif
 diff -ruN SDL-1.2.11/src/audio/amigaos/SDL_ahiaudio.c SDL-1.2.11-aros/src/audio/amigaos/SDL_ahiaudio.c
 --- SDL-1.2.11/src/audio/amigaos/SDL_ahiaudio.c	2006-05-01 10:02:41.000000000 +0200
-+++ SDL-1.2.11-aros/src/audio/amigaos/SDL_ahiaudio.c	2009-09-03 22:29:45.000000000 +0200
++++ SDL-1.2.11-aros/src/audio/amigaos/SDL_ahiaudio.c	2009-09-05 14:43:49.000000000 +0200
+@@ -114,7 +114,7 @@
+ }
+ 
+ AudioBootStrap AHI_bootstrap = {
+-	"AHI", Audio_Available, Audio_CreateDevice
++	"AHI", "AHI SDL driver", Audio_Available, Audio_CreateDevice
+ };
+ 
+ 
 @@ -240,7 +240,11 @@
  
  		case 16: { /* Signed 16 bit audio data */
@@ -165,16 +201,27 @@ diff -ruN SDL-1.2.11/src/audio/amigaos/SDL_ahiaudio.c SDL-1.2.11-aros/src/audio/
  				this->hidden->type = AHIST_M16S;
 diff -ruN SDL-1.2.11/src/audio/amigaos/SDL_ahiaudio.h SDL-1.2.11-aros/src/audio/amigaos/SDL_ahiaudio.h
 --- SDL-1.2.11/src/audio/amigaos/SDL_ahiaudio.h	2006-05-01 10:02:41.000000000 +0200
-+++ SDL-1.2.11-aros/src/audio/amigaos/SDL_ahiaudio.h	2009-09-03 22:29:45.000000000 +0200
++++ SDL-1.2.11-aros/src/audio/amigaos/SDL_ahiaudio.h	2009-09-05 15:27:28.000000000 +0200
 @@ -26,7 +26,7 @@
  
  #include <exec/exec.h>
  #include <dos/dos.h>
 -#ifdef __SASC
-+#ifdef __SASC || defined(__AROS__)
++#if defined(__SASC) || defined(__AROS__)
  #include <proto/exec.h>
  #else
  #include <inline/exec.h>
+diff -ruN SDL-1.2.11/src/audio/SDL_audio.c SDL-1.2.11-aros/src/audio/SDL_audio.c
+--- SDL-1.2.11/src/audio/SDL_audio.c	2006-05-09 10:47:05.000000000 +0200
++++ SDL-1.2.11-aros/src/audio/SDL_audio.c	2009-09-05 14:39:28.000000000 +0200
+@@ -116,6 +116,7 @@
+ void SDL_AudioQuit(void);
+ 
+ #if SDL_AUDIO_DRIVER_AHI
++#include "amigaos/mydebug.h"
+ static int audio_configured = 0;
+ #endif
+ 
 diff -ruN SDL-1.2.11/src/joystick/amigaos/mydebug.h SDL-1.2.11-aros/src/joystick/amigaos/mydebug.h
 --- SDL-1.2.11/src/joystick/amigaos/mydebug.h	1970-01-01 01:00:00.000000000 +0100
 +++ SDL-1.2.11-aros/src/joystick/amigaos/mydebug.h	2009-09-03 22:29:45.000000000 +0200
@@ -762,8 +809,8 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_amigaevents.c SDL-1.2.11-aros/src/vi
  #endif
 diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxgl.c SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxgl.c
 --- SDL-1.2.11/src/video/cybergfx/SDL_cgxgl.c	2006-05-01 10:02:46.000000000 +0200
-+++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxgl.c	2009-09-03 22:29:45.000000000 +0200
-@@ -21,13 +21,13 @@
++++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxgl.c	2009-09-05 07:15:27.000000000 +0200
+@@ -21,32 +21,32 @@
  */
  #include "SDL_config.h"
  
@@ -779,20 +826,68 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxgl.c SDL-1.2.11-aros/src/video/cy
  #endif
  
  /* Init OpenGL */
-@@ -64,6 +64,7 @@
+ int CGX_GL_Init(_THIS)
+ {
+ #if SDL_VIDEO_OPENGL
+-   int i = 0;
++	LONG i = 0;
+ 	struct TagItem attributes [ 14 ]; /* 14 should be more than enough :) */
+-   struct Window *win = (struct Window *)SDL_Window;
++	struct Window *win = (struct Window *)SDL_Window;
+ 
+-	// default config. Always used...
++	/* default config. Always used... */
+ 	attributes[i].ti_Tag = AMA_Window;	attributes[i++].ti_Data = (unsigned long)win;
+ 	attributes[i].ti_Tag = AMA_Left;		attributes[i++].ti_Data = 0;
+ 	attributes[i].ti_Tag = AMA_Bottom;	attributes[i++].ti_Data = 0;
+ 	attributes[i].ti_Tag = AMA_Width;	attributes[i++].ti_Data = win->Width-win->BorderLeft-win->BorderRight;
+ 	attributes[i].ti_Tag = AMA_Height;	attributes[i++].ti_Data = win->Height-win->BorderBottom-win->BorderTop;
+-	attributes[i].ti_Tag = AMA_DirectRender; attributes[i++].ti_Data = GL_TRUE;
++	/* attributes[i].ti_Tag = AMA_DirectRender; attributes[i++].ti_Data = GL_TRUE; */ /*NOT SUPPORTED */
+ 
+-	// double buffer ?
++	/* double buffer ? */
+ 	attributes[i].ti_Tag = AMA_DoubleBuf;
+ 	if ( this->gl_config.double_buffer ) {
+ 		attributes[i++].ti_Data = GL_TRUE;
+@@ -54,7 +54,8 @@
  	else {
  		attributes[i++].ti_Data = GL_FALSE;
  	}
+-	// RGB(A) Mode ?
++	
++	/* RGB(A) Mode ? */
+ 	attributes[i].ti_Tag = AMA_RGBMode;
+ 	if ( this->gl_config.red_size   != 0 &&
+ 	     this->gl_config.blue_size  != 0 &&
+@@ -64,27 +65,29 @@
+ 	else {
+ 		attributes[i++].ti_Data = GL_FALSE;
+ 	}
+-	// no depth buffer ?
 +    
- 	// no depth buffer ?
++	/* no depth buffer ? */
  	if ( this->gl_config.depth_size == 0 ) {
  		attributes[i].ti_Tag = AMA_NoDepth;
-@@ -81,10 +82,11 @@
+ 		attributes[i++].ti_Data = GL_TRUE;
+ 	}
+-	// no stencil buffer ?
++	/* no stencil buffer ? */
+ 	if ( this->gl_config.stencil_size == 0 ) {
+ 		attributes[i].ti_Tag = AMA_NoStencil;
+ 		attributes[i++].ti_Data = GL_TRUE;
+ 	}
+-	// no accum buffer ?
++	/* no accum buffer ? */
+ 	if ( this->gl_config.accum_red_size   != 0 &&
+ 	     this->gl_config.accum_blue_size  != 0 &&
+ 	     this->gl_config.accum_green_size != 0 ) {
  		attributes[i].ti_Tag = AMA_NoAccum;
  		attributes[i++].ti_Data = GL_TRUE;
  	}
+-	// done...
 +    
- 	// done...
++	/* done */
  	attributes[i].ti_Tag	= TAG_DONE;
  
 -	glcont = AmigaMesaCreateContext(attributes);
@@ -800,7 +895,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxgl.c SDL-1.2.11-aros/src/video/cy
  	if ( glcont == NULL ) {
  		SDL_SetError("Couldn't create OpenGL context");
  		return(-1);
-@@ -104,7 +106,7 @@
+@@ -104,7 +107,7 @@
  {
  #if SDL_VIDEO_OPENGL
  	if ( glcont != NULL ) {
@@ -809,18 +904,18 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxgl.c SDL-1.2.11-aros/src/video/cy
  		glcont = NULL;
  		this->gl_data->gl_active = 0;
  		this->gl_config.driver_loaded = 0;
-@@ -124,7 +126,9 @@
+@@ -124,7 +127,9 @@
  	tags[0].ti_Tag = AMA_Window;
  	tags[0].ti_Data = (unsigned long)win;
  	tags[1].ti_Tag = TAG_DONE;
 -	AmigaMesaSetRast(glcont, tags);
 +    
-+    /* AROSMesa 7.0.3 does not support this */
++    /* AROSMesa does not support this */
 +    //AROSMesaSetRast(glcont, tags);
  
  	return 0;
  #else
-@@ -141,13 +145,13 @@
+@@ -141,13 +146,13 @@
  	if(glcont == NULL)
  		return -1;
  
@@ -836,20 +931,27 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxgl.c SDL-1.2.11-aros/src/video/cy
  }
  
  int CGX_GL_GetAttribute(_THIS, SDL_GLattr attrib, int* value) {
-@@ -191,7 +195,8 @@
+@@ -191,13 +196,14 @@
  			return -1;
  	}
  
 -	AmigaMesaGetConfig(glcont->visual, mesa_attrib, value);
-+    /* AROSMesa 7.0.3 does not support this */
++    /* AROSMesa does not support this */
 +	//AROSMesaGetConfig(glcont->visual, mesa_attrib, value);
  	return 0;
  }
  
+ void *CGX_GL_GetProcAddress(_THIS, const char *proc) {
+ 	void *func = NULL;
+-	func = AmiGetGLProc(proc);
++	func = AROSMesaGetProcAddress(proc);
+ 	return func;
+ }
+ 
 diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxgl_c.h SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxgl_c.h
 --- SDL-1.2.11/src/video/cybergfx/SDL_cgxgl_c.h	2006-05-01 10:02:46.000000000 +0200
-+++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxgl_c.h	2009-09-03 22:29:45.000000000 +0200
-@@ -21,14 +21,14 @@
++++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxgl_c.h	2009-09-05 07:07:12.000000000 +0200
+@@ -21,15 +21,14 @@
  */
  #include "SDL_config.h"
  
@@ -862,10 +964,11 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxgl_c.h SDL-1.2.11-aros/src/video/
  
  #if SDL_VIDEO_OPENGL
 -#include <GL/Amigamesa.h>
-+#include <GL/AROSMesa.h> /* Requires AROSMesa 7.0.3 port header */
- extern void *AmiGetGLProc(const char *proc);
+-extern void *AmiGetGLProc(const char *proc);
++#include <GL/arosmesa.h>
  #endif /* SDL_VIDEO_OPENGL */
  
+ struct SDL_PrivateGLData {
 diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgximage.c SDL-1.2.11-aros/src/video/cybergfx/SDL_cgximage.c
 --- SDL-1.2.11/src/video/cybergfx/SDL_cgximage.c	2006-05-01 10:02:46.000000000 +0200
 +++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgximage.c	2009-09-03 22:29:45.000000000 +0200
