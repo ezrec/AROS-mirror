@@ -25,7 +25,7 @@ AROSMesaVisual aros_new_visual(struct TagItem *tagList)
     if (!aros_vis)
         return NULL;
 
-    vis = GET_GL_FB_PTR(aros_vis);
+    vis = GET_GL_VIS_PTR(aros_vis);
 
     /* Create core visual with default values */
     depthBits = DEFAULT_SOFTWARE_DEPTH_BITS;

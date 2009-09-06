@@ -99,6 +99,6 @@ struct arosmesa_context
 /* typedef struct arosmesa_context * AROSMesaContext; */ /* Defined in AROSMesa.h */
 
 #define GET_GL_CTX_PTR(arosmesa_ctx) (&arosmesa_ctx->Base)
-#define GET_AROS_CTX_PTR(gl_ctx) ((AROSMesaContext)gl_ctx)
+#define GET_AROS_CTX_PTR(gl_ctx) ((AROSMesaContext)gl_ctx) /* FIXME: Should be gl_ctx->DriverCtx? */
 
 #endif /* AROSMESA_INTERN_H */
