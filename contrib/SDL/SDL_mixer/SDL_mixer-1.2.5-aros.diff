@@ -1,6 +1,6 @@
-diff -rNu SDL_mixer-1.2.5/config.sub SDL_mixer-1.2.5-aros/config.sub
+diff -ruN SDL_mixer-1.2.5/config.sub SDL_mixer-1.2.5-aros/config.sub
 --- SDL_mixer-1.2.5/config.sub	2001-01-17 18:17:40.000000000 +0100
-+++ SDL_mixer-1.2.5-aros/config.sub	2004-09-01 04:57:45.308027136 +0200
++++ SDL_mixer-1.2.5-aros/config.sub	2003-03-07 07:29:16.000000000 +0100
 @@ -1,9 +1,9 @@
  #! /bin/sh
  # Configuration validation subroutine script.
@@ -708,9 +708,9 @@ diff -rNu SDL_mixer-1.2.5/config.sub SDL_mixer-1.2.5-aros/config.sub
  		esac
  		basic_machine=`echo $basic_machine | sed "s/unknown/$vendor/"`
  		;;
-diff -rNu SDL_mixer-1.2.5/music.c SDL_mixer-1.2.5-aros/music.c
+diff -ruN SDL_mixer-1.2.5/music.c SDL_mixer-1.2.5-aros/music.c
 --- SDL_mixer-1.2.5/music.c	2003-02-12 06:07:12.000000000 +0100
-+++ SDL_mixer-1.2.5-aros/music.c	2004-09-01 04:50:17.802271512 +0200
++++ SDL_mixer-1.2.5-aros/music.c	2003-03-07 07:29:16.000000000 +0100
 @@ -32,6 +32,10 @@
  #include "SDL_mixer.h"
  
@@ -722,9 +722,9 @@ diff -rNu SDL_mixer-1.2.5/music.c SDL_mixer-1.2.5-aros/music.c
  #ifndef unix
  #undef CMD_MUSIC
  #endif
-diff -rNu SDL_mixer-1.2.5/music_cmd.c SDL_mixer-1.2.5-aros/music_cmd.c
+diff -ruN SDL_mixer-1.2.5/music_cmd.c SDL_mixer-1.2.5-aros/music_cmd.c
 --- SDL_mixer-1.2.5/music_cmd.c	2001-12-20 01:01:30.000000000 +0100
-+++ SDL_mixer-1.2.5-aros/music_cmd.c	2004-09-01 04:48:04.167587072 +0200
++++ SDL_mixer-1.2.5-aros/music_cmd.c	2003-03-07 07:29:16.000000000 +0100
 @@ -24,7 +24,7 @@
  
  /* This file supports an external command for playing music */
@@ -734,3 +734,15 @@ diff -rNu SDL_mixer-1.2.5/music_cmd.c SDL_mixer-1.2.5-aros/music_cmd.c
  
  #include <sys/types.h>
  #include <sys/wait.h>
+diff -ruN SDL_mixer-1.2.5/timidity/config.h SDL_mixer-1.2.5-aros/timidity/config.h
+--- SDL_mixer-1.2.5/timidity/config.h	2001-03-14 09:42:58.000000000 +0100
++++ SDL_mixer-1.2.5-aros/timidity/config.h	2009-09-06 09:15:16.000000000 +0200
+@@ -209,6 +209,8 @@
+ #define CONFIG_FILE	"timidity.cfg"
+ #ifdef __WIN32__
+ #define DEFAULT_PATH	"\\TIMIDITY"
++#elif __AROS__
++#define DEFAULT_PATH    "PROGDIR:"
+ #else
+ #define DEFAULT_PATH	"/usr/local/lib/timidity"
+ #endif
