@@ -83,8 +83,55 @@ static AROSMesaVisual aros_new_visual(struct TagItem *tagList)
 
 
 
+/*****************************************************************************/
+/*                             HACKS                                         */
+/*****************************************************************************/
 
+#include "pipe/internal/p_winsys_screen.h"
+#include "softpipe/sp_winsys.h"
+#include "state_tracker/st_public.h"
+#include "pipe/p_context.h"
 
+static void hack_initialize_gallium_structures(AROSMesaContext amesa)
+{
+    /* THIS FUNCTION IS A HACK TO GET FIRST VERSION OF CODE */
+    /* ALL THIS SHOULD BE DONE IN WIN_SYS NOT IN STATE_TRACKER */
+    /* SEE Xlib state_tracker/win_sys for proper implementation */
+    
+    struct pipe_winsys * ws = NULL;
+    struct pipe_screen * screen = NULL;
+    struct pipe_context * pipe = NULL;
+    
+    ws = (struct pipe_winsys *)AllocVec(sizeof(struct pipe_winsys), MEMF_PUBLIC|MEMF_CLEAR);
+    
+    /* FIXME: Attach winsys_functions */
+    
+    /*
+          ws->base.buffer_create = xm_buffer_create;
+      ws->base.user_buffer_create = xm_user_buffer_create;
+      ws->base.buffer_map = xm_buffer_map;
+      ws->base.buffer_unmap = xm_buffer_unmap;
+      ws->base.buffer_destroy = xm_buffer_destroy;
+
+      ws->base.surface_buffer_create = xm_surface_buffer_create;
+
+      ws->base.fence_reference = xm_fence_reference;
+      ws->base.fence_signalled = xm_fence_signalled;
+      ws->base.fence_finish = xm_fence_finish;
+
+      ws->base.flush_frontbuffer = xm_flush_frontbuffer;
+      ws->base.get_name = xm_get_name;*/
+    
+    screen = softpipe_create_screen(ws);
+    
+    pipe = softpipe_create(screen);
+    
+    pipe->priv = (void *)amesa;
+    
+    amesa->st = st_create_context(pipe, NULL, /*GET_GL_VIS_PTR(amesa->visual),*/ NULL);
+    
+    /* NO ERROR CHECKING - THIS IS JUST A HACK */
+}
 
 
 
@@ -135,6 +182,10 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
         /* LastError = AMESA_OUT_OF_MEM; */ /* FIXME: verify usage of LastError - should it be part of AROSMesaContext ? */
         return NULL;
     }
+    
+    /* FIXME: This is only hack of initilization. See Xlib state_tracker for proper initilization */
+    hack_initialize_gallium_structures(amesa);
+    
     
     return amesa;
 }

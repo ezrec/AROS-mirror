@@ -16,8 +16,10 @@ EXEDIR      := $(AROSDIR)/Tests
     targetdir=$(EXEDIR) \
     files="$(FILES)" uselibs="GL"
 
+# deadwood: I don't know why this hack with ldflags is needed, but without it I get unresolved symbols
+
 %build_prog mmake=mesa-tests-gallium progname="gallium" \
-    targetdir=$(EXEDIR) \
+    targetdir=$(EXEDIR) ldflags="$(LDFLAGS) $(GENDIR)/contrib/gfx/libs/mesa/src/mesa/gallium-linklib/st_context.o" \
     files="mesasimplerendering" uselibs="GLGalliumStatic AROSGalliumStatic"
     
 %common
