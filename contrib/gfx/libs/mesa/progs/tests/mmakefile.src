@@ -8,10 +8,16 @@ FILES 	    :=  mesasimplerendering \
                 
 EXEDIR      := $(AROSDIR)/Tests
 
-#MM- contrib-gfx-libs-mesa-tests : contrib-gfx-libs-mesa-includes includes contrib-gfx-libs-mesa-mesa-shared
+#MM- contrib-gfx-libs-mesa-tests : contrib-gfx-libs-mesa-includes includes contrib-gfx-libs-mesa-mesa-module
+
+#MM- mesa-tests-gallium : contrib-gfx-libs-mesa-includes includes
 
 %build_progs mmake=contrib-gfx-libs-mesa-tests \
     targetdir=$(EXEDIR) \
     files="$(FILES)" uselibs="GL"
 
+%build_prog mmake=mesa-tests-gallium progname="gallium" \
+    targetdir=$(EXEDIR) \
+    files="mesasimplerendering" uselibs="GLGalliumStatic AROSGalliumStatic"
+    
 %common

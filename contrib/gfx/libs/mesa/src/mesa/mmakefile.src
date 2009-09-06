@@ -10,6 +10,8 @@ include $(SRCDIR)/$(CURDIR)/sources.mak
 
 #MM contrib-gfx-libs-mesa-mesa-linklib : includes contrib-gfx-libs-mesa-includes
 
+#MM mesa-mesa-gallium-linklib : includes contrib-gfx-libs-mesa-includes
+
 SHARED_LIB_SOURCES = \
             aros_libapi \
             aros_libinit
@@ -39,6 +41,10 @@ LIB_MESA_SOURCES = \
             $(MESA_SOURCES:.c=)\
             $(GLAPI_SOURCES:.c=) \
             $(AROS_DRIVER_SOURCES)
+            
+LIB_MESA_GALLIUM_SOURCES = \
+            $(MESA_GALLIUM_SOURCES:.c=)\
+            $(GLAPI_SOURCES:.c=)\
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../../include \
             -I$(SRCDIR)/$(CURDIR)/ \
@@ -50,10 +56,15 @@ USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../../include \
             -I$(SRCDIR)/$(CURDIR)/shader/slang \
             -I$(SRCDIR)/$(CURDIR)/shader/grammar \
             -I$(SRCDIR)/$(CURDIR)/swrast \
-            -I$(SRCDIR)/$(CURDIR)/tnl
+            -I$(SRCDIR)/$(CURDIR)/tnl \
+            -I$(SRCDIR)/$(CURDIR)/../gallium/include \
+            -I$(SRCDIR)/$(CURDIR)/../gallium/auxiliary \
 
 %build_linklib mmake=contrib-gfx-libs-mesa-mesa-linklib libname=GLStatic \
     files="$(LIB_MESA_SOURCES) arosmesa_getprocaddress" objdir=$(GENDIR)/$(CURDIR)/linklib
+
+%build_linklib mmake=mesa-mesa-gallium-linklib libname=GLGalliumStatic \
+    files="$(LIB_MESA_GALLIUM_SOURCES) arosmesa_getprocaddress" objdir=$(GENDIR)/$(CURDIR)/gallium-linklib
 
 USER_CFLAGS := -DUSE_MGL_NAMESPACE -DAROS_MESA_SHARED -ffast-math $(FFIXED)
 

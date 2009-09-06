@@ -1,0 +1,32 @@
+#   $Id$
+#
+include $(TOP)/config/make.cfg
+
+
+#MM mesa-aros-gallium-linklib : includes contrib-gfx-libs-mesa-includes
+
+AROS_GALLIUM_SOURCES = \
+            state_trackers/aros/arosmesa_api \
+
+ifeq ($(AROS_TARGET_CPU), i386)
+  FFIXED = -ffixed-ebx
+endif
+
+ifeq ($(AROS_TARGET_CPU), x86_64)
+  FFIXED = -ffixed-rbx
+endif
+
+ifeq ($(AROS_TARGET_CPU), ppc)
+  FFIXED = -ffixed-r14
+endif
+
+USER_INCLUDES := \
+            -I$(SRCDIR)/$(CURDIR)/../../include \
+            -I$(SRCDIR)/$(CURDIR)/../mesa \
+            -I$(SRCDIR)/$(CURDIR)/include \
+            -I$(SRCDIR)/$(CURDIR)/auxiliary \
+
+%build_linklib mmake=mesa-aros-gallium-linklib libname=AROSGalliumStatic \
+    files="$(AROS_GALLIUM_SOURCES)"
+
+%common
