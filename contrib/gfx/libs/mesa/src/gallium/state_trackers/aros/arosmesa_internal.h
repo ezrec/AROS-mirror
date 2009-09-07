@@ -11,6 +11,21 @@
 
 #include <GL/arosmesa.h>
 
+extern struct Library * AROSMesaCyberGfxBase;
+#define CyberGfxBase AROSMesaCyberGfxBase
+
+/* AROS frame buffer */
+struct arosmesa_framebuffer
+{
+    struct st_framebuffer *stfb;                    /* Base class - must be first */
+};
+
+typedef struct arosmesa_framebuffer * AROSMesaFrameBuffer;
+
+#define GET_GL_FB_PTR(arosmesa_fb) (&arosmesa_fb->stfb->Base)
+#define GET_AROS_FB_PTR(gl_fb) ((AROSMesaFrameBuffer)gl_fb)
+
+
 /* AROS visual */
 struct arosmesa_visual
 {
@@ -27,6 +42,14 @@ struct arosmesa_context
 {
     struct st_context *     st;                     /* Base class - must be first */
     AROSMesaVisual          visual;                 /* the visual context */
+    AROSMesaFrameBuffer     framebuffer;
+    
+    /* FIXME: shouldn't this be part of frame buffer? */
+    struct Window           *window;                /* Intuition window */
+    struct Screen           *screen;                /* Current screen*/
+    
+    /* Rastport 'visible' to user (window rasport, screen rastport)*/
+    struct RastPort         *visible_rp;       
 };
 
 #define GET_GL_CTX_PTR(arosmesa_ctx) (&arosmesa_ctx->st->Ctx)

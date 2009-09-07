@@ -78,11 +78,15 @@
  */
 
 #if defined(__i386__) /* gcc */ || defined(_M_IX86) /* msvc */ || defined(_X86_) || defined(__386__) || defined(i386) || defined(__i386) /* Sun cc */
+#ifndef __AROS__ /* FIXME: AROS should use this and SSE as well - needs support for SSE in hosted kernel */
 #define PIPE_ARCH_X86
+#endif
 #endif
 
 #if defined(__x86_64__) /* gcc */ || defined(_M_X64) /* msvc */ || defined(_M_AMD64) /* msvc */ || defined(__x86_64) /* Sun cc */
+#ifndef __AROS__ /* FIXME: AROS should use this and SSE as well - needs support for SSE in hosted kernel */
 #define PIPE_ARCH_X86_64
+#endif
 #endif
 
 #if defined(PIPE_ARCH_X86) || defined(PIPE_ARCH_X86_64)
