@@ -49,10 +49,19 @@ struct arosmesa_context
     struct Screen           *screen;                /* Current screen*/
     
     /* Rastport 'visible' to user (window rasport, screen rastport)*/
-    struct RastPort         *visible_rp;       
+    struct RastPort         *visible_rp;
+    /* Rastport dimentions */
+    GLuint                  visible_rp_width;       /* the rastport drawing area full size*/
+    GLuint                  visible_rp_height;      /* the rastport drawing area full size*/
+
+    /* Buffer information */
+    GLuint                  depth;                  /* bits per pixel (1, 8, 24, etc) */
+    GLuint                  width, height;          /* drawable area on rastport defined by borders */
+    GLuint                  top, bottom;            /* offsets due to window border */
+    GLuint                  left, right;            /* offsets due to window border */    
 };
 
-#define GET_GL_CTX_PTR(arosmesa_ctx) (&arosmesa_ctx->st->Ctx)
+#define GET_GL_CTX_PTR(arosmesa_ctx) (arosmesa_ctx->st->ctx)
 #define GET_AROS_CTX_PTR(gl_ctx) ((AROSMesaContext)gl_ctx->DriverCtx)
 
 #endif /* AROSMESA_INTERNAL_H */

@@ -15,6 +15,8 @@
 
 #include <proto/cybergraphics.h>
 #include <cybergraphx/cybergraphics.h>
+#include <proto/graphics.h>
+#include <graphics/rpattr.h>
 
 struct Library * AROSMesaCyberGfxBase = NULL;    /* Base address for cybergfx */
 
@@ -85,7 +87,7 @@ static AROSMesaVisual aros_new_visual(struct TagItem *tagList)
                                 accumBits,
                                 accumBits,
                                 alphaBits ? accumBits : 0,
-                                1)) /* FIXME: xlib code passes 0 - verify */
+                                1)) /* FIXME: xlib state_tracker code passes 0 - verify */
     {
         _aros_destroy_visual(aros_vis);
         return NULL;
@@ -94,11 +96,10 @@ static AROSMesaVisual aros_new_visual(struct TagItem *tagList)
     return aros_vis;
 }
 
-static AROSMesaFrameBuffer aros_new_framebuffer(AROSMesaVisual visual)
+static AROSMesaFrameBuffer aros_new_framebuffer(AROSMesaContext amesa, AROSMesaVisual visual)
 {
     AROSMesaFrameBuffer aros_fb = NULL;
     enum pipe_format colorFormat, depthFormat, stencilFormat;
-    ULONG width, height;
 
     D(bug("[AROSMESA] aros_new_framebuffer\n"));
 
@@ -109,18 +110,15 @@ static AROSMesaFrameBuffer aros_new_framebuffer(AROSMesaVisual visual)
         return NULL;
 
     /* FIXME: calculate formats based on visual */
-    colorFormat = PIPE_FORMAT_A8R8G8B8_UNORM;
+    colorFormat = PIPE_FORMAT_A8R8G8B8_UNORM; /* FIXME: Color format should match AROS native format */
     depthFormat = PIPE_FORMAT_Z16_UNORM;
     stencilFormat = PIPE_FORMAT_S8_UNORM;
     
     
-    /* FIXME: calcula width/height from rastport */
-    width = 300; height = 300;
-    
-    /* Create framebuffer, but we'll plug in our own renderbuffers below. */
+    /* Create framebuffer */
     aros_fb->stfb = st_create_framebuffer(GET_GL_VIS_PTR(visual),
                                     colorFormat, depthFormat, stencilFormat,
-                                    width, height,
+                                    amesa->width, amesa->height,
                                     (void *) aros_fb);    
     
     
@@ -184,7 +182,151 @@ aros_select_rastport(AROSMesaContext amesa, struct TagItem * tagList)
     D(bug("[AROSMESA] aros_select_rastport: Using RastPort @ %x\n", amesa->visible_rp));
 }
 
+static GLboolean
+_aros_recalculate_buffer_width_height(GLcontext *ctx)
+{
+    AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
+    
+    GLsizei newwidth = 0;
+    GLsizei newheight = 0;
+    
+    D(bug("[AROSMESA] _aros_recalculate_width_height\n"));
+    
+    
+    amesa->visible_rp_width = 
+        amesa->visible_rp->Layer->bounds.MaxX - amesa->visible_rp->Layer->bounds.MinX + 1;
 
+    amesa->visible_rp_height = 
+        amesa->visible_rp->Layer->bounds.MaxY - amesa->visible_rp->Layer->bounds.MinY + 1;
+
+
+    newwidth = amesa->visible_rp_width - amesa->left - amesa->right;
+    newheight = amesa->visible_rp_height - amesa->top - amesa->bottom;
+    
+    if (newwidth < 0) newwidth = 0;
+    if (newheight < 0) newheight = 0;
+    
+    
+    if ((newwidth != amesa->width) || (newheight != amesa->height))
+    {
+        /* The drawing area size has changed. Buffer must change */
+        D(bug("[AROSMESA] _aros_recalculate_width_height: current height    =   %d\n", amesa->height));
+        D(bug("[AROSMESA] _aros_recalculate_width_height: current width     =   %d\n", amesa->width));
+        D(bug("[AROSMESA] _aros_recalculate_width_height: new height        =   %d\n", newheight));
+        D(bug("[AROSMESA] _aros_recalculate_width_height: new width         =   %d\n", newwidth));
+        
+        amesa->width = newwidth;
+        amesa->height = newheight;
+        
+        if (amesa->window)
+        {
+            struct Rectangle rastcliprect;
+            struct TagItem crptags[] =
+            {
+                { RPTAG_ClipRectangle      , (IPTR)&rastcliprect },
+                { RPTAG_ClipRectangleFlags , (RPCRF_RELRIGHT | RPCRF_RELBOTTOM) },
+                { TAG_DONE }
+            };
+        
+            D(bug("[AROSMESA] _aros_recalculate_width_height: Clipping Rastport to Window's dimensions\n"));
+
+            /* Clip the rastport to the visible area */
+            rastcliprect.MinX = amesa->left;
+            rastcliprect.MinY = amesa->top;
+            rastcliprect.MaxX = amesa->left + amesa->width;
+            rastcliprect.MaxY = amesa->top + amesa->height;
+            SetRPAttrsA(amesa->visible_rp, crptags);
+        }
+        
+        return GL_TRUE;
+    }
+    
+    return GL_FALSE;
+}
+
+static BOOL
+aros_standard_init(AROSMesaContext amesa, struct TagItem *tagList)
+{
+    GLint requestedwidth = 0, requestedheight = 0;
+    GLint requestedright = 0, requestedbottom = 0;
+    
+    D(bug("[AROSMESA] aros_standard_init(amesa @ %x, taglist @ %x)\n", amesa, tagList));
+    D(bug("[AROSMESA] aros_standard_init: Using RastPort @ %x\n", amesa->visible_rp));
+
+    amesa->visible_rp = CloneRastPort(amesa->visible_rp);
+
+    D(bug("[AROSMESA] aros_standard_init: Cloned RastPort @ %x\n", amesa->visible_rp));
+
+    /* We assume left and top are given or set to 0 */
+    amesa->left = GetTagData(AMA_Left, 0, tagList);
+    amesa->top = GetTagData(AMA_Top, 0, tagList);
+    
+    requestedright = GetTagData(AMA_Right, -1, tagList);
+    requestedbottom = GetTagData(AMA_Bottom, -1, tagList);
+    requestedwidth = GetTagData(AMA_Width, -1 , tagList);
+    requestedheight = GetTagData(AMA_Height, -1 , tagList);
+
+    /* Calculate rastport dimensions */
+    amesa->visible_rp_width = 
+        amesa->visible_rp->Layer->bounds.MaxX - amesa->visible_rp->Layer->bounds.MinX + 1;
+
+    amesa->visible_rp_height = 
+        amesa->visible_rp->Layer->bounds.MaxY - amesa->visible_rp->Layer->bounds.MinY + 1;
+    
+    /* right will be either passed or calculated from width or 0 */
+    amesa->right = 0;
+    if (requestedright < 0)
+    {
+        if (requestedwidth >= 0)
+        {
+            requestedright = amesa->visible_rp_width - amesa->left - requestedwidth;
+            if (requestedright < 0) requestedright = 0;
+        }
+        else
+            requestedright = 0;
+    }
+    amesa->right = requestedright;
+    
+    /* bottom will be either passed or calculated from height or 0 */
+    amesa->bottom = 0;
+    if (requestedbottom < 0)
+    {
+        if (requestedheight >= 0)
+        {
+            requestedbottom = amesa->visible_rp_height - amesa->top - requestedheight;
+            if (requestedbottom < 0) requestedbottom = 0;
+        }
+        else
+            requestedbottom = 0;
+    }
+    amesa->bottom = requestedbottom;
+
+    _aros_recalculate_buffer_width_height(GET_GL_CTX_PTR(amesa));
+
+    //amesa->clearpixel = 0;   /* current drawing/clearing pens */
+    
+    if (amesa->screen)
+    {
+        if (amesa->depth == 0)
+        {
+            D(bug("[AROSMESA] aros_standard_init: WARNING - Illegal RastPort Depth, attempting to correct\n"));
+            amesa->depth = GetCyberMapAttr(amesa->visible_rp->BitMap, CYBRMATTR_DEPTH);
+        }
+    }
+    
+    D(bug("[AROSMESA] aros_standard_init: Context Base dimensions set -:\n"));
+    D(bug("[AROSMESA] aros_standard_init:    amesa->visible_rp_width        = %d\n", amesa->visible_rp_width));
+    D(bug("[AROSMESA] aros_standard_init:    amesa->visible_rp_height       = %d\n", amesa->visible_rp_height));
+    D(bug("[AROSMESA] aros_standard_init:    amesa->width                   = %d\n", amesa->width));
+    D(bug("[AROSMESA] aros_standard_init:    amesa->height                  = %d\n", amesa->height));
+    D(bug("[AROSMESA] aros_standard_init:    amesa->left                    = %d\n", amesa->left));
+    D(bug("[AROSMESA] aros_standard_init:    amesa->right                   = %d\n", amesa->right));
+    D(bug("[AROSMESA] aros_standard_init:    amesa->top                     = %d\n", amesa->top));
+    D(bug("[AROSMESA] aros_standard_init:    amesa->bottom                  = %d\n", amesa->bottom));
+    D(bug("[AROSMESA] aros_standard_init:    amesa->depth                   = %d\n", amesa->depth));
+
+    return TRUE;
+}
 
 
 
@@ -330,17 +472,16 @@ static void hack_display(AROSMesaContext amesa, struct pipe_surface * surf)
 {
    struct softpipe_texture *spt = softpipe_texture(surf->texture);
    struct arosmesa_buffer *amesa_buf = (struct arosmesa_buffer *)(spt->buffer);
-    
-       WritePixelArray(
-        amesa_buf->data, 
+     WritePixelArray(
+     amesa_buf->data, 
         0,
         0,
-        4 * 300 /*GET_GL_RB_PTR(amesa->renderbuffer)->Width*/, 
+        spt->stride[surf->level],
         amesa->visible_rp, 
-        10 /*amesa->left*/, 
-        20 /*amesa->top*/, 
-        300 /*amesa->width*/, 
-        300 /*amesa->height*/, 
+        amesa->left, 
+        amesa->top, 
+        amesa->width, 
+        amesa->height, 
         AROS_PIXFMT);
 }
 
@@ -389,8 +530,11 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
         return NULL;
     }
 
-    /* FIXME; shouldn't RastPort be part of framebuffer */
+    /* FIXME; shouldn't RastPort be part of framebuffer? */
     aros_select_rastport(amesa, tagList);
+    
+    /* FIXME: check if any rastport is available */
+    
     
     D(bug("[AROSMESA] AROSMesaCreateContext: Creating new AROSMesaVisual\n"));
 
@@ -405,8 +549,11 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
     /* FIXME: This is only hack of initilization. See Xlib state_tracker for proper initilization */
     hack_initialize_gallium_structures(amesa);
     
+    /* FIXME: later this might me placed in initialization of framebuffer */
+    aros_standard_init(amesa, tagList);
+
     /* FIXME: Provide rastport to framebuffer ? */
-    amesa->framebuffer = aros_new_framebuffer(amesa->visual);
+    amesa->framebuffer = aros_new_framebuffer(amesa, amesa->visual);
     
     return amesa;
 }
@@ -421,7 +568,7 @@ void AROSMesaMakeCurrent(AROSMesaContext amesa)
         st_make_current(amesa->st, amesa->framebuffer->stfb, amesa->framebuffer->stfb);
         
         /* FIXME: add buffers resizing */
-        st_resize_framebuffer(amesa->framebuffer->stfb, 300/*width*/, 300 /*height*/);
+        st_resize_framebuffer(amesa->framebuffer->stfb, amesa->width, amesa->height);
         /* xmesa_check_and_update_buffer_size */
     }
     else
