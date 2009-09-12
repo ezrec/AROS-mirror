@@ -8,6 +8,7 @@
 
 #include "main/context.h"
 #include "state_tracker/st_public.h"
+#include "../winsys/aros/arosmesa_winsys.h"
 
 #include <proto/exec.h>
 #include <proto/utility.h>
@@ -20,12 +21,10 @@
 
 struct Library * AROSMesaCyberGfxBase = NULL;    /* Base address for cybergfx */
 
-#if (AROS_BIG_ENDIAN == 1)
-#define AROS_PIXFMT RECTFMT_ARGB32   /* Big Endian Archs. */
-#else
-#define AROS_PIXFMT RECTFMT_BGRA32   /* Little Endian Archs. */
-#endif
+/* HACK to get the driver setup */
+extern struct arosmesa_driver arosmesa_softpipe_driver;
 
+extern struct arosmesa_driver driver;
 
 /*****************************************************************************/
 /*                             PRIVATE FUNCTIONS                             */
@@ -330,175 +329,6 @@ aros_standard_init(AROSMesaContext amesa, struct TagItem *tagList)
 
 
 
-
-
-
-
-
-
-/*****************************************************************************/
-/*                             HACKS                                         */
-/*****************************************************************************/
-
-#include "pipe/internal/p_winsys_screen.h"
-#include "softpipe/sp_winsys.h"
-#include "softpipe/sp_texture.h"
-#include "pipe/p_context.h"
-#include "util/u_math.h"
-
-struct arosmesa_buffer
-{
-   struct pipe_buffer base;
-   void *data;
-   void *mapped;
-};
-
-static struct pipe_buffer *
-arosmesa_buffer_create(struct pipe_winsys *pws, 
-                        unsigned alignment, 
-                        unsigned usage,
-                        unsigned size)
-{
-   struct arosmesa_buffer *buffer = AllocVec(sizeof(struct arosmesa_buffer), MEMF_PUBLIC|MEMF_CLEAR);
-
-   pipe_reference_init(&buffer->base.reference, 1);
-   buffer->base.alignment = alignment;
-   buffer->base.usage = usage;
-   buffer->base.size = size;
-
-   if (buffer->data == NULL) {
-      /* FIXME: alligment */
-      buffer->data = AllocVec(size, MEMF_PUBLIC);
-   }
-
-   return &buffer->base;
-}
-
-static void *
-arosmesa_buffer_map(struct pipe_winsys *pws, struct pipe_buffer *buf,
-              unsigned flags)
-{
-   struct arosmesa_buffer *amesa_buf = (struct arosmesa_buffer *)buf;
-   amesa_buf->mapped = amesa_buf->data;
-   return amesa_buf->mapped;
-}
-
-static void
-arosmesa_buffer_unmap(struct pipe_winsys *pws, struct pipe_buffer *buf)
-{
-   struct arosmesa_buffer *amesa_buf = (struct arosmesa_buffer *)buf;
-   amesa_buf->mapped = NULL;
-}
-
-static void
-arosmesa_buffer_destroy(struct pipe_buffer *buf)
-{
-   struct arosmesa_buffer *amesa_buf = (struct arosmesa_buffer *)buf;
-
-   if (amesa_buf->data) {
-      FreeVec(amesa_buf->data);  
-      amesa_buf->data = NULL;
-   }
-
-   FreeVec(amesa_buf);
-}
-
-static struct pipe_buffer *
-arosmesa_surface_buffer_create(struct pipe_winsys *winsys,
-                         unsigned width, unsigned height,
-                         enum pipe_format format,
-                         unsigned usage,
-                         unsigned *stride)
-{
-   const unsigned alignment = 64;
-   struct pipe_format_block block;
-   unsigned nblocksx, nblocksy;
-
-   pf_get_block(format, &block);
-   nblocksx = pf_get_nblocksx(&block, width);
-   nblocksy = pf_get_nblocksy(&block, height);
-   *stride = align(nblocksx * block.size, alignment);
-
-   return winsys->buffer_create(winsys, alignment,
-                                usage,
-                                *stride * nblocksy);
-}
-
-
-static void hack_initialize_gallium_structures(AROSMesaContext amesa)
-{
-    /* THIS FUNCTION IS A HACK TO GET FIRST VERSION OF CODE */
-    /* ALL THIS SHOULD BE DONE IN WIN_SYS NOT IN STATE_TRACKER */
-    /* SEE Xlib state_tracker/win_sys for proper implementation */
-    
-    struct pipe_winsys * ws = NULL;
-    struct pipe_screen * screen = NULL;
-    struct pipe_context * pipe = NULL;
-    
-    ws = (struct pipe_winsys *)AllocVec(sizeof(struct pipe_winsys), MEMF_PUBLIC|MEMF_CLEAR);
-    
-    /* FIXME: Attach winsys_functions */
-    
-    
-      ws->buffer_create = arosmesa_buffer_create;
-    /*  ws->base.user_buffer_create = xm_user_buffer_create;*/
-      ws->buffer_map = arosmesa_buffer_map;
-      ws->buffer_unmap = arosmesa_buffer_unmap;
-      ws->buffer_destroy = arosmesa_buffer_destroy;
-
-      ws->surface_buffer_create = arosmesa_surface_buffer_create;
-
-      /*ws->base.fence_reference = xm_fence_reference;
-      ws->base.fence_signalled = xm_fence_signalled;
-      ws->base.fence_finish = xm_fence_finish;
-
-      ws->base.flush_frontbuffer = xm_flush_frontbuffer;
-      ws->base.get_name = xm_get_name;*/
-    
-    screen = softpipe_create_screen(ws);
-    
-    pipe = softpipe_create(screen);
-    
-    pipe->priv = (void *)amesa;
-    
-    amesa->st = st_create_context(pipe, GET_GL_VIS_PTR(amesa->visual), NULL);
-    
-    amesa->st->ctx->DriverCtx = amesa;
-    
-    /* NO ERROR CHECKING - THIS IS JUST A HACK */
-}
-
-static void hack_display(AROSMesaContext amesa, struct pipe_surface * surf)
-{
-   struct softpipe_texture *spt = softpipe_texture(surf->texture);
-   struct arosmesa_buffer *amesa_buf = (struct arosmesa_buffer *)(spt->buffer);
-     WritePixelArray(
-     amesa_buf->data, 
-        0,
-        0,
-        spt->stride[surf->level],
-        amesa->visible_rp, 
-        amesa->left, 
-        amesa->top, 
-        amesa->width, 
-        amesa->height, 
-        AROS_PIXFMT);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*****************************************************************************/
 /*                             PUBLIC FUNCTIONS                              */
 /*****************************************************************************/
@@ -514,6 +344,11 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
 {
     AROSMesaContext amesa = NULL;
     /* LastError = 0; */ /* FIXME: verify usage of LastError - should it be part of AROSMesaContext ? */
+    struct pipe_screen * screen = NULL;
+    struct pipe_context * pipe = NULL;
+    
+    /* HACK - driver should be already set up */
+    arosmesa_set_driver(&arosmesa_softpipe_driver);
     
     /* Try to open cybergraphics.library */
     if (CyberGfxBase == NULL)
@@ -546,8 +381,18 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
         return NULL;
     }
     
-    /* FIXME: This is only hack of initilization. See Xlib state_tracker for proper initilization */
-    hack_initialize_gallium_structures(amesa);
+    screen = driver.create_pipe_screen();
+    
+    /* FIXME : If screen == NULL */
+    
+    pipe = driver.create_pipe_context(screen);
+    
+    /* FIXME: If pipe == NULL */
+    
+    amesa->st = st_create_context(pipe, GET_GL_VIS_PTR(amesa->visual), NULL);
+    
+    amesa->st->ctx->DriverCtx = amesa;
+    
     
     /* FIXME: later this might me placed in initialization of framebuffer */
     aros_standard_init(amesa, tagList);
@@ -581,26 +426,23 @@ void AROSMesaMakeCurrent(AROSMesaContext amesa)
 
 void AROSMesaSwapBuffers(AROSMesaContext amesa)
 {
-   struct pipe_surface *surf;
+    struct pipe_surface *surf;
 
-   /* If we're swapping the buffer associated with the current context
+    /* If we're swapping the buffer associated with the current context
     * we have to flush any pending rendering commands first.
     */
-   st_notify_swapbuffers(amesa->framebuffer->stfb);
+    st_notify_swapbuffers(amesa->framebuffer->stfb);
 
-   
-   /* FIXME: should be ST_SURFACE_BACK_LEFT */
-   st_get_framebuffer_surface(amesa->framebuffer->stfb, ST_SURFACE_FRONT_LEFT, &surf);
-   
-   /* FIXME: display should be the method of driver */
-   /*if (surf) {
-      driver.display_surface(b, surf);
-   }*/
-   
-   hack_display(amesa, surf);
+
+    /* FIXME: should be ST_SURFACE_BACK_LEFT */
+    st_get_framebuffer_surface(amesa->framebuffer->stfb, ST_SURFACE_FRONT_LEFT, &surf);
+
+    if (surf) {
+        driver.display_surface(amesa, surf);
+    }
 
     /* FIXME: update size? */
-   /* xmesa_check_and_update_buffer_size(NULL, b);*/
+    /* xmesa_check_and_update_buffer_size(NULL, b);*/
 }
 
 void AROSMesaDestroyContext(AROSMesaContext amesa)

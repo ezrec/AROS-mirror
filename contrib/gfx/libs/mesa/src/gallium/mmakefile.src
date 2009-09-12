@@ -7,6 +7,10 @@ include $(TOP)/config/make.cfg
 
 AROS_STATE_TRACKER_SOURCES = \
             state_trackers/aros/arosmesa_api \
+            
+AROS_WINSYS_SOURCES = \
+            winsys/aros/arosmesa_winsys \
+            winsys/aros/arosmesa_softpipe \
 
 GALLIUM_AUXILIARY_SOURCES = \
             auxiliary/util/u_debug \
@@ -100,7 +104,6 @@ GALLIUM_AUXILIARY_SOURCES = \
 #            auxiliary/util/u_time \
 
 #FIXME: Not all auxiliary modules added yet
-#FIXME: Check which defines are applied in Mesa make file (for example: PIPE_ARCH_X86, PIPE_ARCH_SSE. PIPE_CC_GCC - include/pipe/p_config.h)
 
 GALLIUM_SOFTPIPE_SOURCES = \
             drivers/softpipe/sp_fs_exec \
@@ -142,6 +145,7 @@ GALLIUM_SOFTPIPE_SOURCES = \
 
 AROS_GALLIUM_SOURCES = \
             $(AROS_STATE_TRACKER_SOURCES) \
+            $(AROS_WINSYS_SOURCES) \
             $(GALLIUM_SOFTPIPE_SOURCES) \
             $(GALLIUM_AUXILIARY_SOURCES) \
 
