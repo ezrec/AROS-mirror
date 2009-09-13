@@ -391,7 +391,9 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
     
     amesa->st = st_create_context(pipe, GET_GL_VIS_PTR(amesa->visual), NULL);
     
+    /* Set up some needed pointers */
     amesa->st->ctx->DriverCtx = amesa;
+    pipe->priv = amesa;
     
     
     /* FIXME: later this might me placed in initialization of framebuffer */

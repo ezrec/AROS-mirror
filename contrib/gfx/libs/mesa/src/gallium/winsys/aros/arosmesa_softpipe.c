@@ -19,6 +19,26 @@
 #define AROS_PIXFMT RECTFMT_BGRA32   /* Little Endian Archs. */
 #endif
 
+/* FIXME: Don't use context. Use structure having access to rastport instead */
+static void
+arosmesa_softpipe_display_surface(AROSMesaContext amesa,
+                              struct pipe_surface *surf)
+{
+   struct softpipe_texture *spt = softpipe_texture(surf->texture);
+   struct arosmesa_buffer *amesa_buf = (struct arosmesa_buffer *)(spt->buffer);
+     WritePixelArray(
+     amesa_buf->data, 
+        0,
+        0,
+        spt->stride[surf->level],
+        amesa->visible_rp, 
+        amesa->left, 
+        amesa->top, 
+        amesa->width, 
+        amesa->height, 
+        AROS_PIXFMT);
+}
+
 static struct pipe_buffer *
 arosmesa_buffer_create(struct pipe_winsys *pws, 
                         unsigned alignment, 
@@ -38,6 +58,17 @@ arosmesa_buffer_create(struct pipe_winsys *pws,
     }
 
     return &buffer->base;
+}
+
+static struct pipe_buffer *
+arosmesa_user_buffer_create(struct pipe_winsys *pws, void *ptr, unsigned bytes)
+{
+   struct arosmesa_buffer *buffer = AllocVec(sizeof(struct arosmesa_buffer), MEMF_PUBLIC|MEMF_CLEAR);
+   pipe_reference_init(&buffer->base.reference, 1);
+   buffer->base.size = bytes;
+   buffer->data = ptr;
+
+   return &buffer->base;
 }
 
 static void *
@@ -90,6 +121,15 @@ arosmesa_surface_buffer_create(struct pipe_winsys *winsys,
                                 *stride * nblocksy);
 }
 
+static void
+arosmesa_flush_frontbuffer(struct pipe_winsys *pws,
+                     struct pipe_surface *surf,
+                     void *context_private)
+{
+    /* FIXME: Is this correction implementation */
+    AROSMesaContext amesa = (AROSMesaContext) context_private;
+    arosmesa_softpipe_display_surface(amesa, surf);
+}
 
 static struct pipe_winsys *
 arosmesa_create_softpipe_winsys( void )
@@ -105,7 +145,7 @@ arosmesa_create_softpipe_winsys( void )
         * communicate with the window system, buffer manager, etc. 
         */
         ws->buffer_create = arosmesa_buffer_create;
-        ws->user_buffer_create = NULL; /* FIXME */
+        ws->user_buffer_create = arosmesa_user_buffer_create;
         ws->buffer_map = arosmesa_buffer_map;
         ws->buffer_unmap = arosmesa_buffer_unmap;
         ws->buffer_destroy = arosmesa_buffer_destroy;
@@ -116,7 +156,7 @@ arosmesa_create_softpipe_winsys( void )
         ws->fence_signalled = NULL; /* FIXME */
         ws->fence_finish = NULL; /* FIXME */
 
-        ws->flush_frontbuffer = NULL; /* FIXME */
+        ws->flush_frontbuffer = arosmesa_flush_frontbuffer;
         ws->get_name = NULL; /* FIXME */
     }
 
@@ -158,33 +198,13 @@ arosmesa_create_softpipe_context( struct pipe_screen *screen )
     if (pipe == NULL)
         goto fail;
 
-    /* FIXME: Is that needed ? */
+    /* FIXME: Is that needed ? - filled in in AROSMesaCreateContext */
     /*pipe->priv = context_private;*/
     return pipe;
 
 fail:
     /* FIXME: Free stuff here */
     return NULL;
-}
-
-/* FIXME: Don't use context. Use structure having access to rastport instead */
-static void
-arosmesa_softpipe_display_surface(AROSMesaContext amesa,
-                              struct pipe_surface *surf)
-{
-   struct softpipe_texture *spt = softpipe_texture(surf->texture);
-   struct arosmesa_buffer *amesa_buf = (struct arosmesa_buffer *)(spt->buffer);
-     WritePixelArray(
-     amesa_buf->data, 
-        0,
-        0,
-        spt->stride[surf->level],
-        amesa->visible_rp, 
-        amesa->left, 
-        amesa->top, 
-        amesa->width, 
-        amesa->height, 
-        AROS_PIXFMT);
 }
 
 struct arosmesa_driver arosmesa_softpipe_driver = 
