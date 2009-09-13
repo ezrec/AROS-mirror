@@ -1,0 +1,44 @@
+2003-10-11  Edouard Gomez  <ed.gomez@free.fr>
+
+	* Makefile: added for GNU/linux. It should work relatively well
+	out of the box.
+
+	* *.cpp: enclosed #include <windows.h> in a #ifdef WIN32
+	preprocessing.
+
+	* *.cpp: all variables turned into file scope vars using static.
+
+	* *.cpp: fixed all MSVCisms incompatible with ISO C++
+	standard. This includes for(int i=0;...) {} scope of the i
+	var, and many (many many) warnings about explicit casting
+	missing. References to UINT replaced by GLuint or GLint where
+	appropriate.
+
+	* *.cpp: replaced the gl\ path by  GL/ to respect case sensitivity
+	of Unix platforms.
+
+	* LICENSE, *.cpp: Added legal headers to code files and data
+	files. Added the complete GNU GPLv2 License to LICENSE file 
+	
+	* scene06.h, scene07.h: Moved object data definition to a
+	specific header ${filename}-data.h that is only included by the
+	sceneXX.cpp file that requires it.
+
+	* scene04.cpp: Sleep(20) call replaced by usleep for non WIN32
+	platforms which conforms to BSD4.3 standard. This may be replaced
+	by nanosleep which is defined by POSIX.1b and thus i probably
+	more widespread among unixes.
+
+	* utils.cpp: tochar(int) returns '\0' when not a digit.
+
+	* utils.cpp: tostr(), replaced all NULL assignment to '\0'
+	assignment.
+	
+	* glxsglut.cpp: changed Fullscreen code to fallback to
+	glutFullscreen because Game Mode seems to fail with many glut
+	configs. The glutFullscreen solution is not as nice as the game
+	mode but at least it respect the user's wish to have a FS
+	application running.
+
+	* ReadMe.txt: Added Build instructions for MSVC and Unix. Added
+	the License section.

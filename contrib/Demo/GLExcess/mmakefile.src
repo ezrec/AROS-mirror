@@ -1,0 +1,49 @@
+#   $Id: mmakefile.src 31739 2009-08-24 18:56:44Z deadwood $
+include $(TOP)/config/make.cfg
+
+#MM contrib-local-glexcess : contrib-gnu-crosstools includes contrib-gfx-libs-mesa-includes contrib-local-glexcess-cpp
+
+GLEXCESS_SOURCES = \
+	glxsglut \
+	scene01 \
+	scene02 \
+	scene03 \
+	scene04 \
+	scene05 \
+	scene06 \
+	scene07 \
+	scene08 \
+	scene09 \
+	scene10 \
+	scene11 \
+	scene12 \
+	Texture \
+	utils
+
+USER_INCLUDES := \
+    -I$(SRCDIR)/$(CURDIR)
+
+USER_CFLAGS := -fno-asynchronous-unwind-tables -fno-exceptions 
+
+# Remove C-only flags
+CXX_FLAGS := $(CFLAGS) $(USER_CFLAGS) -fno-rtti -nostdinc++
+CXX_FLAGS := $(subst -Wno-pointer-sign,, $(subst -Werror-implicit-function-declaration,, $(CXX_FLAGS)))
+
+# Define the use of cross compiler
+TARGET_CXX = $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-g++
+
+$(GLEXCESS_SOURCES) :
+%compile_q cmd=$(TARGET_CXX) opt=$(CXX_FLAGS) from=$(SRCDIR)/$(CURDIR)/$@.cpp to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+contrib-local-glexcess-cpp : contrib-local-glexcess-cpp-directories-setup $(GLEXCESS_SOURCES)
+
+#MM
+contrib-local-glexcess-cpp-directories-setup :
+%mkdirs_q dirs="$(GENDIR)/$(CURDIR) $(CONTRIBDIR)/Demos/Mesa/GLExcess"
+
+#MM
+contrib-local-glexcess :
+%link_q cmd=$(TARGET_CXX) from="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(GLEXCESS_SOURCES))))" to=$(CONTRIBDIR)/Demos/Mesa/GLExcess/GLExcess libs="-lglut -lGL -lGLU"
+
+%common
