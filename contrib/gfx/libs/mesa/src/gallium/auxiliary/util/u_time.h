@@ -43,6 +43,10 @@
 #include <unistd.h> /* usleep */
 #endif
 
+#if defined(PIPE_OS_AROS)
+#include <sys/time.h> /* timeval */
+#endif
+
 #include "pipe/p_compiler.h"
 
 
@@ -58,7 +62,7 @@ extern "C" {
  */
 struct util_time 
 {
-#if defined(PIPE_OS_LINUX) || defined(PIPE_OS_BSD) || defined(PIPE_OS_SOLARIS)
+#if defined(PIPE_OS_LINUX) || defined(PIPE_OS_BSD) || defined(PIPE_OS_SOLARIS) || defined(PIPE_OS_AROS)
    struct timeval tv;
 #else
    int64_t counter;
@@ -89,7 +93,7 @@ util_time_timeout(const struct util_time *start,
                   const struct util_time *end,
                   const struct util_time *curr);
 
-#if defined(PIPE_OS_LINUX) || defined(PIPE_OS_BSD) || defined(PIPE_OS_SOLARIS)
+#if defined(PIPE_OS_LINUX) || defined(PIPE_OS_BSD) || defined(PIPE_OS_SOLARIS) || defined(PIPE_OS_AROS)
 #define util_time_sleep usleep
 #else
 void

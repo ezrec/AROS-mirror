@@ -9,7 +9,8 @@
 struct arosmesa_buffer
 {
    struct pipe_buffer base;
-   void *data;
+   void *buffer; /* Real buffer pointer */
+   void *data; /* Aligned buffer pointer (inside real buffer) */
    void *mapped;
 };
 

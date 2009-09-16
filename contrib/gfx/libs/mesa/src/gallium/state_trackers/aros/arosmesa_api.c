@@ -449,4 +449,12 @@ void AROSMesaSwapBuffers(AROSMesaContext amesa)
 
 void AROSMesaDestroyContext(AROSMesaContext amesa)
 {
+    /* FIXME: Implement */
+}
+
+AROSMesaContext AROSMesaGetCurrentContext()
+{
+    GET_CURRENT_CONTEXT(ctx);
+
+    return (AROSMesaContext)ctx;
 }

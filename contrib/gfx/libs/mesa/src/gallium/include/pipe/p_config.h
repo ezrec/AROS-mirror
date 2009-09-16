@@ -123,6 +123,9 @@
 #define PIPE_OS_WINDOWS
 #endif
 
+#if defined(__AROS__)
+#define PIPE_OS_AROS
+#endif
 
 /*
  * Subsystem.

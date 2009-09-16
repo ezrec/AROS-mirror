@@ -1,9 +1,4 @@
-#   $Id$
-#
-include $(TOP)/config/make.cfg
-
-
-#MM mesa-aros-gallium-linklib : includes contrib-gfx-libs-mesa-includes
+### Lists of source files, included by Makefiles
 
 AROS_STATE_TRACKER_SOURCES = \
             state_trackers/aros/arosmesa_api \
@@ -99,9 +94,8 @@ GALLIUM_AUXILIARY_SOURCES = \
             auxiliary/cso_cache/cso_cache \
             auxiliary/cso_cache/cso_hash \
             auxiliary/draw/draw_pipe_clip \
-            auxiliary/util/u_math
-            
-#            auxiliary/util/u_time \
+            auxiliary/util/u_math \
+            auxiliary/util/u_time \
 
 #FIXME: Not all auxiliary modules added yet
 
@@ -148,27 +142,3 @@ AROS_GALLIUM_SOURCES = \
             $(AROS_WINSYS_SOURCES) \
             $(GALLIUM_SOFTPIPE_SOURCES) \
             $(GALLIUM_AUXILIARY_SOURCES) \
-
-ifeq ($(AROS_TARGET_CPU), i386)
-  FFIXED = -ffixed-ebx
-endif
-
-ifeq ($(AROS_TARGET_CPU), x86_64)
-  FFIXED = -ffixed-rbx
-endif
-
-ifeq ($(AROS_TARGET_CPU), ppc)
-  FFIXED = -ffixed-r14
-endif
-
-USER_INCLUDES := \
-            -I$(SRCDIR)/$(CURDIR)/../../include \
-            -I$(SRCDIR)/$(CURDIR)/../mesa \
-            -I$(SRCDIR)/$(CURDIR)/include \
-            -I$(SRCDIR)/$(CURDIR)/auxiliary \
-            -I$(SRCDIR)/$(CURDIR)/drivers \
-
-%build_linklib mmake=mesa-aros-gallium-linklib libname=AROSGalliumStatic \
-    files="$(AROS_GALLIUM_SOURCES)"
-
-%common

@@ -51,10 +51,10 @@ arosmesa_buffer_create(struct pipe_winsys *pws,
     buffer->base.alignment = alignment;
     buffer->base.usage = usage;
     buffer->base.size = size;
-
-    if (buffer->data == NULL) {
-        /* FIXME: alligment */
-        buffer->data = AllocVec(size, MEMF_PUBLIC);
+    if (buffer->buffer == NULL) {
+        /* Alligment */
+        buffer->buffer = AllocVec(size + alignment - 1, MEMF_PUBLIC);
+        buffer->data = (void *)(((IPTR)buffer->buffer + (alignment - 1)) & ~(alignment - 1));
     }
 
     return &buffer->base;
@@ -92,9 +92,10 @@ arosmesa_buffer_destroy(struct pipe_buffer *buf)
 {
     struct arosmesa_buffer *amesa_buf = (struct arosmesa_buffer *)buf;
 
-    if (amesa_buf->data) {
-        FreeVec(amesa_buf->data);  
+    if (amesa_buf->buffer) {
+        FreeVec(amesa_buf->buffer);  
         amesa_buf->data = NULL;
+        amesa_buf->buffer = NULL;
     }
 
     FreeVec(amesa_buf);

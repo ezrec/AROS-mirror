@@ -6,6 +6,8 @@ include $(TOP)/config/make.cfg
 
 include $(SRCDIR)/$(CURDIR)/sources.mak
 
+include $(SRCDIR)/$(CURDIR)/sources.gallium.mak
+
 #MM contrib-gfx-libs-mesa-mesa-module : includes contrib-gfx-libs-mesa-includes linklibs
 
 #MM contrib-gfx-libs-mesa-mesa-linklib : includes contrib-gfx-libs-mesa-includes
@@ -24,6 +26,8 @@ AROS_DRIVER_SOURCES = \
             drivers/aros/aros_rb_functions \
             drivers/aros/aros_swrast_functions \
             drivers/aros/aros_visual_functions
+
+GALLIUM_SUBPATH = ../gallium
 
 ifeq ($(AROS_TARGET_CPU), i386)
   FFIXED = -ffixed-ebx
@@ -45,6 +49,7 @@ LIB_MESA_SOURCES = \
 LIB_MESA_GALLIUM_SOURCES = \
             $(MESA_GALLIUM_SOURCES:.c=)\
             $(GLAPI_SOURCES:.c=)\
+            $(addprefix $(GALLIUM_SUBPATH)/,$(AROS_GALLIUM_SOURCES))\
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../../include \
             -I$(SRCDIR)/$(CURDIR)/ \
@@ -57,8 +62,9 @@ USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../../include \
             -I$(SRCDIR)/$(CURDIR)/shader/grammar \
             -I$(SRCDIR)/$(CURDIR)/swrast \
             -I$(SRCDIR)/$(CURDIR)/tnl \
-            -I$(SRCDIR)/$(CURDIR)/../gallium/include \
-            -I$(SRCDIR)/$(CURDIR)/../gallium/auxiliary \
+            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/include \
+            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/auxiliary \
+            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/drivers \
 
 %build_linklib mmake=contrib-gfx-libs-mesa-mesa-linklib libname=GLStatic \
     files="$(LIB_MESA_SOURCES) arosmesa_getprocaddress" objdir=$(GENDIR)/$(CURDIR)/linklib
