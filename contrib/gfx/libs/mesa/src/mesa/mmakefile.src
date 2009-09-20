@@ -62,20 +62,31 @@ USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../../include \
             -I$(SRCDIR)/$(CURDIR)/shader/grammar \
             -I$(SRCDIR)/$(CURDIR)/swrast \
             -I$(SRCDIR)/$(CURDIR)/tnl \
-            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/include \
-            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/auxiliary \
-            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/drivers \
 
 %build_linklib mmake=contrib-gfx-libs-mesa-mesa-linklib libname=GLStatic \
     files="$(LIB_MESA_SOURCES) arosmesa_getprocaddress" objdir=$(GENDIR)/$(CURDIR)/linklib
-
-%build_linklib mmake=mesa-mesa-gallium-linklib libname=GLGalliumStatic \
-    files="$(LIB_MESA_GALLIUM_SOURCES) arosmesa_getprocaddress" objdir=$(GENDIR)/$(CURDIR)/gallium-linklib
 
 USER_CFLAGS := -DUSE_MGL_NAMESPACE -DAROS_MESA_SHARED -ffast-math $(FFIXED)
 
 %build_module mmake=contrib-gfx-libs-mesa-mesa-module \
     modname=mesa modtype=library linklibname=GL conffile=arosmesa.conf linklibfiles="arosmesa_getprocaddress" \
     files="$(SHARED_LIB_SOURCES) $(LIB_MESA_SOURCES)" objdir=$(GENDIR)/$(CURDIR)/module 
+
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../../include \
+            -I$(SRCDIR)/$(CURDIR)/ \
+            -I$(SRCDIR)/$(CURDIR)/main \
+            -I$(SRCDIR)/$(CURDIR)/glapi \
+            -I$(SRCDIR)/$(CURDIR)/shader \
+            -I$(SRCDIR)/$(CURDIR)/shader/slang \
+            -I$(SRCDIR)/$(CURDIR)/shader/grammar \
+            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/include \
+            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/auxiliary \
+            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/drivers \
+            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/winsys/aros/libdrm \
+
+USER_CFLAGS :=
+
+%build_linklib mmake=mesa-mesa-gallium-linklib libname=GLGalliumStatic \
+    files="$(LIB_MESA_GALLIUM_SOURCES) arosmesa_getprocaddress" objdir=$(GENDIR)/$(CURDIR)/gallium-linklib
 
 %common

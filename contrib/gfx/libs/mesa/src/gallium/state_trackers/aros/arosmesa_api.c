@@ -23,6 +23,8 @@ struct Library * AROSMesaCyberGfxBase = NULL;    /* Base address for cybergfx */
 
 /* HACK to get the driver setup */
 extern struct arosmesa_driver arosmesa_softpipe_driver;
+extern struct arosmesa_driver arosmesa_nouveau_driver;
+
 
 extern struct arosmesa_driver driver;
 
@@ -348,7 +350,11 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
     struct pipe_context * pipe = NULL;
     
     /* HACK - driver should be already set up */
+    #if 0
     arosmesa_set_driver(&arosmesa_softpipe_driver);
+    #else
+    arosmesa_set_driver(&arosmesa_nouveau_driver);
+    #endif
     
     /* Try to open cybergraphics.library */
     if (CyberGfxBase == NULL)

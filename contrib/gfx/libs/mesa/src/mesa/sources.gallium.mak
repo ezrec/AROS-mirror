@@ -6,6 +6,8 @@ AROS_STATE_TRACKER_SOURCES = \
 AROS_WINSYS_SOURCES = \
             winsys/aros/arosmesa_winsys \
             winsys/aros/arosmesa_softpipe \
+            winsys/aros/arosmesa_nouveau \
+            winsys/aros/arosmesa_i915 \
 
 GALLIUM_AUXILIARY_SOURCES = \
             auxiliary/util/u_debug \
@@ -135,10 +137,70 @@ GALLIUM_SOFTPIPE_SOURCES = \
             drivers/softpipe/sp_texture \
             drivers/softpipe/sp_tex_sample \
             drivers/softpipe/sp_tile_cache \
-            drivers/softpipe/sp_surface 
+            drivers/softpipe/sp_surface
 
+GALLIUM_NVIDIA_SOURCES = \
+            drivers/nouveau/nouveau_screen \
+            drivers/nv40/nv40_clear \
+            drivers/nv40/nv40_context \
+            drivers/nv40/nv40_draw \
+            drivers/nv40/nv40_fragprog \
+            drivers/nv40/nv40_fragtex \
+            drivers/nv40/nv40_miptree \
+            drivers/nv40/nv40_query \
+            drivers/nv40/nv40_screen \
+            drivers/nv40/nv40_state \
+            drivers/nv40/nv40_state_blend \
+            drivers/nv40/nv40_state_emit \
+            drivers/nv40/nv40_state_fb \
+            drivers/nv40/nv40_state_rasterizer \
+            drivers/nv40/nv40_state_scissor \
+            drivers/nv40/nv40_state_stipple \
+            drivers/nv40/nv40_state_viewport \
+            drivers/nv40/nv40_state_zsa \
+            drivers/nv40/nv40_surface \
+            drivers/nv40/nv40_transfer \
+            drivers/nv40/nv40_vbo \
+            drivers/nv40/nv40_vertprog \
+            drivers/nv04/nv04_surface_2d \
+            drivers/nv04/nv04_clear \
+            drivers/nv04/nv04_context \
+            drivers/nv04/nv04_fragprog \
+            drivers/nv04/nv04_fragtex \
+            drivers/nv04/nv04_miptree \
+            drivers/nv04/nv04_prim_vbuf \
+            drivers/nv04/nv04_screen \
+            drivers/nv04/nv04_state \
+            drivers/nv04/nv04_state_emit \
+            drivers/nv04/nv04_surface \
+            drivers/nv04/nv04_transfer \
+            drivers/nv04/nv04_vbo \
+            
+GALLIUM_I915_SOURCES = \
+            drivers/i915simple/i915_blit \
+            drivers/i915simple/i915_clear \
+            drivers/i915simple/i915_flush \
+            drivers/i915simple/i915_context \
+            drivers/i915simple/i915_debug \
+            drivers/i915simple/i915_debug_fp \
+            drivers/i915simple/i915_state \
+            drivers/i915simple/i915_state_immediate \
+            drivers/i915simple/i915_state_dynamic \
+            drivers/i915simple/i915_state_derived \
+            drivers/i915simple/i915_state_emit \
+            drivers/i915simple/i915_state_sampler \
+            drivers/i915simple/i915_screen \
+            drivers/i915simple/i915_prim_emit \
+            drivers/i915simple/i915_prim_vbuf \
+            drivers/i915simple/i915_texture \
+            drivers/i915simple/i915_fpc_emit \
+            drivers/i915simple/i915_fpc_translate \
+            drivers/i915simple/i915_surface \
+            
 AROS_GALLIUM_SOURCES = \
             $(AROS_STATE_TRACKER_SOURCES) \
             $(AROS_WINSYS_SOURCES) \
-            $(GALLIUM_SOFTPIPE_SOURCES) \
             $(GALLIUM_AUXILIARY_SOURCES) \
+            $(GALLIUM_SOFTPIPE_SOURCES) \
+            $(GALLIUM_NVIDIA_SOURCES) \
+            $(GALLIUM_I915_SOURCES) \
