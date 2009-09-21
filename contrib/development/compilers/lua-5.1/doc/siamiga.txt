@@ -8,7 +8,7 @@ There are 3 Lua tables:
 * Sigadget: setting and getting of gadget parameters
 * Sipicture: loading, grabbing and blitting of bitmaps.
 
-You can find some examples in the drawer 'amiga-ex'.
+You can find some examples in the drawer 'test-amilua'.
 
 Parameters in square brackets are optional.
 
@@ -220,7 +220,7 @@ Example: pic = Sipicture.get(win1, 23, 54, 32, 32)
 ------------------------------------------------------------------------------------------
 Sipicture.query(picture)
 Returns width, height, depth and if the picture contains a mask.
-Example: print(pic:get())
+Example: print(pic:query())
 
 ------------------------------------------------------------------------------------------
 Sipicture.free(picture)
