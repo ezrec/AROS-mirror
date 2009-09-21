@@ -3,10 +3,11 @@ win:openwindow()
 
 --pic = Sipicture.load("system:prefs/presets/patterns/misc/amoeba.png")
 pic = Sipicture.load("test.iff")
-
+print(pic:query())
 
 function drawstuff()
     pic:put(win, 30, 30)
+    pic:put(win, 30, 50, true)
 end
 
 drawstuff()

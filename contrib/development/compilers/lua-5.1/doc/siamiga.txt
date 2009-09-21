@@ -176,7 +176,7 @@ Example: g1 = win1:addgadget(10, "button", 10, 20, 50, 15, "Cancel")
 
 ------------------------------------------------------------------------------------------
 Siamiga.__gc
-The garbage collector closes the window and frees the RAM for gadgets and menus.
+The garbage collector closes the window and frees the resources of gadgets and menus.
 
 
 ==========================================================================================
@@ -198,14 +198,17 @@ Example: print(g3.get())
 ------------------------------------------------------------------------------------------
 Sipicture.load(filename)
 Loads the picture with the help of the datatypes library. You can load any graphic format
-for which you have installed a datatype. Transparency is ignored.
+for which you have installed a datatype.
 Returns picture handle.
-BUG: Doesn't work well with screen depth <=8 because the pens are released after loading.
+BUG: Doesn't work well with screen depth <=8 because if the garbage collector frees a
+picture the pens are released, too.
 Example: pic = Sipicture.load("work:smily.gif")
 
 ------------------------------------------------------------------------------------------
-Sipicture.put(picture, window, left, top)
+Sipicture.put(picture, window, left, top, [mask])
 Blits a picture at position left,top to the window.
+If you set the mask argument to true and the picture contains a mask the rendering is done
+using that mask.
 Example: pic:put(win1, 15, 30)
 
 ------------------------------------------------------------------------------------------
@@ -215,12 +218,15 @@ Returns a picture handle.
 Example: pic = Sipicture.get(win1, 23, 54, 32, 32)
 
 ------------------------------------------------------------------------------------------
+Sipicture.query(picture)
+Returns width, height, depth and if the picture contains a mask.
+Example: print(pic:get())
+
+------------------------------------------------------------------------------------------
 Sipicture.free(picture)
-Frees the RAM for a picture.
+Frees the resources obtained for a picture.
 Example: pic:free()
 
 ------------------------------------------------------------------------------------------
 Sipicture.__gc
 The garbage collector just calls Sipicture.free().
-
-End of file.

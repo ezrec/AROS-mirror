@@ -25,12 +25,6 @@
 #include "lauxlib.h"
 #include "lualib.h"
 
-struct IntuitionBase *IntuitionBase = NULL;
-struct GfxBase *GfxBase = NULL;
-struct Library *AslBase = NULL;
-struct Library *DataTypesBase = NULL;
-struct Library *GadToolsBase = NULL;
-
 static struct Screen *screen = NULL;
 static void *vinfo = NULL;
 static struct TextAttr gadfont = { "topaz.font", 8, 0, 0 }; // default values, will be overwritten by screen's font
@@ -288,7 +282,7 @@ static int siamiga_line(lua_State *L)
     Siamiga *siam = checkSiamiga(L, 1);
     struct Window *win = siam->win;
     if (win)
-        {
+    {
         if (lua_gettop(L) == 3)
         {
             Draw(win->RPort, luaL_checknumber(L, 2), luaL_checknumber(L, 3));
@@ -340,7 +334,7 @@ static int siamiga_box(lua_State *L)
                 y1 = y2;
                 y2 = tmp;
             }
-            RectFill(rp, x1, y1, x2, y2); // RectFill requieres x1<x2 and y1<y2
+            RectFill(rp, x1, y1, x2, y2); // RectFill requires x1<x2 and y1<y2
         }
         else
         {
@@ -1045,8 +1039,10 @@ static const luaL_reg sigadget_meta[] = {
 
 typedef struct Picture
 {
+    Object        *dto;
     struct BitMap *bm;
-    int width, height, depth;
+    APTR           mask;
+    int            width, height, depth;
 } Picture;
 
 #if 0
@@ -1080,20 +1076,30 @@ static int sipicture_load(lua_State *L)
 {
     const char *filename = luaL_checkstring(L, 1);
 
-    Object *o = NewDTObject((APTR)filename,
-        DTA_GroupID, GID_PICTURE,
-        PDTA_Remap, TRUE,
-        PDTA_Screen, (IPTR)screen,
-        PDTA_DestMode, PMODE_V43,
+    Object *o = NewDTObject
+    (
+        (APTR)filename,
+        DTA_GroupID,    GID_PICTURE,
+        PDTA_Remap,     TRUE,
+        PDTA_Screen,    (IPTR)screen,
+        PDTA_DestMode,  PMODE_V43,
         TAG_END
     );
     if (o == NULL) luaL_error(L, "Can't create datatype object");
 
     DoDTMethod(o, NULL, NULL, DTM_PROCLAYOUT, 0, 1);
 
-    struct BitMap *dbm = NULL;
+    struct BitMap *dbm       = NULL;
     struct BitMapHeader *bmh = NULL;
-    GetDTAttrs(o, PDTA_DestBitMap, (IPTR)&dbm, PDTA_BitMapHeader, (IPTR)&bmh, TAG_END);
+    APTR mask                = NULL;
+    GetDTAttrs
+    (
+        o,
+        PDTA_DestBitMap,   (IPTR)&dbm,
+        PDTA_BitMapHeader, (IPTR)&bmh,
+        PDTA_MaskPlane,    (IPTR)&mask,
+        TAG_END
+    );
 
     if (bmh == NULL)
     {
@@ -1101,31 +1107,19 @@ static int sipicture_load(lua_State *L)
         luaL_error(L, "Bitmapheader is Null");
     }   
 
-    int width = bmh->bmh_Width;
-    int height = bmh->bmh_Height;
-    int depth = bmh->bmh_Depth;
-    printf("width %d height %d depth %d\n", width, height, depth);    
     if (dbm == NULL)
     {
         DisposeDTObject(o);
         luaL_error(L, "Destbitmap is Null");
     }
 
-
-    struct BitMap *newbm = AllocBitMap(width, height, depth, 0, screen->RastPort.BitMap);
-    if (newbm == NULL)
-    {
-        DisposeDTObject(o);
-        luaL_error(L, "Can't allocate Bitmap");
-    }
-    BltBitMap(dbm, 0, 0, newbm, 0, 0 , width, height, 0xC0, 0xFFFFFFFF, NULL);
-    DisposeDTObject(o);
-
     Picture *pic = pushPicture(L);
-    pic->bm = newbm;
-    pic->width = width;
-    pic->height = height;
-    pic->depth = depth;
+    pic->dto     = o;
+    pic->bm      = dbm; // Point to datatype's bitmap
+    pic->width   = bmh->bmh_Width;
+    pic->height  = bmh->bmh_Height;
+    pic->depth   = bmh->bmh_Depth;
+    pic->mask    = mask; // Point to datatype's mask plane
 
     return 1;
 }
@@ -1219,12 +1213,15 @@ static int sipicture_put(lua_State *L)
 
     int x = luaL_checknumber(L, 3);
     int y = luaL_checknumber(L, 4);
-
-    struct RastPort rp;
-    memset(&rp, 0, sizeof(struct RastPort));
-    InitRastPort(&rp);
-    rp.BitMap = pi->bm;
-    ClipBlit(&rp, 0 , 0 , win->RPort , x, y, pi->width, pi->height, 0xC0);
+    BOOL withMask = lua_toboolean(L, 5);
+    if (withMask && pi->mask)
+    {
+        BltMaskBitMapRastPort(pi->bm, 0, 0, win->RPort, x, y, pi->width, pi->height, 0xe0, pi->mask);  
+    }
+    else
+    {
+        BltBitMapRastPort(pi->bm, 0, 0, win->RPort, x, y, pi->width, pi->height, 0xc0);
+    }
     return 0;
 }
 
@@ -1240,21 +1237,32 @@ static int sipicture_get(lua_State *L)
     int h = luaL_checknumber(L, 5);
 
     int d = GetBitMapAttr(win->RPort->BitMap , BMA_DEPTH);
-    struct BitMap *bm = AllocBitMap(w, h, d, BMF_CLEAR , win->RPort->BitMap);
+    struct BitMap *bm = AllocBitMap(w, h, d, 0, win->RPort->BitMap);
     if (bm == NULL) luaL_error(L, "Can't allocate bitmap");
 
-    struct RastPort rp;
-    memset(&rp, 0, sizeof(struct RastPort));
-    InitRastPort(&rp);
-    rp.BitMap = bm;
-    ClipBlit(win->RPort, x, y, &rp, 0, 0, w, h, 0xC0);
+    BltRastPortBitMap(win->RPort, x, y, bm, 0, 0, w, h, 0xC0);
 
     Picture *pi = pushPicture(L);
-    pi->bm = bm;
-    pi->width = w;
-    pi->height = h;
-    pi->depth = d;
+    pi->dto     = NULL;
+    pi->bm      = bm;
+    pi->width   = w;
+    pi->height  = h;
+    pi->depth   = d;
+    pi->mask    = NULL;
     return 1;
+}
+
+static int sipicture_query(lua_State *L)
+{
+    Picture *pi = checkPicture(L, 1);
+    if (pi->bm == NULL) luaL_error(L, "Picture object doesn't contain bitmap");
+
+    lua_pushnumber(L, pi->width);
+    lua_pushnumber(L, pi->height);
+    lua_pushnumber(L, pi->depth);
+    lua_pushboolean(L, (int)pi->mask);
+
+    return 4;
 }
 
 static int sipicture_free(lua_State *L)
@@ -1262,9 +1270,21 @@ static int sipicture_free(lua_State *L)
     Picture *pi = checkPicture(L, 1);
     if (pi)
     {
-        WaitBlit();
-        FreeBitMap(pi->bm);
-        pi->bm = NULL;
+        if (pi->dto) // Picture was created with Sipicture:load()
+        {
+            DisposeDTObject(pi->dto);
+        }
+        else // Picture was created with Sipicture:get()
+        {
+            WaitBlit();
+            FreeBitMap(pi->bm);
+        }
+        pi->dto    = NULL;
+        pi->bm     = NULL;
+        pi->mask   = NULL;
+        pi->width  = 0;
+        pi->height = 0;
+        pi->depth  = 0;
     }
     return 0;
 }
@@ -1275,6 +1295,7 @@ static const luaL_reg sipicture_methods[] =
     // {"save",    sipicture_save},
     {"put",     sipicture_put},
     {"get",     sipicture_get},
+    {"query",   sipicture_query},
     {"free",    sipicture_free},
 
     {NULL, NULL}
@@ -1298,21 +1319,6 @@ static const luaL_reg sipicture_meta[] = {
 
 int luaopen_siamigalib(lua_State *L)
 {
-    IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library", 36);
-    if (IntuitionBase == NULL) luaL_error(L, "Can't open intuition.library V 36");
-
-    GfxBase = (struct GfxBase *)OpenLibrary("graphics.library", 36);
-    if (GfxBase == NULL) luaL_error(L, "Can't open graphics.library V 36");
-
-    AslBase = OpenLibrary("asl.library", 36);
-    if (AslBase == NULL) luaL_error(L, "Can't open asl.library V 36");
-
-    DataTypesBase = OpenLibrary("datatypes.library", 43);
-    if (DataTypesBase == NULL) luaL_error(L, "Can't open datatypes.library V 43");
-
-    GadToolsBase = OpenLibrary("gadtools.library", 39);
-    if (GadToolsBase == NULL) luaL_error(L, "Can't open gadtools.library V39");
-
     screen = LockPubScreen(NULL);
     if (screen == NULL) luaL_error(L, "Can't lock pubscreen");
 
@@ -1366,10 +1372,5 @@ void siamiga_close_libraries(void)
 {
     if (screen) UnlockPubScreen(NULL, screen);
     if (vinfo) FreeVisualInfo(vinfo);
-    CloseLibrary(GadToolsBase);
-    CloseLibrary(DataTypesBase);
-    CloseLibrary(AslBase);
-    CloseLibrary((struct Library *)IntuitionBase);
-    CloseLibrary((struct Library *)GfxBase);
 }
 
