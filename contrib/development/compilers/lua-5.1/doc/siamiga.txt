@@ -205,11 +205,15 @@ picture the pens are released, too.
 Example: pic = Sipicture.load("work:smily.gif")
 
 ------------------------------------------------------------------------------------------
-Sipicture.put(picture, window, left, top, [mask])
+Sipicture.put(picture, window, left, top, [width], [height], [mask])
 Blits a picture at position left,top to the window.
+The optional arguments width and height default to the width and height of the picure.
 If you set the mask argument to true and the picture contains a mask the rendering is done
-using that mask.
+using that mask. Set width and height to 0 if you want to set the mask argument without
+limiting width and height.
 Example: pic:put(win1, 15, 30)
+         pic:put(win1, 15, 30, 20, 40)
+         pic:put(win1, 15, 30, 0, 0, true)
 
 ------------------------------------------------------------------------------------------
 Sipicture.get(window, left, top, width, height)

@@ -7,12 +7,14 @@ print(pic:query())
 
 function drawstuff()
     pic:put(win, 30, 30)
-    pic:put(win, 30, 50, true)
+    pic:put(win, 30, 50, 0, 0, true)
 end
 
 drawstuff()
 pic2 = Sipicture.get(win, 50, 30 , 40, 40)
 pic2:put(win, 100, 100)
+pic2:put(win, 100, 150, 15, 15)
+pic2:put(win, 150, 150, 500, 500)
 
 done = false
 while not done do

@@ -1213,14 +1213,24 @@ static int sipicture_put(lua_State *L)
 
     int x = luaL_checknumber(L, 3);
     int y = luaL_checknumber(L, 4);
-    BOOL withMask = lua_toboolean(L, 5);
+    int w = lua_tointeger(L, 5);
+    int h = lua_tointeger(L, 6);
+    BOOL withMask = lua_toboolean(L, 7);
+    if ((w < 1) || (w > pi->width))
+    {
+        w = pi->width;
+    }
+    if ((h < 1) || (h > pi->height))
+    {
+        h = pi->height;
+    }
     if (withMask && pi->mask)
     {
-        BltMaskBitMapRastPort(pi->bm, 0, 0, win->RPort, x, y, pi->width, pi->height, 0xe0, pi->mask);  
+        BltMaskBitMapRastPort(pi->bm, 0, 0, win->RPort, x, y, w, h, 0xe0, pi->mask);  
     }
     else
     {
-        BltBitMapRastPort(pi->bm, 0, 0, win->RPort, x, y, pi->width, pi->height, 0xc0);
+        BltBitMapRastPort(pi->bm, 0, 0, win->RPort, x, y ,w , h, 0xc0);
     }
     return 0;
 }
@@ -1235,6 +1245,9 @@ static int sipicture_get(lua_State *L)
     int y = luaL_checknumber(L, 3);
     int w = luaL_checknumber(L, 4);
     int h = luaL_checknumber(L, 5);
+
+    luaL_argcheck(L, (w > 0), 4, "Width must be greater than 0");
+    luaL_argcheck(L, (h > 0), 5, "Height must be greater than 0");
 
     int d = GetBitMapAttr(win->RPort->BitMap , BMA_DEPTH);
     struct BitMap *bm = AllocBitMap(w, h, d, 0, win->RPort->BitMap);
