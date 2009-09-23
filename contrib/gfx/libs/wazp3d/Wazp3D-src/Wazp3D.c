@@ -25,6 +25,11 @@
 #include <proto/asl.h>
 #include <proto/exec.h>
 #include <proto/cybergraphics.h>
+
+#if !defined(__AROS__) && !defined(__MORPHOS__)
+typedef ULONG IPTR;
+#endif
+
 /*==================================================================================*/
 struct memory3D{
 	UBYTE *pt;
@@ -51,7 +56,7 @@ UBYTE text2[2];
 /*==================================================================================*/
 #define DRIVERNAME "Wazp3D soft renderer - Alain Thellier - Paris France 2009 - Beta 44"
 UBYTE Wazp3DPrefsName[] = {"Wazp3D Prefs.Beta 44.Alain Thellier 2009"};
-ULONG Wazp3DPrefsNameTag=(ULONG) Wazp3DPrefsName;
+IPTR Wazp3DPrefsNameTag=(IPTR) Wazp3DPrefsName;
 /*==================================================================================*/
 struct vertex3D{
 	float x,y,z;
