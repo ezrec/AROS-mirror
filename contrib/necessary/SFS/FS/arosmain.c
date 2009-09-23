@@ -781,6 +781,25 @@ D(bug("[SFS] FSA_RENAME %s %s\n", iofs->io_Union.io_RENAME.io_Filename, iofs->io
                     error = packet.dp_Res2;
                 break;
 
+            case FSA_SET_OWNER:
+D(bug("[SFS] FSA_SET_OWNER %s %u %u\n", iofs->io_Union.io_SET_OWNER.io_Filename, iofs->io_Union.io_SET_OWNER.io_UID,  iofs->io_Union.io_SET_OWNER.io_GID));
+                packet.dp_Type = ACTION_SET_OWNER;
+                packet.dp_Arg2 =
+                    (asfshandle ==  &asfshandle->device->rootfh) ?
+                    0 :
+                    (IPTR)MKBADDR(asfshandle->handle);
+                packet.dp_Arg3 =
+                    (IPTR)MKBADDR(iofs->io_Union.io_SET_OWNER.io_Filename);
+                packet.dp_Arg4 =
+                      iofs->io_Union.io_SET_OWNER.io_UID << 16
+                    | iofs->io_Union.io_SET_OWNER.io_GID;
+                sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
+                if (packet.dp_Res1)
+                    error = 0;
+                else
+                    error = packet.dp_Res2;
+                break;
+
             case FSA_SET_DATE:
                 packet.dp_Type = ACTION_SET_DATE;
                 packet.dp_Arg2 =
