@@ -1,17 +1,16 @@
-/* Wazp3D Beta 44 : Alain THELLIER - Paris - FRANCE - (November 2006 to Sept. 2009) */
+/* Wazp3D Beta 44 c3 : Alain THELLIER - Paris - FRANCE - (November 2006 to Sept. 2009) */
 /* Adaptation to AROS from Matthias Rustler							*/
 /* Code clean-up and library enhancements from Gunther Nikl					*/
 /* LICENSE: GNU General Public License (GNU GPL) for this file				*/
 
 /* define this one if you want the builtin debugger */
-/* #define WAZP3DDEBUG 1  */
+#define WAZP3DDEBUG 1  
 /* define this one if your CPU got same byteordering as Motorola */
 #define MOTOROLAORDER 1
 
 #if defined(__AROS__) && (AROS_BIG_ENDIAN == 0)
 #undef MOTOROLAORDER
 #endif
-
 //PROVIDE_VARARG_FUNCTIONS
 
 /*==================================================================================*/
@@ -25,11 +24,9 @@
 #include <proto/asl.h>
 #include <proto/exec.h>
 #include <proto/cybergraphics.h>
-
-#if !defined(__AROS__) && !defined(__MORPHOS__)
-typedef ULONG IPTR;
+#if !defined(__AROS__) && !defined(__MORPHOS__) 
+typedef ULONG IPTR; 
 #endif
-
 /*==================================================================================*/
 struct memory3D{
 	UBYTE *pt;
@@ -54,8 +51,8 @@ struct memory3D *firstME=NULL;		/* Tracked memory-allocation	  		*/
 UBYTE text1[2];
 UBYTE text2[2];
 /*==================================================================================*/
-#define DRIVERNAME "Wazp3D soft renderer - Alain Thellier - Paris France 2009 - Beta 44"
-UBYTE Wazp3DPrefsName[] = {"Wazp3D Prefs.Beta 44.Alain Thellier 2009"};
+#define DRIVERNAME "Wazp3D soft renderer - Alain Thellier - Paris France 2009 - Beta 44c3"
+UBYTE Wazp3DPrefsName[] = {"Wazp3D Prefs.Beta 44c3.Alain Thellier 2009"};
 IPTR Wazp3DPrefsNameTag=(IPTR) Wazp3DPrefsName;
 /*==================================================================================*/
 struct vertex3D{
@@ -1033,6 +1030,22 @@ void CopyP(struct point3D *P1,struct point3D *P2)
 	P1->u=P2->u; 
 	P1->v=P2->v; 
 	COPYRGBA(P1->RGBA,P2->RGBA);
+}
+/*==========================================================================*/
+void ColorToRGBA(UBYTE *RGBA,float r,float g,float b,float a)
+{
+	RGBA[0]=(UBYTE)(r*256.0); 
+	if(1.0<=r)	RGBA[0]=255;
+	if(r<=0.0)	RGBA[0]=0;
+	RGBA[1]=(UBYTE)(g*256.0); 
+	if(1.0<=g)	RGBA[1]=255;
+	if(g<=0.0)	RGBA[1]=0;
+	RGBA[2]=(UBYTE)(b*256.0); 
+	if(1.0<=b)	RGBA[2]=255;
+	if(b<=0.0)	RGBA[2]=0;
+	RGBA[3]=(UBYTE)(a*256.0); 
+	if(1.0<=a)	RGBA[3]=255;
+	if(a<=0.0)	RGBA[3]=0;
 }
 /*=================================================================*/
 #ifdef WAZP3DDEBUG
@@ -2562,7 +2575,6 @@ SREM(flush remaining pixels)
 			{
 			SREM(ColorTransp so use A)
 			TexMode='A';			/* then use it as an alpha one */
-			tex24=FALSE;			/* and use a Pixels32x function  */
 			}
 		}
 
@@ -3507,9 +3519,9 @@ if(Wazp3D.DebugSOFT3D.ON) Libprintf("DrawPolyP Pnb %ld  \n",SC->PolyPnb);
 	P++;
 	}
 
-	if(SC->PolyP->RGBA[3]!=255)		/* if not solid ==> do alpha */ 
+	if(Wazp3D.UseAlphaMinMax.ON)	
+	if(SC->PolyP->RGBA[3] < ALPHAMAX)		/* if not solid ==> do alpha */ 
 		SC->ColorTransp=TRUE;
-
 
 /* This face is inside Fog ? */
 	if(SC->FogMode==0)
@@ -5057,10 +5069,8 @@ struct point3D *P;
 	P->w=V->w;
 	P->u=V->u * WC->uresize;
 	P->v=V->v * WC->vresize;
-	P->RGBA[0]=V->color.r * 255.0;
-	P->RGBA[1]=V->color.g * 255.0;
-	P->RGBA[2]=V->color.b * 255.0;
-	P->RGBA[3]=V->color.a * 255.0;
+
+	ColorToRGBA(P->RGBA,V->color.r,V->color.g,V->color.b,V->color.a);
 
 	PrintP(P);
 }
@@ -5162,10 +5172,7 @@ struct point3D *P;
 	if(Cformat AND W3D_COLOR_FLOAT)
 		{
 		rgbaF=(float *)pt;
-		RGBA[0]=rgbaF[0]*255.0;
-		RGBA[1]=rgbaF[1]*255.0;
-		RGBA[2]=rgbaF[2]*255.0;
-		RGBA[3]=rgbaF[3]*255.0;
+		ColorToRGBA(RGBA,rgbaF[0],rgbaF[1],rgbaF[2],rgbaF[3]);
 		}
 	if(Cformat AND W3D_COLOR_UBYTE)
 		{
@@ -6870,12 +6877,7 @@ struct WAZP3D_texture *WT;
 	if(texture!=NULL) WT=texture->driver; else WT=&emptyWT; 	/* patch: StormMesa use this undocumented NULL value for texture */
 
 	if(envcolor!=NULL)
-	{
-	WT->EnvRGBA[0]=envcolor->r * 255.0;
-	WT->EnvRGBA[1]=envcolor->g * 255.0;
-	WT->EnvRGBA[2]=envcolor->b * 255.0;
-	WT->EnvRGBA[3]=envcolor->a * 255.0;
-	}
+		ColorToRGBA(WT->EnvRGBA,envcolor->r,envcolor->g,envcolor->b,envcolor->a);
 
 	WT->TexEnvMode=envparam;
 
@@ -6908,12 +6910,7 @@ struct WAZP3D_texture *WT=texture->driver;
 	WT->WrapRepeatX=(s_mode==W3D_REPEAT);
 	WT->WrapRepeatY=(t_mode==W3D_REPEAT);
 	if(bordercolor!=NULL)
-	{
-	WT->WrapRGBA[0]=bordercolor->r * 255.0;
-	WT->WrapRGBA[1]=bordercolor->g * 255.0;
-	WT->WrapRGBA[2]=bordercolor->b * 255.0;
-	WT->WrapRGBA[3]=bordercolor->a * 255.0;
-	}
+		ColorToRGBA(WT->WrapRGBA,bordercolor->r,bordercolor->g,bordercolor->b,bordercolor->a);
 
 	WINFO(s_mode,W3D_REPEAT,"texture is repeated ")
 	WINFO(s_mode,W3D_CLAMP,"texture is clamped")
@@ -7236,7 +7233,9 @@ struct WAZP3D_context *WC=context->driver;
 
 	WAZP3DFUNCTION(44);
 	WC->AlphaMode=mode;
-	WC->AlphaRef=(UBYTE)(*refval*255.0);
+	WC->AlphaRef=(UBYTE)(*refval*256.0); 
+	if(*refval>=1.0)	WC->AlphaRef=255;
+	if(*refval<=0.0)	WC->AlphaRef=0;	
 
 	WINFO(mode,W3D_A_NEVER,"discard incoming pixel ")
 	WINFO(mode,W3D_A_LESS,"draw,if A < refvalue ")
@@ -7418,10 +7417,8 @@ struct WAZP3D_context *WC=context->driver;
 	if(fogmode==W3D_FOG_EXP)	WC->FogMode=2;
 	if(fogmode==W3D_FOG_EXP_2)	WC->FogMode=3;
 
-	WC->FogRGBA[0]	=fogparams->fog_color.r*255.0;
-	WC->FogRGBA[1]	=fogparams->fog_color.g*255.0;
-	WC->FogRGBA[2]	=fogparams->fog_color.b*255.0;
-	WC->FogRGBA[3]	=255;
+	ColorToRGBA(WC->FogRGBA,fogparams->fog_color.r,fogparams->fog_color.g,fogparams->fog_color.b,1.0);
+
 	WC->FogZmin	   =fogparams->fog_end;		/* end is zmin !!! */
 	WC->FogZmax	   =fogparams->fog_start;
 	WC->FogDensity	=fogparams->fog_density;
@@ -7498,12 +7495,8 @@ struct WAZP3D_context *WC=context->driver;
 
 	WAZP3DFUNCTION(52);
 	if(color!=NULL)
-	{
-	WC->CurrentRGBA[0]=color->r * 255.0;
-	WC->CurrentRGBA[1]=color->g * 255.0;
-	WC->CurrentRGBA[2]=color->b * 255.0;
-	WC->CurrentRGBA[3]=color->a * 255.0;
-	}
+		ColorToRGBA(WC->CurrentRGBA,color->r,color->g,color->b,color->a);
+
 	SOFT3D_SetCurrentColor(WC->SC,WC->CurrentRGBA);
 	WRETURN(W3D_SUCCESS);
 }
@@ -8136,10 +8129,8 @@ SREM(TEXTURE_NOT_NULL)
 		}
 
 	TexEnvMode=context->globaltexenvmode;  		/* global texture-env-mode  */
-	EnvRGBA[0]=255.0*context->globaltexenvcolor[0];	/* global texture-env-color */
-	EnvRGBA[1]=255.0*context->globaltexenvcolor[1];	
-	EnvRGBA[2]=255.0*context->globaltexenvcolor[2];	
-	EnvRGBA[3]=255.0*context->globaltexenvcolor[3];	
+	ColorToRGBA(EnvRGBA,context->globaltexenvcolor[0],context->globaltexenvcolor[1],context->globaltexenvcolor[2],context->globaltexenvcolor[3]); /* global texture-env-color */
+
 	if(WT!=NULL)
 	if(!StateON(W3D_GLOBALTEXENV))
 	{
