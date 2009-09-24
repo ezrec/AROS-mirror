@@ -1236,8 +1236,7 @@ Tags
 ::
 
 
- PDTA_Screen     --  for pictureclass objects
- ADTA_Screen     --  for animationclass objects
+     None defined so far.
 
 
 Result
@@ -1426,15 +1425,6 @@ Inputs
  o       --  pointer to the data type object the drawinfo of which to
              release; may be NULL
  handle  --  handle got from ObtainDTDrawInfoA()
-
-
-Tags
-~~~~
-::
-
-
- PDTA_Screen     --  for pictureclass objects
- ADTA_Screen     --  for animationclass objects
 
 
 Result

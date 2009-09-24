@@ -1325,15 +1325,40 @@ Synopsis
 
   int chown(
      const char *path,
-     uid_t owner,
-     gid_t group)
+     uid_t      owner,
+     gid_t      group)
+
+
+Function
+~~~~~~~~
+::
+
+     Change the user and group ownership of a file.
+     
+
+Inputs
+~~~~~~
+::
+
+     path  - the path to file
+     owner - new owner ID
+     group - new group ID
+
+
+Result
+~~~~~~
+::
+
+     0 on success and -1 on error. If an error occurred, the global
+     variable errno is set.
 
 
 Notes
 ~~~~~
 ::
 
-     Not implemented.
+     This implementation was done by looking at Olaf 'Olsen' Barthels
+     clib2.
 
 
 
@@ -5784,7 +5809,7 @@ Synopsis
 ::
 
   int lstat(
-     const char *path,
+     const char  *path,
      struct stat *sb)
 
 

@@ -60,11 +60,11 @@ Example
 ::
 
 
-     Install-grub2-i386-pc device ata.device unit 0 grub dh0:boot/grub
+     Install-grub2-i386-pc DEVICE ata.device UNIT 0 GRUB DH0:boot/grub
 
 
 See also
 ~~~~~~~~
 
-`Partition <partition>`_ Sys:System/Format   
+`Partition <partition>`_ SYS:System/Format   
 
