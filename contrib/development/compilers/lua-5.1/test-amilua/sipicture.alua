@@ -7,7 +7,7 @@ print(pic:query())
 
 function drawstuff()
     pic:put(win, 30, 30)
-    pic:put(win, 30, 50, 0, 0, true)
+    pic:put(win, 30, 50)
 end
 
 drawstuff()

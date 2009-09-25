@@ -1041,7 +1041,7 @@ typedef struct Picture
 {
     Object        *dto;
     struct BitMap *bm;
-    APTR           mask;
+    APTR           drinfo;
     int            width, height, depth;
 } Picture;
 
@@ -1080,24 +1080,19 @@ static int sipicture_load(lua_State *L)
     (
         (APTR)filename,
         DTA_GroupID,    GID_PICTURE,
-        PDTA_Remap,     TRUE,
+        //PDTA_Remap,     TRUE,
         PDTA_Screen,    (IPTR)screen,
         PDTA_DestMode,  PMODE_V43,
         TAG_END
     );
     if (o == NULL) luaL_error(L, "Can't create datatype object");
 
-    DoDTMethod(o, NULL, NULL, DTM_PROCLAYOUT, 0, 1);
-
-    struct BitMap *dbm       = NULL;
     struct BitMapHeader *bmh = NULL;
-    APTR mask                = NULL;
+    APTR drinfo              = NULL;
     GetDTAttrs
     (
         o,
-        PDTA_DestBitMap,   (IPTR)&dbm,
         PDTA_BitMapHeader, (IPTR)&bmh,
-        PDTA_MaskPlane,    (IPTR)&mask,
         TAG_END
     );
 
@@ -1107,19 +1102,21 @@ static int sipicture_load(lua_State *L)
         luaL_error(L, "Bitmapheader is Null");
     }   
 
-    if (dbm == NULL)
+    drinfo = ObtainDTDrawInfo(o, PDTA_Screen, screen, TAG_END);
+
+    if (drinfo == NULL)
     {
         DisposeDTObject(o);
-        luaL_error(L, "Destbitmap is Null");
+        luaL_error(L, "Can't obtain DrawInfo");
     }
 
     Picture *pic = pushPicture(L);
     pic->dto     = o;
-    pic->bm      = dbm; // Point to datatype's bitmap
+    pic->bm      = NULL;
     pic->width   = bmh->bmh_Width;
     pic->height  = bmh->bmh_Height;
     pic->depth   = bmh->bmh_Depth;
-    pic->mask    = mask; // Point to datatype's mask plane
+    pic->drinfo  = drinfo;
 
     return 1;
 }
@@ -1205,7 +1202,6 @@ static int sipicture_save(lua_State *L)
 static int sipicture_put(lua_State *L)
 {
     Picture *pi = checkPicture(L, 1);
-    if (pi->bm == NULL) luaL_error(L, "Picture object doesn't contain bitmap");
 
     Siamiga *siam = checkSiamiga(L, 2);
     struct Window *win = siam->win;
@@ -1213,9 +1209,8 @@ static int sipicture_put(lua_State *L)
 
     int x = luaL_checknumber(L, 3);
     int y = luaL_checknumber(L, 4);
-    int w = lua_tointeger(L, 5);
-    int h = lua_tointeger(L, 6);
-    BOOL withMask = lua_toboolean(L, 7);
+    int w = lua_tonumber(L, 5);
+    int h = lua_tonumber(L, 6);
     if ((w < 1) || (w > pi->width))
     {
         w = pi->width;
@@ -1224,11 +1219,23 @@ static int sipicture_put(lua_State *L)
     {
         h = pi->height;
     }
-    if (withMask && pi->mask)
+
+    if (pi->dto)
     {
-        BltMaskBitMapRastPort(pi->bm, 0, 0, win->RPort, x, y, w, h, 0xe0, pi->mask);  
+        DrawDTObjectA
+        (
+            win->RPort,
+            pi->dto,
+            x,
+            y,
+            w,
+            h,
+            0,
+            0,
+            NULL
+        );
     }
-    else
+    else if (pi->bm)
     {
         BltBitMapRastPort(pi->bm, 0, 0, win->RPort, x, y ,w , h, 0xc0);
     }
@@ -1261,21 +1268,19 @@ static int sipicture_get(lua_State *L)
     pi->width   = w;
     pi->height  = h;
     pi->depth   = d;
-    pi->mask    = NULL;
+    pi->drinfo  = NULL;
     return 1;
 }
 
 static int sipicture_query(lua_State *L)
 {
     Picture *pi = checkPicture(L, 1);
-    if (pi->bm == NULL) luaL_error(L, "Picture object doesn't contain bitmap");
 
     lua_pushnumber(L, pi->width);
     lua_pushnumber(L, pi->height);
     lua_pushnumber(L, pi->depth);
-    lua_pushboolean(L, (int)pi->mask);
 
-    return 4;
+    return 3;
 }
 
 static int sipicture_free(lua_State *L)
@@ -1286,6 +1291,7 @@ static int sipicture_free(lua_State *L)
         if (pi->dto) // Picture was created with Sipicture:load()
         {
             DisposeDTObject(pi->dto);
+            ReleaseDTDrawInfo(pi->dto, pi->drinfo);
         }
         else // Picture was created with Sipicture:get()
         {
@@ -1294,7 +1300,7 @@ static int sipicture_free(lua_State *L)
         }
         pi->dto    = NULL;
         pi->bm     = NULL;
-        pi->mask   = NULL;
+        pi->drinfo = NULL;
         pi->width  = 0;
         pi->height = 0;
         pi->depth  = 0;
