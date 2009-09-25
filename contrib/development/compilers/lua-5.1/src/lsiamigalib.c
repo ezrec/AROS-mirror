@@ -1102,7 +1102,7 @@ static int sipicture_load(lua_State *L)
         luaL_error(L, "Bitmapheader is Null");
     }   
 
-    drinfo = ObtainDTDrawInfo(o, PDTA_Screen, screen, TAG_END);
+    drinfo = ObtainDTDrawInfoA(o, NULL);
 
     if (drinfo == NULL)
     {
@@ -1290,8 +1290,8 @@ static int sipicture_free(lua_State *L)
     {
         if (pi->dto) // Picture was created with Sipicture:load()
         {
-            DisposeDTObject(pi->dto);
             ReleaseDTDrawInfo(pi->dto, pi->drinfo);
+            DisposeDTObject(pi->dto);
         }
         else // Picture was created with Sipicture:get()
         {
