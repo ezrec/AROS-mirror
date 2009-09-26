@@ -125,13 +125,16 @@ void initmesa()
     // done...
     attributes[i].ti_Tag    = TAG_DONE;
 
-    glcont = AROSMesaCreateContext(attributes);  
-    AROSMesaMakeCurrent(glcont);
+    glcont = AROSMesaCreateContext(attributes);
+    if (glcont)
+        AROSMesaMakeCurrent(glcont);
+    else
+        finished = TRUE; /* Failure. Stop */
 }
 
 void deinitmesa()
 {
-    AROSMesaDestroyContext(glcont);
+    if (glcont) AROSMesaDestroyContext(glcont);
 }
 
 

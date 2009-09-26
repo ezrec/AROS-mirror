@@ -82,7 +82,10 @@ USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../../include \
             -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/include \
             -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/auxiliary \
             -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/drivers \
-            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/winsys/aros/libdrm \
+            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/winsys/aros/libdrm/libdrm \
+            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/winsys/aros/libdrm/libdrm/nouveau \
+            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/winsys/aros/libdrm/shared-core \
+            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/winsys/drm/nouveau/drm \
 
 USER_CFLAGS :=
 

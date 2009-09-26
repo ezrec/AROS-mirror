@@ -21,6 +21,8 @@
 
 struct Library * AROSMesaCyberGfxBase = NULL;    /* Base address for cybergfx */
 
+#define USE_NVIDIA_DRIVER 1
+
 /* HACK to get the driver setup */
 extern struct arosmesa_driver arosmesa_softpipe_driver;
 extern struct arosmesa_driver arosmesa_nouveau_driver;
@@ -32,7 +34,7 @@ extern struct arosmesa_driver driver;
 /*                             PRIVATE FUNCTIONS                             */
 /*****************************************************************************/
 
-static void _aros_destroy_visual(AROSMesaVisual aros_vis)
+static void aros_destroy_visual(AROSMesaVisual aros_vis)
 {
     if (aros_vis)
     {
@@ -90,7 +92,7 @@ static AROSMesaVisual aros_new_visual(struct TagItem *tagList)
                                 alphaBits ? accumBits : 0,
                                 1)) /* FIXME: xlib state_tracker code passes 0 - verify */
     {
-        _aros_destroy_visual(aros_vis);
+        aros_destroy_visual(aros_vis);
         return NULL;
     }
 
@@ -350,10 +352,10 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
     struct pipe_context * pipe = NULL;
     
     /* HACK - driver should be already set up */
-    #if 0
-    arosmesa_set_driver(&arosmesa_softpipe_driver);
-    #else
+    #if USE_NVIDIA_DRIVER == 1
     arosmesa_set_driver(&arosmesa_nouveau_driver);
+    #else
+    arosmesa_set_driver(&arosmesa_softpipe_driver);
     #endif
     
     /* Try to open cybergraphics.library */
@@ -381,6 +383,7 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
 
     if (!(amesa->visual = aros_new_visual(tagList)))
     {
+        /* TODO: Route error handling to one place */
         D(bug("[AROSMESA] AROSMesaCreateContext: ERROR -  failed to create AROSMesaVisual\n"));
         FreeVec( amesa );
         /* LastError = AMESA_OUT_OF_MEM; */ /* FIXME: verify usage of LastError - should it be part of AROSMesaContext ? */
@@ -388,8 +391,14 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
     }
     
     screen = driver.create_pipe_screen();
-    
-    /* FIXME : If screen == NULL */
+    if (!screen)
+    {
+        /* TODO: Route error handling to one place */
+        D(bug("[AROSMESA] AROSMesaCreateContext: ERROR -  failed to create gallium driver screen\n"));
+        aros_destroy_visual(amesa->visual);
+        FreeVec(amesa);
+        return NULL;
+    }
     
     pipe = driver.create_pipe_context(screen);
     
@@ -408,7 +417,12 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
     /* FIXME: Provide rastport to framebuffer ? */
     amesa->framebuffer = aros_new_framebuffer(amesa, amesa->visual);
     
+    #if USE_NVIDIA_DRIVER == 1
+    /* Return NULL so that no further rendering operations are in client - temp */
+    return NULL;
+    #else
     return amesa;
+    #endif
 }
 
 void AROSMesaMakeCurrent(AROSMesaContext amesa)

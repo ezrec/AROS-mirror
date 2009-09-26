@@ -7,7 +7,19 @@ AROS_WINSYS_SOURCES = \
             winsys/aros/arosmesa_winsys \
             winsys/aros/arosmesa_softpipe \
             winsys/aros/arosmesa_nouveau \
-            winsys/aros/arosmesa_i915 \
+            winsys/aros/arosmesa_nouveau_pci \
+            winsys/aros/libdrm/libdrm/nouveau/nouveau_resource \
+            winsys/aros/libdrm/libdrm/nouveau/nouveau_grobj \
+            winsys/aros/libdrm/libdrm/nouveau/nouveau_pushbuf \
+            winsys/aros/libdrm/libdrm/nouveau/nouveau_fence \
+            winsys/aros/libdrm/libdrm/nouveau/nouveau_dma \
+            winsys/aros/libdrm/libdrm/nouveau/nouveau_notifier \
+            winsys/aros/libdrm/libdrm/nouveau/nouveau_bo \
+            winsys/aros/libdrm/libdrm/nouveau/nouveau_channel \
+            winsys/aros/libdrm/libdrm/nouveau/nouveau_device \
+            winsys/aros/libdrm/libdrm/arosdrm \
+            winsys/drm/nouveau/drm/nouveau_winsys_pipe \
+            winsys/drm/nouveau/drm/nouveau_winsys \
 
 GALLIUM_AUXILIARY_SOURCES = \
             auxiliary/util/u_debug \
@@ -175,6 +187,18 @@ GALLIUM_NVIDIA_SOURCES = \
             drivers/nv04/nv04_surface \
             drivers/nv04/nv04_transfer \
             drivers/nv04/nv04_vbo \
+            drivers/nv20/nv20_clear \
+            drivers/nv20/nv20_context \
+            drivers/nv20/nv20_fragprog \
+            drivers/nv20/nv20_fragtex \
+            drivers/nv20/nv20_miptree \
+            drivers/nv20/nv20_prim_vbuf \
+            drivers/nv20/nv20_screen \
+            drivers/nv20/nv20_state \
+            drivers/nv20/nv20_state_emit \
+            drivers/nv20/nv20_surface \
+            drivers/nv20/nv20_transfer \
+            drivers/nv20/nv20_vbo \
             
 GALLIUM_I915_SOURCES = \
             drivers/i915simple/i915_blit \
@@ -203,4 +227,3 @@ AROS_GALLIUM_SOURCES = \
             $(GALLIUM_AUXILIARY_SOURCES) \
             $(GALLIUM_SOFTPIPE_SOURCES) \
             $(GALLIUM_NVIDIA_SOURCES) \
-            $(GALLIUM_I915_SOURCES) \

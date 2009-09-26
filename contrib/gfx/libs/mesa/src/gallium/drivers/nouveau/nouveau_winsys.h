@@ -30,7 +30,7 @@ struct nouveau_winsys {
 
 	int  (*res_init)(struct nouveau_resource **heap, unsigned start,
 			 unsigned size);
-	int  (*res_alloc)(struct nouveau_resource *heap, int size, void *priv,
+	int  (*res_alloc)(struct nouveau_resource *heap, unsigned size, void *priv,
 			  struct nouveau_resource **);
 	void (*res_free)(struct nouveau_resource **);
 
@@ -51,7 +51,7 @@ struct nouveau_winsys {
 	uint32_t  (*notifier_status)(struct nouveau_notifier *, int id);
 	uint32_t  (*notifier_retval)(struct nouveau_notifier *, int id);
 	int       (*notifier_wait)(struct nouveau_notifier *, int id,
-				   int status, double timeout);
+				   uint32_t status, double timeout);
 
 	int (*surface_copy)(struct nouveau_winsys *, struct pipe_surface *,
 			    unsigned, unsigned, struct pipe_surface *,
