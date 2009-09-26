@@ -1,13 +1,28 @@
 #include "arosdrm.h"
+#include "drmP.h"
 #include "nouveau_drm.h"
+#include "nouveau_drv.h"
 
 #define DEBUG 1
 #include <aros/debug.h>
 
+/* FIXME: This should implement generic approach - not card specific */
+
+int drm_debug_flag = 0;
+
+struct drm_device global_drm_device;
+
 int 
 drmCommandNone(int fd, unsigned long drmCommandIndex)
 {
-    D(bug("drmCommandNone - %d\n", drmCommandIndex));
+    switch(drmCommandIndex)
+    {
+        case(DRM_NOUVEAU_CARD_INIT):
+            return nouveau_ioctl_card_init(&global_drm_device, NULL, NULL);
+        default:
+            D(bug("drmCommandNone - UNHANDLED %d\n", drmCommandIndex));
+    }
+    
     return 0;
 }
 

@@ -5,6 +5,7 @@
 #include "pipe/p_shader_tokens.h"
 #include "tgsi/tgsi_parse.h"
 #include "tgsi/tgsi_util.h"
+#include "tgsi/tgsi_dump.h"
 
 #include "nv30_context.h"
 

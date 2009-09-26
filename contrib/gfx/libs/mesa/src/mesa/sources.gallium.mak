@@ -18,6 +18,32 @@ AROS_WINSYS_SOURCES = \
             winsys/aros/libdrm/libdrm/nouveau/nouveau_channel \
             winsys/aros/libdrm/libdrm/nouveau/nouveau_device \
             winsys/aros/libdrm/libdrm/arosdrm \
+            winsys/aros/libdrm/aros-core/nouveau_state \
+            winsys/aros/libdrm/aros-core/nouveau_fifo \
+            winsys/aros/libdrm/aros-core/nouveau_object \
+            winsys/aros/libdrm/aros-core/nouveau_mem \
+            winsys/aros/libdrm/aros-core/nouveau_backlight \
+            winsys/aros/libdrm/aros-core/drm_memory \
+            winsys/aros/libdrm/aros-core/drm_irq \
+            winsys/aros/libdrm/aros-core/drm_bufs \
+            winsys/aros/libdrm/shared-core/nv04_fifo \
+            winsys/aros/libdrm/shared-core/nv10_fifo \
+            winsys/aros/libdrm/shared-core/nv40_fifo \
+            winsys/aros/libdrm/shared-core/nv50_fifo \
+            winsys/aros/libdrm/shared-core/nv04_graph \
+            winsys/aros/libdrm/shared-core/nv10_graph \
+            winsys/aros/libdrm/shared-core/nv20_graph \
+            winsys/aros/libdrm/shared-core/nv40_graph \
+            winsys/aros/libdrm/shared-core/nv50_graph \
+            winsys/aros/libdrm/shared-core/nv04_fb \
+            winsys/aros/libdrm/shared-core/nv10_fb \
+            winsys/aros/libdrm/shared-core/nv40_fb \
+            winsys/aros/libdrm/shared-core/nv04_instmem \
+            winsys/aros/libdrm/shared-core/nv50_instmem \
+            winsys/aros/libdrm/shared-core/nv04_timer \
+            winsys/aros/libdrm/shared-core/nv04_mc \
+            winsys/aros/libdrm/shared-core/nv40_mc \
+            winsys/aros/libdrm/shared-core/nv50_mc \
             winsys/drm/nouveau/drm/nouveau_winsys_pipe \
             winsys/drm/nouveau/drm/nouveau_winsys \
 
@@ -199,7 +225,54 @@ GALLIUM_NVIDIA_SOURCES = \
             drivers/nv20/nv20_surface \
             drivers/nv20/nv20_transfer \
             drivers/nv20/nv20_vbo \
-            
+            drivers/nv10/nv10_clear \
+            drivers/nv10/nv10_context \
+            drivers/nv10/nv10_fragprog \
+            drivers/nv10/nv10_fragtex \
+            drivers/nv10/nv10_miptree \
+            drivers/nv10/nv10_prim_vbuf \
+            drivers/nv10/nv10_screen \
+            drivers/nv10/nv10_state \
+            drivers/nv10/nv10_state_emit \
+            drivers/nv10/nv10_surface \
+            drivers/nv10/nv10_transfer \
+            drivers/nv10/nv10_vbo \
+            drivers/nv30/nv30_clear \
+            drivers/nv30/nv30_context \
+            drivers/nv30/nv30_draw \
+            drivers/nv30/nv30_fragprog \
+            drivers/nv30/nv30_fragtex \
+            drivers/nv30/nv30_miptree \
+            drivers/nv30/nv30_query \
+            drivers/nv30/nv30_screen \
+            drivers/nv30/nv30_state \
+            drivers/nv30/nv30_state_blend \
+            drivers/nv30/nv30_state_emit \
+            drivers/nv30/nv30_state_fb \
+            drivers/nv30/nv30_state_rasterizer \
+            drivers/nv30/nv30_state_scissor \
+            drivers/nv30/nv30_state_stipple \
+            drivers/nv30/nv30_state_viewport \
+            drivers/nv30/nv30_state_zsa \
+            drivers/nv30/nv30_surface \
+            drivers/nv30/nv30_transfer \
+            drivers/nv30/nv30_vbo \
+            drivers/nv30/nv30_vertprog \
+            drivers/nv50/nv50_clear \
+            drivers/nv50/nv50_context \
+            drivers/nv50/nv50_draw \
+            drivers/nv50/nv50_miptree \
+            drivers/nv50/nv50_query \
+            drivers/nv50/nv50_program \
+            drivers/nv50/nv50_screen \
+            drivers/nv50/nv50_state \
+            drivers/nv50/nv50_state_validate \
+            drivers/nv50/nv50_tex \
+            drivers/nv50/nv50_vbo \
+
+#            drivers/nv50/nv50_surface \
+#            drivers/nv50/nv50_transfer \
+
 GALLIUM_I915_SOURCES = \
             drivers/i915simple/i915_blit \
             drivers/i915simple/i915_clear \

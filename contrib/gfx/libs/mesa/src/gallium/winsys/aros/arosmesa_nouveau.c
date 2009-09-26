@@ -35,24 +35,25 @@ arosmesa_create_nouveau_screen( void )
     case 0x00:
         init = nv04_screen_create;
         break;
-//     case 0x10:
-//         init = nv10_screen_create;
-//         break;
+    case 0x10:
+        init = nv10_screen_create;
+        break;
     case 0x20:
         init = nv20_screen_create;
         break;
-//     case 0x30:
-//         init = nv30_screen_create;
-//         break;
+    case 0x30:
+        init = nv30_screen_create;
+        break;
     case 0x40:
     case 0x60:
         init = nv40_screen_create;
         break;
-/*    case 0x80:
-    case 0x90:
-    case 0xa0:
-        init = nv50_screen_create;
-        break;*/
+        /* FIXME: compatibility between libdrm and gallium nouveau */
+//     case 0x80:
+//     case 0x90:
+//     case 0xa0:
+//         init = nv50_screen_create;
+//         break;
     default:
         debug_printf("%s: unknown chipset nv%02x\n", __func__,
                  dev->chipset);
@@ -92,24 +93,25 @@ arosmesa_create_nouveau_context( struct pipe_screen *screen )
     case 0x00:
         init = nv04_create;
         break;
-/*    case 0x10:
+    case 0x10:
         init = nv10_create;
-        break;*/
+        break;
     case 0x20:
         init = nv20_create;
         break;
-/*    case 0x30:
+    case 0x30:
         init = nv30_create;
-        break;*/
+        break;
     case 0x40:
     case 0x60:
         init = nv40_create;
         break;
-/*    case 0x80:
-    case 0x90:
-    case 0xa0:
-        init = nv50_create;
-        break;*/
+        /* FIXME: compatibility between libdrm and gallium nouveau */
+//     case 0x80:
+//     case 0x90:
+//     case 0xa0:
+//         init = nv50_create;
+//         break;
     default:
         debug_printf("%s: unknown chipset nv%02x\n", __func__, chipset);
         return NULL;
