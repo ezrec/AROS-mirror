@@ -30,32 +30,48 @@
 #include "drm.h"
 #include "drm_linux_list.h"
 
+#include "drm_redefines.h"
+
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
+
+#define DEBUG 1
+#include <aros/debug.h>
 
 #define DRM_CURRENTPID 1
 #define DRM_IRQ_ARGS void *args
 #define DRM_MEM_DRIVER     2
 #define DRM_MEM_BUFS       7
 
-extern int drm_debug_flag;
+/* FIXME: What should this be? */
+#define PAGE_SIZE 4096
 
 /* FIXME: real code needed*/
 #define DRM_READ32(map, offset)   0
 #define DRM_WRITE32(map, offset, val)  
+/* FIXME: int? Will this work for x86_64? */
+//#define readl(addr) (*(volatile unsigened int *) (addr))  
+#define readl(addr) 0
 
-#define DRM_ERROR(fmt, ...) \
-    printf("error: [" DRM_NAME ":pid%d:%s] *ERROR* " fmt,       \
-        DRM_CURRENTPID, __func__ , ##__VA_ARGS__)
+#define DRM_ERROR(fmt, ...) D(bug("[" DRM_NAME "(ERROR):%s] " fmt, __func__ , ##__VA_ARGS__))
 
-#define DRM_INFO(fmt, ...)  printf("info: [" DRM_NAME "] " fmt , ##__VA_ARGS__)
+#define DRM_INFO(fmt, ...) D(bug("[" DRM_NAME "(INFO)] " fmt, ##__VA_ARGS__))
 
-#define DRM_DEBUG(fmt, ...) do {                    \
-    if (drm_debug_flag)                     \
-        printf("[" DRM_NAME ":pid%d:%s] " fmt, DRM_CURRENTPID,  \
-            __func__ , ##__VA_ARGS__);          \
-} while (0)
+#define DRM_DEBUG(fmt, ...) D(bug("[" DRM_NAME "(DEBUG):%s] " fmt, __func__ , ##__VA_ARGS__))
+
+
+/* DRM_READMEMORYBARRIER() prevents reordering of reads.
+ * DRM_WRITEMEMORYBARRIER() prevents reordering of writes.
+ * DRM_MEMORYBARRIER() prevents reordering of reads and writes.
+ */
+/* FIXME: Implementation for other architextures */
+#define DRM_READMEMORYBARRIER()     __asm __volatile( \
+                    "lock; addl $0,0(%%esp)" : : : "memory");
+#define DRM_WRITEMEMORYBARRIER()    __asm __volatile("" : : : "memory");
+#define DRM_MEMORYBARRIER()     __asm __volatile( \
+                    "lock; addl $0,0(%%esp)" : : : "memory");
+
 
 typedef unsigned long dma_addr_t;
 
@@ -89,6 +105,9 @@ unsigned long drm_get_resource_len(struct drm_device *dev,
                       unsigned int resource);
 int drm_order(unsigned long size);
                           
+unsigned long drm_get_resource_start(struct drm_device *dev,
+                        unsigned int resource);
+                        
 void *drm_calloc(size_t nmemb, size_t size, int area);
 /* FIXME: make them inline */
 void *drm_alloc(size_t size, int area);

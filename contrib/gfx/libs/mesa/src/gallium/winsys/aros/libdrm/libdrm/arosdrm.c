@@ -15,6 +15,7 @@ struct drm_device global_drm_device;
 int 
 drmCommandNone(int fd, unsigned long drmCommandIndex)
 {
+    D(bug("drmCommandNone - %d\n", drmCommandIndex));
     switch(drmCommandIndex)
     {
         case(DRM_NOUVEAU_CARD_INIT):
@@ -65,6 +66,9 @@ int
 drmOpen(const char *name, const char *busid)
 {
     D(bug("drmOpen %s, %s\n", name, busid));
+    
+    nouveau_load(&global_drm_device, 0);
+    
     return 4242; /*FIXME: some id just for now */
 }
 

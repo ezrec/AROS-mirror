@@ -467,6 +467,7 @@ int nouveau_firstopen(struct drm_device *dev)
 #endif
 	return 0;
 }
+#endif
 
 #define NV40_CHIPSET_MASK 0x00000baf
 #define NV44_CHIPSET_MASK 0x00005450
@@ -484,7 +485,7 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
 
 	dev_priv->flags = flags & NOUVEAU_FLAGS;
 	dev_priv->init_state = NOUVEAU_CARD_INIT_DOWN;
-
+#if !defined(__AROS__)
 	DRM_DEBUG("vendor: 0x%X device: 0x%X class: 0x%X\n", dev->pci_vendor, dev->pci_device, dev->pdev->class);
 
 	/* Time to determine the card architecture */
@@ -493,6 +494,9 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
 		DRM_ERROR("Could not ioremap to determine register\n");
 		return -ENOMEM;
 	}
+#else
+#warning IMPLEMENT nouveau_load
+#endif
 
 	reg0 = readl(regs+NV03_PMC_BOOT_0);
 	reg1 = readl(regs+NV03_PMC_BOOT_1);
@@ -510,7 +514,12 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
 		architecture = 0x04;
 	}
 
+    /* HACK: Temporary */
+    architecture = 0x20;
+    /* HACK: Temporary */
+#if !defined(__AROS__)
 	iounmap(regs);
+#endif
 
 	if (architecture >= 0x80) {
 		dev_priv->card_type = NV_50;
@@ -563,6 +572,7 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
 	return 0;
 }
 
+#if !defined(__AROS__)
 void nouveau_lastclose(struct drm_device *dev)
 {
 	struct drm_nouveau_private *dev_priv = dev->dev_private;

@@ -23,6 +23,9 @@ AROS_WINSYS_SOURCES = \
             winsys/aros/libdrm/aros-core/nouveau_object \
             winsys/aros/libdrm/aros-core/nouveau_mem \
             winsys/aros/libdrm/aros-core/nouveau_backlight \
+            winsys/aros/libdrm/aros-core/nouveau_sgdma \
+            winsys/aros/libdrm/aros-core/drm_nouveau_dma \
+            winsys/aros/libdrm/aros-core/drm_nouveau_notifier \
             winsys/aros/libdrm/aros-core/drm_memory \
             winsys/aros/libdrm/aros-core/drm_irq \
             winsys/aros/libdrm/aros-core/drm_bufs \

@@ -9,6 +9,13 @@ unsigned long drm_get_resource_len(struct drm_device *dev, unsigned int resource
     return 0;
 }
 
+unsigned long drm_get_resource_start(struct drm_device *dev,
+                        unsigned int resource)
+{
+    D(bug("drm_get_resource_start\n"));
+    return 0;
+}
+
 /**
  * Compute size order.  Returns the exponent of the smaller power of two which
  * is greater or equal to given number.

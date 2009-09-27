@@ -170,7 +170,6 @@ int nouveau_fifo_init(struct drm_device *dev)
 	return 0;
 }
 
-#if !defined(__AROS__)
 static int
 nouveau_fifo_pushbuf_ctxdma_init(struct nouveau_channel *chan)
 {
@@ -223,6 +222,7 @@ nouveau_fifo_pushbuf_ctxdma_init(struct nouveau_channel *chan)
 	return 0;
 }
 
+#if !defined(__AROS__)
 static struct mem_block *
 nouveau_fifo_user_pushbuf_alloc(struct drm_device *dev)
 {
@@ -245,6 +245,7 @@ nouveau_fifo_user_pushbuf_alloc(struct drm_device *dev)
 
 	return pb;
 }
+#endif
 
 /* allocates and initializes a fifo for user space consumption */
 int
@@ -480,6 +481,7 @@ void nouveau_fifo_free(struct nouveau_channel *chan)
 	drm_free(chan, sizeof(*chan), DRM_MEM_DRIVER);
 }
 
+#if !defined(__AROS__)
 /* cleanups all the fifos from file_priv */
 void nouveau_fifo_cleanup(struct drm_device *dev, struct drm_file *file_priv)
 {
@@ -495,6 +497,7 @@ void nouveau_fifo_cleanup(struct drm_device *dev, struct drm_file *file_priv)
 			nouveau_fifo_free(chan);
 	}
 }
+#endif
 
 int
 nouveau_fifo_owner(struct drm_device *dev, struct drm_file *file_priv,
@@ -510,6 +513,7 @@ nouveau_fifo_owner(struct drm_device *dev, struct drm_file *file_priv,
 	return (dev_priv->fifos[channel]->file_priv == file_priv);
 }
 
+#if !defined(__AROS__)
 /***********************************
  * ioctls wrapping the functions
  ***********************************/

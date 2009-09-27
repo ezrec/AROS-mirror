@@ -597,7 +597,6 @@ nouveau_gpuobj_new_fake(struct drm_device *dev, uint32_t p_offset,
 	return 0;
 }
 
-#if !defined(__AROS__)
 static int
 nouveau_gpuobj_class_instmem_size(struct drm_device *dev, int class)
 {
@@ -731,6 +730,7 @@ nouveau_gpuobj_dma_new(struct nouveau_channel *chan, int class,
 			/*for each PAGE, get its bus address, fill in the page table entry, and advance*/
 			for (i = 0; i < page_count; i++) {
 				if (dev->sg->busaddr[idx] == 0) {
+#if !defined(__AROS__)                    
 					dev->sg->busaddr[idx] =
 						pci_map_page(dev->pdev,
 							     dev->sg->pagelist[idx],
@@ -746,6 +746,9 @@ nouveau_gpuobj_dma_new(struct nouveau_channel *chan, int class,
 #endif
 						return -ENOMEM;
 					}
+#else
+#warning IMPLEMENT nouveau_gpuobj_dma_new
+#endif
 				}
 
 				frame = (uint32_t) dev->sg->busaddr[idx];
@@ -1122,6 +1125,7 @@ nouveau_gpuobj_channel_takedown(struct nouveau_channel *chan)
 
 }
 
+#if !defined(__AROS__)
 int nouveau_ioctl_grobj_alloc(struct drm_device *dev, void *data,
 			      struct drm_file *file_priv)
 {
