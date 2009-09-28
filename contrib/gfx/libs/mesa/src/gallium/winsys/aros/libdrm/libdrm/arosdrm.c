@@ -65,9 +65,22 @@ drmUnmap(drmAddress address, drmSize size)
 int
 drmOpen(const char *name, const char *busid)
 {
-    D(bug("drmOpen %s, %s\n", name, busid));
+    int ret;
     
-    nouveau_load(&global_drm_device, 0);
+    /* FIXME: Calling this the second time will most likelly crash. Fix it. */
+    
+    DRM_DEBUG("%s, %s\n", name, busid);
+#if !defined(HOSTED_BUILD)    
+    ret = drm_pci_find_supported_video_card(&global_drm_device);
+    if (ret)
+        return -1;
+#endif
+
+    ret = nouveau_load(&global_drm_device, 0);
+    if (ret)
+        return -1;
+    return -1; /* FIXME: for test only */
+    /* FIXME: call nouveau_firstopen */
     
     return 4242; /*FIXME: some id just for now */
 }

@@ -7,7 +7,6 @@ AROS_WINSYS_SOURCES = \
             winsys/aros/arosmesa_winsys \
             winsys/aros/arosmesa_softpipe \
             winsys/aros/arosmesa_nouveau \
-            winsys/aros/arosmesa_nouveau_pci \
             winsys/aros/libdrm/libdrm/nouveau/nouveau_resource \
             winsys/aros/libdrm/libdrm/nouveau/nouveau_grobj \
             winsys/aros/libdrm/libdrm/nouveau/nouveau_pushbuf \
@@ -29,6 +28,7 @@ AROS_WINSYS_SOURCES = \
             winsys/aros/libdrm/aros-core/drm_memory \
             winsys/aros/libdrm/aros-core/drm_irq \
             winsys/aros/libdrm/aros-core/drm_bufs \
+            winsys/aros/libdrm/aros-core/drm_pci \
             winsys/aros/libdrm/shared-core/nv04_fifo \
             winsys/aros/libdrm/shared-core/nv10_fifo \
             winsys/aros/libdrm/shared-core/nv40_fifo \

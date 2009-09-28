@@ -490,12 +490,16 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
 
 	/* Time to determine the card architecture */
 	regs = ioremap_nocache(pci_resource_start(dev->pdev, 0), 0x8);
-	if (!regs) {
-		DRM_ERROR("Could not ioremap to determine register\n");
-		return -ENOMEM;
-	}
 #else
-#warning IMPLEMENT nouveau_load
+#if !defined(HOSTED_BUILD)
+    regs = drm_pci_ioremap(dev->pcidriver, drm_pci_resource_start(dev->pciDevice, 0), 0x8);
+#endif    
+#endif
+#if !defined(HOSTED_BUILD)
+    if (!regs) {
+        DRM_ERROR("Could not ioremap to determine register\n");
+        return -ENOMEM;
+    }
 #endif
 
 	reg0 = readl(regs+NV03_PMC_BOOT_0);
@@ -514,11 +518,14 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
 		architecture = 0x04;
 	}
 
-    /* HACK: Temporary */
+#if defined(HOSTED_BUILD)
     architecture = 0x20;
-    /* HACK: Temporary */
+#endif    
+    
 #if !defined(__AROS__)
 	iounmap(regs);
+#else
+    drm_pci_iounmap(dev->pcidriver, regs, 0x8);
 #endif
 
 	if (architecture >= 0x80) {

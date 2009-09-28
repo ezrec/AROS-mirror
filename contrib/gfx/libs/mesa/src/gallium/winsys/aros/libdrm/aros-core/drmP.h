@@ -38,6 +38,12 @@
 
 #define DEBUG 1
 #include <aros/debug.h>
+#include <oop/oop.h>
+
+/* Enable hacks for running under hosted AROS */
+/* FIXME: THIS AND ALL "HOSTED_BUILD" MARKED CODE MUST BE DELETED IN FINAL VERSION */
+//#define HOSTED_BUILD 
+
 
 #define DRM_CURRENTPID 1
 #define DRM_IRQ_ARGS void *args
@@ -47,17 +53,31 @@
 /* FIXME: What should this be? */
 #define PAGE_SIZE 4096
 
-/* FIXME: real code needed*/
-#define DRM_READ32(map, offset)   0
-#define DRM_WRITE32(map, offset, val)  
-/* FIXME: int? Will this work for x86_64? */
-//#define readl(addr) (*(volatile unsigened int *) (addr))  
+#if defined(HOSTED_BUILD)
 #define readl(addr) 0
+#define writel(val, addr)
+#else
+#define writel(val, addr)  (*(volatile ULONG*)(addr) = (val))
+#define readl(addr)    (*(volatile ULONG*)(addr))
+#endif
 
-#define DRM_ERROR(fmt, ...) D(bug("[" DRM_NAME "(ERROR):%s] " fmt, __func__ , ##__VA_ARGS__))
+/** Read a byte from a MMIO region */
+//#define DRM_READ8(map, offset)      readb((map)->handle + (offset))
+/** Read a word from a MMIO region */
+//#define DRM_READ16(map, offset)     readw((map)->handle + (offset))
+/** Read a dword from a MMIO region */
+#define DRM_READ32(map, offset)     readl((map)->handle + (offset))
+/** Write a byte into a MMIO region */
+//#define DRM_WRITE8(map, offset, val)    writeb(val, (map)->handle + (offset))
+/** Write a word into a MMIO region */
+//#define DRM_WRITE16(map, offset, val)   writew(val, (map)->handle + (offset))
+/** Write a dword into a MMIO region */
+#define DRM_WRITE32(map, offset, val)   writel(val, (map)->handle + (offset))
 
-#define DRM_INFO(fmt, ...) D(bug("[" DRM_NAME "(INFO)] " fmt, ##__VA_ARGS__))
 
+
+#define DRM_ERROR(fmt, ...) bug("[" DRM_NAME "(ERROR):%s] " fmt, __func__ , ##__VA_ARGS__)
+#define DRM_INFO(fmt, ...) bug("[" DRM_NAME "(INFO)] " fmt, ##__VA_ARGS__)
 #define DRM_DEBUG(fmt, ...) D(bug("[" DRM_NAME "(DEBUG):%s] " fmt, __func__ , ##__VA_ARGS__))
 
 
@@ -90,6 +110,10 @@ struct drm_device {
     struct drm_sg_mem *sg;      /**< Scatter gather memory */
     void *dev_private;      /**< device private data */
     /* FIXME: other fields */
+    /* AROS specific fields */
+    OOP_Object      *pci;
+    OOP_Object      *pciDevice;
+    OOP_Object      *pcidriver;
 };
 
 struct drm_file;
@@ -109,8 +133,14 @@ unsigned long drm_get_resource_start(struct drm_device *dev,
                         unsigned int resource);
                         
 void *drm_calloc(size_t nmemb, size_t size, int area);
-/* FIXME: make them inline */
+/* FIXME: make them inline? */
 void *drm_alloc(size_t size, int area);
 void drm_free(void *pt, size_t size, int area);
 
+/* AROS specific functions */
+int drm_pci_find_supported_video_card(struct drm_device *dev);
+APTR drm_pci_ioremap(OOP_Object *driver, APTR buf, IPTR size);
+void drm_pci_iounmap(OOP_Object *driver, APTR buf, IPTR size);
+APTR drm_pci_resource_start(OOP_Object *pciDevice,  unsigned int resource);
+IPTR drm_pci_resource_len(OOP_Object *pciDevice,  unsigned int resource);
 #endif

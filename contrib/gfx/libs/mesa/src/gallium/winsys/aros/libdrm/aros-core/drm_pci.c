@@ -3,7 +3,9 @@
     $Id$
 */
 
-#include "arosmesa_nouveau_pci.h"
+/* FIXME: This should implement generic approach - not card specific */
+
+#include "drmP.h"
 
 #include <aros/libcall.h>
 
@@ -12,15 +14,12 @@
 
 #include <proto/exec.h>
 #include <proto/oop.h>
-#include <oop/oop.h>
+
 
 #include <hidd/pci.h>
 #include <hidd/hidd.h>
 
-struct nouveau_device * global_device = NULL;
-
 /* FIXME: should these be global? */
-OOP_Object * pci = NULL;
 struct Library *OOPBase = NULL;
 OOP_AttrBase __IHidd_PCIDev;
 
@@ -239,8 +238,6 @@ static const struct NVDevice {
     { 0x0000, 0x0000, }
 };
 
-
-
 AROS_UFH3(void, Enumerator,
     AROS_UFHA(struct Hook *,    hook,       A0),
     AROS_UFHA(OOP_Object *, pciDevice,  A2),
@@ -251,19 +248,13 @@ AROS_UFH3(void, Enumerator,
     IPTR ProductID;
     IPTR VendorID;
     struct NVDevice *sup = (struct NVDevice *)support;
-
-    if (global_device)
-    {
-        /* Already allocated */
-        D(bug("[NVidia-gallium] global_device already allocated\n"));
-        return;
-    }
+    struct drm_device *dev = (struct drm_device *)hook->h_Data;
     
     /* Get the Device's ProductID */
     OOP_GetAttr(pciDevice, aHidd_PCIDevice_ProductID, &ProductID);
     OOP_GetAttr(pciDevice, aHidd_PCIDevice_VendorID, &VendorID);
 
-    D(bug("[NVidia-gallium] VendorID: %x, ProductID: %x\n", VendorID, ProductID));
+    DRM_DEBUG("VendorID: %x, ProductID: %x\n", VendorID, ProductID);
     
     while (sup->VendorID)
     {
@@ -283,14 +274,33 @@ AROS_UFH3(void, Enumerator,
 
         if (found)
         {
-            D(bug("[NVidia-gallium] Found!\n"));
-            global_device = AllocVec(sizeof(struct nouveau_device), MEMF_PUBLIC | MEMF_CLEAR);
+            OOP_Object *driver;
             
-            /* TODO: drmCommandNone(nvdev->fd, DRM_NOUVEAU_CARD_INIT); */
+            struct TagItem attrs[] = {
+            { aHidd_PCIDevice_isIO,     FALSE },    /* Don't listen IO transactions */
+            { aHidd_PCIDevice_isMEM,    TRUE },     /* Listen to MEM transactions */
+            { aHidd_PCIDevice_isMaster, TRUE },     /* Can work in BusMaster */
+            { TAG_DONE, 0UL },
+            };
             
+            DRM_DEBUG("Found!\n");
+            /* Filling out device properties */
+            dev->pci_vendor = (int)VendorID;
+            dev->pci_device = (int)ProductID;
+            dev->pciDevice = pciDevice;
+
+            /*
+            Fix PCI device attributes (perhaps already set, but if the 
+            NVidia would be the second card in the system, it may stay
+            uninitialized.
+            */
+            OOP_SetAttrs(pciDevice, (struct TagItem*)&attrs);
             
+            OOP_GetAttr(pciDevice, aHidd_PCIDevice_Driver, (APTR)&driver);
+            dev->pcidriver = driver;
+
+            DRM_DEBUG("Acquired pcidriver\n");
             
-            /* TODO: Implement filling out device properties */
             return;
         }
         
@@ -301,9 +311,9 @@ AROS_UFH3(void, Enumerator,
 }
 
 static void 
-Find_NV_Card()
+find_card(struct drm_device *dev)
 {
-    D(bug("[NVidia-gallium] Find_NV_Card\n"));
+    DRM_DEBUG("Enter\n");
     
     if (!OOPBase)
     {
@@ -318,15 +328,15 @@ Find_NV_Card()
         }
     }
 
-    pci = OOP_NewObject(NULL, CLID_Hidd_PCI, NULL);
-    
-    D(bug("[NVidia-gallium] Creating PCI object\n"));
+    DRM_DEBUG("Creating PCI object\n");
 
-    if (pci)
+    dev->pci = OOP_NewObject(NULL, CLID_Hidd_PCI, NULL);
+
+    if (dev->pci)
     {
         struct Hook FindHook = {
         h_Entry:    (IPTR (*)())Enumerator,
-        h_Data:     0UL/* FIXME; was: sd */,
+        h_Data:     dev,
         };
 
         struct TagItem Requirements[] = {
@@ -342,46 +352,80 @@ Find_NV_Card()
         callback:   &FindHook,
         requirements:   (struct TagItem*)&Requirements,
         }, *msg = &enummsg;
-        D(bug("[NVidia-gallium] Calling search Hook\n"));
-        OOP_DoMethod(pci, (OOP_Msg)msg);
+        DRM_DEBUG("Calling search Hook\n");
+        OOP_DoMethod(dev->pci, (OOP_Msg)msg);
     }
 }
 
-static void
-arosmesa_create_nouveau_device_global()
+int drm_pci_find_supported_video_card(struct drm_device *dev)
 {
-    if (global_device)
-    {
-        /* Device alrady created */
-        return;
-    }
+    /* FIXME: What if they had values? memory leaks? */
+    dev->pci = NULL;
+    dev->pciDevice = NULL;
+    
+    find_card(dev);
 
-    Find_NV_Card();
+    /* If objects are set, detection was succesful */
+    if (dev->pci && dev->pciDevice && dev->pcidriver)
+        return 0;
+    else
+    {
+        DRM_ERROR("Failed to find supported video card\n");
+        return -1;
+    }
 }
 
-struct nouveau_device *
-arosmesa_create_nouveau_device()
+APTR drm_pci_ioremap(OOP_Object *driver, APTR buf, IPTR size)
 {
-    struct nouveau_device * device = NULL;
+    struct pHidd_PCIDriver_MapPCI mappci,*msg = &mappci;
+    mappci.mID = OOP_GetMethodID(IID_Hidd_PCIDriver, moHidd_PCIDriver_MapPCI);
+    mappci.PCIAddress = buf;
+    mappci.Length = size;
+    return (APTR)OOP_DoMethod(driver, (OOP_Msg)msg);
+}
 
-    arosmesa_create_nouveau_device_global();
-    
-    /* FIXME: Temp so that initialization does not continue */
-    //return device;
-    global_device = AllocVec(sizeof(struct nouveau_device), MEMF_PUBLIC | MEMF_CLEAR);
-    global_device->chipset = 0x0148;
-    /* FIXME: Temp so that initialization does not continue */
-    
-    if (global_device)
+APTR drm_pci_resource_start(OOP_Object *pciDevice,  unsigned int resource)
+{
+    APTR start = (APTR)NULL;
+    switch(resource)
     {
-        device = AllocVec(sizeof(struct nouveau_device), MEMF_PUBLIC | MEMF_CLEAR);
-        
-        if (!device)
-            return NULL;
-        
-        /* Copy device information */
-        *device = *global_device;
+        case(0): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Base0, (APTR)&start); break;
+        case(1): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Base1, (APTR)&start); break;
+        case(2): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Base2, (APTR)&start); break;
+        case(3): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Base3, (APTR)&start); break;
+        case(4): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Base4, (APTR)&start); break;
+        case(5): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Base5, (APTR)&start); break;
+        default: DRM_ERROR("ResourceID %d not supported\n", resource);
     }
     
-    return device;
+    return start;
+}
+
+IPTR drm_pci_resource_len(OOP_Object *pciDevice,  unsigned int resource)
+{
+    IPTR len = (IPTR)0;
+    
+    switch(resource)
+    {
+        case(0): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size0, (APTR)&len); break;
+        case(1): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size1, (APTR)&len); break;
+        case(2): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size2, (APTR)&len); break;
+        case(3): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size3, (APTR)&len); break;
+        case(4): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size4, (APTR)&len); break;
+        case(5): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size5, (APTR)&len); break;
+        default: DRM_ERROR("ResourceID %d not supported\n", resource);
+    }
+    
+    return len;
+}
+
+void drm_pci_iounmap(OOP_Object *driver, APTR buf, IPTR size)
+{
+    struct pHidd_PCIDriver_UnmapPCI unmappci,*msg=&unmappci;
+
+    unmappci.mID = OOP_GetMethodID(IID_Hidd_PCIDriver, moHidd_PCIDriver_UnmapPCI);
+    unmappci.CPUAddress = buf;
+    unmappci.Length = size;
+
+    OOP_DoMethod(driver, (OOP_Msg)msg);
 }
