@@ -8,8 +8,6 @@
 
 /* FIXME: This should implement generic approach - not card specific */
 
-int drm_debug_flag = 0;
-
 struct drm_device global_drm_device;
 
 int 
@@ -79,9 +77,13 @@ drmOpen(const char *name, const char *busid)
     ret = nouveau_load(&global_drm_device, 0);
     if (ret)
         return -1;
-    return -1; /* FIXME: for test only */
-    /* FIXME: call nouveau_firstopen */
-    
+
+#if !defined(HOSTED_BUILD)    
+    ret = nouveau_firstopen(&global_drm_device);
+    if (ret)
+        return -1;
+#endif    
+
     return 4242; /*FIXME: some id just for now */
 }
 

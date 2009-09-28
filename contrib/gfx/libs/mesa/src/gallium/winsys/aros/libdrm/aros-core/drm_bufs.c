@@ -1,21 +1,51 @@
 #include "drmP.h"
 
-#define DEBUG 1
-#include <aros/debug.h>
-
 unsigned long drm_get_resource_len(struct drm_device *dev, unsigned int resource)
 {
-    D(bug("drm_get_resource_len\n"));
-    return 0;
+    return (unsigned long)drm_pci_resource_len(dev->pciDevice, resource);
 }
 
 unsigned long drm_get_resource_start(struct drm_device *dev,
                         unsigned int resource)
 {
-    D(bug("drm_get_resource_start\n"));
-    return 0;
+    return (unsigned long)drm_pci_resource_start(dev->pciDevice, resource);
 }
 
+int drm_addmap(struct drm_device *dev, unsigned int offset,
+              unsigned int size, enum drm_map_type type,
+              enum drm_map_flags flags, drm_local_map_t ** map_ptr)
+{
+    struct drm_map *map;
+    
+    /* FIXME: Add support for other types */
+    if (type != _DRM_REGISTERS)
+    {
+        DRM_ERROR("Type %d UNHANDLED\n", type);
+        return -EINVAL;
+    }
+
+    map = drm_alloc(sizeof(*map), DRM_MEM_MAPS);
+    if (!map)
+        return -ENOMEM;
+
+    map->offset = offset;
+    map->size = size;
+    map->flags = flags;
+    map->type = type;
+
+    if (map->type == _DRM_REGISTERS) {
+        map->handle = drm_pci_ioremap(dev->pcidriver, (APTR)map->offset, (IPTR)map->size);
+        if (!map->handle) {
+            drm_free(map, sizeof(*map), DRM_MEM_MAPS);
+            return -ENOMEM;
+        }
+    }
+
+    *map_ptr = map;
+    
+    return 0;
+}
+              
 /**
  * Compute size order.  Returns the exponent of the smaller power of two which
  * is greater or equal to given number.

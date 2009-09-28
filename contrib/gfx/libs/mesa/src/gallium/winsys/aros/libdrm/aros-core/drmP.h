@@ -48,11 +48,13 @@
 #define DRM_CURRENTPID 1
 #define DRM_IRQ_ARGS void *args
 #define DRM_MEM_DRIVER     2
+#define DRM_MEM_MAPS       5
 #define DRM_MEM_BUFS       7
 
-/* FIXME: What should this be? */
+/* FIXME: What should this be? Is is needed? */
 #define PAGE_SIZE 4096
 
+/* FIXME: Implement missing */
 #if defined(HOSTED_BUILD)
 #define readl(addr) 0
 #define writel(val, addr)
@@ -61,6 +63,7 @@
 #define readl(addr)    (*(volatile ULONG*)(addr))
 #endif
 
+/* FIXME: Implement missing */
 /** Read a byte from a MMIO region */
 //#define DRM_READ8(map, offset)      readb((map)->handle + (offset))
 /** Read a word from a MMIO region */
@@ -131,7 +134,10 @@ int drm_order(unsigned long size);
                           
 unsigned long drm_get_resource_start(struct drm_device *dev,
                         unsigned int resource);
-                        
+int drm_addmap(struct drm_device *dev, unsigned int offset,
+              unsigned int size, enum drm_map_type type,
+              enum drm_map_flags flags, drm_local_map_t ** map_ptr);
+              
 void *drm_calloc(size_t nmemb, size_t size, int area);
 /* FIXME: make them inline? */
 void *drm_alloc(size_t size, int area);

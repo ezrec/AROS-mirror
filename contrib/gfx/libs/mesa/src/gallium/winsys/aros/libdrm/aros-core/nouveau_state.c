@@ -29,7 +29,6 @@
 #include "nouveau_drv.h"
 #include "nouveau_drm.h"
 
-#if !defined(__AROS__)
 static int nouveau_init_card_mappings(struct drm_device *dev)
 {
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
@@ -87,7 +86,7 @@ static int nouveau_init_card_mappings(struct drm_device *dev)
 
 	return 0;
 }
-#endif
+
 static int nouveau_stub_init(struct drm_device *dev) { return 0; }
 static void nouveau_stub_takedown(struct drm_device *dev) {}
 
@@ -420,6 +419,7 @@ void nouveau_preclose(struct drm_device *dev, struct drm_file *file_priv)
 	nouveau_mem_release(file_priv,dev_priv->agp_heap);
 	nouveau_mem_release(file_priv,dev_priv->pci_heap);
 }
+#endif
 
 /* first module load, setup the mmio/fb mapping */
 int nouveau_firstopen(struct drm_device *dev)
@@ -467,7 +467,6 @@ int nouveau_firstopen(struct drm_device *dev)
 #endif
 	return 0;
 }
-#endif
 
 #define NV40_CHIPSET_MASK 0x00000baf
 #define NV44_CHIPSET_MASK 0x00005450
@@ -525,7 +524,9 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
 #if !defined(__AROS__)
 	iounmap(regs);
 #else
+#if !defined(HOSTED_BUILD)
     drm_pci_iounmap(dev->pcidriver, regs, 0x8);
+#endif    
 #endif
 
 	if (architecture >= 0x80) {
