@@ -301,6 +301,9 @@ nouveau_card_init(struct drm_device *dev)
 	else
 		dev_priv->chipset =
 			(NV_READ(NV03_PMC_BOOT_0) & 0x0ff00000) >> 20;
+#if defined(HOSTED_BUILD)
+    dev_priv->chipset = 37;
+#endif
 
 	/* Initialise internal driver API hooks */
 	ret = nouveau_init_engine_ptrs(dev);
@@ -490,16 +493,12 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
 	/* Time to determine the card architecture */
 	regs = ioremap_nocache(pci_resource_start(dev->pdev, 0), 0x8);
 #else
-#if !defined(HOSTED_BUILD)
     regs = drm_pci_ioremap(dev->pcidriver, drm_pci_resource_start(dev->pciDevice, 0), 0x8);
-#endif    
 #endif
-#if !defined(HOSTED_BUILD)
     if (!regs) {
         DRM_ERROR("Could not ioremap to determine register\n");
         return -ENOMEM;
     }
-#endif
 
 	reg0 = readl(regs+NV03_PMC_BOOT_0);
 	reg1 = readl(regs+NV03_PMC_BOOT_1);
@@ -524,9 +523,7 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
 #if !defined(__AROS__)
 	iounmap(regs);
 #else
-#if !defined(HOSTED_BUILD)
     drm_pci_iounmap(dev->pcidriver, regs, 0x8);
-#endif    
 #endif
 
 	if (architecture >= 0x80) {
@@ -612,7 +609,6 @@ nouveau_ioctl_card_init(struct drm_device *dev, void *data,
 	return nouveau_card_init(dev);
 }
 
-#if !defined(__AROS__)
 int nouveau_ioctl_getparam(struct drm_device *dev, void *data, struct drm_file *file_priv)
 {
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
@@ -676,6 +672,7 @@ int nouveau_ioctl_getparam(struct drm_device *dev, void *data, struct drm_file *
 	return 0;
 }
 
+#if !defined(__AROS__)
 int nouveau_ioctl_setparam(struct drm_device *dev, void *data, struct drm_file *file_priv)
 {
 	struct drm_nouveau_private *dev_priv = dev->dev_private;

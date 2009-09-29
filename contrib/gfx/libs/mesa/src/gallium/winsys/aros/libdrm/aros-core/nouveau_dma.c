@@ -57,17 +57,12 @@ nouveau_dma_channel_init(struct drm_device *dev)
 	}
 	DRM_DEBUG("Using FIFO channel %d\n", dchan->chan->id);
 
-#if !defined(__AROS__)    
 	/* Map push buffer */
 	drm_core_ioremap(dchan->chan->pushbuf_mem->map, dev);
 	if (!dchan->chan->pushbuf_mem->map->handle) {
 		DRM_ERROR("Failed to ioremap push buffer\n");
 		return -EINVAL;
 	}
-#else
-DRM_ERROR("IMPLEMENT nouveau_dma_channel_init map push buffer\n");
-#warning IMPLEMENT nouveau_dma_channel_init map push buffer
-#endif
 	dchan->pushbuf = (void*)dchan->chan->pushbuf_mem->map->handle;
 
 	/* Initialise DMA vars */

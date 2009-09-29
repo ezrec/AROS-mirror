@@ -36,13 +36,16 @@
 #include <stdio.h>
 #include <string.h>
 
+
 #define DEBUG 1
 #include <aros/debug.h>
 #include <oop/oop.h>
 
+#define max(a,b) (a > b) ? a : b
+
 /* Enable hacks for running under hosted AROS */
 /* FIXME: THIS AND ALL "HOSTED_BUILD" MARKED CODE MUST BE DELETED IN FINAL VERSION */
-//#define HOSTED_BUILD 
+#define HOSTED_BUILD 
 
 /* FIXME: Need to find a way to remove the need for these defines */
 #define PAGE_SHIFT  12
@@ -86,6 +89,7 @@
 #define DRM_INFO(fmt, ...) bug("[" DRM_NAME "(INFO)] " fmt, ##__VA_ARGS__)
 #define DRM_DEBUG(fmt, ...) D(bug("[" DRM_NAME "(DEBUG):%s] " fmt, __func__ , ##__VA_ARGS__))
 
+#define DRM_IMPL(fmt, ...) bug("------IMPLEMENT(%s): " fmt, __func__ , ##__VA_ARGS__)
 
 /* DRM_READMEMORYBARRIER() prevents reordering of reads.
  * DRM_WRITEMEMORYBARRIER() prevents reordering of writes.
@@ -161,10 +165,26 @@ struct drm_map_list *drm_find_matching_map(struct drm_device *dev,
 
 int drm_sg_alloc(struct drm_device *dev, struct drm_scatter_gather * request);
 
+/* drm_memory.c */
+void drm_core_ioremap(struct drm_map *map, struct drm_device *dev);
 void *drm_calloc(size_t nmemb, size_t size, int area);
 /* FIXME: make them inline? */
 void *drm_alloc(size_t size, int area);
 void drm_free(void *pt, size_t size, int area);
+
+static __inline__ int drm_device_is_agp(struct drm_device *dev)
+{
+    /* FIXME: Implement */
+    DRM_IMPL("\n");
+    return 0;
+}
+
+static __inline__ int drm_device_is_pcie(struct drm_device *dev)
+{
+    /* FIXME: Implement */
+    DRM_IMPL("\n");
+    return 0;
+}
 
 /* AROS specific functions */
 int drm_pci_find_supported_video_card(struct drm_device *dev);

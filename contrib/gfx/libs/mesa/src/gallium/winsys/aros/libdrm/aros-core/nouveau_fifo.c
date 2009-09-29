@@ -222,7 +222,6 @@ nouveau_fifo_pushbuf_ctxdma_init(struct nouveau_channel *chan)
 	return 0;
 }
 
-#if !defined(__AROS__)
 static struct mem_block *
 nouveau_fifo_user_pushbuf_alloc(struct drm_device *dev)
 {
@@ -245,7 +244,6 @@ nouveau_fifo_user_pushbuf_alloc(struct drm_device *dev)
 
 	return pb;
 }
-#endif
 
 /* allocates and initializes a fifo for user space consumption */
 int
@@ -513,7 +511,7 @@ nouveau_fifo_owner(struct drm_device *dev, struct drm_file *file_priv,
 	return (dev_priv->fifos[channel]->file_priv == file_priv);
 }
 
-#if !defined(__AROS__)
+
 /***********************************
  * ioctls wrapping the functions
  ***********************************/
@@ -562,14 +560,14 @@ static int nouveau_ioctl_fifo_alloc(struct drm_device *dev, void *data,
 	/* pass back FIFO map info to the caller */
 	init->cmdbuf      = chan->pushbuf_mem->map_handle;
 	init->cmdbuf_size = chan->pushbuf_mem->size;
-
+asm("int3");
 	/* and the notifier block */
 	init->notifier      = chan->notifier_block->map_handle;
 	init->notifier_size = chan->notifier_block->size;
 
 	return 0;
 }
-
+#if !defined(__AROS__)
 static int nouveau_ioctl_fifo_free(struct drm_device *dev, void *data,
 				   struct drm_file *file_priv)
 {
@@ -605,3 +603,9 @@ struct drm_ioctl_desc nouveau_ioctls[] = {
 
 int nouveau_max_ioctl = DRM_ARRAY_SIZE(nouveau_ioctls);
 #endif
+
+int exported_nouveau_ioctl_fifo_alloc(struct drm_device *dev, void *data,
+                    struct drm_file *file_priv)
+{
+    return nouveau_ioctl_fifo_alloc(dev, data, file_priv);
+}
