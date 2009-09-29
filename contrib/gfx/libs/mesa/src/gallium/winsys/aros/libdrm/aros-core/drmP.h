@@ -44,15 +44,18 @@
 /* FIXME: THIS AND ALL "HOSTED_BUILD" MARKED CODE MUST BE DELETED IN FINAL VERSION */
 //#define HOSTED_BUILD 
 
+/* FIXME: Need to find a way to remove the need for these defines */
+#define PAGE_SHIFT  12
+#define PAGE_SIZE   ((1UL) << PAGE_SHIFT)
+#define PAGE_MASK   (~(PAGE_SIZE-1))
 
 #define DRM_CURRENTPID 1
 #define DRM_IRQ_ARGS void *args
 #define DRM_MEM_DRIVER     2
 #define DRM_MEM_MAPS       5
 #define DRM_MEM_BUFS       7
-
-/* FIXME: What should this be? Is is needed? */
-#define PAGE_SIZE 4096
+#define DRM_MEM_PAGES      9
+#define DRM_MEM_SGLISTS   20
 
 /* FIXME: Implement missing */
 #if defined(HOSTED_BUILD)
@@ -98,6 +101,8 @@
 
 typedef unsigned long dma_addr_t;
 
+//struct page;
+
 struct drm_sg_mem {
     unsigned long handle;
     void *virtual;
@@ -107,6 +112,8 @@ struct drm_sg_mem {
 };
 
 struct drm_device {
+    struct list_head maplist;   /**< Linked list of regions */
+    
     int irq_enabled;        /**< True if irq handler is enabled */
     int pci_vendor;         /**< PCI vendor id */
     int pci_device;         /**< PCI device id */
@@ -123,6 +130,18 @@ struct drm_file;
 
 struct file;
 
+/**
+ * Mappings list
+ */
+struct drm_map_list {
+    struct list_head head;      /**< list head */
+/* FIXME: commented out fields*/    
+//    struct drm_hash_item hash;
+    struct drm_map *map;            /**< mapping */
+    uint64_t user_token;
+    struct drm_mm_node *file_offset_node;
+};
+
 typedef struct drm_map drm_local_map_t;
 
 typedef void            irqreturn_t;
@@ -137,7 +156,11 @@ unsigned long drm_get_resource_start(struct drm_device *dev,
 int drm_addmap(struct drm_device *dev, unsigned int offset,
               unsigned int size, enum drm_map_type type,
               enum drm_map_flags flags, drm_local_map_t ** map_ptr);
-              
+struct drm_map_list *drm_find_matching_map(struct drm_device *dev,
+                          drm_local_map_t *map);              
+
+int drm_sg_alloc(struct drm_device *dev, struct drm_scatter_gather * request);
+
 void *drm_calloc(size_t nmemb, size_t size, int area);
 /* FIXME: make them inline? */
 void *drm_alloc(size_t size, int area);

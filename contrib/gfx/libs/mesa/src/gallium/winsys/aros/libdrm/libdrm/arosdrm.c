@@ -67,6 +67,10 @@ drmOpen(const char *name, const char *busid)
     
     /* FIXME: Calling this the second time will most likelly crash. Fix it. */
     
+    /* FIXME: Init code - should be moved to separate function */
+    INIT_LIST_HEAD(&global_drm_device.maplist);
+    global_drm_device.sg = NULL;
+    
     DRM_DEBUG("%s, %s\n", name, busid);
 #if !defined(HOSTED_BUILD)    
     ret = drm_pci_find_supported_video_card(&global_drm_device);
@@ -78,11 +82,9 @@ drmOpen(const char *name, const char *busid)
     if (ret)
         return -1;
 
-#if !defined(HOSTED_BUILD)    
     ret = nouveau_firstopen(&global_drm_device);
     if (ret)
         return -1;
-#endif    
 
     return 4242; /*FIXME: some id just for now */
 }
@@ -98,7 +100,6 @@ drmVersionPtr
 drmGetVersion(int fd)
 {
     static drmVersion ver;
-    D(bug("drmGetVersion\n"));
     ver.version_patchlevel = NOUVEAU_DRM_HEADER_PATCHLEVEL;
     return &ver;
 }
@@ -106,7 +107,7 @@ drmGetVersion(int fd)
 void
 drmFreeVersion(drmVersionPtr ptr)
 {
-    D(bug("drmFreeVersion\n"));
+    /* This is a no-op for now */
 }
 
 int

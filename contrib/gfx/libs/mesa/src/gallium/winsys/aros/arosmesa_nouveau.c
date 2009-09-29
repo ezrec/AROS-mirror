@@ -59,6 +59,8 @@ arosmesa_create_nouveau_screen( void )
                  dev->chipset);
         return NULL;
     }
+    /* FIXME: temporary */
+    return NULL;
 
     ws = nouveau_pipe_winsys_new(dev);
     if (!ws) {

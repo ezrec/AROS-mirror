@@ -500,6 +500,7 @@ nouveau_mem_init_ttm(struct drm_device *dev)
 #endif
 
 #else
+DRM_ERROR("IMPLEMENT nouveau_mem_init_ttm\n");
 #warning IMPLEMENT nouveau_mem_init_ttm
 #endif
 	return 0;
@@ -510,19 +511,22 @@ int nouveau_mem_init(struct drm_device *dev)
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 	uint32_t fb_size;
 	int ret = 0;
-#if !defined(__AROS__)
+
 	dev_priv->agp_heap = dev_priv->pci_heap = dev_priv->fb_heap = NULL;
 	dev_priv->fb_phys = 0;
 	dev_priv->gart_info.type = NOUVEAU_GART_NONE;
 
 	if (dev_priv->flags & (NV_NFORCE | NV_NFORCE2))
 		nouveau_mem_check_nforce_dimms(dev);
-
+#if !defined(__AROS__)
 	/* setup a mtrr over the FB */
 	dev_priv->fb_mtrr = drm_mtrr_add(drm_get_resource_start(dev, 1),
 					 nouveau_mem_fb_amount(dev),
 					 DRM_MTRR_WC);
-
+#else
+DRM_ERROR("IMPLEMENT drm_mtrr_add?\n");
+#warning IMPLEMENT drm_mtrr_add?
+#endif
 	/* Init FB */
 	dev_priv->fb_phys=drm_get_resource_start(dev,1);
 	fb_size = nouveau_mem_fb_amount(dev);
@@ -549,7 +553,7 @@ int nouveau_mem_init(struct drm_device *dev)
 			return -ENOMEM;
 		dev_priv->fb_nomap_heap=NULL;
 	}
-
+#if !defined(__AROS__)
 #if !defined(__powerpc__) && !defined(__ia64__)
 	/* Init AGP / NV50 PCIEGART */
 	if (drm_device_is_agp(dev) && dev->agp) {
@@ -557,7 +561,11 @@ int nouveau_mem_init(struct drm_device *dev)
 			DRM_ERROR("Error initialising AGP: %d\n", ret);
 	}
 #endif
-
+#else
+DRM_ERROR("IMPLEMENT calling nouveau_mem_init_agp\n");
+#warning IMPLEMENT calling nouveau_mem_init_agp
+#endif
+#if !defined(__AROS__)
 	/*Note: this is *not* just NV50 code, but only used on NV50 for now */
 	if (dev_priv->gart_info.type == NOUVEAU_GART_NONE &&
 	    dev_priv->card_type >= NV_50) {
@@ -581,7 +589,11 @@ int nouveau_mem_init(struct drm_device *dev)
 			}
 		}
 	}
-
+#else
+DRM_ERROR("IMPLEMENT NV50 gart code\n");
+#warning IMPLEMENT NV50 gart code
+#endif
+    
 	/* NV04-NV40 PCIEGART */
 	if (!dev_priv->agp_heap && dev_priv->card_type < NV_50) {
 		struct drm_scatter_gather sgreq;
@@ -613,9 +625,7 @@ int nouveau_mem_init(struct drm_device *dev)
 			return ret;
 		}
 	}
-#else
-#warning IMPLEMENT nouveau_mem_init
-#endif
+
 	return 0;
 
 }
@@ -627,7 +637,6 @@ nouveau_mem_alloc(struct drm_device *dev, int alignment, uint64_t size,
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 	struct mem_block *block;
 	int type, tail = !(flags & NOUVEAU_MEM_USER);
-#if !defined(__AROS__)    
 
 	/*
 	 * Make things easier on ourselves: all allocations are page-aligned.
@@ -772,9 +781,7 @@ alloc_ok:
 		}
 		block->map_handle = entry->user_token;
 	}
-#else
-#warning IMPLEMENT nouveau_mem_alloc
-#endif
+
 	DRM_DEBUG("allocated %lld bytes at 0x%llx type=0x%08x\n", block->size, block->start, block->flags);
 	return block;
 }
@@ -809,6 +816,7 @@ void nouveau_mem_free(struct drm_device* dev, struct mem_block* block)
 		}
 	}
 #else
+DRM_ERROR("IMPLEMENT nouveau_mem_free\n");
 #warning IMPLEMENT nouveau_mem_free
 #endif
 out_free:

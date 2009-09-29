@@ -747,6 +747,7 @@ nouveau_gpuobj_dma_new(struct nouveau_channel *chan, int class,
 						return -ENOMEM;
 					}
 #else
+//DRM_ERROR("IMPLEMENT nouveau_gpuobj_dma_new\n");
 #warning IMPLEMENT nouveau_gpuobj_dma_new
 #endif
 				}

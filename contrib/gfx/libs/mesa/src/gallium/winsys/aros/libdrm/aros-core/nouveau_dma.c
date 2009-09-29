@@ -65,7 +65,8 @@ nouveau_dma_channel_init(struct drm_device *dev)
 		return -EINVAL;
 	}
 #else
-#warning IMPLEMENT nouveau_dma_channel_init
+DRM_ERROR("IMPLEMENT nouveau_dma_channel_init map push buffer\n");
+#warning IMPLEMENT nouveau_dma_channel_init map push buffer
 #endif
 	dchan->pushbuf = (void*)dchan->chan->pushbuf_mem->map->handle;
 

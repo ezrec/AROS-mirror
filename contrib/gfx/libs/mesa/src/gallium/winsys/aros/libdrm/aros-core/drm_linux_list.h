@@ -47,6 +47,8 @@ list_empty(struct list_head *head) {
 	return (head)->next == head;
 }
 
+#define list_add(entry, head) list_add_tail(entry, head)
+
 static __inline__ void
 list_add_tail(struct list_head *entry, struct list_head *head) {
 	(entry)->prev = (head)->prev;

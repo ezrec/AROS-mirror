@@ -134,8 +134,8 @@ nouveau_bo_kfree(struct nouveau_bo_priv *nvbo)
 
 	if (nvbo->map) {
 #if defined(__AROS__)
-#warning IMPLEMENT!!!
-D(bug("FIXME: nouveau_bo_kfree\n"));
+D(bug("IMPLEMENT nouveau_bo_kfree\n"));
+#warning IMPLEMENT nouveau_bo_kfree 
 #else       
 		munmap(nvbo->map, nvbo->size);
 #endif
@@ -266,8 +266,8 @@ nouveau_bo_kmap(struct nouveau_bo_priv *nvbo)
 	if (!nvdev->mm_enabled)
 		return nouveau_bo_kmap_nomm(nvbo);
 #if defined(__AROS__)
-#warning IMPLEMENT!!!
-D(bug("FIXME: nouveau_bo_kmap\n"));
+D(bug("IMPLEMENT nouveau_bo_kmap\n"));
+#warning IMPLEMENT nouveau_bo_kmap
 #else  
 	nvbo->map = mmap(0, nvbo->size, PROT_READ | PROT_WRITE,
 			 MAP_SHARED, nvdev->fd, nvbo->map_handle);
