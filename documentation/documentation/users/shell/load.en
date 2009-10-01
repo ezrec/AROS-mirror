@@ -1,0 +1,46 @@
+====
+Load
+====
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <list>`_ `Next <lock>`_ 
+
+---------------
+
+Name
+~~~~
+::
+
+     Load <device>
+
+
+Synopsis
+~~~~~~~~
+::
+
+     DEVICE/A
+
+
+Location
+~~~~~~~~
+::
+
+    C:
+
+
+Function
+~~~~~~~~
+::
+
+     Loads media into a device. This feature is not supported by all
+     device types.
+
+
+Inputs
+~~~~~~
+::
+
+     DEVICE  --  Name of device to load media into.
+
+

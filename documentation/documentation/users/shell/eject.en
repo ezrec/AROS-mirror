@@ -1,0 +1,46 @@
+=====
+Eject
+=====
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <echo>`_ `Next <else>`_ 
+
+---------------
+
+Name
+~~~~
+::
+
+     Eject <device>
+
+
+Synopsis
+~~~~~~~~
+::
+
+     DEVICE/A
+
+
+Location
+~~~~~~~~
+::
+
+    C:
+
+
+Function
+~~~~~~~~
+::
+
+     Ejects media from a device. This feature is not supported by all
+     device types.
+
+
+Inputs
+~~~~~~
+::
+
+     DEVICE  --  Name of device to eject media from.
+
+

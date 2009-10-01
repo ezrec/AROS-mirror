@@ -946,8 +946,8 @@ Function
 ::
 
      Tries to get an exclusive lock on a signal semaphore. If the semaphore
-     is already in use by another task this function does not wait but
-     return false instead.
+     is already in use by another task, this function does not wait but
+     returns false instead.
 
 
 Inputs
@@ -1051,7 +1051,7 @@ Result
 ::
 
      Either the total of the available memory or the largest chunk if
-     MEMF_LARGEST ist set in the attributes.
+     MEMF_LARGEST is set in the attributes.
 
 
 Example
@@ -2598,7 +2598,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct IORequest * CreateIORequest(
+ APTR CreateIORequest(
           struct MsgPort * ioReplyPort,
           ULONG size );
 
@@ -2792,7 +2792,7 @@ Synopsis
 ::
 
  void DeleteIORequest(
-          struct IORequest * iorequest );
+          APTR iorequest );
 
 Function
 ~~~~~~~~
@@ -3893,8 +3893,8 @@ Synopsis
 
  ULONG MakeFunctions(
           APTR target,
-          APTR functionArray,
-          APTR funcDispBase );
+          CONST_APTR functionArray,
+          CONST_APTR funcDispBase );
 
 Function
 ~~~~~~~~
