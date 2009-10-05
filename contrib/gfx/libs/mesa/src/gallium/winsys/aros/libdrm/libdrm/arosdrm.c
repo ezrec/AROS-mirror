@@ -62,6 +62,9 @@ drmCommandWriteRead(int fd, unsigned long drmCommandIndex, void *data, unsigned 
             return exported_nouveau_ioctl_fifo_alloc(&global_drm_device, data, NULL);
         case(DRM_NOUVEAU_NOTIFIEROBJ_ALLOC):
             return nouveau_ioctl_notifier_alloc(&global_drm_device, data, NULL);
+        case(DRM_NOUVEAU_MEM_ALLOC):
+            /* FIXME: What to pass as third argument? */
+            return nouveau_ioctl_mem_alloc(&global_drm_device, data, NULL);
         default:
             DRM_IMPL("COMMAND %d\n", drmCommandIndex);
     }

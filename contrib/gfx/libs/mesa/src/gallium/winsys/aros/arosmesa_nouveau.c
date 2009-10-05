@@ -11,6 +11,12 @@
 #include "nouveau_drmif.h"
 /* Code from DRM winsys */
 
+static void
+arosmesa_nouveau_display_surface(AROSMesaContext amesa,
+                              struct pipe_surface *surf)
+{
+}
+
 static int
 arosmesa_open_nouveau_device(struct nouveau_device **dev)
 {
@@ -137,7 +143,7 @@ struct arosmesa_driver arosmesa_nouveau_driver =
 {
    .create_pipe_screen = arosmesa_create_nouveau_screen,
    .create_pipe_context = arosmesa_create_nouveau_context,
-   .display_surface = NULL
+   .display_surface = arosmesa_nouveau_display_surface
 };
 
 

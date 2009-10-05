@@ -417,12 +417,7 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
     /* FIXME: Provide rastport to framebuffer ? */
     amesa->framebuffer = aros_new_framebuffer(amesa, amesa->visual);
     
-    #if USE_NVIDIA_DRIVER == 1
-    /* Return NULL so that no further rendering operations are in client - temp */
-    return NULL;
-    #else
     return amesa;
-    #endif
 }
 
 void AROSMesaMakeCurrent(AROSMesaContext amesa)
@@ -448,13 +443,14 @@ void AROSMesaMakeCurrent(AROSMesaContext amesa)
 
 void AROSMesaSwapBuffers(AROSMesaContext amesa)
 {
+    #if USE_NVIDIA_DRIVER == 1
+    #else
     struct pipe_surface *surf;
 
     /* If we're swapping the buffer associated with the current context
     * we have to flush any pending rendering commands first.
     */
     st_notify_swapbuffers(amesa->framebuffer->stfb);
-
 
     /* FIXME: should be ST_SURFACE_BACK_LEFT */
     st_get_framebuffer_surface(amesa->framebuffer->stfb, ST_SURFACE_FRONT_LEFT, &surf);
@@ -465,6 +461,7 @@ void AROSMesaSwapBuffers(AROSMesaContext amesa)
 
     /* FIXME: update size? */
     /* xmesa_check_and_update_buffer_size(NULL, b);*/
+    #endif
 }
 
 void AROSMesaDestroyContext(AROSMesaContext amesa)

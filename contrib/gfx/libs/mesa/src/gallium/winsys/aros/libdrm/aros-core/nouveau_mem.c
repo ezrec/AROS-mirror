@@ -822,7 +822,7 @@ DRM_ERROR("IMPLEMENT nouveau_mem_free\n");
 out_free:
 	nouveau_mem_free_block(block);
 }
-#if !defined(__AROS__)
+
 /*
  * Ioctls
  */
@@ -853,7 +853,7 @@ nouveau_ioctl_mem_alloc(struct drm_device *dev, void *data,
 
 	return 0;
 }
-
+#if !defined(__AROS__)
 int
 nouveau_ioctl_mem_free(struct drm_device *dev, void *data,
 		       struct drm_file *file_priv)
