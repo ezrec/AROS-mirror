@@ -560,7 +560,6 @@ static int nouveau_ioctl_fifo_alloc(struct drm_device *dev, void *data,
 	/* pass back FIFO map info to the caller */
 	init->cmdbuf      = chan->pushbuf_mem->map_handle;
 	init->cmdbuf_size = chan->pushbuf_mem->size;
-asm("int3");
 	/* and the notifier block */
 	init->notifier      = chan->notifier_block->map_handle;
 	init->notifier_size = chan->notifier_block->size;

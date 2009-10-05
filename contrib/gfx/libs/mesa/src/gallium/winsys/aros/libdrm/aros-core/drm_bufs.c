@@ -20,6 +20,9 @@ static int drm_addmap_core(struct drm_device *dev, unsigned int offset,
     struct drm_map_list *list;
     unsigned long user_token;
     int ret;    
+
+    /* HACK to get unique user tokens */
+    static uint64_t map_counter = 0;
     
     /* FIXME: Add support for other types */
     if ((type != _DRM_REGISTERS) && (type != _DRM_FRAME_BUFFER) && (type != _DRM_SCATTER_GATHER))
@@ -88,8 +91,7 @@ static int drm_addmap_core(struct drm_device *dev, unsigned int offset,
 
     list->user_token = list->hash.key << PAGE_SHIFT;
 #else
-DRM_ERROR("IMPLEMENT assigning token?\n");
-#warning IMPLEMENT assigning token?
+    list->user_token = ++map_counter;
 #endif
     *maplist = list;
     return 0;

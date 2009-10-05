@@ -514,7 +514,6 @@ nouveau_gpuobj_new_ref(struct drm_device *dev,
 	return 0;
 }
 
-#if !defined(__AROS__)
 int
 nouveau_gpuobj_ref_find(struct nouveau_channel *chan, uint32_t handle,
 			struct nouveau_gpuobj_ref **ref_ret)
@@ -534,7 +533,6 @@ nouveau_gpuobj_ref_find(struct nouveau_channel *chan, uint32_t handle,
 
 	return -EINVAL;
 }
-#endif
 
 int
 nouveau_gpuobj_new_fake(struct drm_device *dev, uint32_t p_offset,
@@ -747,8 +745,8 @@ nouveau_gpuobj_dma_new(struct nouveau_channel *chan, int class,
 						return -ENOMEM;
 					}
 #else
-//DRM_ERROR("IMPLEMENT nouveau_gpuobj_dma_new\n");
-#warning IMPLEMENT nouveau_gpuobj_dma_new
+//DRM_IMPL("pci_map_page/sg->pagelist\n");
+#warning IMPLEMENT pci_map_page/sg->pagelis
 #endif
 				}
 
@@ -1126,7 +1124,6 @@ nouveau_gpuobj_channel_takedown(struct nouveau_channel *chan)
 
 }
 
-#if !defined(__AROS__)
 int nouveau_ioctl_grobj_alloc(struct drm_device *dev, void *data,
 			      struct drm_file *file_priv)
 {
@@ -1163,6 +1160,7 @@ int nouveau_ioctl_grobj_alloc(struct drm_device *dev, void *data,
 	return 0;
 }
 
+#if !defined(__AROS__)
 int nouveau_ioctl_gpuobj_free(struct drm_device *dev, void *data,
 			      struct drm_file *file_priv)
 {

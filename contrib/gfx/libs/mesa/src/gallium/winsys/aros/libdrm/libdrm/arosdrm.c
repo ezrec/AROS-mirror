@@ -24,14 +24,26 @@ drmCommandNone(int fd, unsigned long drmCommandIndex)
 int
 drmCommandRead(int fd, unsigned long drmCommandIndex, void *data, unsigned long size)
 {
-    D(bug("drmCommandRead - %d\n", drmCommandIndex));
+    switch(drmCommandIndex)
+    {
+        default:
+            DRM_IMPL("COMMAND %d\n", drmCommandIndex);
+    }
+    
     return 0;
 }
 
 int
 drmCommandWrite(int fd, unsigned long drmCommandIndex, void *data, unsigned long size)
 {
-    D(bug("drmCommandWrite - %d\n", drmCommandIndex));
+    switch(drmCommandIndex)
+    {
+        case(DRM_NOUVEAU_GROBJ_ALLOC):
+            return nouveau_ioctl_grobj_alloc(&global_drm_device, data, NULL);
+        default:
+            DRM_IMPL("COMMAND %d\n", drmCommandIndex);
+    }
+    
     return 0;
 }
 
@@ -48,6 +60,8 @@ drmCommandWriteRead(int fd, unsigned long drmCommandIndex, void *data, unsigned 
         case(DRM_NOUVEAU_CHANNEL_ALLOC):
             /* FIXME: What to pass as third argument? */
             return exported_nouveau_ioctl_fifo_alloc(&global_drm_device, data, NULL);
+        case(DRM_NOUVEAU_NOTIFIEROBJ_ALLOC):
+            return nouveau_ioctl_notifier_alloc(&global_drm_device, data, NULL);
         default:
             DRM_IMPL("COMMAND %d\n", drmCommandIndex);
     }
@@ -58,14 +72,34 @@ drmCommandWriteRead(int fd, unsigned long drmCommandIndex, void *data, unsigned 
 int           
 drmMap(int fd, drm_handle_t handle, drmSize size, drmAddressPtr address)
 {
-    D(bug("drmMap\n"));
-    return 0;
+    struct drm_map_list *entry;
+    
+    /* This function should call mmap - map a portion of user space onto
+    kernel allocated buffer. Since AROS does not distinguish kernel-user, 
+    we just return to the caller the address of "kernel" allocated memory */
+    
+    /* FIXME: will become extreemly slow with large number of allocations
+    Original implementeation used hastabled to get quicker access to the
+    needed drm_map_list */
+    
+    for (entry = (struct drm_map_list *)global_drm_device.maplist.next; 
+    entry != (struct drm_map_list *)&global_drm_device.maplist; 
+    entry = (struct drm_map_list *)entry->head.next)
+    {
+        if (entry->map && entry->user_token == handle)
+        {
+            *address = entry->map->handle;
+            return 0;
+        }
+    }
+    
+    return -EINVAL;
 }
 
 int
 drmUnmap(drmAddress address, drmSize size)
 {
-    D(bug("drmUnmap\n"));
+    DRM_IMPL("\n");
     return 0;
 }
 
@@ -101,7 +135,7 @@ drmOpen(const char *name, const char *busid)
 int
 drmClose(int fd)
 {
-    D(bug("drmClose\n"));
+    DRM_IMPL("\n");
     return 0;
 }
 
@@ -122,14 +156,14 @@ drmFreeVersion(drmVersionPtr ptr)
 int
 drmCreateContext(int fd, drm_context_t * handle)
 {
-    D(bug("drmCreateContext\n"));
+    DRM_IMPL("\n");
     return 0;
 }
 
 int
 drmDestroyContext(int fd, drm_context_t handle)
 {
-    D(bug("drmDestroyContext\n"));
+    DRM_IMPL("\n");
     return 0;
 }
 
