@@ -39,13 +39,16 @@
 
 #define DEBUG 1
 #include <aros/debug.h>
-#include <oop/oop.h>
+
+#include <hidd/irq.h>
 
 #define max(a,b) (a > b) ? a : b
 
+
+
 /* Enable hacks for running under hosted AROS */
 /* FIXME: THIS AND ALL "HOSTED_BUILD" MARKED CODE MUST BE DELETED IN FINAL VERSION */
-#define HOSTED_BUILD 
+//#define HOSTED_BUILD 
 
 /* FIXME: Need to find a way to remove the need for these defines */
 #define PAGE_SHIFT  12
@@ -53,7 +56,17 @@
 #define PAGE_MASK   (~(PAGE_SIZE-1))
 
 #define DRM_CURRENTPID 1
-#define DRM_IRQ_ARGS void *args
+
+#define DRM_IRQ_ARGS        void *arg
+typedef void                irqreturn_t;
+#define IRQ_HANDLED         /* nothing */
+#define IRQ_NONE            /* nothing */
+
+#define ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
+
+struct Library          *OOPBase;
+
+    
 #define DRM_MEM_DRIVER     2
 #define DRM_MEM_MAPS       5
 #define DRM_MEM_BUFS       7
@@ -88,6 +101,7 @@
 #define DRM_ERROR(fmt, ...) bug("[" DRM_NAME "(ERROR):%s] " fmt, __func__ , ##__VA_ARGS__)
 #define DRM_INFO(fmt, ...) bug("[" DRM_NAME "(INFO)] " fmt, ##__VA_ARGS__)
 #define DRM_DEBUG(fmt, ...) D(bug("[" DRM_NAME "(DEBUG):%s] " fmt, __func__ , ##__VA_ARGS__))
+#define printk bug
 
 #define DRM_IMPL(fmt, ...) bug("------IMPLEMENT(%s): " fmt, __func__ , ##__VA_ARGS__)
 
@@ -125,10 +139,13 @@ struct drm_device {
     void *dev_private;      /**< device private data */
     /* FIXME: other fields */
     /* AROS specific fields */
-    OOP_Object      *pci;
-    OOP_Object      *pciDevice;
-    OOP_Object      *pcidriver;
+    OOP_Object              *pci;
+    OOP_Object              *pciDevice;
+    OOP_Object              *pcidriver;
+    HIDDT_IRQ_Handler       *IntHandler;
 };
+
+
 
 struct drm_file;
 
@@ -147,8 +164,6 @@ struct drm_map_list {
 };
 
 typedef struct drm_map drm_local_map_t;
-
-typedef void            irqreturn_t;
 
 int drm_irq_install(struct drm_device *dev);
 unsigned long drm_get_resource_len(struct drm_device *dev,

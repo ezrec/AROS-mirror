@@ -9,15 +9,12 @@
 
 #include <aros/libcall.h>
 
-#include <proto/exec.h>
 #include <proto/oop.h>
-
 
 #include <hidd/pci.h>
 #include <hidd/hidd.h>
 
 /* FIXME: should these be global? */
-struct Library *OOPBase = NULL;
 OOP_AttrBase __IHidd_PCIDev;
 
 /* Taken from nvidia.hidd */
@@ -360,6 +357,7 @@ int drm_pci_find_supported_video_card(struct drm_device *dev)
     dev->pci = NULL;
     dev->pciDevice = NULL;
     dev->pcidriver = NULL;
+    OOPBase = NULL;
     
     find_card(dev);
 

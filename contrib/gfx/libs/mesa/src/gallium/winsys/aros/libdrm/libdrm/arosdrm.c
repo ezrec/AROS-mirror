@@ -116,6 +116,7 @@ drmOpen(const char *name, const char *busid)
     /* FIXME: Init code - should be moved to separate function */
     INIT_LIST_HEAD(&global_drm_device.maplist);
     global_drm_device.sg = NULL;
+    global_drm_device.irq_enabled = 0;
     
     DRM_DEBUG("%s, %s\n", name, busid);
 #if !defined(HOSTED_BUILD)    

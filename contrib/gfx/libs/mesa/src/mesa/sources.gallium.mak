@@ -48,6 +48,8 @@ AROS_WINSYS_SOURCES = \
             winsys/aros/libdrm/shared-core/nv04_mc \
             winsys/aros/libdrm/shared-core/nv40_mc \
             winsys/aros/libdrm/shared-core/nv50_mc \
+            winsys/aros/libdrm/shared-core/nouveau_irq \
+            winsys/aros/libdrm/shared-core/nouveau_swmthd \
             winsys/drm/nouveau/drm/nouveau_winsys_pipe \
             winsys/drm/nouveau/drm/nouveau_winsys \
 

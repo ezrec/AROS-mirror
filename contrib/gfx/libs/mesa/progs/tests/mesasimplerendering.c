@@ -7,7 +7,6 @@
 #include <proto/dos.h>
 #include <proto/intuition.h>
 
-
 #include <GL/arosmesa.h>
 #include <GL/gl.h>
 
@@ -97,8 +96,7 @@ void render()
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
 
-  AROSMesaSwapBuffers(glcont);
-
+    AROSMesaSwapBuffers(glcont);
 }    
     
     
