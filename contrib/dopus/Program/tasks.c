@@ -67,7 +67,7 @@ static struct Interrupt
 	hotkey_interrupt={
 	
 /* AROS: The struct Node is a little different */
-#if 0	
+#if (AROS_FLAVOUR & AROS_FLAVOUR_BINCOMPAT)
 		{NULL,NULL,2,52,"hotkeez_port"},
 #else
 		{NULL,NULL,"hotkeez_port",2,52},
