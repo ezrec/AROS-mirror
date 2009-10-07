@@ -913,7 +913,7 @@ BOOL METHOD(OHCI, Hidd_USBDrv, ControlTransfer)
         if (Wait((1 << sig) | (1 << toutsig)) & (1 << toutsig))
         {
             /* Timeout. Pipe stall. */
-            bug("[OHCI] !!!TIMEOUT!!!\n");
+            bug("[OHCI] ControlTransfer() !!!TIMEOUT!!!\n");
 
             GetMsg(pipe->timeout->tr_node.io_Message.mn_ReplyPort);
 
@@ -1083,7 +1083,7 @@ BOOL METHOD(OHCI, Hidd_USBDrv, BulkTransfer)
         if (Wait((1 << sig) | (1 << toutsig)) & (1 << toutsig))
         {
             /* Timeout. Pipe stall. */
-            bug("[OHCI] !!!TIMEOUT!!!\n");
+            bug("[OHCI] BulkTransfer() !!!TIMEOUT!!!\n");
 
             GetMsg(pipe->timeout->tr_node.io_Message.mn_ReplyPort);
 
