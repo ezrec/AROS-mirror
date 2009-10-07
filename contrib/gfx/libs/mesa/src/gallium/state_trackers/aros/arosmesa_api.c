@@ -400,6 +400,10 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
         return NULL;
     }
     
+    #if USE_NVIDIA_DRIVER == 1
+    driver.dummy(screen);
+    #endif
+    
     pipe = driver.create_pipe_context(screen);
     
     /* FIXME: If pipe == NULL */
@@ -443,8 +447,6 @@ void AROSMesaMakeCurrent(AROSMesaContext amesa)
 
 void AROSMesaSwapBuffers(AROSMesaContext amesa)
 {
-    #if USE_NVIDIA_DRIVER == 1
-    #else
     struct pipe_surface *surf;
 
     /* If we're swapping the buffer associated with the current context
@@ -461,7 +463,6 @@ void AROSMesaSwapBuffers(AROSMesaContext amesa)
 
     /* FIXME: update size? */
     /* xmesa_check_and_update_buffer_size(NULL, b);*/
-    #endif
 }
 
 void AROSMesaDestroyContext(AROSMesaContext amesa)

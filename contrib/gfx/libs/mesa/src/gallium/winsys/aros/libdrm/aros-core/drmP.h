@@ -37,7 +37,7 @@
 #include <string.h>
 
 
-#define DEBUG 1
+#define DEBUG 0
 #include <aros/debug.h>
 
 #include <hidd/irq.h>
@@ -99,9 +99,11 @@ struct Library          *OOPBase;
 
 
 #define DRM_ERROR(fmt, ...) bug("[" DRM_NAME "(ERROR):%s] " fmt, __func__ , ##__VA_ARGS__)
-#define DRM_INFO(fmt, ...) bug("[" DRM_NAME "(INFO)] " fmt, ##__VA_ARGS__)
+//#define DRM_INFO(fmt, ...) bug("[" DRM_NAME "(INFO)] " fmt, ##__VA_ARGS__)
+#define DRM_INFO(fmt, ...)
 #define DRM_DEBUG(fmt, ...) D(bug("[" DRM_NAME "(DEBUG):%s] " fmt, __func__ , ##__VA_ARGS__))
-#define printk bug
+//#define printk(fmt, ...) bug(fmt, ##__VA_ARGS__)
+#define printk(fmt, ...)
 
 #define DRM_IMPL(fmt, ...) bug("------IMPLEMENT(%s): " fmt, __func__ , ##__VA_ARGS__)
 
