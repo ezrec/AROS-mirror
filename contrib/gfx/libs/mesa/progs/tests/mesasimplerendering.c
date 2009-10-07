@@ -7,15 +7,26 @@
 #include <proto/dos.h>
 #include <proto/intuition.h>
 
+#include <proto/timer.h>
+#include <devices/timer.h>
+
 #include <GL/arosmesa.h>
 #include <GL/gl.h>
 
 #include <stdio.h>
 
-AROSMesaContext glcont=NULL;
-
-#define RAND_COL 1.0
+AROSMesaContext     glcont=NULL;
+double              angle = 0.0;
+double              angle_inc = 0.0;
+BOOL                finished = FALSE;
+struct Window *     win = NULL;
+struct Device *     TimerBase = NULL;
+struct timerequest  timereq;
+struct MsgPort      timeport;
     
+#define RAND_COL 1.0f
+#define DEGREES_PER_SECOND 180.0;
+
 void render_face()
 {
     glBegin(GL_QUADS);
@@ -30,8 +41,6 @@ void render_face()
     glEnd();
 
 }
-
-double angle = 0.0;
 
 void render_cube()
 {
@@ -84,7 +93,7 @@ void render()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
     glEnable(GL_BLEND);
 
-    angle++;
+    angle += angle_inc;
 
     glPushMatrix();
     glRotatef(angle, 0.0, 1.0, 0.0);
@@ -98,10 +107,6 @@ void render()
 
     AROSMesaSwapBuffers(glcont);
 }    
-    
-    
-BOOL finished = FALSE;
-struct Window * win = NULL;
 
 void initmesa()
 {
@@ -135,22 +140,55 @@ void deinitmesa()
     if (glcont) AROSMesaDestroyContext(glcont);
 }
 
+static int init_timerbase()
+{
+    timeport.mp_Node.ln_Type   = NT_MSGPORT;
+    timeport.mp_Node.ln_Pri    = 0;
+    timeport.mp_Node.ln_Name   = NULL;
+    timeport.mp_Flags          = PA_IGNORE;
+    timeport.mp_SigTask        = FindTask(NULL);
+    timeport.mp_SigBit         = 0;
+    NEWLIST(&timeport.mp_MsgList);
+
+    timereq.tr_node.io_Message.mn_Node.ln_Type    = NT_MESSAGE;
+    timereq.tr_node.io_Message.mn_Node.ln_Pri     = 0;
+    timereq.tr_node.io_Message.mn_Node.ln_Name    = NULL;
+    timereq.tr_node.io_Message.mn_ReplyPort       = &timeport;
+    timereq.tr_node.io_Message.mn_Length          = sizeof (timereq);
+
+    if(OpenDevice("timer.device",UNIT_VBLANK,(struct IORequest *)&timereq,0) == 0)
+    {
+        TimerBase = (struct Device *)timereq.tr_node.io_Device;
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+
+static void deinit_timerbase()
+{
+    if (TimerBase != NULL)
+        CloseDevice((struct IORequest *)&timereq);
+}
 
 
 void HandleIntuiMessages(void)
 {
-  struct IntuiMessage *msg;
-  
-  while((msg = (struct IntuiMessage *)GetMsg(win->UserPort)))
-  {
-    switch(msg->Class)
+    struct IntuiMessage *msg;
+
+    while((msg = (struct IntuiMessage *)GetMsg(win->UserPort)))
     {
-      case IDCMP_CLOSEWINDOW:
-    finished = TRUE;
-    break;
+        switch(msg->Class)
+        {
+            case IDCMP_CLOSEWINDOW:
+            finished = TRUE;
+            break;
+        }
+        ReplyMsg((struct Message *)msg);
     }
-    ReplyMsg((struct Message *)msg);
-  }
 }
 
 /*
@@ -160,52 +198,61 @@ int main(int argc, char **argv)
 {
     ULONG fps = 0;
     TEXT title[100];
-    ULONG oldminute;
-    ULONG oldticks;
-    struct DateStamp ds;
     
-    DateStamp(&ds);
-    oldminute = ds.ds_Minute;
-    oldticks = ds.ds_Tick;
+    struct timeval tv;
+    UQUAD lastmicrosecs = 0L;
+    UQUAD currmicrosecs = 0L;
+    UQUAD fpsmicrosecs = 0L;
     
+    init_timerbase();
+    
+    GetSysTime(&tv);
+    lastmicrosecs = tv.tv_secs * 1000000 + tv.tv_micro;
+    fpsmicrosecs = lastmicrosecs;
         
-      win = OpenWindowTags(0,
-                          WA_Title, (IPTR)"MesaSimpleRendering",
-                          WA_CloseGadget, TRUE,
-              WA_DragBar, TRUE,
-              WA_DepthGadget, TRUE,
-              WA_Left, 10,
-              WA_Top, 10,
-              WA_InnerWidth, 300,
-              WA_InnerHeight, 300,
-              WA_Activate, TRUE,
-              WA_RMBTrap, TRUE,
-              WA_SimpleRefresh, TRUE,
-              WA_NoCareRefresh, TRUE,
-              WA_IDCMP, IDCMP_CLOSEWINDOW,
-              TAG_DONE);
+    win = OpenWindowTags(0,
+                        WA_Title, (IPTR)"MesaSimpleRendering",
+                        WA_CloseGadget, TRUE,
+                        WA_DragBar, TRUE,
+                        WA_DepthGadget, TRUE,
+                        WA_Left, 10,
+                        WA_Top, 10,
+                        WA_InnerWidth, 300,
+                        WA_InnerHeight, 300,
+                        WA_Activate, TRUE,
+                        WA_RMBTrap, TRUE,
+                        WA_SimpleRefresh, TRUE,
+                        WA_NoCareRefresh, TRUE,
+                        WA_IDCMP, IDCMP_CLOSEWINDOW,
+                        TAG_DONE);
              
-        initmesa();
+    initmesa();
         
-        while(!finished)
+    while(!finished)
+    {
+        GetSysTime(&tv);
+        currmicrosecs = tv.tv_secs * 1000000 + tv.tv_micro;
+        
+        if (currmicrosecs - fpsmicrosecs > 1000000)
         {
-            DateStamp(&ds);
-            if ((ds.ds_Minute > oldminute) || (ds.ds_Tick > (oldticks + 50)))
-            {
-                /* FPS counting is naive! */
-                oldminute = ds.ds_Minute;
-                oldticks = ds.ds_Tick;
-                sprintf(title, "MesaSimpleRendering, FPS: %d", fps);
-                SetWindowTitles(win, title, (UBYTE *)~0L);
-                fps = 0;
-            }
-            fps++; 
-            render();
-            HandleIntuiMessages();
+            /* FPS counting is naive! */
+            fpsmicrosecs += 1000000;
+            sprintf(title, "MesaSimpleRendering, FPS: %d", fps);
+            SetWindowTitles(win, title, (UBYTE *)~0L);
+            fps = 0;
         }
         
-        deinitmesa();
+        angle_inc = ((double)(currmicrosecs - lastmicrosecs) / 1000000.0) * DEGREES_PER_SECOND;
+        lastmicrosecs = currmicrosecs;
         
+        fps++; 
+        render();
+        HandleIntuiMessages();
+    }
+    
+    deinitmesa();
+    
+    deinit_timerbase();
       
     CloseWindow(win);
     
