@@ -112,7 +112,6 @@ nouveau_dma_channel_init(struct drm_device *dev)
 	return 0;
 }
 
-#if !defined(__AROS__)
 void
 nouveau_dma_channel_takedown(struct drm_device *dev)
 {
@@ -172,4 +171,3 @@ nouveau_dma_wait(struct drm_device *dev, int size)
 
 	return 0;
 }
-#endif

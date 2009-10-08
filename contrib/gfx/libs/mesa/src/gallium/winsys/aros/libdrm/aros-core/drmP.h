@@ -149,7 +149,10 @@ struct drm_device {
 
 
 
-struct drm_file;
+struct drm_file
+{
+    int dummy;
+};
 
 struct file;
 
@@ -167,23 +170,29 @@ struct drm_map_list {
 
 typedef struct drm_map drm_local_map_t;
 
+/* drm_irq.c */
 int drm_irq_install(struct drm_device *dev);
+int drm_irq_uninstall(struct drm_device *dev);
+
+/* drm_bufs.c */
+int drm_order(unsigned long size);
 unsigned long drm_get_resource_len(struct drm_device *dev,
                       unsigned int resource);
-int drm_order(unsigned long size);
-                          
 unsigned long drm_get_resource_start(struct drm_device *dev,
                         unsigned int resource);
 int drm_addmap(struct drm_device *dev, unsigned int offset,
               unsigned int size, enum drm_map_type type,
               enum drm_map_flags flags, drm_local_map_t ** map_ptr);
+int drm_rmmap(struct drm_device *dev, drm_local_map_t *map);              
 struct drm_map_list *drm_find_matching_map(struct drm_device *dev,
                           drm_local_map_t *map);              
 
+/* drm_scatter.c */
 int drm_sg_alloc(struct drm_device *dev, struct drm_scatter_gather * request);
 
 /* drm_memory.c */
 void drm_core_ioremap(struct drm_map *map, struct drm_device *dev);
+void drm_core_ioremapfree(struct drm_map *map, struct drm_device *dev);
 void *drm_calloc(size_t nmemb, size_t size, int area);
 /* FIXME: make them inline? */
 void *drm_alloc(size_t size, int area);

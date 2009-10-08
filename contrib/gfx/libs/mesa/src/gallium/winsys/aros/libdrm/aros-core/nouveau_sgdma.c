@@ -261,12 +261,14 @@ nouveau_sgdma_init(struct drm_device *dev)
 	dev_priv->gart_info.sg_ctxdma = gpuobj;
 	return 0;
 }
+#endif
 
 void
 nouveau_sgdma_takedown(struct drm_device *dev)
 {
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 
+#if !defined(__AROS__)
 	if (dev_priv->gart_info.sg_dummy_page) {
 		pci_unmap_page(dev->pdev, dev_priv->gart_info.sg_dummy_bus,
 			       NV_CTXDMA_PAGE_SIZE, PCI_DMA_BIDIRECTIONAL);
@@ -275,10 +277,14 @@ nouveau_sgdma_takedown(struct drm_device *dev)
 		dev_priv->gart_info.sg_dummy_page = NULL;
 		dev_priv->gart_info.sg_dummy_bus = 0;
 	}
-
+#else
+DRM_IMPL("call to pci_unmap_page?\n");
+#warning IMPLEMENT call to pci_unmap_page?
+#endif
 	nouveau_gpuobj_del(dev, &dev_priv->gart_info.sg_ctxdma);
 }
 
+#if !defined(__AROS__)
 int
 nouveau_sgdma_nottm_hack_init(struct drm_device *dev)
 {
@@ -322,12 +328,13 @@ nouveau_sgdma_nottm_hack_init(struct drm_device *dev)
 
 	return 0;
 }
+#endif
 
 void
 nouveau_sgdma_nottm_hack_takedown(struct drm_device *dev)
 {
 }
-#endif
+
 
 int
 nouveau_sgdma_get_page(struct drm_device *dev, uint32_t offset, uint32_t *page)

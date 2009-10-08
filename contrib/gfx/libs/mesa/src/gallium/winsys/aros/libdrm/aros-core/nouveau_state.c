@@ -375,7 +375,6 @@ nouveau_card_init(struct drm_device *dev)
 	return 0;
 }
 
-#if !defined(__AROS__)
 static void nouveau_card_takedown(struct drm_device *dev)
 {
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
@@ -417,12 +416,14 @@ void nouveau_preclose(struct drm_device *dev, struct drm_file *file_priv)
 {
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 
+#if !defined(HOSTED_BUILD)
+    /* Crashes hosted - double-free situation due to no hack available */
 	nouveau_fifo_cleanup(dev, file_priv);
+#endif    
 	nouveau_mem_release(file_priv,dev_priv->fb_heap);
 	nouveau_mem_release(file_priv,dev_priv->agp_heap);
 	nouveau_mem_release(file_priv,dev_priv->pci_heap);
 }
-#endif
 
 /* first module load, setup the mmio/fb mapping */
 int nouveau_firstopen(struct drm_device *dev)
@@ -577,7 +578,6 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
 	return 0;
 }
 
-#if !defined(__AROS__)
 void nouveau_lastclose(struct drm_device *dev)
 {
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
@@ -588,8 +588,13 @@ void nouveau_lastclose(struct drm_device *dev)
 
 		if(dev_priv->fb_mtrr>0)
 		{
+#if !defined(__AROS__)            
 			drm_mtrr_del(dev_priv->fb_mtrr, drm_get_resource_start(dev, 1),nouveau_mem_fb_amount(dev), DRM_MTRR_WC);
 			dev_priv->fb_mtrr=0;
+#else
+DRM_IMPL("drm_mtrr_del?\n");
+#warning IMPLEMENT drm_mtrr_del?
+#endif            
 		}
 	}
 }
@@ -600,7 +605,6 @@ int nouveau_unload(struct drm_device *dev)
 	dev->dev_private = NULL;
 	return 0;
 }
-#endif
 
 int
 nouveau_ioctl_card_init(struct drm_device *dev, void *data,

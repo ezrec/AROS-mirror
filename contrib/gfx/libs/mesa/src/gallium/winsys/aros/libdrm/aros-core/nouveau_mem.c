@@ -39,7 +39,7 @@ static struct mem_block *
 split_block(struct mem_block *p, uint64_t start, uint64_t size,
 	    struct drm_file *file_priv)
 {
-	/* Maybe cut off the start of an existing block */
+    /* Maybe cut off the start of an existing block */
 	if (start > p->start) {
 		struct mem_block *newblock =
 			drm_alloc(sizeof(*newblock), DRM_MEM_BUFS);
@@ -171,14 +171,13 @@ int nouveau_mem_init_heap(struct mem_block **heap, uint64_t start,
 	(*heap)->next = (*heap)->prev = blocks;
 	return 0;
 }
-#if !defined(__AROS__)
+
 /*
  * Free all blocks associated with the releasing file_priv
  */
 void nouveau_mem_release(struct drm_file *file_priv, struct mem_block *heap)
 {
 	struct mem_block *p;
-
 	if (!heap || !heap->next)
 		return;
 
@@ -201,7 +200,7 @@ void nouveau_mem_release(struct drm_file *file_priv, struct mem_block *heap)
 		}
 	}
 }
-#endif
+
 /*
  * Cleanup everything
  */
@@ -221,7 +220,7 @@ void nouveau_mem_takedown(struct mem_block **heap)
 	drm_free(*heap, sizeof(**heap), DRM_MEM_DRIVER);
 	*heap = NULL;
 }
-#if !defined(__AROS__)
+
 void nouveau_mem_close(struct drm_device *dev)
 {
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
@@ -231,7 +230,7 @@ void nouveau_mem_close(struct drm_device *dev)
 	if (dev_priv->pci_heap)
 		nouveau_mem_takedown(&dev_priv->pci_heap);
 }
-#endif
+
 /*XXX BSD needs compat functions for pci access
  * #define DRM_PCI_DEV		struct device
  * #define drm_pci_get_bsf	pci_get_bsf
@@ -500,7 +499,7 @@ nouveau_mem_init_ttm(struct drm_device *dev)
 #endif
 
 #else
-DRM_ERROR("IMPLEMENT nouveau_mem_init_ttm\n");
+DRM_IMPL("\n");
 #warning IMPLEMENT nouveau_mem_init_ttm
 #endif
 	return 0;
@@ -792,7 +791,7 @@ void nouveau_mem_free(struct drm_device* dev, struct mem_block* block)
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 
 	DRM_DEBUG("freeing 0x%llx type=0x%08x\n", block->start, block->flags);
-#if !defined(__AROS__)
+
 	if (block->flags&NOUVEAU_MEM_MAPPED)
 		drm_rmmap(dev, block->map);
 
@@ -815,10 +814,6 @@ void nouveau_mem_free(struct drm_device* dev, struct mem_block* block)
 			offset += 65536;
 		}
 	}
-#else
-DRM_ERROR("IMPLEMENT nouveau_mem_free\n");
-#warning IMPLEMENT nouveau_mem_free
-#endif
 out_free:
 	nouveau_mem_free_block(block);
 }

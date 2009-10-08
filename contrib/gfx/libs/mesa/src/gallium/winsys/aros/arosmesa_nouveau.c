@@ -268,12 +268,30 @@ arosmesa_nouveau_dummy(struct pipe_screen * screen)
    whole_screen = surface;
 }
 
+static void
+arosmesa_nouveau_cleanup( struct pipe_screen * screen )
+{
+    if (screen)
+    {
+        /* First destroy the screen, then the winsys */
+        struct pipe_winsys * winsys = screen->winsys;
+        
+        screen->destroy(screen);
+        
+        if (winsys)
+        {
+            winsys->destroy(winsys);
+        }
+    }
+}
+
 struct arosmesa_driver arosmesa_nouveau_driver = 
 {
    .create_pipe_screen = arosmesa_create_nouveau_screen,
    .create_pipe_context = arosmesa_create_nouveau_context,
    .display_surface = arosmesa_nouveau_display_surface,
-   .dummy = arosmesa_nouveau_dummy
+   .dummy = arosmesa_nouveau_dummy,
+   .cleanup = arosmesa_nouveau_cleanup
 };
 
 

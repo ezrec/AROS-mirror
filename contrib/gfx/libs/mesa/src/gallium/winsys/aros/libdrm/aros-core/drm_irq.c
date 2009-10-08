@@ -16,7 +16,8 @@ static void interrupt_handler(HIDDT_IRQ_Handler * irq, HIDDT_IRQ_HwInfo *hw)
 {
     struct drm_device *dev = (struct drm_device*)irq->h_Data;
     
-    /*FIXME: Should be generic, not nouveau */
+    /* FIXME: What is INT is shared between devices? */
+    /* FIXME: Should be generic, not nouveau */
     nouveau_irq_handler(dev);
 }
 
@@ -77,4 +78,43 @@ int drm_irq_install(struct drm_device *dev)
     
     return retval;
 #endif    
+}
+
+int drm_irq_uninstall(struct drm_device *dev)
+{
+#if defined(HOSTED_BUILD)
+    return 0;
+#else      
+    int irq_enabled;
+    struct OOP_Object *o = NULL;
+    int retval = -EINVAL;
+
+    /* FIXME: mutex_lock(&dev->struct_mutex); */
+    irq_enabled = dev->irq_enabled;
+    dev->irq_enabled = 0;
+    /* FIXME: mutex_unlock(&dev->struct_mutex); */
+
+    if (!irq_enabled)
+        return retval;
+
+    /* FIXME: This should be generic, not nouveau */
+    nouveau_irq_uninstall(dev);
+
+    o = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
+    
+    if (o)
+    {
+        struct pHidd_IRQ_RemHandler __msg__ = {
+            mID:            OOP_GetMethodID(IID_Hidd_IRQ, moHidd_IRQ_RemHandler),
+            handlerinfo:    dev->IntHandler,
+        }, *msg = &__msg__;
+
+        if (OOP_DoMethod((OOP_Object *)o, (OOP_Msg)msg))
+            retval = 0;
+
+        OOP_DisposeObject((OOP_Object *)o);
+    }
+
+    return retval;
+#endif
 }

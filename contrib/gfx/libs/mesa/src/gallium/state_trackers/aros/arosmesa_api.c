@@ -34,7 +34,8 @@ extern struct arosmesa_driver driver;
 /*                             PRIVATE FUNCTIONS                             */
 /*****************************************************************************/
 
-static void aros_destroy_visual(AROSMesaVisual aros_vis)
+static void 
+aros_destroy_visual(AROSMesaVisual aros_vis)
 {
     if (aros_vis)
     {
@@ -42,7 +43,8 @@ static void aros_destroy_visual(AROSMesaVisual aros_vis)
     }
 }
 
-static AROSMesaVisual aros_new_visual(struct TagItem *tagList)
+static AROSMesaVisual 
+aros_new_visual(struct TagItem *tagList)
 {
     AROSMesaVisual aros_vis = NULL;
     GLvisual * vis = NULL;
@@ -99,7 +101,17 @@ static AROSMesaVisual aros_new_visual(struct TagItem *tagList)
     return aros_vis;
 }
 
-static AROSMesaFrameBuffer aros_new_framebuffer(AROSMesaContext amesa, AROSMesaVisual visual)
+static void 
+aros_destroy_context(AROSMesaContext amesa)
+{
+    if (amesa)
+    {
+        FreeVec(amesa);
+    }
+}
+
+static AROSMesaFrameBuffer 
+aros_new_framebuffer(AROSMesaContext amesa, AROSMesaVisual visual)
 {
     AROSMesaFrameBuffer aros_fb = NULL;
     enum pipe_format colorFormat, depthFormat, stencilFormat;
@@ -126,6 +138,22 @@ static AROSMesaFrameBuffer aros_new_framebuffer(AROSMesaContext amesa, AROSMesaV
     
     
     return aros_fb;
+}
+
+static void
+aros_destroy_framebuffer(AROSMesaFrameBuffer aros_fb)
+{
+    if (aros_fb)
+    {
+        if (aros_fb->stfb)
+        {
+            /* So that reference count goes to 0 and buffer is freed */
+            st_unreference_framebuffer(aros_fb->stfb);
+            aros_fb->stfb = NULL;
+        }
+        
+        FreeVec(aros_fb);
+    }
 }
 
 static void 
@@ -467,7 +495,39 @@ void AROSMesaSwapBuffers(AROSMesaContext amesa)
 
 void AROSMesaDestroyContext(AROSMesaContext amesa)
 {
-    /* FIXME: Implement */
+    /* destroy a AROS/Mesa context */
+    D(bug("[AROSMESA] AROSMesaDestroyContext(amesa @ %x)\n", amesa));
+
+    if (!amesa)
+        return;
+
+    GLcontext * ctx = GET_GL_CTX_PTR(amesa);
+
+    if (ctx)
+    {
+        struct pipe_screen * screen = ctx->st->pipe->screen;
+        
+        GET_CURRENT_CONTEXT(cur_ctx);
+
+        if (cur_ctx == ctx)
+        {
+            /* Unbind if current */
+            st_make_current( NULL, NULL, NULL );
+        }
+
+        st_finish(ctx->st);        
+        st_destroy_context(ctx->st);
+        
+        aros_destroy_framebuffer(amesa->framebuffer);
+        aros_destroy_visual(amesa->visual);
+        aros_destroy_context(amesa);
+        
+        #if USE_NVIDIA_DRIVER == 1
+        /* FIXME: what if st_destroy_context destroyed the screen already? This is really driver dependant */
+        driver.cleanup(screen);
+        #endif
+    }
+    
 }
 
 AROSMesaContext AROSMesaGetCurrentContext()

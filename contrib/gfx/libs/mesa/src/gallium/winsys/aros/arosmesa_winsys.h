@@ -6,6 +6,7 @@
 #include "pipe/p_context.h"
 #include "../state_trackers/aros/arosmesa_internal.h"
 
+/* FIXME: This is softpipe-only buffer - move to softpipe part */
 struct arosmesa_buffer
 {
     struct pipe_buffer base;
@@ -23,6 +24,8 @@ struct arosmesa_driver
     void (*display_surface)( AROSMesaContext , struct pipe_surface * );
     
     void (*dummy)( struct pipe_screen * );
+    
+    void (*cleanup)( struct pipe_screen * );
                                     
 };
 

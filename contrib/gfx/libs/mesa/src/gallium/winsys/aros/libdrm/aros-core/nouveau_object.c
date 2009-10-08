@@ -298,7 +298,6 @@ nouveau_gpuobj_init(struct drm_device *dev)
 	return 0;
 }
 
-#if !defined(__AROS__)
 void
 nouveau_gpuobj_takedown(struct drm_device *dev)
 {
@@ -327,7 +326,6 @@ nouveau_gpuobj_late_takedown(struct drm_device *dev)
 		nouveau_gpuobj_del(dev, &gpuobj);
 	}
 }
-#endif
 
 int
 nouveau_gpuobj_del(struct drm_device *dev, struct nouveau_gpuobj **pgpuobj)
@@ -1160,7 +1158,6 @@ int nouveau_ioctl_grobj_alloc(struct drm_device *dev, void *data,
 	return 0;
 }
 
-#if !defined(__AROS__)
 int nouveau_ioctl_gpuobj_free(struct drm_device *dev, void *data,
 			      struct drm_file *file_priv)
 {
@@ -1178,4 +1175,3 @@ int nouveau_ioctl_gpuobj_free(struct drm_device *dev, void *data,
 
 	return 0;
 }
-#endif

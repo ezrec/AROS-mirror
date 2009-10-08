@@ -479,7 +479,6 @@ void nouveau_fifo_free(struct nouveau_channel *chan)
 	drm_free(chan, sizeof(*chan), DRM_MEM_DRIVER);
 }
 
-#if !defined(__AROS__)
 /* cleanups all the fifos from file_priv */
 void nouveau_fifo_cleanup(struct drm_device *dev, struct drm_file *file_priv)
 {
@@ -495,7 +494,6 @@ void nouveau_fifo_cleanup(struct drm_device *dev, struct drm_file *file_priv)
 			nouveau_fifo_free(chan);
 	}
 }
-#endif
 
 int
 nouveau_fifo_owner(struct drm_device *dev, struct drm_file *file_priv,

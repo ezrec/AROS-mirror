@@ -6,6 +6,7 @@
 /* FIXME: This should implement generic approach - not card specific */
 
 struct drm_device global_drm_device;
+struct drm_file global_drm_file;
 
 int 
 drmCommandNone(int fd, unsigned long drmCommandIndex)
@@ -13,7 +14,7 @@ drmCommandNone(int fd, unsigned long drmCommandIndex)
     switch(drmCommandIndex)
     {
         case(DRM_NOUVEAU_CARD_INIT):
-            return nouveau_ioctl_card_init(&global_drm_device, NULL, NULL);
+            return nouveau_ioctl_card_init(&global_drm_device, NULL, &global_drm_file);
         default:
             DRM_IMPL("COMMAND %d\n", drmCommandIndex);
     }
@@ -39,7 +40,9 @@ drmCommandWrite(int fd, unsigned long drmCommandIndex, void *data, unsigned long
     switch(drmCommandIndex)
     {
         case(DRM_NOUVEAU_GROBJ_ALLOC):
-            return nouveau_ioctl_grobj_alloc(&global_drm_device, data, NULL);
+            return nouveau_ioctl_grobj_alloc(&global_drm_device, data, &global_drm_file);
+        case(DRM_NOUVEAU_GPUOBJ_FREE):
+            return nouveau_ioctl_gpuobj_free(&global_drm_device, data, &global_drm_file);
         default:
             DRM_IMPL("COMMAND %d\n", drmCommandIndex);
     }
@@ -56,14 +59,13 @@ drmCommandWriteRead(int fd, unsigned long drmCommandIndex, void *data, unsigned 
     switch(drmCommandIndex)
     {
         case(DRM_NOUVEAU_GETPARAM):
-            return nouveau_ioctl_getparam(&global_drm_device, data, NULL);
+            return nouveau_ioctl_getparam(&global_drm_device, data, &global_drm_file);
         case(DRM_NOUVEAU_CHANNEL_ALLOC):
-            /* FIXME: What to pass as third argument? */
-            return exported_nouveau_ioctl_fifo_alloc(&global_drm_device, data, NULL);
+            return exported_nouveau_ioctl_fifo_alloc(&global_drm_device, data, &global_drm_file);
         case(DRM_NOUVEAU_NOTIFIEROBJ_ALLOC):
-            return nouveau_ioctl_notifier_alloc(&global_drm_device, data, NULL);
+            return nouveau_ioctl_notifier_alloc(&global_drm_device, data, &global_drm_file);
         case(DRM_NOUVEAU_MEM_ALLOC):
-            /* FIXME: What to pass as third argument? */
+            /* FIXME: If &global_drm_file is passed here - no rendering is visible, why? */
             return nouveau_ioctl_mem_alloc(&global_drm_device, data, NULL);
         default:
             DRM_IMPL("COMMAND %d\n", drmCommandIndex);
@@ -139,7 +141,16 @@ drmOpen(const char *name, const char *busid)
 int
 drmClose(int fd)
 {
-    DRM_IMPL("\n");
+    /* FIXME: Calling this the second time will most likelly crash. Fix it. */
+    
+    nouveau_preclose(&global_drm_device, &global_drm_file);
+    
+    nouveau_lastclose(&global_drm_device);
+    
+    nouveau_unload(&global_drm_device);
+    
+    /* FIXME: release AROS pci.hidd/irq.hidd resources */
+    
     return 0;
 }
 

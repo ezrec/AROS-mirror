@@ -371,20 +371,6 @@ int drm_pci_find_supported_video_card(struct drm_device *dev)
     }
 }
 
-APTR drm_pci_ioremap(OOP_Object *driver, APTR buf, IPTR size)
-{
-#if !defined(HOSTED_BUILD)    
-    struct pHidd_PCIDriver_MapPCI mappci,*msg = &mappci;
-    mappci.mID = OOP_GetMethodID(IID_Hidd_PCIDriver, moHidd_PCIDriver_MapPCI);
-    mappci.PCIAddress = buf;
-    mappci.Length = size;
-    return (APTR)OOP_DoMethod(driver, (OOP_Msg)msg);
-#else
-    static UBYTE fakebuffer[1024];
-    return (APTR)&fakebuffer;
-#endif
-}
-
 APTR drm_pci_resource_start(OOP_Object *pciDevice,  unsigned int resource)
 {
 #if !defined(HOSTED_BUILD)    
@@ -434,6 +420,30 @@ return (IPTR)0;
 #endif
 }
 
+#if defined(HOSTED_BUILD)
+UBYTE * fakebuffer = NULL;
+LONG usagecount = 0;
+#endif
+
+APTR drm_pci_ioremap(OOP_Object *driver, APTR buf, IPTR size)
+{
+#if !defined(HOSTED_BUILD)    
+    struct pHidd_PCIDriver_MapPCI mappci,*msg = &mappci;
+    mappci.mID = OOP_GetMethodID(IID_Hidd_PCIDriver, moHidd_PCIDriver_MapPCI);
+    mappci.PCIAddress = buf;
+    mappci.Length = size;
+    return (APTR)OOP_DoMethod(driver, (OOP_Msg)msg);
+#else
+    if (!fakebuffer) 
+    {
+        usagecount = 0;
+        fakebuffer = AllocVec(1024*1024*16, MEMF_PUBLIC);
+    }
+    usagecount++;
+    return (APTR)fakebuffer;
+#endif
+}
+
 void drm_pci_iounmap(OOP_Object *driver, APTR buf, IPTR size)
 {
 #if !defined(HOSTED_BUILD)    
@@ -444,5 +454,12 @@ void drm_pci_iounmap(OOP_Object *driver, APTR buf, IPTR size)
     unmappci.Length = size;
 
     OOP_DoMethod(driver, (OOP_Msg)msg);
+#else
+    if (usagecount > 0) usagecount--;
+    if ((usagecount == 0) && (fakebuffer != NULL))
+    {
+        FreeVec(fakebuffer);
+        fakebuffer = NULL;
+    }
 #endif    
 }
