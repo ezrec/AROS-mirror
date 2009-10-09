@@ -149,7 +149,7 @@ drmClose(int fd)
     
     nouveau_unload(&global_drm_device);
     
-    /* FIXME: release AROS pci.hidd/irq.hidd resources */
+    drm_pci_shutdown(&global_drm_device);
     
     return 0;
 }

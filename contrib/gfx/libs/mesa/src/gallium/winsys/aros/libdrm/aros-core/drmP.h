@@ -247,7 +247,9 @@ static __inline__ int drm_device_is_pcie(struct drm_device *dev)
 }
 
 /* AROS specific functions */
-int drm_pci_find_supported_video_card(struct drm_device *dev);
+/* drm_pci.c */
+LONG drm_pci_find_supported_video_card(struct drm_device *dev);
+void drm_pci_shutdown(struct drm_device *dev);
 APTR drm_pci_ioremap(OOP_Object *driver, APTR buf, IPTR size);
 void drm_pci_iounmap(OOP_Object *driver, APTR buf, IPTR size);
 APTR drm_pci_resource_start(OOP_Object *pciDevice,  unsigned int resource);

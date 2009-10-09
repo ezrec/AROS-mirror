@@ -110,7 +110,11 @@ int drm_irq_uninstall(struct drm_device *dev)
         }, *msg = &__msg__;
 
         if (OOP_DoMethod((OOP_Object *)o, (OOP_Msg)msg))
+        {
+            FreeVec(dev->IntHandler);
+            dev->IntHandler = NULL;
             retval = 0;
+        }
 
         OOP_DisposeObject((OOP_Object *)o);
     }

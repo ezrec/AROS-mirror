@@ -15,7 +15,7 @@
 #include <hidd/hidd.h>
 
 /* FIXME: should these be global? */
-OOP_AttrBase __IHidd_PCIDev;
+OOP_AttrBase __IHidd_PCIDev = 0;
 
 /* Taken from nvidia.hidd */
 
@@ -351,7 +351,7 @@ find_card(struct drm_device *dev)
     }
 }
 
-int drm_pci_find_supported_video_card(struct drm_device *dev)
+LONG drm_pci_find_supported_video_card(struct drm_device *dev)
 {
     /* FIXME: What if they had values? memory leaks? */
     dev->pci = NULL;
@@ -368,6 +368,45 @@ int drm_pci_find_supported_video_card(struct drm_device *dev)
     {
         DRM_ERROR("Failed to find supported video card\n");
         return -1;
+    }
+}
+
+void drm_pci_shutdown(struct drm_device *dev)
+{
+    /* Release AROS-specific PCI objects. Should be called at driver shutdown */
+    
+    if (dev)
+    {
+        if (dev->irq_enabled)
+        {
+            DRM_ERROR("IRQ still enabled at PCI shutdown\n");
+            drm_irq_uninstall(dev);
+        }
+        
+        if (dev->IntHandler != NULL)
+        {
+            DRM_ERROR("IRQ handler not freed\n");
+        }
+
+        if (dev->pci)
+        {
+            OOP_DisposeObject(dev->pci);
+            dev->pci = NULL;
+        }
+        
+        dev->pciDevice = NULL;
+        dev->pcidriver = NULL;
+    }
+    
+    if (__IHidd_PCIDev != 0)
+    {
+        OOP_ReleaseAttrBase(IID_Hidd_PCIDevice);
+    }
+    
+    if (OOPBase)
+    {
+        CloseLibrary(OOPBase);
+        OOPBase = NULL;
     }
 }
 
