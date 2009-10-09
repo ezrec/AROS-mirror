@@ -125,12 +125,22 @@ arosmesa_nouveau_display_surface(AROSMesaContext amesa,
                         surf, 
                         xmin - L->bounds.MinX - amesa->left, 
                         ymin - L->bounds.MinY - amesa->top, 
-                        xmax - xmin, 
-                        ymax - ymin);
+                        xmax - xmin + 1, 
+                        ymax - ymin + 1);
         }
     }
 
     UnlockLayerRom(L);
+    
+    /* FIXME: There is still something wrong with this code:
+       a) have another window under this window
+       b) move this another window to front
+       The hidden part of another window will not be redrawn until the other window is move
+       as if moving another window to front did not change the cliprects of our window
+       It migh assume that since the hidden window is now on top, it will simply override what
+       our window has draw - but our window renders direclty to framebuffer, so it overrides the
+       top window */
+    
 //  pipe->surface_fill(pipe, whole_screen, 300, 300, 300, 300, 0x00ff0000);
 //  pipe->surface_fill(pipe, whole_screen, 350, 350, 300, 300, 0x0000ff00); 
 //  pipe->surface_fill(pipe, whole_screen, 400, 400, 300, 300, 0x000000ff); 
@@ -297,10 +307,14 @@ arosmesa_nouveau_dummy(struct pipe_screen * screen)
    struct pipe_texture *texture = NULL;
    struct pipe_texture templat;
    struct pipe_buffer *buf = NULL;
-    unsigned pitch = 1024 * 4; /* FIXME: What this represents? width * bpp / 8 */
+   unsigned pitch = 1024 * 4; /* FIXME: width * bpp / 8 */
    
-   
-   buf = nouveau_drm_pb_from_handle(screen, "front buffer", 123456 /*makes no difference anyway */);
+#warning hardcoded start of visible framebuffer
+/* FIXME: The third parameter represents the offset to start of visible framebuffer - this must be read, not hardcoded 
+nvidia hidd registers_base + x00600000 + (0x800/4)
+*/
+
+   buf = nouveau_drm_pb_from_handle(screen, "front buffer", 0 /*FIXME: THIS VALUE MATTERS!!!! */);
    if (!buf)
       return;
 
