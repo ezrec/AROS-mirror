@@ -12,6 +12,11 @@
 #include "nouveau_drmif.h"
 /* Code from DRM winsys */
 
+#define DEBUG 0
+#include <aros/debug.h>
+
+#include <proto/graphics.h>
+
 // #include <proto/exec.h>
 // #include <proto/cybergraphics.h>
 // #include <cybergraphx/cybergraphics.h>
@@ -29,6 +34,10 @@ arosmesa_nouveau_display_surface(AROSMesaContext amesa,
                               struct pipe_surface *surf)
 {
     struct pipe_context *pipe = amesa->st->pipe;
+    
+    struct Layer *L = amesa->visible_rp->Layer;
+    struct ClipRect *CR;
+    
 //     struct pipe_screen *screen = pipe->screen;
 //     struct pipe_transfer *src_trans;
 //     const void *src_map;
@@ -61,8 +70,67 @@ arosmesa_nouveau_display_surface(AROSMesaContext amesa,
 //    
 //    screen->tex_transfer_destroy(src_trans);
 
-pipe->surface_copy(pipe, whole_screen, 0, 300, surf, 0, 0, 300, 300);
+    if (L == NULL)
+    {
+        D(bug("Layer not provided\n"));
+        /* FIXME: Implement rendering path - render at 0,0 full size of buffer? */
+        return;
+    }
 
+    /* FIXME: Check if layer is visible at all? */
+
+    LockLayerRom(L);
+    
+    CR = L->ClipRect;
+    
+    for (;NULL != CR; CR = CR->Next)
+    {
+        D(bug("Cliprect (%d, %d, %d, %d), lobs=%p\n",
+            CR->bounds.MinX, CR->bounds.MinY, CR->bounds.MaxX, CR->bounds.MaxY,
+            CR->lobs));
+
+        /* I assume this means the cliprect is visible */
+        if (NULL == CR->lobs)
+        {
+            /* FIXME: Use rp clip rect and AND operation? !!UNIFY!! approach with _aros_recalculate_buffer_width_height */
+            LONG xmin, ymin, xmax, ymax;
+            
+            /* Greater wins */
+            xmin = L->bounds.MinX + amesa->left;
+            if (CR->bounds.MinX > xmin) xmin = CR->bounds.MinX;
+            
+            /* Smaller wins */
+            xmax = L->bounds.MaxX - amesa->right;
+            if (CR->bounds.MaxX < xmax) xmax = CR->bounds.MaxX;
+            
+            /* Greater wins */
+            ymin = L->bounds.MinY + amesa->top;
+            if (CR->bounds.MinY > ymin) ymin = CR->bounds.MinY;
+            
+            /* Smaller wins */
+            ymax = L->bounds.MaxY - amesa->bottom;
+            if (CR->bounds.MaxY < ymax) ymax = CR->bounds.MaxY;
+            
+            
+/*            DrawEllipse(&amesa->screen->RastPort, 
+                        (xmin + xmax) / 2, 
+                        (ymin + ymax) / 2,
+                        (xmax - xmin) / 2,
+                        (ymax - ymin) / 2);*/
+
+            /* FIXME: clip last 4 parameters to actuall surface deminsions */
+            pipe->surface_copy(pipe, whole_screen, 
+                        xmin, 
+                        ymin, 
+                        surf, 
+                        xmin - L->bounds.MinX - amesa->left, 
+                        ymin - L->bounds.MinY - amesa->top, 
+                        xmax - xmin, 
+                        ymax - ymin);
+        }
+    }
+
+    UnlockLayerRom(L);
 //  pipe->surface_fill(pipe, whole_screen, 300, 300, 300, 300, 0x00ff0000);
 //  pipe->surface_fill(pipe, whole_screen, 350, 350, 300, 300, 0x0000ff00); 
 //  pipe->surface_fill(pipe, whole_screen, 400, 400, 300, 300, 0x000000ff); 
