@@ -44,7 +44,8 @@
 
 #define max(a,b) (a > b) ? a : b
 
-
+struct drm_device;
+struct drm_file;
 
 /* Enable hacks for running under hosted AROS */
 /* FIXME: THIS AND ALL "HOSTED_BUILD" MARKED CODE MUST BE DELETED IN FINAL VERSION */
@@ -63,6 +64,7 @@ typedef void                irqreturn_t;
 #define IRQ_NONE            /* nothing */
 
 #define ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
+#define DRM_ARRAY_SIZE(x) ARRAY_SIZE(x)
 
 struct Library          *OOPBase;
 
@@ -72,8 +74,40 @@ struct Library          *OOPBase;
 #define DRM_MEM_BUFS       7
 #define DRM_MEM_PAGES      9
 #define DRM_MEM_SGLISTS   20
-
 /* FIXME: Implement missing */
+
+
+/* IOCTL table emulation */
+/**
+ * Ioctl function type.
+ *
+ * \param dev DRM device structure
+ * \param data pointer to kernel-space stored data, copied in and out according
+ *         to ioctl description.
+ * \param file_priv DRM file private pointer.
+ */
+typedef int drm_ioctl_t(struct drm_device *dev, void *data,
+            struct drm_file *file_priv);
+
+#define DRM_AUTH        0x1
+#define DRM_MASTER      0x2
+#define DRM_ROOT_ONLY   0x4
+
+struct drm_ioctl_desc {
+    unsigned int cmd;
+    drm_ioctl_t *func;
+    int flags;
+};
+/**
+ * Creates a driver or general drm_ioctl_desc array entry for the given
+ * ioctl, for use by drm_ioctl().
+ */
+#define DRM_IOCTL_NR(n)     ((n) & 0xff)
+#define DRM_IOCTL_DEF(ioctl, func, flags) \
+    [DRM_IOCTL_NR(ioctl)] = {ioctl, func, flags}
+/* */
+
+
 #if defined(HOSTED_BUILD)
 #define readl(addr) 0
 #define writel(val, addr)

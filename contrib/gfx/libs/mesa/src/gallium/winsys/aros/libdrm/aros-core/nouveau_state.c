@@ -676,7 +676,6 @@ int nouveau_ioctl_getparam(struct drm_device *dev, void *data, struct drm_file *
 	return 0;
 }
 
-#if !defined(__AROS__)
 int nouveau_ioctl_setparam(struct drm_device *dev, void *data, struct drm_file *file_priv)
 {
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
@@ -709,7 +708,6 @@ int nouveau_ioctl_setparam(struct drm_device *dev, void *data, struct drm_file *
 
 	return 0;
 }
-#endif
 
 /* waits for idle */
 void nouveau_wait_for_idle(struct drm_device *dev)
@@ -741,7 +739,6 @@ void nouveau_wait_for_idle(struct drm_device *dev)
 	}
 }
 
-#if !defined(__AROS__)
 static int nouveau_suspend(struct drm_device *dev)
 {
 	struct mem_block *p;
@@ -835,6 +832,7 @@ static int nouveau_resume(struct drm_device *dev)
 	DRM_DEBUG("Doing resume\n");
 
 	if (dev_priv->gart_info.type == NOUVEAU_GART_AGP) {
+#if !defined(__AROS__)        
 		struct drm_agp_info info;
 		struct drm_agp_mode mode;
 
@@ -848,6 +846,10 @@ static int nouveau_resume(struct drm_device *dev)
 			DRM_ERROR("Unable to enable AGP: %d\n", i);
 			return i;
 		}
+#else
+DRM_IMPL("call to drm_agp_info/drm_agp_enable\n");
+#warning IMPLEMENT call to drm_agp_info/drm_agp_enable
+#endif        
 	}
 
 	for (i = 0; i < susres->ramin_size / 4; i++)
@@ -920,4 +922,4 @@ int nouveau_ioctl_resume(struct drm_device *dev, void *data,
 
 	return nouveau_resume(dev);
 }
-#endif
+

@@ -8,6 +8,9 @@
 struct drm_device global_drm_device;
 struct drm_file global_drm_file;
 
+/* FIXME: This should be generic function table, not nouveau */
+extern struct drm_ioctl_desc nouveau_ioctls[];
+
 int 
 drmCommandNone(int fd, unsigned long drmCommandIndex)
 {
@@ -50,9 +53,6 @@ drmCommandWrite(int fd, unsigned long drmCommandIndex, void *data, unsigned long
     return 0;
 }
 
-/* FIXME: temporary, should be in some header, later dynamically invoked from driver object */
-int exported_nouveau_ioctl_fifo_alloc(struct drm_device *dev, void *data,
-                    struct drm_file *file_priv);
 int
 drmCommandWriteRead(int fd, unsigned long drmCommandIndex, void *data, unsigned long size)
 {
@@ -61,7 +61,7 @@ drmCommandWriteRead(int fd, unsigned long drmCommandIndex, void *data, unsigned 
         case(DRM_NOUVEAU_GETPARAM):
             return nouveau_ioctl_getparam(&global_drm_device, data, &global_drm_file);
         case(DRM_NOUVEAU_CHANNEL_ALLOC):
-            return exported_nouveau_ioctl_fifo_alloc(&global_drm_device, data, &global_drm_file);
+            return nouveau_ioctls[DRM_NOUVEAU_CHANNEL_ALLOC].func(&global_drm_device, data, &global_drm_file);
         case(DRM_NOUVEAU_NOTIFIEROBJ_ALLOC):
             return nouveau_ioctl_notifier_alloc(&global_drm_device, data, &global_drm_file);
         case(DRM_NOUVEAU_MEM_ALLOC):

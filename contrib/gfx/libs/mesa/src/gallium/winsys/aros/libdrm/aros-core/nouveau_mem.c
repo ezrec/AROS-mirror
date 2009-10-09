@@ -848,7 +848,7 @@ nouveau_ioctl_mem_alloc(struct drm_device *dev, void *data,
 
 	return 0;
 }
-#if !defined(__AROS__)
+
 int
 nouveau_ioctl_mem_free(struct drm_device *dev, void *data,
 		       struct drm_file *file_priv)
@@ -926,4 +926,3 @@ nouveau_ioctl_mem_tile(struct drm_device *dev, void *data,
 
 	return 0;
 }
-#endif

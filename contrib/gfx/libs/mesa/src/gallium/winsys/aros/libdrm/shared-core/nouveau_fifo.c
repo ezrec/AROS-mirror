@@ -27,6 +27,7 @@
 #include "nouveau_drv.h"
 #include "nouveau_drm.h"
 
+
 /* returns the size of fifo context */
 int nouveau_fifo_ctx_size(struct drm_device *dev)
 {
@@ -509,7 +510,6 @@ nouveau_fifo_owner(struct drm_device *dev, struct drm_file *file_priv,
 	return (dev_priv->fifos[channel]->file_priv == file_priv);
 }
 
-
 /***********************************
  * ioctls wrapping the functions
  ***********************************/
@@ -558,13 +558,14 @@ static int nouveau_ioctl_fifo_alloc(struct drm_device *dev, void *data,
 	/* pass back FIFO map info to the caller */
 	init->cmdbuf      = chan->pushbuf_mem->map_handle;
 	init->cmdbuf_size = chan->pushbuf_mem->size;
+
 	/* and the notifier block */
 	init->notifier      = chan->notifier_block->map_handle;
 	init->notifier_size = chan->notifier_block->size;
 
 	return 0;
 }
-#if !defined(__AROS__)
+
 static int nouveau_ioctl_fifo_free(struct drm_device *dev, void *data,
 				   struct drm_file *file_priv)
 {
@@ -599,10 +600,3 @@ struct drm_ioctl_desc nouveau_ioctls[] = {
 };
 
 int nouveau_max_ioctl = DRM_ARRAY_SIZE(nouveau_ioctls);
-#endif
-
-int exported_nouveau_ioctl_fifo_alloc(struct drm_device *dev, void *data,
-                    struct drm_file *file_priv)
-{
-    return nouveau_ioctl_fifo_alloc(dev, data, file_priv);
-}

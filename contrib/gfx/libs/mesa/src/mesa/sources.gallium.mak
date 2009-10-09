@@ -18,7 +18,6 @@ AROS_WINSYS_SOURCES = \
             winsys/aros/libdrm/libdrm/nouveau/nouveau_device \
             winsys/aros/libdrm/libdrm/arosdrm \
             winsys/aros/libdrm/aros-core/nouveau_state \
-            winsys/aros/libdrm/aros-core/nouveau_fifo \
             winsys/aros/libdrm/aros-core/nouveau_object \
             winsys/aros/libdrm/aros-core/nouveau_mem \
             winsys/aros/libdrm/aros-core/nouveau_backlight \
@@ -50,6 +49,7 @@ AROS_WINSYS_SOURCES = \
             winsys/aros/libdrm/shared-core/nv50_mc \
             winsys/aros/libdrm/shared-core/nouveau_irq \
             winsys/aros/libdrm/shared-core/nouveau_swmthd \
+            winsys/aros/libdrm/shared-core/nouveau_fifo \
             winsys/drm/nouveau/drm/nouveau_winsys_pipe \
             winsys/drm/nouveau/drm/nouveau_winsys \
 
