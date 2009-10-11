@@ -85,9 +85,9 @@ arosmesa_nouveau_display_surface(AROSMesaContext amesa,
     
     for (;NULL != CR; CR = CR->Next)
     {
-        D(bug("Cliprect (%d, %d, %d, %d), lobs=%p\n",
+/*        D(bug("Cliprect (%d, %d, %d, %d), lobs=%p\n",
             CR->bounds.MinX, CR->bounds.MinY, CR->bounds.MaxX, CR->bounds.MaxY,
-            CR->lobs));
+            CR->lobs));*/
 
         /* I assume this means the cliprect is visible */
         if (NULL == CR->lobs)
@@ -271,8 +271,7 @@ arosmesa_create_nouveau_context( struct pipe_screen *screen )
 }
 
 static struct pipe_buffer *
-nouveau_drm_pb_from_handle(struct pipe_screen *pscreen, const char *name,
-               unsigned handle)
+nouveau_drm_pb_from_handle(struct pipe_screen *pscreen, unsigned handle)
 {
     struct nouveau_pipe_winsys *nvpws = nouveau_screen(pscreen);
     struct nouveau_device *dev = nvpws->channel->device;
@@ -300,54 +299,80 @@ nouveau_drm_pb_from_handle(struct pipe_screen *pscreen, const char *name,
     return &nvpb->base;
 }
 
-static void
-arosmesa_nouveau_dummy(struct pipe_screen * screen)
+static void HACK_allocate_screen_buffer(int size, struct pipe_screen * pscreen)
 {
-   struct pipe_surface *surface = NULL;
-   struct pipe_texture *texture = NULL;
-   struct pipe_texture templat;
-   struct pipe_buffer *buf = NULL;
-   unsigned pitch = 1024 * 4; /* FIXME: width * bpp / 8 */
-   
-#warning hardcoded start of visible framebuffer
-/* FIXME: The third parameter represents the offset to start of visible framebuffer - this must be read, not hardcoded 
-nvidia hidd registers_base + x00600000 + (0x800/4)
-*/
+    struct nouveau_pipe_winsys *nvpws = nouveau_screen(pscreen);
+    struct nouveau_device *dev = nvpws->channel->device;
+    struct nouveau_bo *bo = NULL;
+    
+    /* HACK - UNHOLY */
+    /* IF WE ARE LUCKY:
+    A) VISIBLE FRAMEBUFFER IS ALLOCATED AT FRAMEBUFFER OFFSET 0
+    B) THERE ARE NO ALLOCATATION ON FB HEAP
+    THEN WE WILL 'PROTECT' THE VISIBLE FRAMEBUFFER WITH THIS ALLOCATION */
+    
+    nouveau_bo_new(dev, NOUVEAU_BO_VRAM | NOUVEAU_BO_PIN, 0, size, &bo);
+}
 
-   buf = nouveau_drm_pb_from_handle(screen, "front buffer", 0 /*FIXME: THIS VALUE MATTERS!!!! */);
-   if (!buf)
-      return;
+static void
+arosmesa_nouveau_protect_visible_screen(struct pipe_screen * screen, int width, int height, int bpp)
+{
+    struct pipe_surface *surface = NULL;
+    struct pipe_texture *texture = NULL;
+    struct pipe_texture templat;
+    struct pipe_buffer *buf = NULL;
+    unsigned pitch = width * bpp / 8;
 
-   memset(&templat, 0, sizeof(templat));
-   templat.tex_usage = PIPE_TEXTURE_USAGE_PRIMARY |
-                       NOUVEAU_TEXTURE_USAGE_LINEAR;
-   templat.target = PIPE_TEXTURE_2D;
-   templat.last_level = 0;
-   templat.depth[0] = 1;
-   templat.format = PIPE_FORMAT_A8R8G8B8_UNORM; /*FIXME:format*/
-   templat.width[0] = 1024 /*FIXME:width*/;
-   templat.height[0] = 768 /*FIXME:height*/;
-   pf_get_block(templat.format, &templat.block);
+    HACK_allocate_screen_buffer(pitch * height, screen);
 
-   texture = screen->texture_blanket(screen,
-                                     &templat,
-                                     &pitch,
-                                     buf);
+    #warning hardcoded start of visible framebuffer
+    /* FIXME: The third parameter represents the offset to start of visible framebuffer - this must be read, not hardcoded 
+    nvidia hidd registers_base + x00600000 + (0x800/4)
+    */
 
-   /* we don't need the buffer from this point on */
-   pipe_buffer_reference(&buf, NULL);
+    buf = nouveau_drm_pb_from_handle(screen, 0 /*FIXME: THIS VALUE MATTERS!!!! */);
+    if (!buf)
+        return;
 
-   if (!texture)
-      return;
+    memset(&templat, 0, sizeof(templat));
+    templat.tex_usage = PIPE_TEXTURE_USAGE_PRIMARY |
+                        NOUVEAU_TEXTURE_USAGE_LINEAR;
+    templat.target = PIPE_TEXTURE_2D;
+    templat.last_level = 0;
+    templat.depth[0] = 1;
+    switch(bpp)
+    {
+        case(16):
+            templat.format = PIPE_FORMAT_R5G6B5_UNORM;
+            break;
+        default:
+            /* FIXME: should fail for anything other than 32bit */
+            templat.format = PIPE_FORMAT_A8R8G8B8_UNORM;
+            break;
+    }
+    templat.width[0] = width;
+    templat.height[0] = height;
+    pf_get_block(templat.format, &templat.block);
 
-   surface = screen->get_tex_surface(screen, texture, 0, 0, 0,
-                                     PIPE_BUFFER_USAGE_GPU_READ |
-                                     PIPE_BUFFER_USAGE_GPU_WRITE);
+    texture = screen->texture_blanket(screen,
+                                        &templat,
+                                        &pitch,
+                                        buf);
 
-   /* we don't need the texture from this point on */
-   pipe_texture_reference(&texture, NULL);
-   
-   whole_screen = surface;
+    /* we don't need the buffer from this point on */
+    pipe_buffer_reference(&buf, NULL);
+
+    if (!texture)
+        return;
+
+    surface = screen->get_tex_surface(screen, texture, 0, 0, 0,
+                                        PIPE_BUFFER_USAGE_GPU_READ |
+                                        PIPE_BUFFER_USAGE_GPU_WRITE);
+
+    /* we don't need the texture from this point on */
+    pipe_texture_reference(&texture, NULL);
+
+    whole_screen = surface;
 }
 
 static void
@@ -367,13 +392,21 @@ arosmesa_nouveau_cleanup( struct pipe_screen * screen )
     }
 }
 
+static void
+arosmesa_nouveau_query_depth_stencil(int color, int * depth, int * stencil)
+{
+    (*depth)    = 24;
+    (*stencil)  = 8;
+}
+
 struct arosmesa_driver arosmesa_nouveau_driver = 
 {
-   .create_pipe_screen = arosmesa_create_nouveau_screen,
-   .create_pipe_context = arosmesa_create_nouveau_context,
-   .display_surface = arosmesa_nouveau_display_surface,
-   .dummy = arosmesa_nouveau_dummy,
-   .cleanup = arosmesa_nouveau_cleanup
+    .create_pipe_screen = arosmesa_create_nouveau_screen,
+    .create_pipe_context = arosmesa_create_nouveau_context,
+    .display_surface = arosmesa_nouveau_display_surface,
+    .protect_visible_screen = arosmesa_nouveau_protect_visible_screen,
+    .cleanup = arosmesa_nouveau_cleanup,
+    .query_depth_stencil = arosmesa_nouveau_query_depth_stencil,
 };
 
 

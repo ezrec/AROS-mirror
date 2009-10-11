@@ -37,28 +37,36 @@ typedef struct arosmesa_visual * AROSMesaVisual;
 #define GET_GL_VIS_PTR(arosmesa_vis) (&arosmesa_vis->Base)
 #define GET_AROS_VIS_PTR(gl_vis) ((AROSMesaVisual)gl_vis)
 
+struct arosmesa_screen_info
+{
+    struct Screen * Screen;                         /* Current screen*/
+    GLuint          Width;
+    GLuint          Height;
+    GLuint          Depth;
+    GLuint          BitsPerPixel;
+};
+
 /* AROS context */
 struct arosmesa_context
 {
-    struct st_context *     st;                     /* Base class - must be first */
-    AROSMesaVisual          visual;                 /* the visual context */
-    AROSMesaFrameBuffer     framebuffer;
+    struct st_context *         st;                     /* Base class - must be first */
+    AROSMesaVisual              visual;                 /* the visual context */
+    AROSMesaFrameBuffer         framebuffer;
     
     /* FIXME: shouldn't this be part of frame buffer? */
-    struct Window           *window;                /* Intuition window */
-    struct Screen           *screen;                /* Current screen*/
+    struct Window               *window;                /* Intuition window */
+    struct arosmesa_screen_info ScreenInfo;
     
     /* Rastport 'visible' to user (window rasport, screen rastport)*/
-    struct RastPort         *visible_rp;
+    struct RastPort             *visible_rp;
     /* Rastport dimentions */
-    GLuint                  visible_rp_width;       /* the rastport drawing area full size*/
-    GLuint                  visible_rp_height;      /* the rastport drawing area full size*/
+    GLuint                      visible_rp_width;       /* the rastport drawing area full size*/
+    GLuint                      visible_rp_height;      /* the rastport drawing area full size*/
 
     /* Buffer information */
-    GLuint                  depth;                  /* bits per pixel (1, 8, 24, etc) */
-    GLuint                  width, height;          /* drawable area on rastport defined by borders */
-    GLuint                  top, bottom;            /* offsets due to window border */
-    GLuint                  left, right;            /* offsets due to window border */    
+    GLuint                      width, height;          /* drawable area on rastport defined by borders */
+    GLuint                      top, bottom;            /* offsets due to window border */
+    GLuint                      left, right;            /* offsets due to window border */    
 };
 
 #define GET_GL_CTX_PTR(arosmesa_ctx) (arosmesa_ctx->st->ctx)

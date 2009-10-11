@@ -49,7 +49,7 @@ struct drm_file;
 
 /* Enable hacks for running under hosted AROS */
 /* FIXME: THIS AND ALL "HOSTED_BUILD" MARKED CODE MUST BE DELETED IN FINAL VERSION */
-//#define HOSTED_BUILD 
+//#define HOSTED_BUILD
 
 /* FIXME: Need to find a way to remove the need for these defines */
 #define PAGE_SHIFT  12
@@ -203,6 +203,35 @@ struct drm_map_list {
 };
 
 typedef struct drm_map drm_local_map_t;
+
+/* MTRR */
+static inline int drm_mtrr_add(unsigned long offset, unsigned long size,
+                   unsigned int flags)
+{
+    return -ENODEV;
+}
+
+static inline int drm_mtrr_del(int handle, unsigned long offset,
+                   unsigned long size, unsigned int flags)
+{
+    return -ENODEV;
+}
+
+#define drm_core_has_MTRR(dev) (0)
+#define DRM_MTRR_WC     0
+static __inline__ int mtrr_add(unsigned long base, unsigned long size,
+                   unsigned int type, char increment)
+{
+    return -ENODEV;
+}
+
+static __inline__ int mtrr_del(int reg, unsigned long base, unsigned long size)
+{
+    return -ENODEV;
+}
+
+#define MTRR_TYPE_WRCOMB     1
+/*  */
 
 /* drm_irq.c */
 int drm_irq_install(struct drm_device *dev);

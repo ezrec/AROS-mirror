@@ -19,6 +19,14 @@
 #define AROS_PIXFMT RECTFMT_BGRA32   /* Little Endian Archs. */
 #endif
 
+struct arosmesa_buffer
+{
+    struct pipe_buffer base;
+    void *buffer; /* Real buffer pointer */
+    void *data; /* Aligned buffer pointer (inside real buffer) */
+    void *mapped;
+};
+
 /* FIXME: Don't use context. Use structure having access to rastport instead */
 static void
 arosmesa_softpipe_display_surface(AROSMesaContext amesa,
@@ -208,11 +216,37 @@ fail:
     return NULL;
 }
 
+static void
+arosmesa_softpipe_query_depth_stencil(int color, int * depth, int * stencil)
+{
+    (*depth)    = 16;
+    (*stencil)  = 8;
+}
+
+static void
+arosmesa_softpipe_protect_visible_screen(struct pipe_screen * screen, int width, int height, int bpp)
+{
+    /* No op */
+}
+
+static void
+arosmesa_softpipe_cleanup( struct pipe_screen * screen )
+{
+    if (screen)
+    {
+        screen->destroy(screen);
+        /* screen->destroy calls winsys->destroy */
+    }
+}
+
 struct arosmesa_driver arosmesa_softpipe_driver = 
 {
-   .create_pipe_screen = arosmesa_create_softpipe_screen,
-   .create_pipe_context = arosmesa_create_softpipe_context,
-   .display_surface = arosmesa_softpipe_display_surface
+    .create_pipe_screen = arosmesa_create_softpipe_screen,
+    .create_pipe_context = arosmesa_create_softpipe_context,
+    .display_surface = arosmesa_softpipe_display_surface,
+    .query_depth_stencil = arosmesa_softpipe_query_depth_stencil,
+    .protect_visible_screen = arosmesa_softpipe_protect_visible_screen,
+    .cleanup = arosmesa_softpipe_cleanup,
 };
 
 

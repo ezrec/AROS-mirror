@@ -125,6 +125,10 @@ void initmesa()
     // RGB(A) Mode ?
     attributes[i].ti_Tag = AMA_RGBMode;     attributes[i++].ti_Data = GL_TRUE;
     
+    /* Stencil/Accum */
+    attributes[i].ti_Tag = AMA_NoStencil;   attributes[i++].ti_Data = GL_TRUE;
+    attributes[i].ti_Tag = AMA_NoAccum;     attributes[i++].ti_Data = GL_TRUE;
+    
     // done...
     attributes[i].ti_Tag    = TAG_DONE;
 
@@ -198,6 +202,7 @@ int main(int argc, char **argv)
 {
     ULONG fps = 0;
     TEXT title[100];
+    struct Screen * pubscreen = NULL;
     
     struct timeval tv;
     UQUAD lastmicrosecs = 0L;
@@ -209,14 +214,17 @@ int main(int argc, char **argv)
     GetSysTime(&tv);
     lastmicrosecs = tv.tv_secs * 1000000 + tv.tv_micro;
     fpsmicrosecs = lastmicrosecs;
-        
+
+    if ((pubscreen = LockPubScreen(NULL)) == NULL) return 1;
+    
     win = OpenWindowTags(0,
                         WA_Title, (IPTR)"MesaSimpleRendering",
+                        WA_PubScreen, pubscreen,
                         WA_CloseGadget, TRUE,
                         WA_DragBar, TRUE,
                         WA_DepthGadget, TRUE,
-                        WA_Left, 10,
-                        WA_Top, 10,
+                        WA_Left, 50,
+                        WA_Top, 200,
                         WA_InnerWidth, 300,
                         WA_InnerHeight, 300,
                         WA_Activate, TRUE,
@@ -225,9 +233,11 @@ int main(int argc, char **argv)
                         WA_NoCareRefresh, TRUE,
                         WA_IDCMP, IDCMP_CLOSEWINDOW,
                         TAG_DONE);
-             
+    
+    UnlockPubScreen(NULL, pubscreen);
+                        
     initmesa();
-        
+    //finished = TRUE;
     while(!finished)
     {
         GetSysTime(&tv);

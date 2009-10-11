@@ -9,7 +9,9 @@ void *drm_calloc(size_t nmemb, size_t size, int area)
 
 void *drm_alloc(size_t size, int area)
 {
-    return AllocMem(size, MEMF_PUBLIC);
+    /* The MEMF_CLEAR is not needed per definition, but makes it easier to find
+     * uses of unallocated pointers */
+    return AllocMem(size, MEMF_PUBLIC | MEMF_CLEAR);
 }
 
 void drm_free(void *pt, size_t size, int area)

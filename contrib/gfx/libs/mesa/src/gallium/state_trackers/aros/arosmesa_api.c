@@ -44,7 +44,7 @@ aros_destroy_visual(AROSMesaVisual aros_vis)
 }
 
 static AROSMesaVisual 
-aros_new_visual(struct TagItem *tagList)
+aros_new_visual(GLint bpp, struct TagItem *tagList)
 {
     AROSMesaVisual aros_vis = NULL;
     GLvisual * vis = NULL;
@@ -52,29 +52,48 @@ aros_new_visual(struct TagItem *tagList)
     
     D(bug("[AROSMESA] aros_new_visual\n"));
 
-    /* Allocated memory for aros structure */
-    aros_vis = AllocVec(sizeof(struct arosmesa_visual), MEMF_PUBLIC | MEMF_CLEAR);
+    /* Color buffer */
+    switch(bpp)
+    {
+        case(16):
+            indexBits   = 0;
+            redBits     = 5;
+            greenBits   = 6;
+            blueBits    = 5;
+            alphaBits   = 0;
+            break;
+        case(32):
+            indexBits   = 0;
+            redBits     = 8;
+            greenBits   = 8;
+            blueBits    = 8;
+            alphaBits   = 8;
+            break;
+        default:
+            D(bug("[AROSMESA] aros_new_visual - ERROR - Unsupported bpp\n"));
+            return NULL;
+    }
 
-    if (!aros_vis)
-        return NULL;
-
-    vis = GET_GL_VIS_PTR(aros_vis);
-
-    /* Create core visual with default values */
-    depthBits = DEFAULT_SOFTWARE_DEPTH_BITS;
-    stencilBits = 8;
+    /* Z-buffer / Stencil buffer */
+    driver.query_depth_stencil(bpp, &depthBits, &stencilBits);
+    
+    /* Accum buffer */
     accumBits = 16;
-    indexBits = 0;
-    redBits = CHAN_BITS;
-    greenBits = CHAN_BITS;
-    blueBits = CHAN_BITS;
-    alphaBits = CHAN_BITS;
+    
     
     /* Override default values */
     /* AMA_RGBMode, AMA_DoubleBuf and AMA_AlphaFlag are always GL_TRUE in this implementation */
     stencilBits     = !GetTagData(AMA_NoStencil, GL_FALSE, tagList) ? stencilBits : 0;
     accumBits       = !GetTagData(AMA_NoAccum, GL_FALSE, tagList) ? accumBits : 0;
     depthBits       = !GetTagData(AMA_NoDepth, GL_FALSE, tagList) ? depthBits : 0;
+
+    /* Allocate memory for aros structure */
+    aros_vis = AllocVec(sizeof(struct arosmesa_visual), MEMF_PUBLIC | MEMF_CLEAR);
+
+    if (!aros_vis)
+        return NULL;
+
+    vis = GET_GL_VIS_PTR(aros_vis);
 
     /* Initialize mesa structure */
     if(!_mesa_initialize_visual(vis,
@@ -115,27 +134,68 @@ aros_new_framebuffer(AROSMesaContext amesa, AROSMesaVisual visual)
 {
     AROSMesaFrameBuffer aros_fb = NULL;
     enum pipe_format colorFormat, depthFormat, stencilFormat;
-
+    GLvisual * vis = GET_GL_VIS_PTR(visual);
+    
     D(bug("[AROSMESA] aros_new_framebuffer\n"));
 
-    /* Allocated memory for aros structure */
+    stencilFormat = PIPE_FORMAT_NONE;
+    
+    switch(vis->redBits)
+    {
+        case(5):
+            colorFormat = PIPE_FORMAT_R5G6B5_UNORM;
+            break;
+        case(8):
+            colorFormat = PIPE_FORMAT_A8R8G8B8_UNORM;
+            break;
+        default:
+            D(bug("[AROSMESA] aros_new_framebuffer - ERROR - Unsupported redBits value\n"));
+            return NULL;
+    }
+    
+    switch(vis->depthBits)
+    {
+        case(0):
+            depthFormat = PIPE_FORMAT_NONE;
+            break;
+        case(16):
+            depthFormat = PIPE_FORMAT_Z16_UNORM;
+            break;
+        case(24):
+            depthFormat = PIPE_FORMAT_Z24S8_UNORM;
+            break;
+        default:
+            D(bug("[AROSMESA] aros_new_framebuffer - ERROR - Unsupported depthBits value\n"));
+            return NULL;
+    }
+    
+    switch(vis->stencilBits)
+    {
+        case(0):
+            stencilFormat = PIPE_FORMAT_NONE;
+            break;
+        case(8):
+            if (depthFormat == PIPE_FORMAT_Z24S8_UNORM)
+                stencilFormat = PIPE_FORMAT_Z24S8_UNORM;
+            else
+                stencilFormat = PIPE_FORMAT_S8_UNORM;
+            break;
+        default:
+            D(bug("[AROSMESA] aros_new_framebuffer - ERROR - Unsupported stencilBits value\n"));
+            return NULL;
+    }
+
+    /* Allocate memory for aros structure */
     aros_fb = AllocVec(sizeof(struct arosmesa_framebuffer), MEMF_PUBLIC | MEMF_CLEAR);
 
     if (!aros_fb)
         return NULL;
-
-    /* FIXME: calculate formats based on visual */
-    colorFormat = PIPE_FORMAT_A8R8G8B8_UNORM; /* FIXME: Color format should match AROS native format */
-    depthFormat = PIPE_FORMAT_Z16_UNORM;
-    stencilFormat = PIPE_FORMAT_S8_UNORM;
-    
     
     /* Create framebuffer */
-    aros_fb->stfb = st_create_framebuffer(GET_GL_VIS_PTR(visual),
+    aros_fb->stfb = st_create_framebuffer(vis,
                                     colorFormat, depthFormat, stencilFormat,
                                     amesa->width, amesa->height,
                                     (void *) aros_fb);    
-    
     
     return aros_fb;
 }
@@ -159,11 +219,11 @@ aros_destroy_framebuffer(AROSMesaFrameBuffer aros_fb)
 static void 
 aros_select_rastport(AROSMesaContext amesa, struct TagItem * tagList)
 {
-    amesa->screen = (struct Screen *)GetTagData(AMA_Screen, 0, tagList);
+    amesa->ScreenInfo.Screen = (struct Screen *)GetTagData(AMA_Screen, 0, tagList);
     amesa->window = (struct Window *)GetTagData(AMA_Window, 0, tagList);
     amesa->visible_rp = (struct RastPort *)GetTagData(AMA_RastPort, 0, tagList);
 
-    if (amesa->screen)
+    if (amesa->ScreenInfo.Screen)
     {
         D(bug("[AROSMESA] aros_select_rastport: Screen @ %x\n", amesa->screen));
         if (amesa->window)
@@ -181,7 +241,7 @@ aros_select_rastport(AROSMesaContext amesa, struct TagItem * tagList)
             if (!(amesa->visible_rp))
             {
                 /* Use the screens rastport */
-                amesa->visible_rp = &amesa->screen->RastPort;
+                amesa->visible_rp = &amesa->ScreenInfo.Screen->RastPort;
                 D(bug("[AROSMESA] aros_select_rastport: Screens RastPort @ %x\n", amesa->visible_rp));
             }
         }
@@ -193,8 +253,8 @@ aros_select_rastport(AROSMesaContext amesa, struct TagItem * tagList)
         {
             D(bug("[AROSMESA] aros_select_rastport: Window @ %x\n", amesa->window));
             /* Use the windows Screen */
-            amesa->screen = amesa->window->WScreen;
-            D(bug("[AROSMESA] aros_select_rastport: Windows Screen @ %x\n", amesa->screen));
+            amesa->ScreenInfo.Screen = amesa->window->WScreen;
+            D(bug("[AROSMESA] aros_select_rastport: Windows Screen @ %x\n", amesa->ScreenInfo.Screen));
 
             if (!(amesa->visible_rp))
             {
@@ -331,18 +391,14 @@ aros_standard_init(AROSMesaContext amesa, struct TagItem *tagList)
             requestedbottom = 0;
     }
     amesa->bottom = requestedbottom;
-
-    _aros_recalculate_buffer_width_height(GET_GL_CTX_PTR(amesa));
-
-    //amesa->clearpixel = 0;   /* current drawing/clearing pens */
     
-    if (amesa->screen)
+    /* Init screen information */
+    if (amesa->ScreenInfo.Screen)
     {
-        if (amesa->depth == 0)
-        {
-            D(bug("[AROSMESA] aros_standard_init: WARNING - Illegal RastPort Depth, attempting to correct\n"));
-            amesa->depth = GetCyberMapAttr(amesa->visible_rp->BitMap, CYBRMATTR_DEPTH);
-        }
+        amesa->ScreenInfo.Depth         = GetCyberMapAttr(amesa->ScreenInfo.Screen->RastPort.BitMap, CYBRMATTR_DEPTH);
+        amesa->ScreenInfo.BitsPerPixel  = GetCyberMapAttr(amesa->ScreenInfo.Screen->RastPort.BitMap, CYBRMATTR_BPPIX) * 8;
+        amesa->ScreenInfo.Width         = GetCyberMapAttr(amesa->ScreenInfo.Screen->RastPort.BitMap, CYBRMATTR_WIDTH);
+        amesa->ScreenInfo.Height        = GetCyberMapAttr(amesa->ScreenInfo.Screen->RastPort.BitMap, CYBRMATTR_HEIGHT);
     }
     
     D(bug("[AROSMESA] aros_standard_init: Context Base dimensions set -:\n"));
@@ -406,10 +462,12 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
     
     /* FIXME: check if any rastport is available */
     
+    /* FIXME: later this might me placed in initialization of framebuffer */
+    aros_standard_init(amesa, tagList);   
     
     D(bug("[AROSMESA] AROSMesaCreateContext: Creating new AROSMesaVisual\n"));
 
-    if (!(amesa->visual = aros_new_visual(tagList)))
+    if (!(amesa->visual = aros_new_visual(amesa->ScreenInfo.BitsPerPixel, tagList)))
     {
         /* TODO: Route error handling to one place */
         D(bug("[AROSMESA] AROSMesaCreateContext: ERROR -  failed to create AROSMesaVisual\n"));
@@ -419,6 +477,7 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
     }
     
     screen = driver.create_pipe_screen();
+    
     if (!screen)
     {
         /* TODO: Route error handling to one place */
@@ -427,10 +486,10 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
         FreeVec(amesa);
         return NULL;
     }
-    
-    #if USE_NVIDIA_DRIVER == 1
-    driver.dummy(screen);
-    #endif
+
+    /* FIXME: This is a hack so that VRAM is not allocated from visible portion of framebuffer */
+    driver.protect_visible_screen(screen, amesa->ScreenInfo.Width, amesa->ScreenInfo.Height, 
+                                   amesa->ScreenInfo.BitsPerPixel);
     
     pipe = driver.create_pipe_context(screen);
     
@@ -442,10 +501,8 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
     amesa->st->ctx->DriverCtx = amesa;
     pipe->priv = amesa;
     
+    _aros_recalculate_buffer_width_height(GET_GL_CTX_PTR(amesa));
     
-    /* FIXME: later this might me placed in initialization of framebuffer */
-    aros_standard_init(amesa, tagList);
-
     /* FIXME: Provide rastport to framebuffer ? */
     amesa->framebuffer = aros_new_framebuffer(amesa, amesa->visual);
     
@@ -521,11 +578,8 @@ void AROSMesaDestroyContext(AROSMesaContext amesa)
         aros_destroy_framebuffer(amesa->framebuffer);
         aros_destroy_visual(amesa->visual);
         aros_destroy_context(amesa);
-        
-        #if USE_NVIDIA_DRIVER == 1
-        /* FIXME: what if st_destroy_context destroyed the screen already? This is really driver dependant */
+
         driver.cleanup(screen);
-        #endif
     }
     
 }

@@ -29,6 +29,7 @@ EXEDIR      := $(CONTRIBDIR)/Demos/Mesa
 
 #MM contrib-gfx-libs-mesa-demos-tunnel : contrib-gfx-libs-mesa-demos-prerequisites
 
+#MM- mesa-demos-gears-gallium : contrib-gfx-libs-mesa-includes includes mesa-mesa-gallium-linklib
 
 %build_progs mmake=contrib-gfx-libs-mesa-demos \
     targetdir=$(EXEDIR) \
@@ -58,4 +59,8 @@ EXEDIR      := $(CONTRIBDIR)/Demos/Mesa
     targetdir=$(EXEDIR) progname="reflect" \
     files="reflect readtex showbuffer" uselibs="glut GL GLU "
 
+%build_prog mmake=mesa-demos-gears-gallium progname="gears-gallium" \
+    targetdir=$(EXEDIR) \
+    files="gears" uselibs="glut GLGalliumStatic GLU"
+    
 %common

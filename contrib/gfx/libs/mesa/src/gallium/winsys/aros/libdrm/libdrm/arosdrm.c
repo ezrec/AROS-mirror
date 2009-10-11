@@ -65,8 +65,7 @@ drmCommandWriteRead(int fd, unsigned long drmCommandIndex, void *data, unsigned 
         case(DRM_NOUVEAU_NOTIFIEROBJ_ALLOC):
             return nouveau_ioctl_notifier_alloc(&global_drm_device, data, &global_drm_file);
         case(DRM_NOUVEAU_MEM_ALLOC):
-            /* FIXME: If &global_drm_file is passed here - no rendering is visible, why? */
-            return nouveau_ioctl_mem_alloc(&global_drm_device, data, NULL);
+            return nouveau_ioctl_mem_alloc(&global_drm_device, data, &global_drm_file);
         default:
             DRM_IMPL("COMMAND %d\n", drmCommandIndex);
     }
@@ -79,20 +78,22 @@ drmMap(int fd, drm_handle_t handle, drmSize size, drmAddressPtr address)
 {
     struct drm_map_list *entry;
     
-    /* This function should call mmap - map a portion of user space onto
-    kernel allocated buffer. Since AROS does not distinguish kernel-user, 
-    we just return to the caller the address of "kernel" allocated memory */
-    
     /* FIXME: will become extreemly slow with large number of allocations
     Original implementeation used hastabled to get quicker access to the
     needed drm_map_list */
-    
+  
     for (entry = (struct drm_map_list *)global_drm_device.maplist.next; 
     entry != (struct drm_map_list *)&global_drm_device.maplist; 
     entry = (struct drm_map_list *)entry->head.next)
     {
         if (entry->map && entry->user_token == handle)
         {
+            
+            if (entry->map->type == _DRM_FRAME_BUFFER)
+            {
+                /* HACK ? - map of this type was not ioremaped before */
+                drm_core_ioremap(entry->map, &global_drm_device);
+            }
             *address = entry->map->handle;
             return 0;
         }

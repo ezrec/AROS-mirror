@@ -517,15 +517,12 @@ int nouveau_mem_init(struct drm_device *dev)
 
 	if (dev_priv->flags & (NV_NFORCE | NV_NFORCE2))
 		nouveau_mem_check_nforce_dimms(dev);
-#if !defined(__AROS__)
+
 	/* setup a mtrr over the FB */
 	dev_priv->fb_mtrr = drm_mtrr_add(drm_get_resource_start(dev, 1),
 					 nouveau_mem_fb_amount(dev),
 					 DRM_MTRR_WC);
-#else
-DRM_ERROR("IMPLEMENT drm_mtrr_add?\n");
-#warning IMPLEMENT drm_mtrr_add?
-#endif
+
 	/* Init FB */
 	dev_priv->fb_phys=drm_get_resource_start(dev,1);
 	fb_size = nouveau_mem_fb_amount(dev);

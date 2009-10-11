@@ -588,13 +588,8 @@ void nouveau_lastclose(struct drm_device *dev)
 
 		if(dev_priv->fb_mtrr>0)
 		{
-#if !defined(__AROS__)            
 			drm_mtrr_del(dev_priv->fb_mtrr, drm_get_resource_start(dev, 1),nouveau_mem_fb_amount(dev), DRM_MTRR_WC);
 			dev_priv->fb_mtrr=0;
-#else
-DRM_IMPL("drm_mtrr_del?\n");
-#warning IMPLEMENT drm_mtrr_del?
-#endif            
 		}
 	}
 }

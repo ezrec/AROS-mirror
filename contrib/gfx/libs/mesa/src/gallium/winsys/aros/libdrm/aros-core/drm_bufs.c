@@ -85,7 +85,7 @@ static int drm_addmap_core(struct drm_device *dev, unsigned int offset,
             *maplist = list;
             return 0;
         }
-#if !defined(__AROS__)
+
         if (drm_core_has_MTRR(dev)) {
             if (map->type == _DRM_FRAME_BUFFER ||
                 (map->flags & _DRM_WRITE_COMBINING)) {
@@ -95,10 +95,6 @@ static int drm_addmap_core(struct drm_device *dev, unsigned int offset,
         }
 
         if (map->type == _DRM_REGISTERS) {
-#else
-        /* Mapping of _DRM_FRAME_BUFFER is needed under AROS - else segfault at dma pushbuffer */
-        if (map->type == _DRM_REGISTERS || map->type == _DRM_FRAME_BUFFER) {
-#endif            
             map->handle = drm_pci_ioremap(dev->pcidriver, (APTR)map->offset, (IPTR)map->size);
             if (!map->handle) {
                 drm_free(map, sizeof(*map), DRM_MEM_MAPS);
@@ -210,24 +206,15 @@ int drm_rmmap_locked(struct drm_device *dev, drm_local_map_t *map)
      */
 
     switch (map->type) {
-#if defined(__AROS__)
-    /* Since _DRM_FRAME_BUFFER was mapped in drm_addmap, it must now be unmapped */
-    case _DRM_FRAME_BUFFER:
-    DRM_IMPL("_DRM_FRAME_BUFFER - call to mtrr_del?\n");
-    #warning IMPLEMENT _DRM_FRAME_BUFFER - call to mtrr_del?
-    /* FALLTHROUGH */
-#endif
     case _DRM_REGISTERS:
         drm_pci_iounmap(dev->pcidriver, map->handle, map->size);
         /* FALLTHROUGH */
-#if !defined(__AROS__)        
     case _DRM_FRAME_BUFFER:
         if (drm_core_has_MTRR(dev) && map->mtrr >= 0) {
             int retcode;
             retcode = mtrr_del(map->mtrr, map->offset, map->size);
             DRM_DEBUG("mtrr_del=%d\n", retcode);
         }
-#endif        
         break;
     case _DRM_SHM:
         DRM_IMPL("handle _DRM_SHM\n");
