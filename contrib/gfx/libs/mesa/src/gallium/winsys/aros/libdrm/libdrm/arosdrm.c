@@ -146,7 +146,7 @@ drmClose(int fd)
     
     nouveau_preclose(&global_drm_device, &global_drm_file);
     
-    nouveau_lastclose(&global_drm_device);
+    drm_lastclose(&global_drm_device);
     
     nouveau_unload(&global_drm_device);
     

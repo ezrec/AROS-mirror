@@ -45,16 +45,16 @@ static inline void *drm_vmalloc_dma(unsigned long size)
 
 void drm_sg_cleanup(struct drm_sg_mem *entry)
 {
-// 	struct page *page;
+#if !defined(__AROS__)        
+	struct page *page;
 	int i;
 
-// 	for (i = 0; i < entry->pages; i++) {
-// 		page = entry->pagelist[i];
-// #if !defined(__AROS__)        
-// 		if (page)
-// 			ClearPageReserved(page);
-// #endif        
-// 	}
+	for (i = 0; i < entry->pages; i++) {
+		page = entry->pagelist[i];
+		if (page)
+			ClearPageReserved(page);
+	}
+#endif        
 
 #if defined(__AROS__)
     FreeVec(entry->virtual);
@@ -64,8 +64,10 @@ void drm_sg_cleanup(struct drm_sg_mem *entry)
 
 	drm_free(entry->busaddr,
 		 entry->pages * sizeof(*entry->busaddr), DRM_MEM_PAGES);
-/*	drm_free(entry->pagelist,
-		 entry->pages * sizeof(*entry->pagelist), DRM_MEM_PAGES);*/
+#if !defined(__AROS__)
+	drm_free(entry->pagelist,
+		 entry->pages * sizeof(*entry->pagelist), DRM_MEM_PAGES);
+#endif
 	drm_free(entry, sizeof(*entry), DRM_MEM_SGLISTS);
 }
 EXPORT_SYMBOL(drm_sg_cleanup);
@@ -100,21 +102,24 @@ int drm_sg_alloc(struct drm_device *dev, struct drm_scatter_gather * request)
 	DRM_DEBUG("size=%ld pages=%ld\n", request->size, pages);
 
 	entry->pages = pages;
-// 	entry->pagelist = drm_alloc(pages * sizeof(*entry->pagelist),
-// 				    DRM_MEM_PAGES);
-// 	if (!entry->pagelist) {
-// 		drm_free(entry, sizeof(*entry), DRM_MEM_SGLISTS);
-// 		return -ENOMEM;
-// 	}
+#if !defined(__AROS__)
+	entry->pagelist = drm_alloc(pages * sizeof(*entry->pagelist),
+				    DRM_MEM_PAGES);
+	if (!entry->pagelist) {
+		drm_free(entry, sizeof(*entry), DRM_MEM_SGLISTS);
+		return -ENOMEM;
+	}
 
-// 	memset(entry->pagelist, 0, pages * sizeof(*entry->pagelist));
-
+	memset(entry->pagelist, 0, pages * sizeof(*entry->pagelist));
+#endif
 	entry->busaddr = drm_alloc(pages * sizeof(*entry->busaddr),
 				   DRM_MEM_PAGES);
 	if (!entry->busaddr) {
-/*		drm_free(entry->pagelist,
+#if !defined(__AROS__)
+		drm_free(entry->pagelist,
 			 entry->pages * sizeof(*entry->pagelist),
-			 DRM_MEM_PAGES);*/
+			 DRM_MEM_PAGES);
+#endif
 		drm_free(entry, sizeof(*entry), DRM_MEM_SGLISTS);
 		return -ENOMEM;
 	}
@@ -124,9 +129,11 @@ int drm_sg_alloc(struct drm_device *dev, struct drm_scatter_gather * request)
 	if (!entry->virtual) {
 		drm_free(entry->busaddr,
 			 entry->pages * sizeof(*entry->busaddr), DRM_MEM_PAGES);
-/*		drm_free(entry->pagelist,
+#if !defined(__AROS__)
+		drm_free(entry->pagelist,
 			 entry->pages * sizeof(*entry->pagelist),
-			 DRM_MEM_PAGES);*/
+			 DRM_MEM_PAGES);
+#endif
 		drm_free(entry, sizeof(*entry), DRM_MEM_SGLISTS);
 		return -ENOMEM;
 	}

@@ -252,6 +252,7 @@ struct drm_map_list *drm_find_matching_map(struct drm_device *dev,
 
 /* drm_scatter.c */
 int drm_sg_alloc(struct drm_device *dev, struct drm_scatter_gather * request);
+void drm_sg_cleanup(struct drm_sg_mem * entry);
 
 /* drm_memory.c */
 void drm_core_ioremap(struct drm_map *map, struct drm_device *dev);
@@ -274,6 +275,9 @@ static __inline__ int drm_device_is_pcie(struct drm_device *dev)
     DRM_IMPL("\n");
     return 0;
 }
+
+/* drm_drv.c */
+int drm_lastclose(struct drm_device *dev);
 
 /* AROS specific functions */
 /* drm_pci.c */
