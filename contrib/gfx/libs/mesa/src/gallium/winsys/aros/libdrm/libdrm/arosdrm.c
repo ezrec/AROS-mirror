@@ -46,6 +46,8 @@ drmCommandWrite(int fd, unsigned long drmCommandIndex, void *data, unsigned long
             return nouveau_ioctl_grobj_alloc(&global_drm_device, data, &global_drm_file);
         case(DRM_NOUVEAU_GPUOBJ_FREE):
             return nouveau_ioctl_gpuobj_free(&global_drm_device, data, &global_drm_file);
+        case(DRM_NOUVEAU_MEM_FREE):
+            return nouveau_ioctl_mem_free(&global_drm_device, data, &global_drm_file);
         default:
             DRM_IMPL("COMMAND %d\n", drmCommandIndex);
     }

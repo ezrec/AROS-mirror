@@ -274,10 +274,8 @@ aros_select_rastport(AROSMesaContext amesa, struct TagItem * tagList)
 }
 
 static GLboolean
-_aros_recalculate_buffer_width_height(GLcontext *ctx)
+_aros_recalculate_buffer_width_height(AROSMesaContext amesa)
 {
-    AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
-    
     GLsizei newwidth = 0;
     GLsizei newheight = 0;
     
@@ -333,6 +331,13 @@ _aros_recalculate_buffer_width_height(GLcontext *ctx)
     }
     
     return GL_FALSE;
+}
+
+static void
+_aros_check_and_update_buffer_size(AROSMesaContext amesa)
+{
+    if (_aros_recalculate_buffer_width_height(amesa))
+        st_resize_framebuffer(amesa->framebuffer->stfb, amesa->width, amesa->height);
 }
 
 static BOOL
@@ -456,7 +461,7 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
         /* LastError = AMESA_OUT_OF_MEM; */ /* FIXME: verify usage of LastError - should it be part of AROSMesaContext ? */
         return NULL;
     }
-
+    
     /* FIXME; shouldn't RastPort be part of framebuffer? */
     aros_select_rastport(amesa, tagList);
     
@@ -501,7 +506,9 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
     amesa->st->ctx->DriverCtx = amesa;
     pipe->priv = amesa;
     
-    _aros_recalculate_buffer_width_height(GET_GL_CTX_PTR(amesa));
+    /* Initial update of buffer dimensions (amesa->width/amesa->height) */
+    _aros_recalculate_buffer_width_height(amesa);
+    
     
     /* FIXME: Provide rastport to framebuffer ? */
     amesa->framebuffer = aros_new_framebuffer(amesa, amesa->visual);
@@ -518,9 +525,9 @@ void AROSMesaMakeCurrent(AROSMesaContext amesa)
     {
         st_make_current(amesa->st, amesa->framebuffer->stfb, amesa->framebuffer->stfb);
         
-        /* FIXME: add buffers resizing */
+        /* Resize must be done here */
+        _aros_recalculate_buffer_width_height(amesa);
         st_resize_framebuffer(amesa->framebuffer->stfb, amesa->width, amesa->height);
-        /* xmesa_check_and_update_buffer_size */
     }
     else
     {
@@ -546,8 +553,7 @@ void AROSMesaSwapBuffers(AROSMesaContext amesa)
         driver.display_surface(amesa, surf);
     }
 
-    /* FIXME: update size? */
-    /* xmesa_check_and_update_buffer_size(NULL, b);*/
+    _aros_check_and_update_buffer_size(amesa);
 }
 
 void AROSMesaDestroyContext(AROSMesaContext amesa)

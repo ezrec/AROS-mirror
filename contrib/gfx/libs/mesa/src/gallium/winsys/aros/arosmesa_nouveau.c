@@ -154,6 +154,21 @@ arosmesa_open_nouveau_device(struct nouveau_device **dev)
     return nouveau_device_open(dev, "DUMMY");
 }
 
+static void
+arosmesa_nouveau_flush_frontbuffer(struct pipe_winsys *pws,
+                     struct pipe_surface *surf,
+                     void *context_private)
+{
+    /* No Op */
+}
+
+static void 
+arosmesa_nouveau_update_buffer( struct pipe_winsys *ws, void *context_private )
+{
+    /* No Op */
+}
+
+
 static struct pipe_screen *
 arosmesa_create_nouveau_screen( void )
 {
@@ -202,6 +217,10 @@ arosmesa_create_nouveau_screen( void )
         nouveau_device_close(&dev);
         return NULL;
     }
+    
+    /* Install pipe_winsys function */
+    ws->flush_frontbuffer = arosmesa_nouveau_flush_frontbuffer;
+    ws->update_buffer = arosmesa_nouveau_update_buffer;
 
     nvws = nouveau_winsys_new(ws);
     if (!nvws) {

@@ -130,14 +130,18 @@ arosmesa_surface_buffer_create(struct pipe_winsys *winsys,
                                 *stride * nblocksy);
 }
 
-static void
-arosmesa_flush_frontbuffer(struct pipe_winsys *pws,
-                     struct pipe_surface *surf,
-                     void *context_private)
+static void 
+arosmesa_softpipe_flush_frontbuffer(struct pipe_winsys *ws,
+                                struct pipe_surface *surf,
+                                void *context_private)
 {
-    /* FIXME: Is this correction implementation */
-    AROSMesaContext amesa = (AROSMesaContext) context_private;
-    arosmesa_softpipe_display_surface(amesa, surf);
+    /* No Op */
+}
+
+static void 
+arosmesa_softpipe_update_buffer( struct pipe_winsys *ws, void *context_private )
+{
+    /* No Op */
 }
 
 static struct pipe_winsys *
@@ -165,7 +169,8 @@ arosmesa_create_softpipe_winsys( void )
         ws->fence_signalled = NULL; /* FIXME */
         ws->fence_finish = NULL; /* FIXME */
 
-        ws->flush_frontbuffer = arosmesa_flush_frontbuffer;
+        ws->flush_frontbuffer = arosmesa_softpipe_flush_frontbuffer;
+        ws->update_buffer = arosmesa_softpipe_update_buffer;
         ws->get_name = NULL; /* FIXME */
     }
 
