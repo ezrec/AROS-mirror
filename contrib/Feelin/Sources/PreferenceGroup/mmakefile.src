@@ -1,33 +1,17 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-
-CLASSPREFERENCEGROUPFILES = Project \
-					   object
-
-USER_CFLAGS := -I$(FEELINTOP)/Include
-
-CLASSPREFERENCEGROUP_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSPREFERENCEGROUPFILES))))
-
 #MM- feelin-classes : feelin-classes-preferencegroup
-#MM- feelin-classes-preferencegroup : feelin-classes-preferencegroup-setup feelin-classes-preferencegroup-compile feelin-classes-preferencegroup-link
+#MM  feelin-classes-preferencegroup : includes linklibs feelin-linklib
 
-$(CLASSPREFERENCEGROUPFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+FILES := Project \
+	    object
 
-#MM
-feelin-classes-preferencegroup-compile : $(CLASSPREFERENCEGROUPFILES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-$(AROSDIR)/Libs/Feelin/PreferenceGroup.fc : $(CLASSPREFERENCEGROUP_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSPREFERENCEGROUP_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-preferencegroup-link : $(AROSDIR)/Libs/Feelin/PreferenceGroup.fc
-
-#MM
-feelin-classes-preferencegroup-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-preferencegroup modname=PreferenceGroup modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

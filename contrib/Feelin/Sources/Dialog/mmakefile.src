@@ -1,33 +1,17 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-
-CLASSDIALOGFILES = Project \
-		object
-
-USER_CFLAGS := -I$(FEELINTOP)/Include
-
-CLASSDIALOG_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSDIALOGFILES))))
-
 #MM- feelin-classes : feelin-classes-dialog
-#MM- feelin-classes-dialog : feelin-classes-dialog-setup feelin-classes-dialog-compile feelin-classes-dialog-link
+#MM  feelin-classes-dialog : includes linklibs feelin-linklib
 
-$(CLASSDIALOGFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+FILES := Project \
+	    object
 
-#MM
-feelin-classes-dialog-compile : $(CLASSDIALOGFILES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-$(AROSDIR)/Libs/Feelin/Dialog.fc : $(CLASSDIALOG_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSDIALOG_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-dialog-link : $(AROSDIR)/Libs/Feelin/Dialog.fc
-
-#MM
-feelin-classes-dialog-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-dialog modname=Dialog modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

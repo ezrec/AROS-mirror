@@ -1,33 +1,17 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-
-CLASSXMLDOCUMENTFILES = Project \
-				  object
-
-USER_CFLAGS := -I$(FEELINTOP)/Include
-
-CLASSXMLDOCUMENT_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSXMLDOCUMENTFILES))))
-
 #MM- feelin-classes : feelin-classes-xmldocument
-#MM- feelin-classes-xmldocument : feelin-classes-xmldocument-setup feelin-classes-xmldocument-compile feelin-classes-xmldocument-link
+#MM  feelin-classes-xmldocument : includes linklibs feelin-linklib
 
-$(CLASSXMLDOCUMENTFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+FILES := Project \
+	    object
 
-#MM
-feelin-classes-xmldocument-compile : $(CLASSXMLDOCUMENTFILES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-$(AROSDIR)/Libs/Feelin/XMLDocument.fc : $(CLASSXMLDOCUMENT_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSXMLDOCUMENT_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-xmldocument-link : $(AROSDIR)/Libs/Feelin/XMLDocument.fc
-
-#MM
-feelin-classes-xmldocument-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-xmldocument modname=XMLDocument modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

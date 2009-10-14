@@ -2,32 +2,16 @@
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
+#MM- feelin-classes : feelin-classes-adjustimage
+#MM  feelin-classes-adjustimage : includes linklibs feelin-linklib
 
-CLASSADJUSTIMAGEFILES = Project \
+FILES := Project \
 	    object
 
-USER_CFLAGS := -I$(FEELINTOP)/Include
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-CLASSADJUSTIMAGE_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSADJUSTIMAGEFILES))))
-
-#MM- feelin-classes : feelin-classes-adjustimage
-#MM- feelin-classes-adjustimage : feelin-classes-adjustimage-setup feelin-classes-adjustimage-compile feelin-classes-adjustimage-link
-
-$(CLASSADJUSTIMAGEFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
-
-#MM
-feelin-classes-adjustimage-compile : $(CLASSADJUSTIMAGEFILES)
-
-$(AROSDIR)/Libs/Feelin/AdjustImage.fc : $(CLASSADJUSTIMAGE_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSADJUSTIMAGE_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-adjustimage-link : $(AROSDIR)/Libs/Feelin/AdjustImage.fc
-
-#MM
-feelin-classes-adjustimage-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-adjustimage modname=AdjustImage modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

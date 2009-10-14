@@ -1,36 +1,20 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
+#MM- feelin-classes : feelin-classes-application
+#MM  feelin-classes-application : includes linklibs feelin-linklib
 
-CLASSAPPLICATIONFILES = Project \
+FILES := Project \
 		setup \
 		system \
 		prefs \
 	    object
 
-USER_CFLAGS := -I$(FEELINTOP)/Include
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-CLASSAPPLICATION_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSAPPLICATIONFILES))))
-
-#MM- feelin-classes : feelin-classes-application
-#MM- feelin-classes-application : feelin-classes-application-setup feelin-classes-application-compile feelin-classes-application-link
-
-$(CLASSAPPLICATIONFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
-
-#MM
-feelin-classes-application-compile : $(CLASSAPPLICATIONFILES)
-
-$(AROSDIR)/Libs/Feelin/Application.fc : $(CLASSAPPLICATION_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSAPPLICATION_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-application-link : $(AROSDIR)/Libs/Feelin/Application.fc
-
-#MM
-feelin-classes-application-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-application modname=Application modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

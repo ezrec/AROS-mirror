@@ -1,10 +1,11 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
+#MM- feelin-classes : feelin-classes-area
+#MM  feelin-classes-area : includes linklibs feelin-linklib
 
-CLASSAREAFILES = Project \
+FILES := Project \
         area \
 		dnd \
 		draw \
@@ -12,27 +13,10 @@ CLASSAREAFILES = Project \
 		prefs \
 	    object
 
-USER_CFLAGS := -I$(FEELINTOP)/Include
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-CLASSAREA_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSAREAFILES))))
-
-#MM- feelin-classes : feelin-classes-area
-#MM- feelin-classes-area : feelin-classes-area-setup feelin-classes-area-compile feelin-classes-area-link
-
-$(CLASSAREAFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
-
-#MM
-feelin-classes-area-compile : $(CLASSAREAFILES)
-
-$(AROSDIR)/Libs/Feelin/Area.fc : $(CLASSAREA_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSAREA_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-area-link : $(AROSDIR)/Libs/Feelin/Area.fc
-
-#MM
-feelin-classes-area-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-area modname=Area modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

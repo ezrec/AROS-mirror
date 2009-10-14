@@ -1,34 +1,18 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-
-CLASSRENDERFILES = Project \
-                  graphics \
-				  object
-
-USER_CFLAGS := -I$(FEELINTOP)/Include
-
-CLASSRENDER_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSRENDERFILES))))
-
 #MM- feelin-classes : feelin-classes-render
-#MM- feelin-classes-render : feelin-classes-render-setup feelin-classes-render-compile feelin-classes-render-link
+#MM  feelin-classes-render : includes linklibs feelin-linklib
 
-$(CLASSRENDERFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+FILES := Project \
+        graphics \
+	    object
 
-#MM
-feelin-classes-render-compile : $(CLASSRENDERFILES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-$(AROSDIR)/Libs/Feelin/Render.fc : $(CLASSRENDER_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSRENDER_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-render-link : $(AROSDIR)/Libs/Feelin/Render.fc
-
-#MM
-feelin-classes-render-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-render modname=Render modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

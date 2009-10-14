@@ -1,34 +1,18 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
+#MM- feelin-classes : feelin-classes-cycle
+#MM  feelin-classes-cycle : includes linklibs feelin-linklib
 
-CLASSCYCLEFILES = Project \
+FILES := Project \
         area \
 	    object
 
-USER_CFLAGS := -I$(FEELINTOP)/Include
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-CLASSCYCLE_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSCYCLEFILES))))
-
-#MM- feelin-classes : feelin-classes-cycle
-#MM- feelin-classes-cycle : feelin-classes-cycle-setup feelin-classes-cycle-compile feelin-classes-cycle-link
-
-$(CLASSCYCLEFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
-
-#MM
-feelin-classes-cycle-compile : $(CLASSCYCLEFILES)
-
-$(AROSDIR)/Libs/Feelin/Cycle.fc : $(CLASSCYCLE_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSCYCLE_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-cycle-link : $(AROSDIR)/Libs/Feelin/Cycle.fc
-
-#MM
-feelin-classes-cycle-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-cycle modname=Cycle modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

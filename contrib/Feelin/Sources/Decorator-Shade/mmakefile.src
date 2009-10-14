@@ -1,10 +1,11 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
+#MM- feelin-classes : feelin-classes-decoratorshade
+#MM  feelin-classes-decoratorshade : includes linklibs feelin-linklib
 
-CLASSDECORATORSHADEFILES = Project \
+FILES := Project \
         prefs \
 		area \
 		draw \
@@ -12,27 +13,10 @@ CLASSDECORATORSHADEFILES = Project \
 		gad_draw \
 		object
 
-USER_CFLAGS := -I$(FEELINTOP)/Include
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-CLASSDECORATORSHADE_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSDECORATORSHADEFILES))))
-
-#MM- feelin-classes : feelin-classes-decoratorshade
-#MM- feelin-classes-decoratorshade : feelin-classes-decoratorshade-setup feelin-classes-decoratorshade-compile feelin-classes-decoratorshade-link
-
-$(CLASSDECORATORSHADEFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
-
-#MM
-feelin-classes-decoratorshade-compile : $(CLASSDECORATORSHADEFILES)
-
-$(AROSDIR)/Libs/Feelin/Decorator-Shade.fc : $(CLASSDECORATORSHADE_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSDECORATORSHADE_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-decoratorshade-link : $(AROSDIR)/Libs/Feelin/Decorator-Shade.fc
-
-#MM
-feelin-classes-decoratorshade-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-decoratorshade modname=Decorator-Shade modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

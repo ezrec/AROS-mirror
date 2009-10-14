@@ -1,33 +1,17 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-
-CLASSSCALEFILES = Project \
-				  object
-
-USER_CFLAGS := -I$(FEELINTOP)/Include
-
-CLASSSCALE_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSSCALEFILES))))
-
 #MM- feelin-classes : feelin-classes-scale
-#MM- feelin-classes-scale : feelin-classes-scale-setup feelin-classes-scale-compile feelin-classes-scale-link
+#MM  feelin-classes-scale : includes linklibs feelin-linklib
 
-$(CLASSSCALEFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+FILES := Project \
+	    object
 
-#MM
-feelin-classes-scale-compile : $(CLASSSCALEFILES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-$(AROSDIR)/Libs/Feelin/Scale.fc : $(CLASSSCALE_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSSCALE_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-scale-link : $(AROSDIR)/Libs/Feelin/Scale.fc
-
-#MM
-feelin-classes-scale-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-scale modname=Scale modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

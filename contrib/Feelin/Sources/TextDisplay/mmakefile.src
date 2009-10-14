@@ -1,39 +1,23 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-
-CLASSTEXTDISPLAYFILES = Project \
-                  adjust \
-				  context \
-				  create \
-				  draw \
-				  parse \
-				  setup \
-				  object
-
-USER_CFLAGS := -I$(FEELINTOP)/Include
-
-CLASSTEXTDISPLAY_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSTEXTDISPLAYFILES))))
-
 #MM- feelin-classes : feelin-classes-textdisplay
-#MM- feelin-classes-textdisplay : feelin-classes-textdisplay-setup feelin-classes-textdisplay-compile feelin-classes-textdisplay-link
+#MM  feelin-classes-textdisplay : includes linklibs feelin-linklib
 
-$(CLASSTEXTDISPLAYFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+FILES := Project \
+        adjust \
+		context \
+		create \
+		draw \
+		parse \
+		setup \
+		object
 
-#MM
-feelin-classes-textdisplay-compile : $(CLASSTEXTDISPLAYFILES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-$(AROSDIR)/Libs/Feelin/TextDisplay.fc : $(CLASSTEXTDISPLAY_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSTEXTDISPLAY_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-textdisplay-link : $(AROSDIR)/Libs/Feelin/TextDisplay.fc
-
-#MM
-feelin-classes-textdisplay-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-textdisplay modname=TextDisplay modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

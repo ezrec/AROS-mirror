@@ -1,33 +1,17 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-
-CLASSPREVIEWSCHEMEFILES = Project \
-					   object
-
-USER_CFLAGS := -I$(FEELINTOP)/Include
-
-CLASSPREVIEWSCHEME_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSPREVIEWSCHEMEFILES))))
-
 #MM- feelin-classes : feelin-classes-previewscheme
-#MM- feelin-classes-previewscheme : feelin-classes-previewscheme-setup feelin-classes-previewscheme-compile feelin-classes-previewscheme-link
+#MM  feelin-classes-previewscheme : includes linklibs feelin-linklib
 
-$(CLASSPREVIEWSCHEMEFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+FILES := Project \
+	    object
 
-#MM
-feelin-classes-previewscheme-compile : $(CLASSPREVIEWSCHEMEFILES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-$(AROSDIR)/Libs/Feelin/PreviewScheme.fc : $(CLASSPREVIEWSCHEME_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSPREVIEWSCHEME_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-previewscheme-link : $(AROSDIR)/Libs/Feelin/PreviewScheme.fc
-
-#MM
-feelin-classes-previewscheme-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-previewscheme modname=PreviewScheme modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

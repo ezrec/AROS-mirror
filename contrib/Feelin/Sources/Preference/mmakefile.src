@@ -1,35 +1,19 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-
-CLASSPREFERENCEFILES = Project \
-                       file \
-					   prefs \
-					   object
-
-USER_CFLAGS := -I$(FEELINTOP)/Include
-
-CLASSPREFERENCE_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSPREFERENCEFILES))))
-
 #MM- feelin-classes : feelin-classes-preference
-#MM- feelin-classes-preference : feelin-classes-preference-setup feelin-classes-preference-compile feelin-classes-preference-link
+#MM  feelin-classes-preference : includes linklibs feelin-linklib
 
-$(CLASSPREFERENCEFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+FILES := Project \
+        file \
+		prefs \
+	    object
 
-#MM
-feelin-classes-preference-compile : $(CLASSPREFERENCEFILES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-$(AROSDIR)/Libs/Feelin/Preference.fc : $(CLASSPREFERENCE_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSPREFERENCE_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-preference-link : $(AROSDIR)/Libs/Feelin/Preference.fc
-
-#MM
-feelin-classes-preference-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-preference modname=Preference modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

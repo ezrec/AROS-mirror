@@ -1,34 +1,18 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-
-CLASSNUMERICFILES = Project \
-        numeric \
-		object
-
-USER_CFLAGS := -I$(FEELINTOP)/Include
-
-CLASSNUMERIC_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSNUMERICFILES))))
-
 #MM- feelin-classes : feelin-classes-numeric
-#MM- feelin-classes-numeric : feelin-classes-numeric-setup feelin-classes-numeric-compile feelin-classes-numeric-link
+#MM  feelin-classes-numeric : includes linklibs feelin-linklib
 
-$(CLASSNUMERICFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+FILES := Project \
+        numeric \
+	    object
 
-#MM
-feelin-classes-numeric-compile : $(CLASSNUMERICFILES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-$(AROSDIR)/Libs/Feelin/Numeric.fc : $(CLASSNUMERIC_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSNUMERIC_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-numeric-link : $(AROSDIR)/Libs/Feelin/Numeric.fc
-
-#MM
-feelin-classes-numeric-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-numeric modname=Numeric modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

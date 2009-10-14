@@ -1,8 +1,6 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
-
-FEELINTOP = ../
 
 DEMOFILES = alpha \
            Class1 \
@@ -59,7 +57,7 @@ XMLDEMOICONFILES = areafonts.xml.info \
 		   states.xml.info \
 		   strings.xml.info
 
-USER_CFLAGS := -I$(FEELINTOP)/Include
+USER_CFLAGS := -I$(SRCDIR)/$(GENDIR)/../Include
 
 FEELINDEMODIR = $(CONTRIBDIR)/Feelin/Demos
 

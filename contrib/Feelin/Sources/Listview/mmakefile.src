@@ -1,33 +1,17 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-
-CLASSLISTVIEWFILES = Project \
-		object
-
-USER_CFLAGS := -I$(FEELINTOP)/Include
-
-CLASSLISTVIEW_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSLISTVIEWFILES))))
-
 #MM- feelin-classes : feelin-classes-listview
-#MM- feelin-classes-listview : feelin-classes-listview-setup feelin-classes-listview-compile feelin-classes-listview-link
+#MM  feelin-classes-listview : includes linklibs feelin-linklib
 
-$(CLASSLISTVIEWFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+FILES := Project \
+	    object
 
-#MM
-feelin-classes-listview-compile : $(CLASSLISTVIEWFILES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-$(AROSDIR)/Libs/Feelin/Listview.fc : $(CLASSLISTVIEW_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSLISTVIEW_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-listview-link : $(AROSDIR)/Libs/Feelin/Listview.fc
-
-#MM
-feelin-classes-listview-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-listview modname=Listview modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

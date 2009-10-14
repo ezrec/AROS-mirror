@@ -1,33 +1,17 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
+#MM- feelin-classes : feelin-classes-adjust
+#MM  feelin-classes-adjust : include linklibs feelin-linklib
 
-CLASSADJUSTFILES = Project \
+FILES := Project \
 	    object
 
-USER_CFLAGS := -I$(FEELINTOP)/Include
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-CLASSADJUST_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSADJUSTFILES))))
-
-#MM- feelin-classes : feelin-classes-adjust
-#MM- feelin-classes-adjust : feelin-classes-adjust-setup feelin-classes-adjust-compile feelin-classes-adjust-link
-
-$(CLASSADJUSTFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
-
-#MM
-feelin-classes-adjust-compile : $(CLASSADJUSTFILES)
-
-$(AROSDIR)/Libs/Feelin/Adjust.fc : $(CLASSADJUST_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSADJUST_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-adjust-link : $(AROSDIR)/Libs/Feelin/Adjust.fc
-
-#MM
-feelin-classes-adjust-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-adjust modname=Adjust modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

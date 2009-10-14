@@ -1,35 +1,19 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-
-CLASSFRAMEFILES = Project \
-        draw \
-		setup \
-		object
-
-USER_CFLAGS := -I$(FEELINTOP)/Include
-
-CLASSFRAME_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSFRAMEFILES))))
-
 #MM- feelin-classes : feelin-classes-frame
-#MM- feelin-classes-frame : feelin-classes-frame-setup feelin-classes-frame-compile feelin-classes-frame-link
+#MM  feelin-classes-frame : includes linklibs feelin-linklib
 
-$(CLASSFRAMEFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+FILES := Project \
+		draw \
+		setup \
+	    object
 
-#MM
-feelin-classes-frame-compile : $(CLASSFRAMEFILES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-$(AROSDIR)/Libs/Feelin/Frame.fc : $(CLASSFRAME_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSFRAME_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-frame-link : $(AROSDIR)/Libs/Feelin/Frame.fc
-
-#MM
-feelin-classes-frame-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-frame modname=Frame modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

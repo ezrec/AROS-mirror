@@ -1,36 +1,20 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
+#MM- feelin-classes : feelin-classes-bitmap
+#MM  feelin-classes-bitmap : includes linklibs feelin-linklib
 
-CLASSBITMAPFILES = Project \
+FILES := Project \
         blit \
 		render \
 		scale \
 	    object
 
-USER_CFLAGS := -I$(FEELINTOP)/Include
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-CLASSBITMAP_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSBITMAPFILES))))
-
-#MM- feelin-classes : feelin-classes-bitmap
-#MM- feelin-classes-bitmap : feelin-classes-bitmap-setup feelin-classes-bitmap-compile feelin-classes-bitmap-link
-
-$(CLASSBITMAPFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
-
-#MM
-feelin-classes-bitmap-compile : $(CLASSBITMAPFILES)
-
-$(AROSDIR)/Libs/Feelin/BitMap.fc : $(CLASSBITMAP_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSBITMAP_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-bitmap-link : $(AROSDIR)/Libs/Feelin/BitMap.fc
-
-#MM
-feelin-classes-bitmap-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-bitmap modname=BitMap modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

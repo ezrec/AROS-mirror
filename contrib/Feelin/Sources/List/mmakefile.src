@@ -1,10 +1,11 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
+#MM- feelin-classes : feelin-classes-list
+#MM  feelin-classes-list : includes linklibs feelin-linklib
 
-CLASSLISTFILES = Project \
+FILES := Project \
         area \
 		build \
 		draw \
@@ -14,27 +15,10 @@ CLASSLISTFILES = Project \
 		support \
 		object
 
-USER_CFLAGS := -I$(FEELINTOP)/Include
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-CLASSLIST_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSLISTFILES))))
-
-#MM- feelin-classes : feelin-classes-list
-#MM- feelin-classes-list : feelin-classes-list-setup feelin-classes-list-compile feelin-classes-list-link
-
-$(CLASSLISTFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
-
-#MM
-feelin-classes-list-compile : $(CLASSLISTFILES)
-
-$(AROSDIR)/Libs/Feelin/List.fc : $(CLASSLIST_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSLIST_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-list-link : $(AROSDIR)/Libs/Feelin/List.fc
-
-#MM
-feelin-classes-list-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-list modname=List modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

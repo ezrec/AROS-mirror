@@ -1,34 +1,18 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-
-CLASSCRAWLERFILES = Project \
-        area \
-	    object
-
-USER_CFLAGS := -I$(FEELINTOP)/Include
-
-CLASSCRAWLER_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSCRAWLERFILES))))
-
 #MM- feelin-classes : feelin-classes-crawler
-#MM- feelin-classes-crawler : feelin-classes-crawler-setup feelin-classes-crawler-compile feelin-classes-crawler-link
+#MM  feelin-classes-crawler : includes linklibs feelin-linklib
 
-$(CLASSCRAWLERFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+FILES := Project \
+        area \
+        object
 
-#MM
-feelin-classes-crawler-compile : $(CLASSCRAWLERFILES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-$(AROSDIR)/Libs/Feelin/Crawler.fc : $(CLASSCRAWLER_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSCRAWLER_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-crawler-link : $(AROSDIR)/Libs/Feelin/Crawler.fc
-
-#MM
-feelin-classes-crawler-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-crawler modname=Crawler modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

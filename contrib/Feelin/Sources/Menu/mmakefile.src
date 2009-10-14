@@ -1,34 +1,18 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
+# #MM- feelin-classes : feelin-classes-menu
+# #MM  feelin-classes-menu : includes linklibs feelin-linklib
 
-CLASSMENUFILES = Project \
+FILES := Project \
 		Menu \
-		object
+	    object
 
-USER_CFLAGS := -I$(FEELINTOP)/Include
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-CLASSMENU_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSMENUFILES))))
-
-##MM- feelin-classes : feelin-classes-menu
-#MM- feelin-classes-menu : feelin-classes-menu-setup feelin-classes-menu-compile feelin-classes-menu-link
-
-$(CLASSMENUFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
-
-#MM
-feelin-classes-menu-compile : $(CLASSMENUFILES)
-
-$(AROSDIR)/Libs/Feelin/Menu.fc : $(CLASSMENU_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSMENU_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-menu-link : $(AROSDIR)/Libs/Feelin/Menu.fc
-
-#MM
-feelin-classes-menu-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-menu modname=Menu modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

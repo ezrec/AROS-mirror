@@ -1,33 +1,17 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-
-CLASSRADIOFILES = Project \
-					   object
-
-USER_CFLAGS := -I$(FEELINTOP)/Include
-
-CLASSRADIO_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSRADIOFILES))))
-
 #MM- feelin-classes : feelin-classes-radio
-#MM- feelin-classes-radio : feelin-classes-radio-setup feelin-classes-radio-compile feelin-classes-radio-link
+#MM  feelin-classes-radio : includes linklibs feelin-linklib
 
-$(CLASSRADIOFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+FILES := Project \
+	    object
 
-#MM
-feelin-classes-radio-compile : $(CLASSRADIOFILES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-$(AROSDIR)/Libs/Feelin/Radio.fc : $(CLASSRADIO_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSRADIO_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-radio-link : $(AROSDIR)/Libs/Feelin/Radio.fc
-
-#MM
-feelin-classes-radio-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-radio modname=Radio modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

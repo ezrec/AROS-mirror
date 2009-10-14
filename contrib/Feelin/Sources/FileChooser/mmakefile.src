@@ -1,33 +1,17 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-
-CLASSFILECHOOSERFILES = Project \
-		object
-
-USER_CFLAGS := -I$(FEELINTOP)/Include
-
-CLASSFILECHOOSER_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSFILECHOOSERFILES))))
-
 #MM- feelin-classes : feelin-classes-filechooser
-#MM- feelin-classes-filechooser : feelin-classes-filechooser-setup feelin-classes-filechooser-compile feelin-classes-filechooser-link
+#MM  feelin-classes-filechooser : includes linklibs feelin-linklib
 
-$(CLASSFILECHOOSERFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+FILES := Project \
+	    object
 
-#MM
-feelin-classes-filechooser-compile : $(CLASSFILECHOOSERFILES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-$(AROSDIR)/Libs/Feelin/FileChooser.fc : $(CLASSFILECHOOSER_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSFILECHOOSER_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-filechooser-link : $(AROSDIR)/Libs/Feelin/FileChooser.fc
-
-#MM
-feelin-classes-filechooser-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-filechooser modname=FileChooser modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

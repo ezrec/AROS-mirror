@@ -2,33 +2,17 @@
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-
-CLASSDECORATORFLATTYFILES = Project \
-        prefs \
-		object
-
-USER_CFLAGS := -I$(FEELINTOP)/Include
-
-CLASSDECORATORFLATTY_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSDECORATORFLATTYFILES))))
-
 #MM- feelin-classes : feelin-classes-decoratorflatty
-#MM- feelin-classes-decoratorflatty : feelin-classes-decoratorflatty-setup feelin-classes-decoratorflatty-compile feelin-classes-decoratorflatty-link
+#MM  feelin-classes-decoratorflatty : includes linklibs feelin-linklib
 
-$(CLASSDECORATORFLATTYFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+FILES := Project \
+        prefs \
+	    object
 
-#MM
-feelin-classes-decoratorflatty-compile : $(CLASSDECORATORFLATTYFILES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-$(AROSDIR)/Libs/Feelin/Decorator-Flatty.fc : $(CLASSDECORATORFLATTY_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSDECORATORFLATTY_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-decoratorflatty-link : $(AROSDIR)/Libs/Feelin/Decorator-Flatty.fc
-
-#MM
-feelin-classes-decoratorflatty-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-decoratorflatty modname=Decorator-Flatty modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

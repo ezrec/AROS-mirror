@@ -1,33 +1,17 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-
-CLASSHTMLDOCUMENTFILES = Project \
-		object
-
-USER_CFLAGS := -I$(FEELINTOP)/Include
-
-CLASSHTMLDOCUMENT_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSHTMLDOCUMENTFILES))))
-
 #MM- feelin-classes : feelin-classes-htmldocument
-#MM- feelin-classes-htmldocument : feelin-classes-htmldocument-setup feelin-classes-htmldocument-compile feelin-classes-htmldocument-link
+#MM  feelin-classes-htmldocument : includes linklibs feelin-linklib
 
-$(CLASSHTMLDOCUMENTFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+FILES := Project \
+	    object
 
-#MM
-feelin-classes-htmldocument-compile : $(CLASSHTMLDOCUMENTFILES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-$(AROSDIR)/Libs/Feelin/HTMLDocument.fc : $(CLASSHTMLDOCUMENT_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSHTMLDOCUMENT_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-htmldocument-link : $(AROSDIR)/Libs/Feelin/HTMLDocument.fc
-
-#MM
-feelin-classes-htmldocument-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-htmldocument modname=HTMLDocument modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

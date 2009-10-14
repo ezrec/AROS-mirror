@@ -1,33 +1,17 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
+#MM- feelin-classes : feelin-classes-adjustbrush
+#MM  feelin-classes-adjustbrush : includes linklibs feelin-linklib
 
-CLASSADJUSTBRUSHFILES = Project \
+FILES := Project \
 	    object
 
-USER_CFLAGS := -I$(FEELINTOP)/Include
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-CLASSADJUSTBRUSH_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSADJUSTBRUSHFILES))))
-
-#MM- feelin-classes : feelin-classes-adjustbrush
-#MM- feelin-classes-adjustbrush : feelin-classes-adjustbrush-setup feelin-classes-adjustbrush-compile feelin-classes-adjustbrush-link
-
-$(CLASSADJUSTBRUSHFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
-
-#MM
-feelin-classes-adjustbrush-compile : $(CLASSADJUSTBRUSHFILES)
-
-$(AROSDIR)/Libs/Feelin/AdjustBrush.fc : $(CLASSADJUSTBRUSH_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSADJUSTBRUSH_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-adjustbrush-link : $(AROSDIR)/Libs/Feelin/AdjustBrush.fc
-
-#MM
-feelin-classes-adjustbrush-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-adjustbrush modname=AdjustBrush modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

@@ -1,33 +1,17 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
+#MM- feelin-classes : feelin-classes-adjustschemeentry
+#MM  feelin-classes-adjustschemeentry : includes linklibs feelin-linklib
 
-CLASSADJUSTSCHEMEENTRYFILES = Project \
+FILES := Project \
 	    object
 
-USER_CFLAGS := -I$(FEELINTOP)/Include
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-CLASSADJUSTSCHEMEENTRY_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSADJUSTSCHEMEENTRYFILES))))
-
-#MM- feelin-classes : feelin-classes-adjustschemeentry
-#MM- feelin-classes-adjustschemeentry : feelin-classes-adjustschemeentry-setup feelin-classes-adjustschemeentry-compile feelin-classes-adjustschemeentry-link
-
-$(CLASSADJUSTSCHEMEENTRYFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
-
-#MM
-feelin-classes-adjustschemeentry-compile : $(CLASSADJUSTSCHEMEENTRYFILES)
-
-$(AROSDIR)/Libs/Feelin/AdjustSchemeEntry.fc : $(CLASSADJUSTSCHEMEENTRY_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSADJUSTSCHEMEENTRY_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-adjustschemeentry-link : $(AROSDIR)/Libs/Feelin/AdjustSchemeEntry.fc
-
-#MM
-feelin-classes-adjustschemeentry-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-adjustschemeentry modname=AdjustSchemeEntry modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

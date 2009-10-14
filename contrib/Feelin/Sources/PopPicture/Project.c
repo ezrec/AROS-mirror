@@ -7,7 +7,7 @@ $VER: 02.00 (2005/08/10)
 #include <libraries/feelin.h>
 #include <proto/feelin.h>
 
-#include "Project.c"
+#include "Project.h"
 
 #include "_locale/enums.h"
 #include "_locale/table.h"

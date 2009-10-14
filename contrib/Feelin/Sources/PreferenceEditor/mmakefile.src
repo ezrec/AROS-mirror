@@ -1,34 +1,18 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-
-CLASSPREFERENCEEDITORFILES = Project \
-					   prefs \
-					   object
-
-USER_CFLAGS := -I$(FEELINTOP)/Include
-
-CLASSPREFERENCEEDITOR_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSPREFERENCEEDITORFILES))))
-
 #MM- feelin-classes : feelin-classes-preferenceeditor
-#MM- feelin-classes-preferenceeditor : feelin-classes-preferenceeditor-setup feelin-classes-preferenceeditor-compile feelin-classes-preferenceeditor-link
+#MM  feelin-classes-preferenceeditor : includes linklibs feelin-linklib
 
-$(CLASSPREFERENCEEDITORFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+FILES := Project \
+		prefs \
+	    object
 
-#MM
-feelin-classes-preferenceeditor-compile : $(CLASSPREFERENCEEDITORFILES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-$(AROSDIR)/Libs/Feelin/PreferenceEditor.fc : $(CLASSPREFERENCEEDITOR_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSPREFERENCEEDITOR_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-preferenceeditor-link : $(AROSDIR)/Libs/Feelin/PreferenceEditor.fc
-
-#MM
-feelin-classes-preferenceeditor-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-preferenceeditor modname=PreferenceEditor modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

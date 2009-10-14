@@ -1,33 +1,17 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
+#MM- feelin-classes : feelin-classes-adjustspacing
+#MM  feelin-classes-adjustspacing : includes linklibs feelin-linklib
 
-CLASSADJUSTSPACINGFILES = Project \
+FILES := Project \
 	    object
 
-USER_CFLAGS := -I$(FEELINTOP)/Include
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-CLASSADJUSTSPACING_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSADJUSTSPACINGFILES))))
-
-#MM- feelin-classes : feelin-classes-adjustspacing
-#MM- feelin-classes-adjustspacing : feelin-classes-adjustspacing-setup feelin-classes-adjustspacing-compile feelin-classes-adjustspacing-link
-
-$(CLASSADJUSTSPACINGFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
-
-#MM
-feelin-classes-adjustspacing-compile : $(CLASSADJUSTSPACINGFILES)
-
-$(AROSDIR)/Libs/Feelin/AdjustSpacing.fc : $(CLASSADJUSTSPACING_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSADJUSTSPACING_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-adjustspacing-link : $(AROSDIR)/Libs/Feelin/AdjustSpacing.fc
-
-#MM
-feelin-classes-adjustspacing-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-adjustspacing modname=AdjustSpacing modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

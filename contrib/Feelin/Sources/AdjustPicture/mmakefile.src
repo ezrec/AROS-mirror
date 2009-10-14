@@ -1,33 +1,17 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
+#MM- feelin-classes : feelin-classes-adjustpicture
+#MM  feelin-classes-adjustpicture : includes linklibs feelin-linklib
 
-CLASSADJUSTPICTUREFILES = Project \
+FILES := Project \
 	    object
 
-USER_CFLAGS := -I$(FEELINTOP)/Include
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-CLASSADJUSTPICTURE_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSADJUSTPICTUREFILES))))
-
-#MM- feelin-classes : feelin-classes-adjustpicture
-#MM- feelin-classes-adjustpicture : feelin-classes-adjustpicture-setup feelin-classes-adjustpicture-compile feelin-classes-adjustpicture-link
-
-$(CLASSADJUSTPICTUREFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
-
-#MM
-feelin-classes-adjustpicture-compile : $(CLASSADJUSTPICTUREFILES)
-
-$(AROSDIR)/Libs/Feelin/AdjustPicture.fc : $(CLASSADJUSTPICTURE_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSADJUSTPICTURE_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-adjustpicture-link : $(AROSDIR)/Libs/Feelin/AdjustPicture.fc
-
-#MM
-feelin-classes-adjustpicture-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-adjustpicture modname=AdjustPicture modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

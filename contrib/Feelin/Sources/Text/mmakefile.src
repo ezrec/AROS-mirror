@@ -1,34 +1,18 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-
-CLASSTEXTFILES = Project \
-                  area \
-				  object
-
-USER_CFLAGS := -I$(FEELINTOP)/Include
-
-CLASSTEXT_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSTEXTFILES))))
-
 #MM- feelin-classes : feelin-classes-text
-#MM- feelin-classes-text : feelin-classes-text-setup feelin-classes-text-compile feelin-classes-text-link
+#MM  feelin-classes-text : includes linklibs feelin-linklib
 
-$(CLASSTEXTFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+FILES := Project \
+        area \
+	    object
 
-#MM
-feelin-classes-text-compile : $(CLASSTEXTFILES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-$(AROSDIR)/Libs/Feelin/Text.fc : $(CLASSTEXT_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSTEXT_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-text-link : $(AROSDIR)/Libs/Feelin/Text.fc
-
-#MM
-feelin-classes-text-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-text modname=Text modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

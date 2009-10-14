@@ -1,38 +1,22 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-
-CLASSWINDOWFILES = Project \
-                  draw \
-				  events \
-				  layout \
-				  open \
-				  setup \
-				  object
-
-USER_CFLAGS := -I$(FEELINTOP)/Include
-
-CLASSWINDOW_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSWINDOWFILES))))
-
 #MM- feelin-classes : feelin-classes-window
-#MM- feelin-classes-window : feelin-classes-window-setup feelin-classes-window-compile feelin-classes-window-link
+#MM  feelin-classes-window : includes linklibs feelin-linklib
 
-$(CLASSWINDOWFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+FILES := Project \
+		draw \
+		events \
+		layout \
+		open \
+		setup \
+	    object
 
-#MM
-feelin-classes-window-compile : $(CLASSWINDOWFILES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-$(AROSDIR)/Libs/Feelin/Window.fc : $(CLASSWINDOW_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSWINDOW_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-window-link : $(AROSDIR)/Libs/Feelin/Window.fc
-
-#MM
-feelin-classes-window-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-window modname=Window modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

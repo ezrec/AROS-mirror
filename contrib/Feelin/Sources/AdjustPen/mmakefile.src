@@ -1,33 +1,18 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-
-CLASSADJUSTPENFILES = Project \
-	    object
-
-USER_CFLAGS := -I$(FEELINTOP)/Include
-
-CLASSADJUSTPEN_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSADJUSTPENFILES))))
 
 #MM- feelin-classes : feelin-classes-adjustpen
-#MM- feelin-classes-adjustpen : feelin-classes-adjustpen-setup feelin-classes-adjustpen-compile feelin-classes-adjustpen-link
+#MM  feelin-classes-adjustpen : includes linklibs feelin-linklib
 
-$(CLASSADJUSTPENFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+FILES := Project \
+	    object
 
-#MM
-feelin-classes-adjustpen-compile : $(CLASSADJUSTPENFILES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-$(AROSDIR)/Libs/Feelin/AdjustPen.fc : $(CLASSADJUSTPEN_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSADJUSTPEN_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-adjustpen-link : $(AROSDIR)/Libs/Feelin/AdjustPen.fc
-
-#MM
-feelin-classes-adjustpen-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-adjustpen modname=AdjustPen modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

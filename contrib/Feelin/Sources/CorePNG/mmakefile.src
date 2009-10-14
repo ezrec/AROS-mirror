@@ -1,34 +1,17 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-LIBPNGDIR = libpng
+# #MM- feelin-classes : feelin-classes-corepng
+# #MM  feelin-classes-corepng : includes linklibs feelin-linklib
 
-CLASSCOREPNGFILES = Project \
+FILES := Project \
 	    object
 
-USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)../../Include -I$(SRCDIR)/$(CURDIR)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-CLASSCOREPNG_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSCOREPNGFILES))))
-
-#MM- feelin-classes : feelin-classes-corepng
-#MM- feelin-classes-corepng : feelin-classes-corepng-setup feelin-classes-corepng-compile feelin-classes-corepng-link
-
-$(CLASSCOREPNGFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
-
-#MM
-feelin-classes-corepng-compile : $(CLASSCOREPNGFILES)
-
-$(AROSDIR)/Libs/Feelin/CorePNG.fc : $(CLASSCOREPNG_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSCOREPNG_OBJS) -lpng_nostdio -lz -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-corepng-link : $(AROSDIR)/Libs/Feelin/CorePNG.fc
-
-#MM
-feelin-classes-corepng-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-corepng modname=CorePNG modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="png_nostdio z FeelinAROS rom"
 
 %common

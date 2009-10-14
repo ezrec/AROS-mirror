@@ -1,33 +1,17 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
+#MM- feelin-classes : feelin-classes-adjustgradient
+#MM  feelin-classes-adjustgradient : includes linklibs feelin-linklib
 
-CLASSADJUSTGRADIENTFILES = Project \
+FILES := Project \
 	    object
 
-USER_CFLAGS := -I$(FEELINTOP)/Include
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-CLASSADJUSTGRADIENT_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSADJUSTGRADIENTFILES))))
-
-#MM- feelin-classes : feelin-classes-adjustgradient
-#MM- feelin-classes-adjustgradient : feelin-classes-adjustgradient-setup feelin-classes-adjustgradient-compile feelin-classes-adjustgradient-link
-
-$(CLASSADJUSTGRADIENTFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
-
-#MM
-feelin-classes-adjustgradient-compile : $(CLASSADJUSTGRADIENTFILES)
-
-$(AROSDIR)/Libs/Feelin/AdjustGradient.fc : $(CLASSADJUSTGRADIENT_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSADJUSTGRADIENT_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-adjustgradient-link : $(AROSDIR)/Libs/Feelin/AdjustGradient.fc
-
-#MM
-feelin-classes-adjustgradient-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-adjustgradient modname=AdjustGradient modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

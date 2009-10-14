@@ -1,35 +1,19 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
+#MM- feelin-classes : feelin-classes-dataspace
+#MM  feelin-classes-dataspace : includes linklibs feelin-linklib
 
-CLASSDATASPACEFILES = Project \
+FILES := Project \
         data \
 		iff \
 	    object
 
-USER_CFLAGS := -I$(FEELINTOP)/Include
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-CLASSDATASPACE_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSDATASPACEFILES))))
-
-#MM- feelin-classes : feelin-classes-dataspace
-#MM- feelin-classes-dataspace : feelin-classes-dataspace-setup feelin-classes-dataspace-compile feelin-classes-dataspace-link
-
-$(CLASSDATASPACEFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
-
-#MM
-feelin-classes-dataspace-compile : $(CLASSDATASPACEFILES)
-
-$(AROSDIR)/Libs/Feelin/Dataspace.fc : $(CLASSDATASPACE_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSDATASPACE_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-dataspace-link : $(AROSDIR)/Libs/Feelin/Dataspace.fc
-
-#MM
-feelin-classes-dataspace-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-dataspace modname=Dataspace modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

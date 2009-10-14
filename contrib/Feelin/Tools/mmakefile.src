@@ -1,9 +1,7 @@
-# Copyright © 2003, The AROS Development Team. All rights reserved.
+# Copyright © 2003-2009, The AROS Development Team. All rights reserved.
 # $Id: mmakefile.src 25737 2007-04-13 09:37:43Z schulz $
 
 include $(TOP)/config/make.cfg
-
-FEELINTOP = ../
 
 FILES = F_Allocs \
         F_Classes \
@@ -12,7 +10,7 @@ FILES = F_Allocs \
         F_Make \
         F_Changes
 
-USER_CFLAGS := -I$(FEELINTOP)/Include -I$(FEELINTOP)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../Include -I$(SRCDIR)/$(CURDIR)/..
 
 FEELINTOOLDIR = $(CONTRIBDIR)/Feelin/Tools
 

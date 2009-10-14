@@ -1,33 +1,17 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-
-CLASSPOPPREPARSEFILES = Project \
-                        object
-
-USER_CFLAGS := -I$(FEELINTOP)/Include
-
-CLASSPOPPREPARSE_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSPOPPREPARSEFILES))))
-
 #MM- feelin-classes : feelin-classes-poppreparse
-#MM- feelin-classes-poppreparse : feelin-classes-poppreparse-setup feelin-classes-poppreparse-compile feelin-classes-poppreparse-link
+#MM  feelin-classes-poppreparse : includes linklibs feelin-linklib
 
-$(CLASSPOPPREPARSEFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+FILES := Project \
+	    object
 
-#MM
-feelin-classes-poppreparse-compile : $(CLASSPOPPREPARSEFILES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-$(AROSDIR)/Libs/Feelin/PopPreParse.fc : $(CLASSPOPPREPARSE_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSPOPPREPARSE_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-poppreparse-link : $(AROSDIR)/Libs/Feelin/PopPreParse.fc
-
-#MM
-feelin-classes-poppreparse-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-poppreparse modname=PopPreParse modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

@@ -1,35 +1,19 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
+#MM- feelin-classes : feelin-classes-balance
+#MM  feelin-classes-balance : includes linklibs feelin-linklib
 
-CLASSBALANCEFILES = Project \
+FILES := Project \
         area \
 		events \
 	    object
 
-USER_CFLAGS := -I$(FEELINTOP)/Include
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-CLASSBALANCE_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSBALANCEFILES))))
-
-#MM- feelin-classes : feelin-classes-balance
-#MM- feelin-classes-balance : feelin-classes-balance-setup feelin-classes-balance-compile feelin-classes-balance-link
-
-$(CLASSBALANCEFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
-
-#MM
-feelin-classes-balance-compile : $(CLASSBALANCEFILES)
-
-$(AROSDIR)/Libs/Feelin/Balance.fc : $(CLASSBALANCE_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSBALANCE_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-balance-link : $(AROSDIR)/Libs/Feelin/Balance.fc
-
-#MM
-feelin-classes-balance-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-balance modname=Balance modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

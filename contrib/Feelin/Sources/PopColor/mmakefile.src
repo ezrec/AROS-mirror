@@ -1,32 +1,16 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-
-CLASSPOPCOLORFILES = Project
-
-USER_CFLAGS := -I$(FEELINTOP)/Include
-
-CLASSPOPCOLOR_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSPOPCOLORFILES))))
-
 #MM- feelin-classes : feelin-classes-popcolor
-#MM- feelin-classes-popcolor : feelin-classes-popcolor-setup feelin-classes-popcolor-compile feelin-classes-popcolor-link
+#MM  feelin-classes-popcolor : includes linklibs feelin-linklib
 
-$(CLASSPOPCOLORFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+FILES := Project
 
-#MM
-feelin-classes-popcolor-compile : $(CLASSPOPCOLORFILES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-$(AROSDIR)/Libs/Feelin/PopColor.fc : $(CLASSPOPCOLOR_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSPOPCOLOR_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-popcolor-link : $(AROSDIR)/Libs/Feelin/PopColor.fc
-
-#MM
-feelin-classes-popcolor-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-popcolor modname=PopColor modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

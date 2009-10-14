@@ -1,32 +1,16 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
-
-CLASSPOPBRUSHFILES = Project
-
-USER_CFLAGS := -I$(FEELINTOP)/Include
-
-CLASSPOPBRUSH_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSPOPBRUSHFILES))))
-
 #MM- feelin-classes : feelin-classes-popbrush
-#MM- feelin-classes-popbrush : feelin-classes-popbrush-setup feelin-classes-popbrush-compile feelin-classes-popbrush-link
+#MM  feelin-classes-popbrush : includes linklibs feelin-linklib
 
-$(CLASSPOPBRUSHFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+FILES := Project
 
-#MM
-feelin-classes-popbrush-compile : $(CLASSPOPBRUSHFILES)
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-$(AROSDIR)/Libs/Feelin/PopBrush.fc : $(CLASSPOPBRUSH_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSPOPBRUSH_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-popbrush-link : $(AROSDIR)/Libs/Feelin/PopBrush.fc
-
-#MM
-feelin-classes-popbrush-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-popbrush modname=PopBrush modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common

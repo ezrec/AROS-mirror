@@ -1,18 +1,15 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
-
-FEELINTOP = ./
 
 FILES = Prefs
 
 FEELINDIR = $(CONTRIBDIR)/Feelin
 
-USER_CFLAGS := -I$(FEELINTOP)/Include
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/Include
 
 #MM- contrib-feelin : feelin-linklib feelin-library feelin-classes feelin-prefs feelin-demos feelin-files
 #MM- contrib-feelin : iconset-$(AROS_TARGET_ICONSET)-contrib-icons-extras-feelin
-#MM- feelin-classes : feelin-classes-setup
 #MM- feelin-files : feelin-dictionary feelin-fonts feelin-images feelin-resources feelin-xmlsources
 
 %copy_dir_recursive mmake=feelin-dictionary src=dictionary dst=$(FEELINDIR)/dictionary
@@ -32,9 +29,5 @@ USER_CFLAGS := -I$(FEELINTOP)/Include
 feelin-icons : files-copy
 %copy_files_q files="prefs.info Demos.info" \
     dst=$(FEELINDIR)
-
-#MM
-feelin-classes-setup :
-%mkdirs_q $(AROSDIR)/Libs/Feelin
 
 %common

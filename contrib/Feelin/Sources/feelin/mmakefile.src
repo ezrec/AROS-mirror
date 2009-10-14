@@ -1,10 +1,10 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
+#MM- feelin-library : includes linklibs feelin-linklib
 
-FILES = feelin \
+FILES := feelin \
 	    lib_Link \
 	    lib_Memory \
 	    lib_Hash \
@@ -16,26 +16,10 @@ FILES = feelin \
 	    fc_Class \
 	    fc_Object
 
-USER_CFLAGS := -I$(FEELINTOP)/Include
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-FEELIN_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(FILES))))
-
-#MM- feelin-library : feelin-library-setup feelin-library-compile feelin-library-link
-
-$(FILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
-
-#MM
-feelin-library-compile : $(FILES)
-
-$(AROSDIR)/Libs/feelin.library : $(FEELIN_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(FEELIN_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-library-link : $(AROSDIR)/Libs/feelin.library
-
-#MM
-feelin-library-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-library modname=feelin modtype=library \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs \
+    uselibs="FeelinAROS rom"
 
 %common

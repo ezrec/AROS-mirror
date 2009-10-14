@@ -1,32 +1,16 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
-FEELINTOP = ../../
+#MM- feelin-classes : feelin-classes-poppicture
+#MM  feelin-classes-poppicture : includes linklibs feelin-linklib
 
-CLASSPOPPICTUREFILES = Project
+FILES := Project
 
-USER_CFLAGS := -I$(FEELINTOP)/Include
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../Include
 
-CLASSPOPPICTURE_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSPOPPICTUREFILES))))
-
-##MM- feelin-classes : feelin-classes-poppicture
-#MM- feelin-classes-poppicture : feelin-classes-poppicture-setup feelin-classes-poppicture-compile feelin-classes-poppicture-link
-
-$(CLASSPOPPICTUREFILES) :
-%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
-
-#MM
-feelin-classes-poppicture-compile : $(CLASSPOPPICTUREFILES)
-
-$(AROSDIR)/Libs/Feelin/PopPicture.fc : $(CLASSPOPPICTURE_OBJS)
-	$(AROS_CC) $(LDFLAGS) $(CLASSPOPPICTURE_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
-
-#MM
-feelin-classes-poppicture-link : $(AROSDIR)/Libs/Feelin/PopPicture.fc
-
-#MM
-feelin-classes-poppicture-setup :
-%mkdirs_q $(GENDIR)/$(CURDIR)
+%build_module_simple mmake=feelin-classes-poppicture modname=PopPicture modtype=fc \
+    files=$(FILES) moduledir=$(AROSDIR)/Libs/Feelin \
+    uselibs="FeelinAROS rom"
 
 %common
