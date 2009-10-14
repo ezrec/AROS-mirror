@@ -6,7 +6,7 @@ typedef uint32                                  FImage;
 STATIC F_CODE_CREATE_XML(id_raster_create)
 {
    uint32 id = FI_Fill;
- 
+
    for ( ; Attribute ; Attribute = Attribute -> Next)
    {
       switch (Attribute -> Name -> ID)
@@ -46,7 +46,7 @@ STATIC F_CODE_DRAW(id_raster_draw)
    else if (Raster >= FI_Shine_HalfShine && Raster <= FI_Shine_Highlight)
    {
       static uint16 pattern_Mixed[] = {0xAAAA,0x5555,0xAAAA,0x5555};
-      uint16 *prev_ptrn = rp -> AreaPtrn;
+      const uint16 *prev_ptrn = rp -> AreaPtrn;
       uint32 prev_ptsz = rp -> AreaPtSz;
 
       rp -> AreaPtrn = pattern_Mixed;

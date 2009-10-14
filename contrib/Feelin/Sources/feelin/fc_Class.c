@@ -8,20 +8,20 @@
 *****************************************************************************
 
  * 09.00 ** 2005/07/06 *
- 
+
    GROG: Modifications for the new design. Morphos port and Mr Proper.
 
    OLAV:  It's  now  possible,  forced  in  fact  since  FA_Class_Init  and
    FA_Class_Exit  are considered deprecated, to create metaclasses (classes
    for classes).
- 
+
  * 08.06 ** 2005/04/06 *
 
    Memory  pool  is  disabled  for  custom  classes.  The   new   attribute
    FA_Class_Module  is  used  to  provide  the  library  base of the class,
    instead of writting  it  direcly  in  the  structure.  More  over,  this
    attribute can be used to get the library base of the class.
- 
+
  * 08.04 ** 2005/01/28 *
 
    A message is logged when an unknown attribute is supplied. This  doesn't
@@ -30,13 +30,13 @@
 
    The functions defined by FA_Class_Init and FA_Class_Exit now  receive  a
    pointer to FeelinBase in A6.
-   
+
    When the attribute FA_Class_Pool is NULL the default memory pool  should
    be  used  to create object. Formely I checked the class pool everytime I
    created / deleted objects. Now I set the right pool pointer in "Class ->
    ObjectsPool".  Now  I  only  need  to  check the pool when I dispose the
    class.
-  
+
 */
 
 #include "Private.h"
@@ -101,11 +101,12 @@ STATIC struct Catalog * f_localize
 F_METHOD_NEW(Class_New)
 {
     struct in_FeelinClass *LOD = F_LOD(Class,Obj);
-    struct TagItem *Tags = Msg,*item;
+    const struct TagItem *Tags = Msg;
+    struct TagItem *item;
     FCatalogEntry *cat_table=NULL;
     STRPTR classname=NULL,supername=NULL,cat_name=NULL;
     BOOL haspool=TRUE;
-  
+
     while  ((item = NextTagItem(&Tags)))
     switch (item -> ti_Tag)
     {
@@ -156,32 +157,32 @@ F_METHOD_NEW(Class_New)
     }
 
 /*** memory pool setup *****************************************************/
-  
+
     /*OLAV-20050605: if FA_Class_LODSize equals 0 no pool is created */
-    
+
     if (haspool && classname && LOD -> Public.LODSize)
     {
         LOD -> ObjectsPool = F_CreatePool(sizeof (APTR) + LOD -> Public.Offset + LOD -> Public.LODSize,FA_Pool_Name,LOD -> Public.Name,TAG_DONE);
     }
-    
+
     if (!LOD -> ObjectsPool)
     {
         if (LOD -> Public.Super)
         {
             LOD -> ObjectsPool = ((struct in_FeelinClass *)(LOD -> Public.Super)) -> ObjectsPool;
-          
+
             LOD -> Flags |= FF_CLASS_INHERITED_POOL;
         }
         else
         {
             LOD -> ObjectsPool = FeelinBase -> DefaultPool;
-          
+
             LOD -> Flags |= FF_CLASS_INHERITED_POOL;
         }
     }
 
 /*** localization **********************************************************/
-  
+
     if (cat_table)
     {
        STRPTR str;
@@ -204,7 +205,7 @@ F_METHOD_NEW(Class_New)
     }
 
 /*** linking ***************************************************************/
-    
+
     F_HashAdd(FeelinBase -> HashClasses,LOD -> Public.Name,F_StrLen(LOD -> Public.Name),Obj);
     F_LinkTail(&FeelinBase -> Classes,(FNode *) LOD);
 
@@ -213,7 +214,7 @@ F_METHOD_NEW(Class_New)
     if (!F_DynamicCreate((FClass *) LOD))
     {
        F_Log(FV_LOG_USER,"(%s) Unable to create Dynamic entries",(LOD -> Module) ? LOD -> Module -> lib_Node.ln_Name : "custom");
-       
+
        goto __error;
     }
 
@@ -257,12 +258,12 @@ F_METHOD_DISPOSE(Class_Dispose)
    /* remove dynamic entries */
 
    F_DynamicDelete((FClass *) LOD);
-   
+
    if (!(FF_CLASS_INHERITED_POOL & LOD -> Flags))
    {
       F_DeletePool(LOD -> ObjectsPool); LOD -> ObjectsPool = NULL;
    }
-   
+
    F_Dispose(LOD -> Public.Name);
 
    /* automatically close library module, if class was built from a library
@@ -276,7 +277,7 @@ F_METHOD_DISPOSE(Class_Dispose)
    /* Free SuperClass */
 
    F_CloseClass(LOD -> Public.Super);
- 
+
    F_RPool(FeelinBase -> ClassesPool);
 }
 //+
@@ -289,8 +290,8 @@ STATIC F_METHODS_ARRAY =
 {
    F_METHODS_ADD_BOTH(Class_New,       "New",      FM_New),
    F_METHODS_ADD_BOTH(Class_Dispose,   "Dispose",  FM_Dispose),
-   
-   F_ARRAY_END 
+
+   F_ARRAY_END
 };
 
 ///fc_class_create

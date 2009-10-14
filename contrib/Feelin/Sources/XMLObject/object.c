@@ -30,18 +30,18 @@ F_METHOD(FObject,XMLObject_New)
     if (LOD -> Definitions)
     {
         FXMLDefinition *en;
-        
+
         for (en = LOD -> Definitions ; en -> Name ; en++)
         {
             F_Log(0,"XMLDefinition (%s)(%s)(0x%08lx)",en -> Name,en -> Data,en -> Data);
         }
     }
 #endif
- 
+
     if (LOD -> References)
     {
         FXMLReference *ref;
-        
+
         for (ref = LOD -> References ; ref -> Name ; ref++)
         {
             if (ref -> ObjectPtr)
@@ -55,9 +55,9 @@ F_METHOD(FObject,XMLObject_New)
     if (F_SUPERDO())
     {
         uint32 markup,pool;
-        
+
         F_Do(Obj,FM_Get,
-            
+
             "FA_Document_Pool", &pool,
             "FA_XMLDocument_Markups", &markup,
 
@@ -66,14 +66,14 @@ F_METHOD(FObject,XMLObject_New)
         if (markup && pool)
         {
             LOD -> HTable = F_NewP((APTR)(pool),sizeof (FHashTable) + sizeof (APTR) * FV_HASH_NORMAL);
-            
+
             if (LOD -> HTable)
             {
                 LOD -> HTable -> Size = FV_HASH_NORMAL;
                 LOD -> HTable -> Entries = (APTR)((uint32)(LOD -> HTable) + sizeof (FHashTable));
 
                 F_Do(Obj,F_IDR(FM_Document_AddIDs),xml_object_ids);
-            
+
                 if (F_Do(Obj,F_IDM(FM_XMLObject_Build)))
                 {
                     return Obj;
@@ -98,7 +98,7 @@ F_METHOD(void,XMLObject_Get)
 {
     struct LocalObjectData *LOD = F_LOD(Class,Obj);
     struct TagItem *Tags = Msg,item;
-    
+
     while  (F_DynamicNTI(&Tags,&item,Class))
     switch (item.ti_Tag)
     {
@@ -116,7 +116,7 @@ F_METHODM(uint32,XMLObject_Read,FS_Document_Read)
     if (Msg -> Type == FV_Document_SourceType_File)
     {
         STRPTR buf;
-        uint32 rc=NULL;
+        uint32 rc=0;
         BPTR lock;
 
         if ((lock = Lock(Msg -> Source,ACCESS_READ)) != NULL)
@@ -131,7 +131,7 @@ F_METHODM(uint32,XMLObject_Read,FS_Document_Read)
         {
             F_StrFmt(buf,"Feelin:XMLSources");
             AddPart(buf,Msg -> Source,1024);
-                
+
             if ((lock = Lock(buf,ACCESS_READ)) != NULL)
             {
                 rc = F_SuperDo(Class, Obj, Method, buf, Msg -> Type, Msg -> Pool);
@@ -140,10 +140,10 @@ F_METHODM(uint32,XMLObject_Read,FS_Document_Read)
             {
                 F_Log(FV_LOG_DEV,"Unable to lock (%s)",buf);
             }
-            
+
             F_Dispose(buf);
         }
-    
+
         if (lock)
         {
             UnLock(lock); return rc;
@@ -160,9 +160,9 @@ F_METHODM(uint32,XMLObject_Read,FS_Document_Read)
 F_METHODM(FObject,XMLObject_Find,FS_XMLObject_Find)
 {
     struct LocalObjectData *LOD = F_LOD(Class,Obj);
-    
+
     FHashLink *link = F_HashFind(LOD -> HTable,Msg -> Name,F_StrLen(Msg -> Name),NULL);
-    
+
     if (link)
     {
         return (FObject)(link -> Data);
@@ -184,19 +184,19 @@ F_METHODM(FObject,XMLObject_Find,FS_XMLObject_Find)
 F_METHOD(int32,XMLObject_Build)
 {
     struct LocalObjectData *LOD = F_LOD(Class,Obj);
-    
+
     APTR pool=NULL;
     FXMLMarkup *markup=NULL;
-    
+
     F_Do(Obj,FM_Get,
-        
+
         "FA_Document_Pool",         &pool,
         "FA_XMLDocument_Markups",   &markup,
-        
+
         TAG_DONE);
 
 /*** searching 'objects' markup ********************************************/
-                
+
     for ( ; markup ; markup = markup -> Next)
     {
         if (markup -> Name -> ID == FV_XMLOBJECT_ID_OBJECTS)
@@ -210,18 +210,18 @@ F_METHOD(int32,XMLObject_Build)
         struct TagItem *tags;
         FXMLMarkup *m;
         uint32 n=0;
-        
+
         for (m = (FXMLMarkup *)(markup -> ChildrenList.Head) ; m ; m = m -> Next)
         {
             n++;
         }
-    
+
         tags = F_NewP(pool,sizeof (struct TagItem) * (n + 1));
 
         if (tags)
         {
             struct TagItem *item = tags;
-            
+
             for (m = (FXMLMarkup *)(markup -> ChildrenList.Head) ; m ; m = m -> Next)
             {
                 item -> ti_Tag = FA_Child;
@@ -233,12 +233,12 @@ F_METHOD(int32,XMLObject_Build)
                     {
                         F_DisposeObj((FObject)(item -> ti_Data));
                     }
-                
+
                     return FALSE;
                 }
                 item++;
             }
-        
+
             if (LOD -> InitTags)
             {
                 item -> ti_Tag = TAG_MORE;
@@ -249,7 +249,7 @@ F_METHOD(int32,XMLObject_Build)
                 item -> ti_Tag = TAG_DONE;
                 item -> ti_Data = 0;
             }
-        
+
             LOD -> BuiltTags = tags;
 
             return TRUE;
@@ -259,7 +259,7 @@ F_METHOD(int32,XMLObject_Build)
     {
         F_Do(Obj,F_IDR(FM_Document_Log),0,NULL,"Unable to locate markup 'feelin:objects'");
     }
-    
+
     return FALSE;
 }
 //+
@@ -292,11 +292,11 @@ F_METHODM(uint32,XMLObject_Resolve,FS_Document_Resolve)
         }
 
 /*** check objects *********************************************************/
- 
+
         if (!done && (FV_TYPE_OBJECT == Msg -> Type))
         {
             value = F_Do(Obj,F_IDM(FM_XMLObject_Find),Msg -> Data);
- 
+
             if (value)
             {
                 done = FV_TYPE_OBJECT;
@@ -304,7 +304,7 @@ F_METHODM(uint32,XMLObject_Resolve,FS_Document_Resolve)
         }
 
 /*** pass to XMLDocument ***************************************************/
-  
+
         if (!done)
         {
             value = F_SuperDo(Class,Obj,Method,Msg -> Data,Msg -> Type,Msg -> Values,&done);

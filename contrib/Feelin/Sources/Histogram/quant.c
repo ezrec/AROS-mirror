@@ -88,7 +88,7 @@ static struct quantizenode * histogram_quantize_create(APTR Pool, FHEntry **lowe
 //	#define IEEEDPMul(a,b)  a * b
 //	#define IEEEDPFix   	(uint32)
 //	#endif
-	
+
             double c1 = IEEEDPFlt(((rgb & 0x00FF0000) >> 16) - qn -> cc_mid[0]);
             double c2 = IEEEDPFlt(((rgb & 0x0000FF00) >>  8) - qn -> cc_mid[1]);
             double c3 = IEEEDPFlt( (rgb & 0x000000FF)        - qn -> cc_mid[2]);
@@ -236,7 +236,7 @@ static uint32 histogram_quantize(APTR Pool, FHEntry **histoptrtab, uint32 numhis
 {
     uint32 rc = FALSE;
     struct quantizenode *rootnode;
-    
+
     rootnode = histogram_quantize_create(Pool, histoptrtab, histoptrtab + numhist - 1);
 
     if (rootnode)
@@ -270,7 +270,7 @@ static uint32 histogram_quantize(APTR Pool, FHEntry **histoptrtab, uint32 numhis
         {
             histogram_quantize_decompose(rootnode, pptr);
         }
-abort:
+
         histogram_quantize_free(rootnode);
     }
 
@@ -288,9 +288,9 @@ struct FS_Histogram_Extract                     { uint32 NumColors; };
 F_METHODM(uint32 *,Histogram_Extract,FS_Histogram_Extract)
 {
     struct LocalObjectData *LOD = F_LOD(Class,Obj);
-    
+
     uint32 *table = NULL;
-     
+
     if (Msg -> NumColors)
     {
         F_Do(Obj,FM_Lock,FF_Lock_Shared);
@@ -298,7 +298,7 @@ F_METHODM(uint32 *,Histogram_Extract,FS_Histogram_Extract)
         if (LOD -> numcolors)
         {
             FHEntry **array = (FHEntry **) F_Do(Obj,F_IDM(FM_Histogram_CreateArray));
- 
+
             if (array)
             {
                 table = F_New(sizeof (uint32) * Msg -> NumColors);
@@ -308,7 +308,7 @@ F_METHODM(uint32 *,Histogram_Extract,FS_Histogram_Extract)
                     if (Msg -> NumColors >= LOD -> numcolors)
                     {
                         uint32 i;
-                        
+
                         for (i = 0 ; i < LOD -> numcolors ; i++)
                         {
                             table[i] = array[i] -> rgb;
@@ -322,7 +322,7 @@ F_METHODM(uint32 *,Histogram_Extract,FS_Histogram_Extract)
                         }
                     }
                 }
-            
+
                 F_Dispose(array);
             }
         }

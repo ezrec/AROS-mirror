@@ -256,11 +256,11 @@ F_METHODM(struct in_FeelinPalette *,D_AddPalette,FS_AddPalette)
 F_METHODM(void,D_RemPalette,FS_RemPalette)
 {
    struct LocalObjectData *LOD = F_LOD(Class,Obj);
-   
+
    if (Msg -> Palette)
    {
       struct in_FeelinPalette *pal;
- 
+
       F_OPool(CUD -> PalettePool);
 
       for (pal = (struct in_FeelinPalette *)(LOD -> PaletteList.Head) ; pal ; pal = pal -> Next)
@@ -306,7 +306,7 @@ F_METHODM(uint32,D_DecodeColor,FS_Display_DecodeColor)
    if (Msg -> Spec)
    {
 /*** deprecated color types ************************************************/
-      
+
       if (Msg -> Spec[1] == ':')
       {
          switch (Msg -> Spec[0])
@@ -368,7 +368,7 @@ F_METHODM(uint32,D_DecodeColor,FS_Display_DecodeColor)
                      val = (1 << depth) + val;
                   }
 
-                  GetRGB32(LOD -> ColorMap,val,1,(uint32 *)(&rgb));
+                  GetRGB32(LOD -> ColorMap,val,1,(ULONG *)(&rgb));
                   argb = (0x00FF0000 & rgb[0]) | (0x0000FF00 & rgb[1]) | (0x000000FF & rgb[2]);
                }
                else
@@ -396,7 +396,7 @@ F_METHODM(uint32,D_DecodeColor,FS_Display_DecodeColor)
                   if (val < 0)          val = 0;
                   if (val > NUMDRIPENS) val = NUMDRIPENS - 1;
 
-                  GetRGB32(LOD -> ColorMap,LOD -> DrawInfo -> dri_Pens[val],1,(uint32 *)(&rgb));
+                  GetRGB32(LOD -> ColorMap,LOD -> DrawInfo -> dri_Pens[val],1,(ULONG *)(&rgb));
 
                   argb = (0x00FF0000 & rgb[0]) | (0x0000FF00 & rgb[1]) | (0x000000FF & rgb[2]);
                }
@@ -414,9 +414,9 @@ F_METHODM(uint32,D_DecodeColor,FS_Display_DecodeColor)
             break;
          }
       }
-   
+
 /*** new color types *******************************************************/
- 
+
       else if (*Msg -> Spec == '#')
       {
          stch_l(Msg -> Spec + 1,(int32 *)(&argb));
@@ -444,23 +444,23 @@ F_METHODM(uint32,D_DecodeColor,FS_Display_DecodeColor)
                   }
                }
                break;
-               
+
                case 'h':
                {
                   int32 cmp;
-                  
+
                   if ((cmp = F_StrCmp("halfdark",Msg -> Spec,8)) == 0)
                   {
                      argb = Msg -> Reference -> ARGB[FV_Pen_HalfDark];
                   }
                   else if (cmp > 0) break;
-               
+
                   if ((cmp = F_StrCmp("halfshadow",Msg -> Spec,10)) == 0)
                   {
                      argb = Msg -> Reference -> ARGB[FV_Pen_HalfShadow];
                   }
                   else if (cmp > 0) break;
-                                             
+
                   if ((cmp = F_StrCmp("halfshine",Msg -> Spec,9)) == 0)
                   {
                      argb = Msg -> Reference -> ARGB[FV_Pen_HalfShine];
@@ -478,7 +478,7 @@ F_METHODM(uint32,D_DecodeColor,FS_Display_DecodeColor)
                case 's':
                {
                   int32 cmp;
-               
+
                   if ((cmp = F_StrCmp("shadow",Msg -> Spec,6)) == 0)
                   {
                      argb = Msg -> Reference -> ARGB[FV_Pen_Shadow];
@@ -492,7 +492,7 @@ F_METHODM(uint32,D_DecodeColor,FS_Display_DecodeColor)
                   else if (cmp > 0) break;
                }
                break;
-               
+
                case 't':
                {
                   if (F_StrCmp("text",Msg -> Spec,4) == 0)
@@ -510,7 +510,7 @@ F_METHODM(uint32,D_DecodeColor,FS_Display_DecodeColor)
       else
       {
          int32 val;
-         
+
          if (stcd_l(Msg -> Spec,&val) && LOD -> ColorMap)
          {
             uint32 rgb[3];
@@ -520,7 +520,7 @@ F_METHODM(uint32,D_DecodeColor,FS_Display_DecodeColor)
                val = (1 << LOD -> Depth) + val;
             }
 
-            GetRGB32(LOD -> ColorMap,val,1,(uint32 *)(&rgb));
+            GetRGB32(LOD -> ColorMap,val,1,(ULONG *)(&rgb));
             argb = (0x00FF0000 & rgb[0]) | (0x0000FF00 & rgb[1]) | (0x000000FF & rgb[2]);
          }
          else
@@ -553,12 +553,12 @@ enum  {
       FV_XML_ID_TEXT,
       FV_XML_ID_CONTRAST,
       FV_XML_ID_SATURATION
-      
+
       };
-      
+
 #define FF_HAS_CONTRAST                         (1 << 0)
 #define FF_HAS_SATURATION                       (1 << 1)
-      
+
 F_METHODM(struct in_FeelinPalette *,D_CreateColorScheme,FS_CreateColorScheme)
 {
     uint32 argb[FV_PEN_COUNT];
@@ -567,7 +567,7 @@ F_METHODM(struct in_FeelinPalette *,D_CreateColorScheme,FS_CreateColorScheme)
     bits32 flags=0;
 
     /* item equals to -1 need to be created (obtained or computed) */
-    
+
     /* en premier on va créer les valeurs par défault */
 
     argb[FV_Pen_Text]       = 0x00000000;
@@ -607,14 +607,14 @@ F_METHODM(struct in_FeelinPalette *,D_CreateColorScheme,FS_CreateColorScheme)
             { "scheme",      6, FV_XML_ID_SCHEME     },
             { "shine",       5, FV_XML_ID_SHINE      },
             { "text",        4, FV_XML_ID_TEXT       },
-               
+
             F_ARRAY_END
         };
-   
+
         FXMLMarkup *markup;
-     
+
         F_Do(CUD -> XMLScheme,FM_Lock,FF_Lock_Exclusive);
-                     
+
         F_Do(CUD -> XMLScheme,FM_Set,
 
             F_ID(CUD -> XMLIDs,FA_Document_Source),      Msg -> Spec,
@@ -623,17 +623,17 @@ F_METHODM(struct in_FeelinPalette *,D_CreateColorScheme,FS_CreateColorScheme)
             TAG_DONE);
 
         F_Do(CUD -> XMLScheme,F_ID(CUD -> XMLIDs,FM_Document_AddIDs), xml_scheme_ids);
-        
+
         for (markup = (FXMLMarkup *) F_Get(CUD -> XMLScheme,F_ID(CUD -> XMLIDs,FA_XMLDocument_Markups)) ; markup ; markup = markup -> Next)
         {
             if (markup -> Name -> ID == FV_XML_ID_SCHEME)
             {
                 FXMLAttribute *attribute;
-               
+
                 for (attribute = (FXMLAttribute *) markup -> AttributesList.Head; attribute ; attribute = attribute -> Next)
                 {
                     int32 pen = -1;
-     
+
                     switch (attribute -> Name -> ID)
                     {
                         case FV_XML_ID_DARK:       pen = FV_Pen_Dark;      break;
@@ -644,7 +644,7 @@ F_METHODM(struct in_FeelinPalette *,D_CreateColorScheme,FS_CreateColorScheme)
                         case FV_XML_ID_CONTRAST:   flags |= FF_HAS_CONTRAST;   contrast = F_Do(CUD -> XMLScheme, F_ID(CUD -> XMLIDs,FM_Document_Resolve), attribute -> Data, FV_TYPE_INTEGER, NULL, NULL); break;
                         case FV_XML_ID_SATURATION: flags |= FF_HAS_SATURATION; saturation = F_Do(CUD -> XMLScheme, F_ID(CUD -> XMLIDs,FM_Document_Resolve), attribute -> Data, FV_TYPE_INTEGER, NULL, NULL); break;
                     }
-                
+
                     if (pen != -1)
                     {
                         argb[pen] = F_Do(Obj,F_IDM(FM_Display_DecodeColor),attribute -> Data,Msg -> Reference);
@@ -672,7 +672,7 @@ F_METHODM(struct in_FeelinPalette *,D_CreateColorScheme,FS_CreateColorScheme)
         uint8 dg = fg - (fg * (100 + contrast) / 200);
         uint8 db = fb - (fb * (100 + contrast) / 200);
         uint8 dm = MAX(dr,MAX(db,dg));
-        
+
         if (FF_HAS_SATURATION)
         {
             sr = sm - ((sm - sr) * saturation / 100);
@@ -687,12 +687,12 @@ F_METHODM(struct in_FeelinPalette *,D_CreateColorScheme,FS_CreateColorScheme)
             fg = fm - ((fm - fg) * saturation / 100);
             fb = fm - ((fm - fb) * saturation / 100);
         }
-        
+
         argb[FV_Pen_Shine] = (sr << 16) | (sg << 8) | sb;
         argb[FV_Pen_Dark]  = (dr << 16) | (dg << 8) | db;
         argb[FV_Pen_Fill]  = (fr << 16) | (fg << 8) | fb;
     }
-    
+
     /* create half colors */
 
     argb[FV_Pen_Shadow]     = MakeXGrad(argb[FV_Pen_Fill],   argb[FV_Pen_Dark]);

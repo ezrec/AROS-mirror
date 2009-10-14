@@ -25,7 +25,7 @@ F_METHOD(uint32,Deco_New)
     return F_SuperDo(Class,Obj,Method,
 
         FA_ChainToCycle, FALSE,
-        
+
         FA_Font, "$decorator-font",
         FA_ColorScheme, "$decorator-scheme-active",
         FA_Back, FP_DRAGBAR_BACK,
@@ -39,21 +39,21 @@ F_METHOD(void, Deco_Get)
     #if 0
     struct LocalObjectData *LOD = F_LOD(Class, Obj);
     struct TagItem *Tags = Msg,item;
-    
+
     while  (F_DynamicNTI(&Tags, &item, Class))
     switch (item.ti_Tag)
     {
         case FA_Back:
         {
             FFramePublic *fp = (FFramePublic *) F_Get(Obj, FA_Frame_PublicData);
- 
+
             F_Log(0,"back 0x%08lx 0x%08lx", LOD->dragbar_back, fp->Back);
 //            F_STORE(LOD->dragbar_back);
         }
         break;
     }
     #endif
-     
+
     F_SUPERDO();
 }
 //+
@@ -74,7 +74,7 @@ F_METHODM(uint32,Deco_Setup,FS_Setup)
     if (F_Get(win, FA_Window_GadDragbar))
     {
         LOD->intuition_gadget_drag = NewObject(NULL,"buttongclass",GA_SysGType,GTYP_WDRAGGING,TAG_DONE);
-        
+
         if (LOD->intuition_gadget_drag == NULL)
         {
             return FALSE;
@@ -117,7 +117,7 @@ F_METHODM(uint32,Deco_Setup,FS_Setup)
     data = F_Do(Msg->Render->Application, FM_Application_Resolve, FP_DRAGBAR_BACK, DEF_DRAGBAR_BACK);
 
     F_Log(0,"dragbar back (%s)",FP_DRAGBAR_BACK);
- 
+
     LOD->dragbar_back = ImageDisplayObject,
 
         FA_ImageDisplay_Spec, data,
@@ -129,11 +129,11 @@ F_METHODM(uint32,Deco_Setup,FS_Setup)
         return FALSE;
     }
     #endif
- 
+
     if (F_SUPERDO())
     {
         FFramePublic *fp = (FFramePublic *) F_Get(Obj, FA_Frame_PublicData);
-        
+
         uint32 data = F_Do(_app, FM_Application_Resolve, "$decorator-scheme-inactive", NULL);
 
         LOD->scheme_active = (FPalette *) F_Get(Obj,FA_ColorScheme);
@@ -143,9 +143,9 @@ F_METHODM(uint32,Deco_Setup,FS_Setup)
         {
             return FALSE;
         }
-        
+
         F_Set(fp->Back, FA_ImageDisplay_Origin, (uint32) &LOD->dragbar_box);
- 
+
         /*** $decorator-flatty-sizebar-back ***/
 
         data = F_Do(_app, FM_Application_Resolve, FP_SIZEBAR_BACK, DEF_SIZEBAR_BACK);
@@ -160,9 +160,9 @@ F_METHODM(uint32,Deco_Setup,FS_Setup)
         {
             return FALSE;
         }
-    
+
         /*** text display ***/
-    
+
         if (LOD->intuition_gadget_drag)
         {
             LOD->td = TextDisplayObject,
@@ -176,7 +176,7 @@ F_METHODM(uint32,Deco_Setup,FS_Setup)
             {
                 return FALSE;
             }
-        
+
             LOD->preparse_active = (STRPTR) F_Do(_app, FM_Application_Resolve, "$decorator-preparse-active", DEF_PREPARSE_ACTIVE);
             LOD->preparse_inactive = (STRPTR) F_Do(_app, FM_Application_Resolve, "$decorator-preparse-inactive", DEF_PREPARSE_INACTIVE);
         }
@@ -218,7 +218,7 @@ F_METHOD(void,Deco_Cleanup)
     {
         F_Do(LOD->td, FM_TextDisplay_Cleanup, _render);
         F_DisposeObj(LOD->td); LOD->td = NULL;
-        
+
         #if 0
         F_Do(LOD->dragbar_back, FM_ImageDisplay_Cleanup, _render);
         F_DisposeObj(LOD->dragbar_back); LOD->dragbar_back = NULL;
@@ -255,16 +255,16 @@ F_METHOD(void,Deco_Cleanup)
 F_METHOD(void, Deco_AskMinMax)
 {
     struct LocalObjectData *LOD = F_LOD(Class, Obj);
-        
+
     uint32 maxw=0, maxh=0;
-    
+
     F_SUPERDO();
-    
+
     _maxw = FV_MAXMAX;
     _maxh = FV_MAXMAX;
- 
+
     LOD->sizebar_h = MAX(LOD->sizebar_h, DEF_SIZEBAR_HEIGHT);
-                    
+
     if (LOD->gadget_close)
     {
         _gad_init(LOD->gadget_close);
@@ -272,7 +272,7 @@ F_METHOD(void, Deco_AskMinMax)
         maxw = MAX(maxw, _gad_maxw);
         maxh = MAX(maxh, _gad_maxh);
     }
- 
+
     if (LOD->gadget_zoom)
     {
         _gad_init(LOD->gadget_zoom);
@@ -287,15 +287,15 @@ F_METHOD(void, Deco_AskMinMax)
         maxw = MAX(maxw, _gad_maxw);
         maxh = MAX(maxh, _gad_maxh);
     }
-                        
+
     //F_Log(0,"maxw %ld, maxh %ld, gad_w %ld, gad_h %ld",maxw, maxh,LOD->gadgets_w, LOD->gadgets_h);
 
     LOD->gadgets_w = MAX(LOD->gadgets_w, maxw);
     LOD->gadgets_h = MAX(LOD->gadgets_h, maxh);
- 
+
     _bl = 1;
     _br = 1;
-    
+
     if (LOD -> intuition_gadget_drag)
     {
         _bt = 2 + MAX(_font -> tf_YSize, LOD->gadgets_h + LOD->spacing_vertical * 2);
@@ -304,7 +304,7 @@ F_METHOD(void, Deco_AskMinMax)
     {
         _bt = 1;
     }
-    
+
     _bb = 2 + LOD->sizebar_h;
 }
 //+
@@ -330,7 +330,7 @@ F_METHOD(void,Deco_Layout)
     LOD->dragbar_box.y = _y + 1;
     LOD->dragbar_box.w = _w - 2;
     LOD->dragbar_box.h = _iy - _y + 1;
-    
+
     if (resizable)
     {
         LOD->flags |= FF_DECO_SIZEBAR;
@@ -400,7 +400,7 @@ F_METHOD(void,Deco_Layout)
     //F_Log(0,"NEED: %ld x %ld",need_w,need_h);
 
     LOD->flags &= ~FF_DECO_TITLEONLY;
-    
+
     if (need_w > _w)
     {
         //F_Log(0,"needs too big: %ld x %ld (available %ld x %ld)",need_w,need_h,_w,_h);
@@ -641,7 +641,7 @@ F_METHOD(void,Deco_GoActive)
 F_METHOD(void,Deco_GoInactive)
 {
     struct LocalObjectData *LOD = F_LOD(Class, Obj);
- 
+
     FAreaPublic *ap;
 
     if ((ap = (FAreaPublic *) F_Get(LOD->gadget_close, FA_Area_PublicData)) != NULL)
@@ -658,7 +658,7 @@ F_METHOD(void,Deco_GoInactive)
     {
         ap->Palette = LOD->scheme_inactive;
     }
-    
+
     F_Draw(Obj,FF_Draw_Object);
 }
 //+
@@ -680,7 +680,7 @@ F_METHODM(void,Deco_Draw,FS_Draw)
     int16 iy2 = _iy2 + 1;
 
     int8 active = F_Get(Obj, FA_Active);
-    FPalette *palette = (FPalette *) active ? LOD->scheme_active : LOD->scheme_inactive;
+    FPalette *palette = active ? LOD->scheme_active : LOD->scheme_inactive;
     uint32 *pn = palette->Pens;
 
     _palette = palette;
@@ -691,16 +691,16 @@ F_METHODM(void,Deco_Draw,FS_Draw)
     _Move(x1, y1); _Draw(x1, y2); _Draw(x2, y2); _Draw(x2, y1); _Draw(x1, y1);
     _Move(ix1, iy1); _Draw(ix2, iy1);
     _Move(ix1, iy2); _Draw(ix2, iy2);
-    
+
     if (_parent != _win)
     {
         FBox b;
-        
+
         b.x = _ix;
         b.y = _iy;
         b.w = _iw;
         b.h = _ih;
-        
+
         F_Do(_parent, FM_Erase, &b, FF_Erase_Box);
     }
 

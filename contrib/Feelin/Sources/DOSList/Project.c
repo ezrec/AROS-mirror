@@ -1,9 +1,9 @@
 /*
 
 $VER: 02.00 (2005/08/10)
- 
+
    Portability update.
-   
+
    Metaclass support.
 
 $VER: 01.00 (2005/04/14)
@@ -16,7 +16,7 @@ $VER: 01.00 (2005/04/14)
 #include "Project.h"
 
 struct ClassUserData               *CUD;
- 
+
 ///METHODS
 F_METHOD(void,DOSList_ChangePath);
 
@@ -39,9 +39,9 @@ AROS_UFH2S(void, put_func,
     AROS_UFHA(STRPTR *, strPtrPtr, A3))
 {
     AROS_USERFUNC_INIT
-    
+
     *(*strPtrPtr)++ = chr;
-    
+
     AROS_USERFUNC_EXIT
 }
 
@@ -50,9 +50,9 @@ AROS_UFH2S(void, len_func,
     AROS_UFHA(ULONG *, lenPtr, A3))
 {
     AROS_USERFUNC_INIT
-    
+
     (*lenPtr)++;
-    
+
     AROS_USERFUNC_EXIT
 }
 #endif
@@ -83,11 +83,11 @@ STATIC STRPTR f_str_newpA
 
    if (len > 1)
    {
-      if (string = F_NewP(Pool,len))
+      if ((string = F_NewP(Pool,len)))
       {
       #ifdef __AROS__
       	 STRPTR stringptr = string;
-	 
+
          RawDoFmt(Fmt,Params,(VOID_FUNC)AROS_ASMSYMNAME(put_func),&stringptr);
       #else
          RawDoFmt(Fmt,Params,(void *)(&put_func),string);
@@ -122,7 +122,7 @@ F_HOOKM(APTR,code_list_construct,FS_List_Construct)
     if (ler -> Type == FV_ENTRY_VOLUME || ler -> Type == FV_ENTRY_ASSIGN)
     {
         le = F_NewP(Msg -> Pool,sizeof (struct ListEntry));
- 
+
         if (le)
         {
 #warning "TODO: FIXME! - Changes to the AROS DOS headers made this attribute disappear .."
@@ -141,13 +141,13 @@ F_HOOKM(APTR,code_list_construct,FS_List_Construct)
 //                le -> DevName = f_str_newp(FeelinBase,Msg -> Pool,NULL,"%s:", "AROS_FIXME");
 //	    #else
                 le -> DevName = f_str_newp(FeelinBase,Msg -> Pool,NULL,"%s:",((struct Task *)(((struct DosList *)(ler -> Data)) -> dol_Task -> mp_SigTask)) -> tc_Node.ln_Name);
-//            #endif               
+//            #endif
 //                F_Log(0,"devname (0x%08lx)(%s)",le->DevName);
- 
+
                 if (le->DevName)
                 {
                     BPTR lock = Lock(le -> DevName,SHARED_LOCK);
- 
+
                     if (lock)
                     {
                         struct InfoData id;
@@ -298,7 +298,7 @@ F_HOOKM(FListDisplay *,code_list_display,FS_List_Display)
 F_METHOD_NEW(Class_New)
 {
     CUD = F_LOD(Class,Obj);
-  
+
     CUD -> construct_hook.h_Entry = (HOOKFUNC) code_list_construct;
     CUD -> destruct_hook.h_Entry  = (HOOKFUNC) code_list_destruct;
     CUD -> compare_hook.h_Entry   = (HOOKFUNC) code_list_compare;

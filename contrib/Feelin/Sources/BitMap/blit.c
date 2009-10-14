@@ -14,13 +14,17 @@
 
 //#define DB_BLIT
 
+// forward declaration
+struct FeelinBitMapBlit;
+struct FeelinBitMapScale;
+
 ///typedef
 typedef void (*feelin_func_blit)                (struct FeelinBitMapBlit *fbb, APTR source, uint16 source_x, uint16 source_y, uint16 target_x, uint16 target_y, uint16 target_w, uint16 target_h);
 
 struct FeelinBitMapBlit
 {
     feelin_func_blit                blit_func;
-    
+
     uint16                          PixelSize;
     uint16                          ColorType;
     uint32                         *ColorArray;
@@ -37,18 +41,18 @@ typedef uint32 (*feelin_func_get_pixel)         (struct FeelinBitMapScale *fbs, 
 struct FeelinBitMapScale
 {
     struct FeelinBitMapBlit        *fbb;
-    
+
     uint16                          source_w;
     uint16                          source_h;
     uint32                          source_modulo;
     uint32                          source_modulo_real;
-    
+
     uint16                          target_x;
     uint16                          target_y;
     uint16                          target_w;
     uint16                          target_h;
     uint32                          target_modulo;
-    
+
     uint32                          xfrac;
     uint32                          yfrac;
     uint32                          spy;
@@ -56,7 +60,7 @@ struct FeelinBitMapScale
     feelin_func_transform           transform_func;
     uint32                         *transform_buffer;
     uint32                         *transform_colors;
-    
+
     feelin_func_scale               scale_func;
     feelin_func_scale_y             scale_y_func;
     feelin_func_scale_x             scale_x_func;
@@ -215,7 +219,7 @@ static void bitmap_blit_rgb_alpha(struct FeelinBitMapBlit *fbb,uint32 *source, u
     	    #if !BIG_ENDIAN_MACHINE
 	    	d_rgba = AROS_BE2LONG(d_rgba);
 	    #endif
-	    
+
                 int32 a = /*255 -*/ F_PIXEL_A(d_rgba);
                 int32 s,d;
 
@@ -244,7 +248,7 @@ static void bitmap_blit_rgb_alpha(struct FeelinBitMapBlit *fbb,uint32 *source, u
             WritePixelArray(line_buffer, 0,0,target_mod, fbb->RPort, target_x,target_y, target_w,1, RECTFMT_RGBA);
     	#else
             WritePixelArray(line_buffer, 0,0,target_mod, fbb->RPort, target_x,target_y, target_w,1, RECTFMT_ABGR32);
-	#endif	    
+	#endif
         }
 
         F_Dispose(line_buffer);
@@ -291,7 +295,7 @@ static void bitmap_blit_bitmap(struct FeelinBitMapBlit *fbb, APTR source, uint16
 static void bitmap_blit_tile
 (
     struct FeelinBitMapBlit *fbb,
-    
+
     APTR source,
 
     uint16 source_x,
@@ -345,7 +349,7 @@ static void bitmap_blit_tile
     fbb->blit_func
     (
         fbb,
- 
+
         source,
         source_x, source_y,
 
@@ -372,7 +376,7 @@ static void bitmap_blit_tile
         fbb->blit_func
         (
             fbb,
- 
+
             source,
             0, source_y,
 
@@ -396,7 +400,7 @@ static void bitmap_blit_tile
         fbb->blit_func
         (
             fbb,
- 
+
             source,
             source_x, 0,
 
@@ -417,7 +421,7 @@ static void bitmap_blit_tile
             fbb->blit_func
             (
                 fbb,
- 
+
                 source,
                 0, 0,
 
@@ -441,12 +445,12 @@ static void bitmap_blit_tile
         ClipBlit
         (
             fbb->RPort,
-            
+
             target_x,
             target_y,
-            
+
             fbb->RPort,
-            
+
             pos, target_y,
             size, MIN(source_h, target_h),
 
@@ -638,7 +642,7 @@ static uint32 bitmap_get_pixel_average(struct FeelinBitMapScale *fbs, uint32 *s,
     {
         bcky = 0;
     }
- 
+
     /* fetch pixels */
 
     s00 = *((uint32 *)((uint32)(s) - bcky - bckx));
@@ -776,7 +780,7 @@ static void bitmap_scale_draw(struct FeelinBitMapScale *fbs, APTR source)
     if (target)
     {
         struct FeelinBitMapBlit fbb;
-        
+
         uint32 i;
 
         if (FF_COLOR_TYPE_ALPHA & fbs->fbb->ColorType)
@@ -798,7 +802,7 @@ static void bitmap_scale_draw(struct FeelinBitMapScale *fbs, APTR source)
             fbb.blit_func
             (
                 &fbb,
-                
+
                 target,
 
                 0,
@@ -859,7 +863,7 @@ static void bitmap_transform_palette(struct FeelinBitMapScale *fbs, uint8 *sourc
 static void bitmap_blit_scale
 (
     struct FeelinBitMapBlit *fbb,
-    
+
     APTR source,
 
     uint16 source_x,
@@ -871,15 +875,15 @@ static void bitmap_blit_scale
     uint16 target_y,
     uint16 target_w,
     uint16 target_h,
-    
+
     uint32 filter
 )
 {
     #if 1
     struct FeelinBitMapScale fbs;
-    
+
     fbs.fbb = fbb;
-    
+
     fbs.source_w = source_w;
     fbs.source_h = source_h;
     fbs.source_modulo = fbb->Modulo;
@@ -898,7 +902,7 @@ static void bitmap_blit_scale
     fbs.scale_func = bitmap_scale_draw;
     fbs.scale_y_func = bitmap_y_scale;
     fbs.scale_x_func = bitmap_x_scale;
-    
+
     fbs.transform_func   = NULL;
     fbs.transform_buffer = NULL;
     fbs.transform_colors = fbb->ColorArray;
@@ -910,13 +914,13 @@ static void bitmap_blit_scale
             fbs.get_pixel_func = bitmap_get_pixel_bilinear;
         }
         break;
-                
+
         case FV_BitMap_ScaleFilter_Average:
         {
             fbs.get_pixel_func = bitmap_get_pixel_average;
         }
         break;
-             
+
         default:
         {
             fbs.get_pixel_func = bitmap_get_pixel_nearest;
@@ -981,7 +985,7 @@ static void bitmap_blit_scale
 __done:
 
     F_Dispose(fbs.transform_buffer);
-    
+
     #endif
 }
 //+
@@ -995,28 +999,28 @@ void bitmap_blit_frame(FClass *Class, FObject Obj, struct FS_BitMap_Blit *Msg)
 
     uint16 source_w = LOD->source.Width;
     uint16 source_h = LOD->source.Height;
-    
+
     uint16 target_x = Msg->TargetBox->x;
     uint16 target_y = Msg->TargetBox->y;
     uint16 target_w = Msg->TargetBox->w;
     uint16 target_h = Msg->TargetBox->h;
 
     FInner *margins = NULL;
-    
+
     #if 1
     uint16 x,y,w,h;
     #endif
-    
+
     while  (F_DynamicNTI(&Tags, &item, Class))
     switch (item.ti_Tag)
     {
         case FA_BitMap_Margins: margins = (FInner *) item.ti_Data; break;
     }
-                        
+
     if (margins == NULL)
     {
         F_Log(0,"You need to defined the FA_BitMap_Margins attribute while using the 'Frame' blit mode");
-        
+
         return;
     }
 
@@ -1081,7 +1085,7 @@ void bitmap_blit_frame(FClass *Class, FObject Obj, struct FS_BitMap_Blit *Msg)
         LOD->source.PixelType,
         LOD->source.ColorArray
     );
-                
+
     bitmap_blit_select
     (
         LOD->source.PixelArray,
@@ -1106,7 +1110,7 @@ void bitmap_blit_frame(FClass *Class, FObject Obj, struct FS_BitMap_Blit *Msg)
     y = target_y;
     w = target_w - margins->l - margins->r;
     h = margins->t;
-    
+
     while (w)
     {
         uint32 draw_w = MIN(source_w - margins->l - margins->r, w);
@@ -1130,7 +1134,7 @@ void bitmap_blit_frame(FClass *Class, FObject Obj, struct FS_BitMap_Blit *Msg)
         x += draw_w;
         w -= draw_w;
     }
-    
+
     x = target_x + margins->l;
     y = target_y + target_h - margins->b;
     w = target_w - margins->l - margins->r;
@@ -1159,7 +1163,7 @@ void bitmap_blit_frame(FClass *Class, FObject Obj, struct FS_BitMap_Blit *Msg)
         x += draw_w;
         w -= draw_w;
     }
-                            
+
     x = target_x;
     y = target_y + margins->t;
     w = margins->l;
@@ -1219,7 +1223,7 @@ void bitmap_blit_frame(FClass *Class, FObject Obj, struct FS_BitMap_Blit *Msg)
     }
 //+
     #endif
-  
+
     #if 1
     bitmap_blit_scale
     (
@@ -1277,7 +1281,7 @@ F_METHODM(void,BitMap_Blit,FS_BitMap_Blit)
     #if 1
     struct LocalObjectData *LOD = F_LOD(Class,Obj);
     struct TagItem *Tags = (struct TagItem *) &Msg->Tag1, item;
-    
+
     APTR source;
     uint16 source_w;
     uint16 source_h;
@@ -1290,7 +1294,7 @@ F_METHODM(void,BitMap_Blit,FS_BitMap_Blit)
 
     fbb.blit_func = NULL;
     fbb.RPort = Msg->rp;
-    
+
     #if 0
     if (LOD->rendered)
     {
@@ -1299,7 +1303,7 @@ F_METHODM(void,BitMap_Blit,FS_BitMap_Blit)
         source_h = LOD->rendered_h;
         modulo = source_w * sizeof (uint32);
         type = (FF_BITMAP_RENDERED_BITMAP & LOD->flags) ? FV_COLOR_TYPE_BITMAP : LOD->rendered_pixel_type;
-        
+
 //        F_Log(0,"pixeltype1 (%ld)",pixel_type);
     }
     else
@@ -1360,21 +1364,21 @@ F_METHODM(void,BitMap_Blit,FS_BitMap_Blit)
         default:
         {
             F_Log(0,"PixelSize %ld is not supported", fbb.PixelSize);
-            
+
             return;
         }
     }
-    
+
     if (fbb.blit_func == NULL)
     {
         F_Log(0,"No suitable function to blit bitmap");
-        
+
         return;
     }
-    
-    
-    
-    
+
+
+
+
     if (((0xFF000000 & (uint32)(Tags)) == DYNA_ATTR) || TypeOfMem((APTR)(Msg->Tag1)))
     {
         while  (F_DynamicNTI(&Tags, &item, Class))
@@ -1386,7 +1390,7 @@ F_METHODM(void,BitMap_Blit,FS_BitMap_Blit)
                 source_w = MIN(source_w, item.ti_Data);
             }
             break;
-            
+
             case FA_BitMap_Height:
             {
                 source_h = MIN(source_h, item.ti_Data);
@@ -1398,7 +1402,7 @@ F_METHODM(void,BitMap_Blit,FS_BitMap_Blit)
                 blit_mode = item.ti_Data;
             }
             break;
-        
+
             case FA_BitMap_ScaleFilter:
             {
                 scale_filter = item.ti_Data;
@@ -1411,7 +1415,7 @@ F_METHODM(void,BitMap_Blit,FS_BitMap_Blit)
         F_Log(0,"BAD TAGS 0x%08lx: RPort (0x%08lx) Source (%ld : %ld) Target (%ld : %ld, %ld x %ld)",
             Msg->Tag1, Msg->rp, Msg->SourceX, Msg->SourceY,
             Msg->TargetBox->x, Msg->TargetBox->y, Msg->TargetBox->w, Msg->TargetBox->h);
-        
+
         return;
     }
 /*
@@ -1433,7 +1437,7 @@ F_METHODM(void,BitMap_Blit,FS_BitMap_Blit)
             fbb.blit_func
             (
                 &fbb,
- 
+
                 source,
                 source_x, source_y,
 
@@ -1442,7 +1446,7 @@ F_METHODM(void,BitMap_Blit,FS_BitMap_Blit)
             );
         }
         break;
-        
+
         case FV_BitMap_BlitMode_Tile:
         {
             bitmap_blit_tile
@@ -1458,27 +1462,27 @@ F_METHODM(void,BitMap_Blit,FS_BitMap_Blit)
             );
         }
         break;
-         
+
         #if 1
         case FV_BitMap_BlitMode_Scale:
         {
             bitmap_blit_scale
             (
                 &fbb,
-                
+
                 source,
                 source_x, source_y,
                 source_w - source_x, source_h - source_y,
 
                 Msg->TargetBox->x, Msg->TargetBox->y,
                 Msg->TargetBox->w, Msg->TargetBox->h,
-                
+
                 scale_filter
             );
         }
         break;
         #endif
-         
+
         #if 0
         case FV_BitMap_BlitMode_Frame:
         {
@@ -1486,7 +1490,7 @@ F_METHODM(void,BitMap_Blit,FS_BitMap_Blit)
         }
         break;
         #endif
-        
+
         default:
         {
             F_Log(0,"%ld is not a valid blit mode",blit_mode);

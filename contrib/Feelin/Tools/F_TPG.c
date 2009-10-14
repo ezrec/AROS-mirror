@@ -22,17 +22,17 @@ int main()
 {
     if (F_FEELIN_OPEN)
     {
-        ULONG args[] = { (ULONG) "Area", 0 };
+        IPTR args[] = { (IPTR)"Area", 0 };
         APTR rdargs;
 
-        if (rdargs = ReadArgs("CLASS/A",(LONG *)(&args),NULL))
+        if ((rdargs = ReadArgs("CLASS/A",(IPTR *)(&args),NULL)))
         {
             STRPTR name;
 
-            if (name = F_StrNew(NULL,"LIBS:Feelin/%s.fc",args[0]))
+            if ((name = F_StrNew(NULL,"LIBS:Feelin/%s.fc",args[0])))
             {
                 struct Library *FeelinClassBase = OpenLibrary(name,0);
-                
+
                 if (FeelinClassBase)
                 {
                     FClass *cc = F_CreateClassA(NULL,F_Query(FV_Query_PrefsTags,FeelinBase));
@@ -57,12 +57,12 @@ int main()
                             if (app)
                             {
                                 FObject prefs = (FObject) F_Get(app,FA_Application_Preference);
-                                
+
                                 if (prefs)
                                 {
                                     F_Do(grp,(ULONG) "FM_PreferenceGroup_Load",prefs,F_DynamicFindID("FM_Preference_Resolve"),F_DynamicFindID("FM_Preference_ResolveInt"));
                                 }
- 
+
                                 F_Do(win,FM_Notify,FA_Window_CloseRequest,TRUE,app,FM_Application_Shutdown,0);
                                 F_Do(app,FM_Application_Run);
                                 F_DisposeObj(app);
@@ -70,10 +70,10 @@ int main()
 
                             F_Dispose(win_name);
                         }
-                        
+
                         F_DeleteClass(cc);
                     }
-                    
+
                     CloseLibrary(FeelinClassBase);
                 }
                 else

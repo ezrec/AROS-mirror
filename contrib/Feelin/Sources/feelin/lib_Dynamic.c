@@ -8,19 +8,19 @@
 *****************************************************************************
 
  * 08.02 ** 2005/05/30 *
- 
+
 	Dynamic ID space is no longer wasted  if  a  class  defined  methods  or
 	attributes but no new dynamic items.
- 
+
  * 08.01 ** 2005/04/04 *
- 
+
 	Removed a little bug in F_DynamicNTI().  When  an  attribute  failed  to
 	resolve (because the developer used a non existing one), it was replaced
 	with TAG_DONE. But, instead of continuing the parsing of the  tag  list,
 	the  function  was returning TAG_IGNORE (== 1), which corresponds to the
 	second attribute defined by any  class,  if  the  argument  'Class'  was
 	supplied.
- 
+
 */
 
 #include "Private.h"
@@ -169,7 +169,7 @@ F_LIB_DYNAMIC_CREATE
 	if (!Class) return FALSE;
 
 	F_OPool(FeelinBase -> DynamicPool);
-	
+
 	if (Class -> Public.Attributes || Class -> Public.Methods)
 	{
 		struct in_FeelinClass *node;
@@ -195,7 +195,7 @@ F_LIB_DYNAMIC_CREATE
 			/* Attributes  that  use  a  static  ID  e.g.  FA_Right  are  left
 			untouched.  Thus,  an  attribute  can  have  a Dynamic name, but a
 			static numerical representation */
-			
+
 			if (en -> Name[0] >= 'A' && en -> Name[0] <= 'Z')
 			{
 				if ((0xFF000000 & en -> ID) != ATTR_BASE)
@@ -206,9 +206,9 @@ F_LIB_DYNAMIC_CREATE
 			else
 			{
 				F_Log(FV_LOG_CORE,"Invalid attribute name (0x%08lx)(%s)",en -> Name,en -> Name);
-				
+
 				F_RPool(FeelinBase -> DynamicPool);
-			
+
 				return FALSE;
 			}
 		}
@@ -232,7 +232,7 @@ F_LIB_DYNAMIC_CREATE
 				/* A method can be inherited by simply suppling its whole  e.g.
 				"FM_Object_New".  Otherwise the string supplied here is used as
 				the name of the method. */
-				
+
 				if (en -> Name[0] >= 'A' && en -> Name[0] <= 'Z')
 				{
 					if (en -> Name[0] == 'F' && en -> Name[1] == 'M' && en -> Name[2] == '_')
@@ -263,14 +263,14 @@ F_LIB_DYNAMIC_CREATE
 
 	/* if the class dynamic id has not be used, we reset it to  0  to  avoid
 	wasting dynamic space */
- 
+
 	if (!dynamic_id_used)
 	{
 		Class -> DynamicID = 0;
 	}
 
 	F_DynamicResolveTable(Class -> Public.ResolvedIDs);
-	
+
 	f_dynamic_auto_add_class((FClass *) Class,FeelinBase);
 
 	if (Class -> Public.AutoResolvedIDs)
@@ -307,7 +307,7 @@ F_LIB_DYNAMIC_FIND_ATTRIBUTE
 	if (Name)
 	{
 		STRPTR back=Name;
- 
+
 		if (Name[0] == 'F' && Name[1] == 'A' && Name[2] == '_')
 		{
 
@@ -326,7 +326,7 @@ F_LIB_DYNAMIC_FIND_ATTRIBUTE
 			}
 
 			while (*Name != '_') Name++; Name++;
-				
+
 			if (FromClass -> Attributes)
 			{
 				FClassAttribute *en;
@@ -380,7 +380,7 @@ F_LIB_DYNAMIC_FIND_METHOD
 	if (Name)
 	{
 		STRPTR back = Name;
- 
+
 		if (Name[0] == 'F' && Name[1] == 'M' && Name[2] == '_')
 		{
 
@@ -399,7 +399,7 @@ F_LIB_DYNAMIC_FIND_METHOD
 			}
 
 			while (*Name != '_') Name++; Name++;
-				
+
 			if (FromClass -> Methods)
 			{
 				FClassMethod *en;
@@ -519,7 +519,6 @@ F_LIB_DYNAMIC_FIND_ID
 
 #if 0
 //+
-/*
 ///f_dynamic_resolve_table
 F_LIB_DYNAMIC_RESOLVE_TABLE
 {
@@ -633,26 +632,26 @@ F_LIB_DYNAMIC_RESOLVE_TABLE
 #endif
 
 enum  {
-	
+
 		FV_RESOLVE_TYPE_INVALID,
 		FV_RESOLVE_TYPE_ATTRIBUTE,
 		FV_RESOLVE_TYPE_METHOD
 
 		};
- 
+
 F_LIB_DYNAMIC_RESOLVE_TABLE
 {
 	uint32 n=0;
-	
+
 	if (Entries)
 	{
 		FClass *cl = NULL;
 		FDynamicEntry *en;
-		
+
 		for (en = Entries ; en -> Name ; en++)
 		{
 			uint32 type = FV_RESOLVE_TYPE_INVALID;
-			
+
 			if (en -> Name[0] == 'F' && en -> Name[2] == '_')
 			{
 				switch (en -> Name[1])
@@ -661,7 +660,7 @@ F_LIB_DYNAMIC_RESOLVE_TABLE
 					case 'M':   type = FV_RESOLVE_TYPE_METHOD; break;
 				}
 			}
-		
+
 			if (type)
 			{
 				if (cl)
@@ -671,20 +670,20 @@ F_LIB_DYNAMIC_RESOLVE_TABLE
 						cl = NULL;
 					}
 				}
-					 
+
 				if (!cl)
 				{
 					cl = f_dynamic_find_name(en -> Name + 3,FeelinBase);
 				}
-				
+
 				if (cl)
 				{
 				   STRPTR name = en -> Name + 3;
 
 	            while (*name != '_') name++; name++;
-					
+
 //					  F_Log(0,"Class (%s) Entry (%s)(%s)",cl -> Name,en -> Name,name);
-					
+
 					if (type == FV_RESOLVE_TYPE_ATTRIBUTE && cl -> Attributes)
 					{
 						FClassAttribute *attribute;
@@ -696,18 +695,18 @@ F_LIB_DYNAMIC_RESOLVE_TABLE
 								en -> ID = attribute -> ID; n++; break;
 							}
 						}
-					
+
 						if (!attribute -> Name)
 						{
 							F_Log(FV_LOG_CLASS,"Attribute (%s) not defined by Class (%s)",en -> Name,cl -> Name);
-						
+
 							en -> ID = 0;
 	               }
 					}
 					else if (type == FV_RESOLVE_TYPE_METHOD && cl -> Methods)
 					{
 						FClassMethod *method;
-						
+
 						for (method = cl -> Methods ; method -> Function ; method++)
 						{
 							if (F_StrCmp(method -> Name,name,ALL) == 0)
@@ -719,7 +718,7 @@ F_LIB_DYNAMIC_RESOLVE_TABLE
 						if (!method -> Name)
 	               {
 							F_Log(FV_LOG_CLASS,"Method (%s) not defined by Class (%s)",en -> Name,cl -> Name);
-							
+
 							en -> ID = 0;
 	               }
 					}
@@ -746,8 +745,8 @@ F_LIB_DYNAMIC_NTI
 {
 	if(!(*TLP)) return NULL;
 
-	item -> ti_Tag  = NULL;
-	item -> ti_Data = NULL;
+	item -> ti_Tag  = 0;
+	item -> ti_Data = 0;
 
 	for (;;)
 	{
@@ -797,10 +796,10 @@ F_LIB_DYNAMIC_NTI
 						item -> ti_Tag = TAG_IGNORE;
 					}
 				}
-				
+
 				/* save values in the real  tag,  so  that  we  don't  have  to
 				resolve everything again */
- 
+
 				(*TLP) -> ti_Tag  = item -> ti_Tag;
 				(*TLP) -> ti_Data = item -> ti_Data;
 

@@ -18,6 +18,17 @@ USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/Include
 %copy_dir_recursive mmake=feelin-resources src=resources dst=$(FEELINDIR)/resources
 %copy_dir_recursive mmake=feelin-xmlsources src=XMLSources dst=$(FEELINDIR)/XMLSources
 
+
+INCLUDE_FILES := $(subst $(SRCDIR)/$(CURDIR)/,, \
+		$(wildcard $(SRCDIR)/$(CURDIR)/Include/proto/*.h) \
+		$(wildcard $(SRCDIR)/$(CURDIR)/Include/clib/*.h) \
+		$(wildcard $(SRCDIR)/$(CURDIR)/Include/defines/*.h) \
+		$(wildcard $(SRCDIR)/$(CURDIR)/Include/libraries/*.h) \
+		$(wildcard $(SRCDIR)/$(CURDIR)/Include/feelin/*.h))
+
+%copy_includes mmake=feelin-includes dir=Include
+
+
 #MM feelin-prefs : includes linklibs feelin-linklib feelin-icons
 
 %build_progs mmake=feelin-prefs \

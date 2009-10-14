@@ -1,13 +1,13 @@
 /*
 
 $VER: 03.00 (2005/08/10)
- 
+
    Portability update.
-   
+
    FM_Preview_Query implementation
 
 $VER: 02.00 (2005/04/04)
- 
+
    Class rewritten according to FC_Preview
 
 */
@@ -25,28 +25,28 @@ $VER: 02.00 (2005/04/04)
 #define COMPATIBILITY
 
 enum  {
-   
+
       FA_Preview_Spec
 
       };
-      
+
 enum  {
-   
+
       FA_PopColor_AddScheme,
       FA_PopColor_AddPen,
       FA_PopColor_AddRGB
-   
+
       };
- 
+
 ///PopColor_New
 F_METHOD(FObject,PopColor_New)
 {
    struct TagItem *Tags = Msg,item;
-   
+
    BOOL addscheme = TRUE;
    BOOL addpen = TRUE;
    BOOL addrgb = TRUE;
-                     
+
    while  (F_DynamicNTI(&Tags,&item,Class))
    switch (item.ti_Tag)
    {
@@ -54,7 +54,7 @@ F_METHOD(FObject,PopColor_New)
       case FA_PopColor_AddPen:      addpen = item.ti_Data; break;
       case FA_PopColor_AddRGB:      addrgb = item.ti_Data; break;
    }
- 
+
    if (F_SuperDo(Class,Obj,Method,
 
       FA_Frame,        "$popbutton-frame",
@@ -66,17 +66,17 @@ F_METHOD(FObject,PopColor_New)
       TAG_MORE,Msg))
    {
       F_Do(Obj,FM_Notify,FA_Pressed,FALSE,
-      
+
          Obj,"FM_Preview_Adjust",9,
-         
+
          F_CAT(TITLE),
-         
+
          "AdjustColor",
-         
+
          "FA_AdjustColor_AddScheme",   addscheme,
          "FA_AdjustColor_AddPen",      addpen,
          "FA_AdjustColor_AddRGB",      addrgb,
-         
+
          TAG_DONE);
 
       return Obj;
@@ -96,7 +96,7 @@ F_METHODM(uint32,PopColor_Query,FS_Preview_Query)
             return TRUE;
          }
          break;
-          
+
 #ifdef COMPATIBILITY
          case 'c':
          {
@@ -156,7 +156,7 @@ F_METHODM(uint32,PopColor_Query,FS_Preview_Query)
          break;
 
 #ifdef COMPATIBILITY
- 
+
          case 'p':
          {
             if (Msg -> Spec[1] == ':')
@@ -166,7 +166,7 @@ F_METHODM(uint32,PopColor_Query,FS_Preview_Query)
          }
          break;
 #endif
-         
+
          case 's':
          {
 #ifdef COMPATIBILITY
@@ -203,11 +203,11 @@ F_METHODM(uint32,PopColor_Query,FS_Preview_Query)
                return TRUE;
             }
          }
-      
+
          default:
          {
             int32 val;
- 
+
             if (stcd_l(Msg -> Spec,&val))
             {
                return TRUE;
@@ -232,10 +232,10 @@ F_QUERY()
             F_ATTRIBUTES_ADD("AddScheme", FV_TYPE_BOOLEAN),
             F_ATTRIBUTES_ADD("AddPen", FV_TYPE_BOOLEAN),
             F_ATTRIBUTES_ADD("AddRGB", FV_TYPE_BOOLEAN),
-          
+
             F_ARRAY_END
          };
-          
+
          STATIC F_METHODS_ARRAY =
          {
             F_METHODS_ADD        (PopColor_Query,   "FM_Preview_Query"),
@@ -243,11 +243,11 @@ F_QUERY()
 
             F_ARRAY_END
          };
-         
+
          STATIC F_RESOLVES_ARRAY =
          {
             F_RESOLVES_ADD("FA_Preview_Spec"),
-            
+
             F_ARRAY_END
          };
 
@@ -258,8 +258,8 @@ F_QUERY()
             F_TAGS_ADD_ATTRIBUTES,
             F_TAGS_ADD_RESOLVES,
             F_TAGS_ADD_CATALOG,
-            
-            TAG_DONE
+
+            {TAG_DONE}
          };
 
          return F_TAGS;

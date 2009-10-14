@@ -1,19 +1,13 @@
-# Copyright © 2007, The AROS Development Team. All rights reserved.
+# Copyright © 2007-2009, The AROS Development Team. All rights reserved.
 
 include $(TOP)/config/make.cfg
 
 #MM- contrib-feelin : feelin-s feelin-package
-#MM feelin-s
 
-feelin-s : files-copy
-%copy_files_q files="Package-Startup" \
-    dst=$(CONTRIBDIR)/Feelin/S
+#MM feelin-package :
+%copy_files_q files=Feelin dst=$(AROS_PACKAGES) maketarget=feelin-package
 
-#MM feelin-package
-
-feelin-package : files-copy
-%copy_files_q files="Feelin" \
-    dst=$(AROSDIR)/Prefs/Env-Archive/SYS/Packages
+#MM feelin-s :
+%copy_files_q files=Package-Startup dst=$(CONTRIBDIR)/Feelin/S maketarget=feelin-s
 
 #%common
-

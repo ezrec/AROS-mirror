@@ -48,7 +48,7 @@ FImage;
 ///id_mask_create
 
 /* Pixels *must* be 32 bits aligned */
- 
+
 STATIC void id_mask_create(uint8 *Pixels,uint32 *Raster,uint32 Num)
 {
    for ( ; Num ; Num -= 32)
@@ -85,7 +85,7 @@ STATIC int32 id_mask_check(uint8 *Pixels,uint32 Num)
    return FALSE;
 }
 //+
- 
+
 /****************************************************************************
 *** Blitting ****************************************************************
 ****************************************************************************/
@@ -139,14 +139,14 @@ STATIC void MyBltMaskBitMapRastPort(struct BitMap *srcBitMap,int32 xSrc, int32 y
       struct BltMaskHook hook;
 
     /* Define the destination rectangle in the rastport */
-    
+
       rect.MinX = xDest;
       rect.MinY = yDest;
       rect.MaxX = xDest + xSize - 1;
       rect.MaxY = yDest + ySize - 1;
 
     /* Initialize the hook */
-    
+
       hook.hook.h_Entry = (HOOKFUNC)HookFunc_BltMask;
       hook.srcBitMap = srcBitMap;
       hook.srcx = xSrc;
@@ -155,16 +155,16 @@ STATIC void MyBltMaskBitMapRastPort(struct BitMap *srcBitMap,int32 xSrc, int32 y
       hook.desty = yDest;
 
       /* Initialize a bitmap where all plane pointers points to the mask */
-   
+
       InitBitMap(&hook.maskBitMap,src_depth,GetBitMapAttr(srcBitMap,BMA_WIDTH),GetBitMapAttr(srcBitMap,BMA_HEIGHT));
-    
+
       while (src_depth)
       {
          hook.maskBitMap.Planes[--src_depth] = bltMask;
       }
 
       /* Blit onto the Rastport */
-      
+
       DoHookClipRects(&hook.hook,destRP,&rect);
    }
    else
@@ -196,11 +196,11 @@ STATIC APTR id_shared_open(STRPTR Name)
       #else
          if (Shared -> Lock -> fl_Volume == lock -> fl_Volume &&
              Shared -> Lock -> fl_Key    == lock -> fl_Key)
-      #endif	     
+      #endif
          {
             Shared -> UserCount++; break;
          }
-	 
+
       }
 
       if (!Shared)
@@ -210,7 +210,7 @@ STATIC APTR id_shared_open(STRPTR Name)
             DTA_SourceType,   DTST_FILE,
             DTA_GroupID,      GID_PICTURE,
             PDTA_Remap,       FALSE,
-         
+
          TAG_DONE);
 
          if (dt)
@@ -262,7 +262,7 @@ STATIC APTR id_shared_open(STRPTR Name)
                         }
                         pix = Shared -> Pixels;
                      }
-		    
+
 		  #ifdef __AROS__
 		     DeinitRastPort(rp1);
 		     DeinitRastPort(rp2);
@@ -273,7 +273,7 @@ STATIC APTR id_shared_open(STRPTR Name)
 
                      for (y = 0 ; y < Shared -> Height ; y++)
                      {
-                        if ((hasmask = id_mask_check(pix,Shared -> Width)) != NULL)
+                        if ((hasmask = id_mask_check(pix,Shared -> Width)) != 0)
                         {
                            break;
                         }
@@ -298,11 +298,11 @@ STATIC APTR id_shared_open(STRPTR Name)
 /*
                            {
                               BPTR out;
-                              
+
                               if (out = Open("ram:mask",MODE_NEWFILE))
                               {
                                  Write(out,Shared -> Mask,w * h);
-                                  
+
                                  Close(out);
                               }
                            }
@@ -485,12 +485,12 @@ STATIC struct FeelinBrushBitMap * id_shared_setup(struct FeelinSharedBrush *Shar
                }
 
                if (rp2 -> BitMap) FreeBitMap(rp2 -> BitMap);
-               
+
 	    #ifdef __AROS__
 	       DeinitRastPort(rp1);
 	       DeinitRastPort(rp2);
 	    #endif
-	    
+
                F_Dispose(rp1);
 
                if (Shared -> BitMaps)
@@ -571,7 +571,7 @@ F_CODE_CREATE_XML(id_brush_create)
    if (DataTypesBase)
    {
       STRPTR src=NULL;
-      
+
       for ( ; Attribute ; Attribute = Attribute -> Next)
       {
          switch (Attribute -> Name -> ID)
@@ -579,7 +579,7 @@ F_CODE_CREATE_XML(id_brush_create)
             case FV_XML_ID_SRC:  src = Attribute -> Data; break;
          }
       }
-      
+
       if (src)
       {
          if ((buf = F_New(1024)) != NULL)
@@ -620,7 +620,7 @@ F_CODE_DELETE(id_brush_delete)
 {
    id_shared_close(image -> Shared[0]); image -> Shared[0] = NULL;
    id_shared_close(image -> Shared[1]); image -> Shared[1] = NULL;
-   
+
    F_Dispose(image);
 }
 //+
@@ -672,7 +672,7 @@ F_CODE_GET(id_brush_get)
          if (image -> Shared[1]) rc = MAX(rc,image -> Shared[1] -> Width);
       }
       break;
-   
+
       case FA_ImageDisplay_Mask:
       {
          if (image -> Shared[0]) rc = (int32)(image -> Shared[0] -> Mask);
@@ -715,7 +715,7 @@ F_CODE_DRAW(id_brush_draw)
          MyBltMaskBitMapRastPort(map -> Mapped,0,0, Msg -> Render -> RPort,x,y,shared -> Width-a,shared -> Height-b,(ABC|ABNC|ANBC),shared -> Mask);
       #else
          MyBltMaskBitMapRastPort(map -> Mapped,0,0, Msg -> Render -> RPort,x,y,shared -> Width-a,shared -> Height-b,0x0E2,shared -> Mask);
-      #endif      
+      #endif
       }
       else
       {

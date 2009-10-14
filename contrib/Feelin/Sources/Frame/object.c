@@ -29,7 +29,7 @@ F_METHOD(uint32,Frame_New)
         case FA_Frame_InnerTop:    LOD -> UserInner.t = item.ti_Data; break;
         case FA_Frame_InnerRight:  LOD -> UserInner.r = item.ti_Data; break;
         case FA_Frame_InnerBottom: LOD -> UserInner.b = item.ti_Data; break;
-    
+
         case FA_Back:              LOD -> p_back = (STRPTR)(item.ti_Data); break;
     }
 
@@ -48,7 +48,7 @@ F_METHOD(uint32,Frame_New)
 
             return F_SUPERDO();
         }
-        else return NULL;
+        else return 0;
     }
     return F_SUPERDO();
 }
@@ -97,7 +97,7 @@ F_METHOD(void,Frame_Set)
             if (LOD->Public.Back)
             {
                 F_Set(LOD->Public.Back, FA_ImageDisplay_Spec, item.ti_Data);
-            
+
                 F_Draw(Obj, FF_Draw_Object);
             }
         }

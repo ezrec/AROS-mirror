@@ -10,6 +10,6 @@ struct FeelinCatalogEntry FCC_CatalogTable[] =
 	"<align=\"justify\">Click it to open an adjust window or<br>"\
 	"use <b>drag'n'drop</b> facilities to copy<br>"\
 	"from or to another object." },
-	 { NULL }
+	 { 0 }
 };
 

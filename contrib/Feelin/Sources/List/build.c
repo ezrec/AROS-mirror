@@ -88,11 +88,11 @@ F_METHODM(uint32,List_Display,FS_List_Display)
     if (LOD -> Hook_Display && ((uint32)(LOD -> Hook_Display) != FV_List_Hook_String))
     {
         FListDisplay *ld = (FListDisplay *) CallHookPkt(LOD -> Hook_Display,Obj,Msg);
-        
+
         if (ld)
         {
             uint32 i;
-            
+
             for (i = 0 ; i < LOD -> ColumnCount ; i++, ld++)
             {
                 Msg -> Strings[i] = ld -> String;
@@ -107,5 +107,7 @@ F_METHODM(uint32,List_Display,FS_List_Display)
 
         return TRUE;
     }
+
+    return 0; // FIXME: TRUE or FALSE?
 }
 //+

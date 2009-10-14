@@ -6,42 +6,42 @@
 STATIC int32 app_create_ports(struct LocalObjectData *LOD)
 {
     LOD->AppPort = CreateMsgPort();
-    
+
     if (LOD->AppPort == NULL)
     {
         F_Log(FV_LOG_USER,"Unable to create Application's message port");
-        
+
         return FALSE;
     }
-        
+
     LOD -> WindowPort = CreateMsgPort();
- 
+
     if (LOD->WindowPort == NULL)
     {
         F_Log(FV_LOG_USER,"Unable to create Windows' message port");
 
         return FALSE;
     }
- 
+
     LOD -> TimersPort = CreateMsgPort();
-    
+
     if (LOD->TimersPort == NULL)
     {
         F_Log(FV_LOG_USER,"Unable to create Timers' message port");
-        
+
         return FALSE;
     }
- 
+
     LOD -> TimeRequest = CreateIORequest(LOD -> TimersPort,sizeof (struct timerequest));
-    
+
     if (LOD->TimeRequest == NULL)
     {
         F_Log(FV_LOG_USER,"Unable to create IORequest for timer.device");
-        
+
         return FALSE;
     }
-                    
-    if (OpenDevice("timer.device",UNIT_VBLANK,(struct IORequest *) LOD -> TimeRequest,NULL))
+
+    if (OpenDevice("timer.device",UNIT_VBLANK,(struct IORequest *) LOD -> TimeRequest,0))
     {
         F_Log(FV_LOG_USER,"Unable to open timer.device");
     }
@@ -61,7 +61,7 @@ STATIC int32 app_create_ports(struct LocalObjectData *LOD)
 STATIC void app_delete_ports(struct LocalObjectData *LOD)
 {
     Forbid();
-    
+
     if (LOD->TimeRequest)
     {
         if (LOD->AppPort && LOD->Base)
@@ -71,18 +71,18 @@ STATIC void app_delete_ports(struct LocalObjectData *LOD)
                 RemPort(LOD -> AppPort);
             }
         }
-    
+
         CloseDevice((struct IORequest *) LOD -> TimeRequest);
 
         DeleteIORequest(LOD -> TimeRequest);
-        
+
         LOD -> TimeRequest = NULL;
     }
 
     if (LOD->TimersPort)
     {
         struct Message *msg;
- 
+
         while ((msg = GetMsg(LOD -> TimersPort)) != NULL)
         {
             ReplyMsg(msg);
@@ -91,12 +91,12 @@ STATIC void app_delete_ports(struct LocalObjectData *LOD)
 
         LOD -> TimersPort = NULL;
     }
- 
+
 
     if (LOD->WindowPort)
     {
         struct Message *msg;
-        
+
         while ((msg = GetMsg(LOD -> WindowPort)) != NULL)
         {
            ReplyMsg(msg);
@@ -107,7 +107,7 @@ STATIC void app_delete_ports(struct LocalObjectData *LOD)
         LOD -> WindowPort = NULL;
     }
 
- 
+
     if (LOD->AppPort)
     {
         struct Message *msg;
@@ -126,7 +126,7 @@ STATIC void app_delete_ports(struct LocalObjectData *LOD)
 
         DeleteMsgPort(LOD -> AppPort); LOD -> AppPort = NULL;
     }
-    
+
     Permit();
 }
 //+
@@ -141,18 +141,18 @@ STATIC int32 app_create_broker(struct LocalObjectData *LOD,struct TagItem *Tags)
     {
         return FALSE;
     }
-        
+
     xp = CreateMsgPort();
-   
+
     if (xp)
     {
         struct NewBroker *nb = F_New(sizeof (struct NewBroker));
-        
+
         if (nb)
         {
             APTR bk;
             int32 er;
-            
+
             nb -> nb_Version = NB_VERSION;
             nb -> nb_Name    = LOD -> Title;
             nb -> nb_Title   = LOD -> Version + 6;
@@ -161,9 +161,9 @@ STATIC int32 app_create_broker(struct LocalObjectData *LOD,struct TagItem *Tags)
             nb -> nb_Pri     = GetTagData(FA_Application_BrokerPri,0,Tags);
             nb -> nb_Port    = xp;
             nb -> nb_Flags   = COF_SHOW_HIDE;
-                
-            bk = CxBroker(nb,&er);
-   
+
+            bk = CxBroker(nb,(LONG *)&er);
+
             if (bk)
             {
                 LOD -> Broker = bk;
@@ -192,7 +192,7 @@ STATIC void app_delete_broker(struct LocalObjectData *LOD)
         if (LOD -> BrokerPort)
         {
             struct Message *msg;
-            
+
             Forbid();
             DeleteCxObj(LOD -> Broker); LOD -> Broker = NULL;
 
@@ -238,7 +238,7 @@ F_METHOD(ULONG,App_New)
         case FA_Application_Author:      LOD -> Author      = (STRPTR)(item.ti_Data); break;
         case FA_Application_Description: LOD -> Description = (STRPTR)(item.ti_Data); break;
         case FA_Application_Base:        LOD -> Base        = (STRPTR)(item.ti_Data); break;
-    
+
         case FA_Application_ResolveMapping: LOD -> ResolveMap = (FAppResolveMap *)(item.ti_Data); break;
     }
 
@@ -256,13 +256,13 @@ F_METHOD(ULONG,App_New)
         }
 
         LOD -> AppServer = F_SharedOpen("AppServer");
-     
+
         if (LOD -> AppServer)
         {
             /* The FC_Dataspace object is used by objects to store data */
 
             LOD -> Dataspace = DataspaceObject, End;
-            
+
             if (LOD -> Dataspace)
             {
                 /* A new FC_Preference object should only be created if the
@@ -281,7 +281,7 @@ F_METHOD(ULONG,App_New)
                 if (LOD -> Base)
                 {
                     LOD -> Preferences = PreferenceObject,
-                        
+
                         "FA_Preference_Name",         LOD -> Base,
                         "FA_Preference_Reference",    F_Get(LOD -> AppServer,(ULONG) "FA_AppServer_Preference"),
 
@@ -307,7 +307,7 @@ F_METHOD(ULONG,App_New)
                     mach these modifications */
 
                     LOD -> PreferencesNH = (FNotifyHandler *) F_Do(LOD -> Preferences,FM_Notify,"FA_Preference_Update",TRUE,Obj,FM_Application_Update,0);
-                    
+
                     if (LOD -> PreferencesNH)
                     {
                         /* Now that everything is  ready,  the  application
@@ -337,12 +337,14 @@ F_METHOD(ULONG,App_New)
         {
             if (item.ti_Tag == FA_Child)
             {
-                F_DisposeObj((FObject)(item.ti_Data)); rtag -> ti_Tag = TAG_IGNORE; rtag -> ti_Data = NULL;
+                F_DisposeObj((FObject)(item.ti_Data));
+                rtag -> ti_Tag = TAG_IGNORE;
+                rtag -> ti_Data = 0;
             }
         }
     }
 
-    return NULL;
+    return 0;
 }
 //+
 ///App_Dispose
@@ -358,7 +360,7 @@ F_METHOD(void,App_Dispose)
     F_Do(Obj,FM_Application_Sleep);
 
     F_Do(Obj,FM_Application_Save,FV_Application_BOTH);
-    
+
     F_DisposeObj(LOD -> Dataspace); LOD -> Dataspace = NULL;
 
     F_Do(LOD -> Preferences,FM_UnNotify,LOD -> PreferencesNH);
@@ -423,13 +425,13 @@ F_METHOD(void,App_Set)
             }
         }
         break;
-    
+
         case FA_Application_Menu:
         {
             F_Do(LOD->menu, FM_Disconnect);
-            
+
             LOD->menu = (FObject) item.ti_Data;
-            
+
             F_Do(LOD->menu, FM_Connect, LOD->menu);
         }
         break;
@@ -508,13 +510,13 @@ F_METHODM(uint32,App_AddMember,FS_AddMember)
 F_METHODM(void, App_RemMember, FS_RemMember)
 {
     struct LocalObjectData *LOD = F_LOD(Class,Obj);
-        
+
     if (Msg->Member)
     {
         if (Msg->Member == LOD->menu)
         {
             F_Do(Msg->Member, FM_Disconnect);
-     
+
             LOD->menu = NULL;
         }
         else
@@ -523,7 +525,7 @@ F_METHODM(void, App_RemMember, FS_RemMember)
             {
                 F_Do(Msg -> Member, FM_Window_Close);
             }
-            
+
             F_SUPERDO();
         }
     }

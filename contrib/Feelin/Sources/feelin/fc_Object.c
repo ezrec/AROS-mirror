@@ -6,22 +6,22 @@
 *****************************************************************************
 
 $VER: 04.00 (2005/08/04)
- 
+
     Every FC_Object can be turned on-the-fly as a semaphore. FC_Semaphore is
     now deprecated.
-    
+
     The new FM_SetAs method can be used instead of FM_SetAsString (which  is
     now considered deprecated) to set a formated string. It can also be used
     to set a decimal number, an hexadecimal  number  or  a  constant  number
     converted from a given string.
-    
+
     FM_CallHook and FM_CallHookEntry no longer call code with FeelinBase  in
     a6. Using hooks should be avoided as much as possible.
 
 $VER: 03.12 (2005/04/07)
- 
+
     FM_CallHook and FM_CallHookEntry call code with FeelinBase in a6
- 
+
 $VER: 03.10 (2004/12/14)
 
     Notifications are  no  longer  semaphore  locked,  this  was  completely
@@ -76,7 +76,8 @@ struct LocalObjectData
 F_METHOD_NEW(Object_New)
 {
     struct LocalObjectData *LOD = F_LOD(Class,Obj);
-    struct TagItem *Tags = Msg,*item;
+    const struct TagItem *Tags = Msg;
+    struct TagItem *item;
 
     while  ((item = NextTagItem(&Tags)) != NULL)
     switch (item -> ti_Tag)
@@ -103,12 +104,12 @@ F_METHOD_DISPOSE(Object_Dispose)
     {
         F_Do(parent,FM_RemMember,Obj);
     }
- 
+
     if (LOD -> Handlers)
     {
         F_Do(Obj,FM_UnNotify,ALL);
     }
-    
+
     F_Dispose(LOD -> Atomic); LOD -> Atomic = NULL;
 }
 //+
@@ -168,7 +169,7 @@ F_METHOD_SET(Object_Set)
                     case FV_Notify_Window:        target = (FObject) F_Get(Obj,FA_WindowObject);   break;
                     case FV_Notify_Application:   target = (FObject) F_Get(Obj,FA_Application);    break;
                 }
-            
+
 //            F_Log(0,"ATTRIBUTE (0x%08lx)(%s) - TARGET %s{%08lx}",nh -> Attribute,f_find_attribute_name(nh -> Attribute,FeelinBase),_classname(target),target);
 
                 if (nh -> Count)
@@ -189,7 +190,7 @@ F_METHOD_SET(Object_Set)
                         for (i = 0 ; i < nh -> Count ; i++)
                         {
 //                     F_Log(0,"   >> (%ld)(0x%08lx)",i,msg[i]);
- 
+
                             switch (msg[i])
                             {
                                 case FV_Notify_Value:   cpy[i] = item.ti_Data; break;
@@ -312,7 +313,7 @@ F_METHODM(APTR,Object_Notify,FS_Notify)
         }
 
 /*** try to resolve method *************************************************/
-        
+
         CopyMem((APTR)((uint32)(Msg) + sizeof (struct FS_Notify)),(APTR)((uint32)(nh) + sizeof (struct FeelinNotifyHandler)),Msg -> Count * sizeof (uint32));
 
 ///DB_NOTIFY
@@ -371,11 +372,11 @@ F_METHODM(void,Object_UnNotify,FS_UnNotify)
         while ((nh = LOD -> Handlers) != NULL)
         {
             LOD -> Handlers = nh -> Next;
-            
+
             if (FF_NOTIFY_PERFORMING & nh -> Flags)
             {
                 F_Log(FV_LOG_DEV,"Trying to remove a notify handler (0x%08lx) under process. The notify handler will not be disposed to ensure the end of the notify process. Check your source code !!\n   >> Attribute (0x%08lx)(%s) - Target %s{%08lx} - Method (0x%08lx)(%s)",nh,nh -> Attribute,f_find_attribute_name(nh -> Attribute,FeelinBase),_classname(nh -> Target),nh -> Target,nh -> Method,f_find_method_name(nh -> Method,FeelinBase));
- 
+
                 nh -> Next = NULL;
             }
             else F_Dispose(nh);
@@ -435,7 +436,7 @@ F_METHODM(void,Object_SetAs,FS_SetAs)
     int32 nonotify = (FF_SetAs_Notify & Msg -> Flags) ? FALSE : TRUE;
 
 //    F_Log(0,"FLAGS 0x%08lx >> %ld",Msg -> Flags,Msg -> Flags & 0x0000FFFF);
- 
+
     switch (Msg -> Flags & 0x0000FFFF)
     {
         case FV_SetAs_String:
@@ -443,7 +444,7 @@ F_METHODM(void,Object_SetAs,FS_SetAs)
             STRPTR str = F_StrNewA(NULL,Msg -> Data,(APTR)((uint32)(Msg) + sizeof (struct FS_SetAs)));
 
 //         F_Log(0,"NOTIFY (%ld) STRING (0x%08lx)(%s) >> (%s)",!nonotify,Msg -> Data,Msg -> Data,str);
- 
+
             if (str)
             {
                 F_Do(Obj,FM_Set, FA_NoNotify,nonotify, Msg -> Attribute,(uint32)(str), TAG_DONE);
@@ -452,48 +453,48 @@ F_METHODM(void,Object_SetAs,FS_SetAs)
             }
         }
         break;
-        
+
         case FV_SetAs_Decimal:
         {
             int32 val=0;
-            
+
             if (Msg -> Data)
             {
                 stcd_l(Msg -> Data,&val);
             }
-            
+
 //         F_Log(0,"NOTIFY (%ld) DECIMAL (0x%08lx)(%s) >> (%ld)",!nonotify,Msg -> Data,Msg -> Data,val);
-            
+
             F_Do(Obj,FM_Set, FA_NoNotify,nonotify, Msg -> Attribute,val, TAG_DONE);
         }
         break;
-    
+
         case FV_SetAs_Hexadecimal:
         {
             int32 val=0;
-            
+
             if (Msg -> Data)
             {
                 stch_l(Msg -> Data,&val);
             }
-            
+
 //         F_Log(0,"NOTIFY (%ld) HEX (0x%08lx)(%s) >> (%ld)",!nonotify,Msg -> Data,Msg -> Data,val);
 
             F_Do(Obj,FM_Set, FA_NoNotify,nonotify, Msg -> Attribute,val, TAG_DONE);
         }
         break;
-    
+
         case FV_SetAs_Constant:
         {
             int32 val=0;
-            
+
             if (Msg -> Data)
             {
                 val = *((uint32 *)(Msg -> Data));
             }
-            
+
 //         F_Log(0,"NOTIFY (%ld) CONSTANT (0x%08lx)(%s) >> (%08lx)",Msg -> Notify,Msg -> Data,Msg -> Data,*((uint32 *)(Msg -> Data)));
- 
+
             F_Do(Obj,FM_Set, FA_NoNotify,nonotify, Msg -> Attribute,val, TAG_DONE);
         }
         break;
@@ -551,7 +552,7 @@ F_METHODM(uint32,Object_CallHookEntry,FS_CallHookEntry)
         hook.h_Entry            = (HOOKFUNC) Msg -> Entry;
         hook.h_SubEntry         = NULL;
         hook.h_Data             = NULL;
- 
+
         return CallHookPkt(&hook,Obj,++Msg);
     }
     return 0;
@@ -564,13 +565,13 @@ F_METHODM(uint32,Object_Lock,FS_Lock)
     struct LocalObjectData *LOD = F_LOD(Class,Obj);
 
     Forbid();
- 
+
     if (!LOD -> Atomic)
     {
         LOD -> Atomic = F_New(sizeof (struct SignalSemaphore));
 
 //      F_Log(0,"NEW ATOMIC 0x%08lx",LOD -> Atomic);
- 
+
         if (LOD -> Atomic)
         {
             InitSemaphore(LOD -> Atomic);
@@ -578,7 +579,7 @@ F_METHODM(uint32,Object_Lock,FS_Lock)
     }
 
     Permit();
-    
+
     if (LOD -> Atomic)
     {
         if (FF_Lock_Attempt & Msg -> Flags)
@@ -617,7 +618,7 @@ F_METHOD(void,Object_Unlock)
     if (LOD -> Atomic)
     {
 //      F_Log(0,"Owner (%s)(0x%08lx)",LOD -> Atomic -> ss_Owner -> tc_Node.ln_Name,LOD -> Atomic -> ss_Owner);
-        
+
         ReleaseSemaphore(LOD -> Atomic);
     }
     else
@@ -643,7 +644,7 @@ STATIC F_ATTRIBUTES_ARRAY =
     F_ATTRIBUTES_ADD_BOTH("Child",        FV_TYPE_OBJECT,  FA_Child),
     F_ATTRIBUTES_ADD_BOTH("ContextHelp",  FV_TYPE_STRING,  FA_ContextHelp),
     F_ATTRIBUTES_ADD_BOTH("ContextMenu",  FV_TYPE_OBJECT,  FA_ContextMenu),
-    
+
     F_ARRAY_END
 };
 
@@ -669,7 +670,7 @@ STATIC F_METHODS_ARRAY =
     F_METHODS_ADD_BOTH(Object_Null,           "Disconnect",     FM_Disconnect),
     F_METHODS_ADD_BOTH(Object_Null,           "AddMember",      FM_AddMember),
     F_METHODS_ADD_BOTH(Object_Null,           "RemMember",      FM_RemMember),
-    
+
     F_ARRAY_END
 };
 
@@ -678,7 +679,7 @@ STATIC F_TAGS_ARRAY =
     F_TAGS_ADD_LOD,
     F_TAGS_ADD_METHODS,
     F_TAGS_ADD_ATTRIBUTES,
-    
+
     F_ARRAY_END
 };
 

@@ -13,7 +13,7 @@ F_METHOD(uint32,String_New)
     LOD -> Flags = FF_String_AdvanceOnCR;
     LOD -> Max   = 0;
     LOD -> Sel   = 1;
-    
+
     LOD -> p_Cursor     = "$string-cursor";
     LOD -> p_Blink      = "$string-blink";
     LOD -> p_BlinkSpeed = "$string-blink-speed";
@@ -61,7 +61,7 @@ F_METHOD(void,String_Set)
 {
     struct LocalObjectData *LOD  = F_LOD(Class,Obj);
     struct TagItem *Tags = Msg,item,*tag;
-    
+
     while  ((tag = F_DynamicNTI(&Tags,&item,Class)) != NULL)
     switch (item.ti_Tag)
     {
@@ -74,13 +74,13 @@ F_METHOD(void,String_Set)
                     LOD -> Accept = "0123456789";
                 }
                 break;
-               
+
                 case FV_String_Hexadecimal:
                 {
                     LOD -> Accept = "0123456789ABCDEFabcdef";
                 }
                 break;
-               
+
                 default:
                 {
                     LOD -> Accept = (STRPTR)(item.ti_Data);
@@ -118,13 +118,13 @@ F_METHOD(void,String_Set)
                     while (*str)
                     {
                         String_Insert(Class,Obj,*str++);
-                       
+
                         if (LOD -> Max)
                         {
                             if (LOD -> Len + 1 == LOD -> Max) break;
                         }
                     }
-                    
+
                     F_Dispose(LOD -> Undo);
                     LOD -> Undo = F_StrNew(NULL,"%s",LOD -> String);
                 }
@@ -139,14 +139,14 @@ F_METHOD(void,String_Set)
                         F_Dispose(LOD -> String); LOD -> String = NULL; LOD -> Allocated = 0;
                     }
                 }
-             
+
     //            F_Log(0,"len (%ld)(%s)(%ld)",LOD -> Len,LOD -> String,LOD -> String[LOD -> Len]);
 
                 LOD -> Pos = 0;
                 LOD -> Cur = 0;
-                
+
                 F_Draw(Obj,FF_Draw_Object);
-                
+
                 tag -> ti_Data = (uint32) LOD -> String;
             }
         }
@@ -201,7 +201,7 @@ F_METHOD(void,String_Get)
    while  (F_DynamicNTI(&Tags,&item,Class))
    switch (item.ti_Tag)
    {
-      case FA_String_AdvanceOnCR:   F_STORE(NULL != (LOD -> Flags & FF_String_AdvanceOnCR)); break;
+      case FA_String_AdvanceOnCR:   F_STORE(0 != (LOD -> Flags & FF_String_AdvanceOnCR)); break;
       case FA_String_AttachedList:  F_STORE(LOD -> AttachedList); break;
       case FA_String_Blink:         F_STORE(LOD -> Blink);  break;
       case FA_String_BlinkSpeed:    F_STORE(LOD -> BlinkSpeed);   break;

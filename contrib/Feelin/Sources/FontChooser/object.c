@@ -50,7 +50,7 @@ F_METHOD(FObject,FontChooser_New)
 
    F_Do(LOD -> name_list,FM_Notify,"FA_List_Active",FV_Notify_Always,
         Obj,F_IDM(FM_FontChooser_ActivateName),1,FV_Notify_Value);
-        
+
    F_Do(LOD -> name_list,FM_Notify,"FA_List_Activation",FV_List_Activation_DoubleClick,
         Obj,FM_Set,2,F_IDA(FA_FontChooser_Choosed),TRUE);
 
@@ -141,7 +141,7 @@ F_METHOD(void,FontChooser_Set)
       {
          uint32 active_name=0;
          uint32 active_size=0;
-         
+
          F_Dispose(LOD -> spec);
          LOD -> spec = F_StrNew(NULL,"%s",item.ti_Data);
 
@@ -221,8 +221,8 @@ F_METHODM(void,FontChooser_ActivateName,FS_FontChooser_ActivateName)
 
       /* stegerg: CHECKME/FIXME size_string my be NULL. Therefore I added some checks */
       {
-      	 STRPTR size_string = F_Get(LOD -> size_string,(uint32) "FA_String_Contents");
-	 
+      	 STRPTR size_string = (STRPTR)F_Get(LOD -> size_string,(uint32) "FA_String_Contents");
+
 	 if (size_string)
 	 {
             current_size = atol(size_string);
@@ -288,7 +288,7 @@ F_METHOD(void,FontChooser_ActivateBoth)
    F_Dispose(LOD -> spec);
 
    LOD -> spec = F_StrNew(NULL,"%s/%s",F_Get(LOD -> name_string,(uint32) "FA_String_Contents"),F_Get(LOD -> size_string,(uint32) "FA_String_Contents"));
-   
+
    if (LOD -> spec)
    {
       F_Set(LOD -> preview,FA_Font,(uint32)(LOD -> spec));

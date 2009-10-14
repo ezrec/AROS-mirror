@@ -36,7 +36,7 @@ enum    {
 *** Structures **************************************************************
 ****************************************************************************/
 
-typedef struct LocalObjectData
+struct LocalObjectData
 {
     uint32                          numcolors;
     uint32                         *colors;

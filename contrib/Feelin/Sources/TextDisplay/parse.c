@@ -134,7 +134,7 @@ STATIC FTDParseAttribute attr_td_font[] =
    { "color",    5, FF_TD_TYPE_DEC |
                     FF_TD_TYPE_HEX |
                     FF_TD_TYPE_STRING,   resolve_td_pen_names,   0x000000 },
-   { "face",     4, FF_TD_TYPE_STRING,   NULL,                   NULL },
+   { "face",     4, FF_TD_TYPE_STRING,   NULL,                   0 },
    { "size",     4, FF_TD_TYPE_DEC,      NULL,                   FV_TD_CONTEXT_FONT_SIZE_SAME },
 
    F_ARRAY_END
@@ -156,22 +156,22 @@ STATIC FTDParseAttribute attr_td_spacing[] =
 
 #define FF_TD_ATTR_SELF                         (1 << 0)
 #define FF_TD_ASIS                              (1 << 1)
-    
+
 //   { "img",      3, FV_TD_IMG,           FV_TD_NONE,                           0, attr_td_img      },
- 
+
 STATIC FTDParseEntry ParseTable[] =
 {
-    { "align",      5, FV_TD_ALIGN,         FV_TD_NONE,             FF_TD_ATTR_SELF, attr_td_align    },
-    { "b",          1, FV_TD_BOLD_ON,       FV_TD_BOLD_OFF,                       0, NULL             },
-    { "br",         2, FV_TD_BR,            FV_TD_NONE,                           0, NULL             },
-    { "font",       4, FV_TD_FONT_ON,       FV_TD_FONT_OFF,                       0, attr_td_font     },
-    { "hr",         2, FV_TD_HR,            FV_TD_NONE,                           0, attr_td_hr       },
-    { "i",          1, FV_TD_ITALIC_ON,     FV_TD_ITALIC_OFF,                     0, NULL             },
-    { "image",      5, FV_TD_IMAGE,         FV_TD_NONE,                  FF_TD_ASIS, NULL             },
-    { "spacing",    7, FV_TD_SPACING,       FV_TD_NONE,             FF_TD_ATTR_SELF, attr_td_spacing  },
-    { "pens",       4, FV_TD_PENS_ON,       FV_TD_PENS_OFF,                       0, attr_td_pens     },
-    { "stop",       4, FV_TD_STOP_ON,       FV_TD_STOP_OFF,                       0, NULL             },
-    { "u",          1, FV_TD_UNDERLINED_ON, FV_TD_UNDERLINED_OFF,                 0, NULL             },
+    { "align",      5, {FV_TD_ALIGN,         FV_TD_NONE},             FF_TD_ATTR_SELF, attr_td_align    },
+    { "b",          1, {FV_TD_BOLD_ON,       FV_TD_BOLD_OFF},                       0, NULL             },
+    { "br",         2, {FV_TD_BR,            FV_TD_NONE},                           0, NULL             },
+    { "font",       4, {FV_TD_FONT_ON,       FV_TD_FONT_OFF},                       0, attr_td_font     },
+    { "hr",         2, {FV_TD_HR,            FV_TD_NONE},                           0, attr_td_hr       },
+    { "i",          1, {FV_TD_ITALIC_ON,     FV_TD_ITALIC_OFF},                     0, NULL             },
+    { "image",      5, {FV_TD_IMAGE,         FV_TD_NONE},                  FF_TD_ASIS, NULL             },
+    { "spacing",    7, {FV_TD_SPACING,       FV_TD_NONE},             FF_TD_ATTR_SELF, attr_td_spacing  },
+    { "pens",       4, {FV_TD_PENS_ON,       FV_TD_PENS_OFF},                       0, attr_td_pens     },
+    { "stop",       4, {FV_TD_STOP_ON,       FV_TD_STOP_OFF},                       0, NULL             },
+    { "u",          1, {FV_TD_UNDERLINED_ON, FV_TD_UNDERLINED_OFF},                 0, NULL             },
 
     F_ARRAY_END
 };
@@ -218,7 +218,7 @@ uint32 td_resolve(FTDParseAttribute *Attribute,STRPTR Data,uint32 DataLength,uin
             }
          }
          break;
-          
+
          case 3:
          {
             if (F_StrCmp("yes",Data,3) == 0)
@@ -259,7 +259,7 @@ uint32 td_resolve(FTDParseAttribute *Attribute,STRPTR Data,uint32 DataLength,uin
    {
       uint32 len;
 
-      if ((len = stcd_l(Data,(LONG *)(&value))) != NULL)
+      if ((len = stcd_l(Data,(long *)(&value))) != 0)
       {
          if (Data[len] == '%')
          {
@@ -286,7 +286,7 @@ uint32 td_resolve(FTDParseAttribute *Attribute,STRPTR Data,uint32 DataLength,uin
    {
       if (*Data == '#')
       {
-         stch_l(Data + 1,(LONG *)(&value));
+         stch_l(Data + 1,(long *)(&value));
          done = FV_TD_RESULT_TYPE_HEX;
          goto __done;
       }
@@ -362,7 +362,7 @@ STATIC STRPTR td_parse_attributes(STRPTR s,FTDParseEntry *entry,FTDParseResult *
       {
          F_Log(FV_LOG_DEV,"unexpected end of data"); return s;
       }
-      
+
       for (attribute = entry -> Attributes ; attribute -> Name ; attribute++)
       {
          if (s - item == attribute -> NameLength)
@@ -403,7 +403,7 @@ STATIC STRPTR td_parse_attributes(STRPTR s,FTDParseEntry *entry,FTDParseResult *
                   else
                   {
                      quote = 0;
- 
+
                      while (*s && *s != ' ' && *s != '<' && *s != '>' && *s != '/') s++; // skip spaces
 
                      if (!*s)
@@ -428,26 +428,26 @@ STATIC STRPTR td_parse_attributes(STRPTR s,FTDParseEntry *entry,FTDParseResult *
                   {
                      s++;
                   }
-               
+
 //                  F_Log(0,"ATTRIBUTE_DONE >> (%-16.16s)",s);
                }
-               
+
                break;
             }
             else if (cmp < 0)
             {
                F_Log(FV_LOG_DEV,"attribute not found (stop at '%s')",attribute -> Name);
-               
+
                break;
             }
          }
          attr_pos++;
       }
-      
+
       if (item == s)
       {
          F_Log(FV_LOG_DEV,"syntax error (%-16.16s)",item);
- 
+
          return s;
       }
    }
@@ -462,7 +462,7 @@ STRPTR td_parse_markup(STRPTR s,FTDParseResult *result)
     result -> ID = FV_TD_NONE;
 
 //   F_Log(0,"PARSE MARKUP (%-16.16s)",s);
- 
+
     if (*s)
     {
         FTDParseEntry *entry;
@@ -497,13 +497,13 @@ STRPTR td_parse_markup(STRPTR s,FTDParseResult *result)
                 if (cmp == 0)
                 {
                     result -> ID = entry -> ID[(terminator) ? 1 : 0];
- 
+
                     if (FF_TD_ASIS & entry -> Flags)
                     {
                         STRPTR copy;
- 
+
                         item--;
-                        
+
                         while (*s && *s != '>') s++;
 
                         if (*s == '>')
@@ -512,7 +512,7 @@ STRPTR td_parse_markup(STRPTR s,FTDParseResult *result)
                             {
                                CopyMem(item,copy,s - item);
                             }
-                        
+
                             if (s[-1] == '/')
                             {
                                 copy[s - item] = '>';
@@ -522,15 +522,15 @@ STRPTR td_parse_markup(STRPTR s,FTDParseResult *result)
                                 copy[s - item] = '/';
                                 copy[s - item + 1] = '>';
                             }
-                        
+
                             s++;
-                                
+
                             result -> Types[FV_TD_RESULT_IMAGE_SPEC] = FV_TD_RESULT_TYPE_STRING;
                             result -> Attributes[FV_TD_RESULT_IMAGE_SPEC] = (uint32) copy;
-                            
+
                             //F_Log(0,"COPY: (0x%08lx)(%s)",copy,copy);
                         }
-                        
+
                         break;
                     }
                     else
@@ -540,7 +540,7 @@ STRPTR td_parse_markup(STRPTR s,FTDParseResult *result)
                         if (!terminator && ((attribute = entry -> Attributes) != NULL))
                         {
                            uint32 attr_pos = 0;
-                           
+
                            /* set default values */
 
                            for ( ; attribute -> Name ; attribute++)
@@ -550,9 +550,9 @@ STRPTR td_parse_markup(STRPTR s,FTDParseResult *result)
 
                               attr_pos++;
                            }
-                           
+
                            /* is the markup empty ? */
-          
+
                            if (item[entry -> NameLength] != '>')
                            {
 
@@ -569,11 +569,11 @@ STRPTR td_parse_markup(STRPTR s,FTDParseResult *result)
                               s = td_parse_attributes(s,entry,result);
                            }
                         }
-                     
+
                         if (*s == '>') s++;
-                           
+
          //               F_Log(0,"RETURN (0x%08lx)(%-16.16s)",s,s);
-                        
+
                         break;
                     }
                 }

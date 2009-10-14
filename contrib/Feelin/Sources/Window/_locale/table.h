@@ -18,6 +18,6 @@ struct FeelinCatalogEntry FCC_CatalogTable[] =
 	 { 0x006e, NULL, "Complex Rendering" },
 	 { 0x006f, NULL, "Resizing" },
 	 { 0x0070, NULL, "Drawing" },
-	 { NULL }
+	 { 0 }
 };
 

@@ -31,7 +31,7 @@ int main()
     {
         Printf("Feelin is not running.\n");
     }
-    else if (FeelinInternalBase = (struct in_FeelinBase *) OpenLibrary("feelin.library",FV_FEELIN_VERSION))
+    else if ((FeelinInternalBase = (struct in_FeelinBase *) OpenLibrary("feelin.library",FV_FEELIN_VERSION)))
     {
         FPool *pool;
         FPuddle *puddle;
@@ -39,13 +39,13 @@ int main()
         ULONG s1,s2,s3,n1=0,n2=0,n3=0,f=0,
               args[] = { FALSE, 0};
         APTR  rdargs;
-        
+
         uint32 spreading=0;
         uint32 i;
-      
+
 /*** read arguments ********************************************************/
 
-        if (rdargs = ReadArgs("T=TREE/S",(LONG *)(&args),NULL))
+        if ((rdargs = ReadArgs("T=TREE/S",(IPTR *)(&args),NULL)))
         {
             FreeArgs(rdargs);
         }
@@ -70,7 +70,7 @@ int main()
             if ((puddle = pool -> puddles) != NULL)
             {
                 ULONG pf = 0;
-     
+
                 if (args[0]) Printf("\n");
 
                 for ( ; puddle ; puddle = puddle -> next)
@@ -87,7 +87,7 @@ int main()
 
                         if (SetSignal(0L,SIGBREAKF_CTRL_C) & SIGBREAKF_CTRL_C)
                         {
-                           Printf("*** Break\n"); return;
+                           Printf("*** Break\n"); return 0;
                         }
                     }
 
@@ -106,7 +106,7 @@ int main()
         }
 
         if (args[0]) Printf("\n");
-        
+
         for (i = 0 ; i < FV_MEMORY_HASH_SIZE + 1; i ++)
         {
             if (FeelinInternalBase->hash_puddles[i])
@@ -114,7 +114,7 @@ int main()
                 spreading++;
             }
         }
- 
+
         Printf("[1mUsed[0m %ld bytes (%ld%%), [1mFree[0m %ld bytes (%ld%%), [1mTotal[0m %ld bytes.\n",s1,s1 * 100 / (s1+f),f,f * 100 / (s1+f),s1+f);
         Printf("in %ld [1mPools[0m, %ld [1mPuddles[0m and %ld [1mChunks[0m. Puddles spreading %ld%%.\n",n1,n2,n3,spreading * 100 / n2);
 

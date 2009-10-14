@@ -6,13 +6,13 @@
 *****************************************************************************
 
 $VER: 09.00 (2005/05/18)
- 
+
    GROG: Modifications for the new design.  Morphos  port  and  Mr  Proper.
    Replace  Forbid()/Permit()  by  ObtainSemaphore()/RelaseSemaphore(). 68k
    method call added.
-   
+
    OLAV: Added Metaclass features.
- 
+
 $VER: 08.10 (2005/01/13)
 
    The whole OOS is finaly in C, even the almighty invokation  functions  :
@@ -40,17 +40,17 @@ F_LIB_FIND_CLASS
    if (key_length)
    {
       FHashLink *link;
-      
+
       /*OLAV: Quitte à utiliser des sémaphore autant utiliser les bons  :-)
       Henes  sert  à  arbitrer  l'ouverture  de  la bibliothèque, celui des
       classes est contenu dans 'ClassesPool'.
-      
+
       Note: si tu regardes les functions qui appelle F_FindClass() tu veras
       que   le   sémaphore   est   toujours   bloqué  lorsque  la  fonction
       F_FindClass() est appelée. */
-  
+
       F_OPool(FeelinBase -> ClassesPool);
-      
+
       link = F_HashFind(FeelinBase -> HashClasses,Name,key_length,NULL);
 
       F_RPool(FeelinBase -> ClassesPool);
@@ -66,7 +66,7 @@ F_LIB_FIND_CLASS
 ///f_open_class
 F_LIB_OPEN_CLASS
 {
-    FClass *cl; 
+    FClass *cl;
 
     F_OPool(FeelinBase -> ClassesPool);
 
@@ -93,44 +93,44 @@ F_LIB_OPEN_CLASS
                 /* Before creating the class, I request  FV_Query_MetaTags.
                 These tags are used to create the class of the class object
                 (the meta class). */
-                
+
                 if (tags)
                 {
                     STRPTR meta_name = F_StrNew(NULL,":meta:%s",Name);
-      
+
                     struct in_FeelinClass *meta = F_NewObj(FC_Class,
-                          
+
                           FA_Class_Super,   FC_Class,
                           FA_Class_Pool,    FALSE,
                           FA_Class_Name,    meta_name,
-                          
+
                           TAG_MORE, tags);
-                          
+
                     F_Dispose(meta_name);
 
                     if (meta)
                     {
                        //F_Log(0,"OPEN(%s) META 0x%08lx %ld",Name,meta,meta -> Public.UserCount);
-                 
-                       if (tags = F_Query(FV_Query_ClassTags,(struct FeelinBase *) FeelinBase))
+
+                       if ((tags = F_Query(FV_Query_ClassTags,(struct FeelinBase *) FeelinBase)))
                        {
-                          if (cl = F_NewObj(meta -> Public.Name,
-                                            
+                          if ((cl = F_NewObj(meta -> Public.Name,
+
                              FA_Class_Name,    Name,
                              FA_Class_Module,  FeelinClassBase,
-                             
-                          TAG_MORE, tags))
+
+                          TAG_MORE, tags)))
                           {
                              // the module is saved into meta class
-                             
+
                              OpenLibrary(name,0);
-                             
+
                              //F_Log(0,"META 0x%08lx %ld - CLASSMETA 0x%08lx - FC_CLASS 0x%08lx",meta,meta -> Public.UserCount,_class(cl),FeelinBase -> ClassClass);
 
                              meta -> Module = FeelinClassBase;
                           }
                        }
-                    
+
                        if (!cl)
                        {
                           F_DisposeObj(meta);
@@ -144,10 +144,10 @@ F_LIB_OPEN_CLASS
                     if (tags)
                     {
                         cl = F_NewObj(FC_Class,
-                        
+
                             FA_Class_Name,    Name,
                             FA_Class_Module,  FeelinClassBase,
-                            
+
                             TAG_MORE, tags);
                     }
                 }
@@ -183,7 +183,7 @@ F_LIB_CLOSE_CLASS
    if (Class)
    {
       F_OPool(FeelinBase -> ClassesPool);
- 
+
       if ((--Class -> Public.UserCount) == 0)
       {
          if (Class -> Module)
@@ -194,13 +194,14 @@ F_LIB_CLOSE_CLASS
 
       F_RPool(FeelinBase -> ClassesPool);
    }
-   return NULL;
+   return 0;
 }
 //+
 ///f_create_classA
 F_LIB_CREATE_CLASS
 {
-   struct TagItem *next = Tags,*item;
+   const struct TagItem *next = Tags;
+   struct TagItem *item;
    FClass *cl=NULL;
 
    F_OPool(FeelinBase -> ClassesPool);
@@ -271,7 +272,7 @@ F_LIB_DO
           ((0xFF000000 & Method) != FCCM_BASE))
       {
          FClassMethod *m = F_DynamicFindMethod((STRPTR)(Method),_class(Obj),NULL);
-         
+
          if (m)
          {
             Method = m -> ID;
@@ -399,7 +400,7 @@ F_LIB_NEW_OBJ
          {
             return Obj;
          }
- 
+
          F_Do(Obj,FM_Dispose);
       }
       F_CloseClass((FClass *) Class);
@@ -421,7 +422,7 @@ F_LIB_MAKE_OBJ
                FA_SetMax,           FV_SetBoth,
                FA_ChainToCycle,     FALSE,
                FA_Text,             Params[0],
-            
+
             TAG_MORE, Params + 1);
          }
          else
@@ -449,7 +450,7 @@ F_LIB_MAKE_OBJ
             FA_InputMode,          FV_InputMode_Release,
             FA_Text,               Params[0],
             FA_Text_PreParse,     "<align=center>",
-         
+
          TAG_MORE, Params + 1);
       }
 
@@ -471,7 +472,7 @@ F_LIB_MAKE_OBJ
            "FA_Numeric_Min",       Params[1],
            "FA_Numeric_Max",       Params[2],
            "FA_Numeric_Value",     Params[3],
-            
+
          TAG_MORE, Params + 4);
       }
 
@@ -490,30 +491,30 @@ F_LIB_MAKE_OBJ
       case FV_MakeObj_Prop:
       {
          return PropObject,
-            
+
             FA_Horizontal,         Params[0],
            "FA_Prop_Entries",      Params[1],
            "FA_Prop_Visible",      Params[2],
            "FA_Prop_First",        Params[3],
-            
+
             TAG_MORE, Params + 4);
       }
 
       case FV_MakeObj_String:
       {
          return StringObject,
-            
+
             FA_SetMax,             FV_SetHeight,
            "FA_String_Contents",   Params[0],
            "FA_String_MaxLen",     Params[1],
-            
+
             TAG_MORE, Params + 2);
       }
 
       case FV_MakeObj_Checkbox:
       {
          return ImageObject,
-            
+
             FA_SetMin,           FV_SetBoth,
             FA_SetMax,           FV_SetBoth,
             FA_InputMode,        FV_InputMode_Toggle,
@@ -522,7 +523,7 @@ F_LIB_MAKE_OBJ
             FA_Frame,           "$checkbox-frame",
             FA_ColorScheme,     "$checkbox-scheme",
            "FA_Image_Spec",     "$checkbox-image",
-            
+
             TAG_MORE, Params + 1);
       }
    }
@@ -551,7 +552,7 @@ F_LIB_DISPOSE_OBJ
          {
             F_Log(FV_LOG_DEV,"(db)F_DisposeObj() 0x%08lx is not an Object !! - Class 0x%08lx",Obj,Class);
 
-            return NULL;
+            return 0;
          }
       }
 //+
@@ -567,7 +568,7 @@ F_LIB_DISPOSE_OBJ
    /* I always return NULL when I free a resource... it's one part  of  the
    mystery of life :-) */
 
-   return NULL;
+   return 0;
 }
 //+
 

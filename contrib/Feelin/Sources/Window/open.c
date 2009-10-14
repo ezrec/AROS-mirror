@@ -70,7 +70,7 @@ F_METHOD(struct Window *,Window_Open)
     }
 
     F_Do(Obj,FM_Window_Layout);
-    
+
 //    F_Log(0,"OPEN %ld : %ld, %ld x %ld",LOD->Box.x,LOD->Box.y,LOD->Box.w,LOD->Box.h);
 
     /* There is two way of opening a window. The first one  is  for  windows
@@ -147,13 +147,13 @@ F_METHOD(struct Window *,Window_Open)
         F_Do(LOD->Application,FM_Application_ModifyEvents,window_collect_events(Class,Obj),Obj);
 
         LOD->AppWin = AddAppWindow(MAKE_ID('A','P','P','W'),(uint32)(Obj),LOD->Win,LOD->Win->UserPort,NULL);
- 
+
         F_Do(Obj,FM_Set,
 
             FA_NoNotify,            TRUE,
             FA_Window_Title,        LOD->WinTitle,
             FA_Window_ScreenTitle,  LOD->ScrTitle,
-            
+
             TAG_DONE);
 
         F_Do(LOD->Decorator,FM_Show);
@@ -171,7 +171,7 @@ F_METHOD(struct Window *,Window_Open)
 __error:
 
     F_Do(Obj,FM_Window_Cleanup);
-    
+
     return NULL;
 }
 //+
@@ -193,28 +193,28 @@ F_METHOD(void,Window_Close)
     {
         if (LOD->Render)
         {
-            F_Set(Obj,FA_Window_ActiveObject,NULL);
-            
+            F_Set(Obj,FA_Window_ActiveObject,0);
+
             F_Do(LOD->Root,FM_Hide);
             F_Do(LOD->Decorator,FM_Hide);
 
-            F_Set(LOD->Render,FA_Render_RPort,NULL);
+            F_Set(LOD->Render,FA_Render_RPort,0);
         }
 
         LOD->Box.x = win->LeftEdge;
         LOD->Box.y = win->TopEdge;
         LOD->Box.w = win->Width;
         LOD->Box.h = win->Height;
-            
+
         if (LOD->AppWin)
         {
             RemoveAppWindow(LOD->AppWin); LOD->AppWin = NULL;
         }
-        
+
         F_Do(LOD->Application, FM_Application_ModifyEvents, 0, Obj);
-        
+
         LOD->Win = NULL;
-        
+
         CloseWindow(win);
     }
 

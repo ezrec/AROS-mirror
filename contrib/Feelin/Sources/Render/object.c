@@ -9,8 +9,8 @@ F_METHOD(FObject,Render_New)
 {
    struct LocalObjectData *LOD  = F_LOD(Class,Obj),
                           *friend;
-   struct TagItem         *Tags = Msg,
-                          *item;
+   const struct TagItem   *Tags = Msg;
+   struct TagItem         *item;
 
    if ((friend = (APTR) GetTagData(FA_Render_Friend,NULL,Tags)) != NULL)
    {
@@ -19,7 +19,7 @@ F_METHOD(FObject,Render_New)
       LOD -> Window      = friend -> Window;
       LOD -> RPort       = friend -> RPort;
       LOD -> Palette     = friend -> Palette;
-      
+
       if (FF_Render_TrueColors & friend -> Flags)
       {
          LOD -> Flags = FF_Render_TrueColors;
@@ -48,7 +48,7 @@ F_METHOD(FObject,Render_New)
             LOD -> Flags |= FF_Render_TrueColors;
          }
       }
-   
+
       F_DoA(Obj,FM_Set,Msg);
 
       return Obj;
@@ -66,8 +66,8 @@ F_METHOD(FObject,Render_New)
 F_METHOD(void,Render_Get)
 {
    struct LocalObjectData *LOD  = F_LOD(Class,Obj);
-   struct TagItem         *Tags = Msg,
-                          *item;
+   const struct TagItem   *Tags = Msg;
+   struct TagItem         *item;
 
    while  ((item = NextTagItem(&Tags)) != NULL)
    switch (item -> ti_Tag)
@@ -84,8 +84,8 @@ F_METHOD(void,Render_Get)
 F_METHOD(void,Render_Set)
 {
    struct LocalObjectData *LOD  = F_LOD(Class,Obj);
-   struct TagItem         *Tags = Msg,
-                          *item;
+   const struct TagItem   *Tags = Msg;
+   struct TagItem         *item;
 
    while  ((item = NextTagItem(&Tags)) != NULL)
    switch (item -> ti_Tag)
@@ -93,10 +93,10 @@ F_METHOD(void,Render_Set)
       case FA_Render_RPort:
       {
          LOD -> RPort = (struct RastPort *)(item -> ti_Data);
-         
+
          /*
          LOD -> Flags &= ~FF_Render_TrueColors;
-         
+
          if (LOD -> RPort = (struct RastPort *)(item -> ti_Data))
          {
             if (LOD -> RPort -> BitMap)
@@ -455,7 +455,7 @@ F_METHODM(void,Render_RemClip,FS_Render_RemClip)
 
 /*  CreateBuffer()  and  DeleteBuffer()  are  not  really  what  I  want...
 FC_Render needs a serious update !! */
- 
+
 ///Render_CreateBuffer
 F_METHODM(FObject,Render_CreateBuffer,FS_Render_CreateBuffer)
 {
@@ -478,7 +478,7 @@ F_METHODM(FObject,Render_CreateBuffer,FS_Render_CreateBuffer)
 
             "FA_Display_BitMap",   &bmfrd,
             "FA_Display_Depth",    &depth,
-            
+
             TAG_DONE);
       }
 
@@ -492,7 +492,7 @@ F_METHODM(FObject,Render_CreateBuffer,FS_Render_CreateBuffer)
 
             FA_Render_Friend,   Obj,
             FA_Render_RPort,    rp,
-            
+
             End;
 
          if (render)
@@ -532,7 +532,7 @@ F_METHODM(void,Render_DeleteBuffer,FS_Render_DeleteBuffer)
          }
       #ifdef __AROS__
          DeinitRastPort(Msg -> Buffer -> RPort);
-      #endif 
+      #endif
          F_Dispose(Msg -> Buffer -> RPort);
       }
 

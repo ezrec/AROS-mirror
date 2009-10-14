@@ -76,7 +76,7 @@ void td_adjust(FClass *Class,FObject Obj)
 F_METHOD(uint32,TD_New)
 {
    struct LocalObjectData *LOD = F_LOD(Class,Obj);
-   
+
    LOD -> Flags   = FF_TD_SHORTCUT;
    LOD -> limit_w = FV_TD_NOLIMIT;
    LOD -> limit_h = FV_TD_NOLIMIT;
@@ -114,7 +114,7 @@ F_METHOD(void,TD_Set)
    struct TagItem         *Tags = Msg,item;
 
    bits32 update = 0;
-   
+
    while  (F_DynamicNTI(&Tags,&item,Class))
    switch (item.ti_Tag)
    {
@@ -158,7 +158,7 @@ F_METHOD(void,TD_Set)
          }
          else
          {
-            LOD -> Flags &= ~FF_TD_SHORTCUT; LOD -> Shortcut = NULL;
+            LOD -> Flags &= ~FF_TD_SHORTCUT; LOD -> Shortcut = 0;
          }
 
          update |= FF_TD_UPDATE_CREATE;
@@ -204,7 +204,7 @@ F_METHODM(int32,TD_Setup,FS_TextDisplay_Setup)
       /* D'abord on calcule la taille de toutes les lignes, et de tous  les
       chunks,  sans  aucune restriction. On en profite pour initialiser les
       images qui trennent, charger les fontes et allouer les couleurs */
-      
+
       td_setup(Class,Obj);
 
       /* Maintenant, on ajuste les lignes en fonction des restrictions */
@@ -224,7 +224,7 @@ F_METHOD(void,TD_Cleanup)
    FTDLine *line;
    FTDChunk *chunk;
    FTDColor *color;
-   
+
 /*** lines *****************************************************************/
 
 //   while ((line = (FTDLine *) LOD -> LineList.Tail) != NULL)
@@ -286,12 +286,12 @@ F_METHOD(void,TD_Cleanup)
       {
          F_Dispose(color -> Spec);
       }
-      
+
       if (color -> Color && LOD -> Render)
       {
          F_Do(LOD -> Render -> Display,FM_RemColor,color -> Color);
       }
- 
+
       F_Dispose(color);
    }
 

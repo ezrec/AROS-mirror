@@ -137,14 +137,14 @@ F_METHOD(uint32,Window_New)
     struct TagItem *Tags = Msg,item;
 
     LOD->FramePublic = (FFramePublic *) F_Get(Obj,FA_Frame_PublicData);
-  
+
     /* set default values */
 
     LOD->GADFlags = FF_WINDOW_GAD_DRAG  | FF_WINDOW_GAD_CLOSE |
                       FF_WINDOW_GAD_DEPTH | FF_WINDOW_GAD_ICONIFY;
 
     LOD->WINFlags = FF_WINDOW_WIN_ACTIVE;
-    
+
     LOD->p_Scheme    = "$window-scheme";
     LOD->p_Decorator = "$decorator-class";
 
@@ -153,9 +153,9 @@ F_METHOD(uint32,Window_New)
     while  (F_DynamicNTI(&Tags,&item,NULL))
     switch (item.ti_Tag)
     {
-        case FA_Child:                if (!item.ti_Data) return NULL; break;
+        case FA_Child:                if (!item.ti_Data) return 0; break;
 
-        case FA_Window_GadNone:       if (item.ti_Data) LOD->GADFlags  = NULL; break;
+        case FA_Window_GadNone:       if (item.ti_Data) LOD->GADFlags  = 0; break;
         case FA_Window_GadDragbar:    if (item.ti_Data) LOD->GADFlags |= FF_WINDOW_GAD_DRAG;       else LOD->GADFlags &= ~FF_WINDOW_GAD_DRAG;       break;
         case FA_Window_GadClose:      if (item.ti_Data) LOD->GADFlags |= FF_WINDOW_GAD_CLOSE;      else LOD->GADFlags &= ~FF_WINDOW_GAD_CLOSE;      break;
         case FA_Window_GadDepth:      if (item.ti_Data) LOD->GADFlags |= FF_WINDOW_GAD_DEPTH;      else LOD->GADFlags &= ~FF_WINDOW_GAD_DEPTH;      break;
@@ -178,7 +178,7 @@ F_METHOD(uint32,Window_New)
     }
 
     return F_SuperDo(Class,Obj,Method,
-    
+
        FA_Back,    "$window-back",
        FA_Frame,   "$window-frame",
 
@@ -191,9 +191,9 @@ F_METHOD(void,Window_Dispose)
     struct LocalObjectData *LOD = F_LOD(Class,Obj);
 
     F_Do(Obj,FM_Window_Close);
-    
+
     F_DisposeObj(LOD->Root); LOD->Root = NULL;
- 
+
     F_SUPERDO();
 }
 //+
@@ -304,17 +304,17 @@ F_METHOD(void,Window_Set)
          {
             STRPTR str = (STRPTR)(item.ti_Data);
             int32 val;
-            
+
             str += stcd_l(str,&val);
-            
+
             LOD->UserBox.w = val;
-            
+
             if (*str == '%') LOD->BOXFlags |= FF_WINDOW_BOX_WPERCENT;
             else             LOD->BOXFlags &= ~FF_WINDOW_BOX_WPERCENT;
          }
       }
       break;
- 
+
       case FA_Height:
       {
          if (item.ti_Data < 0xFFFF)
@@ -477,7 +477,7 @@ F_METHODM(uint32,Window_Connect,FS_Connect)
     struct LocalObjectData *LOD = F_LOD(Class,Obj);
 
     LOD->Application = Msg->Parent;
-    
+
     return TRUE;
 }
 //+

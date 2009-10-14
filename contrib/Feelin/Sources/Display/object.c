@@ -1,5 +1,5 @@
 #include "Private.h"
- 
+
 ///str_copy_length
 uint32 str_copy_length(STRPTR Src,STRPTR Dst,uint32 Max)
 {
@@ -104,7 +104,7 @@ F_METHOD(uint32,D_New)
       F_Log(FV_LOG_USER,"Screen creation is not yet implemented");
    }
 
-   return NULL;
+   return 0;
 }
 //+
 ///D_Dispose
@@ -154,7 +154,7 @@ F_METHOD(void,D_Dispose)
 
       if (FF_Display_Created & LOD -> Flags)
       {
-         CloseScreen(LOD -> Screen); 
+         CloseScreen(LOD -> Screen);
       }
 
       LOD -> Screen = NULL;

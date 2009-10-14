@@ -83,7 +83,7 @@ static FXMLMake xml_object_make[] =
 FHashLink * f_create_reference(FClass *Class,FObject Obj,STRPTR Name,APTR Pool)
 {
    struct LocalObjectData *LOD = F_LOD(Class,Obj);
-      
+
    uint32 len=F_StrLen(Name);
    uint32 hash=0;
    FHashLink *link;
@@ -120,7 +120,7 @@ F_METHODM(FObject,XMLObject_Create,FS_XMLObject_Create)
    FClass *cl;
 
 /*** check markup **********************************************************/
- 
+
    if (!Msg -> Markup)
    {
       F_Log(FV_LOG_DEV,"Markup is NULL"); return NULL;
@@ -170,32 +170,32 @@ F_METHODM(FObject,XMLObject_Create,FS_XMLObject_Create)
       FXMLMarkup *markup;
       FXMLAttribute *attribute;
       uint32 i= (make) ? 1 + make -> Params : 1;
-      struct TagItem *tags; 
-      
+      struct TagItem *tags;
+
       /* now that we have opened the  class,  we  can  create  and  resolve
       attributes   and   parameters.   Note  well  the  difference  between
       parameters (uint32) and tags (struct TagItem *). If 'make  ->  ID'  is
       different  then FV_MakeObj_None (0) then we use F_MakeObj() to create
       the object, thats why parameters are so important.
-      
+
       Free space is reserved for parameters, right before additional  tags,
       which  must  be  filled  with  parameters  for F_MakeObj() or default
       attributes for F_NewObj(). */
-   
+
       /* attributes */
- 
+
       for (attribute = (FXMLAttribute *)(Msg -> Markup -> AttributesList.Head) ; attribute ; attribute = attribute -> Next)
       {
          i += 2;
       }
-                  
+
       /* children */
- 
+
       for (markup = (FXMLMarkup *)(Msg -> Markup -> ChildrenList.Head) ; markup ; markup = markup -> Next)
       {
          i += 2;
       }
-   
+
       /* we allocate enough memory for parameters (or default  tags),  user
       attributes and TAG_DONE */
 
@@ -204,12 +204,12 @@ F_METHODM(FObject,XMLObject_Create,FS_XMLObject_Create)
          struct TagItem *item = tags;
          STRPTR name=NULL;
          FObject obj=NULL;
-         
+
          /*  if  we  are  going  to  create  an  object  from  our  builtin
          collection,  we  call  the  function  'make -> write' to write the
          appropriate parameters or tags before we add markup attributes and
          children */
-         
+
          if (make)
          {
             make -> write(Obj,Msg -> Markup,(uint32 *)(tags)); item = (struct TagItem *)((uint32)(tags) + make -> Params * sizeof (uint32));
@@ -217,23 +217,23 @@ F_METHODM(FObject,XMLObject_Create,FS_XMLObject_Create)
 
          /* Now we parse and add markup attributes. Don't forget to  handle
          the speciale attribute 'name' used to reference the object. */
-         
+
          for (attribute = (FXMLAttribute *)(Msg -> Markup -> AttributesList.Head) ; attribute ; attribute = attribute -> Next)
          {
             UBYTE c = *attribute -> Name -> Key;
-            
+
             if (attribute -> Name -> ID == FV_XMLOBJECT_ID_NAME)
             {
                name = attribute -> Data;
- 
+
                if (name)
                {
                   FHashLink *link;
-                  
+
                   /* before going any further, we check  reference  clones.
                   Reference  name  must  be unique. If the name has already
                   been defined the build fails. */
-                  
+
                   if ((link = F_HashFind(LOD -> HTable,name,F_StrLen(name),NULL)))
                   {
                      F_Do(Obj,F_IDR(FM_Document_Log),attribute -> Line,NULL,"Reference name (%s) used multiple time",name);
@@ -276,7 +276,7 @@ F_METHODM(FObject,XMLObject_Create,FS_XMLObject_Create)
                goto __error;
             }
          }
-         
+
          /* create and add children to the taglist */
 
          for (markup = (FXMLMarkup *)(Msg -> Markup -> ChildrenList.Head) ; markup ; markup = markup -> Next)
@@ -291,7 +291,7 @@ F_METHODM(FObject,XMLObject_Create,FS_XMLObject_Create)
             }
             else goto __error;
          }
-      
+
          /* Eveything is ready, we can create the object now. If  'make  ->
          ID' we use F_MakeObj(), otherwise F_NewObj(). */
 
@@ -303,21 +303,21 @@ F_METHODM(FObject,XMLObject_Create,FS_XMLObject_Create)
          {
             obj = F_NewObjA(cl -> Name,tags);
          }
-      
+
          if (obj)
          {
             if (name)
             {
                FHashLink *link = f_create_reference(Class,Obj,name,Msg -> Pool);
-               
+
                if (link)
                {
                   link -> Data = obj;
-                  
+
                   if (LOD -> References)
                   {
                      FXMLReference *ref;
-                     
+
                      for (ref = LOD -> References ; ref -> Name ; ref++)
                      {
                         if (F_StrCmp(ref -> Name,name,ALL) == 0)
@@ -332,11 +332,11 @@ F_METHODM(FObject,XMLObject_Create,FS_XMLObject_Create)
                }
                else goto __error;
             }
-         
+
             F_Dispose(tags);
 
             F_CloseClass(cl);
-             
+
             return obj;
          }
 
@@ -351,7 +351,7 @@ __error:
          else if (tags)
          {
             struct TagItem *item;
-            struct TagItem *next = (make) ? (struct TagItem *)((uint32)(tags) + make -> Params * sizeof (uint32)) : tags;
+            const struct TagItem *next = (make) ? (struct TagItem *)((uint32)(tags) + make -> Params * sizeof (uint32)) : tags;
 
             /* if the object has not been created we need to  dispose  each
             child found in the taglist */
@@ -364,7 +364,7 @@ __error:
                }
             }
          }
- 
+
          F_Dispose(tags);
       }
       F_CloseClass(cl);

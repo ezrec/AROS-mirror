@@ -19,7 +19,7 @@ bits32 app_collect_signals(FClass *Class,FObject Obj)
     }
 
     LOD -> WaitSignals = wait;
-    
+
     return wait;
 }
 //+
@@ -42,7 +42,7 @@ STATIC int32 app_check_window_port(FClass *Class,FObject Obj)
          if (fev)
          {
             fev -> IMsg = msg;
- 
+
             if ((((struct AppMessage *)(msg)) -> am_Type == AMTYPE_APPWINDOW ||
                  ((struct AppMessage *)(msg)) -> am_Type == AMTYPE_APPICON ||
                  ((struct AppMessage *)(msg)) -> am_Type == AMTYPE_APPMENUITEM) &&
@@ -60,7 +60,7 @@ STATIC int32 app_check_window_port(FClass *Class,FObject Obj)
             {
 
 /*** intuition events ******************************************************/
- 
+
                fev -> Qualifier  = msg -> Qualifier;
                fev -> Key        = FV_KEY_NONE;
                fev -> MouseX     = msg -> MouseX;
@@ -84,10 +84,10 @@ STATIC int32 app_check_window_port(FClass *Class,FObject Obj)
 
                   case IDCMP_RAWKEY:
                   {
-                     
+
                      /* Mouse wheel events are received as keycodes because
                      intuition doesn't know how to decode them */
- 
+
                      if (msg -> Code == 0x7A)
                      {
                         fev -> Class  = FF_EVENT_BUTTON;
@@ -161,7 +161,7 @@ STATIC int32 app_check_window_port(FClass *Class,FObject Obj)
                         case IECODE_MBUTTON: fev -> Code = FV_EVENT_BUTTON_MIDDLE; break;
                         default:             fev -> Code = 0xFFFF;
                      };
-                     
+
                      if (FF_EVENT_BUTTON_DOWN & fev -> Flags)
                      {
                         if (LOD -> ev_Window == LOD -> ev_Window &&
@@ -255,7 +255,7 @@ STATIC int32 app_check_window_port(FClass *Class,FObject Obj)
                      fev -> Code  = FV_EVENT_DISK_EJECT;
                   }
                   break;
-               }         
+               }
             }
 
 ///DB_EVENTS
@@ -282,7 +282,7 @@ STATIC int32 app_check_window_port(FClass *Class,FObject Obj)
                         case FV_EVENT_BUTTON_SELECT:  F_Log(0,"event:button-select-%s-%s)",(IECODE_UP_PREFIX & msg -> Code) ? "up" : "down",(FF_EVENT_BUTTON_DOUBLE & fev -> Flags) ? "double" : "first"); break;
                         case FV_EVENT_BUTTON_MENU:    F_Log(0,"event:button-menu-%s-%s)",(IECODE_UP_PREFIX & msg -> Code) ? "up" : "down",(FF_EVENT_BUTTON_DOUBLE & fev -> Flags) ? "double" : "first"); break;
                         case FV_EVENT_BUTTON_MIDDLE:  F_Log(0,"event:button-middle-%s-%s)",(IECODE_UP_PREFIX & msg -> Code) ? "up" : "down",(FF_EVENT_BUTTON_DOUBLE & fev -> Flags) ? "double" : "first"); break;
-                        default:                      F_Log(0,"event:button-??-%s-%s)",(IECODE_UP_PREFIX & msg -> Code) ? "up" : "down",(FF_EVENT_BUTTON_DOUBLE & fev -> Flags) ? "double" : "first"); break;
+                        default:                      F_Log(0,"event:button-\?\?-%s-%s)",(IECODE_UP_PREFIX & msg -> Code) ? "up" : "down",(FF_EVENT_BUTTON_DOUBLE & fev -> Flags) ? "double" : "first"); break;
                      }
                   }
                   break;
@@ -334,9 +334,9 @@ STATIC int32 app_check_window_port(FClass *Class,FObject Obj)
 
             F_Dispose(fev);
          }
-      
+
          ReplyMsg((struct Message *) msg);
-         
+
          return TRUE;
       }
    }
@@ -472,15 +472,15 @@ F_METHOD(void,App_Run)
             F_Do(Obj,FM_Application_Sleep);
             F_Do(Obj,FM_Application_Awake);
         }
-    
+
 /*** Waiting signals *******************************************************/
-        
+
         if (read_again == FALSE)
         {
             F_Do(Obj,FM_Unlock);
-           
+
             sig = Wait(LOD -> WaitSignals);
-           
+
             F_Do(Obj,FM_Lock,FF_Lock_Exclusive);
         }
         else
@@ -500,9 +500,9 @@ F_METHOD(void,App_Run)
                 if (sig & handler -> fsh_Signals)
                 {
                     F_Do(Obj,FM_Unlock);
-                    
+
                     F_Do(handler -> Object,handler -> Method);
-                    
+
                     F_Do(Obj,FM_Lock,FF_Lock_Exclusive);
                 }
             }
@@ -531,7 +531,7 @@ F_METHOD(void,App_Run)
             F_Do(Obj,FM_Unlock);
 
             F_DoA(push -> Target,push -> Method,push -> Msg);
-            
+
             F_Do(Obj,FM_Lock,FF_Lock_Exclusive);
 
             F_Dispose(push);
@@ -540,14 +540,14 @@ F_METHOD(void,App_Run)
  /*** Rexx Port *************************************************************/
 
         msg = GetMsg(LOD -> AppPort);
-       
+
         if (msg)
         {
             read_again = TRUE;
 
             if (IsRexxMsg((struct RexxMsg *)(msg)))
             {
-                STRPTR cmd = ((struct RexxMsg *)(msg))  -> rm_Args[0];
+                STRPTR cmd = (STRPTR)(((struct RexxMsg *)(msg))  -> rm_Args[0]);
 
                 if (cmd)
                 {
@@ -592,7 +592,7 @@ F_METHOD(void,App_Run)
         if (!IsMsgPortEmpty(LOD -> TimersPort))
         {
             msg = GetMsg(LOD -> TimersPort);
-            
+
             if (msg)
             {
                 FTimeNode *time = (APTR)((ULONG)(msg) - sizeof (FTimeHeader));
@@ -603,24 +603,24 @@ F_METHOD(void,App_Run)
                 treq -> tr_time.tv_micro   = time -> Handler -> fsh_Micros;
 
                 F_Do(Obj,FM_Unlock);
-                
+
                 if (F_Do(time -> Handler -> Object,time -> Handler -> Method))
                 {
                     SendIO((struct IORequest *) treq);
                 }
-                
+
                 F_Do(Obj,FM_Lock,FF_Lock_Exclusive);
             }
-            
+
             read_again = TRUE;
         }
 
         if (sig)
         {
             F_Do(Obj,FM_Unlock);
-            
+
             F_Set(Obj,FA_Application_Signal,sig);
-            
+
             F_Do(Obj,FM_Lock,FF_Lock_Exclusive);
         }
     }
@@ -735,7 +735,7 @@ F_METHODM(LONG,App_PushMethod,FS_Application_PushMethod)
             push -> Msg    = (APTR)((ULONG)(push) + sizeof (FPush));
 
             CopyMem((APTR)((ULONG)(Msg) + sizeof (struct FS_Application_PushMethod)),push -> Msg,Msg -> Count * sizeof (ULONG));
-            
+
             F_Do(Obj,FM_Lock,FF_Lock_Exclusive);
             F_LinkTail(&LOD -> PushedMethodList,(FNode *) push);
             F_Do(Obj,FM_Unlock);
@@ -766,7 +766,7 @@ F_METHODM(void,App_AddSignal,FS_Application_AddSignalHandler)
         if (!app_find_timers(LOD,Handler))
         {
             FTimeNode *time = F_New(sizeof (FTimeNode));
-            
+
             if (time)
             {
                 CopyMem(LOD -> TimeRequest,(APTR)(&time -> TReq),sizeof (struct timerequest));
@@ -820,7 +820,7 @@ F_METHODM(void,App_RemSignal,FS_Application_RemSignalHandler)
             {
                AbortIO((struct IORequest *) &time -> TReq);
             }
-            
+
             WaitIO((struct IORequest *) &time -> TReq);
 
             F_LinkRemove(&LOD -> Timers,(FNode *) time);
@@ -855,15 +855,15 @@ F_METHOD(void,App_Update)
 F_METHODM(int32,App_ModifyEvents,FS_Application_ModifyEvents)
 {
     struct LocalObjectData *LOD = F_LOD(Class,Obj);
-    
+
     if (LOD -> WindowPort)
     {
         struct Window *win = (struct Window *) F_Get(Msg -> Window,FA_Window);
-        
+
         if (win)
         {
             bits32 idcmp = 0;
-            
+
             if (FF_EVENT_TICK & Msg -> Events)
             {
                 idcmp |= IDCMP_INTUITICKS;
@@ -899,7 +899,7 @@ F_METHODM(int32,App_ModifyEvents,FS_Application_ModifyEvents)
                     (FF_EVENT_WINDOW & Msg -> Events) ? "window" : "",
                     (FF_EVENT_DISK & Msg -> Events) ? "disk" : "");
             }
-            
+
             if (idcmp)
             {
                 win -> UserData = Msg -> Window;
@@ -909,7 +909,7 @@ F_METHODM(int32,App_ModifyEvents,FS_Application_ModifyEvents)
             {
                 struct IntuiMessage *msg;
                 struct Node *succ;
-     
+
                 win -> UserData = NULL;
                 win -> UserPort = NULL;
 
@@ -925,9 +925,9 @@ F_METHODM(int32,App_ModifyEvents,FS_Application_ModifyEvents)
                     msg = (struct IntuiMessage *)(succ);
                 }
             }
-            
+
             ModifyIDCMP(win,idcmp);
-            
+
             return TRUE;
         }
     }

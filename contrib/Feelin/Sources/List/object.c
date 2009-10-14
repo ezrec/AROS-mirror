@@ -11,18 +11,18 @@ F_METHODM(APTR,List_New,TagItem)
     BOOL readonly = FALSE;
 
     F_AREA_SAVE_PUBLIC;
-    
+
     LOD -> PoolItemSize     = 1024;
     LOD -> PoolItemNumber   = 4;
     LOD -> ColumnCount      = 1;
     LOD -> SortMode         = FV_List_Sort_Descending;
     LOD -> Activation       = FV_List_Activation_Unknown;
     LOD -> Steps            = 1;
-    
+
     LOD -> p_Spacing        = "$list-spacing";
     LOD -> p_CursorActive   = "$list-cursor-active";
     LOD -> p_Steps          = "$list-steps";
-  
+
     while  (F_DynamicNTI(&Tags,&item,Class))
     switch (item.ti_Tag)
     {
@@ -44,7 +44,7 @@ F_METHODM(APTR,List_New,TagItem)
 
         case FA_List_Spacing:            LOD -> p_Spacing = (STRPTR)(item.ti_Data); break;
         case FA_List_Steps:              LOD -> p_Steps = (STRPTR)(item.ti_Data); break;
-        
+
         case FA_List_CursorActive:       LOD -> p_CursorActive = (STRPTR)(item.ti_Data); break;
     }
 
@@ -71,11 +71,11 @@ F_METHODM(APTR,List_New,TagItem)
     }
 
     LOD -> TDObj = TextDisplayObject,
-    
+
         FA_TextDisplay_Shortcut, FALSE,
 
         End;
-        
+
     if (LOD->TDObj == NULL)
     {
         return NULL;
@@ -91,9 +91,9 @@ F_METHODM(APTR,List_New,TagItem)
         FA_Font,          (readonly) ? "$list-read-font"   : "$list-font",
         FA_Frame,         (readonly) ? "$list-read-frame"  : "$list-frame",
         FA_ColorScheme,   (readonly) ? "$list-read-scheme" : "$list-scheme",
-        
+
         F_IDA(FA_List_Format),  "<col />",
-        
+
         TAG_MORE, Msg))
     {
         if (LOD -> TitleBar)
@@ -162,7 +162,7 @@ F_METHOD(void,List_Set)
    struct LocalObjectData *LOD  = F_LOD(Class,Obj);
    struct TagItem *Tags = Msg,*tag,item;
 
-   while  (tag = F_DynamicNTI(&Tags,&item,Class))
+   while  ((tag = F_DynamicNTI(&Tags,&item,Class)))
    switch (item.ti_Tag)
    {
       case FA_List_CompareHook:     LOD -> Hook_Compare     = (struct Hook *)(item.ti_Data); break;
@@ -173,7 +173,7 @@ F_METHOD(void,List_Set)
       case FA_List_Format:
       {
          LOD -> LastFirst = NULL;
-         
+
          titlebar_new(Class,Obj,(STRPTR)(item.ti_Data));
       }
       break;
@@ -194,7 +194,7 @@ F_METHOD(void,List_Set)
 
          pos = MAX((LONG)(item.ti_Data),0);
          pos = MIN(pos,LOD -> LineCount - 1);
-          
+
          list_adjust_first(Class,Obj,pos);
 
          if (LOD -> Quiet >= 0 && line != LOD -> First)
@@ -211,20 +211,20 @@ F_METHOD(void,List_Set)
          if (!(FF_LIST_ACTIVATION_INTERNAL & LOD -> Flags))
          {
             LOD -> Activation = FV_List_Activation_External;
-            
+
             LOD -> Flags &= ~FF_LIST_ACTIVATION_INTERNAL;
          }
- 
+
 //         F_Log(0,"ACTIVE %ld - VISIBLE_FIRST 0x%08lx (%ld) - VISIBLE_LAST 0x%08lx (%ld)",item.ti_Data,LOD -> First,LOD -> First -> Position,LOD -> Last,LOD -> Last -> Position);
 
          if (item.ti_Data == FV_List_Active_None)
          {
             if (LOD -> Quiet >= 0)
             {
-               if (LOD -> Update = LOD -> Active)
+               if ((LOD -> Update = LOD -> Active))
                {
                   LOD -> Active -> Flags &= ~FF_LINE_SELECTED;
-                  
+
                   F_Draw(Obj,FF_Draw_Update | FF_Draw_Line);
                }
             }
@@ -285,7 +285,7 @@ F_METHOD(void,List_Set)
 
 /*** new active * clear previous one ***************************************/
 
-            if (LOD -> Update = LOD -> Active)
+            if ((LOD -> Update = LOD -> Active))
             {
                LOD -> Active -> Flags &= ~FF_LINE_SELECTED;
 
@@ -296,7 +296,7 @@ F_METHOD(void,List_Set)
             }
 
             LOD -> Active = active;
-            
+
             if (LOD -> Active)
             {
                LOD -> Active -> Flags |= FF_LINE_SELECTED;
@@ -306,7 +306,7 @@ F_METHOD(void,List_Set)
             {
                if (pos >= LOD -> First -> Position && pos <= LOD -> Last -> Position)
                {
-                  if (LOD -> Update = LOD -> Active)
+                  if ((LOD -> Update = LOD -> Active))
                   {
                      F_Draw(Obj,FF_Draw_Update | FF_Draw_Line);
                   }
@@ -331,7 +331,7 @@ F_METHOD(void,List_Set)
          }
       }
       break;
-   
+
       case FA_List_Activation:
       {
          LOD -> Activation = item.ti_Data;
@@ -348,18 +348,18 @@ F_METHOD(void,List_Set)
             list_update(Class,Obj,FALSE);
 
 //            F_Log(0,"entries (%ld) visible (%ld) first (0x%08lx)(%ld)",LOD -> LineCount,LOD -> Visible,LOD -> First,LOD -> First -> Position);
- 
+
             F_SuperDo(Class,Obj,FM_Set,
                F_IDA(FA_List_Entries), LOD -> LineCount,
                F_IDA(FA_List_Visible), LOD -> Visible,
                F_IDA(FA_List_First),   (LOD -> First) ? LOD -> First -> Position : 0,
                TAG_DONE);
-               
+
             F_Draw(Obj,FF_Draw_Update);
          }
       }
       break;
-   
+
       case FA_List_Steps:
       {
          LOD -> Steps = item.ti_Data;
@@ -382,7 +382,7 @@ F_METHODM(APTR,List_GetEntry,FS_List_GetEntry)
       case FV_List_GetEntry_Prev:   return (LOD -> Active) ? LOD -> Active -> Prev : NULL;
       case FV_List_GetEntry_Next:   return (LOD -> Active) ? LOD -> Active -> Next : NULL;
       case FV_List_GetEntry_Active: return LOD -> Active;
-      
+
       default:
       {
          FLine *line;

@@ -30,19 +30,19 @@ enum    {
 enum    {
 
         FM_HTMLDocument_Parse
-        
+
         };
-        
+
 
 enum    {                                       // resolve
- 
+
         FM_Document_Read,
         FM_Document_Resolve,
         FM_Document_ObtainName,
         FM_Document_Log
 
         };
-        
+
 enum    {
 
         FV_PARSE_ERROR_NONE,
@@ -63,7 +63,7 @@ enum    {
 *** Structures **************************************************************
 ****************************************************************************/
 
-typedef struct LocalObjectData
+struct LocalObjectData
 {
     APTR                            Pool;
     FList                           AttributesList;

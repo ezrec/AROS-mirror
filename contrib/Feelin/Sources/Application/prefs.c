@@ -1,7 +1,7 @@
 #include "Private.h"
 
 //#define DB_OPENFONT
- 
+
 /*** Private ***************************************************************/
 
 ///app_create_name
@@ -47,24 +47,24 @@ STATIC struct TextAttr *app_create_ta(STRPTR Define,struct TextAttr *TA)
         {
             STRPTR back = name;
 
-            while ((*Define != NULL) && (*Define != '/'))
-            
+            while ((*Define != 0) && (*Define != '/'))
+
             *name++ = *Define++;
 
             CopyMem(".font",name,5);
-            
+
             name = back;
 
             if (*Define++ == '/')
             {
                 uint16 size = atol(Define);
-                
+
                 if (size)
                 {
                     TA -> ta_Name  = name;
                     TA -> ta_YSize = size;
                     TA -> ta_Style = FS_NORMAL;
-                    TA -> ta_Flags = NULL;
+                    TA -> ta_Flags = 0;
 
                     return TA;
                 }
@@ -111,7 +111,7 @@ STATIC void app_save_iff(FClass *Class,FObject Obj,STRPTR Name)
 
         if (iff)
         {
-            if ((iff -> iff_Stream = Open(file_name,MODE_NEWFILE)) != NULL)
+            if ((iff -> iff_Stream = (IPTR)Open(file_name,MODE_NEWFILE)) != 0)
             {
                 InitIFFasDOS(iff);
 
@@ -133,7 +133,7 @@ STATIC void app_save_iff(FClass *Class,FObject Obj,STRPTR Name)
                     }
                     CloseIFF(iff);
                 }
-                Close(iff -> iff_Stream);
+                Close((BPTR)iff -> iff_Stream);
             }
             FreeIFF(iff);
         }
@@ -162,7 +162,7 @@ F_METHODM(int32,App_Load,FS_Application_Load)
 
             if ((iff = AllocIFF()) != NULL)
             {
-                if ((iff -> iff_Stream = Open(name,MODE_OLDFILE)) != NULL)
+                if ((iff -> iff_Stream = (IPTR)Open(name,MODE_OLDFILE)) != 0)
                 {
                     InitIFFasDOS(iff);
 
@@ -177,7 +177,7 @@ F_METHODM(int32,App_Load,FS_Application_Load)
                         }
                         CloseIFF(iff);
                     }
-                    Close(iff -> iff_Stream);
+                    Close((BPTR)iff -> iff_Stream);
                 }
                 FreeIFF(iff);
             }
@@ -222,7 +222,7 @@ F_METHODM(uint32,App_Resolve,FS_Application_Resolve)
         if (((uint32)(Msg -> Name) > 0xFFFF) && (*Msg -> Name == '$'))
         {
             FAppResolveMap *map;
-    
+
             for (map = LOD -> ResolveMap ; map -> Name ; map++)
             {
                 if (F_StrCmp(Msg -> Name,map -> Name,ALL) == 0)
@@ -317,7 +317,7 @@ F_METHODM(struct TextFont *,App_OpenFont,FS_Application_OpenFont)
     }
 
 /*** last fall back : screen font ******************************************/
- 
+
     if (!font)
     {
         struct Screen *scr;
@@ -351,7 +351,7 @@ STATIC FPreferenceScript Script[] =
 
     F_ARRAY_END
 };
- 
+
 ///Prefs_New
 F_METHOD(uint32,Prefs_New)
 {
@@ -361,7 +361,7 @@ F_METHOD(uint32,Prefs_New)
 
         "Script",      Script,
         "XMLSource",   "feelin/preference/application.xml",
-        
+
     TAG_MORE,Msg);
 }
 //+

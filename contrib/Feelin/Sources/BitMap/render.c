@@ -1,5 +1,8 @@
 #include "Private.h"
 
+// forward declaration
+struct FeelinBitMapRender;
+
 ///typedefs
 
 typedef uint32 (*FPixelFunc)                    (struct FeelinBitMapRender *fbr, uint32 *source, uint32 x, uint32 y);
@@ -20,13 +23,13 @@ typedef struct FeelinBitMapRender
 
     uint32                         *pixel_transform_buffer;
     feelin_pixel_transform_func     pixel_transform_func;
- 
+
     FPixelFunc                      code_render_pixel;
     FLineYFunc                      code_render_y;
     FLineXFunc                      code_render_x;
 
     uint32                         *color_array;
- 
+
     /* the following members are used for remaping */
 
     struct RastPort                *rp1;
@@ -126,7 +129,7 @@ static uint32 pixels_scale_average(FBRender *fbr, uint32 *s, uint32 x, uint32 y)
     uint32 bcky;
 
     /* limit borders */
-    
+
     if ((int32)(x) - 1 < 0)
     {
         bckx = 0;
@@ -550,11 +553,11 @@ void bitmap_render_y_scale(FBRender *fbr, uint32 *source, uint32 *target)
     uint32 i;
 
     uint32 modulo = fbr->smod;
- 
+
     if (fbr->pixel_transform_func)
     {
         fbr->smod = fbr->source_w * sizeof(uint32);
- 
+
         for (i = 0; i < fbr->target_h; i++)
         {
             tpy = (spy * i);
@@ -562,7 +565,7 @@ void bitmap_render_y_scale(FBRender *fbr, uint32 *source, uint32 *target)
             tpy /= GSIMUL;
 
             sp = (APTR)((uint32)(source) + tpy * modulo);
-            
+
             fbr->pixel_transform_func(fbr, (APTR)((uint32)(sp) - modulo), fbr->source_w * 3);
 
             fbr->code_render_x
@@ -679,13 +682,13 @@ F_METHOD(uint32,BitMap_Render)
     uint32 maxcolors = 32;
     uint32 *rendered_w_ptr=NULL;
     uint32 *rendered_h_ptr=NULL;
-    
+
     struct Screen *scr = NULL;
-    
+
     uint32 done = FALSE;
 
     F_Do(Obj, FM_Lock, FF_Lock_Exclusive);
- 
+
 /*** read optional parameters **********************************************/
 
     while  (F_DynamicNTI(&Tags,&item,Class))
@@ -704,7 +707,7 @@ F_METHOD(uint32,BitMap_Render)
 /*** check screen & and remap needs ****************************************/
 
 //    F_Log(0,"target (%ld x %ld) prt (0x%08lx & 0x%08lx)",target_w,target_h,rendered_w_ptr,rendered_h_ptr);
- 
+
     if (scr)
     {
         depth = GetBitMapAttr(scr->RastPort.BitMap,BMA_DEPTH);
@@ -721,7 +724,7 @@ F_METHOD(uint32,BitMap_Render)
     else
     {
         F_Log(0,"If you don't have cybergraphics.library, you must provide a Screen to remap your BitMap");
-        
+
         goto __end;
     }
 
@@ -734,14 +737,14 @@ F_METHOD(uint32,BitMap_Render)
     {
         LOD->rendered_w = target_w,
         LOD->rendered_h = target_h,
-        
+
         done = TRUE; goto __end;
     }
     else
     {
         uint32 *source = LOD->source.PixelArray;
         APTR target = NULL;
-    
+
         FBRender fbr;
 
         fbr.smod = LOD->source.PixelArrayMod;
@@ -751,7 +754,7 @@ F_METHOD(uint32,BitMap_Render)
         fbr.yfrac = 0;
         fbr.target_w = target_w;
         fbr.target_h = target_h;
-        
+
         fbr.pixel_transform_buffer = NULL;
 
         fbr.code_render_y = NULL;
@@ -765,14 +768,14 @@ F_METHOD(uint32,BitMap_Render)
         fbr.pens = NULL;
         fbr.numpens = 0;
         fbr.id_Best = 0;
-        
+
         fbr.color_array = LOD->source.ColorArray;
-        
+
         switch (LOD->source.PixelType)
         {
             case FV_PIXEL_TYPE_RGBA:
             break;
-            
+
             case FV_PIXEL_TYPE_PALETTE:
             {
                 fbr.pixel_transform_buffer = F_New(fbr.source_w * sizeof (uint32) * 3);
@@ -816,7 +819,7 @@ F_METHOD(uint32,BitMap_Render)
             default:
             {
                 F_Log(0,"Unkown PixelType (%ld)", LOD->source.PixelType);
-                
+
                 goto __end;
             }
             break;
@@ -904,7 +907,7 @@ F_METHOD(uint32,BitMap_Render)
         {
             fbr.code_render_x = (target_w == LOD->source.Width) ? bitmap_render_x_plain : bitmap_render_x_scale;
             fbr.code_render_y = (target_h == LOD->source.Height) ? bitmap_render_y_plain : bitmap_render_y_scale;
- 
+
             target = F_New(target_w * target_h * sizeof (uint32));
         }
 
@@ -941,7 +944,7 @@ F_METHOD(uint32,BitMap_Render)
                 F_Dispose(fbr.rp1);
             }
             F_DisposeObj(fbr.palette);
-        } 
+        }
 
 /*** done ? free resources on failure **************************************/
 
@@ -950,13 +953,13 @@ F_METHOD(uint32,BitMap_Render)
             LOD->rendered = target;
             LOD->rendered_w = target_w;
             LOD->rendered_h = target_h;
-            
+
             if (remap)
             {
                 LOD->pens = fbr.pens;
                 LOD->numpens = fbr.numpens;
                 LOD->cm = scr->ViewPort.ColorMap;
-                
+
                 LOD->flags |= FF_BITMAP_RENDERED_BITMAP;
             }
             else
@@ -994,14 +997,14 @@ F_METHOD(uint32,BitMap_Render)
         }
     }
     #else
-    
+
     LOD->rendered_w = target_w;
     LOD->rendered_h = target_h;
-    
+
     #endif
 
 /*** done ******************************************************************/
-            
+
 __end:
 
     if (rendered_w_ptr)
@@ -1015,7 +1018,7 @@ __end:
     }
 
     F_Do(Obj, FM_Unlock);
-    
+
     return done;
 }
 //+

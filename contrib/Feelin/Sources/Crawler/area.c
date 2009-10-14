@@ -12,7 +12,7 @@ F_METHOD_SETUP(Crawler_Setup)
     if (F_SuperDoA(Class -> Super,Obj,Method,Msg))
     {
         InitRastPort(&LOD -> OwnRPort);
-        
+
         LOD -> delay         = F_Do(_app,FM_Application_ResolveInt,LOD -> p_Delay,FV_DEF_DELAY);
         LOD -> sh.fsh_Micros = F_Do(_app,FM_Application_ResolveInt,LOD -> p_Micros,FV_DEF_MICROS);
 
@@ -20,9 +20,9 @@ F_METHOD_SETUP(Crawler_Setup)
 
             FA_Render_Friend,  Msg -> Render,
             FA_Render_RPort,   &LOD -> OwnRPort,
-            
+
             End;
-        
+
         if (LOD -> OwnRender)
         {
             FFamilyNode *node = (FFamilyNode *) F_Get(Obj,FA_Family_Head);
@@ -139,7 +139,7 @@ F_METHOD(void,Crawler_Layout)
 
     F_Do(Obj,FM_Lock,FF_Lock_Exclusive);
 
-    if (node = (FAreaNode *) F_Get(Obj,FA_Family_Head))
+    if ((node = (FAreaNode *) F_Get(Obj,FA_Family_Head)))
     {
         UWORD bmpw;
         UWORD bmph;
@@ -165,7 +165,7 @@ F_METHOD(void,Crawler_Layout)
             LOD -> OwnRPort.BitMap = AllocBitMap(bmpw,bmph,scr -> RastPort.BitMap -> Depth,0,scr -> RastPort.BitMap);
 
             SetRast(&LOD -> OwnRPort,3);
- 
+
             LOD -> bmpw = bmpw;
             LOD -> bmph = bmph;
         }
@@ -186,7 +186,7 @@ F_METHODM(void,Crawler_Draw,FS_Draw)
     uint16 h = _ih;
     uint16 bmpw = LOD -> bmpw;
     uint16 bmph = LOD -> bmph,pad=0,off;
-    
+
     if (!bmp)
     {
         F_Log(FV_LOG_DEV,"BitMap is NULL");

@@ -116,7 +116,7 @@ $VER: 10.00 (2005/08/08)
 
 /* stegerg CHECKME: the check here was __GNUC__ and the check at the
    end (to undo prama pack) is __MORPHOS__! */
-   
+
 #ifndef __AROS__
 #ifdef __GNUC__
 #pragma pack(2)
@@ -405,11 +405,11 @@ enum    {
 #define F_IDO(n)                                F_ID(Class -> AutoResolvedIDs,n)
 #define F_CAT(n)                                FCC_CatalogTable[CAT_ ## n].String
 
-#define F_ARRAY_END                             { NULL }
+#define F_ARRAY_END                             { 0 }
 
 #define F_VALUES_ARRAY(name)                    FClassAttributeValue feelin_auto_values_##name[]
 #define F_VALUES_ADD(name,value)                { name, value }
- 
+
 #define F_ATTRIBUTES_ARRAY                                          FClassAttribute feelin_auto_attributes[]
 #define F_ATTRIBUTES_ADD(name,type)                                 { name, type, 0, NULL }
 #define F_ATTRIBUTES_ADD_WITH_VALUES(name,type,values)              { name, type, 0, feelin_auto_values_##values }
@@ -462,7 +462,7 @@ GOFROMIEL: Fais ton malin vas ;-)
 #define F_AUTOS_ARRAY                           FDynamicEntry feelin_auto_autos[]
 #define F_AUTOS_ADD(name)                       { name, 0 }
 #define F_AUTOS                                 feelin_auto_autos
- 
+
 #define F_TAGS_ARRAY                            struct TagItem feelin_auto_tags[]
 #define F_TAGS_ADD(tag,data)                    { FA_Class_##tag, (uint32) data }
 #define F_TAGS                                  feelin_auto_tags
@@ -557,7 +557,7 @@ struct  FS_ImageDisplay_HookDraw                { FRender *Render; FRect *Rect; 
 #define FA_ImageDisplay_Origin                  (FR_ImageDisplay_ATTR + 5)
 
 #define FV_ImageDisplay_Separator               ';'
- 
+
 #define FF_ImageDisplay_Region                  (1 << 0)
 
 /* Builtin patterns */
@@ -573,7 +573,7 @@ enum    {
         FI_Shine_HalfDark,      FI_HalfShine_Dark,          FI_Fill_Highlight,
         FI_Shine_Dark,          FI_HalfShine_Highlight,
         FI_Shine_Highlight
-        
+
         };
 
 #define FC_ImageDisplay                         "ImageDisplay"
@@ -663,7 +663,7 @@ enum    {
         FV_Application_ENV,
         FV_Application_ENVARC,
         FV_Application_BOTH
-        
+
         };
 
 enum    {
@@ -695,7 +695,7 @@ enum    {
         FV_KEY_CLOSEWINDOW,
 
         FV_KEY_COUNT
-        
+
         };
 
 #define FC_Application                          "Application"
@@ -764,7 +764,7 @@ typedef struct FeelinEvent
 FEvent;
 
 /*** classes ***/
- 
+
 #define FF_EVENT_TICK                           (1 << 0)
 #define FF_EVENT_KEY                            (1 << 1)
 #define FF_EVENT_BUTTON                         (1 << 2)
@@ -783,7 +783,7 @@ enum    {
         FV_EVENT_BUTTON_WHEEL
 
         };
- 
+
 enum    {
 
         FV_EVENT_WINDOW_CLOSE,
@@ -795,14 +795,14 @@ enum    {
         FV_EVENT_WINDOW_REFRESH
 
         };
-    
+
 enum    {
 
         FV_EVENT_DISK_LOAD,
         FV_EVENT_DISK_EJECT
 
         };
-    
+
 /*** flags ***/
 
 #define FF_EVENT_KEY_UP                         (1 << 0)
@@ -890,7 +890,7 @@ enum    {
         FV_Window_Depth_Toggle
 
         };
-    
+
 enum    {
 
         FV_Window_Help_Show = 1,
@@ -974,7 +974,7 @@ enum    {                                       // FA_Display_Name
         FV_Display_Public
 
         };
-    
+
 typedef struct FeelinHSV
 {
     uint16                                      h;
@@ -1032,7 +1032,7 @@ enum    {
         FV_Frame_DownLeft,
         FV_Frame_DownRight,
         FV_Frame_DownCenter
-        
+
         };
 
 #define FF_Frame_Draw_Select                    (1 << 0)
@@ -1169,8 +1169,8 @@ enum    {                                       /* FA_SetMin & FA_SetMax */
         FV_SetWidth,
         FV_SetHeight
 
-        }; 
-    
+        };
+
 #if F_CODE_DEPRECATED
 enum    {
 
@@ -1444,7 +1444,7 @@ FAreaNode;
 /****************************************************************************
 *** Dynamic Classes *********************************************************
 ****************************************************************************/
- 
+
 #define FC_Adjust                               "Adjust"
 #define FC_AdjustBrush                          "AdjustBrush"
 #define FC_AdjustColor                          "AdjustColor"
@@ -1615,7 +1615,7 @@ struct  FS_Thread_Send                          { uint32 Cmd; };
 /*** Values ****************************************************************/
 
 #define FV_Adjust_Separator         '\n'
-  
+
 enum    {
 
         FV_Image_Normal = 0,
@@ -1664,7 +1664,7 @@ enum    {
         FV_Cycle_EntriesType_Array
 
         };
-    
+
 enum    {
 
         FV_Cycle_Layout_Right = 0,
@@ -1745,7 +1745,7 @@ enum    {
         FV_List_Remove_All
 
         };
-    
+
 enum    {
 
         FV_List_GetEntry_First = -5,

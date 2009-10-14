@@ -79,7 +79,7 @@ int32 titlebar_new(FClass *Class,FObject Obj,STRPTR Fmt)
         "SourceType",  "Memory",
 
     End;
-    
+
     if (xml != NULL)
     {
         uint32 id_Resolve = F_DynamicFindID("FM_Document_Resolve");
@@ -94,7 +94,7 @@ int32 titlebar_new(FClass *Class,FObject Obj,STRPTR Fmt)
             {
                 FXMLAttribute *attribute;
                 uint32 span=1;
-                
+
                 for (attribute = (FXMLAttribute *)(markup -> AttributesList.Head) ; attribute ; attribute = attribute -> Next)
                 {
                     if (attribute -> Name -> ID == FV_XML_ID_SPAN)
@@ -102,7 +102,7 @@ int32 titlebar_new(FClass *Class,FObject Obj,STRPTR Fmt)
                         span = F_Do(xml,id_Resolve,attribute -> Data,FV_TYPE_INTEGER,NULL,NULL);
                     }
                 }
-     
+
                 n += span;
             }
         }
@@ -126,18 +126,18 @@ int32 titlebar_new(FClass *Class,FObject Obj,STRPTR Fmt)
                 LOD -> TitleBar -> Position  = -1;
 
                 LOD -> ColumnCount = n;
-                
+
                 for (n = 0, markup = (FXMLMarkup *) F_Get(xml,(uint32) "Markups") ; markup ; markup = markup -> Next, n++)
                 {
                     if (markup -> Name -> ID == FV_XML_ID_COL)
                     {
                         FXMLAttribute *attribute;
                         uint32 span=0;
-                        
+
                         /*** default values ***/
 
                         LOD -> Columns[n].Padding = 4;
-                        
+
                         /*** reading ***/
 
                         for (attribute = (FXMLAttribute *)(markup -> AttributesList.Head) ; attribute ; attribute = attribute -> Next)
@@ -167,16 +167,16 @@ int32 titlebar_new(FClass *Class,FObject Obj,STRPTR Fmt)
                                     LOD -> Columns[n].Padding = F_Do(xml,id_Resolve,attribute -> Data,FV_TYPE_INTEGER,NULL,NULL);
                                 }
                                 break;
-                             
+
                                 case FV_XML_ID_SPAN:
                                 {
-                                    if (span = F_Do(xml,id_Resolve,attribute -> Data,FV_TYPE_INTEGER,NULL,NULL))
+                                    if ((span = F_Do(xml,id_Resolve,attribute -> Data,FV_TYPE_INTEGER,NULL,NULL)))
                                     {
                                        span--;
                                     }
                                 }
                                 break;
-                             
+
                                 case FV_XML_ID_WEIGHT:
                                 {
                                     LOD -> Columns[n].Weight = F_Do(xml,id_Resolve,attribute -> Data,FV_TYPE_INTEGER,NULL,NULL);
@@ -184,7 +184,7 @@ int32 titlebar_new(FClass *Class,FObject Obj,STRPTR Fmt)
                                 break;
                             }
                         }
-                     
+
                         if (span)
                         {
                             FColumn *ref = &LOD -> Columns[n];
@@ -225,8 +225,8 @@ void titlebar_compute_dimensions(FClass *Class,FObject Obj)
             BOOL prev_bar=FALSE;
 
             line_display(Class,Obj,line);
-            
-            line -> Height = 0; 
+
+            line -> Height = 0;
 
             for (j = 0 ; j < LOD -> ColumnCount ; j++)
             {
@@ -235,30 +235,30 @@ void titlebar_compute_dimensions(FClass *Class,FObject Obj)
                 if (line -> Strings[j])
                 {
                     F_Do(LOD -> TDObj,FM_Set,
-                                      
+
                         FA_TextDisplay_Font,       _font,
                         FA_TextDisplay_Width,      -1,
                         FA_TextDisplay_Height,     -1,
                         FA_TextDisplay_Contents,   line -> Strings[j],
                         FA_TextDisplay_PreParse,   line -> PreParses[j],
-                                      
+
                         TAG_DONE);
 
                     F_Do(LOD -> TDObj,FM_Get,
 
                         FA_TextDisplay_Width,      &tw,
                         FA_TextDisplay_Height,     &th,
-                                      
+
                         TAG_DONE);
-                                      
+
                     /* frame borders ********************************************/
-                                      
+
                     if (fd)
                     {
                         tw += MAX(fd -> Border[0].l,fd -> Border[1].l) + MAX(fd -> Border[0].r,fd -> Border[1].r) + MAX(fd -> Padding[0].l,fd -> Padding[1].l) + MAX(fd -> Padding[0].r,fd -> Padding[1].r);
                         th += MAX(fd -> Border[0].t,fd -> Border[1].t) + MAX(fd -> Border[0].b,fd -> Border[1].b) + MAX(fd -> Padding[0].t,fd -> Padding[1].t) + MAX(fd -> Padding[0].b,fd -> Padding[1].b);
                     }
-                                      
+
                     /* padding flags ********************************************/
 
                     if (LOD -> Columns[j].Padding)
@@ -279,7 +279,7 @@ void titlebar_compute_dimensions(FClass *Class,FObject Obj)
                             LOD -> Columns[j].Flags |= FF_COLUMN_PADLEFT;
                         }
                     }
-                 
+
                     if (FF_COLUMN_PADLEFT & LOD -> Columns[j].Flags)
                     {
                         tw += LOD -> Columns[j].Padding;
@@ -290,7 +290,7 @@ void titlebar_compute_dimensions(FClass *Class,FObject Obj)
                     }
 
                     /* bar flags ************************************************/
-                                      
+
                     if (prev_bar)
                     {
                         LOD -> Columns[j].Flags |= FF_COLUMN_PREVBAR;
@@ -300,7 +300,7 @@ void titlebar_compute_dimensions(FClass *Class,FObject Obj)
                     {
                         LOD -> Columns[j].Flags &= ~FF_COLUMN_PREVBAR;
                     }
-                                      
+
                     if ((FF_COLUMN_BAR & LOD -> Columns[j].Flags) && (j + 1 < LOD -> ColumnCount))
                     {
                         tw ++; prev_bar = TRUE;
@@ -310,13 +310,13 @@ void titlebar_compute_dimensions(FClass *Class,FObject Obj)
                         prev_bar = FALSE;
                     }
                 }
-             
+
                 line -> Height = MAX(line -> Height,th);
                 line -> Widths[j] = tw;
-                
+
                 LOD -> Columns[j].Width = line -> Widths[j];
             }
-         
+
             LOD -> TitleBarH = line -> Height;
         }
     }
@@ -377,17 +377,17 @@ int32 titlebar_setup(FClass *Class,FObject Obj)
     struct LocalObjectData *LOD = F_LOD(Class,Obj);
 
     LOD -> TitleBarH = 0;
- 
+
     if (LOD -> TitleBar)
     {
         uint32 j;
         uint32 data;
-   
+
         for (j = 0 ; j < LOD -> ColumnCount ; j++)
         {
             LOD -> TitleBar -> Widths[j] = 0;
         }
-   
+
 /*** scheme ****************************************************************/
 
         data = F_Do(_app,FM_Application_Resolve,LOD -> p_title_scheme,NULL);
@@ -398,16 +398,16 @@ int32 titlebar_setup(FClass *Class,FObject Obj)
         }
 
         _render -> Palette = (LOD -> TitleScheme) ? LOD -> TitleScheme : LOD -> Scheme;
-   
+
 /*** frame *****************************************************************/
 
         LOD -> TitleFrame = FrameObject,
-            
+
             FA_Frame,   LOD -> p_title_frame,
             FA_Back,    LOD -> p_title_back,
-            
+
             End;
-         
+
         if (LOD -> TitleFrame)
         {
             if (F_Do(LOD -> TitleFrame,FM_Frame_Setup,_render))
@@ -423,7 +423,7 @@ int32 titlebar_setup(FClass *Class,FObject Obj)
             else
             {
                 F_Dispose(LOD -> TitleFrame);
-                
+
                 LOD -> TitleFrame = NULL;
             }
         }
@@ -432,7 +432,7 @@ int32 titlebar_setup(FClass *Class,FObject Obj)
         {
             return FALSE;
         }
- 
+
         titlebar_compute_dimensions(Class,Obj);
     }
     return TRUE;
@@ -452,18 +452,18 @@ void titlebar_cleanup(FClass *Class,FObject Obj)
                 LOD -> TitleFramePublic -> Back = NULL;
                 LOD -> Flags &= FF_LIST_TITLE_INHERITED_BACK;
             }
- 
+
             F_Do(LOD -> TitleFrame,FM_Frame_Cleanup,_render);
             F_DisposeObj(LOD -> TitleFrame);
 
             LOD -> TitleFrame = NULL;
             LOD -> TitleFramePublic = NULL;
         }
-   
+
         if (LOD -> TitleScheme)
         {
             F_Do(_display,FM_RemPalette,LOD -> TitleScheme);
-            
+
             LOD -> TitleScheme = NULL;
         }
     }
@@ -491,14 +491,14 @@ void titlebar_draw(FClass *Class,FObject Obj)
         {
             F_Set(LOD -> TitleFramePublic -> Back,FA_ImageDisplay_Origin,(uint32) &b);
         }
-        
+
         _render -> Palette = (LOD -> TitleScheme) ? LOD -> TitleScheme : LOD -> Scheme;
 
         for (j = 0 ; j < LOD -> ColumnCount; j++)
         {
             FRect r;
             b.w = LOD -> Columns[j].AdjustedWidth;
-            
+
             if (LOD -> TitleFrame)
             {
                 F_Do(LOD -> TitleFrame,FM_Frame_Draw,_render,&b,FF_Frame_Draw_Erase);
@@ -524,7 +524,7 @@ void titlebar_draw(FClass *Class,FObject Obj)
             {
                 r.x2 -= LOD -> Columns[j].Padding;
             }
-            
+
             if (LOD -> TitleBar -> Strings[j])
             {
                 F_Do(LOD -> TDObj,FM_Set,
@@ -538,7 +538,7 @@ void titlebar_draw(FClass *Class,FObject Obj)
 
                 F_Do(LOD -> TDObj,FM_TextDisplay_Draw,&r);
             }
-            
+
             b.x += LOD -> Columns[j].AdjustedWidth;
         }
         _render -> Palette = previous_palette;

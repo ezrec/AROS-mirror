@@ -17,7 +17,7 @@ int32 histogram_add(struct LocalObjectData *LOD, uint32 ARGB, uint32 Count)
 
     ARGB &= rgbmask;
 
-    while (node = *nodeptr)
+    while ((node = *nodeptr))
     {
         if (node -> entry.rgb == ARGB)
         {
@@ -153,14 +153,14 @@ F_METHODM(uint32,Histogram_AddRGB,FS_Histogram_AddRGB)
     struct LocalObjectData *LOD = F_LOD(Class,Obj);
 
     uint32 n = 0;
-    
+
     F_Do(Obj,FM_Lock,FF_Lock_Exclusive);
-    
+
     if (histogram_add(LOD, Msg -> ARGB, Msg -> Weight))
     {
         n++;
     }
-    
+
     F_Do(Obj,FM_Unlock);
 
     return n;
@@ -170,7 +170,7 @@ F_METHODM(uint32,Histogram_AddRGB,FS_Histogram_AddRGB)
 F_METHODM(uint32,Histogram_AddPixels,FS_Histogram_AddPixels)
 {
     struct LocalObjectData *LOD = F_LOD(Class,Obj);
-     
+
     uint32 n=0;
 
     if (Msg -> ARGB && Msg -> Width && Msg -> Height)
@@ -179,7 +179,7 @@ F_METHODM(uint32,Histogram_AddPixels,FS_Histogram_AddPixels)
         uint32 i,j = Msg -> Width * Msg -> Height;
 
         F_Do(Obj,FM_Lock,FF_Lock_Exclusive);
-        
+
         for (i = 0 ; i < j ; i++)
         {
             if (histogram_add(LOD, *argb++, 1))
@@ -188,7 +188,7 @@ F_METHODM(uint32,Histogram_AddPixels,FS_Histogram_AddPixels)
             }
             else break;
         }
-        
+
         F_Do(Obj,FM_Unlock);
     }
 
@@ -219,7 +219,7 @@ FHEntry **histogram_scan(struct RNDTreeNode *node, FHEntry **Array)
 F_METHOD(FHEntry **,Histogram_CreateArray)
 {
     struct LocalObjectData *LOD = F_LOD(Class,Obj);
-    
+
     FHEntry **array = NULL;
 
     F_Do(Obj,FM_Lock,FF_Lock_Shared);
@@ -360,12 +360,12 @@ int32 cmpfunc_sig_asc(APTR data, FHEntry *ref1, FHEntry *ref2)
 F_METHODM(uint32 *,Histogram_Sort,FS_Histogram_Sort)
 {
     struct LocalObjectData *LOD = F_LOD(Class,Obj);
- 
+
     FHEntry **sortdata;
     int32 (*cmpfunc)(APTR, FHEntry *, FHEntry *) = NULL;
 
     F_Log(0,"Mode (%ld) - NumColors (%ld)",Msg -> Mode,LOD -> numcolors);
-    
+
     switch (Msg -> Mode)
     {
         case FV_HISTOGRAM_SORT_BRIGHTNESS:

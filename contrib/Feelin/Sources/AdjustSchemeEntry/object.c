@@ -2,11 +2,11 @@
 
 STATIC STRPTR numeric_string_array[] =
 {
-    "shine", "halfshine", "fill", "halfshadow", "shadow", "halfdark", "dark", "text", "highlight", F_ARRAY_END
+    "shine", "halfshine", "fill", "halfshadow", "shadow", "halfdark", "dark", "text", "highlight", 0
 };
 
 enum    {
-    
+
         FV_ARRAY_SHINE,
         FV_ARRAY_HALFSHINE,
         FV_ARRAY_FILL,
@@ -16,7 +16,7 @@ enum    {
         FV_ARRAY_DARK,
         FV_ARRAY_TEXT,
         FV_ARRAY_HIGHLIGHT,
-        
+
         ENTRIES_COUNT
 
         };
@@ -25,13 +25,13 @@ enum    {
 STATIC FObject Rectangle_(uint32 id)
 {
     return  AreaObject,
-            
+
             FA_ChainToCycle,  FALSE,
             FA_InputMode,     FV_InputMode_Immediate,
             FA_Back,          numeric_string_array[id],
             FA_MinWidth,      4,
             FA_MinHeight,     4,
-            
+
             End;
 }
 //+
@@ -46,7 +46,7 @@ STATIC FObject Rectangle_(uint32 id)
 F_METHOD(FObject,Adjust_New)
 {
     struct LocalObjectData *LOD = F_LOD(Class,Obj);
-    
+
     FObject entries[ENTRIES_COUNT];
 
     FObject entries_grp = HGroup,
@@ -59,9 +59,9 @@ F_METHOD(FObject,Adjust_New)
             Child, entries[5] = Rectangle_(FV_ARRAY_HALFDARK),
             Child, entries[6] = Rectangle_(FV_ARRAY_DARK),
         End,
-        
+
         Child, BarObject, FA_MinWidth,10, End,
-        
+
         Child, HGroup, FA_Group_HSpacing,0, FA_Weight,20,
             Child, entries[7] = Rectangle_(FV_ARRAY_TEXT),
             Child, entries[8] = Rectangle_(FV_ARRAY_HIGHLIGHT),
@@ -72,9 +72,9 @@ F_METHOD(FObject,Adjust_New)
     {
         return NULL;
     }
- 
+
     if (F_SuperDo(Class,Obj,Method,
-        
+
         "PreviewTitle", "Feelin",
         "PreviewClass", "PreviewImage",
         "Separator",     FV_ImageDisplay_Separator,
@@ -95,7 +95,7 @@ F_METHOD(FObject,Adjust_New)
         TAG_MORE,Msg))
     {
         uint32 i;
- 
+
         F_Do(LOD -> slider, FM_Notify, "Value", FV_Notify_Always, Obj, F_IDM(FM_Adjust_ToString), 2, FV_Notify_Value, TRUE);
 
         for (i = 0 ; i < ENTRIES_COUNT ; i++)
@@ -225,9 +225,9 @@ F_METHODM(uint32,Adjust_ToString,FS_Adjust_ToString)
 
             F_ARRAY_END
         };
-        
+
         uint32 rc;
- 
+
         rc = F_SuperDo(Class,Obj,Method,numeric_string_id[(uint32)(Msg -> Spec)].Name,Msg -> Notify);
 
         return rc;
@@ -242,7 +242,7 @@ F_METHODM(void,Adjust_ToObject,FS_Adjust_ToObject)
     struct LocalObjectData *LOD = F_LOD(Class,Obj);
 
     uint32 value = F_Do(Obj,F_IDM(FM_Adjust_Query),Msg -> Spec);
-    
+
     F_Do(LOD -> slider,FM_Set,FA_NoNotify,TRUE, "Value",0x0000FFFF & value, TAG_DONE);
 }
 //+

@@ -25,7 +25,7 @@ F_METHOD(LONG,Preview_Setup)
    if (F_SUPERDO())
    {
       uint32 spec = F_Get(Obj,F_IDR(FA_Preview_Spec));
- 
+
       if (spec)
       {
          LOD -> scheme = (FPalette *) F_Do(_display,FM_CreateColorScheme,spec,F_Get(Obj,FA_ColorScheme));
@@ -69,13 +69,13 @@ F_METHODM(void,Preview_Draw,FS_Draw)
     if (LOD -> scheme)
     {
         uint8 alpha;
-            
+
         if (FF_Render_TrueColors & _render_flags)
         {
             if (FF_Area_Disabled & _flags)
             {
                 alpha = 128;
-            
+
                 F_Erase(Obj, _ix, _iy, _ix2, _iy2, 0);
             }
             else
@@ -99,7 +99,7 @@ F_METHODM(void,Preview_Draw,FS_Draw)
             uint16 dw = w;
             uint16 bonus_w = _iw - (w * FV_PEN_COUNT);
             uint8 a;
-            
+
             if (FF_Render_TrueColors & _render->Flags)
             {
                 for (a = 0 ; a < FV_PEN_COUNT ; a++)
@@ -153,7 +153,7 @@ F_METHODM(void,Preview_Draw,FS_Draw)
                             ((pn[translate[a]]) << 8) | alpha);
                     }
                     y += dh;
-                } 
+                }
             }
             else
             {
@@ -179,14 +179,14 @@ F_METHODM(void,Preview_Draw,FS_Draw)
             uint16 bonush = _ih - (h * BY_SIDE);
             uint16 dh = h,a,b;
             uint8 p = 0;
-            
+
             if (FF_Render_TrueColors & _render_flags)
             {
                 for (a = 0 ; a < BY_SIDE ; a++)
                 {
                     uint16 dw = w;
                     uint16 x = _ix;
-                            
+
                     if (a == (BY_SIDE - 1)) dh = h + bonush;
 
                     for (b = 0 ; b < BY_SIDE ; b++)
@@ -236,7 +236,7 @@ F_METHODM(void,Preview_Draw,FS_Draw)
         if ((FF_Area_Disabled & _flags) && ((FF_Render_TrueColors & _render_flags) == 0))
         {
            STATIC uint16 pattern[] = {0xAAAA,0x5555,0xAAAA,0x5555};
-           uint16 *prev_ptrn = rp -> AreaPtrn;
+           const uint16 *prev_ptrn = rp -> AreaPtrn;
            uint32 prev_ptsz = rp -> AreaPtSz;
 
            rp -> AreaPtrn = pattern;

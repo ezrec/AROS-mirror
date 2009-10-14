@@ -12,7 +12,7 @@ uint32 String_PrevWord(struct LocalObjectData *LOD)
     {
         pos = LOD -> Cur - 1;
 
-        while (str[pos] == ' ' && pos) pos--; 
+        while (str[pos] == ' ' && pos) pos--;
         while (str[pos] != ' ' && pos) pos--;
 
         if (pos) pos++;
@@ -40,12 +40,12 @@ int32 String_Insert(FClass *Class,FObject Obj,UBYTE Char)
     struct LocalObjectData *LOD = F_LOD(Class,Obj);
     STRPTR chars;
     int32 ok=TRUE;
-    
+
     if (LOD -> Max && (LOD -> Len + 1 == LOD -> Max))
     {
         return FALSE;
     }
- 
+
     if (Char)
     {
         if ((chars = LOD -> Accept) != NULL)
@@ -69,7 +69,7 @@ int32 String_Insert(FClass *Class,FObject Obj,UBYTE Char)
             STRPTR src = LOD -> String;
             STRPTR dst;
             uint32  len = LOD -> Len - LOD -> Cur;
- 
+
             if (LOD -> Max)
             {
                 if (!LOD -> String)
@@ -89,25 +89,25 @@ int32 String_Insert(FClass *Class,FObject Obj,UBYTE Char)
                     {
                         LOD -> Allocated *= 2;
                     }
-                
+
                     dispose = LOD -> String;
                     LOD -> String = F_New(LOD -> Allocated);
-                    
+
 //               F_Log(0,"new 0x%08lx (%ld)",LOD -> String,LOD -> Allocated);
                 }
             }
-        
+
             if (LOD -> String)
             {
                 dst = LOD -> String + LOD -> Cur + 1;
 
 //            F_Log(0,"src 0x%08lx (%ld)(%ld)",src,LOD -> Cur,len);
-                
+
                 if (src && src != LOD -> String)
                 {
                     CopyMem(src,LOD -> String,LOD -> Cur);
                 }
-            
+
                 src += LOD -> Cur;
 
                 while (len--) dst[len] = src[len];
@@ -115,7 +115,7 @@ int32 String_Insert(FClass *Class,FObject Obj,UBYTE Char)
                 LOD -> String[LOD -> Cur++] = Char;
                 LOD -> String[++LOD -> Len] = 0;
             }
-             
+
             F_Dispose(dispose);
 
             return TRUE;
@@ -163,10 +163,10 @@ uint32 String_ClipLoad(FClass *Class,FObject Obj)
     if (IFFParseBase)
     {
         struct IFFHandle *iff = AllocIFF();
-        
+
         if (iff)
         {
-            if ((iff -> iff_Stream = (uint32) OpenClipboard(PRIMARY_CLIP)) != NULL)
+            if ((iff -> iff_Stream = (IPTR) OpenClipboard(PRIMARY_CLIP)) != 0)
             {
                 InitIFFasClip(iff);
 
@@ -177,7 +177,7 @@ uint32 String_ClipLoad(FClass *Class,FObject Obj)
                         if (!ParseIFF(iff,IFFPARSE_SCAN))
                         {
                             struct ContextNode *cn = CurrentChunk(iff);
-                            
+
                             if (cn)
                             {
                                 UBYTE c;
@@ -189,7 +189,7 @@ uint32 String_ClipLoad(FClass *Class,FObject Obj)
                                     if (!ReadChunkBytes(iff,&c,1))    break;
                                     if (String_Insert(Class,Obj,c))   added++;
                                     if (LOD -> Len + 1 == LOD -> Max) break;
-                                } 
+                                }
 
                                 LOD -> Pos = oldpos;
                                 LOD -> Cur = oldcur;
@@ -216,10 +216,10 @@ void String_ClipSave(FClass *Class,FObject Obj)
     if (IFFParseBase)
     {
         struct IFFHandle *iff = AllocIFF();
-        
+
         if (iff)
         {
-            if ((iff -> iff_Stream = (uint32) OpenClipboard(PRIMARY_CLIP)) != NULL)
+            if ((iff -> iff_Stream = (IPTR) OpenClipboard(PRIMARY_CLIP)) != 0)
             {
                 InitIFFasClip(iff);
 
@@ -227,7 +227,7 @@ void String_ClipSave(FClass *Class,FObject Obj)
                 {
                     if (!PushChunk(iff,MAKE_ID('F','T','X','T'),MAKE_ID('F','O','R','M'),IFFSIZE_UNKNOWN))
                     {
-                        if (!PushChunk(iff,NULL,MAKE_ID('C','H','R','S'),IFFSIZE_UNKNOWN))
+                        if (!PushChunk(iff,0,MAKE_ID('C','H','R','S'),IFFSIZE_UNKNOWN))
                         {
                             WriteChunkBytes(iff,LOD -> String,LOD -> Len);
                             PopChunk(iff);
@@ -270,14 +270,14 @@ F_METHODM(uint32,String_HandleEvent,FS_HandleEvent)
                 else                                        { sel  = 1; if (cur) --cur; }
             }
             break;
-            
+
             case FV_KEY_RIGHT:
             {
                 if (IEQUALIFIER_CONTROL & fev -> Qualifier) { sel += 1; }
                 else                                        { sel  = 1; if (cur < len) cur++; }
             }
             break;
-            
+
             case FV_KEY_STEPLEFT:   cur = String_PrevWord(LOD);   break;
             case FV_KEY_STEPRIGHT:  cur = String_NextWord(LOD);   break;
             case FV_KEY_FIRST:      cur = 0;                      break;
@@ -365,14 +365,14 @@ F_METHODM(uint32,String_HandleEvent,FS_HandleEvent)
             {
                 F_Dispose(LOD -> Undo);
                 LOD -> Undo = F_StrNew(NULL,"%s",LOD -> String);
- 
+
                 F_Set(Obj,F_IDA(FA_String_Changed),(uint32) LOD -> String);
 
                 if (FF_String_AdvanceOnCR & LOD -> Flags)
                 {
                     F_Set(_win,FA_Window_ActiveObject,FV_Window_ActiveObject_Next);
                 }
-        
+
                 return FF_HandleEvent_Eat;
             }
             break;
@@ -400,18 +400,18 @@ F_METHODM(uint32,String_HandleEvent,FS_HandleEvent)
             if (LOD -> Len != len)
             {
                 LOD -> Len = len;
-                
+
                 if (!LOD -> Len && !LOD -> Max)
                 {
                     F_Dispose(LOD -> String);
-                    
+
                     LOD -> String = NULL;
                     LOD -> Allocated = 0;
                 }
- 
+
                 F_SuperDo(Class,Obj,FM_Set,F_IDA(FA_String_Contents),LOD -> String,TAG_DONE);
             }
-            
+
             F_Draw(Obj,FF_Draw_Update | dflags);
         }
 
@@ -439,38 +439,38 @@ F_METHODM(uint32,String_HandleEvent,FS_HandleEvent)
                                 while (len--) LOD -> String[len] = ToLower(LOD -> String[len]);
                             }
                             break;
-                            
+
                             case 'L':
                             {
                                 while (len--) LOD -> String[len] = ToUpper(LOD -> String[len]);
                             }
                             break;
-                            
+
                             case 'u':
                             {
                                 F_Set(Obj,F_IDA(FA_String_Contents),(uint32)(LOD -> Undo));
                             }
                             break;
-                            
+
                             case 'c':
                             {
                                 String_ClipSave(Class,Obj);
                             }
                             return FF_HandleEvent_Eat;
-                            
+
                             case 'v':
                             {
                                 if (String_ClipLoad(Class,Obj) == 0) return FF_HandleEvent_Eat;
                             }
                             break;
-                            
+
                             case 'x':
                             {
                                 String_ClipSave(Class,Obj);
-                                F_Set(Obj,F_IDA(FA_String_Contents),NULL);
+                                F_Set(Obj,F_IDA(FA_String_Contents),0);
                             }
                             return FF_HandleEvent_Eat;
-                            
+
                             default: return 0;
                         }
 
@@ -484,16 +484,16 @@ F_METHODM(uint32,String_HandleEvent,FS_HandleEvent)
                         if (String_Insert(Class,Obj,fev -> DecodedChar))
                         {
                             F_Draw(Obj,FF_Draw_Update | FF_Draw_Insert);
-                            
+
                             if (LOD -> AttachedList)
                             {
                                 uint32 pos = F_Do(LOD -> AttachedList,(uint32) "FM_List_FindString", LOD -> String, NULL);
-                                
+
                                 F_Set(LOD -> AttachedList,(uint32) "FA_List_Active",pos);
                             }
-                            
+
                             F_SuperDo(Class,Obj,FM_Set,F_IDA(FA_String_Contents),LOD -> String,TAG_DONE);
-                            
+
                             return FF_HandleEvent_Eat;
                         }
                         else
@@ -548,7 +548,7 @@ F_METHODM(uint32,String_HandleEvent,FS_HandleEvent)
                     }
                     else if (FF_Area_Active & _flags)
                     {
-                        F_Set(_win,FA_Window_ActiveObject,NULL);
+                        F_Set(_win,FA_Window_ActiveObject,0);
                     }
                 }
             }

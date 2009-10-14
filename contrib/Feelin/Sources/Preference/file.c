@@ -100,14 +100,14 @@ void prefs_strip(struct FeelinClass *Class,FObject Obj)
 /*
 
    IFF NODE:
-   
+
    4 bytes - long name length
    ? bytes - name
    4 bytes - long data length
    ? bytes - data
 
 */
- 
+
 ///Prefs_Read
 F_METHODM(void,Prefs_Read,FS_Preference_Read)
 {
@@ -119,7 +119,7 @@ F_METHODM(void,Prefs_Read,FS_Preference_Read)
 
    if (p_obtain_storage(Class,Obj) && (iff = AllocIFF()))
    {
-      if ((iff -> iff_Stream = Open(name,MODE_OLDFILE)) != NULL)
+      if ((iff -> iff_Stream = (IPTR)Open(name,MODE_OLDFILE)) != NULL)
       {
          InitIFFasDOS(iff);
 
@@ -133,24 +133,24 @@ F_METHODM(void,Prefs_Read,FS_Preference_Read)
             {
                UWORD long_name_len=0;
                UWORD long_data_len=0;
- 
+
                ReadChunkBytes(iff,&long_name_len,2);
                ReadChunkBytes(iff,&long_data_len,2);
-               
+
     	    #if !BIG_ENDIAN_MACHINE
 	       long_name_len = AROS_BE2WORD(long_name_len);
-	       long_data_len = AROS_BE2WORD(long_data_len);	       
+	       long_data_len = AROS_BE2WORD(long_data_len);
 	    #endif
-	    	       
+
                if (long_name_len && long_data_len)
                {
                   FPItem *item;
- 
+
                   if ((item = F_NewP(LOD -> Pool,sizeof (FPItem) + long_name_len + long_data_len)) != NULL)
                   {
                      FPItem *same;
                      ULONG hash;
- 
+
                      item -> Key = (STRPTR)((ULONG)(item) + sizeof (FPItem));
                      item -> Data = (APTR)((ULONG)(item) + sizeof (FPItem) + long_name_len);
 
@@ -159,14 +159,14 @@ F_METHODM(void,Prefs_Read,FS_Preference_Read)
 
                      ReadChunkBytes(iff,item -> Key,long_name_len);
                      ReadChunkBytes(iff,item -> Data,long_data_len);
-                     
+
                      item -> KeyLength = F_StrLen(item -> Key);
 
-                     if ((same = (FPItem *) F_HashFind(LOD -> Table,item -> Key,item -> KeyLength,&hash)) != NULL)
+                     if ((same = (FPItem *) F_HashFind(LOD -> Table,item -> Key,item -> KeyLength,(uint32 *)&hash)) != NULL)
                      {
                         p_remove_item(Class,Obj,same,hash);
                      }
-                  
+
 //                     F_Log(0,"%04lx%04lx[%s][%s]",item -> NameSize,item -> DataSize,item -> Key,item -> Data);
 
                      item -> Next = (FPItem *) LOD -> Table -> Entries[hash];
@@ -179,7 +179,7 @@ F_METHODM(void,Prefs_Read,FS_Preference_Read)
             if (CUD -> db_Read)
             {
                ULONG i;
- 
+
                F_Log(0,"FILE: '%s'",name);
 
                for (i = 0 ; i < LOD -> Table -> Size ; i++)
@@ -189,7 +189,7 @@ F_METHODM(void,Prefs_Read,FS_Preference_Read)
                   for (item = (FPItem *)(LOD -> Table -> Entries[i]) ; item ; item = (FPItem *)(item -> Next))
                   {
                      ULONG *data = item -> Data;
-                     
+
                      if (((UBYTE *)(item -> Data))[0] > '!' && ((UBYTE *)(item -> Data))[1] < '~')
                      {
                         FPrintf(FeelinBase -> Console,"$[%32.32s] [%04ld.%04ld] ($%s)\n",item -> Data,item -> NameSize,item -> DataSize,item -> Key);
@@ -208,7 +208,7 @@ F_METHODM(void,Prefs_Read,FS_Preference_Read)
 
             CloseIFF(iff);
          }
-         Close(iff -> iff_Stream);
+         Close((BPTR)iff -> iff_Stream);
       }
       FreeIFF(iff);
    }
@@ -227,7 +227,7 @@ F_METHODM(void,Prefs_Write,FS_Preference_Write)
    {
       return;
    }
- 
+
 //   prefs_strip(Class,Obj);
 
    if ((ULONG)(name) == FV_Preference_BOTH)
@@ -253,7 +253,7 @@ F_METHODM(void,Prefs_Write,FS_Preference_Write)
          for (item = (FPItem *)(LOD -> Table -> Entries[i]) ; item ; item = (FPItem *)(item -> Next))
          {
             ULONG *data = item -> Data;
- 
+
             if (((UBYTE *)(item -> Data))[0] > '!' && ((UBYTE *)(item -> Data))[1] < '~')
             {
                FPrintf(FeelinBase -> Console,"$[%32.32s] [%04ld.%04ld] ($%s)\n",item -> Data,item -> NameSize,item -> DataSize,item -> Key);
@@ -270,7 +270,7 @@ F_METHODM(void,Prefs_Write,FS_Preference_Write)
 
    if ((iff = AllocIFF()) != NULL)
    {
-      if ((iff -> iff_Stream = Open(name,MODE_NEWFILE)) != NULL)
+      if ((iff -> iff_Stream = (IPTR)Open(name,MODE_NEWFILE)) != NULL)
       {
          InitIFFasDOS(iff);
 
@@ -290,7 +290,7 @@ F_METHODM(void,Prefs_Write,FS_Preference_Write)
                for (item = (FPItem *) LOD -> Table -> Entries[i] ; item ; item = item -> Next)
                {
                   PushChunk(iff,MAKE_ID('P','R','E','F'),ID_FP_X,IFFSIZE_UNKNOWN);
-                  
+
 	       #if BIG_ENDIAN_MACHINE
                   WriteChunkBytes(iff,&item -> NameSize,sizeof (UWORD));
                   WriteChunkBytes(iff,&item -> DataSize,sizeof (UWORD));
@@ -298,22 +298,22 @@ F_METHODM(void,Prefs_Write,FS_Preference_Write)
 	          {
 		     UWORD namesize = AROS_WORD2BE(item->NameSize);
 		     UWORD datasize = AROS_WORD2BE(item->DataSize);
-		     
+
                      WriteChunkBytes(iff,&namesize,sizeof (UWORD));
                      WriteChunkBytes(iff,&datasize,sizeof (UWORD));
 	          }
 	       #endif
-	       
+
                   WriteChunkBytes(iff,item -> Key,item -> NameSize);
                   WriteChunkBytes(iff,item -> Data,item -> DataSize);
-                  
+
                   PopChunk(iff);
                }
             }
             PopChunk(iff);
             CloseIFF(iff);
          }
-         Close(iff -> iff_Stream);
+         Close((BPTR)iff -> iff_Stream);
       }
       else
       {

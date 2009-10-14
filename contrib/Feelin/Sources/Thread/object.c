@@ -10,62 +10,62 @@
 F_THREAD_ENTRY(thread_main)
 {
     struct Process *proc = (struct Process *) FindTask(NULL);
-    
+
     for (;;)
     {
         FThreadMsg *msg = (FThreadMsg *) GetMsg(&proc->pr_MsgPort);
-    
+
         if (msg)
         {
             if (msg->Action == FV_Thread_Init)
             {
                 struct FS_Thread_Init *params = msg->Params;
-               
+
                 struct FeelinClass *Class = params->Class;
                 FObject Obj = params->Object;
                 F_THREAD_ENTRY_PROTO((*entry)) = params->UserEntry;
                 APTR userdata = params->UserData;
                 struct FeelinBase *FeelinBase = params->Feelin;
-               
+
                 struct LocalObjectData *LOD = F_LOD(Class,Obj);
-    
+
                 msg->Return = TRUE;
-               
+
                 ReplyMsg((struct Message *) msg);
 
                 /* call user function */
 
                 /*GOFROMIEL: 'entry' ne peut pas être  NULL,  nous  l'avons
                 déjà testé lors de la création de l'objet (Thread_New)*/
-               
+
                 entry(Obj,userdata,FeelinBase);
 
                 /* Terminate all messages sent and waiting for a reply */
-               
+
                 if (!AttemptSemaphore(&LOD->arbitrer))
                 {
                     while ((msg = (FThreadMsg *) GetMsg(&proc->pr_MsgPort)) != NULL)
                     {
                         ReplyMsg((APTR) msg);
                     }
-               
+
                     ObtainSemaphore(&LOD->arbitrer);
                 }
-           
+
                 LOD->process = NULL; /* it's the signal that this process does no longer exist */
 
                 ReleaseSemaphore(&LOD->arbitrer);
-                
+
                 return;
             }
             else
             {
                 /* re-queue message */
-               
+
                 PutMsg(&proc->pr_MsgPort, (struct Message *) msg);
             }
         }
-    
+
         Wait(1 << proc -> pr_MsgPort.mp_SigBit);
     };
 }
@@ -80,7 +80,7 @@ F_METHOD(FObject, Thread_New)
 {
     struct LocalObjectData *LOD = F_LOD(Class, Obj);
     struct TagItem *Tags = Msg, item;
-    
+
     uint32 entry = 0, stacksize = 8192, pri = 0, name = NULL;
     APTR data = NULL;
 
@@ -101,14 +101,14 @@ F_METHOD(FObject, Thread_New)
     if (entry)
     {
         ObtainSemaphore(&LOD->arbitrer);
-        
+
         LOD->process = CreateNewProcTags(
-            
+
             NP_Entry,       (uint32) thread_main,
             NP_StackSize,   stacksize,
             NP_Priority,    pri,
             NP_Name,        (uint32) name,
-            
+
             TAG_DONE);
 
         ReleaseSemaphore(&LOD->arbitrer);
@@ -120,13 +120,13 @@ F_METHOD(FObject, Thread_New)
 //            F_Log(0, "Process 0x%08lx - FM_Thread_Send 0x%08lx (%ld)", (uint32) LOD->process, F_IDM(FM_Thread_Send), FM_Thread_Send);
 
             rc = F_Do(Obj, F_IDM(FM_Thread_Send), FV_Thread_Init, Class, Obj, entry, data, FeelinBase);
-            
+
             if (rc)
             {
                 /* User init msg */
-                
+
                 rc = F_Do(Obj, F_IDM(FM_Thread_Send), FV_Thread_Hello);
-                
+
                 if (rc)
                 {
                     return Obj;
@@ -153,7 +153,7 @@ F_METHOD(void, Thread_Dispose)
     if (!F_Do(Obj, F_IDM(FM_Thread_Send), FV_Thread_Bye))
     {
         /* process is not dead, but doesn't respond */
-        
+
         if (LOD->process)
         {
             F_Alert("Thread.Dispose",
@@ -161,11 +161,11 @@ F_METHOD(void, Thread_Dispose)
                     "The process 0x%08lx will be killed", (uint32) LOD->process);
 
             Forbid();
-            
+
             RemTask((struct Task *) (LOD->process));
-            
+
             LOD->process = NULL;
-            
+
             Permit();
         }
     }
@@ -213,16 +213,16 @@ F_METHOD(void, Thread_Set)
 F_METHODM(uint32, Thread_Send, FS_Thread_Send)
 {
     struct LocalObjectData *LOD = F_LOD(Class, Obj);
-    FThreadMsg msg; 
+    FThreadMsg msg;
 
     //   F_Log(0,"SEND 0x%08lx 0x%08lx",((ULONG *)(Msg))[0],((ULONG *)(Msg))[1]);
 
-    msg.Return = 0; 
+    msg.Return = 0;
 
-    /* prevent process death during a send */  
-    
+    /* prevent process death during a send */
+
     ObtainSemaphoreShared(&LOD->arbitrer);
-    
+
     if (LOD->process)
     {
         msg.SysMsg.mn_Node.ln_Succ = NULL;
@@ -245,7 +245,7 @@ F_METHODM(uint32, Thread_Send, FS_Thread_Send)
         if (msg.SysMsg.mn_ReplyPort)
         {
             uint32 i;
-            
+
             #ifdef DB_SEND
             F_Log(0,"Reply 0x%08lx", (uint32) msg.SysMsg.mn_ReplyPort);
             #endif
@@ -255,19 +255,19 @@ F_METHODM(uint32, Thread_Send, FS_Thread_Send)
             #endif
 
             PutMsg(&LOD -> process -> pr_MsgPort, (struct Message *) &msg);
-            
+
             for (i = 0 ; i < 200 ; i++)
             {
                 struct Message *replied = GetMsg(msg.SysMsg.mn_ReplyPort);
-                    
+
                 if (replied)
                 {
-                    if (replied == &msg)
+                    if (replied == (struct Message *)&msg)
                     {
                         #ifdef DB_SEND
                         F_Log(0,"message replied");
                         #endif
-                        
+
                         break;
                     }
                     else
@@ -280,11 +280,11 @@ F_METHODM(uint32, Thread_Send, FS_Thread_Send)
                     #ifdef DB_SEND
                     F_Log(0,"waiting (%ld)",i);
                     #endif
- 
+
                     WaitTOF();
                 }
             }
-        
+
             if (i == 199)
             {
                 F_Log(0,"Time's out !!");

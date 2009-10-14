@@ -27,30 +27,24 @@
 extern struct ExecBase             *SysBase;
 struct in_FeelinBase               *FeelinInternalBase;
 
-struct MyArgs
-{
-   LONG                             ShowMethods;
-   LONG                             ShowAttributes;
-   LONG                             ShowValues;
-   LONG                             dummy;
-};
+enum {SHOWMETHODS, SHOWATTRIBUTES, SHOWVALUES, DUMMY, ARG_CNT};
 
-void main(void)
+int main(void)
 {
    if (!FindName(&SysBase -> LibList,"feelin.library"))
    {
       Printf("Feelin is not running.\n");
 
-      return;
+      return 1;
    }
 
-   if (FeelinInternalBase = (struct in_FeelinBase *) OpenLibrary("feelin.library",FV_FEELIN_VERSION))
+   if ((FeelinInternalBase = (struct in_FeelinBase *) OpenLibrary("feelin.library",FV_FEELIN_VERSION)))
    {
 #define FeelinBase FeelinInternalBase
-      struct MyArgs args[] = { FALSE, FALSE, FALSE, 0 };
+      IPTR args[ARG_CNT] = { FALSE, FALSE, FALSE, 0 };
       APTR rdargs;
 
-      if (rdargs = ReadArgs("M=METHODS/S,A=ATTRIBUTES/S,V=VALUES/S",(LONG *)(&args),NULL))
+      if ((rdargs = ReadArgs("M=METHODS/S,A=ATTRIBUTES/S,V=VALUES/S",(IPTR *)(&args),NULL)))
       {
          struct in_FeelinClass *Class;
          ULONG nc=0,ns=0,nl=0;
@@ -75,7 +69,7 @@ void main(void)
                Printf("*** Break\n"); break;
             }
 
-            if (args -> ShowMethods)
+            if (args[SHOWMETHODS])
             {
                FClassMethod *entry = Class -> Public.Methods;
 
@@ -84,7 +78,7 @@ void main(void)
                   for ( ; entry -> Function ; entry++)
                   {
                      Printf("   >> Method 0x%08lx (0x%08lx)",entry -> ID,entry -> Function);
-                     
+
                      if (entry -> Name)
                      {
                         Printf(" - %s",entry -> Name);
@@ -97,18 +91,18 @@ void main(void)
                   Printf("   >> No Methods\n");
                }
             }
-         
-            if (args -> ShowAttributes)
+
+            if (args[SHOWATTRIBUTES])
             {
                FClassAttribute *entry = Class -> Public.Attributes;
-               
+
                if (entry)
                {
                   for ( ; entry -> Name ; entry++)
                   {
                      Printf("   >> Attribute 0x%08lx (%s)\n",entry -> ID,entry -> Name);
-                     
-                     if (args -> ShowValues)
+
+                     if (args[SHOWVALUES])
                      {
                         FClassAttributeValue *val = entry -> Values;
 
@@ -142,4 +136,5 @@ void main(void)
 
       F_FEELIN_CLOSE;
    }
+   return 0;
 }

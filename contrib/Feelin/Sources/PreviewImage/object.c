@@ -16,12 +16,12 @@ F_METHOD_NEW(Preview_New)
     if (F_SUPERDO())
     {
         LOD -> preview = ImageDisplayObject,
-        
+
             FA_ImageDisplay_Spec, "fill",
             FA_ImageDisplay_Origin, &LOD->preview_box,
-           
+
             End;
-   
+
         if (LOD -> preview)
         {
            return Obj;
@@ -59,7 +59,7 @@ F_METHOD_SETUP(Preview_Setup)
       F_Set(LOD -> preview,FA_ImageDisplay_Spec,spec);
 
       F_DoA(LOD -> preview,FM_ImageDisplay_Setup,Msg);
-      
+
       return TRUE;
    }
    return FALSE;
@@ -81,7 +81,7 @@ F_METHOD(uint32,Preview_Cleanup)
 F_METHODM(void,Preview_Draw,FS_Draw)
 {
     struct LocalObjectData *LOD = F_LOD(Class,Obj);
-    
+
     STRPTR spec = (STRPTR) F_Get(Obj,F_IDR(FA_Preview_Spec));
 
     F_SUPERDO();
@@ -89,7 +89,7 @@ F_METHODM(void,Preview_Draw,FS_Draw)
     if (spec)
     {
         FRect r;
-         
+
         r.x1 = _ix ; r.x2 = r.x1 + _iw - 1;
         r.y1 = _iy ; r.y2 = r.y1 + _ih - 1;
 
@@ -97,28 +97,28 @@ F_METHODM(void,Preview_Draw,FS_Draw)
         LOD->preview_box.y = _iy;
         LOD->preview_box.w = _iw;
         LOD->preview_box.h = _ih;
-   
+
         if (F_Get(LOD -> preview, FA_ImageDisplay_Mask))
         {
            F_Do(Obj, FM_Erase, &r, 0);
         }
-   
+
         F_Set(LOD -> preview,FA_ImageDisplay_State,(FF_Area_Selected & _flags) ? FV_Image_Selected : FV_Image_Normal);
 
         F_Do(LOD -> preview,FM_ImageDisplay_Draw,_render,&r,0);
-        
+
         if (FF_Area_Disabled & _flags)
         {
            struct RastPort *rp = _rp;
            STATIC uint16 pattern[] = {0xAAAA,0x5555,0xAAAA,0x5555};
-           uint16 *prev_ptrn = rp -> AreaPtrn;
+           const uint16 *prev_ptrn = rp -> AreaPtrn;
            uint32 prev_ptsz = rp -> AreaPtSz;
 
            rp -> AreaPtrn = pattern;
            rp -> AreaPtSz = 2;
 
            SetDrMd(rp,JAM1);
-   
+
            _FPen(FV_Pen_Fill);
            _BPen(0);
            _Boxf(r.x1,r.y1,r.x2,r.y2);
@@ -136,7 +136,7 @@ F_METHODM(uint32,Preview_Query,FS_Preview_Query)
    if (Msg -> Spec)
    {
       int32 val;
- 
+
       if (*Msg -> Spec == '<')
       {
          if (F_StrCmp("image ",Msg -> Spec + 1,6) == 0) return TRUE;
@@ -160,7 +160,7 @@ F_METHODM(uint32,Preview_Query,FS_Preview_Query)
          {
             case 'r': case 's': case 'p': case 'c':
             case 'g': case 'B': case 'P':
-               
+
             return TRUE;
          }
       }
@@ -173,7 +173,7 @@ F_METHODM(uint32,Preview_Query,FS_Preview_Query)
 F_METHODM(STRPTR,Preview_ToString,FS_Preview_ToString)
 {
    struct LocalObjectData *LOD = F_LOD(Class,Obj);
-    
+
    STRPTR spec = (STRPTR) F_SUPERDO();
 
    if (_render)

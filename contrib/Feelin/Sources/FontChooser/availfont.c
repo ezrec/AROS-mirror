@@ -65,7 +65,7 @@ void f_fontlist_add(struct FeelinAvailFontHeader *Header,struct TextAttr *ta)
                             if (Stricmp(font_node -> Name,font_prev -> Name) > 0) break;
                         }
 
-                        F_LinkInsert(&Header -> FontList,font_node,font_prev);
+                        F_LinkInsert(&Header -> FontList,(FNode *)font_node,(FNode *)font_prev);
 
 //                  F_Log(0,"af 0x%08lx - Name %s - Size %ld (0x%08lx)",af,af -> Name,Size,af -> Sizes);
 

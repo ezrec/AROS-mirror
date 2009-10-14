@@ -3,43 +3,43 @@
 #define COMPATIBILITY
 
 ///typedef
- 
+
 STATIC STRPTR cycle_entries_mode[] =
 {
     "no-repeat",
     "repeat",
     "scale",
 
-    F_ARRAY_END
+    TAG_DONE
 };
 
 enum    {
-    
+
         FV_MODE_NOREPEAT,
         FV_MODE_REPEAT,
         FV_MODE_SCALE
 
         };
-        
+
 /***/
-        
+
 STATIC STRPTR cycle_entries_filter[] =
 {
     "nearest",
     "average",
     "bilinear",
-    
-    F_ARRAY_END
+
+    TAG_DONE
 };
 
 enum    {
-    
+
         FV_FILTER_NEAREST,
         FV_FILTER_AVERAGE,
         FV_FILTER_BILINEAR
 
         };
-        
+
 /***/
 
 enum    {
@@ -80,13 +80,13 @@ STATIC FDOCValue xml_attributes_values[] =
 F_METHOD(FObject,Adjust_New)
 {
     struct LocalObjectData *LOD = F_LOD(Class,Obj);
-    
+
     if (F_SuperDo(Class,Obj,Method,
 
         "PreviewTitle", "Picture",
         "PreviewClass", "PreviewImage",
         "Separator",     FV_ImageDisplay_Separator,
-       
+
         Child, ColGroup(2),
             Child, HLabel("File"),
             Child, LOD->file = PopFileObject, End,
@@ -154,13 +154,13 @@ F_METHODM(uint32,Adjust_Query,FS_Adjust_Query)
 F_METHODM(uint32,Adjust_ToString,FS_Adjust_ToString)
 {
     struct LocalObjectData *LOD = F_LOD(Class,Obj);
-    
+
     if (Msg->Notify)
     {
         uint32 rc;
         STRPTR spec = NULL;
         STRPTR src = (STRPTR) F_Get(LOD->file, (uint32) "Contents");
-        
+
         if (src)
         {
             spec = F_StrNew(NULL,"<image type='picture' src='%s' mode='%s' filter='%s' />",
@@ -183,7 +183,7 @@ F_METHODM(uint32,Adjust_ToString,FS_Adjust_ToString)
 F_METHODM(void,Adjust_ToObject,FS_Adjust_ToObject)
 {
     struct LocalObjectData *LOD = F_LOD(Class,Obj);
-    
+
     STRPTR src = NULL;
     uint32 mode = FV_MODE_NOREPEAT;
     uint32 filter = FV_FILTER_NEAREST;
@@ -209,33 +209,33 @@ F_METHODM(void,Adjust_ToObject,FS_Adjust_ToObject)
                             src = attribute->Data;
                         }
                         break;
-                      
+
                         case FV_XML_ID_MODE:
                         {
                             STATIC FDOCValue xml_values_mode[] =
                             {
-                                "no-repeat",    FV_MODE_NOREPEAT,
-                                "repeat",       FV_MODE_REPEAT,
-                                "scale",        FV_MODE_SCALE,
-                                
+                                {"no-repeat",    FV_MODE_NOREPEAT},
+                                {"repeat",       FV_MODE_REPEAT},
+                                {"scale",        FV_MODE_SCALE},
+
                                 F_ARRAY_END
                             };
- 
+
                             mode = F_Do(doc,id_resolve, attribute->Data, FV_TYPE_INTEGER, xml_values_mode, NULL);
                         }
                         break;
-                    
+
                         case FV_XML_ID_FILTER:
                         {
                             STATIC FDOCValue xml_values_filter[] =
                             {
-                                "nearest",      FV_FILTER_NEAREST,
-                                "average",      FV_FILTER_AVERAGE,
-                                "bilinear",     FV_FILTER_BILINEAR,
-                                
+                                {"nearest",      FV_FILTER_NEAREST},
+                                {"average",      FV_FILTER_AVERAGE},
+                                {"bilinear",     FV_FILTER_BILINEAR},
+
                                 F_ARRAY_END
                             };
-                            
+
                             filter = F_Do(doc,id_resolve, attribute->Data, FV_TYPE_INTEGER, xml_values_filter, NULL);
                         }
                         break;
@@ -250,7 +250,7 @@ F_METHODM(void,Adjust_ToObject,FS_Adjust_ToObject)
         }
 #endif
     }
-  
+
     F_Do(LOD->file,FM_Set,FA_NoNotify,TRUE,"Contents",src,TAG_DONE);
     F_Do(LOD->mode,FM_Set,FA_NoNotify,TRUE,"FA_Cycle_Active",mode,TAG_DONE);
     F_Do(LOD->filter,FM_Set,FA_NoNotify,TRUE,"FA_Cycle_Active",filter,TAG_DONE);

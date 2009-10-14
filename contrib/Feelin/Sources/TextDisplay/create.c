@@ -53,7 +53,7 @@ STATIC STRPTR td_chunk_text_new(STRPTR s,FTDContext *Context,FTDChunkText **Save
    {
       uint8 c;
 
-      while ((c = *s) != NULL)
+      while ((c = *s) != 0)
       {
          if (c == '\n')
          {
@@ -92,7 +92,7 @@ STATIC STRPTR td_chunk_text_new(STRPTR s,FTDContext *Context,FTDChunkText **Save
    {
       uint8 c;
 
-      while ((c = *s) != NULL)
+      while ((c = *s) != 0)
       {
          if (c == '<' || c == '\n') break; s++;
       }
@@ -101,7 +101,7 @@ STATIC STRPTR td_chunk_text_new(STRPTR s,FTDContext *Context,FTDChunkText **Save
    {
       uint8 c;
 
-      while ((c = *s) != NULL)
+      while ((c = *s) != 0)
       {
          if (c == '<' || c == '_' || c == '\n') break; s++;
       }
@@ -132,7 +132,7 @@ STATIC STRPTR td_short_check(STRPTR s,FTDContext *context)
 
       s = td_chunk_text_new(s,context,&chunk);
 
-      chunk -> Header.Flags |= FF_TD_CHUNK_TEXT_SHORTCUT; 
+      chunk -> Header.Flags |= FF_TD_CHUNK_TEXT_SHORTCUT;
    }
    return s;
 }
@@ -213,7 +213,7 @@ STATIC STRPTR td_parse_tag(STRPTR s,FTDContext *Context)
                   case FV_TD_RESULT_TYPE_HEX:    font -> spec_type = FV_TD_CONTEXT_FONT_TYPE_RGB;  break;
                   case FV_TD_RESULT_TYPE_STRING: font -> spec_type = FV_TD_CONTEXT_FONT_TYPE_SPEC; break;
                }
- 
+
                font -> spec = (STRPTR) _td_result_attr(FV_TD_RESULT_FONT_COLOR);
 */
             }
@@ -237,7 +237,7 @@ STATIC STRPTR td_parse_tag(STRPTR s,FTDContext *Context)
             {
                ULONG len;
 
-               if ((len = F_StrLen(prev -> face)) != NULL)
+               if ((len = F_StrLen(prev -> face)) != 0)
                {
                   if ((font -> face = F_NewP(CUD -> Pool,len + 1)) != NULL)
                   {
@@ -254,7 +254,7 @@ STATIC STRPTR td_parse_tag(STRPTR s,FTDContext *Context)
             {
                font -> size = prev -> size;
             }
-         
+
             if (!font -> size)
             {
                font -> size = 8;
@@ -369,9 +369,9 @@ STATIC STRPTR td_parse_tag(STRPTR s,FTDContext *Context)
             };
 
             uint8 i;
-            
+
             FTDColor **colors = &pens -> down;
-            
+
             for (i = 0 ; i < FV_TD_CONTEXT_PENS_COUNT ; i++)
             {
                colors[i] = NULL;
@@ -467,12 +467,12 @@ STATIC STRPTR td_parse_tag(STRPTR s,FTDContext *Context)
                   }
                }
             }
-         
+
             if (colors[FV_TD_CONTEXT_PENS_UP] || colors[FV_TD_CONTEXT_PENS_LIGHT])
             {
                Context -> flags |= FF_TD_CONTEXT_EXTRA_TOPLEFT;
             }
-            
+
             if (colors[FV_TD_CONTEXT_PENS_DOWN] || colors[FV_TD_CONTEXT_PENS_SHADOW])
             {
                Context -> flags |= FF_TD_CONTEXT_EXTRA_BOTTOMRIGHT;
@@ -540,7 +540,7 @@ STATIC int32 td_create_lines(struct FeelinClass *Class,FObject Obj,STRPTR Text,F
          /* chunks are created when needed, and they are very specific e.g.
          some  text,  an image, a shortcut, an object... appropriate chunks
          are created as data is found.
-         
+
          For example, text attributes are saved in the 'context', when  raw
          text  is  found  a  chunk 'text' is created and attributes copied.
          Thus, if only  text  attributes  are  defined  no  text  chunk  is
@@ -593,10 +593,10 @@ STATIC int32 td_create_lines(struct FeelinClass *Class,FObject Obj,STRPTR Text,F
          }
          else
          {
-            
+
             /* At this point, there is raw  text.  A  text  chunk  must  be
             created to initiated.
-            
+
             WARNING: Don't forget that the raw text can contain a  shortcut
             definition */
 
@@ -627,22 +627,22 @@ void td_create(struct FeelinClass *Class,FObject Obj)
    struct LocalObjectData *LOD = F_LOD(Class,Obj);
 
    FTDContext *context;
- 
+
    if ((context = td_context_new(Class,Obj)) != NULL)
    {
       td_create_lines(Class,Obj,LOD -> Prep,context);
       td_create_lines(Class,Obj,LOD -> Text,context);
 
       LOD -> Shortcut = context -> shortcut;
-      
+
       /*** still colors list from context ***/
-      
+
       LOD -> ColorsList.Head = context -> ColorsList.Head;
       LOD -> ColorsList.Tail = context -> ColorsList.Tail;
-      
+
       context -> ColorsList.Head = NULL;
       context -> ColorsList.Tail = NULL;
-      
+
       if (FF_TD_CONTEXT_EXTRA_TOPLEFT & context -> flags)
       {
          LOD -> Flags |= FF_TD_EXTRA_TOPLEFT;

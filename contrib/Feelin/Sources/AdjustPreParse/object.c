@@ -19,7 +19,7 @@ F_METHOD(FObject,Adjust_New)
 {
    struct LocalObjectData *LOD = F_LOD(Class,Obj);
 
-   if (LOD -> HTMLParser = HTMLDocumentObject, End)
+   if ((LOD -> HTMLParser = HTMLDocumentObject, End))
    {
       F_XML_REFS_INIT(11);
       F_XML_REFS_ADD("style-bold",&LOD -> style_bold);
@@ -34,18 +34,18 @@ F_METHOD(FObject,Adjust_New)
       F_XML_REFS_ADD("pens-style",&LOD -> pens_style);
       F_XML_REFS_ADD("test",&LOD -> test);
       F_XML_REFS_DONE;
-   
-      if (LOD -> XMLObject = XMLObjectObject,
-         
+
+      if ((LOD -> XMLObject = XMLObjectObject,
+
             "Source",         "feelin/system-adjust-preparse.xml",
             "SourceType",     "File",
             "References",     F_XML_REFS,
             "Tags",           Msg,
-         
-         End)
+
+         End))
       {
          if (F_SuperDo(Class,Obj,Method,
-   
+
             "Preview",        FALSE,
 
          TAG_MORE, F_Get(LOD -> XMLObject,(uint32) "Tags")))
@@ -73,10 +73,10 @@ F_METHOD(FObject,Adjust_New)
 F_METHOD(void,Adjust_Dispose)
 {
    struct LocalObjectData *LOD = F_LOD(Class,Obj);
-   
+
    F_DisposeObj(LOD -> XMLObject); LOD -> XMLObject = NULL;
    F_DisposeObj(LOD -> HTMLParser); LOD -> HTMLParser = NULL;
-   
+
    F_SUPERDO();
 }
 //+
@@ -95,16 +95,16 @@ F_METHODM(uint32,Adjust_Query,FS_Adjust_Query)
 F_METHODM(uint32,Adjust_ToString,FS_Adjust_ToString)
 {
    struct LocalObjectData *LOD = F_LOD(Class,Obj);
- 
+
    if (Msg -> Notify)
    {
       uint32 rc;
       STRPTR spec = F_New(1024);
-      
+
       if (spec)
       {
          STRPTR buf = spec;
- 
+
          if (F_Get(LOD -> style_bold,FA_Selected))
          {
             buf = F_StrFmt(buf,"<b>");
@@ -119,19 +119,19 @@ F_METHODM(uint32,Adjust_ToString,FS_Adjust_ToString)
          {
             buf = F_StrFmt(buf,"<u>");
          }
-                                                   
+
          switch (F_Get(LOD -> align,(uint32) "FA_Cycle_Active"))
          {
             case 1: buf = F_StrFmt(buf,"<align='center'>"); break;
             case 2: buf = F_StrFmt(buf,"<align='right'>"); break;
          }
-         
+
 /*
          if (F_Get(LOD -> font_face,(uint32) "Spec") ||
              F_Get(LOD -> font_color,(uint32) "Spec"))
          {
             F_StrFmt(buf,"<font"); buf += F_StrLen(buf);
- 
+
             if (temp = (STRPTR) F_Get(LOD -> font_face,(uint32) "Spec"))
             {
                STRPTR size;
@@ -143,10 +143,10 @@ F_METHODM(uint32,Adjust_ToString,FS_Adjust_ToString)
 
                   F_StrFmt(buf," face=\"%s\" size=\"%spx\"",font,size); buf += F_StrLen(buf);
                }
-            
+
                F_Dispose(font);
             }
-         
+
             if (temp = (STRPTR) F_Get(LOD -> font_color,(uint32) "Spec"))
             {
                if (*temp == 'c')
@@ -162,20 +162,20 @@ F_METHODM(uint32,Adjust_ToString,FS_Adjust_ToString)
                   F_StrFmt(buf," color=\"%s\"",temp); buf += F_StrLen(buf);
                }
             }
-         
+
             *buf++ ='>';
          }
 */
          {
             STRPTR pens[5];
             uint32 pens_style    = F_Get(LOD -> pens_style, (uint32) "FA_Cycle_Active");
- 
+
             pens[FV_PEN_UP]      = (STRPTR) F_Get(LOD -> pens_up,    (uint32) "Spec");
             pens[FV_PEN_DOWN]    = (STRPTR) F_Get(LOD -> pens_down,  (uint32) "Spec");
             pens[FV_PEN_LIGHT]   = (STRPTR) F_Get(LOD -> pens_light, (uint32) "Spec");
             pens[FV_PEN_SHADOW]  = (STRPTR) F_Get(LOD -> pens_shadow,(uint32) "Spec");
             pens[FV_PEN_TEXT]    = (STRPTR) F_Get(LOD -> pens_text,  (uint32) "Spec");
-         
+
             if (pens[FV_PEN_UP] || pens[FV_PEN_DOWN] || pens[FV_PEN_LIGHT] || pens[FV_PEN_SHADOW] || pens[FV_PEN_TEXT] || pens_style)
             {
                STATIC STRPTR pens_name[] =
@@ -184,9 +184,9 @@ F_METHODM(uint32,Adjust_ToString,FS_Adjust_ToString)
                };
 
                uint32 i;
- 
+
                buf = F_StrFmt(buf,"<pens");
-               
+
                for (i = 0 ; i < 5 ; i++)
                {
                   if (pens[i])
@@ -194,7 +194,7 @@ F_METHODM(uint32,Adjust_ToString,FS_Adjust_ToString)
                      buf = F_StrFmt(buf," %s='%s'",pens_name[i],pens[i]);
                   }
                }
-            
+
                if (pens_style)
                {
                   STATIC STRPTR strings[] =
@@ -204,16 +204,16 @@ F_METHODM(uint32,Adjust_ToString,FS_Adjust_ToString)
 
                   buf = F_StrFmt(buf," style='%s'",strings[pens_style - 1]);
                }
-            
+
                *buf = '>';
             }
-         } 
+         }
       }
 
       rc = F_SuperDo(Class,Obj,Method,spec,Msg -> Notify);
 
       F_Set(LOD -> test,FA_Text_PreParse,rc);
- 
+
       F_Dispose(spec);
 
       return rc;
@@ -224,14 +224,14 @@ F_METHODM(uint32,Adjust_ToString,FS_Adjust_ToString)
    }
 
    /* clear */
-   
+
    return F_SuperDo(Class,Obj,Method,NULL,Msg -> Notify);
 }
 //+
 ///Adjust_ToObject
 
 enum  {
-   
+
       FV_HTML_ID_BOLD = FV_HTMLDOCUMENT_ID_DUMMY,
       FV_HTML_ID_ITALIC,
       FV_HTML_ID_UNDERLINED,
@@ -248,30 +248,30 @@ enum  {
       FV_HTML_ID_STYLE
 
       };
-  
+
 F_METHODM(void,Adjust_ToObject,FS_Adjust_ToObject)
 {
    struct LocalObjectData *LOD = F_LOD(Class,Obj);
- 
+
    STATIC FDOCID resolve_ids[] =
    {
-      "b",        1, FV_HTML_ID_BOLD,
-      "i",        1, FV_HTML_ID_ITALIC,
-      "u",        1, FV_HTML_ID_UNDERLINED,
-      "align",    5, FV_HTML_ID_ALIGN,
+      {"b",        1, FV_HTML_ID_BOLD},
+      {"i",        1, FV_HTML_ID_ITALIC},
+      {"u",        1, FV_HTML_ID_UNDERLINED},
+      {"align",    5, FV_HTML_ID_ALIGN},
 //      "font",     4, FV_HTML_ID_FONT,
 //      "face",     4, FV_HTML_ID_FACE,
 //      "color",    5, FV_HTML_ID_COLOR,
-      "pens",     4, FV_HTML_ID_PENS,
-      "up",       2, FV_HTML_ID_UP,
-      "light",    5, FV_HTML_ID_LIGHT,
-      "down",     4, FV_HTML_ID_DOWN,
-      "shadow",   6, FV_HTML_ID_SHADOW,
-      "text",     4, FV_HTML_ID_TEXT,
-      "style",    5, FV_HTML_ID_STYLE,
-       NULL
+      {"pens",     4, FV_HTML_ID_PENS},
+      {"up",       2, FV_HTML_ID_UP},
+      {"light",    5, FV_HTML_ID_LIGHT},
+      {"down",     4, FV_HTML_ID_DOWN},
+      {"shadow",   6, FV_HTML_ID_SHADOW},
+      {"text",     4, FV_HTML_ID_TEXT},
+      {"style",    5, FV_HTML_ID_STYLE},
+      { NULL }
    };
-   
+
    uint32 id_Resolve = F_DynamicFindID("FM_Document_Resolve");
    uint32 n;
 
@@ -283,11 +283,11 @@ F_METHODM(void,Adjust_ToObject,FS_Adjust_ToObject)
                           TAG_DONE);
 
    n = F_Do(LOD -> HTMLParser,(uint32) "FM_Document_AddIDs",resolve_ids);
- 
+
    if (n)
    {
       FHTMLNode *node;
- 
+
       for (node = (FHTMLNode *) F_Get(LOD -> HTMLParser,(uint32) "FA_HTMLDocument_Nodes") ; node ; node = node -> Next)
       {
          FHTMLMarkup *markup = (FHTMLMarkup *)(node);
@@ -329,11 +329,11 @@ F_METHODM(void,Adjust_ToObject,FS_Adjust_ToObject)
                   {
                      STATIC FDOCValue resolve[] =
                      {
-                        "left",0, "center",1, "right",2, NULL
+                        {"left",0}, {"center",1}, {"right",2}, {NULL}
                      };
-                     
+
                      uint32 val = F_Do(LOD -> HTMLParser,id_Resolve,attribute -> Data,0,resolve,NULL);
-                     
+
                      F_Do(LOD -> align,FM_Set, FA_NoNotify,TRUE, "FA_Cycle_Active",val, TAG_DONE);
                   }
                }
@@ -345,7 +345,7 @@ F_METHODM(void,Adjust_ToObject,FS_Adjust_ToObject)
                case FV_HTML_ID_FONT:
                {
                   FHTMLAttribute *attribute;
-                  
+
                   for (attribute = (FHTMLAttribute *)(markup -> AttributesList.Head) ; attribute ; attribute = attribute -> Next)
                   {
                      switch (attribute -> Name -> ID)
@@ -355,9 +355,9 @@ F_METHODM(void,Adjust_ToObject,FS_Adjust_ToObject)
                            if (*attribute -> Data == '#')
                            {
                               STRPTR spec = F_StrNew(NULL,"c:%s",attribute -> Data + 1);
-                              
+
                               F_Do(LOD -> font_color,FM_Set,FA_NoNotify,TRUE,"Spec",spec,TAG_DONE);
-                              
+
                               F_Dispose(spec);
                            }
                            else
@@ -366,7 +366,7 @@ F_METHODM(void,Adjust_ToObject,FS_Adjust_ToObject)
                            }
                         }
                         break;
-                        
+
                         case FV_HTML_ID_FACE:
                         {
                            F_Do(LOD -> font_face,FM_Set,FA_NoNotify,TRUE,"Spec",attribute -> Data,TAG_DONE);
@@ -390,7 +390,7 @@ F_METHODM(void,Adjust_ToObject,FS_Adjust_ToObject)
                   {
                      STATIC FDOCValue resolve[] =
                      {
-                        "emboss",1,"ghost",2,"glow",3,"light",4,"shadow",5,NULL
+                        {"emboss",1}, {"ghost",2}, {"glow",3}, {"light",4}, {"shadow",5}, {NULL}
                      };
 
                      uint32 val = F_Do(LOD -> HTMLParser,id_Resolve,attribute -> Data,0,resolve,NULL);

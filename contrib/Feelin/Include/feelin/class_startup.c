@@ -10,10 +10,10 @@ $VER: 01.00 (2005/08/09)
 
     Rewrote class startup. It's no longer a linked object, but  a  file  to
     include in the "Project.c" file of the class.
-    
+
     The following macros must be defined by the compiler when creating  the
     object :
-        
+
     F_CLASS_NAME: The name of the class e.g. "Area"
     F_CLASS_VERSION_STIRNG: The version string e.g. "09.12 (2005/07/25)"
     F_CLASS_VERSION: The version number of the class e.g. "09"
@@ -43,8 +43,8 @@ $VER: 01.00 (2005/08/09)
 #include <feelin/machine.h>
 
 ///NDEBUG
- 
-#ifndef NDEBUG 
+
+#ifndef NDEBUG
 #ifndef __AROS__
 #include <clib/debug_protos.h>
 #endif
@@ -112,7 +112,7 @@ int32 lib_return(void)
 }
 //+
 
-STATIC struct Resident ROMTag 
+STATIC struct Resident ROMTag
 #if (defined(__GNUC__) && defined(__amigaos4__)) || defined(__AROS__)
 __attribute__((used))
 #endif
@@ -120,7 +120,7 @@ __attribute__((used))
     RTC_MATCHWORD,
     &ROMTag,
     &ROMTag + 1,
-    
+
 #if defined(__MORPHOS__)
     RTF_PPC | RTF_EXTENDED | RTF_AUTOINIT,
 #elif defined(__AROS__)
@@ -152,7 +152,7 @@ SAVEDS STATIC F_LIB_INIT
     DEBUG_INIT(KPrintF("LibInit: in_ClassBase 0x%p SegList 0x%lx SysBase 0x%p\n",
                        ClassBase, SegList, SYS));
 */
-    ClassBase->seglist = SegList;
+    ClassBase->seglist = (BPTR)SegList;
 
     SysBase = SYS;
 
@@ -163,7 +163,7 @@ SAVEDS STATIC F_LIB_INIT
 SAVEDS STATIC F_LIB_EXPUNGE
 {
     F_LIB_EXPUNGE_ARGS
- 
+
     uint32 seglist = (uint32) ClassBase -> seglist;
 /*
     DEBUG_EXPUNGE(KPrintF("LIB_Expunge: LibBase 0x%p <%s> OpenCount %ld\n",
@@ -175,7 +175,7 @@ SAVEDS STATIC F_LIB_EXPUNGE
         DEBUG_EXPUNGE(KPrintF("LIB_Expunge: set LIBF_DELEXP\n"));
 */
         ClassBase -> lib.lib_Flags |= LIBF_DELEXP;
-        
+
         return 0;
     }
 
@@ -188,7 +188,7 @@ SAVEDS STATIC F_LIB_EXPUNGE
     DEBUG_EXPUNGE(KPrintF("LIB_Expunge: remove the library\n"));
 */
     Remove(&ClassBase->lib.lib_Node);
-    
+
     Permit();
 /*
     DEBUG_EXPUNGE(KPrintF("LIB_Expunge: free the library\n"));
@@ -213,7 +213,7 @@ STATIC F_LIB_OPEN
 
     ClassBase->lib.lib_Flags &= ~LIBF_DELEXP;
     ClassBase->lib.lib_OpenCnt++;
-    
+
     return &ClassBase->lib;
 }
 //+
@@ -229,7 +229,7 @@ STATIC F_LIB_CLOSE
 
     if (ClassBase->lib.lib_OpenCnt > 0)
         ClassBase->lib.lib_OpenCnt--;
-    
+
     if (ClassBase->lib.lib_OpenCnt == 0)
     {
         if (ClassBase->lib.lib_Flags & LIBF_DELEXP)
@@ -260,25 +260,25 @@ STATIC F_LIB_CLOSE
 STATIC uint32 lib_reserved(void)
 {
     uint32 a;
-            
+
     /* These useless lines are used to hide symbols and shutup the compiler
     */
- 
+
     a = (uint32)(&ROMTag) - (uint32)(&ROMTag);
- 
+
     return a;
 }
 //+
 
 #include <proto/feelin.h>
- 
+
 ///lib_query
 SAVEDS STATIC F_LIB_QUERY
 {
     F_LIB_QUERY_ARGS
-    
+
     FeelinBase = Feelin;
- 
+
     return feelin_auto_class_query(Which);
 }
 //+

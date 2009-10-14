@@ -2,7 +2,7 @@
 #include "support.h"
 
 #define CODE_NOMATH
- 
+
 #ifdef CODE_NOMATH
 #include "gradient.h"
 #else
@@ -47,7 +47,7 @@ STATIC uint32 color_type_to_rgb(uint32 type,uint32 data,FRender *Render)
             (uint32) "Depth",    &depth,
 
             TAG_DONE);
-            
+
          depth = MIN(depth,8);
 
          if (cm)
@@ -59,7 +59,7 @@ STATIC uint32 color_type_to_rgb(uint32 type,uint32 data,FRender *Render)
                data = (1 << depth) + data;
             }
 
-            GetRGB32(cm,data,1,(uint32 *)(&rgb));
+            GetRGB32(cm,data,1,(ULONG *)(&rgb));
 
 
             return (0x00FF0000 & rgb[0]) | (0x0000FF00 & rgb[1]) | (0x000000FF & rgb[2]);
@@ -81,7 +81,7 @@ STATIC uint32 color_type_to_rgb(uint32 type,uint32 data,FRender *Render)
 STATIC F_CODE_CREATE_XML(id_gradient_create)
 {
     FImage *img;
-    
+
     if ((img = F_NewP(CUD -> Pool,sizeof (FImage))))
     {
         for ( ; Attribute ; Attribute = Attribute -> Next)
@@ -93,33 +93,33 @@ STATIC F_CODE_CREATE_XML(id_gradient_create)
                     img -> angle = F_Do(CUD -> XMLDocument,F_ID(CUD -> IDs,FM_Document_Resolve),Attribute -> Data,FV_TYPE_INTEGER,NULL,NULL);
                 }
                 break;
-                
+
                 case FV_XML_ID_START:
                 case FV_XML_ID_FIRST_START:
                 {
                     img -> type1 = color_decode_spec(Attribute -> Data,&img -> data1);
                 }
                 break;
-                
+
                 case FV_XML_ID_MIDDLE:
                 {
                     img -> type2 = color_decode_spec(Attribute -> Data,&img -> data2);
                     img -> type3 = color_decode_spec(Attribute -> Data,&img -> data3);
                 }
                 break;
-                 
+
                 case FV_XML_ID_FIRST_END:
                 {
                     img -> type2 = color_decode_spec(Attribute -> Data,&img -> data2);
                 }
                 break;
-                
+
                 case FV_XML_ID_SECOND_START:
                 {
                     img -> type3 = color_decode_spec(Attribute -> Data,&img -> data3);
                 }
                 break;
-                
+
                 case FV_XML_ID_END:
                 case FV_XML_ID_SECOND_END:
                 {
@@ -128,7 +128,7 @@ STATIC F_CODE_CREATE_XML(id_gradient_create)
                 break;
             }
         }
-     
+
         if (img -> type1 && img -> type4)
         {
             return img;
@@ -280,13 +280,13 @@ STATIC int id_gradient_draw_angle
 /*
    {
       BPTR vx_out,vy_out;
-      
+
       if (vx_out = Open("ram:vx",MODE_NEWFILE))
       {
          if (vy_out = Open("ram:vy",MODE_NEWFILE))
          {
             uint32 i;
-            
+
             for (i = 0 ; i < 361 ; i++)
             {
                double rad = i * PI / 180;
@@ -301,14 +301,14 @@ STATIC int id_gradient_draw_angle
                   FPrintf(vx_out,"\n");
                   FPrintf(vy_out,"\n");
                }
- 
+
                FPrintf(vx_out,"0x%08lx,",vx);
                FPrintf(vy_out,"0x%08lx,",vy);
             }
-         
+
             FPrintf(vx_out,"DONE");
             FPrintf(vy_out,"DONE");
- 
+
             Close(vy_out);
          }
          Close(vx_out);
@@ -461,12 +461,12 @@ STATIC F_CODE_DRAW(id_gradient_draw)
    if (Msg -> Origin)
    {
       FRect o;
-      
+
       o.x1 = Msg -> Origin -> x;
       o.y1 = Msg -> Origin -> y;
       o.x2 = Msg -> Origin -> x + Msg -> Origin -> w - 1;
       o.y2 = Msg -> Origin -> y + Msg -> Origin -> h - 1;
- 
+
       F_Do(Msg -> Render,(uint32) "DrawGradient",Msg -> Rect,&o,image -> angle,s_rgb,e_rgb,0);
    }
    else
@@ -483,14 +483,14 @@ STATIC F_CODE_DRAW(id_gradient_draw)
     }
 
     //F_Log(0,"START 0x%06lx - END 0x%06lx - ANGLE %ld",s_rgb,e_rgb,image -> angle);
-  
+
     switch (image -> angle)
     {
 ///Vertical2
         case 180:
         {
             uint32 tmp;
-         
+
             tmp = rgb4; rgb4 = rgb1; rgb1 = tmp;
             tmp = rgb3; rgb3 = rgb2; rgb2 = tmp;
         }
@@ -501,7 +501,7 @@ STATIC F_CODE_DRAW(id_gradient_draw)
          if (image -> type2)
          {
             uint32 y;
-            
+
             if (Msg -> Origin)
             {
                y = Msg -> Origin -> h / 2 + Msg -> Origin -> y - 1;
@@ -510,7 +510,7 @@ STATIC F_CODE_DRAW(id_gradient_draw)
             {
                y = (Msg -> Rect -> y2 - Msg -> Rect -> y1 + 1) / 2 + Msg -> Rect -> y1 - 1;
             }
- 
+
             id_gradient_draw_vertical
             (
                Msg -> Render -> RPort,
@@ -548,15 +548,15 @@ STATIC F_CODE_DRAW(id_gradient_draw)
             id_gradient_draw_vertical
             (
                Msg -> Render -> RPort,
-               
+
                Msg -> Rect -> x1,
                Msg -> Rect -> y1,
                Msg -> Rect -> x2,
                Msg -> Rect -> y2,
-               
+
                (Msg -> Origin) ? Msg -> Origin -> y : Msg -> Rect -> y1,
                (Msg -> Origin) ? Msg -> Origin -> y + Msg -> Origin -> h - 1 : Msg -> Rect -> y2,
-               
+
                rgb1,
                rgb4
             );
@@ -568,16 +568,15 @@ STATIC F_CODE_DRAW(id_gradient_draw)
         case 270:
         {
             uint32 tmp;
-         
+
             tmp = rgb4; rgb4 = rgb1; rgb1 = tmp;
             tmp = rgb3; rgb3 = rgb2; rgb2 = tmp;
-        }  
+        }
 //+
 ///Horizontal
         case 90:
         {
-__horizontal:
- 
+
             if (image -> type2)
             {
                uint32 x;
@@ -606,7 +605,7 @@ __horizontal:
                   rgb1,
                   rgb2
                );
-               
+
                id_gradient_draw_horizontal
                (
                   Msg -> Render -> RPort,
@@ -628,7 +627,7 @@ __horizontal:
                id_gradient_draw_horizontal
                (
                   Msg -> Render -> RPort,
-                  
+
                   Msg -> Rect -> x1,
                   Msg -> Rect -> y1,
                   Msg -> Rect -> x2,
@@ -647,7 +646,7 @@ __horizontal:
         default:
         {
             APTR clip=NULL;
-    
+
             if (Msg -> Origin)
             {
                 if (Msg -> Origin -> x != Msg -> Rect -> x1 ||
@@ -658,7 +657,7 @@ __horizontal:
                     clip = (APTR) F_Do(Msg -> Render,FM_Render_AddClip,Msg -> Rect);
                 }
             }
-    
+
             id_gradient_draw_angle
             (
                 Msg -> Render -> RPort,
@@ -667,13 +666,13 @@ __horizontal:
                 (clip) ? Msg -> Origin -> y : Msg -> Rect -> y1,
                 (clip) ? Msg -> Origin -> x + Msg -> Origin -> w - 1 : Msg -> Rect -> x2,
                 (clip) ? Msg -> Origin -> y + Msg -> Origin -> h - 1 : Msg -> Rect -> y2,
-                
+
                 rgb1,
                 rgb4,
-                
+
                 image -> angle
             );
-            
+
             if (clip)
             {
                 F_Do(Msg -> Render,FM_Render_RemClip,clip);

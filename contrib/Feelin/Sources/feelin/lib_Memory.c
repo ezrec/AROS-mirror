@@ -6,7 +6,7 @@
 *****************************************************************************
 
 Why is Feelin memory system so f*cking fast ?
-    
+
     It's magic, or maybe because puddles are hashed are linked together  in
     a  tiny global hash table (e.g. 4ko) and an address to the chunk in the
     'middle' of the puddle is often used to 'skip' lots of checkings.
@@ -21,11 +21,11 @@ $VER: 04.00 (2005/08/05)
     Memory is now cleared and filled with a turbo method.
 
 $VER: 03.02 (2005/04/06)
- 
+
     Removed  an  error   introduced   while   porting   ASM   code   to   C.
     f_chunk_create()  failed allocating the last free memory chunk, making a
     new puddle to be created. I was testing a '<' instead of '<='...
- 
+
 $VER: 03.00 (2005/01/13)
 
     The whole memory system has finaly been ported to C, even  the  almighty
@@ -36,12 +36,12 @@ $VER: 03.00 (2005/01/13)
 #include "Private.h"
 
 //#define DB_MEMORY_STATS
- 
- 
+
+
 //#define DB_STATS_DISPOSE
 
 #define F_USE_PUDDLE_MIDDLE
- 
+
 ///DB_STATS_DISPOSE
 #ifdef DB_STATS_DISPOSE
 
@@ -64,7 +64,7 @@ STATIC struct FeelinStats stats =
 
 #endif
 //+
-  
+
 /****************************************************************************
 *** Private *****************************************************************
 ****************************************************************************/
@@ -115,7 +115,8 @@ STATIC void f_memory_hash_rem(FPuddle *Puddle, struct in_FeelinBase *FeelinBase)
 ///f_pool_create_a
 F_LIB_POOL_CREATE
 {
-    struct TagItem *tags = Tagl,*item;
+    const struct TagItem *tags = Tagl;
+    struct TagItem *item;
 
     uint32 pool_attributes = MEMF_CLEAR;
     uint32 pool_itemnum = 10;
@@ -158,7 +159,7 @@ F_LIB_POOL_CREATE
         InitSemaphore(&LOD -> Semaphore);
 
         LOD->flags = pool_attributes;
-        
+
         #ifdef F_USE_MEMORY_WALL
         LOD->thresh_size = sizeof (FMemChunk) + (((pool_wall_size * 2 + ItemSize + 3) >> 2) << 2);
         #else
@@ -166,11 +167,11 @@ F_LIB_POOL_CREATE
         #endif
 
         LOD->puddle_size = LOD -> thresh_size * pool_itemnum;
-        
+
         #ifdef F_USE_MEMORY_WALL
         LOD->wall_size = pool_wall_size;
         #endif
-        
+
         LOD->Semaphore.ss_Link.ln_Name = pool_name;
 
         Forbid();
@@ -282,11 +283,11 @@ F_LIB_NEWP
         #else
         Size = sizeof (FMemChunk) + (((Size + 3) >> 2) << 2);
         #endif
-        
+
         for (puddle = Pool -> puddles ; puddle ; puddle = puddle -> next)
         {
 //            F_Log(0,"try to create a memory chunk - Pool (0x%08lx) Puddle (0x%08lx)",Pool,puddle);
- 
+
 ///try to create a memory chunk
 
             if (puddle -> free >= Size)
@@ -308,7 +309,7 @@ F_LIB_NEWP
                         else
                         {
                             from = (FMemChunk *)((uint32)(next) + next -> size);
-                            
+
                             prev = next;
                             next = next -> next;
                         }
@@ -323,13 +324,13 @@ F_LIB_NEWP
                         {
                             from = (FMemChunk *)((uint32)(puddle->upper) - Size);
                         }
-                        
+
                         break;
                     }
                 }
 
                 chunk = from;
-                
+
                 if (chunk)
                 {
                     /* enough space was found for a  new  Drop  (or  memory
@@ -338,15 +339,15 @@ F_LIB_NEWP
 
                     chunk -> next = next;
                     chunk -> size = Size;
-                    
+
                     #ifdef F_USE_PUDDLE_MIDDLE
-                    
+
                     /* The 'middle' chunk is updated if the  new  chunk  is
                     located  in  the second part of the puddle. If there is
                     no 'middle' chunk  defined,  the  new  chunk  is  used,
                     otherwise  the  'middle'  chunk  is  adjusted using the
                     lowest chunk. */
-                    
+
                     if ((uint32)(chunk) >= ((uint32)(puddle->upper) - (uint32)(puddle->lower)) / 2 + (uint32)(puddle->lower))
                     {
                         if (puddle->middle)
@@ -400,7 +401,7 @@ F_LIB_NEWP
 
             /* Because puddle's memory was not cleared when  allocated,  we
             need to set *all* puddle's members. */
-            
+
             puddle->next = Pool->puddles;
             puddle->prev = NULL;
             puddle->lower = (APTR)((uint32)(puddle) + sizeof (FPuddle));
@@ -429,12 +430,12 @@ F_LIB_NEWP
             /* For accurate Chunks searches, 'lower' is used  as  hash  key
             instead  of the address of the puddle, because 'lower' is often
             the first chunk of the puddle. */
-            
+
             h = F_MEMORY_HASH(puddle->lower);
 
             puddle->hash_next = FeelinBase->hash_puddles[h];
             FeelinBase->hash_puddles[h] = puddle;
-            
+
 ///DB_MEMORY_STATS
             #ifdef DB_MEMORY_STATS
             FeelinBase->numpuddles++; // for performance monitoring
@@ -451,16 +452,16 @@ F_LIB_NEWP
         if (chunk)
         {
             chunk = (APTR)((uint32)(chunk) + sizeof (FMemChunk));
-            
+
             #ifdef F_USE_MEMORY_WALL
 ///wall before memory
-            
+
             if (Pool->wall_size)
             {
                 uint32 *mem = (uint32 *) chunk;
                 uint32 len = Pool->wall_size;
                 uint32 len8;
-                
+
                 len >>= 2;
                 len8 = (len >> 3) + 1;
 
@@ -484,10 +485,10 @@ F_LIB_NEWP
 
                 chunk = (FMemChunk *) mem;
             }
-        
+
 //+
             #endif
- 
+
             /* if MEMF_CLEAR is set the chunk is filled with zeros */
 
             if (MEMF_CLEAR & Pool -> flags)
@@ -524,7 +525,7 @@ F_LIB_NEWP
 
             #ifdef F_USE_MEMORY_WALL
 ///wall after memory
-            
+
             if (Pool->wall_size)
             {
                 uint32 *mem = (uint32 *)((uint32)(chunk) + Size - sizeof (FMemChunk) - Pool->wall_size * 2);
@@ -586,7 +587,7 @@ F_LIB_DISPOSE
 
         uint32 stats_n = 0;
         uint32 stats_n_prev = 0;
-        
+
         #endif
 //+
         #ifdef F_USE_MEMORY_WALL
@@ -594,20 +595,20 @@ F_LIB_DISPOSE
         #else
         uint32 h = F_MEMORY_HASH(((uint32)(Mem) - sizeof (FMemChunk)));
         #endif
-        
+
         FPuddle *puddle = NULL;
 
         FPuddle **stp = &FeelinBase->hash_puddles[-1];
         FPuddle **pos = &FeelinBase->hash_puddles[h];
 
         Forbid();
-        
+
         /* We search the puddle which may contains the  Chunk  between  its
         'lower'  and  'upper'  addresses. Puddles are checked from the hash
         point to the first (zero), because if the Chunk is not in  the  'h'
         puddle  (or  in  the  hash  link  chain) its always before it, very
         really after (not to say never). */
-        
+
         while (pos != stp)
         {
 ///DB_STATS_DISPOSE
@@ -617,7 +618,7 @@ F_LIB_DISPOSE
 //+
 
             puddle = *pos--;
-    
+
             while (puddle)
             {
 ///DB_STATS_DISPOSE
@@ -651,7 +652,7 @@ F_LIB_DISPOSE
 #endif
 //+
                     pos = stp;
-                    
+
                     break;
                 }
                 else
@@ -672,15 +673,15 @@ F_LIB_DISPOSE
         }
 
 /*** search in following puddles (very rare) *******************************/
- 
+
         /* We didn't find the Chunk. Maybe it's after the 'h' puddle, let's
         check it out. */
-        
+
         if (puddle == NULL)
         {
             stp = &FeelinBase->hash_puddles[FV_MEMORY_HASH_SIZE];
             pos = &FeelinBase->hash_puddles[h + 1];
-                            
+
             while (pos != stp)
             {
                 puddle = *pos++;
@@ -708,7 +709,7 @@ F_LIB_DISPOSE
         }
 
 /*** remove memory chunk ***************************************************/
- 
+
         if (puddle)
         {
             #ifdef F_USE_MEMORY_WALL
@@ -718,14 +719,14 @@ F_LIB_DISPOSE
             #endif
             FMemChunk *prev;
             FMemChunk *node;
-            
+
             #ifdef F_USE_PUDDLE_MIDDLE
-            
+
             /* If we are lucky, the Chunk to dispose is  after  the  middle
             one.  This  will  save  us a lot of checkings e.g. half of them
             :-). The middle chunk could be our Chunk, but we cannot use  it
             because we need the previous chunk in order to unlink it. */
- 
+
             if (puddle->middle != NULL && real > puddle->middle)
             {
                 prev = puddle->middle;
@@ -737,20 +738,20 @@ F_LIB_DISPOSE
                 prev = NULL;
                 node = puddle->chunks;
             }
- 
+
             while (node)
             {
                 if (node == real)
                 {
                     puddle -> free += node -> size;
-            
+
                     #ifdef F_USE_MEMORY_WALL
 ///check memory wall integrity
                     if (puddle->pool->wall_size)
                     {
                         uint32 *wall = (uint32 *)((uint32)(Mem) - puddle->pool->wall_size);
                         uint32 i;
-                        
+
                         for (i = 0 ; i < puddle->pool->wall_size / 4 ; i++)
                         {
                             if (*wall != FV_DEBUG_MEMORY_WALL_PATTERN)
@@ -759,9 +760,9 @@ F_LIB_DISPOSE
                             }
                             wall++;
                         }
-                    
+
                         wall = (uint32 *)((uint32)(Mem) - puddle->pool->wall_size - sizeof (FMemChunk) + node->size - puddle->pool->wall_size);
-                        
+
                         for (i = 0 ; i < puddle->pool->wall_size / 4 ; i++)
                         {
                             if (*wall != FV_DEBUG_MEMORY_WALL_PATTERN)
@@ -773,14 +774,14 @@ F_LIB_DISPOSE
                     }
 ///+
                     #endif
-                    
+
                     #ifdef F_USE_PUDDLE_MIDDLE
-                    
+
                     /* If our Chunk is the middle one, we  set  the  middle
                     chunk  to  the  next chunk, which may be NULL. We don't
                     need to do anything else, since  the  middle  chunk  is
                     adjusted to its best when allocating new item. */
- 
+
                     if (puddle->middle == node)
                     {
                         puddle->middle = node->next;
@@ -855,12 +856,12 @@ F_LIB_DISPOSE
 //+
 
                     break;
-                }       
+                }
 
                 prev = node;
                 node = node->next;
             }
-        
+
             if (node == NULL)
             {
                 F_Log(0,"F_Dispose() Unknown memory chunk (0x%08lx). Similar puddle ? please report",Mem);
@@ -875,12 +876,12 @@ F_LIB_DISPOSE
 //+
             F_Log(0,"F_Dispose() Unknown memory chunk (0x%08lx)",Mem);
         }
-    
+
         Permit();
     }
 ///DB_STATS_DISPOSE
     #ifdef DB_STATS_DISPOSE
- 
+
     if (stats.immediate > stats.step ||
         stats.link > stats.step ||
         stats.prev > stats.step ||
@@ -888,7 +889,7 @@ F_LIB_DISPOSE
         stats.fucked > stats.step)
     {
         F_Log(0,"STATS: i (%ld) l (%ld) p (%ld, dis %ld) n (%ld) f (%ld)",stats.immediate,stats.link,stats.prev,stats.prev_total_distance,stats.next,stats.fucked);
-        
+
         stats.step += 20;
     }
     #endif
@@ -901,7 +902,7 @@ F_LIB_DISPOSE
 F_LIB_DISPOSEP
 {
     F_Log(0,"*** F_DisposeP() is deprecated ***");
-    
+
     F_Dispose(Mem);
 
     return 0;

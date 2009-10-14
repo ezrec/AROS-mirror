@@ -17,6 +17,6 @@ struct FeelinCatalogEntry FCC_CatalogTable[] =
 	 { 0x006d, NULL, "Pick" },
 	 { 0x006e, NULL, "<align=center>Hold select-button down and<br>"\
 	"move the pointer to the color to copy" },
-	 { NULL }
+	 { 0 }
 };
 
