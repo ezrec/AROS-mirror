@@ -492,7 +492,7 @@ STATIC F_LIB_CLOSE
 //+
 ///lib_open
 #define TEMPLATE                    "LEVEL=L/K,MEMWALLSIZE/N,FASTINVOKATION=FI/S,VERBOSE_NEW=VBNEW/S,VERBOSE_DISPOSE=VBDISPOSE/S,PUBSEMAPHORES=PUBSEM/S"
-#define CONSOLE                     "CON:0/30//130/Feelin Debug/INACTIVE/AUTO"
+#define CONSOLE                     "CON:0/30//130/Feelin Debug/INACTIVE/AUTO/CLOSE"
 
 enum  {
 

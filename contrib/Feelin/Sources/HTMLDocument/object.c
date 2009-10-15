@@ -282,7 +282,7 @@ __error:
 		switch (er)
 		{
 			case FV_PARSE_ERROR_NULL:    str = "Unexpected end of data"; break;
-			case FV_PARSE_ERROR_CLOSE:   str = "Expected closed barket"; break;
+			case FV_PARSE_ERROR_CLOSE:   str = "Expected closed bracket"; break;
 			case FV_PARSE_ERROR_EQUAL:   str = "Expected equal sign"; break;
 			case FV_PARSE_ERROR_QUOTE:   str = "Missing quote"; break;
 			case FV_PARSE_ERROR_MEMORY:  str = "Not enough memory"; break;
@@ -447,8 +447,8 @@ __error:
 			case FV_PARSE_ERROR_NULL:          str = "Unexpected end of data"; break;
 			case FV_PARSE_ERROR_MEMORY:        str = "Unable to allocate Markup"; break;
 			case FV_PARSE_ERROR_SYNTAX:        str = "Syntax Error"; break;
-			case FV_PARSE_ERROR_OPEN:          str = "Expected opened barket"; break;
-			case FV_PARSE_ERROR_CLOSE:         str = "Expected closed barket"; break;
+			case FV_PARSE_ERROR_OPEN:          str = "Expected opened bracket"; break;
+			case FV_PARSE_ERROR_CLOSE:         str = "Expected closed bracket"; break;
 			case FV_PARSE_ERROR_ATTRIBUTE:     str = "Expected attribute"; break;
 			case FV_PARSE_ERROR_NAME:
 			{

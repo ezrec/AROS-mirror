@@ -10,7 +10,7 @@ USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/Include
 
 #MM- contrib-feelin : feelin-linklib feelin-library feelin-classes feelin-prefs feelin-demos feelin-files
 #MM- contrib-feelin : iconset-$(AROS_TARGET_ICONSET)-contrib-icons-extras-feelin
-#MM- feelin-files : feelin-dictionary feelin-fonts feelin-images feelin-resources feelin-xmlsources
+#MM- feelin-files : feelin-dictionary feelin-fonts feelin-images feelin-resources feelin-xmlsources feelin-filescopy
 
 %copy_dir_recursive mmake=feelin-dictionary src=dictionary dst=$(FEELINDIR)/dictionary
 %copy_dir_recursive mmake=feelin-fonts src=Fonts dst=$(FEELINDIR)/Fonts
@@ -29,16 +29,16 @@ INCLUDE_FILES := $(subst $(SRCDIR)/$(CURDIR)/,, \
 %copy_includes mmake=feelin-includes dir=Include
 
 
-#MM feelin-prefs : includes linklibs feelin-linklib feelin-icons
+#MM feelin-prefs : includes linklibs feelin-linklib
 
 %build_progs mmake=feelin-prefs \
     files=$(FILES) targetdir=$(FEELINDIR)/ \
     uselibs="FeelinAROS arossupport amiga arosc m"
 
-#MM feelin-icons
+#MM feelin-filescopy
 
-feelin-icons : files-copy
-%copy_files_q files="prefs.info Demos.info" \
+feelin-filescopy : files-copy
+%copy_files_q files="README-AROS README-AROS.info prefs.info Demos.info" \
     dst=$(FEELINDIR)
 
 %common

@@ -1,0 +1,3 @@
+On AROS/hosted you must start AROS with the option --mapsysbase.
+On my Ubuntu installation this worked only if I started AROS
+as ROOT.
