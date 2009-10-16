@@ -268,19 +268,19 @@ nouveau_sgdma_takedown(struct drm_device *dev)
 {
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 
-#if !defined(__AROS__)
 	if (dev_priv->gart_info.sg_dummy_page) {
+#if !defined(__AROS__)
 		pci_unmap_page(dev->pdev, dev_priv->gart_info.sg_dummy_bus,
 			       NV_CTXDMA_PAGE_SIZE, PCI_DMA_BIDIRECTIONAL);
 		unlock_page(dev_priv->gart_info.sg_dummy_page);
 		__free_page(dev_priv->gart_info.sg_dummy_page);
+#else
+        drm_aros_dma_unmap_buf(dev_priv->gart_info.sg_dummy_bus, NV_CTXDMA_PAGE_SIZE);
+#endif
 		dev_priv->gart_info.sg_dummy_page = NULL;
 		dev_priv->gart_info.sg_dummy_bus = 0;
 	}
-#else
-DRM_IMPL("call to pci_unmap_page?\n");
-#warning IMPLEMENT call to pci_unmap_page?
-#endif
+
 	nouveau_gpuobj_del(dev, &dev_priv->gart_info.sg_ctxdma);
 }
 

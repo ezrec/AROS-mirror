@@ -27,7 +27,7 @@ void drm_core_ioremap(struct drm_map *map, struct drm_device *dev)
         map->handle = agp_remap(map->offset, map->size, dev);
     else
 #endif
-        map->handle = drm_pci_ioremap(dev->pcidriver, (APTR)map->offset, map->size);
+        map->handle = drm_aros_pci_ioremap(dev->pcidriver, (APTR)map->offset, map->size);
 }
 
 void drm_core_ioremapfree(struct drm_map *map, struct drm_device *dev)
@@ -40,5 +40,5 @@ void drm_core_ioremapfree(struct drm_map *map, struct drm_device *dev)
         vunmap(map->handle);
     else
 #endif
-        drm_pci_iounmap(dev->pcidriver, map->handle, map->size);
+        drm_aros_pci_iounmap(dev->pcidriver, map->handle, map->size);
 }

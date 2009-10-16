@@ -351,7 +351,7 @@ find_card(struct drm_device *dev)
     }
 }
 
-LONG drm_pci_find_supported_video_card(struct drm_device *dev)
+LONG drm_aros_find_supported_video_card(struct drm_device *dev)
 {
     /* FIXME: What if they had values? memory leaks? */
     dev->pci = NULL;
@@ -371,7 +371,7 @@ LONG drm_pci_find_supported_video_card(struct drm_device *dev)
     }
 }
 
-void drm_pci_shutdown(struct drm_device *dev)
+void drm_aros_pci_shutdown(struct drm_device *dev)
 {
     /* Release AROS-specific PCI objects. Should be called at driver shutdown */
     
@@ -410,7 +410,7 @@ void drm_pci_shutdown(struct drm_device *dev)
     }
 }
 
-APTR drm_pci_resource_start(OOP_Object *pciDevice,  unsigned int resource)
+APTR drm_aros_pci_resource_start(OOP_Object *pciDevice,  unsigned int resource)
 {
 #if !defined(HOSTED_BUILD)    
     APTR start = (APTR)NULL;
@@ -434,7 +434,7 @@ return (APTR)0;
 #endif
 }
 
-IPTR drm_pci_resource_len(OOP_Object *pciDevice,  unsigned int resource)
+IPTR drm_aros_pci_resource_len(OOP_Object *pciDevice,  unsigned int resource)
 {
 #if !defined(HOSTED_BUILD)    
     IPTR len = (IPTR)0;
@@ -464,7 +464,7 @@ UBYTE * fakebuffer = NULL;
 LONG usagecount = 0;
 #endif
 
-APTR drm_pci_ioremap(OOP_Object *driver, APTR buf, IPTR size)
+APTR drm_aros_pci_ioremap(OOP_Object *driver, APTR buf, IPTR size)
 {
 #if !defined(HOSTED_BUILD)    
     struct pHidd_PCIDriver_MapPCI mappci,*msg = &mappci;
@@ -483,7 +483,7 @@ APTR drm_pci_ioremap(OOP_Object *driver, APTR buf, IPTR size)
 #endif
 }
 
-void drm_pci_iounmap(OOP_Object *driver, APTR buf, IPTR size)
+void drm_aros_pci_iounmap(OOP_Object *driver, APTR buf, IPTR size)
 {
 #if !defined(HOSTED_BUILD)    
     struct pHidd_PCIDriver_UnmapPCI unmappci,*msg=&unmappci;
@@ -501,4 +501,14 @@ void drm_pci_iounmap(OOP_Object *driver, APTR buf, IPTR size)
         fakebuffer = NULL;
     }
 #endif    
+}
+
+dma_addr_t drm_aros_dma_map_buf(APTR buf, IPTR offset, IPTR size)
+{
+    return (dma_addr_t)(buf + offset);
+}
+
+void drm_aros_dma_unmap_buf(dma_addr_t dma_address, IPTR size)
+{
+    /* No Op */
 }

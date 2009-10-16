@@ -125,7 +125,7 @@ drmOpen(const char *name, const char *busid)
     
     DRM_DEBUG("%s, %s\n", name, busid);
 #if !defined(HOSTED_BUILD)    
-    ret = drm_pci_find_supported_video_card(&global_drm_device);
+    ret = drm_aros_find_supported_video_card(&global_drm_device);
     if (ret)
         return -1;
 #endif
@@ -152,7 +152,7 @@ drmClose(int fd)
     
     nouveau_unload(&global_drm_device);
     
-    drm_pci_shutdown(&global_drm_device);
+    drm_aros_pci_shutdown(&global_drm_device);
     
     return 0;
 }

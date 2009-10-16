@@ -27,7 +27,7 @@ AROS_WINSYS_SOURCES = \
             winsys/aros/libdrm/aros-core/drm_memory \
             winsys/aros/libdrm/aros-core/drm_irq \
             winsys/aros/libdrm/aros-core/drm_bufs \
-            winsys/aros/libdrm/aros-core/drm_pci \
+            winsys/aros/libdrm/aros-core/drm_aros \
             winsys/aros/libdrm/aros-core/drm_scatter \
             winsys/aros/libdrm/aros-core/drm_drv \
             winsys/aros/libdrm/shared-core/nv04_fifo \

@@ -743,9 +743,10 @@ nouveau_gpuobj_dma_new(struct nouveau_channel *chan, int class,
 						return -ENOMEM;
 					}
 #else
-/* FIXME: This must be something important... should really be fixed */
-//DRM_IMPL("pci_map_page/sg->pagelist\n");
-#warning IMPLEMENT pci_map_page/sg->pagelis
+                    dev->sg->busaddr[idx] = (dma_addr_t)drm_aros_dma_map_buf(
+                                                        dev->sg->virtual + (idx * PAGE_SIZE),
+                                                        0,
+                                                        PAGE_SIZE);
 #endif
 				}
 

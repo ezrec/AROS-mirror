@@ -155,13 +155,13 @@ struct drm_ioctl_desc {
 
 typedef unsigned long dma_addr_t;
 
-//struct page;
-
 struct drm_sg_mem {
     unsigned long handle;
     void *virtual;
     int pages;
-//    struct page **pagelist;
+#if !defined(__AROS__)    
+    struct page **pagelist;
+#endif    
     dma_addr_t *busaddr;
 };
 
@@ -280,11 +280,13 @@ static __inline__ int drm_device_is_pcie(struct drm_device *dev)
 int drm_lastclose(struct drm_device *dev);
 
 /* AROS specific functions */
-/* drm_pci.c */
-LONG drm_pci_find_supported_video_card(struct drm_device *dev);
-void drm_pci_shutdown(struct drm_device *dev);
-APTR drm_pci_ioremap(OOP_Object *driver, APTR buf, IPTR size);
-void drm_pci_iounmap(OOP_Object *driver, APTR buf, IPTR size);
-APTR drm_pci_resource_start(OOP_Object *pciDevice,  unsigned int resource);
-IPTR drm_pci_resource_len(OOP_Object *pciDevice,  unsigned int resource);
+/* drm_aros.c */
+LONG        drm_aros_find_supported_video_card(struct drm_device *dev);
+void        drm_aros_pci_shutdown(struct drm_device *dev);
+APTR        drm_aros_pci_ioremap(OOP_Object *driver, APTR buf, IPTR size);
+void        drm_aros_pci_iounmap(OOP_Object *driver, APTR buf, IPTR size);
+APTR        drm_aros_pci_resource_start(OOP_Object *pciDevice,  unsigned int resource);
+IPTR        drm_aros_pci_resource_len(OOP_Object *pciDevice,  unsigned int resource);
+dma_addr_t  drm_aros_dma_map_buf(APTR buf, IPTR offset, IPTR size);
+void        drm_aros_dma_unmap_buf(dma_addr_t dma_address, IPTR size);
 #endif

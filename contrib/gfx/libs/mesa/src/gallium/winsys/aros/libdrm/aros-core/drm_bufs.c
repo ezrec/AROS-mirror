@@ -27,13 +27,13 @@
 
 unsigned long drm_get_resource_len(struct drm_device *dev, unsigned int resource)
 {
-    return (unsigned long)drm_pci_resource_len(dev->pciDevice, resource);
+    return (unsigned long)drm_aros_pci_resource_len(dev->pciDevice, resource);
 }
 
 unsigned long drm_get_resource_start(struct drm_device *dev,
                         unsigned int resource)
 {
-    return (unsigned long)drm_pci_resource_start(dev->pciDevice, resource);
+    return (unsigned long)drm_aros_pci_resource_start(dev->pciDevice, resource);
 }
 
 static int drm_addmap_core(struct drm_device *dev, unsigned int offset,
@@ -95,7 +95,7 @@ static int drm_addmap_core(struct drm_device *dev, unsigned int offset,
         }
 
         if (map->type == _DRM_REGISTERS) {
-            map->handle = drm_pci_ioremap(dev->pcidriver, (APTR)map->offset, (IPTR)map->size);
+            map->handle = drm_aros_pci_ioremap(dev->pcidriver, (APTR)map->offset, (IPTR)map->size);
             if (!map->handle) {
                 drm_free(map, sizeof(*map), DRM_MEM_MAPS);
                 return -ENOMEM;
@@ -118,7 +118,7 @@ static int drm_addmap_core(struct drm_device *dev, unsigned int offset,
     list = drm_alloc(sizeof(*list), DRM_MEM_MAPS);
     if (!list) {
         if (map->type == _DRM_REGISTERS)
-            drm_pci_iounmap(dev->pcidriver, map->handle, map->size);
+            drm_aros_pci_iounmap(dev->pcidriver, map->handle, map->size);
         drm_free(map, sizeof(*map), DRM_MEM_MAPS);
         return -EINVAL;
     }
@@ -135,7 +135,7 @@ static int drm_addmap_core(struct drm_device *dev, unsigned int offset,
 
     if (ret) {
         if (map->type == _DRM_REGISTERS)
-            drm_pci_iounmap(dev->pcidriver, map->handle, map->size);
+            drm_aros_pci_iounmap(dev->pcidriver, map->handle, map->size);
         drm_free(map, sizeof(*map), DRM_MEM_MAPS);
         drm_free(list, sizeof(*list), DRM_MEM_MAPS);
         return ret;
@@ -207,7 +207,7 @@ int drm_rmmap_locked(struct drm_device *dev, drm_local_map_t *map)
 
     switch (map->type) {
     case _DRM_REGISTERS:
-        drm_pci_iounmap(dev->pcidriver, map->handle, map->size);
+        drm_aros_pci_iounmap(dev->pcidriver, map->handle, map->size);
         /* FALLTHROUGH */
     case _DRM_FRAME_BUFFER:
         if (drm_core_has_MTRR(dev) && map->mtrr >= 0) {

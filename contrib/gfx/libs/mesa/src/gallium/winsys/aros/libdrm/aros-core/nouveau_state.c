@@ -494,7 +494,7 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
 	/* Time to determine the card architecture */
 	regs = ioremap_nocache(pci_resource_start(dev->pdev, 0), 0x8);
 #else
-    regs = drm_pci_ioremap(dev->pcidriver, drm_pci_resource_start(dev->pciDevice, 0), 0x8);
+    regs = drm_aros_pci_ioremap(dev->pcidriver, drm_aros_pci_resource_start(dev->pciDevice, 0), 0x8);
 #endif
     if (!regs) {
         DRM_ERROR("Could not ioremap to determine register\n");
@@ -524,7 +524,7 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
 #if !defined(__AROS__)
 	iounmap(regs);
 #else
-    drm_pci_iounmap(dev->pcidriver, regs, 0x8);
+    drm_aros_pci_iounmap(dev->pcidriver, regs, 0x8);
 #endif
 
 	if (architecture >= 0x80) {
