@@ -302,7 +302,7 @@ nouveau_card_init(struct drm_device *dev)
 		dev_priv->chipset =
 			(NV_READ(NV03_PMC_BOOT_0) & 0x0ff00000) >> 20;
 #if defined(HOSTED_BUILD)
-    dev_priv->chipset = 37;
+    dev_priv->chipset = HOSTED_BUILD_CHIPSET;
 #endif
 
 	/* Initialise internal driver API hooks */
@@ -416,10 +416,7 @@ void nouveau_preclose(struct drm_device *dev, struct drm_file *file_priv)
 {
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 
-#if !defined(HOSTED_BUILD)
-    /* Crashes hosted - double-free situation due to no hack available */
 	nouveau_fifo_cleanup(dev, file_priv);
-#endif    
 	nouveau_mem_release(file_priv,dev_priv->fb_heap);
 	nouveau_mem_release(file_priv,dev_priv->agp_heap);
 	nouveau_mem_release(file_priv,dev_priv->pci_heap);
@@ -518,7 +515,7 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
 	}
 
 #if defined(HOSTED_BUILD)
-    architecture = 0x20;
+    architecture = HOSTED_BUILD_ARCH;
 #endif    
     
 #if !defined(__AROS__)

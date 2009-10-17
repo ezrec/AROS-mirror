@@ -459,11 +459,6 @@ return (IPTR)0;
 #endif
 }
 
-#if defined(HOSTED_BUILD)
-UBYTE * fakebuffer = NULL;
-LONG usagecount = 0;
-#endif
-
 APTR drm_aros_pci_ioremap(OOP_Object *driver, APTR buf, IPTR size)
 {
 #if !defined(HOSTED_BUILD)    
@@ -473,13 +468,12 @@ APTR drm_aros_pci_ioremap(OOP_Object *driver, APTR buf, IPTR size)
     mappci.Length = size;
     return (APTR)OOP_DoMethod(driver, (OOP_Msg)msg);
 #else
-    if (!fakebuffer) 
-    {
-        usagecount = 0;
-        fakebuffer = AllocVec(1024*1024*16, MEMF_PUBLIC);
-    }
-    usagecount++;
-    return (APTR)fakebuffer;
+    /* For better simulation:
+    a) make a list of already "mapped" buffers keyed by APTR buf
+    b) check if a request (buf + size) is inside of already mapped region -> return pointer in mapped region
+    Why: sometimes the same range is mapped more than once (_DRM_REGISTERS)
+    */
+    return AllocMem(size, MEMF_PUBLIC);
 #endif
 }
 
@@ -494,12 +488,9 @@ void drm_aros_pci_iounmap(OOP_Object *driver, APTR buf, IPTR size)
 
     OOP_DoMethod(driver, (OOP_Msg)msg);
 #else
-    if (usagecount > 0) usagecount--;
-    if ((usagecount == 0) && (fakebuffer != NULL))
-    {
-        FreeVec(fakebuffer);
-        fakebuffer = NULL;
-    }
+    /* If "better simulation" is implemented (see drm_aros_pci_ioremap) memory
+    can only be freed if there is no other mappings to this buffer */
+    FreeMem(buf, size);
 #endif    
 }
 

@@ -51,6 +51,24 @@ struct drm_file;
 /* FIXME: THIS AND ALL "HOSTED_BUILD" MARKED CODE MUST BE DELETED IN FINAL VERSION */
 //#define HOSTED_BUILD
 
+#if defined(HOSTED_BUILD)
+/* FIXME: These defines simulate certain gfx cards. Need to be removed in final version. Works only with HOSTED_BUILD */
+//#define HOSTED_BUILD_ARCH       0x04    /* NV04 family */
+//#define HOSTED_BUILD_CHIPSET    5       /* NV05 chip Riva TNT 2 */
+//#define HOSTED_BUILD_ARCH       0x10    /* NV10 family */
+//#define HOSTED_BUILD_CHIPSET    16      /* NV10 chip GeForce 256 */
+//#define HOSTED_BUILD_ARCH       0x10    /* NV10 family */
+//#define HOSTED_BUILD_CHIPSET    21      /* NV15 chip GeForce 2 GTS */
+//#define HOSTED_BUILD_ARCH       0x20    /* NV20 family */
+//#define HOSTED_BUILD_CHIPSET    32      /* NV20 chip GeForce 3 Ti 200 */
+#define HOSTED_BUILD_ARCH       0x20    /* NV20 family */
+#define HOSTED_BUILD_CHIPSET    37      /* NV25 chip GeForce Ti 4200 */
+//#define HOSTED_BUILD_ARCH       0x30    /* NV30 family */
+//#define HOSTED_BUILD_CHIPSET    52      /* NV34 chip GeForce FX 5200 */
+//#define HOSTED_BUILD_ARCH       0x40    /* NV40 family */
+//#define HOSTED_BUILD_CHIPSET    67      /* NV43 chip GeForce 6600 */
+#endif
+
 /* FIXME: Need to find a way to remove the need for these defines */
 #define PAGE_SHIFT  12
 #define PAGE_SIZE   ((1UL) << PAGE_SHIFT)
@@ -108,13 +126,8 @@ struct drm_ioctl_desc {
 /* */
 
 
-#if defined(HOSTED_BUILD)
-#define readl(addr) 0
-#define writel(val, addr)
-#else
-#define writel(val, addr)  (*(volatile ULONG*)(addr) = (val))
-#define readl(addr)    (*(volatile ULONG*)(addr))
-#endif
+#define writel(val, addr)       (*(volatile ULONG*)(addr) = (val))
+#define readl(addr)             (*(volatile ULONG*)(addr))
 
 /* FIXME: Implement missing */
 /** Read a byte from a MMIO region */
@@ -122,7 +135,7 @@ struct drm_ioctl_desc {
 /** Read a word from a MMIO region */
 //#define DRM_READ16(map, offset)     readw((map)->handle + (offset))
 /** Read a dword from a MMIO region */
-#define DRM_READ32(map, offset)     readl((map)->handle + (offset))
+#define DRM_READ32(map, offset)         readl((map)->handle + (offset))
 /** Write a byte into a MMIO region */
 //#define DRM_WRITE8(map, offset, val)    writeb(val, (map)->handle + (offset))
 /** Write a word into a MMIO region */
