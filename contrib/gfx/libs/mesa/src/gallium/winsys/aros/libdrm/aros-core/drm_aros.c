@@ -427,9 +427,15 @@ APTR drm_aros_pci_resource_start(OOP_Object *pciDevice,  unsigned int resource)
     
     return start;
 #else
+#if HOSTED_BUILD_ARCH >= 0x40
+if (resource == 0) return (APTR)0xcf000000;
+if (resource == 1) return (APTR)0xb0000000;
+if (resource == 3) return (APTR)0xce000000;
+#else
 if (resource == 0) return (APTR)0xe7000000;
 if (resource == 1) return (APTR)0xf0000000;
 if (resource == 2) return (APTR)0xef800000;
+#endif
 return (APTR)0;
 #endif
 }
@@ -452,9 +458,15 @@ IPTR drm_aros_pci_resource_len(OOP_Object *pciDevice,  unsigned int resource)
     
     return len;
 #else
+#if HOSTED_BUILD_ARCH >= 0x40
+if (resource == 0) return (IPTR)0x1000000;
+if (resource == 1) return (IPTR)0x10000000;
+if (resource == 3) return (IPTR)0x1000000;
+#else
 if (resource == 0) return (IPTR)0x1000000;
 if (resource == 1) return (IPTR)0x8000000;
 if (resource == 2) return (IPTR)0x80000;
+#endif
 return (IPTR)0;
 #endif
 }
@@ -473,7 +485,7 @@ APTR drm_aros_pci_ioremap(OOP_Object *driver, APTR buf, IPTR size)
     b) check if a request (buf + size) is inside of already mapped region -> return pointer in mapped region
     Why: sometimes the same range is mapped more than once (_DRM_REGISTERS)
     */
-    return AllocMem(size, MEMF_PUBLIC);
+    return AllocMem(size, MEMF_PUBLIC | MEMF_CLEAR); /* This will leak */
 #endif
 }
 

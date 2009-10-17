@@ -90,14 +90,26 @@ drmMap(int fd, drm_handle_t handle, drmSize size, drmAddressPtr address)
     {
         if (entry->map && entry->user_token == handle)
         {
-            
-            if (entry->map->type == _DRM_FRAME_BUFFER)
+            switch(entry->map->type)
             {
-                /* HACK ? - map of this type was not ioremaped before */
-                drm_core_ioremap(entry->map, &global_drm_device);
+                case(_DRM_FRAME_BUFFER):
+                    /* HACK ? - map of this type was not ioremaped before */
+                    drm_core_ioremap(entry->map, &global_drm_device);
+                    /* FALLTHROUGH */
+                case(_DRM_REGISTERS):
+                    *address = entry->map->handle;
+                    break;
+                case(_DRM_SCATTER_GATHER):
+                    *address = (void *)entry->map->offset;
+                    break;
+                default:
+                    *address = NULL;
             }
-            *address = entry->map->handle;
-            return 0;
+            
+            if(*address)
+                return 0;
+            else
+                return -EINVAL;
         }
     }
     

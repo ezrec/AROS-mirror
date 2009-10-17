@@ -30,6 +30,10 @@ EXEDIR      := $(CONTRIBDIR)/Demos/Mesa
 #MM contrib-gfx-libs-mesa-demos-tunnel : contrib-gfx-libs-mesa-demos-prerequisites
 
 #MM- mesa-demos-gears-gallium : contrib-gfx-libs-mesa-includes includes mesa-mesa-gallium-linklib
+#MM- mesa-demos-bounce-gallium : contrib-gfx-libs-mesa-includes includes mesa-mesa-gallium-linklib
+#MM- mesa-demos-morph3d-gallium : contrib-gfx-libs-mesa-includes includes mesa-mesa-gallium-linklib
+#MM- mesa-demos-teapot-gallium : contrib-gfx-libs-mesa-includes includes mesa-mesa-gallium-linklib
+#MM- mesa-demos-gallium : mesa-demos-gears-gallium mesa-demos-bounce-gallium mesa-demos-morph3d-gallium mesa-demos-teapot-gallium mesa-demos-fire-gallium
 
 %build_progs mmake=contrib-gfx-libs-mesa-demos \
     targetdir=$(EXEDIR) \
@@ -62,5 +66,21 @@ EXEDIR      := $(CONTRIBDIR)/Demos/Mesa
 %build_prog mmake=mesa-demos-gears-gallium progname="gears-gallium" \
     targetdir=$(EXEDIR) \
     files="gears" uselibs="glut GLGalliumStatic GLU"
+
+%build_prog mmake=mesa-demos-bounce-gallium progname="bounce-gallium" \
+    targetdir=$(EXEDIR) \
+    files="bounce" uselibs="glut GLGalliumStatic GLU"
+
+%build_prog mmake=mesa-demos-morph3d-gallium progname="morph3d-gallium" \
+    targetdir=$(EXEDIR) \
+    files="morph3d" uselibs="glut GLGalliumStatic GLU"
     
+%build_prog mmake=mesa-demos-teapot-gallium \
+    targetdir=$(EXEDIR) progname="teapot-gallium" \
+    files="teapot readtex" uselibs="glut GLGalliumStatic GLU"
+    
+%build_prog mmake=mesa-demos-fire-gallium \
+    targetdir=$(EXEDIR) progname="fire-gallium" \
+    files="fire readtex" uselibs="glut GLGalliumStatic GLU"
+
 %common
