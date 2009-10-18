@@ -184,9 +184,10 @@ arosmesa_create_nouveau_screen( void )
         return NULL;
 
     switch (dev->chipset & 0xf0) {
-    case 0x00:
-        init = nv04_screen_create;
-        break;
+    /* NV04 codebase is not in-sync with gallium API */
+//     case 0x00:
+//         init = nv04_screen_create;
+//         break;
     case 0x10:
         init = nv10_screen_create;
         break;
@@ -246,9 +247,10 @@ arosmesa_create_nouveau_context( struct pipe_screen *screen )
     int i;
 
     switch (chipset & 0xf0) {
-    case 0x00:
-        init = nv04_create;
-        break;
+    /* NV04 codebase is not in-sync with gallium API */        
+//     case 0x00:
+//         init = nv04_create;
+//         break;
     case 0x10:
         init = nv10_create;
         break;
