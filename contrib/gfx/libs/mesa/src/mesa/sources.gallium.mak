@@ -276,9 +276,8 @@ GALLIUM_NVIDIA_SOURCES = \
             drivers/nv50/nv50_state_validate \
             drivers/nv50/nv50_tex \
             drivers/nv50/nv50_vbo \
-
-#            drivers/nv50/nv50_surface \
-#            drivers/nv50/nv50_transfer \
+            drivers/nv50/nv50_surface \
+            drivers/nv50/nv50_transfer \
 
 GALLIUM_I915_SOURCES = \
             drivers/i915simple/i915_blit \

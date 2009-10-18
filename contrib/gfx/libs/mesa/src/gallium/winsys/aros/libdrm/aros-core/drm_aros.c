@@ -229,6 +229,9 @@ static const struct NVDevice {
     { 0x10de, 0x0090, NV36, NV_ARCH_40, NV20Init, TRUE },
     { 0x10de, 0x0210, NV36, NV_ARCH_40, NV20Init, TRUE },
     
+    /* Added for tests */
+    { 0x10de, 0x0191, NV36/*FAKE*/, NV_ARCH_40/*FAKE*/, NV20Init/*FAKE*/, FALSE },
+    
     { 0x0000, 0x0000, }
 };
 
