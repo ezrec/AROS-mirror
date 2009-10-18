@@ -67,6 +67,8 @@ struct drm_file;
 //#define HOSTED_BUILD_CHIPSET    52      /* NV34 chip GeForce FX 5200 */
 //#define HOSTED_BUILD_ARCH       0x40    /* NV40 family */
 //#define HOSTED_BUILD_CHIPSET    67      /* NV43 chip GeForce 6600 */
+//#define HOSTED_BUILD_ARCH       0x80    /* NV50 family */
+//#define HOSTED_BUILD_CHIPSET    128     /* G80 chip GeForce 8800 GTX */
 #endif
 
 /* FIXME: Need to find a way to remove the need for these defines */
@@ -202,6 +204,26 @@ struct drm_file
 };
 
 struct file;
+
+/*
+ * Generic memory manager structs
+ */
+
+struct drm_mm_node {
+    struct list_head fl_entry;
+    struct list_head ml_entry;
+    int free;
+    unsigned long start;
+    unsigned long size;
+    struct drm_mm *mm;
+    void *private;
+};
+
+struct drm_mm {
+    struct list_head fl_entry;
+    struct list_head ml_entry;
+};
+
 
 /**
  * Mappings list

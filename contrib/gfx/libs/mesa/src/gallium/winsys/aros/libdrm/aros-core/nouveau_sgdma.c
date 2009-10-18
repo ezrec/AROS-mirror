@@ -199,7 +199,7 @@ nouveau_sgdma_init_ttm(struct drm_device *dev)
 
 	return &nvbe->backend;
 }
-
+#endif
 int
 nouveau_sgdma_init(struct drm_device *dev)
 {
@@ -226,13 +226,17 @@ nouveau_sgdma_init(struct drm_device *dev)
 		return ret;
 	}
 
+#if !defined(__AROS__)
 	dev_priv->gart_info.sg_dummy_page =
 		alloc_page(GFP_KERNEL|__GFP_DMA32);
 	set_page_locked(dev_priv->gart_info.sg_dummy_page);
 	dev_priv->gart_info.sg_dummy_bus =
 		pci_map_page(dev->pdev, dev_priv->gart_info.sg_dummy_page, 0,
 			     PAGE_SIZE, PCI_DMA_BIDIRECTIONAL);
-
+#else
+    dev_priv->gart_info.sg_dummy_page = AllocVec(PAGE_SIZE, MEMF_PUBLIC | MEMF_CLEAR);
+    dev_priv->gart_info.sg_dummy_bus = drm_aros_dma_map_buf(dev_priv->gart_info.sg_dummy_page, 0, PAGE_SIZE);
+#endif
 	if (dev_priv->card_type < NV_50) {
 		/* Maybe use NV_DMA_TARGET_AGP for PCIE? NVIDIA do this, and
 		 * confirmed to work on c51.  Perhaps means NV_DMA_TARGET_PCIE
@@ -261,7 +265,7 @@ nouveau_sgdma_init(struct drm_device *dev)
 	dev_priv->gart_info.sg_ctxdma = gpuobj;
 	return 0;
 }
-#endif
+
 
 void
 nouveau_sgdma_takedown(struct drm_device *dev)
@@ -276,6 +280,7 @@ nouveau_sgdma_takedown(struct drm_device *dev)
 		__free_page(dev_priv->gart_info.sg_dummy_page);
 #else
         drm_aros_dma_unmap_buf(dev_priv->gart_info.sg_dummy_bus, NV_CTXDMA_PAGE_SIZE);
+        FreeVec(dev_priv->gart_info.sg_dummy_page);
 #endif
 		dev_priv->gart_info.sg_dummy_page = NULL;
 		dev_priv->gart_info.sg_dummy_bus = 0;
@@ -284,10 +289,10 @@ nouveau_sgdma_takedown(struct drm_device *dev)
 	nouveau_gpuobj_del(dev, &dev_priv->gart_info.sg_ctxdma);
 }
 
-#if !defined(__AROS__)
 int
 nouveau_sgdma_nottm_hack_init(struct drm_device *dev)
 {
+#if !defined(__AROS__)    
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 	struct drm_ttm_backend *be;
 	struct drm_scatter_gather sgreq;
@@ -324,11 +329,16 @@ nouveau_sgdma_nottm_hack_init(struct drm_device *dev)
 	if ((ret = be->func->bind(be, &mem))) {
 		DRM_ERROR("failed bind: %d\n", ret);
 		return ret;
-	}
-
-	return 0;
 }
+    
+	return 0;
+#else
+DRM_IMPL("\n");
+#warning IMPLEMENT nouveau_sgdma_nottm_hack_init
+    return -EINVAL;
 #endif
+	
+}
 
 void
 nouveau_sgdma_nottm_hack_takedown(struct drm_device *dev)

@@ -498,11 +498,13 @@ nouveau_mem_init_ttm(struct drm_device *dev)
 		return -ENOMEM;
 #endif
 
+	return 0;
 #else
 DRM_IMPL("\n");
 #warning IMPLEMENT nouveau_mem_init_ttm
+    return -ENOMEM;
 #endif
-	return 0;
+
 }
 
 int nouveau_mem_init(struct drm_device *dev)
@@ -558,10 +560,10 @@ int nouveau_mem_init(struct drm_device *dev)
 	}
 #endif
 #else
-DRM_ERROR("IMPLEMENT calling nouveau_mem_init_agp\n");
+DRM_IMPL("calling nouveau_mem_init_agp\n");
 #warning IMPLEMENT calling nouveau_mem_init_agp
 #endif
-#if !defined(__AROS__)
+
 	/*Note: this is *not* just NV50 code, but only used on NV50 for now */
 	if (dev_priv->gart_info.type == NOUVEAU_GART_NONE &&
 	    dev_priv->card_type >= NV_50) {
@@ -585,10 +587,6 @@ DRM_ERROR("IMPLEMENT calling nouveau_mem_init_agp\n");
 			}
 		}
 	}
-#else
-DRM_ERROR("IMPLEMENT NV50 gart code\n");
-#warning IMPLEMENT NV50 gart code
-#endif
     
 	/* NV04-NV40 PCIEGART */
 	if (!dev_priv->agp_heap && dev_priv->card_type < NV_50) {

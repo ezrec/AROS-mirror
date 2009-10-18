@@ -176,12 +176,14 @@ nv50_instmem_init(struct drm_device *dev)
 
 	/* Assume that praying isn't enough, check that we can re-read the
 	 * entire fake channel back from the PRAMIN BAR */
+#if !defined(HOSTED_BUILD)    
 	for (i = 0; i < c_size; i+=4) {
 		if (NV_READ(NV_RAMIN + i) != NV_RI32(i)) {
 			DRM_ERROR("Error reading back PRAMIN at 0x%08x\n", i);
 			return -EINVAL;
 		}
 	}
+#endif
 
 	/* Global PRAMIN heap */
 	if (nouveau_mem_init_heap(&dev_priv->ramin_heap,
