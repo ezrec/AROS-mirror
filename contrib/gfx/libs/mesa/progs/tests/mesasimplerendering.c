@@ -26,6 +26,7 @@ struct MsgPort      timeport;
     
 #define RAND_COL 1.0f
 #define DEGREES_PER_SECOND 180.0;
+#define USE_PERSPECTIVE 1
 
 void render_face()
 {
@@ -82,6 +83,18 @@ void render_cube()
     glPopMatrix();
 }
 
+void render_triangle()
+{
+    glBegin(GL_TRIANGLES);
+        glColor4f(1.0, 0.0, 0.0, 1.0);
+        glVertex3f(-0.25, -0.25, 0.0);
+        glColor4f(0.0, 1.0, 0.0, 1.0);
+        glVertex3f(-0.25,  0.25, 0.0);
+        glColor4f(0.0, 0.0, 1.0, 1.0);
+        glVertex3f( 0.25,  0.25, 0.0);
+    glEnd();
+}
+
 void render()
 {
     glLoadIdentity();
@@ -95,6 +108,9 @@ void render()
 
     angle += angle_inc;
 
+#if USE_PERSPECTIVE == 1
+    glTranslatef(0.0, 0.0, -6.0);
+#endif    
     glPushMatrix();
     glRotatef(angle, 0.0, 1.0, 0.0);
     glTranslatef(0.0, 0.0, 0.25);
@@ -108,10 +124,14 @@ void render()
     AROSMesaSwapBuffers(glcont);
 }    
 
+#define VISIBLE_WIDTH 300
+#define VISIBLE_HEIGHT 300
+
 void initmesa()
 {
     struct TagItem attributes [ 14 ]; /* 14 should be more than enough :) */
     int i = 0;
+    GLfloat h = 0.0f;
     
     attributes[i].ti_Tag = AMA_Window;      attributes[i++].ti_Data = (IPTR)win;
     attributes[i].ti_Tag = AMA_Left;        attributes[i++].ti_Data = win->BorderLeft;
@@ -137,6 +157,16 @@ void initmesa()
         AROSMesaMakeCurrent(glcont);
     else
         finished = TRUE; /* Failure. Stop */
+
+    h = (GLfloat)VISIBLE_HEIGHT / (GLfloat)VISIBLE_WIDTH ;
+
+    glViewport(0, 0, (GLint) VISIBLE_WIDTH, (GLint) VISIBLE_HEIGHT);
+#if USE_PERSPECTIVE == 1
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glFrustum(-1.0, 1.0, -h, h, 5.0, 200.0);
+    glMatrixMode(GL_MODELVIEW);
+#endif    
 }
 
 void deinitmesa()
@@ -225,8 +255,8 @@ int main(int argc, char **argv)
                         WA_DepthGadget, TRUE,
                         WA_Left, 50,
                         WA_Top, 200,
-                        WA_InnerWidth, 300,
-                        WA_InnerHeight, 300,
+                        WA_InnerWidth, VISIBLE_WIDTH,
+                        WA_InnerHeight, VISIBLE_HEIGHT,
                         WA_Activate, TRUE,
                         WA_RMBTrap, TRUE,
                         WA_SimpleRefresh, TRUE,

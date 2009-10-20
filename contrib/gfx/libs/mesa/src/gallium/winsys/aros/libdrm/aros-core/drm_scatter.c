@@ -29,19 +29,16 @@
 #include <proto/exec.h>
 
 #define DEBUG_SCATTER 0
-
+#if !defined(__AROS__)
 static inline void *drm_vmalloc_dma(unsigned long size)
 {
-#if defined(__AROS__)
-    return AllocVec(size, MEMF_PUBLIC);
-#else
 #if defined(__powerpc__) && defined(CONFIG_NOT_COHERENT_CACHE)
 	return __vmalloc(size, GFP_KERNEL, PAGE_KERNEL | _PAGE_NO_CACHE);
 #else
 	return vmalloc_32(size);
 #endif
-#endif
 }
+#endif
 
 void drm_sg_cleanup(struct drm_sg_mem *entry)
 {
@@ -57,7 +54,7 @@ void drm_sg_cleanup(struct drm_sg_mem *entry)
 #endif        
 
 #if defined(__AROS__)
-    FreeVec(entry->virtual);
+    FreeVec(entry->buffer);
 #else
 	vfree(entry->virtual);
 #endif    
@@ -125,7 +122,17 @@ int drm_sg_alloc(struct drm_device *dev, struct drm_scatter_gather * request)
 	}
 	memset((void *)entry->busaddr, 0, pages * sizeof(*entry->busaddr));
 
+#if !defined(__AROS__)
 	entry->virtual = drm_vmalloc_dma(pages << PAGE_SHIFT);
+#else
+    /* The allocated memory must be 4096 aligned */
+    entry->buffer = AllocVec((pages << PAGE_SHIFT) + PAGE_SIZE, MEMF_PUBLIC);
+    /* Align entry->virtual to 4096 */
+    if (entry->buffer)
+        entry->virtual = (APTR)(((IPTR)entry->buffer + (IPTR)(PAGE_SIZE - 1)) &~ (IPTR)(PAGE_SIZE - 1));
+    else
+        entry->virtual = NULL;
+#endif
 	if (!entry->virtual) {
 		drm_free(entry->busaddr,
 			 entry->pages * sizeof(*entry->busaddr), DRM_MEM_PAGES);

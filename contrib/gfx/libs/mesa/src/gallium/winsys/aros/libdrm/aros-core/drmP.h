@@ -61,10 +61,10 @@ struct drm_file;
 //#define HOSTED_BUILD_CHIPSET    21      /* NV15 chip GeForce 2 GTS */
 //#define HOSTED_BUILD_ARCH       0x20    /* NV20 family */
 //#define HOSTED_BUILD_CHIPSET    32      /* NV20 chip GeForce 3 Ti 200 */
-#define HOSTED_BUILD_ARCH       0x20    /* NV20 family */
-#define HOSTED_BUILD_CHIPSET    37      /* NV25 chip GeForce Ti 4200 */
-//#define HOSTED_BUILD_ARCH       0x30    /* NV30 family */
-//#define HOSTED_BUILD_CHIPSET    52      /* NV34 chip GeForce FX 5200 */
+//#define HOSTED_BUILD_ARCH       0x20    /* NV20 family */
+//#define HOSTED_BUILD_CHIPSET    37      /* NV25 chip GeForce Ti 4200 */
+#define HOSTED_BUILD_ARCH       0x30    /* NV30 family */
+#define HOSTED_BUILD_CHIPSET    52      /* NV34 chip GeForce FX 5200 */
 //#define HOSTED_BUILD_ARCH       0x40    /* NV40 family */
 //#define HOSTED_BUILD_CHIPSET    67      /* NV43 chip GeForce 6600 */
 //#define HOSTED_BUILD_ARCH       0x80    /* NV50 family */
@@ -75,7 +75,7 @@ struct drm_file;
 #define PAGE_SHIFT  12
 #define PAGE_SIZE   ((1UL) << PAGE_SHIFT)
 #define PAGE_MASK   (~(PAGE_SIZE-1))
-
+#define EXPORT_SYMBOL(a)
 #define DRM_CURRENTPID 1
 
 #define DRM_IRQ_ARGS        void *arg
@@ -176,6 +176,8 @@ struct drm_sg_mem {
     int pages;
 #if !defined(__AROS__)    
     struct page **pagelist;
+#else
+    void * buffer;
 #endif    
     dma_addr_t *busaddr;
 };

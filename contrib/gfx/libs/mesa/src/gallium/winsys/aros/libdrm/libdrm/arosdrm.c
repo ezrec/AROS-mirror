@@ -103,6 +103,7 @@ drmMap(int fd, drm_handle_t handle, drmSize size, drmAddressPtr address)
                     *address = (void *)entry->map->offset;
                     break;
                 default:
+                    DRM_IMPL("Unhandled map->type\n");
                     *address = NULL;
             }
             
@@ -119,7 +120,8 @@ drmMap(int fd, drm_handle_t handle, drmSize size, drmAddressPtr address)
 int
 drmUnmap(drmAddress address, drmSize size)
 {
-    DRM_IMPL("\n");
+    /* Commented out so that it does not litter the debug output */
+    /* DRM_IMPL("\n"); */
     return 0;
 }
 
