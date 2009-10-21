@@ -45,7 +45,7 @@ CC=$(AROS_CC)
 
 BASE_CFLAGS=-Dstricmp=strcasecmp
 
-DEBUG_CFLAGS=$(BASE_CFLAGS) -g
+DEBUG_CFLAGS=$(CFLAGS) $(BASE_CFLAGS) -g
 
 AROSCFLAGS=-DAROS $(RELEASE_CFLAGS)
 AROSLDFLAGS=-L$(LIBDIR) -larosc -larosm -lamiga -lautoinit
@@ -183,7 +183,7 @@ AROS_OBJS = \
 #	$(CC) $(CFLAGS) -o $@ $(AROS_OBJS) $(AROSLDFLAGS) $(LDFLAGS)
 
 $(EXE) : $(AROS_OBJS) $(DEPLIBS)
-	%link_q opt="$(TARGET_LDFLAGS) $(AROSLDFLAGS)" from="$(AROS_OBJS)"
+	%link_q opt="$(LDFLAGS) $(AROSLDFLAGS)" from="$(AROS_OBJS)"
 
 ####
 

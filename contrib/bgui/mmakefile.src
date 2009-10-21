@@ -20,7 +20,6 @@ OS_INCLUDES     := -I$(AROS_INCLUDES)
 USER_INCLUDES   := -I$(SRCDIR)/$(CURDIR) -I$(INCLUDES_DIR)
 
 INCLUDES        := $(USER_INCLUDES) $(OS_INCLUDES)
-CFLAGS          := $(INCLUDES)
 
 INCLUDE_FILES = \
 	$(OBJDIR)/bgui.library_rev.h \
@@ -198,7 +197,7 @@ $(OBJDIR)/bin/bgui.library.$(BUILD_TYPE) : $(OBJDIR)/libtag.o \
 		$(OBJDIR)/plaslclasses$(o) \
 		$(OBJDIR)/endtag.o
 #	if ($(BUILD_TYPE) eq D)
-	@$(CC) $(DEBUG_OPTIONS) $(DEFINES) -c $(SRCDIR)/$(CURDIR)/ver.c -o $(OBJDIR)/ver.o
+	@$(CC) $(CFLAGS) $(DEBUG_OPTIONS) $(DEFINES) -c $(SRCDIR)/$(CURDIR)/ver.c -o $(OBJDIR)/ver.o
 #	endif
 #	ifeq ($(BUILD_TYPE),S)
 #	@$(CC) $(STANDARD_OPTIONS) $(DEFINES) -c ver.c -o $(OBJDIR)/ver.o
@@ -274,10 +273,10 @@ $(OBJDIR)/plaslclasses$(o) : $(asl_o)
 	@$(LD) $(LDINCR_FLAG) $(asl_o) -o $@
 
 $(OBJDIR)/libtag.o: libtag.c
-	@$(CC) $(INCLUDES) -c $^ -o $@
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $^ -o $@
 
 $(OBJDIR)/endtag.o: endtag.c
-	@$(CC) $(INCLUDES) -c $^ -o $@
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $^ -o $@
 
 $(OBJDIR)/%$(o): %.c
 	@$(CC) $(CFLAGS) $(DEFINES) -c $< -o $@ 2>&1|tee $@.err
