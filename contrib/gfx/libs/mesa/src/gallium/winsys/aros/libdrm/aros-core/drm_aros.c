@@ -448,15 +448,24 @@ IPTR drm_aros_pci_resource_len(OOP_Object *pciDevice,  unsigned int resource)
 #if !defined(HOSTED_BUILD)    
     IPTR len = (IPTR)0;
     
-    switch(resource)
+    if (drm_aros_pci_resource_start(pciDevice, resource) != NULL)
     {
-        case(0): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size0, (APTR)&len); break;
-        case(1): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size1, (APTR)&len); break;
-        case(2): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size2, (APTR)&len); break;
-        case(3): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size3, (APTR)&len); break;
-        case(4): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size4, (APTR)&len); break;
-        case(5): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size5, (APTR)&len); break;
-        default: DRM_ERROR("ResourceID %d not supported\n", resource);
+        /* 
+         * The length reading is only correct when the resource actually exists.
+         * pci.hidd can however return a non 0 lenght for a resource that does
+         * not exsist. Possible fix in pci.hidd needed
+         */
+        
+        switch(resource)
+        {
+            case(0): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size0, (APTR)&len); break;
+            case(1): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size1, (APTR)&len); break;
+            case(2): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size2, (APTR)&len); break;
+            case(3): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size3, (APTR)&len); break;
+            case(4): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size4, (APTR)&len); break;
+            case(5): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size5, (APTR)&len); break;
+            default: DRM_ERROR("ResourceID %d not supported\n", resource);
+        }
     }
     
     return len;
