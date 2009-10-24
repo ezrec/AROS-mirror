@@ -1,7 +1,14 @@
 #   $Id: mmakefile.src 31739 2009-08-24 18:56:44Z deadwood $
 include $(TOP)/config/make.cfg
 
-#MM contrib-local-glexcess : contrib-gnu-crosstools includes contrib-gfx-libs-mesa-includes contrib-local-glexcess-cpp
+#MM mesa-demos-glexcess : \
+#MM	includes \
+#MM	contrib-gnu-crosstools \
+#MM	contrib-gfx-libs-mesa-includes \
+#MM	contrib-gfx-libs-mesa-glu-linklib \
+#MM	contrib-gfx-libs-mesa-glut-linklib \
+#MM	mesa-demos-glexcess-cpp \
+#MM	mesa-demos-glexcess-copyfiles
 
 GLEXCESS_SOURCES = \
 	glxsglut \
@@ -36,14 +43,18 @@ $(GLEXCESS_SOURCES) :
 %compile_q cmd=$(TARGET_CXX) opt=$(CXX_FLAGS) from=$(SRCDIR)/$(CURDIR)/$@.cpp to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
 
 #MM
-contrib-local-glexcess-cpp : contrib-local-glexcess-cpp-directories-setup $(GLEXCESS_SOURCES)
+mesa-demos-glexcess-cpp : mesa-demos-glexcess-cpp-directories-setup $(GLEXCESS_SOURCES)
 
 #MM
-contrib-local-glexcess-cpp-directories-setup :
+mesa-demos-glexcess-cpp-directories-setup :
 %mkdirs_q dirs="$(GENDIR)/$(CURDIR) $(CONTRIBDIR)/Demos/Mesa/GLExcess"
 
 #MM
-contrib-local-glexcess :
+mesa-demos-glexcess :
 %link_q cmd=$(TARGET_CXX) from="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(GLEXCESS_SOURCES))))" to=$(CONTRIBDIR)/Demos/Mesa/GLExcess/GLExcess libs="-lglut -lGL -lGLU"
+
+#MM
+mesa-demos-glexcess-copyfiles :
+%copy_dir_recursive mmake=mesa-demos-glexcess-copyfiles src=data dst="$(GENDIR)/$(CURDIR) $(CONTRIBDIR)/Demos/Mesa/GLExcess/data"
 
 %common
