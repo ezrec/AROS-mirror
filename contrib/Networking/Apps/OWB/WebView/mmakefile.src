@@ -4,7 +4,7 @@
 -include $(TOP)/config/make.cfg
 
 REPOSITORIES = http://www.sand-labs.org/aros_downloads/OWB%20Source%20Snapshots
-ARCHBASE := OWB-r994
+ARCHBASE := OWB-r1097
 OWB_SOURCE := $(PORTSDIR)/OWB/$(ARCHBASE)
 OWB_BUILD_DIR := $(GENDIR)/$(CURDIR)
 
@@ -41,8 +41,8 @@ aros-tcpip-apps-owb-webview-setup :
 	-DCMAKE_INSTALL_PREFIX=$(AROS_DEVELOPMENT) \
 	-DJPEG_LIBRARY=$(AROS_DEVELOPMENT)/lib/libjpeg.a \
 	-DJPEG_INCLUDE_DIR=$(AROS_DEVELOPMENT)/include/ \
-	-DLIBXML2_LIBRARIES=$(AROS_DEVELOPMENT)/lib/libxml2.a \
-	-DLIBXML2_INCLUDE_DIRS=$(AROS_DEVELOPMENT)/include/libxml2 \
+	-DOWB_BASE_DEPS_LIBRARIES=$(AROS_DEVELOPMENT)/lib/libxml2.a \
+	-DOWB_BASE_DEPS_INCLUDE_DIRS=$(AROS_DEVELOPMENT)/include/libxml2 \
 	-DCURL_LIBRARIES="$(AROS_DEVELOPMENT)/lib/libcurl.a;$(AROS_DEVELOPMENT)/lib/libiconv.a;$(AROS_DEVELOPMENT)/lib/libz.a;$(AROS_DEVELOPMENT)/lib/libssl.a;$(AROS_DEVELOPMENT)/lib/libcrypto.a;" \
 	-DCURL_INCLUDE_DIRS=$(AROS_DEVELOPMENT)/include/ \
 	-DPNG12_LIBRARIES=$(AROS_DEVELOPMENT)/lib/libpng.a \

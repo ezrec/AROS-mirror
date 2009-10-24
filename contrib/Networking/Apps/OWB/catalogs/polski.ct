@@ -1,4 +1,4 @@
-## version $VER: owb.catalog 3.0 (21.06.2009)
+## version $VER: owb.catalog 4.0 (24.10.2009)
 ## language polski
 ## codeset 0
 ;
@@ -298,6 +298,10 @@ MSG_UnknownFileName
 nieznana
 ; unknown
 ;
+MSG_UnknownDownloadSpeed
+nieznana
+; unknown
+;
 MSG_DownloadFileSize
 Rozmiar pliku
 ; File size
@@ -305,6 +309,10 @@ Rozmiar pliku
 MSG_DownloadFileName
 Nazwa pliku
 ; File name
+;
+MSG_DownloadSpeed
+Prêdko¶æ pobierania
+; Speed
 ;
 MSG_DownloadState
 Status
@@ -369,6 +377,14 @@ Ustawienia Zune
 MSG_PreferencesManager_OpenZuneSettings
 Otwórz ustawienia Zune
 ; Open Zune Settings
+;
+MSG_PreferencesManager_ProxySettings
+Ustawienia serwera proxy
+; Proxy Settings
+;
+MSG_PreferencesManager_HttpProxy
+HTTP Proxy
+; HTTP Proxy:
 ;
 MSG_PreferencesManager_Content
 Zawarto¶æ
@@ -467,15 +483,15 @@ Anuluj
 ; Cancel
 ;
 MSG_Tabs
-Zak³adki
+Karty
 ; Tabs
 ;
 MSG_Tabs_OpenNew
-Otwórz now± zak³adkê
+Otwórz now± kartê
 ; Open new tab
 ;
 MSG_Tabs_CloseActive
-Zamknij aktywn± zak³adkê
+Zamknij aktywn± kartê
 ; Close active tab
 ;
 MSG_Tabs_Bookmark
@@ -581,4 +597,60 @@ Przesuñ w górê
 MSG_BookmarkManager_MoveDown
 Przesuñ w dó³
 ; Move down
+;
+MSG_MainMenu_File
+Plik
+; File
+;
+MSG_MainMenu_OpenNewTab
+Otwórz now± kartê
+; Open new tab
+;
+MSG_MainMenu_OpenNewWindow
+Otwórz nowe okno
+; Open new window
+;
+MSG_MainMenu_OpenFile
+Otwórz plik
+; Open file
+;
+MSG_MainMenu_CloseCurrentTab
+Zamknij aktywn± kartê
+; Close current tab
+;
+MSG_MainMenu_CloseWindow
+Zamknij okno
+; Close window
+;
+MSG_MainMenu_Quit
+Zakoñcz
+; Quit
+;
+MSG_MainMenu_Edit
+Edycja
+; Edit
+;
+MSG_MainMenu_Find
+Znajd¼
+; Find
+;
+MSG_MainMenu_FindNext
+Znajd¼ nastêpny
+; Find next
+;
+MSG_MainMenu_Preferences
+Ustawienia
+; Preferences
+;
+MSG_MainMenu_Tools
+Narzêdzia
+; Tools
+;
+MSG_MainMenu_BookmarkManager
+Zarz±dzanie ulubionymi stronami
+; Bookmark manager
+;
+MSG_MainMenu_DownloadManager
+Zarz±dzanie pobieraniem plików
+; Download manager
 ;

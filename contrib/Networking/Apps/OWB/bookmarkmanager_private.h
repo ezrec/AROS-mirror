@@ -18,7 +18,7 @@ struct BookmarkManager_DATA
     Object *bookmarks_list;
     Object *label_string, *url_string;
     Object *openOnStartup_check, *showInQuickLaunch_check;
-    Object *bookmarks_menu, *bookmarks_menustrip;
+    Object *bookmarks_menu;
     struct Hook create_hook, destroy_hook, display_hook;
     STRPTR selectedURL;
 };

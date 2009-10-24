@@ -114,7 +114,6 @@ IPTR BrowserTab__OM_SET(Class *cl, Object *obj, struct opSet *msg)
     		    return FALSE;
     		FreeVec(data->title);
     		data->title = newtitle;
-    		bug("setting titleObject %p in Tab %p to %s\n", data->titleObject, obj, data->title);
     		set(data->titleObject, MUIA_Text_Contents, data->title);
     		break;
     	    }

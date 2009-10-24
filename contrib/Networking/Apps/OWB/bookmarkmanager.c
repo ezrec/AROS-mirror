@@ -23,6 +23,7 @@
 #include "bookmarkmanager_private.h"
 
 #include "locale.h"
+#include "browserapp.h"
 
 static IPTR BookmarkDisplayFunc(struct Hook *hook, char **columns, struct Bookmark *bookmark)
 {
@@ -111,11 +112,13 @@ IPTR BookmarkManager__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 		    Child, tmpdata.label_string = StringObject,
 			MUIA_Frame, MUIV_Frame_String,
 			MUIA_CycleChain, 1,
+			MUIA_String_MaxLen, 256,
 			End,
 		    Child, Label2(_(MSG_BookmarkManager_URL)),
 		    Child, tmpdata.url_string = StringObject,
 			MUIA_Frame, MUIV_Frame_String,
 			MUIA_CycleChain, 1,
+			MUIA_String_MaxLen, 2048,
 			End,
 		    End,
 		End,
@@ -133,11 +136,9 @@ IPTR BookmarkManager__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
     if (self == NULL)
 	return (IPTR) NULL;
 
-    tmpdata.bookmarks_menustrip = MenustripObject,
-        MUIA_Family_Child, tmpdata.bookmarks_menu = MenuObject,
-            MUIA_Menu_Title, _(MSG_BookmarkManager_MenuTitle),
-            End,
-        End,
+    tmpdata.bookmarks_menu = MenuObject,
+        MUIA_Menu_Title, _(MSG_BookmarkManager_MenuTitle),
+        End;
     
     /* Click Close window with close gadget */
     DoMethod(self, MUIM_Notify, MUIA_Window_CloseRequest, (IPTR) TRUE,
@@ -270,7 +271,9 @@ IPTR BookmarkManager__MUIM_BookmarkManager_Insert(struct IClass *cl, Object *obj
 	
     set(data->label_string, MUIA_String_Contents, "");
     set(data->url_string, MUIA_String_Contents, "");
-    
+
+    DoMethod(_app(obj), MUIM_Application_UpdateMenus);
+
     return (IPTR) 0;
 
 database_error:
@@ -336,6 +339,8 @@ IPTR BookmarkManager__MUIM_BookmarkManager_Change(struct IClass *cl, Object *obj
 	(IPTR) obj, 3,
 	MUIM_Set, MUIA_BookmarkManager_SelectedURL, bookmark->url);
 
+    DoMethod(_app(obj), MUIM_Application_UpdateMenus);
+
     return (IPTR) 0;
 database_error:
     D(bug("Database error: %s\n", sqlite3_errmsg(data->db)));
@@ -392,7 +397,9 @@ IPTR BookmarkManager__MUIM_BookmarkManager_Remove(struct IClass *cl, Object *obj
     DoMethod(data->bookmarks_menu, MUIM_Family_Remove, bookmark->menuItem);
 
     DoMethod(data->bookmarks_list, MUIM_List_Remove, active);
-    
+
+    DoMethod(_app(obj), MUIM_Application_UpdateMenus);
+
     return (IPTR) 0;
 
 database_error:
@@ -428,7 +435,7 @@ IPTR BookmarkManager__OM_GET(Class *cl, Object *obj, struct opGet *msg)
     switch(msg->opg_AttrID)
     {
         case MUIA_BookmarkManager_BookmarkMenu:
-            *(Object**)msg->opg_Storage = data->bookmarks_menustrip;
+            *(Object**)msg->opg_Storage = data->bookmarks_menu;
             break;
         case MUIA_BookmarkManager_SelectedURL:
             *(STRPTR*)msg->opg_Storage = data->selectedURL;
@@ -578,6 +585,8 @@ IPTR BookmarkManager__MUIM_BookmarkManager_Move(struct IClass *cl, Object *obj, 
     default:
 	break;
     }
+    
+    DoMethod(_app(obj), MUIM_Application_UpdateMenus);
     
     return (IPTR) 0;
 

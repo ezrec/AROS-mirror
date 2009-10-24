@@ -3,6 +3,13 @@
 
 include $(TOP)/config/make.cfg
 
+EXEDIR := $(CONTRIBDIR)/Networking/Apps/OWB
+
+%build_prog mmake=aros-tcpip-apps-startowb \
+    files="startowb locale" targetdir=$(EXEDIR) \
+    progname="startowb" uselibs="fontconfig xml2 freetype2 z iconv amiga arosc m mui" \
+    cflags="$(CFLAGS) -DZUNE_BUILTIN_SCROLLGROUP=0 -DWTF_PLATFORM_AROS=1"
+
 FILES :=               \
 	tabs/tab           \
 	tabs/tabs          \
@@ -11,20 +18,23 @@ FILES :=               \
 	locale             \
 	browsertab         \
 	downloadmanager    \
-	searchwindow       \
+	searchbar          \
 	browserpreferences \
 	preferencesmanager \
 	tabbedview         \
-	bookmarkmanager
+	bookmarkmanager    \
+	browserwindow      \
+	browserapp
 	
-EXEDIR := $(CONTRIBDIR)/Networking/Apps/OWB
+#MM- aros-tcpip-apps-startowb : contrib-fontconfig
 
 #MM- aros-tcpip-apps-owb : aros-tcpip-apps-owb-webview   \
 #MM                        aros-tcpip-apps-owb-icon      \
 #MM                        aros-tcpip-apps-owb-catalogs  \
 #MM                        aros-tcpip-apps-owb-resources \
 #MM                        aros-tcpip-apps-owb-fonts     \
-#MM                        aros-tcpip-apps-owb-licenses
+#MM                        aros-tcpip-apps-owb-licenses  \
+#MM                        aros-tcpip-apps-startowb
 
 LDFLAGS += -Wl,-whole-archive -lwebkit-owb -lwtf -ljsc -lwebcore -Wl,-no-whole-archive
 AROS_CC := $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-g++ -specs=$(GENDIR)/config/specs
@@ -36,7 +46,7 @@ AROS_CC := $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-g++ -specs=$(GENDIR)/config/specs
     progname="owb" uselibs="sicui18n sicuuc sicudata codesets thread xml2 fontconfig freetype2 SDL SDL_gfx png jpeg curl iconv z amiga arosc m mui ssl crypto sqlite3" \
     cflags="$(CFLAGS) -DZUNE_BUILTIN_SCROLLGROUP=0 -DWTF_PLATFORM_AROS=1 -I$(SRCDIR)/$(CURDIR)/tabs -I$(AROS_INCLUDES)/SDL -I$(AROS_INCLUDES)/webkit-owb"
 
-ICONS := back.png close.png download.png find.png forward.png go.png home.png preferences.png reload.png search.png stop.png bookmarks.png
+ICONS := back.png close.png download.png find.png forward.png go.png home.png preferences.png reload.png search.png stop.png bookmarks.png logo.png
 
 #MM aros-tcpip-apps-owb-icons
 %copy_files_q files="$(ICONS)" src="icons" dst="$(EXEDIR)/resources" maketarget=aros-tcpip-apps-owb-icons

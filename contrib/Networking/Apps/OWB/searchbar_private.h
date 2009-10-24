@@ -1,5 +1,5 @@
-#ifndef _SEARCHWINDOW_PRIVATE_H_
-#define _SEARCHWINDOW_PRIVATE_H_
+#ifndef _SEARCHBAR_PRIVATE_H_
+#define _SEARCHBAR_PRIVATE_H_
 
 /*
     Copyright © 2009, The AROS Development Team. All rights reserved.
@@ -11,13 +11,12 @@
 #include <libraries/mui.h>
 
 /*** Instance data **********************************************************/
-struct SearchWindow_DATA
+struct SearchBar_DATA
 {
     Object *located_string;
     Object *next_button;
     Object *previous_button;
     Object *case_checkmark;
-    struct Hook *search_hook;
 };
 
-#endif /* _SEARCHWINDOW_PRIVATE_H_ */
+#endif /* _SEARCHBAR_PRIVATE_H_ */

@@ -1,5 +1,5 @@
-#ifndef _SEARCHWINDOW_H
-#define _SEARCHWINDOW_H
+#ifndef _SEARCHBAR_H
+#define _SEARCHBAR_H
 
 /*
     Copyright © 2009, The AROS Development Team. All rights reserved.
@@ -10,20 +10,19 @@
 #include <libraries/mui.h>
 
 /*** Identifier base ********************************************************/
-#define MUIB_SearchWindow                 (TAG_USER | 0x10000000)
+#define MUIB_SearchBar                 (TAG_USER | 0x10000000)
 
 /*** Public attributes ******************************************************/
-#define MUIA_SearchWindow_SearchHook      (MUIB_SearchWindow | 0x00000000)
 
 /*** Private methods * ******************************************************/
-#define MUIM_SearchWindow_Find            (MUIB_SearchWindow | 0x00000000)
-struct MUIP_SearchWindow_Find             {STACKED ULONG MethodID; STACKED BYTE forward;};
+#define MUIM_SearchBar_Find            (MUIB_SearchBar | 0x00000000)
+struct MUIP_SearchBar_Find             {STACKED ULONG MethodID; STACKED BYTE forward;};
 
 /*** Variables **************************************************************/
-extern struct MUI_CustomClass *SearchWindow_CLASS;
+extern struct MUI_CustomClass *SearchBar_CLASS;
 
 /*** Macros *****************************************************************/
-#define SearchWindowObject BOOPSIOBJMACRO_START(SearchWindow_CLASS->mcc_Class)
+#define SearchBarObject BOOPSIOBJMACRO_START(SearchBar_CLASS->mcc_Class)
 
 struct OWB_SearchMsg
 {
@@ -32,4 +31,4 @@ struct OWB_SearchMsg
     LONG forward;
 };
 
-#endif /* _SEARCHWINDOW_H */
+#endif /* _SEARCHBAR_H */

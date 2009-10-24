@@ -445,3 +445,45 @@ Move up
 MSG_BookmarkManager_MoveDown (//)
 Move down
 ;
+MSG_MainMenu_File (//)
+File
+;
+MSG_MainMenu_OpenNewTab (//)
+Open new tab
+;
+MSG_MainMenu_OpenNewWindow (//)
+Open new window
+;
+MSG_MainMenu_OpenFile (//)
+Open file
+;
+MSG_MainMenu_CloseCurrentTab (//)
+Close current tab
+;
+MSG_MainMenu_CloseWindow (//)
+Close window
+;
+MSG_MainMenu_Quit (//)
+Quit
+;
+MSG_MainMenu_Edit (//)
+Edit
+;
+MSG_MainMenu_Find (//)
+Find
+;
+MSG_MainMenu_FindNext (//)
+Find next
+;
+MSG_MainMenu_Preferences (//)
+Preferences
+;
+MSG_MainMenu_Tools (//)
+Tools
+;
+MSG_MainMenu_BookmarkManager (//)
+Bookmark manager
+;
+MSG_MainMenu_DownloadManager (//)
+Download manager
+;
