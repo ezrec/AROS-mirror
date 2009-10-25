@@ -579,8 +579,6 @@ IPTR BrowserWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
     data->webSearchAcknowledgeHook.h_Entry = HookEntry;
     data->webSearchAcknowledgeHook.h_SubEntry = (HOOKFUNC) WebSearchAcknowledgeFunc;
     
-//    set(urlString, MUIA_ContextMenu, XGET(bookmarkManager, MUIA_BookmarkManager_BookmarkMenu));
-
     /* Click Close gadget or hit Escape to quit */
     DoMethod(self, MUIM_Notify, MUIA_Window_CloseRequest, TRUE,
 	    (IPTR) MUIV_Notify_Application, 2,
