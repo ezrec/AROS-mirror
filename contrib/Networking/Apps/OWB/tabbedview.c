@@ -22,6 +22,8 @@
 #include "tabbedview.h"
 #include "tabbedview_private.h"
 
+#include "locale.h"
+
 IPTR forwardedAttributes[] = 
 { 
     MUIA_WebView_ToolTip, 
@@ -56,6 +58,28 @@ IPTR TabbedView__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
          MUIM_TabbedView_TriggerNotifications);
     
     return (IPTR) self;
+}
+
+IPTR TabbedView__OM_DISPOSE(struct IClass *cl, Object *obj, Msg msg)
+{
+    Object *cstate;
+    Object *child;
+    struct MinList *ChildList = NULL;
+    int i;
+    
+    if ((get(obj, MUIA_Group_ChildList, &(ChildList))) && (ChildList != NULL))
+    {
+	cstate = (Object *)ChildList->mlh_Head;
+	while ((child = NextObject(&cstate)))
+	{
+	    for(i = 0; i < sizeof(forwardedAttributes) / sizeof(IPTR); i++)
+	    {
+		DoMethod(child, MUIM_KillNotify, forwardedAttributes[i]);
+	    }
+	}
+    }
+  
+    return DoSuperMethodA(cl, obj, (Msg)msg);
 }
 
 IPTR TabbedView__OM_ADDMEMBER(Class *cl, Object *obj, struct opMember *msg)
@@ -170,7 +194,10 @@ static IPTR TabbedView__MUIM_TabbedView_ForwardAttribute(Class *cl, Object *obj,
 	{
 	    if(forwardedAttributes[i] == msg->attribute)
 	    {
-		SetAttrs(obj, MUIA_Group_Forward, FALSE, msg->attribute, msg->value, TAG_END);
+		if(msg->attribute == MUIA_WebView_Title && (msg->value == NULL || ((char*) msg->value)[0] == '\0'))
+		    SetAttrs(obj, MUIA_Group_Forward, FALSE, msg->attribute, (IPTR) _(MSG_OWB), TAG_END);
+		else
+		    SetAttrs(obj, MUIA_Group_Forward, FALSE, msg->attribute, msg->value, TAG_END);
 		break;
 	    }
 	}
@@ -185,17 +212,28 @@ static IPTR TabbedView__MUIM_TabbedView_TriggerNotifications(Class *cl, Object *
     int i;
     for(i = 0; i < sizeof(forwardedAttributes) / sizeof(IPTR); i++)
     {
-        SetAttrs(obj, MUIA_Group_Forward, FALSE, forwardedAttributes[i], XGET(activeView, forwardedAttributes[i]), TAG_END);
+	IPTR value = XGET(activeView, forwardedAttributes[i]);
+	if(forwardedAttributes[i] == MUIA_WebView_Title && (value == NULL || ((char*) value)[0] == '\0'))
+	    value = (IPTR) _(MSG_OWB);
+	SetAttrs(obj, MUIA_Group_Forward, FALSE, forwardedAttributes[i], value, TAG_END);
     }
     
     return TRUE;
+}
+
+static IPTR TabbedView__MUIM_TabbedView_Notify(Class *cl, Object *obj, struct MUIP_Notify *msg)
+{
+    struct IClass *notifyClass = MUI_GetClass(MUIC_Notify);
+    return CoerceMethodA(notifyClass, obj, msg);
 }
 
 __ZUNE_CUSTOMCLASS_START(TabbedView)
 __ZUNE_CUSTOMCLASS_METHOD(TabbedView__OM_NEW, OM_NEW, struct opSet*);
 __ZUNE_CUSTOMCLASS_METHOD(TabbedView__OM_GET, OM_GET, struct opGet*);
 __ZUNE_CUSTOMCLASS_METHOD(TabbedView__OM_SET, OM_SET, struct opSet*);
+__ZUNE_CUSTOMCLASS_METHOD(TabbedView__OM_DISPOSE, OM_DISPOSE, Msg);
 __ZUNE_CUSTOMCLASS_METHOD(TabbedView__OM_ADDMEMBER, OM_ADDMEMBER, struct opMember*);
+__ZUNE_CUSTOMCLASS_METHOD(TabbedView__MUIM_TabbedView_Notify, MUIM_Notify, struct MUIP_Notify*);
 __ZUNE_CUSTOMCLASS_METHOD(TabbedView__MUIM_TabbedView_ForwardMethod, MUIM_WebView_LoadURL, Msg);
 __ZUNE_CUSTOMCLASS_METHOD(TabbedView__MUIM_TabbedView_ForwardMethod, MUIM_WebView_GoBack, Msg);
 __ZUNE_CUSTOMCLASS_METHOD(TabbedView__MUIM_TabbedView_ForwardMethod, MUIM_WebView_GoForward, Msg);
