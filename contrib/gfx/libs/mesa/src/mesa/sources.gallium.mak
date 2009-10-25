@@ -31,6 +31,7 @@ AROS_WINSYS_SOURCES = \
             winsys/aros/libdrm/aros-core/drm_scatter \
             winsys/aros/libdrm/aros-core/drm_drv \
             winsys/aros/libdrm/aros-core/nv50_instmem \
+            winsys/aros/libdrm/aros-core/nouveau_drv \
             winsys/aros/libdrm/shared-core/nv04_fifo \
             winsys/aros/libdrm/shared-core/nv10_fifo \
             winsys/aros/libdrm/shared-core/nv40_fifo \

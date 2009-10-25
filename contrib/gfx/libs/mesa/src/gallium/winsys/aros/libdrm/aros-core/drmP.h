@@ -182,6 +182,11 @@ struct drm_sg_mem {
     dma_addr_t *busaddr;
 };
 
+/* Contains a collection of functions common to each drm driver */
+struct drm_driver
+{
+};
+
 struct drm_device {
     struct list_head maplist;   /**< Linked list of regions */
     
@@ -197,8 +202,6 @@ struct drm_device {
     OOP_Object              *pcidriver;
     HIDDT_IRQ_Handler       *IntHandler;
 };
-
-
 
 struct drm_file
 {
@@ -315,6 +318,8 @@ static __inline__ int drm_device_is_pcie(struct drm_device *dev)
 
 /* drm_drv.c */
 int drm_lastclose(struct drm_device *dev);
+void drm_exit(struct drm_driver *driver);
+int drm_init(struct drm_driver *driver);
 
 /* AROS specific functions */
 /* drm_aros.c */
