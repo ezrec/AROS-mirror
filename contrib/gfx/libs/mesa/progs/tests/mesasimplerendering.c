@@ -154,19 +154,20 @@ void initmesa()
 
     glcont = AROSMesaCreateContext(attributes);
     if (glcont)
+    {
         AROSMesaMakeCurrent(glcont);
+        h = (GLfloat)VISIBLE_HEIGHT / (GLfloat)VISIBLE_WIDTH ;
+
+        glViewport(0, 0, (GLint) VISIBLE_WIDTH, (GLint) VISIBLE_HEIGHT);
+#if USE_PERSPECTIVE == 1
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glFrustum(-1.0, 1.0, -h, h, 5.0, 200.0);
+        glMatrixMode(GL_MODELVIEW);
+#endif           
+    }
     else
         finished = TRUE; /* Failure. Stop */
-
-    h = (GLfloat)VISIBLE_HEIGHT / (GLfloat)VISIBLE_WIDTH ;
-
-    glViewport(0, 0, (GLint) VISIBLE_WIDTH, (GLint) VISIBLE_HEIGHT);
-#if USE_PERSPECTIVE == 1
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glFrustum(-1.0, 1.0, -h, h, 5.0, 200.0);
-    glMatrixMode(GL_MODELVIEW);
-#endif    
 }
 
 void deinitmesa()

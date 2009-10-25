@@ -24,4 +24,4 @@ struct arosmesa_driver
 
 };
 
-void arosmesa_set_driver (const struct arosmesa_driver * drv);
+struct arosmesa_driver * arosmesa_get_driver ( void );

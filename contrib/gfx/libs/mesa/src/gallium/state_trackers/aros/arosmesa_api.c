@@ -20,15 +20,7 @@
 #include <graphics/rpattr.h>
 
 struct Library * AROSMesaCyberGfxBase = NULL;    /* Base address for cybergfx */
-
-#define USE_NVIDIA_DRIVER 0
-
-/* HACK to get the driver setup */
-extern struct arosmesa_driver arosmesa_softpipe_driver;
-extern struct arosmesa_driver arosmesa_nouveau_driver;
-
-
-extern struct arosmesa_driver driver;
+struct arosmesa_driver * driver = NULL;
 
 /*****************************************************************************/
 /*                             PRIVATE FUNCTIONS                             */
@@ -75,7 +67,7 @@ aros_new_visual(GLint bpp, struct TagItem *tagList)
     }
 
     /* Z-buffer / Stencil buffer */
-    driver.query_depth_stencil(bpp, &depthBits, &stencilBits);
+    driver->query_depth_stencil(bpp, &depthBits, &stencilBits);
     
     /* Accum buffer */
     accumBits = 16;
@@ -440,12 +432,12 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
     struct pipe_screen * screen = NULL;
     struct pipe_context * pipe = NULL;
     
-    /* HACK - driver should be already set up */
-    #if USE_NVIDIA_DRIVER == 1
-    arosmesa_set_driver(&arosmesa_nouveau_driver);
-    #else
-    arosmesa_set_driver(&arosmesa_softpipe_driver);
-    #endif
+    /* Acquire gallium driver */
+    if (driver == NULL)
+    {
+        if (!(driver = arosmesa_get_driver()))
+            return NULL;
+    }
     
     /* Try to open cybergraphics.library */
     if (CyberGfxBase == NULL)
@@ -481,7 +473,7 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
         return NULL;
     }
     
-    screen = driver.create_pipe_screen();
+    screen = driver->create_pipe_screen();
     
     if (!screen)
     {
@@ -493,10 +485,10 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
     }
 
     /* FIXME: This is a hack so that VRAM is not allocated from visible portion of framebuffer */
-    driver.protect_visible_screen(screen, amesa->ScreenInfo.Width, amesa->ScreenInfo.Height, 
+    driver->protect_visible_screen(screen, amesa->ScreenInfo.Width, amesa->ScreenInfo.Height, 
                                    amesa->ScreenInfo.BitsPerPixel);
     
-    pipe = driver.create_pipe_context(screen);
+    pipe = driver->create_pipe_context(screen);
     
     /* FIXME: If pipe == NULL */
     
@@ -578,7 +570,7 @@ void AROSMesaSwapBuffers(AROSMesaContext amesa)
     st_get_framebuffer_surface(amesa->framebuffer->stfb, ST_SURFACE_FRONT_LEFT, &surf);
 
     if (surf) {
-        driver.display_surface(amesa, surf);
+        driver->display_surface(amesa, surf);
     }
 
     _aros_check_and_update_buffer_size(amesa);
@@ -630,7 +622,7 @@ void AROSMesaDestroyContext(AROSMesaContext amesa)
         aros_destroy_visual(amesa->visual);
         aros_destroy_context(amesa);
 
-        driver.cleanup(screen);
+        driver->cleanup(screen);
     }
     
     RESTORE_REG
