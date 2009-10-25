@@ -225,6 +225,8 @@ IPTR BrowserApp__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
     data->requestFileHook.h_SubEntry = (HOOKFUNC) RequestFileFunc;
     data->preferences = preferences;
 
+    DoMethod(data->preferencesManager, MUIM_PreferencesManager_Load);
+
     DoMethod(mainMenustrip,MUIM_Family_AddTail,XGET(bookmarkManager, MUIA_BookmarkManager_BookmarkMenu));
 
     /* Open tab menu item */
@@ -486,19 +488,6 @@ IPTR BrowserApp__MUIM_BrowserApp_CloseWindow(Class *cl, Object *obj, struct MUIP
     return TRUE;
 }
 
-
-IPTR BrowserApp__MUIM_Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
-{
-    struct BrowserApp_DATA *data = (struct BrowserApp_DATA *) INST_DATA(cl, obj);
-    
-    if (!DoSuperMethodA(cl, obj, (Msg)msg))
-	return FALSE;
-    
-    DoMethod(data->preferencesManager, MUIM_PreferencesManager_Load);
-    
-    return TRUE;
-}
-
 IPTR BrowserApp__MUIM_BrowserApp_Bookmark(struct IClass *cl, Object *obj, struct MUIP_BrowserApp_Bookmark *msg)
 {
     struct BrowserApp_DATA *data = (struct BrowserApp_DATA *) INST_DATA(cl, obj);
@@ -507,14 +496,13 @@ IPTR BrowserApp__MUIM_BrowserApp_Bookmark(struct IClass *cl, Object *obj, struct
 }
 
 /*** Setup ******************************************************************/
-ZUNE_CUSTOMCLASS_9
+ZUNE_CUSTOMCLASS_8
 (
     BrowserApp, NULL, MUIC_Application, NULL,
     OM_NEW, struct opSet*,
     OM_DISPOSE, Msg,
     OM_SET, struct opSet*,
     OM_GET, struct opGet*,
-    MUIM_Setup, struct MUIP_Setup *,
     MUIM_BrowserApp_OpenNewWindow, struct MUIP_BrowserApp_OpenNewWindow*,
     MUIM_BrowserApp_CloseActiveWindow, Msg,
     MUIM_BrowserApp_CloseWindow, struct MUIP_BrowserApp_CloseWindow*,
