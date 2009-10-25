@@ -21,7 +21,7 @@
 
 struct Library * AROSMesaCyberGfxBase = NULL;    /* Base address for cybergfx */
 
-#define USE_NVIDIA_DRIVER 1
+#define USE_NVIDIA_DRIVER 0
 
 /* HACK to get the driver setup */
 extern struct arosmesa_driver arosmesa_softpipe_driver;
@@ -516,8 +516,20 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
     return amesa;
 }
 
+#if defined (AROS_MESA_SHARED)
+AROS_LH1(void, AROSMesaMakeCurrent,
+    AROS_LHA(AROSMesaContext, amesa, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+#else
 void AROSMesaMakeCurrent(AROSMesaContext amesa)
 {
+#endif
+    SAVE_REG
+    
+    PUT_MESABASE_IN_REG
+
     /* FIXME: if passed context is the same as current context, check buffer sizes */
     /* FIXME: if there was old context active, flush it and NULL the pointers to buffers */
     
@@ -535,10 +547,26 @@ void AROSMesaMakeCurrent(AROSMesaContext amesa)
         st_make_current( NULL, NULL, NULL );
     }
         
+    RESTORE_REG
+#if defined (AROS_MESA_SHARED)
+    AROS_LIBFUNC_EXIT
+#endif
 }
 
-void AROSMesaSwapBuffers(AROSMesaContext amesa)
+#if defined (AROS_MESA_SHARED)
+AROS_LH1(void, AROSMesaSwapBuffers,
+    AROS_LHA(AROSMesaContext, amesa, A0),
+    struct Library *, MesaBase, 0, Mesa)
 {
+    AROS_LIBFUNC_INIT
+#else
+void AROSMesaSwapBuffers(AROSMesaContext amesa)
+{        
+#endif
+    SAVE_REG
+    
+    PUT_MESABASE_IN_REG
+
     struct pipe_surface *surf;
 
     /* If we're swapping the buffer associated with the current context
@@ -554,10 +582,27 @@ void AROSMesaSwapBuffers(AROSMesaContext amesa)
     }
 
     _aros_check_and_update_buffer_size(amesa);
+
+    RESTORE_REG
+#if defined (AROS_MESA_SHARED)
+    AROS_LIBFUNC_EXIT
+#endif
 }
 
+#if defined (AROS_MESA_SHARED)
+AROS_LH1(void, AROSMesaDestroyContext,
+    AROS_LHA(AROSMesaContext, amesa, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+#else
 void AROSMesaDestroyContext(AROSMesaContext amesa)
 {
+#endif
+    SAVE_REG
+    
+    PUT_MESABASE_IN_REG
+
     /* destroy a AROS/Mesa context */
     D(bug("[AROSMESA] AROSMesaDestroyContext(amesa @ %x)\n", amesa));
 
@@ -588,11 +633,32 @@ void AROSMesaDestroyContext(AROSMesaContext amesa)
         driver.cleanup(screen);
     }
     
+    RESTORE_REG
+#if defined (AROS_MESA_SHARED)
+    AROS_LIBFUNC_EXIT
+#endif
 }
 
+#if defined (AROS_MESA_SHARED)
+AROS_LH0(AROSMesaContext, AROSMesaGetCurrentContext,
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+#else
 AROSMesaContext AROSMesaGetCurrentContext()
 {
+#endif
+    SAVE_REG
+    
+    PUT_MESABASE_IN_REG
+
     GET_CURRENT_CONTEXT(ctx);
 
+    RESTORE_REG;
+    
     return (AROSMesaContext)ctx;
+
+#if defined (AROS_MESA_SHARED)
+    AROS_LIBFUNC_EXIT
+#endif
 }

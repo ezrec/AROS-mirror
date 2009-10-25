@@ -12,6 +12,8 @@ include $(SRCDIR)/$(CURDIR)/sources.gallium.mak
 
 #MM contrib-gfx-libs-mesa-mesa-linklib : includes contrib-gfx-libs-mesa-includes
 
+#MM mesa-mesa-gallium-module : includes contrib-gfx-libs-mesa-includes linklibs
+
 #MM mesa-mesa-gallium-linklib : includes contrib-gfx-libs-mesa-includes
 
 SHARED_LIB_SOURCES = \
@@ -92,5 +94,11 @@ USER_CFLAGS :=
 
 %build_linklib mmake=mesa-mesa-gallium-linklib libname=GLGalliumStatic \
     files="$(LIB_MESA_GALLIUM_SOURCES) arosmesa_getprocaddress" objdir=$(GENDIR)/$(CURDIR)/gallium-linklib
+
+USER_CFLAGS := -DUSE_MGL_NAMESPACE -DAROS_MESA_SHARED -ffast-math $(FFIXED)
+
+%build_module mmake=mesa-mesa-gallium-module \
+    modname=mesa modtype=library linklibname=GLGallium conffile=arosmesa.conf linklibfiles="arosmesa_getprocaddress" \
+    files="$(SHARED_LIB_SOURCES) $(LIB_MESA_GALLIUM_SOURCES)" objdir=$(GENDIR)/$(CURDIR)/gallium-module 
 
 %common
