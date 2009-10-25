@@ -234,6 +234,8 @@ nouveau_sgdma_init(struct drm_device *dev)
 		pci_map_page(dev->pdev, dev_priv->gart_info.sg_dummy_page, 0,
 			     PAGE_SIZE, PCI_DMA_BIDIRECTIONAL);
 #else
+#warning sg_dummy_page needs to be 4096 aligned
+DRM_IMPL("sg_dummy_page needs to be 4096 aligned\n");
     dev_priv->gart_info.sg_dummy_page = AllocVec(PAGE_SIZE, MEMF_PUBLIC | MEMF_CLEAR);
     dev_priv->gart_info.sg_dummy_bus = drm_aros_dma_map_buf(dev_priv->gart_info.sg_dummy_page, 0, PAGE_SIZE);
 #endif

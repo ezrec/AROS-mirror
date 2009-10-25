@@ -567,6 +567,7 @@ DRM_IMPL("calling nouveau_mem_init_agp\n");
 	/*Note: this is *not* just NV50 code, but only used on NV50 for now */
 	if (dev_priv->gart_info.type == NOUVEAU_GART_NONE &&
 	    dev_priv->card_type >= NV_50) {
+#if !defined(__AROS__)
 		ret = nouveau_sgdma_init(dev);
 		if (!ret) {
 			ret = nouveau_sgdma_nottm_hack_init(dev);
@@ -576,6 +577,10 @@ DRM_IMPL("calling nouveau_mem_init_agp\n");
 
 		if (ret)
 			DRM_ERROR("Error initialising SG DMA: %d\n", ret);
+#else
+DRM_IMPL("initializing SG DMA for NV50\n");
+#warning IMPLEMENT initializing SG DMA for NV50
+#endif
 	}
 
 	if (dev_priv->gart_info.type != NOUVEAU_GART_NONE) {

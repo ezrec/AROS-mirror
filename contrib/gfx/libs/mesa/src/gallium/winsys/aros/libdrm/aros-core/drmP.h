@@ -68,7 +68,7 @@ struct drm_file;
 //#define HOSTED_BUILD_ARCH       0x40    /* NV40 family */
 //#define HOSTED_BUILD_CHIPSET    67      /* NV43 chip GeForce 6600 */
 //#define HOSTED_BUILD_ARCH       0x80    /* NV50 family */
-//#define HOSTED_BUILD_CHIPSET    128     /* G80 chip GeForce 8800 GTX */
+//#define HOSTED_BUILD_CHIPSET    132     /* G84 chip GeForce 8600 GT */
 #endif
 
 /* FIXME: Need to find a way to remove the need for these defines */
