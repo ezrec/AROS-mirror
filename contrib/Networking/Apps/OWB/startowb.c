@@ -20,6 +20,8 @@
 #include "locale.h"
 #include "version.h"
 
+#define OWB_STACK_SIZE 2097152
+
 int main(void)
 {
     IPTR argArray[] = { 0 };
@@ -112,10 +114,11 @@ int main(void)
         {
             set(status, MUIA_Text_Contents, "Executing...");
             set(wnd, MUIA_Window_Open, FALSE);
-            MUI_DisposeObject(app);
             
             SetIoErr(0);
-	    LONG returncode = RunCommand(owbSeg, 1048576, (url ? url : "\n"), 0);
+            struct CommandLineInterface *cli = Cli();
+            ULONG stackSize = (cli ? cli->cli_DefaultStack * CLI_DEFAULTSTACK_UNIT : OWB_STACK_SIZE);
+	    LONG returncode = RunCommand(owbSeg, (stackSize > OWB_STACK_SIZE ? stackSize : OWB_STACK_SIZE), (url ? url : "\n"), 0);
 	    
 	    UnLoadSeg(owbSeg);
 	    
@@ -126,6 +129,8 @@ int main(void)
 		Delay(100);
 		goto error;		
 	    }
+
+	    MUI_DisposeObject(app);
 	    
 	    return returncode;
         }
