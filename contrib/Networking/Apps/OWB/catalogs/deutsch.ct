@@ -598,3 +598,59 @@ MSG_BookmarkManager_MoveDown
 Nach unten verschieben
 ; Move down
 ;
+MSG_MainMenu_File
+Datei
+; File
+;
+MSG_MainMenu_OpenNewTab
+÷ffne neuen Tab
+; Open new tab
+;
+MSG_MainMenu_OpenNewWindow
+÷ffne neues Fenster
+; Open new window
+;
+MSG_MainMenu_OpenFile
+÷ffne Datei
+; Open file
+;
+MSG_MainMenu_CloseCurrentTab
+Schlieﬂe aktuellen Tab
+; Close current tab
+;
+MSG_MainMenu_CloseWindow
+Schlieﬂe Fenster
+; Close window
+;
+MSG_MainMenu_Quit
+Beenden
+; Quit
+;
+MSG_MainMenu_Edit
+Editieren
+; Edit
+;
+MSG_MainMenu_Find
+Suchen
+; Find
+;
+MSG_MainMenu_FindNext
+Suche n‰chstes
+; Find next
+;
+MSG_MainMenu_Preferences
+Einstellungen
+; Preferences
+;
+MSG_MainMenu_Tools
+Werkzeuge
+; Tools
+;
+MSG_MainMenu_BookmarkManager
+Lesezeichen-Verwalter
+; Bookmark manager
+;
+MSG_MainMenu_DownloadManager
+Downloadmanager
+; Download manager
+;
