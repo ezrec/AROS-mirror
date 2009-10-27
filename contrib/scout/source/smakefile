@@ -1,0 +1,466 @@
+PROJECT=            Scout
+TARGET=             Scout.os3
+
+VERSION=            37
+
+OBJDIR=             .obj_os3
+CLASSESDIR=         classes
+EXTRASRC=           extrasrc
+
+OPTIMIZE=           opt opttime optsched nooptinline
+DEBUG=              debug=line
+#CFLAGS=             cpu=68020 streq strmerge nostkchk nocheckabort utillib incdir=sdk:include/include_h incdir=classes incdir=netinclude incdir=include incdir=tbLib gst=$(OBJDIR)/$(PROJECT).gst idlen=64 ign=104 DEFINE=__USE_SYSBASE DEFINE=__USE_BASETYPE__
+CFLAGS=             cpu=68020 streq strmerge nostkchk nocheckabort utillib incdir=classes incdir=netinclude incdir=include incdir=tbLib gst=$(OBJDIR)/$(PROJECT).gst idlen=64 ign=104 DEFINE=__USE_SYSBASE
+AFLAGS=             cpu=68020 incdir=/include incdir=include:
+LFLAGS=             smallcode smalldata noicons addsym
+
+LOCALE=             locale
+
+OBJECTS=$(OBJDIR)/startup.o \
+   $(OBJDIR)/Scout.o \
+   $(OBJDIR)/scout_logo.o \
+   $(OBJDIR)/scout_net.o \
+   $(OBJDIR)/i64.o \
+   $(OBJDIR)/$(CLASSESDIR)/fontdisplay_class.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_about.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_allocations.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_arexx.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_asm.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_assigns.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_audiomode.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_audiomode_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_catalogs.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_classes.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_classes_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_commands.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_commodity.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_commodity_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_customclasses.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_devices.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_devices_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_expansions.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_expansions_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_extras.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_flags.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_fonts.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_fonts_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_functions.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_inputhandlers.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_inputhandlers_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_interrupts.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_interrupts_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_libraries.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_libraries_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_locks.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_lowmemory.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_lowmemory_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_main.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_memory.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_memory_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_mount.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_mount_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_parentwindow.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_patches.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_ports.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_ports_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_print.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_priority.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_resethandlers.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_resethandlers_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_residents.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_residents_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_resources.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_resources_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_screenmode.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_screenmode_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_semaphores.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_signal.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_system.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_tasks.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_tasks_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_timer.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_vectors.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_version.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_windows.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_windows_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_disassembler.o \
+   $(OBJDIR)/$(CLASSESDIR)/disassembler_button.o \
+   $(OBJDIR)/$(CLASSESDIR)/flags_button.o \
+   $(OBJDIR)/$(CLASSESDIR)/task_button.o \
+   $(OBJDIR)/$(CLASSESDIR)/port_button.o \
+   $(OBJDIR)/hexdump.o \
+   $(OBJDIR)/scout_cat.o \
+   $(OBJDIR)/SmartReadArgs.o \
+   $(OBJDIR)/all_sas.o
+
+HEADERS=system_headers.h startup.h Scout.h \
+   scout_logo.h scout_net.h \
+   i64.h \
+   scout_defs.h scout_tags.h startup_defs.h \
+   classes/fontdisplay_class.h \
+   classes/scout_about.h \
+   classes/scout_allocations.h \
+   classes/scout_arexx.h \
+   classes/scout_asm.h \
+   classes/scout_assigns.h \
+   classes/scout_audiomode.h \
+   classes/scout_audiomode_detail.h \
+   classes/scout_catalogs.h \
+   classes/scout_classes.h \
+   classes/scout_classes_detail.h \
+   classes/scout_commands.h \
+   classes/scout_commodity.h \
+   classes/scout_commodity_detail.h \
+   classes/scout_customclasses.h \
+   classes/scout_devices.h \
+   classes/scout_devices_detail.h \
+   classes/scout_expansions.h \
+   classes/scout_expansions_detail.h \
+   classes/scout_extras.h \
+   classes/scout_flags.h \
+   classes/scout_fonts.h \
+   classes/scout_fonts_detail.h \
+   classes/scout_functions.h \
+   classes/scout_inputhandlers.h \
+   classes/scout_inputhandlers_detail.h \
+   classes/scout_interrupts.h \
+   classes/scout_interrupts_detail.h \
+   classes/scout_libraries.h \
+   classes/scout_libraries_detail.h \
+   classes/scout_locks.h \
+   classes/scout_lowmemory.h \
+   classes/scout_lowmemory_detail.h \
+   classes/scout_main.h \
+   classes/scout_memory.h \
+   classes/scout_memory_detail.h \
+   classes/scout_mount.h \
+   classes/scout_mount_detail.h \
+   classes/scout_parentwindow.h \
+   classes/scout_patches.h \
+   classes/scout_ports.h \
+   classes/scout_ports_detail.h \
+   classes/scout_print.h \
+   classes/scout_priority.h \
+   classes/scout_resethandlers.h \
+   classes/scout_resethandlers_detail.h \
+   classes/scout_residents.h \
+   classes/scout_residents_detail.h \
+   classes/scout_resources.h \
+   classes/scout_resources_detail.h \
+   classes/scout_screenmode.h \
+   classes/scout_screenmode_detail.h \
+   classes/scout_semaphores.h \
+   classes/scout_signal.h \
+   classes/scout_system.h \
+   classes/scout_tasks.h \
+   classes/scout_tasks_detail.h \
+   classes/scout_timer.h \
+   classes/scout_vectors.h \
+   classes/scout_version.h \
+   classes/scout_windows.h \
+   classes/scout_windows_detail.h \
+   classes/scout_disassembler.h \
+   classes/disassembler_button.h \
+   classes/flags_button.h \
+   classes/task_button.h \
+   classes/port_button.h \
+   hexdump.h \
+   scout_cat.h \
+   SmartReadArgs.h
+
+LIBS=               netlib/net.lib lib:sc.lib lib:amiga.lib lib:debug.lib tbLib/tblib.lib
+
+all:                $(OBJDIR) $(OBJDIR)/$(PROJECT).gst $(TARGET)
+
+.c.o:
+					sc $(CFLAGS) $(OPTIMIZE) $(DEBUG) $< objname=$@
+
+.asm.o:
+					sc $(AFLAGS) $(DEBUG) $< objname=$@
+
+.ct.catalog:
+					flexcat $(LOCALE)/scout.cd $< catalog $@ flush
+
+$(OBJDIR):
+	@makedir $(OBJDIR)
+	@makedir $(OBJDIR)/$(CLASSESDIR)
+
+$(OBJDIR)/$(PROJECT).gst: $(HEADERS) system_headers.c
+					gst unload $@
+					sc $(CFLAGS) nodebug noobjname noicons nogst makegst=$@ system_headers.c
+
+$(TARGET) :         $(OBJDIR)/$(PROJECT).gst $(LIBS) $(OBJECTS)
+					slink with <<
+						from $(OBJECTS) \
+						to $@.debug \
+						lib $(LIBS) \
+						$(LFLAGS) \
+						map $(OBJDIR)/$@.map,fhx fwidth 32 pwidth 32 swidth 32 width 100
+					<
+					slink $@.debug to $@ noicons nodebug
+
+catalogs:           #$(LOCALE)/français.catalog
+
+scout_cat.h:        $(LOCALE)/scout.cd
+					flexcat locale/Scout.cd scout_cat.h=C_h.sd scout_cat.c=C_c.sd
+
+$(OBJDIR)/startup.o: startup.c startup.h
+
+$(OBJDIR)/Scout.o: Scout.c Scout.h
+
+$(OBJDIR)/scout_cat.o: scout_cat.c scout_cat.h
+
+$(OBJDIR)/scout_logo.o: scout_logo.c scout_logo.h
+
+$(OBJDIR)/scout_net.o: scout_net.c scout_net.h
+
+$(OBJDIR)/i64.o: i64.c i64.h
+
+$(OBJDIR)/hexdump.o: hexdump.c hexdump.h
+
+$(OBJDIR)/SmartReadArgs.o: SmartReadArgs.c SmartReadArgs.h
+
+$(OBJDIR)/$(CLASSESDIR)/disassembler_button.o: classes/disassembler_button.c classes/disassembler_button.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/flags_button.o: classes/flags_button.c classes/flags_button.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/fontdisplay_class.o: classes/fontdisplay_class.c classes/fontdisplay_class.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/port_button.o: classes/port_button.c classes/port_button.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_about.o: classes/scout_about.c classes/scout_about.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h classes/scout_version.h Scout_rev.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_allocations.o: classes/scout_allocations.c classes/scout_allocations.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_arexx.o: classes/scout_arexx.c classes/scout_arexx.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_asm.o: classes/scout_asm.asm classes/scout_asm.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_assigns.o: classes/scout_assigns.c classes/scout_assigns.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_audiomode.o: classes/scout_audiomode.c classes/scout_audiomode.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_audiomode_detail.o: classes/scout_audiomode_detail.c classes/scout_audiomode_detail.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_catalogs.o: classes/scout_catalogs.c classes/scout_catalogs.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_classes.o: classes/scout_classes.c classes/scout_classes.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_classes_detail.o: classes/scout_classes_detail.c classes/scout_classes_detail.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_commands.o: classes/scout_commands.c classes/scout_commands.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_commodity.o: classes/scout_commodity.c classes/scout_commodity.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_commodity_detail.o: classes/scout_commodity_detail.c classes/scout_commodity_detail.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_customclasses.o: classes/scout_customclasses.c classes/scout_customclasses.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_devices.o: classes/scout_devices.c classes/scout_devices.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_devices_detail.o: classes/scout_devices_detail.c classes/scout_devices_detail.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_disassembler.o: classes/scout_disassembler.c classes/scout_disassembler.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_expansions.o: classes/scout_expansions.c classes/scout_expansions.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_expansions_detail.o: classes/scout_expansions_detail.c classes/scout_expansions_detail.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_extras.o: classes/scout_extras.c classes/scout_extras.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_flags.o: classes/scout_flags.c classes/scout_flags.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_fonts.o: classes/scout_fonts.c classes/scout_fonts.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_fonts_detail.o: classes/scout_fonts_detail.c classes/scout_fonts_detail.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_functions.o: classes/scout_functions.c classes/scout_functions.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_inputhandlers.o: classes/scout_inputhandlers.c classes/scout_inputhandlers.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_inputhandlers_detail.o: classes/scout_inputhandlers_detail.c classes/scout_inputhandlers_detail.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_interrupts.o: classes/scout_interrupts.c classes/scout_interrupts.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_interrupts_detail.o: classes/scout_interrupts_detail.c classes/scout_interrupts_detail.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_libraries.o: classes/scout_libraries.c classes/scout_libraries.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_libraries_detail.o: classes/scout_libraries_detail.c classes/scout_libraries_detail.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_locks.o: classes/scout_locks.c classes/scout_locks.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_lowmemory.o: classes/scout_lowmemory.c classes/scout_lowmemory.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_lowmemory_detail.o: classes/scout_lowmemory_detail.c classes/scout_lowmemory_detail.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_main.o: classes/scout_main.c classes/scout_main.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_memory.o: classes/scout_memory.c classes/scout_memory.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_memory_detail.o: classes/scout_memory_detail.c classes/scout_memory_detail.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_mount.o: classes/scout_mount.c classes/scout_mount.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_mount_detail.o: classes/scout_mount_detail.c classes/scout_mount_detail.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_parentwindow.o: classes/scout_parentwindow.c classes/scout_parentwindow.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_patches.o: classes/scout_patches.c classes/scout_patches.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_ports.o: classes/scout_ports.c classes/scout_ports.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_ports_detail.o: classes/scout_ports_detail.c classes/scout_ports_detail.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_print.o: classes/scout_print.c classes/scout_print.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_priority.o: classes/scout_priority.c classes/scout_priority.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_resethandlers.o: classes/scout_resethandlers.c classes/scout_resethandlers.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_resethandlers_detail.o: classes/scout_resethandlers_detail.c classes/scout_resethandlers_detail.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_residents.o: classes/scout_residents.c classes/scout_residents.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_residents_detail.o: classes/scout_residents_detail.c classes/scout_residents_detail.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_resources.o: classes/scout_resources.c classes/scout_resources.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_resources_detail.o: classes/scout_resources_detail.c classes/scout_resources_detail.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_screenmode.o: classes/scout_screenmode.c classes/scout_screenmode.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_screenmode_detail.o: classes/scout_screenmode_detail.c classes/scout_screenmode_detail.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_semaphores.o: classes/scout_semaphores.c classes/scout_semaphores.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_signal.o: classes/scout_signal.c classes/scout_signal.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_system.o: classes/scout_system.c classes/scout_system.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_tasks.o: classes/scout_tasks.c classes/scout_tasks.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_tasks_detail.o: classes/scout_tasks_detail.c classes/scout_tasks_detail.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_timer.o: classes/scout_timer.c classes/scout_timer.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_vectors.o: classes/scout_vectors.c classes/scout_vectors.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_version.o: classes/scout_version.c classes/scout_version.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h classes/scout_version.h Scout_rev.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_windows.o: classes/scout_windows.c classes/scout_windows.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_windows_detail.o: classes/scout_windows_detail.c classes/scout_windows_detail.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/task_button.o: classes/task_button.c classes/task_button.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/all_sas.o: all_sas.c $(EXTRASRC)/xcexit.c
+
+tbLib/tbLib.lib:
+					@execute <<
+						cd tbLib
+						smake
+						cd /
+					<
+clean:
+					-delete $(OBJDIR)\#?.o $(OBJDIR)/$(CLASSESDIR)/\#?.o $(OBJDIR)/\#?.gst $(OBJDIR)/\#?.map $(TARGET) $(TARGET).debug quiet
+					@execute <<
+						cd tbLib
+						smake $@
+						cd /
+					<
+
+realclean:          clean
+
+version:
+					bumprev $(VERSION) $(PROJECT)
+
+date:
+					@eval `type $(PROJECT)_rev.rev`-1 >t:$(PROJECT)_rev.rev
+					@copy t:$(PROJECT)_rev.rev $(PROJECT)_rev.rev
+					@delete >nil: t:$(PROJECT)_rev.rev
+					@smake version
+
+install:            $(TARGET)
+					copy $(TARGET) Work:Debug/Scout
+
+cvs-tag:
+					cvs -q tag V$(VERSION)_`type $(PROJECT)_rev.rev`
+
+cvs-update:
+					cvs update
+
+doc:
+					@execute <<
+						pushcd help
+						smake
+						popcd
+					<
+

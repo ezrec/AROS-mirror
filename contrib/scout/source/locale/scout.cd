@@ -1,0 +1,4759 @@
+#language english
+#version 3
+;
+; strings in scout.c
+msgCantOpenInputDevice (0//)
+Can't open input.device!\n
+;
+;
+msgCantOpenTimerDevice (//)
+Can't open timer.device!\n
+;
+;
+msgNoHostNameSpecified (//)
+No HOST specified!\n
+;
+;
+msgStartTCPIPStack (//)
+Please start a TCP/IP stack first (i.e. AmiTCP/Genesis or Miami(Dx))!\n
+;
+;
+msgCantCreateApplication (//)
+Can't create application!\n
+;
+;
+msgCantSendARexxScript (//)
+Can't send script %s to port \"%s\"!\n
+;
+;
+msgBreak (//)
+***Break\n
+;
+;
+msgMCCNotAvailable (//)
+Cannot open MUI class %s!\n\
+Scout needs at least %s V%ld.%ld!
+;
+;
+msgMCCTooOld (//)
+Your MUI class %s is too old!\n\
+Scout needs at least %s V%ld.%ld, but you only have V%ld.%ld!
+;
+; strings in scout_net.c
+msgCantInitTCPIP (100//)
+Can't initialize TCP/IP stack!\n
+;
+;
+msgAskForPassword (//)
+Password:
+;
+;
+msgCantGetPassword (//)
+Can't get password!\n
+;
+;
+msgCantConnectToServer (//)
+Can't connect to server!\n
+;
+;
+msgCantCreateSocket (//)
+Can't create socket!\n
+;
+;
+msgCantFindHost (//)
+Can't find host \"%s\"!\n
+;
+;
+msgUnknownOption (//)
+Unknown option
+;
+;
+msgWrongPassword (//)
+Wrong password!\n
+;
+;
+msgNoPrivilege (//)
+You don't have root privileges!\n
+;
+;
+msgUnknownUser (//)
+Unknown user!\n
+;
+;
+msgNoBEGINReceived (//)
+No \"BEGIN\" received!\n
+;
+;
+msgErrorOccured (//)
+Error occured!
+;
+;
+msgErrorContinue (//)
+Continue
+;
+;
+msgYes (//)
+Yes
+;
+;
+msgNo (//)
+No
+;
+;
+txtRequestTitle (//)
+Scout Request
+;
+;
+txtChooseFile (//)
+Choose file or printer
+;
+;
+msgCouldNotOpenFile (//)
+Couldn't open file \'%s\'!
+;
+; strings in objects/scout_about.c
+txtMUIContinue (200//)
+_Continue
+;
+;
+txtAboutTitle (//)
+About Scout
+;
+;
+txtAboutText (//)
+\033c\n\
+%s\n\
+%s\n\
+\n\
+%s\n\
+All Rights Reserved\n\
+\n\
+This program is \033bOpen Source\033n.\n\
+\n\
+ARexx port name: %s\n\
+\n\
+Homepage:
+;
+; general button strings
+txtUpdate (300//)
+_Update
+;
+;
+txtPrint (//)
+Pr_int
+;
+;
+txtRemove (//)
+_Remove
+;
+;
+txtPriority (//)
+_Priority
+;
+;
+txtMore (//)
+_More
+;
+;
+txtClose (//)
+_Close
+;
+;
+txtExit (//)
+E_xit
+;
+;
+txtFunctions (//)
+_Functions
+;
+;
+msgYesNo (//)
+Yes|No
+;
+;
+msgOnceAllCancel (//)
+Once|All|Cancel
+;
+;
+txtMUIOk (//)
+_Ok
+;
+;
+txtMUICancel (//)
+_Cancel
+;
+;
+txtNone (//)
+<none>
+;
+;
+txtDisassemble (//)
+_Disassemble
+;
+;
+txtAddress (//)
+Address
+;
+;
+txtAddress2 (//)
+Address:
+;
+;
+txtName (//)
+Name
+;
+;
+txtName2 (//)
+Name:
+;
+;
+txtCount (//)
+ Cnt:
+;
+;
+txtNotAvailable (//)
+n/a
+;
+; strings in allocations window
+txtAllocationFree (400//)
+<free>
+;
+;
+txtAllocationAllocated (//)
+<allocated>
+;
+;
+txtAllocationNotAvailable (//)
+<not available>
+;
+;
+txtAllocationsTitle (//)
+ALLOCATIONS
+;
+;
+txtAllocationCIAA (//)
+CIA A
+;
+;
+txtAllocationCIAB (//)
+CIA B
+;
+;
+txtAllocationTimerA (//)
+Timer A:
+;
+;
+txtAllocationTimerB (//)
+Timer B:
+;
+;
+txtAllocationAlarm (//)
+Alarm:
+;
+;
+txtAllocationSerial (//)
+Serial:
+;
+;
+txtAllocationFlag (//)
+Flag:
+;
+;
+txtAllocationPorts (//)
+Ports
+;
+;
+txtAllocationSerialPort (//)
+Serial Port:
+;
+;
+txtAllocationSerialControl (//)
+Serial Control:
+;
+;
+txtAllocationParallelPort (//)
+Parallel Port:
+;
+;
+txtAllocationParallelControl (//)
+Parallel Control:
+;
+;
+txtAllocationsPrintHeaderCIA (//)
+\nCIA %s:\n\n
+;
+;
+txtAllocationsPrintLineCIA (//)
+Timer A: %s\n\
+Timer B: %s\n\
+  Alarm: %s\n\
+ Serial: %s\n\
+   Flag: %s\n
+;
+;
+txtAllocationsPrintHeaderPorts (//)
+\n\nSerial & Parallel Ports:\n\n
+;
+;
+txtAllocationsPrintLinePorts (//)
+     Serial Port: %s\n\
+  Serial Control: %s\n\
+   Parallel Port: %s\n\
+Parallel Control: %s\n
+;
+; strings in assigns window
+msgWantToRemoveAssignFromList (500//)
+Do you really want to remove directory\n\
+\"%s\" from assign \"%s:\"?
+;
+;
+msgWantToRemoveAssign (//)
+Do you really want to remove assign \"%s:\"?
+;
+;
+txtAssignsTitle (//)
+ASSIGNS
+;
+;
+txtAssignsPath (//)
+Path
+;
+;
+txtAssignsPrintHeader (//)
+\n  Address  Name             Path\n\n
+;
+;
+txtAssignsPrintLine (//)
+ %9s %-16s %s\n
+;
+; strings in classes window
+msgWantToRemoveClass (600//)
+Do you really want to remove class\n\
+\"%s\"?
+;
+;
+txtClassesTitle (//)
+CLASSES
+;
+;
+txtClassesDetailTitle (//)
+CLASS
+;
+;
+txtClassID (//)
+cl_ID
+;
+;
+txtClassID2 (//)
+cl_ID:
+;
+;
+txtClassObjects (//)
+Objects
+;
+;
+txtClassSubclasses (//)
+Subclasses
+;
+;
+txtClassDispatcher (//)
+cl_Dispatcher
+;
+;
+txtClassSuper (//)
+cl_Super:
+;
+;
+txtClassInstOffset (//)
+cl_InstOffset:
+;
+;
+txtClassInstSize (//)
+cl_InstSize:
+;
+;
+txtClassEntry (//)
+cl_Entry:
+;
+;
+txtClassSubEntry (//)
+cl_SubEntry:
+;
+;
+txtClassData (//)
+cl_Data:
+;
+;
+txtClassUserData (//)
+cl_UserData:
+;
+;
+txtClassSubclassCount (//)
+cl_SubclassCount:
+;
+;
+txtClassObjectCount (//)
+cl_ObjectCount:
+;
+;
+txtClassFlags (//)
+cl_Flags
+;
+;
+txtClassFlags2 (//)
+cl_Flags:
+;
+;
+txtClassFlagsTitle (//)
+Class flags
+;
+;
+txtClassReserved (//)
+cl_Reserved:
+;
+;
+txtClassesPrintHeader (//)
+\n  Address  Objects  Subclasses  Superclass             Dispatcher  Name\n\n
+;
+;
+txtClassesPrintLine (//)
+ %s %7s %11s  %-20s   %-9.9s   %-20s\n
+;
+; strings in commands window
+msgCantRemoveInternal (700//)
+Can't remove INTERNAL commands!
+;
+;
+msgCantRemoveSystem (//)
+Can't remove SYSTEM commands!
+;
+;
+msgCantRemoveDisabled (//)
+Can't remove DISABLED commands!
+;
+;
+msgWantToRemoveCommand (//)
+Do you really want to remove command\n\
+\"%s\"?
+;
+;
+txtCommandsTitle (//)
+RESIDENT COMMANDS
+;
+;
+txtCommandUseCount (//)
+UseCount
+;
+;
+txtCommandSegment (//)
+Segment
+;
+;
+txtCommandLower (//)
+Lower
+;
+;
+txtCommandUpper (//)
+Upper
+;
+;
+txtCommandSize (//)
+Size
+;
+;
+txtCommandSystem (//)
+SYSTEM
+;
+;
+txtCommandInternal (//)
+INTERNAL
+;
+;
+txtCommandDisabled (//)
+DISABLED
+;
+;
+txtCommandPrintHeader (//)
+\n  Address  Name            UseCount     Lower     Upper       Size\n\n
+;
+;
+txtCommandPrintLine (//)
+ %9s %-15.15s %8s %9.9s %9.9s %10.10s\n
+;
+; strings in commodities window
+txtAppear (800//)
+_Appear
+;
+;
+txtDisappear (//)
+_Disappear
+;
+;
+txtEnable (//)
+_Enable
+;
+;
+txtDisable (//)
+Di_sable
+;
+;
+txtKill (//)
+_Kill
+;
+;
+txtListChange (//)
+List_Chg
+;
+;
+txtUnique (//)
+Uni_que
+;
+;
+msgWantToRemoveCommoditiy (//)
+Do you really want to remove commodity\n\
+\"%s\"?
+;
+;
+txtCommoditiesTitle (//)
+COMMODITIES
+;
+;
+txtCommoditiesDetailTitle (//)
+COMMODITY
+;
+;
+txtCommodityName (//)
+mco_Name
+;
+;
+txtCommodityName2 (//)
+mco_Name:
+;
+;
+txtCommodityFlags (//)
+mco_Flags
+;
+;
+txtCommodityFlags2 (//)
+mco_Flags:
+;
+;
+txtCommodityPort (//)
+mco_Port
+;
+;
+txtCommodityPort2 (//)
+mco_Port:
+;
+;
+txtCommodityTask (//)
+mco_Task:
+;
+;
+txtCommodityTypeInvalid (//)
+Invalid
+;
+;
+txtCommodityTypeFilter (//)
+Filter
+;
+;
+txtCommodityTypeTypefilter (//)
+Typefilter
+;
+;
+txtCommodityTypeSend (//)
+Send
+;
+;
+txtCommodityTypeSignal (//)
+Signal
+;
+;
+txtCommodityTypeTranslate (//)
+Translate
+;
+;
+txtCommodityTypeBroker (//)
+Broker
+;
+;
+txtCommodityTypeDebug (//)
+Debug
+;
+;
+txtCommodityTypeCustom (//)
+Custom
+;
+;
+txtCommodityTypeZero (//)
+Zero
+;
+;
+txtCommodityTypeUnknown (//)
+< ??? >
+;
+;
+txtCommodityHotkey (//)
+Hotkey
+;
+;
+txtCommodityTitle (//)
+mco_Title:
+;
+;
+txtCommodityDescription (//)
+mco_Description:
+;
+;
+txtCommodityBrokerFlagsTitle (//)
+Broker flags
+;
+;
+txtCommoditySubObjects (//)
+Sub CxObj:
+;
+;
+txtCommoditiesPrintHeader (//)
+\n  Address  Type     Pri Flags  Port      Name\n\n
+;
+;
+txtCommoditiesPrintLine (//)
+ %s %-7.7s %3s %3s   %s %s\n
+;
+; strings in devices window
+msgWantToRemoveDevice (900//)
+Do you really want to remove device\n\
+\"%s\"?
+;
+;
+txtSupportedCommands (//)
+Supported commands
+;
+;
+txtDevicesTitle (//)
+DEVICES
+;
+;
+txtDevicesDetailTitle (//)
+DEVICE
+;
+;
+txtDeviceVersion (//)
+Version
+;
+;
+txtDeviceOpenCount (//)
+OCnt
+;
+;
+txtDeviceRPC (//)
+RPC
+;
+;
+txtDeviceFlagsTitle (//)
+Device flags
+;
+;
+txtDeviceNSDType (//)
+NSDType:
+;
+;
+txtDeviceNSDCmdNumberDec (//)
+Number (dec)
+;
+;
+txtDeviceNSDCmdNumberHex (//)
+Number (hex)
+;
+;
+txtDeviceNSDCmdName (//)
+Name
+;
+;
+txtDeviceUnknownGameportCommand (//)
+<unknown gameport command>
+;
+;
+txtDeviceUnknownTimerCommand (//)
+<unknown timer command>
+;
+;
+txtDeviceUnknownKeyboardCommand (//)
+<unknown keyboard command>
+;
+;
+txtDeviceUnknownInputCommand (//)
+<unknown input command>
+;
+;
+txtDeviceUnknownTrackdiskCommand (//)
+<unknown trackdisk command>
+;
+;
+txtDeviceUnknownConsoleCommand (//)
+<unknown console command>
+;
+;
+txtDeviceUnknownSANA2Command (//)
+<unknown SANA2 command>
+;
+;
+txtDeviceUnknownAudioCommand (//)
+<unknown audio command>
+;
+;
+txtDeviceUnknownClipboardCommand (//)
+<unknown clipboard command>
+;
+;
+txtDeviceUnknownPrinterCommand (//)
+<unknown printer command>
+;
+;
+txtDeviceUnknownSerialCommand (//)
+<unknown serial command>
+;
+;
+txtDeviceUnknownParallelCommand (//)
+<unknown parallel command>
+;
+;
+txtDeviceUnknownCommand (//)
+<unknown command>
+;
+;
+txtDeviceNSDTypeGameport (//)
+gameport
+;
+;
+txtDeviceNSDTypeTimer (//)
+timer
+;
+;
+txtDeviceNSDTypeKeyboard (//)
+keyboard
+;
+;
+txtDeviceNSDTypeInput (//)
+input
+;
+;
+txtDeviceNSDTypeTrackdisk (//)
+trackdisk
+;
+;
+txtDeviceNSDTypeConsole (//)
+console
+;
+;
+txtDeviceNSDTypeSANA2 (//)
+SANA2
+;
+;
+txtDeviceNSDTypeAudio (//)
+audio
+;
+;
+txtDeviceNSDTypeClipboard (//)
+clipboard
+;
+;
+txtDeviceNSDTypePrinter (//)
+printer
+;
+;
+txtDeviceNSDTypeSerial (//)
+serial
+;
+;
+txtDeviceNSDTypeParallel (//)
+parallel
+;
+;
+txtDeviceNSDTypeUnknown (//)
+unknown
+;
+;
+txtDeviceNSDCompleteType (//)
+%s (subtype %ld)
+;
+;
+txtDeviceCannotOpen (//)
+unknown (device could not be openend)
+;
+;
+txtDeviceNonNSD (//)
+unknown (device does not support NSD)
+;
+;
+txtDevicesPrintHeader (//)
+\n  Address   Pri  OpenC  RPC Name & Version\n\n
+;
+;
+txtDevicesPrintLine (//)
+ %s %4s %4s %4s %s %s %s\n
+;
+;
+txtDeviceCodeType (//)
+CodeType
+;
+;
+txtDeviceCodeType2 (//)
+CodeType:
+;
+;
+txtDeviceCodeTypePPC (//)
+PPC
+;
+;
+txtDeviceCodeType68k (//)
+68k
+;
+; strings in expansions window
+txtNoIdentifyLibrary (1000//)
+[identify.library required]
+;
+;
+txtExpansionsTitle (//)
+EXPANSIONS
+;
+;
+txtExpansionsDetailTitle (//)
+EXPANSION
+;
+;
+txtExpansionDetails (//)
+Size=%s Flags=%s ID=%s:%s SN=%s
+;
+;
+txtExpansionBoardAddr (//)
+BoardAddr
+;
+;
+txtExpansionBoardAddr2 (//)
+cd_BoardAddr:
+;
+;
+txtExpansionType (//)
+Type
+;
+;
+txtExpansionManufacturer (//)
+Manufacturer
+;
+;
+txtExpansionManufacturer2 (//)
+Manufacturer:
+;
+;
+txtExpansionProduct (//)
+Product
+;
+;
+txtExpansionProduct2 (//)
+Product:
+;
+;
+txtExpansionClass (//)
+Class
+;
+;
+txtExpansionClass2 (//)
+Class:
+;
+;
+txtExpansionBoardSize (//)
+cd_BoardSize:
+;
+;
+txtExpansionSlotAddr (//)
+cd_SlotAddr:
+;
+;
+txtExpansionSlotSize (//)
+cd_SlotSize:
+;
+;
+txtExpansionDriver (//)
+cd_Driver:
+;
+;
+txtExpansionNextCD (//)
+cd_NextCD:
+;
+;
+txtExpansionFlags (//)
+cd_Flags
+;
+;
+txtExpansionFlags2 (//)
+cd_Flags:
+;
+;
+txtExpansionFlagsTitle (//)
+ConfigDev flags
+;
+;
+txtExpansionROMType (//)
+er_Type:
+;
+;
+txtExpansionROMFlags (//)
+er_Flags
+;
+;
+txtExpansionROMFlags2 (//)
+er_Flags:
+;
+;
+txtExpansionROMFlagsTitle (//)
+ExpansionRom flags
+;
+;
+txtExpansionROMReserved (//)
+er_Reserved03:
+;
+;
+txtExpansionROMSerialNumber (//)
+er_SerialNumber:
+;
+;
+txtExpansionROMInitDiagVec (//)
+er_InitDiagVec:
+;
+;
+txtExpansionDiagAreaTitle (//)
+DiagArea specific
+;
+;
+txtExpansionDiagArea (//)
+DiagArea:
+;
+;
+txtExpansionDiagAreaConfig (//)
+da_Config
+;
+;
+txtExpansionDiagAreaConfig2 (//)
+da_Config:
+;
+;
+txtExpansionDiagAreaConfigTitle (//)
+DiagArea config
+;
+;
+txtExpansionDiagAreaFlags (//)
+da_Flags
+;
+;
+txtExpansionDiagAreaFlags2 (//)
+da_Flags:
+;
+;
+txtExpansionDiagAreaFlagsTitle (//)
+DiagArea flags
+;
+;
+txtExpansionDiagAreaSize (//)
+da_Size:
+;
+;
+txtExpansionDiagAreaDiagPoint (//)
+da_DiagPoint:
+;
+;
+txtExpansionDiagAreaBootPoint (//)
+da_BootPoint:
+;
+;
+txtExpansionDiagAreaName (//)
+da_Name:
+;
+;
+txtExpansionsPrintHeader (//)
+\n  Address  Flags BoardAddr BoardSize Type Manuf. Prod. Serial#\n
+;
+;
+txtExpansionsPrintLine (//)
+\n %s  %s %s %s  %s  %s   %s %9s\n Board = %s · %s %s\n
+;
+; strings in fonts window
+msgWantToCloseFont (1100//)
+Do you really want to close font\n\
+\"%s\"?
+;
+;
+msgWantToRemoveFont (//)
+Do you really want to remove font\n\
+\"%s\"?
+;
+;
+msgAccessorCountIsZero (//)
+Sorry, the count of accessors is already zero!
+;
+;
+msgAccessorCountIsNotZero (//)
+Sorry, the count of accessors is not zero!
+;
+;
+txtFontsTitle (//)
+FONTS
+;
+;
+txtFontsDetailTitle (//)
+FONT
+;
+;
+txtFontsROMFont (//)
+ROM
+;
+;
+txtFontsDiskFont (//)
+Disk
+;
+;
+txtFontsXSize (//)
+tf_XSize
+;
+;
+txtFontsXSize2 (//)
+tf_XSize:
+;
+;
+txtFontsYSize (//)
+tf_YSize
+;
+;
+txtFontsYSize2 (//)
+tf_YSize:
+;
+;
+txtFontsStyle (//)
+tf_Style
+;
+;
+txtFontsStyle2 (//)
+tf_Style:
+;
+;
+txtFontsFlags (//)
+tf_Flags
+;
+;
+txtFontsFlags2 (//)
+tf_Flags:
+;
+;
+txtFontsAccessors (//)
+tf_Accessors
+;
+;
+txtFontsAccessors2 (//)
+tf_Accessors:
+;
+;
+txtFontsLoChar (//)
+tf_LoChar
+;
+;
+txtFontsLoChar2 (//)
+tf_LoChar:
+;
+;
+txtFontsHiChar (//)
+tf_HiChar
+;
+;
+txtFontsHiChar2 (//)
+tf_HiChar:
+;
+;
+txtFontsType (//)
+Type
+;
+;
+txtFontsType2 (//)
+Type:
+;
+;
+txtFontsStyleTitle (//)
+Font style
+;
+;
+txtFontsFlagsTitle (//)
+Font flags
+;
+;
+txtFontsBaseline (//)
+tf_Baseline:
+;
+;
+txtFontsBoldSmear (//)
+tf_BoldSmear:
+;
+;
+txtFontsModulo (//)
+tf_Modulo:
+;
+;
+txtFontsExample (//)
+Font example
+;
+;
+txtFontsExampleText (//)
+¤¢ the quick brown fox jumps over the lazy dog
+;
+;
+txtFontsPrintHeader (//)
+\n  Address  YSize XSize Style Flags  Count LoChar HiChar  Type     Name\n\n
+;
+;
+txtFontsPrintLine (//)
+ %s  %3s   %3s  %s  %s %3s    %3s    %3s  %-8s %s\n
+;
+;
+txtFontsExtension (//)
+tf_Extension
+;
+;
+txtFontsExtension2(//)
+tf_Extension:
+;
+;
+txtFontsExtensionFlags0 (//)
+tfe_Flags0
+;
+;
+txtFontsExtensionFlags02 (//)
+tfe_Flags0:
+;
+;
+txtFontsExtensionFlags0Title (//)
+Font extension flags 0
+;
+;
+txtFontsExtensionFlags1 (//)
+tfe_Flags1
+;
+;
+txtFontsExtensionFlags12 (//)
+tfe_Flags1:
+;
+;
+txtFontsExtensionFlags1Title (//)
+Font extension flags 1
+;
+;
+txtFontsExtensionTags (//)
+tfe_Tags:
+;
+;
+txtFontsExtensionOFontPatchS (//)
+tfe_OFontPatchS:
+;
+;
+txtFontsExtensionOFontPatchK (//)
+tfe_OFontPatchK:
+;
+; strings in functions window
+txtNoFDFile (1200//)
+<no .fd file>
+;
+;
+txtNoJump (//)
+<no jmp>
+;
+;
+txtNoFunctionEntry (//)
+<no entry in .fd file>
+;
+;
+txtFunctionsTitle (//)
+FUNCTIONS
+;
+;
+txtOffset (//)
+Offset
+;
+;
+txtHexadecimal (//)
+Hex
+;
+; strings in inputhandlers window
+msgWantToRemoveInputHandler (1300//)
+Do you really want to remove input handler\n\
+\"%s\"?
+;
+;
+txtInputHandlersTitle (//)
+INPUTHANDLERS
+;
+;
+txtInputHandlersDetailTitle (//)
+INPUTHANDLER
+;
+;
+txtInputHandlersPrintHeader (//)
+\n  Address  Type          Pri    Data       Code    Name\n\n
+;
+;
+txtInputHandlersPrintLine (//)
+ %s %-12s %4s %s  %-9.9s  %s\n
+;
+; strings in interrupts window
+msgCantRemoveInterruptHandler (1400//)
+Sorry, I can't remove an interrupt handler!
+;
+;
+msgWantToRemoveInterrupt (//)
+Do you really want to remove interrupt server\n\
+\"%s\"?
+;
+;
+txtInterruptsTitle (//)
+INTERRUPTS
+;
+;
+txtInterruptsDetailTitle (//)
+INTERRUPT
+;
+;
+txtInterruptUnused (//)
+Unused
+;
+;
+txtInterruptFree (//)
+Free
+;
+;
+txtInterruptHandler (//)
+Handler
+;
+;
+txtInterruptServer (//)
+Server
+;
+;
+txtInterruptIPL (//)
+IPL / Interrupt
+;
+;
+txtInterruptType (//)
+Type
+;
+;
+txtInterruptSysType (//)
+IntType:
+;
+;
+txtInterruptSysName (//)
+IntName:
+;
+;
+txtInterrupt00Name (//)
+TBE (serial transmit buffer empty)
+;
+;
+txtInterrupt01Name (//)
+DSKBLK (disk block complete)
+;
+;
+txtInterrupt02Name (//)
+SOFTINT (software interrupt)
+;
+;
+txtInterrupt03Name (//)
+PORTS (external INT2 & CIA A)
+;
+;
+txtInterrupt04Name (//)
+COPPER (graphics coprocessor)
+;
+;
+txtInterrupt05Name (//)
+VERTB (vertical blank interval)
+;
+;
+txtInterrupt06Name (//)
+BLITTER (blitter finished)
+;
+;
+txtInterrupt07Name (//)
+AUDIO0 (audio channel 0)
+;
+;
+txtInterrupt08Name (//)
+AUDIO1 (audio channel 1)
+;
+;
+txtInterrupt09Name (//)
+AUDIO2 (audio channel 2)
+;
+;
+txtInterrupt10Name (//)
+AUDIO3 (audio channel 3)
+;
+;
+txtInterrupt11Name (//)
+RBF (serial receive buffer full)
+;
+;
+txtInterrupt12Name (//)
+DSKSYNC (disk sync patt. found)
+;
+;
+txtInterrupt13Name (//)
+EXTER (external INT6 & CIA B)
+;
+;
+txtInterrupt14Name (//)
+INTEN (special (master enable))
+;
+;
+txtInterrupt15Name (//)
+NMI (non-maskable interrupt)
+;
+;
+txtInterruptsPrintHeader (//)
+\n  Address   Pri   Data      Code      NUM                 IntType Name\n\n
+;
+;
+txtInterruptsPrintLine (//)
+ %s %4s %-9.9s %-9.9s  %-20s %-7.7s %s\n
+;
+; strings in libraries window
+msgWantToRemoveLibrary (1500//)
+Do you really want to remove library\n\
+\"%s\"?
+;
+;
+msgWantToCloseLibrary (//)
+Do you really want to close library\n\
+\"%s\"?
+;
+;
+msgLibOpenCountIsZero (//)
+Sorry, the open count is already zero!
+;
+;
+txtLibrariesTitle (//)
+LIBRARIES
+;
+;
+txtLibrariesDetailTitle (//)
+LIBRARY
+;
+;
+txtLibraryVersion (//)
+Version
+;
+;
+txtLibraryVersion2 (//)
+lib_Version:
+;
+;
+txtLibraryOpenCount (//)
+OCnt
+;
+;
+txtLibraryOpenCount2 (//)
+lib_OpenCnt:
+;
+;
+txtLibraryRPC (//)
+RPC
+;
+;
+txtLibraryRPC2 (//)
+RamPtrCnt:
+;
+;
+txtLibraryRPCFormat (//)
+%lD of %lD
+;
+;
+txtLibraryIdString (//)
+lib_IdString:
+;
+;
+txtLibraryFlags (//)
+lib_Flags
+;
+;
+txtLibraryFlags2 (//)
+lib_Flags:
+;
+;
+txtLibraryFlagsTitle (//)
+Library flags
+;
+;
+txtLibraryNegSize (//)
+lib_NegSize:
+;
+;
+txtLibraryPosSize (//)
+lib_PosSize:
+;
+;
+txtLibrarySum (//)
+lib_Sum:
+;
+;
+txtLibrariesPrintHeader (//)
+\n  Address   Pri  OpenC   RPC Name & Version\n\n
+;
+;
+txtLibrariesPrintLine (//)
+ %s %4s %4s %5s %s %s %s\n
+;
+;
+txtLibraryCodeType (//)
+CodeType
+;
+;
+txtLibraryCodeType2 (//)
+CodeType:
+;
+;
+txtLibraryCodeTypePPC (//)
+PPC
+;
+;
+txtLibraryCodeType68k (//)
+68k
+;
+;
+txtLibraryInterfaces (//)
+Interfaces
+;
+;
+txtLibraryInterfaceRefCount (//)
+RefCount
+;
+;
+txtLibraryInterfaceVersion (//)
+Version
+;
+; strings in locks window
+txtPattern (1600//)
+Pattern:
+;
+;
+msgLocksShownHidden (//)
+%lD shown, %lD hidden
+;
+;
+msgLocksShownHiddenInProgress (//)
+%lD shown, %lD hidden...
+;
+;
+msgLocksShownHiddenDone (//)
+%lD shown, %lD hidden. Done.
+;
+;
+msgWantToRemoveLock (//)
+Do you really want to remove lock\n\
+\"%s\"?
+;
+;
+msgYesAllNoAbort (//)
+Yes|All|No|Abort
+;
+;
+txtLocksTitle (//)
+LOCKS
+;
+;
+txtLockAccess (//)
+Access
+;
+;
+txtLockOwn (//)
+OWN
+;
+;
+txtLockShared (//)
+SHARED
+;
+;
+txtLockSharedInvalid (//)
+SHARED (%ld)
+;
+;
+txtLockExclusive (//)
+EXCLUSIVE
+;
+;
+txtLockPath (//)
+Path
+;
+;
+txtLocksPrintHeader (//)
+\n  Address   Access       Path\n\n
+;
+;
+txtLocksPrintLine (//)
+ %s  %-12s %s\n
+;
+; strings in lowmemory window
+txtCause (1700//)
+_Cause
+;
+;
+msgWantToCauseLowMemory (//)
+Do you really want to cause lowmemory handler\n\
+\"%s\"?
+;
+;
+msgWantToRemoveLowMemory (//)
+Do you really want to remove lowmemory handler\n\
+\"%s\"?
+;
+;
+txtLowMemoryTitle (//)
+LOWMEMORY
+;
+;
+txtLowMemoryDetailTitle (//)
+LOWMEMORYHANDLER
+;
+;
+txtLowMemoryPrintHeader (//)
+\n  Address  Type          Pri    Data       Code    Name\n\n
+;
+;
+txtLowMemoryPrintLine (//)
+ %s %-12s %4s %s  %-9.9s  %s\n
+;
+; strings in memory window
+txtMemoryTitle (1800//)
+MEMORY
+;
+;
+txtMemoryDetailTitle (//)
+MEMORY
+;
+;
+txtMemoryLower (//)
+mh_Lower
+;
+;
+txtMemoryLower2 (//)
+mh_Lower:
+;
+;
+txtMemoryLower3 (//)
+Lower
+;
+;
+txtMemoryUpper (//)
+mh_Upper
+;
+;
+txtMemoryUpper2 (//)
+mh_Upper:
+;
+;
+txtMemoryUpper3 (//)
+Upper
+;
+;
+txtMemoryAttr (//)
+mh_Attributes
+;
+;
+txtMemoryAttr2 (//)
+mh_Attributes:
+;
+;
+txtMemoryFirst (//)
+First:
+;
+;
+txtMemoryInUse (//)
+In use:
+;
+;
+txtMemoryFree (//)
+mh_Free:
+;
+;
+txtMemoryTotal (//)
+Total:
+;
+;
+txtMemoryLargest (//)
+Largest:
+;
+;
+txtMemoryFlagsTitle (//)
+Memory flags
+;
+;
+txtMemoryChunks (//)
+Chunks
+;
+;
+txtMemorySize (//)
+Size
+;
+;
+txtMemoryPrintHeader (//)
+\n  Address  Name                 Type     Pri    Lower     Upper  Attr\n\n
+;
+;
+txtMemoryPrintLine (//)
+ %s %-20.20s %-8s%4s %s %s %s\n
+;
+; strings in mounts window
+txtReadOnly (1900//)
+read only
+;
+;
+txtValidating (//)
+validating
+;
+;
+txtReadWrite (//)
+read/write
+;
+;
+txtNoDisk (//)
+no disk
+;
+;
+txtUnreadable (//)
+unreadable
+;
+;
+txtMountsTitle (//)
+MOUNTED DEVICES
+;
+;
+txtMountsDetailTitle (//)
+MOUNTED DEVICE
+;
+;
+txtMountHeads (//)
+Heads
+;
+;
+txtMountCylinders (//)
+Cylinders
+;
+;
+txtMountState (//)
+State
+;
+;
+txtMountFilesystem (//)
+Filesystem
+;
+;
+txtMountDevice (//)
+Device
+;
+;
+txtMountUnit (//)
+Unit
+;
+;
+txtMountHandler (//)
+dol_Handler
+;
+;
+txtMountHandler2 (//)
+dol_Handler:
+;
+;
+txtMountNext (//)
+dol_Next:
+;
+;
+txtMountType (//)
+dol_Type:
+;
+;
+txtMountTask (//)
+dol_Task:
+;
+;
+txtMountLock (//)
+dol_Lock:
+;
+;
+txtMountStackSize (//)
+dol_StackSize:
+;
+;
+txtMountPriority (//)
+dol_Priority:
+;
+;
+txtMountStartup (//)
+dol_Startup:
+;
+;
+txtMountSegList (//)
+dol_SegList:
+;
+;
+txtMountGlobVec (//)
+dol_GlobVec:
+;
+;
+txtFSSMTitle (//)
+FileSysStartupMsg
+;
+;
+txtFSSMDevice (//)
+fssm_Device:
+;
+;
+txtFSSMDiskState (//)
+DiskState:
+;
+;
+txtFSSMDiskType (//)
+DiskType:
+;
+;
+txtFSSMFlags (//)
+fssm_Flags:
+;
+;
+txtFSSMCapacity (//)
+Capacity:
+;
+;
+txtFSSMEnviron (//)
+fssm_Environ
+;
+;
+txtFSSMEnviron2 (//)
+fssm_Environ:
+;
+;
+txtEnvecTableSize (//)
+de_TableSize:
+;
+;
+txtEnvecSizeBlock (//)
+de_SizeBlock:
+;
+;
+txtEnvecSecOrg (//)
+de_SecOrg:
+;
+;
+txtEnvecSurfaces (//)
+de_Surfaces:
+;
+;
+txtEnvecSectorPerBlock (//)
+de_SectorPerBlock:
+;
+;
+txtEnvecBlocksPerTrack (//)
+de_BlocksPerTrack:
+;
+;
+txtEnvecReserved (//)
+de_Reserved:
+;
+;
+txtEnvecPreAlloc (//)
+de_PreAlloc:
+;
+;
+txtEnvecInterleave (//)
+de_Interleave:
+;
+;
+txtEnvecLowCyl (//)
+de_LowCyl:
+;
+;
+txtEnvecHighCyl (//)
+de_HighCyl:
+;
+;
+txtEnvecNumBuffers (//)
+de_NumBuffers:
+;
+;
+txtEnvecBufMemType (//)
+de_BufMemType
+;
+;
+txtEnvecBufMemType2 (//)
+de_BufMemType:
+;
+;
+txtEnvecMaxTransfer (//)
+de_MaxTransfer:
+;
+;
+txtEnvecMask (//)
+de_Mask:
+;
+;
+txtEnvecBootPri (//)
+de_BootPri:
+;
+;
+txtEnvecDosType (//)
+de_DosType:
+;
+;
+txtEnvecBaud (//)
+de_Baud:
+;
+;
+txtEnvecControl (//)
+de_Control:
+;
+;
+txtEnvecBootBlocks (//)
+de_BootBlocks:
+;
+;
+txtMountCapacityGigaBytes (//)
+GB
+;
+;
+txtMountCapacityMegaBytes (//)
+MB
+;
+;
+txtMountCapacityKiloBytes (//)
+KB
+;
+;
+txtMountCapacityBytes (//)
+ bytes
+;
+;
+txtMountsPrintHeader (//)
+\n  Address  Name     Unit   Heads    Cylinders     State     Filesys. Handler or Device\n\n
+;
+;
+txtMountsPrintLine (//)
+ %s %-9.9s %3s  %6s %12s %10s  %-8s %s\n
+;
+; strings in ports window
+msgWantToRemovePort (2000//)
+Do you really want to remove port\n\
+\"%s\"?
+;
+;
+txtPortsTitle (//)
+PORTS
+;
+;
+txtPortsDetailTitle (//)
+PORT
+;
+;
+txtPortFlagsSignal (//)
+signal
+;
+;
+txtPortFlagsSoftInt (//)
+softint
+;
+;
+txtPortFlagsIgnore (//)
+ignore
+;
+;
+txtPortFlags (//)
+mp_Flags
+;
+;
+txtPortFlags2 (//)
+mp_Flags:
+;
+;
+txtPortSigBit (//)
+mp_SigBit
+;
+;
+txtPortSigBit2 (//)
+mp_SigBit:
+;
+;
+txtPortSigTask (//)
+mp_SigTask
+;
+;
+txtPortSigTask2 (//)
+mp_SigTask:
+;
+;
+txtPortFlagsTitle (//)
+MsgPort flags
+;
+;
+txtPortMsgList (//)
+mp_MsgList:
+;
+;
+txtPortMsgListHead (//)
+lh_Head:
+;
+;
+txtPortMsgListTail (//)
+lh_Tail:
+;
+;
+txtPortMsgListTailPred (//)
+lh_TailPred:
+;
+;
+txtPortsPrintHeader (//)
+\n  Address  Name                       Pri SigBit SigTask\n\n
+;
+;
+txtPortsPrintLine (//)
+ %s %-25.25s %4s   %3s   %-26.26s\n
+;
+; strings in priority window
+txtPriorityWinTitle (2100//)
+Change priority
+;
+;
+txtMinPri (//)
+Min:
+;
+;
+txtMaxPri (//)
+Max:
+;
+;
+txtOldPri (//)
+Old:
+;
+;
+txtNewPri (//)
+New:
+;
+;
+msgSelectNewPriority (//)
+\033c Please select a new priority for \n\
+\"%s\"
+;
+; strings in residents window
+txtResidentsTitle (2200//)
+RESIDENTS
+;
+;
+txtResidentsDetailTitle (//)
+RESIDENT
+;
+;
+txtResidentName (//)
+rt_Name
+;
+;
+txtResidentName2 (//)
+rt_Name:
+;
+;
+txtResidentPri (//)
+rt_Pri
+;
+;
+txtResidentPri2 (//)
+rt_Pri:
+;
+;
+txtResidentIdString (//)
+rt_IdString
+;
+;
+txtResidentIdString2 (//)
+rt_IdString:
+;
+;
+txtResidentMatchTag (//)
+rt_MatchTag:
+;
+;
+txtResidentType (//)
+rt_Type:
+;
+;
+txtResidentVersion (//)
+rt_Version:
+;
+;
+txtResidentEndSkip (//)
+rt_EndSkip:
+;
+;
+txtResidentInit (//)
+rt_Init:
+;
+;
+txtResidentFlags (//)
+rt_Flags
+;
+;
+txtResidentFlags2 (//)
+rt_Flags:
+;
+;
+txtResidentFlagsTitle (//)
+Resident flags
+;
+;
+txtResidentsPrintHeader (//)
+\n  Address  Name                     Pri IdString\n\n
+;
+;
+txtResidentsPrintLine (//)
+ %-8.8s  %-23.23s %4s %s\n
+;
+; strings in resources window
+msgWantToRemoveResource (2300//)
+Do you really want to remove resource\n\
+\"%s\"?
+;
+;
+txtResourcesTitle (//)
+RESOURCES
+;
+;
+txtResourcesDetailTitle (//)
+RESOURCE
+;
+;
+txtResourceVersion (//)
+Version
+;
+;
+txtResourceOpenCount (//)
+OCnt
+;
+;
+txtResourceRPC (//)
+RPC
+;
+;
+txtResourceFlagsTitle (//)
+Resource flags
+;
+;
+txtResourceFileSystem (//)
+FileSystem
+;
+;
+txtResourceFileSystemDosType (//)
+fse_DosType
+;
+;
+txtResourceFileSystemVersion (//)
+fse_Version
+;
+;
+txtResourceFileSystemPatchFlags (//)
+fse_PatchFlags
+;
+;
+txtResourceFileSystemCreator (//)
+fse_Creator
+;
+;
+txtResourceFileSystemSpecific (//)
+FileSystem.resource specific
+;
+;
+txtResourceFileSystemResCreator (//)
+fsr_Creator:
+;
+;
+txtResourceFileSystemResEntries (//)
+fsr_FileSysEntries:
+;
+;
+txtResourceDiskResSpecific (//)
+disk.resource specific
+;
+;
+txtResourceDiskResFlags (//)
+dr_Flags
+;
+;
+txtResourceDiskResFlags2 (//)
+dr_Flags:
+;
+;
+txtResourceDiskResFlagsTitle (//)
+disk.resource flags
+;
+;
+txtResourceDiskResCurrTask (//)
+dr_CurrTask:
+;
+;
+txtResourcesPrintHeader (//)
+\n  Address   Pri OpenC RPC Name & Version\n\n
+;
+;
+txtResourcesPrintLine (//)
+ %s %4.4s %4.4s %4.4s %s %s\n
+;
+; strings in screenmodes window
+msgScreenModeCompatMixed (2400//)
+MCOMPAT_MIXED (can share display with other MIXED)
+;
+;
+msgScreenModeCompatSelf (//)
+MCOMPAT_SELF (can share only within monitor)
+;
+;
+msgScreenModeCompatNobody (//)
+MCOMPAT_NOBODY (only one viewport)
+;
+;
+txtScreenModesTitle (//)
+SCREENMODES
+;
+;
+txtScreenModesDetailTitle (//)
+SCREENMODE
+;
+;
+txtScreenModeSuperHighRes (//)
+SuperHighRes
+;
+;
+txtScreenModeHighRes (//)
+HighRes
+;
+;
+txtScreenModeLowRes (//)
+LowRes
+;
+;
+txtScreenModeExtraLowRes (//)
+ExtraLowRes
+;
+;
+txtScreenModeDualPF (//)
+ DualPF
+;
+;
+txtScreenModeDualPF2 (//)
+2
+;
+;
+txtScreenModeEHB (//)
+ EHB
+;
+;
+txtScreenModeHAM (//)
+ HAM
+;
+;
+txtScreenModeInterlace (//)
+ Interlace
+;
+;
+txtScreenModeDblScan (//)
+ DblScan
+;
+;
+txtScreenModeUnknown (//)
+< ??? >
+;
+;
+txtScreenModeID (//)
+ModeID
+;
+;
+txtScreenModeID2 (//)
+ModeID:
+;
+;
+txtScreenModeWidth (//)
+Width
+;
+;
+txtScreenModeHeight (//)
+Height
+;
+;
+txtScreenModeDepth (//)
+Depth
+;
+;
+txtScreenModeMonitorInfo (//)
+Monitor info
+;
+;
+txtScreenModeOpenCount (//)
+OpenCnt:
+;
+;
+txtScreenModeViewPosition (//)
+ViewPosition:
+;
+;
+txtScreenModeViewResolution (//)
+ViewResolution:
+;
+;
+txtScreenModeViewPositionRange (//)
+ViewPositionRange:
+;
+;
+txtScreenModeTotalRows (//)
+TotalRows:
+;
+;
+txtScreenModeTotalClockColors (//)
+TotalClockColors:
+;
+;
+txtScreenModeHFrequency (//)
+H frequency:
+;
+;
+txtScreenModeVFrequency (//)
+V frequency:
+;
+;
+txtScreenModeMinRow (//)
+MinRow:
+;
+;
+txtScreenModeCompatibility (//)
+Compatibility:
+;
+;
+txtScreenModeMouseTicks (//)
+MouseTicks:
+;
+;
+txtScreenModeDefaultViewPosition (//)
+DefaultViewPosition:
+;
+;
+txtScreenModePreferredModeID (//)
+PreferredModeID:
+;
+;
+txtScreenModeDimensionInfo (//)
+Dimension info
+;
+;
+txtScreenModeMaxDepth (//)
+MaxDepth:
+;
+;
+txtScreenModeMinRaster (//)
+MinRaster:
+;
+;
+txtScreenModeMaxRaster (//)
+MaxRaster:
+;
+;
+txtScreenModeNominal (//)
+Nominal:
+;
+;
+txtScreenModeMaxOScan (//)
+MaxOScan:
+;
+;
+txtScreenModeVideoOScan (//)
+VideoOScan:
+;
+;
+txtScreenModeTxtOScan (//)
+TxtOScan:
+;
+;
+txtScreenModeStdOScan (//)
+StdOScan:
+;
+;
+txtScreenModeDisplayInfo (//)
+Display info
+;
+;
+txtScreenModeNotAvailable (//)
+NotAvailable
+;
+;
+txtScreenModeNotAvailable2 (//)
+NotAvailable:
+;
+;
+txtScreenModeNotAvailableTitle (//)
+NotAvailable
+;
+;
+txtScreenModePropertyFlags (//)
+PropertyFlags
+;
+;
+txtScreenModePropertyFlags2 (//)
+PropertyFlags:
+;
+;
+txtScreenModePropertyFlagsTitle (//)
+Property flags
+;
+;
+txtScreenModeResolution (//)
+Resolution:
+;
+;
+txtScreenModePixelSpeed (//)
+PixelSpeed:
+;
+;
+txtScreenModeNumStdSprites (//)
+NumStdSprites:
+;
+;
+txtScreenModePaletteRange (//)
+PaletteRange:
+;
+;
+txtScreenModeSpriteResolution (//)
+SpriteResolution:
+;
+;
+txtScreenModeRGBBits (//)
+RGB bits:
+;
+;
+txtScreenModeColorsFormat (//)
+%s colors
+;
+;
+txtScreenModesPrintHeader (//)
+\n  ModeID    Wdth  Hght  Dpth  ScreenMode\n\n
+;
+;
+txtScreenModesPrintLine (//)
+ %s %5s %5s %2s  %s\n
+;
+; strings in semaphores window
+txtObtain (2500//)
+_Obtain
+;
+;
+txtRelease (//)
+Re_lease
+;
+;
+msgWantToObtainSemaphore (//)
+Do you really want to obtain semaphore\n\
+\"%s\"?
+;
+;
+msgWantToReleaseSemaphore (//)
+Do you really want to release semaphore\n\
+\"%s\"?
+;
+;
+msgNestCountIsZero (//)
+Sorry, the semaphore's nest count is already zero!
+;
+;
+msgWantToRemoveSemaphore (//)
+Do you really want to remove semaphore\n\
+\"%s\"?
+;
+;
+txtSemaphoresTitle (//)
+SEMAPHORES
+;
+;
+txtSemaphoreNestCount (//)
+ss_NestCount
+;
+;
+txtSemaphoreQueueCount (//)
+ss_QueueCount
+;
+;
+txtSemaphoreOwner (//)
+ss_Owner
+;
+;
+txtSemaphorePrintHeader (//)
+\n  Address  Name                            Pri Nest Queue Owner\n\n
+;
+;
+txtSemaphorePrintLine (//)
+ %s %-30s %4s %4s %5s %s\n
+;
+; strings in signal window
+txtSignalWinTitle (2600//)
+Send signal
+;
+;
+txtNewSignal (//)
+Signal:
+;
+;
+txtWaitSignal (//)
+SigWait:
+;
+;
+msgSelectNewSignal (//)
+\033c Please select the signal for \n\
+\"%s\"
+;
+; strings in system window
+txtSystemTitle (2700//)
+SYSTEM
+;
+;
+txtSystemPageHardware (//)
+Hardware
+;
+;
+txtSystemPageRegisters (//)
+Registers
+;
+;
+txtSystemPageUptime (//)
+Uptime
+;
+;
+txtSystemPageVersions (//)
+Versions
+;
+;
+txtSystemPageMemory (//)
+Memory
+;
+;
+txtSystemPageLastAlert (//)
+Last Alert
+;
+;
+txtSystemSystem (//)
+System:
+;
+;
+txtSystemProcessor (//)
+Processor
+;
+;
+txtSystemCPU (//)
+CPU:
+;
+;
+txtSystemFPU (//)
+FPU:
+;
+;
+txtSystemMMU (//)
+MMU:
+;
+;
+txtSystemPPC (//)
+PPC:
+;
+;
+txtSystemChipset (//)
+Chipset
+;
+;
+txtSystemChipset2 (//)
+Chipset:
+;
+;
+txtSystemRamsey (//)
+Ramsey:
+;
+;
+txtSystemGary (//)
+Gary:
+;
+;
+txtSystemAgnus (//)
+Agnus:
+;
+;
+txtSystemDenise (//)
+Denise:
+;
+;
+txtSystemChunkyPlanar (//)
+ChunkyPlanar:
+;
+;
+txtSystemBattClock (//)
+BattClock:
+;
+;
+txtSystemFBlit (//)
+FBlit:
+;
+;
+txtSystemRunning (//)
+running
+;
+;
+txtSystemNotRunning (//)
+not running
+;
+;
+txtSystemMotherboardRAM (//)
+Motherboard RAM
+;
+;
+txtSystemRAMWidth (//)
+RAM width:
+;
+;
+txtSystemRAMAccess (//)
+Access time:
+;
+;
+txtSystemRAMCAS (//)
+CAS:
+;
+;
+txtSystemRAMBandwidth (//)
+Bandwidth:
+;
+;
+txtSystemFrequencies (//)
+Frequencies
+;
+;
+txtSystemVBlank (//)
+VBlank:
+;
+;
+txtSystemPower (//)
+Power:
+;
+;
+txtSystemEClock (//)
+EClock:
+;
+;
+txtSystemSSP (//)
+SSP:
+;
+;
+txtSystem680x0Specific (//)
+680x0 specific
+;
+;
+txtSystem68060Specific (//)
+68060 specific
+;
+;
+txtSystemVBR (//)
+VBR:
+;
+;
+txtSystemCACR (//)
+CACR:
+;
+;
+txtSystemPCR (//)
+PCR:
+;
+;
+txtSystemInstCache (//)
+InstCache:
+;
+;
+txtSystemDataCache (//)
+DataCache:
+;
+;
+txtSystemBranchCache (//)
+BranchCache:
+;
+;
+txtSystem68060 (//)
+68060:
+;
+;
+txtCacheEnabled (//)
+enabled
+;
+;
+txtCacheDisabled (//)
+disabled
+;
+;
+txtCacheBurst (//)
+, burst
+;
+;
+txtCacheHalf (//)
+, half
+;
+;
+txtCacheFrozen (//)
+, frozen
+;
+;
+txtCacheAllocate (//)
+, allocate
+;
+;
+txtCacheCopyBack (//)
+, copyback
+;
+;
+txtCacheExternal (//)
+, external
+;
+;
+txtCacheSuperscalar (//)
+, Superscalar
+;
+;
+txtCacheAllocateOperandDisabled (//)
+, Allocate Operand disabled
+;
+;
+txtCacheAllocateDisabled (//)
+, Allocate disabled
+;
+;
+txtCacheWriteBuffer (//)
+, WriteBuffer
+;
+;
+txtCacheCPUSHInvalidationDisabled (//)
+, CPUSH invalidation disabled
+;
+;
+txtCacheFPUDisabled (//)
+, FPU disabled
+;
+;
+txtCacheLoadStoreBypassEnabled (//)
+, Load/Store Bypass enabled
+;
+;
+txtCacheLoadStoreBypassDisabled (//)
+, Load/Store Bypass disabled
+;
+;
+txtSystemCurrentTime (//)
+Current time:
+;
+;
+txtSystemBootTime (//)
+Boot time:
+;
+;
+txtSystemUpTime (//)
+Uptime:
+;
+;
+txtSystemUpTimeFormat (//)
+%4ld days, %s hours
+;
+;
+txtSystemTimeInvalid (//)
+invalid
+;
+;
+txtSystemAmigaOSVersion (//)
+AmigaOS version:
+;
+;
+txtSystemBoingBagVersion (//)
+BoingBag version:
+;
+;
+txtSystemOSVersion (//)
+OS version:
+;
+;
+txtSystemSetPatchVersion (//)
+SetPatch version:
+;
+;
+txtSystemROMSize (//)
+ROM size:
+;
+;
+txtSystemExecVersion (//)
+Exec version:
+;
+;
+txtSystemWorkbenchVersion (//)
+Workbench version:
+;
+;
+txtSystemGraphics (//)
+Graphics:
+;
+;
+txtSystemAudio (//)
+Audio:
+;
+;
+txtSystemTCPIP (//)
+TCP/IP:
+;
+;
+txtSystemPowerPCOS (//)
+PowerPC OS:
+;
+;
+txtSystemChip (//)
+Chip
+;
+;
+txtSystemFast (//)
+Fast
+;
+;
+txtSystemTotal (//)
+Total
+;
+;
+txtSystemPlain (//)
+Plain:
+;
+;
+txtSystemVirtual (//)
+Virtual:
+;
+;
+txtSystemTotal2 (//)
+Total:
+;
+;
+txtSystemSlowRAM (//)
+Slow RAM:
+;
+;
+txtSystemAlertCode (//)
+Alert code:
+;
+;
+txtSystemAlertTask (//)
+Alert task:
+;
+;
+txtSystemAlertDeadend (//)
+Deadend:
+;
+;
+txtSystemAlertSubsystem (//)
+Subsystem:
+;
+;
+txtSystemAlertGeneral (//)
+General:
+;
+;
+txtSystemAlertSpecific (//)
+Specific:
+;
+;
+txtSystemPrintHeader (//)
+%s\n
+;
+;
+txtSystemPrintTitleLine (//)
+\t%s\n
+;
+;
+txtSystemPrintLine (//)
+%20s %s\n
+;
+;
+txtSystemPrintRAMLine (//)
+%20s %10s %10s %10s\n
+;
+;
+txtSystemPrintSlowRAMLine (//)
+%20s %32s\n
+;
+; strings in tasks window
+txtFreeze (2800//)
+_Freeze
+;
+;
+txtActivate (//)
+_Activate
+;
+;
+txtSignal (//)
+_Signal
+;
+;
+txtBreak (//)
+_Break
+;
+;
+txtCPU (//)
+ CPU:
+;
+;
+txtSeconds (//)
+ Secs:
+;
+;
+txtCPUOff (//)
+off
+;
+;
+txtCPUFull (//)
+full
+;
+;
+txtCPUPercent (//)
+in %
+;
+;
+msgWantToRemoveTask (//)
+Do you really want to remove %s\n\
+\"%s\"?
+;
+;
+msgWantToRemoveTaskWithStuff (//)
+Also remove ports, window, etc allocated by task\n\
+\"%s\"?
+;
+;
+msgCantFindTask (//)
+Sorry, I can't find that task!
+;
+;
+msgCantInstallPatchSemaphore (//)
+Can't install patch semaphore!
+;
+;
+msgFoundOldPatchSemaphore (//)
+Found old patch semaphore (V%ld.%ld)!\n\
+I will replace this one by a new one (V%ld.%ld)!
+;
+;
+txtNoTask (//)
+<no task>
+;
+;
+txtTaskStateFrozen (//)
+frozen
+;
+;
+txtTaskStateAdded (//)
+added
+;
+;
+txtTaskStateRunning (//)
+running
+;
+;
+txtTaskStateReady (//)
+ready
+;
+;
+txtTaskStateWaiting (//)
+waiting
+;
+;
+txtTaskStateWaitAbort (//)
+wait abort
+;
+;
+txtTaskStateWaitChild (//)
+wait child
+;
+;
+txtTaskStateWaitSemaphore (//)
+wait sema
+;
+;
+txtTaskStateWaitIntuition (//)
+wait intui
+;
+;
+txtTaskStateWaitNet (//)
+wait net
+;
+;
+txtTaskStateWaitDOS (//)
+wait dos
+;
+;
+txtTaskStateWaitBreakC (//)
+wait break C
+;
+;
+txtTaskStateWaitBreakD (//)
+wait break D
+;
+;
+txtTaskStateWaitBreakE (//)
+wait break E
+;
+;
+txtTaskStateWaitBreakF (//)
+wait break F
+;
+;
+txtTaskStateSuspended (//)
+suspended
+;
+;
+txtTaskStateExcept (//)
+except
+;
+;
+txtTaskStateRemoved (//)
+removed
+;
+;
+txtTaskStateInvalid (//)
+invalid
+;
+;
+txtTaskStateUnknown (//)
+< ??? >
+;
+;
+txtNodeTypeTask (//)
+task
+;
+;
+txtNodeTypeInterrupt (//)
+interrupt
+;
+;
+txtNodeTypeDevice (//)
+device
+;
+;
+txtNodeTypeMsgPort (//)
+msgport
+;
+;
+txtNodeTypeMessage (//)
+message
+;
+;
+txtNodeTypeFreeMsg (//)
+freemsg
+;
+;
+txtNodeTypeReplyMsg (//)
+replymsg
+;
+;
+txtNodeTypeResource (//)
+resource
+;
+;
+txtNodeTypeLibrary (//)
+library
+;
+;
+txtNodeTypeMemory (//)
+memory
+;
+;
+txtNodeTypeSoftInt (//)
+softint
+;
+;
+txtNodeTypeFont (//)
+font
+;
+;
+txtNodeTypeProcess (//)
+process
+;
+;
+txtNodeTypeSemaphore (//)
+semaphore
+;
+;
+txtNodeTypeSignalSem (//)
+signalsem
+;
+;
+txtNodeTypeBootNode (//)
+bootnode
+;
+;
+txtNodeTypeKickMem (//)
+kickmem
+;
+;
+txtNodeTypeGraphics (//)
+graphics
+;
+;
+txtNodeTypeDeathMessage (//)
+deathmessage
+;
+;
+txtNodeTypeUser (//)
+user
+;
+;
+txtNodeTypeExtended (//)
+extended
+;
+;
+txtNodeTypeUnknown (//)
+unknown
+;
+;
+txtNodeTypeInvalid (//)
+invalid (%ld)
+;
+;
+txtCLIBatch (//)
+batch
+;
+;
+txtCLIInteractive (//)
+interactive
+;
+;
+txtCLIBackground (//)
+background
+;
+;
+txtCLIForeground (//)
+foreground
+;
+;
+txtTasksTitle (//)
+TASKS & PROCESSES
+;
+;
+txtTasksDetailTaskTitle (//)
+TASK
+;
+;
+txtTasksDetailProcessTitle (//)
+PROCESS
+;
+;
+txtCPUPercentTitle (//)
+CPU %
+;
+;
+txtTaskNum (//)
+NUM
+;
+;
+txtTaskState (//)
+tc_State
+;
+;
+txtTaskState2 (//)
+tc_State:
+;
+;
+txtTaskSigWait (//)
+tc_SigWait
+;
+;
+txtTaskSigWait2 (//)
+tc_SigWait:
+;
+;
+txtTaskFreeStack (//)
+Free Stack
+;
+;
+txtTaskFlags (//)
+tc_Flags
+;
+;
+txtTaskFlags2 (//)
+tc_Flags:
+;
+;
+txtTaskFlagsTitle (//)
+Task flags
+;
+;
+txtTaskIDNestCnt (//)
+tc_IDNestCnt:
+;
+;
+txtTaskTDNestCnt (//)
+tc_TDNestCnt:
+;
+;
+txtTaskSigAlloc (//)
+tc_SigAlloc:
+;
+;
+txtTaskSigRecvd (//)
+tc_SigRecvd:
+;
+;
+txtTaskSigExcept (//)
+tc_SigExcept:
+;
+;
+txtTaskTrapAlloc (//)
+tc_TrapAlloc:
+;
+;
+txtTaskTrapAble (//)
+tc_TrapAble:
+;
+;
+txtTaskExceptData (//)
+tc_ExceptData:
+;
+;
+txtTaskExceptCode (//)
+tc_ExceptCode:
+;
+;
+txtTaskTrapData (//)
+tc_TrapData:
+;
+;
+txtTaskTrapCode (//)
+tc_TrapCode:
+;
+;
+txtTaskSPReg (//)
+tc_SPReg:
+;
+;
+txtTaskSPLower (//)
+tc_SPLower:
+;
+;
+txtTaskSPUpper (//)
+tc_SPUpper:
+;
+;
+txtTaskStacksize (//)
+Stacksize:
+;
+;
+txtTaskSwitch (//)
+tc_Switch:
+;
+;
+txtTaskLaunch (//)
+tc_Launch:
+;
+;
+txtTaskMemEntry (//)
+tc_MemEntry:
+;
+;
+txtTaskUserData (//)
+tc_UserData:
+;
+;
+txtTaskProcessSpecific (//)
+Process specific
+;
+;
+txtTaskProcessSegList (//)
+pr_SegList
+;
+;
+txtTaskProcessSegList2 (//)
+pr_SegList:
+;
+;
+txtTaskProcessStackSize (//)
+pr_StackSize:
+;
+;
+txtTaskProcessGlobVec (//)
+pr_GlobVec:
+;
+;
+txtTaskProcessTaskNum (//)
+pr_TaskNum:
+;
+;
+txtTaskProcessStackBase (//)
+pr_StackBase:
+;
+;
+txtTaskProcessResult2 (//)
+pr_Result2:
+;
+;
+txtTaskProcessCurrentDir (//)
+pr_CurrentDir:
+;
+;
+txtTaskProcessCIS (//)
+pr_CIS:
+;
+;
+txtTaskProcessCOS (//)
+pr_COS:
+;
+;
+txtTaskProcessConsoleTask (//)
+pr_ConsoleTask:
+;
+;
+txtTaskProcessFileSystemTask (//)
+pr_FileSystemTask:
+;
+;
+txtTaskProcessCLI (//)
+pr_CLI
+;
+;
+txtTaskProcessCLI2 (//)
+pr_CLI:
+;
+;
+txtTaskProcessReturnAddr (//)
+pr_ReturnAddr:
+;
+;
+txtTaskProcessPktWait (//)
+pr_PktWait:
+;
+;
+txtTaskProcessWindowPtr (//)
+pr_WindowPtr:
+;
+;
+txtTaskProcessHomeDir (//)
+pr_HomeDir:
+;
+;
+txtTaskProcessFlags (//)
+pr_Flags
+;
+;
+txtTaskProcessFlags2 (//)
+pr_Flags:
+;
+;
+txtTaskProcessFlagsTitle (//)
+Process flags
+;
+;
+txtTaskProcessExitCode (//)
+pr_ExitCode:
+;
+;
+txtTaskProcessExitData (//)
+pr_ExitData:
+;
+;
+txtTaskProcessArguments (//)
+pr_Arguments:
+;
+;
+txtTaskProcessLocalVars (//)
+pr_LocalVars:
+;
+;
+txtTaskProcessShellPrivate (//)
+pr_ShellPrivate:
+;
+;
+txtTaskProcessCES (//)
+pr_CES:
+;
+;
+txtTaskCLIResult2 (//)
+cli_Result2:
+;
+;
+txtTaskCLISetName (//)
+cli_SetName:
+;
+;
+txtTaskCLICommandDir (//)
+cli_CommandDir:
+;
+;
+txtTaskCLIReturnCode (//)
+cli_ReturnCode:
+;
+;
+txtTaskCLICommandName (//)
+cli_CommandName:
+;
+;
+txtTaskCLIFailLevel (//)
+cli_FailLevel:
+;
+;
+txtTaskCLIPrompt (//)
+cli_Prompt:
+;
+;
+txtTaskCLIStandardInput (//)
+cli_StandardInput:
+;
+;
+txtTaskCLICurrentInput (//)
+cli_CurrentInput:
+;
+;
+txtTaskCLICommandFile (//)
+cli_CommandFile:
+;
+;
+txtTaskCLIInteractive (//)
+cli_CommandInteractive:
+;
+;
+txtTaskCLIBackground (//)
+cli_Background:
+;
+;
+txtTaskCLICurrentOutput (//)
+cli_CurrentOutput:
+;
+;
+txtTaskCLIDefaultStack (//)
+cli_DefaultStack:
+;
+;
+txtTaskCLIStandardOutput (//)
+cli_StandardOutput:
+;
+;
+txtTaskCLIModule (//)
+cli_Module:
+;
+;
+txtSegListLower (//)
+Lower
+;
+;
+txtSegListUpper (//)
+Upper
+;
+;
+txtSegListSize (//)
+Size
+;
+;
+txtTasksPrintHeader (//)
+\n  Address  Type     Pri NUM State         SigWait  FreeStack Name\n\n
+;
+;
+txtTasksPrintLine (//)
+ %s %-7.7s %4s %3s %-12.12s %s %-8.8s  %s\n
+;
+;
+txtTaskFreeStackPPC (//)
+Free Stack (PPC)
+;
+;
+txtNodeTypeExtInterrupt (//)
+extinterrupt
+;
+;
+txtNodeTypeExtSoftInt (//)
+extsoftint
+;
+;
+txtNodeTypeVMArea (//)
+vmarea
+;
+;
+txtNodeTypeVMAreaProxy (//)
+vmareaproxy
+;
+;
+txtNodeTypeClass (//)
+class
+;
+;
+txtNodeTypeInterface (//)
+interface
+;
+;
+txtNodeTypeKMemCache (//)
+kmemcache
+;
+;
+txtTaskStateCrashed (//)
+crashed
+;
+;
+txtTaskProcessPrivateVec (//)
+pr_PrivateVec:
+;
+;
+txtTaskProcessCurrentSeg (//)
+pr_CurrentSeg:
+;
+;
+txtTaskProcessEmulPrivate (//)
+pr_EmulPrivate:
+;
+;
+txtTaskProcess68kPrivate (//)
+pr_68kPrivate:
+;
+;
+txtTaskProcessParentID (//)
+pr_ParentID:
+;
+;
+txtTaskProcessProcessID (//)
+pr_ProcessID:
+;
+;
+txtTaskProcessOGLContextPtr (//)
+pr_OGLContextPtr:
+;
+;
+txtTaskProcessPrData (//)
+pr_PrData:
+;
+;
+txtTaskProcessCLibData (//)
+pr_CLibData:
+;
+;
+txtTaskProcessFLCHandler (//)
+pr_FLCHandler:
+;
+;
+txtTaskProcessDeathSigTask (//)
+pr_DeathSigTask:
+;
+;
+txtTaskProcessDeathSigBit (//)
+pr_DeathSigBit:
+;
+;
+txtTaskProcessDeathMessage (//)
+pr_DeathMessage:
+;
+;
+txtTaskProcessEntryCode (//)
+pr_EntryCode:
+;
+;
+txtTaskProcessEntryData (//)
+pr_EntryData:
+;
+;
+txtTaskProcessFinalCode (//)
+pr_FinalCode:
+;
+;
+txtTaskProcessFinalData (//)
+pr_FinalData:
+;
+;
+txtTaskProcessDLNotifyData (//)
+pr_DLNotifyData:
+;
+;
+txtTaskProcessPLNotifyData (//)
+pr_PLNotifyData:
+;
+;
+txtTaskETask (//)
+tc_ETask:
+;
+;
+txtTaskProcessCodeType (//)
+CodeType:
+;
+;
+txtTaskProcessCodeTypeUnknown (//)
+unknown
+;
+;
+txtTaskProcessCodeTypePPC (//)
+PPC
+;
+;
+txtTaskProcessCodeTypePPCELF32 (//)
+PPC ELF32
+;
+;
+txtTaskProcessCodeType68kHunk (//)
+68k hunk
+;
+;
+txtTaskProcessCodeType68kOverlay (//)
+68k hunk overlay
+;
+;
+txtTaskProcessCodeType68kSegList (//)
+68k pseudo seglist
+;
+;strings in timers window
+txtAbort (3000//)
+_Abort
+;
+;
+msgWantToAbortTimer (//)
+Do you want to abort timer\n\"%s\"?
+;
+;
+txtTimersTitle (//)
+TIMER REQUESTS
+;
+;
+txtTimerMicroHz (//)
+MicroHz
+;
+;
+txtTimerVBlank (//)
+VBlank
+;
+;
+txtTask (//)
+Task
+;
+;
+txtTime (//)
+Time
+;
+;
+txtUnit (//)
+Unit
+;
+;
+txtReplyPort (//)
+mn_ReplyPort
+;
+;
+txtTimerPrintHeader (//)
+\n  Address  ReplyPort    Time       Unit    Task\n\n
+;
+;
+txtTimerPrintLine (//)
+ %s %s %13s %-7s %s\n
+;
+;
+txtTimerWaitUntil (//)
+WaitUntil
+;
+; strings in vectors window
+txtVectorsTitle (3100//)
+VECTORS
+;
+;
+txtResetVectors (//)
+Reset Vectors
+;
+;
+txtAutoVectorInterrupts (//)
+Auto Vector Interrupts
+;
+;
+txtInterruptVectors (//)
+Interrupt Vectors
+;
+;
+txtVectorColdCapture (//)
+ColdCapture:
+;
+;
+txtVectorCoolCapture (//)
+CoolCapture:
+;
+;
+txtVectorWarmCapture (//)
+WarmCapture:
+;
+;
+txtVectorKickMemPtr (//)
+KickMemPtr:
+;
+;
+txtVectorKickTagPtr (//)
+KickTagPtr:
+;
+;
+txtVectorKickChecksum (//)
+KickChecksum:
+;
+;
+txtVectorLevel1 (//)
+Level 1 ($0064):
+;
+;
+txtVectorLevel2 (//)
+Level 2 ($0068):
+;
+;
+txtVectorLevel3 (//)
+Level 3 ($006c):
+;
+;
+txtVectorLevel4 (//)
+Level 4 ($0070):
+;
+;
+txtVectorLevel5 (//)
+Level 5 ($0074):
+;
+;
+txtVectorLevel6 (//)
+Level 6 ($0078):
+;
+;
+txtVectorLevel7 (//)
+Level 7 ($007c):
+;
+;
+txtVectorInt00 (//)
+TBE  0:
+;
+;
+txtVectorInt01 (//)
+DSKBLK  1:
+;
+;
+txtVectorInt02 (//)
+SOFTINT  2:
+;
+;
+txtVectorInt03 (//)
+PORTS  3:
+;
+;
+txtVectorInt04 (//)
+COPPER  4:
+;
+;
+txtVectorInt05 (//)
+VERTB  5:
+;
+;
+txtVectorInt06 (//)
+BLITTER  6:
+;
+;
+txtVectorInt07 (//)
+AUDIO0  7:
+;
+;
+txtVectorInt08 (//)
+AUDIO1  8:
+;
+;
+txtVectorInt09 (//)
+AUDIO2  9:
+;
+;
+txtVectorInt10 (//)
+AUDIO3 10:
+;
+;
+txtVectorInt11 (//)
+RBF 11:
+;
+;
+txtVectorInt12 (//)
+DSKSYNC 12:
+;
+;
+txtVectorInt13 (//)
+EXTER 13:
+;
+;
+txtVectorInt14 (//)
+INTEN 14:
+;
+;
+txtVectorInt15 (//)
+NMI 15:
+;
+;
+txtVectorsPrintHeader (//)
+\n%s:\n\n
+;
+;
+txtVectorsPrintLineReset (//)
+ ColdCapture   : %s     KickMemPtr    : %s\n\
+ CoolCapture   : %s     KickTagPtr    : %s\n\
+ WarmCapture   : %s     KickCheckSum  : %s\n
+;
+;
+txtVectorsPrintLineAuto (//)
+ Level1 ($0064): %s     Level5 ($0074): %s\n\
+ Level2 ($0068): %s     Level6 ($0078): %s\n\
+ Level3 ($006c): %s     Level7 ($007c): %s\n\
+ Level4 ($0070): %s\n
+;
+;
+txtVectorsPrintLineVectors (//)
+ TBE      0    : %s     AUDIO1   8    : %s\n\
+ DISKBLK  1    : %s     AUDIO2   9    : %s\n\
+ SOFTINT  2    : %s     AUDIO3  10    : %s\n\
+ PORTS    3    : %s     RBF     11    : %s\n\
+ COPPER   4    : %s     DSKSYNC 12    : %s\n\
+ VERTB    5    : %s     EXTER   13    : %s\n\
+ BLITTER  6    : %s     INTEN   14    : %s\n\
+ AUDIO0   7    : %s     NMI     15    : %s\n
+;
+; strings in windows window
+txtToFront (3200//)
+To _Front
+;
+;
+msgWantToCloseScreen (//)
+Do you really want to close screen\n\
+\"%s\"?
+;
+;
+msgWantToCloseWindow (//)
+Do you really want to close window\n\
+\"%s\"?
+;
+;
+txtWindowsTitle (//)
+SCREENS & WINDOWS
+;
+;
+txtWindowsDetailTitleWindow (//)
+WINDOW
+;
+;
+txtWindowsDetailTitleScreen (//)
+SCREEN
+;
+;
+msgCantFindScreen (//)
+Can't find screen $%08lx!\nAlready closed?
+;
+;
+msgCantFindWindow (//)
+Can't find window $%08lx!\nAlready closed?
+;
+;
+txtWindowPos (//)
+Pos(x,y)
+;
+;
+txtWindowSize (//)
+Size(w,h)
+;
+;
+txtWindowFlags (//)
+Flags
+;
+;
+txtWindowFlags2 (//)
+Flags:
+;
+;
+txtWindowIDCMP (//)
+IDCMP
+;
+;
+txtWindowTitle (//)
+Title
+;
+;
+txtWindowTitle2 (//)
+Title:
+;
+;
+txtWindowNextScreen (//)
+NextScreen:
+;
+;
+txtWindowFirstWindow (//)
+FirstWindow:
+;
+;
+txtWindowLeftEdge (//)
+LeftEdge:
+;
+;
+txtWindowTopEdge (//)
+TopEdge:
+;
+;
+txtWindowWidth (//)
+Width:
+;
+;
+txtWindowHeight (//)
+Height:
+;
+;
+txtWindowMouseX (//)
+MouseX:
+;
+;
+txtWindowMouseY (//)
+MouseY:
+;
+;
+txtWindowScreenFlagsTitle (//)
+Screen flags
+;
+;
+txtWindowDefaultTitle (//)
+DefaultTitle:
+;
+;
+txtWindowBarHeight (//)
+BarHeight:
+;
+;
+txtWindowBarVBorder (//)
+BarVBorder:
+;
+;
+txtWindowBarHBorder (//)
+BarHBorder:
+;
+;
+txtWindowMenuVBorder (//)
+MenuVBorder:
+;
+;
+txtWindowMenuHBorder (//)
+MenuHBorder:
+;
+;
+txtWindowWBorTop (//)
+WBorTop:
+;
+;
+txtWindowWBorLeft (//)
+WBorLeft:
+;
+;
+txtWindowWBorRight (//)
+WBorRight:
+;
+;
+txtWindowWBorBottom (//)
+WBorBottom:
+;
+;
+txtWindowScreenMode (//)
+ScreenMode:
+;
+;
+txtWindowDepth (//)
+Depth:
+;
+;
+txtWindowFont (//)
+Font:
+;
+;
+txtWindowFirstGadget (//)
+FirstGadget:
+;
+;
+txtWindowDetailPen (//)
+DetailPen:
+;
+;
+txtWindowBlockPen (//)
+BlockPen:
+;
+;
+txtWindowSaveColor0 (//)
+SaveColor0:
+;
+;
+txtWindowBarLayer (//)
+BarLayer:
+;
+;
+txtWindowExtData (//)
+ExtData:
+;
+;
+txtWindowUserData (//)
+UserData:
+;
+;
+txtWindowPens (//)
+Pens:
+;
+;
+txtWindowColors (//)
+%lD colors
+;
+;
+txtWindowSharedPens (//)
+%lD shareable, %lD used, %lD free
+;
+;
+txtWindowPubScreenSpecific (//)
+PubScreen specific
+;
+;
+txtWindowPubScreenName (//)
+PublicName:
+;
+;
+txtWindowPubScreenFlags (//)
+psn_Flags
+;
+;
+txtWindowPubScreenFlags2 (//)
+psn_Flags:
+;
+;
+txtWindowPubScreenFlagsTitle (//)
+PubScreen flags
+;
+;
+txtWindowPubScreenVisitorCount (//)
+psn_VisitorCount:
+;
+;
+txtWindowPubScreenSigBit (//)
+psn_SigBit:
+;
+;
+txtWindowPubScreenSigTask (//)
+psn_SigTask:
+;
+;
+txtWindowNextWindow (//)
+NextWindow:
+;
+;
+txtWindowMinWidth (//)
+MinWidth:
+;
+;
+txtWindowMinHeight (//)
+MinHeight:
+;
+;
+txtWindowMaxWidth (//)
+MaxWidth:
+;
+;
+txtWindowMaxHeight (//)
+MaxHeight:
+;
+;
+txtWindowWindowFlagsTitle (//)
+Window flags
+;
+;
+txtWindowMenuStrip (//)
+MenuStrip:
+;
+;
+txtWindowFirstRequest (//)
+FirstRequest:
+;
+;
+txtWindowDMRequest (//)
+DMRequest:
+;
+;
+txtWindowReqCount (//)
+ReqCount:
+;
+;
+txtWindowWScreen (//)
+WScreen:
+;
+;
+txtWindowRPort (//)
+RPort:
+;
+;
+txtWindowBorderLeft (//)
+BorderLeft:
+;
+;
+txtWindowBorderTop (//)
+BorderTop:
+;
+;
+txtWindowBorderRight (//)
+BorderRight:
+;
+;
+txtWindowBorderBottom (//)
+BorderBottom:
+;
+;
+txtWindowBorderRPort (//)
+BorderRPort:
+;
+;
+txtWindowParent (//)
+Parent:
+;
+;
+txtWindowDescendant (//)
+Descendant:
+;
+;
+txtWindowPointer (//)
+Pointer:
+;
+;
+txtWindowPtrHeight (//)
+PtrHeight:
+;
+;
+txtWindowPtrWidth (//)
+PtrWidth:
+;
+;
+txtWindowXOffset (//)
+XOffset:
+;
+;
+txtWindowYOffset (//)
+YOffset:
+;
+;
+txtWindowIDCMPFlags (//)
+IDCMPFlags
+;
+;
+txtWindowIDCMPFlags2 (//)
+IDCMPFlags:
+;
+;
+txtWindowIDCMPFlagsTitle (//)
+IDCMP flags
+;
+;
+txtWindowUserPort (//)
+UserPort:
+;
+;
+txtWindowWindowPort (//)
+WindowPort:
+;
+;
+txtWindowMessageKey (//)
+MessageKey:
+;
+;
+txtWindowCheckMark (//)
+CheckMark:
+;
+;
+txtWindowScreenTitle (//)
+ScreenTitle:
+;
+;
+txtWindowGZZMouseX (//)
+GZZMouseX:
+;
+;
+txtWindowGZZMouseY (//)
+GZZMouseY:
+;
+;
+txtWindowGZZWidth (//)
+GZZWidth:
+;
+;
+txtWindowGZZHeight (//)
+GZZHeight:
+;
+;
+txtWindowWLayer (//)
+WLayer:
+;
+;
+txtWindowIFont (//)
+IFont:
+;
+;
+txtWindowMoreFlags (//)
+MoreFlags:
+;
+;
+txtWindowsPrintHeader (//)
+\n  Address  Pos(x,y)  Size(w,h) Flags     IDCMP     Title\n\n
+;
+;
+txtWindowsPrintLine (//)
+ %s %9s %9s %-9.9s %s %-26.26s\n
+;
+;
+txtMakeVisible (//)
+Make _Visible
+;
+;
+txtWindowViewPort (//)
+ViewPort:
+;
+;
+txtWindowRastPort (//)
+RastPort:
+;
+;
+txtWindowBitmap (//)
+BitMap:
+;
+;
+txtWindowBitmapWidth (//)
+Bitmap width
+;
+;
+txtWindowBitmapHeight (//)
+Bitmap height
+;
+;
+txtWindowBitmapDepth (//)
+Bitmap depth
+;
+;
+txtWindowBitmapFlags (//)
+Bitmap flags
+;
+;
+txtWindowBitmapFlags2 (//)
+Bitmap flags:
+;
+;
+txtWindowLayerInfo (//)
+LayerInfo:
+;
+;
+txtWindowScreenBitmapFlagsTitle (//)
+Bitmap flags
+;
+; strings in patches window
+msgControlProgramNotInstalled (3400//)
+Neither SaferPatches nor SetMan nor PatchControl is installed!
+;
+;
+msgWrongSetManVersion (//)
+Wrong SetMan version!\n\
+wanted: 0x%08lx, is: 0x%08lx
+;
+;
+msgWantToDisablePatches (//)
+Disabling patches, even a complete patch list of\n\
+related patches, is a potentially dangerous operation.\n\
+Are you sure you want to continue?
+;
+;
+txtPatchDisabled (//)
+disabled
+;
+;
+txtPatchRemoved (//)
+removed
+;
+;
+txtPatchActive (//)
+active
+;
+;
+txtPatchesTitle (//)
+PATCHES
+;
+;
+txtLibrary (//)
+Library
+;
+;
+txtFunction (//)
+Function
+;
+;
+txtState (//)
+State
+;
+;
+txtPatcher (//)
+Patcher
+;
+;
+txtPatchesPrintHeader (//)
+\n  Address  Library                   Offset Function                  Flags    Patcher\n\n
+;
+;
+txtPatchesPrintLine (//)
+ %s %-25.25s %s %-25.25s %-8s %s\n
+;
+; strings in audiomodes window
+msgCantOpenAHIDevice (3500//)
+Can't open %s version %ld!
+;
+;
+txtAudioModesTitle (//)
+AUDIOMODES
+;
+;
+txtAudioModesDetailTitle (//)
+AUDIOMODE
+;
+;
+txtAudioModeID (//)
+ModeID
+;
+;
+txtAudioModeID2 (//)
+ModeID:
+;
+;
+txtAudioModeBits (//)
+Bits
+;
+;
+txtAudioModeMinFreq (//)
+min. Freq
+;
+;
+txtAudioModeMaxFreq (//)
+max. Freq
+;
+;
+txtAudioModeDriver (//)
+Driver:
+;
+;
+txtAudioModeVersion (//)
+Version:
+;
+;
+txtAudioModeAuthor (//)
+Author:
+;
+;
+txtAudioModeCopyright (//)
+Copyright:
+;
+;
+txtAudioModeAnnotation (//)
+Annotation:
+;
+;
+txtAudioModeBits2 (//)
+Bits:
+;
+;
+txtAudioModeMaxChannels (//)
+max. Channels:
+;
+;
+txtAudioModeMixFrequency (//)
+Mix Frequency
+;
+;
+txtAudioModeMaxPlaySamples (//)
+max. Play Samples:
+;
+;
+txtAudioModeMaxRecordSamples (//)
+max. Record Samples:
+;
+;
+txtAudioModeMonitorVolume (//)
+Monitor Volume:
+;
+;
+txtAudioModeInputGain (//)
+Input Gain:
+;
+;
+txtAudioModeOutputVolume (//)
+Output Volume:
+;
+;
+txtAudioModeVolume (//)
+Volume:
+;
+;
+txtAudioModeStereo (//)
+Stereo:
+;
+;
+txtAudioModePanning (//)
+Panning:
+;
+;
+txtAudioModeHiFi (//)
+HiFi:
+;
+;
+txtAudioModePingPong (//)
+PingPong:
+;
+;
+txtAudioModeRecord (//)
+Record:
+;
+;
+txtAudioModeFullDuplex (//)
+FullDuplex:
+;
+;
+txtAudioModeRealTime (//)
+RealTime:
+;
+;
+txtAudioModesPrintHeader (//)
+\n  ModeID    Bits MinFreq  MaxFreq    Name\n\n
+;
+;
+txtAudioModesPrintLine (//)
+ %s %4s %9s %9s  %s\n
+;
+; strings in catalogs window
+txtCatalogsTitle (3600//)
+CATALOGS
+;
+;
+txtCatalogName (//)
+cat_Name
+;
+;
+txtCatalogVersion (//)
+cat_Version
+;
+;
+txtCatalogLanguage (//)
+cat_Language
+;
+;
+txtCatalogPrintHeader (//)
+\n  Address  Version Language   Name\n\n
+;
+;
+txtCatalogPrintLine (//)
+ %s   %-5.5s %-10.10s %s\n
+;
+; strings in resethandlers window
+msgWantToRemoveResetHandler (3700//)
+Do you really want to remove reset handler\n\
+\"%s\"?
+;
+;
+txtResetHandlersTitle (//)
+RESETHANDLERS
+;
+;
+txtResetHandlersDetailTitle (//)
+RESETHANDLER
+;
+;
+txtResetHandlersPrintHeader (//)
+\n  Address  Type          Pri    Data       Code    Name\n\n
+;
+;
+txtResetHandlersPrintLine (//)
+ %s %-12s %4s %s  %-9.9s  %s\n
+;
+; strings in disassembler window
+txtDisassemblyRange (3800//)
+Disassembly range:
+;
+;
+txtHexdumpRange (//)
+Hexdump range:
+;
+;
+msgCannotOpenDisasmLibrary (//)
+cannot open disassembler.library V40\n\n
+;
+;
+txtRangeBytes (//)
+%5ld Bytes
+;
+;
+txtHexdumpTitle (//)
+HEXDUMP
+;
+;
+txtDisassemblyTitle (//)
+DISASSEMBLY
+;
+; strings in flags window
+txtFlagsName (3900//)
+Name
+;
+;
+txtFlagsValue (//)
+Value
+;
+; generic strings, mainly used in list titles
+txtNodeName (4000//)
+ln_Name
+;
+;
+txtNodeName2 (//)
+ln_Name:
+;
+;
+txtNodeType (//)
+ln_Type
+;
+;
+txtNodeType2 (//)
+ln_Type:
+;
+;
+txtNodePri (//)
+ln_Pri
+;
+;
+txtNodePri2 (//)
+ln_Pri:
+;
+;
+txtInterruptData (//)
+is_Data
+;
+;
+txtInterruptData2 (//)
+is_Data:
+;
+;
+txtInterruptCode (//)
+is_Code
+;
+;
+txtInterruptCode2 (//)
+is_Code:
+;
+; strings in main window
+txtMainAllocations (4100//)
+_Allocations
+;
+;
+txtMainAssigns (//)
+Assi_gns
+;
+;
+txtMainBoopsiClasses (//)
+_BoopsiClasses
+;
+;
+txtMainCommodities (//)
+Commodities
+;
+;
+txtMainDevices (//)
+_Devices
+;
+;
+txtMainExpansions (//)
+E_xpansions
+;
+;
+txtMainFonts (//)
+_Fonts
+;
+;
+txtMainInputHandlers (//)
+Input_Handlers
+;
+;
+txtMainInterrupts (//)
+_Interrupts
+;
+;
+txtMainLibraries (//)
+_Libraries
+;
+;
+txtMainLocks (//)
+L_ocks
+;
+;
+txtMainLowMemory (//)
+LowMemory
+;
+;
+txtMainMemory (//)
+_Memory
+;
+;
+txtMainMountedDevs (//)
+Mou_nted Devs
+;
+;
+txtMainPorts (//)
+_Ports
+;
+;
+txtMainResidents (//)
+_Residents
+;
+;
+txtMainResCmds (//)
+Res_Cmds
+;
+;
+txtMainResources (//)
+Reso_urces
+;
+;
+txtMainScreenModes (//)
+ScreenModes
+;
+;
+txtMainSemaphores (//)
+_Semaphores
+;
+;
+txtMainSystem (//)
+S_ystem
+;
+;
+txtMainTasks (//)
+_Tasks
+;
+;
+txtMainTimer (//)
+Tim_er
+;
+;
+txtMainVectors (//)
+_Vectors
+;
+;
+txtMainWindows (//)
+_Windows
+;
+;
+txtMainPatches (//)
+Patches
+;
+;
+txtMainCatalogs (//)
+Catalogs
+;
+;
+txtMainAudioModes (//)
+AudioModes
+;
+;
+txtMainResetHandlers (//)
+ResetHandlers
+;
+; menu strings
+txtMenuProject (4200//)
+Project
+;
+;
+txtMenuAbout (//)
+?\0About...
+;
+;
+txtMenuAboutMUI (//)
+About MUI...
+;
+;
+txtMenuQuit (//)
+Q\0Quit
+;
+;
+txtMenuList (//)
+List
+;
+;
+txtMenuAllocations (//)
+A\0Allocations
+;
+;
+txtMenuAssigns (//)
+G\0Assigns
+;
+;
+txtMenuClasses (//)
+B\0Classes
+;
+;
+txtMenuCommodities (//)
+K\0Commodities
+;
+;
+txtMenuDevices (//)
+D\0Devices
+;
+;
+txtMenuExpansions (//)
+X\0Expansions
+;
+;
+txtMenuFonts (//)
+F\0Fonts
+;
+;
+txtMenuInputHandlers (//)
+H\0InputHandlers
+;
+;
+txtMenuInterrupts (//)
+I\0Interrupts
+;
+;
+txtMenuLibraries (//)
+L\0Libraries
+;
+;
+txtMenuLocks (//)
+O\0Locks
+;
+;
+txtMenuLowMemory (//)
+J\0LowMemory
+;
+;
+txtMenuMemory (//)
+M\0Memory
+;
+;
+txtMenuMount (//)
+N\0Mount
+;
+;
+txtMenuPorts (//)
+P\0Ports
+;
+;
+txtMenuResidents (//)
+R\0Residents
+;
+;
+txtMenuResCmds (//)
+C\0ResCmds
+;
+;
+txtMenuResources (//)
+U\0Resources
+;
+;
+txtMenuScreenModes (//)
+Z\0ScreenModes
+;
+;
+txtMenuSemaphores (//)
+S\0Semaphores
+;
+;
+txtMenuSystem (//)
+Y\0System
+;
+;
+txtMenuTasks (//)
+T\0Tasks
+;
+;
+txtMenuTimer (//)
+E\0Timer
+;
+;
+txtMenuVectors (//)
+V\0Vectors
+;
+;
+txtMenuWindows (//)
+W\0Windows
+;
+;
+txtMenuInstalledPatches (//)
+1\0Installed patches
+;
+;
+txtMenuLocaleCatalogs (//)
+2\0Locale catalogs
+;
+;
+txtMenuAHIAudioModes (//)
+3\0AHI AudioModes
+;
+;
+txtMenuResetHandlers (//)
+4\0ResetHandlers
+;
+;
+txtMenuOther (//)
+Other
+;
+;
+txtMenuFlushDevices (//)
+Flush devices
+;
+;
+txtMenuFlushFonts (//)
+Flush fonts
+;
+;
+txtMenuFlushLibraries (//)
+Flush libraries
+;
+;
+txtMenuFlushAll (//)
+.\0Flush all
+;
+;
+txtMenuClearResetVectors (//)
+!\0Clear reset vectors
+;
+;
+txtMenuOptions (//)
+Options
+;
+;
+txtMenuSingleWindows (//)
++\0Single windows
+;
+;
+txtETask (//)
+ETask
+;
+txtETaskPPCStackSize (//)
+PPC StackSize
+;
+txtETaskPPCStackUsed (//)
+PPC StackUsed
+;
+txtETaskTrapMsgPort (//)
+TrapMsgPort
+;
+txtETaskStartupMsg (//)
+StartupMsg
+;
+txtETaskMsgPort (//)
+TaskMsgPort
+;
+txtETaskPoolPtr (//)
+TaskPoolPtr
+;
+txtETaskPoolMemFlags (//)
+TaskPoolFlags
+;
+txtETaskPoolPuddleSize (//)
+TaskPoolPuddleSize
+;
+txtETaskPoolThreshSize (//)
+TaskPoolThreshSize
+;
+txtCommandNotLoaded (//)
+DEFER
+;

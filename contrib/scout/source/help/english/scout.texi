@@ -1,0 +1,3121 @@
+\input texinfo   @c -*-texinfo-*-
+
+@c ------------------------------------------------------------------
+@c
+@c  Scout - The Amiga System Monitor
+@c
+@c ------------------------------------------------------------------
+@c
+@c  This program is free software; you can redistribute it and/or modify
+@c  it under the terms of the GNU General Public License as published by
+@c  the Free Software Foundation; either version 2 of the License, or
+@c  any later version.
+@c
+@c  This program is distributed in the hope that it will be useful,
+@c  but WITHOUT ANY WARRANTY; without even the implied warranty of
+@c  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+@c  GNU General Public License for more details.
+@c
+@c  You should have received a copy of the GNU General Public License
+@c  along with this program; if not, write to the Free Software
+@c  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+@c
+@c  You must not use this source code to gain profit of any kind!
+@c
+@c ------------------------------------------------------------------
+@c
+@c  author Andreas Gelhausen
+@c  author Richard K@"orber <rkoerber@gmx.de>
+@c  author Thore B@"ockelmann <tboeckel@uni-paderborn.de>
+@c
+@c ------------------------------------------------------------------
+
+@c ===================================================================
+@c V37GUIDE: 'makeinfo --amiga -D guide --output scout.guide scout.texi'
+@c V39GUIDE: 'makeinfo --amiga-39 -D guide --output scout-39.guide scout.texi'
+@c DOC-FILE: 'makeinfo --amiga-39 --no-headers --output scout.doc scout.texi'
+@c DVI-FILE: 'virtex &plain scout.texi' (2-mal)
+@c DVIPRINT: 'dviprint printer DeskJet voffset 3cm hoffset 2cm fast
+@c            from 1 to 3 scout.dvi'
+@c ===================================================================
+
+@c ===================================================================
+@c ============================ Header ===============================
+@c ===================================================================
+@setfilename scout.info
+@settitle Scout
+
+@smallbook
+@defcodeindex op
+@iftex
+@c @afourpaper
+@end iftex
+
+@setchapternewpage odd
+@set xrefstring see
+@set Xrefstring See
+
+@c Set smallbook if printing in smallbook format so the example of the
+@c smallbook font is actually written using smallbook; in bigbook, a kludge
+@c is used for TeX output.
+@set smallbook
+
+@set edition 3.0
+@set release 3.0
+@set programversion 37
+@set programrevision 227
+@set update-date 16 May 2002
+@set update-month May 2002
+
+@c finalout
+
+@c ===================================================================
+@c ==================== Titlepage and Copyright ======================
+@c ===================================================================
+@titlepage
+@sp 10
+@title Scout
+@subtitle System Monitor
+@subtitle Scout @value{programversion}.@value{programrevision} (Release @value{release})
+@subtitle Edition @value{edition}
+@subtitle @value{update-month}
+
+@author by Thore B@"ockelmann
+
+@ignore
+@c The following two commands start the copyright page.
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 1994-2002 Andreas Gelhausen, Richard K@"orber, Thore B@"ockelmann
+@end ignore
+@end titlepage
+
+@c ===================================================================
+@c ================== `Top' Node and Master Menu =====================
+@c ===================================================================
+@node Top, Introduction, (dir), (dir)
+@comment node-name, next, previous, up
+
+@ifinfo
+@format
+
+                             Scout @value{programversion}.@value{programrevision}
+                             Release @value{release}
+                            User's Manual
+          Copyright @copyright{} 1994-2002 Andreas Gelhausen, Richard K@"orber, Thore B@"ockelmann
+@end format
+@end ifinfo
+
+
+@menu
+* Introduction::         What is @code{Scout}?
+
+* Copyright::            Please read this first!
+
+* System Requirements::  What your system should have
+* Installation::         Installing @code{Scout}
+
+* Using Scout::          How to use @code{Scout}
+* Scout and AmiTCP::     @code{Scout} as @code{AmiTCP} service
+* Scout without MUI::    @code{MUI} is not necessary!
+
+* Options::              You can set some variables.
+* Commands::             ARexx and shell commands
+
+* Updates::              How to get updates
+* Credits::              Thanks are going to@dots{}
+* Author Info::          How to reach the author
+
+* Index::                Contents index
+@end menu
+
+@c ===================================================================
+@c ==================== The Body of the Document =====================
+@c ===================================================================
+@node Introduction, Copyright, Top, Top
+@comment node-name, next, previous, up
+
+@iftex
+@chapter Introduction
+@end iftex
+
+@heading What is Scout?
+@cindex What is Scout?
+@cindex Introduction
+
+@code{Scout} is a tool that allows you to monitor your computer
+system.  It displays many different things --- like tasks, ports,
+assigns, expansion boards, resident commands, interrupts, etc.  ---
+and you can perform some certain actions on them.
+
+For example you can freeze tasks, close windows and screens, release
+semaphores or remove locks, ports and interrupts.
+
+@noindent Through @code{AmiTCP} it's also possible to use @code{Scout} as
+an TCP/IP service.
+
+Since version 2.0 of @code{Scout} you can use nearly all implemented
+functions through shell parameters. Therefore it's not necessary
+to install @code{MUI} for using @code{Scout}, but you will need
+@code{MUI}, if you want to use @code{Scout} with its graphical user
+interface.
+
+
+@c =----------------------------------------------------------------------
+
+@iftex
+@chapter Legalities
+@end iftex
+
+@node Copyright, System Requirements, Introduction, Top
+@comment node-name, next, previous, up
+
+@cindex Legalities
+@heading Copyright
+@cindex Copyright
+@cindex No Warranty
+
+Please read the following parts carefully. You accept the following terms
+by starting the software, even for a test drive only.
+
+@table @strong
+@item COPYRIGHT
+@cindex Copyright
+Scout @value{programversion}.@value{programrevision} (Release
+@value{release}) - Copyright @copyright{} 1994-2002 by Andreas Gelhausen, Richard K@"orber and Thore B@"ockelmann,
+all rights reserved.
+
+You only have the right to use the software, but no rights on
+the software itself. Disassembling, resourcing and all other ways
+of reverse engineering is forbidden.
+
+@item FREEWARE
+@cindex FreeWare
+Scout is FreeWare. You are allowed to use the packet without
+paying a fee or similar to the authors. Of course we would appreciate
+a small donor! ;-)
+
+@item COPYING
+@cindex Copying
+You can copy the packet as long as it remains entire and unchanged.
+
+You are allowed to compress the packet using a customary compression
+software (as lha, lzh, lzx, dms). You must not compress single files of
+the packet (e.g. PowerPacker or Imploder).
+
+@item DISTRIBUTION
+@cindex Distribution
+You must not exceed an usual price on the market for your working
+and material. This means a maximum of 5 DM (or the equivalent amount
+in other currencies, including all taxes) for disks and 35 DM for
+CD-ROMs containing a PD software collection.
+
+In any case, you need a written permission from us if you want to include
+Scout on a cover disk or in connection with a commercial product.
+
+We explicitly permit the distribution via AmiNet, Meeting Pearls and
+Fred Fish.
+
+@item LIABILITY
+@cindex Liability
+You are using the program as it is, with all flaws, and on your
+own risk! We grant no warranty for the software meeting a special
+purpose. This software may cause financial damage or harm people.
+
+@item LIMITATIONS
+@cindex Limitation
+You are not allowed to use this software and its results
+
+@itemize @bullet
+@item for fascism or military purposes
+@item if you do not agree to the copyright note
+@end itemize
+
+In this case you must delete the software and all related and
+generated files immediately!
+
+@item CONTENTS OF THE PACKET
+@cindex Contents
+The Scout packet is @emph{only} entire with these files:
+@example
+Scout/arexx/activatetask.scout
+Scout/arexx/arexx.readme
+Scout/arexx/arexx.readme.info
+Scout/arexx/breaktask.scout
+Scout/arexx/freezetask.scout
+Scout/arexx/poptofront.scout
+Scout/arexx/settaskpri.scout
+Scout/arexx/startup.scout
+Scout/arexx.info
+Scout/help/deutsch/scout-39.guide
+Scout/help/deutsch/scout-39.guide.info
+Scout/help/deutsch/scout.doc
+Scout/help/deutsch/scout.doc.info
+Scout/help/deutsch/scout.dvi
+Scout/help/deutsch/scout.guide
+Scout/help/deutsch/scout.guide.info
+Scout/help/deutsch.info
+Scout/help/english/scout-39.guide
+Scout/help/english/scout-39.guide.info
+Scout/help/english/scout.doc
+Scout/help/english/scout.doc.info
+Scout/help/english/scout.dvi
+Scout/help/english/scout.guide
+Scout/help/english/scout.guide.info
+Scout/help/english.info
+Scout/help.info
+Scout/icons/icons.readme
+Scout/icons/icons.readme.info
+Scout/icons/Scout.info
+Scout/icons/ScoutDock
+Scout/icons/ScoutDock.info
+Scout/icons.info
+Scout/libs/identify.library
+Scout/libs/identify.readme
+Scout/libs/identify.readme.info
+Scout/libs.info
+Scout/Product-Info
+Scout/Scout
+Scout/Scout.info
+Scout/scout.history
+Scout/Scout.history.info
+Scout/Scout.readme
+Scout/Scout.readme.info
+Scout.info
+@end example
+
+@item TRADEMARKS
+@cindex Trademarks
+All copyrights and trademarks are held by their owners.
+@end table
+
+@c =----------------------------------------------------------------------
+
+@iftex
+@chapter Before Starting
+@end iftex
+
+@node System Requirements, MUI, Copyright, Top
+@comment node-name, next, previous, up
+
+@section System Requirements
+@cindex System Requirements
+
+@noindent @code{Scout} only requires AmigaOS version 2.04.
+The @code{identify.library} V8 is not required, but I strongly suggest to
+install it to give Scout its full power.
+See also @ref{Identify}.
+
+If you want to use @code{Scout's} graphical user interface, you also have
+to install @code{MUI} version 2.1 or higher.
+See also @ref{MUI, MUI and where you can get it}.
+
+The TCP/IP features of @code{Scout} are only available, if you
+have installed the version 4.0 of @code{AmiTCP}.
+See also @ref{AmiTCP, AmiTCP and where you can get it}.
+
+@node MUI, Identify, System Requirements, System Requirements
+@comment node-name, next, previous, up
+
+@section MUI - MagicUserInterface
+@cindex MUI
+@cindex MagicUserInterface
+
+@example
+        @copyright{} Copyright 1992-97 by Stefan Stuntz
+@end example
+
+MUI is a system to generate and maintain graphical user interfaces.
+With the aid of a preferences program, the user of an application has
+the ability to customize the outfit according to his personal taste.
+
+MUI is distributed as shareware. To obtain a complete package
+containing lots of examples and more information about registration
+please look for a file called @file{muiXXusr.lha} (XX means the latest
+version number) on your local bulletin boards or on public domain
+disks.
+
+If you want to register directly, feel free to send DM 30.- or
+US$ 20.- to
+
+@example
+                   Stefan Stuntz
+              Eduard-Spranger-Stra@ss{}e 7
+                   80935 M@"unchen
+                      GERMANY
+@end example
+
+
+@node Identify, AmiTCP, MUI, System Requirements
+@comment node-name, next, previous, up
+
+@section Identify
+@cindex Identify
+
+@example
+        Copyright @copyright{} 1996-97 Richard K@"orber
+@end example
+
+@code{Identify} is a Shared Library that decodes expansion IDs, guru codes
+and library functions, and identifies your system.
+
+@code{Identify} is FreeWare. You can find a complete package in the AmiNet
+(@file{util/libs/Identify.lha}) or on the author's home page:
+@code{http://www.is-koeln.de/einwohner/shred/}. To get in contact, write to
+@code{shred@@chessy.aworld.de}.
+
+
+@node AmiTCP, Installation, Identify, System Requirements
+@comment node-name, next, previous, up
+
+@section AmiTCP
+@cindex AmiTCP
+@cindex TCP/IP
+
+@code{AmiTCP} is a TCP/IP protocol stack for the Amiga. The demo
+version 4.0 (or higher) should be available in greater public
+domain collections or on the AmiNet. Ask your preferred Amiga
+dealer.  =:^)
+
+
+@node Installation, Using Scout, AmiTCP, Top
+@comment node-name, next, previous, up
+
+@heading Installing Scout
+@cindex Installation
+
+You only have to copy the program @code{scout} to your favourite directory,
+and @file{identify.library} to @file{libs:}. Then you can start it.
+
+
+@node Using Scout, Allocations, Installation, Top
+@comment node-name, next, previous, up
+
+@chapter How to use Scout
+@cindex Using Scout
+
+This chapter describes the usage of @code{Scout} through its graphical
+user interface. This graphical user interface is based on the
+@code{Magic User Interface} (@code{MUI}) and @code{MUI} have to be
+installed in your system, if you want to use @code{Scout} trough
+windows and so on.
+
+If you don't like @code{MUI}, you should see @ref{Scout without MUI}.
+
+@cindex Main Window
+
+@ifinfo
+@ifset guide
+@noindent If you start the program, you will get the main window with these Gadgets:
+@example
+ @ref{Allocations}
+ @ref{Assigns}
+ @ref{BoopsiClasses}
+ @ref{Commodities}
+ @ref{Devices}
+ @ref{Expansions}
+ @ref{Fonts}
+ @ref{InputHandlers}
+ @ref{Interrupts}
+ @ref{Libraries}
+ @ref{Locks}
+ @ref{LowMemory}
+ @ref{Memory}
+ @ref{Mounted Devs}
+ @ref{Ports}
+ @ref{Resident Cmds}
+ @ref{Residents}
+ @ref{Resources}
+ @ref{ScreenMode}
+ @ref{Semaphores}
+ @ref{System}
+ @ref{Tasks}
+ @ref{Timer}
+ @ref{Vectors}
+ @ref{Windows}
+ @ref{Patches}
+ @ref{Catalogs}
+ @ref{AudioModes}
+@end example
+
+Every gadget you see represents a certain kind of system structures.
+@ignore
+@end ifset
+If you start the program you will see the main window which includes
+many gadgets.  Each of these gadgets represents a certain kind of
+system structure.
+
+@noindent You can choose between:
+
+Allocations, Assigns, BoopsiClasses, Commodities, Devices, Expansions, Fonts, InputHandlers, Interrupts,
+Libraries, Locks, LowMemory, Memory, Mounted Devices, Ports, Resident Commands,
+Residents, Resources, ScreenMode, Semaphores, System, Tasks, Timer, Vectors, Windows, Patches, Catalogs and AudioModes.
+@ifset guide
+@end ignore
+@end ifset
+@end ifinfo
+
+@iftex
+If you start the program you will see the main window which includes
+many gadgets.  Each of these gadgets represents a certain kind of
+system structure.
+
+@noindent You can choose between:
+
+Allocations, Assigns, BoopsiClasses, Commodities, Devices, Expansions, Fonts, InputHandlers, Interrupts,
+Libraries, Locks, LowMemory, Memory, Mounted Devices, Ports, Resident Commands,
+Residents, Resources, ScreenMode, Semaphores, System, Tasks, Timer, Vectors, Windows, Patches, Catalogs and AudioModes.
+@end iftex
+
+Click one of these gadgets and another window will be opened with a
+list of the structure type that is indicated on the pressed gadget.
+
+@quotation
+@strong{Example:} Press the task gadget and you will get a window with
+the list of tasks and processes.
+@end quotation
+
+You can also select these functions by pressing the underlined key
+you see on each gadget or by using the right mousebutton menu.
+
+If you wish to handle/remove a given structure, you should know what
+you do.
+
+@quotation
+@strong{Warning:}
+Wrong handling of the showed structures can crash your system. At the
+worst you will lose your data.
+@end quotation
+
+@noindent @strong{Please note:}
+You should not be surprised, if you don't find a certain detail
+information in this manual, because it's to much work to explain each
+element of all the structures you could see in this program.
+
+Many books are written about these things and if you want to have more
+information about them, you should have a look in the specialized
+literature.
+
+
+@c > Allocations
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Allocations, Assigns, Using Scout, Using Scout
+@comment node-name, next, previous, up
+@section Allocations
+@cindex Allocations
+@cindex Resource allocation
+
+
+This window informs about who allocated what hardware resource.
+
+
+@subheading CIA
+
+The Amiga owns two CIA to control its hardware, the keyboard and
+the printer interfaces. Additionally, it contains a couple of timer.
+This window shows which parts of the CIA are not yet allocated, or
+which program allocated the resource.
+
+@table @samp
+@item Timer A
+@itemx Timer B
+This are two 16bit timer. They can also be coupled to a 32bit timer.
+
+@item Alarm
+This resource informs if a third timer reached an alarm value.
+
+@item Serial
+This is a simple serial interface. Usually, the CIA-A one's is used
+for communicating with the keyboard. The CIA-B serial interface will
+not be allocated in most cases.
+
+@item Flag
+This is a special control line. It is connected from the CIA-A to the
+Index line of the floppy disk drives.
+@end table
+
+Note: newer DraCos do not contain the CIA chips. Thus, these hardware resources
+will be emulated or are even not offered.
+
+
+@subheading Ports
+
+This are the resources for the internal parallel and serial interfaces.
+
+@table @samp
+@item Serial Port
+This are the plain data transfer registers (transmitting and receiving).
+
+@item Serial Control
+This are the serial control lines, as Carrier Detect.
+
+@item Parallel Port
+This are the data lines of the parallel port.
+
+@item Parallel Control
+This are the control lines of the parallel port, as Busy or Paper Out.
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Update
+The window is updates each time you press this button.
+
+@item Print
+The window's contents are printed or saved to a file of your choice.
+
+@item Exit
+The window will be closed.
+@end table
+@c <
+@c > Assigns
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Assigns, BoopsiClasses, Allocations, Using Scout
+@comment node-name, next, previous, up
+
+@section Assigns
+@cindex Assigns
+@cindex Logical device names
+@cindex Device names, logical
+
+This type of structure assigns a logical name to a directory.
+
+If you assign the directory @file{dh0:data/documents} the logical
+name @file{texts:}, you will also be able to choose a file @var{filename}
+in that directory with the path `texts:@var{filename}'.
+
+
+@subheading Column items
+
+@table @samp
+@item Address
+Address of the assign structure.
+
+@item Name
+Logical name of a directory
+
+@item Path
+Here you will find the path of the directory.
+@end table
+
+@subheading Actions
+
+@table @samp
+@item Update
+Selecting this gadget updates the list of assigns.
+
+@item Print
+This function allows you to send the list of @samp{Assigns} to
+printer or a selected file.
+
+@item Remove
+The selected assign will be removed with this function.
+
+@item Exit
+The @samp{Assigns} window will be closed.
+@end table
+@c <
+@c > BoopsiClasses
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node BoopsiClasses, Commodities, Assigns, Using Scout
+@comment node-name, next, previous, up
+@section BoopsiClasses
+@cindex BoopsiClasses
+
+
+@noindent BOOPSI classes are object oriented classes. The classes in
+this list are all classes that are publically available from intuition.
+
+@subheading Column items
+
+@table @samp
+@item Address
+This is the address of the @code{IClass} structure, which contains all
+data of this class.
+
+@item Objects
+Shows the current amount of objects constructed by this class.
+
+@item Subclasses
+Shows the current amount of sub classes (public and private) which are
+derived from this class.
+
+@item Superclass
+A pointer to the @code{IClass} structure of the parent class.
+
+@item Dispatcher
+A pointer to the dispatcher code, which realizes all methods of the class.
+
+@item Name
+The name of the class.
+@end table
+
+@subheading Actions
+
+@table @samp
+@item Update
+The list will be updated.
+
+@item Print
+This function allows you to send the list to
+printer or a selected file.
+
+@item Remove
+Removes the selected class from the system. This is only possible if
+neither objects nor sub classes exist from this class.
+
+@item More
+Opens a window with further information.
+
+@item Exit
+Closes the window.
+@end table
+@c <
+@c > Commodities
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Commodities, Devices, BoopsiClasses, Using Scout
+@comment node-name, next, previous, up
+@section Commodities
+@cindex Commodities
+
+
+@noindent Commodities are small utilities. Most of them react on the
+input stream, or manipulate it.
+
+You can find some commodity examples in the @file{Tools} drawer of
+your Workbench.
+
+@subheading Column items
+
+@table @samp
+@item Address
+Points to the @code{CxObj} structure of the commodity, containing all
+data about it.
+
+@item ln_Type
+Structure type. Usually, it will be @code{Broker}.
+
+@item ln_Pri
+Priority of the commodity broker.
+
+@item Flags
+Flags describing the broker.
+
+@item Port
+All messages of the broker are sent to this MessagePort.
+
+@item Name
+Name of the commodity.
+@end table
+
+@subheading Actions
+
+@table @samp
+@item Appear
+@itemx Disappear
+Let the selected commodity's GUI pop up or disappear. Some commodities
+do not have a GUI.
+
+@item Enable
+@itemx Disable
+The commodity will be enabled or disabled.
+
+@item Kill
+Let the selected commodity remove itself in a clean way.
+
+@item ListChg
+@itemx Unique
+The commodity is notified that the list has been changed or that another
+commodity with the same name was about to be added. This is only useful
+for programmers to test out their commmodities.
+
+@item Update
+The list will be updated.
+
+@item Print
+This function allows you to send the list to
+printer or a selected file.
+
+@item Priority
+This function allows you to change the priority of a commodity.
+
+@item Remove
+Removes the selected commodity from the system. Please try a frienly
+remove before, using @samp{Kill}. Maybe the commodity removes itself
+voluntarily. =;^)
+
+@item More
+Opens a window with further information.
+
+@item Exit
+Closes the window.
+@end table
+@c <
+@c > Devices
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Devices, Expansions, Commodities, Using Scout
+@comment node-name, next, previous, up
+
+@section Devices
+@cindex Devices
+@cindex RPC
+@cindex RAM Pointer Count
+
+A device is --- like a library (see @ref{Libraries}) --- a collection
+of functions/procedures, which have to do certain jobs.
+
+E.g. the @file{trackdisk.device} includes functions for the floppy disk
+handling.
+
+
+@subheading Column items
+
+@table @samp
+@item Address
+Address of the device structure
+
+@item ln_Name
+Name of a device
+
+@item ln_Pri
+Priority of a device
+
+@item OpenC
+This element shows how often the device was opened.
+
+@item RPC
+@samp{RPC} means @samp{RAM Pointer Count} and shows how many jump
+addresses of the device point into RAM.  In this way many programs ---
+like the @code{setpatch} command from Commodore --- patch the system.
+
+Many viruses patch the system in this way too, but don't panic now.
+If you check your system in regular intervals with a current virus
+killer, it should be out of danger.
+
+If the whole program code of the device is located in RAM, you will
+find a dash (minus sign) here, because in this case it's unimportant
+how many jump addresses point into RAM.
+
+@item ln_Type
+Type of this structure (usually @samp{device})
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Update
+If you select this gadget, the list of devices will be updated.
+
+@item Print
+This function allows you to send the list of @samp{Devices} to
+printer or a selected file.
+
+@item Remove
+The selected device will be removed with this function provided that no
+program uses this device anymore and the @samp{OpenC} is zero.
+
+@item Priority
+Herewith the priority of the device can be changed.  A little window
+will be opened, that asks you for a new priority.  Through the new
+priority it can happen that the device gets a new place in the device
+list.
+
+@item More
+Another window will be opened and you will see more informations about
+the selected device.
+
+You will have the same effect, if you doubleclick an element of the
+device list.
+
+@item Functions
+All device function offsets and addresses are shown up in a subwindow.
+If an appropriate @file{.fd} file exists and an @file{FD:} assign points
+to its directory, then you will also see the function names.
+
+@item Exit
+The @samp{Devices} window will be closed.
+@end table
+@c <
+@c > Expansions
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Expansions, Fonts, Devices, Using Scout
+@comment node-name, next, previous, up
+
+@section Expansions
+@cindex Expansions
+@cindex Manufacturer
+@cindex Boards
+@cindex Hardware
+
+@strong{IMPORTANT:} All Scout releases before 2.10 are not compatible
+to this release! So if you want to read this list using TCP/IP, make
+sure that the remote system runs the latest version as well!
+
+This window shows a list about all your expansion boards
+(graphic boards, memory expansions and so on) too.
+
+
+@subheading Column items
+
+@table @samp
+@item Address
+The address of the expansion structure.
+
+@item BoardAddr
+Usually you will find the ROM of the card here.  If this address
+points into RAM, the card is a memory expansion.
+
+@item Type
+Information about the board. See the More window for further information.
+
+@item Manufacturer
+Name of the board manufacturer.
+
+@item Product
+Name and class of the product.
+@end table
+
+
+@subheading Additional information
+
+If you select one item from the list, the text field below shows up some
+additional information:
+
+@table @samp
+@item Size
+If the entry belongs to a memory expansion, the size of the memory
+is displayed here.  Otherwise it's the ROM size of the card.
+
+@item Flags
+See the More window.
+
+@item ID
+ManufacturerID, assigned by Commodore, followed by the
+Productnumber, assigned by the manufacturer of the board.
+
+@item SN
+Serialnumber of the card (usually unused)
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Print
+This function allows you to send the list of @samp{Expansions} to
+printer or a selected file.
+
+@item More
+Now a window will be opened, that includes more informations about
+the selected expansion board.
+
+Doubleclick an element of the @samp{Expansions} list and you will
+have the same effect.
+
+@item Exit
+The @samp{Expansions} window will be closed.
+@end table
+
+
+@subheading Unknown expansion boards
+
+If you select an expansion board by selecting its list item, you will
+get the name of the manufacturer and the card in the textfield you
+find below the list, provided that the installed version of
+@file{identify.library} knows about these data.
+
+If no information is available in this textfield or the given
+information is wrong, you should send me the following data, please.
+
+@example
+1. ManufacturerID (Manufacturer)
+2. ProductID (Product)
+3. Name of the company
+4. Name of your expansion card
+5. Function of your card
+@end example
+
+If you send me these data, the next version of @file{Identify}
+will include your expansion boards. Please be as precise you can.
+
+@c <
+@c > Fonts
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Fonts, InputHandlers, Expansions, Using Scout
+@comment node-name, next, previous, up
+
+@section Fonts
+@cindex Fonts
+@cindex ROMFONT
+@cindex DISKFONT
+
+@noindent This function will show you all fonts existing in your system.
+
+
+@subheading Column items
+
+@table @samp
+@item YSize
+Vertical size of the font
+
+@item Count
+Here you can see how many programs use the font.
+
+@item Type
+@samp{ROMFONT} means the font is located in ROM and @samp{DISKFONT}
+means the font was loaded from disk/harddisk.
+
+@item Name
+Name of the font
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Update
+The list of fonts will be updated.
+
+@item Print
+This function allows you to send the list of @samp{Fonts} to
+printer or a selected file.
+
+@item Close
+The font will be closed by using this function.
+
+@item Remove
+It is possible to remove a font from system, provided that no program
+uses it and it's no @samp{ROMFONT}.
+
+@item Exit
+The @samp{Fonts} window disappears.
+@end table
+
+@c <
+@c > InputHandlers
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node InputHandlers, Interrupts, Fonts, Using Scout
+@comment node-name, next, previous, up
+
+@section InputHandlers
+@cindex InputHandlers
+@cindex Input events
+
+Input handlers take care of all user input arriving in system
+(pressed keys, mouseclicks, inserted disks, etc.). They stand one
+behind the other like on a production line and analyze the user input.
+The input handler with the highest priority gets the `events' first
+and if it doesn't know how to react on these `events', the second input
+handler gets them, and so on.
+
+Usually the system input handler has a priority of 50.  Every input
+handler, that wants to get the user input before the system, must have
+a higher priority.
+
+
+@subheading Column items
+
+@table @samp
+@item ln_Name
+Name of the input handler
+
+@item ln_Pri
+Its priority
+
+@item is_Data
+This address points to some data needed by the input handler.
+
+@item is_Code
+The program code starts here.  If the code is located in RAM, the
+address is of different color.  Otherwise you can find the code in
+ROM.  Some viruses install an input handler in system.  In this case
+the @samp{is_Code} address points into RAM, but many other programs uses
+input handlers, too.  Don't panic!
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Update
+The list of input handlers will be updated when you select this gadget.
+
+@item Print
+This function allows you to send the list of @samp{InputHandlers} to
+printer or a selected file.
+
+@item Remove
+Removes an input handler from system.
+
+@item Priority
+Changes the priority of an input handler.
+
+@item Exit
+The window will be closed.
+@end table
+
+@c <
+@c > Interrupts
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Interrupts, Libraries, InputHandlers, Using Scout
+@comment node-name, next, previous, up
+
+@section Interrupts
+@cindex Interrupts
+@cindex Vertical blank interrupt
+
+Interrupts are important events the computer system has to react on.
+It exists a list of interrupt routines for each interrupt type. If a
+certain interrupt occurs, all these interrupt routines will be called.
+During their execution the running program will be interrupted.
+
+
+@subheading Column items
+
+@table @samp
+@item ln_Name
+Name of the interrupt
+
+@item ln_Pri
+Its priority
+
+@item is_Data
+At this address you find the data of the interrupt.
+
+@item is_Code
+Address of the interrupt code.  If this address points into RAM, it's
+of a different color.
+
+@item NUM
+This number represents the type of event the interrupt routine is
+called on.  The @samp{IntName} you find in the interrupt detail window
+gives you a little bit more information about it.
+
+@strong{Example:} Number 5 means that the interrupt is called at every
+vertical blank interval.
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Update
+The list of interrupts will be updated.
+
+@item Print
+This function allows you to send the list of @samp{Interrupts} to
+printer or a selected file.
+
+@item Remove
+If the interrupt is a server you can remove it from system.  An
+interrupt handler can't be removed by @code{Scout}.
+
+If you call @samp{avail flush} and the audio.device isn't used, the
+interrupt handlers of the audio.device will be removed.
+
+@item More
+Now a window will be opened that includes more details of the
+interrupt.
+
+@item Exit
+Selecting this gadget will close the @samp{Interrupts} window.
+@end table
+
+@c <
+@c > Libraries
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Libraries, Locks, Interrupts, Using Scout
+@comment node-name, next, previous, up
+
+@section Libraries
+@cindex Libraries
+
+
+A library is a collection of functions/procedures, which have to do
+certain jobs. E.g. the `graphics.library' includes routines for
+graphical display.
+
+
+@subheading Column items
+
+@table @samp
+@item Address
+Adress of the library structure
+
+@item ln_Name
+Name of a library
+
+@item ln_Pri
+Priority of a library
+
+@item OpenC
+Here you see, how often the library was opened.
+
+@item RPC
+@samp{RPC} means @samp{RAM Pointer Count} and shows how many jump
+addresses of the library point into RAM.  In this way many programs
+--- like the @code{setpatch} command from Commodore --- patch the
+system.
+
+Many viruses patch the system in this way too, but don't panic now.
+If you check your system in regular intervals with a current virus
+killer, it should be out of danger.
+
+If the whole program code of the library is located in RAM, you will
+find a dash (minus sign) here, because in this case it's unimportant
+how many jump addresses point into RAM.
+
+@item ln_Type
+Type of this structure (usually @samp{library})
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Priority
+Herewith the priority of the library can be changed.  A little window
+will be opened, that asks you for a new priority.  Through the new
+priority it can happen that the library gets a new place in the
+list of libraries.
+
+@item Close
+A library must be closed by all programs, if you want to remove it
+from system. In this case the @samp{OpenC} is zero.
+
+If you select this function, you will be asked, how often you want
+to close it. You can choose between @samp{Once} and @samp{All}.
+
+Select @samp{All} and the library will so often be closed till the
+@samp{OpenC} is zero.
+
+@item Remove
+The selected library will be removed with this function provided that
+no program uses this library anymore and the @samp{OpenC} is zero.
+
+Some libraries can't be removed from system without a reset.  So you
+shouldn't wonder about it, if this happens.
+
+@item Functions
+All library function offsets and addresses are shown up in a subwindow.
+If an appropriate @file{.fd} file exists and an @file{FD:} assign points
+to its directory, then you will also see the function names.
+
+@item Update
+The list of libraries will be updated.
+
+@item Print
+This function allows you to send the list of @samp{Libraries} to
+printer or a selected file.
+@item More
+A window will be opened that includes more details of the library.
+
+@item Exit
+Selecting this gadget will close the @samp{library} window.
+@end table
+
+@c <
+@c > Locks
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Locks, LowMemory, Libraries, Using Scout
+@comment node-name, next, previous, up
+
+@section Locks
+@cindex Locks
+
+
+A lock structure shows you, that a program reads from or perhaps write
+into a file or a directory.  With this type of structure the system
+prevents, that a file will be deleted while another program gets some
+data from it.
+
+
+@subheading Column items
+
+@table @samp
+@item Access
+Here you can see the type of access.  This could be @samp{READ},
+@samp{WRITE} or @samp{OWN}.  @samp{OWN} stands for a lock @code{Scout}
+created to get the elements of this list.
+
+@item Path
+Path of the file or directory
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Update
+The list of @samp{Locks} will be updated.
+
+@item Print
+This function allows you to send the list of @samp{Locks} to
+printer or a selected file.
+
+@item Remove
+A lock will be removed through dos.library's `UnLock()' function.
+
+@item Pattern
+If you give @code{Scout} a pattern, only the locks with a matching
+path will be shown.
+
+@item Exit
+The @samp{Locks} window will be closed.
+@end table
+
+@c <
+@c > LowMemory
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node LowMemory, Memory, Locks, Using Scout
+@comment node-name, next, previous, up
+
+@section LowMemory
+@cindex LowMemory
+@cindex Handler, LowMemory
+
+This list contains all low memory handler known to the system.
+
+These handlers are called in their sequence if a memory allocation is about
+to fail due to missing resources. The handlers try to free as much unused
+memory space as possible.
+
+`ramlib' is such a low memory handler removing unused libraries and devices
+from the system's memory. It is always present.
+
+@strong{Note:} Low memory handlers are only available since AmigaOS 3.0.
+On older systems this list will always be empty.
+
+@subheading Column items
+
+@table @samp
+@item Address
+Address of the low memory handler structure.
+
+@item ln_Name
+Name of the handler.
+
+@item ln_Type
+Type of the handler.
+
+@item ln_Pri
+Priority of the handler. All handlers are called in their priority sequence.
+
+@item is_Data
+A pointer to some handler's private data.
+
+@item is_Code
+A pointer to the low memory handler code.
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Update
+The list will be actualized.
+
+@item Print
+This function allows you to send the list to
+printer or a selected file.
+
+@item Remove
+The low memory handler will be removed from system.
+
+@item Priority
+Changes the priority of the selected handler.
+
+@item Exit
+The window will be closed.
+@end table
+@c <
+@c > Memory
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Memory, Mounted Devs, LowMemory, Using Scout
+@comment node-name, next, previous, up
+
+@section Memory
+@cindex Memory
+
+
+In this list you will find the segments of your memory.  At least you
+will find an entry for your chip memory.
+
+
+@subheading Column items
+
+@table @samp
+@item ln_Name
+Name of the memory segment (e.g. @samp{chip memory})
+
+@item ln_Pri
+Priority of memory
+
+@item mh_Lower
+First address of memory
+
+@item mh_Upper
+Last address of memory
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Print
+This function allows you to send the list of the memory segments to
+printer or a selected file.
+
+@item Priority
+This function allows you to change the priority of a memory segment.
+The memory segment with the highest priority will be preferred from
+system, provided that no certain type of memory is demanded.
+
+@item More
+Another window will be opened. This window includes more information
+about the memory segment.
+
+@item Exit
+The window will be closed.
+@end table
+
+@c <
+@c > Mounted Devs
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Mounted Devs, Ports, Memory, Using Scout
+@comment node-name, next, previous, up
+
+@section Mounted Devices
+@cindex Mounted Devices
+
+
+In this list you will find all your devices like disk drives, printer
+devices, etc.
+
+
+@subheading Column items
+
+@table @samp
+@item Name
+Name of the device
+
+@item Unit
+Unit number
+
+@item Heads
+Number of heads
+
+@item Cyl
+Number of cylinders
+
+@item State
+The state shows you for example, if a disk is in drive.
+
+@item DiskType
+Type of a disk (e.g. OFS (OldFileSystem), FFS (FastFileSystem), @dots{})
+
+@item Handler or Device
+The handler or the device you find here has to manage the stream of
+data from and to the device.
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Update
+The list will be updated.
+
+@item Print
+This function allows you to send the list of @samp{Mounted Devs} to
+printer or a selected file.
+
+@item Exit
+The window will be closed.
+@end table
+
+@c <
+@c > Ports
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Ports, Resident Cmds, Mounted Devs, Using Scout
+@comment node-name, next, previous, up
+
+@section Ports
+@cindex Ports
+
+
+@noindent Programs are able to communicate together through ports.
+
+
+@subheading Column items
+
+@table @samp
+@item Address
+Here you will find the port structure.
+
+@item ln_Name
+Name of port
+
+@item ln_Pri
+Priority of port
+
+@item mp_SigTask
+The task is communicating through the port.
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Update
+The ports list will be updated.
+
+@item Print
+This function allows you to send the list of @samp{Ports} to
+printer or a selected file.
+
+@item Remove
+The port will be removed.
+
+@item Priority
+Herewith the port priority can be changed.
+
+@item Exit
+The @samp{Ports} window will be closed.
+@end table
+
+@c <
+@c > Resident Cmds
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Resident Cmds, Residents, Ports, Using Scout
+@comment node-name, next, previous, up
+
+@section Resident Commands
+@cindex Resident Commands
+
+
+This list includes all resident commands. That means all commands you
+find in ROM and the commands you made `resident' through the
+@code{resident} command.
+
+@noindent Positions and sizes of their hunks you will find here, too.
+
+
+@subheading Column items
+
+@table @samp
+@item Name
+Name of the command
+
+@item UseCount
+Here you can see, how often a command was being executed at the time
+the list was build.
+
+@item Lower
+First address of hunk in memory
+
+@item Upper
+Last address of hunk in memory
+
+@item Size
+Size of hunk (upper - lower - 8 bytes overhead)
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Update
+The list of @samp{Resident Commands} will be updated.
+
+@item Print
+This function allows you to send the list of @samp{Resident Commands} to
+printer or a selected file.
+
+@item Remove
+The selected command will be removed with this function provided that no
+program uses this command anymore and the @samp{UseCount} is zero.
+
+@item Exit
+The window disappears.
+@end table
+@c <
+@c > Residents
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Residents, Resources, Resident Cmds, Using Scout
+@comment node-name, next, previous, up
+
+@section Residents
+@cindex Residents
+
+
+Resident modules are reset-protected segments (code and data).  In the
+list of @samp{Residents} you usually find libraries, devices and
+resources.  A programmer has the possibility to make his own programs
+reset-protected.  He has to initialize a resident structure for it
+and then he can link the program through the kick-vectors (see
+@ref{Vectors}) to the list of the resident modules.  The residents you
+linked to system are usually located in RAM and are of a different
+color.
+
+If you find a resident module that points into RAM and you don't know
+which program has created it, you should start your favourite virus
+detector and let it check your memory.  Many viruses prefer this way
+to travel around.
+
+
+@subheading Column items
+
+@table @samp
+@item Address
+At this address the resident module is located.
+
+@item ln_Name
+Name of the resident module
+
+@item rt_Pri
+Priority
+
+@item rt_IdString
+Identity string of the resident module.
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Update
+The list of @samp{Residents} will be updated.
+
+@item Print
+This function allows you to send the list of @samp{Residents} to
+printer or a selected file.
+
+@item More
+Selecting this gadget opens a new window with more information about
+the selected resident module.
+
+@item Exit
+The @samp{Residents} window will be closed.
+@end table
+
+@c <
+@c > Resources
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Resources, ScreenMode, Residents, Using Scout
+@comment node-name, next, previous, up
+
+@section Resources
+@cindex Resources
+
+
+Usually a resource is --- like a library (see @ref{Libraries}) --- a
+collection of functions/procedures, which have to do certain jobs.
+
+E.g. the `filesystem.resource' includes functions for the filesystem
+handling.
+
+
+@subheading Column items
+
+@table @samp
+@item Address
+Address of the resource structure
+
+@item ln_Name
+Name of a resource
+
+@item ln_Pri
+Priority of a resource
+
+@item OpenC
+This element shows how often the resource was opened.
+
+@item RPC
+@samp{RPC} means @samp{RAM Pointer Count} and shows how many jump
+addresses of the resource point into RAM.  In this way many programs
+--- like the @code{setpatch} command from Commodore --- patch the
+system.
+
+Many viruses patch the system in this way too, but don't panic now.
+If you check your system in regular intervals with a current virus
+killer, it should be out of danger.
+
+If the whole program code of the resource is located in RAM, you will
+find a dash (minus sign) here, because in this case it's unimportant
+how many jump addresses point into RAM.
+
+@item ln_Type
+Type of this structure (usually @samp{resource})
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Update
+The list of @samp{Resources} will be updated.
+
+@item Print
+This function allows you to send the list of @samp{Resources} to
+printer or a selected file.
+
+@item Remove
+The selected resource will be removed with this function, provided that
+no program uses it anymore and the @samp{OpenC} is zero.
+
+@item Priority
+Herewith the priority of the resource can be changed. A small
+window will be opened, that asks you for a new priority. Through
+the new priority it can happen that the resource gets a new position
+in the list of resources.
+
+@item More
+Select this gadget and you get a new window with more information about
+the selected resource.
+
+@item Functions
+All resource function offsets and addresses are shown up in a subwindow.
+If an appropriate @file{.fd} file exists and an @file{FD:} assign points
+to its directory, then you will also see the function names. Note that some
+resources do not have functions.
+
+@item Exit
+The @samp{Resources} window will be closed.
+@end table
+
+@strong{Please note:} If you should find three dashes (minus signs) at
+@samp{OpenC} and/or @samp{RPC}, the resource has no typical library
+structure.  This happens for example at the `FileSystem.resource'.
+
+@c <
+@c > ScreenMode
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node ScreenMode, Semaphores, Resources, Using Scout
+@comment node-name, next, previous, up
+
+@section ScreenMode
+@cindex ScreenMode
+
+Screen modes define all monitor resolutions that the system is able to
+show up.
+
+You surely have already selected a screen mode before. In this list,
+you will find all available modes. Most of the programs filter out some
+of them when they do not meet their purpose.
+
+@subheading Column items
+
+@table @samp
+@item ModeID
+An identification number, unique to each mode.
+
+@item Width
+Nominal width of the resolution in pixeln.
+
+@item Height
+Nominal height of the resolution in pixeln.
+
+@item Depth
+Maximum number of planes. The amount of colors which can be simultaneously
+displayed depends on this.
+
+@item ScreenMode
+Name of the screen mode. Some modes do not have a real name, so Scout will
+generate it. Then it might differ from the name generated by other programs or
+screen mode requesters.
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Update
+The list will be updated.
+
+@item Print
+This function allows you to send the list to
+printer or a selected file.
+
+@item More
+Further information about the screen mode are displayed in a subwindow. This
+includes the overscan resolutions and the frequencies. Due to an inaccuracy of
+the operating system, the real frequencies might be a little bit different to
+those displayed.
+
+@item Exit
+The window will be closed.
+@end table
+@c <
+@c > Semaphores
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Semaphores, System, ScreenMode, Using Scout
+@comment node-name, next, previous, up
+
+@section Semaphores
+@cindex Semaphores
+
+
+The use of semaphores is a way of single-threading critical
+sections.  For example only one program is allowed to use the printer
+at one time, otherwise the texts would be mixed.
+
+
+@subheading Column items
+
+@table @samp
+@item ln_Name
+Name of a semaphore
+
+@item Nest
+This item counts how often the semaphore has been obtained by the
+owner task.
+
+@item Queue
+This counter shows you, how many programs want to obtain the
+semaphore.
+
+@item Owner
+Here you will find the name of the task that owns the semaphore.
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Update
+The list of @samp{Semaphores} will be updated.
+
+@item Print
+This function allows you to send the list of @samp{Semaphores} to
+printer or a selected file.
+
+@item Obtain
+This function is used to gain access to a semaphore.  The @samp{NestCnt}
+will be increased at one by this call.
+
+@item Release
+Herewith you can make a signal semaphore available to others.
+
+@item Exit
+The @samp{Semaphores} window will be closed.
+@end table
+
+@c <
+@c > System
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node System, Tasks, Semaphores, Using Scout
+@comment node-name, next, previous, up
+
+@section System
+@cindex System
+
+@subheading Actions
+
+@table @samp
+@item Print
+This function allows you to send the list to
+printer or a selected file.
+
+@item Exit
+The window will be closed.
+@end table
+
+
+@subheading Entry items
+
+In this window you will find some (partially technical) information
+about your computer. Please excuse the ordinary look of the window,
+but it is very easy to add more lines this way.
+
+@c <
+@c > Tasks
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Tasks, Timer, System, Using Scout
+@comment node-name, next, previous, up
+
+@section Tasks
+@cindex Tasks
+@cindex Processes
+
+In this window you find a list of all tasks and processes being in
+system. Each program you start will be executed as a task or process.
+
+
+@subheading Column items
+
+@table @samp
+@item ln_Name
+Name of the task/process
+
+@item ln_Type
+Type of the structure (@samp{task} or @samp{process})
+
+@item ln_Pri
+Priority of the task/process
+
+@item NUM
+If a non detaching program was started from shell, you will find here
+the number of the process. Programs you started from Workbench have a
+dash here.
+
+@item State
+Here you see the state of the task or process. You will find
+Scout's own process on the top of the list with a @samp{run} at
+this place, because this process is always running when it gets the
+task list.
+
+@samp{ready} means the task wants to work, but it's interrupted by
+the execution of another task.
+
+A task that is waiting for a certain signal is in the state
+@samp{wait}. In this case it doesn't need processing time.
+
+@item SigWait
+Signalmask the task is waiting for.
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Print
+This function allows you to send the list of @samp{Tasks} to
+printer or a selected file.
+
+@item Freeze
+With this function you freeze the selected task. It can still be found
+in the list of tasks, but it gets no processing time from system.
+
+@quotation
+@strong{Warning:}
+If you try to freeze tasks essential to the system like
+`input.device', you should have saved all important data, cause a
+RESET is the only way out!
+@end quotation
+
+@item Activate
+A frozen task can be activated here.
+
+@item CPU
+Here you will find a text field and a cycle gadget. This text field
+displays --- dependent on the state of the cycle gadget --- the CPU
+load in percent.
+
+For the cycle gadget you can choose between three states:
+@table @samp
+@item off
+In this case the CPU load won't be displayed. If you select another
+state, @code{Scout} will patch some system functions to calculate the
+CPU load of all tasks.
+
+@item full
+If you select this state, @code{Scout} sets the real cpu load to 100%.
+That means the total of the CPU loads of all tasks and processes will
+be 100%. Therefore nothing will be displayed in the text field.
+
+@item in %
+@code{Scout} starts a task named @samp{« Scout's cheat task »} to
+calculate the real CPU load and it will be displayed in the text
+field.
+@end table
+
+@item Secs
+This string gadget allows you to set the intervall time for updating
+of the CPU load display.
+
+@item Update
+The list will be updated.
+
+@item Remove
+A task will be removed from the list.  You should prefer the freeze
+function, if you perhaps need this task again.
+
+See also @samp{Break}!
+
+@item Signal
+If you select a signal mask, it will be send to the task.
+
+@item Break
+A signal mask that includes the signals CTRL-C and CTRL-D will be
+send to the task you selected.  Many tasks and processes end, if
+they receive these signals.
+
+@item Priority
+The priority of a task can be changed with this function.
+
+@item More
+Selecting this gadget will open another window that displays more
+informations about the task or the process.
+
+@item Exit
+The window will be closed.
+@end table
+
+@c <
+@c > Timer
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Timer, Vectors , Tasks, Using Scout
+@comment node-name, next, previous, up
+@section Timer
+@cindex Timer
+
+
+This window lists all current requests of the timer.device.
+
+
+@subheading Column items
+
+@table @samp
+@item Address
+Address of the IO request structure.
+
+@item ReplyPort
+Address of the port the request will be replied to.
+
+@item Time
+Time that this request will stay in this list.
+
+@item Unit
+There are two different measures: VBlank (which has less overhead) and
+MicroHz (which is more accurate).
+
+@item Task
+Name of the requesting task.
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Print
+This function allows you to send the list to
+printer or a selected file.
+
+@item Update
+The list will be updated.
+
+@item Exit
+The window will be closed.
+@end table
+
+@c <
+@c > Vectors
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Vectors, Windows, Timer, Using Scout
+@comment node-name, next, previous, up
+
+@section Vectors
+@cindex Vectors
+
+@subheading Actions
+
+@table @samp
+@item Update
+The displayed vectors will be updated.
+
+@item Print
+This function allows you to send the list of @samp{Vectors} to
+printer or a selected file.
+
+@item Exit
+The window will be closed.
+@end table
+
+@subheading Reset Vectors
+
+A program can make itself reset-protected by using the reset vectors.
+If the vectors are unused, they have a value of zero. The programs
+which use the Kick-Vectors (KickTagPtr, KickMemPtr and KickCheckSum)
+can also be found in the list of resident structures.
+See also @ref{Residents}.
+
+@subheading Auto Vector Interrupts
+@cindex VBR
+
+In a computer system with a MC68000 processor you will find the seven
+@samp{Auto Vector Interrupts} from address $64 to address $7c. Higher
+processors (MC68010, etc.) have the VBR (Vector Base Register) that
+allows you to move the interrupt table to FAST-MEM. The system will
+be a little bit faster then. @code{Scout} uses the VBR if it exists.
+
+@subheading Interrupt Vectors
+
+Here you see 16 interrupt vectors (IntVecs). These vectors are located
+in the `ExecBase' (base structure of the exec.library).
+
+@c <
+@c > Windows
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Windows, Patches, Vectors, Using Scout
+@comment node-name, next, previous, up
+
+@section Windows
+@cindex Windows
+@cindex Screens
+
+
+All screens with the windows opened on them are listed here. Screens
+are of a different color as windows.
+
+
+@subheading Column items
+
+@table @samp
+@item Pos(x,y)
+x and y position of the screen/window
+
+@item Size(x,y)
+x and y size of the screen/window
+
+@item Title
+Title of the screen/window
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Update
+The list will be updated.
+
+@item Print
+This function allows you to send the list of @samp{Windows} to
+printer or a selected file.
+
+@item Close
+With this function it is possible to close screens and/or windows. If
+you close a screen, all windows on it will be closed too.
+
+@item To Front
+The selected screen/window will be popped to front.
+
+@item More
+If you select this gadget another window will be opened that displays
+more informations about the window or the screen.
+
+@item Exit
+The window will be closed.
+@end table
+
+@c <
+@c > Patches
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Patches, Catalogs, Windows, Using Scout
+@comment node-name, next, previous, up
+
+@section Patches
+@cindex Patches
+
+
+All patches currently installed in the system are listed here.
+
+
+@subheading Column items
+
+@table @samp
+@item Library
+Name of the patched resource
+
+@item Offset
+Decimal and Hex offset of the patched function
+
+@item Function
+Name of the patched function. This name is obtained from the accoring .fd file.
+
+@item State
+Current state of the patch. This can either be @samp{active}, @samp{disabled} or @samp{removed}.
+
+@item Patcher
+Name of the program that applied this patch.
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Update
+The list will be updated.
+
+@item Print
+This function allows you to send the list of @samp{Patches} to
+printer or a selected file.
+
+@item Enable
+If you select this gadget the selected (disabled) patches will be enabled again.
+
+@item Disable
+If you select this gadget the selected (enabled) patches will be disabled.
+@quotation
+@strong{Warning:} This is a very dangerous action!! Please read the SaferPatches documentation!
+@end quotation
+
+@item Exit
+The window will be closed.
+@end table
+
+@c <
+@c > Catalogs
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Catalogs, AudioModes, Patches, Using Scout
+@comment node-name, next, previous, up
+
+@section Catalogs
+@cindex Catalogs
+
+
+All locale catalogs currently loaded are listed here.
+
+
+@subheading Column items
+
+@table @samp
+@item cat_Version
+Version number of the catalog file.
+
+@item cat_Language
+Language of the catalog file.
+
+@item cat_Name
+Name of the catalog file.
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Update
+The list will be updated.
+
+@item Print
+This function allows you to send the list of @samp{Catalogs} to
+printer or a selected file.
+
+@item Exit
+The window will be closed.
+@end table
+
+@c <
+@c > AudioModes
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node AudioModes, Scout and AmiTCP, Catalogs, Using Scout
+@comment node-name, next, previous, up
+
+@section AudioModes
+@cindex AudioModes
+@cindex AHI
+
+
+All AHI audiomodes are listed here.
+
+
+@subheading Column items
+
+@table @samp
+@item ID
+ModeID of the AudioMode.
+
+@item Name
+Name of the AudioMode.
+
+@item Bits
+Bits per sample.
+
+@item min Freq
+Minimum mixing frequency.
+
+@item max Freq
+Maximum mixing frequency.
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Update
+The list will be updated.
+
+@item Print
+This function allows you to send the list of @samp{Patches} to
+printer or a selected file.
+
+@item More
+Selecting this gadget will open another window that displays more
+informations about the AudioMode.
+
+@item Exit
+The window will be closed.
+@end table
+
+@c <
+
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Scout and AmiTCP, Scout without MUI, AudioModes, Top
+@comment node-name, next, previous, up
+
+@section Scout and AmiTCP
+
+This section will show you what you have to do for using @code{Scout}
+as a TCP/IP service through @code{AmiTCP}. Nearly all functions of
+@code{Scout} can also be used via @code{AmiTCP}.
+
+Now some knowledge will be assumed. If you don't know, what kind of
+program @code{AmiTCP} represents, you should read @code{AmiTCP's} user's
+manual before. (See also @ref{AmiTCP}.)
+
+If you have installed @code{AmiTCP}, you can use @code{Scout} as client
+and server. Except the installed programs of @code{AmiTCP} you don't need
+another program for using @code{Scout} on networks.
+
+If you want to make your computer available for other systems on the
+network, you have to do following two steps:
+
+@enumerate
+@item Add the line @samp{scout 6543/tcp} to file @file{AmiTCP:db/services}.
+
+@item Now please add the line @samp{scout stream tcp nowait root dh0:scout}
+to file @file{AmiTCP:db/inetd.conf}. Make sure that the path at the
+end of this line is the right path for @code{scout}.
+@end enumerate
+
+That's it! If you start @code{AmiTCP} now, your computer is available
+for other systems through using the options @samp{HOST}, @samp{USER}
+and @samp{PASSWORD}.
+
+@quotation
+@noindent @strong{Example:} If I want perform some actions on some system
+structures of my own system for example, I have to start @code{Scout}
+through something like:
+
+@format
+1> scout HOST crash.north.de USER atte PASSWORD secret
+@end format
+@end quotation
+
+If you leave out option @samp{PASSWORD}, you will be asked for the
+correct password through the @samp{password:} prompt. In this case
+nobody can see your password, because it won't be displayed in shell.
+
+If you don't use option @samp{USER}, @code{AmiTCP} takes the username
+that is actually available in system.
+
+The usage of @code{AmiTCP} doesn't provide the installation of
+@code{MUI}. All of @code{Scout's} shell commands (see also @ref{Commands})
+can be used via network through @code{AmiTCP}.
+
+@quotation
+@noindent @strong{Example:} If I want to get the task list of my
+system, I have to use something like:
+
+@format
+1> scout HOST crash.north.de USER atte PASSWORD secret Tasks
+@end format
+@end quotation
+
+You and all other users must always identify themselves through
+their usernames (option @samp{USER}) and their passwords
+(option @samp{PASSWORD}).
+It's also possible to allow or deny certain systems the usage of
+some services through the file @file{AmiTCP:db/inet.access}. See also
+the user's manual of @code{AmiTCP}.
+
+If you want to get more informations about the implemented options and
+commands, you should also see @ref{Options} and @ref{Commands}.
+
+@strong{NOTE:} Please take care that the remote system runs the latest
+Scout version as well, to avoid incompatibilities.
+
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Scout without MUI, Options, Scout and AmiTCP, Top
+@comment node-name, next, previous, up
+
+@section Scout without MUI
+
+Nearly all through the graphical user interface available functions of
+@code{Scout} are also available via shell. Therefore you don't really
+need @code{MUI} for using @code{Scout}. But if you want to use
+@code{Scout's} graphical user interface, you must have @code{MUI} in
+your system.
+
+
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Options, Commands, Scout without MUI, Top
+@comment node-name, next, previous, up
+
+@chapter Options
+@cindex Options
+@cindex Tool Types
+@cindex Command Line Options
+
+There are some options for @code{Scout} which you can use, when you
+start the program.  The following options are available from shell and
+as tool types from Workbench.
+
+@table @samp
+@item ICONIFIED
+@format
+@strong{Usage:} @code{ICONIFIED}
+@end format
+
+If this option is activ, @code{Scout} starts iconified.
+
+@item PORTNAME
+@format
+@strong{Usage:} @code{PORTNAME}=@var{portname}
+@end format
+
+The name of Scout's ARexx port can be changed into @var{portname}.
+Without this option the ARexx port is called `SCOUT.X'. The @samp{X}
+stands for a decimal number that will be incremented, if a so called
+port already exists.
+
+@item TOOLPRI
+@format
+@strong{Usage:} @code{TOOLPRI}=@var{value}
+@end format
+
+This option allows you to change the priority of Scout's process
+into @var{value}.
+
+@item STARTUP
+@format
+@strong{Usage:} @code{STARTUP}=@var{command}
+@end format
+
+The variable @var{command} should be an ARexx script or a single ARexx
+command. Both (script or command) will be executed, when @code{Scout}
+will be started. In this way you can open more than only the main
+window by starting. Try for example the command @samp{OpenWindow Tasks}
+and you will get two windows by starting (the main window and the
+task list window).
+
+(See also @ref{Commands, ARexx port, ARexx port}.)
+
+@item INTERVALTIME
+@format
+@strong{Usage:} @code{INTERVALTIME}=@var{seconds}
+@end format
+
+This options allows you to save your preferred update time for
+the list of tasks.
+(See also @ref{Tasks, Secs, Secs}.)
+
+@item CPUDISPLAY
+@format
+@strong{Format:} @code{CPUDISPLAY}=@var{value}
+@end format
+
+Through the variable @var{value} you can select the state of the
+@samp{CPU} cycle gadget you find in the @samp{Tasks} window.
+(See also @ref{Tasks, CPU, CPU}.)
+
+@itemize @bullet
+@item @samp{1}  means  @samp{CPU: full}
+@item @samp{2}  means  @samp{CPU: in %}
+@end itemize
+
+@item HOST
+@format
+@strong{Format:} @code{HOST}=@var{hostname}
+@end format
+
+This options allows you to specify the system (@var{hostname}) you
+want to manipulate via network through @code{AmiTCP}.
+
+@item USER
+@format
+@strong{Format:} @code{USER}=@var{username}
+@end format
+
+You have to use this option to identify yourself by using @code{Scout}
+as a TCP/IP service.
+
+@item PASSWORD
+@format
+@strong{Format:} @code{PASSWORD}=@var{password}
+@end format
+
+Without a password @code{Scout} can't connect to another system via
+network. This option allows you to set the correct password.
+
+@item COMMAND
+@format
+@strong{Format:} @code{COMMAND}=@var{commandline}
+@end format
+
+Nearly all of @code{Scout's} implemented functions are available from
+shell through this option. You don't need the @samp{COMMAND} key to
+use this option. (See also @ref{Commands}.)
+
+@item SINGLEWINDOWS
+@format
+@strong{Format:} @code{SINGLEWINDOWS}
+@end format
+
+Some users don't like to handle the many windows of Scout. This option
+solves the problem of too many windows. If this option is selected,
+only one list window and only one detail window is opened at a time.
+
+@end table
+
+
+@node Commands, Updates, Options, Top
+@comment node-name, next, previous, up
+
+@chapter Scout's commands via ARexx and shell
+@cindex ARexx
+@cindex Command
+
+@noindent @code{Scout} supports two kinds of commands:
+
+@enumerate
+@item commands only available from shell
+@item commands available from ARexx and shell
+@end enumerate
+
+@cindex ARexx port
+@subheading ARexx port
+
+It's a feature of @code{MUI} to give each application its own ARexx port.
+Therefore @code{Scout} also has an ARexx port that usually has the
+name @samp{SCOUT.X}. The @samp{X} stands for a decimal number that will be
+incremented, if a so called port already exists.
+
+You will find the name of @code{Scout's} ARexx port in the window you
+get, if you select the @samp{Project/About} menu.
+
+@cindex Tasknames
+@subheading Using tasknames:
+
+If a task or a process was started from shell and hasn't detached
+itself, you will find the name of the command being executed, where
+usually the taskname is displayed.  The real name of those tasks
+usually is something like @samp{Background CLI}, but such a taskname
+isn't useful.
+
+@quotation
+@strong{Example:} If you start a non detaching task like
+@samp{DH0:Debug/Sushi} from shell, you will see @samp{DH0:Debug/Sushi}
+as taskname.
+@end quotation
+
+Some ARexx commands need a taskname as parameter. You have to
+select those from CLI started self detaching tasks by using their
+command names like @code{Scout} displays them in the lists of tasks.
+
+@section Commands only available from shell
+
+@table @samp
+@item Help
+@format
+@strong{Format:} @code{Help}
+@end format
+
+This command is the most important one and it doesn't need parameters.
+If you try @code{Help}, @code{Scout} prints a list of all available
+commands to shell.  =:^)
+@end table
+
+Now 18 commands follow. These commands allow the user to get all
+lists of system structures from shell. Therefore you only need
+to install @code{MUI} for using @code{Scout's} graphical user
+interface.
+
+Each of the following commands has a shortened form that stands behind
+the command in parentheses.
+
+@quotation
+@code{Allocations} (a), @code{BoopsiClasses} (b),
+@code{Commands} (c), @code{Devices} (d),
+@code{Timer} (e), @code{Fonts} (f),
+@code{Assigns} (g), @code{InputHandlers} (h),
+@code{Interrupts} (i), @code{LowMemory} (j),
+@code{Commodities} (k), @code{Libraries} (l),
+@code{Memory} (m), @code{Mounts} (n),
+@code{Locks} (o), @code{Ports} (p),
+@code{Residents} (r), @code{Semaphores} (s),
+@code{Tasks} (t), @code{Resources} (u),
+@code{Vectors} (v), @code{Windows} (w),
+@code{Expansions} (x), @code{System} (y) and
+@code{ScreenMode} (z).
+@end quotation
+
+@quotation
+@noindent @strong{Example:} To get the list of ports, you only have to
+use @samp{scout ports} or @samp{scout p} from shell.
+@end quotation
+
+@section Commands available from ARexx and shell
+
+@table @samp
+@item FindTask
+@format
+@strong{Usage:} @code{FindTask} @var{task}
+@end format
+
+This command allows you to check, if task @var{task} exists in
+system or not. The result is the address of the task @var{task},
+if it has been found. @var{task} can be the name or the address of
+a task.
+
+@item FreezeTask
+@format
+@strong{Usage:} @code{FreezeTask} @var{task}
+@end format
+
+The task @var{taskname} will be frozen. After that it will still be
+found in system's task list, but then it doesn't need processing time.
+You can choose the name or the address of a task for @var{task}.
+
+@item ActivateTask
+@format
+@strong{Usage:} @code{ActivateTask} @var{task}
+@end format
+
+If task @var{task} was frozen, it will be activated, otherwise an
+error occured. @var{task} is again a task's name or an address.
+
+@item RemoveTask
+@format
+@strong{Usage:} @code{RemoveTask} @var{task}
+@end format
+
+This command removes the task @var{task}. It's lost forever.
+
+@item BreakTask
+@format
+@strong{Usage:} @code{BreakTask} @var{task}
+@end format
+
+@code{Scout} sends the task @var{task} a certain signal mask
+that includes the signals CTRL-C and CTRL-D. Many programs support
+these signals and finish themselves, if they receive one of them.
+
+@item SignalTask
+@format
+@strong{Usage:} @code{SignalTask} @var{task} @var{hexsignal}
+@end format
+
+This command allows you to send a signal @var{hexsignal} to the task
+@var{task}. The signal must specified as a hexadecimal number.
+
+@strong{Example:}
+@example
+SendSignal 'scout' 0x001000
+@end example
+sends task @samp{scout} a CTRL-C and after that @code{Scout} ends.
+
+@item SetTaskPri
+@format
+@strong{Usage:} @code{SetTaskPri} @var{task} @var{priority}
+@end format
+
+The task @var{task} gets a new priority (@var{priority}).
+
+@item RemovePort
+@format
+@strong{Usage:} @code{RemovePort} @var{port}
+@end format
+
+The port @var{port} will be removed from @code{Scout}. @var{port}
+can be the name of a port or its address.
+
+@item GetLockNumber
+@format
+@strong{Usage:} @code{GetLockNumber} @var{lockpattern}
+@end format
+
+This command returns the number of locks which have paths matching
+to the pattern @var{lockpattern}.
+
+@strong{Example:} Use the command
+@example
+GetLockNumber 'WORK:Utilities/#?'
+@end example
+and you will know, how many locks are currently used for files in the
+directory @file{WORK:Utilities/}.
+
+@item RemoveLocks
+@format
+@strong{Usage:} @code{RemoveLocks} @var{lockpattern}
+@end format
+
+Use this command and all locks which have paths matching to the pattern
+@var{lockpattern} will be removed.
+(See also @code{GetLockNumber}.)
+
+@item RemoveLock
+@format
+@strong{Format:} @code{RemoveLock} @var{lockaddress}
+@end format
+
+The lock at adress @var{lockaddress} will be removed.
+
+@item FindNode
+@format
+@strong{Usage:} @code{FindNode} @var{nodetype} @var{nodename}
+@end format
+
+This command allows you to find a certain node. You only have
+to know its name (@var{nodename}) and its type (@var{nodetype}).
+
+@var{Nodetype} can have following values:  @samp{LIBRARY},
+@samp{DEVICE}, @samp{RESOURCE}, @samp{MEMORY}, @samp{SEMAPHORE},
+@samp{PORT} or @samp{INPUTHANDLER}.
+
+@strong{Example:} If you want to get the address of the
+@samp{disk.resource} you must use:
+@example
+FindNode RESOURCE 'disk.resource'
+@end example
+
+@item GetPriority
+@format
+@strong{Usage:} @code{GetPriority} @var{nodeaddress}
+@end format
+
+This command allows you to check the priority of a certain node
+structure. This includes all following structure types:  tasks,
+libraries, devices, resources, ports, residents, input handlers,
+interrupts, semaphores and the elements of the memory list.
+
+You only have to know the address (@var{nodeaddress}) of that
+structure.
+
+@strong{Example:} The following ARexx commands store the priority of
+your chip memory in the variable @samp{pri}:
+@example
+FindName MEMORY 'chip memory'
+addr = result
+GetPriority addr
+pri = result
+@end example
+
+@item SetPriority
+@format
+@strong{Usage:} @code{SetPriority} @var{nodetype} @var{nodename}
+@end format
+
+If you want to change the priority of the node @var{nodename}, you can
+use this command.  Again @var{nodetype} can have following values:
+@samp{LIBRARY}, @samp{DEVICE}, @samp{RESOURCE}, @samp{MEMORY},
+@samp{SEMAPHORE}, @samp{PORT} or @samp{INPUTHANDLER}.
+
+@item CloseLibrary
+@format
+@strong{Format:} @code{CloseLibrary} @var{library}
+@end format
+
+The library @var{library} will be closed once. @var{library} can be
+the name of the library or its address.
+
+@item RemoveLibrary
+@format
+@strong{Format:} @code{RemoveLibrary} @var{library}
+@end format
+
+The library @var{library} will be removed, if no program uses it.
+
+@item RemoveDevice
+@format
+@strong{Format:} @code{RemoveDevice} @var{device}
+@end format
+
+The selected device @var{device} will be removed. For @var{device}
+use the name or the address of the device.
+
+@item RemoveResource
+@format
+@strong{Format:} @code{RemoveResource} @var{resource}
+@end format
+
+The resource @var{resource} will be removed.
+
+@item ObtainSemaphore
+@format
+@strong{Format:} @code{ObtainSemaphore} @var{semaphore}
+@end format
+
+This command allows you to obtain the given semaphore. @var{semaphore}
+can be the semaphore's name or address.
+
+@item ReleaseSemaphore
+@format
+@strong{Format:} @code{ReleaseSemaphore} @var{semaphore}
+@end format
+
+The semaphore @var{semaphore} will be once released.
+
+@item RemoveSemaphore
+@format
+@strong{Format:} @code{RemoveSemaphore} @var{semaphore}
+@end format
+
+You are able to remove the semaphore @var{semaphore} by using this
+command.
+
+@item RemoveInputhandler
+@format
+@strong{Format:} @code{RemoveInputhandler} @var{inputhandler}
+@end format
+
+The input handler @var{inputhandler} selected through name or address
+will be removed.
+
+@item FindResident
+@format
+@strong{Usage:} @code{FindResident} @var{resident}
+@end format
+
+This command returns the address of the resident structure
+@var{resident}.
+
+@item FindInterrupt
+@format
+@strong{Usage:} @code{FindInterrupt} @var{interruptname}
+@end format
+
+The address of the interrupt @var{interruptname} will be returned.
+
+@item RemoveInterrupt
+@format
+@strong{Format:} @code{RemoveInterrupt} @var{interruptname}
+@end format
+
+The interrupt you have selected through @var{interruptname} will be
+removed.
+
+@item FlushDevs
+@format
+@strong{Usage:} @code{FlushDevs}
+@end format
+
+All not used devices will be removed. The used memory will be freed.
+
+@item FlushFonts
+@format
+@strong{Usage:} @code{FlushFonts}
+@end format
+
+If a diskfont is in memory, but no program uses it, it will be
+removed.
+
+@item FlushLibs
+@format
+@strong{Usage:} @code{FlushLibs}
+@end format
+
+All not used libraries will be removed. The used memory will be freed.
+
+@item FlushAll
+@format
+@strong{Usage:} @code{FlushAll}
+@end format
+
+This function includes @code{FlushDevs}, @code{FlushFonts} and
+@code{FlushLibs}. All not used devices, libraries and fonts
+will be removed and the used memory will be freed.
+
+@item ClearResetVectors
+@format
+@strong{Usage:} @code{ClearResetVectors}
+@end format
+
+The six reset vectors will be cleared, if you select this function
+(see @ref{Vectors}).
+
+@item PopToFront
+@format
+@strong{Usage:} @code{PopToFront} @var{title}
+@end format
+
+This command allows you to pop a screen or window to front. You
+only have to know its (@var{title}).
+
+@item CloseWindow
+@format
+@strong{Usage:} @code{CloseWindow} @var{windowtitle}
+@end format
+
+This command closes the window that is specified through its title
+(@var{windowtitle}).
+
+@item CloseScreen
+@format
+@strong{Usage:} @code{CloseScreen} @var{screentitle}
+@end format
+
+If you select this command, the screen (@var{screentitle}) will be
+closed with all its windows.
+
+@item CloseFont
+@format
+@strong{Format:} @code{CloseFont} @var{address}
+@end format
+
+The font at address @var{address} will be closed once.
+
+@item RemoveFont
+@format
+@strong{Format:} @code{RemoveFont} @var{address}
+@end format
+
+This command removes the font at address @var{address}, if it's
+not used by any program.
+
+@item RemoveCommand
+@format
+@strong{Format:} @code{RemoveCommand} @var{address}
+@end format
+
+@code{Scout} makes the resident command at address @var{address}
+not resident.
+
+@item RemoveAssign
+@format
+@strong{Format:} @code{RemoveAssign} @var{name}
+@end format
+
+With this command you're able to remove the assign @var{name}.
+
+@item RemoveAssignList
+@format
+@strong{Format:} @code{RemoveAssignList} @var{name} @var{address}
+@end format
+
+This command removes the directory at address @var{address} from
+assign @var{name}. You will find the address of that directory in
+the list of assigns.
+
+@item PrintList
+@format
+@strong{Format:} @code{PrintList} @var{listcharacter} @var{filename}
+@end format
+
+This command allows you to print a list (specified by the
+listcharacter) into the file @var{filename}.
+
+@strong{Example:}
+@example
+PrintList t 'ram:tasklist'
+@end example
+will print the list of tasks into the file 'ram:tasklist'.
+
+@item OpenWindow
+@format
+@strong{Usage:} @code{OpenWindow} @var{windowid}
+@end format
+
+All windows you get if you select a gadget of @code{Scout's} main window,
+can be opened with this command.  The @var{windowid} is the same text you
+find on the main window gadgets.
+
+@strong{Example:}
+@example
+OpenWindow 'Mounted Devs'
+@end example
+will open the window with the list of mounted devices.
+
+@item CxAppear
+@itemx CxDisappear
+@itemx CxEnable
+@itemx CxDisable
+@itemx CxKill
+@itemx CxListChg
+@itemx CxUnique
+@format
+@strong{Format:} @code{Cx...} @var{name}
+@end format
+
+Sends the command to the commodity named @var{name}.
+
+@item RemoveCx
+@format
+@strong{Format:} @code{RemoveCx} @var{commodity}
+@end format
+
+Removes the appropriate commodity from the list. Please consider this as
+`emergency break'. Use it only if @code{CxKill} failed.
+
+@item SetCxPri
+@format
+@strong{Format:} @code{SetCxPri} @var{commodity} @var{priority}
+@end format
+
+Sets the priority of a commodity.
+
+@item RemoveClass
+@format
+@strong{Format:} @code{RemoveClass} @var{class}
+@end format
+
+The appropriate BOOPSI class is removed, if no objects and no subclasses
+are existing.
+
+
+@end table
+
+
+@node Updates, Credits, Commands, Top
+@comment node-name, next, previous, up
+
+@iftex
+@unnumbered Appendix A
+@end iftex
+
+@section How to get updates
+@cindex Updates
+
+The newest version of @code{Scout} should always be available
+on AmiNet or Public Domain collections, which are up-to-date.
+
+You can also find the latest version on my home page:
+@example
+    http://www.is-koeln.de/einwohner/shred/
+@end example
+
+@node Credits, Author Info, Updates, Top
+@comment node-name, next, previous, up
+
+@section Credits
+@cindex Credits
+
+Now we have to thank some people for supporting the development
+of @code{Scout} on many different kinds:
+
+@itemize @bullet
+@item Klaus `gizmo' Weber, he was always available to Atte and his
+many questions (not a few) during the programming of @code{Scout}.
+
+@item Christian `cosinus' Stelter, he gave the permission to use
+his many manuals.
+
+@item Stefan Stuntz for his great @samp{MagicUserInterface}
+
+@item all (hopefully still) bug reporting and feature requesting people:
+Kai `wusel' Siering, Martin Hauner, Peter Meyer, Karl `Charly' Skibinski,
+Michael `Mick' Hohmann, Thore B@"ockelmann, Bernardo Innocenti, Daniel Lundberg, @dots{}
+
+ and last but not least
+@item all the others we've forgotten for reporting bugs, sending
+expansion boards data and so on.
+@end itemize
+
+@node Author Info, Index, Credits, Top
+@comment node-name, next, previous, up
+
+@section How to reach the author
+@cindex Author Info
+
+If you have questions, suggestions, bug reports or anything else, you
+can contact me at:
+
+@example
+
+                    Richard K@"orber
+                    Hornstra@ss{}e 20
+               51465 Bergisch Gladbach
+                     - Germany -
+
+            E-Mail: shred@@chessy.aworld.de
+                    richard.koerber@@koeln.netsurf.de
+
+@end example
+
+Send E-Mails whenever possible..
+
+If you want to contact Andreas Gelhausen, you can reach him at:
+
+@example
+
+                  Andreas Gelhausen
+                  Graf Spee Str. 23b
+                  26123 Oldenburg
+                     - Germany -
+
+             E-Mail: atte@@crash.north.de
+
+@end example
+
+Please do not contact him for bug reports, suggestions and similar. But
+if you feel the urge to send a gift, then he is the right address!
+
+@noindent That's it!  =:^)
+
+@c ===================================================================
+@c ==================== The End of the Document ======================
+@c ===================================================================
+@node Index, , Author Info, Top
+@comment node-name, next, previous, up
+
+@unnumbered Index
+
+@printindex cp
+
+@contents
+@bye

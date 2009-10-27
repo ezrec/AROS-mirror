@@ -1,0 +1,34 @@
+DIRS=       english \
+            deutsch
+
+DOCS=       scout.dvi \
+            scout.doc \
+            scout.guide \
+            scout-39.guide \
+            scout.pdf
+
+all:        english/scout.texi deutsch/scout.texi
+            @execute <<
+                foreach dir in $(DIRS)
+                    pushcd $$dir
+                    makeinfo --force --amiga -D guide --output scout.guide scout.texi
+                    makeinfo --force --amiga-39 -D guide --output scout-39.guide scout.texi
+                    makeinfo --force --amiga-39 --no-headers --output scout.doc scout.texi
+                    tex scout.texi
+                    texindex scout.cp
+                    tex scout.texi
+                    pdftex scout.texi
+                    copy $(DOCS) ///help/$$dir/ quiet
+                    popcd
+                end
+            <
+
+clean:
+            @execute <<
+                foreach dir in $(DIRS)
+                    pushcd $$dir
+                    delete ~(scout.texi) quiet
+                    popcd
+                end
+            <
+

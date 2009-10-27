@@ -1,0 +1,71 @@
+##
+##
+
+TARGET = libtblib.a
+
+CC = ppc-morphos-gcc
+AR = ppc-morphos-ar
+
+OBJDIR=             .obj_mos
+
+REDEFINE=
+OPTIMIZE=           -O3
+DEBUG   =
+CFLAGS  =           -Wall -Werror -noixemul -mcpu=750 -I../include $(REDEFINE) $(DEBUG) -c
+
+
+OBJS = $(OBJDIR)/ports_AllocPort.o \
+	$(OBJDIR)/ports_FreePort.o \
+	$(OBJDIR)/ports_AllocSig.o \
+	$(OBJDIR)/ports_FreeSig.o \
+	$(OBJDIR)/ports_SafePutMsg.o \
+	$(OBJDIR)/timer_TimerDelay.o \
+	$(OBJDIR)/timer_StartTimer.o \
+	$(OBJDIR)/timer_AbortTimer.o \
+	$(OBJDIR)/string_b2cstr.o \
+	$(OBJDIR)/string_b2cstrn.o \
+	$(OBJDIR)/string_c2bstr.o \
+	$(OBJDIR)/string_snprintf.o \
+	$(OBJDIR)/string_sprintf.o \
+	$(OBJDIR)/string_strcat.o \
+	$(OBJDIR)/string_strcatn.o \
+	$(OBJDIR)/string_strdup.o \
+	$(OBJDIR)/string_strdup_pool.o \
+	$(OBJDIR)/string_strsep.o \
+	$(OBJDIR)/string_parse_string.o \
+	$(OBJDIR)/i2m_word_c.o \
+	$(OBJDIR)/i2m_long_c.o \
+	$(OBJDIR)/math64_add64_c.o \
+	$(OBJDIR)/math64_sub64_c.o \
+	$(OBJDIR)/math64_cmp64_c.o \
+	$(OBJDIR)/envvar_GetEnvVar.o \
+	$(OBJDIR)/envvar_SetEnvVar.o \
+	$(OBJDIR)/mui_MakeButton.o \
+	$(OBJDIR)/mui_MakeCheckmark.o \
+	$(OBJDIR)/errorreq_ErrorMsg.o \
+	$(OBJDIR)/library_CheckLibVersion.o \
+	$(OBJDIR)/library_CheckLibVersionName.o
+
+INCLUDES= tblib.h \
+	SDI_compiler.h
+
+all: $(OBJDIR) $(TARGET)
+
+$(OBJDIR)/%.o: %.c
+	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINE) $< -o $@
+
+$(OBJDIR):
+	@makedir $(OBJDIR)
+
+$(TARGET): $(OBJS)
+	$(AR) -r libtblib.a $(OBJS)
+
+clean:
+	-delete $(OBJS) $(TARGET) quiet
+
+realclean:
+	@make clean
+
+date:
+	@;
+

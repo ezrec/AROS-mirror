@@ -1,0 +1,13 @@
+* "identify.library"
+##base _IdentifyBase
+##bias 30
+##public
+IdExpansion(TagList)(a0)
+IdHardware(Type,TagList)(d0,a0)
+IdAlert(ID,TagList)(d0,a0)
+IdFunction(LibName,Offset,TagList)(a0,d0,a1)
+IdHardwareNum(Type,TagList)(d0,a0)
+IdHardwareUpdate()()
+IdFormatString(String,Buffer,Length,Tags)(a0,a1,d0,a2)
+IdEstimateFormatSize(String,Tags)(a0,a1)
+##end

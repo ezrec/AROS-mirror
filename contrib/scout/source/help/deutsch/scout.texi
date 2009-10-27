@@ -1,0 +1,3486 @@
+\input texinfo   @c -*-texinfo-*-
+
+@c ------------------------------------------------------------------
+@c
+@c  Scout - The Amiga System Monitor
+@c
+@c ------------------------------------------------------------------
+@c
+@c  This program is free software; you can redistribute it and/or modify
+@c  it under the terms of the GNU General Public License as published by
+@c  the Free Software Foundation; either version 2 of the License, or
+@c  any later version.
+@c
+@c  This program is distributed in the hope that it will be useful,
+@c  but WITHOUT ANY WARRANTY; without even the implied warranty of
+@c  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+@c  GNU General Public License for more details.
+@c
+@c  You should have received a copy of the GNU General Public License
+@c  along with this program; if not, write to the Free Software
+@c  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+@c
+@c  You must not use this source code to gain profit of any kind!
+@c
+@c ------------------------------------------------------------------
+@c
+@c  author Andreas Gelhausen
+@c  author Richard K@"orber <rkoerber@gmx.de>
+@c  author Thore B@"ockelmann <tboeckel@uni-paderborn.de>
+@c
+@c ------------------------------------------------------------------
+
+
+@c ===================================================================
+@c V37GUIDE: 'makeinfo --amiga -D guide --output scout.guide scout.texi'
+@c V39GUIDE: 'makeinfo --amiga-39 -D guide --output scout-39.guide scout.texi'
+@c DOC-FILE: 'makeinfo --amiga-39 --no-headers --output scout.doc scout.texi'
+@c DVI-FILE: 'virtex &gplain scout.texi' (2-mal)
+@c DVIPRINT: 'dviprint printer DeskJet voffset 3cm hoffset 2.10cm fast
+@c            odd/even scout.dvi'
+@c ===================================================================
+
+@c ===================================================================
+@c ============================ Header ===============================
+@c ===================================================================
+@setfilename scout.info
+@settitle Scout
+
+@smallbook
+@defcodeindex op
+@iftex
+@afourpaper
+@end iftex
+
+@setchapternewpage odd
+@set xrefstring siehe
+@set Xrefstring Siehe
+@set ToCstring Inhaltsverzeichnis
+@set pagestring Seite
+@set Chapterstring Kapitel
+@set sectionstring Abschnitt
+@set Sectionstring Abschnitt
+
+@c Set smallbook if printing in smallbook format so the example of the
+@c smallbook font is actually written using smallbook; in bigbook, a kludge
+@c is used for TeX output.
+@set smallbook
+
+@set edition 3.0
+@set release 3.0
+@set programversion 37
+@set programrevision 227
+@set update-date 16. Mai 2002
+@set update-month Mai 2002
+
+@c finalout
+
+@c ===================================================================
+@c ==================== Titlepage and Copyright ======================
+@c ===================================================================
+@titlepage
+@sp 10
+@title Scout
+@subtitle System Monitor
+@subtitle Scout @value{programversion}.@value{programrevision} (Release @value{release})
+@subtitle Edition @value{edition}
+@subtitle @value{update-month}
+
+@author von Thore B@"ockelmann
+
+@ignore
+@c The following two commands start the copyright page.
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 1994-2002 Andreas Gelhausen, Richard K@"orber, Thore B@"ockelmann
+@end ignore
+@end titlepage
+
+@c ===================================================================
+@c ================== `Top' Node and Master Menu =====================
+@c ===================================================================
+@node Top, Introduction, (dir), (dir)
+@comment node-name, next, previous, up
+
+@ifinfo
+@format
+
+                            Scout @value{programversion}.@value{programrevision}
+                            Release @value{release}
+                          Benutzer Handbuch
+          Copyright @copyright{} 1994-2002 Andreas Gelhausen, Richard K@"orber, Thore B@"ockelmann
+@end format
+@end ifinfo
+
+
+@menu
+* Introduction::         Was ist @code{Scout}?
+
+* Copyright::            Bitte lesen Sie dies zuerst!
+
+* System Requirements::  Was zum Betrieb n@"otig ist
+* Installation::         Wie installiert man @code{Scout}?
+
+* Using Scout::          Wie benutzt man @code{Scout}?
+* Scout and AmiTCP::     Was @code{Scout} f@"ur @code{AmiTCP} bietet
+* Scout without MUI::    @code{MUI} ist nicht unbedingt erforderlich!
+
+* Options::              Liste von benutzbaren Shell-Optionen
+* Commands::             Befehle via ARexx und Shell
+
+* Updates::              Wie und wo bekommt man Updates?
+* Credits::              Wem ich zu danken habe
+* Author Info::          Wie erreicht man den Autor?
+
+* Index::                Stichwortverzeichnis
+@end menu
+
+@c ===================================================================
+@c ==================== The Body of the Document =====================
+@c ===================================================================
+@node Introduction, Copyright, Top, Top
+@comment node-name, next, previous, up
+
+@iftex
+@chapter Einleitung
+@end iftex
+
+@heading Was ist Scout?
+@cindex Was ist Scout?
+@cindex Einleitung
+
+@code{Scout} ist ein Systemmonitor, d.h. viele f@"ur den reibungslosen
+Betrieb des Rechners notwendige Strukturen --- wie z.B. Tasks, Ports,
+Assigns, System-Erweiterungen, residente Befehle, Interrupts, usw.
+--- k@"onnen angeschaut und auf viele dieser Strukturen k@"onnen auch
+bestimmte Aktionen ausgef@"uhrt werden.
+
+Es k@"onnen zum Beispiel Tasks und Prozesse eingefroren, Windows und
+Screens geschlossen, Semaphore freigegeben und Interrupts aus dem
+System entfernt werden.
+
+@code{Scout} bietet zus@"atzlich die M@"oglichkeit, via @code{AmiTCP} auch
+andere Rechner beobachten und gegebenenfalls auch dort auf viele
+Strukturen zugreifen zu k@"onnen.
+
+Fast alle der implementierten Funktionen stehen auch als Shell-Parameter
+zur Verf@"ugung. Das @code{Magic User Interface} ist nur f@"ur die grafische
+Benutzungsoberfl@"ache notwendig und demnach nicht unbedingt
+erforderlich.
+
+@c =----------------------------------------------------------------------
+
+@iftex
+@chapter Rechtliche Dinge
+@end iftex
+
+@node Copyright, System Requirements, Introduction, Top
+@comment node-name, next, previous, up
+
+@cindex Rechtliche Dinge
+@heading Copyright
+@cindex Copyright
+@cindex Keine Garantie
+
+Bitte lesen Sie sich diesen Teil aufmerksam durch! Sie akzeptieren diese
+Bedingungen durch den Start der Software, selbst f@"ur einen Probelauf.
+
+@table @strong
+@item COPYRIGHT
+@cindex Copyright
+Scout @value{programversion}.@value{programrevision} (Release
+@value{release}) - Copyright @copyright{} 1994-2002 by Andreas Gelhausen, Richard K@"orber und Thore B@"ockelmann
+alle Rechte vorbehalten.
+
+Diese Software ist urheberrechtlich gesch@"utzt. Die Urheber sind
+Andreas Gelhausen, Richard K@"orber und Thore B@"ockelmann
+
+Sie haben nur das Recht, diese Software zu benutzen, aber keine
+Rechte an der Software an sich. Disassemblieren, Resourcen und alle
+anderen Arten des Reverse Engineering sind verboten.
+
+@item FREEWARE
+@cindex FreeWare
+Scout ist FreeWare. Sie d@"urfen dieses Paket verwenden, ohne eine Geb@"uhr
+oder @"ahnliches an die Autoren zahlen zu m@"ussen. Nat@"urlich freuen wir
+uns @"uber eine kleine Spende! ;-)
+
+@item KOPIEREN
+@cindex Kopieren
+Sie d@"urfen dieses Paket so lange kopieren, wie es vollst@"andig und unver@"andert
+bleibt.
+
+Sie d@"urfen das Paket mit @"ublichen Kompressionsprogrammen komprimieren (wie
+lha, lzh, lzx, dms). Einzelne Dateien des Pakets d@"urfen jedoch nicht komprimiert
+werden (z. B. mit PowerPacker oder Imploder).
+
+@item VERTEILUNG
+@cindex Verteilung
+Sie d@"urfen f@"ur Arbeit und Material nicht einen markt@"ublichen Preis
+@"uberschreiten. Dies sind maximal 5 DM (oder ein entsprechender Wert in
+anderen W@"ahrungen, Steuern eingeschlossen) f@"ur Disketten und 35 DM f@"ur
+CD-ROMs, welche auch andere PD-Software enthalten.
+
+Eine Verteilung auf Coverdisks oder zusammen mit kommerzieller Software
+bedarf in jedem Fall unserer schriftlichen Einverst@"andnis.
+
+Wir erlauben ausdr@"ucklich die Verteilung @"uber AmiNet, Meeting Pearls
+und Fred Fish.
+
+@item HAFTUNGSEINSCHR@"ANKUNG
+@cindex Haftungseinschr@"ankung
+Sie benutzen das Programm, wie es ist, mit allen Fehlern und M@"angeln,
+und auf Ihr eigenes Risiko! Wir garantieren nicht daf@"ur, da@ss{} die Software
+einen bestimmten Zweck erf@"ullt. Diese Software kann finanziellen Schaden
+anrichten oder Personen verletzen. In keinem Fall k@"onnen die Autoren f@"ur
+Sch@"aden und Mangelfolgesch@"aden haftbar gemacht werden, solange kein Vorsatz
+nachgewiesen werden kann.
+
+@item NUTZUNGSEINSCHR@"ANKUNG
+@cindex Nutzungseinschr@"ankung
+Sie d@"urfen diese Software und ihre Ergebnisse nicht verwenden
+
+@itemize @bullet
+@item f@"ur faschistische oder milit@"arische Zwecke
+@item wenn Sie mit dieser Copyright-Erkl@"arung nicht einverstanden sind
+@end itemize
+
+In diesem Fall m@"ussen Sie die Software und alle dazugeh@"origen Dateien
+l@"oschen.
+
+@item INHALT DES PAKETS
+@cindex Inhalt des Pakets
+Das Scout-Paket ist @emph{nur} vollst@"andig, wenn diese Dateien vorhanden sind:
+@example
+Scout/arexx/activatetask.scout
+Scout/arexx/arexx.readme
+Scout/arexx/arexx.readme.info
+Scout/arexx/breaktask.scout
+Scout/arexx/freezetask.scout
+Scout/arexx/poptofront.scout
+Scout/arexx/settaskpri.scout
+Scout/arexx/startup.scout
+Scout/arexx.info
+Scout/help/deutsch/scout-39.guide
+Scout/help/deutsch/scout-39.guide.info
+Scout/help/deutsch/scout.doc
+Scout/help/deutsch/scout.doc.info
+Scout/help/deutsch/scout.dvi
+Scout/help/deutsch/scout.guide
+Scout/help/deutsch/scout.guide.info
+Scout/help/deutsch/scout.pdf
+Scout/help/deutsch.info
+Scout/help/english/scout-39.guide
+Scout/help/english/scout-39.guide.info
+Scout/help/english/scout.doc
+Scout/help/english/scout.doc.info
+Scout/help/english/scout.dvi
+Scout/help/english/scout.guide
+Scout/help/english/scout.guide.info
+Scout/help/english/scout.pdf
+Scout/help/english.info
+Scout/help.info
+Scout/icons/icons.readme
+Scout/icons/icons.readme.info
+Scout/icons/Scout.info
+Scout/icons/ScoutDock
+Scout/icons/ScoutDock.info
+Scout/icons.info
+Scout/libs/identify.library
+Scout/libs/identify.readme
+Scout/libs/identify.readme.info
+Scout/libs.info
+Scout/Product-Info
+Scout/Scout
+Scout/Scout.info
+Scout/scout.history
+Scout/Scout.history.info
+Scout/Scout.readme
+Scout/Scout.readme.info
+Scout.info
+@end example
+
+@item MARKENZEICHEN
+@cindex Markenzeichen
+Die Copyright und Markenzeichen aller Hersteller und Produkte
+werden von ihren Eigent@"umern gehalten.
+@end table
+
+
+@c =----------------------------------------------------------------------
+
+@iftex
+@chapter Vor dem Programmstart
+@end iftex
+
+@node System Requirements, MUI, Copyright, Top
+@comment node-name, next, previous, up
+
+@section Systemanforderungen
+@cindex Systemanforderungen
+
+@code{Scout} ben@"otigt mindestens die Kickstart Version 2.04. Die
+@code{identify.library} V8 wird dringend empfohlen, da Scout ansonsten
+in der Funktionalit@"at eingeschr@"ankt ist.
+Siehe auch @ref{Identify}.
+
+M@"ochten Sie das Programm mit der grafischen Benutzungsoberfl@"ache
+benutzen, dann m@"ussen Sie die @code{MUI}-Version 2.1 oder eine h@"ohere
+Version von @code{MUI} installieren.
+Siehe auch @ref{MUI, MUI und wo man es bekommt}.
+
+Um die Netz-Funktionen von @code{Scout} benutzen zu k@"onnen,
+sollten Sie mindestens die @code{AmiTCP}-Version 4.0 installiert haben.
+Siehe auch @ref{AmiTCP, AmiTCP und wo man es bekommt}.
+
+@node MUI, Identify, System Requirements, System Requirements
+@comment node-name, next, previous, up
+
+@section MUI - MagicUserInterface
+@cindex MUI
+@cindex MagicUserInterface
+
+@example
+        @copyright{} Copyright 1992-97 Stefan Stuntz
+@end example
+
+@code{MUI} ist ein System zum Erzeugen und Unterst@"utzen von grafischen
+Benutzungsoberfl@"achen. Mit der Hilfe eines Konfigurationsprogrammes
+bekommt der Benutzer einer @code{MUI}-Applikation die M@"oglichkeit das
+Aussehen dieser Applikation seinem Geschmack anzupassen.
+
+@code{MUI} wird als Shareware vertrieben. Um ein vollst@"andiges Programmpaket
+zu bekommen, das viele Beispiele und mehr Informationen @"uber die
+Registrierung beinhaltet, sollten Sie auf lokalen Bulletin Boards oder
+Public Domain Disketten nach einem File namens @file{muiXXusr.lha}
+Ausschau halten (XX steht f@"ur die letzte Versionsnummer).
+
+Sie k@"onnen sich auch direkt registrieren lassen, indem Sie 30.- DM
+oder 20.- US$ an die folgende Adresse schicken:
+
+@example
+                   Stefan Stuntz
+              Eduard-Spranger-Stra@ss{}e 7
+                   80935 M@"unchen
+                      GERMANY
+@end example
+
+
+@node Identify, AmiTCP, MUI, System Requirements
+@comment node-name, next, previous, up
+
+@section Identify
+@cindex Identify
+
+@example
+        Copyright @copyright{} 1996-97 Richard K@"orber
+@end example
+
+@code{Identify} ist eine Shared Library, die Erweiterungskarten, Guru-Codes
+und Library-Funktionen erkennt sowie das System identifiziert.
+
+@code{Identify} ist FreeWare. Ein vollst@"andiges Programmpaket finden Sie
+im AmiNet (@file{util/libs/Identify.lha}) oder auf der Homepage des Autors:
+@code{http://www.is-koeln.de/einwohner/shred/}. Anfragen richten Sie bitte
+an @code{shred@@chessy.aworld.de}.
+
+
+@node AmiTCP, Installation, Identify, System Requirements
+@comment node-name, next, previous, up
+
+@section AmiTCP
+@cindex AmiTCP
+@cindex TCP/IP
+
+@code{AmiTCP} ist ein TCP/IP Protokoll-Stack f@"ur den Amiga. Die Demoversion
+4.0 (oder neuer) sollte in jeder gr@"o@ss{}eren Public-Domain-Sammlung
+oder auf dem AmiNet erh@"altlich sein. Fragen Sie den Amiga-H@"andler
+Ihres Vertrauens.  =:^)
+
+
+@node Installation, Using Scout, AmiTCP, Top
+@comment node-name, next, previous, up
+
+@section Installation
+@cindex Installation
+
+F@"ur die Installation von @code{Scout} reicht es aus, nur das Programm
+@file{scout} selbst in ein Verzeichnis Ihrer Wahl zu kopieren, und die
+@file{identify.library} in @file{libs:} abzulegen. Danach k@"onnen Sie es
+sofort starten.
+
+
+@node Using Scout, Allocations, Installation, Top
+@comment node-name, next, previous, up
+
+@chapter Wie wird Scout benutzt?
+@cindex Generelle Benutzung
+
+In diesem Kapitel wird die Benutzung von @code{Scout} @"uber
+die grafische Benutzungsoberfl@"ache beschrieben. Diese grafische
+Benutzungsoberfl@"ache wurde mit @code{MUI} realisiert, das f@"ur die grafische
+Benutzung von @code{Scout} auch im System vorhanden sein mu@ss{}.
+Siehe auch @ref{MUI, Was ist @code{MUI} und wo bekommt man es?}.
+
+M@"ochten Sie --- aus welchem Grund auch immer --- @code{MUI} nicht verwenden, dann
+sollten Sie sich den @ref{Scout without MUI, Scout ohne MUI, Scout ohne MUI}
+anschauen.
+
+@cindex Hauptfenster
+
+@ifinfo
+@ifset guide
+Wird das Programm gestartet, so erscheint das Hauptfenster mit folgenden Gadgets:
+@example
+ @ref{Allocations}
+ @ref{Assigns}
+ @ref{BoopsiClasses}
+ @ref{Commodities}
+ @ref{Devices}
+ @ref{Expansions}
+ @ref{Fonts}
+ @ref{InputHandlers}
+ @ref{Interrupts}
+ @ref{Libraries}
+ @ref{Locks}
+ @ref{LowMemory}
+ @ref{Memory}
+ @ref{Mounted Devs}
+ @ref{Ports}
+ @ref{Resident Cmds}
+ @ref{Residents}
+ @ref{Resources}
+ @ref{ScreenMode}
+ @ref{Semaphores}
+ @ref{System}
+ @ref{Tasks}
+ @ref{Timer}
+ @ref{Vectors}
+ @ref{Windows}
+ @ref{Patches}
+ @ref{Catalogs}
+ @ref{AudioModes}
+@end example
+
+Jedes dieser oben dargestellten Gadgets steht f@"ur eine bestimmte Art
+von f@"ur das Betriebssystem notwendigen Strukturen.
+@ignore
+@end ifset
+Wenn Sie das Programm starten, wird das Hauptfenster ge@"offnet, welches
+viele Gadgets beinhaltet. Jedes dieser Gadgets steht f@"ur eine
+bestimmte Art von f@"ur das Betriebssystem notwendigen Strukturen.
+
+@noindent Sie k@"onnen w@"ahlen zwischen:
+
+Allocations, Assigns, BoopsiClasses, Commodities, Devices, Expansions, Fonts, InputHandlers, Interrupts,
+Libraries, Locks, LowMemory, Memory, Mounted Devices, Ports, Resident Commands,
+Residents, Resources, ScreenMode, Semaphores, System, Tasks, Timer, Vectors, Windows, Patches, Catalogs und AudioModes.
+@ifset guide
+@end ignore
+@end ifset
+@end ifinfo
+
+@iftex
+Wenn Sie das Programm starten, wird das Hauptfenster ge@"offnet, welches
+viele Gadgets beinhaltet. Jedes dieser Gadgets steht f@"ur eine
+bestimmte Art von f@"ur das Betriebssystem notwendigen Strukturen.
+
+Sie k@"onnen w@"ahlen zwischen:
+
+Allocations, Assigns, BoopsiClasses, Commodities, Devices, Expansions, Fonts, InputHandlers, Interrupts,
+Libraries, Locks, LowMemory, Memory, Mounted Devices, Ports, Resident Commands,
+Residents, Resources, ScreenMode, Semaphores, System, Tasks, Timer, Vectors, Windows, Patches, Catalogs und AudioModes.
+@end iftex
+
+Bet@"atigen Sie eines dieser Gadgets, dann wird ein weiteres Fenster
+ge@"offnet, welches die jeweils dazugeh@"orende Liste von Strukturen
+beinhaltet.
+
+@quotation
+@strong{Beispiel:} Bet@"atigen Sie das @samp{Tasks}-Gadget, so wird ein
+Fenster mit der aktuellen Task-Liste des Systems ge@"offnet.
+@end quotation
+
+Diese ganzen Funktionen k@"onnen auch jeweils @"uber das Menu und durch
+eine Taste aufgerufen werden, die durch das unterstrichene Zeichen auf
+jedem Gadget bestimmt wird.
+
+Mit diesem Programm k@"onnen Sie auf viele dieser Strukturen bestimmte
+Aktionen ausf@"uhren lassen. Sollten Sie so etwas in Betracht ziehen,
+dann sollten Sie sich bewu@ss{}t sein, was Sie tun.
+
+@quotation
+@strong{Achtung:}
+Unsachgem@"a@ss{}e Manipulation der System-Strukturen kann zum Absturz des
+Systems f@"uhren. In schweren F@"allen kann dies einen Datenverlust zur
+Folge haben.
+@end quotation
+
+@noindent @strong{Hinweis:}
+Da es f@"ur die Anleitung eines solchen Programmes zu aufwendig w@"are,
+die angegebenen Strukturen bis ins letzte Detail zu erkl@"aren, wundern
+Sie sich bitte nicht, da@ss{} einige Detail-Informationen fehlen.
+
+Da @"uber diese Dinge schon B@"ucher @"uber B@"ucher geschrieben wurden,
+verweise ich an dieser Stelle auf die daf@"ur vorgesehene Fachliteratur!
+
+@c > Allocations
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Allocations, Assigns, Using Scout, Using Scout
+@comment node-name, next, previous, up
+@section Allocations
+@cindex Allocations
+@cindex Resourcen-Belegungen
+
+
+Dieses Fenster informiert Sie dar@"uber, welche Hardware-Resource an
+wen vergeben wurde.
+
+
+@subheading CIA
+
+Der Amiga besitzt zwei CIAs zur Steuerung der Hardware, der Tastatur
+und der Druckerschnittstelle. Au@ss{}erdem besitzt er mehrere Timer. Es
+wird angezeigt, welcher Teil der CIA noch nicht belegt wurde bzw.
+welches Programm ihn belegt h@"alt.
+
+@table @samp
+@item Timer A
+@itemx Timer B
+Dies sind zwei 16bit-Timer, welche gegebenfalls auch zu einem 32bit-Timer
+gekoppelt werden k@"onnen.
+
+@item Alarm
+Diese Resource informiert, wenn ein dritter Timer einen bestimmten Z@"ahlerstand
+erreicht hat.
+
+@item Serial
+Dies ist eine einfache serielle Schnittstelle. @"Ublicherweise wird die der
+CIA-A zur Kommunikation mit der Tastatur verwendet, die der CIA-B ist in
+aller Regel nicht belegt.
+
+@item Flag
+Dies ist ein spezieller Steuereingang. Bei der CIA-A ist diese Leitung mit
+der Index-Leitung der Diskettenlaufwerke verbunden.
+@end table
+
+Anmerkung: in neueren DraCos befinden sich keine CIAs mehr. Diese Hardware-Resourcen
+werden daher emuliert oder stehen gar nicht erst zur Verf@"ugung.
+
+
+@subheading Ports
+
+Dies sind die Resourcen f@"ur die interne parallele und serielle Schnittstelle.
+
+@table @samp
+@item Serial Port
+Dies sind die reinen Daten@"ubertragungsregister (Senden wie Empfangen).
+
+@item Serial Control
+Dies sind die seriellen Steuerleitungen wie zum Beispiel Carrier Detect.
+Die Daten@"ubertragungsleitungen geh@"oren nicht hierzu.
+
+@item Parallel Port
+Dies sind die Datenleitungen des Parallelports.
+
+@item Parallel Control
+Dies sind die Steuerleitungen des Parallelports, zum Beispiel Busy oder
+Paper Out.
+@end table
+
+
+@subheading Aktionen
+
+@table @samp
+@item Update
+Bet@"atigen Sie dieses Gadget, dann werden die Daten erneut eingelesen.
+
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie diese Angaben
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item Exit
+Das @samp{Allocations}-Fenster wird geschlossen.
+@end table
+@c <
+@c > Assigns
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Assigns, BoopsiClasses, Allocations, Using Scout
+@comment node-name, next, previous, up
+@section Assigns
+@cindex Assigns
+@cindex Logische Verzeichnisse
+
+
+@noindent Ein Assign weist einem Verzeichnis einen logischen Namen zu.
+
+Wenn Sie zum Beispiel einem Verzeichnis @file{DH0:Daten/Dokumente} den
+logischen Namen @file{Texte:} zuweisen, dann k@"onnen Sie auf eine Datei
+@var{Dateiname}, die sich in diesem Verzeichnis befindet, auch durch
+die Angabe von `Texte:@var{Dateiname}' zugreifen.
+
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item Address
+An dieser Adresse beginnt die Struktur eines Assign-Eintrages.
+
+@item Name
+Logischer Name eines Verzeichnisses oder Ger@"ates
+
+@item Path
+Hier steht der Pfad des Verzeichnisses.
+@end table
+
+@subheading Aktionen
+
+@table @samp
+@item Update
+Bet@"atigen Sie dieses Gadget, dann wird die Liste erneut eingelesen.
+
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie die Liste der @samp{Assigns}
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item Remove
+Mit dieser Funktion wird der ausgew@"ahlte Assign-Eintrag aus dem
+System entfernt.
+
+@item Exit
+Das @samp{Assigns}-Fenster wird geschlossen.
+@end table
+@c <
+@c > BoopsiClasses
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node BoopsiClasses, Commodities, Assigns, Using Scout
+@comment node-name, next, previous, up
+@section BoopsiClasses
+@cindex BoopsiClasses
+
+
+@noindent BOOPSI-Klassen sind Objektklassen des Amiga. Die in dieser Liste
+dargestellten Klassen sind alle von Intuition @"offentlich zur Verf@"ugung gestellt.
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item Address
+An dieser Adresse beginnt die Struktur @code{IClass}, die s@"amtliche Daten
+f@"ur die Klasse enth@"alt.
+
+@item Objects
+Zeigt die momentane Anzahl der Objekte, die mit dieser Klasse erzeugt wurden.
+
+@item Subclasses
+Zeigt die momentane Anzahl der Klassen (@"offentlich wie privat), die aus dieser
+Klasse abgeleitet wurden.
+
+@item Superclass
+Ein Zeiger auf die @code{IClass}-Struktur der @"ubergeordneten Klasse.
+
+@item Dispatcher
+Ein Zeiger auf den Dispatcher-Programmcode, der die Methoden der Klasse realisiert.
+
+@item Name
+Name der Klasse.
+@end table
+
+@subheading Aktionen
+
+@table @samp
+@item Update
+Bet@"atigen Sie dieses Gadget, dann wird die Liste erneut eingelesen.
+
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie diese Liste
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item Remove
+Mit dieser Funktion wird die ausgew@"ahlte Klasse aus dem System entfernt.
+Eine Entfernung ist nur m@"oglich, wenn weder Objekte noch Unterklassen der
+Klasse existieren.
+
+@item More
+Ein Fenster mit weiteren Informationen wird ge@"offnet.
+
+@item Exit
+Das Fenster wird geschlossen.
+@end table
+@c <
+@c > Commodities
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Commodities, Devices, BoopsiClasses, Using Scout
+@comment node-name, next, previous, up
+@section Commodities
+@cindex Commodities
+
+
+@noindent Commodities sind kleine Hilfsprogramme, die meistens auf den
+Eingabestrom reagieren oder ihn ver@"andern.
+
+Beispiele f@"ur Commodities finden Sie im @file{Tools}-Verzeichnis Ihrer
+Workbench.
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item Address
+An dieser Adresse beginnt die Struktur @code{CxObj}, die s@"amtliche Daten
+f@"ur das Commodity enth@"alt.
+
+@item ln_Type
+Der Typ der Struktur. Sie ist in aller Regel vom Typ @code{Broker}.
+
+@item ln_Pri
+Priorit@"at des Commodity-Brokers. In der Reihenfolge der Priorit@"aten wird
+der Eingabestrom durchgereicht.
+
+@item Flags
+Flags, die den Broker n@"aher beschreiben.
+
+@item Port
+Adresse des MessagePort, an den alle Nachrichten des Brokers gesendet werden.
+
+@item Name
+Name des Commodities.
+@end table
+
+@subheading Aktionen
+
+@table @samp
+@item Appear
+@itemx Disappear
+Fordert das angew@"ahlte Commodity auf, seine Oberfl@"ache zu @"offnen bzw. zu
+schlie@ss{}en. Nicht alle Commodities bieten allerdings eine Oberfl@"ache an.
+
+@item Enable
+@itemx Disable
+Hiermit wird das Commodity aktiviert bzw. deaktiviert.
+
+@item Kill
+Das Commodity wird aufgefordert, sich zu beenden. Im Gegensatz zu
+@samp{Remove} entfernt sich das Commodity dann selbst.
+
+@item ListChg
+@itemx Unique
+Dem Commodity wird mitgeteilt, da@ss{} sich die Liste ge@"andert hat bzw. da@ss{}
+ein weiteres Commodity mit gleichem Namen dazukommen wollte. Dies
+ist eigentlich nur f@"ur Programmierer zum Testen ihrer Commodities
+sinnvoll, sofern ihre Commodities diese Befehle unterst@"utzen.
+
+@item Update
+Bet@"atigen Sie dieses Gadget, dann wird die Liste erneut eingelesen.
+
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie diese Liste
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item Priority
+@"Andert die Priorit@"at des Commodities.
+
+@item Remove
+Mit dieser Funktion wird der ausgew@"ahlte Commodity-Eintrag aus dem
+System entfernt. Bitte versuchen Sie vorher mit @samp{Kill} eine
+sanfte Entfernung. Vielleicht geht das Commodity ja freiwillig! =;^)
+
+@item More
+Ein Fenster mit weiteren Informationen wird ge@"offnet.
+
+@item Exit
+Das Fenster wird geschlossen.
+@end table
+@c <
+@c > Devices
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Devices, Expansions, Commodities, Using Scout
+@comment node-name, next, previous, up
+
+@section Devices
+@cindex Devices
+@cindex RPC
+@cindex RAM Pointer Count
+
+Ein Device, das sich in dieser Liste befindet, ist --- wie auch eine
+Library (siehe @ref{Libraries}) --- eine Ansammlung von Funktionen
+bzw. Routinen, denen bestimmte Aufgaben zugedacht wurden.
+
+Das @file{trackdisk.device} zum Beispiel beinhaltet Funktionen f@"ur die
+Handhabung von Disketten bzw. der Laufwerke.
+
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item Address
+Adresse der Device-Struktur
+
+@item ln_Name
+Name eines Devices
+
+@item ln_Pri
+Priorit@"at eines Devices
+
+@item OpenC
+Z@"ahler, der angibt, wie oft das Device ge@"offnet wurde.
+
+@item RPC
+@samp{RPC} steht f@"ur @samp{RAM Pointer Count} und gibt an, wieviele
+Sprungadressen des Devices ins RAM zeigen. So eine ins RAM zeigende
+Einsprungadresse weist auf ein Programm (z.B. den @code{SetPatch}-Befehl)
+hin, welches die @i{alte} Funktion verbessern bzw. erneuern m@"ochte,
+indem es einfach die Sprungadresse der Funktion durch die Adresse
+einer eigenen Funktion ersetzt.
+
+Viele Viren h@"angen sich auf diese Weise ins System. Diese
+Tatsache soll Sie aber jetzt nicht in Panik versetzen, da es sich in
+den meisten F@"allen um kleine Patch-Programme --- wie den
+@code{SetPatch}-Befehl von Commodore --- handelt.
+
+Sollten alle Sprungadressen eines Devices ins RAM zeigen, dann hat es
+seinen Programmcode im RAM stehen. Ein solcher @samp{RPC}-Eintrag besteht
+aus drei Sternen, da es in dem Fall unwichtig ist, wieviele
+Sprungadressen ins RAM zeigen.
+
+@item ln_Type
+Typ dieser Struktur (Hier sollte normalerweise @samp{device} stehen.)
+@end table
+
+
+@subheading Aktionen
+
+@table @samp
+@item Update
+Die Device-Liste wird erneut ausgelesen.
+
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie die Liste der @samp{Devices}
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item Remove
+Mit dieser Funktion wird das ausgew@"ahlte Device entfernt.
+Voraussetzung hierf@"ur ist allerdings, da@ss{} es von keinem Programm mehr
+benutzt wird bzw. der @samp{OpenC} gleich Null ist.
+
+@item Priority
+Die Prioritat des Devices kann hier von Ihnen ver@"andert werden.
+Hierzu erscheint ein kleines Fenster, in dem Sie eine neue Priorit@"at
+angeben k@"onnen. Durch die ver@"anderte Priorit@"at bekommt das Device
+eventuell einen neuen Platz in der Device-Liste.
+
+@item More
+Ein zus@"atzliches Fenster wird ge@"offnet, in dem Sie weitere Details
+des selektierten Devices finden.
+
+Sie erreichen dasselbe, indem Sie einfach einen Doppelklick auf den
+jeweiligen Device-Eintrag ausf@"uhren.
+
+@item Functions
+In einem Unterfenster werden s@"amtliche Funktionsoffsets des Devices
+sowie deren Einsprungadressen angezeigt. Wenn eine passende @file{.fd}-Datei
+existiert und der Assign @file{FD:} auf dessen Verzeichnis gesetzt ist,
+werden auch die Namen der Funktionen angezeigt.
+
+@item Exit
+Das @samp{Devices}-Fenster wird geschlossen.
+@end table
+@c <
+@c > Expansions
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Expansions, Fonts, Devices, Using Scout
+@comment node-name, next, previous, up
+
+@section Expansions (System-Erweiterungen)
+@cindex Expansions
+@cindex System-Erweiterungen
+@cindex Erweiterungskarten
+@cindex Manufacturer
+@cindex Hersteller
+@cindex Boards
+@cindex Hardware
+
+
+@strong{WICHTIG:} Alle Scout-Releases vor 2.10 sind nicht mehr kompatibel!
+Wenn Sie diese Liste @"uber TCP/IP von einem Fremdrechner lesen, achten Sie
+bitte unbedingt darauf, da@ss{} der Zielrechner ebenfalls eine aktuelle Version
+benutzt!
+
+
+Dem Benutzer wird eine Liste aller
+System-Erweiterungen geboten, die zur Zeit dem System zur
+Verf@"ugung stehen (Grafikkarten, Speichererweiterungen usw.).
+
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item Address
+Die Adresse der Expansion-Struktur.
+
+@item BoardAddr
+Das ROM der Karte ist ab dieser Adresse im Speicher zu finden. Sollte
+es sich bei der Karte um eine Speichererweiterung handeln, ist hier
+die Anfangsadresse des konfigurierten Speichersegmentes zu finden.
+
+@item Type
+N@"ahere Informationen zur Karte. Sie werden im More-Fenster ausf@"uhrlich
+beschrieben.
+
+@item Manufacturer
+Name des Kartenherstellers.
+
+@item Product
+Name und Klasse des Produkts.
+@end table
+
+
+@subheading Zusatzinformationen
+
+Wenn Sie einen Eintrag ausw@"ahlen, erscheinen im Textfeld darunter noch
+ein paar zus@"atzliche Informationen:
+
+@table @samp
+@item Size
+Handelt es sich bei dem Listen-Eintrag um eine Speichererweiterung,
+dann steht hier die Byte-Anzahl, die dem System durch diese Karte als
+Speicher zur Verf@"ugung gestellt wird.
+
+Bei @i{normalen} Karten wird hier nur die Gr@"o@ss{}e des zur Karte geh@"orenden
+ROMs angegeben.
+
+@item Flags
+Werden im More-Fenster n@"aher erl@"autert.
+
+@item ID
+Herstellernummer, die von Commodore vergeben wird, gefolgt von der
+Produktnummer, die der System-Erweiterung vom Hersteller gegeben wird.
+
+@item SN
+Seriennummer der Karte (Dieser Eintrag wird von den meisten Karten
+nicht benutzt.)
+@end table
+
+
+@subheading Aktionen
+
+@table @samp
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie die Liste der @samp{Expansions}
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item More
+Beim Bet@"atigen dieses Gadgets erhalten Sie mehr Informationen @"uber
+die selektierte System-Erweiterung in einem zus@"atzlichen Fenster.
+
+Sie erreichen dasselbe, indem Sie einfach einen Doppelklick auf den
+jeweiligen Eintrag der Liste ausf@"uhren.
+
+@item Exit
+Das @samp{Expansions}-Fenster wird geschlossen.
+@end table
+
+
+@subheading Unbekannte System-Erweiterungen
+
+Wenn Sie eine System-Erweiterung durch einfaches Anklicken des jeweiligen
+Eintrages mit der Maus selektieren, dann erhalten Sie den Namen der
+Herstellerfirma und die Bezeichnung der Karte in dem daf@"ur vorgesehenen
+Textfeld unterhalb der Liste. Das passiert nat@"urlich nur, sofern
+diese Daten der jeweilig installierten Version der @file{identify.library}
+bekannt sind!
+
+Sollten diese Angaben fehlen oder nicht mit den Daten Ihrer
+System-Erweiterungen @"ubereinstimmen, so m@"ochte ich Sie bitten, mir
+die folgenden Daten zuzusenden, damit ich sie dem Programm beif@"ugen
+bzw. sie korrigieren kann. In der n@"achsten @code{Identify}-Version
+sollten diese Angaben dann vorhanden sein.
+
+
+@noindent @strong{Daten zur Erfassung einer nicht namentlich genannten Erweiterung:}
+
+@example
+1. Herstellernummer (Manufacturer)
+2. Produktnummer (Product)
+3. Name des Herstellers
+4. Bezeichnung der Hardware
+5. Funktion der Karte
+@end example
+
+
+Seien Sie hierbei bitte so genau wie m@"oglich. Die Version der
+Erweiterung oder auch noch andere Angaben k@"onnen hierbei nicht
+schaden.
+
+@c <
+@c > Fonts
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Fonts, InputHandlers, Expansions, Using Scout
+@comment node-name, next, previous, up
+
+@section Fonts
+@c (Zeichens@"atze)
+@cindex Fonts
+@cindex Zeichens@"atze
+@cindex DISKFONT
+@cindex ROMFONT
+
+Alle Zeichens@"atze, die sich zur Zeit im System befinden bzw. von
+Programmen benutzt werden, sind in dieser Liste zu finden.
+
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item YSize
+Vertikale Gr@"o@ss{}e des Zeichensatzes
+
+@item Count
+Z@"ahler, der angibt, von wievielen Programmen der Zeichensatz gerade
+benutzt wird.
+
+@item Type
+Steht an dieser Stelle @samp{ROMFONT}, so befindet sich dieser
+Zeichensatz im ROM. Bei @samp{DISKFONT} wurde er von Diskette bzw.
+Festplatte geladen.
+
+@item Name
+Name des Zeichensatzes
+@end table
+
+
+@subheading Aktionen
+
+@table @samp
+@item Update
+Die Liste der Zeichens@"atze wird aktualisiert.
+
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie die Liste der @samp{Fonts}
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item Close
+Hiermit kann ein Zeichensatz geschlossen werden. @samp{Count}
+verringert sich dann um eins.
+
+@item Remove
+Mit dieser Funktion kann ein Zeichensatz aus dem System (Speicher)
+entfernt werden, vorausgesetzt er wird von keinem Programm mehr
+ben@"otigt und befindet sich nicht im ROM.
+
+@item Exit
+Das @samp{Fonts}-Fenster wird geschlossen.
+@end table
+@c <
+@c > InputHandlers
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node InputHandlers, Interrupts, Fonts, Using Scout
+@comment node-name, next, previous, up
+
+@section Inputhandler
+@cindex Inputhandler
+@cindex Input Events
+@cindex Ereignisse
+
+Inputhandler k@"ummern sich um die Benutzereingaben, die im System
+ankommen (Tastendr@"ucke, Mausklicks, usw.). Sie stehen wie an einem
+Flie@ss{}band in einer Reihe und werten diese Eingaben aus. Der
+Inputhandler mit der h@"ochsten Piorit@"at bearbeitet diese Eingaben
+zuerst. Kann er mit den Eingaben nichts anfangen, reicht er sie
+in der Regel an den n@"achsten Inputhandler weiter.
+
+Das System benutzt normalerweise f@"ur seinen Inputhandler die Priorit@"at
+50. M@"ochte also ein Inputhandler die Benutzereingaben vor dem System
+bekommen, braucht er eine h@"ohere Priorit@"at.
+
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item ln_Name
+Name des Inputhandlers
+
+@item ln_Pri
+Priorit@"at des Inputhandlers
+
+@item is_Data
+Ab dieser Adresse sind die Daten des Inputhandlers im Speicher zu
+finden.
+
+@item is_Code
+Diese Adresse zeigt zum Programmcode des Inputhandlers. Sollte diese
+Adresse ins RAM zeigen, so wird sie andersfarbig dargestellt. Der
+Inputhandler des Betriebssystems hat seinen Programmcode im ROM.
+
+Ein paar Viren klinken sich als Inputhandler ins System. Bei denen
+zeigt dann auch die @samp{is_Code}-Adresse ins RAM. Wiederum gilt
+auch in einem solchen Fall:
+Nicht gleich die Panik bekommen, es gibt genug @i{normale} Programme,
+die so verfahren.
+@end table
+
+
+@subheading Aktionen
+
+@table @samp
+@item Update
+Die Liste der Inputhandler wird auf den neuesten Stand gebracht.
+
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie die Liste der @samp{InputHandlers}
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item Remove
+Ein Inputhandler kann mit Hilfe dieser Funktion aus dem System
+entfernt werden. Hierbei zieht man dem System aber eventuell den
+Stuhl unter dem Hintern weg. Das System kann dabei leicht abst@"urzen!
+
+@item Priority
+Die Priorit@"at des Inputhandlers kann auf einen bestimmten Wert gesetzt
+werden. Wird die Priorit@"at eines Inputhandlers verringert, kann es
+passieren, da@ss{} Programme nicht mehr auf bestimmte Dinge (z.B. das
+Dr@"ucken einer bestimmten Taste) reagieren, da ein Inputhandler mit
+einer h@"oheren Priorit@"at diese absorbiert.
+
+Auch diese Liste wird vom System nach den Priorit@"aten sortiert.
+@"Andern Sie also die Priorit@"at eines Inputhandlers, dann bekommt dieser
+eventuell einen neuen Platz in der Liste.
+
+@item Exit
+Das Fenster wird geschlossen.
+@end table
+@c <
+@c > Interrupts
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Interrupts, Libraries, InputHandlers, Using Scout
+@comment node-name, next, previous, up
+
+@section Interrupts
+@cindex Interrupts
+@cindex Vertical blank interrupt
+
+Interrupts sind bestimmte Ereignisse, auf die das Betriebssystem
+reagieren mu@ss{}. F@"ur jeden Interrupt-Typ stehen meist sogar
+mehrere Interrupt-Routinen zur Verf@"ugung. Diese Interrupt-Routinen
+werden in einer Liste nach Priorit@"aten sortiert.
+
+Sobald also ein bestimmter Interrupt auftritt, wird das laufende
+Programm solange unterbrochen, bis die zum jeweiligen Interrupt
+geh@"orende Liste der Interrupt-Routinen abgearbeitet wurde.
+
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item ln_Name
+Diesem Text kann normalerweise entnommen werden, von welchem
+Programm die Interrupt-Routine installiert wurde und auch ben@"otigt
+wird.
+
+@item ln_Pri
+Priorit@"at der Interrupt-Routine
+
+@item is_Data
+Ab dieser Adresse sind im Speicher Daten zu finden, die zur
+Interrupt-Routine geh@"oren.
+
+@item is_Code
+Der Programmcode der Interrupt-Routine ist hier zu finden. Sollte
+diese Adresse ins RAM zeigen, so wird sie andersfarbig dargestellt.
+
+@item NUM
+Diese Nummer beschreibt das Ereignis, bei dem die Interrupt-Routine
+aufgerufen wird. Eine kleine Information hierzu finden Sie im
+@samp{IntName}-Eintrag des Interrupt-Detail-Fensters, das durch das
+Bet@"atigen des @samp{More}-Gadgets ge@"offnet wird.
+
+@strong{Beispiel:} Nummer 5 bedeutet, da@ss{} die Interrupt-Routine
+bei jedem neuen Bildaufbau ihres Monitors aufgerufen wird, was bei
+einem 50 Hz Monitor 50 mal in der Sekunde passiert.
+(@samp{VERTB (vertical blank interval)})
+@end table
+
+
+@subheading Aktionen
+
+@table @samp
+@item Update
+Die Liste der Interrupt-Routinen wird aktualisiert.
+
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie die Liste der Interrupt-Routinen
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item Remove
+Mit dieser Funktion kann eine Interrupt-Routine aus der Liste
+entfernt werden. Sollte es sich bei der Interrupt-Routine
+allerdings um einen Interrupt-Handler handeln, kann @code{Scout}
+diese Aktionen nicht ausf@"uhren. Ist dies der Fall, dann steht in
+der Spalte @samp{IntType} der Text @samp{Handler}.
+
+Bei den Interrupt-Handlern vom audio.device kann dieses Problem
+z.B. gel@"ost werden, indem das @file{audio.device} entfernt wird. Das passiert
+unter anderem durch den Aufruf von @samp{avail flush}, wenn das
+audio.device von keinem Programm mehr benutzt wird.
+
+@item More
+Ein Fenster mit weiteren Informationen @"uber den selektierten Interrupt
+wird ge@"offnet.
+
+@item Exit
+Bet@"atigen Sie dieses Gadget, dann wird das Fenster geschlossen.
+@end table
+@c <
+@c > Libraries
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Libraries, Locks, Interrupts, Using Scout
+@comment node-name, next, previous, up
+
+@section Libraries
+@cindex Libraries
+
+
+Eine Library ist eine Ansammlung von Funktionen/Routinen (Bibliothek),
+denen bestimmte Aufgaben zugedacht wurden.
+
+@noindent Die @code{graphics.library} zum Beispiel beinhaltet Funktionen f@"ur die
+Grafikdarstellung.
+
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item Address
+Adresse einer Library
+
+@item ln_Name
+Name einer Library
+
+@item ln_Pri
+Priorit@"at einer Library
+
+@item OpenC
+Z@"ahler, der angibt, wie oft die Library ge@"offnet wurde.
+
+@item RPC
+@samp{RPC} steht f@"ur @samp{RAM Pointer Count} und gibt an, wieviele
+Sprungadressen der Library ins RAM zeigen. So eine ins RAM zeigende
+Einsprungadresse weist auf ein Programm (z.B. den @code{SetPatch}-Befehl)
+hin, welches die @i{alte} Funktion verbessern bzw. erneuern m@"ochte,
+indem es einfach die Sprungadresse der Funktion durch die Adresse
+einer eigenen Funktion ersetzt.
+
+Viele Viren h@"angen sich auf diese Weise ins System. Diese
+Tatsache soll Sie aber jetzt nicht in Panik versetzen, da es sich in
+den meisten F@"allen um kleine Patch-Programme --- wie den
+@code{SetPatch}-Befehl von Commodore --- handelt.
+
+Sollten alle Sprungadressen einer Library ins RAM zeigen, dann hat sie
+ihren Programmcode im RAM stehen. Ein solcher @samp{RPC}-Eintrag besteht
+aus drei Sternen, da es in dem Fall unwichtig ist, wieviele
+Sprungadressen ins RAM zeigen.
+
+@item ln_Type
+Typ dieser Struktur (Hier sollte normalerweise @samp{library} stehen.)
+@end table
+
+
+@subheading Aktionen
+
+@table @samp
+@item Priority
+Die Prioritat der Library kann von Ihnen ver@"andert werden. Hierzu
+erscheint ein kleines Fenster, in dem Sie die neue Priorit@"at angeben
+k@"onnen. Durch die ver@"anderte Priorit@"at bekommt die Library eventuell
+einen neuen Platz in der Liste.
+
+@item Close
+Um eine Library aus dem System entfernen zu k@"onnen, mu@ss{} sie von allen
+Programmen wieder geschlossen worden sein. Dies ist der Fall, wenn
+der @samp{OpenC}-Eintrag den Wert Null hat.
+
+Wenn Sie mit dieser Funktion eine Library schlie@ss{}en m@"ochten, werden
+Sie gefragt, ob Sie die Library nur einmal oder gleich f@"ur alle
+Programme schlie@ss{}en m@"ochten, die diese Library ge@"offnet haben.
+
+W@"ahlen Sie hier also @samp{all}, dann wird die Library so oft
+geschlossen, bis der @samp{OpenC} gleich Null ist.
+
+@item Remove
+Mit dieser Funktion wird die selektierte Library entfernt.
+Voraussetzung hierf@"ur ist allerdings, da@ss{} sie von keinem Programm mehr
+benutzt wird bzw. der @samp{OpenC} gleich Null ist.
+
+Einige Libraries lassen sich nicht mehr ohne einen Reset aus dem
+System entfernen. Es ist also nicht unbedingt verwunderlich, wenn
+@code{Scout} es einmal nicht schaffen sollte, eine Library zu
+entfernen!
+
+@item Functions
+In einem Unterfenster werden s@"amtliche Funktionsoffsets der Library
+sowie deren Einsprungadressen angezeigt. Wenn eine passende @file{.fd}-Datei
+existiert und der Assign @file{FD:} auf dessen Verzeichnis gesetzt ist,
+werden auch die Namen der Funktionen angezeigt.
+
+@item Update
+Die Library-Liste wird erneuert.
+
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie die Liste der @samp{Libraries}
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item More
+Ein Fenster mit weiteren Informationen zur Library wird ge@"offnet.
+
+@item Exit
+Das @samp{Libraries}-Fenster wird geschlossen.
+@end table
+@c <
+@c > Locks
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Locks, LowMemory, Libraries, Using Scout
+@comment node-name, next, previous, up
+
+@section Locks
+@cindex Locks
+
+
+Ein Lock symbolisiert den Zugriff eines Programmes auf eine Datei oder
+ein Verzeichnis. Auf diese Weise wird z.B. verhindert, da@ss{} eine
+Datei gel@"oscht wird, w@"ahrend irgendein anderes Programm noch auf die
+sich in der Datei befindenden Daten zugreift.
+
+Bei etwas umfangreicheren Systemen kann der Aufbau der Liste etwas
+l@"anger dauern!  Mein eigenes System hat z.B. im Durchschnitt ca.
+500 Lockeintr@"age, was gemessen an anderen Systemen noch nicht allzu
+viel ist.  =:^)
+
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item Access
+Hier wird die Zugriffsart des Lock-Zugriffes angegeben. Dies kann ein
+Lese- (@samp{READ}) oder ein Schreibzugriff (@samp{WRITE}) sein.
+Sollte hier @samp{OWN} stehen, dann handelt es sich nur um einen Lock,
+der zum Aufbau dieser Liste von @code{Scout} angefordert wurde.
+
+@item Path
+Pfad der Datei oder des Verzeichnisses
+@end table
+
+
+@subheading Aktionen
+
+@table @samp
+@item Update
+Die Liste der Locks wird aktualisiert.
+
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie die Liste der @samp{Locks}
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item Remove
+Ein Lock wird mittels der @code{UnLock()}-Funktion der dos.library wieder
+freigegeben.
+
+@item Pattern
+Geben Sie hier ein Namensmuster an, so werden nur die Locks angezeigt,
+deren Pfad mit dem Namensmuster @"ubereinstimmt.
+
+@item Exit
+Das Fenster wird geschlossen.
+@end table
+@c <
+@c > LowMemory
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node LowMemory, Memory, Locks, Using Scout
+@comment node-name, next, previous, up
+
+@section LowMemory
+@cindex LowMemory
+@cindex Handler, LowMemory
+
+In dieser Liste werden alle dem System bekannten LowMemory-Handler
+angezeigt.
+
+Diese Handler werden der Reihe nach aufgerufen, wenn eine Speicherbelegung
+wegen mangelnden Speichers nicht ausgef@"uhrt werden konnte. Die Handler
+versuchen, unbenutzten Speicher wieder freizugeben, damit die Speicheranforderung
+eventuell doch noch ausgef@"uhrt werden kann.
+
+`ramlib' ist ein LowMemory-Handler, der unben@"otigte Libraries und Devices
+wieder aus dem Speicher entfernt. Er ist stets vorhanden.
+
+@strong{Hinweis:} LowMemory-Handler existieren erst seit AmigaOS 3.0. Unter
+@"alteren Versionen ist diese Liste stets leer.
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item Address
+Adresse der Struktur, die Daten @"uber den LowMemory-Handler beinhaltet.
+
+@item ln_Name
+Name des Handlers.
+
+@item ln_Type
+Typ des Handlers.
+
+@item ln_Pri
+Priorit@"at des Handlers. In dieser Reihenfolge werden die Handler der Reihe
+nach aufgerufen. Dazwischen wird stets gepr@"uft, ob die Speicheranforderung bereits
+erf@"ullt werden kann.
+
+@item is_Data
+Ein Zeiger auf die Datenstruktur, die der jeweilige Handler benutzt.
+
+@item is_Code
+Ein Zeiger auf den LowMemory-Handler selbst.
+@end table
+
+
+@subheading Aktionen
+
+@table @samp
+@item Update
+Die Liste wird aktualisiert.
+
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie die Liste
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item Remove
+Der LowMemory-Handler wird aus dem Speicher entfernt.
+
+@item Priority
+Hiermit bestimmem Sie die Priorit@"at und damit die Reihenfolge, in der
+die Memory-Handler abgearbeitet werden.
+
+@item Exit
+Das @samp{LowMemory}-Fenster wird geschlossen.
+@end table
+@c <
+@c > Memory
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Memory, Mounted Devs, LowMemory, Using Scout
+@comment node-name, next, previous, up
+
+@section Memory (Speichersegmente)
+@cindex Memory
+@cindex Speichersegmente
+
+
+Die Eintr@"age dieser Liste stellen die Speichersegmente Ihres
+Rechners dar. Sie finden dort mindestens den Eintrag Ihres
+Grafik-Speichers (@samp{CHIP-MEMORY}), der fest in Ihren Rechner eingebaut
+ist.
+
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item ln_Name
+Name des Speichersegmentes (z.B. @samp{chip memory})
+
+@item ln_Pri
+Priorit@"at des Speichersegmentes
+
+@item mh_Lower
+Anfangsadresse des Speichersegmentes
+
+@item mh_Upper
+Endadresse des Speichersegmentes
+@end table
+
+
+@subheading Aktionen
+
+@table @samp
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie die Liste der Speichersegmente
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item Priority
+Mit dieser Funktion k@"onnen Sie bestimmen, welches Speichersegment
+bevorzugt vom System und den anderen Programmen benutzt werden soll,
+indem Sie diesem eine h@"ohere Priorit@"at geben als den anderen
+Speichersegmenten.
+
+@strong{Ausnahme:} Wird der Typ des Speichers direkt bei der
+Anforderung eines Programmes angegeben, wird das erste
+Speichersegment benutzt, das die Anforderungskriterien erf@"ullt.
+
+@item More
+Ein neues Fenster wird ge@"offnet. Dieses Fenster enth@"alt weitere Daten
+zum selektierten Speichersegment.
+
+@item Exit
+Das @samp{Memory}-Fenster wird geschlossen.
+@end table
+@c <
+@c > Mounted Devs
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Mounted Devs, Ports, Memory, Using Scout
+@comment node-name, next, previous, up
+
+@section Mounted Devices
+@c (`gemountete' Ger@"ate)
+@cindex Mounted Devices
+@cindex Laufwerke
+@cindex Festplatten
+
+@noindent In dieser Liste finden Sie alle Ihre ansprechbaren Ger@"ate
+(Laufwerke, Festplatten usw.).
+
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item Name
+Name des Ger@"ates
+
+@item Unit
+Kennziffer des Ger@"ates
+(Bei DF2: steht hier z.B. normalerweise eine Zwei.)
+
+@item Heads
+Anzahl der vorhandenen Lese- bzw. Schreib-K@"opfe
+
+@item Cyl
+Anzahl der Zylinder
+
+@item State
+Zustand eines Ger@"ates, der z.B. angibt, ob eine Diskette im Laufwerk
+liegt oder ob die Diskette unlesbar ist.
+
+@item DiskType
+Typ der Diskette (z.B. @samp{OFS} (OldFileSystem), @samp{FFS}
+(FastFileSystem), @dots{})
+
+@item Handler or Device
+Hier wird angegeben, welcher Handler oder welches Device sich um
+den Zugriff auf das jeweilige Ger@"at k@"ummert.
+
+Beim Laufwerk DF0: w@"are es z.B. in der Regel das @file{trackdisk.device}.
+Um also direkt auf die Sektoren von DF0: schreiben zu k@"onnen,
+m@"u@ss{}ten Sie das @file{trackdisk.device} benutzen.
+@end table
+
+
+@subheading Aktionen
+
+@table @samp
+@item Update
+Die Liste wird erneut eingelesen.
+
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie die Liste der Ger@"ate
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item More
+Ein weiteres Fenster mit mehr Informationen zum ausgew@"ahlten Ger@"at
+wird ge@"offnet.
+
+@item Exit
+Das Fenster wird geschlossen.
+@end table
+@c <
+@c > Ports
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Ports, Resident Cmds, Mounted Devs, Using Scout
+@comment node-name, next, previous, up
+
+@section Ports
+@cindex Ports
+
+
+Ports dienen der Kommunikation von Programmen. Dem Port eines
+Programmes k@"onnen Mitteilungen gesendet werden, auf die das Programm
+reagieren soll.
+
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item Address
+An dieser Adresse ist die Port-Struktur zu finden.
+
+@item ln_Name
+Name des Ports
+
+@item ln_Pri
+Priorit@"at des Ports
+
+@item mp_SigTask
+Name des Tasks, der f@"ur diesen Port zust@"andig ist.
+@end table
+
+
+@subheading Aktionen
+
+@table @samp
+@item Update
+Die Liste der Ports wird aktualisiert.
+
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie die Liste der @samp{Ports}
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item Remove
+Der Port wird aus dem System entfernt.
+
+@item Priority
+Mit Hilfe dieser Funktion kann die Priorit@"at des Ports ver@"andert
+werden.
+
+@item More
+Ein neues Fenster wird ge@"offnet. Dieses Fenster enth@"alt weitere Daten
+zum selektierten Port.
+
+@item Exit
+Das @samp{Ports}-Fenster wird geschlossen.
+@end table
+@c <
+@c > Resident Cmds
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Resident Cmds, Residents, Ports, Using Scout
+@comment node-name, next, previous, up
+
+@section Resident Commands (Residente Befehle)
+@cindex Residente Befehle
+@cindex Resident Commands
+
+Alle Kommandos, die durch den Shell-Befehl @code{resident}
+resident gemacht wurden, und die Befehle, die schon im ROM
+enthalten sind, werden hier angezeigt.
+
+Dabei werden auch die Positionen und die Gr@"o@ss{}en aller Hunks der
+jeweiligen Befehle aufgelistet.
+
+Die hier behandelten `residenten Befehle' haben nichts mit den
+im n@"achsten Abschnitt beschriebenen `residenten Strukturen' zu tun.
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item Name
+Name des Befehls
+
+@item UseCount
+Z@"ahler, der angibt, wieviele Instanzen des Befehls zur Zeit des
+Listenaufbaus im System aktiv sind.
+
+@item Lower
+Startadresse eines Hunks im Speicher
+
+@item Upper
+Endadresse eines Hunks im Speicher
+
+@item Size
+Gr@"o@ss{}e des Hunks (@samp{Upper} - @samp{Lower} - 8 Bytes Overhead)
+@end table
+
+
+@subheading Aktionen
+
+@table @samp
+@item Update
+Die Liste der residenten Befehle wird erneut eingelesen.
+
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie die Liste der residenten Befehle
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item Remove
+Mit dieser Funktion wird der ausgew@"ahlte residente Befehl aus der
+Liste entfernt. Voraussetzung hierf@"ur ist allerdings, da@ss{} er nicht mehr
+benutzt wird bzw. der @samp{UseCount} gleich Null ist.
+
+@item Exit
+Das Fenster wird geschlossen.
+@end table
+@c <
+@c > Residents
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Residents, Resources, Resident Cmds, Using Scout
+@comment node-name, next, previous, up
+
+@section Residents (Residente Strukturen)
+@cindex Residente Strukturen
+@cindex Residents
+
+
+Residente Strukturen (Residents) sind Code- bzw. Daten-Segmente (wie
+zum Beispiel Libraries), die einen Reset @"uberstehen. Sie sind
+@i{reset-fest}.
+
+Die hier behandelten `residenten Strukturen' haben nichts mit den
+im vorigen Abschnitt beschriebenen `residenten Befehlen' zu tun.
+
+Ein Programmierer hat nun die M@"oglichkeit sein Programm reset-fest zu
+machen, indem er unter anderem eine Resident-Struktur initialisiert
+und diese @"uber die Kick-Vektoren (siehe @ref{Vectors}), die sich in
+der ExecBase-Struktur (Basis der exec.library) befinden, ins System
+einklinkt.
+
+Diese residenten Strukturen liegen demnach im RAM und ihre Adressen
+werden andersfarbig dargestellt, um sie von den anderen residenten
+Strukturen abzuheben.
+Die residenten Strukturen, die @"uber die Kick-Vektoren ins System
+gekommen sind, werden, sofern @"uberhaupt solche residenten Strukturen
+vorhanden sind, am oberen Ende der Liste eingef@"ugt.
+
+Sollten Sie hier eine residente Struktur finden, die ins RAM zeigt,
+dann ist Vorsicht geboten. Schauen Sie sich ihren Namen an, und wenn
+Sie nicht ganz sicher wissen, worum es sich handelt, sollten Sie
+lieber einmal den Virenkiller Ihres Vertrauens das System @"uberpr@"ufen
+lassen.
+
+Viele Viren machen sich auf diese Weise reset-fest!
+
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item Address
+An dieser Adresse ist die residente Struktur zu finden.
+
+@item ln_Name
+Name der residenten Struktur
+
+@item rt_Pri
+Priorit@"at der residenten Struktur
+
+@item rt_IdString
+Identifikationstext der residenten Struktur
+@end table
+
+
+@subheading Aktionen
+
+@table @samp
+@item Update
+Die Liste der residenten Strukturen wird aktualisiert.
+
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie die Liste der @samp{Residents}
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item More
+Ein neues Fenster mit mehr Informationen @"uber die Resident-Struktur
+wird ge@"offnet.
+
+@item Exit
+Das @samp{Residents}-Fenster wird geschlossen.
+@end table
+@c <
+@c > Resources
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Resources, ScreenMode, Residents, Using Scout
+@comment node-name, next, previous, up
+
+@section Resources (Ressourcen)
+@cindex Resources
+@cindex Ressourcen
+
+Eine Ressource ist --- wie auch eine Library (siehe @ref{Libraries})
+und ein Device (siehe @ref{Devices}) --- eine Ansammlung von
+Funktionen bzw. Routinen, denen bestimmte Aufgaben zugedacht wurden.
+
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item Address
+Addresse der Ressource
+
+@item ln_Name
+Name der Ressource
+
+@item ln_Pri
+Priorit@"at der Ressource
+
+@item OpenC
+Z@"ahler, der angibt, wie oft die Ressource ge@"offnet wurde.
+
+@item RPC
+@samp{RPC} steht f@"ur @samp{RAM Pointer Count} und gibt an, wieviele
+Sprungadressen der Ressource ins RAM zeigen. So eine ins RAM zeigende
+Einsprungadresse weist auf ein Programm hin (wie z.B. den
+@code{SetPatch}-Befehl), welches die `alte' Funktion verbessern bzw.
+erneuern m@"ochte, indem es einfach die Sprungadresse der Funktion durch
+die Adresse einer eigenen Funktion ersetzt.
+
+Sollten alle Sprungadressen einer Ressource ins RAM zeigen, dann hat
+sie ihren Programmcode im RAM stehen. Ein solcher @samp{RPC}-Eintrag
+besteht aus drei Sternen, da es in dem Fall unwichtig ist, wieviele
+Sprungadressen ins RAM zeigen.
+
+@item ln_Type
+Typ der Struktur (Hier sollte normalerweise @samp{resource} stehen.)
+@end table
+
+
+@subheading Aktionen
+
+@table @samp
+@item Update
+Die Ressource-Liste wird neu eingelesen.
+
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie die Liste der @samp{Resources}
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item Remove
+Mit dieser Funktion wird die gew@"ahlte Ressource entfernt.
+Voraussetzung hierf@"ur ist allerdings, da@ss{} sie von keinem Programm mehr
+benutzt wird bzw. der @samp{OpenC} gleich Null ist.
+
+@item Priority
+Die Priorit@"at der Ressource kann von Ihnen ver@"andert werden. Hierzu
+erscheint ein kleines Fenster, in dem Sie die neue Priorit@"at angeben
+k@"onnen.
+
+@item More
+Wird dieses Gadget bet@"atigt, dann erscheint ein zus@"atzliches Fenster mit
+weiteren Daten zur selektierten Ressource.
+
+@item Functions
+In einem Unterfenster werden s@"amtliche Funktionsoffsets der Resource
+sowie deren Einsprungadressen angezeigt. Wenn eine passende @file{.fd}-Datei
+existiert und der Assign @file{FD:} auf dessen Verzeichnis gesetzt ist,
+werden auch die Namen der Funktionen angezeigt. Einige Resources bieten
+keine Funktionen an.
+
+@item Exit
+Das @samp{Residents}-Fenster wird geschlossen.
+@end table
+
+@noindent @strong{Beachte:} Sollte bei @samp{OpenC} und/oder @samp{RPC} ein
+Strich stehen, so besitzt die Ressource keine typische Library-Struktur
+(Hintereinanderreihung von Sprungbefehlen und deren Sprungadressen).
+Das passiert z.B. beim Eintrag der @samp{FileSystem.resource}.
+@c <
+@c > ScreenMode
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node ScreenMode, Semaphores, Resources, Using Scout
+@comment node-name, next, previous, up
+
+@section ScreenMode
+@cindex ScreenMode
+@cindex Bildschirm-Modis
+
+Durch ScreenModes werden die einzelnen Bildschirm-Darstellungsarten
+definiert, die das System darstellen kann.
+
+Sie haben sicherlich schon einmal einen Bildschirm-Modus ausgew@"ahlt.
+In dieser Liste finden sie s@"amtliche, die zur Verf@"ugung stehen. Viele
+Programme filtern einen Teil davon heraus, weil sie f@"ur ihre Zwecke
+nicht geeignet sind.
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item ModeID
+Eine einmalige Zahl, mit der der Bildschirm-Modus verwaltet wird.
+
+@item Width
+Standard-Breite dieses Bildschirmmodus in Pixeln.
+
+@item Height
+Standard-H@"ohe dieses Bildschirmmodus in Pixeln.
+
+@item Depth
+Maximale Anzahl der Bitplanes. Damit zusammen h@"angen die Anzahl der Farben,
+die gleichzeitig dargestellt werden k@"onnen.
+
+@item ScreenMode
+Name dieses Bildschirmmodus. Einige Modis liefern keinen Namen mit. Er wird
+dann von Scout generiert und kann von den Bezeichnungen in anderen Programmen
+und Requestern abweichen. Folgende Darstellungsarten werden ausgewiesen:
+
+@table @emph
+@item HAM
+Spezieller Hold-And-Modify-Modus des Amiga-Chipsatzes. Damit k@"onnen trotz 6
+bzw. 8 Bitplanes tausende von Farben gleichzeitig dargestellt werden.
+@item EHB
+Extra-Halfbrite-Modus des Amiga-Chipsatzes. Es stehen 32 frei w@"ahlbare Farben
+sowie deren halbhellen Farbt@"one zur Verf@"ugung.
+@item DualPF
+@itemx DualPF2
+Spezieller Darstellungsmodus des Amiga-Chipsatzes, bei dem der Bildschirm quasi
+aus zwei voneinander unabh@"angigen `Folien' besteht, die @"ubereinandergelegt wurden. Der Unterschied
+zwischen @emph{DualPF} und @emph{DualPF2} ist die Reihenfolge, in der die Folien
+@"ubereinanderliegen.
+@item Interlace
+Das Bild wird im Zeilensprungverfahren dargestellt.
+@item DblScan
+Das Bild wird im Zeilenverdoppelungsverfahren dargestellt (AGA und Grafikkarten).
+@end table
+
+@end table
+
+
+@subheading Aktionen
+
+@table @samp
+@item Update
+Die Liste wird erneut eingelesen.
+
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie die Liste
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item More
+Es werden weitere Informationen @"uber diesen ScreenMode ausgegeben, mitunter die
+Gr@"o@ss{}e der Overscan-Aufl@"osungen sowie die Zeilen- und Bildwechselfrequenz. Durch eine
+Ungenauigkeit des Betriebssystems bedingt weichen die tats@"achlichen Frequenz ein wenig
+von den dargestellten ab!
+
+@item Exit
+Das Fenster wird geschlossen.
+@end table
+@c <
+@c > Semaphores
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Semaphores, System, ScreenMode, Using Scout
+@comment node-name, next, previous, up
+
+@section Semaphores (Semaphore)
+@cindex Semaphore
+@cindex Semaphores
+
+Semaphore sind normalerweise daf@"ur da, den Zugriff auf bestimmte
+Ger@"ate zu handhaben, auf die nur eine bestimmte Anzahl von Programmen
+zur Zeit zugreifen darf.
+
+@noindent @strong{Beispiele:}
+@enumerate
+@item Auf einen Drucker darf nur ein Programm zur Zeit zugreifen, da
+sonst die zu druckenden Texte `gemischt' w@"urden.
+
+@item Wenn der @code{SetPatch}-Befehl von Commodore z.B. schon die
+Routinen des Betriebssystems gepatcht hat, dann soll er diese Patches beim
+n@"achsten Aufruf ja nicht nochmal ausf@"uhren. Zu diesem Zweck wird ein
+Semaphor eingerichtet. Der @code{SetPatch}-Befehl kann dadurch bei
+einem erneuten Start pr@"ufen, ob er schon einmal ausgef@"uhrt worden ist.
+@end enumerate
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item ln_Name
+Name des Semaphors
+
+@item Nest
+Dieser Z@"ahler zeigt, wie oft der @samp{Owner}-Task den Semaphor benutzt.
+
+@item Queue
+Hier wird angezeigt, wieviele Tasks den Semaphor besitzen m@"ochten.
+
+@item Owner
+Hier ist der Name des Tasks zu finden, dem der Semaphor zur Zeit
+geh@"ort.
+@end table
+
+
+@subheading Aktionen
+
+@table @samp
+@item Update
+Die Liste der Semaphore wird erneut eingelesen.
+
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie die Liste der Semaphore
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item Obtain
+Hierdurch wird dem System vorgegaukelt, da@ss{} das Ger@"at, das File oder
+wof@"ur der Semaphor sonst eingerichtet wurde, gerade benutzt wird.
+Der @samp{NestCnt}-Eintrag erh@"oht sich hierbei um Eins.
+
+@item Release
+Sollte ein Semaphor gerade benutzt werden, so machen Sie dem System
+mit dieser Funktion weis, da@ss{} dem nicht mehr so ist. Ein Programm,
+das den Semaphor beachtet, kann so eventuell versuchen, ein weiteres
+Mal auf das entsprechende Ger@"at zuzugreifen.
+
+@item Remove
+Sofern der Semaphor nicht mehr benutzt wird, k@"onnen Sie ihn anhand
+dieser Funktion aus dem System entfernen.
+
+@item Exit
+Das @samp{Semaphores}-Fenster wird geschlossen.
+@end table
+@c <
+@c > System
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node System, Tasks, Semaphores, Using Scout
+@comment node-name, next, previous, up
+
+@section System
+@cindex System
+@cindex Analyse des Systems
+
+@subheading Aktionen
+
+@table @samp
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie diese Liste
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item Exit
+Das @samp{System}-Fenster wird geschlossen.
+@end table
+
+
+@subheading Eintr@"age
+
+In dem Fenster finden Sie einige, zum Teil sehr technische Angaben
+@"uber Ihren Computer. Bitte entschuldigen Sie hierbei das gew@"ohnliche
+Aussehen des Fensters, aber dadurch l@"a@ss{}t es sich sehr bequem erweitern.
+@c <
+@c > Tasks
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Tasks, Timer, System, Using Scout
+@comment node-name, next, previous, up
+
+@section Tasks
+@cindex Tasks
+@cindex Processes
+@cindex Prozesse
+
+In dieser Liste befinden sich alle Tasks und Prozesse. (Prozesse sind
+erweiterte Task-Strukturen.) Sie repr@"asentieren die Programme, die im
+Augenblick im System ablaufen bzw. auf ein Ereignis warten.
+
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item ln_Name
+Name des Tasks
+
+@item ln_Type
+Typ der Struktur (@samp{task} oder @samp{process})
+
+@item ln_Pri
+Priorit@"at des Tasks
+
+@item NUM
+Hier steht die Nummer eines Prozesses, sofern dieser sich mit Hilfe des
+Befehles @code{run} abgekoppelt hat oder noch in einer Shell l@"auft.
+Ein Programm, das @"uber die Workbench gestartet wurde, hat als
+@samp{NUM}-Eintrag einen Strich, wie auch ein Programm, das sich selbst@"andig
+von der Shell abgekoppelt hat.
+
+@item State
+Dieser Eintrag zeigt den Zustand eines Tasks/Prozesses an. Der eigene
+Prozess von @code{Scout}, der ganz oben in der Liste zu finden ist,
+hat dort immer @samp{run} stehen, weil er immer aktiv ist, wenn er die
+Task-Liste ausliest.  =:^)
+
+Ein @samp{wait} bedeutet hierbei, da@ss{} ein Task auf ein bestimmtes
+Ereignis wartet. Dies kann zum Beispiel das Bet@"atigen eines Gadgets
+sein.
+
+Sollte sich ein Task im Zustand @samp{ready} befinden, dann hat er
+zwar gerade etwas zu tun, wurde aber von der Abarbeitung eines
+anderen Prozesses unterbrochen (Multitasking-Prinzip).
+
+@item SigWait
+Signalmaske, auf die der Task wartet. Sollte ein Task im Zustand
+@samp{wait} sein und diese Signalmaske den Wert Null ($00000000)
+haben, dann handelt es sich mit gro@ss{}er Wahrscheinlichkeit um einen
+Task, der sich `aufgeh@"angt' hat und vom Betriebssystem in der
+Schwebe gehalten wird. (@samp{suspend} or @samp{reboot})
+@end table
+
+
+@subheading Aktionen
+
+@table @samp
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie die Liste der @samp{Tasks}
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item Freeze
+Hiermit wird ein Task @i{eingefroren}. Er befindet sich zwar dann
+noch in der Task-Liste, bekommt aber keine Rechenzeit mehr vom System.
+
+@strong{Achtung:}
+Wenn Sie versuchen Tasks einzufrieren, die f@"ur das System
+@i{lebenswichtig} sind (wie z.B. der Task @samp{input.device}),
+sollten Sie alle wichtigen Daten abgespeichert haben, da durch den
+folgenden Systemabsturz diese Daten sonst verloren sind.
+
+@item Activate
+Ein eingefrorener Task kann hiermit wieder aktiviert werden.
+
+@item CPU
+Hier finden Sie ein Textfeld und ein Cycle-Gadget. Das Textfeld gibt
+--- abh@"angig von dem Zustand des Cycle-Gadgets --- die verbrauchte
+CPU-Auslastung in Prozent an.
+
+F@"ur das Cycle-Gadgets gibt es drei Zustande:
+@table @samp
+@item off
+In diesem Zustand wird die CPU-Auslastung nicht berechnet.
+
+@item full
+Wurde dieser Zustand gew@"ahlt, dann setzt @code{Scout} die verbrauchte
+CPU-Auslastung auf 100%, d.h. die Summe der CPU-Auslastungsprozente
+aller in der Liste stehenden Tasks und Prozesse ergibt immer 100%.
+Dies ist unabh@"angig von der wirklich verbrauchten Rechenzeit.
+
+@item in %
+In diesem Fall wird die wirklich verbrauchte CPU-Auslastung gemessen
+und in dem daf@"ur vorgesehenen Textfeld angegeben. Daf@"ur startet
+@code{Scout} den Task @samp{« Scout's cheat task »}, der mit der
+Priorit@"at -128 die ganze nicht verbrauchte Prozessorzeit beanprucht.
+@end table
+
+@item Secs
+Mit Hilfe dieses String-Gadgets k@"onnen Sie bestimmen, in welchen
+Intervallen die CPU-Auslastung gemessen wird, sofern Sie diese
+Funktion beim Cycle-Gadget mittels @samp{full} oder @samp{in %}
+@"uberhaupt ausgew@"ahlt haben. Dieses Intervall sollte nicht zu klein
+gew@"ahlt werden, da es zu Ungenauigkeiten kommen kann und @code{Scout}
+dann die meiste Rechenzeit beansprucht. Intervalle kleiner 0.5 Sekunden
+machen nicht viel Sinn!
+
+@item Update
+Die Liste der Tasks und Prozesse wird erneut eingelesen.
+
+@item Remove
+Ein Task wird aus der Liste entfernt. Sollten Sie sich nicht ganz
+sicher sein, ob Sie den Task noch einmal brauchen, dann sollten Sie
+lieber die @samp{Freeze}-Funktion benutzen. (Siehe auch @samp{Break}!)
+
+@item Signal
+Sie k@"onnen beim Benutzen dieser Funktion eine Signalmaske angeben, die
+darauf dem ausgew@"ahlten Task geschickt wird.
+
+@item Break
+Einem Task wird ein Break-Signal gesendet. Viele Tasks reagieren auf
+dieses Signal und beenden sich selbst. Reagiert der Task, der mit
+Hilfe von @code{Scout} aus dem System entfernt werden soll, auf dieses
+Signal, dann sollte er normalerweise den von ihm angeforderten Speicher
+wieder freigeben. Wird ein Task durch die @samp{Remove}-Funktion
+entfernt, wird der von ihm benutzte Speicher nicht wieder freigegeben.
+Es bleiben dann sogenannte `Speicherleichen' im System zur@"uck.
+
+@item Priority
+Die Priorit@"at eines Tasks kann hiermit ver@"andert werden. Ein Task mit
+einer niedrigen Priorit@"at bekommt erst vom System Rechenzeit zur
+Verf@"ugung gestellt, wenn kein Task mit einer h@"oheren Priorit@"at
+Rechenzeit ben@"otigt.
+
+@item More
+Ein weiteres Fenster wird ge@"offnet, das, je nachdem ob ein Task oder
+ein Prozess selektiert wurde, weitere Informationen zu dem Task oder
+dem Prozess beinhaltet.
+
+@item Exit
+Das Fenster mit der Task-Liste wird geschlossen.
+@end table
+@c <
+@c > Timer
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Timer, Vectors , Tasks, Using Scout
+@comment node-name, next, previous, up
+@section Timer
+@cindex Timer
+
+
+Dieses Fenster enth@"alt alle Anfragen an das timer.device.
+
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item Address
+Die Adresse der IORequest-Struktur.
+
+@item ReplyPort
+Die Adresse des MessagePorts, an den der Request zur@"uckgeschickt wird.
+
+@item Time
+Zeit, die dieser Request noch in der Liste verbringt.
+
+@item Unit
+Es gibt zwei verschiedene Me@ss{}arten: VBlank (weniger Overhead) und
+MicroHz (genaueres Ma@ss{}).
+
+@item Task
+Der Name des anfragenden Tasks.
+@end table
+
+
+@subheading Actions
+
+@table @samp
+@item Print
+Diese Funktion erlaubt es Ihnen, die Liste an einen Drucker oder
+in eine ausgew@"ahlte Datei zu schicken.
+
+@item Update
+Die Liste wird aktualisiert.
+
+@item Exit
+Das Fenster wird geschlossen.
+@end table
+
+@c <
+@c > Vectors
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Vectors, Windows, Timer, Using Scout
+@comment node-name, next, previous, up
+
+@section Vectors (Spezielle Vektoren)
+@cindex Vectors
+@cindex Vektoren
+
+@subheading Aktionen
+
+@table @samp
+@item Update
+Die Vektoren werden erneut ausgelesen.
+
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie die Liste der Vektoren
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item Exit
+Das @samp{Vectors}-Fenster wird geschlossen.
+@end table
+
+
+@subheading Reset Vectors
+
+Mit Hilfe der Reset-Vektoren kann sich ein Programm reset-fest ins
+System einh@"angen. Sie haben einen Wert von Null, wenn sie nicht
+verbogen wurden. Benutzt ein Programm die Kick-Vektoren (KickTagPtr,
+KickMemPtr und KickCheckSum) um sich reset-fest zu machen, dann
+ist es auch in der Liste der residenten Strukturen zu finden.
+Siehe auch @ref{Residents}.
+
+
+@subheading Auto Vector Interrupts
+@cindex VBR
+
+Die sieben Auto-Vektor-Interrupts, die hier angezeigt werden, sind bei
+einem System mit MC68000-Prozessor von Adresse $64 bis $7c zu finden.
+Die Prozessoren MC68010 und aufw@"arts besitzen ein Vektor-Basis-Register
+(VBR), das eine Verlegung der Interrupt-Tabelle ins FAST-RAM erm@"oglicht.
+Durch diese Verlegung ins FAST-RAM wird das System etwas beschleunigt.
+@code{Scout} ber@"ucksichtigt das VBR bei der Darstellung dieser Vektoren,
+vorausgesetzt es ist vorhanden und wird benutzt.
+
+
+@subheading Interrupt Vectors
+
+Die hier angezeigten 16 Interrupt-Vektoren (IntVecs) befinden sich
+in der ExecBase-Struktur (der Basisstruktur der exec.library).
+Welche Aufgabe sie haben bzw. wie das Zusammenspiel der
+Auto-Vektor-Interrupts, der Interrupt-Vektoren und der
+Interrupt-Handler bzw. Interrupt-Server (siehe @ref{Interrupts})
+funktioniert, entnehmen Sie bitte der Fachliteratur.
+@c <
+@c > Windows
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Windows, Patches, Vectors, Using Scout
+@comment node-name, next, previous, up
+
+@section Windows (Fenster)
+@cindex Windows
+@cindex Screens
+@cindex Fenster
+
+In dieser Liste werden alle Screens mit den auf ihnen befindlichen
+Fenstern angezeigt. Screens werden andersfarbig dargestellt, damit
+sie sich besser von den Fenstern unterscheiden.
+
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item Pos(x,y)
+Horizontale (X) und vertikale (Y) Position des Screens/Fensters
+
+@item Size(x,y)
+Horizontale (X) und vertikale (Y) Gr@"o@ss{}e des Screens/Fensters
+
+@item Title
+Titel des Screens/Fensters
+@end table
+
+
+@subheading Aktionen
+
+@table @samp
+@item Update
+Die Liste wird erneut eingelesen.
+
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie die Liste der Fenster
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item Close
+Ihnen wird hiermit die M@"oglichkeit gegeben, Fenster und Screens
+zu schlie@ss{}en. Ein Screen wird dann mit all den Fenstern geschlossen,
+die sich auf ihm befinden.
+
+@item ToFront
+Das von selektierte Element der Windows- und Screensliste wird in den
+Vordergrund geholt.
+
+@item More
+Je nachdem, ob ein Screen oder ein Fenster in der Liste selektiert
+wurde, wird ein weiteres Fenster ge@"offnet, das weitere Daten zum
+Screen oder zum Fenster enth@"alt.
+
+@item Exit
+Das @samp{Windows}-Fenster wird geschlossen.
+@end table
+@c <
+@c > Patches
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Patches, Catalogs, Windows, Using Scout
+@comment node-name, next, previous, up
+
+@section Patches
+@cindex Patches
+
+In dieser Liste werden alle Patches angezeigt.
+
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item Library
+Name der gepatchten Bibliothek.
+
+@item Offset
+Dezimaler und Hexadezimaler Offset der gepatchten Funktion.
+
+@item Function
+Name der gepatchten Funktion. Dieser Name wird aus der entsprechenden .fd-Datei gelesen.
+
+@item State
+Derzeitiger Status des Patches. M@"oglich sind @samp{active}, @samp{disabled} oder @samp{removed}.
+
+@item Patcher
+Name des Programms, das den Patch installiert hat.
+@end table
+
+
+@subheading Aktionen
+
+@table @samp
+@item Update
+Die Liste wird erneut eingelesen.
+
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie die Liste der Patches
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item Enable
+Ein deaktivierter Patch wird wieder aktiviert.
+
+@item Disable
+Ein aktiver Patch wird deaktiviert.
+@quotation
+@strong{Warnung:} Dies ist eine sehr gef@"ahrliche Aktion!! Bitte lesen Sie die Dokumentation zu SaferPatches!
+@end quotation
+
+@item Exit
+Das @samp{Patches}-Fenster wird geschlossen.
+@end table
+@c <
+@c > Catalogs
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Catalogs, AudioModes, Patches, Using Scout
+@comment node-name, next, previous, up
+
+@section Catalogs
+@cindex Catalogs
+@cindex Sprachkataloge
+
+In dieser Liste werden alle Sprachkataloge der locale.library angezeigt.
+
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item cat_Version
+Version des Katalogs.
+
+@item cat_Language
+Sprache des Katalogs.
+
+@item cat_Name
+Name der Katalogdatei.
+@end table
+
+
+@subheading Aktionen
+
+@table @samp
+@item Update
+Die Liste wird erneut eingelesen.
+
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie die Liste der Kataloge
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item Exit
+Das @samp{Catalogs}-Fenster wird geschlossen.
+@end table
+@c <
+@c > AudioModes
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node AudioModes, Scout and AmiTCP, Catalogs, Using Scout
+@comment node-name, next, previous, up
+
+@section AudioModes
+@cindex AudioModes
+@cindex AHI
+
+In dieser Liste werden alle AHI AudioModes angezeigt.
+
+
+@subheading Spalteneintr@"age
+
+@table @samp
+@item ID
+ModeID des AudioModes.
+
+@item Name
+Name des AudioModes.
+
+@item Bits
+Bits pro Sample.
+
+@item min Freq
+Minimale Mixfrequenz.
+
+@item max Freq
+Maximale Mixfrequenz.
+@end table
+
+
+@subheading Aktionen
+
+@table @samp
+@item Update
+Die Liste wird erneut eingelesen.
+
+@item Print
+Mit Hilfe dieser Funktion k@"onnen Sie die Liste der AudioModes
+zum Drucker schicken oder in eine Datei Ihrer Wahl ausgeben lassen.
+
+@item More
+Wird dieses Gadget bet@"atigt, dann erscheint ein zus@"atzliches Fenster mit
+weiteren Daten zum selektierten AudioMode.
+
+@item Exit
+Das @samp{Patches}-Fenster wird geschlossen.
+@end table
+@c <
+
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Scout and AmiTCP, Scout without MUI, AudioModes, Top
+@comment node-name, next, previous, up
+
+@section Scout und AmiTCP
+
+Dieser Abschnitt soll Ihnen kurz erl@"autern, was Sie machen m@"ussen,
+um Ihren Rechner durch @code{Scout} und @code{AmiTCP} von einem
+anderen Rechner aus beeinflussen zu k@"onnen.
+
+Es werden hier bestimmte Kenntnisse zu @code{AmiTCP} vorausgesetzt. Wenn Sie
+mit diesem Thema absolut nichts anfangen k@"onnen, dann k@"onnen Sie der
+Anleitung von @code{AmiTCP} entnehmen, was es alles damit auf sich hat!
+(Siehe auch @ref{AmiTCP, AmiTCP und wo man es bekommt}.)
+
+Das Programm @code{Scout} dient unter @code{AmiTCP} als Client und als
+Server. Demnach brauchen Sie also neben der @code{AmiTCP}-Installation kein
+zus@"atzliches Programm, um @code{Scout} zusammen mit @code{AmiTCP} benutzen zu
+k@"onnen.
+
+M@"ochten Sie Ihren Rechner einem anderen System via @code{Scout}
+zug@"anglich machen, dann m@"ussen Sie die nun folgenden zwei Schritte
+ausf@"uhren:
+
+@enumerate
+@item F@"ugen Sie dem File @file{AmiTCP:db/services} die Zeile
+@samp{scout 6543/tcp} hinzu.
+
+@item Jetzt f@"ugen Sie bitte dem File @file{AmiTCP:db/inetd.conf} die
+Zeile @samp{scout stream tcp nowait root dh0:scout} hinzu. Hierbei ist
+zu beachten, da@ss{} unter dem Pfad am Ende der Zeile wirklich das
+Programm @code{Scout} zu finden ist. Korrigieren Sie ggf. diesen Pfad
+in der Textzeile!
+@end enumerate
+
+Das war's! Wenn Sie nun @code{AmiTCP} starten, dann ist Ihr Rechner
+prinzipiell von anderen System aus @"uber @code{Scout} unter Verwendung
+der Optionen @samp{HOST}, @samp{USER} und @samp{PASSWORD} erreichbar.
+
+@quotation
+@noindent @strong{Beispiel:} Wenn ich die Systemstrukturen meines
+Rechners von einem anderen System aus warten m@"ochte. Dann m@"u@ss{}te
+ich (nat@"urlich mit einem anderen Passwort) @code{Scout} wie folgt
+aufrufen:
+
+@example
+1> scout HOST crash.north.de USER atte PASSWORD secret
+@end example
+@end quotation
+
+Wird die Option @samp{PASSWORD} weggelassen, dann werden Sie nachtr@"aglich
+aufgefordert, das Passwort in der Shell einzugeben. Diese Variante ist
+sicherer, falls Sie nicht allein sind und Ihr Passwort nicht preisgeben
+m@"ochten, da das Passwort, das Sie in der Shell eingeben, nicht
+dargestellt wird.
+
+Auch die Option @samp{USER} kann weggelassen werden. In diesem Fall
+nimmt @code{AmiTCP} an, da@ss{} derselbe Username verwendet werden soll,
+unter dem Sie sich derzeit in Ihrem System aufhalten.
+
+Auch bei der Verwendung von @code{AmiTCP} sind Sie nicht daran
+gebunden @code{MUI} installiert zu haben. Alle Shell-Befehle (siehe
+@ref{Commands, ARexx- und Shell-Befehle, ARexx- und Shell-Befehle})
+k@"onnen auch zusammen mit @code{AmiTCP} verwendet werden.
+
+@quotation
+@noindent @strong{Beispiel:} M@"ochte ich z.B. die aktuelle Taskliste
+meines Rechners von einem anderen System aus ausgeben lassen. Dann m@"u@ss{}te
+ich (nat@"urlich wieder mit einem anderen Passwort) @code{Scout} wie folgt
+aufrufen:
+
+@example
+1> scout HOST crash.north.de USER atte PASSWORD secret Tasks
+@end example
+@end quotation
+
+Um die Angabe des korrekten Passwortes kommen Sie, wie jeder andere
+Benutzer, in `keinem' Fall herum. Jeder, der Ihr System durch @code{Scout}
+beeinflussen m@"ochte, mu@ss{} ein Login auf Ihrem Rechner haben und sich
+korrekt identifizieren. Desweiteren gibt es bei @code{AmiTCP} durch
+einen Eintrag in der Datei @file{AmiTCP:db/inet.access}) auch die
+M@"oglichkeit, bestimmte Services f@"ur beliebige Systeme zu sperren.
+Wenn Sie mehr dar@"uber wissen m@"ochten, dann sollten Sie sich die Anleitung
+von @code{AmiTCP} mal ein wenig genauer zu Gem@"ute f@"uhren.  =;^)
+
+Um weitere Informationen @"uber die Optionen bzw. die durch @code{Scout}
+benutzbaren Befehle zu erhalten, siehe auch @ref{Options, Optionen, Optionen}
+und @ref{Commands, ARexx- und Shell-Befehle, ARexx- und Shell-Befehle}.
+
+@strong{HINWEIS:} Achten Sie aus Sicherheitsgr@"unden stets darauf, da@ss{} auch
+der entfernte Rechner eine aktuelle Scout-Version benutzt, um Inkompatibilit@"aten
+zu vermeiden.
+
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Scout without MUI, Options, Scout and AmiTCP, Top
+@comment node-name, next, previous, up
+
+@section Scout ohne MUI
+
+@code{Scout} bietet dem Benutzer die M@"oglichkeit, fast alle @"uber die
+grafische Benutzungsoberfl@"ache angebotenen Funktionen auch @"uber die
+Shell zu verwenden, wobei @code{MUI} von @code{Scout} dann nat@"urlich nicht
+ben@"otigt wird.
+
+@noindent Demzufolge m@"ussen Sie @code{MUI} nicht unbedingt installiert
+haben, um @code{Scout} benutzen zu k@"onnen! Wenn Sie allerdings eine
+grafische Benutzungsoberfl@"ache bevorzugen, kommen Sie bei @code{Scout}
+nicht um @code{MUI} herum.
+
+
+@c -------------------------------------------------------------------
+@c                                node
+@c -------------------------------------------------------------------
+@node Options, Commands, Scout without MUI, Top
+@comment node-name, next, previous, up
+
+@chapter Optionen
+@cindex Optionen
+@cindex Tool Types
+@cindex Shell Optionen
+@cindex CLI Optionen
+
+F@"ur das Programm stehen ein paar Optionen zur Verf@"ugung, die Sie
+benutzen k@"onnen, wenn Sie das Programm starten. Diese Optionen
+k@"onnen als Shell-Parameter oder als Tool Types von der Workbench
+benutzt werden. Dieser Abschnitt soll Ihnen den Verwendungszweck
+der Optionen erl@"autern.
+
+@quotation
+@noindent @strong{Beispiel:} In einer Shell werden die Optionen
+wie folgt benutzt:
+
+@example
+1> scout @var{option(s)}
+@end example
+@end quotation
+
+@table @samp
+@item ICONIFIED
+@format
+@strong{Format:} @code{ICONIFIED}
+@end format
+
+Wird diese Option verwendet, dann startet @code{Scout} iconifiziert.
+
+@item PORTNAME
+@format
+@strong{Format:} @code{PORTNAME}=@var{portname}
+@end format
+
+Der ARexx-Port von @code{Scout} kann mit Hilfe dieser Option in
+@var{portname} umbenannt werden. Wird diese Option nicht benutzt, dann
+bekommt der ARexx-Port von @code{Scout} den Namen @samp{SCOUT.X}, wobei das
+@samp{X} die Nummer der @code{Scout}-Inkarnation angibt.
+
+@item TOOLPRI
+@format
+@strong{Format:} @code{TOOLPRI}=@var{value}
+@end format
+
+Diese Option erlaubt es Ihnen, die Task-Priorit@"at von @code{Scout} auf
+einen bestimmten Wert @var{value} zu setzen. Dieser Wert @var{value}
+darf nur Werte von -128 bis 127 annehmen.
+
+@item STARTUP
+@format
+@strong{Format:} @code{STARTUP}=@var{command}
+@end format
+
+Als Parameter kann dieser Option entweder der Name eines ARexx-Skripts
+oder ein ARexx-Befehl @"ubergeben werden. Beide (das Skript oder der
+Befehl) werden beim Start von @code{Scout} ausgef@"uhrt.
+
+Auf diese Weise kann zum Beispiel bei jedem Start des Programmes das
+@samp{Tasks}-Fenster automatisch ge@"offnet werden. Daf@"ur braucht nur
+der Befehl @samp{OpenWindow Tasks} entweder der Option @code{STARTUP}
+@"ubergeben werden oder in dem angegebenen ARexx-Skript enthalten sein.
+
+@item INTERVALTIME
+@format
+@strong{Format:} @code{INTERVALTIME}=@var{time}
+@end format
+
+Diese Option erlaubt es, die Intervallzeit einzustellen, an der die
+Liste der Tasks regelm@"a@ss{}ig erneuert wird, wenn die CPU-Funktion
+gew@"ahlt wurde.
+
+@item CPUDISPLAY
+@format
+@strong{Format:} @code{CPUDISPLAY}=@var{value}
+@end format
+
+Durch die Variable @var{value} ist es m@"oglich den Zustand des
+Cycle-Gadgets, das sich im @samp{Tasks}-Fenster befindet,
+einzustellen. (Siehe auch @ref{Tasks, CPU, CPU}.)
+
+@itemize @bullet
+@item @samp{1}  bedeutet  @samp{CPU: full}
+@item @samp{2}  bedeutet  @samp{CPU: in %}
+@end itemize
+
+@item HOST
+@format
+@strong{Format:} @code{HOST}=@var{hostname}
+@end format
+
+M@"ochten Sie via @code{AmiTCP} auf einen anderen Rechner zugreifen,
+dann geben Sie hier bitte als @var{hostname} den Namen des gew@"unschten
+Rechners an.
+
+@item USER
+@format
+@strong{Format:} @code{USER}=@var{username}
+@end format
+
+Diese Option dient dazu, um mit @var{username} den Namen des
+Accounts auszuw@"ahlen, @"uber den Sie die Systemstrukturen des
+anderen Rechners verwalten m@"ochten.
+
+@item PASSWORD
+@format
+@strong{Format:} @code{PASSWORD}=@var{password}
+@end format
+
+Hier sollten Sie das notwendige Passwort angeben, das f@"ur das
+Einloggen an dem anderen Rechner notwendig ist.
+
+@item COMMAND
+@format
+@strong{Format:} @code{COMMAND}=@var{commandline}
+@end format
+
+Diese Option, die als Shell-Option auch ohne das Schl@"usselwort
+@samp{COMMAND} benutzt werden kann, bietet Ihnen die M@"oglichkeit,
+einen der vielen Befehle zu benutzen, die @code{Scout} Ihnen via ARexx
+und Shell zur Verf@"ugung stellt.
+
+Siehe auch @ref{Commands, ARexx- und Shell-Befehle, ARexx- und Shell-Befehle}.
+
+@item SINGLEWINDOWS
+@format
+@strong{Format:} @code{SINGLEWINDOWS}
+@end format
+
+Diese Option sorgt daf@"ur, da@ss{} jeweils nur ein Listenfenster und ein
+Detailfenster ge@"offnet sind. Leute, die nicht gewohnt sind, mit vielen
+Fenstern zu arbeiten, werden diese Option wohl zu sch@"atzen wissen. =¦^)
+
+@end table
+
+
+@node Commands, Updates, Options, Top
+@comment node-name, next, previous, up
+
+@chapter ARexx- und Shell-Befehle
+@cindex ARexx-Befehle
+@cindex Shell-Befehle
+
+@noindent Bei @code{Scout} gibt es zwei Arten von Befehlen:
+
+@enumerate
+@item Befehle, die nur als Shell-Parameter von @code{Scout} zur
+Verf@"ugung stehen
+
+@item Befehle, die zus@"atzlich auch @"uber die ARexx-Schnittstelle
+aufgerufen werden k@"onnen
+@end enumerate
+
+@c @section Grundlegendes f@"ur die Benutzung der ganzen Befehle
+
+@subheading ARexx-Schnittstelle:
+@cindex ARexx-Schnittstelle
+@code{MUI} gibt jeder seiner Applikationen automatisch eine ARexx-Port
+(ARexx-Schnittstelle). Demnach besitzt @code{Scout} also auch einen
+ARexx-Port, der normalerweise den Namen @samp{SCOUT.X} hat, wobei das
+@samp{X} die Nummer der Programm-Inkarnation angibt.
+
+Der jeweilige Name des ARexx-Ports jeder @code{Scout}-Inkarnation
+wird auch in dem Fenster angezeigt, welches Sie durch die Auswahl des
+@samp{Project/About}-Men@"upunktes erhalten.
+
+@subheading Verwendung von Tasknamen:
+@cindex Tasknamen, Verwendung von
+Ein Task oder ein Prozess, der von einer Shell aus gestartet wurde und
+sich nicht abgekoppelt hat, hat meistens einen Namen wie
+@samp{Background CLI} oder @samp{CLI Process}.
+@code{Scout} verwendet in der Task-Liste in einem solchen Fall nicht
+den `richtigen' Namen des Tasks, sondern den Namen des jeweils
+ausgef@"uhrten Programmes.
+
+@quotation
+@noindent @strong{Beispiel:} Starten Sie zum Beispiel das Programm
+@code{DH0:Debug/Sushi} ohne den Befehl @code{run}, dann wird bei
+@code{Scout} als Taskname @samp{DH0:Debug/Sushi} angezeigt.
+@end quotation
+
+Einige Befehle von @code{Scout} erwarten als Parameter auch einen
+Tasknamen. Dieser Taskname mu@ss{} auf die gleiche Weise angegeben werden,
+wie er bei @code{Scout} angezeigt wird.
+
+@subheading Verwendung von Adressen:
+@cindex Adressen, Verwendung von
+Viele der folgenden Befehle ben@"otigen als Parameter die Adressen
+bestimmter Strukturen. Diese Adressen k@"onnen als hexadezimale Zahlen
+mit im Befehlsaufruf angegeben werden.
+
+@quotation
+@noindent @strong{Beispiel:} Die folgenden drei Aufrufe sind syntaktisch korrekt:
+
+@example
+1. @samp{scout FreezeTask AmiTCP:AmiTCP}
+2. @samp{scout FreezeTask 0x00204508}
+3. @samp{scout FreezeTask $00204508}
+@end example
+
+Der erste Aufruf friert den Prozess @samp{AmiTCP:AmiTCP} ein, sofern
+dieser @"uberhaupt vorhanden ist. Die beiden anderen Aufrufe k@"onnen
+nur erfolgreich ausgef@"uhrt werden, wenn jeweils ein Task existiert,
+der an der Adresse @samp{$00204508} im System zu finden ist.
+@end quotation
+
+@section Befehle via Shell
+
+@table @samp
+@item Help
+@format
+@strong{Format:} @code{Help}
+@end format
+
+Dieser Befehl @code{Help}, der keine Parameter ben@"otigt, ist wohl der
+wichtigste der nun folgenden Befehle. Er veranla@ss{}t @code{Scout},
+die Liste der verf@"ugbaren Befehle auszugeben. =:^)
+@end table
+
+Die nun folgenden 18 Befehle sind dazu da, dem Benutzer alle Listen,
+die @code{Scout} anbietet, auch in der Shell auszugeben. Dadurch ist es
+nicht mehr unbedingt erforderlich, @code{MUI} zu installieren, wenn
+man @code{Scout} benutzen m@"ochte. M@"ochte man allerdings die vielen Fenster
+von @code{Scout} benutzen, kommt man um @code{MUI} nicht herum!
+
+F@"ur jeden dieser Befehle steht auch eine Kurzform zur Verf@"ugung,
+die jeweils hinter dem Befehl in Klammern zu finden ist.
+
+@noindent Hier also die Befehle, die jeder f@"ur sich eine Liste ausgeben:
+
+@quotation
+@code{Allocations} (a), @code{BoopsiClasses} (b),
+@code{Commands} (c), @code{Devices} (d),
+@code{Timer} (e), @code{Fonts} (f),
+@code{Assigns} (g), @code{InputHandlers} (h),
+@code{Interrupts} (i), @code{LowMemory} (j),
+@code{Commodities} (k), @code{Libraries} (l),
+@code{Memory} (m), @code{Mounts} (n),
+@code{Locks} (o), @code{Ports} (p),
+@code{Residents} (r), @code{Semaphores} (s),
+@code{Tasks} (t), @code{Resources} (u),
+@code{Vectors} (v), @code{Windows} (w),
+@code{Expansions} (x), @code{System} (y) und
+@code{ScreenMode} (z).
+@end quotation
+
+@quotation
+@noindent @strong{Beispiel:} Um die Liste der Ports in der Shell
+auszugeben, m@"ussen Sie einfach in der Shell @samp{scout ports} oder
+@samp{scout p} eingeben.
+@end quotation
+
+@section Befehle via ARexx und Shell
+
+Dieser Abschnitt stellt die Befehle vor, die als ARexx-Befehl und
+als Shell-Parameter zur Verf@"ugung stehen.
+
+@table @samp
+@item FindTask
+@format
+@strong{Format:} @code{FindTask} @var{task}
+@end format
+
+Mit diesem Befehl kann festgestellt werden, ob ein bestimmter Task
+im System vorhanden ist. Er liefert als Ergebnis die Adresse des
+Tasks @var{task}, sofern dieser gefunden wurde. Als Variable
+@var{task} kann entweder der Name eines Tasks oder eine Adresse
+angegeben werden.
+
+@item FreezeTask
+@format
+@strong{Format:} @code{FreezeTask} @var{task}
+@end format
+
+Der Task @var{task} wird von @code{Scout} eingefroren. Er ist
+danach zwar noch in der Task-Liste zu finden, bekommt aber keine
+Rechenzeit mehr vom System. Die Variable @var{task} entspricht
+einem Tasknamen oder der Adresse eines Tasks.
+
+@item ActivateTask
+@format
+@strong{Format:} @code{ActivateTask} @var{task}
+@end format
+
+Der eingefrorener Task @var{task} kann durch diesen Befehl
+wieder aktiviert werden. F@"ur die Variable @var{task} ist ein
+Taskname oder eine Adresse zu w@"ahlen.
+
+@item RemoveTask
+@format
+@strong{Format:} @code{RemoveTask} @var{task}
+@end format
+
+Mit diesem Befehl wird der Task mit dem Namen oder der Adresse
+@var{task} unwiderruflich aus dem System entfernt.
+
+@item BreakTask
+@format
+@strong{Format:} @code{BreakTask} @var{task}
+@end format
+
+Dem Task @var{task} wird mit Hilfe dieses Kommandos ein Signal
+geschickt, das dem Dr@"ucken von CTRL-C bzw. CTRL-D entspricht. Viele
+Programme reagieren auf dieses Signal, indem sie sich selbst@"andig
+beenden. Als Variable @var{task} kann entweder der Name eines
+Tasks oder eine Adresse angegeben werden.
+
+@item SignalTask
+@format
+@strong{Format:} @code{SignalTask} @var{task} @var{hexsignal}
+@end format
+
+Hiermit kann dem Task @var{task} ein gew@"ahltes Signal
+@var{hexsignal} (bzw. eine Signalmaske) zugeschickt werden.
+Dieses Signal mu@ss{} als Hexadezimalzahl (mit vorangestelltem
+@samp{0x} oder @samp{$}) angegeben werden.
+
+@strong{Beispiel:} Das Kommando @samp{SignalTask scout 0x001000}
+sendet dem @code{Scout}-Prozess ein CTRL-C, worauf dieser sein Dasein
+beendet.
+
+@item SetTaskPri
+@format
+@strong{Format:} @code{SetTaskPri} @var{task} @var{priority}
+@end format
+
+Der Task @var{task} bekommt mit Hilfe dieses Befehles die
+Priorit@"at @var{priority}.  Die Variable @var{task} entspricht
+einem Tasknamen oder der Adresse eines Tasks.
+
+@item RemovePort
+@format
+@strong{Format:} @code{RemovePort} @var{port}
+@end format
+
+Der Port @var{port} wird von @code{Scout} aus dem System entfernt.
+F@"ur @var{port} kann entweder der Name des zu entfernenden Ports oder
+dessen Adresse gew@"ahlt werden.
+
+@item GetLockNumber
+@format
+@strong{Format:} @code{GetLockNumber} @var{lockpattern}
+@end format
+
+Dieses Kommando gibt die Anzahl der Lock-Eintr@"age zur@"uck, deren Pfade
+mit dem Namensmuster @var{lockpattern} @"ubereinstimmen. So kann @"uber ARexx
+nachgeschaut werden, ob noch auf ein bestimmtes File zugegriffen wird.
+
+@item RemoveLocks
+@format
+@strong{Format:} @code{RemoveLocks} @var{lockpattern}
+@end format
+
+Alle Locks werden aus dem System entfernt, deren Pfade mit dem
+Namensmuster @var{lockpattern} @"ubereinstimmen. Bei diesem Kommando ist
+h@"ochste Vorsicht geboten! Will ein Programm einen Lock entfernen, der
+schon von @code{Scout} entfernt wurde, dann st@"urzt mit gro@ss{}er
+Wahrscheinlichkeit der Rechner ab.
+
+@item RemoveLock
+@format
+@strong{Format:} @code{RemoveLock} @var{lockaddress}
+@end format
+
+Der Lock mit der Adresse @var{lockaddress} wird aus dem System
+entfernt.
+
+@item FindNode
+@format
+@strong{Format:} @code{FindNode} @var{nodetype} @var{nodename}
+@end format
+
+Dieser Befehl erlaubt es Ihnen, eine Struktur @var{nodename} zu
+finden, die einen bestimmten Nodetypen @var{nodetype} besitzt.
+
+Die Variable @var{nodetype} kann folgende Werte haben: @samp{LIBRARY},
+@samp{DEVICE}, @samp{RESOURCE}, @samp{MEMORY}, @samp{SEMAPHORE},
+@samp{PORT} oder @samp{INPUTHANDLER}.
+
+@strong{Beispiel:} Wenn Sie die Adresse der @file{dos.library} bekommen
+m@"ochten, m@"ussen Sie den Befehl wie folgt aufrufen:
+@example
+FindNode LIBRARY 'dos.library'
+@end example
+
+@item GetPriority
+@format
+@strong{Format:} @code{GetPriority} @var{nodeaddress}
+@end format
+
+Dieser Befehl liefert die Priorit@"at einer Struktur, die folgenden
+Typ haben kann: Task, Library, Device, Resource, Port, Resident,
+Inputhandler, Interrupt, Semaphor oder ein Element der Memory-List.
+
+Die Struktur m@"ussen Sie dabei durch ihre Adresse @var{nodeaddress}
+ausw@"ahlen, die Sie z.B. durch das ARexx-Kommando @code{FindNode}
+erhalten.
+
+@strong{Beispiel:} Die folgenden ARexx-Befehle beschaffen die
+Priorit@"at Ihres Grafik-Speichers und legen sie in der Variablen
+@var{pri} ab:
+
+@example
+FindNode MEMORY 'chip memory'
+addr = result
+GetPriority addr
+pri = result
+@end example
+
+@item SetPriority
+@format
+@strong{Format:} @code{SetPriority} @var{nodetype} @var{nodename} @var{priority}
+@end format
+
+Wenn Sie die Priorit@"at einer Struktur @var{nodename} @"andern m@"ochten,
+k@"onnen Sie daf@"ur dieses Kommando benutzen. Wiederum kann die
+Variable @var{nodetype} folgende Werte haben:  @samp{LIBRARY},
+@samp{DEVICE}, @samp{RESOURCE}, @samp{MEMORY}, @samp{SEMAPHORE},
+@samp{PORT} oder @samp{INPUTHANDLER}. Die Variable @var{priority}
+mu@ss{} daf@"ur von Ihnen die Priorit@"at bekommen, die die Struktur
+@var{nodename} bekommen soll.
+
+@item CloseLibrary
+@format
+@strong{Format:} @code{CloseLibrary} @var{library}
+@end format
+
+Die von Ihnen mittels der Variablen @var{library} ausgew@"ahlte
+Library wird einmal geschlossen. Die Variable @var{library} sollte
+daf@"ur mit dem Namen oder der Adresse der zu schlie@ss{}enden Library
+versehen werden.
+
+@item RemoveLibrary
+@format
+@strong{Format:} @code{RemoveLibrary} @var{library}
+@end format
+
+Die durch ihren Namen oder ihre Adresse ausgew@"ahlte Library @var{library}
+wird geschlossen.
+
+@item RemoveDevice
+@format
+@strong{Format:} @code{RemoveDevice} @var{device}
+@end format
+
+Das durch seinen Namen oder seine Adresse ausgew@"ahlte Device @var{device}
+wird geschlossen.
+
+@item RemoveResource
+@format
+@strong{Format:} @code{RemoveResource} @var{resource}
+@end format
+
+Die durch ihren Namen oder ihre Adresse ausgew@"ahlte Resource @var{resource}
+wird geschlossen.
+
+@item ObtainSemaphore
+@format
+@strong{Format:} @code{ObtainSemaphore} @var{semaphore}
+@end format
+
+Hierdurch wird dem System vorgegaukelt, da@ss{} das Ger@"at, das File oder
+wof@"ur der Semaphor @var{semaphore} sonst eingerichtet wurde, von
+einem Programm mehr benutzt wird, als vorher. Die Variable
+@var{semaphore} kann dabei entweder den Namen oder die Adresse
+des Semaphors enthalten.
+
+@item ReleaseSemaphore
+@format
+@strong{Format:} @code{ReleaseSemaphore} @var{semaphore}
+@end format
+
+Sollte ein Semaphor gerade benutzt werden, so machen Sie dem System
+mit dieser Funktion weis, da@ss{} ein Programm weniger das dem Semaphor
+entsprechende Ger@"at benutzt. Ein Programm, das den Semaphor beachtet,
+kann so eventuell versuchen, ein weiteres Mal auf das entsprechende
+Ger@"at zuzugreifen.
+
+@item RemoveSemaphore
+@format
+@strong{Format:} @code{RemoveSemaphore} @var{semaphore}
+@end format
+
+Der durch seinen Namen oder seine Adresse ausgew@"ahlte Semaphor
+@var{semaphore} wird mit Hilfe dieses Befehles aus dem System
+entfernt.
+
+@item RemoveInputhandler
+@format
+@strong{Format:} @code{RemoveInputhandler} @var{inputhandler}
+@end format
+
+Der Inputhandler @var{inputhandler}, den sie durch seinen Namen
+oder seine Adresse ausgew@"ahlt haben, wird aus dem System entfernt.
+
+@item FindResident
+@format
+@strong{Format:} @code{FindResident} @var{resident}
+@end format
+
+Mit diesem Befehl kann festgestellt werden, ob eine bestimmte
+residente Struktur im System vorhanden ist. Er liefert als
+Ergebnis die Adresse der residenten Struktur @var{resident},
+sofern diese gefunden wurde. Als Variable @var{resident} kann
+entweder der Name oder die Adresse einer residenten Struktur
+angegeben werden.
+
+@item FindInterrupt
+@format
+@strong{Format:} @code{FindInterrupt} @var{interruptname}
+@end format
+
+Dieser Befehl dient dazu, einen bestimmten Interrupt mit dem
+Namen @var{interruptname} zu finden. Wird der Interrupt gefunden,
+so wird seine Adresse zur@"uckgeliefert.
+
+@item RemoveInterrupt
+@format
+@strong{Format:} @code{RemoveInterrupt} @var{interruptname}
+@end format
+
+Der Interrupt @var{interruptname} wird aus dem System entfernt.
+
+@item FlushDevs
+@format
+@strong{Format:} @code{FlushDevs}
+@end format
+
+Sollten sich noch Devices im System bzw. im Speicher befinden, die im
+Augenblick von keinem Programm mehr ben@"otigt werden, so werden sie
+aus dem Speicher entfernt.
+
+@item FlushFonts
+@format
+@strong{Format:} @code{FlushFonts}
+@end format
+
+Unbenutzte Zeichens@"atze, die von Diskette bzw. Festplatte nachgeladen
+wurden und nicht mehr ben@"otigt werden, werden aus dem Speicher
+entfernt.
+
+@item FlushLibs
+@format
+@strong{Format:} @code{FlushLibs}
+@end format
+
+Sollten sich noch Libraries im System/im Speicher befinden, die im
+Augenblick von keinem Programm mehr ben@"otigt werden, so werden sie
+aus dem Speicher entfernt.
+
+@item FlushAll
+@format
+@strong{Format:} @code{FlushAll}
+@end format
+
+Diese Funktion beinhaltet die Funktionen @code{FlushDevs}, @code{FlushFonts}
+und @code{FlushLibs}. Dementsprechend werden Devices, Libraries und
+Zeichens@"atze, die zur Zeit von keinem Programm benutzt werden, aus dem
+Speicher entfernt.
+
+@item ClearResetVectors
+@format
+@strong{Format:} @code{ClearResetVectors}
+@end format
+
+Bei Gebrauch dieser Funktion werden die sechs Reset-Vektoren gel@"oscht
+(siehe auch @ref{Vectors}).
+
+@item PopToFront
+@format
+@strong{Format:} @code{PopToFront} @var{winscr}
+@end format
+
+Der Screen oder das Fenster @var{winscr} werden in den Vordergrund
+gebracht. Die Variable @var{winscr} kann entweder den Title des
+Screens/Fensters oder die Adresse des Screens/Fensters enthalten.
+
+@item CloseWindow
+@format
+@strong{Format:} @code{CloseWindow} @var{window}
+@end format
+
+Das Fenster mit dem Titel oder der Adresse @var{window} wird
+geschlossen.
+
+@item CloseScreen
+@format
+@strong{Format:} @code{CloseScreen} @var{screen}
+@end format
+
+Der Screen mit dem Titel oder der Adresse @var{screen} wird
+geschlossen.
+
+@item CloseFont
+@format
+@strong{Format:} @code{CloseFont} @var{address}
+@end format
+
+Der Zeichensatz mit der Adresse @var{address} wird einmal
+geschlossen.
+
+@item RemoveFont
+@format
+@strong{Format:} @code{RemoveFont} @var{address}
+@end format
+
+Der Zeichensatz mit der Adresse @var{address} wird aus dem
+System entfernt, sofern er von keinem Programm mehr benutzt wird
+bzw. oft genug geschlossen wurde.
+
+@item RemoveCommand
+@format
+@strong{Format:} @code{RemoveCommand} @var{address}
+@end format
+
+Der residente Befehl mit der Adresse @var{address} wird aus dem
+System entfernt.
+
+@item RemoveAssign
+@format
+@strong{Format:} @code{RemoveAssign} @var{name}
+@end format
+
+Mit Hilfe dieses Befehles wird der Assign mit dem Namen
+@var{name} aus dem System entfernt.
+
+@item RemoveAssignList
+@format
+@strong{Format:} @code{RemoveAssignList} @var{name} @var{address}
+@end format
+
+Dieser Befehl sorgt daf@"ur, da@ss{} das Verzeichnis mit der Adresse
+@var{address} von dem Assign mit dem Namen @var{name} entfernt wird.
+
+@item PrintList
+@format
+@strong{Format:} @code{PrintList} @var{listkey} @var{filename}
+@end format
+
+Um auch via ARexx an eine der gegebenen Struktur-Listen zu kommen,
+wurde @code{Scout} der Befehl @code{PrintList} beigef@"ugt. Die
+Liste, deren Tastaturk@"urzel der Variablen @var{listkey} @"ubergeben
+wird, wird in das File @var{filename} ausgegeben.
+
+@item OpenWindow
+@format
+@strong{Format:} @code{OpenWindow} @var{windowid}
+@end format
+
+Mit diesem Kommando sind Sie in der Lage, alle Fenster @"uber ARexx zu
+@"offnen, die @"uber das Hauptfenster von @code{Scout} durch das
+Bet@"atigen eines Gadgets ge@"offnet werden k@"onnen.
+
+Die Fensteridentifikation @var{windowid} besteht aus dem gleichen
+Text, der auch auf den Gadgets im Hauptfenster zu finden ist.
+
+@strong{Beispiel:} Wird das Kommando @samp{OpenWindow 'Resident Cmds'}
+zu @code{Scouts} ARexx-Port geschickt, dann wird das Fenster mit der Liste
+der residenten Befehle ge@"offnet.
+
+Sollte das Fenster schon ge@"offnet worden sein, dann wird es nach vorn
+geholt, und die jeweilige Liste wird neu eingelesen.
+
+Aus der diesem Befehl zugedachten Aufgabe wird ersichtlich, da@ss{}
+dieser Befehl keinerlei Wirkung hat, sollte er als Shell-Parameter
+aufgerufen worden sein. Die grafische Oberfl@"ache von @code{Scout} steht
+dort eben nicht zur Verf@"ugung.
+
+@item CxAppear
+@itemx CxDisappear
+@itemx CxEnable
+@itemx CxDisable
+@itemx CxKill
+@itemx CxListChg
+@itemx CxUnique
+@format
+@strong{Format:} @code{Cx...} @var{name}
+@end format
+
+Hiermit wird dem Commodity mit dem Namen @var{name} das entsprechende Kommando
+zugesendet. Ob und was dann geschieht, h@"angt von dem Commodity selbst ab.
+
+@item RemoveCx
+@format
+@strong{Format:} @code{RemoveCx} @var{commodity}
+@end format
+
+Das entsprechende Commodity wird aus der Liste entfernt. Dies ist jedoch nur
+als Notfall@"osung gedacht, wenn @code{CxKill} nicht funktionierte.
+
+@item SetCxPri
+@format
+@strong{Format:} @code{SetCxPri} @var{commodity} @var{priorit@"at}
+@end format
+
+Setzt die Priorit@"at des Commodities.
+
+@item RemoveClass
+@format
+@strong{Format:} @code{RemoveClass} @var{class}
+@end format
+
+Die entsprechende BOOPSI-Klasse wird geschlossen, wenn kein Objekt und keine
+Unterklasse existiert.
+
+
+@end table
+@node Updates, Credits, Commands, Top
+@comment node-name, next, previous, up
+
+@iftex
+@unnumbered Anhang A
+@end iftex
+
+@section Wie und wo bekommt man Updates?
+@cindex Updates
+@cindex Programmversion
+
+Die neueste Version von @code{Scout} sollte immer auf dem AmiNet
+im Verzeichnis @file{util/moni} zu finden sein. Wahrscheinlich
+wird sie sich dadurch automatisch etwas sp@"ater auch in aktuelleren
+Public Domain Sammlungen befinden.
+
+Auch finden Sie die aktuelle Version stets auf meiner Homepage:
+@example
+    http://www.is-koeln.de/einwohner/shred/
+@end example
+
+@node Credits, Author Info, Updates, Top
+@comment node-name, next, previous, up
+
+@section Wem ich zu danken habe
+@cindex Danksagungen
+
+Nun haben wir noch ein paar Leuten zu danken, die uns bei der
+Entwicklung von @code{Scout} auf die unterschiedlichsten Weisen
+behilflich waren, als da w@"aren:
+
+@itemize @bullet
+@item Klaus `gizmo' Weber,
+der dieses Programm ein wenig unter die Lupe genommen hat und f@"ur
+Attes Probleme bei der Entwicklung von @code{Scout} (es waren nicht
+wenige) meist ein freies Ohr hatte,
+
+@item Christian `cosinus' Stelter,
+der es erlaubt hat, seine ganzen Manuals zu benutzen,
+
+@item Stefan Stuntz
+f@"ur sein @code{MagicUserInterface}, das uns viel Arbeit erspart hat,
+
+@item allen, die die Bezeichnung @i{Giftware} ernst genommen hatten,
+
+@item den ganzen Leuten, die Scout getestet und uns Bugs oder neue
+einzubauende Features gemeldet haben und es (hoffentlich auch weiterhin) noch tun:
+Kai `wusel' Siering, Martin Hauner, Peter Meyer, Karl `Charly' Skibinski,
+Michael `Mick' Hohmann, Thore B@"ockelmann, Bernardo Innocenti, Daniel Lundberg, @dots{}
+
+ und zum guten Schlu@ss{}
+
+@item all den anderen, die wir evtl. vergessen haben, die uns Bugs,
+Anregungen und konstruktive Kritik zu Geh@"or gebracht haben.
+@end itemize
+
+@node Author Info, Index, Credits, Top
+@comment node-name, next, previous, up
+
+@section Wie erreicht man die Autoren?
+@cindex Autor
+@cindex Adresse des Autors
+
+Wenn Sie Fragen, Verbesserungsvorschl@"age, Bug Reports oder Dinge
+dieser Art haben, dann k@"onnen Sie mich unter der folgenden
+Adresse erreichen:
+
+@example
+
+                    Richard K@"orber
+                    Hornstra@ss{}e 20
+               51465 Bergisch Gladbach
+                     - Germany -
+
+            E-Mail: shred@@chessy.aworld.de
+                    richard.koerber@@koeln.netsurf.de
+
+@end example
+
+Schreiben Sie E-Mails, wenn irgend m@"oglich.
+
+
+Andreas Gelhausen k@"onnen Sie erreichen unter:
+
+@example
+
+                  Andreas Gelhausen
+                  Graf Spee Str. 23b
+                  26123 Oldenburg
+                     - Germany -
+
+             E-Mail: atte@@crash.north.de
+
+@end example
+
+Bitte senden Sie ihm keine Bug-Reports, Vorschl@"age und @"ahnliches. F@"ur
+Leute, die unbedingt noch ein Geschenk loswerden m@"ochten, ist er jedoch
+die richtige Adresse.
+
+@noindent Das war's!  =:^)
+
+@c ===================================================================
+@c ==================== The End of the Document ======================
+@c ===================================================================
+@node Index, , Author Info, Top
+@comment node-name, next, previous, up
+
+@unnumbered Stichwortverzeichnis
+
+@printindex cp
+
+@contents
+@bye

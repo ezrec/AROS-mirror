@@ -1,0 +1,109 @@
+
+
+ INTRODUCTION
+-------------- -- -
+
+Scout was originally written by Andreas Gelhausen, starting in 1994.
+
+When he decided to leave the Amiga, he gave the source code to Richard Körber in
+1997. He has added some new windows, nice features and nasty bugs. :)
+
+He has left the Amiga as well (at least he said that when he released the
+source). So as a gift to the Amiga community, Andreas and Richard decided to
+make the source code of Scout public.
+
+In 2001 I, Thore Böckelmann, took the source of Scout, because many things were
+very unpleasant und Scout tended to crash quite often, especially when you had
+to look up some things in a hurry.
+
+As most of the free software source codes, the source code of Scout is
+in an excellent shape. Every single function is commented in English
+and has a header that explains the functionality in every single detail.
+It will surely be a feast for you to read the code.
+
+Well, at least sort of... ;-)
+
+
+
+ TO-DO
+------- -- -
+
+What you have here, is a the source to the latest released version. You can do
+whatever you want to do with it, but I would like to know if you encounter any
+bugs (and probably fixes for them, too), so I can include them in my source and
+make a new "official" release.
+
+Currently I have nothing on my to-do list...
+
+
+
+ REQUIREMENTS
+-------------- -- -
+
+Scout is not suited for Amiga beginners. It makes great demands on your
+system, and requires a deep knowledge about the Amiga system and interna.
+
+You will need the latest SAS/C package to compile Scout. I don't know
+if other C compilers will do as well. Just give it a try. :-)
+
+These packages are also required to successfully compile Scout:
+
+ * Identify's developer package (AmiNet, my Home Page)
+ * MUI developer package (AmiNet)
+ * AmiTCP/IP developer package (AFAIK AmiNet) or similar
+
+(I hope I didn't forget something.)
+
+TexInfo is also required for the documentation.
+
+You will also need some free megs on your hard disk and a lot of free RAM.
+My 68o6o/50 requires about 6 minutes to compile the entire project.
+
+
+ GNU
+----- -- -
+
+The GNU General Public License will apply.
+
+  Scout - An Amiga System Monitor
+  Copyright (C) 1994-2000 Andreas Gelhausen, Richard Körber and Thore Böckelmann
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+For further details, see the COPYING file of this package.
+
+
+ ADDRESS
+--------- -- -
+
+If you want to contact me, you can reach me at one of these addresses:
+
+  tboeckel@uni-paderborn.de
+  thboeckel@web.de
+
+You can write EMails to Richard Körber, too, but he stopped the development:
+
+  rkoerber@gmx.de
+  shred@shredzone.de
+
+Please don't contact me if you want me to put some improvements to the
+source code. Also, don't ask me newbie questions. I am quite busy and
+don't have the time to answer to minor problems and RTFM stuff. :)
+
+Also, visit Richard's home page at:
+
+  http://www.shredzone.de
+
+

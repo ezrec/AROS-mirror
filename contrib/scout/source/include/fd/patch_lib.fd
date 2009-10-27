@@ -1,0 +1,6 @@
+##base _PatchBase
+##bias 6
+##public
+GetPatchList()()
+FreePatchList(list)(a0)
+##end

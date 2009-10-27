@@ -1,0 +1,156 @@
+##
+##
+
+TARGET=             tblib.lib
+
+OBJDIR=             .obj_os3
+
+OPTIMIZE=           opt opttime optsched
+DEBUG=              debug=line #define=DEBUG
+#CFLAGS=             cpu=68020 parm=b streq strmerge nostkchk incdir=sdk:include/include_h incdir=/include ign=306
+CFLAGS=             cpu=68020 parm=b streq strmerge nostkchk incdir=sc:include incdir=/include ign=306 define=__USE_SYSBASE
+AFLAGS=             machine=68020 incpath=include:,/include dl
+
+OBJS=               $(OBJDIR)/ports_AllocPort.o \
+                    $(OBJDIR)/ports_FreePort.o \
+                    $(OBJDIR)/ports_AllocSig.o \
+                    $(OBJDIR)/ports_FreeSig.o \
+                    $(OBJDIR)/ports_SafePutMsg.o \
+                    $(OBJDIR)/timer_TimerDelay.o \
+                    $(OBJDIR)/timer_StartTimer.o \
+                    $(OBJDIR)/timer_AbortTimer.o \
+                    $(OBJDIR)/memory_CreatePool.o \
+                    $(OBJDIR)/memory_AllocPooled.o \
+                    $(OBJDIR)/memory_AllocVecPooled.o \
+                    $(OBJDIR)/memory_FreePooled.o \
+                    $(OBJDIR)/memory_FreeVecPooled.o \
+                    $(OBJDIR)/memory_DeletePool.o \
+                    $(OBJDIR)/string_b2cstr.o \
+                    $(OBJDIR)/string_b2cstrn.o \
+                    $(OBJDIR)/string_c2bstr.o \
+                    $(OBJDIR)/string_snprintf.o \
+                    $(OBJDIR)/string_sprintf.o \
+                    $(OBJDIR)/string_strcat.o \
+                    $(OBJDIR)/string_strcatn.o \
+                    $(OBJDIR)/string_strdup.o \
+                    $(OBJDIR)/string_strdup_pool.o \
+                    $(OBJDIR)/string_strsep.o \
+                    $(OBJDIR)/string_parse_string.o \
+                    $(OBJDIR)/i2m_word.o \
+                    $(OBJDIR)/i2m_long.o \
+                    $(OBJDIR)/math64_add64.o \
+                    $(OBJDIR)/math64_sub64.o \
+                    $(OBJDIR)/math64_cmp64.o \
+                    $(OBJDIR)/envvar_GetEnvVar.o \
+                    $(OBJDIR)/envvar_SetEnvVar.o \
+                    $(OBJDIR)/mui_DoSuperNew.o \
+                    $(OBJDIR)/mui_MakeButton.o \
+                    $(OBJDIR)/mui_MakeCheckmark.o \
+                    $(OBJDIR)/mui_xget.o \
+                    $(OBJDIR)/errorreq_ErrorMsg.o \
+                    $(OBJDIR)/library_CheckLibVersion.o \
+                    $(OBJDIR)/library_CheckLibVersionName.o
+
+INCLUDES=           tblib.h \
+                    SDI_compiler.h
+
+all:                $(TARGET)
+
+.c.o:
+                    sc $(CFLAGS) $(OPTIMIZE) $(DEBUG) $< objname=$@
+.asm.o:
+                    prog:phxass/phxass $(AFLAGS) $< to $@
+
+
+$(TARGET):          $(OBJS)
+                    oml tblib.lib r $(OBJS)
+                    #-copy tblib.lib sc:lib
+                    #-copy tblib.h sc:include
+
+clean:
+                    -delete $(OBJS) $(TARGET) quiet
+
+realclean:
+                    @smake clean
+
+date:
+                    @;
+
+$(OBJDIR)/ports_AllocPort.o: ports_AllocPort.c tblib.h
+
+$(OBJDIR)/ports_FreePort.o: ports_FreePort.c tblib.h
+
+$(OBJDIR)/ports_AllocSig.o: ports_AllocSig.c tblib.h
+
+$(OBJDIR)/ports_FreeSig.o: ports_FreeSig.c tblib.h
+
+$(OBJDIR)/ports_SafePutMsg.o: ports_SafePutMsg.c tblib.h
+
+$(OBJDIR)/timer_TimerDelay.o: timer_TimerDelay.c tblib.h
+
+$(OBJDIR)/timer_StartTimer.o: timer_StartTimer.c tblib.h
+
+$(OBJDIR)/timer_AbortTimer.o: timer_AbortTimer.c tblib.h
+
+$(OBJDIR)/memory_CreatePool.o: memory_CreatePool.c tblib.h
+
+$(OBJDIR)/memory_AllocPooled.o: memory_AllocPooled.c tblib.h
+
+$(OBJDIR)/memory_AllocVecPooled.o: memory_AllocVecPooled.c tblib.h
+
+$(OBJDIR)/memory_FreePooled.o: memory_FreePooled.c tblib.h
+
+$(OBJDIR)/memory_FreeVecPooled.o: memory_FreeVecPooled.c tblib.h
+
+$(OBJDIR)/memory_DeletePool.o: memory_DeletePool.c tblib.h
+
+$(OBJDIR)/string_b2cstr.o: string_b2cstr.c tblib.h
+
+$(OBJDIR)/string_b2cstrn.o: string_b2cstrn.c tblib.h
+
+$(OBJDIR)/string_c2bstr.o: string_c2bstr.c tblib.h
+
+$(OBJDIR)/string_snprintf.o: string_snprintf.c tblib.h
+
+$(OBJDIR)/string_sprintf.o: string_sprintf.c tblib.h
+
+$(OBJDIR)/string_strcat.o: string_strcat.c tblib.h
+
+$(OBJDIR)/string_strcatn.o: string_strcatn.c tblib.h
+
+$(OBJDIR)/string_strdup.o: string_strdup.c tblib.h
+
+$(OBJDIR)/string_strdup_pool.o: string_strdup_pool.c tblib.h
+
+$(OBJDIR)/string_strsep.o: string_strsep.c tblib.h
+
+$(OBJDIR)/string_parse_string.o: string_parse_string.c tblib.h
+
+$(OBJDIR)/i2m_word.o: i2m_word.asm tblib.h
+
+$(OBJDIR)/i2m_long.o: i2m_long.asm tblib.h
+
+$(OBJDIR)/math64_add64.o: math64_add64.asm tblib.h
+
+$(OBJDIR)/math64_sub64.o: math64_cmp64.asm tblib.h
+
+$(OBJDIR)/math64_cmp64.o: math64_sub64.asm tblib.h
+
+$(OBJDIR)/envvar_GetEnvVar.o: envvar_GetEnvVar.c tblib.h
+
+$(OBJDIR)/envvar_SetEnvVar.o: envvar_SetEnvVar.c tblib.h
+
+$(OBJDIR)/mui_DoSuperNew.o: mui_DoSuperNew.c tblib.h
+
+$(OBJDIR)/mui_MakeButton.o: mui_MakeButton.c tblib.h
+
+$(OBJDIR)/mui_MakeCheckmark.o: mui_MakeCheckMark.c tblib.h
+
+$(OBJDIR)/mui_xget.o: mui_xget.c tblib.h
+
+$(OBJDIR)/errorreq_ErrorMsg.o: errorreq_ErrorMsg.c tblib.h
+
+$(OBJDIR)/library_CheckLibVersion.o: library_CheckLibVersion.c tblib.h
+
+$(OBJDIR)/library_CheckLibVersionName.o: library_CheckLibVersionName.c tblib.h
+

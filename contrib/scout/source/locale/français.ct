@@ -1,0 +1,5609 @@
+## version $VER: scout.ct 3.0 (09.06.2004) - Herve & Jean-Frederic
+## language français
+## codeset 0
+;
+;#language english
+;#version 3
+;
+; strings in scout.c
+msgCantOpenInputDevice
+Impossible d'ouvrir « input.device » !\n
+; Can't open input.device!\n
+;
+;
+msgCantOpenTimerDevice
+Impossible d'ouvrir « timer.device » !\n
+; Can't open timer.device!\n
+;
+;
+msgNoHostNameSpecified
+Pas d'hôte indiqué!\n
+; No HOST specified!\n
+;
+;
+msgStartTCPIPStack
+Veuillez démarrer une pile TCP/IP (ex.: AmiTcp/Genesis ou Miami(Dx)) !\n
+; Please start a TCP/IP stack first (i.e. AmiTCP/Genesis or Miami(Dx))!\n
+;
+;
+msgCantCreateApplication
+Impossible de créer l'application !
+; Can't create application!\n
+;
+;
+msgCantSendARexxScript
+Impossible d'envoyer le script %s sur le port « %s »!\n
+; Can't send script %s to port \"%s\"!\n
+;
+;
+msgBreak
+*** Interrompu\n
+; ***Break\n
+;
+;
+msgMCCNotAvailable
+Impossible d'ouvrir la classe MUI %s!\n\
+Scout a besoin de %s V%ld.%ld minimum!
+; Cannot open MUI class %s!\n\
+; Scout needs at least %s V%ld.%ld!
+;
+;
+msgMCCTooOld
+Votre classe MUI %s est trop ancienne!\n\
+Scout a besoin de %s V%ld.%ld minimum, vous n'avez que V%ld.%ld!
+; Your MUI class %s is too old!\n\
+; Scout needs at least %s V%ld.%ld, but you only have V%ld.%ld!
+;
+; strings in scout_net.c
+msgCantInitTCPIP
+Impossible d'initialiser la pile TCP/IP!\n
+; Can't initialize TCP/IP stack!\n
+;
+;
+msgAskForPassword
+Mot de passe:
+; Password:
+;
+;
+msgCantGetPassword
+Impossible d'obtenir le mot de passe!\n
+; Can't get password!\n
+;
+;
+msgCantConnectToServer
+Impossible de se connecter au serveur!\n
+; Can't connect to server!\n
+;
+;
+msgCantCreateSocket
+Impossible de créer le socket!\n
+; Can't create socket!\n
+;
+;
+msgCantFindHost
+Impossible de trouver l'hôte « %s » !\n
+; Can't find host \"%s\"!\n
+;
+;
+msgUnknownOption
+Option inconnue
+; Unknown option
+;
+;
+msgWrongPassword
+Mauvais mot de passe!\n
+; Wrong password!\n
+;
+;
+msgNoPrivilege
+Vous n'avez pas les privilèges racines!\n
+; You don't have root privileges!\n
+;
+;
+msgUnknownUser
+Utilisateur inconnu!\n
+; Unknown user!\n
+;
+;
+msgNoBEGINReceived
+Aucun « BEGIN » reçu!\n
+; No \"BEGIN\" received!\n
+;
+;
+msgErrorOccured
+Une erreur est survenue!
+; Error occured!
+;
+;
+msgErrorContinue
+Continuer
+; Continue
+;
+;
+msgYes
+Oui
+; Yes
+;
+;
+msgNo
+Non
+; No
+;
+;
+txtRequestTitle
+Requête Scout
+; Scout Request
+;
+;
+txtChooseFile
+Vers un fichier ou l'imprimante
+; Choose file or printer
+;
+;
+msgCouldNotOpenFile
+Impossible d'ouvrir « %s » !
+; Couldn't open file \'%s\'!
+;
+; strings in objects/scout_about.c
+txtMUIContinue
+_Continuer
+; _Continue
+;
+;
+txtAboutTitle
+À propos de Scout
+; About Scout
+;
+;
+txtAboutText
+\033c\n\
+%s\n\
+%s\n\
+\n\
+%s\n\
+Tous droits réservés\n\
+\n\
+Ce programme est en \033bOpen Source\033n.\n\
+\n\
+Nom du port ARexx: %s\n\
+\n\
+Page d'accueil:
+; \033c\n\
+; %s\n\
+; %s\n\
+; \n\
+; %s\n\
+; All Rights Reserved\n\
+; \n\
+; This program is \033bOpen Source\033n.\n\
+; \n\
+; ARexx port name: %s\n\
+; \n\
+; Homepage:
+;
+; general button strings
+txtUpdate
+_Rafraîchir
+; _Update
+;
+;
+txtPrint
+_Imprimer
+; Pr_int
+;
+;
+txtRemove
+_Supprimer
+; _Remove
+;
+;
+txtPriority
+_Priorité
+; _Priority
+;
+;
+txtMore
+P_lus
+; _More
+;
+;
+txtClose
+_Libérer
+; _Close
+;
+;
+txtExit
+_Fermer
+; E_xit
+;
+;
+txtFunctions
+Fon_ctions
+; _Functions
+;
+;
+msgYesNo
+Oui|Non
+; Yes|No
+;
+;
+msgOnceAllCancel
+Une|Tous|Annuler
+; Once|All|Cancel
+;
+;
+txtMUIOk
+_Ok
+; _Ok
+;
+;
+txtMUICancel
+_Annuler
+; _Cancel
+;
+;
+txtNone
+<rien>
+; <none>
+;
+;
+txtDisassemble
+_Désassembler
+; _Disassemble
+;
+;
+txtAddress
+Adresse
+; Address
+;
+;
+txtAddress2
+Adresse:
+; Address:
+;
+;
+txtName
+Nom
+; Name
+;
+;
+txtName2
+Nom:
+; Name:
+;
+;
+txtCount
+Nbr:
+;  Cnt:
+;
+;
+txtNotAvailable
+N/A
+; n/a
+;
+; strings in allocations window
+txtAllocationFree
+<libre>
+; <free>
+;
+;
+txtAllocationAllocated
+<alloué>
+; <allocated>
+;
+;
+txtAllocationNotAvailable
+<non disponible>
+; <not available>
+;
+;
+txtAllocationsTitle
+ALLOCATIONS
+; ALLOCATIONS
+;
+;
+txtAllocationCIAA
+CIA A
+; CIA A
+;
+;
+txtAllocationCIAB
+CIA B
+; CIA B
+;
+;
+txtAllocationTimerA
+Timer A:
+; Timer A:
+;
+;
+txtAllocationTimerB
+Timer B:
+; Timer B:
+;
+;
+txtAllocationAlarm
+Alarme:
+; Alarm:
+;
+;
+txtAllocationSerial
+Série:
+; Serial:
+;
+;
+txtAllocationFlag
+Attributs:
+; Flag:
+;
+;
+txtAllocationPorts
+Ports
+; Ports
+;
+;
+txtAllocationSerialPort
+Port série:
+; Serial Port:
+;
+;
+txtAllocationSerialControl
+Contrôle série:
+; Serial Control:
+;
+;
+txtAllocationParallelPort
+Port parallèle:
+; Parallel Port:
+;
+;
+txtAllocationParallelControl
+Contrôle parallèle:
+; Parallel Control:
+;
+;
+txtAllocationsPrintHeaderCIA
+\nCIA %s:\n\n
+; \nCIA %s:\n\n
+;
+;
+txtAllocationsPrintLineCIA
+Timer A: %s\n\
+Timer B: %s\n\
+ Alarme: %s\n\
+  Série: %s\n\
+ Attri.: %s\n
+; Timer A: %s\n\
+; Timer B: %s\n\
+;   Alarm: %s\n\
+;  Serial: %s\n\
+;    Flag: %s\n
+;
+;
+txtAllocationsPrintHeaderPorts
+\n\nPorts série et parallèle:\n\n
+; \n\nSerial & Parallel Ports:\n\n
+;
+;
+txtAllocationsPrintLinePorts
+    Port série: %s\n\
+Contrôle série: %s\n\
+Port parallèle: %s\n\
+Contrôle parallèle: %s\n
+;      Serial Port: %s\n\
+;   Serial Control: %s\n\
+;    Parallel Port: %s\n\
+; Parallel Control: %s\n
+;
+; strings in assigns window
+msgWantToRemoveAssignFromList
+Voulez-vous réellement supprimer le répertoire\n\
+« %s » de l'assignation « %s » ?
+; Do you really want to remove directory\n\
+; \"%s\" from assign \"%s:\"?
+;
+;
+msgWantToRemoveAssign
+Voulez-vous vraiment supprimer l'assignation « %s: » ?
+; Do you really want to remove assign \"%s:\"?
+;
+;
+txtAssignsTitle
+ASSIGNATIONS
+; ASSIGNS
+;
+;
+txtAssignsPath
+Chemin
+; Path
+;
+;
+txtAssignsPrintHeader
+\n  Adresse  Nom             Chemin\n\n
+; \n  Address  Name             Path\n\n
+;
+;
+txtAssignsPrintLine
+ %9s %-16s %s\n
+;  %9s %-16s %s\n
+;
+; strings in classes window
+msgWantToRemoveClass
+Voulez-vous vraiment supprimer la classe\n\
+« %s » ?
+; Do you really want to remove class\n\
+; \"%s\"?
+;
+;
+txtClassesTitle
+CLASSES
+; CLASSES
+;
+;
+txtClassesDetailTitle
+CLASSE
+; CLASS
+;
+;
+txtClassID
+ID
+; cl_ID
+;
+;
+txtClassID2
+ID:
+; cl_ID:
+;
+;
+txtClassObjects
+Objets
+; Objects
+;
+;
+txtClassSubclasses
+Sous-classes
+; Subclasses
+;
+;
+txtClassDispatcher
+Dispatcher
+; cl_Dispatcher
+;
+;
+txtClassSuper
+Super:
+; cl_Super:
+;
+;
+txtClassInstOffset
+Offset inst.:
+; cl_InstOffset:
+;
+;
+txtClassInstSize
+Taille inst.:
+; cl_InstSize:
+;
+;
+txtClassEntry
+Entrée:
+; cl_Entry:
+;
+;
+txtClassSubEntry
+Sous-entrée:
+; cl_SubEntry:
+;
+;
+txtClassData
+Données:
+; cl_Data:
+;
+;
+txtClassUserData
+Données utilisateur:
+; cl_UserData:
+;
+;
+txtClassSubclassCount
+Compteur sous-classe:
+; cl_SubclassCount:
+;
+;
+txtClassObjectCount
+Compteur objet:
+; cl_ObjectCount:
+;
+;
+txtClassFlags
+Attributs
+; cl_Flags
+;
+;
+txtClassFlags2
+Attributs:
+; cl_Flags:
+;
+;
+txtClassFlagsTitle
+Attributs de la classe
+; Class flags
+;
+;
+txtClassReserved
+Réservé:
+; cl_Reserved:
+;
+;
+txtClassesPrintHeader
+\n  Adresse  Objets  Sous-classes  Super-classe          Dispatcher  Nom\n\n
+; \n  Address  Objects  Subclasses  Superclass             Dispatcher  Name\n\n
+;
+;
+txtClassesPrintLine
+ %s %7s %11s  %-20s   %-9.9s   %-20s\n
+;  %s %7s %11s  %-20s   %-9.9s   %-20s\n
+;
+; strings in commands window
+msgCantRemoveInternal
+On ne peut pas supprimer une commande interne !
+; Can't remove INTERNAL commands!
+;
+;
+msgCantRemoveSystem
+Impossible de supprimer une commande système !
+; Can't remove SYSTEM commands!
+;
+;
+msgCantRemoveDisabled
+Impossible de supprimer une commande désactivée !
+; Can't remove DISABLED commands!
+;
+;
+msgWantToRemoveCommand
+Voulez-vous vraiment supprimer la commande\n\
+« %s » ?
+; Do you really want to remove command\n\
+; \"%s\"?
+;
+;
+txtCommandsTitle
+COMMANDES RÉSIDENTES
+; RESIDENT COMMANDS
+;
+;
+txtCommandUseCount
+Compteur
+; UseCount
+;
+;
+txtCommandSegment
+Segment
+; Segment
+;
+;
+txtCommandLower
+Bas
+; Lower
+;
+;
+txtCommandUpper
+Haut
+; Upper
+;
+;
+txtCommandSize
+Taille
+; Size
+;
+;
+txtCommandSystem
+SYSTÈME
+; SYSTEM
+;
+;
+txtCommandInternal
+INTERNE
+; INTERNAL
+;
+;
+txtCommandDisabled
+DÉSACTIVÉ
+; DISABLED
+;
+;
+txtCommandPrintHeader
+\n  Adresse  Nom             Compteur   Bas       Haut         Taille\n\n
+; \n  Address  Name            UseCount   Lower     Upper         Size\n\n
+;
+;
+txtCommandPrintLine
+ %9s %-15.15s %8s %-9.9s %-9.9s %10.10s\n
+;  %9s %-15.15s %8s %-9.9s %-9.9s %10.10s\n
+;
+; strings in commodities window
+txtAppear
+_Apparaître
+; _Appear
+;
+;
+txtDisappear
+_Disparaître
+; _Disappear
+;
+;
+txtEnable
+A_ctiver
+; _Enable
+;
+;
+txtDisable
+Dé_sactiver
+; Di_sable
+;
+;
+txtKill
+_Tuer
+; _Kill
+;
+;
+txtListChange
+List_Chg
+; List_Chg
+;
+;
+txtUnique
+Uni_que
+; Uni_que
+;
+;
+msgWantToRemoveCommoditiy
+Voulez-vous vraiment supprimer la commodité\n\
+« %s » ?
+; Do you really want to remove commodity\n\
+; \"%s\"?
+;
+;
+txtCommoditiesTitle
+COMMODITÉS
+; COMMODITIES
+;
+;
+txtCommoditiesDetailTitle
+COMMODITÉ
+; COMMODITY
+;
+;
+txtCommodityName
+Nom
+; mco_Name
+;
+;
+txtCommodityName2
+Nom:
+; mco_Name:
+;
+;
+txtCommodityFlags
+Attributs
+; mco_Flags
+;
+;
+txtCommodityFlags2
+Attributs:
+; mco_Flags:
+;
+;
+txtCommodityPort
+Port:
+; mco_Port
+;
+;
+txtCommodityPort2
+Port:
+; mco_Port:
+;
+;
+txtCommodityTask
+Tâche:
+; mco_Task:
+;
+;
+txtCommodityTypeInvalid
+Invalide
+; Invalid
+;
+;
+txtCommodityTypeFilter
+Filtre
+; Filter
+;
+;
+txtCommodityTypeTypefilter
+Type filtre
+; Typefilter
+;
+;
+txtCommodityTypeSend
+Envoyer
+; Send
+;
+;
+txtCommodityTypeSignal
+Signal
+; Signal
+;
+;
+txtCommodityTypeTranslate
+Traduire
+; Translate
+;
+;
+txtCommodityTypeBroker
+Échange
+; Broker
+;
+;
+txtCommodityTypeDebug
+Déboguer
+; Debug
+;
+;
+txtCommodityTypeCustom
+Personalisé
+; Custom
+;
+;
+txtCommodityTypeZero
+Zéro
+; Zero
+;
+;
+txtCommodityTypeUnknown
+< ??? >
+; < ??? >
+;
+;
+txtCommodityHotkey
+Raccourci
+; Hotkey
+;
+;
+txtCommodityTitle
+Titre:
+; mco_Title:
+;
+;
+txtCommodityDescription
+Description:
+; mco_Description:
+;
+;
+txtCommodityBrokerFlagsTitle
+Attributs d'échange
+; Broker flags
+;
+;
+txtCommoditySubObjects
+Sous-objets:
+; Sub CxObj:
+;
+;
+txtCommoditiesPrintHeader
+\n  Adresse  Type     Pri Attr.  Port      Nom\n\n
+; \n  Address  Type     Pri Flags  Port      Name\n\n
+;
+;
+txtCommoditiesPrintLine
+ %s %-7.7s %3s %3s   %s %s\n
+;  %s %-7.7s %3s %3s   %s %s\n
+;
+; strings in devices window
+msgWantToRemoveDevice
+Voulez-vous vraiment supprimer le périphérique\n\
+« %s » ?
+; Do you really want to remove device\n\
+; \"%s\"?
+;
+;
+txtSupportedCommands
+Commandes supportées:
+; Supported commands:
+;
+;
+txtDevicesTitle
+PÉRIPHÉRIQUES
+; DEVICES
+;
+;
+txtDevicesDetailTitle
+PÉRIPHÉRIQUE
+; DEVICE
+;
+;
+txtDeviceVersion
+Version
+; Version
+;
+;
+txtDeviceOpenCount
+Cpt
+; OCnt
+;
+;
+txtDeviceRPC
+RPC
+; RPC
+;
+;
+txtDeviceFlagsTitle
+Attributs du périphérique
+; Device flags
+;
+;
+txtDeviceNSDType
+Type NSD:
+; NSDType:
+;
+;
+txtDeviceNSDCmdNumberDec
+Décimal
+; Number (dec)
+;
+;
+txtDeviceNSDCmdNumberHex
+Hexadécimal
+; Number (hex)
+;
+;
+txtDeviceNSDCmdName
+Nom
+; Name
+;
+;
+txtDeviceUnknownGameportCommand
+<commande de jeu inconnue>
+; <unknown gameport command>
+;
+;
+txtDeviceUnknownTimerCommand
+<commande timer inconnue>
+; <unknown timer command>
+;
+;
+txtDeviceUnknownKeyboardCommand
+<commande clavier inconnue>
+; <unknown keyboard command>
+;
+;
+txtDeviceUnknownInputCommand
+<commande input inconnue>
+; <unknown input command>
+;
+;
+txtDeviceUnknownTrackdiskCommand
+<commande trackdisk inconnue>
+; <unknown trackdisk command>
+;
+;
+txtDeviceUnknownConsoleCommand
+<commande console inconnue>
+; <unknown console command>
+;
+;
+txtDeviceUnknownSANA2Command
+<commande SANA2 inconnue>
+; <unknown SANA2 command>
+;
+;
+txtDeviceUnknownAudioCommand
+<commande audio inconnue>
+; <unknown audio command>
+;
+;
+txtDeviceUnknownClipboardCommand
+<commande clipboard inconnue>
+; <unknown clipboard command>
+;
+;
+txtDeviceUnknownPrinterCommand
+<commande printer inconnue>
+; <unknown printer command>
+;
+;
+txtDeviceUnknownSerialCommand
+<commande serial inconnue>
+; <unknown serial command>
+;
+;
+txtDeviceUnknownParallelCommand
+<commande parallel inconnue>
+; <unknown parallel command>
+;
+;
+txtDeviceUnknownCommand
+<commande inconnue>
+; <unknown command>
+;
+;
+txtDeviceNSDTypeGameport
+gameport
+; gameport
+;
+;
+txtDeviceNSDTypeTimer
+timer
+; timer
+;
+;
+txtDeviceNSDTypeKeyboard
+clavier
+; keyboard
+;
+;
+txtDeviceNSDTypeInput
+input
+; input
+;
+;
+txtDeviceNSDTypeTrackdisk
+trackdisk
+; trackdisk
+;
+;
+txtDeviceNSDTypeConsole
+console
+; console
+;
+;
+txtDeviceNSDTypeSANA2
+SANA2
+; SANA2
+;
+;
+txtDeviceNSDTypeAudio
+audio
+; audio
+;
+;
+txtDeviceNSDTypeClipboard
+presse-papiers
+; clipboard
+;
+;
+txtDeviceNSDTypePrinter
+imprimante
+; printer
+;
+;
+txtDeviceNSDTypeSerial
+série
+; serial
+;
+;
+txtDeviceNSDTypeParallel
+parallèle
+; parallel
+;
+;
+txtDeviceNSDTypeUnknown
+inconnu
+; unknown
+;
+;
+txtDeviceNSDCompleteType
+%s (sous type %ld)
+; %s (subtype %ld)
+;
+;
+txtDeviceCannotOpen
+inconnu (impossible d'ouvrir le périphérique)
+; unknown (device could not be openend)
+;
+;
+txtDeviceNonNSD
+inconnu (le périphérique ne gère pas le NSD)
+; unknown (device does not support NSD)
+;
+;
+txtDevicesPrintHeader
+\n  Adresse   Pri  Ouvert  RPC Nom et version\n\n
+; \n  Address   Pri  OpenC  RPC Name & Version\n\n
+;
+;
+txtDevicesPrintLine
+ %s %4s %4s %4s %s %s\n
+;  %s %4s %4s %4s %s %s\n
+;
+; strings in expansions window
+txtNoIdentifyLibrary
+[identify.library requise]
+; [identify.library required]
+;
+;
+txtExpansionsTitle
+EXTENSIONS
+; EXPANSIONS
+;
+;
+txtExpansionsDetailTitle
+EXTENSION
+; EXPANSION
+;
+;
+txtExpansionDetails
+Taille = %s Attr. = %s ID = %s: %s SN = %s
+; Size=%s Flags=%s ID=%s:%s SN=%s
+;
+;
+txtExpansionBoardAddr
+Adr. carte
+; BoardAddr
+;
+;
+txtExpansionBoardAddr2
+Adr. carte:
+; cd_BoardAddr:
+;
+;
+txtExpansionType
+Type
+; Type
+;
+;
+txtExpansionManufacturer
+Constructeur
+; Manufacturer
+;
+;
+txtExpansionManufacturer2
+Constructeur:
+; Manufacturer:
+;
+;
+txtExpansionProduct
+Produit
+; Product
+;
+;
+txtExpansionProduct2
+Produit:
+; Product:
+;
+;
+txtExpansionClass
+Classe
+; Class
+;
+;
+txtExpansionClass2
+Classe:
+; Class:
+;
+;
+txtExpansionBoardSize
+Taille carte:
+; cd_BoardSize:
+;
+;
+txtExpansionSlotAddr
+Adr. slot:
+; cd_SlotAddr:
+;
+;
+txtExpansionSlotSize
+Taille slot:
+; cd_SlotSize:
+;
+;
+txtExpansionDriver
+Pilote:
+; cd_Driver:
+;
+;
+txtExpansionNextCD
+CD suivant:
+; cd_NextCD:
+;
+;
+txtExpansionFlags
+Attributs
+; cd_Flags
+;
+;
+txtExpansionFlags2
+Attributs:
+; cd_Flags:
+;
+;
+txtExpansionFlagsTitle
+Attributs ConfigDev
+; ConfigDev flags
+;
+;
+txtExpansionROMType
+Type:
+; er_Type:
+;
+;
+txtExpansionROMFlags
+Attributs
+; er_Flags
+;
+;
+txtExpansionROMFlags2
+Attributs:
+; er_Flags:
+;
+;
+txtExpansionROMFlagsTitle
+Attributs ExpansionRom
+; ExpansionRom flags
+;
+;
+txtExpansionROMReserved
+Réservé 03:
+; er_Reserved03:
+;
+;
+txtExpansionROMSerialNumber
+Numéro série:
+; er_SerialNumber:
+;
+;
+txtExpansionROMInitDiagVec
+InitDiagVec:
+; er_InitDiagVec:
+;
+;
+txtExpansionDiagAreaTitle
+Spécificités « DiagArea »
+; DiagArea specific
+;
+;
+txtExpansionDiagArea
+DiagArea:
+; DiagArea:
+;
+;
+txtExpansionDiagAreaConfig
+Configuration
+; da_Config
+;
+;
+txtExpansionDiagAreaConfig2
+Configuration:
+; da_Config:
+;
+;
+txtExpansionDiagAreaConfigTitle
+Config DiagArea
+; DiagArea config
+;
+;
+txtExpansionDiagAreaFlags
+Attributs
+; da_Flags
+;
+;
+txtExpansionDiagAreaFlags2
+Attributs:
+; da_Flags:
+;
+;
+txtExpansionDiagAreaFlagsTitle
+DiagArea flags
+; DiagArea flags
+;
+;
+txtExpansionDiagAreaSize
+Taille:
+; da_Size:
+;
+;
+txtExpansionDiagAreaDiagPoint
+Point de diag.:
+; da_DiagPoint:
+;
+;
+txtExpansionDiagAreaBootPoint
+Point démarrage:
+; da_BootPoint:
+;
+;
+txtExpansionDiagAreaName
+Nom:
+; da_Name:
+;
+;
+txtExpansionsPrintHeader
+\n  Adresse  Attr. Adr. cte  Taille   Type Const. Prod. Série #\n
+; \n  Address  Flags BoardAddr BoardSize Type Manuf. Prod. Serial#\n
+;
+;
+txtExpansionsPrintLine
+\n %s  %s %s %s  %s  %s   %s %9s\n Board = %s · %s %s\n
+; \n %s  %s %s %s  %s  %s   %s %9s\n Board = %s · %s %s\n
+;
+; strings in fonts window
+msgWantToCloseFont
+Voulez-vous vraiment fermer la police\n\
+« %s » ?
+; Do you really want to close font\n\
+; \"%s\"?
+;
+;
+msgWantToRemoveFont
+Voulez-vous vraiment supprimer la police\n\
+« %s » ?
+; Do you really want to remove font\n\
+; \"%s\"?
+;
+;
+msgAccessorCountIsZero
+Désolé, le compteur d'accès est déjà à zéro !
+; Sorry, the count of accessors is already zero!
+;
+;
+msgAccessorCountIsNotZero
+Désolé, le compteur d'accès n'est pas à zéro !
+; Sorry, the count of accessors is not zero!
+;
+;
+txtFontsTitle
+POLICES
+; FONTS
+;
+;
+txtFontsDetailTitle
+POLICE
+; FONT
+;
+;
+txtFontsROMFont
+ROM
+; ROM
+;
+;
+txtFontsDiskFont
+Disque
+; Disk
+;
+;
+txtFontsXSize
+Taille X
+; tf_XSize
+;
+;
+txtFontsXSize2
+Taille X:
+; tf_XSize:
+;
+;
+txtFontsYSize
+Taille Y
+; tf_YSize
+;
+;
+txtFontsYSize2
+Taille Y:
+; tf_YSize:
+;
+;
+txtFontsStyle
+Style
+; tf_Style
+;
+;
+txtFontsStyle2
+Style:
+; tf_Style:
+;
+;
+txtFontsFlags
+Attributs
+; tf_Flags
+;
+;
+txtFontsFlags2
+Attributs:
+; tf_Flags:
+;
+;
+txtFontsAccessors
+Accessors
+; tf_Accessors
+;
+;
+txtFontsAccessors2
+Accessors:
+; tf_Accessors:
+;
+;
+txtFontsLoChar
+Caractère bas
+; tf_LoChar
+;
+;
+txtFontsLoChar2
+Caractère bas:
+; tf_LoChar:
+;
+;
+txtFontsHiChar
+Caractère haut
+; tf_HiChar
+;
+;
+txtFontsHiChar2
+Caractère haut:
+; tf_HiChar:
+;
+;
+txtFontsType
+Type
+; Type
+;
+;
+txtFontsType2
+Type:
+; Type:
+;
+;
+txtFontsStyleTitle
+Style police
+; Font style
+;
+;
+txtFontsFlagsTitle
+Attributs de la police
+; Font flags
+;
+;
+txtFontsBaseline
+Ligne de base:
+; tf_Baseline:
+;
+;
+txtFontsBoldSmear
+Aspect gras:
+; tf_BoldSmear:
+;
+;
+txtFontsModulo
+Modulo:
+; tf_Modulo:
+;
+;
+txtFontsExample
+Exemple
+; Font example
+;
+;
+txtFontsExampleText
+¤¢ le renard brun saute par dessus le chien paresseux.
+; ¤¢ the quick brown fox jumps over the lazy dog
+;
+;
+txtFontsPrintHeader
+\n  Adresse  TailleY TailleX Style Attr.  Cpt. Car Bs Car Ht  Type     Nom\n\n
+; \n  Address  YSize XSize Style Flags  Count LoChar HiChar  Type     Name\n\n
+;
+;
+txtFontsPrintLine
+ %s  %3s   %3s  %s  %s %3s    %3s    %3s  %-8s %s\n
+;  %s  %3s   %3s  %s  %s %3s    %3s    %3s  %-8s %s\n
+;
+; strings in functions window
+txtNoFDFile
+<pas de fichier .fd>
+; <no .fd file>
+;
+;
+txtNoJump
+<pas de saut>
+; <no jmp>
+;
+;
+txtNoFunctionEntry
+<pas d'entrée dans le fichier .fd>
+; <no entry in .fd file>
+;
+;
+txtFunctionsTitle
+FONCTIONS
+; FUNCTIONS
+;
+;
+txtOffset
+Offset
+; Offset
+;
+;
+txtHexadecimal
+Hex
+; Hex
+;
+; strings in inputhandlers window
+msgWantToRemoveInputHandler
+Voulez-vous vraiment supprimer le gestionnaire\n\
+« %s » ?
+; Do you really want to remove input handler\n\
+; \"%s\"?
+;
+;
+txtInputHandlersTitle
+GESTIONNAIRES D'ENTRÉES
+; INPUTHANDLERS
+;
+;
+txtInputHandlersDetailTitle
+GESTIONNAIRE D'ENTRÉE
+; INPUTHANDLER
+;
+;
+txtInputHandlersPrintHeader
+\n  Adresse  Type       Pri    Données      Code    Nom\n\n
+; \n  Address  Type       Pri    Data       Code    Name\n\n
+;
+;
+txtInputHandlersPrintLine
+ %s %-9s %4s %s  %-9.9s  %s\n
+;  %s %-9s %4s %s  %-9.9s  %s\n
+;
+; strings in interrupts window
+msgCantRemoveInterruptHandler
+Désolé, impossible de supprimer un gestionnaire d'interruptions !
+; Sorry, I can't remove an interrupt handler!
+;
+;
+msgWantToRemoveInterrupt
+Voulez-vous vraiment supprimer le serveur d'interruption\n\
+« %s » ?
+; Do you really want to remove interrupt server\n\
+; \"%s\"?
+;
+;
+txtInterruptsTitle
+INTERRUPTIONS
+; INTERRUPTS
+;
+;
+txtInterruptsDetailTitle
+INTERRUPTION
+; INTERRUPT
+;
+;
+txtInterruptUnused
+Non utilisé
+; Unused
+;
+;
+txtInterruptFree
+Libre
+; Free
+;
+;
+txtInterruptHandler
+Gestionnaire
+; Handler
+;
+;
+txtInterruptServer
+Serveur
+; Server
+;
+;
+txtInterruptIPL
+Interruption / IPL
+; IPL / Interrupt
+;
+;
+txtInterruptType
+Type
+; Type
+;
+;
+txtInterruptSysType
+Type int.:
+; IntType:
+;
+;
+txtInterruptSysName
+Nom int.:
+; IntName:
+;
+;
+txtInterrupt00Name
+TBE (tampon transmission série vide)
+; TBE (serial transmit buffer empty)
+;
+;
+txtInterrupt01Name
+DSKBLK (bloc disque complèt)
+; DSKBLK (disk block complete)
+;
+;
+txtInterrupt02Name
+SOFTINT (interruption logiciel)
+; SOFTINT (software interrupt)
+;
+;
+txtInterrupt03Name
+PORTS (externe INT2 & CIA A)
+; PORTS (external INT2 & CIA A)
+;
+;
+txtInterrupt04Name
+COPPER (coprocesseur graphique)
+; COPPER (graphics coprocessor)
+;
+;
+txtInterrupt05Name
+VERTB (vertical blank interval)
+; VERTB (vertical blank interval)
+;
+;
+txtInterrupt06Name
+BLITTER (blitter terminé)
+; BLITTER (blitter finished)
+;
+;
+txtInterrupt07Name
+AUDIO0 (audio canal 0)
+; AUDIO0 (audio channel 0)
+;
+;
+txtInterrupt08Name
+AUDIO1 (audio canal 1)
+; AUDIO1 (audio channel 1)
+;
+;
+txtInterrupt09Name
+AUDIO2 (audio canal 2)
+; AUDIO2 (audio channel 2)
+;
+;
+txtInterrupt10Name
+AUDIO3 (audio canal 3)
+; AUDIO3 (audio channel 3)
+;
+;
+txtInterrupt11Name
+RBF (tampon réception série plein)
+; RBF (serial receive buffer full)
+;
+;
+txtInterrupt12Name
+DSKSYNC (motif synchro disque trouvé)
+; DSKSYNC (disk sync patt. found)
+;
+;
+txtInterrupt13Name
+EXTER (externe INT6 & CIA B)
+; EXTER (external INT6 & CIA B)
+;
+;
+txtInterrupt14Name
+INTEN (spécial (master enable))
+; INTEN (special (master enable))
+;
+;
+txtInterrupt15Name
+NMI (interruption non-masquable)
+; NMI (non-maskable interrupt)
+;
+;
+txtInterruptsPrintHeader
+\n  Adresse   Pri   Donnée     Code      NUM                  Type Nom\n\n
+; \n  Address   Pri   Data      Code      NUM                 IntType Name\n\n
+;
+;
+txtInterruptsPrintLine
+ %s %4s %-9.9s %-9.9s  %-20s %-7.7s %s\n
+;  %s %4s %-9.9s %-9.9s  %-20s %-7.7s %s\n
+;
+; strings in libraries window
+msgWantToRemoveLibrary
+Voulez-vous vraiment supprimer la bibliothèque\n\
+« %s » ?
+; Do you really want to remove library\n\
+; \"%s\"?
+;
+;
+msgWantToCloseLibrary
+Voulez-vous vraiment fermer la bibliothèque\n\
+« %s » ?
+; Do you really want to close library\n\
+; \"%s\"?
+;
+;
+msgLibOpenCountIsZero
+Désolé, le compte est déjà à zéro!
+; Sorry, the open count is already zero!
+;
+;
+txtLibrariesTitle
+BIBLIOTHÈQUES
+; LIBRARIES
+;
+;
+txtLibrariesDetailTitle
+BIBLIOTHÈQUES
+; LIBRARY
+;
+;
+txtLibraryVersion
+Version
+; Version
+;
+;
+txtLibraryVersion2
+Version:
+; lib_Version:
+;
+;
+txtLibraryOpenCount
+Cpt
+; OCnt
+;
+;
+txtLibraryOpenCount2
+Cpt_Ouvert:
+; lib_OpenCnt:
+;
+;
+txtLibraryRPC
+RPC
+; RPC
+;
+;
+txtLibraryRPC2
+Cpt pointeur RAM:
+; RamPtrCnt:
+;
+;
+txtLibraryRPCFormat
+%lD sur %lD
+; %lD of %lD
+;
+;
+txtLibraryIdString
+Chaîne:
+; lib_IdString:
+;
+;
+txtLibraryFlags
+Attributs
+; lib_Flags
+;
+;
+txtLibraryFlags2
+Attributs:
+; lib_Flags:
+;
+;
+txtLibraryFlagsTitle
+Attributs
+; Library flags
+;
+;
+txtLibraryNegSize
+Taille nég.:
+; lib_NegSize:
+;
+;
+txtLibraryPosSize
+PosSize:
+; lib_PosSize:
+;
+; ***NEW***
+;
+;
+txtLibrarySum
+lib_Sum:
+; lib_Sum:
+;
+; ***NEW***
+;
+;
+txtLibrariesPrintHeader
+\n  Adresse   Pri  Ouvert  RPC Nom & Version\n\n
+; \n  Address   Pri  OpenC  RPC Name & Version\n\n
+;
+;
+txtLibrariesPrintLine
+ %s %4s %4s %4s %s %s\n
+;  %s %4s %4s %4s %s %s\n
+;
+; strings in locks window
+txtPattern
+Motif:
+; Pattern:
+;
+;
+msgLocksShownHidden
+%lD affichés, %lD cachés
+; %lD shown, %lD hidden
+;
+;
+msgLocksShownHiddenInProgress
+%lD affiché(s), %lD caché(s)...
+; %lD shown, %lD hidden...
+;
+;
+msgLocksShownHiddenDone
+%lD affiché(s), %lD caché(s). Opération terminée.
+; %lD shown, %lD hidden. Done.
+;
+;
+msgWantToRemoveLock
+Voulez-vous vraiment supprimer le verrou\n\
+« %s » ?
+; Do you really want to remove lock\n\
+; \"%s\"?
+;
+;
+msgYesAllNoAbort
+Oui|Tous|Non|Annuler
+; Yes|All|No|Abort
+;
+;
+txtLocksTitle
+VERROUS
+; LOCKS
+;
+;
+txtLockAccess
+Accès
+; Access
+;
+;
+txtLockOwn
+PROPRIÉTAIRE
+; OWN
+;
+;
+txtLockShared
+PARTAGÉ
+; SHARED
+;
+;
+txtLockSharedInvalid
+PARTAGÉ (%ld)
+; SHARED (%ld)
+;
+;
+txtLockExclusive
+EXCLUSIF
+; EXCLUSIVE
+;
+;
+txtLockPath
+Chemin
+; Path
+;
+;
+txtLocksPrintHeader
+\n  Adresse   Accès       Chemin\n\n
+; \n  Address   Access       Path\n\n
+;
+;
+txtLocksPrintLine
+ %s  %-12s %s\n
+;  %s  %-12s %s\n
+;
+; strings in lowmemory window
+txtCause
+_Cause
+; _Cause
+;
+;
+msgWantToCauseLowMemory
+Voulez-vous vraiment vous retrouver en état de mémoire basse\n\
+« %s » ?
+; Do you really want to cause lowmemory handler\n\
+; \"%s\"?
+;
+;
+msgWantToRemoveLowMemory
+Voulez-vous vraiment supprimer la gestion de mémoire basse\n\
+« %s » ?
+; Do you really want to remove lowmemory handler\n\
+; \"%s\"?
+;
+;
+txtLowMemoryTitle
+MÉMOIRE BASSE
+; LOWMEMORY
+;
+;
+txtLowMemoryDetailTitle
+GEST.MEMOIRE_BASSE
+; LOWMEMORYHANDLER
+;
+;
+txtLowMemoryPrintHeader
+\n  Adresse  Type       Pri    Donnée     Code    Nom\n\n
+; \n  Address  Type       Pri    Data       Code    Name\n\n
+;
+;
+txtLowMemoryPrintLine
+ %s %-9s %4s %s  %-9.9s  %s\n
+;  %s %-9s %4s %s  %-9.9s  %s\n
+;
+; strings in memory window
+txtMemoryTitle
+MÉMOIRE
+; MEMORY
+;
+;
+txtMemoryDetailTitle
+MÉMOIRE
+; MEMORY
+;
+;
+txtMemoryLower
+Bas
+; mh_Lower
+;
+;
+txtMemoryLower2
+Bas:
+; mh_Lower:
+;
+;
+txtMemoryLower3
+Bas
+; Lower
+;
+;
+txtMemoryUpper
+Haut
+; mh_Upper
+;
+;
+txtMemoryUpper2
+Haut:
+; mh_Upper:
+;
+;
+txtMemoryUpper3
+Haut
+; Upper
+;
+;
+txtMemoryAttr
+Attributs
+; mh_Attributes
+;
+;
+txtMemoryAttr2
+Attributs:
+; mh_Attributes:
+;
+;
+txtMemoryFirst
+Premier:
+; First:
+;
+;
+txtMemoryInUse
+Utilisé:
+; In use:
+;
+;
+txtMemoryFree
+Libre:
+; mh_Free:
+;
+;
+txtMemoryTotal
+Totale:
+; Total:
+;
+;
+txtMemoryLargest
+Plus gros:
+; Largest:
+;
+;
+txtMemoryFlagsTitle
+Attributs
+; Memory flags
+;
+;
+txtMemoryChunks
+Chunks
+; Chunks
+;
+;
+txtMemorySize
+Taille
+; Size
+;
+;
+txtMemoryPrintHeader
+\n  Adresse  Nom                  Type     Pri    Bas       Haut  Attr\n\n
+; \n  Address  Name                 Type     Pri    Lower     Upper  Attr\n\n
+;
+;
+txtMemoryPrintLine
+ %s %-20.20s %-8s%4s %s %s %s\n
+;  %s %-20.20s %-8s%4s %s %s %s\n
+;
+; strings in mounts window
+txtReadOnly
+lecture seule
+; read only
+;
+;
+txtValidating
+validation
+; validating
+;
+;
+txtReadWrite
+lecture/écriture
+; read/write
+;
+;
+txtNoDisk
+pas de disque
+; no disk
+;
+;
+txtUnreadable
+illisible
+; unreadable
+;
+;
+txtMountsTitle
+PÉRIPHÉRIQUES MONTÉS
+; MOUNTED DEVICES
+;
+;
+txtMountsDetailTitle
+PÉRIPHÉRIQUE MONTÉ
+; MOUNTED DEVICE
+;
+;
+txtMountHeads
+Têtes
+; Heads
+;
+;
+txtMountCylinders
+Cylindres
+; Cylinders
+;
+;
+txtMountState
+Statut
+; State
+;
+;
+txtMountFilesystem
+Système de fichiers
+; Filesystem
+;
+;
+txtMountDevice
+Périphérique
+; Device
+;
+;
+txtMountUnit
+Unité
+; Unit
+;
+;
+txtMountHandler
+Gestionnaire
+; dol_Handler
+;
+;
+txtMountHandler2
+Gestionnaire:
+; dol_Handler:
+;
+;
+txtMountNext
+Suivant:
+; dol_Next:
+;
+;
+txtMountType
+Type:
+; dol_Type:
+;
+;
+txtMountTask
+Tâche:
+; dol_Task:
+;
+;
+txtMountLock
+Verrou:
+; dol_Lock:
+;
+;
+txtMountStackSize
+Taille pile:
+; dol_StackSize:
+;
+;
+txtMountPriority
+Priorité:
+; dol_Priority:
+;
+;
+txtMountStartup
+Au démarrage:
+; dol_Startup:
+;
+;
+txtMountSegList
+SegList:
+; dol_SegList:
+;
+;
+txtMountGlobVec
+Vecteur global:
+; dol_GlobVec:
+;
+;
+txtFSSMTitle
+Message démarrage SF
+; FileSysStartupMsg
+;
+;
+txtFSSMDevice
+Périphérique:
+; fssm_Device:
+;
+;
+txtFSSMDiskState
+État:
+; DiskState:
+;
+;
+txtFSSMDiskType
+Type disque:
+; DiskType:
+;
+;
+txtFSSMFlags
+Attributs:
+; fssm_Flags:
+;
+;
+txtFSSMCapacity
+Capacité:
+; Capacity:
+;
+;
+txtFSSMEnviron
+Environnement
+; fssm_Environ
+;
+;
+txtFSSMEnviron2
+Environnement:
+; fssm_Environ:
+;
+;
+txtEnvecTableSize
+Taille table:
+; de_TableSize:
+;
+;
+txtEnvecSizeBlock
+Taille bloc:
+; de_SizeBlock:
+;
+;
+txtEnvecSecOrg
+Sect. orig.:
+; de_SecOrg:
+;
+;
+txtEnvecSurfaces
+Surfaces:
+; de_Surfaces:
+;
+;
+txtEnvecSectorPerBlock
+Secteurs par bloc:
+; de_SectorPerBlock:
+;
+;
+txtEnvecBlocksPerTrack
+Blocs par piste:
+; de_BlocksPerTrack:
+;
+;
+txtEnvecReserved
+Réservé:
+; de_Reserved:
+;
+;
+txtEnvecPreAlloc
+PreAlloc:
+; de_PreAlloc:
+;
+;
+txtEnvecInterleave
+Interactivité:
+; de_Interleave:
+;
+;
+txtEnvecLowCyl
+Cyl. bas:
+; de_LowCyl:
+;
+;
+txtEnvecHighCyl
+Cyl. haut:
+; de_HighCyl:
+;
+;
+txtEnvecNumBuffers
+Tampon:
+; de_NumBuffers:
+;
+;
+txtEnvecBufMemType
+Type mémoire
+; de_BufMemType
+;
+;
+txtEnvecBufMemType2
+Type mémoire:
+; de_BufMemType:
+;
+;
+txtEnvecMaxTransfer
+Transfert max.:
+; de_MaxTransfer:
+;
+;
+txtEnvecMask
+Masque:
+; de_Mask:
+;
+;
+txtEnvecBootPri
+Pri. démarrage:
+; de_BootPri:
+;
+;
+txtEnvecDosType
+Type DOS:
+; de_DosType:
+;
+;
+txtEnvecBaud
+Baud:
+; de_Baud:
+;
+;
+txtEnvecControl
+Contrôle:
+; de_Control:
+;
+;
+txtEnvecBootBlocks
+Bloc amorce:
+; de_BootBlocks:
+;
+;
+txtMountCapacityGigaBytes
+Go
+; GB
+;
+;
+txtMountCapacityMegaBytes
+Mo
+; MB
+;
+;
+txtMountCapacityKiloBytes
+Ko
+; KB
+;
+;
+txtMountCapacityBytes
+octets
+;  bytes
+;
+;
+txtMountsPrintHeader
+\n  Adresse  Nom      Unité  Têtes    Cylindres     État      Sys. fic. gestion. ou périph.\n\n
+; \n  Address  Name     Unit   Heads    Cylinders     State     Filesys. Handler or Device\n\n
+;
+;
+txtMountsPrintLine
+ %s %-9.9s %3s  %6s %12s %10s  %-8s %s\n
+;  %s %-9.9s %3s  %6s %12s %10s  %-8s %s\n
+;
+; strings in ports window
+msgWantToRemovePort
+Voulez-vous vraiment supprimer le port\n\
+« %s » ?
+; Do you really want to remove port\n\
+; \"%s\"?
+;
+;
+txtPortsTitle
+PORTS
+; PORTS
+;
+;
+txtPortsDetailTitle
+PORT
+; PORT
+;
+;
+txtPortFlagsSignal
+signal
+; signal
+;
+;
+txtPortFlagsSoftInt
+int. logiciel
+; softint
+;
+;
+txtPortFlagsIgnore
+ignoré
+; ignore
+;
+;
+txtPortFlags
+Attributs
+; mp_Flags
+;
+;
+txtPortFlags2
+Attributs:
+; mp_Flags:
+;
+;
+txtPortSigBit
+SigBit
+; mp_SigBit
+;
+;
+txtPortSigBit2
+SigBit:
+; mp_SigBit:
+;
+;
+txtPortSigTask
+SigTask
+; mp_SigTask
+;
+;
+txtPortSigTask2
+SigTask:
+; mp_SigTask:
+;
+;
+txtPortFlagsTitle
+Attributs MsgPort
+; MsgPort flags
+;
+;
+txtPortMsgList
+MsgList:
+; mp_MsgList:
+;
+;
+txtPortMsgListHead
+Tête:
+; lh_Head:
+;
+;
+txtPortMsgListTail
+Queue:
+; lh_Tail:
+;
+;
+txtPortMsgListTailPred
+Queue précédente:
+; lh_TailPred:
+;
+;
+txtPortsPrintHeader
+\n  Adresse  Nom                        Pri SigBit SigTask\n\n
+; \n  Address  Name                       Pri SigBit SigTask\n\n
+;
+;
+txtPortsPrintLine
+ %s %-25.25s %4s   %3s   %-26.26s\n
+;  %s %-25.25s %4s   %3s   %-26.26s\n
+;
+; strings in priority window
+txtPriorityWinTitle
+Changer la priorité
+; Change priority
+;
+;
+txtMinPri
+Min:
+; Min:
+;
+;
+txtMaxPri
+Max:
+; Max:
+;
+;
+txtOldPri
+Anc.:
+; Old:
+;
+;
+txtNewPri
+Nouv.:
+; New:
+;
+;
+msgSelectNewPriority
+\033c Veuillez choisir une nouvelle priorité pour \n\
+« %s » ?
+; \033c Please select a new priority for \n\
+; \"%s\"
+;
+; strings in residents window
+txtResidentsTitle
+RÉSIDENTS
+; RESIDENTS
+;
+;
+txtResidentsDetailTitle
+RÉSIDENT
+; RESIDENT
+;
+;
+txtResidentName
+Nom
+; rt_Name
+;
+;
+txtResidentName2
+Nom:
+; rt_Name:
+;
+;
+txtResidentPri
+Priorité
+; rt_Pri
+;
+;
+txtResidentPri2
+Priorité:
+; rt_Pri:
+;
+;
+txtResidentIdString
+Chaîne
+; rt_IdString
+;
+;
+txtResidentIdString2
+Chaîne:
+; rt_IdString:
+;
+;
+txtResidentMatchTag
+Options:
+; rt_MatchTag:
+;
+;
+txtResidentType
+Type:
+; rt_Type:
+;
+;
+txtResidentVersion
+Version:
+; rt_Version:
+;
+;
+txtResidentEndSkip
+Fin saut:
+; rt_EndSkip:
+;
+;
+txtResidentInit
+Init.:
+; rt_Init:
+;
+;
+txtResidentFlags
+Attributs
+; rt_Flags
+;
+;
+txtResidentFlags2
+Attributs:
+; rt_Flags:
+;
+;
+txtResidentFlagsTitle
+Attributs résidents
+; Resident flags
+;
+;
+txtResidentsPrintHeader
+\n  Adresse  Nom                      Pri  Chaîne\n\n
+; \n  Address  Name                     Pri IdString\n\n
+;
+;
+txtResidentsPrintLine
+ %-8.8s  %-23.23s %4s %s\n
+;  %-8.8s  %-23.23s %4s %s\n
+;
+; strings in resources window
+msgWantToRemoveResource
+Voulez-vous vraiment supprimer la ressource\n\
+« %s » ?
+; Do you really want to remove resource\n\
+; \"%s\"?
+;
+;
+txtResourcesTitle
+RESSOURCES
+; RESOURCES
+;
+;
+txtResourcesDetailTitle
+RESSOURCE
+; RESOURCE
+;
+;
+txtResourceVersion
+Version
+; Version
+;
+;
+txtResourceOpenCount
+OCpt
+; OCnt
+;
+;
+txtResourceRPC
+RPC
+; RPC
+;
+;
+txtResourceFlagsTitle
+Attributs de la ressource
+; Resource flags
+;
+;
+txtResourceFileSystem
+Système de fichiers
+; FileSystem
+;
+;
+txtResourceFileSystemDosType
+Type DOS
+; fse_DosType
+;
+;
+txtResourceFileSystemVersion
+Version
+; fse_Version
+;
+;
+txtResourceFileSystemPatchFlags
+Attributs correctifs
+; fse_PatchFlags
+;
+;
+txtResourceFileSystemCreator
+Créateur
+; fse_Creator
+;
+;
+txtResourceFileSystemSpecific
+Spécificités « FileSystem.resource »
+; FileSystem.resource specific
+;
+;
+txtResourceFileSystemResCreator
+Créateur:
+; fsr_Creator:
+;
+;
+txtResourceFileSystemResEntries
+Entrées des systèmes de fichiers:
+; fsr_FileSysEntries:
+;
+;
+txtResourceDiskResSpecific
+Spécificités « disk.resource »
+; disk.resource specific
+;
+;
+txtResourceDiskResFlags
+Attributs
+; dr_Flags
+;
+;
+txtResourceDiskResFlags2
+Attributs:
+; dr_Flags:
+;
+;
+txtResourceDiskResFlagsTitle
+Attributs disk.resource
+; disk.resource flags
+;
+;
+txtResourceDiskResCurrTask
+Tâche actuelle:
+; dr_CurrTask:
+;
+;
+txtResourcesPrintHeader
+\n  Adresse   Pri Ouvert RPC Nom & Version\n\n
+; \n  Address   Pri OpenC RPC Name & Version\n\n
+;
+;
+txtResourcesPrintLine
+ %s %4.4s %4.4s %4.4s %s %s\n
+;  %s %4.4s %4.4s %4.4s %s %s\n
+;
+; strings in screenmodes window
+msgScreenModeCompatMixed
+MCOMPAT_MIXED (peut partager l'affichage avec MIXED)
+; MCOMPAT_MIXED (can share display with other MIXED)
+;
+;
+msgScreenModeCompatSelf
+MCOMPAT_SELF (partage uniquement dans monitor)
+; MCOMPAT_SELF (can share only within monitor)
+;
+;
+msgScreenModeCompatNobody
+MCOMPAT_NOBODY (seulement un viewport)
+; MCOMPAT_NOBODY (only one viewport)
+;
+;
+txtScreenModesTitle
+MODES ÉCRAN
+; SCREENMODES
+;
+;
+txtScreenModesDetailTitle
+MODE ÉCRAN
+; SCREENMODE
+;
+;
+txtScreenModeSuperHighRes
+SuperHighRes
+; SuperHighRes
+;
+;
+txtScreenModeHighRes
+HighRes
+; HighRes
+;
+;
+txtScreenModeLowRes
+LowRes
+; LowRes
+;
+;
+txtScreenModeExtraLowRes
+ExtraLowRes
+; ExtraLowRes
+;
+;
+txtScreenModeDualPF
+ DualPF
+;  DualPF
+;
+;
+txtScreenModeDualPF2
+2
+; 2
+;
+;
+txtScreenModeEHB
+ EHB
+;  EHB
+;
+;
+txtScreenModeHAM
+ HAM
+;  HAM
+;
+;
+txtScreenModeInterlace
+ Entrelacé
+;  Interlace
+;
+;
+txtScreenModeDblScan
+ DblScan
+;  DblScan
+;
+;
+txtScreenModeUnknown
+< ??? >
+; < ??? >
+;
+;
+txtScreenModeID
+ModeID
+; ModeID
+;
+;
+txtScreenModeID2
+ModeID:
+; ModeID:
+;
+;
+txtScreenModeWidth
+Largeur
+; Width
+;
+;
+txtScreenModeHeight
+Hauteur
+; Height
+;
+;
+txtScreenModeDepth
+Prof.
+; Depth
+;
+;
+txtScreenModeMonitorInfo
+Informations sur le moniteur
+; Monitor info
+;
+;
+txtScreenModeOpenCount
+Ouvert:
+; OpenCnt:
+;
+;
+txtScreenModeViewPosition
+Position vue:
+; ViewPosition:
+;
+;
+txtScreenModeViewResolution
+Résolution vue:
+; ViewResolution:
+;
+;
+txtScreenModeViewPositionRange
+Plage:
+; ViewPositionRange:
+;
+;
+txtScreenModeTotalRows
+Lignes (total):
+; TotalRows:
+;
+;
+txtScreenModeTotalClockColors
+TotalClockColors:
+; TotalClockColors:
+;
+;
+txtScreenModeHFrequency
+Fréquence H:
+; H frequency:
+;
+;
+txtScreenModeVFrequency
+Fréquence V:
+; V frequency:
+;
+;
+txtScreenModeMinRow
+Ligne mini.:
+; MinRow:
+;
+;
+txtScreenModeCompatibility
+Compatibilité:
+; Compatibility:
+;
+;
+txtScreenModeMouseTicks
+Dép. souris:
+; MouseTicks:
+;
+;
+txtScreenModeDefaultViewPosition
+Position par défaut:
+; DefaultViewPosition:
+;
+;
+txtScreenModePreferredModeID
+ModeID préféré:
+; PreferredModeID:
+;
+;
+txtScreenModeDimensionInfo
+Informations des dimensions
+; Dimension info
+;
+;
+txtScreenModeMaxDepth
+Profondeur max.:
+; MaxDepth:
+;
+;
+txtScreenModeMinRaster
+Raster mini.:
+; MinRaster:
+;
+;
+txtScreenModeMaxRaster
+Raster max.:
+; MaxRaster:
+;
+;
+txtScreenModeNominal
+Nominal:
+; Nominal:
+;
+;
+txtScreenModeMaxOScan
+Suraffichage max.:
+; MaxOScan:
+;
+;
+txtScreenModeVideoOScan
+Suraffichage vidéo:
+; VideoOScan:
+;
+;
+txtScreenModeTxtOScan
+Suraffichage texte:
+; TxtOScan:
+;
+;
+txtScreenModeStdOScan
+Suraffichage standard:
+; StdOScan:
+;
+;
+txtScreenModeDisplayInfo
+Informations sur l'affichage
+; Display info
+;
+;
+txtScreenModeNotAvailable
+Non disponible
+; NotAvailable
+;
+;
+txtScreenModeNotAvailable2
+Non disponible:
+; NotAvailable:
+;
+;
+txtScreenModeNotAvailableTitle
+Non disponible
+; NotAvailable
+;
+;
+txtScreenModePropertyFlags
+Attributs
+; PropertyFlags
+;
+;
+txtScreenModePropertyFlags2
+Attributs:
+; PropertyFlags:
+;
+;
+txtScreenModePropertyFlagsTitle
+Attributs
+; Property flags
+;
+;
+txtScreenModeResolution
+Résolution:
+; Resolution:
+;
+;
+txtScreenModePixelSpeed
+Vitesse pixels:
+; PixelSpeed:
+;
+;
+txtScreenModeNumStdSprites
+Nombre Sprites:
+; NumStdSprites:
+;
+;
+txtScreenModePaletteRange
+Palette:
+; PaletteRange:
+;
+;
+txtScreenModeSpriteResolution
+Résolution du Sprite:
+; SpriteResolution:
+;
+;
+txtScreenModeRGBBits
+Matrice RVB:
+; RGB bits:
+;
+;
+txtScreenModeColorsFormat
+%s couleurs
+; %s colors
+;
+;
+txtScreenModesPrintHeader
+\n  ModeID    Larg. Haut. Prof. Mode\n\n
+; \n  ModeID    Wdth  Hght  Dpth  ScreenMode\n\n
+;
+;
+txtScreenModesPrintLine
+ %s %5s %5s %2s  %s\n
+;  %s %5s %5s %2s  %s\n
+;
+; strings in semaphores window
+txtObtain
+_Obtenir
+; _Obtain
+;
+;
+txtRelease
+Libérer
+; Re_lease
+;
+;
+msgWantToObtainSemaphore
+Voulez-vous vraiment obtenir le sémaphore\n\
+« %s » ?
+; Do you really want to obtain semaphore\n\
+; \"%s\"?
+;
+;
+msgWantToReleaseSemaphore
+Voulez-vous vraiment libérer le sémaphore\n\
+« %s » ?
+; Do you really want to release semaphore\n\
+; \"%s\"?
+;
+;
+msgNestCountIsZero
+Désolé, le nombre de sémaphores est déjà à zéro !
+; Sorry, the semaphore's nest count is already zero!
+;
+;
+msgWantToRemoveSemaphore
+Voulez-vous vraiment supprimer le sémaphore\n\
+« %s » ?
+; Do you really want to remove semaphore\n\
+; \"%s\"?
+;
+;
+txtSemaphoresTitle
+SÉMAPHORES
+; SEMAPHORES
+;
+;
+txtSemaphoreNestCount
+Compteur
+; ss_NestCount
+;
+;
+txtSemaphoreQueueCount
+Compteur attente
+; ss_QueueCount
+;
+;
+txtSemaphoreOwner
+Propriétaire
+; ss_Owner
+;
+;
+txtSemaphorePrintHeader
+\n  Adresse  Nom                             Pri Cpt  Att.  Pro.\n\n
+; \n  Address  Name                            Pri Nest Queue Owner\n\n
+;
+;
+txtSemaphorePrintLine
+ %s %-30s %4s %4s %5s %s\n
+;  %s %-30s %4s %4s %5s %s\n
+;
+; strings in signal window
+txtSignalWinTitle
+Envoyer signal
+; Send signal
+;
+;
+txtNewSignal
+Signal:
+; Signal:
+;
+;
+txtWaitSignal
+SigWait:
+; SigWait:
+;
+;
+msgSelectNewSignal
+\033c Veuillez choisir le signal pour \n\
+« %s » ?
+; \033c Please select the signal for \n\
+; \"%s\"
+;
+; strings in system window
+txtSystemTitle
+SYSTÈME
+; SYSTEM
+;
+;
+txtSystemPageHardware
+Matériel
+; Hardware
+;
+;
+txtSystemPageRegisters
+Registres
+; Registers
+;
+;
+txtSystemPageUptime
+Heures
+; Uptime
+;
+;
+txtSystemPageVersions
+Versions
+; Versions
+;
+;
+txtSystemPageMemory
+Mémoire
+; Memory
+;
+;
+txtSystemPageLastAlert
+Dernière alerte
+; Last Alert
+;
+;
+txtSystemSystem
+Système:
+; System:
+;
+;
+txtSystemProcessor
+Processeur
+; Processor
+;
+;
+txtSystemCPU
+CPU:
+; CPU:
+;
+;
+txtSystemFPU
+FPU:
+; FPU:
+;
+;
+txtSystemMMU
+MMU:
+; MMU:
+;
+;
+txtSystemPPC
+PPC:
+; PPC:
+;
+;
+txtSystemChipset
+Coprocesseurs
+; Chipset
+;
+;
+txtSystemChipset2
+Coprocesseur:
+; Chipset:
+;
+;
+txtSystemRamsey
+Ramsey:
+; Ramsey:
+;
+;
+txtSystemGary
+Gary:
+; Gary:
+;
+;
+txtSystemAgnus
+Agnus:
+; Agnus:
+;
+;
+txtSystemDenise
+Denise:
+; Denise:
+;
+;
+txtSystemChunkyPlanar
+ChunkyPlanar:
+; ChunkyPlanar:
+;
+;
+txtSystemBattClock
+Horloge:
+; BattClock:
+;
+;
+txtSystemFBlit
+FBlit:
+; FBlit:
+;
+;
+txtSystemRunning
+en fonctionnement
+; running
+;
+;
+txtSystemNotRunning
+à l'arrêt
+; not running
+;
+;
+txtSystemMotherboardRAM
+RAM carte mère
+; Motherboard RAM
+;
+;
+txtSystemRAMWidth
+Largeur RAM:
+; RAM width:
+;
+;
+txtSystemRAMAccess
+Vitesse d'accès:
+; Access time:
+;
+;
+txtSystemRAMCAS
+CAS:
+; CAS:
+;
+;
+txtSystemRAMBandwidth
+Bande passante:
+; Bandwidth:
+;
+;
+txtSystemFrequencies
+Fréquences
+; Frequencies
+;
+;
+txtSystemVBlank
+VBlank:
+; VBlank:
+;
+;
+txtSystemPower
+Énergie:
+; Power:
+;
+;
+txtSystemEClock
+EClock:
+; EClock:
+;
+;
+txtSystemSSP
+SSP:
+; SSP:
+;
+;
+txtSystem680x0Specific
+Spécificités 680x0
+; 680x0 specific
+;
+;
+txtSystem68060Specific
+Spécificités 68060
+; 68060 specific
+;
+;
+txtSystemVBR
+VBR:
+; VBR:
+;
+;
+txtSystemCACR
+CACR:
+; CACR:
+;
+;
+txtSystemPCR
+PCR:
+; PCR:
+;
+;
+txtSystemInstCache
+Cache instructions:
+; InstCache:
+;
+;
+txtSystemDataCache
+Cache de données:
+; DataCache:
+;
+;
+txtSystemBranchCache
+Gestion du cache:
+; BranchCache:
+;
+;
+txtSystem68060
+68060:
+; 68060:
+;
+;
+txtCacheEnabled
+activé
+; enabled
+;
+;
+txtCacheDisabled
+désactivé
+; disabled
+;
+;
+txtCacheBurst
+, turbo
+; , burst
+;
+;
+txtCacheHalf
+, demi
+; , half
+;
+;
+txtCacheFrozen
+, figé
+; , frozen
+;
+;
+txtCacheAllocate
+, allocation
+; , allocate
+;
+;
+txtCacheCopyBack
+, copyback
+; , copyback
+;
+;
+txtCacheExternal
+, externe
+; , external
+;
+;
+txtCacheSuperscalar
+, Super scalaire
+; , Superscalar
+;
+;
+txtCacheAllocateOperandDisabled
+, Opérande d'allocation désactivée
+; , Allocate Operand disabled
+;
+;
+txtCacheAllocateDisabled
+, allocation désactivée
+; , Allocate disabled
+;
+;
+txtCacheWriteBuffer
+, écriture tampon
+; , WriteBuffer
+;
+;
+txtCacheCPUSHInvalidationDisabled
+, invalidation CPUSH désactivée
+; , CPUSH invalidation disabled
+;
+;
+txtCacheFPUDisabled
+, FPU désactivé
+; , FPU disabled
+;
+;
+txtCacheLoadStoreBypassEnabled
+, bi-passe chargement/stockage activé
+; , Load/Store Bypass enabled
+;
+;
+txtCacheLoadStoreBypassDisabled
+, bi-passe chargement/stockage désactivé
+; , Load/Store Bypass disabled
+;
+;
+txtSystemCurrentTime
+Heure actuelle:
+; Current time:
+;
+;
+txtSystemBootTime
+Heure de démarrage:
+; Boot time:
+;
+;
+txtSystemUpTime
+Temps écoulé:
+; Uptime:
+;
+;
+txtSystemUpTimeFormat
+%4ld jours, %s heures
+; %4ld days, %s hours
+;
+;
+txtSystemTimeInvalid
+invalide
+; invalid
+;
+;
+txtSystemAmigaOSVersion
+Version AmigaOS:
+; AmigaOS version:
+;
+;
+txtSystemBoingBagVersion
+Version du BoingBag:
+; BoingBag version:
+;
+;
+txtSystemOSVersion
+Version OS:
+; OS version:
+;
+;
+txtSystemSetPatchVersion
+Version de SetPatch:
+; SetPatch version:
+;
+;
+txtSystemROMSize
+Taille ROM:
+; ROM size:
+;
+;
+txtSystemExecVersion
+Version d'Exec:
+; Exec version:
+;
+;
+txtSystemWorkbenchVersion
+Version du Workbench:
+; Workbench version:
+;
+;
+txtSystemGraphics
+Graphique:
+; Graphics:
+;
+;
+txtSystemAudio
+Audio:
+; Audio:
+;
+;
+txtSystemTCPIP
+TCP/IP:
+; TCP/IP:
+;
+;
+txtSystemPowerPCOS
+OS PowerPC:
+; PowerPC OS:
+;
+;
+txtSystemChip
+Graphique
+; Chip
+;
+;
+txtSystemFast
+Autre
+; Fast
+;
+;
+txtSystemTotal
+Totale
+; Total
+;
+;
+txtSystemPlain
+Physique:
+; Plain:
+;
+;
+txtSystemVirtual
+Virtuelle:
+; Virtual:
+;
+;
+txtSystemTotal2
+Totale:
+; Total:
+;
+;
+txtSystemSlowRAM
+RAM lente:
+; Slow RAM:
+;
+;
+txtSystemAlertCode
+Code d'alerte:
+; Alert code:
+;
+;
+txtSystemAlertTask
+Tâche d'alerte:
+; Alert task:
+;
+;
+txtSystemAlertDeadend
+Issue fatale:
+; Deadend:
+;
+;
+txtSystemAlertSubsystem
+Sous-système:
+; Subsystem:
+;
+;
+txtSystemAlertGeneral
+Général:
+; General:
+;
+;
+txtSystemAlertSpecific
+Spécifique:
+; Specific:
+;
+;
+txtSystemPrintHeader
+%s\n
+; %s\n
+;
+;
+txtSystemPrintTitleLine
+\t%s\n
+; \t%s\n
+;
+;
+txtSystemPrintLine
+%20s %s\n
+; %20s %s\n
+;
+;
+txtSystemPrintRAMLine
+%20s %10s %10s %10s\n
+; %20s %10s %10s %10s\n
+;
+;
+txtSystemPrintSlowRAMLine
+%20s %32s\n
+; %20s %32s\n
+;
+; strings in tasks window
+txtFreeze
+Fig_er
+; _Freeze
+;
+;
+txtActivate
+_Activer
+; _Activate
+;
+;
+txtSignal
+Si_gnal
+; _Signal
+;
+;
+txtBreak
+Interr_ompre
+; _Break
+;
+;
+txtCPU
+CPU:
+;  CPU:
+;
+;
+txtSeconds
+ Secs:
+;  Secs:
+;
+;
+txtCPUOff
+éteint
+; off
+;
+;
+txtCPUFull
+tous
+; full
+;
+;
+txtCPUPercent
+en %
+; in %
+;
+;
+msgWantToRemoveTask
+Voulez-vous vraiment supprimer %s\n\
+« %s » ?
+; Do you really want to remove %s\n\
+; \"%s\"?
+;
+;
+msgWantToRemoveTaskWithStuff
+Aussi retirer les ports, fenêtre etc alloués par la tâche\n\
+« %s » ?
+; Also remove ports, window, etc allocated by task\n\
+; \"%s\"?
+;
+;
+msgCantFindTask
+Désolé, Je ne trouve pas la tâche !
+; Sorry, I can't find that task!
+;
+;
+msgCantInstallPatchSemaphore
+Impossible d'installer le patch de sémaphore !
+; Can't install patch semaphore!
+;
+;
+msgFoundOldPatchSemaphore
+Vieux patch de sémaphore trouvé (V%ld.%ld) !\n\
+Je vais le remplacer par celui-ci (V%ld.%ld) !
+; Found old patch semaphore (V%ld.%ld)!\n\
+; I will replace this one by a new one (V%ld.%ld)!
+;
+;
+txtNoTask
+<pas de tâche>
+; <no task>
+;
+;
+txtTaskStateFrozen
+figé
+; frozen
+;
+;
+txtTaskStateAdded
+ajouté
+; added
+;
+;
+txtTaskStateRunning
+en cours
+; running
+;
+;
+txtTaskStateReady
+prêt
+; ready
+;
+;
+txtTaskStateWaiting
+en attente
+; waiting
+;
+;
+txtTaskStateWaitAbort
+attente interrompue
+; wait abort
+;
+;
+txtTaskStateWaitChild
+att. hiérarchie
+; wait child
+;
+;
+txtTaskStateWaitSemaphore
+att. séma.
+; wait sema
+;
+;
+txtTaskStateWaitIntuition
+att. intui
+; wait intui
+;
+;
+txtTaskStateWaitNet
+att. net
+; wait net
+;
+;
+txtTaskStateWaitDOS
+att. dos
+; wait dos
+;
+;
+txtTaskStateWaitBreakC
+att. « break C »
+; wait break C
+;
+;
+txtTaskStateWaitBreakD
+att. « break D »
+; wait break D
+;
+;
+txtTaskStateWaitBreakE
+att. « break E »
+; wait break E
+;
+;
+txtTaskStateWaitBreakF
+att. « break F »
+; wait break F
+;
+;
+txtTaskStateSuspended
+suspendue
+; suspended
+;
+;
+txtTaskStateExcept
+exception
+; except
+;
+;
+txtTaskStateRemoved
+supprimé
+; removed
+;
+;
+txtTaskStateInvalid
+invalide
+; invalid
+;
+;
+txtTaskStateUnknown
+< ??? >
+; < ??? >
+;
+;
+txtNodeTypeTask
+tâche
+; task
+;
+;
+txtNodeTypeInterrupt
+interruption
+; interrupt
+;
+;
+txtNodeTypeDevice
+périphérique
+; device
+;
+;
+txtNodeTypeMsgPort
+port msg
+; msgport
+;
+;
+txtNodeTypeMessage
+message
+; message
+;
+;
+txtNodeTypeFreeMsg
+freemsg
+; freemsg
+;
+;
+txtNodeTypeReplyMsg
+replymsg
+; replymsg
+;
+;
+txtNodeTypeResource
+ressource
+; resource
+;
+;
+txtNodeTypeLibrary
+bibliothèque
+; library
+;
+;
+txtNodeTypeMemory
+mémoire
+; memory
+;
+;
+txtNodeTypeSoftInt
+softint
+; softint
+;
+;
+txtNodeTypeFont
+police
+; font
+;
+;
+txtNodeTypeProcess
+processus
+; process
+;
+;
+txtNodeTypeSemaphore
+sémaphore
+; semaphore
+;
+;
+txtNodeTypeSignalSem
+signalsem
+; signalsem
+;
+;
+txtNodeTypeBootNode
+noeud de démarrage
+; bootnode
+;
+;
+txtNodeTypeKickMem
+kickmem
+; kickmem
+;
+;
+txtNodeTypeGraphics
+graphique
+; graphics
+;
+;
+txtNodeTypeDeathMessage
+deathmessage
+; deathmessage
+;
+;
+txtNodeTypeUser
+utilisateur
+; user
+;
+;
+txtNodeTypeExtended
+étendu
+; extended
+;
+;
+txtNodeTypeUnknown
+inconnu
+; unknown
+;
+;
+txtNodeTypeInvalid
+< ??? >
+; < ??? >
+;
+;
+txtCLIBatch
+script
+; batch
+;
+;
+txtCLIInteractive
+interactive
+; interactive
+;
+;
+txtCLIBackground
+fond
+; background
+;
+;
+txtCLIForeground
+1er plan
+; foreground
+;
+;
+txtTasksTitle
+TÂCHES & PROCESSUS
+; TASKS & PROCESSES
+;
+;
+txtTasksDetailTaskTitle
+TÂCHE
+; TASK
+;
+;
+txtTasksDetailProcessTitle
+PROCESSUS
+; PROCESS
+;
+;
+txtCPUPercentTitle
+CPU %
+; CPU %
+;
+;
+txtTaskNum
+NUM
+; NUM
+;
+;
+txtTaskState
+État
+; tc_State
+;
+;
+txtTaskState2
+État:
+; tc_State:
+;
+;
+txtTaskSigWait
+SigWait
+; tc_SigWait
+;
+;
+txtTaskSigWait2
+SigWait:
+; tc_SigWait:
+;
+;
+txtTaskFreeStack
+Pile disponible
+; Free Stack
+;
+;
+txtTaskFlags
+Attributs
+; tc_Flags
+;
+;
+txtTaskFlags2
+Attributs:
+; tc_Flags:
+;
+;
+txtTaskFlagsTitle
+Attributs de la tâche
+; Task flags
+;
+;
+txtTaskIDNestCnt
+IDNestCnt:
+; tc_IDNestCnt:
+;
+;
+txtTaskTDNestCnt
+TDNestCnt:
+; tc_TDNestCnt:
+;
+;
+txtTaskSigAlloc
+SigAlloc:
+; tc_SigAlloc:
+;
+;
+txtTaskSigRecvd
+SigRecvd:
+; tc_SigRecvd:
+;
+;
+txtTaskSigExcept
+SigExcept:
+; tc_SigExcept:
+;
+;
+txtTaskTrapAlloc
+TrapAlloc:
+; tc_TrapAlloc:
+;
+;
+txtTaskTrapAble
+TrapAble:
+; tc_TrapAble:
+;
+;
+txtTaskExceptData
+ExceptData:
+; tc_ExceptData:
+;
+;
+txtTaskExceptCode
+ExceptCode:
+; tc_ExceptCode:
+;
+;
+txtTaskTrapData
+TrapData:
+; tc_TrapData:
+;
+;
+txtTaskTrapCode
+TrapCode:
+; tc_TrapCode:
+;
+;
+txtTaskSPReg
+SPReg:
+; tc_SPReg:
+;
+;
+txtTaskSPLower
+SPLower:
+; tc_SPLower:
+;
+;
+txtTaskSPUpper
+SPUpper:
+; tc_SPUpper:
+;
+;
+txtTaskStacksize
+Taille pile:
+; Stacksize:
+;
+;
+txtTaskSwitch
+Switch:
+; tc_Switch:
+;
+;
+txtTaskLaunch
+Lancé:
+; tc_Launch:
+;
+;
+txtTaskMemEntry
+Entrée mémoire:
+; tc_MemEntry:
+;
+;
+txtTaskUserData
+Données utilisateur:
+; tc_UserData:
+;
+;
+txtTaskProcessSpecific
+Spécificité du processus
+; Process specific
+;
+;
+txtTaskProcessSegList
+SegList
+; pr_SegList
+;
+;
+txtTaskProcessSegList2
+SegList:
+; pr_SegList:
+;
+;
+txtTaskProcessStackSize
+Taille pile:
+; pr_StackSize:
+;
+;
+txtTaskProcessGlobVec
+Vecteur global:
+; pr_GlobVec:
+;
+;
+txtTaskProcessTaskNum
+Num. tâche:
+; pr_TaskNum:
+;
+;
+txtTaskProcessStackBase
+Base pile:
+; pr_StackBase:
+;
+;
+txtTaskProcessResult2
+pr_Result2:
+; pr_Result2:
+;
+;
+txtTaskProcessCurrentDir
+Répertoire actuel:
+; pr_CurrentDir:
+;
+;
+txtTaskProcessCIS
+CIS:
+; pr_CIS:
+;
+;
+txtTaskProcessCOS
+COS:
+; pr_COS:
+;
+;
+txtTaskProcessConsoleTask
+Tâche console:
+; pr_ConsoleTask:
+;
+;
+txtTaskProcessFileSystemTask
+Tâche syst. fichier:
+; pr_FileSystemTask:
+;
+;
+txtTaskProcessCLI
+CLI
+; pr_CLI
+;
+;
+txtTaskProcessCLI2
+CLI:
+; pr_CLI:
+;
+;
+txtTaskProcessReturnAddr
+Adresse retour:
+; pr_ReturnAddr:
+;
+;
+txtTaskProcessPktWait
+Attente paquet:
+; pr_PktWait:
+;
+;
+txtTaskProcessWindowPtr
+Pointeur fenêtre:
+; pr_WindowPtr:
+;
+;
+txtTaskProcessHomeDir
+Répertoire parent:
+; pr_HomeDir:
+;
+;
+txtTaskProcessFlags
+Attributs
+; pr_Flags
+;
+;
+txtTaskProcessFlags2
+Attributs:
+; pr_Flags:
+;
+;
+txtTaskProcessFlagsTitle
+Attributs processus
+; Process flags
+;
+;
+txtTaskProcessExitCode
+Code de sortie:
+; pr_ExitCode:
+;
+;
+txtTaskProcessExitData
+Données en sortie:
+; pr_ExitData:
+;
+;
+txtTaskProcessArguments
+Arguments:
+; pr_Arguments:
+;
+;
+txtTaskProcessLocalVars
+Variables locales:
+; pr_LocalVars:
+;
+;
+txtTaskProcessShellPrivate
+Shell privé:
+; pr_ShellPrivate:
+;
+;
+txtTaskProcessCES
+CES:
+; pr_CES:
+;
+;
+txtTaskCLIResult2
+Résultat 2:
+; cli_Result2:
+;
+;
+txtTaskCLISetName
+SetName:
+; cli_SetName:
+;
+;
+txtTaskCLICommandDir
+Répertoire commande:
+; cli_CommandDir:
+;
+;
+txtTaskCLIReturnCode
+Code de retour:
+; cli_ReturnCode:
+;
+;
+txtTaskCLICommandName
+Nom commande:
+; cli_CommandName:
+;
+;
+txtTaskCLIFailLevel
+Niveau d'échec:
+; cli_FailLevel:
+;
+;
+txtTaskCLIPrompt
+Affichage:
+; cli_Prompt:
+;
+;
+txtTaskCLIStandardInput
+Entrée standard:
+; cli_StandardInput:
+;
+;
+txtTaskCLICurrentInput
+Entrée actuelle:
+; cli_CurrentInput:
+;
+;
+txtTaskCLICommandFile
+Fichier commande:
+; cli_CommandFile:
+;
+;
+txtTaskCLIInteractive
+Commande:
+; cli_CommandInteractive:
+;
+;
+txtTaskCLIBackground
+Fond:
+; cli_Background:
+;
+;
+txtTaskCLICurrentOutput
+Sortie actuelle:
+; cli_CurrentOutput:
+;
+;
+txtTaskCLIDefaultStack
+Pile (défaut):
+; cli_DefaultStack:
+;
+;
+txtTaskCLIStandardOutput
+Sortie standard:
+; cli_StandardOutput:
+;
+;
+txtTaskCLIModule
+Module:
+; cli_Module:
+;
+;
+txtSegListLower
+Bas
+; Lower
+;
+;
+txtSegListUpper
+Haut
+; Upper
+;
+;
+txtSegListSize
+Taille
+; Size
+;
+;
+txtTasksPrintHeader
+\n  Adresse  Type     Pri NUM État         SigWait  Pile disp. Nom\n\n
+; \n  Address  Type     Pri NUM State         SigWait  FreeStack Name\n\n
+;
+;
+txtTasksPrintLine
+ %s %-7.7s %4s %3s %-12.12s %s %-8.8s  %s\n
+;  %s %-7.7s %4s %3s %-12.12s %s %-8.8s  %s\n
+;
+;
+txtTaskFreeStackPPC
+Pile disponible (PPC)
+; Free Stack (PPC)
+;
+; strings in timers window
+txtAbort
+_Annuler
+; _Abort
+;
+;
+msgWantToAbortTimer
+Voulez-vous interrompre le timer\n« %s » ?
+; Do you want to abort timer\n\"%s\"?
+;
+;
+txtTimersTitle
+REQUÊTE TIMER
+; TIMER REQUESTS
+;
+;
+txtTimerMicroHz
+MicroHz
+; MicroHz
+;
+;
+txtTimerVBlank
+VBlank
+; VBlank
+;
+;
+txtTask
+Tâche
+; Task
+;
+;
+txtTime
+Heure
+; Time
+;
+;
+txtUnit
+Unité
+; Unit
+;
+;
+txtReplyPort
+Port réponse
+; mn_ReplyPort
+;
+;
+txtTimerPrintHeader
+\n  Adresse  Port rép.    Heure       Unité    Tâche\n\n
+; \n  Address  ReplyPort    Time       Unit    Task\n\n
+;
+;
+txtTimerPrintLine
+ %s %s %13s %-7s %s\n
+;  %s %s %13s %-7s %s\n
+;
+;
+txtTimerWaitUntil
+WaitUntil
+; WaitUntil
+;
+; strings in vectors window
+txtVectorsTitle
+VECTEURS
+; VECTORS
+;
+;
+txtResetVectors
+Vecteurs de réinit.
+; Reset Vectors
+;
+;
+txtAutoVectorInterrupts
+Vecteurs d'interruption auto.
+; Auto Vector Interrupts
+;
+;
+txtInterruptVectors
+Vecteurs d'interruption
+; Interrupt Vectors
+;
+;
+txtVectorColdCapture
+ColdCapture:
+; ColdCapture:
+;
+;
+txtVectorCoolCapture
+CoolCapture:
+; CoolCapture:
+;
+;
+txtVectorWarmCapture
+WarmCapture:
+; WarmCapture:
+;
+;
+txtVectorKickMemPtr
+KickMemPtr:
+; KickMemPtr:
+;
+;
+txtVectorKickTagPtr
+KickTagPtr:
+; KickTagPtr:
+;
+;
+txtVectorKickChecksum
+KickChecksum:
+; KickChecksum:
+;
+;
+txtVectorLevel1
+Niveau 1 ($0064):
+; Level 1 ($0064):
+;
+;
+txtVectorLevel2
+Niveau 2 ($0068):
+; Level 2 ($0068):
+;
+;
+txtVectorLevel3
+Niveau 3 ($006c):
+; Level 3 ($006c):
+;
+;
+txtVectorLevel4
+Niveau 4 ($0070):
+; Level 4 ($0070):
+;
+;
+txtVectorLevel5
+Niveau 5 ($0074):
+; Level 5 ($0074):
+;
+;
+txtVectorLevel6
+Niveau 6 ($0078):
+; Level 6 ($0078):
+;
+;
+txtVectorLevel7
+Niveau 7 ($007c):
+; Level 7 ($007c):
+;
+;
+txtVectorInt00
+TBE  0:
+; TBE  0:
+;
+;
+txtVectorInt01
+DSKBLK  1:
+; DSKBLK  1:
+;
+;
+txtVectorInt02
+SOFTINT  2:
+; SOFTINT  2:
+;
+;
+txtVectorInt03
+PORTS  3:
+; PORTS  3:
+;
+;
+txtVectorInt04
+COPPER  4:
+; COPPER  4:
+;
+;
+txtVectorInt05
+VERTB  5:
+; VERTB  5:
+;
+;
+txtVectorInt06
+BLITTER  6:
+; BLITTER  6:
+;
+;
+txtVectorInt07
+AUDIO0  7:
+; AUDIO0  7:
+;
+;
+txtVectorInt08
+AUDIO1  8:
+; AUDIO1  8:
+;
+;
+txtVectorInt09
+AUDIO2  9:
+; AUDIO2  9:
+;
+;
+txtVectorInt10
+AUDIO3 10:
+; AUDIO3 10:
+;
+;
+txtVectorInt11
+RBF 11:
+; RBF 11:
+;
+;
+txtVectorInt12
+DSKSYNC 12:
+; DSKSYNC 12:
+;
+;
+txtVectorInt13
+EXTER 13:
+; EXTER 13:
+;
+;
+txtVectorInt14
+INTEN 14:
+; INTEN 14:
+;
+;
+txtVectorInt15
+NMI 15:
+; NMI 15:
+;
+;
+txtVectorsPrintHeader
+\n%s:\n\n
+; \n%s:\n\n
+;
+;
+txtVectorsPrintLineReset
+ ColdCapture  : %s     KickMemPtr   : %s\n\
+ CoolCapture  : %s     KickTagPtr   : %s\n\
+ WarmCapture  : %s     KickCheckSum : %s\n
+;  ColdCapture  : %s     KickMemPtr   : %s\n\
+;  CoolCapture  : %s     KickTagPtr   : %s\n\
+;  WarmCapture  : %s     KickCheckSum : %s\n
+;
+;
+txtVectorsPrintLineAuto
+ Niveau 1 ($0064): %s     Niveau 5 ($0074): %s\n\
+ Niveau 2 ($0068): %s     Niveau 6 ($0078): %s\n\
+ Niveau 3 ($006c): %s     Niveau 7 ($007c): %s\n\
+ Niveau 4 ($0070): %s\n
+;  Level1 ($0064): %s     Level5 ($0074): %s\n\
+;  Level2 ($0068): %s     Level6 ($0078): %s\n\
+;  Level3 ($006c): %s     Level7 ($007c): %s\n\
+;  Level4 ($0070): %s\n
+;
+;
+txtVectorsPrintLineVectors
+ TBE      0   : %s     AUDIO1   8   : %s\n\
+ DISKBLK  1   : %s     AUDIO2   9   : %s\n\
+ SOFTINT  2   : %s     AUDIO3  10   : %s\n\
+ PORTS    3   : %s     RBF     11   : %s\n\
+ COPPER   4   : %s     DSKSYNC 12   : %s\n\
+ VERTB    5   : %s     EXTER   13   : %s\n\
+ BLITTER  6   : %s     INTEN   14   : %s\n\
+ AUDIO0   7   : %s     NMI     15   : %s\n
+;  TBE      0   : %s     AUDIO1   8   : %s\n\
+;  DISKBLK  1   : %s     AUDIO2   9   : %s\n\
+;  SOFTINT  2   : %s     AUDIO3  10   : %s\n\
+;  PORTS    3   : %s     RBF     11   : %s\n\
+;  COPPER   4   : %s     DSKSYNC 12   : %s\n\
+;  VERTB    5   : %s     EXTER   13   : %s\n\
+;  BLITTER  6   : %s     INTEN   14   : %s\n\
+;  AUDIO0   7   : %s     NMI     15   : %s\n
+;
+; strings in windows window
+txtToFront
+Au 1er plan
+; To _Front
+;
+;
+msgWantToCloseScreen
+Voulez-vous vraiment fermer l'écran\n\
+« %s » ?
+; Do you really want to close screen\n\
+; \"%s\"?
+;
+;
+msgWantToCloseWindow
+Voulez-vous vraiment fermer la fenêtre\n\
+« %s » ?
+; Do you really want to close window\n\
+; \"%s\"?
+;
+;
+txtWindowsTitle
+ÉCRAN & FENÊTRES
+; SCREENS & WINDOWS
+;
+;
+txtWindowsDetailTitleWindow
+FENÊTRE
+; WINDOW
+;
+;
+txtWindowsDetailTitleScreen
+ÉCRAN
+; SCREEN
+;
+;
+msgCantFindScreen
+Impossible de trouver l'écran $%08lx !\nDéjà fermé ?
+; Can't find screen $%08lx!\nAlready closed?
+;
+;
+msgCantFindWindow
+Impossible de trouver la fenêtre $%08lx !\nDéjà fermée ?
+; Can't find window $%08lx!\nAlready closed?
+;
+;
+txtWindowPos
+Pos(x,y)
+; Pos(x,y)
+;
+;
+txtWindowSize
+Taille (l,h)
+; Size(w,h)
+;
+;
+txtWindowFlags
+Attributs
+; Flags
+;
+;
+txtWindowFlags2
+Attributs:
+; Flags:
+;
+;
+txtWindowIDCMP
+IDCMP
+; IDCMP
+;
+;
+txtWindowTitle
+Titre
+; Title
+;
+;
+txtWindowTitle2
+Titre:
+; Title:
+;
+;
+txtWindowNextScreen
+Écran suivant:
+; NextScreen:
+;
+;
+txtWindowFirstWindow
+Première fenêtre:
+; FirstWindow:
+;
+;
+txtWindowLeftEdge
+Bord gauche:
+; LeftEdge:
+;
+;
+txtWindowTopEdge
+Bord haut:
+; TopEdge:
+;
+;
+txtWindowWidth
+Largeur:
+; Width:
+;
+;
+txtWindowHeight
+Hauteur:
+; Height:
+;
+;
+txtWindowMouseX
+Souris X:
+; MouseX:
+;
+;
+txtWindowMouseY
+Souris Y:
+; MouseY:
+;
+;
+txtWindowScreenFlagsTitle
+Attributs écran
+; Screen flags
+;
+;
+txtWindowDefaultTitle
+Titre par défaut:
+; DefaultTitle:
+;
+;
+txtWindowBarHeight
+Hauteur barre:
+; BarHeight:
+;
+;
+txtWindowBarVBorder
+Bordure vert. barre:
+; BarVBorder:
+;
+;
+txtWindowBarHBorder
+Bordure hor. barre:
+; BarHBorder:
+;
+;
+txtWindowMenuVBorder
+Bordure vert. menu:
+; MenuVBorder:
+;
+;
+txtWindowMenuHBorder
+Bordure hor. menu:
+; MenuHBorder:
+;
+;
+txtWindowWBorTop
+Bordure haute:
+; WBorTop:
+;
+;
+txtWindowWBorLeft
+Bordure gauche:
+; WBorLeft:
+;
+;
+txtWindowWBorRight
+Bordure droite:
+; WBorRight:
+;
+;
+txtWindowWBorBottom
+Bordure basse:
+; WBorBottom:
+;
+;
+txtWindowScreenMode
+Mode écran:
+; ScreenMode:
+;
+;
+txtWindowDepth
+Profondeur:
+; Depth:
+;
+;
+txtWindowFont
+Police:
+; Font:
+;
+;
+txtWindowFirstGadget
+1er gadget:
+; FirstGadget:
+;
+;
+txtWindowDetailPen
+Couleur écriture:
+; DetailPen:
+;
+;
+txtWindowBlockPen
+Couleur fond:
+; BlockPen:
+;
+;
+txtWindowSaveColor0
+Couleur 0:
+; SaveColor0:
+;
+;
+txtWindowBarLayer
+Barre:
+; BarLayer:
+;
+;
+txtWindowExtData
+Données étendues:
+; ExtData:
+;
+;
+txtWindowUserData
+Données utilisateur:
+; UserData:
+;
+;
+txtWindowPens
+Pinceaux:
+; Pens:
+;
+;
+txtWindowColors
+%lD couleurs
+; %lD colors
+;
+;
+txtWindowSharedPens
+%lD partagés, %lD utilisés, %lD libres
+; %lD shareable, %lD used, %lD free
+;
+;
+txtWindowPubScreenSpecific
+Indication écran public
+; PubScreen specific
+;
+;
+txtWindowPubScreenName
+Nom de l'écran:
+; PublicName:
+;
+;
+txtWindowPubScreenFlags
+Attributs
+; psn_Flags
+;
+;
+txtWindowPubScreenFlags2
+Attributs:
+; psn_Flags:
+;
+;
+txtWindowPubScreenFlagsTitle
+Attributs écran
+; PubScreen flags
+;
+;
+txtWindowPubScreenVisitorCount
+Compteur visiteur:
+; psn_VisitorCount:
+;
+;
+txtWindowPubScreenSigBit
+SigBit:
+; psn_SigBit:
+;
+;
+txtWindowPubScreenSigTask
+SigTask:
+; psn_SigTask:
+;
+;
+txtWindowNextWindow
+Fenêtre suivante:
+; NextWindow:
+;
+;
+txtWindowMinWidth
+Largeur mini.:
+; MinWidth:
+;
+;
+txtWindowMinHeight
+Hauteur mini.:
+; MinHeight:
+;
+;
+txtWindowMaxWidth
+Largeur max.:
+; MaxWidth:
+;
+;
+txtWindowMaxHeight
+Hauteur max.:
+; MaxHeight:
+;
+;
+txtWindowWindowFlagsTitle
+Attributs fenêtre
+; Window flags
+;
+;
+txtWindowMenuStrip
+Accro. menus:
+; MenuStrip:
+;
+;
+txtWindowFirstRequest
+1ère requête:
+; FirstRequest:
+;
+;
+txtWindowDMRequest
+Requête DM:
+; DMRequest:
+;
+;
+txtWindowReqCount
+Compteur requête:
+; ReqCount:
+;
+;
+txtWindowWScreen
+WScreen:
+; WScreen:
+;
+;
+txtWindowRPort
+RastPort:
+; RPort:
+;
+;
+txtWindowBorderLeft
+Bordure gauche:
+; BorderLeft:
+;
+;
+txtWindowBorderTop
+Bordure haute:
+; BorderTop:
+;
+;
+txtWindowBorderRight
+Bordure droite:
+; BorderRight:
+;
+;
+txtWindowBorderBottom
+Bordure basse:
+; BorderBottom:
+;
+;
+txtWindowBorderRPort
+Brodure RPort:
+; BorderRPort:
+;
+;
+txtWindowParent
+Parent:
+; Parent:
+;
+;
+txtWindowDescendant
+Descendant:
+; Descendant:
+;
+;
+txtWindowPointer
+Pointeur:
+; Pointer:
+;
+;
+txtWindowPtrHeight
+Hauteur pointeur:
+; PtrHeight:
+;
+;
+txtWindowPtrWidth
+Largeur pointeur:
+; PtrWidth:
+;
+;
+txtWindowXOffset
+Offset X:
+; XOffset:
+;
+;
+txtWindowYOffset
+Offset Y:
+; YOffset:
+;
+;
+txtWindowIDCMPFlags
+IDCMPFlags
+; IDCMPFlags
+;
+;
+txtWindowIDCMPFlags2
+Attributs IDCMP:
+; IDCMPFlags:
+;
+;
+txtWindowIDCMPFlagsTitle
+Attributs IDCMP
+; IDCMP flags
+;
+;
+txtWindowMessageKey
+MessageKey:
+; MessageKey:
+;
+;
+txtWindowCheckMark
+Marquage:
+; CheckMark:
+;
+;
+txtWindowScreenTitle
+Titre écran:
+; ScreenTitle:
+;
+;
+txtWindowGZZMouseX
+Souris visible X:
+; GZZMouseX:
+;
+;
+txtWindowGZZMouseY
+souris visible Y:
+; GZZMouseY:
+;
+;
+txtWindowGZZWidth
+GZZ largeur:
+; GZZWidth:
+;
+;
+txtWindowGZZHeight
+GZZ hauteur:
+; GZZHeight:
+;
+;
+txtWindowWLayer
+Couches:
+; WLayer:
+;
+;
+txtWindowIFont
+Police fenêtre:
+; IFont:
+;
+;
+txtWindowMoreFlags
+Autres attributs:
+; MoreFlags:
+;
+;
+txtWindowsPrintHeader
+\n  Adresse  Pos(x,y)  Taille(l,h) Attri.    IDCMP     Titre\n\n
+; \n  Address  Pos(x,y)  Size(w,h) Flags     IDCMP     Title\n\n
+;
+;
+txtWindowsPrintLine
+ %s %9s %9s %-9.9s %s %-26.26s\n
+;  %s %9s %9s %-9.9s %s %-26.26s\n
+;
+; strings in patches window
+msgControlProgramNotInstalled
+Ni SaferPatches ni SetMan ou PatchControl ne sont installés !
+; Neither SaferPatches nor SetMan nor PatchControl is installed!
+;
+;
+msgWrongSetManVersion
+Mauvaise version de SetMan!\n\
+Attendu: 0x%08lx, non pas: 0x%08lx
+; Wrong SetMan version!\n\
+; wanted: 0x%08lx, is: 0x%08lx
+;
+;
+msgWantToDisablePatches
+Désactiver des correctifs, même une liste complète de\n\
+correctifs précis, est une opération potentiellement dangereuse.\n\
+Êtes-vous sûr de vouloir continuer ?
+; Disabling patches, even a complete patch list of\n\
+; related patches, is a potentially dangerous operation.\n\
+; Are you sure you want to continue?
+;
+;
+txtPatchDisabled
+désactivé
+; disabled
+;
+;
+txtPatchRemoved
+supprimé
+; removed
+;
+;
+txtPatchActive
+actif
+; active
+;
+;
+txtPatchesTitle
+CORRECTIFS
+; PATCHES
+;
+;
+txtLibrary
+Bibliothèque
+; Library
+;
+;
+txtFunction
+Fonction
+; Function
+;
+;
+txtState
+État
+; State
+;
+;
+txtPatcher
+Patcher
+; Patcher
+;
+;
+txtPatchesPrintHeader
+\n  Adresse  biblio.                   Offset Fonction                  Attri.   Patcher\n\n
+; \n  Address  Library                   Offset Function                  Flags    Patcher\n\n
+;
+;
+txtPatchesPrintLine
+ %s %-25.25s %s %-25.25s %-8s %s\n
+;  %s %-25.25s %s %-25.25s %-8s %s\n
+;
+; strings in audiomodes window
+msgCantOpenAHIDevice
+Impossible d'ouvrir %s version %ld !
+; Can't open %s version %ld!
+;
+;
+txtAudioModesTitle
+MODES_AUDIO
+; AUDIOMODES
+;
+;
+txtAudioModesDetailTitle
+MODE AUDIO
+; AUDIOMODE
+;
+;
+txtAudioModeID
+ModeID
+; ModeID
+;
+;
+txtAudioModeID2
+ModeID:
+; ModeID:
+;
+;
+txtAudioModeBits
+Bits
+; Bits
+;
+;
+txtAudioModeMinFreq
+Fréquence mini.:
+; min. Freq
+;
+;
+txtAudioModeMaxFreq
+Fréquence max.:
+; max. Freq
+;
+;
+txtAudioModeDriver
+Pilote:
+; Driver:
+;
+;
+txtAudioModeVersion
+Version:
+; Version:
+;
+;
+txtAudioModeAuthor
+Auteur:
+; Author:
+;
+;
+txtAudioModeCopyright
+Copyright:
+; Copyright:
+;
+;
+txtAudioModeAnnotation
+Annotation:
+; Annotation:
+;
+;
+txtAudioModeBits2
+Bits:
+; Bits:
+;
+;
+txtAudioModeMaxChannels
+Canaux max.:
+; max. Channels:
+;
+;
+txtAudioModeMixFrequency
+Fréquence de mixage:
+; Mix Frequency
+;
+;
+txtAudioModeMaxPlaySamples
+Échantillon max.:
+; max. Play Samples:
+;
+;
+txtAudioModeMaxRecordSamples
+Enregistrement max.:
+; max. Record Samples:
+;
+;
+txtAudioModeMonitorVolume
+Volume:
+; Monitor Volume:
+;
+;
+txtAudioModeInputGain
+Gain en entrée:
+; Input Gain:
+;
+;
+txtAudioModeOutputVolume
+Volume en sortie:
+; Output Volume:
+;
+;
+txtAudioModeVolume
+Volume:
+; Volume:
+;
+;
+txtAudioModeStereo
+Stéreo:
+; Stereo:
+;
+;
+txtAudioModePanning
+Balance:
+; Panning:
+;
+;
+txtAudioModeHiFi
+HiFi:
+; HiFi:
+;
+;
+txtAudioModePingPong
+PingPong:
+; PingPong:
+;
+;
+txtAudioModeRecord
+Enregistrement:
+; Record:
+;
+;
+txtAudioModeFullDuplex
+FullDuplex:
+; FullDuplex:
+;
+;
+txtAudioModeRealTime
+Temps réel:
+; RealTime:
+;
+;
+txtAudioModesPrintHeader
+\n  ModeID    Bits Fq mini  Fq Max     Nom\n\n
+; \n  ModeID    Bits MinFreq  MaxFreq    Name\n\n
+;
+;
+txtAudioModesPrintLine
+ %s %4s %9s %9s  %s\n
+;  %s %4s %9s %9s  %s\n
+;
+; strings in catalogs window
+txtCatalogsTitle
+CATALOGUES
+; CATALOGS
+;
+;
+txtCatalogName
+Nom
+; cat_Name
+;
+;
+txtCatalogVersion
+Version
+; cat_Version
+;
+;
+txtCatalogLanguage
+Langage
+; cat_Language
+;
+;
+txtCatalogPrintHeader
+\n  Adresse  Version Langage    Nom\n\n
+; \n  Address  Version Language   Name\n\n
+;
+;
+txtCatalogPrintLine
+ %s   %-5.5s %-10.10s %s\n
+;  %s   %-5.5s %-10.10s %s\n
+;
+; strings in resethandlers window
+msgWantToRemoveResetHandler
+Voulez-vous vraiment supprimer le gestionnaire de reset\n\
+« %s » ?
+; Do you really want to remove reset handler\n\
+; \"%s\"?
+;
+;
+txtResetHandlersTitle
+GESTION RESET
+; RESETHANDLERS
+;
+;
+txtResetHandlersDetailTitle
+GESTION RESET
+; RESETHANDLER
+;
+;
+txtResetHandlersPrintHeader
+\n  Adresse  Type       Pri    Donnée     Code    Nom\n\n
+; \n  Address  Type       Pri    Data       Code    Name\n\n
+;
+;
+txtResetHandlersPrintLine
+ %s %-9s %4s %s  %-9.9s  %s\n
+;  %s %-9s %4s %s  %-9.9s  %s\n
+;
+; strings in disassembler window
+txtDisassemblyRange
+Affichage:
+; Disassembly range:
+;
+;
+txtHexdumpRange
+Affichage:
+; Hexdump range:
+;
+;
+msgCannotOpenDisasmLibrary
+Impossible d'ouvrir « disassembler.library » V40\n\n
+; cannot open disassembler.library V40\n\n
+;
+;
+txtRangeBytes
+%5ld octets
+; %5ld Bytes
+;
+;
+txtHexdumpTitle
+HEXDUMP
+; HEXDUMP
+;
+;
+txtDisassemblyTitle
+DÉSASSEMBLEUR
+; DISASSEMBLY
+;
+; strings in flags window
+txtFlagsName
+Nom
+; Name
+;
+;
+txtFlagsValue
+Valeur
+; Value
+;
+; generic strings, mainly used in list titles
+txtNodeName
+Nom
+; ln_Name
+;
+;
+txtNodeName2
+Nom:
+; ln_Name:
+;
+;
+txtNodeType
+Type
+; ln_Type
+;
+;
+txtNodeType2
+Type:
+; ln_Type:
+;
+;
+txtNodePri
+Priorité
+; ln_Pri
+;
+;
+txtNodePri2
+Priorité:
+; ln_Pri:
+;
+;
+txtInterruptData
+Données
+; is_Data
+;
+;
+txtInterruptData2
+Données:
+; is_Data:
+;
+;
+txtInterruptCode
+Code
+; is_Code
+;
+;
+txtInterruptCode2
+Code:
+; is_Code:
+;
+; strings in main window
+txtMainAllocations
+_Allocations
+; _Allocations
+;
+;
+txtMainAssigns
+Assi_gnations
+; Assi_gns
+;
+;
+txtMainBoopsiClasses
+Classes _Boopsi
+; _BoopsiClasses
+;
+;
+txtMainCommodities
+Commodités
+; Commodities
+;
+;
+txtMainDevices
+Périp_hériques
+; _Devices
+;
+;
+txtMainExpansions
+E_xtensions
+; E_xpansions
+;
+;
+txtMainFonts
+P_olices
+; _Fonts
+;
+;
+txtMainInputHandlers
+Gestion. entrées
+; Input_Handlers
+;
+;
+txtMainInterrupts
+_Interruptions
+; _Interrupts
+;
+;
+txtMainLibraries
+Bib_liothèques
+; _Libraries
+;
+;
+txtMainLocks
+_Verrous
+; L_ocks
+;
+;
+txtMainLowMemory
+Mémoire basse
+; LowMemory
+;
+;
+txtMainMemory
+_Mémoire
+; _Memory
+;
+;
+txtMainMountedDevs
+Périph. montés
+; Mou_nted Devs
+;
+;
+txtMainPorts
+_Ports
+; _Ports
+;
+;
+txtMainResidents
+_Résidents
+; _Residents
+;
+;
+txtMainResCmds
+Comman_des
+; Res_Cmds
+;
+;
+txtMainResources
+Resso_urces
+; Reso_urces
+;
+;
+txtMainScreenModes
+Modes d'écran
+; ScreenModes
+;
+;
+txtMainSemaphores
+_Sémaphores
+; _Semaphores
+;
+;
+txtMainSystem
+S_ystème
+; S_ystem
+;
+;
+txtMainTasks
+_Tâches
+; _Tasks
+;
+;
+txtMainTimer
+Tim_er
+; Tim_er
+;
+;
+txtMainVectors
+Ve_cteurs
+; _Vectors
+;
+;
+txtMainWindows
+Fe_nêtres
+; _Windows
+;
+;
+txtMainPatches
+Correctifs
+; Patches
+;
+;
+txtMainCatalogs
+Catalogues
+; Catalogs
+;
+;
+txtMainAudioModes
+Modes audio
+; AudioModes
+;
+;
+txtMainResetHandlers
+Gestion. reset
+; ResetHandlers
+;
+; menu strings
+txtMenuProject
+Projet
+; Project
+;
+;
+txtMenuAbout
+?\0À propos...
+; ?\0About...
+;
+;
+txtMenuAboutMUI
+À propos de MUI...
+; About MUI...
+;
+;
+txtMenuQuit
+Q\0Quitter
+; Q\0Quit
+;
+;
+txtMenuList
+Liste
+; List
+;
+;
+txtMenuAllocations
+A\0Allocations
+; A\0Allocations
+;
+;
+txtMenuAssigns
+G\0Assignations
+; G\0Assigns
+;
+;
+txtMenuClasses
+B\0Classes
+; B\0Classes
+;
+;
+txtMenuCommodities
+K\0Commodités
+; K\0Commodities
+;
+;
+txtMenuDevices
+D\0Périphériques
+; D\0Devices
+;
+;
+txtMenuExpansions
+X\0Extensions
+; X\0Expansions
+;
+;
+txtMenuFonts
+F\0Polices
+; F\0Fonts
+;
+;
+txtMenuInputHandlers
+H\0Gestion entrées
+; H\0InputHandlers
+;
+;
+txtMenuInterrupts
+I\0Interruptions
+; I\0Interrupts
+;
+;
+txtMenuLibraries
+L\0Bibliothèques
+; L\0Libraries
+;
+;
+txtMenuLocks
+O\0Verrous
+; O\0Locks
+;
+;
+txtMenuLowMemory
+J\0Mémoire basse
+; J\0LowMemory
+;
+;
+txtMenuMemory
+M\0Mémoire
+; M\0Memory
+;
+;
+txtMenuMount
+N\0Montés
+; N\0Mount
+;
+;
+txtMenuPorts
+P\0Ports
+; P\0Ports
+;
+;
+txtMenuResidents
+R\0Résidents
+; R\0Residents
+;
+;
+txtMenuResCmds
+C\0Commandes rés.
+; C\0ResCmds
+;
+;
+txtMenuResources
+U\0Ressources
+; U\0Resources
+;
+;
+txtMenuScreenModes
+Z\0Modes écran
+; Z\0ScreenModes
+;
+;
+txtMenuSemaphores
+S\0Sémaphores
+; S\0Semaphores
+;
+;
+txtMenuSystem
+Y\0Système
+; Y\0System
+;
+;
+txtMenuTasks
+T\0Tâches
+; T\0Tasks
+;
+;
+txtMenuTimer
+E\0Timer
+; E\0Timer
+;
+;
+txtMenuVectors
+V\0Vecteurs
+; V\0Vectors
+;
+;
+txtMenuWindows
+W\0Fenêtres
+; W\0Windows
+;
+;
+txtMenuInstalledPatches
+1\0Correctifs installés
+; 1\0Installed patches
+;
+;
+txtMenuLocaleCatalogs
+2\0Catalogues (Locale)
+; 2\0Locale catalogs
+;
+;
+txtMenuAHIAudioModes
+3\0Modes audio AHI
+; 3\0AHI AudioModes
+;
+;
+txtMenuResetHandlers
+4\0Gestion. reset
+; 4\0ResetHandlers
+;
+;
+txtMenuOther
+Autre
+; Other
+;
+;
+txtMenuFlushDevices
+Purger périphériques
+; Flush devices
+;
+;
+txtMenuFlushFonts
+Purger polices
+; Flush fonts
+;
+;
+txtMenuFlushLibraries
+Purger bibliothèques
+; Flush libraries
+;
+;
+txtMenuFlushAll
+.\0Tout purger
+; .\0Flush all
+;
+;
+txtMenuClearResetVectors
+!\0Réinit. vecteurs reset
+;!\0Clear reset vectors
+;
+;
+txtMenuOptions
+Options
+; Options
+;
+;
+txtMenuSingleWindows
++\0Fenêtres simples
+; +\0Single windows

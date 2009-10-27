@@ -1,0 +1,1045 @@
+-----------------------------
+Scout Open Source - ChangeLog
+-----------------------------
+
+$Id: ChangeLog,v 1.141 2008/12/01 14:16:59 itix Exp $
+$Source: /cvsroot/scoutos/scoutos/source/ChangeLog,v $
+
+2008-12-01  Ilkka Lehtoranta <ilkleht@isoveli.org>
+ * scout_expansions.c: fixed bug in pciscan code and added support for
+   pciids.library (MorphOS 2 or newer).
+ * scout_catalogs.c: documented LocaleBase as it is in OS3 and MorphOS
+ * scout_memory_detail.c, scout_mount_detail.c: documented MEMF_SWAP (MorphOS).
+
+2008-08-04  Ilkka Lehtoranta <ilkleht@isoveli.org>
+ * scout_system.c: Retrieve uptime from EClock. This method should work also on
+   Classic Amiga OS but due to lack of test environment it is used only for
+   MorphOS build.
+ * scout_resident_detail.c: Fixed resident flag definitions for MorphOS.
+
+2008-07-04  Thore Boeckelmann <tboeckel@gmx.de>
+ * scout_extras.c: fixed the single windows menu item. Before it was always
+   displayed as a radio item instead of a normal checkmark item.
+
+2008-05-04  Thore Boeckelmann <tboeckel@gmx.de>
+ * tbLib/#?timer.c: some changes to make the library buildable for non-OS4 SDKs
+   again.
+ * scout_tasks_detail.c: some changes according to recent SDK changes.
+ * Makefile.os4, tbLib/Makefile.os4: replaced -Werror by -Wwrite-string to
+   respect changes in the current beta SDK and to make sure to read-only string
+   is being written to.
+
+2007-07-29  Thore Boeckelmann <tboeckel@gmx.de>
+    * all: reworked the NList and NListtree object creation to be correct again
+      so that the list/tree is the windows default object and is automatically
+      scrollable by keyboard.
+
+
+2007-07-29  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_tasks_detail.c: added new PRF_LOCKSTACK process flag for OS4.
+
+
+2007-02-23  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * scout_extras.c: treat MorphOS "ROM" space as valid.
+    * scout_disassembler.c: added PPC disassembler for MorphOS.
+
+
+2007-01-29  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_devices_detail.c, scout_libraries_detail.c: removed the interface
+      list for the moment again.
+
+
+2007-01-12  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * Enabled patches window in the MorphOS build.
+
+
+2007-01-11  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * scout_commands.c: added CMD_NOTLOADED check for deferred resident
+      commands in MorphOS.
+    * scout.cd: added txtCommandNotLoaded (DEFER).
+
+
+2006-12-19  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_disassembler.c: added a missing DropInterface() call.
+
+
+2006-12-17  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_parentwindow.c: removed redundand OM_REMMEMBER which in fact tried
+      to remove an object twice. This caused unpredictable results on OS4.
+
+
+2006-11-21  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_resource.c: resources with a type not equal to NT_RESOURCE or
+      NT_LIBRARY are now treated like already known-not-to-work resources.
+
+
+2006-10-16  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_signal.c: it was not possible to enter a full 32 bit signal mask
+      when using the "0x" prefix instead of the "$" prefix.
+
+
+2006-10-07  Ilkka Lehtoratan <ilkleht@isoveli.org>
+    * Re-enabled NSD query in the MorphOS build. Poseidon responds to NSD
+      query and some devices also include TD64 commands with NSD.
+
+
+2006-09-20  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * tbLib/string_snprintf.c: RawDoFmt() calls were completely broken in
+      MorphOS build but problem didn't occur until clean build was done.
+      _vsnprintf() call did nothing if compiled for 68k AmigaOS target.
+
+
+2006-08-15  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_commands.c: the list of non-system resident commands (that is
+      commands made resident via C:Resident) was never scanned in the OS4
+      build.
+    * misc: added some casts to CONST_STRPTR instead of STRPTR.
+
+
+2006-07-07  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * scout_devices_detail.c: removed NSD query from the MOS build.
+
+
+2006-06-27  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_devices_detail.c, scout_libraries_detail.c: added a listview to
+      show the available OS4 interfaces of a library/device. This should be
+      extended in the future to let the user get more information, but for
+      now it is just a beginning.
+
+
+2006-06-23  Thore Boeckelmann <tboeckel@gmx.de>
+    * startup.c: added a check for a 68020+ CPU in the OS3 build. In case no
+      68020 is found Scout simply exits quietly returning RETURN_FAIL. This is
+      also the case if one of the basic libraries cannot be opened.
+
+
+2006-06-20  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * scout_extras.c, include/extra.h: added MUIA_Application_UsedClasses tag
+      to filter out redundant custom classes from MUI settings.
+
+
+2006-06-09  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * scout_tasks_detail.c: added ETask fields for the MorphOS build.
+    * scout.cd: added new strings to describe ETask fields (MOS).
+
+
+2006-06-07  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_tasks_detail.c: the temporary string was freed too early and still
+      used afterwards. This might have caused no harm with OS3 and MorphOS, but
+      it caused crashes for sure with OS4's beta kernel.
+
+
+2006-06-06  Thore Boeckelmann <tboeckel@gmx.de>
+    * startup.c: Scout can now be compiled against newlib.library *and* clib2,
+      although newlib.library if preferred now as this is the default OS4 run-
+      time C library.
+    * scout_disassembler.c: for PPC disassembly a hexdump is also displayed.
+
+
+2006-05-24  Thore Boeckelmann <tboeckel@gmx.de>
+    * misc: added CONST keyword to all constant structures.
+
+
+2006-05-23  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout.c: the default ARexx reply port is no longer public, as this is not
+      required anywhere.
+
+
+2006-05-21  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_tasks_detail.c: the unused text[13] field in the OS4 build made the
+      following buttons disappear.
+
+
+2006-05-17  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_extras.c: changed the way ROM and RAM memory is detected with OS4.
+      The old version was completely wrong and returned "is RAM" for every
+      pointer. Also recognized that IMMU->GetMemoryAttrs() must be called in
+      Supervisor state. Finally, first of all, the address is checked against
+      some very basic values, which cannot really represent valid addresses.
+    * scout_devices_detail.c: changed the size of the IORequest to gather the
+      NSD information to sizeof(struct IOStdReq) + 128, as suggested by the NSD
+      docs. Also added the new commands of console.device and printer.device to
+      the list of known commands in the OS4 build.
+    * scout_functions.c: function entries with an address of NULL now won't
+      enable the "Disassemble" button anymore.
+    * disassembler_button.c: isValidPointer() is used to determine a valid
+      pointer now instead of just comparing against NULL and -1.
+    * scout_resources.c: the functions button is now disabled for resources
+      without a proper library structure.
+    * scout_screenmode.c, scout_screenmode_detail.c: all structures to obtain
+      the information are now allocated dynamically instead of placing them on
+      the stack.
+
+
+2006-05-03  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * scout_windows_detail.c: added BMF_ROOTMAP for completeness (MOS).
+    * scout_commodity_detail.c: added undocumented IECLASS_EXTRAWKEY (MOS).
+
+
+2006-05-02  Thore Boeckelmann <tboeckel@gmx.de>
+    * locale/français.ct: updated translation.
+
+
+2006-04-28  Thore Boeckelmann <tboeckel@gmx.de>
+    * extrasrc/vasprintf.c: implemented VASprintf() for OS3 as well, together
+      with ASPrintf().
+    * misc: added STDARGS attribute where it was missing.
+
+
+2006-04-27  Thore Boeckelmann <tboeckel@gmx.de>
+    * misc: replaced "(text[0] != '\033') ? text : text + 2" compares by a call
+      to StripMUIFormatting. The comparison correctly skipped the initial
+      escape character, but not the trailing one. Thus the MUI highlight code
+      always ended up in the printout.
+
+
+2006-04-23  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * Makefile.mos, all_gcc.c, include/extra.h, extrasrc/vasprintf.c:
+      implemented VASPrintf() for MorphOS.
+    * scout_print.c: changed FileRequest() to use MUI ASL call wrappers.
+      MorphOS build used to crash there because of aboxstubs. Fixed
+      HandlePrintStop() to not Close() Output() file handles.
+    * scout_fonts_detail.c: fixed stack frame trashing (text[] array was
+      too short).
+
+
+2006-04-23  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_net.c: corrected misspelled "snprintf()" to "_snprintf()".
+    * scout_arexx.c: reenabled reset callback code for OS4 build only.
+    * Makefile.os4, tblib/Makefile.os4: added -D__USE_OLD_TIMEVAL__ to the
+      list of compiler flags to match the new definitions of "struct TimeVal"
+      and "struct TimeRequest".
+
+
+2006-04-05  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * scout_window_detail.c: now displays correctly number of colours for
+      32bit screens.
+    * scout_arexx.c: disabled reset callback code for MorphOS build.
+    * scout_task_detail.c: in MOS tasks always have tc_ETask, thus use it
+      always.
+
+
+2006-04-01  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_memory_detail.c, scout_mounts_details.c: brought the two lists of
+      memory types in sync.
+    * scout_resethandlers.c: the OS4 specific list of reset callbacks is now
+      also scanned for entries, because the list of reset handlers is normally
+      not used anymore.
+    * C_c.sd, C_h.sd: removed all unnecessary code, like that old V20 stuff,
+      because Scout requires V37 all around. So something like locale.library
+      V20 is not possible to be present or used.
+    * scout_fonts.c, scout_fonts_details.c: added tf_Extension field, if a font
+      offers this.
+    * scout_arexx.c: added the missing remove function for reset handlers.
+      Until now this has never been implemented. Also the last direct poking in
+      the base structure of input.device to obtain the list of input handlers
+      has been replaced by a proper function which acts the same way as does
+      the scanning function in scout_inputhandlers.c.
+    * scout_inputhandlers.c, scout_resethandlers.c: changed the priorities of
+      the temporary interrupts from minimum to maximum. This makes no real
+      change except that searching the head of the corresponding list is a
+      little faster.
+
+
+2006-03-29  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_tasks_details.c: some minor changes to code type recognition, based
+      on hints of the current dos.library maintainer.
+
+
+2006-03-26  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_devices_details.c: the native USB stack of OS4 needs very special
+      treatment of the used IORequests, else you will get an alert and the
+      device cannot be openend. Hence Scout now respects this special behaviour
+      in the OS4 build.
+    * scout_tasks.c: added now function which returns the usual name of all
+      known signal bits.
+    * scout_tasks_details.c: the old Task field tc_TrapAlloc and tc_TrapAble
+      don't exist anymore for OS4. Instead they always represent a pointer
+      called tc_ETask. Hence this one is shown now. Furthermore Scout can now
+      recognize a process' code type by using the new V51 DOS function
+      GetSegListInfo(). Additionally for OS4 the SegList pointers are now
+      obtained via GetProcSegList() instead of hacking through pr_SegList and
+      pr_CLI->cli_Module. If there is a clean way, then USE IT!
+
+
+2006-03-25  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_tasks_details.c: added the extended V50/V51 process fields. These
+      will only appear in the OS4 build.
+    * scout_window_details.c added the embedded fields ViewPort, RastPort,
+      Bitmap (and all attributes) and LayerInfo of "struct Screen". Therefore
+      the entries "UserPort->SigTask" and "WindowPort->SigTask" of "struct
+      Window" have been dropped since these can be inspected by clicking on
+      the port button.
+
+
+2006-03-24  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_mount_details.c: the capacity calculation is now done with native
+      64bit math for the OS4 and MorphOS builds. Hence i64.c is no longer
+      needed for these, but only for the OS3 build, because SAS/C cannot do
+      64bit math itself.
+    * scout_extras.c, tblib/errormsg_ErrorMsg.c: somehow I never realized that
+      exec/RawDoFmt() cannot do parameter sorting by using something like
+      "Hello %2$s %1$s", "second", "first". Hence the function ErrorMsg() got
+      always passed one parameter too less and that completely crashed on OS4.
+      The catalog description has been modified accordingly. The prototype for
+      ErrorMsg() was missing the usual "VARARGS68K" definition anyway.
+      All in all this made Scout crash when it tried to complain about outdated
+      or missing external MUI classes.
+
+
+2006-03-17  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_print.c: somehow I deleted a NULL-check before copying one string
+      to another, which caused crashes when trying to print information of a
+      window to a file.
+
+
+2006-03-13  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_timer.c: now uses a union to cover all combinations of "uint64",
+      "struct EClockVal", etc without converting all these equivalent types "by
+      hand".
+
+
+2006-03-12  Thore Boeckelmann <tboeckel@gmx.de>
+    * Scout.c: fixed type definitions for LocaleBase and RexxSysBase. Depending
+      on the compiler being used (SAS/C or GCC) this is now either a standard
+      library or a specific base type. Unfortunately this has to be done to
+      cover all the different SDK's :(
+
+
+2006-03-12  Thore Boeckelmann <tboeckel@gmx.de>
+    * Scout.c: I think it was a bad idea to let Scout react to CTRL-D/E as a
+      break signal too in the first place. Now it only reacts to CTRL-C.
+    * tblib/string_snprintf.c: GCC 4.0.x doesn't like unused functions when
+      compiling with -Wall. Hence StuffCharMOS() is declared for MorphOS only.
+    * scout_timer.c: removed one call to NewRawDoFmt() which was left over by
+      itix.
+
+
+2006-03-12  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * scout_extras.c: fixed M68k varargs.
+    * scout_expansions.c: now scans PCI devices via OpenPci wrapper (MOS).
+      Disabled detail window for PCI devices (was accessible via doubleclick).
+
+
+2006-03-12  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * scout_timer.c: now checks time doesnt get negative (rare but
+      possible) and re-enabled 64bit math for MorphOS.
+    * dos_private.h: structures must be packed for PPC.
+    * tbLib: now uses M68k varargs in MOS for _snprintf().
+
+
+2006-03-11  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * Scout.c: Scout no longer reacts (aborts) to CTRL-D and CTRL-E in MOS
+      where CTRL-D/CTRL-E are not considered break signals to programs.
+
+
+2006-03-11  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * scout_timer.c: now uses ReadCPUClock() to get right timer values in MOS.
+    * tbLib/tblib.h: fixed _sprintf() and _snprintf() to use SysV varargs in MOS.
+
+
+2006-03-11  Thore Boeckelmann <tboeckel@gmx.de>
+    * startup.c: readded __stack var to define a minimum stack size for the OS3
+      build.
+
+
+2006-03-11  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_disassembler.c: the OS4 version can now disassemble native PPC and
+      and old 68k code.
+    * scout_system.c: OS4's timer.device is able to deliver the current system
+      uptime itself. Hence we use that function, instead of obtaining the
+      uptime from the creation date of RAM:.
+    * scout.cd: there was one useless quote sign too much.
+
+
+2006-03-11  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * include/extra.h: added uint64/int64 types.
+    * startup.c: MOS uses black boxed UtilityBase and removed __stack var
+      which is used by libnix startup code only (not linked in). Fixed race
+      condition with WB message reply -- it must be done in Forbid() always.
+    * makefile.mos: removed -Werror because of whiny MOS SDK.
+
+
+2006-03-06  Thore Boeckelmann <tboeckel@gmx.de>
+    * all: too many changes to mention them all. All in all Scout is now OS4
+      native, too. That means it can be compiled with GCC 4.0.2 without errors.
+      Compatibility to MorphOS and OS3 is still maintained. All OS4 specific
+      additions to the 68k versions are now "PPC only". The 68k version will
+      still run under OS4, but not all new features will be recognized, because
+      the 68k build relies on the 3.9 NDK only.
+
+
+2006-02-17  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_timer.c: OS4's timer.device seems to keep just one list of timers
+      instead of two (MicroHZ and VBlank), because every entry appears twice,
+      but with the same address. Hence Scout will scan just one list when
+      running on OS4.
+
+
+2006-01-14  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * scout_tasks_detail.c: apparently PRF_CLOSEERROR is same in OS4 and MOS
+
+
+2006-01-14  Thore Boeckelmann <tboeckel@gmx.de>
+    * os4defs.h, scout_tasks_detail.c: added some more definitions.
+
+
+2005-11-14  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * scout_windows_detail.c: Added IDCMP_MOUSEHOVER (MorphOS)
+
+
+2005-10-17  Thore Boeckelmann <tboeckel@gmx.de>
+    * misc: changed some "#ifdef"'s to "#if defined()", because #ifdef is not
+      always suitable for certain actions.
+    * os4defs.h: added some more definitions.
+    * scout_catalogs.c: initialized a formerly uninitialized variable
+
+
+2005-09-30  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * scout_memory_detail.c: Added (private) memory flag used in MorphOS.
+
+
+2005-09-20  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_devices.c, scout_libraries.c, scout_tasks.c,...: added some new OS4
+      definitions to recognize some new features of OS4.
+    * scout_net.c: as the net command list is used nowhere else within the
+      whole program is could be made static instead of global known.
+
+
+2005-09-14  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * scout_net.h: fixed to build with gcc4 (removed unused extern).
+
+
+2005-08-01  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_commodity_detail.c: changed the rawkey based wheelmouse name to
+      carry a "nm_" prefix so that it refers to newmouse based wheelmouse events
+      and doesn't conflict with the new wheelmouse events in AmigaOS4.
+
+
+2005-08-01  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout.c: OS4's RoadShow was not recognized as a valid TCP/IP stack,
+      because Scout never tried to find it :)
+
+
+2005-07-24  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_resources.c, scout_resources_detail.c: some OS4 specific resources,
+      which don't support a full featured library structure, are now treated
+      like keymap.resource or FileSystem.resource.
+
+
+2005-07-21  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_tasks.c: the CPU usage cycler is now disabled with AmigaOS4 under
+      all circumstances. Before it could have happened that it was still re-
+      activated sometimes.
+
+
+2005-07-18  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_arexx.c, scout_windows.c: the "Windows" window now features a "Make
+      Visible" button, which will bring a window to the front and move it
+      within the visible portions of its screen if it is slightly off then
+      screen. The screen is brought to front, too, also for the "To Front"
+      button, if invoked on a window entry.
+
+
+2005-07-17  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_classes.c: the class list is no longer traversed reversely, but as
+      all other lists, from first to last. But since "rootclass" (the mother of
+      all classes) is the last one in this list Scout swaps the order by
+      building its own list via AddHead() instead of AddTail() now.
+
+
+2005-07-08  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_devices.c, scout_libraries.c: there is a much less hacky and ugly
+      way to recognize the code type of libraries and devices with OS3 and OS4.
+      The formerly unsed lib_pad is now called lib_ABIVersion and this one can
+      be used to distinguish between 68k and PPC code. With OS3/OS4 there is no
+      more peeking around in jump vectors. Even the crashes with some libraries
+      are gone now. Thanks to Jörg Strohmayer for that hint.
+
+
+2005-07-06  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_devices.c, scout_libraries.c: the newly introduced code type recog-
+      nition had some flaws in general. First, all elements of a list entry
+      like "struct LibraryEntry" MUST be arrays, because these entries may be
+      transferred over a network (yes, Scout still has network support!!) and
+      the receiving machine must be able to access these data. Hence pointers
+      are forbidden. The only exception are pointers which are never accessed
+      by the receiver like "LibraryEntry->le_Addr". This is also the reason why
+      you cannot get detailed information why monitoring a machine via the net-
+      work.
+      Second (this only applies for OS4), even 68k programs like Scout can
+      detect if a library/device uses 68k or PPC code, hence there is no reason
+      why a 68k Scout binary should detect all libraries/devices as 68k. Un-
+      fortunately not all libraries available for OS4 have a 68k vector table.
+      diskcache.library is one of these candidates and there might be illegal
+      accesses when Scout tries to detect the code type. But at least currently
+      the code type of all libraries/devices is detected correctly.
+      Third, the catalog contains separate strings for devices and libraries.
+
+
+2005-07-06  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_extras.c: the nonetest() function now explicitly checks for CRs and
+      LFs in the checked strings, because locale/IsPrint() no longer returns
+      TRUE with OS4's locale.library 51.12+ for certain control characters.
+
+
+2005-07-02  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * scout_devices_detail.c, scout_libraries_detail.c: Identifies new LIBF_#?
+      flags (MorphOS/AmigaOS4).
+
+
+2005-07-01  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * scout_libraries.c, scout_devices.c: Now detects and reports codetype
+      (PPC/68k) of libraries and devices. Codetype is determined by checking
+      LibOpen vector. PowerUp/WarpUp libraries are not detected but they always
+      have 68k startup code anyway.
+    * Locale/scout.cd: Added new strings for codetype.
+
+
+2005-06-19  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * scout_extras.h: struct JumpEntry was not packed and jump table entries
+      were displayed wrong when using PPC native Scout.
+    * scout_functions.c: detects and accept SysV jump table entries in MorphOS
+      (they start with 0x4afc instead of 0x4ef9).
+    * scout_arexx.c: Flush task pool (MorphOS) before RemTask() and hope the
+      best.
+
+
+2005-06-03  Nicolas Sallin <henes@biclodon.com>
+    * scout_catalogs.c: MorphOS has no sys/c.catalog and stores the catalog list
+      like AmigaOS3, so the new code is only used on AmigaOS4.
+
+
+2005-05-26  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_tasks.c: the CPU usage cycler is now disabled with AmigaOS4 instead
+      of just leaving out the impossible items.
+    * scout_devices_detail.c: added some saftey checks when retrieving the NSD
+      command list.
+
+
+2005-05-26  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_catalogs.c: the library structure of locale.library of course has
+      changed in AmigaOS4. Therefore the old way to get the list of opened
+      catalogs MUST have failed. Now Scout tries a more compatible way, but
+      this requires that at least one known catalog, namely sys/c.catalog, is
+      available and can be opened. But this should be possible for any machine.
+
+
+2005-04-18  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * MorphOS native netlib.a was corrupt and had wrong name. Deleted
+      netlib.a and imported libnet.a.
+
+
+2005-04-11  Nicolas Sallin <henes@biclodon.com>
+    * scount_mount.c: exchanged IsFileSystem() and IsValidFSSM() positions.
+      IsValidFSSM() must be first.
+
+
+2005-04-11  Harry Sintonen <sintonen@iki.fi>
+    * scout_mount.c, scout_mount_detail.c: Scanning the DOS device list was
+      still broken by design; it would have died horribly if some doslist
+      entry was freed or modified. Now the code is fairly bulletproof: All
+      data is copied to memory buffers while keeping the DOS device list lock
+      *and* without breaking Forbid(). The only potential problem can arise
+      from trying to display dol_Startup of freed entry.
+      Also, calling IsFileSystem() for all DOS device list entries is unwise,
+      as it can (and will) deadlock with certain entries.
+    * scout_mount_detail.c: Fixed Capacity to really display only >10 GB
+      partitions using gigabytes. 32bit number can't hold 10000*1024*1024.
+    * task_button.c: Don't read random memory if the task disappears. It can
+      still happen that another task gets allocated with identical tcb
+      pointer, however.
+
+
+2005-04-06  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_ports.c: AmigaOS4 seems to have some more flags defined for
+      mp_Flags. Therefore we only obey the lower two bits of this value, since
+      only these give a valid result.
+
+
+2005-03-29  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_mount.c: the Lock() problem doesn't exist anymore and my workaround
+      using Open() and DupLockFromFH() was even worse. It always marked all
+      valid partitions as "unreadable". Ooops. Now we are back to the old state.
+
+
+2005-03-29  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_mount.c: the scanning of the DOS device list was completely broken
+      by design. Although Scout used the official API it would sooner or later
+      break a Forbid(), which is implicitly called by LockDosList(). Now we
+      first scan the device list and build our own list. After that we obtain
+      all necessary information from the device node without breaking a
+      Forbid(). At least I hope :). Thanks to Colin Wenzel for this hint.
+
+
+2005-03-19  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_mount.c, scout_mount_detail.c: added IsFileSystem() as an
+      additional check for *real* filesystems. Devices like PAR: or SER:
+      should not pass this test.
+
+
+2005-03-19  Thore Boeckelmann <tboeckel@gmx.de>
+    * PAR: and SER: seem to be created a little bit strange under OS4. At
+      least these have a full featured FSSM, which is complete non-sense.
+      Unfortunately this made Scout hang on trying to Lock() such a thing.
+      Instead we now try to Open() this thing first, and after that we
+      DupLockFromFH() to get the required Lock. And this one fails "normally".
+
+
+2005-03-15  Nicolas Sallin <henes@biclodon.com>
+    * System_headers.h, scout_tasks.c: fixed the global cpu usage counter in
+      MorphOS. Patch submited by Christian Rosentreter.
+
+
+2005-03-09  Thore Boeckelmann <tboeckel@gmx.de>
+    * for unknown node types the decimal value is now shown.
+
+
+2005-02-06  Ilkka Lehtoranta <ilkleht@isoveli.org>
+    * imported MorphOS netlib.a, compiled from AmiTCP SDK netlib sources.
+
+
+2004-02-03  Nicolas Sallin <henes@biclodon.com>
+    * The MorphOS makefile autogenerates identify.library stubs.
+
+
+2004-12-06  Nicolas Sallin <henes@biclodon.com>
+    * français.ct: fixed the "Freeze" button to not share its shortcut with
+      the "Close" one
+
+
+2004-12-06  Nicolas Sallin <henes@biclodon.com>
+    * français.ct: fixed two buttons previously sharing the same key shortcut
+
+
+2004-11-06  Thore Boeckelmann <tboeckel@gmx.de>
+    * all sources: completely removed the ITERATE_CHANGING_LIST macro, as this
+      one was broken by design. It was meant to iterate trough a list while
+      changing this list and keeping the next node in a second variable. But
+      my assumptions where wrong. Hence there is now a new function called
+      FreeLinkedList() which frees all nodes in a list in a really safe way.
+
+
+2004-11-05  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_vectors.c: getting the AutoVector interrupts is impossible on an
+      A1, because this means to access the zero page, which is of course
+      forbidden :)
+
+    * scout.c: added two new variables to distinguish between AmigaOS3,
+      AmigaOS4 and MorphOS more easily.
+
+
+2004-10-20  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_tasks.c, scout.cd: the "Free Stack (PPC)" is now a string within
+      the catalog.
+
+    * scout_extras.c: the NameCopy() function doesn't convert the characters
+      to upper case itself anymore, but uses utility/ToUpper() for this task.
+
+
+2004-10-20  Nicolas Sallin <henes@morphos.de>
+    * scout_system.c: don't read in the zero page to get the last alert data
+      under MorphOS
+
+
+2004-10-19  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_system.c: getting the last alert data under AmigaOS4 by reading
+      these values directly from the zero page is not very good, because this
+      makes the GrimReaper appear.
+
+
+2004-10-19  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_asm.c, scout_asm.asm: removed SetVBR() from both sources, because
+      it was never called at all.
+
+
+2004-10-17  Nicolas Sallin <henes@morphos.de>
+    * scout_asm.c: fixed a function name typo so the file compiles.
+
+    * scout_disassembler.c: added a missing emu trap needed by the MorphOS
+      version.
+
+
+2004-10-16  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_asm.c, scout_arexx.c: updated the MorphOS replacements for SetVBR()
+      and MyCause(). LowMemoryHandlers can now also be caused under MorphOS.
+
+
+2004-10-15  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_asm.c: the latest fixes were somewhat incomplete and some functions
+      didn't match the given prototypes in scout_asm.h. This is fixed now. But
+      some functions like SetVBR() still have to be implemented to be complete.
+
+
+2004-10-13  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_asm.c, scout_tasks.c: for MorphOS the CPU usage can now be
+      calculated on a per-task basis. The necessary changes have been
+      contributed by Ilkka Lehtoranta <ilkleht@isoveli.org>. I hope it works,
+      because I am still using an old classic A4000.
+
+
+2004-10-10  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_tasks.c: for AmigaOS4 the CPU usage cycler now shows only the "off"
+      string, because AmigaOS4/PPC doesn't like Scout's current way to get the
+      CPU usage. For AmigaOS3 and MorphOS all three entries are still
+      available.
+
+    * moved the function NameCopy() from scout_asm.c to scout_extra.c and
+      removed the corresponding assembler function from scout_asm.asm
+
+
+2004-07-09  Thore Boeckelmann <tboeckel@gmx.de>
+    * moved the .cd and .ct files to a new directory
+
+
+2004-06-29  Thore Boeckelmann <tboeckel@gmx.de>
+    * finally the french translation is completed. Many thanks to Herve
+      <herve.dpt@free.fr> for all his efforts!
+
+
+2004-05-31  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_mount.h: the string for the disk state was limited to 16 characters,
+      which was a little bit too short for the french translation. Now its size
+      should be sufficient even for the most detailed languages :)
+
+
+2004-05-17  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout.cd, scout_audiomode_detail.c, scout_commodity_detail.c,
+      scout_mount_detail.c, scout_screenmode_detail.c: small modifications
+      to some strings.
+
+
+2004-05-08  Thore Boeckelmann <tboeckel@gmx.de>
+    * classes/scout_system.c: the uptime information still contained a date
+      string, although just the time string would suffice. Now the uptime is
+      displayed as number of days and hours online.
+
+
+2004-05-07  Thore Boeckelmann <tboeckel@gmx.de>
+    * tblib/SDI_compiler.h: SAVEDS was defined as __saveds even for MorphOS.
+      Now it is defined as nothing, because MorphOS doesn't need it.
+
+
+2004-05-07  Thore Boeckelmann <tboeckel@gmx.de>
+    * Scout should be almost 99.99% natively buildable under MorphOS now. A few
+      things may be missing, but that should be fixed quite soon. Thanks to
+      Nicolas Sallin <henes@morphos.de> for all his work.
+
+    * all sources: all hook functions and dispatchers have been changed to be
+      callable under all Amiga-ish operating systems (that is AmigaOS 3.x,
+      AmigaOS 4.x, MorphOS). That should make porting to Scout to AmigaOS 4.x
+      and MorphOS a lot easier. Therefore Dirk Stöckers SDI_compiler.h is used
+      in favour of the old CompilerSpecific.h.
+
+    * scout_allocations.c, scout_system.c: the complete window layout has been
+      rearranged to make it look more similar like all the other windows and to
+      make translation of several strings easier.
+
+    * Scout is going to be 100% localized. A french translation is on its way,
+      a german translation will be done by myself (I hope :). Volunteers for
+      other languages are welcome!
+
+
+2004-04-07  Thore Boeckelmann <tboeckel@gmx.de>
+    * fontdisplay_class.c: the font example text was rendered outside of the
+      desired area because of wrong clipping rectangles. It's a shame that
+      MUI's own clipping functions are not documented in any way :(
+
+
+2004-04-04  Thore Boeckelmann <tboeckel@gmx.de>
+    * scout_extras.c: again changed the name checking function. Now it uses the
+      current locale settings to check each character in a name. This is much
+      better than the previous approach, which just could detect 7bit-ASCII
+      characters. Now all printable characters are really displayed.
+
+
+2004-04-03  Thore Boeckelmann <tboeckel@gmx.de>
+    * just a little note: I finished my diploma, hence my EMail address has
+      changed!
+
+    * scout_extras.c: the name test function is now a little bit more sensible
+      about invalid characters and will detect more invalid names.
+
+
+2004-02-16  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * scout_priority.c: the priority slider is now the active object by default
+
+2004-02-12  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * scout_locks.c: corrected the label position for the pattern string
+
+    * tblib/memory*.c: very little changes. Somehow ExecBase wasn't defined
+      anymore...
+
+2004-02-11  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * scout_windows.c: before opening the detail window the existance of a
+      screen or window is checked. This behaviour must be implemented for all
+      kinds of detail windows (if possible).
+
+    * scout.cd: added 2 new string for the task window: "CPU" and "Secs"
+
+    * scout_tasks.c: finally made the CPU monitor a bit more resistive. Crashes
+      should not happen anymore.
+
+    * scout_asm.asm: replaced some Forbid()/Permit() pairs by Disable()/Enable()
+      and added a call to CacheClearU() after installing/removing the patches.
+      This should cure some problems and crashes, if they existed at all.
+
+
+2004-02-08  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * scout_tasks.c: rearranged the scanning of exec's task lists (ready,
+      waiting, active), because sometimes the task "input.device" was missing. I
+      don't know why this happened, but it seems to be cured now.
+
+
+2004-01-18  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * various sources: corrected the copyright informations to 2004 and "Scout
+      Open Source Team".
+
+    * scout_about.c, scout_version.c: the about requester now shows the homepage
+      URL at sourceforge.net. If Urltext.mcc is available you can click on the
+      URL and you will be beamed directly to that URL :)
+
+    * Scout.c, scout_main.c, scout_extras.c: expanded CheckMCCVersion() to
+      display an error requester for outdated custom classes only in certain
+      situations.
+
+
+2004-01-03  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * various sources: removed MEMF_PUBLIC flag from all memory allocations. If
+      I am correct, this will be better for OS4.0, and it doesn't cause any harm
+      for OS3.x.
+
+
+2003-12-21  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * scout_tasks.c: the time string parsing routine was buggy and could cause
+      crashes under certain conditions. The new routine also handles strings
+      with missing numbers correctly (i.e. ".9", "1.", etc).
+
+
+2003-11-03  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * scout_expansions_detail.c: very minor changes for some fields
+
+
+2003-10-29  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * scout_commodities_detail.c: NewMouse events are now supported, too. Please
+      notify me if they are interpreted wrong, because I still only have a
+      standard two-button mouse from C=.
+
+
+2003-10-07  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * scout_devices.c, scout_devices_detail.c, scout_libraries.c,
+      scout_libraries_detail.c, scout_resources.c, scout_resources_detail.c,
+      scout_extras.c: the number of functions in RAM instead of ROM is now
+      always displayed in decimal notation. No more "***" if all functions are
+      RAM based. The detail windows show the ratio of RAM based vectors to ROM
+      based vectors.
+
+
+2003-10-03  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * scout_expansion.c: the expansion list now has an own column for the
+      product class instead of merging this with the product name
+
+    * scout_tasks_detail.c: added CLI specific information group
+
+    * scout_net.c, all classes: changes some minor quirks in the networking
+      code. Anyway, network support is still far from being perfect.
+
+    * several classes: changed list behaviour in network remote mode not to
+      react on double clicks. The "More" button in these windows already
+      reflected this behaviour.
+
+
+2003-10-01  AmiS <amis@amiga.org.ru>
+
+    * Scout.c, scout_extras.c: added Miami(Dx) support
+
+
+2003-09-24  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * scout_commodities_detail.c: added some more known hotkeys. Even key
+      releases (upstroke) are now recognized.
+
+
+2003-09-23  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * scout_inputhandlers_detail.c, scout_lowmemory_detail.c,
+      scout_resethandlers_detail.c: added new detail windows to make disassemble
+      and hexdump buttons for is_Code and is_Data entries of the interrupt
+      structures possible
+
+
+2003-09-22  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * scout_audiomode_detail.c: restructured detail window
+
+
+2003-09-19  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * scout_classes_detail.c, scout_interrupts_detail.c. scout_mounts_detail.c,
+      scout_residents_detail.c, scout_tasks_detail.c, scout_windows_detail.c,
+      scout_disassembler.c, disassembler_button.c: extended Disassembler window
+      and button to be able to show arbitrary data in memory as hexdump. This is
+      quite handy for structure elements like "UserData" and similar.
+
+
+2003-09-18  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * scout_commodities_detail.c: mco_Port can now be shown via the new
+      PortButton class
+
+    * scout_windows_detail.c: WindowPort and UserPort of a window can now be
+      shown via the new PortButton class
+
+    * port_button.c: new class to show included MsgPort structures
+
+    * scout_tasks_detail.c: pr_ConsoleTask and pr_FileSystemTask entries
+      can now be shown as tasks
+
+    * scout_tasks_detail.c: pr_CurrentDir and pr_HomeDir entries are now shown
+      as path names instead of addresses.
+
+    * task_button.c: added MUIA_TaskButton_IsProcessPointer to be able to
+      distinguish between Exec and DOS tasks.
+
+
+2003-09-16  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * scout_screenmode_detail.c, scout_tasks_detail.c: restructured detail
+      windows
+
+
+2003-09-11  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * scout_commodities_detail.c: the sub object list now tries to decode hotkey
+      events. For ~99% of all combinations this try is successfull. Please eMail
+      me if you encounter unknown combinations and know *for* *sure* what it
+      should be (this means you are the developer of a certain application :)
+
+
+2003-09-08  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * scout_classes_detail.c, scout_commodities_detail.c,
+      scout_expansions_detail.c, scout_memory_detail.c,
+      scout_mounts_detail.c, scout_residents_detail.c,
+      scout_windows_detail.c:
+      restructured detail windows
+
+
+2003-09-08  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * scout_fonts_detail.c, scout_interrupts_detail.c, scout_ports_detail.c:
+      restructured detail windows
+
+
+2003-09-04  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * began to restructure the appearance of some detail windows. These windows
+      now use virtual groups with one information item in each line. Thus it is
+      a lot easier to add more information items if needed without having to
+      think how to layout the whole window afterwards. Additionally the
+      misalignment that sometimes occured between information label and
+      information item is now gone and it is very easy to implement more
+      "detail" buttons like the Flags button or the Task button. If you don't
+      understand what the news above mean, simply try it and see yourself. I
+      hope all becomes clean then.
+
+
+2003-09-03  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * the Task button now shows the address of unknown tasks instead of "<no
+      task>"
+
+    * all scrollbars of NList lists are now *always* visible, regardless of what
+      you configured via the MUI preferences. This avoids a nasty bug in
+      NList.mcc and NListtree.mcc that causes the list/tree to give wrong
+      minimal sizes and thus making MUI paint these lists/trees over other GUI
+      elements. This has been reported by various people, but this is in fact no
+      bug in Scout, but in NList.mcc and NListtree.mcc!
+
+
+2003-09-01  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * new class TaskButton encapsulates all kind of embedded task pointers (like
+      in message ports). Press on a task button and a detail window for this
+      task will be opened.
+
+
+2003-08-31  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * new class FlagsButton encapsulates all kind of flags (screen flags, window
+      flags, library flags, etc). This reduces code size about 2K and simplifies
+      code handling a lot.
+
+
+2003-08-28  Thore Boeckelmann <tboeckel@uni-paderborn.de>
+
+    * inital import of the complete source. Now Scout is real "open source" :)
+
+    * these are the changes made so far since the most recent Aminet release:
+
+      - the system's reset vectors are no longer simple labels with addresses,
+        but buttons. When you press one, you will get a disassembly of the
+        corresponding address. This feature only works if you have THOR's
+        disassembler.library V40 installed. If this one is missing you will get
+        a simple hex dump of the memory area.
+
+      - Exec's resident modules are now sorted by priority by default. This
+        seems to be a bit more intuitive than keeping one part of the list
+        sorted by priority and the other part not sorted at all. Of course, the
+        entries that are contained in both lists (KickTagPtr and ResModules)
+        still appear twice, once from ResModules (normal) and once from
+        KickTagPtr (highlighted).
+
+      - resident commands with more than 2 hunks were enumerated wrongly, e.g
+        they had two hunks labeled "number 2". This is fixed now.
+
+      - the Mounts window seemed to crash MorphOS because of uncorrectly
+        interpreted FileSysStartMsg pointers. Now there are lots of checks to
+        ensure Scout handles only correct FSSMs (Harry Sintonen
+        <sintonen@iki.fi>).
+
+      - the KickTagPtr list has been iterated completely wrong. Now this is
+        corrected and all resident entries should be displayed (Chris Hodges
+        <chrisly@platon42.de>).
+
+      - public screens with open windows can now be closed. This was impossible
+        before, because Intuition V36 doesn't let you close a screen with opened
+        windows. The situation is even worse for public screens which have a
+        visitor counter. Now all locks to a public screen are unlocked before
+        closing it.
+
+      - timers can now be aborted. Thus you can speed up timeouts :)
+
+      - the remaining running times in the Timer window were completely wrong
+        due to wrong 64bit arithmetic and overflows. All calculations are now
+        done by special 64bit math routines, which were already used in the
+        Mounts window to calculate the correct volume size.
+
+      - the LowMemory window can now Cause() a specific handler. This had been
+        implemented for ages, but for unknown reasons Richard Körber had
+        disabled this function. Now it is back again :)
+
+      - lots of code cleanups. Many unused and superflous variables have been
+        deleted, many libraries are only opened when needed, etc.
+
+      - some lists are now printed/saved to file in sorted order instead of
+        random order. This makes it a lot easier to look for certain entries.
+        Some other lists are still printed/saved in random order, because
+        sorting them by name makes no sense, since they are sorted by priority.
+
+      - some lists were totally screwed up when being printed to a file.
+
+      - the font display used wrong color on some system, so you didn't see
+        anything (Stellan <blakkhar@nwn.de>).
+

@@ -1,0 +1,17 @@
+*-----------------------------------------------------------------
+*-- disassembler.library                                        --
+*-- © 1998,1999 THOR-Software					--
+*--                                                             --
+*-- Library header file Version 40.2                            --
+*--                                                             --
+*-- created 29 Jun 1999 THOR,   Thomas Richter                  --
+*--     Modifications:                                          --
+*--                                                             --
+*-----------------------------------------------------------------
+##base _DisassemblerBase
+##bias 66
+** 6 slots reserved here
+##public
+Disassemble(data)(a0)
+FindStartPosition(startpc,min,max)(a0,d0,d1)
+##end

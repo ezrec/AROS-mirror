@@ -1,0 +1,90 @@
+##rem $Id: C_c.sd,v 1.4 2006/04/05 19:08:58 thboeckel Exp $
+##stringtype C
+##shortstrings
+/****************************************************************
+   This file was created automatically by `%fv'
+   from "%f0".
+
+   Do NOT edit by hand!
+****************************************************************/
+
+/****************************************************************
+    This file uses the auto initialization possibilities of
+    Dice, gcc and SAS/C, respectively.
+
+    Dice does this by using the keywords __autoinit and
+    __autoexit, SAS uses names beginning with _STI or
+    _STD, respectively. gcc uses the asm() instruction,
+    to emulate C++ constructors and destructors.
+
+    Using this file you don't have *all* possibilities of
+    the locale.library. (No Locale or Language arguments are
+    supported when opening the catalog. However, these are
+    *very* rarely used, so this should be sufficient for most
+    applications.
+****************************************************************/
+
+
+/*
+    Include files and compiler specific stuff
+*/
+#if defined(__amigaos4__) && !defined(__USE_INLINE__)
+    #define __USE_INLINE__
+#endif
+
+#include <exec/memory.h>
+#include <libraries/locale.h>
+#include <libraries/iffparse.h>
+
+#include "SDI_compiler.h"
+
+#include <proto/exec.h>
+#include <proto/dos.h>
+#include <proto/locale.h>
+#include <proto/utility.h>
+#include <proto/iffparse.h>
+
+#include <stdlib.h>
+#include <string.h>
+#include "%b_cat.h"
+
+/*
+    Variables
+*/
+struct FC_String %b_Strings[%n] = {
+    { (STRPTR) %s, %d }%(,)
+};
+
+STATIC struct Catalog *%bCatalog = NULL;
+
+VOID Close%bCatalog(VOID)
+
+{
+    if (%bCatalog) {
+        CloseCatalog(%bCatalog);
+    }
+}
+
+
+VOID Open%bCatalog(VOID)
+{
+    if (LocaleBase) {
+        if ((%bCatalog = OpenCatalog(NULL, (STRPTR) "%b.catalog",
+                                     OC_BuiltInLanguage, %l,
+                                     OC_Version, %v,
+                                     TAG_DONE))) {
+            struct FC_String *fc;
+            int i;
+
+            for (i = 0, fc = %b_Strings;  i < %n;  i++, fc++) {
+                fc->msg = (STRPTR)GetCatalogStr(%bCatalog, fc->id, (STRPTR)fc->msg);
+            }
+        }
+    }
+}
+
+#if defined(__GNUC__) && !defined(__MORPHOS__) && !defined(__amigaos4__)
+__asm ("  .text;  .stabs \\\"___CTOR_LIST__\\\",22,0,0,__STIOpen%bCatalog");
+__asm ("  .text;  .stabs \\\"___DTOR_LIST__\\\",22,0,0,__STDClose%bCatalog");
+#endif
+
