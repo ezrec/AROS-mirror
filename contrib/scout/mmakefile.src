@@ -1,0 +1,12 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-scout : contrib-scout-bin contrib-scout-files
+
+FILES := COPYING SCOUT-SOURCE.readme
+EXEDIR := $(AROS_CONTRIB)/System/Scout
+
+#MM contrib-scout-files
+
+%copy_files_q files=$(FILES) src=. dst=$(EXEDIR) maketarget=contrib-scout-files

@@ -1,0 +1,13 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+CATDIR := $(AROS_CONTRIB)/System/Scout/Catalogs
+
+%build_catalogs mmake=contrib-scout-catalogs name=scout subdir= \
+ source="../scout_cat.h" dir=$(CATDIR) \
+ sourcedescription=$(SRCDIR)/$(CURDIR)/../C_h
+
+%build_catalogs mmake=contrib-scout-catalogs name=scout subdir= \
+ source="../scout_cat.c" dir=$(CATDIR) \
+ sourcedescription=$(SRCDIR)/$(CURDIR)/../C_c

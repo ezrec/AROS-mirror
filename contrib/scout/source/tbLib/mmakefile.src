@@ -1,0 +1,47 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-scout-tblib : includes linklibs
+
+LIB := tblib
+LIBDIR := $(AROS_CONTRIB)/System/Scout/libs
+
+FILES := \
+    ports_AllocPort \
+    ports_FreePort \
+    ports_AllocSig \
+    ports_FreeSig \
+    ports_SafePutMsg \
+    timer_TimerDelay \
+    timer_StartTimer \
+    timer_AbortTimer \
+    string_b2cstr \
+    string_b2cstrn \
+    string_c2bstr \
+    string_snprintf \
+    string_sprintf \
+    string_strcat \
+    string_strcatn \
+    string_strdup \
+    string_strdup_pool \
+    string_strsep \
+    string_parse_string \
+    i2m_word_c \
+    i2m_long_c \
+    math64_add64_c \
+    math64_sub64_c \
+    math64_cmp64_c \
+    envvar_GetEnvVar \
+    envvar_SetEnvVar \
+    mui_MakeButton \
+    mui_MakeCheckmark \
+    mui_DoSuperNew \
+    errorreq_ErrorMsg \
+    library_CheckLibVersion \
+    library_CheckLibVersionName
+
+%build_linklib mmake=contrib-scout-tblib libname=$(LIB) \
+  files=$(FILES) libdir=$(LIBDIR)
+
+%common

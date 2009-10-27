@@ -1,0 +1,105 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-scout-bin : includes linklibs contrib-zune-classes-nlist contrib-scout-tblib \
+#MM contrib-scout-catalogs contrib-scout-bin contrib-scout-icon
+
+EXE := Scout
+
+# FIXME: Target directory?
+EXEDIR := $(AROS_CONTRIB)/System/Scout
+
+USER_INCLUDES := -D_UTMP_H_ -I$(SRCDIR)/$(CURDIR) -I$(SRCDIR)/$(CURDIR)/includearos -I$(SRCDIR)/$(CURDIR)/classes -I$(SRCDIR)/$(CURDIR)/tbLib
+USER_LDFLAGS  := -L$(EXEDIR)/libs
+
+FILES := \
+   Scout \
+   scout_logo \
+   scout_net \
+   classes/fontdisplay_class \
+   classes/port_button \
+   classes/scout_about \
+   classes/scout_allocations \
+   classes/scout_arexx \
+   classes/scout_asm \
+   classes/scout_assigns \
+   classes/scout_audiomode \
+   classes/scout_audiomode_detail \
+   classes/scout_catalogs \
+   classes/scout_classes \
+   classes/scout_classes_detail \
+   classes/scout_commands \
+   classes/scout_commodity \
+   classes/scout_commodity_detail \
+   classes/scout_customclasses \
+   classes/scout_devices \
+   classes/scout_devices_detail \
+   classes/scout_expansions \
+   classes/scout_expansions_detail \
+   classes/scout_extras \
+   classes/scout_flags \
+   classes/scout_fonts \
+   classes/scout_fonts_detail \
+   classes/scout_functions \
+   classes/scout_inputhandlers \
+   classes/scout_inputhandlers_detail \
+   classes/scout_interrupts \
+   classes/scout_interrupts_detail \
+   classes/scout_libraries \
+   classes/scout_libraries_detail \
+   classes/scout_locks \
+   classes/scout_lowmemory \
+   classes/scout_lowmemory_detail \
+   classes/scout_main \
+   classes/scout_memory \
+   classes/scout_memory_detail \
+   classes/scout_mount \
+   classes/scout_mount_detail \
+   classes/scout_parentwindow \
+   classes/scout_patches \
+   classes/scout_ports \
+   classes/scout_ports_detail \
+   classes/scout_print \
+   classes/scout_priority \
+   classes/scout_resethandlers \
+   classes/scout_resethandlers_detail \
+   classes/scout_residents \
+   classes/scout_residents_detail \
+   classes/scout_resources \
+   classes/scout_resources_detail \
+   classes/scout_screenmode \
+   classes/scout_screenmode_detail \
+   classes/scout_semaphores \
+   classes/scout_signal \
+   classes/scout_system \
+   classes/scout_tasks \
+   classes/scout_tasks_detail \
+   classes/scout_timer \
+   classes/scout_vectors \
+   classes/scout_version \
+   classes/scout_windows \
+   classes/scout_windows_detail \
+   classes/disassembler_button \
+   classes/scout_disassembler \
+   classes/flags_button \
+   classes/task_button \
+   hexdump \
+   aros \
+   scout_cat \
+   SmartReadArgs \
+   all_gcc
+
+%build_prog mmake=contrib-scout-bin \
+	progname=$(EXE) targetdir=$(EXEDIR) \
+	files=$(FILES) uselibs="arossupport amiga arosc m mui tblib"
+
+
+#MM
+contrib-scout-icon : $(EXEDIR)/Scout.info
+
+$(EXEDIR)/Scout.info : $(SRCDIR)/$(CURDIR)/Scout.os3.info
+		$(MKDIR) $(EXEDIR)
+		$(CP) $< $@
+
+%common

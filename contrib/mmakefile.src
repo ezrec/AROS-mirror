@@ -20,6 +20,7 @@ include $(TOP)/config/make.cfg
 #MM- contrib-complete : contrib-networking
 #MM- contrib-complete : contrib-pack-bzip2
 #MM- contrib-complete : contrib-feelin
+#MM- contrib-complete : contrib-scout
 
 CONTRIB_SRC_DIR := $(AROSDIR)/contrib
 
