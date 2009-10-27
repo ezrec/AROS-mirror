@@ -1,8 +1,6 @@
-## version $VER: owb.catalog 1.0 (24.02.2009)
+## version $VER: owb.catalog 4.0 (26.10.2009)
 ## language italiano
 ## codeset 0
-;
-; TODO: Update translation and bumb version to 2
 ;
 MSG_OWB
 OWB
@@ -17,7 +15,7 @@ Invia
 ; Submit
 ;
 MSG_ResetButtonDefaultLabel
-Annulla
+Ripristina
 ; Reset
 ;
 MSG_SearchableIndexIntroduction
@@ -41,7 +39,7 @@ Scarica il file
 ; Download Linked File
 ;
 MSG_ContextMenuItemTagCopyLinkToClipboard
-Copia il link in memoria
+Copia link negli appunti
 ; Copy Link Location
 ;
 MSG_ContextMenuItemTagOpenImageInNewWindow
@@ -57,7 +55,7 @@ Copia l'immagine
 ; Copy Image
 ;
 MSG_ContextMenuItemTagOpenFrameInNewWindow
-Apri frame in una nuova finestra
+Apri riquadro in una nuova finestra
 ; Open frame in new window
 ;
 MSG_ContextMenuItemTagCopy
@@ -73,7 +71,7 @@ Seleziona tutto
 ; Select All
 ;
 MSG_ContextMenuItemTagUnicode
-Inserisci il carattere di controllo unicode
+Inserisci carattere di controllo unicode
 ; Insert Unicode Control Character
 ;
 MSG_ContextMenuItemTagInputMethods
@@ -153,7 +151,7 @@ Controllo ortografico durante la digitazione
 ; Check Spelling While Typing
 ;
 MSG_ContextMenuItemTagCheckGrammarWithSpelling
-Controllo ortografico con grammatica
+Controllo ortografico e grammaticale
 ; Check Grammar With Spelling
 ;
 MSG_ContextMenuItemTagFontMenu
@@ -308,6 +306,10 @@ MSG_DownloadFileName
 Nome file
 ; File name
 ;
+MSG_DownloadSpeed
+Velocità
+;Speed
+;
 MSG_DownloadState
 Stato
 ; Status
@@ -329,7 +331,7 @@ Elimina completati
 ; Clear finished
 ;
 MSG_SearchWindow_Title
-Ricerca
+Finestra di ricerca
 ; OWB Search Window
 ;
 MSG_SearchWindow_Locate
@@ -361,8 +363,24 @@ Trasferimenti
 ; Downloads
 ;
 MSG_PreferencesManager_SaveFilesTo
-Destinazione salvataggi:
+Destinazione salvataggio:
 ; Save files to:
+;
+MSG_PreferencesManager_ZuneSettings
+Impostazioni Zune
+;Zune Settings
+;
+MSG_PreferencesManager_OpenZuneSettings
+Apri impostazioni Zune
+;Open Zune Settings
+;
+MSG_PreferencesManager_ProxySettings
+Impostazioni proxy
+;Proxy Settings
+;
+MSG_PreferencesManager_HttpProxy
+Proxy HTTP:
+;HTTP Proxy:
 ;
 MSG_PreferencesManager_Content
 Contenuto
@@ -409,7 +427,7 @@ Decodifica JPG usando Datatype:
 ; Decode JPG with Datatypes:
 ;
 MSG_PreferencesManager_Fonts
-Font
+Caratteri
 ; Fonts
 ;
 MSG_PreferencesManager_DefaultFontSize
@@ -421,31 +439,31 @@ Dimensioni minime:
 ; Minimum font size:
 ;
 MSG_PreferencesManager_StandardFontFamily
-Famiglia di caratteri standard:
+Caratteri standard:
 ; Standard font family:
 ;
 MSG_PreferencesManager_DefaultFixedFontSize
-Dimensioni caratteri fissi:
+Dimensioni caratteri non proporzionali:
 ; Default fixed font size:
 ;
 MSG_PreferencesManager_FixedFontFamily
-Famiglia di caratteri fissi:
+Caratteri non proporzionali:
 ; Fixed font family:
 ;
 MSG_PreferencesManager_SerifFontFamily
-Famiglia di caratteri serif:
+Caratteri con grazie:
 ; Serif font family:
 ;
 MSG_PreferencesManager_SansSerifFontFamily
-Famiglia di caratteri sans-serif:
+Caratteri senza grazie:
 ; Sans-serif font family:
 ;
 MSG_PreferencesManager_CursiveFontFamily
-Famiglia di caratteri in corsivo:
+Caratteri in corsivo:
 ; Cursive font family:
 ;
 MSG_PreferencesManager_FantasyFontFamily
-Famgilia di caratteri fantasy:
+Caratteri fantasy:
 ; Fantasy font family:
 ;
 MSG_PreferencesManager_Save
@@ -471,4 +489,158 @@ Apri una nuova scheda
 MSG_Tabs_CloseActive
 Chiudi la scheda attiva
 ; Close active tab
+;
+MSG_Tabs_Bookmark
+Inserisci scheda nei segnalibri
+;Bookmark this tab
+;
+MSG_JavaScript_Alert
+Avviso riguardo JavaScript
+;OWB JavaScript Alert
+;
+MSG_JavaScript_AlertOK
+OK
+;
+MSG_JavaScript_Confirm
+Conferma JavaScript
+;OWB JavaScript Confirm
+;
+MSG_JavaScript_ConfirmOptions
+Annulla|OK
+;Cancel|OK
+;
+MSG_JavaScript_Prompt
+Prompt di JavaScript
+;OWB JavaScript Prompt
+;
+MSG_JavaScript_PromptOK
+OK
+;
+MSG_JavaScript_PromptCancel
+Annulla
+;Cancel
+;
+MSG_RequestPolicy_Title
+Richiesta di indicazioni
+;OWB Policy Requester
+;
+MSG_RequestPolicy_Message
+Stai per aprire il file '%s' di tipo MIME '%s'.\nCosa deve fare OWB con questo file?
+;You are about to open file '%s' having MIME type '%s'.\nWhat should OWB do with this file?
+;
+MSG_RequestPolicy_Options
+Scarica|Mostra|Annulla
+;Download|Show|Cancel
+;
+MSG_RequestCredentials_Title
+Richiesta di autenticazione
+;OWB Authentication Requester
+;
+MSG_RequestCredentials_Message
+Prego inserire nome utente e password per accedere al dominio %s presso %s.
+;Please enter username and password to access realm %s at host %s.
+;
+MSG_RequestCredentials_Username
+Nome utente:
+;Username:
+;
+MSG_RequestCredentials_Password
+Password:
+;
+MSG_RequestCredentials_OK
+OK
+;
+MSG_RequestCredentials_Cancel
+Annulla
+;Cancel
+;
+MSG_BookmarkManager_Title
+Raccolta segnalibri
+;Bookmark Manager
+;
+MSG_BookmarkManager_Label
+Etichetta
+;Label
+;
+MSG_BookmarkManager_URL
+URL
+;
+MSG_BookmarkManager_Insert
+Inserisci
+;Insert
+;
+MSG_BookmarkManager_Change
+Cambia
+;Change
+;
+MSG_BookmarkManager_Remove
+Rimuovi
+;Remove
+;
+MSG_BookmarkManager_MenuTitle
+Segnalibri
+;Bookmarks
+;
+MSG_BookmarkManager_MoveUp
+Sposta su
+;Move up
+;
+MSG_BookmarkManager_MoveDown
+Sposta giù
+;Move down
+;
+MSG_MainMenu_File
+File
+;
+MSG_MainMenu_OpenNewTab
+Apri in una nuova scheda
+;Open new tab
+;
+MSG_MainMenu_OpenNewWindow
+Apri in una nuova finestra
+;Open new window
+;
+MSG_MainMenu_OpenFile
+Apri file
+;Open file
+;
+MSG_MainMenu_CloseCurrentTab
+Chiudi scheda corrente
+;Close current tab
+;
+MSG_MainMenu_CloseWindow
+Chiudi la finestra
+;Close window
+;
+MSG_MainMenu_Quit
+Esci
+;Quit
+;
+MSG_MainMenu_Edit
+Modifica
+;Edit
+;
+MSG_MainMenu_Find
+Trova
+;Find
+;
+MSG_MainMenu_FindNext
+Trova successivo
+;Find next
+;
+MSG_MainMenu_Preferences
+Impostazioni
+;Preferences
+;
+MSG_MainMenu_Tools
+Strumenti
+;Tools
+;
+MSG_MainMenu_BookmarkManager
+Raccolta segnalibri
+;Bookmark manager
+;
+MSG_MainMenu_DownloadManager
+Gestore trasferimenti
+;Download manager
 ;
