@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -77,7 +75,10 @@ STATIC void IterateList( void (* callback)( struct VectorEntry *ve, void *userDa
     struct VectorEntry *ve;
 
     if ((ve = tbAllocVecPooled(globalPool, sizeof(struct VectorEntry))) != NULL) {
-        UBYTE *vbr = (UBYTE *)GetVBR();
+        UBYTE *vbr = NULL;
+#if !defined(__AROS__)
+        vbr = (UBYTE *)GetVBR();
+#endif
         ULONG vec;
 
         Forbid();
@@ -90,7 +91,7 @@ STATIC void IterateList( void (* callback)( struct VectorEntry *ve, void *userDa
         _snprintf(ve->ve_ResetVectors[5], sizeof(ve->ve_ResetVectors[5]), "$%08lx", SysBase->KickCheckSum);
 
         for (vec = 0; vec < 7; vec++) {
-            if (amigaOS4) {
+            if (amigaOS4 || arOS) {
                 // the 68k interrupt vectors don't exist anymore in AmigaOS4/AmigaOne
                 _snprintf(ve->ve_AutoVectors[vec], sizeof(ve->ve_AutoVectors[vec]), "$%08lx", 0);
             } else {
@@ -182,7 +183,7 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('V','E','C','T'),
         WindowContents, VGroup,
 
-            Child, pages = RegisterGroup(vectorPages),
+            Child, (IPTR)(pages = (Object *)RegisterGroup(vectorPages),
                 MUIA_CycleChain, TRUE,
 
                 Child, ScrollgroupObject,
@@ -191,17 +192,17 @@ STATIC ULONG mNew( struct IClass *cl,
                     MUIA_Scrollgroup_Contents, VGroupV,
                         Child, ColGroup(2),
                             Child, MyLabel2(txtVectorColdCapture),
-                            Child, resetVectButton[0] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(resetVectButton[0] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorCoolCapture),
-                            Child, resetVectButton[1] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(resetVectButton[1] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorWarmCapture),
-                            Child, resetVectButton[2] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(resetVectButton[2] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorKickMemPtr),
-                            Child, resetVectButton[3] = MyTextObject(),
+                            Child, (IPTR)(resetVectButton[3] = MyTextObject()),
                             Child, MyLabel2(txtVectorKickTagPtr),
-                            Child, resetVectButton[4] = MyTextObject(),
+                            Child, (IPTR)(resetVectButton[4] = MyTextObject()),
                             Child, MyLabel2(txtVectorKickChecksum),
-                            Child, resetVectButton[5] = MyTextObject(),
+                            Child, (IPTR)(resetVectButton[5] = MyTextObject()),
                         End,
                     End,
                 End,
@@ -212,19 +213,19 @@ STATIC ULONG mNew( struct IClass *cl,
                     MUIA_Scrollgroup_Contents, VGroupV,
                         Child, ColGroup(2),
                             Child, MyLabel2(txtVectorLevel1),
-                            Child, autoVectButton[0] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(autoVectButton[0] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorLevel2),
-                            Child, autoVectButton[1] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(autoVectButton[1] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorLevel3),
-                            Child, autoVectButton[2] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(autoVectButton[2] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorLevel4),
-                            Child, autoVectButton[3] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(autoVectButton[3] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorLevel5),
-                            Child, autoVectButton[4] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(autoVectButton[4] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorLevel6),
-                            Child, autoVectButton[5] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(autoVectButton[5] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorLevel7),
-                            Child, autoVectButton[6] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(autoVectButton[6] = (Object *)DisassemblerButtonObject, End),
                         End,
                     End,
                 End,
@@ -235,48 +236,48 @@ STATIC ULONG mNew( struct IClass *cl,
                     MUIA_Scrollgroup_Contents, VGroupV,
                         Child, ColGroup(2),
                             Child, MyLabel2(txtVectorInt00),
-                            Child, intVectButton[ 0] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(intVectButton[ 0] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorInt01),
-                            Child, intVectButton[ 1] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(intVectButton[ 1] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorInt02),
-                            Child, intVectButton[ 2] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(intVectButton[ 2] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorInt03),
-                            Child, intVectButton[ 3] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(intVectButton[ 3] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorInt04),
-                            Child, intVectButton[ 4] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(intVectButton[ 4] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorInt05),
-                            Child, intVectButton[ 5] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(intVectButton[ 5] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorInt06),
-                            Child, intVectButton[ 6] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(intVectButton[ 6] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorInt07),
-                            Child, intVectButton[ 7] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(intVectButton[ 7] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorInt08),
-                            Child, intVectButton[ 8] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(intVectButton[ 8] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorInt09),
-                            Child, intVectButton[ 9] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(intVectButton[ 9] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorInt10),
-                            Child, intVectButton[10] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(intVectButton[10] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorInt11),
-                            Child, intVectButton[11] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(intVectButton[11] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorInt12),
-                            Child, intVectButton[12] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(intVectButton[12] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorInt13),
-                            Child, intVectButton[13] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(intVectButton[13] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorInt14),
-                            Child, intVectButton[14] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(intVectButton[14] = (Object *)DisassemblerButtonObject, End),
                             Child, MyLabel2(txtVectorInt15),
-                            Child, intVectButton[15] = DisassemblerButtonObject, End,
+                            Child, (IPTR)(intVectButton[15] = (Object *)DisassemblerButtonObject, End),
                         End,
                     End,
                 End,
-            End,
+            End),
 
-            Child, MyVSpace(4),
+            Child, (IPTR)MyVSpace(4),
 
             Child, HGroup, MUIA_Group_SameSize, TRUE,
-                Child, updateButton = MakeButton(txtUpdate),
-                Child, printButton  = MakeButton(txtPrint),
-                Child, exitButton   = MakeButton(txtExit),
+                Child, (IPTR)(updateButton = MakeButton(txtUpdate)),
+                Child, (IPTR)(printButton  = MakeButton(txtPrint)),
+                Child, (IPTR)(exitButton   = MakeButton(txtExit)),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)

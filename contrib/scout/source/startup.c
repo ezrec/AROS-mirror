@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -88,7 +86,7 @@ ULONG SAVEDS startup(void)
         wbmsg = (struct WBStartup *)GetMsg(&me->pr_MsgPort);
     }
 
-#if !defined(__amigaos4__) && !defined(__MORPHOS__)
+#if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
     if (FLAG_IS_SET(SysBase->AttnFlags, AFF_68020)) {
 #endif
         if ((DOSBase = (struct DosLibrary *)OpenLibrary(DOSNAME, 37)) != NULL) {
@@ -107,7 +105,7 @@ ULONG SAVEDS startup(void)
 
                                                 memset(&sa, 0x00, sizeof(struct SmartArgs));
                                                 sa.sa_Template = TEMPLATE;
-                                                sa.sa_Parameter = (LONG *)&opts;
+                                                sa.sa_Parameter = (IPTR *)&opts;
                                                 sa.sa_FileParameter = -1;
                                                 sa.sa_Window = "CON:20/20/400/100/Scout/AUTO/CLOSE/WAIT";
 
@@ -173,7 +171,7 @@ ULONG SAVEDS startup(void)
             ReplyMsg((struct Message *)wbmsg);
         }
 
-#if !defined(__amigaos4__) && !defined(__MORPHOS__)
+#if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
     }
 #endif
 

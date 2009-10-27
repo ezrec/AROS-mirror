@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -30,7 +28,11 @@
 objects/scout_functions.c
  */
 
-#define FunctionsWindowObject               NewObject(FunctionsWinClass->mcc_Class, NULL
+#if defined(__AROS__)
+    #define FunctionsWindowObject  BOOPSIOBJMACRO_START(FunctionsWinClass->mcc_Class)
+#else
+    #define FunctionsWindowObject  NewObject(FunctionsWinClass->mcc_Class, NULL
+#endif
 
 APTR MakeFunctionsWinClass( void );
 

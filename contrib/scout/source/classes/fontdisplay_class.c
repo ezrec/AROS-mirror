@@ -53,7 +53,7 @@ STATIC ULONG mSet( struct IClass *cl,
     BOOL redraw = FALSE;
 
     tags = msg->ops_AttrList;
-    while ((tag = NextTagItem(&tags)) != NULL) {
+    while ((tag = NextTagItem((APTR)&tags)) != NULL) {
         switch (tag->ti_Tag) {
             case MUIA_FontDisplay_Font:
                 fdd->fdd_Font = (struct TextFont *)tag->ti_Data;
@@ -84,7 +84,7 @@ STATIC ULONG mGet( struct IClass *cl,
                    struct opGet *msg )
 {
     struct FontDisplayData *fdd = INST_DATA(cl, obj);
-    ULONG *store = msg->opg_Storage;
+    IPTR *store = msg->opg_Storage;
 
     switch (msg->opg_AttrID) {
         case MUIA_FontDisplay_Font:

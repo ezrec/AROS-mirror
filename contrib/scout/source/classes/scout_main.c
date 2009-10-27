@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -33,7 +31,9 @@ struct MainWinData {
     ULONG mwd_UpdateCommands[30];
 };
 
-#define MUIA_Dtpic_Name 0x80423d72
+#if !defined(MUIA_Dtpic_Name)
+    #define MUIA_Dtpic_Name 0x80423d72
+#endif
 
 STATIC SAVEDS LONG close_callfunc( struct Hook *hook, Object *obj, ULONG *index )
 {
@@ -59,16 +59,16 @@ STATIC APTR LogoObject( void )
     }
 
     if (logo == NULL) {
-        logo = BodychunkObject,
+        logo = (Object *)BodychunkObject,
                     MUIA_FixWidth, SCOUT_LOGO_WIDTH,
                     MUIA_FixHeight, SCOUT_LOGO_HEIGHT,
                     MUIA_Bitmap_Width, SCOUT_LOGO_WIDTH,
                     MUIA_Bitmap_Height, SCOUT_LOGO_HEIGHT,
                     MUIA_Bodychunk_Depth, SCOUT_LOGO_DEPTH ,
-                    MUIA_Bodychunk_Body, scout_logo_body,
+                    MUIA_Bodychunk_Body, (IPTR)scout_logo_body,
                     MUIA_Bodychunk_Compression, SCOUT_LOGO_COMPRESSION,
                     MUIA_Bodychunk_Masking, SCOUT_LOGO_MASKING,
-                    MUIA_Bitmap_SourceColors, scout_logo_colors,
+                    MUIA_Bitmap_SourceColors, (IPTR)scout_logo_colors,
                     MUIA_Bitmap_Transparent, FALSE,
                End;
     }
@@ -120,53 +120,53 @@ STATIC ULONG mNew( struct IClass *cl,
                 MUIA_Weight    , 0,
                 MUIA_Frame     , MUIV_Frame_Text,
                 MUIA_Background, MUII_SHADOW,
-                Child, VSpace(0),
-                Child, LogoObject(),
-                Child, VSpace(0),
+                Child, (IPTR)VSpace(0),
+                Child, (IPTR)LogoObject(),
+                Child, (IPTR)VSpace(0),
             End,
 
             Child, ColGroup(5), MUIA_Group_SameSize, TRUE,
-                Child, button[ 0] = MakeButton(txtMainAllocations),
-                Child, button[ 1] = MakeButton(txtMainAssigns),
-                Child, button[ 2] = MakeButton(txtMainBoopsiClasses),
-                Child, button[ 3] = MakeButton(txtMainCommodities),
-                Child, button[ 4] = MakeButton(txtMainDevices),
+                Child, (IPTR)(button[ 0] = MakeButton(txtMainAllocations)),
+                Child, (IPTR)(button[ 1] = MakeButton(txtMainAssigns)),
+                Child, (IPTR)(button[ 2] = MakeButton(txtMainBoopsiClasses)),
+                Child, (IPTR)(button[ 3] = MakeButton(txtMainCommodities)),
+                Child, (IPTR)(button[ 4] = MakeButton(txtMainDevices)),
 
-                Child, button[ 5] = MakeButton(txtMainExpansions),
-                Child, button[ 6] = MakeButton(txtMainFonts),
-                Child, button[ 7] = MakeButton(txtMainInputHandlers),
-                Child, button[ 8] = MakeButton(txtMainInterrupts),
-                Child, button[ 9] = MakeButton(txtMainLibraries),
+                Child, (IPTR)(button[ 5] = MakeButton(txtMainExpansions)),
+                Child, (IPTR)(button[ 6] = MakeButton(txtMainFonts)),
+                Child, (IPTR)(button[ 7] = MakeButton(txtMainInputHandlers)),
+                Child, (IPTR)(button[ 8] = MakeButton(txtMainInterrupts)),
+                Child, (IPTR)(button[ 9] = MakeButton(txtMainLibraries)),
 
-                Child, button[10] = MakeButton(txtMainLocks),
-                Child, button[11] = MakeButton(txtMainLowMemory),
-                Child, button[12] = MakeButton(txtMainMemory),
-                Child, button[13] = MakeButton(txtMainMountedDevs),
-                Child, button[14] = MakeButton(txtMainPorts),
+                Child, (IPTR)(button[10] = MakeButton(txtMainLocks)),
+                Child, (IPTR)(button[11] = MakeButton(txtMainLowMemory)),
+                Child, (IPTR)(button[12] = MakeButton(txtMainMemory)),
+                Child, (IPTR)(button[13] = MakeButton(txtMainMountedDevs)),
+                Child, (IPTR)(button[14] = MakeButton(txtMainPorts)),
 
-                Child, button[15] = MakeButton(txtMainResidents),
-                Child, button[16] = MakeButton(txtMainResCmds),
-                Child, button[17] = MakeButton(txtMainResources),
-                Child, button[18] = MakeButton(txtMainScreenModes),
-                Child, button[19] = MakeButton(txtMainSemaphores),
+                Child, (IPTR)(button[15] = MakeButton(txtMainResidents)),
+                Child, (IPTR)(button[16] = MakeButton(txtMainResCmds)),
+                Child, (IPTR)(button[17] = MakeButton(txtMainResources)),
+                Child, (IPTR)(button[18] = MakeButton(txtMainScreenModes)),
+                Child, (IPTR)(button[19] = MakeButton(txtMainSemaphores)),
 
-                Child, button[20] = MakeButton(txtMainSystem),
-                Child, button[21] = MakeButton(txtMainTasks),
-                Child, button[22] = MakeButton(txtMainTimer),
-                Child, button[23] = MakeButton(txtMainVectors),
-                Child, button[24] = MakeButton(txtMainWindows),
+                Child, (IPTR)(button[20] = MakeButton(txtMainSystem)),
+                Child, (IPTR)(button[21] = MakeButton(txtMainTasks)),
+                Child, (IPTR)(button[22] = MakeButton(txtMainTimer)),
+                Child, (IPTR)(button[23] = MakeButton(txtMainVectors)),
+                Child, (IPTR)(button[24] = MakeButton(txtMainWindows)),
 
-                Child, button[25] = MakeButton(txtMainPatches),
-                Child, button[26] = MakeButton(txtMainCatalogs),
-                Child, button[27] = MakeButton(txtMainAudioModes),
-                Child, button[28] = MakeButton(txtMainResetHandlers),
-                Child, HSpace(0),
+                Child, (IPTR)(button[25] = MakeButton(txtMainPatches)),
+                Child, (IPTR)(button[26] = MakeButton(txtMainCatalogs)),
+                Child, (IPTR)(button[27] = MakeButton(txtMainAudioModes)),
+                Child, (IPTR)(button[28] = MakeButton(txtMainResetHandlers)),
+                Child, (IPTR)HSpace(0),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
     {
         struct MainWinData *mwd = INST_DATA(cl, obj);
-    #if !defined(__amigaos4__)
+    #if !defined(__amigaos4__) && !defined(__AROS__)
         struct PatchPort *pp;
         struct SetManPort *sp;
         struct Library *pc;
@@ -206,7 +206,7 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(button[27], MUIM_Notify,  MUIA_Pressed, FALSE, obj, 1, MUIM_MainWin_ShowAudioModes);
         DoMethod(button[28], MUIM_Notify,  MUIA_Pressed, FALSE, obj, 1, MUIM_MainWin_ShowResetHandlers);
 
-    #if defined(__amigaos4__)
+    #if defined(__amigaos4__) || defined(__AROS__)
         set(button[25], MUIA_Disabled, TRUE);
     #else
         Forbid();
@@ -236,8 +236,8 @@ STATIC ULONG mAbout( struct IClass *cl,
 {
     APTR aboutWin;
 
-    if ((aboutWin = AboutWindowObject,
-            MUIA_Window_ParentWindow, obj,
+    if ((aboutWin = (Object *)AboutWindowObject,
+            MUIA_Window_ParentWindow, (IPTR)obj,
             MUIA_Window_NoMenus, TRUE,
         End) != NULL) {
         APTR app;

@@ -99,7 +99,7 @@ static ULONG mSet( struct IClass *cl,
     BOOL update = FALSE;
 
     tags = msg->ops_AttrList;
-    while ((tag = NextTagItem(&tags)) != NULL) {
+    while ((tag = NextTagItem((APTR)&tags)) != NULL) {
         switch (tag->ti_Tag) {
             case MUIA_TaskButton_Task:
                 tbd->tbd_Task = (struct Task *)tag->ti_Data;
@@ -124,7 +124,7 @@ static ULONG mGet( struct IClass *cl,
                    struct opGet *msg )
 {
     struct TaskButtonData *tbd = INST_DATA(cl, obj);
-    ULONG *store = msg->opg_Storage;
+    IPTR *store = msg->opg_Storage;
 
     switch (msg->opg_AttrID) {
         case MUIA_TaskButton_Task:
@@ -163,8 +163,8 @@ static ULONG mShowTask( struct IClass *cl,
         parentWin = (APTR)xget(obj, MUIA_WindowObject);
 
         GetTaskEntry(task, &tbd->tbd_Entry, FALSE);
-        if ((taskWin = TasksDetailWindowObject,
-                MUIA_Window_ParentWindow, parentWin,
+        if ((taskWin = (Object *)TasksDetailWindowObject,
+                MUIA_Window_ParentWindow, (IPTR)parentWin,
                 MUIA_Window_MaxChildWindowCount, (opts.SingleWindows) ? 1 : 0,
             End) != NULL) {
             COLLECT_RETURNIDS;

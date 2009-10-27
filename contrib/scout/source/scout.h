@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -51,8 +49,10 @@ extern struct Locale *currentLocale;
 
 ULONG scout_main( void );
 
+#if !defined(__AROS__)
 extern void kprintf(const char *,...);
+#endif
 
 extern BOOL amigaOS4;
 extern BOOL morphOS;
-
+extern BOOL arOS;

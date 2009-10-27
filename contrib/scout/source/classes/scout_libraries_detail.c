@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -93,51 +91,51 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('.','L','I','B'),
         WindowContents, VGroup,
 
-            Child, group = ScrollgroupObject,
+            Child, (IPTR)(group = (Object *)ScrollgroupObject,
                 MUIA_CycleChain, TRUE,
                 MUIA_Scrollgroup_FreeHoriz, FALSE,
                 MUIA_Scrollgroup_Contents, VGroupV,
                     MUIA_Background, MUII_GroupBack,
-                    Child, mainGroup = VGroup,
+                    Child, (IPTR)(mainGroup = (Object *)VGroup,
                         GroupFrame,
                         Child, ColGroup(2),
                             Child, MyLabel2(txtNodeName2),
-                            Child, texts[ 0] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 0] = MyTextObject6()),
                             Child, MyLabel2(txtAddress2),
-                            Child, texts[ 1] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 1] = MyTextObject6()),
                             Child, MyLabel2(txtLibraryIdString),
-                            Child, texts[ 2] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 2] = MyTextObject6()),
                             Child, MyLabel2(txtNodeType2),
-                            Child, texts[ 3] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 3] = MyTextObject6()),
                             Child, MyLabel2(txtNodePri2),
-                            Child, texts[ 4] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 4] = MyTextObject6()),
                             Child, MyLabel2(txtLibraryVersion2),
-                            Child, texts[ 5] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 5] = MyTextObject6()),
                             Child, MyLabel2(txtLibraryOpenCount2),
-                            Child, texts[ 6] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 6] = MyTextObject6()),
                             Child, MyLabel2(txtLibraryFlags2),
-                            Child, texts[ 7] = FlagsButtonObject,
+                            Child, (IPTR)(texts[ 7] = (Object *)FlagsButtonObject,
                                 MUIA_FlagsButton_Type, MUIV_FlagsButton_Type_Byte,
-                                MUIA_FlagsButton_Title, txtLibraryFlags,
-                                MUIA_FlagsButton_BitArray, libFlags,
-                                MUIA_FlagsButton_WindowTitle, txtLibraryFlagsTitle,
-                            End,
+                                MUIA_FlagsButton_Title, (IPTR)txtLibraryFlags,
+                                MUIA_FlagsButton_BitArray, (IPTR)libFlags,
+                                MUIA_FlagsButton_WindowTitle, (IPTR)txtLibraryFlagsTitle,
+                            End),
                             Child, MyLabel2(txtLibraryNegSize),
-                            Child, texts[ 8] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 8] = MyTextObject6()),
                             Child, MyLabel2(txtLibraryPosSize),
-                            Child, texts[ 9] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 9] = MyTextObject6()),
                             Child, MyLabel2(txtLibrarySum),
-                            Child, texts[10] = MyTextObject6(),
+                            Child, (IPTR)(texts[10] = MyTextObject6()),
                             Child, MyLabel2(txtLibraryRPC2),
-                            Child, texts[11] = MyTextObject6(),
+                            Child, (IPTR)(texts[11] = MyTextObject6()),
                             Child, MyLabel2(txtLibraryCodeType2),
-                            Child, texts[12] = MyTextObject6(),
+                            Child, (IPTR)(texts[12] = MyTextObject6()),
                         End,
-                    End,
+                    End),
                 End,
-            End,
-            Child, MyVSpace(4),
-            Child, exitButton = MakeButton(txtExit),
+            End),
+            Child, (IPTR)MyVSpace(4),
+            Child, (IPTR)(exitButton = MakeButton(txtExit)),
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
     {
@@ -176,7 +174,7 @@ STATIC ULONG mSet( struct IClass *cl,
     struct TagItem *tags, *tag;
 
     tags = msg->ops_AttrList;
-    while ((tag = NextTagItem(&tags)) != NULL) {
+    while ((tag = NextTagItem((APTR)&tags)) != NULL) {
         switch (tag->ti_Tag) {
             case MUIA_Window_ParentWindow:
                 DoMethod(obj, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, MUIV_Notify_Application, 5, MUIM_Application_PushMethod, (APTR)tag->ti_Data, 2, MUIM_Window_RemChildWindow, obj);

@@ -51,7 +51,7 @@ STATIC ULONG mSet( struct IClass *cl,
     BOOL update = FALSE;
 
     tags = msg->ops_AttrList;
-    while ((tag = NextTagItem(&tags)) != NULL) {
+    while ((tag = NextTagItem((APTR)&tags)) != NULL) {
         switch (tag->ti_Tag) {
             case MUIA_PortButton_Port:
                 pbd->pbd_Port = (struct MsgPort *)tag->ti_Data;
@@ -71,7 +71,7 @@ STATIC ULONG mGet( struct IClass *cl,
                    struct opGet *msg )
 {
     struct PortButtonData *pbd = INST_DATA(cl, obj);
-    ULONG *store = msg->opg_Storage;
+    IPTR *store = msg->opg_Storage;
 
     switch (msg->opg_AttrID) {
         case MUIA_PortButton_Port:
@@ -107,10 +107,10 @@ STATIC ULONG mShowPort( struct IClass *cl,
     pbd->pbd_Entry.pe_Addr = pbd->pbd_Port;
     stccpy(pbd->pbd_Entry.pe_Name, nonetest(pbd->pbd_Port->mp_Node.ln_Name), sizeof(pbd->pbd_Entry.pe_Name));
 
-    if ((portWin = PortsDetailWindowObject,
-            MUIA_Window_ParentWindow, parentWin,
+    if ((portWin = (Object *)(PortsDetailWindowObject,
+            MUIA_Window_ParentWindow, (IPTR)parentWin,
             MUIA_Window_MaxChildWindowCount, (opts.SingleWindows) ? 1 : 0,
-        End) != NULL) {
+        End)) != NULL) {
         COLLECT_RETURNIDS;
         SetAttrs(portWin, MUIA_PortsDetailWin_Port, &pbd->pbd_Entry,
                           MUIA_Window_Open, TRUE,

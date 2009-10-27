@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -215,18 +213,22 @@ STATIC void IterateList( void (* callback)( struct LibraryEntry *le, void *userD
 
             stccpy(le->le_Type, GetNodeType(lib->lib_Node.ln_Type), sizeof(le->le_Type));
 
-        #if defined(__amigaos4__)
-            if (lib->lib_ABIVersion == LIBABI_MIFACE) {
-        #elif defined(__MORPHOS__)
-            if (*(UBYTE *)(((struct JumpEntry *)lib) - 1)->je_JumpAddress == 0xff) {
+        #if defined(__AROS__)
+            stccpy(le->le_CodeType, txtLibraryCodeTypeNative, sizeof(le->le_CodeType));
         #else
-            // OS3 is 68k only
-            if (FALSE) {
+            #if defined(__amigaos4__)
+                if (lib->lib_ABIVersion == LIBABI_MIFACE) {
+            #elif defined(__MORPHOS__)
+                if (*(UBYTE *)(((struct JumpEntry *)lib) - 1)->je_JumpAddress == 0xff) {
+            #else
+                // OS3 is 68k only
+                if (FALSE) {
+            #endif
+                    stccpy(le->le_CodeType, txtLibraryCodeTypePPC, sizeof(le->le_CodeType));
+                } else {
+                    stccpy(le->le_CodeType, txtLibraryCodeType68k, sizeof(le->le_CodeType));
+                }
         #endif
-                stccpy(le->le_CodeType, txtLibraryCodeTypePPC, sizeof(le->le_CodeType));
-            } else {
-                stccpy(le->le_CodeType, txtLibraryCodeType68k, sizeof(le->le_CodeType));
-            }
 
             AddTail((struct List *)&tmplist, (struct Node *)le);
         }
@@ -274,23 +276,23 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('L','I','B','S'),
         WindowContents, VGroup,
 
-            Child, MyNListviewObject(&liblist, MakeID('L','I','L','V'), "BAR,BAR,BAR P=" MUIX_C ",BAR P=" MUIX_R ",BAR P=" MUIX_C ",BAR P=" MUIX_R ",BAR P=" MUIX_R ",BAR P=" MUIX_C, &liblist_con2hook, &liblist_des2hook, &liblist_dsp2hook, &liblist_cmp2hook, TRUE),
-            Child, MyBelowListview(&libtext, &libcount),
+            Child, (IPTR)MyNListviewObject(&liblist, MakeID('L','I','L','V'), "BAR,BAR,BAR P=" MUIX_C ",BAR P=" MUIX_R ",BAR P=" MUIX_C ",BAR P=" MUIX_R ",BAR P=" MUIX_R ",BAR P=" MUIX_C, &liblist_con2hook, &liblist_des2hook, &liblist_dsp2hook, &liblist_cmp2hook, TRUE),
+            Child, (IPTR)MyBelowListview(&libtext, &libcount),
 
-            Child, MyVSpace(4),
+            Child, (IPTR)MyVSpace(4),
 
             Child, HGroup, MUIA_Group_SameSize, TRUE,
-                Child, priorityButton = MakeButton(txtPriority),
-                Child, removeButton   = MakeButton(txtRemove),
-                Child, closeButton    = MakeButton(txtClose),
-                Child, funcButton     = MakeButton(txtFunctions),
+                Child, (IPTR)(priorityButton = MakeButton(txtPriority)),
+                Child, (IPTR)(removeButton   = MakeButton(txtRemove)),
+                Child, (IPTR)(closeButton    = MakeButton(txtClose)),
+                Child, (IPTR)(funcButton     = MakeButton(txtFunctions)),
             End,
 
             Child, HGroup, MUIA_Group_SameSize, TRUE,
-                Child, updateButton   = MakeButton(txtUpdate),
-                Child, printButton    = MakeButton(txtPrint),
-                Child, moreButton     = MakeButton(txtMore),
-                Child, exitButton     = MakeButton(txtExit),
+                Child, (IPTR)(updateButton   = MakeButton(txtUpdate)),
+                Child, (IPTR)(printButton    = MakeButton(txtPrint)),
+                Child, (IPTR)(moreButton     = MakeButton(txtMore)),
+                Child, (IPTR)(exitButton     = MakeButton(txtExit)),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
@@ -479,8 +481,8 @@ STATIC ULONG mMore( struct IClass *cl,
         if ((le = (struct LibraryEntry *)GetActiveEntry(lwd->lwd_LibraryList)) != NULL) {
             APTR detailWin;
 
-            if ((detailWin = LibrariesDetailWindowObject,
-                    MUIA_Window_ParentWindow, obj,
+            if ((detailWin = (Object *)LibrariesDetailWindowObject,
+                    MUIA_Window_ParentWindow, (IPTR)obj,
                     MUIA_Window_MaxChildWindowCount, (opts.SingleWindows) ? 1 : 0,
                 End) != NULL) {
                 COLLECT_RETURNIDS;
@@ -504,8 +506,8 @@ STATIC ULONG mFunctions( struct IClass *cl,
     if ((le = (struct LibraryEntry *)GetActiveEntry(lwd->lwd_LibraryList)) != NULL) {
         APTR funcWin;
 
-        if ((funcWin = FunctionsWindowObject,
-                MUIA_Window_ParentWindow, obj,
+        if ((funcWin = (Object *)FunctionsWindowObject,
+                MUIA_Window_ParentWindow, (IPTR)obj,
             End) != NULL) {
             DoMethod(funcWin, MUIM_FunctionsWin_ShowFunctions, MUIV_FunctionsWin_NodeType_Library, le->le_Addr, le->le_Name);
         }

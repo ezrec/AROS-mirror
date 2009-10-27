@@ -1,4 +1,4 @@
-##rem $Id: C_c.sd,v 1.4 2006/04/05 19:08:58 thboeckel Exp $
+##rem $Id: C_c.sd,v 1.5 2009/10/19 16:44:26 marust Exp $
 ##stringtype C
 ##shortstrings
 /****************************************************************
@@ -83,7 +83,7 @@ VOID Open%bCatalog(VOID)
     }
 }
 
-#if defined(__GNUC__) && !defined(__MORPHOS__) && !defined(__amigaos4__)
+#if defined(__GNUC__) && !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
 __asm ("  .text;  .stabs \\\"___CTOR_LIST__\\\",22,0,0,__STIOpen%bCatalog");
 __asm ("  .text;  .stabs \\\"___DTOR_LIST__\\\",22,0,0,__STDClose%bCatalog");
 #endif

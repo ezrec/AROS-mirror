@@ -90,7 +90,11 @@
 
 /* --------------------------- library bases ------------------------------ */
 extern struct Library *IconBase;
+#if defined(__AROS__)
+extern struct UtilityBase *UtilityBase;
+#else
 extern struct Library *UtilityBase;
+#endif
 
 #ifdef __GNUC__
 extern struct WBStartup *_WBenchMsg;
@@ -159,7 +163,7 @@ extern void kprintf(const char *,...);
  *   SmartReadArgs -- Workbench/CLI transparent ReadArgs().
  * SYNOPSIS
  *   error = SmartReadArgs(wb_startup, smart_args);
- * 
+ *
  *   LONG SmartReadArgs(struct WBStartup *, struct SmartArgs *);
  * FUNCTION
  *   This function is a CLI/Workbench transparent interface to ReadArgs().
@@ -171,7 +175,7 @@ extern void kprintf(const char *,...);
  *   Tooltypes that are not part of the template are ignored. This includes
  *   tooltypes being disabled with "(...)", NewIcons image data on systems
  *   without NewIcons installed and all this «« Icon by some idiot »» crap.
- * 
+ *
  *   If the application was stared from CLI, it simply calls ReadArgs()
  *   without the conversion step.
  *
@@ -273,7 +277,7 @@ LONG SmartReadArgs(struct WBStartup * wb_startup, struct SmartArgs * args)
       {
          wbarg += 1;
          arg_counter += 1;
-      }               
+      }
    }
 
    if (wb_startup != NULL)

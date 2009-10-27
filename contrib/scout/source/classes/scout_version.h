@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -38,7 +36,21 @@ extern STRPTR release;
 extern const ULONG version_ulong;
 extern const ULONG revision_ulong;
 
-#if defined(__PPC__)
+#if defined(__AROS__)
+    #if defined __i386__
+        #define CPU         "[AROS/i386]"
+    #elif defined __x86_64__
+        #define CPU         "[AROS/x86_64]"
+    #elif defined __mc68000__
+        #define CPU         "[AROS/68K]"
+    #elif defined __powerpc__
+        #define CPU         "[AROS/PPC]"
+    #elif defined __arm__
+        #define CPU         "[AROS/arm]"
+    #else
+        #define CPU         "[AROS]"
+    #endif
+#elif defined(__PPC__)
     #if defined(__amigaos4__)
         #define CPU         "[OS4/PPC]"
     #elif defined(__MORPHOS__)
@@ -53,7 +65,7 @@ extern const ULONG revision_ulong;
 #define PROGNAME            "Scout"
 #define RELEASEVERSION      "3"
 #define RELEASEREVISION     "7"
-#define COPYRIGHT           "  ©2004-2006 Scout Open Source Team  \n  ©2001-2003 Thore Böckelmann  \n  ©1994-1997 Andreas Gelhausen, Richard Körber  "
+#define COPYRIGHT           "  ©2004-2009 Scout Open Source Team  \n  ©2001-2003 Thore Böckelmann  \n  ©1994-1997 Andreas Gelhausen, Richard Körber  "
 #define AUTHOR              "Thore Böckelmann"
 #define DESCRIPTION         "System monitor"
 #define HOMEPAGE            "http://sourceforge.net/projects/scoutos/"

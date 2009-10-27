@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -142,14 +140,14 @@ STATIC ULONG mNew( struct IClass *cl,
     if ((obj = (Object *)DoSuperNew(cl, obj,
         MUIA_Window_ID, MakeID('.','L','F','T'),
         WindowContents, VGroup,
-            Child, MyNListviewObject(&funclist, MakeID('F','T','L','V'), "BAR P=" MUIX_R ",BAR P=" MUIX_R ",BAR,BAR", &funclist_con2hook, &funclist_des2hook, &funclist_dsp2hook, &funclist_cmp2hook, TRUE),
-            Child, MyBelowListview(&functext, &funccount),
+            Child, (IPTR)MyNListviewObject(&funclist, MakeID('F','T','L','V'), "BAR P=" MUIX_R ",BAR P=" MUIX_R ",BAR,BAR", &funclist_con2hook, &funclist_des2hook, &funclist_dsp2hook, &funclist_cmp2hook, TRUE),
+            Child, (IPTR)MyBelowListview(&functext, &funccount),
 
-            Child, MyVSpace(4),
+            Child, (IPTR)MyVSpace(4),
 
             Child, HGroup, MUIA_Group_SameSize, TRUE,
-                Child, disasmButton = MakeButton(txtDisassemble),
-                Child, exitButton   = MakeButton(txtExit),
+                Child, (IPTR)(disasmButton = MakeButton(txtDisassemble)),
+                Child, (IPTR)(exitButton   = MakeButton(txtExit)),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
@@ -341,9 +339,9 @@ STATIC ULONG mDisassemble( struct IClass *cl,
     if ((fe = (struct FunctionsEntry *)GetActiveEntry(fwd->fwd_FunctionsList)) != NULL) {
         APTR disasmWin;
 
-        if ((disasmWin = DisassemblerWindowObject,
-                MUIA_Window_ParentWindow, obj,
-                MUIA_DisassemblerWin_Address, fe->fe_Address,
+        if ((disasmWin = (Object *)DisassemblerWindowObject,
+                MUIA_Window_ParentWindow, (IPTR)obj,
+                MUIA_DisassemblerWin_Address, (IPTR)fe->fe_Address,
             End) != NULL) {
             COLLECT_RETURNIDS;
             DoMethod(disasmWin, MUIM_DisassemblerWin_Disassemble);

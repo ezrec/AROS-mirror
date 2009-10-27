@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -216,17 +214,17 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('M','E','M','O'),
         WindowContents, VGroup,
 
-            Child, MyNListviewObject(&memlist, MakeID('M','E','L','V'), "BAR,BAR,BAR P=" MUIX_C ",BAR P=" MUIX_R ",BAR,BAR,BAR", &memlist_con2hook, &memlist_des2hook, &memlist_dsp2hook, &memlist_cmp2hook, TRUE),
-            Child, memtext = MyTextObject(),
+            Child, (IPTR)MyNListviewObject(&memlist, MakeID('M','E','L','V'), "BAR,BAR,BAR P=" MUIX_C ",BAR P=" MUIX_R ",BAR,BAR,BAR", &memlist_con2hook, &memlist_des2hook, &memlist_dsp2hook, &memlist_cmp2hook, TRUE),
+            Child, (IPTR)(memtext = MyTextObject()),
 
-            Child, MyVSpace(4),
+            Child, (IPTR)MyVSpace(4),
 
             Child, HGroup, MUIA_Group_SameSize, TRUE,
-                Child, updateButton   = MakeButton(txtUpdate),
-                Child, printButton    = MakeButton(txtPrint),
-                Child, priorityButton = MakeButton(txtPriority),
-                Child, moreButton     = MakeButton(txtMore),
-                Child, exitButton     = MakeButton(txtExit),
+                Child, (IPTR)(updateButton   = MakeButton(txtUpdate)),
+                Child, (IPTR)(printButton    = MakeButton(txtPrint)),
+                Child, (IPTR)(priorityButton = MakeButton(txtPriority)),
+                Child, (IPTR)(moreButton     = MakeButton(txtMore)),
+                Child, (IPTR)(exitButton     = MakeButton(txtExit)),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
@@ -346,8 +344,8 @@ STATIC ULONG mMore( struct IClass *cl,
         if ((me = (struct MemoryEntry *)GetActiveEntry(mwd->mwd_MemoryList)) != NULL) {
             APTR detailWin;
 
-            if ((detailWin = MemoryDetailWindowObject,
-                    MUIA_Window_ParentWindow, obj,
+            if ((detailWin = (Object *)MemoryDetailWindowObject,
+                    MUIA_Window_ParentWindow, (IPTR)obj,
                 End) != NULL) {
                 COLLECT_RETURNIDS;
                 set(detailWin, MUIA_MemoryDetailWin_Memory, me);

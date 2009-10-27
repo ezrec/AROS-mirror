@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -309,30 +307,30 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('L','O','C','K'),
         WindowContents, VGroup,
 
-            Child, MyNListviewObject(&locklist, MakeID('L','O','L','V'), "BAR,BAR,BAR", &locklist_con2hook, &locklist_des2hook, &locklist_dsp2hook, &locklist_cmp2hook, TRUE),
+            Child, (IPTR)MyNListviewObject(&locklist, MakeID('L','O','L','V'), "BAR,BAR,BAR", &locklist_con2hook, &locklist_des2hook, &locklist_dsp2hook, &locklist_cmp2hook, TRUE),
 
-            Child, locktext = MyTextObject5(SPACE40),
+            Child, (IPTR)(locktext = MyTextObject5(SPACE40)),
 
-            Child, locktext2 = MyTextObject(),
+            Child, (IPTR)(locktext2 = MyTextObject()),
 
             Child, HGroup,
-                Child, KeyLabel2(txtPattern, 'p'),
-                Child, lockpattern = StringObject,
-                    MUIA_String_Contents, "#?",
+                Child, (IPTR)KeyLabel2(txtPattern, 'p'),
+                Child, (IPTR)(lockpattern = (Object *)StringObject,
+                    MUIA_String_Contents, (IPTR)"#?",
                     MUIA_ControlChar, 'p',
                     MUIA_String_MaxLen, TEXT_LENGTH,
                     MUIA_CycleChain, TRUE,
                     StringFrame,
-                End,
+                End),
             End,
 
-            Child, MyVSpace(4),
+            Child, (IPTR)MyVSpace(4),
 
             Child, HGroup, MUIA_Group_SameSize, TRUE,
-                Child, updateButton = MakeButton(txtUpdate),
-                Child, printButton  = MakeButton(txtPrint),
-                Child, removeButton = MakeButton(txtRemove),
-                Child, exitButton   = MakeButton(txtExit),
+                Child, (IPTR)(updateButton = MakeButton(txtUpdate)),
+                Child, (IPTR)(printButton  = MakeButton(txtPrint)),
+                Child, (IPTR)(removeButton = MakeButton(txtRemove)),
+                Child, (IPTR)(exitButton   = MakeButton(txtExit)),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
@@ -444,7 +442,7 @@ STATIC ULONG mRemove( struct IClass *cl,
 
             DoMethod(lwd->lwd_LockList, MUIM_NList_GetEntry, id, &le);
             if (le) {
-                ULONG pos;
+                ULONG pos = 0;
 
                 if (remMode != 2) remMode = MyRequest(msgYesAllNoAbort, msgWantToRemoveLock, le->le_Path);
 

@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -178,6 +176,8 @@ STATIC void ScanSegments( struct List *list,
     struct DosResidentSeg *seg;
 
     seg = FindSegment(NULL, NULL, system);
+#elif defined(__AROS__)
+    struct Segment *seg = NULL; // FIXME
 #else
     struct Segment *seg;
 
@@ -339,16 +339,16 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('R','C','O','M'),
         WindowContents, VGroup,
 
-            Child, MyNListtreeObject(&comtree, "BAR,BAR,BAR,BAR,BAR,BAR,", &comtree_conhook, &comtree_deshook, &comtree_dsphook, &comtree_cmphook, &comtree_findhook, 3),
-            Child, MyBelowListview(&comtext, &comcount),
+            Child, (IPTR)MyNListtreeObject(&comtree, "BAR,BAR,BAR,BAR,BAR,BAR,", &comtree_conhook, &comtree_deshook, &comtree_dsphook, &comtree_cmphook, &comtree_findhook, 3),
+            Child, (IPTR)MyBelowListview(&comtext, &comcount),
 
-            Child, MyVSpace(4),
+            Child, (IPTR)MyVSpace(4),
 
             Child, HGroup, MUIA_Group_SameSize, TRUE,
-                Child, updateButton = MakeButton(txtUpdate),
-                Child, printButton  = MakeButton(txtPrint),
-                Child, removeButton = MakeButton(txtRemove),
-                Child, exitButton   = MakeButton(txtExit),
+                Child, (IPTR)(updateButton = MakeButton(txtUpdate)),
+                Child, (IPTR)(printButton  = MakeButton(txtPrint)),
+                Child, (IPTR)(removeButton = MakeButton(txtRemove)),
+                Child, (IPTR)(exitButton   = MakeButton(txtExit)),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)

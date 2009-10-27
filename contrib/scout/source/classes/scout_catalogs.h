@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -47,6 +45,20 @@ void SendCatalogList( STRPTR );
 
 APTR MakeCatalogsWinClass( void );
 
+#ifdef __AROS__
+struct IntLocaleBase
+{
+    struct LocaleBase        lb_LocaleBase;
+
+    struct IntLocale	    *lb_DefaultLocale;
+    struct IntLocale	    *lb_CurrentLocale;
+    struct SignalSemaphore   lb_LocaleLock;
+    struct SignalSemaphore   lb_CatalogLock;
+    struct MinList           lb_CatalogList;
+};
+
+#else
+
 #if !defined(__SASC)
 #pragma pack(2)
 #endif
@@ -61,4 +73,6 @@ struct IntLocaleBase
 
 #if !defined(__SASC)
 #pragma pack()
+#endif
+
 #endif

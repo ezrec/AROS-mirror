@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -74,6 +72,11 @@ struct UserGroupIFace*  IUserGroup;
 
 #if defined(__MORPHOS__)
 typedef LONG socklen_t;
+#endif
+
+#if defined(__AROS__)
+struct Library*         SocketBase;
+struct Library*         UserGroupBase;
 #endif
 
 extern int init_inet_daemon(void);
@@ -590,7 +593,7 @@ ULONG ExecuteCommand( STRPTR text )
             myrdargs->RDA_Source.CS_Buffer = buffer + len;
             myrdargs->RDA_Source.CS_Length = strlen (buffer) - len;
 
-            if ((arexx_list[i].mc_Parameters && (rdargs = ReadArgs (arexx_list[i].mc_Template, (LONG *) &cmdopts, myrdargs))) \
+            if ((arexx_list[i].mc_Parameters && (rdargs = ReadArgs (arexx_list[i].mc_Template, (IPTR *) &cmdopts, myrdargs))) \
               || (!arexx_list[i].mc_Parameters)) {
 
                rc = CallHookPkt(arexx_list[i].mc_Hook, NULL, &cmdopts[0]);
@@ -616,7 +619,7 @@ ULONG ExecuteCommand( STRPTR text )
                myrdargs->RDA_Source.CS_Buffer = buffer;
                myrdargs->RDA_Source.CS_Length = strlen (buffer);
 
-               if ((rdargs = ReadArgs (CMDOPT_TEMPLATE, (LONG *) &cmdopts, myrdargs)) != NULL) {
+               if ((rdargs = ReadArgs (CMDOPT_TEMPLATE, (IPTR *) &cmdopts, myrdargs)) != NULL) {
 
                   (*net_list[i].nc_func) (NULL);
                   FreeArgs (rdargs);

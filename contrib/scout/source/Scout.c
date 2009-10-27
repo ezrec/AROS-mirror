@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -40,10 +38,10 @@ extern struct  ExecBase *SysBase;
 
 struct Library          *MUIMasterBase;
 struct Library          *IdentifyBase;
-#if !defined(__MORPHOS__) && !defined(__amigaos4__)
+#if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
 struct MMUBase          *MMUBase;
 #endif
-#if defined(__SASC)
+#if defined(__SASC) || defined(__AROS__)
 struct RxsLib           *RexxSysBase;
 struct LocaleBase       *LocaleBase;
 #else
@@ -71,6 +69,7 @@ CONST_STRPTR decimalSeparator;
 
 BOOL amigaOS4;
 BOOL morphOS;
+BOOL arOS = FALSE;
 
 /*
 **  MUI
@@ -102,13 +101,13 @@ STATIC void fail1( void )
         DeleteMsgPort(ScoutPort);
     }
 
-    CloseScoutCatalog();
+    ClosescoutCatalog();
 
     if (RexxSysBase) {
         DROPINTERFACE(IRexxSys);
         CloseLibrary((struct Library *)RexxSysBase);
     }
-#if !defined(__MORPHOS__) && !defined(__amigaos4__)
+#if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
     if (MMUBase) {
         CloseLibrary((struct Library *)MMUBase);
     }
@@ -132,7 +131,15 @@ STATIC void fail( void )
     if (AP_Scout) {
         struct DiskObject *dob = NULL;
 
+#if defined(__AROS__)
+        GetAttr(MUIA_Application_DiskObject, AP_Scout, (APTR)&dob);
+        /*
+            Reason: Error: Variable oder Feld »__zune_val_storage«
+            als void deklariert
+        */
+#else
         get(AP_Scout, MUIA_Application_DiskObject, (APTR)&dob);
+#endif
         if (dob) FreeDiskObject(dob);
 
         MUI_DisposeObject(AP_Scout);
@@ -161,7 +168,7 @@ STATIC BOOL init1( void )
         return FALSE;
     }
 
-#if defined(__SASC)
+#if defined(__SASC) || defined(__AROS__)
     if ((RexxSysBase = (struct RxsLib *)MyOpenLibrary(RXSNAME, 0)) == NULL) {
 #else
     if ((RexxSysBase = MyOpenLibrary(RXSNAME, 0)) == NULL) {
@@ -177,12 +184,12 @@ STATIC BOOL init1( void )
         // just to keep SAS/C happy
     }
 
-#if !defined(__MORPHOS__) && !defined(__amigaos4__)
+#if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
     MMUBase = (struct MMUBase *)OpenLibrary(MMU_NAME, 43);
 #endif
 
     decimalSeparator = ","; // english separator for 1000s
-#if defined(__SASC)
+#if defined(__SASC) || defined(__AROS__)
     if ((LocaleBase = (struct LocaleBase *)OpenLibrary("locale.library", MYLIBVERSION)) != NULL) {
 #else
     if ((LocaleBase = OpenLibrary("locale.library", MYLIBVERSION)) != NULL) {
@@ -194,7 +201,7 @@ STATIC BOOL init1( void )
         }
     }
 
-    OpenScoutCatalog();
+    OpenscoutCatalog();
 
     myprocess = FindTask(NULL);
 
@@ -202,6 +209,9 @@ STATIC BOOL init1( void )
     morphOS = (FindResident("MorphOS") != NULL);
     Permit();
     amigaOS4 = !morphOS && (SysBase->LibNode.lib_Version >= 50);
+#ifdef __AROS__
+    arOS = TRUE;
+#endif
 
     if ((ScoutPort = CreateMsgPort()) == NULL) {
         return FALSE;

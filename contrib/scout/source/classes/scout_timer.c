@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -432,16 +430,16 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('T','I','M','R'),
         WindowContents, VGroup,
 
-            Child, MyNListviewObject(&timerlist, MakeID('T','I','L','V'), "BAR,BAR,BAR,BAR P=" MUIX_C ",BAR", &timerlist_con2hook, &timerlist_des2hook, &timerlist_dsp2hook, &timerlist_cmp2hook, TRUE),
-            Child, MyBelowListview(&timertext, &timercount),
+            Child, (IPTR)MyNListviewObject(&timerlist, MakeID('T','I','L','V'), "BAR,BAR,BAR,BAR P=" MUIX_C ",BAR", &timerlist_con2hook, &timerlist_des2hook, &timerlist_dsp2hook, &timerlist_cmp2hook, TRUE),
+            Child, (IPTR)MyBelowListview(&timertext, &timercount),
 
-            Child, MyVSpace(4),
+            Child, (IPTR)MyVSpace(4),
 
             Child, HGroup, MUIA_Group_SameSize, TRUE,
-                Child, updateButton = MakeButton(txtUpdate),
-                Child, printButton  = MakeButton(txtPrint),
-                Child, abortButton = MakeButton(txtAbort),
-                Child, exitButton   = MakeButton(txtExit),
+                Child, (IPTR)(updateButton = MakeButton(txtUpdate)),
+                Child, (IPTR)(printButton  = MakeButton(txtPrint)),
+                Child, (IPTR)(abortButton = MakeButton(txtAbort)),
+                Child, (IPTR)(exitButton   = MakeButton(txtExit)),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)

@@ -99,7 +99,7 @@ BOOL SetEnvVar( STRPTR name, STRPTR buffer, ULONG size, ULONG flags, BOOL save )
 #define SetEnvVarSimple(name, buffer, save) SetEnvVar((name), (buffer), strlen((buffer)), GVF_GLOBAL_ONLY, (save))
 
 /* function for pooled memory allocations */
-#if defined(__amigaos4__) || defined(__MORPHOS__)
+#if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
 #define tbCreatePool( flags, puddleSize, threshSize)        CreatePool(flags, puddleSize, threshSize)
 #define tbAllocPooled( poolHeader, memSize)                 AllocPooled(poolHeader, memSize)
 #define tbAllocVecPooled( poolHeader, memSize)              AllocVecPooled(poolHeader, memSize)
@@ -116,14 +116,24 @@ void ASM tbDeletePool( REG(a0, void *poolHeader) );
 #endif
 
 #ifndef __MORPHOS__
+#if defined(__AROS__)
+IPTR DoSuperNew(struct IClass *cl, Object *obj, Tag tag1, ...);
+#else
 ULONG VARARGS68K STDARGS DoSuperNew( struct IClass *cl, Object *obj, ... );
 #endif
+#endif
+
 APTR MakeButton( CONST_STRPTR txt );
 APTR MakeCheckmark( CONST_STRPTR txt );
+
+#if defined(__AROS__)
+#define xget XGET
+#else
 #if defined(__GNUC__)
 #define xget(obj, attr) ({ULONG b = 0; GetAttr(attr, obj, (APTR)&b); b;})
 #else
 ULONG xget( Object *obj, ULONG attr );
+#endif
 #endif
 
 #if defined(__amigaos4__)

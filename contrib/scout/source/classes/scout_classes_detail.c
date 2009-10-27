@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -104,7 +102,7 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('.','C','L','S'),
         WindowContents, VGroup,
 
-            Child, group = ScrollgroupObject,
+            Child, (IPTR)(group = (Object *)ScrollgroupObject,
                 MUIA_CycleChain, TRUE,
                 MUIA_Scrollgroup_FreeHoriz, FALSE,
                 MUIA_Scrollgroup_Contents, VGroupV,
@@ -113,48 +111,48 @@ STATIC ULONG mNew( struct IClass *cl,
                         GroupFrame,
                         Child, ColGroup(2),
                             Child, MyLabel2(txtClassID2),
-                            Child, texts[ 0] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 0] = MyTextObject6()),
                             Child, MyLabel2(txtAddress2),
-                            Child, texts[ 1] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 1] = MyTextObject6()),
                             Child, MyLabel2(txtClassSuper),
-                            Child, texts[ 2] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 2] = MyTextObject6()),
                             Child, MyLabel2(txtClassInstOffset),
-                            Child, texts[ 3] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 3] = MyTextObject6()),
                             Child, MyLabel2(txtClassInstSize),
-                            Child, texts[ 4] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 4] = MyTextObject6()),
                             Child, MyLabel2(txtClassEntry),
-                            Child, texts[ 5] = DisassemblerButtonObject,
-                            End,
+                            Child, (IPTR)(texts[ 5] = (Object *)DisassemblerButtonObject,
+                            End),
                             Child, MyLabel2(txtClassSubEntry),
-                            Child, texts[ 6] = DisassemblerButtonObject,
-                            End,
+                            Child, (IPTR)(texts[ 6] = (Object *)DisassemblerButtonObject,
+                            End),
                             Child, MyLabel2(txtClassData),
-                            Child, texts[ 7] = DisassemblerButtonObject,
+                            Child, (IPTR)(texts[ 7] = (Object *)DisassemblerButtonObject,
                                 MUIA_DisassemblerButton_ForceHexDump, TRUE,
-                            End,
+                            End),
                             Child, MyLabel2(txtClassUserData),
-                            Child, texts[ 8] = DisassemblerButtonObject,
+                            Child, (IPTR)(texts[ 8] = (Object *)DisassemblerButtonObject,
                                 MUIA_DisassemblerButton_ForceHexDump, TRUE,
-                            End,
+                            End),
                             Child, MyLabel2(txtClassSubclassCount),
-                            Child, texts[ 9] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 9] = (Object *)MyTextObject6()),
                             Child, MyLabel2(txtClassObjectCount),
-                            Child, texts[10] = MyTextObject6(),
+                            Child, (IPTR)(texts[10] = (Object *)MyTextObject6()),
                             Child, MyLabel2(txtClassFlags2),
-                            Child, texts[11] = FlagsButtonObject,
+                            Child, (IPTR)(texts[11] = (Object *)FlagsButtonObject,
                                 MUIA_FlagsButton_Type, MUIV_FlagsButton_Type_Long,
-                                MUIA_FlagsButton_Title, txtClassFlags,
-                                MUIA_FlagsButton_BitArray, classFlags,
-                                MUIA_FlagsButton_WindowTitle, txtClassFlagsTitle,
-                            End,
+                                MUIA_FlagsButton_Title, (IPTR)txtClassFlags,
+                                MUIA_FlagsButton_BitArray, (IPTR)classFlags,
+                                MUIA_FlagsButton_WindowTitle, (IPTR)txtClassFlagsTitle,
+                            End),
                             Child, MyLabel2(txtClassReserved),
-                            Child, texts[12] = MyTextObject6(),
+                            Child, (IPTR)(texts[12] = MyTextObject6()),
                         End,
                     End,
                 End,
-            End,
-            Child, MyVSpace(4),
-            Child, exitButton = MakeButton(txtExit),
+            End),
+            Child, (IPTR)MyVSpace(4),
+            Child, (IPTR)(exitButton = MakeButton(txtExit)),
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
     {
@@ -192,7 +190,7 @@ STATIC ULONG mSet( struct IClass *cl,
     struct TagItem *tags, *tag;
 
     tags = msg->ops_AttrList;
-    while ((tag = NextTagItem(&tags)) != NULL) {
+    while ((tag = NextTagItem((APTR)&tags)) != NULL) {
         switch (tag->ti_Tag) {
             case MUIA_Window_ParentWindow:
                 DoMethod(obj, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, MUIV_Notify_Application, 5, MUIM_Application_PushMethod, (APTR)tag->ti_Data, 2, MUIM_Window_RemChildWindow, obj);

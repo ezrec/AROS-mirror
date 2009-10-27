@@ -2,8 +2,24 @@
 Scout Open Source - ChangeLog
 -----------------------------
 
-$Id: ChangeLog,v 1.141 2008/12/01 14:16:59 itix Exp $
+$Id: ChangeLog,v 1.146 2009/10/21 22:21:05 marust Exp $
 $Source: /cvsroot/scoutos/scoutos/source/ChangeLog,v $
+
+2009-10-21  Matthias Rustler <mrustler@gmx.de>
+  * Removed hint "You must not use this source code to gain profit of any kind!"
+    because this isn't compatible with the GPL.
+  * Added CPU defines for AROS
+
+2009-10-19  Matthias Rustler <mrustler@gmx.de>
+  * Final preparations for 1st succesfull run of AROS version:
+    - created main() function because start with -nostartup didn't work
+    - Crash in DoSuperNew fixed.
+
+2009-10-19  Matthias Rustler <mrustler@gmx.de>
+  * Lots of compiler warnings removed.
+
+2009-10-16  Matthias Rustler <mrustler@gmx.de>
+  * First steps towards AROS port.
 
 2008-12-01  Ilkka Lehtoranta <ilkleht@isoveli.org>
  * scout_expansions.c: fixed bug in pciscan code and added support for

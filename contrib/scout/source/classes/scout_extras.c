@@ -17,15 +17,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
  * @author Richard Körber <rkoerber@gmx.de>
  */
 
-
+#if defined(__AROS__)
+    #define NO_INLINE_STDARG
+    // Needed for NList classes
+#endif
 
 #include "system_headers.h"
 
@@ -78,7 +79,7 @@ struct Library *MyOpenLibrary( CONST_STRPTR libname,
     struct Library *libbase;
 
     if (!(libbase = OpenLibrary(libname, version))) {
-        Printf("Failed to open %s version %ld!\n", libname, version);
+        Printf("Failed to open %s version %d!\n", libname, version);
     }
 
     return libbase;
@@ -322,7 +323,7 @@ void InsertSortedEntry( APTR list,
 APTR GetActiveEntry( APTR list )
 {
     APTR result = NULL;
-   
+
     if (list) DoMethod(list, MUIM_NList_GetEntry, MUIV_NList_GetEntry_Active, &result);
 
     return result;
@@ -523,6 +524,8 @@ BOOL isValidPointer( APTR ptr )
             return TRUE;
         }
     }
+#elif defined(__AROS__)
+    return FALSE;  // FIXME
 #else
     if (MMUBase) {
         ULONG flags;
@@ -553,9 +556,9 @@ void healstring( STRPTR s )
     }
 }
 
-STRPTR nonetest( STRPTR s )
+CONST_STRPTR nonetest( CONST_STRPTR s )
 {
-    STRPTR t;
+    CONST_STRPTR t;
     TEXT c;
 
     // very simple test for sensible names, may cause Enforcer-Hits for wrong >pointers
@@ -640,6 +643,8 @@ BOOL IsReal( STRPTR text )
 BOOL IsHex( STRPTR text,
             LONG *result )
 {
+    // FIXME: 64 bit AROS?
+
     ULONG i;
 
     *result = 0;
@@ -1150,7 +1155,7 @@ APTR GetApplication( void )
 
         DoMethod(app, MUIM_Notify, MUIA_Application_Iconified,  FALSE,               win,                     1, MUIM_MainWin_UpdateAll);
 
-#if !defined(__amigaos4__) && !defined(__MORPHOS__)
+#if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
         Forbid();
         pp = (struct PatchPort *)FindPort(PATCHPORT_NAME);
         sp = (struct SetManPort *)FindPort(SETMANPORT_NAME);

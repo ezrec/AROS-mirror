@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -342,17 +340,17 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('I','N','T','E'),
         WindowContents, VGroup,
 
-            Child, MyNListtreeObject(&inttree, "BAR,BAR,BAR,BAR P=" MUIX_C ",BAR P=" MUIX_R ",BAR,BAR", &inttree_conhook, &inttree_deshook, &inttree_dsphook, NULL, &inttree_findhook, 1),
-            Child, MyBelowListview(&inttext, &intcount),
+            Child, (IPTR)MyNListtreeObject(&inttree, "BAR,BAR,BAR,BAR P=" MUIX_C ",BAR P=" MUIX_R ",BAR,BAR", &inttree_conhook, &inttree_deshook, &inttree_dsphook, NULL, &inttree_findhook, 1),
+            Child, (IPTR)MyBelowListview(&inttext, &intcount),
 
-            Child, MyVSpace(4),
+            Child, (IPTR)MyVSpace(4),
 
             Child, HGroup, MUIA_Group_SameSize, TRUE,
-                Child, updateButton = MakeButton(txtUpdate),
-                Child, printButton  = MakeButton(txtPrint),
-                Child, removeButton = MakeButton(txtRemove),
-                Child, moreButton   = MakeButton(txtMore),
-                Child, exitButton   = MakeButton(txtExit),
+                Child, (IPTR)(updateButton = MakeButton(txtUpdate)),
+                Child, (IPTR)(printButton  = MakeButton(txtPrint)),
+                Child, (IPTR)(removeButton = MakeButton(txtRemove)),
+                Child, (IPTR)(moreButton   = MakeButton(txtMore)),
+                Child, (IPTR)(exitButton   = MakeButton(txtExit)),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
@@ -480,8 +478,8 @@ STATIC ULONG mMore( struct IClass *cl,
             if ((stricmp(ie->ie_Type, "HANDLER") == 0 && ie->ie_Addr != NULL) || stricmp(ie->ie_Type, "SERVER_NODE") == 0) {
                 APTR detailWin;
 
-                if  ((detailWin = InterruptsDetailWindowObject,
-                        MUIA_Window_ParentWindow, obj,
+                if  ((detailWin = (Object *)InterruptsDetailWindowObject,
+                        MUIA_Window_ParentWindow, (IPTR)obj,
                     End) != NULL) {
                     COLLECT_RETURNIDS;
                     set(detailWin, MUIA_InterruptsDetailWin_Interrupt, ie);

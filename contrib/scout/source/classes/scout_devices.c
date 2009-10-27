@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -214,18 +212,22 @@ STATIC void IterateList( void (* callback)( struct DeviceEntry *de, void *userDa
 
             stccpy(de->de_Type, GetNodeType(dd->dd_Library.lib_Node.ln_Type), sizeof(de->de_Type));
 
-        #if defined(__amigaos4__)
-            if (dd->dd_Library.lib_ABIVersion == LIBABI_MIFACE) {
-        #elif defined(__MORPHOS__)
-            if (*(UBYTE *)(((struct JumpEntry *)dd) - 1)->je_JumpAddress == 0xff) {
+        #if defined(__AROS__)
+            stccpy(de->de_CodeType, txtDeviceCodeTypeNative, sizeof(de->de_CodeType));
         #else
-            // OS3 is 68k only
-            if (FALSE) {
-        #endif
+            #if defined(__amigaos4__)
+                if (dd->dd_Library.lib_ABIVersion == LIBABI_MIFACE) {
+            #elif defined(__MORPHOS__)
+                if (*(UBYTE *)(((struct JumpEntry *)dd) - 1)->je_JumpAddress == 0xff) {
+            #else
+                // OS3 is 68k only
+                if (FALSE) {
+            #endif
                 stccpy(de->de_CodeType, txtDeviceCodeTypePPC, sizeof(de->de_CodeType));
             } else {
                 stccpy(de->de_CodeType, txtDeviceCodeType68k, sizeof(de->de_CodeType));
             }
+        #endif // __AROS__
 
             AddTail((struct List *)&tmplist, (struct Node *)de);
         }
@@ -273,22 +275,22 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('D','E','V','S'),
         WindowContents, VGroup,
 
-            Child, MyNListviewObject(&devlist, MakeID('D','E','L','V'), "BAR,BAR,BAR P=" MUIX_C ",BAR P=" MUIX_R ",BAR P=" MUIX_C ",BAR P=" MUIX_R ",BAR P=" MUIX_R ",BAR P=" MUIX_C, &devlist_con2hook, &devlist_des2hook, &devlist_dsp2hook, &devlist_cmp2hook, TRUE),
-            Child, MyBelowListview(&devtext, &devcount),
+            Child, (IPTR)MyNListviewObject(&devlist, MakeID('D','E','L','V'), "BAR,BAR,BAR P=" MUIX_C ",BAR P=" MUIX_R ",BAR P=" MUIX_C ",BAR P=" MUIX_R ",BAR P=" MUIX_R ",BAR P=" MUIX_C, &devlist_con2hook, &devlist_des2hook, &devlist_dsp2hook, &devlist_cmp2hook, TRUE),
+            Child, (IPTR)MyBelowListview(&devtext, &devcount),
 
-            Child, MyVSpace(4),
+            Child, (IPTR)MyVSpace(4),
 
             Child, HGroup, MUIA_Group_SameSize, TRUE,
-                Child, priorityButton = MakeButton(txtPriority),
-                Child, removeButton   = MakeButton(txtRemove),
-                Child, funcButton     = MakeButton(txtFunctions),
+                Child, (IPTR)(priorityButton = MakeButton(txtPriority)),
+                Child, (IPTR)(removeButton   = MakeButton(txtRemove)),
+                Child, (IPTR)(funcButton     = MakeButton(txtFunctions)),
             End,
 
             Child, HGroup, MUIA_Group_SameSize, TRUE,
-                Child, updateButton   = MakeButton(txtUpdate),
-                Child, printButton    = MakeButton(txtPrint),
-                Child, moreButton     = MakeButton(txtMore),
-                Child, exitButton     = MakeButton(txtExit),
+                Child, (IPTR)(updateButton   = MakeButton(txtUpdate)),
+                Child, (IPTR)(printButton    = MakeButton(txtPrint)),
+                Child, (IPTR)(moreButton     = MakeButton(txtMore)),
+                Child, (IPTR)(exitButton     = MakeButton(txtExit)),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
@@ -437,11 +439,11 @@ STATIC ULONG mMore( struct IClass *cl,
         if ((de = (struct DeviceEntry *)GetActiveEntry(dwd->dwd_DeviceList)) != NULL) {
             APTR detailWin;
 
-            if ((detailWin = DevicesDetailWindowObject,
-                    MUIA_Window_Title, de->de_Name,
-                    MUIA_Window_ParentWindow, obj,
+            if ((detailWin = (Object *)(DevicesDetailWindowObject,
+                    MUIA_Window_Title, (IPTR)de->de_Name,
+                    MUIA_Window_ParentWindow, (IPTR)obj,
                     MUIA_Window_MaxChildWindowCount, (opts.SingleWindows) ? 1 : 0,
-                End) != NULL) {
+                End)) != NULL) {
                 COLLECT_RETURNIDS;
                 set(detailWin, MUIA_DevicesDetailWin_Device, de);
                 set(detailWin, MUIA_Window_Open, TRUE);
@@ -463,8 +465,8 @@ STATIC ULONG mFunctions( struct IClass *cl,
     if ((de = (struct DeviceEntry *)GetActiveEntry(dwd->dwd_DeviceList)) != NULL) {
         APTR funcWin;
 
-        if ((funcWin = FunctionsWindowObject,
-                MUIA_Window_ParentWindow, obj,
+        if ((funcWin = (Object *)FunctionsWindowObject,
+                MUIA_Window_ParentWindow, (IPTR)obj,
             End) != NULL) {
             DoMethod(funcWin, MUIM_FunctionsWin_ShowFunctions, MUIV_FunctionsWin_NodeType_Device, de->de_Addr, de->de_Name);
         }

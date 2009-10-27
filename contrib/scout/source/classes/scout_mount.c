@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -411,16 +409,16 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('M','O','D','E'),
         WindowContents, VGroup,
 
-            Child, MyNListviewObject(&mountlist, MakeID('M','D','L','V'), "BAR,BAR,BAR P=" MUIX_R ",BAR P=" MUIX_R ",BAR P=" MUIX_C ",BAR P=" MUIX_C ",BAR,BAR P=" MUIX_R ",BAR", &mountlist_con2hook, &mountlist_des2hook, &mountlist_dsp2hook, &mountlist_cmp2hook, TRUE),
-            Child, MyBelowListview (&mounttext, &mountcount),
+            Child, (IPTR)MyNListviewObject(&mountlist, MakeID('M','D','L','V'), "BAR,BAR,BAR P=" MUIX_R ",BAR P=" MUIX_R ",BAR P=" MUIX_C ",BAR P=" MUIX_C ",BAR,BAR P=" MUIX_R ",BAR", &mountlist_con2hook, &mountlist_des2hook, &mountlist_dsp2hook, &mountlist_cmp2hook, TRUE),
+            Child, (IPTR)MyBelowListview (&mounttext, &mountcount),
 
-            Child, MyVSpace(4),
+            Child, (IPTR)MyVSpace(4),
 
             Child, HGroup, MUIA_Group_SameSize, TRUE,
-                Child, updateButton = MakeButton(txtUpdate),
-                Child, printButton  = MakeButton(txtPrint),
-                Child, moreButton   = MakeButton(txtMore),
-                Child, exitButton   = MakeButton(txtExit),
+                Child, (IPTR)(updateButton = MakeButton(txtUpdate)),
+                Child, (IPTR)(printButton  = MakeButton(txtPrint)),
+                Child, (IPTR)(moreButton   = MakeButton(txtMore)),
+                Child, (IPTR)(exitButton   = MakeButton(txtExit)),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
@@ -515,8 +513,8 @@ STATIC ULONG mMore( struct IClass *cl,
         if ((me = (struct MountEntry *)GetActiveEntry(mwd->mwd_MountList)) != NULL) {
             APTR detailWin;
 
-            if ((detailWin = MountsDetailWindowObject,
-                    MUIA_Window_ParentWindow, obj,
+            if ((detailWin = (Object *)MountsDetailWindowObject,
+                    MUIA_Window_ParentWindow, (IPTR)obj,
                 End) != NULL) {
                 COLLECT_RETURNIDS;
                 set(detailWin, MUIA_MountsDetailWin_Mount, me);

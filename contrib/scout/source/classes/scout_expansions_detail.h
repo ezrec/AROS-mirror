@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -30,7 +28,11 @@
 objects/scout_expansions_detail.c
  */
 
-#define ExpansionsDetailWindowObject        NewObject(ExpansionsDetailWinClass->mcc_Class, NULL
+#if defined(__AROS__)
+    #define ExpansionsDetailWindowObject  BOOPSIOBJMACRO_START(ExpansionsDetailWinClass->mcc_Class)
+#else
+    #define ExpansionsDetailWindowObject  NewObject(ExpansionsDetailWinClass->mcc_Class, NULL
+#endif
 
 APTR MakeExpansionsDetailWinClass( void );
 

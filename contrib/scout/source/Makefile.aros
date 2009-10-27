@@ -1,0 +1,218 @@
+PROJECT=            Scout
+TARGET=             $(PROJECT).aros
+
+VERSION=            37
+
+OUT=                Scout
+
+CC=                 i386-aros-gcc
+LD=                 i386-aros-gcc
+STRIP=              i386-aros-strip
+RM=                 rm -f
+MKDIR=              mkdir
+FLEXCAT=            flexcat
+
+OBJDIR=             .obj_aros
+CLASSESDIR=         classes
+EXTRASRC=           extrasrc
+
+OPTIMIZE=           -O0
+DEFINE=
+CFLAGS=             -Wall -g -Wno-pointer-sign -I. -I./includearos -I./classes -I./tbLib -c
+#CFLAGS=             -Wall -g -Wno-strict-aliasing -Wno-pointer-sign -I. -I./includearos -I./classes -I./tbLib -c
+LFLAGS=             -g
+
+LOCALE=             locale
+
+OBJECTS= \
+   $(OBJDIR)/Scout.o \
+   $(OBJDIR)/scout_logo.o \
+   $(OBJDIR)/scout_net.o \
+   $(OBJDIR)/$(CLASSESDIR)/fontdisplay_class.o \
+   $(OBJDIR)/$(CLASSESDIR)/port_button.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_about.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_allocations.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_arexx.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_asm.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_assigns.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_audiomode.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_audiomode_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_catalogs.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_classes.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_classes_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_commands.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_commodity.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_commodity_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_customclasses.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_devices.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_devices_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_expansions.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_expansions_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_extras.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_flags.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_fonts.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_fonts_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_functions.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_inputhandlers.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_inputhandlers_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_interrupts.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_interrupts_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_libraries.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_libraries_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_locks.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_lowmemory.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_lowmemory_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_main.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_memory.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_memory_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_mount.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_mount_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_parentwindow.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_patches.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_ports.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_ports_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_print.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_priority.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_resethandlers.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_resethandlers_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_residents.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_residents_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_resources.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_resources_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_screenmode.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_screenmode_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_semaphores.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_signal.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_system.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_tasks.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_tasks_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_timer.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_vectors.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_version.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_windows.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_windows_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/disassembler_button.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_disassembler.o \
+   $(OBJDIR)/$(CLASSESDIR)/flags_button.o \
+   $(OBJDIR)/$(CLASSESDIR)/task_button.o \
+   $(OBJDIR)/hexdump.o \
+   $(OBJDIR)/aros.o \
+   $(OBJDIR)/scout_cat.o \
+   $(OBJDIR)/SmartReadArgs.o \
+   $(OBJDIR)/all_gcc.o
+
+HEADERS=system_headers.h startup.h scout.h \
+   scout_logo.h scout_net.h \
+   scout_defs.h scout_tags.h startup_defs.h \
+   $(CLASSESDIR)/fontdisplay_class.h \
+   $(CLASSESDIR)/port_button.h \
+   $(CLASSESDIR)/scout_about.h \
+   $(CLASSESDIR)/scout_allocations.h \
+   $(CLASSESDIR)/scout_arexx.h \
+   $(CLASSESDIR)/scout_asm.h \
+   $(CLASSESDIR)/scout_assigns.h \
+   $(CLASSESDIR)/scout_audiomode.h \
+   $(CLASSESDIR)/scout_audiomode_detail.h \
+   $(CLASSESDIR)/scout_catalogs.h \
+   $(CLASSESDIR)/scout_classes.h \
+   $(CLASSESDIR)/scout_classes_detail.h \
+   $(CLASSESDIR)/scout_commands.h \
+   $(CLASSESDIR)/scout_commodity.h \
+   $(CLASSESDIR)/scout_commodity_detail.h \
+   $(CLASSESDIR)/scout_customclasses.h \
+   $(CLASSESDIR)/scout_devices.h \
+   $(CLASSESDIR)/scout_devices_detail.h \
+   $(CLASSESDIR)/scout_expansions.h \
+   $(CLASSESDIR)/scout_expansions_detail.h \
+   $(CLASSESDIR)/scout_extras.h \
+   $(CLASSESDIR)/scout_flags.h \
+   $(CLASSESDIR)/scout_fonts.h \
+   $(CLASSESDIR)/scout_fonts_detail.h \
+   $(CLASSESDIR)/scout_functions.h \
+   $(CLASSESDIR)/scout_inputhandlers.h \
+   $(CLASSESDIR)/scout_interrupts.h \
+   $(CLASSESDIR)/scout_interrupts_detail.h \
+   $(CLASSESDIR)/scout_libraries.h \
+   $(CLASSESDIR)/scout_libraries_detail.h \
+   $(CLASSESDIR)/scout_locks.h \
+   $(CLASSESDIR)/scout_lowmemory.h \
+   $(CLASSESDIR)/scout_lowmemory_detail.h \
+   $(CLASSESDIR)/scout_main.h \
+   $(CLASSESDIR)/scout_memory.h \
+   $(CLASSESDIR)/scout_memory_detail.h \
+   $(CLASSESDIR)/scout_mount.h \
+   $(CLASSESDIR)/scout_mount_detail.h \
+   $(CLASSESDIR)/scout_parentwindow.h \
+   $(CLASSESDIR)/scout_patches.h \
+   $(CLASSESDIR)/scout_ports.h \
+   $(CLASSESDIR)/scout_ports_detail.h \
+   $(CLASSESDIR)/scout_print.h \
+   $(CLASSESDIR)/scout_priority.h \
+   $(CLASSESDIR)/scout_resethandlers.h \
+   $(CLASSESDIR)/scout_residents.h \
+   $(CLASSESDIR)/scout_residents_detail.h \
+   $(CLASSESDIR)/scout_resources.h \
+   $(CLASSESDIR)/scout_resources_detail.h \
+   $(CLASSESDIR)/scout_screenmode.h \
+   $(CLASSESDIR)/scout_screenmode_detail.h \
+   $(CLASSESDIR)/scout_semaphores.h \
+   $(CLASSESDIR)/scout_signal.h \
+   $(CLASSESDIR)/scout_system.h \
+   $(CLASSESDIR)/scout_tasks.h \
+   $(CLASSESDIR)/scout_tasks_detail.h \
+   $(CLASSESDIR)/scout_timer.h \
+   $(CLASSESDIR)/scout_vectors.h \
+   $(CLASSESDIR)/scout_version.h \
+   $(CLASSESDIR)/scout_windows.h \
+   $(CLASSESDIR)/scout_windows_detail.h \
+   $(CLASSESDIR)/scout_disassembler.h \
+   $(CLASSESDIR)/disassembler_button.h \
+   $(CLASSESDIR)/flags_button.h \
+   $(CLASSESDIR)/task_button.h \
+   hexdump.h \
+   scout_cat.h \
+   SmartReadArgs.h \
+   include/extra.h
+
+LIBS = -L./tbLib -ltblib -lm -lmui
+
+all: $(OBJDIR) $(HEADERS) $(TARGET)
+
+$(OBJDIR):
+	@$(MKDIR) $(OBJDIR)
+	@$(MKDIR) $(OBJDIR)/$(CLASSESDIR)
+
+$(OBJDIR)/%.o: %.c
+	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINE) $< -o $@
+
+$(LOCALE)/%.catalog: $(LOCALE)/%.ct
+	$(FLEXCAT) $(LOCALE)/scout.cd $< catalog $@
+
+$(TARGET): $(OBJECTS) tbLib/libtblib.a
+	$(LD) $(OBJECTS) -o $@.debug $(LIBS) $(LFLAGS)
+	$(STRIP) --strip-unneeded --remove-section=.comment $@.debug -o $@
+
+scout_cat.h scout_cat.c : $(LOCALE)/scout.cd
+	$(FLEXCAT) locale/scout.cd scout_cat.h=C_h.sd scout_cat.c=C_c.sd
+
+$(OBJDIR)/scout_cat.o: scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_customclasses.o: $(CLASSESDIR)/scout_customclasses.c
+	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINE) $< -o $@
+
+$(OBJDIR)/$(CLASSESDIR)/scout_about.o: $(CLASSESDIR)/scout_about.c $(CLASSESDIR)/scout_version.h Scout_rev.h
+	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINE) $< -o $@
+
+$(OBJDIR)/$(CLASSESDIR)/scout_version.o: $(CLASSESDIR)/scout_version.c $(CLASSESDIR)/scout_version.h Scout_rev.h
+	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINE) $< -o $@
+
+$(OBJDIR)/all_gcc.o: all_gcc.c $(EXTRASRC)/init_inet_daemon.c $(EXTRASRC)/set_socket_stdio.c $(EXTRASRC)/vasprintf.c
+
+tbLib/libtblib.a:
+	@cd tbLib; make -f Makefile.aros
+
+clean:
+	-$(RM) $(OBJDIR)/*.o $(OBJDIR)/$(CLASSESDIR)/*.o $(TARGET) $(TARGET).debug $(TARGET).dump
+	@cd tbLib; make -f Makefile.aros $@
+
+realclean: clean

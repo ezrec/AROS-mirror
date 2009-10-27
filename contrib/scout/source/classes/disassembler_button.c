@@ -47,7 +47,7 @@ static ULONG mSet( struct IClass *cl,
     struct TagItem *tags, *tag;
 
     tags = msg->ops_AttrList;
-    while ((tag = NextTagItem(&tags)) != NULL) {
+    while ((tag = NextTagItem((APTR)&tags)) != NULL) {
         switch (tag->ti_Tag) {
             case MUIA_DisassemblerButton_Address:
                 dbd->dbd_Address = (APTR)tag->ti_Data;
@@ -69,7 +69,7 @@ static ULONG mGet( struct IClass *cl,
                    struct opGet *msg )
 {
     struct DisassemblerButtonData *dbd = INST_DATA(cl, obj);
-    ULONG *store = msg->opg_Storage;
+    IPTR *store = msg->opg_Storage;
 
     switch (msg->opg_AttrID) {
         case MUIA_DisassemblerButton_Address:
@@ -103,9 +103,9 @@ static ULONG mDisassemble( struct IClass *cl,
 
     parentWin = (APTR)xget(obj, MUIA_WindowObject);
 
-    if ((disasmWin = DisassemblerWindowObject,
-            MUIA_Window_ParentWindow, parentWin,
-            MUIA_DisassemblerWin_Address, dbd->dbd_Address,
+    if ((disasmWin = (Object *)DisassemblerWindowObject,
+            MUIA_Window_ParentWindow, (IPTR)parentWin,
+            MUIA_DisassemblerWin_Address, (IPTR)dbd->dbd_Address,
             MUIA_DisassemblerWin_ForceHexDump, dbd->dbd_ForceHexDump,
         End) != NULL) {
         COLLECT_RETURNIDS;

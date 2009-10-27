@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -72,43 +70,43 @@ STATIC void SetDetails( struct IClass *cl,
                         MySetContents(amdwd->amdwd_Texts[ 0], ame->ame_Name);
                         MySetContents(amdwd->amdwd_Texts[ 1], ame->ame_Id);
 
-                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Driver, tmp, AHIDB_BufferLen, PATH_LENGTH, TAG_DONE);
+                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Driver, (Tag)tmp, AHIDB_BufferLen, PATH_LENGTH, TAG_DONE);
                         MySetContents(amdwd->amdwd_Texts[ 2], "DEVS:AHI/%s.audio", tmp);
 
-                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Version, tmp, AHIDB_BufferLen, PATH_LENGTH, TAG_DONE);
+                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Version, (Tag)tmp, AHIDB_BufferLen, PATH_LENGTH, TAG_DONE);
                         MySetContentsHealed(amdwd->amdwd_Texts[ 3], "%s", tmp);
 
-                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Author, tmp, AHIDB_BufferLen, PATH_LENGTH, TAG_DONE);
+                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Author, (Tag)tmp, AHIDB_BufferLen, PATH_LENGTH, TAG_DONE);
                         MySetContentsHealed(amdwd->amdwd_Texts[ 4], "%s", tmp);
 
-                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Copyright, tmp, AHIDB_BufferLen, PATH_LENGTH, TAG_DONE);
+                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Copyright, (Tag)tmp, AHIDB_BufferLen, PATH_LENGTH, TAG_DONE);
                         MySetContentsHealed(amdwd->amdwd_Texts[ 5], "%s", tmp);
 
-                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Annotation, tmp, AHIDB_BufferLen, PATH_LENGTH, TAG_DONE);
+                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Annotation, (Tag)tmp, AHIDB_BufferLen, PATH_LENGTH, TAG_DONE);
                         MySetContentsHealed(amdwd->amdwd_Texts[ 6], "%s", tmp);
 
-                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Bits, &bits,
-                                                                 AHIDB_MaxChannels, &maxchannels,
-                                                                 AHIDB_MinMixFreq, &minfreq,
-                                                                 AHIDB_MaxMixFreq, &maxfreq,
-                                                                 AHIDB_MaxMixFreq, &maxfreq,
-                                                                 AHIDB_Frequencies, &numfreqs,
-                                                                 AHIDB_MaxPlaySamples, &maxplaysamp,
-                                                                 AHIDB_MaxRecordSamples, &maxrecsamp,
-                                                                 AHIDB_Volume, &volume,
-                                                                 AHIDB_Stereo, &stereo,
-                                                                 AHIDB_Panning, &panning,
-                                                                 AHIDB_HiFi, &hifi,
-                                                                 AHIDB_PingPong, &pingpong,
-                                                                 AHIDB_Record, &record,
-                                                                 AHIDB_FullDuplex, &fullduplex,
-                                                                 AHIDB_Realtime, &realtime,
-                                                                 AHIDB_MinMonitorVolume, &minmonivol,
-                                                                 AHIDB_MaxMonitorVolume, &maxmonivol,
-                                                                 AHIDB_MinInputGain, &mininputgain,
-                                                                 AHIDB_MaxInputGain, &maxinputgain,
-                                                                 AHIDB_MinOutputVolume, &minoutputvol,
-                                                                 AHIDB_MaxOutputVolume, &maxoutputvol,
+                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Bits, (Tag)&bits,
+                                                                 AHIDB_MaxChannels, (Tag)&maxchannels,
+                                                                 AHIDB_MinMixFreq, (Tag)&minfreq,
+                                                                 AHIDB_MaxMixFreq, (Tag)&maxfreq,
+                                                                 AHIDB_MaxMixFreq, (Tag)&maxfreq,
+                                                                 AHIDB_Frequencies, (Tag)&numfreqs,
+                                                                 AHIDB_MaxPlaySamples, (Tag)&maxplaysamp,
+                                                                 AHIDB_MaxRecordSamples, (Tag)&maxrecsamp,
+                                                                 AHIDB_Volume, (Tag)&volume,
+                                                                 AHIDB_Stereo, (Tag)&stereo,
+                                                                 AHIDB_Panning, (Tag)&panning,
+                                                                 AHIDB_HiFi, (Tag)&hifi,
+                                                                 AHIDB_PingPong, (Tag)&pingpong,
+                                                                 AHIDB_Record, (Tag)&record,
+                                                                 AHIDB_FullDuplex, (Tag)&fullduplex,
+                                                                 AHIDB_Realtime, (Tag)&realtime,
+                                                                 AHIDB_MinMonitorVolume, (Tag)&minmonivol,
+                                                                 AHIDB_MaxMonitorVolume, (Tag)&maxmonivol,
+                                                                 AHIDB_MinInputGain, (Tag)&mininputgain,
+                                                                 AHIDB_MaxInputGain, (Tag)&maxinputgain,
+                                                                 AHIDB_MinOutputVolume, (Tag)&minoutputvol,
+                                                                 AHIDB_MaxOutputVolume, (Tag)&maxoutputvol,
                                                                  TAG_DONE);
 
                         MySetContents(amdwd->amdwd_Texts[ 7], "%lD", bits);
@@ -177,7 +175,7 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('.','A','M','D'),
         WindowContents, VGroup,
 
-            Child, group = ScrollgroupObject,
+            Child, (IPTR)(group = (Object *)ScrollgroupObject,
                 MUIA_CycleChain, TRUE,
                 MUIA_Scrollgroup_FreeHoriz, FALSE,
                 MUIA_Scrollgroup_Contents, VGroupV,
@@ -186,57 +184,57 @@ STATIC ULONG mNew( struct IClass *cl,
                         GroupFrame,
                         Child, ColGroup(2),
                             Child, MyLabel2(txtName2),
-                            Child, texts[ 0] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 0] = MyTextObject6()),
                             Child, MyLabel2(txtAudioModeID2),
-                            Child, texts[ 1] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 1] = MyTextObject6()),
                             Child, MyLabel2(txtAudioModeDriver),
-                            Child, texts[ 2] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 2] = MyTextObject6()),
                             Child, MyLabel2(txtAudioModeVersion),
-                            Child, texts[ 3] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 3] = MyTextObject6()),
                             Child, MyLabel2(txtAudioModeAuthor),
-                            Child, texts[ 4] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 4] = MyTextObject6()),
                             Child, MyLabel2(txtAudioModeCopyright),
-                            Child, texts[ 5] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 5] = MyTextObject6()),
                             Child, MyLabel2(txtAudioModeAnnotation),
-                            Child, texts[ 6] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 6] = MyTextObject6()),
                             Child, MyLabel2(txtAudioModeBits2),
-                            Child, texts[ 7] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 7] = MyTextObject6()),
                             Child, MyLabel2(txtAudioModeMaxChannels),
-                            Child, texts[ 8] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 8] = MyTextObject6()),
                             Child, MyLabel2(txtAudioModeMixFrequency),
-                            Child, texts[ 9] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 9] = MyTextObject6()),
                             Child, MyLabel2(txtAudioModeMaxPlaySamples),
-                            Child, texts[10] = MyTextObject6(),
+                            Child, (IPTR)(texts[10] = MyTextObject6()),
                             Child, MyLabel2(txtAudioModeMaxRecordSamples),
-                            Child, texts[11] = MyTextObject6(),
+                            Child, (IPTR)(texts[11] = MyTextObject6()),
                             Child, MyLabel2(txtAudioModeMonitorVolume),
-                            Child, texts[12] = MyTextObject6(),
+                            Child, (IPTR)(texts[12] = MyTextObject6()),
                             Child, MyLabel2(txtAudioModeInputGain),
-                            Child, texts[13] = MyTextObject6(),
+                            Child, (IPTR)(texts[13] = MyTextObject6()),
                             Child, MyLabel2(txtAudioModeOutputVolume),
-                            Child, texts[14] = MyTextObject6(),
+                            Child, (IPTR)(texts[14] = MyTextObject6()),
                             Child, MyLabel2(txtAudioModeVolume),
-                            Child, texts[15] = MyTextObject6(),
+                            Child, (IPTR)(texts[15] = MyTextObject6()),
                             Child, MyLabel2(txtAudioModeStereo),
-                            Child, texts[17] = MyTextObject6(),
+                            Child, (IPTR)(texts[17] = MyTextObject6()),
                             Child, MyLabel2(txtAudioModePanning),
-                            Child, texts[19] = MyTextObject6(),
+                            Child, (IPTR)(texts[19] = MyTextObject6()),
                             Child, MyLabel2(txtAudioModeHiFi),
-                            Child, texts[21] = MyTextObject6(),
+                            Child, (IPTR)(texts[21] = MyTextObject6()),
                             Child, MyLabel2(txtAudioModePingPong),
-                            Child, texts[16] = MyTextObject6(),
+                            Child, (IPTR)(texts[16] = MyTextObject6()),
                             Child, MyLabel2(txtAudioModeRecord),
-                            Child, texts[18] = MyTextObject6(),
+                            Child, (IPTR)(texts[18] = MyTextObject6()),
                             Child, MyLabel2(txtAudioModeFullDuplex),
-                            Child, texts[20] = MyTextObject6(),
+                            Child, (IPTR)(texts[20] = MyTextObject6()),
                             Child, MyLabel2(txtAudioModeRealTime),
-                            Child, texts[22] = MyTextObject6(),
+                            Child, (IPTR)(texts[22] = MyTextObject6()),
                         End,
                     End,
                 End,
-            End,
-            Child, MyVSpace(4),
-            Child, exitButton = MakeButton(txtExit),
+            End),
+            Child, (IPTR)MyVSpace(4),
+            Child, (IPTR)(exitButton = MakeButton(txtExit)),
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
     {
@@ -274,7 +272,7 @@ STATIC ULONG mSet( struct IClass *cl,
     struct TagItem *tags, *tag;
 
     tags = msg->ops_AttrList;
-    while ((tag = NextTagItem(&tags)) != NULL) {
+    while ((tag = NextTagItem((APTR)&tags)) != NULL) {
         switch (tag->ti_Tag) {
             case MUIA_Window_ParentWindow:
                 DoMethod(obj, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, MUIV_Notify_Application, 5, MUIM_Application_PushMethod, tag->ti_Data, 2, MUIM_Window_RemChildWindow, obj);

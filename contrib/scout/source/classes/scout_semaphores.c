@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -228,19 +226,19 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('S','E','M','A'),
         WindowContents, VGroup,
 
-            Child, MyNListviewObject(&semlist, MakeID('S','E','L','V'), "BAR,BAR,BAR P=" MUIX_R ",BAR P=" MUIX_C ",BAR P=" MUIX_C ",BAR", &semalist_con2hook, &semalist_des2hook, &semalist_dsp2hook, &semalist_cmp2hook, TRUE),
-            Child, MyBelowListview(&semtext, &semcount),
+            Child, (IPTR)MyNListviewObject(&semlist, MakeID('S','E','L','V'), "BAR,BAR,BAR P=" MUIX_R ",BAR P=" MUIX_C ",BAR P=" MUIX_C ",BAR", &semalist_con2hook, &semalist_des2hook, &semalist_dsp2hook, &semalist_cmp2hook, TRUE),
+            Child, (IPTR)MyBelowListview(&semtext, &semcount),
 
-            Child, MyVSpace(4),
+            Child, (IPTR)MyVSpace(4),
 
             Child, HGroup, MUIA_Group_SameSize, TRUE,
-                Child, updateButton   = MakeButton(txtUpdate),
-                Child, printButton    = MakeButton(txtPrint),
-                Child, obtainButton   = MakeButton(txtObtain),
-                Child, releaseButton  = MakeButton(txtRelease),
-                Child, removeButton   = MakeButton(txtRemove),
-                Child, priorityButton = MakeButton(txtPriority),
-                Child, exitButton     = MakeButton(txtExit),
+                Child, (IPTR)(updateButton   = MakeButton(txtUpdate)),
+                Child, (IPTR)(printButton    = MakeButton(txtPrint)),
+                Child, (IPTR)(obtainButton   = MakeButton(txtObtain)),
+                Child, (IPTR)(releaseButton  = MakeButton(txtRelease)),
+                Child, (IPTR)(removeButton   = MakeButton(txtRemove)),
+                Child, (IPTR)(priorityButton = MakeButton(txtPriority)),
+                Child, (IPTR)(exitButton     = MakeButton(txtExit)),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)

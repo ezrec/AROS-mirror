@@ -32,11 +32,11 @@ struct SmartArgs
    STRPTR sa_Template;
 
    /* Pointer to the parameter array */
-   LONG *sa_Parameter;        
+   IPTR *sa_Parameter;
 
    /* Specifies which parameter should contain the files passed with the
     * WBStartup message; use -1 for none */
-   LONG sa_FileParameter;     
+   LONG sa_FileParameter;
 
    /* Window description to open, if this is started from workbench or NULL
     * for no window. If a WINDOW tooltype is specifies in the icon, it is
@@ -45,10 +45,10 @@ struct SmartArgs
 
    /* Use this RDArgs structure instead of allocating a new. This can be
     * used to specify extended help. */
-   struct RDArgs *sa_RDArgs;  
+   struct RDArgs *sa_RDArgs;
 
    /* Some flags, see below for possible values */
-   ULONG sa_Flags;            
+   ULONG sa_Flags;
 
    /* Pointer to the RDArgs structure returned from the ReadArgs() call */
    struct RDArgs *sa_FreeArgs;
@@ -77,10 +77,10 @@ struct SmartArgs
 /* Flags to be used with SmartArgs.sa_Flags */
 
 /* Indicate, that the program was started from Workbench */
-#define SAF_WORKBENCH    (1<<0)   
+#define SAF_WORKBENCH    (1<<0)
 
 /* SmartArgs.sa_RDArgs is allocated by AllocDosObject() */
-#define SAF_ALLOCRDARGS  (1<<1)   
+#define SAF_ALLOCRDARGS  (1<<1)
 
 /* SmartArgs.sa_Buffer is allocated by SmartReadArgs() */
 #define SAF_ALLOCBUFFER  (1<<2)

@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -228,18 +226,18 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('P','O','R','T'),
         WindowContents, VGroup,
 
-            Child, MyNListviewObject(&portslist, MakeID('P','O','L','V'), "BAR,BAR,BAR P=" MUIX_R ",BAR P=" MUIX_C ",BAR P=" MUIX_C ",BAR", &portslist_con2hook, &portslist_des2hook, &portslist_dsp2hook, &portslist_cmp2hook, TRUE),
-            Child, MyBelowListview(&portstext, &portscount),
+            Child, (IPTR)MyNListviewObject(&portslist, MakeID('P','O','L','V'), "BAR,BAR,BAR P=" MUIX_R ",BAR P=" MUIX_C ",BAR P=" MUIX_C ",BAR", &portslist_con2hook, &portslist_des2hook, &portslist_dsp2hook, &portslist_cmp2hook, TRUE),
+            Child, (IPTR)MyBelowListview(&portstext, &portscount),
 
-            Child, MyVSpace(4),
+            Child, (IPTR)MyVSpace(4),
 
             Child, HGroup, MUIA_Group_SameSize, TRUE,
-                Child, updateButton   = MakeButton(txtUpdate),
-                Child, printButton    = MakeButton(txtPrint),
-                Child, removeButton   = MakeButton(txtRemove),
-                Child, priorityButton = MakeButton(txtPriority),
-                Child, moreButton     = MakeButton(txtMore),
-                Child, exitButton     = MakeButton(txtExit),
+                Child, (IPTR)(updateButton   = MakeButton(txtUpdate)),
+                Child, (IPTR)(printButton    = MakeButton(txtPrint)),
+                Child, (IPTR)(removeButton   = MakeButton(txtRemove)),
+                Child, (IPTR)(priorityButton = MakeButton(txtPriority)),
+                Child, (IPTR)(moreButton     = MakeButton(txtMore)),
+                Child, (IPTR)(exitButton     = MakeButton(txtExit)),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
@@ -385,8 +383,8 @@ STATIC ULONG mMore( struct IClass *cl,
         if ((pe = (struct PortEntry *)GetActiveEntry(pwd->pwd_PortList)) != NULL) {
             APTR detailWin;
 
-            if ((detailWin = PortsDetailWindowObject,
-                    MUIA_Window_ParentWindow, obj,
+            if ((detailWin = (Object *)PortsDetailWindowObject,
+                    MUIA_Window_ParentWindow, (IPTR)obj,
                     MUIA_Window_MaxChildWindowCount, (opts.SingleWindows) ? 1 : 0,
                 End) != NULL) {
                 COLLECT_RETURNIDS;

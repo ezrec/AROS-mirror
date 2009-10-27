@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -101,11 +99,11 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('F','L','A','G'),
         WindowContents, VGroup,
             Child, HGroup,
-                Child, HSpace(0),
-                Child, flagtext = MyLabel2(""),
-                Child, HSpace(0),
+                Child, (IPTR)HSpace(0),
+                Child, (IPTR)(flagtext = (Object *)MyLabel2("")),
+                Child, (IPTR)HSpace(0),
             End,
-            Child, MyNListviewObject(&flaglist, MakeID('F','L','L','V'), "BAR,BAR", &flaglist_con2hook, &flaglist_des2hook, &flaglist_dsp2hook, &flaglist_cmp2hook, FALSE),
+            Child, (IPTR)MyNListviewObject(&flaglist, MakeID('F','L','L','V'), "BAR,BAR", &flaglist_con2hook, &flaglist_des2hook, &flaglist_dsp2hook, &flaglist_cmp2hook, FALSE),
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
     {

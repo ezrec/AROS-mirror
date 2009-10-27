@@ -17,13 +17,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
  * @author Richard Körber <rkoerber@gmx.de>
  */
+
+#if defined(__AROS__)
+    #define NO_INLINE_STDARG
+    // For Nlist classes
+#endif
 
 #include "system_headers.h"
 
@@ -104,7 +107,7 @@ STATIC ULONG mNew( struct IClass *cl,
         dwd->dwd_Buffer = tbAllocVecPooled(globalPool, 128);
         dwd->dwd_BufferSize = 128;
 
-    #if !defined(__amigaos4__)
+    #if !defined(__amigaos4__) && !defined(__AROS__)
         dwd->dwd_DisassemblerBase = OpenLibrary(DISASSEMBLER_NAME, 40);
     #endif
     #if defined(__MORPHOS__)
@@ -155,7 +158,7 @@ STATIC ULONG mSet( struct IClass *cl,
     BOOL update = FALSE;
 
     tags = msg->ops_AttrList;
-    while ((tag = NextTagItem(&tags)) != NULL) {
+    while ((tag = NextTagItem((APTR)&tags)) != NULL) {
         switch (tag->ti_Tag) {
             case MUIA_DisassemblerWin_Address:
                 dwd->dwd_Address = (APTR)tag->ti_Data;
@@ -185,7 +188,7 @@ STATIC ULONG mGet( struct IClass *cl,
                    struct opGet *msg )
 {
     struct DisassemblerWinData *dwd = INST_DATA(cl, obj);
-    ULONG *store = msg->opg_Storage;
+    IPTR *store = msg->opg_Storage;
 
     switch (msg->opg_AttrID) {
         case MUIA_DisassemblerWin_Address:

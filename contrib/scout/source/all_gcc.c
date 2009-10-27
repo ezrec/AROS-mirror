@@ -10,4 +10,9 @@
     #include "extrasrc/init_inet_daemon.c"
     #include "extrasrc/set_socket_stdio.c"
 #endif
+#if defined(__AROS__)
+    #include "extrasrc/vasprintf.c"
+    #include "extrasrc/init_inet_daemon.c"
+    #include "extrasrc/set_socket_stdio.c"
+#endif
 

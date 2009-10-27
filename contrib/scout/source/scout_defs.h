@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -54,16 +52,16 @@
 
 #define MyTextFrame         TextFrame,MUIA_Background,MUII_TextBack
 
-#define LabelA(label)   TextObject,MUIA_Text_PreParse,"\033r",\
-            MUIA_Text_Contents,label,TextFrame,MUIA_FramePhantomHoriz,\
+#define LabelA(label)   TextObject,MUIA_Text_PreParse,(IPTR)"\033r",\
+            MUIA_Text_Contents,(IPTR)label,TextFrame,MUIA_FramePhantomHoriz,\
             TRUE,End
 
-#define LabelB(label)   TextObject,MUIA_Text_PreParse,"\033r",\
-            MUIA_Text_Contents,label,TextFrame,MUIA_FramePhantomHoriz,\
+#define LabelB(label)   TextObject,MUIA_Text_PreParse,(IPTR)"\033r",\
+            MUIA_Text_Contents,(IPTR)label,TextFrame,MUIA_FramePhantomHoriz,\
             TRUE,MUIA_Weight,0,MUIA_InnerLeft,0,MUIA_InnerRight,0,End
 
-#define LabelC(label)   TextObject,MUIA_Text_PreParse,"\033c",\
-            MUIA_Text_Contents,label,TextFrame,MUIA_FramePhantomHoriz,\
+#define LabelC(label)   TextObject,MUIA_Text_PreParse,(IPTR)"\033c",\
+            MUIA_Text_Contents,(IPTR)label,TextFrame,MUIA_FramePhantomHoriz,\
             TRUE,End
 
 #ifndef ZERO

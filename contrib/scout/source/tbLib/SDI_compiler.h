@@ -4,8 +4,8 @@
 /* Includeheader
 
         Name:           SDI_compiler.h
-        Versionstring:  $VER: SDI_compiler.h 1.21 (28.02.2005)
-        Author:         Dirk Stöcker & Jens Langner
+        Versionstring:  $VER: SDI_compiler.h 1.32 (28.05.2009)
+        Author:         Dirk Stoecker & Jens Langner
         Distribution:   PD
         Project page:   http://www.sf.net/projects/sditools/
         Description:    defines to hide compiler stuff
@@ -40,6 +40,21 @@
                   added missing vbcc/VARARGS68K define.
                   moved morphos SDI_EmulLib Stuff into compilers.h. I know it's not
                   compiler specific,  (Guido Mersmann)
+ 1.23  30.04.06 : modified to get it compatible to AROS. (Guido Mersmann)
+ 1.24  06.05.06 : __linearvarargs is only valid for vbcc and PPC, so I moved VARARGS68K
+                  to prevent problems with 68K and i86 targets. (Guido Mersmann)
+ 1.25  21.06.07 : added NEAR to be usable for __near specification for SAS/C
+ 1.26  14.10.07 : added DEPRECATED macro which defaults to __attribute__((deprecated))
+                  for GCC compiles.
+ 1.27  20.03.09 : applied some changes and fixes to get the header more usable
+                  for an AROS compilation. (Pavel Fedin)
+ 1.28  25.03.09 : added missing IPTR definition to make SDI_compiler.h more compatible
+                  to AROS. (Pavel Fedin)
+ 1.29  25.03.09 : fixed the IPTR definition and also the use of the __M68000__ define.
+ 1.30  26.03.09 : fixed the IPTR definition by only defining it for non AROS targets.
+ 1.31  29.03.09 : added VARARGS68K definition for AROS.
+ 1.32  28.05.09 : added STACKED definition for non-AROS targets.
+
 */
 
 /*
@@ -55,7 +70,7 @@
 ** http://cvs.sourceforge.net/viewcvs.py/sditools/sditools/headers/
 **
 ** Jens Langner <Jens.Langner@light-speed.de> and
-** Dirk Stöcker <soft@dstoecker.de>
+** Dirk Stoecker <soft@dstoecker.de>
 */
 
 /* Some SDI internal header */
@@ -72,9 +87,11 @@
 #undef INTERRUPT
 #undef CHIP
 #undef FAR
+#undef NEAR
 #undef UNUSED
 #undef USED
 #undef USED_VAR
+#undef DEPRECATED
 
 /* first "exceptions" */
 
@@ -89,15 +106,11 @@
   #define STDARGS
   #define STACKEXT
   #define REGARGS
-  #define VARARGS68K __linearvarargs
-  #if (__STDC__ == 1L) && (__STDC_VERSION__ >= 199901L)
-    #define INLINE inline
-  #else
-    #define INLINE static
-  #endif
+  #define INLINE static
   #define OFFSET(p,m) __offsetof(struct p,m)
 
   #if defined(__PPC__)
+    #define VARARGS68K __linearvarargs
     #define REG(reg,arg) arg
   #else
     #define REG(reg,arg) __reg(#reg) arg
@@ -115,27 +128,32 @@
 #elif defined(__GNUC__)
   #define UNUSED __attribute__((unused)) /* for functions, variables and types */
   #define USED   __attribute__((used))   /* for functions only! */
+  #define DEPRECATED __attribute__((deprecated))
   #if __GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ > 0)
     #define USED_VAR USED /* for variables only! */
     #define INLINE static __inline __attribute__((always_inline))
   #endif
   /* we have to distinguish between AmigaOS4 and MorphOS */
-  #if defined(__PPC__)
+  #if defined(_M68000) || defined(__M68000) || defined(__mc68000)
+    #define REG(reg,arg) arg __asm(#reg)
+    #define LREG(reg,arg) register REG(reg,arg)
+  #else
     #define REG(reg,arg) arg
     #define SAVEDS
     #define STDARGS
     #define REGARGS
     #define STACKEXT
     #if defined(__MORPHOS__)
-      #define VARARGS68K  __attribute__((varargs68k))
+      #define VARARGS68K __attribute__((varargs68k))
+    #endif
+    #if defined(__AROS__)
+      #define VARARGS68K __stackparm
     #endif
     #define INTERRUPT
     #define CHIP
-  #else
-    #define REG(reg,arg) arg __asm(#reg)
-    #define LREG(reg,arg) register REG(reg,arg)
   #endif
   #define FAR
+  #define NEAR
 #elif defined(_DCC)
   #define REG(reg,arg) __##reg arg
   #define STACKEXT __stkcheck
@@ -188,6 +206,9 @@
 #if !defined(FAR)
   #define FAR __far
 #endif
+#if !defined(NEAR)
+  #define NEAR __near
+#endif
 #if !defined(UNUSED)
   #define UNUSED
 #endif
@@ -197,5 +218,16 @@
 #if !defined(USED_VAR)
   #define USED_VAR
 #endif
+#if !defined(DEPRECATED)
+  #define DEPRECATED
+#endif
+#if !defined(__AROS__) && !defined(IPTR)
+  #define IPTR ULONG
+#endif
+#if !defined(__AROS__) && !defined(STACKED)
+  #define STACKED
+#endif
+
+/*************************************************************************/
 
 #endif /* SDI_COMPILER_H */

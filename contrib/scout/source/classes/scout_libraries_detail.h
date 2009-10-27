@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -30,7 +28,11 @@
 objects/scout_libraries_detail.c
  */
 
-#define LibrariesDetailWindowObject          NewObject(LibrariesDetailWinClass->mcc_Class, NULL
+#if defined(__AROS__)
+    #define LibrariesDetailWindowObject  BOOPSIOBJMACRO_START(LibrariesDetailWinClass->mcc_Class)
+#else
+    #define LibrariesDetailWindowObject  NewObject(LibrariesDetailWinClass->mcc_Class, NULL
+#endif
 
 APTR MakeLibrariesDetailWinClass( void );
 

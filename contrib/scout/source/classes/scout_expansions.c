@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -306,16 +304,16 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('E','X','P','A'),
         WindowContents, VGroup,
 
-            Child, MyNListviewObject(&explist, MakeID('E','X','L','V'), "BAR,BAR,BAR P=" MUIX_C ",BAR,BAR,BAR", &explist_con2hook, &explist_des2hook, &explist_dsp2hook, &explist_cmp2hook, TRUE),
-            Child, exptext = MyTextObject(),
+            Child, (IPTR)MyNListviewObject(&explist, MakeID('E','X','L','V'), "BAR,BAR,BAR P=" MUIX_C ",BAR,BAR,BAR", &explist_con2hook, &explist_des2hook, &explist_dsp2hook, &explist_cmp2hook, TRUE),
+            Child, (IPTR)(exptext = MyTextObject()),
 
-            Child, MyVSpace(4),
+            Child, (IPTR)MyVSpace(4),
 
             Child, HGroup, MUIA_Group_SameSize, TRUE,
-                Child, updateButton = MakeButton(txtUpdate),
-                Child, printButton  = MakeButton(txtPrint),
-                Child, moreButton   = MakeButton(txtMore),
-                Child, exitButton   = MakeButton(txtExit),
+                Child, (IPTR)(updateButton = MakeButton(txtUpdate)),
+                Child, (IPTR)(printButton  = MakeButton(txtPrint)),
+                Child, (IPTR)(moreButton   = MakeButton(txtMore)),
+                Child, (IPTR)(exitButton   = MakeButton(txtExit)),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
@@ -405,17 +403,17 @@ STATIC ULONG mMore( struct IClass *cl,
         struct ExpansionEntry *ee;
 
         if ((ee = (struct ExpansionEntry *)GetActiveEntry(ewd->ewd_ExpansionList)) != NULL) {
-		    if (!strcmp(ee->ee_HardwareType, "ZORRO")) {
-	            APTR detailWin;
+            if (!strcmp(ee->ee_HardwareType, "ZORRO")) {
+                APTR detailWin;
 
-       	        if ((detailWin = ExpansionsDetailWindowObject,
-      	            MUIA_Window_ParentWindow, obj,
-         	        End) != NULL) {
-            	    COLLECT_RETURNIDS;
+                if ((detailWin = (Object *)ExpansionsDetailWindowObject,
+                    MUIA_Window_ParentWindow, (IPTR)obj,
+                    End) != NULL) {
+                    COLLECT_RETURNIDS;
                     set(detailWin, MUIA_ExpansionsDetailWin_Expansion, ee);
-    	            set(detailWin, MUIA_Window_Open, TRUE);
-   	                REISSUE_RETURNIDS;
-		    	}
+                    set(detailWin, MUIA_Window_Open, TRUE);
+                    REISSUE_RETURNIDS;
+                }
             }
         }
     }

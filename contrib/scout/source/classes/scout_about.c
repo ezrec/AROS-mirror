@@ -17,14 +17,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
  * @author Richard Körber <rkoerber@gmx.de>
  */
 
+#if defined(__AROS__)
+    #define NO_INLINE_STDARG
+    // UrltextObject doesn't work without this
+#endif
 /*
 #include <proto/exec.h>
 #include <proto/intuition.h>

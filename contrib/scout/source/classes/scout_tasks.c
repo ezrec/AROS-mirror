@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -486,7 +484,8 @@ STATIC void GetCPUUsage( struct Task *task,
                          struct TaskEntry *te )
 {
 #if !defined(__amigaos4__)
-    if (totalmicros = TotalMicros2) {
+// FIXME: AROS?
+    if ((totalmicros = TotalMicros2)) {
         ULONG cpu, zehntel;
 
         cpu = GetTaskData(task);
@@ -678,56 +677,56 @@ STATIC ULONG mNew( struct IClass *cl,
 #ifdef __MORPHOS__
             Child, MyNListviewObject(&taskslist, MakeID('T','A','L','V'), "BAR,BAR,BAR P=" MUIX_R ",BAR P=" MUIX_C ",BAR P=" MUIX_R ",BAR P=" MUIX_R ",BAR P=" MUIX_C ",BAR,BAR P=" MUIX_R ",BAR P=" MUIX_R, &taskslist_con2hook, &taskslist_des2hook, &taskslist_dsp2hook, &taskslist_cmp2hook, TRUE),
 #else
-            Child, MyNListviewObject(&taskslist, MakeID('T','A','L','V'), "BAR,BAR,BAR P=" MUIX_R ",BAR P=" MUIX_C ",BAR P=" MUIX_R ",BAR P=" MUIX_R ",BAR P=" MUIX_C ",BAR,BAR P=" MUIX_R, &taskslist_con2hook, &taskslist_des2hook, &taskslist_dsp2hook, &taskslist_cmp2hook, TRUE),
+            Child, (IPTR)MyNListviewObject(&taskslist, MakeID('T','A','L','V'), "BAR,BAR,BAR P=" MUIX_R ",BAR P=" MUIX_C ",BAR P=" MUIX_R ",BAR P=" MUIX_R ",BAR P=" MUIX_C ",BAR,BAR P=" MUIX_R, &taskslist_con2hook, &taskslist_des2hook, &taskslist_dsp2hook, &taskslist_cmp2hook, TRUE),
 #endif
-            Child, MyBelowListview(&taskstext, &taskscount),
+            Child, (IPTR)MyBelowListview(&taskstext, &taskscount),
 
-            Child, MyVSpace(4),
+            Child, (IPTR)MyVSpace(4),
 
             Child, HGroup, MUIA_Group_SameSize, TRUE,
-                Child, printButton    = MakeButton(txtPrint),
-                Child, freezeButton   = MakeButton(txtFreeze),
-                Child, activateButton = MakeButton(txtActivate),
+                Child, (IPTR)(printButton    = MakeButton(txtPrint)),
+                Child, (IPTR)(freezeButton   = MakeButton(txtFreeze)),
+                Child, (IPTR)(activateButton = MakeButton(txtActivate)),
                 Child, HGroup,
-                    Child, KeyLabel1(txtCPU, 'c'),
-                    Child, cpucount = GaugeObject,
+                    Child, (IPTR)KeyLabel1(txtCPU, 'c'),
+                    Child, (IPTR)(cpucount = (Object *)GaugeObject,
                         MUIA_Frame, MUIV_Frame_Gauge,
                         MUIA_Gauge_Horiz, TRUE,
                         MUIA_Gauge_Max, 100,
-                        MUIA_Gauge_InfoText, MUIX_PT "-----",
+                        MUIA_Gauge_InfoText, (IPTR)MUIX_PT "-----",
                         MUIA_Gauge_Current, 0,
-                    End,
+                    End),
                 End,
-                Child, cpuCycle = CycleObject,
+                Child, (IPTR)(cpuCycle = (Object *)CycleObject,
                     MUIA_CycleChain, TRUE,
                     MUIA_Weight, 0,
                     MUIA_ControlChar, 'c',
-                    MUIA_Cycle_Entries, CYA_CpuUsageText,
+                    MUIA_Cycle_Entries, (IPTR)CYA_CpuUsageText,
                     // AmigaOS3 and MorphOS can get the CPU usage, so here we enable the cycler
                     MUIA_Cycle_Active, (opts.CpuDisplay && !amigaOS4) ? *opts.CpuDisplay : 0,
                     MUIA_Disabled, amigaOS4,
-                End,
+                End),
                 Child, HGroup,
-                    Child, KeyLabel2(txtSeconds, 'e'),
-                    Child, taskstext2 = StringObject,
+                    Child, (IPTR)KeyLabel2(txtSeconds, 'e'),
+                    Child, (IPTR)(taskstext2 = (Object *)StringObject,
                         StringFrame,
                         MUIA_CycleChain, TRUE,
                         MUIA_String_BufferPos, 0,
                         MUIA_String_MaxLen, 6,
-                        MUIA_String_EditHook, &realstring_edithook,
-                        MUIA_String_Contents, updatetimetext,
+                        MUIA_String_EditHook, (IPTR)&realstring_edithook,
+                        MUIA_String_Contents, (IPTR)updatetimetext,
                         MUIA_String_Format, MUIV_String_Format_Center,
-                    End,
+                    End),
                 End,
             End,
             Child, HGroup, MUIA_Group_SameSize, TRUE,
-                Child, updateButton   = MakeButton(txtUpdate),
-                Child, removeButton   = MakeButton(txtRemove),
-                Child, signalButton   = MakeButton(txtSignal),
-                Child, breakButton    = MakeButton(txtBreak),
-                Child, priorityButton = MakeButton(txtPriority),
-                Child, moreButton     = MakeButton(txtMore),
-                Child, exitButton     = MakeButton(txtExit),
+                Child, (IPTR)(updateButton   = MakeButton(txtUpdate)),
+                Child, (IPTR)(removeButton   = MakeButton(txtRemove)),
+                Child, (IPTR)(signalButton   = MakeButton(txtSignal)),
+                Child, (IPTR)(breakButton    = MakeButton(txtBreak)),
+                Child, (IPTR)(priorityButton = MakeButton(txtPriority)),
+                Child, (IPTR)(moreButton     = MakeButton(txtMore)),
+                Child, (IPTR)(exitButton     = MakeButton(txtExit)),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
@@ -959,8 +958,8 @@ STATIC ULONG mMore( struct IClass *cl,
             if ((task = MyFindTask(te->te_Address)) != NULL) {
                 APTR detailWin;
 
-                if ((detailWin = TasksDetailWindowObject,
-                        MUIA_Window_ParentWindow, obj,
+                if ((detailWin = (Object *)TasksDetailWindowObject,
+                        MUIA_Window_ParentWindow, (IPTR)obj,
                         MUIA_Window_MaxChildWindowCount, (opts.SingleWindows) ? 1 : 0,
                     End) != NULL) {
                     COLLECT_RETURNIDS;
@@ -1047,8 +1046,8 @@ STATIC ULONG mSignal( struct IClass *cl,
         APTR sigwin;
 
         IsUHex(te->te_SigWait, &sigs);
-        if ((sigwin = SignalWindowObject,
-                MUIA_Window_ParentWindow, obj,
+        if ((sigwin = (Object *)SignalWindowObject,
+                MUIA_Window_ParentWindow, (IPTR)obj,
             End) != NULL) {
             if (DoMethod(sigwin, MUIM_SignalWin_GetSignals, te->te_Name, &sigs)) {
                 if (MyDoCommand("SignalTask %s $%08lx", te->te_Address, sigs) == RETURN_OK) {
@@ -1139,7 +1138,7 @@ STATIC ULONG mCPUCheck( struct IClass *cl,
     struct TasksCallbackUserData ud;
     struct Task *task;
     BOOL changed;
-    ULONG i, oldTaskCnt, sortCol;
+    ULONG i, oldTaskCnt = 0, sortCol = 0;
 
     get(twd->twd_TaskList, MUIA_NList_Entries, &oldTaskCnt);
     get(twd->twd_TaskList, MUIA_NList_SortType, &sortCol);

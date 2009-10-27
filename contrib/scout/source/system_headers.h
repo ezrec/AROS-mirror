@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -41,6 +39,10 @@
 
 /*****************************************************************************/
 
+#if defined(__AROS__)
+    #define MUIMASTER_YES_INLINE_STDARG
+    #define MUI_OBSOLETE
+#endif
 #include <devices/ahi.h>
 #include <devices/audio.h>
 #include <devices/cd.h>
@@ -65,7 +67,7 @@
 #include <dos/dosextens.h>
 #include <dos/filehandler.h>
 #include <dos/rdargs.h>
-#if !defined(__amigaos4__)
+#if !defined(__amigaos4__) && !defined(__AROS__)
     #include <dos/dos_private.h>
 #endif
 #include <exec/alerts.h>
@@ -76,6 +78,9 @@
 #include <exec/resident.h>
 #include <exec/semaphores.h>
 #include <exec/tasks.h>
+#if defined(__AROS__)
+    #include <exec/errors.h>
+#endif
 #include <graphics/displayinfo.h>
 #include <graphics/gfx.h>
 #include <graphics/gfxbase.h>
@@ -90,7 +95,9 @@
 #include <intuition/screens.h>
 #include <intuition/sghooks.h>
 #include <libraries/commodities.h>
-#include <libraries/commodities_private.h>
+#if !defined(__AROS__)
+    #include <libraries/commodities_private.h>
+#endif
 #include <libraries/configvars.h>
 #include <libraries/expansion.h>
 #include <libraries/expansionbase.h>
@@ -109,9 +116,11 @@
 #include <mui/NFloattext_mcc.h>
 #include <mui/NList_mcc.h>
 #include <mui/Urltext_mcc.h>
-#include <resources/card.h>
-#include <resources/cia.h>
-#include <resources/disk.h>
+#if !defined(__AROS__)
+    #include <resources/card.h>
+    #include <resources/cia.h>
+    #include <resources/disk.h>
+#endif
 #include <resources/filesysres.h>
 #include <resources/misc.h>
 #include <rexx/rxslib.h>
@@ -133,7 +142,7 @@
     #include <exec/system.h>
     #include <libraries/ppcdiss.h>
 #endif
-#if !defined(__MORPHOS__) && !defined(__amigaos4__)
+#if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
     #include <lvo/exec_lvo.h>
     #include <mmu/mmubase.h>
     #include <mmu/mmutags.h>
@@ -164,9 +173,9 @@
 #include <proto/misc.h>
 #include <proto/muimaster.h>
 #if defined(__MORPHOS__)
-#include <proto/ppcdiss.h>
-#include <proto/openpci.h>
-#include <proto/pciids.h>
+    #include <proto/ppcdiss.h>
+    #include <proto/openpci.h>
+    #include <proto/pciids.h>
 #endif
 #include <proto/rexxsyslib.h>
 #include <proto/socket.h>
@@ -176,7 +185,7 @@
     #include <proto/usbsys.h>
 #endif
 #include <proto/utility.h>
-#if !defined(__MORPHOS__) && !defined(__amigaos4__)
+#if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
     #include <proto/mmu.h>
     #include <dos.h>    // for getreg(), etc
 #endif
@@ -277,7 +286,7 @@
     #include "i64.h"
 #endif
 
-#if !defined(__amigaos4__)
+#if !defined(__amigaos4__) && !defined(__AROS__)
     #include <showpatch.h>
     #include <setman.h>
     #include <patchcontrol.h>
@@ -308,6 +317,53 @@ struct TimeRequest
 
 #define TIMEVAL(x)  (x)
 
+#endif
+
+#if defined(__AROS__)
+    typedef UQUAD uint64;
+    typedef QUAD int64;
+    extern struct Library *IdentifyBase;
+    extern struct Library *UserGroupBase;
+    #define CIAANAME "ciaa.resource"
+    #define CIABNAME "ciab.resource"
+    #define CARDRESNAME "card.resource"
+
+    #define DRF_ALLOC0  (1<<0)
+    #define DRF_ALLOC1  (1<<1)
+    #define DRF_ALLOC2  (1<<2)
+    #define DRF_ALLOC3  (1<<3)
+    #define DRF_ACTIVE  (1<<7)
+    #define DISKNAME    "disk.resource"
+
+    struct DiscResource {
+        struct Library          dr_Library;
+        struct DiscResourceUnit *dr_Current;
+        UBYTE                   dr_Flags;
+        UBYTE                   dr_pad;
+        struct Library          *dr_SysLib;
+        struct Library          *dr_CiaResource;
+        ULONG                   dr_UnitID[4];
+        struct List             dr_Waiting;
+        struct Interrupt        dr_DiscBlock;
+        struct Interrupt        dr_DiscSync;
+        struct Interrupt        dr_Index;
+        struct Task             *dr_CurrTask;
+    };
+
+    #define AFF_68010   (1L<<0)
+    #define AFF_68020   (1L<<1)
+    #define AFF_68030   (1L<<2)
+    #define AFF_68040   (1L<<3)
+    #define AFF_68881   (1L<<4)
+    #define AFF_68882   (1L<<5)
+    #define	AFF_FPU40   (1L<<6)
+    #define AFF_68060   (1L<<7)
+
+    #undef Printf
+    #define Printf(...) printf(__VA_ARGS__)
+
+    struct Interrupt *AddICRVector( struct Library *resource, LONG iCRBit, struct Interrupt *interrupt );
+    VOID RemICRVector( struct Library *resource, LONG iCRBit, struct Interrupt *interrupt );
 #endif
 
 /*****************************************************************************/

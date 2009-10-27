@@ -67,7 +67,7 @@ static ULONG mSet( struct IClass *cl,
     BOOL update = FALSE;
 
     tags = msg->ops_AttrList;
-    while ((tag = NextTagItem(&tags)) != NULL) {
+    while ((tag = NextTagItem((APTR)&tags)) != NULL) {
         switch (tag->ti_Tag) {
             case MUIA_FlagsButton_Title:
                 fbd->fbd_Title = (STRPTR)tag->ti_Data;
@@ -110,7 +110,7 @@ static ULONG mGet( struct IClass *cl,
                    struct opGet *msg )
 {
     struct FlagsButtonData *fbd = INST_DATA(cl, obj);
-    ULONG *store = msg->opg_Storage;
+    IPTR *store = msg->opg_Storage;
 
     switch (msg->opg_AttrID) {
         case MUIA_FlagsButton_Flags:
@@ -147,9 +147,9 @@ static ULONG mShowFlags( struct IClass *cl,
 
     parentWin = (APTR)xget(obj, MUIA_WindowObject);
 
-    if ((flagsWin = FlagsWindowObject,
-            MUIA_Window_Title, fbd->fbd_WindowTitle,
-            MUIA_Window_ParentWindow, parentWin,
+    if ((flagsWin = (Object *)FlagsWindowObject,
+            MUIA_Window_Title, (IPTR)fbd->fbd_WindowTitle,
+            MUIA_Window_ParentWindow, (IPTR)parentWin,
         End) != NULL) {
         COLLECT_RETURNIDS;
         DoMethod(flagsWin, MUIM_FlagsWin_ShowFlags, fbd->fbd_Flags, fbd->fbd_Type, fbd->fbd_BitArray, fbd->fbd_MaskArray, fbd->fbd_Title);

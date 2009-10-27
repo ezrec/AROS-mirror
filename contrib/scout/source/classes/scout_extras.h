@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -114,7 +112,7 @@ APTR MyCheckmarkImage( void );
 
 BOOL isValidPointer( APTR ptr );
 void healstring( STRPTR );
-STRPTR nonetest( STRPTR );
+CONST_STRPTR nonetest( CONST_STRPTR );
 BOOL points2ram( APTR addr );
 
 STRPTR StripMUIFormatting( STRPTR str );

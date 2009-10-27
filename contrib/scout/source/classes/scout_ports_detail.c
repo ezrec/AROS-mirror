@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -73,7 +71,7 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('.','P','O','R'),
         WindowContents, VGroup,
 
-            Child, group = ScrollgroupObject,
+            Child, (IPTR)(group = (Object *)ScrollgroupObject,
                 MUIA_CycleChain, TRUE,
                 MUIA_Scrollgroup_FreeHoriz, FALSE,
                 MUIA_Scrollgroup_Contents, VGroupV,
@@ -82,39 +80,39 @@ STATIC ULONG mNew( struct IClass *cl,
                         GroupFrame,
                         Child, ColGroup(2),
                             Child, MyLabel2(txtNodeName2),
-                            Child, texts[ 0] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 0] = MyTextObject6()),
                             Child, MyLabel2(txtAddress2),
-                            Child, texts[ 1] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 1] = MyTextObject6()),
                             Child, MyLabel2(txtNodeType2),
-                            Child, texts[ 2] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 2] = MyTextObject6()),
                             Child, MyLabel2(txtNodePri2),
-                            Child, texts[ 3] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 3] = MyTextObject6()),
                             Child, MyLabel2(txtPortFlags2),
-                            Child, texts[ 4] = FlagsButtonObject,
+                            Child, (IPTR)(texts[ 4] = (Object *)FlagsButtonObject,
                                 MUIA_FlagsButton_Type, MUIV_FlagsButton_Type_Byte,
-                                MUIA_FlagsButton_Title, txtPortFlags,
-                                MUIA_FlagsButton_MaskArray, portFlags,
-                                MUIA_FlagsButton_WindowTitle, txtPortFlagsTitle,
-                            End,
+                                MUIA_FlagsButton_Title, (IPTR)txtPortFlags,
+                                MUIA_FlagsButton_MaskArray, (IPTR)portFlags,
+                                MUIA_FlagsButton_WindowTitle, (IPTR)txtPortFlagsTitle,
+                            End),
                             Child, MyLabel2(txtPortSigBit2),
-                            Child, texts[ 5] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 5] = MyTextObject6()),
                             Child, MyLabel2(txtPortSigTask2),
-                            Child, texts[ 6] = TaskButtonObject,
-                            End,
+                            Child, (IPTR)(texts[ 6] = (Object *)TaskButtonObject,
+                            End),
                             Child, MyLabel2(txtPortMsgList),
-                            Child, texts[ 7] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 7] = MyTextObject6()),
                             Child, MyLabel2(txtPortMsgListHead),
-                            Child, texts[ 8] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 8] = MyTextObject6()),
                             Child, MyLabel2(txtPortMsgListTail),
-                            Child, texts[ 9] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 9] = MyTextObject6()),
                             Child, MyLabel2(txtPortMsgListTailPred),
-                            Child, texts[10] = MyTextObject6(),
+                            Child, (IPTR)(texts[10] = MyTextObject6()),
                         End,
                     End,
                 End,
-            End,
-            Child, MyVSpace(4),
-            Child, exitButton = MakeButton(txtExit),
+            End),
+            Child, (IPTR)MyVSpace(4),
+            Child, (IPTR)(exitButton = MakeButton(txtExit)),
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
     {
@@ -152,7 +150,7 @@ STATIC ULONG mSet( struct IClass *cl,
     struct TagItem *tags, *tag;
 
     tags = msg->ops_AttrList;
-    while ((tag = NextTagItem(&tags)) != NULL) {
+    while ((tag = NextTagItem((APTR)&tags)) != NULL) {
         switch (tag->ti_Tag) {
             case MUIA_Window_ParentWindow:
                 DoMethod(obj, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, MUIV_Notify_Application, 5, MUIM_Application_PushMethod, tag->ti_Data, 2, MUIM_Window_RemChildWindow, obj);

@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -98,14 +96,14 @@ STATIC void SetDetails( struct IClass *cl,
 
     if ((smd = tbAllocVecPooled(globalPool, sizeof(*smd))) != NULL) {
         STRPTR tmp;
-        ULONG fh, fv;
+        ULONG fh = 0, fv = 0;
         TEXT colors[32];
 
-        GetDisplayInfoData(NULL, &smd->display, sizeof(struct DisplayInfo)  , DTAG_DISP, sme->sme_ModeID);
-        GetDisplayInfoData(NULL, &smd->dimension, sizeof(struct DimensionInfo), DTAG_DIMS, sme->sme_ModeID);
-        GetDisplayInfoData(NULL, &smd->monitor, sizeof(struct MonitorInfo)  , DTAG_MNTR, sme->sme_ModeID);
+        GetDisplayInfoData(NULL, (UBYTE *)&smd->display, sizeof(struct DisplayInfo)  , DTAG_DISP, sme->sme_ModeID);
+        GetDisplayInfoData(NULL, (UBYTE *)&smd->dimension, sizeof(struct DimensionInfo), DTAG_DIMS, sme->sme_ModeID);
+        GetDisplayInfoData(NULL, (UBYTE *)&smd->monitor, sizeof(struct MonitorInfo)  , DTAG_MNTR, sme->sme_ModeID);
 
-        if (GetDisplayInfoData(NULL, &smd->name, sizeof(struct NameInfo), DTAG_NAME, sme->sme_ModeID)) {
+        if (GetDisplayInfoData(NULL, (UBYTE *)&smd->name, sizeof(struct NameInfo), DTAG_NAME, sme->sme_ModeID)) {
             MySetContents(smdwd->smdwd_Texts[ 0], "%s", smd->name.Name);
         } else {
             MySetContents(smdwd->smdwd_Texts[ 0], MUIX_PH "%s" MUIX_PT, sme->sme_Name);
@@ -122,8 +120,11 @@ STATIC void SetDetails( struct IClass *cl,
         MySetContents(smdwd->smdwd_Texts[ 9], "%lD", smd->monitor.TotalColorClocks);
         MySetContents(smdwd->smdwd_Texts[10], "%lDµs", (ULONG)smd->monitor.TotalColorClocks * 280);
 
-        fh = 1000000L / (smd->monitor.TotalColorClocks * 28);
-        fv = (fh * 100) / smd->monitor.TotalRows;
+        if (smd->monitor.TotalColorClocks && smd->monitor.TotalRows)
+        {
+            fh = 1000000L / (smd->monitor.TotalColorClocks * 28);
+            fv = (fh * 100) / smd->monitor.TotalRows;
+        }
         MySetContents(smdwd->smdwd_Texts[11], "%lDkHz", fh / 10);
         MySetContents(smdwd->smdwd_Texts[12], "%lDHz", fv);
         MySetContents(smdwd->smdwd_Texts[13], "%lD", smd->monitor.MinRow);
@@ -185,7 +186,7 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('.','S','M','D'),
         WindowContents, VGroup,
 
-            Child, group = ScrollgroupObject,
+            Child, (IPTR)(group = (Object *)ScrollgroupObject,
                 MUIA_CycleChain, TRUE,
                 MUIA_Scrollgroup_FreeHoriz, FALSE,
                 MUIA_Scrollgroup_Contents, VGroupV,
@@ -194,51 +195,51 @@ STATIC ULONG mNew( struct IClass *cl,
                         GroupFrame,
                         Child, ColGroup(2),
                             Child, MyLabel2(txtName2),
-                            Child, texts[ 0] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 0] = MyTextObject6()),
                             Child, MyLabel2(txtScreenModeID2),
-                            Child, texts[ 1] = MyTextObject6(),
+                            Child, (IPTR)(texts[ 1] = MyTextObject6()),
                         End,
                         Child, VGroup,
                             GroupFrameT(txtScreenModeMonitorInfo),
                             Child, ColGroup(2),
                                 Child, MyLabel2(txtName2),
-                                Child, texts[ 2] = MyTextObject6(),
+                                Child, (IPTR)(texts[ 2] = MyTextObject6()),
                                 Child, MyLabel2(txtAddress2),
-                                Child, texts[ 3] = MyTextObject6(),
+                                Child, (IPTR)(texts[ 3] = MyTextObject6()),
                                 Child, MyLabel2(txtScreenModeOpenCount),
-                                Child, texts[ 4] = MyTextObject6(),
+                                Child, (IPTR)(texts[ 4] = MyTextObject6()),
                                 Child, MyLabel2(txtScreenModeViewPosition),
-                                Child, texts[ 5] = MyTextObject6(),
+                                Child, (IPTR)(texts[ 5] = MyTextObject6()),
                                 Child, MyLabel2(txtScreenModeViewResolution),
-                                Child, texts[ 6] = MyTextObject6(),
+                                Child, (IPTR)(texts[ 6] = MyTextObject6()),
                                 Child, MyLabel2(txtScreenModeViewPositionRange),
-                                Child, texts[ 7] = MyTextObject6(),
+                                Child, (IPTR)(texts[ 7] = MyTextObject6()),
                                 Child, MyLabel2(txtScreenModeTotalRows),
-                                Child, texts[ 8] = MyTextObject6(),
+                                Child, (IPTR)(texts[ 8] = MyTextObject6()),
                                 Child, MyLabel2(txtScreenModeTotalClockColors),
                                 Child, HGroup,
-                                    Child, texts[ 9] = MyTextObject6(),
+                                    Child, (IPTR)(texts[ 9] = MyTextObject6()),
                                     Child, MyLabel2(" = "),
-                                    Child, texts[10] = MyTextObject6(),
+                                    Child, (IPTR)(texts[10] = MyTextObject6()),
                                 End,
                                 Child, MyLabel2(txtScreenModeHFrequency),
-                                Child, texts[11] = MyTextObject6(),
+                                Child, (IPTR)(texts[11] = MyTextObject6()),
                                 Child, MyLabel2(txtScreenModeVFrequency),
-                                Child, texts[12] = MyTextObject6(),
+                                Child, (IPTR)(texts[12] = MyTextObject6()),
                                 Child, MyLabel2(txtScreenModeMinRow),
-                                Child, texts[13] = MyTextObject6(),
+                                Child, (IPTR)(texts[13] = MyTextObject6()),
                                 Child, MyLabel2(txtScreenModeCompatibility),
                                 Child, HGroup,
-                                    Child, texts[14] = MyTextObject2(),
+                                    Child, (IPTR)(texts[14] = MyTextObject2()),
                                     Child, MyLabel2(" = "),
-                                    Child, texts[15] = MyTextObject6(),
+                                    Child, (IPTR)(texts[15] = MyTextObject6()),
                                 End,
                                 Child, MyLabel2(txtScreenModeMouseTicks),
-                                Child, texts[16] = MyTextObject6(),
+                                Child, (IPTR)(texts[16] = MyTextObject6()),
                                 Child, MyLabel2(txtScreenModeDefaultViewPosition),
-                                Child, texts[17] = MyTextObject6(),
+                                Child, (IPTR)(texts[17] = MyTextObject6()),
                                 Child, MyLabel2(txtScreenModePreferredModeID),
-                                Child, texts[18] = MyTextObject6(),
+                                Child, (IPTR)(texts[18] = MyTextObject6()),
                             End,
                         End,
                         Child, VGroup,
@@ -246,62 +247,62 @@ STATIC ULONG mNew( struct IClass *cl,
                             Child, ColGroup(2),
                                 Child, MyLabel2(txtScreenModeMaxDepth),
                                 Child, HGroup,
-                                    Child, texts[19] = MyTextObject2(),
+                                    Child, (IPTR)(texts[19] = MyTextObject2()),
                                     Child, MyLabel2(" = "),
-                                    Child, texts[20] = MyTextObject6(),
+                                    Child, (IPTR)(texts[20] = MyTextObject6()),
                                 End,
                                 Child, MyLabel2(txtScreenModeMinRaster),
-                                Child, texts[21] = MyTextObject6(),
+                                Child, (IPTR)(texts[21] = MyTextObject6()),
                                 Child, MyLabel2(txtScreenModeMaxRaster),
-                                Child, texts[22] = MyTextObject6(),
+                                Child, (IPTR)(texts[22] = MyTextObject6()),
                                 Child, MyLabel2(txtScreenModeNominal),
-                                Child, texts[23] = MyTextObject6(),
+                                Child, (IPTR)(texts[23] = MyTextObject6()),
                                 Child, MyLabel2(txtScreenModeMaxOScan),
-                                Child, texts[24] = MyTextObject6(),
+                                Child, (IPTR)(texts[24] = MyTextObject6()),
                                 Child, MyLabel2(txtScreenModeVideoOScan),
-                                Child, texts[25] = MyTextObject6(),
+                                Child, (IPTR)(texts[25] = MyTextObject6()),
                                 Child, MyLabel2(txtScreenModeTxtOScan),
-                                Child, texts[26] = MyTextObject6(),
+                                Child, (IPTR)(texts[26] = MyTextObject6()),
                                 Child, MyLabel2(txtScreenModeStdOScan),
-                                Child, texts[27] = MyTextObject6(),
+                                Child, (IPTR)(texts[27] = MyTextObject6()),
                             End,
                         End,
                         Child, VGroup,
                             GroupFrameT(txtScreenModeDisplayInfo),
                             Child, ColGroup(2),
                                 Child, MyLabel2(txtScreenModeNotAvailable2),
-                                Child, texts[28] = FlagsButtonObject,
+                                Child, (IPTR)(texts[28] = (Object *)FlagsButtonObject,
                                     MUIA_FlagsButton_Type, MUIV_FlagsButton_Type_Word,
-                                    MUIA_FlagsButton_Title, txtScreenModeNotAvailable,
-                                    MUIA_FlagsButton_BitArray, notAvailFlags,
-                                    MUIA_FlagsButton_WindowTitle, txtScreenModeNotAvailableTitle,
-                                End,
+                                    MUIA_FlagsButton_Title, (IPTR)txtScreenModeNotAvailable,
+                                    MUIA_FlagsButton_BitArray, (IPTR)notAvailFlags,
+                                    MUIA_FlagsButton_WindowTitle, (IPTR)txtScreenModeNotAvailableTitle,
+                                End),
                                 Child, MyLabel2(txtScreenModePropertyFlags2),
-                                Child, texts[29] = FlagsButtonObject,
+                                Child, (IPTR)(texts[29] = (Object *)FlagsButtonObject,
                                     MUIA_FlagsButton_Type, MUIV_FlagsButton_Type_Long,
-                                    MUIA_FlagsButton_Title, txtScreenModePropertyFlags,
-                                    MUIA_FlagsButton_BitArray, propertyFlags,
-                                    MUIA_FlagsButton_WindowTitle, txtScreenModePropertyFlagsTitle,
-                                End,
+                                    MUIA_FlagsButton_Title, (IPTR)txtScreenModePropertyFlags,
+                                    MUIA_FlagsButton_BitArray, (IPTR)propertyFlags,
+                                    MUIA_FlagsButton_WindowTitle, (IPTR)txtScreenModePropertyFlagsTitle,
+                                End),
                                 Child, MyLabel2(txtScreenModeResolution),
-                                Child, texts[30] = MyTextObject6(),
+                                Child, (IPTR)(texts[30] = MyTextObject6()),
                                 Child, MyLabel2(txtScreenModePixelSpeed),
-                                Child, texts[31] = MyTextObject6(),
+                                Child, (IPTR)(texts[31] = MyTextObject6()),
                                 Child, MyLabel2(txtScreenModeNumStdSprites),
-                                Child, texts[32] = MyTextObject6(),
+                                Child, (IPTR)(texts[32] = MyTextObject6()),
                                 Child, MyLabel2(txtScreenModePaletteRange),
-                                Child, texts[33] = MyTextObject6(),
+                                Child, (IPTR)(texts[33] = MyTextObject6()),
                                 Child, MyLabel2(txtScreenModeSpriteResolution),
-                                Child, texts[34] = MyTextObject6(),
+                                Child, (IPTR)(texts[34] = MyTextObject6()),
                                 Child, MyLabel2(txtScreenModeRGBBits),
-                                Child, texts[35] = MyTextObject6(),
+                                Child, (IPTR)(texts[35] = MyTextObject6()),
                             End,
                         End,
                     End,
                 End,
-            End,
-            Child, MyVSpace(4),
-            Child, exitButton = MakeButton(txtExit),
+            End),
+            Child, (IPTR)MyVSpace(4),
+            Child, (IPTR)(exitButton = MakeButton(txtExit)),
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
     {
@@ -339,7 +340,7 @@ STATIC ULONG mSet( struct IClass *cl,
     struct TagItem *tags, *tag;
 
     tags = msg->ops_AttrList;
-    while ((tag = NextTagItem(&tags)) != NULL) {
+    while ((tag = NextTagItem((APTR)&tags)) != NULL) {
         switch (tag->ti_Tag) {
             case MUIA_Window_ParentWindow:
                 DoMethod(obj, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, MUIV_Notify_Application, 5, MUIM_Application_PushMethod, tag->ti_Data, 2, MUIM_Window_RemChildWindow, obj);

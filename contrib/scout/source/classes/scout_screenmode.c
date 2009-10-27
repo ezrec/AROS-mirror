@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -166,16 +164,16 @@ STATIC void IterateList( void (* callback)( struct ScreenModeEntry *sme, void *u
                 sme->sme_ModeID = id;
                 _snprintf(sme->sme_Id, sizeof(sme->sme_Id), "$%08lx", id);
 
-                GetDisplayInfoData(NULL, &smd->dimension, sizeof(smd->dimension), DTAG_DIMS, id);
+                GetDisplayInfoData(NULL, (UBYTE *)&smd->dimension, sizeof(smd->dimension), DTAG_DIMS, id);
                 _snprintf(sme->sme_Width, sizeof(sme->sme_Width), "%5ld", smd->dimension.Nominal.MaxX - smd->dimension.Nominal.MinX + 1);
                 _snprintf(sme->sme_Height, sizeof(sme->sme_Height), "%5ld", smd->dimension.Nominal.MaxY - smd->dimension.Nominal.MinY + 1);
                 _snprintf(sme->sme_Depth, sizeof(sme->sme_Depth), "%5ld", (smd->dimension.MaxDepth == 32) ? 24 : smd->dimension.MaxDepth);
 
-                if (GetDisplayInfoData(NULL, &smd->name, sizeof(smd->name), DTAG_NAME, id)) {
+                if (GetDisplayInfoData(NULL, (UBYTE *)&smd->name, sizeof(smd->name), DTAG_NAME, id)) {
                     stccpy(sme->sme_Name, smd->name.Name, sizeof(sme->sme_Name));
                 } else {
-                    if (GetDisplayInfoData(NULL, &smd->monitor, sizeof(smd->monitor), DTAG_MNTR, id)) {
-                        if (GetDisplayInfoData(NULL, &smd->display, sizeof(smd->display), DTAG_DISP, id)) {
+                    if (GetDisplayInfoData(NULL, (UBYTE *)&smd->monitor, sizeof(smd->monitor), DTAG_MNTR, id)) {
+                        if (GetDisplayInfoData(NULL, (UBYTE *)&smd->display, sizeof(smd->display), DTAG_DISP, id)) {
                             ULONG prop = smd->display.PropertyFlags;
                             WORD  xres = smd->dimension.Nominal.MaxX - smd->dimension.Nominal.MinX;
 
@@ -253,16 +251,16 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('S','M','D','E'),
         WindowContents, VGroup,
 
-            Child, MyNListviewObject(&smodelist, MakeID('S','M','L','V'), "BAR,BAR,BAR,BAR,BAR", &smodelist_con2hook, &smodelist_des2hook, &smodelist_dsp2hook, &smodelist_cmp2hook, TRUE),
-            Child, MyBelowListview(&smodetext, &smodecount),
+            Child, (IPTR)MyNListviewObject(&smodelist, MakeID('S','M','L','V'), "BAR,BAR,BAR,BAR,BAR", &smodelist_con2hook, &smodelist_des2hook, &smodelist_dsp2hook, &smodelist_cmp2hook, TRUE),
+            Child, (IPTR)MyBelowListview(&smodetext, &smodecount),
 
-            Child, MyVSpace(4),
+            Child, (IPTR)MyVSpace(4),
 
             Child, HGroup, MUIA_Group_SameSize, TRUE,
-                Child, updateButton = MakeButton(txtUpdate),
-                Child, printButton  = MakeButton(txtPrint),
-                Child, moreButton   = MakeButton(txtMore),
-                Child, exitButton   = MakeButton(txtExit),
+                Child, (IPTR)(updateButton = MakeButton(txtUpdate)),
+                Child, (IPTR)(printButton  = MakeButton(txtPrint)),
+                Child, (IPTR)(moreButton   = MakeButton(txtMore)),
+                Child, (IPTR)(exitButton   = MakeButton(txtExit)),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
@@ -357,8 +355,8 @@ STATIC ULONG mMore( struct IClass *cl,
         if ((sme = (struct ScreenModeEntry *)GetActiveEntry(smwd->smwd_ScreenModeList)) != NULL) {
             APTR detailWin;
 
-            if ((detailWin = ScreenModesDetailWindowObject,
-                    MUIA_Window_ParentWindow, obj,
+            if ((detailWin = (Object *)ScreenModesDetailWindowObject,
+                    MUIA_Window_ParentWindow, (IPTR)obj,
                     MUIA_Window_MaxChildWindowCount, (opts.SingleWindows) ? 1 : 0,
                 End) != NULL) {
                 COLLECT_RETURNIDS;

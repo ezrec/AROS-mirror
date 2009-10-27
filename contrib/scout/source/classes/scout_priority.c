@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -66,47 +64,47 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('P','R','I','O'),
         WindowContents, VGroup,
 
-            Child, MyVSpace(2),
-            Child, pritext1 = MyTextObject(),
-            Child, MyVSpace(2),
-            Child, SL_Priority = SliderObject,
+            Child, (IPTR)MyVSpace(2),
+            Child, (IPTR)(pritext1 = MyTextObject()),
+            Child, (IPTR)MyVSpace(2),
+            Child, (IPTR)(SL_Priority = (Object *)SliderObject,
                 MUIA_Slider_Min, -128,
                 MUIA_Slider_Max, 127,
                 MUIA_Slider_Level, 0,
-                MUIA_FixHeightTxt, " ",
+                MUIA_FixHeightTxt, (IPTR)" ",
                 MUIA_CycleChain, TRUE,
-            End,
-            Child, MyVSpace(2),
+            End),
+            Child, (IPTR)MyVSpace(2),
             Child, HGroup, MUIA_Group_SameWidth, TRUE,
                 Child, HGroup,
                     Child, MyLabel2(txtMinPri),
-                    Child, MyTextObject3(MUIX_C "-128"),
+                    Child, (IPTR)MyTextObject3(MUIX_C "-128"),
                 End,
                 Child, HGroup,
                     Child, MyLabel2(txtMaxPri),
-                    Child, MyTextObject3(MUIX_C "127"),
+                    Child, (IPTR)MyTextObject3(MUIX_C "127"),
                 End,
                 Child, HGroup,
                     Child, MyLabel2(txtOldPri),
-                    Child, pritext2 = MyTextObject(),
+                    Child, (IPTR)(pritext2 = MyTextObject()),
                 End,
                 Child, HGroup,
                     Child, MyLabel2(txtNewPri),
-                    Child, pritext3 = StringObject,
+                    Child, (IPTR)(pritext3 = (Object *)StringObject,
                         MUIA_String_BufferPos, 1,
-                        MUIA_String_Accept , "-0123456879",
+                        MUIA_String_Accept , (IPTR)"-0123456879",
                         MUIA_String_Integer, 0,
                         MUIA_String_MaxLen, 5,
                         MUIA_String_Format, MUIV_String_Format_Right,
                         MUIA_CycleChain, TRUE,
                         StringFrame,
-                    End,
+                    End),
                 End,
             End,
-            Child, MyVSpace(2),
+            Child, (IPTR)MyVSpace(2),
             Child, HGroup, MUIA_Group_SameWidth, TRUE,
-                Child, okButton = MakeButton(txtMUIOk),
-                Child, cancelButton = MakeButton(txtMUICancel),
+                Child, (IPTR)(okButton = MakeButton(txtMUIOk)),
+                Child, (IPTR)(cancelButton = MakeButton(txtMUICancel)),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
@@ -152,7 +150,7 @@ STATIC ULONG mSet( struct IClass *cl,
     struct TagItem *tags, *tag;
 
     tags = msg->ops_AttrList;
-    while ((tag = NextTagItem(&tags)) != NULL) {
+    while ((tag = NextTagItem((APTR)&tags)) != NULL) {
         switch (tag->ti_Tag) {
             case MUIA_PriorityWin_ObjectName:
                 MySetContents(pwd->pwd_PriorityText[0], msgSelectNewPriority, (UBYTE *)tag->ti_Data);
@@ -174,7 +172,7 @@ STATIC ULONG mGet( struct IClass *cl,
                    struct opGet *msg )
 {
     struct PriorityWinData *pwd = INST_DATA(cl, obj);
-    ULONG *store = msg->opg_Storage;
+    IPTR *store = msg->opg_Storage;
 
     switch (msg->opg_AttrID) {
         case MUIA_PriorityWin_Priority:

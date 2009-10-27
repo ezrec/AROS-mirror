@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -187,13 +185,13 @@ STATIC void IterateList( void (* callback)( struct AudioModeEntry *ame, void *us
                             ame->ame_ModeID = id;
                             _snprintf(ame->ame_Id, sizeof(ame->ame_Id), "$%08lx", id);
 
-                            AHI_GetAudioAttrs(id, NULL, AHIDB_Name, ame->ame_Name,
+                            AHI_GetAudioAttrs(id, NULL, AHIDB_Name, (Tag)ame->ame_Name,
                                                         AHIDB_BufferLen, sizeof(ame->ame_Name),
                                                         TAG_DONE);
-                            AHI_GetAudioAttrs(id, NULL, AHIDB_Bits, &bits,
-                                                        AHIDB_MinMixFreq, &minfreq,
-                                                        AHIDB_MaxMixFreq, &maxfreq,
-                                                        AHIDB_Frequencies, &numfreqs,
+                            AHI_GetAudioAttrs(id, NULL, AHIDB_Bits, (Tag)&bits,
+                                                        AHIDB_MinMixFreq, (Tag)&minfreq,
+                                                        AHIDB_MaxMixFreq, (Tag)&maxfreq,
+                                                        AHIDB_Frequencies, (Tag)&numfreqs,
                                                         TAG_DONE);
                             _snprintf(ame->ame_Bits, sizeof(ame->ame_Bits), "%3lD", bits);
                             if (numfreqs > 1) {
@@ -262,16 +260,16 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('A','M','D','E'),
         WindowContents, VGroup,
 
-            Child, MyNListviewObject(&amodelist, MakeID('A','M','L','V'), "BAR,BAR,BAR P=" MUIX_R ",BAR P=" MUIX_R ",BAR P=" MUIX_R, &amodelist_con2hook, &amodelist_des2hook, &amodelist_dsp2hook, &amodelist_cmp2hook, TRUE),
-            Child, MyBelowListview(&amodetext, &amodecount),
+            Child, (IPTR)MyNListviewObject(&amodelist, MakeID('A','M','L','V'), "BAR,BAR,BAR P=" MUIX_R ",BAR P=" MUIX_R ",BAR P=" MUIX_R, &amodelist_con2hook, &amodelist_des2hook, &amodelist_dsp2hook, &amodelist_cmp2hook, TRUE),
+            Child, (IPTR)MyBelowListview(&amodetext, &amodecount),
 
-            Child, MyVSpace(4),
+            Child, (IPTR)MyVSpace(4),
 
             Child, HGroup, MUIA_Group_SameSize, TRUE,
-                Child, updateButton = MakeButton(txtUpdate),
-                Child, printButton  = MakeButton(txtPrint),
-                Child, moreButton   = MakeButton(txtMore),
-                Child, exitButton   = MakeButton(txtExit),
+                Child, (IPTR)(updateButton = MakeButton(txtUpdate)),
+                Child, (IPTR)(printButton  = MakeButton(txtPrint)),
+                Child, (IPTR)(moreButton   = MakeButton(txtMore)),
+                Child, (IPTR)(exitButton   = MakeButton(txtExit)),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
@@ -366,9 +364,9 @@ STATIC ULONG mMore( struct IClass *cl,
         if ((ame = (struct AudioModeEntry *)GetActiveEntry(amwd->amwd_AudioModeList)) != NULL) {
             APTR detailWin;
 
-            if ((detailWin = AudioModesDetailWindowObject,
-                    MUIA_Window_ParentWindow, obj,
-                End) != NULL) {
+            if ((detailWin = (Object *)(AudioModesDetailWindowObject,
+                    MUIA_Window_ParentWindow, (IPTR)obj,
+                End)) != NULL) {
                 COLLECT_RETURNIDS;
                 set(detailWin, MUIA_AudioModesDetailWin_AudioMode, ame);
                 set(detailWin, MUIA_Window_Open, TRUE);

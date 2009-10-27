@@ -9,6 +9,14 @@
 #include "SDI_compiler.h"
 
 /* /// "DoSuperNew()" */
+#if defined(__AROS__)
+IPTR DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...)
+{
+  AROS_SLOWSTACKTAGS_PRE(tag1)
+  retval = DoSuperMethod(cl, obj, OM_NEW, AROS_SLOWSTACKTAGS_ARG(tag1));
+  AROS_SLOWSTACKTAGS_POST
+}
+#else
 ULONG VARARGS68K STDARGS DoSuperNew( struct IClass *cl,
                                      Object *obj, ... )
 {
@@ -21,5 +29,6 @@ ULONG VARARGS68K STDARGS DoSuperNew( struct IClass *cl,
 
     return rc;
 }
-/* \\\ */
+#endif
 
+/* \\\ */

@@ -20,8 +20,6 @@
 @c  along with this program; if not, write to the Free Software
 @c  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 @c
-@c  You must not use this source code to gain profit of any kind!
-@c
 @c ------------------------------------------------------------------
 @c
 @c  author Andreas Gelhausen

@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -306,19 +304,19 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('W','I','N','D'),
         WindowContents, VGroup,
 
-            Child, MyNListtreeObject(&wintree, "BAR,BAR P=" MUIX_C ",BAR P=" MUIX_C ",BAR,BAR,BAR", &wintree_conhook, &wintree_deshook, &wintree_dsphook, &wintree_cmphook, &wintree_findhook, 5),
-            Child, wintext = MyTextObject(),
+            Child, (IPTR)MyNListtreeObject(&wintree, "BAR,BAR P=" MUIX_C ",BAR P=" MUIX_C ",BAR,BAR,BAR", &wintree_conhook, &wintree_deshook, &wintree_dsphook, &wintree_cmphook, &wintree_findhook, 5),
+            Child, (IPTR)(wintext = MyTextObject()),
 
-            Child, MyVSpace(4),
+            Child, (IPTR)MyVSpace(4),
 
             Child, HGroup, MUIA_Group_SameSize, TRUE,
-                Child, updateButton  = MakeButton(txtUpdate),
-                Child, printButton   = MakeButton(txtPrint),
-                Child, closeButton   = MakeButton(txtClose),
-                Child, frontButton   = MakeButton(txtToFront),
-                Child, visibleButton = MakeButton(txtMakeVisible),
-                Child, moreButton    = MakeButton(txtMore),
-                Child, exitButton    = MakeButton(txtExit),
+                Child, (IPTR)(updateButton  = MakeButton(txtUpdate)),
+                Child, (IPTR)(printButton   = MakeButton(txtPrint)),
+                Child, (IPTR)(closeButton   = MakeButton(txtClose)),
+                Child, (IPTR)(frontButton   = MakeButton(txtToFront)),
+                Child, (IPTR)(visibleButton = MakeButton(txtMakeVisible)),
+                Child, (IPTR)(moreButton    = MakeButton(txtMore)),
+                Child, (IPTR)(exitButton    = MakeButton(txtExit)),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
@@ -488,9 +486,9 @@ STATIC ULONG mMore( struct IClass *cl,
             if (ObjectExists(we)) {
                 APTR detailWin;
 
-                if ((detailWin = WindowsDetailWindowObject,
-                        MUIA_Window_Title, we->we_Title,
-                        MUIA_Window_ParentWindow, obj,
+                if ((detailWin = (Object *)WindowsDetailWindowObject,
+                        MUIA_Window_Title, (IPTR)we->we_Title,
+                        MUIA_Window_ParentWindow, (IPTR)obj,
                         MUIA_Window_MaxChildWindowCount, (opts.SingleWindows) ? 1 : 0,
                     End) != NULL) {
                     COLLECT_RETURNIDS;

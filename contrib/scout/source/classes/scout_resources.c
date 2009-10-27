@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -53,6 +51,12 @@ STRPTR forbiddenResources[] = {
     "newmemory.resource",
     "newfilesystem.resource",
     "biosversion.resource",
+#elif defined(__AROS__)
+    "battclock.resource",
+    "bootloader.resource",
+    "bootmenu.resource",
+    "dosboot.resource",
+    "hostlib.resource",
 #endif
     NULL,
 };
@@ -276,22 +280,22 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('R','E','S','O'),
         WindowContents, VGroup,
 
-            Child, MyNListviewObject(&reslist, MakeID('R','S','L','V'), "BAR,BAR,BAR P=" MUIX_C ",BAR P=" MUIX_R ",BAR P=" MUIX_C ",BAR P=" MUIX_R ",BAR P=" MUIX_R "", &reslist_con2hook, &reslist_des2hook, &reslist_dsp2hook, &reslist_cmp2hook, TRUE),
-            Child, MyBelowListview(&restext, &rescount),
+            Child, (IPTR)MyNListviewObject(&reslist, MakeID('R','S','L','V'), "BAR,BAR,BAR P=" MUIX_C ",BAR P=" MUIX_R ",BAR P=" MUIX_C ",BAR P=" MUIX_R ",BAR P=" MUIX_R "", &reslist_con2hook, &reslist_des2hook, &reslist_dsp2hook, &reslist_cmp2hook, TRUE),
+            Child, (IPTR)MyBelowListview(&restext, &rescount),
 
-            Child, MyVSpace(4),
+            Child, (IPTR)MyVSpace(4),
 
             Child, HGroup, MUIA_Group_SameSize, TRUE,
-                Child, priorityButton = MakeButton(txtPriority),
-                Child, removeButton   = MakeButton(txtRemove),
-                Child, funcButton     = MakeButton(txtFunctions),
+                Child, (IPTR)(priorityButton = MakeButton(txtPriority)),
+                Child, (IPTR)(removeButton   = MakeButton(txtRemove)),
+                Child, (IPTR)(funcButton     = MakeButton(txtFunctions)),
             End,
 
             Child, HGroup, MUIA_Group_SameSize, TRUE,
-                Child, updateButton   = MakeButton(txtUpdate),
-                Child, printButton    = MakeButton(txtPrint),
-                Child, moreButton     = MakeButton(txtMore),
-                Child, exitButton     = MakeButton(txtExit),
+                Child, (IPTR)(updateButton   = MakeButton(txtUpdate)),
+                Child, (IPTR)(printButton    = MakeButton(txtPrint)),
+                Child, (IPTR)(moreButton     = MakeButton(txtMore)),
+                Child, (IPTR)(exitButton     = MakeButton(txtExit)),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
@@ -440,8 +444,8 @@ STATIC ULONG mMore( struct IClass *cl,
         if ((re = (struct ResourceEntry *)GetActiveEntry(rwd->rwd_ResourceList)) != NULL) {
             APTR detailWin;
 
-            if ((detailWin = ResourcesDetailWindowObject,
-                    MUIA_Window_ParentWindow, obj,
+            if ((detailWin = (Object *)ResourcesDetailWindowObject,
+                    MUIA_Window_ParentWindow, (IPTR)obj,
                     MUIA_Window_MaxChildWindowCount, (opts.SingleWindows) ? 1 : 0,
                 End) != NULL) {
                 COLLECT_RETURNIDS;
@@ -465,8 +469,8 @@ STATIC ULONG mFunctions( struct IClass *cl,
     if ((re = (struct ResourceEntry *)GetActiveEntry(rwd->rwd_ResourceList)) != NULL) {
         APTR funcWin;
 
-        if ((funcWin = FunctionsWindowObject,
-                MUIA_Window_ParentWindow, obj,
+        if ((funcWin = (Object *)FunctionsWindowObject,
+                MUIA_Window_ParentWindow, (IPTR)obj,
             End) != NULL) {
             DoMethod(funcWin, MUIM_FunctionsWin_ShowFunctions, MUIV_FunctionsWin_NodeType_Resource, re->re_Addr, re->re_Name);
         }

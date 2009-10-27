@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -39,7 +37,11 @@ struct FileSystemEntry {
     char fse_Creator[NODENAME_LENGTH];
 };
 
-#define ResourcesDetailWindowObject          NewObject(ResourcesDetailWinClass->mcc_Class, NULL
+#if defined(__AROS__)
+    #define ResourcesDetailWindowObject  BOOPSIOBJMACRO_START(ResourcesDetailWinClass->mcc_Class)
+#else
+    #define ResourcesDetailWindowObject  NewObject(ResourcesDetailWinClass->mcc_Class, NULL
+#endif
 
 APTR MakeResourcesDetailWinClass( void );
 

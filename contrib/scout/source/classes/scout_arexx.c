@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -151,7 +149,7 @@ MakeStaticHook(breaktask_rxhook, breaktask_rxfunc);
 STATIC SAVEDS LONG settaskpri_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
 {
    struct   Task     *task;
-   long     pri, result = RETURN_ERROR;
+   LONG     pri, result = RETURN_ERROR;
 
    Forbid();
    if ((task = MyFindTask ((STRPTR)arg[0])) != NULL && (IsDec ((STRPTR)arg[1], &pri))) {
@@ -194,10 +192,10 @@ MakeStaticHook(removelocks_rxhook, removelocks_rxfunc);
 
 STATIC SAVEDS LONG removelock_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
 {
-   long  nobptr;
+   LONG  nobptr;
 
    if (IsHex ((STRPTR)arg[0], &nobptr)) {
-      UnLock ((BPTR) nobptr>>2);
+      UnLock ((BPTR) MKBADDR(nobptr));
       return (RETURN_OK);
    }
    return (RETURN_ERROR);
@@ -206,7 +204,7 @@ MakeStaticHook(removelock_rxhook, removelock_rxfunc);
 
 STATIC SAVEDS LONG getpriority_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
 {
-   long  address;
+   LONG  address;
 
    if (IsHex ((STRPTR)arg[0], &address)) {
       if (SendResultString ("%d", ((struct Node *) address)->ln_Pri))
@@ -425,7 +423,7 @@ MakeStaticHook(findinterrupt_rxhook, findinterrupt_rxfunc);
 STATIC SAVEDS LONG removeinterrupt_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
 {
     struct Interrupt *intr;
-   
+
     if ((intr = RemoveInterrupt((STRPTR)arg[0])) != NULL) {
         return RETURN_OK;
     }
@@ -515,7 +513,7 @@ STATIC SAVEDS LONG poptofront_rxfunc( struct Hook *hook, Object *obj, ULONG *arg
 {
    struct   Window   *window;
    struct   Screen   *screen;
-   
+
    if ((screen = MyFindScreen ((STRPTR)arg[0])) != NULL) {
       ScreenToFront (screen);
       return (RETURN_OK);
@@ -556,7 +554,7 @@ STATIC SAVEDS LONG makevisible_rxfunc( struct Hook *hook, Object *obj, ULONG *ar
             if ((handle = FindDisplayInfo(id)) != NULL) {
                 struct DimensionInfo diminfo;
 
-                GetDisplayInfoData(handle, &diminfo, sizeof(diminfo), DTAG_DIMS, 0);
+                GetDisplayInfoData(handle, (UBYTE *)&diminfo, sizeof(diminfo), DTAG_DIMS, 0);
                 minX = diminfo.Nominal.MinX;
                 minY = diminfo.Nominal.MinY;
                 maxX = diminfo.Nominal.MaxX;
@@ -830,7 +828,7 @@ MakeStaticHook(removecx_rxhook, removecx_rxfunc);
 STATIC SAVEDS LONG setcxpri_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
 {
     struct Node *node;
-   long     pri;
+   LONG   pri;
 
    if ((node = MyFindName ("COMMODITIES", (STRPTR)arg[0])) != NULL && (IsDec ((STRPTR)arg[1], &pri))) {
       if((pri>=-128) && (pri<=127)) {
@@ -1012,7 +1010,7 @@ short SendStartupMsg( STRPTR PortName, STRPTR RString, BOOL IsFileName )
 
             rmsg->rm_Args[0] = CreateArgstring (buffer, buflen);
          }
-      } else {          
+      } else {
          rmsg->rm_Args[0] = CreateArgstring (RString,(LONG) strlen (RString));
       }
 
@@ -1045,7 +1043,7 @@ struct Task *MyFindTask( STRPTR stask )
    if ((tmp = tbAllocVecPooled(globalPool, TMP_STRING_LENGTH)) != NULL) {
        LONG _task;
 
-       if (IsHex (stask, &_task)) {
+       if (IsUHex (stask, &_task)) {
           task = (struct Task *)_task;
 
           Forbid();
@@ -1241,7 +1239,7 @@ BOOL MySignalTask (STRPTR stask, STRPTR ssignal )
 }
 
 STATIC STRPTR nodetype[] = {
-   "LIBRARY", "DEVICE", "RESOURCE", "MEMORY", "SEMAPHORE", 
+   "LIBRARY", "DEVICE", "RESOURCE", "MEMORY", "SEMAPHORE",
    "PORT", "INPUTHANDLER", "LOWMEMORY", "COMMODITIES",
    "CLASSES", "TIMER_MICRO", "TIMER_VBLANK", "RESETHANDLER",
    "RESETCALLBACK", NULL
@@ -1527,9 +1525,9 @@ struct Screen *MyFindScreen( STRPTR sname )
     LONG _screen;
 
     lauf = IntuitionBase->FirstScreen;
-    if (IsHex(sname, (LONG *)&_screen)) {
+    if (IsUHex(sname, (LONG *)&_screen)) {
         screen = (struct Screen *)_screen;
-   
+
         while (lauf) {
             if (screen) {
                 if (lauf == screen) {
@@ -1558,9 +1556,9 @@ struct Window *MyFindWindow( STRPTR sname )
     lock = LockIBase(0);
 
     screen = IntuitionBase->FirstScreen;
-    if (IsHex(sname, &_window)) {
+    if (IsUHex(sname, &_window)) {
         window = (struct Window *)_window;
-   
+
         while (screen) {
             lauf = screen->FirstWindow;
 

@@ -17,8 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * You must not use this source code to gain profit of any kind!
- *
  *------------------------------------------------------------------
  *
  * @author Andreas Gelhausen
@@ -109,7 +107,7 @@ STATIC LONG patchlist_cmp2colfunc( struct PatchEntry *pe1,
     return cmp;
 }
 
-#if !defined(__amigaos4__)
+#if !defined(__amigaos4__) && !defined(__AROS__)
 STATIC LONG patchlist_cmpfunc( const struct Node *n1,
                                const struct Node *n2 )
 {
@@ -153,7 +151,7 @@ STATIC SAVEDS LONG patchlist_cmp2func( struct Hook *hook, Object *obj, struct NL
 }
 MakeStaticHook(patchlist_cmp2hook, patchlist_cmp2func);
 
-#if !defined(__amigaos4__)
+#if !defined(__amigaos4__) && !defined(__AROS__)
 STATIC void GetFunctionName( struct Library *lib,
                              LONG offset,
                              struct PatchEntry *pe )
@@ -203,7 +201,7 @@ STATIC void GetFunctionName( struct Library *lib,
 }
 #endif
 
-#if !defined(__amigaos4__)
+#if !defined(__amigaos4__) && !defined(__AROS__)
 STATIC void IterateSaferPatchesList( struct MinList *tmplist,
                                      struct PatchPort *pp )
 {
@@ -377,7 +375,7 @@ STATIC void IterateList( void (* callback)( struct PatchEntry *pe, void *userDat
                          void *userData,
                          BOOL sort )
 {
-#if !defined(__amigaos4__)
+#if !defined(__amigaos4__) && !defined(__AROS__)
     struct MinList tmplist;
     struct PatchEntry *pe;
     struct PatchPort *pp;
@@ -443,17 +441,17 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('P','T','C','H'),
         WindowContents, VGroup,
 
-            Child, MyNListviewObject(&patchlist, MakeID('P','T','L','V'), "BAR,BAR,BAR P=" MUIX_R ",BAR P=" MUIX_R ",BAR,BAR P=" MUIX_C ",BAR", &patchlist_con2hook, &patchlist_des2hook, &patchlist_dsp2hook, &patchlist_cmp2hook, TRUE),
-            Child, MyBelowListview(&patchtext, &patchcount),
+            Child, (IPTR)MyNListviewObject(&patchlist, MakeID('P','T','L','V'), "BAR,BAR,BAR P=" MUIX_R ",BAR P=" MUIX_R ",BAR,BAR P=" MUIX_C ",BAR", &patchlist_con2hook, &patchlist_des2hook, &patchlist_dsp2hook, &patchlist_cmp2hook, TRUE),
+            Child, (IPTR)MyBelowListview(&patchtext, &patchcount),
 
-            Child, MyVSpace(4),
+            Child, (IPTR)MyVSpace(4),
 
             Child, HGroup, MUIA_Group_SameSize, TRUE,
-                Child, updateButton   = MakeButton(txtUpdate),
-                Child, printButton    = MakeButton(txtPrint),
-                Child, enableButton   = MakeButton(txtEnable),
-                Child, disableButton  = MakeButton(txtDisable),
-                Child, exitButton     = MakeButton(txtExit),
+                Child, (IPTR)(updateButton   = MakeButton(txtUpdate)),
+                Child, (IPTR)(printButton    = MakeButton(txtPrint)),
+                Child, (IPTR)(enableButton   = MakeButton(txtEnable)),
+                Child, (IPTR)(disableButton  = MakeButton(txtDisable)),
+                Child, (IPTR)(exitButton     = MakeButton(txtExit)),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
@@ -486,7 +484,7 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(exitButton,    MUIM_Notify, MUIA_Pressed,             FALSE,          obj,                     3, MUIM_Set, MUIA_Window_CloseRequest, TRUE);
         DoMethod(patchlist,     MUIM_NList_Sort3, MUIV_NList_Sort3_SortType_1, MUIV_NList_SortTypeAdd_None, MUIV_NList_Sort3_SortType_Both);
 
-    #if !defined(__amigaos4__)
+    #if !defined(__amigaos4__) && !defined(__AROS__)
         Forbid();
         pwd->pwd_SetManPort = (struct SetManPort *)FindPort(SETMANPORT_NAME);
         Permit();
@@ -575,7 +573,7 @@ STATIC ULONG mEnable( struct IClass *cl,
                       Object *obj,
                       Msg msg )
 {
-#if !defined(__amigaos4__)
+#if !defined(__amigaos4__) && !defined(__AROS__)
     struct PatchesWinData *pwd = INST_DATA(cl, obj);
     ULONG id = MUIV_NList_NextSelected_Start;
 
@@ -628,7 +626,7 @@ STATIC ULONG mDisable( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
-#if !defined(__amigaos4__)
+#if !defined(__amigaos4__) && !defined(__AROS__)
     struct PatchesWinData *pwd = INST_DATA(cl, obj);
     ULONG id = MUIV_NList_NextSelected_Start;
     ULONG disableMode = 1;
