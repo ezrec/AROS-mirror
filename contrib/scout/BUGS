@@ -1,0 +1,24 @@
+Known issues with AROS port:
+
+BoopsiClasses
+    The classes should be shown in a tree which shows parent/child
+    relations. But on AROS they are shown flat, though some have
+    an arrow.
+
+Devices
+    On AROS the handlers appear in the list. Double clicking on a handler
+    causes a segfault; doing OpenDevice on an handler seems to be bad.
+
+Libraries
+    Clicking on a function in the function list segfaults. CopyMem is
+    done with address -1. Maybe the start address is calculated wrongly.
+
+Locks
+    List is empty.
+
+Tasks
+    Segfault when enabling "in %". It needs to be checked how this
+    task time calculation can be done on AROS.
+
+Catalogs
+    Catalog names aren't shown.
