@@ -547,6 +547,7 @@ IPTR BrowserWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 		    Child, toolTips = TextObject,
 			MUIA_Frame, MUIV_Frame_Text,
 			MUIA_HorizWeight, 90,
+			MUIA_Text_SetMin, FALSE,
 			End,
 		    Child, progressBar = GaugeObject,
 			MUIA_HorizWeight, 10,
