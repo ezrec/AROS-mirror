@@ -114,7 +114,7 @@ See Licenses directory for more details.
 
 HISTORY
 
-OWB 0.9.9 (26.10.2009)
+OWB 0.9.9 (28.10.2009)
   - Added support for multiple browser windows
   - Added support for popup windows
   - Added main application menu
@@ -122,6 +122,7 @@ OWB 0.9.9 (26.10.2009)
   - Added StartOWB tool displaying splash window while OWB is starting
     (logo created by mihcaels, thanks man!)
   - Replaced text search window with search panel
+  - Middle mouse button now opens links in new tab
   - Fixed bug #69: Can't login on www.vcast.it. It say that cookies are not
     active on the browser
   - Fixed bug #81: After sending a private message on AROS-Exec, the links
@@ -129,6 +130,7 @@ OWB 0.9.9 (26.10.2009)
   - Fixed bug #85: Long bookmarks are cut
   - Fixed bug #88: Reloading AROS-Exec causes it to look weird
   - Fixed bug #91: Problem with cookies from www.ppa.pl
+  - Fixed assertion fails in fontconfig library
   - Updated OWB source code to revision 1097
 
 OWB 0.9.8 (28.06.2009)
