@@ -205,6 +205,7 @@ struct drm_device {
 
 struct drm_file
 {
+    /* Don't remove it */
     int dummy;
 };
 

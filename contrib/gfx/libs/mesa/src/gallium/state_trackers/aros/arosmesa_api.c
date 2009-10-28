@@ -484,9 +484,10 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
         return NULL;
     }
 
-    /* FIXME: This is a hack so that VRAM is not allocated from visible portion of framebuffer */
-    driver->protect_visible_screen(screen, amesa->ScreenInfo.Width, amesa->ScreenInfo.Height, 
+    /* FIXME: Needs redesign when gallium merged with 2D HIDDs - how screen resolution change will be handled? */
+    amesa->screen_surface = driver->get_screen_surface(screen, amesa->ScreenInfo.Width, amesa->ScreenInfo.Height, 
                                    amesa->ScreenInfo.BitsPerPixel);
+    /* amesa->screen_surface may be NULL */
     
     pipe = driver->create_pipe_context(screen);
     
@@ -617,6 +618,8 @@ void AROSMesaDestroyContext(AROSMesaContext amesa)
 
         st_finish(ctx->st);        
         st_destroy_context(ctx->st);
+        
+        /* FIXME: Release amesa->screen_surface? (it's only a reference, not an allocation) */
         
         aros_destroy_framebuffer(amesa->framebuffer);
         aros_destroy_visual(amesa->visual);

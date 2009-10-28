@@ -29,6 +29,7 @@ struct arosmesa_driver * arosmesa_get_driver( void )
 /* HACK definition to satisfy compiler */
 void nouveau_exit(void);
 int nouveau_init(void);
+void HACK_unprotect_screen_fb(void);
 
 static int
 initialize_driver(void)
@@ -66,7 +67,11 @@ deinitialize_driver(void)
      * "kernel" driver */
     
     if (current_driver == &arosmesa_nouveau_driver)
+    {
+        HACK_unprotect_screen_fb();
+        
         nouveau_exit();
+    }
     
     return 1;
 }

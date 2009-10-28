@@ -20,8 +20,7 @@ struct arosmesa_driver
     /* Return values of depht/stencil buffer bits supported by driver */
     void (*query_depth_stencil)( int color, int * depth, int * stencil );
 
-    void (*protect_visible_screen)( struct pipe_screen * , int, int, int);
-
+    struct pipe_surface *(*get_screen_surface)( struct pipe_screen * , int, int, int);
 };
 
 struct arosmesa_driver * arosmesa_get_driver ( void );

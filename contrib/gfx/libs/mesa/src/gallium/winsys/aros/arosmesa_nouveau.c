@@ -17,18 +17,6 @@
 
 #include <proto/graphics.h>
 
-// #include <proto/exec.h>
-// #include <proto/cybergraphics.h>
-// #include <cybergraphx/cybergraphics.h>
-// 
-// #if (AROS_BIG_ENDIAN == 1)
-// #define AROS_PIXFMT RECTFMT_ARGB32   /* Big Endian Archs. */
-// #else
-// #define AROS_PIXFMT RECTFMT_BGRA32   /* Little Endian Archs. */
-// #endif
-
-static struct pipe_surface * whole_screen;
-
 static void
 arosmesa_nouveau_display_surface(AROSMesaContext amesa,
                               struct pipe_surface *surf)
@@ -38,38 +26,12 @@ arosmesa_nouveau_display_surface(AROSMesaContext amesa,
     struct Layer *L = amesa->visible_rp->Layer;
     struct ClipRect *CR;
     
-//     struct pipe_screen *screen = pipe->screen;
-//     struct pipe_transfer *src_trans;
-//     const void *src_map;
-// 
-//     if (!surf->texture)
-//         return;
-//    
-//     src_trans = screen->get_tex_transfer(screen,
-//                                         surf->texture,
-//                                         surf->face,
-//                                         surf->level,
-//                                         surf->zslice,
-//                                         PIPE_TRANSFER_READ,
-//                                         0, 0, 300, 300);
-//     src_map = screen->transfer_map(screen, src_trans);
-//     
-//      WritePixelArray(
-//      src_map, 
-//         0,
-//         0,
-//         304,
-//         amesa->visible_rp, 
-//         amesa->left, 
-//         amesa->top, 
-//         amesa->width, 
-//         amesa->height, 
-//         AROS_PIXFMT);
-//         
-//    screen->transfer_unmap(pipe->screen, src_trans);
-//    
-//    screen->tex_transfer_destroy(src_trans);
-
+    if (amesa->screen_surface == NULL)
+    {
+        D(bug("Screen surface not provided\n"));
+        return;
+    }
+    
     if (L == NULL)
     {
         D(bug("Layer not provided\n"));
@@ -112,14 +74,8 @@ arosmesa_nouveau_display_surface(AROSMesaContext amesa,
             if (CR->bounds.MaxY < ymax) ymax = CR->bounds.MaxY;
             
             
-/*            DrawEllipse(&amesa->screen->RastPort, 
-                        (xmin + xmax) / 2, 
-                        (ymin + ymax) / 2,
-                        (xmax - xmin) / 2,
-                        (ymax - ymin) / 2);*/
-
             /* FIXME: clip last 4 parameters to actuall surface deminsions */
-            pipe->surface_copy(pipe, whole_screen, 
+            pipe->surface_copy(pipe, amesa->screen_surface, 
                         xmin, 
                         ymin, 
                         surf, 
@@ -140,18 +96,12 @@ arosmesa_nouveau_display_surface(AROSMesaContext amesa,
        It migh assume that since the hidden window is now on top, it will simply override what
        our window has draw - but our window renders direclty to framebuffer, so it overrides the
        top window */
-    
-//  pipe->surface_fill(pipe, whole_screen, 300, 300, 300, 300, 0x00ff0000);
-//  pipe->surface_fill(pipe, whole_screen, 350, 350, 300, 300, 0x0000ff00); 
-//  pipe->surface_fill(pipe, whole_screen, 400, 400, 300, 300, 0x000000ff); 
-//  pipe->surface_fill(pipe, whole_screen, 450, 450, 300, 300, 0xaaaaaaaa); 
-    return;
 }
 
 static int
 arosmesa_open_nouveau_device(struct nouveau_device **dev)
 {
-    return nouveau_device_open(dev, "DUMMY");
+    return nouveau_device_open(dev, "");
 }
 
 static void
@@ -318,11 +268,41 @@ nouveau_drm_pb_from_handle(struct pipe_screen *pscreen, unsigned handle)
     return &nvpb->base;
 }
 
-static void HACK_allocate_screen_buffer(int size, struct pipe_screen * pscreen)
+static void
+arosmesa_nouveau_cleanup( struct pipe_screen * screen )
 {
-    struct nouveau_pipe_winsys *nvpws = nouveau_screen(pscreen);
-    struct nouveau_device *dev = nvpws->channel->device;
+    if (screen)
+    {
+        /* First destroy the screen, then the winsys */
+        struct pipe_winsys * winsys = screen->winsys;
+        
+        screen->destroy(screen);
+        
+        if (winsys)
+        {
+            winsys->destroy(winsys);
+        }
+    }
+}
+
+/* HACK!!! */
+struct pipe_screen * protect_screen = NULL;
+
+static void HACK_protect_screen_fb(int size)
+{
+    struct nouveau_pipe_winsys *nvpws = NULL;
+    struct nouveau_device *dev = NULL;
     struct nouveau_bo *bo = NULL;
+    
+    /* Create a pipe_screen separate from any actual client */
+    /* FIXME: This screen needs to be destroyed */
+    if(!protect_screen) 
+        protect_screen = arosmesa_create_nouveau_screen();
+    else
+        return;
+    
+    nvpws = nouveau_screen(protect_screen);
+    dev = nvpws->channel->device;
     
     /* HACK - UNHOLY */
     /* IF WE ARE LUCKY:
@@ -333,8 +313,19 @@ static void HACK_allocate_screen_buffer(int size, struct pipe_screen * pscreen)
     nouveau_bo_new(dev, NOUVEAU_BO_VRAM | NOUVEAU_BO_PIN, 0, size, &bo);
 }
 
-static void
-arosmesa_nouveau_protect_visible_screen(struct pipe_screen * screen, int width, int height, int bpp)
+void HACK_unprotect_screen_fb(void)
+{
+    if (protect_screen) 
+    {
+        arosmesa_nouveau_cleanup(protect_screen);
+        protect_screen = NULL;
+    }
+}
+
+
+
+static struct pipe_surface *
+arosmesa_nouveau_get_screen_surface(struct pipe_screen * screen, int width, int height, int bpp)
 {
     struct pipe_surface *surface = NULL;
     struct pipe_texture *texture = NULL;
@@ -342,16 +333,17 @@ arosmesa_nouveau_protect_visible_screen(struct pipe_screen * screen, int width, 
     struct pipe_buffer *buf = NULL;
     unsigned pitch = width * bpp / 8;
 
-    HACK_allocate_screen_buffer(pitch * height, screen);
+    /* FIXME: This should be done at driver start! */
+    HACK_protect_screen_fb(pitch * height);
 
     #warning hardcoded start of visible framebuffer
     /* FIXME: The third parameter represents the offset to start of visible framebuffer - this must be read, not hardcoded 
     nvidia hidd registers_base + x00600000 + (0x800/4)
     */
 
-    buf = nouveau_drm_pb_from_handle(screen, 0 /*FIXME: THIS VALUE MATTERS!!!! */);
+    buf = nouveau_drm_pb_from_handle(screen, 0 /*FIXME: THIS VALUE MATTERS!!!! - offset in GFX memory where visible framebuffer starts */);
     if (!buf)
-        return;
+        return NULL;
 
     memset(&templat, 0, sizeof(templat));
     templat.tex_usage = PIPE_TEXTURE_USAGE_PRIMARY |
@@ -382,7 +374,7 @@ arosmesa_nouveau_protect_visible_screen(struct pipe_screen * screen, int width, 
     pipe_buffer_reference(&buf, NULL);
 
     if (!texture)
-        return;
+        return NULL;
 
     surface = screen->get_tex_surface(screen, texture, 0, 0, 0,
                                         PIPE_BUFFER_USAGE_GPU_READ |
@@ -391,24 +383,7 @@ arosmesa_nouveau_protect_visible_screen(struct pipe_screen * screen, int width, 
     /* we don't need the texture from this point on */
     pipe_texture_reference(&texture, NULL);
 
-    whole_screen = surface;
-}
-
-static void
-arosmesa_nouveau_cleanup( struct pipe_screen * screen )
-{
-    if (screen)
-    {
-        /* First destroy the screen, then the winsys */
-        struct pipe_winsys * winsys = screen->winsys;
-        
-        screen->destroy(screen);
-        
-        if (winsys)
-        {
-            winsys->destroy(winsys);
-        }
-    }
+    return surface;
 }
 
 static void
@@ -423,7 +398,7 @@ struct arosmesa_driver arosmesa_nouveau_driver =
     .create_pipe_screen = arosmesa_create_nouveau_screen,
     .create_pipe_context = arosmesa_create_nouveau_context,
     .display_surface = arosmesa_nouveau_display_surface,
-    .protect_visible_screen = arosmesa_nouveau_protect_visible_screen,
+    .get_screen_surface = arosmesa_nouveau_get_screen_surface,
     .cleanup = arosmesa_nouveau_cleanup,
     .query_depth_stencil = arosmesa_nouveau_query_depth_stencil,
 };

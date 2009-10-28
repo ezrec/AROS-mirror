@@ -228,10 +228,11 @@ arosmesa_softpipe_query_depth_stencil(int color, int * depth, int * stencil)
     (*stencil)  = 8;
 }
 
-static void
-arosmesa_softpipe_protect_visible_screen(struct pipe_screen * screen, int width, int height, int bpp)
+static struct pipe_surface *
+arosmesa_softpipe_get_screen_surface(struct pipe_screen * screen, int width, int height, int bpp)
 {
     /* No op */
+    return NULL;
 }
 
 static void
@@ -250,7 +251,7 @@ struct arosmesa_driver arosmesa_softpipe_driver =
     .create_pipe_context = arosmesa_create_softpipe_context,
     .display_surface = arosmesa_softpipe_display_surface,
     .query_depth_stencil = arosmesa_softpipe_query_depth_stencil,
-    .protect_visible_screen = arosmesa_softpipe_protect_visible_screen,
+    .get_screen_surface = arosmesa_softpipe_get_screen_surface,
     .cleanup = arosmesa_softpipe_cleanup,
 };
 
