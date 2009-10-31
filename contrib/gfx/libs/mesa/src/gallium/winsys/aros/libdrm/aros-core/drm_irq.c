@@ -18,7 +18,7 @@ static void interrupt_handler(HIDDT_IRQ_Handler * irq, HIDDT_IRQ_HwInfo *hw)
 {
     struct drm_device *dev = (struct drm_device*)irq->h_Data;
     
-    /* FIXME: What is INT is shared between devices? */
+    /* FIXME: What if INT is shared between devices? */
     if (dev->driver->irq_handler)
         dev->driver->irq_handler(dev);
 }
@@ -32,12 +32,12 @@ int drm_irq_install(struct drm_device *dev)
     IPTR INTLine = 0;
     int retval = -EINVAL;
     
-    /* FIXME: This should be generic (dependent of driver) and not hardcoded to nouveau */
+    ObtainSemaphore(&dev->struct_semaphore);
     if (dev->irq_enabled) {
         return -EBUSY;
     }
-    
     dev->irq_enabled = 1;
+    ReleaseSemaphore(&dev->struct_semaphore);
     
     if (dev->driver->irq_preinstall)
         dev->driver->irq_preinstall(dev);
@@ -47,7 +47,7 @@ int drm_irq_install(struct drm_device *dev)
     if (dev->IntHandler)
     {
         dev->IntHandler->h_Node.ln_Pri = 10;
-        dev->IntHandler->h_Node.ln_Name = "Nvidia-gallium handler";
+        dev->IntHandler->h_Node.ln_Name = "Gallium3D INT Handler";
         dev->IntHandler->h_Code = interrupt_handler;
         dev->IntHandler->h_Data = dev;
 
@@ -73,12 +73,22 @@ int drm_irq_install(struct drm_device *dev)
 
     if (retval != 0)
     {
+        ObtainSemaphore(&dev->struct_semaphore);
         dev->irq_enabled = 0;
+        ReleaseSemaphore(&dev->struct_semaphore);
         return retval;
     }
     
     if (dev->driver->irq_postinstall)
-        dev->driver->irq_postinstall(dev);
+    {
+        retval = dev->driver->irq_postinstall(dev);
+        if (retval < 0)
+        {
+            ObtainSemaphore(&dev->struct_semaphore);
+            dev->irq_enabled = 0;
+            ReleaseSemaphore(&dev->struct_semaphore);            
+        }
+    }
     
     return retval;
 #endif    
@@ -93,10 +103,10 @@ int drm_irq_uninstall(struct drm_device *dev)
     struct OOP_Object *o = NULL;
     int retval = -EINVAL;
 
-    /* FIXME: mutex_lock(&dev->struct_mutex); */
+    ObtainSemaphore(&dev->struct_semaphore);
     irq_enabled = dev->irq_enabled;
     dev->irq_enabled = 0;
-    /* FIXME: mutex_unlock(&dev->struct_mutex); */
+    ReleaseSemaphore(&dev->struct_semaphore);
 
     if (!irq_enabled)
         return retval;

@@ -213,6 +213,7 @@ struct drm_device {
     struct drm_driver *driver;      /* Driver functions */
 
     /* AROS specific fields */
+    struct SignalSemaphore  struct_semaphore;
     OOP_Object              *pci;
     OOP_Object              *pciDevice;
     OOP_Object              *pcidriver;

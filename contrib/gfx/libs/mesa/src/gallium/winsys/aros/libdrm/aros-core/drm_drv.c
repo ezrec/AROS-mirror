@@ -13,11 +13,15 @@ int drm_lastclose(struct drm_device * dev)
     if (dev->irq_enabled)
         drm_irq_uninstall(dev);
     
+    ObtainSemaphore(&dev->struct_semaphore);
+    
     if (dev->sg)
     {
         drm_sg_cleanup(dev->sg);
         dev->sg = NULL;
     }
+    
+    ReleaseSemaphore(&dev->struct_semaphore);
     
     return 0;
 }
@@ -52,6 +56,7 @@ int drm_init(struct drm_driver * driver)
     dev->sg = NULL;
     dev->irq_enabled = 0;
     dev->driver = driver;
+    InitSemaphore(&dev->struct_semaphore);
     
     DRM_DEBUG("%s, %s\n", name, busid);
 #if !defined(HOSTED_BUILD)    

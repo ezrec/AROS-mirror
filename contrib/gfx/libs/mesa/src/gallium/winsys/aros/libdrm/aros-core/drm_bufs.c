@@ -125,11 +125,12 @@ static int drm_addmap_core(struct drm_device *dev, unsigned int offset,
     memset(list, 0, sizeof(*list));
     list->map = map;
 
+    ObtainSemaphore(&dev->struct_semaphore);
     list_add(&list->head, &dev->maplist);
 
     /* Assign a 32-bit handle */
-#if !defined(__AROS__)
-    user_token = (map->type == _DRM_SHM) ? (unsigned long) map->handle :
+    /* ORIGINAL CODE */
+    /*user_token = (map->type == _DRM_SHM) ? (unsigned long) map->handle :
         map->offset;
     ret = drm_map_handle(dev, &list->hash, user_token, 0);
 
@@ -141,10 +142,11 @@ static int drm_addmap_core(struct drm_device *dev, unsigned int offset,
         return ret;
     }
 
-    list->user_token = list->hash.key << PAGE_SHIFT;
-#else
+    list->user_token = list->hash.key << PAGE_SHIFT;*/
+
     list->user_token = ++map_counter;
-#endif
+    ReleaseSemaphore(&dev->struct_semaphore);
+
     *maplist = list;
     return 0;
 }
@@ -238,9 +240,9 @@ int drm_rmmap(struct drm_device *dev, drm_local_map_t *map)
 {
     int ret;
 
-    /* FIXME: mutex_lock(&dev->struct_mutex); */
+    ObtainSemaphore(&dev->struct_semaphore);
     ret = drm_rmmap_locked(dev, map);
-    /* FIXME: mutex_unlock(&dev->struct_mutex); */
+    ReleaseSemaphore(&dev->struct_semaphore);
 
     return ret;
 }
