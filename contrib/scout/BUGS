@@ -5,10 +5,6 @@ BoopsiClasses
     relations. But on AROS they are shown flat, though some have
     an arrow.
 
-Libraries
-    Clicking on a function in the function list segfaults. CopyMem is
-    done with address -1. Maybe the start address is calculated wrongly.
-
 Locks
     List is empty.
 

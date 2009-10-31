@@ -235,6 +235,13 @@ STATIC ULONG mDisassemble( struct IClass *cl,
                            Msg msg )
 {
     struct DisassemblerWinData *dwd = INST_DATA(cl, obj);
+
+    if (dwd->dwd_Address == -1)
+    {
+        DoMethod(dwd->dwd_SourceFloattext, MUIM_List_Clear);
+        return 0;
+    }
+
     ULONG maxSize = dwd->dwd_Range * 128;
 
     set(dwd->dwd_SourceList, MUIA_NList_Quiet, TRUE);
