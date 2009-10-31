@@ -185,17 +185,33 @@ struct drm_sg_mem {
 /* Contains a collection of functions common to each drm driver */
 struct drm_driver
 {
+    int         (*load)(struct drm_device *, unsigned long);
+    int         (*firstopen)(struct drm_device *);
+    void        (*preclose)(struct drm_device *dev, struct drm_file *);
+    void        (*lastclose)(struct drm_device *);
+    int         (*unload)(struct drm_device *);
+    
+    /* IRQ */
+    irqreturn_t (*irq_handler)(DRM_IRQ_ARGS);
+    void        (*irq_preinstall)(struct drm_device *);
+    int         (*irq_postinstall)(struct drm_device *);
+    void        (*irq_uninstall)(struct drm_device *);
+
+    int                     version_patchlevel;
+    struct drm_ioctl_desc   *ioctls;
 };
 
 struct drm_device {
-    struct list_head maplist;   /**< Linked list of regions */
+    struct list_head maplist;       /* Linked list of regions */
     
-    int irq_enabled;        /**< True if irq handler is enabled */
-    int pci_vendor;         /**< PCI vendor id */
-    int pci_device;         /**< PCI device id */
-    struct drm_sg_mem *sg;      /**< Scatter gather memory */
-    void *dev_private;      /**< device private data */
-    /* FIXME: other fields */
+    int irq_enabled;                /* True if irq handler is enabled */
+    int pci_vendor;                 /* PCI vendor id */
+    int pci_device;                 /* PCI device id */
+    struct drm_sg_mem *sg;          /* Scatter gather memory */
+    void *dev_private;              /* Device private data */
+    
+    struct drm_driver *driver;      /* Driver functions */
+
     /* AROS specific fields */
     OOP_Object              *pci;
     OOP_Object              *pciDevice;

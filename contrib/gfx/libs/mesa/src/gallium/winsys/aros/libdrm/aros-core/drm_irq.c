@@ -5,9 +5,6 @@
 
 #include "drmP.h"
 
-/* FIXME: This should not be here */
-#include "nouveau_drv.h"
-
 #include <proto/oop.h>
 #include <hidd/pci.h>
 
@@ -22,8 +19,8 @@ static void interrupt_handler(HIDDT_IRQ_Handler * irq, HIDDT_IRQ_HwInfo *hw)
     struct drm_device *dev = (struct drm_device*)irq->h_Data;
     
     /* FIXME: What is INT is shared between devices? */
-    /* FIXME: Should be generic, not nouveau */
-    nouveau_irq_handler(dev);
+    if (dev->driver->irq_handler)
+        dev->driver->irq_handler(dev);
 }
 
 int drm_irq_install(struct drm_device *dev)
@@ -42,7 +39,8 @@ int drm_irq_install(struct drm_device *dev)
     
     dev->irq_enabled = 1;
     
-    nouveau_irq_preinstall(dev);
+    if (dev->driver->irq_preinstall)
+        dev->driver->irq_preinstall(dev);
 
     dev->IntHandler = (HIDDT_IRQ_Handler *)AllocVec(sizeof(HIDDT_IRQ_Handler), MEMF_PUBLIC | MEMF_CLEAR);
     
@@ -79,7 +77,8 @@ int drm_irq_install(struct drm_device *dev)
         return retval;
     }
     
-    nouveau_irq_postinstall(dev);
+    if (dev->driver->irq_postinstall)
+        dev->driver->irq_postinstall(dev);
     
     return retval;
 #endif    
@@ -102,8 +101,8 @@ int drm_irq_uninstall(struct drm_device *dev)
     if (!irq_enabled)
         return retval;
 
-    /* FIXME: This should be generic, not nouveau */
-    nouveau_irq_uninstall(dev);
+    if (dev->driver->irq_uninstall)
+        dev->driver->irq_uninstall(dev);
 
     o = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
     

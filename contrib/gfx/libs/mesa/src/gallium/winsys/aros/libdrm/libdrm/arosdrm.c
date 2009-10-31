@@ -1,27 +1,24 @@
 #include "arosdrm.h"
 #include "drmP.h"
-#include "nouveau_drm.h"
-#include "nouveau_drv.h"
-
-/* FIXME: This should implement generic approach - not card specific */
 
 struct drm_device global_drm_device;
 /* FIXME: Array for now, list maybe in future */
 struct drm_file * drm_files[128] = {NULL};
-
-/* FIXME: This should be generic function table, not nouveau */
-extern struct drm_ioctl_desc nouveau_ioctls[];
 
 int 
 drmCommandNone(int fd, unsigned long drmCommandIndex)
 {
     if (!drm_files[fd])
         return -EINVAL;
-    
+
+    if (!global_drm_device.driver || !global_drm_device.driver->ioctls)
+        return -EINVAL;
+
+    /* FIXME: Remove switch when all paths are tested */
     switch(drmCommandIndex)
     {
-        case(DRM_NOUVEAU_CARD_INIT):
-            return nouveau_ioctl_card_init(&global_drm_device, NULL, drm_files[fd]);
+        case(0x0 /*DRM_NOUVEAU_CARD_INIT*/):
+            return global_drm_device.driver->ioctls[drmCommandIndex].func(&global_drm_device, NULL, drm_files[fd]);
         default:
             DRM_IMPL("COMMAND %d\n", drmCommandIndex);
     }
@@ -34,7 +31,11 @@ drmCommandRead(int fd, unsigned long drmCommandIndex, void *data, unsigned long 
 {
     if (!drm_files[fd])
         return -EINVAL;
-        
+
+    if (!global_drm_device.driver || !global_drm_device.driver->ioctls)
+        return -EINVAL;
+    
+    /* FIXME: Remove switch when all paths are tested */
     switch(drmCommandIndex)
     {
         default:
@@ -49,15 +50,17 @@ drmCommandWrite(int fd, unsigned long drmCommandIndex, void *data, unsigned long
 {
     if (!drm_files[fd])
         return -EINVAL;
+
+    if (!global_drm_device.driver || !global_drm_device.driver->ioctls)
+        return -EINVAL;
     
+    /* FIXME: Remove switch when all paths are tested */
     switch(drmCommandIndex)
     {
-        case(DRM_NOUVEAU_GROBJ_ALLOC):
-            return nouveau_ioctl_grobj_alloc(&global_drm_device, data, drm_files[fd]);
-        case(DRM_NOUVEAU_GPUOBJ_FREE):
-            return nouveau_ioctl_gpuobj_free(&global_drm_device, data, drm_files[fd]);
-        case(DRM_NOUVEAU_MEM_FREE):
-            return nouveau_ioctl_mem_free(&global_drm_device, data, drm_files[fd]);
+        case(0x5 /*DRM_NOUVEAU_GROBJ_ALLOC*/):
+        case(0x7 /*DRM_NOUVEAU_GPUOBJ_FREE*/):
+        case(0x9 /*DRM_NOUVEAU_MEM_FREE*/):
+            return global_drm_device.driver->ioctls[drmCommandIndex].func(&global_drm_device, data, drm_files[fd]);
         default:
             DRM_IMPL("COMMAND %d\n", drmCommandIndex);
     }
@@ -71,16 +74,17 @@ drmCommandWriteRead(int fd, unsigned long drmCommandIndex, void *data, unsigned 
     if (!drm_files[fd])
         return -EINVAL;
     
+    if (!global_drm_device.driver || !global_drm_device.driver->ioctls)
+        return -EINVAL;
+    
+    /* FIXME: Remove switch when all paths are tested */
     switch(drmCommandIndex)
     {
-        case(DRM_NOUVEAU_GETPARAM):
-            return nouveau_ioctl_getparam(&global_drm_device, data, drm_files[fd]);
-        case(DRM_NOUVEAU_CHANNEL_ALLOC):
-            return nouveau_ioctls[DRM_NOUVEAU_CHANNEL_ALLOC].func(&global_drm_device, data, drm_files[fd]);
-        case(DRM_NOUVEAU_NOTIFIEROBJ_ALLOC):
-            return nouveau_ioctl_notifier_alloc(&global_drm_device, data, drm_files[fd]);
-        case(DRM_NOUVEAU_MEM_ALLOC):
-            return nouveau_ioctl_mem_alloc(&global_drm_device, data, drm_files[fd]);
+        case(0x1 /*DRM_NOUVEAU_GETPARAM*/):
+        case(0x3 /*DRM_NOUVEAU_CHANNEL_ALLOC*/):
+        case(0x6 /*DRM_NOUVEAU_NOTIFIEROBJ_ALLOC*/):
+        case(0x8 /*DRM_NOUVEAU_MEM_ALLOC*/):
+            return global_drm_device.driver->ioctls[drmCommandIndex].func(&global_drm_device, data, drm_files[fd]);
         default:
             DRM_IMPL("COMMAND %d\n", drmCommandIndex);
     }
@@ -166,7 +170,8 @@ drmClose(int fd)
     
     drm_files[fd] = NULL;
     
-    nouveau_preclose(&global_drm_device, f);
+    if (global_drm_device.driver->preclose)
+        global_drm_device.driver->preclose(&global_drm_device, f);
     
     FreeVec(f);
     
@@ -177,7 +182,11 @@ drmVersionPtr
 drmGetVersion(int fd)
 {
     static drmVersion ver;
-    ver.version_patchlevel = NOUVEAU_DRM_HEADER_PATCHLEVEL;
+    if (global_drm_device.driver)
+        ver.version_patchlevel = global_drm_device.driver->version_patchlevel;
+    else
+        ver.version_patchlevel = 0;
+    
     return &ver;
 }
 

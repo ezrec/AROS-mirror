@@ -3,16 +3,12 @@
     $Id$
 */
 
-/* FIXME: This should implement generic approach - not card specific */
-
 #include "drmP.h"
-
-/* FIXME: This should not be here */
-#include "nouveau_drv.h"
 
 int drm_lastclose(struct drm_device * dev)
 {
-    nouveau_lastclose(dev);
+    if (dev->driver->lastclose)
+        dev->driver->lastclose(dev);
     
     if (dev->irq_enabled)
         drm_irq_uninstall(dev);
@@ -30,8 +26,8 @@ static void drm_cleanup(struct drm_device * dev)
 {
     drm_lastclose(dev);
     
-    /* FIXME: Should be generic, not card specific */
-    nouveau_unload(dev);
+    if (dev->driver->unload)
+        dev->driver->unload(dev);
     
     drm_aros_pci_shutdown(dev);
 }
@@ -48,26 +44,33 @@ void drm_exit(struct drm_driver * driver)
 int drm_init(struct drm_driver * driver)
 {
     int ret;
+    /* FIXME: drm_device should not be hardcoded */
+    struct drm_device * dev = &global_drm_device;
     
     /* Init fields */
-    
-    /* FIXME: drm_device should not be hardcoded */
-    INIT_LIST_HEAD(&global_drm_device.maplist);
-    global_drm_device.sg = NULL;
-    global_drm_device.irq_enabled = 0;
+    INIT_LIST_HEAD(&dev->maplist);
+    dev->sg = NULL;
+    dev->irq_enabled = 0;
+    dev->driver = driver;
     
     DRM_DEBUG("%s, %s\n", name, busid);
 #if !defined(HOSTED_BUILD)    
-    ret = drm_aros_find_supported_video_card(&global_drm_device);
+    ret = drm_aros_find_supported_video_card(dev);
     if (ret)
         return -1;
 #endif
 
-    ret = nouveau_load(&global_drm_device, 0);
+    if (!dev->driver->load)
+        return -1;
+
+    ret = dev->driver->load(dev, 0);
     if (ret)
         return -1;
 
-    ret = nouveau_firstopen(&global_drm_device);
+    if (!dev->driver->firstopen)
+        return -1;
+    
+    ret = dev->driver->firstopen(dev);
     if (ret)
         return -1;
     
