@@ -160,6 +160,15 @@ STATIC LONG NSDQuery( STRPTR dev,
     LONG result = IOERR_OPENFAIL;
     struct MsgPort *mp;
 
+    if (strstr(dev, ".handler"))
+    {
+        /*
+            On AROS handlers appear in the device list.
+            Doing OpenDevice on a handler causes troubles
+        */
+        return IOERR_OPENFAIL;
+    }
+
     if ((mp = CreateMsgPort()) != NULL) {
         struct IOStdReq *io;
 
