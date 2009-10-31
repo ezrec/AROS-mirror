@@ -84,8 +84,11 @@ STATIC BOOL FileRequest (void)
                                                ASLFR_DoSaveMode, TRUE,
                                                TAG_DONE);
 
-            stccpy(initialdrawer, requester->fr_Drawer, sizeof(initialdrawer));
-            stccpy(initialfile, requester->fr_File, sizeof(initialfile));
+            if (result)
+            {
+                stccpy(initialdrawer, requester->fr_Drawer, sizeof(initialdrawer));
+                stccpy(initialfile, requester->fr_File, sizeof(initialfile));
+            }
 
             stccpy(printfilename, initialdrawer, sizeof(printfilename));
             AddPart(printfilename, initialfile, sizeof(printfilename));
