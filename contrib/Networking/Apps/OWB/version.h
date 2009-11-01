@@ -7,6 +7,6 @@
 */
 
 #define OWB_VERSION "0.99"
-#define OWB_RELEASE_DATE "28.10.2009"
+#define OWB_RELEASE_DATE "30.10.2009"
 
 #endif /* _VERSION_H_ */
