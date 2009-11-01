@@ -329,6 +329,34 @@ typedef enum
    OPCODE_STENCIL_OP_SEPARATE,
    OPCODE_STENCIL_MASK_SEPARATE,
 
+   /* GL_ARB_shader_objects */
+   OPCODE_USE_PROGRAM,
+   OPCODE_UNIFORM_1F,
+   OPCODE_UNIFORM_2F,
+   OPCODE_UNIFORM_3F,
+   OPCODE_UNIFORM_4F,
+   OPCODE_UNIFORM_1FV,
+   OPCODE_UNIFORM_2FV,
+   OPCODE_UNIFORM_3FV,
+   OPCODE_UNIFORM_4FV,
+   OPCODE_UNIFORM_1I,
+   OPCODE_UNIFORM_2I,
+   OPCODE_UNIFORM_3I,
+   OPCODE_UNIFORM_4I,
+   OPCODE_UNIFORM_1IV,
+   OPCODE_UNIFORM_2IV,
+   OPCODE_UNIFORM_3IV,
+   OPCODE_UNIFORM_4IV,
+   OPCODE_UNIFORM_MATRIX22,
+   OPCODE_UNIFORM_MATRIX33,
+   OPCODE_UNIFORM_MATRIX44,
+   OPCODE_UNIFORM_MATRIX23,
+   OPCODE_UNIFORM_MATRIX32,
+   OPCODE_UNIFORM_MATRIX24,
+   OPCODE_UNIFORM_MATRIX42,
+   OPCODE_UNIFORM_MATRIX34,
+   OPCODE_UNIFORM_MATRIX43,
+
    /* GL_EXT_framebuffer_blit */
    OPCODE_BLIT_FRAMEBUFFER,
 
@@ -351,6 +379,9 @@ typedef enum
    OPCODE_EVAL_C2,
    OPCODE_EVAL_P1,
    OPCODE_EVAL_P2,
+
+   /* GL_EXT_provoking_vertex */
+   OPCODE_PROVOKING_VERTEX,
 
    /* The following three are meta instructions */
    OPCODE_ERROR,                /* raise compiled-in error */
@@ -573,6 +604,30 @@ _mesa_delete_list(GLcontext *ctx, struct gl_display_list *dlist)
             n += InstSize[n[0].opcode];
             break;
 #endif
+         case OPCODE_UNIFORM_1FV:
+         case OPCODE_UNIFORM_2FV:
+         case OPCODE_UNIFORM_3FV:
+         case OPCODE_UNIFORM_4FV:
+         case OPCODE_UNIFORM_1IV:
+         case OPCODE_UNIFORM_2IV:
+         case OPCODE_UNIFORM_3IV:
+         case OPCODE_UNIFORM_4IV:
+            _mesa_free(n[3].data);
+            n += InstSize[n[0].opcode];
+            break;
+         case OPCODE_UNIFORM_MATRIX22:
+         case OPCODE_UNIFORM_MATRIX33:
+         case OPCODE_UNIFORM_MATRIX44:
+         case OPCODE_UNIFORM_MATRIX24:
+         case OPCODE_UNIFORM_MATRIX42:
+         case OPCODE_UNIFORM_MATRIX23:
+         case OPCODE_UNIFORM_MATRIX32:
+         case OPCODE_UNIFORM_MATRIX34:
+         case OPCODE_UNIFORM_MATRIX43:
+            _mesa_free(n[4].data);
+            n += InstSize[n[0].opcode];
+            break;
+
          case OPCODE_CONTINUE:
             n = (Node *) n[1].next;
             _mesa_free(block);
@@ -680,24 +735,48 @@ translate_id(GLsizei n, GLenum type, const GLvoid * list)
 
 /**
  * Wrapper for _mesa_unpack_image() that handles pixel buffer objects.
- * \todo This won't suffice when the PBO is really in VRAM/GPU memory.
+ * If we run out of memory, GL_OUT_OF_MEMORY will be recorded.
  */
 static GLvoid *
-unpack_image(GLuint dimensions, GLsizei width, GLsizei height, GLsizei depth,
+unpack_image(GLcontext *ctx, GLuint dimensions,
+             GLsizei width, GLsizei height, GLsizei depth,
              GLenum format, GLenum type, const GLvoid * pixels,
              const struct gl_pixelstore_attrib *unpack)
 {
-   if (unpack->BufferObj->Name == 0) {
+   if (!_mesa_is_bufferobj(unpack->BufferObj)) {
       /* no PBO */
-      return _mesa_unpack_image(dimensions, width, height, depth, format,
-                                type, pixels, unpack);
+      GLvoid *image = _mesa_unpack_image(dimensions, width, height, depth,
+                                         format, type, pixels, unpack);
+      if (pixels && !image) {
+         _mesa_error(ctx, GL_OUT_OF_MEMORY, "display list construction");
+      }
+      return image;
    }
-   else
-      if (_mesa_validate_pbo_access
-          (dimensions, unpack, width, height, depth, format, type, pixels)) {
-      const GLubyte *src = ADD_POINTERS(unpack->BufferObj->Data, pixels);
-      return _mesa_unpack_image(dimensions, width, height, depth, format,
-                                type, src, unpack);
+   else if (_mesa_validate_pbo_access(dimensions, unpack, width, height, depth,
+                                      format, type, pixels)) {
+      const GLubyte *map, *src;
+      GLvoid *image;
+
+      map = (GLubyte *)
+         ctx->Driver.MapBuffer(ctx, GL_PIXEL_UNPACK_BUFFER_EXT,
+                               GL_READ_ONLY_ARB, unpack->BufferObj);
+      if (!map) {
+         /* unable to map src buffer! */
+         _mesa_error(ctx, GL_INVALID_OPERATION, "unable to map PBO");
+         return NULL;
+      }
+
+      src = ADD_POINTERS(map, pixels);
+      image = _mesa_unpack_image(dimensions, width, height, depth,
+                                 format, type, src, unpack);
+
+      ctx->Driver.UnmapBuffer(ctx, GL_PIXEL_UNPACK_BUFFER_EXT,
+                              unpack->BufferObj);
+
+      if (!image) {
+         _mesa_error(ctx, GL_OUT_OF_MEMORY, "display list construction");
+      }
+      return image;
    }
    /* bad access! */
    return NULL;
@@ -855,7 +934,6 @@ save_Bitmap(GLsizei width, GLsizei height,
             GLfloat xmove, GLfloat ymove, const GLubyte * pixels)
 {
    GET_CURRENT_CONTEXT(ctx);
-   GLvoid *image = _mesa_unpack_bitmap(width, height, pixels, &ctx->Unpack);
    Node *n;
    ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
    n = ALLOC_INSTRUCTION(ctx, OPCODE_BITMAP, 7);
@@ -866,10 +944,7 @@ save_Bitmap(GLsizei width, GLsizei height,
       n[4].f = yorig;
       n[5].f = xmove;
       n[6].f = ymove;
-      n[7].data = image;
-   }
-   else if (image) {
-      _mesa_free(image);
+      n[7].data = _mesa_unpack_bitmap(width, height, pixels, &ctx->Unpack);
    }
    if (ctx->ExecuteFlag) {
       CALL_Bitmap(ctx->Exec, (width, height,
@@ -996,7 +1071,7 @@ _mesa_save_CallList(GLuint list)
 
 
 void GLAPIENTRY
-_mesa_save_CallLists(GLsizei n, GLenum type, const GLvoid * lists)
+_mesa_save_CallLists(GLsizei num, GLenum type, const GLvoid * lists)
 {
    GET_CURRENT_CONTEXT(ctx);
    GLint i;
@@ -1021,7 +1096,7 @@ _mesa_save_CallLists(GLsizei n, GLenum type, const GLvoid * lists)
       typeErrorFlag = GL_TRUE;
    }
 
-   for (i = 0; i < n; i++) {
+   for (i = 0; i < num; i++) {
       GLint list = translate_id(i, type, lists);
       Node *n = ALLOC_INSTRUCTION(ctx, OPCODE_CALL_LIST_OFFSET, 2);
       if (n) {
@@ -1036,7 +1111,7 @@ _mesa_save_CallLists(GLsizei n, GLenum type, const GLvoid * lists)
    invalidate_saved_current_state( ctx );
 
    if (ctx->ExecuteFlag) {
-      CALL_CallLists(ctx->Exec, (n, type, lists));
+      CALL_CallLists(ctx->Exec, (num, type, lists));
    }
 }
 
@@ -1214,8 +1289,6 @@ save_ColorTable(GLenum target, GLenum internalFormat,
                                   format, type, table));
    }
    else {
-      GLvoid *image = unpack_image(1, width, 1, 1, format, type, table,
-                                   &ctx->Unpack);
       Node *n;
       ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
       n = ALLOC_INSTRUCTION(ctx, OPCODE_COLOR_TABLE, 6);
@@ -1225,10 +1298,8 @@ save_ColorTable(GLenum target, GLenum internalFormat,
          n[3].i = width;
          n[4].e = format;
          n[5].e = type;
-         n[6].data = image;
-      }
-      else if (image) {
-         _mesa_free(image);
+         n[6].data = unpack_image(ctx, 1, width, 1, 1, format, type, table,
+                                  &ctx->Unpack);
       }
       if (ctx->ExecuteFlag) {
          CALL_ColorTable(ctx->Exec, (target, internalFormat, width,
@@ -1304,8 +1375,6 @@ save_ColorSubTable(GLenum target, GLsizei start, GLsizei count,
                    GLenum format, GLenum type, const GLvoid * table)
 {
    GET_CURRENT_CONTEXT(ctx);
-   GLvoid *image = unpack_image(1, count, 1, 1, format, type, table,
-                                &ctx->Unpack);
    Node *n;
    ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
    n = ALLOC_INSTRUCTION(ctx, OPCODE_COLOR_SUB_TABLE, 6);
@@ -1315,10 +1384,8 @@ save_ColorSubTable(GLenum target, GLsizei start, GLsizei count,
       n[3].i = count;
       n[4].e = format;
       n[5].e = type;
-      n[6].data = image;
-   }
-   else if (image) {
-      _mesa_free(image);
+      n[6].data = unpack_image(ctx, 1, count, 1, 1, format, type, table,
+                               &ctx->Unpack);
    }
    if (ctx->ExecuteFlag) {
       CALL_ColorSubTable(ctx->Exec,
@@ -1376,10 +1443,10 @@ save_ConvolutionFilter1D(GLenum target, GLenum internalFormat, GLsizei width,
                          GLenum format, GLenum type, const GLvoid * filter)
 {
    GET_CURRENT_CONTEXT(ctx);
-   GLvoid *image = unpack_image(1, width, 1, 1, format, type, filter,
-                                &ctx->Unpack);
    Node *n;
+
    ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+
    n = ALLOC_INSTRUCTION(ctx, OPCODE_CONVOLUTION_FILTER_1D, 6);
    if (n) {
       n[1].e = target;
@@ -1387,10 +1454,8 @@ save_ConvolutionFilter1D(GLenum target, GLenum internalFormat, GLsizei width,
       n[3].i = width;
       n[4].e = format;
       n[5].e = type;
-      n[6].data = image;
-   }
-   else if (image) {
-      _mesa_free(image);
+      n[6].data = unpack_image(ctx, 1, width, 1, 1, format, type, filter,
+                               &ctx->Unpack);
    }
    if (ctx->ExecuteFlag) {
       CALL_ConvolutionFilter1D(ctx->Exec, (target, internalFormat, width,
@@ -1405,10 +1470,10 @@ save_ConvolutionFilter2D(GLenum target, GLenum internalFormat,
                          GLenum type, const GLvoid * filter)
 {
    GET_CURRENT_CONTEXT(ctx);
-   GLvoid *image = unpack_image(2, width, height, 1, format, type, filter,
-                                &ctx->Unpack);
    Node *n;
+
    ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+
    n = ALLOC_INSTRUCTION(ctx, OPCODE_CONVOLUTION_FILTER_2D, 7);
    if (n) {
       n[1].e = target;
@@ -1417,10 +1482,8 @@ save_ConvolutionFilter2D(GLenum target, GLenum internalFormat,
       n[4].i = height;
       n[5].e = format;
       n[6].e = type;
-      n[7].data = image;
-   }
-   else if (image) {
-      _mesa_free(image);
+      n[7].data = unpack_image(ctx, 2, width, height, 1, format, type, filter,
+                               &ctx->Unpack);
    }
    if (ctx->ExecuteFlag) {
       CALL_ConvolutionFilter2D(ctx->Exec,
@@ -1775,20 +1838,18 @@ save_DrawPixels(GLsizei width, GLsizei height,
                 GLenum format, GLenum type, const GLvoid * pixels)
 {
    GET_CURRENT_CONTEXT(ctx);
-   GLvoid *image = unpack_image(2, width, height, 1, format, type,
-                                pixels, &ctx->Unpack);
    Node *n;
+
    ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+
    n = ALLOC_INSTRUCTION(ctx, OPCODE_DRAW_PIXELS, 5);
    if (n) {
       n[1].i = width;
       n[2].i = height;
       n[3].e = format;
       n[4].e = type;
-      n[5].data = image;
-   }
-   else if (image) {
-      _mesa_free(image);
+      n[5].data = unpack_image(ctx, 2, width, height, 1, format, type,
+                               pixels, &ctx->Unpack);
    }
    if (ctx->ExecuteFlag) {
       CALL_DrawPixels(ctx->Exec, (width, height, format, type, pixels));
@@ -1877,7 +1938,10 @@ save_Fogfv(GLenum pname, const GLfloat *params)
 static void GLAPIENTRY
 save_Fogf(GLenum pname, GLfloat param)
 {
-   save_Fogfv(pname, &param);
+   GLfloat parray[4];
+   parray[0] = param;
+   parray[1] = parray[2] = parray[3] = 0.0F;
+   save_Fogfv(pname, parray);
 }
 
 
@@ -1901,7 +1965,7 @@ save_Fogiv(GLenum pname, const GLint *params)
       break;
    default:
       /* Error will be caught later in gl_Fogfv */
-      ;
+      ASSIGN_4V(p, 0.0F, 0.0F, 0.0F, 0.0F);
    }
    save_Fogfv(pname, p);
 }
@@ -1910,7 +1974,10 @@ save_Fogiv(GLenum pname, const GLint *params)
 static void GLAPIENTRY
 save_Fogi(GLenum pname, GLint param)
 {
-   save_Fogiv(pname, &param);
+   GLint parray[4];
+   parray[0] = param;
+   parray[1] = parray[2] = parray[3] = 0;
+   save_Fogiv(pname, parray);
 }
 
 
@@ -2074,9 +2141,12 @@ save_Lightfv(GLenum light, GLenum pname, const GLfloat *params)
 
 
 static void GLAPIENTRY
-save_Lightf(GLenum light, GLenum pname, GLfloat params)
+save_Lightf(GLenum light, GLenum pname, GLfloat param)
 {
-   save_Lightfv(light, pname, &params);
+   GLfloat parray[4];
+   parray[0] = param;
+   parray[1] = parray[2] = parray[3] = 0.0F;
+   save_Lightfv(light, pname, parray);
 }
 
 
@@ -2122,7 +2192,10 @@ save_Lightiv(GLenum light, GLenum pname, const GLint *params)
 static void GLAPIENTRY
 save_Lighti(GLenum light, GLenum pname, GLint param)
 {
-   save_Lightiv(light, pname, &param);
+   GLint parray[4];
+   parray[0] = param;
+   parray[1] = parray[2] = parray[3] = 0;
+   save_Lightiv(light, pname, parray);
 }
 
 
@@ -2149,7 +2222,10 @@ save_LightModelfv(GLenum pname, const GLfloat *params)
 static void GLAPIENTRY
 save_LightModelf(GLenum pname, GLfloat param)
 {
-   save_LightModelfv(pname, &param);
+   GLfloat parray[4];
+   parray[0] = param;
+   parray[1] = parray[2] = parray[3] = 0.0F;
+   save_LightModelfv(pname, parray);
 }
 
 
@@ -2171,7 +2247,7 @@ save_LightModeliv(GLenum pname, const GLint *params)
       break;
    default:
       /* Error will be caught later in gl_LightModelfv */
-      ;
+      ASSIGN_4V(fparam, 0.0F, 0.0F, 0.0F, 0.0F);
    }
    save_LightModelfv(pname, fparam);
 }
@@ -2180,7 +2256,10 @@ save_LightModeliv(GLenum pname, const GLint *params)
 static void GLAPIENTRY
 save_LightModeli(GLenum pname, GLint param)
 {
-   save_LightModeliv(pname, &param);
+   GLint parray[4];
+   parray[0] = param;
+   parray[1] = parray[2] = parray[3] = 0;
+   save_LightModeliv(pname, parray);
 }
 
 
@@ -2695,21 +2774,28 @@ save_PointParameterfvEXT(GLenum pname, const GLfloat *params)
 static void GLAPIENTRY
 save_PointParameterfEXT(GLenum pname, GLfloat param)
 {
-   save_PointParameterfvEXT(pname, &param);
+   GLfloat parray[3];
+   parray[0] = param;
+   parray[1] = parray[2] = 0.0F;
+   save_PointParameterfvEXT(pname, parray);
 }
 
 static void GLAPIENTRY
 save_PointParameteriNV(GLenum pname, GLint param)
 {
-   GLfloat p = (GLfloat) param;
-   save_PointParameterfvEXT(pname, &p);
+   GLfloat parray[3];
+   parray[0] = (GLfloat) param;
+   parray[1] = parray[2] = 0.0F;
+   save_PointParameterfvEXT(pname, parray);
 }
 
 static void GLAPIENTRY
 save_PointParameterivNV(GLenum pname, const GLint * param)
 {
-   GLfloat p = (GLfloat) param[0];
-   save_PointParameterfvEXT(pname, &p);
+   GLfloat parray[3];
+   parray[0] = (GLfloat) param[0];
+   parray[1] = parray[2] = 0.0F;
+   save_PointParameterfvEXT(pname, parray);
 }
 
 
@@ -2750,16 +2836,14 @@ static void GLAPIENTRY
 save_PolygonStipple(const GLubyte * pattern)
 {
    GET_CURRENT_CONTEXT(ctx);
-   GLvoid *image = unpack_image(2, 32, 32, 1, GL_COLOR_INDEX, GL_BITMAP,
-                                pattern, &ctx->Unpack);
    Node *n;
+
    ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+
    n = ALLOC_INSTRUCTION(ctx, OPCODE_POLYGON_STIPPLE, 1);
    if (n) {
-      n[1].data = image; 
-   }
-   else if (image) {
-      _mesa_free(image);
+      n[1].data = unpack_image(ctx, 2, 32, 32, 1, GL_COLOR_INDEX, GL_BITMAP,
+                               pattern, &ctx->Unpack);
    }
    if (ctx->ExecuteFlag) {
       CALL_PolygonStipple(ctx->Exec, ((GLubyte *) pattern));
@@ -3383,7 +3467,10 @@ save_TexEnvfv(GLenum target, GLenum pname, const GLfloat *params)
 static void GLAPIENTRY
 save_TexEnvf(GLenum target, GLenum pname, GLfloat param)
 {
-   save_TexEnvfv(target, pname, &param);
+   GLfloat parray[4];
+   parray[0] = (GLfloat) param;
+   parray[1] = parray[2] = parray[3] = 0.0F;
+   save_TexEnvfv(target, pname, parray);
 }
 
 
@@ -3451,8 +3538,10 @@ save_TexGeniv(GLenum coord, GLenum pname, const GLint *params)
 static void GLAPIENTRY
 save_TexGend(GLenum coord, GLenum pname, GLdouble param)
 {
-   GLfloat p = (GLfloat) param;
-   save_TexGenfv(coord, pname, &p);
+   GLfloat parray[4];
+   parray[0] = (GLfloat) param;
+   parray[1] = parray[2] = parray[3] = 0.0F;
+   save_TexGenfv(coord, pname, parray);
 }
 
 
@@ -3471,14 +3560,20 @@ save_TexGendv(GLenum coord, GLenum pname, const GLdouble *params)
 static void GLAPIENTRY
 save_TexGenf(GLenum coord, GLenum pname, GLfloat param)
 {
-   save_TexGenfv(coord, pname, &param);
+   GLfloat parray[4];
+   parray[0] = param;
+   parray[1] = parray[2] = parray[3] = 0.0F;
+   save_TexGenfv(coord, pname, parray);
 }
 
 
 static void GLAPIENTRY
 save_TexGeni(GLenum coord, GLenum pname, GLint param)
 {
-   save_TexGeniv(coord, pname, &param);
+   GLint parray[4];
+   parray[0] = param;
+   parray[1] = parray[2] = parray[3] = 0;
+   save_TexGeniv(coord, pname, parray);
 }
 
 
@@ -3506,7 +3601,10 @@ save_TexParameterfv(GLenum target, GLenum pname, const GLfloat *params)
 static void GLAPIENTRY
 save_TexParameterf(GLenum target, GLenum pname, GLfloat param)
 {
-   save_TexParameterfv(target, pname, &param);
+   GLfloat parray[4];
+   parray[0] = param;
+   parray[1] = parray[2] = parray[3] = 0.0F;
+   save_TexParameterfv(target, pname, parray);
 }
 
 
@@ -3543,8 +3641,6 @@ save_TexImage1D(GLenum target,
                                   border, format, type, pixels));
    }
    else {
-      GLvoid *image = unpack_image(1, width, 1, 1, format, type,
-                                   pixels, &ctx->Unpack);
       Node *n;
       ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
       n = ALLOC_INSTRUCTION(ctx, OPCODE_TEX_IMAGE1D, 8);
@@ -3556,10 +3652,8 @@ save_TexImage1D(GLenum target,
          n[5].i = border;
          n[6].e = format;
          n[7].e = type;
-         n[8].data = image;
-      }
-      else if (image) {
-         _mesa_free(image);
+         n[8].data = unpack_image(ctx, 1, width, 1, 1, format, type,
+                                  pixels, &ctx->Unpack);
       }
       if (ctx->ExecuteFlag) {
          CALL_TexImage1D(ctx->Exec, (target, level, components, width,
@@ -3582,8 +3676,6 @@ save_TexImage2D(GLenum target,
                                   height, border, format, type, pixels));
    }
    else {
-      GLvoid *image = unpack_image(2, width, height, 1, format, type,
-                                   pixels, &ctx->Unpack);
       Node *n;
       ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
       n = ALLOC_INSTRUCTION(ctx, OPCODE_TEX_IMAGE2D, 9);
@@ -3596,10 +3688,8 @@ save_TexImage2D(GLenum target,
          n[6].i = border;
          n[7].e = format;
          n[8].e = type;
-         n[9].data = image;
-      }
-      else if (image) {
-         _mesa_free(image);
+         n[9].data = unpack_image(ctx, 2, width, height, 1, format, type,
+                                  pixels, &ctx->Unpack);
       }
       if (ctx->ExecuteFlag) {
          CALL_TexImage2D(ctx->Exec, (target, level, components, width,
@@ -3625,8 +3715,6 @@ save_TexImage3D(GLenum target,
    }
    else {
       Node *n;
-      GLvoid *image = unpack_image(3, width, height, depth, format, type,
-                                   pixels, &ctx->Unpack);
       ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
       n = ALLOC_INSTRUCTION(ctx, OPCODE_TEX_IMAGE3D, 10);
       if (n) {
@@ -3639,10 +3727,8 @@ save_TexImage3D(GLenum target,
          n[7].i = border;
          n[8].e = format;
          n[9].e = type;
-         n[10].data = image;
-      }
-      else if (image) {
-         _mesa_free(image);
+         n[10].data = unpack_image(ctx, 3, width, height, depth, format, type,
+                                   pixels, &ctx->Unpack);
       }
       if (ctx->ExecuteFlag) {
          CALL_TexImage3D(ctx->Exec, (target, level, internalFormat, width,
@@ -3660,9 +3746,9 @@ save_TexSubImage1D(GLenum target, GLint level, GLint xoffset,
 {
    GET_CURRENT_CONTEXT(ctx);
    Node *n;
-   GLvoid *image = unpack_image(1, width, 1, 1, format, type,
-                                pixels, &ctx->Unpack);
+
    ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+
    n = ALLOC_INSTRUCTION(ctx, OPCODE_TEX_SUB_IMAGE1D, 7);
    if (n) {
       n[1].e = target;
@@ -3671,10 +3757,8 @@ save_TexSubImage1D(GLenum target, GLint level, GLint xoffset,
       n[4].i = (GLint) width;
       n[5].e = format;
       n[6].e = type;
-      n[7].data = image;
-   }
-   else if (image) {
-      _mesa_free(image);
+      n[7].data = unpack_image(ctx, 1, width, 1, 1, format, type,
+                               pixels, &ctx->Unpack);
    }
    if (ctx->ExecuteFlag) {
       CALL_TexSubImage1D(ctx->Exec, (target, level, xoffset, width,
@@ -3691,9 +3775,9 @@ save_TexSubImage2D(GLenum target, GLint level,
 {
    GET_CURRENT_CONTEXT(ctx);
    Node *n;
-   GLvoid *image = unpack_image(2, width, height, 1, format, type,
-                                pixels, &ctx->Unpack);
+
    ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+
    n = ALLOC_INSTRUCTION(ctx, OPCODE_TEX_SUB_IMAGE2D, 9);
    if (n) {
       n[1].e = target;
@@ -3704,10 +3788,8 @@ save_TexSubImage2D(GLenum target, GLint level,
       n[6].i = (GLint) height;
       n[7].e = format;
       n[8].e = type;
-      n[9].data = image;
-   }
-   else if (image) {
-      _mesa_free(image);
+      n[9].data = unpack_image(ctx, 2, width, height, 1, format, type,
+                               pixels, &ctx->Unpack);
    }
    if (ctx->ExecuteFlag) {
       CALL_TexSubImage2D(ctx->Exec, (target, level, xoffset, yoffset,
@@ -3724,9 +3806,9 @@ save_TexSubImage3D(GLenum target, GLint level,
 {
    GET_CURRENT_CONTEXT(ctx);
    Node *n;
-   GLvoid *image = unpack_image(3, width, height, depth, format, type,
-                                pixels, &ctx->Unpack);
+
    ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+
    n = ALLOC_INSTRUCTION(ctx, OPCODE_TEX_SUB_IMAGE3D, 11);
    if (n) {
       n[1].e = target;
@@ -3739,10 +3821,8 @@ save_TexSubImage3D(GLenum target, GLint level,
       n[8].i = (GLint) depth;
       n[9].e = format;
       n[10].e = type;
-      n[11].data = image;
-   }
-   else if (image) {
-      _mesa_free(image);
+      n[11].data = unpack_image(ctx, 3, width, height, depth, format, type,
+                                pixels, &ctx->Unpack);
    }
    if (ctx->ExecuteFlag) {
       CALL_TexSubImage3D(ctx->Exec, (target, level,
@@ -4455,18 +4535,17 @@ save_LoadProgramNV(GLenum target, GLuint id, GLsizei len,
 {
    GET_CURRENT_CONTEXT(ctx);
    Node *n;
-   GLubyte *programCopy;
-
-   programCopy = (GLubyte *) _mesa_malloc(len);
-   if (!programCopy) {
-      _mesa_error(ctx, GL_OUT_OF_MEMORY, "glLoadProgramNV");
-      return;
-   }
-   _mesa_memcpy(programCopy, program, len);
 
    ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+
    n = ALLOC_INSTRUCTION(ctx, OPCODE_LOAD_PROGRAM_NV, 4);
    if (n) {
+      GLubyte *programCopy = (GLubyte *) _mesa_malloc(len);
+      if (!programCopy) {
+         _mesa_error(ctx, GL_OUT_OF_MEMORY, "glLoadProgramNV");
+         return;
+      }
+      _mesa_memcpy(programCopy, program, len);
       n[1].e = target;
       n[2].ui = id;
       n[3].i = len;
@@ -4483,15 +4562,17 @@ save_RequestResidentProgramsNV(GLsizei num, const GLuint * ids)
 {
    GET_CURRENT_CONTEXT(ctx);
    Node *n;
-   GLuint *idCopy = (GLuint *) _mesa_malloc(num * sizeof(GLuint));
-   if (!idCopy) {
-      _mesa_error(ctx, GL_OUT_OF_MEMORY, "glRequestResidentProgramsNV");
-      return;
-   }
-   _mesa_memcpy(idCopy, ids, num * sizeof(GLuint));
+
    ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+
    n = ALLOC_INSTRUCTION(ctx, OPCODE_TRACK_MATRIX_NV, 2);
    if (n) {
+      GLuint *idCopy = (GLuint *) _mesa_malloc(num * sizeof(GLuint));
+      if (!idCopy) {
+         _mesa_error(ctx, GL_OUT_OF_MEMORY, "glRequestResidentProgramsNV");
+         return;
+      }
+      _mesa_memcpy(idCopy, ids, num * sizeof(GLuint));
       n[1].i = num;
       n[2].data = idCopy;
    }
@@ -4652,16 +4733,17 @@ save_ProgramNamedParameter4fNV(GLuint id, GLsizei len, const GLubyte * name,
 {
    GET_CURRENT_CONTEXT(ctx);
    Node *n;
-   GLubyte *nameCopy = (GLubyte *) _mesa_malloc(len);
-   if (!nameCopy) {
-      _mesa_error(ctx, GL_OUT_OF_MEMORY, "glProgramNamedParameter4fNV");
-      return;
-   }
-   _mesa_memcpy(nameCopy, name, len);
 
    ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+
    n = ALLOC_INSTRUCTION(ctx, OPCODE_PROGRAM_NAMED_PARAMETER_NV, 6);
    if (n) {
+      GLubyte *nameCopy = (GLubyte *) _mesa_malloc(len);
+      if (!nameCopy) {
+         _mesa_error(ctx, GL_OUT_OF_MEMORY, "glProgramNamedParameter4fNV");
+         return;
+      }
+      _mesa_memcpy(nameCopy, name, len);
       n[1].ui = id;
       n[2].i = len;
       n[3].data = nameCopy;
@@ -4750,18 +4832,17 @@ save_ProgramStringARB(GLenum target, GLenum format, GLsizei len,
 {
    GET_CURRENT_CONTEXT(ctx);
    Node *n;
-   GLubyte *programCopy;
-
-   programCopy = (GLubyte *) _mesa_malloc(len);
-   if (!programCopy) {
-      _mesa_error(ctx, GL_OUT_OF_MEMORY, "glProgramStringARB");
-      return;
-   }
-   _mesa_memcpy(programCopy, string, len);
 
    ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+
    n = ALLOC_INSTRUCTION(ctx, OPCODE_PROGRAM_STRING_ARB, 4);
    if (n) {
+      GLubyte *programCopy = (GLubyte *) _mesa_malloc(len);
+      if (!programCopy) {
+         _mesa_error(ctx, GL_OUT_OF_MEMORY, "glProgramStringARB");
+         return;
+      }
+      _mesa_memcpy(programCopy, string, len);
       n[1].e = target;
       n[2].e = format;
       n[3].i = len;
@@ -4911,7 +4992,7 @@ save_Attr1fNV(GLenum attr, GLfloat x)
       n[2].f = x;
    }
 
-   ASSERT(attr < MAX_VERTEX_PROGRAM_ATTRIBS);
+   ASSERT(attr < MAX_VERTEX_GENERIC_ATTRIBS);
    ctx->ListState.ActiveAttribSize[attr] = 1;
    ASSIGN_4V(ctx->ListState.CurrentAttrib[attr], x, 0, 0, 1);
 
@@ -4933,7 +5014,7 @@ save_Attr2fNV(GLenum attr, GLfloat x, GLfloat y)
       n[3].f = y;
    }
 
-   ASSERT(attr < MAX_VERTEX_PROGRAM_ATTRIBS);
+   ASSERT(attr < MAX_VERTEX_GENERIC_ATTRIBS);
    ctx->ListState.ActiveAttribSize[attr] = 2;
    ASSIGN_4V(ctx->ListState.CurrentAttrib[attr], x, y, 0, 1);
 
@@ -4956,7 +5037,7 @@ save_Attr3fNV(GLenum attr, GLfloat x, GLfloat y, GLfloat z)
       n[4].f = z;
    }
 
-   ASSERT(attr < MAX_VERTEX_PROGRAM_ATTRIBS);
+   ASSERT(attr < MAX_VERTEX_GENERIC_ATTRIBS);
    ctx->ListState.ActiveAttribSize[attr] = 3;
    ASSIGN_4V(ctx->ListState.CurrentAttrib[attr], x, y, z, 1);
 
@@ -4980,7 +5061,7 @@ save_Attr4fNV(GLenum attr, GLfloat x, GLfloat y, GLfloat z, GLfloat w)
       n[5].f = w;
    }
 
-   ASSERT(attr < MAX_VERTEX_PROGRAM_ATTRIBS);
+   ASSERT(attr < MAX_VERTEX_GENERIC_ATTRIBS);
    ctx->ListState.ActiveAttribSize[attr] = 4;
    ASSIGN_4V(ctx->ListState.CurrentAttrib[attr], x, y, z, w);
 
@@ -5757,6 +5838,512 @@ save_BlitFramebufferEXT(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1,
 #endif
 
 
+/** GL_EXT_provoking_vertex */
+static void GLAPIENTRY
+save_ProvokingVertexEXT(GLenum mode)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_PROVOKING_VERTEX, 1);
+   if (n) {
+      n[1].e = mode;
+   }
+   if (ctx->ExecuteFlag) {
+      /*CALL_ProvokingVertexEXT(ctx->Exec, (mode));*/
+      _mesa_ProvokingVertexEXT(mode);
+   }
+}
+
+
+/* aka UseProgram() */
+static void GLAPIENTRY
+save_UseProgramObjectARB(GLhandleARB program)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_USE_PROGRAM, 1);
+   if (n) {
+      n[1].ui = program;
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_UseProgramObjectARB(ctx->Exec, (program));
+   }
+}
+
+
+static void GLAPIENTRY
+save_Uniform1fARB(GLint location, GLfloat x)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_1F, 2);
+   if (n) {
+      n[1].i = location;
+      n[2].f = x;
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_Uniform1fARB(ctx->Exec, (location, x));
+   }
+}
+
+
+static void GLAPIENTRY
+save_Uniform2fARB(GLint location, GLfloat x, GLfloat y)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_2F, 3);
+   if (n) {
+      n[1].i = location;
+      n[2].f = x;
+      n[3].f = y;
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_Uniform2fARB(ctx->Exec, (location, x, y));
+   }
+}
+
+
+static void GLAPIENTRY
+save_Uniform3fARB(GLint location, GLfloat x, GLfloat y, GLfloat z)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_3F, 4);
+   if (n) {
+      n[1].i = location;
+      n[2].f = x;
+      n[3].f = y;
+      n[4].f = z;
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_Uniform3fARB(ctx->Exec, (location, x, y, z));
+   }
+}
+
+
+static void GLAPIENTRY
+save_Uniform4fARB(GLint location, GLfloat x, GLfloat y, GLfloat z, GLfloat w)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_4F, 5);
+   if (n) {
+      n[1].i = location;
+      n[2].f = x;
+      n[3].f = y;
+      n[4].f = z;
+      n[5].f = w;
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_Uniform4fARB(ctx->Exec, (location, x, y, z, w));
+   }
+}
+
+
+/** Return copy of memory */
+static void *
+memdup(const void *src, GLsizei bytes)
+{
+   void *b = bytes >= 0 ? _mesa_malloc(bytes) : NULL;
+   if (b)
+      _mesa_memcpy(b, src, bytes);
+   return b;
+}
+
+
+static void GLAPIENTRY
+save_Uniform1fvARB(GLint location, GLsizei count, const GLfloat *v)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_1FV, 3);
+   if (n) {
+      n[1].i = location;
+      n[2].i = count;
+      n[3].data = memdup(v, count * 1 * sizeof(GLfloat));
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_Uniform1fvARB(ctx->Exec, (location, count, v));
+   }
+}
+
+static void GLAPIENTRY
+save_Uniform2fvARB(GLint location, GLsizei count, const GLfloat *v)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_2FV, 3);
+   if (n) {
+      n[1].i = location;
+      n[2].i = count;
+      n[3].data = memdup(v, count * 2 * sizeof(GLfloat));
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_Uniform2fvARB(ctx->Exec, (location, count, v));
+   }
+}
+
+static void GLAPIENTRY
+save_Uniform3fvARB(GLint location, GLsizei count, const GLfloat *v)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_3FV, 3);
+   if (n) {
+      n[1].i = location;
+      n[2].i = count;
+      n[3].data = memdup(v, count * 3 * sizeof(GLfloat));
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_Uniform3fvARB(ctx->Exec, (location, count, v));
+   }
+}
+
+static void GLAPIENTRY
+save_Uniform4fvARB(GLint location, GLsizei count, const GLfloat *v)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_4FV, 3);
+   if (n) {
+      n[1].i = location;
+      n[2].i = count;
+      n[3].data = memdup(v, count * 4 * sizeof(GLfloat));
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_Uniform4fvARB(ctx->Exec, (location, count, v));
+   }
+}
+
+
+static void GLAPIENTRY
+save_Uniform1iARB(GLint location, GLint x)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_1I, 2);
+   if (n) {
+      n[1].i = location;
+      n[2].i = x;
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_Uniform1iARB(ctx->Exec, (location, x));
+   }
+}
+
+static void GLAPIENTRY
+save_Uniform2iARB(GLint location, GLint x, GLint y)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_2I, 3);
+   if (n) {
+      n[1].i = location;
+      n[2].i = x;
+      n[3].i = y;
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_Uniform2iARB(ctx->Exec, (location, x, y));
+   }
+}
+
+static void GLAPIENTRY
+save_Uniform3iARB(GLint location, GLint x, GLint y, GLint z)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_3I, 4);
+   if (n) {
+      n[1].i = location;
+      n[2].i = x;
+      n[3].i = y;
+      n[4].i = z;
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_Uniform3iARB(ctx->Exec, (location, x, y, z));
+   }
+}
+
+static void GLAPIENTRY
+save_Uniform4iARB(GLint location, GLint x, GLint y, GLint z, GLint w)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_4I, 5);
+   if (n) {
+      n[1].i = location;
+      n[2].i = x;
+      n[3].i = y;
+      n[4].i = z;
+      n[5].i = w;
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_Uniform4iARB(ctx->Exec, (location, x, y, z, w));
+   }
+}
+
+
+
+static void GLAPIENTRY
+save_Uniform1ivARB(GLint location, GLsizei count, const GLint *v)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_1IV, 3);
+   if (n) {
+      n[1].i = location;
+      n[2].i = count;
+      n[3].data = memdup(v, count * 1 * sizeof(GLint));
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_Uniform1ivARB(ctx->Exec, (location, count, v));
+   }
+}
+
+static void GLAPIENTRY
+save_Uniform2ivARB(GLint location, GLsizei count, const GLint *v)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_2IV, 3);
+   if (n) {
+      n[1].i = location;
+      n[2].i = count;
+      n[3].data = memdup(v, count * 2 * sizeof(GLint));
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_Uniform2ivARB(ctx->Exec, (location, count, v));
+   }
+}
+
+static void GLAPIENTRY
+save_Uniform3ivARB(GLint location, GLsizei count, const GLint *v)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_3IV, 3);
+   if (n) {
+      n[1].i = location;
+      n[2].i = count;
+      n[3].data = memdup(v, count * 3 * sizeof(GLint));
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_Uniform3ivARB(ctx->Exec, (location, count, v));
+   }
+}
+
+static void GLAPIENTRY
+save_Uniform4ivARB(GLint location, GLsizei count, const GLint *v)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_4IV, 3);
+   if (n) {
+      n[1].i = location;
+      n[2].i = count;
+      n[3].data = memdup(v, count * 4 * sizeof(GLfloat));
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_Uniform4ivARB(ctx->Exec, (location, count, v));
+   }
+}
+
+
+static void GLAPIENTRY
+save_UniformMatrix2fvARB(GLint location, GLsizei count, GLboolean transpose,
+                         const GLfloat *m)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_MATRIX22, 4);
+   if (n) {
+      n[1].i = location;
+      n[2].i = count;
+      n[3].b = transpose;
+      n[4].data = memdup(m, count * 2 * 2 * sizeof(GLfloat));
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_UniformMatrix2fvARB(ctx->Exec, (location, count, transpose, m));
+   }
+}
+
+static void GLAPIENTRY
+save_UniformMatrix3fvARB(GLint location, GLsizei count, GLboolean transpose,
+                         const GLfloat *m)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_MATRIX33, 4);
+   if (n) {
+      n[1].i = location;
+      n[2].i = count;
+      n[3].b = transpose;
+      n[4].data = memdup(m, count * 3 * 3 * sizeof(GLfloat));
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_UniformMatrix3fvARB(ctx->Exec, (location, count, transpose, m));
+   }
+}
+
+static void GLAPIENTRY
+save_UniformMatrix4fvARB(GLint location, GLsizei count, GLboolean transpose,
+                         const GLfloat *m)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_MATRIX44, 4);
+   if (n) {
+      n[1].i = location;
+      n[2].i = count;
+      n[3].b = transpose;
+      n[4].data = memdup(m, count * 4 * 4 * sizeof(GLfloat));
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_UniformMatrix4fvARB(ctx->Exec, (location, count, transpose, m));
+   }
+}
+
+
+static void GLAPIENTRY
+save_UniformMatrix2x3fv(GLint location, GLsizei count, GLboolean transpose,
+                        const GLfloat *m)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_MATRIX23, 4);
+   if (n) {
+      n[1].i = location;
+      n[2].i = count;
+      n[3].b = transpose;
+      n[4].data = memdup(m, count * 2 * 3 * sizeof(GLfloat));
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_UniformMatrix2x3fv(ctx->Exec, (location, count, transpose, m));
+   }
+}
+
+static void GLAPIENTRY
+save_UniformMatrix3x2fv(GLint location, GLsizei count, GLboolean transpose,
+                        const GLfloat *m)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_MATRIX32, 4);
+   if (n) {
+      n[1].i = location;
+      n[2].i = count;
+      n[3].b = transpose;
+      n[4].data = memdup(m, count * 3 * 2 * sizeof(GLfloat));
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_UniformMatrix3x2fv(ctx->Exec, (location, count, transpose, m));
+   }
+}
+
+
+static void GLAPIENTRY
+save_UniformMatrix2x4fv(GLint location, GLsizei count, GLboolean transpose,
+                        const GLfloat *m)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_MATRIX24, 4);
+   if (n) {
+      n[1].i = location;
+      n[2].i = count;
+      n[3].b = transpose;
+      n[4].data = memdup(m, count * 2 * 4 * sizeof(GLfloat));
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_UniformMatrix2x4fv(ctx->Exec, (location, count, transpose, m));
+   }
+}
+
+static void GLAPIENTRY
+save_UniformMatrix4x2fv(GLint location, GLsizei count, GLboolean transpose,
+                        const GLfloat *m)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_MATRIX42, 4);
+   if (n) {
+      n[1].i = location;
+      n[2].i = count;
+      n[3].b = transpose;
+      n[4].data = memdup(m, count * 4 * 2 * sizeof(GLfloat));
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_UniformMatrix4x2fv(ctx->Exec, (location, count, transpose, m));
+   }
+}
+
+
+static void GLAPIENTRY
+save_UniformMatrix3x4fv(GLint location, GLsizei count, GLboolean transpose,
+                        const GLfloat *m)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_MATRIX34, 4);
+   if (n) {
+      n[1].i = location;
+      n[2].i = count;
+      n[3].b = transpose;
+      n[4].data = memdup(m, count * 3 * 4 * sizeof(GLfloat));
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_UniformMatrix3x4fv(ctx->Exec, (location, count, transpose, m));
+   }
+}
+
+static void GLAPIENTRY
+save_UniformMatrix4x3fv(GLint location, GLsizei count, GLboolean transpose,
+                        const GLfloat *m)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   Node *n;
+   ASSERT_OUTSIDE_SAVE_BEGIN_END_AND_FLUSH(ctx);
+   n = ALLOC_INSTRUCTION(ctx, OPCODE_UNIFORM_MATRIX43, 4);
+   if (n) {
+      n[1].i = location;
+      n[2].i = count;
+      n[3].b = transpose;
+      n[4].data = memdup(m, count * 4 * 3 * sizeof(GLfloat));
+   }
+   if (ctx->ExecuteFlag) {
+      CALL_UniformMatrix4x3fv(ctx->Exec, (location, count, transpose, m));
+   }
+}
+
+
+
 /**
  * Save an error-generating command into display list.
  *
@@ -6321,6 +6908,9 @@ execute_list(GLcontext *ctx, GLuint list)
          case OPCODE_SHADE_MODEL:
             CALL_ShadeModel(ctx->Exec, (n[1].e));
             break;
+         case OPCODE_PROVOKING_VERTEX:
+            CALL_ProvokingVertexEXT(ctx->Exec, (n[1].e));
+            break;
          case OPCODE_STENCIL_FUNC:
             CALL_StencilFunc(ctx->Exec, (n[1].e, n[2].i, n[3].ui));
             break;
@@ -6589,6 +7179,98 @@ execute_list(GLcontext *ctx, GLuint list)
                                                 n[9].i, n[10].e));
 	    break;
 #endif
+
+	 case OPCODE_USE_PROGRAM:
+	    CALL_UseProgramObjectARB(ctx->Exec, (n[1].ui));
+	    break;
+	 case OPCODE_UNIFORM_1F:
+	    CALL_Uniform1fARB(ctx->Exec, (n[1].i, n[2].f));
+	    break;
+	 case OPCODE_UNIFORM_2F:
+	    CALL_Uniform2fARB(ctx->Exec, (n[1].i, n[2].f, n[3].f));
+	    break;
+	 case OPCODE_UNIFORM_3F:
+	    CALL_Uniform3fARB(ctx->Exec, (n[1].i, n[2].f, n[3].f, n[4].f));
+	    break;
+	 case OPCODE_UNIFORM_4F:
+	    CALL_Uniform4fARB(ctx->Exec,
+                              (n[1].i, n[2].f, n[3].f, n[4].f, n[5].f));
+	    break;
+	 case OPCODE_UNIFORM_1FV:
+	    CALL_Uniform1fvARB(ctx->Exec, (n[1].i, n[2].i, n[3].data));
+	    break;
+	 case OPCODE_UNIFORM_2FV:
+	    CALL_Uniform2fvARB(ctx->Exec, (n[1].i, n[2].i, n[3].data));
+	    break;
+	 case OPCODE_UNIFORM_3FV:
+	    CALL_Uniform3fvARB(ctx->Exec, (n[1].i, n[2].i, n[3].data));
+	    break;
+	 case OPCODE_UNIFORM_4FV:
+	    CALL_Uniform4fvARB(ctx->Exec, (n[1].i, n[2].i, n[3].data));
+	    break;
+	 case OPCODE_UNIFORM_1I:
+	    CALL_Uniform1iARB(ctx->Exec, (n[1].i, n[2].i));
+	    break;
+	 case OPCODE_UNIFORM_2I:
+	    CALL_Uniform2iARB(ctx->Exec, (n[1].i, n[2].i, n[3].i));
+	    break;
+	 case OPCODE_UNIFORM_3I:
+	    CALL_Uniform3iARB(ctx->Exec, (n[1].i, n[2].i, n[3].i, n[4].i));
+	    break;
+	 case OPCODE_UNIFORM_4I:
+	    CALL_Uniform4iARB(ctx->Exec,
+                              (n[1].i, n[2].i, n[3].i, n[4].i, n[5].i));
+	    break;
+	 case OPCODE_UNIFORM_1IV:
+	    CALL_Uniform1ivARB(ctx->Exec, (n[1].i, n[2].i, n[3].data));
+	    break;
+	 case OPCODE_UNIFORM_2IV:
+	    CALL_Uniform2ivARB(ctx->Exec, (n[1].i, n[2].i, n[3].data));
+	    break;
+	 case OPCODE_UNIFORM_3IV:
+	    CALL_Uniform3ivARB(ctx->Exec, (n[1].i, n[2].i, n[3].data));
+	    break;
+	 case OPCODE_UNIFORM_4IV:
+	    CALL_Uniform4ivARB(ctx->Exec, (n[1].i, n[2].i, n[3].data));
+	    break;
+
+	 case OPCODE_UNIFORM_MATRIX22:
+	    CALL_UniformMatrix2fvARB(ctx->Exec,
+                                     (n[1].i, n[2].i, n[3].b, n[4].data));
+	    break;
+	 case OPCODE_UNIFORM_MATRIX33:
+	    CALL_UniformMatrix3fvARB(ctx->Exec,
+                                     (n[1].i, n[2].i, n[3].b, n[4].data));
+	    break;
+	 case OPCODE_UNIFORM_MATRIX44:
+	    CALL_UniformMatrix4fvARB(ctx->Exec,
+                                     (n[1].i, n[2].i, n[3].b, n[4].data));
+	    break;
+	 case OPCODE_UNIFORM_MATRIX23:
+	    CALL_UniformMatrix2x3fv(ctx->Exec,
+                                    (n[1].i, n[2].i, n[3].b, n[4].data));
+	    break;
+	 case OPCODE_UNIFORM_MATRIX32:
+	    CALL_UniformMatrix3x2fv(ctx->Exec,
+                                    (n[1].i, n[2].i, n[3].b, n[4].data));
+	    break;
+	 case OPCODE_UNIFORM_MATRIX24:
+	    CALL_UniformMatrix2x4fv(ctx->Exec,
+                                    (n[1].i, n[2].i, n[3].b, n[4].data));
+	    break;
+	 case OPCODE_UNIFORM_MATRIX42:
+	    CALL_UniformMatrix4x2fv(ctx->Exec,
+                                    (n[1].i, n[2].i, n[3].b, n[4].data));
+	    break;
+	 case OPCODE_UNIFORM_MATRIX34:
+	    CALL_UniformMatrix3x4fv(ctx->Exec,
+                                    (n[1].i, n[2].i, n[3].b, n[4].data));
+	    break;
+	 case OPCODE_UNIFORM_MATRIX43:
+	    CALL_UniformMatrix4x3fv(ctx->Exec,
+                                    (n[1].i, n[2].i, n[3].b, n[4].data));
+	    break;
+
          case OPCODE_TEX_BUMP_PARAMETER_ATI:
             {
                GLfloat values[4];
@@ -7700,18 +8382,6 @@ exec_MultiDrawArraysEXT(GLenum mode, GLint * first,
    CALL_MultiDrawArraysEXT(ctx->Exec, (mode, first, count, primcount));
 }
 
-/* GL_EXT_multi_draw_arrays */
-static void GLAPIENTRY
-exec_MultiDrawElementsEXT(GLenum mode, const GLsizei * count,
-                          GLenum type, const GLvoid ** indices,
-                          GLsizei primcount)
-{
-   GET_CURRENT_CONTEXT(ctx);
-   FLUSH_VERTICES(ctx, 0);
-   CALL_MultiDrawElementsEXT(ctx->Exec,
-                             (mode, count, type, indices, primcount));
-}
-
 /* GL_IBM_multimode_draw_arrays */
 static void GLAPIENTRY
 exec_MultiModeDrawArraysIBM(const GLenum * mode, const GLint * first,
@@ -8057,7 +8727,6 @@ _mesa_init_dlist_table(struct _glapi_table *table)
 
    /* 148. GL_EXT_multi_draw_arrays */
    SET_MultiDrawArraysEXT(table, exec_MultiDrawArraysEXT);
-   SET_MultiDrawElementsEXT(table, exec_MultiDrawElementsEXT);
 
    /* 149. GL_EXT_fog_coord */
    SET_FogCoordPointerEXT(table, exec_FogCoordPointerEXT);
@@ -8271,6 +8940,34 @@ _mesa_init_dlist_table(struct _glapi_table *table)
    SET_BlitFramebufferEXT(table, save_BlitFramebufferEXT);
 #endif
 
+   /* GL_ARB_shader_objects */
+   SET_UseProgramObjectARB(table, save_UseProgramObjectARB);
+   SET_Uniform1fARB(table, save_Uniform1fARB);
+   SET_Uniform2fARB(table, save_Uniform2fARB);
+   SET_Uniform3fARB(table, save_Uniform3fARB);
+   SET_Uniform4fARB(table, save_Uniform4fARB);
+   SET_Uniform1fvARB(table, save_Uniform1fvARB);
+   SET_Uniform2fvARB(table, save_Uniform2fvARB);
+   SET_Uniform3fvARB(table, save_Uniform3fvARB);
+   SET_Uniform4fvARB(table, save_Uniform4fvARB);
+   SET_Uniform1iARB(table, save_Uniform1iARB);
+   SET_Uniform2iARB(table, save_Uniform2iARB);
+   SET_Uniform3iARB(table, save_Uniform3iARB);
+   SET_Uniform4iARB(table, save_Uniform4iARB);
+   SET_Uniform1ivARB(table, save_Uniform1ivARB);
+   SET_Uniform2ivARB(table, save_Uniform2ivARB);
+   SET_Uniform3ivARB(table, save_Uniform3ivARB);
+   SET_Uniform4ivARB(table, save_Uniform4ivARB);
+   SET_UniformMatrix2fvARB(table, save_UniformMatrix2fvARB);
+   SET_UniformMatrix3fvARB(table, save_UniformMatrix3fvARB);
+   SET_UniformMatrix4fvARB(table, save_UniformMatrix4fvARB);
+   SET_UniformMatrix2x3fv(table, save_UniformMatrix2x3fv);
+   SET_UniformMatrix3x2fv(table, save_UniformMatrix3x2fv);
+   SET_UniformMatrix2x4fv(table, save_UniformMatrix2x4fv);
+   SET_UniformMatrix4x2fv(table, save_UniformMatrix4x2fv);
+   SET_UniformMatrix3x4fv(table, save_UniformMatrix3x4fv);
+   SET_UniformMatrix4x3fv(table, save_UniformMatrix4x3fv);
+
    /* ARB 30/31/32. GL_ARB_shader_objects, GL_ARB_vertex/fragment_shader */
    SET_BindAttribLocationARB(table, exec_BindAttribLocationARB);
    SET_GetAttribLocationARB(table, exec_GetAttribLocationARB);
@@ -8284,6 +8981,18 @@ _mesa_init_dlist_table(struct _glapi_table *table)
    SET_ProgramEnvParameters4fvEXT(table, save_ProgramEnvParameters4fvEXT);
    SET_ProgramLocalParameters4fvEXT(table, save_ProgramLocalParameters4fvEXT);
 #endif
+
+   /* ARB 50. GL_ARB_map_buffer_range */
+#if FEATURE_ARB_map_buffer_range
+   SET_MapBufferRange(table, _mesa_MapBufferRange); /* no dlist save */
+   SET_FlushMappedBufferRange(table, _mesa_FlushMappedBufferRange); /* no dl */
+#endif
+
+   /* ARB 59. GL_ARB_copy_buffer */
+   SET_CopyBufferSubData(table, _mesa_CopyBufferSubData); /* no dlist save */
+
+   /* 364. GL_EXT_provoking_vertex */
+   SET_ProvokingVertexEXT(table, save_ProvokingVertexEXT);
 }
 
 
@@ -8520,6 +9229,11 @@ print_list(GLcontext *ctx, GLuint list)
             _mesa_printf("EVAL_P2 %d %d\n", n[1].i, n[2].i);
             break;
 
+         case OPCODE_PROVOKING_VERTEX:
+            _mesa_printf("ProvokingVertex %s\n",
+                         _mesa_lookup_enum_by_nr(n[1].ui));
+            break;
+
             /*
              * meta opcodes/commands
              */
@@ -8655,6 +9369,7 @@ _mesa_save_vtxfmt_init(GLvertexformat * vfmt)
    vfmt->DrawArrays = 0;
    vfmt->DrawElements = 0;
    vfmt->DrawRangeElements = 0;
+   vfmt->MultiDrawElemementsEXT = 0;
 #endif
 }
 

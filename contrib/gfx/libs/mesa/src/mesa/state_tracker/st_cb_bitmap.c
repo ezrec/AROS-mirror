@@ -94,6 +94,9 @@ struct bitmap_cache
 
    GLfloat color[4];
 
+   /** Bitmap's Z position */
+   GLfloat zpos;
+
    struct pipe_texture *texture;
    struct pipe_transfer *trans;
 
@@ -104,6 +107,8 @@ struct bitmap_cache
 };
 
 
+/** Epsilon for Z comparisons */
+#define Z_EPSILON 1e-06
 
 
 /**
@@ -236,7 +241,7 @@ combined_bitmap_fragment_program(GLcontext *ctx)
 /**
  * Copy user-provide bitmap bits into texture buffer, expanding
  * bits into texels.
- * "On" bits will set texels to 0xff.
+ * "On" bits will set texels to 0x0.
  * "Off" bits will not modify texels.
  * Note that the image is actually going to be upside down in
  * the texture.  We deal with that with texcoords.
@@ -248,63 +253,10 @@ unpack_bitmap(struct st_context *st,
               const GLubyte *bitmap,
               ubyte *destBuffer, uint destStride)
 {
-   GLint row, col;
+   destBuffer += py * destStride + px;
 
-#define SET_PIXEL(COL, ROW) \
-   destBuffer[(py + (ROW)) * destStride + px + (COL)] = 0x0;
-
-   for (row = 0; row < height; row++) {
-      const GLubyte *src = (const GLubyte *) _mesa_image_address2d(unpack,
-                 bitmap, width, height, GL_COLOR_INDEX, GL_BITMAP, row, 0);
-
-      if (unpack->LsbFirst) {
-         /* Lsb first */
-         GLubyte mask = 1U << (unpack->SkipPixels & 0x7);
-         for (col = 0; col < width; col++) {
-
-            if (*src & mask) {
-               SET_PIXEL(col, row);
-            }
-
-            if (mask == 128U) {
-               src++;
-               mask = 1U;
-            }
-            else {
-               mask = mask << 1;
-            }
-         }
-
-         /* get ready for next row */
-         if (mask != 1)
-            src++;
-      }
-      else {
-         /* Msb first */
-         GLubyte mask = 128U >> (unpack->SkipPixels & 0x7);
-         for (col = 0; col < width; col++) {
-
-            if (*src & mask) {
-               SET_PIXEL(col, row);
-            }
-
-            if (mask == 1U) {
-               src++;
-               mask = 128U;
-            }
-            else {
-               mask = mask >> 1;
-            }
-         }
-
-         /* get ready for next row */
-         if (mask != 128)
-            src++;
-      }
-
-   } /* row */
-
-#undef SET_PIXEL
+   _mesa_expand_bitmap(width, height, unpack, bitmap,
+                       destBuffer, destStride, 0x0);
 }
 
 
@@ -323,7 +275,7 @@ make_bitmap_texture(GLcontext *ctx, GLsizei width, GLsizei height,
    struct pipe_texture *pt;
 
    /* PBO source... */
-   bitmap = _mesa_map_bitmap_pbo(ctx, unpack, bitmap);
+   bitmap = _mesa_map_pbo_source(ctx, unpack, bitmap);
    if (!bitmap) {
       return NULL;
    }
@@ -335,7 +287,7 @@ make_bitmap_texture(GLcontext *ctx, GLsizei width, GLsizei height,
                           0, width, height, 1,
                           PIPE_TEXTURE_USAGE_SAMPLER);
    if (!pt) {
-      _mesa_unmap_bitmap_pbo(ctx, unpack);
+      _mesa_unmap_pbo_source(ctx, unpack);
       return NULL;
    }
 
@@ -350,7 +302,7 @@ make_bitmap_texture(GLcontext *ctx, GLsizei width, GLsizei height,
    unpack_bitmap(ctx->st, 0, 0, width, height, unpack, bitmap,
                  dest, transfer->stride);
 
-   _mesa_unmap_bitmap_pbo(ctx, unpack);
+   _mesa_unmap_pbo_source(ctx, unpack);
 
    /* Release transfer */
    screen->transfer_unmap(screen, transfer);
@@ -538,9 +490,7 @@ draw_bitmap_quad(GLcontext *ctx, GLint x, GLint y, GLfloat z,
    }
 
    /* draw textured quad */
-   offset = setup_bitmap_vertex_data(st, x, y, width, height,
-                                     ctx->Current.RasterPos[2],
-                                     color);
+   offset = setup_bitmap_vertex_data(st, x, y, width, height, z, color);
 
    util_draw_vertex_buffer(pipe, st->bitmap.vbuf, offset,
                            PIPE_PRIM_TRIANGLE_FAN,
@@ -647,7 +597,7 @@ st_flush_bitmap_cache(struct st_context *st)
          draw_bitmap_quad(st->ctx,
                           cache->xpos,
                           cache->ypos,
-                          st->ctx->Current.RasterPos[2],
+                          cache->zpos,
                           BITMAP_CACHE_WIDTH, BITMAP_CACHE_HEIGHT,
                           cache->texture,
                           cache->color);
@@ -687,6 +637,7 @@ accum_bitmap(struct st_context *st,
 {
    struct bitmap_cache *cache = st->bitmap.cache;
    int px = -999, py;
+   const GLfloat z = st->ctx->Current.RasterPos[2];
 
    if (width > BITMAP_CACHE_WIDTH ||
        height > BITMAP_CACHE_HEIGHT)
@@ -697,7 +648,8 @@ accum_bitmap(struct st_context *st,
       py = y - cache->ypos;
       if (px < 0 || px + width > BITMAP_CACHE_WIDTH ||
           py < 0 || py + height > BITMAP_CACHE_HEIGHT ||
-          !TEST_EQ_4V(st->ctx->Current.RasterColor, cache->color)) {
+          !TEST_EQ_4V(st->ctx->Current.RasterColor, cache->color) ||
+          ((fabs(z - cache->zpos) > Z_EPSILON))) {
          /* This bitmap would extend beyond cache bounds, or the bitmap
           * color is changing
           * so flush and continue.
@@ -712,6 +664,7 @@ accum_bitmap(struct st_context *st,
       py = (BITMAP_CACHE_HEIGHT - height) / 2;
       cache->xpos = x;
       cache->ypos = y - py;
+      cache->zpos = z;
       cache->empty = GL_FALSE;
       COPY_4FV(cache->color, st->ctx->Current.RasterColor);
    }

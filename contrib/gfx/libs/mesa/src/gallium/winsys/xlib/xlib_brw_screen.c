@@ -249,6 +249,7 @@ aub_i915_surface_buffer_create(struct pipe_winsys *winsys,
                                unsigned width, unsigned height,
                                enum pipe_format format,
                                unsigned usage,
+                               unsigned tex_usage,
                                unsigned *stride)
 {
    const unsigned alignment = 64;
@@ -364,7 +365,7 @@ void xlib_brw_buffer_subdata_typed( struct pipe_winsys *pws,
                                     unsigned data_type )
 {
    unsigned aub_type = DW_GENERAL_STATE;
-   unsigned aub_sub_type;
+   unsigned aub_sub_type = 0;
 
    switch (data_type) {
    case BRW_CC_VP:

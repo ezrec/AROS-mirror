@@ -1,8 +1,9 @@
 /*
  * Mesa 3-D graphics library
- * Version:  7.0
+ * Version:  7.5
  *
- * Copyright (C) 1999-2007  Brian Paul   All Rights Reserved.
+ * Copyright (C) 1999-2008  Brian Paul   All Rights Reserved.
+ * Copyright (C) 2009  VMware, Inc.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -60,6 +61,37 @@ _mesa_ShadeModel( GLenum mode )
 
    if (ctx->Driver.ShadeModel)
       ctx->Driver.ShadeModel( ctx, mode );
+}
+
+
+/**
+ * Set the provoking vertex (the vertex which specifies the prim's
+ * color when flat shading) to either the first or last vertex of the
+ * triangle or line.
+ */
+void GLAPIENTRY
+_mesa_ProvokingVertexEXT(GLenum mode)
+{
+   GET_CURRENT_CONTEXT(ctx);
+   ASSERT_OUTSIDE_BEGIN_END(ctx);
+
+   if (MESA_VERBOSE&VERBOSE_API)
+      _mesa_debug(ctx, "glProvokingVertexEXT 0x%x\n", mode);
+
+   switch (mode) {
+   case GL_FIRST_VERTEX_CONVENTION_EXT:
+   case GL_LAST_VERTEX_CONVENTION_EXT:
+      break;
+   default:
+      _mesa_error(ctx, GL_INVALID_ENUM, "glProvokingVertexEXT(0x%x)", mode);
+      return;
+   }
+
+   if (ctx->Light.ProvokingVertex == mode)
+      return;
+
+   FLUSH_VERTICES(ctx, _NEW_LIGHT);
+   ctx->Light.ProvokingVertex = mode;
 }
 
 
@@ -496,7 +528,7 @@ _mesa_LightModeliv( GLenum pname, const GLint *params )
          break;
       default:
          /* Error will be caught later in gl_LightModelfv */
-         ;
+         ASSIGN_4V(fparam, 0.0F, 0.0F, 0.0F, 0.0F);
    }
    _mesa_LightModelfv( pname, fparam );
 }
@@ -1224,15 +1256,15 @@ _mesa_update_tnl_spaces( GLcontext *ctx, GLuint new_state )
 	 ctx->Driver.LightingSpaceChange( ctx );
    }
    else {
-      GLuint new_state = ctx->NewState;
+      GLuint new_state2 = ctx->NewState;
 
       /* Recalculate that same state only if it has been invalidated
        * by other statechanges.
        */
-      if (new_state & _NEW_MODELVIEW)
+      if (new_state2 & _NEW_MODELVIEW)
 	 update_modelview_scale(ctx);
 
-      if (new_state & (_NEW_LIGHT|_NEW_MODELVIEW))
+      if (new_state2 & (_NEW_LIGHT|_NEW_MODELVIEW))
 	 compute_light_positions( ctx );
    }
 }
@@ -1348,6 +1380,7 @@ _mesa_init_lighting( GLcontext *ctx )
    init_lightmodel( &ctx->Light.Model );
    init_material( &ctx->Light.Material );
    ctx->Light.ShadeModel = GL_SMOOTH;
+   ctx->Light.ProvokingVertex = GL_LAST_VERTEX_CONVENTION_EXT;
    ctx->Light.Enabled = GL_FALSE;
    ctx->Light.ColorMaterialFace = GL_FRONT_AND_BACK;
    ctx->Light.ColorMaterialMode = GL_AMBIENT_AND_DIFFUSE;

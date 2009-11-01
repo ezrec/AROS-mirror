@@ -18907,3 +18907,289 @@ AROS_LH5(void, glFramebufferTextureLayerEXT,
 
     AROS_LIBFUNC_EXIT
 }
+
+AROS_LH4(GLvoid*, glMapBufferRange,
+    AROS_LHA(GLenum, a, D0),
+    AROS_LHA(GLintptr, b, D1),
+    AROS_LHA(GLsizeiptr, c, D2),
+    AROS_LHA(GLbitfield, d, D3),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    GLvoid* _return = mglMapBufferRange(a, b, c, d);
+
+    RESTORE_REG
+
+    return _return;
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(void, glFlushMappedBufferRange,
+    AROS_LHA(GLenum, a, D0),
+    AROS_LHA(GLintptr, b, D1),
+    AROS_LHA(GLsizeiptr, c, D2),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    mglFlushMappedBufferRange(a, b, c);
+
+    RESTORE_REG
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH1(void, glBindVertexArray,
+    AROS_LHA(GLuint, a, D0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    mglBindVertexArray(a);
+
+    RESTORE_REG
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH2(void, glDeleteVertexArrays,
+    AROS_LHA(GLsizei, a, D0),
+    AROS_LHA(const GLuint *, b, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    mglDeleteVertexArrays(a, b);
+
+    RESTORE_REG
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH2(void, glGenVertexArrays,
+    AROS_LHA(GLsizei, a, D0),
+    AROS_LHA(GLuint *, b, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    mglGenVertexArrays(a, b);
+
+    RESTORE_REG
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH1(GLboolean, glIsVertexArray,
+    AROS_LHA(GLuint, a, D0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    GLboolean _return = mglIsVertexArray(a);
+
+    RESTORE_REG
+
+    return _return;
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH5(void, glCopyBufferSubData,
+    AROS_LHA(GLenum, a, D0),
+    AROS_LHA(GLenum, b, D1),
+    AROS_LHA(GLintptr, c, D2),
+    AROS_LHA(GLintptr, d, D3),
+    AROS_LHA(GLsizeiptr, e, D4),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    mglCopyBufferSubData(a, b, c, d, e);
+
+    RESTORE_REG
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH2(GLsync, glFenceSync,
+    AROS_LHA(GLenum, a, D0),
+    AROS_LHA(GLbitfield, b, D1),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    GLsync _return = mglFenceSync(a, b);
+
+    RESTORE_REG
+
+    return _return;
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH1(GLboolean, glIsSync,
+    AROS_LHA(GLsync, a, D0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    GLboolean _return = mglIsSync(a);
+
+    RESTORE_REG
+
+    return _return;
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH1(void, glDeleteSync,
+    AROS_LHA(GLsync, a, D0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    mglDeleteSync(a);
+
+    RESTORE_REG
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(GLenum, glClientWaitSync,
+    AROS_LHA(GLsync, a, D0),
+    AROS_LHA(GLbitfield, b, D1),
+    AROS_LHA(GLuint64, c, D2),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    GLenum _return = mglClientWaitSync(a, b, c);
+
+    RESTORE_REG
+
+    return _return;
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(void, glWaitSync,
+    AROS_LHA(GLsync, a, D0),
+    AROS_LHA(GLbitfield, b, D1),
+    AROS_LHA(GLuint64, c, D2),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    mglWaitSync(a, b, c);
+
+    RESTORE_REG
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH2(void, glGetInteger64v,
+    AROS_LHA(GLenum, a, D0),
+    AROS_LHA(GLint64 *, b, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    mglGetInteger64v(a, b);
+
+    RESTORE_REG
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH5(void, glGetSynciv,
+    AROS_LHA(GLsync, a, D0),
+    AROS_LHA(GLenum, b, D1),
+    AROS_LHA(GLsizei, c, D2),
+    AROS_LHA(GLsizei *, d, A0),
+    AROS_LHA(GLint *, e, A1),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    mglGetSynciv(a, b, c, d, e);
+
+    RESTORE_REG
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH1(void, glProvokingVertexEXT,
+    AROS_LHA(GLenum, a, D0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    mglProvokingVertexEXT(a);
+
+    RESTORE_REG
+
+    AROS_LIBFUNC_EXIT
+}

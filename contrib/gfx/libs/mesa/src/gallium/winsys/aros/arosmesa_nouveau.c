@@ -7,15 +7,37 @@
 #include "nouveau/nouveau_winsys.h"
 #include "util/u_memory.h"
 
-/* Code from DRM winsys */
-#include "nouveau_winsys_pipe.h"
+#include "nouveau/nouveau_screen.h"
+
 #include "nouveau_drmif.h"
-/* Code from DRM winsys */
 
 #define DEBUG 0
 #include <aros/debug.h>
 
 #include <proto/graphics.h>
+
+struct nouveau_winsys {
+    struct pipe_winsys base;
+
+    struct pipe_screen *pscreen;
+
+    unsigned nr_pctx;
+    struct pipe_context **pctx;
+
+    struct pipe_surface *front;
+};
+
+static INLINE struct nouveau_winsys *
+nouveau_winsys(struct pipe_winsys *ws)
+{
+    return (struct nouveau_winsys *)ws;
+}
+
+static INLINE struct nouveau_winsys *
+nouveau_winsys_screen(struct pipe_screen *pscreen)
+{
+    return nouveau_winsys(pscreen->winsys);
+}
 
 static void
 arosmesa_nouveau_display_surface(AROSMesaContext amesa,
@@ -104,29 +126,22 @@ arosmesa_open_nouveau_device(struct nouveau_device **dev)
     return nouveau_device_open(dev, "");
 }
 
-static void
-arosmesa_nouveau_flush_frontbuffer(struct pipe_winsys *pws,
-                     struct pipe_surface *surf,
-                     void *context_private)
-{
-    /* No Op */
-}
-
 static void 
-arosmesa_nouveau_update_buffer( struct pipe_winsys *ws, void *context_private )
+arosmesa_nouveau_flush_frontbuffer( struct pipe_screen *screen,
+                            struct pipe_surface *surf,
+                            void *context_private )
 {
     /* No Op */
 }
-
 
 static struct pipe_screen *
 arosmesa_create_nouveau_screen( void )
 {
-    struct pipe_winsys *ws;
     struct nouveau_winsys *nvws;
+    struct pipe_winsys *ws;
     struct nouveau_device *dev = NULL;
     struct pipe_screen *(*init)(struct pipe_winsys *,
-                    struct nouveau_winsys *);
+                    struct nouveau_device *);
     int ret;
 
     ret = arosmesa_open_nouveau_device(&dev);
@@ -162,44 +177,38 @@ arosmesa_create_nouveau_screen( void )
         return NULL;
     }
 
-    ws = nouveau_pipe_winsys_new(dev);
-    if (!ws) {
+
+    nvws = CALLOC_STRUCT(nouveau_winsys);
+    if (!nvws) {
         nouveau_device_close(&dev);
         return NULL;
     }
+    ws = &nvws->base;
+
+    nvws->pscreen = init(ws, dev);
+    if (!nvws->pscreen) {
+        ws->destroy(ws);
+        return NULL;
+    }
     
-    /* Install pipe_winsys function */
-    ws->flush_frontbuffer = arosmesa_nouveau_flush_frontbuffer;
-    ws->update_buffer = arosmesa_nouveau_update_buffer;
-
-    nvws = nouveau_winsys_new(ws);
-    if (!nvws) {
-        ws->destroy(ws);
-        return NULL;
-    }
-
-    nouveau_pipe_winsys(ws)->pscreen = init(ws, nvws);
-    if (!nouveau_pipe_winsys(ws)->pscreen) {
-        ws->destroy(ws);
-        return NULL;
-    }
-
-    return nouveau_pipe_winsys(ws)->pscreen;    
+    nvws->pscreen->flush_frontbuffer = arosmesa_nouveau_flush_frontbuffer;
+    
+    return nvws->pscreen;
 }
 
 static struct pipe_context *
-arosmesa_create_nouveau_context( struct pipe_screen *screen )
+arosmesa_create_nouveau_context( struct pipe_screen *pscreen )
 {
-    struct nouveau_pipe_winsys *nvpws = nouveau_screen(screen);
+    struct nouveau_winsys *nvws = nouveau_winsys_screen(pscreen);
     struct pipe_context *(*init)(struct pipe_screen *, unsigned);
-    unsigned chipset = nvpws->channel->device->chipset;
+    unsigned chipset = nouveau_screen(pscreen)->device->chipset;
     int i;
 
     switch (chipset & 0xf0) {
     /* NV04 codebase is not in-sync with gallium API */        
-//     case 0x00:
-//         init = nv04_create;
-//         break;
+//    case 0x00:
+//        init = nv04_create;
+//        break;
     case 0x10:
         init = nv10_create;
         break;
@@ -224,48 +233,48 @@ arosmesa_create_nouveau_context( struct pipe_screen *screen )
     }
 
     /* Find a free slot for a pipe context, allocate a new one if needed */
-    for (i = 0; i < nvpws->nr_pctx; i++) {
-        if (nvpws->pctx[i] == NULL)
+    for (i = 0; i < nvws->nr_pctx; i++) {
+        if (nvws->pctx[i] == NULL)
             break;
     }
 
-    if (i == nvpws->nr_pctx) {
-        nvpws->nr_pctx++;
-        nvpws->pctx = realloc(nvpws->pctx,
-                      sizeof(*nvpws->pctx) * nvpws->nr_pctx);
+    if (i == nvws->nr_pctx) {
+        nvws->nr_pctx++;
+        nvws->pctx = realloc(nvws->pctx,
+                      sizeof(*nvws->pctx) * nvws->nr_pctx);
     }
 
-    nvpws->pctx[i] = init(screen, i);
-    return nvpws->pctx[i];
+    nvws->pctx[i] = init(pscreen, i);
+    return nvws->pctx[i];
 }
 
 static struct pipe_buffer *
 nouveau_drm_pb_from_handle(struct pipe_screen *pscreen, unsigned handle)
 {
-    struct nouveau_pipe_winsys *nvpws = nouveau_screen(pscreen);
-    struct nouveau_device *dev = nvpws->channel->device;
-    struct nouveau_pipe_buffer *nvpb;
+    struct nouveau_device *dev = nouveau_screen(pscreen)->device;
+    struct pipe_buffer *pb;
     int ret;
 
-    nvpb = CALLOC_STRUCT(nouveau_pipe_buffer);
-    if (!nvpb)
+    pb = CALLOC(1, sizeof(struct pipe_buffer) + sizeof(struct nouveau_bo*));
+    if (!pb)
         return NULL;
 
-    ret = nouveau_bo_handle_ref(dev, handle, &nvpb->bo);
+    ret = nouveau_bo_handle_ref(dev, handle, (struct nouveau_bo**)(pb+1));
     if (ret) {
         debug_printf("%s: ref name 0x%08x failed with %d\n",
                  __func__, handle, ret);
-        FREE(nvpb);
+        FREE(pb);
         return NULL;
     }
 
-    pipe_reference_init(&nvpb->base.reference, 1);
-    nvpb->base.screen = pscreen;
-    nvpb->base.alignment = 0;
-    nvpb->base.usage = PIPE_BUFFER_USAGE_GPU_READ_WRITE |
-               PIPE_BUFFER_USAGE_CPU_READ_WRITE;
-    nvpb->base.size = nvpb->bo->size;
-    return &nvpb->base;
+    pipe_reference_init(&pb->reference, 1);
+    pb->screen = pscreen;
+    pb->alignment = 0;
+    pb->usage = PIPE_BUFFER_USAGE_GPU_READ_WRITE |
+            PIPE_BUFFER_USAGE_CPU_READ_WRITE;
+    pb->size = nouveau_bo(pb)->size;
+    
+    return pb;
 }
 
 static void
@@ -278,10 +287,10 @@ arosmesa_nouveau_cleanup( struct pipe_screen * screen )
         
         screen->destroy(screen);
         
-        if (winsys)
+/*        if (winsys)
         {
             winsys->destroy(winsys);
-        }
+        }*/
     }
 }
 
@@ -290,19 +299,16 @@ struct pipe_screen * protect_screen = NULL;
 
 static void HACK_protect_screen_fb(int size)
 {
-    struct nouveau_pipe_winsys *nvpws = NULL;
     struct nouveau_device *dev = NULL;
     struct nouveau_bo *bo = NULL;
     
     /* Create a pipe_screen separate from any actual client */
-    /* FIXME: This screen needs to be destroyed */
     if(!protect_screen) 
         protect_screen = arosmesa_create_nouveau_screen();
     else
         return;
     
-    nvpws = nouveau_screen(protect_screen);
-    dev = nvpws->channel->device;
+    dev = nouveau_screen(protect_screen)->device;
     
     /* HACK - UNHOLY */
     /* IF WE ARE LUCKY:

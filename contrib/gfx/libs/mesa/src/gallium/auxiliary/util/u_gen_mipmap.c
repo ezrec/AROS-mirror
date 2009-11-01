@@ -46,10 +46,6 @@
 #include "util/u_gen_mipmap.h"
 #include "util/u_simple_shaders.h"
 
-#include "tgsi/tgsi_build.h"
-#include "tgsi/tgsi_dump.h"
-#include "tgsi/tgsi_parse.h"
-
 #include "cso_cache/cso_context.h"
 
 
@@ -921,11 +917,19 @@ static void
 format_to_type_comps(enum pipe_format pformat,
                      enum dtype *datatype, uint *comps)
 {
+   /* XXX I think this could be implemented in terms of the pf_*() functions */
    switch (pformat) {
    case PIPE_FORMAT_A8R8G8B8_UNORM:
    case PIPE_FORMAT_X8R8G8B8_UNORM:
    case PIPE_FORMAT_B8G8R8A8_UNORM:
    case PIPE_FORMAT_B8G8R8X8_UNORM:
+   case PIPE_FORMAT_R8G8B8A8_SRGB:
+   case PIPE_FORMAT_R8G8B8X8_SRGB:
+   case PIPE_FORMAT_A8R8G8B8_SRGB:
+   case PIPE_FORMAT_X8R8G8B8_SRGB:
+   case PIPE_FORMAT_B8G8R8A8_SRGB:
+   case PIPE_FORMAT_B8G8R8X8_SRGB:
+   case PIPE_FORMAT_R8G8B8_SRGB:
       *datatype = DTYPE_UBYTE;
       *comps = 4;
       return;
@@ -942,12 +946,14 @@ format_to_type_comps(enum pipe_format pformat,
       *comps = 3;
       return;
    case PIPE_FORMAT_L8_UNORM:
+   case PIPE_FORMAT_L8_SRGB:
    case PIPE_FORMAT_A8_UNORM:
    case PIPE_FORMAT_I8_UNORM:
       *datatype = DTYPE_UBYTE;
       *comps = 1;
       return;
    case PIPE_FORMAT_A8L8_UNORM:
+   case PIPE_FORMAT_A8L8_SRGB:
       *datatype = DTYPE_UBYTE;
       *comps = 2;
       return;
@@ -1508,6 +1514,17 @@ util_gen_mipmap(struct gen_mipmap_state *ctx,
    uint dstLevel;
    uint zslice = 0;
    uint offset;
+
+   /* The texture object should have room for the levels which we're
+    * about to generate.
+    */
+   assert(lastLevel <= pt->last_level);
+
+   /* If this fails, why are we here? */
+   assert(lastLevel > baseLevel);
+
+   assert(filter == PIPE_TEX_FILTER_LINEAR ||
+          filter == PIPE_TEX_FILTER_NEAREST);
 
    /* check if we can render in the texture's format */
    if (!screen->is_format_supported(screen, pt->format, PIPE_TEXTURE_2D,

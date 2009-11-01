@@ -47,10 +47,19 @@
 #include "util/u_blit.h"
 
 
+/** Check if we have a front color buffer and if it's been drawn to. */
 static INLINE GLboolean
 is_front_buffer_dirty(struct st_context *st)
 {
-   return st->frontbuffer_status == FRONT_STATUS_DIRTY;
+   if (st->frontbuffer_status == FRONT_STATUS_DIRTY) {
+      return GL_TRUE;
+   }
+   else {
+      GLframebuffer *fb = st->ctx->DrawBuffer;
+      struct st_renderbuffer *strb
+         = st_renderbuffer(fb->Attachment[BUFFER_FRONT_LEFT].Renderbuffer);
+      return strb && strb->defined;
+   }
 }
 
 
@@ -152,4 +161,16 @@ void st_init_flush_functions(struct dd_function_table *functions)
 {
    functions->Flush = st_glFlush;
    functions->Finish = st_glFinish;
+
+   /* Windows opengl32.dll calls glFinish prior to every swapbuffers.
+    * This is unnecessary and degrades performance.  Luckily we have some
+    * scope to work around this, as the externally-visible behaviour of
+    * Finish() is identical to Flush() in all cases - no differences in
+    * rendering or ReadPixels are visible if we opt not to wait here.
+    *
+    * Only set this up on windows to avoid suprise elsewhere.
+    */
+#ifdef PIPE_OS_WINDOWS
+   functions->Finish = st_glFlush;
+#endif
 }

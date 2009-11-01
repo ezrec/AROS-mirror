@@ -138,9 +138,14 @@
 /** 
  * Maximum viewport/image width. Must accomodate all texture sizes too. 
  */
-#define MAX_WIDTH 4096
+
+#ifndef MAX_WIDTH
+#   define MAX_WIDTH 4096
+#endif
 /** Maximum viewport/image height */
-#define MAX_HEIGHT 4096
+#ifndef MAX_HEIGHT
+#   define MAX_HEIGHT 4096
+#endif
 
 /** Maxmimum size for CVA.  May be overridden by the drivers.  */
 #define MAX_ARRAY_LOCK_SIZE 3000
@@ -165,32 +170,53 @@
 /** For GL_EXT_texture_lod_bias (typically MAX_TEXTURE_LEVELS - 1) */
 #define MAX_TEXTURE_LOD_BIAS 12.0
 
+/** For any program target/extension */
+/*@{*/
+#define MAX_PROGRAM_INSTRUCTIONS       (16 * 1024)
+
+/**
+ * Per-program constants (power of two)
+ *
+ * \c MAX_PROGRAM_LOCAL_PARAMS and \c MAX_UNIFORMS are just the assmebly shader
+ * and GLSL shader names for the same thing.  They should \b always have the
+ * same value.  Each refers to the number of vec4 values supplied as
+ * per-program parameters.
+ */
+/*@{*/
+#define MAX_PROGRAM_LOCAL_PARAMS       1024
+#define MAX_UNIFORMS                   1024
+/*@}*/
+
+/**
+ * Per-context constants (power of two)
+ *
+ * \note
+ * This value should always be less than or equal to \c MAX_PROGRAM_LOCAL_PARAMS
+ * and \c MAX_VERTEX_PROGRAM_PARAMS.  Otherwise some applications will make
+ * incorrect assumptions.
+ */
+#define MAX_PROGRAM_ENV_PARAMS         256
+
+#define MAX_PROGRAM_MATRICES           8
+#define MAX_PROGRAM_MATRIX_STACK_DEPTH 4
+#define MAX_PROGRAM_CALL_DEPTH         8
+#define MAX_PROGRAM_TEMPS              256
+#define MAX_PROGRAM_ADDRESS_REGS       2
+#define MAX_VARYING                    16    /**< number of float[4] vectors */
+#define MAX_SAMPLERS                   MAX_TEXTURE_IMAGE_UNITS
+#define MAX_PROGRAM_INPUTS             32
+#define MAX_PROGRAM_OUTPUTS            32
+/*@}*/
+
 /** For GL_ARB_vertex_program */
 /*@{*/
 #define MAX_VERTEX_PROGRAM_ADDRESS_REGS 1
-#define MAX_VERTEX_PROGRAM_ATTRIBS     16
+#define MAX_VERTEX_PROGRAM_PARAMS       MAX_UNIFORMS
 /*@}*/
 
 /** For GL_ARB_fragment_program */
 /*@{*/
 #define MAX_FRAGMENT_PROGRAM_ADDRESS_REGS 0
-/*@}*/
-
-/** For any program target/extension */
-/*@{*/
-#define MAX_PROGRAM_INSTRUCTIONS  (16 * 1024)
-#define MAX_PROGRAM_LOCAL_PARAMS 256 /**< per-program constants (power of two) */
-#define MAX_PROGRAM_ENV_PARAMS 256   /**< per-context constants (power of two) */
-#define MAX_PROGRAM_MATRICES 8
-#define MAX_PROGRAM_MATRIX_STACK_DEPTH 4
-#define MAX_PROGRAM_CALL_DEPTH 8
-#define MAX_PROGRAM_TEMPS 256
-#define MAX_PROGRAM_ADDRESS_REGS 2
-#define MAX_UNIFORMS 1024  /**< number of vec4 uniforms */
-#define MAX_VARYING 16     /**< number of float[4] vectors */
-#define MAX_SAMPLERS MAX_TEXTURE_IMAGE_UNITS
-#define MAX_PROGRAM_INPUTS 32
-#define MAX_PROGRAM_OUTPUTS 32
 /*@}*/
 
 /** For GL_NV_vertex_program */

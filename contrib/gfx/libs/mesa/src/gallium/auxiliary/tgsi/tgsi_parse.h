@@ -73,11 +73,7 @@ struct tgsi_full_declaration
 struct tgsi_full_immediate
 {
    struct tgsi_immediate   Immediate;
-   union
-   {
-      const void                          *Pointer;
-      const struct tgsi_immediate_float32 *ImmediateFloat32;
-   } u;
+   union tgsi_immediate_data u[4];
 };
 
 #define TGSI_FULL_MAX_DST_REGISTERS 2
@@ -91,6 +87,7 @@ struct tgsi_full_instruction
    struct tgsi_instruction_ext_texture InstructionExtTexture;
    struct tgsi_full_dst_register       FullDstRegisters[TGSI_FULL_MAX_DST_REGISTERS];
    struct tgsi_full_src_register       FullSrcRegisters[TGSI_FULL_MAX_SRC_REGISTERS];
+   uint Flags;  /**< user-defined usage */
 };
 
 union tgsi_full_token

@@ -303,6 +303,7 @@ xm_flush_frontbuffer(struct pipe_winsys *pws,
     */
    XMesaContext xmctx = (XMesaContext) context_private;
    xlib_softpipe_display_surface(xmctx->xm_buffer, surf);
+   xmesa_check_and_update_buffer_size(xmctx, xmctx->xm_buffer);
 }
 
 
@@ -375,6 +376,7 @@ xm_surface_buffer_create(struct pipe_winsys *winsys,
                          unsigned width, unsigned height,
                          enum pipe_format format,
                          unsigned usage,
+                         unsigned tex_usage,
                          unsigned *stride)
 {
    const unsigned alignment = 64;

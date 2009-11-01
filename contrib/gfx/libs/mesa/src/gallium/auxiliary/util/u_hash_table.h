@@ -74,6 +74,7 @@ void
 hash_table_remove(struct hash_table *ht, 
                   void *key);
 
+#define hash_table_clear u_hash_table_clear
 
 void
 hash_table_clear(struct hash_table *ht);

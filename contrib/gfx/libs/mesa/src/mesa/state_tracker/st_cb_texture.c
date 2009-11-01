@@ -56,9 +56,11 @@
 #include "pipe/p_context.h"
 #include "pipe/p_defines.h"
 #include "pipe/p_inlines.h"
+#include "pipe/p_shader_tokens.h"
 #include "util/u_tile.h"
 #include "util/u_blit.h"
 #include "util/u_surface.h"
+#include "util/u_math.h"
 
 
 #define DBG if (0) printf
@@ -237,16 +239,6 @@ do_memcpy(void *dest, const void *src, size_t n)
 }
 
 
-static INLINE unsigned
-logbase2(unsigned n)
-{
-   unsigned log2 = 0;
-   while (n >>= 1)
-      ++log2;
-   return log2;
-}
-
-
 /**
  * Return default texture usage bitmask for the given texture format.
  */
@@ -340,9 +332,9 @@ guess_and_alloc_texture(struct st_context *st,
       lastLevel = firstLevel;
    }
    else {
-      GLuint l2width = logbase2(width);
-      GLuint l2height = logbase2(height);
-      GLuint l2depth = logbase2(depth);
+      GLuint l2width = util_logbase2(width);
+      GLuint l2height = util_logbase2(height);
+      GLuint l2depth = util_logbase2(depth);
       lastLevel = firstLevel + MAX2(MAX2(l2width, l2height), l2depth);
    }
 
@@ -525,12 +517,18 @@ st_TexImage(GLcontext * ctx,
    struct st_texture_image *stImage = st_texture_image(texImage);
    GLint postConvWidth, postConvHeight;
    GLint texelBytes, sizeInBytes;
-   GLuint dstRowStride;
+   GLuint dstRowStride = 0;
    struct gl_pixelstore_attrib unpackNB;
-   enum pipe_transfer_usage transfer_usage;
+   enum pipe_transfer_usage transfer_usage = 0;
 
    DBG("%s target %s level %d %dx%dx%d border %d\n", __FUNCTION__,
        _mesa_lookup_enum_by_nr(target), level, width, height, depth, border);
+
+   /* switch to "normal" */
+   if (stObj->surface_based) {
+      _mesa_clear_texture_object(ctx, texObj);
+      stObj->surface_based = GL_FALSE;
+   }
 
    /* gallium does not support texture borders, strip it off */
    if (border) {
@@ -660,8 +658,10 @@ st_TexImage(GLcontext * ctx,
 					   format, type,
 					   pixels, unpack, "glTexImage");
    }
-   if (!pixels)
-      return;
+
+   /* Note: we can't check for pixels==NULL until after we've allocated
+    * memory for the texture.
+    */
 
    /* See if we can do texture compression with a blit/render.
     */
@@ -672,6 +672,9 @@ st_TexImage(GLcontext * ctx,
                                    stImage->pt->format,
                                    stImage->pt->target,
                                    PIPE_TEXTURE_USAGE_RENDER_TARGET, 0)) {
+      if (!pixels)
+         goto done;
+
       if (compress_with_blit(ctx, target, level, 0, 0, 0, width, height, depth,
                              format, type, pixels, unpack, texImage)) {
          goto done;
@@ -712,6 +715,9 @@ st_TexImage(GLcontext * ctx,
       _mesa_error(ctx, GL_OUT_OF_MEMORY, "glTexImage");
       return;
    }
+
+   if (!pixels)
+      goto done;
 
    DBG("Upload image %dx%dx%d row_len %x pitch %x\n",
        width, height, depth, width * texelBytes, dstRowStride);
@@ -755,9 +761,9 @@ st_TexImage(GLcontext * ctx,
       }
    }
 
+done:
    _mesa_unmap_teximage_pbo(ctx, unpack);
 
-done:
    if (stImage->pt && texImage->Data) {
       st_texture_image_unmap(ctx->st, stImage);
       texImage->Data = NULL;
@@ -873,7 +879,7 @@ decompress_with_blit(GLcontext * ctx, GLenum target, GLint level,
 					     PIPE_TRANSFER_READ,
 					     0, 0, width, height);
 
-   pixels = _mesa_map_readpix_pbo(ctx, &ctx->Pack, pixels);
+   pixels = _mesa_map_pbo_dest(ctx, &ctx->Pack, pixels);
 
    /* copy/pack data into user buffer */
    if (st_equal_formats(stImage->pt->format, format, type)) {
@@ -906,7 +912,7 @@ decompress_with_blit(GLcontext * ctx, GLenum target, GLint level,
       }
    }
 
-   _mesa_unmap_readpix_pbo(ctx, &ctx->Pack);
+   _mesa_unmap_pbo_dest(ctx, &ctx->Pack);
 
    /* destroy the temp / dest surface */
    util_destroy_rgba_surface(dst_texture, dst_surface);
@@ -1047,7 +1053,8 @@ st_TexSubimage(GLcontext *ctx, GLint dims, GLenum target, GLint level,
       _mesa_image_image_stride(packing, width, height, format, type);
    GLint i;
    const GLubyte *src;
-   enum pipe_transfer_usage transfer_usage;
+   /* init to silence warning only: */
+   enum pipe_transfer_usage transfer_usage = PIPE_TRANSFER_WRITE;
 
    DBG("%s target %s level %d offset %d,%d %dx%d\n", __FUNCTION__,
        _mesa_lookup_enum_by_nr(target),
@@ -1097,7 +1104,7 @@ st_TexSubimage(GLcontext *ctx, GLint dims, GLenum target, GLint level,
 
    if (!texImage->Data) {
       _mesa_error(ctx, GL_OUT_OF_MEMORY, "glTexSubImage");
-      return;
+      goto done;
    }
 
    src = (const GLubyte *) pixels;
@@ -1128,9 +1135,9 @@ st_TexSubimage(GLcontext *ctx, GLint dims, GLenum target, GLint level,
       }
    }
 
+done:
    _mesa_unmap_teximage_pbo(ctx, packing);
 
-done:
    if (stImage->pt) {
       st_texture_image_unmap(ctx->st, stImage);
       texImage->Data = NULL;
@@ -1395,6 +1402,36 @@ fallback_copy_texsubimage(GLcontext *ctx, GLenum target, GLint level,
 }
 
 
+static unsigned
+compatible_src_dst_formats(const struct gl_renderbuffer *src,
+                           const struct gl_texture_image *dst)
+{
+   const GLenum srcFormat = src->_BaseFormat;
+   const GLenum dstLogicalFormat = dst->_BaseFormat;
+
+   if (srcFormat == dstLogicalFormat) {
+      /* This is the same as matching_base_formats, which should
+       * always pass, as it did previously.
+       */
+      return TGSI_WRITEMASK_XYZW;
+   }
+   else if (srcFormat == GL_RGBA &&
+            dstLogicalFormat == GL_RGB) {
+      /* Add a single special case to cope with RGBA->RGB transfers,
+       * setting A to 1.0 to cope with situations where the RGB
+       * destination is actually stored as RGBA.
+       */
+      return TGSI_WRITEMASK_XYZ; /* A ==> 1.0 */
+   }
+   else {
+      /* Otherwise fail.
+       */
+      return 0;
+   }
+}
+
+
+
 /**
  * Do a CopyTex[Sub]Image1/2/3D() using a hardware (blit) path if possible.
  * Note that the region to copy has already been clipped so we know we
@@ -1424,6 +1461,9 @@ st_copy_texsubimage(GLcontext *ctx,
    enum pipe_format dest_format, src_format;
    GLboolean use_fallback = GL_TRUE;
    GLboolean matching_base_formats;
+   GLuint format_writemask;
+   struct pipe_surface *dest_surface = NULL;
+   GLboolean do_flip = (st_fb_orientation(ctx->ReadBuffer) == Y_0_TOP);
 
    /* any rendering in progress must flushed before we grab the fb image */
    st_flush(ctx->st, PIPE_FLUSH_RENDER_CACHE, NULL);
@@ -1494,13 +1534,14 @@ st_copy_texsubimage(GLcontext *ctx,
     * textured-quad paths.
     */
    matching_base_formats = (strb->Base._BaseFormat == texImage->_BaseFormat);
+   format_writemask = compatible_src_dst_formats(&strb->Base, texImage);
 
-   if (matching_base_formats && ctx->_ImageTransferState == 0x0) {
-      /* try potential hardware path */
-      struct pipe_surface *dest_surface = NULL;
-      boolean do_flip = (st_fb_orientation(ctx->ReadBuffer) == Y_0_TOP);
+   if (ctx->_ImageTransferState == 0x0) {
 
-      if (src_format == dest_format && !do_flip) {
+      if (matching_base_formats && 
+          src_format == dest_format &&
+          !do_flip) 
+      {
          /* use surface_copy() / blit */
 
          dest_surface = screen->get_tex_surface(screen, stImage->pt,
@@ -1520,7 +1561,8 @@ st_copy_texsubimage(GLcontext *ctx,
                             width, height);
          use_fallback = GL_FALSE;
       }
-      else if (screen->is_format_supported(screen, src_format,
+      else if (format_writemask &&
+               screen->is_format_supported(screen, src_format,
                                            PIPE_TEXTURE_2D, 
                                            PIPE_TEXTURE_USAGE_SAMPLER,
                                            0) &&
@@ -1544,14 +1586,15 @@ st_copy_texsubimage(GLcontext *ctx,
             srcY0 = srcY;
             srcY1 = srcY0 + height;
          }
-         util_blit_pixels(ctx->st->blit,
-                          strb->surface,
-                          srcX, srcY0,
-                          srcX + width, srcY1,
-                          dest_surface,
-                          destX, destY,
-                          destX + width, destY + height,
-                          0.0, PIPE_TEX_MIPFILTER_NEAREST);
+         util_blit_pixels_writemask(ctx->st->blit,
+                                    strb->surface,
+                                    srcX, srcY0,
+                                    srcX + width, srcY1,
+                                    dest_surface,
+                                    destX, destY,
+                                    destX + width, destY + height,
+                                    0.0, PIPE_TEX_MIPFILTER_NEAREST,
+                                    format_writemask);
          use_fallback = GL_FALSE;
       }
 
@@ -1662,53 +1705,6 @@ st_CopyTexSubImage3D(GLcontext * ctx, GLenum target, GLint level,
 }
 
 
-/**
- * Compute which mipmap levels that really need to be sent to the hardware.
- * This depends on the base image size, GL_TEXTURE_MIN_LOD,
- * GL_TEXTURE_MAX_LOD, GL_TEXTURE_BASE_LEVEL, and GL_TEXTURE_MAX_LEVEL.
- */
-static void
-calculate_first_last_level(struct st_texture_object *stObj)
-{
-   struct gl_texture_object *tObj = &stObj->base;
-
-   /* These must be signed values.  MinLod and MaxLod can be negative numbers,
-    * and having firstLevel and lastLevel as signed prevents the need for
-    * extra sign checks.
-    */
-   GLint firstLevel;
-   GLint lastLevel;
-
-   /* Yes, this looks overly complicated, but it's all needed.
-    */
-   switch (tObj->Target) {
-   case GL_TEXTURE_1D:
-   case GL_TEXTURE_2D:
-   case GL_TEXTURE_3D:
-   case GL_TEXTURE_CUBE_MAP:
-      if (tObj->MinFilter == GL_NEAREST || tObj->MinFilter == GL_LINEAR) {
-         /* GL_NEAREST and GL_LINEAR only care about GL_TEXTURE_BASE_LEVEL.
-          */
-         firstLevel = lastLevel = tObj->BaseLevel;
-      }
-      else {
-         firstLevel = 0;
-         lastLevel = MIN2(tObj->MaxLevel,
-                          (int) tObj->Image[0][tObj->BaseLevel]->WidthLog2);
-      }
-      break;
-   case GL_TEXTURE_RECTANGLE_NV:
-   case GL_TEXTURE_4D_SGIS:
-      firstLevel = lastLevel = 0;
-      break;
-   default:
-      return;
-   }
-
-   stObj->lastLevel = lastLevel;
-}
-
-
 static void
 copy_image_data_to_texture(struct st_context *st,
 			   struct st_texture_object *stObj,
@@ -1772,13 +1768,16 @@ st_finalize_texture(GLcontext *ctx,
 
    *needFlush = GL_FALSE;
 
-   /* We know/require this is true by now: 
-    */
-   assert(stObj->base._Complete);
+   if (stObj->base._Complete) {
+      /* The texture is complete and we know exactly how many mipmap levels
+       * are present/needed.  This is conditional because we may be called
+       * from the st_generate_mipmap() function when the texture object is
+       * incomplete.  In that case, we'll have set stObj->lastLevel before
+       * we get here.
+       */
+      stObj->lastLevel = stObj->base._MaxLevel - stObj->base.BaseLevel;
+   }
 
-   /* What levels must the texture include at a minimum?
-    */
-   calculate_first_last_level(stObj);
    firstImage = st_texture_image(stObj->base.Image[0][stObj->base.BaseLevel]);
 
    /* If both firstImage and stObj point to a texture which can contain

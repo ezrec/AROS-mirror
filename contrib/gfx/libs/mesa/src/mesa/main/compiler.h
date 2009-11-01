@@ -110,10 +110,8 @@ extern "C" {
 #if defined(_WIN32) && !defined(__WIN32__) && !defined(__CYGWIN__) && !defined(BUILD_FOR_SNAP)
 #  define __WIN32__
 #  define finite _finite
-#endif
-#if defined(__WATCOMC__)
+#elif defined(__WATCOMC__)
 #  define finite _finite
-#  pragma disable_message(201) /* Disable unreachable code warnings */
 #endif
 
 
@@ -135,6 +133,10 @@ extern "C" {
 #    endif
 #  endif
 #endif
+#if defined(__WATCOMC__)
+#  pragma disable_message(201) /* Disable unreachable code warnings */
+#endif
+
 
 
 /**
@@ -234,7 +236,7 @@ extern "C" {
 #include <CoreFoundation/CFByteOrder.h>
 #define CPU_TO_LE32( x )	CFSwapInt32HostToLittle( x )
 #elif defined(__AROS__)
-#define CPU_TO_LE32( x )        AROS_BE2LONG( x )
+#define CPU_TO_LE32( x )    AROS_BE2LONG( x )
 #else /*__linux__ __APPLE__*/
 #include <sys/endian.h>
 #define CPU_TO_LE32( x )	bswap32( x )

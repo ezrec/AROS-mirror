@@ -52,8 +52,6 @@ AROS_WINSYS_SOURCES = \
             winsys/aros/libdrm/shared-core/nouveau_irq \
             winsys/aros/libdrm/shared-core/nouveau_swmthd \
             winsys/aros/libdrm/shared-core/nouveau_fifo \
-            winsys/drm/nouveau/drm/nouveau_winsys_pipe \
-            winsys/drm/nouveau/drm/nouveau_winsys \
 
 GALLIUM_AUXILIARY_SOURCES = \
             auxiliary/util/u_debug \
@@ -128,6 +126,7 @@ GALLIUM_AUXILIARY_SOURCES = \
             auxiliary/tgsi/tgsi_sse2 \
             auxiliary/tgsi/tgsi_text \
             auxiliary/tgsi/tgsi_transform \
+            auxiliary/tgsi/tgsi_ureg \
             auxiliary/tgsi/tgsi_util \
             auxiliary/rtasm/rtasm_cpu \
             auxiliary/rtasm/rtasm_execmem \
@@ -144,8 +143,6 @@ GALLIUM_AUXILIARY_SOURCES = \
             auxiliary/draw/draw_pipe_clip \
             auxiliary/util/u_math \
             auxiliary/util/u_time \
-
-#FIXME: Not all auxiliary modules added yet
 
 GALLIUM_SOFTPIPE_SOURCES = \
             drivers/softpipe/sp_fs_exec \

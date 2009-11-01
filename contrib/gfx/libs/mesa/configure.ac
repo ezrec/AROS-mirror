@@ -29,6 +29,11 @@ AC_CHECK_PROGS([MAKE], [gmake make])
 AC_PATH_PROG([MKDEP], [makedepend])
 AC_PATH_PROG([SED], [sed])
 
+dnl Our fallback install-sh is a symlink to minstall. Use the existing
+dnl configuration in that case.
+AC_PROG_INSTALL
+test "x$INSTALL" = "x$ac_install_sh" && INSTALL='$(MINSTALL)'
+
 dnl We need a POSIX shell for parts of the build. Assume we have one
 dnl in most cases.
 case "$host_os" in
@@ -121,6 +126,7 @@ AC_ARG_ENABLE([32-bit],
 if test "x$enable_32bit" = xyes; then
     if test "x$GCC" = xyes; then
         CFLAGS="$CFLAGS -m32"
+        ARCH_FLAGS="$ARCH_FLAGS -m32"
     fi
     if test "x$GXX" = xyes; then
         CXXFLAGS="$CXXFLAGS -m32"
@@ -411,8 +417,8 @@ WINDOW_SYSTEM=""
 GALLIUM_DIRS="auxiliary drivers state_trackers"
 GALLIUM_WINSYS_DIRS=""
 GALLIUM_WINSYS_DRM_DIRS=""
-GALLIUM_AUXILIARY_DIRS="draw translate cso_cache pipebuffer tgsi sct rtasm util indices"
-GALLIUM_DRIVERS_DIRS="softpipe failover trace"
+GALLIUM_AUXILIARY_DIRS="rbug draw translate cso_cache pipebuffer tgsi sct rtasm util indices"
+GALLIUM_DRIVERS_DIRS="softpipe failover trace identity"
 GALLIUM_STATE_TRACKERS_DIRS=""
 
 case "$mesa_driver" in
@@ -440,6 +446,8 @@ AC_SUBST([GALLIUM_WINSYS_DRM_DIRS])
 AC_SUBST([GALLIUM_DRIVERS_DIRS])
 AC_SUBST([GALLIUM_AUXILIARY_DIRS])
 AC_SUBST([GALLIUM_STATE_TRACKERS_DIRS])
+AC_SUBST([RADEON_CFLAGS])
+AC_SUBST([RADEON_LDFLAGS])
 
 dnl
 dnl User supplied program configuration
@@ -566,6 +574,13 @@ dri)
     PKG_CHECK_MODULES([DRI2PROTO], [dri2proto >= $DRI2PROTO_REQUIRED])
     GL_PC_REQ_PRIV="libdrm >= $LIBDRM_REQUIRED dri2proto >= $DRI2PROTO_REQUIRED"
     DRI_PC_REQ_PRIV="libdrm >= $LIBDRM_REQUIRED"
+
+    PKG_CHECK_MODULES([LIBDRM_RADEON], [libdrm_radeon], HAVE_LIBDRM_RADEON=yes, HAVE_LIBDRM_RADEON=no)
+
+    if test "$HAVE_LIBDRM_RADEON" = yes; then
+	RADEON_CFLAGS="-DHAVE_LIBDRM_RADEON=1 $LIBDRM_RADEON_CFLAGS"
+	RADEON_LDFLAGS=$LIBDRM_RADEON_LIBS
+    fi
 
     # find the DRI deps for libGL
     if test "$x11_pkgconfig" = yes; then
@@ -699,7 +714,7 @@ if test "$mesa_driver" = dri; then
             # because there is no x86-64 system where they could *ever*
             # be used.
             if test "x$DRI_DIRS" = "xyes"; then
-                DRI_DIRS="i915 i965 mach64 mga r128 r200 r300 radeon \
+                DRI_DIRS="i915 i965 mach64 mga r128 r200 r300 r600 radeon \
                     savage tdfx unichrome swrast"
             fi
             ;;
@@ -707,13 +722,13 @@ if test "$mesa_driver" = dri; then
             # Build only the drivers for cards that exist on PowerPC.
             # At some point MGA will be added, but not yet.
             if test "x$DRI_DIRS" = "xyes"; then
-                DRI_DIRS="mach64 r128 r200 r300 radeon tdfx swrast"
+                DRI_DIRS="mach64 r128 r200 r300 r600 radeon tdfx swrast"
             fi
             ;;
         sparc*)
             # Build only the drivers for cards that exist on sparc`
             if test "x$DRI_DIRS" = "xyes"; then
-                DRI_DIRS="mach64 r128 r200 r300 radeon ffb swrast"
+                DRI_DIRS="mach64 r128 r200 r300 r600 radeon ffb swrast"
             fi
             ;;
         esac
@@ -732,7 +747,7 @@ if test "$mesa_driver" = dri; then
         # ffb and gamma are missing because they have not been converted
         # to use the new interface.
         if test "x$DRI_DIRS" = "xyes"; then
-            DRI_DIRS="i810 i915 i965 mach64 mga r128 r200 r300 radeon tdfx \
+            DRI_DIRS="i810 i915 i965 mach64 mga r128 r200 r300 r600 radeon tdfx \
                 unichrome savage sis swrast"
         fi
         ;;
@@ -751,7 +766,7 @@ if test "$mesa_driver" = dri; then
 
     # default drivers
     if test "x$DRI_DIRS" = "xyes"; then
-        DRI_DIRS="i810 i915 i965 mach64 mga r128 r200 r300 radeon s3v \
+        DRI_DIRS="i810 i915 i965 mach64 mga r128 r200 r300 r600 radeon s3v \
             savage sis tdfx trident unichrome ffb swrast"
     fi
 
@@ -1145,6 +1160,21 @@ AC_ARG_WITH([xorg-driver-dir],
     [XORG_DRIVER_INSTALL_DIR="${libdir}/xorg/modules/drivers"])
 AC_SUBST([XORG_DRIVER_INSTALL_DIR])
 
+AC_ARG_WITH([max-width],
+    [AS_HELP_STRING([--with-max-width=N],
+                    [Maximum framebuffer width (4096)])],
+    [DEFINES="${DEFINES} -DMAX_WIDTH=${withval}";
+     AS_IF([test "${withval}" -gt "4096"],
+           [AC_MSG_WARN([Large framebuffer: see s_tritemp.h comments.])])]
+)
+AC_ARG_WITH([max-height],
+    [AS_HELP_STRING([--with-max-height=N],
+                    [Maximum framebuffer height (4096)])],
+    [DEFINES="${DEFINES} -DMAX_HEIGHT=${withval}";
+     AS_IF([test "${withval}" -gt "4096"],
+           [AC_MSG_WARN([Large framebuffer: see s_tritemp.h comments.])])]
+)
+
 dnl
 dnl Gallium Intel configuration
 dnl
@@ -1172,7 +1202,7 @@ if test "x$enable_gallium_radeon" = xyes; then
 fi
 
 dnl
-dnl Gallium Radeon configuration
+dnl Gallium Nouveau configuration
 dnl
 AC_ARG_ENABLE([gallium-nouveau],
     [AS_HELP_STRING([--enable-gallium-nouveau],
@@ -1181,7 +1211,7 @@ AC_ARG_ENABLE([gallium-nouveau],
     [enable_gallium_nouveau=no])
 if test "x$enable_gallium_nouveau" = xyes; then
     GALLIUM_WINSYS_DRM_DIRS="$GALLIUM_WINSYS_DRM_DIRS nouveau"
-    GALLIUM_DRIVERS_DIRS="$GALLIUM_DRIVERS_DIRS nv04 nv10 nv20 nv30 nv40 nv50"
+    GALLIUM_DRIVERS_DIRS="$GALLIUM_DRIVERS_DIRS nouveau nv04 nv10 nv20 nv30 nv40 nv50"
 fi
 
 
