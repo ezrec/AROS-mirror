@@ -1,0 +1,656 @@
+## version $VER: owb.catalog 4.0 (24.10.2009)
+## language czech
+## codeset 0
+;
+MSG_OWB
+OWB
+; OWB
+;
+MSG_SubmitButtonDefaultLabel
+Poslat
+; Submit
+;
+MSG_InputElementAltText
+Poslat
+; Submit
+;
+MSG_ResetButtonDefaultLabel
+Vyèistit
+; Reset
+;
+MSG_SearchableIndexIntroduction
+Index
+; Searchable Index
+;
+MSG_FileButtonChooseFileLabel
+Vyber soubor
+; Choose File
+;
+MSG_FileButtonNoFileSelectedLabel
+(®ádný)
+; (None)
+;
+MSG_ContextMenuItemTagOpenLinkInNewWindow
+Otevøít odkaz v novém oknì
+; Open Link in New Window
+;
+MSG_ContextMenuItemTagDownloadLinkToDisk
+Ulo¾it soubor z odkazu
+; Download Linked File
+;
+MSG_ContextMenuItemTagCopyLinkToClipboard
+Zkopírovat adresu odkazu
+; Copy Link Location
+;
+MSG_ContextMenuItemTagOpenImageInNewWindow
+Otevøít obrázek v novém oknì
+; Open Image in New Window
+;
+MSG_ContextMenuItemTagDownloadImageToDisk
+Ulo¾it obrázek jako
+; Save Image As
+;
+MSG_ContextMenuItemTagCopyImageToClipboard
+Zkopírovat obrázek
+; Copy Image
+;
+MSG_ContextMenuItemTagOpenFrameInNewWindow
+Otevøít rámec v novém oknì
+; Open Frame in New Window
+;
+MSG_ContextMenuItemTagCopy
+Kopírovat
+; copy
+;
+MSG_ContextMenuItemTagDelete
+Smazat
+; delete
+;
+MSG_ContextMenuItemTagSelectAll
+Vybrat v¹e
+; Select All
+;
+MSG_ContextMenuItemTagUnicode
+Vlo¾it kontrolní znak Unicode
+; Insert Unicode Control Character
+;
+MSG_ContextMenuItemTagInputMethods
+Metoda vstupu
+; Input Methods
+;
+MSG_ContextMenuItemTagGoBack
+Zpìt
+; back
+;
+MSG_ContextMenuItemTagGoForward
+Vpøed
+; forward
+;
+MSG_ContextMenuItemTagStop
+stop
+; stop
+;
+MSG_ContextMenuItemTagReload
+Naèíst znovu
+; Reload
+;
+MSG_ContextMenuItemTagCut
+Vyjmout
+; cut
+;
+MSG_ContextMenuItemTagPaste
+Vlo¾it
+; paste
+;
+MSG_ContextMenuItemTagNoGuessesFound
+Nenalezeny ¾ádné rozpory
+; No Guesses Found
+;
+MSG_ContextMenuItemTagIgnoreSpelling
+Ignorovat pravopis
+; Ignore Spelling
+;
+MSG_ContextMenuItemTagLearnSpelling
+Nauèit pravopis
+; Learn Spelling
+;
+MSG_ContextMenuItemTagSearchWeb
+Vyhledej na síti
+; Search the Web
+;
+MSG_ContextMenuItemTagLookUpInDictionary
+Vyhledat ve slovníku
+; Look Up in Dictionary
+;
+MSG_ContextMenuItemTagOpenLink
+Otevøít odkaz
+; Open Link
+;
+MSG_ContextMenuItemTagIgnoreGrammar
+Ignoruj gramatiku
+; Ignore Grammar
+;
+MSG_ContextMenuItemTagSpellingMenu
+Pravopis a gramatika
+; Spelling and Grammar
+;
+MSG_ContextMenuItemTagShowSpellingPanel
+Uka¾ pravopisnì a gramaticky
+; Show Spelling and Grammar
+;
+MSG_ContextMenuItemTagHideSpellingPanel
+Skrýt pravopisný a gramatický
+; Hide Spelling and Grammar
+;
+MSG_ContextMenuItemTagCheckSpelling
+Zkontrolovat dokument
+; Check Document Now
+;
+MSG_ContextMenuItemTagCheckSpellingWhileTyping
+Kontrola pravopisu pøi psaní
+; Check Spelling While Typing
+;
+MSG_ContextMenuItemTagCheckGrammarWithSpelling
+Zkontrolovat gramatiku s pravopisem
+; Check Grammar With Spelling
+;
+MSG_ContextMenuItemTagFontMenu
+Písmo
+; Font
+;
+MSG_ContextMenuItemTagBold
+Tuèný
+; Bold
+;
+MSG_ContextMenuItemTagItalic
+Kurzíva
+; Italic
+;
+MSG_ContextMenuItemTagUnderline
+Podtr¾ený
+; Underline
+;
+MSG_ContextMenuItemTagOutline
+Obrysový
+; Outline
+;
+MSG_ContextMenuItemTagInspectElement
+Zkonrolovat element
+; Inspect Element
+;
+MSG_searchMenuNoRecentSearchesText
+®ádný nový nález
+; No recent searches
+;
+MSG_searchMenuRecentSearchesText
+Poslední nález
+; Recent searches
+;
+MSG_searchMenuClearRecentSearchesText
+Vyèistit poslední nalezené
+; Clear recent searches
+;
+MSG_AXDefinitionListTermText
+termin
+; term
+;
+MSG_AXDefinitionListDefinitionText
+definice
+; definition
+;
+MSG_AXButtonActionVerb
+
+; 
+;
+MSG_AXRadioButtonActionVerb
+
+; 
+;
+MSG_AXTextFieldActionVerb
+
+; 
+;
+MSG_AXCheckedCheckBoxActionVerb
+
+; 
+;
+MSG_AXUncheckedCheckBoxActionVerb
+
+; 
+;
+MSG_AXLinkActionVerb
+
+; 
+;
+MSG_unknownFileSizeText
+Neznámý
+; Unknown
+;
+MSG_imageTitle
+
+; 
+;
+MSG_ContextMenuItemTagLeftToRight
+
+; Left to Right context menu item
+;
+MSG_ContextMenuItemTagDefaultDirection
+
+; Default writing direction context menu item
+;
+MSG_ContextMenuItemTagRightToLeft
+
+; Right to Left context menu item
+;
+MSG_ContextMenuItemTagWritingDirectionMenu
+
+; Writing direction context sub-menu item
+;
+MSG_ContextMenuItemTagTextDirectionMenu
+
+; Text direction context sub-menu item
+;
+MSG_MultipleFileUploadText
+
+; 
+;
+MSG_Loading
+Nahrávám...
+; Loading...
+;
+MSG_Ready
+Hotovo
+; Ready
+;
+MSG_Connecting
+Spojuji...
+; Connecting...
+;
+MSG_Error
+Chyba
+; Error
+;
+MSG_Untitled
+(Bez názvu)
+; (Untitled)
+;
+MSG_DownloadState_Starting
+Zaèínám
+; Starting
+;
+MSG_DownloadState_Active
+Stahuji
+; Downloading
+;
+MSG_DownloadState_Failed
+Chyba
+; Error
+;
+MSG_DownloadState_Finished
+Ukonèeno
+; Finished
+;
+MSG_UnknownFileSize
+Neznámý
+; unknown
+;
+MSG_UnknownFileName
+Neznámý
+; unknown
+;
+MSG_UnknownDownloadSpeed
+Neznámý
+; unknown
+;
+MSG_DownloadFileSize
+Velikost souboru
+; File size
+;
+MSG_DownloadFileName
+Název souboru
+; File name
+;
+MSG_DownloadSpeed
+Rychlost 
+; Speed
+;
+MSG_DownloadState
+Status
+; Status
+;
+MSG_DownloadProgress
+Postup
+; Progress
+;
+MSG_DownloadManager_Title
+OWB seznam ulo¾ených souborù:
+; OWB Download Manager
+;
+MSG_DownloadManager_Cancel
+Ukonèit ukládání
+; Cancel
+;
+MSG_DownloadManager_ClearFinished
+Smazat dokonèené
+; Clear finished
+;
+MSG_SearchWindow_Title
+OWB Najít:
+; OWB Search Window
+;
+MSG_SearchWindow_Locate
+Najít:
+; Locate:
+;
+MSG_SearchWindow_CaseSensitive
+Rozli¹ovat velikost znakù
+; Case Sensitive
+;
+MSG_SearchWindow_FindNext
+Najít dal¹í
+; Find next
+;
+MSG_SearchWindow_FindPrevious
+Najít pøedchozí
+; Find previous
+;
+MSG_PreferencesManager_Title
+OWB Nastavení:
+; OWB Preferences
+;
+MSG_PreferencesManager_Main
+Hlavní
+; Main
+;
+MSG_PreferencesManager_Downloads
+Ukládání souborù
+; Downloads
+;
+MSG_PreferencesManager_SaveFilesTo
+Ulo¾ soubor do:
+; Save files to:
+;
+MSG_PreferencesManager_ZuneSettings
+Nastavení Zune
+; Zune Settings
+;
+MSG_PreferencesManager_OpenZuneSettings
+Otevøít ovládací panel Zune
+; Open Zune Settings
+;
+MSG_PreferencesManager_ProxySettings
+Nastavení proxy serveru
+; Proxy Settings
+;
+MSG_PreferencesManager_HttpProxy
+HTTP Proxy
+; HTTP Proxy:
+;
+MSG_PreferencesManager_Content
+Roz¹íøené
+; Content
+;
+MSG_PreferencesManager_JavaScript
+JavaScript
+; JavaScript
+;
+MSG_PreferencesManager_EnableJavaScript
+Zapnout JavaScript:
+; Enable JavaScript:
+;
+MSG_PreferencesManager_Images
+Obrázky
+; Images
+;
+MSG_PreferencesManager_LoadImagesAutomatically
+Naèítat obrázky automaticky:
+; Load images automatically:
+;
+MSG_PreferencesManager_AllowAnimatedImages
+Naèítat animované obrázky:
+; Allow animated images:
+;
+MSG_PreferencesManager_AllowLoopedAnimation
+Naèítat animace opakovanì:
+; Allow looped animation:
+;
+MSG_PreferencesManager_DecodeBMPWithDatatypes
+Dekóduj BMP za pomoci datatypu:
+; Decode BMP with Datatypes:
+;
+MSG_PreferencesManager_DecodePNGWithDatatypes
+Dekóduj PNG za pomoci datatypu:
+; Decode PNG with Datatypes:
+;
+MSG_PreferencesManager_DecodeGIFWithDatatypes
+Dekóduj GIF za pomoci datatypu:
+; Decode GIF with Datatypes:
+;
+MSG_PreferencesManager_DecodeJPGWithDatatypes
+Dekóduj JPG za pomoci datatypu:
+; Decode JPG with Datatypes:
+;
+MSG_PreferencesManager_Fonts
+Písmo
+; Fonts
+;
+MSG_PreferencesManager_DefaultFontSize
+Velikost proporcionálního písma:
+; Default font size:
+;
+MSG_PreferencesManager_MinimumFontSize
+Minimalní velikost písma:
+; Minimum font size:
+;
+MSG_PreferencesManager_StandardFontFamily
+Písmo standardní:
+; Standard font family:
+;
+MSG_PreferencesManager_DefaultFixedFontSize
+Velikost neproporcionálního písma:
+; Default fixed font size:
+;
+MSG_PreferencesManager_FixedFontFamily
+Písmo neproporcionální:
+; Fixed font family:
+;
+MSG_PreferencesManager_SerifFontFamily
+Písmo patkové:
+; Serif font family:
+;
+MSG_PreferencesManager_SansSerifFontFamily
+Písmo bezpatkové:
+; Sans-serif font family:
+;
+MSG_PreferencesManager_CursiveFontFamily
+Písmo "Kurzíva":
+; Cursive font family:
+;
+MSG_PreferencesManager_FantasyFontFamily
+Písmo "Fantasy":
+; Fantasy font family:
+;
+MSG_PreferencesManager_Save
+Ulo¾it
+; Save
+;
+MSG_PreferencesManager_Use
+pou¾ít
+; Use
+;
+MSG_PreferencesManager_Cancel
+Zru¹it
+; Cancel
+;
+MSG_Tabs
+Panely
+; Tabs
+;
+MSG_Tabs_OpenNew
+Otevøít nový panel
+; Open new tab
+;
+MSG_Tabs_CloseActive
+Zavøít aktivní panel
+; Close active tab
+;
+MSG_Tabs_Bookmark
+Pøidat do oblíbených
+; Bookmark this tab
+;
+MSG_JavaScript_Alert
+Dialogové okno JavaScript Alert
+; OWB JavaScript Alert
+;
+MSG_JavaScript_AlertOK
+OK
+; OK
+;
+MSG_JavaScript_Confirm
+Dialogové okno JavaScript Confirm
+; OWB JavaScript Confirm
+;
+MSG_JavaScript_ConfirmOptions
+Zru¹it|OK
+; Cancel|OK
+;
+MSG_JavaScript_Prompt
+Dialogové okno JavaScript
+; OWB JavaScript Prompt
+;
+MSG_JavaScript_PromptOK
+OK
+; OK
+;
+MSG_JavaScript_PromptCancel
+Zru¹it
+; Cancel
+;
+MSG_RequestPolicy_Title
+Výbìr zpùsobu zpracování odkazu:
+; OWB Policy Requester
+;
+MSG_RequestPolicy_Message
+Chcete otevøít odkaz '%s' o typu MIME '%s'. Co má OWB udìlat s tímto odkazem?
+; You are about to open file '%s' having MIME type '%s'.\nWhat should OWB do with this file?
+;
+MSG_RequestPolicy_Options
+Ulo¾it|Zobrazit|Zru¹it
+; Download|Show|Cancel
+;
+MSG_RequestCredentials_Title
+OWB pøihla¹ovací okno:
+; OWB Authentication Requester
+;
+MSG_RequestCredentials_Message
+Prosím vlo¾te jméno u¾ivatele a heslo pro pøístup do domeny %s na host %s.
+; Please enter username and password to access realm %s at host %s.
+;
+MSG_RequestCredentials_Username
+Jméno u¹ivatele:
+; Username:
+;
+MSG_RequestCredentials_Password
+Heslo:
+; Password:
+;
+MSG_RequestCredentials_OK
+OK
+; OK
+;
+MSG_RequestCredentials_Cancel
+Zru¹it
+; Cancel
+;
+MSG_BookmarkManager_Title
+Seznam oblíbených www adres:
+; Bookmark Manager
+;
+MSG_BookmarkManager_Label
+Název
+; Label
+;
+MSG_BookmarkManager_URL
+www - adresa
+; URL
+;
+MSG_BookmarkManager_Insert
+Vlo¾it
+; Insert
+;
+MSG_BookmarkManager_Change
+Zmìnit
+; Change
+;
+MSG_BookmarkManager_Remove
+Odebrat
+; Remove
+;
+MSG_BookmarkManager_MenuTitle
+Oblíbené
+; Bookmarks
+;
+MSG_BookmarkManager_MoveUp
+Posunout nahoru
+; Move up
+;
+MSG_BookmarkManager_MoveDown
+Posunout dolù
+; Move down
+;
+MSG_MainMenu_File
+Soubor
+; File
+;
+MSG_MainMenu_OpenNewTab
+Otevøít nový panel
+; Open new tab
+;
+MSG_MainMenu_OpenNewWindow
+Otevøít nové okno
+; Open new window
+;
+MSG_MainMenu_OpenFile
+Otevøít soubor
+; Open file
+;
+MSG_MainMenu_CloseCurrentTab
+Zavøít aktivní panel
+; Close current tab
+;
+MSG_MainMenu_CloseWindow
+Zavøít okno
+; Close window
+;
+MSG_MainMenu_Quit
+Ukonèit
+; Quit
+;
+MSG_MainMenu_Edit
+Edit
+; Edit
+;
+MSG_MainMenu_Find
+Hledat
+; Find
+;
+MSG_MainMenu_FindNext
+Hledat dal¹í
+; Find next
+;
+MSG_MainMenu_Preferences
+Nastavení
+; Preferences
+;
+MSG_MainMenu_Tools
+Nástroje
+; Tools
+;
+MSG_MainMenu_BookmarkManager
+Seznam oblíbených www adres
+; Bookmark manager
+;
+MSG_MainMenu_DownloadManager
+Seznam ulo¾ených souborù
+; Download manager
+;
