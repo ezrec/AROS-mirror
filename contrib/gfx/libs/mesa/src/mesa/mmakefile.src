@@ -18,7 +18,8 @@ include $(SRCDIR)/$(CURDIR)/sources.gallium.mak
 
 SHARED_LIB_SOURCES = \
             aros_libapi \
-            aros_libinit
+            aros_libinit \
+            arosc_emul \
             
 AROS_DRIVER_SOURCES = \
             drivers/aros/arosmesa \
@@ -72,7 +73,8 @@ USER_CFLAGS := -DUSE_MGL_NAMESPACE -DAROS_MESA_SHARED -ffast-math $(FFIXED)
 
 %build_module mmake=contrib-gfx-libs-mesa-mesa-module \
     modname=mesa modtype=library linklibname=GL conffile=arosmesa.conf linklibfiles="arosmesa_getprocaddress" \
-    files="$(SHARED_LIB_SOURCES) $(LIB_MESA_SOURCES)" objdir=$(GENDIR)/$(CURDIR)/module 
+    files="$(SHARED_LIB_SOURCES) $(LIB_MESA_SOURCES)" objdir=$(GENDIR)/$(CURDIR)/module \
+    uselibs="rom"
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../../include \
             -I$(SRCDIR)/$(CURDIR)/ \
@@ -99,6 +101,7 @@ USER_CFLAGS := -DUSE_MGL_NAMESPACE -DAROS_MESA_SHARED -ffast-math $(FFIXED)
 
 %build_module mmake=mesa-mesa-gallium-module \
     modname=mesa modtype=library linklibname=GLGallium conffile=arosmesa.conf linklibfiles="arosmesa_getprocaddress" \
-    files="$(SHARED_LIB_SOURCES) $(LIB_MESA_GALLIUM_SOURCES)" objdir=$(GENDIR)/$(CURDIR)/gallium-module 
+    files="$(SHARED_LIB_SOURCES) $(LIB_MESA_GALLIUM_SOURCES)" objdir=$(GENDIR)/$(CURDIR)/gallium-module \
+    uselibs="rom"
 
 %common
