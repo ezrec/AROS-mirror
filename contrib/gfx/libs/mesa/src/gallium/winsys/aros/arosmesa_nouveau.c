@@ -134,6 +134,16 @@ arosmesa_nouveau_flush_frontbuffer( struct pipe_screen *screen,
     /* No Op */
 }
 
+static void
+arosmesa_nouveau_destroy(struct pipe_winsys *ws)
+{
+    struct nouveau_winsys *nvws = nouveau_winsys(ws);
+
+    nouveau_device_close(&(nouveau_screen(nvws->pscreen)->device));
+    FREE(nvws);
+}
+
+
 static struct pipe_screen *
 arosmesa_create_nouveau_screen( void )
 {
@@ -184,6 +194,7 @@ arosmesa_create_nouveau_screen( void )
         return NULL;
     }
     ws = &nvws->base;
+    ws->destroy = arosmesa_nouveau_destroy;
 
     nvws->pscreen = init(ws, dev);
     if (!nvws->pscreen) {
@@ -282,15 +293,20 @@ arosmesa_nouveau_cleanup( struct pipe_screen * screen )
 {
     if (screen)
     {
-        /* First destroy the screen, then the winsys */
-        struct pipe_winsys * winsys = screen->winsys;
+        /* First destroy the screen, then the rest */
+        struct nouveau_winsys *nvws = nouveau_winsys(screen->winsys);
+        struct nouveau_device *dev = nouveau_screen(screen)->device;
         
         screen->destroy(screen);
         
-/*        if (winsys)
-        {
-            winsys->destroy(winsys);
-        }*/
+        /* nvws->base.destroy cannot be used here as it uses screen
+           and screen has already been destroyed */
+        
+        if (nvws)
+            FREE(nvws);
+        
+        if (dev)
+            nouveau_device_close(&dev);
     }
 }
 

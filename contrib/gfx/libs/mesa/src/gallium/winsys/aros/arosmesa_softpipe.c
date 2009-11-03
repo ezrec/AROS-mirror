@@ -145,35 +145,38 @@ arosmesa_softpipe_update_buffer( struct pipe_winsys *ws, void *context_private )
     /* No Op */
 }
 
+static void
+arosmesa_softpipe_destroy( struct pipe_winsys *ws)
+{
+    FreeVec(ws);
+}
+
 static struct pipe_winsys *
 arosmesa_create_softpipe_winsys( void )
 {
-    /* FIXME: Will this work for shared version ? */
-    static struct pipe_winsys *ws = NULL;
+    struct pipe_winsys *ws = NULL;
 
-    if (!ws) 
-    {
-        ws = (struct pipe_winsys *)AllocVec(sizeof(struct pipe_winsys), MEMF_PUBLIC|MEMF_CLEAR);
+    ws = (struct pipe_winsys *)AllocVec(sizeof(struct pipe_winsys), MEMF_PUBLIC|MEMF_CLEAR);
 
-        /* Fill in this struct with callbacks that pipe will need to
-        * communicate with the window system, buffer manager, etc. 
-        */
-        ws->buffer_create = arosmesa_buffer_create;
-        ws->user_buffer_create = arosmesa_user_buffer_create;
-        ws->buffer_map = arosmesa_buffer_map;
-        ws->buffer_unmap = arosmesa_buffer_unmap;
-        ws->buffer_destroy = arosmesa_buffer_destroy;
+    /* Fill in this struct with callbacks that pipe will need to
+    * communicate with the window system, buffer manager, etc. 
+    */
+    ws->buffer_create = arosmesa_buffer_create;
+    ws->user_buffer_create = arosmesa_user_buffer_create;
+    ws->buffer_map = arosmesa_buffer_map;
+    ws->buffer_unmap = arosmesa_buffer_unmap;
+    ws->buffer_destroy = arosmesa_buffer_destroy;
 
-        ws->surface_buffer_create = arosmesa_surface_buffer_create;
+    ws->surface_buffer_create = arosmesa_surface_buffer_create;
 
-        ws->fence_reference = NULL; /* FIXME */
-        ws->fence_signalled = NULL; /* FIXME */
-        ws->fence_finish = NULL; /* FIXME */
+    ws->fence_reference = NULL; /* FIXME */
+    ws->fence_signalled = NULL; /* FIXME */
+    ws->fence_finish = NULL; /* FIXME */
 
-        ws->flush_frontbuffer = arosmesa_softpipe_flush_frontbuffer;
-        ws->update_buffer = arosmesa_softpipe_update_buffer;
-        ws->get_name = NULL; /* FIXME */
-    }
+    ws->flush_frontbuffer = arosmesa_softpipe_flush_frontbuffer;
+    ws->update_buffer = arosmesa_softpipe_update_buffer;
+    ws->get_name = NULL; /* FIXME */
+    ws->destroy = arosmesa_softpipe_destroy;
 
     return ws;
 }
@@ -196,9 +199,8 @@ arosmesa_create_softpipe_screen( void )
     return screen;
 
 fail:
-    /* FIXME: implement */
-    /* if (winsys)
-        winsys->destroy( winsys ); */
+    if (winsys && winsys->destroy)
+        winsys->destroy( winsys );
 
     return NULL;
 }
