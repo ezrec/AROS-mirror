@@ -1,0 +1,16 @@
+#   $Id$
+#
+
+include $(TOP)/config/make.cfg
+
+FILES   :=  openal-info
+                
+EXEDIR  := $(AROSDIR)/Tests
+
+#MM- contrib-openal-openal-info : contrib-openal-linklib
+
+%build_progs mmake=contrib-openal-openal-info \
+    targetdir=$(EXEDIR) \
+    files="$(FILES)" uselibs="OpenAL"
+
+%common

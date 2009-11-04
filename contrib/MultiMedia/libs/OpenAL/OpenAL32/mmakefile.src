@@ -1,0 +1,39 @@
+#   $Id$
+#
+#   Generate libOpenAL.a
+#
+include $(TOP)/config/make.cfg
+
+#MM- linklibs : contrib-openal-linklib
+
+#MM contrib-openal-linklib : includes contrib-openal-includes
+
+OPENAL_FILES = \
+        alAuxEffectSlot \
+        alBuffer \
+        alEffect \
+        alError \
+        alExtension \
+        alFilter \
+        alListener \
+        alSource \
+        alState \
+        alThunk \
+        ../Alc/ALc \
+        ../Alc/ALu \
+        ../Alc/wave \
+        ../Alc/ahi \
+        ../Alc/alcConfig \
+        ../Alc/alcReverb \
+        ../Alc/alcRing \
+        ../Alc/alcThread \
+        ../Alc/bs2b \
+        
+USER_INCLUDES := \
+        -I$(SRCDIR)/$(CURDIR)/Include \
+        -I$(SRCDIR)/$(CURDIR)/../ \
+
+%build_linklib mmake=contrib-openal-linklib libname=OpenAL \
+    files="$(OPENAL_FILES)"
+
+%common

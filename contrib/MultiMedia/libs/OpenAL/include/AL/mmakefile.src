@@ -1,0 +1,13 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+INCLUDE_FILES := alc.h alext.h al.h
+
+#MM contrib-openal-includes : setup
+
+#MM- includes-copy : contrib-openal-includes
+
+%copy_includes mmake=contrib-openal-includes path=AL includes=$(INCLUDE_FILES)
+
+%common
+
