@@ -1,0 +1,27 @@
+#   $Id$
+#
+
+include $(TOP)/config/make.cfg
+
+FILES   := \
+        test_waveforms \
+        test_fileloader \
+
+DATA_FILES := \
+        file1.wav \
+        file2.au \
+        file3.raw \
+
+EXEDIR  := $(AROSDIR)/Tests
+
+#MM- contrib-alut-tests : contrib-openal-linklib contrib-alut-linklib contrib-alut-tests-copyfiles
+
+%build_progs mmake=contrib-alut-tests \
+    targetdir=$(EXEDIR) \
+    files="$(FILES)" uselibs="OpenAL alut"
+
+#MM
+contrib-alut-tests-copyfiles : files-copy
+%copy_files_q files=$(DATA_FILES) dst=$(EXEDIR)
+
+%common

@@ -1,0 +1,31 @@
+#   $Id$
+#
+#   Generate libalut.a
+#
+include $(TOP)/config/make.cfg
+
+#MM- linklibs : contrib-alut-linklib
+
+#MM contrib-alut-linklib : includes contrib-alut-includes
+
+ALUT_FILES = \
+        alutBufferData \
+        alutCodec \
+        alutError \
+        alutInit \
+        alutInputStream \
+        alutLoader \
+        alutOutputStream \
+        alutUtil \
+        alutVersion \
+        alutWaveform \
+
+USER_CFLAGS := -DHAVE_CONFIG_H
+
+USER_INCLUDES := \
+        -I$(SRCDIR)/$(CURDIR)/../ \
+
+%build_linklib mmake=contrib-alut-linklib libname=alut \
+    files="$(ALUT_FILES)"
+
+%common

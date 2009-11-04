@@ -1,0 +1,13 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+INCLUDE_FILES := alut.h
+
+#MM contrib-alut-includes : setup
+
+#MM- includes-copy : contrib-alut-includes
+
+%copy_includes mmake=contrib-alut-includes path=AL includes=$(INCLUDE_FILES)
+
+%common
+
