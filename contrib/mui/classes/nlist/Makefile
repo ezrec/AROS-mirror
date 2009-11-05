@@ -47,8 +47,8 @@ catalogs:
 	@$(MAKE) -C nlisttree_mcp catalogs
 	@$(MAKE) -C nlistviews_mcp catalogs
 
-.PHONY: install catalogs demo
-install: $(SUBDIRS)
+.PHONY: release catalogs demo
+release: $(SUBDIRS)
 	$(CP) nlistview_mcc/bin_os3/*.mc? release/MCC_NList/Libs/MUI/AmigaOS3/
 	$(CP) nlist_mcc/bin_os3/*.mc? release/MCC_NList/Libs/MUI/AmigaOS3/
 	$(CP) nlisttree_mcp/bin_os3/*.mc? release/MCC_NList/Libs/MUI/AmigaOS3/
@@ -73,9 +73,36 @@ install: $(SUBDIRS)
 	$(CP) nfloattext_mcc/bin_os4/*.mc? release/MCC_NList/Libs/MUI/AmigaOS4/
 	$(CP) nbitmap_mcc/bin_os4/*.mc? release/MCC_NList/Libs/MUI/AmigaOS4/
 	$(CP) nbalance_mcc/bin_os4/*.mc? release/MCC_NList/Libs/MUI/AmigaOS4/
+	$(CP) nlistview_mcc/bin_aros-i386/*.mc? release/MCC_NList/Libs/MUI/AROS-i386/
+	$(CP) nlist_mcc/bin_aros-i386/*.mc? release/MCC_NList/Libs/MUI/AROS-i386/
+	$(CP) nlisttree_mcp/bin_aros-i386/*.mc? release/MCC_NList/Libs/MUI/AROS-i386/
+	$(CP) nlistviews_mcp/bin_aros-i386/*.mc? release/MCC_NList/Libs/MUI/AROS-i386/
+	$(CP) nlisttree_mcc/bin_aros-i386/*.mc? release/MCC_NList/Libs/MUI/AROS-i386/
+	$(CP) nfloattext_mcc/bin_aros-i386/*.mc? release/MCC_NList/Libs/MUI/AROS-i386/
+	$(CP) nbitmap_mcc/bin_aros-i386/*.mc? release/MCC_NList/Libs/MUI/AROS-i386/
+	$(CP) nbalance_mcc/bin_aros-i386/*.mc? release/MCC_NList/Libs/MUI/AROS-i386/
+	$(CP) nlistview_mcc/bin_aros-ppc/*.mc? release/MCC_NList/Libs/MUI/AROS-ppc/
+	$(CP) nlist_mcc/bin_aros-ppc/*.mc? release/MCC_NList/Libs/MUI/AROS-ppc/
+	$(CP) nlisttree_mcp/bin_aros-ppc/*.mc? release/MCC_NList/Libs/MUI/AROS-ppc/
+	$(CP) nlistviews_mcp/bin_aros-ppc/*.mc? release/MCC_NList/Libs/MUI/AROS-ppc/
+	$(CP) nlisttree_mcc/bin_aros-ppc/*.mc? release/MCC_NList/Libs/MUI/AROS-ppc/
+	$(CP) nfloattext_mcc/bin_aros-ppc/*.mc? release/MCC_NList/Libs/MUI/AROS-ppc/
+	$(CP) nbitmap_mcc/bin_aros-ppc/*.mc? release/MCC_NList/Libs/MUI/AROS-ppc/
+	$(CP) nbalance_mcc/bin_aros-ppc/*.mc? release/MCC_NList/Libs/MUI/AROS-ppc/
+	$(CP) nlistview_mcc/bin_aros-x86_64/*.mc? release/MCC_NList/Libs/MUI/AROS-x86_64/
+	$(CP) nlist_mcc/bin_aros-x86_64/*.mc? release/MCC_NList/Libs/MUI/AROS-x86_64/
+	$(CP) nlisttree_mcp/bin_aros-x86_64/*.mc? release/MCC_NList/Libs/MUI/AROS-x86_64/
+	$(CP) nlistviews_mcp/bin_aros-x86_64/*.mc? release/MCC_NList/Libs/MUI/AROS-x86_64/
+	$(CP) nlisttree_mcc/bin_aros-x86_64/*.mc? release/MCC_NList/Libs/MUI/AROS-x86_64/
+	$(CP) nfloattext_mcc/bin_aros-x86_64/*.mc? release/MCC_NList/Libs/MUI/AROS-x86_64/
+	$(CP) nbitmap_mcc/bin_aros-x86_64/*.mc? release/MCC_NList/Libs/MUI/AROS-x86_64/
+	$(CP) nbalance_mcc/bin_aros-x86_64/*.mc? release/MCC_NList/Libs/MUI/AROS-x86_64/
 	$(CP) demo/bin_os4/*-Demo release/MCC_NList/Demo/AmigaOS4/
 	$(CP) demo/bin_os3/*-Demo release/MCC_NList/Demo/AmigaOS3/
 	$(CP) demo/bin_mos/*-Demo release/MCC_NList/Demo/MorphOS/
+	$(CP) demo/bin_aros-i386/*-Demo release/MCC_NList/Demo/AROS-i386/
+	$(CP) demo/bin_aros-ppc/*-Demo release/MCC_NList/Demo/AROS-ppc/
+	$(CP) demo/bin_aros-x86_64/*-Demo release/MCC_NList/Demo/AROS-x86_64/
 	$(CP) demo/*.c release/MCC_NList/Developer/C/Examples/
 	$(CP) demo/*.h release/MCC_NList/Developer/C/Examples/
 	$(CP) demo/Makefile release/MCC_NList/Developer/C/Examples/

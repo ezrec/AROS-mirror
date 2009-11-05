@@ -12,27 +12,25 @@ FILES := library NListtree locale
   files=$(FILES) uselibs="amiga mui rom m"
 
 TARGETDIR := $(AROS_CONTRIB)/Zune/MCC_NList/Locale/Catalogs
-LOCALE_H := $(SRCDIR)/$(CURDIR)/locale.h
-LOCALE_C := $(SRCDIR)/$(CURDIR)/locale.c
 
 # CTs which aren't uptodate:
-# $(TARGETDIR)/deutsch/NListtree_mcp.catalog \
 # $(TARGETDIR)/russian/NListtree_mcp.catalog \
 
 
 #MM
-contrib-zune-classes-nlisttree-mcp-catalogs : $(LOCALE_H) $(LOCALE_C) \
+contrib-zune-classes-nlisttree-mcp-catalogs : locale.c locale.h \
     $(TARGETDIR)/english-british/NListtree_mcp.catalog \
     $(TARGETDIR)/czech/NListtree_mcp.catalog \
     $(TARGETDIR)/svenska/NListtree_mcp.catalog \
-    $(TARGETDIR)/français/NListtree_mcp.catalog
+    $(TARGETDIR)/français/NListtree_mcp.catalog \
+    $(TARGETDIR)/deutsch/NListtree_mcp.catalog
 
 
-$(LOCALE_H): locale/NListtree_mcp.cd C_h.sd
-	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListtree_mcp.cd $(LOCALE_H)=$(SRCDIR)/$(CURDIR)/C_h.sd
+locale.h: locale/NListtree_mcp.cd C_h.sd
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListtree_mcp.cd locale.h=$(SRCDIR)/$(CURDIR)/C_h.sd
 
-$(LOCALE_C): locale/NListtree_mcp.cd C_c.sd
-	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListtree_mcp.cd $(LOCALE_C)=$(SRCDIR)/$(CURDIR)/C_c.sd
+locale.c: locale/NListtree_mcp.cd C_c.sd
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListtree_mcp.cd locale.c=$(SRCDIR)/$(CURDIR)/C_c.sd
 
 
 $(TARGETDIR)/deutsch/NListtree_mcp.catalog: locale/german.ct

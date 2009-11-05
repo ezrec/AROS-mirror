@@ -3,7 +3,52 @@ MUI NList MCC classes - ChangeLog
 ---------------------------------
 
 $Id$
-$URL: https://nlist-classes.svn.sourceforge.net/svnroot/nlist-classes/trunk/ChangeLog $
+$URL: https://nlist-classes.svn.sourceforge.net/svnroot/nlist-classes/releases/0.103/ChangeLog $
+
+#### v0.103 RELEASE ###########################################################
+
+2009-10-24  Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final v0.103 release preparations
+
+2009-10-15 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_func.h: replaced the custom style definitions by official
+    ones.
+  * nlist_mcc/NList_func2.c, docs/MCC_NList.doc: MUIM_NList_ReplaceSingle was
+    broken in several ways. Passing pos==MUIV_NList_Insert_Bottom did nothing
+    instead of replacing the last entry, pos==MUIV_NList_Insert_Active chose
+    the correct entry, but due to a missing "break;" statement that entry was
+    discarded again and caused no replacement at all. Again thanks to Andreas
+    Falkenhahn for the hint.
+  * demo/NList-Demo#?.c: removed some unneeded includes.
+  * nlist_mcc/NList_mcc1.c: get()ting MUIA_Disabled always returned FALSE even
+    for disabled lists. Thanks to Andreas Falkenhahn for the hint.
+
+2009-09-19 Thore Böckelmann <tboeckel@gmx.de>
+
+  * misc: added a name to all memory pools for OS4.
+
+2009-09-17 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlistviews_mcp/locale/german.ct, nlistviews_mcp/Makefile: added a german
+    translation.
+  * nlisttree_mcp/locale/german.ct: replaced the former german translation with
+    a completely new one.
+
+2009-09-16 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/misc: loaded all clipboard access stuff off to a separate process.
+    Accessing the clipboard via iffparse.library requires 2 user signals for
+    each instance and thus an application would run out of free signals sooner
+    or later.
+  * nlisttree_mcc/misc: applied the same changes as for NList.mcc and clipboard
+    access.
+
+2009-08-14 Thore Böckelmann <tboeckel@gmx.de>
+
+  * Makefiles: added "-g" to the debug flags. It seems the OS3 GCC 2.95.3 cross
+    compiler needs this to generate debug infos at all.
 
 2009-06-16 Thore Böckelmann <tboeckel@gmx.de>
 

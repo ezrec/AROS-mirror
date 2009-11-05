@@ -22,6 +22,7 @@ FILES := \
         NList_grp    \
         NList_img    \
         NList_img2   \
+        ClipboardServer \
         Pointer      \
         Debug        \
         vastubs
@@ -29,8 +30,7 @@ FILES := \
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../nlistviews_mcp \
     -I$(SRCDIR)/$(CURDIR)/../nlistview_mcc
 
-# gcc 4.3.1 with -O2 produces bad code when trying to inline DoSuperNew() 
-USER_CFLAGS := -DNO_INLINE_STDARG -fno-inline
+USER_CFLAGS := -DNO_INLINE_STDARG
 
 %build_module_simple mmake=contrib-zune-classes-nlist-class \
   modname=NList modtype=mcc moduledir=$(CONTRIBDIR)/Zune/MCC_NList/Classes/Zune \

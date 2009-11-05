@@ -253,6 +253,7 @@ APTR NL_Pool_Create( ULONG puddlesize, ULONG threshsize)
    return AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
                                            ASOPOOL_Puddle, puddlesize,
                                            ASOPOOL_Threshold, threshsize,
+                                           ASOPOOL_Name, "NList.mcc pool",
                                            TAG_DONE);
    #elif defined(__MORPHOS__)
    return(CreatePool(MEMF_ANY, puddlesize, threshsize));
@@ -941,64 +942,6 @@ static LONG CopyToFile(STRPTR filename, STRPTR buffer)
   return result;
 }
 
-#ifndef ID_FORM
-#define ID_FORM MAKE_ID('F','O','R','M')
-#endif
-#ifndef ID_FTXT
-#define ID_FTXT MAKE_ID('F','T','X','T')
-#endif
-#ifndef ID_CHRS
-#define ID_CHRS MAKE_ID('C','H','R','S')
-#endif
-
-static LONG CopyToClipboard(ULONG clip, STRPTR buffer)
-{
-  LONG result = MUIV_NLCT_Failed;
-  struct IFFHandle *iff;
-
-  ENTER();
-
-  if(buffer == NULL)
-    buffer = (STRPTR)"";
-
-  if((iff = AllocIFF()) != NULL)
-  {
-    SHOWVALUE(DBF_CLIPBOARD, iff);
-    if((iff->iff_Stream = (ULONG)OpenClipboard(clip)) != 0)
-    {
-      SHOWVALUE(DBF_CLIPBOARD, iff->iff_Stream);
-      InitIFFasClip(iff);
-
-      if(OpenIFF(iff, IFFF_WRITE) == 0)
-      {
-        if(PushChunk(iff, ID_FTXT, ID_FORM, IFFSIZE_UNKNOWN) == 0)
-        {
-          if(PushChunk(iff, 0, ID_CHRS, IFFSIZE_UNKNOWN) == 0)
-          {
-            if(WriteChunkBytes(iff, buffer, strlen(buffer)) == (LONG)strlen(buffer))
-              result = MUIV_NLCT_Success;
-            else
-              result = MUIV_NLCT_WriteErr;
-
-            PopChunk(iff);
-          }
-
-          PopChunk(iff);
-        }
-
-        CloseIFF(iff);
-      }
-
-      CloseClipboard((struct ClipboardHandle *)iff->iff_Stream);
-    }
-
-    FreeIFF(iff);
-  }
-
-  RETURN(result);
-  return result;
-}
-
 LONG NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG clipnum,APTR *entries,struct Hook *hook)
 {
   char *retstr = NULL;
@@ -1115,7 +1058,7 @@ LONG NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG cli
   }
   else if((LONG)clipnum >= 0)
   {
-    ok = CopyToClipboard(clipnum, clipstr);
+    ok = StringToClipboard(clipnum, clipstr);
   }
   else
   {

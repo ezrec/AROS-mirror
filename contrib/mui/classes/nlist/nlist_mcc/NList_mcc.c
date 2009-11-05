@@ -238,7 +238,7 @@ IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...) __stackparm;
 IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...)
 {
   AROS_SLOWSTACKTAGS_PRE(tag1)
-  
+
   retval = DoSuperNewTagList(cl, obj, NULL, AROS_SLOWSTACKTAGS_ARG(tag1));
 
   AROS_SLOWSTACKTAGS_POST

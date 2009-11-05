@@ -52,7 +52,7 @@
 
 #define	INSTDATA            NLData
 
-#define USERLIBID		        CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
+#define USERLIBID     CLASS " " LIB_REV_STRING " [" SYSTEMSHORT "/" CPU "] (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION	      19
 
 #define USEDCLASSESP  used_classesP
@@ -66,19 +66,16 @@ static const char *used_classesP[] = { "NListviews.mcp", NULL };
 struct Library *LayersBase = NULL;
 struct Library *DiskfontBase = NULL;
 struct Library *ConsoleDevice = NULL;
-struct Library *IFFParseBase = NULL;
 #else
 struct Library *LayersBase = NULL;
 struct Library *DiskfontBase = NULL;
 struct Device *ConsoleDevice = NULL;
-struct Library *IFFParseBase = NULL;
 #endif
 
 #if defined(__amigaos4__)
 struct LayersIFace *ILayers = NULL;
 struct DiskfontIFace *IDiskfont = NULL;
 struct ConsoleIFace *IConsole = NULL;
-struct IFFParseIFace *IIFFParse = NULL;
 #endif
 
 static struct IOStdReq ioreq;
@@ -111,17 +108,12 @@ static BOOL ClassInit(UNUSED struct Library *base)
         ConsoleDevice = (APTR)ioreq.io_Device;
         if(GETINTERFACE(IConsole, struct ConsoleIFace *, ConsoleDevice))
         {
-          if((IFFParseBase = OpenLibrary("iffparse.library", 37L)) &&
-             GETINTERFACE(IIFFParse, struct IFFParseIFace *, IFFParseBase))
+          if(NGR_Create())
           {
-            if(NGR_Create())
+            if(StartClipboardServer() == TRUE)
             {
               return(TRUE);
             }
-
-            DROPINTERFACE(IIFFParse);
-            CloseLibrary(IFFParseBase);
-            IFFParseBase = NULL;
           }
 
           DROPINTERFACE(IConsole);
@@ -147,14 +139,9 @@ static BOOL ClassInit(UNUSED struct Library *base)
 
 static VOID ClassExpunge(UNUSED struct Library *base)
 {
-  NGR_Delete();
+  ShutdownClipboardServer();
 
-  if(IFFParseBase)
-  {
-    DROPINTERFACE(IIFFParse);
-    CloseLibrary(IFFParseBase);
-    IFFParseBase = NULL;
-  }
+  NGR_Delete();
 
   if(ConsoleDevice)
   {

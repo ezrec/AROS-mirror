@@ -36,7 +36,6 @@
 #include <libraries/gadtools.h>
 #include <libraries/asl.h>
 #include <libraries/mui.h>
-#include <devices/clipboard.h>
 #include <workbench/workbench.h>
 #include <intuition/intuition.h>
 #include <intuition/classusr.h>
@@ -122,7 +121,7 @@ HOOKPROTONHNO(DisplayLI_TextFunc, void, struct NList_DisplayMessage *ndm)
     else if (entry->num % 20 == 13)
       ndm->strings[0] = (STRPTR)"\033o[1]";
     else
-    { 
+    {
       snprintf(buf, sizeof(buf), "%d", (unsigned int)entry->num);
       ndm->strings[0]  = buf;
     }

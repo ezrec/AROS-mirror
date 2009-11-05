@@ -41,6 +41,10 @@ ULONG SetAttrs( APTR object, ULONG tag1, ... )
 LONG EasyRequest( struct Window *window, CONST struct EasyStruct *easyStruct, ULONG *idcmpPtr, ... )
 { return EasyRequestArgs(window, easyStruct, idcmpPtr, (const APTR) ((ULONG) &idcmpPtr + sizeof(ULONG *))); }
 
+#include <proto/dos.h>
+struct Process *CreateNewProcTags( ULONG tag1, ... )
+{ return CreateNewProc((struct TagItem *)&tag1); }
+
 #else
   #error "VARGS stubs are only save on m68k systems!"
 #endif

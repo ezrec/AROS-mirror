@@ -7,6 +7,7 @@ USER_INCLUDES = -I$(SRCDIR)/$(CURDIR)/../include
 USER_CFLAGS := -DNO_INLINE_STDARG
 
 FILES := library \
+         ClipboardServer \
          NListtree \
          QuickSort \
          Debug \

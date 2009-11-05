@@ -4,9 +4,7 @@ include $(TOP)/config/make.cfg
 #MM contrib-zune-classes-nlistview-class : includes linklibs
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../nlistviews_mcp
-
-# gcc 4.3.1 with -O2 produces bad code when trying to inline DoSuperNew() 
-USER_CFLAGS := -DNO_INLINE_STDARG -fno-inline
+USER_CFLAGS := -DNO_INLINE_STDARG
 
 FILES := library \
          NListview \

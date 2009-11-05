@@ -1293,6 +1293,11 @@ IPTR mNL_Get(struct IClass *cl,Object *obj,struct opGet *msg)
     case MUIA_Version:							*msg->opg_Storage = (ULONG) LIB_VERSION;						  return(TRUE);
     case MUIA_Revision:							*msg->opg_Storage = (ULONG) LIB_REVISION;						  return(TRUE);
 
+    // Asking the superclass always yields MUIA_Disabled==FALSE even for really disabled lists.
+    // Hence we return our own internal value, because NList intercepts MUIA_Disabled during
+    // set() already.
+    case MUIA_Disabled:                         *msg->opg_Storage = data->NList_Disabled ? TRUE : FALSE;		  return(TRUE);
+
     default:
       return(DoSuperMethodA(cl, obj, (Msg)msg));
 

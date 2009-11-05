@@ -37,7 +37,7 @@ MSG_FIXED_FONT_ASL (9//)
 Please select a fixed font...
 ;
 MSG_FONT_MARGIN (10//)
-Font Margin
+Font Margin:
 ;
 MSG_FONT_MARGIN_HELP (11//)
 Allows to set a vertical margin\n\

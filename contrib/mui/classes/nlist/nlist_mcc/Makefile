@@ -165,7 +165,7 @@ TESTTARGET= $(BINDIR)/NList-Test
 WARN     = -W -Wall -Wwrite-strings -Wpointer-arith -Wsign-compare
 OPTFLAGS = -O3 -fomit-frame-pointer -funroll-loops
 DEBUG    = -DDEBUG -O0
-DEBUGSYM = -gstabs
+DEBUGSYM = -g -gstabs
 CFLAGS   = -I. -I../nlistview_mcc -I../nlistviews_mcp -I../include $(CPU) $(WARN) \
            $(OPTFLAGS) $(DEBUG) $(DEBUGSYM) $(USER_CFLAGS) -c
 LDFLAGS  = $(CPU) $(DEBUGSYM)
@@ -177,24 +177,25 @@ LDLIBS   =
 
 LOBJS = library.o
 
-COBJS = NList_mcc.o    \
-        NList_mcc0.o   \
-        NList_mcc1.o   \
-        NList_mcc2.o   \
-        NList_mcc3.o   \
-        NList_mcc4.o   \
-        NList_mcc5.o   \
-        NList_mcc6.o   \
-        move.o         \
-        NList_func.o   \
-        NList_func2.o  \
-        NList_func3.o  \
-        NList_func4.o  \
-        NList_grp.o    \
-        NList_img.o    \
-        NList_img2.o   \
-        Pointer.o      \
-        Debug.o        \
+COBJS = NList_mcc.o       \
+        NList_mcc0.o      \
+        NList_mcc1.o      \
+        NList_mcc2.o      \
+        NList_mcc3.o      \
+        NList_mcc4.o      \
+        NList_mcc5.o      \
+        NList_mcc6.o      \
+        move.o            \
+        NList_func.o      \
+        NList_func2.o     \
+        NList_func3.o     \
+        NList_func4.o     \
+        NList_grp.o       \
+        NList_img.o       \
+        NList_img2.o      \
+        ClipboardServer.o \
+        Pointer.o         \
+        Debug.o           \
         vastubs.o
 
 TOBJS = NList-Test.o

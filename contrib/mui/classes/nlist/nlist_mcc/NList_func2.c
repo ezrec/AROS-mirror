@@ -832,74 +832,96 @@ ULONG NL_List_Insert(struct NLData *data,Object *obj,APTR *entries,LONG count,LO
 
 ULONG NL_List_Replace(struct NLData *data,Object *obj,APTR entry,LONG pos,LONG wrapcol,LONG align)
 {
+  ULONG result = FALSE;
   LONG ent;
+
+  ENTER();
+
   wrapcol &= TE_Wrap_TmpMask;
-  if (wrapcol)
-  { LONG wrapcol2 = 1;
-    while (wrapcol2 < TE_Wrap_TmpLine)
-    { if (wrapcol & wrapcol2)
+  if (wrapcol != 0)
+  {
+    LONG wrapcol2 = 1;
+
+    while(wrapcol2 < TE_Wrap_TmpLine)
+    {
+      if(wrapcol & wrapcol2)
         break;
+
       wrapcol2 = wrapcol2 << 1;
     }
     wrapcol = wrapcol2 & TE_Wrap_TmpMask;
   }
+
   switch (pos)
-  { case MUIV_NList_Insert_Top:
+  {
+    case MUIV_NList_Insert_Top:
+    {
       ent = 0;
-      break;
+    }
+    break;
+
     case MUIV_NList_Insert_Bottom:
-      ent = data->NList_Entries;
-      break;
+    {
+      ent = data->NList_Entries-1;
+    }
+    break;
+
     case MUIV_NList_Insert_Active:
-      if ((data->NList_Active >= 0) && (data->NList_Active < data->NList_Entries))
+    {
+      // make sure there is an active element
+      if(data->NList_Active >= 0 && data->NList_Active < data->NList_Entries)
+      {
         ent = data->NList_Active;
+      }
       else
-        ent = data->NList_Entries;
+      {
+        // let the replacement fail if there is no active element
+        ent = -1;
+      }
+    }
+    break;
+
     case MUIV_NList_Insert_Sorted:
     default:
-      if ((pos >= 0) && (pos < data->NList_Entries))
+    {
+      // make sure the position is valid
+      if(pos >= 0 && pos < data->NList_Entries)
+      {
         ent = pos;
+      }
       else
-        ent = data->NList_Entries;
-      break;
-  }
-  if ((ent >= 0) && (ent < data->NList_Entries) && (data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine))
-    ent -= data->EntriesArray[ent]->dnum;
-  if (entry && (ent >= 0) && (ent < data->NList_Entries))
-  {
-#if 0
-    /* $$$Sensei */
-    /* NList.mcc is now using construct method instead of construct hooks directly. */
-    if (data->NList_ConstructHook)
-    { if (data->NList_ConstructHook2)
-        entry = (APTR) MyCallHookPktA(obj,data->NList_ConstructHook,entry,data->Pool);
-      else
-        entry = (APTR) MyCallHookPkt(obj,TRUE,data->NList_ConstructHook,data->Pool,entry);
+      {
+        // let the replacement fail if the position is invalid
+        ent = -1;
+      }
     }
-#else
-    entry = (APTR) DoMethod( obj, MUIM_NList_Construct, entry, data->Pool );
-#endif
+    break;
+  }
 
-    if (entry)
-    { data->display_ptr = NULL;
+  SHOWVALUE(DBF_ALWAYS, ent);
+
+  if(ent >= 0 && ent < data->NList_Entries && (data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine))
+    ent -= data->EntriesArray[ent]->dnum;
+
+  if(entry != NULL && ent >= 0 && ent < data->NList_Entries)
+  {
+    // duplicate the given entry
+    entry = (APTR)DoMethod(obj, MUIM_NList_Construct, entry, data->Pool);
+
+    if(entry != NULL)
+    {
+      data->display_ptr = NULL;
       NL_SetColsRem(obj,data,ent);
-      if (data->EntriesArray[ent]->Wrap && !(data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine) && (data->EntriesArray[ent]->len >= 0))
+
+      if(data->EntriesArray[ent]->Wrap && !(data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine) && data->EntriesArray[ent]->len >= 0)
         data->EntriesArray[ent]->pos = (WORD) NL_GetSelects(data,obj,ent);
       else
         data->EntriesArray[ent]->pos = 0;
-#if 0
-      /*$$$Sensei*/
-      if (data->NList_DestructHook && !(data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine))
-      { if (data->NList_DestructHook2)
-          MyCallHookPktA(obj,data->NList_DestructHook,data->EntriesArray[ent]->Entry,data->Pool);
-        else
-          MyCallHookPkt(obj,TRUE,data->NList_DestructHook,data->Pool,data->EntriesArray[ent]->Entry);
-      }
-#else
+
       /* I don't understand this line but... ;) */
-      if (!(data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine))
-          DoMethod( obj, MUIM_NList_Destruct, data->EntriesArray[ent]->Entry, data->Pool );
-#endif
+      if(!(data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine))
+        DoMethod( obj, MUIM_NList_Destruct, data->EntriesArray[ent]->Entry, data->Pool );
+
       data->EntriesArray[ent]->Entry = entry;
       data->EntriesArray[ent]->Wrap = wrapcol;
       data->EntriesArray[ent]->PixLen = -1;
@@ -912,17 +934,23 @@ ULONG NL_List_Replace(struct NLData *data,Object *obj,APTR entry,LONG pos,LONG w
       NL_SetColsAdd(obj,data,ent,TRUE);
       NL_Changed(data,ent);
       UnSelectCharSel(obj,data,FALSE);
-      if (wrapcol)
+
+      if(wrapcol != 0)
         data->do_wwrap = TRUE;
+
       data->do_updatesb = TRUE;
       data->sorted = FALSE;
+
       REDRAW;
-      return (TRUE);
+
+      result = TRUE;
     }
     else
-      return (NL_List_Remove(data,obj,ent));
+      result = NL_List_Remove(data,obj,ent);
   }
-  return (FALSE);
+
+  RETURN(result);
+  return result;
 }
 
 

@@ -3140,12 +3140,11 @@ NList.mcc/MUIM_NList_UseImage
     INPUTS
         entry   - item to insert.
 
-        pos     - New entry will be added in front of this entry.
-                MUIV_NList_Insert_Top     insert as first entry.
-                MUIV_NList_Insert_Active  insert in front of the active entry.
-                MUIV_NList_Insert_Sorted  insert sorted (all entries will be
-                                          sorted if necessary).
-                MUIV_NList_Insert_Bottom  insert as last entry.
+        pos     - position of the entry to be replaced
+                MUIV_NList_Insert_Top     replace the first entry.
+                MUIV_NList_Insert_Active  replace the active entry.
+                MUIV_NList_Insert_Bottom  replace the last entry.
+                Invalid positions will cause the replacement to fail!
 
         wrapcol - WRAPCOL0 to WRAPCOL6. You can't ask word wrap for an
                 other col. NOWRAP if you don't want word wrap.

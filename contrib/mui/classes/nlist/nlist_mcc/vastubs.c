@@ -49,6 +49,10 @@ VOID SetWindowPointer( struct Window *win, Tag tag1, ... )
 LONG ObtainBestPen( struct ColorMap *cm, ULONG r, ULONG g, ULONG b, Tag tag1Type, ... )
 { return ObtainBestPenA(cm, r, g, b, (CONST struct TagItem *)&tag1Type); }
 
+#include <proto/dos.h>
+struct Process *CreateNewProcTags( ULONG tag1, ... )
+{ return CreateNewProc((struct TagItem *)&tag1); }
+
 #else
   #error "VARGS stubs are only save on m68k systems!"
 #endif

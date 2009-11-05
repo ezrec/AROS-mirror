@@ -856,6 +856,11 @@ struct MUIP_NListtree_MultiTestMessage
 	STACKED LONG	CurrType;
 };
 
+// ClipboardServer.c
+BOOL StartClipboardServer(void);
+void ShutdownClipboardServer(void);
+void StringToClipboard(ULONG unit, STRPTR str);
+
 #include "default-align.h"
 
 #endif /* NLISTTREE_MCC_PRIVATE_H */

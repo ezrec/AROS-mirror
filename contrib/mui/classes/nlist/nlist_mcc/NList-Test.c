@@ -36,8 +36,6 @@
 #include <libraries/gadtools.h>
 #include <libraries/asl.h>
 #include <libraries/mui.h>
-#include <libraries/iffparse.h>
-#include <devices/clipboard.h>
 #include <workbench/workbench.h>
 #include <intuition/intuition.h>
 #include <intuition/classusr.h>
@@ -50,7 +48,6 @@
 #include <proto/graphics.h>
 #include <proto/intuition.h>
 #include <proto/utility.h>
-#include <proto/iffparse.h>
 
 #if !defined(__amigaos4__)
 #include <clib/alib_protos.h>
@@ -65,7 +62,6 @@ struct Library *UtilityBase = NULL;
 struct Library *LayersBase = NULL;
 struct Device *ConsoleDevice = NULL;
 struct Library *DiskfontBase = NULL;
-struct Library *IFFParseBase = NULL;
 
 #if defined(__amigaos4__)
 struct Library *IntuitionBase = NULL;
@@ -76,7 +72,6 @@ struct GfxBase *GfxBase = NULL;
 #endif
 
 #if defined(__amigaos4__)
-struct IFFParseIFace *IIFFParse = NULL;
 struct DiskfontIFace *IDiskfont = NULL;
 struct LayersIFace *ILayers = NULL;
 struct ConsoleIFace *IConsole = NULL;
@@ -682,9 +677,11 @@ static VOID fail(APTR APP_Main,const char *str)
   if(MCC_Main)
     MUI_DeleteCustomClass(MCC_Main);
 
-	NGR_Delete();
+  ShutdownClipboardServer();
 
-	if(ConsoleDevice)
+  NGR_Delete();
+
+  if(ConsoleDevice)
   {
     DROPINTERFACE(IConsole);
 		CloseDevice((struct IORequest *)&ioreq);
@@ -727,12 +724,6 @@ static VOID fail(APTR APP_Main,const char *str)
     CloseLibrary(DiskfontBase);
   }
 
-  if(IFFParseBase)
-  {
-    DROPINTERFACE(IIFFParse);
-    CloseLibrary(IFFParseBase);
-  }
-
 
   if (str)
   { puts(str);
@@ -745,8 +736,6 @@ static VOID init(VOID)
 {
   APP_Main = NULL;
 
-  if((IFFParseBase = OpenLibrary("iffparse.library", 37)) &&
-    GETINTERFACE(IIFFParse, IFFParseBase))
   if((DiskfontBase = OpenLibrary("diskfont.library", 38)) &&
     GETINTERFACE(IDiskfont, DiskfontBase))
   if((UtilityBase = (APTR)OpenLibrary("utility.library", 36)) &&
@@ -762,18 +751,21 @@ static VOID init(VOID)
   {
     ioreq.io_Message.mn_Length = sizeof(ioreq);
     if(!OpenDevice("console.device", -1L, (struct IORequest *)&ioreq, 0L))
-		{
-		  ConsoleDevice = (APTR)ioreq.io_Device;
+    {
+      ConsoleDevice = (APTR)ioreq.io_Device;
 
       if(GETINTERFACE(IConsole, ConsoleDevice))
       {
-  		  if(NGR_Create())
+        if(NGR_Create())
         {
-          #if defined(DEBUG)
-          SetupDebug();
-          #endif
+          if(StartClipboardServer() == TRUE)
+          {
+            #if defined(DEBUG)
+            SetupDebug();
+            #endif
 
-          return;
+            return;
+          }
         }
       }
     }

@@ -731,6 +731,7 @@ IPTR NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
     }
     if (bmimg && (data->MinImageHeight < bmimg->height) && !flags)
       data->MinImageHeight = bmimg->height;
+
     return ((IPTR) bmimg);
   }
 
