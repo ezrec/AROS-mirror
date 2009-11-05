@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 #MM- linklibs : contrib-openal-linklib
 
-#MM contrib-openal-linklib : includes contrib-openal-includes
+#MM contrib-openal-linklib : includes contrib-openal-includes contrib-AHI
 
 OPENAL_FILES = \
         alAuxEffectSlot \
