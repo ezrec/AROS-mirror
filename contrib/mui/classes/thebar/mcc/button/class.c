@@ -189,7 +189,6 @@ ULONG packTable[] =
 static IPTR
 mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    APTR pool;
     struct pack             pack;
     struct TagItem *attrs = msg->ops_AttrList;
     ULONG          nflags, imode;
@@ -197,19 +196,6 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     ENTER();
 
     if(GetTagData(MUIA_TheButton_MinVer, 0, attrs) > LIB_VERSION)
-    {
-      RETURN(0);
-      return 0;
-    }
-
-    #if defined(__amigaos4__)
-    if ((pool = AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
-                                                 ASOPOOL_Puddle, 2048,
-                                                 ASOPOOL_Threshold, 1024,
-                                                 TAG_DONE)) == NULL)
-    #else
-    if ((pool = CreatePool(MEMF_ANY, 2048, 1024)) == NULL)
-    #endif
     {
       RETURN(0);
       return 0;
@@ -261,7 +247,6 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         STRPTR      label;
         ULONG       userFlags;
 
-        data->pool   = pool;
         data->tb     = pack.tb;
         data->id     = pack.id;
         data->strip  = pack.strip;
@@ -381,14 +366,6 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
           data->allowAlphaChannel = TRUE;
         #endif
     }
-    else
-    {
-      #if defined(__amigaos4__)
-      FreeSysObject(ASOT_MEMPOOL, pool);
-      #else
-      DeletePool(pool);
-      #endif
-    }
 
     RETURN(obj);
     return (IPTR)obj;
@@ -401,7 +378,6 @@ mDispose(struct IClass *cl, Object *obj, Msg msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
   struct MinNode *node;
-  APTR  pool = data->pool;
   IPTR res;
 
   ENTER();
@@ -418,18 +394,11 @@ mDispose(struct IClass *cl, Object *obj, Msg msg)
     Remove((struct Node *)notify);
 
     // Free everything of the node
-    freeVecPooled(pool, notify);
+    SharedFree(notify);
   }
 
   // call the super method
   res = DoSuperMethodA(cl, obj, msg);
-
-  // delete our memory pool
-  #if defined(__amigaos4__)
-  FreeSysObject(ASOT_MEMPOOL, pool);
-  #else
-  DeletePool(pool);
-  #endif
 
   RETURN(res);
   return res;
@@ -2276,7 +2245,7 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_Notify *msg)
 
     // now we allocate a new ButtonNotify and add
     // it to the notify list of the button
-    if((notify = allocVecPooled(data->pool, size)))
+    if((notify = SharedAlloc(size)))
     {
       // now we fill the notify structure
       memcpy(&notify->msg, msg, sizeof(struct MUIP_Notify)+(sizeof(ULONG)*msg->FollowParams));
@@ -2297,7 +2266,7 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_Notify *msg)
       if(result == 0)
       {
         Remove((struct Node *)notify);
-        freeVecPooled(data->pool, notify);
+        SharedFree(notify);
       }
     }
   }
@@ -2334,7 +2303,7 @@ mKillNotify(struct IClass *cl, Object *obj, struct MUIP_KillNotify *msg)
       Remove((struct Node *)notify);
 
       // Free everything of the node
-      freeVecPooled(data->pool, notify);
+      SharedFree(notify);
 
       // we walk on as there might be more than
       // one notify on an attribute.
@@ -2376,7 +2345,7 @@ mKillNotifyObj(struct IClass *cl, Object *obj, struct MUIP_KillNotifyObj *msg)
       Remove((struct Node *)notify);
 
       // Free everything of the node
-      freeVecPooled(data->pool, notify);
+      SharedFree(notify);
 
       // we walk on as there might be more than
       // one notify on an attribute.
@@ -2418,7 +2387,7 @@ mSendNotify(struct IClass *cl, Object *obj, struct MUIP_TheButton_SendNotify *ms
         // now we create a full temporary clone of the notify
         // message which we can modify before we send it to
         // the destination
-        if((destMessage = allocVecPooled(data->pool, sizeof(ULONG)*(notify->msg.FollowParams))))
+        if((destMessage = SharedAlloc(sizeof(ULONG)*(notify->msg.FollowParams))))
         {
           ULONG i;
           Object *destObj = NULL;
@@ -2477,7 +2446,7 @@ mSendNotify(struct IClass *cl, Object *obj, struct MUIP_TheButton_SendNotify *ms
           }
 
           // cleanup the temporary clone.
-          freeVecPooled(data->pool, destMessage);
+          SharedFree(destMessage);
         }
 
         // break out

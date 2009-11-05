@@ -86,7 +86,8 @@ static BOOL ClassInit(UNUSED struct Library *base)
     if ((DataTypesBase = OpenLibrary("datatypes.library",37)) &&
         GETINTERFACE(IDataTypes, struct DataTypesIFace *, DataTypesBase) &&
         initSpacerClass() &&
-        initDragBarClass())
+        initDragBarClass() &&
+        CreateSharedPool() == TRUE)
     {
         // we open the cybgraphics.library but without failing if
         // it doesn't exist
@@ -141,6 +142,8 @@ static BOOL ClassInit(UNUSED struct Library *base)
 static BOOL ClassExpunge(UNUSED struct Library *base)
 {
     ENTER();
+
+    DeleteSharedPool();
 
     // clear the data of our subclasses
     if (lib_spacerClass)

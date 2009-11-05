@@ -43,7 +43,7 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
 
     ENTER();
 
-    if (button->img==MUIV_TheBar_BarSpacer)
+    if(button->img==MUIV_TheBar_BarSpacer)
     {
         Object *spacer;
 
@@ -386,7 +386,7 @@ orderButtons(struct IClass *cl,Object *obj,struct InstData *data)
     if (data->db) n++;
 
     if (n>STATICSORTSIZE)
-        smsg = allocVecPooled(data->pool,sizeof(struct MUIP_Group_Sort)+sizeof(Object *)*(n+1));
+        smsg = SharedAlloc(sizeof(struct MUIP_Group_Sort)+sizeof(Object *)*(n+1));
     else
         smsg = (struct MUIP_Group_Sort *)&data->sortMsgID;
 
@@ -416,7 +416,7 @@ orderButtons(struct IClass *cl,Object *obj,struct InstData *data)
     DoSuperMethodA(cl,obj,(Msg)smsg);
 
     if (n>STATICSORTSIZE)
-        freeVecPooled(data->pool,smsg);
+        SharedFree(smsg);
 
     RETURN(TRUE);
     return TRUE;
@@ -1147,11 +1147,11 @@ MakeStaticHook(LayoutHook, LayoutFunc);
 
 /***********************************************************************/
 
-static ULONG
-loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
+static BOOL
+loadDTBrush(struct MUIS_TheBar_Brush *brush,STRPTR file)
 {
     Object *dto;
-    ULONG  res = FALSE;
+    BOOL res = FALSE;
 
     ENTER();
 
@@ -1169,37 +1169,39 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
         if (GetDTAttrs(dto,PDTA_CRegs,(IPTR)&colors,PDTA_NumColors,(IPTR)&numColors,PDTA_BitMapHeader,(IPTR)&bmh,TAG_DONE)==3)
         {
             UBYTE *chunky;
-            ULONG width, height, cdepth, tw, size, csize;
+            ULONG width, height, tw, size, csize;
+            BOOL trueColor;
 
             width  = bmh->bmh_Width;
             height = bmh->bmh_Height;
-            cdepth = bmh->bmh_Depth>8;
+            trueColor = bmh->bmh_Depth>8;
 
             tw    = ((width+15)>>4)<<4;
             size  = tw*height;
             csize = 0;
 
-            if (cdepth) size += size+size+size;
+            if (trueColor)
+                size *= 4;
             else
             {
                 if (colors && numColors)
                 {
-                    csize  = numColors*sizeof(ULONG);
-                    csize += csize+csize;
+                    csize = numColors*sizeof(ULONG)*3;
                 }
             }
 
-            if((chunky = allocVecPooled(pool,size+csize)))
+            if((chunky = SharedAlloc(size+csize)))
             {
-                ULONG line8 = 0;
+                BOOL line8 = FALSE;
 
-                if (cdepth)
+                if (trueColor)
                 {
                   res = DoMethod(dto,PDTM_READPIXELARRAY,(IPTR)chunky,PBPAFMT_ARGB,width<<2,0,0,width,height);
 
                   #if !defined(__amigaos4__) && !defined(__AROS__)
                   // ignore the return code for mos broken pdt
-                  if (isFlagSet(lib_flags,BASEFLG_BROKENMOSPDT)) res = TRUE;
+                  if (isFlagSet(lib_flags,BASEFLG_BROKENMOSPDT))
+                    res = TRUE;
                   #endif
 
                   #ifdef __AROS__
@@ -1245,12 +1247,14 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
                                 WaitBlit();
                                 FreeBitMap(trp.BitMap);
 
-                                res = line8 = TRUE;
+                                res = TRUE;
+                                line8 = TRUE;
                             }
                         }
                     }
                 }
-                else line8 = FALSE;
+                else
+                    line8 = FALSE;
 
                 if (res)
                 {
@@ -1263,16 +1267,18 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
                     {
                         brush->dataTotalWidth = tw;
 
-                        if (colors && numColors) memcpy(brush->colors = (ULONG *)(chunky+size),colors,csize);
+                        if (colors && numColors)
+                            memcpy(brush->colors = (ULONG *)(chunky+size),colors,csize);
                         brush->numColors = numColors;
 
-                        if (bmh->bmh_Masking==mskHasTransparentColor) brush->trColor = bmh->bmh_Transparent;
+                        if (bmh->bmh_Masking==mskHasTransparentColor)
+                            brush->trColor = bmh->bmh_Transparent;
                     }
                     else
                     {
                         brush->dataTotalWidth = width;
 
-                        if (cdepth)
+                        if (trueColor)
                         {
                             brush->flags = BRFLG_ARGB;
                             brush->dataTotalWidth *= 4;
@@ -1316,14 +1322,17 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
                         }
                         else
                         {
-                            if (colors && numColors) memcpy(brush->colors = (ULONG *)(chunky+size),colors,csize);
+                            if (colors && numColors)
+                                memcpy(brush->colors = (ULONG *)(chunky+size),colors,csize);
                             brush->numColors = numColors;
 
-                            if (bmh->bmh_Masking==mskHasTransparentColor) brush->trColor = bmh->bmh_Transparent;
+                            if (bmh->bmh_Masking==mskHasTransparentColor)
+                                brush->trColor = bmh->bmh_Transparent;
                         }
                     }
                 }
-                else freeVecPooled(pool,chunky);
+                else
+                    SharedFree(chunky);
             }
         }
 
@@ -1364,9 +1373,6 @@ findButton(struct InstData *data, ULONG ID)
 static void
 removeButton(struct IClass *cl, Object *obj, struct Button *button)
 {
-  struct InstData *data = INST_DATA(cl,obj);
-  APTR pool = data->pool;
-
   ENTER();
 
   D(DBF_STARTUP, "freeing button %d: %08lx", button->ID, button);
@@ -1401,7 +1407,7 @@ removeButton(struct IClass *cl, Object *obj, struct Button *button)
 
       // remove from list and free
       Remove((struct Node *)notify);
-      freeVecPooled(pool, notify);
+      SharedFree(notify);
     }
   }
 
@@ -1409,7 +1415,7 @@ removeButton(struct IClass *cl, Object *obj, struct Button *button)
   Remove((struct Node *)button);
 
   // free the buttons' occupied memory
-  FreePooled(pool, button, sizeof(struct Button));
+  SharedFree(button);
 
   LEAVE();
 }
@@ -1662,7 +1668,6 @@ ULONG ptable[] =
 
 static BOOL
 makePicsFun(struct pack *pt,
-            APTR pool,
             BOOL dostrip,
             struct MUIS_TheBar_Brush *sb,
             struct MUIS_TheBar_Brush *ssb,
@@ -1690,7 +1695,8 @@ makePicsFun(struct pack *pt,
 
         if (pt->idrawer && (idrawer = Lock(pt->idrawer,SHARED_LOCK)))
             odir = CurrentDir(idrawer);
-        else idrawer = (BPTR)NULL;
+        else
+            idrawer = (BPTR)NULL;
 
         if (dostrip == TRUE || pt->strip)
         {
@@ -1700,15 +1706,22 @@ makePicsFun(struct pack *pt,
             if (dostrip == TRUE)
             {
                 memcpy(sb,pt->stripBrush,sizeof(*sb));
-                if (pt->sstripBrush) memcpy(ssb,pt->sstripBrush,sizeof(*ssb));
-                if (pt->dstripBrush) memcpy(dsb,pt->dstripBrush,sizeof(*dsb));
+
+                if (pt->sstripBrush)
+                    memcpy(ssb,pt->sstripBrush,sizeof(*ssb));
+
+                if (pt->dstripBrush)
+                    memcpy(dsb,pt->dstripBrush,sizeof(*dsb));
             }
             else
             {
-                if (loadDTBrush(pool,sb,pt->strip))
+                if (loadDTBrush(sb,pt->strip))
                 {
-                    if (pt->sstrip) loadDTBrush(pool,ssb,pt->sstrip);
-                    if (pt->dstrip) loadDTBrush(pool,dsb,pt->dstrip);
+                    if (pt->sstrip)
+                        loadDTBrush(ssb,pt->sstrip);
+
+                    if (pt->dstrip)
+                        loadDTBrush(dsb,pt->dstrip);
                 }
             }
 
@@ -1716,22 +1729,26 @@ makePicsFun(struct pack *pt,
             {
                 if (ssb->data && (sb->dataWidth!=ssb->dataWidth || sb->dataHeight!=ssb->dataHeight))
                 {
-                    freeVecPooled(pool,ssb->data);
+                    SharedFree(ssb->data);
                     ssb->data = NULL;
                 }
 
                 if (dsb->data && (sb->dataWidth!=dsb->dataWidth || sb->dataHeight!=dsb->dataHeight))
                 {
-                    freeVecPooled(pool,dsb->data);
+                    SharedFree(dsb->data);
                     dsb->data = NULL;
                 }
 
                 if ((b = pt->buttons))
                 {
                     for (nbr = 0; b->img!=MUIV_TheBar_End; b++)
-                        if (b->img!=MUIV_TheBar_BarSpacer) nbr++;
+                    {
+                        if (b->img!=MUIV_TheBar_BarSpacer)
+                            nbr++;
+                    }
                 }
-                else nbr = 0;
+                else
+                    nbr = 0;
 
                 if (pt->stripCols<=0)  pt->stripCols   = nbr ? nbr : 1;
                 if (pt->stripRows<=0)  pt->stripRows   = 1;
@@ -1748,7 +1765,7 @@ makePicsFun(struct pack *pt,
                 if (dsb->data)
                     totsize += brpsize+brsize;
 
-                if ((pt->brushes = allocVecPooled(pool,totsize)))
+                if ((pt->brushes = SharedAlloc(totsize)))
                 {
                     ULONG rows, cols, horizSpace, vertSpace;
                     int   w, h;
@@ -1828,12 +1845,13 @@ makePicsFun(struct pack *pt,
                     }
                 }
 
-                if (pics) setFlag(pt->flags, FLG_FreeStrip);
+                if (pics)
+                    setFlag(pt->flags, FLG_FreeStrip);
                 else
                 {
                     if (pt->brushes)
                     {
-                        freeVecPooled(pool,pt->brushes);
+                        SharedFree(pt->brushes);
 
                         pt->brushes = NULL;
                         if (pt->sbrushes) pt->sbrushes = NULL;
@@ -1877,7 +1895,7 @@ makePicsFun(struct pack *pt,
                     if (pt->spics) totsize += brpsize+brsize;
                     if (pt->dpics) totsize += brpsize+brsize;
 
-                    if ((pt->brushes = allocVecPooled(pool,totsize)))
+                    if ((pt->brushes = SharedAlloc(totsize)))
                     {
                         struct MUIS_TheBar_Brush *brush, *sbrush = NULL, *dbrush = NULL;
                         int                      i;
@@ -1904,14 +1922,14 @@ makePicsFun(struct pack *pt,
 
                         for (i = 0; *p; i++, p++)
                         {
-                            if (!loadDTBrush(pool,pt->brushes[i] = brush+i,*p))
+                            if (!loadDTBrush(pt->brushes[i] = brush+i,*p))
                                 break;
 
                             if (pt->sbrushes)
                             {
                                 if (*sp!=MUIV_TheBar_SkipPic)
                                 {
-                                    if (!loadDTBrush(pool,pt->sbrushes[i] = sbrush+i,*sp))
+                                    if (!loadDTBrush(pt->sbrushes[i] = sbrush+i,*sp))
                                         pt->sbrushes[i] = NULL;
                                 }
                                 sp++;
@@ -1921,7 +1939,7 @@ makePicsFun(struct pack *pt,
                             {
                                 if (*dp!=MUIV_TheBar_SkipPic)
                                 {
-                                    if (!loadDTBrush(pool,pt->dbrushes[i] = dbrush+i,*dp))
+                                    if (!loadDTBrush(pt->dbrushes[i] = dbrush+i,*dp))
                                         pt->dbrushes[i] = NULL;
                                 }
                                 dp++;
@@ -1930,7 +1948,7 @@ makePicsFun(struct pack *pt,
 
                         if (*p)
                         {
-                            freeVecPooled(pool,pt->brushes);
+                            SharedFree(pt->brushes);
 
                             pt->brushes = NULL;
                             if (pt->sbrushes) pt->sbrushes = NULL;
@@ -1968,7 +1986,6 @@ makePicsFun(struct pack *pt,
 
 static BOOL
 makePics(struct pack *pt,
-         APTR pool,
          struct MUIS_TheBar_Brush *sb,
          struct MUIS_TheBar_Brush *ssb,
          struct MUIS_TheBar_Brush *dsb,
@@ -1978,9 +1995,9 @@ makePics(struct pack *pt,
 
     ENTER();
 
-    pics = makePicsFun(pt,pool,FALSE,sb,ssb,dsb,nbrPtr);
+    pics = makePicsFun(pt,FALSE,sb,ssb,dsb,nbrPtr);
     if (pics == FALSE && pt->stripBrush)
-        pics = makePicsFun(pt,pool,TRUE,sb,ssb,dsb,nbrPtr);
+        pics = makePicsFun(pt,TRUE,sb,ssb,dsb,nbrPtr);
 
     if (pics == FALSE && pt->brushes)
     {
@@ -2003,7 +2020,6 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct pack               pt;
     struct MUIS_TheBar_Button *buttons;
-    APTR                      pool;
     struct TagItem            *attrs = msg->ops_AttrList;
     struct MUIS_TheBar_Brush  sb, ssb, dsb;
     BOOL                      pics;
@@ -2012,20 +2028,6 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     ENTER();
 
     if(GetTagData(MUIA_TheBar_MinVer, 0 ,attrs) > LIB_VERSION)
-    {
-      RETURN(0);
-      return 0;
-    }
-
-    #if defined(__amigaos4__)
-    pool = AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
-                                                            ASOPOOL_Puddle, 2048,
-                                                            ASOPOOL_Threshold, 1024,
-                                                            TAG_DONE);
-    #else
-    pool = CreatePool(MEMF_ANY,2048,1024);
-    #endif
-    if(pool == NULL)
     {
       RETURN(0);
       return 0;
@@ -2053,7 +2055,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     if (isFlagSet(pt.pflags, PFLG_FreeVertExists) ? isFlagSet(pt.flags, PFLG_FreeVert) : isFlagSet(pt.flags, FLG_Horiz) == 0)
         setFlag(pt.flags, FLG_FreeVert);
 
-    pics = makePics(&pt,pool,&sb,&ssb,&dsb,&nbr);
+    pics = makePics(&pt,&sb,&ssb,&dsb,&nbr);
 
     if((obj = (Object *)DoSuperNew(cl,obj,
             MUIA_Group_LayoutHook,   (IPTR)&LayoutHook,
@@ -2062,7 +2064,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
             isFlagSet(lib_flags, BASEFLG_MUI20) ? TAG_IGNORE : MUIA_CustomBackfill, TRUE,
             TAG_MORE,(IPTR)attrs)))
     {
-        struct InstData *data = INST_DATA(cl,obj);
+        struct InstData *data = INST_DATA(cl, obj);
 
         data->brushes   = pt.brushes;
         data->sbrushes  = pt.sbrushes;
@@ -2071,7 +2073,6 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         data->flags     = pt.flags | (pics ? 0 : FLG_TextOnly);
         data->flags2    = pt.flags2;
         data->id        = pt.id;
-        data->pool      = pool;
         data->nbr       = nbr;
         data->labelPos  = pt.labelPos;
         data->barPos    = pt.barPos;
@@ -2289,14 +2290,6 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
           data->allowAlphaChannel = TRUE;
         #endif
     }
-    else
-    {
-      #if defined(__amigaos4__)
-      FreeSysObject(ASOT_MEMPOOL, pool);
-      #else
-        DeletePool(pool);
-        #endif
-    }
 
     RETURN((IPTR)obj);
     return (IPTR)obj;
@@ -2307,9 +2300,8 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 static IPTR
 mDispose(struct IClass *cl, Object *obj, Msg msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   struct MinNode *node;
-  APTR pool = data->pool;
   IPTR res;
 
   ENTER();
@@ -2329,16 +2321,6 @@ mDispose(struct IClass *cl, Object *obj, Msg msg)
   // call the super method to let MUI clear everything else
   res = DoSuperMethodA(cl, obj, msg);
 
-  // delete our previously allocated memory pool
-  if(pool != NULL)
-  {
-    #if defined(__amigaos4__)
-    FreeSysObject(ASOT_MEMPOOL, pool);
-    #else
-    DeletePool(pool);
-    #endif
-  }
-
   RETURN(res);
   return res;
 }
@@ -2348,7 +2330,7 @@ mDispose(struct IClass *cl, Object *obj, Msg msg)
 static IPTR
 mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   BOOL result = FALSE;
 
   ENTER();
@@ -2461,7 +2443,7 @@ enum
 static IPTR
 mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl, obj);
     struct TagItem *tag;
     const struct TagItem *tstate;
     ULONG flags = 0, res;
@@ -2997,7 +2979,7 @@ static struct MUIS_TheBar_Appearance staticAp = { MUIDEF_TheBar_Appearance_ViewM
 static IPTR
 mSetup(struct IClass *cl,Object *obj,Msg msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl, obj);
     #if !defined(VIRTUAL)
     Object               *parent;
     #endif
@@ -3014,15 +2996,15 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
         if (!getconfigitem(cl,obj,MUICFG_TheBar_Appearance,&ap))
             ap = &staticAp;
 
-        SetAttrs(obj,MUIA_TheBar_ViewMode,     ap->viewMode,
-                     MUIA_TheBar_LabelPos,     ap->labelPos,
-                     MUIA_TheBar_Borderless,   (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_Borderless),
-                     MUIA_TheBar_Raised,       (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_Raised),
-                     MUIA_TheBar_Sunny,        (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_Sunny),
-                     MUIA_TheBar_Scaled,       (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_Scaled),
-                     MUIA_TheBar_BarSpacer,    (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_BarSpacer),
-                     MUIA_TheBar_EnableKeys,   (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_EnableKeys),
-                     TAG_DONE);
+        SetAttrs(obj, MUIA_TheBar_ViewMode,     ap->viewMode,
+                      MUIA_TheBar_LabelPos,     ap->labelPos,
+                      MUIA_TheBar_Borderless,   (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_Borderless),
+                      MUIA_TheBar_Raised,       (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_Raised),
+                      MUIA_TheBar_Sunny,        (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_Sunny),
+                      MUIA_TheBar_Scaled,       (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_Scaled),
+                      MUIA_TheBar_BarSpacer,    (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_BarSpacer),
+                      MUIA_TheBar_EnableKeys,   (IPTR)isFlagSet(ap->flags, MUIV_TheBar_Appearance_EnableKeys),
+                      TAG_DONE);
     }
 
     if (isFlagClear(data->flags, FLG_Background))
@@ -3244,29 +3226,29 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 static IPTR
 mCleanup(struct IClass *cl,Object *obj,Msg msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
-    IPTR result = 0;
+  struct InstData *data = INST_DATA(cl, obj);
+  IPTR result = 0;
 
-    ENTER();
+  ENTER();
 
-    #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
-    if (isFlagSet(data->flags, FLG_Framed))
-        freeFramePens(obj,data);
-    #endif
+  #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
+  if (isFlagSet(data->flags, FLG_Framed))
+      freeFramePens(obj,data);
+  #endif
 
-    if (isFlagClear(lib_flags,BASEFLG_MUI20))
-        DoMethod(_win(obj),MUIM_Window_RemEventHandler,(IPTR)&data->eh);
+  if (isFlagClear(lib_flags,BASEFLG_MUI20))
+    DoMethod(_win(obj),MUIM_Window_RemEventHandler,(IPTR)&data->eh);
 
-    if (isFlagSet(data->flags, FLG_FreeStrip))
-        freeBitMaps(data);
+  if (isFlagSet(data->flags, FLG_FreeStrip))
+    freeBitMaps(data);
 
-    clearFlag(data->flags, FLG_Setup|FLG_CyberMap|FLG_CyberDeep|FLG_IsInVirtgroup);
-    clearFlag(data->flags2, FLG2_Gradient);
+  clearFlag(data->flags, FLG_Setup|FLG_CyberMap|FLG_CyberDeep|FLG_IsInVirtgroup);
+  clearFlag(data->flags2, FLG2_Gradient);
 
-    result = DoSuperMethodA(cl,obj,msg);
+  result = DoSuperMethodA(cl,obj,msg);
 
-    RETURN(result);
-    return result;
+  RETURN(result);
+  return result;
 }
 
 /***********************************************************************/
@@ -3290,7 +3272,7 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 
     if (isFlagClear(lib_flags,BASEFLG_MUI4))
     {
-        struct InstData *data = INST_DATA(cl,obj);
+        struct InstData *data = INST_DATA(cl, obj);
 
         msg->MinMaxInfo->MinWidth  = _subwidth(obj)+data->objWidth;
         msg->MinMaxInfo->DefWidth  = _subwidth(obj)+data->objWidth;
@@ -3314,7 +3296,7 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 static IPTR
 mShow(struct IClass *cl,Object *obj,Msg msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl, obj);
 
     ENTER();
 
@@ -3553,19 +3535,21 @@ mShow(struct IClass *cl,Object *obj,Msg msg)
 static IPTR
 mHide(struct IClass *cl,Object *obj,Msg msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
-    IPTR result = 0;
+  struct InstData *data = INST_DATA(cl, obj);
+  IPTR result = 0;
 
-    if (data->gradbm)
-    {
-        FreeBitMap(data->gradbm);
-        data->gradbm = NULL;
-    }
+  ENTER();
 
-    result = DoSuperMethodA(cl,obj,msg);
+  if (data->gradbm)
+  {
+    FreeBitMap(data->gradbm);
+    data->gradbm = NULL;
+  }
 
-    RETURN(result);
-    return result;
+  result = DoSuperMethodA(cl,obj,msg);
+
+  RETURN(result);
+  return result;
 }
 
 /***********************************************************************/
@@ -3574,34 +3558,34 @@ mHide(struct IClass *cl,Object *obj,Msg msg)
 static IPTR
 mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
 
-    ENTER();
+  ENTER();
 
-    DoSuperMethodA(cl,obj,(Msg)msg);
+  DoSuperMethodA(cl,obj,(Msg)msg);
 
-    #if defined(VIRTUAL)
-    if (isFlagSet(data->flags, FLG_Framed))
-    #else
-    if (isFlagSet(data->flags, FLG_Framed) && (isFlagSet(msg->flags, MADF_DRAWUPDATE) || isFlagSet(msg->flags, MADF_DRAWOBJECT)))
-    #endif
-    {
-        struct RastPort rp;
+  #if defined(VIRTUAL)
+  if (isFlagSet(data->flags, FLG_Framed))
+  #else
+  if (isFlagSet(data->flags, FLG_Framed) && (isFlagSet(msg->flags, MADF_DRAWUPDATE) || isFlagSet(msg->flags, MADF_DRAWOBJECT)))
+  #endif
+  {
+    struct RastPort rp;
 
-        memcpy(&rp,_rp(obj),sizeof(rp));
+    memcpy(&rp,_rp(obj),sizeof(rp));
 
-        SetAPen(&rp,MUIPEN(data->barFrameShinePen));
-        Move(&rp,_left(obj),_bottom(obj));
-        Draw(&rp,_left(obj),_top(obj));
-        Draw(&rp,_right(obj),_top(obj));
+    SetAPen(&rp,MUIPEN(data->barFrameShinePen));
+    Move(&rp,_left(obj),_bottom(obj));
+    Draw(&rp,_left(obj),_top(obj));
+    Draw(&rp,_right(obj),_top(obj));
 
-        SetAPen(&rp,MUIPEN(data->barFrameShadowPen));
-        Draw(&rp,_right(obj),_bottom(obj));
-        Draw(&rp,_left(obj)+1,_bottom(obj));
-    }
+    SetAPen(&rp,MUIPEN(data->barFrameShadowPen));
+    Draw(&rp,_right(obj),_bottom(obj));
+    Draw(&rp,_left(obj)+1,_bottom(obj));
+  }
 
-    RETURN(0);
-    return 0;
+  RETURN(0);
+  return 0;
 }
 #endif
 
@@ -3610,7 +3594,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 static IPTR
 mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   IPTR result = 0;
 
   ENTER();
@@ -3632,14 +3616,14 @@ mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
 static IPTR
 mCreateDragImage(struct IClass *cl,Object *obj,struct MUIP_CreateDragImage *msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
 
-    ENTER();
+  ENTER();
 
-    data->dm = (struct MUI_DragImage *)DoSuperMethodA(cl,obj,(Msg)msg);
+  data->dm = (struct MUI_DragImage *)DoSuperMethodA(cl,obj,(Msg)msg);
 
-    RETURN((IPTR)data->dm);
-    return (IPTR)data->dm;
+  RETURN((IPTR)data->dm);
+  return (IPTR)data->dm;
 }
 
 /***********************************************************************/
@@ -3647,17 +3631,17 @@ mCreateDragImage(struct IClass *cl,Object *obj,struct MUIP_CreateDragImage *msg)
 static IPTR
 mDeleteDragImage(struct IClass *cl,Object *obj,struct MUIP_DeleteDragImage *msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
-    IPTR result;
+  struct InstData *data = INST_DATA(cl, obj);
+  IPTR result;
 
-    ENTER();
+  ENTER();
 
-    data->dm = NULL;
+  data->dm = NULL;
 
-    result = DoSuperMethodA(cl,obj,(Msg)msg);
+  result = DoSuperMethodA(cl,obj,(Msg)msg);
 
-    RETURN(result);
-    return result;
+  RETURN(result);
+  return result;
 }
 
 /***********************************************************************/
@@ -3665,7 +3649,7 @@ mDeleteDragImage(struct IClass *cl,Object *obj,struct MUIP_DeleteDragImage *msg)
 static IPTR
 mInitChange(struct IClass *cl,Object *obj,Msg msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   IPTR result;
 
   ENTER();
@@ -3681,7 +3665,7 @@ mInitChange(struct IClass *cl,Object *obj,Msg msg)
 static IPTR
 mExitChange(struct IClass *cl,Object *obj,Msg msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   IPTR result;
 
   ENTER();
@@ -3697,7 +3681,7 @@ mExitChange(struct IClass *cl,Object *obj,Msg msg)
 static IPTR
 mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   struct MinNode *node;
 
   ENTER();
@@ -3752,7 +3736,7 @@ mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
         size = sizeof(struct ButtonNotify)+sizeof(IPTR)*notify->msg.FollowParams;
 
         // clone
-        if((clone = allocVecPooled(data->pool, size)))
+        if((clone = SharedAlloc(size)))
         {
           // copy the data of the notify
           memcpy(clone, notify, size);
@@ -3818,7 +3802,7 @@ mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
         Remove((struct Node *)notify);
 
         // free the clone notify
-        freeVecPooled(data->pool, notify);
+        SharedFree(notify);
       }
 
       if(isFlagSet(data->flags, FLG_Setup) && isFlagSet(data->flags, FLG_FreeStrip))
@@ -3835,11 +3819,9 @@ mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
 
 /***********************************************************************/
 
-static IPTR
-mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
+static IPTR mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
-  struct MUIP_Notify *notify = NULL;
+  struct InstData *data = INST_DATA(cl, obj);
   BOOL result = FALSE;
   struct Button *button;
 
@@ -3848,9 +3830,11 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
   // now we first find the button object with its ID
   if((button = findButton(data, msg->ID)) != NULL)
   {
+    struct MUIP_Notify *notify;
+
     // lets allocate a temporary buffer for sending
     // the notify method to the button correctly.
-    if((notify = reallocVecPooledNC(data->pool, notify, sizeof(struct MUIP_Notify)+(sizeof(IPTR)*msg->followParams))))
+    if((notify = SharedAlloc(sizeof(struct MUIP_Notify)+(sizeof(IPTR)*msg->followParams))) != NULL)
     {
       // now we fill the notify structure
       notify->MethodID      = MUIM_Notify;
@@ -3859,15 +3843,14 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
       notify->DestObj       = msg->dest;
 
       // fill the rest with memcpy
-      memcpy(&notify->FollowParams, &msg->followParams, sizeof(IPTR)*(msg->followParams+1));
+      memcpy(&notify->FollowParams, &msg->followParams, sizeof(msg->followParams)+sizeof(IPTR)*msg->followParams);
 
       // now we set the notify as we have identifed the button
       result = DoMethodA(button->obj, (Msg)notify);
+
+      SharedFree(notify);
     }
   }
-
-  if(notify != NULL)
-    freeVecPooled(data->pool, notify);
 
   RETURN(result);
   return result;
@@ -3875,10 +3858,9 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
 
 /***********************************************************************/
 
-static IPTR
-mKillNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_KillNotify *msg)
+static IPTR mKillNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_KillNotify *msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   struct Button *button;
   BOOL result = FALSE;
 
@@ -3902,12 +3884,12 @@ mKillNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_KillNotify *msg)
 static IPTR
 mAddButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddButton *msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl, obj);
     struct Button *button;
 
     ENTER();
 
-    if((button = AllocPooled(data->pool, sizeof(struct Button))))
+    if((button = SharedAlloc(sizeof(struct Button))))
     {
         button->img     = msg->button->img;
         button->ID      = msg->button->ID;
@@ -3973,7 +3955,7 @@ mAddButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddButton *msg)
         }
         else
         {
-            FreePooled(data->pool,button,sizeof(struct Button));
+            SharedFree(button);
             button = NULL;
         }
     }
@@ -3987,7 +3969,7 @@ mAddButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddButton *msg)
 static IPTR
 mGetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetAttr *msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   struct Button *bt;
   BOOL result = FALSE;
 
@@ -4146,7 +4128,7 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
           size = sizeof(struct ButtonNotify)+sizeof(ULONG)*notify->msg.FollowParams;
 
           // clone
-          if((clone = allocVecPooled(data->pool, size)))
+          if((clone = SharedAlloc(size)))
           {
             // copy the data of the notify
             memcpy(clone, notify, size);
@@ -4229,7 +4211,7 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
             Remove((struct Node *)notify);
 
             // free the clone notify
-            freeVecPooled(data->pool, notify);
+            SharedFree(notify);
           }
 
           // remove the sleep flag
@@ -4247,57 +4229,113 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
 
 /***********************************************************************/
 
-static IPTR
-mSetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_SetAttr *msg)
+static IPTR privateSetAttr(Object *obj, struct Button *button, IPTR attr, IPTR value, BOOL noNotify)
 {
-    struct InstData *data = INST_DATA(cl,obj);
-    struct Button *bt;
-    IPTR         res = FALSE;
+  IPTR res = FALSE;
 
-    ENTER();
+  ENTER();
 
-    if((bt = findButton(data,msg->ID)))
+  switch(attr)
+  {
+    case MUIA_TheBar_Attr_Disabled:
     {
-        IPTR value = msg->value;
+      if(button->obj != NULL)
+        SetAttrs(button->obj, MUIA_NoNotify, noNotify, MUIA_Disabled, value, TAG_DONE);
 
-        switch (msg->attr)
-        {
-            case MUIA_TheBar_Attr_Hide:
-                res = hideButton(cl,obj,data,bt,value);
-                break;
-
-            case MUIA_TheBar_Attr_Sleep:
-                res = sleepButton(cl,obj,data,bt,value);
-                break;
-
-            case MUIA_TheBar_Attr_Disabled:
-                if (bt->obj)
-                    set(bt->obj,MUIA_Disabled,value);
-
-                if (value)
-                    setFlag(bt->flags, BFLG_Disabled);
-                else
-                    clearFlag(bt->flags, BFLG_Disabled);
-                res = TRUE;
-                break;
-
-            case MUIA_TheBar_Attr_Selected:
-                if (bt->exclude)
-                    set(obj,MUIA_TheBar_Active,bt->ID);
-                else if (bt->obj)
-                    set(bt->obj,MUIA_Selected,value);
-
-                if (value)
-                    setFlag(bt->flags, BFLG_Selected);
-                else
-                    clearFlag(bt->flags, BFLG_Selected);
-                res = TRUE;
-                break;
-        }
+      if(value != 0)
+        setFlag(button->flags, BFLG_Disabled);
+      else
+        clearFlag(button->flags, BFLG_Disabled);
+      res = TRUE;
     }
+    break;
 
-    RETURN(res);
-    return res;
+    case MUIA_TheBar_Attr_Selected:
+    {
+      if(button->exclude)
+        SetAttrs(obj, MUIA_NoNotify, noNotify, MUIA_TheBar_Active, button->ID, TAG_DONE);
+      else if(button->obj != NULL)
+        SetAttrs(button->obj, MUIA_NoNotify, noNotify, MUIA_Selected, value, TAG_DONE);
+
+      if(value != 0)
+        setFlag(button->flags, BFLG_Selected);
+      else
+        clearFlag(button->flags, BFLG_Selected);
+      res = TRUE;
+    }
+    break;
+  }
+
+  RETURN(res);
+  return res;
+}
+
+/***********************************************************************/
+
+static IPTR mNoNotifySetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_SetAttr *msg)
+{
+  struct InstData *data = INST_DATA(cl, obj);
+  struct Button *button;
+  IPTR res = FALSE;
+
+  ENTER();
+
+  D(DBF_ALWAYS, "nnset attr %08lx of button %2d to value %08lx", msg->attr, msg->ID, msg->value);
+  if((button = findButton(data, msg->ID)) != NULL)
+  {
+    switch(msg->attr)
+    {
+      case MUIA_TheBar_Attr_Hide:
+        res = hideButton(cl, obj, data, button, msg->value);
+      break;
+
+      case MUIA_TheBar_Attr_Sleep:
+        res = sleepButton(cl, obj, data, button, msg->value);
+      break;
+
+      case MUIA_TheBar_Attr_Disabled:
+      case MUIA_TheBar_Attr_Selected:
+        res = privateSetAttr(obj, button, msg->attr, msg->value, TRUE);
+      break;
+    }
+  }
+
+  RETURN(res);
+  return res;
+}
+
+/***********************************************************************/
+
+static IPTR mSetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_SetAttr *msg)
+{
+  struct InstData *data = INST_DATA(cl, obj);
+  struct Button *button;
+  IPTR res = FALSE;
+
+  ENTER();
+
+  D(DBF_ALWAYS, "set attr %08lx of button %2d to value %08lx", msg->attr, msg->ID, msg->value);
+  if((button = findButton(data, msg->ID)) != NULL)
+  {
+    switch(msg->attr)
+    {
+      case MUIA_TheBar_Attr_Hide:
+        res = hideButton(cl, obj, data, button, msg->value);
+      break;
+
+      case MUIA_TheBar_Attr_Sleep:
+        res = sleepButton(cl, obj, data, button, msg->value);
+      break;
+
+      case MUIA_TheBar_Attr_Disabled:
+      case MUIA_TheBar_Attr_Selected:
+        res = privateSetAttr(obj, button, msg->attr, msg->value, FALSE);
+      break;
+    }
+  }
+
+  RETURN(res);
+  return res;
 }
 
 /***********************************************************************/
@@ -4305,7 +4343,7 @@ mSetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_SetAttr *msg)
 static IPTR
 mRemove(struct IClass *cl, Object *obj, struct MUIP_TheBar_Remove *msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   struct Button *button;
   BOOL result = FALSE;
 
@@ -4338,7 +4376,7 @@ mRemove(struct IClass *cl, Object *obj, struct MUIP_TheBar_Remove *msg)
 static IPTR
 mGetObject(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetObject *msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   struct Button *button;
   Object *result;
 
@@ -4355,7 +4393,7 @@ mGetObject(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetObject *msg)
 static IPTR
 mDoOnButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_DoOnButton *msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   struct Button *button;
   IPTR result;
 
@@ -4372,7 +4410,7 @@ mDoOnButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_DoOnButton *msg)
 static IPTR
 mClear(struct IClass *cl, Object *obj, UNUSED Msg msg)
 {
-  struct InstData *data = INST_DATA(cl,obj);
+  struct InstData *data = INST_DATA(cl, obj);
   struct MinNode *node;
 
   ENTER();
@@ -4403,7 +4441,7 @@ mClear(struct IClass *cl, Object *obj, UNUSED Msg msg)
 static IPTR
 mDeActivate(struct IClass *cl, Object *obj, UNUSED Msg msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl, obj);
     struct Button *button, *succ;
 
     ENTER();
@@ -4425,7 +4463,7 @@ mDeActivate(struct IClass *cl, Object *obj, UNUSED Msg msg)
 static IPTR
 mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl, obj);
     struct MinList                  temp;
     struct MUIP_Group_Sort *smsg;
     struct Button          *button, *succ;
@@ -4445,7 +4483,7 @@ mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
 
     /* Alloc sort msg */
     if (n>STATICSORTSIZE)
-        smsg = allocVecPooled(data->pool,sizeof(struct MUIP_Group_Sort)+sizeof(Object *)*(n+1));
+        smsg = SharedAlloc(sizeof(struct MUIP_Group_Sort)+sizeof(Object *)*(n+1));
     else
         smsg = (struct MUIP_Group_Sort *)&data->sortMsgID;
     if (!smsg)
@@ -4474,7 +4512,7 @@ mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
         if (!(button = findButton(data,*id)))
         {
             if(n>STATICSORTSIZE)
-              freeVecPooled(data->pool,smsg);
+              SharedFree(smsg);
 
             RETURN(FALSE);
             return FALSE;
@@ -4514,7 +4552,7 @@ mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
         DoMethod(obj,MUIM_Group_ExitChange);
 
     if (n>STATICSORTSIZE)
-        freeVecPooled(data->pool,smsg);
+        SharedFree(smsg);
 
     RETURN(TRUE);
     return TRUE;
@@ -4525,7 +4563,7 @@ mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
 static IPTR
 mGetDragImage(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetDragImage *msg)
 {
-    struct InstData *data = INST_DATA(cl,obj);
+    struct InstData *data = INST_DATA(cl, obj);
     IPTR result = 0;
 
     ENTER();
@@ -4565,7 +4603,7 @@ mHandleEvent(struct IClass *cl, Object *obj, UNUSED struct MUIP_HandleEvent *msg
 {
     if (isFlagClear(lib_flags,BASEFLG_MUI20))
     {
-        struct InstData *data = INST_DATA(cl,obj);
+        struct InstData *data = INST_DATA(cl, obj);
         struct Button *button, *succ;
 
         ENTER();
@@ -4626,6 +4664,7 @@ DISPATCHER(_Dispatcher)
     case MUIM_TheBar_AddButton:         return mAddButton(cl,obj,(APTR)msg);
     case MUIM_TheBar_GetAttr:           return mGetAttr(cl,obj,(APTR)msg);
     case MUIM_TheBar_SetAttr:           return mSetAttr(cl,obj,(APTR)msg);
+    case MUIM_TheBar_NoNotifySetAttr:   return mNoNotifySetAttr(cl,obj,(APTR)msg);
     case MUIM_TheBar_Remove:            return mRemove(cl,obj,(APTR)msg);
     case MUIM_TheBar_GetObject:         return mGetObject(cl,obj,(APTR)msg);
     case MUIM_TheBar_DoOnButton:        return mDoOnButton(cl,obj,(APTR)msg);

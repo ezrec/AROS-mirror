@@ -58,8 +58,6 @@ struct CyberGfxIFace *ICyberGfx = NULL;
 struct DiskfontIFace *IDiskfont = NULL;
 #endif
 
-struct SignalSemaphore lib_poolSem;
-APTR  lib_pool = NULL;
 ULONG lib_flags = 0;
 ULONG lib_alpha = 0xffffffff;
 
@@ -78,22 +76,13 @@ static BOOL ClassInit(UNUSED struct Library *base)
 {
     ENTER();
 
-    #if defined(__amigaos4__)
-    if ((lib_pool = AllocSysObjectTags(ASOT_MEMPOOL, ASOPOOL_MFlags, MEMF_SHARED,
-                                                     ASOPOOL_Puddle, 2048,
-                                                     ASOPOOL_Threshold, 1024,
-                                                     TAG_DONE)) != NULL)
-    #else
-    if ((lib_pool = CreatePool(MEMF_ANY, 2048, 1024)))
-    #endif
+    if ((DataTypesBase = OpenLibrary("datatypes.library", 37)) &&
+        GETINTERFACE(IDataTypes, struct DataTypesIFace *, DataTypesBase))
     {
-        InitSemaphore(&lib_poolSem);
-
-        if ((DataTypesBase = OpenLibrary("datatypes.library", 37)) &&
-            GETINTERFACE(IDataTypes, struct DataTypesIFace *, DataTypesBase))
+        if ((DiskfontBase = OpenLibrary("diskfont.library", 37)) &&
+            GETINTERFACE(IDiskfont, struct DiskfontIFace *, DiskfontBase))
         {
-            if ((DiskfontBase = OpenLibrary("diskfont.library", 37)) &&
-                GETINTERFACE(IDiskfont, struct DiskfontIFace *, DiskfontBase))
+            if(CreateSharedPool() == TRUE)
             {
                 // we open the cybgraphics.library but without failing if
                 // it doesn't exist
@@ -132,6 +121,8 @@ static BOOL ClassExpunge(UNUSED struct Library *base)
 {
     ENTER();
 
+    DeleteSharedPool();
+
     if (PictureDTBase)
     {
         CloseLibrary(PictureDTBase);
@@ -157,16 +148,6 @@ static BOOL ClassExpunge(UNUSED struct Library *base)
         DROPINTERFACE(IDataTypes);
         CloseLibrary(DataTypesBase);
         DataTypesBase = NULL;
-    }
-
-    if (lib_pool != NULL)
-    {
-    	#if defined(__amigaos4__)
-    	FreeSysObject(ASOT_MEMPOOL, lib_pool);
-    	#else
-    	DeletePool(lib_pool);
-    	#endif
-    	lib_pool =  NULL;
     }
 
     clearFlag(lib_flags, BASEFLG_Init|BASEFLG_MUI20|BASEFLG_MUI4);

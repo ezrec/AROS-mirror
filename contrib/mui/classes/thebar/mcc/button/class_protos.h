@@ -16,7 +16,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id$ 
+ $Id$
 
 ***************************************************************************/
 
@@ -28,12 +28,12 @@ IPTR DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
 #else
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
 #endif
-APTR allocVecPooled(APTR pool, ULONG size);
-void freeVecPooled(APTR pool, APTR mem);
+BOOL CreateSharedPool(void);
+void DeleteSharedPool(void);
+APTR SharedAlloc(ULONG size);
+void SharedFree(APTR mem);
 void stripUnderscore(STRPTR dest , STRPTR from, ULONG mode);
 struct TextFont *openFont(STRPTR name);
-APTR gmalloc(ULONG size);
-void gfree(APTR mem);
 ULONG peekQualifier(void);
 
 /* brc1.c */

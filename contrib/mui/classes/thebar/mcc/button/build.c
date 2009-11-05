@@ -22,14 +22,15 @@
 
 #include "class.h"
 #include "private.h"
+#include <clib/macros.h>
 
 /***********************************************************************/
 
 #define ALLOCRASTER(w,h)   AllocVec(RAWIDTH(w)*((UWORD)(h)),MEMF_CHIP|MEMF_CLEAR)
 #define FREERASTER(ra)     FreeVec(ra)
 
-#define ALLOCRASTERCG(w,h) gmalloc(RAWIDTH(w)*((UWORD)(h)))
-#define FREERASTERCG(ra)   gfree(ra)
+#define ALLOCRASTERCG(w,h) SharedAlloc(RAWIDTH(w)*((UWORD)(h)))
+#define FREERASTERCG(ra)   SharedFree(ra)
 
 /***********************************************************************/
 
@@ -114,14 +115,14 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
     if (isFlagSet(flags, MFLG_Grey))
     {
-        if ((chunky = gmalloc(size+size)) == NULL)
+        if ((chunky = SharedAlloc(size+size)) == NULL)
             clearFlag(flags, MFLG_Grey);
     }
     else
         chunky = NULL;
 
     if (chunky == NULL)
-        chunky = gmalloc(size);
+        chunky = SharedAlloc(size);
 
     if (chunky != NULL)
     {
@@ -133,7 +134,7 @@ LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
             {
                 ULONG len = RAWIDTH(w)*h;
 
-                if((copy->mask = gmalloc(len)))
+                if((copy->mask = SharedAlloc(len)))
                 {
                     alpha = copy->mask;
                     memset(alpha,0,len);
@@ -309,18 +310,20 @@ LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
     if (isFlagSet(flags, MFLG_Grey))
     {
-        if ((chunky = gmalloc(size+size)) == NULL)
+        if ((chunky = SharedAlloc(size+size)) == NULL)
             clearFlag(flags, MFLG_Grey);
     }
     else
         chunky = NULL;
 
     if (chunky == NULL)
-        chunky = gmalloc(size);
+        chunky = SharedAlloc(size);
 
     if (chunky != NULL)
     {
-        ULONG *colors, trColor, RGB8 = isFlagSet(image->flags, BRFLG_ColorRGB8);
+        ULONG *colors;
+        ULONG trColor;
+        BOOL RGB8 = isFlagSet(image->flags, BRFLG_ColorRGB8);
         UBYTE *src, *dest, *alpha = NULL, *gdest;
         int   x, y;
 
@@ -419,7 +422,7 @@ LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
     }
 
     if (isFlagSet(flags, MFLG_Scaled))
-        gfree(from);
+        SharedFree(from);
 
     RETURN(chunky);
     return chunky;
@@ -460,14 +463,14 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy, ULONG allowAlphaChan
 
     if (isFlagSet(flags, MFLG_Grey))
     {
-        if ((chunky = gmalloc(size+size)) == NULL)
+        if ((chunky = SharedAlloc(size+size)) == NULL)
             clearFlag(flags, MFLG_Grey);
     }
     else
         chunky = NULL;
 
     if (chunky == NULL)
-        chunky = gmalloc(size);
+        chunky = SharedAlloc(size);
 
     if (chunky != NULL)
     {
@@ -773,7 +776,7 @@ RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
     if (isFlagSet(flags, MFLG_Scaled))
     {
-        if((from = gmalloc(4*copy->dw*copy->dh)))
+        if((from = SharedAlloc(4*copy->dw*copy->dh)))
         {
             struct scale sce;
 
@@ -812,14 +815,14 @@ RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
     if (isFlagSet(flags, MFLG_Grey))
     {
-        if ((chunky = gmalloc(size+size)) == NULL)
+        if ((chunky = SharedAlloc(size+size)) == NULL)
             clearFlag(flags, MFLG_Grey);
     }
     else
         chunky = NULL;
 
     if (chunky == NULL)
-        chunky = gmalloc(size);
+        chunky = SharedAlloc(size);
 
     if (chunky != NULL)
     {
@@ -899,7 +902,7 @@ RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
     }
 
     if (from!=image->data)
-        gfree(from);
+        SharedFree(from);
 
     RETURN(chunky);
     return chunky;
@@ -921,7 +924,7 @@ getSource(struct MUIS_TheBar_Brush *image)
         if (isFlagSet(image->flags, BRFLG_ARGB))
             size *= 4;
 
-        if ((src = gmalloc(size)) == NULL)
+        if ((src = SharedAlloc(size)) == NULL)
         {
             RETURN(NULL);
             return NULL;
@@ -929,7 +932,7 @@ getSource(struct MUIS_TheBar_Brush *image)
 
         if(BRCUnpack(image->data,src,image->compressedSize,size) != 0)
         {
-            gfree(src);
+            SharedFree(src);
             RETURN(NULL);
             return NULL;
         }
@@ -950,7 +953,7 @@ freeSource(struct MUIS_TheBar_Brush *image,UBYTE *back)
 
     if (image->data && image->data!=back)
     {
-        gfree(image->data);
+        SharedFree(image->data);
         image->data = back;
     }
 
@@ -1192,7 +1195,7 @@ buildBitMapsCyber(struct InstData *data)
 
     ENTER();
 
-    if ((make = gmalloc(sizeof(struct make))) == NULL)
+    if ((make = SharedAlloc(sizeof(struct make))) == NULL)
     {
         LEAVE();
         return;
@@ -1220,7 +1223,7 @@ buildBitMapsCyber(struct InstData *data)
 
     if (makeSourcesRGB(data,make) == FALSE)
     {
-        gfree(make);
+        SharedFree(make);
 
         LEAVE();
         return;
@@ -1295,14 +1298,14 @@ buildBitMapsCyber(struct InstData *data)
     {
         // free unused chunky blocks
         if(make->chunky)
-            gfree(make->chunky);
+            SharedFree(make->chunky);
         if(make->schunky)
-            gfree(make->schunky);
+            SharedFree(make->schunky);
         if(make->dchunky)
-            gfree(make->dchunky);
+            SharedFree(make->dchunky);
     }
 
-    gfree(make);
+    SharedFree(make);
 
     LEAVE();
 }
@@ -1316,20 +1319,30 @@ LUT8ToBitMap(struct InstData *data,
              UWORD height,
              ULONG *colors,
              ULONG numColors,
-             ULONG RGB8,
+             BOOL RGB8,
              struct pen *pens)
 {
+    UWORD d;
+    ULONG flags;
+    struct BitMap *friend;
     struct BitMap *dest;
-    UWORD       d;
 
     ENTER();
 
-    if (data->screenDepth>8)
+    if(data->screenDepth>8)
         d = 8;
     else
         d = data->screenDepth;
 
-    if((dest = AllocBitMap(width,height,d,(isFlagSet(data->flags, FLG_CyberMap) ? BMF_MINPLANES : 0)|BMF_CLEAR, isFlagSet(data->flags, FLG_CyberMap) ? data->screen->RastPort.BitMap : NULL)))
+    flags = BMF_CLEAR;
+    friend = NULL;
+    if(isFlagSet(data->flags, FLG_CyberMap))
+    {
+      setFlag(flags, BMF_MINPLANES);
+      friend = data->screen->RastPort.BitMap;
+    }
+
+    if((dest = AllocBitMap(width, height, MIN(8, data->screenDepth), flags, friend)) != NULL)
     {
         struct RastPort rport;
 
@@ -1391,7 +1404,7 @@ greyBitMap(struct InstData *data,
            UWORD height,
            ULONG *colors,
            ULONG numColors,
-           ULONG RGB8,
+           BOOL RGB8,
            struct pen *pens)
 {
     ENTER();
@@ -1454,7 +1467,7 @@ buildBitMaps(struct InstData *data)
 
     ENTER();
 
-    if ((make = gmalloc(sizeof(struct make))) == NULL)
+    if ((make = SharedAlloc(sizeof(struct make))) == NULL)
     {
         LEAVE();
         return;
@@ -1484,7 +1497,7 @@ buildBitMaps(struct InstData *data)
 
     if (!makeSources(data,make))
     {
-        gfree(make);
+        SharedFree(make);
         LEAVE();
         return;
     }
@@ -1549,12 +1562,12 @@ buildBitMaps(struct InstData *data)
     }
 
     if (make->chunky)
-        gfree(make->chunky);
+        SharedFree(make->chunky);
     if (make->schunky)
-        gfree(make->schunky);
+        SharedFree(make->schunky);
     if (make->dchunky)
-        gfree(make->dchunky);
-    gfree(make);
+        SharedFree(make->dchunky);
+    SharedFree(make);
 
     LEAVE();
 }
@@ -1744,13 +1757,13 @@ freeBitMaps(struct InstData *data)
   #endif
   {
     if(data->nchunky)
-      gfree(data->nchunky);
+      SharedFree(data->nchunky);
 
     if(data->snchunky)
-      gfree(data->snchunky);
+      SharedFree(data->snchunky);
 
     if(data->dnchunky)
-      gfree(data->dnchunky);
+      SharedFree(data->dnchunky);
   }
 
   if(data->normalBM)

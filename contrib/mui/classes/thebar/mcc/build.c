@@ -29,8 +29,8 @@
 #define ALLOCRASTER(w,h)        AllocVec(RAWIDTH(w)*((UWORD)(h)),MEMF_CHIP|MEMF_CLEAR)
 #define FREERASTER(ra)          FreeVec(ra)
 
-#define ALLOCRASTERCG(pool,w,h) allocVecPooled(pool,RAWIDTH(w)*((UWORD)(h)))
-#define FREERASTERCG(pool,ra)   freeVecPooled(pool,ra)
+#define ALLOCRASTERCG(w,h)      SharedAlloc(RAWIDTH(w)*((UWORD)(h)))
+#define FREERASTERCG(ra)        SharedFree(ra)
 
 struct palette
 {
@@ -85,8 +85,7 @@ enum
 
 /***********************************************************************/
 
-static UBYTE *
-LUT8ToLUT8(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy)
+static UBYTE * LUT8ToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 {
     UBYTE *chunky;
     ULONG flags = copy->flags, size;
@@ -104,14 +103,14 @@ LUT8ToLUT8(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *co
 
     if (isFlagSet(flags, MFLG_Grey))
     {
-        if ((chunky = allocVecPooled(data->pool,size+size)) == NULL)
+        if ((chunky = SharedAlloc(size+size)) == NULL)
             clearFlag(flags, MFLG_Grey);
     }
     else
         chunky = NULL;
 
     if (chunky == NULL)
-        chunky = allocVecPooled(data->pool,size);
+        chunky = SharedAlloc(size);
 
     if (chunky != NULL)
     {
@@ -119,7 +118,7 @@ LUT8ToLUT8(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *co
 
         if (isFlagClear(flags, MFLG_NtMask))
         {
-            if((copy->mask = isFlagSet(flags, MFLG_Cyber) ? ALLOCRASTERCG(data->pool,w,h) : ALLOCRASTER(w,h)))
+            if((copy->mask = isFlagSet(flags, MFLG_Cyber) ? ALLOCRASTERCG(w,h) : ALLOCRASTER(w,h)))
               alpha = copy->mask;
         }
 
@@ -227,8 +226,7 @@ LUT8ToLUT8(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *co
 
 /***********************************************************************/
 
-static UBYTE *
-LUT8ToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy)
+static UBYTE * LUT8ToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 {
     UBYTE *chunky;
     ULONG flags = copy->flags, size;
@@ -247,25 +245,27 @@ LUT8ToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *cop
 
     if (isFlagSet(flags, MFLG_Grey))
     {
-        if ((chunky = allocVecPooled(data->pool,size+size)) == NULL)
+        if ((chunky = SharedAlloc(size+size)) == NULL)
             clearFlag(flags, MFLG_Grey);
     }
     else
         chunky = NULL;
 
     if (chunky == NULL)
-        chunky = allocVecPooled(data->pool,size);
+        chunky = SharedAlloc(size);
 
     if (chunky != NULL)
     {
-        ULONG *colors, trColor, RGB8 = isFlagSet(image->flags, BRFLG_ColorRGB8);
+        ULONG *colors;
+        ULONG trColor;
+        BOOL RGB8 = isFlagSet(image->flags, BRFLG_ColorRGB8);
         UBYTE *src, *dest, *alpha = NULL, *gdest;
         UWORD tsw;
         int   x, y;
 
         if (isFlagClear(flags, MFLG_NtMask))
         {
-            if((copy->mask = isFlagSet(flags, MFLG_Cyber) ? ALLOCRASTERCG(data->pool,w,h) : ALLOCRASTER(w,h)))
+            if((copy->mask = isFlagSet(flags, MFLG_Cyber) ? ALLOCRASTERCG(w,h) : ALLOCRASTER(w,h)))
               alpha = copy->mask;
         }
 
@@ -366,8 +366,7 @@ LUT8ToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *cop
 
 /***********************************************************************/
 
-static UBYTE *
-RGBToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy)
+static UBYTE * RGBToRGB(UNUSED struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy)
 {
     UBYTE *chunky;
     ULONG flags = copy->flags, size, maskDone = FALSE;
@@ -386,14 +385,14 @@ RGBToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy
 
     if (isFlagSet(flags, MFLG_Grey))
     {
-        if ((chunky = allocVecPooled(data->pool,size+size)) == NULL)
+        if ((chunky = SharedAlloc(size+size)) == NULL)
             clearFlag(flags, MFLG_Grey);
     }
     else
         chunky = NULL;
 
     if (chunky == NULL)
-        chunky = allocVecPooled(data->pool,size);
+        chunky = SharedAlloc(size);
 
     if (chunky != NULL)
     {
@@ -401,7 +400,7 @@ RGBToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy
 
         if (isFlagClear(flags, MFLG_NtMask))
         {
-            if((copy->mask = isFlagSet(flags, MFLG_Cyber) ? ALLOCRASTERCG(data->pool,w,h) : ALLOCRASTER(w,h)))
+            if((copy->mask = isFlagSet(flags, MFLG_Cyber) ? ALLOCRASTERCG(w,h) : ALLOCRASTER(w,h)))
               alpha = copy->mask;
         }
 
@@ -669,8 +668,7 @@ bestColor(struct palette *pal,ULONG rgb)
 
 /***********************************************************************/
 
-static UBYTE *
-RGBToLUT8(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy)
+static UBYTE * RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 {
     UBYTE *chunky;
     ULONG flags = copy->flags, size;
@@ -696,14 +694,14 @@ RGBToLUT8(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *cop
 
     if (isFlagSet(flags, MFLG_Grey))
     {
-        if ((chunky = allocVecPooled(data->pool,size+size)) == NULL)
+        if ((chunky = SharedAlloc(size+size)) == NULL)
             clearFlag(flags, MFLG_Grey);
     }
     else
         chunky = NULL;
 
     if (chunky == NULL)
-        chunky = allocVecPooled(data->pool,size);
+        chunky = SharedAlloc(size);
 
     if (chunky != NULL)
     {
@@ -713,7 +711,7 @@ RGBToLUT8(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *cop
 
         if (isFlagClear(flags, MFLG_NtMask))
         {
-            if((copy->mask = isFlagSet(flags, MFLG_Cyber) ? ALLOCRASTERCG(data->pool,w,h) : ALLOCRASTER(w,h)))
+            if((copy->mask = isFlagSet(flags, MFLG_Cyber) ? ALLOCRASTERCG(w,h) : ALLOCRASTER(w,h)))
               alpha = copy->mask;
         }
 
@@ -791,8 +789,7 @@ RGBToLUT8(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *cop
 
 /***********************************************************************/
 
-static UBYTE *
-getSource(struct InstData *data,struct MUIS_TheBar_Brush *image)
+static UBYTE * getSource(struct MUIS_TheBar_Brush *image)
 {
     UBYTE *src;
 
@@ -802,7 +799,7 @@ getSource(struct InstData *data,struct MUIS_TheBar_Brush *image)
     {
         ULONG size = image->dataWidth*image->dataHeight;
 
-        if(!(src = allocVecPooled(data->pool,size)))
+        if(!(src = SharedAlloc(size)))
         {
           RETURN(NULL);
           return NULL;
@@ -810,7 +807,7 @@ getSource(struct InstData *data,struct MUIS_TheBar_Brush *image)
 
         if (BRCUnpack(image->data, (signed char*)src,image->compressedSize,size))
         {
-            freeVecPooled(data->pool,src);
+            SharedFree(src);
 
             RETURN(NULL);
             return NULL;
@@ -824,14 +821,13 @@ getSource(struct InstData *data,struct MUIS_TheBar_Brush *image)
 
 /***********************************************************************/
 
-static void
-freeSource(struct InstData *data,struct MUIS_TheBar_Brush *image,UBYTE *back)
+static void freeSource(struct MUIS_TheBar_Brush *image,UBYTE *back)
 {
     ENTER();
 
     if (image->data && image->data!=back)
     {
-        freeVecPooled(data->pool,image->data);
+        SharedFree(image->data);
         image->data = back;
     }
 
@@ -840,8 +836,7 @@ freeSource(struct InstData *data,struct MUIS_TheBar_Brush *image,UBYTE *back)
 
 /***********************************************************************/
 
-static ULONG
-makeSources(struct InstData *data,struct make *make)
+static ULONG makeSources(struct InstData *data,struct make *make)
 {
     ENTER();
 
@@ -850,7 +845,7 @@ makeSources(struct InstData *data,struct make *make)
         struct copy    copy;
         UBYTE *back = data->image.data;
 
-        if (!(data->image.data = getSource(data,&data->image)))
+        if (!(data->image.data = getSource(&data->image)))
         {
             data->image.data = back;
 
@@ -866,12 +861,12 @@ makeSources(struct InstData *data,struct make *make)
         {
             copy.pal  = &make->pal;
             copy.gpal = &make->gpal;
-            make->chunky = RGBToLUT8(data,&data->image,&copy);
+            make->chunky = RGBToLUT8(&data->image,&copy);
         }
         else
-            make->chunky = LUT8ToLUT8(data,&data->image,&copy);
+            make->chunky = LUT8ToLUT8(&data->image,&copy);
 
-        freeSource(data,&data->image,back);
+        freeSource(&data->image,back);
         if (!make->chunky)
         {
           RETURN(FALSE);
@@ -885,18 +880,18 @@ makeSources(struct InstData *data,struct make *make)
         {
             back = data->simage.data;
 
-            if((data->simage.data = getSource(data,&data->simage)))
+            if((data->simage.data = getSource(&data->simage)))
             {
                 if (isFlagSet(data->simage.flags, BRFLG_ARGB))
                 {
                     copy.pal  = &make->spal;
                     copy.gpal = &make->sgpal;
-                    make->schunky = RGBToLUT8(data,&data->simage,&copy);
+                    make->schunky = RGBToLUT8(&data->simage,&copy);
                 }
                 else
-                    make->schunky = LUT8ToLUT8(data,&data->simage,&copy);
+                    make->schunky = LUT8ToLUT8(&data->simage,&copy);
 
-                freeSource(data,&data->simage,back);
+                freeSource(&data->simage,back);
 
                 make->smask    = copy.mask;
                 make->sgchunky = copy.grey;
@@ -909,18 +904,18 @@ makeSources(struct InstData *data,struct make *make)
         {
             back = data->dimage.data;
 
-            if((data->dimage.data = getSource(data,&data->dimage)))
+            if((data->dimage.data = getSource(&data->dimage)))
             {
                 if (isFlagSet(data->dimage.flags, BRFLG_ARGB))
                 {
                     copy.pal  = &make->dpal;
                     copy.gpal = &make->dgpal;
-                    make->dchunky = RGBToLUT8(data,&data->dimage,&copy);
+                    make->dchunky = RGBToLUT8(&data->dimage,&copy);
                 }
                 else
-                    make->dchunky = LUT8ToLUT8(data,&data->dimage,&copy);
+                    make->dchunky = LUT8ToLUT8(&data->dimage,&copy);
 
-                freeSource(data,&data->dimage,back);
+                freeSource(&data->dimage,back);
 
                 make->dmask    = copy.mask;
                 make->dgchunky = copy.grey;
@@ -949,7 +944,7 @@ makeSourcesRGB(struct InstData *data,struct make *make)
         struct copy    copy;
         UBYTE *back = data->image.data;
 
-        if (!(data->image.data = getSource(data,&data->image)))
+        if (!(data->image.data = getSource(&data->image)))
         {
             data->image.data = back;
             return FALSE;
@@ -960,11 +955,11 @@ makeSourcesRGB(struct InstData *data,struct make *make)
         copy.flags = make->flags;
 
         if (isFlagSet(data->image.flags, BRFLG_ARGB))
-            make->chunky = RGBToRGB(data,&data->image,&copy);
+            make->chunky = RGBToRGB(data, &data->image,&copy);
         else
-            make->chunky = LUT8ToRGB(data,&data->image,&copy);
+            make->chunky = LUT8ToRGB(&data->image,&copy);
 
-        freeSource(data,&data->image,back);
+        freeSource(&data->image,back);
         if(!make->chunky)
         {
           RETURN(FALSE);
@@ -978,15 +973,15 @@ makeSourcesRGB(struct InstData *data,struct make *make)
         {
             back = data->simage.data;
 
-            if((data->simage.data = getSource(data,&data->simage)))
+            if((data->simage.data = getSource(&data->simage)))
             {
                 if (isFlagSet(data->simage.flags, BRFLG_ARGB))
-                    make->schunky = RGBToRGB(data,&data->simage,&copy);
+                    make->schunky = RGBToRGB(data, &data->simage,&copy);
                 else
-                    make->schunky = LUT8ToRGB(data,&data->simage,&copy);
+                    make->schunky = LUT8ToRGB(&data->simage,&copy);
 
 
-                freeSource(data,&data->simage,back);
+                freeSource(&data->simage,back);
 
                 make->smask    = copy.mask;
                 make->sgchunky = copy.grey;
@@ -999,14 +994,14 @@ makeSourcesRGB(struct InstData *data,struct make *make)
         {
             back = data->dimage.data;
 
-            if((data->dimage.data = getSource(data,&data->dimage)))
+            if((data->dimage.data = getSource(&data->dimage)))
             {
                 if (isFlagSet(data->dimage.flags, BRFLG_ARGB))
-                    make->dchunky = RGBToRGB(data,&data->dimage,&copy);
+                    make->dchunky = RGBToRGB(data, &data->dimage,&copy);
                 else
-                    make->dchunky = LUT8ToRGB(data,&data->dimage,&copy);
+                    make->dchunky = LUT8ToRGB(&data->dimage,&copy);
 
-                freeSource(data,&data->dimage,back);
+                freeSource(&data->dimage,back);
 
                 make->dmask    = copy.mask;
                 make->dgchunky = copy.grey;
@@ -1062,7 +1057,7 @@ buildBitMapsCyber(struct InstData *data)
 
     ENTER();
 
-    if(!(make = allocVecPooled(data->pool,sizeof(struct make))))
+    if(!(make = SharedAlloc(sizeof(struct make))))
     {
       LEAVE();
       return;
@@ -1079,7 +1074,7 @@ buildBitMapsCyber(struct InstData *data)
 
     if (!makeSourcesRGB(data,make))
     {
-        freeVecPooled(data->pool,make);
+        SharedFree(make);
 
         LEAVE();
         return;
@@ -1153,14 +1148,14 @@ buildBitMapsCyber(struct InstData *data)
     {
         // free unused chunky blocks
         if (make->chunky)
-            freeVecPooled(data->pool,make->chunky);
+            SharedFree(make->chunky);
         if (make->schunky)
-            freeVecPooled(data->pool,make->schunky);
+            SharedFree(make->schunky);
         if (make->dchunky)
-            freeVecPooled(data->pool,make->dchunky);
+            SharedFree(make->dchunky);
     }
 
-    freeVecPooled(data->pool,make);
+    SharedFree(make);
 
     LEAVE();
 }
@@ -1173,14 +1168,24 @@ LUT8ToBitMap(struct InstData *data,
              UWORD width,
              UWORD height,
              ULONG *colors,
-             ULONG RGB8,
+             BOOL RGB8,
              struct pen *pens)
 {
+    ULONG flags;
+    struct BitMap *friend;
     struct BitMap *dest;
 
     ENTER();
 
-    if((dest = AllocBitMap(width,height, MIN(8, (LONG)data->screenDepth),(isFlagSet(data->flags, FLG_CyberMap) ? BMF_MINPLANES : 0)|BMF_CLEAR, isFlagSet(data->flags, FLG_CyberMap) ? data->screen->RastPort.BitMap : NULL)))
+    flags = BMF_CLEAR;
+    friend = NULL;
+    if(isFlagSet(data->flags, FLG_CyberMap))
+    {
+      setFlag(flags, BMF_MINPLANES);
+      friend = data->screen->RastPort.BitMap;
+    }
+
+    if((dest = AllocBitMap(width,height, MIN(8, data->screenDepth), flags, friend)) != NULL)
     {
         struct RastPort rport;
 
@@ -1242,7 +1247,7 @@ greyBitMap(struct InstData *data,
            UWORD height,
            ULONG *colors,
            ULONG numColors,
-           ULONG RGB8,
+           BOOL RGB8,
            struct pen *pens)
 {
     struct BitMap *result = NULL;
@@ -1303,7 +1308,7 @@ buildBitMaps(struct InstData *data)
 
     ENTER();
 
-    if (!(make = allocVecPooled(data->pool,sizeof(struct make))))
+    if (!(make = SharedAlloc(sizeof(struct make))))
     {
       LEAVE();
       return;
@@ -1322,7 +1327,7 @@ buildBitMaps(struct InstData *data)
 
     if (!makeSources(data,make))
     {
-        freeVecPooled(data->pool,make);
+        SharedFree(make);
 
         LEAVE();
         return;
@@ -1388,13 +1393,13 @@ buildBitMaps(struct InstData *data)
     }
 
     if (make->chunky)
-        freeVecPooled(data->pool,make->chunky);
+        SharedFree(make->chunky);
     if (make->schunky)
-        freeVecPooled(data->pool,make->schunky);
+        SharedFree(make->schunky);
     if (make->dchunky)
-        freeVecPooled(data->pool,make->dchunky);
+        SharedFree(make->dchunky);
 
-    freeVecPooled(data->pool,make);
+    SharedFree(make);
 
     LEAVE();
 }
@@ -1430,13 +1435,13 @@ freeBitMaps(struct InstData *data)
     #endif
     {
         if (data->strip.nchunky)
-            freeVecPooled(data->pool,data->strip.nchunky);
+            SharedFree(data->strip.nchunky);
 
         if (data->strip.snchunky)
-            freeVecPooled(data->pool,data->strip.snchunky);
+            SharedFree(data->strip.snchunky);
 
         if (data->strip.dnchunky)
-            freeVecPooled(data->pool,data->strip.dnchunky);
+            SharedFree(data->strip.dnchunky);
     }
 
     if(strip->normalBM)
@@ -1536,7 +1541,7 @@ freeBitMaps(struct InstData *data)
         if (strip->mask)
         {
             if (isFlagSet(data->flags, FLG_CyberMap))
-                FREERASTERCG(data->pool,strip->mask);
+                FREERASTERCG(strip->mask);
             else
                 FREERASTER(strip->mask);
         }
@@ -1551,7 +1556,7 @@ freeBitMaps(struct InstData *data)
             if (strip->smask)
             {
                 if (isFlagSet(data->flags, FLG_CyberMap))
-                    FREERASTERCG(data->pool,strip->smask);
+                    FREERASTERCG(strip->smask);
                 else
                     FREERASTER(strip->smask);
             }
@@ -1567,7 +1572,7 @@ freeBitMaps(struct InstData *data)
             if (strip->dmask)
             {
                 if (isFlagSet(data->flags, FLG_CyberMap))
-                    FREERASTERCG(data->pool,strip->dmask);
+                    FREERASTERCG(strip->dmask);
                 else
                     FREERASTER(strip->dmask);
             }

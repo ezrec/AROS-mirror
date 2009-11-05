@@ -28,9 +28,10 @@ IPTR DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
 #else
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
 #endif
-APTR allocVecPooled(APTR pool, ULONG size);
-void freeVecPooled (APTR pool, APTR mem);
-APTR reallocVecPooledNC(APTR pool,APTR mem,ULONG size);
+BOOL CreateSharedPool(void);
+void DeleteSharedPool(void);
+APTR SharedAlloc(ULONG size);
+void SharedFree(APTR mem);
 
 /* brc1.c */
 int BRCUnpack(APTR pSource, APTR pDest, LONG srcBytes0, LONG dstBytes0);

@@ -2,8 +2,51 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
-$Id: ChangeLog 324 2009-08-30 09:52:30Z damato $
-$URL: https://thebar.svn.sourceforge.net/svnroot/thebar/releases/26.4/ChangeLog $
+$Id: ChangeLog 337 2009-10-24 22:53:17Z damato $
+$URL: https://thebar.svn.sourceforge.net/svnroot/thebar/releases/26.5/ChangeLog $
+
+#### v26.5 RELEASE ############################################################
+
+2009-10-24 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final release preparations
+
+2009-10-14 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c: added a missing ENTER() statement.
+
+2009-10-06 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/utils.c: dropped the no longer needed reallocation code completely.
+  * mcc/class.c: did some minor code cleanup and replaced a somewhat obscure
+    reallocation by a simple allocation.
+
+2009-10-04 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c: implemented MUIM_TheBar_NoNotifySetAttr to set attributes of
+    single buttons without triggering any notifications.
+
+2009-09-24 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/misc: renamed all pool functions to "*Shared*" as this describes what
+    they really do.
+
+2009-09-21 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/build.c: readded the instance data for the RGBtoRGB call. The OS3 build
+    needs this.
+
+2009-09-20 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/utils.c, mcc/button/utils.c: added the missing semaphore protection
+    for the OS4 build.
+
+2009-09-19 Thore Böckelmann <tboeckel@gmx.de>
+
+  * misc: replaced the per-instance memory pool by a global and semaphore
+    protected one. There is absolutely no benefit in having a separate pool
+    for every instance with only just one allocation within this pool.
+  * misc: added a name to all memory pools for OS4.
 
 #### v26.4 RELEASE ############################################################
 

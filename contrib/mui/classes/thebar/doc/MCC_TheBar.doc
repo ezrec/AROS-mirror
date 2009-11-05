@@ -72,6 +72,7 @@ TheBar.mcc/MUIM_TheBar_DoOnButton
 TheBar.mcc/MUIM_TheBar_GetAttr
 TheBar.mcc/MUIM_TheBar_GetDragImage
 TheBar.mcc/MUIM_TheBar_GetObject
+TheBar.mcc/MUIM_TheBar_NoNotifySetAttr
 TheBar.mcc/MUIM_TheBar_KillNotify
 TheBar.mcc/MUIM_TheBar_Notify
 TheBar.mcc/MUIM_TheBar_Remove
@@ -80,8 +81,8 @@ TheBar.mcc/MUIM_TheBar_Sort
 
 TheBar.mcc/TheBar.mcc
 
-    $Id: MCC_TheBar.doc 324 2009-08-30 09:52:30Z damato $
-    $URL: https://thebar.svn.sourceforge.net/svnroot/thebar/releases/26.4/doc/MCC_TheBar.doc $
+    $Id: MCC_TheBar.doc 332 2009-10-04 11:57:03Z thboeckel $
+    $URL: https://thebar.svn.sourceforge.net/svnroot/thebar/releases/26.5/doc/MCC_TheBar.doc $
 
     Copyright (C) 2003-2005 Alfonso Ranieri
     Copyright (C) 2005-2009 TheBar Open Source Team
@@ -2011,7 +2012,7 @@ TheBar.mcc/MUIM_TheBar_GetAttr
 
 
     SEE ALSO
-     MUIM_TheBar_SetAttr
+     MUIM_TheBar_NoNotifySetAttr, MUIM_TheBar_SetAttr
 
 TheBar.mcc/MUIM_TheBar_GetDragImage
 
@@ -2077,6 +2078,47 @@ TheBar.mcc/MUIM_TheBar_GetObject
 
     SEE ALSO
      MUIM_TheBar_DoOnButton
+
+TheBar.mcc/MUIM_TheBar_NoNotifySetAttr
+
+    NAME
+     MUIM_TheBar_NoNotifySetAttr, v21
+
+
+    SYNOPSIS
+     res = DoMethod(bar,MUIM_TheBar_NoNotifySetAttr,ULONG ID,Tag attr,ULONG value);
+
+
+    FUNCTION
+     Allows to set the state of one of the following
+     allowed attributes for a specified button with the
+     identifier (ID):
+
+       MUIV_TheBar_Attr_Hide      (for compatibily, MUIA_TheBar_Attr_Hide)
+       MUIV_TheBar_Attr_Sleep     (for compatibily, MUIA_TheBar_Attr_Sleep)
+       MUIV_TheBar_Attr_Disabled  (for compatibily, MUIA_TheBar_Attr_Disabled)
+       MUIV_TheBar_Attr_Selected  (for compatibily, MUIA_TheBar_Attr_Selected)
+
+     Use this function rather that setting the attribute directly
+     on the object via SetAttrs(), especially for Hide, Sleep and
+     Selected attributes.
+
+     In contrast to MUIM_TheBar_SetAttr this function will *NOT* trigger any
+     notifications!
+
+
+    INPUTS
+     ID - the ID of the object to set the attribute of
+     attr - the attribute to set
+     storage - the value to set attr to
+
+
+    RESULT
+     res - a boolean
+
+
+    SEE ALSO
+     MUIM_TheBar_GetAttr, MUIM_TheBar_SetAttr
 
 TheBar.mcc/MUIM_TheBar_KillNotify
 
@@ -2250,7 +2292,7 @@ TheBar.mcc/MUIM_TheBar_SetAttr
 
 
     SEE ALSO
-     MUIM_TheBar_GetAttr
+     MUIM_TheBar_GetAttr, MUIM_TheBar_NoNotifySetAttr
 
 TheBar.mcc/MUIM_TheBar_Sort
 

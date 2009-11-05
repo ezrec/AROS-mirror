@@ -30,7 +30,6 @@ struct pen
 
 struct InstData
 {
-    APTR                           pool;
     struct MinList                 buttons;
 
     struct Screen                  *screen;
