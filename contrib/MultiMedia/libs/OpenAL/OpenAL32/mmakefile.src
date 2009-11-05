@@ -33,7 +33,7 @@ USER_INCLUDES := \
         -I$(SRCDIR)/$(CURDIR)/Include \
         -I$(SRCDIR)/$(CURDIR)/../ \
 
-%build_linklib mmake=contrib-openal-linklib libname=OpenAL \
+%build_linklib mmake=contrib-openal-linklib libname=openal \
     files="$(OPENAL_FILES)"
 
 %common
