@@ -2,8 +2,12 @@
 Scout Open Source - ChangeLog
 -----------------------------
 
-$Id: ChangeLog,v 1.146 2009/10/21 22:21:05 marust Exp $
+$Id: ChangeLog,v 1.147 2009/11/05 19:56:04 marust Exp $
 $Source: /cvsroot/scoutos/scoutos/source/ChangeLog,v $
+
+2009-11-05  Matthias Rustler <mrustler@gmx.de>
+  * Replaced AROS makefiles by metamakefiles.
+  * Misc fixes for AROS port.
 
 2009-10-21  Matthias Rustler <mrustler@gmx.de>
   * Removed hint "You must not use this source code to gain profit of any kind!"

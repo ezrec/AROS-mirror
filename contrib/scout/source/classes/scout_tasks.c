@@ -290,7 +290,7 @@ STATIC struct Task *AddCheatTask( void )
 
     // AmigaOS4 currently doesn't like our way to get the CPU usage, so we disable it
     // and MorphOS doesn't need the cheat task
-    if (!(amigaOS4 || morphOS)) {
+    if (!(amigaOS4 || morphOS || arOS)) {
         struct CheatTask *ct;
 
         if ((ct = tbAllocVecPooled(globalPool, sizeof(*ct))) != NULL) {
