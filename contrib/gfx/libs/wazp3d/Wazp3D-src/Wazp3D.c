@@ -1,16 +1,17 @@
-/* Wazp3D Beta 44 c3 : Alain THELLIER - Paris - FRANCE - (November 2006 to Sept. 2009) */
+/* Wazp3D Beta 45.6 : Alain THELLIER - Paris - FRANCE - (November 2006 to Oct.  2009) */
 /* Adaptation to AROS from Matthias Rustler							*/
 /* Code clean-up and library enhancements from Gunther Nikl					*/
 /* LICENSE: GNU General Public License (GNU GPL) for this file				*/
 
 /* define this one if you want the builtin debugger */
-#define WAZP3DDEBUG 1  
+#define WAZP3DDEBUG 1
 /* define this one if your CPU got same byteordering as Motorola */
 #define MOTOROLAORDER 1
 
 #if defined(__AROS__) && (AROS_BIG_ENDIAN == 0)
 #undef MOTOROLAORDER
 #endif
+
 //PROVIDE_VARARG_FUNCTIONS
 
 /*==================================================================================*/
@@ -19,11 +20,11 @@
 #include <stdarg.h>
 #include <cybergraphx/cybergraphics.h>
 #include <libraries/asl.h>
-#include <Warp3D/Warp3D.h>
 #include <proto/graphics.h>
 #include <proto/asl.h>
 #include <proto/exec.h>
 #include <proto/cybergraphics.h>
+#include <clib/Warp3D_protos.h>
 #if !defined(__AROS__) && !defined(__MORPHOS__) 
 typedef ULONG IPTR; 
 #endif
@@ -35,24 +36,40 @@ struct memory3D{
 	void *nextME;
 };
 /*==================================================================================*/
-#define MAXPOINTS (3*1000)			/* Maximum points per drawing-primitive	*/
+#define MAXPRIM (3*1000)			/* Maximum points per primitive		*/
 #define MAXPOLY	100				/* Maximum points per polygone		*/
 #define MAXPOLYHACK 5				/* Maximum points per polygone in PolyHack*/
 #define MAXPOLYHACK2 7				/* Maximum points per polygone in PolyHack2*/
-#define MAXSCREEN  1024				/* Maximum scren   size 1024x1024		*/
-#define MAXTEXTURE 2048				/* Maximum tex size 2048x2048 (really 256)*/
-#define ALPHAMIN 8				/* Alpha range : A < ALPHAMIN ==> transp. */
-#define ALPHAMAX (255-ALPHAMIN)		/* Alpha range : ALPHAMAX < A ==> solid	*/
-#define PIXBUFFERSIZE 10000			/* Pixels buffer 					*/
+#define MAXSCREEN  1024				/* Maximum screen size 1024x1024		*/
+#define MAXTEXTURE 2048				/* Maximum tex size 2048x2048 (fast=256)  */
+#define FOGSIZE 1000				/* Size for Fog values array			*/
+#define MINZ 0.00000				/* min Zbuffer value				*/
+#define MAXZ 0.99999				/* max Zbuffer value				*/
+#define MINALPHA 5				/* Alpha range : A < MINALPHA ==> transp. */
+#define MAXALPHA (255-MINALPHA)		/* Alpha range : MAXALPHA < A ==> solid	*/
+#define FRAGBUFFERSIZE 10000			/* Fragments buffer (a pixels buffer)	*/
 #define PSIZE sizeof(struct point3D)	/* Size for copying a point			*/
+
+#define ZBUFF UWORD 				/* Zbuffer's format				*/
+#define ZVALUE Pix->W.z				/* Z value is stored here			*/
+#define ZCONVERSION Pix->L.z=0; Pix->W.z=(P->z * (float)ZRESIZE);
+#define ZRESIZE 60000.0				/* Zbuffer's conversion	from float		*/
+
+/* for a Z buffer as float 
+#define ZBUFF float
+#define ZVALUE Pix->L.z			
+#define ZCONVERSION Pix->L.z=P->z;
+#define ZRESIZE 1.0	
+*/
+
+#define DEBUGTNUM 9999				/* Activate debugger for this texture	*/
 extern BOOL LibDebug;				/* Enable Library Debugger (global)		*/
 struct memory3D *firstME=NULL;		/* Tracked memory-allocation	  		*/
-#define DEBUGTNUM 9999				/* Activate debugger for this texture	*/
-UBYTE text1[2];
-UBYTE text2[2];
 /*==================================================================================*/
-#define DRIVERNAME "Wazp3D soft renderer - Alain Thellier - Paris France 2009 - Beta 44c3"
-UBYTE Wazp3DPrefsName[] = {"Wazp3D Prefs.Beta 44c3.Alain Thellier 2009"};
+typedef const void * (*HOOKEDFUNCTION)(void *SC);
+/*==================================================================================*/
+#define DRIVERNAME "Wazp3D soft renderer - Alain Thellier - Paris France 2009 - Beta 45.6"
+UBYTE Wazp3DPrefsName[] = {"Wazp3D Prefs.Beta 45.6.Alain Thellier 2009"};
 IPTR Wazp3DPrefsNameTag=(IPTR) Wazp3DPrefsName;
 /*==================================================================================*/
 struct vertex3D{
@@ -66,7 +83,7 @@ struct point3D{
 	UBYTE RGBA[4];
 };
 /*==================================================================================*/
-struct MyButton{
+struct button3D{
 	BOOL ON;
 	char name[30];
 	};
@@ -86,73 +103,74 @@ W3D_ScreenMode smodelist[50];
 BOOL  ASLsize;
 ULONG ASLminX,ASLmaxX,ASLminY,ASLmaxY;
 
-struct MyButton HardwareLie;		/* pretend to be a perfect hardware driver */
-struct MyButton TexFmtLie;		
-struct MyButton HackARGB;
-struct MyButton UseRatioAlpha;	/* v40: force TexMode to 'a' if alpha-pixels < 20% */
-struct MyButton UseAlphaMinMax;	/* v40: ignore smallest (=transparent) and biggest (=solid) alpha values*/
-struct MyButton DirectBitmap;		/* v39: directly hit in the screen bitmap so no RGBA buffer & no update */
-struct MyButton OnlyTrueColor;	/* only use fast RGB/RGBA screens */
-struct MyButton SmoothTextures;
-struct MyButton ReloadTextures;
-struct MyButton DoMipMaps;		/* v44: mipmapping emulation = dont works */
+struct button3D HardwareLie;		/* pretend to be a perfect hardware driver */
+struct button3D TexFmtLie;		
+struct button3D HackARGB;
+struct button3D UseRatioAlpha;	/* v40: force BlendMode to 'a' if alpha-pixels < 20% */
+struct button3D UseAlphaMinMax;	/* v40: ignore smallest (=transparent) and biggest (=solid) alpha values*/
+struct button3D DirectBitmap;		/* v39: directly hit in the screen bitmap so no RGBA buffer & no update */
+struct button3D OnlyTrueColor;	/* only use fast RGB/RGBA screens */
+struct button3D SmoothTextures;
+struct button3D ReloadTextures;
+struct button3D DoMipMaps;		/* v44: mipmapping emulation = dont works */
 
-struct MyButton UseColorHack;		/* get background color from bitmap */
-struct MyButton UseClearDrawRegion;	/* let Warp3D clear his bitmap */
-struct MyButton UseClearImage;	/* let Wazp3D clear his RGBA buffer */
-struct MyButton UseMinUpdate;
-struct MyButton UsePolyHack;		/* convert trifan & tristrip to quad */
-struct MyButton UsePolyHack2;		/* v43: convert more trifan & tristrip to quad  */
+struct button3D UseColorHack;		/* get background color from bitmap */
+struct button3D UseClearDrawRegion;	/* let Warp3D clear his bitmap */
+struct button3D UseClearImage;	/* let Wazp3D clear his RGBA buffer */
+struct button3D UseMinUpdate;
+struct button3D UsePolyHack;		/* convert trifan & tristrip to quad */
+struct button3D UsePolyHack2;		/* v43: convert more trifan & tristrip to quad  */
 
-struct MyButton UseColoringGL;	/* v40:emulate truly decal/blend/modulate */
-struct MyButton UseColoring;		/*  do simple coloring */
-struct MyButton UseFog;
-struct MyButton NoPerspective;	/* v41: no perspective at all = faster */
-struct MyButton SimuPerspective;	/* v44: do perspective emulation (quadratic method) two times per polygon's raster */
-struct MyButton UseAntiImage;
-struct MyButton UseCullingHack;
+struct button3D UseColoringGL;	/* v40:emulate truly decal/blend/modulate */
+struct button3D UseColoring;		/*  do simple coloring */
+struct button3D UseFog;
+struct button3D NoPerspective;	/* v41: no perspective at all = faster */
+struct button3D SimuPerspective;	/* v44: do perspective emulation (quadratic method) two times per polygon's raster */
+struct button3D UseAntiImage;
+struct button3D UseCullingHack;
 
-struct MyButton UpdateAtUnlock;
-struct MyButton ClearZAtUpdate;
-struct MyButton HackRGBA1;
-struct MyButton HackRGBA2;
+struct button3D HackRGBA1;
+struct button3D HackRGBA2;
 
-struct MyButton QuakePatch;		/* v41: Force blending if 32bits tex (if 32 bits then TexMode is 'A' or 'a' allways) */
+struct button3D QuakePatch;		/* v41: Force blending if 32bits tex (if 32 bits then BlendMode is 'A' or 'a' allways) */
 
-struct MyButton DebugWazp3D;		/* global on/off for printing debug */
-struct MyButton DisplayFPS;
+struct button3D DebugWazp3D;		/* global on/off for printing debug */
+struct button3D DisplayFPS;
 
-struct MyButton DebugFunction;	/* usefull debug messages */
-struct MyButton DebugCalls;
-struct MyButton DebugState;
-struct MyButton DebugVar;
-struct MyButton DebugVal;
-struct MyButton DebugSOFT3D;
-struct MyButton DebugPoint;
-struct MyButton DebugClipper;
+struct button3D DebugFunction;	/* usefull debug messages */
+struct button3D DebugCalls;
+struct button3D DebugState;
+struct button3D DebugVar;
+struct button3D DebugVal;
+struct button3D DebugSOFT3D;
+struct button3D DebugPoint;
+struct button3D DebugClipper;
 
-struct MyButton DebugDoc;		/* useless debug messages*/
-struct MyButton DebugAdresses;
-struct MyButton DebugAsJSR;
-struct MyButton DebugDriver;
-struct MyButton DebugContext;
-struct MyButton DebugTexture;
-struct MyButton DebugError;
-struct MyButton DebugWC;
-struct MyButton DebugWT;
-struct MyButton DebugSC;
-struct MyButton DebugST;
-struct MyButton DebugTexNumber;	/* v40: print texture number in bitmap */
-struct MyButton DebugSepiaImage;	/* Colorize Wazp3D's RGBA buffer */
-struct MyButton DumpTextures;
-struct MyButton DumpObject;
-struct MyButton StepFunction;		/* Step a Warp3D function call */
-struct MyButton StepSOFT3D;		/* Step a SOFT3D function call */
-struct MyButton StepUpdate;		/* Step at update (Wazp3D's RGBA buffer-->screen) */
-struct MyButton StepDrawPoly;		/* V42: Step each DrawPolyP() */
-struct MyButton StepFunction50;	/* V44: Step 50 Warp3D functions calls */
-struct MyButton DebugMemList;
-struct MyButton DebugMemUsage;
+struct button3D DebugDoc;		/* useless debug messages*/
+struct button3D DebugAdresses;
+struct button3D DebugAsJSR;
+struct button3D DebugDriver;
+struct button3D DebugContext;
+struct button3D DebugTexture;
+struct button3D DebugError;
+struct button3D DebugWC;
+struct button3D DebugWT;
+struct button3D DebugSC;
+struct button3D DebugST;
+struct button3D DebugTexNumber;	/* v40: print texture number in bitmap */
+struct button3D DebugSepiaImage;	/* Colorize Wazp3D's RGBA buffer */
+struct button3D DumpTextures;
+struct button3D DumpObject;
+struct button3D ResizeDumpedObject;
+struct button3D StepFunction;		/* Step a Warp3D function call */
+struct button3D StepSOFT3D;		/* Step a SOFT3D function call */
+struct button3D StepUpdate;		/* Step at update (Wazp3D's RGBA buffer-->screen) */
+struct button3D StepDrawPoly;		/* V42: Step each DrawPolyP() */
+struct button3D StepFunction50;	/* V44: Step 50 Warp3D functions calls */
+struct button3D DebugMemList;
+struct button3D DebugMemUsage;
+HOOKEDFUNCTION FunctionsFill[8];
+HOOKEDFUNCTION FunctionsZtest[8*2+1];	
 } Wazp3D;
 /*==================================================================================*/
 #ifdef WAZP3DDEBUG
@@ -277,24 +295,23 @@ struct WAZP3D_texture *WT;		/* binded one */
 float uresize,vresize;			/* for binded tex */
 struct WAZP3D_texture *firstWT;	/* list of all textures */
 
-BOOL CallFlushFrame;	/* then DoUpdate inside bitmap*/
+BOOL CallFlushFrame;			/* then DoUpdate inside bitmap*/
 BOOL CallSetDrawRegion;
 BOOL CallClearZBuffer;
 BOOL CallSetBlending;
-
-struct point3D P[MAXPOINTS];
-
-UBYTE hints[32];
+BOOL NeedNewZbuffer;
+struct point3D P[MAXPRIM];
+ULONG primitive;
+ULONG Pnb;
 
 struct RastPort rastport;
 ULONG ModeID;
 
-UWORD large,high;
+UWORD large,high,bits;
 WORD Xmin,Ymin,Xmax,Ymax;					/* screen scissor */
 
-ULONG primitive;
-ULONG Pnb;
 float PointSize;
+UBYTE hints[32];
 
 ULONG AlphaMode,AlphaRef;
 ULONG SrcFunc,DstFunc;
@@ -304,7 +321,6 @@ ULONG PenMask;
 UWORD FogMode;
 float FogZmin,FogZmax,FogDensity;
 UBYTE FogRGBA[4];
-
 ULONG	StencilFunc,StencilRef,StencilMask,StencilDpfail,StencilDppass,StencilWriteMask;
 ULONG ZbufferMode;
 
@@ -316,12 +332,12 @@ UWORD TimePerFrame;
 ULONG LastMilliTime;
 
 UBYTE ZMode;
-UBYTE ColMode;
-UBYTE TexMode;
+UBYTE TexEnvMode;
+UBYTE BlendMode;
 UBYTE UseFog;
 UBYTE UseGouraud;	
 UBYTE UseTex;	
-W3D_Context context;
+W3D_Context context;					/* The Warp3D's context is inside the Wazp3D's context WC */
 void *SC;
 };
 /*==================================================================================*/
@@ -343,7 +359,7 @@ W3D_Texture	texture;	/* include this Warp3D texture */
 /*=============================================================*/
 union pixel3D {
 struct pixel3DL{
-	float z;
+	ZBUFF z;
 	float w;
 	LONG u;
 	LONG v;
@@ -353,10 +369,11 @@ struct pixel3DL{
 	LONG A;
 	LONG x;
 	LONG y;
+	LONG F;
 	WORD large;
 	ULONG *Image32Y;
-	float *ZbufferFY;
-	float dz;
+	ZBUFF *ZbufferY;
+	ZBUFF dz;
 	float dw;
 	LONG du;
 	LONG dv;
@@ -367,11 +384,12 @@ struct pixel3DL{
 	LONG dB;
 	LONG dA;
 	LONG dx;
+	LONG dF;
 	}  L;
 
 #ifdef MOTOROLAORDER
 struct pixel3DW{
-	float z;
+	ZBUFF z;
 	float w;
 	UBYTE u1,u,u3,u4;
 	UBYTE v1,v,v3,v4;
@@ -381,10 +399,11 @@ struct pixel3DW{
 	UBYTE A1,A,A3,A4;
 	WORD  x,xlow;
 	WORD  y,ylow;
+	WORD  F,Flow;
 	WORD large;
 	ULONG *Image32Y;
-	float *ZbufferFY;
-	float dz;
+	ZBUFF *ZbufferY;
+	ZBUFF dz;
 	float dw;
 	LONG du;
 	LONG dv;
@@ -395,10 +414,11 @@ struct pixel3DW{
 	LONG dB;
 	LONG dA;
 	LONG dx;
+	LONG dF;
 	}  W;
 #else
 struct pixel3DW{
-	float z;
+	ZBUFF z;
 	float w;
 	UBYTE u4,u3,u,u1;
 	UBYTE v4,v3,v,v1;
@@ -408,10 +428,11 @@ struct pixel3DW{
 	UBYTE A4,A3,A,A1;
 	WORD  xlow,x;
 	WORD  ylow,y;
+	WORD  Flow,F;
 	WORD large;
 	ULONG *Image32Y;
-	float *ZbufferFY;
-	float dz;
+	ZBUFF *ZbufferY;
+	ZBUFF dz;
 	float dw;
 	LONG du;
 	LONG dv;
@@ -422,6 +443,7 @@ struct pixel3DW{
 	LONG dB;
 	LONG dA;
 	LONG dx;
+	LONG dF;
 	}  W;
 #endif
 };
@@ -446,7 +468,7 @@ struct oper3DB{
 };
 #endif
 /*=============================================================*/
-struct pixbuffer3D{
+struct fragbuffer3D{
 	UBYTE *Image8;
 	UBYTE *Tex8;
 	UBYTE *Color8;		/* ptr on ColorRGBA */
@@ -457,7 +479,7 @@ struct pixbuffer3D{
 	UBYTE    FogRGBA[4];
 };
 /*=============================================================*/
-struct rgbabuffer3D{		/* same thing as pixbuffer3D but access to only one of the RGBA values */
+struct rgbabuffer3D{		/* same thing as fragbuffer3D but access to only one of the RGBA values */
 	UBYTE *RGBA;
 	UBYTE *unused1;
 	UBYTE *unused2;
@@ -468,19 +490,27 @@ struct rgbabuffer3D{		/* same thing as pixbuffer3D but access to only one of the
 	UBYTE  unused7[4];
 };
 /*=============================================================*/
-typedef const void * (*HOOKEDFUNCTION)(void *SC);
-/*=============================================================*/
 struct SOFT3D_context{
-	UBYTE Mul8[256*256];
-	UBYTE Add8[256*256];
+	UBYTE Mul8[256*256];			/* table for multiplying two UBYTE */
+	UBYTE Add8[256*256];			/* table for adding two UBYTE with overflow */
+	ULONG Image0ToColor[256];		/* tables for converting 8/15/16 bits to RGBA */
+	ULONG Image1ToColor[256];
+	UBYTE Color0ToImage0[256];		
+	UBYTE Color1ToImage0[256];
+	UBYTE Color2ToImage0[256];
+	UBYTE Color3ToImage0[256];
+	UBYTE Color0ToImage1[256];
+	UBYTE Color1ToImage1[256];
+	UBYTE Color2ToImage1[256];
+	UBYTE Color3ToImage1[256];
 	WORD PolyHigh;
 	WORD large,high;
 	struct vertex3D ClipMin;			/* 3D clipper */
 	struct vertex3D ClipMax;
 	ULONG *Image32;
-	float *ZbufferF;
-	ULONG Zbuffersize;
-	UBYTE RGBA[4];
+	ZBUFF *Zbuffer;
+	UBYTE BackRGBA[4];
+	UBYTE NoopRGBA[4];
 	UBYTE CurrentRGBA[4];
 	UBYTE FlatRGBA[4];
 	struct SOFT3D_texture *ST;
@@ -492,38 +522,44 @@ struct SOFT3D_context{
 	union pixel3D edge1[MAXSCREEN];
 	union pixel3D edge2[MAXSCREEN];
 	union pixel3D edgeM[MAXSCREEN];
-	HOOKEDFUNCTION FillFunction;
-	HOOKEDFUNCTION PixelsFunctionIn;
-	HOOKEDFUNCTION PixelsFunctionTex;
-	HOOKEDFUNCTION PixelsFunctionCol;
-	HOOKEDFUNCTION PixelsFunctionFog;
-	HOOKEDFUNCTION PixelsFunctionOut;
-	struct pixbuffer3D PixBuffer[PIXBUFFERSIZE];
-	struct pixbuffer3D *PixBufferDone;
-	struct pixbuffer3D *PixBufferMaxi;
+	UBYTE Ztest[MAXSCREEN];
+	HOOKEDFUNCTION FunctionFill;				/* functions used in pipeline */
+	HOOKEDFUNCTION FunctionZtest;	
+	HOOKEDFUNCTION FunctionIn;
+	HOOKEDFUNCTION FunctionBlend;
+	HOOKEDFUNCTION FunctionTexEnv;
+	HOOKEDFUNCTION FunctionFog;
+	HOOKEDFUNCTION FunctionSepia;
+	HOOKEDFUNCTION FunctionOut;
+	struct fragbuffer3D FragBuffer[FRAGBUFFERSIZE];
+	struct fragbuffer3D *FragBufferDone;		/* last pixel written in FragBuffer */
+	struct fragbuffer3D *FragBufferMaxi;		/* dont fill FragBuffer beyond this limit ==> flush it*/
 	UWORD Culling;
 	UWORD FogMode;
 	float FogZmin,FogZmax,FogDensity;
 	UBYTE FogRGBA[4];
+	ULONG FogRGBAs[FOGSIZE];
 	WORD PolyPnb;
-	union pixel3D PolyPIX[MAXPOLY];
+	union pixel3D PolyPix[MAXPOLY];
 	struct point3D PolyP[MAXPOLY];
 	struct point3D T1[MAXPOLY];
 	struct point3D T2[MAXPOLY];
 	void *firstST;
 	UBYTE AliasedLines[4*MAXSCREEN*2];
-	WORD Pxmin,Pxmax,Pymin,Pymax;				/* really updated region */
+	WORD Pxmin,Pxmax,Pymin,Pymax,Pzmin,Pzmax;		/* really updated region */
 	WORD xUpdate,largeUpdate,yUpdate,highUpdate;	/* really updated region previous frame*/
 	UWORD Tnb,DumpStage;
 	ULONG DumpFnum,DumpPnum,DumpFnb,DumpPnb;		/* Faces & Points count. */
 	struct  face3D *DumpF;
 	struct point3D *DumpP;
 	UBYTE ZMode;
-	UBYTE TexMode;
-	UBYTE ColMode;
+	UBYTE BlendMode;
+	UBYTE TexEnvMode;
 	UBYTE UseGouraud;	
 	UBYTE UseFog;
-	UBYTE ColorChange;		/* V41: Soft3D can smartly desactivate the gouraud if all points got the same color */
+	UBYTE UseTex;
+	UBYTE UseFunctionIn;
+	UBYTE ColorChange;			/* V41: Soft3D can smartly desactivate the gouraud if all points got the same color */
 	UBYTE ColorTransp;			/* V43: Soft3D detect if points got alpha value */
 	struct rgbabuffer3D *Src;
 	struct rgbabuffer3D *Dst;
@@ -532,11 +568,15 @@ struct SOFT3D_context{
 	LONG dmin; 
 	struct BitMap *bm;
 	void  *bmHandle; 				/* to directly write to bitmap */
+	UWORD yoffset;
+	struct RastPort rastport;
 };
 /*=================================================================*/
 struct SOFT3D_mipmap{
 	UBYTE *Tex8V[256];	/* adresse of the texture at this line */
-	LONG   Tex8U[256];
+	ULONG  Tex8U[256];
+	ULONG  Tex8Vlow[256];
+	ULONG  Tex8Ulow[256];
 };
 /*=================================================================*/
 struct SOFT3D_texture{
@@ -545,7 +585,7 @@ struct SOFT3D_texture{
 	UBYTE *pt2;			/* converted data as RGB or RGBA */
 	UBYTE *ptmm;		/* mipmaps as RGB or RGBA */
 	UWORD large,high,bits;
-	UBYTE MipMapped,TexMode;
+	UBYTE MipMapped,BlendMode;
 	UBYTE name[40];
 	UWORD Tnum;
 	void *nextST;
@@ -617,186 +657,133 @@ AROS_UFHA(APTR		 , message, A1));
 #else
 BOOL ScreenModeFilter(struct Hook* hook __asm("a0"), APTR object __asm("a2"),APTR message __asm("a1"));
 #endif
-struct SOFT3D_context *SOFT3D_Start(WORD large,WORD high,void *bm);
-UBYTE *Libstrcat(char *s1,const char *s2);
+/*==================================================================================*/
+/* internal private functions */
+void AntiAliasImage(void *image,UWORD large,UWORD high,UBYTE *AliasedLines);    
+void BitmapPattern(void *image,UWORD large,UWORD high,UWORD bits,UBYTE color);    
+void ClipPoly(struct SOFT3D_context *SC);    
+void ConvertBitmap(ULONG format,UBYTE *pt1,UBYTE *pt2,UWORD high,UWORD large,ULONG offset1,ULONG offset2,UBYTE *palette);    
+void CreateMipmaps(struct SOFT3D_texture *ST);    
+void DoUpdate(W3D_Context *context);    
+void DrawFragBuffer(struct SOFT3D_context *SC);    
+void DrawLinePix(struct SOFT3D_context *SC);    
+void DrawPointPix(struct SOFT3D_context *SC);    
+void DrawSimplePix(struct SOFT3D_context *SC,register union pixel3D *P);    
+void DrawPolyP(struct SOFT3D_context *SC);    
+void DrawPolyPix(struct SOFT3D_context *SC);    
+void DrawText(W3D_Context *context,UBYTE *text,WORD x,WORD y);    
+void DrawTriP(struct SOFT3D_context *SC,register struct point3D *A,register struct point3D *B,register struct point3D *C);    
+void DumpMem(UBYTE *pt,LONG nb);    
+void Fill_BigTexPersp_Gouraud_Fog(struct SOFT3D_context *SC); 
+void Fill_BigTexPersp_Fog(struct SOFT3D_context *SC);
+void Fill_Flat(struct SOFT3D_context *SC);    
+void Fill_Fog(struct SOFT3D_context *SC);    
+void Fill_Gouraud(struct SOFT3D_context *SC);    
+void Fill_Gouraud_Fog(struct SOFT3D_context *SC);    
+void Fill_Tex(struct SOFT3D_context *SC);    
+void Fill_Tex_Fog(struct SOFT3D_context *SC);    
+void Fill_Tex_Gouraud(struct SOFT3D_context *SC);    
+void Fill_Tex_Gouraud_Fog(struct SOFT3D_context *SC);    
+void GetPoint(W3D_Context *context,ULONG i);    
+void GetVertex(struct WAZP3D_context *WC,W3D_Vertex *V);    
+void ImagePlot(struct SOFT3D_context *SC,UWORD x,UWORD y);    
+void *Libmalloc(ULONG size );    
+void *Libmemcpy(void *s1,void *s2,LONG n);    
+UBYTE *Libstrcat(char *s1,const char *s2);    
 UBYTE *Libstrcpy(char *s1,const char *s2);
-ULONG Libstrlen(const char *string);
-ULONG STACKReadPixelArray(APTR  destRect,UWORD  destX,UWORD  destY,UWORD  destMod,struct RastPort *  RastPort,UWORD  SrcX, UWORD  SrcY, UWORD  SizeX, UWORD  SizeY, UBYTE  DestFormat );
-ULONG W3D_AllocStencilBuffer(W3D_Context *context);
-ULONG W3D_AllocZBuffer(W3D_Context *context);
-ULONG W3D_BindTexture(W3D_Context* context, ULONG tmu, W3D_Texture *texture);
-ULONG W3D_CheckDriver(void);
-ULONG W3D_CheckIdle(W3D_Context *context);
-ULONG W3D_ClearDrawRegion(W3D_Context *context, ULONG color);
-ULONG W3D_ClearStencilBuffer(W3D_Context *context, ULONG *clearvalue);
-ULONG W3D_ClearZBuffer(W3D_Context *context, W3D_Double *clearvalue);
-ULONG W3D_ColorPointer(W3D_Context* context, void *pointer, int stride,ULONG format, ULONG mode, ULONG flags);
-ULONG W3D_DrawArray(W3D_Context* context, ULONG primitive, ULONG base, ULONG count);
-ULONG W3D_DrawElements(W3D_Context* context, ULONG primitive, ULONG type, ULONG count,void *indices);
-ULONG W3D_DrawLine(W3D_Context *context, W3D_Line *line);
-ULONG W3D_DrawLineLoop(W3D_Context *context, W3D_Lines *lines);
-ULONG W3D_DrawLineStrip(W3D_Context *context, W3D_Lines *lines);
-ULONG W3D_DrawPoint(W3D_Context *context, W3D_Point *point);
-ULONG W3D_DrawTriangle(W3D_Context *context, W3D_Triangle *triangle);
-ULONG W3D_DrawTriangleV(W3D_Context *context, W3D_TriangleV *triangle);
-ULONG W3D_DrawTriFan(W3D_Context *context, W3D_Triangles *triangles);
-ULONG W3D_DrawTriFanV(W3D_Context *context, W3D_TrianglesV *triangles);
-ULONG W3D_DrawTriStrip(W3D_Context *context, W3D_Triangles *triangles);
-ULONG W3D_DrawTriStripV(W3D_Context *context, W3D_TrianglesV *triangles);
-ULONG W3D_FillStencilBuffer(W3D_Context *context, ULONG x, ULONG y,ULONG width, ULONG height, ULONG depth,void *data);
-ULONG W3D_Flush(W3D_Context *context);
-ULONG W3D_FreeAllTexObj(W3D_Context *context);
-ULONG W3D_FreeStencilBuffer(W3D_Context *context);
-ULONG W3D_FreeZBuffer(W3D_Context *context);
-ULONG W3D_GetDestFmt(void);
-ULONG W3D_GetDriverState(W3D_Context *context);
-ULONG W3D_GetDriverTexFmtInfo(W3D_Driver* driver, ULONG texfmt, ULONG destfmt);
-ULONG W3D_GetState(W3D_Context *context, ULONG state);
-ULONG W3D_GetTexFmtInfo(W3D_Context *context, ULONG texfmt, ULONG destfmt);
-ULONG W3D_Hint(W3D_Context *context, ULONG mode, ULONG quality);
-ULONG W3D_LockHardware(W3D_Context *context);
-ULONG W3D_Query(W3D_Context *context, ULONG query, ULONG destfmt);
-ULONG W3D_QueryDriver(W3D_Driver* driver, ULONG query, ULONG destfmt);
-ULONG W3D_ReadStencilPixel(W3D_Context *context, ULONG x, ULONG y,ULONG *st);
-ULONG W3D_ReadStencilSpan(W3D_Context *context, ULONG x, ULONG y,ULONG n, ULONG *st);
-ULONG W3D_ReadZPixel(W3D_Context *context, ULONG x, ULONG y,W3D_Double *z);
-ULONG W3D_ReadZSpan(W3D_Context *context, ULONG x, ULONG y,ULONG n, W3D_Double *z);
-ULONG W3D_RequestMode(struct TagItem *taglist);
-ULONG W3D_SetAlphaMode(W3D_Context *context, ULONG mode, W3D_Float *refval);
-ULONG W3D_SetBlendMode(W3D_Context *context, ULONG srcfunc, ULONG dstfunc);
-ULONG W3D_SetChromaTestBounds(W3D_Context *context, W3D_Texture *texture,ULONG rgba_lower, ULONG rgba_upper, ULONG mode);
-ULONG W3D_SetColorMask(W3D_Context *context, W3D_Bool Red, W3D_Bool Green,W3D_Bool Blue, W3D_Bool Alpha);
-ULONG W3D_SetCurrentColor(W3D_Context *context, W3D_Color *color);
-ULONG W3D_SetCurrentPen(W3D_Context *context, ULONG pen);
-ULONG W3D_SetDrawRegion(W3D_Context *context, struct BitMap *bm,int yoffset, W3D_Scissor *scissor);
-ULONG W3D_SetDrawRegionWBM(W3D_Context *context, W3D_Bitmap *bm,W3D_Scissor *scissor);
-ULONG W3D_SetFilter(W3D_Context *context, W3D_Texture *texture,ULONG MinFilter, ULONG MagFilter);
-ULONG W3D_SetFogParams(W3D_Context *context, W3D_Fog *fogparams,ULONG fogmode);
-ULONG W3D_SetLogicOp(W3D_Context *context, ULONG operation);
-ULONG W3D_SetPenMask(W3D_Context *context, ULONG pen);
-ULONG W3D_SetState(W3D_Context *context, ULONG state, ULONG action);
-ULONG W3D_SetStencilFunc(W3D_Context *context, ULONG func, ULONG refvalue,ULONG mask);
-ULONG W3D_SetStencilOp(W3D_Context *context, ULONG sfail, ULONG dpfail,ULONG dppass);
-ULONG W3D_SetTexEnv(W3D_Context *context, W3D_Texture *texture,ULONG envparam, W3D_Color *envcolor);
-ULONG W3D_SetWrapMode(W3D_Context *context, W3D_Texture *texture,ULONG s_mode, ULONG t_mode, W3D_Color *bordercolor);
-ULONG W3D_SetWriteMask(W3D_Context *context, ULONG mask);
-ULONG W3D_SetZCompareMode(W3D_Context *context, ULONG mode);
-ULONG W3D_TexCoordPointer(W3D_Context* context, void *pointer, int stride,int unit, int off_v, int off_w, ULONG flags);
-ULONG W3D_UpdateTexImage(W3D_Context *context, W3D_Texture *texture,void *teximage, int level, ULONG *palette);
-ULONG W3D_UpdateTexSubImage(W3D_Context *context, W3D_Texture *texture, void *teximage,ULONG level, ULONG *palette, W3D_Scissor* scissor, ULONG srcbpr);
-ULONG W3D_UploadTexture(W3D_Context *context, W3D_Texture *texture);
-ULONG W3D_VertexPointer(W3D_Context* context, void *pointer, int stride,ULONG mode, ULONG flags);
-ULONG W3D_WriteStencilPixel(W3D_Context *context, ULONG x, ULONG y, ULONG st);
-ULONG W3D_WriteStencilSpan(W3D_Context *context, ULONG x, ULONG y, ULONG n,ULONG *st, UBYTE *mask);
-void W3D_Settings(void);
-void *Libmalloc(ULONG size );
-void *Libmemcpy(void *s1,void *s2,LONG n);
-void *MYmalloc(ULONG size,char *name);
-void *SOFT3D_CreateTexture(struct SOFT3D_context *SC,UBYTE *pt,UWORD large,UWORD high,UWORD bits,UWORD TexMode,BOOL MipMapped);
-void ClipPoly(struct SOFT3D_context *SC);
-void ConvertBitmap(ULONG format,UBYTE *pt1,UBYTE *pt2,UWORD high,UWORD large,ULONG offset1,ULONG offset2,UBYTE *palette);
-void DoUpdate(W3D_Context *context);
-void CreateMipmaps(struct SOFT3D_texture *ST);
-void DrawLinePIX(struct SOFT3D_context *SC);
-void DrawPointPIX(struct SOFT3D_context *SC);
-void DrawPointSimplePIX(struct SOFT3D_context *SC,register union pixel3D *P);
-void DrawPolyP(struct SOFT3D_context *SC);
-void DrawPolyPIX(struct SOFT3D_context *SC);
-void DrawTriP(struct SOFT3D_context *SC,register struct point3D *A,register struct point3D *B,register struct point3D *C);
-void DumpMem(UBYTE *pt,LONG nb);
-void Fill_Zoff_Tex(struct SOFT3D_context *SC);
-void Fill_Zoff_Tex_Gouraud(struct SOFT3D_context *SC);
-void Fill_Zoff_Gouraud(struct SOFT3D_context *SC);
-void Fill_Zoff_Tex_Gouraud_Fog(struct SOFT3D_context *SC);
-void Fill_Ztest_Tex(struct SOFT3D_context *SC);
-void Fill_Ztest_Tex_Gouraud(struct SOFT3D_context *SC);
-void Fill_Ztest_Gouraud(struct SOFT3D_context *SC);
-void Fill_Ztest_Tex_Gouraud_Fog(struct SOFT3D_context *SC);
-void Fill_Zwrite_Tex(struct SOFT3D_context *SC);
-void Fill_Zwrite_Tex_Gouraud(struct SOFT3D_context *SC);
-void Fill_Zwrite_Gouraud(struct SOFT3D_context *SC);
-void Fill_Zwrite_Tex_Gouraud_Fog(struct SOFT3D_context *SC);
-void GetPoint(W3D_Context *context,ULONG i);
-void GetVertex(struct WAZP3D_context *WC,W3D_Vertex *V);
-void LibAlert(const char *t);
-void Libfree(void *p);
-void Libprintf(const char *string, ...);
-void LibSettings(struct MyButton *ButtonList,WORD ButtonCount);
-void MYfree(void *pt);
-void Pixels24R (struct SOFT3D_context *SC);
-void Pixels24m (struct SOFT3D_context *SC);
-void Pixels32R (struct SOFT3D_context *SC);
-void Pixels32m (struct SOFT3D_context *SC);
-void Pixels32AA(struct SOFT3D_context *SC);
-void Pixels32A (struct SOFT3D_context *SC);
-void Pixels32a (struct SOFT3D_context *SC);
-void PixelsARGB(struct SOFT3D_context *SC);
-void PixelsBGRA(struct SOFT3D_context *SC);
-void PrintContext(W3D_Context *C);
-void PrintDriver(W3D_Driver *D);
-void PrintME(struct memory3D *ME);
-void PrintP(struct point3D *P);
-void PrintPIX(union pixel3D *PIX);
-void PrintRGBA(UBYTE *RGBA);
-void PrintST(struct SOFT3D_texture *ST);
-void PrintTexture(W3D_Texture *T);
-void PrintWT(struct WAZP3D_texture *WT);
-void ReduceBitmap(UBYTE *pt,UBYTE *pt2,WORD large,WORD high, WORD bits,WORD ratio);
-void SOFT3D_ClearImage(struct SOFT3D_context *SC,WORD x,WORD y,WORD large,WORD high);
-void SOFT3D_ClearZBuffer(struct SOFT3D_context *SC,float z);
-void SOFT3D_DrawPrimitive(struct SOFT3D_context *SC,struct point3D *P,LONG Pnb,ULONG primitive);
-void SOFT3D_End(struct SOFT3D_context *SC);
-void SOFT3D_Fog(struct SOFT3D_context *SC,WORD FogMode,float FogZmin,float FogZmax,float FogDensity,UBYTE *FogRGBA);
-void SOFT3D_FreeTexture(struct SOFT3D_context *SC,void *texture);
-void SOFT3D_SetBackground(struct SOFT3D_context *SC,UBYTE  *RGBA);
-void SOFT3D_SetClipping(struct SOFT3D_context *SC,float xmin,float xmax,float ymin,float ymax,float zmin,float zmax);
-void SOFT3D_SetCulling(struct SOFT3D_context *SC,UWORD Culling);
-void STACKWritePixelArray(APTR image,UWORD  SrcX, UWORD  SrcY, UWORD  SrcMod, struct RastPort *  RastPort, UWORD  DestX, UWORD  DestY, UWORD  SizeX, UWORD  SizeY, UBYTE  SrcFormat );
-void TextureAlphaUsage(struct SOFT3D_texture *ST);
-void UVtoRGBA(struct SOFT3D_texture *ST,float u,float v,UBYTE *RGBA);
-void W3D_DestroyContext(W3D_Context *context);
-void W3D_FlushFrame(W3D_Context *context);
-void W3D_FlushTextures(W3D_Context *context);
-void W3D_FreeScreenmodeList(W3D_ScreenMode *list);
-void W3D_FreeTexObj(W3D_Context *context, W3D_Texture *texture);
-void W3D_ReleaseTexture(W3D_Context *context, W3D_Texture *texture);
-void W3D_SetFrontFace(W3D_Context* context, ULONG direction);
-void W3D_SetScissor(W3D_Context *context, W3D_Scissor *scissor);
-void W3D_UnLockHardware(W3D_Context *context);
-void W3D_WaitIdle(W3D_Context *context);
-void W3D_WriteZPixel(W3D_Context *context, ULONG x, ULONG y,W3D_Double *z);
-void W3D_WriteZSpan(W3D_Context *context, ULONG x, ULONG y,ULONG n, W3D_Double *z, UBYTE *mask);
-void WAZP3D_Settings();
-void AntiAliasImage(void *image,UWORD large,UWORD high,UBYTE *AliasedLines);
-void SmoothTexture(void *image,UWORD large,UWORD high,UBYTE *AliasedLines,UBYTE bits);
-BOOL SetState(W3D_Context *context,ULONG state,BOOL set);
-void SOFT3D_SetPointSize(struct SOFT3D_context *SC,UWORD PointSize);
-void SOFT3D_SetZbuffer(struct SOFT3D_context *SC,float *ZbufferF);
-void Libsprintf(UBYTE *buffer,const char *string, ...);
-void Libsavefile(UBYTE *filename,void *pt,ULONG size);
-void Libloadfile(UBYTE *filename,void *pt,ULONG size);
-ULONG LibMilliTimer(void);
-void SOFT3D_DrawPixels(struct SOFT3D_context *SC);
-BOOL LockBM(struct SOFT3D_context *SC);
-void UnLockBM(struct SOFT3D_context *SC);
-void SetBitmap(W3D_Context *context, struct BitMap *bm);
-void	 DrawText(W3D_Context *context,UBYTE *text,WORD x,WORD y);
-void BitmapPattern(void *image,UWORD large,UWORD high,UWORD bits,UBYTE color);
-void Pixels24M(struct SOFT3D_context *SC);
-void Pixels32M(struct SOFT3D_context *SC);
-void Pixels24D(struct SOFT3D_context *SC);
-void Pixels32D(struct SOFT3D_context *SC);
-void Pixels24B(struct SOFT3D_context *SC);
-void Pixels32B(struct SOFT3D_context *SC);
-void SOFT3D_SetEnvColor(struct SOFT3D_context *SC,UBYTE  *RGBA);
-void SOFT3D_SetCurrentColor(struct SOFT3D_context *SC,UBYTE  *RGBA);
-void SOFT3D_SetBitmap(struct SOFT3D_context *SC,void *bm,WORD large,WORD high,ULONG yoffset);
-void ImagePlot(struct SOFT3D_context *SC,UWORD x,UWORD y);
-void SetTexture(W3D_Context* context,W3D_Texture *texture);
-UBYTE FogA(struct SOFT3D_context *SC,float z);
-void SOFT3D_SetDrawStates(struct SOFT3D_context *SC,struct SOFT3D_texture *ST,UBYTE ZMode,UBYTE TexMode,UBYTE ColMode,UBYTE UseGouraud,UBYTE UseFog);
-void SOFT3D_SetDrawFunctions(struct SOFT3D_context *SC);
-void		 PrintAllFunctionsAdresses(void);
+void LibAlert(const char *t);    
+void Libfree(void *p);    
+void Libloadfile(UBYTE *filename,void *pt,ULONG size);    
+ULONG LibMilliTimer(void);    
+void Libprintf(const char *string, ...);    
+void Libsavefile(UBYTE *filename,void *pt,ULONG size);    
+void LibSettings(struct button3D *ButtonList,WORD ButtonCount);    
+void Libsprintf(UBYTE *buffer,const char *string, ...);    
+ULONG Libstrlen(const char *string);    
+BOOL LockBM(struct SOFT3D_context *SC);    
+void *MYmalloc(ULONG size,char *name);    
+void MYfree(void *pt);    
+void PixelsARGB(struct SOFT3D_context *SC);    
+void PixelsBlend24(struct SOFT3D_context *SC);    
+void PixelsBlend32(struct SOFT3D_context *SC);    
+void PixelsDecal24(struct SOFT3D_context *SC);    
+void PixelsDecal32(struct SOFT3D_context *SC);    
+void PixelsInOutBGRA(struct SOFT3D_context *SC);    
+void PixelsMedian24(struct SOFT3D_context *SC);    
+void PixelsMedian32(struct SOFT3D_context *SC);    
+void PixelsModulate24(struct SOFT3D_context *SC);    
+void PixelsModulate32(struct SOFT3D_context *SC);    
+void PixelsOne_One24(struct SOFT3D_context *SC);
+void PixelsReplace24(struct SOFT3D_context *SC);    
+void PixelsReplace32(struct SOFT3D_context *SC);    
+void PixelsSrcAlpha_One32(struct SOFT3D_context *SC);    
+void PixelsSrcAlpha_OneMinusSrcAlpha32(struct SOFT3D_context *SC);    
+void PixelsSrcAlpha_OneMinusSrcAlpha32fast(struct SOFT3D_context *SC);    
+void PixelsSrcAlpha_OneMinusSrcAlpha32perfect(struct SOFT3D_context *SC);    
+void PrintAllFunctionsAdresses(void);    
+void PrintContext(W3D_Context *C);    
+void PrintDriver(W3D_Driver *D);    
+void PrintME(struct memory3D *ME);    
+void PrintP(struct point3D *P);    
+void PrintPix(union pixel3D *Pix);    
+void PrintRGBA(UBYTE *RGBA);    
+void PrintST(struct SOFT3D_texture *ST);    
+void PrintTexture(W3D_Texture *T);    
+void PrintWT(struct WAZP3D_texture *WT);    
+void ReduceBitmap(UBYTE *pt,UBYTE *pt2,WORD large,WORD high, WORD bits,WORD ratio);    
+void SetDrawRegion(W3D_Context *context, struct BitMap *bm,int yoffset, W3D_Scissor *scissor);
+BOOL SetState(W3D_Context *context,ULONG state,BOOL set);    
+void SetTexture(W3D_Context* context,W3D_Texture *texture);    
+void SmoothTexture(void *image,UWORD large,UWORD high,UBYTE *AliasedLines,UBYTE bits);    
+ULONG STACKReadPixelArray(APTR  destRect,UWORD  destX,UWORD  destY,UWORD  destMod,struct RastPort *  RastPort,UWORD  SrcX, UWORD  SrcY, UWORD  SizeX, UWORD  SizeY, UBYTE  DestFormat );    
+void STACKWritePixelArray(APTR image,UWORD  SrcX, UWORD  SrcY, UWORD  SrcMod, struct RastPort *  RastPort, UWORD  DestX, UWORD  DestY, UWORD  SizeX, UWORD  SizeY, UBYTE  SrcFormat );    
+void TextureAlphaUsage(struct SOFT3D_texture *ST);    
+void UnLockBM(struct SOFT3D_context *SC);    
+void UVtoRGBA(struct SOFT3D_texture *ST,float u,float v,UBYTE *RGBA);    
+void Ztest_zalways(struct SOFT3D_context *SC);    
+void Ztest_zalways_update(struct SOFT3D_context *SC);    
+void Ztest_zequal(struct SOFT3D_context *SC);    
+void Ztest_zequal_update(struct SOFT3D_context *SC);    
+void Ztest_zgequal(struct SOFT3D_context *SC);    
+void Ztest_zgequal_update(struct SOFT3D_context *SC);    
+void Ztest_zgreater(struct SOFT3D_context *SC);    
+void Ztest_zgreater_update(struct SOFT3D_context *SC);    
+void Ztest_zlequal(struct SOFT3D_context *SC);    
+void Ztest_zlequal_update(struct SOFT3D_context *SC);    
+void Ztest_zless(struct SOFT3D_context *SC);    
+void Ztest_zless_update(struct SOFT3D_context *SC);    
+void Ztest_znequal(struct SOFT3D_context *SC);    
+void Ztest_znequal_update(struct SOFT3D_context *SC);    
+void Ztest_znever_update(struct SOFT3D_context *SC);    
+void Ztest_znotequal(struct SOFT3D_context *SC);    
+void Ztest_znotequal_update(struct SOFT3D_context *SC); 
+void ZbufferCheck(W3D_Context *context);
+/*==========================================================================*/
+/* semi-public functions : SOFT3D is the rasterizer*/
+struct SOFT3D_context *SOFT3D_Start(WORD large,WORD high,void *bm);  
+void  SOFT3D_ClearImage(struct SOFT3D_context *SC,WORD x,WORD y,WORD large,WORD high);    
+void  SOFT3D_ClearZBuffer(struct SOFT3D_context *SC,float fz);    
+void *SOFT3D_CreateTexture(struct SOFT3D_context *SC,UBYTE *pt,UWORD large,UWORD high,UWORD bits,BOOL MipMapped);  
+BOOL  SOFT3D_DoUpdate(struct SOFT3D_context *SC);	
+void  SOFT3D_DrawPrimitive(struct SOFT3D_context *SC,struct point3D *P,LONG Pnb,ULONG primitive);    
+void  SOFT3D_End(struct SOFT3D_context *SC);    
+void  SOFT3D_Fog(struct SOFT3D_context *SC,WORD FogMode,float FogZmin,float FogZmax,float FogDensity,UBYTE *FogRGBA);    
+void  SOFT3D_FreeTexture(struct SOFT3D_context *SC,void  *texture);
+void  SOFT3D_ReadZSpan(struct SOFT3D_context *SC, ULONG x, ULONG y,ULONG n, W3D_Double *z);
+void  SOFT3D_ReallocImage(struct SOFT3D_context *SC,WORD large,WORD high);
+void  SOFT3D_SetBackColor(struct SOFT3D_context *SC,UBYTE  *RGBA);    
+void  SOFT3D_SetBitmap(struct SOFT3D_context *SC,void  *bm,WORD x,WORD y,WORD large,WORD high);    
+void  SOFT3D_SetClipping(struct SOFT3D_context *SC,float xmin,float xmax,float ymin,float ymax,float zmin,float zmax);    
+void  SOFT3D_SetCulling(struct SOFT3D_context *SC,UWORD Culling);    
+void  SOFT3D_SetCurrentColor(struct SOFT3D_context *SC,UBYTE  *RGBA);    
+void  SOFT3D_SetDrawFunctions(struct SOFT3D_context *SC);    
+void  SOFT3D_SetDrawStates(struct SOFT3D_context *SC,struct SOFT3D_texture *ST,UBYTE ZMode,UBYTE BlendMode,UBYTE TexEnvMode,UBYTE UseGouraud,UBYTE UseFog);    
+void  SOFT3D_SetEnvColor(struct SOFT3D_context *SC,UBYTE  *RGBA);    
+void  SOFT3D_SetImage(struct SOFT3D_context *SC,WORD large,WORD high,ULONG *Image32);
+void  SOFT3D_SetPointSize(struct SOFT3D_context *SC,UWORD PointSize);    
+void  SOFT3D_SetZbuffer(struct SOFT3D_context *SC,ZBUFF *Zbuffer);    
+void  SOFT3D_WriteZSpan(struct SOFT3D_context *SC, ULONG x, ULONG y,ULONG n, W3D_Double *zD, UBYTE *mask);    
+void  WAZP3D_Settings();    
 /*==========================================================================*/
 void pf(float x)		/* emulate printf() from a float %f */
 {
@@ -830,13 +817,6 @@ UBYTE hexa[16] = {"0123456789ABCDEF"};
 	if(name[n]!='0')
 		{Libprintf("%s",&name[n]);return;}
 	}
-}
-/*==========================================================================*/
-UBYTE *pc(UBYTE c,UBYTE *t)		/* emulate printf() from a char %c */
-{
-	t[0]=c;
-	t[1]=0;
-	return(t);
 }
 /*==================================================================================*/
 #ifdef WAZP3DDEBUG
@@ -961,9 +941,9 @@ void WAZP3D_Settings()
 {
 WORD ButtonCount;
 #ifdef WAZP3DDEBUG
-	ButtonCount=((LONG)&Wazp3D.DebugMemUsage -(LONG)&Wazp3D.HardwareLie)/sizeof(struct MyButton)+1;
+	ButtonCount=((LONG)&Wazp3D.DebugMemUsage -(LONG)&Wazp3D.HardwareLie)/sizeof(struct button3D)+1;
 #else
-	ButtonCount=((LONG)&Wazp3D.DebugWazp3D  - (LONG)&Wazp3D.HardwareLie)/sizeof(struct MyButton);
+	ButtonCount=((LONG)&Wazp3D.DebugWazp3D  - (LONG)&Wazp3D.HardwareLie)/sizeof(struct button3D);
 #endif
 	Wazp3D.DebugWazp3D.ON=LibDebug;
 	LibSettings(&Wazp3D.HardwareLie,ButtonCount);
@@ -1007,7 +987,7 @@ void WAZP3D_Function(UBYTE n)
 #endif
 }
 /*=================================================================*/
-void CopyPIX(union pixel3D *P1,union pixel3D *P2)
+void CopyPix(union pixel3D *P1,union pixel3D *P2)
 {
 	P1->L.x=P2->L.x; 
 	P1->L.y=P2->L.y; 
@@ -1019,6 +999,7 @@ void CopyPIX(union pixel3D *P1,union pixel3D *P2)
 	P1->L.G=P2->L.G; 
 	P1->L.B=P2->L.B; 
 	P1->L.A=P2->L.A; 
+	P1->L.F=P2->L.F; 
 }
 /*=================================================================*/
 void CopyP(struct point3D *P1,struct point3D *P2)
@@ -1087,16 +1068,16 @@ void PrintWT(struct WAZP3D_texture *WT)
 void PrintST(struct SOFT3D_texture *ST)
 {
 	if (!Wazp3D.DebugST.ON) return;
-	Libprintf("SOFT3D_texture(%ld) %s  pt %ld pt2 %ld NextST(%ld) MipMapped %ld TexMode:%s \n",ST,ST->name,ST->pt,ST->pt2,ST->nextST,ST->MipMapped,ST->TexMode);
+	Libprintf("SOFT3D_texture(%ld) %s  pt %ld pt2 %ld NextST(%ld) MipMapped %ld BlendMode:%lc \n",ST,ST->name,ST->pt,ST->pt2,ST->nextST,ST->MipMapped,ST->BlendMode);
 }
 /*=================================================================*/
-void PrintPIX(union pixel3D *PIX)
+void PrintPix(union pixel3D *Pix)
 {
 	if (!Wazp3D.DebugPoint.ON)  return;
 	if (!Wazp3D.DebugSOFT3D.ON) return;
-	Libprintf(" PIX XY %ld %ld \tUV %ld %ld ",PIX->W.x,PIX->W.y,PIX->W.u,PIX->W.v);
-	Libprintf("RGBA %ld %ld %ld %ld large %ld",PIX->W.R,PIX->W.G,PIX->W.B,PIX->W.A,PIX->W.large);
-	Libprintf(" ZW ");  pf(PIX->L.z); pf(PIX->L.w); Libprintf("\n"); 
+	Libprintf(" Pix XY %ld %ld \tUV %ld %ld ",Pix->W.x,Pix->W.y,Pix->W.u,Pix->W.v);
+	Libprintf("RGBA %ld %ld %ld %ld large %ld",Pix->W.R,Pix->W.G,Pix->W.B,Pix->W.A,Pix->W.large);
+	Libprintf(" ZWF ");  pf(Pix->L.z); pf(Pix->L.w); pf(Pix->W.F);Libprintf("\n"); 
 
 }
 /*==========================================================================*/
@@ -1127,7 +1108,7 @@ WORD Ntexture;
 #define PrintP2(x) ;
 #define PrintWT(x) ;
 #define PrintST(x) ;
-#define PrintPIX(x) ;
+#define PrintPix(x) ;
 #define PrintAllT(x) ;
 #endif
 
@@ -1136,7 +1117,10 @@ void SOFT3D_SetImage(struct SOFT3D_context *SC,WORD large,WORD high,ULONG *Image
 {
 WORD y;
 
+	if(SC==NULL) return;
+	if(Image32==NULL) return;
 SFUNCTION(SOFT3D_SetImage)
+
 	SC->large  =large;
 	SC->high   =high;
 	SC->Image32=Image32;
@@ -1148,39 +1132,46 @@ SFUNCTION(SOFT3D_SetImage)
 
 	YLOOP(high)
 		{
-		SC->edge1[y].L.Image32Y   =SC->edge2[y].L.Image32Y  =SC->edgeM[y].L.Image32Y   =(ULONG *) &SC->Image32  [y*large];
+		SC->edge1[y].L.Image32Y   =SC->edge2[y].L.Image32Y  =SC->edgeM[y].L.Image32Y   =Image32;
 		SC->edge1[y].L.y=0;SC->edge1[y].W.y=y;
 		SC->edge2[y].L.y=0;SC->edge2[y].W.y=y;
 		SC->edgeM[y].L.y=0;SC->edgeM[y].W.y=y;
+		Image32+=large;
 		}
 
+}
+/*=============================================================*/
+void SOFT3D_ReallocImage(struct SOFT3D_context *SC,WORD large,WORD high)
+{
+	FREEPTR(SC->Image32);
+	SC->Image32=MYmalloc(SC->large*SC->high*32/8,"SOFT3D_Image");
+	SOFT3D_SetImage(SC,large,high,SC->Image32);
 }
 /*=============================================================*/
 struct SOFT3D_context *SOFT3D_Start(WORD large,WORD high,void *bm)
 {
 register union oper3D Oper;
 struct SOFT3D_context *SC;
-void *Image32;
 UWORD x,y;
 ULONG n;
-UBYTE FogRGBA[4];
+UBYTE  FogRGBA[]={255,255,255,255}; /* default white fog */
+UBYTE BackRGBA[]={0,0,0,0};		/* default black background */
+UBYTE ZMode,FillMode;
 float m=0.0;	/*for debug: set a margin for clipper so show if 3Dprog never setted scissor */
 
 SFUNCTION(SOFT3D_Start)
 	SC=MYmalloc(sizeof(struct SOFT3D_context),"SOFT3D_context");
 	if(SC==NULL) return(NULL);
+	InitRastPort(&SC->rastport);
 
-	if(bm==NULL)
+	if(!Wazp3D.DirectBitmap.ON)	/* then need an RGBA buffer the "Image" else use the bitmap*/
 	{
-	Image32=MYmalloc(large*high*32/8,"SOFT3D_ImageBuffer");
-	if(Image32==NULL) return(NULL);
-	SOFT3D_SetImage(SC,large,high,Image32);
-	}
-	else
-	{
-	SOFT3D_SetBitmap(SC,bm,large,high,0);
+	SC->Image32=MYmalloc(large*high*32/8,"SOFT3D_Image");
+	if(SC->Image32==NULL) 
+			{MYfree(SC); return(NULL);}
 	}
 
+	SOFT3D_SetBitmap(SC,bm,0,0,large,high);
 
 	Oper.L.Index=0;
 	XLOOP(256)
@@ -1195,46 +1186,67 @@ SFUNCTION(SOFT3D_Start)
 		SC->Add8[Oper.L.Index]=255;
 	}
 
-	SC->PixBufferDone=SC->PixBuffer;
-	SC->PixBufferMaxi=SC->PixBuffer + (PIXBUFFERSIZE-MAXSCREEN);
-	NLOOP(PIXBUFFERSIZE)
+	SC->FragBufferDone=SC->FragBuffer;
+	SC->FragBufferMaxi=SC->FragBuffer + (FRAGBUFFERSIZE-MAXSCREEN);
+	NLOOP(FRAGBUFFERSIZE)
 	{
-	SC->PixBuffer[n].Color8 =(UBYTE *)&SC->PixBuffer[n].ColorRGBA[0];
-	SC->PixBuffer[n].Buffer8=(UBYTE *)&SC->PixBuffer[n].BufferRGBA[0];
-	SC->PixBuffer[n].Fog8   =(UBYTE *)&SC->PixBuffer[n].FogRGBA[0];
+	SC->FragBuffer[n].Color8 =(UBYTE *)&SC->FragBuffer[n].ColorRGBA[0];
+	SC->FragBuffer[n].Buffer8=(UBYTE *)&SC->FragBuffer[n].BufferRGBA[0];
+	SC->FragBuffer[n].Fog8   =(UBYTE *)&SC->FragBuffer[n].FogRGBA[0];
 	}
 
-	SOFT3D_SetClipping(SC,m,(float)(large-1)-m,m,(float)(high-1)-m,0.000,0.999);
-	FogRGBA[0]=FogRGBA[1]=FogRGBA[2]=FogRGBA[3]=255;		/* default white */
-	SOFT3D_Fog(SC,0,0.0,0.999,0.1,FogRGBA);				/* default no fog */
-	SOFT3D_SetDrawStates(SC,NULL,1,'0','R',FALSE,FALSE);		/* default notex nofog nozbuffer just color */
-	SOFT3D_SetPointSize(SC,1);						/* default simpler point = 1 pixel */
-	SC->RGBA[0]=SC->RGBA[1]=SC->RGBA[2]=SC->RGBA[3]=0;
+	ZMode=W3D_Z_NEVER;	Wazp3D.FunctionsZtest[ZMode]=(HOOKEDFUNCTION)Ztest_znever_update;  /* same as Ztest_znever */
+	ZMode=W3D_Z_LESS;	 	Wazp3D.FunctionsZtest[ZMode]=(HOOKEDFUNCTION)Ztest_zless;  
+	ZMode=W3D_Z_GEQUAL;	Wazp3D.FunctionsZtest[ZMode]=(HOOKEDFUNCTION)Ztest_zgequal;  
+	ZMode=W3D_Z_LEQUAL;	Wazp3D.FunctionsZtest[ZMode]=(HOOKEDFUNCTION)Ztest_zlequal;  
+	ZMode=W3D_Z_GREATER;	Wazp3D.FunctionsZtest[ZMode]=(HOOKEDFUNCTION)Ztest_zgreater;  
+	ZMode=W3D_Z_NOTEQUAL;	Wazp3D.FunctionsZtest[ZMode]=(HOOKEDFUNCTION)Ztest_znotequal;  
+	ZMode=W3D_Z_EQUAL;	Wazp3D.FunctionsZtest[ZMode]=(HOOKEDFUNCTION)Ztest_zequal;  
+	ZMode=W3D_Z_ALWAYS;	Wazp3D.FunctionsZtest[ZMode]=(HOOKEDFUNCTION)Ztest_zalways;
+   
+	ZMode=8+W3D_Z_NEVER;	Wazp3D.FunctionsZtest[ZMode]=(HOOKEDFUNCTION)Ztest_znever_update;  
+	ZMode=8+W3D_Z_LESS;	Wazp3D.FunctionsZtest[ZMode]=(HOOKEDFUNCTION)Ztest_zless_update;  
+	ZMode=8+W3D_Z_GEQUAL;	Wazp3D.FunctionsZtest[ZMode]=(HOOKEDFUNCTION)Ztest_zgequal_update;  
+	ZMode=8+W3D_Z_LEQUAL;	Wazp3D.FunctionsZtest[ZMode]=(HOOKEDFUNCTION)Ztest_zlequal_update;  
+	ZMode=8+W3D_Z_GREATER;	Wazp3D.FunctionsZtest[ZMode]=(HOOKEDFUNCTION)Ztest_zgreater_update;  
+	ZMode=8+W3D_Z_NOTEQUAL;	Wazp3D.FunctionsZtest[ZMode]=(HOOKEDFUNCTION)Ztest_znotequal_update;  
+	ZMode=8+W3D_Z_EQUAL;	Wazp3D.FunctionsZtest[ZMode]=(HOOKEDFUNCTION)Ztest_zequal_update;  
+	ZMode=8+W3D_Z_ALWAYS;	Wazp3D.FunctionsZtest[ZMode]=(HOOKEDFUNCTION)Ztest_zalways_update;  
+
+	FillMode=(FALSE*4 + TRUE*2  + TRUE*1  );	Wazp3D.FunctionsFill[FillMode]=(HOOKEDFUNCTION)Fill_Gouraud_Fog;
+	FillMode=(FALSE*4 + TRUE*2  + FALSE*1 );	Wazp3D.FunctionsFill[FillMode]=(HOOKEDFUNCTION)Fill_Gouraud;
+	FillMode=(FALSE*4 + FALSE*2 + TRUE*1  );	Wazp3D.FunctionsFill[FillMode]=(HOOKEDFUNCTION)Fill_Fog;
+	FillMode=(FALSE*4 + FALSE*2 + FALSE*1 );	Wazp3D.FunctionsFill[FillMode]=(HOOKEDFUNCTION)Fill_Flat;
+
+	FillMode=(TRUE*4 + TRUE*2  + TRUE*1  );	Wazp3D.FunctionsFill[FillMode]=(HOOKEDFUNCTION)Fill_Tex_Gouraud_Fog;
+	FillMode=(TRUE*4 + TRUE*2  + FALSE*1 );	Wazp3D.FunctionsFill[FillMode]=(HOOKEDFUNCTION)Fill_Tex_Gouraud;
+	FillMode=(TRUE*4 + FALSE*2 + TRUE*1  );	Wazp3D.FunctionsFill[FillMode]=(HOOKEDFUNCTION)Fill_Tex_Fog;
+	FillMode=(TRUE*4 + FALSE*2 + FALSE*1 );	Wazp3D.FunctionsFill[FillMode]=(HOOKEDFUNCTION)Fill_Tex;
+
+	SOFT3D_SetClipping(SC,m,(float)(large-1)-m,m,(float)(high-1)-m,MINZ,MAXZ);
+	SOFT3D_Fog(SC,0,MINZ,MAXZ,0.0,FogRGBA);					/* default no fog */
+	SOFT3D_SetDrawStates(SC,NULL,W3D_Z_ALWAYS,'R','0',FALSE,FALSE);	/* default notex nofog nozbuffer just color */
+	SOFT3D_SetPointSize(SC,1);							/* default simpler point = 1 pixel */
+	SOFT3D_SetBackColor(SC,BackRGBA);
 
 	SC->Tnb=0;			/* texture number */
 	SC->DumpStage=0;
-
 	return(SC);
 }
 /*=============================================================*/
-void SOFT3D_SetZbuffer(struct SOFT3D_context *SC,float *ZbufferF)
+void SOFT3D_SetZbuffer(struct SOFT3D_context *SC,ZBUFF *Zbuffer)
 {
 WORD y;
 
 SFUNCTION(SOFT3D_SetZbuffer)
-	SC->ZbufferF=ZbufferF;
-VAR(ZbufferF)
+	SC->Zbuffer=Zbuffer;
+VAR(Zbuffer)
 VAR(SC->large)
 VAR(SC->high)
 
-	if(ZbufferF!=NULL)
-		SC->Zbuffersize=SC->large*SC->high;
-	else
-		SC->Zbuffersize=0;
-
-	if(ZbufferF!=NULL)
+	if(Zbuffer!=NULL)
 	YLOOP(SC->high)
-		{ SC->edge1[y].L.ZbufferFY = SC->edge2[y].L.ZbufferFY =SC->edgeM[y].L.ZbufferFY =ZbufferF;ZbufferF+=SC->large;}
+		{ SC->edge1[y].L.ZbufferY = SC->edge2[y].L.ZbufferY =SC->edgeM[y].L.ZbufferY =Zbuffer;Zbuffer+=SC->large;}
 }
 /*=================================================================*/
 void SOFT3D_SetCulling(struct SOFT3D_context *SC,UWORD Culling)
@@ -1252,11 +1264,11 @@ void SOFT3D_SetClipping(struct SOFT3D_context *SC,float xmin,float xmax,float ym
 	SC->ClipMax.z=zmax;
 }
 /*=================================================================*/
-void SOFT3D_SetBackground(struct SOFT3D_context *SC,UBYTE  *RGBA)
+void SOFT3D_SetBackColor(struct SOFT3D_context *SC,UBYTE  *RGBA)
 {
-SREM(SOFT3D_SetBackground)
+SREM(SOFT3D_SetBackColor)
 	PrintRGBA(RGBA);
-	COPYRGBA(SC->RGBA,RGBA);
+	COPYRGBA(SC->BackRGBA,RGBA);
 }
 /*=============================================================*/
 void SOFT3D_SetEnvColor(struct SOFT3D_context *SC,UBYTE  *RGBA)
@@ -1275,13 +1287,14 @@ SREM(SOFT3D_SetCurrentColor)
 /*=============================================================*/
 void SOFT3D_ClearImage(struct SOFT3D_context *SC,WORD x,WORD y,WORD large,WORD high)
 {
-ULONG *ptRGBA32=(ULONG *)SC->RGBA;
+ULONG *ptRGBA32=(ULONG *)SC->BackRGBA;
 register ULONG RGBA32=ptRGBA32[0];
 register ULONG *Image32;
 register LONG  size;
 register LONG  n;
 
 SFUNCTION(SOFT3D_ClearImage)
+	if(SC->Image32==NULL) return;
 	Image32=&SC->Image32[y*SC->large];
 
 	if(RGBA32==0)
@@ -1301,20 +1314,61 @@ SFUNCTION(SOFT3D_ClearImage)
 
 }
 /*=============================================================*/
-void SOFT3D_ClearZBuffer(struct SOFT3D_context *SC,float z)
+void SOFT3D_ClearZBuffer(struct SOFT3D_context *SC,float fz)
 {
-register float *ZbufferF=SC->ZbufferF;
-register ULONG size=SC->Zbuffersize/8;
+register ZBUFF *Zbuffer=SC->Zbuffer;
+register ULONG size=SC->high*SC->large/8;
 register ULONG n;
+register ZBUFF z;
+register float zresize=ZRESIZE;
 
 SFUNCTION(SOFT3D_ClearZBuffer)
-	if(ZbufferF==NULL) return;
+	if(Zbuffer==NULL) return;
+	if (z < MINZ)	z=MINZ;
+	if (MAXZ < z)	z=MAXZ;
+	z=fz*zresize;
 	NLOOP(size)
 	{
-	ZbufferF[0]=z;	ZbufferF[1]=z;	ZbufferF[2]=z; ZbufferF[3]=z;
-	ZbufferF[4]=z;	ZbufferF[5]=z;	ZbufferF[6]=z; ZbufferF[7]=z;
-	ZbufferF+=8;
+	Zbuffer[0]=z;	Zbuffer[1]=z;	Zbuffer[2]=z; Zbuffer[3]=z;
+	Zbuffer[4]=z;	Zbuffer[5]=z;	Zbuffer[6]=z; Zbuffer[7]=z;
+	Zbuffer+=8;
 	}
+}
+/*==========================================================================*/
+void SOFT3D_ReadZSpan(struct SOFT3D_context *SC, ULONG x, ULONG y,ULONG n, W3D_Double *z)
+{
+register ZBUFF *Zbuffer;
+register float fz;
+register float zresize=ZRESIZE;
+
+SFUNCTION(SOFT3D_ReadZSpan)
+	Zbuffer=SC->edge1[y].L.ZbufferY + x;
+	XLOOP(n)
+		{
+		fz=(float)Zbuffer[x];
+		fz=fz/zresize;
+		z[x]=(W3D_Double)fz;
+		}
+
+}
+/*==========================================================================*/
+void SOFT3D_WriteZSpan(struct SOFT3D_context *SC, ULONG x, ULONG y,ULONG n, W3D_Double *zD, UBYTE *mask)
+{
+register ZBUFF *Zbuffer;
+register float fz;
+register float zresize=ZRESIZE;
+
+SFUNCTION(SOFT3D_WriteZSpan)
+	Zbuffer=SC->edge1[y].L.ZbufferY + x;
+	XLOOP(n)
+		if(mask[x]==1)
+			{
+			fz=zD[x];
+			if (fz < MINZ)	fz=MINZ;
+			if (MAXZ < fz)	fz=MAXZ;
+			Zbuffer[x]=fz*zresize;
+			}
+
 }
 /*=============================================================*/
 void SOFT3D_End(struct SOFT3D_context *SC)
@@ -1329,8 +1383,6 @@ SFUNCTION(SOFT3D_End)
 #define MUL8(a1,b1,dst)              Oper1.B.b=b1;  Oper1.B.a=a1;  dst=Mul8[Oper1.L.Index];
 #define NEXTADDMUL8(b1,b2,dst)       Oper1.B.b=b1;  Oper2.B.b=b2;  dst=Mul8[Oper1.L.Index]+Mul8[Oper2.L.Index];
 #define FULLADDMUL8(b1,a1,b2,a2,dst) Oper1.B.a=a1;  Oper2.B.a=a2;  NEXTADDMUL8(b1,b2,dst)
-#define AT Ct[3]
-#define AF Cf[3]
 /*=============================================================*/
 /* since v34:new pixels-functions to do multi-pass blending	*/
 /* see OpenGL doc Ct=texture Cf=color Cc=env*/
@@ -1345,241 +1397,467 @@ glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,param);
 glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR,param);
 */
 /*=============================================================*/
-void Pixels24R(struct SOFT3D_context *SC)
-{
-/* copy source to dest (allways)*/
-register struct rgbabuffer3D* Src=SC->Src;
-register struct rgbabuffer3D* Dst=SC->Dst;
-register struct rgbabuffer3D* End=SC->End;
-register UBYTE *Cf;
-register UBYTE *Ct;
+#define CT1R Frag[0].Tex8[0]
+#define CT1G Frag[0].Tex8[1]
+#define CT1B Frag[0].Tex8[2]
+#define AT1  Frag[0].Tex8[3]
+#define CF1R Frag[0].ColorRGBA[0]
+#define CF1G Frag[0].ColorRGBA[1]
+#define CF1B Frag[0].ColorRGBA[2]
+#define AF1  Frag[0].ColorRGBA[3]
 
-SREM(Pixels24R)
-Pixels:
-	Cf=Dst->RGBA; Ct=Src->RGBA;
-	Cf[0]=Ct[0];
-	Cf[1]=Ct[1];
-	Cf[2]=Ct[2];
-	Dst++;
-	Src++;
-	if(Dst!=End)	 goto Pixels;
+#define CT2R Frag[1].Tex8[0]
+#define CT2G Frag[1].Tex8[1]
+#define CT2B Frag[1].Tex8[2]
+#define AT2  Frag[1].Tex8[3]
+#define CF2R Frag[1].ColorRGBA[0]
+#define CF2G Frag[1].ColorRGBA[1]
+#define CF2B Frag[1].ColorRGBA[2]
+#define AF2  Frag[1].ColorRGBA[3]
+
+#define CCR SC->EnvRGBA[0]
+#define CCG SC->EnvRGBA[1]
+#define CCB SC->EnvRGBA[2]
+
+#define AT Ct[3]
+#define AF Cf[3]
+#define ONE 255
+/*=============================================================*/
+void PixelsTex32ToImage(struct SOFT3D_context *SC)
+{
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
+
+SREM(PixelsTex32ToImage)
+	while(0<size--)
+	{
+	COPYRGBA(Frag[0].Image8,Frag[0].Tex8);
+	COPYRGBA(Frag[1].Image8,Frag[1].Tex8);
+	Frag+=2;
+	}
 }
 /*=============================================================*/
-void Pixels32R(struct SOFT3D_context *SC)
+void PixelsTex24ToImage(struct SOFT3D_context *SC)
 {
-/* copy source to dest (allways)*/
-register struct rgbabuffer3D* Src=SC->Src;
-register struct rgbabuffer3D* Dst=SC->Dst;
-register struct rgbabuffer3D* End=SC->End;
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
 
-SREM(Pixels32R)
-Pixels:
-	COPYRGBA(Dst->RGBA,Src->RGBA);
-	Dst++;
-	Src++;
-	if(Dst!=End)	 goto Pixels;
+SREM(PixelsTex24ToImage)
+	while(0<size--)
+	{
+	Frag[0].Image8[0]=Frag[0].Tex8[0];
+	Frag[0].Image8[1]=Frag[0].Tex8[1];
+	Frag[0].Image8[2]=Frag[0].Tex8[2];
+	Frag[0].Image8[3]=ONE;
+
+	Frag[1].Image8[0]=Frag[1].Tex8[0];
+	Frag[1].Image8[1]=Frag[1].Tex8[1];
+	Frag[1].Image8[2]=Frag[1].Tex8[2];
+	Frag[1].Image8[3]=ONE;
+	Frag+=2;
+	}
+}
+
+/*=============================================================*/
+void PixelsColorToImage(struct SOFT3D_context *SC)
+{
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
+
+SREM(PixelsColorToImage)
+	while(0<size--)
+	{
+	COPYRGBA(Frag[0].Image8,Frag[0].ColorRGBA);
+	COPYRGBA(Frag[1].Image8,Frag[1].ColorRGBA);
+	Frag+=2;
+	}
 }
 /*=============================================================*/
-void Pixels24M(struct SOFT3D_context *SC)
+void PixelsTex32ToBuffer(struct SOFT3D_context *SC)
 {
-/* v40: modulate src & dst  (allways) */
-register struct rgbabuffer3D* Src=SC->Src;	/* tex */
-register struct rgbabuffer3D* Dst=SC->Dst;	/* color  */
-register struct rgbabuffer3D* End=SC->End;
-register UBYTE *Cf;
-register UBYTE *Ct;
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
+
+SREM(PixelsTex32ToBuffer)
+	while(0<size--)
+	{
+	COPYRGBA(Frag[0].Buffer8,Frag[0].Tex8);
+	COPYRGBA(Frag[1].Buffer8,Frag[1].Tex8);
+	Frag+=2;
+	}
+}
+/*=============================================================*/
+void PixelsTex24ToBuffer(struct SOFT3D_context *SC)
+{
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
+
+SREM(PixelsTex24ToBuffer)
+	while(0<size--)
+	{
+	Frag[0].Buffer8[0]=Frag[0].Tex8[0];
+	Frag[0].Buffer8[1]=Frag[0].Tex8[1];
+	Frag[0].Buffer8[2]=Frag[0].Tex8[2];
+	Frag[0].Buffer8[3]=ONE;
+
+	Frag[1].Buffer8[0]=Frag[1].Tex8[0];
+	Frag[1].Buffer8[1]=Frag[1].Tex8[1];
+	Frag[1].Buffer8[2]=Frag[1].Tex8[2];
+	Frag[1].Buffer8[3]=ONE;
+	Frag+=2;
+	}
+}
+/*=============================================================*/
+void PixelsColorToBuffer(struct SOFT3D_context *SC)
+{
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
+
+SREM(PixelsColorToBuffer)
+	while(0<size--)
+	{
+	COPYRGBA(Frag[0].Buffer8,Frag[0].ColorRGBA);
+	COPYRGBA(Frag[1].Buffer8,Frag[1].ColorRGBA);
+	Frag+=2;
+	}
+}
+/*=============================================================*/
+void PixelsReplace24(struct SOFT3D_context *SC)
+{
+/* replace color=tex  (always) */
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
+
+SREM(PixelsReplace24)
+	while(0<size--)
+	{
+	Frag[0].ColorRGBA[0]=Frag[0].Tex8[0];
+	Frag[0].ColorRGBA[1]=Frag[0].Tex8[1];
+	Frag[0].ColorRGBA[2]=Frag[0].Tex8[2];
+	Frag[0].ColorRGBA[3]=ONE;
+
+	Frag[1].ColorRGBA[0]=Frag[1].Tex8[0];
+	Frag[1].ColorRGBA[1]=Frag[1].Tex8[1];
+	Frag[1].ColorRGBA[2]=Frag[1].Tex8[2];
+	Frag[1].ColorRGBA[3]=ONE;
+	Frag+=2;
+	}
+}
+/*=============================================================*/
+void PixelsReplace32(struct SOFT3D_context *SC)
+{
+/* replace color=tex  (always) */
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
+
+SREM(PixelsReplace32)
+	while(0<size--)
+	{
+	COPYRGBA(Frag[0].ColorRGBA,Frag[0].Tex8);
+	COPYRGBA(Frag[1].ColorRGBA,Frag[1].Tex8);
+	Frag+=2;
+	}
+}
+/*=============================================================*/
+void PixelsModulate24(struct SOFT3D_context *SC)
+{
+/* v40: modulate src & dst  (always) */
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
 register UBYTE *Mul8=SC->Mul8;
 register union oper3D Oper1;
 
-SREM(Pixels24M)
+SREM(PixelsModulate24)
 	Oper1.L.Index=0;
-Pixels:
-	Cf=Dst->RGBA; Ct=Src->RGBA;
-	MUL8(Ct[0],Cf[0],Cf[0])
-	MUL8(Ct[1],Cf[1],Cf[1])
-	MUL8(Ct[2],Cf[2],Cf[2])
-/*	AF=AF; */		/* alpha from color */
-	Dst++;
-	Src++;
-	if(Dst!=End)	 goto Pixels;
+	while(0<size--)
+	{
+	MUL8(CT1R,CF1R,CF1R)
+	MUL8(CT1G,CF1G,CF1G)
+	MUL8(CT1B,CF1B,CF1B)
+
+	MUL8(CT2R,CF2R,CF2R)
+	MUL8(CT2G,CF2G,CF2G)
+	MUL8(CT2B,CF2B,CF2B)
+	Frag+=2;
+	}
 }
 /*=============================================================*/
-void Pixels32M(struct SOFT3D_context *SC)
+void PixelsModulate32(struct SOFT3D_context *SC)
 {
-/* v40: modulate src & dst  (allways) */
-register struct rgbabuffer3D* Src=SC->Src;	/* tex */
-register struct rgbabuffer3D* Dst=SC->Dst;	/* color  */
-register struct rgbabuffer3D* End=SC->End;
-register UBYTE *Cf;
-register UBYTE *Ct;
+/* v40: modulate src & dst  (always) */
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
 register UBYTE *Mul8=SC->Mul8;
 register union oper3D Oper1;
 
-
-SREM(Pixels32M)
+SREM(PixelsModulate32)
 	Oper1.L.Index=0;
-Pixels:
-	Cf=Dst->RGBA; Ct=Src->RGBA;
-	MUL8(Ct[0],Cf[0],Cf[0])
-	MUL8(Ct[1],Cf[1],Cf[1])
-	MUL8(Ct[2],Cf[2],Cf[2])
-	MUL8(AT,AF,AF)
-	Dst++;
-	Src++;
-	if(Dst!=End)	 goto Pixels;
+	while(0<size--)
+	{
+	MUL8(CT1R,CF1R,CF1R)
+	MUL8(CT1G,CF1G,CF1G)
+	MUL8(CT1B,CF1B,CF1B)
+	MUL8(AT1,AF1,AF1)
+
+	MUL8(CT2R,CF2R,CF2R)
+	MUL8(CT2G,CF2G,CF2G)
+	MUL8(CT2B,CF2B,CF2B)
+	MUL8(AT2,AF2,AF2)
+	Frag+=2;
+	}
 }
 /*=============================================================*/
-void Pixels24D(struct SOFT3D_context *SC)
+void PixelsDecal24(struct SOFT3D_context *SC)
 {
-/* v40: decal src & dst  (allways) */
-register struct rgbabuffer3D* Src=SC->Src;	/* tex */
-register struct rgbabuffer3D* Dst=SC->Dst;	/* color  */
-register struct rgbabuffer3D* End=SC->End;
-register UBYTE *Cf;
-register UBYTE *Ct;
+/* v40: decal src & dst  (always) */
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
 
 SREM(Pixels24DEC)
-Pixels:
-	Cf=Dst->RGBA; Ct=Src->RGBA;
-	Cf[0]=Ct[0];
-	Cf[1]=Ct[1];
-	Cf[2]=Ct[2];
-/*	AF=AF; */		/* alpha from color */
-	Dst++;
-	Src++;
-	if(Dst!=End)	 goto Pixels;
+	while(0<size--)
+	{
+	CF1R=CT1R;
+	CF1G=CT1G;
+	CF1B=CT1B;
+	AF1 =ONE;
 
+	CF2R=CT2R;
+	CF2G=CT2G;
+	CF2B=CT2B;
+	AF2 =ONE;
+	Frag+=2;
+	}
 }
 /*=============================================================*/
-void Pixels32D(struct SOFT3D_context *SC)
+void PixelsDecal32(struct SOFT3D_context *SC)
 {
-/* v40: decal src & dst  (allways) */
-register struct rgbabuffer3D* Src=SC->Src;	/* tex */
-register struct rgbabuffer3D* Dst=SC->Dst;	/* color  */
-register struct rgbabuffer3D* End=SC->End;
-register UBYTE *Cf;
-register UBYTE *Ct;
+/* v40: decal src & dst  (always) */
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
 register UBYTE *Mul8=SC->Mul8;
 register union oper3D Oper1;
 register union oper3D Oper2;
 
-SREM(Pixels32D)
+SREM(PixelsDecal32)
 	Oper1.L.Index=Oper2.L.Index=0;
-Pixels:
-	Cf=Dst->RGBA; Ct=Src->RGBA;
-	FULLADDMUL8(Ct[0],AT,Cf[0],255-AT,Cf[0])
-	NEXTADDMUL8(Ct[1],Cf[1],Cf[1])
-	NEXTADDMUL8(Ct[2],Cf[2],Cf[2])
-/*	AF=AF; */		/* alpha from color */
-	Dst++;
-	Src++;
-	if(Dst!=End)	 goto Pixels;
+	while(0<size--)
+	{
+	FULLADDMUL8(CT1R,AT1,CF1R,ONE-AT1,CF1R)
+	NEXTADDMUL8(CT1G,CF1G,CF1G)
+	NEXTADDMUL8(CT1B,CF1B,CF1B)
+/*	AF1=AF1; */		/* alpha from color */
 
+	FULLADDMUL8(CT2R,AT2,CF2R,ONE-AT2,CF2R)
+	NEXTADDMUL8(CT2G,CF2G,CF2G)
+	NEXTADDMUL8(CT2B,CF2B,CF2B)
+/*	AF2=AF2; */		/* alpha from color */
+	Frag+=2;
+	}
 }
 /*=============================================================*/
-void Pixels24B(struct SOFT3D_context *SC)
+void PixelsBlend24(struct SOFT3D_context *SC)
 {
-/* v40: blend src & dst  & env (allways) */
-register struct rgbabuffer3D* Src=SC->Src;	/* tex */
-register struct rgbabuffer3D* Dst=SC->Dst;	/* color  */
-register struct rgbabuffer3D* End=SC->End;
-register UBYTE *Cf;
-register UBYTE *Ct;
+/* v40: blend src & dst  & env (always) */
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
 register UBYTE *Mul8=SC->Mul8;
 register union oper3D Oper1;
 register union oper3D Oper2;
-register UBYTE *Cc=SC->EnvRGBA;
 
-SREM(Pixels24B)
+SREM(PixelsBlend24)
 	Oper1.L.Index=Oper2.L.Index=0;
-Pixels:
-	Cf=Dst->RGBA; Ct=Src->RGBA;
-	FULLADDMUL8(Cf[0],255-Ct[0],Cc[0],Ct[0],Cf[0])
-	NEXTADDMUL8(Cf[1],Cc[1],Cf[1])
-	NEXTADDMUL8(Cf[2],Cc[2],Cf[2])
-/*	AF=AF; */		/* alpha from color */
+	while(0<size--)
+	{
+	FULLADDMUL8(CF1R,ONE-CT1R,CCR,CT1R,CF1R)
+	FULLADDMUL8(CF1G,ONE-CT1G,CCG,CT1G,CF1G)
+	FULLADDMUL8(CF1B,ONE-CT1B,CCB,CT1B,CF1B)
 
-	Dst++;
-	Src++;
-	if(Dst!=End)	 goto Pixels;
-
+	FULLADDMUL8(CF2R,ONE-CT2R,CCR,CT2R,CF2R)
+	FULLADDMUL8(CF2G,ONE-CT2G,CCG,CT2G,CF2G)
+	FULLADDMUL8(CF2B,ONE-CT2B,CCB,CT2B,CF2B)
+	Frag+=2;
+	}
 }
 /*=============================================================*/
-void Pixels32B(struct SOFT3D_context *SC)
+void PixelsBlend32(struct SOFT3D_context *SC)
 {
-/* v40: blend src & dst  & env (allways) */
-register struct rgbabuffer3D* Src=SC->Src;	/* tex */
-register struct rgbabuffer3D* Dst=SC->Dst;	/* color  */
-register struct rgbabuffer3D* End=SC->End;
-register UBYTE *Cf;
-register UBYTE *Ct;
+/* v40: blend src & dst  & env (always) */
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
 register UBYTE *Mul8=SC->Mul8;
 register union oper3D Oper1;
 register union oper3D Oper2;
-register UBYTE *Cc=SC->EnvRGBA;
 
-
-SREM(Pixels32B)
+SREM(PixelsBlend32)
 	Oper1.L.Index=Oper2.L.Index=0;
-Pixels:
-	Cf=Dst->RGBA; Ct=Src->RGBA;
-	FULLADDMUL8(Cf[0],255-Ct[0],Cc[0],Ct[0],Cf[0])
-	NEXTADDMUL8(Cf[1],Cc[1],Cf[1])
-	NEXTADDMUL8(Cf[2],Cc[2],Cf[2])
-	MUL8(AF,AT,AF)
-	Dst++;
-	Src++;
-	if(Dst!=End)	 goto Pixels;
+	while(0<size--)
+	{
+	FULLADDMUL8(CF1R,ONE-CT1R,CCR,CT1R,CF1R)
+	FULLADDMUL8(CF1G,ONE-CT1G,CCG,CT1G,CF1G)
+	FULLADDMUL8(CF1B,ONE-CT1B,CCB,CT1B,CF1B)
+	MUL8(AF1,AT1,AF1)
 
+	FULLADDMUL8(CF2R,ONE-CT2R,CCR,CT2R,CF2R)
+	FULLADDMUL8(CF2G,ONE-CT2G,CCG,CT2G,CF2G)
+	FULLADDMUL8(CF2B,ONE-CT2B,CCR,CT2B,CF2B)
+	MUL8(AF2,AT2,AF2)
+	Frag+=2;
+	}
 }
 /*=============================================================*/
-void Pixels24m(struct SOFT3D_context *SC)
+void PixelsMedian24(struct SOFT3D_context *SC)
 {
-/* make median value with src & dst  (allways)*/
-register struct rgbabuffer3D* Src=SC->Src;
-register struct rgbabuffer3D* Dst=SC->Dst;
-register struct rgbabuffer3D* End=SC->End;
-register UBYTE *Cf;
-register UBYTE *Ct;
+/* make median value with src & dst  (always)*/
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
 register ULONG  one=1;
 
-SREM(Pixels24m)
-Pixels:
-	Cf=Dst->RGBA; Ct=Src->RGBA;
-	Cf[0]= ( (ULONG) Ct[0] + (ULONG)Cf[0] )>>one;
-	Cf[1]= ( (ULONG) Ct[1] + (ULONG)Cf[1] )>>one;
-	Cf[2]= ( (ULONG) Ct[2] + (ULONG)Cf[2] )>>one;
-/*	AF=AF; */		/* alpha from color */
-	Dst++;
-	Src++;
-	if(Dst!=End)	 goto Pixels;
+SREM(PixelsMedian24)
+	while(0<size--)
+	{
+	CF1R= ( (ULONG) CT1R + (ULONG)CF1R )>>one;
+	CF1G= ( (ULONG) CT1G + (ULONG)CF1G )>>one;
+	CF1B= ( (ULONG) CT1B + (ULONG)CF1B )>>one;
 
+	CF2R= ( (ULONG) CT2R + (ULONG)CF2R )>>one;
+	CF2G= ( (ULONG) CT2G + (ULONG)CF2G )>>one;
+	CF2B= ( (ULONG) CT2B + (ULONG)CF2B )>>one;
+	Frag+=2;
+	}
 }
 /*=============================================================*/
-void Pixels32m(struct SOFT3D_context *SC)
+void PixelsMedian32(struct SOFT3D_context *SC)
 {
-/* make median value with src & dst  (allways)*/
-register struct rgbabuffer3D* Src=SC->Src;
-register struct rgbabuffer3D* Dst=SC->Dst;
-register struct rgbabuffer3D* End=SC->End;
-register UBYTE *Cf;
-register UBYTE *Ct;
+/* make median value with src & dst  (always)*/
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
 register ULONG one=1;
 
-SREM(Pixels32m)
-Pixels:
-	Cf=Dst->RGBA; Ct=Src->RGBA;
-	Cf[0]= ( (ULONG) Ct[0] + (ULONG)Cf[0] )>>one;
-	Cf[1]= ( (ULONG) Ct[1] + (ULONG)Cf[1] )>>one;
-	Cf[2]= ( (ULONG) Ct[2] + (ULONG)Cf[2] )>>one;
-	Cf[3]= ( (ULONG) AT    + (ULONG)AF    )>>one;
-	Dst++;
-	Src++;
-	if(Dst!=End)	 goto Pixels;
+SREM(PixelsMedian32)
+	while(0<size--)
+	{
+	CF1R= ( (ULONG) CT1R + (ULONG)CF1R )>>one;
+	CF1G= ( (ULONG) CT1G + (ULONG)CF1G )>>one;
+	CF1B= ( (ULONG) CT1B + (ULONG)CF1B )>>one;
+	AF1 = ( (ULONG) AT1  + (ULONG)AF1  )>>one;
+	if(AT1 < MINALPHA) AF1=0;
 
+	CF2R= ( (ULONG) CT2R + (ULONG)CF2R )>>one;
+	CF2G= ( (ULONG) CT2G + (ULONG)CF2G )>>one;
+	CF2B= ( (ULONG) CT2B + (ULONG)CF2B )>>one;
+	AF2 = ( (ULONG) AT2  + (ULONG)AF2  )>>one;
+	if(AT2 < MINALPHA) AF2=0;
+	Frag+=2;
+	}
 }
 /*=============================================================*/
-void Pixels32AA(struct SOFT3D_context *SC)
+void PixelsFogToImage(struct SOFT3D_context *SC)
+{
+/* blend source & dest (always) with a fog color already weigthed to fog A	*/
+/* FogRGBA[3] is set to background transparency against fog	level			*/
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
+register UBYTE *Mul8=SC->Mul8;
+register union oper3D Oper1;
+
+SREM(PixelsFogToImage)
+	Oper1.L.Index=0;
+	while(0<size--)
+	{
+	Oper1.B.a= Frag[0].FogRGBA[3];	
+	Oper1.B.b= Frag[0].Image8[0];	Frag[0].Image8[0]	=Frag[0].FogRGBA[0]+Mul8[Oper1.L.Index];
+	Oper1.B.b= Frag[0].Image8[1];	Frag[0].Image8[1]	=Frag[0].FogRGBA[1]+Mul8[Oper1.L.Index];
+	Oper1.B.b= Frag[0].Image8[2];	Frag[0].Image8[2]	=Frag[0].FogRGBA[2]+Mul8[Oper1.L.Index];
+
+	Oper1.B.a= Frag[1].FogRGBA[3];	
+	Oper1.B.b= Frag[1].Image8[0];	Frag[1].Image8[0]	=Frag[1].FogRGBA[0]+Mul8[Oper1.L.Index];
+	Oper1.B.b= Frag[1].Image8[1];	Frag[1].Image8[1]	=Frag[1].FogRGBA[1]+Mul8[Oper1.L.Index];
+	Oper1.B.b= Frag[1].Image8[2];	Frag[1].Image8[2]	=Frag[1].FogRGBA[2]+Mul8[Oper1.L.Index];
+	Frag+=2;
+	}
+}
+/*=============================================================*/
+void PixelsFogToBuffer(struct SOFT3D_context *SC)
+{
+/* blend source & dest (always) with a fog color already weigthed to fog A	*/
+/* FogRGBA[3] is set to background transparency against fog	level			*/
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
+register UBYTE *Mul8=SC->Mul8;
+register union oper3D Oper1;
+
+SREM(PixelsFogToBuffer)
+	Oper1.L.Index=0;
+	while(0<size--)
+	{
+	Oper1.B.a= Frag[0].FogRGBA[3];	
+	Oper1.B.b= Frag[0].BufferRGBA[0];	Frag[0].BufferRGBA[0]=Frag[0].FogRGBA[0]+Mul8[Oper1.L.Index];
+	Oper1.B.b= Frag[0].BufferRGBA[1];	Frag[0].BufferRGBA[1]=Frag[0].FogRGBA[1]+Mul8[Oper1.L.Index];
+	Oper1.B.b= Frag[0].BufferRGBA[2];	Frag[0].BufferRGBA[2]=Frag[0].FogRGBA[2]+Mul8[Oper1.L.Index];
+
+	Oper1.B.a= Frag[1].FogRGBA[3];	
+	Oper1.B.b= Frag[1].BufferRGBA[0];	Frag[1].BufferRGBA[0]=Frag[1].FogRGBA[0]+Mul8[Oper1.L.Index];
+	Oper1.B.b= Frag[1].BufferRGBA[1];	Frag[1].BufferRGBA[1]=Frag[1].FogRGBA[1]+Mul8[Oper1.L.Index];
+	Oper1.B.b= Frag[1].BufferRGBA[2];	Frag[1].BufferRGBA[2]=Frag[1].FogRGBA[2]+Mul8[Oper1.L.Index];
+	Frag+=2;
+	}
+}
+/*=============================================================*/
+void PixelsSepiaToImage(struct SOFT3D_context *SC)
+{
+/* colorize in red the pixels 	*/
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
+register UWORD r;
+
+SREM(PixelsSepiaToImage)
+	while(0<size--)
+	{
+	r=Frag[0].Image8[0]+Frag[0].Image8[1]+Frag[0].Image8[2];
+	Frag[0].Image8[0]=255;
+	if(r<=255*2)
+		Frag[0].Image8[0]=r/2;
+	Frag[0].Image8[1]=r/4;
+	Frag[0].Image8[2]=r/6;
+
+	r=Frag[1].Image8[0]+Frag[1].Image8[1]+Frag[1].Image8[2];
+	Frag[1].Image8[0]=255;
+	if(r<=255*2)
+		Frag[1].Image8[0]=r/2;
+	Frag[1].Image8[1]=r/4;
+	Frag[1].Image8[2]=r/6;
+	Frag+=2;
+	}
+}
+/*=============================================================*/
+void PixelsSepiaToBuffer(struct SOFT3D_context *SC)
+{
+/* colorize in red the pixels 	*/
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
+register UWORD r;
+
+SREM(PixelsSepiaToBuffer)
+	while(0<size--)
+	{
+	r=Frag[0].BufferRGBA[0]+Frag[0].BufferRGBA[1]+Frag[0].BufferRGBA[2];
+	Frag[0].BufferRGBA[0]=255;
+	if(r<=255*2)
+		Frag[0].BufferRGBA[0]=r/2;
+	Frag[0].BufferRGBA[1]=r/4;
+	Frag[0].BufferRGBA[2]=r/6;
+
+	r=Frag[1].BufferRGBA[0]+Frag[1].BufferRGBA[1]+Frag[1].BufferRGBA[2];
+	Frag[1].BufferRGBA[0]=255;
+	if(r<=255*2)
+		Frag[1].BufferRGBA[0]=r/2;
+	Frag[1].BufferRGBA[1]=r/4;
+	Frag[1].BufferRGBA[2]=r/6;
+	Frag+=2;
+	}
+}
+/*=============================================================*/
+void PixelsSrcAlpha_OneMinusSrcAlpha32perfect(struct SOFT3D_context *SC)
 {
 /* blend source & dest (allways)*/
 register struct rgbabuffer3D* Src=SC->Src;	/* tex */
@@ -1591,11 +1869,11 @@ register union oper3D Oper1;
 register union oper3D Oper2;
 register struct rgbabuffer3D* End=SC->End;
 
-SREM(Pixels32AA)
+SREM(PixelsSrcAlpha_OneMinusSrcAlpha32perfect)
 	Oper1.L.Index=Oper2.L.Index=0;
 Pixels:
 	Cf=Dst->RGBA; Ct=Src->RGBA;
-	FULLADDMUL8(Ct[0],AT,Cf[0],255-AT,Cf[0])
+	FULLADDMUL8(Ct[0],AT,Cf[0],ONE-AT,Cf[0])
 	NEXTADDMUL8(Ct[1],Cf[1],Cf[1])
 	NEXTADDMUL8(Ct[2],Cf[2],Cf[2])
 	Dst++;
@@ -1604,7 +1882,7 @@ Pixels:
 
 }
 /*=============================================================*/
-void Pixels32A(struct SOFT3D_context *SC)
+void PixelsSrcAlpha_OneMinusSrcAlpha32(struct SOFT3D_context *SC)
 {
 /* blend source & dest (if source not solid nor transparent)*/
 register struct rgbabuffer3D* Src=SC->Src;
@@ -1618,17 +1896,17 @@ register struct rgbabuffer3D* End=SC->End;
 
 
 	if(!Wazp3D.UseAlphaMinMax.ON)
-		{ Pixels32AA(SC); return; }
+		{ PixelsSrcAlpha_OneMinusSrcAlpha32perfect(SC); return; }
 
-SREM(Pixels32A)
+SREM(PixelsSrcAlpha_OneMinusSrcAlpha32)
 	Oper1.L.Index=Oper2.L.Index=0;
 Pixels:
 	Cf=Dst->RGBA;  Ct=Src->RGBA;
-	if (AT > ALPHAMIN)				/* if source visible ? */
+	if (AT > MINALPHA)				/* if source visible ? */
 	{
-		if(AT < ALPHAMAX)				/* if source not solid ? */
+		if(AT < MAXALPHA)				/* if source not solid ? */
 		{
-		FULLADDMUL8(Ct[0],AT,Cf[0],255-AT,Cf[0])
+		FULLADDMUL8(Ct[0],AT,Cf[0],ONE-AT,Cf[0])
 		NEXTADDMUL8(Ct[1],Cf[1],Cf[1])
 		NEXTADDMUL8(Ct[2],Cf[2],Cf[2])
 		}
@@ -1643,7 +1921,7 @@ Pixels:
 	if(Dst!=End)	 goto Pixels;
 }
 /*=============================================================*/
-void Pixels32a(struct SOFT3D_context *SC)
+void PixelsSrcAlpha_OneMinusSrcAlpha32fast(struct SOFT3D_context *SC)
 {
 /* copy source to dest (if source not transparent)*/
 register struct rgbabuffer3D* Src=SC->Src;
@@ -1652,25 +1930,66 @@ register struct rgbabuffer3D* End=SC->End;
 register UBYTE *Cf;
 register UBYTE *Ct;
 
-SREM(Pixels32a)
+SREM(PixelsSrcAlpha_OneMinusSrcAlpha32fast)
 Pixels:
 	Cf=Dst->RGBA; Ct=Src->RGBA;
-	if (AT > ALPHAMIN)					/* if source visible ? */
+	if (AT > MINALPHA)					/* if source visible ? */
 		COPYRGBA(Cf,Ct);
 	Dst++;
 	Src++;
 	if(Dst!=End)	 goto Pixels;
 }
 /*=============================================================*/
-void Pixels24S(struct SOFT3D_context *SC)
+void PixelsSrcAlpha_One32(struct SOFT3D_context *SC)
+{
+/* v45: for glxcess :-) */
+register struct rgbabuffer3D* Src=SC->Src;
+register struct rgbabuffer3D* Dst=SC->Dst;
+register UBYTE *Mul8=SC->Mul8;
+register UBYTE *Add8=SC->Add8;
+register UBYTE *Cf;
+register UBYTE *Ct;
+register union oper3D Oper1;
+register union oper3D Oper2;
+register struct rgbabuffer3D* End=SC->End;
+register UBYTE tmp;
+
+SREM(PixelsSrcAlpha_One32)
+	Oper1.L.Index=Oper2.L.Index=0;
+Pixels:
+	Cf=Dst->RGBA;  Ct=Src->RGBA;
+	if (AT > MINALPHA)				/* if source visible ? */
+	{
+		if(AT < MAXALPHA)				/* if source not solid ? */
+		{
+		MUL8(Ct[0],AT,tmp) ADD8(tmp,Cf[0],Cf[0])
+		MUL8(Ct[1],AT,tmp) ADD8(tmp,Cf[1],Cf[1])
+		MUL8(Ct[2],AT,tmp) ADD8(tmp,Cf[2],Cf[2])
+		}
+		else
+		{
+		ADD8(Ct[0],Cf[0],Cf[0])
+		ADD8(Ct[1],Cf[1],Cf[1])
+		ADD8(Ct[2],Cf[2],Cf[2])
+		}
+
+	}
+	Dst++;
+	Src++;
+	if(Dst!=End)	 goto Pixels;
+
+}
+/*=============================================================*/
+void PixelsOne_One24(struct SOFT3D_context *SC)
 {
 /* v41: add saturate src & dst  (allways) */
 /*
 BlendingFunctions used in BlitzQuake:
-glBlendFunc (GL_ZERO, GL_SRC_ALPHA);			---> Pixels24L (v41)
-glBlendFunc (GL_ZERO, GL_SRC_COLOR));			---> Pixels24M (v41)
-glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);	---> Pixels32A
-glBlendFunc (GL_ONE, GL_ONE);					---> Pixels24S (v41)
+glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);	---> PixelsSrcAlpha_OneMinusSrcAlpha32
+glBlendFunc (GL_ONE, GL_ONE);					---> PixelsOne_One24 (v41)
+glBlendFunc (GL_ZERO, GL_SRC_ALPHA);			---> PixelsZero_SrcAlpha32 (v41)
+glBlendFunc (GL_ZERO, GL_SRC_COLOR));			---> PixelsZero_SrcColor24 (v45)
+
 */
 register struct rgbabuffer3D* Src=SC->Src;	/* tex */
 register struct rgbabuffer3D* Dst=SC->Dst;	/* color  */
@@ -1680,7 +1999,7 @@ register UBYTE *Ct;
 register UBYTE *Add8=SC->Add8;
 register union oper3D Oper1;
 
-SREM(Pixels24S)
+SREM(PixelsOne_One24)
 	Oper1.L.Index=0;
 Pixels:
 	Cf=Dst->RGBA; Ct=Src->RGBA;
@@ -1692,7 +2011,7 @@ Pixels:
 	if(Dst!=End)	 goto Pixels;
 }
 /*=============================================================*/
-void Pixels24L(struct SOFT3D_context *SC)
+void PixelsZero_SrcAlpha32(struct SOFT3D_context *SC)
 {
 /* v41: alpha-modulate dst  (allways) */
 register struct rgbabuffer3D* Src=SC->Src;	/* tex */
@@ -1703,7 +2022,7 @@ register UBYTE *Ct;
 register UBYTE *Mul8=SC->Mul8;
 register union oper3D Oper1;
 
-SREM(Pixels24L)
+SREM(PixelsZero_SrcAlpha32)
 	Oper1.L.Index=0;
 Pixels:
 	Cf=Dst->RGBA; Ct=Src->RGBA;
@@ -1715,67 +2034,238 @@ Pixels:
 	if(Dst!=End)	 goto Pixels;
 }
 /*=============================================================*/
-void PixelsBGRA(struct SOFT3D_context *SC)
+void PixelsZero_SrcColor24(struct SOFT3D_context *SC)
 {
-/* Convert BGRA <-> RGBA */
-register struct rgbabuffer3D* Src=SC->Src;
-register struct rgbabuffer3D* Dst=SC->Dst;
+/* v45: color-modulate dst  (allways) */
+register struct rgbabuffer3D* Src=SC->Src;	/* tex */
+register struct rgbabuffer3D* Dst=SC->Dst;	/* color  */
 register struct rgbabuffer3D* End=SC->End;
 register UBYTE *Cf;
 register UBYTE *Ct;
+register UBYTE *Mul8=SC->Mul8;
+register union oper3D Oper1;
 
-SREM(PixelsBGRA)
+SREM(PixelsZero_SrcColor24)
+	Oper1.L.Index=0;
 Pixels:
 	Cf=Dst->RGBA; Ct=Src->RGBA;
-	Cf[0]= Ct[2];
-	Cf[1]= Ct[1];
-	Cf[2]= Ct[0];
-	Cf[3]= Ct[3];
+	MUL8(Ct[0],Cf[0],Cf[0])
+	MUL8(Ct[1],Cf[1],Cf[1])
+	MUL8(Ct[2],Cf[2],Cf[2])
 	Dst++;
 	Src++;
 	if(Dst!=End)	 goto Pixels;
+}
+/*=============================================================*/
+void PixelsZero_OneMinusSrcColor24(struct SOFT3D_context *SC)
+{
+/* v45: for glxcess :-) */
+register struct rgbabuffer3D* Src=SC->Src;	/* tex */
+register struct rgbabuffer3D* Dst=SC->Dst;	/* color  */
+register struct rgbabuffer3D* End=SC->End;
+register UBYTE *Cf;
+register UBYTE *Ct;
+register UBYTE *Mul8=SC->Mul8;
+register union oper3D Oper1;
+
+SREM(PixelsZero_OneMinusSrcColor24)
+	Oper1.L.Index=0;
+Pixels:
+	Cf=Dst->RGBA; Ct=Src->RGBA;
+	MUL8(ONE-Ct[0],Cf[0],Cf[0])
+	MUL8(ONE-Ct[1],Cf[1],Cf[1])
+	MUL8(ONE-Ct[2],Cf[2],Cf[2])
+	Dst++;
+	Src++;
+	if(Dst!=End)	 goto Pixels;
+}
+/*=============================================================*/
+void PixelsSrcAlpha_OneMinusSrcColor32(struct SOFT3D_context *SC)
+{
+/* v45: for glxcess :-) */
+register struct rgbabuffer3D* Src=SC->Src;	/* tex */
+register struct rgbabuffer3D* Dst=SC->Dst;	/* color  */
+register struct rgbabuffer3D* End=SC->End;
+register UBYTE *Cf;
+register UBYTE *Ct;
+register UBYTE *Mul8=SC->Mul8;
+register UBYTE *Add8=SC->Add8;
+register union oper3D Oper1;
+register union oper3D Oper2;
+register UBYTE *tmp;
+
+SREM(PixelsSrcAlpha_OneMinusSrcColor32)
+	Oper1.L.Index=Oper2.L.Index=0;
+Pixels:
+	Cf=Dst->RGBA; Ct=Src->RGBA;
+	FULLADDMUL8(Ct[0],AT,Cf[0],ONE-Ct[0],Cf[0])
+	FULLADDMUL8(Ct[1],AT,Cf[1],ONE-Ct[1],Cf[1])
+	FULLADDMUL8(Ct[2],AT,Cf[2],ONE-Ct[2],Cf[2])
+	Dst++;
+	Src++;
+	if(Dst!=End)	 goto Pixels;
+}
+/*=============================================================*/
+void PixelsDstColor_Zero24(struct SOFT3D_context *SC)
+{
+SREM(PixelsDstColor_Zero24)
+	PixelsZero_SrcColor24(SC);
+}
+/*=============================================================*/
+void PixelsInBGRA(struct SOFT3D_context *SC)
+{
+/* Convert BGRA -> buffer */
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
+
+	while(0<size--)
+	{
+	COPYRGBA(Frag[0].BufferRGBA,Frag[0].Image8);
+	Frag[0].BufferRGBA[0]=Frag[0].Image8[2];
+	Frag[0].BufferRGBA[2]=Frag[0].Image8[0];
+
+	COPYRGBA(Frag[1].BufferRGBA,Frag[1].Image8);
+	Frag[1].BufferRGBA[0]=Frag[1].Image8[2];
+	Frag[1].BufferRGBA[2]=Frag[1].Image8[0];
+	Frag+=2;
+	}
+
+}
+/*=============================================================*/
+void PixelsOutBGRA(struct SOFT3D_context *SC)
+{
+/* Convert buffer -> BGRA */
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
+
+	while(0<size--)
+	{
+	COPYRGBA(Frag[0].Image8,Frag[0].BufferRGBA);
+	Frag[0].Image8[2]=Frag[0].BufferRGBA[0];
+	Frag[0].Image8[0]=Frag[0].BufferRGBA[2];
+
+	COPYRGBA(Frag[1].Image8,Frag[1].BufferRGBA);
+	Frag[1].Image8[2]=Frag[1].BufferRGBA[0];
+	Frag[1].Image8[0]=Frag[1].BufferRGBA[2];
+	Frag+=2;
+	}
+
 }
 /*=============================================================*/
 void PixelsInARGB(struct SOFT3D_context *SC)
 {
-/* Convert ARGB -> RGBA */
-register struct rgbabuffer3D* Src=SC->Src;
-register struct rgbabuffer3D* Dst=SC->Dst;
-register struct rgbabuffer3D* End=SC->End;
-register UBYTE *Cf;
-register UBYTE *Ct;
+/* Convert ARGB -> buffer */
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
 
-SREM(PixelsBGRA)
-Pixels:
-	Cf=Dst->RGBA; Ct=Src->RGBA;
-	Cf[0]= Ct[1];
-	Cf[1]= Ct[2];
-	Cf[2]= Ct[3];
-	Cf[3]= Ct[0];
-	Dst++;
-	Src++;
-	if(Dst!=End)	 goto Pixels;
+	while(0<size--)
+	{
+	Frag[0].BufferRGBA[0]=Frag[0].Image8[1];
+	Frag[0].BufferRGBA[1]=Frag[0].Image8[2];
+	Frag[0].BufferRGBA[2]=Frag[0].Image8[3];
+	Frag[0].BufferRGBA[3]=Frag[0].Image8[0];
+
+	Frag[1].BufferRGBA[0]=Frag[1].Image8[1];
+	Frag[1].BufferRGBA[1]=Frag[1].Image8[2];
+	Frag[1].BufferRGBA[2]=Frag[1].Image8[3];
+	Frag[1].BufferRGBA[3]=Frag[0].Image8[0];
+	Frag+=2;
+	}
+
 }
 /*=============================================================*/
 void PixelsOutARGB(struct SOFT3D_context *SC)
 {
-/* Convert RGBA -> ARGB*/
-register struct rgbabuffer3D* Src=SC->Src;
-register struct rgbabuffer3D* Dst=SC->Dst;
-register struct rgbabuffer3D* End=SC->End;
-register UBYTE *Cf;
-register UBYTE *Ct;
+/* Convert buffer -> ARGB */
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
 
-SREM(PixelsBGRA)
-Pixels:
-	Cf=Dst->RGBA; Ct=Src->RGBA;
-	Cf[0]= Ct[3];
-	Cf[1]= Ct[0];
-	Cf[2]= Ct[1];
-	Cf[3]= Ct[2];
-	Dst++;
-	Src++;
-	if(Dst!=End)	 goto Pixels;
+	while(0<size--)
+	{
+	Frag[0].Image8[1]=Frag[0].BufferRGBA[0];
+	Frag[0].Image8[2]=Frag[0].BufferRGBA[1];
+	Frag[0].Image8[3]=Frag[0].BufferRGBA[2];
+	Frag[0].Image8[0]=Frag[0].BufferRGBA[3];
+
+	Frag[1].Image8[1]=Frag[1].BufferRGBA[0];
+	Frag[1].Image8[2]=Frag[1].BufferRGBA[1];
+	Frag[1].Image8[3]=Frag[1].BufferRGBA[2];
+	Frag[1].Image8[0]=Frag[0].BufferRGBA[3];
+	Frag+=2;
+	}
+
+}
+/*=============================================================*/
+void PixelsInRGB(struct SOFT3D_context *SC)
+{
+/* Convert RGB -> buffer */
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
+
+	while(0<size--)
+	{
+	Frag[0].BufferRGBA[0]=Frag[0].Image8[0];
+	Frag[0].BufferRGBA[1]=Frag[0].Image8[1];
+	Frag[0].BufferRGBA[2]=Frag[0].Image8[2];
+	Frag[0].BufferRGBA[3]=ONE;
+
+	Frag[1].BufferRGBA[0]=Frag[1].Image8[0];
+	Frag[1].BufferRGBA[1]=Frag[1].Image8[1];
+	Frag[1].BufferRGBA[2]=Frag[1].Image8[2];
+	Frag[1].BufferRGBA[3]=ONE;
+	Frag+=2;
+	}
+
+}
+/*=============================================================*/
+void PixelsOutRGB(struct SOFT3D_context *SC)
+{
+/* Convert buffer -> RGB */
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
+
+	while(0<size--)
+	{
+	Frag[0].Image8[0]=Frag[0].BufferRGBA[0];
+	Frag[0].Image8[1]=Frag[0].BufferRGBA[1];
+	Frag[0].Image8[2]=Frag[0].BufferRGBA[2];
+
+	Frag[1].Image8[0]=Frag[1].BufferRGBA[0];
+	Frag[1].Image8[1]=Frag[1].BufferRGBA[1];
+	Frag[1].Image8[2]=Frag[1].BufferRGBA[2];
+	Frag+=2;
+	}
+
+}
+/*=============================================================*/
+void PixelsInRGBA(struct SOFT3D_context *SC)
+{
+/* Convert RGBA -> buffer */
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
+
+	while(0<size--)
+	{
+	COPYRGBA(Frag[0].BufferRGBA,Frag[0].Image8);
+	COPYRGBA(Frag[1].BufferRGBA,Frag[1].Image8);
+	Frag+=2;
+	}
+
+}
+/*=============================================================*/
+void PixelsOutRGBA(struct SOFT3D_context *SC)
+{
+/* Convert buffer -> RGBA */
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=(SC->FragBufferDone - SC->FragBuffer + 1)/2;
+
+	while(0<size--)
+	{
+	COPYRGBA(Frag[0].Image8,Frag[0].BufferRGBA);
+	COPYRGBA(Frag[1].Image8,Frag[1].BufferRGBA);
+	Frag+=2;
+	}
+
 }
 /*=============================================================*/
 void SelectMipMap(struct SOFT3D_context *SC)
@@ -1809,661 +2299,925 @@ SREM(SelectMipMap)
 	SC->MM=&SC->ST->MMs[mm];
 }
 /*=============================================================*/
-void Fill_Zwrite(struct SOFT3D_context *SC)
+void Fill_BigTexPersp_Gouraud_Fog(struct SOFT3D_context *SC)
 {
-register UBYTE *Image8;
-register float  *ZbufferF;
+register ULONG *Image32;
+register UBYTE *Ztest;
 register union pixel3D *Pix=SC->Pix;
-
-register struct pixbuffer3D *PixBuffer=SC->PixBufferDone;
-
-register WORD high  =SC->PolyHigh;
-register WORD large;
-
-SREM(Fill_Zwrite)
-	while(0<high--)
-	{
-	Image8   =(UBYTE *)(& Pix->L.Image32Y  [Pix->W.x]);
-	ZbufferF =(float  *)(& Pix->L.ZbufferFY[Pix->W.x]);
-	large	   =Pix->W.large;
-
-	while(0<large--)
-	{
-	if(Pix->L.z < ZbufferF[0] )	/* W3D_Z_LESS */
-		{
-		ZbufferF[0]=Pix->L.z;
-		PixBuffer->Image8=Image8;
-		COPYRGBA(PixBuffer->ColorRGBA,SC->FlatRGBA);
-		PixBuffer++;
-		}
-	Image8+=4;
-	ZbufferF++;
-	Pix->L.z+=Pix->L.dz;
-	}
-	if(PixBuffer > SC->PixBufferMaxi)
-		{SC->PixBufferDone=PixBuffer;  SOFT3D_DrawPixels(SC); PixBuffer=SC->PixBuffer;}
-	Pix++; 
-	}
-SC->PixBufferDone=PixBuffer;
-}
-/*=============================================================*/
-void Fill_Ztest(struct SOFT3D_context *SC)
-{
-register UBYTE *Image8;
-register float  *ZbufferF;
-register union pixel3D *Pix=SC->Pix;
-
-register struct pixbuffer3D *PixBuffer=SC->PixBufferDone;
-
-register WORD high  =SC->PolyHigh;
-register WORD large;
-
-SREM(Fill_Ztest)
-	while(0<high--)
-	{
-	Image8   =(UBYTE *)(& Pix->L.Image32Y  [Pix->W.x]);
-	ZbufferF =(float  *)(& Pix->L.ZbufferFY[Pix->W.x]);
-	large	   =Pix->W.large;
-
-	while(0<large--)
-	{
-	if(Pix->L.z < ZbufferF[0] )	/* W3D_Z_LESS */
-		{
-		PixBuffer->Image8=Image8;
-		COPYRGBA(PixBuffer->ColorRGBA,SC->FlatRGBA);
-		PixBuffer++;
-		}
-	Image8+=4;
-	ZbufferF++;
-	Pix->L.z+=Pix->L.dz;
-	}
-	if(PixBuffer > SC->PixBufferMaxi)
-		{SC->PixBufferDone=PixBuffer;  SOFT3D_DrawPixels(SC); PixBuffer=SC->PixBuffer;}
-	Pix++; 
-	}
-SC->PixBufferDone=PixBuffer;
-}
-/*=============================================================*/
-void Fill_Zoff(struct SOFT3D_context *SC)
-{
-register UBYTE *Image8;
-register union pixel3D *Pix=SC->Pix;
-
-register struct pixbuffer3D *PixBuffer=SC->PixBufferDone;
-
-register WORD high  =SC->PolyHigh;
-register WORD large;
-
-SREM(Fill_Zoff)
-	while(0<high--)
-	{
-	Image8   =(UBYTE *)(& Pix->L.Image32Y  [Pix->W.x]);
-	large	   =Pix->W.large;
-
-	while(0<large--)
-	{
-	PixBuffer->Image8=Image8;
-	COPYRGBA(PixBuffer->ColorRGBA,SC->FlatRGBA);
-	PixBuffer++;
-	Image8+=4;
-	}
-	if(PixBuffer > SC->PixBufferMaxi)
-		{SC->PixBufferDone=PixBuffer;  SOFT3D_DrawPixels(SC); PixBuffer=SC->PixBuffer;}
-	Pix++; 
-	}
-SC->PixBufferDone=PixBuffer;
-}
-/*=============================================================*/
-void Fill_Zwrite_Tex_Gouraud_Fog(struct SOFT3D_context *SC)
-{
-register UBYTE *Image8;
-register float  *ZbufferF;
-register union pixel3D *Pix=SC->Pix;
-
 register struct SOFT3D_mipmap *MM=SC->MM;
-register struct pixbuffer3D *PixBuffer=SC->PixBufferDone;
-
+register struct fragbuffer3D *Frag=SC->FragBufferDone;
 register WORD high  =SC->PolyHigh;
 register WORD large;
 
-SREM(Fill_Zwrite_Tex_Gouraud_Fog)
+SREM(Fill_BigTexPersp_Gouraud_Fog)
 
 	while(0<high--)
 	{
-	Image8   =(UBYTE *)(& Pix->L.Image32Y  [Pix->W.x]);
-	ZbufferF =(float  *)(& Pix->L.ZbufferFY[Pix->W.x]);
-	large	   =Pix->W.large;
+	Image32  =&Pix->L.Image32Y  [Pix->W.x];
+	large	   = Pix->W.large;
 
+	SC->Pix=Pix; SC->FunctionZtest(SC); Ztest=SC->Ztest;
 	while(0<large--)
 	{
-	if(Pix->L.z < ZbufferF[0] )	/* W3D_Z_LESS */
+	if(*Ztest++)	
 		{
-		ZbufferF[0]=Pix->L.z;
-		PixBuffer->Image8=Image8;
-		PixBuffer->Tex8=MM->Tex8U[Pix->W.u]+MM->Tex8V[Pix->W.v];
-		PixBuffer->ColorRGBA[0]=Pix->W.R;
-		PixBuffer->ColorRGBA[1]=Pix->W.G;
-		PixBuffer->ColorRGBA[2]=Pix->W.B;
-		PixBuffer->ColorRGBA[3]=Pix->W.A;
-		COPYRGBA(PixBuffer->FogRGBA,SC->FogRGBA);
-		PixBuffer->FogRGBA[3]=FogA(SC,Pix->L.z);
-		PixBuffer++;
+		Frag->Image8=(UBYTE *)Image32;
+		Frag->Tex8 =MM->Tex8U   [Pix->W.u ]+MM->Tex8V   [Pix->W.v ];
+		Frag->Tex8+=MM->Tex8Ulow[Pix->W.u3]+MM->Tex8Vlow[Pix->W.v3];
+		Frag->ColorRGBA[0]=Pix->W.R;
+		Frag->ColorRGBA[1]=Pix->W.G;
+		Frag->ColorRGBA[2]=Pix->W.B;
+		Frag->ColorRGBA[3]=Pix->W.A;
+		COPYRGBA(Frag->FogRGBA,(&SC->FogRGBAs[Pix->W.F]));
+		Frag++;
 		}
-	Image8+=4;
-	ZbufferF++;
-	Pix->L.z+=Pix->L.dz;
-	Pix->L.u+=Pix->L.du;
-	Pix->L.v+=Pix->L.dv;		Pix->L.du+=Pix->L.ddu;	Pix->L.dv+=Pix->L.ddv;
-	Pix->L.R+=Pix->L.dR;
-	Pix->L.G+=Pix->L.dG;
-	Pix->L.B+=Pix->L.dB;
-	Pix->L.A+=Pix->L.dA;
+	Image32++;
+	Pix->L.u +=Pix->L.du;
+	Pix->L.v +=Pix->L.dv;
+	Pix->L.du+=Pix->L.ddu;
+	Pix->L.dv+=Pix->L.ddv;
+	Pix->L.R +=Pix->L.dR;
+	Pix->L.G +=Pix->L.dG;
+	Pix->L.B +=Pix->L.dB;
+	Pix->L.A +=Pix->L.dA;
+	Pix->L.F +=Pix->L.dF;
 	}
-	if(PixBuffer > SC->PixBufferMaxi)
-		{SC->PixBufferDone=PixBuffer;  SOFT3D_DrawPixels(SC); PixBuffer=SC->PixBuffer;}
+
+	if(Frag > SC->FragBufferMaxi)
+		{SC->FragBufferDone=Frag;  DrawFragBuffer(SC); Frag=SC->FragBuffer;}
 	Pix++; 
 	}
-SC->PixBufferDone=PixBuffer;
+SC->FragBufferDone=Frag;
 }
 /*=============================================================*/
-void Fill_Ztest_Tex_Gouraud_Fog(struct SOFT3D_context *SC)
+void Fill_BigTexPersp_Fog(struct SOFT3D_context *SC)
 {
-register UBYTE *Image8;
-register float  *ZbufferF;
+register ULONG *Image32;
+register UBYTE *Ztest;
 register union pixel3D *Pix=SC->Pix;
-
 register struct SOFT3D_mipmap *MM=SC->MM;
-register struct pixbuffer3D *PixBuffer=SC->PixBufferDone;
-
+register struct fragbuffer3D *Frag=SC->FragBufferDone;
 register WORD high  =SC->PolyHigh;
 register WORD large;
 
-SREM(Fill_Ztest_Tex_Gouraud_Fog)
-
+SREM(Fill_BigTexPersp_Gouraud_Fog)
 
 	while(0<high--)
 	{
-	Image8   =(UBYTE *)(& Pix->L.Image32Y  [Pix->W.x]);
-	ZbufferF =(float  *)(& Pix->L.ZbufferFY[Pix->W.x]);
-	large	   =Pix->W.large;
+	Image32  =&Pix->L.Image32Y  [Pix->W.x];
+	large	   = Pix->W.large;
 
+	SC->Pix=Pix; SC->FunctionZtest(SC); Ztest=SC->Ztest;
 	while(0<large--)
 	{
-	if(Pix->L.z < ZbufferF[0] )	/* W3D_Z_LESS */
+	if(*Ztest++)	
 		{
-		PixBuffer->Image8=Image8;
-		PixBuffer->Tex8=MM->Tex8U[Pix->W.u]+MM->Tex8V[Pix->W.v];
-		PixBuffer->ColorRGBA[0]=Pix->W.R;
-		PixBuffer->ColorRGBA[1]=Pix->W.G;
-		PixBuffer->ColorRGBA[2]=Pix->W.B;
-		PixBuffer->ColorRGBA[3]=Pix->W.A;
-		COPYRGBA(PixBuffer->FogRGBA,SC->FogRGBA);
-		PixBuffer->FogRGBA[3]=FogA(SC,Pix->L.z);
-		PixBuffer++;
+		Frag->Image8=(UBYTE *)Image32;
+		Frag->Tex8 =MM->Tex8U   [Pix->W.u ]+MM->Tex8V   [Pix->W.v ];
+		Frag->Tex8+=MM->Tex8Ulow[Pix->W.u3]+MM->Tex8Vlow[Pix->W.v3];
+		COPYRGBA(Frag->ColorRGBA,SC->FlatRGBA);
+		COPYRGBA(Frag->FogRGBA,(&SC->FogRGBAs[Pix->W.F]));
+		Frag++;
 		}
-	Image8+=4;
-	ZbufferF++;
-	Pix->L.z+=Pix->L.dz;
-	Pix->L.u+=Pix->L.du;
-	Pix->L.v+=Pix->L.dv;		Pix->L.du+=Pix->L.ddu;	Pix->L.dv+=Pix->L.ddv;
-	Pix->L.R+=Pix->L.dR;
-	Pix->L.G+=Pix->L.dG;
-	Pix->L.B+=Pix->L.dB;
-	Pix->L.A+=Pix->L.dA;
+	Image32++;
+	Pix->L.u +=Pix->L.du;
+	Pix->L.v +=Pix->L.dv;
+	Pix->L.du+=Pix->L.ddu;
+	Pix->L.dv+=Pix->L.ddv;
+	Pix->L.F +=Pix->L.dF;
 	}
-	if(PixBuffer > SC->PixBufferMaxi)
-		{SC->PixBufferDone=PixBuffer;  SOFT3D_DrawPixels(SC); PixBuffer=SC->PixBuffer;}
+
+	if(Frag > SC->FragBufferMaxi)
+		{SC->FragBufferDone=Frag;  DrawFragBuffer(SC); Frag=SC->FragBuffer;}
 	Pix++; 
 	}
-SC->PixBufferDone=PixBuffer;
+SC->FragBufferDone=Frag;
 }
 /*=============================================================*/
-void Fill_Zoff_Tex_Gouraud_Fog(struct SOFT3D_context *SC)
+void Fill_TexPersp_Gouraud_Fog(struct SOFT3D_context *SC)
 {
-register UBYTE *Image8;
+register ULONG *Image32;
+register UBYTE *Ztest;
 register union pixel3D *Pix=SC->Pix;
-
 register struct SOFT3D_mipmap *MM=SC->MM;
-register struct pixbuffer3D *PixBuffer=SC->PixBufferDone;
-
+register struct fragbuffer3D *Frag=SC->FragBufferDone;
 register WORD high  =SC->PolyHigh;
 register WORD large;
 
-SREM(Fill_Zoff_Tex_Gouraud_Fog)
-
-
-	 while(0<high--)
-	{
-	Image8   =(UBYTE *)(& Pix->L.Image32Y  [Pix->W.x]);
-	large	   =Pix->W.large;
-
-	while(0<large--)
-	{
-	PixBuffer->Image8=Image8;
-	PixBuffer->Tex8=MM->Tex8U[Pix->W.u]+MM->Tex8V[Pix->W.v];
-	PixBuffer->ColorRGBA[0]=Pix->W.R;
-	PixBuffer->ColorRGBA[1]=Pix->W.G;
-	PixBuffer->ColorRGBA[2]=Pix->W.B;
-	PixBuffer->ColorRGBA[3]=Pix->W.A;
-	COPYRGBA(PixBuffer->FogRGBA,SC->FogRGBA);
-	PixBuffer->FogRGBA[3]=FogA(SC,Pix->L.z);
-	PixBuffer++;
-	Image8+=4;
-	Pix->L.z+=Pix->L.dz;
-	Pix->L.u+=Pix->L.du;
-	Pix->L.v+=Pix->L.dv;		Pix->L.du+=Pix->L.ddu;	Pix->L.dv+=Pix->L.ddv;
-	Pix->L.R+=Pix->L.dR;
-	Pix->L.G+=Pix->L.dG;
-	Pix->L.B+=Pix->L.dB;
-	Pix->L.A+=Pix->L.dA;
-	}
-	if(PixBuffer > SC->PixBufferMaxi)
-		{SC->PixBufferDone=PixBuffer;  SOFT3D_DrawPixels(SC); PixBuffer=SC->PixBuffer;}
-	Pix++; 
-	}
-SC->PixBufferDone=PixBuffer;
-}
-/*=============================================================*/
-void Fill_Zwrite_Tex_Gouraud(struct SOFT3D_context *SC)
-{
-register UBYTE *Image8;
-register float  *ZbufferF;
-register union pixel3D *Pix=SC->Pix;
-
-register struct SOFT3D_mipmap *MM=SC->MM;
-register struct pixbuffer3D *PixBuffer=SC->PixBufferDone;
-
-register WORD high  =SC->PolyHigh;
-register WORD large;
-
-SREM(Fill_Zwrite_Tex_Gouraud)
-
+SREM(Fill_TexPersp_Gouraud_Fog)
 
 	while(0<high--)
 	{
-	Image8   =(UBYTE *)(& Pix->L.Image32Y  [Pix->W.x]);
-	ZbufferF =(float  *)(& Pix->L.ZbufferFY[Pix->W.x]);
-	large	   =Pix->W.large;
+	Image32  =&Pix->L.Image32Y  [Pix->W.x];
+	large	   = Pix->W.large;
 
+	SC->Pix=Pix; SC->FunctionZtest(SC); Ztest=SC->Ztest;
 	while(0<large--)
 	{
-	if(Pix->L.z < ZbufferF[0] )	/* W3D_Z_LESS */
+	if(*Ztest++)	
 		{
-		ZbufferF[0]=Pix->L.z;
-		PixBuffer->Image8=Image8;
-		PixBuffer->Tex8=MM->Tex8U[Pix->W.u]+MM->Tex8V[Pix->W.v];
-		PixBuffer->ColorRGBA[0]=Pix->W.R;
-		PixBuffer->ColorRGBA[1]=Pix->W.G;
-		PixBuffer->ColorRGBA[2]=Pix->W.B;
-		PixBuffer->ColorRGBA[3]=Pix->W.A;
-		PixBuffer++;
+		Frag->Image8=(UBYTE *)Image32;
+		Frag->Tex8 =MM->Tex8U   [Pix->W.u ]+MM->Tex8V   [Pix->W.v ];
+		Frag->ColorRGBA[0]=Pix->W.R;
+		Frag->ColorRGBA[1]=Pix->W.G;
+		Frag->ColorRGBA[2]=Pix->W.B;
+		Frag->ColorRGBA[3]=Pix->W.A;
+		COPYRGBA(Frag->FogRGBA,(&SC->FogRGBAs[Pix->W.F]));
+		Frag++;
 		}
-	Image8+=4;
-	ZbufferF++;
-	Pix->L.z+=Pix->L.dz;
-	Pix->L.u+=Pix->L.du;
-	Pix->L.v+=Pix->L.dv;		Pix->L.du+=Pix->L.ddu;	Pix->L.dv+=Pix->L.ddv;
-	Pix->L.R+=Pix->L.dR;
-	Pix->L.G+=Pix->L.dG;
-	Pix->L.B+=Pix->L.dB;
-	Pix->L.A+=Pix->L.dA;
+	Image32++;
+	Pix->L.u +=Pix->L.du;
+	Pix->L.v +=Pix->L.dv;
+	Pix->L.du+=Pix->L.ddu;
+	Pix->L.dv+=Pix->L.ddv;
+	Pix->L.R +=Pix->L.dR;
+	Pix->L.G +=Pix->L.dG;
+	Pix->L.B +=Pix->L.dB;
+	Pix->L.A +=Pix->L.dA;
+	Pix->L.F +=Pix->L.dF;
 	}
-	if(PixBuffer > SC->PixBufferMaxi)
-		{SC->PixBufferDone=PixBuffer;  SOFT3D_DrawPixels(SC); PixBuffer=SC->PixBuffer;}
+
+	if(Frag > SC->FragBufferMaxi)
+		{SC->FragBufferDone=Frag;  DrawFragBuffer(SC); Frag=SC->FragBuffer;}
 	Pix++; 
 	}
-SC->PixBufferDone=PixBuffer;
+SC->FragBufferDone=Frag;
 }
 /*=============================================================*/
-void Fill_Ztest_Tex_Gouraud(struct SOFT3D_context *SC)
+void Fill_Tex_Gouraud_Fog(struct SOFT3D_context *SC)
 {
-register UBYTE *Image8;
-register float  *ZbufferF;
+register ULONG *Image32;
+register UBYTE *Ztest;
 register union pixel3D *Pix=SC->Pix;
-
 register struct SOFT3D_mipmap *MM=SC->MM;
-register struct pixbuffer3D *PixBuffer=SC->PixBufferDone;
-
+register struct fragbuffer3D *Frag=SC->FragBufferDone;
 register WORD high  =SC->PolyHigh;
 register WORD large;
 
-SREM(Fill_Ztest_Tex_Gouraud)
-
+	if(Wazp3D.SimuPerspective.ON)
+		{Fill_TexPersp_Gouraud_Fog(SC); return;}
+SREM(Fill_Tex_Gouraud_Fog)
 
 	while(0<high--)
 	{
-	Image8   =(UBYTE *)(& Pix->L.Image32Y  [Pix->W.x]);
-	ZbufferF =(float  *)(& Pix->L.ZbufferFY[Pix->W.x]);
-	large	   =Pix->W.large;
+	Image32  =&Pix->L.Image32Y  [Pix->W.x];
+	large	   = Pix->W.large;
 
+	SC->Pix=Pix; SC->FunctionZtest(SC); Ztest=SC->Ztest;
 	while(0<large--)
 	{
-	if(Pix->L.z < ZbufferF[0] )	/* W3D_Z_LESS */
+	if(*Ztest++)	
 		{
-		PixBuffer->Image8=Image8;
-		PixBuffer->Tex8=MM->Tex8U[Pix->W.u]+MM->Tex8V[Pix->W.v];
-		PixBuffer->ColorRGBA[0]=Pix->W.R;
-		PixBuffer->ColorRGBA[1]=Pix->W.G;
-		PixBuffer->ColorRGBA[2]=Pix->W.B;
-		PixBuffer->ColorRGBA[3]=Pix->W.A;
-		PixBuffer++;
+		Frag->Image8=(UBYTE *)Image32;
+		Frag->Tex8 =MM->Tex8U   [Pix->W.u ]+MM->Tex8V   [Pix->W.v ];
+		Frag->ColorRGBA[0]=Pix->W.R;
+		Frag->ColorRGBA[1]=Pix->W.G;
+		Frag->ColorRGBA[2]=Pix->W.B;
+		Frag->ColorRGBA[3]=Pix->W.A;
+		COPYRGBA(Frag->FogRGBA,(&SC->FogRGBAs[Pix->W.F]));
+		Frag++;
 		}
-	Image8+=4;
-	ZbufferF++;
-	Pix->L.z+=Pix->L.dz;
-	Pix->L.u+=Pix->L.du;
-	Pix->L.v+=Pix->L.dv;		Pix->L.du+=Pix->L.ddu;	Pix->L.dv+=Pix->L.ddv;
-	Pix->L.R+=Pix->L.dR;
-	Pix->L.G+=Pix->L.dG;
-	Pix->L.B+=Pix->L.dB;
-	Pix->L.A+=Pix->L.dA;
+	Image32++;
+	Pix->L.u +=Pix->L.du;
+	Pix->L.v +=Pix->L.dv;
+	Pix->L.R +=Pix->L.dR;
+	Pix->L.G +=Pix->L.dG;
+	Pix->L.B +=Pix->L.dB;
+	Pix->L.A +=Pix->L.dA;
+	Pix->L.F +=Pix->L.dF;
 	}
-	if(PixBuffer > SC->PixBufferMaxi)
-		{SC->PixBufferDone=PixBuffer;  SOFT3D_DrawPixels(SC); PixBuffer=SC->PixBuffer;}
+
+	if(Frag > SC->FragBufferMaxi)
+		{SC->FragBufferDone=Frag;  DrawFragBuffer(SC); Frag=SC->FragBuffer;}
 	Pix++; 
 	}
-SC->PixBufferDone=PixBuffer;
+SC->FragBufferDone=Frag;
 }
 /*=============================================================*/
-void Fill_Zoff_Tex_Gouraud(struct SOFT3D_context *SC)
+void Fill_Gouraud_Fog(struct SOFT3D_context *SC)
 {
-register UBYTE *Image8;
+register ULONG *Image32;
+register UBYTE *Ztest;
 register union pixel3D *Pix=SC->Pix;
+register struct fragbuffer3D *Frag=SC->FragBufferDone;
+register WORD high  =SC->PolyHigh;
+register WORD large;
 
+SREM(Fill_Gouraud_Fog)
+
+	while(0<high--)
+	{
+	Image32  =&Pix->L.Image32Y  [Pix->W.x];
+	large	   = Pix->W.large;
+
+	SC->Pix=Pix; SC->FunctionZtest(SC); Ztest=SC->Ztest;
+	while(0<large--)
+	{
+	if(*Ztest++)	
+		{
+		Frag->Image8=(UBYTE *)Image32;
+		Frag->ColorRGBA[0]=Pix->W.R;
+		Frag->ColorRGBA[1]=Pix->W.G;
+		Frag->ColorRGBA[2]=Pix->W.B;
+		Frag->ColorRGBA[3]=Pix->W.A;
+		COPYRGBA(Frag->FogRGBA,(&SC->FogRGBAs[Pix->W.F]));
+		Frag++;
+		}
+	Image32++;
+	Pix->L.R +=Pix->L.dR;
+	Pix->L.G +=Pix->L.dG;
+	Pix->L.B +=Pix->L.dB;
+	Pix->L.A +=Pix->L.dA;
+	Pix->L.F +=Pix->L.dF;
+	}
+
+	if(Frag > SC->FragBufferMaxi)
+		{SC->FragBufferDone=Frag;  DrawFragBuffer(SC); Frag=SC->FragBuffer;}
+	Pix++; 
+	}
+SC->FragBufferDone=Frag;
+}
+/*=============================================================*/
+void Fill_Gouraud(struct SOFT3D_context *SC)
+{
+register ULONG *Image32;
+register UBYTE *Ztest;
+register union pixel3D *Pix=SC->Pix;
+register struct fragbuffer3D *Frag=SC->FragBufferDone;
+register WORD high  =SC->PolyHigh;
+register WORD large;
+
+SREM(Fill_Gouraud)
+
+	while(0<high--)
+	{
+	Image32  =&Pix->L.Image32Y  [Pix->W.x];
+	large	   = Pix->W.large;
+
+	SC->Pix=Pix; SC->FunctionZtest(SC); Ztest=SC->Ztest;
+	while(0<large--)
+	{
+	if(*Ztest++)	
+		{
+		Frag->Image8=(UBYTE *)Image32;
+		Frag->ColorRGBA[0]=Pix->W.R;
+		Frag->ColorRGBA[1]=Pix->W.G;
+		Frag->ColorRGBA[2]=Pix->W.B;
+		Frag->ColorRGBA[3]=Pix->W.A;
+		Frag++;
+		}
+	Image32++;
+	Pix->L.R +=Pix->L.dR;
+	Pix->L.G +=Pix->L.dG;
+	Pix->L.B +=Pix->L.dB;
+	Pix->L.A +=Pix->L.dA;
+	}
+
+	if(Frag > SC->FragBufferMaxi)
+		{SC->FragBufferDone=Frag;  DrawFragBuffer(SC); Frag=SC->FragBuffer;}
+	Pix++; 
+	}
+SC->FragBufferDone=Frag;
+}
+/*=============================================================*/
+void Fill_Fog(struct SOFT3D_context *SC)
+{
+register ULONG *Image32;
+register UBYTE *Ztest;
+register union pixel3D *Pix=SC->Pix;
+register struct fragbuffer3D *Frag=SC->FragBufferDone;
+register WORD high  =SC->PolyHigh;
+register WORD large;
+
+SREM(Fill_Fog)
+
+	while(0<high--)
+	{
+	Image32  =&Pix->L.Image32Y  [Pix->W.x];
+	large	   = Pix->W.large;
+
+	SC->Pix=Pix; SC->FunctionZtest(SC); Ztest=SC->Ztest;
+	while(0<large--)
+	{
+	if(*Ztest++)	
+		{
+		Frag->Image8=(UBYTE *)Image32;
+		COPYRGBA(Frag->ColorRGBA,SC->FlatRGBA);
+		COPYRGBA(Frag->FogRGBA,(&SC->FogRGBAs[Pix->W.F]));
+		Frag++;
+		}
+	Image32++;
+	Pix->L.F +=Pix->L.dF;
+	}
+
+	if(Frag > SC->FragBufferMaxi)
+		{SC->FragBufferDone=Frag;  DrawFragBuffer(SC); Frag=SC->FragBuffer;}
+	Pix++; 
+	}
+SC->FragBufferDone=Frag;
+}
+/*=============================================================*/
+void Fill_TexPersp_Gouraud(struct SOFT3D_context *SC)
+{
+register ULONG *Image32;
+register UBYTE *Ztest;
+register union pixel3D *Pix=SC->Pix;
 register struct SOFT3D_mipmap *MM=SC->MM;
-register struct pixbuffer3D *PixBuffer=SC->PixBufferDone;
-
+register struct fragbuffer3D *Frag=SC->FragBufferDone;
 register WORD high  =SC->PolyHigh;
 register WORD large;
 
-SREM(Fill_Zoff_Tex_Gouraud)
-
+SREM(Fill_TexPersp_Gouraud)
 
 	while(0<high--)
 	{
-	Image8   =(UBYTE *)(& Pix->L.Image32Y  [Pix->W.x]);
-	large	   =Pix->W.large;
+	Image32  =&Pix->L.Image32Y  [Pix->W.x];
+	large	   = Pix->W.large;
 
+	SC->Pix=Pix; SC->FunctionZtest(SC); Ztest=SC->Ztest;
 	while(0<large--)
 	{
-	PixBuffer->Image8=Image8;
-	PixBuffer->Tex8=MM->Tex8U[Pix->W.u]+MM->Tex8V[Pix->W.v];
-	PixBuffer->ColorRGBA[0]=Pix->W.R;
-	PixBuffer->ColorRGBA[1]=Pix->W.G;
-	PixBuffer->ColorRGBA[2]=Pix->W.B;
-	PixBuffer->ColorRGBA[3]=Pix->W.A;
-	PixBuffer++;
-	Image8+=4;
-	Pix->L.u+=Pix->L.du;
-	Pix->L.v+=Pix->L.dv;		Pix->L.du+=Pix->L.ddu;	Pix->L.dv+=Pix->L.ddv;
-	Pix->L.R+=Pix->L.dR;
-	Pix->L.G+=Pix->L.dG;
-	Pix->L.B+=Pix->L.dB;
-	Pix->L.A+=Pix->L.dA;
-	}
-	if(PixBuffer > SC->PixBufferMaxi)
-		{SC->PixBufferDone=PixBuffer;  SOFT3D_DrawPixels(SC); PixBuffer=SC->PixBuffer;}
-	Pix++; 
-	}
-SC->PixBufferDone=PixBuffer;
-}
-/*=============================================================*/
-void Fill_Zwrite_Gouraud(struct SOFT3D_context *SC)
-{
-register UBYTE *Image8;
-register float  *ZbufferF;
-register union pixel3D *Pix=SC->Pix;
-
-register struct pixbuffer3D *PixBuffer=SC->PixBufferDone;
-
-register WORD high  =SC->PolyHigh;
-register WORD large;
-
-SREM(Fill_Zwrite_Gouraud)
-	while(0<high--)
-	{
-	Image8   =(UBYTE *)(& Pix->L.Image32Y  [Pix->W.x]);
-	ZbufferF =(float  *)(& Pix->L.ZbufferFY[Pix->W.x]);
-	large	   =Pix->W.large;
-
-	while(0<large--)
-	{
-	if(Pix->L.z < ZbufferF[0] )	/* W3D_Z_LESS */
+	if(*Ztest++)	
 		{
-		ZbufferF[0]=Pix->L.z;
-		PixBuffer->Image8=Image8;
-		PixBuffer->ColorRGBA[0]=Pix->W.R;
-		PixBuffer->ColorRGBA[1]=Pix->W.G;
-		PixBuffer->ColorRGBA[2]=Pix->W.B;
-		PixBuffer->ColorRGBA[3]=Pix->W.A;
-		PixBuffer++;
+		Frag->Image8=(UBYTE *)Image32;
+		Frag->Tex8 =MM->Tex8U   [Pix->W.u ]+MM->Tex8V   [Pix->W.v ];
+		Frag->ColorRGBA[0]=Pix->W.R;
+		Frag->ColorRGBA[1]=Pix->W.G;
+		Frag->ColorRGBA[2]=Pix->W.B;
+		Frag->ColorRGBA[3]=Pix->W.A;
+		Frag++;
 		}
-	Image8+=4;
-	ZbufferF++;
-	Pix->L.z+=Pix->L.dz;
-	Pix->L.R+=Pix->L.dR;
-	Pix->L.G+=Pix->L.dG;
-	Pix->L.B+=Pix->L.dB;
-	Pix->L.A+=Pix->L.dA;
+	Image32++;
+	Pix->L.u +=Pix->L.du;
+	Pix->L.v +=Pix->L.dv;
+	Pix->L.du+=Pix->L.ddu;
+	Pix->L.dv+=Pix->L.ddv;
+	Pix->L.R +=Pix->L.dR;
+	Pix->L.G +=Pix->L.dG;
+	Pix->L.B +=Pix->L.dB;
+	Pix->L.A +=Pix->L.dA;
 	}
-	if(PixBuffer > SC->PixBufferMaxi)
-		{SC->PixBufferDone=PixBuffer;  SOFT3D_DrawPixels(SC); PixBuffer=SC->PixBuffer;}
+
+	if(Frag > SC->FragBufferMaxi)
+		{SC->FragBufferDone=Frag;  DrawFragBuffer(SC); Frag=SC->FragBuffer;}
 	Pix++; 
 	}
-SC->PixBufferDone=PixBuffer;
+SC->FragBufferDone=Frag;
 }
 /*=============================================================*/
-void Fill_Ztest_Gouraud(struct SOFT3D_context *SC)
+void Fill_Tex_Gouraud(struct SOFT3D_context *SC)
 {
-register UBYTE *Image8;
-register float  *ZbufferF;
+register ULONG *Image32;
+register UBYTE *Ztest;
 register union pixel3D *Pix=SC->Pix;
-
-register struct pixbuffer3D *PixBuffer=SC->PixBufferDone;
-
-register WORD high  =SC->PolyHigh;
-register WORD large;
-
-SREM(Fill_Ztest_Gouraud)
-	while(0<high--)
-	{
-	Image8   =(UBYTE *)(& Pix->L.Image32Y  [Pix->W.x]);
-	ZbufferF =(float  *)(& Pix->L.ZbufferFY[Pix->W.x]);
-	large	   =Pix->W.large;
-
-	while(0<large--)
-	{
-	if(Pix->L.z < ZbufferF[0] )	/* W3D_Z_LESS */
-		{
-		PixBuffer->Image8=Image8;
-		PixBuffer->ColorRGBA[0]=Pix->W.R;
-		PixBuffer->ColorRGBA[1]=Pix->W.G;
-		PixBuffer->ColorRGBA[2]=Pix->W.B;
-		PixBuffer->ColorRGBA[3]=Pix->W.A;
-		PixBuffer++;
-		}
-	Image8+=4;
-	ZbufferF++;
-	Pix->L.z+=Pix->L.dz;
-	Pix->L.R+=Pix->L.dR;
-	Pix->L.G+=Pix->L.dG;
-	Pix->L.B+=Pix->L.dB;
-	Pix->L.A+=Pix->L.dA;
-	}
-	if(PixBuffer > SC->PixBufferMaxi)
-		{SC->PixBufferDone=PixBuffer;  SOFT3D_DrawPixels(SC); PixBuffer=SC->PixBuffer;}
-	Pix++; 
-	}
-SC->PixBufferDone=PixBuffer;
-}
-/*=============================================================*/
-void Fill_Zoff_Gouraud(struct SOFT3D_context *SC)
-{
-register UBYTE *Image8;
-register union pixel3D *Pix=SC->Pix;
-
-register struct pixbuffer3D *PixBuffer=SC->PixBufferDone;
-
-register WORD high  =SC->PolyHigh;
-register WORD large;
-
-SREM(Fill_Zoff_Gouraud)
-	 while(0<high--)
-	{
-	Image8   =(UBYTE *)(& Pix->L.Image32Y  [Pix->W.x]);
-	large	   =Pix->W.large;
-
-	while(0<large--)
-	{
-	PixBuffer->Image8=Image8;
-	PixBuffer->ColorRGBA[0]=Pix->W.R;
-	PixBuffer->ColorRGBA[1]=Pix->W.G;
-	PixBuffer->ColorRGBA[2]=Pix->W.B;
-	PixBuffer->ColorRGBA[3]=Pix->W.A;
-	PixBuffer++;
-	Image8+=4;
-	Pix->L.R+=Pix->L.dR;
-	Pix->L.G+=Pix->L.dG;
-	Pix->L.B+=Pix->L.dB;
-	Pix->L.A+=Pix->L.dA;
-	}
-	if(PixBuffer > SC->PixBufferMaxi)
-		{SC->PixBufferDone=PixBuffer;  SOFT3D_DrawPixels(SC); PixBuffer=SC->PixBuffer;}
-	Pix++; 
-	}
-SC->PixBufferDone=PixBuffer;
-}
-/*=============================================================*/
-void Fill_Zwrite_Tex(struct SOFT3D_context *SC)
-{
-register UBYTE *Image8;
-register float  *ZbufferF;
-register union pixel3D *Pix=SC->Pix;
-
 register struct SOFT3D_mipmap *MM=SC->MM;
-register struct pixbuffer3D *PixBuffer=SC->PixBufferDone;
-
+register struct fragbuffer3D *Frag=SC->FragBufferDone;
 register WORD high  =SC->PolyHigh;
 register WORD large;
 
-SREM(Fill_Zwrite_Tex)
-
+	if(Wazp3D.SimuPerspective.ON)
+		{Fill_TexPersp_Gouraud(SC); return;}
+SREM(Fill_Tex_Gouraud)
 
 	while(0<high--)
 	{
-	Image8   =(UBYTE *)(& Pix->L.Image32Y  [Pix->W.x]);
-	ZbufferF =(float  *)(& Pix->L.ZbufferFY[Pix->W.x]);
-	large	   =Pix->W.large;
+	Image32  =&Pix->L.Image32Y  [Pix->W.x];
+	large	   = Pix->W.large;
 
+	SC->Pix=Pix; SC->FunctionZtest(SC); Ztest=SC->Ztest;
 	while(0<large--)
 	{
-	if(Pix->L.z < ZbufferF[0] )	/* W3D_Z_LESS */
+	if(*Ztest++)	
 		{
-		ZbufferF[0]=Pix->L.z;
-		PixBuffer->Image8=Image8;
-		PixBuffer->Tex8=MM->Tex8U[Pix->W.u]+MM->Tex8V[Pix->W.v];
-		COPYRGBA(PixBuffer->ColorRGBA,SC->FlatRGBA);
-		PixBuffer++;
+		Frag->Image8=(UBYTE *)Image32;
+		Frag->Tex8 =MM->Tex8U   [Pix->W.u ]+MM->Tex8V   [Pix->W.v ];
+		Frag->ColorRGBA[0]=Pix->W.R;
+		Frag->ColorRGBA[1]=Pix->W.G;
+		Frag->ColorRGBA[2]=Pix->W.B;
+		Frag->ColorRGBA[3]=Pix->W.A;
+		Frag++;
 		}
-	Image8+=4;
-	ZbufferF++;
-	Pix->L.z+=Pix->L.dz;
-	Pix->L.u+=Pix->L.du;
-	Pix->L.v+=Pix->L.dv;		Pix->L.du+=Pix->L.ddu;	Pix->L.dv+=Pix->L.ddv;
+	Image32++;
+	Pix->L.u +=Pix->L.du;
+	Pix->L.v +=Pix->L.dv;
+	Pix->L.R +=Pix->L.dR;
+	Pix->L.G +=Pix->L.dG;
+	Pix->L.B +=Pix->L.dB;
+	Pix->L.A +=Pix->L.dA;
 	}
-	if(PixBuffer > SC->PixBufferMaxi)
-		{SC->PixBufferDone=PixBuffer;  SOFT3D_DrawPixels(SC); PixBuffer=SC->PixBuffer;}
+
+	if(Frag > SC->FragBufferMaxi)
+		{SC->FragBufferDone=Frag;  DrawFragBuffer(SC); Frag=SC->FragBuffer;}
 	Pix++; 
 	}
-SC->PixBufferDone=PixBuffer;
+SC->FragBufferDone=Frag;
 }
 /*=============================================================*/
-void Fill_Ztest_Tex(struct SOFT3D_context *SC)
+void Fill_TexPersp_Fog(struct SOFT3D_context *SC)
 {
-register UBYTE *Image8;
-register float  *ZbufferF;
+register ULONG *Image32;
+register UBYTE *Ztest;
 register union pixel3D *Pix=SC->Pix;
-
 register struct SOFT3D_mipmap *MM=SC->MM;
-register struct pixbuffer3D *PixBuffer=SC->PixBufferDone;
-
+register struct fragbuffer3D *Frag=SC->FragBufferDone;
 register WORD high  =SC->PolyHigh;
 register WORD large;
 
-SREM(Fill_Ztest_Tex)
-
+SREM(Fill_TexPersp_Fog)
 
 	while(0<high--)
 	{
-	Image8   =(UBYTE *)(& Pix->L.Image32Y  [Pix->W.x]);
-	ZbufferF =(float  *)(& Pix->L.ZbufferFY[Pix->W.x]);
-	large	   =Pix->W.large;
+	Image32  =&Pix->L.Image32Y  [Pix->W.x];
+	large	   = Pix->W.large;
 
+	SC->Pix=Pix; SC->FunctionZtest(SC); Ztest=SC->Ztest;
 	while(0<large--)
 	{
-	if(Pix->L.z < ZbufferF[0] )	/* W3D_Z_LESS */
+	if(*Ztest++)	
 		{
-		PixBuffer->Image8=Image8;
-		PixBuffer->Tex8=MM->Tex8U[Pix->W.u]+MM->Tex8V[Pix->W.v];
-		COPYRGBA(PixBuffer->ColorRGBA,SC->FlatRGBA);
-		PixBuffer++;
+		Frag->Image8=(UBYTE *)Image32;
+		Frag->Tex8 =MM->Tex8U   [Pix->W.u ]+MM->Tex8V   [Pix->W.v ];
+		COPYRGBA(Frag->ColorRGBA,SC->FlatRGBA);
+		COPYRGBA(Frag->FogRGBA,(&SC->FogRGBAs[Pix->W.F]));
+		Frag++;
 		}
-	Image8+=4;
-	ZbufferF++;
-	Pix->L.z+=Pix->L.dz;
-	Pix->L.u+=Pix->L.du;
-	Pix->L.v+=Pix->L.dv;		Pix->L.du+=Pix->L.ddu;	Pix->L.dv+=Pix->L.ddv;
+	Image32++;
+	Pix->L.u +=Pix->L.du;
+	Pix->L.v +=Pix->L.dv;
+	Pix->L.du+=Pix->L.ddu;
+	Pix->L.dv+=Pix->L.ddv;
+	Pix->L.F +=Pix->L.dF;
 	}
-	if(PixBuffer > SC->PixBufferMaxi)
-		{SC->PixBufferDone=PixBuffer;  SOFT3D_DrawPixels(SC); PixBuffer=SC->PixBuffer;}
+
+	if(Frag > SC->FragBufferMaxi)
+		{SC->FragBufferDone=Frag;  DrawFragBuffer(SC); Frag=SC->FragBuffer;}
 	Pix++; 
 	}
-SC->PixBufferDone=PixBuffer;
+SC->FragBufferDone=Frag;
 }
 /*=============================================================*/
-void Fill_Zoff_Tex(struct SOFT3D_context *SC)
+void Fill_Tex_Fog(struct SOFT3D_context *SC)
 {
-register UBYTE *Image8;
+register ULONG *Image32;
+register UBYTE *Ztest;
 register union pixel3D *Pix=SC->Pix;
-
 register struct SOFT3D_mipmap *MM=SC->MM;
-register struct pixbuffer3D *PixBuffer=SC->PixBufferDone;
-
+register struct fragbuffer3D *Frag=SC->FragBufferDone;
 register WORD high  =SC->PolyHigh;
 register WORD large;
 
-SREM(Fill_Zoff_Tex)
-
+	if(Wazp3D.SimuPerspective.ON)
+		{Fill_TexPersp_Fog(SC); return;}
+SREM(Fill_Tex_Fog)
 
 	while(0<high--)
 	{
-	Image8   =(UBYTE *)(& Pix->L.Image32Y  [Pix->W.x]);
-	large	   =Pix->W.large;
+	Image32  =&Pix->L.Image32Y  [Pix->W.x];
+	large	   = Pix->W.large;
 
+	SC->Pix=Pix; SC->FunctionZtest(SC); Ztest=SC->Ztest;
 	while(0<large--)
 	{
-	PixBuffer->Image8=Image8;
-	PixBuffer->Tex8=MM->Tex8U[Pix->W.u]+MM->Tex8V[Pix->W.v];
-	COPYRGBA(PixBuffer->ColorRGBA,SC->FlatRGBA);
-	PixBuffer++;
-	Image8+=4;
-	Pix->L.u+=Pix->L.du;
-	Pix->L.v+=Pix->L.dv;		Pix->L.du+=Pix->L.ddu;	Pix->L.dv+=Pix->L.ddv;
+	if(*Ztest++)	
+		{
+		Frag->Image8=(UBYTE *)Image32;
+		Frag->Tex8 =MM->Tex8U   [Pix->W.u ]+MM->Tex8V   [Pix->W.v ];
+		COPYRGBA(Frag->ColorRGBA,SC->FlatRGBA);
+		COPYRGBA(Frag->FogRGBA,(&SC->FogRGBAs[Pix->W.F]));
+		Frag++;
+		}
+	Image32++;
+	Pix->L.u +=Pix->L.du;
+	Pix->L.v +=Pix->L.dv;
+	Pix->L.F +=Pix->L.dF;
 	}
-	if(PixBuffer > SC->PixBufferMaxi)
-		{SC->PixBufferDone=PixBuffer;  SOFT3D_DrawPixels(SC); PixBuffer=SC->PixBuffer;}
+
+	if(Frag > SC->FragBufferMaxi)
+		{SC->FragBufferDone=Frag;  DrawFragBuffer(SC); Frag=SC->FragBuffer;}
 	Pix++; 
 	}
-SC->PixBufferDone=PixBuffer;
+SC->FragBufferDone=Frag;
 }
 /*=============================================================*/
-void Fill_Nothing(struct SOFT3D_context *SC)
+void Fill_TexPersp(struct SOFT3D_context *SC)
 {
-SREM(Fill_Nothing)
-	return;
+register ULONG *Image32;
+register UBYTE *Ztest;
+register union pixel3D *Pix=SC->Pix;
+register struct SOFT3D_mipmap *MM=SC->MM;
+register struct fragbuffer3D *Frag=SC->FragBufferDone;
+register WORD high  =SC->PolyHigh;
+register WORD large;
+
+SREM(Fill_TexPersp)
+	while(0<high--)
+	{
+	Image32  =&Pix->L.Image32Y  [Pix->W.x];
+	large	   = Pix->W.large;
+
+	SC->Pix=Pix; SC->FunctionZtest(SC); Ztest=SC->Ztest;
+	while(0<large--)
+	{
+	if(*Ztest++)	
+		{
+		Frag->Image8=(UBYTE *)Image32;
+		Frag->Tex8 =MM->Tex8U   [Pix->W.u ]+MM->Tex8V   [Pix->W.v ];
+		COPYRGBA(Frag->ColorRGBA,SC->FlatRGBA);
+		Frag++;
+		}
+	Image32++;
+	Pix->L.u +=Pix->L.du;
+	Pix->L.v +=Pix->L.dv;
+	Pix->L.du+=Pix->L.ddu;
+	Pix->L.dv+=Pix->L.ddv;
+	}
+
+	if(Frag > SC->FragBufferMaxi)
+		{SC->FragBufferDone=Frag;  DrawFragBuffer(SC); Frag=SC->FragBuffer;}
+	Pix++; 
+	}
+SC->FragBufferDone=Frag;
 }
 /*=============================================================*/
-void SOFT3D_SetDrawStates(struct SOFT3D_context *SC,struct SOFT3D_texture *ST,UBYTE ZMode,UBYTE TexMode,UBYTE ColMode,UBYTE UseGouraud,UBYTE UseFog)
+void Fill_Tex(struct SOFT3D_context *SC)
+{
+register ULONG *Image32;
+register UBYTE *Ztest;
+register union pixel3D *Pix=SC->Pix;
+register struct SOFT3D_mipmap *MM=SC->MM;
+register struct fragbuffer3D *Frag=SC->FragBufferDone;
+register WORD high  =SC->PolyHigh;
+register WORD large;
+
+	if(Wazp3D.SimuPerspective.ON)
+		{Fill_TexPersp(SC); return;}
+SREM(Fill_Tex)
+	while(0<high--)
+	{
+	Image32  =&Pix->L.Image32Y  [Pix->W.x];
+	large	   = Pix->W.large;
+
+	SC->Pix=Pix; SC->FunctionZtest(SC); Ztest=SC->Ztest;
+	while(0<large--)
+	{
+	if(*Ztest++)	
+		{
+		Frag->Image8=(UBYTE *)Image32;
+		Frag->Tex8 =MM->Tex8U   [Pix->W.u ]+MM->Tex8V   [Pix->W.v ];
+		COPYRGBA(Frag->ColorRGBA,SC->FlatRGBA);
+		Frag++;
+		}
+	Image32++;
+	Pix->L.u +=Pix->L.du;
+	Pix->L.v +=Pix->L.dv;
+	}
+
+	if(Frag > SC->FragBufferMaxi)
+		{SC->FragBufferDone=Frag;  DrawFragBuffer(SC); Frag=SC->FragBuffer;}
+	Pix++; 
+	}
+SC->FragBufferDone=Frag;
+}
+/*=============================================================*/
+void Fill_Flat(struct SOFT3D_context *SC)
+{
+register ULONG *Image32;
+register UBYTE *Ztest;
+register union pixel3D *Pix=SC->Pix;
+register struct SOFT3D_mipmap *MM=SC->MM;
+register struct fragbuffer3D *Frag=SC->FragBufferDone;
+register WORD high  =SC->PolyHigh;
+register WORD large;
+
+SREM(Fill_Flat)
+
+	while(0<high--)
+	{
+	Image32  =&Pix->L.Image32Y  [Pix->W.x];
+	large	   = Pix->W.large;
+
+	SC->Pix=Pix; SC->FunctionZtest(SC); Ztest=SC->Ztest;
+	while(0<large--)
+	{
+	if(*Ztest++)	
+		{
+		Frag->Image8=(UBYTE *)Image32;
+		COPYRGBA(Frag->ColorRGBA,SC->FlatRGBA);
+		Frag++;
+		}
+	Image32++;
+	}
+
+	if(Frag > SC->FragBufferMaxi)
+		{SC->FragBufferDone=Frag;  DrawFragBuffer(SC); Frag=SC->FragBuffer;}
+	Pix++; 
+	}
+SC->FragBufferDone=Frag;
+}
+/*=============================================================*/
+void Ztest_znever_update(struct SOFT3D_context *SC)
+{
+register UBYTE *Ztest=SC->Ztest;
+register union pixel3D *Pix=SC->Pix;
+register WORD large=Pix->W.large;
+
+	while(0<large--)
+		{ *Ztest=(FALSE);  Ztest++; }
+}
+/*=============================================================*/
+void Ztest_zless_update(struct SOFT3D_context *SC)
+{
+register UBYTE *Ztest=SC->Ztest;
+register union pixel3D *Pix=SC->Pix;
+register ZBUFF  *Zbuffer= &(Pix->L.ZbufferY[Pix->W.x]);
+register LONG dz=Pix->L.dz;
+register WORD large=Pix->W.large;
+
+	while(0<large--)
+		{ *Ztest=(ZVALUE < *Zbuffer ); if(*Ztest) *Zbuffer=ZVALUE; Ztest++; Zbuffer++; Pix->L.z+=dz;}
+}
+/*=============================================================*/
+void Ztest_zgequal_update(struct SOFT3D_context *SC)
+{
+register UBYTE *Ztest=SC->Ztest;
+register union pixel3D *Pix=SC->Pix;
+register ZBUFF  *Zbuffer= &(Pix->L.ZbufferY[Pix->W.x]);
+register LONG dz=Pix->L.dz;
+register WORD large=Pix->W.large;
+
+	while(0<large--)
+		{ *Ztest=(ZVALUE >= *Zbuffer ); if(*Ztest) *Zbuffer=ZVALUE; Ztest++; Zbuffer++; Pix->L.z+=dz;}
+}
+/*=============================================================*/
+void Ztest_zlequal_update(struct SOFT3D_context *SC)
+{
+register UBYTE *Ztest=SC->Ztest;
+register union pixel3D *Pix=SC->Pix;
+register ZBUFF  *Zbuffer= &(Pix->L.ZbufferY[Pix->W.x]);
+register LONG dz=Pix->L.dz;
+register WORD large=Pix->W.large;
+
+	while(0<large--)
+		{ *Ztest=(ZVALUE <= *Zbuffer ); if(*Ztest) *Zbuffer=ZVALUE; Ztest++; Zbuffer++; Pix->L.z+=dz;}
+}
+/*=============================================================*/
+void Ztest_zgreater_update(struct SOFT3D_context *SC)
+{
+register UBYTE *Ztest=SC->Ztest;
+register union pixel3D *Pix=SC->Pix;
+register ZBUFF  *Zbuffer= &(Pix->L.ZbufferY[Pix->W.x]);
+register LONG dz=Pix->L.dz;
+register WORD large=Pix->W.large;
+
+	while(0<large--)
+		{ *Ztest=(ZVALUE > *Zbuffer ); if(*Ztest) *Zbuffer=ZVALUE; Ztest++; Zbuffer++; Pix->L.z+=dz;}
+}
+/*=============================================================*/
+void Ztest_znotequal_update(struct SOFT3D_context *SC)
+{
+register UBYTE *Ztest=SC->Ztest;
+register union pixel3D *Pix=SC->Pix;
+register ZBUFF  *Zbuffer= &(Pix->L.ZbufferY[Pix->W.x]);
+register LONG dz=Pix->L.dz;
+register WORD large=Pix->W.large;
+
+	while(0<large--)
+		{ *Ztest=(ZVALUE != *Zbuffer ); if(*Ztest) *Zbuffer=ZVALUE; Ztest++; Zbuffer++; Pix->L.z+=dz;}
+}
+/*=============================================================*/
+void Ztest_zequal_update(struct SOFT3D_context *SC)
+{
+register UBYTE *Ztest=SC->Ztest;
+register union pixel3D *Pix=SC->Pix;
+register ZBUFF  *Zbuffer= &(Pix->L.ZbufferY[Pix->W.x]);
+register LONG dz=Pix->L.dz;
+register WORD large=Pix->W.large;
+
+	while(0<large--)
+		{ *Ztest=(ZVALUE == *Zbuffer ); if(*Ztest) *Zbuffer=ZVALUE; Ztest++; Zbuffer++; Pix->L.z+=dz;}
+}
+/*=============================================================*/
+void Ztest_zalways_update(struct SOFT3D_context *SC)
+{
+register UBYTE *Ztest=SC->Ztest;
+register union pixel3D *Pix=SC->Pix;
+register ZBUFF  *Zbuffer= &(Pix->L.ZbufferY[Pix->W.x]);
+register LONG dz=Pix->L.dz;
+register WORD large=Pix->W.large;
+
+	while(0<large--)
+		{ *Ztest=(TRUE); *Zbuffer=ZVALUE; Ztest++; Zbuffer++; Pix->L.z+=dz;}
+}
+/*=============================================================*/
+/* void Ztest_znever(struct SOFT3D_context *SC) same as Ztest_znever_update */
+/*=============================================================*/
+void Ztest_zless(struct SOFT3D_context *SC)
+{
+register UBYTE *Ztest=SC->Ztest;
+register union pixel3D *Pix=SC->Pix;
+register ZBUFF  *Zbuffer= &(Pix->L.ZbufferY[Pix->W.x]);
+register LONG dz=Pix->L.dz;
+register WORD large=Pix->W.large;
+
+	while(0<large--)
+		{ *Ztest=(ZVALUE < *Zbuffer ); Ztest++; Zbuffer++; Pix->L.z+=dz; }
+}
+/*=============================================================*/
+void Ztest_zgequal(struct SOFT3D_context *SC)
+{
+register UBYTE *Ztest=SC->Ztest;
+register union pixel3D *Pix=SC->Pix;
+register ZBUFF  *Zbuffer= &(Pix->L.ZbufferY[Pix->W.x]);
+register LONG dz=Pix->L.dz;
+register WORD large=Pix->W.large;
+
+	while(0<large--)
+		{ *Ztest=(ZVALUE >= *Zbuffer ); Ztest++; Zbuffer++; Pix->L.z+=dz; }
+}
+/*=============================================================*/
+void Ztest_zlequal(struct SOFT3D_context *SC)
+{
+register UBYTE *Ztest=SC->Ztest;
+register union pixel3D *Pix=SC->Pix;
+register ZBUFF  *Zbuffer= &(Pix->L.ZbufferY[Pix->W.x]);
+register LONG dz=Pix->L.dz;
+register WORD large=Pix->W.large;
+
+	while(0<large--)
+		{ *Ztest=(ZVALUE <= *Zbuffer ); Ztest++; Zbuffer++; Pix->L.z+=dz; }
+}
+/*=============================================================*/
+void Ztest_zgreater(struct SOFT3D_context *SC)
+{
+register UBYTE *Ztest=SC->Ztest;
+register union pixel3D *Pix=SC->Pix;
+register ZBUFF  *Zbuffer= &(Pix->L.ZbufferY[Pix->W.x]);
+register LONG dz=Pix->L.dz;
+register WORD large=Pix->W.large;
+
+	while(0<large--)
+		{ *Ztest=(ZVALUE > *Zbuffer ); Ztest++; Zbuffer++; Pix->L.z+=dz; }
+}
+/*=============================================================*/
+void Ztest_znotequal(struct SOFT3D_context *SC)
+{
+register UBYTE *Ztest=SC->Ztest;
+register union pixel3D *Pix=SC->Pix;
+register ZBUFF  *Zbuffer= &(Pix->L.ZbufferY[Pix->W.x]);
+register LONG dz=Pix->L.dz;
+register WORD large=Pix->W.large;
+
+	while(0<large--)
+		{ *Ztest=(ZVALUE != *Zbuffer ); Ztest++; Zbuffer++; Pix->L.z+=dz; }
+}
+/*=============================================================*/
+void Ztest_zequal(struct SOFT3D_context *SC)
+{
+register UBYTE *Ztest=SC->Ztest;
+register union pixel3D *Pix=SC->Pix;
+register ZBUFF  *Zbuffer= &(Pix->L.ZbufferY[Pix->W.x]);
+register LONG dz=Pix->L.dz;
+register WORD large=Pix->W.large;
+
+	while(0<large--)
+		{ *Ztest=(ZVALUE == *Zbuffer ); Ztest++; Zbuffer++; Pix->L.z+=dz; }
+}
+/*=============================================================*/
+void Ztest_zalways(struct SOFT3D_context *SC)
+{
+register UBYTE *Ztest=SC->Ztest;
+register union pixel3D *Pix=SC->Pix;
+register WORD large=Pix->W.large;
+
+	while(0<large--)
+		{ *Ztest=(TRUE);  Ztest++; }
+}
+/*=============================================================*/
+void SetTexture(W3D_Context* context,W3D_Texture *texture)
+{
+struct WAZP3D_context *WC=context->driver;
+struct WAZP3D_texture *WT=NULL;
+void *ST=NULL;
+BOOL blended;
+ULONG TexEnvMode;
+UBYTE EnvRGBA[4];
+
+SREM(SetTexture)
+	if(texture==NULL)
+		{
+SREM(TEXTURE_NULL)
+		WT=NULL;
+		WC->WT=WT;
+		ST=NULL;
+		WC->uresize=1.0;
+		WC->vresize=1.0;
+		}
+	else
+		{
+SREM(TEXTURE_NOT_NULL)
+		WT=texture->driver;
+		WC->WT=WT;
+		ST=WT->ST;
+		WC->uresize=256.0/(float)(WT->large);
+		WC->vresize=256.0/(float)(WT->high );
+		PrintWT(WT);
+		}
+
+	TexEnvMode=context->globaltexenvmode;  		/* global texture-env-mode  */
+	ColorToRGBA(EnvRGBA,context->globaltexenvcolor[0],context->globaltexenvcolor[1],context->globaltexenvcolor[2],context->globaltexenvcolor[3]); /* global texture-env-color */
+	if(WT!=NULL)
+	if(!StateON(W3D_GLOBALTEXENV))
+	{
+	TexEnvMode=WT->TexEnvMode;		/* texture's texture-env-mode  */
+	COPYRGBA(EnvRGBA,WT->EnvRGBA);	/* texture's texture-env-color */
+	}
+
+	WC->UseFog  =  (StateON(W3D_FOGGING)) et (WC->FogMode!=0);
+
+	WC->ZMode=W3D_Z_ALWAYS;		/* default no z buffer = no test ==> always draw & dont update a zbuffer */
+
+	if(context->zbuffer!=NULL)
+	if(StateON(W3D_ZBUFFER)) 
+		WC->ZMode   =8*(StateON(W3D_ZBUFFERUPDATE)) + WC->ZbufferMode;
+
+	WC->UseTex  =  (StateON(W3D_TEXMAPPING)) et (texture!=NULL);
+	blended     =  (StateON(W3D_BLENDING));
+
+/* step 1: define TexEnvMode */
+	WC->TexEnvMode='0';				/* if no tex ==> no TexEnv effect */	
+	if(WC->UseTex)
+		{
+		WC->TexEnvMode='R';		/* default W3D_REPLACE  : simply R-eplace the color with tex = copy tex */
+
+		if(Wazp3D.UseColoring.ON)		/* If  use color for lighting*/
+		if(TexEnvMode!=W3D_REPLACE)
+			WC->TexEnvMode='m';		/* then do a simple m-edian (color + tex)/2 */
+
+		if(Wazp3D.UseColoringGL.ON)		/* If  use color (new functions)  for lighting*/
+			{
+			if(TexEnvMode==W3D_DECAL)
+				WC->TexEnvMode='D';		/* then D-ecal color & tex */
+			if(TexEnvMode==W3D_MODULATE)
+				WC->TexEnvMode='M';		/* then M-odulate color & tex */
+			if(TexEnvMode==W3D_BLEND)
+				WC->TexEnvMode='B';		/* then B-lend color & tex & envcolor*/
+			}
+
+		}
+
+/* step 2: define BlendMode */
+		WC->BlendMode='R';				/* default : simply W-rite the color (even if color=tex+color) */
+		if(blended)
+			{
+			WC->BlendMode='0';
+			if(WC->SrcFunc==W3D_SRC_ALPHA)
+			if(WC->DstFunc==W3D_ONE_MINUS_SRC_ALPHA)
+				WC->BlendMode='A';		/* classic A-lpha transparency */
+			if(WC->SrcFunc==W3D_SRC_ALPHA)
+			if(WC->DstFunc==W3D_ONE)
+				WC->BlendMode='G';		/* for demo G-lxcess transparency */
+			if(WC->SrcFunc==W3D_ONE)
+			if(WC->DstFunc==W3D_ONE)
+				WC->BlendMode='S';		/* S-aturate = Quake's glow effect */
+			if(WC->SrcFunc==W3D_ZERO)
+			if(WC->DstFunc==W3D_SRC_ALPHA)
+				WC->BlendMode='L';		/* L-ightmap effect */
+			if(WC->SrcFunc==W3D_ZERO)
+			if(WC->DstFunc==W3D_SRC_COLOR)
+				WC->BlendMode='M';		/* M-odulate effect */
+			if(WC->SrcFunc==W3D_DST_COLOR)
+			if(WC->DstFunc==W3D_ZERO)
+				WC->BlendMode='m';		/* m-odulate effect = same as M */
+			if(WC->SrcFunc==W3D_ZERO)
+			if(WC->DstFunc==W3D_ONE_MINUS_SRC_COLOR)
+				WC->BlendMode='C';		/* C-oloring for demo Glxcess */
+			if(WC->SrcFunc==W3D_SRC_ALPHA)
+			if(WC->DstFunc==W3D_ONE_MINUS_SRC_COLOR)
+				WC->BlendMode='c';		/* c-oloring for demo Glxcess */
+
+			if(WC->BlendMode=='0')
+			if(Wazp3D.DebugTexNumber.ON)
+			{
+			LibDebug=Wazp3D.DebugVal.ON=Wazp3D.DebugVar.ON=TRUE;
+			PrintST(ST);
+			W3D_SetBlendMode(context,WC->SrcFunc,WC->DstFunc);	/* then print it */
+			LibDebug=Wazp3D.DebugVal.ON=Wazp3D.DebugVar.ON=FALSE;
+			}
+
+			if(WC->BlendMode=='0')
+				WC->BlendMode='A';			/* default: classic A-lpha transparency */
+			}
+
+	WC->UseGouraud=StateON(W3D_GOURAUD);
+
+#ifdef WAZP3DDEBUG
+	if(Wazp3D.DebugSOFT3D.ON) Libprintf(" WC: ZMode%ld BlendMode%lc TexEnvMode%lc UseFog%ld UseTex%ld Blended%ld UseGouraud%ld\n",WC->ZMode,WC->BlendMode,WC->TexEnvMode,WC->UseFog,WC->UseTex,blended,WC->UseGouraud);
+#endif
+	SOFT3D_SetEnvColor(WC->SC,EnvRGBA);
+	SOFT3D_SetDrawStates(WC->SC,ST,WC->ZMode,WC->BlendMode,WC->TexEnvMode,WC->UseGouraud,WC->UseFog);
+}
+/*=============================================================*/
+void SOFT3D_SetDrawStates(struct SOFT3D_context *SC,struct SOFT3D_texture *ST,UBYTE ZMode,UBYTE BlendMode,UBYTE TexEnvMode,UBYTE UseGouraud,UBYTE UseFog)
 {
 
 SREM(SOFT3D_SetDrawStates)
@@ -2472,36 +3226,36 @@ SREM(SOFT3D_SetDrawStates)
 
 	SC->ST		=ST;
 	SC->ZMode		=ZMode;
-	SC->TexMode		=TexMode;
-	SC->ColMode		=ColMode;
+	SC->BlendMode	=BlendMode;
+	SC->TexEnvMode	=TexEnvMode;
 	SC->UseGouraud	=UseGouraud;
 	SC->UseFog		=UseFog;
 
 	if(Wazp3D.DebugSOFT3D.ON) 
-		Libprintf(" SC: ZMode%ld TexMode%s ColMode%s  UseGouraud%ld UseFog%ld\n",SC->ZMode,pc(SC->TexMode,text1),pc(SC->ColMode,text2),SC->UseGouraud,SC->UseFog);
+		Libprintf(" SC: ZMode%ld BlendMode%lc TexEnvMode%lc  UseGouraud%ld UseFog%ld\n",SC->ZMode,SC->BlendMode,SC->TexEnvMode,SC->UseGouraud,SC->UseFog);
 
 }
 /*=============================================================*/
 void SOFT3D_SetDrawFunctions(struct SOFT3D_context *SC)
 {
 struct SOFT3D_texture *ST;
-UBYTE FillMode,ZMode,TexMode,ColMode,UseFog,UseGouraud,UseTex;
+UBYTE FillMode,ZMode,BlendMode,TexEnvMode,UseFog,UseGouraud,UseTex,BigTex;
 BOOL tex24;
 
 SREM(SOFT3D_SetDrawFunctions)
 
 SREM(flush remaining pixels)
-	SOFT3D_DrawPixels(SC);	
+	DrawFragBuffer(SC);	
 
 	ST		=SC->ST;
 	ZMode		=SC->ZMode;	   
-	ColMode	=SC->ColMode;	   
-	TexMode	=SC->TexMode;	   
+	TexEnvMode	=SC->TexEnvMode;	   
+	BlendMode	=SC->BlendMode;	   
 	UseFog	=SC->UseFog;	   
 	UseGouraud	=SC->UseGouraud;	 
 
 	if(Wazp3D.DebugSOFT3D.ON) 
-		Libprintf(" SC: FillMode%ld ZMode%ld TexMode%s ColMode%s UseGouraud%ld ColorChange%ld UseFog%ld ColorTransp%ld\n",FillMode,SC->ZMode,pc(SC->TexMode,text1),pc(SC->ColMode,text2),SC->UseGouraud,SC->ColorChange,SC->UseFog,SC->ColorTransp);
+		Libprintf(" SC: ZMode%ld BlendMode%lc TexEnvMode%lc UseGouraud%ld ColorChange%ld UseFog%ld ColorTransp%ld\n",SC->ZMode,SC->BlendMode,SC->TexEnvMode,SC->UseGouraud,SC->ColorChange,SC->UseFog,SC->ColorTransp);
 
 	SREM(FlatRGBA);		PrintRGBA(SC->FlatRGBA);
 	SREM(CurrentRGBA);	PrintRGBA(SC->CurrentRGBA);
@@ -2511,7 +3265,7 @@ SREM(flush remaining pixels)
 	if(ST!=NULL)
 	if(Wazp3D.DebugTexNumber.ON)
 	{
-	if(ST->Tnum!=DEBUGTNUM)
+	if(ST->Tnum==DEBUGTNUM)
 		{
 		LibDebug=TRUE;
 		Libprintf("Using DebugTexture %s\n",ST->name);
@@ -2528,70 +3282,67 @@ SREM(flush remaining pixels)
 	if(ST!=NULL)
 	{
 	if(Wazp3D.HackRGBA1.ON)
-		{ColMode=TexMode;		UseFog=FALSE;	TexMode='0'; UseGouraud=TRUE;  SC->ColorChange=TRUE; }
+		{TexEnvMode='0';	BlendMode='R'; UseFog=FALSE;	UseGouraud=SC->ColorChange=TRUE; }
 	if(Wazp3D.HackRGBA2.ON)
-		{ColMode='R';		UseFog=FALSE;	TexMode='0'; UseGouraud=FALSE; SC->ColorChange=FALSE;}
+		{TexEnvMode='0';	BlendMode='R'; UseFog=FALSE;	UseGouraud=SC->ColorChange=FALSE;}
 	}
 	
-	if(ColMode!='0')						/* if coloring */
-	{
-		if(UseGouraud==FALSE)					/* if truly want flat color*/
-			{
-			SREM(True Flat)
-			if(!Wazp3D.HackRGBA2.ON) 			/* in this case flatcolor is already polygon's averagecolor */
-			COPYRGBA(SC->FlatRGBA,SC->CurrentRGBA);	/* if true no-gouraud mode then the flat-color is set with current-color  */
-			}
 
-		if(!SC->ColorChange)					/* then dont truly need gouraud shading */
-			{
-			SREM(Gouraud to Flat)
-			UseGouraud=FALSE;					/* then flat color come from point-color  */
-			}
+	if(UseGouraud==FALSE)					/* if truly want flat color*/
+		{
+		SREM(True Flat)
+		if(!Wazp3D.HackRGBA2.ON) 			/* in this case flatcolor is already polygon's averagecolor */
+		COPYRGBA(SC->FlatRGBA,SC->CurrentRGBA);	/* if true no-gouraud mode then flat-color come from current-color  */
+		}
 
+	if(!SC->ColorChange)					/* then dont truly need gouraud shading */
+		{
+		SREM(Gouraud to Flat)
+		UseGouraud=FALSE;					/* then flat color come from point-color NOT from current-color */
+		}
 
-	}
 
 	if(ST!=NULL)
 		PrintST(ST);
 
-	tex24=FALSE;
-	if(ST!=NULL)
+	UseTex=(TexEnvMode!='0');	/* if use tex */
+	tex24=FALSE;			/* default 32 bits color */
+	BigTex=FALSE;
+	if(UseTex)
 		{
-		tex24=(ST->bits==24);
-		}
-	else
-		{
-		SREM(ST null so TexMode to 0)
-		TexMode='0';
+		if(256<ST->large) BigTex=TRUE;
+		if(256<ST->high ) BigTex=TRUE;
+		tex24=(ST->bits==24);	/* but the tex can be only 24 bits */
 		}
 
-	if(TexMode=='A')			/* if want alpha  */  
+
+	if(UseTex)
+	if(BlendMode=='A')			/* if want alpha  */  
 		{
 		SREM(can optim A to a)
-		TexMode=ST->TexMode;		/* then use best TexMode (A or a) */
+		BlendMode=ST->BlendMode;		/* then use best BlendMode (A or a) */
 
-		if(ColMode!='0')			/* with a coloring function */
-		if(SC->ColorTransp)		/* that colorize in alpha */
+		if(TexEnvMode!='R')			/* if got a coloring function */
+		if(SC->ColorTransp)			/* that colorize in alpha (=make texture transparent)*/
 			{
-			SREM(ColorTransp so use A)
-			TexMode='A';			/* then use it as an alpha one */
+			SREM(ColorTransp so really use A)
+			BlendMode='A';			/* then use the tex as a true alpha one (A) */
 			}
 		}
 
-	if(TexMode=='R')			/* if flat texture */
-	if(ColMode=='0')			/* and no coloring function */
+	if(TexEnvMode=='R')			/* if tex and no coloring function */
+	if(BlendMode=='R')			/* and write flat */
 	if(Wazp3D.QuakePatch.ON)
 		{
-		SREM(Quake use own TexMode )
-		TexMode=ST->TexMode;	/* then use current tex TexMode (R or A or a) */
+		SREM(Quake use own BlendMode )
+		BlendMode=ST->BlendMode;	/* then use current tex BlendMode (R or A or a) */
 		}
 
 
 
 /* if color is white dont do a stupid flat-color modulate on a texture = do nothing */
-	if(TexMode!='0')
-	if(ColMode!='0')			/* if mix tex & color */
-	if(ColMode!='S')			/* except saturate */
+	if(UseTex)
+	if(TexEnvMode!='R')			/* with a coloring function */
 	if(!SC->ColorChange)		
 	if(SC->FlatRGBA[0]==255)
 	if(SC->FlatRGBA[1]==255)
@@ -2599,187 +3350,248 @@ SREM(flush remaining pixels)
 	if(SC->FlatRGBA[3]==255)
 		{
 		SREM(White so no Coloring)
-		ColMode='0';
+		TexEnvMode='R';
 		}
 
-	if(TexMode!='0')
-		UseTex=1; else UseTex=0;
 
-	FillMode=  ZMode*4  +  UseTex*2  +  UseGouraud*1 ;
-	if(UseFog)	
-		FillMode=16 + ZMode;
+	FillMode=UseTex*4  +  UseGouraud*2 + UseFog*1;
+	SC->FunctionFill	=Wazp3D.FunctionsFill[FillMode];
+	if(BigTex)
+		{
+		SC->FunctionFill=(HOOKEDFUNCTION)Fill_BigTexPersp_Gouraud_Fog;
+		if(!UseGouraud)
+			SC->FunctionFill=(HOOKEDFUNCTION)Fill_BigTexPersp_Fog;
+		}
 
-	SC->FillFunction=(HOOKEDFUNCTION)Fill_Nothing;
-	SC->PixelsFunctionTex= NULL;
-	SC->PixelsFunctionCol= NULL;
-	SC->PixelsFunctionFog= NULL;
-
-	if(FillMode==0 )	SC->FillFunction=(HOOKEDFUNCTION)Fill_Zoff;
-	if(FillMode==1 )	SC->FillFunction=(HOOKEDFUNCTION)Fill_Zoff_Gouraud;
-	if(FillMode==2 )	SC->FillFunction=(HOOKEDFUNCTION)Fill_Zoff_Tex;
-	if(FillMode==3 )	SC->FillFunction=(HOOKEDFUNCTION)Fill_Zoff_Tex_Gouraud;
-
-	if(FillMode==4 )	SC->FillFunction=(HOOKEDFUNCTION)Fill_Ztest;
-	if(FillMode==5 )	SC->FillFunction=(HOOKEDFUNCTION)Fill_Ztest_Gouraud;
-	if(FillMode==6 )	SC->FillFunction=(HOOKEDFUNCTION)Fill_Ztest_Tex;
-	if(FillMode==7 )	SC->FillFunction=(HOOKEDFUNCTION)Fill_Ztest_Tex_Gouraud;
-
-	if(FillMode==8 )	SC->FillFunction=(HOOKEDFUNCTION)Fill_Zoff;
-	if(FillMode==9 )	SC->FillFunction=(HOOKEDFUNCTION)Fill_Zoff_Gouraud;
-	if(FillMode==10)	SC->FillFunction=(HOOKEDFUNCTION)Fill_Zoff_Tex;
-	if(FillMode==11)	SC->FillFunction=(HOOKEDFUNCTION)Fill_Zoff_Tex_Gouraud;
-
-	if(FillMode==12)	SC->FillFunction=(HOOKEDFUNCTION)Fill_Zwrite;
-	if(FillMode==13)	SC->FillFunction=(HOOKEDFUNCTION)Fill_Zwrite_Gouraud;
-	if(FillMode==14)	SC->FillFunction=(HOOKEDFUNCTION)Fill_Zwrite_Tex;
-	if(FillMode==15)	SC->FillFunction=(HOOKEDFUNCTION)Fill_Zwrite_Tex_Gouraud;
-
-	if(FillMode==16)	SC->FillFunction=(HOOKEDFUNCTION)Fill_Zoff_Tex_Gouraud_Fog;
-	if(FillMode==17)	SC->FillFunction=(HOOKEDFUNCTION)Fill_Ztest_Tex_Gouraud_Fog;
-	if(FillMode==18)	SC->FillFunction=(HOOKEDFUNCTION)Fill_Zoff_Tex_Gouraud_Fog;
-	if(FillMode==19)	SC->FillFunction=(HOOKEDFUNCTION)Fill_Zwrite_Tex_Gouraud_Fog;
+	SC->FunctionZtest	=Wazp3D.FunctionsZtest [ZMode];
+	SINFO(SC->FunctionZtest,(void *)Ztest_znever_update)
+	SINFO(SC->FunctionZtest,(void *)Ztest_zless)  
+	SINFO(SC->FunctionZtest,(void *)Ztest_zgequal)  
+	SINFO(SC->FunctionZtest,(void *)Ztest_zlequal)  
+	SINFO(SC->FunctionZtest,(void *)Ztest_zgreater)  
+	SINFO(SC->FunctionZtest,(void *)Ztest_znotequal)  
+	SINFO(SC->FunctionZtest,(void *)Ztest_zequal)  
+	SINFO(SC->FunctionZtest,(void *)Ztest_zalways)
+   
+	SINFO(SC->FunctionZtest,(void *)Ztest_znever_update)  
+	SINFO(SC->FunctionZtest,(void *)Ztest_zless_update)  
+	SINFO(SC->FunctionZtest,(void *)Ztest_zgequal_update)  
+	SINFO(SC->FunctionZtest,(void *)Ztest_zlequal_update)  
+	SINFO(SC->FunctionZtest,(void *)Ztest_zgreater_update)  
+	SINFO(SC->FunctionZtest,(void *)Ztest_znotequal_update)  
+	SINFO(SC->FunctionZtest,(void *)Ztest_zequal_update)  
+	SINFO(SC->FunctionZtest,(void *)Ztest_zalways_update) 
 
 
-/* FunctionTex */
-	if(TexMode=='A')	SC->PixelsFunctionTex=(HOOKEDFUNCTION)Pixels32A;
-	if(TexMode=='a')	SC->PixelsFunctionTex=(HOOKEDFUNCTION)Pixels32a;
-	if(TexMode=='S')	SC->PixelsFunctionTex=(HOOKEDFUNCTION)Pixels24S;
+	SC->FunctionTexEnv=NULL;
+	SC->FunctionBlend	=NULL;
+	SC->FunctionFog	=NULL;
+	SC->FunctionSepia	=NULL;
 
-	if(TexMode=='R')
+/* FunctionTexEnv */
+
+	if(TexEnvMode=='R')
 	{
-	if(tex24)
-		SC->PixelsFunctionTex=(HOOKEDFUNCTION)Pixels24R;
-	else
-		SC->PixelsFunctionTex=(HOOKEDFUNCTION)Pixels32R;
+			SC->FunctionTexEnv=NULL;	/* do nothing : let the FunctionBlend do the copy */
+			TexEnvMode='0';
 	}
 
-/* FunctionCol */
-	if(ColMode=='A')	SC->PixelsFunctionCol=(HOOKEDFUNCTION)Pixels32A;
-	if(ColMode=='R')	SC->PixelsFunctionCol=(HOOKEDFUNCTION)Pixels32R;
-
-	if(ColMode=='S')	SC->PixelsFunctionCol=(HOOKEDFUNCTION)Pixels24S;
-	if(ColMode=='L')	SC->PixelsFunctionCol=(HOOKEDFUNCTION)Pixels24L;
-
-	if(ColMode=='m')
+	if(TexEnvMode=='m')
 	{
 	if(tex24)
-			SC->PixelsFunctionCol=(HOOKEDFUNCTION)Pixels24m;
+			SC->FunctionTexEnv=(HOOKEDFUNCTION)PixelsMedian24;
 	else
-			SC->PixelsFunctionCol=(HOOKEDFUNCTION)Pixels32m;
+			SC->FunctionTexEnv=(HOOKEDFUNCTION)PixelsMedian32;
 	}
 
-	if(ColMode=='M')
+	if(TexEnvMode=='M')
 	{
 	if(tex24)
-			SC->PixelsFunctionCol=(HOOKEDFUNCTION)Pixels24M;
+			SC->FunctionTexEnv=(HOOKEDFUNCTION)PixelsModulate24;
 	else
-			SC->PixelsFunctionCol=(HOOKEDFUNCTION)Pixels32M;
+			SC->FunctionTexEnv=(HOOKEDFUNCTION)PixelsModulate32;
 	}
 
-	if(ColMode=='D')
+	if(TexEnvMode=='D')
 	{
 	if(tex24)
-			SC->PixelsFunctionCol=(HOOKEDFUNCTION)Pixels24D;
+			SC->FunctionTexEnv=(HOOKEDFUNCTION)PixelsDecal24;
 	else
-			SC->PixelsFunctionCol=(HOOKEDFUNCTION)Pixels32D;
+			SC->FunctionTexEnv=(HOOKEDFUNCTION)PixelsDecal32;
 	}
 
-	if(ColMode=='B')
+	if(TexEnvMode=='B')
 	{
 	if(tex24)
-			SC->PixelsFunctionCol=(HOOKEDFUNCTION)Pixels24B;
+			SC->FunctionTexEnv=(HOOKEDFUNCTION)PixelsBlend24;
 	else
-			SC->PixelsFunctionCol=(HOOKEDFUNCTION)Pixels32B;
+			SC->FunctionTexEnv=(HOOKEDFUNCTION)PixelsBlend32;
 	}
+
+
+/* FunctionBlend */
+	if(BlendMode=='A')	SC->FunctionBlend=(HOOKEDFUNCTION)PixelsSrcAlpha_OneMinusSrcAlpha32;
+	if(BlendMode=='a')	SC->FunctionBlend=(HOOKEDFUNCTION)PixelsSrcAlpha_OneMinusSrcAlpha32fast;
+	if(BlendMode=='G')	SC->FunctionBlend=(HOOKEDFUNCTION)PixelsSrcAlpha_One32;
+	if(BlendMode=='S')	SC->FunctionBlend=(HOOKEDFUNCTION)PixelsOne_One24;
+	if(BlendMode=='L')	SC->FunctionBlend=(HOOKEDFUNCTION)PixelsZero_SrcAlpha32;
+	if(BlendMode=='M')	SC->FunctionBlend=(HOOKEDFUNCTION)PixelsZero_SrcColor24;
+	if(BlendMode=='m')	SC->FunctionBlend=(HOOKEDFUNCTION)PixelsDstColor_Zero24;
+	if(BlendMode=='C')	SC->FunctionBlend=(HOOKEDFUNCTION)PixelsZero_OneMinusSrcColor24;
+	if(BlendMode=='c')	SC->FunctionBlend=(HOOKEDFUNCTION)PixelsSrcAlpha_OneMinusSrcColor32;
+
+	if(tex24)
+	if(SC->FunctionTexEnv==NULL)		/* if no function to convert a 24bits tex to 32bits color*/
+	{
+	if(BlendMode=='A')	BlendMode='R';		/* then dont use the 32 bits functions that use SrcAlpha(=ONE) */
+	if(BlendMode=='a')	BlendMode='R';
+	if(BlendMode=='G')	SC->FunctionBlend=(HOOKEDFUNCTION)PixelsOne_One24;
+	if(BlendMode=='L')	BlendMode='0';		/* then do Zero_SrcOne = let the destination unchanged =do nothing*/ 
+	}
+	
+	SC->UseFunctionIn=(SC->FunctionIn!=NULL);
+	if(BlendMode=='R')
+	{
+	SC->FunctionBlend=(HOOKEDFUNCTION)PixelsColorToImage;
+	if(SC->FunctionIn!=NULL)
+		SC->FunctionBlend=(HOOKEDFUNCTION)PixelsColorToBuffer;
+	if(UseTex)
+	if(SC->FunctionTexEnv==NULL)		/* if no function to convert a 24bits tex to 32bits color*/
+		{
+		if(tex24)
+			{
+			SC->FunctionBlend=(HOOKEDFUNCTION)PixelsTex24ToImage;
+			if(SC->FunctionIn!=NULL)
+				SC->FunctionBlend=(HOOKEDFUNCTION)PixelsTex24ToBuffer;
+			}
+		else
+			{
+			SC->FunctionBlend=(HOOKEDFUNCTION)PixelsTex32ToImage;
+			if(SC->FunctionIn!=NULL)
+				SC->FunctionBlend=(HOOKEDFUNCTION)PixelsTex32ToBuffer;
+			}
+		SC->UseFunctionIn=FALSE;		/* not need to read Image's pixels = : they are all replaced */
+		}
+	}
+
+	if(Wazp3D.DebugSOFT3D.ON) 
+		Libprintf("Functions set with TexEnvMode%lc BlendMode%lc\n",TexEnvMode,BlendMode);
 
 /* FunctionFog */
 	if(UseFog)
-		SC->PixelsFunctionFog=(HOOKEDFUNCTION)Pixels32A;
+		{
+		SC->FunctionFog=(HOOKEDFUNCTION)PixelsFogToImage;
+		if(SC->FunctionIn!=NULL)
+			SC->FunctionFog=(HOOKEDFUNCTION)PixelsFogToBuffer;
+		}
 
+/* FunctionSepia */
+	if(Wazp3D.DebugSepiaImage.ON)
+	{
+		SC->FunctionSepia=(HOOKEDFUNCTION)PixelsSepiaToImage;
+		if(SC->FunctionIn!=NULL)
+			SC->FunctionSepia=(HOOKEDFUNCTION)PixelsSepiaToBuffer;
+	}
+
+	SC->UseTex	=UseTex;
 }
 /*=============================================================*/
-void SOFT3D_DrawPixels(struct SOFT3D_context *SC)
+void DrawFragBuffer(struct SOFT3D_context *SC)
 {
-register struct pixbuffer3D *PixBuffer=SC->PixBuffer;
-register ULONG PixBufferSize;
-struct rgbabuffer3D *CurrentImage8=(struct rgbabuffer3D *)&PixBuffer->Image8;
+register struct fragbuffer3D *Frag=SC->FragBuffer;
+register ULONG size=SC->FragBufferDone - SC->FragBuffer;
+struct rgbabuffer3D *CurrentImage8;
 
-SREM(SOFT3D_DrawPixels)
-	if(SC->PixBuffer == SC->PixBufferDone) {SREM( ==> nothing to Draw);return;}
-	PixBufferSize=SC->PixBufferDone - SC->PixBuffer;
-	VAR(PixBufferSize)
+SREM(DrawFragBuffer)
+	if(SC->Image32==NULL) return;
+	if(size==0) {SREM( ==> nothing to Draw);goto DrawFragBufferEnd;}
+	VAR(size)
 
-/* default: read & write to Image8 (=Wazp3D's RGBAbuffer ) */
-	CurrentImage8=(struct rgbabuffer3D *)&PixBuffer->Image8;
+/* add one (noop) fragment to FragBuffer so can do size=(size + 1)/2 and so can process 2 Frags inside a loop   */
+	SC->FragBufferDone->Tex8	=SC->NoopRGBA;	/* read the noop pixel as texture */
+	SC->FragBufferDone->Image8	=SC->NoopRGBA;	/* write it in noop pixel = do nothing with Image */
+
+/* default: read & write directly to Image8 (=Wazp3D's RGBAbuffer ) */
+	CurrentImage8=(struct rgbabuffer3D *)&Frag->Image8;
+
+/* cant print inside lockbitmap so print the functionIn/Out name here */
+	SINFO(SC->FunctionIn,(void *)NULL)
+	SINFO(SC->FunctionIn,(void *)PixelsInBGRA)
+	SINFO(SC->FunctionIn,(void *)PixelsInRGBA)
+	SINFO(SC->FunctionIn,(void *)PixelsInARGB)
+	SINFO(SC->FunctionIn,(void *)PixelsInRGB)
+	VAR(SC->UseFunctionIn)
+
+	SINFO(SC->FunctionOut,(void *)NULL)
+	SINFO(SC->FunctionOut,(void *)PixelsOutBGRA)
+	SINFO(SC->FunctionOut,(void *)PixelsOutRGBA)
+	SINFO(SC->FunctionOut,(void *)PixelsOutARGB)
+	SINFO(SC->FunctionOut,(void *)PixelsOutRGB)
 
 /* Pass 1: Read/convert pixel from bitmap */
-	if(SC->PixelsFunctionIn!=NULL)
+	if(SC->FunctionIn!=NULL)
+	if(SC->UseFunctionIn)
 	{
+SREM(FunctionIn)
 	if(!LockBM(SC))
-		goto DrawPixelsDone;	/* if cant lock ==> panic ==> exit */
-SREM(PixelsFunctionIn)
-	SC->Src=(struct rgbabuffer3D *)&PixBuffer->Image8;
-	SC->Dst=(struct rgbabuffer3D *)&PixBuffer->Buffer8;
-	SC->End=SC->Dst+PixBufferSize;
-	SC->PixelsFunctionIn(SC);	/* convert readed pixels to RGBA format. TODO: manage ARGB,RGBA too */
-	CurrentImage8=SC->Dst;		/* now read & write to buffer for bitmap pixel  */
+		goto DrawFragBufferEnd;		/* if cant lock ==> panic ==> exit */
+	SC->FunctionIn(SC);			/* convert readed pixels to RGBA format. TODO: manage 8/15/16 bits mode too */
 	UnLockBM(SC);
+	CurrentImage8=(struct rgbabuffer3D *)&Frag->Buffer8;		/* now read & write to buffer for bitmap pixel  */
 	}
 
 /* Pass 2: apply color (=light) */
-	if(SC->PixelsFunctionCol!=NULL)
+	if(SC->FunctionTexEnv!=NULL)
 	{
-SREM(PixelsFunctionCol)
-	SC->Src=(struct rgbabuffer3D *)&PixBuffer->Tex8;		/* if tex do tex+color -> color */
-	SC->Dst=(struct rgbabuffer3D *)&PixBuffer->Color8;
-	if(SC->PixelsFunctionTex==NULL)					/* else just do color -> image */
-		{
-		SC->Src=(struct rgbabuffer3D *)&PixBuffer->Color8;
-		SC->Dst=CurrentImage8;
-		}
-	SC->End=SC->Dst+PixBufferSize;
-	SC->PixelsFunctionCol(SC);
+SREM(FunctionTexEnv)
+	SC->FunctionTexEnv(SC);
 	}
 
 /* Pass 3: apply texture */
-	if(SC->PixelsFunctionTex!=NULL)
+	if(SC->FunctionBlend!=NULL)
 	{
-SREM(PixelsFunctionTex)
-	SC->Src=(struct rgbabuffer3D *)&PixBuffer->Tex8;	/* default use tex only */
-	if(SC->PixelsFunctionCol!=NULL)				/* if colorization use color(=color+tex) */
-		SC->Src=(struct rgbabuffer3D *)&PixBuffer->Color8;
+SREM(FunctionBlend)
+	SC->Src=(struct rgbabuffer3D *)&Frag->Color8;		/* default use color(can be color=color+tex) */
+	if(SC->UseTex)							/* if use tex */
+	if(SC->FunctionTexEnv==NULL)					/* and no coloring */
+		{
+		SREM(use tex only)
+		SC->Src=(struct rgbabuffer3D *)&Frag->Tex8;	/* then use tex only   */
+		}
 	SC->Dst=CurrentImage8;
-	SC->End=SC->Dst+PixBufferSize;
-	SC->PixelsFunctionTex(SC);
+	SC->End=SC->Dst+size;
+	SC->FunctionBlend(SC);
 	}
 
 /* Pass 4: apply fog */
-	if(SC->PixelsFunctionFog!=NULL)
+	if(SC->FunctionFog!=NULL)
 	{
-SREM(PixelsFunctionFog)
-	SC->Src=(struct rgbabuffer3D *)&PixBuffer->Fog8;
-	SC->Dst=CurrentImage8;
-	SC->End=SC->Dst+PixBufferSize;
-	SC->PixelsFunctionFog(SC);
+SREM(FunctionFog)
+	SC->FunctionFog(SC);
 	}
 
-/* Pass 5: Write/convert pixel to bitmap */
-	if(SC->PixelsFunctionOut!=NULL)
+/* Pass 5: apply sepia (debug effect) */
+	if(SC->FunctionSepia!=NULL)
+	{
+SREM(FunctionSepia)
+	SC->FunctionSepia(SC);
+	}
+
+/* Pass 6: Write/convert pixel to bitmap */
+	if(SC->FunctionOut!=NULL)
+	{
+SREM(FunctionOut)
 	if(LockBM(SC))
 	{
-SREM(PixelsFunctionOut)
-	SC->Src=CurrentImage8;
-	SC->Dst=(struct rgbabuffer3D *)&PixBuffer->Image8;
-	SC->End=SC->Dst+PixBufferSize;
-	SC->PixelsFunctionOut(SC);
+	SC->FunctionOut(SC);
 	UnLockBM(SC);
 	}
-
-DrawPixelsDone:
-	SC->PixBufferDone=SC->PixBuffer;
+	}
+DrawFragBufferEnd:
+	SC->FragBufferDone =SC->FragBuffer;
 }
 /*=============================================================*/
-void DrawPointSimplePIX(struct SOFT3D_context *SC,register union pixel3D *P)
+void DrawSimplePix(struct SOFT3D_context *SC,register union pixel3D *P)
 {
 
 SFUNCTION(DrawPointSimplePIX)
@@ -2787,32 +3599,32 @@ SFUNCTION(DrawPointSimplePIX)
 		return;
 
 	SC->Pix  =&(SC->edge1[P->W.y]);
-	CopyPIX(SC->Pix,P);
+	CopyPix(SC->Pix,P);
 	SC->Pix->W.large=1;
 	SC->PolyHigh=1;
 
 	if(SC->ST!=NULL)
-		SC->MM=&SC->ST->MMs[0];	/* default to biggest mipmap <=> never call FillFunction with SC->MM=NULL*/
+		SC->MM=&SC->ST->MMs[0];	/* default to biggest mipmap <=> never call FunctionFill with SC->MM=NULL*/
 
-	SC->FillFunction(SC);
+	SC->FunctionFill(SC);
 }
 /*=============================================================*/
-void DrawPointPIX(struct SOFT3D_context *SC)
+void DrawPointPix(struct SOFT3D_context *SC)
 {
-register union pixel3D *P=SC->PolyPIX;
+register union pixel3D *P=SC->PolyPix;
 register WORD *PointLarge=SC->PointLarge;
 register WORD xmin,xmax,ymin,ymax,y;
 register WORD R;
 
 SFUNCTION(DrawPointPIX)
 	SC->ColorChange=FALSE;
-	SOFT3D_SetDrawStates(SC,NULL,SC->ZMode,'0','R',FALSE,FALSE);		/* default notex nofog nogouraud just color */
+	SOFT3D_SetDrawStates(SC,NULL,SC->ZMode,'R','0',FALSE,FALSE);		/* default notex nofog nogouraud just color */
 	SOFT3D_SetDrawFunctions(SC);
 
 	COPYRGBA(SC->FlatRGBA,SC->PolyP->RGBA);
 
 	if(SC->PointSize==1)
-		{DrawPointSimplePIX(SC,P);return;}
+		{DrawSimplePix(SC,P);return;}
 
 	R=SC->PointSize/2+1;
 	xmin=0+R;
@@ -2828,14 +3640,14 @@ SFUNCTION(DrawPointPIX)
 
 	YLOOP(SC->PolyHigh)
 		{
-		CopyPIX(&SC->Pix[y],P);
+		CopyPix(&SC->Pix[y],P);
 		SC->Pix[y].W.large =PointLarge[y];
 		SC->Pix[y].W.x	 =SC->Pix[y].W.x - PointLarge[y]/2;
 		}
 
 	if(SC->ST!=NULL)
-		SC->MM=&SC->ST->MMs[0];	/* default to biggest mipmap <=> never call FillFunction with SC->MM=NULL*/
-	SC->FillFunction(SC);
+		SC->MM=&SC->ST->MMs[0];	/* default to biggest mipmap <=> never call FunctionZtest with SC->MM=NULL*/
+	SC->FunctionFill(SC);
 }
 /*=============================================================*/
 void DoDeltasUV(union pixel3D *P1,union pixel3D *P2)
@@ -2844,6 +3656,16 @@ void DoDeltasUV(union pixel3D *P1,union pixel3D *P2)
 double a,b,z0,z2,rz4,n,dt,rz4dt;
 double u0,u1,u2,du,ddu;
 double v0,v1,v2,dv,ddv;
+
+/*
+	if(P1->L.w==P1->L.w)
+	{
+		P1->L.du=(P2->L.u - P1->L.u)/P1->W.large;
+		P1->L.dv=(P2->L.v - P1->L.v)/P1->W.large;
+		P1->L.ddu=P1->L.ddv=0;
+		return;
+	}
+*/
 
 	n=P1->W.large;
 	z0=1.0/P1->L.w;	
@@ -2881,11 +3703,11 @@ void EdgeMinDeltas(struct SOFT3D_context *SC,union pixel3D *P1,union pixel3D *P2
 register WORD size;
 register LONG u,v,du,dv;
 
-	if(SC->TexMode!='0')		/* then dont bother with corect texturing*/
+	if(SC->BlendMode!='0')		/* then dont bother with corect texturing*/
 		return;
 SREM(EdgeMinDeltas)
-	PrintPIX(P1);
-	PrintPIX(P2);
+	PrintPix(P1);
+	PrintPix(P2);
 
 	size=P2->W.y - P1->W.y;
 	VAR(size)
@@ -2936,6 +3758,7 @@ SFUNCTION(DoEdgeTruePersp)
 	DeltaY.L.dG=(P2->L.G - P1->L.G)/high;
 	DeltaY.L.dB=(P2->L.B - P1->L.B)/high;
 	DeltaY.L.dA=(P2->L.A - P1->L.A)/high;
+	DeltaY.L.dF=(P2->L.F - P1->L.F)/high;
 
 	u =(double)P1->L.u * P1->L.w;
 	u2=(double)P2->L.u * P2->L.w;
@@ -2955,6 +3778,7 @@ SFUNCTION(DoEdgeTruePersp)
 		P1[1].L.G=P1->L.G+DeltaY.L.dG;
 		P1[1].L.B=P1->L.B+DeltaY.L.dB;
 		P1[1].L.A=P1->L.A+DeltaY.L.dA;
+		P1[1].L.F=P1->L.F+DeltaY.L.dF;
 		w=P1[1].L.w;
 		u=u+du;
 		v=v+dv;
@@ -2969,7 +3793,7 @@ void DoEdge(struct SOFT3D_context *SC,union pixel3D *P1,union pixel3D *P2)
 register WORD high,n;
 union pixel3D DeltaY;
 
-	if(SC->TexMode!='0')
+	if(SC->BlendMode!='0')
 	{
 	if(Wazp3D.DoMipMaps.ON)
 		EdgeMinDeltas(SC,P1,P2);
@@ -2989,6 +3813,7 @@ SFUNCTION(DoEdge)
 	DeltaY.L.dG=(P2->L.G - P1->L.G)/high;
 	DeltaY.L.dB=(P2->L.B - P1->L.B)/high;
 	DeltaY.L.dA=(P2->L.A - P1->L.A)/high;
+	DeltaY.L.dF=(P2->L.F - P1->L.F)/high;
 
 	high--;						/* ne pas recalculer les points extremites */
 	NLOOP(high)
@@ -3001,6 +3826,7 @@ SFUNCTION(DoEdge)
 		P1[1].L.G=P1->L.G+DeltaY.L.dG;
 		P1[1].L.B=P1->L.B+DeltaY.L.dB;
 		P1[1].L.A=P1->L.A+DeltaY.L.dA;
+		P1[1].L.F=P1->L.F+DeltaY.L.dF;
 		P1++;
 	}
 
@@ -3038,6 +3864,7 @@ SFUNCTION(FillPolyNoPersp)
 	DeltaX.L.dG=(P2->L.G - P1->L.G)/maxlarge;
 	DeltaX.L.dB=(P2->L.B - P1->L.B)/maxlarge;
 	DeltaX.L.dA=(P2->L.A - P1->L.A)/maxlarge;
+	DeltaX.L.dF=(P2->L.F - P1->L.F)/maxlarge;
 	DeltaX.L.ddu=0;
 	DeltaX.L.ddv=0;
 	}
@@ -3053,6 +3880,7 @@ SFUNCTION(FillPolyNoPersp)
 	P1->L.dG	=DeltaX.L.dG;
 	P1->L.dB	=DeltaX.L.dB;
 	P1->L.dA	=DeltaX.L.dA;
+	P1->L.dF	=DeltaX.L.dF;
 	P1->L.ddu	=0;
 	P1->L.ddv	=0;
 	P1++;
@@ -3061,7 +3889,7 @@ SFUNCTION(FillPolyNoPersp)
 	SC->Pix=edge1;
 	SC->PolyHigh=high;
 	SelectMipMap(SC);
-	SC->FillFunction(SC);
+	SC->FunctionFill(SC);
 }
 /*=============================================================*/
 void FillPoly(struct SOFT3D_context *SC,union pixel3D *edge1,union pixel3D *edge2,WORD high)
@@ -3090,6 +3918,7 @@ SFUNCTION(FillPoly)
 		P1->L.dG=(P2->L.G - P1->L.G)/large;
 		P1->L.dB=(P2->L.B - P1->L.B)/large;
 		P1->L.dA=(P2->L.A - P1->L.A)/large;
+		P1->L.dF=(P2->L.F - P1->L.F)/large;
 		DoDeltasUV(P1,P2);
 		}
 	P1++,P2++;
@@ -3108,6 +3937,7 @@ SFUNCTION(FillPoly)
 		P1->L.dG=(P2->L.G - P1->L.G)/large;
 		P1->L.dB=(P2->L.B - P1->L.B)/large;
 		P1->L.dA=(P2->L.A - P1->L.A)/large;
+		P1->L.dA=(P2->L.F - P1->L.F)/large;
 		P1->L.ddu=0;
 		P1->L.ddv=0;
 		}
@@ -3118,7 +3948,7 @@ SFUNCTION(FillPoly)
 	SC->Pix=edge1;
 	SC->PolyHigh=high;
 	SelectMipMap(SC);
-	SC->FillFunction(SC);
+	SC->FunctionFill(SC);
 
 }
 /*=============================================================*/
@@ -3141,12 +3971,13 @@ SFUNCTION(FillPolyDouble)
 	{
 		PM->L.x=(P1->L.x + P2->L.x)/2;
 		PM->L.y=(P1->L.y + P2->L.y)/2;
-		PM->L.z=(P1->L.z + P2->L.z)/2.0;
+		PM->L.z=(P1->L.z + P2->L.z)/2;
 		PM->L.w=(P1->L.w + P2->L.w)/2.0;
 		PM->L.R=(P1->L.R + P2->L.R)/2;
 		PM->L.G=(P1->L.G + P2->L.G)/2;
 		PM->L.B=(P1->L.B + P2->L.B)/2;
 		PM->L.A=(P1->L.A + P2->L.A)/2;
+		PM->L.F=(P1->L.F + P2->L.F)/2;
 
 		if(PM->L.w==0.0) PM->L.w=0.00001; 			
 		u= ( (P1->L.u*P1->L.w) + (P2->L.u*P2->L.w) ) /2.0 ;
@@ -3165,7 +3996,7 @@ SFUNCTION(FillPolyDouble)
 	FillPoly(SC,edgeM,edge2,high);
 }
 /*=============================================================*/
-void DrawSegmentPIX(struct SOFT3D_context *SC,union pixel3D *P1,union pixel3D *P2)
+void DrawSegmentPix(struct SOFT3D_context *SC,union pixel3D *P1,union pixel3D *P2)
 {
 /* draw a simple horizontal line */
 register union pixel3D *edge1=SC->edge1;
@@ -3180,19 +4011,18 @@ register union pixel3D *temp;
 	if ( (P1->W.x<0) ou (P1->W.y<0) ou (SC->large<=P1->W.x) ou (SC->high<=P1->W.y) ou (P2->W.x<0) ou (P2->W.y<0) ou (SC->large<=P2->W.x) ou (SC->high<=P2->W.y))
 		return;
 
-	CopyPIX(&(edge1[P1->W.y]),P1);
+	CopyPix(&(edge1[P1->W.y]),P1);
+	CopyPix(&(edge2[P2->W.y]),P2);
 	P1=&(edge1[P1->W.y]);
-
-	CopyPIX(&(edge2[P2->W.y]),P2);
 	P2=&(edge2[P2->W.y]);
 
 	FillPoly(SC,P1,P2,1);
 }
 /*=============================================================*/
-void DrawLinePIX(struct SOFT3D_context *SC)
+void DrawLinePix(struct SOFT3D_context *SC)
 {
-register union pixel3D *P1=&SC->PolyPIX[0];
-register union pixel3D *P2=&SC->PolyPIX[1];
+register union pixel3D *P1=&SC->PolyPix[0];
+register union pixel3D *P2=&SC->PolyPix[1];
 register union pixel3D *edge1=SC->edge1;
 register union pixel3D *edge2=SC->edge2;
 register union pixel3D *temp;
@@ -3218,20 +4048,20 @@ WORD adjustx;
 	VAR(LineHigh)
 
 	if(LineLarge+LineHigh==0)
-		{DrawPointSimplePIX(SC,P1);return;}
+		{DrawSimplePix(SC,P1);return;}
 	if(LineLarge+LineHigh<=2)
-		{DrawPointSimplePIX(SC,P1);DrawPointSimplePIX(SC,P2);return;}
+		{DrawSimplePix(SC,P1);DrawSimplePix(SC,P2);return;}
 	if(LineHigh==0)
-		{DrawSegmentPIX(SC,P1,P2);return;}
+		{DrawSegmentPix(SC,P1,P2);return;}
 
-	PrintPIX(P1);
-	PrintPIX(P2);
+	PrintPix(P1);
+	PrintPix(P2);
 
 	EdgesOrdered=(P1->W.x < P2->W.x);
 
 /* Store the 2 points in an edge (edge1) */
-	CopyPIX(&(edge1[P1->W.y]),P1);
-	CopyPIX(&(edge1[P2->W.y]),P2);
+	CopyPix(&(edge1[P1->W.y]),P1);
+	CopyPix(&(edge1[P2->W.y]),P2);
 
 	SC->dmin=1024<<16;
 	DoEdge(SC,&edge1[P1->W.y],&edge1[P2->W.y]);
@@ -3247,12 +4077,12 @@ WORD adjustx;
 
 	NLOOP(LineHigh)
 		{
-		CopyPIX(P2,&P1[1]);
+		CopyPix(P2,&P1[1]);
 		P2->W.x += adjustx ;	/* avoid to have a segment with large=0 */
 		P1++;
 		P2++;
 		}
-	CopyPIX(P2,P1);
+	CopyPix(P2,P1);
 
 	if(EdgesOrdered)
 		{P1=edge1;P2=edge2;}
@@ -3262,9 +4092,9 @@ WORD adjustx;
 	FillPoly(SC,P1,P2,SC->PolyHigh);
 }
 /*=============================================================*/
-void DrawPolyPIX(struct SOFT3D_context *SC)
+void DrawPolyPix(struct SOFT3D_context *SC)
 {
-register union pixel3D *PIX=SC->PolyPIX;
+register union pixel3D *Pix=SC->PolyPix;
 register union pixel3D *edge1;
 register union pixel3D *edge2;
 register union pixel3D *Pmin=NULL;
@@ -3277,22 +4107,25 @@ register WORD PolyLarge;
 register WORD PolyYmin;
 register WORD PolyYmax;
 
-	SFUNCTION(DrawPolyPIX)
+	SFUNCTION(DrawPolyPix)
 	VAR(SC->PolyPnb)
-	PolyYmin=PolyYmax=PIX[0].W.y;
+	PolyYmin=PolyYmax=Pix[0].W.y;
 
 
 /* Polygon loop : draw all edges */
 	SC->dmin=1024<<16;
 NLOOP(Pnb)
 {
-	PrintPIX(&PIX[n]);
-	Pmin =&(PIX[n]);
-	Pmax =&(PIX[n+1]);
+	PrintPix(&Pix[n]);
+	Pmin =&(Pix[n]);
+	Pmax =&(Pix[n+1]);
 	if (n+1==Pnb)
-		Pmax =&(PIX[0  ]);
+		Pmax =&(Pix[0  ]);
 
 /* Trouver point Pmin et point Pmax des deux points de cette ligne */
+	if (Pmin->W.y != Pmax->W.y)  /* skip all horizontal lines */
+	{
+
 	if (Pmin->W.y < Pmax->W.y)
 		{edge1=SC->edge1;}
 	else
@@ -3301,14 +4134,15 @@ NLOOP(Pnb)
 	if (Pmin->W.y < PolyYmin   )	PolyYmin=Pmin->W.y;
 	if (PolyYmax  < Pmax->W.y  )	PolyYmax=Pmax->W.y;
 
-/* Stocker les deux points dans un edge1 */
-	CopyPIX(&(edge1[Pmin->W.y]),Pmin);
+/* Stocker les deux points dans edge1 */
+	CopyPix(&(edge1[Pmin->W.y]),Pmin);
 	Pmin=&(edge1[Pmin->W.y]);
-	CopyPIX(&(edge1[Pmax->W.y]),Pmax);
+	CopyPix(&(edge1[Pmax->W.y]),Pmax);
 	Pmax=&(edge1[Pmax->W.y]);
 
 /* draw this edge */
 	DoEdge(SC,Pmin,Pmax);
+	}
 }
 /* all edges drawn */
 
@@ -3326,75 +4160,106 @@ NLOOP(Pnb)
 	if(PolyYmax==(SC->high-1))	/* patch: for TheVague if last line of screen then dont crop it */
 		PolyHigh++;			
 
-	if(Wazp3D.SimuPerspective.ON)
-		FillPolyDouble(SC ,&(edge1[PolyYmin]) ,&(edge2[PolyYmin]), &(SC->edgeM[PolyYmin]) ,PolyHigh);
-	else	
-		FillPoly(SC,&(edge1[PolyYmin]),&(edge2[PolyYmin]),PolyHigh);
-	SFUNCTION(-----------)
-}
-/*==================================================================================*/
-UBYTE FogA(struct SOFT3D_context *SC,float z)
-{
-register float d,f;
-UBYTE A;
-#define CLAMP(X,MIN,MAX) ((X)<(MIN)?(MIN):((X)>(MAX)?(MAX):(X)))
-
-	switch (SC->FogMode)
+/* if poly is only an horizontal line */
+	if(PolyHigh==0)
 	{
-	case 1:
-		d = 1.0F / (SC->FogZmax - SC->FogZmin);
-		f= (SC->FogZmax - z) * d;
-		f = CLAMP( f, 0.0F, 1.0F );
-		A= (UBYTE) ( 255.0 * (1.0 - f ));	
-		break;
-	case 2:
-		d = -SC->FogDensity;
-		f= exp( d * z);
-		f = CLAMP( f, 0.0F, 1.0F );
-		A= (UBYTE) ( 255.0 * (1.0 - f ));	
-		break;
-	case 3:
-	default:
-		d = -(SC->FogDensity*SC->FogDensity);
-		f= exp( d * z*z );
-		f = CLAMP( f, 0.0F, 1.0F );
-		A= (UBYTE) ( 255.0 * (1.0 - f ));
-		break;
+	Pmin = Pmax =Pix;
+	NLOOP(Pnb)
+		{
+		if(Pix->W.x  < Pmin->W.x)
+			Pmin=Pix;
+		if(Pmax->W.x <  Pix->W.x)
+			Pmax=Pix;
+		Pix++;
+		}
+	DrawSegmentPix(SC,Pmin,Pmax);
+	return;
 	}
-	
+
+/*
+	if(SC->UseTex)
+*/
+
+	if(Wazp3D.SimuPerspective.ON)
+		{
+		FillPolyDouble(SC ,&(edge1[PolyYmin]) ,&(edge2[PolyYmin]), &(SC->edgeM[PolyYmin]) ,PolyHigh);
+		return;
+		}
+
+	FillPoly(SC,&(edge1[PolyYmin]),&(edge2[PolyYmin]),PolyHigh);
+	SFUNCTION(-----------)
 }
 /*==================================================================================*/
 void SOFT3D_Fog(struct SOFT3D_context *SC,WORD FogMode,float FogZmin,float FogZmax,float FogDensity,UBYTE *FogRGBA)
 {
+register float d,z,f;
+register UWORD n;
+UBYTE A;
+UBYTE *RGBA;
+register UBYTE *Mul8=SC->Mul8;
+register union oper3D Oper1;
+
+#define CLAMP(X,MIN,MAX) ((X)<(MIN)?(MIN):((X)>(MAX)?(MAX):(X)))
 
 SFUNCTION(SOFT3D_Fog)
 	if(Wazp3D.DebugSOFT3D.ON)
 	{
-	SREM(SOFT3D_Fog)
 	VAR(FogMode)
 	VARF(FogZmin)
 	VARF(FogZmax)
 	VARF(FogDensity)
 	}
 
-	switch(FogMode)
-	{
-	case 0:  SREM(NO_FOG)	break;
-	case 1:  SREM(GL_LINEAR)	break;
-	case 2:  SREM(GL_EXP)	break;
-	case 3:  SREM(GL_EXP2)	break;
-	case 4:  SREM(FOG_INTERPOLATED)	break;
-	default: SREM(BadFogMode) return;
-	}
+	if(FogMode<0)
+		return;
+	if(3<FogMode)
+		return;
 
-	if(FogZmin	<  0.0)	FogZmin =0.0;
-	if(1.0  <= FogZmax)	FogZmax =0.9999;
+	if(FogZmin 	<  MINZ   )	FogZmin =MINZ;
+	if(MAXZ     <= FogZmax)	FogZmax =MAXZ;
 
 	SC->FogMode		=FogMode;
 	SC->FogZmin		=FogZmin;
 	SC->FogZmax		=FogZmax;
 	SC->FogDensity	=FogDensity;
 	COPYRGBA(SC->FogRGBA,FogRGBA);
+
+	if(FogMode==0)
+		return;
+
+	Oper1.L.Index=0;
+
+	NLOOP(FOGSIZE)
+	{
+	z=(((float)n)/((float)FOGSIZE));
+	switch (FogMode)
+	{
+	case 1:
+		d = 1.0F / (FogZmax - FogZmin);
+		f= (FogZmax - z) * d;
+		break;
+	case 2:
+		d = -FogDensity;
+		f= exp( d * z);
+		break;
+	case 3:
+		d = -(FogDensity*FogDensity);
+		f= exp( d * z*z );
+		break;
+	default:
+		f=0.0;
+		break;
+	}
+
+	RGBA=(UBYTE *) &SC->FogRGBAs[n];
+	A = 255.0*(1.0 - CLAMP( f, 0.0F, 1.0F ));
+	MUL8(A,FogRGBA[0],RGBA[0])
+	MUL8(A,FogRGBA[1],RGBA[1])
+	MUL8(A,FogRGBA[2],RGBA[2])
+	RGBA[3]=ONE-A;
+
+	if(Wazp3D.DebugSOFT3D.ON) VARF(f);
+	}
 
 }
 /*================================================================*/
@@ -3433,12 +4298,11 @@ SFUNCTION(DumpPoly)
 /*================================================================*/
 void DrawPolyP(struct SOFT3D_context *SC)
 {
-union   pixel3D *PIX=SC->PolyPIX;
+union   pixel3D *Pix=SC->PolyPix;
 struct point3D *P=SC->PolyP;
 float PolyZmin,PolyZmax;
 WORD Pnb,n;
 BOOL BackFace=FALSE;
-
 
 #ifdef WAZP3DDEBUG
 if(Wazp3D.DebugSOFT3D.ON) Libprintf("DrawPolyP Pnb %ld  \n",SC->PolyPnb);
@@ -3474,7 +4338,7 @@ if(Wazp3D.DebugSOFT3D.ON) Libprintf("DrawPolyP Pnb %ld  \n",SC->PolyPnb);
 	if(Pnb>=3)
 		UVtoRGBA(SC->ST,(P[0].u+P[1].u+P[2].u)/3.0,(P[0].v+P[1].v+P[2].v)/3.0,SC->FlatRGBA);
 
-	PolyZmin=1.0; PolyZmax=0.0;
+	PolyZmin=MAXZ; PolyZmax=MINZ;
 	SC->ColorChange=FALSE;
 	SC->ColorTransp=FALSE;
 
@@ -3487,27 +4351,36 @@ if(Wazp3D.DebugSOFT3D.ON) Libprintf("DrawPolyP Pnb %ld  \n",SC->PolyPnb);
 	if(Wazp3D.HackRGBA1.ON)
 		UVtoRGBA(SC->ST,P->u,P->v,P->RGBA);
 
-	PIX->L.x	= 0;
-	PIX->L.y	= 0;
-	PIX->W.x	= P->x;
-	PIX->W.y	= P->y;
-	PIX->L.z	= P->z;
-	PIX->L.w	= P->w;
+	Pix->L.x	= 0;	/* erase low parts */
+	Pix->L.y	= 0;
+	Pix->W.x	= P->x;
+	Pix->W.y	= P->y;
+	ZCONVERSION
+	Pix->L.w	= P->w;
 
-	PIX->L.u	=(P->u+0.5)*2.0;	/* add 0.5 to texture coordinate for better rounding then mul by 2 to keep an integer */
-	PIX->L.v	=(P->v+0.5)*2.0;
-	PIX->L.u	=PIX->L.u<<15;	/* already multiplied per 2 so only shift per 15 */ 
-	PIX->L.v	=PIX->L.v<<15;
-	PIX->W.R	= P->RGBA[0];
-	PIX->W.G	= P->RGBA[1];
-	PIX->W.B	= P->RGBA[2];
-	PIX->W.A	= P->RGBA[3];
+	Pix->L.F	= 0;
+	Pix->W.F	= (P->z * (float)FOGSIZE);
+	if(P->z<MINZ) Pix->W.F=0;
+	if(MAXZ<P->z) Pix->W.F=FOGSIZE-1;
+
+
+	Pix->L.u	=(P->u+0.5)*2.0;	/* add 0.5 to texture coordinate for better rounding then mul by 2 to keep an integer */
+	Pix->L.v	=(P->v+0.5)*2.0;
+	Pix->L.u	=Pix->L.u<<15;	/* already multiplied per 2 so only shift per 15 */ 
+	Pix->L.v	=Pix->L.v<<15;
+
+	Pix->W.R	= P->RGBA[0];
+	Pix->W.G	= P->RGBA[1];
+	Pix->W.B	= P->RGBA[2];
+	Pix->W.A	= P->RGBA[3];
 
 /* new update-area */
-	if(PIX->W.x < SC->Pxmin) SC->Pxmin=PIX->W.x;
-	if(SC->Pxmax < PIX->W.x) SC->Pxmax=PIX->W.x;
-	if(PIX->W.y < SC->Pymin) SC->Pymin=PIX->W.y;
-	if(SC->Pymax < PIX->W.y) SC->Pymax=PIX->W.y;
+	if(Pix->W.x < SC->Pxmin) SC->Pxmin=Pix->W.x;
+	if(SC->Pxmax < Pix->W.x) SC->Pxmax=Pix->W.x;
+	if(Pix->W.y < SC->Pymin) SC->Pymin=Pix->W.y;
+	if(SC->Pymax < Pix->W.y) SC->Pymax=Pix->W.y;
+	if(ZVALUE < SC->Pzmin) SC->Pzmin=ZVALUE;
+	if(SC->Pzmax < ZVALUE) SC->Pzmax=ZVALUE;
 
 	if(NOTSAMERGBA(SC->PolyP->RGBA,P->RGBA))	/* if color truly change ==> do gouraud */ 
 		{SREM(ColorChange);SC->ColorChange=TRUE;}
@@ -3515,12 +4388,11 @@ if(Wazp3D.DebugSOFT3D.ON) Libprintf("DrawPolyP Pnb %ld  \n",SC->PolyPnb);
 	if(SC->PolyP->RGBA[3]!=P->RGBA[3])		/* if alpha change ==> do alpha */ 
 		SC->ColorTransp=TRUE;
 
-	PIX++;
+	Pix++;
 	P++;
 	}
 
-	if(Wazp3D.UseAlphaMinMax.ON)	
-	if(SC->PolyP->RGBA[3] < ALPHAMAX)		/* if not solid ==> do alpha */ 
+	if(SC->PolyP->RGBA[3]!=255)		/* if not solid ==> do alpha */ 
 		SC->ColorTransp=TRUE;
 
 /* This face is inside Fog ? */
@@ -3530,13 +4402,16 @@ if(Wazp3D.DebugSOFT3D.ON) Libprintf("DrawPolyP Pnb %ld  \n",SC->PolyPnb);
 	{
 	if(PolyZmax	   < SC->FogZmin) SC->UseFog=FALSE;
 	if(SC->FogZmax <	PolyZmin  ) SC->UseFog=FALSE;	  /* end of fogging area */
-	}
-
-	if(!Wazp3D.UseFog.ON) SC->UseFog=FALSE;
-
 #ifdef WAZP3DDEBUG
-	if(Wazp3D.DebugSOFT3D.ON) Libprintf("FogMode %ld FogZmin %ld FogZmax %ld  PolyZmin %ld PolyZmax %ld --> UseFog %ld \n",SC->FogMode,(WORD)(1024.0*SC->FogZmin),(WORD)(1024.0*SC->FogZmax),(WORD)(1024.0*PolyZmin),(WORD)(1024.0*PolyZmax),SC->UseFog);
+	if(Wazp3D.DebugSOFT3D.ON)
+	{
+	Libprintf("LinearFog:UseFog%ld. FogZmin FogZmax PolyZmin PolyZmax:",SC->UseFog);
+	pf(SC->FogZmin);pf(SC->FogZmax);pf(PolyZmin);pf(PolyZmax);
+	Libprintf("\n");
+	}
 #endif
+	}
+	if(!Wazp3D.UseFog.ON) SC->UseFog=FALSE;
 
 	SOFT3D_SetDrawFunctions(SC);		/* draw functions still can change now if ColorChange ColorTransp UseFog just changed */
 
@@ -3546,17 +4421,17 @@ if(Wazp3D.DebugSOFT3D.ON) Libprintf("DrawPolyP Pnb %ld  \n",SC->PolyPnb);
 
 	switch(Pnb)
 	{
-	case 1:  DrawPointPIX(SC); break;
-	case 2:  DrawLinePIX(SC);  break;
-	default: DrawPolyPIX(SC);  break;
+	case 1:  DrawPointPix(SC); break;
+	case 2:  DrawLinePix(SC);  break;
+	default: DrawPolyPix(SC);  break;
 	}
 
 #ifdef WAZP3DDEBUG
 	if(Wazp3D.StepDrawPoly.ON) 
 		{
-		SOFT3D_DrawPixels(SC);	/* flush buffer = finish this poly */
+		DrawFragBuffer(SC);	/* flush buffer = finish this poly */
 		NLOOP(Pnb)
-			ImagePlot(SC,SC->PolyPIX[n].W.x,SC->PolyPIX[n].W.y);
+			ImagePlot(SC,SC->PolyPix[n].W.x,SC->PolyPix[n].W.y);
 		LibAlert("DrawPolyP() done !!");
 		}
 #endif
@@ -3600,9 +4475,7 @@ void ImagePlot(struct SOFT3D_context *SC,UWORD x,UWORD y)
 UBYTE *RGB;
 ULONG offset;
 
-#ifdef WAZP3DDEBUG
 	if(Wazp3D.DebugSOFT3D.ON) Libprintf("ImagePlot x y %ld %ld \n",x,y);
-#endif
 	offset=(SC->large*y + x);
 	RGB=(UBYTE *)&(SC->Image32[offset]);
 	RGB[0]=10;
@@ -3659,23 +4532,6 @@ UBYTE Bit[] = {128,64,32,16,8,4,2,1};
 
 }
 #endif
-
-/*================================================================*/
-void ZbufferPatch(W3D_Context *context)
-{
-/* StormMesa patch: If window is resized then it call W3D_SetDrawRegion				*/
-/*  so change the drawregion(=bitmap) dimensions but dont allways change the Zbuffer(size)*/
-struct WAZP3D_context *WC=context->driver;	
-struct SOFT3D_context *SC=WC->SC;
-
-	if(context->zbuffer!=NULL)			/* if use a zbuffer */
-	if(SC->Zbuffersize!=SC->large*SC->high) 	/* with wrong dimensions */
-	{
-		SREM( bitmap & zbuffer dont have same size !!!)
-		W3D_FreeZBuffer(context);
-		W3D_AllocZBuffer(context);
-	} 
-}
 /*================================================================*/
 void SOFT3D_DrawPrimitive(struct SOFT3D_context *SC,struct point3D *P,LONG Pnb,ULONG primitive)
 {
@@ -3691,8 +4547,8 @@ WORD MaxPolyHack;
 	}
 #endif
 
-
-
+	if(SC->Image32==NULL) 
+		{ REM(Image is lost or freed: cant draw !!); return;}		/* happen if SOFT3D_ReallocImage() fail */
 
 	SINFO(primitive,W3D_PRIMITIVE_TRIANGLES)
 	SINFO(primitive,W3D_PRIMITIVE_TRIFAN)
@@ -3883,12 +4739,9 @@ UBYTE A;
 #define RATIOALPHA 20
 
 SFUNCTION(TextureAlphaUsage)
-	if(ST->TexMode!='R')	/* already setted */
-		return;
-
 	if(ST->bits==32)
 	{
-	ST->TexMode='A';	/* alpha texture with blending */
+	ST->BlendMode='A';	/* alpha texture with blending */
 
 		if(Wazp3D.UseRatioAlpha.ON)	/* count alpha-pixels  */
 		{
@@ -3901,8 +4754,8 @@ SFUNCTION(TextureAlphaUsage)
 			{
 			A=RGBA[3];
 			Anb[A]++; 
-			if(A > ALPHAMIN)				/* if source visible   ? */
-			if(A < ALPHAMAX)				/* if source not solid ? */
+			if(MINALPHA < A)				/* if source visible   ? */
+			if(A < MAXALPHA)				/* if source not solid ? */
 				AllAnb++;
 			RGBA+=4;
 			}
@@ -3913,10 +4766,9 @@ SFUNCTION(TextureAlphaUsage)
 		if(AllAnb!=0) RatioA=(100*AllAnb)/size; else RatioA=0;
 
 		if(RatioA<RATIOALPHA)
-			ST->TexMode='a';
+			ST->BlendMode='a';
 
-		if(Anb[0]   == size) ST->TexMode='R';
-		if(Anb[255] == size) ST->TexMode='R';
+		if(Anb[255] == size) ST->BlendMode='R';	/* all pixels solid ?*/
 		}
 #ifdef WAZP3DDEBUG
 	if(Wazp3D.DebugSOFT3D.ON)
@@ -3926,14 +4778,13 @@ SFUNCTION(TextureAlphaUsage)
 
 }
 /*==================================================================*/
-void *SOFT3D_CreateTexture(struct SOFT3D_context *SC,UBYTE *pt,UWORD large,UWORD high,UWORD bits,UWORD TexMode,BOOL MipMapped)
+void *SOFT3D_CreateTexture(struct SOFT3D_context *SC,UBYTE *pt,UWORD large,UWORD high,UWORD bits,BOOL MipMapped)
 {
 struct SOFT3D_texture *ST;
-LONG   Tex8U;
 UBYTE *Tex8V;
 UBYTE *ptmm;
-float Xratio,Yratio,nf;
-UWORD Nbytes,n,m;
+float TexelsPerU,TexelsPerV,nf;
+UWORD BytesPerTexel,BytesPerLine,n,m;
 UBYTE BitmapName[40];
 LONG Tsize,MMsize;
 
@@ -3945,7 +4796,7 @@ SFUNCTION(SOFT3D_CreateTexture)
 	ST->large	=large;
 	ST->high	=high;
 	ST->bits	=bits;
-	ST->TexMode='R';	/* default */
+	ST->BlendMode='R';	/* default */
 /* add to linkage */
 	ST->nextST =SC->firstST;
 	SC->firstST=ST;
@@ -3953,10 +4804,11 @@ SFUNCTION(SOFT3D_CreateTexture)
 	TextureAlphaUsage(ST);
 
 /* Create texture index */
-	Nbytes=bits/8;
-	Xratio=((float)ST->large)/256.0;
-	Yratio=((float)ST->high )/256.0;
-	Tex8U=0;
+	BytesPerTexel=bits/8;
+	BytesPerLine =ST->large*BytesPerTexel;
+
+	TexelsPerU=((float)ST->large)/256.0;
+	TexelsPerV=((float)ST->high )/256.0;
 	Tex8V=ST->pt;
 
 	Tsize=ST->large*ST->high*ST->bits/8;
@@ -3971,8 +4823,14 @@ SFUNCTION(SOFT3D_CreateTexture)
 		NLOOP(256)
 		{
 		nf=(float)n;
-		ST->MMs[m].Tex8U[n]=Tex8U +(ULONG)(		    Nbytes*(UWORD)(Xratio*nf));
-		ST->MMs[m].Tex8V[n]=Tex8V +(ULONG)( ST->large*Nbytes*(UWORD)(Yratio*nf));
+		ST->MMs[m].Tex8U[n]=       (ULONG)(	BytesPerTexel * (UWORD)(TexelsPerU*nf));
+		ST->MMs[m].Tex8V[n]=Tex8V +(ULONG)( BytesPerLine  * (UWORD)(TexelsPerV*nf));
+		ST->MMs[m].Tex8Ulow[n]=    (ULONG)(	BytesPerTexel * (UWORD)(TexelsPerU*nf/256.0));
+		ST->MMs[m].Tex8Vlow[n]=    (ULONG)( BytesPerLine  * (UWORD)(TexelsPerV*nf/256.0));
+		if(TexelsPerU<=1.0)
+				ST->MMs[m].Tex8Ulow[n]=0;
+		if(TexelsPerV<=1.0)
+				ST->MMs[m].Tex8Vlow[n]=0;
 		}
 
 		if(ST->MipMapped)
@@ -3980,8 +4838,8 @@ SFUNCTION(SOFT3D_CreateTexture)
 		if(Tsize > MMsize) 	/* for smaller texture-models use mipmaps */ 
 		{
 		Tex8V=ptmm;
-		Xratio=Xratio/2.0;
-		Yratio=Yratio/4.0;
+		TexelsPerU=TexelsPerU/2.0;
+		TexelsPerV=TexelsPerV/4.0;
 		ptmm=ptmm+MMsize;
 		}
 		MMsize=MMsize/4;
@@ -4000,14 +4858,14 @@ SFUNCTION(SOFT3D_CreateTexture)
 	Libsprintf(ST->name,"T:Texture%ld_%ldX%ldX%ld.RAW",ST->Tnum,ST->large,ST->high,ST->bits);
 	if(Wazp3D.DebugWazp3D.ON)
 	if(Wazp3D.DumpTextures.ON)
-		Libsavefile(ST->name,ST->pt,ST->large*ST->high*Nbytes);
+		Libsavefile(ST->name,ST->pt,ST->large*ST->high*BytesPerTexel);
 
 	Libsprintf(ST->name,"Texture%ld_%ldX%ldX%ld.RAW",ST->Tnum,ST->large,ST->high,ST->bits);
 
-	Libsprintf(BitmapName,"Tex%ld %s",ST->Tnum,pc(ST->TexMode,text1));
+	Libsprintf(BitmapName,"Tex%ld %lc",ST->Tnum,ST->BlendMode);
 
 	if(Wazp3D.ReloadTextures.ON)
-		Libloadfile(ST->name,ST->pt,ST->large*ST->high*Nbytes);
+		Libloadfile(ST->name,ST->pt,ST->large*ST->high*BytesPerTexel);
 
 	if(Wazp3D.SmoothTextures.ON)
 		SmoothTexture(ST->pt,ST->large,ST->high,SC->AliasedLines,ST->bits);
@@ -4016,7 +4874,7 @@ SFUNCTION(SOFT3D_CreateTexture)
 	if(Wazp3D.DebugTexNumber.ON)
 		TexturePrint(ST,0,ST->high/2,BitmapName);
 	if(Wazp3D.DebugSOFT3D.ON)
-		Libprintf("%s is done, TexMode(%s)\n",ST->name,pc(ST->TexMode,text1));
+		Libprintf("%s is done, BlendMode(%lc)\n",ST->name,ST->BlendMode);
 #endif
 	return( (void *) ST);
 }
@@ -4257,7 +5115,7 @@ WORD n;
 void WAZP3D_Init()
 {
 WORD ButtonCount,n;
-struct MyButton *ButtonsList=(struct MyButton *)&Wazp3D.HardwareLie;
+struct button3D *ButtonsList=(struct button3D *)&Wazp3D.HardwareLie;
 
 #define TRUECOLORFORMATS (W3D_FMT_R8G8B8|W3D_FMT_B8G8R8|W3D_FMT_A8R8G8B8|W3D_FMT_A8B8G8R8|W3D_FMT_R8G8B8A8|W3D_FMT_B8G8R8A8)
 #define HIGHCOLORFORMATS (W3D_FMT_R5G5B5|W3D_FMT_B5G5R5|W3D_FMT_R5G5B5PC|W3D_FMT_B5G5R5PC|W3D_FMT_R5G6B5|W3D_FMT_B5G6R5|W3D_FMT_R5G6B5PC|W3D_FMT_B5G6R5PC|W3D_FMT_R8G8B8|W3D_FMT_B8G8R8|W3D_FMT_A8R8G8B8|W3D_FMT_A8B8G8R8|W3D_FMT_R8G8B8A8|W3D_FMT_B8G8R8A8)
@@ -4386,8 +5244,6 @@ struct MyButton *ButtonsList=(struct MyButton *)&Wazp3D.HardwareLie;
 	Libstrcpy(Wazp3D.UseClearDrawRegion.name,"Use ClearDrawRegion");
 	Libstrcpy(Wazp3D.UseClearImage.name,"Use Clear Image");
 	Libstrcpy(Wazp3D.UseMinUpdate.name,"Use Min. Update");
-	Libstrcpy(Wazp3D.UpdateAtUnlock.name,"Update At UnlockHardware");
-	Libstrcpy(Wazp3D.ClearZAtUpdate.name,"ClearZbuffer at Update");
 	Libstrcpy(Wazp3D.HackRGBA1.name,"Tex as RGBA1 Hack");
 	Libstrcpy(Wazp3D.HackRGBA2.name,"Tex as RGBA2 Hack");
 	Libstrcpy(Wazp3D.UseAntiImage.name,"AntiAlias Image");
@@ -4424,10 +5280,11 @@ struct MyButton *ButtonsList=(struct MyButton *)&Wazp3D.HardwareLie;
 	Libstrcpy(Wazp3D.DebugClipper.name,"Debug Clipper");
 	Libstrcpy(Wazp3D.DumpTextures.name,"Dump Textures");
 	Libstrcpy(Wazp3D.DumpObject.name,"Dump Object");
+	Libstrcpy(Wazp3D.ResizeDumpedObject.name,"Resize Dumped Object");
 	Libstrcpy(Wazp3D.DebugMemList.name,"Debug MemList");
 	Libstrcpy(Wazp3D.DebugMemUsage.name,"Debug MemUsage");
 
-	ButtonCount=((LONG)&Wazp3D.DebugMemUsage -(LONG)&Wazp3D.HardwareLie)/sizeof(struct MyButton)+1;
+	ButtonCount=((LONG)&Wazp3D.DebugMemUsage -(LONG)&Wazp3D.HardwareLie)/sizeof(struct button3D)+1;
 	NLOOP(ButtonCount)
 		ButtonsList[n].ON=FALSE;
 
@@ -4761,6 +5618,8 @@ register float u0w,v0w,u1w,v1w;
 	P->w= PN[0].w + t * (PN[1].w - PN[0].w) ;
 
 /* compute the new U V with a true-perspective */
+	if(PN[0].w!=PN[1].w)
+	{
 	if(P->w==0.0) P->w=0.00001; 			
 	u0w=PN[0].u*PN[0].w;
 	v0w=PN[0].v*PN[0].w;
@@ -4768,6 +5627,12 @@ register float u0w,v0w,u1w,v1w;
 	v1w=PN[1].v*PN[1].w;
 	P->u= (u0w + t * (u1w - u0w) )/P->w;
 	P->v= (v0w + t * (v1w - v0w) )/P->w;
+	}
+	else
+	{
+	P->u= PN[0].u + t * (PN[1].u - PN[0].u) ;
+	P->v= PN[0].v + t * (PN[1].v - PN[0].v) ;
+	}
 
 	c0=PN[0].RGBA[0]; c1=PN[1].RGBA[0]; P->RGBA[0]=c0 + t * (c1 - c0); 
 	c0=PN[0].RGBA[1]; c1=PN[1].RGBA[1]; P->RGBA[1]=c0 + t * (c1 - c0); 
@@ -5060,7 +5925,7 @@ void GetVertex(struct WAZP3D_context *WC,W3D_Vertex *V)
 {
 struct point3D *P;
 
-	if(MAXPOINTS<WC->Pnb) return;
+	if(MAXPRIM<WC->Pnb) return;
 	P=&(WC->P[WC->Pnb]);
 	WC->Pnb++;
 	P->x=V->x;
@@ -5069,7 +5934,6 @@ struct point3D *P;
 	P->w=V->w;
 	P->u=V->u * WC->uresize;
 	P->v=V->v * WC->vresize;
-
 	ColorToRGBA(P->RGBA,V->color.r,V->color.g,V->color.b,V->color.a);
 
 	PrintP(P);
@@ -5106,7 +5970,7 @@ UBYTE *rgbaB;
 UBYTE  RGBA[4];
 struct point3D *P;
 
-	if(MAXPOINTS<WC->Pnb) return;
+	if(MAXPRIM<WC->Pnb) return;
 	P=&(WC->P[WC->Pnb]);
 	P->x=P->y=P->z=P->u=P->v=0.0;
 	COPYRGBA(P->RGBA,WC->CurrentRGBA);	/* default: if a point dont have a color value then it use CurrentColor */
@@ -5361,23 +6225,6 @@ UBYTE *temp;
 	}
 }
 /*==========================================================================*/
-void SepiaImage(void *image,ULONG size)
-{
-register UBYTE *RGBA0=(UBYTE *)image;
-register UWORD r;
-register ULONG n;
-
-	NLOOP(size)
-	{
-	r=RGBA0[0]+RGBA0[1]+RGBA0[2];
-	RGBA0[0]=255;
-	if(r<=255*2) RGBA0[0]=r/2;
-	RGBA0[1]=r/4;
-	RGBA0[2]=r/6;
-	RGBA0+=B32;
-	}
-}
-/*==========================================================================*/
 void SaveMTL(struct SOFT3D_context *SC,UBYTE *filenameMTL)
 {
 #ifdef WAZP3DDEBUG
@@ -5389,6 +6236,7 @@ ULONG f;
 WORD t;
 
 	if(SC->firstST==NULL) return;
+	SREM(SaveMTL)
 	Libprintf("%s ====================\n",filenameMTL);
 
 /* mat for untextured faces */
@@ -5435,6 +6283,7 @@ UBYTE name[40];
 BOOL ThisTextureIsUsed;
 ULONG f,p,t,n,i;
 
+	SREM(SaveOBJ)
 	VAR(SC->DumpP)
 	VAR(SC->DumpPnb)
 	VAR(SC->DumpPnum)
@@ -5460,13 +6309,16 @@ ULONG f,p,t,n,i;
 
 	Libprintf("g default\n");
 
+	if(Wazp3D.ResizeDumpedObject.ON)
+	PLOOP(Pnb)
+		{ P[p].x=(2.0*P[p].x/SC->large)-1.0; P[p].y=(2.0*P[p].y/SC->high)-1.0; P[p].z=(2.0*P[p].z)-1.0; }
 
 	PLOOP(Pnb)
 		{ Libprintf("v  ");  pf(P[p].x); pf(P[p].y); pf(P[p].z); Libprintf("\n"); }
 	PLOOP(Pnb)
 		{ Libprintf("vt  "); pf(P[p].u); pf(P[p].v); Libprintf("\n"); }
 	PLOOP(Pnb)
-		{ Libprintf("vn  "); pf(1.0); pf(1.0); pf(1.0); Libprintf("\n"); }		/* dont compute normals = simpler */
+		{ Libprintf("vn  "); pf(1.0); pf(1.0); pf(1.0); Libprintf("\n"); }		/* dont compute vertices' normals = simpler */
 
 	strcpy(name,"DumpWazp3D");
 	Libprintf("g %s\n",name);
@@ -5523,43 +6375,47 @@ void DumpObject(struct SOFT3D_context *SC)
 {
 #ifdef WAZP3DDEBUG
 
-	Libprintf("DumpObject(%ld/3)\n",SC->DumpStage);
-
-	if(SC->DumpStage==0)	/* 0=reset */
+	if(SC->DumpStage==0)	
 		{
+		Libprintf("DumpObject(0/3): reset\n");
 		SC->DumpFnum=SC->DumpPnum=SC->DumpFnb=SC->DumpPnb=0;
 		SC->DumpF=NULL;
 		SC->DumpP=NULL;
+		SC->DumpStage=1;return;
 		}
 
-	if(SC->DumpStage==1)	/* 1=count&alloc*/
+	if(SC->DumpStage==1)	
 		{
+		Libprintf("DumpObject(1/3): count&alloc\n");
 		VAR(SC->DumpFnb)
 		VAR(SC->DumpPnb)
-		SC->DumpPnb=SC->DumpPnb+SC->DumpPnb/2;	/* alloc 150% the previous size */
+		if(SC->DumpFnb==0) {SC->DumpStage=0;return;}		/* wait a frame that drawn something */
+		SC->DumpPnb=SC->DumpPnb+SC->DumpPnb/2;			/* alloc 150% the previous size */
 		SC->DumpFnb=SC->DumpFnb+SC->DumpFnb/2;
 		SC->DumpP=MYmalloc(SC->DumpPnb*PSIZE,"DumpP");
 		SC->DumpF=MYmalloc(SC->DumpFnb*sizeof(struct  face3D),"DumpF");
-		if(SC->DumpP==NULL) SC->DumpStage=3;	/* then free all */
-		if(SC->DumpF==NULL) SC->DumpStage=3;
+		if(SC->DumpP!=NULL) 	
+		if(SC->DumpF!=NULL) 
+			{SC->DumpStage=2; return;}	/* buffers ok ? then continue */
+		SC->DumpStage=3;				/* else free all */
 		}
 
-	if(SC->DumpStage==2)	/* 2=dump&save */
+	if(SC->DumpStage==2)	
 		{
+		if(SC->DumpFnb==0) {SC->DumpStage=2;return;}		/* wait a frame that drawn something */
+		Libprintf("DumpObject(1/3): dump&save\n");
 		SaveOBJ(SC,"DumpWazp3D.obj");
+		SC->DumpStage=3; return;
 		}
 
-	if(SC->DumpStage==3)	/* 3=clear */
+	if(SC->DumpStage==3)	
 		{
+		Libprintf("DumpObject(1/3): free all\n");
 		FREEPTR(SC->DumpP);
 		FREEPTR(SC->DumpF);
 		Wazp3D.DumpObject.ON=FALSE;
+		SC->DumpStage=0; return;
 		}
-
-	if(SC->DumpStage<3)
-		SC->DumpStage++;
-	else
-		SC->DumpStage=0;
 
 #endif
 }
@@ -5569,119 +6425,137 @@ void	 DrawText(W3D_Context *context,UBYTE *text,WORD x,WORD y)
 struct WAZP3D_context *WC=context->driver;
 struct RastPort *rp=&WC->rastport;
 
-	SetAPen(rp, 2);
+SREM(DrawText)
 	SetDrMd(rp, JAM1);
+	SetAPen(rp, 0) ; 
+	RectFill(rp,x-3,y-9,x+6*strlen(text)+3,y+2); 
+
+	SetAPen(rp, 2);
+	Move(rp,x-2,y-2+context->yoffset);
+	Text(rp,text, strlen(text));
+
+	SetAPen(rp, 2);
 	Move(rp,x,y+context->yoffset);
 	Text(rp,text, strlen(text));
+
+	SetAPen(rp, 1);
+	Move(rp,x-1,y-1+context->yoffset);
+	Text(rp,text, strlen(text));
+
 	SetAPen(rp, 1);
 }
 /*==========================================================================*/
-void DoUpdate(W3D_Context *context)
+BOOL SOFT3D_DoUpdate(struct SOFT3D_context *SC)
 {
-struct WAZP3D_context *WC=context->driver;
-struct SOFT3D_context *SC=WC->SC;
-UBYTE RGBA[4];
-UBYTE name[40];
-ULONG MilliTime;
+UBYTE BackRGBA[4];
 
-SREM(DoUpdate-------------------------)
-	if(SC->Image32==NULL) return;
-	if(SC->Pxmax==0) return;
-	if(SC->Pymax==0) return;
-	SOFT3D_DrawPixels(WC->SC);
-	if(Wazp3D.StepUpdate.ON) LibAlert("Update will occurs now !!");
-	if(Wazp3D.DirectBitmap.ON)	goto ClearZBuffer;
+	if(SC->Image32==NULL) return(FALSE);
+	if(SC->Pxmax==0) return(FALSE);		/* nothing to update ? */
+	if(SC->Pymax==0) return(FALSE);
+
+SREM(SOFT3D_DoUpdate)
+	DrawFragBuffer(SC);
+	if(Wazp3D.StepUpdate.ON) 
+		LibAlert("Update will occurs now !!");
+	if(Wazp3D.DirectBitmap.ON)	
+		goto UpdateDone;
 
 SREM(MinUpdate)
 	if(Wazp3D.UseMinUpdate.ON)
 	{
-	SC->xUpdate	=SC->Pxmin;	/* should also be used to clear the previous drawing */
-	SC->yUpdate	=SC->Pymin;
-	SC->largeUpdate=SC->Pxmax-SC->Pxmin;
-	SC->highUpdate =SC->Pymax-SC->Pymin;
+	SC->xUpdate		=SC->Pxmin;		/* should also be used to clear the previous drawing */
+	SC->yUpdate		=SC->Pymin;
+	SC->largeUpdate	=SC->Pxmax-SC->Pxmin+1;
+	SC->highUpdate	=SC->Pymax-SC->Pymin+1;
 	}
 	else
 	{
-	SC->xUpdate	=0;
-	SC->yUpdate	=0;
-	SC->largeUpdate=WC->large;
-	SC->highUpdate =WC->high;
+	SC->xUpdate		=0;
+	SC->yUpdate		=0;
+	SC->largeUpdate	=SC->large;
+	SC->highUpdate	=SC->high;
 	}
 
 #ifdef WAZP3DDEBUG
 	if(Wazp3D.DebugSOFT3D.ON)
 		Libprintf("Updated Region from %ld %ld (%ld X %ld pixels) \n",SC->xUpdate,SC->yUpdate,SC->largeUpdate,SC->highUpdate);
 #endif
+	VARF(SC->Pzmin)
+	VARF(SC->Pzmax)
 
 SREM(UseColorHack)
 	if(Wazp3D.UseColorHack.ON)
 		{
-		STACKReadPixelArray(RGBA,0,0,1*(32/8),&WC->rastport,0,0,1,1,RECTFMT_RGBA);
-		SOFT3D_SetBackground(WC->SC,RGBA);
+		STACKReadPixelArray(BackRGBA,0,0,1*(32/8),&SC->rastport,0,0,1,1,RECTFMT_RGBA);
+		SOFT3D_SetBackColor(SC,BackRGBA);
 		}
 
 SREM(UseAntiImage)
 	if(Wazp3D.UseAntiImage.ON)
 		AntiAliasImage(SC->Image32,SC->large,SC->high,SC->AliasedLines);
-	if(Wazp3D.DebugSepiaImage.ON)
-		SepiaImage(SC->Image32,SC->large*SC->high);
 
 SREM(STACKWritePixelArray)
 	if(0<SC->largeUpdate)
-	if(SC->largeUpdate<=WC->large)
+	if(SC->largeUpdate<=SC->large)
 	if(0< SC->highUpdate)
-	if(SC->highUpdate <=WC->high)
+	if(SC->highUpdate <=SC->high)
 	{
-	VAR(context->yoffset)
 	VAR(SC->xUpdate)
 	VAR(SC->yUpdate)
 	VAR(SC->largeUpdate)
 	VAR(SC->highUpdate)
-	STACKWritePixelArray(SC->Image32,SC->xUpdate,SC->yUpdate,WC->large*(32/8),&WC->rastport,SC->xUpdate,SC->yUpdate+context->yoffset,SC->largeUpdate,SC->highUpdate,RECTFMT_RGBA);
+	STACKWritePixelArray(SC->Image32,SC->xUpdate,SC->yUpdate,SC->large*(32/8),&SC->rastport,SC->xUpdate,SC->yUpdate+SC->yoffset,SC->largeUpdate,SC->highUpdate,RECTFMT_RGBA);
 	if(Wazp3D.UseClearImage.ON)
-		SOFT3D_ClearImage(WC->SC,0,0,SC->large,SC->high);
+		SOFT3D_ClearImage(SC,0,0,SC->large,SC->high);
 	}
 
-SREM(Px Py)
-	SC->Pxmin=WC->large-1;
-	SC->Pymin=WC->high -1;
+UpdateDone:
+	SC->Pxmin=SC->large-1;
+	SC->Pymin=SC->high -1;
+	SC->Pzmin= 1000.0;
 	SC->Pxmax=0;
 	SC->Pymax=0;
+	SC->Pzmax=-1000.0;
+	return(TRUE);
 
-ClearZBuffer:
-	if(Wazp3D.ClearZAtUpdate.ON)
-		SOFT3D_ClearZBuffer(SC,1.0);
+}
+/*==========================================================================*/
+void DoUpdate(W3D_Context *context)
+{
+struct WAZP3D_context *WC=context->driver;
+UBYTE name[40];
+ULONG MilliTime;
 
+	if(!SOFT3D_DoUpdate(WC->SC))
+		return;
 #ifdef WAZP3DDEBUG
 	if(Wazp3D.DebugWazp3D.ON)
 	if(Wazp3D.DumpObject.ON)
-		DumpObject(SC);
+		DumpObject(WC->SC);
 
 	if(Wazp3D.DebugWazp3D.ON)
 	if(Wazp3D.DisplayFPS.ON)
 	{
+SREM(DisplayFPS)
 	MilliTime=LibMilliTimer();
 	WC->TimePerFrame= MilliTime - WC->LastMilliTime;
 	WC->LastMilliTime=MilliTime;
 	if(WC->TimePerFrame!=0)
 		WC->Fps=(((ULONG)1000)/WC->TimePerFrame);
-	Libsprintf(name,"Wazp3D FPS:%ld",WC->Fps);
+	Libsprintf(name,"Wazp3D FPS:%ld  ",WC->Fps);
 	DrawText(context,name,4,10);
 	}
+SREM(DoUpdate OK)
 #endif
-
-SREM(DoUpdateOK)
 }
 /*==========================================================================*/
 W3D_Context	*W3D_CreateContext(ULONG *error, struct TagItem *taglist)
 {
-ULONG tag,data;
-UWORD n,bits;
 W3D_Context	*context;
-W3D_Bitmap  *w3dbm;
-void *bm;
 struct WAZP3D_context *WC;
 struct SOFT3D_context *SC;
+ULONG tag,data;
+UWORD n,bits;
 ULONG EnableMask,DisableMask,supportedfmt;
 ULONG AllStates=~0;
 ULONG UnsupportedStates=  W3D_ANTI_POINT | W3D_ANTI_LINE | W3D_ANTI_POLYGON | W3D_DITHERING | W3D_LOGICOP | W3D_STENCILBUFFER | W3D_ALPHATEST | W3D_SPECULAR | W3D_TEXMAPPING3D | W3D_CHROMATEST;
@@ -5756,8 +6630,8 @@ ULONG noerror;
 	context->fog.fog_color.r	=1.0;
 	context->fog.fog_color.g	=1.0;
 	context->fog.fog_color.b	=1.0;
-	context->fog.fog_start		=0.999;
-	context->fog.fog_end		=0.000;
+	context->fog.fog_start		=MINZ;
+	context->fog.fog_end		=MAXZ;
 	context->fog.fog_density	=0.1;
 
 	context->envsupmask=envsupmask;	 /* Mask of supported envmodes */
@@ -5873,22 +6747,14 @@ ULONG noerror;
 	WINFO(context->drivertype,W3D_DRIVER_3DHW,"use 3D-HW ")
 	WINFO(context->drivertype,W3D_DRIVER_CPU,"use CPU ")
 
-	if(StateON(W3D_DOUBLEHEIGHT))
-		WC->high=WC->high/2;	/* if doubleheight use only the half height for the Wazp3D RGBA buffer*/
-	else
-		context->yoffset=0;	/* AROS cant do doubleheight */
-
 	InitRastPort(&WC->rastport);
-	SetBitmap(context,context->drawregion);
-	context->scissor.left	=0;
-	context->scissor.top	=0;
-	context->scissor.width	=context->width;
-	context->scissor.height	=context->height;
 
+	SetDrawRegion(context,context->drawregion,context->yoffset,NULL);
+ 
 /*V39: if the bitmap (ie context->drawregion) is 32 bits then try to use it as the Wazp3D RGBA buffer */
-	bits=context->bprow/context->width*8;
-	if(bits!=32)
+	if(WC->bits!=32)
 		Wazp3D.DirectBitmap.ON=FALSE;
+
 
 VAR(context->width)
 VAR(context->height)
@@ -5903,29 +6769,20 @@ VAR(context->drawregion->Depth)
 VAR(context->drawregion->pad)
 
 
-
-#if defined(__AROS__)
-	/* WarpTest doesn't draw the triangles without this */
-	Wazp3D.UpdateAtUnlock.ON=TRUE;
-#endif
-
 	WC->firstWT=NULL;
 	WC->CallFlushFrame=WC->CallSetDrawRegion=WC->CallClearZBuffer=FALSE;
 	WC->PointSize=1.0;
 	WC->CallSetBlending=FALSE;
-	bm=NULL;
+
 	if(Wazp3D.DirectBitmap.ON)
 		{
 		Wazp3D.UseColorHack.ON=FALSE;		/* Wazp3D RGBA buffer's options : uncompatible with DirectBitmap */
 		Wazp3D.UseClearImage.ON=FALSE;
 		Wazp3D.UseMinUpdate.ON=FALSE;
-		Wazp3D.UpdateAtUnlock.ON=FALSE;
 		Wazp3D.UseAntiImage.ON=FALSE;
-		Wazp3D.DebugSepiaImage.ON=FALSE;
-		bm=context->drawregion;
 		}
 
-	WC->SC=SOFT3D_Start(WC->large,WC->high,bm);
+	WC->SC=SOFT3D_Start(WC->large,WC->high,context->drawregion);
 	if(WC->SC==NULL) return(NULL);
 
 	Wazp3D.UseAntiImage.ON=StateON(W3D_ANTI_FULLSCREEN);
@@ -6044,6 +6901,7 @@ BOOL SetState(W3D_Context *context,ULONG state,BOOL set)
 /*==========================================================================*/
 ULONG W3D_SetState(W3D_Context *context, ULONG state, ULONG action)
 {
+void W3D_SetFrontFace(W3D_Context* context, ULONG direction);
 struct WAZP3D_context *WC=context->driver;
 
 	WAZP3DFUNCTION(5);
@@ -6145,37 +7003,51 @@ ULONG W3D_CheckDriver(void)
 	return(Wazp3D.drivertype);
 }
 /*==========================================================================*/
-void SOFT3D_SetBitmap(struct SOFT3D_context *SC,void *bm,WORD large,WORD high,ULONG yoffset)
+void  SOFT3D_SetBitmap(struct SOFT3D_context *SC,void  *bm,WORD x,WORD y,WORD large,WORD high)    
 {
 UBYTE *Image8;						/* = bitmap memory  */
 ULONG format;
 
+	if(SC==NULL) return;
 SREM(SOFT3D_SetBitmap)
 	SC->bm=bm;
-	SC->bmHandle=LockBitMapTags((APTR)SC->bm,LBMI_BASEADDRESS,(ULONG)&Image8, TAG_DONE);
-	format = GetCyberMapAttr(bm,CYBRMATTR_PIXFMT);
+	SC->rastport.BitMap=bm;
+	SC->yoffset=y;			/* only stored for WritePixelArray() */
 
 	if(Wazp3D.DirectBitmap.ON)
 	{
+	SC->bmHandle=LockBitMapTags((APTR)SC->bm,LBMI_BASEADDRESS,(ULONG)&Image8, TAG_DONE);
+	format = GetCyberMapAttr(bm,CYBRMATTR_PIXFMT);
+	UnLockBitMap(SC->bmHandle);
+
 	if(format==PIXFMT_BGRA32)
 		{
-		SC->PixelsFunctionIn =(HOOKEDFUNCTION)PixelsBGRA;
-		SC->PixelsFunctionOut=(HOOKEDFUNCTION)PixelsBGRA;
+		SC->FunctionIn =(HOOKEDFUNCTION)PixelsInBGRA;
+		SC->FunctionOut=(HOOKEDFUNCTION)PixelsOutBGRA;
 		}
 	if(format==PIXFMT_RGBA32)
 		{
-		SC->PixelsFunctionIn =(HOOKEDFUNCTION)Pixels32R;
-		SC->PixelsFunctionOut=(HOOKEDFUNCTION)Pixels32R;
+		SC->FunctionIn =(HOOKEDFUNCTION)PixelsInRGBA;
+		SC->FunctionOut=(HOOKEDFUNCTION)PixelsOutRGBA;
 		}
 	if(format==PIXFMT_ARGB32)
 		{
-		SC->PixelsFunctionIn =(HOOKEDFUNCTION)PixelsInARGB;
-		SC->PixelsFunctionOut=(HOOKEDFUNCTION)PixelsOutARGB;
+		SC->FunctionIn =(HOOKEDFUNCTION)PixelsInARGB;
+		SC->FunctionOut=(HOOKEDFUNCTION)PixelsOutARGB;
 		}
+/*
+not yet implemented
+	if(format==PIXFMT_RGB24)
+		{
+		SC->FunctionIn =(HOOKEDFUNCTION)PixelsInRGB;
+		SC->FunctionOut=(HOOKEDFUNCTION)PixelsOutRGB;
+		}
+*/
+	Image8=Image8 + y*SC->large*32/8 + x*32/8;  /* Dont use yoffset in SOFT3D : use real pointer to Image */
+	SC->Image32=(ULONG *)Image8;
 	}
-	Image8=Image8 + yoffset;  
-	SOFT3D_SetImage(SC,large,high,(ULONG *)Image8);
-	UnLockBitMap(SC->bmHandle);
+
+	SOFT3D_SetImage(SC,large,high,SC->Image32);
 }
 /*==========================================================================*/
 BOOL LockBM(struct SOFT3D_context *SC)
@@ -6201,9 +7073,15 @@ ULONG W3D_LockHardware(W3D_Context *context)
 /*==========================================================================*/
 void W3D_UnLockHardware(W3D_Context *context)
 {
+struct WAZP3D_context *WC=context->driver;
+
 	WAZP3DFUNCTION(9);
-	if(Wazp3D.UpdateAtUnlock.ON)
-		DoUpdate(context);	/*draw the image if any */
+
+	if(!WC->CallFlushFrame)
+	if(!WC->CallSetDrawRegion)
+	if(!WC->CallClearZBuffer)
+		DoUpdate(context);	/* draw the image if the usual update-functions are never called  */
+
 	context->HWlocked=FALSE;
 }
 /*==========================================================================*/
@@ -6507,8 +7385,9 @@ filter.h_Entry = (HOOKFUNC)ScreenModeFilter;
 	ASLSM_FilterFunc,(ULONG)&filter,
 	TAG_DONE )))
 		{
-		AslRequest(requester, NULL);
-		ModeID =requester->sm_DisplayID;
+		ModeID=INVALID_ID;
+		if(AslRequest(requester, NULL))
+			ModeID =requester->sm_DisplayID;
 		FreeAslRequest(requester);
 		}
 	CloseLibrary(AslBase);
@@ -6600,7 +7479,6 @@ ULONG tag,data;
 ULONG n;
 APTR *MipPt=NULL;
 ULONG size;
-UWORD TexMode;
 UWORD bits=0;
 ULONG mask=1;
 ULONG noerror;
@@ -6740,8 +7618,7 @@ ULONG noerror;
 	WINFO(texture->texfmtsrc,W3D_I8,"iiiiiiii ")
 	WINFO(texture->texfmtsrc,W3D_R8G8B8A8,"rrrrrrrr gggggggg bbbbbbbb")
 
-	if(WT->bits==24) TexMode='R'; else TexMode='A';
-	WT->ST=SOFT3D_CreateTexture(WC->SC,WT->pt,WT->large,WT->high,WT->bits,TexMode,Wazp3D.DoMipMaps.ON);
+	WT->ST=SOFT3D_CreateTexture(WC->SC,WT->pt,WT->large,WT->high,WT->bits,Wazp3D.DoMipMaps.ON);
 
 	PrintWT(WT);
 
@@ -6807,7 +7684,6 @@ WORD Ntexture=0;
 	}
 
 	PrintAllT(context);
-	REM(...FreeTexObj done);
 }
 /*==========================================================================*/
 void W3D_ReleaseTexture(W3D_Context *context, W3D_Texture *texture)
@@ -7087,7 +7963,7 @@ struct WAZP3D_context *WC=context->driver;
 	GetVertex(WC,&line->v1);
 	GetVertex(WC,&line->v2);
 
-	ZbufferPatch(context);
+	ZbufferCheck(context);
 	SOFT3D_DrawPrimitive(WC->SC,WC->P,WC->Pnb,W3D_PRIMITIVE_LINES);
 	WRETURN(W3D_SUCCESS);
 }
@@ -7104,7 +7980,8 @@ struct WAZP3D_context *WC=context->driver;
 	GetVertex(WC,&point->v1);
 
 	SOFT3D_SetPointSize(WC->SC,(UWORD)WC->PointSize);
-	ZbufferPatch(context);
+
+	ZbufferCheck(context);
 	SOFT3D_DrawPrimitive(WC->SC,WC->P,1,W3D_PRIMITIVE_POINTS);
 	WRETURN(W3D_SUCCESS);
 }
@@ -7120,7 +7997,7 @@ struct WAZP3D_context *WC=context->driver;
 	GetVertex(WC,&triangle->v2);
 	GetVertex(WC,&triangle->v3);
 
-	ZbufferPatch(context);
+	ZbufferCheck(context);
 	SOFT3D_DrawPrimitive(WC->SC,WC->P,WC->Pnb,W3D_PRIMITIVE_TRIANGLES);
 	WRETURN(W3D_SUCCESS);
 }
@@ -7138,7 +8015,7 @@ LONG n;;
 NLOOP(triangles->vertexcount)
 	GetVertex(WC,v++);
 
-	ZbufferPatch(context);
+	ZbufferCheck(context);
 	SOFT3D_DrawPrimitive(WC->SC,WC->P,WC->Pnb,W3D_PRIMITIVE_TRIFAN);
 	WRETURN(W3D_SUCCESS);
 }
@@ -7156,7 +8033,7 @@ LONG n;;
 NLOOP(triangles->vertexcount)
 	GetVertex(WC,v++);
 
-	ZbufferPatch(context);
+	ZbufferCheck(context);
 	SOFT3D_DrawPrimitive(WC->SC,WC->P,WC->Pnb,W3D_PRIMITIVE_TRISTRIP);
 	WRETURN(W3D_SUCCESS);
 }
@@ -7166,7 +8043,7 @@ ULONG W3D_Flush(W3D_Context *context)
 struct WAZP3D_context *WC=context->driver;
 
 	WAZP3DFUNCTION(40);
-	SOFT3D_DrawPixels(WC->SC);
+	DrawFragBuffer(WC->SC);
 	WRETURN(W3D_SUCCESS);
 }
 /*==========================================================================*/
@@ -7183,7 +8060,7 @@ LONG n;;
 NLOOP(lines->vertexcount)
 	GetVertex(WC,v++);
 
-	ZbufferPatch(context);
+	ZbufferCheck(context);
 	SOFT3D_DrawPrimitive(WC->SC,WC->P,WC->Pnb,W3D_PRIMITIVE_LINESTRIP);
 	WRETURN(W3D_SUCCESS);
 }
@@ -7201,7 +8078,7 @@ LONG n;;
 NLOOP(lines->vertexcount)
 	GetVertex(WC,v++);
 
-	ZbufferPatch(context);
+	ZbufferCheck(context);
 	SOFT3D_DrawPrimitive(WC->SC,WC->P,WC->Pnb,W3D_PRIMITIVE_LINELOOP);
 	WRETURN(W3D_SUCCESS);
 }
@@ -7219,7 +8096,7 @@ UBYTE RGBA[4];
 	RGBA[3]=ARGB[0];
 
 	if(!Wazp3D.UseColorHack.ON)
-		SOFT3D_SetBackground(WC->SC,RGBA);
+		SOFT3D_SetBackColor(WC->SC,RGBA);
 
 	if(Wazp3D.UseClearDrawRegion.ON)
 		FillPixelArray(&WC->rastport,0,0+context->yoffset,WC->large,WC->high,color);
@@ -7234,7 +8111,7 @@ struct WAZP3D_context *WC=context->driver;
 	WAZP3DFUNCTION(44);
 	WC->AlphaMode=mode;
 	WC->AlphaRef=(UBYTE)(*refval*256.0); 
-	if(*refval>=1.0)	WC->AlphaRef=255;
+	if(1.0<=*refval)	WC->AlphaRef=255;
 	if(*refval<=0.0)	WC->AlphaRef=0;	
 
 	WINFO(mode,W3D_A_NEVER,"discard incoming pixel ")
@@ -7293,7 +8170,7 @@ struct WAZP3D_context *WC=context->driver;
 	if(!WC->CallSetBlending)
 		SetState(context,W3D_BLENDING,TRUE);
 	
-/* patch: For "The Vague" DiskMag */
+/* backdoor: For "The Vague" DiskMag */
 	if(WC->SrcFunc==W3D_ZERO)
 	if(WC->DstFunc==W3D_ZERO)
 		{
@@ -7303,14 +8180,31 @@ struct WAZP3D_context *WC=context->driver;
 
 	WRETURN(W3D_SUCCESS);
 }
+
 /*==========================================================================*/
-void SetBitmap(W3D_Context *context, struct BitMap *bm)
+void ZbufferCheck(W3D_Context *context)
+{
+struct WAZP3D_context *WC=context->driver;
+
+	if(WC->NeedNewZbuffer)
+	{
+		SREM(Reallocating a new Zbuffer)
+		W3D_FreeZBuffer(context);
+		W3D_AllocZBuffer(context);
+		VAR(context->zbuffer)
+	} 
+}
+/*==========================================================================*/
+void SetDrawRegion(W3D_Context *context, struct BitMap *bm,int yoffset, W3D_Scissor *scissor)
 {
 struct WAZP3D_context *WC=context->driver;
 W3D_Bitmap  *w3dbm;
+BOOL SameSize;
 
+SREM(SetDrawRegion)
+/* change bitmap */
 	if(bm==NULL) return;
-SREM(SetBitmap)
+SREM(setting the bitmap)
 	if(context->w3dbitmap)
 	{
 	w3dbm=(W3D_Bitmap  *)bm;
@@ -7333,12 +8227,80 @@ SREM(SetBitmap)
 	context->drawmem=NULL;
 	}
 
+	WC->bits=context->bprow/context->width*8;
 	context->drawregion=bm;
 	WC->rastport.BitMap=bm;
-	WC->large=context->width ;
+
+/* change yoffset */
+	if(StateON(W3D_DOUBLEHEIGHT))
+		context->height=context->height/2;	/* if doubleheight use only the half height for the Wazp3D RGBA buffer*/
+	else
+		yoffset=0;					/* if cant do double-height (ie AROS) then let this to 0 */
+	context->yoffset=yoffset;
+
+/* store new (?) size */
+	SameSize=((WC->large==context->width) et (WC->high==context->height));
+	WC->large=context->width;
 	WC->high =context->height;
 	VAR(WC->large)
 	VAR(WC->high)
+
+/* change scissor */
+	if(scissor==NULL)
+	{
+SREM(no scissor yet )
+	context->scissor.left	=0;
+	context->scissor.top	=0;
+	context->scissor.width	=context->width;
+	context->scissor.height	=context->height;
+	}
+	else
+	{
+SREM(with scissor )
+	Libmemcpy(&context->scissor,scissor,sizeof(W3D_Scissor));
+	}
+	VAR(context->scissor.left)
+	VAR(context->scissor.top)
+	VAR(context->scissor.width)
+	VAR(context->scissor.height)
+
+	WC->Xmin=context->scissor.left;
+	WC->Ymin=context->scissor.top;
+	WC->Xmax=WC->Xmin+context->scissor.width-1;
+	WC->Ymax=WC->Ymin+context->scissor.height-1;
+
+	if(WC->Xmin<0)		WC->Xmin=0;
+	if(WC->Ymin<0)		WC->Ymin=0;
+	if(WC->large<=WC->Xmax)	WC->Xmax=WC->large-1;
+/*	if(WC->high <=WC->Ymax)	WC->Ymax=WC->high-1;	*/
+	/* patch: for thevague */
+	if(WC->high < WC->Ymax)	WC->Ymax=WC->high;	
+
+	if(WC->SC==NULL) return;			/* exit if SOFT3D not yet started */
+
+/* SOFT3D: change bitmap  & scissor */
+	SOFT3D_SetBitmap(WC->SC,bm,0,yoffset,WC->large,WC->high);
+	SOFT3D_SetClipping(WC->SC,(float)WC->Xmin,(float)WC->Xmax,(float)WC->Ymin,(float)WC->Ymax,MINZ,MAXZ);
+
+/* if same size = nothing more to do */
+	if(SameSize)
+		return;
+
+/* if not same size = change Image & query for a  new Zbuffer */
+	SREM(Bitmap size changed !!!!)
+	if(!Wazp3D.DirectBitmap.ON)			/* then use an Image (Wazp3D's RGBA buffer) */
+	{
+		SREM(Not DirectBitmap so need new Image)
+		SOFT3D_ReallocImage(WC->SC,WC->large,WC->high);
+
+	} 
+
+	if(context->zbuffer!=NULL)			/* if use a Zbuffer */
+	{
+		SREM(Will need a new Zbuffer)
+		WC->NeedNewZbuffer=TRUE;
+	} 
+
 }
 /*==========================================================================*/
 ULONG W3D_SetDrawRegion(W3D_Context *context, struct BitMap *bm,int yoffset, W3D_Scissor *scissor)
@@ -7354,7 +8316,11 @@ struct WAZP3D_context *WC=context->driver;
 	VAR(scissor->height)
 
 	WC->CallSetDrawRegion=TRUE;
+/* draw the image if needed */
+	if(!WC->CallFlushFrame)		/* W3D_FlushFrame is the better time to do the Update */
+		DoUpdate(context);
 
+/* do nothing if the prog always call this function with same parameters */
 	if(context->drawregion		==bm			)
 	if(context->yoffset		==yoffset		)
 	if(context->scissor.left	==scissor->left	)
@@ -7363,35 +8329,7 @@ struct WAZP3D_context *WC=context->driver;
 	if(context->scissor.height	==scissor->height	)
 		WRETURN(W3D_SUCCESS);		/* nothing to do ===> return */
 
-/* draw the image if needed */
-	DoUpdate(context);
-
-	if(!StateON(W3D_DOUBLEHEIGHT))
-		yoffset=0;			/* if cant do double-height (ie AROS) then let this to 0 */
-
-/* change bitmap */
-	SetBitmap(context,bm);
-	if(Wazp3D.DirectBitmap.ON)
-		SOFT3D_SetBitmap(WC->SC,bm,WC->large,WC->high,context->yoffset*context->drawregion->BytesPerRow);  
-
-/* change yoffset */
-	context->yoffset=yoffset;
-
-/* change scissor */
-	Libmemcpy(&context->scissor,scissor,sizeof(W3D_Scissor));
-	WC->Xmin=scissor->left;
-	WC->Ymin=scissor->top;
-	WC->Xmax=WC->Xmin+scissor->width;
-	WC->Ymax=WC->Ymin+scissor->height;
-	if(WC->Xmin<0) WC->Xmin=0;
-	if(WC->Ymin<0) WC->Ymin=0;
-	if(WC->large<=WC->Xmax) WC->Xmax=WC->large;
-	if(WC->high <=WC->Ymax) WC->Ymax=WC->high ;
-VAR(WC->Xmin)
-VAR(WC->Ymin)
-VAR(WC->Xmax)
-VAR(WC->Ymax)
-	SOFT3D_SetClipping(WC->SC,(float)WC->Xmin,(float)WC->Xmax,(float)WC->Ymin,(float)WC->Ymax,0.000,0.999);
+	SetDrawRegion(context,bm,yoffset,scissor);
 
 	WRETURN(W3D_SUCCESS);
 }
@@ -7408,6 +8346,11 @@ ULONG error;
 /*==========================================================================*/
 ULONG W3D_SetFogParams(W3D_Context *context, W3D_Fog *fogparams,ULONG fogmode)
 {
+/* 
+The fields fog_start and fog_end must be given if linear fog is used.
+These values are in 'w-space', meaning 1.0 is the front plane, and 0.0 is the back plane.
+The density field is only used in exponential fog modes
+*/
 struct WAZP3D_context *WC=context->driver;
 
 
@@ -7419,8 +8362,22 @@ struct WAZP3D_context *WC=context->driver;
 
 	ColorToRGBA(WC->FogRGBA,fogparams->fog_color.r,fogparams->fog_color.g,fogparams->fog_color.b,1.0);
 
-	WC->FogZmin	   =fogparams->fog_end;		/* end is zmin !!! */
-	WC->FogZmax	   =fogparams->fog_start;
+	if(0.0!=fogparams->fog_start)
+	WC->FogZmin		=1.0/fogparams->fog_start;
+
+	if(0.0!=fogparams->fog_end)
+	WC->FogZmax		=1.0/fogparams->fog_end;
+
+	if(fogparams->fog_start==1.0)
+		WC->FogZmin=MINZ;
+	if(fogparams->fog_end  ==0.0)
+		WC->FogZmax=MAXZ;
+
+	if(WC->FogZmin<MINZ)
+		WC->FogZmin=MINZ;
+	if(MAXZ<WC->FogZmax)
+		WC->FogZmax=MAXZ;
+
 	WC->FogDensity	=fogparams->fog_density;
 	Libmemcpy(&context->fog,fogparams,sizeof(W3D_Fog));
 
@@ -7520,7 +8477,13 @@ UBYTE RGBA[4];
 void W3D_SetScissor(W3D_Context *context, W3D_Scissor *scissor)
 {
 	WAZP3DFUNCTION(54);
-	W3D_SetDrawRegion(context,context->drawregion,0,scissor);
+	if(context->scissor.left	==scissor->left	)
+	if(context->scissor.top		==scissor->top	)
+	if(context->scissor.width	==scissor->width	)
+	if(context->scissor.height	==scissor->height	)
+		return;			/* nothing to do ===> return */
+
+	SetDrawRegion(context,context->drawregion,context->yoffset,scissor);
 }
 /*==========================================================================*/
 void W3D_FlushFrame(W3D_Context *context)
@@ -7537,13 +8500,17 @@ ULONG W3D_AllocZBuffer(W3D_Context *context)
 struct WAZP3D_context *WC=context->driver;
 
 	WAZP3DFUNCTION(56);
-	if(context->zbufferalloc==TRUE)	 WRETURN(W3D_SUCCESS);	/* already allocated ? */
+	if(context->zbufferalloc==TRUE)
+		WRETURN(W3D_SUCCESS);	/* already allocated ? */
 
-	context->zbuffer=MYmalloc(WC->large*WC->high*32/8,"ZbufferF");
-	if(context->zbuffer==NULL) WRETURN(W3D_NOGFXMEM);
+	context->zbuffer=MYmalloc(WC->large*WC->high*sizeof(ZBUFF),"Zbuffer");
+	if(context->zbuffer==NULL)
+ 		WRETURN(W3D_NOGFXMEM);
+
 	context->zbufferalloc=TRUE;
 	context->zbufferlost =FALSE;		 /* Is it TRUE if just allocated ?!? */
 
+	WC->NeedNewZbuffer=FALSE;
 	SOFT3D_SetZbuffer(WC->SC,context->zbuffer);
 	SOFT3D_ClearZBuffer(WC->SC,1.0);
 
@@ -7566,16 +8533,15 @@ struct WAZP3D_context *WC=context->driver;
 ULONG W3D_ClearZBuffer(W3D_Context *context, W3D_Double *clearvalue)
 {
 struct WAZP3D_context *WC=context->driver;
-register float z;
+float z=1.0;
 
 	WAZP3DFUNCTION(58);
+	ZbufferCheck(context);
 	WC->CallClearZBuffer=TRUE;
 	if(clearvalue!=NULL)
-		z=*clearvalue;	else z=0.0;
+		z=*clearvalue;
 	VARF(z);
 	if(context->zbuffer==NULL) WRETURN(W3D_NOZBUFFER);
-	if (z < 0.0000)	z=0.0000;
-	if (0.9999 < z)	z=0.9999;
 	SOFT3D_ClearZBuffer(WC->SC,z);
 	DoUpdate(context);			/*draw the image if any */
 	WRETURN(W3D_SUCCESS);
@@ -7593,19 +8559,17 @@ ULONG W3D_ReadZPixel(W3D_Context *context, ULONG x, ULONG y,W3D_Double *z)
 ULONG W3D_ReadZSpan(W3D_Context *context, ULONG x, ULONG y,ULONG n, W3D_Double *z)
 {
 struct WAZP3D_context *WC=context->driver;
-register float *ZbufferF=context->zbuffer;
-register ULONG offset;
 
 	WAZP3DFUNCTION(60);
+	ZbufferCheck(context);
 	VAR(x);
 	VAR(y);
 	VAR(n);
 	VAR(z);
-	if(context->zbuffer==NULL) WRETURN(W3D_NOZBUFFER);
-	offset=x+y*WC->large;
-	ZbufferF=&(ZbufferF[offset]);
-	XLOOP(n)
-		z[x]=((W3D_Double)ZbufferF[x]);
+	if(context->zbuffer==NULL)
+		WRETURN(W3D_NOZBUFFER);
+
+	SOFT3D_ReadZSpan(WC->SC,x,y,n,z);
 
 	WRETURN(W3D_SUCCESS);
 }
@@ -7643,29 +8607,19 @@ UBYTE mask=1;
 void W3D_WriteZSpan(W3D_Context *context, ULONG x, ULONG y,ULONG n, W3D_Double *zD, UBYTE *mask)
 {
 struct WAZP3D_context *WC=context->driver;
-register float *ZbufferF =context->zbuffer;
-register ULONG offset;
-register float z;
 
 	WAZP3DFUNCTION(63);
+	ZbufferCheck(context);
 /*	if(context->zbuffer==NULL) WRETURN(W3D_NOZBUFFER); */
 	if(context->zbuffer==NULL) return;
 
-	offset=x+y*WC->large;
-	ZbufferF=&(ZbufferF[offset]);
 	VAR(x);
 	VAR(y);
 	VAR(n);
 	VAR(mask)
-	XLOOP(n)
-		if(mask[x]==1)
-			{
-			z=zD[x];
-			if (z < 0.000)	z=0.000;
-			if (0.999 < z)	z=0.999;
-			VAR(z);
-			ZbufferF[x]=z;
-			}
+
+	SOFT3D_WriteZSpan(WC->SC,x,y,n,zD,mask);
+
 /*	WRETURN(W3D_SUCCESS);*/
 }
 /*==========================================================================*/
@@ -7889,7 +8843,7 @@ struct WAZP3D_context *WC=context->driver;
 	GetVertex(WC,triangle->v2);
 	GetVertex(WC,triangle->v3);
 
-	ZbufferPatch(context);
+	ZbufferCheck(context);
 	SOFT3D_DrawPrimitive(WC->SC,WC->P,WC->Pnb,W3D_PRIMITIVE_TRIANGLES);
 	WRETURN(W3D_SUCCESS);
 }
@@ -7905,7 +8859,7 @@ LONG n;
 NLOOP(triangles->vertexcount)
 	GetVertex(WC,triangles->v[n]);
 
-	ZbufferPatch(context);
+	ZbufferCheck(context);
 	SOFT3D_DrawPrimitive(WC->SC,WC->P,WC->Pnb,W3D_PRIMITIVE_TRIFAN);
 	WRETURN(W3D_SUCCESS);
 }
@@ -7921,7 +8875,7 @@ LONG n;
 NLOOP(triangles->vertexcount)
 	GetVertex(WC,triangles->v[n]);
 
-	ZbufferPatch(context);
+	ZbufferCheck(context);
 	SOFT3D_DrawPrimitive(WC->SC,WC->P,WC->Pnb,W3D_PRIMITIVE_TRISTRIP);
 	WRETURN(W3D_SUCCESS);
 }
@@ -8098,117 +9052,6 @@ struct WAZP3D_context *WC=context->driver;
 	WRETURN(W3D_SUCCESS);
 }
 /*==========================================================================*/
-void SetTexture(W3D_Context* context,W3D_Texture *texture)
-{
-struct WAZP3D_context *WC=context->driver;
-struct WAZP3D_texture *WT=NULL;
-void *ST=NULL;
-BOOL blended;
-ULONG TexEnvMode;
-UBYTE EnvRGBA[4];
-
-SREM(SetTexture)
-	if(texture==NULL)
-		{
-SREM(TEXTURE_NULL)
-		WT=NULL;
-		WC->WT=WT;
-		ST=NULL;
-		WC->uresize=1.0;
-		WC->vresize=1.0;
-		}
-	else
-		{
-SREM(TEXTURE_NOT_NULL)
-		WT=texture->driver;
-		WC->WT=WT;
-		ST=WT->ST;
-		WC->uresize=256.0/(float)(WT->large);
-		WC->vresize=256.0/(float)(WT->high );
-		PrintWT(WT);
-		}
-
-	TexEnvMode=context->globaltexenvmode;  		/* global texture-env-mode  */
-	ColorToRGBA(EnvRGBA,context->globaltexenvcolor[0],context->globaltexenvcolor[1],context->globaltexenvcolor[2],context->globaltexenvcolor[3]); /* global texture-env-color */
-
-	if(WT!=NULL)
-	if(!StateON(W3D_GLOBALTEXENV))
-	{
-	TexEnvMode=WT->TexEnvMode;		/* texture's texture-env-mode  */
-	COPYRGBA(EnvRGBA,WT->EnvRGBA);	/* texture's texture-env-color */
-	}
-
-	WC->TexMode='0';
-	WC->ColMode='0';
-	WC->UseFog  =  (StateON(W3D_FOGGING)) et (WC->FogMode!=0);
-	WC->ZMode   =2*(StateON(W3D_ZBUFFERUPDATE)) + (StateON(W3D_ZBUFFER));
-	WC->UseTex  =  (StateON(W3D_TEXMAPPING)) et (texture!=NULL);
-	blended     =  (StateON(W3D_BLENDING));
-
-	if(WC->UseTex)
-		{
-/* define WC->TexMode */
-		WC->TexMode='R';			/* default = simple tex */
-		if(blended)
-			{
-			WC->TexMode='A';		/* alpha blended tex */
-			if(WC->SrcFunc==W3D_ONE)
-			if(WC->DstFunc==W3D_ONE)
-				WC->TexMode='S';
-			}
-/* define WC->ColMode */
-		if(TexEnvMode==W3D_REPLACE)
-			WC->ColMode='0';		/* do only the tex function */
-
-		if(Wazp3D.UseColoring.ON)	/* If  use color for lighting*/
-		if(TexEnvMode!=W3D_REPLACE)
-			WC->ColMode='m';		/* then do the simple Mix color & tex */
-
-		if(Wazp3D.UseColoringGL.ON)	/* If  use color (new functions)  for lighting*/
-			{
-			if(TexEnvMode==W3D_DECAL)
-				WC->ColMode='D';		/* then Mix color & tex */
-			if(TexEnvMode==W3D_MODULATE)
-				WC->ColMode='M';		/* then Mix color & tex */
-			if(TexEnvMode==W3D_BLEND)
-				WC->ColMode='B';		/* then Mix color & tex */
-			}
-
-		}
-	else
-		{
-		WC->ColMode='R';
-			if(blended)
-			{
-			if(WC->SrcFunc==W3D_SRC_ALPHA)
-			if(WC->DstFunc==W3D_ONE_MINUS_SRC_ALPHA)
-				WC->ColMode='A';
-			if(WC->SrcFunc==W3D_ONE)
-			if(WC->DstFunc==W3D_ONE)
-				WC->ColMode='S';
-			if(WC->SrcFunc==W3D_ZERO)
-			if(WC->DstFunc==W3D_SRC_ALPHA)
-				WC->ColMode='L';
-			if(WC->SrcFunc==W3D_ZERO)
-			if(WC->DstFunc==W3D_SRC_COLOR)
-				WC->ColMode='M';
-			}
-		}
-
-	WC->UseGouraud=FALSE;
-	if(WC->ColMode!='0')
-	if(StateON(W3D_GOURAUD))
-		WC->UseGouraud=TRUE;
-
-
-
-#ifdef WAZP3DDEBUG
-	if(Wazp3D.DebugSOFT3D.ON) Libprintf(" WC: ZMode%ld TexMode%s ColMode%s UseFog%ld UseTex%ld Blended%ld UseGouraud%ld\n",WC->ZMode,pc(WC->TexMode,text1),pc(WC->ColMode,text2),WC->UseFog,WC->UseTex,blended,WC->UseGouraud);
-#endif
-	SOFT3D_SetEnvColor(WC->SC,EnvRGBA);
-	SOFT3D_SetDrawStates(WC->SC,ST,WC->ZMode,WC->TexMode,WC->ColMode,WC->UseGouraud,WC->UseFog);
-}
-/*==========================================================================*/
 ULONG W3D_BindTexture(W3D_Context* context, ULONG tmu, W3D_Texture *texture)
 {
 	WAZP3DFUNCTION(85);
@@ -8250,7 +9093,7 @@ ULONG n;
 	VAR(count)
 	if(primitive==W3D_PRIMITIVE_POINTS) SOFT3D_SetPointSize(WC->SC,1);
 
-	ZbufferPatch(context);
+	ZbufferCheck(context);
 	SOFT3D_DrawPrimitive(WC->SC,WC->P,WC->Pnb,WC->primitive);
 	WRETURN(W3D_SUCCESS);
 }
@@ -8296,7 +9139,7 @@ ULONG n;
 
 	if(primitive==W3D_PRIMITIVE_POINTS) SOFT3D_SetPointSize(WC->SC,1);
 
-	ZbufferPatch(context);
+	ZbufferCheck(context);
 	SOFT3D_DrawPrimitive(WC->SC,WC->P,WC->Pnb,WC->primitive);
 
 	WRETURN(W3D_SUCCESS);
