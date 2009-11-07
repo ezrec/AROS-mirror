@@ -202,6 +202,7 @@ static ALCboolean ahi_open_playback(ALCdevice *device, const ALCchar *deviceName
 //		NP_Child,					TRUE,
 		NP_Name,					"AHIProc (OpenAL)",
 		NP_Priority,				10,
+		NP_StackSize,				40960,
 //		NP_NotifyOnDeathSigTask,	NULL,
 		TAG_END);
 	if (data->proc == NULL) {
