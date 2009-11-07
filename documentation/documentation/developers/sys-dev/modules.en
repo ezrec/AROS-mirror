@@ -57,7 +57,8 @@ parameters are:
     directory will be taken.
 
 ``linklibfiles``
-    FIXME
+    A list of all the C source files without the .c suffix that contain the
+    code that needs to be added to the module linklib.
 
 ``linklibobjs``
     FIXME

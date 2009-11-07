@@ -785,7 +785,7 @@ target directory.
 The definition of the macro is as follows::
 
     %define build_linklib mmake=/A libname=/A files="$(basename $(wildcard *.c)) \
-      asmfiles= cflags=$(CFLAGS) dflags=%(cflags) aflags=$(AFLAGS) \
+      asmfiles= objs= cflags=$(CFLAGS) dflags=%(cflags) aflags=$(AFLAGS) \
       objdir=$(OBJDIR) libdir=$(LIBDIR)
 
 With the meaning of the arguments as follows:
@@ -804,7 +804,9 @@ With the meaning of the arguments as follows:
     ``asmfiles=``
         The assembler files to assemble and include in the library. By
         default no asm files are included in the library.
-
+    ``objs=``
+        Additional objects to link into the linklib. The objects have to be
+        given with full absolute path and the .o suffix.
     ``cflags=$(CFLAGS)``
         The flags to use when compiling the .c files. By default the standard
         AROS cflags (e.g. ``$(CFLAGS)``) are taken. This also
