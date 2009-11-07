@@ -1,10 +1,10 @@
 #   $Id$
 #
-#   Generate libOpenAL.a
+#   Generate libopenal.a
 #
 include $(TOP)/config/make.cfg
 
-#MM- linklibs : contrib-openal-linklib
+#MM- contrib-multimedia : contrib-openal-linklib
 
 #MM contrib-openal-linklib : includes contrib-openal-includes contrib-AHI
 

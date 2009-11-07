@@ -3,9 +3,9 @@
 
 -include $(TOP)/config/make.cfg
 
-#MM- development-libvorbis : development-libogg
+#MM- contrib-multimedia : development-libvorbis
 
-#MM- linklibs : development-libvorbis
+#MM- development-libvorbis : development-libogg
 
 %fetch_and_build_gnu_development package=libvorbis version=1.2.3 patch=yes \
     package_repo=http://downloads.xiph.org/releases/vorbis/

@@ -4,9 +4,9 @@
 #
 include $(TOP)/config/make.cfg
 
-#MM- linklibs : contrib-alut-linklib
+#MM- contrib-multimedia : contrib-alut-linklib
 
-#MM contrib-alut-linklib : includes contrib-alut-includes
+#MM contrib-alut-linklib : includes contrib-alut-includes contrib-openal-linklib
 
 ALUT_FILES = \
         alutBufferData \
