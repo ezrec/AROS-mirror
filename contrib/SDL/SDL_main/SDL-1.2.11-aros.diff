@@ -721,7 +721,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/mydebug.h SDL-1.2.11-aros/src/video/cybe
 +#endif
 diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_amigaevents.c SDL-1.2.11-aros/src/video/cybergfx/SDL_amigaevents.c
 --- SDL-1.2.11/src/video/cybergfx/SDL_amigaevents.c	2006-05-01 10:02:46.000000000 +0200
-+++ SDL-1.2.11-aros/src/video/cybergfx/SDL_amigaevents.c	2009-10-28 18:29:35.000000000 +0100
++++ SDL-1.2.11-aros/src/video/cybergfx/SDL_amigaevents.c	2009-11-07 18:02:58.000000000 +0100
 @@ -37,7 +37,7 @@
  
  /* The translation tables from an Amiga keysym to a SDL keysym */
@@ -731,7 +731,32 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_amigaevents.c SDL-1.2.11-aros/src/vi
  struct IOStdReq *ConReq=NULL;
  struct MsgPort *ConPort=NULL;
  
-@@ -195,7 +195,7 @@
+@@ -189,13 +189,32 @@
+ 
+ 	    case IDCMP_RAWKEY:
+ 
++			/* Mouse wheel support */
++			if (code == RAWKEY_NM_WHEEL_UP)
++			{
++				posted = SDL_PrivateMouseButton(SDL_PRESSED,
++							SDL_BUTTON_WHEELUP, 0, 0);
++				posted |= SDL_PrivateMouseButton(SDL_RELEASED,
++							SDL_BUTTON_WHEELUP, 0, 0);
++				break;
++			}
++			
++			if (code == RAWKEY_NM_WHEEL_DOWN)
++			{
++				posted = SDL_PrivateMouseButton(SDL_PRESSED,
++							SDL_BUTTON_WHEELDOWN, 0, 0);
++				posted |= SDL_PrivateMouseButton(SDL_RELEASED,
++							SDL_BUTTON_WHEELDOWN, 0, 0);
++				break;
++			}
++
+ 		    /* Key press? */
+ 
+ 		    if( !(code&IECODE_UP_PREFIX) )
  		    {
  				SDL_keysym keysym;
  				posted = SDL_PrivateKeyboard(SDL_PRESSED,
@@ -740,7 +765,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_amigaevents.c SDL-1.2.11-aros/src/vi
  		    }
  		    else
  		    {
-@@ -208,7 +208,7 @@
+@@ -208,7 +227,7 @@
  /*			if ( ! X11_KeyRepeat(SDL_Display, &xevent) )  */
  
  				posted = SDL_PrivateKeyboard(SDL_RELEASED,
@@ -749,7 +774,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_amigaevents.c SDL-1.2.11-aros/src/vi
  		    }
  		    break;
  	    /* Have we been iconified? */
-@@ -291,7 +291,7 @@
+@@ -291,7 +310,7 @@
  
  	/* Keep processing pending events */
  	pending = 0;
@@ -758,7 +783,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_amigaevents.c SDL-1.2.11-aros/src/vi
  		amiga_DispatchEvent(this,m);
  		++pending;
  	}
-@@ -423,8 +423,12 @@
+@@ -423,8 +442,12 @@
  	MISC_keymap[95] = SDLK_HELP;
  }
  
@@ -772,7 +797,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_amigaevents.c SDL-1.2.11-aros/src/vi
  	#ifdef STORMC4_WOS
  	static struct Library *KeymapBase=NULL; /* Linking failed in WOS version if ConsoleDevice was used */
  	#else
-@@ -438,49 +442,44 @@
+@@ -438,49 +461,44 @@
  #ifdef DEBUG_KEYS
  	fprintf(stderr, "Translating key 0x%.4x (%d)\n", xsym, xkey->keycode);
  #endif
@@ -844,7 +869,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_amigaevents.c SDL-1.2.11-aros/src/vi
  			event.ie_Qualifier=0;
  			event.ie_Class=IECLASS_RAWKEY;
  			event.ie_SubClass=0L;
-@@ -504,7 +503,7 @@
+@@ -504,7 +522,7 @@
  				{
  					keysym->sym=*buffer;
  					D(bug("Converted rawcode %ld to <%lc>\n",code,*buffer));
@@ -853,7 +878,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_amigaevents.c SDL-1.2.11-aros/src/vi
  					MISC_keymap[code]=*buffer;
  				}
  			}
-@@ -516,12 +515,20 @@
+@@ -516,12 +534,20 @@
  	/* If UNICODE is on, get the UNICODE value for the key */
  	keysym->unicode = 0;
  	if ( SDL_TranslateUNICODE ) {
@@ -2285,7 +2310,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  
 diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.h SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxvideo.h
 --- SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.h	2006-05-01 10:02:46.000000000 +0200
-+++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxvideo.h	2009-10-28 18:29:35.000000000 +0100
++++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxvideo.h	2009-11-07 18:05:25.000000000 +0100
 @@ -30,7 +30,7 @@
  #include <graphics/scale.h>
  #include <graphics/gfx.h>
@@ -2295,3 +2320,11 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.h SDL-1.2.11-aros/src/video
  #include <proto/exec.h>
  #include <proto/cybergraphics.h>
  #include <proto/graphics.h>
+@@ -43,6 +43,7 @@
+ #include <inline/intuition.h>
+ #include <inline/console.h>
+ #endif
++#include <devices/rawkeycodes.h>
+ 
+ #include "SDL_mouse.h"
+ #include "../SDL_sysvideo.h"
