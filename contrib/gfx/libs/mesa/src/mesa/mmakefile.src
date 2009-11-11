@@ -55,7 +55,8 @@ LIB_MESA_GALLIUM_SOURCES = \
             $(addprefix $(GALLIUM_SUBPATH)/,$(AROS_GALLIUM_SOURCES))\
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../../include \
-            -I$(SRCDIR)/$(CURDIR)/ \
+            -I$(SRCDIR)/$(CURDIR)/../../include/GL \
+            -I$(SRCDIR)/$(CURDIR) \
             -I$(SRCDIR)/$(CURDIR)/drivers/aros \
             -I$(SRCDIR)/$(CURDIR)/main \
             -I$(SRCDIR)/$(CURDIR)/glapi \
@@ -77,7 +78,8 @@ USER_CFLAGS := -DUSE_MGL_NAMESPACE -DAROS_MESA_SHARED -ffast-math $(FFIXED)
     uselibs="rom"
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../../include \
-            -I$(SRCDIR)/$(CURDIR)/ \
+            -I$(SRCDIR)/$(CURDIR)/../../include/GL \
+            -I$(SRCDIR)/$(CURDIR) \
             -I$(SRCDIR)/$(CURDIR)/main \
             -I$(SRCDIR)/$(CURDIR)/glapi \
             -I$(SRCDIR)/$(CURDIR)/shader \
