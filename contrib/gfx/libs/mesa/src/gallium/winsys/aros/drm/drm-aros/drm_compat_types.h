@@ -7,6 +7,7 @@
 #define _DRM_COMPAT_TYPES_
 
 #include <exec/types.h>
+#include <exec/semaphores.h>
 #include <sys/types.h>
 #include <stdbool.h>
 #define __user
@@ -22,6 +23,8 @@
 #define u8                          BYTE
 #define resource_size_t             IPTR
 #define dma_addr_t                  IPTR
+/* TODO: Implement spinlocks in busy-cpu way? */
+#define spinlock_t                  struct SignalSemaphore
 
 #undef offsetof
 #define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
@@ -37,6 +40,12 @@
 #define PAGE_MASK   (~(PAGE_SIZE-1))
 
 struct work_struct;
+
+/* Reference counted objects implementation */
+struct kref
+{
+    int count;
+};
 
 #include "drm_linux_list.h"
 

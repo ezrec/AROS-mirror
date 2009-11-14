@@ -72,6 +72,12 @@ struct Library          *OOPBase;
 
 
 /* NEEDED */
+
+/* Config */
+#define CONFIG_AGP
+
+#include "drm_mm.h"
+
 #define DRM_ERROR(fmt, ...) bug("[" DRM_NAME "(ERROR):%s] " fmt, __func__ , ##__VA_ARGS__)
 #define DRM_DEBUG(fmt, ...) D(bug("[" DRM_NAME "(DEBUG):%s] " fmt, __func__ , ##__VA_ARGS__))
 #define DRM_IMPL(fmt, ...) bug("------IMPLEMENT(%s): " fmt, __func__ , ##__VA_ARGS__)
@@ -92,6 +98,7 @@ struct Library          *OOPBase;
 /* FIXME: Implementation for other architextures */
 #endif
 
+#define DRM_UDELAY(d)       udelay(d)
 #define DRM_CURRENTPID      1
 #define DRM_IRQ_ARGS        void *arg
 typedef void                irqreturn_t;
@@ -152,6 +159,22 @@ struct drm_sg_mem {
     dma_addr_t *busaddr;
 };
 
+//FIXME
+struct agp_bridge_data;
+
+struct drm_agp_head {
+//FIXME:    DRM_AGP_KERN agp_info;      /**< AGP device information */
+    struct list_head memory;
+    unsigned long mode;     /* AGP mode */
+    struct agp_bridge_data *bridge;
+    int enabled;            /* whether the AGP bus as been enabled */
+    int acquired;           /* whether the AGP device has been acquired */
+    unsigned long base;
+    int agp_mtrr;
+    int cant_use_aperture;
+    unsigned long page_mask;
+};
+
 /* Contains a collection of functions common to each drm driver */
 
 #define DRIVER_MODESET     0x2000
@@ -183,13 +206,14 @@ struct drm_device
     int pci_vendor;                 /* PCI vendor id */
     int pci_device;                 /* PCI device id */
     
+    struct drm_agp_head *agp;       /* AGP data */
     struct drm_sg_mem *sg;          /* Scatter gather memory */
     
     struct drm_driver *driver;      /* Driver functions */
     void *dev_private;              /* Device private data */
-
+    
     /* AROS specific fields */
-    struct SignalSemaphore  struct_semaphore;
+    struct SignalSemaphore  struct_mutex;
     OOP_Object              *pci;
     OOP_Object              *pciDevice;
     OOP_Object              *pcidriver;
@@ -216,8 +240,16 @@ struct drm_file
 
 struct drm_gem_object 
 {
+    struct file *filp;    
     void *driver_private;
 };
+
+static __inline__ int drm_device_is_agp(struct drm_device *dev)
+{
+    /* FIXME: Implement */
+    DRM_IMPL("\n");
+    return 0;
+}
 
 // /* drm_bufs.c */
 int drm_order(unsigned long size);
@@ -252,6 +284,26 @@ void drm_core_ioremap(struct drm_local_map *map, struct drm_device *dev);
 // /* FIXME: make them inline? */
 // void *drm_alloc(size_t size, int area);
 // void drm_free(void *pt, size_t size, int area);
+
+/* GEM */
+struct drm_gem_object *drm_gem_object_alloc(struct drm_device *dev,
+                        size_t size);
+static inline void
+drm_gem_object_unreference(struct drm_gem_object *obj)
+{
+    if (obj == NULL)
+        return;
+
+//FIXME: kref_put(&obj->refcount, drm_gem_object_free);
+}
+
+/* MTRR */
+#define DRM_MTRR_WC     0
+static inline int drm_mtrr_add(unsigned long offset, unsigned long size,
+                   unsigned int flags)
+{
+    return -ENODEV;
+}
 
 /* AROS specific functions */
 /* drm_aros.c */
@@ -337,38 +389,10 @@ IPTR        drm_aros_pci_resource_len(OOP_Object *pciDevice,  unsigned int resou
 
 
 
-// 
-// struct drm_mm_node {
-//     struct list_head fl_entry;
-//     struct list_head ml_entry;
-//     int free;
-//     unsigned long start;
-//     unsigned long size;
-//     struct drm_mm *mm;
-//     void *private;
-// };
-// 
-// struct drm_mm {
-//     struct list_head fl_entry;
-//     struct list_head ml_entry;
-// };
-// 
-// 
-// /**
-//  * Mappings list
-//  */
+
 
 // 
-// typedef struct drm_map drm_local_map_t;
-// 
 
-// 
-// /* MTRR */
-// static inline int drm_mtrr_add(unsigned long offset, unsigned long size,
-//                    unsigned int flags)
-// {
-//     return -ENODEV;
-// }
 // 
 // static inline int drm_mtrr_del(int handle, unsigned long offset,
 //                    unsigned long size, unsigned int flags)
@@ -377,7 +401,7 @@ IPTR        drm_aros_pci_resource_len(OOP_Object *pciDevice,  unsigned int resou
 // }
 // 
 // #define drm_core_has_MTRR(dev) (0)
-// #define DRM_MTRR_WC     0
+
 // static __inline__ int mtrr_add(unsigned long base, unsigned long size,
 //                    unsigned int type, char increment)
 // {
@@ -401,12 +425,7 @@ IPTR        drm_aros_pci_resource_len(OOP_Object *pciDevice,  unsigned int resou
 
 
 // 
-// static __inline__ int drm_device_is_agp(struct drm_device *dev)
-// {
-//     /* FIXME: Implement */
-//     DRM_IMPL("\n");
-//     return 0;
-// }
+
 // 
 // static __inline__ int drm_device_is_pcie(struct drm_device *dev)
 // {

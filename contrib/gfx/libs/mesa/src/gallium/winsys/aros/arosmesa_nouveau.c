@@ -9,7 +9,7 @@
 
 #include "nouveau/nouveau_screen.h"
 
-#include "nouveau_drmif.h"
+#include "nouveau/nouveau_drmif.h"
 
 #define DEBUG 0
 #include <aros/debug.h>

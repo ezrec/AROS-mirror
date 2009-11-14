@@ -28,7 +28,6 @@
 #include "nouveau_drm.h"
 #include "nouveau_dma.h"
 
-#if !defined(__AROS__)
 static int
 nouveau_channel_pushbuf_ctxdma_init(struct nouveau_channel *chan)
 {
@@ -103,7 +102,6 @@ nouveau_channel_user_pushbuf_alloc(struct drm_device *dev)
 
 	return pushbuf;
 }
-#endif /* !defined(__AROS__) */
 
 /* allocates and initializes a fifo for user space consumption */
 int
@@ -111,7 +109,6 @@ nouveau_channel_alloc(struct drm_device *dev, struct nouveau_channel **chan_ret,
 		      struct drm_file *file_priv,
 		      uint32_t vram_handle, uint32_t tt_handle)
 {
-#if !defined(__AROS__)
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 	struct nouveau_pgraph_engine *pgraph = &dev_priv->engine.graph;
 	struct nouveau_fifo_engine *pfifo = &dev_priv->engine.fifo;
@@ -170,8 +167,10 @@ nouveau_channel_alloc(struct drm_device *dev, struct nouveau_channel **chan_ret,
 	else
 		user = NV50_USER(channel);
 
-	chan->user = ioremap(pci_resource_start(dev->pdev, 0) + user,
-								PAGE_SIZE);
+	chan->user = drm_aros_pci_ioremap(
+                        dev->pcidriver,
+                        drm_aros_pci_resource_start(dev->pciDevice, 0) + user,
+                        PAGE_SIZE);
 	if (!chan->user) {
 		NV_ERROR(dev, "ioremap of regs failed.\n");
 		nouveau_channel_free(chan);
@@ -235,10 +234,6 @@ nouveau_channel_alloc(struct drm_device *dev, struct nouveau_channel **chan_ret,
 
 	NV_INFO(dev, "%s: initialised FIFO %d\n", __func__, channel);
 	*chan_ret = chan;
-#else
-DRM_IMPL("\n");
-#warning IMPLEMENT nouveau_channel_alloc
-#endif
 	return 0;
 }
 

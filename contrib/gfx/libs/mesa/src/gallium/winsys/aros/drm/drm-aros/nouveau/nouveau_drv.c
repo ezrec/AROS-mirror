@@ -7,6 +7,10 @@
 
 #include "nouveau_drv.h"
 
+/* FIXME: Check what impact these settings have */
+int nouveau_vram_pushbuf = 0;
+int nouveau_vram_notify = 0;
+
 extern struct drm_ioctl_desc nouveau_ioctls[];
 
 static struct drm_driver driver =

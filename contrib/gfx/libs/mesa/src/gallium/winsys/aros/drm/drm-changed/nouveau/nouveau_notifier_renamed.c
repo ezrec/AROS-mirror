@@ -29,7 +29,6 @@
 #include "drm.h"
 #include "nouveau_drv.h"
 
-#if !defined(__AROS__)
 int
 nouveau_notifier_init_channel(struct nouveau_channel *chan)
 {
@@ -66,6 +65,7 @@ out_err:
 	return ret;
 }
 
+#if !defined(__AROS__)
 void
 nouveau_notifier_takedown_channel(struct nouveau_channel *chan)
 {
@@ -92,7 +92,6 @@ nouveau_notifier_gpuobj_dtor(struct drm_device *dev,
 		nouveau_mem_free_block(gpuobj->priv);
 }
 
-#if !defined(__AROS__)
 int
 nouveau_notifier_alloc(struct nouveau_channel *chan, uint32_t handle,
 		       int size, uint32_t *b_offset)
@@ -160,7 +159,6 @@ nouveau_notifier_alloc(struct nouveau_channel *chan, uint32_t handle,
 	*b_offset = mem->start;
 	return 0;
 }
-#endif /* !defined(__AROS__) */
 
 int
 nouveau_notifier_offset(struct nouveau_gpuobj *nobj, uint32_t *poffset)

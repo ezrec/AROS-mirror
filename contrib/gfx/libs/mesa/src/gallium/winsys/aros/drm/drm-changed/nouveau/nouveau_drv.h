@@ -47,14 +47,14 @@ struct drm_connector;
 #include "drm_compat_funcs.h"
 #endif
 
-//FIXME:TTM #include "ttm/ttm_bo_api.h"
-//FIXME:TTM #include "ttm/ttm_bo_driver.h"
-//FIXME:TTM #include "ttm/ttm_placement.h"
-//FIXME:TTM #include "ttm/ttm_memory.h"
-//FIXME:TTM #include "ttm/ttm_module.h"
+#include "ttm/ttm_bo_api.h"
+#include "ttm/ttm_bo_driver.h"
+#include "ttm/ttm_placement.h"
+#include "ttm/ttm_memory.h"
+#include "ttm/ttm_module.h"
 
 struct nouveau_fpriv {
-//FIXME:TTM 	struct ttm_object_file *tfile;
+	struct ttm_object_file *tfile;
 };
 
 #define DRM_FILE_PAGE_OFFSET (0x100000000ULL >> PAGE_SHIFT)
@@ -72,8 +72,8 @@ struct nouveau_fpriv {
 #define NV50_VM_VRAM_NR  (NV50_VM_MAX_VRAM / NV50_VM_BLOCK)
 
 struct nouveau_bo {
-//FIXME:TTM 	struct ttm_buffer_object bo;
-//FIXME:TTM 	struct ttm_bo_kmap_obj kmap;
+	struct ttm_buffer_object bo;
+	struct ttm_bo_kmap_obj kmap;
 	struct list_head head;
 
 	struct drm_file *reserved_by;
@@ -92,12 +92,11 @@ struct nouveau_bo {
 	int pin_refcnt;
 };
 
-/*FIXME:TTM
 static inline struct nouveau_bo *
 nouveau_bo(struct ttm_buffer_object *bo)
 {
 	return container_of(bo, struct nouveau_bo, bo);
-}*/
+}
 
 static inline struct nouveau_bo *
 nouveau_gem_object(struct drm_gem_object *gem)
@@ -106,16 +105,15 @@ nouveau_gem_object(struct drm_gem_object *gem)
 }
 
 /* TODO: submit equivalent to TTM generic API upstream? */
-/*FIXME:TTM
 static inline void __iomem *
 nvbo_kmap_obj_iovirtual(struct nouveau_bo *nvbo)
 {
 	bool is_iomem;
 	void __iomem *ioptr = (void __force __iomem *)ttm_kmap_obj_virtual(
 						&nvbo->kmap, &is_iomem);
-	WARN_ON_ONCE(ioptr && !is_iomem);
+//FIXME:	WARN_ON_ONCE(ioptr && !is_iomem);
 	return ioptr;
-}*/
+}
 
 struct mem_block {
 	struct mem_block *next;
@@ -186,7 +184,7 @@ struct nouveau_channel {
 	/* Fencing */
 	struct {
 		/* lock protects the pending list only */
-//FIXME:COMMENT		spinlock_t lock;
+		spinlock_t lock;
 		struct list_head pending;
 		uint32_t sequence;
 		uint32_t sequence_ack;
@@ -497,16 +495,16 @@ struct drm_nouveau_private {
 	uint32_t ramin_size;
 
 //FIXME:COMMENT	struct work_struct irq_work;
-//FIXME:COMMENT	struct list_head vbl_waiting;
+	struct list_head vbl_waiting;
 
-/*FIXME:TTM	struct {
+	struct {
 		struct ttm_global_reference mem_global_ref;
 		struct ttm_bo_global_ref bo_global_ref;
 		struct ttm_bo_device bdev;
 		spinlock_t bo_list_lock;
 		struct list_head bo_list;
-		atomic_t validate_sequence;
-	} ttm;*/
+//FIXME:		atomic_t validate_sequence;
+	} ttm;
 
 	struct fb_info *fbdev_info;
 
@@ -596,13 +594,13 @@ struct drm_nouveau_private {
 	} debugfs;
 };
 
-/*FIXME:TTM static inline struct drm_nouveau_private *
+static inline struct drm_nouveau_private *
 nouveau_bdev(struct ttm_bo_device *bd)
 {
 	return container_of(bd, struct drm_nouveau_private, ttm.bdev);
-}*/
+}
 
-/*FIXME:TTM static inline int
+static inline int
 nouveau_bo_ref(struct nouveau_bo *ref, struct nouveau_bo **pnvbo)
 {
 	struct nouveau_bo *prev;
@@ -619,7 +617,7 @@ nouveau_bo_ref(struct nouveau_bo *ref, struct nouveau_bo **pnvbo)
 	}
 
 	return 0;
-}*/
+}
 #define NOUVEAU_CHECK_INITIALISED_WITH_RETURN do {            \
 	struct drm_nouveau_private *nv = dev->dev_private;    \
 	if (nv->init_state != NOUVEAU_CARD_INIT_DONE) {       \
