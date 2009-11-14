@@ -38,10 +38,10 @@ contrib-networking-openssl-configure : $(OPENSSL_BUILD_DIR)/.build-configured
 #MM
 contrib-networking-openssl-build :
 	cd $(OPENSSL_BUILD_DIR); \
-	env -i PATH=$$PATH make 
+	env -i PATH=$(PATH) make
 
 #MM
 contrib-networking-openssl-install :
 	cd $(OPENSSL_BUILD_DIR); \
-	env -i PATH=$$PATH make install INSTALL_PREFIX=$(AROS_DEVELOPMENT)/../
+	env -i PATH=$(PATH) make install INSTALL_PREFIX=$(AROS_DEVELOPMENT)/../
 
