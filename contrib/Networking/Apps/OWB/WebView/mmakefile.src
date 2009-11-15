@@ -8,7 +8,7 @@ ARCHBASE := OWB-r1097
 OWB_SOURCE := $(PORTSDIR)/OWB/$(ARCHBASE)
 OWB_BUILD_DIR := $(GENDIR)/$(CURDIR)
 
-#MM- aros-tcpip-apps-owb-libs : contrib-fontconfig contrib-networking-curl development-SDL development-SDL_gfx-quick contrib-sqlite
+#MM- aros-tcpip-apps-owb-libs : contrib-fontconfig contrib-networking-curl development-SDL development-SDL_gfx-quick contrib-sqlite contrib-icu4c
 #MM- aros-tcpip-apps-owb-webview : aros-tcpip-apps-owb-libs aros-tcpip-apps-owb-webview-fetch aros-tcpip-apps-owb-webview-setup aros-tcpip-apps-owb-webview-build aros-tcpip-apps-owb-webview-install
 
 #MM
@@ -18,15 +18,13 @@ aros-tcpip-apps-owb-webview-fetch :
 	archive_origins=$(REPOSITORIES) suffixes="tar.gz tar.bz2" \
 	patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p0
 	
-# Change USE_I18N value from GENERIC to ICU if you have ICU installed
-
 #MM
 aros-tcpip-apps-owb-webview-setup :
 	%mkdir_q dir=$(OWB_BUILD_DIR)
 	cd $(OWB_BUILD_DIR); \
 	cmake \
 	-DENABLE_DATABASE:BOOL=ON \
-	-DUSE_I18N:STRING=GENERIC \
+	-DUSE_I18N:STRING=ICU \
 	-DCMAKE_MODULE_PATH=$(SRCDIR)/$(CURDIR)/cmake \
 	-DCMAKE_SYSTEM_NAME=AROS \
 	-DCMAKE_SYSTEM_VERSION=1 \
@@ -66,7 +64,7 @@ aros-tcpip-apps-owb-webview-setup :
 	-DCMAKE_C_FLAGS="$(CFLAGS)" \
 	-DCMAKE_CXX_FLAGS="$(CFLAGS)" \
 	-DAROS_NETINCLUDE=$(AROS_DEVELOPMENT)/netinclude \
-	-DICU_LIBRARY="-lsicui18n -lsicuuc -lsicudata" \
+	-DICU_LIBRARY="-licui18n -licuuc -licudata" \
 	-DICU_INCLUDE="$(AROS_DEVELOPMENT)/include" \
 	$(OWB_SOURCE)
 	
