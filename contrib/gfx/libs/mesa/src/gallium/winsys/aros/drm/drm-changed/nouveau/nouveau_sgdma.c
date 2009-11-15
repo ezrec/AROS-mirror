@@ -220,6 +220,7 @@ nouveau_sgdma_init_ttm(struct drm_device *dev)
 
 	return &nvbe->backend;
 }
+#endif
 
 int
 nouveau_sgdma_init(struct drm_device *dev)
@@ -248,12 +249,19 @@ nouveau_sgdma_init(struct drm_device *dev)
 		return ret;
 	}
 
+#if !defined(__AROS__)
 	dev_priv->gart_info.sg_dummy_page =
 		alloc_page(GFP_KERNEL|__GFP_DMA32);
 	set_bit(PG_locked, &dev_priv->gart_info.sg_dummy_page->flags);
 	dev_priv->gart_info.sg_dummy_bus =
 		pci_map_page(dev->pdev, dev_priv->gart_info.sg_dummy_page, 0,
 			     PAGE_SIZE, PCI_DMA_BIDIRECTIONAL);
+#else
+    #warning sg_dummy_page needs to be 4096 aligned
+    DRM_IMPL("sg_dummy_page needs to be 4096 aligned\n");
+    dev_priv->gart_info.sg_dummy_page = AllocVec(PAGE_SIZE, MEMF_PUBLIC | MEMF_CLEAR);
+    dev_priv->gart_info.sg_dummy_bus = drm_aros_dma_map_buf(dev_priv->gart_info.sg_dummy_page, 0, PAGE_SIZE);
+#endif
 
 	dev_priv->engine.instmem.prepare_access(dev, true);
 	if (dev_priv->card_type < NV_50) {
@@ -286,6 +294,7 @@ nouveau_sgdma_init(struct drm_device *dev)
 	return 0;
 }
 
+#if !defined(__AROS__)
 void
 nouveau_sgdma_takedown(struct drm_device *dev)
 {

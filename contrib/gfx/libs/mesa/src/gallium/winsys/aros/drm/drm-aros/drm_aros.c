@@ -677,10 +677,10 @@ void drm_aros_pci_iounmap(OOP_Object *driver, APTR buf, IPTR size)
 #endif    
 }
 
-// dma_addr_t drm_aros_dma_map_buf(APTR buf, IPTR offset, IPTR size)
-// {
-//     return (dma_addr_t)(buf + offset);
-// }
+dma_addr_t drm_aros_dma_map_buf(APTR buf, IPTR offset, IPTR size)
+{
+    return (dma_addr_t)(buf + offset);
+}
 // 
 // void drm_aros_dma_unmap_buf(dma_addr_t dma_address, IPTR size)
 // {

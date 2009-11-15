@@ -10,6 +10,7 @@
 #include <exec/semaphores.h>
 #include <sys/types.h>
 #include <stdbool.h>
+#include <errno.h>
 #define __user
 #define __iomem
 #define __force
@@ -45,6 +46,12 @@ struct work_struct;
 struct kref
 {
     int count;
+};
+
+/* Mutex emulation */
+struct mutex
+{
+    struct SignalSemaphore semaphore;
 };
 
 #include "drm_linux_list.h"

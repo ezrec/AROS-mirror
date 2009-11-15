@@ -132,22 +132,6 @@ nouveau_fence_wait(void *sync_obj, void *sync_arg, bool lazy, bool intr)
     return 0;
 }
 
-int ttm_bo_device_init(struct ttm_bo_device *bdev,
-                  struct ttm_bo_global *glob,
-                  struct ttm_bo_driver *driver,
-                  uint64_t file_page_offset, bool need_dma32)
-{
-    asm("int3");
-    return 0;
-}
-
-int ttm_bo_init_mm(struct ttm_bo_device *bdev, unsigned type,
-              unsigned long p_offset, unsigned long p_size)
-{
-    asm("int3");
-    return 0;
-}
-
 int ttm_bo_mem_space(struct ttm_buffer_object *bo,
                 uint32_t proposed_placement,
                 struct ttm_mem_reg *mem,
@@ -189,25 +173,32 @@ int ttm_tt_bind(struct ttm_tt *ttm, struct ttm_mem_reg *bo_mem)
     return 0;
 }
 
-int nouveau_ttm_global_init(struct drm_nouveau_private * nvpriv)
-{
-    asm("int3");
-    return 0;
-}
-
-int nouveau_sgdma_init(struct drm_device * dev)
-{
-    asm("int3");
-    return 0;
-}
-
 struct ttm_backend *nouveau_sgdma_init_ttm(struct drm_device * dev)
 {
     asm("int3");
     return NULL;
 }
 
-void drm_mm_put_block(struct drm_mm_node * cur)
+void ttm_bo_global_release(struct ttm_global_reference *ref)
+{
+    asm("int3");
+}
+
+int ttm_bo_global_init(struct ttm_global_reference *ref)
+{
+    //asm("int3");
+    DRM_IMPL("\n");
+    return 0;
+}
+
+int ttm_mem_global_init(struct ttm_mem_global *glob)
+{
+    //asm("int3");
+    DRM_IMPL("\n");
+    return 0;
+}
+
+void ttm_mem_global_release(struct ttm_mem_global *glob)
 {
     asm("int3");
 }

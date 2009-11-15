@@ -60,9 +60,7 @@ struct drm_mm {
 	struct list_head ml_entry;
 	struct list_head unused_nodes;
 	int num_unused;
-#if !defined(__AROS__)    
 	spinlock_t unused_lock;
-#endif
 };
 
 /*

@@ -24,8 +24,9 @@
 #define lower_32_bits(n)            ((u32)(n))
 #define upper_32_bits(n)            ((u32)(((n) >> 16) >> 16))
 #define memcpy_toio                 memcpy
-#define mutex_lock(x)               ObtainSemaphore(x)
-#define mutex_unlock(x)             ReleaseSemaphore(x)
+#define mutex_lock(x)               ObtainSemaphore(x.semaphore)
+#define mutex_unlock(x)             ReleaseSemaphore(x.semaphore)
+#define mutex_init(x)               InitSemaphore(x.semaphore);
 #define likely(x)                   __builtin_expect((x),1)
 #define unlikely(x)                 __builtin_expect((x),0)
 /* TODO: Implement spinlocks in busy-cpu way? */
@@ -51,10 +52,15 @@ static inline void udelay(unsigned long usecs)
 }
 
 #define BUG_ON(condition)           do { if (unlikely(condition)) bug("%s:%d\n", __FILE__, __LINE__); } while(0)
+#define EXPORT_SYMBOL(x)
 
 /* Reference counted objects implementation */
 void kref_init(struct kref *kref);
 void kref_get(struct kref *kref);
 int kref_put(struct kref *kref, void (*release) (struct kref *kref));
+
+/* Kernel debug */
+#define KERN_ERR
+#define printk(fmt, ...)            bug(fmt, ##__VA_ARGS__)
 
 #endif /* _DRM_COMPAT_FUNCS_ */

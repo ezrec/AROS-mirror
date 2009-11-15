@@ -211,9 +211,9 @@ struct drm_device
     
     struct drm_driver *driver;      /* Driver functions */
     void *dev_private;              /* Device private data */
-    
+    struct mutex  struct_mutex;
+
     /* AROS specific fields */
-    struct SignalSemaphore  struct_mutex;
     OOP_Object              *pci;
     OOP_Object              *pciDevice;
     OOP_Object              *pcidriver;
@@ -313,7 +313,7 @@ APTR        drm_aros_pci_ioremap(OOP_Object *driver, APTR buf, IPTR size);
 void        drm_aros_pci_iounmap(OOP_Object *driver, APTR buf, IPTR size);
 APTR        drm_aros_pci_resource_start(OOP_Object *pciDevice,  unsigned int resource);
 IPTR        drm_aros_pci_resource_len(OOP_Object *pciDevice,  unsigned int resource);
-//dma_addr_t  drm_aros_dma_map_buf(APTR buf, IPTR offset, IPTR size);
+dma_addr_t  drm_aros_dma_map_buf(APTR buf, IPTR offset, IPTR size);
 //void        drm_aros_dma_unmap_buf(dma_addr_t dma_address, IPTR size);
 
 /* NEEDED ENDS */
@@ -377,7 +377,7 @@ IPTR        drm_aros_pci_resource_len(OOP_Object *pciDevice,  unsigned int resou
 // //#define DRM_INFO(fmt, ...) bug("[" DRM_NAME "(INFO)] " fmt, ##__VA_ARGS__)
 // #define DRM_INFO(fmt, ...)
 
-// //#define printk(fmt, ...) bug(fmt, ##__VA_ARGS__)
+
 // #define printk(fmt, ...)
 // 
 

@@ -31,8 +31,12 @@
 #ifndef _TTM_MODULE_H_
 #define _TTM_MODULE_H_
 
-//FIXME:#include <linux/kernel.h>
+#if !defined(__AROS__)
+#include <linux/kernel.h>
 struct kobject;
+#else
+#include "drm_compat_types.h"
+#endif
 
 #define TTM_PFX "[TTM] "
 

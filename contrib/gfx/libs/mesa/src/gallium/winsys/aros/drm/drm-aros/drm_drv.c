@@ -4,6 +4,7 @@
 */
 
 #include "drmP.h"
+#include "drm_compat_funcs.h"
 
 int drm_lastclose(struct drm_device * dev)
 {
@@ -13,7 +14,7 @@ int drm_lastclose(struct drm_device * dev)
     if (dev->irq_enabled)
         drm_irq_uninstall(dev);
     
-    ObtainSemaphore(&dev->struct_mutex);
+    ObtainSemaphore(&dev->struct_mutex.semaphore);
     
     if (dev->sg)
     {
@@ -21,7 +22,7 @@ int drm_lastclose(struct drm_device * dev)
         dev->sg = NULL;
     }
     
-    ReleaseSemaphore(&dev->struct_mutex);
+    ReleaseSemaphore(&dev->struct_mutex.semaphore);
     
     return 0;
 }
@@ -56,7 +57,7 @@ int drm_init(struct drm_driver * driver)
     dev->sg = NULL;
     dev->irq_enabled = 0;
     dev->driver = driver;
-    InitSemaphore(&dev->struct_mutex);
+    InitSemaphore(&dev->struct_mutex.semaphore);
     
     DRM_DEBUG("%s, %s\n", name, busid);
 #if !defined(HOSTED_BUILD)    

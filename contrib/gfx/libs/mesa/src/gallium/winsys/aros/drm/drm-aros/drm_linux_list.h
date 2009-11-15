@@ -85,3 +85,9 @@ list_del(struct list_head *entry) {
 		n = list_entry(pos->member.next, typeof(*pos), member);	\
 	     &pos->member != (head); 					\
 	     pos = n, n = list_entry(n->member.next, typeof(*n), member))
+
+static inline void list_del_init(struct list_head *entry)
+{
+    list_del(entry);
+    INIT_LIST_HEAD(entry);
+}
