@@ -14,6 +14,6 @@ SDLVERSION := 1.2.11
 #MM development-SDLGL : development-SDL
 
 %build_with_configure mmake=development-SDLGL package=SDL srcdir=$(PORTSDIR)/SDL/SDL-$(SDLVERSION) \
-    extraoptions="--target-lib-name=libSDLGL --enable-video-opengl"
+    extraoptions="--target-lib-name=libSDLGL --enable-video-opengl --mandir=$(AROS_DEVELOPMENT)/man --datadir=$(AROS_DEVELOPMENT)/share"
 
 %common
