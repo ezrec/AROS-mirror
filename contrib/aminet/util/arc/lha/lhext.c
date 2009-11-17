@@ -94,7 +94,7 @@ static boolean make_parent_path(char *name)
 #ifndef AROS
   if (mkdir (path, 0777) >= 0)/* try */
 #else
-  if (lock = CreateDir(path))
+  if ((lock = CreateDir(path)))
 #endif
   {
 #ifdef AROS
@@ -200,10 +200,17 @@ static void extract_one(FILE *afp, LzHeader *hdr)
 	}
     }
 
-  if (extract_directory)
+  if (extract_directory) {
+#ifndef AROS
     sprintf (name, "%s/%s", extract_directory, q);
-  else
-    strcpy (name, q);
+#else
+    strcpy (name, extract_directory);
+    AddPart(name, q, 257);
+#endif
+    } else {
+      strcpy (name, q);
+    }
+
 
   if ((hdr->unix_mode & UNIX_FILE_TYPEMASK) == UNIX_FILE_REGULAR)
     {
