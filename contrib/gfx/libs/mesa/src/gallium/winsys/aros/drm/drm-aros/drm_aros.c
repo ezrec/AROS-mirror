@@ -681,8 +681,8 @@ dma_addr_t drm_aros_dma_map_buf(APTR buf, IPTR offset, IPTR size)
 {
     return (dma_addr_t)(buf + offset);
 }
-// 
-// void drm_aros_dma_unmap_buf(dma_addr_t dma_address, IPTR size)
-// {
-//     /* No Op */
-// }
+
+void drm_aros_dma_unmap_buf(dma_addr_t dma_address, IPTR size)
+{
+    /* No Op */
+}

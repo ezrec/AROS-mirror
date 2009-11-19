@@ -19,6 +19,7 @@
 #define readb(addr)                 (*(volatile BYTE*)(addr))
 #define kzalloc(size, flags)        AllocVec(size, MEMF_ANY | MEMF_CLEAR)
 #define kmalloc(size, flags)        AllocVec(size, MEMF_ANY)
+#define vmalloc_user(size)          AllocVec(size, MEMF_ANY)
 #define kfree(objp)                 FreeVec(objp)
 #define roundup(x, y)               ((((x) + ((y) - 1)) / (y)) * (y))
 #define lower_32_bits(n)            ((u32)(n))
@@ -37,6 +38,9 @@
 #define spin_unlock_irq(x)          ReleaseSemaphore(x)
 #define spin_lock_irqsave(x,y)      ObtainSemaphore(x)
 #define spin_unlock_irqrestore(x,y) ReleaseSemaphore(x)
+#define pci_map_page(a, b, c, d, e) drm_aros_dma_map_buf(b->address, c, d)
+#define pci_dma_mapping_error(a, b) FALSE
+#define pci_unmap_page(a, b, c, d)  drm_aros_dma_unmap_buf(b, c)
 
 void iowrite32(u32 val, void * addr);
 unsigned int ioread32(void * addr);
@@ -62,5 +66,15 @@ int kref_put(struct kref *kref, void (*release) (struct kref *kref));
 /* Kernel debug */
 #define KERN_ERR
 #define printk(fmt, ...)            bug(fmt, ##__VA_ARGS__)
+#define IMPLEMENT(fmt, ...) bug("------IMPLEMENT(%s): " fmt, __func__ , ##__VA_ARGS__)
+
+/* Bit operations */
+void clear_bit(int nr, volatile void * addr);
+
+/* Page handling */
+void __free_page(struct page * p);
+struct page * my_create_page(); /* Helper function - not from compat */
+#define PageHighMem(p)              FALSE
+#define put_page(p)                 __free_page(p)
 
 #endif /* _DRM_COMPAT_FUNCS_ */

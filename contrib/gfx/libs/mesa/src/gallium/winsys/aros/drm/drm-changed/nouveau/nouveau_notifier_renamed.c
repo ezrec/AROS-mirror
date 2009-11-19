@@ -65,7 +65,6 @@ out_err:
 	return ret;
 }
 
-#if !defined(__AROS__)
 void
 nouveau_notifier_takedown_channel(struct nouveau_channel *chan)
 {
@@ -80,7 +79,6 @@ nouveau_notifier_takedown_channel(struct nouveau_channel *chan)
 	mutex_unlock(&dev->struct_mutex);
 	nouveau_mem_takedown(&chan->notifier_heap);
 }
-#endif /* !defined(__AROS__) */
 
 static void
 nouveau_notifier_gpuobj_dtor(struct drm_device *dev,

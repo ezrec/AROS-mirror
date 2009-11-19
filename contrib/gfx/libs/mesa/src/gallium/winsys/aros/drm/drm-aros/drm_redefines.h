@@ -11,6 +11,7 @@
 
 #define nouveau_notifier_alloc              _redefined_nouveau_notifier_alloc
 #define nouveau_channel_alloc               _redefined_nouveau_channel_alloc
+#define nouveau_channel_free                _redefined_nouveau_channel_free
 
 
 #define nouveau_bo_new                      _redefined_nouveau_bo_new

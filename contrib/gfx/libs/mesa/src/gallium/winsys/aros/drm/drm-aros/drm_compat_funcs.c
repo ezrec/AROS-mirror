@@ -82,3 +82,30 @@ int kref_put(struct kref *kref, void (*release) (struct kref *kref))
     }
         return kref->count;
 }
+
+/* Bit operations */
+void clear_bit(int nr, volatile void * addr)
+{
+    unsigned long mask = 1 << nr;
+    
+    *(unsigned long*)addr &= ~mask;
+}
+
+/* Page handling */
+void __free_page(struct page * p)
+{
+    if (p->allocated_buffer)
+        FreeVec(p->allocated_buffer);
+    p->allocated_buffer = NULL;
+    p->address = NULL;
+    FreeVec(p);
+}
+
+struct page * my_create_page()
+{
+    struct page * p;
+    p = AllocVec(sizeof(*p), MEMF_PUBLIC | MEMF_CLEAR);
+    p->allocated_buffer = AllocVec(PAGE_SIZE + PAGE_SIZE - 1, MEMF_PUBLIC | MEMF_CLEAR);
+    p->address = PAGE_ALIGN(p->allocated_buffer);
+    return p;
+}

@@ -35,10 +35,18 @@
 
 #define ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
 
+/* Page handling */
+struct page
+{
+    APTR address;
+    APTR allocated_buffer;
+};
+
 #undef PAGE_SIZE
-#define PAGE_SHIFT  12
-#define PAGE_SIZE   ((1UL) << PAGE_SHIFT)
-#define PAGE_MASK   (~(PAGE_SIZE-1))
+#define PAGE_SHIFT              12
+#define PAGE_SIZE               ((1UL) << PAGE_SHIFT)
+#define PAGE_MASK               (~(PAGE_SIZE-1))
+#define PAGE_ALIGN(addr)        (APTR)(((IPTR)(addr) + PAGE_SIZE - 1) & PAGE_MASK)
 
 struct work_struct;
 

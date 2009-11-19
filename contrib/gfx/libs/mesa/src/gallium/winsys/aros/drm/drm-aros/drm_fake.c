@@ -77,46 +77,12 @@ void ttm_bo_kunmap(struct ttm_bo_kmap_obj *map)
     asm("int3");
 }
 
-void ttm_bo_unref(struct ttm_buffer_object **bo)
-{
-    asm("int3");
-}
-
-int ttm_buffer_object_init(struct ttm_bo_device *bdev,
-                  struct ttm_buffer_object *bo,
-                  unsigned long size,
-                  enum ttm_bo_type type,
-                  uint32_t flags,
-                  uint32_t page_alignment,
-                  unsigned long buffer_start,
-                  bool interrubtible,
-                  struct file *persistant_swap_storage,
-                  size_t acc_size,
-                  void (*destroy) (struct ttm_buffer_object *))
-{
-    asm("int3");
-    return 0;
-}
-
-int ttm_buffer_object_validate(struct ttm_buffer_object *bo,
-                      uint32_t proposed_placement,
-                      bool interruptible, bool no_wait)
-{
-    asm("int3");
-    return 0;
-}
-
 int ttm_bo_reserve(struct ttm_buffer_object *bo,
               bool interruptible,
               bool no_wait, bool use_sequence, uint32_t sequence)
 {
     asm("int3");
     return 0;
-}
-
-void ttm_bo_unreserve(struct ttm_buffer_object *bo)
-{
-    asm("int3");
 }
 
 struct ttm_backend *ttm_agp_backend_init(struct ttm_bo_device *bdev,
@@ -127,15 +93,6 @@ struct ttm_backend *ttm_agp_backend_init(struct ttm_bo_device *bdev,
 }
 int
 nouveau_fence_wait(void *sync_obj, void *sync_arg, bool lazy, bool intr)
-{
-    asm("int3");
-    return 0;
-}
-
-int ttm_bo_mem_space(struct ttm_buffer_object *bo,
-                uint32_t proposed_placement,
-                struct ttm_mem_reg *mem,
-                bool interruptible, bool no_wait)
 {
     asm("int3");
     return 0;
@@ -167,38 +124,47 @@ int ttm_bo_move_ttm(struct ttm_buffer_object *bo,
     return 0;
 }
 
-int ttm_tt_bind(struct ttm_tt *ttm, struct ttm_mem_reg *bo_mem)
-{
-    asm("int3");
-    return 0;
-}
-
-struct ttm_backend *nouveau_sgdma_init_ttm(struct drm_device * dev)
-{
-    asm("int3");
-    return NULL;
-}
-
 void ttm_bo_global_release(struct ttm_global_reference *ref)
 {
     asm("int3");
 }
 
-int ttm_bo_global_init(struct ttm_global_reference *ref)
-{
-    //asm("int3");
-    DRM_IMPL("\n");
-    return 0;
-}
-
-int ttm_mem_global_init(struct ttm_mem_global *glob)
-{
-    //asm("int3");
-    DRM_IMPL("\n");
-    return 0;
-}
-
 void ttm_mem_global_release(struct ttm_mem_global *glob)
+{
+    asm("int3");
+}
+
+void ttm_bo_unmap_virtual(struct ttm_buffer_object *bo)
+{
+    asm("int3");
+}
+
+void ttm_tt_destroy(struct ttm_tt *ttm)
+{
+    asm("int3");
+}
+
+int ttm_bo_swapout(struct ttm_mem_shrink *shrink)
+{
+    asm("int3");;
+    return 0;
+}
+
+int ttm_tt_swapin(struct ttm_tt *ttm)
+{
+    asm("int3");
+    return 0;
+}
+
+int ttm_mem_global_alloc_page(struct ttm_mem_global *glob,
+                  struct page *page,
+                  bool no_wait, bool interruptible)
+{
+    asm("int3");
+    return 0;
+}
+
+void drm_clflush_pages(struct page *pages[], unsigned long num_pages)
 {
     asm("int3");
 }

@@ -278,6 +278,7 @@ nouveau_channel_idle(struct nouveau_channel *chan)
 	nv_wr32(dev, NV03_PFIFO_CACHES, caches);
 	return idle;
 }
+#endif
 
 /* stops a fifo */
 void
@@ -342,13 +343,14 @@ nouveau_channel_free(struct nouveau_channel *chan)
 	nouveau_gpuobj_channel_takedown(chan);
 	nouveau_notifier_takedown_channel(chan);
 	if (chan->user)
-		iounmap(chan->user);
+		drm_aros_pci_iounmap(dev->pcidriver, chan->user, PAGE_SIZE);
 
 	dev_priv->fifos[chan->id] = NULL;
 	dev_priv->fifo_alloc_count--;
 	kfree(chan);
 }
 
+#if !defined(__AROS__)
 /* cleans up all the fifos from file_priv */
 void
 nouveau_channel_cleanup(struct drm_device *dev, struct drm_file *file_priv)

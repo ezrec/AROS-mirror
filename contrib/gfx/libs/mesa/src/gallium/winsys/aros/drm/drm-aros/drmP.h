@@ -314,7 +314,7 @@ void        drm_aros_pci_iounmap(OOP_Object *driver, APTR buf, IPTR size);
 APTR        drm_aros_pci_resource_start(OOP_Object *pciDevice,  unsigned int resource);
 IPTR        drm_aros_pci_resource_len(OOP_Object *pciDevice,  unsigned int resource);
 dma_addr_t  drm_aros_dma_map_buf(APTR buf, IPTR offset, IPTR size);
-//void        drm_aros_dma_unmap_buf(dma_addr_t dma_address, IPTR size);
+void        drm_aros_dma_unmap_buf(dma_addr_t dma_address, IPTR size);
 
 /* NEEDED ENDS */
 

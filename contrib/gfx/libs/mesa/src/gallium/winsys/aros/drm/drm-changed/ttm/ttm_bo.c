@@ -42,7 +42,7 @@
 #include "drm_compat_funcs.h"
 #endif
 
-#if !defined(__AROS__)
+
 #define TTM_ASSERT_LOCKED(param)
 #define TTM_DEBUG(fmt, arg...)
 #define TTM_BO_HASH_ORDER 13
@@ -50,7 +50,7 @@
 static int ttm_bo_setup_vm(struct ttm_buffer_object *bo);
 static int ttm_bo_swapout(struct ttm_mem_shrink *shrink);
 static void ttm_bo_global_kobj_release(struct kobject *kobj);
-
+#if !defined(__AROS__)
 static struct attribute ttm_bo_count = {
 	.name = "bo_count",
 	.mode = S_IRUGO
@@ -81,6 +81,7 @@ static struct kobj_type ttm_bo_glob_kobj_type  = {
 	.sysfs_ops = &ttm_bo_global_ops,
 	.default_attrs = ttm_bo_global_attrs
 };
+#endif
 
 
 static inline uint32_t ttm_bo_type_flags(unsigned type)
@@ -88,6 +89,7 @@ static inline uint32_t ttm_bo_type_flags(unsigned type)
 	return 1 << (type);
 }
 
+#if !defined(__AROS__)
 static void ttm_bo_release_list(struct kref *list_kref)
 {
 	struct ttm_buffer_object *bo =
@@ -129,13 +131,14 @@ int ttm_bo_wait_unreserved(struct ttm_buffer_object *bo, bool interruptible)
 	return 0;
 }
 EXPORT_SYMBOL(ttm_bo_wait_unreserved);
+#endif
 
 static void ttm_bo_add_to_lru(struct ttm_buffer_object *bo)
 {
 	struct ttm_bo_device *bdev = bo->bdev;
 	struct ttm_mem_type_manager *man;
 
-	BUG_ON(!atomic_read(&bo->reserved));
+//FIXME	BUG_ON(!atomic_read(&bo->reserved));
 
 	if (!(bo->mem.placement & TTM_PL_FLAG_NO_EVICT)) {
 
@@ -143,14 +146,15 @@ static void ttm_bo_add_to_lru(struct ttm_buffer_object *bo)
 
 		man = &bdev->man[bo->mem.mem_type];
 		list_add_tail(&bo->lru, &man->lru);
-		kref_get(&bo->list_kref);
+//FIXME		kref_get(&bo->list_kref);
 
 		if (bo->ttm != NULL) {
 			list_add_tail(&bo->swap, &bo->glob->swap_lru);
-			kref_get(&bo->list_kref);
+//FIXME			kref_get(&bo->list_kref);
 		}
 	}
 }
+
 
 /**
  * Call with the lru_lock held.
@@ -184,6 +188,7 @@ int ttm_bo_reserve_locked(struct ttm_buffer_object *bo,
 	struct ttm_bo_global *glob = bo->glob;
 	int ret;
 
+#if !defined(__AROS__)
 	while (unlikely(atomic_cmpxchg(&bo->reserved, 0, 1) != 0)) {
 		if (use_sequence && bo->seq_valid &&
 			(sequence - bo->val_seq < (1 << 31))) {
@@ -200,7 +205,9 @@ int ttm_bo_reserve_locked(struct ttm_buffer_object *bo,
 		if (unlikely(ret))
 			return ret;
 	}
-
+#else
+IMPLEMENT("while (unlikely(atomic_cmpxchg(&bo->reserved, 0, 1) != 0))\n");
+#endif
 	if (use_sequence) {
 		bo->val_seq = sequence;
 		bo->seq_valid = true;
@@ -212,6 +219,7 @@ int ttm_bo_reserve_locked(struct ttm_buffer_object *bo,
 }
 EXPORT_SYMBOL(ttm_bo_reserve);
 
+#if !defined(__AROS__)
 static void ttm_bo_ref_bug(struct kref *list_kref)
 {
 	BUG();
@@ -237,6 +245,7 @@ int ttm_bo_reserve(struct ttm_buffer_object *bo,
 
 	return ret;
 }
+#endif
 
 void ttm_bo_unreserve(struct ttm_buffer_object *bo)
 {
@@ -244,8 +253,8 @@ void ttm_bo_unreserve(struct ttm_buffer_object *bo)
 
 	spin_lock(&glob->lru_lock);
 	ttm_bo_add_to_lru(bo);
-	atomic_set(&bo->reserved, 0);
-	wake_up_all(&bo->event_queue);
+//FIXME	atomic_set(&bo->reserved, 0);
+//FIXME	wake_up_all(&bo->event_queue);
 	spin_unlock(&glob->lru_lock);
 }
 EXPORT_SYMBOL(ttm_bo_unreserve);
@@ -285,8 +294,12 @@ static int ttm_bo_add_ttm(struct ttm_buffer_object *bo, bool zero_alloc)
 			ret = -ENOMEM;
 		break;
 
+#if !defined(__AROS__)
 		ret = ttm_tt_set_user(bo->ttm, current,
 				      bo->buffer_start, bo->num_pages);
+#else
+IMPLEMENT("Calling ttm_tt_set_user\n");
+#endif
 		if (unlikely(ret != 0))
 			ttm_tt_destroy(bo->ttm);
 		break;
@@ -371,11 +384,11 @@ moved:
 	}
 
 	if (bo->mem.mm_node) {
-		spin_lock(&bo->lock);
+//FIXME		spin_lock(&bo->lock);
 		bo->offset = (bo->mem.mm_node->start << PAGE_SHIFT) +
 		    bdev->man[bo->mem.mem_type].gpu_offset;
 		bo->cur_placement = bo->mem.placement;
-		spin_unlock(&bo->lock);
+//FIXME		spin_unlock(&bo->lock);
 	}
 
 	return 0;
@@ -391,6 +404,7 @@ out_err:
 	return ret;
 }
 
+#if !defined(__AROS__)
 /**
  * If bo idle, remove from delayed- and lru lists, and unref.
  * If not idle, and already on delayed list, do nothing.
@@ -547,6 +561,7 @@ static void ttm_bo_release(struct kref *kref)
 	kref_put(&bo->list_kref, ttm_bo_release_list);
 	write_lock(&bdev->vm_lock);
 }
+#endif
 
 void ttm_bo_unref(struct ttm_buffer_object **p_bo)
 {
@@ -554,9 +569,9 @@ void ttm_bo_unref(struct ttm_buffer_object **p_bo)
 	struct ttm_bo_device *bdev = bo->bdev;
 
 	*p_bo = NULL;
-	write_lock(&bdev->vm_lock);
-	kref_put(&bo->kref, ttm_bo_release);
-	write_unlock(&bdev->vm_lock);
+//FIXME	write_lock(&bdev->vm_lock);
+//FIXME	kref_put(&bo->kref, ttm_bo_release);
+//FIXME	write_unlock(&bdev->vm_lock);
 }
 EXPORT_SYMBOL(ttm_bo_unref);
 
@@ -572,9 +587,9 @@ static int ttm_bo_evict(struct ttm_buffer_object *bo, unsigned mem_type,
 	if (bo->mem.mem_type != mem_type)
 		goto out;
 
-	spin_lock(&bo->lock);
+//FIXME	spin_lock(&bo->lock);
 	ret = ttm_bo_wait(bo, false, interruptible, no_wait);
-	spin_unlock(&bo->lock);
+//FIXME	spin_unlock(&bo->lock);
 
 	if (unlikely(ret != 0)) {
 		if (ret != -ERESTART) {
@@ -585,7 +600,7 @@ static int ttm_bo_evict(struct ttm_buffer_object *bo, unsigned mem_type,
 		goto out;
 	}
 
-	BUG_ON(!atomic_read(&bo->reserved));
+//FIXME	BUG_ON(!atomic_read(&bo->reserved));
 
 	evict_mem = bo->mem;
 	evict_mem.mm_node = NULL;
@@ -660,7 +675,7 @@ retry_pre_get:
 			break;
 
 		entry = list_first_entry(lru, struct ttm_buffer_object, lru);
-		kref_get(&entry->list_kref);
+//FIXME		kref_get(&entry->list_kref);
 
 		ret =
 		    ttm_bo_reserve_locked(entry, interruptible, no_wait,
@@ -674,14 +689,14 @@ retry_pre_get:
 		if (unlikely(ret != 0))
 			return ret;
 
-		while (put_count--)
-			kref_put(&entry->list_kref, ttm_bo_ref_bug);
+//FIXME		while (put_count--)
+//FIXME			kref_put(&entry->list_kref, ttm_bo_ref_bug);
 
 		ret = ttm_bo_evict(entry, mem_type, interruptible, no_wait);
 
 		ttm_bo_unreserve(entry);
 
-		kref_put(&entry->list_kref, ttm_bo_release_list);
+//FIXME		kref_put(&entry->list_kref, ttm_bo_release_list);
 		if (ret)
 			return ret;
 
@@ -874,6 +889,7 @@ int ttm_bo_mem_space(struct ttm_buffer_object *bo,
 }
 EXPORT_SYMBOL(ttm_bo_mem_space);
 
+#if !defined(__AROS__)
 int ttm_bo_wait_cpu(struct ttm_buffer_object *bo, bool no_wait)
 {
 	int ret = 0;
@@ -890,6 +906,7 @@ int ttm_bo_wait_cpu(struct ttm_buffer_object *bo, bool no_wait)
 	return ret;
 }
 EXPORT_SYMBOL(ttm_bo_wait_cpu);
+#endif
 
 int ttm_bo_move_buffer(struct ttm_buffer_object *bo,
 		       uint32_t proposed_placement,
@@ -899,7 +916,7 @@ int ttm_bo_move_buffer(struct ttm_buffer_object *bo,
 	int ret = 0;
 	struct ttm_mem_reg mem;
 
-	BUG_ON(!atomic_read(&bo->reserved));
+//FIXME	BUG_ON(!atomic_read(&bo->reserved));
 
 	/*
 	 * FIXME: It's possible to pipeline buffer moves.
@@ -907,9 +924,9 @@ int ttm_bo_move_buffer(struct ttm_buffer_object *bo,
 	 * instead of doing it here.
 	 */
 
-	spin_lock(&bo->lock);
+//FIXME	spin_lock(&bo->lock);
 	ret = ttm_bo_wait(bo, false, interruptible, no_wait);
-	spin_unlock(&bo->lock);
+//FIXME	spin_unlock(&bo->lock);
 
 	if (ret)
 		return ret;
@@ -955,7 +972,7 @@ int ttm_buffer_object_validate(struct ttm_buffer_object *bo,
 {
 	int ret;
 
-	BUG_ON(!atomic_read(&bo->reserved));
+//FIXME	BUG_ON(!atomic_read(&bo->reserved));
 	bo->proposed_placement = proposed_placement;
 
 	TTM_DEBUG("Proposed placement 0x%08lx, Old flags 0x%08lx\n",
@@ -1018,6 +1035,7 @@ ttm_bo_check_placement(struct ttm_buffer_object *bo,
 		return -EINVAL;
 	}
 
+#if !defined(__AROS__)
 	if (!capable(CAP_SYS_ADMIN)) {
 		if (new_mask & TTM_PL_FLAG_NO_EVICT) {
 			printk(KERN_ERR TTM_PFX "Need to be root to modify"
@@ -1033,6 +1051,7 @@ ttm_bo_check_placement(struct ttm_buffer_object *bo,
 			return -EINVAL;
 		}
 	}
+#endif
 	return 0;
 }
 
@@ -1059,12 +1078,12 @@ int ttm_buffer_object_init(struct ttm_bo_device *bdev,
 	}
 	bo->destroy = destroy;
 
-	spin_lock_init(&bo->lock);
-	kref_init(&bo->kref);
-	kref_init(&bo->list_kref);
-	atomic_set(&bo->cpu_writers, 0);
-	atomic_set(&bo->reserved, 1);
-	init_waitqueue_head(&bo->event_queue);
+//FIXME	spin_lock_init(&bo->lock);
+//FIXME	kref_init(&bo->kref);
+//FIXME	kref_init(&bo->list_kref);
+//FIXME	atomic_set(&bo->cpu_writers, 0);
+//FIXME	atomic_set(&bo->reserved, 1);
+//FIXME	init_waitqueue_head(&bo->event_queue);
 	INIT_LIST_HEAD(&bo->lru);
 	INIT_LIST_HEAD(&bo->ddestroy);
 	INIT_LIST_HEAD(&bo->swap);
@@ -1082,7 +1101,7 @@ int ttm_buffer_object_init(struct ttm_bo_device *bdev,
 	bo->seq_valid = false;
 	bo->persistant_swap_storage = persistant_swap_storage;
 	bo->acc_size = acc_size;
-	atomic_inc(&bo->glob->bo_count);
+//FIXME	atomic_inc(&bo->glob->bo_count);
 
 	ret = ttm_bo_check_placement(bo, flags, 0ULL);
 	if (unlikely(ret != 0))
@@ -1121,6 +1140,7 @@ out_err:
 }
 EXPORT_SYMBOL(ttm_buffer_object_init);
 
+#if !defined(__AROS__)
 static inline size_t ttm_bo_size(struct ttm_bo_global *glob,
 				 unsigned long num_pages)
 {
@@ -1166,15 +1186,16 @@ int ttm_buffer_object_create(struct ttm_bo_device *bdev,
 
 	return ret;
 }
+#endif
 
 static int ttm_bo_leave_list(struct ttm_buffer_object *bo,
 			     uint32_t mem_type, bool allow_errors)
 {
 	int ret;
 
-	spin_lock(&bo->lock);
+//FIXME	spin_lock(&bo->lock);
 	ret = ttm_bo_wait(bo, false, false, false);
-	spin_unlock(&bo->lock);
+//FIXME	spin_unlock(&bo->lock);
 
 	if (ret && allow_errors)
 		goto out;
@@ -1212,16 +1233,16 @@ static int ttm_bo_force_list_clean(struct ttm_bo_device *bdev,
 
 	while (!list_empty(head)) {
 		entry = list_first_entry(head, struct ttm_buffer_object, lru);
-		kref_get(&entry->list_kref);
+//FIXME		kref_get(&entry->list_kref);
 		ret = ttm_bo_reserve_locked(entry, false, false, false, 0);
 		put_count = ttm_bo_del_from_lru(entry);
 		spin_unlock(&glob->lru_lock);
-		while (put_count--)
-			kref_put(&entry->list_kref, ttm_bo_ref_bug);
+//FIXME		while (put_count--)
+//FIXME			kref_put(&entry->list_kref, ttm_bo_ref_bug);
 		BUG_ON(ret);
 		ret = ttm_bo_leave_list(entry, mem_type, allow_errors);
 		ttm_bo_unreserve(entry);
-		kref_put(&entry->list_kref, ttm_bo_release_list);
+//FIXME		kref_put(&entry->list_kref, ttm_bo_release_list);
 		spin_lock(&glob->lru_lock);
 	}
 
@@ -1268,6 +1289,7 @@ int ttm_bo_clean_mm(struct ttm_bo_device *bdev, unsigned mem_type)
 }
 EXPORT_SYMBOL(ttm_bo_clean_mm);
 
+#if !defined(__AROS__)
 int ttm_bo_evict_mm(struct ttm_bo_device *bdev, unsigned mem_type)
 {
 	struct ttm_mem_type_manager *man = &bdev->man[mem_type];
@@ -1355,6 +1377,7 @@ void ttm_bo_global_release(struct ttm_global_reference *ref)
 	kobject_put(&glob->kobj);
 }
 EXPORT_SYMBOL(ttm_bo_global_release);
+#endif
 
 int ttm_bo_global_init(struct ttm_global_reference *ref)
 {
@@ -1366,7 +1389,11 @@ int ttm_bo_global_init(struct ttm_global_reference *ref)
 	mutex_init(&glob->device_list_mutex);
 	spin_lock_init(&glob->lru_lock);
 	glob->mem_glob = bo_ref->mem_glob;
+#if !defined(__AROS__)
 	glob->dummy_read_page = alloc_page(__GFP_ZERO | GFP_DMA32);
+#else
+    glob->dummy_read_page = my_create_page();
+#endif
 
 	if (unlikely(glob->dummy_read_page == NULL)) {
 		ret = -ENOMEM;
@@ -1391,12 +1418,12 @@ int ttm_bo_global_init(struct ttm_global_reference *ref)
 	glob->ttm_bo_size = glob->ttm_bo_extra_size +
 		ttm_round_pot(sizeof(struct ttm_buffer_object));
 
-	atomic_set(&glob->bo_count, 0);
+//FIXME	atomic_set(&glob->bo_count, 0);
 
-	kobject_init(&glob->kobj, &ttm_bo_glob_kobj_type);
-	ret = kobject_add(&glob->kobj, ttm_get_kobj(), "buffer_objects");
-	if (unlikely(ret != 0))
-		kobject_put(&glob->kobj);
+//FIXME	kobject_init(&glob->kobj, &ttm_bo_glob_kobj_type);
+//FIXME	ret = kobject_add(&glob->kobj, ttm_get_kobj(), "buffer_objects");
+//FIXME	if (unlikely(ret != 0))
+//FIXME		kobject_put(&glob->kobj);
 	return ret;
 out_no_shrink:
 	__free_page(glob->dummy_read_page);
@@ -1406,7 +1433,7 @@ out_no_drp:
 }
 EXPORT_SYMBOL(ttm_bo_global_init);
 
-
+#if !defined(__AROS__)
 int ttm_bo_device_release(struct ttm_bo_device *bdev)
 {
 	int ret = 0;
@@ -1464,8 +1491,7 @@ int ttm_bo_device_init(struct ttm_bo_device *bdev,
 {
 	int ret = -EINVAL;
 
-#if !defined(__AROS__)
-	rwlock_init(&bdev->vm_lock);
+//FIXME	rwlock_init(&bdev->vm_lock);
 	bdev->driver = driver;
 
 	memset(bdev->man, 0, sizeof(bdev->man));
@@ -1478,12 +1504,12 @@ int ttm_bo_device_init(struct ttm_bo_device *bdev,
 	if (unlikely(ret != 0))
 		goto out_no_sys;
 
-	bdev->addr_space_rb = RB_ROOT;
+//FIXME	bdev->addr_space_rb = RB_ROOT;
 	ret = drm_mm_init(&bdev->addr_space_mm, file_page_offset, 0x10000000);
 	if (unlikely(ret != 0))
 		goto out_no_addr_mm;
 
-	INIT_DELAYED_WORK(&bdev->wq, ttm_bo_delayed_workqueue);
+//FIXME	INIT_DELAYED_WORK(&bdev->wq, ttm_bo_delayed_workqueue);
 	bdev->nice_mode = true;
 	INIT_LIST_HEAD(&bdev->ddestroy);
 	bdev->dev_mapping = NULL;
@@ -1499,18 +1525,9 @@ out_no_addr_mm:
 	ttm_bo_clean_mm(bdev, 0);
 out_no_sys:
 	return ret;
-#else
-    bdev->driver = driver;
-
-    memset(bdev->man, 0, sizeof(bdev->man));
-    
-    bug("ttm_bo_device_init - MISSING IMPLEMENTATION\n");
-    return 0;
-#endif
 }
 EXPORT_SYMBOL(ttm_bo_device_init);
 
-#if !defined(__AROS__)
 /*
  * buffer object vm functions.
  */
@@ -1532,6 +1549,7 @@ bool ttm_mem_reg_is_pci(struct ttm_bo_device *bdev, struct ttm_mem_reg *mem)
 	return true;
 }
 
+#if !defined(__AROS__)
 int ttm_bo_pci_offset(struct ttm_bo_device *bdev,
 		      struct ttm_mem_reg *mem,
 		      unsigned long *bus_base,
@@ -1564,9 +1582,11 @@ void ttm_bo_unmap_virtual(struct ttm_buffer_object *bo)
 	unmap_mapping_range(bdev->dev_mapping, offset, holelen, 1);
 }
 EXPORT_SYMBOL(ttm_bo_unmap_virtual);
+#endif
 
 static void ttm_bo_vm_insert_rb(struct ttm_buffer_object *bo)
 {
+#if !defined(__AROS__)
 	struct ttm_bo_device *bdev = bo->bdev;
 	struct rb_node **cur = &bdev->addr_space_rb.rb_node;
 	struct rb_node *parent = NULL;
@@ -1588,7 +1608,11 @@ static void ttm_bo_vm_insert_rb(struct ttm_buffer_object *bo)
 
 	rb_link_node(&bo->vm_rb, parent, cur);
 	rb_insert_color(&bo->vm_rb, &bdev->addr_space_rb);
+#else
+IMPLEMENT("\n");
+#endif
 }
+
 
 /**
  * ttm_bo_setup_vm:
@@ -1611,7 +1635,7 @@ retry_pre_get:
 	if (unlikely(ret != 0))
 		return ret;
 
-	write_lock(&bdev->vm_lock);
+//FIXME	write_lock(&bdev->vm_lock);
 	bo->vm_node = drm_mm_search_free(&bdev->addr_space_mm,
 					 bo->mem.num_pages, 0, 0);
 
@@ -1624,17 +1648,17 @@ retry_pre_get:
 					      bo->mem.num_pages, 0);
 
 	if (unlikely(bo->vm_node == NULL)) {
-		write_unlock(&bdev->vm_lock);
+//FIXME		write_unlock(&bdev->vm_lock);
 		goto retry_pre_get;
 	}
 
 	ttm_bo_vm_insert_rb(bo);
-	write_unlock(&bdev->vm_lock);
+//FIXME	write_unlock(&bdev->vm_lock);
 	bo->addr_space_offset = ((uint64_t) bo->vm_node->start) << PAGE_SHIFT;
 
 	return 0;
 out_unlock:
-	write_unlock(&bdev->vm_lock);
+//FIXME	write_unlock(&bdev->vm_lock);
 	return ret;
 }
 
@@ -1655,9 +1679,9 @@ int ttm_bo_wait(struct ttm_buffer_object *bo,
 			void *tmp_obj = bo->sync_obj;
 			bo->sync_obj = NULL;
 			clear_bit(TTM_BO_PRIV_FLAG_MOVING, &bo->priv_flags);
-			spin_unlock(&bo->lock);
+//FIXME			spin_unlock(&bo->lock);
 			driver->sync_obj_unref(&tmp_obj);
-			spin_lock(&bo->lock);
+//FIXME			spin_lock(&bo->lock);
 			continue;
 		}
 
@@ -1666,35 +1690,36 @@ int ttm_bo_wait(struct ttm_buffer_object *bo,
 
 		sync_obj = driver->sync_obj_ref(bo->sync_obj);
 		sync_obj_arg = bo->sync_obj_arg;
-		spin_unlock(&bo->lock);
+//FIXME		spin_unlock(&bo->lock);
 		ret = driver->sync_obj_wait(sync_obj, sync_obj_arg,
 					    lazy, interruptible);
 		if (unlikely(ret != 0)) {
 			driver->sync_obj_unref(&sync_obj);
-			spin_lock(&bo->lock);
+//FIXME			spin_lock(&bo->lock);
 			return ret;
 		}
-		spin_lock(&bo->lock);
+//FIXME		spin_lock(&bo->lock);
 		if (likely(bo->sync_obj == sync_obj &&
 			   bo->sync_obj_arg == sync_obj_arg)) {
 			void *tmp_obj = bo->sync_obj;
 			bo->sync_obj = NULL;
 			clear_bit(TTM_BO_PRIV_FLAG_MOVING,
 				  &bo->priv_flags);
-			spin_unlock(&bo->lock);
+//FIXME			spin_unlock(&bo->lock);
 			driver->sync_obj_unref(&sync_obj);
 			driver->sync_obj_unref(&tmp_obj);
-			spin_lock(&bo->lock);
+//FIXME			spin_lock(&bo->lock);
 		} else {
-			spin_unlock(&bo->lock);
+//FIXME			spin_unlock(&bo->lock);
 			driver->sync_obj_unref(&sync_obj);
-			spin_lock(&bo->lock);
+//FIXME			spin_lock(&bo->lock);
 		}
 	}
 	return 0;
 }
 EXPORT_SYMBOL(ttm_bo_wait);
 
+#if !defined(__AROS__)
 void ttm_bo_unblock_reservation(struct ttm_buffer_object *bo)
 {
 	atomic_set(&bo->reserved, 0);

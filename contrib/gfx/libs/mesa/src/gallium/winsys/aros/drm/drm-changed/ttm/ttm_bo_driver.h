@@ -164,6 +164,9 @@ struct ttm_tt {
 	long first_himem_page;
 	long last_lomem_page;
 	uint32_t page_flags;
+#if defined(__AROS__)
+    APTR allocated_buffer;
+#endif
 	unsigned long num_pages;
 	struct ttm_bo_global *glob;
 	struct ttm_backend *be;
@@ -406,7 +409,7 @@ struct ttm_bo_global {
 	struct ttm_mem_shrink shrink;
 	size_t ttm_bo_extra_size;
 	size_t ttm_bo_size;
-//FIXME	struct mutex device_list_mutex;
+	struct mutex device_list_mutex;
 	spinlock_t lru_lock;
 
 	/**

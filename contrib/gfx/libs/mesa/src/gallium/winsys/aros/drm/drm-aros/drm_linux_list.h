@@ -91,3 +91,6 @@ static inline void list_del_init(struct list_head *entry)
     list_del(entry);
     INIT_LIST_HEAD(entry);
 }
+
+#define list_first_entry(ptr, type, member) \
+    list_entry((ptr)->next, type, member)
