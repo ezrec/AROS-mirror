@@ -27,10 +27,16 @@
 #define MUIM_BrowserWindow_OpenURLInActiveTab (MUIB_BrowserWindow  | 0x00000000)
 struct  MUIP_BrowserWindow_OpenURLInActiveTab {STACKED ULONG MethodID; STACKED STRPTR url;};
 #define MUIM_BrowserWindow_OpenNewTab          (MUIB_BrowserWindow  | 0x00000001)
+struct  MUIP_BrowserWindow_OpenNewTab {STACKED ULONG MethodID; STACKED ULONG mode;};
 #define MUIM_BrowserWindow_CloseActiveTab      (MUIB_BrowserWindow  | 0x00000002)
 #define MUIM_BrowserWindow_Bookmark            (MUIB_BrowserWindow  | 0x00000003)
 #define MUIM_BrowserWindow_Find                (MUIB_BrowserWindow  | 0x00000004)
 #define MUIM_BrowserWindow_FindNext            (MUIB_BrowserWindow  | 0x00000005)
+
+/*** Constants **************************************************************/
+#define MUIV_BrowserWindow_BackgroundTab       (MUIB_BrowserWindow  | 0x00000000)
+#define MUIV_BrowserWindow_ForegroundTab       (MUIB_BrowserWindow  | 0x00000001)
+
 /*** Variables **************************************************************/
 extern struct MUI_CustomClass *BrowserWindow_CLASS;
 

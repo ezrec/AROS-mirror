@@ -54,7 +54,7 @@ static IPTR OpenNewFunc(struct Hook *hook, Object *sender, void *data)
     if(spec == NULL)
     {
 	// data is null - open a new browser tab
-	newWebView = (Object*) DoMethod(_win(sender), MUIM_BrowserWindow_OpenNewTab);
+	newWebView = (Object*) DoMethod(_win(sender), MUIM_BrowserWindow_OpenNewTab, MUIV_BrowserWindow_BackgroundTab);
     }
     else
     {
@@ -596,12 +596,12 @@ IPTR BrowserWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 
     /* Open new tab */
     DoMethod(menunewtab, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
-	    (IPTR) self, 1,
-	    MUIM_BrowserWindow_OpenNewTab);
+	    (IPTR) self, 2,
+	    MUIM_BrowserWindow_OpenNewTab, MUIV_BrowserWindow_ForegroundTab);
 
     DoMethod(self, MUIM_Notify, MUIA_Window_InputEvent, "control t",
-	    (IPTR) self, 1,
-	    MUIM_BrowserWindow_OpenNewTab);
+	    (IPTR) self, 2,
+	    MUIM_BrowserWindow_OpenNewTab, MUIV_BrowserWindow_ForegroundTab);
 
     /* Bookmark tab */
     DoMethod(menubookmarktab, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
@@ -895,7 +895,7 @@ IPTR BrowserWindow__MUIM_BrowserWindow_OpenURLInActiveTab(Class *cl, Object *obj
     return 0;
 }
 
-IPTR BrowserWindow__MUIM_BrowserWindow_OpenNewTab(Class *cl, Object *obj, Msg msg)
+IPTR BrowserWindow__MUIM_BrowserWindow_OpenNewTab(Class *cl, Object *obj, struct MUIP_BrowserWindow_OpenNewTab *msg)
 {
     struct BrowserWindow_DATA *data = INST_DATA(cl, obj);
     
@@ -921,6 +921,15 @@ IPTR BrowserWindow__MUIM_BrowserWindow_OpenNewTab(Class *cl, Object *obj, Msg ms
     DoMethod(newWebView, MUIM_Notify, MUIA_WebView_Title, MUIV_EveryTime,
 	     (IPTR) newTab, 3,
 	     MUIM_Set, MUIA_BrowserTab_Title, MUIV_TriggerValue);
+    
+    if(msg->mode == MUIV_BrowserWindow_ForegroundTab)
+    {
+	struct List *children = (struct List*) XGET(data->tabbed, MUIA_Group_ChildList);
+	ULONG childNum;
+	ListLength(children,childNum);
+	set(data->tabs, MUIA_Tabs_ActiveTab, childNum - 1);
+	DoMethod(_app(obj), MUIM_Application_PushMethod, obj, 3, MUIM_Set, MUIA_Window_ActiveObject, data->urlString);
+    }
     
     return (IPTR) newWebView;
 }
@@ -992,7 +1001,7 @@ __ZUNE_CUSTOMCLASS_METHOD(BrowserWindow__OM_DISPOSE, OM_DISPOSE, Msg);
 __ZUNE_CUSTOMCLASS_METHOD(BrowserWindow__OM_SET, OM_SET, struct opSet*);
 __ZUNE_CUSTOMCLASS_METHOD(BrowserWindow__OM_GET, OM_GET, struct opGet*);
 __ZUNE_CUSTOMCLASS_METHOD(BrowserWindow__MUIM_BrowserWindow_OpenURLInActiveTab, MUIM_BrowserWindow_OpenURLInActiveTab, struct MUIP_BrowserWindow_OpenURLInActiveTab*);
-__ZUNE_CUSTOMCLASS_METHOD(BrowserWindow__MUIM_BrowserWindow_OpenNewTab, MUIM_BrowserWindow_OpenNewTab, Msg);
+__ZUNE_CUSTOMCLASS_METHOD(BrowserWindow__MUIM_BrowserWindow_OpenNewTab, MUIM_BrowserWindow_OpenNewTab, struct MUIP_BrowserWindow_OpenNewTab*);
 __ZUNE_CUSTOMCLASS_METHOD(BrowserWindow__MUIM_BrowserWindow_CloseActiveTab, MUIM_BrowserWindow_CloseActiveTab, Msg);
 __ZUNE_CUSTOMCLASS_METHOD(BrowserWindow__MUIM_BrowserWindow_Bookmark, MUIM_BrowserWindow_Bookmark, Msg);
 __ZUNE_CUSTOMCLASS_METHOD(BrowserWindow__MUIM_BrowserWindow_Find, MUIM_BrowserWindow_Find, Msg);

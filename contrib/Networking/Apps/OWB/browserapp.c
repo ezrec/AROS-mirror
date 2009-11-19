@@ -231,8 +231,8 @@ IPTR BrowserApp__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 
     /* Open tab menu item */
     DoMethod(openTabMenuItem, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
-	    (IPTR) self, (IPTR) 3,
-	    MUIM_CallHook, &data->forwardCallToActiveWindowHook, MUIM_BrowserWindow_OpenNewTab);
+	    (IPTR) self, (IPTR) 4,
+	    MUIM_CallHook, &data->forwardCallToActiveWindowHook, MUIM_BrowserWindow_OpenNewTab, MUIV_BrowserWindow_ForegroundTab);
 
     /* Open window menu item */
     DoMethod(openWindowMenuItem, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
