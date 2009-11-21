@@ -8,7 +8,7 @@ ARCHBASE := OWB-r1097
 OWB_SOURCE := $(PORTSDIR)/OWB/$(ARCHBASE)
 OWB_BUILD_DIR := $(GENDIR)/$(CURDIR)
 
-#MM- aros-tcpip-apps-owb-libs : contrib-fontconfig contrib-networking-curl development-SDL development-SDL_gfx-quick contrib-sqlite contrib-icu4c
+#MM- aros-tcpip-apps-owb-libs : contrib-fontconfig contrib-networking-curl development-SDL development-SDL_gfx-quick contrib-sqlite contrib-icu4c contrib-libxslt
 #MM- aros-tcpip-apps-owb-webview : aros-tcpip-apps-owb-libs aros-tcpip-apps-owb-webview-fetch aros-tcpip-apps-owb-webview-setup aros-tcpip-apps-owb-webview-build aros-tcpip-apps-owb-webview-install
 
 #MM
@@ -24,6 +24,9 @@ aros-tcpip-apps-owb-webview-setup :
 	cd $(OWB_BUILD_DIR); \
 	cmake \
 	-DENABLE_DATABASE:BOOL=ON \
+	-DENABLE_XPATH:BOOL=ON \
+	-DENABLE_XSLT:BOOL=ON \
+	-DENABLE_INSPECTOR:BOOL=ON \
 	-DUSE_I18N:STRING=ICU \
 	-DCMAKE_MODULE_PATH=$(SRCDIR)/$(CURDIR)/cmake \
 	-DCMAKE_SYSTEM_NAME=AROS \
