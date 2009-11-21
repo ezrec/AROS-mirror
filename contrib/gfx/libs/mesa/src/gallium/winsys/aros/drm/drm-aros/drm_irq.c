@@ -28,12 +28,12 @@ int drm_irq_install(struct drm_device *dev)
     IPTR INTLine = 0;
     int retval = -EINVAL;
     
-    ObtainSemaphore(&dev->struct_semaphore);
+    ObtainSemaphore(&dev->struct_mutex.semaphore);
     if (dev->irq_enabled) {
         return -EBUSY;
     }
     dev->irq_enabled = 1;
-    ReleaseSemaphore(&dev->struct_semaphore);
+    ReleaseSemaphore(&dev->struct_mutex.semaphore);
     
     if (dev->driver->irq_preinstall)
         dev->driver->irq_preinstall(dev);
@@ -69,9 +69,9 @@ int drm_irq_install(struct drm_device *dev)
 
     if (retval != 0)
     {
-        ObtainSemaphore(&dev->struct_semaphore);
+        ObtainSemaphore(&dev->struct_mutex.semaphore);
         dev->irq_enabled = 0;
-        ReleaseSemaphore(&dev->struct_semaphore);
+        ReleaseSemaphore(&dev->struct_mutex.semaphore);
         return retval;
     }
     
@@ -80,9 +80,9 @@ int drm_irq_install(struct drm_device *dev)
         retval = dev->driver->irq_postinstall(dev);
         if (retval < 0)
         {
-            ObtainSemaphore(&dev->struct_semaphore);
+            ObtainSemaphore(&dev->struct_mutex.semaphore);
             dev->irq_enabled = 0;
-            ReleaseSemaphore(&dev->struct_semaphore);            
+            ReleaseSemaphore(&dev->struct_mutex.semaphore);            
         }
     }
     
@@ -99,10 +99,10 @@ int drm_irq_uninstall(struct drm_device *dev)
     struct OOP_Object *o = NULL;
     int retval = -EINVAL;
 
-    ObtainSemaphore(&dev->struct_semaphore);
+    ObtainSemaphore(&dev->struct_mutex.semaphore);
     irq_enabled = dev->irq_enabled;
     dev->irq_enabled = 0;
-    ReleaseSemaphore(&dev->struct_semaphore);
+    ReleaseSemaphore(&dev->struct_mutex.semaphore);
 
     if (!irq_enabled)
         return retval;

@@ -384,7 +384,6 @@ nouveau_channel_owner(struct drm_device *dev, struct drm_file *file_priv,
 	return (dev_priv->fifos[channel]->file_priv == file_priv);
 }
 
-#if !defined(__AROS__)
 /***********************************
  * ioctls wrapping the functions
  ***********************************/
@@ -469,4 +468,3 @@ struct drm_ioctl_desc nouveau_ioctls[] = {
 };
 
 int nouveau_max_ioctl = DRM_ARRAY_SIZE(nouveau_ioctls);
-#endif /* !defined(__AROS__) */

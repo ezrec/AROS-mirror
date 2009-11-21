@@ -98,14 +98,21 @@ struct Library          *OOPBase;
 /* FIXME: Implementation for other architextures */
 #endif
 
+
+#define DRM_COPY_FROM_USER(to, from, size)   copy_from_user(to, from, size)
+#define DRM_COPY_TO_USER(to , from, size)    copy_to_user(to, from, size)
+#define DRM_ARRAY_SIZE(x)   ARRAY_SIZE(x)
 #define DRM_UDELAY(d)       udelay(d)
 #define DRM_CURRENTPID      1
 #define DRM_IRQ_ARGS        void *arg
 typedef void                irqreturn_t;
+#define IRQ_NONE            /* nothing */
+#define IRQ_HANDLED         /* nothing */
 
 struct drm_file;
 struct drm_device;
 struct file;
+struct drm_gem_object;
 
 typedef int drm_ioctl_t(struct drm_device *dev, void *data,
             struct drm_file *file_priv);
@@ -122,8 +129,15 @@ struct drm_ioctl_desc
     drm_ioctl_t *func;
 };
 
-/* Memory management */
+/*
+ * Creates a driver or general drm_ioctl_desc array entry for the given
+ * ioctl, for use by drm_ioctl().
+ */
+#define DRM_IOCTL_NR(n)     ((n) & 0xff)
+#define DRM_IOCTL_DEF(ioctl, _func, _flags) \
+    [DRM_IOCTL_NR(ioctl)] = {.cmd = ioctl, .func = _func, .flags = _flags}
 
+/* Memory management */
 struct drm_local_map
 {
     resource_size_t offset;         /* Requested physical address (0 for SAREA)*/
@@ -192,6 +206,9 @@ struct drm_driver
     void        (*irq_preinstall)(struct drm_device *);
     int         (*irq_postinstall)(struct drm_device *);
     void        (*irq_uninstall)(struct drm_device *);
+    
+    /* GEM */
+    int         (*gem_init_object) (struct drm_gem_object *obj);
 
     int                     version_patchlevel;
     unsigned int            driver_features;
@@ -240,11 +257,26 @@ struct drm_file
 
 struct drm_gem_object 
 {
-    struct file *filp;    
+    struct file *filp;
+    struct drm_device *dev;
+    
+    /*
+     * Size of the object, in bytes.  Immutable over the object's
+     * lifetime.
+     */
+    size_t size;
+    
     void *driver_private;
 };
 
 static __inline__ int drm_device_is_agp(struct drm_device *dev)
+{
+    /* FIXME: Implement */
+    DRM_IMPL("\n");
+    return 0;
+}
+
+static __inline__ int drm_device_is_pcie(struct drm_device *dev)
 {
     /* FIXME: Implement */
     DRM_IMPL("\n");
@@ -296,6 +328,26 @@ drm_gem_object_unreference(struct drm_gem_object *obj)
 
 //FIXME: kref_put(&obj->refcount, drm_gem_object_free);
 }
+int drm_gem_handle_create(struct drm_file *file_priv,
+              struct drm_gem_object *obj,
+              u32 *handlep);
+struct drm_gem_object *drm_gem_object_lookup(struct drm_device *dev,
+                         struct drm_file *filp,
+                         u32 handle);
+static inline void
+drm_gem_object_handle_unreference(struct drm_gem_object *obj)
+{
+    if (obj == NULL)
+        return;
+
+    /*
+     * Must bump handle count first as this may be the last
+     * ref, in which case the object would disappear before we
+     * checked for a name
+     */
+//FIXME    kref_put(&obj->handlecount, drm_gem_object_handle_free);
+    drm_gem_object_unreference(obj);
+}
 
 /* MTRR */
 #define DRM_MTRR_WC     0
@@ -329,11 +381,11 @@ void        drm_aros_dma_unmap_buf(dma_addr_t dma_address, IPTR size);
 
 // 
 
-// #define IRQ_HANDLED         /* nothing */
-// #define IRQ_NONE            /* nothing */
+
+
 // 
 
-// #define DRM_ARRAY_SIZE(x) ARRAY_SIZE(x)
+
 // 
 //    
 // #define DRM_MEM_DRIVER     2
@@ -345,12 +397,7 @@ void        drm_aros_dma_unmap_buf(dma_addr_t dma_address, IPTR size);
 
 
 
-// /**
-//  * Creates a driver or general drm_ioctl_desc array entry for the given
-//  * ioctl, for use by drm_ioctl().
-//  */
-// #define DRM_IOCTL_NR(n)     ((n) & 0xff)
-// #define DRM_IOCTL_DEF(ioctl, func, flags) [DRM_IOCTL_NR(ioctl)] = {ioctl, func, flags}
+
 
 /* */
 // 
@@ -427,12 +474,7 @@ void        drm_aros_dma_unmap_buf(dma_addr_t dma_address, IPTR size);
 // 
 
 // 
-// static __inline__ int drm_device_is_pcie(struct drm_device *dev)
-// {
-//     /* FIXME: Implement */
-//     DRM_IMPL("\n");
-//     return 0;
-// }
+
 // 
 
 #endif

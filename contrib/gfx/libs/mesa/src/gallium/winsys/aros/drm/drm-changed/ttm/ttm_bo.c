@@ -224,6 +224,7 @@ static void ttm_bo_ref_bug(struct kref *list_kref)
 {
 	BUG();
 }
+#endif
 
 int ttm_bo_reserve(struct ttm_buffer_object *bo,
 		   bool interruptible,
@@ -240,12 +241,11 @@ int ttm_bo_reserve(struct ttm_buffer_object *bo,
 		put_count = ttm_bo_del_from_lru(bo);
 	spin_unlock(&glob->lru_lock);
 
-	while (put_count--)
-		kref_put(&bo->list_kref, ttm_bo_ref_bug);
+//FIXME	while (put_count--)
+//FIXME		kref_put(&bo->list_kref, ttm_bo_ref_bug);
 
 	return ret;
 }
-#endif
 
 void ttm_bo_unreserve(struct ttm_buffer_object *bo)
 {
@@ -1549,7 +1549,6 @@ bool ttm_mem_reg_is_pci(struct ttm_bo_device *bdev, struct ttm_mem_reg *mem)
 	return true;
 }
 
-#if !defined(__AROS__)
 int ttm_bo_pci_offset(struct ttm_bo_device *bdev,
 		      struct ttm_mem_reg *mem,
 		      unsigned long *bus_base,
@@ -1572,6 +1571,7 @@ int ttm_bo_pci_offset(struct ttm_bo_device *bdev,
 
 void ttm_bo_unmap_virtual(struct ttm_buffer_object *bo)
 {
+#if !defined(__AROS__)
 	struct ttm_bo_device *bdev = bo->bdev;
 	loff_t offset = (loff_t) bo->addr_space_offset;
 	loff_t holelen = ((loff_t) bo->mem.num_pages) << PAGE_SHIFT;
@@ -1580,9 +1580,12 @@ void ttm_bo_unmap_virtual(struct ttm_buffer_object *bo)
 		return;
 
 	unmap_mapping_range(bdev->dev_mapping, offset, holelen, 1);
+#else
+IMPLEMENT("\n");
+#warning IMPLEMENT ttm_bo_unmap_virtual
+#endif
 }
 EXPORT_SYMBOL(ttm_bo_unmap_virtual);
-#endif
 
 static void ttm_bo_vm_insert_rb(struct ttm_buffer_object *bo)
 {

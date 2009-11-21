@@ -28,12 +28,13 @@
 #ifndef TTM_MEMORY_H
 #define TTM_MEMORY_H
 
-//FIXME:#include <linux/workqueue.h>
-//FIXME:#include <linux/spinlock.h>
-//FIXME:#include <linux/wait.h>
-//FIXME:#include <linux/errno.h>
-//FIXME:#include <linux/kobject.h>
-#if defined(__AROS__)
+#if !defined(__AROS__)
+#include <linux/workqueue.h>
+#include <linux/spinlock.h>
+#include <linux/wait.h>
+#include <linux/errno.h>
+#include <linux/kobject.h>
+#else
 #include "drm_compat_funcs.h"
 #endif
 
@@ -82,7 +83,7 @@ struct ttm_mem_global {
 //FIXME:	struct workqueue_struct *swap_queue;
 //FIXME:	struct work_struct work;
 //FIXME:	wait_queue_head_t queue;
-//FIXME:	spinlock_t lock;
+	spinlock_t lock;
 	struct ttm_mem_zone *zones[TTM_MEM_MAX_ZONES];
 	unsigned int num_zones;
 	struct ttm_mem_zone *zone_kernel;

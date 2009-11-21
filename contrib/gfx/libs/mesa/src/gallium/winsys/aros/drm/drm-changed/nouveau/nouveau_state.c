@@ -511,6 +511,7 @@ void nouveau_preclose(struct drm_device *dev, struct drm_file *file_priv)
 {
 	nouveau_channel_cleanup(dev, file_priv);
 }
+#endif /* !defined(__AROS__) */
 
 /* first module load, setup the mmio/fb mapping */
 /* KMS: we need mmio at load time, not when the first drm client opens. */
@@ -518,7 +519,6 @@ int nouveau_firstopen(struct drm_device *dev)
 {
 	return 0;
 }
-#endif /* !defined(__AROS__) */
 
 /* if we have an OF card, copy vbios to RAMIN */
 static void nouveau_OF_copy_vbios_to_ramin(struct drm_device *dev)
@@ -726,6 +726,7 @@ int nouveau_unload(struct drm_device *dev)
 	dev->dev_private = NULL;
 	return 0;
 }
+#endif
 
 int
 nouveau_ioctl_card_init(struct drm_device *dev, void *data,
@@ -808,7 +809,6 @@ nouveau_ioctl_setparam(struct drm_device *dev, void *data,
 
 	return 0;
 }
-#endif
 
 /* Wait until (value(reg) & mask) == val, up until timeout has hit */
 bool nouveau_wait_until(struct drm_device *dev, uint64_t timeout,

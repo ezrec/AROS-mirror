@@ -26,6 +26,8 @@
 #define dma_addr_t                  IPTR
 /* TODO: Implement spinlocks in busy-cpu way? */
 #define spinlock_t                  struct SignalSemaphore
+/* FIXME: atomic_t does not really deliver atomic operations */
+#define atomic_t                    int
 
 #undef offsetof
 #define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)

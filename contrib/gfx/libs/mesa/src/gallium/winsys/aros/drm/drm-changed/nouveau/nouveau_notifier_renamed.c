@@ -176,7 +176,6 @@ nouveau_notifier_offset(struct nouveau_gpuobj *nobj, uint32_t *poffset)
 	return 0;
 }
 
-#if !defined(__AROS__)
 int
 nouveau_ioctl_notifier_alloc(struct drm_device *dev, void *data,
 			     struct drm_file *file_priv)
@@ -194,5 +193,4 @@ nouveau_ioctl_notifier_alloc(struct drm_device *dev, void *data,
 
 	return 0;
 }
-#endif
 

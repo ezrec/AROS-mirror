@@ -61,6 +61,19 @@ unsigned int ioread8(void * addr)
     return 0xff;
 }
 
+/* HACK: This a mighty hack :( */
+#include <proto/oop.h>
+
+APTR drm_aros_pci_ioremap(OOP_Object *driver, APTR buf, IPTR size);
+extern OOP_Object * hack_pci_driver_hack;
+
+void  *ioremap_nocache(resource_size_t offset, unsigned long size)
+{
+    return drm_aros_pci_ioremap(hack_pci_driver_hack, offset, size);
+}
+/* HACK ends */
+
+
 /* FIXME:These functions should guarantee atomic access to counter */
 void kref_init(struct kref *kref)
 {
@@ -90,6 +103,14 @@ void clear_bit(int nr, volatile void * addr)
     
     *(unsigned long*)addr &= ~mask;
 }
+
+void set_bit(int nr, volatile void *addr)
+{
+    unsigned long mask = 1 << nr;
+    
+    *(unsigned long*)addr |= mask;
+}
+
 
 /* Page handling */
 void __free_page(struct page * p)

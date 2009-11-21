@@ -33,11 +33,12 @@
 #include <linux/wait.h>
 #include <linux/mm.h>
 #include <linux/module.h>
+#endif
 
 #define TTM_MEMORY_ALLOC_RETRIES 4
 
 struct ttm_mem_zone {
-	struct kobject kobj;
+//FIXME	struct kobject kobj;
 	struct ttm_mem_global *glob;
 	const char *name;
 	uint64_t zone_mem;
@@ -47,6 +48,7 @@ struct ttm_mem_zone {
 	uint64_t used_mem;
 };
 
+#if !defined(__AROS__)
 static struct attribute ttm_mem_sys = {
 	.name = "zone_memory",
 	.mode = S_IRUGO
@@ -175,6 +177,7 @@ static void ttm_mem_global_kobj_release(struct kobject *kobj)
 static struct kobj_type ttm_mem_glob_kobj_type = {
 	.release = &ttm_mem_global_kobj_release,
 };
+#endif
 
 static bool ttm_zones_above_swap_target(struct ttm_mem_global *glob,
 					bool from_wq, uint64_t extra)
@@ -186,12 +189,16 @@ static bool ttm_zones_above_swap_target(struct ttm_mem_global *glob,
 	for (i = 0; i < glob->num_zones; ++i) {
 		zone = glob->zones[i];
 
+#if !defined(__AROS__)
 		if (from_wq)
 			target = zone->swap_limit;
 		else if (capable(CAP_SYS_ADMIN))
 			target = zone->emer_mem;
 		else
 			target = zone->max_mem;
+#else
+        target = zone->max_mem;
+#endif
 
 		target = (extra > target) ? 0ULL : target;
 
@@ -231,7 +238,7 @@ out:
 }
 
 
-
+#if !defined(__AROS__)
 static void ttm_shrink_work(struct work_struct *work)
 {
 	struct ttm_mem_global *glob =
@@ -355,53 +362,50 @@ static int ttm_mem_init_dma32_zone(struct ttm_mem_global *glob,
 
 int ttm_mem_global_init(struct ttm_mem_global *glob)
 {
-#if !defined(__AROS__)    
-	struct sysinfo si;
+//FIXME	struct sysinfo si;
 	int ret;
 	int i;
 	struct ttm_mem_zone *zone;
 
 	spin_lock_init(&glob->lock);
-	glob->swap_queue = create_singlethread_workqueue("ttm_swap");
-	INIT_WORK(&glob->work, ttm_shrink_work);
-	init_waitqueue_head(&glob->queue);
-	kobject_init(&glob->kobj, &ttm_mem_glob_kobj_type);
-	ret = kobject_add(&glob->kobj,
-			  ttm_get_kobj(),
-			  "memory_accounting");
-	if (unlikely(ret != 0)) {
-		kobject_put(&glob->kobj);
-		return ret;
-	}
+//FIXME	glob->swap_queue = create_singlethread_workqueue("ttm_swap");
+//FIXME	INIT_WORK(&glob->work, ttm_shrink_work);
+//FIXME	init_waitqueue_head(&glob->queue);
+//FIXME	kobject_init(&glob->kobj, &ttm_mem_glob_kobj_type);
+//FIXME	ret = kobject_add(&glob->kobj,
+//FIXME			  ttm_get_kobj(),
+//FIXME			  "memory_accounting");
+//FIXME	if (unlikely(ret != 0)) {
+//FIXME		kobject_put(&glob->kobj);
+//FIXME		return ret;
+//FIXME	}
 
-	si_meminfo(&si);
+//FIXME	si_meminfo(&si);
 
-	ret = ttm_mem_init_kernel_zone(glob, &si);
-	if (unlikely(ret != 0))
-		goto out_no_zone;
+//FIXME	ret = ttm_mem_init_kernel_zone(glob, &si);
+//FIXME	if (unlikely(ret != 0))
+//FIXME		goto out_no_zone;
 #ifdef CONFIG_HIGHMEM
-	ret = ttm_mem_init_highmem_zone(glob, &si);
-	if (unlikely(ret != 0))
-		goto out_no_zone;
+//FIXME	ret = ttm_mem_init_highmem_zone(glob, &si);
+//FIXME	if (unlikely(ret != 0))
+//FIXME		goto out_no_zone;
 #else
-	ret = ttm_mem_init_dma32_zone(glob, &si);
-	if (unlikely(ret != 0))
-		goto out_no_zone;
+//FIXME	ret = ttm_mem_init_dma32_zone(glob, &si);
+//FIXME	if (unlikely(ret != 0))
+//FIXME		goto out_no_zone;
 #endif
-	for (i = 0; i < glob->num_zones; ++i) {
-		zone = glob->zones[i];
-		printk(KERN_INFO TTM_PFX
-		       "Zone %7s: Available graphics memory: %llu kiB.\n",
-		       zone->name, (unsigned long long) zone->max_mem >> 10);
-	}
+//FIXME	for (i = 0; i < glob->num_zones; ++i) {
+//FIXME		zone = glob->zones[i];
+//FIXME		printk(KERN_INFO TTM_PFX
+//FIXME		       "Zone %7s: Available graphics memory: %llu kiB.\n",
+//FIXME		       zone->name, (unsigned long long) zone->max_mem >> 10);
+//FIXME	}
+IMPLEMENT("Initializing zones\n");
+#warning IMPLEMENT Initializing zones
 	return 0;
 out_no_zone:
 	ttm_mem_global_release(glob);
 	return ret;
-#else
-IMPLEMENT("\n");
-return 0;
-#endif
 }
 EXPORT_SYMBOL(ttm_mem_global_init);
 
@@ -423,9 +427,11 @@ void ttm_mem_global_release(struct ttm_mem_global *glob)
 	kobject_put(&glob->kobj);
 }
 EXPORT_SYMBOL(ttm_mem_global_release);
+#endif
 
 static void ttm_check_swapping(struct ttm_mem_global *glob)
 {
+#if !defined(__AROS__)
 	bool needs_swapping = false;
 	unsigned int i;
 	struct ttm_mem_zone *zone;
@@ -443,9 +449,13 @@ static void ttm_check_swapping(struct ttm_mem_global *glob)
 
 	if (unlikely(needs_swapping))
 		(void)queue_work(glob->swap_queue, &glob->work);
-
+#else
+IMPLEMENT("\n");
+#warning IMPLEMENT ttm_check_swapping
+#endif
 }
 
+#if !defined(__AROS__)
 static void ttm_mem_global_free_zone(struct ttm_mem_global *glob,
 				     struct ttm_mem_zone *single_zone,
 				     uint64_t amount)
@@ -468,6 +478,7 @@ void ttm_mem_global_free(struct ttm_mem_global *glob,
 {
 	return ttm_mem_global_free_zone(glob, NULL, amount);
 }
+#endif
 
 static int ttm_mem_global_reserve(struct ttm_mem_global *glob,
 				  struct ttm_mem_zone *single_zone,
@@ -484,8 +495,12 @@ static int ttm_mem_global_reserve(struct ttm_mem_global *glob,
 		if (single_zone && zone != single_zone)
 			continue;
 
+#if !defined(__AROS__)
 		limit = (capable(CAP_SYS_ADMIN)) ?
 			zone->emer_mem : zone->max_mem;
+#else
+        limit = zone->max_mem;
+#endif
 
 		if (zone->used_mem > limit)
 			goto out_unlock;
@@ -564,6 +579,7 @@ int ttm_mem_global_alloc_page(struct ttm_mem_global *glob,
 					 interruptible);
 }
 
+#if !defined(__AROS__)
 void ttm_mem_global_free_page(struct ttm_mem_global *glob, struct page *page)
 {
 	struct ttm_mem_zone *zone = NULL;

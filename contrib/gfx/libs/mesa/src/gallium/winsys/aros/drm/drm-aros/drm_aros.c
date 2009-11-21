@@ -17,6 +17,11 @@
 /* FIXME: should these be global? */
 OOP_AttrBase __IHidd_PCIDev = 0;
 
+/* THIS IS A MIGHTY HACK */
+OOP_Object * hack_pci_driver_hack = NULL;
+/* THIS IS A MIGHTY HACK */
+
+
 /* List of DeviceID's of supported nvidia cards */
 static const struct NVDevice {
     UWORD VendorID, ProductID;
@@ -453,6 +458,10 @@ AROS_UFH3(void, Enumerator,
             
             OOP_GetAttr(pciDevice, aHidd_PCIDevice_Driver, (APTR)&driver);
             dev->pcidriver = driver;
+            
+            /* HACK */
+            hack_pci_driver_hack = driver;
+            /* HACK */
 
             DRM_DEBUG("Acquired pcidriver\n");
             

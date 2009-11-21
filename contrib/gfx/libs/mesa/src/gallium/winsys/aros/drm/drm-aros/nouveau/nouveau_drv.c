@@ -27,6 +27,7 @@ static struct drm_driver driver =
     .irq_uninstall = nouveau_irq_uninstall,
     .version_patchlevel = NOUVEAU_DRM_HEADER_PATCHLEVEL,
     .ioctls = nouveau_ioctls,
+    .gem_init_object = nouveau_gem_object_new,
 };
 
 void nouveau_exit(void)
