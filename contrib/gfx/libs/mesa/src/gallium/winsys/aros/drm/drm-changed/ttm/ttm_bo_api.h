@@ -187,7 +187,7 @@ struct ttm_buffer_object {
 	 * Members protected by the bo::reserved lock only when written to.
 	 */
 
-//FIXME:	atomic_t cpu_writers;
+	atomic_t cpu_writers;
 
 	/**
 	 * Members protected by the bdev::lru_lock.

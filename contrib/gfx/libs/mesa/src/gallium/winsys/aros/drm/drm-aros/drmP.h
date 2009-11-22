@@ -28,7 +28,7 @@
 #define DRMP_H
 
 #include "drm.h"
-#include "drm_compat_types.h"
+#include "drm_compat_funcs.h"
 #include "drm_redefines.h"
 
 #include <errno.h>
@@ -251,8 +251,8 @@ struct drm_crtc
 
 struct drm_file
 {
-    /* Don't remove it */
-    int dummy;
+    struct idr object_idr;
+    spinlock_t table_lock;
 };
 
 struct drm_gem_object 
@@ -320,20 +320,40 @@ void drm_core_ioremap(struct drm_local_map *map, struct drm_device *dev);
 /* GEM */
 struct drm_gem_object *drm_gem_object_alloc(struct drm_device *dev,
                         size_t size);
-static inline void
-drm_gem_object_unreference(struct drm_gem_object *obj)
-{
-    if (obj == NULL)
-        return;
-
-//FIXME: kref_put(&obj->refcount, drm_gem_object_free);
-}
 int drm_gem_handle_create(struct drm_file *file_priv,
               struct drm_gem_object *obj,
               u32 *handlep);
 struct drm_gem_object *drm_gem_object_lookup(struct drm_device *dev,
                          struct drm_file *filp,
                          u32 handle);
+
+                         
+static inline void
+drm_gem_object_reference(struct drm_gem_object *obj)
+{
+//FIXME    kref_get(&obj->refcount);
+}
+
+static inline void
+drm_gem_object_unreference(struct drm_gem_object *obj)
+{
+    if (obj == NULL)
+        return;
+
+//FIXME    kref_put(&obj->refcount, drm_gem_object_free);
+}
+
+int drm_gem_handle_create(struct drm_file *file_priv,
+              struct drm_gem_object *obj,
+              u32 *handlep);
+
+static inline void
+drm_gem_object_handle_reference(struct drm_gem_object *obj)
+{
+    drm_gem_object_reference(obj);
+//FIXME   kref_get(&obj->handlecount);
+}
+
 static inline void
 drm_gem_object_handle_unreference(struct drm_gem_object *obj)
 {

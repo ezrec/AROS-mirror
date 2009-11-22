@@ -28,7 +28,7 @@
 #include "drmP.h"
 #include "drm.h"
 #include "drm_sarea.h"
-//#include "drm_crtc_helper.h"
+//FIXME #include "drm_crtc_helper.h"
 #include "nouveau_drv.h"
 #include "nouveau_drm.h"
 #include "nv50_display.h"
@@ -464,7 +464,6 @@ DRM_IMPL("Calling drm_helper_initial_config\n");
 	return 0;
 }
 
-#if !defined(__AROS__)
 static void nouveau_card_takedown(struct drm_device *dev)
 {
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
@@ -499,7 +498,12 @@ static void nouveau_card_takedown(struct drm_device *dev)
 			drm_irq_uninstall(dev);
 
 		nouveau_gpuobj_late_takedown(dev);
+#if !defined(__AROS__)        
 		nouveau_bios_takedown(dev);
+#else
+IMPLEMENT("Calling nouveau_bios_takedown\n");
+#warning IMPLEMENT nouveau_bios_takedown
+#endif
 
 		dev_priv->init_state = NOUVEAU_CARD_INIT_DOWN;
 	}
@@ -511,7 +515,6 @@ void nouveau_preclose(struct drm_device *dev, struct drm_file *file_priv)
 {
 	nouveau_channel_cleanup(dev, file_priv);
 }
-#endif /* !defined(__AROS__) */
 
 /* first module load, setup the mmio/fb mapping */
 /* KMS: we need mmio at load time, not when the first drm client opens. */
@@ -688,7 +691,6 @@ DRM_IMPL("Calling nouveau_dsm_probe and nouveau_hybrid_setup\n");
 	return 0;
 }
 
-#if !defined(__AROS__)
 static void nouveau_close(struct drm_device *dev)
 {
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
@@ -712,21 +714,30 @@ int nouveau_unload(struct drm_device *dev)
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 
 	if (drm_core_check_feature(dev, DRIVER_MODESET)) {
+#if !defined(__AROS__)        
 		if (dev_priv->card_type >= NV_50)
 			nv50_display_destroy(dev);
 		else
 			nv04_display_destroy(dev);
+#else
+DRM_IMPL("Calling *_display_destroy\n");
+#warning IMPLEMENT Calling *_display_destroy
+#endif
 		nouveau_close(dev);
 	}
 
+#if !defined(__AROS__)
 	iounmap(dev_priv->mmio);
 	iounmap(dev_priv->ramin);
-
+#else
+    drm_aros_pci_iounmap(dev->pcidriver, dev_priv->mmio, 0x00800000);
+    drm_aros_pci_iounmap(dev->pcidriver, dev_priv->ramin, dev_priv->ramin_size);
+#endif
+    
 	kfree(dev_priv);
 	dev->dev_private = NULL;
 	return 0;
 }
-#endif
 
 int
 nouveau_ioctl_card_init(struct drm_device *dev, void *data,

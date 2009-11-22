@@ -33,8 +33,8 @@ struct list_head {
 	struct list_head *next, *prev;
 };
 
-/* Cheat, assume the list_head is at the start of the struct */
-#define list_entry(entry, type, member)	(type *)(entry)
+#define list_entry(ptr, type, member) \
+    container_of(ptr, type, member)
 
 static __inline__ void
 INIT_LIST_HEAD(struct list_head *head) {

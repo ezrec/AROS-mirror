@@ -64,6 +64,14 @@ struct mutex
     struct SignalSemaphore semaphore;
 };
 
+/* IDR handling */
+struct idr
+{
+    ULONG size;
+    ULONG occupied;
+    IPTR * pointers;
+};
+
 #include "drm_linux_list.h"
 
 #endif /* _DRM_COMPAT_TYPES_ */

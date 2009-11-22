@@ -171,6 +171,7 @@ nouveau_fence_ref(void *sync_obj)
 bool
 nouveau_fence_signalled(void *sync_obj, void *sync_arg)
 {
+#if !defined(HOSTED_BUILD)    
 	struct nouveau_fence *fence = nouveau_fence(sync_obj);
 	struct nouveau_channel *chan = fence->channel;
 	unsigned long flags;
@@ -182,12 +183,17 @@ nouveau_fence_signalled(void *sync_obj, void *sync_arg)
 	nouveau_fence_update(chan);
 	spin_unlock_irqrestore(&chan->fence.lock, flags);
 	return fence->signalled;
+#else
+    struct nouveau_fence *fence = nouveau_fence(sync_obj);
+    fence->signalled = 1;
+    return fence->signalled;
+#endif
 }
 
-#if !defined(__AROS__)
 int
 nouveau_fence_wait(void *sync_obj, void *sync_arg, bool lazy, bool intr)
 {
+#if !defined(__AROS__)
 	unsigned long timeout = jiffies + (3 * DRM_HZ);
 	int ret = 0;
 
@@ -214,8 +220,16 @@ nouveau_fence_wait(void *sync_obj, void *sync_arg, bool lazy, bool intr)
 	__set_current_state(TASK_RUNNING);
 
 	return ret;
-}
+#else
+    #warning IMPLEMENT nouveau_fence_wait
+    while (1) 
+    {
+        if (nouveau_fence_signalled(sync_obj, sync_arg))
+            break;
+    }
+    return 0;
 #endif
+}
 
 int
 nouveau_fence_flush(void *sync_obj, void *sync_arg)

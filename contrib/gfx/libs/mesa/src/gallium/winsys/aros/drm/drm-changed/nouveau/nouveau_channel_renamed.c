@@ -350,7 +350,6 @@ nouveau_channel_free(struct nouveau_channel *chan)
 	kfree(chan);
 }
 
-#if !defined(__AROS__)
 /* cleans up all the fifos from file_priv */
 void
 nouveau_channel_cleanup(struct drm_device *dev, struct drm_file *file_priv)
@@ -367,7 +366,6 @@ nouveau_channel_cleanup(struct drm_device *dev, struct drm_file *file_priv)
 			nouveau_channel_free(chan);
 	}
 }
-#endif /* !defined(__AROS__) */
 
 int
 nouveau_channel_owner(struct drm_device *dev, struct drm_file *file_priv,

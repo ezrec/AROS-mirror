@@ -69,7 +69,7 @@ extern OOP_Object * hack_pci_driver_hack;
 
 void  *ioremap_nocache(resource_size_t offset, unsigned long size)
 {
-    return drm_aros_pci_ioremap(hack_pci_driver_hack, offset, size);
+    return drm_aros_pci_ioremap(hack_pci_driver_hack, (APTR)offset, size);
 }
 /* HACK ends */
 
@@ -129,4 +129,59 @@ struct page * my_create_page()
     p->allocated_buffer = AllocVec(PAGE_SIZE + PAGE_SIZE - 1, MEMF_PUBLIC | MEMF_CLEAR);
     p->address = PAGE_ALIGN(p->allocated_buffer);
     return p;
+}
+
+/* IDR handling */
+int idr_pre_get_internal(struct idr *idp)
+{
+    if (idp->size == idp->occupied)
+    {
+        /* Create new table */
+        ULONG newsize = idp->size ? idp->size * 2 : 128;
+        IPTR * newtab = AllocVec(newsize * sizeof(IPTR), MEMF_PUBLIC | MEMF_CLEAR);
+        
+        if (newtab == NULL)
+            return 0;
+        
+        
+        if (idp->pointers)
+        {
+            /* Copy old table into new */
+            CopyMem(idp->pointers, newtab, idp->size);
+            
+            /* Release old table */
+            FreeVec(idp->pointers);
+        }
+        
+        idp->pointers = newtab;
+        idp->size = newsize;
+    }
+    
+    return 1;
+}
+
+int idr_get_new_above(struct idr *idp, void *ptr, int starting_id, int *id)
+{
+    int i = starting_id;
+
+    for(;i < idp->size;i++)
+    {
+        if (idp->pointers[i] == (IPTR)NULL)
+        {
+            *id = i;
+            idp->pointers[i] = (IPTR)ptr;
+            idp->occupied++;
+            return 0;
+        }
+    }
+    
+    return -EAGAIN;
+}
+
+void *idr_find(struct idr *idp, int id)
+{
+    if ((id < idp->size) && (id >= 0))
+        return (APTR)idp->pointers[id];
+    else
+        return NULL;
 }

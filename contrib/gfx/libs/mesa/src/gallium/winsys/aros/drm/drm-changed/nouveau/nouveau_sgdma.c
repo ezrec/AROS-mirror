@@ -289,7 +289,6 @@ nouveau_sgdma_init(struct drm_device *dev)
 	return 0;
 }
 
-#if !defined(__AROS__)
 void
 nouveau_sgdma_takedown(struct drm_device *dev)
 {
@@ -298,7 +297,9 @@ nouveau_sgdma_takedown(struct drm_device *dev)
 	if (dev_priv->gart_info.sg_dummy_page) {
 		pci_unmap_page(dev->pdev, dev_priv->gart_info.sg_dummy_bus,
 			       NV_CTXDMA_PAGE_SIZE, PCI_DMA_BIDIRECTIONAL);
+#if !defined(__AROS__)
 		unlock_page(dev_priv->gart_info.sg_dummy_page);
+#endif
 		__free_page(dev_priv->gart_info.sg_dummy_page);
 		dev_priv->gart_info.sg_dummy_page = NULL;
 		dev_priv->gart_info.sg_dummy_bus = 0;
@@ -306,7 +307,6 @@ nouveau_sgdma_takedown(struct drm_device *dev)
 
 	nouveau_gpuobj_del(dev, &dev_priv->gart_info.sg_ctxdma);
 }
-#endif
 
 int
 nouveau_sgdma_get_page(struct drm_device *dev, uint32_t offset, uint32_t *page)

@@ -59,6 +59,8 @@ drmCommandWrite(int fd, unsigned long drmCommandIndex, void *data, unsigned long
     {
         case(0x5 /*DRM_NOUVEAU_GROBJ_ALLOC*/):
         case(0x7 /*DRM_NOUVEAU_GPUOBJ_FREE*/):
+        case(0x45 /*DRM_NOUVEAU_GEM_CPU_PREP*/):
+        case(0x46 /*DRM_NOUVEAU_GEM_CPU_FINI*/):
             return global_drm_device.driver->ioctls[drmCommandIndex].func(&global_drm_device, data, drm_files[fd]);
         default:
             DRM_IMPL("COMMAND %d\n", drmCommandIndex);
@@ -82,6 +84,10 @@ drmCommandWriteRead(int fd, unsigned long drmCommandIndex, void *data, unsigned 
         case(0x1 /*DRM_NOUVEAU_GETPARAM*/):
         case(0x3 /*DRM_NOUVEAU_CHANNEL_ALLOC*/):
         case(0x6 /*DRM_NOUVEAU_NOTIFIEROBJ_ALLOC*/):
+        case(0x40 /*DRM_NOUVEAU_GEM_NEW*/):
+        case(0x42 /*DRM_NOUVEAU_GEM_PUSHBUF_CALL*/):
+        case(0x43 /*DRM_NOUVEAU_GEM_PIN*/):
+        case(0x47 /*DRM_NOUVEAU_GEM_INFO*/):
             return global_drm_device.driver->ioctls[drmCommandIndex].func(&global_drm_device, data, drm_files[fd]);
         default:
             DRM_IMPL("COMMAND %d\n", drmCommandIndex);
@@ -151,6 +157,7 @@ drmOpen(const char *name, const char *busid)
         if (drm_files[i] == NULL)
         {
             drm_files[i] = AllocVec(sizeof(struct drm_file), MEMF_PUBLIC | MEMF_CLEAR);
+            spin_lock_init(&drm_files[i]->table_lock);
             return i;
         }
     }
@@ -208,3 +215,31 @@ drmDestroyContext(int fd, drm_context_t handle)
     return 0;
 }
 
+/* FIXME: this should be generic, not nouveau specific */
+#include "nouveau_drv.h"
+void * drmMMap(int fd, uint32_t handle)
+{
+    struct drm_file * f = drm_files[fd];
+    struct drm_gem_object * gem_object = NULL;
+    struct nouveau_bo * nvbo = NULL;
+    
+    if (!f)
+        return NULL;
+    
+    /* Get GEM objects from handle */
+    gem_object = drm_gem_object_lookup(&global_drm_device, f, handle);
+    if (!gem_object)
+        return NULL;
+    
+    /* Translate to nouveau_bo */
+    nvbo = nouveau_gem_object(gem_object);
+    if (!nvbo)
+        return NULL;
+    
+    /* Perform mapping if not already done */
+    if (!nvbo->kmap.virtual)
+        nouveau_bo_map(nvbo);
+    
+    /* Return virtual address */
+    return nvbo->kmap.virtual;
+}

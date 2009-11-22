@@ -42,6 +42,7 @@
 #define pci_dma_mapping_error(a, b)     FALSE
 #define pci_unmap_page(a, b, c, d)      drm_aros_dma_unmap_buf(b, c)
 #define ioremap_wc                      ioremap_nocache
+#define idr_pre_get(a, b)               idr_pre_get_internal(a)
 
 
 
@@ -90,7 +91,8 @@ int kref_put(struct kref *kref, void (*release) (struct kref *kref));
 /* Kernel debug */
 #define KERN_ERR
 #define printk(fmt, ...)            bug(fmt, ##__VA_ARGS__)
-#define IMPLEMENT(fmt, ...) bug("------IMPLEMENT(%s): " fmt, __func__ , ##__VA_ARGS__)
+#define IMPLEMENT(fmt, ...)         bug("------IMPLEMENT(%s): " fmt, __func__ , ##__VA_ARGS__)
+#define BUG(x)                      bug("BUG:(%s)\n", __func__)
 
 /* Bit operations */
 void clear_bit(int nr, volatile void * addr);
@@ -104,6 +106,8 @@ struct page * my_create_page(); /* Helper function - not from compat */
 #define page_to_pfn(p)              p->address /*FIXME: This might be wrong */
 #define kmap(p)                     p->address
 #define vmap(p, count, flags, prot) (p)[0]->address
+#define kunmap(addr)
+#define vunmap(addr)
 
 /* Atomic handling */
 /* FIXME NOT REALLY ATOMIC */
@@ -112,5 +116,33 @@ static inline int atomic_add_return(int i, atomic_t *v)
     (*v) += i;
     return (*v);
 }
+
+static inline void atomic_inc(atomic_t *v)
+{
+    (*v)++;
+}
+
+static inline void atomic_set(atomic_t *v, int i)
+{
+    (*v) = i;
+}
+
+static inline int atomic_read(atomic_t *v)
+{
+    return (*v);
+}
+
+static inline int atomic_dec_and_test(atomic_t *v)
+{
+    (*v)--;
+    return (*v) == 0;
+}
+
+
+/* IDR handling */
+int idr_pre_get_internal(struct idr *idp);
+int idr_get_new_above(struct idr *idp, void *ptr, int starting_id, int *id);
+void *idr_find(struct idr *idp, int id);
+
 
 #endif /* _DRM_COMPAT_FUNCS_ */

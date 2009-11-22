@@ -1081,7 +1081,7 @@ int ttm_buffer_object_init(struct ttm_bo_device *bdev,
 //FIXME	spin_lock_init(&bo->lock);
 //FIXME	kref_init(&bo->kref);
 //FIXME	kref_init(&bo->list_kref);
-//FIXME	atomic_set(&bo->cpu_writers, 0);
+	atomic_set(&bo->cpu_writers, 0);
 //FIXME	atomic_set(&bo->reserved, 1);
 //FIXME	init_waitqueue_head(&bo->event_queue);
 	INIT_LIST_HEAD(&bo->lru);
@@ -1749,6 +1749,7 @@ int ttm_bo_block_reservation(struct ttm_buffer_object *bo, bool interruptible,
 	}
 	return 0;
 }
+#endif
 
 int ttm_bo_synccpu_write_grab(struct ttm_buffer_object *bo, bool no_wait)
 {
@@ -1762,9 +1763,9 @@ int ttm_bo_synccpu_write_grab(struct ttm_buffer_object *bo, bool no_wait)
 	ret = ttm_bo_reserve(bo, true, no_wait, false, 0);
 	if (unlikely(ret != 0))
 		return ret;
-	spin_lock(&bo->lock);
+//FIXME	spin_lock(&bo->lock);
 	ret = ttm_bo_wait(bo, false, true, no_wait);
-	spin_unlock(&bo->lock);
+//FIXME	spin_unlock(&bo->lock);
 	if (likely(ret == 0))
 		atomic_inc(&bo->cpu_writers);
 	ttm_bo_unreserve(bo);
@@ -1772,13 +1773,20 @@ int ttm_bo_synccpu_write_grab(struct ttm_buffer_object *bo, bool no_wait)
 }
 EXPORT_SYMBOL(ttm_bo_synccpu_write_grab);
 
+
 void ttm_bo_synccpu_write_release(struct ttm_buffer_object *bo)
 {
+#if !defined(__AROS__)
 	if (atomic_dec_and_test(&bo->cpu_writers))
 		wake_up_all(&bo->event_queue);
+#else
+    atomic_dec_and_test(&bo->cpu_writers);
+#warning IMPLEMENT "wake up" of queue
+#endif    
 }
 EXPORT_SYMBOL(ttm_bo_synccpu_write_release);
 
+#if !defined(__AROS__)
 /**
  * A buffer object shrink method that tries to swap out the first
  * buffer object on the bo_global::swap_lru list.

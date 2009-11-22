@@ -50,7 +50,6 @@ void ttm_bo_free_old_node(struct ttm_buffer_object *bo)
 	old_mem->mm_node = NULL;
 }
 
-#if !defined(__AROS__)
 int ttm_bo_move_ttm(struct ttm_buffer_object *bo,
 		    bool evict, bool no_wait, struct ttm_mem_reg *new_mem)
 {
@@ -85,6 +84,7 @@ int ttm_bo_move_ttm(struct ttm_buffer_object *bo,
 }
 EXPORT_SYMBOL(ttm_bo_move_ttm);
 
+#if !defined(__AROS__)
 int ttm_mem_reg_ioremap(struct ttm_bo_device *bdev, struct ttm_mem_reg *mem,
 			void **virtual)
 {
@@ -489,14 +489,18 @@ int ttm_bo_kmap(struct ttm_buffer_object *bo,
 }
 EXPORT_SYMBOL(ttm_bo_kmap);
 
-#if !defined(__AROS__)
 void ttm_bo_kunmap(struct ttm_bo_kmap_obj *map)
 {
 	if (!map->virtual)
 		return;
 	switch (map->bo_kmap_type) {
 	case ttm_bo_map_iomap:
+#if !defined(__AROS__)
 		iounmap(map->virtual);
+#else
+IMPLEMENT("Handling of mapping type ttm_bo_map_iomap\n");
+#warning IMPLEMENT Handling of mapping type ttm_bo_map_iomap
+#endif
 		break;
 	case ttm_bo_map_vmap:
 		vunmap(map->virtual);
@@ -514,6 +518,7 @@ void ttm_bo_kunmap(struct ttm_bo_kmap_obj *map)
 }
 EXPORT_SYMBOL(ttm_bo_kunmap);
 
+#if !defined(__AROS__)
 int ttm_bo_pfn_prot(struct ttm_buffer_object *bo,
 		    unsigned long dst_offset,
 		    unsigned long *pfn, pgprot_t *prot)

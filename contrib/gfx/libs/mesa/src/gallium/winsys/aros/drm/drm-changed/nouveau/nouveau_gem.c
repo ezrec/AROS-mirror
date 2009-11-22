@@ -334,13 +334,13 @@ retry:
 		nvbo->reserved_by = file_priv;
 		list_add_tail(&nvbo->entry, list);
 
-//FIXME		if (unlikely(atomic_read(&nvbo->bo.cpu_writers) > 0)) {
-//FIXME			nouveau_gem_pushbuf_backoff(list);
-//FIXME			ret = ttm_bo_wait_cpu(&nvbo->bo, false);
-//FIXME			if (ret)
-//FIXME				goto out_unref;
-//FIXME			goto retry;
-//FIXME		}
+	if (unlikely(atomic_read(&nvbo->bo.cpu_writers) > 0)) {
+		nouveau_gem_pushbuf_backoff(list);
+		ret = ttm_bo_wait_cpu(&nvbo->bo, false);
+		if (ret)
+			goto out_unref;
+		goto retry;
+	}
 	}
 
 	b = pbbo;

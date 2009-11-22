@@ -115,7 +115,7 @@ nouveau_bo_kfree(struct nouveau_bo_priv *nvbo)
 	nvbo->handle = 0;
 	ioctl(nvdev->fd, DRM_IOCTL_GEM_CLOSE, &req);
 #else
-    bug("Implement nouveau_bo_kfree\n");
+    bug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Implement nouveau_bo_kfree\n");
 #endif
 }
 
@@ -164,7 +164,6 @@ nouveau_bo_kalloc(struct nouveau_bo_priv *nvbo, struct nouveau_channel *chan)
 static int
 nouveau_bo_kmap(struct nouveau_bo_priv *nvbo)
 {
-#if !defined(__AROS__)    
 	struct nouveau_device_priv *nvdev = nouveau_device(nvbo->base.device);
 
 	if (nvbo->map)
@@ -173,18 +172,19 @@ nouveau_bo_kmap(struct nouveau_bo_priv *nvbo)
 	if (!nvbo->map_handle)
 		return -EINVAL;
 
+#if !defined(__AROS__)
 	nvbo->map = mmap(0, nvbo->size, PROT_READ | PROT_WRITE,
 			 MAP_SHARED, nvdev->fd, nvbo->map_handle);
 	if (nvbo->map == MAP_FAILED) {
 		nvbo->map = NULL;
 		return -errno;
 	}
-
-	return 0;
 #else
-    bug("Implement nouveau_bo_kmap\n");
-    return 0;
+    nvbo->map = drmMMap(nvdev->fd, nvbo->handle);
+    if (nvbo->map == NULL)
+        return -EINVAL;
 #endif
+	return 0;
 }
 
 int
