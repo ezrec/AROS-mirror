@@ -79,4 +79,6 @@ extern int           drmDestroyContext(int fd, drm_context_t handle);
 
 /* AROS specific */
 extern void *       drmMMap(int fd, uint32_t handle);
+extern void         drmMUnmap(int fd, uint32_t handle);
+
 #endif

@@ -172,7 +172,9 @@ struct ttm_tt {
 	struct ttm_backend *be;
 	struct task_struct *tsk;
 	unsigned long start;
+#if !defined(__AROS__)
 	struct file *swap_storage;
+#endif
 	enum ttm_caching_state caching_state;
 	enum {
 		tt_bound,

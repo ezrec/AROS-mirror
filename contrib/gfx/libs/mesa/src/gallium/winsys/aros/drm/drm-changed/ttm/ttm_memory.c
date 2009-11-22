@@ -409,29 +409,28 @@ out_no_zone:
 }
 EXPORT_SYMBOL(ttm_mem_global_init);
 
-#if !defined(__AROS__)
 void ttm_mem_global_release(struct ttm_mem_global *glob)
 {
 	unsigned int i;
 	struct ttm_mem_zone *zone;
 
-	flush_workqueue(glob->swap_queue);
-	destroy_workqueue(glob->swap_queue);
-	glob->swap_queue = NULL;
-	for (i = 0; i < glob->num_zones; ++i) {
-		zone = glob->zones[i];
-		kobject_del(&zone->kobj);
-		kobject_put(&zone->kobj);
-	}
-	kobject_del(&glob->kobj);
-	kobject_put(&glob->kobj);
+//FIXME	flush_workqueue(glob->swap_queue);
+//FIXME	destroy_workqueue(glob->swap_queue);
+//FIXME	glob->swap_queue = NULL;
+//FIXME	for (i = 0; i < glob->num_zones; ++i) {
+//FIXME		zone = glob->zones[i];
+//FIXME		kobject_del(&zone->kobj);
+//FIXME		kobject_put(&zone->kobj);
+//FIXME	}
+//FIXME	kobject_del(&glob->kobj);
+//FIXME	kobject_put(&glob->kobj);
+IMPLEMENT("Freeing zones\n");
+#warning IMPLEMENT Freeing zones
 }
 EXPORT_SYMBOL(ttm_mem_global_release);
-#endif
 
 static void ttm_check_swapping(struct ttm_mem_global *glob)
 {
-#if !defined(__AROS__)
 	bool needs_swapping = false;
 	unsigned int i;
 	struct ttm_mem_zone *zone;
@@ -448,14 +447,14 @@ static void ttm_check_swapping(struct ttm_mem_global *glob)
 	spin_unlock(&glob->lock);
 
 	if (unlikely(needs_swapping))
+#if !defined(__AROS__)
 		(void)queue_work(glob->swap_queue, &glob->work);
 #else
-IMPLEMENT("\n");
-#warning IMPLEMENT ttm_check_swapping
+        IMPLEMENT("(void)queue_work(glob->swap_queue, &glob->work);\n");
+        #warning IMPLEMENT (void)queue_work(glob->swap_queue, &glob->work);
 #endif
 }
 
-#if !defined(__AROS__)
 static void ttm_mem_global_free_zone(struct ttm_mem_global *glob,
 				     struct ttm_mem_zone *single_zone,
 				     uint64_t amount)
@@ -478,7 +477,6 @@ void ttm_mem_global_free(struct ttm_mem_global *glob,
 {
 	return ttm_mem_global_free_zone(glob, NULL, amount);
 }
-#endif
 
 static int ttm_mem_global_reserve(struct ttm_mem_global *glob,
 				  struct ttm_mem_zone *single_zone,
@@ -579,7 +577,6 @@ int ttm_mem_global_alloc_page(struct ttm_mem_global *glob,
 					 interruptible);
 }
 
-#if !defined(__AROS__)
 void ttm_mem_global_free_page(struct ttm_mem_global *glob, struct page *page)
 {
 	struct ttm_mem_zone *zone = NULL;
@@ -593,7 +590,6 @@ void ttm_mem_global_free_page(struct ttm_mem_global *glob, struct page *page)
 #endif
 	ttm_mem_global_free_zone(glob, zone, PAGE_SIZE);
 }
-#endif
 
 size_t ttm_round_pot(size_t size)
 {

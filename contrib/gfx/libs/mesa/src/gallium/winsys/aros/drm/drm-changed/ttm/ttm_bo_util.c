@@ -84,7 +84,6 @@ int ttm_bo_move_ttm(struct ttm_buffer_object *bo,
 }
 EXPORT_SYMBOL(ttm_bo_move_ttm);
 
-#if !defined(__AROS__)
 int ttm_mem_reg_ioremap(struct ttm_bo_device *bdev, struct ttm_mem_reg *mem,
 			void **virtual)
 {
@@ -122,7 +121,12 @@ void ttm_mem_reg_iounmap(struct ttm_bo_device *bdev, struct ttm_mem_reg *mem,
 	man = &bdev->man[mem->mem_type];
 
 	if (virtual && (man->flags & TTM_MEMTYPE_FLAG_NEEDS_IOREMAP))
+#if !defined(__AROS__)        
 		iounmap(virtual);
+#else
+        IMPLEMENT("Handling of iounmap\n");
+        #warning IMPLEMENT Handling of iounmap
+#endif
 }
 
 static int ttm_copy_io_page(void *dst, void *src, unsigned long page)
@@ -150,6 +154,7 @@ static int ttm_copy_io_ttm_page(struct ttm_tt *ttm, void *src,
 
 	src = (void *)((unsigned long)src + (page << PAGE_SHIFT));
 
+#if !defined(__AROS__)
 #ifdef CONFIG_X86
 	dst = kmap_atomic_prot(d, KM_USER0, prot);
 #else
@@ -158,11 +163,15 @@ static int ttm_copy_io_ttm_page(struct ttm_tt *ttm, void *src,
 	else
 		dst = kmap(d);
 #endif
+#else
+    dst = kmap(d);
+#endif
 	if (!dst)
 		return -ENOMEM;
 
 	memcpy_fromio(dst, src, PAGE_SIZE);
 
+#if !defined(__AROS__)
 #ifdef CONFIG_X86
 	kunmap_atomic(dst, KM_USER0);
 #else
@@ -170,6 +179,9 @@ static int ttm_copy_io_ttm_page(struct ttm_tt *ttm, void *src,
 		vunmap(dst);
 	else
 		kunmap(d);
+#endif
+#else
+    kunmap(d);
 #endif
 
 	return 0;
@@ -186,6 +198,7 @@ static int ttm_copy_ttm_io_page(struct ttm_tt *ttm, void *dst,
 		return -ENOMEM;
 
 	dst = (void *)((unsigned long)dst + (page << PAGE_SHIFT));
+#if !defined(__AROS__)
 #ifdef CONFIG_X86
 	src = kmap_atomic_prot(s, KM_USER0, prot);
 #else
@@ -194,11 +207,15 @@ static int ttm_copy_ttm_io_page(struct ttm_tt *ttm, void *dst,
 	else
 		src = kmap(s);
 #endif
+#else
+    src = kmap(s);
+#endif
 	if (!src)
 		return -ENOMEM;
 
 	memcpy_toio(dst, src, PAGE_SIZE);
 
+#if !defined(__AROS__)
 #ifdef CONFIG_X86
 	kunmap_atomic(src, KM_USER0);
 #else
@@ -207,15 +224,16 @@ static int ttm_copy_ttm_io_page(struct ttm_tt *ttm, void *dst,
 	else
 		kunmap(s);
 #endif
+#else
+    kunmap(s);
+#endif
 
 	return 0;
 }
-#endif
 
 int ttm_bo_move_memcpy(struct ttm_buffer_object *bo,
 		       bool evict, bool no_wait, struct ttm_mem_reg *new_mem)
 {
-#if !defined(__AROS__)
 	struct ttm_bo_device *bdev = bo->bdev;
 	struct ttm_mem_type_manager *man = &bdev->man[new_mem->mem_type];
 	struct ttm_tt *ttm = bo->ttm;
@@ -255,13 +273,21 @@ int ttm_bo_move_memcpy(struct ttm_buffer_object *bo,
 	for (i = 0; i < new_mem->num_pages; ++i) {
 		page = i * dir + add;
 		if (old_iomap == NULL) {
+#if !defined(__AROS__)
 			pgprot_t prot = ttm_io_prot(old_mem->placement,
 						    PAGE_KERNEL);
+#else
+            pgprot_t prot = 0;
+#endif
 			ret = ttm_copy_ttm_io_page(ttm, new_iomap, page,
 						   prot);
 		} else if (new_iomap == NULL) {
+#if !defined(__AROS__)
 			pgprot_t prot = ttm_io_prot(new_mem->placement,
 						    PAGE_KERNEL);
+#else
+            pgprot_t prot = 0;
+#endif
 			ret = ttm_copy_io_ttm_page(ttm, old_iomap, page,
 						   prot);
 		} else
@@ -288,11 +314,6 @@ out1:
 out:
 	ttm_mem_reg_iounmap(bdev, &old_copy, old_iomap);
 	return ret;
-#else
-    IMPLEMENT("\n");
-    #warning IMPLEMENT ttm_bo_move_memcpy
-    return 0;
-#endif
 }
 EXPORT_SYMBOL(ttm_bo_move_memcpy);
 

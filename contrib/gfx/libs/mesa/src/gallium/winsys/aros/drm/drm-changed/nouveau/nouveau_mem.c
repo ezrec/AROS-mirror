@@ -295,7 +295,6 @@ void nouveau_mem_takedown(struct mem_block **heap)
 
 void nouveau_mem_close(struct drm_device *dev)
 {
-#if !defined(__AROS__)
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 
 	if (dev_priv->ttm.bdev.man[TTM_PL_PRIV0].has_type)
@@ -306,6 +305,7 @@ void nouveau_mem_close(struct drm_device *dev)
 
 	nouveau_ttm_global_release(dev_priv);
 
+#if !defined(__AROS__)
 	if (drm_core_has_AGP(dev) && dev->agp &&
 	    drm_core_check_feature(dev, DRIVER_MODESET)) {
 		struct drm_agp_mem *entry, *tempe;
@@ -326,16 +326,16 @@ void nouveau_mem_close(struct drm_device *dev)
 		dev->agp->acquired = 0;
 		dev->agp->enabled = 0;
 	}
+#else
+IMPLEMENT("AGP mem close handling\n");
+#warning IMPLEMENT AGP mem close handling
+#endif
 
 	if (dev_priv->fb_mtrr) {
 		drm_mtrr_del(dev_priv->fb_mtrr, drm_get_resource_start(dev, 1),
 			     drm_get_resource_len(dev, 1), DRM_MTRR_WC);
 		dev_priv->fb_mtrr = 0;
 	}
-#else
-DRM_IMPL("\n");
-#warning IMPLEMENT nouveau_mem_close
-#endif
 }
 
 /*XXX won't work on BSD because of pci_read_config_dword */

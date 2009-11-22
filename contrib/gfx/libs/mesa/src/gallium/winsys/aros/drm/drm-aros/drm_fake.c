@@ -17,21 +17,6 @@ struct ttm_backend *ttm_agp_backend_init(struct ttm_bo_device *bdev,
     return NULL;
 }
 
-void ttm_bo_global_release(struct ttm_global_reference *ref)
-{
-    asm("int3");
-}
-
-void ttm_mem_global_release(struct ttm_mem_global *glob)
-{
-    asm("int3");
-}
-
-void ttm_tt_destroy(struct ttm_tt *ttm)
-{
-    asm("int3");
-}
-
 int ttm_bo_swapout(struct ttm_mem_shrink *shrink)
 {
     asm("int3");;

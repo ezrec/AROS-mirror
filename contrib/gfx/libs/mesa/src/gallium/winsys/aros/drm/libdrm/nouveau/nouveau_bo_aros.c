@@ -99,7 +99,6 @@ nouveau_bo_ufree(struct nouveau_bo_priv *nvbo)
 static void
 nouveau_bo_kfree(struct nouveau_bo_priv *nvbo)
 {
-#if !defined(__AROS__)
 	struct nouveau_device_priv *nvdev = nouveau_device(nvbo->base.device);
 	struct drm_gem_close req;
 
@@ -107,15 +106,21 @@ nouveau_bo_kfree(struct nouveau_bo_priv *nvbo)
 		return;
 
 	if (nvbo->map) {
+#if !defined(__AROS__)        
 		munmap(nvbo->map, nvbo->size);
+#else
+        drmMUnmap(nvdev->fd, nvbo->handle);
+#endif
 		nvbo->map = NULL;
 	}
 
 	req.handle = nvbo->handle;
 	nvbo->handle = 0;
+#if !defined(__AROS__)    
 	ioctl(nvdev->fd, DRM_IOCTL_GEM_CLOSE, &req);
 #else
-    bug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Implement nouveau_bo_kfree\n");
+    bug("------IMPLEMENT(nouveau_bo_kfree): ioctl(nvdev->fd, DRM_IOCTL_GEM_CLOSE, &req)\n");
+    #warning IMPLEMENT(nouveau_bo_kfree): ioctl(nvdev->fd, DRM_IOCTL_GEM_CLOSE, &req)
 #endif
 }
 

@@ -28,6 +28,7 @@
 #define spinlock_t                  struct SignalSemaphore
 /* FIXME: atomic_t does not really deliver atomic operations */
 #define atomic_t                    int
+#define pgprot_t                    ULONG
 
 #undef offsetof
 #define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)

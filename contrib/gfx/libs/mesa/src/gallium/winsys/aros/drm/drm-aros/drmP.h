@@ -60,10 +60,10 @@ struct Library          *OOPBase;
 //#define HOSTED_BUILD_CHIPSET    32      /* NV20 chip GeForce 3 Ti 200 */
 //#define HOSTED_BUILD_ARCH       0x20    /* NV20 family */
 //#define HOSTED_BUILD_CHIPSET    37      /* NV25 chip GeForce Ti 4200 */
-#define HOSTED_BUILD_ARCH       0x30    /* NV30 family */
-#define HOSTED_BUILD_CHIPSET    52      /* NV34 chip GeForce FX 5200 */
-//#define HOSTED_BUILD_ARCH       0x40    /* NV40 family */
-//#define HOSTED_BUILD_CHIPSET    67      /* NV43 chip GeForce 6600 */
+//#define HOSTED_BUILD_ARCH       0x30    /* NV30 family */
+//#define HOSTED_BUILD_CHIPSET    52      /* NV34 chip GeForce FX 5200 */
+#define HOSTED_BUILD_ARCH       0x40    /* NV40 family */
+#define HOSTED_BUILD_CHIPSET    67      /* NV43 chip GeForce 6200 */
 //#define HOSTED_BUILD_ARCH       0x80    /* NV50 family */
 //#define HOSTED_BUILD_CHIPSET    132     /* G84 chip GeForce 8600 GT */
 #endif
@@ -376,6 +376,11 @@ static inline int drm_mtrr_add(unsigned long offset, unsigned long size,
 {
     return -ENODEV;
 }
+static inline int drm_mtrr_del(int handle, unsigned long offset,
+                   unsigned long size, unsigned int flags)
+{
+    return -ENODEV;
+}
 
 /* AROS specific functions */
 /* drm_aros.c */
@@ -461,11 +466,7 @@ void        drm_aros_dma_unmap_buf(dma_addr_t dma_address, IPTR size);
 // 
 
 // 
-// static inline int drm_mtrr_del(int handle, unsigned long offset,
-//                    unsigned long size, unsigned int flags)
-// {
-//     return -ENODEV;
-// }
+
 // 
 // #define drm_core_has_MTRR(dev) (0)
 

@@ -68,7 +68,7 @@ static void ttm_tt_alloc_page_directory(struct ttm_tt *ttm)
 #endif
 }
 
-#if !defined(__AROS__)
+
 static void ttm_tt_free_page_directory(struct ttm_tt *ttm)
 {
 	if (ttm->page_flags & TTM_PAGE_FLAG_VMALLOC) {
@@ -78,8 +78,13 @@ static void ttm_tt_free_page_directory(struct ttm_tt *ttm)
 		kfree(ttm->pages);
 	}
 	ttm->pages = NULL;
+#if defined(__AROS__)
+    FreeVec(ttm->allocated_buffer);
+    ttm->allocated_buffer = NULL;
+#endif
 }
 
+#if !defined(__AROS__)
 static struct page *ttm_tt_alloc_page(unsigned page_flags)
 {
 	gfp_t gfp_flags = GFP_USER;
@@ -94,6 +99,7 @@ static struct page *ttm_tt_alloc_page(unsigned page_flags)
 
 	return alloc_page(gfp_flags);
 }
+#endif
 
 static void ttm_tt_free_user_pages(struct ttm_tt *ttm)
 {
@@ -120,8 +126,10 @@ static void ttm_tt_free_user_pages(struct ttm_tt *ttm)
 			continue;
 		}
 
+#if !defined(__AROS__)
 		if (write && dirty && !PageReserved(page))
 			set_page_dirty_lock(page);
+#endif
 
 		ttm->pages[i] = NULL;
 		ttm_mem_global_free(ttm->glob->mem_glob, PAGE_SIZE);
@@ -131,7 +139,6 @@ static void ttm_tt_free_user_pages(struct ttm_tt *ttm)
 	ttm->first_himem_page = ttm->num_pages;
 	ttm->last_lomem_page = -1;
 }
-#endif
 
 static struct page *__ttm_tt_get_page(struct ttm_tt *ttm, int index)
 {
@@ -296,7 +303,6 @@ int ttm_tt_set_placement_caching(struct ttm_tt *ttm, uint32_t placement)
 	return ttm_tt_set_caching(ttm, state);
 }
 
-#if !defined(__AROS__)
 static void ttm_tt_free_alloced_pages(struct ttm_tt *ttm)
 {
 	int i;
@@ -310,10 +316,12 @@ static void ttm_tt_free_alloced_pages(struct ttm_tt *ttm)
 		cur_page = ttm->pages[i];
 		ttm->pages[i] = NULL;
 		if (cur_page) {
+#if !defined(__AROS__)
 			if (page_count(cur_page) != 1)
 				printk(KERN_ERR TTM_PFX
 				       "Erroneous page count. "
 				       "Leaking pages.\n");
+#endif
 			ttm_mem_global_free_page(ttm->glob->mem_glob,
 						 cur_page);
 			__free_page(cur_page);
@@ -346,13 +354,16 @@ void ttm_tt_destroy(struct ttm_tt *ttm)
 		ttm_tt_free_page_directory(ttm);
 	}
 
+#if !defined(__AROS__)
 	if (!(ttm->page_flags & TTM_PAGE_FLAG_PERSISTANT_SWAP) &&
 	    ttm->swap_storage)
 		fput(ttm->swap_storage);
+#endif
 
 	kfree(ttm);
 }
 
+#if !defined(__AROS__)
 int ttm_tt_set_user(struct ttm_tt *ttm,
 		    struct task_struct *tsk,
 		    unsigned long start, unsigned long num_pages)

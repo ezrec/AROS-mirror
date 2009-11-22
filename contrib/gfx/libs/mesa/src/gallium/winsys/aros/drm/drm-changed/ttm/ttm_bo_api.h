@@ -32,13 +32,17 @@
 #define _TTM_BO_API_H_
 
 #include "drm_hashtab.h"
-//FIXME:#include <linux/kref.h>
-//FIXME:#include <linux/list.h>
-//FIXME:#include <linux/wait.h>
-//FIXME:#include <linux/mutex.h>
-//FIXME:#include <linux/mm.h>
-//FIXME:#include <linux/rbtree.h>
-//FIXME:#include <linux/bitmap.h>
+#if !defined(__AROS__)
+#include <linux/kref.h>
+#include <linux/list.h>
+#include <linux/wait.h>
+#include <linux/mutex.h>
+#include <linux/mm.h>
+#include <linux/rbtree.h>
+#include <linux/bitmap.h>
+#else
+#include "drm_compat_types.h"
+#endif
 
 struct ttm_bo_device;
 
@@ -204,7 +208,7 @@ struct ttm_buffer_object {
 	 * only when written to.
 	 */
 
-//FIXME:	atomic_t reserved;
+	atomic_t reserved;
 
 
 	/**

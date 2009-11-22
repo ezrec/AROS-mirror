@@ -243,3 +243,25 @@ void * drmMMap(int fd, uint32_t handle)
     /* Return virtual address */
     return nvbo->kmap.virtual;
 }
+
+void drmMUnmap(int fd, uint32_t handle)
+{
+    struct drm_file * f = drm_files[fd];
+    struct drm_gem_object * gem_object = NULL;
+    struct nouveau_bo * nvbo = NULL;
+   
+    if (!f) return ;
+    
+    /* Get GEM objects from handle */
+    gem_object = drm_gem_object_lookup(&global_drm_device, f, handle);
+    if (!gem_object) return;
+    
+    /* Translate to nouveau_bo */
+    nvbo = nouveau_gem_object(gem_object);
+    if (!nvbo)
+        return NULL;
+    
+    /* Perform mapping if not already done */
+    if (nvbo->kmap.virtual)
+        nouveau_bo_unmap(nvbo);
+}

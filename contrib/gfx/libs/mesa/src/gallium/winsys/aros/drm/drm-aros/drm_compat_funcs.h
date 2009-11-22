@@ -21,10 +21,12 @@
 #define kmalloc(size, flags)            AllocVec(size, MEMF_ANY)
 #define vmalloc_user(size)              AllocVec(size, MEMF_ANY)
 #define kfree(objp)                     FreeVec(objp)
+#define vfree(objp)                     FreeVec(objp)
 #define roundup(x, y)                   ((((x) + ((y) - 1)) / (y)) * (y))
 #define lower_32_bits(n)                ((u32)(n))
 #define upper_32_bits(n)                ((u32)(((n) >> 16) >> 16))
 #define memcpy_toio(dest, src, count)   memcpy(dest, src, count)
+#define memcpy_fromio(dest, src, count) memcpy(dest, src, count)
 #define mutex_lock(x)                   ObtainSemaphore(x.semaphore)
 #define mutex_unlock(x)                 ReleaseSemaphore(x.semaphore)
 #define mutex_init(x)                   InitSemaphore(x.semaphore);
@@ -42,7 +44,7 @@
 #define pci_dma_mapping_error(a, b)     FALSE
 #define pci_unmap_page(a, b, c, d)      drm_aros_dma_unmap_buf(b, c)
 #define ioremap_wc                      ioremap_nocache
-#define idr_pre_get(a, b)               idr_pre_get_internal(a)
+#define mb()                            __asm __volatile("lock; addl $0,0(%%esp)" : : : "memory");
 
 
 
@@ -102,7 +104,7 @@ void set_bit(int nr, volatile void *addr);
 void __free_page(struct page * p);
 struct page * my_create_page(); /* Helper function - not from compat */
 #define PageHighMem(p)              FALSE
-#define put_page(p)                 __free_page(p)
+#define put_page(p)                 __free_page(p) /*FIXME: This might be wrong */
 #define page_to_pfn(p)              p->address /*FIXME: This might be wrong */
 #define kmap(p)                     p->address
 #define vmap(p, count, flags, prot) (p)[0]->address
@@ -138,8 +140,16 @@ static inline int atomic_dec_and_test(atomic_t *v)
     return (*v) == 0;
 }
 
+static inline int atomic_cmpxchg(atomic_t *v, int old, int new)
+{
+    int ret = (*v);
+    if (ret == old) (*v) = new;
+    return ret;
+}
+
 
 /* IDR handling */
+#define idr_pre_get(a, b)               idr_pre_get_internal(a)
 int idr_pre_get_internal(struct idr *idp);
 int idr_get_new_above(struct idr *idp, void *ptr, int starting_id, int *id);
 void *idr_find(struct idr *idp, int id);
