@@ -33,10 +33,6 @@
 #include <sys/ioctl.h>
 #endif
 
-#if defined(__AROS__)
-#include <aros/debug.h>
-#endif
-
 #include "nouveau_private.h"
 
 int
@@ -119,8 +115,7 @@ nouveau_bo_kfree(struct nouveau_bo_priv *nvbo)
 #if !defined(__AROS__)    
 	ioctl(nvdev->fd, DRM_IOCTL_GEM_CLOSE, &req);
 #else
-    bug("------IMPLEMENT(nouveau_bo_kfree): ioctl(nvdev->fd, DRM_IOCTL_GEM_CLOSE, &req)\n");
-    #warning IMPLEMENT(nouveau_bo_kfree): ioctl(nvdev->fd, DRM_IOCTL_GEM_CLOSE, &req)
+    drmGEMIoctl(nvdev->fd, DRM_IOCTL_GEM_CLOSE, &req);
 #endif
 }
 
@@ -295,7 +290,6 @@ nouveau_bo_wrap(struct nouveau_device *dev, uint32_t handle,
 int
 nouveau_bo_handle_get(struct nouveau_bo *bo, uint32_t *handle)
 {
-#if !defined(__AROS__)
 	struct nouveau_device_priv *nvdev = nouveau_device(bo->device);
 	struct nouveau_bo_priv *nvbo = nouveau_bo(bo);
 	int ret;
@@ -311,7 +305,11 @@ nouveau_bo_handle_get(struct nouveau_bo *bo, uint32_t *handle)
 			return ret;
 
 		req.handle = nvbo->handle;
+#if !defined(__AROS__)
 		ret = ioctl(nvdev->fd, DRM_IOCTL_GEM_FLINK, &req);
+#else
+        ret = drmGEMIoctl(nvdev->fd, DRM_IOCTL_GEM_FLINK, &req);
+#endif
 		if (ret) {
 			nouveau_bo_kfree(nvbo);
 			return ret;
@@ -322,24 +320,23 @@ nouveau_bo_handle_get(struct nouveau_bo *bo, uint32_t *handle)
  
 	*handle = nvbo->global_handle;
 	return 0;
-#else
-    bug("Implement nouveau_bo_handle_get\n");
-    return 0;
-#endif
 }
  
 int
 nouveau_bo_handle_ref(struct nouveau_device *dev, uint32_t handle,
 		      struct nouveau_bo **bo)
 {
-#if !defined(__AROS__)
 	struct nouveau_device_priv *nvdev = nouveau_device(dev);
 	struct nouveau_bo_priv *nvbo;
 	struct drm_gem_open req;
 	int ret;
 
 	req.name = handle;
+#if !defined(__AROS__)
 	ret = ioctl(nvdev->fd, DRM_IOCTL_GEM_OPEN, &req);
+#else
+    ret = drmGEMIoctl(nvdev->fd, DRM_IOCTL_GEM_OPEN, &req);
+#endif
 	if (ret) {
 		nouveau_bo_ref(NULL, bo);
 		return ret;
@@ -354,10 +351,6 @@ nouveau_bo_handle_ref(struct nouveau_device *dev, uint32_t handle,
 	nvbo = nouveau_bo(*bo);
 	nvbo->base.handle = nvbo->handle;
 	return 0;
-#else
-    bug("Implement nouveau_bo_handle_ref\n");
-    return 0;
-#endif
 } 
 
 static void

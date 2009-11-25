@@ -56,7 +56,7 @@ struct work_struct;
 /* Reference counted objects implementation */
 struct kref
 {
-    int count;
+    atomic_t refcount;
 };
 
 /* Mutex emulation */

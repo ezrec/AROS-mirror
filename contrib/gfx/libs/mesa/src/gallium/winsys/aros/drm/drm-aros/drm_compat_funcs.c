@@ -73,29 +73,6 @@ void  *ioremap_nocache(resource_size_t offset, unsigned long size)
 }
 /* HACK ends */
 
-
-/* FIXME:These functions should guarantee atomic access to counter */
-void kref_init(struct kref *kref)
-{
-    kref->count = 1;
-}
-
-void kref_get(struct kref *kref)
-{
-    kref->count++;
-}
-
-int kref_put(struct kref *kref, void (*release) (struct kref *kref))
-{
-    kref->count--;
-    if (kref->count < 1)
-    {
-        release(kref);
-        return 0;
-    }
-        return kref->count;
-}
-
 /* Bit operations */
 void clear_bit(int nr, volatile void * addr)
 {
@@ -184,4 +161,17 @@ void *idr_find(struct idr *idp, int id)
         return (APTR)idp->pointers[id];
     else
         return NULL;
+}
+
+void idr_remove(struct idr *idp, int id)
+{
+    if ((id < idp->size) && (id >= 0))
+        idp->pointers[id] = (IPTR)NULL;
+}
+
+void idr_init(struct idr *idp)
+{
+    idp->size = 0;
+    idp->pointers = NULL;
+    idp->occupied = 0;
 }

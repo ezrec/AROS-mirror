@@ -85,11 +85,6 @@ static inline IPTR IS_ERR(APTR ptr)
     return (IPTR)(ptr) >= (IPTR)-MAX_ERRNO;
 }
 
-/* Reference counted objects implementation */
-void kref_init(struct kref *kref);
-void kref_get(struct kref *kref);
-int kref_put(struct kref *kref, void (*release) (struct kref *kref));
-
 /* Kernel debug */
 #define KERN_ERR
 #define printk(fmt, ...)            bug(fmt, ##__VA_ARGS__)
@@ -134,6 +129,11 @@ static inline int atomic_read(atomic_t *v)
     return (*v);
 }
 
+static inline void atomic_dec(atomic_t * v)
+{
+    (*v)++;
+}
+
 static inline int atomic_dec_and_test(atomic_t *v)
 {
     (*v)--;
@@ -147,12 +147,29 @@ static inline int atomic_cmpxchg(atomic_t *v, int old, int new)
     return ret;
 }
 
+/* Reference counted objects implementation */
+static inline void kref_init(struct kref *kref)
+{
+    atomic_set(&kref->refcount, 1);
+}
+
+static inline void kref_get(struct kref *kref)
+{
+    atomic_inc(&kref->refcount);
+}
+
+static inline int kref_put(struct kref *kref, void (*release) (struct kref *kref))
+{
+    if (atomic_dec_and_test(&kref->refcount)) release(kref);
+    return atomic_read(&kref->refcount);
+}
 
 /* IDR handling */
 #define idr_pre_get(a, b)               idr_pre_get_internal(a)
 int idr_pre_get_internal(struct idr *idp);
 int idr_get_new_above(struct idr *idp, void *ptr, int starting_id, int *id);
 void *idr_find(struct idr *idp, int id);
-
+void idr_remove(struct idr *idp, int id);
+void idr_init(struct idr *idp);
 
 #endif /* _DRM_COMPAT_FUNCS_ */

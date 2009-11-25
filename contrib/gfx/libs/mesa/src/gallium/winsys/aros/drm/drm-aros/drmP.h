@@ -191,6 +191,7 @@ struct drm_agp_head {
 
 /* Contains a collection of functions common to each drm driver */
 
+#define DRIVER_GEM         0x1000
 #define DRIVER_MODESET     0x2000
 
 struct drm_driver
@@ -209,6 +210,7 @@ struct drm_driver
     
     /* GEM */
     int         (*gem_init_object) (struct drm_gem_object *obj);
+    void        (*gem_free_object) (struct drm_gem_object *obj);
 
     int                     version_patchlevel;
     unsigned int            driver_features;
@@ -229,6 +231,10 @@ struct drm_device
     struct drm_driver *driver;      /* Driver functions */
     void *dev_private;              /* Device private data */
     struct mutex  struct_mutex;
+    
+    /* GEM information */
+    spinlock_t object_name_lock;
+    struct idr object_name_idr;
 
     /* AROS specific fields */
     OOP_Object              *pci;
@@ -257,6 +263,12 @@ struct drm_file
 
 struct drm_gem_object 
 {
+    /* Reference count of this object */
+    struct kref refcount;
+
+    /* Handle count of this object. Each handle also holds a reference */
+    struct kref handlecount;
+    
     struct file *filp;
     struct drm_device *dev;
     
@@ -265,6 +277,12 @@ struct drm_gem_object
      * lifetime.
      */
     size_t size;
+    
+    /*
+     * Global name for this object, starts at 1. 0 means unnamed.
+     * Access is covered by the object_name_lock in the related drm_device
+     */
+    int name;
     
     void *driver_private;
 };
@@ -318,6 +336,9 @@ void drm_core_ioremap(struct drm_local_map *map, struct drm_device *dev);
 // void drm_free(void *pt, size_t size, int area);
 
 /* GEM */
+int drm_gem_init(struct drm_device *dev);
+void drm_gem_object_free(struct kref *kref);
+void drm_gem_object_handle_free(struct kref *kref);
 struct drm_gem_object *drm_gem_object_alloc(struct drm_device *dev,
                         size_t size);
 int drm_gem_handle_create(struct drm_file *file_priv,
@@ -331,7 +352,7 @@ struct drm_gem_object *drm_gem_object_lookup(struct drm_device *dev,
 static inline void
 drm_gem_object_reference(struct drm_gem_object *obj)
 {
-//FIXME    kref_get(&obj->refcount);
+    kref_get(&obj->refcount);
 }
 
 static inline void
@@ -340,7 +361,7 @@ drm_gem_object_unreference(struct drm_gem_object *obj)
     if (obj == NULL)
         return;
 
-//FIXME    kref_put(&obj->refcount, drm_gem_object_free);
+    kref_put(&obj->refcount, drm_gem_object_free);
 }
 
 int drm_gem_handle_create(struct drm_file *file_priv,
@@ -351,7 +372,7 @@ static inline void
 drm_gem_object_handle_reference(struct drm_gem_object *obj)
 {
     drm_gem_object_reference(obj);
-//FIXME   kref_get(&obj->handlecount);
+    kref_get(&obj->handlecount);
 }
 
 static inline void
@@ -365,9 +386,15 @@ drm_gem_object_handle_unreference(struct drm_gem_object *obj)
      * ref, in which case the object would disappear before we
      * checked for a name
      */
-//FIXME    kref_put(&obj->handlecount, drm_gem_object_handle_free);
+    kref_put(&obj->handlecount, drm_gem_object_handle_free);
     drm_gem_object_unreference(obj);
 }
+
+/* GEM IOCTL */
+int drm_gem_open_ioctl(struct drm_device *dev, void *data,
+               struct drm_file *file_priv);
+int drm_gem_close_ioctl(struct drm_device *dev, void *data,
+            struct drm_file *file_priv);               
 
 /* MTRR */
 #define DRM_MTRR_WC     0

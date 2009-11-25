@@ -79,44 +79,44 @@
  * Initialize the GEM device fields
  */
 
-#if !defined(__AROS__)
 int
 drm_gem_init(struct drm_device *dev)
 {
-	struct drm_gem_mm *mm;
+//FIXME	struct drm_gem_mm *mm;
 
 	spin_lock_init(&dev->object_name_lock);
 	idr_init(&dev->object_name_idr);
-	atomic_set(&dev->object_count, 0);
-	atomic_set(&dev->object_memory, 0);
-	atomic_set(&dev->pin_count, 0);
-	atomic_set(&dev->pin_memory, 0);
-	atomic_set(&dev->gtt_count, 0);
-	atomic_set(&dev->gtt_memory, 0);
+//FIXME	atomic_set(&dev->object_count, 0);
+//FIXME	atomic_set(&dev->object_memory, 0);
+//FIXME	atomic_set(&dev->pin_count, 0);
+//FIXME	atomic_set(&dev->pin_memory, 0);
+//FIXME	atomic_set(&dev->gtt_count, 0);
+//FIXME	atomic_set(&dev->gtt_memory, 0);
 
-	mm = kzalloc(sizeof(struct drm_gem_mm), GFP_KERNEL);
-	if (!mm) {
-		DRM_ERROR("out of memory\n");
-		return -ENOMEM;
-	}
+//FIXME	mm = kzalloc(sizeof(struct drm_gem_mm), GFP_KERNEL);
+//FIXME	if (!mm) {
+//FIXME		DRM_ERROR("out of memory\n");
+//FIXME		return -ENOMEM;
+//FIXME	}
 
-	dev->mm_private = mm;
+//FIXME	dev->mm_private = mm;
 
-	if (drm_ht_create(&mm->offset_hash, 19)) {
-		kfree(mm);
-		return -ENOMEM;
-	}
+//FIXME	if (drm_ht_create(&mm->offset_hash, 19)) {
+//FIXME		kfree(mm);
+//FIXME		return -ENOMEM;
+//FIXME	}
 
-	if (drm_mm_init(&mm->offset_manager, DRM_FILE_PAGE_OFFSET_START,
-			DRM_FILE_PAGE_OFFSET_SIZE)) {
-		drm_ht_remove(&mm->offset_hash);
-		kfree(mm);
-		return -ENOMEM;
-	}
+//FIXME	if (drm_mm_init(&mm->offset_manager, DRM_FILE_PAGE_OFFSET_START,
+//FIXME			DRM_FILE_PAGE_OFFSET_SIZE)) {
+//FIXME		drm_ht_remove(&mm->offset_hash);
+//FIXME		kfree(mm);
+//FIXME		return -ENOMEM;
+//FIXME	}
 
 	return 0;
 }
 
+#if !defined(__AROS__)
 void
 drm_gem_destroy(struct drm_device *dev)
 {
@@ -148,8 +148,8 @@ drm_gem_object_alloc(struct drm_device *dev, size_t size)
 //FIXME	if (IS_ERR(obj->filp))
 //FIXME		goto free;
 
-//FIXME	kref_init(&obj->refcount);
-//FIXME	kref_init(&obj->handlecount);
+	kref_init(&obj->refcount);
+	kref_init(&obj->handlecount);
 	obj->size = size;
 	if (dev->driver->gem_init_object != NULL &&
 	    dev->driver->gem_init_object(obj) != 0) {
@@ -166,7 +166,6 @@ free:
 }
 EXPORT_SYMBOL(drm_gem_object_alloc);
 
-#if !defined(__AROS__)
 /**
  * Removes the mapping from handle to filp for this object.
  */
@@ -205,7 +204,6 @@ drm_gem_handle_delete(struct drm_file *filp, u32 handle)
 
 	return 0;
 }
-#endif
 
 /**
  * Create a handle for this object. This adds a handle reference
@@ -266,7 +264,6 @@ drm_gem_object_lookup(struct drm_device *dev, struct drm_file *filp,
 }
 EXPORT_SYMBOL(drm_gem_object_lookup);
 
-#if !defined(__AROS__)
 /**
  * Releases the handle to an mm object.
  */
@@ -285,6 +282,7 @@ drm_gem_close_ioctl(struct drm_device *dev, void *data,
 	return ret;
 }
 
+#if !defined(__AROS__)
 /**
  * Create a global name for an object, returning the name.
  *
@@ -419,6 +417,7 @@ drm_gem_release(struct drm_device *dev, struct drm_file *file_private)
 	idr_destroy(&file_private->object_idr);
 	mutex_unlock(&dev->struct_mutex);
 }
+#endif
 
 /**
  * Called after the last reference to the object has been lost.
@@ -431,14 +430,14 @@ drm_gem_object_free(struct kref *kref)
 	struct drm_gem_object *obj = (struct drm_gem_object *) kref;
 	struct drm_device *dev = obj->dev;
 
-	BUG_ON(!mutex_is_locked(&dev->struct_mutex));
+//FIXME	BUG_ON(!mutex_is_locked(&dev->struct_mutex));
 
 	if (dev->driver->gem_free_object != NULL)
 		dev->driver->gem_free_object(obj);
 
-	fput(obj->filp);
-	atomic_dec(&dev->object_count);
-	atomic_sub(obj->size, &dev->object_memory);
+//FIXME	fput(obj->filp);
+//FIXME	atomic_dec(&dev->object_count);
+//FIXME	atomic_sub(obj->size, &dev->object_memory);
 	kfree(obj);
 }
 EXPORT_SYMBOL(drm_gem_object_free);
@@ -475,6 +474,7 @@ drm_gem_object_handle_free(struct kref *kref)
 }
 EXPORT_SYMBOL(drm_gem_object_handle_free);
 
+#if !defined(__AROS__)
 void drm_gem_vm_open(struct vm_area_struct *vma)
 {
 	struct drm_gem_object *obj = vma->vm_private_data;

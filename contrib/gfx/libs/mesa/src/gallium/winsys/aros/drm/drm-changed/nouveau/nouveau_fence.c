@@ -123,8 +123,15 @@ nouveau_fence_emit(struct nouveau_fence *fence)
 	int ret;
 
 	ret = RING_SPACE(chan, 2);
+#if defined(HOSTED_BUILD)
+    /* 
+     * Since RING_SPACE can raise an error when there is no space is channel
+     * and under hosted we will run out of space.
+     */
+#else
 	if (ret)
 		return ret;
+#endif
 
 	if (unlikely(chan->fence.sequence == chan->fence.sequence_ack - 1)) {
 		spin_lock_irqsave(&chan->fence.lock, flags);
@@ -184,9 +191,9 @@ nouveau_fence_signalled(void *sync_obj, void *sync_arg)
 	spin_unlock_irqrestore(&chan->fence.lock, flags);
 	return fence->signalled;
 #else
-    struct nouveau_fence *fence = nouveau_fence(sync_obj);
-    fence->signalled = 1;
-    return fence->signalled;
+   struct nouveau_fence *fence = nouveau_fence(sync_obj);
+   fence->signalled = 1;
+   return fence->signalled;
 #endif
 }
 

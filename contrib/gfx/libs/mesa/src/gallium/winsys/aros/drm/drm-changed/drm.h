@@ -48,6 +48,7 @@
 #endif
 
 #if defined(__AROS__)
+#include <sys/ioctl.h>
 #include "drm_compat_types.h"
 #endif
 

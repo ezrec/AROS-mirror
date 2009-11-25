@@ -355,7 +355,7 @@ static int ttm_buffer_object_transfer(struct ttm_buffer_object *bo,
 	 * TODO: Explicit member copy would probably be better here.
 	 */
 
-//FIXME	spin_lock_init(&fbo->lock);
+	spin_lock_init(&fbo->lock);
 //FIXME	init_waitqueue_head(&fbo->event_queue);
 	INIT_LIST_HEAD(&fbo->ddestroy);
 	INIT_LIST_HEAD(&fbo->lru);
@@ -365,8 +365,8 @@ static int ttm_buffer_object_transfer(struct ttm_buffer_object *bo,
 	fbo->sync_obj = driver->sync_obj_ref(bo->sync_obj);
 	if (fbo->mem.mm_node)
 		fbo->mem.mm_node->private = (void *)fbo;
-//FIXME	kref_init(&fbo->list_kref);
-//FIXME	kref_init(&fbo->kref);
+	kref_init(&fbo->list_kref);
+	kref_init(&fbo->kref);
 	fbo->destroy = &ttm_transfered_destroy;
 
 	*new_obj = fbo;
@@ -585,7 +585,7 @@ int ttm_bo_move_accel_cleanup(struct ttm_buffer_object *bo,
 	struct ttm_buffer_object *ghost_obj;
 	void *tmp_obj = NULL;
 
-//FIXME	spin_lock(&bo->lock);
+	spin_lock(&bo->lock);
 	if (bo->sync_obj) {
 		tmp_obj = bo->sync_obj;
 		bo->sync_obj = NULL;
@@ -594,7 +594,7 @@ int ttm_bo_move_accel_cleanup(struct ttm_buffer_object *bo,
 	bo->sync_obj_arg = sync_obj_arg;
 	if (evict) {
 		ret = ttm_bo_wait(bo, false, false, false);
-//FIXME		spin_unlock(&bo->lock);
+		spin_unlock(&bo->lock);
 		if (tmp_obj)
 			driver->sync_obj_unref(&tmp_obj);
 		if (ret)
@@ -617,7 +617,7 @@ int ttm_bo_move_accel_cleanup(struct ttm_buffer_object *bo,
 		 */
 
 		set_bit(TTM_BO_PRIV_FLAG_MOVING, &bo->priv_flags);
-//FIXME		spin_unlock(&bo->lock);
+		spin_unlock(&bo->lock);
 		if (tmp_obj)
 			driver->sync_obj_unref(&tmp_obj);
 

@@ -89,7 +89,6 @@ static inline uint32_t ttm_bo_type_flags(unsigned type)
 	return 1 << (type);
 }
 
-#if !defined(__AROS__)
 static void ttm_bo_release_list(struct kref *list_kref)
 {
 	struct ttm_buffer_object *bo =
@@ -115,6 +114,7 @@ static void ttm_bo_release_list(struct kref *list_kref)
 	}
 }
 
+#if !defined(__AROS__)
 int ttm_bo_wait_unreserved(struct ttm_buffer_object *bo, bool interruptible)
 {
 
@@ -146,11 +146,11 @@ static void ttm_bo_add_to_lru(struct ttm_buffer_object *bo)
 
 		man = &bdev->man[bo->mem.mem_type];
 		list_add_tail(&bo->lru, &man->lru);
-//FIXME		kref_get(&bo->list_kref);
+		kref_get(&bo->list_kref);
 
 		if (bo->ttm != NULL) {
 			list_add_tail(&bo->swap, &bo->glob->swap_lru);
-//FIXME			kref_get(&bo->list_kref);
+			kref_get(&bo->list_kref);
 		}
 	}
 }
@@ -216,12 +216,10 @@ int ttm_bo_reserve_locked(struct ttm_buffer_object *bo,
 }
 EXPORT_SYMBOL(ttm_bo_reserve);
 
-#if !defined(__AROS__)
 static void ttm_bo_ref_bug(struct kref *list_kref)
 {
 	BUG();
 }
-#endif
 
 int ttm_bo_reserve(struct ttm_buffer_object *bo,
 		   bool interruptible,
@@ -238,8 +236,8 @@ int ttm_bo_reserve(struct ttm_buffer_object *bo,
 		put_count = ttm_bo_del_from_lru(bo);
 	spin_unlock(&glob->lru_lock);
 
-//FIXME	while (put_count--)
-//FIXME		kref_put(&bo->list_kref, ttm_bo_ref_bug);
+	while (put_count--)
+		kref_put(&bo->list_kref, ttm_bo_ref_bug);
 
 	return ret;
 }
@@ -381,11 +379,11 @@ moved:
 	}
 
 	if (bo->mem.mm_node) {
-//FIXME		spin_lock(&bo->lock);
+		spin_lock(&bo->lock);
 		bo->offset = (bo->mem.mm_node->start << PAGE_SHIFT) +
 		    bdev->man[bo->mem.mem_type].gpu_offset;
 		bo->cur_placement = bo->mem.placement;
-//FIXME		spin_unlock(&bo->lock);
+		spin_unlock(&bo->lock);
 	}
 
 	return 0;
@@ -415,13 +413,13 @@ static int ttm_bo_cleanup_refs(struct ttm_buffer_object *bo, bool remove_all)
 	struct ttm_bo_driver *driver = bdev->driver;
 	int ret;
 
-//FIXME	spin_lock(&bo->lock);
+	spin_lock(&bo->lock);
 	(void) ttm_bo_wait(bo, false, false, !remove_all);
 
 	if (!bo->sync_obj) {
 		int put_count;
 
-//FIXME		spin_unlock(&bo->lock);
+		spin_unlock(&bo->lock);
 
 		spin_lock(&glob->lru_lock);
 		ret = ttm_bo_reserve_locked(bo, false, false, false, 0);
@@ -431,7 +429,7 @@ static int ttm_bo_cleanup_refs(struct ttm_buffer_object *bo, bool remove_all)
 
 		if (!list_empty(&bo->ddestroy)) {
 			list_del_init(&bo->ddestroy);
-//FIXME			kref_put(&bo->list_kref, ttm_bo_ref_bug);
+			kref_put(&bo->list_kref, ttm_bo_ref_bug);
 		}
 		if (bo->mem.mm_node) {
 			drm_mm_put_block(bo->mem.mm_node);
@@ -442,8 +440,8 @@ static int ttm_bo_cleanup_refs(struct ttm_buffer_object *bo, bool remove_all)
 
 		atomic_set(&bo->reserved, 0);
 
-//FIXME		while (put_count--)
-//FIXME			kref_put(&bo->list_kref, ttm_bo_release_list);
+		while (put_count--)
+			kref_put(&bo->list_kref, ttm_bo_release_list);
 
 		return 0;
 	}
@@ -453,10 +451,10 @@ static int ttm_bo_cleanup_refs(struct ttm_buffer_object *bo, bool remove_all)
 		void *sync_obj = bo->sync_obj;
 		void *sync_obj_arg = bo->sync_obj_arg;
 
-//FIXME		kref_get(&bo->list_kref);
+		kref_get(&bo->list_kref);
 		list_add_tail(&bo->ddestroy, &bdev->ddestroy);
 		spin_unlock(&glob->lru_lock);
-//FIXME		spin_unlock(&bo->lock);
+		spin_unlock(&bo->lock);
 
 		if (sync_obj)
 			driver->sync_obj_flush(sync_obj, sync_obj_arg);
@@ -466,7 +464,7 @@ static int ttm_bo_cleanup_refs(struct ttm_buffer_object *bo, bool remove_all)
 
 	} else {
 		spin_unlock(&glob->lru_lock);
-//FIXME		spin_unlock(&bo->lock);
+		spin_unlock(&bo->lock);
 		ret = -EBUSY;
 	}
 
@@ -498,19 +496,19 @@ static int ttm_bo_delayed_delete(struct ttm_bo_device *bdev, bool remove_all)
 		if (next != &bdev->ddestroy) {
 			nentry = list_entry(next, struct ttm_buffer_object,
 					    ddestroy);
-//FIXME			kref_get(&nentry->list_kref);
+			kref_get(&nentry->list_kref);
 		}
-//FIXME		kref_get(&entry->list_kref);
+		kref_get(&entry->list_kref);
 
 		spin_unlock(&glob->lru_lock);
 		ret = ttm_bo_cleanup_refs(entry, remove_all);
-//FIXME		kref_put(&entry->list_kref, ttm_bo_release_list);
+		kref_put(&entry->list_kref, ttm_bo_release_list);
 
 		spin_lock(&glob->lru_lock);
 		if (nentry) {
 			bool next_onlist = !list_empty(next);
 			spin_unlock(&glob->lru_lock);
-//FIXME			kref_put(&nentry->list_kref, ttm_bo_release_list);
+			kref_put(&nentry->list_kref, ttm_bo_release_list);
 			spin_lock(&glob->lru_lock);
 			/*
 			 * Someone might have raced us and removed the
@@ -541,6 +539,7 @@ static void ttm_bo_delayed_workqueue(struct work_struct *work)
 				      ((HZ / 100) < 1) ? 1 : HZ / 100);
 	}
 }
+#endif
 
 static void ttm_bo_release(struct kref *kref)
 {
@@ -549,16 +548,20 @@ static void ttm_bo_release(struct kref *kref)
 	struct ttm_bo_device *bdev = bo->bdev;
 
 	if (likely(bo->vm_node != NULL)) {
+#if !defined(__AROS__)        
 		rb_erase(&bo->vm_rb, &bdev->addr_space_rb);
+#else
+IMPLEMENT("Calling rb_erase(&bo->vm_rb, &bdev->addr_space_rb)\n");
+#warning IMPLEMENT Calling rb_erase(&bo->vm_rb, &bdev->addr_space_rb)
+#endif
 		drm_mm_put_block(bo->vm_node);
 		bo->vm_node = NULL;
 	}
-	write_unlock(&bdev->vm_lock);
+//FIXME	write_unlock(&bdev->vm_lock);
 	ttm_bo_cleanup_refs(bo, false);
 	kref_put(&bo->list_kref, ttm_bo_release_list);
-	write_lock(&bdev->vm_lock);
+//FIXME	write_lock(&bdev->vm_lock);
 }
-#endif
 
 void ttm_bo_unref(struct ttm_buffer_object **p_bo)
 {
@@ -567,7 +570,7 @@ void ttm_bo_unref(struct ttm_buffer_object **p_bo)
 
 	*p_bo = NULL;
 //FIXME	write_lock(&bdev->vm_lock);
-//FIXME	kref_put(&bo->kref, ttm_bo_release);
+	kref_put(&bo->kref, ttm_bo_release);
 //FIXME	write_unlock(&bdev->vm_lock);
 }
 EXPORT_SYMBOL(ttm_bo_unref);
@@ -584,9 +587,9 @@ static int ttm_bo_evict(struct ttm_buffer_object *bo, unsigned mem_type,
 	if (bo->mem.mem_type != mem_type)
 		goto out;
 
-//FIXME	spin_lock(&bo->lock);
+	spin_lock(&bo->lock);
 	ret = ttm_bo_wait(bo, false, interruptible, no_wait);
-//FIXME	spin_unlock(&bo->lock);
+	spin_unlock(&bo->lock);
 
 	if (unlikely(ret != 0)) {
 		if (ret != -ERESTART) {
@@ -672,7 +675,7 @@ retry_pre_get:
 			break;
 
 		entry = list_first_entry(lru, struct ttm_buffer_object, lru);
-//FIXME		kref_get(&entry->list_kref);
+		kref_get(&entry->list_kref);
 
 		ret =
 		    ttm_bo_reserve_locked(entry, interruptible, no_wait,
@@ -686,14 +689,14 @@ retry_pre_get:
 		if (unlikely(ret != 0))
 			return ret;
 
-//FIXME		while (put_count--)
-//FIXME			kref_put(&entry->list_kref, ttm_bo_ref_bug);
+		while (put_count--)
+			kref_put(&entry->list_kref, ttm_bo_ref_bug);
 
 		ret = ttm_bo_evict(entry, mem_type, interruptible, no_wait);
 
 		ttm_bo_unreserve(entry);
 
-//FIXME		kref_put(&entry->list_kref, ttm_bo_release_list);
+		kref_put(&entry->list_kref, ttm_bo_release_list);
 		if (ret)
 			return ret;
 
@@ -921,9 +924,9 @@ int ttm_bo_move_buffer(struct ttm_buffer_object *bo,
 	 * instead of doing it here.
 	 */
 
-//FIXME	spin_lock(&bo->lock);
+	spin_lock(&bo->lock);
 	ret = ttm_bo_wait(bo, false, interruptible, no_wait);
-//FIXME	spin_unlock(&bo->lock);
+	spin_unlock(&bo->lock);
 
 	if (ret)
 		return ret;
@@ -1075,9 +1078,9 @@ int ttm_buffer_object_init(struct ttm_bo_device *bdev,
 	}
 	bo->destroy = destroy;
 
-//FIXME	spin_lock_init(&bo->lock);
-//FIXME	kref_init(&bo->kref);
-//FIXME	kref_init(&bo->list_kref);
+	spin_lock_init(&bo->lock);
+	kref_init(&bo->kref);
+	kref_init(&bo->list_kref);
 	atomic_set(&bo->cpu_writers, 0);
 	atomic_set(&bo->reserved, 1);
 //FIXME	init_waitqueue_head(&bo->event_queue);
@@ -1098,7 +1101,7 @@ int ttm_buffer_object_init(struct ttm_bo_device *bdev,
 	bo->seq_valid = false;
 	bo->persistant_swap_storage = persistant_swap_storage;
 	bo->acc_size = acc_size;
-//FIXME	atomic_inc(&bo->glob->bo_count);
+	atomic_inc(&bo->glob->bo_count);
 
 	ret = ttm_bo_check_placement(bo, flags, 0ULL);
 	if (unlikely(ret != 0))
@@ -1190,9 +1193,9 @@ static int ttm_bo_leave_list(struct ttm_buffer_object *bo,
 {
 	int ret;
 
-//FIXME	spin_lock(&bo->lock);
+	spin_lock(&bo->lock);
 	ret = ttm_bo_wait(bo, false, false, false);
-//FIXME	spin_unlock(&bo->lock);
+	spin_unlock(&bo->lock);
 
 	if (ret && allow_errors)
 		goto out;
@@ -1225,21 +1228,27 @@ static int ttm_bo_force_list_clean(struct ttm_bo_device *bdev,
 	/*
 	 * Can't use standard list traversal since we're unlocking.
 	 */
+    IMPLEMENT("HACK!HACK!HACK!HACK!HACK\n");
+return 0; //HACK
+#warning HACK !!!! ELSE GOES INTO INFINITE LOOP
+#warning HACK !!!! ELSE GOES INTO INFINITE LOOP
+#warning HACK !!!! ELSE GOES INTO INFINITE LOOP
+#warning HACK !!!! ELSE GOES INTO INFINITE LOOP
 
 	spin_lock(&glob->lru_lock);
-
+asm("int3");
 	while (!list_empty(head)) {
 		entry = list_first_entry(head, struct ttm_buffer_object, lru);
-//FIXME		kref_get(&entry->list_kref);
+		kref_get(&entry->list_kref);
 		ret = ttm_bo_reserve_locked(entry, false, false, false, 0);
 		put_count = ttm_bo_del_from_lru(entry);
 		spin_unlock(&glob->lru_lock);
-//FIXME		while (put_count--)
-//FIXME			kref_put(&entry->list_kref, ttm_bo_ref_bug);
+		while (put_count--)
+			kref_put(&entry->list_kref, ttm_bo_ref_bug);
 		BUG_ON(ret);
 		ret = ttm_bo_leave_list(entry, mem_type, allow_errors);
 		ttm_bo_unreserve(entry);
-//FIXME		kref_put(&entry->list_kref, ttm_bo_release_list);
+		kref_put(&entry->list_kref, ttm_bo_release_list);
 		spin_lock(&glob->lru_lock);
 	}
 
@@ -1415,7 +1424,7 @@ int ttm_bo_global_init(struct ttm_global_reference *ref)
 	glob->ttm_bo_size = glob->ttm_bo_extra_size +
 		ttm_round_pot(sizeof(struct ttm_buffer_object));
 
-//FIXME	atomic_set(&glob->bo_count, 0);
+	atomic_set(&glob->bo_count, 0);
 
 //FIXME	kobject_init(&glob->kobj, &ttm_bo_glob_kobj_type);
 //FIXME	ret = kobject_add(&glob->kobj, ttm_get_kobj(), "buffer_objects");
@@ -1606,7 +1615,7 @@ static void ttm_bo_vm_insert_rb(struct ttm_buffer_object *bo)
 	rb_link_node(&bo->vm_rb, parent, cur);
 	rb_insert_color(&bo->vm_rb, &bdev->addr_space_rb);
 #else
-IMPLEMENT("\n");
+//IMPLEMENT("\n");
 #endif
 }
 
@@ -1676,40 +1685,45 @@ int ttm_bo_wait(struct ttm_buffer_object *bo,
 			void *tmp_obj = bo->sync_obj;
 			bo->sync_obj = NULL;
 			clear_bit(TTM_BO_PRIV_FLAG_MOVING, &bo->priv_flags);
-//FIXME			spin_unlock(&bo->lock);
+			spin_unlock(&bo->lock);
 			driver->sync_obj_unref(&tmp_obj);
-//FIXME			spin_lock(&bo->lock);
+			spin_lock(&bo->lock);
 			continue;
 		}
 
+#if !defined(__AROS__)
 		if (no_wait)
 			return -EBUSY;
+#endif
+#warning VERY BAD THING DONE
+/* Sometimes the fence is not signalled in time and using no_wait makes function exit with error
+   It is either a hidden race condition or bug in port */
 
 		sync_obj = driver->sync_obj_ref(bo->sync_obj);
 		sync_obj_arg = bo->sync_obj_arg;
-//FIXME		spin_unlock(&bo->lock);
+		spin_unlock(&bo->lock);
 		ret = driver->sync_obj_wait(sync_obj, sync_obj_arg,
 					    lazy, interruptible);
 		if (unlikely(ret != 0)) {
 			driver->sync_obj_unref(&sync_obj);
-//FIXME			spin_lock(&bo->lock);
+			spin_lock(&bo->lock);
 			return ret;
 		}
-//FIXME		spin_lock(&bo->lock);
+		spin_lock(&bo->lock);
 		if (likely(bo->sync_obj == sync_obj &&
 			   bo->sync_obj_arg == sync_obj_arg)) {
 			void *tmp_obj = bo->sync_obj;
 			bo->sync_obj = NULL;
 			clear_bit(TTM_BO_PRIV_FLAG_MOVING,
 				  &bo->priv_flags);
-//FIXME			spin_unlock(&bo->lock);
+			spin_unlock(&bo->lock);
 			driver->sync_obj_unref(&sync_obj);
 			driver->sync_obj_unref(&tmp_obj);
-//FIXME			spin_lock(&bo->lock);
+			spin_lock(&bo->lock);
 		} else {
-//FIXME			spin_unlock(&bo->lock);
+			spin_unlock(&bo->lock);
 			driver->sync_obj_unref(&sync_obj);
-//FIXME			spin_lock(&bo->lock);
+			spin_lock(&bo->lock);
 		}
 	}
 	return 0;
@@ -1756,10 +1770,12 @@ int ttm_bo_synccpu_write_grab(struct ttm_buffer_object *bo, bool no_wait)
 
 	ret = ttm_bo_reserve(bo, true, no_wait, false, 0);
 	if (unlikely(ret != 0))
+    {
 		return ret;
-//FIXME	spin_lock(&bo->lock);
+    }
+	spin_lock(&bo->lock);
 	ret = ttm_bo_wait(bo, false, true, no_wait);
-//FIXME	spin_unlock(&bo->lock);
+	spin_unlock(&bo->lock);
 	if (likely(ret == 0))
 		atomic_inc(&bo->cpu_writers);
 	ttm_bo_unreserve(bo);
@@ -1803,7 +1819,7 @@ static int ttm_bo_swapout(struct ttm_mem_shrink *shrink)
 
 		bo = list_first_entry(&glob->swap_lru,
 				      struct ttm_buffer_object, swap);
-//FIXME		kref_get(&bo->list_kref);
+		kref_get(&bo->list_kref);
 
 		/**
 		 * Reserve buffer. Since we unlock while sleeping, we need
@@ -1815,7 +1831,7 @@ static int ttm_bo_swapout(struct ttm_mem_shrink *shrink)
 		if (unlikely(ret == -EBUSY)) {
 			spin_unlock(&glob->lru_lock);
 			ttm_bo_wait_unreserved(bo, false);
-//FIXME			kref_put(&bo->list_kref, ttm_bo_release_list);
+			kref_put(&bo->list_kref, ttm_bo_release_list);
 			spin_lock(&glob->lru_lock);
 		}
 	}
@@ -1824,16 +1840,16 @@ static int ttm_bo_swapout(struct ttm_mem_shrink *shrink)
 	put_count = ttm_bo_del_from_lru(bo);
 	spin_unlock(&glob->lru_lock);
 
-//FIXME	while (put_count--)
-//FIXME		kref_put(&bo->list_kref, ttm_bo_ref_bug);
+	while (put_count--)
+		kref_put(&bo->list_kref, ttm_bo_ref_bug);
 
 	/**
 	 * Wait for GPU, then move to system cached.
 	 */
 
-//FIXME	spin_lock(&bo->lock);
+	spin_lock(&bo->lock);
 	ret = ttm_bo_wait(bo, false, false, false);
-//FIXME	spin_unlock(&bo->lock);
+	spin_unlock(&bo->lock);
 
 	if (unlikely(ret != 0))
 		goto out;
@@ -1875,7 +1891,7 @@ out:
 
 	atomic_set(&bo->reserved, 0);
 //FIXME	wake_up_all(&bo->event_queue);
-//FIXME	kref_put(&bo->list_kref, ttm_bo_release_list);
+	kref_put(&bo->list_kref, ttm_bo_release_list);
 	return ret;
 }
 

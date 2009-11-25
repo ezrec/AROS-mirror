@@ -38,7 +38,7 @@ nouveau_gem_object_new(struct drm_gem_object *gem)
 {
 	return 0;
 }
-#if !defined(__AROS__)
+
 void
 nouveau_gem_object_del(struct drm_gem_object *gem)
 {
@@ -59,7 +59,6 @@ nouveau_gem_object_del(struct drm_gem_object *gem)
 
 	ttm_bo_unref(&bo);
 }
-#endif
 
 int
 nouveau_gem_new(struct drm_device *dev, struct nouveau_channel *chan,

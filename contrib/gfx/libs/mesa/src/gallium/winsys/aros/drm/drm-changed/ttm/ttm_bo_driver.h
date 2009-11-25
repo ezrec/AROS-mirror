@@ -427,7 +427,7 @@ struct ttm_bo_global {
 	/**
 	 * Internal protection.
 	 */
-//FIXME	atomic_t bo_count;
+	atomic_t bo_count;
 };
 
 

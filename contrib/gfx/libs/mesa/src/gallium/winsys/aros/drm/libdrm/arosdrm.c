@@ -258,10 +258,25 @@ void drmMUnmap(int fd, uint32_t handle)
     
     /* Translate to nouveau_bo */
     nvbo = nouveau_gem_object(gem_object);
-    if (!nvbo)
-        return NULL;
+    if (!nvbo) return;
     
     /* Perform mapping if not already done */
     if (nvbo->kmap.virtual)
         nouveau_bo_unmap(nvbo);
+}
+
+int drmGEMIoctl(int fd, unsigned long drmCommandIndex, void *data)
+{
+    if (!drm_files[fd])
+        return -EINVAL;
+    
+    switch(drmCommandIndex)
+    {
+        case(DRM_IOCTL_GEM_CLOSE):
+            return drm_gem_close_ioctl(&global_drm_device, data, drm_files[fd]); 
+        default:
+            DRM_IMPL("GEM COMMAND %d\n", drmCommandIndex);
+    }
+    
+    return 0;
 }

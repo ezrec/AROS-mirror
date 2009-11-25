@@ -59,6 +59,14 @@ int drm_init(struct drm_driver * driver)
     dev->driver = driver;
     InitSemaphore(&dev->struct_mutex.semaphore);
     
+    if (driver->driver_features & DRIVER_GEM) {
+        if (drm_gem_init(dev)) {
+            DRM_ERROR("Cannot initialize graphics execution "
+                  "manager (GEM)\n");
+            return -1;
+        }
+    }
+    
     DRM_DEBUG("%s, %s\n", name, busid);
 #if !defined(HOSTED_BUILD)    
     ret = drm_aros_find_supported_video_card(dev);

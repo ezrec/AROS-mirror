@@ -41,7 +41,7 @@
 #include <linux/rbtree.h>
 #include <linux/bitmap.h>
 #else
-#include "drm_compat_types.h"
+#include "drm_compat_funcs.h"
 #endif
 
 struct ttm_bo_device;
@@ -172,10 +172,10 @@ struct ttm_buffer_object {
 	* Members not needing protection.
 	*/
 
-//FIXME:	struct kref kref;
-//FIXME:	struct kref list_kref;
+	struct kref kref;
+	struct kref list_kref;
 //FIXME:	wait_queue_head_t event_queue;
-//FIXME:	spinlock_t lock;
+	spinlock_t lock;
 
 	/**
 	 * Members protected by the bo::reserved lock.
@@ -273,7 +273,7 @@ struct ttm_bo_kmap_obj {
 static inline struct ttm_buffer_object *
 ttm_bo_reference(struct ttm_buffer_object *bo)
 {
-//FIXME	kref_get(&bo->kref);
+	kref_get(&bo->kref);
 	return bo;
 }
 
