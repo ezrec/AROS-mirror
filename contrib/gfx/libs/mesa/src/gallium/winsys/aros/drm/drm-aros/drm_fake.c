@@ -17,18 +17,6 @@ struct ttm_backend *ttm_agp_backend_init(struct ttm_bo_device *bdev,
     return NULL;
 }
 
-int ttm_bo_swapout(struct ttm_mem_shrink *shrink)
-{
-    asm("int3");;
-    return 0;
-}
-
-int ttm_tt_swapin(struct ttm_tt *ttm)
-{
-    asm("int3");
-    return 0;
-}
-
 void drm_clflush_pages(struct page *pages[], unsigned long num_pages)
 {
     asm("int3");

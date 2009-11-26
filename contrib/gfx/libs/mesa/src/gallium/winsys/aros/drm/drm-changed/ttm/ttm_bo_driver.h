@@ -34,10 +34,11 @@
 #include "ttm/ttm_memory.h"
 #include "ttm/ttm_module.h"
 #include "drm_mm.h"
-//FIXME:#include "linux/workqueue.h"
-//FIXME:#include "linux/fs.h"
-//FIXME:#include "linux/spinlock.h"
-#if defined(__AROS__)
+#if !defined(__AROS__)
+#include "linux/workqueue.h"
+#include "linux/fs.h"
+#include "linux/spinlock.h"
+#else
 #include "drm_compat_types.h"
 #endif
 
@@ -122,8 +123,10 @@ struct ttm_backend {
 #define TTM_PAGE_FLAG_USER            (1 << 1)
 #define TTM_PAGE_FLAG_USER_DIRTY      (1 << 2)
 #define TTM_PAGE_FLAG_WRITE           (1 << 3)
+#if !defined(__AROS__)
 #define TTM_PAGE_FLAG_SWAPPED         (1 << 4)
 #define TTM_PAGE_FLAG_PERSISTANT_SWAP (1 << 5)
+#endif
 #define TTM_PAGE_FLAG_ZERO_ALLOC      (1 << 6)
 #define TTM_PAGE_FLAG_DMA32           (1 << 7)
 
@@ -406,9 +409,13 @@ struct ttm_bo_global {
 	 */
 
 //FIXME	struct kobject kobj;
+#if !defined(__AROS__)
 	struct ttm_mem_global *mem_glob;
 	struct page *dummy_read_page;
 	struct ttm_mem_shrink shrink;
+#else
+    struct page *dummy_read_page;
+#endif
 	size_t ttm_bo_extra_size;
 	size_t ttm_bo_size;
 	struct mutex device_list_mutex;
@@ -916,7 +923,9 @@ extern int ttm_bo_move_accel_cleanup(struct ttm_buffer_object *bo,
 
 #if (defined(CONFIG_AGP) || (defined(CONFIG_AGP_MODULE) && defined(MODULE)))
 #define TTM_HAS_AGP
-//FIXME:#include <linux/agp_backend.h>
+#if !defined(__AROS__)
+#include <linux/agp_backend.h>
+#endif
 
 /**
  * ttm_agp_backend_init

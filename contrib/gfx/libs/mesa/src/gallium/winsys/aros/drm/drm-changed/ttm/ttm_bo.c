@@ -48,8 +48,8 @@
 #define TTM_BO_HASH_ORDER 13
 
 static int ttm_bo_setup_vm(struct ttm_buffer_object *bo);
-static int ttm_bo_swapout(struct ttm_mem_shrink *shrink);
 #if !defined(__AROS__)
+static int ttm_bo_swapout(struct ttm_mem_shrink *shrink);
 static void ttm_bo_global_kobj_release(struct kobject *kobj);
 static struct attribute ttm_bo_count = {
 	.name = "bo_count",
@@ -109,7 +109,9 @@ static void ttm_bo_release_list(struct kref *list_kref)
 	if (bo->destroy)
 		bo->destroy(bo);
 	else {
+#if !defined(__AROS__)
 		ttm_mem_global_free(bdev->glob->mem_glob, bo->acc_size);
+#endif
 		kfree(bo);
 	}
 }
@@ -1390,12 +1392,12 @@ int ttm_bo_global_init(struct ttm_global_reference *ref)
 	struct ttm_bo_global_ref *bo_ref =
 		container_of(ref, struct ttm_bo_global_ref, ref);
 	struct ttm_bo_global *glob = ref->object;
-	int ret;
+	int ret = 0;
 
 	mutex_init(&glob->device_list_mutex);
 	spin_lock_init(&glob->lru_lock);
-	glob->mem_glob = bo_ref->mem_glob;
 #if !defined(__AROS__)
+	glob->mem_glob = bo_ref->mem_glob;
 	glob->dummy_read_page = alloc_page(__GFP_ZERO | GFP_DMA32);
 #else
     glob->dummy_read_page = my_create_page();
@@ -1409,6 +1411,7 @@ int ttm_bo_global_init(struct ttm_global_reference *ref)
 	INIT_LIST_HEAD(&glob->swap_lru);
 	INIT_LIST_HEAD(&glob->device_list);
 
+#if !defined(__AROS__)
 	ttm_mem_init_shrink(&glob->shrink, ttm_bo_swapout);
 	ret = ttm_mem_register_shrink(glob->mem_glob, &glob->shrink);
 	if (unlikely(ret != 0)) {
@@ -1416,6 +1419,7 @@ int ttm_bo_global_init(struct ttm_global_reference *ref)
 		       "Could not register buffer object swapout.\n");
 		goto out_no_shrink;
 	}
+#endif
 
 	glob->ttm_bo_extra_size =
 		ttm_round_pot(sizeof(struct ttm_tt)) +
@@ -1796,6 +1800,7 @@ void ttm_bo_synccpu_write_release(struct ttm_buffer_object *bo)
 }
 EXPORT_SYMBOL(ttm_bo_synccpu_write_release);
 
+#if !defined(__AROS__)
 /**
  * A buffer object shrink method that tries to swap out the first
  * buffer object on the bo_global::swap_lru list.
@@ -1875,12 +1880,7 @@ static int ttm_bo_swapout(struct ttm_mem_shrink *shrink)
 	 * anyone tries to access a ttm page.
 	 */
 
-#if !defined(__AROS__)
 	ret = ttm_tt_swapout(bo->ttm, bo->persistant_swap_storage);
-#else
-    IMPLEMENT("Calling ttm_tt_swapout\n");
-    #warning IMPLEMENT Calling ttm_tt_swapout
-#endif
 out:
 
 	/**
@@ -1890,7 +1890,7 @@ out:
 	 */
 
 	atomic_set(&bo->reserved, 0);
-//FIXME	wake_up_all(&bo->event_queue);
+	wake_up_all(&bo->event_queue);
 	kref_put(&bo->list_kref, ttm_bo_release_list);
 	return ret;
 }
@@ -1900,3 +1900,4 @@ void ttm_bo_swapout_all(struct ttm_bo_device *bdev)
 	while (ttm_bo_swapout(&bdev->glob->shrink) == 0)
 		;
 }
+#endif

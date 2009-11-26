@@ -43,7 +43,9 @@
 #include "ttm/ttm_bo_driver.h"
 #include "ttm/ttm_placement.h"
 
+#if !defined(__AROS__)
 static int ttm_tt_swapin(struct ttm_tt *ttm);
+#endif
 
 /**
  * Allocates storage for pointers to the pages that back the ttm.
@@ -132,7 +134,9 @@ static void ttm_tt_free_user_pages(struct ttm_tt *ttm)
 #endif
 
 		ttm->pages[i] = NULL;
+#if !defined(__AROS__)
 		ttm_mem_global_free(ttm->glob->mem_glob, PAGE_SIZE);
+#endif
 		put_page(page);
 	}
 	ttm->state = tt_unpopulated;
@@ -143,8 +147,10 @@ static void ttm_tt_free_user_pages(struct ttm_tt *ttm)
 static struct page *__ttm_tt_get_page(struct ttm_tt *ttm, int index)
 {
 	struct page *p;
+#if !defined(__AROS__)
 	struct ttm_mem_global *mem_glob = ttm->glob->mem_glob;
 	int ret;
+#endif
 
 	while (NULL == (p = ttm->pages[index])) {
 #if !defined(__AROS__)
@@ -158,9 +164,11 @@ static struct page *__ttm_tt_get_page(struct ttm_tt *ttm, int index)
 		if (!p)
 			return NULL;
 
+#if !defined(__AROS__)
 		ret = ttm_mem_global_alloc_page(mem_glob, p, false, false);
 		if (unlikely(ret != 0))
 			goto out_err;
+#endif
 
 		if (PageHighMem(p))
 			ttm->pages[--ttm->first_himem_page] = p;
@@ -168,13 +176,16 @@ static struct page *__ttm_tt_get_page(struct ttm_tt *ttm, int index)
 			ttm->pages[++ttm->last_lomem_page] = p;
 	}
 	return p;
+#if !defined(__AROS__)
 out_err:
 	put_page(p);
 	return NULL;
+#endif
 }
 
 struct page *ttm_tt_get_page(struct ttm_tt *ttm, int index)
 {
+#if !defined(__AROS__)
 	int ret;
 
 	if (unlikely(ttm->page_flags & TTM_PAGE_FLAG_SWAPPED)) {
@@ -182,6 +193,7 @@ struct page *ttm_tt_get_page(struct ttm_tt *ttm, int index)
 		if (unlikely(ret != 0))
 			return NULL;
 	}
+#endif
 	return __ttm_tt_get_page(ttm, index);
 }
 
@@ -190,16 +202,20 @@ int ttm_tt_populate(struct ttm_tt *ttm)
 	struct page *page;
 	unsigned long i;
 	struct ttm_backend *be;
+#if !defined(__AROS__)
 	int ret;
+#endif
 
 	if (ttm->state != tt_unpopulated)
 		return 0;
 
+#if !defined(__AROS__)
 	if (unlikely(ttm->page_flags & TTM_PAGE_FLAG_SWAPPED)) {
 		ret = ttm_tt_swapin(ttm);
 		if (unlikely(ret != 0))
 			return ret;
 	}
+#endif
 
 	be = ttm->be;
 
@@ -321,9 +337,9 @@ static void ttm_tt_free_alloced_pages(struct ttm_tt *ttm)
 				printk(KERN_ERR TTM_PFX
 				       "Erroneous page count. "
 				       "Leaking pages.\n");
-#endif
 			ttm_mem_global_free_page(ttm->glob->mem_glob,
 						 cur_page);
+#endif
 			__free_page(cur_page);
 		}
 	}
