@@ -7,6 +7,65 @@ AROS_WINSYS_SOURCES = \
             winsys/aros/arosmesa_winsys \
             winsys/aros/arosmesa_softpipe \
             winsys/aros/arosmesa_nouveau \
+            
+AROS_LIBDRM_SOURCES = \
+            winsys/aros/drm/libdrm/nouveau/nouveau_device \
+            winsys/aros/drm/libdrm/nouveau/nouveau_resource \
+            winsys/aros/drm/libdrm/nouveau/nouveau_pushbuf \
+            winsys/aros/drm/libdrm/nouveau/nouveau_notifier \
+            winsys/aros/drm/libdrm/nouveau/nouveau_grobj \
+            winsys/aros/drm/libdrm/nouveau/nouveau_channel \
+            winsys/aros/drm/libdrm/nouveau/nouveau_bo_aros \
+            winsys/aros/drm/libdrm/arosdrm \
+
+AROS_DRM_SOURCES = \
+            winsys/aros/drm/drm-aros/drm_memory \
+            winsys/aros/drm/drm-aros/drm_aros \
+            winsys/aros/drm/drm-aros/drm_bufs \
+            winsys/aros/drm/drm-aros/drm_irq \
+            winsys/aros/drm/drm-aros/drm_drv \
+            winsys/aros/drm/drm-aros/drm_fake \
+            winsys/aros/drm/drm-aros/drm_compat_funcs \
+            winsys/aros/drm/drm-aros/nouveau/nouveau_drv \
+            winsys/aros/drm/drm-changed/drm_mm \
+            winsys/aros/drm/drm-changed/drm_gem \
+            winsys/aros/drm/drm-changed/nouveau/nouveau_state \
+            winsys/aros/drm/drm-changed/nouveau/nouveau_object \
+            winsys/aros/drm/drm-changed/nouveau/nouveau_mem \
+            winsys/aros/drm/drm-changed/nouveau/nouveau_notifier_renamed \
+            winsys/aros/drm/drm-changed/nouveau/nouveau_channel_renamed \
+            winsys/aros/drm/drm-changed/nouveau/nouveau_fence \
+            winsys/aros/drm/drm-changed/nouveau/nouveau_sgdma \
+            winsys/aros/drm/drm-changed/nouveau/nouveau_gem \
+            winsys/aros/drm/drm-changed/nouveau/nouveau_ttm \
+            winsys/aros/drm/drm-changed/nouveau/nouveau_irq \
+            winsys/aros/drm/drm-changed/nouveau/nv50_graph \
+            winsys/aros/drm/drm-changed/nouveau/nv50_instmem \
+            winsys/aros/drm/drm-changed/nouveau/nv50_display \
+            winsys/aros/drm/drm-changed/ttm/ttm_global \
+            winsys/aros/drm/drm-changed/ttm/ttm_bo \
+            winsys/aros/drm/drm-changed/ttm/ttm_bo_util \
+            winsys/aros/drm/drm-changed/ttm/ttm_tt \
+            winsys/aros/drm/drm-unchanged/nouveau/nouveau_bo \
+            winsys/aros/drm/drm-unchanged/nouveau/nouveau_dma \
+            winsys/aros/drm/drm-unchanged/nouveau/nv04_fb \
+            winsys/aros/drm/drm-unchanged/nouveau/nv04_fifo \
+            winsys/aros/drm/drm-unchanged/nouveau/nv04_graph \
+            winsys/aros/drm/drm-unchanged/nouveau/nv04_instmem \
+            winsys/aros/drm/drm-unchanged/nouveau/nv04_mc \
+            winsys/aros/drm/drm-unchanged/nouveau/nv04_timer \
+            winsys/aros/drm/drm-unchanged/nouveau/nv10_fb \
+            winsys/aros/drm/drm-unchanged/nouveau/nv10_fifo \
+            winsys/aros/drm/drm-unchanged/nouveau/nv10_graph \
+            winsys/aros/drm/drm-unchanged/nouveau/nv20_graph \
+            winsys/aros/drm/drm-unchanged/nouveau/nv40_fb \
+            winsys/aros/drm/drm-unchanged/nouveau/nv40_fifo \
+            winsys/aros/drm/drm-unchanged/nouveau/nv40_graph \
+            winsys/aros/drm/drm-unchanged/nouveau/nv40_mc \
+            winsys/aros/drm/drm-unchanged/nouveau/nv50_fifo \
+            winsys/aros/drm/drm-unchanged/nouveau/nv50_mc \
+
+AROS_DRM_OLD_SOURCES = \
             winsys/aros/libdrm/libdrm/nouveau/nouveau_resource \
             winsys/aros/libdrm/libdrm/nouveau/nouveau_grobj \
             winsys/aros/libdrm/libdrm/nouveau/nouveau_pushbuf \
@@ -301,6 +360,8 @@ GALLIUM_I915_SOURCES = \
 AROS_GALLIUM_SOURCES = \
             $(AROS_STATE_TRACKER_SOURCES) \
             $(AROS_WINSYS_SOURCES) \
+            $(AROS_LIBDRM_SOURCES) \
+            $(AROS_DRM_SOURCES) \
             $(GALLIUM_AUXILIARY_SOURCES) \
             $(GALLIUM_SOFTPIPE_SOURCES) \
             $(GALLIUM_NVIDIA_SOURCES) \
