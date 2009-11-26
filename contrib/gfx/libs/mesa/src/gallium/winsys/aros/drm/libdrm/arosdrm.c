@@ -273,7 +273,11 @@ int drmGEMIoctl(int fd, unsigned long drmCommandIndex, void *data)
     switch(drmCommandIndex)
     {
         case(DRM_IOCTL_GEM_CLOSE):
-            return drm_gem_close_ioctl(&global_drm_device, data, drm_files[fd]); 
+            return drm_gem_close_ioctl(&global_drm_device, data, drm_files[fd]);
+        case(DRM_IOCTL_GEM_OPEN):
+            return drm_gem_open_ioctl(&global_drm_device, data, drm_files[fd]);
+        case(DRM_IOCTL_GEM_FLINK):
+            return drm_gem_flink_ioctl(&global_drm_device, data, drm_files[fd]);
         default:
             DRM_IMPL("GEM COMMAND %d\n", drmCommandIndex);
     }

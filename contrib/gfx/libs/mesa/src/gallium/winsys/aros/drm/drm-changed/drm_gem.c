@@ -282,7 +282,6 @@ drm_gem_close_ioctl(struct drm_device *dev, void *data,
 	return ret;
 }
 
-#if !defined(__AROS__)
 /**
  * Create a global name for an object, returning the name.
  *
@@ -377,6 +376,7 @@ drm_gem_open_ioctl(struct drm_device *dev, void *data,
 	return 0;
 }
 
+#if !defined(__AROS__)
 /**
  * Called at device open time, sets up the structure for handling refcounting
  * of mm objects.

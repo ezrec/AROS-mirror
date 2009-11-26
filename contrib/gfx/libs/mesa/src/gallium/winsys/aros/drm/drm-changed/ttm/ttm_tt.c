@@ -64,7 +64,7 @@ static void ttm_tt_alloc_page_directory(struct ttm_tt *ttm)
 			ttm->page_flags |= TTM_PAGE_FLAG_VMALLOC;
 	}
 #if defined(__AROS__)
-    ttm->allocated_buffer = AllocVec(ttm->num_pages * PAGE_SIZE + PAGE_SIZE - 1, MEMF_PUBLIC | MEMF_CLEAR);
+    ttm->allocated_buffer = AllocVec((ttm->num_pages * PAGE_SIZE) + PAGE_SIZE - 1, MEMF_PUBLIC | MEMF_CLEAR);
 #endif
 }
 

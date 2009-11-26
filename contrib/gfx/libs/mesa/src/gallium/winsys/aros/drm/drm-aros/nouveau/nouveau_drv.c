@@ -15,7 +15,7 @@ extern struct drm_ioctl_desc nouveau_ioctls[];
 
 static struct drm_driver driver =
 {
-    .driver_features = DRIVER_GEM,
+    .driver_features = DRIVER_MODESET | DRIVER_GEM,
     .load = nouveau_load,
     .firstopen = nouveau_firstopen,
     .preclose = nouveau_preclose,

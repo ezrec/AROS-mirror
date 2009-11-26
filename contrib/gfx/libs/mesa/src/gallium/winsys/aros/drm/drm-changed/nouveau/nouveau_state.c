@@ -393,6 +393,21 @@ DRM_IMPL("Calling drm_vblank_init\n");
 #warning IMPLEMENT Calling drm_vblank_init
 #endif
 
+#if defined(__AROS__)
+    {
+        struct nouveau_bo * screen_bo = NULL;
+        /* Create buffer object to protect visible screen. */
+        /* FIXME: Allocate FullHD buffer size for now, should read real resolution later */
+        nouveau_gem_new(dev, NULL, 1920 * 1080 * 4, 0, 4, 0, 0, false, false, &screen_bo);
+
+        /* Create global name == 1 */
+        idr_pre_get(&dev->object_name_idr, GFP_KERNEL);
+        spin_lock(&dev->object_name_lock);
+        idr_get_new_above(&dev->object_name_idr, screen_bo->gem, 1, &screen_bo->gem->name);
+        spin_unlock(&dev->object_name_lock);
+    }
+#endif
+
 	/* what about PVIDEO/PCRTC/PRAMDAC etc? */
 
 	ret = nouveau_channel_alloc(dev, &dev_priv->channel,

@@ -394,7 +394,9 @@ drm_gem_object_handle_unreference(struct drm_gem_object *obj)
 int drm_gem_open_ioctl(struct drm_device *dev, void *data,
                struct drm_file *file_priv);
 int drm_gem_close_ioctl(struct drm_device *dev, void *data,
-            struct drm_file *file_priv);               
+            struct drm_file *file_priv);
+int drm_gem_flink_ioctl(struct drm_device *dev, void *data,
+            struct drm_file *file_priv);
 
 /* MTRR */
 #define DRM_MTRR_WC     0

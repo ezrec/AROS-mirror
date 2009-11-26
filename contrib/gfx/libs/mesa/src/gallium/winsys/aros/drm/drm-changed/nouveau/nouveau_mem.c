@@ -559,8 +559,14 @@ DRM_IMPL("Calling pci_set_dma_mask\n");
 	}
 
 	/* mappable vram */
+#if !defined(__AROS__)    
 	ret = ttm_bo_init_mm(bdev, TTM_PL_VRAM, text_size,
 						vram_size - text_size);
+#else
+#warning VRAM AT OFFSET 0 USED - MAY LEAD TO PROBLEMS
+    ret = ttm_bo_init_mm(bdev, TTM_PL_VRAM, 0,
+                        vram_size);
+#endif
 	if (ret) {
 		NV_ERROR(dev, "Failed VRAM mm init: %d\n", ret);
 		return ret;

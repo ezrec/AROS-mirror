@@ -260,7 +260,7 @@ arosmesa_create_nouveau_context( struct pipe_screen *pscreen )
 }
 
 static struct pipe_buffer *
-nouveau_drm_pb_from_handle(struct pipe_screen *pscreen, unsigned handle)
+nouveau_drm_pb_from_handle(struct pipe_screen *pscreen, unsigned int handle)
 {
     struct nouveau_device *dev = nouveau_screen(pscreen)->device;
     struct pipe_buffer *pb;
@@ -310,42 +310,6 @@ arosmesa_nouveau_cleanup( struct pipe_screen * screen )
     }
 }
 
-/* HACK!!! */
-struct pipe_screen * protect_screen = NULL;
-
-static void HACK_protect_screen_fb(int size)
-{
-    struct nouveau_device *dev = NULL;
-    struct nouveau_bo *bo = NULL;
-    
-    /* Create a pipe_screen separate from any actual client */
-    if(!protect_screen) 
-        protect_screen = arosmesa_create_nouveau_screen();
-    else
-        return;
-    
-    dev = nouveau_screen(protect_screen)->device;
-    
-    /* HACK - UNHOLY */
-    /* IF WE ARE LUCKY:
-    A) VISIBLE FRAMEBUFFER IS ALLOCATED AT FRAMEBUFFER OFFSET 0
-    B) THERE ARE NO ALLOCATATION ON FB HEAP
-    THEN WE WILL 'PROTECT' THE VISIBLE FRAMEBUFFER WITH THIS ALLOCATION */
-    
-    nouveau_bo_new(dev, NOUVEAU_BO_VRAM | NOUVEAU_BO_PIN, 0, size, &bo);
-}
-
-void HACK_unprotect_screen_fb(void)
-{
-    if (protect_screen) 
-    {
-        arosmesa_nouveau_cleanup(protect_screen);
-        protect_screen = NULL;
-    }
-}
-
-
-
 static struct pipe_surface *
 arosmesa_nouveau_get_screen_surface(struct pipe_screen * screen, int width, int height, int bpp)
 {
@@ -355,26 +319,7 @@ arosmesa_nouveau_get_screen_surface(struct pipe_screen * screen, int width, int 
     struct pipe_buffer *buf = NULL;
     unsigned pitch = width * bpp / 8;
 
-#warning DISABLED SCREEN PROTECTION DUE TO KSM NOT ALLOWING TO PIN THE BUFFER    
-#warning DISABLED SCREEN PROTECTION DUE TO KSM NOT ALLOWING TO PIN THE BUFFER
-#warning DISABLED SCREEN PROTECTION DUE TO KSM NOT ALLOWING TO PIN THE BUFFER
-#warning DISABLED SCREEN PROTECTION DUE TO KSM NOT ALLOWING TO PIN THE BUFFER
-#warning DISABLED SCREEN PROTECTION DUE TO KSM NOT ALLOWING TO PIN THE BUFFER
-#warning DISABLED SCREEN PROTECTION DUE TO KSM NOT ALLOWING TO PIN THE BUFFER
-#warning DISABLED SCREEN PROTECTION DUE TO KSM NOT ALLOWING TO PIN THE BUFFER
-#warning DISABLED SCREEN PROTECTION DUE TO KSM NOT ALLOWING TO PIN THE BUFFER
-    bug("DISABLED SCREEN PROTECTION DUE TO KSM NOT ALLOWING TO PIN THE BUFFER\n");
-    return NULL;
-    
-    /* FIXME: This should be done at driver start! */
-    HACK_protect_screen_fb(pitch * height);
-
-    #warning hardcoded start of visible framebuffer
-    /* FIXME: The third parameter represents the offset to start of visible framebuffer - this must be read, not hardcoded 
-    nvidia hidd registers_base + x00600000 + (0x800/4)
-    */
-
-    buf = nouveau_drm_pb_from_handle(screen, 0 /*FIXME: THIS VALUE MATTERS!!!! - offset in GFX memory where visible framebuffer starts */);
+    buf = nouveau_drm_pb_from_handle(screen, 1 /* driver makes sure object with ID 1 is visible framebuffer */);
     if (!buf)
         return NULL;
 
