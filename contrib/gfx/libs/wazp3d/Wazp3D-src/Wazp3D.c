@@ -8086,7 +8086,8 @@ NLOOP(lines->vertexcount)
 ULONG W3D_ClearDrawRegion(W3D_Context *context, ULONG color)
 {
 struct WAZP3D_context *WC=context->driver;
-UBYTE *ARGB=(UBYTE *)color;
+ULONG ARGB32=color;
+UBYTE *ARGB=(UBYTE *)&ARGB32;
 UBYTE RGBA[4];
 
 	WAZP3DFUNCTION(43);
