@@ -222,6 +222,7 @@ void * drmMMap(int fd, uint32_t handle)
     struct drm_file * f = drm_files[fd];
     struct drm_gem_object * gem_object = NULL;
     struct nouveau_bo * nvbo = NULL;
+    void * addr = NULL;
     
     if (!f)
         return NULL;
@@ -233,15 +234,23 @@ void * drmMMap(int fd, uint32_t handle)
     
     /* Translate to nouveau_bo */
     nvbo = nouveau_gem_object(gem_object);
-    if (!nvbo)
-        return NULL;
     
-    /* Perform mapping if not already done */
-    if (!nvbo->kmap.virtual)
-        nouveau_bo_map(nvbo);
+    if (nvbo)
+    {
+        /* Perform mapping if not already done */
+        if (!nvbo->kmap.virtual)
+            nouveau_bo_map(nvbo);
+        
+        addr = nvbo->kmap.virtual;
+    }
+    
+    /* Release the acquired reference */
+    mutex_lock(&global_drm_device.struct_mutex);
+    drm_gem_object_unreference(gem_object);
+    mutex_unlock(&global_drm_device.struct_mutex);    
     
     /* Return virtual address */
-    return nvbo->kmap.virtual;
+    return addr;
 }
 
 void drmMUnmap(int fd, uint32_t handle)
@@ -258,11 +267,17 @@ void drmMUnmap(int fd, uint32_t handle)
     
     /* Translate to nouveau_bo */
     nvbo = nouveau_gem_object(gem_object);
-    if (!nvbo) return;
+    if (nvbo)
+    {
+        /* Perform unmapping if not already done */
+        if (nvbo->kmap.virtual)
+            nouveau_bo_unmap(nvbo);
+    }
     
-    /* Perform mapping if not already done */
-    if (nvbo->kmap.virtual)
-        nouveau_bo_unmap(nvbo);
+    /* Release the acquired reference */
+    mutex_lock(&global_drm_device.struct_mutex);
+    drm_gem_object_unreference(gem_object);
+    mutex_unlock(&global_drm_device.struct_mutex);
 }
 
 int drmGEMIoctl(int fd, unsigned long drmCommandIndex, void *data)

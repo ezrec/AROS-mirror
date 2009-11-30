@@ -552,9 +552,6 @@ static void ttm_bo_release(struct kref *kref)
 	if (likely(bo->vm_node != NULL)) {
 #if !defined(__AROS__)        
 		rb_erase(&bo->vm_rb, &bdev->addr_space_rb);
-#else
-IMPLEMENT("Calling rb_erase(&bo->vm_rb, &bdev->addr_space_rb)\n");
-#warning IMPLEMENT Calling rb_erase(&bo->vm_rb, &bdev->addr_space_rb)
 #endif
 		drm_mm_put_block(bo->vm_node);
 		bo->vm_node = NULL;
@@ -1594,9 +1591,9 @@ void ttm_bo_unmap_virtual(struct ttm_buffer_object *bo)
 }
 EXPORT_SYMBOL(ttm_bo_unmap_virtual);
 
+#if !defined(__AROS__)
 static void ttm_bo_vm_insert_rb(struct ttm_buffer_object *bo)
 {
-#if !defined(__AROS__)
 	struct ttm_bo_device *bdev = bo->bdev;
 	struct rb_node **cur = &bdev->addr_space_rb.rb_node;
 	struct rb_node *parent = NULL;
@@ -1618,11 +1615,8 @@ static void ttm_bo_vm_insert_rb(struct ttm_buffer_object *bo)
 
 	rb_link_node(&bo->vm_rb, parent, cur);
 	rb_insert_color(&bo->vm_rb, &bdev->addr_space_rb);
-#else
-//IMPLEMENT("\n");
-#endif
 }
-
+#endif
 
 /**
  * ttm_bo_setup_vm:
@@ -1662,7 +1656,9 @@ retry_pre_get:
 		goto retry_pre_get;
 	}
 
+#if !defined(__AROS__)
 	ttm_bo_vm_insert_rb(bo);
+#endif
 //FIXME	write_unlock(&bdev->vm_lock);
 	bo->addr_space_offset = ((uint64_t) bo->vm_node->start) << PAGE_SHIFT;
 

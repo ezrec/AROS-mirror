@@ -223,7 +223,9 @@ struct ttm_buffer_object {
 	 * Members protected by the bdev::vm_lock
 	 */
 
-//FIXME:	struct rb_node vm_rb;
+#if !defined(__AROS__)
+	struct rb_node vm_rb;
+#endif
 	struct drm_mm_node *vm_node;
 
 

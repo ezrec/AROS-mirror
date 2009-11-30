@@ -19,7 +19,7 @@
 #define readb(addr)                     (*(volatile BYTE*)(addr))
 #define kzalloc(size, flags)            AllocVec(size, MEMF_ANY | MEMF_CLEAR)
 #define kmalloc(size, flags)            AllocVec(size, MEMF_ANY)
-#define vmalloc_user(size)              AllocVec(size, MEMF_ANY)
+#define vmalloc_user(size)              AllocVec(size, MEMF_ANY | MEMF_CLEAR)
 #define kfree(objp)                     FreeVec(objp)
 #define vfree(objp)                     FreeVec(objp)
 #define roundup(x, y)                   ((((x) + ((y) - 1)) / (y)) * (y))
