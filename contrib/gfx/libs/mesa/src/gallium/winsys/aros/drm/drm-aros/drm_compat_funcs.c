@@ -124,7 +124,7 @@ int idr_pre_get_internal(struct idr *idp)
         if (idp->pointers)
         {
             /* Copy old table into new */
-            CopyMem(idp->pointers, newtab, idp->size);
+            CopyMem(idp->pointers, newtab, idp->size * sizeof(IPTR));
             
             /* Release old table */
             FreeVec(idp->pointers);
@@ -166,7 +166,10 @@ void *idr_find(struct idr *idp, int id)
 void idr_remove(struct idr *idp, int id)
 {
     if ((id < idp->size) && (id >= 0))
+    {
         idp->pointers[id] = (IPTR)NULL;
+        idp->occupied--;
+    }
 }
 
 void idr_init(struct idr *idp)
