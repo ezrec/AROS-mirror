@@ -574,6 +574,9 @@ void AROSMesaSwapBuffers(AROSMesaContext amesa)
         driver->display_surface(amesa, surf);
     }
 
+    /* Flush. Executes all code posted in driver->display_surface */
+    st_flush(amesa->st, PIPE_FLUSH_RENDER_CACHE, NULL);
+
     _aros_check_and_update_buffer_size(amesa);
 
     RESTORE_REG

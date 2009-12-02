@@ -108,16 +108,10 @@ arosmesa_nouveau_display_surface(AROSMesaContext amesa,
         }
     }
 
+    /* Flush all copy operations done */
+    pipe->flush(pipe, PIPE_FLUSH_RENDER_CACHE, NULL);
+
     UnlockLayerRom(L);
-    
-    /* FIXME: There is still something wrong with this code:
-       a) have another window under this window
-       b) move this another window to front
-       The hidden part of another window will not be redrawn until the other window is move
-       as if moving another window to front did not change the cliprects of our window
-       It migh assume that since the hidden window is now on top, it will simply override what
-       our window has draw - but our window renders direclty to framebuffer, so it overrides the
-       top window */
 }
 
 static int
