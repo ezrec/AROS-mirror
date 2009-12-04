@@ -422,7 +422,6 @@ static int
 nv50_graph_nvsw_vblsem_release(struct nouveau_channel *chan, int grclass,
 			       int mthd, uint32_t data)
 {
-#if !defined(__AROS__)    
 	struct drm_device *dev = chan->dev;
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 
@@ -439,13 +438,8 @@ nv50_graph_nvsw_vblsem_release(struct nouveau_channel *chan, int grclass,
 	}
 
 	list_add(&chan->nvsw.vbl_wait, &dev_priv->vbl_waiting);
-#else
-DRM_IMPL("\n");
-#warning IMPLEMENT nv50_graph_nvsw_vblsem_release
-#endif
 	return 0;
 }
-
 
 static struct nouveau_pgraph_object_method nv50_graph_nvsw_methods[] = {
 	{ 0x018c, nv50_graph_nvsw_dma_vblsem },

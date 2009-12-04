@@ -39,7 +39,6 @@ AROS_DRM_SOURCES = \
             winsys/aros/drm/drm-changed/nouveau/nouveau_gem \
             winsys/aros/drm/drm-changed/nouveau/nouveau_ttm \
             winsys/aros/drm/drm-changed/nouveau/nouveau_irq \
-            winsys/aros/drm/drm-changed/nouveau/nv50_graph \
             winsys/aros/drm/drm-changed/nouveau/nv50_instmem \
             winsys/aros/drm/drm-changed/nouveau/nv50_display \
             winsys/aros/drm/drm-changed/ttm/ttm_global \
@@ -64,6 +63,7 @@ AROS_DRM_SOURCES = \
             winsys/aros/drm/drm-unchanged/nouveau/nv40_mc \
             winsys/aros/drm/drm-unchanged/nouveau/nv50_fifo \
             winsys/aros/drm/drm-unchanged/nouveau/nv50_mc \
+            winsys/aros/drm/drm-unchanged/nouveau/nv50_graph \
 
 AROS_DRM_OLD_SOURCES = \
             winsys/aros/libdrm/libdrm/nouveau/nouveau_resource \
