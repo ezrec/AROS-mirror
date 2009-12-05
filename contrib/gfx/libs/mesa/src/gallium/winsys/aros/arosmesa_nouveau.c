@@ -47,6 +47,7 @@ arosmesa_nouveau_display_surface(AROSMesaContext amesa,
     
     struct Layer *L = amesa->visible_rp->Layer;
     struct ClipRect *CR;
+    struct Rectangle renderableLayerRect;
     
     if (amesa->screen_surface == NULL)
     {
@@ -65,6 +66,13 @@ arosmesa_nouveau_display_surface(AROSMesaContext amesa,
 
     LockLayerRom(L);
     
+    renderableLayerRect.MinX = L->bounds.MinX + amesa->left;
+    renderableLayerRect.MaxX = L->bounds.MaxX - amesa->right;
+    renderableLayerRect.MinY = L->bounds.MinY + amesa->top;
+    renderableLayerRect.MaxY = L->bounds.MaxY - amesa->bottom;
+    
+    /* Do not clip renderableLayerRect to screen rast port. CRs are already clipped and unclipped layer coords are needed: see surface_copy */
+    
     CR = L->ClipRect;
     
     for (;NULL != CR; CR = CR->Next)
@@ -76,35 +84,22 @@ arosmesa_nouveau_display_surface(AROSMesaContext amesa,
         /* I assume this means the cliprect is visible */
         if (NULL == CR->lobs)
         {
-            /* FIXME: Use rp clip rect and AND operation? !!UNIFY!! approach with _aros_recalculate_buffer_width_height */
-            LONG xmin, ymin, xmax, ymax;
+            struct Rectangle result;
             
-            /* Greater wins */
-            xmin = L->bounds.MinX + amesa->left;
-            if (CR->bounds.MinX > xmin) xmin = CR->bounds.MinX;
-            
-            /* Smaller wins */
-            xmax = L->bounds.MaxX - amesa->right;
-            if (CR->bounds.MaxX < xmax) xmax = CR->bounds.MaxX;
-            
-            /* Greater wins */
-            ymin = L->bounds.MinY + amesa->top;
-            if (CR->bounds.MinY > ymin) ymin = CR->bounds.MinY;
-            
-            /* Smaller wins */
-            ymax = L->bounds.MaxY - amesa->bottom;
-            if (CR->bounds.MaxY < ymax) ymax = CR->bounds.MaxY;
-            
-            
-            /* FIXME: clip last 4 parameters to actuall surface deminsions */
-            pipe->surface_copy(pipe, amesa->screen_surface, 
-                        xmin, 
-                        ymin, 
-                        surf, 
-                        xmin - L->bounds.MinX - amesa->left, 
-                        ymin - L->bounds.MinY - amesa->top, 
-                        xmax - xmin + 1, 
-                        ymax - ymin + 1);
+            if (AndRectRect(&renderableLayerRect, &CR->bounds, &result))
+            {
+                /* This clip rect intersects renderable layer rect */
+                
+                /* FIXME: clip last 4 parameters to actuall surface deminsions */
+                pipe->surface_copy(pipe, amesa->screen_surface, 
+                            result.MinX, 
+                            result.MinY, 
+                            surf, 
+                            result.MinX - L->bounds.MinX - amesa->left, 
+                            result.MinY - L->bounds.MinY - amesa->top, 
+                            result.MaxX - result.MinX + 1, 
+                            result.MaxY - result.MinY + 1);
+            }
         }
     }
 
