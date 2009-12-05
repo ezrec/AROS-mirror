@@ -52,6 +52,7 @@ struct page
 #define PAGE_ALIGN(addr)        (APTR)(((IPTR)(addr) + PAGE_SIZE - 1) & PAGE_MASK)
 
 struct work_struct;
+struct agp_bridge_data;
 
 /* Reference counted objects implementation */
 struct kref

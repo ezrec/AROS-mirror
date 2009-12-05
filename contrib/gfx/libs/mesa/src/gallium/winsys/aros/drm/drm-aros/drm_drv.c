@@ -14,16 +14,6 @@ int drm_lastclose(struct drm_device * dev)
     if (dev->irq_enabled)
         drm_irq_uninstall(dev);
     
-    ObtainSemaphore(&dev->struct_mutex.semaphore);
-    
-    if (dev->sg)
-    {
-        drm_sg_cleanup(dev->sg);
-        dev->sg = NULL;
-    }
-    
-    ReleaseSemaphore(&dev->struct_mutex.semaphore);
-    
     return 0;
 }
 
@@ -54,7 +44,6 @@ int drm_init(struct drm_driver * driver)
     
     /* Init fields */
     INIT_LIST_HEAD(&dev->maplist);
-    dev->sg = NULL;
     dev->irq_enabled = 0;
     dev->driver = driver;
     InitSemaphore(&dev->struct_mutex.semaphore);

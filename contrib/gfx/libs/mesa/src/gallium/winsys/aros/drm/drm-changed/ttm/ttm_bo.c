@@ -116,10 +116,10 @@ static void ttm_bo_release_list(struct kref *list_kref)
 	}
 }
 
-#if !defined(__AROS__)
+
 int ttm_bo_wait_unreserved(struct ttm_buffer_object *bo, bool interruptible)
 {
-
+#if !defined(__AROS__)
 	if (interruptible) {
 		int ret = 0;
 
@@ -130,10 +130,14 @@ int ttm_bo_wait_unreserved(struct ttm_buffer_object *bo, bool interruptible)
 	} else {
 		wait_event(bo->event_queue, atomic_read(&bo->reserved) == 0);
 	}
+#else
+IMPLEMENT("\n");
+#warning IMPLEMENT ttm_bo_wait_unreserved
+#endif    
 	return 0;
 }
 EXPORT_SYMBOL(ttm_bo_wait_unreserved);
-#endif
+
 
 static void ttm_bo_add_to_lru(struct ttm_buffer_object *bo)
 {
@@ -888,11 +892,11 @@ int ttm_bo_mem_space(struct ttm_buffer_object *bo,
 }
 EXPORT_SYMBOL(ttm_bo_mem_space);
 
-#if !defined(__AROS__)
 int ttm_bo_wait_cpu(struct ttm_buffer_object *bo, bool no_wait)
 {
 	int ret = 0;
 
+#if !defined(__AROS__)
 	if ((atomic_read(&bo->cpu_writers) > 0) && no_wait)
 		return -EBUSY;
 
@@ -901,11 +905,14 @@ int ttm_bo_wait_cpu(struct ttm_buffer_object *bo, bool no_wait)
 
 	if (ret == -ERESTARTSYS)
 		ret = -ERESTART;
+#else
+IMPLEMENT("\n");
+#warning IMPLEMENT ttm_bo_wait_cpu
+#endif
 
 	return ret;
 }
 EXPORT_SYMBOL(ttm_bo_wait_cpu);
-#endif
 
 int ttm_bo_move_buffer(struct ttm_buffer_object *bo,
 		       uint32_t proposed_placement,

@@ -921,7 +921,7 @@ extern int ttm_bo_move_accel_cleanup(struct ttm_buffer_object *bo,
  */
 //FIXME: extern pgprot_t ttm_io_prot(enum ttm_caching_state c_state, pgprot_t tmp);
 
-#if (defined(CONFIG_AGP) || (defined(CONFIG_AGP_MODULE) && defined(MODULE)))
+#if (defined(CONFIG_AGP) || (defined(CONFIG_AGP_MODULE) && defined(MODULE)) || defined(__AROS__))
 #define TTM_HAS_AGP
 #if !defined(__AROS__)
 #include <linux/agp_backend.h>

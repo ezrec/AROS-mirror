@@ -794,9 +794,13 @@ int nouveau_ioctl_getparam(struct drm_device *dev, void *data,
 		getparam->value = dev_priv->gart_info.aper_base;
 		break;
 	case NOUVEAU_GETPARAM_PCI_PHYSICAL:
+#if !defined(__AROS__)
 		if (dev->sg) {
 			getparam->value = (unsigned long)dev->sg->virtual;
 		} else {
+#else
+        {
+#endif
 			NV_ERROR(dev, "Requested PCIGART address, "
 					"while no PCIGART was created\n");
 			return -EINVAL;

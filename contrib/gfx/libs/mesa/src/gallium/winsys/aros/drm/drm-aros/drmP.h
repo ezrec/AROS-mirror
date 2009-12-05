@@ -62,11 +62,11 @@ struct Library          *OOPBase;
 //#define HOSTED_BUILD_CHIPSET    37      /* NV25 chip GeForce Ti 4200 */
 //#define HOSTED_BUILD_ARCH       0x30    /* NV30 family */
 //#define HOSTED_BUILD_CHIPSET    52      /* NV34 chip GeForce FX 5200 */
-//#define HOSTED_BUILD_ARCH       0x40    /* NV40 family */
-//#define HOSTED_BUILD_CHIPSET    67      /* NV43 chip GeForce 6200 */
-#define HOSTED_BUILD_ARCH       0x80    /* NV50 family */
+#define HOSTED_BUILD_ARCH       0x40    /* NV40 family */
+#define HOSTED_BUILD_CHIPSET    67      /* NV43 chip GeForce 6200 */
+//#define HOSTED_BUILD_ARCH       0x80    /* NV50 family */
 //#define HOSTED_BUILD_CHIPSET    132     /* G84 chip GeForce 8600 GT */
-#define HOSTED_BUILD_CHIPSET    134     /* G86 chip GeForce 8300 */
+//#define HOSTED_BUILD_CHIPSET    134     /* G86 chip GeForce 8300 */
 #endif
 
 /* HACK ENDS */
@@ -175,9 +175,6 @@ struct drm_sg_mem {
     dma_addr_t *busaddr;
 };
 
-//FIXME
-struct agp_bridge_data;
-
 struct drm_agp_head {
 //FIXME:    DRM_AGP_KERN agp_info;      /**< AGP device information */
     struct list_head memory;
@@ -228,7 +225,6 @@ struct drm_device
     int pci_device;                 /* PCI device id */
     
     struct drm_agp_head *agp;       /* AGP data */
-    struct drm_sg_mem *sg;          /* Scatter gather memory */
     
     struct drm_driver *driver;      /* Driver functions */
     void *dev_private;              /* Device private data */
@@ -322,10 +318,6 @@ resource_size_t drm_get_resource_start(struct drm_device *dev,
 //int drm_lastclose(struct drm_device *dev);
 void drm_exit(struct drm_driver *driver);
 int drm_init(struct drm_driver *driver);
-
-/* drm_scatter.c */
-//int drm_sg_alloc(struct drm_device *dev, struct drm_scatter_gather * request);
-void drm_sg_cleanup(struct drm_sg_mem * entry);
 
 /* drm_irq.c */
 int drm_irq_install(struct drm_device *dev);
