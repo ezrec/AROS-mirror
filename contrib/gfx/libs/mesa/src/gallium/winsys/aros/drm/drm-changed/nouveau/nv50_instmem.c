@@ -250,6 +250,7 @@ nv50_instmem_init(struct drm_device *dev)
 	/* Assume that praying isn't enough, check that we can re-read the
 	 * entire fake channel back from the PRAMIN BAR */
 	dev_priv->engine.instmem.prepare_access(dev, false);
+#if !defined(HOSTED_BUILD)
 	for (i = 0; i < c_size; i += 4) {
 		if (nv_rd32(dev, NV_RAMIN + i) != nv_ri32(dev, i)) {
 			NV_ERROR(dev, "Error reading back PRAMIN at 0x%08x\n",
@@ -258,6 +259,7 @@ nv50_instmem_init(struct drm_device *dev)
 			return -EINVAL;
 		}
 	}
+#endif
 	dev_priv->engine.instmem.finish_access(dev);
 
 	nv_wr32(dev, NV50_PUNK_BAR0_PRAMIN, save_nv001700);
@@ -321,7 +323,6 @@ nv50_instmem_takedown(struct drm_device *dev)
 int
 nv50_instmem_suspend(struct drm_device *dev)
 {
-#if !defined(__AROS__)
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 	struct nouveau_channel *chan = dev_priv->fifos[0];
 	struct nouveau_gpuobj *ramin = chan->ramin->gpuobj;
@@ -333,17 +334,12 @@ nv50_instmem_suspend(struct drm_device *dev)
 
 	for (i = 0; i < ramin->im_pramin->size; i += 4)
 		ramin->im_backing_suspend[i/4] = nv_ri32(dev, i);
-#else
-DRM_IMPL("\n");
-#warning IMPLEMENT nv50_instmem_suspend
-#endif
 	return 0;
 }
 
 void
 nv50_instmem_resume(struct drm_device *dev)
 {
-#if !defined(__AROS__)
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 	struct nv50_instmem_priv *priv = dev_priv->engine.instmem.priv;
 	struct nouveau_channel *chan = dev_priv->fifos[0];
@@ -368,17 +364,12 @@ nv50_instmem_resume(struct drm_device *dev)
 
 	for (i = 0; i < 8; i++)
 		nv_wr32(dev, 0x1900 + (i*4), 0);
-#else
-DRM_IMPL("\n");
-#warning IMPLEMENT nv50_instmem_resume
-#endif
 }
 
 int
 nv50_instmem_populate(struct drm_device *dev, struct nouveau_gpuobj *gpuobj,
 		      uint32_t *sz)
 {
-#if !defined(__AROS__)
 	int ret;
 
 	if (gpuobj->im_backing)
@@ -404,17 +395,13 @@ nv50_instmem_populate(struct drm_device *dev, struct nouveau_gpuobj *gpuobj,
 
 	gpuobj->im_backing_start = gpuobj->im_backing->bo.mem.mm_node->start;
 	gpuobj->im_backing_start <<= PAGE_SHIFT;
-#else
-DRM_IMPL("\n");
-#warning IMPLEMENT nv50_instmem_populate
-#endif
+
 	return 0;
 }
 
 void
 nv50_instmem_clear(struct drm_device *dev, struct nouveau_gpuobj *gpuobj)
 {
-#if !defined(__AROS__)
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 
 	if (gpuobj && gpuobj->im_backing) {
@@ -423,10 +410,6 @@ nv50_instmem_clear(struct drm_device *dev, struct nouveau_gpuobj *gpuobj)
 		nouveau_bo_ref(NULL, &gpuobj->im_backing);
 		gpuobj->im_backing = NULL;
 	}
-#else
-DRM_IMPL("\n");
-#warning IMPLEMENT nv50_instmem_clear
-#endif
 }
 
 int

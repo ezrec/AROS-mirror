@@ -20,8 +20,10 @@
 #define kzalloc(size, flags)            AllocVec(size, MEMF_ANY | MEMF_CLEAR)
 #define kmalloc(size, flags)            AllocVec(size, MEMF_ANY)
 #define vmalloc_user(size)              AllocVec(size, MEMF_ANY | MEMF_CLEAR)
+#define vmalloc(size)                   AllocVec(size, MEMF_ANY)
 #define kfree(objp)                     FreeVec(objp)
 #define vfree(objp)                     FreeVec(objp)
+#define capable(p)                      TRUE
 #define roundup(x, y)                   ((((x) + ((y) - 1)) / (y)) * (y))
 #define lower_32_bits(n)                ((u32)(n))
 #define upper_32_bits(n)                ((u32)(((n) >> 16) >> 16))

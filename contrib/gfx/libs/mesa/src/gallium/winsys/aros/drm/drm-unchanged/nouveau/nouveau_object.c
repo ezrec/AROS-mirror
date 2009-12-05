@@ -1139,7 +1139,6 @@ nouveau_gpuobj_channel_takedown(struct nouveau_channel *chan)
 int
 nouveau_gpuobj_suspend(struct drm_device *dev)
 {
-#if !defined(__AROS__)
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 	struct nouveau_gpuobj *gpuobj;
 	int i;
@@ -1169,17 +1168,13 @@ nouveau_gpuobj_suspend(struct drm_device *dev)
 			gpuobj->im_backing_suspend[i] = nv_ro32(dev, gpuobj, i);
 		dev_priv->engine.instmem.finish_access(dev);
 	}
-#else
-DRM_IMPL("\n");
-#warning IMPLEMENT nouveau_gpuobj_suspend
-#endif
+
 	return 0;
 }
 
 void
 nouveau_gpuobj_suspend_cleanup(struct drm_device *dev)
 {
-#if !defined(__AROS__)
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 	struct nouveau_gpuobj *gpuobj;
 
@@ -1196,10 +1191,6 @@ nouveau_gpuobj_suspend_cleanup(struct drm_device *dev)
 		vfree(gpuobj->im_backing_suspend);
 		gpuobj->im_backing_suspend = NULL;
 	}
-#else
-DRM_IMPL("\n");
-#warning IMPLEMENT nouveau_gpuobj_suspend_cleanup
-#endif
 }
 
 void

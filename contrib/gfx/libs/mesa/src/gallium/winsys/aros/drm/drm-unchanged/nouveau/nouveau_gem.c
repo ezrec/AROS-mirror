@@ -30,7 +30,6 @@
 #include "nouveau_drm.h"
 #include "nouveau_dma.h"
 
-
 #define nouveau_gem_pushbuf_sync(chan) 0
 
 int
@@ -137,8 +136,8 @@ nouveau_gem_ioctl_new(struct drm_device *dev, void *data,
 
 	NOUVEAU_CHECK_INITIALISED_WITH_RETURN;
 
-//FIXME	if (unlikely(dev_priv->ttm.bdev.dev_mapping == NULL))
-//FIXME		dev_priv->ttm.bdev.dev_mapping = dev_priv->dev->dev_mapping;
+	if (unlikely(dev_priv->ttm.bdev.dev_mapping == NULL))
+		dev_priv->ttm.bdev.dev_mapping = dev_priv->dev->dev_mapping;
 
 	if (req->channel_hint) {
 		NOUVEAU_GET_USER_CHANNEL_WITH_RETURN(req->channel_hint,
@@ -256,10 +255,10 @@ nouveau_gem_pushbuf_fence(struct list_head *list, struct nouveau_fence *fence)
 	list_for_each_safe(entry, tmp, list) {
 		nvbo = list_entry(entry, struct nouveau_bo, entry);
 
-//FIXME		spin_lock(&nvbo->bo.lock);
+		spin_lock(&nvbo->bo.lock);
 		prev_fence = nvbo->bo.sync_obj;
 		nvbo->bo.sync_obj = nouveau_fence_ref(fence);
-//FIXME		spin_unlock(&nvbo->bo.lock);
+		spin_unlock(&nvbo->bo.lock);
 
 		list_del(&nvbo->entry);
 		nvbo->reserved_by = NULL;
@@ -333,13 +332,13 @@ retry:
 		nvbo->reserved_by = file_priv;
 		list_add_tail(&nvbo->entry, list);
 
-	if (unlikely(atomic_read(&nvbo->bo.cpu_writers) > 0)) {
-		nouveau_gem_pushbuf_backoff(list);
-		ret = ttm_bo_wait_cpu(&nvbo->bo, false);
-		if (ret)
-			goto out_unref;
-		goto retry;
-	}
+		if (unlikely(atomic_read(&nvbo->bo.cpu_writers) > 0)) {
+			nouveau_gem_pushbuf_backoff(list);
+			ret = ttm_bo_wait_cpu(&nvbo->bo, false);
+			if (ret)
+				goto out_unref;
+			goto retry;
+		}
 	}
 
 	b = pbbo;
@@ -348,9 +347,9 @@ retry:
 
 		prev_fence = nvbo->bo.sync_obj;
 		if (prev_fence && nouveau_fence_channel(prev_fence) != chan) {
-//FIXME			spin_lock(&nvbo->bo.lock);
+			spin_lock(&nvbo->bo.lock);
 			ret = ttm_bo_wait(&nvbo->bo, false, false, false);
-//FIXME			spin_unlock(&nvbo->bo.lock);
+			spin_unlock(&nvbo->bo.lock);
 			if (ret)
 				goto out_unref;
 		}
@@ -771,7 +770,6 @@ out_next:
 	return ret;
 }
 
-
 static inline uint32_t
 domain_to_ttm(struct nouveau_bo *nvbo, uint32_t domain)
 {
@@ -805,10 +803,8 @@ nouveau_gem_ioctl_pin(struct drm_device *dev, void *data,
 		return -EINVAL;
 	}
 
-#if !defined(__AROS__)
 	if (!DRM_SUSER(DRM_CURPROC))
 		return -EPERM;
-#endif
 
 	gem = drm_gem_object_lookup(dev, file_priv, req->handle);
 	if (!gem)
@@ -955,3 +951,4 @@ nouveau_gem_ioctl_info(struct drm_device *dev, void *data,
 	mutex_unlock(&dev->struct_mutex);
 	return ret;
 }
+

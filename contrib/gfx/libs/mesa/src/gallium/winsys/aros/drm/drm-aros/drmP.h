@@ -62,10 +62,11 @@ struct Library          *OOPBase;
 //#define HOSTED_BUILD_CHIPSET    37      /* NV25 chip GeForce Ti 4200 */
 //#define HOSTED_BUILD_ARCH       0x30    /* NV30 family */
 //#define HOSTED_BUILD_CHIPSET    52      /* NV34 chip GeForce FX 5200 */
-#define HOSTED_BUILD_ARCH       0x40    /* NV40 family */
-#define HOSTED_BUILD_CHIPSET    67      /* NV43 chip GeForce 6200 */
-//#define HOSTED_BUILD_ARCH       0x80    /* NV50 family */
+//#define HOSTED_BUILD_ARCH       0x40    /* NV40 family */
+//#define HOSTED_BUILD_CHIPSET    67      /* NV43 chip GeForce 6200 */
+#define HOSTED_BUILD_ARCH       0x80    /* NV50 family */
 //#define HOSTED_BUILD_CHIPSET    132     /* G84 chip GeForce 8600 GT */
+#define HOSTED_BUILD_CHIPSET    134     /* G86 chip GeForce 8300 */
 #endif
 
 /* HACK ENDS */
@@ -105,6 +106,7 @@ struct Library          *OOPBase;
 #define DRM_UDELAY(d)       udelay(d)
 #define DRM_CURRENTPID      1
 #define DRM_IRQ_ARGS        void *arg
+#define DRM_SUSER(p)        capable(CAP_SYS_ADMIN)
 typedef void                irqreturn_t;
 #define IRQ_NONE            /* nothing */
 #define IRQ_HANDLED         /* nothing */
@@ -231,6 +233,8 @@ struct drm_device
     struct drm_driver *driver;      /* Driver functions */
     void *dev_private;              /* Device private data */
     struct mutex  struct_mutex;
+    
+    struct address_space *dev_mapping;
     
     /* GEM information */
     spinlock_t object_name_lock;

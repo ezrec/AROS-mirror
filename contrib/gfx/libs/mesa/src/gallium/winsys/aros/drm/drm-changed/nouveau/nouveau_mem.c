@@ -408,6 +408,13 @@ uint64_t nouveau_mem_fb_amount(struct drm_device *dev)
 			mem = (nv_rd32(dev, NV04_FIFO_DATA) &
 					NV10_FIFO_DATA_RAM_AMOUNT_MB_MASK) >>
 					NV10_FIFO_DATA_RAM_AMOUNT_MB_SHIFT;
+#if defined(HOSTED_BUILD)
+#if HOSTED_BUILD_ARCH >= 0x40
+            mem = 256;
+#else
+            mem = 128;
+#endif
+#endif
 			return mem * 1024 * 1024;
 		}
 		break;

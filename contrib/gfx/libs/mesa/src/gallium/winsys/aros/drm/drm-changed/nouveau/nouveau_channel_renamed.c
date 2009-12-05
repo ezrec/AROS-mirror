@@ -237,7 +237,6 @@ nouveau_channel_alloc(struct drm_device *dev, struct nouveau_channel **chan_ret,
 	return 0;
 }
 
-#if !defined(__AROS__)
 int
 nouveau_channel_idle(struct nouveau_channel *chan)
 {
@@ -278,7 +277,6 @@ nouveau_channel_idle(struct nouveau_channel *chan)
 	nv_wr32(dev, NV03_PFIFO_CACHES, caches);
 	return idle;
 }
-#endif
 
 /* stops a fifo */
 void

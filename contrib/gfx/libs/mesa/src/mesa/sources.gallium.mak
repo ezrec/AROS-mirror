@@ -30,13 +30,10 @@ AROS_DRM_SOURCES = \
             winsys/aros/drm/drm-changed/drm_mm \
             winsys/aros/drm/drm-changed/drm_gem \
             winsys/aros/drm/drm-changed/nouveau/nouveau_state \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_object \
             winsys/aros/drm/drm-changed/nouveau/nouveau_mem \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_notifier_renamed \
             winsys/aros/drm/drm-changed/nouveau/nouveau_channel_renamed \
             winsys/aros/drm/drm-changed/nouveau/nouveau_fence \
             winsys/aros/drm/drm-changed/nouveau/nouveau_sgdma \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_gem \
             winsys/aros/drm/drm-changed/nouveau/nouveau_ttm \
             winsys/aros/drm/drm-changed/nouveau/nouveau_irq \
             winsys/aros/drm/drm-changed/nouveau/nv50_instmem \
@@ -47,6 +44,9 @@ AROS_DRM_SOURCES = \
             winsys/aros/drm/drm-changed/ttm/ttm_tt \
             winsys/aros/drm/drm-unchanged/nouveau/nouveau_bo \
             winsys/aros/drm/drm-unchanged/nouveau/nouveau_dma \
+            winsys/aros/drm/drm-unchanged/nouveau/nouveau_object \
+            winsys/aros/drm/drm-unchanged/nouveau/nouveau_notifier_renamed \
+            winsys/aros/drm/drm-unchanged/nouveau/nouveau_gem \
             winsys/aros/drm/drm-unchanged/nouveau/nv04_fb \
             winsys/aros/drm/drm-unchanged/nouveau/nv04_fifo \
             winsys/aros/drm/drm-unchanged/nouveau/nv04_graph \
