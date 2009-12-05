@@ -65,11 +65,17 @@ unsigned int ioread8(void * addr)
 #include <proto/oop.h>
 
 APTR drm_aros_pci_ioremap(OOP_Object *driver, APTR buf, IPTR size);
+void drm_aros_pci_iounmap(OOP_Object *driver, APTR buf, IPTR size);
 extern OOP_Object * hack_pci_driver_hack;
 
 void  *ioremap_nocache(resource_size_t offset, unsigned long size)
 {
     return drm_aros_pci_ioremap(hack_pci_driver_hack, (APTR)offset, size);
+}
+
+void iounmap_helper(void * addr, unsigned long size)
+{
+    return drm_aros_pci_iounmap(hack_pci_driver_hack, (APTR) addr, size);
 }
 /* HACK ends */
 
@@ -99,7 +105,7 @@ void __free_page(struct page * p)
     FreeVec(p);
 }
 
-struct page * my_create_page()
+struct page * create_page_helper()
 {
     struct page * p;
     p = AllocVec(sizeof(*p), MEMF_PUBLIC | MEMF_CLEAR);

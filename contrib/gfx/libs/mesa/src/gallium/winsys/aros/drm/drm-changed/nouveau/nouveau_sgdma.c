@@ -252,7 +252,7 @@ nouveau_sgdma_init(struct drm_device *dev)
 		alloc_page(GFP_KERNEL|__GFP_DMA32);
 	set_bit(PG_locked, &dev_priv->gart_info.sg_dummy_page->flags);
 #else
-    dev_priv->gart_info.sg_dummy_page = my_create_page();
+    dev_priv->gart_info.sg_dummy_page = create_page_helper();
 #endif
 	dev_priv->gart_info.sg_dummy_bus =
 		pci_map_page(dev->pdev, dev_priv->gart_info.sg_dummy_page, 0,

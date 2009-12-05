@@ -1397,7 +1397,7 @@ int ttm_bo_global_init(struct ttm_global_reference *ref)
 	glob->mem_glob = bo_ref->mem_glob;
 	glob->dummy_read_page = alloc_page(__GFP_ZERO | GFP_DMA32);
 #else
-    glob->dummy_read_page = my_create_page();
+    glob->dummy_read_page = create_page_helper();
 #endif
 
 	if (unlikely(glob->dummy_read_page == NULL)) {

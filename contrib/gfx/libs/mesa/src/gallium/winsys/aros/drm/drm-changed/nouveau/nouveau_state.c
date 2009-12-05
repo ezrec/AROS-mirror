@@ -398,7 +398,7 @@ DRM_IMPL("Calling drm_vblank_init\n");
         struct nouveau_bo * screen_bo = NULL;
         /* Create buffer object to protect visible screen. */
         /* FIXME: Allocate FullHD buffer size for now, should read real resolution later */
-        nouveau_gem_new(dev, NULL, 1920 * 1080 * 4, 0, 4, 0, 0, false, false, &screen_bo);
+        nouveau_gem_new(dev, NULL, 1920 * 1080 * 4, 0, TTM_PL_FLAG_VRAM, 0, 0, false, false, &screen_bo);
 
         /* Create global name == 1 */
         idr_pre_get(&dev->object_name_idr, GFP_KERNEL);
@@ -840,6 +840,7 @@ nouveau_ioctl_setparam(struct drm_device *dev, void *data,
 bool nouveau_wait_until(struct drm_device *dev, uint64_t timeout,
 			uint32_t reg, uint32_t mask, uint32_t val)
 {
+#if !defined(HOSTED_BUILD)
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 	struct nouveau_timer_engine *ptimer = &dev_priv->engine.timer;
 	uint64_t start = ptimer->read(dev);
@@ -850,6 +851,9 @@ bool nouveau_wait_until(struct drm_device *dev, uint64_t timeout,
 	} while (ptimer->read(dev) - start < timeout);
 
 	return false;
+#else
+    return true;
+#endif
 }
 
 /* Waits for PGRAPH to go completely idle */

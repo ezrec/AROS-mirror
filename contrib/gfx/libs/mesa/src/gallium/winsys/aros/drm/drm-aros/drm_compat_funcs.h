@@ -51,7 +51,8 @@
 
 
 
-void  *ioremap_nocache(resource_size_t offset, unsigned long size);
+void *ioremap_nocache(resource_size_t offset, unsigned long size);
+void iounmap_helper(void * addr, unsigned long size); /* Helper function - not from compat */
 
 void iowrite32(u32 val, void * addr);
 unsigned int ioread32(void * addr);
@@ -99,10 +100,10 @@ void set_bit(int nr, volatile void *addr);
 
 /* Page handling */
 void __free_page(struct page * p);
-struct page * my_create_page(); /* Helper function - not from compat */
+struct page * create_page_helper();                     /* Helper function - not from compat */
 #define PageHighMem(p)              FALSE
-#define put_page(p)                 __free_page(p) /*FIXME: This might be wrong */
-#define page_to_pfn(p)              p->address /*FIXME: This might be wrong */
+#define put_page(p)                 __free_page(p)  /*FIXME: This might be wrong */
+#define page_to_pfn(p)              p->address      /*FIXME: This might be wrong */
 #define kmap(p)                     p->address
 #define vmap(p, count, flags, prot) (p)[0]->address
 #define kunmap(addr)
