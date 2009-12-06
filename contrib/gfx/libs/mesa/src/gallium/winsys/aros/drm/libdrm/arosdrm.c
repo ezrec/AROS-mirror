@@ -88,6 +88,7 @@ drmCommandWriteRead(int fd, unsigned long drmCommandIndex, void *data, unsigned 
         case(0x42 /*DRM_NOUVEAU_GEM_PUSHBUF_CALL*/):
         case(0x43 /*DRM_NOUVEAU_GEM_PIN*/):
         case(0x47 /*DRM_NOUVEAU_GEM_INFO*/):
+        case(0x48 /* DRM_NOUVEAU_GEM_PUSHBUF_CALL2 */):
             return global_drm_device.driver->ioctls[drmCommandIndex].func(&global_drm_device, data, drm_files[fd]);
         default:
             DRM_IMPL("COMMAND %d\n", drmCommandIndex);

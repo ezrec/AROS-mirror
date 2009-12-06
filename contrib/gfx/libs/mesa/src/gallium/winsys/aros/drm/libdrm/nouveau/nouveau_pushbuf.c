@@ -60,17 +60,17 @@ nouveau_pushbuf_emit_reloc(struct nouveau_channel *chan, void *ptr,
 			   uint32_t flags, uint32_t vor, uint32_t tor)
 {
 	struct nouveau_pushbuf_priv *nvpb = nouveau_pushbuf(chan->pushbuf);
+	struct nouveau_bo_priv *nvbo = nouveau_bo(bo);
 	struct drm_nouveau_gem_pushbuf_reloc *r;
 	struct drm_nouveau_gem_pushbuf_bo *pbbo;
 	uint32_t domains = 0;
 
 	if (nvpb->nr_relocs >= NOUVEAU_GEM_MAX_RELOCS) {
 		fprintf(stderr, "too many relocs!!\n");
-		assert(0);
 		return -ENOMEM;
 	}
 
-	if (nouveau_bo(bo)->user && (flags & NOUVEAU_BO_WR)) {
+	if (nvbo->user && (flags & NOUVEAU_BO_WR)) {
 		fprintf(stderr, "write to user buffer!!\n");
 		return -EINVAL;
 	}
@@ -78,16 +78,21 @@ nouveau_pushbuf_emit_reloc(struct nouveau_channel *chan, void *ptr,
 	pbbo = nouveau_bo_emit_buffer(chan, bo);
 	if (!pbbo) {
 		fprintf(stderr, "buffer emit fail :(\n");
-		assert(0);
 		return -ENOMEM;
 	}
+
+	nvbo->pending_refcnt++;
 
 	if (flags & NOUVEAU_BO_VRAM)
 		domains |= NOUVEAU_GEM_DOMAIN_VRAM;
 	if (flags & NOUVEAU_BO_GART)
 		domains |= NOUVEAU_GEM_DOMAIN_GART;
+
+	if (!(pbbo->valid_domains & domains)) {
+		fprintf(stderr, "no valid domains remain!\n");
+		return -EINVAL;
+	}
 	pbbo->valid_domains &= domains;
-	assert(pbbo->valid_domains);
 
 	assert(flags & NOUVEAU_BO_RDWR);
 	if (flags & NOUVEAU_BO_RD) {
@@ -95,7 +100,7 @@ nouveau_pushbuf_emit_reloc(struct nouveau_channel *chan, void *ptr,
 	}
 	if (flags & NOUVEAU_BO_WR) {
 		pbbo->write_domains |= domains;
-		nouveau_bo(bo)->write_marker = 1;
+		nvbo->write_marker = 1;
 	}
 
 	r = nvpb->relocs + nvpb->nr_relocs++;
@@ -202,10 +207,17 @@ nouveau_pushbuf_init_call(struct nouveau_channel *chan)
 	req.channel = chan->id;
 	req.handle = 0;
 	ret = drmCommandWriteRead(nouveau_device(dev)->fd,
-				  DRM_NOUVEAU_GEM_PUSHBUF_CALL,
+				  DRM_NOUVEAU_GEM_PUSHBUF_CALL2,
 				  &req, sizeof(req));
-	if (ret)
-		return;
+	if (ret) {
+		ret = drmCommandWriteRead(nouveau_device(dev)->fd,
+					  DRM_NOUVEAU_GEM_PUSHBUF_CALL2,
+					  &req, sizeof(req));
+		if (ret)
+			return;
+
+		nvpb->no_aper_update = 1;
+	}
 
 	for (i = 0; i < CALPB_BUFFERS; i++) {
 		ret = nouveau_bo_new(dev, NOUVEAU_BO_GART | NOUVEAU_BO_MAP,
@@ -270,6 +282,7 @@ nouveau_pushbuf_flush(struct nouveau_channel *chan, unsigned min)
 		if (nvpb->base.remaining > 2) /* space() will fixup if not */
 			nvpb->base.remaining -= 2;
 
+restart_cal:
 		req.channel = chan->id;
 		req.handle = nvpb->buffer[nvpb->current]->handle;
 		req.offset = nvpb->current_offset * 4;
@@ -281,15 +294,22 @@ nouveau_pushbuf_flush(struct nouveau_channel *chan, unsigned min)
 				nvpb->current_offset;
 		req.suffix0 = nvpb->cal_suffix0;
 		req.suffix1 = nvpb->cal_suffix1;
-		ret = drmCommandWriteRead(nvdev->fd,
-					  DRM_NOUVEAU_GEM_PUSHBUF_CALL,
+		ret = drmCommandWriteRead(nvdev->fd, nvpb->no_aper_update ?
+					  DRM_NOUVEAU_GEM_PUSHBUF_CALL :
+					  DRM_NOUVEAU_GEM_PUSHBUF_CALL2,
 					  &req, sizeof(req));
+		if (ret == -EAGAIN)
+			goto restart_cal;
 		nvpb->cal_suffix0 = req.suffix0;
 		nvpb->cal_suffix1 = req.suffix1;
-		assert(ret == 0);
+		if (!nvpb->no_aper_update) {
+			nvdev->base.vm_vram_size = req.vram_available;
+			nvdev->base.vm_gart_size = req.gart_available;
+		}
 	} else {
 		struct drm_nouveau_gem_pushbuf req;
 
+restart_push:
 		req.channel = chan->id;
 		req.nr_dwords = nvpb->size - nvpb->base.remaining;
 		req.dwords = (uint64_t)(unsigned long)nvpb->pushbuf;
@@ -299,35 +319,93 @@ nouveau_pushbuf_flush(struct nouveau_channel *chan, unsigned min)
 		req.relocs = (uint64_t)(unsigned long)nvpb->relocs;
 		ret = drmCommandWrite(nvdev->fd, DRM_NOUVEAU_GEM_PUSHBUF,
 				      &req, sizeof(req));
-		assert(ret == 0);
+		if (ret == -EAGAIN)
+			goto restart_push;
 	}
 
 
 	/* Update presumed offset/domain for any buffers that moved.
 	 * Dereference all buffers on validate list
 	 */
-	for (i = 0; i < nvpb->nr_buffers; i++) {
-		struct drm_nouveau_gem_pushbuf_bo *pbbo = &nvpb->buffers[i];
+	for (i = 0; i < nvpb->nr_relocs; i++) {
+		struct drm_nouveau_gem_pushbuf_reloc *r = &nvpb->relocs[i];
+		struct drm_nouveau_gem_pushbuf_bo *pbbo =
+			&nvpb->buffers[r->bo_index];
 		struct nouveau_bo *bo = (void *)(unsigned long)pbbo->user_priv;
+		struct nouveau_bo_priv *nvbo = nouveau_bo(bo);
+
+		if (--nvbo->pending_refcnt)
+			continue;
 
 		if (pbbo->presumed_ok == 0) {
-			nouveau_bo(bo)->domain = pbbo->presumed_domain;
-			nouveau_bo(bo)->offset = pbbo->presumed_offset;
+			nvbo->domain = pbbo->presumed_domain;
+			nvbo->offset = pbbo->presumed_offset;
 		}
 
-		nouveau_bo(bo)->pending = NULL;
+		nvbo->pending = NULL;
 		nouveau_bo_ref(NULL, &bo);
 	}
+
 	nvpb->nr_buffers = 0;
 	nvpb->nr_relocs = 0;
 
 	/* Allocate space for next push buffer */
-	ret = nouveau_pushbuf_space(chan, min);
-	assert(!ret);
+	assert(!nouveau_pushbuf_space(chan, min));
 
 	if (chan->flush_notify)
 		chan->flush_notify(chan);
 
+	nvpb->marker = 0;
+	return ret;
+}
+
+int
+nouveau_pushbuf_marker_emit(struct nouveau_channel *chan,
+			    unsigned wait_dwords, unsigned wait_relocs)
+{
+	struct nouveau_pushbuf_priv *nvpb = nouveau_pushbuf(chan->pushbuf);
+
+	if (AVAIL_RING(chan) < wait_dwords)
+		return nouveau_pushbuf_flush(chan, wait_dwords);
+
+	if (nvpb->nr_relocs + wait_relocs >= NOUVEAU_GEM_MAX_RELOCS)
+		return nouveau_pushbuf_flush(chan, wait_dwords);
+
+	nvpb->marker = nvpb->base.cur - nvpb->pushbuf;
+	nvpb->marker_relocs = nvpb->nr_relocs;
 	return 0;
 }
+
+void
+nouveau_pushbuf_marker_undo(struct nouveau_channel *chan)
+{
+	struct nouveau_pushbuf_priv *nvpb = nouveau_pushbuf(chan->pushbuf);
+	unsigned i;
+
+	if (!nvpb->marker)
+		return;
+
+	/* undo any relocs/buffers added to the list since last marker */
+	for (i = nvpb->marker_relocs; i < nvpb->nr_relocs; i++) {
+		struct drm_nouveau_gem_pushbuf_reloc *r = &nvpb->relocs[i];
+		struct drm_nouveau_gem_pushbuf_bo *pbbo =
+			&nvpb->buffers[r->bo_index];
+		struct nouveau_bo *bo = (void *)(unsigned long)pbbo->user_priv;
+		struct nouveau_bo_priv *nvbo = nouveau_bo(bo);
+
+		if (--nvbo->pending_refcnt)
+			continue;
+
+		nvbo->pending = NULL;
+		nouveau_bo_ref(NULL, &bo);
+		nvpb->nr_buffers--;
+	}
+	nvpb->nr_relocs = nvpb->marker_relocs;
+
+	/* reset pushbuf back to last marker */
+	nvpb->base.cur = nvpb->pushbuf + nvpb->marker;
+	nvpb->base.remaining = nvpb->size - nvpb->marker;
+	nvpb->marker = 0;
+}
+
 

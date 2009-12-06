@@ -41,6 +41,7 @@
 struct nouveau_pushbuf_priv {
 	struct nouveau_pushbuf base;
 
+	int no_aper_update;
 	int use_cal;
 	uint32_t cal_suffix0;
 	uint32_t cal_suffix1;
@@ -50,6 +51,9 @@ struct nouveau_pushbuf_priv {
 
 	unsigned *pushbuf;
 	unsigned  size;
+
+	unsigned marker;
+	unsigned marker_relocs;
 
 	struct drm_nouveau_gem_pushbuf_bo *buffers;
 	unsigned nr_buffers;
@@ -98,6 +102,7 @@ struct nouveau_bo_priv {
 	/* Tracking */
 	struct drm_nouveau_gem_pushbuf_bo *pending;
 	struct nouveau_channel *pending_channel;
+	int pending_refcnt;
 	int write_marker;
 
 	/* Userspace object */
