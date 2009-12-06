@@ -244,6 +244,7 @@ GALLIUM_SOFTPIPE_SOURCES = \
 
 GALLIUM_NVIDIA_SOURCES = \
             drivers/nouveau/nouveau_screen \
+            drivers/nouveau/nouveau_context \
             drivers/nv40/nv40_clear \
             drivers/nv40/nv40_context \
             drivers/nv40/nv40_draw \

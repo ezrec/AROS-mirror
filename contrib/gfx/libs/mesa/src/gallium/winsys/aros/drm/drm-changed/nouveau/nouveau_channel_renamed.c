@@ -337,7 +337,10 @@ nouveau_channel_free(struct nouveau_channel *chan)
 
 	/* Release the channel's resources */
 	nouveau_gpuobj_ref_del(dev, &chan->pushbuf);
-	nouveau_bo_ref(NULL, &chan->pushbuf_bo);
+	if (chan->pushbuf_bo) {
+		nouveau_bo_unpin(chan->pushbuf_bo);
+		nouveau_bo_ref(NULL, &chan->pushbuf_bo);
+	}
 	nouveau_gpuobj_channel_takedown(chan);
 	nouveau_notifier_takedown_channel(chan);
 	if (chan->user)
@@ -461,6 +464,7 @@ struct drm_ioctl_desc nouveau_ioctls[] = {
 	DRM_IOCTL_DEF(DRM_NOUVEAU_GEM_CPU_PREP, nouveau_gem_ioctl_cpu_prep, DRM_AUTH),
 	DRM_IOCTL_DEF(DRM_NOUVEAU_GEM_CPU_FINI, nouveau_gem_ioctl_cpu_fini, DRM_AUTH),
 	DRM_IOCTL_DEF(DRM_NOUVEAU_GEM_INFO, nouveau_gem_ioctl_info, DRM_AUTH),
+	DRM_IOCTL_DEF(DRM_NOUVEAU_GEM_PUSHBUF_CALL2, nouveau_gem_ioctl_pushbuf_call2, DRM_AUTH),
 };
 
 int nouveau_max_ioctl = DRM_ARRAY_SIZE(nouveau_ioctls);

@@ -42,10 +42,6 @@ init_pow2_table(void)
       pow2_table[i] = (float) pow(2.0, (i - POW2_TABLE_OFFSET) / POW2_TABLE_SCALE);
 }
 
-
-/** log2(x), for x in [1.0, 2.0) */
-float log2_table[LOG2_TABLE_SIZE];
-
 #if defined(__AROS__)
 /*
  * NOTE: log_base_2(x) = log(x) / log(2)
@@ -53,6 +49,10 @@ float log2_table[LOG2_TABLE_SIZE];
  */
 #define log2(x)  ((float) (log(x) * 1.442695f))
 #endif
+
+/** log2(x), for x in [1.0, 2.0) */
+float log2_table[LOG2_TABLE_SIZE];
+
 
 static void 
 init_log2_table(void)

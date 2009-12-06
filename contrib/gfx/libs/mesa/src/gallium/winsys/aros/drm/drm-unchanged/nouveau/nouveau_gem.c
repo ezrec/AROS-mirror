@@ -104,7 +104,7 @@ nouveau_gem_info(struct drm_gem_object *gem, struct drm_nouveau_gem_info *rep)
 }
 
 static bool
-nouveau_gem_tile_mode_valid(struct drm_device *dev, uint32_t tile_flags) {
+nouveau_gem_tile_flags_valid(struct drm_device *dev, uint32_t tile_flags) {
 	switch (tile_flags) {
 	case 0x0000:
 	case 0x1800:
@@ -151,12 +151,7 @@ nouveau_gem_ioctl_new(struct drm_device *dev, void *data,
 	if (!flags || req->info.domain & NOUVEAU_GEM_DOMAIN_CPU)
 		flags |= TTM_PL_FLAG_SYSTEM;
 
-	if (req->info.tile_mode > 4) {
-		NV_ERROR(dev, "bad tile mode: %d\n", req->info.tile_mode);
-		return -EINVAL;
-	}
-
-	if (!nouveau_gem_tile_mode_valid(dev, req->info.tile_flags))
+	if (!nouveau_gem_tile_flags_valid(dev, req->info.tile_flags))
 		return -EINVAL;
 
 	ret = nouveau_gem_new(dev, chan, req->info.size, req->align, flags,
@@ -334,7 +329,17 @@ retry:
 
 		if (unlikely(atomic_read(&nvbo->bo.cpu_writers) > 0)) {
 			nouveau_gem_pushbuf_backoff(list);
+
+			if (nvbo->cpu_filp == file_priv) {
+				NV_ERROR(dev, "bo %p mapped by process trying "
+					      "to validate it!\n", nvbo);
+				ret = -EINVAL;
+				goto out_unref;
+			}
+
 			ret = ttm_bo_wait_cpu(&nvbo->bo, false);
+			if (ret == -ERESTART)
+				ret = -EAGAIN;
 			if (ret)
 				goto out_unref;
 			goto retry;
@@ -594,7 +599,7 @@ nouveau_gem_ioctl_pushbuf_call(struct drm_device *dev, void *data,
 	struct drm_gem_object *gem;
 	struct nouveau_bo *pbbo;
 	struct list_head list;
-	int ret = 0, do_reloc = 0;
+	int i, ret = 0, do_reloc = 0;
 
 	NOUVEAU_CHECK_INITIALISED_WITH_RETURN;
 	NOUVEAU_GET_USER_CHANNEL_WITH_RETURN(req->channel, file_priv, chan);
@@ -670,8 +675,8 @@ nouveau_gem_ioctl_pushbuf_call(struct drm_device *dev, void *data,
 	if (!PUSHBUF_CAL) {
 		uint32_t retaddy;
 
-		if (chan->dma.free < 4) {
-			ret = nouveau_dma_wait(chan, 4);
+		if (chan->dma.free < 4 + NOUVEAU_DMA_SKIPS) {
+			ret = nouveau_dma_wait(chan, 4 + NOUVEAU_DMA_SKIPS);
 			if (ret) {
 				NV_ERROR(dev, "jmp_space: %d\n", ret);
 				goto out;
@@ -728,7 +733,7 @@ nouveau_gem_ioctl_pushbuf_call(struct drm_device *dev, void *data,
 				  req->offset) | 2);
 		OUT_RING(chan, 0);
 	} else {
-		ret = RING_SPACE(chan, 2);
+		ret = RING_SPACE(chan, 2 + NOUVEAU_DMA_SKIPS);
 		if (ret) {
 			NV_ERROR(dev, "jmp_space: %d\n", ret);
 			goto out;
@@ -736,6 +741,10 @@ nouveau_gem_ioctl_pushbuf_call(struct drm_device *dev, void *data,
 		OUT_RING(chan, ((pbbo->bo.mem.mm_node->start << PAGE_SHIFT) +
 				  req->offset) | 0x20000000);
 		OUT_RING(chan, 0);
+
+		/* Space the jumps apart with NOPs. */
+		for (i = 0; i < NOUVEAU_DMA_SKIPS; i++)
+			OUT_RING(chan, 0);
 	}
 
 	ret = nouveau_fence_emit(fence);
@@ -768,6 +777,19 @@ out_next:
 	}
 
 	return ret;
+}
+
+int
+nouveau_gem_ioctl_pushbuf_call2(struct drm_device *dev, void *data,
+				struct drm_file *file_priv)
+{
+	struct drm_nouveau_private *dev_priv = dev->dev_private;
+	struct drm_nouveau_gem_pushbuf_call *req = data;
+
+	req->vram_available = 128*1024*1024;//dev_priv->fb_aper_free;
+	req->gart_available = 0;//dev_priv->gart_info.aper_free;
+
+	return nouveau_gem_ioctl_pushbuf_call(dev, data, file_priv);
 }
 
 static inline uint32_t

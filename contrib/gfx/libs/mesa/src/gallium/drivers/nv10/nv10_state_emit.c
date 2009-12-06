@@ -129,6 +129,9 @@ static void nv10_state_emit_framebuffer(struct nv10_context* nv10)
 	rt_format = NV10TCL_RT_FORMAT_TYPE_LINEAR;
 
 	switch (colour_format) {
+	case PIPE_FORMAT_X8R8G8B8_UNORM:
+		rt_format |= NV10TCL_RT_FORMAT_COLOR_X8R8G8B8;
+		break;
 	case PIPE_FORMAT_A8R8G8B8_UNORM:
 	case 0:
 		rt_format |= NV10TCL_RT_FORMAT_COLOR_A8R8G8B8;
@@ -171,29 +174,28 @@ static void nv10_vertex_layout(struct nv10_context *nv10)
 	struct nv10_fragment_program *fp = nv10->fragprog.current;
 	uint32_t src = 0;
 	int i;
-    /* FIXME: FIX NOT COMMITED UPSTREAM TO GALLIUM*/
-	struct vertex_info *vinfo = &nv10->vertex_info;
+	struct vertex_info vinfo;
 
-	memset(vinfo, 0, sizeof(*vinfo));
+	memset(&vinfo, 0, sizeof(vinfo));
 
 	for (i = 0; i < fp->info.num_inputs; i++) {
 		switch (fp->info.input_semantic_name[i]) {
 			case TGSI_SEMANTIC_POSITION:
-				draw_emit_vertex_attr(vinfo, EMIT_4F, INTERP_LINEAR, src++);
+				draw_emit_vertex_attr(&vinfo, EMIT_4F, INTERP_LINEAR, src++);
 				break;
 			case TGSI_SEMANTIC_COLOR:
-				draw_emit_vertex_attr(vinfo, EMIT_4F, INTERP_LINEAR, src++);
+				draw_emit_vertex_attr(&vinfo, EMIT_4F, INTERP_LINEAR, src++);
 				break;
 			default:
 			case TGSI_SEMANTIC_GENERIC:
-				draw_emit_vertex_attr(vinfo, EMIT_4F, INTERP_PERSPECTIVE, src++);
+				draw_emit_vertex_attr(&vinfo, EMIT_4F, INTERP_PERSPECTIVE, src++);
 				break;
 			case TGSI_SEMANTIC_FOG:
-				draw_emit_vertex_attr(vinfo, EMIT_4F, INTERP_PERSPECTIVE, src++);
+				draw_emit_vertex_attr(&vinfo, EMIT_4F, INTERP_PERSPECTIVE, src++);
 				break;
 		}
 	}
-	draw_compute_vertex_size(vinfo);
+	draw_compute_vertex_size(&vinfo);
 }
 
 void
