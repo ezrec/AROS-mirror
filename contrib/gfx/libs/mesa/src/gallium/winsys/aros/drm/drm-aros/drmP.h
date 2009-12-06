@@ -50,21 +50,13 @@ struct Library          *OOPBase;
 
 #if defined(HOSTED_BUILD)
 /* These defines simulate certain gfx cards. Need to be removed in final version. Works only with HOSTED_BUILD */
-//#define HOSTED_BUILD_ARCH       0x04    /* NV04 family */
 //#define HOSTED_BUILD_CHIPSET    5       /* NV05 chip Riva TNT 2 */
-//#define HOSTED_BUILD_ARCH       0x10    /* NV10 family */
 //#define HOSTED_BUILD_CHIPSET    16      /* NV10 chip GeForce 256 */
-//#define HOSTED_BUILD_ARCH       0x10    /* NV10 family */
 //#define HOSTED_BUILD_CHIPSET    21      /* NV15 chip GeForce 2 GTS */
-//#define HOSTED_BUILD_ARCH       0x20    /* NV20 family */
 //#define HOSTED_BUILD_CHIPSET    32      /* NV20 chip GeForce 3 Ti 200 */
-//#define HOSTED_BUILD_ARCH       0x20    /* NV20 family */
 //#define HOSTED_BUILD_CHIPSET    37      /* NV25 chip GeForce Ti 4200 */
-//#define HOSTED_BUILD_ARCH       0x30    /* NV30 family */
 //#define HOSTED_BUILD_CHIPSET    52      /* NV34 chip GeForce FX 5200 */
-#define HOSTED_BUILD_ARCH       0x40    /* NV40 family */
 #define HOSTED_BUILD_CHIPSET    67      /* NV43 chip GeForce 6200 */
-//#define HOSTED_BUILD_ARCH       0x80    /* NV50 family */
 //#define HOSTED_BUILD_CHIPSET    132     /* G84 chip GeForce 8600 GT */
 //#define HOSTED_BUILD_CHIPSET    134     /* G86 chip GeForce 8300 */
 #endif

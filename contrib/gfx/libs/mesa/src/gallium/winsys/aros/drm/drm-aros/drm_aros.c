@@ -597,7 +597,7 @@ APTR drm_aros_pci_resource_start(OOP_Object *pciDevice,  unsigned int resource)
     
     return start;
 #else
-#if HOSTED_BUILD_ARCH >= 0x40
+#if HOSTED_BUILD_CHIPSET >= 0x40
 if (resource == 0) return (APTR)0xcf000000;
 if (resource == 1) return (APTR)0xb0000000;
 if (resource == 3) return (APTR)0xce000000;
@@ -638,7 +638,7 @@ IPTR drm_aros_pci_resource_len(OOP_Object *pciDevice,  unsigned int resource)
     
     return len;
 #else
-#if HOSTED_BUILD_ARCH >= 0x40
+#if HOSTED_BUILD_CHIPSET >= 0x40
 if (resource == 0) return (IPTR)0x1000000;
 if (resource == 1) return (IPTR)0x10000000;
 if (resource == 3) return (IPTR)0x1000000;

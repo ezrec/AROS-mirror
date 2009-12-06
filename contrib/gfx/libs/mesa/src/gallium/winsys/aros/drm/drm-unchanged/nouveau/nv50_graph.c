@@ -111,6 +111,12 @@ nv50_graph_init_ctxctl(struct drm_device *dev)
 	case 0xa0:
 		voodoo = nva0_ctxprog;
 		break;
+	case 0xa5:
+		voodoo = nva5_ctxprog;
+		break;
+	case 0xa8:
+		voodoo = nva8_ctxprog;
+		break;
 	case 0xaa:
 		voodoo = nvaa_ctxprog;
 		break;
@@ -254,6 +260,12 @@ nv50_graph_create_context(struct nouveau_channel *chan)
 	case 0xa0:
 		ctxvals = nva0_ctxvals;
 		break;
+	case 0xa5:
+		ctxvals = nva5_ctxvals;
+		break;
+	case 0xa8:
+		ctxvals = nva8_ctxvals;
+		break;
 	case 0xaa:
 		ctxvals = nvaa_ctxvals;
 		break;
@@ -337,32 +349,23 @@ nv50_graph_load_context(struct nouveau_channel *chan)
 	return nv50_graph_do_load_context(chan->dev, inst);
 }
 
-static int
-nv50_graph_do_save_context(struct drm_device *dev, uint32_t inst)
+int
+nv50_graph_unload_context(struct drm_device *dev)
 {
-	uint32_t fifo = nv_rd32(dev, 0x400500);
+	uint32_t inst, fifo = nv_rd32(dev, 0x400500);
+
+	inst  = nv_rd32(dev, NV50_PGRAPH_CTXCTL_CUR);
+	if (!(inst & NV50_PGRAPH_CTXCTL_CUR_LOADED))
+		return 0;
+	inst &= NV50_PGRAPH_CTXCTL_CUR_INSTANCE;
 
 	nv_wr32(dev, 0x400500, fifo & ~1);
 	nv_wr32(dev, 0x400784, inst);
 	nv_wr32(dev, 0x400824, nv_rd32(dev, 0x400824) | 0x20);
 	nv_wr32(dev, 0x400304, nv_rd32(dev, 0x400304) | 0x01);
 	nouveau_wait_for_idle(dev);
-
 	nv_wr32(dev, 0x400500, fifo);
-	return 0;
-}
 
-int
-nv50_graph_unload_context(struct drm_device *dev)
-{
-	uint32_t inst;
-	int ret;
-
-	inst  = nv_rd32(dev, NV50_PGRAPH_CTXCTL_CUR);
-	if (!(inst & NV50_PGRAPH_CTXCTL_CUR_LOADED))
-		return 0;
-	inst &= NV50_PGRAPH_CTXCTL_CUR_INSTANCE;
-	ret = nv50_graph_do_save_context(dev, inst);
 	nv_wr32(dev, NV50_PGRAPH_CTXCTL_CUR, inst);
 	return 0;
 }
@@ -454,8 +457,10 @@ struct nouveau_pgraph_object_class nv50_graph_grclass[] = {
 	{ 0x0030, false, NULL }, /* null */
 	{ 0x5039, false, NULL }, /* m2mf */
 	{ 0x502d, false, NULL }, /* 2d */
+	{ 0x50c0, false, NULL }, /* compute */
 	{ 0x5097, false, NULL }, /* tesla (nv50) */
 	{ 0x8297, false, NULL }, /* tesla (nv80/nv90) */
 	{ 0x8397, false, NULL }, /* tesla (nva0) */
+	{ 0x8597, false, NULL }, /* tesla (nva8) */
 	{}
 };

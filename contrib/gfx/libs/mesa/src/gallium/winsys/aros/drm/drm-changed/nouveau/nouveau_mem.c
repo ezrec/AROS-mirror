@@ -374,10 +374,11 @@ DRM_IMPL("\n");
 uint64_t nouveau_mem_fb_amount(struct drm_device *dev)
 {
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
+	uint32_t boot0;
+
 	switch (dev_priv->card_type) {
 	case NV_04:
-	case NV_05: {
-		uint32_t boot0 = nv_rd32(dev, NV03_BOOT_0);
+		boot0 = nv_rd32(dev, NV03_BOOT_0);
 		if (boot0 & 0x00000100)
 			return (((boot0 >> 12) & 0xf) * 2 + 2) * 1024 * 1024;
 
@@ -392,10 +393,7 @@ uint64_t nouveau_mem_fb_amount(struct drm_device *dev)
 			return 4 * 1024 * 1024;
 		}
 		break;
-	}
 	case NV_10:
-	case NV_11:
-	case NV_17:
 	case NV_20:
 	case NV_30:
 	case NV_40:
@@ -409,7 +407,7 @@ uint64_t nouveau_mem_fb_amount(struct drm_device *dev)
 					NV10_FIFO_DATA_RAM_AMOUNT_MB_MASK) >>
 					NV10_FIFO_DATA_RAM_AMOUNT_MB_SHIFT;
 #if defined(HOSTED_BUILD)
-#if HOSTED_BUILD_ARCH >= 0x40
+#if HOSTED_BUILD_CHIPSET >= 0x40
             mem = 256;
 #else
             mem = 128;
@@ -546,12 +544,16 @@ DRM_IMPL("Calling pci_set_dma_mask\n");
 	INIT_LIST_HEAD(&dev_priv->ttm.bo_list);
 	spin_lock_init(&dev_priv->ttm.bo_list_lock);
 
-	/* non-mappable vram */
 	dev_priv->fb_available_size = nouveau_mem_fb_amount(dev);
+	NV_INFO(dev, "%d MiB VRAM\n", (int)(dev_priv->fb_available_size >> 20));
+
+	/* remove reserved space at end of vram from available amount */
 	dev_priv->fb_available_size -= dev_priv->ramin_rsvd_vram;
+	dev_priv->fb_aper_free = dev_priv->fb_available_size;
+
+	/* non-mappable vram */
 	vram_size = dev_priv->fb_available_size >> PAGE_SHIFT;
 	bar1_size = drm_get_resource_len(dev, 1) >> PAGE_SHIFT;
-	text_size = (256 * 1024) >> PAGE_SHIFT;
 	if (bar1_size < vram_size) {
 		if (dev_priv->card_type < NV_50) {
 			ret = ttm_bo_init_mm(bdev, TTM_PL_PRIV0, bar1_size,
@@ -565,10 +567,14 @@ DRM_IMPL("Calling pci_set_dma_mask\n");
 		vram_size = bar1_size;
 	}
 
+#if !defined(__AROS__)
+	/* remove reserved space at start of vram from available amount */
+	dev_priv->fb_aper_free -= (256 * 1024);
+	text_size  = (256 * 1024) >> PAGE_SHIFT;
+	vram_size -= text_size;
+
 	/* mappable vram */
-#if !defined(__AROS__)    
-	ret = ttm_bo_init_mm(bdev, TTM_PL_VRAM, text_size,
-						vram_size - text_size);
+	ret = ttm_bo_init_mm(bdev, TTM_PL_VRAM, text_size, vram_size);
 #else
 #warning VRAM AT OFFSET 0 USED - MAY LEAD TO PROBLEMS
     ret = ttm_bo_init_mm(bdev, TTM_PL_VRAM, 0,
@@ -590,13 +596,18 @@ DRM_IMPL("Calling pci_set_dma_mask\n");
 
 	if (dev_priv->gart_info.type == NOUVEAU_GART_NONE) {
 		ret = nouveau_sgdma_init(dev);
-		if (ret)
-			NV_ERROR(dev, "Error initialising PCI SGDMA: %d\n",
-									ret);
+		if (ret) {
+			NV_ERROR(dev, "Error initialising PCI(E): %d\n", ret);
+			return ret;
+		}
 	}
 
+	NV_INFO(dev, "%d MiB GART (aperture)\n",
+		(int)(dev_priv->gart_info.aper_size >> 20));
+	dev_priv->gart_info.aper_free = dev_priv->gart_info.aper_size;
+
 	ret = ttm_bo_init_mm(bdev, TTM_PL_TT, 0,
-				dev_priv->gart_info.aper_size >> PAGE_SHIFT);
+			     dev_priv->gart_info.aper_size >> PAGE_SHIFT);
 	if (ret) {
 		NV_ERROR(dev, "Failed TT mm init: %d\n", ret);
 		return ret;

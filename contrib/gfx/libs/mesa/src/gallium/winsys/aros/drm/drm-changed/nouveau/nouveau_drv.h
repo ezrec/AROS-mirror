@@ -464,16 +464,12 @@ struct nv04_mode_state {
 };
 
 enum nouveau_card_type {
-	NV_UNKNOWN = 0,
-	NV_04      = 4,
-	NV_05      = 5,
-	NV_10      = 10,
-	NV_11      = 11,
-	NV_17      = 17,
-	NV_20      = 20,
-	NV_30      = 30,
-	NV_40      = 40,
-	NV_50      = 50,
+	NV_04      = 0x00,
+	NV_10      = 0x10,
+	NV_20      = 0x20,
+	NV_30      = 0x30,
+	NV_40      = 0x40,
+	NV_50      = 0x50,
 };
 
 struct drm_nouveau_private {
@@ -494,7 +490,9 @@ struct drm_nouveau_private {
 	void __iomem *ramin;
 	uint32_t ramin_size;
 
-//FIXME:COMMENT	struct work_struct irq_work;
+//FIXME	struct workqueue_struct *wq;
+//FIXME	struct work_struct irq_work;
+
 	struct list_head vbl_waiting;
 
 	struct {
@@ -528,6 +526,7 @@ struct drm_nouveau_private {
 	/* base physical adresses */
 	uint64_t fb_phys;
 	uint64_t fb_available_size;
+	uint64_t fb_aper_free;
 
 	struct {
 		enum {
@@ -537,6 +536,7 @@ struct drm_nouveau_private {
 		} type;
 		uint64_t aper_base;
 		uint64_t aper_size;
+		uint64_t aper_free;
 
 		struct nouveau_gpuobj *sg_ctxdma;
 		struct page *sg_dummy_page;
@@ -772,7 +772,7 @@ extern int nouveau_sgdma_get_page(struct drm_device *, uint32_t offset,
 extern struct ttm_backend *nouveau_sgdma_init_ttm(struct drm_device *);
 
 /* nouveau_debugfs.c */
-#if defined(CONFIG_DEBUG_FS)
+#if defined(CONFIG_DRM_NOUVEAU_DEBUG)
 extern int  nouveau_debugfs_init(struct drm_minor *);
 extern void nouveau_debugfs_takedown(struct drm_minor *);
 extern int  nouveau_debugfs_channel_init(struct nouveau_channel *);
@@ -836,11 +836,19 @@ static inline void nouveau_backlight_exit(struct drm_device *dev) { }
 extern int nouveau_bios_init(struct drm_device *);
 extern void nouveau_bios_takedown(struct drm_device *dev);
 extern int nouveau_run_vbios_init(struct drm_device *);
+extern void nouveau_bios_run_init_table(struct drm_device *, uint16_t table,
+					struct dcb_entry *);
+extern struct dcb_gpio_entry *nouveau_bios_gpio_entry(struct drm_device *,
+						      enum dcb_gpio_tag);
+extern struct dcb_connector_table_entry *
+nouveau_bios_connector_entry(struct drm_device *, int index);
 extern int get_pll_limits(struct drm_device *, uint32_t limit_match,
 			  struct pll_lims *);
 extern int nouveau_bios_run_display_table(struct drm_device *,
 					  struct dcb_entry *,
 					  uint32_t script, int pxclk);
+extern void *nouveau_bios_dp_table(struct drm_device *, struct dcb_entry *,
+				   int *length);
 //FIXME:COMMENT extern bool nouveau_bios_fp_mode(struct drm_device *, struct drm_display_mode *);
 extern uint8_t *nouveau_bios_embedded_edid(struct drm_device *);
 extern int nouveau_bios_parse_lvds_table(struct drm_device *, int pxclk,
@@ -854,6 +862,12 @@ extern int call_lvds_script(struct drm_device *, struct dcb_entry *, int head,
 int nouveau_ttm_global_init(struct drm_nouveau_private *);
 void nouveau_ttm_global_release(struct drm_nouveau_private *);
 //FIXME:TTM int nouveau_ttm_mmap(struct file *, struct vm_area_struct *);
+
+/* nouveau_dp.c */
+int nouveau_dp_auxch(struct nouveau_i2c_chan *auxch, int cmd, int addr,
+		     uint8_t *data, int data_nr);
+bool nouveau_dp_detect(struct drm_encoder *);
+bool nouveau_dp_link_train(struct drm_encoder *);
 
 /* nv04_fb.c */
 extern int  nv04_fb_init(struct drm_device *);
@@ -1096,6 +1110,10 @@ extern int nouveau_gem_ioctl_cpu_fini(struct drm_device *, void *,
 extern int nouveau_gem_ioctl_info(struct drm_device *, void *,
 				  struct drm_file *);
 
+/* nv17_gpio.c */
+int nv17_gpio_get(struct drm_device *dev, enum dcb_gpio_tag tag);
+int nv17_gpio_set(struct drm_device *dev, enum dcb_gpio_tag tag, int state);
+
 #ifndef ioread32_native
 #ifdef __BIG_ENDIAN
 #define ioread16_native ioread16be
@@ -1233,6 +1251,7 @@ enum {
 	NOUVEAU_REG_DEBUG_VGACRTC        = 0x40,
 	NOUVEAU_REG_DEBUG_RMVIO          = 0x80,
 	NOUVEAU_REG_DEBUG_VGAATTR        = 0x100,
+	NOUVEAU_REG_DEBUG_EVO            = 0x200,
 };
 
 #define NV_REG_DEBUG(type, dev, fmt, arg...) do { \
@@ -1240,39 +1259,13 @@ enum {
 		NV_PRINTK(KERN_DEBUG, dev, "%s: " fmt, __func__, ##arg); \
 } while (0)
 
-static inline enum nouveau_card_type
-nv_arch(struct drm_device *dev)
-{
-	struct drm_nouveau_private *dev_priv = dev->dev_private;
-
-	switch (dev_priv->chipset & 0xf0) {
-	case 0x00:
-		return NV_04;
-	case 0x10:
-		return NV_10;
-	case 0x20:
-		return NV_20;
-	case 0x30:
-		return NV_30;
-	case 0x40:
-	case 0x60:
-		return NV_40;
-	case 0x50:
-	case 0x80:
-	case 0x90:
-	case 0xa0:
-		return NV_50;
-	default:
-		return NV_UNKNOWN;
-	}
-}
-
 static inline bool
 nv_two_heads(struct drm_device *dev)
 {
+	struct drm_nouveau_private *dev_priv = dev->dev_private;
 	const int impl = dev->pci_device & 0x0ff0;
 
-	if (nv_arch(dev) >= NV_10 && impl != 0x0100 &&
+	if (dev_priv->card_type >= NV_10 && impl != 0x0100 &&
 	    impl != 0x0150 && impl != 0x01a0 && impl != 0x0200)
 		return true;
 
@@ -1288,9 +1281,10 @@ nv_gf4_disp_arch(struct drm_device *dev)
 static inline bool
 nv_two_reg_pll(struct drm_device *dev)
 {
+	struct drm_nouveau_private *dev_priv = dev->dev_private;
 	const int impl = dev->pci_device & 0x0ff0;
 
-	if (impl == 0x0310 || impl == 0x0340 || nv_arch(dev) >= NV_40)
+	if (impl == 0x0310 || impl == 0x0340 || dev_priv->card_type >= NV_40)
 		return true;
 	return false;
 }

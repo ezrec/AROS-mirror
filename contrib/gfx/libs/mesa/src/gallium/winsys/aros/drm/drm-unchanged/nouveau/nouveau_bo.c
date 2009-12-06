@@ -74,7 +74,7 @@ nouveau_bo_new(struct drm_device *dev, struct nouveau_channel *chan,
 		flags |= TTM_PL_FLAG_PRIV0;
 
 	/*
-	 * Some of the tile_flags have a periodic structure of 24*4096 bytes,
+	 * Some of the tile_flags have a periodic structure of N*4096 bytes,
 	 * align to to that as well as the page size. Overallocate memory to
 	 * avoid corruption of other buffer objects.
 	 */
@@ -83,8 +83,22 @@ nouveau_bo_new(struct drm_device *dev, struct nouveau_channel *chan,
 	case 0x2800:
 	case 0x4800:
 	case 0x7a00:
-		size += 6 * 4096;
-		align = 2 * 24 * 4096;
+		if (dev_priv->chipset >= 0xA0) {
+			/* This is based on high end cards with 448 bits
+			 * memory bus, could be different elsewhere.*/
+			size += 6 * 28672;
+			/* 8 * 28672 is the actual alignment requirement,
+			 * but we must also align to page size. */
+			align = 2 * 8 * 28672;
+		} else if (dev_priv->chipset >= 0x90) {
+			size += 3 * 16384;
+			align = 12 * 16834;
+		} else {
+			size += 3 * 8192;
+			/* 12 * 8192 is the actual alignment requirement,
+			 * but we must also align to page size. */
+			align = 2 * 12 * 8192;
+		}
 		break;
 	default:
 		break;
@@ -119,6 +133,7 @@ nouveau_bo_new(struct drm_device *dev, struct nouveau_channel *chan,
 int
 nouveau_bo_pin(struct nouveau_bo *nvbo, uint32_t memtype)
 {
+	struct drm_nouveau_private *dev_priv = nouveau_bdev(nvbo->bo.bdev);
 	struct ttm_buffer_object *bo = &nvbo->bo;
 	int ret;
 
@@ -142,6 +157,19 @@ nouveau_bo_pin(struct nouveau_bo *nvbo, uint32_t memtype)
 
 	ret = ttm_buffer_object_validate(bo, bo->proposed_placement,
 					 false, false);
+	if (ret == 0) {
+		switch (bo->mem.mem_type) {
+		case TTM_PL_VRAM:
+		case TTM_PL_PRIV0:
+			dev_priv->fb_aper_free -= bo->mem.size;
+			break;
+		case TTM_PL_TT:
+			dev_priv->gart_info.aper_free -= bo->mem.size;
+			break;
+		default:
+			break;
+		}
+	}
 	ttm_bo_unreserve(bo);
 out:
 	if (unlikely(ret))
@@ -152,6 +180,7 @@ out:
 int
 nouveau_bo_unpin(struct nouveau_bo *nvbo)
 {
+	struct drm_nouveau_private *dev_priv = nouveau_bdev(nvbo->bo.bdev);
 	struct ttm_buffer_object *bo = &nvbo->bo;
 	int ret;
 
@@ -166,6 +195,20 @@ nouveau_bo_unpin(struct nouveau_bo *nvbo)
 
 	ret = ttm_buffer_object_validate(bo, bo->proposed_placement,
 					 false, false);
+	if (ret == 0) {
+		switch (bo->mem.mem_type) {
+		case TTM_PL_VRAM:
+		case TTM_PL_PRIV0:
+			dev_priv->fb_aper_free += bo->mem.size;
+			break;
+		case TTM_PL_TT:
+			dev_priv->gart_info.aper_free += bo->mem.size;
+			break;
+		default:
+			break;
+		}
+	}
+
 	ttm_bo_unreserve(bo);
 	return ret;
 }

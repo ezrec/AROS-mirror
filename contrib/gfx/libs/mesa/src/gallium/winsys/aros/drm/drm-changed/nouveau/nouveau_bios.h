@@ -29,6 +29,8 @@
 
 #define DCB_MAX_NUM_ENTRIES 16
 #define DCB_MAX_NUM_I2C_ENTRIES 16
+#define DCB_MAX_NUM_GPIO_ENTRIES 32
+#define DCB_MAX_NUM_CONNECTOR_ENTRIES 16
 
 #define DCB_LOC_ON_CHIP 0
 
@@ -43,16 +45,28 @@ struct dcb_entry {
 	uint8_t or;
 	bool duallink_possible;
 	union {
+		struct sor_conf {
+			int link;
+		} sorconf;
 		struct {
 			int maxfreq;
 		} crtconf;
 		struct {
+			struct sor_conf sor;
 			bool use_straps_for_mode;
 			bool use_power_scripts;
 		} lvdsconf;
 		struct {
 			bool has_component_output;
 		} tvconf;
+		struct {
+			struct sor_conf sor;
+			int link_nr;
+			int link_bw;
+		} dpconf;
+		struct {
+			struct sor_conf sor;
+		} tmdsconf;
 	};
 	bool i2c_upper_default;
 };
@@ -69,14 +83,46 @@ struct parsed_dcb {
 	struct dcb_i2c_entry i2c[DCB_MAX_NUM_I2C_ENTRIES];
 };
 
+enum dcb_gpio_tag {
+	DCB_GPIO_TVDAC0 = 0xc,
+	DCB_GPIO_TVDAC1 = 0x2d,
+};
+
+struct dcb_gpio_entry {
+	enum dcb_gpio_tag tag;
+	int line;
+	bool invert;
+};
+
+struct parsed_dcb_gpio {
+	int entries;
+	struct dcb_gpio_entry entry[DCB_MAX_NUM_GPIO_ENTRIES];
+};
+
+struct dcb_connector_table_entry {
+	uint32_t entry;
+	uint8_t type;
+	uint8_t index;
+	uint8_t gpio_tag;
+};
+
+struct dcb_connector_table {
+	int entries;
+	struct dcb_connector_table_entry entry[DCB_MAX_NUM_CONNECTOR_ENTRIES];
+};
+
 struct bios_parsed_dcb {
 	uint8_t version;
 
 	struct parsed_dcb dcb;
 
-	uint16_t init8e_table_ptr;
 	uint8_t *i2c_table;
 	uint8_t i2c_default_indices;
+
+	uint16_t gpio_table_ptr;
+	struct parsed_dcb_gpio gpio;
+	uint16_t connector_table_ptr;
+	struct dcb_connector_table connector;
 };
 
 enum nouveau_encoder_type {
@@ -137,6 +183,10 @@ struct pll_lims {
 	 */
 	uint8_t max_usable_log2p;
 	uint8_t log2p_bias;
+
+	uint8_t min_p;
+	uint8_t max_p;
+
 	int refclk;
 };
 
@@ -190,8 +240,9 @@ struct nvbios {
 	} state;
 
 	struct {
-		int head;
+		struct dcb_entry *output;
 		uint16_t script_table_ptr;
+		uint16_t dp_table_ptr;
 	} display;
 
 	struct {
@@ -207,7 +258,9 @@ struct nvbios {
 		bool dual_link;
 		bool link_c_increment;
 		bool BITbit1;
+		bool if_is_24bit;
 		int duallink_transition_clk;
+		uint8_t strapless_is_24bit;
 		uint8_t *edid;
 
 		/* will need resetting after suspend */

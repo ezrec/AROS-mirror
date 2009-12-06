@@ -786,8 +786,8 @@ nouveau_gem_ioctl_pushbuf_call2(struct drm_device *dev, void *data,
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 	struct drm_nouveau_gem_pushbuf_call *req = data;
 
-	req->vram_available = 128*1024*1024;//dev_priv->fb_aper_free;
-	req->gart_available = 0;//dev_priv->gart_info.aper_free;
+	req->vram_available = dev_priv->fb_aper_free;
+	req->gart_available = dev_priv->gart_info.aper_free;
 
 	return nouveau_gem_ioctl_pushbuf_call(dev, data, file_priv);
 }
