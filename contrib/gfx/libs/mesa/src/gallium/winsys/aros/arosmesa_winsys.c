@@ -73,5 +73,5 @@ deinitialize_driver(void)
     return 1;
 }
 
-ADD2INIT(initialize_driver, 10);
-ADD2EXIT(deinitialize_driver, 10);
+ADD2INIT(initialize_driver, 5);
+ADD2EXIT(deinitialize_driver, 5);
