@@ -739,8 +739,11 @@ DRM_IMPL("Calling *_display_destroy\n");
 	iounmap(dev_priv->mmio);
 	iounmap(dev_priv->ramin);
 #else
-    drm_aros_pci_iounmap(dev->pcidriver, dev_priv->mmio, 0x00800000);
-    drm_aros_pci_iounmap(dev->pcidriver, dev_priv->ramin, dev_priv->ramin_size);
+    if (dev->pcidriver)
+    {
+        drm_aros_pci_iounmap(dev->pcidriver, dev_priv->mmio, 0x00800000);
+        drm_aros_pci_iounmap(dev->pcidriver, dev_priv->ramin, dev_priv->ramin_size);
+    }
 #endif
     
 	kfree(dev_priv);
