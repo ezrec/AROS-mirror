@@ -277,10 +277,8 @@ static int ttm_tt_set_caching(struct ttm_tt *ttm,
 			return ret;
 	}
 
-#if !defined(__AROS__)
 	if (ttm->caching_state == tt_cached)
 		drm_clflush_pages(ttm->pages, ttm->num_pages);
-#endif
 
 	for (i = 0; i < ttm->num_pages; ++i) {
 		cur_page = ttm->pages[i];

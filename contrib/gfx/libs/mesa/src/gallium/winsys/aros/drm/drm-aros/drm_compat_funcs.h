@@ -15,8 +15,8 @@
 #define readl(addr)                     (*(volatile ULONG*)(addr))
 #define writew(val, addr)               (*(volatile UWORD*)(addr) = (val))
 #define readw(addr)                     (*(volatile UWORD*)(addr))
-#define writeb(val, addr)               (*(volatile BYTE*)(addr) = (val))
-#define readb(addr)                     (*(volatile BYTE*)(addr))
+#define writeb(val, addr)               (*(volatile UBYTE*)(addr) = (val))
+#define readb(addr)                     (*(volatile UBYTE*)(addr))
 #define kzalloc(size, flags)            AllocVec(size, MEMF_ANY | MEMF_CLEAR)
 #define kmalloc(size, flags)            AllocVec(size, MEMF_ANY)
 #define vmalloc_user(size)              AllocVec(size, MEMF_ANY | MEMF_CLEAR)
@@ -50,7 +50,6 @@
 
 
 
-
 void *ioremap_nocache(resource_size_t offset, unsigned long size);
 void iounmap_helper(void * addr, unsigned long size); /* Helper function - not from compat */
 
@@ -79,6 +78,12 @@ static inline ULONG copy_to_user(APTR to, APTR from, IPTR size)
     return 0;
 }
 
+static inline void clflush(volatile void * ptr)
+{
+    asm volatile("clflush %0" : "+m" (*(volatile BYTE *) ptr));
+}
+
+
 #define BUG_ON(condition)           do { if (unlikely(condition)) bug("%s:%d\n", __FILE__, __LINE__); } while(0)
 #define EXPORT_SYMBOL(x)
 #define PTR_ERR(addr)               (SIPTR)addr
@@ -105,7 +110,9 @@ struct page * create_page_helper();                     /* Helper function - not
 #define put_page(p)                 __free_page(p)  /*FIXME: This might be wrong */
 #define page_to_pfn(p)              p->address      /*FIXME: This might be wrong */
 #define kmap(p)                     p->address
+#define kmap_atomic(p, type)        p->address
 #define vmap(p, count, flags, prot) (p)[0]->address
+#define kunmap_atomic(addr, type)
 #define kunmap(addr)
 #define vunmap(addr)
 

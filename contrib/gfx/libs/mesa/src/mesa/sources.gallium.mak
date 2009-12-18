@@ -29,6 +29,7 @@ AROS_DRM_SOURCES = \
             winsys/aros/drm/drm-aros/nouveau/nouveau_drv \
             winsys/aros/drm/drm-changed/drm_mm \
             winsys/aros/drm/drm-changed/drm_gem \
+            winsys/aros/drm/drm-changed/drm_cache \
             winsys/aros/drm/drm-changed/nouveau/nouveau_state \
             winsys/aros/drm/drm-changed/nouveau/nouveau_mem \
             winsys/aros/drm/drm-changed/nouveau/nouveau_channel_renamed \
