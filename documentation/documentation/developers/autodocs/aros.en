@@ -71,6 +71,10 @@ Inputs
      AI_ArosVariant IPTR
              Configure time variant name.
 
+     AI_ArosArchitecture IPTR
+             Return the target architecture.
+
+
 
 Result
 ~~~~~~
