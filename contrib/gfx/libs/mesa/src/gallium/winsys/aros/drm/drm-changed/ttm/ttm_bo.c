@@ -560,10 +560,10 @@ static void ttm_bo_release(struct kref *kref)
 		drm_mm_put_block(bo->vm_node);
 		bo->vm_node = NULL;
 	}
-//FIXME	write_unlock(&bdev->vm_lock);
+	write_unlock(&bdev->vm_lock);
 	ttm_bo_cleanup_refs(bo, false);
 	kref_put(&bo->list_kref, ttm_bo_release_list);
-//FIXME	write_lock(&bdev->vm_lock);
+	write_lock(&bdev->vm_lock);
 }
 
 void ttm_bo_unref(struct ttm_buffer_object **p_bo)
@@ -572,9 +572,9 @@ void ttm_bo_unref(struct ttm_buffer_object **p_bo)
 	struct ttm_bo_device *bdev = bo->bdev;
 
 	*p_bo = NULL;
-//FIXME	write_lock(&bdev->vm_lock);
+	write_lock(&bdev->vm_lock);
 	kref_put(&bo->kref, ttm_bo_release);
-//FIXME	write_unlock(&bdev->vm_lock);
+	write_unlock(&bdev->vm_lock);
 }
 EXPORT_SYMBOL(ttm_bo_unref);
 
@@ -1487,9 +1487,9 @@ int ttm_bo_device_release(struct ttm_bo_device *bdev)
 	spin_unlock(&glob->lru_lock);
 
 //FIXME	BUG_ON(!drm_mm_clean(&bdev->addr_space_mm));
-//FIXME	write_lock(&bdev->vm_lock);
+	write_lock(&bdev->vm_lock);
 	drm_mm_takedown(&bdev->addr_space_mm);
-//FIXME	write_unlock(&bdev->vm_lock);
+	write_unlock(&bdev->vm_lock);
 
 	return ret;
 }
@@ -1503,7 +1503,7 @@ int ttm_bo_device_init(struct ttm_bo_device *bdev,
 {
 	int ret = -EINVAL;
 
-//FIXME	rwlock_init(&bdev->vm_lock);
+	rwlock_init(&bdev->vm_lock);
 	bdev->driver = driver;
 
 	memset(bdev->man, 0, sizeof(bdev->man));
@@ -1646,7 +1646,7 @@ retry_pre_get:
 	if (unlikely(ret != 0))
 		return ret;
 
-//FIXME	write_lock(&bdev->vm_lock);
+	write_lock(&bdev->vm_lock);
 	bo->vm_node = drm_mm_search_free(&bdev->addr_space_mm,
 					 bo->mem.num_pages, 0, 0);
 
@@ -1659,19 +1659,19 @@ retry_pre_get:
 					      bo->mem.num_pages, 0);
 
 	if (unlikely(bo->vm_node == NULL)) {
-//FIXME		write_unlock(&bdev->vm_lock);
+		write_unlock(&bdev->vm_lock);
 		goto retry_pre_get;
 	}
 
 #if !defined(__AROS__)
 	ttm_bo_vm_insert_rb(bo);
 #endif
-//FIXME	write_unlock(&bdev->vm_lock);
+	write_unlock(&bdev->vm_lock);
 	bo->addr_space_offset = ((uint64_t) bo->vm_node->start) << PAGE_SHIFT;
 
 	return 0;
 out_unlock:
-//FIXME	write_unlock(&bdev->vm_lock);
+	write_unlock(&bdev->vm_lock);
 	return ret;
 }
 
@@ -1698,9 +1698,11 @@ int ttm_bo_wait(struct ttm_buffer_object *bo,
 			continue;
 		}
 
-#if !defined(__AROS__)
 		if (no_wait)
+#if !defined(__AROS__)
 			return -EBUSY;
+#else
+            bug("ttm_bo_wait: SHOULD HAVE RETURNED -EBUSY!\n");
 #endif
 #warning VERY BAD THING DONE
 /* Sometimes the fence is not signalled in time and using no_wait makes function exit with error

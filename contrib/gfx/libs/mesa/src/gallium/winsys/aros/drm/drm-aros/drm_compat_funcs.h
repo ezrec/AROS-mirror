@@ -34,14 +34,6 @@
 #define mutex_init(x)                   InitSemaphore(x.semaphore);
 #define likely(x)                       __builtin_expect((x),1)
 #define unlikely(x)                     __builtin_expect((x),0)
-/* TODO: Implement spinlocks in busy-cpu way? */
-#define spin_lock_init(x)               InitSemaphore(x)
-#define spin_lock(x)                    ObtainSemaphore(x)
-#define spin_unlock(x)                  ReleaseSemaphore(x)
-#define spin_lock_irq(x)                ObtainSemaphore(x)
-#define spin_unlock_irq(x)              ReleaseSemaphore(x)
-#define spin_lock_irqsave(x,y)          ObtainSemaphore(x)
-#define spin_unlock_irqrestore(x,y)     ReleaseSemaphore(x)
 #define pci_map_page(a, b, c, d, e)     drm_aros_dma_map_buf(b->address, c, d)
 #define pci_dma_mapping_error(a, b)     FALSE
 #define pci_unmap_page(a, b, c, d)      drm_aros_dma_unmap_buf(b, c)
@@ -103,6 +95,20 @@ static inline IPTR IS_ERR(APTR ptr)
 void clear_bit(int nr, volatile void * addr);
 void set_bit(int nr, volatile void *addr);
 
+/* Lock handling */
+/* TODO: Implement spinlocks in busy-cpu way? */
+#define spin_lock_init(x)               InitSemaphore(x)
+#define spin_lock(x)                    ObtainSemaphore(x)
+#define spin_unlock(x)                  ReleaseSemaphore(x)
+#define spin_lock_irq(x)                ObtainSemaphore(x)
+#define spin_unlock_irq(x)              ReleaseSemaphore(x)
+#define spin_lock_irqsave(x,y)          ObtainSemaphore(x)
+#define spin_unlock_irqrestore(x,y)     ReleaseSemaphore(x)
+/* TODO: This may work incorreclty if write_lock and read_lock are used for the same lock
+   read_lock allows concurent readers as lock as there is no writer */
+#define write_lock(x)                   ObtainSemaphore(x)
+#define write_unlock(x)                 ReleaseSemaphore(x)
+#define rwlock_init(x)                  InitSemaphore(x)
 /* Page handling */
 void __free_page(struct page * p);
 struct page * create_page_helper();                     /* Helper function - not from compat */

@@ -26,6 +26,7 @@
 #define dma_addr_t                  IPTR
 /* TODO: Implement spinlocks in busy-cpu way? */
 #define spinlock_t                  struct SignalSemaphore
+#define rwlock_t                    struct SignalSemaphore
 /* FIXME: atomic_t does not really deliver atomic operations */
 #define atomic_t                    int
 #define pgprot_t                    ULONG
