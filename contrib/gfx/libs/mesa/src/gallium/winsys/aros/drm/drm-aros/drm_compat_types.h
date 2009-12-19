@@ -24,11 +24,6 @@
 #define u8                          BYTE
 #define resource_size_t             IPTR
 #define dma_addr_t                  IPTR
-/* TODO: Implement spinlocks in busy-cpu way? */
-#define spinlock_t                  struct SignalSemaphore
-#define rwlock_t                    struct SignalSemaphore
-/* FIXME: atomic_t does not really deliver atomic operations */
-#define atomic_t                    int
 #define pgprot_t                    ULONG
 
 #undef offsetof
@@ -38,6 +33,21 @@
              (type *)((char *)__mptr - offsetof(type, member)); })
 
 #define ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
+
+typedef struct
+{
+    LONG count;
+} atomic_t;
+
+typedef struct
+{
+    atomic_t lock;
+} spinlock_t;
+
+typedef struct
+{
+    atomic_t lock;
+} rwlock_t;
 
 /* Page handling */
 struct page

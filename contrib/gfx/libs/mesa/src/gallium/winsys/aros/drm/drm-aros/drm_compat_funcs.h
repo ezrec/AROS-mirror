@@ -95,20 +95,6 @@ static inline IPTR IS_ERR(APTR ptr)
 void clear_bit(int nr, volatile void * addr);
 void set_bit(int nr, volatile void *addr);
 
-/* Lock handling */
-/* TODO: Implement spinlocks in busy-cpu way? */
-#define spin_lock_init(x)               InitSemaphore(x)
-#define spin_lock(x)                    ObtainSemaphore(x)
-#define spin_unlock(x)                  ReleaseSemaphore(x)
-#define spin_lock_irq(x)                ObtainSemaphore(x)
-#define spin_unlock_irq(x)              ReleaseSemaphore(x)
-#define spin_lock_irqsave(x,y)          ObtainSemaphore(x)
-#define spin_unlock_irqrestore(x,y)     ReleaseSemaphore(x)
-/* TODO: This may work incorreclty if write_lock and read_lock are used for the same lock
-   read_lock allows concurent readers as lock as there is no writer */
-#define write_lock(x)                   ObtainSemaphore(x)
-#define write_unlock(x)                 ReleaseSemaphore(x)
-#define rwlock_init(x)                  InitSemaphore(x)
 /* Page handling */
 void __free_page(struct page * p);
 struct page * create_page_helper();                     /* Helper function - not from compat */
@@ -123,44 +109,81 @@ struct page * create_page_helper();                     /* Helper function - not
 #define vunmap(addr)
 
 /* Atomic handling */
-/* FIXME NOT REALLY ATOMIC */
 static inline int atomic_add_return(int i, atomic_t *v)
 {
-    (*v) += i;
-    return (*v);
+    return __sync_add_and_fetch(&v->count, i);
 }
 
 static inline void atomic_inc(atomic_t *v)
 {
-    (*v)++;
+    __sync_add_and_fetch(&v->count, 1);
 }
 
 static inline void atomic_set(atomic_t *v, int i)
 {
-    (*v) = i;
+    v->count = i;
 }
 
 static inline int atomic_read(atomic_t *v)
 {
-    return (*v);
+    return v->count;
 }
 
 static inline void atomic_dec(atomic_t * v)
 {
-    (*v)++;
+    __sync_sub_and_fetch(&v->count, 1);
 }
 
 static inline int atomic_dec_and_test(atomic_t *v)
 {
-    (*v)--;
-    return (*v) == 0;
+    return (__sync_sub_and_fetch(&v->count, 1) == 0);
 }
 
 static inline int atomic_cmpxchg(atomic_t *v, int old, int new)
 {
-    int ret = (*v);
-    if (ret == old) (*v) = new;
-    return ret;
+    return __sync_val_compare_and_swap(&v->count, old, new);
+}
+
+/* Lock handling */
+static inline void spin_lock_init(spinlock_t * lock)
+{
+    atomic_set(&lock->lock, 0);
+}
+static inline void spin_lock(spinlock_t * lock)
+{
+    while(atomic_cmpxchg(&lock->lock, 0, 1) != 0);
+}
+static inline void spin_unlock(spinlock_t * lock)
+{
+    atomic_set(&lock->lock, 0);
+}
+static inline void spin_lock_irq(spinlock_t * lock)
+{
+    Disable();
+    
+    while(atomic_cmpxchg(&lock->lock, 0, 1) != 0);
+}
+static inline void spin_unlock_irq(spinlock_t * lock)
+{
+    atomic_set(&lock->lock, 0);
+
+    Enable();
+}
+#define spin_lock_irqsave(x,y)          spin_lock_irq(x)
+#define spin_unlock_irqrestore(x,y)     spin_unlock_irq(x)
+/* TODO: This may work incorreclty if write_lock and read_lock are used for the same lock
+   read_lock allows concurent readers as lock as there is no writer */
+static inline void rwlock_init(rwlock_t * lock)
+{
+    atomic_set(&lock->lock, 0);
+}
+static inline void write_lock(rwlock_t * lock)
+{
+    while(atomic_cmpxchg(&lock->lock, 0, 1) != 0);
+}
+static inline void write_unlock(rwlock_t * lock)
+{
+    atomic_set(&lock->lock, 0);
 }
 
 /* Reference counted objects implementation */
