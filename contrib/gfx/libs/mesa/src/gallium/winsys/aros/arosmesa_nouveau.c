@@ -308,8 +308,6 @@ arosmesa_nouveau_get_screen_surface(struct pipe_screen * screen, int width, int 
     struct pipe_buffer *buf = NULL;
     unsigned pitch = width * bpp / 8;
 
-//    return NULL; //HACK HACK HACK
-    
     buf = nouveau_drm_pb_from_handle(screen, 1 /* driver makes sure object with ID 1 is visible framebuffer */);
     if (!buf)
         return NULL;

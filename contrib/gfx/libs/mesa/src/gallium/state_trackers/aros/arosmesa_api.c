@@ -619,10 +619,13 @@ void AROSMesaDestroyContext(AROSMesaContext amesa)
             st_make_current( NULL, NULL, NULL );
         }
 
-        st_finish(ctx->st);        
+        st_finish(ctx->st);
+
+        /* Release amesa->screen_surface reference */
+        if (amesa->screen_surface)
+            pipe_surface_reference(&amesa->screen_surface, NULL);
+
         st_destroy_context(ctx->st);
-        
-        /* FIXME: Release amesa->screen_surface? (it's only a reference, not an allocation) */
         
         aros_destroy_framebuffer(amesa->framebuffer);
         aros_destroy_visual(amesa->visual);

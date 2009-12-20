@@ -288,6 +288,8 @@ static int nouveau_init_engine_ptrs(struct drm_device *dev)
 	return 0;
 }
 
+struct nouveau_bo * screen_bo = NULL;
+
 int
 nouveau_card_init(struct drm_device *dev)
 {
@@ -384,7 +386,6 @@ DRM_IMPL("Calling drm_vblank_init\n");
 
 #if defined(__AROS__)
     {
-        struct nouveau_bo * screen_bo = NULL;
         /* Create buffer object to protect visible screen. */
         /* FIXME: Allocate FullHD buffer size for now, should read real resolution later */
         nouveau_gem_new(dev, NULL, 1920 * 1080 * 4, 0, TTM_PL_FLAG_VRAM, 0, 0, false, false, &screen_bo);
@@ -732,6 +733,11 @@ int nouveau_unload(struct drm_device *dev)
 DRM_IMPL("Calling *_display_destroy\n");
 #warning IMPLEMENT Calling *_display_destroy
 #endif
+#if defined(__AROS__)
+        /* Release screen buffer object */
+        if (screen_bo != NULL)
+            drm_gem_object_unreference(screen_bo->gem);
+#endif        
 		nouveau_close(dev);
 	}
 
