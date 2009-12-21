@@ -285,7 +285,7 @@ There are some command line options for aros executable that could be used.
 You can get this list with ./aros -h option given::
 
 	AROS for Linux
-	usage: ./aros [options]
+	usage: ./aros-unix [options]
 	 -h                 show this page
 	 -m <size>          allocate <size> Megabytes of memory for AROS
 	 -M                 allows programs to read SysBase from Address $4; SysBase is
