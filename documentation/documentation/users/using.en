@@ -277,9 +277,9 @@ Using AROS hosted on Linux or FreeBSD
 
 Once you got the binaries for your system, either by compiling or by
 downloading pre-compiled binaries, you should go down into the
-"bin/$TARGET/AROS" directory, where $TARGET is your system target
-(something like "linux-i386"). Run the file "aros" ("./aros"). The
-Workbench replacement "Wanderer" will be started.
+"bin/$TARGET/AROS/boot" directory, where $TARGET is your system target
+(something like "linux-i386"). Run the file "aros-unix" ("./aros-unix").
+The Workbench replacement "Wanderer" will be started.
 
 There are some command line options for aros executable that could be used.
 You can get this list with ./aros -h option given::
@@ -316,12 +316,6 @@ prefix to address a command within the current directory either, but
 leave this away instead.) Once you are used to it, try to execute a few
 programs (especially the "Demos" and "Games") to get an impression of
 AROS capabilities. 
-
-Using AROS-hosted on PPC
-------------------------
-
-To be filled by someone... 
-
 
 AROS Basics
 ===========
