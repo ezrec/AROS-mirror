@@ -262,6 +262,12 @@ nouveau_pushbuf_init(struct nouveau_channel *chan)
 	return 0;
 }
 
+void
+nouveau_pushbuf_fini(struct nouveau_channel *chan)
+{
+	nouveau_pushbuf_fini_call(chan);
+}
+
 int
 nouveau_pushbuf_flush(struct nouveau_channel *chan, unsigned min)
 {
