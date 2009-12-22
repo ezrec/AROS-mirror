@@ -231,7 +231,7 @@ static boolean
 is_register_src(struct codegen *gen, int channel,
                 const struct tgsi_full_src_register *src)
 {
-   int swizzle = tgsi_util_get_full_src_register_extswizzle(src, channel);
+   int swizzle = tgsi_util_get_full_src_register_swizzle(src, channel);
    int sign_op = tgsi_util_get_full_src_register_sign_mode(src, channel);
 
    if (swizzle > TGSI_SWIZZLE_W || sign_op != TGSI_UTIL_SIGN_KEEP) {
@@ -271,23 +271,14 @@ get_src_reg(struct codegen *gen,
             const struct tgsi_full_src_register *src)
 {
    int reg = -1;
-   int swizzle = tgsi_util_get_full_src_register_extswizzle(src, channel);
+   int swizzle = tgsi_util_get_full_src_register_swizzle(src, channel);
    boolean reg_is_itemp = FALSE;
    uint sign_op;
 
    assert(swizzle >= TGSI_SWIZZLE_X);
-   assert(swizzle <= TGSI_EXTSWIZZLE_ONE);
+   assert(swizzle <= TGSI_SWIZZLE_W);
 
-   if (swizzle == TGSI_EXTSWIZZLE_ONE) {
-      /* Load const one float and early out */
-      reg = get_const_one_reg(gen);
-   }
-   else if (swizzle == TGSI_EXTSWIZZLE_ZERO) {
-      /* Load const zero float and early out */
-      reg = get_itemp(gen);
-      spe_xor(gen->f, reg, reg, reg);
-   }
-   else {
+   {
       int index = src->SrcRegister.Index;
 
       assert(swizzle < 4);
@@ -674,7 +665,7 @@ emit_MAD(struct codegen *gen, const struct tgsi_full_instruction *inst)
  * Emit linear interpolate.  See emit_ADD for comments.
  */
 static boolean
-emit_LERP(struct codegen *gen, const struct tgsi_full_instruction *inst)
+emit_LRP(struct codegen *gen, const struct tgsi_full_instruction *inst)
 {
    int ch, s1_reg[4], s2_reg[4], s3_reg[4], d_reg[4], tmp_reg[4];
 
@@ -1758,7 +1749,6 @@ emit_instruction(struct codegen *gen,
    case TGSI_OPCODE_ARL:
       return emit_ARL(gen, inst);
    case TGSI_OPCODE_MOV:
-   case TGSI_OPCODE_SWZ:
       return emit_MOV(gen, inst);
    case TGSI_OPCODE_ADD:
    case TGSI_OPCODE_SUB:
@@ -1766,7 +1756,7 @@ emit_instruction(struct codegen *gen,
       return emit_binop(gen, inst);
    case TGSI_OPCODE_MAD:
       return emit_MAD(gen, inst);
-   case TGSI_OPCODE_LERP:
+   case TGSI_OPCODE_LRP:
       return emit_LRP(gen, inst);
    case TGSI_OPCODE_DP3:
       return emit_DP3(gen, inst);

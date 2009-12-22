@@ -176,6 +176,24 @@ cleanup(void)
    glutDestroyWindow(win);
 }
 
+
+/* new window size or exposure */
+static void
+reshape(int width, int height)
+{
+ GLfloat h = (GLfloat) height / (GLfloat) width;
+printf("reshape: %d/%d\n", height, width);
+fflush(stdout);
+ glViewport(0, 0, (GLint) width, (GLint) height);
+ glMatrixMode(GL_PROJECTION);
+ glLoadIdentity();
+ glFrustum(-1.0, 1.0, -h, h, 5.0, 200.0);
+ glMatrixMode(GL_MODELVIEW);
+}
+
+#include <proto/dos.h>
+#include <proto/exec.h>
+
 static void
 draw(void)
 {
@@ -211,8 +229,9 @@ draw(void)
 
   glutSwapBuffers();
 
+  //Delay(50);
+  
   Frames++;
-
   {
     GLint t = glutGet(GLUT_ELAPSED_TIME);
     if (t - T0 >= 5000) {
@@ -220,6 +239,8 @@ draw(void)
       GLfloat fps = Frames / seconds;
       printf("%d frames in %6.3f seconds = %6.3f FPS\n", Frames, seconds, fps);
       fflush(stdout);
+     //reshape(200,200);
+ 
       T0 = t;
       Frames = 0;
       if ((t >= 999.0 * autoexit) && (autoexit)) {
@@ -310,19 +331,6 @@ special(int k, int x, int y)
     return;
   }
   glutPostRedisplay();
-}
-
-/* new window size or exposure */
-static void
-reshape(int width, int height)
-{
-  GLfloat h = (GLfloat) height / (GLfloat) width;
-
-  glViewport(0, 0, (GLint) width, (GLint) height);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  glFrustum(-1.0, 1.0, -h, h, 5.0, 200.0);
-  glMatrixMode(GL_MODELVIEW);
 }
 
 static void

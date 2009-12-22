@@ -1020,3 +1020,9 @@
 #undef glGetInteger64v
 #undef glGetSynciv
 #undef glProvokingVertexEXT
+#undef glDrawElementsBaseVertex
+#undef glDrawRangeElementsBaseVertex
+#undef glMultiDrawElementsBaseVertex
+#undef glProvokingVertex
+#undef glRenderbufferStorageMultisampleEXT
+

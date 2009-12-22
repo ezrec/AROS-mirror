@@ -1,6 +1,6 @@
-diff -ru -x .svn /data/deadwood/source/Mesa-7.6/src/mesa/glapi/glapi.c mesa/glapi/glapi.c
---- /data/deadwood/source/Mesa-7.6/src/mesa/glapi/glapi.c	2009-10-18 09:25:49.000000000 +0200
-+++ mesa/glapi/glapi.c	2009-11-01 11:14:10.000000000 +0100
+diff -ur -x .svn /data/deadwood/source/Mesa-7.7/src/mesa/glapi/glapi.c mesa/glapi/glapi.c
+--- /data/deadwood/source/Mesa-7.7/src/mesa/glapi/glapi.c	2009-11-17 17:54:28.000000000 +0100
++++ mesa/glapi/glapi.c	2009-12-22 18:11:36.000000000 +0100
 @@ -223,9 +223,12 @@
  
  #endif /* defined(THREADS) */
@@ -14,9 +14,9 @@ diff -ru -x .svn /data/deadwood/source/Mesa-7.6/src/mesa/glapi/glapi.c mesa/glap
  
  #endif /* defined(GLX_USE_TLS) */
  /*@}*/
-diff -ru -x .svn /data/deadwood/source/Mesa-7.6/src/mesa/glapi/glapi.h mesa/glapi/glapi.h
---- /data/deadwood/source/Mesa-7.6/src/mesa/glapi/glapi.h	2009-10-18 09:25:49.000000000 +0200
-+++ mesa/glapi/glapi.h	2009-11-01 11:16:58.000000000 +0100
+diff -ur -x .svn /data/deadwood/source/Mesa-7.7/src/mesa/glapi/glapi.h mesa/glapi/glapi.h
+--- /data/deadwood/source/Mesa-7.7/src/mesa/glapi/glapi.h	2009-11-17 17:54:28.000000000 +0100
++++ mesa/glapi/glapi.h	2009-12-22 18:11:36.000000000 +0100
 @@ -53,6 +53,38 @@
  
  struct _glapi_table;
@@ -77,22 +77,22 @@ diff -ru -x .svn /data/deadwood/source/Mesa-7.6/src/mesa/glapi/glapi.h mesa/glap
  
  # ifdef THREADS
  #  define GET_CURRENT_CONTEXT(C)  GLcontext *C = (GLcontext *) (_glapi_Context ? _glapi_Context : _glapi_get_context())
-diff -ru -x .svn /data/deadwood/source/Mesa-7.6/src/mesa/main/compiler.h mesa/main/compiler.h
---- /data/deadwood/source/Mesa-7.6/src/mesa/main/compiler.h	2009-10-18 09:25:49.000000000 +0200
-+++ mesa/main/compiler.h	2009-11-01 11:18:12.000000000 +0100
-@@ -235,6 +235,8 @@
+diff -ur -x .svn /data/deadwood/source/Mesa-7.7/src/mesa/main/compiler.h mesa/main/compiler.h
+--- /data/deadwood/source/Mesa-7.7/src/mesa/main/compiler.h	2009-12-21 18:23:40.000000000 +0100
++++ mesa/main/compiler.h	2009-12-22 18:14:42.000000000 +0100
+@@ -234,6 +234,8 @@
  #elif defined(__APPLE__)
  #include <CoreFoundation/CFByteOrder.h>
  #define CPU_TO_LE32( x )	CFSwapInt32HostToLittle( x )
 +#elif defined(__AROS__)
 +#define CPU_TO_LE32( x )    AROS_BE2LONG( x )
- #else /*__linux__ __APPLE__*/
- #include <sys/endian.h>
- #define CPU_TO_LE32( x )	bswap32( x )
-diff -ru -x .svn /data/deadwood/source/Mesa-7.6/src/mesa/main/imports.c mesa/main/imports.c
---- /data/deadwood/source/Mesa-7.6/src/mesa/main/imports.c	2009-10-18 09:25:49.000000000 +0200
-+++ mesa/main/imports.c	2009-11-01 11:18:55.000000000 +0100
-@@ -559,7 +559,7 @@
+ #elif (defined(_AIX) || defined(__blrts))
+ #define CPU_TO_LE32( x )        x = ((x & 0x000000ff) << 24) | \
+                                     ((x & 0x0000ff00) <<  8) | \
+diff -ur -x .svn /data/deadwood/source/Mesa-7.7/src/mesa/main/imports.c mesa/main/imports.c
+--- /data/deadwood/source/Mesa-7.7/src/mesa/main/imports.c	2009-12-21 18:08:14.000000000 +0100
++++ mesa/main/imports.c	2009-12-22 18:11:36.000000000 +0100
+@@ -566,7 +566,7 @@
  int
  _mesa_ffs(int32_t i)
  {

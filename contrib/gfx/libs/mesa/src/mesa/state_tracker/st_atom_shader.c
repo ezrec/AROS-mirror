@@ -176,7 +176,7 @@ find_translated_vp(struct st_context *st,
    /* See if we need to translate vertex program to TGSI form */
    if (xvp->serialNo != stvp->serialNo) {
       GLuint outAttr;
-      const GLbitfield outputsWritten = stvp->Base.Base.OutputsWritten;
+      const GLbitfield64 outputsWritten = stvp->Base.Base.OutputsWritten;
       GLuint numVpOuts = 0;
       GLboolean emitPntSize = GL_FALSE, emitBFC0 = GL_FALSE, emitBFC1 = GL_FALSE;
       GLbitfield usedGenerics = 0x0;
@@ -286,8 +286,6 @@ find_translated_vp(struct st_context *st,
                 xvp->output_to_slot[outAttr]);
 #endif
       }
-
-      assert(stvp->Base.Base.NumInstructions > 1);
 
       st_translate_vertex_program(st, stvp, xvp->output_to_slot,
                                   xvp->output_to_semantic_name,

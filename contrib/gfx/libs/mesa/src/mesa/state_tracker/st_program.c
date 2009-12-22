@@ -80,12 +80,14 @@ st_translate_vertex_program(struct st_context *st,
    GLbitfield input_flags[MAX_PROGRAM_INPUTS];
    GLbitfield output_flags[MAX_PROGRAM_OUTPUTS];
 
-//   memset(&vs, 0, sizeof(vs));
+   /*memset(&vs, 0, sizeof(vs));*/
    memset(input_flags, 0, sizeof(input_flags));
    memset(output_flags, 0, sizeof(output_flags));
 
    if (stvp->Base.IsPositionInvariant)
       _mesa_insert_mvp_code(st->ctx, &stvp->Base);
+
+   assert(stvp->Base.Base.NumInstructions > 1);
 
    /*
     * Determine number of inputs, the mappings between VERT_ATTRIB_x
@@ -386,7 +388,7 @@ st_translate_fragment_program(struct st_context *st,
    GLbitfield input_flags[MAX_PROGRAM_INPUTS];
    GLbitfield output_flags[MAX_PROGRAM_OUTPUTS];
 
-//   memset(&fs, 0, sizeof(fs));
+   /*memset(&fs, 0, sizeof(fs));*/
    memset(input_flags, 0, sizeof(input_flags));
    memset(output_flags, 0, sizeof(output_flags));
 
@@ -469,7 +471,7 @@ st_translate_fragment_program(struct st_context *st,
     */
    {
       uint numColors = 0;
-      GLbitfield outputsWritten = stfp->Base.Base.OutputsWritten;
+      GLbitfield64 outputsWritten = stfp->Base.Base.OutputsWritten;
 
       /* if z is written, emit that first */
       if (outputsWritten & (1 << FRAG_RESULT_DEPTH)) {

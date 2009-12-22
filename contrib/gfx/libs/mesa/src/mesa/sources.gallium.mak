@@ -208,25 +208,15 @@ GALLIUM_AUXILIARY_SOURCES = \
 GALLIUM_SOFTPIPE_SOURCES = \
             drivers/softpipe/sp_fs_exec \
             drivers/softpipe/sp_fs_sse \
-            drivers/softpipe/sp_fs_llvm \
             drivers/softpipe/sp_clear \
             drivers/softpipe/sp_flush \
             drivers/softpipe/sp_query \
             drivers/softpipe/sp_context \
             drivers/softpipe/sp_draw_arrays \
-            drivers/softpipe/sp_prim_setup \
-            drivers/softpipe/sp_prim_vbuf \
             drivers/softpipe/sp_quad_pipe \
-            drivers/softpipe/sp_quad_alpha_test \
             drivers/softpipe/sp_quad_blend \
-            drivers/softpipe/sp_quad_colormask \
-            drivers/softpipe/sp_quad_coverage \
             drivers/softpipe/sp_quad_depth_test \
-            drivers/softpipe/sp_quad_earlyz \
             drivers/softpipe/sp_quad_fs \
-            drivers/softpipe/sp_quad_occlusion \
-            drivers/softpipe/sp_quad_output \
-            drivers/softpipe/sp_quad_stencil \
             drivers/softpipe/sp_quad_stipple \
             drivers/softpipe/sp_screen \
             drivers/softpipe/sp_setup \

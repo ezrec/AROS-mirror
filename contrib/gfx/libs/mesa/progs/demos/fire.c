@@ -379,7 +379,7 @@ dojoy(void)
       joyavailable = 0;
 #endif
 }
-
+#include <proto/dos.h>
 static void
 drawfire(void)
 {
@@ -519,6 +519,8 @@ drawfire(void)
    glPopMatrix();
 
    glutSwapBuffers();
+   
+   //Delay(50);
 
    Frames++;
    {

@@ -8,6 +8,7 @@
 #include <aros/debug.h>
 
 #include <GL/arosmesa.h>
+#include "main/formats.h"
 #include "swrast/swrast.h"
 #include "renderbuffer.h"
 
@@ -216,10 +217,6 @@ _aros_renderbuffer_allocstorage(GLcontext *ctx, struct gl_renderbuffer *rb,
     rb->PutMonoValues = aros_renderbuffer_putmonovalues;
     rb->GetRow = aros_renderbuffer_getrow;
     rb->GetValues = aros_renderbuffer_getvalues;
-    rb->RedBits = rb->DataType;
-    rb->GreenBits = rb->DataType;
-    rb->BlueBits = rb->DataType;
-    rb->AlphaBits = rb->DataType;
     rb->Width = width;
     rb->Height = height;
 
@@ -273,7 +270,7 @@ AROSMesaRenderBuffer aros_new_renderbuffer(void)
     {
         rb->InternalFormat = GL_RGBA;
         rb->_BaseFormat = GL_RGBA;
-        rb->_ActualFormat = GL_RGBA;
+        rb->Format = MESA_FORMAT_RGBA8888;
         rb->DataType = GL_UNSIGNED_BYTE;
         rb->AllocStorage = _aros_renderbuffer_allocstorage;
         rb->Delete = _aros_renderbuffer_delete;

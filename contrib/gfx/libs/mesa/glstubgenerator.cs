@@ -134,6 +134,36 @@ namespace glstubgenerator
 			foreach (Function f in this)
 				f.CalculateRegisters();
 		}
+		
+		public void ReorderToMatch(FunctionList requestedOrderOfFunctions)
+		{
+			/* Rather not effective implementation
+			 * For each item on ordered list, find it in this list, put to temp list, remove from this list
+			 * when finished, copy remaining items on this list to temp list
+			 * copy temp list to this list */
+			FunctionList tempList = new FunctionList();
+			
+			foreach(Function ordered in requestedOrderOfFunctions)
+			{
+				foreach(Function current in this)
+				{
+					if ((current.Name == ordered.Name) &&
+					    current.ReturnType == ordered.ReturnType)
+					{
+						tempList.Add(current);
+						this.Remove(current);
+						break;
+					}
+				}
+			}
+			
+			foreach(Function current in this)
+				tempList.Add(current);
+			
+			this.Clear();
+			
+			this.AddRange(tempList);
+		}
 	}
 	
 	enum HeaderType
@@ -394,6 +424,45 @@ namespace glstubgenerator
 		}
 	}
 	
+	class ConfParser
+	{
+		public FunctionList Parse(string pathToFile)
+		{
+			FunctionList functions = new FunctionList();
+			
+			/* This file might not yet exist */
+			if (!File.Exists(pathToFile))
+				return functions;
+			
+			StreamReader sr = File.OpenText(pathToFile);
+			
+			string line = null;
+			int spacePosition = -1;
+			int bracketPosition = -1;
+			
+			while((line = sr.ReadLine()) != null)
+			{
+				if (line.IndexOf(" gl") < 0)
+					continue;
+
+				bracketPosition = line.IndexOf("(", 0);
+				if (bracketPosition < 0)
+					continue;
+				
+				spacePosition = line.LastIndexOf(" ", bracketPosition);
+				if (spacePosition < 0)
+					continue;
+				
+				Function f = new Function();
+				f.ReturnType = line.Substring(0, spacePosition).Trim();
+				f.Name = line.Substring(spacePosition + 1, bracketPosition - spacePosition - 1).Trim();
+				
+				functions.Add(f);
+			}
+			
+			return functions;
+		}
+	}
 	abstract class ArosFileWriter
 	{
 		public abstract void Write(string path, FunctionList functions);
@@ -510,9 +579,10 @@ namespace glstubgenerator
 
 		public static void Main(string[] args)
 		{
+			string PATH_TO_MESA = @"/data/deadwood/AROS/AROS/contrib/gfx/libs/mesa/";
 			GLApiTempParser apiParser = new GLApiTempParser();
 			FunctionNameDictionary implementedFunctions = 
-				apiParser.Parse(@"/data/deadwood/AROS/AROS/contrib/gfx/libs/mesa/src/mesa/glapi/glapitemp.h");
+				apiParser.Parse(PATH_TO_MESA + @"/src/mesa/glapi/glapitemp.h");
 			
 			
 			Console.WriteLine("Implemented functions: {0}", implementedFunctions.Keys.Count);
@@ -520,10 +590,13 @@ namespace glstubgenerator
 			GLHeaderParser p = new GLHeaderParser();
 			
 			p.HeaderType = HeaderType.GL_H;
-			FunctionList functionsglh = p.Parse(@"/data/deadwood/AROS/AROS/contrib/gfx/libs/mesa/include/GL/gl.h");
+			FunctionList functionsglh = p.Parse(PATH_TO_MESA + @"/include/GL/gl.h");
 			
 			p.HeaderType = HeaderType.GLEXT_H;
-			FunctionList functionsglexth = p.Parse(@"/data/deadwood/AROS/AROS/contrib/gfx/libs//mesa/include/GL/glext.h");
+			FunctionList functionsglexth = p.Parse(PATH_TO_MESA + @"/include/GL/glext.h");
+			
+			ConfParser confParser = new ConfParser();
+			FunctionList orderedExistingFunctions = confParser.Parse(PATH_TO_MESA + @"/src/mesa/arosmesa.conf");
 			
 			Console.WriteLine("Initial parse results: GL: {0} GLEXT: {1}", functionsglh.Count, functionsglexth.Count);
 			
@@ -542,6 +615,8 @@ namespace glstubgenerator
 
 			functionsglh.CorrectionForArrayArguments();
 			functionsglh.CalculateRegisters();
+			functionsglh.ReorderToMatch(orderedExistingFunctions);
+			
 			
 			StubsFileWriter sfw = new StubsFileWriter();
 			sfw.Write(@"/data/deadwood/temp/aros_libapi.c", functionsglh);

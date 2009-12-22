@@ -420,7 +420,7 @@ static void dojoy(void)
     joyavailable=0;
 #endif
 }
-
+#include <proto/dos.h>
 static void draw(void)
 {
   static char frbuf[80] = "";
@@ -481,6 +481,8 @@ static void draw(void)
   reshape(WIDTH,HEIGHT);
 
   glutSwapBuffers();
+  
+  //Delay(50);
 
    Frames++;
 

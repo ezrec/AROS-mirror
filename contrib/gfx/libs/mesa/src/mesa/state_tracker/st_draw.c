@@ -25,10 +25,20 @@
  * 
  **************************************************************************/
 
- /*
-  * Authors:
-  *   Keith Whitwell <keith@tungstengraphics.com>
-  */
+/*
+ * This file implements the st_draw_vbo() function which is called from
+ * Mesa's VBO module.  All point/line/triangle rendering is done through
+ * this function whether the user called glBegin/End, glDrawArrays,
+ * glDrawElements, glEvalMesh, or glCalList, etc.
+ *
+ * We basically convert the VBO's vertex attribute/array information into
+ * Gallium vertex state, bind the vertex buffer objects and call
+ * pipe->draw_elements(), pipe->draw_range_elements() or pipe->draw_arrays().
+ *
+ * Authors:
+ *   Keith Whitwell <keith@tungstengraphics.com>
+ */
+
 
 #include "main/imports.h"
 #include "main/image.h"
@@ -371,7 +381,7 @@ setup_interleaved_attribs(GLcontext *ctx,
 {
    struct pipe_context *pipe = ctx->st->pipe;
    GLuint attr;
-   const GLubyte *offset0;
+   const GLubyte *offset0 = NULL;
 
    for (attr = 0; attr < vp->num_inputs; attr++) {
       const GLuint mesaAttr = vp->index_to_input[attr];
@@ -550,7 +560,7 @@ st_draw_vbo(GLcontext *ctx,
    GLuint attr;
    struct pipe_vertex_element velements[PIPE_MAX_ATTRIBS];
    unsigned num_vbuffers, num_velements;
-   GLboolean userSpace;
+   GLboolean userSpace = GL_FALSE;
 
    /* Gallium probably doesn't want this in some cases. */
    if (!index_bounds_valid)

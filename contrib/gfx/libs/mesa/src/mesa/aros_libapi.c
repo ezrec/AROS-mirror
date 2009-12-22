@@ -19193,3 +19193,108 @@ AROS_LH1(void, glProvokingVertexEXT,
 
     AROS_LIBFUNC_EXIT
 }
+
+AROS_LH5(void, glDrawElementsBaseVertex,
+    AROS_LHA(GLenum, a, D0),
+    AROS_LHA(GLsizei, b, D1),
+    AROS_LHA(GLenum, c, D2),
+    AROS_LHA(const GLvoid *, d, A0),
+    AROS_LHA(GLint, e, D3),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    mglDrawElementsBaseVertex(a, b, c, d, e);
+
+    RESTORE_REG
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH7(void, glDrawRangeElementsBaseVertex,
+    AROS_LHA(GLenum, a, D0),
+    AROS_LHA(GLuint, b, D1),
+    AROS_LHA(GLuint, c, D2),
+    AROS_LHA(GLsizei, d, D3),
+    AROS_LHA(GLenum, e, D4),
+    AROS_LHA(const GLvoid *, f, A0),
+    AROS_LHA(GLint, g, D5),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    mglDrawRangeElementsBaseVertex(a, b, c, d, e, f, g);
+
+    RESTORE_REG
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH6(void, glMultiDrawElementsBaseVertex,
+    AROS_LHA(GLenum, a, D0),
+    AROS_LHA(const GLsizei *, b, A0),
+    AROS_LHA(GLenum, c, D1),
+    AROS_LHA(const GLvoid *  *, d, A1),
+    AROS_LHA(GLsizei, e, D2),
+    AROS_LHA(const GLint *, f, A2),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    mglMultiDrawElementsBaseVertex(a, b, c, d, e, f);
+
+    RESTORE_REG
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH1(void, glProvokingVertex,
+    AROS_LHA(GLenum, a, D0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    mglProvokingVertex(a);
+
+    RESTORE_REG
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH5(void, glRenderbufferStorageMultisampleEXT,
+    AROS_LHA(GLenum, a, D0),
+    AROS_LHA(GLsizei, b, D1),
+    AROS_LHA(GLenum, c, D2),
+    AROS_LHA(GLsizei, d, D3),
+    AROS_LHA(GLsizei, e, D4),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    mglRenderbufferStorageMultisampleEXT(a, b, c, d, e);
+
+    RESTORE_REG
+
+    AROS_LIBFUNC_EXIT
+}
+

@@ -232,6 +232,7 @@ void HandleIntuiMessages(void)
 int main(int argc, char **argv)
 {
     ULONG fps = 0;
+    ULONG exitcounter = 0;
     TEXT title[100];
     struct Screen * pubscreen = NULL;
     
@@ -289,6 +290,9 @@ int main(int argc, char **argv)
         fps++; 
         render();
         HandleIntuiMessages();
+        exitcounter++;
+        //Delay(10);
+        //if (exitcounter > 200) finished = TRUE;
     }
     
     deinitmesa();
@@ -299,5 +303,3 @@ int main(int argc, char **argv)
     
     return 0;
 }
-
- 
