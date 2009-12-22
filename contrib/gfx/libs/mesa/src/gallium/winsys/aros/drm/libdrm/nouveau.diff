@@ -1,0 +1,142 @@
+diff -ru -x .svn /data/deadwood/source/drm-2.4.16/nouveau/nouveau_bo.c nouveau/nouveau_bo.c
+--- /data/deadwood/source/drm-2.4.16/nouveau/nouveau_bo.c	2009-12-06 13:47:17.000000000 +0100
++++ nouveau/nouveau_bo.c	2009-12-22 13:54:52.000000000 +0100
+@@ -28,8 +28,10 @@
+ #include <errno.h>
+ #include <assert.h>
+ 
++#if !defined(__AROS__)
+ #include <sys/mman.h>
+ #include <sys/ioctl.h>
++#endif
+ 
+ #include "nouveau_private.h"
+ 
+@@ -100,13 +102,21 @@
+ 		return;
+ 
+ 	if (nvbo->map) {
++#if !defined(__AROS__)        
+ 		munmap(nvbo->map, nvbo->size);
++#else
++        drmMUnmap(nvdev->fd, nvbo->handle);
++#endif
+ 		nvbo->map = NULL;
+ 	}
+ 
+ 	req.handle = nvbo->handle;
+ 	nvbo->handle = 0;
++#if !defined(__AROS__)    
+ 	ioctl(nvdev->fd, DRM_IOCTL_GEM_CLOSE, &req);
++#else
++    drmGEMIoctl(nvdev->fd, DRM_IOCTL_GEM_CLOSE, &req);
++#endif
+ }
+ 
+ static int
+@@ -162,13 +172,18 @@
+ 	if (!nvbo->map_handle)
+ 		return -EINVAL;
+ 
++#if !defined(__AROS__)
+ 	nvbo->map = mmap(0, nvbo->size, PROT_READ | PROT_WRITE,
+ 			 MAP_SHARED, nvdev->fd, nvbo->map_handle);
+ 	if (nvbo->map == MAP_FAILED) {
+ 		nvbo->map = NULL;
+ 		return -errno;
+ 	}
+-
++#else
++    nvbo->map = drmMMap(nvdev->fd, nvbo->handle);
++    if (nvbo->map == NULL)
++        return -EINVAL;
++#endif
+ 	return 0;
+ }
+ 
+@@ -290,7 +305,11 @@
+ 			return ret;
+ 
+ 		req.handle = nvbo->handle;
++#if !defined(__AROS__)
+ 		ret = ioctl(nvdev->fd, DRM_IOCTL_GEM_FLINK, &req);
++#else
++        ret = drmGEMIoctl(nvdev->fd, DRM_IOCTL_GEM_FLINK, &req);
++#endif
+ 		if (ret) {
+ 			nouveau_bo_kfree(nvbo);
+ 			return ret;
+@@ -313,7 +332,11 @@
+ 	int ret;
+ 
+ 	req.name = handle;
++#if !defined(__AROS__)
+ 	ret = ioctl(nvdev->fd, DRM_IOCTL_GEM_OPEN, &req);
++#else
++    ret = drmGEMIoctl(nvdev->fd, DRM_IOCTL_GEM_OPEN, &req);
++#endif
+ 	if (ret) {
+ 		nouveau_bo_ref(NULL, bo);
+ 		return ret;
+diff -ru -x .svn /data/deadwood/source/drm-2.4.16/nouveau/nouveau_channel.c nouveau/nouveau_channel.c
+--- /data/deadwood/source/drm-2.4.16/nouveau/nouveau_channel.c	2009-12-06 13:47:17.000000000 +0100
++++ nouveau/nouveau_channel.c	2009-12-21 14:21:56.000000000 +0100
+@@ -111,6 +111,8 @@
+ 
+ 	FIRE_RING(&nvchan->base);
+ 
++	nouveau_pushbuf_fini(&nvchan->base);
++
+ 	nouveau_bo_unmap(nvchan->notifier_bo);
+ 	nouveau_bo_ref(NULL, &nvchan->notifier_bo);
+ 
+diff -ru -x .svn /data/deadwood/source/drm-2.4.16/nouveau/nouveau_drmif.h nouveau/nouveau_drmif.h
+--- /data/deadwood/source/drm-2.4.16/nouveau/nouveau_drmif.h	2009-12-06 13:47:17.000000000 +0100
++++ nouveau/nouveau_drmif.h	2009-12-06 14:41:10.000000000 +0100
+@@ -24,7 +24,7 @@
+ #define __NOUVEAU_DRMIF_H__
+ 
+ #include <stdint.h>
+-#include <xf86drm.h>
++#include <arosdrm.h>
+ 
+ #include "nouveau_device.h"
+ 
+diff -ru -x .svn /data/deadwood/source/drm-2.4.16/nouveau/nouveau_private.h nouveau/nouveau_private.h
+--- /data/deadwood/source/drm-2.4.16/nouveau/nouveau_private.h	2009-12-06 13:47:17.000000000 +0100
++++ nouveau/nouveau_private.h	2009-12-21 11:17:33.000000000 +0100
+@@ -24,7 +24,7 @@
+ #define __NOUVEAU_PRIVATE_H__
+ 
+ #include <stdint.h>
+-#include <xf86drm.h>
++#include <arosdrm.h>
+ #include <nouveau_drm.h>
+ 
+ #include "nouveau_drmif.h"
+@@ -65,6 +65,9 @@
+ int
+ nouveau_pushbuf_init(struct nouveau_channel *);
+ 
++void
++nouveau_pushbuf_fini(struct nouveau_channel *);
++
+ struct nouveau_channel_priv {
+ 	struct nouveau_channel base;
+ 
+diff -ru -x .svn /data/deadwood/source/drm-2.4.16/nouveau/nouveau_pushbuf.c nouveau/nouveau_pushbuf.c
+--- /data/deadwood/source/drm-2.4.16/nouveau/nouveau_pushbuf.c	2009-12-06 13:47:17.000000000 +0100
++++ nouveau/nouveau_pushbuf.c	2009-12-21 14:22:31.000000000 +0100
+@@ -262,6 +262,12 @@
+ 	return 0;
+ }
+ 
++void
++nouveau_pushbuf_fini(struct nouveau_channel *chan)
++{
++	nouveau_pushbuf_fini_call(chan);
++}
++
+ int
+ nouveau_pushbuf_flush(struct nouveau_channel *chan, unsigned min)
+ {

@@ -15,7 +15,7 @@ AROS_LIBDRM_SOURCES = \
             winsys/aros/drm/libdrm/nouveau/nouveau_notifier \
             winsys/aros/drm/libdrm/nouveau/nouveau_grobj \
             winsys/aros/drm/libdrm/nouveau/nouveau_channel \
-            winsys/aros/drm/libdrm/nouveau/nouveau_bo_aros \
+            winsys/aros/drm/libdrm/nouveau/nouveau_bo \
             winsys/aros/drm/libdrm/arosdrm \
 
 AROS_DRM_SOURCES = \
@@ -44,7 +44,7 @@ AROS_DRM_SOURCES = \
             winsys/aros/drm/drm-changed/ttm/ttm_bo_util \
             winsys/aros/drm/drm-changed/ttm/ttm_tt \
             winsys/aros/drm/drm-changed/ttm/ttm_agp_backend \
-            winsys/aros/drm/drm-unchanged/nouveau/nouveau_bo \
+            winsys/aros/drm/drm-unchanged/nouveau/nouveau_bo_renamed \
             winsys/aros/drm/drm-unchanged/nouveau/nouveau_dma \
             winsys/aros/drm/drm-unchanged/nouveau/nouveau_object \
             winsys/aros/drm/drm-unchanged/nouveau/nouveau_notifier_renamed \

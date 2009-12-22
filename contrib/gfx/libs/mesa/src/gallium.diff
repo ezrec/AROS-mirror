@@ -1,0 +1,156 @@
+diff -ru -x .svn /data/deadwood/source/Mesa-7.6/src/gallium/auxiliary/util/u_math.c gallium/auxiliary/util/u_math.c
+--- /data/deadwood/source/Mesa-7.6/src/gallium/auxiliary/util/u_math.c	2009-10-18 09:25:49.000000000 +0200
++++ gallium/auxiliary/util/u_math.c	2009-12-06 14:26:28.000000000 +0100
+@@ -42,6 +42,13 @@
+       pow2_table[i] = (float) pow(2.0, (i - POW2_TABLE_OFFSET) / POW2_TABLE_SCALE);
+ }
+ 
++#if defined(__AROS__)
++/*
++ * NOTE: log_base_2(x) = log(x) / log(2)
++ * NOTE: 1.442695 = 1/log(2).
++ */
++#define log2(x)  ((float) (log(x) * 1.442695f))
++#endif
+ 
+ /** log2(x), for x in [1.0, 2.0) */
+ float log2_table[LOG2_TABLE_SIZE];
+diff -ru -x .svn /data/deadwood/source/Mesa-7.6/src/gallium/auxiliary/util/u_math.h gallium/auxiliary/util/u_math.h
+--- /data/deadwood/source/Mesa-7.6/src/gallium/auxiliary/util/u_math.h	2009-10-18 09:25:49.000000000 +0200
++++ gallium/auxiliary/util/u_math.h	2009-12-06 14:24:09.000000000 +0100
+@@ -372,6 +392,32 @@
+ }
+ #elif defined(__MINGW32__)
+ #define ffs __builtin_ffs
++#elif defined (__AROS__)
++static INLINE
++unsigned ffs( unsigned i ) /*FIXME: mesa code was using signed value as parameter */
++{
++   register int bit = 0;
++   if (i != 0) {
++      if ((i & 0xffff) == 0) {
++         bit += 16;
++         i >>= 16;
++      }
++      if ((i & 0xff) == 0) {
++         bit += 8;
++         i >>= 8;
++      }
++      if ((i & 0xf) == 0) {
++         bit += 4;
++         i >>= 4;
++      }
++      while ((i & 1) == 0) {
++         bit++;
++         i >>= 1;
++      }
++      bit++;
++   }
++   return bit;
++}
+ #endif
+ 
+ #ifdef __MINGW32__
+diff -ru -x .svn /data/deadwood/source/Mesa-7.6/src/gallium/auxiliary/util/u_time.c gallium/auxiliary/util/u_time.c
+--- /data/deadwood/source/Mesa-7.6/src/gallium/auxiliary/util/u_time.c	2009-10-18 09:25:49.000000000 +0200
++++ gallium/auxiliary/util/u_time.c	2009-12-06 14:26:59.000000000 +0100
+@@ -35,7 +35,7 @@
+ 
+ #include "pipe/p_config.h"
+ 
+-#if defined(PIPE_OS_LINUX) || defined(PIPE_OS_BSD) || defined(PIPE_OS_SOLARIS) || defined(PIPE_OS_APPLE) || defined(PIPE_OS_HAIKU)
++#if defined(PIPE_OS_LINUX) || defined(PIPE_OS_BSD) || defined(PIPE_OS_SOLARIS) || defined(PIPE_OS_APPLE) || defined(PIPE_OS_HAIKU) || defined(PIPE_OS_AROS)
+ #include <sys/time.h>
+ #elif defined(PIPE_SUBSYSTEM_WINDOWS_DISPLAY)
+ #include <windows.h>
+@@ -77,7 +77,7 @@
+ void 
+ util_time_get(struct util_time *t)
+ {
+-#if defined(PIPE_OS_LINUX) || defined(PIPE_OS_BSD) || defined(PIPE_OS_SOLARIS) || defined(PIPE_OS_APPLE) || defined(PIPE_OS_HAIKU)
++#if defined(PIPE_OS_LINUX) || defined(PIPE_OS_BSD) || defined(PIPE_OS_SOLARIS) || defined(PIPE_OS_APPLE) || defined(PIPE_OS_HAIKU) || defined(PIPE_OS_AROS)
+    gettimeofday(&t->tv, NULL);
+ #elif defined(PIPE_SUBSYSTEM_WINDOWS_DISPLAY)
+    LONGLONG temp;
+@@ -102,7 +102,7 @@
+               int64_t usecs,
+               struct util_time *t2)
+ {
+-#if defined(PIPE_OS_LINUX) || defined(PIPE_OS_BSD) || defined(PIPE_OS_SOLARIS) || defined(PIPE_OS_APPLE) || defined(PIPE_OS_HAIKU)
++#if defined(PIPE_OS_LINUX) || defined(PIPE_OS_BSD) || defined(PIPE_OS_SOLARIS) || defined(PIPE_OS_APPLE) || defined(PIPE_OS_HAIKU) || defined(PIPE_OS_AROS)
+    t2->tv.tv_sec = t1->tv.tv_sec + usecs / 1000000;
+    t2->tv.tv_usec = t1->tv.tv_usec + usecs % 1000000;
+ #elif defined(PIPE_SUBSYSTEM_WINDOWS_DISPLAY) || defined(PIPE_SUBSYSTEM_WINDOWS_USER) || defined(PIPE_SUBSYSTEM_WINDOWS_CE)
+@@ -124,7 +124,7 @@
+ util_time_diff(const struct util_time *t1, 
+                const struct util_time *t2)
+ {
+-#if defined(PIPE_OS_LINUX) || defined(PIPE_OS_BSD) || defined(PIPE_OS_SOLARIS) || defined(PIPE_OS_APPLE) || defined(PIPE_OS_HAIKU)
++#if defined(PIPE_OS_LINUX) || defined(PIPE_OS_BSD) || defined(PIPE_OS_SOLARIS) || defined(PIPE_OS_APPLE) || defined(PIPE_OS_HAIKU) || defined(PIPE_OS_AROS)
+    return (t2->tv.tv_usec - t1->tv.tv_usec) + 
+           (t2->tv.tv_sec - t1->tv.tv_sec)*1000000;
+ #elif defined(PIPE_SUBSYSTEM_WINDOWS_DISPLAY) || defined(PIPE_SUBSYSTEM_WINDOWS_USER) || defined(PIPE_SUBSYSTEM_WINDOWS_CE)
+@@ -144,7 +144,7 @@
+    
+    util_time_get(&t1);
+    
+-#if defined(PIPE_OS_LINUX) || defined(PIPE_OS_BSD) || defined(PIPE_OS_SOLARIS) || defined(PIPE_OS_APPLE) || defined(PIPE_OS_HAIKU)
++#if defined(PIPE_OS_LINUX) || defined(PIPE_OS_BSD) || defined(PIPE_OS_SOLARIS) || defined(PIPE_OS_APPLE) || defined(PIPE_OS_HAIKU) || defined(PIPE_OS_AROS)
+    return t1.tv.tv_usec + t1.tv.tv_sec*1000000LL;
+ #elif defined(PIPE_SUBSYSTEM_WINDOWS_DISPLAY) || defined(PIPE_SUBSYSTEM_WINDOWS_USER) || defined(PIPE_SUBSYSTEM_WINDOWS_CE)
+    util_time_get_frequency();
+@@ -166,7 +166,7 @@
+ util_time_compare(const struct util_time *t1, 
+                   const struct util_time *t2)
+ {
+-#if defined(PIPE_OS_LINUX) || defined(PIPE_OS_BSD) || defined(PIPE_OS_SOLARIS) || defined(PIPE_OS_APPLE) || defined(PIPE_OS_HAIKU)
++#if defined(PIPE_OS_LINUX) || defined(PIPE_OS_BSD) || defined(PIPE_OS_SOLARIS) || defined(PIPE_OS_APPLE) || defined(PIPE_OS_HAIKU) || defined(PIPE_OS_AROS)
+    if (t1->tv.tv_sec < t2->tv.tv_sec)
+       return -1;
+    else if(t1->tv.tv_sec > t2->tv.tv_sec)
+diff -ru -x .svn /data/deadwood/source/Mesa-7.6/src/gallium/auxiliary/util/u_time.h gallium/auxiliary/util/u_time.h
+--- /data/deadwood/source/Mesa-7.6/src/gallium/auxiliary/util/u_time.h	2009-10-18 09:25:49.000000000 +0200
++++ gallium/auxiliary/util/u_time.h	2009-12-06 14:27:13.000000000 +0100
+@@ -48,6 +48,10 @@
+ #include <unistd.h>
+ #endif
+ 
++#if defined(PIPE_OS_AROS)
++#include <sys/time.h> /* timeval */
++#endif
++
+ #include "pipe/p_compiler.h"
+ 
+ 
+@@ -63,7 +67,7 @@
+  */
+ struct util_time 
+ {
+-#if defined(PIPE_OS_LINUX) || defined(PIPE_OS_BSD) || defined(PIPE_OS_SOLARIS) || defined(PIPE_OS_APPLE) || defined(PIPE_OS_HAIKU)
++#if defined(PIPE_OS_LINUX) || defined(PIPE_OS_BSD) || defined(PIPE_OS_SOLARIS) || defined(PIPE_OS_APPLE) || defined(PIPE_OS_HAIKU)  || defined(PIPE_OS_AROS)
+    struct timeval tv;
+ #else
+    int64_t counter;
+@@ -94,7 +98,7 @@
+                   const struct util_time *end,
+                   const struct util_time *curr);
+ 
+-#if defined(PIPE_OS_LINUX) || defined(PIPE_OS_BSD) || defined(PIPE_OS_SOLARIS) || defined(PIPE_OS_APPLE) || defined(PIPE_OS_HAIKU)
++#if defined(PIPE_OS_LINUX) || defined(PIPE_OS_BSD) || defined(PIPE_OS_SOLARIS) || defined(PIPE_OS_APPLE) || defined(PIPE_OS_HAIKU) || defined(PIPE_OS_AROS)
+ #define util_time_sleep usleep
+ #else
+ void
+diff -ru -x .svn /data/deadwood/source/Mesa-7.6/src/gallium/include/pipe/p_config.h gallium/include/pipe/p_config.h
+--- /data/deadwood/source/Mesa-7.6/src/gallium/include/pipe/p_config.h	2009-10-18 09:25:49.000000000 +0200
++++ gallium/include/pipe/p_config.h	2009-11-01 14:17:15.000000000 +0100
+@@ -144,6 +144,10 @@
+ #define PIPE_OS_HAIKU
+ #endif
+ 
++#if defined(__AROS__)
++#define PIPE_OS_AROS
++#endif
++
+ /*
+  * Subsystem.
+  * 
