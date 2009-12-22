@@ -570,6 +570,7 @@ extern void ttm_bo_kunmap(struct ttm_bo_kmap_obj *map);
 #if 0
 #endif
 
+#if !defined(__AROS__)
 /**
  * ttm_fbdev_mmap - mmap fbdev memory backed by a ttm buffer object.
  *
@@ -581,8 +582,8 @@ extern void ttm_bo_kunmap(struct ttm_bo_kmap_obj *map);
  * if the fbdev address space is to be backed by a bo.
  */
 
-//FIXME:extern int ttm_fbdev_mmap(struct vm_area_struct *vma,
-//FIXME:			  struct ttm_buffer_object *bo);
+extern int ttm_fbdev_mmap(struct vm_area_struct *vma,
+			  struct ttm_buffer_object *bo);
 
 /**
  * ttm_bo_mmap - mmap out of the ttm device address space.
@@ -595,8 +596,8 @@ extern void ttm_bo_kunmap(struct ttm_bo_kmap_obj *map);
  * if the device address space is to be backed by the bo manager.
  */
 
-//FIXME:extern int ttm_bo_mmap(struct file *filp, struct vm_area_struct *vma,
-//FIXME:		       struct ttm_bo_device *bdev);
+extern int ttm_bo_mmap(struct file *filp, struct vm_area_struct *vma,
+		       struct ttm_bo_device *bdev);
 
 /**
  * ttm_bo_io
@@ -619,9 +620,10 @@ extern void ttm_bo_kunmap(struct ttm_bo_kmap_obj *map);
  * interrupted by a signal.
  */
 
-//FIXME:extern ssize_t ttm_bo_io(struct ttm_bo_device *bdev, struct file *filp,
-//FIXME:			 const char __user *wbuf, char __user *rbuf,
-//FIXME:			 size_t count, loff_t *f_pos, bool write);
+extern ssize_t ttm_bo_io(struct ttm_bo_device *bdev, struct file *filp,
+			 const char __user *wbuf, char __user *rbuf,
+			 size_t count, loff_t *f_pos, bool write);
+#endif
 
 extern void ttm_bo_swapout_all(struct ttm_bo_device *bdev);
 

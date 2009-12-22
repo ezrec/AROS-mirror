@@ -58,7 +58,7 @@ struct Library          *OOPBase;
 //#define HOSTED_BUILD_CHIPSET    52      /* NV34 chip GeForce FX 5200 */
 #define HOSTED_BUILD_CHIPSET    67      /* NV43 chip GeForce 6200 */
 //#define HOSTED_BUILD_CHIPSET    132     /* G84 chip GeForce 8600 GT */
-//#define HOSTED_BUILD_CHIPSET    134     /* G86 chip GeForce 8300 */
+//#define HOSTED_BUILD_CHIPSET    134     /* G86 chip GeForce 8400 GS */
 #endif
 
 /* HACK ENDS */

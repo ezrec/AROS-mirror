@@ -464,8 +464,16 @@ static int ttm_bo_cleanup_refs(struct ttm_buffer_object *bo, bool remove_all)
 
 		if (sync_obj)
 			driver->sync_obj_flush(sync_obj, sync_obj_arg);
-//FIXME		schedule_delayed_work(&bdev->wq,
-//FIXME				      ((HZ / 100) < 1) ? 1 : HZ / 100);
+/* AROS NOTE: this call is supposed to start a work process which in some
+   time will try clean up refs again (ttm_bo_delayed_delete). This is needed
+   if ttm_bo_wait "fails" - meaning the fence is not signalled in time
+   Since currently ttm_bo_wait always waits until fence is signalled
+   this is not needed. If ttm_bo_wait is change not to skip no_wait parameter
+   then this call is needed, else the buffer objects might not be freed */
+#if !defined(__AROS__)
+		schedule_delayed_work(&bdev->wq,
+				      ((HZ / 100) < 1) ? 1 : HZ / 100);
+#endif
 		ret = 0;
 
 	} else {
@@ -1234,15 +1242,9 @@ static int ttm_bo_force_list_clean(struct ttm_bo_device *bdev,
 	/*
 	 * Can't use standard list traversal since we're unlocking.
 	 */
-    IMPLEMENT("HACK!HACK!HACK!HACK!HACK\n");
-return 0; //HACK
-#warning HACK !!!! ELSE GOES INTO INFINITE LOOP
-#warning HACK !!!! ELSE GOES INTO INFINITE LOOP
-#warning HACK !!!! ELSE GOES INTO INFINITE LOOP
-#warning HACK !!!! ELSE GOES INTO INFINITE LOOP
 
 	spin_lock(&glob->lru_lock);
-asm("int3");
+
 	while (!list_empty(head)) {
 		entry = list_first_entry(head, struct ttm_buffer_object, lru);
 		kref_get(&entry->list_kref);
@@ -1472,8 +1474,11 @@ int ttm_bo_device_release(struct ttm_bo_device *bdev)
 	list_del(&bdev->device_list);
 	mutex_unlock(&glob->device_list_mutex);
 
-//FIXME	if (!cancel_delayed_work(&bdev->wq))
-//FIXME		flush_scheduled_work();
+#if !defined(__AROS__)
+    /* Not needed as long as ttm_bo_wait is forced to always wait for fence signalling */
+	if (!cancel_delayed_work(&bdev->wq))
+		flush_scheduled_work();
+#endif
 
 	while (ttm_bo_delayed_delete(bdev, true))
 		;
@@ -1486,7 +1491,7 @@ int ttm_bo_device_release(struct ttm_bo_device *bdev)
 		TTM_DEBUG("Swap list was clean\n");
 	spin_unlock(&glob->lru_lock);
 
-//FIXME	BUG_ON(!drm_mm_clean(&bdev->addr_space_mm));
+	BUG_ON(!drm_mm_clean(&bdev->addr_space_mm));
 	write_lock(&bdev->vm_lock);
 	drm_mm_takedown(&bdev->addr_space_mm);
 	write_unlock(&bdev->vm_lock);
@@ -1516,12 +1521,17 @@ int ttm_bo_device_init(struct ttm_bo_device *bdev,
 	if (unlikely(ret != 0))
 		goto out_no_sys;
 
-//FIXME	bdev->addr_space_rb = RB_ROOT;
+#if !defined(__AROS__)
+	bdev->addr_space_rb = RB_ROOT;
+#endif
 	ret = drm_mm_init(&bdev->addr_space_mm, file_page_offset, 0x10000000);
 	if (unlikely(ret != 0))
 		goto out_no_addr_mm;
 
-//FIXME	INIT_DELAYED_WORK(&bdev->wq, ttm_bo_delayed_workqueue);
+#if !defined(__AROS__)
+    /* Not needed as long as ttm_bo_wait is forced to always wait for fence signalling */
+	INIT_DELAYED_WORK(&bdev->wq, ttm_bo_delayed_workqueue);
+#endif
 	bdev->nice_mode = true;
 	INIT_LIST_HEAD(&bdev->ddestroy);
 	bdev->dev_mapping = NULL;
@@ -1685,9 +1695,13 @@ int ttm_bo_wait(struct ttm_buffer_object *bo,
 
 	if (likely(bo->sync_obj == NULL))
 		return 0;
+#if defined(__AROS__)
+    /* Be sure always to wait until fence is signalled. A case when
+       fence is not signalled in time seems to happen to often. */
+    no_wait = false;
+#endif		
 
 	while (bo->sync_obj) {
-
 		if (driver->sync_obj_signaled(bo->sync_obj, bo->sync_obj_arg)) {
 			void *tmp_obj = bo->sync_obj;
 			bo->sync_obj = NULL;
@@ -1699,14 +1713,7 @@ int ttm_bo_wait(struct ttm_buffer_object *bo,
 		}
 
 		if (no_wait)
-#if !defined(__AROS__)
 			return -EBUSY;
-#else
-            bug("ttm_bo_wait: SHOULD HAVE RETURNED -EBUSY!\n");
-#endif
-#warning VERY BAD THING DONE
-/* Sometimes the fence is not signalled in time and using no_wait makes function exit with error
-   It is either a hidden race condition or bug in port */
 
 		sync_obj = driver->sync_obj_ref(bo->sync_obj);
 		sync_obj_arg = bo->sync_obj_arg;

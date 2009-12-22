@@ -472,7 +472,9 @@ struct ttm_bo_device {
 	/*
 	 * Protected by the vm lock.
 	 */
-//FIXME	struct rb_root addr_space_rb;
+#if !defined(__AROS__)
+	struct rb_root addr_space_rb;
+#endif
 	struct drm_mm addr_space_mm;
 
 	/*
@@ -491,7 +493,10 @@ struct ttm_bo_device {
 	 * Internal protection.
 	 */
 
-//FIXME	struct delayed_work wq;
+#if !defined(__AROS__)
+    /* Not needed as long as ttm_bo_wait is forced to always wait for fence signalling */
+	struct delayed_work wq;
+#endif
 
 	bool need_dma32;
 };
@@ -910,6 +915,7 @@ extern int ttm_bo_move_accel_cleanup(struct ttm_buffer_object *bo,
 				     void *sync_obj_arg,
 				     bool evict, bool no_wait,
 				     struct ttm_mem_reg *new_mem);
+#if !defined(__AROS__)
 /**
  * ttm_io_prot
  *
@@ -919,7 +925,8 @@ extern int ttm_bo_move_accel_cleanup(struct ttm_buffer_object *bo,
  * Utility function that returns the pgprot_t that should be used for
  * setting up a PTE with the caching model indicated by @c_state.
  */
-//FIXME: extern pgprot_t ttm_io_prot(enum ttm_caching_state c_state, pgprot_t tmp);
+extern pgprot_t ttm_io_prot(enum ttm_caching_state c_state, pgprot_t tmp);
+#endif
 
 #if (defined(CONFIG_AGP) || (defined(CONFIG_AGP_MODULE) && defined(MODULE)) || defined(__AROS__))
 #define TTM_HAS_AGP

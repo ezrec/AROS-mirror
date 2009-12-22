@@ -229,12 +229,23 @@ nouveau_fence_wait(void *sync_obj, void *sync_arg, bool lazy, bool intr)
 	return ret;
 #else
     #warning IMPLEMENT nouveau_fence_wait
+    int ret = 0;
+    LONG counter = 0;
     while (1) 
     {
         if (nouveau_fence_signalled(sync_obj, sync_arg))
             break;
+
+        counter++;
+        if (counter > 100000)
+        {
+            NV_INFO(nouveau_fence(sync_obj)->channel->dev, "Waited too long!\n");
+            ret = -EBUSY;
+            break;
+        }
+            
     }
-    return 0;
+    return ret;
 #endif
 }
 

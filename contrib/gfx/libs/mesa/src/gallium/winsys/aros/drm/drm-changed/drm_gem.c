@@ -82,36 +82,40 @@
 int
 drm_gem_init(struct drm_device *dev)
 {
-//FIXME	struct drm_gem_mm *mm;
+#if !defined(__AROS__)
+	struct drm_gem_mm *mm;
+#endif
 
 	spin_lock_init(&dev->object_name_lock);
 	idr_init(&dev->object_name_idr);
-//FIXME	atomic_set(&dev->object_count, 0);
-//FIXME	atomic_set(&dev->object_memory, 0);
-//FIXME	atomic_set(&dev->pin_count, 0);
-//FIXME	atomic_set(&dev->pin_memory, 0);
-//FIXME	atomic_set(&dev->gtt_count, 0);
-//FIXME	atomic_set(&dev->gtt_memory, 0);
+#if !defined(__AROS__)
+	atomic_set(&dev->object_count, 0);
+	atomic_set(&dev->object_memory, 0);
+	atomic_set(&dev->pin_count, 0);
+	atomic_set(&dev->pin_memory, 0);
+	atomic_set(&dev->gtt_count, 0);
+	atomic_set(&dev->gtt_memory, 0);
 
-//FIXME	mm = kzalloc(sizeof(struct drm_gem_mm), GFP_KERNEL);
-//FIXME	if (!mm) {
-//FIXME		DRM_ERROR("out of memory\n");
-//FIXME		return -ENOMEM;
-//FIXME	}
+	mm = kzalloc(sizeof(struct drm_gem_mm), GFP_KERNEL);
+	if (!mm) {
+		DRM_ERROR("out of memory\n");
+		return -ENOMEM;
+	}
 
-//FIXME	dev->mm_private = mm;
+	dev->mm_private = mm;
 
-//FIXME	if (drm_ht_create(&mm->offset_hash, 19)) {
-//FIXME		kfree(mm);
-//FIXME		return -ENOMEM;
-//FIXME	}
+	if (drm_ht_create(&mm->offset_hash, 19)) {
+		kfree(mm);
+		return -ENOMEM;
+	}
 
-//FIXME	if (drm_mm_init(&mm->offset_manager, DRM_FILE_PAGE_OFFSET_START,
-//FIXME			DRM_FILE_PAGE_OFFSET_SIZE)) {
-//FIXME		drm_ht_remove(&mm->offset_hash);
-//FIXME		kfree(mm);
-//FIXME		return -ENOMEM;
-//FIXME	}
+	if (drm_mm_init(&mm->offset_manager, DRM_FILE_PAGE_OFFSET_START,
+			DRM_FILE_PAGE_OFFSET_SIZE)) {
+		drm_ht_remove(&mm->offset_hash);
+		kfree(mm);
+		return -ENOMEM;
+	}
+#endif
 
 	return 0;
 }
@@ -144,9 +148,14 @@ drm_gem_object_alloc(struct drm_device *dev, size_t size)
 		goto free;
 
 	obj->dev = dev;
-//FIXME	obj->filp = shmem_file_setup("drm mm object", size, VM_NORESERVE);
-//FIXME	if (IS_ERR(obj->filp))
-//FIXME		goto free;
+#if !defined(__AROS__)
+	obj->filp = shmem_file_setup("drm mm object", size, VM_NORESERVE);
+	if (IS_ERR(obj->filp))
+		goto free;
+#else
+    /* No swapping under AROS. Set to NULL to detect any problems */
+    obj->filp = NULL;
+#endif
 
 	kref_init(&obj->refcount);
 	kref_init(&obj->handlecount);
@@ -155,11 +164,15 @@ drm_gem_object_alloc(struct drm_device *dev, size_t size)
 	    dev->driver->gem_init_object(obj) != 0) {
 		goto fput;
 	}
-//FIXME	atomic_inc(&dev->object_count);
-//FIXME	atomic_add(obj->size, &dev->object_memory);
+#if !defined(__AROS__)
+	atomic_inc(&dev->object_count);
+	atomic_add(obj->size, &dev->object_memory);
+#endif
 	return obj;
 fput:
-//FIXME	fput(obj->filp);
+#if !defined(__AROS__)
+	fput(obj->filp);
+#endif
 free:
 	kfree(obj);
 	return NULL;
@@ -435,9 +448,11 @@ drm_gem_object_free(struct kref *kref)
 	if (dev->driver->gem_free_object != NULL)
 		dev->driver->gem_free_object(obj);
 
-//FIXME	fput(obj->filp);
-//FIXME	atomic_dec(&dev->object_count);
-//FIXME	atomic_sub(obj->size, &dev->object_memory);
+#if !defined(__AROS__)
+	fput(obj->filp);
+	atomic_dec(&dev->object_count);
+	atomic_sub(obj->size, &dev->object_memory);
+#endif
 	kfree(obj);
 }
 EXPORT_SYMBOL(drm_gem_object_free);

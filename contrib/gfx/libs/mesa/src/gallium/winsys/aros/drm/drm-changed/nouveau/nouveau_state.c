@@ -483,6 +483,12 @@ static void nouveau_card_takedown(struct drm_device *dev)
 			nouveau_channel_free(dev_priv->channel);
 			dev_priv->channel = NULL;
 		}
+		
+#if defined(__AROS__)
+        /* Release screen buffer object */
+        if (screen_bo != NULL)
+            drm_gem_object_unreference(screen_bo->gem);
+#endif        
 
 		engine->fifo.takedown(dev);
 		engine->graph.takedown(dev);
@@ -733,11 +739,6 @@ int nouveau_unload(struct drm_device *dev)
 DRM_IMPL("Calling *_display_destroy\n");
 #warning IMPLEMENT Calling *_display_destroy
 #endif
-#if defined(__AROS__)
-        /* Release screen buffer object */
-        if (screen_bo != NULL)
-            drm_gem_object_unreference(screen_bo->gem);
-#endif        
 		nouveau_close(dev);
 	}
 

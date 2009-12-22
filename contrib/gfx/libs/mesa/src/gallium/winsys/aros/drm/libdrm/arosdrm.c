@@ -57,6 +57,7 @@ drmCommandWrite(int fd, unsigned long drmCommandIndex, void *data, unsigned long
     /* FIXME: Remove switch when all paths are tested */
     switch(drmCommandIndex)
     {
+        case(0x4 /*DRM_NOUVEAU_CHANNEL_FREE*/):
         case(0x5 /*DRM_NOUVEAU_GROBJ_ALLOC*/):
         case(0x7 /*DRM_NOUVEAU_GPUOBJ_FREE*/):
         case(0x45 /*DRM_NOUVEAU_GEM_CPU_PREP*/):
