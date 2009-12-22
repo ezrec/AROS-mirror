@@ -372,10 +372,14 @@ LONG lruiocache(struct IOCache **returned_ioc) {
   struct IOCache *ioc;
   LONG errorcode;
 
+  /* Must be volatile to keep ioc variable value up to date regardless of
+     compiler optimizations */
+  volatile struct MinList *ioclist = globals->iocache_lruhead;
+
   /* Returns the least recently used IOCache */
 
   do {
-    ioc=(struct IOCache *)globals->iocache_lruhead->mlh_Head;
+    ioc=(struct IOCache *) ioclist->mlh_Head;
 
     removem(&ioc->node);
     addtailm(globals->iocache_lruhead, &ioc->node);
