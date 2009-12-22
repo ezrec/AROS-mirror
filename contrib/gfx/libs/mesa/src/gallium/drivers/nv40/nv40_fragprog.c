@@ -948,6 +948,12 @@ void
 nv40_fragprog_destroy(struct nv40_context *nv40,
 		      struct nv40_fragment_program *fp)
 {
+    if (fp->buffer)
+        pipe_buffer_reference(&fp->buffer, NULL);
+
+    if (fp->so)
+        so_ref(NULL, &fp->so);
+
 	if (fp->insn_len)
 		FREE(fp->insn);
 }
