@@ -7,6 +7,10 @@ AROS_WINSYS_SOURCES = \
             winsys/aros/arosmesa_winsys \
             winsys/aros/arosmesa_softpipe \
             winsys/aros/arosmesa_nouveau \
+            winsys/aros/arosmesa_intel \
+            winsys/drm/intel/gem/intel_drm_batchbuffer \
+            winsys/drm/intel/gem/intel_drm_fence \
+            winsys/drm/intel/gem/intel_drm_buffer \
             
 AROS_LIBDRM_SOURCES = \
             winsys/aros/drm/libdrm/nouveau/nouveau_device \
@@ -16,6 +20,8 @@ AROS_LIBDRM_SOURCES = \
             winsys/aros/drm/libdrm/nouveau/nouveau_grobj \
             winsys/aros/drm/libdrm/nouveau/nouveau_channel \
             winsys/aros/drm/libdrm/nouveau/nouveau_bo \
+            winsys/aros/drm/libdrm/intel/intel_bufmgr \
+            winsys/aros/drm/libdrm/intel/intel_bufmgr_gem \
             winsys/aros/drm/libdrm/arosdrm \
 
 AROS_DRM_SOURCES = \
@@ -332,25 +338,26 @@ GALLIUM_NVIDIA_SOURCES = \
             drivers/nv50/nv50_transfer \
 
 GALLIUM_I915_SOURCES = \
-            drivers/i915simple/i915_blit \
-            drivers/i915simple/i915_clear \
-            drivers/i915simple/i915_flush \
-            drivers/i915simple/i915_context \
-            drivers/i915simple/i915_debug \
-            drivers/i915simple/i915_debug_fp \
-            drivers/i915simple/i915_state \
-            drivers/i915simple/i915_state_immediate \
-            drivers/i915simple/i915_state_dynamic \
-            drivers/i915simple/i915_state_derived \
-            drivers/i915simple/i915_state_emit \
-            drivers/i915simple/i915_state_sampler \
-            drivers/i915simple/i915_screen \
-            drivers/i915simple/i915_prim_emit \
-            drivers/i915simple/i915_prim_vbuf \
-            drivers/i915simple/i915_texture \
-            drivers/i915simple/i915_fpc_emit \
-            drivers/i915simple/i915_fpc_translate \
-            drivers/i915simple/i915_surface \
+            drivers/i915/i915_blit \
+            drivers/i915/i915_buffer \
+            drivers/i915/i915_clear \
+            drivers/i915/i915_context \
+            drivers/i915/i915_debug \
+            drivers/i915/i915_debug_fp \
+            drivers/i915/i915_flush \
+            drivers/i915/i915_fpc_emit \
+            drivers/i915/i915_fpc_translate \
+            drivers/i915/i915_prim_emit \
+            drivers/i915/i915_prim_vbuf \
+            drivers/i915/i915_screen \
+            drivers/i915/i915_state \
+            drivers/i915/i915_state_derived \
+            drivers/i915/i915_state_dynamic \
+            drivers/i915/i915_state_emit \
+            drivers/i915/i915_state_immediate \
+            drivers/i915/i915_state_sampler \
+            drivers/i915/i915_surface \
+            drivers/i915/i915_texture \
             
 AROS_GALLIUM_SOURCES = \
             $(AROS_STATE_TRACKER_SOURCES) \
@@ -360,3 +367,4 @@ AROS_GALLIUM_SOURCES = \
             $(GALLIUM_AUXILIARY_SOURCES) \
             $(GALLIUM_SOFTPIPE_SOURCES) \
             $(GALLIUM_NVIDIA_SOURCES) \
+            $(GALLIUM_I915_SOURCES) \

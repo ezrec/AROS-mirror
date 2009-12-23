@@ -81,5 +81,6 @@ extern int           drmIoctl(int fd, unsigned long request, void *arg);
 /* AROS specific */
 extern void *       drmMMap(int fd, uint32_t handle);
 extern void         drmMUnmap(int fd, uint32_t handle);
+extern int          drmIntelIoctlEmul(int fildes, int request, void * arg);
 
 #endif

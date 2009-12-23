@@ -311,3 +311,9 @@ void drmMUnmap(int fd, uint32_t handle)
     mutex_unlock(&global_drm_device.struct_mutex);
 }
 
+int drmIntelIoctlEmul(int fildes, int request, void * arg)
+{
+    DRM_IMPL("IOCTL: %d -> %d\n", fildes, request);
+    return 0;
+}
+
