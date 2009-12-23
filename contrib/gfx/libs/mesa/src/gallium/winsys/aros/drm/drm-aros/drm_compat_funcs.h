@@ -11,6 +11,8 @@
 
 #include "drm_compat_types.h"
 
+#define writeq(val, addr)               (*(volatile UQUAD*)(addr) = (val))
+#define readq(addr)                     (*(volatile UQUAD*)(addr)
 #define writel(val, addr)               (*(volatile ULONG*)(addr) = (val))
 #define readl(addr)                     (*(volatile ULONG*)(addr))
 #define writew(val, addr)               (*(volatile UWORD*)(addr) = (val))
@@ -37,6 +39,7 @@
 #define pci_map_page(a, b, c, d, e)     drm_aros_dma_map_buf(b->address, c, d)
 #define pci_dma_mapping_error(a, b)     FALSE
 #define pci_unmap_page(a, b, c, d)      drm_aros_dma_unmap_buf(b, c)
+#define ioremap                         ioremap_nocache
 #define ioremap_wc                      ioremap_nocache
 #define mb()                            __asm __volatile("lock; addl $0,0(%%esp)" : : : "memory");
 

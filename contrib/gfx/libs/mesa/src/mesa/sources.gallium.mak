@@ -33,6 +33,7 @@ AROS_DRM_SOURCES = \
             winsys/aros/drm/drm-aros/drm_fake \
             winsys/aros/drm/drm-aros/drm_compat_funcs \
             winsys/aros/drm/drm-aros/nouveau/nouveau_drv \
+            winsys/aros/drm/drm-aros/i915/i915_drv \
             winsys/aros/drm/drm-changed/drm_mm \
             winsys/aros/drm/drm-changed/drm_gem \
             winsys/aros/drm/drm-changed/drm_cache \
@@ -45,6 +46,9 @@ AROS_DRM_SOURCES = \
             winsys/aros/drm/drm-changed/nouveau/nouveau_irq \
             winsys/aros/drm/drm-changed/nouveau/nv50_instmem \
             winsys/aros/drm/drm-changed/nouveau/nv50_display \
+            winsys/aros/drm/drm-changed/i915/i915_dma \
+            winsys/aros/drm/drm-changed/i915/i915_gem \
+            winsys/aros/drm/drm-changed/i915/i915_gem_tiling \
             winsys/aros/drm/drm-changed/ttm/ttm_global \
             winsys/aros/drm/drm-changed/ttm/ttm_bo \
             winsys/aros/drm/drm-changed/ttm/ttm_bo_util \

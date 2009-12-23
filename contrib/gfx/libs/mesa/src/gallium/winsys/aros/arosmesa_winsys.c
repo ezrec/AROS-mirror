@@ -8,6 +8,7 @@
 
 extern struct arosmesa_driver arosmesa_softpipe_driver;
 extern struct arosmesa_driver arosmesa_nouveau_driver;
+extern struct arosmesa_driver arosmesa_intel_driver;
 
 struct arosmesa_driver * current_driver = NULL;
 
@@ -29,10 +30,29 @@ struct arosmesa_driver * arosmesa_get_driver( void )
 /* HACK definition to satisfy compiler */
 void nouveau_exit(void);
 int nouveau_init(void);
+void i915_exit(void);
+int i915_init(void);
 
 static int
 initialize_driver(void)
 {
+    if (current_driver == NULL)
+    {
+        /* HACK: goes around the whole libdrm call chain and calls directly into
+         * "kernel" driver */
+
+        /* Try using i915 */
+        if (i915_init())
+        {
+            /* Failed */
+            i915_exit();
+        }
+        else
+        {
+            current_driver = &arosmesa_intel_driver;
+        }
+    }
+
     if (current_driver == NULL)
     {
         /* HACK: goes around the whole libdrm call chain and calls directly into
@@ -49,7 +69,7 @@ initialize_driver(void)
             current_driver = &arosmesa_nouveau_driver;
         }
     }
-    
+
     if (current_driver == NULL)
     {
         /* Use softpipe fallback */

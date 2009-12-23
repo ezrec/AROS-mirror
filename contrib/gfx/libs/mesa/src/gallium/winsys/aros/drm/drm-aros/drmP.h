@@ -74,6 +74,7 @@ struct Library          *OOPBase;
 #define DRM_ERROR(fmt, ...) bug("[" DRM_NAME "(ERROR):%s] " fmt, __func__ , ##__VA_ARGS__)
 #define DRM_DEBUG(fmt, ...) D(bug("[" DRM_NAME "(DEBUG):%s] " fmt, __func__ , ##__VA_ARGS__))
 #define DRM_IMPL(fmt, ...) bug("------IMPLEMENT(%s): " fmt, __func__ , ##__VA_ARGS__)
+#define DRM_INFO(fmt, ...) bug("[" DRM_NAME "(INFO)] " fmt, ##__VA_ARGS__)
 
 
 /*
@@ -247,6 +248,12 @@ struct drm_crtc
     int dummy;
 };
 
+typedef struct drm_dma_handle {
+	dma_addr_t busaddr;
+	void *vaddr;
+	size_t size;
+} drm_dma_handle_t;
+
 struct drm_file
 {
     struct idr object_idr;
@@ -399,6 +406,14 @@ static inline int drm_mtrr_del(int handle, unsigned long offset,
     return -ENODEV;
 }
 
+#define MTRR_TYPE_WRCOMB     1
+
+static inline int mtrr_add(unsigned long base, unsigned long size,
+                    unsigned int type, char increment)
+{
+    return -ENODEV;
+}
+
 /* AROS specific functions */
 /* drm_aros.c */
 LONG        drm_aros_find_supported_video_card(struct drm_device *dev);
@@ -463,7 +478,7 @@ void        drm_aros_dma_unmap_buf(dma_addr_t dma_address, IPTR size);
 
 
 
-// //#define DRM_INFO(fmt, ...) bug("[" DRM_NAME "(INFO)] " fmt, ##__VA_ARGS__)
+// //
 // #define DRM_INFO(fmt, ...)
 
 
@@ -487,18 +502,14 @@ void        drm_aros_dma_unmap_buf(dma_addr_t dma_address, IPTR size);
 // 
 // #define drm_core_has_MTRR(dev) (0)
 
-// static __inline__ int mtrr_add(unsigned long base, unsigned long size,
-//                    unsigned int type, char increment)
-// {
-//     return -ENODEV;
-// }
+
 // 
 // static __inline__ int mtrr_del(int reg, unsigned long base, unsigned long size)
 // {
 //     return -ENODEV;
 // }
 // 
-// #define MTRR_TYPE_WRCOMB     1
+// 
 // /*  */
 // 
 
