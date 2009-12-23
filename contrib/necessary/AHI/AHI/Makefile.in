@@ -51,7 +51,7 @@ OBJECTS_MUI	= gui_mui.o
 
 EXECUTABLES	= AHI_MUI # AHI_BGUI AHI_CA
 
-LANGUAGES	= $(notdir $(basename $(wildcard ${srcdir}/translations/*.ct)))
+LANGUAGES	= $(basename $(shell cd ${srcdir}/translations; for file in *.ct; do if [ -f $$file ]; then echo -n "$$file "; fi; done))
 CATALOGS	= $(addsuffix .catalog, $(LANGUAGES))
 
 
