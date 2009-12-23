@@ -1,6 +1,6 @@
-diff -ru -x .svn /data/deadwood/source/Mesa-7.6/src/gallium/auxiliary/util/u_math.c gallium/auxiliary/util/u_math.c
---- /data/deadwood/source/Mesa-7.6/src/gallium/auxiliary/util/u_math.c	2009-10-18 09:25:49.000000000 +0200
-+++ gallium/auxiliary/util/u_math.c	2009-12-06 14:26:28.000000000 +0100
+diff -ur -x .svn /data/deadwood/source/Mesa-7.7/src/gallium/auxiliary/util/u_math.c gallium/auxiliary/util/u_math.c
+--- /data/deadwood/source/Mesa-7.7/src/gallium/auxiliary/util/u_math.c	2009-03-23 17:25:44.000000000 +0100
++++ gallium/auxiliary/util/u_math.c	2009-12-23 07:30:07.000000000 +0100
 @@ -42,6 +42,13 @@
        pow2_table[i] = (float) pow(2.0, (i - POW2_TABLE_OFFSET) / POW2_TABLE_SCALE);
  }
@@ -15,10 +15,10 @@ diff -ru -x .svn /data/deadwood/source/Mesa-7.6/src/gallium/auxiliary/util/u_mat
  
  /** log2(x), for x in [1.0, 2.0) */
  float log2_table[LOG2_TABLE_SIZE];
-diff -ru -x .svn /data/deadwood/source/Mesa-7.6/src/gallium/auxiliary/util/u_math.h gallium/auxiliary/util/u_math.h
---- /data/deadwood/source/Mesa-7.6/src/gallium/auxiliary/util/u_math.h	2009-10-18 09:25:49.000000000 +0200
-+++ gallium/auxiliary/util/u_math.h	2009-12-06 14:24:09.000000000 +0100
-@@ -372,6 +392,32 @@
+diff -ur -x .svn /data/deadwood/source/Mesa-7.7/src/gallium/auxiliary/util/u_math.h gallium/auxiliary/util/u_math.h
+--- /data/deadwood/source/Mesa-7.7/src/gallium/auxiliary/util/u_math.h	2009-12-21 18:26:02.000000000 +0100
++++ gallium/auxiliary/util/u_math.h	2009-12-23 07:30:07.000000000 +0100
+@@ -392,6 +392,32 @@
  }
  #elif defined(__MINGW32__)
  #define ffs __builtin_ffs
@@ -51,9 +51,9 @@ diff -ru -x .svn /data/deadwood/source/Mesa-7.6/src/gallium/auxiliary/util/u_mat
  #endif
  
  #ifdef __MINGW32__
-diff -ru -x .svn /data/deadwood/source/Mesa-7.6/src/gallium/auxiliary/util/u_time.c gallium/auxiliary/util/u_time.c
---- /data/deadwood/source/Mesa-7.6/src/gallium/auxiliary/util/u_time.c	2009-10-18 09:25:49.000000000 +0200
-+++ gallium/auxiliary/util/u_time.c	2009-12-06 14:26:59.000000000 +0100
+diff -ur -x .svn /data/deadwood/source/Mesa-7.7/src/gallium/auxiliary/util/u_time.c gallium/auxiliary/util/u_time.c
+--- /data/deadwood/source/Mesa-7.7/src/gallium/auxiliary/util/u_time.c	2009-11-17 17:54:28.000000000 +0100
++++ gallium/auxiliary/util/u_time.c	2009-12-23 07:30:07.000000000 +0100
 @@ -35,7 +35,7 @@
  
  #include "pipe/p_config.h"
@@ -108,9 +108,9 @@ diff -ru -x .svn /data/deadwood/source/Mesa-7.6/src/gallium/auxiliary/util/u_tim
     if (t1->tv.tv_sec < t2->tv.tv_sec)
        return -1;
     else if(t1->tv.tv_sec > t2->tv.tv_sec)
-diff -ru -x .svn /data/deadwood/source/Mesa-7.6/src/gallium/auxiliary/util/u_time.h gallium/auxiliary/util/u_time.h
---- /data/deadwood/source/Mesa-7.6/src/gallium/auxiliary/util/u_time.h	2009-10-18 09:25:49.000000000 +0200
-+++ gallium/auxiliary/util/u_time.h	2009-12-06 14:27:13.000000000 +0100
+diff -ur -x .svn /data/deadwood/source/Mesa-7.7/src/gallium/auxiliary/util/u_time.h gallium/auxiliary/util/u_time.h
+--- /data/deadwood/source/Mesa-7.7/src/gallium/auxiliary/util/u_time.h	2009-11-17 17:54:28.000000000 +0100
++++ gallium/auxiliary/util/u_time.h	2009-12-23 07:30:07.000000000 +0100
 @@ -48,6 +48,10 @@
  #include <unistd.h>
  #endif
@@ -140,11 +140,226 @@ diff -ru -x .svn /data/deadwood/source/Mesa-7.6/src/gallium/auxiliary/util/u_tim
  #define util_time_sleep usleep
  #else
  void
-diff -ru -x .svn /data/deadwood/source/Mesa-7.6/src/gallium/include/pipe/p_config.h gallium/include/pipe/p_config.h
---- /data/deadwood/source/Mesa-7.6/src/gallium/include/pipe/p_config.h	2009-10-18 09:25:49.000000000 +0200
-+++ gallium/include/pipe/p_config.h	2009-11-01 14:17:15.000000000 +0100
-@@ -144,6 +144,10 @@
- #define PIPE_OS_HAIKU
+diff -ur -x .svn /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nouveau/nouveau_screen.c gallium/drivers/nouveau/nouveau_screen.c
+--- /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nouveau/nouveau_screen.c	2009-10-20 13:48:08.000000000 +0200
++++ gallium/drivers/nouveau/nouveau_screen.c	2009-12-23 08:17:22.000000000 +0100
+@@ -239,5 +239,6 @@
+ void
+ nouveau_screen_fini(struct nouveau_screen *screen)
+ {
++    nouveau_channel_free(&screen->channel);
+ }
+ 
+diff -ur -x .svn /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nv10/nv10_screen.c gallium/drivers/nv10/nv10_screen.c
+--- /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nv10/nv10_screen.c	2009-12-21 18:26:02.000000000 +0100
++++ gallium/drivers/nv10/nv10_screen.c	2009-12-23 08:19:08.000000000 +0100
+@@ -116,6 +116,8 @@
+ 	nouveau_notifier_free(&screen->sync);
+ 	nouveau_grobj_free(&screen->celsius);
+ 
++	nouveau_screen_fini(&screen->base);
++
+ 	FREE(pscreen);
+ }
+ 
+diff -ur -x .svn /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nv20/nv20_screen.c gallium/drivers/nv20/nv20_screen.c
+--- /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nv20/nv20_screen.c	2009-12-21 18:26:02.000000000 +0100
++++ gallium/drivers/nv20/nv20_screen.c	2009-12-23 08:19:27.000000000 +0100
+@@ -116,6 +116,8 @@
+ 	nouveau_notifier_free(&screen->sync);
+ 	nouveau_grobj_free(&screen->kelvin);
+ 
++	nouveau_screen_fini(&screen->base);
++
+ 	FREE(pscreen);
+ }
+ 
+diff -ur -x .svn /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nv30/nv30_context.c gallium/drivers/nv30/nv30_context.c
+--- /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nv30/nv30_context.c	2009-12-21 18:26:02.000000000 +0100
++++ gallium/drivers/nv30/nv30_context.c	2009-12-23 08:19:27.000000000 +0100
+@@ -25,6 +25,12 @@
+ nv30_destroy(struct pipe_context *pipe)
+ {
+ 	struct nv30_context *nv30 = nv30_context(pipe);
++    unsigned i;
++
++    for (i = 0; i < NV30_STATE_MAX; i++) {
++        if (nv30->state.hw[i])
++            so_ref(NULL, &nv30->state.hw[i]);
++    }
+ 
+ 	if (nv30->draw)
+ 		draw_destroy(nv30->draw);
+diff -ur -x .svn /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nv30/nv30_fragprog.c gallium/drivers/nv30/nv30_fragprog.c
+--- /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nv30/nv30_fragprog.c	2009-12-21 18:26:02.000000000 +0100
++++ gallium/drivers/nv30/nv30_fragprog.c	2009-12-23 08:19:27.000000000 +0100
+@@ -7,6 +7,7 @@
+ #include "tgsi/tgsi_dump.h"
+ #include "tgsi/tgsi_parse.h"
+ #include "tgsi/tgsi_util.h"
++#include "tgsi/tgsi_dump.h"
+ 
+ #include "nv30_context.h"
+ 
+@@ -870,6 +871,12 @@
+ nv30_fragprog_destroy(struct nv30_context *nv30,
+ 		      struct nv30_fragment_program *fp)
+ {
++    if (fp->buffer)
++        pipe_buffer_reference(&fp->buffer, NULL);
++
++    if (fp->so)
++        so_ref(NULL, &fp->so);
++
+ 	if (fp->insn_len)
+ 		FREE(fp->insn);
+ }
+diff -ur -x .svn /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nv30/nv30_screen.c gallium/drivers/nv30/nv30_screen.c
+--- /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nv30/nv30_screen.c	2009-12-21 18:26:02.000000000 +0100
++++ gallium/drivers/nv30/nv30_screen.c	2009-12-23 08:19:27.000000000 +0100
+@@ -156,6 +156,12 @@
+ nv30_screen_destroy(struct pipe_screen *pscreen)
+ {
+ 	struct nv30_screen *screen = nv30_screen(pscreen);
++    unsigned i;
++
++    for (i = 0; i < NV30_STATE_MAX; i++) {
++        if (screen->state[i])
++            so_ref(NULL, &screen->state[i]);
++    }
+ 
+ 	nouveau_resource_free(&screen->vp_exec_heap);
+ 	nouveau_resource_free(&screen->vp_data_heap);
+@@ -164,6 +170,8 @@
+ 	nouveau_notifier_free(&screen->sync);
+ 	nouveau_grobj_free(&screen->rankine);
+ 
++	nouveau_screen_fini(&screen->base);
++	
+ 	FREE(pscreen);
+ }
+ 
+diff -ur -x .svn /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nv40/nv40_context.c gallium/drivers/nv40/nv40_context.c
+--- /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nv40/nv40_context.c	2009-12-21 18:26:02.000000000 +0100
++++ gallium/drivers/nv40/nv40_context.c	2009-12-23 08:19:27.000000000 +0100
+@@ -25,6 +25,12 @@
+ nv40_destroy(struct pipe_context *pipe)
+ {
+ 	struct nv40_context *nv40 = nv40_context(pipe);
++    unsigned i;
++
++    for (i = 0; i < NV40_STATE_MAX; i++) {
++        if (nv40->state.hw[i])
++            so_ref(NULL, &nv40->state.hw[i]);
++    }
+ 
+ 	if (nv40->draw)
+ 		draw_destroy(nv40->draw);
+diff -ur -x .svn /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nv40/nv40_fragprog.c gallium/drivers/nv40/nv40_fragprog.c
+--- /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nv40/nv40_fragprog.c	2009-12-21 18:26:02.000000000 +0100
++++ gallium/drivers/nv40/nv40_fragprog.c	2009-12-23 08:19:27.000000000 +0100
+@@ -948,6 +948,12 @@
+ nv40_fragprog_destroy(struct nv40_context *nv40,
+ 		      struct nv40_fragment_program *fp)
+ {
++    if (fp->buffer)
++        pipe_buffer_reference(&fp->buffer, NULL);
++
++    if (fp->so)
++        so_ref(NULL, &fp->so);
++
+ 	if (fp->insn_len)
+ 		FREE(fp->insn);
+ }
+diff -ur -x .svn /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nv40/nv40_screen.c gallium/drivers/nv40/nv40_screen.c
+--- /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nv40/nv40_screen.c	2009-12-21 18:26:02.000000000 +0100
++++ gallium/drivers/nv40/nv40_screen.c	2009-12-23 08:19:27.000000000 +0100
+@@ -140,6 +140,12 @@
+ nv40_screen_destroy(struct pipe_screen *pscreen)
+ {
+ 	struct nv40_screen *screen = nv40_screen(pscreen);
++    unsigned i;
++
++    for (i = 0; i < NV40_STATE_MAX; i++) {
++        if (screen->state[i])
++            so_ref(NULL, &screen->state[i]);
++    }
+ 
+ 	nouveau_resource_free(&screen->vp_exec_heap);
+ 	nouveau_resource_free(&screen->vp_data_heap);
+diff -ur -x .svn /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nv50/nv50_context.c gallium/drivers/nv50/nv50_context.c
+--- /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nv50/nv50_context.c	2009-12-21 18:26:02.000000000 +0100
++++ gallium/drivers/nv50/nv50_context.c	2009-12-23 08:19:27.000000000 +0100
+@@ -43,6 +43,39 @@
+ {
+ 	struct nv50_context *nv50 = nv50_context(pipe);
+ 
++	if (nv50->state.fb)
++	    so_ref(NULL, &nv50->state.fb);
++	if (nv50->state.blend)
++	    so_ref(NULL, &nv50->state.blend);
++	if (nv50->state.blend_colour)
++	    so_ref(NULL, &nv50->state.blend_colour);
++	if (nv50->state.zsa)
++	    so_ref(NULL, &nv50->state.zsa);
++	if (nv50->state.rast)
++	    so_ref(NULL, &nv50->state.rast);
++	if (nv50->state.stipple)
++	    so_ref(NULL, &nv50->state.stipple);
++	if (nv50->state.scissor)
++	    so_ref(NULL, &nv50->state.scissor);
++	if (nv50->state.viewport)
++	    so_ref(NULL, &nv50->state.viewport);
++	if (nv50->state.tsc_upload)
++	    so_ref(NULL, &nv50->state.tsc_upload);
++	if (nv50->state.tic_upload)
++	    so_ref(NULL, &nv50->state.tic_upload);
++	if (nv50->state.vertprog)
++	    so_ref(NULL, &nv50->state.vertprog);
++	if (nv50->state.fragprog)
++	    so_ref(NULL, &nv50->state.fragprog);
++	if (nv50->state.programs)
++	    so_ref(NULL, &nv50->state.programs);
++	if (nv50->state.vtxfmt)
++	    so_ref(NULL, &nv50->state.vtxfmt);
++	if (nv50->state.vtxbuf)
++	    so_ref(NULL, &nv50->state.vtxbuf);
++	if (nv50->state.vtxattr)
++	    so_ref(NULL, &nv50->state.vtxattr);
++
+ 	draw_destroy(nv50->draw);
+ 	FREE(nv50);
+ }
+diff -ur -x .svn /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nv50/nv50_screen.c gallium/drivers/nv50/nv50_screen.c
+--- /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nv50/nv50_screen.c	2009-12-21 18:26:02.000000000 +0100
++++ gallium/drivers/nv50/nv50_screen.c	2009-12-23 08:19:27.000000000 +0100
+@@ -162,6 +162,21 @@
+ nv50_screen_destroy(struct pipe_screen *pscreen)
+ {
+ 	struct nv50_screen *screen = nv50_screen(pscreen);
++    unsigned i;
++
++    for (i = 0; i < 2; i++) {
++        if (screen->constbuf_parm[i])
++            nouveau_bo_ref(NULL, &screen->constbuf_parm[i]);
++    }
++    
++    if (screen->constbuf_misc[0])
++        nouveau_bo_ref(NULL, &screen->constbuf_misc[0]);
++    if (screen->tic)
++        nouveau_bo_ref(NULL, &screen->tic);
++    if (screen->tsc)
++        nouveau_bo_ref(NULL, &screen->tsc);
++    if (screen->static_init)
++        so_ref(NULL, &screen->static_init);
+ 
+ 	nouveau_notifier_free(&screen->sync);
+ 	nouveau_grobj_free(&screen->tesla);
+diff -ur -x .svn /data/deadwood/source/Mesa-7.7/src/gallium/include/pipe/p_config.h gallium/include/pipe/p_config.h
+--- /data/deadwood/source/Mesa-7.7/src/gallium/include/pipe/p_config.h	2009-12-21 18:26:02.000000000 +0100
++++ gallium/include/pipe/p_config.h	2009-12-23 07:30:07.000000000 +0100
+@@ -162,6 +162,10 @@
+ #define PIPE_OS_UNIX
  #endif
  
 +#if defined(__AROS__)

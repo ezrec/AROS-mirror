@@ -379,7 +379,7 @@ dojoy(void)
       joyavailable = 0;
 #endif
 }
-#include <proto/dos.h>
+
 static void
 drawfire(void)
 {
@@ -520,8 +520,6 @@ drawfire(void)
 
    glutSwapBuffers();
    
-   //Delay(50);
-
    Frames++;
    {
       GLint t = glutGet(GLUT_ELAPSED_TIME);

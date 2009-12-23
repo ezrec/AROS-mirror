@@ -392,6 +392,32 @@ unsigned ffs( unsigned u )
 }
 #elif defined(__MINGW32__)
 #define ffs __builtin_ffs
+#elif defined (__AROS__)
+static INLINE
+unsigned ffs( unsigned i ) /*FIXME: mesa code was using signed value as parameter */
+{
+   register int bit = 0;
+   if (i != 0) {
+      if ((i & 0xffff) == 0) {
+         bit += 16;
+         i >>= 16;
+      }
+      if ((i & 0xff) == 0) {
+         bit += 8;
+         i >>= 8;
+      }
+      if ((i & 0xf) == 0) {
+         bit += 4;
+         i >>= 4;
+      }
+      while ((i & 1) == 0) {
+         bit++;
+         i >>= 1;
+      }
+      bit++;
+   }
+   return bit;
+}
 #endif
 
 #ifdef __MINGW32__

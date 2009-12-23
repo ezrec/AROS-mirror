@@ -102,8 +102,6 @@ key(unsigned char k, int x, int y)
   }
 }
 
-#include <proto/dos.h>
-
 static void 
 draw(void)
 {
@@ -149,7 +147,6 @@ draw(void)
   glFlush();
   glutSwapBuffers();
   
-  //Delay(50);
 }
 
 static void 

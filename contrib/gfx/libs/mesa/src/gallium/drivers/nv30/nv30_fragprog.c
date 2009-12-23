@@ -7,6 +7,7 @@
 #include "tgsi/tgsi_dump.h"
 #include "tgsi/tgsi_parse.h"
 #include "tgsi/tgsi_util.h"
+#include "tgsi/tgsi_dump.h"
 
 #include "nv30_context.h"
 
@@ -870,6 +871,12 @@ void
 nv30_fragprog_destroy(struct nv30_context *nv30,
 		      struct nv30_fragment_program *fp)
 {
+    if (fp->buffer)
+        pipe_buffer_reference(&fp->buffer, NULL);
+
+    if (fp->so)
+        so_ref(NULL, &fp->so);
+
 	if (fp->insn_len)
 		FREE(fp->insn);
 }

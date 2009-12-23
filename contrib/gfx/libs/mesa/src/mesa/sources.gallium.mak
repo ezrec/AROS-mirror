@@ -213,6 +213,7 @@ GALLIUM_SOFTPIPE_SOURCES = \
             drivers/softpipe/sp_query \
             drivers/softpipe/sp_context \
             drivers/softpipe/sp_draw_arrays \
+            drivers/softpipe/sp_prim_vbuf \
             drivers/softpipe/sp_quad_pipe \
             drivers/softpipe/sp_quad_blend \
             drivers/softpipe/sp_quad_depth_test \
@@ -231,6 +232,7 @@ GALLIUM_SOFTPIPE_SOURCES = \
             drivers/softpipe/sp_texture \
             drivers/softpipe/sp_tex_sample \
             drivers/softpipe/sp_tile_cache \
+            drivers/softpipe/sp_tex_tile_cache \
             drivers/softpipe/sp_surface
 
 GALLIUM_NVIDIA_SOURCES = \
