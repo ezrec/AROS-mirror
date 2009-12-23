@@ -76,10 +76,10 @@ extern int           drmMap(int fd, drm_handle_t handle, drmSize size,
 extern int           drmUnmap(drmAddress address, drmSize size);
 extern int           drmCreateContext(int fd, drm_context_t * handle);
 extern int           drmDestroyContext(int fd, drm_context_t handle);
+extern int           drmIoctl(int fd, unsigned long request, void *arg);
 
 /* AROS specific */
 extern void *       drmMMap(int fd, uint32_t handle);
 extern void         drmMUnmap(int fd, uint32_t handle);
-extern int          drmGEMIoctl(int fd, unsigned long drmCommandIndex, void *data);
 
 #endif

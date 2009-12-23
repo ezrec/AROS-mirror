@@ -30,7 +30,6 @@
 
 #if !defined(__AROS__)
 #include <sys/mman.h>
-#include <sys/ioctl.h>
 #endif
 
 #include "nouveau_private.h"
@@ -62,7 +61,7 @@ nouveau_bo_info(struct nouveau_bo_priv *nvbo, struct drm_nouveau_gem_info *arg)
 static int
 nouveau_bo_allocated(struct nouveau_bo_priv *nvbo)
 {
-	if (nvbo->sysmem || nvbo->handle || (nvbo->flags & NOUVEAU_BO_PIN))
+	if (nvbo->sysmem || nvbo->handle)
 		return 1;
 	return 0;
 }
@@ -112,11 +111,7 @@ nouveau_bo_kfree(struct nouveau_bo_priv *nvbo)
 
 	req.handle = nvbo->handle;
 	nvbo->handle = 0;
-#if !defined(__AROS__)    
-	ioctl(nvdev->fd, DRM_IOCTL_GEM_CLOSE, &req);
-#else
-    drmGEMIoctl(nvdev->fd, DRM_IOCTL_GEM_CLOSE, &req);
-#endif
+	drmIoctl(nvdev->fd, DRM_IOCTL_GEM_CLOSE, &req);
 }
 
 static int
@@ -127,7 +122,7 @@ nouveau_bo_kalloc(struct nouveau_bo_priv *nvbo, struct nouveau_channel *chan)
 	struct drm_nouveau_gem_info *info = &req.info;
 	int ret;
 
-	if (nvbo->handle || (nvbo->flags & NOUVEAU_BO_PIN))
+	if (nvbo->handle)
 		return 0;
 
 	req.channel_hint = chan ? chan->id : 0;
@@ -207,19 +202,23 @@ nouveau_bo_new_tile(struct nouveau_device *dev, uint32_t flags, int align,
 	nvbo->base.tile_flags = tile_flags;
 
 	nvbo->refcount = 1;
-	/* Don't set NOUVEAU_BO_PIN here, or nouveau_bo_allocated() will
-	 * decided the buffer's already allocated when it's not.  The
-	 * call to nouveau_bo_pin() later will set this flag.
-	 */
-	nvbo->flags = (flags & ~NOUVEAU_BO_PIN);
+	nvbo->flags = flags;
 	nvbo->size = size;
 	nvbo->align = align;
 
-	if (flags & NOUVEAU_BO_PIN) {
-		ret = nouveau_bo_pin((void *)nvbo, nvbo->flags);
+	if (flags & (NOUVEAU_BO_VRAM | NOUVEAU_BO_GART)) {
+		ret = nouveau_bo_kalloc(nvbo, NULL);
 		if (ret) {
 			nouveau_bo_ref(NULL, (void *)nvbo);
 			return ret;
+		}
+
+		if (flags & NOUVEAU_BO_PIN) {
+			ret = nouveau_bo_pin((void *)nvbo, nvbo->flags);
+			if (ret) {
+				nouveau_bo_ref(NULL, (void *)nvbo);
+				return ret;
+			}
 		}
 	}
 
@@ -305,11 +304,7 @@ nouveau_bo_handle_get(struct nouveau_bo *bo, uint32_t *handle)
 			return ret;
 
 		req.handle = nvbo->handle;
-#if !defined(__AROS__)
-		ret = ioctl(nvdev->fd, DRM_IOCTL_GEM_FLINK, &req);
-#else
-        ret = drmGEMIoctl(nvdev->fd, DRM_IOCTL_GEM_FLINK, &req);
-#endif
+		ret = drmIoctl(nvdev->fd, DRM_IOCTL_GEM_FLINK, &req);
 		if (ret) {
 			nouveau_bo_kfree(nvbo);
 			return ret;
@@ -332,11 +327,7 @@ nouveau_bo_handle_ref(struct nouveau_device *dev, uint32_t handle,
 	int ret;
 
 	req.name = handle;
-#if !defined(__AROS__)
-	ret = ioctl(nvdev->fd, DRM_IOCTL_GEM_OPEN, &req);
-#else
-    ret = drmGEMIoctl(nvdev->fd, DRM_IOCTL_GEM_OPEN, &req);
-#endif
+	ret = drmIoctl(nvdev->fd, DRM_IOCTL_GEM_OPEN, &req);
 	if (ret) {
 		nouveau_bo_ref(NULL, bo);
 		return ret;
@@ -513,25 +504,15 @@ nouveau_bo_pin(struct nouveau_bo *bo, uint32_t flags)
 	if (nvbo->pinned)
 		return 0;
 
-	/* Ensure we have a kernel object... */
-	if (!nvbo->flags) {
-		if (!(flags & (NOUVEAU_BO_VRAM | NOUVEAU_BO_GART)))
-			return -EINVAL;
-		nvbo->flags = flags;
-	}
-
-	if (!nvbo->handle) {
-		ret = nouveau_bo_kalloc(nvbo, NULL);
-		if (ret)
-			return ret;
-	}
+	if (!nvbo->handle)
+		return -EINVAL;
 
 	/* Now force it to stay put :) */
 	req.handle = nvbo->handle;
 	req.domain = 0;
-	if (nvbo->flags & NOUVEAU_BO_VRAM)
+	if (flags & NOUVEAU_BO_VRAM)
 		req.domain |= NOUVEAU_GEM_DOMAIN_VRAM;
-	if (nvbo->flags & NOUVEAU_BO_GART)
+	if (flags & NOUVEAU_BO_GART)
 		req.domain |= NOUVEAU_GEM_DOMAIN_GART;
 
 	ret = drmCommandWriteRead(nvdev->fd, DRM_NOUVEAU_GEM_PIN, &req,
@@ -541,7 +522,6 @@ nouveau_bo_pin(struct nouveau_bo *bo, uint32_t flags)
 	nvbo->offset = req.offset;
 	nvbo->domain = req.domain;
 	nvbo->pinned = 1;
-	nvbo->flags |= NOUVEAU_BO_PIN;
 
 	/* Fill in public nouveau_bo members */
 	if (nvbo->domain & NOUVEAU_GEM_DOMAIN_VRAM)

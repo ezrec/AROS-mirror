@@ -217,6 +217,35 @@ drmDestroyContext(int fd, drm_context_t handle)
     return 0;
 }
 
+int drmIoctl(int fd, unsigned long request, void *arg)
+{
+    int ret = -EINVAL;
+    
+    if (!drm_files[fd])
+        return ret;
+
+    do
+    {
+        switch(request)
+        {
+            case(DRM_IOCTL_GEM_CLOSE):
+                ret = drm_gem_close_ioctl(&global_drm_device, arg, drm_files[fd]);
+                break;
+            case(DRM_IOCTL_GEM_OPEN):
+                ret = drm_gem_open_ioctl(&global_drm_device, arg, drm_files[fd]);
+                break;
+            case(DRM_IOCTL_GEM_FLINK):
+                ret = drm_gem_flink_ioctl(&global_drm_device, arg, drm_files[fd]);
+                break;
+            default:
+                DRM_IMPL("GEM COMMAND %d\n", request);
+        }
+        /* FIXME: It is possible that -ERESTARTSYS needs to be translated to -EAGAIN here */
+    } while (ret == -EINTR || ret == -EAGAIN);
+    
+    return ret;
+}
+
 /* FIXME: this should be generic, not nouveau specific */
 #include "nouveau_drv.h"
 void * drmMMap(int fd, uint32_t handle)
@@ -282,22 +311,3 @@ void drmMUnmap(int fd, uint32_t handle)
     mutex_unlock(&global_drm_device.struct_mutex);
 }
 
-int drmGEMIoctl(int fd, unsigned long drmCommandIndex, void *data)
-{
-    if (!drm_files[fd])
-        return -EINVAL;
-    
-    switch(drmCommandIndex)
-    {
-        case(DRM_IOCTL_GEM_CLOSE):
-            return drm_gem_close_ioctl(&global_drm_device, data, drm_files[fd]);
-        case(DRM_IOCTL_GEM_OPEN):
-            return drm_gem_open_ioctl(&global_drm_device, data, drm_files[fd]);
-        case(DRM_IOCTL_GEM_FLINK):
-            return drm_gem_flink_ioctl(&global_drm_device, data, drm_files[fd]);
-        default:
-            DRM_IMPL("GEM COMMAND %d\n", drmCommandIndex);
-    }
-    
-    return 0;
-}
