@@ -282,7 +282,7 @@ downloading pre-compiled binaries, you should go down into the
 The Workbench replacement "Wanderer" will be started.
 
 There are some command line options for aros executable that could be used.
-You can get this list with ./aros -h option given::
+You can get this list with ./aros-unix -h option given::
 
 	AROS for Linux
 	usage: ./aros-unix [options]
