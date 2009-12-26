@@ -6,11 +6,14 @@
 #include "drmP.h"
 
 #include "i915_drv.h"
+#include "i915_pciids.h"
 
 extern struct drm_ioctl_desc nouveau_ioctls[];
 
 static struct drm_driver driver =
 {
+    .VendorID = 0x8086,
+    .PciIDs = i915_pciids,
     .driver_features = DRIVER_MODESET | DRIVER_GEM,
     .load = i915_driver_load,
 /*    .firstopen = nouveau_firstopen,
@@ -35,6 +38,5 @@ void i915_exit(void)
 
 int i915_init(void)
 {
-    asm("int3");
     return drm_init(&driver);
 }

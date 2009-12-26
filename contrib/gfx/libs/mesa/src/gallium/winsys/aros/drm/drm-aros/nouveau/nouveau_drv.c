@@ -6,6 +6,7 @@
 #include "drmP.h"
 
 #include "nouveau_drv.h"
+#include "nouveau_pciids.h"
 
 /* FIXME: Check what impact these settings have */
 int nouveau_vram_pushbuf = 0;
@@ -15,6 +16,8 @@ extern struct drm_ioctl_desc nouveau_ioctls[];
 
 static struct drm_driver driver =
 {
+    .VendorID = 0x10de,
+    .PciIDs = nouveau_pciids,
     .driver_features = DRIVER_MODESET | DRIVER_GEM,
     .load = nouveau_load,
     .firstopen = nouveau_firstopen,

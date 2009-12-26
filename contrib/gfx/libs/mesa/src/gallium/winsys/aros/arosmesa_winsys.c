@@ -36,22 +36,22 @@ int i915_init(void);
 static int
 initialize_driver(void)
 {
-//    if (current_driver == NULL)
-//    {
-//        /* HACK: goes around the whole libdrm call chain and calls directly into
-//         * "kernel" driver */
-//
-//        /* Try using i915 */
-//        if (i915_init())
-//        {
-//            /* Failed */
-//            i915_exit();
-//        }
-//        else
-//        {
-//            current_driver = &arosmesa_intel_driver;
-//        }
-//    }
+    if (current_driver == NULL)
+    {
+        /* HACK: goes around the whole libdrm call chain and calls directly into
+         * "kernel" driver */
+
+        /* Try using i915 */
+        if (i915_init())
+        {
+            /* Failed */
+            i915_exit();
+        }
+        else
+        {
+            current_driver = &arosmesa_intel_driver;
+        }
+    }
 
     if (current_driver == NULL)
     {

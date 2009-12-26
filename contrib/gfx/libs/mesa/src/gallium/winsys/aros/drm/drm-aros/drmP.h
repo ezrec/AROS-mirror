@@ -155,6 +155,12 @@ struct drm_agp_head {
     unsigned long page_mask;
 };
 
+struct drm_pciid 
+{
+    UWORD VendorID;
+    UWORD ProductID;
+};
+
 /* Contains a collection of functions common to each drm driver */
 
 #define DRIVER_GEM         0x1000
@@ -162,6 +168,10 @@ struct drm_agp_head {
 
 struct drm_driver
 {
+    /* PCI ID */
+    UWORD               VendorID;
+    struct drm_pciid  * PciIDs;
+    
     int         (*load)(struct drm_device *, unsigned long);
     int         (*firstopen)(struct drm_device *);
     void        (*preclose)(struct drm_device *dev, struct drm_file *);
