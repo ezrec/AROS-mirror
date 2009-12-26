@@ -28,6 +28,8 @@
 #define DRMP_H
 
 #include "drm.h"
+#include "drm_aros.h"
+#include "drm_aros_config.h"
 #include "drm_compat_funcs.h"
 #include "drm_redefines.h"
 
@@ -39,35 +41,7 @@
 #define DEBUG 0
 #include <aros/debug.h>
 
-#include <hidd/irq.h>
-struct Library          *OOPBase;
-
-/* HACK */
-
-/* Enable hacks for running under hosted AROS */
-/* THIS AND ALL "HOSTED_BUILD" MARKED CODE MUST BE DELETED IN FINAL VERSION */
-#define HOSTED_BUILD
-
-#if defined(HOSTED_BUILD)
-/* These defines simulate certain gfx cards. Need to be removed in final version. Works only with HOSTED_BUILD */
-//#define HOSTED_BUILD_CHIPSET    5       /* NV05 chip Riva TNT 2 */
-//#define HOSTED_BUILD_CHIPSET    16      /* NV10 chip GeForce 256 */
-//#define HOSTED_BUILD_CHIPSET    21      /* NV15 chip GeForce 2 GTS */
-//#define HOSTED_BUILD_CHIPSET    32      /* NV20 chip GeForce 3 Ti 200 */
-//#define HOSTED_BUILD_CHIPSET    37      /* NV25 chip GeForce Ti 4200 */
-//#define HOSTED_BUILD_CHIPSET    52      /* NV34 chip GeForce FX 5200 */
-#define HOSTED_BUILD_CHIPSET    67      /* NV43 chip GeForce 6200 */
-//#define HOSTED_BUILD_CHIPSET    132     /* G84 chip GeForce 8600 GT */
-//#define HOSTED_BUILD_CHIPSET    134     /* G86 chip GeForce 8400 GS */
-#endif
-
-/* HACK ENDS */
-
-
 /* NEEDED */
-
-/* Config */
-#define CONFIG_AGP
 
 #include "drm_mm.h"
 
@@ -231,8 +205,7 @@ struct drm_device
 
     /* AROS specific fields */
     OOP_Object              *pci;
-    OOP_Object              *pciDevice;
-    OOP_Object              *pcidriver;
+    OOP_Object              *pdev;
     HIDDT_IRQ_Handler       *IntHandler;
 };
 
@@ -303,9 +276,9 @@ static __inline__ int drm_device_is_pcie(struct drm_device *dev)
 // /* drm_bufs.c */
 int drm_order(unsigned long size);
 resource_size_t drm_get_resource_len(struct drm_device *dev,
-                       unsigned int resource);
+                        unsigned int resource);
 resource_size_t drm_get_resource_start(struct drm_device *dev,
-                         unsigned int resource);
+                        unsigned int resource);
 // int drm_addmap(struct drm_device *dev, unsigned int offset,
 //               unsigned int size, enum drm_map_type type,
 //               enum drm_map_flags flags, drm_local_map_t ** map_ptr);
@@ -323,7 +296,7 @@ int drm_irq_install(struct drm_device *dev);
 int drm_irq_uninstall(struct drm_device *dev);
 
 /* drm_memory.c */
-void drm_core_ioremap(struct drm_local_map *map, struct drm_device *dev);
+// void drm_core_ioremap(struct drm_local_map *map, struct drm_device *dev);
 // void drm_core_ioremapfree(struct drm_map *map, struct drm_device *dev);
 // void *drm_calloc(size_t nmemb, size_t size, int area);
 // /* FIXME: make them inline? */
@@ -413,17 +386,6 @@ static inline int mtrr_add(unsigned long base, unsigned long size,
 {
     return -ENODEV;
 }
-
-/* AROS specific functions */
-/* drm_aros.c */
-LONG        drm_aros_find_supported_video_card(struct drm_device *dev);
-void        drm_aros_pci_shutdown(struct drm_device *dev);
-APTR        drm_aros_pci_ioremap(OOP_Object *driver, APTR buf, IPTR size);
-void        drm_aros_pci_iounmap(OOP_Object *driver, APTR buf, IPTR size);
-APTR        drm_aros_pci_resource_start(OOP_Object *pciDevice,  unsigned int resource);
-IPTR        drm_aros_pci_resource_len(OOP_Object *pciDevice,  unsigned int resource);
-dma_addr_t  drm_aros_dma_map_buf(APTR buf, IPTR offset, IPTR size);
-void        drm_aros_dma_unmap_buf(dma_addr_t dma_address, IPTR size);
 
 /* NEEDED ENDS */
 

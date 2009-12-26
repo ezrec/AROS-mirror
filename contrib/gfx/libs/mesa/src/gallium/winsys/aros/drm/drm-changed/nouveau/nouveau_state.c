@@ -600,8 +600,8 @@ DRM_IMPL("Creating workqueue\n");
 	/* resource 6 is bios */
 
 	/* map the mmio regs */
-	mmio_start_offs = (IPTR)drm_aros_pci_resource_start(dev->pciDevice, 0);
-	dev_priv->mmio = drm_aros_pci_ioremap(dev->pcidriver, (APTR)mmio_start_offs, 0x00800000);
+	mmio_start_offs = pci_resource_start(dev->pdev, 0);
+	dev_priv->mmio = ioremap(mmio_start_offs, 0x00800000);
 	if (!dev_priv->mmio) {
 		NV_ERROR(dev, "Unable to initialize the mmio mapping. "
 			 "Please report your setup to " DRIVER_EMAIL "\n");
@@ -664,12 +664,12 @@ DRM_IMPL("Creating workqueue\n");
 	dev_priv->ramin  = NULL;
 	if (dev_priv->card_type >= NV_40) {
 		int ramin_bar = 2;
-		if (drm_aros_pci_resource_len(dev->pciDevice, ramin_bar) == 0)
+		if (pci_resource_len(dev->pdev, ramin_bar) == 0)
 			ramin_bar = 3;
 
-		dev_priv->ramin_size = drm_aros_pci_resource_len(dev->pciDevice, ramin_bar);
-		dev_priv->ramin = drm_aros_pci_ioremap(dev->pcidriver,
-				drm_aros_pci_resource_start(dev->pciDevice, ramin_bar),
+		dev_priv->ramin_size = pci_resource_len(dev->pdev, ramin_bar);
+		dev_priv->ramin = ioremap(
+				pci_resource_start(dev->pdev, ramin_bar),
 				dev_priv->ramin_size);
 		if (!dev_priv->ramin) {
 			NV_ERROR(dev, "Failed to init RAMIN mapping, "
@@ -681,7 +681,7 @@ DRM_IMPL("Creating workqueue\n");
 	 * the BAR0 PRAMIN aperture */
 	if (!dev_priv->ramin) {
 		dev_priv->ramin_size = 1 * 1024 * 1024;
-		dev_priv->ramin = drm_aros_pci_ioremap(dev->pcidriver, (APTR)(mmio_start_offs + NV_RAMIN),
+		dev_priv->ramin = ioremap(mmio_start_offs + NV_RAMIN,
 							dev_priv->ramin_size);
 		if (!dev_priv->ramin) {
 			NV_ERROR(dev, "Failed to map BAR0 PRAMIN.\n");
@@ -742,16 +742,8 @@ DRM_IMPL("Calling *_display_destroy\n");
 		nouveau_close(dev);
 	}
 
-#if !defined(__AROS__)
 	iounmap(dev_priv->mmio);
 	iounmap(dev_priv->ramin);
-#else
-    if (dev->pcidriver)
-    {
-        drm_aros_pci_iounmap(dev->pcidriver, dev_priv->mmio, 0x00800000);
-        drm_aros_pci_iounmap(dev->pcidriver, dev_priv->ramin, dev_priv->ramin_size);
-    }
-#endif
     
 	kfree(dev_priv);
 	dev->dev_private = NULL;

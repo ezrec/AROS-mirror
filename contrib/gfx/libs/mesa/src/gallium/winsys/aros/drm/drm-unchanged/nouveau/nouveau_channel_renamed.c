@@ -167,10 +167,8 @@ nouveau_channel_alloc(struct drm_device *dev, struct nouveau_channel **chan_ret,
 	else
 		user = NV50_USER(channel);
 
-	chan->user = drm_aros_pci_ioremap(
-                        dev->pcidriver,
-                        drm_aros_pci_resource_start(dev->pciDevice, 0) + user,
-                        PAGE_SIZE);
+	chan->user = ioremap(pci_resource_start(dev->pdev, 0) + user,
+								PAGE_SIZE);
 	if (!chan->user) {
 		NV_ERROR(dev, "ioremap of regs failed.\n");
 		nouveau_channel_free(chan);
@@ -344,7 +342,7 @@ nouveau_channel_free(struct nouveau_channel *chan)
 	nouveau_gpuobj_channel_takedown(chan);
 	nouveau_notifier_takedown_channel(chan);
 	if (chan->user)
-		drm_aros_pci_iounmap(dev->pcidriver, chan->user, PAGE_SIZE);
+		iounmap(chan->user);
 
 	dev_priv->fifos[chan->id] = NULL;
 	dev_priv->fifo_alloc_count--;

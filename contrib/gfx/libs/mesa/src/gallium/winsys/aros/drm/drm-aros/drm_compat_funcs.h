@@ -36,17 +36,10 @@
 #define mutex_init(x)                   InitSemaphore(x.semaphore);
 #define likely(x)                       __builtin_expect((x),1)
 #define unlikely(x)                     __builtin_expect((x),0)
-#define pci_map_page(a, b, c, d, e)     drm_aros_dma_map_buf(b->address, c, d)
-#define pci_dma_mapping_error(a, b)     FALSE
-#define pci_unmap_page(a, b, c, d)      drm_aros_dma_unmap_buf(b, c)
-#define ioremap                         ioremap_nocache
-#define ioremap_wc                      ioremap_nocache
 #define mb()                            __asm __volatile("lock; addl $0,0(%%esp)" : : : "memory");
 
 
 
-void *ioremap_nocache(resource_size_t offset, unsigned long size);
-void iounmap_helper(void * addr, unsigned long size); /* Helper function - not from compat */
 
 void iowrite32(u32 val, void * addr);
 unsigned int ioread32(void * addr);
@@ -93,6 +86,17 @@ static inline IPTR IS_ERR(APTR ptr)
 #define printk(fmt, ...)            bug(fmt, ##__VA_ARGS__)
 #define IMPLEMENT(fmt, ...)         bug("------IMPLEMENT(%s): " fmt, __func__ , ##__VA_ARGS__)
 #define BUG(x)                      bug("BUG:(%s)\n", __func__)
+
+/* PCI handling */
+void * ioremap(resource_size_t offset, unsigned long size);
+#define pci_map_page(a, b, c, d, e)     (dma_addr_t)(b->address + c)
+#define pci_dma_mapping_error(a, b)     FALSE
+#define pci_unmap_page(a, b, c, d)      
+#define ioremap_nocache                 ioremap
+#define ioremap_wc                      ioremap
+void iounmap(void * addr);
+resource_size_t pci_resource_start(void * pdev, unsigned int barnum);
+unsigned long pci_resource_len(void * pdev, unsigned int barnum);
 
 /* Bit operations */
 void clear_bit(int nr, volatile void * addr);

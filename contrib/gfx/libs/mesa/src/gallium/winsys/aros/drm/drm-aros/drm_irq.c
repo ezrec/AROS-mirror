@@ -47,7 +47,7 @@ int drm_irq_install(struct drm_device *dev)
         dev->IntHandler->h_Code = interrupt_handler;
         dev->IntHandler->h_Data = dev;
 
-        OOP_GetAttr(dev->pciDevice, aHidd_PCIDevice_INTLine, &INTLine);
+        OOP_GetAttr(dev->pdev, aHidd_PCIDevice_INTLine, &INTLine);
         DRM_DEBUG("INTLine: %d\n", INTLine);
         
         o = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);

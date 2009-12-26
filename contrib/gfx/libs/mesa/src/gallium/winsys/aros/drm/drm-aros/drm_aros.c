@@ -14,13 +14,9 @@
 #include <hidd/pci.h>
 #include <hidd/hidd.h>
 
-/* FIXME: should these be global? */
 OOP_AttrBase __IHidd_PCIDev = 0;
-
-/* THIS IS A MIGHTY HACK */
-OOP_Object * hack_pci_driver_hack = NULL;
-/* THIS IS A MIGHTY HACK */
-
+struct Library * OOPBase = NULL;
+OOP_Object * pciDriver = NULL; 
 
 /* List of DeviceID's of supported nvidia cards */
 static const struct NVDevice {
@@ -447,7 +443,7 @@ AROS_UFH3(void, Enumerator,
             /* Filling out device properties */
             dev->pci_vendor = (int)VendorID;
             dev->pci_device = (int)ProductID;
-            dev->pciDevice = pciDevice;
+            dev->pdev = pciDevice;
 
             /*
             Fix PCI device attributes (perhaps already set, but if the 
@@ -457,11 +453,7 @@ AROS_UFH3(void, Enumerator,
             OOP_SetAttrs(pciDevice, (struct TagItem*)&attrs);
             
             OOP_GetAttr(pciDevice, aHidd_PCIDevice_Driver, (APTR)&driver);
-            dev->pcidriver = driver;
-            
-            /* HACK */
-            hack_pci_driver_hack = driver;
-            /* HACK */
+            pciDriver = driver;
 
             DRM_DEBUG("Acquired pcidriver\n");
             
@@ -525,14 +517,14 @@ LONG drm_aros_find_supported_video_card(struct drm_device *dev)
 {
     /* FIXME: What if they had values? memory leaks? */
     dev->pci = NULL;
-    dev->pciDevice = NULL;
-    dev->pcidriver = NULL;
+    dev->pdev = NULL;
+    pciDriver = NULL;
     OOPBase = NULL;
     
     find_card(dev);
 
     /* If objects are set, detection was succesful */
-    if (dev->pci && dev->pciDevice && dev->pcidriver)
+    if (dev->pci && dev->pdev && pciDriver)
         return 0;
     else
     {
@@ -564,8 +556,8 @@ void drm_aros_pci_shutdown(struct drm_device *dev)
             dev->pci = NULL;
         }
         
-        dev->pciDevice = NULL;
-        dev->pcidriver = NULL;
+        dev->pdev = NULL;
+        pciDriver = NULL;
     }
     
     if (__IHidd_PCIDev != 0)
@@ -580,118 +572,3 @@ void drm_aros_pci_shutdown(struct drm_device *dev)
     }
 }
 
-APTR drm_aros_pci_resource_start(OOP_Object *pciDevice,  unsigned int resource)
-{
-#if !defined(HOSTED_BUILD)    
-    APTR start = (APTR)NULL;
-    switch(resource)
-    {
-        case(0): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Base0, (APTR)&start); break;
-        case(1): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Base1, (APTR)&start); break;
-        case(2): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Base2, (APTR)&start); break;
-        case(3): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Base3, (APTR)&start); break;
-        case(4): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Base4, (APTR)&start); break;
-        case(5): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Base5, (APTR)&start); break;
-        default: DRM_ERROR("ResourceID %d not supported\n", resource);
-    }
-    
-    return start;
-#else
-#if HOSTED_BUILD_CHIPSET >= 0x40
-if (resource == 0) return (APTR)0xcf000000;
-if (resource == 1) return (APTR)0xb0000000;
-if (resource == 3) return (APTR)0xce000000;
-#else
-if (resource == 0) return (APTR)0xe7000000;
-if (resource == 1) return (APTR)0xf0000000;
-if (resource == 2) return (APTR)0xef800000;
-#endif
-return (APTR)0;
-#endif
-}
-
-IPTR drm_aros_pci_resource_len(OOP_Object *pciDevice,  unsigned int resource)
-{
-#if !defined(HOSTED_BUILD)    
-    IPTR len = (IPTR)0;
-    
-    if (drm_aros_pci_resource_start(pciDevice, resource) != NULL)
-    {
-        /* 
-         * FIXME:
-         * The length reading is only correct when the resource actually exists.
-         * pci.hidd can however return a non 0 lenght for a resource that does
-         * not exsist. Possible fix in pci.hidd needed
-         */
-        
-        switch(resource)
-        {
-            case(0): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size0, (APTR)&len); break;
-            case(1): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size1, (APTR)&len); break;
-            case(2): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size2, (APTR)&len); break;
-            case(3): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size3, (APTR)&len); break;
-            case(4): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size4, (APTR)&len); break;
-            case(5): OOP_GetAttr(pciDevice, aHidd_PCIDevice_Size5, (APTR)&len); break;
-            default: DRM_ERROR("ResourceID %d not supported\n", resource);
-        }
-    }
-    
-    return len;
-#else
-#if HOSTED_BUILD_CHIPSET >= 0x40
-if (resource == 0) return (IPTR)0x1000000;
-if (resource == 1) return (IPTR)0x10000000;
-if (resource == 3) return (IPTR)0x1000000;
-#else
-if (resource == 0) return (IPTR)0x1000000;
-if (resource == 1) return (IPTR)0x8000000;
-if (resource == 2) return (IPTR)0x80000;
-#endif
-return (IPTR)0;
-#endif
-}
-
-APTR drm_aros_pci_ioremap(OOP_Object *driver, APTR buf, IPTR size)
-{
-#if !defined(HOSTED_BUILD)    
-    struct pHidd_PCIDriver_MapPCI mappci,*msg = &mappci;
-    mappci.mID = OOP_GetMethodID(IID_Hidd_PCIDriver, moHidd_PCIDriver_MapPCI);
-    mappci.PCIAddress = buf;
-    mappci.Length = size;
-    return (APTR)OOP_DoMethod(driver, (OOP_Msg)msg);
-#else
-    /* For better simulation:
-    a) make a list of already "mapped" buffers keyed by APTR buf
-    b) check if a request (buf + size) is inside of already mapped region -> return pointer in mapped region
-    Why: sometimes the same range is mapped more than once (_DRM_REGISTERS)
-    */
-    return AllocMem(size, MEMF_PUBLIC | MEMF_CLEAR); /* This will leak */
-#endif
-}
-
-void drm_aros_pci_iounmap(OOP_Object *driver, APTR buf, IPTR size)
-{
-#if !defined(HOSTED_BUILD)    
-    struct pHidd_PCIDriver_UnmapPCI unmappci,*msg=&unmappci;
-
-    unmappci.mID = OOP_GetMethodID(IID_Hidd_PCIDriver, moHidd_PCIDriver_UnmapPCI);
-    unmappci.CPUAddress = buf;
-    unmappci.Length = size;
-
-    OOP_DoMethod(driver, (OOP_Msg)msg);
-#else
-    /* If "better simulation" is implemented (see drm_aros_pci_ioremap) memory
-    can only be freed if there is no other mappings to this buffer */
-    FreeMem(buf, size);
-#endif    
-}
-
-dma_addr_t drm_aros_dma_map_buf(APTR buf, IPTR offset, IPTR size)
-{
-    return (dma_addr_t)(buf + offset);
-}
-
-void drm_aros_dma_unmap_buf(dma_addr_t dma_address, IPTR size)
-{
-    /* No Op */
-}

@@ -121,11 +121,7 @@ void ttm_mem_reg_iounmap(struct ttm_bo_device *bdev, struct ttm_mem_reg *mem,
 	man = &bdev->man[mem->mem_type];
 
 	if (virtual && (man->flags & TTM_MEMTYPE_FLAG_NEEDS_IOREMAP))
-#if !defined(__AROS__)
 		iounmap(virtual);
-#else
-        iounmap_helper(virtual, mem->size);
-#endif
 }
 
 static int ttm_copy_io_page(void *dst, void *src, unsigned long page)
@@ -424,9 +420,6 @@ static int ttm_bo_ioremap(struct ttm_buffer_object *bo,
 			map->virtual = ioremap_nocache(bus_base + bus_offset,
 						       bus_size);
 	}
-#if defined(__AROS__)
-    map->size = bus_size;
-#endif
 	return (!map->virtual) ? -ENOMEM : 0;
 }
 
@@ -476,9 +469,6 @@ static int ttm_bo_kmap_ttm(struct ttm_buffer_object *bo,
 		map->virtual = vmap(ttm->pages + start_page, num_pages,
 				    0, prot);
 	}
-#if defined(__AROS__)
-    map->size = num_pages << PAGE_SHIFT;
-#endif
 	return (!map->virtual) ? -ENOMEM : 0;
 }
 
@@ -521,11 +511,7 @@ void ttm_bo_kunmap(struct ttm_bo_kmap_obj *map)
 		return;
 	switch (map->bo_kmap_type) {
 	case ttm_bo_map_iomap:
-#if !defined(__AROS__)
 		iounmap(map->virtual);
-#else
-        iounmap_helper(map->virtual, map->size);
-#endif
 		break;
 	case ttm_bo_map_vmap:
 		vunmap(map->virtual);
@@ -540,9 +526,6 @@ void ttm_bo_kunmap(struct ttm_bo_kmap_obj *map)
 	}
 	map->virtual = NULL;
 	map->page = NULL;
-#if defined(__AROS__)
-    map->size = 0L;
-#endif
 }
 EXPORT_SYMBOL(ttm_bo_kunmap);
 

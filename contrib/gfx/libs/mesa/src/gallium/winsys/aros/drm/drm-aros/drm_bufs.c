@@ -7,13 +7,13 @@
 
 resource_size_t drm_get_resource_len(struct drm_device *dev, unsigned int resource)
 {
-    return (resource_size_t)drm_aros_pci_resource_len(dev->pciDevice, resource);
+    return (resource_size_t)pci_resource_len(dev->pdev, resource);
 }
 
 resource_size_t drm_get_resource_start(struct drm_device *dev,
                         unsigned int resource)
 {
-    return (resource_size_t)drm_aros_pci_resource_start(dev->pciDevice, resource);
+    return (resource_size_t)pci_resource_start(dev->pdev, resource);
 }
 
 // static int drm_addmap_core(struct drm_device *dev, unsigned int offset,

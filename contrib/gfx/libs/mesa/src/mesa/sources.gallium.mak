@@ -39,7 +39,6 @@ AROS_DRM_SOURCES = \
             winsys/aros/drm/drm-changed/drm_cache \
             winsys/aros/drm/drm-changed/nouveau/nouveau_state \
             winsys/aros/drm/drm-changed/nouveau/nouveau_mem \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_channel_renamed \
             winsys/aros/drm/drm-changed/nouveau/nouveau_fence \
             winsys/aros/drm/drm-changed/nouveau/nouveau_sgdma \
             winsys/aros/drm/drm-changed/nouveau/nouveau_ttm \
@@ -54,6 +53,7 @@ AROS_DRM_SOURCES = \
             winsys/aros/drm/drm-changed/ttm/ttm_bo_util \
             winsys/aros/drm/drm-changed/ttm/ttm_tt \
             winsys/aros/drm/drm-changed/ttm/ttm_agp_backend \
+            winsys/aros/drm/drm-unchanged/nouveau/nouveau_channel_renamed \
             winsys/aros/drm/drm-unchanged/nouveau/nouveau_bo_renamed \
             winsys/aros/drm/drm-unchanged/nouveau/nouveau_dma \
             winsys/aros/drm/drm-unchanged/nouveau/nouveau_object \

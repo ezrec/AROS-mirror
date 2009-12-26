@@ -1509,11 +1509,7 @@ out_workqueue_free:
 out_iomapfree:
 //FIXME	io_mapping_free(dev_priv->mm.gtt_mapping);
 out_rmmap:
-#if !defined(__AROS__)
 	iounmap(dev_priv->regs);
-#else
-    iounmap_helper(dev_priv->regs, size);
-#endif
 put_bridge:
 //FIXME	pci_dev_put(dev_priv->bridge_dev);
 free_priv:
