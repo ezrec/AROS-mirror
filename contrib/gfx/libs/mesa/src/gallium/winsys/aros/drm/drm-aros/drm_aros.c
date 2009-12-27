@@ -14,7 +14,8 @@
 
 OOP_AttrBase __IHidd_PCIDev = 0;
 struct Library * OOPBase = NULL;
-OOP_Object * pciDriver = NULL; 
+OOP_Object * pciDriver = NULL;
+OOP_Object * pci = NULL;
 
 AROS_UFH3(void, Enumerator,
     AROS_UFHA(struct Hook *, hook, A0),
@@ -94,9 +95,9 @@ find_card(struct drm_device *dev)
 
     DRM_DEBUG("Creating PCI object\n");
 
-    dev->pci = OOP_NewObject(NULL, CLID_Hidd_PCI, NULL);
+    pci = OOP_NewObject(NULL, CLID_Hidd_PCI, NULL);
 
-    if (dev->pci)
+    if (pci)
     {
         struct Hook FindHook = {
         h_Entry:    (IPTR (*)())Enumerator,
@@ -117,28 +118,31 @@ find_card(struct drm_device *dev)
         requirements:   (struct TagItem*)&Requirements,
         }, *msg = &enummsg;
         DRM_DEBUG("Calling search Hook\n");
-        OOP_DoMethod(dev->pci, (OOP_Msg)msg);
+        OOP_DoMethod(pci, (OOP_Msg)msg);
     }
 }
 
 LONG drm_aros_find_supported_video_card(struct drm_device *dev)
 {
     /* FIXME: What if they had values? memory leaks? */
-    dev->pci = NULL;
     dev->pdev = NULL;
+    pci = NULL;
     pciDriver = NULL;
     OOPBase = NULL;
     
     find_card(dev);
 
     /* If objects are set, detection was succesful */
-    if (dev->pci && dev->pdev && pciDriver)
+    if (pci && dev->pdev && pciDriver)
     {
         DRM_INFO("Detected card: 0x%x/0x%x\n", dev->pci_vendor, dev->pci_device);
         return 0;
     }
     else
+    {
+        DRM_ERROR("Failed detecting card for VendorID: 0x%x\n", dev->driver->VendorID);
         return -1;
+    }
 }
 
 void drm_aros_pci_shutdown(struct drm_device *dev)
@@ -158,10 +162,10 @@ void drm_aros_pci_shutdown(struct drm_device *dev)
             DRM_ERROR("IRQ handler not freed\n");
         }
 
-        if (dev->pci)
+        if (pci)
         {
-            OOP_DisposeObject(dev->pci);
-            dev->pci = NULL;
+            OOP_DisposeObject(pci);
+            pci = NULL;
         }
         
         dev->pdev = NULL;

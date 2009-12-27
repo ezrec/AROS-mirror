@@ -179,7 +179,11 @@ typedef struct drm_i915_private {
 
 	void __iomem *regs;
 
+#if !defined(__AROS__)
 	struct pci_dev *bridge_dev;
+#else
+    void * bridge_dev; /* This is a pointer to OOP_Object */
+#endif
 	drm_i915_ring_buffer_t ring;
 
 	drm_dma_handle_t *status_page_dmah;

@@ -742,11 +742,14 @@ DRM_IMPL("Calling *_display_destroy\n");
 		nouveau_close(dev);
 	}
 
-	iounmap(dev_priv->mmio);
-	iounmap(dev_priv->ramin);
-    
-	kfree(dev_priv);
-	dev->dev_private = NULL;
+    if (dev_priv)
+    {
+	    iounmap(dev_priv->mmio);
+	    iounmap(dev_priv->ramin);
+        
+	    kfree(dev_priv);
+	    dev->dev_private = NULL;
+	}
 	return 0;
 }
 

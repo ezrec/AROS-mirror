@@ -118,6 +118,7 @@ int i915_wrap_ring(struct drm_device *dev)
 
 	return 0;
 }
+#endif
 
 /**
  * Sets up the hardware status page for devices that need a physical address
@@ -144,6 +145,7 @@ static int i915_init_phys_hws(struct drm_device *dev)
 	return 0;
 }
 
+#if !defined(__AROS__)
 /**
  * Frees the hardware status page, whether it's a physical address or a virtual
  * address set up by the X Server.
@@ -909,6 +911,7 @@ static int i915_set_status_page(struct drm_device *dev, void *data,
 				dev_priv->hw_status_page);
 	return 0;
 }
+#endif
 
 static int i915_get_bridge_dev(struct drm_device *dev)
 {
@@ -947,11 +950,19 @@ static int i915_probe_agp(struct drm_device *dev, uint32_t *aperture_size,
 	*aperture_size = 1024 * 1024;
 	*preallocated_size = 1024 * 1024;
 
+#if !defined(__AROS__)
 	switch (dev->pdev->device) {
 	case PCI_DEVICE_ID_INTEL_82830_CGC:
 	case PCI_DEVICE_ID_INTEL_82845G_IG:
 	case PCI_DEVICE_ID_INTEL_82855GM_IG:
 	case PCI_DEVICE_ID_INTEL_82865_IG:
+#else
+    switch(dev->pci_device) {
+    case 0x3577:
+    case 0x2562:
+    case 0x3582:
+    case 0x2572:
+#endif
 		if ((tmp & INTEL_GMCH_MEM_MASK) == INTEL_GMCH_MEM_64M)
 			*aperture_size *= 64;
 		else
@@ -1034,6 +1045,7 @@ static int i915_probe_agp(struct drm_device *dev, uint32_t *aperture_size,
 #define PTE_MAPPING_TYPE_MASK		(3 << 1)
 #define PTE_VALID			(1 << 0)
 
+#if !defined(__AROS__)
 /**
  * i915_gtt_to_phys - take a GTT address and turn it into a physical one
  * @dev: drm device
@@ -1381,10 +1393,10 @@ int i915_driver_load(struct drm_device *dev, unsigned long flags)
 	base = drm_get_resource_start(dev, mmio_bar);
 	size = drm_get_resource_len(dev, mmio_bar);
 
-//FIXME	if (i915_get_bridge_dev(dev)) {
-//FIXME		ret = -EIO;
-//FIXME		goto free_priv;
-//FIXME	}
+	if (i915_get_bridge_dev(dev)) {
+		ret = -EIO;
+		goto free_priv;
+	}
 
 	dev_priv->regs = ioremap(base, size);
 	if (!dev_priv->regs) {
@@ -1415,9 +1427,9 @@ int i915_driver_load(struct drm_device *dev, unsigned long flags)
 //FIXME			 "performance may suffer.\n");
 //FIXME	}
 
-//FIXME	ret = i915_probe_agp(dev, &agp_size, &prealloc_size, &prealloc_start);
-//FIXME	if (ret)
-//FIXME		goto out_iomapfree;
+	ret = i915_probe_agp(dev, &agp_size, &prealloc_size, &prealloc_start);
+	if (ret)
+		goto out_iomapfree;
 
 //FIXME	dev_priv->wq = create_workqueue("i915");
 //FIXME	if (dev_priv->wq == NULL) {
@@ -1448,11 +1460,11 @@ int i915_driver_load(struct drm_device *dev, unsigned long flags)
 	i915_gem_load(dev);
 
 	/* Init HWS */
-//FIXME	if (!I915_NEED_GFX_HWS(dev)) {
-//FIXME		ret = i915_init_phys_hws(dev);
-//FIXME		if (ret != 0)
-//FIXME			goto out_workqueue_free;
-//FIXME	}
+	if (!I915_NEED_GFX_HWS(dev)) {
+		ret = i915_init_phys_hws(dev);
+		if (ret != 0)
+			goto out_workqueue_free;
+	}
 
 	i915_get_mem_freq(dev);
 
@@ -1467,8 +1479,13 @@ int i915_driver_load(struct drm_device *dev, unsigned long flags)
 	 * be lost or delayed, but we use them anyways to avoid
 	 * stuck interrupts on some machines.
 	 */
-//FIXME	if (!IS_I945G(dev) && !IS_I945GM(dev))
-//FIXME		pci_enable_msi(dev->pdev);
+	if (!IS_I945G(dev) && !IS_I945GM(dev))
+#if !defined(__AROS__)
+		pci_enable_msi(dev->pdev);
+#else
+//FIXME
+IMPLEMENT("Calling pci_enable_msi\n"); 
+#endif
 
 	spin_lock_init(&dev_priv->user_irq_lock);
 	spin_lock_init(&dev_priv->error_lock);
@@ -1484,7 +1501,7 @@ int i915_driver_load(struct drm_device *dev, unsigned long flags)
 
 	/* Start out suspended */
 	dev_priv->mm.suspended = 1;
-
+asm("int3");
 //FIXME	if (drm_core_check_feature(dev, DRIVER_MODESET)) {
 //FIXME		ret = i915_load_modeset_init(dev, prealloc_start,
 //FIXME					     prealloc_size, agp_size);

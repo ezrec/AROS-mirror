@@ -169,6 +169,7 @@ void idr_init(struct idr *idp)
 }
 
 #include "drm_aros.h"
+#include <aros/libcall.h>
 #include <proto/oop.h>
 #include <hidd/pci.h>
 #include <hidd/hidd.h>
@@ -236,6 +237,7 @@ resource_size_t pci_resource_start(void * pdev, unsigned int resource)
     
     return (resource_size_t)start;
 #else
+#if HOSTED_BUILD_HARDWARE == HOSTED_BUILD_HARDWARE_NVIDIA
 #if HOSTED_BUILD_CHIPSET >= 0x40
 if (resource == 0) return (resource_size_t)0xcf000000;
 if (resource == 1) return (resource_size_t)0xb0000000;
@@ -244,6 +246,13 @@ if (resource == 3) return (resource_size_t)0xce000000;
 if (resource == 0) return (resource_size_t)0xe7000000;
 if (resource == 1) return (resource_size_t)0xf0000000;
 if (resource == 2) return (resource_size_t)0xef800000;
+#endif
+#endif
+#if HOSTED_BUILD_HARDWARE == HOSTED_BUILD_HARDWARE_I915
+if (resource == 0) return (resource_size_t)0x50300000;
+if (resource == 1) return (resource_size_t)0x000030e0;
+if (resource == 2) return (resource_size_t)0x40000000;
+if (resource == 3) return (resource_size_t)0x50380000;
 #endif
 return (resource_size_t)0;
 #endif
@@ -277,6 +286,7 @@ unsigned long pci_resource_len(void * pdev, unsigned int resource)
     
     return len;
 #else
+#if HOSTED_BUILD_HARDWARE == HOSTED_BUILD_HARDWARE_NVIDIA
 #if HOSTED_BUILD_CHIPSET >= 0x40
 if (resource == 0) return (IPTR)0x1000000;
 if (resource == 1) return (IPTR)0x10000000;
@@ -286,7 +296,152 @@ if (resource == 0) return (IPTR)0x1000000;
 if (resource == 1) return (IPTR)0x8000000;
 if (resource == 2) return (IPTR)0x80000;
 #endif
+#endif
+#if HOSTED_BUILD_HARDWARE == HOSTED_BUILD_HARDWARE_I915
+if (resource == 0) return (IPTR)0x80000;
+if (resource == 1) return (IPTR)0x8;
+if (resource == 2) return (IPTR)0x10000000;
+if (resource == 3) return (IPTR)0x40000;
+#endif
 return (IPTR)0;
 #endif
+}
+
+struct GetBusSlotEnumeratorData
+{
+    IPTR Bus;
+    IPTR Dev;
+    IPTR Sub;
+    OOP_Object ** pciDevice;
+};
+
+AROS_UFH3(void, GetBusSlotEnumerator,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(OOP_Object *, pciDevice, A2),
+    AROS_UFHA(APTR, message, A1))
+{
+    AROS_USERFUNC_INIT
+    
+    struct GetBusSlotEnumeratorData * data = hook->h_Data;
+    
+    IPTR Bus;
+    IPTR Dev;
+    IPTR Sub;    
+
+    if (*data->pciDevice)
+        return; /* Already found, should not happen */
+    
+    /* Get the Device's properties */
+    OOP_GetAttr(pciDevice, aHidd_PCIDevice_Bus, &Bus);
+    OOP_GetAttr(pciDevice, aHidd_PCIDevice_Dev, &Dev);
+    OOP_GetAttr(pciDevice, aHidd_PCIDevice_Sub, &Sub);
+
+    if (data->Bus == Bus &&
+        data->Dev == Dev &&
+        data->Sub == Sub)
+    {
+        (*data->pciDevice) = pciDevice;
+    }
+    
+    AROS_USERFUNC_EXIT
+}   
+void * pci_get_bus_and_slot(unsigned int bus, unsigned int dev, unsigned int fun)
+{
+#if !defined(HOSTED_BUILD)
+    OOP_Object * pciDevice = NULL;
+
+    if (pci)
+    {
+        struct GetBusSlotEnumeratorData data = {
+        Bus: bus,
+        Dev: dev,
+        Sub: fun,
+        pciDevice: &pciDevice,
+        };
+        
+        struct Hook FindHook = {
+        h_Entry:    (IPTR (*)())GetBusSlotEnumerator,
+        h_Data:     &data,
+        };
+
+        struct TagItem Requirements[] = {
+        { TAG_DONE,             0UL }
+        };
+    
+        struct pHidd_PCI_EnumDevices enummsg = {
+        mID:        OOP_GetMethodID(IID_Hidd_PCI, moHidd_PCI_EnumDevices),
+        callback:   &FindHook,
+        requirements:   (struct TagItem*)&Requirements,
+        }, *msg = &enummsg;
+        
+        OOP_DoMethod(pci, (OOP_Msg)msg);
+    }
+    
+    return pciDevice;
+#else
+    return AllocVec(1, MEMF_ANY);
+#endif
+}
+
+int pci_read_config_word(void *dev, int where, u16 *val)
+{
+#if !defined(HOSTED_BUILD)
+    struct pHidd_PCIDevice_ReadConfigWord rcwmsg = {
+    mID: OOP_GetMethodID(IID_Hidd_PCIDevice, moHidd_PCIDevice_ReadConfigWord),
+    reg: (UBYTE)where,
+    }, *msg = &rcwmsg;
+    
+    *val = (UWORD)OOP_DoMethod((OOP_Object*)dev, (OOP_Msg)msg);
+#else
+#if HOSTED_BUILD_HARDWARE == HOSTED_BUILD_HARDWARE_I915
+    switch(where)
+    {
+        case 0x52: *val = 48; break;
+        default: *val = 0; IMPLEMENT("check correct value with iMica\n"); break;
+    }
+#endif
+#endif
+    bug("pci_read_config_word: %d -> %d\n", where, *val);
+    
+    return 0;
+}
+
+int pci_read_config_dword(void *dev, int where, u32 *val)
+{
+#if !defined(HOSTED_BUILD)
+    struct pHidd_PCIDevice_ReadConfigLong rclmsg = {
+    mID: OOP_GetMethodID(IID_Hidd_PCIDevice, moHidd_PCIDevice_ReadConfigLong),
+    reg: (UBYTE)where,
+    }, *msg = &rclmsg;
+    
+    *val = (ULONG)OOP_DoMethod((OOP_Object*)dev, (OOP_Msg)msg);
+#else
+#if HOSTED_BUILD_HARDWARE == HOSTED_BUILD_HARDWARE_I915
+    switch(where)
+    {
+        default: *val = 0; IMPLEMENT("check correct value with iMica\n"); break;
+    }
+#endif
+#endif
+    bug("pci_read_config_dword: %d -> %d\n", where, *val);
+    
+    return 0;
+}
+
+int pci_write_config_dword(void *dev, int where, u32 val)
+{
+#if !defined(HOSTED_BUILD)
+    struct pHidd_PCIDevice_WriteConfigLong wclmsg = {
+    mID: OOP_GetMethodID(IID_Hidd_PCIDevice, moHidd_PCIDevice_ReadConfigLong),
+    reg: (UBYTE)where,
+    val: val,
+    }, *msg = &wclmsg;
+    
+    OOP_DoMethod((OOP_Object*)dev, (OOP_Msg)msg);
+#else
+#endif
+    bug("pci_write_config_dword: %d -> %d\n", where, val);
+    
+    return 0;
 }
 

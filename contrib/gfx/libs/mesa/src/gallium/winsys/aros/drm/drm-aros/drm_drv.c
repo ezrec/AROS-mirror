@@ -61,6 +61,10 @@ int drm_init(struct drm_driver * driver)
     ret = drm_aros_find_supported_video_card(dev);
     if (ret)
         return -1;
+#else
+#if HOSTED_BUILD_HARDWARE == HOSTED_BUILD_HARDWARE_I915
+    dev->pci_device = HOSTED_BUILD_PRODUCT_ID;
+#endif
 #endif
 
     if (!dev->driver->load)

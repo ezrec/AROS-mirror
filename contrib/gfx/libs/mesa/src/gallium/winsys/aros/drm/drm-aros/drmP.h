@@ -47,8 +47,9 @@
 
 #define DRM_ERROR(fmt, ...) bug("[" DRM_NAME "(ERROR):%s] " fmt, __func__ , ##__VA_ARGS__)
 #define DRM_DEBUG(fmt, ...) D(bug("[" DRM_NAME "(DEBUG):%s] " fmt, __func__ , ##__VA_ARGS__))
-#define DRM_IMPL(fmt, ...) bug("------IMPLEMENT(%s): " fmt, __func__ , ##__VA_ARGS__)
-#define DRM_INFO(fmt, ...) bug("[" DRM_NAME "(INFO)] " fmt, ##__VA_ARGS__)
+#define DRM_IMPL(fmt, ...)  bug("------IMPLEMENT(%s): " fmt, __func__ , ##__VA_ARGS__)
+#define DRM_INFO(fmt, ...)  bug("[" DRM_NAME "(INFO)] " fmt, ##__VA_ARGS__)
+#define DRM_DEBUG_DRIVER    DRM_DEBUG
 
 
 /*
@@ -214,7 +215,6 @@ struct drm_device
     struct idr object_name_idr;
 
     /* AROS specific fields */
-    OOP_Object              *pci;
     OOP_Object              *pdev;
     HIDDT_IRQ_Handler       *IntHandler;
 };
@@ -304,6 +304,10 @@ int drm_init(struct drm_driver *driver);
 /* drm_irq.c */
 int drm_irq_install(struct drm_device *dev);
 int drm_irq_uninstall(struct drm_device *dev);
+
+/* drm_pci.c */
+drm_dma_handle_t *drm_pci_alloc(struct drm_device *dev, size_t size,
+				       size_t align, dma_addr_t maxaddr);
 
 /* drm_memory.c */
 // void drm_core_ioremap(struct drm_local_map *map, struct drm_device *dev);

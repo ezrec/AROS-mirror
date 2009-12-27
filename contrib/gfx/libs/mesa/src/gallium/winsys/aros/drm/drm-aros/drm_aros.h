@@ -8,7 +8,8 @@
 
 #include <hidd/irq.h>
 extern struct Library   * OOPBase;
-extern OOP_Object       * pciDriver; 
+extern OOP_Object       * pciDriver;
+extern OOP_Object       * pci;
 struct drm_device;
 
 LONG        drm_aros_find_supported_video_card(struct drm_device *dev);

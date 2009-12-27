@@ -36,7 +36,6 @@
 #include "i915_drm.h"
 #include "i915_drv.h"
 
-#if !defined(__AROS__)
 /** @file i915_gem_tiling.c
  *
  * Support for managing tiling state of buffer objects.
@@ -93,6 +92,7 @@
 #define DEVEN_REG 0x54
 #define   DEVEN_MCHBAR_EN (1 << 28)
 
+#if !defined(__AROS__)
 /* Allocate space for the MCH regs if needed, return nonzero on error */
 static int
 intel_alloc_mchbar_resource(struct drm_device *dev)
@@ -226,10 +226,11 @@ i915_gem_detect_bit_6_swizzle(struct drm_device *dev)
 		swizzle_x = I915_BIT_6_SWIZZLE_NONE;
 		swizzle_y = I915_BIT_6_SWIZZLE_NONE;
 	} else if (IS_MOBILE(dev)) {
+#if !defined(__AROS__)
 		uint32_t dcc;
 
 		/* Try to make sure MCHBAR is enabled before poking at it */
-//FIXME		need_disable = intel_setup_mchbar(dev);
+		need_disable = intel_setup_mchbar(dev);
 
 		/* On mobile 9xx chipsets, channel interleave by the CPU is
 		 * determined by DCC.  For single-channel, neither the CPU
@@ -271,7 +272,11 @@ i915_gem_detect_bit_6_swizzle(struct drm_device *dev)
 			swizzle_y = I915_BIT_6_SWIZZLE_UNKNOWN;
 		}
 
-//FIXME		intel_teardown_mchbar(dev, need_disable);
+		intel_teardown_mchbar(dev, need_disable);
+#else
+//FIXME
+IMPLEMENT("MCHBAR support for mobile chipsets\n");
+#endif
 	} else {
 		/* The 965, G33, and newer, have a very flexible memory
 		 * configuration.  It will enable dual-channel mode

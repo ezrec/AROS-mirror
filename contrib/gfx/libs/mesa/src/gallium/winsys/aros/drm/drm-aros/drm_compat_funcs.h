@@ -97,6 +97,13 @@ void * ioremap(resource_size_t offset, unsigned long size);
 void iounmap(void * addr);
 resource_size_t pci_resource_start(void * pdev, unsigned int barnum);
 unsigned long pci_resource_len(void * pdev, unsigned int barnum);
+#define PCI_DEVFN(dev, fun)             dev, fun
+void * pci_get_bus_and_slot(unsigned int bus, unsigned int dev, unsigned int fun);
+int pci_read_config_word(void *dev, int where, u16 *val);
+int pci_read_config_dword(void *dev, int where, u32 *val);
+int pci_write_config_dword(void *dev, int where, u32 val);
+
+
 
 /* Bit operations */
 void clear_bit(int nr, volatile void * addr);
