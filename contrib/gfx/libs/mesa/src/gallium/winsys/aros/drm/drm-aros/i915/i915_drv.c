@@ -8,13 +8,16 @@
 #include "i915_drv.h"
 #include "i915_pciids.h"
 
-extern struct drm_ioctl_desc nouveau_ioctls[];
+/* FIXME: What this does? */
+unsigned int i915_powersave = 0;
+
+//extern struct drm_ioctl_desc 915_ioctls[];
 
 static struct drm_driver driver =
 {
     .VendorID = 0x8086,
     .PciIDs = i915_pciids,
-    .driver_features = DRIVER_MODESET | DRIVER_GEM,
+    .driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_USE_AGP | DRIVER_REQUIRE_AGP,
     .load = i915_driver_load,
 /*    .firstopen = nouveau_firstopen,
     .preclose = nouveau_preclose,

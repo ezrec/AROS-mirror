@@ -36,7 +36,6 @@
 #include <linux/pci.h>
 #endif
 
-#if !defined(__AROS__)
 #define I915_GEM_GPU_DOMAINS	(~(I915_GEM_DOMAIN_CPU | I915_GEM_DOMAIN_GTT))
 
 static void i915_gem_object_flush_gpu_write_domain(struct drm_gem_object *obj);
@@ -80,6 +79,7 @@ int i915_gem_do_init(struct drm_device *dev, unsigned long start,
 	return 0;
 }
 
+#if !defined(__AROS__)
 int
 i915_gem_init_ioctl(struct drm_device *dev, void *data,
 		    struct drm_file *file_priv)
@@ -2357,6 +2357,7 @@ static void i830_write_fence_reg(struct drm_i915_fence_reg *reg)
 
 	I915_WRITE(FENCE_REG_830_0 + (regnum * 4), val);
 }
+#endif
 
 /**
  * i915_gem_object_get_fence_reg - set up a fence reg for an object
@@ -2374,6 +2375,7 @@ static void i830_write_fence_reg(struct drm_i915_fence_reg *reg)
 int
 i915_gem_object_get_fence_reg(struct drm_gem_object *obj)
 {
+#if !defined(__AROS__)
 	struct drm_device *dev = obj->dev;
 	struct drm_i915_private *dev_priv = dev->dev_private;
 	struct drm_i915_gem_object *obj_priv = obj->driver_private;
@@ -2487,10 +2489,15 @@ i915_gem_object_get_fence_reg(struct drm_gem_object *obj)
 		i830_write_fence_reg(reg);
 
 	trace_i915_gem_object_get_fence(obj, i, obj_priv->tiling_mode);
+#else
+//FIXME
+IMPLEMENT("\n");
+#endif
 
 	return 0;
 }
 
+#if !defined(__AROS__)
 /**
  * i915_gem_clear_fence_reg - clear out fence register info
  * @obj: object to clear
@@ -2559,6 +2566,7 @@ i915_gem_object_put_fence_reg(struct drm_gem_object *obj)
 
 	return 0;
 }
+#endif
 
 /**
  * Finds free space in the GTT aperture and binds the object there.
@@ -2566,6 +2574,7 @@ i915_gem_object_put_fence_reg(struct drm_gem_object *obj)
 static int
 i915_gem_object_bind_to_gtt(struct drm_gem_object *obj, unsigned alignment)
 {
+#if !defined(__AROS__)
 	struct drm_device *dev = obj->dev;
 	drm_i915_private_t *dev_priv = dev->dev_private;
 	struct drm_i915_gem_object *obj_priv = obj->driver_private;
@@ -2679,10 +2688,15 @@ i915_gem_object_bind_to_gtt(struct drm_gem_object *obj, unsigned alignment)
 	BUG_ON(obj->write_domain & I915_GEM_GPU_DOMAINS);
 
 	trace_i915_gem_object_bind(obj, obj_priv->gtt_offset);
+#else
+//FIXME
+IMPLEMENT("\n");
+#endif
 
 	return 0;
 }
 
+#if !defined(__AROS__)
 void
 i915_gem_clflush_object(struct drm_gem_object *obj)
 {
@@ -2763,6 +2777,7 @@ i915_gem_object_flush_cpu_write_domain(struct drm_gem_object *obj)
 					    obj->read_domains,
 					    old_write_domain);
 }
+#endif
 
 /**
  * Moves a single object to the GTT read, and possibly write domain.
@@ -2773,6 +2788,7 @@ i915_gem_object_flush_cpu_write_domain(struct drm_gem_object *obj)
 int
 i915_gem_object_set_to_gtt_domain(struct drm_gem_object *obj, int write)
 {
+#if !defined(__AROS__)
 	struct drm_i915_gem_object *obj_priv = obj->driver_private;
 	uint32_t old_write_domain, old_read_domains;
 	int ret;
@@ -2811,10 +2827,15 @@ i915_gem_object_set_to_gtt_domain(struct drm_gem_object *obj, int write)
 	trace_i915_gem_object_change_domain(obj,
 					    old_read_domains,
 					    old_write_domain);
+#else
+//FIXME
+IMPLEMENT("\n");
+#endif
 
 	return 0;
 }
 
+#if !defined(__AROS__)
 /**
  * Moves a single object to the CPU read, and possibly write domain.
  *
@@ -3167,6 +3188,7 @@ i915_gem_object_set_cpu_read_domain_range(struct drm_gem_object *obj,
 
 	return 0;
 }
+#endif
 
 /**
  * Pin an object to the GTT and evaluate the relocations landing in it.
@@ -3311,6 +3333,7 @@ i915_gem_object_pin_and_relocate(struct drm_gem_object *obj,
 			return -EINVAL;
 		}
 
+#if !defined(__AROS__)
 		/* Map the page containing the relocation we're going to
 		 * perform.
 		 */
@@ -3329,6 +3352,12 @@ i915_gem_object_pin_and_relocate(struct drm_gem_object *obj,
 #endif
 		writel(reloc_val, reloc_entry);
 		io_mapping_unmap_atomic(reloc_page);
+#else
+//FIXME
+IMPLEMENT("CRITICAL!\n");
+IMPLEMENT("CRITICAL!\n");
+IMPLEMENT("CRITICAL!\n");
+#endif
 
 		/* The updated presumed offset for this entry will be
 		 * copied back out to the user.
@@ -3345,6 +3374,7 @@ i915_gem_object_pin_and_relocate(struct drm_gem_object *obj,
 	return 0;
 }
 
+#if !defined(__AROS__)
 /** Dispatch a batchbuffer to the ring
  */
 static int
@@ -3853,6 +3883,7 @@ pre_mutex_err:
 
 	return ret;
 }
+#endif
 
 int
 i915_gem_object_pin(struct drm_gem_object *obj, uint32_t alignment)
@@ -3925,6 +3956,7 @@ i915_gem_object_unpin(struct drm_gem_object *obj)
 	i915_verify_inactive(dev, __FILE__, __LINE__);
 }
 
+#if !defined(__AROS__)
 int
 i915_gem_pin_ioctl(struct drm_device *dev, void *data,
 		   struct drm_file *file_priv)
@@ -4317,6 +4349,7 @@ i915_gem_idle(struct drm_device *dev)
 
 	return 0;
 }
+#endif
 
 static int
 i915_gem_init_hws(struct drm_device *dev)
@@ -4517,6 +4550,7 @@ i915_gem_cleanup_ringbuffer(struct drm_device *dev)
 	i915_gem_cleanup_hws(dev);
 }
 
+#if !defined(__AROS__)
 int
 i915_gem_entervt_ioctl(struct drm_device *dev, void *data,
 		       struct drm_file *file_priv)

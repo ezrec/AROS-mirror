@@ -94,3 +94,11 @@ static inline void list_del_init(struct list_head *entry)
 
 #define list_first_entry(ptr, type, member) \
     list_entry((ptr)->next, type, member)
+
+static inline void list_move_tail(struct list_head *list,
+				  struct list_head *head)
+{
+	list_del(list);
+	list_add_tail(list, head);
+}
+

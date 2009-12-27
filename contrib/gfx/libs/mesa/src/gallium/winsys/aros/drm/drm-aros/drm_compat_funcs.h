@@ -128,6 +128,11 @@ static inline int atomic_add_return(int i, atomic_t *v)
     return __sync_add_and_fetch(&v->count, i);
 }
 
+static inline void atomic_add(int i, atomic_t *v)
+{
+    (void)__sync_add_and_fetch(&v->count, i);
+}
+
 static inline void atomic_inc(atomic_t *v)
 {
     __sync_add_and_fetch(&v->count, 1);
@@ -143,7 +148,12 @@ static inline int atomic_read(atomic_t *v)
     return v->count;
 }
 
-static inline void atomic_dec(atomic_t * v)
+static inline void atomic_sub(int i, atomic_t *v)
+{
+    (void)__sync_sub_and_fetch(&v->count, i);
+}
+
+static inline void atomic_dec(atomic_t *v)
 {
     __sync_sub_and_fetch(&v->count, 1);
 }

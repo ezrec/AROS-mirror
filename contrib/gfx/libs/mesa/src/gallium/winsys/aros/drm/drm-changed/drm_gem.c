@@ -91,8 +91,10 @@ drm_gem_init(struct drm_device *dev)
 #if !defined(__AROS__)
 	atomic_set(&dev->object_count, 0);
 	atomic_set(&dev->object_memory, 0);
+#endif
 	atomic_set(&dev->pin_count, 0);
 	atomic_set(&dev->pin_memory, 0);
+#if !defined(__AROS__)
 	atomic_set(&dev->gtt_count, 0);
 	atomic_set(&dev->gtt_memory, 0);
 

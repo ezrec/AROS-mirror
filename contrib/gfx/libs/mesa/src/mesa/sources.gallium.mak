@@ -25,7 +25,6 @@ AROS_LIBDRM_SOURCES = \
             winsys/aros/drm/libdrm/arosdrm \
 
 AROS_DRM_SOURCES = \
-            winsys/aros/drm/drm-aros/drm_memory \
             winsys/aros/drm/drm-aros/drm_aros \
             winsys/aros/drm/drm-aros/drm_bufs \
             winsys/aros/drm/drm-aros/drm_irq \
@@ -38,6 +37,7 @@ AROS_DRM_SOURCES = \
             winsys/aros/drm/drm-changed/drm_mm \
             winsys/aros/drm/drm-changed/drm_gem \
             winsys/aros/drm/drm-changed/drm_cache \
+            winsys/aros/drm/drm-changed/drm_memory \
             winsys/aros/drm/drm-changed/nouveau/nouveau_state \
             winsys/aros/drm/drm-changed/nouveau/nouveau_mem \
             winsys/aros/drm/drm-changed/nouveau/nouveau_fence \

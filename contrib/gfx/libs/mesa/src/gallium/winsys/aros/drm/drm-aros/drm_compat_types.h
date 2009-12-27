@@ -65,6 +65,10 @@ struct page
 struct work_struct;
 struct agp_bridge_data;
 
+#define AGP_USER_MEMORY         1
+#define AGP_USER_CACHED_MEMORY  2
+#define ERESTARTSYS             782434897 /* Just some random value */
+
 /* Reference counted objects implementation */
 struct kref
 {

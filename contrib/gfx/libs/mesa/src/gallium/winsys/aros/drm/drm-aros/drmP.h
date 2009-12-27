@@ -156,6 +156,11 @@ struct drm_agp_head {
     unsigned long page_mask;
 };
 
+struct drm_mode_config
+{
+    resource_size_t fb_base;
+};
+
 struct drm_pciid 
 {
     UWORD VendorID;
@@ -164,6 +169,8 @@ struct drm_pciid
 
 /* Contains a collection of functions common to each drm driver */
 
+#define DRIVER_USE_AGP     0x1
+#define DRIVER_REQUIRE_AGP 0x2
 #define DRIVER_GEM         0x1000
 #define DRIVER_MODESET     0x2000
 
@@ -209,10 +216,14 @@ struct drm_device
     struct mutex  struct_mutex;
     
     struct address_space *dev_mapping;
+    struct drm_mode_config mode_config;
     
     /* GEM information */
     spinlock_t object_name_lock;
     struct idr object_name_idr;
+    uint32_t gtt_total;
+    atomic_t pin_count;
+    atomic_t pin_memory;
 
     /* AROS specific fields */
     OOP_Object              *pdev;
@@ -266,8 +277,31 @@ struct drm_gem_object
      */
     int name;
     
+    /**
+     * Memory domains. These monitor which caches contain read/write data
+     * related to the object. When transitioning from one set of domains
+     * to another, the driver is called to ensure that caches are suitably
+     * flushed and invalidated
+     */
+    uint32_t read_domains;
+    uint32_t write_domain;
+
+    /**
+     * While validating an exec operation, the
+     * new read/write domain values are computed here.
+     * They will be transferred to the above values
+     * at the point that any cache flushing occurs
+     */
+    uint32_t pending_read_domains;
+    uint32_t pending_write_domain;
+
     void *driver_private;
 };
+
+static inline int drm_core_has_AGP(struct drm_device *dev)
+{
+	return drm_core_check_feature(dev, DRIVER_USE_AGP);
+}
 
 static __inline__ int drm_device_is_agp(struct drm_device *dev)
 {
@@ -310,8 +344,9 @@ drm_dma_handle_t *drm_pci_alloc(struct drm_device *dev, size_t size,
 				       size_t align, dma_addr_t maxaddr);
 
 /* drm_memory.c */
-// void drm_core_ioremap(struct drm_local_map *map, struct drm_device *dev);
-// void drm_core_ioremapfree(struct drm_map *map, struct drm_device *dev);
+void drm_core_ioremap(struct drm_local_map *map, struct drm_device *dev);
+void drm_core_ioremap_wc(struct drm_local_map *map, struct drm_device *dev);
+void drm_core_ioremapfree(struct drm_local_map *map, struct drm_device *dev);
 // void *drm_calloc(size_t nmemb, size_t size, int area);
 // /* FIXME: make them inline? */
 // void *drm_alloc(size_t size, int area);

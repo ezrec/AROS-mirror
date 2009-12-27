@@ -166,6 +166,7 @@ static void i915_free_hws(struct drm_device *dev)
 	/* Need to rewrite hardware status page */
 	I915_WRITE(HWS_PGA, 0x1ffff000);
 }
+#endif
 
 void i915_kernel_lost_context(struct drm_device * dev)
 {
@@ -180,6 +181,7 @@ void i915_kernel_lost_context(struct drm_device * dev)
 	if (drm_core_check_feature(dev, DRIVER_MODESET))
 		return;
 
+#if !defined(__AROS__)
 	ring->head = I915_READ(PRB0_HEAD) & HEAD_ADDR;
 	ring->tail = I915_READ(PRB0_TAIL) & TAIL_ADDR;
 	ring->space = ring->head - (ring->tail + 8);
@@ -192,8 +194,13 @@ void i915_kernel_lost_context(struct drm_device * dev)
 	master_priv = dev->primary->master->driver_priv;
 	if (ring->head == ring->tail && master_priv->sarea_priv)
 		master_priv->sarea_priv->perf_boxes |= I915_BOX_RING_EMPTY;
+#else
+//FIXME
+IMPLEMENT("\n");
+#endif
 }
 
+#if !defined(__AROS__)
 static int i915_dma_cleanup(struct drm_device * dev)
 {
 	drm_i915_private_t *dev_priv = dev->dev_private;
@@ -1198,6 +1205,7 @@ static unsigned int i915_vga_set_decode(void *cookie, bool state)
 	else
 		return VGA_RSRC_NORMAL_IO | VGA_RSRC_NORMAL_MEM;
 }
+#endif
 
 static int i915_load_modeset_init(struct drm_device *dev,
 				  unsigned long prealloc_start,
@@ -1207,7 +1215,7 @@ static int i915_load_modeset_init(struct drm_device *dev,
 	struct drm_i915_private *dev_priv = dev->dev_private;
 	int fb_bar = IS_I9XX(dev) ? 2 : 0;
 	int ret = 0;
-
+asm("int3");
 	dev->mode_config.fb_base = drm_get_resource_start(dev, fb_bar) &
 		0xff000000;
 
@@ -1245,6 +1253,7 @@ static int i915_load_modeset_init(struct drm_device *dev,
 
 	/* Try to set up FBC with a reasonable compressed buffer size */
 	if (I915_HAS_FBC(dev) && i915_powersave) {
+#if !defined(__AROS__)
 		int cfb_size;
 
 		/* Try to get an 8M buffer... */
@@ -1253,20 +1262,34 @@ static int i915_load_modeset_init(struct drm_device *dev,
 		else /* fall back to 7/8 of the stolen space */
 			cfb_size = prealloc_size * 7 / 8;
 		i915_setup_compression(dev, cfb_size);
+#else
+//FIXME
+IMPLEMENT("Calling i915_setup_compression\n");
+#endif
 	}
 
 	/* Allow hardware batchbuffers unless told otherwise.
 	 */
 	dev_priv->allow_batchbuffer = 1;
 
+#if !defined(__AROS__)
 	ret = intel_init_bios(dev);
 	if (ret)
 		DRM_INFO("failed to find VBIOS tables\n");
+#else
+//FIXME
+IMPLEMENT("Calling intel_init_bios\n");
+#endif
 
+#if !defined(__AROS__)
 	/* if we have > 1 VGA cards, then disable the radeon VGA resources */
 	ret = vga_client_register(dev->pdev, dev, NULL, i915_vga_set_decode);
 	if (ret)
 		goto destroy_ringbuffer;
+#else
+//FIXME
+IMPLEMENT("Calling vga_client_register\n");
+#endif
 
 	ret = drm_irq_install(dev);
 	if (ret)
@@ -1274,7 +1297,12 @@ static int i915_load_modeset_init(struct drm_device *dev,
 
 	/* Always safe in the mode setting case. */
 	/* FIXME: do pre/post-mode set stuff in core KMS code */
+#if !defined(__AROS__)
 	dev->vblank_disable_allowed = 1;
+#else
+//FIXME
+IMPLEMENT("dev->vblank_disable_allowed = 1;\n");
+#endif
 
 	/*
 	 * Initialize the hardware status page IRQ location.
@@ -1282,9 +1310,19 @@ static int i915_load_modeset_init(struct drm_device *dev,
 
 	I915_WRITE(INSTPM, (1 << 5) | (1 << 21));
 
+#if !defined(__AROS__)
 	intel_modeset_init(dev);
+#else
+//FIXME
+IMPLEMENT("Calling intel_modeset_init(dev);\n");
+#endif
 
+#if !defined(__AROS__)
 	drm_helper_initial_config(dev);
+#else
+//FIXME
+IMPLEMENT("Calling drm_helper_initial_config(dev);\n");
+#endif
 
 	return 0;
 
@@ -1294,6 +1332,7 @@ out:
 	return ret;
 }
 
+#if !defined(__AROS__)
 int i915_master_create(struct drm_device *dev, struct drm_master *master)
 {
 	struct drm_i915_master_private *master_priv;
@@ -1501,16 +1540,16 @@ IMPLEMENT("Calling pci_enable_msi\n");
 
 	/* Start out suspended */
 	dev_priv->mm.suspended = 1;
-asm("int3");
-//FIXME	if (drm_core_check_feature(dev, DRIVER_MODESET)) {
-//FIXME		ret = i915_load_modeset_init(dev, prealloc_start,
-//FIXME					     prealloc_size, agp_size);
-//FIXME		if (ret < 0) {
-//FIXME			DRM_ERROR("failed to init modeset\n");
-//FIXME			goto out_workqueue_free;
-//FIXME		}
-//FIXME	}
 
+	if (drm_core_check_feature(dev, DRIVER_MODESET)) {
+		ret = i915_load_modeset_init(dev, prealloc_start,
+					     prealloc_size, agp_size);
+		if (ret < 0) {
+			DRM_ERROR("failed to init modeset\n");
+			goto out_workqueue_free;
+		}
+	}
+asm("int3");
 	/* Must be done after probing outputs */
 	/* FIXME: verify on IGDNG */
 //FIXME	if (!IS_IGDNG(dev))
