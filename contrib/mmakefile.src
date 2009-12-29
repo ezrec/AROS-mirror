@@ -19,7 +19,6 @@ include $(TOP)/config/make.cfg
 #MM- contrib-complete : contrib-gnu
 #MM- contrib-complete : contrib-networking
 #MM- contrib-complete : contrib-pack-bzip2
-#MM- contrib-complete : contrib-feelin
 #MM- contrib-complete : contrib-scout
 #MM- contrib-complete : contrib-multimedia
 
