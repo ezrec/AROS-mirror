@@ -9,12 +9,47 @@
 #endif
 #include <exec/types.h>
 
-inline WORD bfffo(ULONG data, WORD bitoffset);
-inline WORD bfflo(ULONG data, WORD bitoffset);
-inline WORD bfflz(ULONG data, WORD bitoffset);
-inline WORD bfffz(ULONG data, WORD bitoffset);
-inline ULONG bfset(ULONG data, WORD bitoffset, WORD bits);
-inline ULONG bfclr(ULONG data, WORD bitoffset, WORD bits);
+#if defined __i386__
+static inline LONG fls(ULONG mask)
+{
+    LONG bit = -1;
+
+    if (mask)
+        asm volatile("bsr %1, %0":"=r"(bit):"rm"(mask));
+
+    return (bit + 1);
+}
+#else
+static inline LONG fls(ULONG mask)
+{
+    LONG bit;
+
+    if (mask == 0)
+    return (0);
+
+    for (bit = 1; mask != 1; bit++)
+        mask = mask >> 1;
+
+    return (bit);
+}
+#endif
+
+/* Finds first set bit in /data/ starting at /bitoffset/.  This function
+   considers the MSB to be the first bit. */
+static inline WORD bfffo(ULONG data, WORD bitoffset)
+{
+    ULONG mask = 0xffffffff >> bitoffset;
+    data &= mask;
+    return data == 0 ? 32 : 32-fls(data);
+}
+
+/* Finds first zero bit in /data/ starting at /bitoffset/.  This function
+   considers the MSB to be the first bit. */
+static inline WORD bfffz(ULONG data, WORD bitoffset)
+{
+    return bfffo(~data, bitoffset);
+}
+
 ULONG bfcnto(ULONG v);
 ULONG bfcntz(ULONG v);
 LONG bmflo(ULONG *bitmap, LONG bitoffset);

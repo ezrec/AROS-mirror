@@ -91,7 +91,7 @@ struct CacheBuffer *findlatestcachebuffer(BLCK blckno) {
 
 
 
-void __inline mrucachebuffer(struct CacheBuffer *cb) {
+static __inline void mrucachebuffer(struct CacheBuffer *cb) {
 
   /* Moves the passed in CacheBuffer to the end of the LRU list.
      This means it becomes the MRU CacheBuffer. */
@@ -624,8 +624,8 @@ void killunlockedcachebuffers(void) {
 
     if(!(
         (cb->locked>0) ||
-        (((cb->bits & (CB_ORIGINAL|CB_LATEST)))==CB_ORIGINAL) &&
-        (findlatestcachebuffer(cb->blckno)!=0)
+        ((((cb->bits & (CB_ORIGINAL|CB_LATEST)))==CB_ORIGINAL) &&
+        (findlatestcachebuffer(cb->blckno)!=0))
         ))
     {
       clearcachebuffer(cb);

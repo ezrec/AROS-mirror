@@ -1,5 +1,3 @@
-#include "asmsupport.h"
-
 #include <dos/dos.h>
 #include <exec/types.h>
 

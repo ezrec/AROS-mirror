@@ -18,16 +18,6 @@
 #include "debug.h"
 
 #if defined __i386__
-static inline LONG fls(ULONG mask)
-{
-    LONG bit = -1;
-
-    if (mask)
-        asm volatile("bsr %1, %0":"=r"(bit):"rm"(mask));
-
-    return (bit + 1);
-}
-
 static inline LONG frs(ULONG mask)
 {
     LONG bit = 0;
@@ -39,19 +29,6 @@ static inline LONG frs(ULONG mask)
 }
 
 #else
-static inline LONG fls(ULONG mask)
-{
-    LONG bit;
-
-    if (mask == 0)
-    return (0);
-
-    for (bit = 1; mask != 1; bit++)
-        mask = mask >> 1;
-
-    return (bit);
-}
-
 static inline LONG frs(ULONG mask)
 {
     LONG bit;
@@ -66,18 +43,9 @@ static inline LONG frs(ULONG mask)
 }
 #endif
 
-/* Finds first set bit in /data/ starting at /bitoffset/.  This function
-   considers the MSB to be the first bit. */
-inline WORD bfffo(ULONG data, WORD bitoffset)
-{
-    ULONG mask = 0xffffffff >> bitoffset;
-    data &= mask;
-    return data == 0 ? 32 : 32-fls(data);
-}
-
 /* Finds last set bit in /data/ starting at /bitoffset/.  This function
    considers the MSB to be the first bit. */
-inline WORD bfflo(ULONG data, WORD bitoffset)
+static inline WORD bfflo(ULONG data, WORD bitoffset)
 {
     ULONG mask = 0xffffffff << (31-bitoffset);
     data &= mask;
@@ -86,21 +54,14 @@ inline WORD bfflo(ULONG data, WORD bitoffset)
 
 /* Finds last zero bit in /data/ starting at /bitoffset/.  This function
    considers the MSB to be the first bit. */
-inline WORD bfflz(ULONG data, WORD bitoffset)
+static inline WORD bfflz(ULONG data, WORD bitoffset)
 {
     return bfflo(~data, bitoffset);
 }
 
-/* Finds first zero bit in /data/ starting at /bitoffset/.  This function
-   considers the MSB to be the first bit. */
-inline WORD bfffz(ULONG data, WORD bitoffset)
-{
-    return bfffo(~data, bitoffset);
-}
-
 /* Sets /bits/ bits starting from /bitoffset/ in /data/.
    /bits/ must be between 1 and 32. */
-inline ULONG bfset(ULONG data, WORD bitoffset, WORD bits)
+static inline ULONG bfset(ULONG data, WORD bitoffset, WORD bits)
 {
     ULONG mask = ~((1 << (32 - bits)) - 1);
     mask >>= bitoffset;
@@ -109,7 +70,7 @@ inline ULONG bfset(ULONG data, WORD bitoffset, WORD bits)
 
 /* Clears /bits/ bits starting from /bitoffset/ in /data/.
    /bits/ must be between 1 and 32. */
-inline ULONG bfclr(ULONG data, WORD bitoffset, WORD bits)
+static inline ULONG bfclr(ULONG data, WORD bitoffset, WORD bits)
 {
     ULONG mask = ~((1 << (32 - bits)) - 1);
     mask >>= bitoffset;
@@ -118,9 +79,9 @@ inline ULONG bfclr(ULONG data, WORD bitoffset, WORD bits)
 
 ULONG bfcnto(ULONG v)
 {
-    ULONG const w = v - ((v >> 1) & 0x55555555);                    // temp
-    ULONG const x = (w & 0x33333333) + ((w >> 2) & 0x33333333);     // temp
-    ULONG const c = ((x + (x >> 4) & 0xF0F0F0F) * 0x1010101) >> 24; // count
+    ULONG const w = v - ((v >> 1) & 0x55555555);                      // temp
+    ULONG const x = (w & 0x33333333) + ((w >> 2) & 0x33333333);       // temp
+    ULONG const c = (((x + (x >> 4)) & 0xF0F0F0F) * 0x1010101) >> 24; // count
 
     return c;
 }
