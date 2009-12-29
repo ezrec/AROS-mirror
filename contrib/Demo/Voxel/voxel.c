@@ -236,7 +236,7 @@ for(x=0;x<MAPWIDTH;x++){
 
 # if 1
 
-inline void innerloop(int x, int start,int col)
+static inline void innerloop(int x, int start,int col)
 {
     UBYTE *dest = buffer + x + start * SCREENWIDTH;
     int count = y_old + 1 - start;

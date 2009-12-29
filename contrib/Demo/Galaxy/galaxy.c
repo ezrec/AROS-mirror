@@ -79,11 +79,11 @@ void memshset (char *dst, int center_shade,int fixed_shade, int length_2);
 void init_plouf();
 void drawgalaxy();
 
-inline float ocos(float a){
+static inline float ocos(float a){
     return (precos[(int)(a*256/M_PI)&511]);
 }
 
-inline float osin(float a){
+static inline float osin(float a){
     return (presin[(int)(a*256/M_PI)&511]);
 }
 
@@ -105,7 +105,7 @@ void mulmat(matrix *a, matrix *b, matrix *c){
 	        	+(*a)[i][2] * (*b)[2][j];
 }
 
-inline void mulvec(matrix *a, float *x, float *y, float *z){
+static inline void mulvec(matrix *a, float *x, float *y, float *z){
     float nx=*x,ny=*y,nz=*z;
 
     *x = nx*(*a)[0][0] + ny*(*a)[0][1] + nz*(*a)[0][2];
