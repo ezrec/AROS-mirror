@@ -45,7 +45,7 @@
 #define SQUARE( x ) ((x)*(x))
 
 /* compares to strings and returns true if their first strlen(str1) chars are equal */
-inline int strequal( char *str1, char *str2 );
+int strequal( char *str1, char *str2 );
 
 /* delete lines */
 void delete_lines( char **lines, int line_number );
@@ -57,13 +57,13 @@ typedef struct {
 } Delay;
 
 /* set delay to ms milliseconds */
-inline void delay_set( Delay *delay, int ms );
+void delay_set( Delay *delay, int ms );
 
 /* reset delay ( cur = 0 )*/
-inline void delay_reset( Delay *delay );
+void delay_reset( Delay *delay );
 
 /* check if time's out ( add ms milliseconds )and reset */
-inline int delay_timed_out( Delay *delay, int ms );
+int delay_timed_out( Delay *delay, int ms );
 
 /* return distance betwteen to map positions */
 int get_dist( int x1, int y1, int x2, int y2 );

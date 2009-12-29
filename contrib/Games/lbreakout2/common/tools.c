@@ -22,27 +22,27 @@
 #include "tools.h"
 
 /* compares to strings and returns true if their first strlen(str1) chars are equal */
-inline int strequal( char *str1, char *str2 )
+int strequal( char *str1, char *str2 )
 {
     if ( strlen( str1 ) != strlen( str2 ) ) return 0;
     return ( !strncmp( str1, str2, strlen( str1 ) ) );
 }
 
 /* set delay to ms milliseconds */
-inline void delay_set( Delay *delay, int ms )
+void delay_set( Delay *delay, int ms )
 {
     delay->limit = ms;
     delay->cur = 0;
 }
 
 /* reset delay ( cur = 0 )*/
-inline void delay_reset( Delay *delay )
+void delay_reset( Delay *delay )
 {
     delay->cur = 0;
 }
 
 /* check if times out and reset */
-inline int delay_timed_out( Delay *delay, int ms )
+int delay_timed_out( Delay *delay, int ms )
 {
     delay->cur += ms;
     if ( delay->cur >= delay->limit ) {
