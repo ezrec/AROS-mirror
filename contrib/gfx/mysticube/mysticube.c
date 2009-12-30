@@ -459,7 +459,7 @@ void rotatecube(struct cube *cube, double timescale)
 ----------------------------------------------------------------------
 *********************************************************************/
 
-int __inline whichquad(point2d pt, point2d orig)
+static __inline int whichquad(point2d pt, point2d orig)
 {
 	if(pt.x < orig.x)
 	{

@@ -72,7 +72,7 @@ void InitPEQBlockfxs(
 }
 
 
-__inline void fxhandle(int x,struct PEventQueue *peq,int skip){
+static __inline void fxhandle(int x,struct PEventQueue *peq,int skip){
 	if(peq->fxs->fx!=NULL && peq->track->onoff==1){
 		(*peq->fxs->fx->treatFX)(peq->fxs->fx,x,peq->track,skip);
 	}

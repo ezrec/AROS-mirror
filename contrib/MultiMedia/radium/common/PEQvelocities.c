@@ -90,7 +90,7 @@ void InitPEQvelocities(
 }
 
 
-__inline void SendVelocityChange(int x,struct PEventQueue *peq){
+static __inline void SendVelocityChange(int x,struct PEventQueue *peq){
 	if(peq->track->patch!=NULL && peq->track->onoff==1){
 		(*peq->track->patch->changevelocity)(
 			x,

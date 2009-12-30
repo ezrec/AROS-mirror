@@ -67,7 +67,7 @@ struct Blocks *PC_GetPlayBlock(int numfromcurrent){
 }
 
 
-__inline void PC_InsertElement_private(struct PEventQueue *peq, int addplaypos, STime addtime,bool before){
+static __inline void PC_InsertElement_private(struct PEventQueue *peq, int addplaypos, STime addtime,bool before){
 	int time=pc->seqtime;
 	int playpos;
 
@@ -112,7 +112,7 @@ void PC_InsertElement_a(
 }
 
 
-__inline void PC_InsertElement2_private(struct PEventQueue *peq, int addplaypos, Place *p, bool before){
+static __inline void PC_InsertElement2_private(struct PEventQueue *peq, int addplaypos, Place *p, bool before){
 
 	PC_InsertElement_private(
 

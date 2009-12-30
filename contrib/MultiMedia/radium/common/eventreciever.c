@@ -107,7 +107,7 @@ bool Quit(struct Tracker_Windows *window){
 	return true;
 }
 
-__inline int ER_getNoteNum(int subid){
+static __inline int ER_getNoteNum(int subid){
 	static int s2n[EVENT_MAX+1]={0};
 	static bool initialized=false;
 

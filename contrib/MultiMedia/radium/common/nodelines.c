@@ -73,7 +73,7 @@ typedef struct TTVector TVector;
     Returns the relative X position, calculated from
     the vector (x,maxx).
 **************************************************************/
-__inline int GetRelXPos(
+static __inline int GetRelXPos(
 	float x,
 	float maxx,
 	int arealength
@@ -92,7 +92,7 @@ __inline int GetRelXPos(
     Return the x value for the y value 'y' calculated from
     the vector tvector.
 *************************************************************/
-__inline float GetXFromVector(
+static __inline float GetXFromVector(
 	float y,
 	TVector *tvector
 ){
@@ -112,7 +112,7 @@ __inline float GetXFromVector(
     the vector (x1,y1)-(x2,y2) encapsulated by the
     arealength.
 *************************************************************/
-__inline int GetSubTrackXFromVector(
+static __inline int GetSubTrackXFromVector(
 	float maxx,int areallength,
 	float y,
 	TVector *tvector

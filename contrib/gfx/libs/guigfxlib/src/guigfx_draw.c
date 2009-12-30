@@ -144,7 +144,7 @@ struct drawdata_chunkybitmap
 
 --------------------------------------------------------------------*/
 
-ULONG __inline calldrawhook (struct Hook *hook, PIC *pic, ULONG zeile)
+static __inline ULONG calldrawhook (struct Hook *hook, PIC *pic, ULONG zeile)
 {
 	if (hook)
 	{

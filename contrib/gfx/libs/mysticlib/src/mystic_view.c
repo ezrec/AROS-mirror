@@ -87,8 +87,8 @@ void CloseDrawer(struct picdrawer *drawer);
 APTR GetDrawHandle(struct picview *view);
 APTR GetQuickPic(struct picview *view);
 void DeletePip(struct picview *view);
-void __inline StopDrawing(struct picview *view);
-void __inline StartDrawing(struct picview *view);
+static __inline void StopDrawing(struct picview *view);
+static __inline void StartDrawing(struct picview *view);
 void GetViewAspect(struct Screen *screen, int *aspectx, int *aspecty);
 void LockBackground(struct picview *view);
 void UnLockBackground(struct picview *view);
@@ -1099,7 +1099,7 @@ void DrawViewText(struct picview *view, BOOL clearbg)
 
 --------------------------------------------------------------------*/
 
-void __inline StopDrawing(struct picview *view)
+static __inline void StopDrawing(struct picview *view)
 {
 	//ObtainSemaphore(&view->semaphore);
 
@@ -1122,7 +1122,7 @@ void __inline StopDrawing(struct picview *view)
 
 --------------------------------------------------------------------*/
 
-void __inline StartDrawing(struct picview *view)
+static __inline void StartDrawing(struct picview *view)
 {
 	//ObtainSemaphore(&view->semaphore);
 
@@ -1503,7 +1503,7 @@ APTR GetDrawHandle(struct picview *view)
 
 --------------------------------------------------------------------*/
 
-int __inline GetBackPen(struct picview *view)
+static __inline int GetBackPen(struct picview *view)
 {
 	int pen;	// = 0;
 	
@@ -2504,7 +2504,7 @@ void ParseViewAttrs(struct picview *view, struct TagItem *tags)
 
 --------------------------------------------------------------------*/
 
-void __inline DeleteDrawer(struct picdrawer *drawer)
+static __inline void DeleteDrawer(struct picdrawer *drawer)
 {
 	_Free(drawer);
 }

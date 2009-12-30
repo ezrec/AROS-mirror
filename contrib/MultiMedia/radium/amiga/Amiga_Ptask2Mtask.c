@@ -49,7 +49,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 ULONG ptask2mtasksig;
 extern struct Task *mytask;
 
-__inline void Ptask2Mtask(void){
+void Ptask2Mtask(void){
 	Signal(mytask,ptask2mtasksig);
 }
 
