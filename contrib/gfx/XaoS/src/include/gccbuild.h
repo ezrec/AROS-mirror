@@ -3,7 +3,11 @@
 /*A bit of gcc magic:) */
 #include <math.h>
 #ifndef __GLIBC__
+#ifdef __GNUC_STDC_INLINE__  /* we want GNU extern inline behaviour */
+#define __MATH_INLINE extern inline __attribute__((__gnu_inline__))
+#else
 #define __MATH_INLINE extern inline
+#endif
 #define __inline_mathcode(func, arg, code) \
   __inline_mathcode_ (double, func, arg, code)                                \
   __inline_mathcode_ (float, __CONCAT(func,f), arg, code)                     \

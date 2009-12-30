@@ -83,7 +83,11 @@
 #ifdef __cplusplus
 # define __MATH_INLINE __inline
 #else
-# define __MATH_INLINE extern __inline
+# ifdef __GNUC_STDC_INLINE__ /* we want GNU extern inline behaviour */
+#  define __MATH_INLINE extern __inline __attribute__((__gnu_inline__))
+# else
+#  define __MATH_INLINE extern __inline
+# endif
 #endif
 
 /* A macro to define float, double, and long double versions of various
