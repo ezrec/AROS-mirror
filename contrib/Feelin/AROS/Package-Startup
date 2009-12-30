@@ -1,9 +1,0 @@
-; $VER: Feelin-PackageStartup 1.0 (01/08/06)
-; Feelin (c) The AROS Dev Team.
-;
-
-Assign Feelin: ""
-Assign FONTS: ADD Feelin:Fonts
-If Exists Feelin:Tools 
-Path Feelin:Tools ADD QUIET
-EndIF
