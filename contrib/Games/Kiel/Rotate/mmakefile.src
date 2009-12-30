@@ -15,9 +15,7 @@ INFO := $(foreach f,$(FILES), $(DESTDIR)/$(f).info)
 #MM
 games-kiel-rotate : $(INFO)
 
-$(DESTDIR)/%.info : %.info
+$(DESTDIR)/%.info : %.info | $(DESTDIR)
 	$(CP) $? $(DESTDIR)
-
-%make_prog_single dir=$(DESTDIR)
 
 %common

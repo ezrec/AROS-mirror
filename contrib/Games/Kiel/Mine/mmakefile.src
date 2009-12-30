@@ -15,8 +15,7 @@ INFO := $(foreach f,$(FILES), $(DESTDIR)/$(f).info)
 #MM games-kiel-mine : games-kiel-mine-catalogs
 games-kiel-mine : $(INFO)
 
-$(DESTDIR)/%.info : %.info
+$(DESTDIR)/%.info : %.info | $(DESTDIR)
 	$(CP) $? $(DESTDIR)
 
 %common
-
