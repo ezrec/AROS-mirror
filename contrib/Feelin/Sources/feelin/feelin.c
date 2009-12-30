@@ -431,6 +431,7 @@ __error:
 
    return NULL;
 }
+F_LIB_INIT_END
 //+
 ///lib_expunge
 STATIC F_LIB_EXPUNGE
@@ -461,6 +462,7 @@ STATIC F_LIB_EXPUNGE
     }
     return 0;
 }
+F_LIB_END
 //+
 ///lib_close
 STATIC F_LIB_CLOSE
@@ -482,6 +484,8 @@ STATIC F_LIB_CLOSE
             REG_A6 = (uint32) FeelinBase;
          
             return lib_expunge();
+#elif defined(__AROS__)
+            return AROS_LC0(uint32, lib_expunge, F_LIB_TYPE, FeelinBase, 3, Feelin);
 #else
             return lib_expunge(FeelinBase);
 #endif
@@ -489,6 +493,7 @@ STATIC F_LIB_CLOSE
     }
     return 0;
 }
+F_LIB_END
 //+
 ///lib_open
 #define TEMPLATE                    "LEVEL=L/K,MEMWALLSIZE/N,FASTINVOKATION=FI/S,VERBOSE_NEW=VBNEW/S,VERBOSE_DISPOSE=VBDISPOSE/S,PUBSEMAPHORES=PUBSEM/S"
@@ -628,6 +633,7 @@ STATIC F_LIB_OPEN
     
     return (struct Library *)(FeelinBase);
 }
+F_LIB_END
 //+
 
 /****************************************************************************
@@ -643,110 +649,110 @@ STATIC const APTR lib_func_table[] =
    
    /*** Library interface ***/
 
-   lib_open,
-   lib_close,
-   lib_expunge,
+   F_LIB_SYM(lib_open),
+   F_LIB_SYM(lib_close),
+   F_LIB_SYM(lib_expunge),
    lib_null,
 
    /*** Memory related functions ***/
 
-   f_pool_create_a,
-   f_pool_delete,
+   F_LIB_SYM(f_pool_create_a),
+   F_LIB_SYM(f_pool_delete),
    lib_null,
    lib_null,
    lib_null,
    lib_null,
    lib_null,
 
-   f_new,
-   f_newp,
-   f_dispose,
-   f_disposep, // deprecated
+   F_LIB_SYM(f_new),
+   F_LIB_SYM(f_newp),
+   F_LIB_SYM(f_dispose),
+   F_LIB_SYM(f_disposep), // deprecated
 
-   f_opool,
-   f_spool,
-   f_rpool,
+   F_LIB_SYM(f_opool),
+   F_LIB_SYM(f_spool),
+   F_LIB_SYM(f_rpool),
 
    lib_null,
 
    /*** List related functions ***/
 
-   f_link_tail,
-   f_link_head,
-   f_link_insert,
-   f_link_move,
-   f_link_remove,
-   f_link_member,
-   f_next_node,
+   F_LIB_SYM(f_link_tail),
+   F_LIB_SYM(f_link_head),
+   F_LIB_SYM(f_link_insert),
+   F_LIB_SYM(f_link_move),
+   F_LIB_SYM(f_link_remove),
+   F_LIB_SYM(f_link_member),
+   F_LIB_SYM(f_next_node),
 
    /*** String functions ***/
 
-   f_str_fmtA,
-   f_str_newA,
-   f_str_len,
-   f_str_cmp,
+   F_LIB_SYM(f_str_fmtA),
+   F_LIB_SYM(f_str_newA),
+   F_LIB_SYM(f_str_len),
+   F_LIB_SYM(f_str_cmp),
 
    /*** Bug report functions ***/
 
-   f_logA,
-   f_alerta,
+   F_LIB_SYM(f_logA),
+   F_LIB_SYM(f_alerta),
 
    /*** Hash functions ***/
          
-   f_hash_create,
-   f_hash_delete,
-   f_hash_find,
-   f_hash_add_link,
-   f_hash_rem_link,
-   f_hash_add,
-   f_hash_rem,
+   F_LIB_SYM(f_hash_create),
+   F_LIB_SYM(f_hash_delete),
+   F_LIB_SYM(f_hash_find),
+   F_LIB_SYM(f_hash_add_link),
+   F_LIB_SYM(f_hash_rem_link),
+   F_LIB_SYM(f_hash_add),
+   F_LIB_SYM(f_hash_rem),
 
    /*** Dynamic IDs allocation system ***/
 
-   f_dynamic_create,
-   f_dynamic_delete,
-   f_dynamic_find_attribute,
-   f_dynamic_find_method,
-   f_dynamic_find_id,
-   f_dynamic_resolve_table,
-   f_dynamic_add_auto_table,
-   f_dynamic_rem_auto_table,
-   f_dynamic_nti,
-   f_dynamic_fti,
-   f_dynamic_gtd,
+   F_LIB_SYM(f_dynamic_create),
+   F_LIB_SYM(f_dynamic_delete),
+   F_LIB_SYM(f_dynamic_find_attribute),
+   F_LIB_SYM(f_dynamic_find_method),
+   F_LIB_SYM(f_dynamic_find_id),
+   F_LIB_SYM(f_dynamic_resolve_table),
+   F_LIB_SYM(f_dynamic_add_auto_table),
+   F_LIB_SYM(f_dynamic_rem_auto_table),
+   F_LIB_SYM(f_dynamic_nti),
+   F_LIB_SYM(f_dynamic_fti),
+   F_LIB_SYM(f_dynamic_gtd),
 
    /*** Object-oriented system functions ***/
 
-   f_find_class,
-   f_open_class,
-   f_close_class,
-   f_create_classA,
-   f_dispose_obj,
+   F_LIB_SYM(f_find_class),
+   F_LIB_SYM(f_open_class),
+   F_LIB_SYM(f_close_class),
+   F_LIB_SYM(f_create_classA),
+   F_LIB_SYM(f_dispose_obj),
 
-   f_doa,
-   f_classdoa,
-   f_superdoa,
+   F_LIB_SYM(f_doa),
+   F_LIB_SYM(f_classdoa),
+   F_LIB_SYM(f_superdoa),
 
-   f_new_obja,
-   f_make_obja,
-   f_dispose_obj,
+   F_LIB_SYM(f_new_obja),
+   F_LIB_SYM(f_make_obja),
+   F_LIB_SYM(f_dispose_obj),
 
-   f_get,
-   f_set,
+   F_LIB_SYM(f_get),
+   F_LIB_SYM(f_set),
 
    /*** FC_Area support ***/
 
-   f_draw,
-   f_layout,
-   f_erase,
+   F_LIB_SYM(f_draw),
+   F_LIB_SYM(f_layout),
+   F_LIB_SYM(f_erase),
 
    /*** Shared objects functions ***/
 
-   f_shared_find,
-   f_shared_create,
-   f_shared_delete,
-   f_shared_open,
-   f_shared_close,
+   F_LIB_SYM(f_shared_find),
+   F_LIB_SYM(f_shared_create),
+   F_LIB_SYM(f_shared_delete),
+   F_LIB_SYM(f_shared_open),
+   F_LIB_SYM(f_shared_close),
 
    (APTR) -1
 #ifdef __MORPHOS__

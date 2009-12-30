@@ -44,6 +44,7 @@ F_LIB_LINK_TAIL
    }
    return NULL;
 }
+F_LIB_END
 //+
 ///f_link_head
 F_LIB_LINK_HEAD
@@ -74,6 +75,7 @@ F_LIB_LINK_HEAD
    }
    return NULL;
 }
+F_LIB_END
 //+
 ///f_link_insert
 F_LIB_LINK_INSERT
@@ -103,6 +105,7 @@ F_LIB_LINK_INSERT
    }
    return NULL;
 }
+F_LIB_END
 //+
 ///f_link_move
 F_LIB_LINK_MOVE
@@ -123,6 +126,7 @@ F_LIB_LINK_MOVE
    }
    return NULL;
 }
+F_LIB_END
 //+
 ///f_link_remove
 F_LIB_LINK_REMOVE
@@ -177,6 +181,7 @@ F_LIB_LINK_REMOVE
    }
    return NULL;
 }
+F_LIB_END
 //+
 ///f_link_member
 F_LIB_LINK_MEMBER
@@ -194,6 +199,7 @@ F_LIB_LINK_MEMBER
    }
    return NULL;
 }
+F_LIB_END
 //+
 ///f_next_node
 F_LIB_NEXT_NODE
@@ -206,5 +212,6 @@ F_LIB_NEXT_NODE
    }
    return next;
 }
+F_LIB_END
 //+
 

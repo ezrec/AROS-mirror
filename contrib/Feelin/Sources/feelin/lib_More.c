@@ -161,6 +161,7 @@ F_LIB_STR_NEW
 
     return string;
 }
+F_LIB_END
 //+
 ///f_str_fmtA
 F_LIB_STR_FMT
@@ -177,6 +178,7 @@ F_LIB_STR_FMT
     
     return Buffer + F_StrLen(Buffer);
 }
+F_LIB_END
 //+
 ///f_str_len
 F_LIB_STR_LEN
@@ -191,6 +193,7 @@ F_LIB_STR_LEN
     }
     return 0;
 }
+F_LIB_END
 //+
 ///f_str_cmp
 F_LIB_STR_CMP
@@ -219,6 +222,7 @@ F_LIB_STR_CMP
 
     return (LONG)(c1) - (LONG)(c2);
 }
+F_LIB_END
 //+
 
 /****************************************************************************
@@ -238,6 +242,7 @@ F_LIB_ALERT
 
     return EasyRequestArgs(NULL,&ez,NULL,Params);
 }
+F_LIB_END
 //+
 ///f_logA
 F_LIB_LOG
@@ -384,6 +389,7 @@ F_LIB_LOG
         FreeMem(str,1024);
     }
 }
+F_LIB_END
 //+
 
 /****************************************************************************
@@ -517,6 +523,7 @@ F_LIB_DRAW
         }
     }
 }
+F_LIB_END
 //+
 ///f_erase
 F_LIB_ERASE
@@ -537,6 +544,7 @@ F_LIB_ERASE
 
     F_Do(Obj,FM_Erase,&r,Flags);
 }
+F_LIB_END
 //+
 ///f_layout
 F_LIB_LAYOUT
@@ -566,5 +574,6 @@ F_LIB_LAYOUT
         }
     }
 }
+F_LIB_END
 //+
 

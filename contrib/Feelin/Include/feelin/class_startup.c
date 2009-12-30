@@ -22,6 +22,8 @@ $VER: 01.00 (2005/08/09)
 
 */
 
+#define F_LIB_TYPE                              struct in_ClassBase *
+#define F_LIB_BASE                              ClassBase
 #define F_LIB_STRUCT_AND_BASE                   struct in_ClassBase *ClassBase
 
 #include <proto/exec.h>
@@ -158,6 +160,7 @@ SAVEDS STATIC F_LIB_INIT
 
     return &ClassBase->lib;
 }
+F_LIB_INIT_END
 //+
 /// lib_expunge
 SAVEDS STATIC F_LIB_EXPUNGE
@@ -190,6 +193,7 @@ SAVEDS STATIC F_LIB_EXPUNGE
     Remove(&ClassBase->lib.lib_Node);
 
     Permit();
+
 /*
     DEBUG_EXPUNGE(KPrintF("LIB_Expunge: free the library\n"));
 */
@@ -200,6 +204,7 @@ SAVEDS STATIC F_LIB_EXPUNGE
 */
     return seglist;
 }
+F_LIB_END
 //+
 /// lib_open
 STATIC F_LIB_OPEN
@@ -216,6 +221,7 @@ STATIC F_LIB_OPEN
 
     return &ClassBase->lib;
 }
+F_LIB_END
 //+
 ///lib_close
 STATIC F_LIB_CLOSE
@@ -241,6 +247,8 @@ STATIC F_LIB_CLOSE
             REG_A6 = (uint32) ClassBase;
 
             return lib_expunge();
+#elif defined(__AROS__)
+            return AROS_LC0(uint32, lib_expunge, F_LIB_TYPE, ClassBase, 3, Feelin);
 #else
             return lib_expunge(ClassBase);
 #endif
@@ -255,6 +263,7 @@ STATIC F_LIB_CLOSE
 */
     return 0;
 }
+F_LIB_END
 //+
 ///lib_reserved
 STATIC uint32 lib_reserved(void)
@@ -281,6 +290,7 @@ SAVEDS STATIC F_LIB_QUERY
 
     return feelin_auto_class_query(Which);
 }
+F_LIB_END
 //+
 
 STATIC const APTR lib_func_table[] =
@@ -290,12 +300,12 @@ STATIC const APTR lib_func_table[] =
     (APTR) FUNCARRAY_32BIT_NATIVE,
 #endif
 
-    lib_open,
-    lib_close,
-    lib_expunge,
+    F_LIB_SYM(lib_open),
+    F_LIB_SYM(lib_close),
+    F_LIB_SYM(lib_expunge),
     lib_reserved,
 
-    lib_query,
+    F_LIB_SYM(lib_query),
 
     (APTR) -1,
 

@@ -111,23 +111,45 @@ machine code) */
     e.g.
 
 #define F_LIB_STRUCT_AND_BASE                   struct in_FeelinBase *FeelinBase
+#define F_LIB_TYPE                              struct in_FeelinBase *
+#define F_LIB_BASE                              FeelinBase
 
 */
 
 #define LIB_PROTO0(name, rt) ASM(rt) name(REG(a6, F_LIB_STRUCT_AND_BASE))
-#define LIB_PROTO0NR(name) ASM(void) name(REG(a6, F_LIB_STRUCT_AND_BASE))
-#define LIB_PROTO1(name, rt, r1, v1) ASM(rt) name(REG(r1, v1), REG(a6, F_LIB_STRUCT_AND_BASE))
-#define LIB_PROTO1NR(name, r1, v1) ASM(void) name(REG(r1, v1), REG(a6, F_LIB_STRUCT_AND_BASE))
-#define LIB_PROTO2(name, rt, r1, v1, r2, v2) ASM(rt) name(REG(r1, v1), REG(r2, v2), REG(a6, F_LIB_STRUCT_AND_BASE))
-#define LIB_PROTO2NR(name, r1, v1, r2, v2) ASM(void) name(REG(r1, v1), REG(r2, v2), REG(a6, F_LIB_STRUCT_AND_BASE))
-#define LIB_PROTO3(name, rt, r1, v1, r2, v2, r3, v3) ASM(rt) name(REG(r1, v1), REG(r2, v2), REG(r3, v3), REG(a6, F_LIB_STRUCT_AND_BASE))
-#define LIB_PROTO3NR(name, r1, v1, r2, v2, r3, v3) ASM(void) name(REG(r1, v1), REG(r2, v2), REG(r3, v3), REG(a6, F_LIB_STRUCT_AND_BASE))
-#define LIB_PROTO4(name, rt, r1, v1, r2, v2, r3, v3, r4, v4) ASM(rt) name(REG(r1, v1), REG(r2, v2), REG(r3, v3), REG(r4, v4), REG(a6, F_LIB_STRUCT_AND_BASE))
-#define LIB_PROTO4NR(name, r1, v1, r2, v2, r3, v3, r4, v4) ASM(void) name(REG(r1, v1), REG(r2, v2), REG(r3, v3), REG(r4, v4), REG(a6, F_LIB_STRUCT_AND_BASE))
-#define LIB_PROTO5(name, rt, r1, v1, r2, v2, r3, v3, r4, v4, r5, v5) ASM(rt) name(REG(r1, v1), REG(r2, v2), REG(r3, v3), REG(r4, v4), REG(r5, v5), REG(a6, F_LIB_STRUCT_AND_BASE))
-#define LIB_PROTO5NR(name, r1, v1, r2, v2, r3, v3, r4, v4, r5, v5) ASM(void) name(REG(r1, v1), REG(r2, v2), REG(r3, v3), REG(r4, v4), REG(r5, v5), REG(a6, F_LIB_STRUCT_AND_BASE))
-#define LIB_PROTO6(name, rt, r1, v1, r2, v2, r3, v3, r4, v4, r5, v5, r6, v6) ASM(rt) name(REG(r1, v1), REG(r2, v2), REG(r3, v3), REG(r4, v4), REG(r5, v5), REG(r6, v6), REG(a6, F_LIB_STRUCT_AND_BASE))
-#define LIB_PROTO6NR(name, r1, v1, r2, v2, r3, v3, r4, v4, r5, v5, r6, v6) ASM(void) name(REG(r1, v1), REG(r2, v2), REG(r3, v3), REG(r4, v4), REG(r5, v5), REG(r6, v6), REG(a6, F_LIB_STRUCT_AND_BASE))
+#define LIB_PROTO1(name, rt, r1, t1, v1) ASM(rt) name(REG(r1, t1 v1), REG(a6, F_LIB_STRUCT_AND_BASE))
+#define LIB_PROTO2(name, rt, r1, t1, v1, r2, t2, v2) ASM(rt) name(REG(r1, t1 v1), REG(r2, t2 v2), REG(a6, F_LIB_STRUCT_AND_BASE))
+#define LIB_PROTO3(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3) ASM(rt) name(REG(r1, t1 v1), REG(r2, t2 v2), REG(r3, t3 v3), REG(a6, F_LIB_STRUCT_AND_BASE))
+#define LIB_PROTO4(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4) ASM(rt) name(REG(r1, t1 v1), REG(r2, t2 v2), REG(r3, t3 v3), REG(r4, t4 v4), REG(a6, F_LIB_STRUCT_AND_BASE))
+#define LIB_PROTO5(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5) ASM(rt) name(REG(r1, t1 v1), REG(r2, t2 v2), REG(r3, t3 v3), REG(r4, t4 v4), REG(r5, t5 v5), REG(a6, F_LIB_STRUCT_AND_BASE))
+#define LIB_PROTO6(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5, r6, t6, v6) ASM(rt) name(REG(r1, t1 v1), REG(r2, t2 v2), REG(r3, t3 v3), REG(r4, t4 v4), REG(r5, t5 v5), REG(r6, t6 v6), REG(a6, F_LIB_STRUCT_AND_BASE))
+
+#define LIB_PROTO0NR(name) LIB_PROTO0(name, void)
+#define LIB_PROTO1NR(name, r1, t1, v1) LIB_PROTO1(name, void, r1, t1, v1)
+#define LIB_PROTO2NR(name, r1, t1, v1, r2, t2, v2) LIB_PROTO2(name, void, r1, t1, v1, r2, t2, v2)
+#define LIB_PROTO3NR(name, r1, t1, v1, r2, t2, v2, r3, t3, v3) LIB_PROTO3(name, void, r1, t1, v1, r2, t2, v2, r3, t3, v3)
+#define LIB_PROTO4NR(name, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4) LIB_PROTO4(name, void, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4)
+#define LIB_PROTO5NR(name, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5) LIB_PROTO5(name, void, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5)
+#define LIB_PROTO6NR(name, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5, r6, t6, v6) LIB_PROTO6(name, void, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5, r6, t6, v6)
+
+#define LIB_DEFFUNC0(name, rt) LIB_PROTO0(name, rt)
+#define LIB_DEFFUNC1(name, rt, r1, t1, v1) LIB_PROTO1(name, rt, r1, t1, v1)
+#define LIB_DEFFUNC2(name, rt, r1, t1, v1, r2, t2, v2) LIB_PROTO2(name, rt, r1, t1, v1, r2, t2, v2)
+#define LIB_DEFFUNC3(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3) LIB_PROTO3(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3)
+#define LIB_DEFFUNC4(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4) LIB_PROTO4(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4)
+#define LIB_DEFFUNC5(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5) LIB_PROTO5(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5)
+#define LIB_DEFFUNC6(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5, r6, t6, v6) LIB_PROTO6(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5, r6, t6, v6)
+
+#define LIB_DEFFUNC0NR(name) LIB_DEFFUNC0(name, void)
+#define LIB_DEFFUNC1NR(name, r1, t1, v1) LIB_DEFFUNC1(name, void, r1, t1, v1)
+#define LIB_DEFFUNC2NR(name, r1, t1, v1, r2, t2, v2) LIB_DEFFUNC2(name, void, r1, t1, v1, r2, t2, v2)
+#define LIB_DEFFUNC3NR(name, r1, t1, v1, r2, t2, v2, r3, t3, v3) LIB_DEFFUNC3(name, void, r1, t1, v1, r2, t2, v2, r3, t3, v3)
+#define LIB_DEFFUNC4NR(name, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4) LIB_DEFFUNC4(name, void, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4)
+#define LIB_DEFFUNC5NR(name, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5) LIB_DEFFUNC5(name, void, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5)
+#define LIB_DEFFUNC6NR(name, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5, r6, t6, v6) LIB_DEFFUNC6(name, void, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5, r6, t6, v6)
+
+#define F_LIB_END
+#define F_LIB_SYM(func) func
 
 #ifdef __MORPHOS__
 
@@ -148,7 +170,7 @@ machine code) */
 #undef LIB_DEFFUNC1
 #define LIB_DEFFUNC1(name, rt, r1, t1, v1) \
         static rt name##_PPC(t1 v1, F_LIB_STRUCT_AND_BASE); \
-        LIB_PROTO1(name, rt, r1, t1 v1) { rt rc; \
+        LIB_PROTO1(name, rt, r1, t1, v1) { rt rc; \
                 rc = name##_PPC((t1) REG_##r1, (APTR)REG_A6); \
                 REG_D0 = (uint32) rc; return rc; } \
         static rt name##_PPC(t1 v1, F_LIB_STRUCT_AND_BASE)
@@ -156,14 +178,14 @@ machine code) */
 #undef LIB_DEFFUNC1NR
 #define LIB_DEFFUNC1NR(name, r1, t1, v1) \
         static void name##_PPC(t1 v1, F_LIB_STRUCT_AND_BASE); \
-        LIB_PROTO1NR(name, r1, t1 v1) { \
+        LIB_PROTO1NR(name, r1, t1, v1) { \
                 name##_PPC((t1) REG_##r1, (APTR)REG_A6); } \
         static void name##_PPC(t1 v1, F_LIB_STRUCT_AND_BASE)
 
 #undef LIB_DEFFUNC2
 #define LIB_DEFFUNC2(name, rt, r1, t1, v1, r2, t2, v2) \
         static rt name##_PPC(t1 v1, t2 v2, F_LIB_STRUCT_AND_BASE); \
-        LIB_PROTO2(name, rt, r1, t1 v1, r2, t2 v2) { rt rc; \
+        LIB_PROTO2(name, rt, r1, t1, v1, r2, t2, v2) { rt rc; \
                 rc = name##_PPC((t1) REG_##r1, (t2) REG_##r2, (APTR)REG_A6); \
                 REG_D0 = (uint32) rc; return rc; } \
         static rt name##_PPC(t1 v1, t2 v2, F_LIB_STRUCT_AND_BASE)
@@ -171,14 +193,14 @@ machine code) */
 #undef LIB_DEFFUNC2NR
 #define LIB_DEFFUNC2NR(name, r1, t1, v1, r2, t2, v2) \
         static void name##_PPC(t1 v1, t2 v2, F_LIB_STRUCT_AND_BASE); \
-        LIB_PROTO2NR(name, r1, t1 v1, r2, t2 v2) { \
+        LIB_PROTO2NR(name, r1, t1, v1, r2, t2, v2) { \
                 name##_PPC((t1) REG_##r1, (t2) REG_##r2, (APTR)REG_A6); } \
         static void name##_PPC(t1 v1, t2 v2, F_LIB_STRUCT_AND_BASE)
 
 #undef LIB_DEFFUNC3
 #define LIB_DEFFUNC3(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3) \
         static rt name##_PPC(t1 v1, t2 v2, t3 v3, F_LIB_STRUCT_AND_BASE); \
-        LIB_PROTO3(name, rt, r1, t1 v1, r2, t2 v2, r3, t3 v3) { rt rc; \
+        LIB_PROTO3(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3) { rt rc; \
                 rc = name##_PPC((t1) REG_##r1, (t2) REG_##r2, (t3) REG_##r3, (APTR)REG_A6); \
                 REG_D0 = (uint32) rc; return rc; } \
         static rt name##_PPC(t1 v1, t2 v2, t3 v3, F_LIB_STRUCT_AND_BASE)
@@ -186,14 +208,14 @@ machine code) */
 #undef LIB_DEFFUNC3NR
 #define LIB_DEFFUNC3NR(name, r1, t1, v1, r2, t2, v2, r3, t3, v3) \
         static void name##_PPC(t1 v1, t2 v2, t3 v3, F_LIB_STRUCT_AND_BASE); \
-        LIB_PROTO3NR(name, r1, t1 v1, r2, t2 v2, r3, t3 v3) { \
+        LIB_PROTO3NR(name, r1, t1, v1, r2, t2, v2, r3, t3, v3) { \
                 name##_PPC((t1) REG_##r1, (t2) REG_##r2, (t3) REG_##r3, (APTR)REG_A6); } \
         static void name##_PPC(t1 v1, t2 v2, t3 v3, F_LIB_STRUCT_AND_BASE)
 
 #undef LIB_DEFFUNC4
 #define LIB_DEFFUNC4(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4) \
         static rt name##_PPC(t1 v1, t2 v2, t3 v3, t4 v4, F_LIB_STRUCT_AND_BASE); \
-        LIB_PROTO4(name, rt, r1, t1 v1, r2, t2 v2, r3, t3 v3, r4, t4 v4) { rt rc; \
+        LIB_PROTO4(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4) { rt rc; \
                 rc = name##_PPC((t1) REG_##r1, (t2) REG_##r2, (t3) REG_##r3, (t4) REG_##r4, (APTR)REG_A6); \
                 REG_D0 = (uint32) rc; return rc; } \
         static rt name##_PPC(t1 v1, t2 v2, t3 v3, t4 v4, F_LIB_STRUCT_AND_BASE)
@@ -201,14 +223,14 @@ machine code) */
 #undef LIB_DEFFUNC4NR
 #define LIB_DEFFUNC4NR(name, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4) \
         static void name##_PPC(t1 v1, t2 v2, t3 v3, t4 v4, F_LIB_STRUCT_AND_BASE); \
-        LIB_PROTO4NR(name, r1, t1 v1, r2, t2 v2, r3, t3 v3, r4, t4 v4) { \
+        LIB_PROTO4NR(name, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4) { \
                 name##_PPC((t1) REG_##r1, (t2) REG_##r2, (t3) REG_##r3, (t4) REG_##r4, (APTR)REG_A6); } \
         static void name##_PPC(t1 v1, t2 v2, t3 v3, t4 v4, F_LIB_STRUCT_AND_BASE)
 
 #undef LIB_DEFFUNC5
 #define LIB_DEFFUNC5(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5) \
         static rt name##_PPC(t1 v1, t2 v2, t3 v3, t4 v4, t5 v5, F_LIB_STRUCT_AND_BASE); \
-        LIB_PROTO5(name, rt, r1, t1 v1, r2, t2 v2, r3, t3 v3, r4, t4 v4, r5, t5 v5) { rt rc; \
+        LIB_PROTO5(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5) { rt rc; \
                 rc = name##_PPC((t1) REG_##r1, (t2) REG_##r2, (t3) REG_##r3, (t4) REG_##r4, (t5) REG_##r5, (APTR)REG_A6); \
                 REG_D0 = (uint32) rc; return rc; } \
         static rt name##_PPC(t1 v1, t2 v2, t3 v3, t4 v4, t5 v5, F_LIB_STRUCT_AND_BASE)
@@ -216,14 +238,14 @@ machine code) */
 #undef LIB_DEFFUNC5NR
 #define LIB_DEFFUNC5NR(name, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5) \
         static void name##_PPC(t1 v1, t2 v2, t3 v3, t4 v4, t5 v5, F_LIB_STRUCT_AND_BASE); \
-        LIB_PROTO5NR(name, r1, t1 v1, r2, t2 v2, r3, t3 v3, r4, t4 v4, r5, t5 v5) { \
+        LIB_PROTO5NR(name, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5) { \
                 name##_PPC((t1) REG_##r1, (t2) REG_##r2, (t3) REG_##r3, (t4) REG_##r4, (t5) REG_##r5, (APTR)REG_A6); } \
         static void name##_PPC(t1 v1, t2 v2, t3 v3, t4 v4, t5 v5, F_LIB_STRUCT_AND_BASE)
 
 #undef LIB_DEFFUNC6
 #define LIB_DEFFUNC6(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5, r6, t6, v6) \
         static rt name##_PPC(t1 v1, t2 v2, t3 v3, t4 v4, t5 v5, t6 v6, F_LIB_STRUCT_AND_BASE); \
-        LIB_PROTO6(name, rt, r1, t1 v1, r2, t2 v2, r3, t3 v3, r4, t4 v4, r5, t5 v5, r6, t6 v6) { rt rc; \
+        LIB_PROTO6(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5, r6, t6, v6) { rt rc; \
                 rc = name##_PPC((t1) REG_##r1, (t2) REG_##r2, (t3) REG_##r3, (t4) REG_##r4, (t5) REG_##r5, (t6) REG_##r6, (APTR)REG_A6); \
                 REG_D0 = (uint32) rc; return rc; } \
         static rt name##_PPC(t1 v1, t2 v2, t3 v3, t4 v4, t5 v5, t6 v6, F_LIB_STRUCT_AND_BASE)
@@ -231,28 +253,85 @@ machine code) */
 #undef LIB_DEFFUNC6NR
 #define LIB_DEFFUNC6NR(name, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5, r6, t6, v6) \
         static void name##_PPC(t1 v1, t2 v2, t3 v3, t4 v4, t5 v5, t6 v6, F_LIB_STRUCT_AND_BASE); \
-        LIB_PROTO6NR(name, r1, t1 v1, r2, t2 v2, r3, t3 v3, r4, t4 v4, r5, t5 v5, r6, t6 v6) { \
+        LIB_PROTO6NR(name, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5, r6, t6, v6) { \
                 name##_PPC((t1) REG_##r1, (t2) REG_##r2, (t3) REG_##r3, (t4) REG_##r4, (t5) REG_##r5, (t6) REG_##r6, (APTR)REG_A6); } \
         static void name##_PPC(t1 v1, t2 v2, t3 v3, t4 v4, t5 v5, t6 v6, F_LIB_STRUCT_AND_BASE)
 
-#else /* __MORPHOS__ */
+#elif defined(__AROS__)
 
-#define LIB_DEFFUNC0(name, rt) LIB_PROTO0(name, rt)
-#define LIB_DEFFUNC0NR(name) LIB_PROTO0NR(name)
-#define LIB_DEFFUNC1(name, rt, r1, t1, v1) LIB_PROTO1(name, rt, r1, t1 v1)
-#define LIB_DEFFUNC1NR(name, r1, t1, v1) LIB_PROTO1NR(name, r1, t1 v1)
-#define LIB_DEFFUNC2(name, rt, r1, t1, v1, r2, t2, v2) LIB_PROTO2(name, rt, r1, t1 v1, r2, t2 v2)
-#define LIB_DEFFUNC2NR(name, r1, t1, v1, r2, t2, v2) LIB_PROTO2NR(name, r1, t1 v1, r2, t2 v2)
-#define LIB_DEFFUNC3(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3) LIB_PROTO3(name, rt, r1, t1 v1, r2, t2 v2, r3, t3 v3)
-#define LIB_DEFFUNC3NR(name, r1, t1, v1, r2, t2, v2, r3, t3, v3) LIB_PROTO3NR(name, r1, t1 v1, r2, t2 v2, r3, t3 v3)
-#define LIB_DEFFUNC4(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4) LIB_PROTO4(name, rt, r1, t1 v1, r2, t2 v2, r3, t3 v3, r4, t4 v4)
-#define LIB_DEFFUNC4NR(name, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4) LIB_PROTO4NR(name, r1, t1 v1, r2, t2 v2, r3, t3 v3, r4, t4 v4)
-#define LIB_DEFFUNC5(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5) LIB_PROTO5(name, rt, r1, t1 v1, r2, t2 v2, r3, t3 v3, r4, t4 v4, r5, t5 v5)
-#define LIB_DEFFUNC5NR(name, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5) LIB_PROTO5NR(name, r1, t1 v1, r2, t2 v2, r3, t3 v3, r4, t4 v4, r5, t5 v5)
-#define LIB_DEFFUNC6(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5, r6, t6, v6) LIB_PROTO6(name, rt, r1, t1 v1, r2, t2 v2, r3, t3 v3, r4, t4 v4, r5, t5 v5, r6, t6 v6)
-#define LIB_DEFFUNC6NR(name, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5, r6, t6, v6) LIB_PROTO6NR(name, r1, t1 v1, r2, t2 v2, r3, t3 v3, r4, t4 v4, r5, t5 v5, r6, t6 v6)
+#include <aros/libcall.h>
 
-#endif /* __MORPHOS__ */
+#undef LIB_DEFFUNC0
+#define LIB_DEFFUNC0(name, rt) \
+    AROS_LH0(rt, name, F_LIB_TYPE, F_LIB_BASE, 0, Feelin)       \
+        { AROS_LIBFUNC_INIT \
+          (void)F_LIB_BASE;
+#undef LIB_PROTO0
+#define LIB_PROTO0(name, rt) \
+    AROS_LD0(rt, name, F_LIB_TYPE, F_LIB_BASE, 0, Feelin)
+
+#undef LIB_DEFFUNC1
+#define LIB_DEFFUNC1(name, rt, r1, t1, v1) \
+    AROS_LH1(rt, name, AROS_LHA(t1, v1, r1), F_LIB_TYPE, F_LIB_BASE, 0, Feelin)     \
+        { AROS_LIBFUNC_INIT \
+          (void)F_LIB_BASE;
+#undef LIB_PROTO1
+#define LIB_PROTO1(name, rt, r1, t1, v1)                                 \
+    AROS_LD1(rt, name, AROS_LDA(t1, v1, r1), F_LIB_TYPE, F_LIB_BASE, 0, Feelin)
+
+#undef LIB_DEFFUNC2
+#define LIB_DEFFUNC2(name, rt, r1, t1, v1, r2, t2, v2) \
+    AROS_LH2(rt, name, AROS_LHA(t1, v1, r1), AROS_LHA(t2, v2, r2), F_LIB_TYPE, F_LIB_BASE, 0, Feelin) \
+        { AROS_LIBFUNC_INIT \
+          (void)F_LIB_BASE;
+#undef LIB_PROTO2
+#define LIB_PROTO2(name, rt, r1, t1, v1, r2, t2, v2) \
+    AROS_LD2(rt, name, AROS_LDA(t1, v1, r1), AROS_LDA(t2, v2, r2), F_LIB_TYPE, F_LIB_BASE, 0, Feelin)
+
+#undef LIB_DEFFUNC3
+#define LIB_DEFFUNC3(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3) \
+    AROS_LH3(rt, name, AROS_LHA(t1, v1, r1), AROS_LHA(t2, v2, r2), AROS_LHA(t3, v3, r3), F_LIB_TYPE, F_LIB_BASE, 0, Feelin) \
+        { AROS_LIBFUNC_INIT \
+          (void)F_LIB_BASE;
+#undef LIB_PROTO3
+#define LIB_PROTO3(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3) \
+    AROS_LD3(rt, name, AROS_LDA(t1, v1, r1), AROS_LDA(t2, v2, r2), AROS_LDA(t3, v3, r3), F_LIB_TYPE, F_LIB_BASE, 0, Feelin)
+
+#undef LIB_DEFFUNC4
+#define LIB_DEFFUNC4(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4) \
+    AROS_LH4(rt, name, AROS_LHA(t1, v1, r1), AROS_LHA(t2, v2, r2), AROS_LHA(t3, v3, r3), AROS_LHA(t4, v4, r4), F_LIB_TYPE, F_LIB_BASE, 0, Feelin) \
+        { AROS_LIBFUNC_INIT \
+          (void)F_LIB_BASE;
+#undef LIB_PROTO4
+#define LIB_PROTO4(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4) \
+    AROS_LD4(rt, name, AROS_LDA(t1, v1, r1), AROS_LDA(t2, v2, r2), AROS_LDA(t3, v3, r3), AROS_LDA(t4, v4, r4), F_LIB_TYPE, F_LIB_BASE, 0, Feelin)
+
+#undef LIB_DEFFUNC5
+#define LIB_DEFFUNC5(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5) \
+    AROS_LH5(rt, name, AROS_LHA(t1, v1, r1), AROS_LHA(t2, v2, r2), AROS_LHA(t3, v3, r3), AROS_LHA(t4, v4, r4), AROS_LHA(t5, v5, r5), F_LIB_TYPE, F_LIB_BASE, 0, Feelin) \
+        { AROS_LIBFUNC_INIT \
+          (void)F_LIB_BASE;
+#undef LIB_PROTO5
+#define LIB_PROTO5(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5) \
+    AROS_LD5(rt, name, AROS_LDA(t1, v1, r1), AROS_LDA(t2, v2, r2), AROS_LDA(t3, v3, r3), AROS_LDA(t4, v4, r4), AROS_LDA(t5, v5, r5), F_LIB_TYPE, F_LIB_BASE, 0, Feelin)
+
+#undef LIB_DEFFUNC6
+#define LIB_DEFFUNC6(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5, r6, t6, v6) \
+    AROS_LH6(rt, name, AROS_LHA(t1, v1, r1), AROS_LHA(t2, v2, r2), AROS_LHA(t3, v3, r3), AROS_LHA(t4, v4, r4), AROS_LHA(t5, v5, r5), AROS_LHA(t6, v6, r6), F_LIB_TYPE, F_LIB_BASE, 0, Feelin) \
+        { AROS_LIBFUNC_INIT \
+          (void)F_LIB_BASE;
+#undef LIB_PROTO6
+#define LIB_PROTO6(name, rt, r1, t1, v1, r2, t2, v2, r3, t3, v3, r4, t4, v4, r5, t5, v5, r6, t6, v6) \
+    AROS_LD6(rt, name, AROS_LDA(t1, v1, r1), AROS_LDA(t2, v2, r2), AROS_LDA(t3, v3, r3), AROS_LDA(t4, v4, r4), AROS_LDA(t5, v5, r5), AROS_LDA(t6, v6, r6), F_LIB_TYPE, F_LIB_BASE, 0, Feelin)
+
+#undef F_LIB_END
+#define F_LIB_END AROS_LIBFUNC_EXIT }
+#undef F_LIB_SYM
+#define F_LIB_SYM(func) AROS_SLIB_ENTRY(func, Feelin)
+
+#else /* !defined(__MORPHOS__) && !defined(__AROS__) */
+
+#endif /* __MORPHOS__ || __AROS__ */
 //+
 
 ///FC_Object
@@ -368,6 +447,7 @@ les classes.
 #ifdef __MORPHOS__
 
 #define F_LIB_INIT                              struct Library * lib_init(void)
+#define F_LIB_INIT_END
 #define F_LIB_EXPUNGE                           uint32 lib_expunge(void)
 #define F_LIB_CLOSE                             void lib_close(void)
 #define F_LIB_OPEN                              struct Library * lib_open(void)
@@ -385,6 +465,43 @@ les classes.
                                                 struct FeelinBase *Feelin = (struct FeelinBase *) REG_A0; \
                                                 F_LIB_STRUCT_AND_BASE = (APTR) REG_A6;
 
+#elif defined(__AROS__) /*** AROS ******************************************/
+
+
+#define F_LIB_INIT                              AROS_UFH3 (struct Library *, lib_init, \
+                                                           AROS_UFHA(F_LIB_TYPE, F_LIB_BASE, D0), \
+                                                           AROS_UFHA(uint32, SegList, A0), \
+                                                           AROS_UFHA(struct ExecBase *, SYS, A6) \
+                                                           ) { AROS_USERFUNC_INIT
+#define F_LIB_INIT_END                          AROS_USERFUNC_EXIT }
+
+#define F_LIB_EXPUNGE \
+    AROS_LH0(uint32, lib_expunge, F_LIB_TYPE, F_LIB_BASE, 3, Feelin) \
+    { AROS_LIBFUNC_INIT \
+      (void)F_LIB_BASE;
+#define F_LIB_CLOSE \
+    AROS_LH0(uint32, lib_close, F_LIB_TYPE, F_LIB_BASE, 2, Feelin) \
+    { AROS_LIBFUNC_INIT \
+      (void)F_LIB_BASE;
+#define F_LIB_OPEN \
+    AROS_LH1(struct Library *, lib_open, AROS_LHA(ULONG, Version, D0), F_LIB_TYPE, F_LIB_BASE, 1, Feelin) \
+    { AROS_LIBFUNC_INIT \
+      (void)F_LIB_BASE;
+#define F_LIB_QUERY \
+    AROS_LH2(struct TagItem *, lib_query, \
+             AROS_LHA(uint32, Which, D0), AROS_LHA(struct FeelinBase *, Feelin, A0), \
+             F_LIB_TYPE, F_LIB_BASE, 4, Feelin \
+    ) { AROS_LIBFUNC_INIT \
+        (void)F_LIB_BASE;
+
+/* args */
+
+#define F_LIB_INIT_ARGS
+#define F_LIB_EXPUNGE_ARGS
+#define F_LIB_CLOSE_ARGS                    
+#define F_LIB_OPEN_ARGS
+#define F_LIB_QUERY_ARGS
+
 #else /*** classic *********************************************************/
 
 #define F_LIB_INIT                              ASM(struct Library *) lib_init \
@@ -393,6 +510,7 @@ les classes.
                                                    REG(a0,uint32 SegList), \
                                                    REG(a6,struct ExecBase *SYS) \
                                                 )
+#define F_LIB_INIT_END
 
 #define F_LIB_EXPUNGE                           ASM(uint32) lib_expunge \
                                                 ( \

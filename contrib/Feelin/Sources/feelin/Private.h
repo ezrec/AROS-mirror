@@ -28,6 +28,8 @@ $VER 08.00 (2004/12/16)
 */
 
 #define F_LIB_STRUCT_AND_BASE                   struct in_FeelinBase *FeelinBase
+#define F_LIB_TYPE                              struct in_FeelinBase *
+#define F_LIB_BASE                              FeelinBase
 //#define F_USE_MEMORY_WALL
 
 /****************************************************************************
@@ -324,52 +326,52 @@ FClass *          fc_object_create              (struct in_FeelinBase *FeelinBas
                                                     d0, uint32, ItemSize, \
                                                     a0, struct TagItem *, Tagl)
 LIB_PROTO2(f_pool_create_a, FPool *,
-    d0, uint32 ItemSize,
-    a0, struct TagItem *Tagl);
+    d0, uint32, ItemSize,
+    a0, struct TagItem *, Tagl);
 
 #define F_LIB_POOL_DELETE                       LIB_DEFFUNC1(f_pool_delete, uint32, \
                                                     a0, FPool *,Pool)
 LIB_PROTO1(f_pool_delete, uint32,
-    a0, FPool * Pool);
+    a0, FPool *, Pool);
 
 #define F_LIB_NEW                               LIB_DEFFUNC1(f_new, APTR, \
                                                     d0, uint32, Size)
 LIB_PROTO1(f_new, APTR,
-    d0, uint32 Size);
+    d0, uint32, Size);
 
 #define F_LIB_NEWP                              LIB_DEFFUNC2(f_newp, APTR, \
                                                     a0, FPool *,Pool, \
                                                     d0, uint32, Size)
 LIB_PROTO2(f_newp, APTR,
-    a0, FPool * Pool,
-    d0, uint32 Size);
+    a0, FPool *, Pool,
+    d0, uint32, Size);
 
 #define F_LIB_DISPOSE                           LIB_DEFFUNC1(f_dispose, uint32, \
                                                     a1, APTR, Mem)
 LIB_PROTO1(f_dispose, uint32,
-    a1, APTR Mem);
+    a1, APTR, Mem);
 
 #define F_LIB_DISPOSEP                          LIB_DEFFUNC2(f_disposep, uint32, \
                                                     a0, FPool *, Pool, \
                                                     a1, APTR, Mem)
 LIB_PROTO2(f_disposep, uint32,
-    a0, FPool * Pool,
-    a1, APTR Mem);
+    a0, FPool *, Pool,
+    a1, APTR, Mem);
 
 #define F_LIB_OPOOL                             LIB_DEFFUNC1NR(f_opool, \
                                                     a0, FPool *, Pool)
 LIB_PROTO1NR(f_opool,
-    a0, FPool * Pool);
+    a0, FPool *, Pool);
 
 #define F_LIB_SPOOL                             LIB_DEFFUNC1NR(f_spool, \
                                                     a0, FPool *, Pool)
 LIB_PROTO1NR(f_spool,
-    a0, FPool * Pool);
+    a0, FPool *, Pool);
 
 #define F_LIB_RPOOL                             LIB_DEFFUNC1NR(f_rpool, \
                                                     a0, FPool *, Pool)
 LIB_PROTO1NR(f_rpool,
-    a0, FPool * Pool);
+    a0, FPool *, Pool);
 
 //+
 ///Linking
@@ -377,52 +379,52 @@ LIB_PROTO1NR(f_rpool,
                                                     a0, FList *, List, \
                                                     a1, FNode *, Node)
 LIB_PROTO2(f_link_tail, FNode *,
-    a0, FList * List,
-    a1, FNode * Node);
+    a0, FList *, List,
+    a1, FNode *, Node);
 
 #define F_LIB_LINK_HEAD                         LIB_DEFFUNC2(f_link_head, FNode *, \
                                                     a0, FList *, List, \
                                                     a1, FNode *, Node)
 LIB_PROTO2(f_link_head, FNode *,
-    a0, FList * List,
-    a1, FNode * Node);
+    a0, FList *, List,
+    a1, FNode *, Node);
 
 #define F_LIB_LINK_INSERT                       LIB_DEFFUNC3(f_link_insert, FNode *, \
                                                     a0, FList *, List, \
                                                     a1, FNode *, Node, \
                                                     a2, FNode *, Prev)
 LIB_PROTO3(f_link_insert, FNode *,
-    a0, FList * List,
-    a1, FNode * Node,
-    a2, FNode * Prev);
+    a0, FList *, List,
+    a1, FNode *, Node,
+    a2, FNode *, Prev);
 
 #define F_LIB_LINK_MOVE                         LIB_DEFFUNC3(f_link_move, FNode *, \
                                                     a0, FList *, List, \
                                                     a1, FNode *, Node, \
                                                     a2, FNode *, Prev)
 LIB_PROTO3(f_link_move, FNode *,
-    a0, FList * List,
-    a1, FNode * Node,
-    a2, FNode * Prev);
+    a0, FList *, List,
+    a1, FNode *, Node,
+    a2, FNode *, Prev);
 
 #define F_LIB_LINK_REMOVE                       LIB_DEFFUNC2(f_link_remove, FNode *, \
                                                     a0, FList *, List, \
                                                     a1, FNode *, Node)
 LIB_PROTO2(f_link_remove, FNode *,
-    a0, FList * List,
-    a1, FNode * Node);
+    a0, FList *, List,
+    a1, FNode *, Node);
 
 #define F_LIB_LINK_MEMBER                       LIB_DEFFUNC2(f_link_member, FNode *, \
                                                     a0, FList *, List, \
                                                     a1, FNode *, Node)
 LIB_PROTO2(f_link_member, FNode *,
-    a0, FList * List,
-    a1, FNode * Node);
+    a0, FList *, List,
+    a1, FNode *, Node);
 
 #define F_LIB_NEXT_NODE                         LIB_DEFFUNC1(f_next_node, FNode *, \
                                                     a0, FNode **, Nodeptr)
 LIB_PROTO1(f_next_node, FNode *,
-    a0, FNode ** Nodeptr);
+    a0, FNode **, Nodeptr);
 
 //+
 ///Strings manipulation
@@ -431,32 +433,32 @@ LIB_PROTO1(f_next_node, FNode *,
                                                     a1, STRPTR, Fmt, \
                                                     a2, uint32 *,Params)
 LIB_PROTO3(f_str_fmtA, APTR,
-    a0, STRPTR Buffer,
-    a1, STRPTR Fmt,
-    a2, uint32 *Params);
+    a0, STRPTR, Buffer,
+    a1, STRPTR, Fmt,
+    a2, uint32 *, Params);
 
 #define F_LIB_STR_NEW                           LIB_DEFFUNC3(f_str_newA, STRPTR, \
                                                     a0, uint32 *, LenPtr, \
                                                     a1, STRPTR, Fmt, \
                                                     a2, uint32 *,Params)
 LIB_PROTO3(f_str_newA, STRPTR,
-    a0, uint32 *LenPtr,
-    a1, STRPTR Fmt,
-    a2, uint32 *Params);
+    a0, uint32 *, LenPtr,
+    a1, STRPTR, Fmt,
+    a2, uint32 *, Params);
 
 #define F_LIB_STR_LEN                           LIB_DEFFUNC1(f_str_len, uint32, \
                                                     a0, STRPTR, Str)
 LIB_PROTO1(f_str_len, uint32,
-    a0, STRPTR Str);
+    a0, STRPTR, Str);
 
 #define F_LIB_STR_CMP                           LIB_DEFFUNC3(f_str_cmp, int32, \
                                                     a0, STRPTR, Str1, \
                                                     a1, STRPTR, Str2, \
                                                     d1, uint32, Length)
 LIB_PROTO3(f_str_cmp, int32,
-    a0, STRPTR Str1,
-    a1, STRPTR Str2,
-    d1, uint32 Length);
+    a0, STRPTR, Str1,
+    a1, STRPTR, Str2,
+    d1, uint32, Length);
 //+
 ///Alert
 #define F_LIB_LOG                               LIB_DEFFUNC3NR(f_logA, \
@@ -464,30 +466,30 @@ LIB_PROTO3(f_str_cmp, int32,
                                                     a0, STRPTR, Fmt, \
                                                     a1, APTR, Msg)
 LIB_PROTO3NR(f_logA,
-    d0, uint32 Level,
-    a0, STRPTR Fmt,
-    a1, APTR Msg);
+    d0, uint32, Level,
+    a0, STRPTR, Fmt,
+    a1, APTR, Msg);
 
 #define F_LIB_ALERT                             LIB_DEFFUNC3(f_alerta, int32, \
                                                     a0, STRPTR, Title, \
                                                     a1, STRPTR, Body, \
                                                     a2, APTR, Params)
 LIB_PROTO3(f_alerta, int32,
-    a0, STRPTR Title,
-    a1, STRPTR Body,
-    a2, APTR Params);
+    a0, STRPTR, Title,
+    a1, STRPTR, Body,
+    a2, APTR, Params);
 
 //+
 ///Hashing
 #define F_LIB_HASH_CREATE                       LIB_DEFFUNC1(f_hash_create, FHashTable *, \
                                                     d0, uint32, Size)
 LIB_PROTO1(f_hash_create, FHashTable *,
-    d0, uint32 Size);
+    d0, uint32, Size);
 
 #define F_LIB_HASH_DELETE                       LIB_DEFFUNC1NR(f_hash_delete, \
                                                     a0, FHashTable *, Table)
 LIB_PROTO1NR(f_hash_delete,
-    a0, FHashTable * Table);
+    a0, FHashTable *, Table);
 
 #define F_LIB_HASH_FIND                         LIB_DEFFUNC4(f_hash_find, FHashLink *, \
                                                     a0, FHashTable *, Table, \
@@ -495,24 +497,24 @@ LIB_PROTO1NR(f_hash_delete,
                                                     d1, uint32, KeyLength, \
                                                     a2, uint32 *, HashPtr)
 LIB_PROTO4(f_hash_find, FHashLink *,
-    a0, FHashTable * Table,
-    a1, UBYTE *Key,
-    d1, uint32 KeyLength,
-    a2, uint32 *HashPtr);
+    a0, FHashTable *, Table,
+    a1, UBYTE *, Key,
+    d1, uint32, KeyLength,
+    a2, uint32 *, HashPtr);
 
 #define F_LIB_HASH_ADD_LINK                     LIB_DEFFUNC2(f_hash_add_link, uint32, \
                                                     a0, FHashTable *, Table, \
                                                     a1, FHashLink *, Link)
 LIB_PROTO2(f_hash_add_link, uint32,
-    a0, FHashTable * Table,
-    a1, FHashLink * Link);
+    a0, FHashTable *, Table,
+    a1, FHashLink *, Link);
 
 #define F_LIB_HASH_REM_LINK                     LIB_DEFFUNC2(f_hash_rem_link, int32, \
                                                     a0, FHashTable *, Table, \
                                                     a1, FHashLink *, Link)
 LIB_PROTO2(f_hash_rem_link, int32,
-    a0, FHashTable * Table,
-    a1, FHashLink * Link);
+    a0, FHashTable *, Table,
+    a1, FHashLink *, Link);
 
 #define F_LIB_HASH_ADD                          LIB_DEFFUNC4(f_hash_add, FHashLink *, \
                                                     a0, FHashTable *, Table, \
@@ -520,125 +522,125 @@ LIB_PROTO2(f_hash_rem_link, int32,
                                                     d0, uint32, KeyLength, \
                                                     a2, APTR, Data)
 LIB_PROTO4(f_hash_add, FHashLink *,
-    a0, FHashTable * Table,
-    a1, UBYTE *Key,
-    d0, uint32 KeyLength,
-    a2, APTR Data);
+    a0, FHashTable *, Table,
+    a1, UBYTE *, Key,
+    d0, uint32, KeyLength,
+    a2, APTR, Data);
 
 #define F_LIB_HASH_REM                          LIB_DEFFUNC3(f_hash_rem, int32, \
                                                     a0, FHashTable *, Table, \
                                                     a1, UBYTE *, Key, \
                                                     d0, uint32, KeyLength)
 LIB_PROTO3(f_hash_rem, int32,
-    a0, FHashTable * Table,
-    a1, UBYTE *Key,
-    d0, uint32 KeyLength);
+    a0, FHashTable *, Table,
+    a1, UBYTE *, Key,
+    d0, uint32, KeyLength);
 //+
 ///Dynamic System
 #define F_LIB_DYNAMIC_CREATE                    LIB_DEFFUNC1(f_dynamic_create, int32, \
                                                     a0, struct in_FeelinClass *, Class)
 LIB_PROTO1(f_dynamic_create, int32,
-    a0, struct in_FeelinClass *Class);
+    a0, struct in_FeelinClass *, Class);
 
 #define F_LIB_DYNAMIC_DELETE                    LIB_DEFFUNC1NR(f_dynamic_delete, \
                                                     a0, struct FeelinClass *, Class)
 LIB_PROTO1NR(f_dynamic_delete,
-    a0, struct FeelinClass *Class);
+    a0, struct FeelinClass *, Class);
 
 #define F_LIB_DYNAMIC_FIND_ATTRIBUTE            LIB_DEFFUNC3(f_dynamic_find_attribute, FClassAttribute *, \
                                                     a0, STRPTR, Name, \
                                                     a1, FClass *, FromClass, \
                                                     a2, FClass **, RealClass)
 LIB_PROTO3(f_dynamic_find_attribute, FClassAttribute *,
-    a0, STRPTR Name,
-    a1, FClass * FromClass,
-    a2, FClass ** RealClass);
+    a0, STRPTR, Name,
+    a1, FClass *, FromClass,
+    a2, FClass **, RealClass);
 
 #define F_LIB_DYNAMIC_FIND_METHOD               LIB_DEFFUNC3(f_dynamic_find_method, FClassMethod *, \
                                                     a0, STRPTR, Name, \
                                                     a1, FClass *, FromClass, \
                                                     a2, FClass **, RealClass)
 LIB_PROTO3(f_dynamic_find_method, FClassMethod *,
-    a0, STRPTR Name,
-    a1, FClass * FromClass,
-    a2, FClass ** RealClass);
+    a0, STRPTR, Name,
+    a1, FClass *, FromClass,
+    a2, FClass **, RealClass);
 
 #define F_LIB_DYNAMIC_FIND_ID                   LIB_DEFFUNC1(f_dynamic_find_id, uint32, \
                                                     a0, STRPTR, Name)
 LIB_PROTO1(f_dynamic_find_id, uint32,
-    a0, STRPTR Name);
+    a0, STRPTR, Name);
 
 #define F_LIB_DYNAMIC_RESOLVE_TABLE             LIB_DEFFUNC1(f_dynamic_resolve_table, uint32, \
                                                     a0, FDynamicEntry *, Entries)
 LIB_PROTO1(f_dynamic_resolve_table, uint32,
-    a0, FDynamicEntry * Entries);
+    a0, FDynamicEntry *, Entries);
 
 #define F_LIB_DYNAMIC_ADD_AUTO_TABLE            LIB_DEFFUNC1(f_dynamic_add_auto_table, int32, \
                                                     a0, FDynamicEntry *, Table)
 LIB_PROTO1(f_dynamic_add_auto_table, int32,
-    a0, FDynamicEntry * Table);
+    a0, FDynamicEntry *, Table);
 
 #define F_LIB_DYNAMIC_REM_AUTO_TABLE            LIB_DEFFUNC1NR(f_dynamic_rem_auto_table, \
                                                     a0, FDynamicEntry *, Table)
 LIB_PROTO1NR(f_dynamic_rem_auto_table,
-    a0, FDynamicEntry * Table);
+    a0, FDynamicEntry *, Table);
 
 #define F_LIB_DYNAMIC_NTI                       LIB_DEFFUNC3(f_dynamic_nti, struct TagItem *, \
                                                     a0, struct TagItem **, TLP, \
                                                     a1, struct TagItem *, item, \
                                                     a2, struct in_FeelinClass *, Class)
 LIB_PROTO3(f_dynamic_nti, struct TagItem *,
-    a0, struct TagItem **TLP,
-    a1, struct TagItem *item,
-    a2, struct in_FeelinClass *Class);
+    a0, struct TagItem **, TLP,
+    a1, struct TagItem *, item,
+    a2, struct in_FeelinClass *, Class);
 
 #define F_LIB_DYNAMIC_FTI                       LIB_DEFFUNC2(f_dynamic_fti, struct TagItem *, \
                                                     d0, uint32, Attribute, \
                                                     a0, struct TagItem *, Tags)
 LIB_PROTO2(f_dynamic_fti, struct TagItem *,
-    d0, uint32 Attribute,
-    a0, struct TagItem *Tags);
+    d0, uint32, Attribute,
+    a0, struct TagItem *, Tags);
 
 #define F_LIB_DYNAMIC_GTD                       LIB_DEFFUNC3(f_dynamic_gtd, uint32, \
                                                     d0, uint32, Attribute, \
                                                     d1, uint32, Default, \
                                                     a0, struct TagItem *, Tags)
 LIB_PROTO3(f_dynamic_gtd, uint32,
-    d0, uint32 Attribute,
-    d1, uint32 Default,
-    a0, struct TagItem *Tags);
+    d0, uint32, Attribute,
+    d1, uint32, Default,
+    a0, struct TagItem *, Tags);
 //+
 ///OOS
 #define F_LIB_FIND_CLASS                        LIB_DEFFUNC1(f_find_class, FClass *, \
                                                     a0, STRPTR, Name)
 LIB_PROTO1(f_find_class, FClass *,
-    a0, STRPTR Name);
+    a0, STRPTR, Name);
 
 #define F_LIB_OPEN_CLASS                        LIB_DEFFUNC1(f_open_class, FClass *, \
                                                     a0, STRPTR, Name)
 LIB_PROTO1(f_open_class, FClass *,
-    a0, STRPTR Name);
+    a0, STRPTR, Name);
 
 #define F_LIB_CLOSE_CLASS                       LIB_DEFFUNC1(f_close_class, uint32, \
                                                     a0, struct in_FeelinClass *, Class)
 LIB_PROTO1(f_close_class, uint32,
-    a0, struct in_FeelinClass *Class);
+    a0, struct in_FeelinClass *, Class);
 
 #define F_LIB_CREATE_CLASS                      LIB_DEFFUNC2(f_create_classA, FClass *, \
                                                     a0, STRPTR, Name, \
                                                     a1, struct TagItem *, Tags)
 LIB_PROTO2(f_create_classA, FClass *,
-    a0, STRPTR Name,
-    a1, struct TagItem *Tags);
+    a0, STRPTR, Name,
+    a1, struct TagItem *, Tags);
 
 #define F_LIB_DO                                LIB_DEFFUNC3(f_doa, uint32, \
                                                     a0, FObject, Obj, \
                                                     d0, uint32, Method, \
                                                     a1, APTR, Msg)
 LIB_PROTO3(f_doa, uint32,
-    a0, FObject Obj,
-    d0, uint32 Method,
-    a1, APTR Msg);
+    a0, FObject, Obj,
+    d0, uint32, Method,
+    a1, APTR, Msg);
 
 #define F_LIB_CLASS_DO                          LIB_DEFFUNC4(f_classdoa, uint32, \
                                                     a2, FClass *, Class, \
@@ -646,10 +648,10 @@ LIB_PROTO3(f_doa, uint32,
                                                     d0, uint32, Method, \
                                                     a1, APTR, Msg)
 LIB_PROTO4(f_classdoa, uint32,
-    a2, FClass * Class,
-    a0, FObject Obj,
-    d0, uint32 Method,
-    a1, APTR Msg);
+    a2, FClass *, Class,
+    a0, FObject, Obj,
+    d0, uint32, Method,
+    a1, APTR, Msg);
 
 #define F_LIB_SUPER_DO                          LIB_DEFFUNC4(f_superdoa, uint32, \
                                                     a2, FClass *, Class, \
@@ -657,52 +659,52 @@ LIB_PROTO4(f_classdoa, uint32,
                                                     d0, uint32, Method, \
                                                     a1, APTR, Msg)
 LIB_PROTO4(f_superdoa, uint32,
-    a2, FClass * Class,
-    a0, FObject Obj,
-    d0, uint32 Method,
-    a1, APTR Msg);
+    a2, FClass *, Class,
+    a0, FObject, Obj,
+    d0, uint32, Method,
+    a1, APTR, Msg);
 
 #define F_LIB_NEW_OBJ                           LIB_DEFFUNC2(f_new_obja, FObject, \
                                                     a0, STRPTR, Name, \
                                                     a1, struct TagItem *, Tags)
 LIB_PROTO2(f_new_obja, FObject,
-    a0, STRPTR Name,
-    a1, struct TagItem *Tags);
+    a0, STRPTR, Name,
+    a1, struct TagItem *, Tags);
 
 #define F_LIB_MAKE_OBJ                          LIB_DEFFUNC2(f_make_obja, FObject, \
                                                     d0, uint32, Type, \
                                                     a0, uint32 *, Params)
 LIB_PROTO2(f_make_obja, FObject,
-    d0, uint32 Type,
-    a0, uint32 *Params);
+    d0, uint32, Type,
+    a0, uint32 *, Params);
 
 #define F_LIB_DISPOSE_OBJ                       LIB_DEFFUNC1(f_dispose_obj, uint32, \
                                                     a0, FObject, Obj)
 LIB_PROTO1(f_dispose_obj, uint32,
-    a0, FObject Obj);
+    a0, FObject, Obj);
 
 #define F_LIB_GET                               LIB_DEFFUNC2(f_get, uint32, \
                                                     a0, FObject, Obj, \
                                                     d1, uint32, Tag)
 LIB_PROTO2(f_get, uint32,
-    a0, FObject Obj,
-    d1, uint32 Tag);
+    a0, FObject, Obj,
+    d1, uint32, Tag);
 
 #define F_LIB_SET                               LIB_DEFFUNC3NR(f_set, \
                                                     a0, FObject, Obj, \
                                                     d1, uint32, Tag, \
                                                     d2, uint32, Data)
 LIB_PROTO3NR(f_set,
-    a0, FObject Obj,
-    d1, uint32 Tag,
-    d2, uint32 Data);
+    a0, FObject, Obj,
+    d1, uint32, Tag,
+    d2, uint32, Data);
 
 #define F_LIB_DRAW                              LIB_DEFFUNC2NR(f_draw, \
                                                     a0, FObject, Obj, \
                                                     d0, uint32, Flags)
 LIB_PROTO2NR(f_draw,
-    a0, FObject Obj,
-    d0, uint32 Flags);
+    a0, FObject, Obj,
+    d0, uint32, Flags);
 
 /*OLAV: Attention, tu avais mis Flags en d1 */
 
@@ -714,12 +716,12 @@ LIB_PROTO2NR(f_draw,
                                                     d3, UWORD, h, \
                                                     d4, uint32, Flags)
 LIB_PROTO6NR(f_layout,
-    a0, FObject Obj,
-    d0, WORD x,
-    d1, WORD y,
-    d2, UWORD w,
-    d3, UWORD h,
-    d4, bits32 Flags);
+    a0, FObject, Obj,
+    d0, WORD, x,
+    d1, WORD, y,
+    d2, UWORD, w,
+    d3, UWORD, h,
+    d4, bits32, Flags);
 
 #define F_LIB_ERASE                             LIB_DEFFUNC6NR(f_erase, \
                                                     a0, FObject, Obj, \
@@ -729,39 +731,39 @@ LIB_PROTO6NR(f_layout,
                                                     d3, WORD, y2, \
                                                     d4, bits32, Flags)
 LIB_PROTO6NR(f_erase,
-    a0, FObject Obj,
-    d0, WORD x1,
-    d1, WORD y1,
-    d2, WORD x2,
-    d3, WORD y2,
-    d4, bits32 Flags);
+    a0, FObject, Obj,
+    d0, WORD, x1,
+    d1, WORD, y1,
+    d2, WORD, x2,
+    d3, WORD, y2,
+    d4, bits32, Flags);
 //+
 ///Shared objects menagement
 #define F_LIB_SHARED_FIND                       LIB_DEFFUNC1(f_shared_find, FObject, \
                                                     a0, STRPTR, Name)
 LIB_PROTO1(f_shared_find, FObject,
-    a0, STRPTR Name);
+    a0, STRPTR, Name);
 
 #define F_LIB_SHARED_CREATE                     LIB_DEFFUNC2(f_shared_create, FObject , \
                                                     a0, FObject, Object, \
                                                     a1, STRPTR, Name)
 LIB_PROTO2(f_shared_create, FObject,
-    a0, FObject Object,
-    a1, STRPTR Name);
+    a0, FObject, Object,
+    a1, STRPTR, Name);
 
 #define F_LIB_SHARED_DELETE                     LIB_DEFFUNC1NR(f_shared_delete, \
                                                     a0, FObject, Shared)
 LIB_PROTO1NR(f_shared_delete,
-    a0, FObject Shared);
+    a0, FObject, Shared);
 
 #define F_LIB_SHARED_OPEN                       LIB_DEFFUNC1(f_shared_open, FObject, \
                                                     a0, STRPTR, Name)
 LIB_PROTO1(f_shared_open, FObject,
-    a0, STRPTR Name);
+    a0, STRPTR, Name);
 
 #define F_LIB_SHARED_CLOSE                      LIB_DEFFUNC1NR(f_shared_close, \
                                                     a0, FObject, Shared)
 LIB_PROTO1NR(f_shared_close,
-    a0, FObject Shared);
+    a0, FObject, Shared);
 //+
 

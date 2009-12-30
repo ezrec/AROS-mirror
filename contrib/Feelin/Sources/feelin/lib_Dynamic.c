@@ -282,6 +282,7 @@ F_LIB_DYNAMIC_CREATE
 
 	return rc;
 }
+F_LIB_END
 //+
 ///f_dynamic_delete
 F_LIB_DYNAMIC_DELETE
@@ -300,6 +301,7 @@ F_LIB_DYNAMIC_DELETE
 		F_RPool(FeelinBase -> ClassesPool);
 	}
 }
+F_LIB_END
 //+
 ///f_dynamic_find_attribute
 F_LIB_DYNAMIC_FIND_ATTRIBUTE
@@ -373,6 +375,7 @@ F_LIB_DYNAMIC_FIND_ATTRIBUTE
 	}
 	return NULL;
 }
+F_LIB_END
 //+
 ///f_dynamic_find_method
 F_LIB_DYNAMIC_FIND_METHOD
@@ -446,6 +449,7 @@ F_LIB_DYNAMIC_FIND_METHOD
 	}
 	return NULL;
 }
+F_LIB_END
 //+
 ///f_dynamic_find_id
 F_LIB_DYNAMIC_FIND_ID
@@ -516,6 +520,7 @@ F_LIB_DYNAMIC_FIND_ID
 	}
 	return 0;
 }
+F_LIB_END
 
 #if 0
 //+
@@ -626,6 +631,7 @@ F_LIB_DYNAMIC_RESOLVE_TABLE
 		}
 	}
 }
+F_LIB_END
 //+
 */
 ///f_dynamic_resolve_table
@@ -737,6 +743,7 @@ F_LIB_DYNAMIC_RESOLVE_TABLE
 	}
 	return n;
 }
+F_LIB_END
 //+
 
 
@@ -820,6 +827,7 @@ F_LIB_DYNAMIC_NTI
 		(*TLP)++;
 	}
 }
+F_LIB_END
 //+
 ///f_dynamic_fti
 F_LIB_DYNAMIC_FTI
@@ -865,6 +873,7 @@ F_LIB_DYNAMIC_FTI
 		Tags++;
 	}
 }
+F_LIB_END
 //+
 ///f_dynamic_gtd
 F_LIB_DYNAMIC_GTD
@@ -880,5 +889,6 @@ F_LIB_DYNAMIC_GTD
 		return Default;
 	}
 }
+F_LIB_END
 //+
 

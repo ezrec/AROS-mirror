@@ -673,6 +673,7 @@ F_LIB_DYNAMIC_ADD_AUTO_TABLE
 
     return ok;
 }
+F_LIB_END
 //+
 ///f_dynamic_rem_auto_table
 F_LIB_DYNAMIC_REM_AUTO_TABLE
@@ -689,5 +690,6 @@ F_LIB_DYNAMIC_REM_AUTO_TABLE
         F_RPool(FeelinBase -> DynamicPool);
     }
 }
+F_LIB_END
 //+
 

@@ -149,6 +149,7 @@ F_LIB_SHARED_FIND
    }
    return NULL;
 }
+F_LIB_END
 //+
 ///f_shared_create
 F_LIB_SHARED_CREATE
@@ -171,6 +172,7 @@ F_LIB_SHARED_CREATE
    }
    return NULL;
 }
+F_LIB_END
 //+
 ///f_shared_delete
 F_LIB_SHARED_DELETE
@@ -209,6 +211,7 @@ F_LIB_SHARED_DELETE
       ReleaseSemaphore(&FeelinBase -> SharedList.Semaphore);
    }
 }
+F_LIB_END
 //+
 ///f_shared_open
 F_LIB_SHARED_OPEN
@@ -262,6 +265,7 @@ F_LIB_SHARED_OPEN
    }
    return NULL;
 }
+F_LIB_END
 //+
 ///f_shared_close
 F_LIB_SHARED_CLOSE
@@ -295,5 +299,6 @@ F_LIB_SHARED_CLOSE
       ReleaseSemaphore(&FeelinBase -> SharedList.Semaphore);
    }
 }
+F_LIB_END
 //+
 

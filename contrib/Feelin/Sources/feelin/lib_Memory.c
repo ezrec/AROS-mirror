@@ -188,6 +188,7 @@ F_LIB_POOL_CREATE
     }
     return LOD;
 }
+F_LIB_END
 //+
 ///f_pool_delete
 F_LIB_POOL_DELETE
@@ -259,12 +260,14 @@ F_LIB_POOL_DELETE
 
     return 0;
 }
+F_LIB_END
 //+
 ///f_new
 F_LIB_NEW
 {
     return F_NewP(FeelinBase -> DefaultPool,Size);
 }
+F_LIB_END
 //+
 ///f_newp
 F_LIB_NEWP
@@ -576,6 +579,7 @@ F_LIB_NEWP
     }
     return NULL;
 }
+F_LIB_END
 //+
 ///f_dispose
 F_LIB_DISPOSE
@@ -897,6 +901,7 @@ F_LIB_DISPOSE
 
     return 0;
 }
+F_LIB_END
 //+
 ///f_disposep
 F_LIB_DISPOSEP
@@ -907,6 +912,7 @@ F_LIB_DISPOSEP
 
     return 0;
 }
+F_LIB_END
 //+
 ///f_opool
 F_LIB_OPOOL
@@ -916,6 +922,7 @@ F_LIB_OPOOL
         ObtainSemaphore(&Pool -> Semaphore);
     }
 }
+F_LIB_END
 //+
 ///f_spool
 F_LIB_SPOOL
@@ -925,6 +932,7 @@ F_LIB_SPOOL
         ObtainSemaphoreShared(&Pool -> Semaphore);
     }
 }
+F_LIB_END
 //+
 ///f_rpool
 F_LIB_RPOOL
@@ -934,5 +942,6 @@ F_LIB_RPOOL
         ReleaseSemaphore(&Pool -> Semaphore);
     }
 }
+F_LIB_END
 //+
 

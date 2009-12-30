@@ -62,6 +62,7 @@ F_LIB_FIND_CLASS
    }
    return NULL;
 }
+F_LIB_END
 //+
 ///f_open_class
 F_LIB_OPEN_CLASS
@@ -176,6 +177,7 @@ F_LIB_OPEN_CLASS
 
     return cl;
 }
+F_LIB_END
 //+
 ///f_close_class
 F_LIB_CLOSE_CLASS
@@ -196,6 +198,7 @@ F_LIB_CLOSE_CLASS
    }
    return 0;
 }
+F_LIB_END
 //+
 ///f_create_classA
 F_LIB_CREATE_CLASS
@@ -230,6 +233,7 @@ F_LIB_CREATE_CLASS
 
    return cl;
 }
+F_LIB_END
 //+
 
 /****************************************************************************
@@ -283,6 +287,7 @@ F_LIB_DO
    }
    return 0;
 }
+F_LIB_END
 //+
 ///f_classdoa
 F_LIB_CLASS_DO
@@ -359,6 +364,7 @@ F_LIB_CLASS_DO
 
    return 0;
 }
+F_LIB_END
 //+
 ///f_superdoa
 F_LIB_SUPER_DO
@@ -373,6 +379,7 @@ F_LIB_SUPER_DO
    }
    return 0;
 }
+F_LIB_END
 //+
 
 /****************************************************************************
@@ -407,6 +414,7 @@ F_LIB_NEW_OBJ
    }
    return NULL;
 }
+F_LIB_END
 //+
 ///f_make_obja
 F_LIB_MAKE_OBJ
@@ -529,6 +537,7 @@ F_LIB_MAKE_OBJ
    }
    return NULL;
 }
+F_LIB_END
 //+
 ///f_dispose_obj
 F_LIB_DISPOSE_OBJ
@@ -570,6 +579,7 @@ F_LIB_DISPOSE_OBJ
 
    return 0;
 }
+F_LIB_END
 //+
 
 /****************************************************************************
@@ -593,11 +603,13 @@ F_LIB_GET
 
    return rc;
 }
+F_LIB_END
 //+
 ///f_set
 F_LIB_SET
 {
    F_Do(Obj,FM_Set,Tag,Data,TAG_DONE);
 }
+F_LIB_END
 //+
 

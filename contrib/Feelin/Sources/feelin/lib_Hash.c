@@ -48,12 +48,14 @@ F_LIB_HASH_CREATE
     }
     return NULL;
 }
+F_LIB_END
 //+
 ///f_hash_delete
 F_LIB_HASH_DELETE
 {
     F_Dispose(Table);
 }
+F_LIB_END
 //+
 ///f_hash_find
 F_LIB_HASH_FIND
@@ -95,6 +97,7 @@ F_LIB_HASH_FIND
     }
     return NULL;
 }
+F_LIB_END
 //+
 ///f_hash_add_link
 F_LIB_HASH_ADD_LINK
@@ -112,6 +115,7 @@ F_LIB_HASH_ADD_LINK
     }
     return 0;
 }
+F_LIB_END
 //+
 ///f_hash_rem_link
 F_LIB_HASH_REM_LINK
@@ -148,6 +152,7 @@ F_LIB_HASH_REM_LINK
 
     return FALSE;
 }
+F_LIB_END
 //+
 ///f_hash_add
 F_LIB_HASH_ADD
@@ -170,6 +175,7 @@ F_LIB_HASH_ADD
     }
     return NULL;
 }
+F_LIB_END
 //+
 ///f_hash_rem
 F_LIB_HASH_REM
@@ -189,5 +195,6 @@ F_LIB_HASH_REM
     }
     return FALSE;
 }
+F_LIB_END
 //+
 
