@@ -110,6 +110,13 @@ static IPTR RequestFileFunc(struct Hook *hook, Object *app, struct Hook **forwar
     return TRUE;
 }
 
+static IPTR CloseWindowFunc(struct Hook *hook, Object *app, Object **win)
+{
+    DoMethod(*win, MUIA_Window_Open, FALSE);
+    DoMethod(app, OM_REMMEMBER, *win);
+    MUI_DisposeObject(*win);
+}
+
 /*** Methods ****************************************************************/
 IPTR BrowserApp__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 {
@@ -223,6 +230,8 @@ IPTR BrowserApp__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
     data->forwardCallToActiveWindowHook.h_SubEntry = (HOOKFUNC) ForwardCallToActiveWindowFunc;
     data->requestFileHook.h_Entry = HookEntry;
     data->requestFileHook.h_SubEntry = (HOOKFUNC) RequestFileFunc;
+    data->closeWindowHook.h_Entry = HookEntry;
+    data->closeWindowHook.h_SubEntry = (HOOKFUNC) CloseWindowFunc;
     data->preferences = preferences;
 
     DoMethod(data->preferencesManager, MUIM_PreferencesManager_Load);
@@ -480,9 +489,7 @@ IPTR BrowserApp__MUIM_BrowserApp_CloseWindow(Class *cl, Object *obj, struct MUIP
     }
     else
     {
-	DoMethod(msg->win, MUIA_Window_Open, FALSE);
-	DoMethod(obj, OM_REMMEMBER, msg->win);
-	MUI_DisposeObject(msg->win);
+	DoMethod(_app(msg->win), MUIM_Application_PushMethod, obj, 3, MUIM_CallHook, &data->closeWindowHook, msg->win);
     }
     
     return TRUE;

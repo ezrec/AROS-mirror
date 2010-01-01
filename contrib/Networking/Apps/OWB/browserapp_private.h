@@ -20,6 +20,7 @@ struct BrowserApp_DATA
     Object *downloadManager;
     struct Hook forwardCallToActiveWindowHook;
     struct Hook requestFileHook;
+    struct Hook closeWindowHook;
 };
 
 #endif /* _BROWSERAPP_PRIVATE_H_ */
