@@ -1,6 +1,6 @@
 diff -ruN icu/source/common/unicode/umachine.h icu-aros/source/common/unicode/umachine.h
 --- icu/source/common/unicode/umachine.h	2009-07-01 20:50:34.000000000 +0200
-+++ icu-aros/source/common/unicode/umachine.h	2009-11-14 19:48:33.000000000 +0100
++++ icu-aros/source/common/unicode/umachine.h	2010-01-01 11:35:04.754138978 +0100
 @@ -273,6 +273,10 @@
  #       endif
  #   elif defined(U_WINDOWS)
@@ -14,7 +14,7 @@ diff -ruN icu/source/common/unicode/umachine.h icu-aros/source/common/unicode/um
  
 diff -ruN icu/source/config/mh-aros icu-aros/source/config/mh-aros
 --- icu/source/config/mh-aros	1970-01-01 01:00:00.000000000 +0100
-+++ icu-aros/source/config/mh-aros	2009-11-14 19:48:33.000000000 +0100
++++ icu-aros/source/config/mh-aros	2010-01-01 11:35:04.754138978 +0100
 @@ -0,0 +1,76 @@
 +## AROS-specific setup
 +
@@ -94,7 +94,7 @@ diff -ruN icu/source/config/mh-aros icu-aros/source/config/mh-aros
 +
 diff -ruN icu/source/configure icu-aros/source/configure
 --- icu/source/configure	2009-07-01 20:51:26.000000000 +0200
-+++ icu-aros/source/configure	2009-11-14 19:48:33.000000000 +0100
++++ icu-aros/source/configure	2010-01-01 11:35:04.758139257 +0100
 @@ -4110,19 +4110,16 @@
              *) ;;
          esac
@@ -150,7 +150,7 @@ diff -ruN icu/source/configure icu-aros/source/configure
  
 diff -ruN icu/source/data/Makefile.in icu-aros/source/data/Makefile.in
 --- icu/source/data/Makefile.in	2009-07-01 20:51:20.000000000 +0200
-+++ icu-aros/source/data/Makefile.in	2009-11-14 19:48:33.000000000 +0100
++++ icu-aros/source/data/Makefile.in	2010-01-01 11:35:04.758139257 +0100
 @@ -34,8 +34,12 @@
  ifeq ($(PKGDATA_MODE),dll)
  ICUPKGDATA_OUTDIR = $(LIBDIR)
@@ -166,7 +166,7 @@ diff -ruN icu/source/data/Makefile.in icu-aros/source/data/Makefile.in
  PKGDATA = $(TOOLBINDIR)/pkgdata $(PKGDATA_OPTS) -q -c -s $(CURDIR)/out/build/$(ICUDATA_PLATFORM_NAME) -d $(ICUPKGDATA_OUTDIR)
 diff -ruN icu/source/extra/uconv/Makefile.in icu-aros/source/extra/uconv/Makefile.in
 --- icu/source/extra/uconv/Makefile.in	2009-07-01 20:50:32.000000000 +0200
-+++ icu-aros/source/extra/uconv/Makefile.in	2009-11-15 12:07:14.000000000 +0100
++++ icu-aros/source/extra/uconv/Makefile.in	2010-01-01 11:35:04.758139257 +0100
 @@ -150,7 +150,7 @@
  package-resfiles: $(RESDIR)/$(RESDIR).lst pkgdata.inc
  	$(INVOKE) $(PKGDATA_INVOKE_OPTS) $(TOOLBINDIR)/pkgdata -p $(MSGNAME) $(PKGDATA_OPTS) -m $(PKGMODE) -s $(RESDIR) -d $(RESDIR) -T $(RESDIR) $(RESDIR)/$(RESDIR).lst
@@ -178,7 +178,7 @@ diff -ruN icu/source/extra/uconv/Makefile.in icu-aros/source/extra/uconv/Makefil
  	@for file in $(RESFILES:$(RESDIR)/%.res=%.res); do \
 diff -ruN icu/source/icudefs.mk.in icu-aros/source/icudefs.mk.in
 --- icu/source/icudefs.mk.in	2009-07-01 20:51:26.000000000 +0200
-+++ icu-aros/source/icudefs.mk.in	2009-11-14 19:48:33.000000000 +0100
++++ icu-aros/source/icudefs.mk.in	2010-01-01 11:35:04.758139257 +0100
 @@ -64,10 +64,16 @@
  PKGDATA_LIBNAME = -L $(ICUPREFIX)$(DATA_STUBNAME)$(ICULIBSUFFIX)
  ICUPKGDATA_DIR = $(libdir)
@@ -198,7 +198,7 @@ diff -ruN icu/source/icudefs.mk.in icu-aros/source/icudefs.mk.in
  
 diff -ruN icu/source/tools/pkgdata/pkgdata.cpp icu-aros/source/tools/pkgdata/pkgdata.cpp
 --- icu/source/tools/pkgdata/pkgdata.cpp	2009-07-01 20:50:42.000000000 +0200
-+++ icu-aros/source/tools/pkgdata/pkgdata.cpp	2009-11-14 19:48:33.000000000 +0100
++++ icu-aros/source/tools/pkgdata/pkgdata.cpp	2010-01-01 11:37:56.164876790 +0100
 @@ -70,12 +70,12 @@
  #define WINDOWS_WITH_MSVC
  #endif
@@ -430,7 +430,7 @@ diff -ruN icu/source/tools/pkgdata/pkgdata.cpp icu-aros/source/tools/pkgdata/pkg
              if (result != 0) {
                  break;
              }
-@@ -1110,7 +1147,7 @@
+@@ -1110,14 +1147,13 @@
                      pkgDataFlags[LIBFLAGS],
                      tempObjectFile,
                      gencmnFile);
@@ -439,16 +439,31 @@ diff -ruN icu/source/tools/pkgdata/pkgdata.cpp icu-aros/source/tools/pkgdata/pkg
          if (result != 0) {
              break;
          }
-@@ -1139,7 +1176,7 @@
+ 
+-        sprintf(buffer, "%s %s",
+-                buffer,
+-                tempObjectFile);
++        strcat(buffer, " ");
++        strcat(buffer, tempObjectFile);
+ #endif
+         
+         if (i > 0) {
+@@ -1139,11 +1175,10 @@
          tempObjectFile,
          icudtAll);
      
 -    result = system(cmd);
 +    result = runCommand(cmd);
      if (result == 0) {
-         sprintf(buffer, "%s %s",
-             buffer,
-@@ -1222,7 +1259,7 @@
+-        sprintf(buffer, "%s %s",
+-            buffer,
+-            tempObjectFile);
++        strcat(buffer, " ");
++        strcat(buffer, tempObjectFile);
+     }
+ #endif
+ 
+@@ -1222,7 +1257,7 @@
                  );
      }
  
