@@ -73,6 +73,7 @@ static inline void clflush(volatile void * ptr)
 
 
 #define BUG_ON(condition)           do { if (unlikely(condition)) bug("BUG: %s:%d\n", __FILE__, __LINE__); } while(0)
+#define WARN_ON(condition)          do { if (unlikely(condition)) bug("WARN: %s:%d\n", __FILE__, __LINE__); } while(0)
 #define EXPORT_SYMBOL(x)
 #define PTR_ERR(addr)               (SIPTR)addr
 #define ERR_PTR(error)              (APTR)error

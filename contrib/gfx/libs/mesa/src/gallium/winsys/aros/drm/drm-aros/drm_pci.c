@@ -27,4 +27,10 @@ drm_dma_handle_t *drm_pci_alloc(struct drm_device *dev, size_t size,
 	
 	return dmah;   
 }
+
+void drm_pci_free(struct drm_device * dev, drm_dma_handle_t * dmah)
+{
+    /* FIXME: Free dmah->vaddr */
+    kfree(dmah);
+}
 				       

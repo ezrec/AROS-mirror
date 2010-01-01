@@ -38,5 +38,6 @@
 
 /* Config */
 #define CONFIG_AGP
+#define __OS_HAS_AGP    1
 
 #endif /* DRM_AROS_CONFIG_H */

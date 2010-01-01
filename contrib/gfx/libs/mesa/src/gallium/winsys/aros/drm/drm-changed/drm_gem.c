@@ -94,10 +94,10 @@ drm_gem_init(struct drm_device *dev)
 #endif
 	atomic_set(&dev->pin_count, 0);
 	atomic_set(&dev->pin_memory, 0);
-#if !defined(__AROS__)
 	atomic_set(&dev->gtt_count, 0);
 	atomic_set(&dev->gtt_memory, 0);
 
+#if !defined(__AROS__)
 	mm = kzalloc(sizeof(struct drm_gem_mm), GFP_KERNEL);
 	if (!mm) {
 		DRM_ERROR("out of memory\n");

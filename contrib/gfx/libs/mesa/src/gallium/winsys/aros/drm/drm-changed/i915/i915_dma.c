@@ -35,12 +35,11 @@
 #endif
 #include "i915_drm.h"
 #include "i915_drv.h"
-#if !defined(__AROS__)
 #include "i915_trace.h"
+#if !defined(__AROS__)
 #include <linux/vgaarb.h>
 #endif
 
-#if !defined(__AROS__)
 /* Really want an OS-independent resettable timer.  Would like to have
  * this loop run for (eg) 3 sec, but have the timer reset every time
  * the head pointer changes, so that EBUSY only happens if the ring
@@ -69,11 +68,11 @@ int i915_wait_ring(struct drm_device * dev, int n, const char *caller)
 			return 0;
 		}
 
-		if (dev->primary->master) {
-			struct drm_i915_master_private *master_priv = dev->primary->master->driver_priv;
-			if (master_priv->sarea_priv)
-				master_priv->sarea_priv->perf_boxes |= I915_BOX_WAIT;
-		}
+//FIXME		if (dev->primary->master) {
+//FIXME			struct drm_i915_master_private *master_priv = dev->primary->master->driver_priv;
+//FIXME			if (master_priv->sarea_priv)
+//FIXME				master_priv->sarea_priv->perf_boxes |= I915_BOX_WAIT;
+//FIXME		}
 
 
 		if (ring->head != last_head)
@@ -83,7 +82,12 @@ int i915_wait_ring(struct drm_device * dev, int n, const char *caller)
 
 		last_head = ring->head;
 		last_acthd = acthd;
+#if !defined(__AROS__)
 		msleep_interruptible(10);
+#else
+//FIXME
+IMPLEMENT("Calling msleep_interruptible\n");
+#endif
 
 	}
 
@@ -118,7 +122,6 @@ int i915_wrap_ring(struct drm_device *dev)
 
 	return 0;
 }
-#endif
 
 /**
  * Sets up the hardware status page for devices that need a physical address
@@ -145,7 +148,6 @@ static int i915_init_phys_hws(struct drm_device *dev)
 	return 0;
 }
 
-#if !defined(__AROS__)
 /**
  * Frees the hardware status page, whether it's a physical address or a virtual
  * address set up by the X Server.
@@ -166,7 +168,6 @@ static void i915_free_hws(struct drm_device *dev)
 	/* Need to rewrite hardware status page */
 	I915_WRITE(HWS_PGA, 0x1ffff000);
 }
-#endif
 
 void i915_kernel_lost_context(struct drm_device * dev)
 {
@@ -200,7 +201,6 @@ IMPLEMENT("\n");
 #endif
 }
 
-#if !defined(__AROS__)
 static int i915_dma_cleanup(struct drm_device * dev)
 {
 	drm_i915_private_t *dev_priv = dev->dev_private;
@@ -225,6 +225,7 @@ static int i915_dma_cleanup(struct drm_device * dev)
 	return 0;
 }
 
+#if !defined(__AROS__)
 static int i915_initialize(struct drm_device * dev, drm_i915_init_t * init)
 {
 	drm_i915_private_t *dev_priv = dev->dev_private;
@@ -1215,7 +1216,7 @@ static int i915_load_modeset_init(struct drm_device *dev,
 	struct drm_i915_private *dev_priv = dev->dev_private;
 	int fb_bar = IS_I9XX(dev) ? 2 : 0;
 	int ret = 0;
-asm("int3");
+
 	dev->mode_config.fb_base = drm_get_resource_start(dev, fb_bar) &
 		0xff000000;
 
@@ -1549,16 +1550,19 @@ IMPLEMENT("Calling pci_enable_msi\n");
 			goto out_workqueue_free;
 		}
 	}
-asm("int3");
+
 	/* Must be done after probing outputs */
 	/* FIXME: verify on IGDNG */
-//FIXME	if (!IS_IGDNG(dev))
-//FIXME		intel_opregion_init(dev, 0);
+	if (!IS_IGDNG(dev))
+#if !defined(__AROS__)
+		intel_opregion_init(dev, 0);
+#else
+        IMPLEMENT("Calling intel_opregion_init(dev, 0)\n");
+#endif
 
 //FIXME	setup_timer(&dev_priv->hangcheck_timer, i915_hangcheck_elapsed,
 //FIXME		    (unsigned long) dev);
-//FIXME	return 0;
-    return -1;
+	return 0;
 
 out_workqueue_free:
 //FIXME	destroy_workqueue(dev_priv->wq);
@@ -1573,28 +1577,32 @@ free_priv:
 	return ret;
 }
 
-#if !defined(__AROS__)
 int i915_driver_unload(struct drm_device *dev)
 {
 	struct drm_i915_private *dev_priv = dev->dev_private;
 
-	destroy_workqueue(dev_priv->wq);
-	del_timer_sync(&dev_priv->hangcheck_timer);
+//FIXME	destroy_workqueue(dev_priv->wq);
+//FIXME	del_timer_sync(&dev_priv->hangcheck_timer);
 
-	io_mapping_free(dev_priv->mm.gtt_mapping);
-	if (dev_priv->mm.gtt_mtrr >= 0) {
-		mtrr_del(dev_priv->mm.gtt_mtrr, dev->agp->base,
-			 dev->agp->agp_info.aper_size * 1024 * 1024);
-		dev_priv->mm.gtt_mtrr = -1;
-	}
+//FIXME	io_mapping_free(dev_priv->mm.gtt_mapping);
+//FIXME	if (dev_priv->mm.gtt_mtrr >= 0) {
+//FIXME		mtrr_del(dev_priv->mm.gtt_mtrr, dev->agp->base,
+//FIXME			 dev->agp->agp_info.aper_size * 1024 * 1024);
+//FIXME		dev_priv->mm.gtt_mtrr = -1;
+//FIXME	}
 
 	if (drm_core_check_feature(dev, DRIVER_MODESET)) {
 		drm_irq_uninstall(dev);
+#if !defined(__AROS__)
 		vga_client_register(dev->pdev, NULL, NULL, NULL);
+#else
+//FIXME
+IMPLEMENT("Calling vga_client_register\n");
+#endif
 	}
 
-	if (dev->pdev->msi_enabled)
-		pci_disable_msi(dev->pdev);
+//FIXME	if (dev->pdev->msi_enabled)
+//FIXME		pci_disable_msi(dev->pdev);
 
 	if (dev_priv->regs != NULL)
 		iounmap(dev_priv->regs);
@@ -1603,7 +1611,12 @@ int i915_driver_unload(struct drm_device *dev)
 		intel_opregion_free(dev, 0);
 
 	if (drm_core_check_feature(dev, DRIVER_MODESET)) {
+#if !defined(__AROS__)
 		intel_modeset_cleanup(dev);
+#else
+//FIXME
+IMPLEMENT("Calling intel_modeset_cleanup\n");
+#endif
 
 		i915_gem_free_all_phys_object(dev);
 
@@ -1614,12 +1627,18 @@ int i915_driver_unload(struct drm_device *dev)
 		i915_gem_lastclose(dev);
 	}
 
+#if !defined(__AROS__)
 	pci_dev_put(dev_priv->bridge_dev);
+#else
+//FIXME
+IMPLEMENT("Calling pci_dev_put\n");
+#endif
 	kfree(dev->dev_private);
 
 	return 0;
 }
 
+#if !defined(__AROS__)
 int i915_driver_open(struct drm_device *dev, struct drm_file *file_priv)
 {
 	struct drm_i915_file_private *i915_file_priv;
@@ -1637,6 +1656,7 @@ int i915_driver_open(struct drm_device *dev, struct drm_file *file_priv)
 
 	return 0;
 }
+#endif
 
 /**
  * i915_driver_lastclose - clean up after all DRM clients have exited
@@ -1654,10 +1674,10 @@ void i915_driver_lastclose(struct drm_device * dev)
 {
 	drm_i915_private_t *dev_priv = dev->dev_private;
 
-	if (!dev_priv || drm_core_check_feature(dev, DRIVER_MODESET)) {
-		drm_fb_helper_restore();
-		return;
-	}
+//FIXME	if (!dev_priv || drm_core_check_feature(dev, DRIVER_MODESET)) {
+//FIXME		drm_fb_helper_restore();
+//FIXME		return;
+//FIXME	}
 
 	i915_gem_lastclose(dev);
 
@@ -1667,6 +1687,7 @@ void i915_driver_lastclose(struct drm_device * dev)
 	i915_dma_cleanup(dev);
 }
 
+#if !defined(__AROS__)
 void i915_driver_preclose(struct drm_device * dev, struct drm_file *file_priv)
 {
 	drm_i915_private_t *dev_priv = dev->dev_private;

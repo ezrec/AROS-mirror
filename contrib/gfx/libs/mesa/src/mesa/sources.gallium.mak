@@ -38,6 +38,7 @@ AROS_DRM_SOURCES = \
             winsys/aros/drm/drm-changed/drm_gem \
             winsys/aros/drm/drm-changed/drm_cache \
             winsys/aros/drm/drm-changed/drm_memory \
+            winsys/aros/drm/drm-changed/drm_agpsupport \
             winsys/aros/drm/drm-changed/nouveau/nouveau_state \
             winsys/aros/drm/drm-changed/nouveau/nouveau_mem \
             winsys/aros/drm/drm-changed/nouveau/nouveau_fence \
@@ -49,6 +50,8 @@ AROS_DRM_SOURCES = \
             winsys/aros/drm/drm-changed/i915/i915_dma \
             winsys/aros/drm/drm-changed/i915/i915_gem \
             winsys/aros/drm/drm-changed/i915/i915_gem_tiling \
+            winsys/aros/drm/drm-changed/i915/i915_irq \
+            winsys/aros/drm/drm-changed/i915/i915_mem \
             winsys/aros/drm/drm-changed/ttm/ttm_global \
             winsys/aros/drm/drm-changed/ttm/ttm_bo \
             winsys/aros/drm/drm-changed/ttm/ttm_bo_util \

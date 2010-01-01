@@ -58,6 +58,7 @@ int drm_mem_info(char *buf, char **start, off_t offset,
 }
 
 #if __OS_HAS_AGP
+#if !defined(__AROS__)
 static void *agp_remap(unsigned long offset, unsigned long size,
 		       struct drm_device * dev)
 {
@@ -126,7 +127,13 @@ int drm_unbind_agp(DRM_AGP_MEM * handle)
 	return drm_agp_unbind_memory(handle);
 }
 EXPORT_SYMBOL(drm_unbind_agp);
-
+#else /* !defined(__AROS__) */
+static inline void *agp_remap(unsigned long offset, unsigned long size,
+			      struct drm_device * dev)
+{
+	return NULL;
+}
+#endif
 #else  /*  __OS_HAS_AGP  */
 static inline void *agp_remap(unsigned long offset, unsigned long size,
 			      struct drm_device * dev)

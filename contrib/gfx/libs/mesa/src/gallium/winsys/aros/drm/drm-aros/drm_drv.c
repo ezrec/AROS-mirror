@@ -41,22 +41,8 @@ int drm_init(struct drm_driver * driver)
     int ret;
     /* FIXME: drm_device should not be hardcoded */
     struct drm_device * dev = &global_drm_device;
-    
-    /* Init fields */
-    INIT_LIST_HEAD(&dev->maplist);
-    dev->irq_enabled = 0;
     dev->driver = driver;
-    InitSemaphore(&dev->struct_mutex.semaphore);
     
-    if (driver->driver_features & DRIVER_GEM) {
-        if (drm_gem_init(dev)) {
-            DRM_ERROR("Cannot initialize graphics execution "
-                  "manager (GEM)\n");
-            return -1;
-        }
-    }
-    
-    DRM_DEBUG("%s, %s\n", name, busid);
 #if !defined(HOSTED_BUILD)    
     ret = drm_aros_find_supported_video_card(dev);
     if (ret)
@@ -66,7 +52,31 @@ int drm_init(struct drm_driver * driver)
     dev->pci_device = HOSTED_BUILD_PRODUCT_ID;
 #endif
 #endif
+    
+    /* Init fields */
+    INIT_LIST_HEAD(&dev->maplist);
+    dev->irq_enabled = 0;
+    InitSemaphore(&dev->struct_mutex.semaphore);
 
+    if (drm_core_has_AGP(dev)) {
+//FIXME        if (drm_device_is_agp(dev))
+            dev->agp = drm_agp_init(dev);
+//FIXME        if (drm_core_check_feature(dev, DRIVER_REQUIRE_AGP)
+//FIXME            && (dev->agp == NULL)) {
+//FIXME            DRM_ERROR("Cannot initialize the agpgart module.\n");
+//FIXME            return -1;
+//FIXME        }
+    }
+
+    
+    if (driver->driver_features & DRIVER_GEM) {
+        if (drm_gem_init(dev)) {
+            DRM_ERROR("Cannot initialize graphics execution "
+                  "manager (GEM)\n");
+            return -1;
+        }
+    }
+    
     if (!dev->driver->load)
         return -1;
 
@@ -74,12 +84,12 @@ int drm_init(struct drm_driver * driver)
     if (ret)
         return -1;
 
-    if (!dev->driver->firstopen)
-        return -1;
-    
-    ret = dev->driver->firstopen(dev);
-    if (ret)
-        return -1;
+    if (dev->driver->firstopen)
+    {    
+        ret = dev->driver->firstopen(dev);
+        if (ret)
+            return -1;
+    }
     
     return 0;
 }

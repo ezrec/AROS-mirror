@@ -75,9 +75,9 @@
 #define DRM_CURRENTPID      1
 #define DRM_IRQ_ARGS        void *arg
 #define DRM_SUSER(p)        capable(CAP_SYS_ADMIN)
-typedef void                irqreturn_t;
-#define IRQ_NONE            /* nothing */
-#define IRQ_HANDLED         /* nothing */
+typedef int                 irqreturn_t;
+#define IRQ_NONE            1
+#define IRQ_HANDLED         0
 
 struct drm_file;
 struct drm_device;
@@ -146,14 +146,14 @@ struct drm_sg_mem {
 struct drm_agp_head {
 //FIXME:    DRM_AGP_KERN agp_info;      /**< AGP device information */
     struct list_head memory;
-    unsigned long mode;     /* AGP mode */
+//FIXME    unsigned long mode;     /* AGP mode */
     struct agp_bridge_data *bridge;
     int enabled;            /* whether the AGP bus as been enabled */
     int acquired;           /* whether the AGP device has been acquired */
     unsigned long base;
     int agp_mtrr;
     int cant_use_aperture;
-    unsigned long page_mask;
+//FIXME    unsigned long page_mask;
 };
 
 struct drm_mode_config
@@ -224,6 +224,8 @@ struct drm_device
     uint32_t gtt_total;
     atomic_t pin_count;
     atomic_t pin_memory;
+    atomic_t gtt_count;
+    atomic_t gtt_memory;    
 
     /* AROS specific fields */
     OOP_Object              *pdev;
@@ -342,6 +344,7 @@ int drm_irq_uninstall(struct drm_device *dev);
 /* drm_pci.c */
 drm_dma_handle_t *drm_pci_alloc(struct drm_device *dev, size_t size,
 				       size_t align, dma_addr_t maxaddr);
+void drm_pci_free(struct drm_device * dev, drm_dma_handle_t * dmah);
 
 /* drm_memory.c */
 void drm_core_ioremap(struct drm_local_map *map, struct drm_device *dev);
@@ -351,6 +354,12 @@ void drm_core_ioremapfree(struct drm_local_map *map, struct drm_device *dev);
 // /* FIXME: make them inline? */
 // void *drm_alloc(size_t size, int area);
 // void drm_free(void *pt, size_t size, int area);
+
+/* drm_agpsupport.c */
+struct drm_agp_head *drm_agp_init(struct drm_device *dev);
+
+/* drm_cache.c */
+void drm_clflush_pages(struct page *pages[], unsigned long num_pages);
 
 /* GEM */
 int drm_gem_init(struct drm_device *dev);
