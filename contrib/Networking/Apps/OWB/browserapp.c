@@ -2,6 +2,7 @@
 #include <libraries/mui.h>
 #include <dos/var.h>
 #include <utility/tagitem.h>
+#include <devices/rawkeycodes.h>
 
 #include <proto/exec.h>
 #include <proto/dos.h>
@@ -15,6 +16,7 @@
 #include <proto/utility.h>
 #include <proto/codesets.h>
 #include <zune/customclasses.h>
+#include <devices/input.h>
 
 #include <WebViewZune.h>
 
@@ -115,8 +117,48 @@ static IPTR CloseWindowFunc(struct Hook *hook, Object *app, Object **win)
     DoMethod(*win, MUIA_Window_Open, FALSE);
     DoMethod(app, OM_REMMEMBER, *win);
     MUI_DisposeObject(*win);
+    return NULL;
 }
 
+static IPTR SynthetizeKeyboardEventFunc(struct Hook *hook, Object *app, IPTR *data)
+{
+    BYTE code = data[0];
+    BYTE qualifier = data[1];
+    struct IOStdReq *inputIO;
+    struct MsgPort *inputMP;
+    struct InputEvent *fakeEvent;
+
+    if (inputMP = CreateMsgPort())
+    {
+        if (fakeEvent = AllocMem(sizeof(struct InputEvent), MEMF_PUBLIC | MEMF_CLEAR))
+        {
+            if (inputIO = CreateIORequest(inputMP, sizeof(struct IOStdReq)))
+            {
+                if (!OpenDevice("input.device",NULL, (struct IORequest *) inputIO, NULL))
+                {
+		    /* Set up InputEvent fields */
+		    fakeEvent->ie_Class = IECLASS_RAWKEY;
+		    fakeEvent->ie_Code = code;
+		    fakeEvent->ie_Qualifier = qualifier;
+
+		    /* InputEvent */
+		    inputIO->io_Data = (APTR)fakeEvent;
+		    inputIO->io_Length = sizeof(struct InputEvent);
+		    inputIO->io_Command = IND_WRITEEVENT;
+
+		    DoIO((struct IORequest *)inputIO);
+
+		    CloseDevice((struct IORequest *) inputIO);
+		}
+		DeleteIORequest(inputIO);
+            }
+            FreeMem(fakeEvent,sizeof(struct InputEvent));
+        }
+        DeleteMsgPort(inputMP);
+    }
+
+    return 0;
+}
 /*** Methods ****************************************************************/
 IPTR BrowserApp__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 {
@@ -127,6 +169,7 @@ IPTR BrowserApp__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
     Object *preferences, *fileMenu, *mainMenustrip;
     Object *quitMenuItem, *openTabMenuItem, *openWindowMenuItem, *closeTabMenuItem, *closeWindowMenuItem;
     Object *findMenuItem, *findNextMenuItem, *bookmarkManagerMenuItem, *downloadManagerMenuItem;
+    Object *cutMenuItem, *copyMenuItem, *pasteMenuItem;
     Object *preferencesManagerMenuItem, *openFileMenuItem;
 
     /* Parse initial attributes --------------------------------------------*/
@@ -190,6 +233,18 @@ IPTR BrowserApp__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 		MUIA_Family_Child, MenuitemObject,
 		    MUIA_Menuitem_Title, NM_BARLABEL,
 		    End,
+		MUIA_Family_Child, cutMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, _(MSG_MainMenu_Cut),
+		    End,
+		MUIA_Family_Child, copyMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, _(MSG_MainMenu_Copy),
+		    End,
+		MUIA_Family_Child, pasteMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, _(MSG_MainMenu_Paste),
+		    End,
+		MUIA_Family_Child, MenuitemObject,
+		    MUIA_Menuitem_Title, NM_BARLABEL,
+		    End,
 	        MUIA_Family_Child, preferencesManagerMenuItem = MenuitemObject,
 		    MUIA_Menuitem_Title, _(MSG_MainMenu_Preferences),
 		    End,
@@ -232,6 +287,8 @@ IPTR BrowserApp__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
     data->requestFileHook.h_SubEntry = (HOOKFUNC) RequestFileFunc;
     data->closeWindowHook.h_Entry = HookEntry;
     data->closeWindowHook.h_SubEntry = (HOOKFUNC) CloseWindowFunc;
+    data->synthetizeKeyboardEventHook.h_Entry = HookEntry;
+    data->synthetizeKeyboardEventHook.h_SubEntry = (HOOKFUNC) SynthetizeKeyboardEventFunc;
     data->preferences = preferences;
 
     DoMethod(data->preferencesManager, MUIM_PreferencesManager_Load);
@@ -293,6 +350,17 @@ IPTR BrowserApp__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
     DoMethod(downloadManagerMenuItem, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
 	    downloadManager, (IPTR) 3,
 	    MUIM_Set, MUIA_Window_Activate, (IPTR) TRUE);
+
+    /* Clipboard menu items */
+    DoMethod(cutMenuItem, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
+	    (IPTR) self, (IPTR) 4,
+	    MUIM_CallHook, &data->synthetizeKeyboardEventHook, RAWKEY_X, IEQUALIFIER_RCOMMAND);
+    DoMethod(copyMenuItem, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
+	    (IPTR) self, (IPTR) 4,
+	    MUIM_CallHook, &data->synthetizeKeyboardEventHook, RAWKEY_C, IEQUALIFIER_RCOMMAND);
+    DoMethod(pasteMenuItem, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
+	    (IPTR) self, (IPTR) 4,
+	    MUIM_CallHook, &data->synthetizeKeyboardEventHook, RAWKEY_V, IEQUALIFIER_RCOMMAND);
 
     /* Preferences manager menu item */
     DoMethod(preferencesManagerMenuItem, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,

@@ -21,6 +21,7 @@ struct BrowserApp_DATA
     struct Hook forwardCallToActiveWindowHook;
     struct Hook requestFileHook;
     struct Hook closeWindowHook;
+    struct Hook synthetizeKeyboardEventHook;
 };
 
 #endif /* _BROWSERAPP_PRIVATE_H_ */

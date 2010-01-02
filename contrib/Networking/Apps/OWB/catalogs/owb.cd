@@ -487,3 +487,12 @@ Bookmark manager
 MSG_MainMenu_DownloadManager (//)
 Download manager
 ;
+MSG_MainMenu_Cut (//)
+Cut
+;
+MSG_MainMenu_Copy (//)
+Copy
+;
+MSG_MainMenu_Paste (//)
+Paste
+;
