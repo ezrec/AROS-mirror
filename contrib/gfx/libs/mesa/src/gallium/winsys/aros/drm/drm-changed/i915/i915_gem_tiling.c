@@ -311,7 +311,6 @@ IMPLEMENT("MCHBAR support for mobile chipsets\n");
 	dev_priv->mm.bit_6_swizzle_y = swizzle_y;
 }
 
-#if !defined(__AROS__)
 /**
  * Returns the size of the fence for a tiled object of the given size.
  */
@@ -520,6 +519,7 @@ err:
 	return ret;
 }
 
+#if !defined(__AROS__)
 /**
  * Returns the current tiling mode and required bit 6 swizzling for the object.
  */
@@ -565,6 +565,7 @@ i915_gem_get_tiling(struct drm_device *dev, void *data,
 
 	return 0;
 }
+#endif
 
 /**
  * Swap every 64 bytes of this page around, to account for it having a new
@@ -651,4 +652,4 @@ i915_gem_object_save_bit_17_swizzle(struct drm_gem_object *obj)
 			__clear_bit(i, obj_priv->bit_17);
 	}
 }
-#endif
+

@@ -443,6 +443,7 @@ static int i915_emit_cmds(struct drm_device * dev, int *buffer, int dwords)
 
 	return 0;
 }
+#endif
 
 int
 i915_emit_box(struct drm_device *dev,
@@ -480,6 +481,7 @@ i915_emit_box(struct drm_device *dev,
 	return 0;
 }
 
+#if !defined(__AROS__)
 /* XXX: Emitting the counter should really be moved to part of the IRQ
  * emit. For now, do it in both places:
  */
@@ -790,8 +792,10 @@ static int i915_flip_bufs(struct drm_device *dev, void *data,
 
 	return ret;
 }
+#endif
 
-static int i915_getparam(struct drm_device *dev, void *data,
+//FIXME static int i915_getparam(struct drm_device *dev, void *data,
+int i915_getparam(struct drm_device *dev, void *data,
 			 struct drm_file *file_priv)
 {
 	drm_i915_private_t *dev_priv = dev->dev_private;
@@ -805,7 +809,11 @@ static int i915_getparam(struct drm_device *dev, void *data,
 
 	switch (param->param) {
 	case I915_PARAM_IRQ_ACTIVE:
+#if !defined(__AROS__)
 		value = dev->pdev->irq ? 1 : 0;
+#else
+IMPLEMENT("Reading of dev->pdev->irq\n");
+#endif
 		break;
 	case I915_PARAM_ALLOW_BATCHBUFFER:
 		value = dev_priv->allow_batchbuffer ? 1 : 0;
@@ -836,6 +844,7 @@ static int i915_getparam(struct drm_device *dev, void *data,
 	return 0;
 }
 
+#if !defined(__AROS__)
 static int i915_setparam(struct drm_device *dev, void *data,
 			 struct drm_file *file_priv)
 {
@@ -1581,6 +1590,9 @@ int i915_driver_unload(struct drm_device *dev)
 {
 	struct drm_i915_private *dev_priv = dev->dev_private;
 
+    if (!dev_priv)
+        return 0;
+
 //FIXME	destroy_workqueue(dev_priv->wq);
 //FIXME	del_timer_sync(&dev_priv->hangcheck_timer);
 
@@ -1638,7 +1650,6 @@ IMPLEMENT("Calling pci_dev_put\n");
 	return 0;
 }
 
-#if !defined(__AROS__)
 int i915_driver_open(struct drm_device *dev, struct drm_file *file_priv)
 {
 	struct drm_i915_file_private *i915_file_priv;
@@ -1656,7 +1667,6 @@ int i915_driver_open(struct drm_device *dev, struct drm_file *file_priv)
 
 	return 0;
 }
-#endif
 
 /**
  * i915_driver_lastclose - clean up after all DRM clients have exited
@@ -1674,10 +1684,10 @@ void i915_driver_lastclose(struct drm_device * dev)
 {
 	drm_i915_private_t *dev_priv = dev->dev_private;
 
-//FIXME	if (!dev_priv || drm_core_check_feature(dev, DRIVER_MODESET)) {
+	if (!dev_priv || drm_core_check_feature(dev, DRIVER_MODESET)) {
 //FIXME		drm_fb_helper_restore();
-//FIXME		return;
-//FIXME	}
+		return;
+	}
 
 	i915_gem_lastclose(dev);
 
@@ -1687,7 +1697,6 @@ void i915_driver_lastclose(struct drm_device * dev)
 	i915_dma_cleanup(dev);
 }
 
-#if !defined(__AROS__)
 void i915_driver_preclose(struct drm_device * dev, struct drm_file *file_priv)
 {
 	drm_i915_private_t *dev_priv = dev->dev_private;
@@ -1703,6 +1712,7 @@ void i915_driver_postclose(struct drm_device *dev, struct drm_file *file_priv)
 	kfree(i915_file_priv);
 }
 
+#if !defined(__AROS__)
 struct drm_ioctl_desc i915_ioctls[] = {
 	DRM_IOCTL_DEF(DRM_I915_INIT, i915_dma_init, DRM_AUTH|DRM_MASTER|DRM_ROOT_ONLY),
 	DRM_IOCTL_DEF(DRM_I915_FLUSH, i915_flush_ioctl, DRM_AUTH),

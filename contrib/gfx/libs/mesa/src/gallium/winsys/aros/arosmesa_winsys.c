@@ -90,6 +90,11 @@ deinitialize_driver(void)
         nouveau_exit();
     }
     
+    if (current_driver == &arosmesa_intel_driver)
+    {
+        i915_exit();
+    }
+    
     return 1;
 }
 

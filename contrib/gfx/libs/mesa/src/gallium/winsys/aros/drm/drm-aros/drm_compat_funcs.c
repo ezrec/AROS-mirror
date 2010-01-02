@@ -77,6 +77,14 @@ void set_bit(int nr, volatile void *addr)
     *(unsigned long*)addr |= mask;
 }
 
+int test_bit(int nr, volatile void *addr)
+{
+    unsigned long mask = 1 << nr;
+    
+    return (*(unsigned long*)addr) & mask;
+}
+
+
 
 /* Page handling */
 void __free_page(struct page * p)

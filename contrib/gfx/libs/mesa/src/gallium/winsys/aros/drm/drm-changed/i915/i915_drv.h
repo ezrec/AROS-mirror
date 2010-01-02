@@ -585,6 +585,9 @@ struct drm_i915_gem_object {
 
 	struct page **pages;
 	int pages_refcount;
+#if defined(__AROS__)
+    APTR allocated_buffer;
+#endif
 
 	/**
 	 * Current offset of the object in GTT space.

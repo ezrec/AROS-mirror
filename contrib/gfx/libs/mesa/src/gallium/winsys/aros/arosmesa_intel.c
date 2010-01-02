@@ -28,6 +28,9 @@ arosmesa_intel_flush_frontbuffer( struct pipe_screen *screen,
     /* No Op */
 }
 
+/* FIXME: should this be here? Maybe add open intel device function to libdrm? */
+#include "arosdrm.h"
+
 static void
 intel_drm_winsys_destroy(struct intel_winsys *iws)
 {
@@ -35,6 +38,8 @@ intel_drm_winsys_destroy(struct intel_winsys *iws)
 
    drm_intel_bufmgr_destroy(idws->pools.gem);
 
+   drmClose(idws->fd);
+   
    FREE(idws);
 }
 
@@ -52,7 +57,7 @@ arosmesa_intel_create_screen( void )
    intel_drm_winsys_init_buffer_functions(idws);
    intel_drm_winsys_init_fence_functions(idws);
 
-   idws->fd = 0; /* FIXME: hardcoded value */
+   idws->fd = drmOpen("", "");
    idws->id = deviceID;
    idws->max_batch_size = 16 * 4096;
 
@@ -76,7 +81,11 @@ arosmesa_intel_create_context( struct pipe_screen *pscreen )
 static void
 arosmesa_intel_cleanup( struct pipe_screen * screen )
 {
-    bug("IMPLEMENT: arosmesa_intel_cleanup\n");
+    if (screen)
+    {
+        /* This also destroys the winsys */
+        screen->destroy(screen);
+    }
 }
 
 static struct pipe_surface *
@@ -103,6 +112,4 @@ struct arosmesa_driver arosmesa_intel_driver =
     .cleanup = arosmesa_intel_cleanup,
     .query_depth_stencil = arosmesa_intel_query_depth_stencil,
 };
-
-
 

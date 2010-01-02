@@ -20,6 +20,7 @@
 #define writeb(val, addr)               (*(volatile UBYTE*)(addr) = (val))
 #define readb(addr)                     (*(volatile UBYTE*)(addr))
 #define kzalloc(size, flags)            AllocVec(size, MEMF_ANY | MEMF_CLEAR)
+#define kcalloc(count, size, flags)     AllocVec(count * size, MEMF_ANY | MEMF_CLEAR);
 #define kmalloc(size, flags)            AllocVec(size, MEMF_ANY)
 #define vmalloc_user(size)              AllocVec(size, MEMF_ANY | MEMF_CLEAR)
 #define vmalloc(size)                   AllocVec(size, MEMF_ANY)
@@ -37,7 +38,7 @@
 #define likely(x)                       __builtin_expect((x),1)
 #define unlikely(x)                     __builtin_expect((x),0)
 #define mb()                            __asm __volatile("lock; addl $0,0(%%esp)" : : : "memory");
-
+#define ffs(x)                          __builtin_ffs(x)
 
 
 
@@ -86,7 +87,9 @@ static inline IPTR IS_ERR(APTR ptr)
 #define KERN_ERR
 #define printk(fmt, ...)            bug(fmt, ##__VA_ARGS__)
 #define IMPLEMENT(fmt, ...)         bug("------IMPLEMENT(%s): " fmt, __func__ , ##__VA_ARGS__)
+#define TRACE(fmt, ...)             bug("[TRACE](%s): " fmt, __func__ , ##__VA_ARGS__)
 #define BUG(x)                      bug("BUG:(%s)\n", __func__)
+#define WARN(condition, message)    do { if (unlikely(condition)) bug("WARN: %s:%d %s\n", __FILE__, __LINE__, message); } while(0)
 
 /* PCI handling */
 void * ioremap(resource_size_t offset, unsigned long size);
@@ -109,19 +112,23 @@ int pci_write_config_dword(void *dev, int where, u32 val);
 /* Bit operations */
 void clear_bit(int nr, volatile void * addr);
 void set_bit(int nr, volatile void *addr);
+int test_bit(int nr, volatile void *addr);
+#define __set_bit(nr, addr)         set_bit(nr, addr)
+#define __clear_bit(nr, addr)       clear_bit(nr, addr)
 
 /* Page handling */
 void __free_page(struct page * p);
 struct page * create_page_helper();                     /* Helper function - not from compat */
 #define PageHighMem(p)              FALSE
 #define put_page(p)                 __free_page(p)  /*FIXME: This might be wrong */
-#define page_to_pfn(p)              p->address      /*FIXME: This might be wrong */
+#define page_to_phys(p)             (dma_addr_t)p->address
 #define kmap(p)                     p->address
 #define kmap_atomic(p, type)        p->address
 #define vmap(p, count, flags, prot) (p)[0]->address
 #define kunmap_atomic(addr, type)
 #define kunmap(addr)
 #define vunmap(addr)
+#define set_page_dirty(p)
 
 /* Atomic handling */
 static inline int atomic_add_return(int i, atomic_t *v)

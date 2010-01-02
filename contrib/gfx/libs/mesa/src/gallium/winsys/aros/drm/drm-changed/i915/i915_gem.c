@@ -93,6 +93,7 @@ i915_gem_init_ioctl(struct drm_device *dev, void *data,
 
 	return ret;
 }
+#endif
 
 int
 i915_gem_get_aperture_ioctl(struct drm_device *dev, void *data,
@@ -109,7 +110,6 @@ i915_gem_get_aperture_ioctl(struct drm_device *dev, void *data,
 
 	return 0;
 }
-
 
 /**
  * Creates a new mm object and returns a handle to it.
@@ -143,6 +143,7 @@ i915_gem_create_ioctl(struct drm_device *dev, void *data,
 	return 0;
 }
 
+#if !defined(__AROS__)
 static inline int
 fast_shmem_read(struct page **pages,
 		loff_t page_base, int page_offset,
@@ -163,6 +164,7 @@ fast_shmem_read(struct page **pages,
 
 	return 0;
 }
+#endif
 
 static int i915_gem_object_needs_bit17_swizzle(struct drm_gem_object *obj)
 {
@@ -173,6 +175,7 @@ static int i915_gem_object_needs_bit17_swizzle(struct drm_gem_object *obj)
 		obj_priv->tiling_mode != I915_TILING_NONE;
 }
 
+#if !defined(__AROS__)
 static inline int
 slow_shmem_copy(struct page *dst_page,
 		int dst_offset,
@@ -591,6 +594,7 @@ fast_shmem_write(struct page **pages,
 		return -EFAULT;
 	return 0;
 }
+#endif
 
 /**
  * This is the fast pwrite path, where we copy the data directly from the
@@ -601,6 +605,7 @@ i915_gem_gtt_pwrite_fast(struct drm_device *dev, struct drm_gem_object *obj,
 			 struct drm_i915_gem_pwrite *args,
 			 struct drm_file *file_priv)
 {
+#if !defined(__AROS__)
 	struct drm_i915_gem_object *obj_priv = obj->driver_private;
 	drm_i915_private_t *dev_priv = dev->dev_private;
 	ssize_t remain;
@@ -661,6 +666,11 @@ fail:
 	mutex_unlock(&dev->struct_mutex);
 
 	return ret;
+#else
+//FIXME
+IMPLEMENT("\n");
+    return 0;
+#endif
 }
 
 /**
@@ -675,6 +685,7 @@ i915_gem_gtt_pwrite_slow(struct drm_device *dev, struct drm_gem_object *obj,
 			 struct drm_i915_gem_pwrite *args,
 			 struct drm_file *file_priv)
 {
+#if !defined(__AROS__)
 	struct drm_i915_gem_object *obj_priv = obj->driver_private;
 	drm_i915_private_t *dev_priv = dev->dev_private;
 	ssize_t remain;
@@ -770,6 +781,11 @@ out_unpin_pages:
 	drm_free_large(user_pages);
 
 	return ret;
+#else
+//FIXME
+IMPLEMENT("\n");
+    return 0;
+#endif
 }
 
 /**
@@ -781,6 +797,7 @@ i915_gem_shmem_pwrite_fast(struct drm_device *dev, struct drm_gem_object *obj,
 			   struct drm_i915_gem_pwrite *args,
 			   struct drm_file *file_priv)
 {
+#if !defined(__AROS__)
 	struct drm_i915_gem_object *obj_priv = obj->driver_private;
 	ssize_t remain;
 	loff_t offset, page_base;
@@ -835,6 +852,11 @@ fail_unlock:
 	mutex_unlock(&dev->struct_mutex);
 
 	return ret;
+#else
+//FIXME
+IMPLEMENT("\n");
+    return 0;
+#endif
 }
 
 /**
@@ -849,6 +871,7 @@ i915_gem_shmem_pwrite_slow(struct drm_device *dev, struct drm_gem_object *obj,
 			   struct drm_i915_gem_pwrite *args,
 			   struct drm_file *file_priv)
 {
+#if !defined(__AROS__)
 	struct drm_i915_gem_object *obj_priv = obj->driver_private;
 	struct mm_struct *mm = current->mm;
 	struct page **user_pages;
@@ -953,6 +976,11 @@ fail_put_user_pages:
 	drm_free_large(user_pages);
 
 	return ret;
+#else
+//FIXME
+IMPLEMENT("\n");
+    return 0;
+#endif
 }
 
 /**
@@ -1058,7 +1086,12 @@ i915_gem_set_domain_ioctl(struct drm_device *dev, void *data,
 
 	mutex_lock(&dev->struct_mutex);
 
+#if !defined(__AROS__)
 	intel_mark_busy(dev, obj);
+#else
+//FIXME
+IMPLEMENT("Calling intel_mark_busy\n");
+#endif
 
 #if WATCH_BUF
 	DRM_INFO("set_domain_ioctl %p(%zd), %08x %08x\n",
@@ -1140,7 +1173,12 @@ i915_gem_mmap_ioctl(struct drm_device *dev, void *data,
 {
 	struct drm_i915_gem_mmap *args = data;
 	struct drm_gem_object *obj;
+#if !defined(__AROS__)
 	loff_t offset;
+#else
+    struct drm_i915_gem_object * obj_priv = NULL;
+    int ret = 0;
+#endif
 	unsigned long addr;
 
 	if (!(dev->driver->driver_features & DRIVER_GEM))
@@ -1150,6 +1188,7 @@ i915_gem_mmap_ioctl(struct drm_device *dev, void *data,
 	if (obj == NULL)
 		return -EBADF;
 
+#if !defined(__AROS__)
 	offset = args->offset;
 
 	down_write(&current->mm->mmap_sem);
@@ -1157,6 +1196,15 @@ i915_gem_mmap_ioctl(struct drm_device *dev, void *data,
 		       PROT_READ | PROT_WRITE, MAP_SHARED,
 		       args->offset);
 	up_write(&current->mm->mmap_sem);
+#else
+    obj_priv = obj->driver_private;
+	if (obj_priv->gtt_space == NULL) {
+		ret = i915_gem_object_bind_to_gtt(obj, 0 /* FIXME: is this ok? */);
+		if (ret)
+			return ret;
+	}
+	addr = vmap(obj_priv->pages, obj->size / PAGE_SIZE, 0 /* DUMMY */, 0 /* DUMMY */);
+#endif
 	mutex_lock(&dev->struct_mutex);
 	drm_gem_object_unreference(obj);
 	mutex_unlock(&dev->struct_mutex);
@@ -1168,6 +1216,7 @@ i915_gem_mmap_ioctl(struct drm_device *dev, void *data,
 	return 0;
 }
 
+#if !defined(__AROS__)
 /**
  * i915_gem_fault - fault a page into the GTT
  * vma: VMA in question
@@ -1368,7 +1417,6 @@ IMPLEMENT("\n");
 	obj_priv->mmap_offset = 0;
 }
 
-#if !defined(__AROS__)
 /**
  * i915_gem_get_gtt_alignment - return required GTT alignment for an object
  * @obj: object to check
@@ -1405,6 +1453,7 @@ i915_gem_get_gtt_alignment(struct drm_gem_object *obj)
 	return i;
 }
 
+#if !defined(__AROS__)
 /**
  * i915_gem_mmap_gtt_ioctl - prepare an object for GTT mmap'ing
  * @dev: DRM device
@@ -1484,7 +1533,6 @@ i915_gem_mmap_gtt_ioctl(struct drm_device *dev, void *data,
 void
 i915_gem_object_put_pages(struct drm_gem_object *obj)
 {
-#if !defined(__AROS__)
 	struct drm_i915_gem_object *obj_priv = obj->driver_private;
 	int page_count = obj->size / PAGE_SIZE;
 	int i;
@@ -1505,6 +1553,7 @@ i915_gem_object_put_pages(struct drm_gem_object *obj)
 		if (obj_priv->pages[i] == NULL)
 			break;
 
+#if !defined(__AROS__)
 		if (obj_priv->dirty)
 			set_page_dirty(obj_priv->pages[i]);
 
@@ -1512,13 +1561,18 @@ i915_gem_object_put_pages(struct drm_gem_object *obj)
 			mark_page_accessed(obj_priv->pages[i]);
 
 		page_cache_release(obj_priv->pages[i]);
+#else
+        __free_page(obj_priv->pages[i]);
+        obj_priv->pages[i] = NULL;
+#endif
 	}
 	obj_priv->dirty = 0;
 
 	drm_free_large(obj_priv->pages);
 	obj_priv->pages = NULL;
-#else
-IMPLEMENT("\n");
+#if defined(__AROS__)
+    FreeVec(obj_priv->allocated_buffer);
+    obj_priv->allocated_buffer = NULL;
 #endif
 }
 
@@ -1568,13 +1622,13 @@ i915_gem_object_truncate(struct drm_gem_object *obj)
 
 	obj_priv->madv = __I915_MADV_PURGED;
 }
+#endif
 
 static inline int
 i915_gem_object_is_purgeable(struct drm_i915_gem_object *obj_priv)
 {
 	return obj_priv->madv == I915_MADV_DONTNEED;
 }
-#endif
 
 static void
 i915_gem_object_move_to_inactive(struct drm_gem_object *obj)
@@ -1616,8 +1670,8 @@ i915_add_request(struct drm_device *dev, struct drm_file *file_priv,
 	int was_empty;
 	RING_LOCALS;
 
-//FIXME	if (file_priv != NULL)
-//FIXME		i915_file_priv = file_priv->driver_priv;
+	if (file_priv != NULL)
+		i915_file_priv = file_priv->driver_priv;
 
 	request = kzalloc(sizeof(*request), GFP_KERNEL);
 	if (request == NULL)
@@ -1690,7 +1744,6 @@ IMPLEMENT("Setting request->emitted_jiffies\n");
 	return seqno;
 }
 
-#if !defined(__AROS__)
 /**
  * Command execution barrier
  *
@@ -1714,7 +1767,6 @@ i915_retire_commands(struct drm_device *dev)
 	ADVANCE_LP_RING();
 	return flush_domains;
 }
-#endif
 
 /**
  * Moves buffers associated only with the given active seqno from the active
@@ -2098,7 +2150,6 @@ IMPLEMENT("Calling drm_unbind_agp/drm_free_agp\n");
 	return 0;
 }
 
-#if !defined(__AROS__)
 static struct drm_gem_object *
 i915_gem_find_inactive_object(struct drm_device *dev, int min_size)
 {
@@ -2258,16 +2309,16 @@ i915_gem_evict_something(struct drm_device *dev, int min_size)
 			return i915_gem_evict_everything(dev);
 	}
 }
-#endif
 
 int
 i915_gem_object_get_pages(struct drm_gem_object *obj)
 {
-#if !defined(__AROS__)
 	struct drm_i915_gem_object *obj_priv = obj->driver_private;
 	int page_count, i;
 	struct address_space *mapping;
+#if !defined(__AROS__)
 	struct inode *inode;
+#endif
 	struct page *page;
 	int ret;
 
@@ -2285,6 +2336,7 @@ i915_gem_object_get_pages(struct drm_gem_object *obj)
 		return -ENOMEM;
 	}
 
+#if !defined(__AROS__)
 	inode = obj->filp->f_path.dentry->d_inode;
 	mapping = inode->i_mapping;
 	for (i = 0; i < page_count; i++) {
@@ -2296,12 +2348,18 @@ i915_gem_object_get_pages(struct drm_gem_object *obj)
 		}
 		obj_priv->pages[i] = page;
 	}
+#else
+    obj_priv->allocated_buffer = AllocVec((page_count * PAGE_SIZE) + PAGE_SIZE - 1, MEMF_PUBLIC | MEMF_CLEAR);
+    for (i = 0; i < page_count; i++)
+    {
+        obj_priv->pages[i] = AllocVec(sizeof(struct page), MEMF_PUBLIC | MEMF_CLEAR);
+        obj_priv->pages[i]->allocated_buffer = NULL;
+        obj_priv->pages[i]->address = (APTR)((IPTR)PAGE_ALIGN(obj_priv->allocated_buffer) + (IPTR)(PAGE_SIZE * i));
+    }
+#endif
 
 	if (obj_priv->tiling_mode != I915_TILING_NONE)
 		i915_gem_object_do_bit_17_swizzle(obj);
-#else
-IMPLEMENT("\n");
-#endif
 
 	return 0;
 }
@@ -2575,7 +2633,6 @@ i915_gem_clear_fence_reg(struct drm_gem_object *obj)
 	list_del_init(&obj_priv->fence_list);
 }
 
-#if !defined(__AROS__)
 /**
  * i915_gem_object_put_fence_reg - waits on outstanding fenced access
  * to the buffer to finish, and then resets the fence register.
@@ -2611,7 +2668,6 @@ i915_gem_object_put_fence_reg(struct drm_gem_object *obj)
 
 	return 0;
 }
-#endif
 
 /**
  * Finds free space in the GTT aperture and binds the object there.
@@ -2619,7 +2675,6 @@ i915_gem_object_put_fence_reg(struct drm_gem_object *obj)
 static int
 i915_gem_object_bind_to_gtt(struct drm_gem_object *obj, unsigned alignment)
 {
-#if !defined(__AROS__)
 	struct drm_device *dev = obj->dev;
 	drm_i915_private_t *dev_priv = dev->dev_private;
 	struct drm_i915_gem_object *obj_priv = obj->driver_private;
@@ -2671,15 +2726,19 @@ i915_gem_object_bind_to_gtt(struct drm_gem_object *obj, unsigned alignment)
 	DRM_INFO("Binding object of size %zd at 0x%08x\n",
 		 obj->size, obj_priv->gtt_offset);
 #endif
+#if !defined(__AROS__)
 	if (retry_alloc) {
 		i915_gem_object_set_page_gfp_mask (obj,
 						   i915_gem_object_get_page_gfp_mask (obj) & ~__GFP_NORETRY);
 	}
+#endif
 	ret = i915_gem_object_get_pages(obj);
+#if !defined(__AROS__)
 	if (retry_alloc) {
 		i915_gem_object_set_page_gfp_mask (obj,
 						   i915_gem_object_get_page_gfp_mask (obj) | __GFP_NORETRY);
 	}
+#endif
 	if (ret) {
 		drm_mm_put_block(obj_priv->gtt_space);
 		obj_priv->gtt_space = NULL;
@@ -2703,6 +2762,7 @@ i915_gem_object_bind_to_gtt(struct drm_gem_object *obj, unsigned alignment)
 		return ret;
 	}
 
+#if !defined(__AROS__)
 	/* Create an AGP memory structure pointing at our pages, and bind it
 	 * into the GTT.
 	 */
@@ -2722,6 +2782,10 @@ i915_gem_object_bind_to_gtt(struct drm_gem_object *obj, unsigned alignment)
 
 		goto search_free;
 	}
+#else
+//FIXME
+IMPLEMENT("Assigning obj_priv->agp_mem\n");
+#endif
 	atomic_inc(&dev->gtt_count);
 	atomic_add(obj->size, &dev->gtt_memory);
 
@@ -2733,10 +2797,6 @@ i915_gem_object_bind_to_gtt(struct drm_gem_object *obj, unsigned alignment)
 	BUG_ON(obj->write_domain & I915_GEM_GPU_DOMAINS);
 
 	trace_i915_gem_object_bind(obj, obj_priv->gtt_offset);
-#else
-//FIXME
-IMPLEMENT("\n");
-#endif
 
 	return 0;
 }
@@ -2802,7 +2862,6 @@ i915_gem_object_flush_gtt_write_domain(struct drm_gem_object *obj)
 					    old_write_domain);
 }
 
-#if !defined(__AROS__)
 /** Flushes the CPU write domain for the object if it's dirty. */
 static void
 i915_gem_object_flush_cpu_write_domain(struct drm_gem_object *obj)
@@ -2814,7 +2873,12 @@ i915_gem_object_flush_cpu_write_domain(struct drm_gem_object *obj)
 		return;
 
 	i915_gem_clflush_object(obj);
+#if !defined(__AROS__)
 	drm_agp_chipset_flush(dev);
+#else
+//FIXME
+IMPLEMENT("Calling drm_agp_chipset_flush\n");
+#endif
 	old_write_domain = obj->write_domain;
 	obj->write_domain = 0;
 
@@ -2822,7 +2886,6 @@ i915_gem_object_flush_cpu_write_domain(struct drm_gem_object *obj)
 					    obj->read_domains,
 					    old_write_domain);
 }
-#endif
 
 /**
  * Moves a single object to the GTT read, and possibly write domain.
@@ -2935,7 +2998,6 @@ i915_gem_object_set_to_cpu_domain(struct drm_gem_object *obj, int write)
 	return 0;
 }
 
-#if !defined(__AROS__)
 /*
  * Set the next domain for the specified object. This
  * may not actually perform the necessary flushing/invaliding though,
@@ -3059,7 +3121,12 @@ i915_gem_object_set_to_gpu_domain(struct drm_gem_object *obj)
 	BUG_ON(obj->pending_read_domains & I915_GEM_DOMAIN_CPU);
 	BUG_ON(obj->pending_write_domain == I915_GEM_DOMAIN_CPU);
 
+#if !defined(__AROS__)
 	intel_mark_busy(dev, obj);
+#else
+//FIXME
+IMPLEMENT("Calling intel_mark_busy\n");
+#endif
 
 #if WATCH_BUF
 	DRM_INFO("%s: object %p read %08x -> %08x write %08x -> %08x\n",
@@ -3126,7 +3193,6 @@ i915_gem_object_set_to_gpu_domain(struct drm_gem_object *obj)
 					    old_read_domains,
 					    obj->write_domain);
 }
-#endif
 
 /**
  * Moves the object from a partially CPU read to a full one.
@@ -3421,7 +3487,6 @@ IMPLEMENT("CRITICAL!\n");
 	return 0;
 }
 
-#if !defined(__AROS__)
 /** Dispatch a batchbuffer to the ring
  */
 static int
@@ -3478,6 +3543,7 @@ i915_dispatch_gem_execbuffer(struct drm_device *dev,
 	return 0;
 }
 
+#if !defined(__AROS__)
 /* Throttle our rendering by waiting until the ring has completed our requests
  * emitted over 20 msec ago.
  *
@@ -3514,6 +3580,7 @@ i915_gem_ring_throttle(struct drm_device *dev, struct drm_file *file_priv)
 
 	return ret;
 }
+#endif
 
 static int
 i915_gem_get_relocs_from_user(struct drm_i915_gem_exec_object *exec_list,
@@ -3930,7 +3997,6 @@ pre_mutex_err:
 
 	return ret;
 }
-#endif
 
 int
 i915_gem_object_pin(struct drm_gem_object *obj, uint32_t alignment)
@@ -4874,6 +4940,7 @@ i915_gem_attach_phys_object(struct drm_device *dev,
 out:
 	return ret;
 }
+#endif
 
 static int
 i915_gem_phys_pwrite(struct drm_device *dev, struct drm_gem_object *obj,
@@ -4892,8 +4959,12 @@ i915_gem_phys_pwrite(struct drm_device *dev, struct drm_gem_object *obj,
 	ret = copy_from_user(obj_addr, user_data, args->size);
 	if (ret)
 		return -EFAULT;
-
+#if !defined(__AROS__)
 	drm_agp_chipset_flush(dev);
+#else
+//FIXME
+IMPLEMENT("Calling drm_agp_chipset_flush\n");
+#endif
 	return 0;
 }
 
@@ -4911,6 +4982,7 @@ void i915_gem_release(struct drm_device * dev, struct drm_file *file_priv)
 	mutex_unlock(&dev->struct_mutex);
 }
 
+#if !defined(__AROS__)
 static int
 i915_gem_shrink(int nr_to_scan, gfp_t gfp_mask)
 {

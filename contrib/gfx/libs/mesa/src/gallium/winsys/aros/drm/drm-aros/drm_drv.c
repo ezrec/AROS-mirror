@@ -39,8 +39,12 @@ void drm_exit(struct drm_driver * driver)
 int drm_init(struct drm_driver * driver)
 {
     int ret;
-    /* FIXME: drm_device should not be hardcoded */
+    /* FIXME: drm_device should not be hardcoded - it should be bound with driver and driver should be global */
     struct drm_device * dev = &global_drm_device;
+    /* Init fields */
+    INIT_LIST_HEAD(&dev->maplist);
+    dev->irq_enabled = 0;
+    InitSemaphore(&dev->struct_mutex.semaphore);
     dev->driver = driver;
     
 #if !defined(HOSTED_BUILD)    
@@ -53,10 +57,6 @@ int drm_init(struct drm_driver * driver)
 #endif
 #endif
     
-    /* Init fields */
-    INIT_LIST_HEAD(&dev->maplist);
-    dev->irq_enabled = 0;
-    InitSemaphore(&dev->struct_mutex.semaphore);
 
     if (drm_core_has_AGP(dev)) {
 //FIXME        if (drm_device_is_agp(dev))

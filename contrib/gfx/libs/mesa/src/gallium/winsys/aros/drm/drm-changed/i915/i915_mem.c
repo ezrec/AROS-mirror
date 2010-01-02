@@ -31,7 +31,6 @@
 #include "i915_drm.h"
 #include "i915_drv.h"
 
-#if !defined(__AROS__)
 /* This memory manager is integrated into the global/local lru
  * mechanisms used by the clients.  Specifically, it operates by
  * setting the 'in_use' fields of the global LRU to indicate whether
@@ -46,6 +45,7 @@
  */
 static void mark_block(struct drm_device * dev, struct mem_block *p, int in_use)
 {
+#if !defined(__AROS__)
 	drm_i915_private_t *dev_priv = dev->dev_private;
 	struct drm_i915_master_private *master_priv = dev->primary->master->driver_priv;
 	drm_i915_sarea_t *sarea_priv = master_priv->sarea_priv;
@@ -84,8 +84,13 @@ static void mark_block(struct drm_device * dev, struct mem_block *p, int in_use)
 		list[(unsigned)list[nr].next].prev = i;
 		list[nr].next = i;
 	}
+#else
+//FIXME
+IMPLEMENT("\n");
+#endif
 }
 
+#if !defined(__AROS__)
 /* Very simple allocator for agp memory, working on a static range
  * already mapped into each client's address space.
  */
@@ -207,6 +212,7 @@ static int init_heap(struct mem_block **heap, int start, int size)
 	(*heap)->next = (*heap)->prev = blocks;
 	return 0;
 }
+#endif
 
 /* Free all blocks associated with the releasing file.
  */
@@ -238,7 +244,6 @@ void i915_mem_release(struct drm_device * dev, struct drm_file *file_priv,
 		}
 	}
 }
-#endif
 
 /* Shutdown.
  */

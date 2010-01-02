@@ -152,13 +152,15 @@ int
 drmOpen(const char *name, const char *busid)
 {
     int i;
-    
+
     for (i = 0; i < 128; i++)
     {
         if (drm_files[i] == NULL)
         {
             drm_files[i] = AllocVec(sizeof(struct drm_file), MEMF_PUBLIC | MEMF_CLEAR);
             spin_lock_init(&drm_files[i]->table_lock);
+            if (global_drm_device.driver->open)
+                global_drm_device.driver->open(&global_drm_device, drm_files[i]);
             return i;
         }
     }
@@ -178,7 +180,10 @@ drmClose(int fd)
     
     if (global_drm_device.driver->preclose)
         global_drm_device.driver->preclose(&global_drm_device, f);
-    
+
+    if (global_drm_device.driver->postclose)
+        global_drm_device.driver->postclose(&global_drm_device, f);
+
     FreeVec(f);
     
     return 0;
@@ -310,9 +315,54 @@ void drmMUnmap(int fd, uint32_t handle)
     mutex_unlock(&global_drm_device.struct_mutex);
 }
 
+/* HACK */
+#undef DRIVER_NAME
+#undef DRIVER_DESC
+#undef DRIVER_AUTHOR
+#undef DRIVER_DATE
+#undef DRIVER_MINOR
+#undef DRIVER_MAJOR
+#undef DRIVER_PATCHLEVEL
+#define mem_block mem_blockr /* HACK: Really nasty hack - nouvea_drv.h also contains defintion of mem_block */
+#include "i915_drm.h"
+#include "i915_drv.h"
+
+int i915_getparam(struct drm_device *dev, void *data,
+			 struct drm_file *file_priv);
+
 int drmIntelIoctlEmul(int fildes, int request, void * arg)
 {
-    DRM_IMPL("IOCTL: %d -> %d\n", fildes, request);
-    return 0;
+    int ret = -EINVAL;
+    
+    if (!drm_files[fildes])
+        return ret;
+
+    switch(request)
+    {
+    case(DRM_IOCTL_I915_GEM_GET_APERTURE):
+        return i915_gem_get_aperture_ioctl(&global_drm_device, arg, drm_files[fildes]);
+    case(DRM_IOCTL_I915_GETPARAM):
+        return i915_getparam(&global_drm_device, arg, drm_files[fildes]);
+    case(DRM_IOCTL_I915_GEM_CREATE):
+        return i915_gem_create_ioctl(&global_drm_device, arg, drm_files[fildes]);
+    case(DRM_IOCTL_I915_GEM_MMAP):
+        return i915_gem_mmap_ioctl(&global_drm_device, arg, drm_files[fildes]);
+    case(DRM_IOCTL_I915_GEM_SET_DOMAIN):
+        return i915_gem_set_domain_ioctl(&global_drm_device, arg, drm_files[fildes]);
+    case(DRM_IOCTL_I915_GEM_SW_FINISH):
+        return i915_gem_sw_finish_ioctl(&global_drm_device, arg, drm_files[fildes]);
+    case(DRM_IOCTL_I915_GEM_SET_TILING):
+        return i915_gem_set_tiling(&global_drm_device, arg, drm_files[fildes]);
+    case(DRM_IOCTL_I915_GEM_PWRITE):
+        return i915_gem_pwrite_ioctl(&global_drm_device, arg, drm_files[fildes]);
+    case(DRM_IOCTL_I915_GEM_EXECBUFFER):
+        return i915_gem_execbuffer(&global_drm_device, arg, drm_files[fildes]);
+    default:
+        asm("int3");
+        DRM_IMPL("IOCTL: %d -> %d\n", fildes, request);
+        break;
+    }
+    
+    return ret;
 }
 

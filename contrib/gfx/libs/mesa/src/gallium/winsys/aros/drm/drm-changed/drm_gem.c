@@ -88,10 +88,8 @@ drm_gem_init(struct drm_device *dev)
 
 	spin_lock_init(&dev->object_name_lock);
 	idr_init(&dev->object_name_idr);
-#if !defined(__AROS__)
 	atomic_set(&dev->object_count, 0);
 	atomic_set(&dev->object_memory, 0);
-#endif
 	atomic_set(&dev->pin_count, 0);
 	atomic_set(&dev->pin_memory, 0);
 	atomic_set(&dev->gtt_count, 0);
@@ -166,10 +164,9 @@ drm_gem_object_alloc(struct drm_device *dev, size_t size)
 	    dev->driver->gem_init_object(obj) != 0) {
 		goto fput;
 	}
-#if !defined(__AROS__)
 	atomic_inc(&dev->object_count);
 	atomic_add(obj->size, &dev->object_memory);
-#endif
+
 	return obj;
 fput:
 #if !defined(__AROS__)
@@ -452,9 +449,10 @@ drm_gem_object_free(struct kref *kref)
 
 #if !defined(__AROS__)
 	fput(obj->filp);
+#endif
 	atomic_dec(&dev->object_count);
 	atomic_sub(obj->size, &dev->object_memory);
-#endif
+
 	kfree(obj);
 }
 EXPORT_SYMBOL(drm_gem_object_free);

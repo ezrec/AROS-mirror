@@ -182,7 +182,9 @@ struct drm_driver
     
     int         (*load)(struct drm_device *, unsigned long);
     int         (*firstopen)(struct drm_device *);
+    int         (*open) (struct drm_device *, struct drm_file *);
     void        (*preclose)(struct drm_device *dev, struct drm_file *);
+    void        (*postclose) (struct drm_device *, struct drm_file *);
     void        (*lastclose)(struct drm_device *);
     int         (*unload)(struct drm_device *);
     
@@ -225,7 +227,11 @@ struct drm_device
     atomic_t pin_count;
     atomic_t pin_memory;
     atomic_t gtt_count;
-    atomic_t gtt_memory;    
+    atomic_t gtt_memory;
+    uint32_t invalidate_domains;    /* domains pending invalidation */
+    uint32_t flush_domains;         /* domains pending flush */
+    atomic_t object_count;
+    atomic_t object_memory;
 
     /* AROS specific fields */
     OOP_Object              *pdev;
@@ -254,6 +260,7 @@ struct drm_file
 {
     struct idr object_idr;
     spinlock_t table_lock;
+    void *driver_priv;
 };
 
 struct drm_gem_object 
@@ -317,6 +324,16 @@ static __inline__ int drm_device_is_pcie(struct drm_device *dev)
     /* FIXME: Implement */
     DRM_IMPL("\n");
     return 0;
+}
+
+static __inline__ void *drm_calloc_large(size_t nmemb, size_t size)
+{
+    return AllocVec(nmemb * size, MEMF_ANY | MEMF_CLEAR);
+}
+
+static __inline__ void drm_free_large(void *ptr)
+{
+    FreeVec(ptr);
 }
 
 // /* drm_bufs.c */
