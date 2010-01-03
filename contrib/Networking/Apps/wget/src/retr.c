@@ -173,7 +173,12 @@ write_data (FILE *out, const char *buf, int bufsize, wgint *skip,
      performance: fast downloads will arrive in large 16K chunks
      (which stdio would write out immediately anyway), and slow
      downloads wouldn't be limited by disk speed.  */
+
+  /* fflush call hinders performance on AROS SFS filesystem.
+   * Without fflush I got 10 MB/s, with fflush only 350 kB/s */
+#ifndef __AROS__
   fflush (out);
+#endif
   return !ferror (out);
 }
 
