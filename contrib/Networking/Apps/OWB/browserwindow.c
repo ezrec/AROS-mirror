@@ -994,6 +994,50 @@ IPTR BrowserWindow__MUIM_BrowserWindow_FindNext(struct IClass *cl, Object *obj, 
     return TRUE;
 }
 
+IPTR BrowserWindow__MUIM_BrowserWindow_Zoom(struct IClass *cl, Object *obj, struct MUIP_BrowserWindow_Zoom *msg)
+{
+    struct BrowserWindow_DATA *data = (struct BrowserWindow_DATA *) INST_DATA(cl, obj);
+    Object *webView = (Object*) XGET(data->tabbed, MUIA_TabbedView_ActiveObject);
+    switch(msg->mode)
+    {
+	case MUIV_BrowserWindow_ZoomIn:
+	    return DoMethod(webView, MUIM_WebView_Zoom, MUIV_WebView_ZoomIn);
+	    break;
+	case MUIV_BrowserWindow_ZoomOut:
+	    return DoMethod(webView, MUIM_WebView_Zoom, MUIV_WebView_ZoomOut);
+	    break;
+	case MUIV_BrowserWindow_ZoomReset:
+	    return DoMethod(webView, MUIM_WebView_Zoom, MUIV_WebView_ZoomReset);
+	    break;
+    }
+}
+
+IPTR BrowserWindow__MUIM_BrowserWindow_ShowSource(struct IClass *cl, Object *obj, Msg msg)
+{
+    struct BrowserWindow_DATA *data = (struct BrowserWindow_DATA *) INST_DATA(cl, obj);
+
+    struct WindowSpecification spec = {
+	MUIV_Window_LeftEdge_Centered,
+	MUIV_Window_TopEdge_Centered,
+	MUIV_Window_Width_Default,
+	MUIV_Window_Height_Default,
+	TRUE,
+	TRUE,
+	FALSE,
+	FALSE,
+	TRUE,
+	FALSE
+    };
+
+    Object *webView = (Object*) XGET(data->tabbed, MUIA_TabbedView_ActiveObject);
+    STRPTR url = (STRPTR) XGET(webView, MUIA_WebView_URL);
+    STRPTR htmlData = (STRPTR) XGET(webView, MUIA_WebView_Data);
+    Object* newWebView = (Object*) DoMethod(_app(obj), MUIM_BrowserApp_OpenNewWindow, &spec);
+    set(newWebView, MUIA_WebView_SourceMode, TRUE);
+    DoMethod(newWebView, MUIM_WebView_LoadHTMLString, url, htmlData, -1, "text/html", "UTF-8");
+    FreeVec(htmlData);
+}
+
 /*** Setup ******************************************************************/
 __ZUNE_CUSTOMCLASS_START(BrowserWindow)
 __ZUNE_CUSTOMCLASS_METHOD(BrowserWindow__OM_NEW, OM_NEW, struct opSet*);
@@ -1006,4 +1050,6 @@ __ZUNE_CUSTOMCLASS_METHOD(BrowserWindow__MUIM_BrowserWindow_CloseActiveTab, MUIM
 __ZUNE_CUSTOMCLASS_METHOD(BrowserWindow__MUIM_BrowserWindow_Bookmark, MUIM_BrowserWindow_Bookmark, Msg);
 __ZUNE_CUSTOMCLASS_METHOD(BrowserWindow__MUIM_BrowserWindow_Find, MUIM_BrowserWindow_Find, Msg);
 __ZUNE_CUSTOMCLASS_METHOD(BrowserWindow__MUIM_BrowserWindow_FindNext, MUIM_BrowserWindow_FindNext, Msg);
+__ZUNE_CUSTOMCLASS_METHOD(BrowserWindow__MUIM_BrowserWindow_Zoom, MUIM_BrowserWindow_Zoom, struct MUIP_BrowserWindow_Zoom*);
+__ZUNE_CUSTOMCLASS_METHOD(BrowserWindow__MUIM_BrowserWindow_ShowSource, MUIM_BrowserWindow_ShowSource, Msg);
 __ZUNE_CUSTOMCLASS_END(BrowserWindow, NULL, MUIC_Window, NULL)

@@ -170,6 +170,7 @@ IPTR BrowserApp__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
     Object *quitMenuItem, *openTabMenuItem, *openWindowMenuItem, *closeTabMenuItem, *closeWindowMenuItem;
     Object *findMenuItem, *findNextMenuItem, *bookmarkManagerMenuItem, *downloadManagerMenuItem;
     Object *cutMenuItem, *copyMenuItem, *pasteMenuItem;
+    Object *zoomInMenuItem, *zoomOutMenuItem, *zoomResetMenuItem, *viewSourceMenuItem;
     Object *preferencesManagerMenuItem, *openFileMenuItem;
 
     /* Parse initial attributes --------------------------------------------*/
@@ -247,6 +248,24 @@ IPTR BrowserApp__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 		    End,
 	        MUIA_Family_Child, preferencesManagerMenuItem = MenuitemObject,
 		    MUIA_Menuitem_Title, _(MSG_MainMenu_Preferences),
+		    End,
+		End,
+	    MUIA_Family_Child, MenuObject,
+		MUIA_Menu_Title, _(MSG_MainMenu_View),
+		MUIA_Family_Child, zoomInMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, _(MSG_MainMenu_ZoomIn),
+		    End,
+		MUIA_Family_Child, zoomOutMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, _(MSG_MainMenu_ZoomOut),
+		    End,
+		MUIA_Family_Child, zoomResetMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, _(MSG_MainMenu_ZoomReset),
+		    End,
+		MUIA_Family_Child, MenuitemObject,
+		    MUIA_Menuitem_Title, NM_BARLABEL,
+		    End,
+		MUIA_Family_Child, viewSourceMenuItem = MenuitemObject,
+		    MUIA_Menuitem_Title, _(MSG_MainMenu_ViewSource),
 		    End,
 		End,
 	    MUIA_Family_Child, MenuObject,
@@ -369,6 +388,20 @@ IPTR BrowserApp__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
     DoMethod(preferencesManagerMenuItem, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
 	    preferencesManager, (IPTR) 3,
 	    MUIM_Set, MUIA_Window_Activate, (IPTR) TRUE);
+
+    /* View menu items */
+    DoMethod(zoomInMenuItem, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
+	    (IPTR) self, (IPTR) 4,
+	    MUIM_CallHook, &data->forwardCallToActiveWindowHook, MUIM_BrowserWindow_Zoom, MUIV_BrowserWindow_ZoomIn);
+    DoMethod(zoomOutMenuItem, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
+	    (IPTR) self, (IPTR) 4,
+	    MUIM_CallHook, &data->forwardCallToActiveWindowHook, MUIM_BrowserWindow_Zoom, MUIV_BrowserWindow_ZoomOut);
+    DoMethod(zoomResetMenuItem, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
+	    (IPTR) self, (IPTR) 4,
+	    MUIM_CallHook, &data->forwardCallToActiveWindowHook, MUIM_BrowserWindow_Zoom, MUIV_BrowserWindow_ZoomReset);
+    DoMethod(viewSourceMenuItem, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
+	    (IPTR) self, (IPTR) 3,
+	    MUIM_CallHook, &data->forwardCallToActiveWindowHook, MUIM_BrowserWindow_ShowSource);
 
     /* Find next menu item */
     DoMethod(openFileMenuItem, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,

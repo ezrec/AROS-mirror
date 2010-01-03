@@ -32,10 +32,16 @@ struct  MUIP_BrowserWindow_OpenNewTab {STACKED ULONG MethodID; STACKED ULONG mod
 #define MUIM_BrowserWindow_Bookmark            (MUIB_BrowserWindow  | 0x00000003)
 #define MUIM_BrowserWindow_Find                (MUIB_BrowserWindow  | 0x00000004)
 #define MUIM_BrowserWindow_FindNext            (MUIB_BrowserWindow  | 0x00000005)
+#define MUIM_BrowserWindow_Zoom                (MUIB_BrowserWindow  | 0x00000006)
+struct  MUIP_BrowserWindow_Zoom    {STACKED ULONG MethodID; STACKED ULONG mode;};
+#define MUIM_BrowserWindow_ShowSource          (MUIB_BrowserWindow  | 0x00000007)
 
 /*** Constants **************************************************************/
 #define MUIV_BrowserWindow_BackgroundTab       (MUIB_BrowserWindow  | 0x00000000)
 #define MUIV_BrowserWindow_ForegroundTab       (MUIB_BrowserWindow  | 0x00000001)
+#define MUIV_BrowserWindow_ZoomIn              (MUIB_BrowserWindow  | 0x00000002)
+#define MUIV_BrowserWindow_ZoomOut             (MUIB_BrowserWindow  | 0x00000003)
+#define MUIV_BrowserWindow_ZoomReset           (MUIB_BrowserWindow  | 0x00000004)
 
 /*** Variables **************************************************************/
 extern struct MUI_CustomClass *BrowserWindow_CLASS;

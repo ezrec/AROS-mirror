@@ -496,3 +496,18 @@ Copy
 MSG_MainMenu_Paste (//)
 Paste
 ;
+MSG_MainMenu_View (//)
+View
+;
+MSG_MainMenu_ZoomIn (//)
+Zoom in
+;
+MSG_MainMenu_ZoomOut (//)
+Zoom out
+;
+MSG_MainMenu_ZoomReset (//)
+Reset zoom
+;
+MSG_MainMenu_ViewSource (//)
+View source
+;
