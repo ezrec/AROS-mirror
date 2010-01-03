@@ -17,11 +17,16 @@ extern struct drm_ioctl_desc nouveau_ioctls[];
 static struct drm_driver driver =
 {
     .VendorID = 0x10de,
+    .ProductID = 0x0,
     .PciIDs = nouveau_pciids,
+    .pciDevice = NULL,
+    .dev = NULL,
     .driver_features = DRIVER_MODESET | DRIVER_GEM,
     .load = nouveau_load,
     .firstopen = nouveau_firstopen,
+    .open = NULL,
     .preclose = nouveau_preclose,
+    .postclose = NULL,
     .lastclose = nouveau_lastclose,
     .unload = nouveau_unload,
     .irq_handler = nouveau_irq_handler,

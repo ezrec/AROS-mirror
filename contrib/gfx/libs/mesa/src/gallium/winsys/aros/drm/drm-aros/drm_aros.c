@@ -13,9 +13,9 @@
 #include <hidd/hidd.h>
 
 OOP_AttrBase __IHidd_PCIDev = 0;
-struct Library * OOPBase = NULL;
-OOP_Object * pciDriver = NULL;
-OOP_Object * pci = NULL;
+struct Library * OOPBase    = NULL;
+OOP_Object * pciDriver      = NULL;
+OOP_Object * pciBus         = NULL;
 
 AROS_UFH3(void, Enumerator,
     AROS_UFHA(struct Hook *, hook, A0),
@@ -26,8 +26,8 @@ AROS_UFH3(void, Enumerator,
 
     IPTR ProductID;
     IPTR VendorID;
-    struct drm_device *dev = (struct drm_device *)hook->h_Data;
-    struct drm_pciid *sup = dev->driver->PciIDs;
+    struct drm_driver *drv = (struct drm_driver *)hook->h_Data;
+    struct drm_pciid *sup = drv->PciIDs;
     
     /* Get the Device's ProductID */
     OOP_GetAttr(pciDevice, aHidd_PCIDevice_ProductID, &ProductID);
@@ -50,9 +50,9 @@ AROS_UFH3(void, Enumerator,
             
             DRM_DEBUG("Found!\n");
             /* Filling out device properties */
-            dev->pci_vendor = (int)VendorID;
-            dev->pci_device = (int)ProductID;
-            dev->pdev = pciDevice;
+            drv->VendorID = (UWORD)VendorID;
+            drv->ProductID = (UWORD)ProductID;
+            drv->pciDevice = pciDevice;
 
             /*
             Fix PCI device attributes (perhaps already set, but if the 
@@ -76,10 +76,8 @@ AROS_UFH3(void, Enumerator,
 }
 
 static void 
-find_card(struct drm_device *dev)
+drm_aros_pci_find_card(struct drm_driver *drv)
 {
-    DRM_DEBUG("Enter\n");
-    
     if (!OOPBase)
     {
         if ((OOPBase=OpenLibrary("oop.library", 0)) != NULL)
@@ -95,20 +93,20 @@ find_card(struct drm_device *dev)
 
     DRM_DEBUG("Creating PCI object\n");
 
-    pci = OOP_NewObject(NULL, CLID_Hidd_PCI, NULL);
+    pciBus = OOP_NewObject(NULL, CLID_Hidd_PCI, NULL);
 
-    if (pci)
+    if (pciBus)
     {
         struct Hook FindHook = {
         h_Entry:    (IPTR (*)())Enumerator,
-        h_Data:     dev,
+        h_Data:     drv,
         };
 
         struct TagItem Requirements[] = {
         { tHidd_PCI_Interface,  0x00 },
         { tHidd_PCI_Class,      0x03 },
         { tHidd_PCI_SubClass,   0x00 },
-        { tHidd_PCI_VendorID,   dev->driver->VendorID },
+        { tHidd_PCI_VendorID,   drv->VendorID },
         { TAG_DONE,             0UL }
         };
     
@@ -118,63 +116,55 @@ find_card(struct drm_device *dev)
         requirements:   (struct TagItem*)&Requirements,
         }, *msg = &enummsg;
         DRM_DEBUG("Calling search Hook\n");
-        OOP_DoMethod(pci, (OOP_Msg)msg);
+        OOP_DoMethod(pciBus, (OOP_Msg)msg);
     }
 }
 
-LONG drm_aros_find_supported_video_card(struct drm_device *dev)
+LONG drm_aros_pci_find_supported_video_card(struct drm_driver *drv)
 {
-    /* FIXME: What if they had values? memory leaks? */
-    dev->pdev = NULL;
-    pci = NULL;
+    drv->pciDevice = NULL;
+    drv->ProductID = 0x0;
+    pciBus = NULL;
     pciDriver = NULL;
     OOPBase = NULL;
     
-    find_card(dev);
+    drm_aros_pci_find_card(drv);
 
     /* If objects are set, detection was succesful */
-    if (pci && dev->pdev && pciDriver)
+    if (pciBus && drv->pciDevice && pciDriver)
     {
-        DRM_INFO("Detected card: 0x%x/0x%x\n", dev->pci_vendor, dev->pci_device);
+        DRM_INFO("Detected card: 0x%x/0x%x\n", drv->VendorID, drv->ProductID);
         return 0;
     }
     else
     {
-        DRM_ERROR("Failed detecting card for VendorID: 0x%x\n", dev->driver->VendorID);
+        DRM_INFO("Failed detecting card for VendorID: 0x%x\n", drv->VendorID);
+        drm_aros_pci_shutdown(drv);
         return -1;
     }
 }
 
-void drm_aros_pci_shutdown(struct drm_device *dev)
+void drm_aros_pci_shutdown(struct drm_driver *drv)
 {
     /* Release AROS-specific PCI objects. Should be called at driver shutdown */
     
-    if (dev)
+    if (drv)
     {
-        if (dev->irq_enabled)
-        {
-            DRM_ERROR("IRQ still enabled at PCI shutdown\n");
-            drm_irq_uninstall(dev);
-        }
-        
-        if (dev->IntHandler != NULL)
-        {
-            DRM_ERROR("IRQ handler not freed\n");
-        }
-
-        if (pci)
-        {
-            OOP_DisposeObject(pci);
-            pci = NULL;
-        }
-        
-        dev->pdev = NULL;
-        pciDriver = NULL;
+        drv->pciDevice = NULL;
     }
+
+    if (pciBus)
+    {
+        OOP_DisposeObject(pciBus);
+        pciBus = NULL;
+    }
+
+    pciDriver = NULL;
     
     if (__IHidd_PCIDev != 0)
     {
         OOP_ReleaseAttrBase(IID_Hidd_PCIDevice);
+        __IHidd_PCIDev = 0;
     }
     
     if (OOPBase)

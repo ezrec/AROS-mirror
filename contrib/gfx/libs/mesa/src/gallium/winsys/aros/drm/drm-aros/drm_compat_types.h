@@ -88,6 +88,7 @@ struct idr
 {
     ULONG size;
     ULONG occupied;
+    ULONG last_starting_id;
     IPTR * pointers;
 };
 

@@ -16,9 +16,13 @@ unsigned int i915_powersave = 0;
 static struct drm_driver driver =
 {
     .VendorID = 0x8086,
+    .ProductID = 0x0,
     .PciIDs = i915_pciids,
+    .pciDevice = NULL,
+    .dev = NULL,
     .driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_USE_AGP | DRIVER_REQUIRE_AGP,
     .load = i915_driver_load,
+    .firstopen = NULL,
     .open = i915_driver_open,
     .preclose = i915_driver_preclose,
     .postclose = i915_driver_postclose,

@@ -1,7 +1,8 @@
 #include "arosdrm.h"
 #include "drmP.h"
 
-struct drm_device global_drm_device;
+extern struct drm_driver * current_drm_driver;
+
 /* FIXME: Array for now, list maybe in future */
 struct drm_file * drm_files[128] = {NULL};
 
@@ -11,14 +12,14 @@ drmCommandNone(int fd, unsigned long drmCommandIndex)
     if (!drm_files[fd])
         return -EINVAL;
 
-    if (!global_drm_device.driver || !global_drm_device.driver->ioctls)
+    if (!current_drm_driver || !current_drm_driver->ioctls)
         return -EINVAL;
 
     /* FIXME: Remove switch when all paths are tested */
     switch(drmCommandIndex)
     {
         case(0x0 /*DRM_NOUVEAU_CARD_INIT*/):
-            return global_drm_device.driver->ioctls[drmCommandIndex].func(&global_drm_device, NULL, drm_files[fd]);
+            return current_drm_driver->ioctls[drmCommandIndex].func(current_drm_driver->dev, NULL, drm_files[fd]);
         default:
             DRM_IMPL("COMMAND %d\n", drmCommandIndex);
     }
@@ -32,7 +33,7 @@ drmCommandRead(int fd, unsigned long drmCommandIndex, void *data, unsigned long 
     if (!drm_files[fd])
         return -EINVAL;
 
-    if (!global_drm_device.driver || !global_drm_device.driver->ioctls)
+    if (!current_drm_driver || !current_drm_driver->ioctls)
         return -EINVAL;
     
     /* FIXME: Remove switch when all paths are tested */
@@ -51,7 +52,7 @@ drmCommandWrite(int fd, unsigned long drmCommandIndex, void *data, unsigned long
     if (!drm_files[fd])
         return -EINVAL;
 
-    if (!global_drm_device.driver || !global_drm_device.driver->ioctls)
+    if (!current_drm_driver || !current_drm_driver->ioctls)
         return -EINVAL;
     
     /* FIXME: Remove switch when all paths are tested */
@@ -62,7 +63,7 @@ drmCommandWrite(int fd, unsigned long drmCommandIndex, void *data, unsigned long
         case(0x7 /*DRM_NOUVEAU_GPUOBJ_FREE*/):
         case(0x45 /*DRM_NOUVEAU_GEM_CPU_PREP*/):
         case(0x46 /*DRM_NOUVEAU_GEM_CPU_FINI*/):
-            return global_drm_device.driver->ioctls[drmCommandIndex].func(&global_drm_device, data, drm_files[fd]);
+            return current_drm_driver->ioctls[drmCommandIndex].func(current_drm_driver->dev, data, drm_files[fd]);
         default:
             DRM_IMPL("COMMAND %d\n", drmCommandIndex);
     }
@@ -76,7 +77,7 @@ drmCommandWriteRead(int fd, unsigned long drmCommandIndex, void *data, unsigned 
     if (!drm_files[fd])
         return -EINVAL;
     
-    if (!global_drm_device.driver || !global_drm_device.driver->ioctls)
+    if (!current_drm_driver || !current_drm_driver->ioctls)
         return -EINVAL;
     
     /* FIXME: Remove switch when all paths are tested */
@@ -90,7 +91,7 @@ drmCommandWriteRead(int fd, unsigned long drmCommandIndex, void *data, unsigned 
         case(0x43 /*DRM_NOUVEAU_GEM_PIN*/):
         case(0x47 /*DRM_NOUVEAU_GEM_INFO*/):
         case(0x48 /* DRM_NOUVEAU_GEM_PUSHBUF_CALL2 */):
-            return global_drm_device.driver->ioctls[drmCommandIndex].func(&global_drm_device, data, drm_files[fd]);
+            return current_drm_driver->ioctls[drmCommandIndex].func(current_drm_driver->dev, data, drm_files[fd]);
         default:
             DRM_IMPL("COMMAND %d\n", drmCommandIndex);
     }
@@ -108,7 +109,7 @@ drmCommandWriteRead(int fd, unsigned long drmCommandIndex, void *data, unsigned 
 //    needed drm_map_list */
 //  
 //    for (entry = (struct drm_map_list *)global_drm_device.maplist.next; 
-//    entry != (struct drm_map_list *)&global_drm_device.maplist; 
+//    entry != (struct drm_map_list *)current_drm_driver->dev.maplist; 
 //    entry = (struct drm_map_list *)entry->head.next)
 //    {
 //        if (entry->map && entry->user_token == handle)
@@ -117,7 +118,7 @@ drmCommandWriteRead(int fd, unsigned long drmCommandIndex, void *data, unsigned 
 //            {
 //                case(_DRM_FRAME_BUFFER):
 //                    /* HACK ? - map of this type was not ioremaped before */
-//                    drm_core_ioremap(entry->map, &global_drm_device);
+//                    drm_core_ioremap(entry->map, current_drm_driver->dev);
 //                    /* FALLTHROUGH */
 //                case(_DRM_REGISTERS):
 //                    *address = entry->map->handle;
@@ -159,8 +160,8 @@ drmOpen(const char *name, const char *busid)
         {
             drm_files[i] = AllocVec(sizeof(struct drm_file), MEMF_PUBLIC | MEMF_CLEAR);
             spin_lock_init(&drm_files[i]->table_lock);
-            if (global_drm_device.driver->open)
-                global_drm_device.driver->open(&global_drm_device, drm_files[i]);
+            if (current_drm_driver->open)
+                current_drm_driver->open(current_drm_driver->dev, drm_files[i]);
             return i;
         }
     }
@@ -178,11 +179,11 @@ drmClose(int fd)
     
     drm_files[fd] = NULL;
     
-    if (global_drm_device.driver->preclose)
-        global_drm_device.driver->preclose(&global_drm_device, f);
+    if (current_drm_driver->preclose)
+        current_drm_driver->preclose(current_drm_driver->dev, f);
 
-    if (global_drm_device.driver->postclose)
-        global_drm_device.driver->postclose(&global_drm_device, f);
+    if (current_drm_driver->postclose)
+        current_drm_driver->postclose(current_drm_driver->dev, f);
 
     FreeVec(f);
     
@@ -193,8 +194,8 @@ drmVersionPtr
 drmGetVersion(int fd)
 {
     static drmVersion ver;
-    if (global_drm_device.driver)
-        ver.version_patchlevel = global_drm_device.driver->version_patchlevel;
+    if (current_drm_driver)
+        ver.version_patchlevel = current_drm_driver->version_patchlevel;
     else
         ver.version_patchlevel = 0;
     
@@ -233,13 +234,13 @@ int drmIoctl(int fd, unsigned long request, void *arg)
         switch(request)
         {
             case(DRM_IOCTL_GEM_CLOSE):
-                ret = drm_gem_close_ioctl(&global_drm_device, arg, drm_files[fd]);
+                ret = drm_gem_close_ioctl(current_drm_driver->dev, arg, drm_files[fd]);
                 break;
             case(DRM_IOCTL_GEM_OPEN):
-                ret = drm_gem_open_ioctl(&global_drm_device, arg, drm_files[fd]);
+                ret = drm_gem_open_ioctl(current_drm_driver->dev, arg, drm_files[fd]);
                 break;
             case(DRM_IOCTL_GEM_FLINK):
-                ret = drm_gem_flink_ioctl(&global_drm_device, arg, drm_files[fd]);
+                ret = drm_gem_flink_ioctl(current_drm_driver->dev, arg, drm_files[fd]);
                 break;
             default:
                 DRM_IMPL("GEM COMMAND %d\n", request);
@@ -263,7 +264,7 @@ void * drmMMap(int fd, uint32_t handle)
         return NULL;
     
     /* Get GEM objects from handle */
-    gem_object = drm_gem_object_lookup(&global_drm_device, f, handle);
+    gem_object = drm_gem_object_lookup(current_drm_driver->dev, f, handle);
     if (!gem_object)
         return NULL;
     
@@ -280,9 +281,9 @@ void * drmMMap(int fd, uint32_t handle)
     }
     
     /* Release the acquired reference */
-    mutex_lock(&global_drm_device.struct_mutex);
+    mutex_lock(&current_drm_driver->dev->struct_mutex);
     drm_gem_object_unreference(gem_object);
-    mutex_unlock(&global_drm_device.struct_mutex);    
+    mutex_unlock(&current_drm_driver->dev->struct_mutex);    
     
     /* Return virtual address */
     return addr;
@@ -297,7 +298,7 @@ void drmMUnmap(int fd, uint32_t handle)
     if (!f) return ;
     
     /* Get GEM objects from handle */
-    gem_object = drm_gem_object_lookup(&global_drm_device, f, handle);
+    gem_object = drm_gem_object_lookup(current_drm_driver->dev, f, handle);
     if (!gem_object) return;
     
     /* Translate to nouveau_bo */
@@ -310,9 +311,9 @@ void drmMUnmap(int fd, uint32_t handle)
     }
     
     /* Release the acquired reference */
-    mutex_lock(&global_drm_device.struct_mutex);
+    mutex_lock(&current_drm_driver->dev->struct_mutex);
     drm_gem_object_unreference(gem_object);
-    mutex_unlock(&global_drm_device.struct_mutex);
+    mutex_unlock(&current_drm_driver->dev->struct_mutex);
 }
 
 /* HACK */
@@ -340,23 +341,23 @@ int drmIntelIoctlEmul(int fildes, int request, void * arg)
     switch(request)
     {
     case(DRM_IOCTL_I915_GEM_GET_APERTURE):
-        return i915_gem_get_aperture_ioctl(&global_drm_device, arg, drm_files[fildes]);
+        return i915_gem_get_aperture_ioctl(current_drm_driver->dev, arg, drm_files[fildes]);
     case(DRM_IOCTL_I915_GETPARAM):
-        return i915_getparam(&global_drm_device, arg, drm_files[fildes]);
+        return i915_getparam(current_drm_driver->dev, arg, drm_files[fildes]);
     case(DRM_IOCTL_I915_GEM_CREATE):
-        return i915_gem_create_ioctl(&global_drm_device, arg, drm_files[fildes]);
+        return i915_gem_create_ioctl(current_drm_driver->dev, arg, drm_files[fildes]);
     case(DRM_IOCTL_I915_GEM_MMAP):
-        return i915_gem_mmap_ioctl(&global_drm_device, arg, drm_files[fildes]);
+        return i915_gem_mmap_ioctl(current_drm_driver->dev, arg, drm_files[fildes]);
     case(DRM_IOCTL_I915_GEM_SET_DOMAIN):
-        return i915_gem_set_domain_ioctl(&global_drm_device, arg, drm_files[fildes]);
+        return i915_gem_set_domain_ioctl(current_drm_driver->dev, arg, drm_files[fildes]);
     case(DRM_IOCTL_I915_GEM_SW_FINISH):
-        return i915_gem_sw_finish_ioctl(&global_drm_device, arg, drm_files[fildes]);
+        return i915_gem_sw_finish_ioctl(current_drm_driver->dev, arg, drm_files[fildes]);
     case(DRM_IOCTL_I915_GEM_SET_TILING):
-        return i915_gem_set_tiling(&global_drm_device, arg, drm_files[fildes]);
+        return i915_gem_set_tiling(current_drm_driver->dev, arg, drm_files[fildes]);
     case(DRM_IOCTL_I915_GEM_PWRITE):
-        return i915_gem_pwrite_ioctl(&global_drm_device, arg, drm_files[fildes]);
+        return i915_gem_pwrite_ioctl(current_drm_driver->dev, arg, drm_files[fildes]);
     case(DRM_IOCTL_I915_GEM_EXECBUFFER):
-        return i915_gem_execbuffer(&global_drm_device, arg, drm_files[fildes]);
+        return i915_gem_execbuffer(current_drm_driver->dev, arg, drm_files[fildes]);
     default:
         asm("int3");
         DRM_IMPL("IOCTL: %d -> %d\n", fildes, request);

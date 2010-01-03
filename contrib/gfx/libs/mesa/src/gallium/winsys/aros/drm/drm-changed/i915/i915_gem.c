@@ -2896,7 +2896,6 @@ IMPLEMENT("Calling drm_agp_chipset_flush\n");
 int
 i915_gem_object_set_to_gtt_domain(struct drm_gem_object *obj, int write)
 {
-#if !defined(__AROS__)
 	struct drm_i915_gem_object *obj_priv = obj->driver_private;
 	uint32_t old_write_domain, old_read_domains;
 	int ret;
@@ -2935,10 +2934,6 @@ i915_gem_object_set_to_gtt_domain(struct drm_gem_object *obj, int write)
 	trace_i915_gem_object_change_domain(obj,
 					    old_read_domains,
 					    old_write_domain);
-#else
-//FIXME
-IMPLEMENT("\n");
-#endif
 
 	return 0;
 }

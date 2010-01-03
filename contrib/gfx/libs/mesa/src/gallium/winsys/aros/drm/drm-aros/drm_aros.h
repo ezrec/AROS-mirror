@@ -9,10 +9,10 @@
 #include <hidd/irq.h>
 extern struct Library   * OOPBase;
 extern OOP_Object       * pciDriver;
-extern OOP_Object       * pci;
-struct drm_device;
+extern OOP_Object       * pciBus;
+struct drm_driver;
 
-LONG        drm_aros_find_supported_video_card(struct drm_device *dev);
-void        drm_aros_pci_shutdown(struct drm_device *dev);
+LONG        drm_aros_pci_find_supported_video_card(struct drm_driver *drv);
+void        drm_aros_pci_shutdown(struct drm_driver *drv);
 
 #endif /* DRM_AROS_H */

@@ -108,7 +108,7 @@ struct page * create_page_helper()
 /* IDR handling */
 int idr_pre_get_internal(struct idr *idp)
 {
-    if (idp->size == idp->occupied)
+    if (idp->size <= idp->occupied + idp->last_starting_id)
     {
         /* Create new table */
         ULONG newsize = idp->size ? idp->size * 2 : 128;
@@ -137,6 +137,7 @@ int idr_pre_get_internal(struct idr *idp)
 int idr_get_new_above(struct idr *idp, void *ptr, int starting_id, int *id)
 {
     int i = starting_id;
+    idp->last_starting_id = starting_id;
 
     for(;i < idp->size;i++)
     {
@@ -174,6 +175,7 @@ void idr_init(struct idr *idp)
     idp->size = 0;
     idp->pointers = NULL;
     idp->occupied = 0;
+    idp->last_starting_id = 0;
 }
 
 #include "drm_aros.h"
@@ -358,7 +360,7 @@ void * pci_get_bus_and_slot(unsigned int bus, unsigned int dev, unsigned int fun
 #if !defined(HOSTED_BUILD)
     OOP_Object * pciDevice = NULL;
 
-    if (pci)
+    if (pciBus)
     {
         struct GetBusSlotEnumeratorData data = {
         Bus: bus,
@@ -382,7 +384,7 @@ void * pci_get_bus_and_slot(unsigned int bus, unsigned int dev, unsigned int fun
         requirements:   (struct TagItem*)&Requirements,
         }, *msg = &enummsg;
         
-        OOP_DoMethod(pci, (OOP_Msg)msg);
+        OOP_DoMethod(pciBus, (OOP_Msg)msg);
     }
     
     return pciDevice;

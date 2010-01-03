@@ -822,7 +822,7 @@ void i915_gem_cleanup_ringbuffer(struct drm_device *dev);
 int i915_gem_do_init(struct drm_device *dev, unsigned long start,
 		     unsigned long end);
 int i915_gem_idle(struct drm_device *dev);
-int i915_gem_fault(struct vm_area_struct *vma, struct vm_fault *vmf);
+//FIXME int i915_gem_fault(struct vm_area_struct *vma, struct vm_fault *vmf);
 int i915_gem_object_set_to_gtt_domain(struct drm_gem_object *obj,
 				      int write);
 int i915_gem_attach_phys_object(struct drm_device *dev,
@@ -856,8 +856,8 @@ void i915_gem_dump_object(struct drm_gem_object *obj, int len,
 void i915_dump_lru(struct drm_device *dev, const char *where);
 
 /* i915_debugfs.c */
-int i915_debugfs_init(struct drm_minor *minor);
-void i915_debugfs_cleanup(struct drm_minor *minor);
+//FIXME int i915_debugfs_init(struct drm_minor *minor);
+//FIXME void i915_debugfs_cleanup(struct drm_minor *minor);
 
 /* i915_suspend.c */
 extern int i915_save_state(struct drm_device *dev);

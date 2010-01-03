@@ -176,9 +176,14 @@ struct drm_pciid
 
 struct drm_driver
 {
-    /* PCI ID */
+    /* PCI */
     UWORD               VendorID;
-    struct drm_pciid  * PciIDs;
+    UWORD               ProductID;
+    struct drm_pciid    *PciIDs;
+    OOP_Object          *pciDevice;
+    
+    /* DRM device */
+    struct drm_device   *dev;
     
     int         (*load)(struct drm_device *, unsigned long);
     int         (*firstopen)(struct drm_device *);
@@ -201,6 +206,7 @@ struct drm_driver
     int                     version_patchlevel;
     unsigned int            driver_features;
     struct drm_ioctl_desc   *ioctls;
+    
 };
 
 struct drm_device

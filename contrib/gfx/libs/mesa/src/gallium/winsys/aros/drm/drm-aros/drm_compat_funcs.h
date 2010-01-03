@@ -87,7 +87,7 @@ static inline IPTR IS_ERR(APTR ptr)
 #define KERN_ERR
 #define printk(fmt, ...)            bug(fmt, ##__VA_ARGS__)
 #define IMPLEMENT(fmt, ...)         bug("------IMPLEMENT(%s): " fmt, __func__ , ##__VA_ARGS__)
-#define TRACE(fmt, ...)             bug("[TRACE](%s): " fmt, __func__ , ##__VA_ARGS__)
+#define TRACE(fmt, ...)             D(bug("[TRACE](%s): " fmt, __func__ , ##__VA_ARGS__))
 #define BUG(x)                      bug("BUG:(%s)\n", __func__)
 #define WARN(condition, message)    do { if (unlikely(condition)) bug("WARN: %s:%d %s\n", __FILE__, __LINE__, message); } while(0)
 

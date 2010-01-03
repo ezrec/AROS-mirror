@@ -6,6 +6,8 @@
 #include "drmP.h"
 #include "drm_compat_funcs.h"
 
+struct drm_driver *current_drm_driver = NULL;
+
 int drm_lastclose(struct drm_device * dev)
 {
     if (dev->driver->lastclose)
@@ -23,40 +25,34 @@ static void drm_cleanup(struct drm_device * dev)
     
     if (dev->driver->unload)
         dev->driver->unload(dev);
-    
-    drm_aros_pci_shutdown(dev);
 }
-
-/* HACK to get access to device */
-extern struct drm_device global_drm_device;
 
 void drm_exit(struct drm_driver * driver)
 {
-    /* FIXME: drm_device should not be hardcoded */
-    drm_cleanup(&global_drm_device);
+    drm_cleanup(driver->dev);
+    
+    drm_aros_pci_shutdown(driver);
+    
+    FreeVec(driver->dev);
+    driver->dev = NULL;
+    current_drm_driver = NULL;
 }
 
-int drm_init(struct drm_driver * driver)
+static int drm_init_device(struct drm_driver * driver)
 {
-    int ret;
-    /* FIXME: drm_device should not be hardcoded - it should be bound with driver and driver should be global */
-    struct drm_device * dev = &global_drm_device;
+    /* If this function is called, the card was already found */
+    driver->dev = AllocVec(sizeof(struct drm_device), MEMF_ANY | MEMF_CLEAR);
+    struct drm_device * dev = driver->dev;
+    
     /* Init fields */
     INIT_LIST_HEAD(&dev->maplist);
     dev->irq_enabled = 0;
     InitSemaphore(&dev->struct_mutex.semaphore);
     dev->driver = driver;
-    
-#if !defined(HOSTED_BUILD)    
-    ret = drm_aros_find_supported_video_card(dev);
-    if (ret)
-        return -1;
-#else
-#if HOSTED_BUILD_HARDWARE == HOSTED_BUILD_HARDWARE_I915
-    dev->pci_device = HOSTED_BUILD_PRODUCT_ID;
-#endif
-#endif
-    
+    dev->pci_vendor = driver->VendorID;
+    dev->pci_device = driver->ProductID;
+    dev->pdev = driver->pciDevice;
+    int ret;
 
     if (drm_core_has_AGP(dev)) {
 //FIXME        if (drm_device_is_agp(dev))
@@ -67,7 +63,6 @@ int drm_init(struct drm_driver * driver)
 //FIXME            return -1;
 //FIXME        }
     }
-
     
     if (driver->driver_features & DRIVER_GEM) {
         if (drm_gem_init(dev)) {
@@ -90,6 +85,27 @@ int drm_init(struct drm_driver * driver)
         if (ret)
             return -1;
     }
+    
+    return 0;
+}
+
+int drm_init(struct drm_driver * driver)
+{
+#if !defined(HOSTED_BUILD)
+    if (drm_aros_pci_find_supported_video_card(driver))
+        return -1;
+#else
+#if HOSTED_BUILD_HARDWARE == HOSTED_BUILD_HARDWARE_I915
+    driver->ProductID = HOSTED_BUILD_PRODUCT_ID;
+#endif
+#endif
+    if (drm_init_device(driver))
+    {
+        drm_exit(driver);
+        return -1;
+    }
+    
+    current_drm_driver = driver;
     
     return 0;
 }
