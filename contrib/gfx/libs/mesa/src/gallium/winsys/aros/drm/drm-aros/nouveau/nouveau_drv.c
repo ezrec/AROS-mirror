@@ -8,7 +8,9 @@
 #include "nouveau_drv.h"
 #include "nouveau_pciids.h"
 
-/* FIXME: Check what impact these settings have */
+/* Whether pushbuf and notifer are to be put in VRAM (access via 
+   pci mapping) or in GART (accessed by card - SGDMA or AGP) 
+   Setting nouveau_vram_pushbuf to 1 causes problems */
 int nouveau_vram_pushbuf = 0;
 int nouveau_vram_notify = 0;
 

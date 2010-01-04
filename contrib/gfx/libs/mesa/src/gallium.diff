@@ -142,8 +142,37 @@ diff -ur -x .svn /data/deadwood/source/Mesa-7.7/src/gallium/auxiliary/util/u_tim
  void
 diff -ur -x .svn /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nouveau/nouveau_screen.c gallium/drivers/nouveau/nouveau_screen.c
 --- /data/deadwood/source/Mesa-7.7/src/gallium/drivers/nouveau/nouveau_screen.c	2009-10-20 13:48:08.000000000 +0200
-+++ gallium/drivers/nouveau/nouveau_screen.c	2009-12-23 08:17:22.000000000 +0100
-@@ -239,5 +239,6 @@
++++ gallium/drivers/nouveau/nouveau_screen.c	2010-01-04 22:40:09.000000000 +0100
+@@ -59,6 +59,20 @@
+ 	if (usage & NOUVEAU_BUFFER_USAGE_TRANSFER)
+ 		flags |= NOUVEAU_BO_GART;
+ 	else
++#if defined(__AROS__)
++    /* Put the buffers in VRAM instead of GART. This solved graphics
++       curruption of vertices. Reason for this curruption is unknown
++       but similar errors have been reported also on nouveau mailing
++       list which suggests general bug in nouveau not bug in port */
++	if (usage & PIPE_BUFFER_USAGE_VERTEX) {
++		if (pscreen->get_param(pscreen, NOUVEAU_CAP_HW_VTXBUF))
++			flags |= NOUVEAU_BO_VRAM/* NOUVEAU_BO_GART */;
++	} else
++	if (usage & PIPE_BUFFER_USAGE_INDEX) {
++		if (pscreen->get_param(pscreen, NOUVEAU_CAP_HW_IDXBUF))
++			flags |= NOUVEAU_BO_VRAM/* NOUVEAU_BO_GART */;
++	}
++#else
+ 	if (usage & PIPE_BUFFER_USAGE_VERTEX) {
+ 		if (pscreen->get_param(pscreen, NOUVEAU_CAP_HW_VTXBUF))
+ 			flags |= NOUVEAU_BO_GART;
+@@ -67,6 +81,7 @@
+ 		if (pscreen->get_param(pscreen, NOUVEAU_CAP_HW_IDXBUF))
+ 			flags |= NOUVEAU_BO_GART;
+ 	}
++#endif
+ 
+ 	if (usage & PIPE_BUFFER_USAGE_PIXEL) {
+ 		if (usage & NOUVEAU_BUFFER_USAGE_TEXTURE)
+@@ -239,5 +254,6 @@
  void
  nouveau_screen_fini(struct nouveau_screen *screen)
  {

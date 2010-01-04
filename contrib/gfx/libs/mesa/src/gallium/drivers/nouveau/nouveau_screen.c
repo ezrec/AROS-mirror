@@ -59,6 +59,20 @@ nouveau_screen_bo_new(struct pipe_screen *pscreen, unsigned alignment,
 	if (usage & NOUVEAU_BUFFER_USAGE_TRANSFER)
 		flags |= NOUVEAU_BO_GART;
 	else
+#if defined(__AROS__)
+    /* Put the buffers in VRAM instead of GART. This solved graphics
+       curruption of vertices. Reason for this curruption is unknown
+       but similar errors have been reported also on nouveau mailing
+       list which suggests general bug in nouveau not bug in port */
+	if (usage & PIPE_BUFFER_USAGE_VERTEX) {
+		if (pscreen->get_param(pscreen, NOUVEAU_CAP_HW_VTXBUF))
+			flags |= NOUVEAU_BO_VRAM/* NOUVEAU_BO_GART */;
+	} else
+	if (usage & PIPE_BUFFER_USAGE_INDEX) {
+		if (pscreen->get_param(pscreen, NOUVEAU_CAP_HW_IDXBUF))
+			flags |= NOUVEAU_BO_VRAM/* NOUVEAU_BO_GART */;
+	}
+#else
 	if (usage & PIPE_BUFFER_USAGE_VERTEX) {
 		if (pscreen->get_param(pscreen, NOUVEAU_CAP_HW_VTXBUF))
 			flags |= NOUVEAU_BO_GART;
@@ -67,6 +81,7 @@ nouveau_screen_bo_new(struct pipe_screen *pscreen, unsigned alignment,
 		if (pscreen->get_param(pscreen, NOUVEAU_CAP_HW_IDXBUF))
 			flags |= NOUVEAU_BO_GART;
 	}
+#endif
 
 	if (usage & PIPE_BUFFER_USAGE_PIXEL) {
 		if (usage & NOUVEAU_BUFFER_USAGE_TEXTURE)

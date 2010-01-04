@@ -364,18 +364,9 @@ static float MaterialGray[]    =   { 0.2, 0.2, 0.2, 1.0 };
   }                                                                                                              \
 }
 
-#include <proto/dos.h>
-
 static void draw_tetra( void )
 {
   GLuint list;
-
-//glBegin(GL_TRIANGLES);
-//glVertex3f(0,0,0);
-
-//glVertex3f(0,1,0);
-//glVertex3f(1,1,0);
-//glEnd();
 
   list = glGenLists( 1 );
   glNewList( list, GL_COMPILE );
@@ -695,8 +686,6 @@ static void draw ( void ) {
   glFlush();
 
   glutSwapBuffers();
-
-  //Delay(50);
 }
 
 static void idle_( void )
