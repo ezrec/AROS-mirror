@@ -96,6 +96,12 @@ int drm_init(struct drm_driver * driver)
         return -1;
 #else
 #if HOSTED_BUILD_HARDWARE == HOSTED_BUILD_HARDWARE_I915
+    if (driver->VendorID != 0x8086) return -1;
+#endif
+#if HOSTED_BUILD_HARDWARE == HOSTED_BUILD_HARDWARE_NVIDIA
+    if (driver->VendorID != 0x10de) return -1;
+#endif
+#if HOSTED_BUILD_HARDWARE == HOSTED_BUILD_HARDWARE_I915
     driver->ProductID = HOSTED_BUILD_PRODUCT_ID;
 #endif
 #endif

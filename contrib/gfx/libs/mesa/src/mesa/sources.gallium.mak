@@ -30,7 +30,6 @@ AROS_DRM_SOURCES = \
             winsys/aros/drm/drm-aros/drm_irq \
             winsys/aros/drm/drm-aros/drm_pci \
             winsys/aros/drm/drm-aros/drm_drv \
-            winsys/aros/drm/drm-aros/drm_fake \
             winsys/aros/drm/drm-aros/drm_compat_funcs \
             winsys/aros/drm/drm-aros/nouveau/nouveau_drv \
             winsys/aros/drm/drm-aros/i915/i915_drv \

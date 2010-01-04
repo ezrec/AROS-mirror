@@ -64,10 +64,15 @@ nouveau_fence_update(struct nouveau_channel *chan)
 	struct nouveau_fence *fence;
 	uint32_t sequence;
 
+#if defined(HOSTED_BUILD)
+    /* For purpose of simulation, assume all fences are signalled */
+    sequence = chan->fence.sequence;
+#else
 	if (USE_REFCNT)
 		sequence = nvchan_rd32(chan, 0x48);
 	else
 		sequence = chan->fence.last_sequence_irq;
+#endif
 
 	if (chan->fence.sequence_ack == sequence)
 		return;
@@ -123,15 +128,8 @@ nouveau_fence_emit(struct nouveau_fence *fence)
 	int ret;
 
 	ret = RING_SPACE(chan, 2);
-#if defined(HOSTED_BUILD)
-    /* 
-     * Since RING_SPACE can raise an error when there is no space is channel
-     * and under hosted we will run out of space.
-     */
-#else
 	if (ret)
 		return ret;
-#endif
 
 	if (unlikely(chan->fence.sequence == chan->fence.sequence_ack - 1)) {
 		spin_lock_irqsave(&chan->fence.lock, flags);
@@ -178,7 +176,6 @@ nouveau_fence_ref(void *sync_obj)
 bool
 nouveau_fence_signalled(void *sync_obj, void *sync_arg)
 {
-#if !defined(HOSTED_BUILD)    
 	struct nouveau_fence *fence = nouveau_fence(sync_obj);
 	struct nouveau_channel *chan = fence->channel;
 	unsigned long flags;
@@ -190,12 +187,8 @@ nouveau_fence_signalled(void *sync_obj, void *sync_arg)
 	nouveau_fence_update(chan);
 	spin_unlock_irqrestore(&chan->fence.lock, flags);
 	return fence->signalled;
-#else
-   struct nouveau_fence *fence = nouveau_fence(sync_obj);
-   fence->signalled = 1;
-   return fence->signalled;
-#endif
 }
+
 
 int
 nouveau_fence_wait(void *sync_obj, void *sync_arg, bool lazy, bool intr)
