@@ -241,6 +241,10 @@ nv50_instmem_init(struct drm_device *dev)
 					 NV50_PUNK_BAR_CFG_BASE_VALID);
 	nv_wr32(dev, NV50_PUNK_BAR1_CTXDMA, (priv->fb_bar->instance >> 4) |
 					NV50_PUNK_BAR1_CTXDMA_VALID);
+    /* NOTE: The following line somehow block the AROS VESA driver commands from
+    beeing executed by a card. This results in AROS screen not redrawing as long
+    as nouvea driver is active. Probably the only solution is to do things right
+    and integrate 3D nouveau with 2D driver */
 	nv_wr32(dev, NV50_PUNK_BAR3_CTXDMA, (priv->pramin_bar->instance >> 4) |
 					NV50_PUNK_BAR3_CTXDMA_VALID);
 
