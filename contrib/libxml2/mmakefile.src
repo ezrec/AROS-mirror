@@ -7,6 +7,6 @@
 #MM- development-libxml2 : development-libiconv
 
 %fetch_and_build_gnu_development package=libxml2 version=2.6.31 patch=yes \
-    package_repo=ftp://xmlsoft.org/libxml2/ \
+    package_repo=ftp://xmlsoft.org/libxml2/old/ \
     extraoptions="--with-http=no --with-ftp=no --with-modules=no --with-mem-debug=no \
         --with-iconv=no --with-debug=no --with-run-debug=no --enable-shared=no --with-threads=no --with-python=no"
