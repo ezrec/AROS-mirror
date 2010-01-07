@@ -2,6 +2,7 @@
 #include <intuition/intuition.h>
 #include <intuition/intuitionbase.h>
 #include <intuition/screens.h>
+#include <cybergraphx/cybergraphics.h>
 
 #include <proto/exec.h>
 #include <proto/dos.h>
@@ -9,6 +10,7 @@
 
 #include <proto/timer.h>
 #include <devices/timer.h>
+#include <proto/cybergraphics.h>
 
 #include <GL/arosmesa.h>
 #include <GL/gl.h>
@@ -23,6 +25,8 @@ struct Window *     win = NULL;
 struct Device *     TimerBase = NULL;
 struct timerequest  timereq;
 struct MsgPort      timeport;
+struct Library *    CyberGfxBase = NULL;
+BOOL                fullscreen = FALSE;
     
 #define RAND_COL 1.0f
 #define DEGREES_PER_SECOND 180.0;
@@ -218,28 +222,52 @@ void HandleIntuiMessages(void)
     {
         switch(msg->Class)
         {
-            case IDCMP_CLOSEWINDOW:
+        case IDCMP_CLOSEWINDOW:
             finished = TRUE;
+            break;
+        case IDCMP_VANILLAKEY:
+            if (msg->Code == 27 /* ESC */) finished = TRUE;
             break;
         }
         ReplyMsg((struct Message *)msg);
     }
 }
 
+
+#define ARG_FULLSCREEN  0
+#define NUM_ARGS        1
+
+STATIC CONST_STRPTR   TEMPLATE=(CONST_STRPTR) "FULLSCREEN/S";
+static struct RDArgs  *myargs;
+static IPTR           args[NUM_ARGS];
+
+void get_arguments(void)
+{
+    if((myargs = ReadArgs(TEMPLATE, args, NULL)))
+    {
+        fullscreen = (BOOL)args[ARG_FULLSCREEN];
+        FreeArgs(myargs);
+    }
+}
+
 /*
 ** Open a simple window using OpenWindowTagList()
 */
-int main(int argc, char **argv)
+int main(void)
 {
     ULONG fps = 0;
     ULONG exitcounter = 0;
     TEXT title[100];
     struct Screen * pubscreen = NULL;
+    struct Screen * customscreen = NULL;
+    LONG modeid;
     
     struct timeval tv;
     UQUAD lastmicrosecs = 0L;
     UQUAD currmicrosecs = 0L;
     UQUAD fpsmicrosecs = 0L;
+    
+    get_arguments();
     
     init_timerbase();
     
@@ -247,29 +275,59 @@ int main(int argc, char **argv)
     lastmicrosecs = tv.tv_secs * 1000000 + tv.tv_micro;
     fpsmicrosecs = lastmicrosecs;
 
-    if ((pubscreen = LockPubScreen(NULL)) == NULL) return 1;
-    
-    win = OpenWindowTags(0,
-                        WA_Title, (IPTR)"MesaSimpleRendering",
-                        WA_PubScreen, pubscreen,
-                        WA_CloseGadget, TRUE,
-                        WA_DragBar, TRUE,
-                        WA_DepthGadget, TRUE,
-                        WA_Left, 50,
-                        WA_Top, 200,
-                        WA_InnerWidth, VISIBLE_WIDTH,
-                        WA_InnerHeight, VISIBLE_HEIGHT,
-                        WA_Activate, TRUE,
-                        WA_RMBTrap, TRUE,
-                        WA_SimpleRefresh, TRUE,
-                        WA_NoCareRefresh, TRUE,
-                        WA_IDCMP, IDCMP_CLOSEWINDOW,
-                        TAG_DONE);
-    
-    UnlockPubScreen(NULL, pubscreen);
-                        
+    if (fullscreen)
+    {
+        CyberGfxBase = OpenLibrary("cybergraphics.library", 0L);
+        
+        modeid = BestCModeIDTags(CYBRBIDTG_NominalWidth, VISIBLE_WIDTH,
+                                    CYBRBIDTG_NominalHeight, VISIBLE_HEIGHT,
+                                    TAG_DONE);
+        
+        customscreen = OpenScreenTags(NULL,
+                            SA_Type,        CUSTOMSCREEN,
+                            SA_DisplayID,   modeid,
+                            SA_Width,       VISIBLE_WIDTH,
+                            SA_Height,      VISIBLE_HEIGHT,
+                            SA_ShowTitle,   FALSE,
+                            SA_Quiet,       TRUE,
+                            TAG_DONE);
+
+        win = OpenWindowTags(NULL,
+                WA_Left,            0,
+                WA_Top,             200,
+                WA_InnerWidth,      VISIBLE_WIDTH,
+                WA_InnerHeight,     VISIBLE_HEIGHT,
+                WA_CustomScreen,    (IPTR)customscreen,
+                WA_Flags,           WFLG_ACTIVATE | WFLG_BACKDROP | WFLG_BORDERLESS | WFLG_RMBTRAP,
+                WA_IDCMP,           IDCMP_VANILLAKEY,
+                TAG_DONE);
+    }
+    else
+    {
+        if ((pubscreen = LockPubScreen(NULL)) == NULL) return 1;
+        
+        win = OpenWindowTags(0,
+                            WA_Title, (IPTR)"MesaSimpleRendering",
+                            WA_PubScreen, pubscreen,
+                            WA_CloseGadget, TRUE,
+                            WA_DragBar, TRUE,
+                            WA_DepthGadget, TRUE,
+                            WA_Left, 50,
+                            WA_Top, 200,
+                            WA_InnerWidth, VISIBLE_WIDTH,
+                            WA_InnerHeight, VISIBLE_HEIGHT,
+                            WA_Activate, TRUE,
+                            WA_RMBTrap, TRUE,
+                            WA_SimpleRefresh, TRUE,
+                            WA_NoCareRefresh, TRUE,
+                            WA_IDCMP, IDCMP_VANILLAKEY | IDCMP_CLOSEWINDOW,
+                            TAG_DONE);
+        
+        UnlockPubScreen(NULL, pubscreen);
+    }
+                   
     initmesa();
-    //finished = TRUE;
+//    finished = TRUE;
     while(!finished)
     {
         GetSysTime(&tv);
@@ -290,9 +348,9 @@ int main(int argc, char **argv)
         fps++; 
         render();
         HandleIntuiMessages();
-        exitcounter++;
-        //Delay(10);
-        //if (exitcounter > 200) finished = TRUE;
+//        exitcounter++;
+//        Delay(10);
+//        if (exitcounter > 0) finished = TRUE;
     }
     
     deinitmesa();
@@ -300,6 +358,10 @@ int main(int argc, char **argv)
     deinit_timerbase();
       
     CloseWindow(win);
+    
+    if (customscreen) CloseScreen(customscreen);
+    
+    if (CyberGfxBase) CloseLibrary(CyberGfxBase);
     
     return 0;
 }
