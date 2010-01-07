@@ -15,6 +15,7 @@
 #include <aros/debug.h>
 
 #include <proto/graphics.h>
+#include <proto/layers.h>
 
 struct nouveau_winsys {
     struct pipe_winsys base;
@@ -48,7 +49,7 @@ arosmesa_nouveau_display_surface(AROSMesaContext amesa,
     struct Layer *L = amesa->visible_rp->Layer;
     struct ClipRect *CR;
     struct Rectangle renderableLayerRect;
-    
+
     if (amesa->screen_surface == NULL)
     {
         D(bug("Screen surface not provided\n"));
@@ -62,7 +63,8 @@ arosmesa_nouveau_display_surface(AROSMesaContext amesa,
         return;
     }
 
-    /* FIXME: Check if layer is visible at all? */
+    if (!IsLayerVisible(L))
+        return;
 
     LockLayerRom(L);
     
@@ -71,7 +73,8 @@ arosmesa_nouveau_display_surface(AROSMesaContext amesa,
     renderableLayerRect.MinY = L->bounds.MinY + amesa->top;
     renderableLayerRect.MaxY = L->bounds.MaxY - amesa->bottom;
     
-    /* Do not clip renderableLayerRect to screen rast port. CRs are already clipped and unclipped layer coords are needed: see surface_copy */
+    /*  Do not clip renderableLayerRect to screen rast port. CRs are already clipped and unclipped 
+        layer coords are needed: see surface_copy */
     
     CR = L->ClipRect;
     
