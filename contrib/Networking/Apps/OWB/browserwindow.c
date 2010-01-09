@@ -1024,7 +1024,7 @@ IPTR BrowserWindow__MUIM_BrowserWindow_ShowSource(struct IClass *cl, Object *obj
 	TRUE,
 	TRUE,
 	FALSE,
-	FALSE,
+	TRUE,
 	TRUE,
 	FALSE
     };
