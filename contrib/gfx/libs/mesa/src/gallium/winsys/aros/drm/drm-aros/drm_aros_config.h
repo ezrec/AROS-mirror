@@ -10,14 +10,14 @@
 
 /* Enable hacks for running under hosted AROS */
 /* THIS AND ALL "HOSTED_BUILD" MARKED CODE MUST BE DELETED IN FINAL VERSION */
-#define HOSTED_BUILD
+//#define HOSTED_BUILD
 
 #if defined(HOSTED_BUILD)
 /* Which type of hardware */
 #define HOSTED_BUILD_HARDWARE_NVIDIA    1
 #define HOSTED_BUILD_HARDWARE_I915      2
 
-#define HOSTED_BUILD_HARDWARE HOSTED_BUILD_HARDWARE_I915
+#define HOSTED_BUILD_HARDWARE HOSTED_BUILD_HARDWARE_NVIDIA 
 
 /* nVidia defines */
 //#define HOSTED_BUILD_CHIPSET    5       /* NV05 chip Riva TNT 2 */

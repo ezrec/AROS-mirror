@@ -256,7 +256,7 @@ void get_arguments(void)
 int main(void)
 {
     ULONG fps = 0;
-    ULONG exitcounter = 0;
+//    ULONG exitcounter = 0;
     TEXT title[100];
     struct Screen * pubscreen = NULL;
     struct Screen * customscreen = NULL;

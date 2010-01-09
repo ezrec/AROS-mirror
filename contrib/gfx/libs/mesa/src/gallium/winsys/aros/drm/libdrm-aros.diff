@@ -1,3 +1,145 @@
+diff -ur -x .svn /data/deadwood/source/drm-2.4.17/intel/intel_atomic.h libdrm/intel/intel_atomic.h
+--- /data/deadwood/source/drm-2.4.17/intel/intel_atomic.h	2009-12-20 21:03:30.000000000 +0100
++++ libdrm/intel/intel_atomic.h	2009-12-23 15:08:21.000000000 +0100
+@@ -38,6 +38,12 @@
+ #include "config.h"
+ #endif
+ 
++#if defined(__AROS__)
++/* FIXME: dependency on drm */
++#include "drm_compat_funcs.h"
++#define HAS_ATOMIC_OPS 1
++#endif
++
+ #if HAVE_INTEL_ATOMIC_PRIMITIVES
+ 
+ #define HAS_ATOMIC_OPS 1
+diff -ur -x .svn /data/deadwood/source/drm-2.4.17/intel/intel_bufmgr_gem.c libdrm/intel/intel_bufmgr_gem.c
+--- /data/deadwood/source/drm-2.4.17/intel/intel_bufmgr_gem.c	2009-12-20 21:03:30.000000000 +0100
++++ libdrm/intel/intel_bufmgr_gem.c	2009-12-23 15:46:14.000000000 +0100
+@@ -38,18 +38,39 @@
+ #include "config.h"
+ #endif
+ 
++#if !defined(__AROS__)
+ #include <xf86drm.h>
+ #include <fcntl.h>
++#else
++#include <arosdrm.h>
++#endif
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include <unistd.h>
+ #include <assert.h>
++#if !defined(__AROS__)
+ #include <pthread.h>
+ #include <sys/ioctl.h>
+ #include <sys/mman.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
++#else
++#include <proto/exec.h>
++#include <exec/semaphores.h>
++#define pthread_mutex_t             struct SignalSemaphore
++static int 
++pthread_mutex_init(pthread_mutex_t *mutex, void *attr)
++{
++    InitSemaphore(mutex);
++    return 0;
++}
++#define pthread_mutex_lock(x)       ObtainSemaphore(x)
++#define pthread_mutex_unlock(x)     ReleaseSemaphore(x)
++#define pthread_mutex_destroy(x)
++#undef ioctl
++#define ioctl                       drmIntelIoctlEmul
++#endif
+ 
+ #include "errno.h"
+ #include "libdrm_lists.h"
+@@ -484,7 +505,11 @@
+ {
+ 	drm_intel_bufmgr_gem *bufmgr_gem = (drm_intel_bufmgr_gem *) bufmgr;
+ 	drm_intel_bo_gem *bo_gem;
++#if !defined(__AROS__)	
+ 	unsigned int page_size = getpagesize();
++#else
++    unsigned int page_size = PAGE_SIZE;
++#endif
+ 	int ret;
+ 	struct drm_intel_gem_bo_bucket *bucket;
+ 	int alloc_from_cache;
+@@ -722,10 +747,14 @@
+ 	struct drm_gem_close close;
+ 	int ret;
+ 
++#if !defined(__AROS__)
+ 	if (bo_gem->mem_virtual)
+ 		munmap(bo_gem->mem_virtual, bo_gem->bo.size);
+ 	if (bo_gem->gtt_virtual)
+ 		munmap(bo_gem->gtt_virtual, bo_gem->bo.size);
++#else
++IMPLEMENT("calling munmap\n");
++#endif
+ 
+ 	/* Close this object */
+ 	memset(&close, 0, sizeof(close));
+@@ -833,6 +862,7 @@
+ 	if (atomic_dec_and_test(&bo_gem->refcount)) {
+ 		drm_intel_bufmgr_gem *bufmgr_gem =
+ 		    (drm_intel_bufmgr_gem *) bo->bufmgr;
++#if !defined(__AROS__)
+ 		struct timespec time;
+ 
+ 		clock_gettime(CLOCK_MONOTONIC, &time);
+@@ -840,6 +870,9 @@
+ 		pthread_mutex_lock(&bufmgr_gem->lock);
+ 		drm_intel_gem_bo_unreference_final(bo, time.tv_sec);
+ 		pthread_mutex_unlock(&bufmgr_gem->lock);
++#else
++IMPLEMENT("calling drm_intel_gem_bo_unreference_final\n");
++#endif
+ 	}
+ }
+ 
+@@ -946,6 +979,7 @@
+ 		}
+ 
+ 		/* and mmap it */
++#if !defined(__AROS__)
+ 		bo_gem->gtt_virtual = mmap(0, bo->size, PROT_READ | PROT_WRITE,
+ 					   MAP_SHARED, bufmgr_gem->fd,
+ 					   mmap_arg.offset);
+@@ -960,6 +994,9 @@
+ 			pthread_mutex_unlock(&bufmgr_gem->lock);
+ 			return ret;
+ 		}
++#else
++IMPLEMENT("calling mmap\n");
++#endif
+ 	}
+ 
+ 	bo->virtual = bo_gem->gtt_virtual;
+@@ -1070,7 +1107,7 @@
+ 	drm_intel_bufmgr_gem *bufmgr_gem = (drm_intel_bufmgr_gem *) bufmgr;
+ 	struct drm_i915_get_pipe_from_crtc_id get_pipe_from_crtc_id;
+ 	int ret;
+-
++#if !defined(__AROS__)
+ 	get_pipe_from_crtc_id.crtc_id = crtc_id;
+ 	ret = ioctl(bufmgr_gem->fd, DRM_IOCTL_I915_GET_PIPE_FROM_CRTC_ID,
+ 		    &get_pipe_from_crtc_id);
+@@ -1083,7 +1120,9 @@
+ 		 */
+ 		return -1;
+ 	}
+-
++#else
++IMPLEMENT("\n");
++#endif
+ 	return get_pipe_from_crtc_id.pipe;
+ }
+ 
 diff -ur -x .svn /data/deadwood/source/drm-2.4.17/nouveau/nouveau_bo.c libdrm/nouveau/nouveau_bo.c
 --- /data/deadwood/source/drm-2.4.17/nouveau/nouveau_bo.c	2009-12-20 21:03:30.000000000 +0100
 +++ libdrm/nouveau/nouveau_bo.c	2009-12-23 12:52:04.000000000 +0100
@@ -91,7 +233,7 @@ diff -ur -x .svn /data/deadwood/source/drm-2.4.17/nouveau/nouveau_private.h libd
  
 diff -ur -x .svn /data/deadwood/source/drm-2.4.17/nouveau/nouveau_pushbuf.c libdrm/nouveau/nouveau_pushbuf.c
 --- /data/deadwood/source/drm-2.4.17/nouveau/nouveau_pushbuf.c	2009-12-20 21:03:30.000000000 +0100
-+++ libdrm/nouveau/nouveau_pushbuf.c	2009-12-23 12:46:56.000000000 +0100
++++ libdrm/nouveau/nouveau_pushbuf.c	2010-01-09 08:39:05.000000000 +0100
 @@ -170,6 +170,12 @@
  	return 0;
  }

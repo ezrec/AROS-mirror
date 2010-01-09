@@ -54,7 +54,8 @@ LIB_MESA_GALLIUM_SOURCES = \
             $(GLAPI_SOURCES:.c=)\
             $(addprefix $(GALLIUM_SUBPATH)/,$(AROS_GALLIUM_SOURCES))\
 
-USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../../include \
+USER_INCLUDES := \
+            -I$(SRCDIR)/$(CURDIR)/../../include \
             -I$(SRCDIR)/$(CURDIR)/../../include/GL \
             -I$(SRCDIR)/$(CURDIR) \
             -I$(SRCDIR)/$(CURDIR)/drivers/aros \
@@ -77,7 +78,8 @@ USER_CFLAGS := -DUSE_MGL_NAMESPACE -DAROS_MESA_SHARED -ffast-math $(FFIXED)
     files="$(SHARED_LIB_SOURCES) $(LIB_MESA_SOURCES)" objdir=$(GENDIR)/$(CURDIR)/module \
     uselibs="rom"
 
-USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../../include \
+USER_INCLUDES := \
+            -I$(SRCDIR)/$(CURDIR)/../../include \
             -I$(SRCDIR)/$(CURDIR)/../../include/GL \
             -I$(SRCDIR)/$(CURDIR) \
             -I$(SRCDIR)/$(CURDIR)/main \
@@ -100,11 +102,6 @@ USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../../include \
             -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/winsys/aros/drm/drm-unchanged \
             -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/winsys/aros/drm/drm-unchanged/nouveau \
             -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/winsys/aros/drm/drm-unchanged/i915 \
-
-#            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/winsys/aros/libdrm/libdrm \
-#            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/winsys/aros/libdrm/libdrm/nouveau \
-#            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/winsys/aros/libdrm/shared-core \
-#            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/winsys/aros/libdrm/aros-core \
 
 USER_CFLAGS :=
 

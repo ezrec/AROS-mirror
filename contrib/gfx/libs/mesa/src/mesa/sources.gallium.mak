@@ -80,53 +80,6 @@ AROS_DRM_SOURCES = \
             winsys/aros/drm/drm-unchanged/nouveau/nv50_mc \
             winsys/aros/drm/drm-unchanged/nouveau/nv50_graph \
 
-AROS_DRM_OLD_SOURCES = \
-            winsys/aros/libdrm/libdrm/nouveau/nouveau_resource \
-            winsys/aros/libdrm/libdrm/nouveau/nouveau_grobj \
-            winsys/aros/libdrm/libdrm/nouveau/nouveau_pushbuf \
-            winsys/aros/libdrm/libdrm/nouveau/nouveau_fence \
-            winsys/aros/libdrm/libdrm/nouveau/nouveau_dma \
-            winsys/aros/libdrm/libdrm/nouveau/nouveau_notifier \
-            winsys/aros/libdrm/libdrm/nouveau/nouveau_bo \
-            winsys/aros/libdrm/libdrm/nouveau/nouveau_channel \
-            winsys/aros/libdrm/libdrm/nouveau/nouveau_device \
-            winsys/aros/libdrm/libdrm/arosdrm \
-            winsys/aros/libdrm/aros-core/nouveau_state \
-            winsys/aros/libdrm/aros-core/nouveau_object \
-            winsys/aros/libdrm/aros-core/nouveau_mem \
-            winsys/aros/libdrm/aros-core/nouveau_backlight \
-            winsys/aros/libdrm/aros-core/nouveau_sgdma \
-            winsys/aros/libdrm/aros-core/drm_nouveau_dma \
-            winsys/aros/libdrm/aros-core/drm_nouveau_notifier \
-            winsys/aros/libdrm/aros-core/drm_memory \
-            winsys/aros/libdrm/aros-core/drm_irq \
-            winsys/aros/libdrm/aros-core/drm_bufs \
-            winsys/aros/libdrm/aros-core/drm_aros \
-            winsys/aros/libdrm/aros-core/drm_scatter \
-            winsys/aros/libdrm/aros-core/drm_drv \
-            winsys/aros/libdrm/aros-core/nv50_instmem \
-            winsys/aros/libdrm/aros-core/nouveau_drv \
-            winsys/aros/libdrm/shared-core/nv04_fifo \
-            winsys/aros/libdrm/shared-core/nv10_fifo \
-            winsys/aros/libdrm/shared-core/nv40_fifo \
-            winsys/aros/libdrm/shared-core/nv50_fifo \
-            winsys/aros/libdrm/shared-core/nv04_graph \
-            winsys/aros/libdrm/shared-core/nv10_graph \
-            winsys/aros/libdrm/shared-core/nv20_graph \
-            winsys/aros/libdrm/shared-core/nv40_graph \
-            winsys/aros/libdrm/shared-core/nv50_graph \
-            winsys/aros/libdrm/shared-core/nv04_fb \
-            winsys/aros/libdrm/shared-core/nv10_fb \
-            winsys/aros/libdrm/shared-core/nv40_fb \
-            winsys/aros/libdrm/shared-core/nv04_instmem \
-            winsys/aros/libdrm/shared-core/nv04_timer \
-            winsys/aros/libdrm/shared-core/nv04_mc \
-            winsys/aros/libdrm/shared-core/nv40_mc \
-            winsys/aros/libdrm/shared-core/nv50_mc \
-            winsys/aros/libdrm/shared-core/nouveau_irq \
-            winsys/aros/libdrm/shared-core/nouveau_swmthd \
-            winsys/aros/libdrm/shared-core/nouveau_fifo \
-
 GALLIUM_AUXILIARY_SOURCES = \
             auxiliary/util/u_debug \
             auxiliary/util/u_debug_symbol \
