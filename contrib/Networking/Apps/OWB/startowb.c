@@ -7,6 +7,7 @@
 #include <libraries/mui.h>
 #include <dos/var.h>
 #include <exec/libraries.h>
+#include <workbench/startup.h>
 
 #include <proto/exec.h>
 #include <proto/dos.h>
@@ -22,13 +23,29 @@
 
 #define OWB_STACK_SIZE 2097152
 
-int main(void)
+int main(int argc, char** argv)
 {
     IPTR argArray[] = { 0 };
     struct RDArgs *args = NULL;
     const char *url = NULL;
     Object *wnd, *app, *status;
     
+    if (argc == 0)
+    {
+        struct WBStartup *startup = (struct WBStartup *) argv;
+
+        if (startup->sm_NumArgs >= 2)
+        {
+            UBYTE buffer[1024] = "file:///";
+
+	    if(NameFromLock(startup->sm_ArgList[1].wa_Lock, &buffer[8], sizeof(buffer) - 8))
+	    {
+		AddPart(&buffer[8], startup->sm_ArgList[1].wa_Name, sizeof(buffer) - 8);
+		url = StrDup(buffer);
+	    }
+        }
+    }
+
     if((args = ReadArgs("URL", argArray, NULL)) != NULL)
     {
 	if(argArray[0])
@@ -118,12 +135,23 @@ int main(void)
             SetIoErr(0);
             struct CommandLineInterface *cli = Cli();
             ULONG stackSize = (cli ? cli->cli_DefaultStack * CLI_DEFAULTSTACK_UNIT : OWB_STACK_SIZE);
-	    LONG returncode = RunCommand(owbSeg, (stackSize > OWB_STACK_SIZE ? stackSize : OWB_STACK_SIZE), (url ? url : "\n"), 0);
+
+            struct TagItem tags[] =
+            {
+        	{ NP_Seglist, owbSeg },
+        	{ NP_StackSize, stackSize > OWB_STACK_SIZE ? stackSize : OWB_STACK_SIZE },
+        	{ NP_Name, "Origyn Web Browser" },
+        	{ url ? NP_Arguments : TAG_IGNORE, url },
+        	{ NP_Cli, TRUE },
+        	{ NP_FreeSeglist, TRUE },
+        	{ NP_CommandName, "owb" }
+            };
+
+	    struct Process *owbProc = CreateNewProc(tags);
 	    
-	    UnLoadSeg(owbSeg);
-	    
-	    if(returncode == -1)
+	    if(!owbProc)
 	    {
+		UnLoadSeg(owbSeg);
 		set(wnd, MUIA_Window_Open, TRUE);
 		set(status, MUIA_Text_Contents, "Error: \33bCouldn't execute Origyn Web Browser\33n");
 		Delay(100);
@@ -132,7 +160,7 @@ int main(void)
 
 	    MUI_DisposeObject(app);
 	    
-	    return returncode;
+	    return 0;
         }
         else
         {
