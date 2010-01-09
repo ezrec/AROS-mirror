@@ -241,6 +241,7 @@ IPTR DownloadManager__MUIM_DownloadDelegate_DidBeginDownload(Class *cl, Object *
     download->filesize = NULL;
     download->speed = NULL;
     download->speedMeasureTime = time(NULL);
+    download->listRedrawTime = time(NULL);
     download->speedSizeDownloaded = 0;
     sprintf(download->progress, "%ld %%", 0);
 
@@ -265,7 +266,9 @@ IPTR DownloadManager__MUIM_DownloadDelegate_DidFinishDownload(Class *cl, Object 
 	return FALSE;
     
     download->state = DOWNLOAD_FINISHED;
-    
+
+    sprintf(download->progress, "%ld %%", (long) (download->sizeTotal > 0 ? 100 * download->sizeDownloaded / download->sizeTotal : 0));
+
     /* Activate finished entry */
     int i;
     for (i=0;;i++)
@@ -413,7 +416,6 @@ IPTR DownloadManager__MUIM_DownloadDelegate_DidReceiveDataOfLength(Class *cl, Ob
 	download->state = DOWNLOAD_ACTIVE;
 
     download->sizeDownloaded += message->length;
-    sprintf(download->progress, "%ld %%", (long) (download->sizeTotal > 0 ? 100 * download->sizeDownloaded / download->sizeTotal : 0));
 
     time_t currentTime = time(NULL);
     if(currentTime > download->speedMeasureTime)
@@ -454,8 +456,13 @@ IPTR DownloadManager__MUIM_DownloadDelegate_DidReceiveDataOfLength(Class *cl, Ob
 	    download->speed = transferspeed;
 	}
     }
-    
-    DoMethod(manager->list, MUIM_List_Redraw, MUIV_List_Redraw_All);
+
+    if(currentTime > download->listRedrawTime)
+    {
+	download->listRedrawTime = currentTime;
+	sprintf(download->progress, "%ld %%", (long) (download->sizeTotal > 0 ? 100 * download->sizeDownloaded / download->sizeTotal : 0));
+	DoMethod(manager->list, MUIM_List_Redraw, MUIV_List_Redraw_All);
+    }
     
     return TRUE;
 }

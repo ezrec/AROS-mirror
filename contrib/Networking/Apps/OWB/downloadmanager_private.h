@@ -20,6 +20,7 @@ struct Download {
     Object *manager;
     char *speed;
     time_t speedMeasureTime;
+    time_t listRedrawTime;
     long long speedSizeDownloaded;
 };
 
