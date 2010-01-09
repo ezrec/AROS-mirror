@@ -24,6 +24,7 @@
     crashes at expunge.
 */
 
+#define IMPLEMENT()  bug("------IMPLEMENT(%s)\n", __func__)
 
 /* Blocks arosc.library from beeing auto opened */
 /* Every arosc.library function which is not implemented here will now segfault */
@@ -145,14 +146,133 @@ char *getenv (const char *name)
         return buff;
 }
 
-int fprintf (FILE * fh, const char * format, ...)
+int gettimeofday (struct timeval * tv,struct timezone * tz)
 {
-    bug("------IMPLEMENT(arosc_emul_fprintf)\n");
-    
+    IMPLEMENT();
     return 0;
 }
 
+void abort (void)
+{
+    IMPLEMENT();
+}
 
+void exit (int code)
+{
+    IMPLEMENT();
+}
+	
+int puts (const char * str)
+{
+    bug("%s\n", str);
+    return 1;
+}
+
+int putchar(int c)
+{
+    bug("%c", c);
+    return c;
+}
+
+char * strdup (const char * orig)
+{
+    char * copy;
+    char * ptr;
+
+    if ((copy = malloc (strlen (orig)+1)))
+    {
+	ptr = copy;
+
+	while ((*ptr ++ = *orig ++));
+    }
+
+    return copy;
+}
+	
+double atof (const char * str)
+{
+    return strtod (str, (char **)NULL);
+}
+
+int printf (const char * format, ...)
+{
+    IMPLEMENT();
+    return EOF;
+}
+
+
+/* File operations */
+FILE * fopen (const char * pathname, const char * mode)
+{
+    IMPLEMENT();
+    return NULL;
+}
+
+int fclose (FILE * stream)
+{
+    IMPLEMENT();
+    return EOF;
+}
+
+int fputc (int c, FILE * stream)
+{
+    IMPLEMENT();
+    return EOF;
+}
+
+int fputs (const char * str, FILE * stream)
+{
+    IMPLEMENT();
+    return EOF;
+}
+
+int fgetc (FILE * stream)
+{
+    IMPLEMENT();;
+    return EOF;
+}
+
+size_t fwrite (const void * restrict buf, size_t size, size_t nblocks, FILE * restrict stream)
+{
+    IMPLEMENT();
+    return 0;
+}
+
+int fflush (FILE * stream)
+{
+    IMPLEMENT();
+    return EOF;
+}
+
+size_t fread (void * buf, size_t size, size_t nblocks, FILE * stream)
+{
+    IMPLEMENT();
+    return 0;
+}
+
+int ferror (FILE * stream)
+{
+    IMPLEMENT();
+    return TRUE;
+}
+
+void clearerr (FILE * stream)
+{
+    IMPLEMENT();
+}
+
+int fprintf (FILE * fh, const char * format, ...)
+{
+    IMPLEMENT();
+    return 0;
+}
+
+int vfprintf (FILE * stream, const char * format, va_list args)
+{
+    IMPLEMENT();
+    return 0;
+}
+	
 int __init_emul(void)
 {
     /* malloc/calloc/realloc/free */
