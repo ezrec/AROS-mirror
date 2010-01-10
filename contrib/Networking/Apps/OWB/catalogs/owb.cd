@@ -22,6 +22,9 @@ MSG_FileButtonNoFileSelectedLabel (//)
 MSG_ContextMenuItemTagOpenLinkInNewWindow (//)
 Open Link in New Window
 ;
+MSG_ContextMenuItemTagOpenLinkInNewTab (//)
+Open Link in New Tab
+;
 MSG_ContextMenuItemTagDownloadLinkToDisk (//)
 Download Linked File
 ;
@@ -31,14 +34,20 @@ Copy Link Location
 MSG_ContextMenuItemTagOpenImageInNewWindow (//)
 Open Image in New Window
 ;
+MSG_ContextMenuItemTagOpenImageInNewTab (//)
+Open Image in New Tab
+;
 MSG_ContextMenuItemTagDownloadImageToDisk (//)
-Save Image As
+Save Image
 ;
 MSG_ContextMenuItemTagCopyImageToClipboard (//)
 Copy Image
 ;
 MSG_ContextMenuItemTagOpenFrameInNewWindow (//)
 Open Frame in New Window
+;
+MSG_ContextMenuItemTagOpenFrameInNewTab (//)
+Open Frame in New Tab
 ;
 MSG_ContextMenuItemTagCopy (//)
 copy
@@ -247,6 +256,9 @@ Cancel
 MSG_DownloadManager_ClearFinished (//)
 Clear finished
 ;
+MSG_DownloadManager_RequestDownloadedFileTitle (//)
+Download as
+;
 MSG_SearchWindow_Title (//)
 OWB Search Window
 ;
@@ -358,6 +370,8 @@ Use
 MSG_PreferencesManager_Cancel (//)
 Cancel
 ;
+MSG_PreferencesManager_RequestDownloadedFileNameLabel (//)
+Ask me about downloaded file names
 MSG_Tabs (//)
 Tabs
 ;

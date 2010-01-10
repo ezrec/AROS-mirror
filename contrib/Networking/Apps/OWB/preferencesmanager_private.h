@@ -25,6 +25,7 @@ struct PreferencesManager_DATA
     Object *standardFontFamily, *fixedFontFamily, *serifFontFamily, *sansSerifFontFamily, *cursiveFontFamily, *fantasyFontFamily;
     Object *decodesPNGWithDatatypes, *decodesBMPWithDatatypes, *decodesGIFWithDatatypes, *decodesJPGWithDatatypes;
     Object *downloadDestination, *useHttpProxy, *httpProxy;
+    Object *requestDownloadedFileName;
 };
 
 #endif /* _PREFERENCES_PRIVATE_H_ */

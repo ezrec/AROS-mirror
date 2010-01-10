@@ -12,6 +12,7 @@
 struct BrowserPreferences_DATA
 {
     STRPTR downloadDestination;
+    BOOL requestDownloadedFileName;
 };
 
 #endif /* _BROWSERPREFERENCES_PRIVATE_H_ */

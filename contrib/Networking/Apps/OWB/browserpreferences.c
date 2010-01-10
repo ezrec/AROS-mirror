@@ -35,6 +35,7 @@ IPTR BrowserPreferences__OM_NEW(struct IClass *cl, Object *self, struct opSet *m
     
     struct BrowserPreferences_DATA *data = (struct BrowserPreferences_DATA *) INST_DATA(cl, self);
     data->downloadDestination = downloadDestination;
+    data->requestDownloadedFileName = FALSE;
     
     return (IPTR) self;
 }
@@ -61,6 +62,9 @@ IPTR BrowserPreferences__OM_SET(Class *cl, Object *obj, struct opSet *msg)
         	    FreeVec(data->downloadDestination);
         	data->downloadDestination = StrDup((STRPTR) tag->ti_Data);
         	break;
+            case MUIA_BrowserPreferences_RequestDownloadedFileName:
+        	data->requestDownloadedFileName = (BOOL) tag->ti_Data;
+        	break;
 	} /* switch(tag->ti_Tag) */
 	
     } /* while ((tag = NextTagItem(&tags)) != NULL) */
@@ -77,6 +81,9 @@ IPTR BrowserPreferences__OM_GET(Class *cl, Object *obj, struct opGet *msg)
     {
         case MUIA_BrowserPreferences_DownloadDestination:
             *(msg->opg_Storage) = (IPTR) data->downloadDestination;
+            break;
+        case MUIA_BrowserPreferences_RequestDownloadedFileName:
+            *(BOOL*) msg->opg_Storage = data->requestDownloadedFileName;
             break;
     	default:
 	    retval = DoSuperMethodA(cl, obj, (Msg)msg);

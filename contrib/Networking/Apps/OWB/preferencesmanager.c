@@ -86,7 +86,7 @@ IPTR PreferencesManager__OM_NEW(struct IClass *cl, Object *self, struct opSet *m
     Object *allowsAnimatedImages, *allowAnimatedImageLooping;
     Object *standardFontFamily, *fixedFontFamily, *serifFontFamily, *sansSerifFontFamily, *cursiveFontFamily, *fantasyFontFamily;
     Object *decodesPNGWithDatatypes, *decodesBMPWithDatatypes, *decodesGIFWithDatatypes, *decodesJPGWithDatatypes;
-    Object *downloadDestination, *httpProxy, *useHttpProxy;
+    Object *downloadDestination, *requestDownloadedFileName, *httpProxy, *useHttpProxy;
     Object *preferences = NULL;
     STRPTR *fontFamilies;
     struct TagItem *tag, *tags;
@@ -134,6 +134,8 @@ IPTR PreferencesManager__OM_NEW(struct IClass *cl, Object *self, struct opSet *m
     	                    MUIA_Popstring_Button, PopButton(MUII_PopFile),
     	                    ASLFR_DrawersOnly, TRUE,
     	                    End,
+    	                Child, Label2(_(MSG_PreferencesManager_RequestDownloadedFileNameLabel)),
+    	                Child, requestDownloadedFileName = MUI_MakeObject(MUIO_Checkmark, FALSE),
     	                End,
     	            Child, ColGroup(3), GroupFrameT(_(MSG_PreferencesManager_ProxySettings)),
         	    	Child, useHttpProxy = MUI_MakeObject(MUIO_Checkmark, FALSE),
@@ -312,6 +314,10 @@ IPTR PreferencesManager__OM_NEW(struct IClass *cl, Object *self, struct opSet *m
     set(httpProxy, MUIA_ObjectID, 20);
     data->httpProxy = httpProxy;
 
+    set(requestDownloadedFileName, MUIA_Selected, XGET(preferences, MUIA_BrowserPreferences_RequestDownloadedFileName));
+    set(requestDownloadedFileName, MUIA_ObjectID, 21);
+    data->requestDownloadedFileName = requestDownloadedFileName;
+
     /* Close window with close gadget */
     DoMethod(self, MUIM_Notify, MUIA_Window_CloseRequest, (IPTR) TRUE,
         (IPTR) self,  (IPTR) 3,
@@ -377,6 +383,7 @@ static void SetPreferenceData(Class *cl, Object *obj)
     set(data->preferences, MUIA_WebPreferences_DecodesGIFWithDatatypes, XGET(data->decodesGIFWithDatatypes, MUIA_Selected));
     set(data->preferences, MUIA_WebPreferences_DecodesBMPWithDatatypes, XGET(data->decodesBMPWithDatatypes, MUIA_Selected));
     set(data->preferences, MUIA_BrowserPreferences_DownloadDestination, XGET(data->downloadDestination, MUIA_String_Contents));
+    set(data->preferences, MUIA_BrowserPreferences_RequestDownloadedFileName, XGET(data->requestDownloadedFileName, MUIA_Selected));
     set(data->preferences, MUIA_WebPreferences_CookieJarFileName, "PROGDIR:cookies.db"); /* Hardcoded for now */
     if(XGET(data->useHttpProxy, MUIA_Selected))
 	setenv("http_proxy", XGET(data->httpProxy, MUIA_String_Contents), 1);

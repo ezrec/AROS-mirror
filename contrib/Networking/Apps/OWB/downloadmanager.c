@@ -6,7 +6,9 @@
 #include <proto/alib.h>
 #include <proto/exec.h>
 #include <proto/muimaster.h>
+#include <proto/asl.h>
 #include <libraries/mui.h>
+#include <libraries/asl.h>
 #include <proto/intuition.h>
 #include <proto/alib.h>
 #include <proto/utility.h>
@@ -329,6 +331,7 @@ IPTR DownloadManager__MUIM_DownloadDelegate_DidFailWithError(Class *cl, Object *
 IPTR DownloadManager__MUIM_DownloadDelegate_DecideDestinationWithSuggestedFilename(Class *cl, Object *obj, struct  MUIP_DownloadDelegate_DecideDestinationWithSuggestedFilename* message)
 {
     struct DownloadManager_DATA *manager = (struct DownloadManager_DATA *) INST_DATA(cl, obj);
+    char *destination = NULL;
 
     struct Download *download = GetDownload(manager, message->download);
     if(!download)
@@ -343,11 +346,50 @@ IPTR DownloadManager__MUIM_DownloadDelegate_DecideDestinationWithSuggestedFilena
     if(strlen(filename) == 0)
 	filename = strdup(_(MSG_UnknownFileName));
     
-    download->filename = StrDup(filename);
-    
-    char *destination = AllocVec(strlen(filename) + strlen(prefix) + 1, MEMF_ANY);
-    strcpy(destination, prefix);
-    strcat(destination, filename);
+    BOOL requestFileName = XGET(manager->preferences, MUIA_BrowserPreferences_RequestDownloadedFileName);
+    if(requestFileName)
+    {
+	struct FileRequester *fr;
+
+	struct TagItem frtags[] =
+	{
+	    { ASLFR_TitleText,     (IPTR)_(MSG_DownloadManager_RequestDownloadedFileTitle) },
+	    { ASLFR_InitialDrawer, (IPTR)prefix                   },
+	    { ASLFR_InitialFile,   (IPTR)filename                 },
+	    { TAG_END                                             }
+	};
+
+	if((fr = (struct FileRequester *) AllocAslRequest(ASL_FileRequest, frtags)))
+	{
+	    if(AslRequest(fr, NULL))
+	    {
+		download->filename = StrDup(fr->fr_File);
+		destination = AllocVec(strlen(fr->fr_Drawer) + strlen(fr->fr_File) + 1, MEMF_ANY);
+		strcpy(destination, fr->fr_Drawer);
+		strcat(destination, fr->fr_File);
+	    }
+	    else
+	    {
+		download->filename = StrDup(filename);
+		destination = AllocVec(strlen(filename) + strlen(prefix) + 1, MEMF_ANY);
+		strcpy(destination, prefix);
+		strcat(destination, filename);
+	    }
+	    FreeAslRequest(fr);
+	}
+	else
+	{
+	    return FALSE;
+	}
+    }
+    else
+    {
+	download->filename = StrDup(filename);
+	destination = AllocVec(strlen(filename) + strlen(prefix) + 1, MEMF_ANY);
+	strcpy(destination, prefix);
+	strcat(destination, filename);
+    }
+
     D(bug("setting destination %s\n", destination));
     DoMethod(obj, MUIM_DownloadDelegate_SetDestination, download->identifier, destination);
     FreeVec(destination);

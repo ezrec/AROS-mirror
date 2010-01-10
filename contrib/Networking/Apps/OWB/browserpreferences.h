@@ -16,6 +16,7 @@
 
 /*** Attributes *************************************************************/
 #define MUIA_BrowserPreferences_DownloadDestination (MUIB_BrowserPreferences | 0x00000000)
+#define MUIA_BrowserPreferences_RequestDownloadedFileName (MUIB_BrowserPreferences | 0x00000001)
 
 /*** Variables **************************************************************/
 extern struct MUI_CustomClass *BrowserPreferences_CLASS;
