@@ -1,0 +1,92 @@
+=============
+Status update
+=============
+
+:Author:   Paolo Besser
+:Date:     2010-01-11
+
+Latest updates
+--------------
+
+It's been a long time since the latest status update, however many 
+things happened in the meanwhile. 
+
+First of all, Chris "platon42" Hodges has opened the sources of his
+Poseidon USB stack under the terms of the APL, and ported it to AROS: 
+after some weeks of tweaking, adapting and bugfixing, AROS can now 
+handle USB 1.1 and 2.0 controllers. Any USB device should be correctly
+detected by the operating system, while mice, keyboards and other input
+devices should be correctly handled as well. Most USB pendrives and 
+storage devices work, while others don't yet, due to some fat.handler
+issues we're investigating about. Other devices will be supported in
+future, when someone will write the necessary drivers.
+
+Thanks to Poseidon, AROS can now boot from USB CD-ROM and DVD-ROM 
+drives. This allows installing AROS on a wide range of notebooks and
+netbooks like the `Acer Aspire One A150`__. This netbook is now a fair
+good hardware platform for AROS: Steve Jones and Davy Wenzler wrote a
+`HD Audio driver`__ for the iMica__ computer which covers also this
+one and a wide range of Intel-compatible mainboards, and the
+`Icaros Desktop`__ distribution introduced a way to get correct 
+1024x600 resolution on the GMA9x0 video chip.
+
+Przemyslaw "Qus" Szczygielsky's TCPPrefs utility has been fixed and
+added to the AROS prefs utilities: pokeing with script and configuration
+text files is not required anymore to connect to the Internet. Matthias
+Rustler has ported Scout to AROS, so closing offending windows and 
+crashed applications should  be easier than before. Kernel stability
+has improved a lot thanks to many fixes from Neil Cafferkey and Pavel
+Fedin.
+
+Neil Cafferkey vastly improved our ata.device, which now supports
+many SATA controllers. Any SATA enabled computer which can be turned to
+work as 'IDE' in the BIOS settings, however, should work with AROS.
+
+Stanislaw Sszymczyk continued to update OWB, fixing bugs and problems, 
+and adding new features like bookmarks, application menu, splash 
+screen, the ability to open HTML files and so on, and he's now heading
+to release version 1.0 of his modern, CSS and JavaScript enabled web
+browser. OWB is a quite flexible tool, since allows AROS to run most
+web-enabled applications.
+
+Yannick "Yannickescu" Erb has ported to AROS some interesting games like
+Open Tyrian, Super Methane Brothers and SDL Ball, and wrote ZuneARC, a
+standard and customizable Zune frontend for command-line archivers 
+already available for AROS. You can find these and other interesting 
+stuff on `his website`__. Some nice games have been ported also by 
+AROS_EXEC.org user Fishy_fis. Don't miss his DOSBox port to AROS!
+
+Simone "samo" Bevilacqua ported his Amiga game BOH to AROS, and it behaves
+nicely! `BOH`__ is the first commercial game available for the new Amiga
+platforms.
+
+Krzysztof "Deadwood" Smiechowicz ported version 7.5 of MESA to AROS, and
+is adding hardware 3D acceleration capabilities to AROS with his ongoing
+port of Gallium3D. For now, he has just released an `alpha demo`__
+of this technology running on GeForce FX, 6 and 7 series video cards. A
+nice video showing the GLExcess demo running on AROS is here__.
+
+Paolo Besser has released version 1.2 of the Icaros Desktop distribution.
+The new version includes the ability to `run old Amiga games`__ straight
+from their ADF files, thanks to some new AmiBridge scripts and a old
+version of E-UAE. In the meanwhile, Oliver Bunner has improved Janus-UAE
+integration, allowing AROS to run AmigaOS 3.x applications inside AROS
+windows. To do both things, however, users must provide a working 
+installation of AmigaOS 3.x and original kickstart, maybe using Cloanto's
+`Amiga Forever`__.
+
+Behind the scene Staf Verhaegen is still working on a new standardized
+ABI for AROS. Hopefully the moon and the sun will be right one day this
+year and the ABI can see the light of day.
+
+
+__ http://vmwaros.blogspot.com/2009/12/icaros-desktop-got-sound-on-imica-and.html
+__ http://www.clusteruk.com/SitePortalPage.aspx?siteid=1&cfid=0&did=109
+__ http://www.clusteruk.com/SitePortalPage.aspx?siteid=1&cfid=0&did=108
+__ http://www.icarosdesktop.org/
+__ http://www.dusabledanslherbe.eu/AROSPage/INDEX.1.html
+__ http://www.bohthegame.com/
+__ http://download.aros3d.org/gallium/mesa-nv.i386-aros.zip
+__ http://vmwaros.blogspot.com/2009/11/yet-another-glexcessgallium3d-video.html
+__ http://vmwaros.blogspot.com/2009/11/can-icaros-play-my-amiga-games-and-why.html
+__ http://www.amigaforever.com
