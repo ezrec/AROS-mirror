@@ -1,4 +1,4 @@
-#include <string.h>
+#include <stdio.h>
 
 int stcl_o (char * out,long lvalue)
 {
