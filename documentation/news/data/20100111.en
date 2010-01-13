@@ -30,7 +30,7 @@ one and a wide range of Intel-compatible mainboards, and the
 `Icaros Desktop`__ distribution introduced a way to get correct 
 1024x600 resolution on the GMA9x0 video chip.
 
-Przemyslaw "Qus" Szczygielsky's TCPPrefs utility has been fixed and
+Przemyslaw "Qus" Szczygielski's TCPPrefs utility has been fixed and
 added to the AROS prefs utilities: pokeing with script and configuration
 text files is not required anymore to connect to the Internet. Matthias
 Rustler has ported Scout to AROS, so closing offending windows and 
@@ -42,7 +42,7 @@ Neil Cafferkey vastly improved our ata.device, which now supports
 many SATA controllers. Any SATA enabled computer which can be turned to
 work as 'IDE' in the BIOS settings, however, should work with AROS.
 
-Stanislaw Sszymczyk continued to update OWB, fixing bugs and problems, 
+Stanislaw Szymczyk continued to update OWB, fixing bugs and problems, 
 and adding new features like bookmarks, application menu, splash 
 screen, the ability to open HTML files and so on, and he's now heading
 to release version 1.0 of his modern, CSS and JavaScript enabled web
