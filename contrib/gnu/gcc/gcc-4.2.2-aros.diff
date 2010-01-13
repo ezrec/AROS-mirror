@@ -1433,7 +1433,7 @@ index 0000000..286fe33
 +
 +#undef	LIB_SPEC
 +#define LIB_SPEC \
-+  "-lamiga -larossupport -larosc -lm"
++  "-lamiga -larossupport %{!noarosc:-larosc} -lm"
 +
 +#if !defined(USE_GNULIBC_1) && defined(HAVE_LD_EH_FRAME_HDR)
 +#define LINK_EH_SPEC "%{!static:--eh-frame-hdr} "

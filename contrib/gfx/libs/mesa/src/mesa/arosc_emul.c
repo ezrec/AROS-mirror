@@ -15,21 +15,15 @@
 #include <errno.h>
 
 /* 
-    The purpose of this file is to
-    a) block arosc.library from auto opening
-    b) provide implementation for functions from arosc.library which are used by Mesa/Gallium
+    The purpose of this file is to provide implementation for C functions which are used by Mesa/Gallium
+    and are not located in librom.a
 
     Mesa/Gallium cannot use arosc.library because arosc.library context is bound with caller task
-    and get's destroyed when the task exits. mesa.library at that point is still in RAM and
+    and gets destroyed when the task exits. mesa.library at that point is still in RAM and
     crashes at expunge.
 */
 
 #define IMPLEMENT()  bug("------IMPLEMENT(%s)\n", __func__)
-
-/* Blocks arosc.library from beeing auto opened */
-/* Every arosc.library function which is not implemented here will now segfault */
-struct Library * aroscbase = NULL;
-
 
 /* malloc/calloc/realloc/free */
 

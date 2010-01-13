@@ -3,32 +3,6 @@
 #   Generate libGL.a
 #
 
-# IMPORTANT FOR SHARED VERSION
-# mesa.library is build with target compiler which means it will
-# get arosc.library linked in by default (see $(GENDIR)/config/specs)
-# arosc.library however cannot be used in module.
-#
-# To block the usage, following hack has been done:
-# In arosc_emul.c "struct Library *aroscbase = NULL" is defined. This blocks
-# arosc.library from auto-opening but still C libs calls will be performed,
-# but jump vectors will be NULL. This is why all arosc.library functions which
-# are not in librom.a need to be implemented in arosc_emul.c
-#
-# To find out which functions are missing, do the following:
-# a) build mesa.library
-# b) delete generated mesa.library from SYSTEM:Libs
-# c) go to $(GENDIR)/config/scec and remove -larosc from *lib line
-# d) go to mmakefile generate from this file and remove all -larosc
-# e) make contrib-gfx-libs-mesa-mesa-module-quick
-#
-# Functions which are indicated as unresolved externals, need to be implemented
-# in arosc_emul.c.
-#
-# Repeat this process with new MESA release!
-#
-# If ANYONE knows a better sollution, please implement it.
-#
-
 include $(TOP)/config/make.cfg
 
 include $(SRCDIR)/$(CURDIR)/sources.mak

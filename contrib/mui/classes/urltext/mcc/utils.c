@@ -61,4 +61,24 @@ snprintf(char *buf,int size,char *fmt,...)
 }
 #endif
 
+#ifdef __AROS__
+#include <string.h>
+size_t stccpy (char * dest,	const char * src, size_t n)
+{
+    char * ptr = dest;
+
+    while (n>1 && *src)
+    {
+        *ptr = *src;
+	ptr ++;
+	src ++;
+	n--;
+    }
+
+    *ptr++ = '\0';
+
+    return (ptr-dest);
+}
+#endif
+
 /****************************************************************************/
