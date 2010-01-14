@@ -1,0 +1,97 @@
+=============
+Aggiornamento
+=============
+
+:Author:   Paolo Besser
+:Date:     11-01-2010
+
+Ultime novità
+-------------
+
+È passato parecchio tempo dall'ultimo aggiornamento di questa pagina,
+ma le novità di certo non mancano. 
+
+Prima di tutto, Chris "platon42" Hodges ha portato su AROS il suo stack
+USB Poseidon e lo ha rilasciato sotto i termini della licenza APL: dopo
+un intenso lavoro di adattamento e correzione, AROS può finalmente
+gestire i controller USB 1.1 e 2.0. Qualsiasi dispositivo dovrebbe essere
+correttamente riconosciuto e, nel caso di mouse, tastiere e altri sistemi
+di input, anche gestiti direttamente. Funzionano anche diverse chiavette
+USB e altri dispositivi di storage. Altri purtroppo no, a causa del
+nostro fat.handler su cui stiamo comunque indagando. Altre periferiche
+verranno supportate solo in seguito, se qualcuno scriverà i driver
+necessari.
+
+Grazie a Poseidon, AROS adesso può effettuare il boot da unità CD-ROM e
+DVD-ROM esterne. Questo ne permette l'installazione su una vasta quantità
+di portatili e netbook come l'`Aspire One A150 di Acer`__. Quest'ultimo
+si qualifica già come una buona piattaforma per AROS: Steve Jones e Davy
+Wenzler hanno realizzato un `driver HD Audio`__ per il sistema iMica__
+che funziona anche su di esso, oltre che su una buona scelta di schede
+madri con lo stesso chipset. La distribuzione `Icaros Desktop`__ prevede
+inoltre un piccolo hack che permette di avviare AROS in modalità VESA, con
+la risoluzione di 1024x600 pixel, sui computer con GPU GMA9x0.
+
+Il programma TCPPrefs di Przemyslaw "Qus" Szczygielski è stato inserito
+tra le preferenze ufficiali di AROS, per cui non è più necessario
+modificare file testuali e script per collegarsi a Internet. Matthias
+Rustler ha portato Scout, per cui chiudere le finestre e i programmi
+impiantati è molto più semplice di prima. La stabilità del Kernel, in
+ogni caso, è migliorata parecchio grazie al lavoro di Neil Cafferkey e
+Pavel Fedin.
+
+Neil Cafferkey ha migliorato notevolmente il nostro ata.device, 
+aggiungendo il supporto di una buona quantità di controller Serial-ATA.
+In ogni caso, qualunque dispositivo SATA che può essere impostato dal
+BIOS per essere visto come IDE, dovrebbe funzionare con AROS.
+
+Stanislaw Szymczyk prosegue il suo lavoro su OWB. Ultimamente ha 
+corretto diversi errori e apportato numerose migliorie, introducendo
+caratteristiche molto attese come un gestore dei segnalibri e i menu
+dell'applicazione accessibili con il tasto destro del mouse. Ora OWB
+galoppa spedito verso la sua release 1.0, permettendo ad AROS di 
+accedere a numerose web-applications.
+
+Yannick "Yannickescu" Erb ha portato su AROS giochi divertenti come
+Open Tyrian, Super Methane Brothers e SDL Ball e, soprattutto, ha
+realizzato ZuneARC, una GUI standardizzata per tutte le utilità di
+compressione già disponibili su AROS in riga di comando. Potete trovare
+questa e altre interessanti applicazioni sul `suo sito`__. Altri
+giochi sono stati convertiti da Fishy_fis, utente di AROS-EXEC.org.
+Non perdete il suo porting di DOSBox!
+
+Simone "samo" Bevilacqua ha portato anche su AROS il suo gioco BOH__,
+il primo prodotto commerciale di questo tipo per gli Amiga di "nuova
+generazione". 
+
+Krzysztof "Deadwood" Smiechowicz ha portato su AROS la versione 7.5 delle
+librerie grafiche MESA, aggiungendo l'accelerazione hardware 3D grazie
+al suo porting dell'infrastruttura Gallium3D. Per ora, ha rilasciato una
+`alpha dimostrativa`__ in grado di funzionare solo sulle schede video
+GeForce FX, 6 e 7. Qui__ potrete trovare un eloquente video della demo
+GLExcess in esecuzione su AROS.
+
+Paolo Besser ha pubblicato la versione 1.2 della sua distribuzione
+Icaros Desktop. Tra le migliorie introdotte, questa permette di `eseguire
+i vecchi giochi per Amiga`__ partendo dai loro file ADF, grazie ai nuovi
+script introdotti in AmiBridge e a una vecchia versione di E-UAE. Oliver
+Bunner nel frattempo ha migliorato l'integrazione delle vecchie 
+applicazioni per il Workbench grazie al suo Janus-UAE. Per entrambe le
+cose, tuttavia, gli utenti dovranno fornire un'installazione funzionante
+del Kickstart e di AmigaOS 3.x, magari partendo dal sempreverde `Amiga
+Forever`__ di Cloanto.
+
+Dietro le quinti, Staf Verhaegen è sempre al lavoro su una ABI standard
+per AROS. La speranza è che i frutti dei suoi sforzi trovino compimento
+entro l'anno.
+
+__ http://vmwaros.blogspot.com/2009/12/icaros-desktop-got-sound-on-imica-and.html
+__ http://www.clusteruk.com/SitePortalPage.aspx?siteid=1&cfid=0&did=109
+__ http://www.clusteruk.com/SitePortalPage.aspx?siteid=1&cfid=0&did=108
+__ http://www.icarosdesktop.org/
+__ http://www.dusabledanslherbe.eu/AROSPage/INDEX.1.html
+__ http://www.bohthegame.com/
+__ http://download.aros3d.org/gallium/mesa-nv.i386-aros.zip
+__ http://vmwaros.blogspot.com/2009/11/yet-another-glexcessgallium3d-video.html
+__ http://vmwaros.blogspot.com/2009/11/can-icaros-play-my-amiga-games-and-why.html
+__ http://www.amigaforever.com
