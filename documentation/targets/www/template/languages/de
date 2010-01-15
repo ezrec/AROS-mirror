@@ -28,6 +28,8 @@ using:            Benutzung
 shell:            Shell
 applications:     Anwendungen
 faq:              FAQ
+howto:            HowTo
+hwcompat:         Hardware Compatibility
 developers:       Entwickler
 contribute:       Mitwirken
 roadmap:          Roadmap

@@ -28,6 +28,8 @@ using:            Χρήση
 shell:            Εντολές κελύφους
 applications:     Εφαρμογές
 faq:              Συχνές Ερωτήσεις
+howto:            HowTo
+hwcompat:         Hardware Compatibility
 developers:       Υπεύθυνοι ανάπτυξης
 contribute:       Συνεισφέροντας
 roadmap:          Roadmap

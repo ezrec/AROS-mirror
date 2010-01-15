@@ -91,8 +91,8 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                 A( _N['shell'], href=makeURL( 'documentation/users/shell/index', lang ) ),
                 A( _N['applications'], href=makeURL( 'documentation/users/applications/index', lang ) ),
                 A( _N['faq'], href=makeURL( 'documentation/users/faq', lang ) ),
-                #_N['ports'],
-                #A( _N['links'], href=makeURL( 'documentation/users/links', lang ) )
+                A( _N['howto'], href=makeURL( 'documentation/users/howto', lang ) ),
+                A( _N['hwcompat'], href='http://en.wikibooks.org/wiki/Aros/Platforms/x86_support'),
             ] ),
             A( _N['developers'], href=makeURL( 'documentation/developers/index', lang ) ),
             Tree \

@@ -7,9 +7,13 @@ User Resources
 + `Shell`__
 + `Applications`__
 + `FAQ`__
++ `HowTo`__
++ `Hardware Compatibility`__
 
 __ installation  
 __ using  
 __ shell/index
 __ applications/index
-__ faq  
+__ faq
+__ howto
+__ http://en.wikibooks.org/wiki/Aros/Platforms/x86_support

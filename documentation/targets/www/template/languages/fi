@@ -28,6 +28,8 @@ using:            Käyttö
 shell:            Shell commands
 applications:     Applications
 faq:              FAQ
+howto:            HowTo
+hwcompat:         Hardware Compatibility
 developers:       Kehittäjät
 contribute:       Osanotto
 roadmap:          Roadmap

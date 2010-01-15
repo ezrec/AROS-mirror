@@ -28,6 +28,8 @@ using:            Gebruik
 shell:            Shell commando's
 applications:     Applications
 faq:              Veel gestelde vragen (FAQ)
+howto:            HowTo
+hwcompat:         Hardware Compatibility
 developers:       Ontwikkelaars
 contribute:       Meehelpen
 roadmap:          Roadmap

@@ -26,6 +26,8 @@ users:            Användare
 installation:     Installation
 using:            Användning
 faq:              Frågor och svar
+howto:            HowTo
+hwcompat:         Hardware Compatibility
 shell:            Shell commands
 # FIXME: above
 applications:     Applications

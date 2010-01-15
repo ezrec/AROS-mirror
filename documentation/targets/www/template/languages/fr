@@ -28,6 +28,8 @@ using:            Utilisation
 shell:            Commandes Shell
 applications:     Applications
 faq:              FAQ
+howto:            HowTo
+hwcompat:         Hardware Compatibility
 developers:       Développeurs
 contribute:       Contributions
 roadmap:          Roadmap

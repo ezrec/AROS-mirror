@@ -2604,6 +2604,10 @@ window;MUIM_ConnectParent;1;2;2
 window;MUIM_DisconnectParent;1;2;2
 window;MUIM_Export;1;1;2
 window;MUIM_Import;1;1;2
+window;MUIA_Window_ShowIconify;1;1;0
+window;MUIA_Window_ShowPrefs;1;1;0
+window;MUIA_Window_ShowSnapshot;1;1;0
+window;MUIA_Window_ShowPopup;1;1;0
 aboutmui;MUIA_Aboutmui_Application;1;1;2
 aboutmui;OM_NEW;1;1;2
 area;MUIA_Background;1;1;2
@@ -2648,5 +2652,9 @@ window;MUIA_Window_AltWidth, MUIA_Window_AltTopEdge, MUIA_Window_AltLeftEdge and
 window;MUIA_Window_AppWindow - flag set but no real implementation
 window;MUIA_Window_IsSubWindow - flag set but no real implementation
 window;MUIA_Window_UseBottomBorderScroller and MUIA_Window_UseRightBorderScroller are missing getters
+window;MUIA_Window_ShowIconify is a private sttribute with signature 0x8042bc26
+window;MUIA_Window_ShowPrefs  is a private sttribute with signature 0x8042e262
+window;MUIA_Window_ShowSnapshot is a private sttribute with signature 0x80423c55
+window;MUIA_Window_ShowPopup is a private sttribute with signature 0x8042324e
 area;MUIA_ContextMenuTrigger - bugreport #2807847
 #COMMENTS_END

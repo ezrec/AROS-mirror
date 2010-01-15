@@ -28,6 +28,8 @@ using:            Использование
 shell:            Команды CLI-shell
 applications:     Applications
 faq:              ЧАВО(FAQ)
+howto:            HowTo
+hwcompat:         Hardware Compatibility
 developers:       Разработчики
 contribute:       Участие
 roadmap:          План развития
