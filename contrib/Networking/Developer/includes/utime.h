@@ -8,13 +8,7 @@
     Lang: english
 */
 
-#include <sys/_types.h>
-#include <sys/cdefs.h>
-
-#ifndef __AROS_TIME_T_DECLARED
-#define __AROS_TIME_T_DECLARED
-typedef __time_t        time_t;
-#endif
+#include <sys/types/time_t.h>
 
 struct utimbuf {
 	time_t actime;		/* Access time */

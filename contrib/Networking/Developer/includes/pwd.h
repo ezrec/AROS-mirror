@@ -1,28 +1,15 @@
 #ifndef _PWD_H_
 #define	_PWD_H_
 /*
-    Copyright © 2003, The AROS Development Team. All rights reserved.
+    Copyright © 2003-2010, The AROS Development Team. All rights reserved.
     $Id$
 */
 
-//#include <sys/_types.h>
 #include <sys/cdefs.h>
 
 /*
     Implementation Note:
     You do not need to define size_t in this file. (POSIX)
-*/
-
-/*
-#ifndef __AROS_GID_T_DECLARED
-#define __AROS_GID_T_DECLARED
-typedef __gid_t     gid_t;
-#endif
-
-#ifndef __AROS_UID_T_DECLARED
-#define __AROS_UID_T_DECLARED
-typedef __uid_t     uid_t;
-#endif
 */
 
 struct passwd
