@@ -10,7 +10,7 @@
 #include "strings.h"
 
 #define CATALOG_NAME     "owb.catalog"
-#define CATALOG_VERSION  4
+#define CATALOG_VERSION  5
 
 struct Catalog *catalog;
 
