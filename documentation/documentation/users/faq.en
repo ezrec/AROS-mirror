@@ -491,3 +491,5 @@ My system hangs with red cursor on screen or a blank screen
 One reason for this can be use of the serial mouse (these is not supported yet).
 You must use PS/2 mouse with AROS at the moment. Another can be if you've chosen
 a video mode unsupported by your hardware in boot menu. Reboot and try a different one.
+
+

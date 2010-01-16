@@ -306,3 +306,23 @@ list change port1 into port 0. Repeat this for all triggers and for all items on
 "Usage items" list.
 
 
+How to make joystick simulate keyboard keys?
+--------------------------------------------
+
+With Poseidon it is possible to make the joystick simulate the keyboard
+pressings. This might enable using joystick for playing games which only have
+keyboard support. This feature is configured in Trident preferences.
+
+Open Trident and go to Devices window. Select your controller from the list and
+then click on Settings button. This will open a new window. Go to "Actions" tab.
+On the right top window select X axis. On the left bottom list select an entry
+"Digital Joystick, Push left(port 1)". On the panel to the right change
+"Digital joystick" into "Raw Key". A list of keys will be displayed. Select key
+you wish to send. Repeat the same procedure for "Digital Joystick, Release left
+(port 1)" option but this time check "Send key up even instead of key down".
+
+Open shell and move your joystick to the left - your selected letter should
+appear in the shell.
+
+
+
