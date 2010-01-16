@@ -6,7 +6,7 @@
     $Id$
 */
 
-#define OWB_VERSION "0.99"
-#define OWB_RELEASE_DATE "30.10.2009"
+#define OWB_VERSION "1.00"
+#define OWB_RELEASE_DATE "16.01.2010"
 
 #endif /* _VERSION_H_ */

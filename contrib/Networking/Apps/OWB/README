@@ -1,4 +1,4 @@
-OWB 0.9.9 for AROS
+OWB 1.0.0 for AROS
 
 INTRODUCTION
 
@@ -63,6 +63,8 @@ To bookmark a tab use tab's context menu.
 
 Bookmark menu is present in URL string input context menu.
 
+To open a link in background tab use middle mouse button.
+
 The following keyboard shortcuts are implemented:
 
 F1 - go back
@@ -113,6 +115,34 @@ WebCore/JSCore code where the original licenses apply (APSL, LGPL and BSD).
 See Licenses directory for more details.
 
 HISTORY
+
+OWB 1.0.0 (16.01.2010)
+  - Enabled JavaScript XPath interface
+  - Enabled XSLT transformations
+  - Added View menu with zoom-related menu items
+  - Implemented feature #8: Show source
+  - Implemented feature #33: Double click on HTML file support
+  - Implemented feature #63: Better graphic refresh and scrolling
+  - Implemented feature #93: Open new empty tabs in foreground with activated
+    URL input field
+  - Implemented feature #94: Add "Open link in a new tab" menu selection
+  - Implemented feature #105: Add clipboard operations to main application
+    menu
+  - Fixed bug #31: AROS crashes when drawing VICE menu on OWB window
+  - Fixed a problem with file uploads manifesting in the following tickets:
+    * bug #37: upload of files does not work on yahoo mail
+    * bug #57: ImageShack, upload fails
+    * bug #83: Attaching a file on a ticket seems doing nothing, but it 
+      works even if OWB says "error"
+  - Fixed a problem with mouse button events propagation preventing Google
+    Docs and other JavaScript-based text editors from working correctly
+  - Fixed bug #61: File download transfer speed in very low in OWB
+  - Fixed bug #86: Downloading virtualbox from http://www.virtualbox.org/ is 
+    not possible
+  - Fixed bug #98: Closing a "new window" opened from owb crashes AROS-hosted
+  - Fixed bug #101: Cursor not appearing when entering text in fields
+  - Fixed bug #102: The scrollbar doesn't follow the pointer if is moved too
+    far
 
 OWB 0.9.9 (30.10.2009)
   - Added support for multiple browser windows
