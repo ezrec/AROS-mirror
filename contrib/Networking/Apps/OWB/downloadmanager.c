@@ -356,6 +356,7 @@ IPTR DownloadManager__MUIM_DownloadDelegate_DecideDestinationWithSuggestedFilena
 	    { ASLFR_TitleText,     (IPTR)_(MSG_DownloadManager_RequestDownloadedFileTitle) },
 	    { ASLFR_InitialDrawer, (IPTR)prefix                   },
 	    { ASLFR_InitialFile,   (IPTR)filename                 },
+	    { ASLFR_DoSaveMode,    (BOOL)TRUE                     },
 	    { TAG_END                                             }
 	};
 
