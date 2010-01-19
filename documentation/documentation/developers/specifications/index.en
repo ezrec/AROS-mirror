@@ -32,3 +32,4 @@ correspond precisely with the current implementations available.
 + `MIDI Driver Interface <drafts/midi>`__
 + `MMU HIDD <drafts/mmuhidd>`__
 + `ABI V1 <drafts/abiv1>`__
++ `Mouse Pointer Handling <drafts/mousepointer>`__
