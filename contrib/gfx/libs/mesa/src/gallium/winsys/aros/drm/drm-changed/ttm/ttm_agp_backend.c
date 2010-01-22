@@ -52,7 +52,6 @@ static int ttm_agp_populate(struct ttm_backend *backend,
 			    unsigned long num_pages, struct page **pages,
 			    struct page *dummy_read_page)
 {
-#if !defined(__AROS__)
 	struct ttm_agp_backend *agp_be =
 	    container_of(backend, struct ttm_agp_backend, backend);
 	struct page **cur_page, **last_page = pages + num_pages;
@@ -71,16 +70,12 @@ static int ttm_agp_populate(struct ttm_backend *backend,
 		mem->pages[mem->page_count++] = page;
 	}
 	agp_be->mem = mem;
-#else
-IMPLEMENT("\n");
-#warning IMPLEMENT ttm_agp_populate
-#endif
+
 	return 0;
 }
 
 static int ttm_agp_bind(struct ttm_backend *backend, struct ttm_mem_reg *bo_mem)
 {
-#if !defined(__AROS__)
 	struct ttm_agp_backend *agp_be =
 	    container_of(backend, struct ttm_agp_backend, backend);
 	struct agp_memory *mem = agp_be->mem;
@@ -95,16 +90,10 @@ static int ttm_agp_bind(struct ttm_backend *backend, struct ttm_mem_reg *bo_mem)
 		printk(KERN_ERR TTM_PFX "AGP Bind memory failed.\n");
 
 	return ret;
-#else
-IMPLEMENT("\n");
-#warning IMPLEMENT ttm_agp_bind
-    return 0;
-#endif
 }
 
 static int ttm_agp_unbind(struct ttm_backend *backend)
 {
-#if !defined(__AROS__)
 	struct ttm_agp_backend *agp_be =
 	    container_of(backend, struct ttm_agp_backend, backend);
 
@@ -112,16 +101,10 @@ static int ttm_agp_unbind(struct ttm_backend *backend)
 		return agp_unbind_memory(agp_be->mem);
 	else
 		return 0;
-#else
-IMPLEMENT("\n");
-#warning IMPLEMENT ttm_agp_unbind
-   return 0;
-#endif
 }
 
 static void ttm_agp_clear(struct ttm_backend *backend)
 {
-#if !defined(__AROS__)
 	struct ttm_agp_backend *agp_be =
 	    container_of(backend, struct ttm_agp_backend, backend);
 	struct agp_memory *mem = agp_be->mem;
@@ -131,10 +114,6 @@ static void ttm_agp_clear(struct ttm_backend *backend)
 		agp_free_memory(mem);
 	}
 	agp_be->mem = NULL;
-#else
-IMPLEMENT("\n");
-#warning IMPLEMENT ttm_agp_clear
-#endif
 }
 
 static void ttm_agp_destroy(struct ttm_backend *backend)

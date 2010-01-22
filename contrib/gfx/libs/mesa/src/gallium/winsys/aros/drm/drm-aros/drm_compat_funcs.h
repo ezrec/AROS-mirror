@@ -243,4 +243,15 @@ void *idr_find(struct idr *idp, int id);
 void idr_remove(struct idr *idp, int id);
 void idr_init(struct idr *idp);
 
+/* AGP handling */
+struct agp_bridge_data *agp_backend_acquire(void * dev);
+void agp_backend_release(struct agp_bridge_data * bridge);
+struct agp_bridge_data * agp_find_bridge(void * dev);
+int agp_copy_info(struct agp_bridge_data * bridge, struct agp_kern_info * info);
+void agp_enable(struct agp_bridge_data * bridge, u32 mode);
+struct agp_memory *agp_allocate_memory(struct agp_bridge_data * bridge, size_t num_pages , u32 type);
+void agp_free_memory(struct agp_memory * mem);
+int agp_bind_memory(struct agp_memory * mem, off_t offset);
+int agp_unbind_memory(struct agp_memory * mem);
+
 #endif /* _DRM_COMPAT_FUNCS_ */

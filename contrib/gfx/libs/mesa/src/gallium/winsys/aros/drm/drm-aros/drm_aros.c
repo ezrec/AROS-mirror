@@ -124,6 +124,7 @@ LONG drm_aros_pci_find_supported_video_card(struct drm_driver *drv)
 {
     drv->pciDevice = NULL;
     drv->ProductID = 0x0;
+    drv->IsAGP = FALSE; /* FIXME: Implement AGP detection */
     pciBus = NULL;
     pciDriver = NULL;
     OOPBase = NULL;

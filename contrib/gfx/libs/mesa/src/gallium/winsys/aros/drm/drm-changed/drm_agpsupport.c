@@ -40,6 +40,7 @@
 
 #if !defined(__AROS__)
 #include <asm/agp.h>
+#endif
 
 /**
  * Get AGP information.
@@ -61,15 +62,15 @@ int drm_agp_info(struct drm_device *dev, struct drm_agp_info *info)
 		return -EINVAL;
 
 	kern = &dev->agp->agp_info;
-	info->agp_version_major = kern->version.major;
-	info->agp_version_minor = kern->version.minor;
+//FIXME	info->agp_version_major = kern->version.major;
+//FIXME	info->agp_version_minor = kern->version.minor;
 	info->mode = kern->mode;
 	info->aperture_base = kern->aper_base;
 	info->aperture_size = kern->aper_size * 1024 * 1024;
-	info->memory_allowed = kern->max_memory << PAGE_SHIFT;
-	info->memory_used = kern->current_memory << PAGE_SHIFT;
-	info->id_vendor = kern->device->vendor;
-	info->id_device = kern->device->device;
+//FIXME	info->memory_allowed = kern->max_memory << PAGE_SHIFT;
+//FIXME	info->memory_used = kern->current_memory << PAGE_SHIFT;
+//FIXME	info->id_vendor = kern->device->vendor;
+//FIXME	info->id_device = kern->device->device;
 
 	return 0;
 }
@@ -112,6 +113,7 @@ int drm_agp_acquire(struct drm_device * dev)
 
 EXPORT_SYMBOL(drm_agp_acquire);
 
+#if !defined(__AROS__)
 /**
  * Acquire the AGP device (ioctl).
  *
@@ -129,6 +131,7 @@ int drm_agp_acquire_ioctl(struct drm_device *dev, void *data,
 {
 	return drm_agp_acquire((struct drm_device *) file_priv->minor->dev);
 }
+#endif
 
 /**
  * Release the AGP device.
@@ -185,6 +188,7 @@ int drm_agp_enable_ioctl(struct drm_device *dev, void *data,
 	return drm_agp_enable(dev, *mode);
 }
 
+#if !defined(__AROS__)
 /**
  * Allocate AGP memory.
  *
@@ -404,7 +408,6 @@ struct drm_agp_head *drm_agp_init(struct drm_device *dev)
 	if (!(head = kmalloc(sizeof(*head), GFP_KERNEL)))
 		return NULL;
 	memset((void *)head, 0, sizeof(*head));
-#if !defined(__AROS__)
 	head->bridge = agp_find_bridge(dev->pdev);
 	if (!head->bridge) {
 		if (!(head->bridge = agp_backend_acquire(dev->pdev))) {
@@ -420,19 +423,10 @@ struct drm_agp_head *drm_agp_init(struct drm_device *dev)
 		kfree(head);
 		return NULL;
 	}
-#endif
 	INIT_LIST_HEAD(&head->memory);
-#if !defined(__AROS__)
 	head->cant_use_aperture = head->agp_info.cant_use_aperture;
 	head->page_mask = head->agp_info.page_mask;
 	head->base = head->agp_info.aper_base;
-#else
-    head->cant_use_aperture = 0;
-    //FIXME: Setting start of GART as start of FRAMEBUFFER. Does this make sense?
-    head->base = pci_resource_start(dev->pdev, 2); 
-#endif
-    //FIXME
-    IMPLEMENT("\n");
 	return head;
 }
 
@@ -443,6 +437,7 @@ DRM_AGP_MEM *drm_agp_allocate_memory(struct agp_bridge_data * bridge,
 {
 	return agp_allocate_memory(bridge, pages, type);
 }
+#endif
 
 /** Calls agp_free_memory() */
 int drm_agp_free_memory(DRM_AGP_MEM * handle)
@@ -453,6 +448,7 @@ int drm_agp_free_memory(DRM_AGP_MEM * handle)
 	return 1;
 }
 
+#if !defined(__AROS__)
 /** Calls agp_bind_memory() */
 int drm_agp_bind_memory(DRM_AGP_MEM * handle, off_t start)
 {
@@ -460,6 +456,7 @@ int drm_agp_bind_memory(DRM_AGP_MEM * handle, off_t start)
 		return -EINVAL;
 	return agp_bind_memory(handle, start);
 }
+#endif
 
 /** Calls agp_unbind_memory() */
 int drm_agp_unbind_memory(DRM_AGP_MEM * handle)
@@ -469,6 +466,7 @@ int drm_agp_unbind_memory(DRM_AGP_MEM * handle)
 	return agp_unbind_memory(handle);
 }
 
+#if !defined(__AROS__)
 /**
  * Binds a collection of pages into AGP memory at the given offset, returning
  * the AGP memory structure containing them.

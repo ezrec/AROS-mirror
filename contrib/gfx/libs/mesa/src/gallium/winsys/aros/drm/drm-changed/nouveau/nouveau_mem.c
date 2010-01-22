@@ -305,7 +305,6 @@ void nouveau_mem_close(struct drm_device *dev)
 
 	nouveau_ttm_global_release(dev_priv);
 
-#if !defined(__AROS__)
 	if (drm_core_has_AGP(dev) && dev->agp &&
 	    drm_core_check_feature(dev, DRIVER_MODESET)) {
 		struct drm_agp_mem *entry, *tempe;
@@ -326,10 +325,6 @@ void nouveau_mem_close(struct drm_device *dev)
 		dev->agp->acquired = 0;
 		dev->agp->enabled = 0;
 	}
-#else
-IMPLEMENT("AGP mem close handling\n");
-#warning IMPLEMENT AGP mem close handling
-#endif
 
 	if (dev_priv->fb_mtrr) {
 		drm_mtrr_del(dev_priv->fb_mtrr, drm_get_resource_start(dev, 1),
@@ -453,7 +448,6 @@ static void nouveau_mem_reset_agp(struct drm_device *dev)
 int
 nouveau_mem_init_agp(struct drm_device *dev)
 {
-#if !defined(__AROS__)
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 	struct drm_agp_info info;
 	struct drm_agp_mode mode;
@@ -489,10 +483,7 @@ nouveau_mem_init_agp(struct drm_device *dev)
 	dev_priv->gart_info.type	= NOUVEAU_GART_AGP;
 	dev_priv->gart_info.aper_base	= info.aperture_base;
 	dev_priv->gart_info.aper_size	= info.aperture_size;
-#else
-DRM_IMPL("\n");
-#warning IMPLEMENT nouveau_mem_init_agp
-#endif
+
 	return 0;
 }
 

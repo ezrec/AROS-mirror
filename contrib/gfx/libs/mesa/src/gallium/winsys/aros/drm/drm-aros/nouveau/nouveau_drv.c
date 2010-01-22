@@ -13,6 +13,7 @@
    Setting nouveau_vram_pushbuf to 1 causes problems */
 int nouveau_vram_pushbuf = 0;
 int nouveau_vram_notify = 0;
+int nouveau_noagp = 0;
 
 extern struct drm_ioctl_desc nouveau_ioctls[];
 
@@ -22,8 +23,9 @@ static struct drm_driver driver =
     .ProductID = 0x0,
     .PciIDs = nouveau_pciids,
     .pciDevice = NULL,
+    .IsAGP = FALSE,
     .dev = NULL,
-    .driver_features = DRIVER_MODESET | DRIVER_GEM,
+    .driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_USE_AGP,
     .load = nouveau_load,
     .firstopen = nouveau_firstopen,
     .open = NULL,

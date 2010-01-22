@@ -455,3 +455,97 @@ int pci_write_config_dword(void *dev, int where, u32 val)
     return 0;
 }
 
+
+
+
+
+
+
+
+
+/* AGP handling */
+struct agp_bridge_data *agp_backend_acquire(void * dev)
+{
+#if !defined(HOSTED_BUILD)
+    IMPLEMENT("\n");
+    return NULL;
+#else
+    struct agp_bridge_data * bridge = AllocVec(sizeof(struct agp_bridge_data), 
+                                        MEMF_PUBLIC | MEMF_CLEAR);
+    return bridge;
+#endif
+}
+
+void agp_backend_release(struct agp_bridge_data * bridge)
+{
+    IMPLEMENT("\n");
+}
+
+struct agp_bridge_data * agp_find_bridge(void * dev)
+{
+#if !defined(HOSTED_BUILD)
+    IMPLEMENT("\n");
+    return NULL;
+#else
+    struct agp_bridge_data * bridge = AllocVec(sizeof(struct agp_bridge_data), 
+                                        MEMF_PUBLIC | MEMF_CLEAR);
+    return bridge;
+#endif
+}
+
+int agp_copy_info(struct agp_bridge_data * bridge, struct agp_kern_info * info)
+{
+#if !defined(HOSTED_BUILD)
+    IMPLEMENT("\n");
+#else
+    info->chipset = SUPPORTED;
+    info->cant_use_aperture = 0;
+    info->aper_base = 0xb0000000; /* FIXME: Probably makes no sense */
+    info->aper_size = 64;
+#endif
+    return 1;
+}
+
+void agp_enable(struct agp_bridge_data * bridge, u32 mode)
+{
+    IMPLEMENT("\n");
+}
+
+struct agp_memory *agp_allocate_memory(struct agp_bridge_data * bridge, 
+    size_t num_pages , u32 type)
+{
+    struct agp_memory * mem = AllocVec(sizeof(struct agp_memory), MEMF_PUBLIC | MEMF_CLEAR);
+    mem->pages = AllocVec(sizeof(struct page *) * num_pages, MEMF_PUBLIC | MEMF_CLEAR);
+    mem->type = type;
+    mem->is_flushed = FALSE;
+    mem->is_bound = FALSE;
+    return mem;
+}
+
+int agp_bind_memory(struct agp_memory * mem, off_t offset)
+{
+#if !defined(HOSTED_BUILD)
+    IMPLEMENT("\n");
+    return -1;
+#else
+    mem->is_bound = TRUE;
+    return 0;
+#endif
+}
+
+int agp_unbind_memory(struct agp_memory * mem)
+{
+#if !defined(HOSTED_BUILD)
+    IMPLEMENT("\n");
+    return -1;
+#else
+    mem->is_bound = FALSE;
+    return 0;
+#endif
+}
+
+void agp_free_memory(struct agp_memory * mem)
+{
+    FreeVec(mem->pages);
+    FreeVec(mem);
+}

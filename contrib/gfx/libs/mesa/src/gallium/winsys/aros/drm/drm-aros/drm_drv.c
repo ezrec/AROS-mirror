@@ -25,6 +25,12 @@ static void drm_cleanup(struct drm_device * dev)
     
     if (dev->driver->unload)
         dev->driver->unload(dev);
+        
+    if (drm_core_has_AGP(dev) && dev->agp)
+    {
+        kfree(dev->agp);
+        dev->agp = NULL;
+    }
 }
 
 void drm_exit(struct drm_driver * driver)
@@ -55,13 +61,13 @@ static int drm_init_device(struct drm_driver * driver)
     int ret;
 
     if (drm_core_has_AGP(dev)) {
-//FIXME        if (drm_device_is_agp(dev))
+        if (drm_device_is_agp(dev))
             dev->agp = drm_agp_init(dev);
-//FIXME        if (drm_core_check_feature(dev, DRIVER_REQUIRE_AGP)
-//FIXME            && (dev->agp == NULL)) {
-//FIXME            DRM_ERROR("Cannot initialize the agpgart module.\n");
-//FIXME            return -1;
-//FIXME        }
+        if (drm_core_check_feature(dev, DRIVER_REQUIRE_AGP)
+            && (dev->agp == NULL)) {
+            DRM_ERROR("Cannot initialize the agpgart module.\n");
+            return -1;
+        }
     }
     
     if (driver->driver_features & DRIVER_GEM) {
@@ -103,6 +109,12 @@ int drm_init(struct drm_driver * driver)
 #endif
 #if HOSTED_BUILD_HARDWARE == HOSTED_BUILD_HARDWARE_I915
     driver->ProductID = HOSTED_BUILD_PRODUCT_ID;
+#endif
+#if HOSTED_BUILD_BUS == HOSTED_BUILD_BUS_PCI
+    driver->IsAGP = FALSE;
+#endif
+#if HOSTED_BUILD_BUS == HOSTED_BUILD_BUS_AGP
+    driver->IsAGP = TRUE;
 #endif
 #endif
     if (drm_init_device(driver))

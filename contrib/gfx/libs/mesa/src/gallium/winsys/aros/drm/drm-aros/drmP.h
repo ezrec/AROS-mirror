@@ -143,17 +143,26 @@ struct drm_sg_mem {
     dma_addr_t *busaddr;
 };
 
+#define DRM_AGP_KERN struct agp_kern_info
+#define DRM_AGP_MEM struct agp_memory 
+struct drm_agp_mem {
+    DRM_AGP_MEM *memory;
+    unsigned long bound;
+    int pages;
+    struct list_head head;
+};
+
 struct drm_agp_head {
-//FIXME:    DRM_AGP_KERN agp_info;      /**< AGP device information */
+    DRM_AGP_KERN agp_info;          /* AGP device information */
     struct list_head memory;
-//FIXME    unsigned long mode;     /* AGP mode */
+    unsigned long mode;             /* AGP mode */
     struct agp_bridge_data *bridge;
-    int enabled;            /* whether the AGP bus as been enabled */
-    int acquired;           /* whether the AGP device has been acquired */
+    int enabled;                    /* whether the AGP bus as been enabled */
+    int acquired;                   /* whether the AGP device has been acquired */
     unsigned long base;
     int agp_mtrr;
     int cant_use_aperture;
-//FIXME    unsigned long page_mask;
+    unsigned long page_mask;
 };
 
 struct drm_mode_config
@@ -181,6 +190,7 @@ struct drm_driver
     UWORD               ProductID;
     struct drm_pciid    *PciIDs;
     OOP_Object          *pciDevice;
+    BOOL                IsAGP;
     
     /* DRM device */
     struct drm_device   *dev;
@@ -320,9 +330,7 @@ static inline int drm_core_has_AGP(struct drm_device *dev)
 
 static __inline__ int drm_device_is_agp(struct drm_device *dev)
 {
-    /* FIXME: Implement */
-    DRM_IMPL("\n");
-    return 0;
+    return dev->driver->IsAGP;
 }
 
 static __inline__ int drm_device_is_pcie(struct drm_device *dev)
@@ -380,6 +388,12 @@ void drm_core_ioremapfree(struct drm_local_map *map, struct drm_device *dev);
 
 /* drm_agpsupport.c */
 struct drm_agp_head *drm_agp_init(struct drm_device *dev);
+int drm_agp_acquire(struct drm_device *dev);
+int drm_agp_release(struct drm_device *dev);
+int drm_agp_enable(struct drm_device *dev, struct drm_agp_mode mode);
+int drm_agp_info(struct drm_device *dev, struct drm_agp_info *info);
+int drm_agp_free_memory(DRM_AGP_MEM * handle);
+int drm_agp_unbind_memory(DRM_AGP_MEM * handle);
 
 /* drm_cache.c */
 void drm_clflush_pages(struct page *pages[], unsigned long num_pages);

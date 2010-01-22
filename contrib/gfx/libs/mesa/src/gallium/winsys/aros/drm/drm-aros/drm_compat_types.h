@@ -65,10 +65,36 @@ struct page
 #define BITS_TO_LONGS(x)        ((x / (sizeof(long) * 8)) + 1)
 
 struct work_struct;
-struct agp_bridge_data;
+
+/* AGP support */
+struct agp_bridge_data
+{
+    int dummy;
+};
+#define NOT_SUPPORTED           0
+#define SUPPORTED               1
+struct agp_kern_info
+{
+    int chipset;
+    int cant_use_aperture;
+    unsigned long aper_base;
+    unsigned long aper_size;
+    unsigned long mode;
+    unsigned long page_mask;
+};
+struct agp_memory
+{
+    struct page **pages;
+    size_t page_count;
+    BOOL is_flushed;
+    BOOL is_bound;
+    ULONG type;
+};
 
 #define AGP_USER_MEMORY         1
 #define AGP_USER_CACHED_MEMORY  2
+
+
 #define ERESTARTSYS             782434897 /* Just some random value */
 
 /* Reference counted objects implementation */

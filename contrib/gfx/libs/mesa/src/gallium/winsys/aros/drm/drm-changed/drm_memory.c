@@ -107,6 +107,7 @@ DRM_AGP_MEM *drm_alloc_agp(struct drm_device * dev, int pages, u32 type)
 {
 	return drm_agp_allocate_memory(dev->agp->bridge, pages, type);
 }
+#endif
 
 /** Wrapper around agp_free_memory() */
 int drm_free_agp(DRM_AGP_MEM * handle, int pages)
@@ -115,11 +116,13 @@ int drm_free_agp(DRM_AGP_MEM * handle, int pages)
 }
 EXPORT_SYMBOL(drm_free_agp);
 
+#if !defined(__AROS__)
 /** Wrapper around agp_bind_memory() */
 int drm_bind_agp(DRM_AGP_MEM * handle, unsigned int start)
 {
 	return drm_agp_bind_memory(handle, start);
 }
+#endif
 
 /** Wrapper around agp_unbind_memory() */
 int drm_unbind_agp(DRM_AGP_MEM * handle)
@@ -127,13 +130,13 @@ int drm_unbind_agp(DRM_AGP_MEM * handle)
 	return drm_agp_unbind_memory(handle);
 }
 EXPORT_SYMBOL(drm_unbind_agp);
-#else /* !defined(__AROS__) */
+
 static inline void *agp_remap(unsigned long offset, unsigned long size,
 			      struct drm_device * dev)
 {
 	return NULL;
 }
-#endif
+
 #else  /*  __OS_HAS_AGP  */
 static inline void *agp_remap(unsigned long offset, unsigned long size,
 			      struct drm_device * dev)
