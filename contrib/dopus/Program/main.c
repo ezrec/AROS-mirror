@@ -1335,7 +1335,7 @@ ULONG *palette;
 	int numcols;
 
 	numcols=1<<screen->RastPort.BitMap->Depth;
-	if (numcols>32) numcols=32;
+	if (numcols>16) numcols=16;
 
 	if (system_version2>=OSVER_39) {
 		ULONG backup_palette[98];
