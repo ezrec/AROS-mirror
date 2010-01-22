@@ -12,6 +12,7 @@
 #include <proto/intuition.h>
 #include <proto/alib.h>
 #include <proto/utility.h>
+#include <proto/dos.h>
 #include <string.h>
 #include <stdio.h>
 #include <aros/debug.h>
@@ -365,35 +366,49 @@ IPTR DownloadManager__MUIM_DownloadDelegate_DecideDestinationWithSuggestedFilena
 	    if(AslRequest(fr, NULL))
 	    {
 		download->filename = StrDup(fr->fr_File);
-		destination = AllocVec(strlen(fr->fr_Drawer) + strlen(fr->fr_File) + 1, MEMF_ANY);
+		destination = AllocVec(strlen(fr->fr_Drawer) + strlen(fr->fr_File) + 2, MEMF_ANY);
 		strcpy(destination, fr->fr_Drawer);
-		strcat(destination, fr->fr_File);
+		AddPart(destination, fr->fr_File, strlen(fr->fr_Drawer) + strlen(fr->fr_File) + 2);
 	    }
 	    else
 	    {
-		download->filename = StrDup(filename);
-		destination = AllocVec(strlen(filename) + strlen(prefix) + 1, MEMF_ANY);
-		strcpy(destination, prefix);
-		strcat(destination, filename);
+		destination = NULL;
 	    }
 	    FreeAslRequest(fr);
 	}
 	else
 	{
-	    return FALSE;
+	    destination = NULL;
 	}
     }
     else
     {
 	download->filename = StrDup(filename);
-	destination = AllocVec(strlen(filename) + strlen(prefix) + 1, MEMF_ANY);
+	destination = AllocVec(strlen(filename) + strlen(prefix) + 2, MEMF_ANY);
 	strcpy(destination, prefix);
-	strcat(destination, filename);
+	AddPart(destination, filename, strlen(filename) + strlen(prefix) + 2);
     }
 
     D(bug("setting destination %s\n", destination));
     DoMethod(obj, MUIM_DownloadDelegate_SetDestination, download->identifier, destination);
     FreeVec(destination);
+
+    if(destination == NULL)
+    {
+	// download is cancelled now, remove it
+	int i;
+	for(i = XGET(manager->list, MUIA_List_Entries) - 1; i>= 0; i--)
+	{
+	    struct Download *download_entry = NULL;
+	    DoMethod(manager->list, MUIM_List_GetEntry, i, &download_entry);
+	    if(download == download_entry)
+	    {
+		set(manager->list, MUIA_List_Active, i);
+		DoMethod(_app(obj), MUIM_Application_PushMethod, manager->list, 3, MUIM_CallHook, &manager->cancelHook, NULL);
+		break;
+	    }
+	}
+    }
 
     DoMethod(manager->list, MUIM_List_Redraw, MUIV_List_Redraw_All);
     
