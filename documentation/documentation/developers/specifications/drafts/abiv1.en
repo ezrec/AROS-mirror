@@ -212,7 +212,7 @@ C library
   arosc2.library (new library) and reimplementing arosc.library as stub to 
   arosc.library was rejected - the ABI_V1 should be clean of such hacks
 
-STATUS: NOT STARTED
+STATUS: IN PROGRESS (first split off of code done locally)
 
 DECISION: A decision has been made on 2008-12-14 to include this item into 
 ABI_V1.
