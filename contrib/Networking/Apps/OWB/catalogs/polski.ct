@@ -1,4 +1,4 @@
-## version $VER: owb.catalog 4.0 (24.10.2009)
+## version $VER: owb.catalog 5.0 (23.01.2010)
 ## language polski
 ## codeset 0
 ;
@@ -34,6 +34,10 @@ MSG_ContextMenuItemTagOpenLinkInNewWindow
 Otwórz w nowym oknie
 ; Open Link in New Window
 ;
+MSG_ContextMenuItemTagOpenLinkInNewTab
+Otwórz w nowej karcie
+; Open Link in New Tab
+;
 MSG_ContextMenuItemTagDownloadLinkToDisk
 Pobierz plik z linku
 ; Download Linked File
@@ -46,9 +50,13 @@ MSG_ContextMenuItemTagOpenImageInNewWindow
 Otwórz obraz w nowym oknie
 ; Open Image in New Window
 ;
+MSG_ContextMenuItemTagOpenImageInNewTab
+Owórz obraz w nowej karcie
+; Open Image in New Tab
+;
 MSG_ContextMenuItemTagDownloadImageToDisk
 Zapisz obraz jako
-; Save Image As
+; Save Image
 ;
 MSG_ContextMenuItemTagCopyImageToClipboard
 Kopiuj obraz
@@ -57,6 +65,10 @@ Kopiuj obraz
 MSG_ContextMenuItemTagOpenFrameInNewWindow
 Otwórz ramkê w nowym oknie
 ; Open Frame in New Window
+;
+MSG_ContextMenuItemTagOpenFrameInNewTab
+Otwórz ramkê w nowej karcie
+; Open Frame in New Tab
 ;
 MSG_ContextMenuItemTagCopy
 kopiuj
@@ -334,6 +346,10 @@ MSG_DownloadManager_ClearFinished
 Wyczy¶æ zakoñczone
 ; Clear finished
 ;
+MSG_DownloadManager_RequestDownloadedFileTitle
+Zapisz jako
+; Download as
+;
 MSG_SearchWindow_Title
 OWB Okno wyszukiwania
 ; OWB Search Window
@@ -481,6 +497,10 @@ U¿yj
 MSG_PreferencesManager_Cancel
 Anuluj
 ; Cancel
+;
+MSG_PreferencesManager_RequestDownloadedFileNameLabel
+Pytaj o nazwy zapisywanych plików
+; Ask me about downloaded file names
 ;
 MSG_Tabs
 Karty
@@ -654,3 +674,36 @@ MSG_MainMenu_DownloadManager
 Zarz±dzanie pobieraniem plików
 ; Download manager
 ;
+MSG_MainMenu_Cut
+Wytnij
+; Cut
+;
+MSG_MainMenu_Copy
+Kopiuj
+; Copy
+;
+MSG_MainMenu_Paste
+Wklej
+; Paste
+;
+MSG_MainMenu_View
+Widok
+; View
+;
+MSG_MainMenu_ZoomIn
+Powiêksz
+; Zoom in
+;
+MSG_MainMenu_ZoomOut
+Pomniejsz
+; Zoom out
+;
+MSG_MainMenu_ZoomReset
+Domy¶lny
+; Reset zoom
+;
+MSG_MainMenu_ViewSource
+Poka¿ ¼ród³o
+; View source
+;
+
