@@ -1,4 +1,4 @@
-## version $VER: owb.catalog 4.0 (29.06.2009)
+## version $VER: owb.catalog 5.0 (24.01.2010)
 ## language deutsch
 ## codeset 0
 ;
@@ -34,6 +34,10 @@ MSG_ContextMenuItemTagOpenLinkInNewWindow
 Link in neuem Fenster öffnen
 ; Open Link in New Window
 ;
+MSG_ContextMenuItemTagOpenLinkInNewTab
+Link in neuem Tab öffnen
+; Open Link in New Tab
+;
 MSG_ContextMenuItemTagDownloadLinkToDisk
 Verlinkte Datei herunterladen
 ; Download Linked File
@@ -46,9 +50,13 @@ MSG_ContextMenuItemTagOpenImageInNewWindow
 Bild in neuem Fenster öffnen
 ; Open Image in New Window
 ;
+MSG_ContextMenuItemTagOpenImageInNewTab
+Bild in neuem Tab öffnen
+; Open Image in New Tab
+;
 MSG_ContextMenuItemTagDownloadImageToDisk
 Bild speichern unter
-; Save Image As
+; Save Image
 ;
 MSG_ContextMenuItemTagCopyImageToClipboard
 Bild kopieren
@@ -57,6 +65,10 @@ Bild kopieren
 MSG_ContextMenuItemTagOpenFrameInNewWindow
 Frame in neuem Fenster öffnen
 ; Open Frame in New Window
+;
+MSG_ContextMenuItemTagOpenFrameInNewTab
+Frame in neuem Tab öffnen
+; Open Frame in New Tab
 ;
 MSG_ContextMenuItemTagCopy
 kopieren
@@ -103,7 +115,7 @@ einfügen
 ; paste
 ;
 MSG_ContextMenuItemTagNoGuessesFound
-Nichts ähnliches gefunden
+Nichts Ähnliches gefunden
 ; No Guesses Found
 ;
 MSG_ContextMenuItemTagIgnoreSpelling
@@ -334,6 +346,10 @@ MSG_DownloadManager_ClearFinished
 Abgeschlossene löschen
 ; Clear finished
 ;
+MSG_DownloadManager_RequestDownloadedFileTitle
+Herunterladen als
+; Download as
+;
 MSG_SearchWindow_Title
 OWB Suchfenster
 ; OWB Search Window
@@ -481,6 +497,10 @@ Verwenden
 MSG_PreferencesManager_Cancel
 Abbrechen
 ; Cancel
+;
+MSG_PreferencesManager_RequestDownloadedFileNameLabel
+Nach Namen für heruntergeladene Dateien fragen
+; Ask me about downloaded file names
 ;
 MSG_Tabs
 Tabs
@@ -653,4 +673,36 @@ Lesezeichen-Verwalter
 MSG_MainMenu_DownloadManager
 Downloadmanager
 ; Download manager
+;
+MSG_MainMenu_Cut
+Ausschneiden
+; Cut
+;
+MSG_MainMenu_Copy
+Kopieren
+; Copy
+;
+MSG_MainMenu_Paste
+Einfügen
+; Paste
+;
+MSG_MainMenu_View
+Anzeige
+; View
+;
+MSG_MainMenu_ZoomIn
+Vergrößern
+; Zoom in
+;
+MSG_MainMenu_ZoomOut
+Verkleinern
+; Zoom out
+;
+MSG_MainMenu_ZoomReset
+Normale Größe
+; Reset zoom
+;
+MSG_MainMenu_ViewSource
+Quellkode anzeigen
+; View source
 ;
