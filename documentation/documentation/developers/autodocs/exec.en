@@ -30,19 +30,19 @@ exec
 `FreeTrap()`_                           `FreeVec()`_                            `GetCC()`_                              `GetMsg()`_                             
 `InitCode()`_                           `InitResident()`_                       `InitSemaphore()`_                      `InitStruct()`_                         
 `Insert()`_                             `MakeFunctions()`_                      `MakeLibrary()`_                        `NewAddTask()`_                         
-`NewAllocEntry()`_                      `ObtainQuickVector()`_                  `ObtainSemaphoreList()`_                `ObtainSemaphoreShared()`_              
-`OldOpenLibrary()`_                     `OpenDevice()`_                         `OpenLibrary()`_                        `OpenResource()`_                       
-`Permit()`_                             `Procure()`_                            `PutMsg()`_                             `RawDoFmt()`_                           
-`ReleaseSemaphore()`_                   `ReleaseSemaphoreList()`_               `RemDevice()`_                          `RemHead()`_                            
-`RemIntServer()`_                       `RemLibrary()`_                         `RemMemHandler()`_                      `Remove()`_                             
-`RemPort()`_                            `RemResource()`_                        `RemSemaphore()`_                       `RemTail()`_                            
-`RemTask()`_                            `ReplyMsg()`_                           `SendIO()`_                             `SetExcept()`_                          
-`SetFunction()`_                        `SetIntVector()`_                       `SetSignal()`_                          `SetSR()`_                              
-`SetTaskPri()`_                         `ShutdownA()`_                          `Signal()`_                             `StackSwap()`_                          
-`SumKickData()`_                        `SumLibrary()`_                         `SuperState()`_                         `Supervisor()`_                         
-`Switch()`_                             `TypeOfMem()`_                          `UserState()`_                          `Vacate()`_                             
-`VNewRawDoFmt()`_                       `Wait()`_                               `WaitIO()`_                             `WaitPort()`_                           
-
+`NewAllocEntry()`_                      `NewStackSwap()`_                       `ObtainQuickVector()`_                  `ObtainSemaphoreList()`_                
+`ObtainSemaphoreShared()`_              `OldOpenLibrary()`_                     `OpenDevice()`_                         `OpenLibrary()`_                        
+`OpenResource()`_                       `Permit()`_                             `Procure()`_                            `PutMsg()`_                             
+`RawDoFmt()`_                           `ReleaseSemaphore()`_                   `ReleaseSemaphoreList()`_               `RemDevice()`_                          
+`RemHead()`_                            `RemIntServer()`_                       `RemLibrary()`_                         `RemMemHandler()`_                      
+`Remove()`_                             `RemPort()`_                            `RemResource()`_                        `RemSemaphore()`_                       
+`RemTail()`_                            `RemTask()`_                            `ReplyMsg()`_                           `SendIO()`_                             
+`SetExcept()`_                          `SetFunction()`_                        `SetIntVector()`_                       `SetSignal()`_                          
+`SetSR()`_                              `SetTaskPri()`_                         `ShutdownA()`_                          `Signal()`_                             
+`StackSwap()`_                          `SumKickData()`_                        `SumLibrary()`_                         `SuperState()`_                         
+`Supervisor()`_                         `Switch()`_                             `TypeOfMem()`_                          `UserState()`_                          
+`Vacate()`_                             `VNewRawDoFmt()`_                       `Wait()`_                               `WaitIO()`_                             
+`WaitPort()`_                           
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -4111,6 +4111,59 @@ See also
 ~~~~~~~~
 
 `AllocEntry()`_ `FreeEntry()`_ 
+
+----------
+
+NewStackSwap()
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ IPTR NewStackSwap(
+          struct StackSwapStruct * sss,
+          LONG_FUNC entry,
+          struct StackSwapArgs * args );
+
+Function
+~~~~~~~~
+::
+
+     Calls a function with a new stack. 
+
+
+Inputs
+~~~~~~
+::
+
+     sss     -   A structure containing the values for the upper, lower
+                 and current bounds of the stack you wish to use.
+     entry   -   Address of the function to call.
+     args    -   A structure (actually an array) containing up to 8
+                 function arguments
+
+
+Result
+~~~~~~
+::
+
+     A value actually returned by your function. The function will be
+     running on a new stack.
+
+
+Bugs
+~~~~
+::
+
+     Do not attempt to pass in a prebuilt stack - it will be erased.
+
+
+
+See also
+~~~~~~~~
+
+`StackSwap()`_ 
 
 ----------
 

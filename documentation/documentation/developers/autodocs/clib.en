@@ -10373,6 +10373,13 @@ Result
      returned.
 
 
+Bugs
+~~~~
+::
+
+     NAN is not handled at the moment
+
+
 
 See also
 ~~~~~~~~

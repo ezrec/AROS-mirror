@@ -47,16 +47,16 @@ graphics
 `RemVSprite()`_                         `ScalerDiv()`_                          `ScrollRaster()`_                       `ScrollRasterBF()`_                     
 `ScrollRegion()`_                       `ScrollVPort()`_                        `SetABPenDrMd()`_                       `SetAPen()`_                            
 `SetBPen()`_                            `SetChipRev()`_                         `SetCollision()`_                       `SetDrMd()`_                            
-`SetFont()`_                            `SetFrontBitMap()`_                     `SetMaxPen()`_                          `SetOutlinePen()`_                      
-`SetRast()`_                            `SetRegion()`_                          `SetRGB32()`_                           `SetRGB32CM()`_                         
-`SetRGB4()`_                            `SetRGB4CM()`_                          `SetRGBConversionFunctionA()`_          `SetRPAttrsA()`_                        
-`SetSoftStyle()`_                       `SetWriteMask()`_                       `SortGList()`_                          `StripFont()`_                          
-`SwapRegions()`_                        `SyncSBitMap()`_                        `Text()`_                               `TextExtent()`_                         
-`TextFit()`_                            `TextLength()`_                         `UCopperListInit()`_                    `UnlockLayerRom()`_                     
-`VBeamPos()`_                           `VideoControl()`_                       `WaitBlit()`_                           `WaitBOVP()`_                           
-`WaitTOF()`_                            `WeighTAMatch()`_                       `WriteChunkyPixels()`_                  `WritePixel()`_                         
-`WritePixelArray8()`_                   `WritePixelLine8()`_                    `XorRectRegion()`_                      `XorRectRegionND()`_                    
-`XorRegionRegion()`_                    `XorRegionRegionND()`_                  
+`SetFont()`_                            `SetMaxPen()`_                          `SetOutlinePen()`_                      `SetRast()`_                            
+`SetRegion()`_                          `SetRGB32()`_                           `SetRGB32CM()`_                         `SetRGB4()`_                            
+`SetRGB4CM()`_                          `SetRGBConversionFunctionA()`_          `SetRPAttrsA()`_                        `SetSoftStyle()`_                       
+`SetWriteMask()`_                       `SortGList()`_                          `StripFont()`_                          `SwapRegions()`_                        
+`SyncSBitMap()`_                        `Text()`_                               `TextExtent()`_                         `TextFit()`_                            
+`TextLength()`_                         `UCopperListInit()`_                    `UnlockLayerRom()`_                     `VBeamPos()`_                           
+`VideoControl()`_                       `WaitBlit()`_                           `WaitBOVP()`_                           `WaitTOF()`_                            
+`WeighTAMatch()`_                       `WriteChunkyPixels()`_                  `WritePixel()`_                         `WritePixelArray8()`_                   
+`WritePixelLine8()`_                    `XorRectRegion()`_                      `XorRectRegionND()`_                    `XorRegionRegion()`_                    
+`XorRegionRegionND()`_                  
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -1802,13 +1802,6 @@ Result
 ::
 
      success - 0 if there was an error
-
-
-Notes
-~~~~~
-::
-
-     Not implemented.
 
 
 
@@ -3839,13 +3832,6 @@ Result
      Sprite_number - a sprite number or -1 for an error
 
 
-Notes
-~~~~~
-::
-
-     Not implemented.
-
-
 
 ----------
 
@@ -4612,7 +4598,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL InitRastPort(
+ void InitRastPort(
           struct RastPort * rp );
 
 Function
@@ -4633,8 +4619,11 @@ Result
 ~~~~~~
 ::
 
-     TRUE if the RastPort was successfully initialized and FALSE
-     otherwise.
+     all entries in RastPort get zeroed out, with the following exceptions:
+
+         Mask, FgPen, AOLPen, and LinePtrn are set to -1.
+         The DrawMode is set to JAM2
+         The font is set to the standard system font
 
 
 Notes
@@ -4642,9 +4631,6 @@ Notes
 ::
 
      You must call DeinitRastPort() before you free the structure.
-
-     AROS defines this function with a return value which you should
-     check.
 
 
 
@@ -6565,52 +6551,6 @@ Result
 ::
 
      None.
-
-
-
-----------
-
-SetFrontBitMap()
-================
-
-Synopsis
-~~~~~~~~
-::
-
- BOOL SetFrontBitMap(
-          struct BitMap * bitmap,
-          BOOL copyback );
-
-Function
-~~~~~~~~
-::
-
-     Sets the supplied screen as the frontmost, e.g. shows it in the display.
-
-
-Inputs
-~~~~~~
-::
-
-     bitmap - The bitmap to put in front. Must be a displayable bitmap.
-     copyback - Whether to copy back from the framebuffer into
-                the previously front bitmap. !!!! Only set this to TRUE 
-                this if you are 100% SURE that
-                the previously shown bitmap has not been disposed
-
-
-Result
-~~~~~~
-::
-
-     success - TRUE if successful, FALSE otherwise.
-
-
-Notes
-~~~~~
-::
-
-     This function is private and AROS specific.
 
 
 
