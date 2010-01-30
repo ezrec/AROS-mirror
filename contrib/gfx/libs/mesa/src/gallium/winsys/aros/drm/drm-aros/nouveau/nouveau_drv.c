@@ -24,6 +24,7 @@ static struct drm_driver driver =
     .PciIDs = nouveau_pciids,
     .pciDevice = NULL,
     .IsAGP = FALSE,
+    .IsPCIE = FALSE,
     .dev = NULL,
     .driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_USE_AGP,
     .load = nouveau_load,

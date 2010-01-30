@@ -199,6 +199,7 @@ struct drm_driver
     struct drm_pciid    *PciIDs;
     OOP_Object          *pciDevice;
     BOOL                IsAGP;
+    BOOL                IsPCIE;
     
     /* DRM device */
     struct drm_device   *dev;
@@ -343,9 +344,7 @@ static __inline__ int drm_device_is_agp(struct drm_device *dev)
 
 static __inline__ int drm_device_is_pcie(struct drm_device *dev)
 {
-    /* FIXME: Implement */
-    DRM_IMPL("\n");
-    return 0;
+    return dev->driver->IsPCIE;
 }
 
 static __inline__ void *drm_calloc_large(size_t nmemb, size_t size)

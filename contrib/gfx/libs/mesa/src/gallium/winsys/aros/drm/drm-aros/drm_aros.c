@@ -12,6 +12,9 @@
 #include <hidd/pci.h>
 #include <hidd/hidd.h>
 
+/* FIXME: Temp - remove after agp.hidd implemented */
+#include "aros_agp_hack.h"
+
 OOP_AttrBase __IHidd_PCIDev = 0;
 struct Library * OOPBase    = NULL;
 OOP_Object * pciDriver      = NULL;
@@ -63,6 +66,10 @@ AROS_UFH3(void, Enumerator,
             
             OOP_GetAttr(pciDevice, aHidd_PCIDevice_Driver, (APTR)&driver);
             pciDriver = driver;
+
+            /* FIXME: Change into pci.hidd calls when implemented */
+            drv->IsAGP = aros_agp_hack_device_is_agp(pciDevice);
+            drv->IsPCIE = aros_agp_hack_device_is_pcie(pciDevice);
 
             DRM_DEBUG("Acquired pcidriver\n");
             
@@ -124,7 +131,8 @@ LONG drm_aros_pci_find_supported_video_card(struct drm_driver *drv)
 {
     drv->pciDevice = NULL;
     drv->ProductID = 0x0;
-    drv->IsAGP = FALSE; /* FIXME: Implement AGP detection */
+    drv->IsAGP = FALSE;
+    drv->IsPCIE = FALSE;
     pciBus = NULL;
     pciDriver = NULL;
     OOPBase = NULL;
@@ -134,12 +142,25 @@ LONG drm_aros_pci_find_supported_video_card(struct drm_driver *drv)
     /* If objects are set, detection was succesful */
     if (pciBus && drv->pciDevice && pciDriver)
     {
-        DRM_INFO("Detected card: 0x%x/0x%x\n", drv->VendorID, drv->ProductID);
+        DRM_INFO("Detected card: 0x%x/0x%x - %s%s%s\n", 
+            drv->VendorID, drv->ProductID,
+            (!drv->IsAGP) && (!drv->IsPCIE) ? "PCI" : "",
+            drv->IsAGP ? "AGP" : "",
+            drv->IsPCIE ? "PCIe" : "");
+        /* FIXME: Temp - remove */
+        printf("Detected card: 0x%x/0x%x - %s%s%s\n", 
+            drv->VendorID, drv->ProductID,
+            (!drv->IsAGP) && (!drv->IsPCIE) ? "PCI" : "",
+            drv->IsAGP ? "AGP" : "",
+            drv->IsPCIE ? "PCIe" : "");
+
         return 0;
     }
     else
     {
         DRM_INFO("Failed detecting card for VendorID: 0x%x\n", drv->VendorID);
+        /* FIXME: Temp - remove */
+        printf("Failed detecting card for VendorID: 0x%x\n", drv->VendorID);
         drm_aros_pci_shutdown(drv);
         return -1;
     }

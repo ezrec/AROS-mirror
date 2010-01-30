@@ -455,42 +455,70 @@ int pci_write_config_dword(void *dev, int where, u32 val)
     return 0;
 }
 
-
-
-
-
-
-
-
-
 /* AGP handling */
+struct agp_bridge_data * global_agp_bridge = NULL;
+
 struct agp_bridge_data *agp_backend_acquire(void * dev)
 {
-#if !defined(HOSTED_BUILD)
-    IMPLEMENT("\n");
-    return NULL;
-#else
-    struct agp_bridge_data * bridge = AllocVec(sizeof(struct agp_bridge_data), 
-                                        MEMF_PUBLIC | MEMF_CLEAR);
-    return bridge;
-#endif
+    /* TODO:
+       if no bridge return NULL
+       if already acquired return NULL, else acquire
+     */
+    return agp_find_bridge(dev);
 }
 
 void agp_backend_release(struct agp_bridge_data * bridge)
 {
-    IMPLEMENT("\n");
+    /* TODO: release acquired lock */
 }
+
+void agp_free_memory(struct agp_memory * mem)
+{
+    FreeVec(mem->pages);
+    FreeVec(mem);
+}
+
+struct agp_memory *agp_allocate_memory(struct agp_bridge_data * bridge, 
+    size_t num_pages , u32 type)
+{
+    if ((type != AGP_USER_MEMORY) && (type != AGP_USER_CACHED_MEMORY))
+    {
+        IMPLEMENT("Unsupported memory type: %d\n", type);
+        return NULL;
+    }
+    
+    struct agp_memory * mem = AllocVec(sizeof(struct agp_memory), MEMF_PUBLIC | MEMF_CLEAR);
+    mem->pages = AllocVec(sizeof(struct page *) * num_pages, MEMF_PUBLIC | MEMF_CLEAR);
+    mem->page_count = 0; /* Not a typo */
+    mem->type = type;
+    mem->is_flushed = FALSE;
+    mem->is_bound = FALSE;
+    return mem;
+}
+
+/* FIXME: Temp until agp.hidd implemented */
+#include "aros_agp_hack.h"
 
 struct agp_bridge_data * agp_find_bridge(void * dev)
 {
+    OOP_Object * pciBridgeDevice = NULL;
+    
+    if (global_agp_bridge)
+        return global_agp_bridge;
+
 #if !defined(HOSTED_BUILD)
-    IMPLEMENT("\n");
-    return NULL;
+    pciBridgeDevice = aros_agp_hack_find_agp_bridge();
+    
+    if (pciBridgeDevice)
+    {
+        global_agp_bridge = AllocVec(sizeof(struct agp_bridge_data), 
+                                            MEMF_PUBLIC | MEMF_CLEAR);
+    }
 #else
-    struct agp_bridge_data * bridge = AllocVec(sizeof(struct agp_bridge_data), 
+    global_agp_bridge = AllocVec(sizeof(struct agp_bridge_data), 
                                         MEMF_PUBLIC | MEMF_CLEAR);
-    return bridge;
 #endif
+    return global_agp_bridge;
 }
 
 int agp_copy_info(struct agp_bridge_data * bridge, struct agp_kern_info * info)
@@ -509,17 +537,6 @@ int agp_copy_info(struct agp_bridge_data * bridge, struct agp_kern_info * info)
 void agp_enable(struct agp_bridge_data * bridge, u32 mode)
 {
     IMPLEMENT("\n");
-}
-
-struct agp_memory *agp_allocate_memory(struct agp_bridge_data * bridge, 
-    size_t num_pages , u32 type)
-{
-    struct agp_memory * mem = AllocVec(sizeof(struct agp_memory), MEMF_PUBLIC | MEMF_CLEAR);
-    mem->pages = AllocVec(sizeof(struct page *) * num_pages, MEMF_PUBLIC | MEMF_CLEAR);
-    mem->type = type;
-    mem->is_flushed = FALSE;
-    mem->is_bound = FALSE;
-    return mem;
 }
 
 int agp_bind_memory(struct agp_memory * mem, off_t offset)
@@ -544,8 +561,4 @@ int agp_unbind_memory(struct agp_memory * mem)
 #endif
 }
 
-void agp_free_memory(struct agp_memory * mem)
-{
-    FreeVec(mem->pages);
-    FreeVec(mem);
-}
+
