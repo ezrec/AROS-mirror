@@ -69,8 +69,12 @@ struct work_struct;
 /* AGP support */
 struct agp_bridge_data
 {
-    int dummy;
+    IPTR pciDevice;
+    ULONG mode;
+    IPTR aperturebase;
+    ULONG aperturesize;
 };
+
 #define NOT_SUPPORTED           0
 #define SUPPORTED               1
 struct agp_kern_info

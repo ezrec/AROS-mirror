@@ -489,49 +489,58 @@ struct agp_memory *agp_allocate_memory(struct agp_bridge_data * bridge,
     
     struct agp_memory * mem = AllocVec(sizeof(struct agp_memory), MEMF_PUBLIC | MEMF_CLEAR);
     mem->pages = AllocVec(sizeof(struct page *) * num_pages, MEMF_PUBLIC | MEMF_CLEAR);
-    mem->page_count = 0; /* Not a typo */
+    mem->page_count = 0; /* Not a typo, will be filled later */
     mem->type = type;
     mem->is_flushed = FALSE;
     mem->is_bound = FALSE;
     return mem;
 }
 
+int agp_copy_info(struct agp_bridge_data * bridge, struct agp_kern_info * info)
+{
+    info->chipset = SUPPORTED;
+    info->cant_use_aperture = 0;
+    info->page_mask = ~0UL;
+    if (bridge->mode & (1<<3))
+        info->mode = bridge->mode & 0x00ff00c4; /* AGP3_RESERVED_MASK */
+    else
+        info->mode = bridge->mode & 0x00fffcc8; /* AGP2_RESERVED_MASK */
+
+    info->aper_base = (unsigned long)bridge->aperturebase;
+    info->aper_size = (unsigned long)bridge->aperturesize;    
+    
+    return 0;
+}
+
+
 /* FIXME: Temp until agp.hidd implemented */
 #include "aros_agp_hack.h"
 
 struct agp_bridge_data * agp_find_bridge(void * dev)
 {
-    OOP_Object * pciBridgeDevice = NULL;
-    
     if (global_agp_bridge)
         return global_agp_bridge;
 
 #if !defined(HOSTED_BUILD)
-    pciBridgeDevice = aros_agp_hack_find_agp_bridge();
-    
-    if (pciBridgeDevice)
+    if (aros_agp_hack_is_agp_bridge_present())
     {
         global_agp_bridge = AllocVec(sizeof(struct agp_bridge_data), 
                                             MEMF_PUBLIC | MEMF_CLEAR);
+        global_agp_bridge->pciDevice = (IPTR)aros_agp_hack_get_agp_bridge();
+        global_agp_bridge->mode = aros_agp_hack_get_bridge_mode();
+        global_agp_bridge->aperturebase = aros_agp_hack_get_bridge_aperture_base();
+        global_agp_bridge->aperturesize = aros_agp_hack_get_bridge_aperture_size();
     }
 #else
     global_agp_bridge = AllocVec(sizeof(struct agp_bridge_data), 
                                         MEMF_PUBLIC | MEMF_CLEAR);
+    global_agp_bridge->pciDevice = NULL;
+    global_agp_bridge->mode = 0x1f004e1b;
+    global_agp_bridge->aperturebase = 0xd8000000;
+    global_apg_bridge->aperturesize = 64;
 #endif
-    return global_agp_bridge;
-}
 
-int agp_copy_info(struct agp_bridge_data * bridge, struct agp_kern_info * info)
-{
-#if !defined(HOSTED_BUILD)
-    IMPLEMENT("\n");
-#else
-    info->chipset = SUPPORTED;
-    info->cant_use_aperture = 0;
-    info->aper_base = 0xb0000000; /* FIXME: Probably makes no sense */
-    info->aper_size = 64;
-#endif
-    return 1;
+    return global_agp_bridge;
 }
 
 void agp_enable(struct agp_bridge_data * bridge, u32 mode)
@@ -543,22 +552,17 @@ int agp_bind_memory(struct agp_memory * mem, off_t offset)
 {
 #if !defined(HOSTED_BUILD)
     IMPLEMENT("\n");
-    return -1;
-#else
+#endif
     mem->is_bound = TRUE;
     return 0;
-#endif
 }
 
 int agp_unbind_memory(struct agp_memory * mem)
 {
 #if !defined(HOSTED_BUILD)
     IMPLEMENT("\n");
-    return -1;
-#else
+#endif
     mem->is_bound = FALSE;
     return 0;
-#endif
 }
-
 
