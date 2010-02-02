@@ -4,8 +4,7 @@ include $(TOP)/config/make.cfg
 
 FILES :=    debugging     \
 		   networking_helpers     \
-		   thread_helpers     \
-		   errors
+		   thread_helpers
  
 #MM contrib-networking-caf : libcaf-includes-copy
 
