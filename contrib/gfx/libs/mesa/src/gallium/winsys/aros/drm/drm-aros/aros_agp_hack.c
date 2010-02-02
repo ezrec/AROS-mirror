@@ -8,7 +8,6 @@
 #include <aros/symbolsets.h>
 
 OOP_AttrBase __IHidd_PCIDev_AGP = 0;
-OOP_AttrBase __IHidd_PCIDrv_AGP = 0;
 struct Library * OOPBase_AGP = NULL;
 OOP_Object * pciBus_AGP = NULL;
 
@@ -41,26 +40,15 @@ static UWORD readconfigword(OOP_Object * pciDevice, UBYTE where)
 
 static ULONG readconfiglong(OOP_Object * pciDevice, UBYTE where)
 {
-    /* Has to be done using driver because of bug in PciDevice ReadConfigLong
-       method (return type was UBYTE instead of ULONG */
+    /* Has to be done like this because of bug in PciDevice ReadConfigLong
+       method (return type was UBYTE instead of ULONG) */
 
-    OOP_Object * driver;
-    UBYTE bus, dev, sub;
-    struct pHidd_PCIDriver_ReadConfigLong rclmsg;
-    struct pHidd_PCIDriver_ReadConfigLong * msg = &rclmsg;
+    ULONG result = 0;
     
-    OOP_GetAttr(pciDevice, aHidd_PCIDevice_Driver, (APTR)&driver);
-    OOP_GetAttr(pciDevice, aHidd_PCIDevice_Bus, (APTR)&bus);
-    OOP_GetAttr(pciDevice, aHidd_PCIDevice_Dev, (APTR)&dev);
-    OOP_GetAttr(pciDevice, aHidd_PCIDevice_Sub, (APTR)&sub);
-    
-    rclmsg.mID = OOP_GetMethodID(IID_Hidd_PCIDriver, moHidd_PCIDriver_ReadConfigLong);
-    rclmsg.bus = bus;
-    rclmsg.dev = dev;
-    rclmsg.sub = sub;
-    rclmsg.reg = where;
-    
-    return (ULONG)OOP_DoMethod(driver, (OOP_Msg)msg);
+    result = readconfigword(pciDevice, where + 2);
+    result <<= 16;
+    result |= readconfigword(pciDevice, where);
+    return result;
 }
 
 static void writeconfiglong(OOP_Object * pciDevice, UBYTE where, ULONG val)
@@ -121,6 +109,10 @@ ULONG * gatt_table = NULL;
 ULONG aperture_size = 0;
 BOOL bridge_present = FALSE;
 APTR scratch_memory = NULL;
+BOOL isagp3 = FALSE;
+UBYTE capptr = 0;
+UBYTE vgacapptr = 0;
+OOP_Object * vga_card = NULL;
 
 #define LOG_MSG(x, ...)         \
     bug(x, ##__VA_ARGS__);      \
@@ -150,6 +142,271 @@ IPTR aros_agp_hack_get_bridge_aperture_base()
 ULONG aros_agp_hack_get_bridge_aperture_size()
 {
     return aperture_size;
+}
+
+#define writel(val, addr)               (*(volatile ULONG*)(addr) = (val))
+#define readl(addr)                     (*(volatile ULONG*)(addr))
+#define min(a,b)                        ((a) < (b) ? (a) : (b))
+#define max(a,b)                        ((a) > (b) ? (a) : (b))
+
+#define AGP_STATUS_REG                  0x04
+#define AGP_STATUS_REG_AGP_3_0          (1<<3)
+#define AGP_STATUS_REG_FAST_WRITES      (1<<4)
+#define AGP_STATUS_REG_AGP_ENABLED      (1<<8)
+#define AGP_STATUS_REG_SBA              (1<<9)
+#define AGP_STATUS_REG_CAL_MASK         (1<<12|1<<11|1<<10)
+#define AGP_STATUS_REG_ARQSZ_MASK       (1<<15|1<<14|1<<13)
+#define AGP_STATUS_REG_RQ_DEPTH_MASK    0xff000000
+#define AGP_STATUS_REG_AGP3_X4          (1<<0)
+#define AGP_STATUS_REG_AGP3_X8          (1<<1)
+#define AGP_COMMAND_REG                 0x08
+#define AGP_CTRL_REG                    0x10
+#define AGP_CTRL_REG_GTBLEN             (1<<7)
+
+
+AROS_UFH3(void, AGPDevicesEnumerator,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(OOP_Object *, pciDevice, A2),
+    AROS_UFHA(APTR, message, A1))
+{
+    AROS_USERFUNC_INIT
+
+    IPTR ProductID;
+    IPTR VendorID;
+    UBYTE agpcapptr = aros_agp_hack_get_capabilities_ptr(pciDevice, CAPABILITY_AGP);
+
+    OOP_GetAttr(pciDevice, aHidd_PCIDevice_ProductID, &ProductID);
+    OOP_GetAttr(pciDevice, aHidd_PCIDevice_VendorID, &VendorID);
+
+    if (agpcapptr)
+    {
+        ULONG status = *((ULONG*)hook->h_Data);
+        ULONG mode = status;
+        
+        mode &= 0x7;
+        if (isagp3)
+            mode *= 4;
+        
+        LOG_MSG("Set AGP%d device 0x%x/0x%x to speed %dx\n", 
+            isagp3 ? 3 : 2, (ULONG)VendorID, (ULONG)ProductID, mode);
+        
+        writeconfiglong(pciDevice, agpcapptr + AGP_COMMAND_REG, status);
+    } 
+
+    AROS_USERFUNC_EXIT
+}
+
+static void aros_agp_hack_send_command(ULONG status)
+{
+    struct Hook FindHook = {
+    h_Entry:    (IPTR (*)())AGPDevicesEnumerator,
+    h_Data:     &status,
+    };
+
+    struct TagItem Requirements[] = {
+    { TAG_DONE,             0UL }
+    };
+
+    struct pHidd_PCI_EnumDevices enummsg = {
+    mID:        OOP_GetMethodID(IID_Hidd_PCI, moHidd_PCI_EnumDevices),
+    callback:   &FindHook,
+    requirements:   (struct TagItem*)&Requirements,
+    }, *msg = &enummsg;
+
+    OOP_DoMethod(pciBus_AGP, (OOP_Msg)msg);
+}
+
+AROS_UFH3(void, AGPVideoCardsEnumerator,
+    AROS_UFHA(struct Hook *, hook, A0),
+    AROS_UFHA(OOP_Object *, pciDevice, A2),
+    AROS_UFHA(APTR, message, A1))
+{
+    AROS_USERFUNC_INIT
+
+    IPTR ProductID;
+    IPTR VendorID;
+
+    if (vgacapptr != 0)
+        return;
+
+    vgacapptr = aros_agp_hack_get_capabilities_ptr(pciDevice, CAPABILITY_AGP);
+    if (vgacapptr != 0)
+    {
+        OOP_GetAttr(pciDevice, aHidd_PCIDevice_ProductID, &ProductID);
+        OOP_GetAttr(pciDevice, aHidd_PCIDevice_VendorID, &VendorID);
+
+        vga_card = pciDevice;
+        
+        LOG_MSG("    Found AGP VGA 0x%x/0x%x\n", (ULONG)VendorID, (ULONG)ProductID);
+    }
+
+    AROS_USERFUNC_EXIT
+}
+
+static ULONG aros_agp_hack_calibrate(ULONG requestedmode, ULONG bridgemode, ULONG vgamode)
+{
+    ULONG calibratedmode = bridgemode;
+    ULONG temp = 0;
+    
+    /* TODO: Apply reserved mask to requestedmode */
+    
+    /* Select a speed for requested mode */
+    temp = requestedmode & 0x07;
+    requestedmode &= ~0x07; /* Clear any speed */
+    if (temp & AGP_STATUS_REG_AGP3_X8)
+        requestedmode |= AGP_STATUS_REG_AGP3_X8;
+    else
+        requestedmode |= AGP_STATUS_REG_AGP3_X4;
+    
+    /* Set ARQSZ as max value. Ignore requestedmode */
+    calibratedmode = ((calibratedmode & ~AGP_STATUS_REG_ARQSZ_MASK) |
+        max(calibratedmode & AGP_STATUS_REG_ARQSZ_MASK, vgamode & AGP_STATUS_REG_ARQSZ_MASK));
+    
+    /* Set calibration cycle. Ignore requestedmode */
+    calibratedmode = ((calibratedmode & ~AGP_STATUS_REG_CAL_MASK) |
+        min(calibratedmode & AGP_STATUS_REG_CAL_MASK, vgamode & AGP_STATUS_REG_CAL_MASK));
+    
+    /* Set SBA for AGP3 (always) */
+    calibratedmode |= AGP_STATUS_REG_SBA;
+    
+    /* Select speed based on request and capabilities of bridge and vgacard */
+    calibratedmode &= ~0x07; /* Clear any mode */
+    if ((requestedmode & AGP_STATUS_REG_AGP3_X8) &&
+        (bridgemode & AGP_STATUS_REG_AGP3_X8) &&
+        (vgamode & AGP_STATUS_REG_AGP3_X8))
+        calibratedmode |= AGP_STATUS_REG_AGP3_X8;
+    else
+        calibratedmode |= AGP_STATUS_REG_AGP3_X4;
+
+    return calibratedmode;
+}
+static ULONG aros_agp_hack_select_best_mode(ULONG requestedmode, ULONG bridgemode)
+{
+    struct Hook FindHook = {
+    h_Entry:    (IPTR (*)())AGPVideoCardsEnumerator,
+    h_Data:     NULL,
+    };
+
+    struct TagItem Requirements[] = {
+    { tHidd_PCI_Class,      0x03 },
+    { TAG_DONE,             0UL }
+    };
+
+    struct pHidd_PCI_EnumDevices enummsg = {
+    mID:        OOP_GetMethodID(IID_Hidd_PCI, moHidd_PCI_EnumDevices),
+    callback:   &FindHook,
+    requirements:   (struct TagItem*)&Requirements,
+    }, *msg = &enummsg;
+    
+    ULONG vgamode = 0;
+
+    OOP_DoMethod(pciBus_AGP, (OOP_Msg)msg);
+    
+    /* Get VGA card capability */
+    vgamode = readconfiglong(vga_card, vgacapptr + AGP_STATUS_REG);
+    
+    LOG_MSG("    VGA mode 0x%x\n", vgamode);
+    
+    /* Set Request Queue */
+    bridgemode = ((bridgemode & ~AGP_STATUS_REG_RQ_DEPTH_MASK) |
+        min(requestedmode & AGP_STATUS_REG_RQ_DEPTH_MASK,
+        min(bridgemode & AGP_STATUS_REG_RQ_DEPTH_MASK, vgamode & AGP_STATUS_REG_RQ_DEPTH_MASK)));
+    
+    /* Fast Writes */
+    if (!(
+        (bridgemode & AGP_STATUS_REG_FAST_WRITES) &&
+        (requestedmode & AGP_STATUS_REG_FAST_WRITES) &&
+        (vgamode & AGP_STATUS_REG_FAST_WRITES)))
+    {
+        bridgemode &= ~AGP_STATUS_REG_FAST_WRITES;
+    }
+        
+    if (bridgemode & AGP_STATUS_REG_AGP_3_0)
+    {
+        bridgemode = aros_agp_hack_calibrate(requestedmode, bridgemode, vgamode);
+    }
+    else
+    {
+        LOG_MSG("Select best mode: AGP2 mode not supported\n");
+    }
+    
+    return bridgemode;
+}
+
+static void aros_agp_hack_enable_agp_generic(ULONG requestedmode)
+{
+    ULONG bridgemode = 0;
+    
+    LOG_MSG("Enable AGP:\n");
+    LOG_MSG("    Requested mode 0x%x\n", requestedmode);
+    
+    bridgemode = readconfiglong(agp_bridge, capptr + AGP_STATUS_REG);
+    LOG_MSG("    Bridge mode 0x%x\n", requestedmode);
+    
+    bridgemode = aros_agp_hack_select_best_mode(requestedmode, bridgemode);
+    
+    bridgemode |= AGP_STATUS_REG_AGP_ENABLED;
+    
+    LOG_MSG("Mode to write: 0x%x\n", bridgemode);
+    
+    if (isagp3)
+    {
+        /* TODO: agp_3_5_enable */
+        aros_agp_hack_send_command(bridgemode);
+        
+        /* TODO: Handling of situation when version is 3 but bridge is not in mode 3 */
+    }
+    else
+    {
+        LOG_MSG("Enable AGP: AGP2 mode not supported\n");
+    }
+}
+
+VOID aros_agp_hack_enable_agp(ULONG mode)
+{
+    aros_agp_hack_enable_agp_generic(mode);
+}
+
+static void aros_agp_hack_tblflush_generic_agp3()
+{
+    ULONG ctrlreg;
+    ctrlreg = readconfiglong(agp_bridge, capptr + AGP_CTRL_REG);
+    writeconfiglong(agp_bridge, capptr + AGP_CTRL_REG, ctrlreg & ~AGP_CTRL_REG_GTBLEN);
+    writeconfiglong(agp_bridge, capptr + AGP_CTRL_REG, ctrlreg);    
+}
+static void aros_agp_hack_bind_memory_generic(IPTR address, ULONG size, ULONG offset)
+{
+    LONG i;
+    
+    /* TODO: check if offset + size / 4096 ends before gatt_table end */
+    
+    /* TODO: get mask type */
+    
+    /* TODO: flush memory */
+    
+    /* Insert entries into GATT table */
+    for(i = 0; i < size / 4096; i++)
+    {
+        /* TODO: mask memory */
+        writel(address + (4096 * i), gatt_table + offset + i);
+    }
+    
+    readl(gatt_table + offset + i - 1); /* PCI posting */
+    
+    /* Flush GATT table */
+    if (isagp3)
+    {
+        aros_agp_hack_tblflush_generic_agp3();
+    }
+    else
+    {
+        LOG_MSG("Bind Memory: AGP2 mode not supported\n");
+    }
+}
+
+VOID aros_agp_hack_bind_memory(IPTR address, ULONG size, ULONG offset)
+{
+    aros_agp_hack_bind_memory_generic(address, size, offset);
 }
 
 /* Init code */
@@ -238,11 +495,10 @@ static void aros_agp_hack_list_all_bridges()
     }   
 }
 
-#define writel(val, addr)               (*(volatile ULONG*)(addr) = (val))
-#define readl(addr)                     (*(volatile ULONG*)(addr))
+
 #define ALIGN(val, align)               (val + align - 1) & (~(align - 1))
 
-static void aros_agp_hack_create_gatt_table()
+static void aros_agp_hack_create_gatt_table_generic()
 {
     /* Create a table that will hold a certain number of 32bit pointers */
     ULONG entries = aperture_size * 1024 * 1024 / 4096;
@@ -268,11 +524,11 @@ static void aros_agp_hack_create_gatt_table()
 
 static void aros_agp_hack_init_sis()
 {
-    UBYTE capptr = aros_agp_hack_get_capabilities_ptr(agp_bridge, CAPABILITY_AGP);
     BOOL agp3 = FALSE;
     UBYTE agp_speed = 1;
     ULONG major, minor = 0;
-    BOOL isagp3 = FALSE;
+    capptr = aros_agp_hack_get_capabilities_ptr(agp_bridge, CAPABILITY_AGP);
+    
     
     /* Getting version info */ 
     major = (readconfigbyte(agp_bridge, capptr + 2 /* PCI_AGP_VERSION */) >> 4) & 0xf;
@@ -282,7 +538,7 @@ static void aros_agp_hack_init_sis()
     isagp3 = (major == 3 && minor >= 5);
         
     /* Getting mode */
-    mode = readconfiglong(agp_bridge, capptr + 0x04 /* PCI_AGP_STATUS */);
+    mode = readconfiglong(agp_bridge, capptr + AGP_STATUS_REG);
     
     agp3 = mode & (1 << 3); /* MODE AGP3 */
     
@@ -333,7 +589,7 @@ static void aros_agp_hack_init_sis()
         LOG_MSG("Calculated aperture size: %d MB\n", aperture_size);
 
         /* Creation of GATT table */
-        aros_agp_hack_create_gatt_table();
+        aros_agp_hack_create_gatt_table_generic();
         
         /* TODO: Setting GART size (is it needed at all?) */
         
@@ -343,9 +599,9 @@ static void aros_agp_hack_init_sis()
         LOG_MSG("Set GATT pointer to 0x%x\n", (ULONG)gatt_base);
         
         /* Enabled GART and GATT */
-        ctrlreg = readconfiglong(agp_bridge, capptr + 0x10 /* AGPCTRL */);
-        writeconfiglong(agp_bridge, capptr + 0x10 /* AGPCTRL */,
-            ctrlreg | (1<<8) /* AGPCTRL_APERENB */ | (1<<7) /* AGPCTRL_GTLBEN */);
+        ctrlreg = readconfiglong(agp_bridge, capptr + AGP_CTRL_REG);
+        writeconfiglong(agp_bridge, capptr + AGP_CTRL_REG,
+            ctrlreg | (1<<8) /* AGPCTRL_APERENB */ | AGP_CTRL_REG_GTBLEN);
         
         LOG_MSG("Enabled GART and GATT\n");
         
@@ -353,7 +609,7 @@ static void aros_agp_hack_init_sis()
     }
     else
     {
-        LOG_MSG("AGP2 mode not supported\n");
+        LOG_MSG("SiS Init: AGP2 mode not supported\n");
     }
 }
 
@@ -364,7 +620,6 @@ static int aros_agp_hack_init_agp(void)
         if ((OOPBase_AGP=OpenLibrary("oop.library", 0)) != NULL)
         {
             __IHidd_PCIDev_AGP = OOP_ObtainAttrBase(IID_Hidd_PCIDevice);
-            __IHidd_PCIDrv_AGP = OOP_ObtainAttrBase(IID_Hidd_PCIDriver);
             pciBus_AGP = OOP_NewObject(NULL, CLID_Hidd_PCI, NULL);
         }
         else
@@ -401,12 +656,6 @@ static int aros_agp_hack_deinit_agp()
     {
         OOP_ReleaseAttrBase(IID_Hidd_PCIDevice);
         __IHidd_PCIDev_AGP = 0;
-    }
-    
-    if (__IHidd_PCIDrv_AGP != 0)
-    {
-        OOP_ReleaseAttrBase(IID_Hidd_PCIDriver);
-        __IHidd_PCIDrv_AGP = 0;
     }
     
     if (OOPBase_AGP)

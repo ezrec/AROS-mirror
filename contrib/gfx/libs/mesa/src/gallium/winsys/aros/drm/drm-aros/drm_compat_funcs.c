@@ -501,10 +501,10 @@ int agp_copy_info(struct agp_bridge_data * bridge, struct agp_kern_info * info)
     info->chipset = SUPPORTED;
     info->cant_use_aperture = 0;
     info->page_mask = ~0UL;
-    if (bridge->mode & (1<<3))
-        info->mode = bridge->mode & 0x00ff00c4; /* AGP3_RESERVED_MASK */
+    if (bridge->mode & (1<<3) /* AGPSTAT_MODE_3_0 */)
+        info->mode = bridge->mode & ~(0x00ff00c4); /* AGP3_RESERVED_MASK */
     else
-        info->mode = bridge->mode & 0x00fffcc8; /* AGP2_RESERVED_MASK */
+        info->mode = bridge->mode & ~(0x00fffcc8); /* AGP2_RESERVED_MASK */
 
     info->aper_base = (unsigned long)bridge->aperturebase;
     info->aper_size = (unsigned long)bridge->aperturesize;    
@@ -534,10 +534,10 @@ struct agp_bridge_data * agp_find_bridge(void * dev)
 #else
     global_agp_bridge = AllocVec(sizeof(struct agp_bridge_data), 
                                         MEMF_PUBLIC | MEMF_CLEAR);
-    global_agp_bridge->pciDevice = NULL;
+    global_agp_bridge->pciDevice = (IPTR)NULL;
     global_agp_bridge->mode = 0x1f004e1b;
     global_agp_bridge->aperturebase = 0xd8000000;
-    global_apg_bridge->aperturesize = 64;
+    global_agp_bridge->aperturesize = 64;
 #endif
 
     return global_agp_bridge;
@@ -545,13 +545,25 @@ struct agp_bridge_data * agp_find_bridge(void * dev)
 
 void agp_enable(struct agp_bridge_data * bridge, u32 mode)
 {
-    IMPLEMENT("\n");
+#if !defined(HOSTED_BUILD)
+    aros_agp_hack_enable_agp(mode);
+#endif
 }
 
 int agp_bind_memory(struct agp_memory * mem, off_t offset)
 {
 #if !defined(HOSTED_BUILD)
-    IMPLEMENT("\n");
+    if (!mem->is_flushed)
+    {
+        /* TODO: Flush memory */
+        mem->is_flushed = TRUE;
+    }
+    
+    /* TODO: agp_map_memory */
+    /* TODO: Move flush/map into bind call on the side of agp.hidd */
+    
+    aros_agp_hack_bind_memory((IPTR)(mem->pages[0]->address), 
+        mem->page_count * PAGE_SIZE, offset);
 #endif
     mem->is_bound = TRUE;
     return 0;

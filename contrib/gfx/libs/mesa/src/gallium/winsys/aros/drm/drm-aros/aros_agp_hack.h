@@ -8,3 +8,5 @@ BOOL aros_agp_hack_is_agp_bridge_present();
 ULONG aros_agp_hack_get_bridge_mode();
 IPTR aros_agp_hack_get_bridge_aperture_base();
 ULONG aros_agp_hack_get_bridge_aperture_size();
+VOID aros_agp_hack_bind_memory(IPTR address, ULONG size, ULONG offset);
+VOID aros_agp_hack_enable_agp(ULONG mode);
