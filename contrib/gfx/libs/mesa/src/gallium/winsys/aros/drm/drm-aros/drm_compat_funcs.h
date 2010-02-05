@@ -30,8 +30,6 @@
 #define roundup(x, y)                   ((((x) + ((y) - 1)) / (y)) * (y))
 #define lower_32_bits(n)                ((u32)(n))
 #define upper_32_bits(n)                ((u32)(((n) >> 16) >> 16))
-#define memcpy_toio(dest, src, count)   memcpy(dest, src, count)
-#define memcpy_fromio(dest, src, count) memcpy(dest, src, count)
 #define mutex_lock(x)                   ObtainSemaphore(x.semaphore)
 #define mutex_unlock(x)                 ReleaseSemaphore(x.semaphore)
 #define mutex_init(x)                   InitSemaphore(x.semaphore);
@@ -65,6 +63,26 @@ static inline ULONG copy_to_user(APTR to, APTR from, IPTR size)
 {
     memcpy(to, from, size);
     return 0;
+}
+
+static inline VOID memcpy_toio(APTR dst, APTR src, ULONG size)
+{
+    /* TODO: optimize by using writel */
+    UBYTE * srcp = (UBYTE*)src;
+    ULONG i = 0;
+    
+    for (i = 0; i < size; i++)
+        writeb(*(srcp + i), dst + i);
+}
+
+static inline VOID memcpy_fromio(APTR dst, APTR src, ULONG size)
+{
+    /* TODO: optimize by using readl */
+    UBYTE * dstp = (UBYTE*)dst;
+    ULONG i = 0;
+    
+    for (i = 0; i < size; i++)
+        *(dstp + i) = readb(src + i);
 }
 
 static inline void clflush(volatile void * ptr)

@@ -493,6 +493,7 @@ struct agp_memory *agp_allocate_memory(struct agp_bridge_data * bridge,
     mem->type = type;
     mem->is_flushed = FALSE;
     mem->is_bound = FALSE;
+    mem->pg_start = 0;
     return mem;
 }
 
@@ -552,6 +553,8 @@ void agp_enable(struct agp_bridge_data * bridge, u32 mode)
 
 int agp_bind_memory(struct agp_memory * mem, off_t offset)
 {
+    if (!mem || mem->is_bound)
+        return -EINVAL;
 #if !defined(HOSTED_BUILD)
     if (!mem->is_flushed)
     {
@@ -566,15 +569,21 @@ int agp_bind_memory(struct agp_memory * mem, off_t offset)
         mem->page_count * PAGE_SIZE, offset);
 #endif
     mem->is_bound = TRUE;
+    mem->pg_start = offset;
     return 0;
 }
 
 int agp_unbind_memory(struct agp_memory * mem)
 {
+    if (!mem || !mem->is_bound)
+        return -EINVAL;
 #if !defined(HOSTED_BUILD)
-    IMPLEMENT("\n");
+    aros_agp_hack_unbind_memory(mem->pg_start, mem->page_count * PAGE_SIZE);
+    
+    /* TODO: agp_unmap_memory */
 #endif
     mem->is_bound = FALSE;
+    mem->pg_start = 0;
     return 0;
 }
 

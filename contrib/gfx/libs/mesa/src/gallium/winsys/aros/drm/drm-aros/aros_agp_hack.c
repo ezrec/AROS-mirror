@@ -114,9 +114,12 @@ UBYTE capptr = 0;
 UBYTE vgacapptr = 0;
 OOP_Object * vga_card = NULL;
 
+/*
 #define LOG_MSG(x, ...)         \
     bug(x, ##__VA_ARGS__);      \
     printf(x, ##__VA_ARGS__);
+*/
+#define LOG_MSG(x, ...)
 
 /* Accessors */
 OOP_Object * aros_agp_hack_get_agp_bridge()
@@ -367,22 +370,36 @@ VOID aros_agp_hack_enable_agp(ULONG mode)
     aros_agp_hack_enable_agp_generic(mode);
 }
 
+
+
 static void aros_agp_hack_tblflush_generic_agp3()
 {
     ULONG ctrlreg;
     ctrlreg = readconfiglong(agp_bridge, capptr + AGP_CTRL_REG);
     writeconfiglong(agp_bridge, capptr + AGP_CTRL_REG, ctrlreg & ~AGP_CTRL_REG_GTBLEN);
-    writeconfiglong(agp_bridge, capptr + AGP_CTRL_REG, ctrlreg);    
+    writeconfiglong(agp_bridge, capptr + AGP_CTRL_REG, ctrlreg);
 }
+
+static inline void clflush(volatile void * ptr)
+{
+    asm volatile("clflush %0" : "+m" (*(volatile BYTE *) ptr));
+}
+
 static void aros_agp_hack_bind_memory_generic(IPTR address, ULONG size, ULONG offset)
 {
-    LONG i;
+    ULONG i;
     
+//    LOG_MSG("Bind address 0x%x into offset %d, size %d\n", (ULONG)address, offset, size);
+
     /* TODO: check if offset + size / 4096 ends before gatt_table end */
     
     /* TODO: get mask type */
     
-    /* TODO: flush memory */
+    /* TODO: Check if each entry in GATT to be written in unbound */
+    
+    /* Flush memory */
+    for (i = 0; i < size; i += 32 /* Cache line size on x86 */)
+        clflush((APTR)(address + i));
     
     /* Insert entries into GATT table */
     for(i = 0; i < size / 4096; i++)
@@ -397,16 +414,68 @@ static void aros_agp_hack_bind_memory_generic(IPTR address, ULONG size, ULONG of
     if (isagp3)
     {
         aros_agp_hack_tblflush_generic_agp3();
+
+        {
+            /* THIS IS A NASTY HACK
+               Somehow data written in GATT is not refreshed at video card -
+               this probably happens due to some CPU cache problem.
+               Executing the code below makes the GATT table have correct data,
+               but it will cause memory fragmentation at a long term - a proper
+               solution needs to be found
+             */
+            ULONG sized = 512 * 1024;
+            ULONG * d = (ULONG*)AllocVec(sized, MEMF_ANY);
+            ULONG i = 0;
+            for (i = 0; i < sized / 4; i++)
+                *(d+i) = 0xffeeddcc;
+            FreeVec((APTR)d);
+        }
     }
     else
     {
         LOG_MSG("Bind Memory: AGP2 mode not supported\n");
     }
+    
+
 }
 
 VOID aros_agp_hack_bind_memory(IPTR address, ULONG size, ULONG offset)
 {
     aros_agp_hack_bind_memory_generic(address, size, offset);
+}
+
+static void aros_agp_hack_unbind_memory_generic(ULONG offset, ULONG size)
+{
+    ULONG i;
+
+//    LOG_MSG("Unbind offset %d, size %d\n", offset, size);
+    if (size == 0)
+        return;
+
+    /* TODO: get mask type */
+
+    /* Remove entries from GATT table */
+    for(i = 0; i < size / 4096; i++)
+    {
+        writel((ULONG)scratch_memory, gatt_table + offset + i);
+    }
+    
+    readl(gatt_table + offset + i - 1); /* PCI posting */
+    
+    /* Flush GATT table */
+    if (isagp3)
+    {
+        aros_agp_hack_tblflush_generic_agp3();
+    }
+    else
+    {
+        LOG_MSG("Bind Memory: AGP2 mode not supported\n");
+    }    
+}
+
+VOID aros_agp_hack_unbind_memory(ULONG offset, ULONG size)
+{
+    aros_agp_hack_unbind_memory_generic(offset, size);
 }
 
 /* Init code */
@@ -508,9 +577,10 @@ static void aros_agp_hack_create_gatt_table_generic()
     scratch_memory = AllocVec(4096 * 2, MEMF_PUBLIC | MEMF_CLEAR);
     scratch_memory = (APTR)(ALIGN((IPTR)scratch_memory, 4096));
     LOG_MSG("Created scratch memory at 0x%x\n", (ULONG)scratch_memory);
+
     
     gatt_table = AllocVec(tablesize + 4096, MEMF_PUBLIC | MEMF_CLEAR);
-    gatt_table = (APTR)(ALIGN((ULONG)gatt_table, 4096));
+    gatt_table = (ULONG *)(ALIGN((ULONG)gatt_table, 4096));
     gatt_base = (IPTR)gatt_table;
     
     LOG_MSG("Created GATT table size %d at 0x%x\n", tablesize, (ULONG)gatt_base);

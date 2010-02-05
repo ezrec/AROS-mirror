@@ -93,6 +93,7 @@ struct agp_memory
     BOOL is_flushed;
     BOOL is_bound;
     ULONG type;
+    ULONG pg_start;
 };
 
 #define AGP_USER_MEMORY         1
