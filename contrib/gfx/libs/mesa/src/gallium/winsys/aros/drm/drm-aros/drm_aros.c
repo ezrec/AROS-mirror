@@ -147,20 +147,11 @@ LONG drm_aros_pci_find_supported_video_card(struct drm_driver *drv)
             (!drv->IsAGP) && (!drv->IsPCIE) ? "PCI" : "",
             drv->IsAGP ? "AGP" : "",
             drv->IsPCIE ? "PCIe" : "");
-        /* FIXME: Temp - remove */
-        printf("Detected card: 0x%x/0x%x - %s%s%s\n", 
-            drv->VendorID, drv->ProductID,
-            (!drv->IsAGP) && (!drv->IsPCIE) ? "PCI" : "",
-            drv->IsAGP ? "AGP" : "",
-            drv->IsPCIE ? "PCIe" : "");
-
         return 0;
     }
     else
     {
         DRM_INFO("Failed detecting card for VendorID: 0x%x\n", drv->VendorID);
-        /* FIXME: Temp - remove */
-        printf("Failed detecting card for VendorID: 0x%x\n", drv->VendorID);
         drm_aros_pci_shutdown(drv);
         return -1;
     }
