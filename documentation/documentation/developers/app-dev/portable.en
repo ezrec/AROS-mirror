@@ -268,6 +268,11 @@ The solution is to prefix all elements in the struct with *STACKED*::
     struct MUIP_Application_SetMenuCheck { STACKED ULONG MethodID;
             STACKED ULONG MenuID; STACKED LONG stat; };
 
+.. Warning::
+
+   Don't use types smaller than ULONG for message structures. It does not
+   work on big endian.
+
 
 Tag Identifiers/Values
 ======================
