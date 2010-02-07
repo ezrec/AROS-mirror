@@ -5522,6 +5522,13 @@ Result
  Depending on the operation
 
 
+Notes
+~~~~~
+::
+
+     This function is currently considered private
+
+
 
 ----------
 
