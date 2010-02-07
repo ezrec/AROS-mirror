@@ -166,6 +166,9 @@ struct agp_staticdata {
 #define AGP_STATUS_REG_CAL_MASK         (1<<12|1<<11|1<<10)
 #define AGP_STATUS_REG_ARQSZ_MASK       (1<<15|1<<14|1<<13)
 #define AGP_STATUS_REG_RQ_DEPTH_MASK    0xff000000
+#define AGP_STATUS_REG_AGP2_X1          (1<<0)
+#define AGP_STATUS_REG_AGP2_X2          (1<<1)
+#define AGP_STATUS_REG_AGP2_X4          (1<<2)
 #define AGP_STATUS_REG_AGP3_X4          (1<<0)
 #define AGP_STATUS_REG_AGP3_X8          (1<<1)
 #define AGP_COMMAND_REG                 0x08
@@ -174,6 +177,10 @@ struct agp_staticdata {
 #define AGP_CTRL_REG_APEREN             (1<<8)
 #define AGP_APER_SIZE_REG               0x14
 #define AGP_GART_CTRL_LO_REG            0x18
+
+#define AGP2_RESERVED_MASK              0x00fffcc8
+#define AGP3_RESERVED_MASK              0x00ff00c4
+
 
 #define ALIGN(val, align)               (val + align - 1) & (~(align - 1))
 
@@ -202,7 +209,7 @@ static VOID agp3_initialize_chipset(struct agp_staticdata * agpsd)
 
     /* Getting GART size */
     aperture_size_value = readconfigword(bridgedev, bridgeagpcap + AGP_APER_SIZE_REG);
-    LOG_MSG("Reading aperture size value: %d\n", aperture_size_value);
+    LOG_MSG("Reading aperture size value: %x\n", aperture_size_value);
     
     switch(aperture_size_value)
     {
@@ -363,12 +370,13 @@ static VOID generic_bind_memory(struct agp_staticdata * agpsd, IPTR address, ULO
     }
 }
 
-static ULONG generic_calibrate_modes(ULONG requestedmode, ULONG bridgemode, ULONG vgamode)
+static ULONG generic_agp3_calibrate_modes(ULONG requestedmode, ULONG bridgemode, ULONG vgamode)
 {
     ULONG calibratedmode = bridgemode;
     ULONG temp = 0;
     
-    /* TODO: Apply reserved mask to requestedmode */
+    /* Apply reserved mask to requestedmode */
+    requestedmode &= ~AGP3_RESERVED_MASK;
     
     /* Select a speed for requested mode */
     temp = requestedmode & 0x07;
@@ -401,6 +409,61 @@ static ULONG generic_calibrate_modes(ULONG requestedmode, ULONG bridgemode, ULON
     return calibratedmode;
 }
 
+static ULONG generic_agp2_calibrate_modes(ULONG requestedmode, ULONG bridgemode, ULONG vgamode)
+{
+    ULONG calibratedmode = bridgemode;
+    ULONG temp = 0;
+
+    /* Apply reserved mask to requestedmode */
+    requestedmode &= ~AGP2_RESERVED_MASK;
+    
+    /* Fix for some bridges reporting only one speed instead of all */
+    if (bridgemode & AGP_STATUS_REG_AGP2_X4)
+        bridgemode |= (AGP_STATUS_REG_AGP2_X2 | AGP_STATUS_REG_AGP2_X1);
+    if (bridgemode & AGP_STATUS_REG_AGP2_X2)
+        bridgemode |= AGP_STATUS_REG_AGP2_X1;
+
+    /* Select speed for requested mode */
+    temp = requestedmode & 0x07;
+    requestedmode &= ~0x07; /* Clear any speed */
+    if (temp & AGP_STATUS_REG_AGP2_X4)
+        requestedmode |= AGP_STATUS_REG_AGP2_X4;
+    else 
+    {
+        if (temp & AGP_STATUS_REG_AGP2_X2)
+            requestedmode |= AGP_STATUS_REG_AGP2_X2;
+        else
+            requestedmode |= AGP_STATUS_REG_AGP2_X1;
+    }
+    
+    /* Disable SBA if not supported/requested */
+    if (!((bridgemode & AGP_STATUS_REG_SBA) && (requestedmode & AGP_STATUS_REG_SBA)
+            && (vgamode & AGP_STATUS_REG_SBA)))
+        calibratedmode &= ~AGP_STATUS_REG_SBA;
+
+    /* Select speed based on request and capabilities of bridge and vgacard */
+    calibratedmode &= ~0x07; /* Clear any mode */
+    if ((requestedmode & AGP_STATUS_REG_AGP2_X4) &&
+        (bridgemode & AGP_STATUS_REG_AGP2_X4) &&
+        (vgamode & AGP_STATUS_REG_AGP2_X4))
+        calibratedmode |= AGP_STATUS_REG_AGP2_X4;
+    else
+    {
+        if ((requestedmode & AGP_STATUS_REG_AGP2_X2) &&
+            (bridgemode & AGP_STATUS_REG_AGP2_X2) &&
+            (vgamode & AGP_STATUS_REG_AGP2_X2))
+            calibratedmode |= AGP_STATUS_REG_AGP2_X2;
+        else
+            calibratedmode |= AGP_STATUS_REG_AGP2_X1;
+    }
+
+    /* Disable fast writed if in X1 mode */
+    if (calibratedmode & AGP_STATUS_REG_AGP2_X1)
+        calibratedmode &= ~AGP_STATUS_REG_FAST_WRITES;
+    
+    return calibratedmode;
+}
+
 static ULONG generic_select_best_mode(struct agp_staticdata * agpsd, ULONG requestedmode, ULONG bridgemode)
 {
     OOP_Object * videodev = agpsd->videocard->PciDevice;
@@ -426,13 +489,13 @@ static ULONG generic_select_best_mode(struct agp_staticdata * agpsd, ULONG reque
         bridgemode &= ~AGP_STATUS_REG_FAST_WRITES;
     }
         
-    if (bridgemode & AGP_STATUS_REG_AGP_3_0)
+    if (agpsd->bridgemode & AGP_STATUS_REG_AGP_3_0)
     {
-        bridgemode = generic_calibrate_modes(requestedmode, bridgemode, vgamode);
+        bridgemode = generic_agp3_calibrate_modes(requestedmode, bridgemode, vgamode);
     }
     else
     {
-        LOG_MSG("Select best mode: AGP2 mode not supported\n");
+        bridgemode = generic_agp2_calibrate_modes(requestedmode, bridgemode, vgamode);
     }
     
     return bridgemode;
@@ -450,11 +513,11 @@ static VOID generic_send_command(struct agp_staticdata * agpsd, ULONG status)
             ULONG mode = status;
             
             mode &= 0x7;
-            if (1) /* FIXME: detection of AGP3 */
+            if (status & AGP_STATUS_REG_AGP_3_0)
                 mode *= 4;
             
             LOG_MSG("Set AGP%d device 0x%x/0x%x to speed %dx\n", 
-                TRUE /* FIXME: detection of AGP3 */ ? 3 : 2, 
+                (status & AGP_STATUS_REG_AGP_3_0) ? 3 : 2, 
                 pciagpdev->VendorID, pciagpdev->ProductID, mode);
             
             writeconfiglong(pciagpdev->PciDevice, pciagpdev->AgpCapability + AGP_COMMAND_REG, status);            
@@ -467,6 +530,7 @@ static VOID generic_enable_agp(struct agp_staticdata * agpsd, ULONG requestedmod
     OOP_Object * bridgedev = agpsd->bridge->PciDevice;
     UBYTE bridgeagpcap = agpsd->bridge->AgpCapability;
     ULONG bridgemode = 0;
+    ULONG major = 0;
     
     LOG_MSG("Enable AGP:\n");
     LOG_MSG("    Requested mode 0x%x\n", requestedmode);
@@ -478,19 +542,31 @@ static VOID generic_enable_agp(struct agp_staticdata * agpsd, ULONG requestedmod
     
     bridgemode |= AGP_STATUS_REG_AGP_ENABLED;
     
+    major = (readconfigbyte(bridgedev, bridgeagpcap + AGP_VERSION_REG) >> 4) & 0xf;
+
+    if (major >= 3)
+    {
+        /* Bridge supports version 3 or greater) */
+        if (agpsd->bridgemode & AGP_STATUS_REG_AGP_3_0)
+        {
+            /* Bridge is operating in mode 3.0 */
+            /* TODO: agp_3_5_enable */
+        }
+        else
+        {
+            /* Bridge is operating in legacy mode */
+            /* Disable calibration cycle */
+            ULONG temp = 0;
+            bridgemode &= ~(7<<10);
+            temp = readconfiglong(bridgedev, bridgeagpcap + AGP_CTRL_REG);
+            temp |= (1<<9);
+            writeconfiglong(bridgedev, bridgeagpcap + AGP_CTRL_REG, temp);           
+        }
+    }
+
     LOG_MSG("Mode to write: 0x%x\n", bridgemode);
     
-    if (1) /* FIXME: detection of AGP3 */
-    {
-        /* TODO: agp_3_5_enable */
-        generic_send_command(agpsd, bridgemode);
-        
-        /* TODO: Handling of situation when version is 3 but bridge is not in mode 3 */
-    }
-    else
-    {
-        LOG_MSG("Enable AGP: AGP2 mode not supported\n");
-    }
+    generic_send_command(agpsd, bridgemode);
 }
 
 /* SiS functions */
@@ -499,7 +575,6 @@ static VOID sis_initialize_agp(struct agp_staticdata * agpsd)
     ULONG major, minor = 0;
     OOP_Object * bridgedev = agpsd->bridge->PciDevice;
     UBYTE bridgeagpcap = agpsd->bridge->AgpCapability;
-    BOOL bridgeisagp3 = FALSE;
     
     /* Set default function pointers */
     agpsd->create_gatt_table = generic_create_gatt_table;
@@ -515,15 +590,15 @@ static VOID sis_initialize_agp(struct agp_staticdata * agpsd)
     major = (readconfigbyte(bridgedev, bridgeagpcap + AGP_VERSION_REG) >> 4) & 0xf;
     minor = readconfigbyte(bridgedev, bridgeagpcap + AGP_VERSION_REG) & 0xf;
     
-    LOG_MSG("Read config: AGP version %d.%d\n", major, minor);
-    bridgeisagp3 = (major == 3 && minor >= 5);
+    LOG_MSG("[SiS] Read config: AGP version %d.%d\n", major, minor);
         
     /* Getting mode */
     agpsd->bridgemode = readconfiglong(bridgedev, bridgeagpcap + AGP_STATUS_REG);
     
-    LOG_MSG("Reading mode: 0x%x\n", agpsd->bridgemode);
+    LOG_MSG("[SiS] Reading mode: 0x%x\n", agpsd->bridgemode);
 
-    if (bridgeisagp3)
+    /* In case of SiS only 3.5 bridges are guaranteed to be AGP3 compliant */
+    if ((major == 3) && (minor >= 5))
     {
         /* Set specific function pointers */
         agpsd->flush_gatt_table = agp3_flush_gatt_table;
@@ -533,7 +608,7 @@ static VOID sis_initialize_agp(struct agp_staticdata * agpsd)
     else
     {
         /* TODO: Set specific function pointers */
-        LOG_MSG("SiS Init: AGP2 mode not supported\n");
+        LOG_MSG("[SiS] SiS Init: AGP2 mode not supported\n");
         return;
     }
     
