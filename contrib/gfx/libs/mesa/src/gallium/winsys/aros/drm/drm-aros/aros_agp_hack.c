@@ -62,6 +62,28 @@ static void writeconfiglong(OOP_Object * pciDevice, UBYTE where, ULONG val)
     OOP_DoMethod(pciDevice, (OOP_Msg)msg); 
 }
 
+static void writeconfigbyte(OOP_Object * pciDevice, UBYTE where, UBYTE val)
+{
+    struct pHidd_PCIDevice_WriteConfigByte wcbmsg = {
+    mID: OOP_GetMethodID(IID_Hidd_PCIDevice, moHidd_PCIDevice_WriteConfigByte),
+    reg: where,
+    val: val,
+    }, *msg = &wcbmsg;
+    
+    OOP_DoMethod(pciDevice, (OOP_Msg)msg); 
+}
+
+static void writeconfigword(OOP_Object * pciDevice, UBYTE where, UWORD val)
+{
+    struct pHidd_PCIDevice_WriteConfigWord wcwmsg = {
+    mID: OOP_GetMethodID(IID_Hidd_PCIDevice, moHidd_PCIDevice_WriteConfigWord),
+    reg: where,
+    val: val,
+    }, *msg = &wcwmsg;
+    
+    OOP_DoMethod(pciDevice, (OOP_Msg)msg); 
+}
+
 /* This needs to be added to pci.hidd */
 static UBYTE aros_agp_hack_get_capabilities_ptr(OOP_Object * pciDevice, UBYTE cap)
 {
@@ -125,11 +147,6 @@ struct agp_staticdata {
     /* Video card data */
     struct PciAgpDevice *videocard;     /* Selected AGP card */
     
-    /* HACK */
-    ULONG               *hackbuffer;    /* Use for CPU flush hack */
-    ULONG               hackbuffersize;
-    /* HACK */
-    
     /* Functions */
     VOID    (*create_gatt_table)(struct agp_staticdata * agpsd);
     VOID    (*unbind_memory)(struct agp_staticdata * agpsd, ULONG offset, ULONG size);
@@ -176,7 +193,7 @@ struct agp_staticdata {
 #define AGP_CTRL_REG_GTBLEN             (1<<7)
 #define AGP_CTRL_REG_APEREN             (1<<8)
 #define AGP_APER_SIZE_REG               0x14
-#define AGP_GART_CTRL_LO_REG            0x18
+#define AGP_GATT_CTRL_LO_REG            0x18
 
 #define AGP2_RESERVED_MASK              0x00fffcc8
 #define AGP3_RESERVED_MASK              0x00ff00c4
@@ -202,11 +219,6 @@ static VOID agp3_initialize_chipset(struct agp_staticdata * agpsd)
     UWORD aperture_size_value = 0;
     ULONG ctrlreg = 0;
     
-    /* Getting GART base */
-    agpsd->bridgeaperbase = (IPTR)readconfiglong(bridgedev, AGP_APER_BASE);
-    agpsd->bridgeaperbase &= (~0x0fUL) /* PCI_BASE_ADDRESS_MEM_MASK */;
-    LOG_MSG("Reading aperture base: 0x%x\n", (ULONG)agpsd->bridgeaperbase);
-
     /* Getting GART size */
     aperture_size_value = readconfigword(bridgedev, bridgeagpcap + AGP_APER_SIZE_REG);
     LOG_MSG("Reading aperture size value: %x\n", aperture_size_value);
@@ -231,10 +243,15 @@ static VOID agp3_initialize_chipset(struct agp_staticdata * agpsd)
     /* Creation of GATT table */
     agpsd->create_gatt_table(agpsd);
     
+    /* Getting GART base */
+    agpsd->bridgeaperbase = (IPTR)readconfiglong(bridgedev, AGP_APER_BASE);
+    agpsd->bridgeaperbase &= (~0x0fUL) /* PCI_BASE_ADDRESS_MEM_MASK */;
+    LOG_MSG("Reading aperture base: 0x%x\n", (ULONG)agpsd->bridgeaperbase);
+
     /* TODO: Setting GART size (is it needed at all?) */
     
     /* Set GATT pointer */
-    writeconfiglong(bridgedev, bridgeagpcap + AGP_GART_CTRL_LO_REG,
+    writeconfiglong(bridgedev, bridgeagpcap + AGP_GATT_CTRL_LO_REG,
         (ULONG)agpsd->gatttable);
     LOG_MSG("Set GATT pointer to 0x%x\n", (ULONG)agpsd->gatttable);
     
@@ -299,10 +316,28 @@ static VOID generic_free_gatt_table(struct agp_staticdata * agpsd)
     agpsd->gatttable = NULL;
 }
 
+static inline VOID clflush(volatile void * ptr)
+{
+    asm volatile("clflush %0" : "+m" (*(volatile BYTE *) ptr));
+}
+
+static VOID flush_memory(APTR address, ULONG size)
+{
+    if (1) /* TODO: Detect if CPU has clflush / Use CachePreDMA */
+    {
+        ULONG i = 0;
+        for (i = 0; i < size; i += 32 /* Cache line size on x86 */)
+            clflush((APTR)(address + i));        
+    }
+    else
+    {
+        /* TODO: Use wbinvd */
+    }
+}
+
 static VOID generic_unbind_memory(struct agp_staticdata * agpsd, ULONG offset, ULONG size)
 {
     ULONG i;
-
 #if 0
     LOG_MSG("Unbind offset %d, size %d\n", offset, size);
 #endif
@@ -319,20 +354,18 @@ static VOID generic_unbind_memory(struct agp_staticdata * agpsd, ULONG offset, U
     
     readl(agpsd->gatttable + offset + i - 1); /* PCI posting */
     
+    /* Flush GATT table contents */
+    flush_memory((APTR)agpsd->gatttable,
+        (ULONG)(agpsd->bridgeapersize * 1024 * 1024 / 4096 * 4)); /* No. pages * 4 byte ptr */
+
     /* Flush GATT table */
     agpsd->flush_gatt_table(agpsd);
-}
-
-static inline VOID clflush(volatile void * ptr)
-{
-    asm volatile("clflush %0" : "+m" (*(volatile BYTE *) ptr));
 }
 
 static VOID generic_bind_memory(struct agp_staticdata * agpsd, IPTR address, ULONG size, ULONG offset)
 {
     ULONG i;
-
-#if 0    
+#if 0
     LOG_MSG("Bind address 0x%x into offset %d, size %d\n", (ULONG)address, offset, size);
 #endif
 
@@ -342,9 +375,8 @@ static VOID generic_bind_memory(struct agp_staticdata * agpsd, IPTR address, ULO
     
     /* TODO: Check if each entry in GATT to be written in unbound (might not work due to CPU caches problem - see HACK*/
     
-    /* Flush memory */
-    for (i = 0; i < size; i += 32 /* Cache line size on x86 */)
-        clflush((APTR)(address + i));
+    /* Flush incomming memory */
+    flush_memory((APTR)address, size);
     
     /* Insert entries into GATT table */
     for(i = 0; i < size / 4096; i++)
@@ -354,20 +386,13 @@ static VOID generic_bind_memory(struct agp_staticdata * agpsd, IPTR address, ULO
     }
     
     readl(agpsd->gatttable + offset + i - 1); /* PCI posting */
-    
-    /* Flush GATT table */
-    agpsd->flush_gatt_table(agpsd);
 
-    {
-        /* THIS IS A NASTY HACK
-           Somehow data written in GATT is not refreshed at video card -
-           this probably happens due to some CPU cache problem.
-           Executing the code below makes the GATT table have correct data.
-         */
-        ULONG i = 0;
-        for (i = 0; i < agpsd->hackbuffersize / 4; i++)
-            *(agpsd->hackbuffer + i) = 0xdeadbeef;
-    }
+    /* Flush GATT table contents */
+    flush_memory((APTR)agpsd->gatttable,
+        (ULONG)(agpsd->bridgeapersize * 1024 * 1024 / 4096 * 4)); /* No. pages * 4 byte ptr */
+
+    /* Flush GATT table at card*/
+    agpsd->flush_gatt_table(agpsd);
 }
 
 static ULONG generic_agp3_calibrate_modes(ULONG requestedmode, ULONG bridgemode, ULONG vgamode)
@@ -570,6 +595,63 @@ static VOID generic_enable_agp(struct agp_staticdata * agpsd, ULONG requestedmod
 }
 
 /* SiS functions */
+#define AGP_SIS_GATT_BASE   0x90
+#define APG_SIS_APER_SIZE   0x94
+#define AGP_SIS_GATT_CNTRL  0x97
+#define AGP_SIS_GATT_FLUSH  0x98
+
+static VOID sis_flush_gatt_table(struct agp_staticdata * agpsd)
+{
+    OOP_Object * bridgedev = agpsd->bridge->PciDevice;
+    writeconfigbyte(bridgedev, AGP_SIS_GATT_FLUSH, 0x02);    
+}
+
+static VOID sis_initialize_chipset(struct agp_staticdata * agpsd)
+{
+    OOP_Object * bridgedev = agpsd->bridge->PciDevice;
+    UBYTE aperture_size_value = 0;
+    
+    /* Getting GART size */
+    aperture_size_value = readconfigbyte(bridgedev, APG_SIS_APER_SIZE);
+    LOG_MSG("[SIS] Reading aperture size value: %x\n", aperture_size_value);
+    
+    switch(aperture_size_value & ~(0x07))
+    {
+        case( 3 & ~(0x07)): agpsd->bridgeapersize = 4; break;
+        case(19 & ~(0x07)): agpsd->bridgeapersize = 8; break;
+        case(35 & ~(0x07)): agpsd->bridgeapersize = 16; break;
+        case(51 & ~(0x07)): agpsd->bridgeapersize = 32; break;
+        case(67 & ~(0x07)): agpsd->bridgeapersize = 64; break;
+        case(83 & ~(0x07)): agpsd->bridgeapersize = 128; break;
+        case(99 & ~(0x07)): agpsd->bridgeapersize = 256; break;
+        default: agpsd->bridgeapersize = 0; break;
+    }
+    
+    LOG_MSG("[SIS] Calculated aperture size: %d MB\n", (ULONG)agpsd->bridgeapersize);
+
+    /* Creation of GATT table */
+    agpsd->create_gatt_table(agpsd);
+    
+    /* Send control command */
+    writeconfigbyte(bridgedev, AGP_SIS_GATT_CNTRL, 0x05);
+
+    /* Getting GART base */
+    agpsd->bridgeaperbase = (IPTR)readconfiglong(bridgedev, AGP_APER_BASE);
+    agpsd->bridgeaperbase &= (~0x0fUL) /* PCI_BASE_ADDRESS_MEM_MASK */;
+    LOG_MSG("[SiS] Reading aperture base: 0x%x\n", (ULONG)agpsd->bridgeaperbase);
+    
+    /* Set GATT pointer */
+    writeconfiglong(bridgedev, AGP_SIS_GATT_BASE, (ULONG)agpsd->gatttable);
+    LOG_MSG("[SiS] Set GATT pointer to 0x%x\n", (ULONG)agpsd->gatttable);
+    
+    agpsd->bridgesupported = TRUE;
+}
+
+static VOID sis_deinitialize_chipset(struct agp_staticdata * agpsd)
+{
+    /* NO OP (or set previous size of aperture?) */
+}
+
 static VOID sis_initialize_agp(struct agp_staticdata * agpsd)
 {
     ULONG major, minor = 0;
@@ -607,14 +689,343 @@ static VOID sis_initialize_agp(struct agp_staticdata * agpsd)
     }
     else
     {
-        /* TODO: Set specific function pointers */
-        LOG_MSG("[SiS] SiS Init: AGP2 mode not supported\n");
-        return;
+        /* Set specific function pointers */
+        agpsd->flush_gatt_table = sis_flush_gatt_table;
+        agpsd->initialize_chipset = sis_initialize_chipset;
+        agpsd->deinitialize_chipset = sis_deinitialize_chipset;
     }
     
     agpsd->initialize_chipset(agpsd);
 }
 
+/* VIA functions */
+#define AGP_VIA_SEL             0xfd
+#define AGP_VIA_GART_CTRL       0x80
+#define AGP_VIA_APER_SIZE       0x84
+#define AGP_VIA_GATT_BASE       0x88
+
+#define AGP_VIA_AGP3_GART_CTRL  0x90
+#define AGP_VIA_AGP3_APER_SIZE  0x94
+#define AGP_VIA_AGP3_GATT_BASE  0x98
+
+static VOID via_deinitialize_chipset(struct agp_staticdata * agpsd)
+{
+    /* NO OP (or set previous size of aperture?) */
+}
+
+static VOID via_flush_gatt_table(struct agp_staticdata * agpsd)
+{
+    OOP_Object * bridgedev = agpsd->bridge->PciDevice;
+    ULONG ctrlreg;
+    ctrlreg = readconfiglong(bridgedev, AGP_VIA_GART_CTRL);
+    ctrlreg |= (1<<7);
+    writeconfiglong(bridgedev, AGP_VIA_GART_CTRL, ctrlreg);
+    ctrlreg &= ~(1<<7);
+    writeconfiglong(bridgedev, AGP_VIA_GART_CTRL, ctrlreg);
+}
+
+static VOID via_agp3_flush_gatt_table(struct agp_staticdata * agpsd)
+{
+    OOP_Object * bridgedev = agpsd->bridge->PciDevice;
+    ULONG ctrlreg;
+    ctrlreg = readconfiglong(bridgedev, AGP_VIA_AGP3_GART_CTRL);
+    writeconfiglong(bridgedev, AGP_VIA_AGP3_GART_CTRL, ctrlreg & ~(1<<7));
+    writeconfiglong(bridgedev, AGP_VIA_AGP3_GART_CTRL, ctrlreg);
+}
+
+static VOID via_initialize_chipset(struct agp_staticdata * agpsd)
+{
+    OOP_Object * bridgedev = agpsd->bridge->PciDevice;
+    UBYTE aperture_size_value = 0;
+    
+    /* Getting GART size */
+    aperture_size_value = readconfigbyte(bridgedev, AGP_VIA_APER_SIZE);
+    LOG_MSG("[VIA] Reading aperture size value: %x\n", aperture_size_value);
+    
+    switch(aperture_size_value)
+    {
+        case(255): agpsd->bridgeapersize = 1; break;
+        case(254): agpsd->bridgeapersize = 2; break;
+        case(252): agpsd->bridgeapersize = 4; break;
+        case(248): agpsd->bridgeapersize = 8; break;
+        case(240): agpsd->bridgeapersize = 16; break;
+        case(224): agpsd->bridgeapersize = 32; break;
+        case(192): agpsd->bridgeapersize = 64; break;
+        case(128): agpsd->bridgeapersize = 128; break;
+        case(0): agpsd->bridgeapersize = 256; break;
+        default: agpsd->bridgeapersize = 0; break;
+    }
+    
+    LOG_MSG("[VIA] Calculated aperture size: %d MB\n", (ULONG)agpsd->bridgeapersize);
+
+    /* Creation of GATT table */
+    agpsd->create_gatt_table(agpsd);
+    
+    /* Getting GART base */
+    agpsd->bridgeaperbase = (IPTR)readconfiglong(bridgedev, AGP_APER_BASE);
+    agpsd->bridgeaperbase &= (~0x0fUL) /* PCI_BASE_ADDRESS_MEM_MASK */;
+    LOG_MSG("[VIA] Reading aperture base: 0x%x\n", (ULONG)agpsd->bridgeaperbase);
+
+    /* TODO: Setting GART size (is it needed at all?) */
+
+    /* GART control register */
+    writeconfiglong(bridgedev, AGP_VIA_GART_CTRL, 0x0000000f);
+        
+    /* Set GATT pointer */
+    writeconfiglong(bridgedev, AGP_VIA_GATT_BASE, 
+        (((ULONG)agpsd->gatttable) & 0xfffff000) | 3);
+    LOG_MSG("[VIA] Set GATT pointer to 0x%x\n", 
+        (((ULONG)agpsd->gatttable) & 0xfffff000) | 3);
+    
+    agpsd->bridgesupported = TRUE;
+}
+
+static VOID via_agp3_initialize_chipset(struct agp_staticdata * agpsd)
+{
+    OOP_Object * bridgedev = agpsd->bridge->PciDevice;
+    UWORD aperture_size_value = 0;
+    ULONG ctrlreg = 0;
+    
+    /* Getting GART size */
+    aperture_size_value = readconfigword(bridgedev, AGP_VIA_AGP3_APER_SIZE);
+    aperture_size_value &= 0xfff;
+    LOG_MSG("[VIA] Reading aperture size value: %x\n", aperture_size_value);
+    
+    switch(aperture_size_value)
+    {
+        case(0xf3f): agpsd->bridgeapersize = 4; break;
+        case(0xf3e): agpsd->bridgeapersize = 8; break;
+        case(0xf3c): agpsd->bridgeapersize = 16; break;
+        case(0xf38): agpsd->bridgeapersize = 32; break;
+        case(0xf30): agpsd->bridgeapersize = 64; break;
+        case(0xf20): agpsd->bridgeapersize = 128; break;
+        case(0xf00): agpsd->bridgeapersize = 256; break;
+        case(0xe00): agpsd->bridgeapersize = 512; break;
+        case(0xc00): agpsd->bridgeapersize = 1024; break;
+        case(0x800): agpsd->bridgeapersize = 2048; break;
+        default: agpsd->bridgeapersize = 0; break;
+    }
+    
+    LOG_MSG("[VIA] Calculated aperture size: %d MB\n", (ULONG)agpsd->bridgeapersize);
+
+    /* Creation of GATT table */
+    agpsd->create_gatt_table(agpsd);
+    
+    /* Getting GART base */
+    agpsd->bridgeaperbase = (IPTR)readconfiglong(bridgedev, AGP_APER_BASE);
+    agpsd->bridgeaperbase &= (~0x0fUL) /* PCI_BASE_ADDRESS_MEM_MASK */;
+    LOG_MSG("[VIA] Reading aperture base: 0x%x\n", (ULONG)agpsd->bridgeaperbase);
+
+    /* TODO: Setting GART size (is it needed at all?) */
+    
+    /* Set GATT pointer */
+    writeconfiglong(bridgedev, AGP_VIA_AGP3_GATT_BASE, 
+        ((ULONG)agpsd->gatttable) & 0xfffff000);
+    LOG_MSG("[VIA] Set GATT pointer to 0x%x\n", 
+        ((ULONG)agpsd->gatttable) & 0xfffff000);
+    
+    /* Enabled GART and GATT */
+    /* 1. Enable GTLB in RX90<7>, all AGP aperture access needs to fetch
+     *    translation table first.
+     * 2. Enable AGP aperture in RX91<0>. This bit controls the enabling of the
+     *    graphics AGP aperture for the AGP3.0 port.
+     */
+
+    ctrlreg = readconfiglong(bridgedev, AGP_VIA_AGP3_GART_CTRL);
+    writeconfiglong(bridgedev, AGP_VIA_AGP3_GART_CTRL,
+        ctrlreg | (3<<7));
+    
+    LOG_MSG("[VIA] Enabled GART and GATT\n");
+    
+    agpsd->bridgesupported = TRUE;
+}
+
+static VOID via_initialize_agp(struct agp_staticdata * agpsd)
+{
+    ULONG major, minor = 0;
+    OOP_Object * bridgedev = agpsd->bridge->PciDevice;
+    UBYTE bridgeagpcap = agpsd->bridge->AgpCapability;
+    
+    /* Set default function pointers */
+    agpsd->create_gatt_table = generic_create_gatt_table;
+    agpsd->unbind_memory = generic_unbind_memory;
+    agpsd->flush_gatt_table = NULL;
+    agpsd->bind_memory = generic_bind_memory;
+    agpsd->enable_agp = generic_enable_agp;
+    agpsd->initialize_chipset = NULL;
+    agpsd->deinitialize_chipset = NULL;
+    agpsd->free_gatt_table = generic_free_gatt_table;
+    
+    /* Getting version info */ 
+    major = (readconfigbyte(bridgedev, bridgeagpcap + AGP_VERSION_REG) >> 4) & 0xf;
+    minor = readconfigbyte(bridgedev, bridgeagpcap + AGP_VERSION_REG) & 0xf;
+    
+    LOG_MSG("[VIA] Read config: AGP version %d.%d\n", major, minor);
+        
+    /* Getting mode */
+    agpsd->bridgemode = readconfiglong(bridgedev, bridgeagpcap + AGP_STATUS_REG);
+    
+    LOG_MSG("[VIA] Reading mode: 0x%x\n", agpsd->bridgemode);
+
+    /* By deafult set specific function pointer to pre 3.0 version */
+    agpsd->flush_gatt_table = via_flush_gatt_table;
+    agpsd->initialize_chipset = via_initialize_chipset;
+    agpsd->deinitialize_chipset = via_deinitialize_chipset;
+    
+    if (major >= 3)
+    {
+        /* VIA AGP3 chipsets emulate pre 3.0 if in legacy mode */
+        
+        UBYTE reg = 0;
+        reg = readconfigbyte(bridgedev, AGP_VIA_SEL);
+        /* Set 3.0 functions if not in 2.0 compatibility mode */
+        if ((reg & (1<<1)) == 0)
+        {
+            LOG_MSG("[VIA] 3.0 chipset working in 3.0 mode\n");
+            /* Set specific function pointers for 3.0 version*/
+            agpsd->flush_gatt_table = via_agp3_flush_gatt_table;
+            agpsd->initialize_chipset = via_agp3_initialize_chipset;
+            agpsd->deinitialize_chipset = via_deinitialize_chipset;
+        }
+        else
+            LOG_MSG("[VIA] 3.0 chipset working in 2.0 emulation mode\n");
+    }
+        
+    agpsd->initialize_chipset(agpsd);
+}
+
+/* Intel functions */
+#define AGP_INTEL_NBXCFG        0x50
+#define AGP_INTEL_CTRL          0xb0
+#define AGP_INTEL_APER_SIZE     0xb4
+#define AGP_INTEL_GATT_BASE     0xb8
+
+#define AGP_INTEL_I845_AGPM     0x51
+#define AGP_INTEL_I845_ERRSTS   0xc8
+
+static VOID intel_845_initialize_chipset(struct agp_staticdata * agpsd)
+{
+    OOP_Object * bridgedev = agpsd->bridge->PciDevice;
+    UBYTE aperture_size_value = 0;
+    UBYTE agpm = 0;
+    
+    /* Getting GART size */
+    aperture_size_value = readconfigbyte(bridgedev, AGP_INTEL_APER_SIZE);
+    LOG_MSG("[Intel] Reading aperture size value: %x\n", aperture_size_value);
+    
+    switch(aperture_size_value)
+    {
+        case(63): agpsd->bridgeapersize = 4; break;
+        case(62): agpsd->bridgeapersize = 8; break;
+        case(60): agpsd->bridgeapersize = 16; break;
+        case(56): agpsd->bridgeapersize = 32; break;
+        case(48): agpsd->bridgeapersize = 64; break;
+        case(32): agpsd->bridgeapersize = 128; break;
+        case(0): agpsd->bridgeapersize = 256; break;
+        default: agpsd->bridgeapersize = 0; break;
+    }
+    
+    LOG_MSG("[Intel] Calculated aperture size: %d MB\n", (ULONG)agpsd->bridgeapersize);
+
+    /* Creation of GATT table */
+    agpsd->create_gatt_table(agpsd);
+    
+    /* Getting GART base */
+    agpsd->bridgeaperbase = (IPTR)readconfiglong(bridgedev, AGP_APER_BASE);
+    agpsd->bridgeaperbase &= (~0x0fUL) /* PCI_BASE_ADDRESS_MEM_MASK */;
+    LOG_MSG("[Intel] Reading aperture base: 0x%x\n", (ULONG)agpsd->bridgeaperbase);
+
+    /* Set GATT pointer */
+    writeconfiglong(bridgedev, AGP_INTEL_GATT_BASE, (ULONG)agpsd->gatttable);
+    LOG_MSG("[Intel] Set GATT pointer to 0x%x\n", (ULONG)agpsd->gatttable);
+    
+    /* Control register */
+    writeconfiglong(bridgedev, AGP_INTEL_CTRL, 0x00000000);
+    
+    /* AGPM */
+    agpm = readconfigbyte(bridgedev, AGP_INTEL_I845_AGPM);
+    writeconfigbyte(bridgedev, AGP_INTEL_I845_AGPM, agpm | (1 << 1));
+    
+    /* Clear error conditions */
+    writeconfigword(bridgedev, AGP_INTEL_I845_ERRSTS, 0x001c);
+    
+    agpsd->bridgesupported = TRUE;
+}
+
+static VOID intel_8XX_deinitialize_chipset(struct agp_staticdata * agpsd)
+{
+    OOP_Object * bridgedev = agpsd->bridge->PciDevice;
+    UWORD cfgreg;
+    
+    cfgreg = readconfigword(bridgedev, AGP_INTEL_NBXCFG);
+    writeconfigword(bridgedev, AGP_INTEL_NBXCFG, cfgreg & ~(1 << 9));
+    /* TODO: set previous size of aperture */
+}
+
+static VOID intel_8XX_flush_gatt_table(struct agp_staticdata * agpsd)
+{
+    OOP_Object * bridgedev = agpsd->bridge->PciDevice;
+    ULONG ctrlreg;
+    
+    ctrlreg = readconfiglong(bridgedev, AGP_INTEL_CTRL);
+    writeconfiglong(bridgedev, AGP_INTEL_CTRL, ctrlreg & ~(1 << 7));
+    ctrlreg = readconfiglong(bridgedev, AGP_INTEL_CTRL);
+    writeconfiglong(bridgedev, AGP_INTEL_CTRL, ctrlreg | (1 << 7));
+}
+
+static VOID intel_initialize_agp(struct agp_staticdata * agpsd)
+{
+    ULONG major, minor = 0;
+    OOP_Object * bridgedev = agpsd->bridge->PciDevice;
+    UBYTE bridgeagpcap = agpsd->bridge->AgpCapability;
+    
+    /* Set default function pointers */
+    agpsd->create_gatt_table = generic_create_gatt_table;
+    agpsd->unbind_memory = generic_unbind_memory;
+    agpsd->flush_gatt_table = NULL;
+    agpsd->bind_memory = generic_bind_memory;
+    agpsd->enable_agp = generic_enable_agp;
+    agpsd->initialize_chipset = NULL;
+    agpsd->deinitialize_chipset = NULL;
+    agpsd->free_gatt_table = generic_free_gatt_table;
+    
+    /* Getting version info */ 
+    major = (readconfigbyte(bridgedev, bridgeagpcap + AGP_VERSION_REG) >> 4) & 0xf;
+    minor = readconfigbyte(bridgedev, bridgeagpcap + AGP_VERSION_REG) & 0xf;
+    
+    LOG_MSG("[Intel] Read config: AGP version %d.%d\n", major, minor);
+        
+    /* Getting mode */
+    agpsd->bridgemode = readconfiglong(bridgedev, bridgeagpcap + AGP_STATUS_REG);
+    
+    LOG_MSG("[Intel] Reading mode: 0x%x\n", agpsd->bridgemode);
+    
+    /* TODO: Change this to list of product ids */
+    if (
+        (agpsd->bridge->ProductID == 0x2570) || /* 82865_HB */
+        (agpsd->bridge->ProductID == 0x1a30) || /* 82845_HB */
+        (agpsd->bridge->ProductID == 0x2560) || /* 82845G_HB */
+        (agpsd->bridge->ProductID == 0x358c) || /* 82854_HB */
+        (agpsd->bridge->ProductID == 0x3340) || /* 82855PM_HB */
+        (agpsd->bridge->ProductID == 0x3580) || /* 82855GM_HB */
+        (agpsd->bridge->ProductID == 0x2578)    /* 82875_HB */
+       )
+    {
+        LOG_MSG("[Intel] Setting up pointers for 0x%x\n", agpsd->bridge->ProductID);
+        agpsd->flush_gatt_table = intel_8XX_flush_gatt_table;
+        agpsd->initialize_chipset = intel_845_initialize_chipset;
+        agpsd->deinitialize_chipset = intel_8XX_deinitialize_chipset;
+        agpsd->initialize_chipset(agpsd);
+    }
+    else
+    {
+        LOG_MSG("[Intel] Bridge 0x%x is not supported\n", agpsd->bridge->ProductID);
+    }
+        
+    
+}
+
+/* Generic init functions */
 AROS_UFH3(void, PciDevicesEnumerator,
     AROS_UFHA(struct Hook *, hook, A0),
     AROS_UFHA(OOP_Object *, pciDevice, A2),
@@ -754,11 +1165,6 @@ static VOID initialize_static_data(struct agp_staticdata * agpsd)
     agpsd->initialize_chipset = NULL;
     agpsd->deinitialize_chipset = NULL;
     agpsd->free_gatt_table = NULL;
-    
-    /* HACK */
-    agpsd->hackbuffersize = 512 * 1024;
-    agpsd->hackbuffer = AllocMem(agpsd->hackbuffersize, MEMF_ANY);
-    /* HACK */
 }
 
 /* Init/deinit */
@@ -792,8 +1198,14 @@ static int aros_agp_hack_init_agp(void)
     {
         switch(agpsd_global.bridge->VendorID)
         {
-            case(0x1039): /*SiS */
+            case(0x1039): /* SiS */
             sis_initialize_agp(&agpsd_global);
+            break;
+            case(0x1106): /* VIA */
+            via_initialize_agp(&agpsd_global);
+            break;
+            case(0x8086): /* Intel */
+            intel_initialize_agp(&agpsd_global);
             break;
         }
     }
@@ -821,11 +1233,6 @@ static int aros_agp_hack_deinit_agp()
     while((pciagpdev = (struct PciAgpDevice *)RemHead(&agpsd_global.devices)) != NULL)
         FreeVec(pciagpdev);
 
-    /* HACK */
-    if (agpsd_global.hackbuffer)
-        FreeMem(agpsd_global.hackbuffer, agpsd_global.hackbuffersize);
-    /* HACK */
-        
     if (pciBus_AGP)
     {
         OOP_DisposeObject(pciBus_AGP);

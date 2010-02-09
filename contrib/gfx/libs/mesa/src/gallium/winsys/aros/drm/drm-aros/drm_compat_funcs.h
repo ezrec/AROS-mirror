@@ -87,6 +87,7 @@ static inline VOID memcpy_fromio(APTR dst, APTR src, ULONG size)
 
 static inline void clflush(volatile void * ptr)
 {
+    /* TODO: Substitution is needed for pre-Pentium 4 processors */
     asm volatile("clflush %0" : "+m" (*(volatile BYTE *) ptr));
 }
 
