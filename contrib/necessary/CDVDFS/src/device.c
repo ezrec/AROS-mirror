@@ -139,7 +139,6 @@
 #include "params.h"
 #include "rock.h"
 #include "globals.h"
-#include "debug.h"
 #include "volumes.h"
 #include "charset.h"
 #include "prefs.h"
@@ -918,7 +917,7 @@ openbreak:
 		case ACTION_INHIBIT:        /* Bool       Bool */
 			if (packet->dp_Arg1 != DOSFALSE)
 			{
-				/* true meens forbid access */
+				/* true means forbid access */
 				global->g_inhibited++;
 				if (global->DevList)
 					Unmount();
@@ -927,7 +926,7 @@ openbreak:
 			}
 			else
 			{
-				/* false meens access allowed */
+				/* false means access allowed */
 				if (global->g_inhibited)
 					global->g_inhibited--;
 				if (global->g_inhibited == 0)

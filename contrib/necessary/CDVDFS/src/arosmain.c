@@ -52,8 +52,8 @@ AROS_UFH3(void, ACDROldEntry,
 }
 
 /*
-	every packet style process needs it's own global variable
-	we may loose it on every task switch so set it up here
+	every packet style process needs its own global variable
+	we may lose it on every task switch so set it up here
 	before switching the task
 */
 AROS_UFH1(void, ACDR_Launch,
@@ -771,7 +771,7 @@ D(bug("[acdr] examine: name=%s ([0]=%x)\n", ead->ed_Name, ead->ed_Name[0]));
 #endif
 
             default:
-                D(bug("[acdr] unkown fsa %d\n", iofs->IOFS.io_Command));
+                D(bug("[acdr] unknown fsa %d\n", iofs->IOFS.io_Command));
                 retval = DOSFALSE;
                 error = ERROR_ACTION_NOT_KNOWN;
 		break;

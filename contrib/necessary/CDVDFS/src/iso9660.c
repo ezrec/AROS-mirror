@@ -4,13 +4,14 @@
  *
  * ----------------------------------------------------------------------
  * This code is (C) Copyright 1993,1994 by Frank Munkert.
- *              (C) Copyright 2007-2009 The AROS Development Team.
+ *              (C) Copyright 2007-2010 The AROS Development Team.
  * All rights reserved.
  * This software may be freely distributed and redistributed for
  * non-commercial purposes, provided this notice is included.
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 10-Feb-10 neil    - Removed error in fetching Rock Ridge names.
  * 06-Mar-09 error   - Removed madness, fixed insanity. Cleanup started
  * 16-Jun-08 sonic   - Skip files with "Associated" flag set. Helps to
  *                     read ISO discs created under MacOS.
@@ -107,15 +108,16 @@ int Get_File_Name(VOLUME *volume, directory_record *dir, char *buf, int buflen)
 
     switch (volume->protocol) 
     {
+	case PRO_JOLIET:
+	    len = Get_Joliet_Name(dir->file_id, buf, dir->file_id_length);
+	    break;
+
 	case PRO_ROCK:
 	    len = Get_RR_File_Name(volume, dir, buf, buflen);
 	    if (len > 0)
 		return len;
-	    break;
 
-	case PRO_JOLIET:
-	    len = Get_Joliet_Name(dir->file_id, buf, dir->file_id_length);
-	    break;
+	    /* Fall through... */
 
 	default:
 	    len = dir->file_id_length;
