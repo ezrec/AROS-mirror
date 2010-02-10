@@ -1125,7 +1125,7 @@ void mainloop(void) {
               clearcachebuffer(cb);
 
               rb=cb->data;
-              rb->bheader.id=DOSTYPE_ID;
+              rb->bheader.id=L2BE(DOSTYPE_ID);
               rb->bheader.be_ownblock=0;
 
               rb->be_version=W2BE(STRUCTURE_VERSION);
@@ -3362,22 +3362,22 @@ LONG readroots(void) {
   rb1=cb1->data;
   rb2=cb2->data;
 
-  if(checkchecksum(cb1)==DOSFALSE || rb1->bheader.id!=DOSTYPE_ID || rb1->bheader.be_ownblock!=0) {
+  if(checkchecksum(cb1)==DOSFALSE || rb1->bheader.id!=L2BE(DOSTYPE_ID) || rb1->bheader.be_ownblock!=0) {
   _DEBUG(("cb1/rb1 not ok!\n"));
     rb1okay=FALSE;
   }
   
   _DEBUG(("checkchecksum(cb1)=%d, rb1->bheader.id=%08x (wanted %08x), rb1->bheader.ownblock=%d\n",
-    checkchecksum(cb1),rb1->bheader.id, DOSTYPE_ID, BE2L(rb1->bheader.be_ownblock)
+    checkchecksum(cb1),BE2L(rb1->bheader.id), DOSTYPE_ID, BE2L(rb1->bheader.be_ownblock)
     ));
 
-  if(checkchecksum(cb2)==DOSFALSE || rb2->bheader.id!=DOSTYPE_ID || BE2L(rb2->bheader.be_ownblock)!=BE2L(rb2->be_totalblocks)-1) {
+  if(checkchecksum(cb2)==DOSFALSE || rb2->bheader.id!=L2BE(DOSTYPE_ID) || BE2L(rb2->bheader.be_ownblock)!=BE2L(rb2->be_totalblocks)-1) {
   _DEBUG(("cb2/rb2 not ok!\n"));
     rb2okay=FALSE;
   }
 
   _DEBUG(("checkchecksum(cb2)=%d, rb2->bheader.id=%08x, rb2->bheader.ownblock=%d, rb2->be_totalblocks =%d\n",
-    checkchecksum(cb2),rb2->bheader.id, BE2L(rb2->bheader.be_ownblock), BE2L(rb2->be_totalblocks)
+    checkchecksum(cb2),BE2L(rb2->bheader.id), BE2L(rb2->bheader.be_ownblock), BE2L(rb2->be_totalblocks)
     ));
 
   if(rb1okay!=FALSE && rb2okay!=FALSE) {
