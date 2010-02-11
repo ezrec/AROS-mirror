@@ -167,20 +167,6 @@ VOID RemICRVector( struct Library *resource, LONG iCRBit, struct Interrupt *inte
 }
 
 
-/* Misc *******************************************************************/
-
-UBYTE *AllocMiscResource( ULONG unitNum, CONST_STRPTR name )
-{
-    bug("%s not implemented!\n", __func__);
-    return 0;
-}
-
-VOID FreeMiscResource( ULONG unitNum )
-{
-    bug("%s not implemented!\n", __func__);
-}
-
-
 /* main *******************************************************************/
 
 struct Args opts;
