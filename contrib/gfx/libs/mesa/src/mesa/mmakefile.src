@@ -107,7 +107,8 @@ USER_INCLUDES := \
 USER_CFLAGS :=
 
 %build_linklib mmake=mesa-mesa-gallium-linklib libname=GLGalliumStatic \
-    files="$(LIB_MESA_GALLIUM_SOURCES) arosmesa_getprocaddress" objdir=$(GENDIR)/$(CURDIR)/gallium-linklib
+    files="$(LIB_MESA_GALLIUM_SOURCES) arosmesa_getprocaddress" \
+    asmfiles=aros_wbinvd_hack objdir=$(GENDIR)/$(CURDIR)/gallium-linklib
 
 USER_CFLAGS := -DUSE_MGL_NAMESPACE -DAROS_MESA_SHARED -ffast-math $(FFIXED)
 

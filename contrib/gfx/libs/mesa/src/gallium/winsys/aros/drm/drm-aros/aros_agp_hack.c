@@ -276,6 +276,14 @@ static VOID agp3_deinitialize_chipset(struct agp_staticdata * agpsd)
 }
 
 /* Generic functions */
+VOID HACK_Wbinvd(); /* Implemented in assembler */
+
+static VOID flush_cpu_cache()
+{
+    /* Don't use clflush here. Both linux and BSD codes use full wbinvd */
+    Supervisor(HACK_Wbinvd);
+}
+
 static VOID generic_create_gatt_table(struct agp_staticdata * agpsd)
 {
     /* Create a table that will hold a certain number of 32bit pointers */
@@ -299,6 +307,8 @@ static VOID generic_create_gatt_table(struct agp_staticdata * agpsd)
         writel((ULONG)agpsd->scratchmem, agpsd->gatttable + i);
         readl(agpsd->gatttable + i);	/* PCI Posting. */
     }
+    
+    flush_cpu_cache();
 }
 
 static VOID generic_free_gatt_table(struct agp_staticdata * agpsd)
@@ -315,25 +325,6 @@ static VOID generic_free_gatt_table(struct agp_staticdata * agpsd)
         FreeVec(agpsd->gatttablebuffer);
     agpsd->gatttablebuffer = NULL;
     agpsd->gatttable = NULL;
-}
-
-static inline VOID clflush(volatile void * ptr)
-{
-    asm volatile("clflush %0" : "+m" (*(volatile BYTE *) ptr));
-}
-
-static VOID flush_memory(APTR address, ULONG size)
-{
-    if (1) /* TODO: Detect if CPU has clflush / Use CachePreDMA */
-    {
-        ULONG i = 0;
-        for (i = 0; i < size; i += 32 /* Cache line size on x86 */)
-            clflush((APTR)(address + i));        
-    }
-    else
-    {
-        /* TODO: Use wbinvd */
-    }
 }
 
 static VOID generic_unbind_memory(struct agp_staticdata * agpsd, ULONG offset, ULONG size)
@@ -355,9 +346,8 @@ static VOID generic_unbind_memory(struct agp_staticdata * agpsd, ULONG offset, U
     
     readl(agpsd->gatttable + offset + i - 1); /* PCI posting */
     
-    /* Flush GATT table contents */
-    flush_memory((APTR)agpsd->gatttable,
-        (ULONG)(agpsd->bridgeapersize * 1024 * 1024 / 4096 * 4)); /* No. pages * 4 byte ptr */
+    /* Flush CPU cache - make sure data in GATT is up to date */
+    flush_cpu_cache();
 
     /* Flush GATT table */
     agpsd->flush_gatt_table(agpsd);
@@ -376,8 +366,7 @@ static VOID generic_bind_memory(struct agp_staticdata * agpsd, IPTR address, ULO
     
     /* TODO: Check if each entry in GATT to be written in unbound (might not work due to CPU caches problem - see HACK*/
     
-    /* Flush incomming memory */
-    flush_memory((APTR)address, size);
+    /* Flush incomming memory - will be done in flush_cpu_cache below */
     
     /* Insert entries into GATT table */
     for(i = 0; i < size / 4096; i++)
@@ -389,9 +378,8 @@ static VOID generic_bind_memory(struct agp_staticdata * agpsd, IPTR address, ULO
     
     readl(agpsd->gatttable + offset + i - 1); /* PCI posting */
 
-    /* Flush GATT table contents */
-    flush_memory((APTR)agpsd->gatttable,
-        (ULONG)(agpsd->bridgeapersize * 1024 * 1024 / 4096 * 4)); /* No. pages * 4 byte ptr */
+    /* Flush CPU cache - make sure data in GATT is up to date */
+    flush_cpu_cache();
 
     /* Flush GATT table at card*/
     agpsd->flush_gatt_table(agpsd);

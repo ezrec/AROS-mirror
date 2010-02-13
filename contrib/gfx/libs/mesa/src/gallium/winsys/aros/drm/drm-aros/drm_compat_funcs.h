@@ -85,13 +85,6 @@ static inline VOID memcpy_fromio(APTR dst, APTR src, ULONG size)
         *(dstp + i) = readb(src + i);
 }
 
-static inline void clflush(volatile void * ptr)
-{
-    /* TODO: Substitution is needed for pre-Pentium 4 processors */
-    asm volatile("clflush %0" : "+m" (*(volatile BYTE *) ptr));
-}
-
-
 #define BUG_ON(condition)           do { if (unlikely(condition)) bug("BUG: %s:%d\n", __FILE__, __LINE__); } while(0)
 #define WARN_ON(condition)          do { if (unlikely(condition)) bug("WARN: %s:%d\n", __FILE__, __LINE__); } while(0)
 #define EXPORT_SYMBOL(x)

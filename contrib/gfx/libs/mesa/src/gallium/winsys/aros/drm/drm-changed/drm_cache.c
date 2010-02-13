@@ -30,7 +30,7 @@
 
 #include "drmP.h"
 
-#if defined(CONFIG_X86) || defined(__AROS__)
+#if defined(CONFIG_X86)
 static void
 drm_clflush_page(struct page *page)
 {
@@ -41,7 +41,7 @@ drm_clflush_page(struct page *page)
 		return;
 
 	page_virtual = kmap_atomic(page, KM_USER0);
-	for (i = 0; i < PAGE_SIZE; i += 32 /* boot_cpu_data.x86_clflush_size */)
+	for (i = 0; i < PAGE_SIZE; i += boot_cpu_data.x86_clflush_size)
 		clflush(page_virtual + i);
 	kunmap_atomic(page_virtual, KM_USER0);
 }
@@ -57,13 +57,11 @@ static void drm_cache_flush_clflush(struct page *pages[],
 	mb();
 }
 
-#if !defined(__AROS__)
 static void
 drm_clflush_ipi_handler(void *null)
 {
 	wbinvd();
 }
-#endif
 #endif
 
 void
@@ -94,7 +92,9 @@ drm_clflush_pages(struct page *pages[], unsigned long num_pages)
 		kunmap_atomic(page_virtual, KM_USER0);
 	}
 #elif defined(__AROS__)
-    drm_cache_flush_clflush(pages, num_pages);
+    /* TODO: Detect if cpu has clflush. Use it if present */
+    VOID HACK_Wbinvd(); /* Implemented in assembler */
+    Supervisor(HACK_Wbinvd);
 #else
 	printk(KERN_ERR "Architecture has no drm_cache.c support\n");
 	WARN_ON_ONCE(1);
