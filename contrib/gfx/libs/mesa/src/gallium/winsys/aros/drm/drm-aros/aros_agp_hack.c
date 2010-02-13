@@ -143,6 +143,7 @@ struct agp_staticdata {
     ULONG               *gatttable;     /* 4096 aligned gatt table */
     APTR                scratchmembuffer;/* Buffer for scratch mem */
     ULONG               *scratchmem;    /* 4096 aligned scratch mem */
+    ULONG               memmask;        /* Mask for binded memorory */
 
     /* Video card data */
     struct PciAgpDevice *videocard;     /* Selected AGP card */
@@ -381,8 +382,9 @@ static VOID generic_bind_memory(struct agp_staticdata * agpsd, IPTR address, ULO
     /* Insert entries into GATT table */
     for(i = 0; i < size / 4096; i++)
     {
-        /* TODO: mask memory */
-        writel(address + (4096 * i), agpsd->gatttable + offset + i);
+        /* Write masked memory address into GATT */
+        writel((address + (4096 * i)) | agpsd->memmask, 
+            agpsd->gatttable + offset + i);
     }
     
     readl(agpsd->gatttable + offset + i - 1); /* PCI posting */
@@ -545,7 +547,7 @@ static VOID generic_send_command(struct agp_staticdata * agpsd, ULONG status)
                 (status & AGP_STATUS_REG_AGP_3_0) ? 3 : 2, 
                 pciagpdev->VendorID, pciagpdev->ProductID, mode);
             
-            writeconfiglong(pciagpdev->PciDevice, pciagpdev->AgpCapability + AGP_COMMAND_REG, status);            
+            writeconfiglong(pciagpdev->PciDevice, pciagpdev->AgpCapability + AGP_COMMAND_REG, status);
         }
     }
 }
@@ -582,9 +584,9 @@ static VOID generic_enable_agp(struct agp_staticdata * agpsd, ULONG requestedmod
             /* Bridge is operating in legacy mode */
             /* Disable calibration cycle */
             ULONG temp = 0;
-            bridgemode &= ~(7<<10);
+            bridgemode &= ~(7 << 10);
             temp = readconfiglong(bridgedev, bridgeagpcap + AGP_CTRL_REG);
-            temp |= (1<<9);
+            temp |= (1 << 9);
             writeconfiglong(bridgedev, bridgeagpcap + AGP_CTRL_REG, temp);           
         }
     }
@@ -596,7 +598,7 @@ static VOID generic_enable_agp(struct agp_staticdata * agpsd, ULONG requestedmod
 
 /* SiS functions */
 #define AGP_SIS_GATT_BASE   0x90
-#define APG_SIS_APER_SIZE   0x94
+#define AGP_SIS_APER_SIZE   0x94
 #define AGP_SIS_GATT_CNTRL  0x97
 #define AGP_SIS_GATT_FLUSH  0x98
 
@@ -610,9 +612,10 @@ static VOID sis_initialize_chipset(struct agp_staticdata * agpsd)
 {
     OOP_Object * bridgedev = agpsd->bridge->PciDevice;
     UBYTE aperture_size_value = 0;
+    UBYTE temp = 0;
     
     /* Getting GART size */
-    aperture_size_value = readconfigbyte(bridgedev, APG_SIS_APER_SIZE);
+    aperture_size_value = readconfigbyte(bridgedev, AGP_SIS_APER_SIZE);
     LOG_MSG("[SIS] Reading aperture size value: %x\n", aperture_size_value);
     
     switch(aperture_size_value & ~(0x07))
@@ -632,9 +635,6 @@ static VOID sis_initialize_chipset(struct agp_staticdata * agpsd)
     /* Creation of GATT table */
     agpsd->create_gatt_table(agpsd);
     
-    /* Send control command */
-    writeconfigbyte(bridgedev, AGP_SIS_GATT_CNTRL, 0x05);
-
     /* Getting GART base */
     agpsd->bridgeaperbase = (IPTR)readconfiglong(bridgedev, AGP_APER_BASE);
     agpsd->bridgeaperbase &= (~0x0fUL) /* PCI_BASE_ADDRESS_MEM_MASK */;
@@ -644,12 +644,27 @@ static VOID sis_initialize_chipset(struct agp_staticdata * agpsd)
     writeconfiglong(bridgedev, AGP_SIS_GATT_BASE, (ULONG)agpsd->gatttable);
     LOG_MSG("[SiS] Set GATT pointer to 0x%x\n", (ULONG)agpsd->gatttable);
     
+    /* Enable GART */
+    temp = readconfigbyte(bridgedev, AGP_SIS_APER_SIZE);
+    writeconfigbyte(bridgedev, AGP_SIS_APER_SIZE, temp | 3);
+
+    /* Enable GATT */
+    writeconfigbyte(bridgedev, AGP_SIS_GATT_CNTRL, 0x05);
+
     agpsd->bridgesupported = TRUE;
 }
 
 static VOID sis_deinitialize_chipset(struct agp_staticdata * agpsd)
 {
-    /* NO OP (or set previous size of aperture?) */
+    OOP_Object * bridgedev = agpsd->bridge->PciDevice;
+    UBYTE temp = 0;
+
+    /* Disable GART */
+    temp = readconfigbyte(bridgedev, AGP_SIS_APER_SIZE);
+    writeconfigbyte(bridgedev, AGP_SIS_APER_SIZE, temp & ~3);
+    
+    /* Disable GATT */
+    writeconfigbyte(bridgedev, AGP_SIS_GATT_CNTRL, 0x00);
 }
 
 static VOID sis_initialize_agp(struct agp_staticdata * agpsd)
@@ -667,6 +682,7 @@ static VOID sis_initialize_agp(struct agp_staticdata * agpsd)
     agpsd->initialize_chipset = NULL;
     agpsd->deinitialize_chipset = NULL;
     agpsd->free_gatt_table = generic_free_gatt_table;
+    agpsd->memmask = 0x00000000;
     
     /* Getting version info */ 
     major = (readconfigbyte(bridgedev, bridgeagpcap + AGP_VERSION_REG) >> 4) & 0xf;
@@ -855,7 +871,8 @@ static VOID via_initialize_agp(struct agp_staticdata * agpsd)
     agpsd->initialize_chipset = NULL;
     agpsd->deinitialize_chipset = NULL;
     agpsd->free_gatt_table = generic_free_gatt_table;
-    
+    agpsd->memmask = 0x00000000;
+
     /* Getting version info */ 
     major = (readconfigbyte(bridgedev, bridgeagpcap + AGP_VERSION_REG) >> 4) & 0xf;
     minor = readconfigbyte(bridgedev, bridgeagpcap + AGP_VERSION_REG) & 0xf;
@@ -988,6 +1005,7 @@ static VOID intel_initialize_agp(struct agp_staticdata * agpsd)
     agpsd->initialize_chipset = NULL;
     agpsd->deinitialize_chipset = NULL;
     agpsd->free_gatt_table = generic_free_gatt_table;
+    agpsd->memmask = 0x00000017;
     
     /* Getting version info */ 
     major = (readconfigbyte(bridgedev, bridgeagpcap + AGP_VERSION_REG) >> 4) & 0xf;
@@ -1157,6 +1175,8 @@ static VOID initialize_static_data(struct agp_staticdata * agpsd)
     agpsd->gatttable = NULL;
     agpsd->scratchmembuffer = NULL;
     agpsd->scratchmem = NULL;
+    agpsd->memmask = 0x00000000;
+    
     agpsd->create_gatt_table = NULL;
     agpsd->unbind_memory = NULL;
     agpsd->flush_gatt_table = NULL;
