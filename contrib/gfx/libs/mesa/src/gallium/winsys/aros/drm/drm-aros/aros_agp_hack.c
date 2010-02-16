@@ -562,8 +562,11 @@ static VOID generic_enable_agp(struct agp_staticdata * agpsd, ULONG requestedmod
     ObtainSemaphore(&agpsd->driverlock);
     
     if (agpsd->enabled)
+    {
+        ReleaseSemaphore(&agpsd->driverlock);
         return;
-
+    }
+    
     D(bug("[AGP] Enable AGP:\n"));
     D(bug("[AGP]     Requested mode 0x%x\n", requestedmode));
     
@@ -1206,9 +1209,9 @@ static BOOL is_agp_disabled_by_env()
     TEXT buffer[128] = {0};
     
     if (GetVar("NOAGP", buffer, 128, LV_VAR) == -1)
-        return TRUE;
-    else
         return FALSE;
+    else
+        return TRUE;
 }
 
 static int aros_agp_hack_init_agp(void)

@@ -117,4 +117,7 @@ USER_CFLAGS := -DUSE_MGL_NAMESPACE -DAROS_MESA_SHARED -ffast-math $(FFIXED)
     files="$(SHARED_LIB_SOURCES) $(LIB_MESA_GALLIUM_SOURCES)" objdir=$(GENDIR)/$(CURDIR)/gallium-module \
     uselibs="rom"
 
+%build_archspecific mainmmake=mesa-mesa-gallium-module asmfiles=aros_wbinvd_hack \
+    maindir=$(CURDIR)/gallium-module arch=i386 modulename=mesa
+
 %common
