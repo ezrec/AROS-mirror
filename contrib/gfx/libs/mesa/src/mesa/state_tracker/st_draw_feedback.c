@@ -28,7 +28,6 @@
 #include "main/imports.h"
 #include "main/image.h"
 #include "main/macros.h"
-#include "shader/prog_uniform.h"
 
 #include "vbo/vbo.h"
 
@@ -40,7 +39,7 @@
 
 #include "pipe/p_context.h"
 #include "pipe/p_defines.h"
-#include "pipe/p_inlines.h"
+#include "util/u_inlines.h"
 
 #include "draw/draw_private.h"
 #include "draw/draw_context.h"
@@ -120,10 +119,10 @@ st_feedback_draw_vbo(GLcontext *ctx,
 
    /* must get these after state validation! */
    vp = ctx->st->vp;
-   vs = &st->vp->state;
+   vs = &st->vp_varient->tgsi;
 
-   if (!st->vp->draw_shader) {
-      st->vp->draw_shader = draw_create_vertex_shader(draw, vs);
+   if (!st->vp_varient->draw_shader) {
+      st->vp_varient->draw_shader = draw_create_vertex_shader(draw, vs);
    }
 
    /*
@@ -136,7 +135,7 @@ st_feedback_draw_vbo(GLcontext *ctx,
    draw_set_viewport_state(draw, &st->state.viewport);
    draw_set_clip_state(draw, &st->state.clip);
    draw_set_rasterizer_state(draw, &st->state.rasterizer);
-   draw_bind_vertex_shader(draw, st->vp->draw_shader);
+   draw_bind_vertex_shader(draw, st->vp_varient->draw_shader);
    set_feedback_vertex_format(ctx);
 
    /* loop over TGSI shader inputs to determine vertex buffer
@@ -177,6 +176,7 @@ st_feedback_draw_vbo(GLcontext *ctx,
       /* common-case setup */
       vbuffers[attr].stride = arrays[mesaAttr]->StrideB; /* in bytes */
       vbuffers[attr].max_index = max_index;
+      velements[attr].instance_divisor = 0;
       velements[attr].vertex_buffer_index = attr;
       velements[attr].nr_components = arrays[mesaAttr]->Size;
       velements[attr].src_format = 
@@ -239,10 +239,11 @@ st_feedback_draw_vbo(GLcontext *ctx,
 
    /* map constant buffers */
    mapped_constants = pipe_buffer_map(pipe->screen,
-                                      st->state.constants[PIPE_SHADER_VERTEX].buffer,
+                                      st->state.constants[PIPE_SHADER_VERTEX],
                                       PIPE_BUFFER_USAGE_CPU_READ);
-   draw_set_mapped_constant_buffer(st->draw, mapped_constants,
-                                   st->state.constants[PIPE_SHADER_VERTEX].buffer->size);
+   draw_set_mapped_constant_buffer(st->draw, PIPE_SHADER_VERTEX, 0,
+                                   mapped_constants,
+                                   st->state.constants[PIPE_SHADER_VERTEX]->size);
 
 
    /* draw here */
@@ -252,7 +253,7 @@ st_feedback_draw_vbo(GLcontext *ctx,
 
 
    /* unmap constant buffers */
-   pipe_buffer_unmap(pipe->screen, st->state.constants[PIPE_SHADER_VERTEX].buffer);
+   pipe_buffer_unmap(pipe->screen, st->state.constants[PIPE_SHADER_VERTEX]);
 
    /*
     * unmap vertex/index buffers

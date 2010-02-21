@@ -35,7 +35,8 @@
 #include "st_cb_bitmap.h"
 #include "st_program.h"
 
-       
+#include "pipe/p_context.h"
+
 
 /**
  * This is used to initialize st->atoms[].
@@ -46,7 +47,8 @@ static const struct st_tracked_state *atoms[] =
    &st_update_clip,
 
    &st_finalize_textures,
-   &st_update_shader,
+   &st_update_fp,
+   &st_update_vp,
 
    &st_update_rasterizer,
    &st_update_polygon_stipple,
@@ -133,6 +135,10 @@ void st_validate_state( struct st_context *st )
       st_flush_bitmap_cache(st);
 
    check_program_state( st );
+
+   if (st->pipe->screen->update_buffer)
+      st->pipe->screen->update_buffer(st->pipe->screen,
+				      st->pipe->priv);
 
    if (state->st == 0)
       return;

@@ -40,19 +40,15 @@
 #include "main/imports.h"
 #include "main/context.h"
 #include "main/feedback.h"
-#include "main/macros.h"
 
 #include "vbo/vbo.h"
 
 #include "st_context.h"
-#include "st_atom.h"
 #include "st_draw.h"
 #include "st_cb_feedback.h"
-#include "st_cb_bufferobjects.h"
 
 #include "pipe/p_context.h"
 #include "pipe/p_defines.h"
-#include "cso_cache/cso_cache.h"
 
 #include "draw/draw_context.h"
 #include "draw/draw_pipe.h"

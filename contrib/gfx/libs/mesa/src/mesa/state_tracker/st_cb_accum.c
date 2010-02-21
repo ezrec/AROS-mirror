@@ -38,14 +38,12 @@
 #include "st_context.h"
 #include "st_cb_accum.h"
 #include "st_cb_fbo.h"
-#include "st_draw.h"
 #include "st_public.h"
-#include "st_format.h"
 #include "st_texture.h"
 #include "st_inlines.h"
 #include "pipe/p_context.h"
 #include "pipe/p_defines.h"
-#include "pipe/p_inlines.h"
+#include "util/u_inlines.h"
 #include "util/u_tile.h"
 
 
@@ -229,7 +227,7 @@ accum_return(GLcontext *ctx, GLfloat value,
 {
    struct pipe_context *pipe = ctx->st->pipe;
    struct pipe_screen *screen = pipe->screen;
-   const GLubyte *colormask = ctx->Color.ColorMask;
+   const GLubyte *colormask = ctx->Color.ColorMask[0];
    enum pipe_transfer_usage usage;
    struct pipe_transfer *color_trans;
    size_t stride = acc_strb->stride;

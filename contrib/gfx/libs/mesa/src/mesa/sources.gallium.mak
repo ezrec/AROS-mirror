@@ -20,11 +20,12 @@ AROS_LIBDRM_SOURCES = \
             winsys/aros/drm/libdrm/nouveau/nouveau_grobj \
             winsys/aros/drm/libdrm/nouveau/nouveau_channel \
             winsys/aros/drm/libdrm/nouveau/nouveau_bo \
+            winsys/aros/drm/libdrm/nouveau/nouveau_reloc \
             winsys/aros/drm/libdrm/intel/intel_bufmgr \
             winsys/aros/drm/libdrm/intel/intel_bufmgr_gem \
             winsys/aros/drm/libdrm/arosdrm \
 
-AROS_DRM_SOURCES = \
+AROS_DRM_CORE_SOURCES = \
             winsys/aros/drm/drm-aros/aros_agp_hack \
             winsys/aros/drm/drm-aros/drm_aros \
             winsys/aros/drm/drm-aros/drm_bufs \
@@ -32,33 +33,30 @@ AROS_DRM_SOURCES = \
             winsys/aros/drm/drm-aros/drm_pci \
             winsys/aros/drm/drm-aros/drm_drv \
             winsys/aros/drm/drm-aros/drm_compat_funcs \
-            winsys/aros/drm/drm-aros/nouveau/nouveau_drv \
-            winsys/aros/drm/drm-aros/i915/i915_drv \
             winsys/aros/drm/drm-changed/drm_mm \
             winsys/aros/drm/drm-changed/drm_gem \
             winsys/aros/drm/drm-changed/drm_cache \
             winsys/aros/drm/drm-changed/drm_memory \
             winsys/aros/drm/drm-changed/drm_agpsupport \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_state \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_mem \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_fence \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_sgdma \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_ttm \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_irq \
-            winsys/aros/drm/drm-changed/nouveau/nv50_instmem \
-            winsys/aros/drm/drm-changed/nouveau/nv50_display \
-            winsys/aros/drm/drm-changed/i915/i915_dma \
-            winsys/aros/drm/drm-changed/i915/i915_gem \
-            winsys/aros/drm/drm-changed/i915/i915_gem_tiling \
-            winsys/aros/drm/drm-changed/i915/i915_irq \
-            winsys/aros/drm/drm-changed/i915/i915_mem \
             winsys/aros/drm/drm-changed/ttm/ttm_global \
             winsys/aros/drm/drm-changed/ttm/ttm_bo \
             winsys/aros/drm/drm-changed/ttm/ttm_bo_util \
             winsys/aros/drm/drm-changed/ttm/ttm_tt \
             winsys/aros/drm/drm-changed/ttm/ttm_agp_backend \
+
+AROS_DRM_NVIDIA_SOURCES = \
+            winsys/aros/drm/drm-aros/nouveau/nouveau_drv \
+            winsys/aros/drm/drm-changed/nouveau/nouveau_state \
+            winsys/aros/drm/drm-changed/nouveau/nouveau_mem \
+            winsys/aros/drm/drm-changed/nouveau/nouveau_fence \
+            winsys/aros/drm/drm-changed/nouveau/nouveau_grctx \
+            winsys/aros/drm/drm-changed/nouveau/nouveau_sgdma \
+            winsys/aros/drm/drm-changed/nouveau/nouveau_ttm \
+            winsys/aros/drm/drm-changed/nouveau/nouveau_irq \
+            winsys/aros/drm/drm-changed/nouveau/nv50_instmem \
+            winsys/aros/drm/drm-changed/nouveau/nv50_display \
+            winsys/aros/drm/drm-changed/nouveau/nouveau_bo_renamed \
             winsys/aros/drm/drm-unchanged/nouveau/nouveau_channel_renamed \
-            winsys/aros/drm/drm-unchanged/nouveau/nouveau_bo_renamed \
             winsys/aros/drm/drm-unchanged/nouveau/nouveau_dma \
             winsys/aros/drm/drm-unchanged/nouveau/nouveau_object \
             winsys/aros/drm/drm-unchanged/nouveau/nouveau_notifier_renamed \
@@ -76,10 +74,20 @@ AROS_DRM_SOURCES = \
             winsys/aros/drm/drm-unchanged/nouveau/nv40_fb \
             winsys/aros/drm/drm-unchanged/nouveau/nv40_fifo \
             winsys/aros/drm/drm-unchanged/nouveau/nv40_graph \
+            winsys/aros/drm/drm-unchanged/nouveau/nv40_grctx \
             winsys/aros/drm/drm-unchanged/nouveau/nv40_mc \
             winsys/aros/drm/drm-unchanged/nouveau/nv50_fifo \
             winsys/aros/drm/drm-unchanged/nouveau/nv50_mc \
             winsys/aros/drm/drm-unchanged/nouveau/nv50_graph \
+
+AROS_DRM_INTEL_SOURCES = \
+            winsys/aros/drm/drm-aros/i915/i915_drv \
+            winsys/aros/drm/drm-changed/i915/i915_dma \
+            winsys/aros/drm/drm-changed/i915/i915_gem \
+            winsys/aros/drm/drm-changed/i915/i915_gem_tiling \
+            winsys/aros/drm/drm-changed/i915/i915_irq \
+            winsys/aros/drm/drm-changed/i915/i915_mem \
+
 
 GALLIUM_AUXILIARY_SOURCES = \
             auxiliary/util/u_debug \
@@ -88,6 +96,9 @@ GALLIUM_AUXILIARY_SOURCES = \
             auxiliary/util/u_blit \
             auxiliary/util/u_cache \
             auxiliary/util/u_draw_quad \
+            auxiliary/util/u_format \
+            auxiliary/util/u_format_access \
+            auxiliary/util/u_format_table \
             auxiliary/util/u_gen_mipmap \
             auxiliary/util/u_handle_table \
             auxiliary/util/u_hash_table \
@@ -95,20 +106,22 @@ GALLIUM_AUXILIARY_SOURCES = \
             auxiliary/util/u_keymap \
             auxiliary/util/u_linear \
             auxiliary/util/u_mm \
+            auxiliary/util/u_math \
             auxiliary/util/u_rect \
             auxiliary/util/u_simple_shaders \
             auxiliary/util/u_snprintf \
-            auxiliary/util/u_stream_stdc \
-            auxiliary/util/u_stream_wd \
             auxiliary/util/u_surface \
+            auxiliary/util/u_texture \
             auxiliary/util/u_tile \
             auxiliary/util/u_timed_winsys \
             auxiliary/util/u_upload_mgr \
             auxiliary/util/u_simple_screen \
             auxiliary/draw/draw_context \
+            auxiliary/draw/draw_gs \
             auxiliary/draw/draw_pipe \
             auxiliary/draw/draw_pipe_aaline \
             auxiliary/draw/draw_pipe_aapoint \
+            auxiliary/draw/draw_pipe_clip \
             auxiliary/draw/draw_pipe_cull \
             auxiliary/draw/draw_pipe_flatshade \
             auxiliary/draw/draw_pipe_offset \
@@ -168,9 +181,8 @@ GALLIUM_AUXILIARY_SOURCES = \
             auxiliary/cso_cache/cso_context \
             auxiliary/cso_cache/cso_cache \
             auxiliary/cso_cache/cso_hash \
-            auxiliary/draw/draw_pipe_clip \
-            auxiliary/util/u_math \
-            auxiliary/util/u_time \
+            auxiliary/os/os_misc \
+            auxiliary/os/os_time \
 
 GALLIUM_SOFTPIPE_SOURCES = \
             drivers/softpipe/sp_fs_exec \
@@ -205,6 +217,7 @@ GALLIUM_SOFTPIPE_SOURCES = \
 GALLIUM_NVIDIA_SOURCES = \
             drivers/nouveau/nouveau_screen \
             drivers/nouveau/nouveau_context \
+            drivers/nouveau/nv04_surface_2d \
             drivers/nv40/nv40_clear \
             drivers/nv40/nv40_context \
             drivers/nv40/nv40_draw \
@@ -226,43 +239,6 @@ GALLIUM_NVIDIA_SOURCES = \
             drivers/nv40/nv40_transfer \
             drivers/nv40/nv40_vbo \
             drivers/nv40/nv40_vertprog \
-            drivers/nv04/nv04_surface_2d \
-            drivers/nv04/nv04_clear \
-            drivers/nv04/nv04_context \
-            drivers/nv04/nv04_fragprog \
-            drivers/nv04/nv04_fragtex \
-            drivers/nv04/nv04_miptree \
-            drivers/nv04/nv04_prim_vbuf \
-            drivers/nv04/nv04_screen \
-            drivers/nv04/nv04_state \
-            drivers/nv04/nv04_state_emit \
-            drivers/nv04/nv04_surface \
-            drivers/nv04/nv04_transfer \
-            drivers/nv04/nv04_vbo \
-            drivers/nv20/nv20_clear \
-            drivers/nv20/nv20_context \
-            drivers/nv20/nv20_fragprog \
-            drivers/nv20/nv20_fragtex \
-            drivers/nv20/nv20_miptree \
-            drivers/nv20/nv20_prim_vbuf \
-            drivers/nv20/nv20_screen \
-            drivers/nv20/nv20_state \
-            drivers/nv20/nv20_state_emit \
-            drivers/nv20/nv20_surface \
-            drivers/nv20/nv20_transfer \
-            drivers/nv20/nv20_vbo \
-            drivers/nv10/nv10_clear \
-            drivers/nv10/nv10_context \
-            drivers/nv10/nv10_fragprog \
-            drivers/nv10/nv10_fragtex \
-            drivers/nv10/nv10_miptree \
-            drivers/nv10/nv10_prim_vbuf \
-            drivers/nv10/nv10_screen \
-            drivers/nv10/nv10_state \
-            drivers/nv10/nv10_state_emit \
-            drivers/nv10/nv10_surface \
-            drivers/nv10/nv10_transfer \
-            drivers/nv10/nv10_vbo \
             drivers/nv30/nv30_clear \
             drivers/nv30/nv30_context \
             drivers/nv30/nv30_draw \
@@ -324,7 +300,9 @@ AROS_GALLIUM_SOURCES = \
             $(AROS_STATE_TRACKER_SOURCES) \
             $(AROS_WINSYS_SOURCES) \
             $(AROS_LIBDRM_SOURCES) \
-            $(AROS_DRM_SOURCES) \
+            $(AROS_DRM_CORE_SOURCES) \
+            $(AROS_DRM_NVIDIA_SOURCES) \
+            $(AROS_DRM_INTEL_SOURCES) \
             $(GALLIUM_AUXILIARY_SOURCES) \
             $(GALLIUM_SOFTPIPE_SOURCES) \
             $(GALLIUM_NVIDIA_SOURCES) \

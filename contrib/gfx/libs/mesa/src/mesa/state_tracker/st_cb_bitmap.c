@@ -34,9 +34,7 @@
 #include "main/image.h"
 #include "main/bufferobj.h"
 #include "main/macros.h"
-#include "main/texformat.h"
 #include "shader/program.h"
-#include "shader/prog_parameter.h"
 #include "shader/prog_print.h"
 
 #include "st_context.h"
@@ -44,15 +42,12 @@
 #include "st_atom_constbuf.h"
 #include "st_program.h"
 #include "st_cb_bitmap.h"
-#include "st_cb_program.h"
-#include "st_mesa_to_tgsi.h"
 #include "st_texture.h"
 #include "st_inlines.h"
 
 #include "pipe/p_context.h"
 #include "pipe/p_defines.h"
-#include "pipe/p_inlines.h"
-#include "util/u_tile.h"
+#include "util/u_inlines.h"
 #include "util/u_draw_quad.h"
 #include "util/u_simple_shaders.h"
 #include "shader/prog_instruction.h"
@@ -169,11 +164,6 @@ make_bitmap_fragment_program(GLcontext *ctx, GLuint samplerIndex)
    stfp = (struct st_fragment_program *) p;
    stfp->Base.UsesKill = GL_TRUE;
 
-   /* No need to send this incomplete program down to hardware:
-    *
-    * st_translate_fragment_program(ctx->st, stfp, NULL);
-    */
-
    return stfp;
 }
 
@@ -231,7 +221,7 @@ combined_bitmap_fragment_program(GLcontext *ctx)
 #endif
 
       /* translate to TGSI tokens */
-      st_translate_fragment_program(st, stfp->bitmap_program, NULL);
+      st_translate_fragment_program(st, stfp->bitmap_program);
    }
 
    return stfp->bitmap_program;
@@ -391,11 +381,11 @@ setup_bitmap_vertex_data(struct st_context *st,
    }
 
    /* put vertex data into vbuf */
-   st_no_flush_pipe_buffer_write(st,
-				 st->bitmap.vbuf,
-				 st->bitmap.vbuf_slot * sizeof st->bitmap.vertices,
-				 sizeof st->bitmap.vertices,
-				 st->bitmap.vertices);
+   st_no_flush_pipe_buffer_write_nooverlap(st,
+                                           st->bitmap.vbuf,
+                                           st->bitmap.vbuf_slot * sizeof st->bitmap.vertices,
+                                           sizeof st->bitmap.vertices,
+                                           st->bitmap.vertices);
 
    return st->bitmap.vbuf_slot++ * sizeof st->bitmap.vertices;
 }
@@ -647,7 +637,7 @@ accum_bitmap(struct st_context *st,
              const GLubyte *bitmap )
 {
    struct bitmap_cache *cache = st->bitmap.cache;
-   int px = -999, py;
+   int px = -999, py = -999;
    const GLfloat z = st->ctx->Current.RasterPos[2];
 
    if (width > BITMAP_CACHE_WIDTH ||
@@ -681,6 +671,7 @@ accum_bitmap(struct st_context *st,
    }
 
    assert(px != -999);
+   assert(py != -999);
 
    if (x < cache->xmin)
       cache->xmin = x;

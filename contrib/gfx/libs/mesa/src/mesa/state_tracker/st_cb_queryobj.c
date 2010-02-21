@@ -41,24 +41,6 @@
 #include "pipe/p_defines.h"
 #include "st_context.h"
 #include "st_cb_queryobj.h"
-#include "st_public.h"
-
-
-struct st_query_object
-{
-   struct gl_query_object base;
-   struct pipe_query *pq;
-};
-
-
-/**
- * Cast wrapper
- */
-static struct st_query_object *
-st_query_object(struct gl_query_object *q)
-{
-   return (struct st_query_object *) q;
-}
 
 
 static struct gl_query_object *

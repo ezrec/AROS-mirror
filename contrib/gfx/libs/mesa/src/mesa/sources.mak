@@ -190,6 +190,7 @@ STATETRACKER_SOURCES = \
 	state_tracker/st_cb_blit.c \
 	state_tracker/st_cb_bufferobjects.c \
 	state_tracker/st_cb_clear.c \
+	state_tracker/st_cb_condrender.c \
 	state_tracker/st_cb_flush.c \
 	state_tracker/st_cb_drawpixels.c \
 	state_tracker/st_cb_fbo.c \
@@ -200,8 +201,6 @@ STATETRACKER_SOURCES = \
 	state_tracker/st_cb_readpixels.c \
 	state_tracker/st_cb_strings.c \
 	state_tracker/st_cb_texture.c \
-	state_tracker/st_cb_viewport.c \
-	state_tracker/st_api.c \
 	state_tracker/st_context.c \
 	state_tracker/st_debug.c \
 	state_tracker/st_draw.c \
