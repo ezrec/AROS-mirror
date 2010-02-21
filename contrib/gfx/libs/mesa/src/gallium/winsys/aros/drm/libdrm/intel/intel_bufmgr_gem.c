@@ -1462,18 +1462,15 @@ drm_intel_gem_bo_set_tiling(drm_intel_bo *bo, uint32_t * tiling_mode,
 
 	memset(&set_tiling, 0, sizeof(set_tiling));
 	set_tiling.handle = bo_gem->gem_handle;
-	set_tiling.tiling_mode = *tiling_mode;
-	set_tiling.stride = stride;
 
 	do {
+		set_tiling.tiling_mode = *tiling_mode;
+		set_tiling.stride = stride;
+
 		ret = ioctl(bufmgr_gem->fd,
 			    DRM_IOCTL_I915_GEM_SET_TILING,
 			    &set_tiling);
 	} while (ret == -1 && errno == EINTR);
-	if (ret != 0) {
-		*tiling_mode = bo_gem->tiling_mode;
-		return -errno;
-	}
 	bo_gem->tiling_mode = set_tiling.tiling_mode;
 	bo_gem->swizzle_mode = set_tiling.swizzle_mode;
 
@@ -1484,7 +1481,7 @@ drm_intel_gem_bo_set_tiling(drm_intel_bo *bo, uint32_t * tiling_mode,
 	drm_intel_bo_gem_set_in_aperture_size(bufmgr_gem, bo_gem);
 
 	*tiling_mode = bo_gem->tiling_mode;
-	return 0;
+	return ret == 0 ? 0 : -errno;
 }
 
 static int
@@ -1766,6 +1763,9 @@ drm_intel_bufmgr_gem_init(int fd, int batch_size)
 	unsigned long size;
 
 	bufmgr_gem = calloc(1, sizeof(*bufmgr_gem));
+	if (bufmgr_gem == NULL)
+		return NULL;
+
 	bufmgr_gem->fd = fd;
 
 	if (pthread_mutex_init(&bufmgr_gem->lock, NULL) != 0) {
@@ -1805,6 +1805,19 @@ drm_intel_bufmgr_gem_init(int fd, int batch_size)
 			fprintf(stderr, "param: %d, val: %d\n", gp.param,
 				*gp.value);
 			bufmgr_gem->available_fences = 0;
+		} else {
+			/* XXX The kernel reports the total number of fences,
+			 * including any that may be pinned.
+			 *
+			 * We presume that there will be at least one pinned
+			 * fence for the scanout buffer, but there may be more
+			 * than one scanout and the user may be manually
+			 * pinning buffers. Let's move to execbuffer2 and
+			 * thereby forget the insanity of using fences...
+			 */
+			bufmgr_gem->available_fences -= 2;
+			if (bufmgr_gem->available_fences < 0)
+				bufmgr_gem->available_fences = 0;
 		}
 	}
 

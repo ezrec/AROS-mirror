@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 Nouveau Project
+ * Copyright 2010 Nouveau Project
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -20,32 +20,13 @@
  * SOFTWARE.
  */
 
-#ifndef __NOUVEAU_RESOURCE_H__
-#define __NOUVEAU_RESOURCE_H__
-
-struct nouveau_resource {
-	struct nouveau_resource *prev;
-	struct nouveau_resource *next;
-
-	int in_use;
-	void *priv;
-
-	unsigned int start;
-	unsigned int size;
-};
+#ifndef __NOUVEAU_RELOC_H__
+#define __NOUVEAU_RELOC_H__
 
 int
-nouveau_resource_init(struct nouveau_resource **heap, unsigned start,
-		      unsigned size);
-
-void
-nouveau_resource_destroy(struct nouveau_resource **heap);
-
-int
-nouveau_resource_alloc(struct nouveau_resource *heap, unsigned size, void *priv,
-		       struct nouveau_resource **);
-
-void
-nouveau_resource_free(struct nouveau_resource **);
+nouveau_reloc_emit(struct nouveau_channel *chan, struct nouveau_bo *reloc_bo,
+		   uint32_t reloc_offset, uint32_t *reloc_ptr,
+		   struct nouveau_bo *bo, uint32_t data, uint32_t data2,
+		   uint32_t flags, uint32_t vor, uint32_t tor);
 
 #endif

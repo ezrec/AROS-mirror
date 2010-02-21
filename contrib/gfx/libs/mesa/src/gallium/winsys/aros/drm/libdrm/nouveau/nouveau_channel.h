@@ -29,10 +29,11 @@ struct nouveau_subchannel {
 };
 
 struct nouveau_channel {
+	uint32_t *cur;
+	uint32_t *end;
+
 	struct nouveau_device *device;
 	int id;
-
-	struct nouveau_pushbuf *pushbuf;
 
 	struct nouveau_grobj *nullobj;
 	struct nouveau_grobj *vram;

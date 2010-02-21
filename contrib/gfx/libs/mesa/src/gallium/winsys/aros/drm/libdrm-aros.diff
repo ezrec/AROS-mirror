@@ -1,6 +1,6 @@
-diff -ur -x .svn /data/deadwood/source/drm-2.4.17/intel/intel_atomic.h libdrm/intel/intel_atomic.h
---- /data/deadwood/source/drm-2.4.17/intel/intel_atomic.h	2009-12-20 21:03:30.000000000 +0100
-+++ libdrm/intel/intel_atomic.h	2009-12-23 15:08:21.000000000 +0100
+diff -ur -x .svn /data/deadwood/source/drm-2.4.18/intel/intel_atomic.h libdrm/intel/intel_atomic.h
+--- /data/deadwood/source/drm-2.4.18/intel/intel_atomic.h	2010-02-16 12:12:40.000000000 +0100
++++ libdrm/intel/intel_atomic.h	2010-02-20 14:30:21.000000000 +0100
 @@ -38,6 +38,12 @@
  #include "config.h"
  #endif
@@ -14,9 +14,9 @@ diff -ur -x .svn /data/deadwood/source/drm-2.4.17/intel/intel_atomic.h libdrm/in
  #if HAVE_INTEL_ATOMIC_PRIMITIVES
  
  #define HAS_ATOMIC_OPS 1
-diff -ur -x .svn /data/deadwood/source/drm-2.4.17/intel/intel_bufmgr_gem.c libdrm/intel/intel_bufmgr_gem.c
---- /data/deadwood/source/drm-2.4.17/intel/intel_bufmgr_gem.c	2009-12-20 21:03:30.000000000 +0100
-+++ libdrm/intel/intel_bufmgr_gem.c	2009-12-23 15:46:14.000000000 +0100
+diff -ur -x .svn /data/deadwood/source/drm-2.4.18/intel/intel_bufmgr_gem.c libdrm/intel/intel_bufmgr_gem.c
+--- /data/deadwood/source/drm-2.4.18/intel/intel_bufmgr_gem.c	2010-02-16 12:12:40.000000000 +0100
++++ libdrm/intel/intel_bufmgr_gem.c	2010-02-20 14:30:21.000000000 +0100
 @@ -38,18 +38,39 @@
  #include "config.h"
  #endif
@@ -140,9 +140,9 @@ diff -ur -x .svn /data/deadwood/source/drm-2.4.17/intel/intel_bufmgr_gem.c libdr
  	return get_pipe_from_crtc_id.pipe;
  }
  
-diff -ur -x .svn /data/deadwood/source/drm-2.4.17/nouveau/nouveau_bo.c libdrm/nouveau/nouveau_bo.c
---- /data/deadwood/source/drm-2.4.17/nouveau/nouveau_bo.c	2009-12-20 21:03:30.000000000 +0100
-+++ libdrm/nouveau/nouveau_bo.c	2009-12-23 12:52:04.000000000 +0100
+diff -ur -x .svn /data/deadwood/source/drm-2.4.18/nouveau/nouveau_bo.c libdrm/nouveau/nouveau_bo.c
+--- /data/deadwood/source/drm-2.4.18/nouveau/nouveau_bo.c	2010-02-16 12:12:40.000000000 +0100
++++ libdrm/nouveau/nouveau_bo.c	2010-02-20 14:30:21.000000000 +0100
 @@ -28,7 +28,9 @@
  #include <errno.h>
  #include <assert.h>
@@ -185,21 +185,9 @@ diff -ur -x .svn /data/deadwood/source/drm-2.4.17/nouveau/nouveau_bo.c libdrm/no
  	return 0;
  }
  
-diff -ur -x .svn /data/deadwood/source/drm-2.4.17/nouveau/nouveau_channel.c libdrm/nouveau/nouveau_channel.c
---- /data/deadwood/source/drm-2.4.17/nouveau/nouveau_channel.c	2009-12-20 21:03:30.000000000 +0100
-+++ libdrm/nouveau/nouveau_channel.c	2009-12-23 12:46:56.000000000 +0100
-@@ -111,6 +111,8 @@
- 
- 	FIRE_RING(&nvchan->base);
- 
-+	nouveau_pushbuf_fini(&nvchan->base);
-+
- 	nouveau_bo_unmap(nvchan->notifier_bo);
- 	nouveau_bo_ref(NULL, &nvchan->notifier_bo);
- 
-diff -ur -x .svn /data/deadwood/source/drm-2.4.17/nouveau/nouveau_drmif.h libdrm/nouveau/nouveau_drmif.h
---- /data/deadwood/source/drm-2.4.17/nouveau/nouveau_drmif.h	2009-12-20 21:03:30.000000000 +0100
-+++ libdrm/nouveau/nouveau_drmif.h	2009-12-23 12:46:56.000000000 +0100
+diff -ur -x .svn /data/deadwood/source/drm-2.4.18/nouveau/nouveau_drmif.h libdrm/nouveau/nouveau_drmif.h
+--- /data/deadwood/source/drm-2.4.18/nouveau/nouveau_drmif.h	2010-02-16 12:12:40.000000000 +0100
++++ libdrm/nouveau/nouveau_drmif.h	2010-02-20 14:30:21.000000000 +0100
 @@ -24,7 +24,7 @@
  #define __NOUVEAU_DRMIF_H__
  
@@ -209,9 +197,9 @@ diff -ur -x .svn /data/deadwood/source/drm-2.4.17/nouveau/nouveau_drmif.h libdrm
  
  #include "nouveau_device.h"
  
-diff -ur -x .svn /data/deadwood/source/drm-2.4.17/nouveau/nouveau_private.h libdrm/nouveau/nouveau_private.h
---- /data/deadwood/source/drm-2.4.17/nouveau/nouveau_private.h	2009-12-20 21:03:30.000000000 +0100
-+++ libdrm/nouveau/nouveau_private.h	2009-12-23 12:46:56.000000000 +0100
+diff -ur -x .svn /data/deadwood/source/drm-2.4.18/nouveau/nouveau_private.h libdrm/nouveau/nouveau_private.h
+--- /data/deadwood/source/drm-2.4.18/nouveau/nouveau_private.h	2010-02-16 12:12:40.000000000 +0100
++++ libdrm/nouveau/nouveau_private.h	2010-02-20 14:33:08.000000000 +0100
 @@ -24,7 +24,7 @@
  #define __NOUVEAU_PRIVATE_H__
  
@@ -221,29 +209,3 @@ diff -ur -x .svn /data/deadwood/source/drm-2.4.17/nouveau/nouveau_private.h libd
  #include <nouveau_drm.h>
  
  #include "nouveau_drmif.h"
-@@ -65,6 +65,9 @@
- int
- nouveau_pushbuf_init(struct nouveau_channel *);
- 
-+void
-+nouveau_pushbuf_fini(struct nouveau_channel *);
-+
- struct nouveau_channel_priv {
- 	struct nouveau_channel base;
- 
-diff -ur -x .svn /data/deadwood/source/drm-2.4.17/nouveau/nouveau_pushbuf.c libdrm/nouveau/nouveau_pushbuf.c
---- /data/deadwood/source/drm-2.4.17/nouveau/nouveau_pushbuf.c	2009-12-20 21:03:30.000000000 +0100
-+++ libdrm/nouveau/nouveau_pushbuf.c	2010-01-09 08:39:05.000000000 +0100
-@@ -170,6 +170,12 @@
- 	return 0;
- }
- 
-+void
-+nouveau_pushbuf_fini(struct nouveau_channel *chan)
-+{
-+	nouveau_pushbuf_fini_call(chan);
-+}
-+
- int
- nouveau_pushbuf_flush(struct nouveau_channel *chan, unsigned min)
- {
