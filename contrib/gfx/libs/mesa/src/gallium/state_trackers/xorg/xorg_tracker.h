@@ -47,6 +47,8 @@
 #endif
 
 #include "pipe/p_screen.h"
+#include "util/u_inlines.h"
+#include "util/u_debug.h"
 #include "state_tracker/drm_api.h"
 
 #define DRV_ERROR(msg)	xf86DrvMsg(pScrn->scrnIndex, X_ERROR, msg);
@@ -112,6 +114,7 @@ typedef struct _modesettingRec
     /* exa */
     struct exa_context *exa;
     Bool noEvict;
+    Bool accelerate_2d;
     Bool debug_fallback;
 
     /* winsys hocks */
@@ -134,9 +137,6 @@ typedef struct _modesettingRec
  */
 struct pipe_texture *
 xorg_exa_get_texture(PixmapPtr pPixmap);
-
-unsigned
-xorg_exa_get_pixmap_handle(PixmapPtr pPixmap, unsigned *stride);
 
 int
 xorg_exa_set_displayed_usage(PixmapPtr pPixmap);

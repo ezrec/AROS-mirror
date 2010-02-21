@@ -27,8 +27,9 @@
 
 #include "pipe/p_state.h"
 #include "pipe/p_defines.h"
-#include "pipe/p_inlines.h"
-#include "pipe/p_thread.h"
+#include "util/u_inlines.h"
+#include "os/os_thread.h"
+#include "util/u_format.h"
 #include "util/u_math.h"
 #include "util/u_memory.h"
 
@@ -158,7 +159,8 @@ svga_transfer_dma_band(struct svga_transfer *st,
                 st->base.x + st->base.width,
                 y + h,
                 st->base.zslice + 1,
-                texture->base.block.size*8/(texture->base.block.width*texture->base.block.height));
+                util_format_get_blocksize(texture->base.format)*8/
+                (util_format_get_blockwidth(texture->base.format)*util_format_get_blockheight(texture->base.format)));
    
    box.x = st->base.x;
    box.y = y;
@@ -203,12 +205,13 @@ svga_transfer_dma(struct svga_transfer *st,
       if(transfer == SVGA3D_READ_HOST_VRAM) {
          svga_screen_flush(screen, &fence);
          sws->fence_finish(sws, fence, 0);
-         //sws->fence_reference(sws, &fence, NULL);
+         sws->fence_reference(sws, &fence, NULL);
       }
    }
    else {
       unsigned y, h, srcy;
-      h = st->hw_nblocksy * st->base.block.height;
+      unsigned blockheight = util_format_get_blockheight(st->base.texture->format);
+      h = st->hw_nblocksy * blockheight;
       srcy = 0;
       for(y = 0; y < st->base.height; y += h) {
          unsigned offset, length;
@@ -218,11 +221,11 @@ svga_transfer_dma(struct svga_transfer *st,
             h = st->base.height - y;
 
          /* Transfer band must be aligned to pixel block boundaries */
-         assert(y % st->base.block.height == 0);
-         assert(h % st->base.block.height == 0);
+         assert(y % blockheight == 0);
+         assert(h % blockheight == 0);
          
-         offset = y * st->base.stride / st->base.block.height;
-         length = h * st->base.stride / st->base.block.height;
+         offset = y * st->base.stride / blockheight;
+         length = h * st->base.stride / blockheight;
 
          sw = (uint8_t *)st->swbuf + offset;
          
@@ -232,7 +235,7 @@ svga_transfer_dma(struct svga_transfer *st,
             if(y) {
                svga_screen_flush(screen, &fence);
                sws->fence_finish(sws, fence, 0);
-               //sws->fence_reference(sws, &fence, NULL);
+               sws->fence_reference(sws, &fence, NULL);
             }
 
             hw = sws->buffer_map(sws, st->hwbuf, PIPE_BUFFER_USAGE_CPU_WRITE);
@@ -281,24 +284,19 @@ svga_texture_create(struct pipe_screen *screen,
    if(templat->last_level >= SVGA_MAX_TEXTURE_LEVELS)
       goto error2;
    
-   width = templat->width[0];
-   height = templat->height[0];
-   depth = templat->depth[0];
+   width = templat->width0;
+   height = templat->height0;
+   depth = templat->depth0;
    for(level = 0; level <= templat->last_level; ++level) {
-      tex->base.width[level] = width;
-      tex->base.height[level] = height;
-      tex->base.depth[level] = depth;
-      tex->base.nblocksx[level] = pf_get_nblocksx(&tex->base.block, width);  
-      tex->base.nblocksy[level] = pf_get_nblocksy(&tex->base.block, height);  
-      width  = minify(width);
-      height = minify(height);
-      depth = minify(depth);
+      width = u_minify(width, 1);
+      height = u_minify(height, 1);
+      depth = u_minify(depth, 1);
    }
    
    tex->key.flags = 0;
-   tex->key.size.width = templat->width[0];
-   tex->key.size.height = templat->height[0];
-   tex->key.size.depth = templat->depth[0];
+   tex->key.size.width = templat->width0;
+   tex->key.size.height = templat->height0;
+   tex->key.size.depth = templat->depth0;
    
    if(templat->target == PIPE_TEXTURE_CUBE) {
       tex->key.flags |= SVGA3D_SURFACE_CUBEMAP;
@@ -308,11 +306,19 @@ svga_texture_create(struct pipe_screen *screen,
       tex->key.numFaces = 1;
    }
 
+   tex->key.cachable = 1;
+
    if(templat->tex_usage & PIPE_TEXTURE_USAGE_SAMPLER)
       tex->key.flags |= SVGA3D_SURFACE_HINT_TEXTURE;
 
-   if(templat->tex_usage & PIPE_TEXTURE_USAGE_PRIMARY)
+   if(templat->tex_usage & PIPE_TEXTURE_USAGE_DISPLAY_TARGET) {
+      tex->key.cachable = 0;
+   }
+
+   if(templat->tex_usage & PIPE_TEXTURE_USAGE_PRIMARY) {
       tex->key.flags |= SVGA3D_SURFACE_HINT_SCANOUT;
+      tex->key.cachable = 0;
+   }
    
    /* 
     * XXX: Never pass the SVGA3D_SURFACE_HINT_RENDERTARGET hint. Mesa cannot
@@ -322,7 +328,7 @@ svga_texture_create(struct pipe_screen *screen,
     */
 #if 0
    if((templat->tex_usage & PIPE_TEXTURE_USAGE_RENDER_TARGET) &&
-      !pf_is_compressed(templat->format))
+      !util_format_is_compressed(templat->format))
       tex->key.flags |= SVGA3D_SURFACE_HINT_RENDERTARGET;
 #endif
    
@@ -335,8 +341,6 @@ svga_texture_create(struct pipe_screen *screen,
    if(tex->key.format == SVGA3D_FORMAT_INVALID)
       goto error2;
 
-   tex->key.cachable = 1;
-   
    SVGA_DBG(DEBUG_DMA, "surface_create for texture\n", tex->handle);
    tex->handle = svga_screen_surface_create(svgascreen, &tex->key);
    if (tex->handle)
@@ -365,7 +369,7 @@ svga_texture_blanket(struct pipe_screen * screen,
    /* Only supports one type */
    if (base->target != PIPE_TEXTURE_2D ||
        base->last_level != 0 ||
-       base->depth[0] != 1) {
+       base->depth0 != 1) {
       return NULL;
    }
 
@@ -413,6 +417,62 @@ svga_texture_blanket(struct pipe_screen * screen,
    assert(sbuf->key.cachable == 0);
    tex->key.cachable = 0;
    sws->surface_reference(sws, &tex->handle, sbuf->handle);
+
+   return &tex->base;
+}
+
+
+struct pipe_texture *
+svga_screen_texture_wrap_surface(struct pipe_screen *screen,
+				 struct pipe_texture *base,
+				 enum SVGA3dSurfaceFormat format,
+				 struct svga_winsys_surface *srf)
+{
+   struct svga_texture *tex;
+   assert(screen);
+
+   /* Only supports one type */
+   if (base->target != PIPE_TEXTURE_2D ||
+       base->last_level != 0 ||
+       base->depth0 != 1) {
+      return NULL;
+   }
+
+   if (!srf)
+      return NULL;
+
+   if (svga_translate_format(base->format) != format) {
+      unsigned f1 = svga_translate_format(base->format);
+      unsigned f2 = format;
+
+      /* It's okay for XRGB and ARGB or depth with/out stencil to get mixed up */
+      if ( !( (f1 == SVGA3D_X8R8G8B8 && f2 == SVGA3D_A8R8G8B8) ||
+              (f1 == SVGA3D_A8R8G8B8 && f2 == SVGA3D_X8R8G8B8) ||
+              (f1 == SVGA3D_Z_D24X8 && f2 == SVGA3D_Z_D24S8) ) ) {
+         debug_printf("%s wrong format %u != %u\n", __FUNCTION__, f1, f2);
+         return NULL;
+      }
+   }
+
+   tex = CALLOC_STRUCT(svga_texture);
+   if (!tex)
+      return NULL;
+
+   tex->base = *base;
+   
+
+   if (format == 1)
+      tex->base.format = PIPE_FORMAT_X8R8G8B8_UNORM;
+   else if (format == 2)
+      tex->base.format = PIPE_FORMAT_A8R8G8B8_UNORM;
+
+   pipe_reference_init(&tex->base.reference, 1);
+   tex->base.screen = screen;
+
+   SVGA_DBG(DEBUG_DMA, "wrap surface sid %p\n", srf);
+
+   tex->key.cachable = 0;
+   tex->handle = srf;
 
    return &tex->base;
 }
@@ -538,9 +598,9 @@ svga_texture_view_surface(struct pipe_context *pipe,
    key->flags = 0;
    key->format = format;
    key->numMipLevels = num_mip;
-   key->size.width = tex->base.width[start_mip];
-   key->size.height = tex->base.height[start_mip];
-   key->size.depth = zslice_pick < 0 ? tex->base.depth[start_mip] : 1;
+   key->size.width = u_minify(tex->base.width0, start_mip);
+   key->size.height = u_minify(tex->base.height0, start_mip);
+   key->size.depth = zslice_pick < 0 ? u_minify(tex->base.depth0, start_mip) : 1;
    key->cachable = 1;
    assert(key->size.depth == 1);
    
@@ -574,7 +634,10 @@ svga_texture_view_surface(struct pipe_context *pipe,
    for (i = 0; i < key->numMipLevels; i++) {
       for (j = 0; j < key->numFaces; j++) {
          if(tex->defined[j + face_pick][i + start_mip]) {
-            unsigned depth = zslice_pick < 0 ? tex->base.depth[i + start_mip] : 1;
+            unsigned depth = (zslice_pick < 0 ?
+                              u_minify(tex->base.depth0, i + start_mip) :
+                              1);
+
             svga_texture_copy_handle(svga_context(pipe),
                                      ss,
                                      tex->handle, 
@@ -582,8 +645,8 @@ svga_texture_view_surface(struct pipe_context *pipe,
                                      i + start_mip, 
                                      j + face_pick,
                                      handle, 0, 0, 0, i, j,
-                                     tex->base.width[i + start_mip],
-                                     tex->base.height[i + start_mip],
+                                     u_minify(tex->base.width0, i + start_mip),
+                                     u_minify(tex->base.height0, i + start_mip),
                                      depth);
          }
       }
@@ -612,8 +675,8 @@ svga_get_tex_surface(struct pipe_screen *screen,
    pipe_reference_init(&s->base.reference, 1);
    pipe_texture_reference(&s->base.texture, pt);
    s->base.format = pt->format;
-   s->base.width = pt->width[level];
-   s->base.height = pt->height[level];
+   s->base.width = u_minify(pt->width0, level);
+   s->base.height = u_minify(pt->height0, level);
    s->base.usage = flags;
    s->base.level = level;
    s->base.face = face;
@@ -742,7 +805,8 @@ svga_propagate_surface(struct pipe_context *pipe, struct pipe_surface *surf)
       svga_texture_copy_handle(svga_context(pipe), ss,
                                s->handle, 0, 0, 0, s->real_level, s->real_face,
                                tex->handle, 0, 0, surf->zslice, surf->level, surf->face,
-                               tex->base.width[surf->level], tex->base.height[surf->level], 1);
+                               u_minify(tex->base.width0, surf->level),
+                               u_minify(tex->base.height0, surf->level), 1);
       tex->defined[surf->face][surf->level] = TRUE;
    }
 }
@@ -770,6 +834,8 @@ svga_get_tex_transfer(struct pipe_screen *screen,
    struct svga_screen *ss = svga_screen(screen);
    struct svga_winsys_screen *sws = ss->sws;
    struct svga_transfer *st;
+   unsigned nblocksx = util_format_get_nblocksx(texture->format, w);
+   unsigned nblocksy = util_format_get_nblocksy(texture->format, h);
 
    /* We can't map texture storage directly */
    if (usage & PIPE_TRANSFER_MAP_DIRECTLY)
@@ -779,21 +845,17 @@ svga_get_tex_transfer(struct pipe_screen *screen,
    if (!st)
       return NULL;
    
-   st->base.format = texture->format;
-   st->base.block = texture->block;
    st->base.x = x;
    st->base.y = y;
    st->base.width = w;
    st->base.height = h;
-   st->base.nblocksx = pf_get_nblocksx(&texture->block, w);
-   st->base.nblocksy = pf_get_nblocksy(&texture->block, h);
-   st->base.stride = st->base.nblocksx*st->base.block.size;
+   st->base.stride = nblocksx*util_format_get_blocksize(texture->format);
    st->base.usage = usage;
    st->base.face = face;
    st->base.level = level;
    st->base.zslice = zslice;
 
-   st->hw_nblocksy = st->base.nblocksy;
+   st->hw_nblocksy = nblocksy;
    
    st->hwbuf = svga_winsys_buffer_create(ss, 
                                          1, 
@@ -809,15 +871,15 @@ svga_get_tex_transfer(struct pipe_screen *screen,
    if(!st->hwbuf)
       goto no_hwbuf;
 
-   if(st->hw_nblocksy < st->base.nblocksy) {
+   if(st->hw_nblocksy < nblocksy) {
       /* We couldn't allocate a hardware buffer big enough for the transfer, 
        * so allocate regular malloc memory instead */
       debug_printf("%s: failed to allocate %u KB of DMA, splitting into %u x %u KB DMA transfers\n",
                    __FUNCTION__,
-                   (st->base.nblocksy*st->base.stride + 1023)/1024,
-                   (st->base.nblocksy + st->hw_nblocksy - 1)/st->hw_nblocksy,
+                   (nblocksy*st->base.stride + 1023)/1024,
+                   (nblocksy + st->hw_nblocksy - 1)/st->hw_nblocksy,
                    (st->hw_nblocksy*st->base.stride + 1023)/1024);
-      st->swbuf = MALLOC(st->base.nblocksy*st->base.stride);
+      st->swbuf = MALLOC(nblocksy*st->base.stride);
       if(!st->swbuf)
          goto no_swbuf;
    }
@@ -932,7 +994,7 @@ svga_get_tex_sampler_view(struct pipe_context *pipe, struct pipe_texture *pt,
       if (min_lod == 0 && max_lod >= pt->last_level)
          view = FALSE;
 
-      if (pf_is_compressed(pt->format) && view) {
+      if (util_format_is_compressed(pt->format) && view) {
          format = svga_translate_format_render(pt->format);
       }
 
@@ -971,9 +1033,9 @@ svga_get_tex_sampler_view(struct pipe_context *pipe, struct pipe_texture *pt,
                "svga: Sampler view: no %p, mips %u..%u, nr %u, size (%ux%ux%u), last %u\n",
                pt, min_lod, max_lod,
                max_lod - min_lod + 1,
-               pt->width[0],
-               pt->height[0],
-               pt->depth[0],
+               pt->width0,
+               pt->height0,
+               pt->depth0,
                pt->last_level);
       sv->key.cachable = 0;
       sv->handle = tex->handle;
@@ -984,9 +1046,9 @@ svga_get_tex_sampler_view(struct pipe_context *pipe, struct pipe_texture *pt,
             "svga: Sampler view: yes %p, mips %u..%u, nr %u, size (%ux%ux%u), last %u\n",
             pt, min_lod, max_lod,
             max_lod - min_lod + 1,
-            pt->width[0],
-            pt->height[0],
-            pt->depth[0],
+            pt->width0,
+            pt->height0,
+            pt->depth0,
             pt->last_level);
 
    sv->age = tex->age;
@@ -1036,9 +1098,9 @@ svga_validate_sampler_view(struct svga_context *svga, struct svga_sampler_view *
             svga_texture_copy_handle(svga, NULL,
                                      tex->handle, 0, 0, 0, i, k,
                                      v->handle, 0, 0, 0, i - v->min_lod, k,
-                                     tex->base.width[i],
-                                     tex->base.height[i],
-                                     tex->base.depth[i]);
+                                     u_minify(tex->base.width0, i),
+                                     u_minify(tex->base.height0, i),
+                                     u_minify(tex->base.depth0, i));
       }
    }
 
@@ -1071,8 +1133,7 @@ svga_screen_buffer_from_texture(struct pipe_texture *texture,
        svga_translate_format(texture->format),
        stex->handle);
 
-   *stride = pf_get_nblocksx(&texture->block, texture->width[0]) *
-      texture->block.size;
+   *stride = util_format_get_stride(texture->format, texture->width0);
 
    return *buffer != NULL;
 }

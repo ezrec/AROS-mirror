@@ -31,17 +31,13 @@ struct r300_vertex_program_code;
 
 void r300_emit_aos(struct r300_context* r300, unsigned offset);
 
-void r300_emit_blend_state(struct r300_context* r300,
-                           struct r300_blend_state* blend);
+void r300_emit_blend_state(struct r300_context* r300, void* state);
 
-void r300_emit_blend_color_state(struct r300_context* r300,
-                                 struct r300_blend_color_state* bc);
+void r300_emit_blend_color_state(struct r300_context* r300, void* state);
 
-void r300_emit_clip_state(struct r300_context* r300,
-                          struct pipe_clip_state* clip);
+void r300_emit_clip_state(struct r300_context* r300, void* state);
 
-void r300_emit_dsa_state(struct r300_context* r300,
-                         struct r300_dsa_state* dsa);
+void r300_emit_dsa_state(struct r300_context* r300, void* state);
 
 void r300_emit_fragment_program_code(struct r300_context* r300,
                                      struct rX00_fragment_program_code* generic_code);
@@ -55,21 +51,18 @@ void r500_emit_fragment_program_code(struct r300_context* r300,
 void r500_emit_fs_constant_buffer(struct r300_context* r300,
                                   struct rc_constant_list* constants);
 
-void r300_emit_fb_state(struct r300_context* r300,
-                        struct pipe_framebuffer_state* fb);
+void r300_emit_fb_state(struct r300_context* r300, void* state);
 
 void r300_emit_query_begin(struct r300_context* r300,
                            struct r300_query* query);
 
 void r300_emit_query_end(struct r300_context* r300);
 
-void r300_emit_rs_state(struct r300_context* r300, struct r300_rs_state* rs);
+void r300_emit_rs_state(struct r300_context* r300, void* state);
 
-void r300_emit_rs_block_state(struct r300_context* r300,
-                              struct r300_rs_block* rs);
+void r300_emit_rs_block_state(struct r300_context* r300, void* state);
 
-void r300_emit_scissor_state(struct r300_context* r300,
-                             struct r300_scissor_state* scissor);
+void r300_emit_scissor_state(struct r300_context* r300, void* state);
 
 void r300_emit_texture(struct r300_context* r300,
                        struct r300_sampler_state* sampler,
@@ -78,7 +71,7 @@ void r300_emit_texture(struct r300_context* r300,
 
 void r300_emit_vertex_buffer(struct r300_context* r300);
 
-void r300_emit_vertex_format_state(struct r300_context* r300);
+void r300_emit_vertex_format_state(struct r300_context* r300, void* state);
 
 void r300_emit_vertex_program_code(struct r300_context* r300,
                                    struct r300_vertex_program_code* code);
@@ -89,12 +82,17 @@ void r300_emit_vs_constant_buffer(struct r300_context* r300,
 void r300_emit_vertex_shader(struct r300_context* r300,
                              struct r300_vertex_shader* vs);
 
-void r300_emit_viewport_state(struct r300_context* r300,
-                              struct r300_viewport_state* viewport);
+void r300_emit_viewport_state(struct r300_context* r300, void* state);
+
+void r300_emit_texture_count(struct r300_context* r300);
+
+void r300_emit_ztop_state(struct r300_context* r300, void* state);
 
 void r300_flush_textures(struct r300_context* r300);
 
 /* Emit all dirty state. */
 void r300_emit_dirty_state(struct r300_context* r300);
+
+void r300_emit_buffer_validate(struct r300_context *r300);
 
 #endif /* R300_EMIT_H */

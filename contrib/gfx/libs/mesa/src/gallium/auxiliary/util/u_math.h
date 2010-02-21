@@ -392,32 +392,8 @@ unsigned ffs( unsigned u )
 }
 #elif defined(__MINGW32__)
 #define ffs __builtin_ffs
-#elif defined (__AROS__)
-static INLINE
-unsigned ffs( unsigned i ) /*FIXME: mesa code was using signed value as parameter */
-{
-   register int bit = 0;
-   if (i != 0) {
-      if ((i & 0xffff) == 0) {
-         bit += 16;
-         i >>= 16;
-      }
-      if ((i & 0xff) == 0) {
-         bit += 8;
-         i >>= 8;
-      }
-      if ((i & 0xf) == 0) {
-         bit += 4;
-         i >>= 4;
-      }
-      while ((i & 1) == 0) {
-         bit++;
-         i >>= 1;
-      }
-      bit++;
-   }
-   return bit;
-}
+#elif defined(PIPE_OS_AROS)
+#define ffs __builtin_ffs
 #endif
 
 #ifdef __MINGW32__
@@ -517,6 +493,47 @@ util_next_power_of_two(unsigned x)
 
 
 /**
+ * Return number of bits set in n.
+ */
+static INLINE unsigned
+util_bitcount(unsigned n)
+{
+#if defined(PIPE_CC_GCC)
+   return __builtin_popcount(n);
+#else
+   /* K&R classic bitcount.
+    *
+    * For each iteration, clear the LSB from the bitfield.
+    * Requires only one iteration per set bit, instead of
+    * one iteration per bit less than highest set bit.
+    */
+   unsigned bits = 0;
+   for (bits; n; bits++) {
+      n &= n - 1;
+   }
+   return bits;
+#endif
+}
+
+
+/**
+ * Reverse byte order of a 32 bit word.
+ */
+static INLINE uint32_t
+util_bswap32(uint32_t n)
+{
+#if defined(PIPE_CC_GCC) && (PIPE_CC_GCC_VERSION >= 403)
+   return __builtin_bswap32(n);
+#else
+   return (n >> 24) |
+          ((n >> 8) & 0x0000ff00) |
+          ((n << 8) & 0x00ff0000) |
+          (n << 24);
+#endif
+}
+
+
+/**
  * Clamp X to [MIN, MAX].
  * This is a macro to allow float, int, uint, etc. types.
  */
@@ -524,6 +541,9 @@ util_next_power_of_two(unsigned x)
 
 #define MIN2( A, B )   ( (A)<(B) ? (A) : (B) )
 #define MAX2( A, B )   ( (A)>(B) ? (A) : (B) )
+
+#define MIN3( A, B, C ) MIN2( MIN2( A, B ), C )
+#define MAX3( A, B, C ) MAX2( MAX2( A, B ), C )
 
 
 static INLINE int
@@ -533,9 +553,9 @@ align(int value, int alignment)
 }
 
 static INLINE unsigned
-minify(unsigned value)
+u_minify(unsigned value, unsigned levels)
 {
-    return MAX2(1, value >> 1);
+    return MAX2(1, value >> levels);
 }
 
 #ifndef COPY_4V
@@ -563,6 +583,18 @@ do {                                     \
    (DST)[3] = (V3);                      \
 } while (0)
 #endif
+
+
+static INLINE uint32_t util_unsigned_fixed(float value, unsigned frac_bits)
+{
+   return value < 0 ? 0 : (uint32_t)(value * (1<<frac_bits));
+}
+
+static INLINE int32_t util_signed_fixed(float value, unsigned frac_bits)
+{
+   return (int32_t)(value * (1<<frac_bits));
+}
+
 
 
 #ifdef __cplusplus

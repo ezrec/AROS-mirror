@@ -3,7 +3,9 @@
 #include <pipe/p_state.h>
 
 #include <util/u_memory.h>
+#include <util/u_inlines.h>
 
+#include <stdio.h>
 #include <errno.h>
 
 #include "nouveau/nouveau_bo.h"
@@ -31,7 +33,7 @@ nouveau_screen_bo_skel(struct pipe_screen *pscreen, struct nouveau_bo *bo,
 		       unsigned alignment, unsigned usage, unsigned size)
 {
 	struct pipe_buffer *pb;
-	
+
 	pb = CALLOC(1, sizeof(struct pipe_buffer)+sizeof(struct nouveau_bo *));
 	if (!pb) {
 		nouveau_bo_ref(NULL, &bo);
@@ -53,26 +55,12 @@ nouveau_screen_bo_new(struct pipe_screen *pscreen, unsigned alignment,
 {
 	struct nouveau_device *dev = nouveau_screen(pscreen)->device;
 	struct nouveau_bo *bo = NULL;
-	uint32_t flags = NOUVEAU_BO_MAP;
+	uint32_t flags = NOUVEAU_BO_MAP, tile_mode = 0, tile_flags = 0;
 	int ret;
 
 	if (usage & NOUVEAU_BUFFER_USAGE_TRANSFER)
 		flags |= NOUVEAU_BO_GART;
 	else
-#if defined(__AROS__)
-    /* Put the buffers in VRAM instead of GART. This solved graphics
-       curruption of vertices. Reason for this curruption is unknown
-       but similar errors have been reported also on nouveau mailing
-       list which suggests general bug in nouveau not bug in port */
-	if (usage & PIPE_BUFFER_USAGE_VERTEX) {
-		if (pscreen->get_param(pscreen, NOUVEAU_CAP_HW_VTXBUF))
-			flags |= NOUVEAU_BO_VRAM/* NOUVEAU_BO_GART */;
-	} else
-	if (usage & PIPE_BUFFER_USAGE_INDEX) {
-		if (pscreen->get_param(pscreen, NOUVEAU_CAP_HW_IDXBUF))
-			flags |= NOUVEAU_BO_VRAM/* NOUVEAU_BO_GART */;
-	}
-#else
 	if (usage & PIPE_BUFFER_USAGE_VERTEX) {
 		if (pscreen->get_param(pscreen, NOUVEAU_CAP_HW_VTXBUF))
 			flags |= NOUVEAU_BO_GART;
@@ -81,7 +69,6 @@ nouveau_screen_bo_new(struct pipe_screen *pscreen, unsigned alignment,
 		if (pscreen->get_param(pscreen, NOUVEAU_CAP_HW_IDXBUF))
 			flags |= NOUVEAU_BO_GART;
 	}
-#endif
 
 	if (usage & PIPE_BUFFER_USAGE_PIXEL) {
 		if (usage & NOUVEAU_BUFFER_USAGE_TEXTURE)
@@ -90,13 +77,15 @@ nouveau_screen_bo_new(struct pipe_screen *pscreen, unsigned alignment,
 			flags |= NOUVEAU_BO_VRAM;
 
 		if (dev->chipset == 0x50 || dev->chipset >= 0x80) {
-			flags |= NOUVEAU_BO_TILED;
 			if (usage & NOUVEAU_BUFFER_USAGE_ZETA)
-				flags |= NOUVEAU_BO_ZTILE;
+				tile_flags = 0x2800;
+			else
+				tile_flags = 0x7000;
 		}
 	}
 
-	ret = nouveau_bo_new(dev, flags, alignment, size, &bo);
+	ret = nouveau_bo_new_tile(dev, flags, alignment, size,
+				  tile_mode, tile_flags, &bo);
 	if (ret)
 		return NULL;
 
@@ -142,7 +131,17 @@ nouveau_screen_bo_map(struct pipe_screen *pscreen, struct pipe_buffer *pb,
 		      unsigned usage)
 {
 	struct nouveau_bo *bo = nouveau_bo(pb);
+	struct nouveau_screen *nscreen = nouveau_screen(pscreen);
 	int ret;
+
+	if (nscreen->pre_pipebuffer_map_callback) {
+		ret = nscreen->pre_pipebuffer_map_callback(pscreen, pb, usage);
+		if (ret) {
+			debug_printf("pre_pipebuffer_map_callback failed %d\n",
+				ret);
+			return NULL;
+		}
+	}
 
 	ret = nouveau_bo_map(bo, nouveau_screen_map_flags(usage));
 	if (ret) {
@@ -158,11 +157,22 @@ nouveau_screen_bo_map_range(struct pipe_screen *pscreen, struct pipe_buffer *pb,
 			    unsigned offset, unsigned length, unsigned usage)
 {
 	struct nouveau_bo *bo = nouveau_bo(pb);
+	struct nouveau_screen *nscreen = nouveau_screen(pscreen);
 	uint32_t flags = nouveau_screen_map_flags(usage);
 	int ret;
 
+	if (nscreen->pre_pipebuffer_map_callback) {
+		ret = nscreen->pre_pipebuffer_map_callback(pscreen, pb, usage);
+		if (ret) {
+			debug_printf("pre_pipebuffer_map_callback failed %d\n",
+				ret);
+			return NULL;
+		}
+	}
+
 	ret = nouveau_bo_map_range(bo, offset, length, flags);
 	if (ret) {
+		nouveau_bo_unmap(bo);
 		if (!(flags & NOUVEAU_BO_NOWAIT) || ret != -EBUSY)
 			debug_printf("map_range failed: %d\n", ret);
 		return NULL;
@@ -254,6 +264,8 @@ nouveau_screen_init(struct nouveau_screen *screen, struct nouveau_device *dev)
 void
 nouveau_screen_fini(struct nouveau_screen *screen)
 {
-    nouveau_channel_free(&screen->channel);
+	struct pipe_winsys *ws = screen->base.winsys;
+	nouveau_channel_free(&screen->channel);
+	ws->destroy(ws);
 }
 

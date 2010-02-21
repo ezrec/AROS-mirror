@@ -24,6 +24,7 @@
 #define R300_TEXTURE_H
 
 #include "pipe/p_video_state.h"
+#include "util/u_format.h"
 
 #include "r300_reg.h"
 
@@ -31,31 +32,58 @@ struct r300_texture;
 
 void r300_init_screen_texture_functions(struct pipe_screen* screen);
 
-unsigned r300_texture_get_stride(struct r300_texture* tex, unsigned level);
+unsigned r300_texture_get_stride(struct r300_screen* screen,
+                                 struct r300_texture* tex, unsigned level);
 
 unsigned r300_texture_get_offset(struct r300_texture* tex, unsigned level,
                                  unsigned zslice, unsigned face);
 
-/* Note the signature of R300_EASY_TX_FORMAT(A, R, G, B, FORMAT)... */
+void r300_texture_reinterpret_format(struct pipe_screen *screen,
+                                     struct pipe_texture *tex,
+                                     enum pipe_format new_format);
+
+/* Translate a pipe_format into a useful texture format for sampling.
+ *
+ * R300_EASY_TX_FORMAT swizzles the texture.
+ * Note the signature of R300_EASY_TX_FORMAT:
+ *   R300_EASY_TX_FORMAT(B, G, R, A, FORMAT);
+ *
+ * The FORMAT specifies how the texture sampler will treat the texture, and
+ * makes available X, Y, Z, W, ZERO, and ONE for swizzling. */
 static INLINE uint32_t r300_translate_texformat(enum pipe_format format)
 {
     switch (format) {
         /* X8 */
+        case PIPE_FORMAT_A8_UNORM:
+            return R300_EASY_TX_FORMAT(ZERO, ZERO, ZERO, X, X8);
         case PIPE_FORMAT_I8_UNORM:
             return R300_EASY_TX_FORMAT(X, X, X, X, X8);
         case PIPE_FORMAT_L8_UNORM:
             return R300_EASY_TX_FORMAT(X, X, X, ONE, X8);
+        case PIPE_FORMAT_L8_SRGB:
+            return R300_EASY_TX_FORMAT(X, X, X, ONE, X8) |
+                R300_TX_FORMAT_GAMMA;
         /* X16 */
+        case PIPE_FORMAT_A4R4G4B4_UNORM:
+            return R300_EASY_TX_FORMAT(X, Y, Z, W, W4Z4Y4X4);
         case PIPE_FORMAT_R16_UNORM:
+        case PIPE_FORMAT_Z16_UNORM:
             return R300_EASY_TX_FORMAT(X, X, X, X, X16);
         case PIPE_FORMAT_R16_SNORM:
             return R300_EASY_TX_FORMAT(X, X, X, X, X16) |
                 R300_TX_FORMAT_SIGNED;
-        case PIPE_FORMAT_Z16_UNORM:
-            return R300_EASY_TX_FORMAT(X, X, X, X, X16);
+        /* Z5Y6X5 */
+        case PIPE_FORMAT_R5G6B5_UNORM:
+            return R300_EASY_TX_FORMAT(X, Y, Z, ONE, Z5Y6X5);
+        /* W1Z5Y5X5*/
+        case PIPE_FORMAT_A1R5G5B5_UNORM:
+            return R300_EASY_TX_FORMAT(X, Y, Z, W, W1Z5Y5X5);
         /* Y8X8 */
         case PIPE_FORMAT_A8L8_UNORM:
             return R300_EASY_TX_FORMAT(X, X, X, Y, Y8X8);
+        case PIPE_FORMAT_A8L8_SRGB:
+            return R300_EASY_TX_FORMAT(X, X, X, Y, Y8X8) |
+                R300_TX_FORMAT_GAMMA;
         /* W8Z8Y8X8 */
         case PIPE_FORMAT_A8R8G8B8_UNORM:
             return R300_EASY_TX_FORMAT(X, Y, Z, W, W8Z8Y8X8);
@@ -94,7 +122,7 @@ static INLINE uint32_t r300_translate_texformat(enum pipe_format format)
         default:
             debug_printf("r300: Implementation error: "
                 "Got unsupported texture format %s in %s\n",
-                pf_name(format), __FUNCTION__);
+                util_format_name(format), __FUNCTION__);
             assert(0);
             break;
     }
@@ -115,7 +143,8 @@ r300_video_surface(struct pipe_video_surface *pvs)
 
 #ifndef R300_WINSYS_H
 
-boolean r300_get_texture_buffer(struct pipe_texture* texture,
+boolean r300_get_texture_buffer(struct pipe_screen* screen,
+                                struct pipe_texture* texture,
                                 struct pipe_buffer** buffer,
                                 unsigned* stride);
 

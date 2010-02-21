@@ -4,10 +4,11 @@
 */
 
 #include "arosmesa_winsys.h"
-#include "pipe/internal/p_winsys_screen.h"
 #include "softpipe/sp_texture.h"
 #include "softpipe/sp_winsys.h"
 #include "util/u_math.h"
+#include "util/u_simple_screen.h"
+#include "util/u_format.h"
 
 #include <proto/exec.h>
 #include <proto/cybergraphics.h>
@@ -118,13 +119,10 @@ arosmesa_surface_buffer_create(struct pipe_winsys *winsys,
                          unsigned *stride)
 {
     const unsigned alignment = 64;
-    struct pipe_format_block block;
-    unsigned nblocksx, nblocksy;
+    unsigned nblocksy;
 
-    pf_get_block(format, &block);
-    nblocksx = pf_get_nblocksx(&block, width);
-    nblocksy = pf_get_nblocksy(&block, height);
-    *stride = align(nblocksx * block.size, alignment);
+    nblocksy = util_format_get_nblocksy(format, height);
+    *stride = align(util_format_get_stride(format, width), alignment);
 
     return winsys->buffer_create(winsys, alignment,
                                     usage,
@@ -209,19 +207,10 @@ fail:
 static struct pipe_context *
 arosmesa_create_softpipe_context( struct pipe_screen *screen )
 {
-    struct pipe_context *pipe;
+    if (!screen)
+        return NULL;
 
-    pipe = softpipe_create(screen);
-    if (pipe == NULL)
-        goto fail;
-
-    /* FIXME: Is that needed ? - filled in in AROSMesaCreateContext */
-    /*pipe->priv = context_private;*/
-    return pipe;
-
-fail:
-    /* FIXME: Free stuff here */
-    return NULL;
+    return screen->context_create(screen, NULL);
 }
 
 static void

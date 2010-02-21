@@ -23,7 +23,7 @@
  *
  **********************************************************/
 
-#include "pipe/p_inlines.h"
+#include "util/u_inlines.h"
 #include "pipe/p_defines.h"
 #include "util/u_math.h"
 
@@ -31,8 +31,6 @@
 #include "svga_state.h"
 #include "svga_cmd.h"
 #include "svga_debug.h"
-
-#include "svga_hw_reg.h"
 
 
 /***********************************************************************

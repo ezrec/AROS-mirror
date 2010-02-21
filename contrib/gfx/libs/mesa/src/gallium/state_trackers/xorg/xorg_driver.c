@@ -45,7 +45,6 @@
 #include "miscstruct.h"
 #include "dixstruct.h"
 #include "xf86xv.h"
-#include <X11/extensions/Xv.h>
 #ifndef XSERVER_LIBPCIACCESS
 #error "libpciaccess needed"
 #endif
@@ -79,11 +78,13 @@ typedef enum
 {
     OPTION_SW_CURSOR,
     OPTION_2D_ACCEL,
+    OPTION_DEBUG_FALLBACK,
 } drv_option_enums;
 
 static const OptionInfoRec drv_options[] = {
     {OPTION_SW_CURSOR, "SWcursor", OPTV_BOOLEAN, {0}, FALSE},
     {OPTION_2D_ACCEL, "2DAccel", OPTV_BOOLEAN, {0}, FALSE},
+    {OPTION_DEBUG_FALLBACK, "DebugFallback", OPTV_BOOLEAN, {0}, FALSE},
     {-1, NULL, OPTV_NONE, {0}, FALSE}
 };
 
@@ -109,6 +110,28 @@ xorg_tracker_set_functions(ScrnInfoPtr scrn)
     scrn->LeaveVT = drv_leave_vt;
     scrn->FreeScreen = drv_free_screen;
     scrn->ValidMode = drv_valid_mode;
+}
+
+Bool
+xorg_tracker_have_modesetting(ScrnInfoPtr pScrn, struct pci_device *device)
+{
+    char *BusID = xalloc(64);
+    sprintf(BusID, "pci:%04x:%02x:%02x.%d",
+	    device->domain, device->bus,
+	    device->dev, device->func);
+
+    if (drmCheckModesettingSupported(BusID)) {
+	xf86DrvMsgVerb(pScrn->scrnIndex, X_INFO, 0,
+		       "Drm modesetting not supported %s\n", BusID);
+	xfree(BusID);
+	return FALSE;
+    }
+
+    xf86DrvMsgVerb(pScrn->scrnIndex, X_INFO, 0,
+		   "Drm modesetting supported on %s\n", BusID);
+
+    xfree(BusID);
+    return TRUE;
 }
 
 
@@ -181,8 +204,7 @@ drv_crtc_resize(ScrnInfoPtr pScrn, int width, int height)
     if (!pScreen->ModifyPixmapHeader(rootPixmap, width, height, -1, -1, -1, NULL))
 	return FALSE;
 
-    /* HW dependent - FIXME */
-    pScrn->displayWidth = pScrn->virtualX;
+    pScrn->displayWidth = rootPixmap->devKind / (rootPixmap->drawable.bitsPerPixel / 8);
 
     /* now create new frontbuffer */
     return ms->create_front_buffer(pScrn) && ms->bind_front_buffer(pScrn);
@@ -207,11 +229,36 @@ drv_init_drm(ScrnInfoPtr pScrn)
 		ms->PciInfo->dev, ms->PciInfo->func
 	    );
 
-	ms->fd = drmOpen(NULL, BusID);
 
-	if (ms->fd < 0)
-	    return FALSE;
+	ms->api = drm_api_create();
+	ms->fd = drmOpen(ms->api ? ms->api->driver_name : NULL, BusID);
+	xfree(BusID);
+
+	if (ms->fd >= 0)
+	    return TRUE;
+
+	if (ms->api && ms->api->destroy)
+	    ms->api->destroy(ms->api);
+
+	ms->api = NULL;
+
+	return FALSE;
     }
+
+    return TRUE;
+}
+
+static Bool
+drv_close_drm(ScrnInfoPtr pScrn)
+{
+    modesettingPtr ms = modesettingPTR(pScrn);
+
+    if (ms->api && ms->api->destroy)
+	ms->api->destroy(ms->api);
+    ms->api = NULL;
+
+    drmClose(ms->fd);
+    ms->fd = -1;
 
     return TRUE;
 }
@@ -220,11 +267,16 @@ static Bool
 drv_init_resource_management(ScrnInfoPtr pScrn)
 {
     modesettingPtr ms = modesettingPTR(pScrn);
+    /*
+    ScreenPtr pScreen = pScrn->pScreen;
+    PixmapPtr rootPixmap = pScreen->GetScreenPixmap(pScreen);
+    Bool fbAccessDisabled;
+    CARD8 *fbstart;
+     */
 
     if (ms->screen || ms->kms)
 	return TRUE;
 
-    ms->api = drm_api_create();
     if (ms->api) {
 	ms->screen = ms->api->create_screen(ms->api, ms->fd, NULL);
 
@@ -249,14 +301,20 @@ static Bool
 drv_close_resource_management(ScrnInfoPtr pScrn)
 {
     modesettingPtr ms = modesettingPTR(pScrn);
+    int i;
 
-    if (ms->screen)
+    if (ms->screen) {
+	assert(ms->ctx == NULL);
+
+	for (i = 0; i < XORG_NR_FENCES; i++) {
+	    if (ms->fence[i]) {
+		ms->screen->fence_finish(ms->screen, ms->fence[i], 0);
+		ms->screen->fence_reference(ms->screen, &ms->fence[i], NULL);
+	    }
+	}
 	ms->screen->destroy(ms->screen);
+    }
     ms->screen = NULL;
-
-    if (ms->api && ms->api->destroy)
-	ms->api->destroy(ms->api);
-    ms->api = NULL;
 
 #ifdef HAVE_LIBKMS
     if (ms->kms)
@@ -461,7 +519,7 @@ static void drv_block_handler(int i, pointer blockData, pointer pTimeout,
         * quite small.  Let us get a fair way ahead of hardware before
         * throttling.
         */
-       for (j = 0; j < XORG_NR_FENCES; j++)
+       for (j = 0; j < XORG_NR_FENCES - 1; j++)
           ms->screen->fence_reference(ms->screen,
                                       &ms->fence[j],
                                       ms->fence[j+1]);
@@ -614,16 +672,28 @@ drv_screen_init(int scrnIndex, ScreenPtr pScreen, int argc, char **argv)
 
     xf86SetBlackWhitePixels(pScreen);
 
+    ms->accelerate_2d = xf86ReturnOptValBool(ms->Options, OPTION_2D_ACCEL, FALSE);
+    ms->debug_fallback = xf86ReturnOptValBool(ms->Options, OPTION_DEBUG_FALLBACK, TRUE);
+
     if (ms->screen) {
-	ms->exa = xorg_exa_init(pScrn, xf86ReturnOptValBool(ms->Options,
-							    OPTION_2D_ACCEL, TRUE));
-	ms->debug_fallback = debug_get_bool_option("XORG_DEBUG_FALLBACK", TRUE);
+	ms->exa = xorg_exa_init(pScrn, ms->accelerate_2d);
 
 	xorg_xv_init(pScreen);
 #ifdef DRI2
 	xorg_dri2_init(pScreen);
 #endif
     }
+
+    xf86DrvMsg(pScrn->scrnIndex, X_INFO, "2D Acceleration is %s\n",
+	       ms->screen && ms->accelerate_2d ? "enabled" : "disabled");
+    xf86DrvMsg(pScrn->scrnIndex, X_INFO, "Fallback debugging is %s\n",
+	       ms->debug_fallback ? "enabled" : "disabled");
+#ifdef DRI2
+    xf86DrvMsg(pScrn->scrnIndex, X_INFO, "3D Acceleration is %s\n",
+	       ms->screen ? "enabled" : "disabled");
+#else
+    xf86DrvMsg(pScrn->scrnIndex, X_INFO, "3D Acceleration is disabled\n");
+#endif
 
     miInitializeBackingStore(pScreen);
     xf86SetBackingStore(pScreen);
@@ -808,8 +878,7 @@ drv_close_screen(int scrnIndex, ScreenPtr pScreen)
 
     drv_close_resource_management(pScrn);
 
-    drmClose(ms->fd);
-    ms->fd = -1;
+    drv_close_drm(pScrn);
 
     pScrn->vtSema = FALSE;
     pScreen->CloseScreen = ms->CloseScreen;
@@ -915,6 +984,12 @@ drv_destroy_front_buffer_kms(ScrnInfoPtr pScrn)
     ScreenPtr pScreen = pScrn->pScreen;
     PixmapPtr rootPixmap = pScreen->GetScreenPixmap(pScreen);
 
+    /* XXX Do something with the rootPixmap.
+     * This currently works fine but if we are getting crashes in
+     * the fb functions after VT switches maybe look more into it.
+     */
+    (void)rootPixmap;
+
     if (!ms->root_bo)
 	return TRUE;
 
@@ -933,7 +1008,11 @@ drv_create_front_buffer_kms(ScrnInfoPtr pScrn)
     int ret;
 
     attr[0] = KMS_BO_TYPE;
+#ifdef KMS_BO_TYPE_SCANOUT_X8R8G8B8
+    attr[1] = KMS_BO_TYPE_SCANOUT_X8R8G8B8;
+#else
     attr[1] = KMS_BO_TYPE_SCANOUT;
+#endif
     attr[2] = KMS_WIDTH;
     attr[3] = pScrn->virtualX;
     attr[4] = KMS_HEIGHT;
@@ -991,12 +1070,22 @@ drv_bind_front_buffer_kms(ScrnInfoPtr pScrn)
 	goto err_destroy;
 
     pScreen->ModifyPixmapHeader(rootPixmap,
-				pScreen->width,
-				pScreen->height,
+				pScrn->virtualX,
+				pScrn->virtualY,
 				pScreen->rootDepth,
 				pScrn->bitsPerPixel,
 				stride,
 				ptr);
+
+    /* This a hack to work around EnableDisableFBAccess setting the pointer
+     * the real fix would be to replace pScrn->EnableDisableFBAccess hook
+     * and set the rootPixmap->devPrivate.ptr to something valid before that.
+     *
+     * But in its infinit visdome something uses either this some times before
+     * that, so our hook doesn't get called before the crash happens.
+     */
+    pScrn->pixmapPrivate.ptr = ptr;
+
     return TRUE;
 
 err_destroy:

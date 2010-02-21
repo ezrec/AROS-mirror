@@ -11,7 +11,6 @@
 #include "cso_cache/cso_context.h"
 
 #include "pipe/p_screen.h"
-#include "pipe/p_inlines.h"
 
 /*XXX get these from pipe's texture limits */
 #define IMAGE_MAX_WIDTH		2048
@@ -167,10 +166,9 @@ create_component_texture(struct pipe_context *pipe,
    templ.target = PIPE_TEXTURE_2D;
    templ.format = PIPE_FORMAT_L8_UNORM;
    templ.last_level = 0;
-   templ.width[0] = width;
-   templ.height[0] = height;
-   templ.depth[0] = 1;
-   pf_get_block(PIPE_FORMAT_L8_UNORM, &templ.block);
+   templ.width0 = width;
+   templ.height0 = height;
+   templ.depth0 = 1;
    templ.tex_usage = PIPE_TEXTURE_USAGE_SAMPLER;
 
    tex = screen->texture_create(screen, &templ);
@@ -183,18 +181,18 @@ check_yuv_textures(struct xorg_xv_port_priv *priv,  int width, int height)
 {
    struct pipe_texture **dst = priv->yuv[priv->current_set];
    if (!dst[0] ||
-       dst[0]->width[0] != width ||
-       dst[0]->height[0] != height) {
+       dst[0]->width0 != width ||
+       dst[0]->height0 != height) {
       pipe_texture_reference(&dst[0], NULL);
    }
    if (!dst[1] ||
-       dst[1]->width[0] != width ||
-       dst[1]->height[0] != height) {
+       dst[1]->width0 != width ||
+       dst[1]->height0 != height) {
       pipe_texture_reference(&dst[1], NULL);
    }
    if (!dst[2] ||
-       dst[2]->width[0] != width ||
-       dst[2]->height[0] != height) {
+       dst[2]->width0 != width ||
+       dst[2]->height0 != height) {
       pipe_texture_reference(&dst[2], NULL);
    }
 
@@ -390,6 +388,9 @@ draw_yuv(struct xorg_xv_port_priv *port,
 {
    struct pipe_texture **textures = port->yuv[port->current_set];
 
+   /*debug_printf("  draw_yuv([%d, %d, %d ,%d], [%d, %d, %d, %d])\n",
+                src_x, src_y, src_w, src_h,
+                dst_x, dst_y, dst_w, dst_h);*/
    renderer_draw_yuv(port->r,
                      src_x, src_y, src_w, src_h,
                      dst_x, dst_y, dst_w, dst_h,
@@ -402,14 +403,14 @@ bind_blend_state(struct xorg_xv_port_priv *port)
    struct pipe_blend_state blend;
 
    memset(&blend, 0, sizeof(struct pipe_blend_state));
-   blend.blend_enable = 1;
-   blend.colormask |= PIPE_MASK_RGBA;
+   blend.rt[0].blend_enable = 0;
+   blend.rt[0].colormask = PIPE_MASK_RGBA;
 
    /* porter&duff src */
-   blend.rgb_src_factor   = PIPE_BLENDFACTOR_ONE;
-   blend.alpha_src_factor = PIPE_BLENDFACTOR_ONE;
-   blend.rgb_dst_factor   = PIPE_BLENDFACTOR_ZERO;
-   blend.alpha_dst_factor = PIPE_BLENDFACTOR_ZERO;
+   blend.rt[0].rgb_src_factor   = PIPE_BLENDFACTOR_ONE;
+   blend.rt[0].alpha_src_factor = PIPE_BLENDFACTOR_ONE;
+   blend.rt[0].rgb_dst_factor   = PIPE_BLENDFACTOR_ZERO;
+   blend.rt[0].alpha_dst_factor = PIPE_BLENDFACTOR_ZERO;
 
    cso_set_blend(port->r->cso, &blend);
 }
@@ -485,8 +486,14 @@ display_video(ScrnInfoPtr pScrn, struct xorg_xv_port_priv *pPriv, int id,
    int dxo, dyo;
    Bool hdtv;
    int x, y, w, h;
-   struct exa_pixmap_priv *dst = exaGetPixmapDriverPrivate(pPixmap);
-   struct pipe_surface *dst_surf = xorg_gpu_surface(pPriv->r->pipe->screen, dst);
+   struct exa_pixmap_priv *dst;
+   struct pipe_surface *dst_surf = NULL;
+
+   exaMoveInPixmap(pPixmap);
+   dst = exaGetPixmapDriverPrivate(pPixmap);
+
+   /*debug_printf("display_video([%d, %d, %d, %d], [%d, %d, %d, %d])\n",
+     src_x, src_y, src_w, src_h, dstX, dstY, dst_w, dst_h);*/
 
    if (dst && !dst->tex) {
 	xorg_exa_set_shared_usage(pPixmap);
@@ -496,6 +503,7 @@ display_video(ScrnInfoPtr pScrn, struct xorg_xv_port_priv *pPriv, int id,
    if (!dst || !dst->tex)
       XORG_FALLBACK("Xv destination %s", !dst ? "!dst" : "!dst->tex");
 
+   dst_surf = xorg_gpu_surface(pPriv->r->pipe->screen, dst);
    hdtv = ((src_w >= RES_720P_X) && (src_h >= RES_720P_Y));
 
    REGION_TRANSLATE(pScrn->pScreen, dstRegion, -pPixmap->screen_x,
@@ -515,7 +523,6 @@ display_video(ScrnInfoPtr pScrn, struct xorg_xv_port_priv *pPriv, int id,
    bind_samplers(pPriv);
    setup_fs_video_constants(pPriv->r, hdtv);
 
-   exaMoveInPixmap(pPixmap);
    DamageDamageRegion(&pPixmap->drawable, dstRegion);
 
    while (nbox--) {
@@ -538,8 +545,9 @@ display_video(ScrnInfoPtr pScrn, struct xorg_xv_port_priv *pPriv, int id,
       offset_w = dst_w - w;
       offset_h = dst_h - h;
 
-      draw_yuv(pPriv, src_x + offset_x*diff_x, src_y + offset_y*diff_y,
-               src_w - offset_w*diff_x, src_h - offset_h*diff_x,
+      draw_yuv(pPriv,
+               src_x + offset_x*diff_x, src_y + offset_y*diff_y,
+               src_w - offset_w*diff_x, src_h - offset_h*diff_y,
                x, y, w, h);
 
       pbox++;

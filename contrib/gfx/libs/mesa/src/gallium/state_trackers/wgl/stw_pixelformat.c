@@ -32,6 +32,7 @@
 #include "pipe/p_defines.h"
 #include "pipe/p_screen.h"
 
+#include "util/u_format.h"
 #include "util/u_debug.h"
 
 #include "stw_icd.h"
@@ -94,8 +95,6 @@ stw_pf_depth_stencil[] = {
    { PIPE_FORMAT_Z24X8_UNORM, {24, 0} },
    { PIPE_FORMAT_X8Z24_UNORM, {24, 0} },
    { PIPE_FORMAT_Z16_UNORM,   {16, 0} },
-   /* pure stencil */
-   { PIPE_FORMAT_S8_UNORM,    { 0, 8} },
    /* combined depth-stencil */
    { PIPE_FORMAT_S8Z24_UNORM, {24, 8} },
    { PIPE_FORMAT_Z24S8_UNORM, {24, 8} }
@@ -132,14 +131,12 @@ stw_pixelformat_add(
    if(stw_dev->pixelformat_extended_count >= STW_MAX_PIXELFORMATS)
       return;
 
-   assert(pf_layout( color->format ) == PIPE_FORMAT_LAYOUT_RGBAZS );
-   assert(pf_get_component_bits( color->format, PIPE_FORMAT_COMP_R ) == color->bits.red );
-   assert(pf_get_component_bits( color->format, PIPE_FORMAT_COMP_G ) == color->bits.green );
-   assert(pf_get_component_bits( color->format, PIPE_FORMAT_COMP_B ) == color->bits.blue );
-   assert(pf_get_component_bits( color->format, PIPE_FORMAT_COMP_A ) == color->bits.alpha );
-   assert(pf_layout( depth->format ) == PIPE_FORMAT_LAYOUT_RGBAZS );
-   assert(pf_get_component_bits( depth->format, PIPE_FORMAT_COMP_Z ) == depth->bits.depth );
-   assert(pf_get_component_bits( depth->format, PIPE_FORMAT_COMP_S ) == depth->bits.stencil );
+   assert(util_format_get_component_bits(color->format, UTIL_FORMAT_COLORSPACE_RGB, 0) == color->bits.red);
+   assert(util_format_get_component_bits(color->format, UTIL_FORMAT_COLORSPACE_RGB, 1) == color->bits.green);
+   assert(util_format_get_component_bits(color->format, UTIL_FORMAT_COLORSPACE_RGB, 2) == color->bits.blue);
+   assert(util_format_get_component_bits(color->format, UTIL_FORMAT_COLORSPACE_RGB, 3) == color->bits.alpha);
+   assert(util_format_get_component_bits(depth->format, UTIL_FORMAT_COLORSPACE_ZS, 0) == depth->bits.depth);
+   assert(util_format_get_component_bits(depth->format, UTIL_FORMAT_COLORSPACE_ZS, 1) == depth->bits.stencil);
    
    pfi = &stw_dev->pixelformats[stw_dev->pixelformat_extended_count];
    
@@ -221,7 +218,8 @@ stw_pixelformat_init( void )
          const struct stw_pf_color_info *color = &stw_pf_color[j];
          
          if(!screen->is_format_supported(screen, color->format, PIPE_TEXTURE_2D, 
-                                         PIPE_TEXTURE_USAGE_RENDER_TARGET, 0))
+                                         PIPE_TEXTURE_USAGE_RENDER_TARGET |
+                                         PIPE_TEXTURE_USAGE_DISPLAY_TARGET, 0))
             continue;
          
          for(k = 0; k < Elements(stw_pf_doublebuffer); ++k) {
@@ -303,6 +301,9 @@ DrvDescribePixelFormat(
    const struct stw_pixelformat_info *pfi;
 
    (void) hdc;
+
+   if (!stw_dev)
+      return 0;
 
    count = stw_pixelformat_get_extended_count();
    index = (uint) iPixelFormat - 1;

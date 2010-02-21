@@ -67,6 +67,10 @@
 #include "pipe/p_screen.h"
 #include "pipe/p_context.h"
 
+#include "trace/tr_screen.h"
+#include "trace/tr_context.h"
+#include "trace/tr_texture.h"
+
 #include "xm_winsys.h"
 #include <GL/glx.h>
 
@@ -87,6 +91,8 @@ void xmesa_set_driver( const struct xm_driver *templ )
  */
 pipe_mutex _xmesa_lock;
 
+static struct pipe_screen *_screen = NULL;
+static struct pipe_screen *screen = NULL;
 
 
 /**********************************************************************/
@@ -754,7 +760,6 @@ PUBLIC
 XMesaContext XMesaCreateContext( XMesaVisual v, XMesaContext share_list )
 {
    static GLboolean firstTime = GL_TRUE;
-   static struct pipe_screen *screen = NULL;
    struct pipe_context *pipe = NULL;
    XMesaContext c;
    GLcontext *mesaCtx;
@@ -762,7 +767,8 @@ XMesaContext XMesaCreateContext( XMesaVisual v, XMesaContext share_list )
 
    if (firstTime) {
       pipe_mutex_init(_xmesa_lock);
-      screen = driver.create_pipe_screen();
+      _screen = driver.create_pipe_screen();
+      screen = trace_screen_create( _screen );
       firstTime = GL_FALSE;
    }
 
@@ -781,7 +787,10 @@ XMesaContext XMesaCreateContext( XMesaVisual v, XMesaContext share_list )
    if (screen == NULL)
       goto fail;
 
-   pipe = driver.create_pipe_context(screen, (void *) c);
+   /* Trace screen knows how to properly wrap context creation in the
+    * wrapped screen, so nothing special to do here:
+    */
+   pipe = screen->context_create(screen, (void *) c);
    if (pipe == NULL)
       goto fail;
 
@@ -1110,6 +1119,12 @@ void XMesaSwapBuffers( XMesaBuffer b )
    st_swapbuffers(b->stfb, &frontLeftSurf, NULL);
 
    if (frontLeftSurf) {
+      if (_screen != screen) {
+         struct trace_surface *tr_surf = trace_surface( frontLeftSurf );
+         struct pipe_surface *surf = tr_surf->surface;
+         frontLeftSurf = surf;
+      }
+
       driver.display_surface(b, frontLeftSurf);
    }
 

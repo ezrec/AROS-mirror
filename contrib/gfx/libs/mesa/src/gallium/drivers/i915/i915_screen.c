@@ -26,7 +26,7 @@
  **************************************************************************/
 
 
-#include "pipe/p_inlines.h"
+#include "util/u_inlines.h"
 #include "util/u_memory.h"
 #include "util/u_string.h"
 
@@ -117,6 +117,12 @@ i915_get_param(struct pipe_screen *screen, int param)
       return 8;  /* max 128x128x128 */
    case PIPE_CAP_MAX_TEXTURE_CUBE_LEVELS:
       return 11; /* max 1024x1024 */
+   case PIPE_CAP_TGSI_FS_COORD_ORIGIN_UPPER_LEFT:
+   case PIPE_CAP_TGSI_FS_COORD_PIXEL_CENTER_HALF_INTEGER:
+      return 1;
+   case PIPE_CAP_TGSI_FS_COORD_ORIGIN_LOWER_LEFT:
+   case PIPE_CAP_TGSI_FS_COORD_PIXEL_CENTER_INTEGER:
+      return 0;
    default:
       return 0;
    }
@@ -287,6 +293,8 @@ i915_create_screen(struct intel_winsys *iws, uint pci_id)
    is->base.get_param = i915_get_param;
    is->base.get_paramf = i915_get_paramf;
    is->base.is_format_supported = i915_is_format_supported;
+
+   is->base.context_create = i915_create_context;
 
    is->base.fence_reference = i915_fence_reference;
    is->base.fence_signalled = i915_fence_signalled;

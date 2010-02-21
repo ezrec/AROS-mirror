@@ -86,6 +86,9 @@ struct pipe_screen {
     */
    float (*get_paramf)( struct pipe_screen *, int param );
 
+   struct pipe_context * (*context_create)( struct pipe_screen *,
+					    void *priv );
+   
    /**
     * Check if the given pipe_format is supported as a texture or
     * drawing surface.
@@ -266,6 +269,11 @@ struct pipe_screen {
 
    void (*video_surface_destroy)( struct pipe_video_surface *vsfc );
 
+   /**
+    * Do any special operations to ensure buffer size is correct
+    */
+   void (*update_buffer)( struct pipe_screen *ws,
+                          void *context_private );
 
    /**
     * Do any special operations to ensure frontbuffer contents are

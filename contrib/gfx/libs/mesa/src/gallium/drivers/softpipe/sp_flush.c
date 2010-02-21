@@ -34,11 +34,9 @@
 #include "draw/draw_context.h"
 #include "sp_flush.h"
 #include "sp_context.h"
-#include "sp_surface.h"
 #include "sp_state.h"
 #include "sp_tile_cache.h"
 #include "sp_tex_tile_cache.h"
-#include "sp_winsys.h"
 
 
 void
@@ -54,6 +52,9 @@ softpipe_flush( struct pipe_context *pipe,
    if (flags & PIPE_FLUSH_TEXTURE_CACHE) {
       for (i = 0; i < softpipe->num_textures; i++) {
          sp_flush_tex_tile_cache(softpipe->tex_cache[i]);
+      }
+      for (i = 0; i < softpipe->num_vertex_textures; i++) {
+         sp_flush_tex_tile_cache(softpipe->vertex_tex_cache[i]);
       }
    }
 

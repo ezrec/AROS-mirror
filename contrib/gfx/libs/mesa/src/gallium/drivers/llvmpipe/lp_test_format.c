@@ -38,7 +38,7 @@
 #include "util/u_cpu_detect.h"
 #include "util/u_format.h"
 
-#include "lp_bld_format.h"
+#include "gallivm/lp_bld_format.h"
 #include "lp_test.h"
 
 
@@ -199,7 +199,7 @@ add_store_rgba_test(LLVMModuleRef module,
 }
 
 
-ALIGN_STACK
+PIPE_ALIGN_STACK
 static boolean
 test_format(unsigned verbose, FILE *fp, const struct pixel_test_case *test)
 {

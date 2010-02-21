@@ -32,11 +32,11 @@
 
 #include <stdio.h>
 
-#include "pipe/internal/p_winsys_screen.h"
+#include "util/u_simple_screen.h"
 #include "pipe/p_defines.h"
-#include "pipe/p_inlines.h"
+#include "util/u_inlines.h"
 
-//#include "state_tracker/st_public.h"
+#include "pipebuffer/pb_buffer.h"
 
 #include "util/u_memory.h"
 
@@ -45,9 +45,14 @@
 
 #include "radeon_drm.h"
 
+#include "radeon_winsys.h"
+
 struct radeon_pipe_buffer {
     struct pipe_buffer  base;
+    /* Pointer to GPU-backed BO. */
     struct radeon_bo    *bo;
+    /* Pointer to fallback PB buffer. */
+    struct pb_buffer    *pb;
     boolean flinked;
     uint32_t flink;
 };
@@ -66,14 +71,10 @@ struct radeon_winsys_priv {
 
     /* Current CS. */
     struct radeon_cs* cs;
-};
 
-struct radeon_winsys {
-    /* Parent class. */
-    struct pipe_winsys base;
-
-    /* This corresponds to void* radeon_winsys in r300_winsys. */
-    struct radeon_winsys_priv* priv;
+    /* Flush CB */
+    void (*flush_cb)(void *);
+    void *flush_data;
 };
 
 struct radeon_winsys* radeon_pipe_winsys(int fb);

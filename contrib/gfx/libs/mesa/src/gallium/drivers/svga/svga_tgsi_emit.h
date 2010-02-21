@@ -79,6 +79,8 @@ struct svga_shader_emitter
 
    int ps30_input_count;
 
+   int dynamic_branching_level;
+
    boolean in_main_func;
 
    boolean created_zero_immediate;
@@ -196,6 +198,23 @@ static INLINE boolean emit_op3( struct svga_shader_emitter *emit,
            emit_src( emit, src0 ) &&
            emit_src( emit, src1 ) &&
            emit_src( emit, src2 ));
+}
+
+
+static INLINE boolean emit_op4( struct svga_shader_emitter *emit,
+                                SVGA3dShaderInstToken inst,
+                                SVGA3dShaderDestToken dest,
+                                struct src_register src0,
+                                struct src_register src1,
+                                struct src_register src2,
+                                struct src_register src3)
+{
+   return (emit_instruction( emit, inst ) &&
+           emit_dst( emit, dest ) &&
+           emit_src( emit, src0 ) &&
+           emit_src( emit, src1 ) &&
+           emit_src( emit, src2 ) &&
+           emit_src( emit, src3 ));
 }
 
 

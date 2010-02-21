@@ -42,7 +42,7 @@ init_pow2_table(void)
       pow2_table[i] = (float) pow(2.0, (i - POW2_TABLE_OFFSET) / POW2_TABLE_SCALE);
 }
 
-#if defined(__AROS__)
+#if defined(PIPE_OS_AROS)
 /*
  * NOTE: log_base_2(x) = log(x) / log(2)
  * NOTE: 1.442695 = 1/log(2).

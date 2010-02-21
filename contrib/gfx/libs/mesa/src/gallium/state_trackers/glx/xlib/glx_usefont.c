@@ -210,7 +210,7 @@ isvalid(XFontStruct * fs, unsigned int which)
 }
 
 
-void
+PUBLIC void
 glXUseXFont(Font font, int first, int count, int listbase)
 {
    Display *dpy;

@@ -6,6 +6,7 @@
 #include "arosmesa_winsys.h"
 #include "nouveau/nouveau_winsys.h"
 #include "util/u_memory.h"
+#include "util/u_inlines.h"
 
 #include "nouveau/nouveau_screen.h"
 
@@ -151,16 +152,6 @@ arosmesa_create_nouveau_screen( void )
         return NULL;
 
     switch (dev->chipset & 0xf0) {
-    /* NV04 codebase is not in-sync with gallium API */
-//     case 0x00:
-//         init = nv04_screen_create;
-//         break;
-    case 0x10:
-        init = nv10_screen_create;
-        break;
-    case 0x20:
-        init = nv20_screen_create;
-        break;
     case 0x30:
         init = nv30_screen_create;
         break;
@@ -202,53 +193,9 @@ arosmesa_create_nouveau_screen( void )
 static struct pipe_context *
 arosmesa_create_nouveau_context( struct pipe_screen *pscreen )
 {
-    struct nouveau_winsys *nvws = nouveau_winsys_screen(pscreen);
-    struct pipe_context *(*init)(struct pipe_screen *, unsigned);
-    unsigned chipset = nouveau_screen(pscreen)->device->chipset;
-    int i;
-
-    switch (chipset & 0xf0) {
-    /* NV04 codebase is not in-sync with gallium API */        
-//    case 0x00:
-//        init = nv04_create;
-//        break;
-    case 0x10:
-        init = nv10_create;
-        break;
-    case 0x20:
-        init = nv20_create;
-        break;
-    case 0x30:
-        init = nv30_create;
-        break;
-    case 0x40:
-    case 0x60:
-        init = nv40_create;
-        break;
-    case 0x80:
-    case 0x90:
-    case 0xa0:
-        init = nv50_create;
-        break;
-    default:
-        debug_printf("%s: unknown chipset nv%02x\n", __func__, chipset);
+    if (!pscreen)
         return NULL;
-    }
-
-    /* Find a free slot for a pipe context, allocate a new one if needed */
-    for (i = 0; i < nvws->nr_pctx; i++) {
-        if (nvws->pctx[i] == NULL)
-            break;
-    }
-
-    if (i == nvws->nr_pctx) {
-        nvws->nr_pctx++;
-        nvws->pctx = realloc(nvws->pctx,
-                      sizeof(*nvws->pctx) * nvws->nr_pctx);
-    }
-
-    nvws->pctx[i] = init(pscreen, i);
-    return nvws->pctx[i];
+    return pscreen->context_create(pscreen, NULL);
 }
 
 static struct pipe_buffer *
@@ -320,7 +267,7 @@ arosmesa_nouveau_get_screen_surface(struct pipe_screen * screen, int width, int 
                         NOUVEAU_TEXTURE_USAGE_LINEAR;
     templat.target = PIPE_TEXTURE_2D;
     templat.last_level = 0;
-    templat.depth[0] = 1;
+    templat.depth0 = 1;
     switch(bpp)
     {
         case(16):
@@ -331,9 +278,8 @@ arosmesa_nouveau_get_screen_surface(struct pipe_screen * screen, int width, int 
             templat.format = PIPE_FORMAT_A8R8G8B8_UNORM;
             break;
     }
-    templat.width[0] = width;
-    templat.height[0] = height;
-    pf_get_block(templat.format, &templat.block);
+    templat.width0 = width;
+    templat.height0 = height;
 
     texture = screen->texture_blanket(screen,
                                         &templat,

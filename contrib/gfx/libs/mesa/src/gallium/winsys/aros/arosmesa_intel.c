@@ -66,7 +66,6 @@ arosmesa_intel_create_screen( void )
    idws->pools.gem = drm_intel_bufmgr_gem_init(idws->fd, idws->max_batch_size);
    drm_intel_bufmgr_gem_enable_reuse(idws->pools.gem);
 
-   idws->softpipe = FALSE;
    idws->dump_cmd = debug_get_bool_option("INTEL_DUMP_CMD", FALSE);
 
    return i915_create_screen(&idws->base, deviceID);
@@ -75,7 +74,10 @@ arosmesa_intel_create_screen( void )
 static struct pipe_context *
 arosmesa_intel_create_context( struct pipe_screen *pscreen )
 {
-   return i915_create_context(pscreen);
+    if (!pscreen)
+        return NULL;
+
+    return pscreen->context_create(pscreen, NULL);
 }
 
 static void

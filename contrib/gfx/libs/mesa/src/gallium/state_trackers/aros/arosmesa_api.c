@@ -9,6 +9,7 @@
 #include "main/context.h"
 #include "state_tracker/st_public.h"
 #include "../winsys/aros/arosmesa_winsys.h"
+#include "util/u_inlines.h"
 
 #include <proto/exec.h>
 #include <proto/utility.h>
