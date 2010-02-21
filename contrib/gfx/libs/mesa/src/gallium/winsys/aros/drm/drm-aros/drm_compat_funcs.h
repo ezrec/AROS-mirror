@@ -37,7 +37,11 @@
 #define unlikely(x)                     __builtin_expect((x),0)
 #define mb()                            __asm __volatile("lock; addl $0,0(%%esp)" : : : "memory");
 #define ffs(x)                          __builtin_ffs(x)
+#define max(a, b)                       ((a) > (b) ? (a) : (b))
+#define min(a, b)                       ((a) < (b) ? (a) : (b))
+#define is_power_of_2(x)                (x != 0 && ((x & (x - 1)) == 0))
 
+#define MODULE_FIRMWARE(x)
 
 
 void iowrite32(u32 val, void * addr);
@@ -97,6 +101,7 @@ static inline IPTR IS_ERR(APTR ptr)
 
 /* Kernel debug */
 #define KERN_ERR
+#define KERN_DEBUG
 #define printk(fmt, ...)            bug(fmt, ##__VA_ARGS__)
 #define IMPLEMENT(fmt, ...)         bug("------IMPLEMENT(%s): " fmt, __func__ , ##__VA_ARGS__)
 #define TRACE(fmt, ...)             D(bug("[TRACE](%s): " fmt, __func__ , ##__VA_ARGS__))

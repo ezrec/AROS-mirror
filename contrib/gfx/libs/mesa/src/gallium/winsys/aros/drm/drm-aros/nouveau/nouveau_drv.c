@@ -14,6 +14,8 @@
 int nouveau_vram_pushbuf = 0;
 int nouveau_vram_notify = 0;
 int nouveau_noagp = 0;
+int nouveau_noaccel = 0;
+int nouveau_ctxfw = 0; /* Use external ctxprog for NV40 */
 
 extern struct drm_ioctl_desc nouveau_ioctls[];
 

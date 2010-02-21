@@ -200,8 +200,7 @@ nouveau_gem_set_domain(struct drm_gem_object *gem, uint32_t read_domains,
 	} else {
 		if ((valid_domains & NOUVEAU_GEM_DOMAIN_VRAM) &&
 		    (read_domains & NOUVEAU_GEM_DOMAIN_VRAM) &&
-		    (bo->mem.mem_type == TTM_PL_VRAM ||
-		     bo->mem.mem_type == TTM_PL_PRIV0))
+		    bo->mem.mem_type == TTM_PL_VRAM)
 			flags = TTM_PL_FLAG_VRAM;
 		else
 		if ((valid_domains & NOUVEAU_GEM_DOMAIN_GART) &&
@@ -216,22 +215,33 @@ nouveau_gem_set_domain(struct drm_gem_object *gem, uint32_t read_domains,
 			flags = TTM_PL_FLAG_TT;
 	}
 
-	if ((flags & TTM_PL_FLAG_VRAM) && !nvbo->mappable)
-		flags |= TTM_PL_FLAG_PRIV0;
-
-	bo->proposed_placement &= ~TTM_PL_MASK_MEM;
-	bo->proposed_placement |= flags;
+	nouveau_bo_placement_set(nvbo, flags);
 	return 0;
 }
 
+struct validate_op {
+	struct list_head vram_list;
+	struct list_head gart_list;
+	struct list_head both_list;
+};
+
 static void
-nouveau_gem_pushbuf_backoff(struct list_head *list)
+validate_fini_list(struct list_head *list, struct nouveau_fence *fence)
 {
 	struct list_head *entry, *tmp;
 	struct nouveau_bo *nvbo;
 
 	list_for_each_safe(entry, tmp, list) {
 		nvbo = list_entry(entry, struct nouveau_bo, entry);
+		if (likely(fence)) {
+			struct nouveau_fence *prev_fence;
+
+			spin_lock(&nvbo->bo.lock);
+			prev_fence = nvbo->bo.sync_obj;
+			nvbo->bo.sync_obj = nouveau_fence_ref(fence);
+			spin_unlock(&nvbo->bo.lock);
+			nouveau_fence_unref((void *)&prev_fence);
+		}
 
 		list_del(&nvbo->entry);
 		nvbo->reserved_by = NULL;
@@ -241,27 +251,167 @@ nouveau_gem_pushbuf_backoff(struct list_head *list)
 }
 
 static void
-nouveau_gem_pushbuf_fence(struct list_head *list, struct nouveau_fence *fence)
+validate_fini(struct validate_op *op, struct nouveau_fence* fence)
 {
-	struct list_head *entry, *tmp;
-	struct nouveau_fence *prev_fence;
-	struct nouveau_bo *nvbo;
+	validate_fini_list(&op->vram_list, fence);
+	validate_fini_list(&op->gart_list, fence);
+	validate_fini_list(&op->both_list, fence);
+}
 
-	list_for_each_safe(entry, tmp, list) {
-		nvbo = list_entry(entry, struct nouveau_bo, entry);
+static int
+validate_init(struct nouveau_channel *chan, struct drm_file *file_priv,
+	      struct drm_nouveau_gem_pushbuf_bo *pbbo,
+	      int nr_buffers, struct validate_op *op)
+{
+	struct drm_device *dev = chan->dev;
+	struct drm_nouveau_private *dev_priv = dev->dev_private;
+	uint32_t sequence;
+	int trycnt = 0;
+	int ret, i;
 
-		spin_lock(&nvbo->bo.lock);
-		prev_fence = nvbo->bo.sync_obj;
-		nvbo->bo.sync_obj = nouveau_fence_ref(fence);
-		spin_unlock(&nvbo->bo.lock);
-
-		list_del(&nvbo->entry);
-		nvbo->reserved_by = NULL;
-		ttm_bo_unreserve(&nvbo->bo);
-		drm_gem_object_unreference(nvbo->gem);
-
-		nouveau_fence_unref((void *)&prev_fence);
+	sequence = atomic_add_return(1, &dev_priv->ttm.validate_sequence);
+retry:
+	if (++trycnt > 100000) {
+		NV_ERROR(dev, "%s failed and gave up.\n", __func__);
+		return -EINVAL;
 	}
+
+	for (i = 0; i < nr_buffers; i++) {
+		struct drm_nouveau_gem_pushbuf_bo *b = &pbbo[i];
+		struct drm_gem_object *gem;
+		struct nouveau_bo *nvbo;
+
+		gem = drm_gem_object_lookup(dev, file_priv, b->handle);
+		if (!gem) {
+			NV_ERROR(dev, "Unknown handle 0x%08x\n", b->handle);
+			validate_fini(op, NULL);
+			return -EINVAL;
+		}
+		nvbo = gem->driver_private;
+
+		if (nvbo->reserved_by && nvbo->reserved_by == file_priv) {
+			NV_ERROR(dev, "multiple instances of buffer %d on "
+				      "validation list\n", b->handle);
+			validate_fini(op, NULL);
+			return -EINVAL;
+		}
+
+		ret = ttm_bo_reserve(&nvbo->bo, false, false, true, sequence);
+		if (ret) {
+			validate_fini(op, NULL);
+			if (ret == -EAGAIN)
+				ret = ttm_bo_wait_unreserved(&nvbo->bo, false);
+			drm_gem_object_unreference(gem);
+			if (ret) {
+				NV_ERROR(dev, "fail reserve\n");
+				return ret;
+			}
+			goto retry;
+		}
+
+		b->user_priv = (uint64_t)(unsigned long)nvbo;
+		nvbo->reserved_by = file_priv;
+		nvbo->pbbo_index = i;
+		if ((b->valid_domains & NOUVEAU_GEM_DOMAIN_VRAM) &&
+		    (b->valid_domains & NOUVEAU_GEM_DOMAIN_GART))
+			list_add_tail(&nvbo->entry, &op->both_list);
+		else
+		if (b->valid_domains & NOUVEAU_GEM_DOMAIN_VRAM)
+			list_add_tail(&nvbo->entry, &op->vram_list);
+		else
+		if (b->valid_domains & NOUVEAU_GEM_DOMAIN_GART)
+			list_add_tail(&nvbo->entry, &op->gart_list);
+		else {
+			NV_ERROR(dev, "invalid valid domains: 0x%08x\n",
+				 b->valid_domains);
+			list_add_tail(&nvbo->entry, &op->both_list);
+			validate_fini(op, NULL);
+			return -EINVAL;
+		}
+
+		if (unlikely(atomic_read(&nvbo->bo.cpu_writers) > 0)) {
+			validate_fini(op, NULL);
+
+			if (nvbo->cpu_filp == file_priv) {
+				NV_ERROR(dev, "bo %p mapped by process trying "
+					      "to validate it!\n", nvbo);
+				return -EINVAL;
+			}
+
+			ret = ttm_bo_wait_cpu(&nvbo->bo, false);
+			if (ret) {
+				NV_ERROR(dev, "fail wait_cpu\n");
+				return ret;
+			}
+			goto retry;
+		}
+	}
+
+	return 0;
+}
+
+static int
+validate_list(struct nouveau_channel *chan, struct list_head *list,
+	      struct drm_nouveau_gem_pushbuf_bo *pbbo, uint64_t user_pbbo_ptr)
+{
+	struct drm_nouveau_gem_pushbuf_bo __user *upbbo =
+				(void __force __user *)(uintptr_t)user_pbbo_ptr;
+	struct drm_device *dev = chan->dev;
+	struct nouveau_bo *nvbo;
+	int ret, relocs = 0;
+
+	list_for_each_entry(nvbo, list, entry) {
+		struct drm_nouveau_gem_pushbuf_bo *b = &pbbo[nvbo->pbbo_index];
+		struct nouveau_fence *prev_fence = nvbo->bo.sync_obj;
+
+		if (prev_fence && nouveau_fence_channel(prev_fence) != chan) {
+			spin_lock(&nvbo->bo.lock);
+			ret = ttm_bo_wait(&nvbo->bo, false, false, false);
+			spin_unlock(&nvbo->bo.lock);
+			if (unlikely(ret)) {
+				NV_ERROR(dev, "fail wait other chan\n");
+				return ret;
+			}
+		}
+
+		ret = nouveau_gem_set_domain(nvbo->gem, b->read_domains,
+					     b->write_domains,
+					     b->valid_domains);
+		if (unlikely(ret)) {
+			NV_ERROR(dev, "fail set_domain\n");
+			return ret;
+		}
+
+		nvbo->channel = chan;
+		ret = ttm_bo_validate(&nvbo->bo, &nvbo->placement,
+				      false, false);
+		nvbo->channel = NULL;
+		if (unlikely(ret)) {
+			NV_ERROR(dev, "fail ttm_validate\n");
+			return ret;
+		}
+
+		if (nvbo->bo.offset == b->presumed.offset &&
+		    ((nvbo->bo.mem.mem_type == TTM_PL_VRAM &&
+		      b->presumed.domain & NOUVEAU_GEM_DOMAIN_VRAM) ||
+		     (nvbo->bo.mem.mem_type == TTM_PL_TT &&
+		      b->presumed.domain & NOUVEAU_GEM_DOMAIN_GART)))
+			continue;
+
+		if (nvbo->bo.mem.mem_type == TTM_PL_TT)
+			b->presumed.domain = NOUVEAU_GEM_DOMAIN_GART;
+		else
+			b->presumed.domain = NOUVEAU_GEM_DOMAIN_VRAM;
+		b->presumed.offset = nvbo->bo.offset;
+		b->presumed.valid = 0;
+		relocs++;
+
+		if (DRM_COPY_TO_USER(&upbbo[nvbo->pbbo_index].presumed,
+				     &b->presumed, sizeof(b->presumed)))
+			return -EFAULT;
+	}
+
+	return relocs;
 }
 
 static int
@@ -269,143 +419,50 @@ nouveau_gem_pushbuf_validate(struct nouveau_channel *chan,
 			     struct drm_file *file_priv,
 			     struct drm_nouveau_gem_pushbuf_bo *pbbo,
 			     uint64_t user_buffers, int nr_buffers,
-			     struct list_head *list, int *apply_relocs)
+			     struct validate_op *op, int *apply_relocs)
 {
-	struct drm_nouveau_private *dev_priv = chan->dev->dev_private;
 	struct drm_device *dev = chan->dev;
-	struct drm_nouveau_gem_pushbuf_bo *b;
-	struct drm_nouveau_gem_pushbuf_bo __user *user_pbbos =
-				(void __force __user *)(uintptr_t)user_buffers;
-	struct nouveau_fence *prev_fence;
-	struct nouveau_bo *nvbo;
-	struct list_head *entry, *tmp;
-	uint32_t sequence;
-	int ret = -EINVAL;
-	int i;
-	int trycnt = 0;
+	int ret, relocs = 0;
+
+	INIT_LIST_HEAD(&op->vram_list);
+	INIT_LIST_HEAD(&op->gart_list);
+	INIT_LIST_HEAD(&op->both_list);
 
 	if (nr_buffers == 0)
 		return 0;
 
-	sequence = atomic_add_return(1, &dev_priv->ttm.validate_sequence);
-retry:
-	if (++trycnt > 100000) {
-		ret = -EINVAL;
-		NV_ERROR(dev, "%s failed and gave up.\n", __func__);
-		goto out_unref;
+	ret = validate_init(chan, file_priv, pbbo, nr_buffers, op);
+	if (unlikely(ret)) {
+		NV_ERROR(dev, "validate_init\n");
+		return ret;
 	}
 
-	for (i = 0, b = pbbo; i < nr_buffers; i++, b++) {
-		struct drm_gem_object *gem;
-
-		gem = drm_gem_object_lookup(dev, file_priv, b->handle);
-		if (!gem) {
-			NV_ERROR(dev, "Unknown handle 0x%08x\n", b->handle);
-			ret = -EINVAL;
-			goto out_unref;
-		}
-		nvbo = gem->driver_private;
-
-		if (nvbo->reserved_by && nvbo->reserved_by == file_priv) {
-			NV_INFO(dev, "multiple instances of buffer %d on "
-				     "validation list\n", b->handle);
-			ret = -EINVAL;
-			goto out_unref;
-		}
-
-		ret = ttm_bo_reserve(&nvbo->bo, false, false, true, sequence);
-		if (ret) {
-			nouveau_gem_pushbuf_backoff(list);
-			if (ret == -EAGAIN)
-				ret = ttm_bo_wait_unreserved(&nvbo->bo, false);
-			drm_gem_object_unreference(gem);
-			if (ret)
-				goto out_unref;
-			goto retry;
-		}
-
-		nvbo->reserved_by = file_priv;
-		list_add_tail(&nvbo->entry, list);
-
-		if (unlikely(atomic_read(&nvbo->bo.cpu_writers) > 0)) {
-			nouveau_gem_pushbuf_backoff(list);
-
-			if (nvbo->cpu_filp == file_priv) {
-				NV_ERROR(dev, "bo %p mapped by process trying "
-					      "to validate it!\n", nvbo);
-				ret = -EINVAL;
-				goto out_unref;
-			}
-
-			ret = ttm_bo_wait_cpu(&nvbo->bo, false);
-			if (ret == -ERESTART)
-				ret = -EAGAIN;
-			if (ret)
-				goto out_unref;
-			goto retry;
-		}
+	ret = validate_list(chan, &op->vram_list, pbbo, user_buffers);
+	if (unlikely(ret < 0)) {
+		NV_ERROR(dev, "validate vram_list\n");
+		validate_fini(op, NULL);
+		return ret;
 	}
+	relocs += ret;
 
-	b = pbbo;
-	list_for_each_safe(entry, tmp, list) {
-		nvbo = list_entry(entry, struct nouveau_bo, entry);
-
-		prev_fence = nvbo->bo.sync_obj;
-		if (prev_fence && nouveau_fence_channel(prev_fence) != chan) {
-			spin_lock(&nvbo->bo.lock);
-			ret = ttm_bo_wait(&nvbo->bo, false, false, false);
-			spin_unlock(&nvbo->bo.lock);
-			if (ret)
-				goto out_unref;
-		}
-
-		ret = nouveau_gem_set_domain(nvbo->gem, b->read_domains,
-					     b->write_domains,
-					     b->valid_domains);
-		if (ret)
-			goto out_unref;
-
-		nvbo->channel = chan;
-		ret = ttm_buffer_object_validate(&nvbo->bo,
-						 nvbo->bo.proposed_placement,
-						 false, false);
-		nvbo->channel = NULL;
-		if (ret)
-			goto out_unref;
-
-		if (nvbo->bo.offset == b->presumed_offset &&
-		    (((nvbo->bo.mem.mem_type == TTM_PL_VRAM ||
-		       nvbo->bo.mem.mem_type == TTM_PL_PRIV0) &&
-		      b->presumed_domain & NOUVEAU_GEM_DOMAIN_VRAM) ||
-		     (nvbo->bo.mem.mem_type == TTM_PL_TT &&
-		      b->presumed_domain & NOUVEAU_GEM_DOMAIN_GART))) {
-			b++;
-			user_pbbos++;
-			continue;
-		}
-
-		if (nvbo->bo.mem.mem_type == TTM_PL_TT)
-			b->presumed_domain = NOUVEAU_GEM_DOMAIN_GART;
-		else
-			b->presumed_domain = NOUVEAU_GEM_DOMAIN_VRAM;
-		b->presumed_offset = nvbo->bo.offset;
-		b->presumed_ok = 0;
-		(*apply_relocs)++;
-
-		if (DRM_COPY_TO_USER(user_pbbos, b, sizeof(*b))) {
-			ret = -EFAULT;
-			goto out_unref;
-		}
-
-		b++;
-		user_pbbos++;
+	ret = validate_list(chan, &op->gart_list, pbbo, user_buffers);
+	if (unlikely(ret < 0)) {
+		NV_ERROR(dev, "validate gart_list\n");
+		validate_fini(op, NULL);
+		return ret;
 	}
+	relocs += ret;
 
-out_unref:
-	if (unlikely(ret))
-		nouveau_gem_pushbuf_backoff(list);
+	ret = validate_list(chan, &op->both_list, pbbo, user_buffers);
+	if (unlikely(ret < 0)) {
+		NV_ERROR(dev, "validate both_list\n");
+		validate_fini(op, NULL);
+		return ret;
+	}
+	relocs += ret;
 
-	return ret;
+	*apply_relocs = relocs;
+	return 0;
 }
 
 static inline void *
@@ -427,58 +484,81 @@ u_memcpya(uint64_t user, unsigned nmemb, unsigned size)
 }
 
 static int
-nouveau_gem_pushbuf_reloc_apply(struct nouveau_channel *chan, int nr_bo,
-				struct drm_nouveau_gem_pushbuf_bo *bo,
-				int nr_relocs, uint64_t ptr_relocs,
-				int nr_dwords, int first_dword,
-				uint32_t *pushbuf, bool is_iomem)
+nouveau_gem_pushbuf_reloc_apply(struct drm_device *dev,
+				struct drm_nouveau_gem_pushbuf *req,
+				struct drm_nouveau_gem_pushbuf_bo *bo)
 {
 	struct drm_nouveau_gem_pushbuf_reloc *reloc = NULL;
-	struct drm_device *dev = chan->dev;
-	int ret = 0, i;
+	int ret = 0;
+	unsigned i;
 
-	reloc = u_memcpya(ptr_relocs, nr_relocs, sizeof(*reloc));
+	reloc = u_memcpya(req->relocs, req->nr_relocs, sizeof(*reloc));
 	if (IS_ERR(reloc))
 		return PTR_ERR(reloc);
 
-	for (i = 0; i < nr_relocs; i++) {
+	for (i = 0; i < req->nr_relocs; i++) {
 		struct drm_nouveau_gem_pushbuf_reloc *r = &reloc[i];
 		struct drm_nouveau_gem_pushbuf_bo *b;
+		struct nouveau_bo *nvbo;
 		uint32_t data;
 
-		if (r->bo_index >= nr_bo || r->reloc_index < first_dword ||
-		    r->reloc_index >= first_dword + nr_dwords) {
-			NV_ERROR(dev, "Bad relocation %d\n", i);
-			NV_ERROR(dev, "  bo: %d max %d\n", r->bo_index, nr_bo);
-			NV_ERROR(dev, "  id: %d max %d\n", r->reloc_index, nr_dwords);
+		if (unlikely(r->bo_index > req->nr_buffers)) {
+			NV_ERROR(dev, "reloc bo index invalid\n");
 			ret = -EINVAL;
 			break;
 		}
 
 		b = &bo[r->bo_index];
-		if (b->presumed_ok)
+		if (b->presumed.valid)
 			continue;
 
+		if (unlikely(r->reloc_bo_index > req->nr_buffers)) {
+			NV_ERROR(dev, "reloc container bo index invalid\n");
+			ret = -EINVAL;
+			break;
+		}
+		nvbo = (void *)(unsigned long)bo[r->reloc_bo_index].user_priv;
+
+		if (unlikely(r->reloc_bo_offset + 4 >
+			     nvbo->bo.mem.num_pages << PAGE_SHIFT)) {
+			NV_ERROR(dev, "reloc outside of bo\n");
+			ret = -EINVAL;
+			break;
+		}
+
+		if (!nvbo->kmap.virtual) {
+			ret = ttm_bo_kmap(&nvbo->bo, 0, nvbo->bo.mem.num_pages,
+					  &nvbo->kmap);
+			if (ret) {
+				NV_ERROR(dev, "failed kmap for reloc\n");
+				break;
+			}
+		}
+
 		if (r->flags & NOUVEAU_GEM_RELOC_LOW)
-			data = b->presumed_offset + r->data;
+			data = b->presumed.offset + r->data;
 		else
 		if (r->flags & NOUVEAU_GEM_RELOC_HIGH)
-			data = (b->presumed_offset + r->data) >> 32;
+			data = (b->presumed.offset + r->data) >> 32;
 		else
 			data = r->data;
 
 		if (r->flags & NOUVEAU_GEM_RELOC_OR) {
-			if (b->presumed_domain == NOUVEAU_GEM_DOMAIN_GART)
+			if (b->presumed.domain == NOUVEAU_GEM_DOMAIN_GART)
 				data |= r->tor;
 			else
 				data |= r->vor;
 		}
 
-		if (is_iomem)
-			iowrite32_native(data, (void __force __iomem *)
-						&pushbuf[r->reloc_index]);
-		else
-			pushbuf[r->reloc_index] = data;
+		spin_lock(&nvbo->bo.lock);
+		ret = ttm_bo_wait(&nvbo->bo, false, false, false);
+		if (ret) {
+			NV_ERROR(dev, "reloc wait_idle failed: %d\n", ret);
+			break;
+		}
+		spin_unlock(&nvbo->bo.lock);
+
+		nouveau_bo_wr32(nvbo, r->reloc_bo_offset >> 2, data);
 	}
 
 	kfree(reloc);
@@ -489,285 +569,160 @@ int
 nouveau_gem_ioctl_pushbuf(struct drm_device *dev, void *data,
 			  struct drm_file *file_priv)
 {
-	struct drm_nouveau_gem_pushbuf *req = data;
-	struct drm_nouveau_gem_pushbuf_bo *bo = NULL;
-	struct nouveau_fence *fence = NULL;
-	struct nouveau_channel *chan;
-	struct list_head list;
-	uint32_t *pushbuf = NULL;
-	int ret = 0, do_reloc = 0, i;
-
-	NOUVEAU_CHECK_INITIALISED_WITH_RETURN;
-	NOUVEAU_GET_USER_CHANNEL_WITH_RETURN(req->channel, file_priv, chan);
-
-	if (req->nr_dwords >= chan->dma.max ||
-	    req->nr_buffers > NOUVEAU_GEM_MAX_BUFFERS ||
-	    req->nr_relocs > NOUVEAU_GEM_MAX_RELOCS) {
-		NV_ERROR(dev, "Pushbuf config exceeds limits:\n");
-		NV_ERROR(dev, "  dwords : %d max %d\n", req->nr_dwords,
-			 chan->dma.max - 1);
-		NV_ERROR(dev, "  buffers: %d max %d\n", req->nr_buffers,
-			 NOUVEAU_GEM_MAX_BUFFERS);
-		NV_ERROR(dev, "  relocs : %d max %d\n", req->nr_relocs,
-			 NOUVEAU_GEM_MAX_RELOCS);
-		return -EINVAL;
-	}
-
-	pushbuf = u_memcpya(req->dwords, req->nr_dwords, sizeof(uint32_t));
-	if (IS_ERR(pushbuf))
-		return PTR_ERR(pushbuf);
-
-	bo = u_memcpya(req->buffers, req->nr_buffers, sizeof(*bo));
-	if (IS_ERR(bo)) {
-		kfree(pushbuf);
-		return PTR_ERR(bo);
-	}
-
-	mutex_lock(&dev->struct_mutex);
-
-	INIT_LIST_HEAD(&list);
-
-	/* Validate buffer list */
-	ret = nouveau_fence_new(chan, &fence, false);
-	if (ret)
-		goto out;
-
-	ret = nouveau_gem_pushbuf_validate(chan, file_priv, bo, req->buffers,
-					   req->nr_buffers, &list, &do_reloc);
-	if (ret)
-		goto out;
-
-	/* Apply any relocations that are required */
-	if (do_reloc) {
-		ret = nouveau_gem_pushbuf_reloc_apply(chan, req->nr_buffers,
-						      bo, req->nr_relocs,
-						      req->relocs,
-						      req->nr_dwords, 0,
-						      pushbuf, false);
-		if (ret)
-			goto out;
-	}
-
-	/* Emit push buffer to the hw
-	 */
-	ret = RING_SPACE(chan, req->nr_dwords);
-	if (ret)
-		goto out;
-
-	OUT_RINGp(chan, pushbuf, req->nr_dwords);
-
-	ret = nouveau_fence_emit(fence);
-	if (ret) {
-		NV_ERROR(dev, "error fencing pushbuf: %d\n", ret);
-		WIND_RING(chan);
-		goto out;
-	}
-
-	nouveau_gem_pushbuf_fence(&list, fence);
-
-	if (nouveau_gem_pushbuf_sync(chan)) {
-		ret = nouveau_fence_wait(fence, NULL, false, false);
-		if (ret) {
-			for (i = 0; i < req->nr_dwords; i++)
-				NV_ERROR(dev, "0x%08x\n", pushbuf[i]);
-			NV_ERROR(dev, "^^ above push buffer is fail :(\n");
-		}
-	}
-out:
-	if (unlikely(ret))
-		nouveau_gem_pushbuf_backoff(&list);
-	nouveau_fence_unref((void *)&fence);
-
-	mutex_unlock(&dev->struct_mutex);
-
-	kfree(pushbuf);
-	kfree(bo);
-	return ret;
-}
-
-#define PUSHBUF_CAL (dev_priv->card_type >= NV_20)
-
-int
-nouveau_gem_ioctl_pushbuf_call(struct drm_device *dev, void *data,
-			       struct drm_file *file_priv)
-{
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
-	struct drm_nouveau_gem_pushbuf_call *req = data;
-	struct drm_nouveau_gem_pushbuf_bo *bo = NULL;
-	struct nouveau_fence *fence = NULL;
+	struct drm_nouveau_gem_pushbuf *req = data;
+	struct drm_nouveau_gem_pushbuf_push *push;
+	struct drm_nouveau_gem_pushbuf_bo *bo;
 	struct nouveau_channel *chan;
-	struct drm_gem_object *gem;
-	struct nouveau_bo *pbbo;
-	struct list_head list;
+	struct validate_op op;
+	struct nouveau_fence *fence = 0;
 	int i, ret = 0, do_reloc = 0;
 
 	NOUVEAU_CHECK_INITIALISED_WITH_RETURN;
 	NOUVEAU_GET_USER_CHANNEL_WITH_RETURN(req->channel, file_priv, chan);
 
-	if (unlikely(req->handle == 0))
+	req->vram_available = dev_priv->fb_aper_free;
+	req->gart_available = dev_priv->gart_info.aper_free;
+	if (unlikely(req->nr_push == 0))
 		goto out_next;
 
-	if (req->nr_buffers > NOUVEAU_GEM_MAX_BUFFERS ||
-	    req->nr_relocs > NOUVEAU_GEM_MAX_RELOCS) {
-		NV_ERROR(dev, "Pushbuf config exceeds limits:\n");
-		NV_ERROR(dev, "  buffers: %d max %d\n", req->nr_buffers,
-			 NOUVEAU_GEM_MAX_BUFFERS);
-		NV_ERROR(dev, "  relocs : %d max %d\n", req->nr_relocs,
-			 NOUVEAU_GEM_MAX_RELOCS);
+	if (unlikely(req->nr_push > NOUVEAU_GEM_MAX_PUSH)) {
+		NV_ERROR(dev, "pushbuf push count exceeds limit: %d max %d\n",
+			 req->nr_push, NOUVEAU_GEM_MAX_PUSH);
 		return -EINVAL;
 	}
 
+	if (unlikely(req->nr_buffers > NOUVEAU_GEM_MAX_BUFFERS)) {
+		NV_ERROR(dev, "pushbuf bo count exceeds limit: %d max %d\n",
+			 req->nr_buffers, NOUVEAU_GEM_MAX_BUFFERS);
+		return -EINVAL;
+	}
+
+	if (unlikely(req->nr_relocs > NOUVEAU_GEM_MAX_RELOCS)) {
+		NV_ERROR(dev, "pushbuf reloc count exceeds limit: %d max %d\n",
+			 req->nr_relocs, NOUVEAU_GEM_MAX_RELOCS);
+		return -EINVAL;
+	}
+
+	push = u_memcpya(req->push, req->nr_push, sizeof(*push));
+	if (IS_ERR(push))
+		return PTR_ERR(push);
+
 	bo = u_memcpya(req->buffers, req->nr_buffers, sizeof(*bo));
-	if (IS_ERR(bo))
+	if (IS_ERR(bo)) {
+		kfree(push);
 		return PTR_ERR(bo);
+	}
 
 	mutex_lock(&dev->struct_mutex);
 
-	INIT_LIST_HEAD(&list);
-
 	/* Validate buffer list */
-	ret = nouveau_fence_new(chan, &fence, false);
-	if (ret) {
-		NV_ERROR(dev, "fence new\n");
-		goto out;
-	}
-
 	ret = nouveau_gem_pushbuf_validate(chan, file_priv, bo, req->buffers,
-					   req->nr_buffers, &list, &do_reloc);
+					   req->nr_buffers, &op, &do_reloc);
 	if (ret) {
 		NV_ERROR(dev, "validate: %d\n", ret);
 		goto out;
 	}
 
-	/* Validate DMA push buffer */
-	gem = drm_gem_object_lookup(dev, file_priv, req->handle);
-	if (!gem) {
-		NV_ERROR(dev, "Unknown pb handle 0x%08x\n", req->handle);
-		ret = -EINVAL;
-		goto out;
-	}
-	pbbo = nouveau_gem_object(gem);
-
-	ret = ttm_bo_reserve(&pbbo->bo, false, false, true,
-			     chan->fence.sequence);
-	if (ret) {
-		NV_ERROR(dev, "resv pb: %d\n", ret);
-		drm_gem_object_unreference(gem);
-		goto out;
-	}
-
-	pbbo->bo.proposed_placement &= ~TTM_PL_MASK_MEM;
-	pbbo->bo.proposed_placement |= (1 << chan->pushbuf_bo->bo.mem.mem_type);
-	ret = ttm_buffer_object_validate(&pbbo->bo, pbbo->bo.proposed_placement,
-					 false, false);
-	if (ret) {
-		NV_ERROR(dev, "validate pb: %d\n", ret);
-		ttm_bo_unreserve(&pbbo->bo);
-		drm_gem_object_unreference(gem);
-		goto out;
-	}
-
-	list_add_tail(&pbbo->entry, &list);
-
-	/* If presumed return address doesn't match, we need to map the
-	 * push buffer and fix it..
-	 */
-	if (!PUSHBUF_CAL) {
-		uint32_t retaddy;
-
-		if (chan->dma.free < 4 + NOUVEAU_DMA_SKIPS) {
-			ret = nouveau_dma_wait(chan, 4 + NOUVEAU_DMA_SKIPS);
-			if (ret) {
-				NV_ERROR(dev, "jmp_space: %d\n", ret);
-				goto out;
-			}
-		}
-
-		retaddy  = chan->pushbuf_base + ((chan->dma.cur + 2) << 2);
-		retaddy |= 0x20000000;
-		if (retaddy != req->suffix0) {
-			req->suffix0 = retaddy;
-			do_reloc = 1;
-		}
-	}
-
 	/* Apply any relocations that are required */
 	if (do_reloc) {
-		void *pbvirt;
-		bool is_iomem;
-		ret = ttm_bo_kmap(&pbbo->bo, 0, pbbo->bo.mem.num_pages,
-				  &pbbo->kmap);
-		if (ret) {
-			NV_ERROR(dev, "kmap pb: %d\n", ret);
-			goto out;
-		}
-
-		pbvirt = ttm_kmap_obj_virtual(&pbbo->kmap, &is_iomem);
-		ret = nouveau_gem_pushbuf_reloc_apply(chan, req->nr_buffers, bo,
-						      req->nr_relocs,
-						      req->relocs,
-						      req->nr_dwords,
-						      req->offset / 4,
-						      pbvirt, is_iomem);
-
-		if (!PUSHBUF_CAL) {
-			nouveau_bo_wr32(pbbo,
-					req->offset / 4 + req->nr_dwords - 2,
-					req->suffix0);
-		}
-
-		ttm_bo_kunmap(&pbbo->kmap);
+		ret = nouveau_gem_pushbuf_reloc_apply(dev, req, bo);
 		if (ret) {
 			NV_ERROR(dev, "reloc apply: %d\n", ret);
 			goto out;
 		}
 	}
 
-	if (PUSHBUF_CAL) {
-		ret = RING_SPACE(chan, 2);
+	if (chan->dma.ib_max) {
+		ret = nouveau_dma_wait(chan, req->nr_push + 1, 6);
+		if (ret) {
+			NV_INFO(dev, "nv50cal_space: %d\n", ret);
+			goto out;
+		}
+
+		for (i = 0; i < req->nr_push; i++) {
+			struct nouveau_bo *nvbo = (void *)(unsigned long)
+				bo[push[i].bo_index].user_priv;
+
+			nv50_dma_push(chan, nvbo, push[i].offset,
+				      push[i].length);
+		}
+	} else
+	if (dev_priv->card_type >= NV_20) {
+		ret = RING_SPACE(chan, req->nr_push * 2);
 		if (ret) {
 			NV_ERROR(dev, "cal_space: %d\n", ret);
 			goto out;
 		}
-		OUT_RING(chan, ((pbbo->bo.mem.mm_node->start << PAGE_SHIFT) +
-				  req->offset) | 2);
-		OUT_RING(chan, 0);
+
+		for (i = 0; i < req->nr_push; i++) {
+			struct nouveau_bo *nvbo = (void *)(unsigned long)
+				bo[push[i].bo_index].user_priv;
+			struct drm_mm_node *mem = nvbo->bo.mem.mm_node;
+
+			OUT_RING(chan, ((mem->start << PAGE_SHIFT) +
+					push[i].offset) | 2);
+			OUT_RING(chan, 0);
+		}
 	} else {
-		ret = RING_SPACE(chan, 2 + NOUVEAU_DMA_SKIPS);
+		ret = RING_SPACE(chan, req->nr_push * (2 + NOUVEAU_DMA_SKIPS));
 		if (ret) {
 			NV_ERROR(dev, "jmp_space: %d\n", ret);
 			goto out;
 		}
-		OUT_RING(chan, ((pbbo->bo.mem.mm_node->start << PAGE_SHIFT) +
-				  req->offset) | 0x20000000);
-		OUT_RING(chan, 0);
 
-		/* Space the jumps apart with NOPs. */
-		for (i = 0; i < NOUVEAU_DMA_SKIPS; i++)
+		for (i = 0; i < req->nr_push; i++) {
+			struct nouveau_bo *nvbo = (void *)(unsigned long)
+				bo[push[i].bo_index].user_priv;
+			struct drm_mm_node *mem = nvbo->bo.mem.mm_node;
+			uint32_t cmd;
+
+			cmd = chan->pushbuf_base + ((chan->dma.cur + 2) << 2);
+			cmd |= 0x20000000;
+			if (unlikely(cmd != req->suffix0)) {
+				if (!nvbo->kmap.virtual) {
+					ret = ttm_bo_kmap(&nvbo->bo, 0,
+							  nvbo->bo.mem.
+							  num_pages,
+							  &nvbo->kmap);
+					if (ret) {
+						WIND_RING(chan);
+						goto out;
+					}
+				}
+
+				nouveau_bo_wr32(nvbo, (push[i].offset +
+						push[i].length - 8) / 4, cmd);
+			}
+
+			OUT_RING(chan, ((mem->start << PAGE_SHIFT) +
+					push[i].offset) | 0x20000000);
 			OUT_RING(chan, 0);
+			for (i = 0; i < NOUVEAU_DMA_SKIPS; i++)
+				OUT_RING(chan, 0);
+		}
 	}
 
-	ret = nouveau_fence_emit(fence);
+	ret = nouveau_fence_new(chan, &fence, true);
 	if (ret) {
 		NV_ERROR(dev, "error fencing pushbuf: %d\n", ret);
 		WIND_RING(chan);
 		goto out;
 	}
 
-	nouveau_gem_pushbuf_fence(&list, fence);
-
-	FIRE_RING(chan);
 out:
-	if (unlikely(ret))
-		nouveau_gem_pushbuf_backoff(&list);
-	nouveau_fence_unref((void *)&fence);
-
+	validate_fini(&op, fence);
+	nouveau_fence_unref((void**)&fence);
 	mutex_unlock(&dev->struct_mutex);
-
 	kfree(bo);
+	kfree(push);
 
 out_next:
-	if (PUSHBUF_CAL) {
+	if (chan->dma.ib_max) {
+		req->suffix0 = 0x00000000;
+		req->suffix1 = 0x00000000;
+	} else
+	if (dev_priv->card_type >= NV_20) {
 		req->suffix0 = 0x00020000;
 		req->suffix1 = 0x00000000;
 	} else {
@@ -779,102 +734,17 @@ out_next:
 	return ret;
 }
 
-int
-nouveau_gem_ioctl_pushbuf_call2(struct drm_device *dev, void *data,
-				struct drm_file *file_priv)
-{
-	struct drm_nouveau_private *dev_priv = dev->dev_private;
-	struct drm_nouveau_gem_pushbuf_call *req = data;
-
-	req->vram_available = dev_priv->fb_aper_free;
-	req->gart_available = dev_priv->gart_info.aper_free;
-
-	return nouveau_gem_ioctl_pushbuf_call(dev, data, file_priv);
-}
-
 static inline uint32_t
 domain_to_ttm(struct nouveau_bo *nvbo, uint32_t domain)
 {
 	uint32_t flags = 0;
 
-	if (domain & NOUVEAU_GEM_DOMAIN_VRAM) {
+	if (domain & NOUVEAU_GEM_DOMAIN_VRAM)
 		flags |= TTM_PL_FLAG_VRAM;
-		if (!nvbo->mappable)
-			flags |= TTM_PL_FLAG_PRIV0;
-	}
-
 	if (domain & NOUVEAU_GEM_DOMAIN_GART)
 		flags |= TTM_PL_FLAG_TT;
 
 	return flags;
-}
-
-int
-nouveau_gem_ioctl_pin(struct drm_device *dev, void *data,
-		      struct drm_file *file_priv)
-{
-	struct drm_nouveau_gem_pin *req = data;
-	struct drm_gem_object *gem;
-	struct nouveau_bo *nvbo;
-	int ret = 0;
-
-	NOUVEAU_CHECK_INITIALISED_WITH_RETURN;
-
-	if (drm_core_check_feature(dev, DRIVER_MODESET)) {
-		NV_ERROR(dev, "pin only allowed without kernel modesetting\n");
-		return -EINVAL;
-	}
-
-	if (!DRM_SUSER(DRM_CURPROC))
-		return -EPERM;
-
-	gem = drm_gem_object_lookup(dev, file_priv, req->handle);
-	if (!gem)
-		return -EINVAL;
-	nvbo = nouveau_gem_object(gem);
-
-	ret = nouveau_bo_pin(nvbo, domain_to_ttm(nvbo, req->domain));
-	if (ret)
-		goto out;
-
-	req->offset = nvbo->bo.offset;
-	if (nvbo->bo.mem.mem_type == TTM_PL_TT)
-		req->domain = NOUVEAU_GEM_DOMAIN_GART;
-	else
-		req->domain = NOUVEAU_GEM_DOMAIN_VRAM;
-
-out:
-	mutex_lock(&dev->struct_mutex);
-	drm_gem_object_unreference(gem);
-	mutex_unlock(&dev->struct_mutex);
-
-	return ret;
-}
-
-int
-nouveau_gem_ioctl_unpin(struct drm_device *dev, void *data,
-			struct drm_file *file_priv)
-{
-	struct drm_nouveau_gem_pin *req = data;
-	struct drm_gem_object *gem;
-	int ret;
-
-	NOUVEAU_CHECK_INITIALISED_WITH_RETURN;
-
-	if (drm_core_check_feature(dev, DRIVER_MODESET))
-		return -EINVAL;
-
-	gem = drm_gem_object_lookup(dev, file_priv, req->handle);
-	if (!gem)
-		return -EINVAL;
-
-	ret = nouveau_bo_unpin(nouveau_gem_object(gem));
-
-	mutex_lock(&dev->struct_mutex);
-	drm_gem_object_unreference(gem);
-	mutex_unlock(&dev->struct_mutex);
-
-	return ret;
 }
 
 int
@@ -899,19 +769,16 @@ nouveau_gem_ioctl_cpu_prep(struct drm_device *dev, void *data,
 			goto out;
 
 		ret = ttm_bo_wait_cpu(&nvbo->bo, no_wait);
-		if (ret == -ERESTART)
-			ret = -EAGAIN;
 		if (ret)
 			goto out;
 	}
 
 	if (req->flags & NOUVEAU_GEM_CPU_PREP_NOBLOCK) {
+		spin_lock(&nvbo->bo.lock);
 		ret = ttm_bo_wait(&nvbo->bo, false, false, no_wait);
+		spin_unlock(&nvbo->bo.lock);
 	} else {
 		ret = ttm_bo_synccpu_write_grab(&nvbo->bo, no_wait);
-		if (ret == -ERESTART)
-			ret = -EAGAIN;
-		else
 		if (ret == 0)
 			nvbo->cpu_filp = file_priv;
 	}
