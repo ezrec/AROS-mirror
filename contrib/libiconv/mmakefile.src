@@ -1,4 +1,4 @@
-# Copyright © 2008, The AROS Development Team. All rights reserved.
+# Copyright © 2008-2010, The AROS Development Team. All rights reserved.
 # $Id: mmakefile.src 28866 2008-06-01 13:58:50Z mazze $
 
 -include $(TOP)/config/make.cfg
@@ -6,4 +6,5 @@
 #MM- contrib-gnu : contrib-libiconv
 #MM- contrib-libiconv : development-libiconv
 
-%fetch_and_build_gnu_development package=libiconv version=1.12 patch=no
+%fetch_and_build_gnu_development package=libiconv version=1.12 patch=no \
+    suffixes="tar.gz"

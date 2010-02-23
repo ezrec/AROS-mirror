@@ -1,4 +1,4 @@
-# Copyright © 2004, The AROS Development Team. All rights reserved.
+# Copyright © 2004-2010, The AROS Development Team. All rights reserved.
 # $Id$
 
 -include $(TOP)/config/make.cfg
@@ -6,4 +6,4 @@
 #MM- contrib-gnu : contrib-gnu-bc
 #MM- contrib-gnu-bc : development-bc
 
-%fetch_and_build_gnu_development package=bc version=1.06
+%fetch_and_build_gnu_development package=bc version=1.06 suffixes="tar.gz"

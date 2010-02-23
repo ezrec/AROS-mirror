@@ -1,4 +1,4 @@
-# Copyright © 2004, The AROS Development Team. All rights reserved.
+# Copyright © 2004-2010, The AROS Development Team. All rights reserved.
 # $Id$
 
 -include $(TOP)/config/make.cfg
@@ -6,4 +6,5 @@
 #MM- contrib-gnu : contrib-gnu-sed
 #MM- contrib-gnu-sed : development-sed
 
-%fetch_and_build_gnu_development package=sed version=4.1.5 patch=yes
+%fetch_and_build_gnu_development package=sed version=4.1.5 patch=yes \
+    suffixes="tar.gz"
