@@ -243,6 +243,11 @@ validate_fini_list(struct list_head *list, struct nouveau_fence *fence)
 			nouveau_fence_unref((void *)&prev_fence);
 		}
 
+		if (unlikely(nvbo->validate_mapped)) {
+			ttm_bo_kunmap(&nvbo->kmap);
+			nvbo->validate_mapped = false;
+		}
+
 		list_del(&nvbo->entry);
 		nvbo->reserved_by = NULL;
 		ttm_bo_unreserve(&nvbo->bo);
@@ -533,6 +538,7 @@ nouveau_gem_pushbuf_reloc_apply(struct drm_device *dev,
 				NV_ERROR(dev, "failed kmap for reloc\n");
 				break;
 			}
+			nvbo->validate_mapped = true;
 		}
 
 		if (r->flags & NOUVEAU_GEM_RELOC_LOW)
@@ -552,11 +558,11 @@ nouveau_gem_pushbuf_reloc_apply(struct drm_device *dev,
 
 		spin_lock(&nvbo->bo.lock);
 		ret = ttm_bo_wait(&nvbo->bo, false, false, false);
+		spin_unlock(&nvbo->bo.lock);
 		if (ret) {
 			NV_ERROR(dev, "reloc wait_idle failed: %d\n", ret);
 			break;
 		}
-		spin_unlock(&nvbo->bo.lock);
 
 		nouveau_bo_wr32(nvbo, r->reloc_bo_offset >> 2, data);
 	}
@@ -576,7 +582,7 @@ nouveau_gem_ioctl_pushbuf(struct drm_device *dev, void *data,
 	struct nouveau_channel *chan;
 	struct validate_op op;
 	struct nouveau_fence *fence = 0;
-	int i, ret = 0, do_reloc = 0;
+	int i, j, ret = 0, do_reloc = 0;
 
 	NOUVEAU_CHECK_INITIALISED_WITH_RETURN;
 	NOUVEAU_GET_USER_CHANNEL_WITH_RETURN(req->channel, file_priv, chan);
@@ -689,6 +695,7 @@ nouveau_gem_ioctl_pushbuf(struct drm_device *dev, void *data,
 						WIND_RING(chan);
 						goto out;
 					}
+					nvbo->validate_mapped = true;
 				}
 
 				nouveau_bo_wr32(nvbo, (push[i].offset +
@@ -698,7 +705,7 @@ nouveau_gem_ioctl_pushbuf(struct drm_device *dev, void *data,
 			OUT_RING(chan, ((mem->start << PAGE_SHIFT) +
 					push[i].offset) | 0x20000000);
 			OUT_RING(chan, 0);
-			for (i = 0; i < NOUVEAU_DMA_SKIPS; i++)
+			for (j = 0; j < NOUVEAU_DMA_SKIPS; j++)
 				OUT_RING(chan, 0);
 		}
 	}

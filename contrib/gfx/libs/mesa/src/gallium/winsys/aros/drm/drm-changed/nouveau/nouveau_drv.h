@@ -91,6 +91,7 @@ struct nouveau_bo {
 	struct drm_file *reserved_by;
 	struct list_head entry;
 	int pbbo_index;
+	bool validate_mapped;
 
 	struct nouveau_channel *channel;
 
@@ -602,6 +603,7 @@ struct drm_nouveau_private {
 	uint64_t vm_end;
 	struct nouveau_gpuobj *vm_vram_pt[NV50_VM_VRAM_NR];
 	int vm_vram_pt_nr;
+	uint64_t vram_sys_base;
 
 	/* the mtrr covering the FB */
 	int fb_mtrr;
