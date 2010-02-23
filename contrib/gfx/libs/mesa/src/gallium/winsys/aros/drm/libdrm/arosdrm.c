@@ -15,16 +15,7 @@ drmCommandNone(int fd, unsigned long drmCommandIndex)
     if (!current_drm_driver || !current_drm_driver->ioctls)
         return -EINVAL;
 
-    /* FIXME: Remove switch when all paths are tested */
-    switch(drmCommandIndex)
-    {
-        case(0x0 /*DRM_NOUVEAU_CARD_INIT*/):
-            return current_drm_driver->ioctls[drmCommandIndex].func(current_drm_driver->dev, NULL, drm_files[fd]);
-        default:
-            DRM_IMPL("COMMAND %d\n", drmCommandIndex);
-    }
-    
-    return 0;
+    return current_drm_driver->ioctls[drmCommandIndex].func(current_drm_driver->dev, NULL, drm_files[fd]);
 }
 
 int
@@ -35,15 +26,8 @@ drmCommandRead(int fd, unsigned long drmCommandIndex, void *data, unsigned long 
 
     if (!current_drm_driver || !current_drm_driver->ioctls)
         return -EINVAL;
-    
-    /* FIXME: Remove switch when all paths are tested */
-    switch(drmCommandIndex)
-    {
-        default:
-            DRM_IMPL("COMMAND %d\n", drmCommandIndex);
-    }
-    
-    return 0;
+
+    return current_drm_driver->ioctls[drmCommandIndex].func(current_drm_driver->dev, data, drm_files[fd]);
 }
 
 int
@@ -55,20 +39,7 @@ drmCommandWrite(int fd, unsigned long drmCommandIndex, void *data, unsigned long
     if (!current_drm_driver || !current_drm_driver->ioctls)
         return -EINVAL;
     
-    /* FIXME: Remove switch when all paths are tested */
-    switch(drmCommandIndex)
-    {
-        case(0x4 /*DRM_NOUVEAU_CHANNEL_FREE*/):
-        case(0x5 /*DRM_NOUVEAU_GROBJ_ALLOC*/):
-        case(0x7 /*DRM_NOUVEAU_GPUOBJ_FREE*/):
-        case(0x45 /*DRM_NOUVEAU_GEM_CPU_PREP*/):
-        case(0x46 /*DRM_NOUVEAU_GEM_CPU_FINI*/):
-            return current_drm_driver->ioctls[drmCommandIndex].func(current_drm_driver->dev, data, drm_files[fd]);
-        default:
-            DRM_IMPL("COMMAND %d\n", drmCommandIndex);
-    }
-    
-    return 0;
+    return current_drm_driver->ioctls[drmCommandIndex].func(current_drm_driver->dev, data, drm_files[fd]);
 }
 
 int
@@ -80,23 +51,7 @@ drmCommandWriteRead(int fd, unsigned long drmCommandIndex, void *data, unsigned 
     if (!current_drm_driver || !current_drm_driver->ioctls)
         return -EINVAL;
     
-    /* FIXME: Remove switch when all paths are tested */
-    switch(drmCommandIndex)
-    {
-        case(0x1 /*DRM_NOUVEAU_GETPARAM*/):
-        case(0x3 /*DRM_NOUVEAU_CHANNEL_ALLOC*/):
-        case(0x6 /*DRM_NOUVEAU_NOTIFIEROBJ_ALLOC*/):
-        case(0x40 /*DRM_NOUVEAU_GEM_NEW*/):
-        case(0x42 /*DRM_NOUVEAU_GEM_PUSHBUF_CALL*/):
-        case(0x43 /*DRM_NOUVEAU_GEM_PIN*/):
-        case(0x47 /*DRM_NOUVEAU_GEM_INFO*/):
-        case(0x48 /* DRM_NOUVEAU_GEM_PUSHBUF_CALL2 */):
-            return current_drm_driver->ioctls[drmCommandIndex].func(current_drm_driver->dev, data, drm_files[fd]);
-        default:
-            DRM_IMPL("COMMAND %d\n", drmCommandIndex);
-    }
-    
-    return 0;
+    return current_drm_driver->ioctls[drmCommandIndex].func(current_drm_driver->dev, data, drm_files[fd]);
 }
  
 //int           

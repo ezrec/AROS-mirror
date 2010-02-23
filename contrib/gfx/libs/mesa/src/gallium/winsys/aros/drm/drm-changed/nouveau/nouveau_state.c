@@ -604,18 +604,10 @@ static void nouveau_card_takedown(struct drm_device *dev)
 		ttm_bo_clean_mm(&dev_priv->ttm.bdev, TTM_PL_VRAM);
 		ttm_bo_clean_mm(&dev_priv->ttm.bdev, TTM_PL_TT);
 		mutex_unlock(&dev->struct_mutex);
-#if !defined(__AROS__)
 		nouveau_sgdma_takedown(dev);
-#endif
 
 		nouveau_gpuobj_takedown(dev);
 		nouveau_mem_close(dev);
-#if defined(__AROS__)
-        /* FIXME: Possible bug in nouveau:
-        When memory management is close, all TTM objects are forced-removed
-        however to do this, sgdma is needed so order needs to be different */
-		nouveau_sgdma_takedown(dev);
-#endif
 		engine->instmem.takedown(dev);
 
 		if (drm_core_check_feature(dev, DRIVER_MODESET))

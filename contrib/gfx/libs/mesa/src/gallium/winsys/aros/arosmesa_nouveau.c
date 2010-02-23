@@ -195,6 +195,7 @@ arosmesa_create_nouveau_context( struct pipe_screen *pscreen )
 {
     if (!pscreen)
         return NULL;
+
     return pscreen->context_create(pscreen, NULL);
 }
 
@@ -232,20 +233,8 @@ arosmesa_nouveau_cleanup( struct pipe_screen * screen )
 {
     if (screen)
     {
-        /* First destroy the screen, then the rest */
-        struct nouveau_winsys *nvws = nouveau_winsys(screen->winsys);
-        struct nouveau_device *dev = nouveau_screen(screen)->device;
-        
+        /* This destroys the winsys and closes the device */
         screen->destroy(screen);
-        
-        /* nvws->base.destroy cannot be used here as it uses screen
-           and screen has already been destroyed */
-        
-        if (nvws)
-            FREE(nvws);
-        
-        if (dev)
-            nouveau_device_close(&dev);
     }
 }
 
