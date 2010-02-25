@@ -616,8 +616,7 @@ struct drm_nouveau_private {
 
 	struct list_head gpuobj_list;
 
-	struct nvbios VBIOS;
-	struct nouveau_bios_info *vbios;
+	struct nvbios vbios;
 
 	struct nv04_mode_state mode_reg;
 	struct nv04_mode_state saved_reg;
@@ -1040,6 +1039,7 @@ extern void nv50_graph_destroy_context(struct nouveau_channel *);
 extern int  nv50_graph_load_context(struct nouveau_channel *);
 extern int  nv50_graph_unload_context(struct drm_device *);
 extern void nv50_graph_context_switch(struct drm_device *);
+extern int  nv50_grctx_init(struct nouveau_grctx *);
 
 /* nouveau_grctx.c */
 extern int  nouveau_grctx_prog_load(struct drm_device *);

@@ -79,6 +79,7 @@ AROS_DRM_NVIDIA_SOURCES = \
             winsys/aros/drm/drm-unchanged/nouveau/nv50_fifo \
             winsys/aros/drm/drm-unchanged/nouveau/nv50_mc \
             winsys/aros/drm/drm-unchanged/nouveau/nv50_graph \
+            winsys/aros/drm/drm-unchanged/nouveau/nv50_grctx \
 
 AROS_DRM_INTEL_SOURCES = \
             winsys/aros/drm/drm-aros/i915/i915_drv \
