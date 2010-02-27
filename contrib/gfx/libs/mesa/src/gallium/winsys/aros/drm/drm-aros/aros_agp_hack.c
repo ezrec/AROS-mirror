@@ -948,7 +948,7 @@ static VOID intel_845_initialize_chipset(struct agp_staticdata * agpsd)
     
     /* Getting GART size */
     aperture_size_value = readconfigbyte(bridgedev, AGP_INTEL_APER_SIZE);
-    D(bug("[AGP] [Intel] Reading aperture size value: %x\n", aperture_size_value));
+    D(bug("[AGP] [Intel 845] Reading aperture size value: %x\n", aperture_size_value));
     
     switch(aperture_size_value)
     {
@@ -962,7 +962,7 @@ static VOID intel_845_initialize_chipset(struct agp_staticdata * agpsd)
         default: agpsd->bridgeapersize = 0; break;
     }
     
-    D(bug("[AGP] [Intel] Calculated aperture size: %d MB\n", (ULONG)agpsd->bridgeapersize));
+    D(bug("[AGP] [Intel 845] Calculated aperture size: %d MB\n", (ULONG)agpsd->bridgeapersize));
 
     /* Creation of GATT table */
     agpsd->create_gatt_table(agpsd);
@@ -970,11 +970,11 @@ static VOID intel_845_initialize_chipset(struct agp_staticdata * agpsd)
     /* Getting GART base */
     agpsd->bridgeaperbase = (IPTR)readconfiglong(bridgedev, AGP_APER_BASE);
     agpsd->bridgeaperbase &= (~0x0fUL) /* PCI_BASE_ADDRESS_MEM_MASK */;
-    D(bug("[AGP] [Intel] Reading aperture base: 0x%x\n", (ULONG)agpsd->bridgeaperbase));
+    D(bug("[AGP] [Intel 845] Reading aperture base: 0x%x\n", (ULONG)agpsd->bridgeaperbase));
 
     /* Set GATT pointer */
     writeconfiglong(bridgedev, AGP_INTEL_GATT_BASE, (ULONG)agpsd->gatttable);
-    D(bug("[AGP] [Intel] Set GATT pointer to 0x%x\n", (ULONG)agpsd->gatttable));
+    D(bug("[AGP] [Intel 845] Set GATT pointer to 0x%x\n", (ULONG)agpsd->gatttable));
     
     /* Control register */
     writeconfiglong(bridgedev, AGP_INTEL_CTRL, 0x00000000);
@@ -1015,11 +1015,49 @@ static VOID intel_830_flush_chipset(struct agp_staticdata * agpsd)
     flush_cpu_cache();   
 }
 
+static VOID intel_830_free_gatt_table(struct agp_staticdata * agpsd)
+{
+    /* This function is a NOOP */ 
+}
+
+static VOID intel_810_flush_gatt_table(struct agp_staticdata * agpsd)
+{
+    /* This function is a NOOP */
+}
+
+static VOID intel_810_enable_agp(struct agp_staticdata * agpsd, ULONG requestedmode)
+{
+    /* This function is a NOOP */
+}
+
+
+#define IS_845(x)                       \
+(                                       \
+    (x == 0x2570) || /* 82865_HB */     \
+    (x == 0x1a30) || /* 82845_HB */     \
+    (x == 0x2560) || /* 82845G_HB */    \
+    (x == 0x358c) || /* 82854_HB */     \
+    (x == 0x3340) || /* 82855PM_HB */   \
+    (x == 0x3580) || /* 82855GM_HB */   \
+    (x == 0x2578)    /* 82875_HB */     \
+)                                       \
+
+#define IS_915(x)                       \
+(                                       \
+    (x == 0x2588) || /* 915 */          \
+    (x == 0x2580) || /* 82915G_HB */    \
+    (x == 0x2590) || /* 82915GM_HB */   \
+    (x == 0x2770) || /* 82945G_HB */    \
+    (x == 0x27A0) || /* 82945GM_HB */   \
+    (x == 0x27AC)    /* 82945GME_HB */  \
+)                                       \
+
 static VOID intel_initialize_agp(struct agp_staticdata * agpsd)
 {
     ULONG major, minor = 0;
     OOP_Object * bridgedev = agpsd->bridge->PciDevice;
     UBYTE bridgeagpcap = agpsd->bridge->AgpCapability;
+    BOOL supporteddevicefound = FALSE;
     
     /* Set default function pointers */
     agpsd->create_gatt_table = generic_create_gatt_table;
@@ -1044,16 +1082,7 @@ static VOID intel_initialize_agp(struct agp_staticdata * agpsd)
     
     D(bug("[AGP] [Intel] Reading mode: 0x%x\n", agpsd->bridgemode));
     
-    /* TODO: Change this to list of product ids */
-    if (
-        (agpsd->bridge->ProductID == 0x2570) || /* 82865_HB */
-        (agpsd->bridge->ProductID == 0x1a30) || /* 82845_HB */
-        (agpsd->bridge->ProductID == 0x2560) || /* 82845G_HB */
-        (agpsd->bridge->ProductID == 0x358c) || /* 82854_HB */
-        (agpsd->bridge->ProductID == 0x3340) || /* 82855PM_HB */
-        (agpsd->bridge->ProductID == 0x3580) || /* 82855GM_HB */
-        (agpsd->bridge->ProductID == 0x2578)    /* 82875_HB */
-       )
+    if (IS_845(agpsd->bridge->ProductID))
     {
         D(bug("[AGP] [Intel 845] Setting up pointers for 0x%x\n", agpsd->bridge->ProductID));
         agpsd->memmask = 0x00000017;
@@ -1061,14 +1090,34 @@ static VOID intel_initialize_agp(struct agp_staticdata * agpsd)
         agpsd->initialize_chipset = intel_845_initialize_chipset;
         agpsd->deinitialize_chipset = intel_8XX_deinitialize_chipset;
         agpsd->flush_chipset = intel_830_flush_chipset;
+        supporteddevicefound = TRUE;
+    }
+    
+    if (IS_915(agpsd->bridge->ProductID))
+    {
+        D(bug("[AGP] [Intel 915] Setting up pointers for 0x%x\n", agpsd->bridge->ProductID));
+        /* TODO: fill functions */
+        agpsd->create_gatt_table = NULL;
+        agpsd->unbind_memory = NULL;
+        agpsd->flush_gatt_table = intel_810_flush_gatt_table;
+        agpsd->bind_memory = NULL;
+        agpsd->enable_agp = intel_810_enable_agp;
+        agpsd->initialize_chipset = NULL;
+        agpsd->deinitialize_chipset = NULL;
+        agpsd->free_gatt_table = intel_830_free_gatt_table;
+        agpsd->memmask = 0x00000000;
+        agpsd->flush_chipset = NULL;
+        supporteddevicefound = TRUE;
+    }
+    
+    if (supporteddevicefound)
+    {
         agpsd->initialize_chipset(agpsd);
     }
     else
     {
         D(bug("[AGP] [Intel] Bridge 0x%x is not supported\n", agpsd->bridge->ProductID));
     }
-        
-    
 }
 
 /* Generic init functions */
@@ -1180,12 +1229,18 @@ static VOID select_bridge_and_videocard(struct agp_staticdata * agpsd)
         {
             agpsd->bridge = pciagpdev;
         }
-            
+
         /* Select video card */
         if ((!agpsd->videocard) && (pciagpdev->Class == 0x03) &&
             (pciagpdev->AgpCapability))
         {
             agpsd->videocard = pciagpdev;
+        }
+
+        /* FIXME: HACK for selecting Intel integrated bridge */
+        if ((!agpsd->bridge) && (IS_915(pciagpdev->ProductID)))
+        {
+            agpsd->bridge = pciagpdev;
         }
     }
 }
