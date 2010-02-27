@@ -5,7 +5,7 @@
 #include <hidd/pci.h>
 #include <hidd/hidd.h>
 #include <aros/libcall.h>
-#define DEBUG 0
+#define DEBUG 1
 #include <aros/debug.h>
 #include <aros/symbolsets.h>
 
@@ -160,6 +160,7 @@ struct agp_staticdata {
     VOID    (*initialize_chipset)(struct agp_staticdata * agpsd);
     VOID    (*deinitialize_chipset)(struct agp_staticdata * agpsd);
     VOID    (*free_gatt_table)(struct agp_staticdata * agpsd);
+    VOID    (*flush_chipset)(struct agp_staticdata * agpsd);
 };
 
 #define writel(val, addr)               (*(volatile ULONG*)(addr) = (val))
@@ -275,6 +276,11 @@ static VOID flush_cpu_cache()
 {
     /* Don't use clflush here. Both linux and BSD codes use full wbinvd */
     Supervisor(HACK_Wbinvd);
+}
+
+static VOID generic_flush_chipset(struct agp_staticdata * agpsd)
+{
+    /* This function is a NOOP */
 }
 
 static VOID generic_create_gatt_table(struct agp_staticdata * agpsd)
@@ -693,6 +699,7 @@ static VOID sis_initialize_agp(struct agp_staticdata * agpsd)
     agpsd->deinitialize_chipset = NULL;
     agpsd->free_gatt_table = generic_free_gatt_table;
     agpsd->memmask = 0x00000000;
+    agpsd->flush_chipset = generic_flush_chipset;
     
     /* Getting version info */ 
     major = (readconfigbyte(bridgedev, bridgeagpcap + AGP_VERSION_REG) >> 4) & 0xf;
@@ -882,6 +889,7 @@ static VOID via_initialize_agp(struct agp_staticdata * agpsd)
     agpsd->deinitialize_chipset = NULL;
     agpsd->free_gatt_table = generic_free_gatt_table;
     agpsd->memmask = 0x00000000;
+    agpsd->flush_chipset = generic_flush_chipset;
 
     /* Getting version info */ 
     major = (readconfigbyte(bridgedev, bridgeagpcap + AGP_VERSION_REG) >> 4) & 0xf;
@@ -1002,6 +1010,11 @@ static VOID intel_8XX_flush_gatt_table(struct agp_staticdata * agpsd)
     writeconfiglong(bridgedev, AGP_INTEL_CTRL, ctrlreg | (1 << 7));
 }
 
+static VOID intel_830_flush_chipset(struct agp_staticdata * agpsd)
+{
+    flush_cpu_cache();   
+}
+
 static VOID intel_initialize_agp(struct agp_staticdata * agpsd)
 {
     ULONG major, minor = 0;
@@ -1017,7 +1030,8 @@ static VOID intel_initialize_agp(struct agp_staticdata * agpsd)
     agpsd->initialize_chipset = NULL;
     agpsd->deinitialize_chipset = NULL;
     agpsd->free_gatt_table = generic_free_gatt_table;
-    agpsd->memmask = 0x00000017;
+    agpsd->memmask = 0x00000000;
+    agpsd->flush_chipset = NULL;
     
     /* Getting version info */ 
     major = (readconfigbyte(bridgedev, bridgeagpcap + AGP_VERSION_REG) >> 4) & 0xf;
@@ -1041,10 +1055,12 @@ static VOID intel_initialize_agp(struct agp_staticdata * agpsd)
         (agpsd->bridge->ProductID == 0x2578)    /* 82875_HB */
        )
     {
-        D(bug("[AGP] [Intel] Setting up pointers for 0x%x\n", agpsd->bridge->ProductID));
+        D(bug("[AGP] [Intel 845] Setting up pointers for 0x%x\n", agpsd->bridge->ProductID));
+        agpsd->memmask = 0x00000017;
         agpsd->flush_gatt_table = intel_8XX_flush_gatt_table;
         agpsd->initialize_chipset = intel_845_initialize_chipset;
         agpsd->deinitialize_chipset = intel_8XX_deinitialize_chipset;
+        agpsd->flush_chipset = intel_830_flush_chipset;
         agpsd->initialize_chipset(agpsd);
     }
     else
@@ -1199,6 +1215,7 @@ static VOID initialize_static_data(struct agp_staticdata * agpsd)
     agpsd->initialize_chipset = NULL;
     agpsd->deinitialize_chipset = NULL;
     agpsd->free_gatt_table = NULL;
+    agpsd->flush_chipset = NULL;
 }
 
 /* Init/deinit */
@@ -1344,6 +1361,11 @@ VOID aros_agp_hack_bind_memory(IPTR address, ULONG size, ULONG offset)
 VOID aros_agp_hack_enable_agp(ULONG mode)
 {
     agpsd_global.enable_agp(&agpsd_global, mode);
+}
+
+VOID aros_agp_hack_flush_chipset()
+{
+    agpsd_global.flush_chipset(&agpsd_global);
 }
 
 ADD2INIT(aros_agp_hack_init_agp, 4);

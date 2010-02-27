@@ -14,3 +14,4 @@ ULONG aros_agp_hack_get_bridge_aperture_size();
 VOID aros_agp_hack_bind_memory(IPTR address, ULONG size, ULONG offset);
 VOID aros_agp_hack_unbind_memory(ULONG offset, ULONG size);
 VOID aros_agp_hack_enable_agp(ULONG mode);
+VOID aros_agp_hack_flush_chipset();
