@@ -581,7 +581,7 @@ struct drm_i915_gem_object {
 	int dirty;
 
 	/** AGP memory structure for our GTT binding. */
-//FIXME	DRM_AGP_MEM *agp_mem;
+	DRM_AGP_MEM *agp_mem;
 
 	struct page **pages;
 	int pages_refcount;

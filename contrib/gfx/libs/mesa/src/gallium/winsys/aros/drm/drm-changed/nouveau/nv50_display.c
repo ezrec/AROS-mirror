@@ -952,7 +952,7 @@ nv50_display_irq_hotplug(struct drm_device *dev)
 void
 nv50_display_irq_handler(struct drm_device *dev)
 {
-	struct drm_nouveau_private *dev_priv = dev->dev_private;
+//FIXME	struct drm_nouveau_private *dev_priv = dev->dev_private;
 	uint32_t delayed = 0;
 
 #if !defined(__AROS__)
@@ -960,7 +960,6 @@ nv50_display_irq_handler(struct drm_device *dev)
 		nv50_display_irq_hotplug(dev);
 #else
 DRM_IMPL("Calling nv50_display_irq_hotplug\n");
-#warning IMPLEMENT Calling nv50_display_irq_hotplug
 #endif
 
 	while (nv_rd32(dev, NV50_PMC_INTR_0) & NV50_PMC_INTR_0_DISPLAY) {

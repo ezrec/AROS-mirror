@@ -24,6 +24,7 @@
 #define u8                          UBYTE
 #define resource_size_t             IPTR
 #define dma_addr_t                  IPTR
+#define loff_t                      IPTR
 #define pgprot_t                    ULONG
 
 #undef offsetof
@@ -65,6 +66,12 @@ struct page
 #define BITS_TO_LONGS(x)        ((x / (sizeof(long) * 8)) + 1)
 
 struct work_struct;
+
+/* io_mapping support */
+struct io_mapping
+{
+    IPTR address;
+};
 
 /* AGP support */
 struct agp_bridge_data

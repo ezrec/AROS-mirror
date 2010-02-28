@@ -56,6 +56,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #else
+#include <sys/time.h>
 #include <proto/exec.h>
 #include <exec/semaphores.h>
 #define pthread_mutex_t             struct SignalSemaphore
@@ -871,7 +872,14 @@ static void drm_intel_gem_bo_unreference(drm_intel_bo *bo)
 		drm_intel_gem_bo_unreference_final(bo, time.tv_sec);
 		pthread_mutex_unlock(&bufmgr_gem->lock);
 #else
-IMPLEMENT("calling drm_intel_gem_bo_unreference_final\n");
+        /* CLOCK_MONOTONIC cannot be changed. Value returned by
+        time() is real time clock, so can be changed */
+        struct timeval tv;
+        gettimeofday(&tv, NULL);
+        
+		pthread_mutex_lock(&bufmgr_gem->lock);
+		drm_intel_gem_bo_unreference_final(bo, tv.tv_sec);
+		pthread_mutex_unlock(&bufmgr_gem->lock);
 #endif
 	}
 }
@@ -1104,10 +1112,10 @@ drm_intel_gem_bo_subdata(drm_intel_bo *bo, unsigned long offset,
 static int
 drm_intel_gem_get_pipe_from_crtc_id(drm_intel_bufmgr *bufmgr, int crtc_id)
 {
+#if !defined(__AROS__)
 	drm_intel_bufmgr_gem *bufmgr_gem = (drm_intel_bufmgr_gem *) bufmgr;
 	struct drm_i915_get_pipe_from_crtc_id get_pipe_from_crtc_id;
 	int ret;
-#if !defined(__AROS__)
 	get_pipe_from_crtc_id.crtc_id = crtc_id;
 	ret = ioctl(bufmgr_gem->fd, DRM_IOCTL_I915_GET_PIPE_FROM_CRTC_ID,
 		    &get_pipe_from_crtc_id);
@@ -1120,10 +1128,11 @@ drm_intel_gem_get_pipe_from_crtc_id(drm_intel_bufmgr *bufmgr, int crtc_id)
 		 */
 		return -1;
 	}
+	return get_pipe_from_crtc_id.pipe;
 #else
 IMPLEMENT("\n");
+    return 0;
 #endif
-	return get_pipe_from_crtc_id.pipe;
 }
 
 static int

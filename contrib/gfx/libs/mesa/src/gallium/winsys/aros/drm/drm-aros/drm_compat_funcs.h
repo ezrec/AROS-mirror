@@ -33,13 +33,14 @@
 #define mutex_lock(x)                   ObtainSemaphore(x.semaphore)
 #define mutex_unlock(x)                 ReleaseSemaphore(x.semaphore)
 #define mutex_init(x)                   InitSemaphore(x.semaphore);
-#define likely(x)                       __builtin_expect((x),1)
-#define unlikely(x)                     __builtin_expect((x),0)
+#define likely(x)                       __builtin_expect((ULONG)(x),1)
+#define unlikely(x)                     __builtin_expect((ULONG)(x),0)
 #define mb()                            __asm __volatile("lock; addl $0,0(%%esp)" : : : "memory");
 #define ffs(x)                          __builtin_ffs(x)
 #define max(a, b)                       ((a) > (b) ? (a) : (b))
 #define min(a, b)                       ((a) < (b) ? (a) : (b))
 #define is_power_of_2(x)                (x != 0 && ((x & (x - 1)) == 0))
+#define access_ok(a, b, c)              TRUE
 
 #define MODULE_FIRMWARE(x)
 
@@ -102,11 +103,11 @@ static inline IPTR IS_ERR(APTR ptr)
 /* Kernel debug */
 #define KERN_ERR
 #define KERN_DEBUG
-#define printk(fmt, ...)            bug(fmt, ##__VA_ARGS__)
-#define IMPLEMENT(fmt, ...)         bug("------IMPLEMENT(%s): " fmt, __func__ , ##__VA_ARGS__)
-#define TRACE(fmt, ...)             D(bug("[TRACE](%s): " fmt, __func__ , ##__VA_ARGS__))
-#define BUG(x)                      bug("BUG:(%s)\n", __func__)
-#define WARN(condition, message)    do { if (unlikely(condition)) bug("WARN: %s:%d %s\n", __FILE__, __LINE__, message); } while(0)
+#define printk(fmt, ...)                bug(fmt, ##__VA_ARGS__)
+#define IMPLEMENT(fmt, ...)             bug("------IMPLEMENT(%s): " fmt, __func__ , ##__VA_ARGS__)
+#define TRACE(fmt, ...)                 D(bug("[TRACE](%s): " fmt, __func__ , ##__VA_ARGS__))
+#define BUG(x)                          bug("BUG:(%s)\n", __func__)
+#define WARN(condition, message, ...)   do { if (unlikely(condition)) bug("WARN: %s:%d" message "\n", __FILE__, __LINE__, ##__VA_ARGS__); } while(0)
 
 /* PCI handling */
 void * ioremap(resource_size_t offset, unsigned long size);
@@ -206,20 +207,24 @@ static inline void spin_unlock(spinlock_t * lock)
 {
     atomic_set(&lock->lock, 0);
 }
-static inline void spin_lock_irq(spinlock_t * lock)
+static inline void spin_lock_irqsave(spinlock_t * lock, unsigned long flags)
 {
+    (void)flags;
+    
     Disable();
     
     while(atomic_cmpxchg(&lock->lock, 0, 1) != 0);
 }
-static inline void spin_unlock_irq(spinlock_t * lock)
+static inline void spin_unlock_irqrestore(spinlock_t * lock, unsigned long flags)
 {
     atomic_set(&lock->lock, 0);
 
     Enable();
+    
+    (void)flags;
 }
-#define spin_lock_irqsave(x,y)          spin_lock_irq(x)
-#define spin_unlock_irqrestore(x,y)     spin_unlock_irq(x)
+#define spin_lock_irq(x)                spin_lock_irqsave(x, 0)
+#define spin_unlock_irq(x)              spin_unlock_irqrestore(x, 0)
 /* TODO: This may work incorreclty if write_lock and read_lock are used for the same lock
    read_lock allows concurent readers as lock as there is no writer */
 static inline void rwlock_init(rwlock_t * lock)
@@ -270,5 +275,25 @@ struct agp_memory *agp_allocate_memory(struct agp_bridge_data * bridge, size_t n
 void agp_free_memory(struct agp_memory * mem);
 int agp_bind_memory(struct agp_memory * mem, off_t offset);
 int agp_unbind_memory(struct agp_memory * mem);
+void agp_flush_chipset(struct agp_bridge_data * bridge);
 
+/* io_mapping handling */
+#define __copy_from_user_inatomic_nocache(to, from, size)   copy_from_user(to, from, size)
+#define io_mapping_map_atomic_wc(mapping, offset)   (APTR)(mapping->address + offset)
+#define io_mapping_unmap_atomic(address)
+static inline struct io_mapping * io_mapping_create_wc(resource_size_t base, unsigned long size)
+{
+    struct io_mapping * mapping = AllocVec(sizeof(struct io_mapping), MEMF_PUBLIC | MEMF_CLEAR);
+    mapping->address = (IPTR)ioremap(base, size);
+    return mapping;
+}
+static inline void io_mapping_free(struct io_mapping *mapping)
+{
+    iounmap((APTR)mapping->address);
+    FreeVec(mapping);
+}
+
+/* jiffies (lame) handling */
+#define jiffies get_jiffies()
+unsigned long get_jiffies();
 #endif /* _DRM_COMPAT_FUNCS_ */

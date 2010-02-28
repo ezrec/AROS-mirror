@@ -391,7 +391,6 @@ nouveau_card_init(struct drm_device *dev)
 	vga_client_register(dev->pdev, dev, NULL, nouveau_vga_set_decode);
 #else
 DRM_IMPL("Calling vga_client_register\n");
-#warning IMPLEMENT Calling vga_client_register
 #endif
 
 	/* Initialise internal driver API hooks */
@@ -411,7 +410,6 @@ DRM_IMPL("Calling vga_client_register\n");
 	}
 #else
 DRM_IMPL("Calling nouveau_bios_init\n");
-#warning IMPLEMENT Calling nouveau_bios_init
 #endif
 
 	ret = nouveau_gpuobj_early_init(dev);
@@ -477,7 +475,6 @@ DRM_IMPL("Calling nouveau_bios_init\n");
 		goto out_irq;
 #else
 DRM_IMPL("Calling drm_vblank_init\n");
-#warning IMPLEMENT Calling drm_vblank_init
 #endif
 
 #if defined(__AROS__)
@@ -513,7 +510,6 @@ DRM_IMPL("Calling drm_vblank_init\n");
 	}
 #else
 DRM_IMPL("Calling *_display_create\n");
-#warning IMPLEMENT Calling *_display_create
 #endif
 
 	ret = nouveau_backlight_init(dev);
@@ -527,7 +523,6 @@ DRM_IMPL("Calling *_display_create\n");
 		drm_helper_initial_config(dev);
 #else
 DRM_IMPL("Calling drm_helper_initial_config\n");
-#warning IMPLEMENT Calling drm_helper_initial_config
 #endif
 
 	return 0;
@@ -559,14 +554,12 @@ out_bios:
 	nouveau_bios_takedown(dev);
 #else
 IMPLEMENT("Calling nouveau_bios_takedown\n");
-#warning IMPLEMENT nouveau_bios_takedown
 #endif	
 out:
 #if !defined(__AROS__)
 	vga_client_register(dev->pdev, NULL, NULL, NULL);
 #else
 DRM_IMPL("Calling vga_client_register\n");
-#warning IMPLEMENT Calling vga_client_register
 #endif
 	return ret;
 }
@@ -618,14 +611,12 @@ static void nouveau_card_takedown(struct drm_device *dev)
 		nouveau_bios_takedown(dev);
 #else
 IMPLEMENT("Calling nouveau_bios_takedown\n");
-#warning IMPLEMENT nouveau_bios_takedown
 #endif
 
 #if !defined(__AROS__)
 		vga_client_register(dev->pdev, NULL, NULL, NULL);
 #else
 DRM_IMPL("Calling vga_client_register\n");
-#warning IMPLEMENT Calling vga_client_register
 #endif
 
 		dev_priv->init_state = NOUVEAU_CARD_INIT_DOWN;
@@ -694,7 +685,6 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
 		nouveau_hybrid_setup(dev);
 #else
 DRM_IMPL("Calling nouveau_dsm_probe and nouveau_hybrid_setup\n");
-#warning IMPLEMENT Calling nouveau_dsm_probe and nouveau_hybrid_setup
 #endif
 
 #if !defined(__AROS__)
@@ -703,7 +693,6 @@ DRM_IMPL("Calling nouveau_dsm_probe and nouveau_hybrid_setup\n");
 		return -EINVAL;
 #else
 DRM_IMPL("Creating workqueue\n");
-#warning IMPLEMENT Creating workqueue
 #endif
 
 	/* resource 0 is mmio regs */
@@ -852,7 +841,6 @@ int nouveau_unload(struct drm_device *dev)
 			nv04_display_destroy(dev);
 #else
 DRM_IMPL("Calling *_display_destroy\n");
-#warning IMPLEMENT Calling *_display_destroy
 #endif
 		nouveau_close(dev);
 	}

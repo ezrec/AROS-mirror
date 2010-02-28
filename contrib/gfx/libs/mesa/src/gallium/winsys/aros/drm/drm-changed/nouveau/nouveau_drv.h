@@ -1292,7 +1292,7 @@ static inline void nv_wo32(struct drm_device *dev, struct nouveau_gpuobj *obj,
 #else
 
 #define NV_PRINTK(level, d, fmt, arg...) \
-    bug("[" DRM_NAME "] " DRIVER_NAME " " fmt, ##arg)
+    { (void)d; bug("[" DRM_NAME "] " DRIVER_NAME " " fmt, ##arg); }
 #ifndef NV_DEBUG_NOTRACE
 #define NV_DEBUG(d, fmt, arg...) do {                                          \
         D(NV_PRINTK(KERN_DEBUG, d, "%s:%d - " fmt, __func__,             \

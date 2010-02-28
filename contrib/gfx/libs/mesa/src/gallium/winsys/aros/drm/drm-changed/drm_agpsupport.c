@@ -430,14 +430,12 @@ struct drm_agp_head *drm_agp_init(struct drm_device *dev)
 	return head;
 }
 
-#if !defined(__AROS__)
 /** Calls agp_allocate_memory() */
 DRM_AGP_MEM *drm_agp_allocate_memory(struct agp_bridge_data * bridge,
 				     size_t pages, u32 type)
 {
 	return agp_allocate_memory(bridge, pages, type);
 }
-#endif
 
 /** Calls agp_free_memory() */
 int drm_agp_free_memory(DRM_AGP_MEM * handle)
@@ -448,7 +446,6 @@ int drm_agp_free_memory(DRM_AGP_MEM * handle)
 	return 1;
 }
 
-#if !defined(__AROS__)
 /** Calls agp_bind_memory() */
 int drm_agp_bind_memory(DRM_AGP_MEM * handle, off_t start)
 {
@@ -456,7 +453,6 @@ int drm_agp_bind_memory(DRM_AGP_MEM * handle, off_t start)
 		return -EINVAL;
 	return agp_bind_memory(handle, start);
 }
-#endif
 
 /** Calls agp_unbind_memory() */
 int drm_agp_unbind_memory(DRM_AGP_MEM * handle)
@@ -466,7 +462,6 @@ int drm_agp_unbind_memory(DRM_AGP_MEM * handle)
 	return agp_unbind_memory(handle);
 }
 
-#if !defined(__AROS__)
 /**
  * Binds a collection of pages into AGP memory at the given offset, returning
  * the AGP memory structure containing them.
@@ -515,6 +510,6 @@ void drm_agp_chipset_flush(struct drm_device *dev)
 	agp_flush_chipset(dev->agp->bridge);
 }
 EXPORT_SYMBOL(drm_agp_chipset_flush);
-#endif
+
 
 #endif /* __OS_HAS_AGP */

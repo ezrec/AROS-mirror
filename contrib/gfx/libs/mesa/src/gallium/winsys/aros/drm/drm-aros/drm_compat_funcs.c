@@ -419,12 +419,19 @@ int pci_read_config_word(void *dev, int where, u16 *val)
 int pci_read_config_dword(void *dev, int where, u32 *val)
 {
 #if !defined(HOSTED_BUILD)
-    struct pHidd_PCIDevice_ReadConfigLong rclmsg = {
-    mID: OOP_GetMethodID(IID_Hidd_PCIDevice, moHidd_PCIDevice_ReadConfigLong),
-    reg: (UBYTE)where,
-    }, *msg = &rclmsg;
+    /* Has to be done like this because of bug in PciDevice ReadConfigLong
+       method (return type was UBYTE instead of ULONG) */
+    /* FIXME: Fix when pci.hidd is fixed */
+    ULONG result = 0;
+    UWORD restemp = 0;
     
-    *val = (ULONG)OOP_DoMethod((OOP_Object*)dev, (OOP_Msg)msg);
+    pci_read_config_word(dev, where + 2, &restemp);
+    result += restemp;
+    result <<= 16;
+    pci_read_config_word(dev, where, &restemp);
+    result |= restemp;
+
+    return result;
 #else
 #if HOSTED_BUILD_HARDWARE == HOSTED_BUILD_HARDWARE_I915
     switch(where)
@@ -513,12 +520,13 @@ int agp_copy_info(struct agp_bridge_data * bridge, struct agp_kern_info * info)
     return 0;
 }
 
-
 /* FIXME: Temp until agp.hidd implemented */
 #include "aros_agp_hack.h"
 
 struct agp_bridge_data * agp_find_bridge(void * dev)
 {
+    bug("[AGP-API] agp_find_bridge\n");
+
     if (global_agp_bridge)
         return global_agp_bridge;
 
@@ -536,9 +544,16 @@ struct agp_bridge_data * agp_find_bridge(void * dev)
     global_agp_bridge = AllocVec(sizeof(struct agp_bridge_data), 
                                         MEMF_PUBLIC | MEMF_CLEAR);
     global_agp_bridge->pciDevice = (IPTR)NULL;
+#if HOSTED_BUILD_HARDWARE == HOSTED_BUILD_HARDWARE_NVIDIA
     global_agp_bridge->mode = 0x1f004e1b;
     global_agp_bridge->aperturebase = 0xd8000000;
     global_agp_bridge->aperturesize = 64;
+#endif
+#if HOSTED_BUILD_HARDWARE == HOSTED_BUILD_HARDWARE_I915
+    bug("[AGP-API] agp_find_bridge - MISSING VALUES!\n");
+    global_agp_bridge->aperturebase = 0x40000000;
+    global_agp_bridge->aperturesize = 256;
+#endif
 #endif
 
     return global_agp_bridge;
@@ -546,6 +561,7 @@ struct agp_bridge_data * agp_find_bridge(void * dev)
 
 void agp_enable(struct agp_bridge_data * bridge, u32 mode)
 {
+    bug("[AGP-API] agp_enable\n");
 #if !defined(HOSTED_BUILD)
     aros_agp_hack_enable_agp(mode);
 #endif
@@ -553,8 +569,17 @@ void agp_enable(struct agp_bridge_data * bridge, u32 mode)
 
 int agp_bind_memory(struct agp_memory * mem, off_t offset)
 {
+    bug("[AGP-API] agp_bind_memory\n");
+
     if (!mem || mem->is_bound)
         return -EINVAL;
+    
+    if ((mem->type != AGP_USER_MEMORY) && (mem->type != AGP_USER_CACHED_MEMORY))
+    {
+        IMPLEMENT("Unsupported memory type: %d\n", mem->type);
+        return -EINVAL;
+    }
+
 #if !defined(HOSTED_BUILD)
     if (!mem->is_flushed)
     {
@@ -566,7 +591,8 @@ int agp_bind_memory(struct agp_memory * mem, off_t offset)
     /* TODO: Move flush/map into bind call on the side of agp.hidd */
     
     aros_agp_hack_bind_memory((IPTR)(mem->pages[0]->address), 
-        mem->page_count * PAGE_SIZE, offset);
+        mem->page_count * PAGE_SIZE, offset,
+        (mem->type == AGP_USER_MEMORY ? AGP_MEMORY_TYPE_NORMAL : AGP_MEMORY_TYPE_CACHED));
 #endif
     mem->is_bound = TRUE;
     mem->pg_start = offset;
@@ -575,6 +601,8 @@ int agp_bind_memory(struct agp_memory * mem, off_t offset)
 
 int agp_unbind_memory(struct agp_memory * mem)
 {
+    bug("[AGP-API] agp_unbind_memory\n");
+
     if (!mem || !mem->is_bound)
         return -EINVAL;
 #if !defined(HOSTED_BUILD)
@@ -587,3 +615,30 @@ int agp_unbind_memory(struct agp_memory * mem)
     return 0;
 }
 
+void agp_flush_chipset(struct agp_bridge_data * bridge)
+{
+    bug("[AGP-API] agp_flush_chipset\n");
+
+#if !defined(HOSTED_BUILD)
+    aros_agp_hack_flush_chipset();
+#endif
+}
+
+/* jiffies handling */
+#include <sys/time.h>
+
+/* jiffies are supposed to be very precise time value. They are implemented
+   as rather very unprecise */
+unsigned long get_jiffies()
+{
+    struct timeval tv;
+    unsigned long val = 0;
+
+    gettimeofday(&tv, NULL);
+
+    val = tv.tv_sec * 1000000 + tv.tv_usec; /* Yes, overflow */
+
+    /* TODO: Maybe make sure that each call to get_jiffies returns a different value? */
+
+    return val;
+}

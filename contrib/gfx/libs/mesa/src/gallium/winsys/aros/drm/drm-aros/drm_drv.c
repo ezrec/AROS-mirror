@@ -101,6 +101,12 @@ int drm_init(struct drm_driver * driver)
     if (drm_aros_pci_find_supported_video_card(driver))
         return -1;
 #else
+#if HOSTED_BUILD_BUS == HOSTED_BUILD_BUS_PCI
+    driver->IsAGP = FALSE;
+#endif
+#if HOSTED_BUILD_BUS == HOSTED_BUILD_BUS_AGP
+    driver->IsAGP = TRUE;
+#endif
 #if HOSTED_BUILD_HARDWARE == HOSTED_BUILD_HARDWARE_I915
     if (driver->VendorID != 0x8086) return -1;
 #endif
@@ -109,12 +115,7 @@ int drm_init(struct drm_driver * driver)
 #endif
 #if HOSTED_BUILD_HARDWARE == HOSTED_BUILD_HARDWARE_I915
     driver->ProductID = HOSTED_BUILD_PRODUCT_ID;
-#endif
-#if HOSTED_BUILD_BUS == HOSTED_BUILD_BUS_PCI
-    driver->IsAGP = FALSE;
-#endif
-#if HOSTED_BUILD_BUS == HOSTED_BUILD_BUS_AGP
-    driver->IsAGP = TRUE;
+    driver->IsAGP = TRUE; /* AGP is needed for INTEL */
 #endif
 #endif
     if (drm_init_device(driver))

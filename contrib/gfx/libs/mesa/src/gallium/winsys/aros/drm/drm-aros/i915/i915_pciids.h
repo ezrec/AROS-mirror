@@ -8,7 +8,7 @@
 
 #include "drmP.h"
 
-const struct drm_pciid i915_pciids [] =
+struct drm_pciid i915_pciids [] =
 {
     { 0x8086, 0x3577 },
     { 0x8086, 0x2562 },

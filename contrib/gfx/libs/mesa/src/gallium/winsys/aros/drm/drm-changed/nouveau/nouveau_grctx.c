@@ -128,7 +128,6 @@ nouveau_grctx_prog_load(struct drm_device *dev)
 			le32_to_cpu(cp->data[i]));
 #else
 DRM_IMPL("\n");
-#warning IMPLEMENT nouveau_grctx_prog_load
 #endif
 	return 0;
 }
@@ -167,6 +166,5 @@ nouveau_grctx_vals_load(struct drm_device *dev, struct nouveau_gpuobj *ctx)
 			le32_to_cpu(cv->data[i].value));
 #else
 DRM_IMPL("\n");
-#warning IMPLEMENT nouveau_grctx_vals_load
 #endif
 }

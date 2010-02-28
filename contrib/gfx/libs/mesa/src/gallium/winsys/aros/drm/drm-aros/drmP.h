@@ -225,7 +225,6 @@ struct drm_driver
     int                     version_patchlevel;
     unsigned int            driver_features;
     struct drm_ioctl_desc   *ioctls;
-    
 };
 
 struct drm_device
@@ -388,6 +387,9 @@ void drm_pci_free(struct drm_device * dev, drm_dma_handle_t * dmah);
 void drm_core_ioremap(struct drm_local_map *map, struct drm_device *dev);
 void drm_core_ioremap_wc(struct drm_local_map *map, struct drm_device *dev);
 void drm_core_ioremapfree(struct drm_local_map *map, struct drm_device *dev);
+int drm_unbind_agp(DRM_AGP_MEM * handle);
+int drm_free_agp(DRM_AGP_MEM * handle, int pages);
+
 // void *drm_calloc(size_t nmemb, size_t size, int area);
 // /* FIXME: make them inline? */
 // void *drm_alloc(size_t size, int area);
@@ -401,6 +403,9 @@ int drm_agp_enable(struct drm_device *dev, struct drm_agp_mode mode);
 int drm_agp_info(struct drm_device *dev, struct drm_agp_info *info);
 int drm_agp_free_memory(DRM_AGP_MEM * handle);
 int drm_agp_unbind_memory(DRM_AGP_MEM * handle);
+void drm_agp_chipset_flush(struct drm_device *dev);
+DRM_AGP_MEM * drm_agp_bind_pages(struct drm_device *dev, struct page **pages,
+		   unsigned long num_pages, uint32_t gtt_offset, u32 type);
 
 /* drm_cache.c */
 void drm_clflush_pages(struct page *pages[], unsigned long num_pages);

@@ -8,7 +8,7 @@
 
 #include "drmP.h"
 
-const struct drm_pciid nouveau_pciids [] =
+struct drm_pciid nouveau_pciids [] =
 {
     { 0x10de, 0x0020 }, /* NV4 [RIVA TNT] */
     { 0x10de, 0x0028 }, /* NV5 [RIVA TNT2/TNT2 Pro] */

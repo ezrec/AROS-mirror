@@ -700,7 +700,11 @@ nouveau_irq_handler(DRM_IRQ_ARGS)
 {
 	struct drm_device *dev = (struct drm_device *)arg;
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
+#if !defined(__AROS__)
 	uint32_t status, fbdev_flags = 0;
+#else
+    uint32_t status;
+#endif
 	unsigned long flags;
 
 	status = nv_rd32(dev, NV03_PMC_INTR_0);

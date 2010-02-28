@@ -477,7 +477,6 @@ nouveau_mem_fb_amount_igp(struct drm_device *dev)
 	}
 #else
 DRM_IMPL("\n");
-#warning IMPLEMENT nouveau_mem_fb_amount_igp
 #endif
 
 	NV_ERROR(dev, "impossible!\n");
@@ -625,7 +624,6 @@ nouveau_mem_init(struct drm_device *dev)
 		dma_bits = 40;
 #else
 DRM_IMPL("Calling pci_dma_supported\n");
-#warning IMPLEMENT Calling pci_dma_supported
 #endif
 
 #if !defined(__AROS__)
@@ -636,7 +634,6 @@ DRM_IMPL("Calling pci_dma_supported\n");
 	}
 #else
 DRM_IMPL("Calling pci_set_dma_mask\n");
-#warning IMPLEMENT Calling pci_set_dma_mask
 #endif
 
 	ret = nouveau_ttm_global_init(dev_priv);

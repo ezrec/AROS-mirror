@@ -59,7 +59,9 @@ nouveau_fence_del(struct kref *ref)
 void
 nouveau_fence_update(struct nouveau_channel *chan)
 {
+#if !defined(HOSTED_BUILD)
 	struct drm_nouveau_private *dev_priv = chan->dev->dev_private;
+#endif
 	struct list_head *entry, *tmp;
 	struct nouveau_fence *fence;
 	uint32_t sequence;
@@ -221,7 +223,6 @@ nouveau_fence_wait(void *sync_obj, void *sync_arg, bool lazy, bool intr)
 
 	return ret;
 #else
-    #warning IMPLEMENT nouveau_fence_wait
     int ret = 0;
     LONG counter = 0;
     while (1) 

@@ -211,7 +211,9 @@ i915_gem_detect_bit_6_swizzle(struct drm_device *dev)
 	drm_i915_private_t *dev_priv = dev->dev_private;
 	uint32_t swizzle_x = I915_BIT_6_SWIZZLE_UNKNOWN;
 	uint32_t swizzle_y = I915_BIT_6_SWIZZLE_UNKNOWN;
+#if !defined(__AROS__)
 	bool need_disable;
+#endif
 
 	if (IS_IGDNG(dev)) {
 		/* On IGDNG whatever DRAM config, GPU always do

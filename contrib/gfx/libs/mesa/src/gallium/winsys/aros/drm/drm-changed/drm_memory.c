@@ -134,6 +134,7 @@ EXPORT_SYMBOL(drm_unbind_agp);
 static inline void *agp_remap(unsigned long offset, unsigned long size,
 			      struct drm_device * dev)
 {
+    IMPLEMENT("\n");
 	return NULL;
 }
 

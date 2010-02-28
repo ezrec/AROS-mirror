@@ -313,6 +313,12 @@ int drmIntelIoctlEmul(int fildes, int request, void * arg)
         return i915_gem_pwrite_ioctl(current_drm_driver->dev, arg, drm_files[fildes]);
     case(DRM_IOCTL_I915_GEM_EXECBUFFER):
         return i915_gem_execbuffer(current_drm_driver->dev, arg, drm_files[fildes]);
+    case(DRM_IOCTL_I915_GEM_MADVISE):
+        return i915_gem_madvise_ioctl(current_drm_driver->dev, arg, drm_files[fildes]);
+    case(DRM_IOCTL_I915_GEM_BUSY):
+        return i915_gem_busy_ioctl(current_drm_driver->dev, arg, drm_files[fildes]);
+    case(DRM_IOCTL_GEM_CLOSE):
+        return drm_gem_close_ioctl(current_drm_driver->dev, arg, drm_files[fildes]);
     default:
         asm("int3");
         DRM_IMPL("IOCTL: %d -> %d\n", fildes, request);

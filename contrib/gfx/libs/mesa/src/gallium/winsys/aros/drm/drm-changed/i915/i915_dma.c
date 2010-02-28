@@ -171,9 +171,11 @@ static void i915_free_hws(struct drm_device *dev)
 
 void i915_kernel_lost_context(struct drm_device * dev)
 {
+#if !defined(__AROS__)
 	drm_i915_private_t *dev_priv = dev->dev_private;
 	struct drm_i915_master_private *master_priv;
 	drm_i915_ring_buffer_t *ring = &(dev_priv->ring);
+#endif
 
 	/*
 	 * We should never lose context on the ring with modesetting
@@ -1454,13 +1456,13 @@ int i915_driver_load(struct drm_device *dev, unsigned long flags)
 		goto put_bridge;
 	}
 
-//FIXME        dev_priv->mm.gtt_mapping =
-//FIXME		io_mapping_create_wc(dev->agp->base,
-//FIXME				     dev->agp->agp_info.aper_size * 1024*1024);
-//FIXME	if (dev_priv->mm.gtt_mapping == NULL) {
-//FIXME		ret = -EIO;
-//FIXME		goto out_rmmap;
-//FIXME	}
+    dev_priv->mm.gtt_mapping =
+		io_mapping_create_wc(dev->agp->base,
+				     dev->agp->agp_info.aper_size * 1024*1024);
+	if (dev_priv->mm.gtt_mapping == NULL) {
+		ret = -EIO;
+		goto out_rmmap;
+	}
 
 	/* Set up a WC MTRR for non-PAT systems.  This is more common than
 	 * one would think, because the kernel disables PAT on first
@@ -1576,7 +1578,7 @@ IMPLEMENT("Calling pci_enable_msi\n");
 out_workqueue_free:
 //FIXME	destroy_workqueue(dev_priv->wq);
 out_iomapfree:
-//FIXME	io_mapping_free(dev_priv->mm.gtt_mapping);
+	io_mapping_free(dev_priv->mm.gtt_mapping);
 out_rmmap:
 	iounmap(dev_priv->regs);
 put_bridge:
@@ -1596,7 +1598,7 @@ int i915_driver_unload(struct drm_device *dev)
 //FIXME	destroy_workqueue(dev_priv->wq);
 //FIXME	del_timer_sync(&dev_priv->hangcheck_timer);
 
-//FIXME	io_mapping_free(dev_priv->mm.gtt_mapping);
+	io_mapping_free(dev_priv->mm.gtt_mapping);
 //FIXME	if (dev_priv->mm.gtt_mtrr >= 0) {
 //FIXME		mtrr_del(dev_priv->mm.gtt_mtrr, dev->agp->base,
 //FIXME			 dev->agp->agp_info.aper_size * 1024 * 1024);

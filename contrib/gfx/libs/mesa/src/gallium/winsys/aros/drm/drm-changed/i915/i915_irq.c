@@ -262,7 +262,7 @@ irqreturn_t igdng_irq_handler(struct drm_device *dev)
 	int ret = IRQ_NONE;
 	u32 de_iir, gt_iir, de_ier;
 	u32 new_de_iir, new_gt_iir;
-	struct drm_i915_master_private *master_priv;
+//FIXME	struct drm_i915_master_private *master_priv;
 
 	/* disable master interrupt before clearing iir  */
 	de_ier = I915_READ(DEIER);
@@ -531,12 +531,12 @@ irqreturn_t i915_driver_irq_handler(DRM_IRQ_ARGS)
 {
 	struct drm_device *dev = (struct drm_device *) arg;
 	drm_i915_private_t *dev_priv = (drm_i915_private_t *) dev->dev_private;
-	struct drm_i915_master_private *master_priv;
+//FIXME	struct drm_i915_master_private *master_priv;
 	u32 iir, new_iir;
 	u32 pipea_stats, pipeb_stats;
 	u32 vblank_status;
 	u32 vblank_enable;
-	int vblank = 0;
+//FIXME	int vblank = 0;
 	unsigned long irqflags;
 	int irq_received;
 	int ret = IRQ_NONE;

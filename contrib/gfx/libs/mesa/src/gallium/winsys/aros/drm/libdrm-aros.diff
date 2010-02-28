@@ -16,8 +16,8 @@ diff -ur -x .svn /data/deadwood/source/drm-2.4.18/intel/intel_atomic.h libdrm/in
  #define HAS_ATOMIC_OPS 1
 diff -ur -x .svn /data/deadwood/source/drm-2.4.18/intel/intel_bufmgr_gem.c libdrm/intel/intel_bufmgr_gem.c
 --- /data/deadwood/source/drm-2.4.18/intel/intel_bufmgr_gem.c	2010-02-16 12:12:40.000000000 +0100
-+++ libdrm/intel/intel_bufmgr_gem.c	2010-02-20 14:30:21.000000000 +0100
-@@ -38,18 +38,39 @@
++++ libdrm/intel/intel_bufmgr_gem.c	2010-02-28 12:35:42.000000000 +0100
+@@ -38,18 +38,40 @@
  #include "config.h"
  #endif
  
@@ -39,6 +39,7 @@ diff -ur -x .svn /data/deadwood/source/drm-2.4.18/intel/intel_bufmgr_gem.c libdr
  #include <sys/stat.h>
  #include <sys/types.h>
 +#else
++#include <sys/time.h>
 +#include <proto/exec.h>
 +#include <exec/semaphores.h>
 +#define pthread_mutex_t             struct SignalSemaphore
@@ -57,7 +58,7 @@ diff -ur -x .svn /data/deadwood/source/drm-2.4.18/intel/intel_bufmgr_gem.c libdr
  
  #include "errno.h"
  #include "libdrm_lists.h"
-@@ -484,7 +505,11 @@
+@@ -484,7 +506,11 @@
  {
  	drm_intel_bufmgr_gem *bufmgr_gem = (drm_intel_bufmgr_gem *) bufmgr;
  	drm_intel_bo_gem *bo_gem;
@@ -69,7 +70,7 @@ diff -ur -x .svn /data/deadwood/source/drm-2.4.18/intel/intel_bufmgr_gem.c libdr
  	int ret;
  	struct drm_intel_gem_bo_bucket *bucket;
  	int alloc_from_cache;
-@@ -722,10 +747,14 @@
+@@ -722,10 +748,14 @@
  	struct drm_gem_close close;
  	int ret;
  
@@ -84,7 +85,7 @@ diff -ur -x .svn /data/deadwood/source/drm-2.4.18/intel/intel_bufmgr_gem.c libdr
  
  	/* Close this object */
  	memset(&close, 0, sizeof(close));
-@@ -833,6 +862,7 @@
+@@ -833,6 +863,7 @@
  	if (atomic_dec_and_test(&bo_gem->refcount)) {
  		drm_intel_bufmgr_gem *bufmgr_gem =
  		    (drm_intel_bufmgr_gem *) bo->bufmgr;
@@ -92,17 +93,24 @@ diff -ur -x .svn /data/deadwood/source/drm-2.4.18/intel/intel_bufmgr_gem.c libdr
  		struct timespec time;
  
  		clock_gettime(CLOCK_MONOTONIC, &time);
-@@ -840,6 +870,9 @@
+@@ -840,6 +871,16 @@
  		pthread_mutex_lock(&bufmgr_gem->lock);
  		drm_intel_gem_bo_unreference_final(bo, time.tv_sec);
  		pthread_mutex_unlock(&bufmgr_gem->lock);
 +#else
-+IMPLEMENT("calling drm_intel_gem_bo_unreference_final\n");
++        /* CLOCK_MONOTONIC cannot be changed. Value returned by
++        time() is real time clock, so can be changed */
++        struct timeval tv;
++        gettimeofday(&tv, NULL);
++        
++		pthread_mutex_lock(&bufmgr_gem->lock);
++		drm_intel_gem_bo_unreference_final(bo, tv.tv_sec);
++		pthread_mutex_unlock(&bufmgr_gem->lock);
 +#endif
  	}
  }
  
-@@ -946,6 +979,7 @@
+@@ -946,6 +987,7 @@
  		}
  
  		/* and mmap it */
@@ -110,7 +118,7 @@ diff -ur -x .svn /data/deadwood/source/drm-2.4.18/intel/intel_bufmgr_gem.c libdr
  		bo_gem->gtt_virtual = mmap(0, bo->size, PROT_READ | PROT_WRITE,
  					   MAP_SHARED, bufmgr_gem->fd,
  					   mmap_arg.offset);
-@@ -960,6 +994,9 @@
+@@ -960,6 +1002,9 @@
  			pthread_mutex_unlock(&bufmgr_gem->lock);
  			return ret;
  		}
@@ -120,25 +128,43 @@ diff -ur -x .svn /data/deadwood/source/drm-2.4.18/intel/intel_bufmgr_gem.c libdr
  	}
  
  	bo->virtual = bo_gem->gtt_virtual;
-@@ -1070,7 +1107,7 @@
+@@ -1067,10 +1112,10 @@
+ static int
+ drm_intel_gem_get_pipe_from_crtc_id(drm_intel_bufmgr *bufmgr, int crtc_id)
+ {
++#if !defined(__AROS__)
  	drm_intel_bufmgr_gem *bufmgr_gem = (drm_intel_bufmgr_gem *) bufmgr;
  	struct drm_i915_get_pipe_from_crtc_id get_pipe_from_crtc_id;
  	int ret;
 -
-+#if !defined(__AROS__)
  	get_pipe_from_crtc_id.crtc_id = crtc_id;
  	ret = ioctl(bufmgr_gem->fd, DRM_IOCTL_I915_GET_PIPE_FROM_CRTC_ID,
  		    &get_pipe_from_crtc_id);
-@@ -1083,7 +1120,9 @@
+@@ -1083,8 +1128,11 @@
  		 */
  		return -1;
  	}
 -
+ 	return get_pipe_from_crtc_id.pipe;
 +#else
 +IMPLEMENT("\n");
++    return 0;
 +#endif
- 	return get_pipe_from_crtc_id.pipe;
  }
+ 
+ static int
+diff -ur -x .svn /data/deadwood/source/drm-2.4.18/intel/intel_bufmgr_priv.h libdrm/intel/intel_bufmgr_priv.h
+--- /data/deadwood/source/drm-2.4.18/intel/intel_bufmgr_priv.h	2010-02-16 12:12:40.000000000 +0100
++++ libdrm/intel/intel_bufmgr_priv.h	2010-02-28 12:37:42.000000000 +0100
+@@ -261,7 +261,9 @@
+ 	int debug;
+ };
+ 
++#if !defined(__AROS__)
+ #define ALIGN(value, alignment)	((value + alignment - 1) & ~(alignment - 1))
++#endif
+ #define ROUND_UP_TO(x, y)	(((x) + (y) - 1) / (y) * (y))
+ #define ROUND_UP_TO_MB(x)	ROUND_UP_TO((x), 1024*1024)
  
 diff -ur -x .svn /data/deadwood/source/drm-2.4.18/nouveau/nouveau_bo.c libdrm/nouveau/nouveau_bo.c
 --- /data/deadwood/source/drm-2.4.18/nouveau/nouveau_bo.c	2010-02-16 12:12:40.000000000 +0100

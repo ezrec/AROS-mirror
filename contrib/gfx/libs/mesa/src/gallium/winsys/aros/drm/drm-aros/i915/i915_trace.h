@@ -79,5 +79,11 @@ static inline void trace_i915_gem_request_submit(struct drm_device *dev, u32 seq
 {
     TRACE("\n");
 }
+
+static inline void trace_i915_gem_object_get_fence(struct drm_gem_object *obj,
+                                    int fance, int tiling_mode)
+{
+    TRACE("\n");
+}
 #endif /* I915_TRACE_H */
 

@@ -156,7 +156,9 @@ static void ttm_bo_release_list(struct kref *list_kref)
 {
 	struct ttm_buffer_object *bo =
 	    container_of(list_kref, struct ttm_buffer_object, list_kref);
+#if !defined(__AROS__)
 	struct ttm_bo_device *bdev = bo->bdev;
+#endif
 
 	BUG_ON(atomic_read(&bo->list_kref.refcount));
 	BUG_ON(atomic_read(&bo->kref.refcount));
@@ -195,7 +197,6 @@ int ttm_bo_wait_unreserved(struct ttm_buffer_object *bo, bool interruptible)
 	}
 #else
 IMPLEMENT("\n");
-#warning IMPLEMENT ttm_bo_wait_unreserved
 #endif    
 	return 0;
 }
@@ -1010,7 +1011,6 @@ int ttm_bo_wait_cpu(struct ttm_buffer_object *bo, bool no_wait)
 					atomic_read(&bo->cpu_writers) == 0);
 #else
 IMPLEMENT("\n");
-#warning IMPLEMENT ttm_bo_wait_cpu
 #endif
 
 	return ret;
@@ -1422,7 +1422,7 @@ static void ttm_bo_global_kobj_release(struct kobject *kobj)
 
 void ttm_bo_global_release(struct ttm_global_reference *ref)
 {
-	struct ttm_bo_global *glob = ref->object;
+//FIXME	struct ttm_bo_global *glob = ref->object;
 
 //FIXME	kobject_del(&glob->kobj);
 //FIXME	kobject_put(&glob->kobj);
@@ -1431,8 +1431,10 @@ EXPORT_SYMBOL(ttm_bo_global_release);
 
 int ttm_bo_global_init(struct ttm_global_reference *ref)
 {
+#if !defined(__AROS__)
 	struct ttm_bo_global_ref *bo_ref =
 		container_of(ref, struct ttm_bo_global_ref, ref);
+#endif
 	struct ttm_bo_global *glob = ref->object;
 	int ret = 0;
 
@@ -1477,8 +1479,10 @@ int ttm_bo_global_init(struct ttm_global_reference *ref)
 //FIXME	if (unlikely(ret != 0))
 //FIXME		kobject_put(&glob->kobj);
 	return ret;
+#if !defined(__AROS__)
 out_no_shrink:
 	__free_page(glob->dummy_read_page);
+#endif
 out_no_drp:
 	kfree(glob);
 	return ret;
@@ -1843,7 +1847,7 @@ void ttm_bo_synccpu_write_release(struct ttm_buffer_object *bo)
 		wake_up_all(&bo->event_queue);
 #else
     atomic_dec_and_test(&bo->cpu_writers);
-#warning IMPLEMENT "wake up" of queue
+/* FIXME: implement "wake up" of queue */
 #endif    
 }
 EXPORT_SYMBOL(ttm_bo_synccpu_write_release);

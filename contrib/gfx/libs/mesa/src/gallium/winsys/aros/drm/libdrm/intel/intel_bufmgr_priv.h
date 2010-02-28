@@ -261,7 +261,9 @@ struct _drm_intel_bufmgr {
 	int debug;
 };
 
+#if !defined(__AROS__)
 #define ALIGN(value, alignment)	((value + alignment - 1) & ~(alignment - 1))
+#endif
 #define ROUND_UP_TO(x, y)	(((x) + (y) - 1) / (y) * (y))
 #define ROUND_UP_TO_MB(x)	ROUND_UP_TO((x), 1024*1024)
 
