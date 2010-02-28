@@ -155,12 +155,18 @@ struct agp_staticdata {
     VOID    (*create_gatt_table)(struct agp_staticdata * agpsd);
     VOID    (*unbind_memory)(struct agp_staticdata * agpsd, ULONG offset, ULONG size);
     VOID    (*flush_gatt_table)(struct agp_staticdata *agpsd);
-    VOID    (*bind_memory)(struct agp_staticdata * agpsd, IPTR address, ULONG size, ULONG offset);
+    VOID    (*bind_memory)(struct agp_staticdata * agpsd, IPTR address, ULONG size, ULONG offset, UBYTE type);
     VOID    (*enable_agp)(struct agp_staticdata * agpsd, ULONG mode);
     VOID    (*initialize_chipset)(struct agp_staticdata * agpsd);
     VOID    (*deinitialize_chipset)(struct agp_staticdata * agpsd);
     VOID    (*free_gatt_table)(struct agp_staticdata * agpsd);
     VOID    (*flush_chipset)(struct agp_staticdata * agpsd);
+
+    /* I915 specific data */
+    ULONG               *intelgatttable;
+    UBYTE               *intelregs;
+    APTR                intelflushpage;
+    ULONG               intelfirstgattentry;
 };
 
 #define writel(val, addr)               (*(volatile ULONG*)(addr) = (val))
@@ -359,7 +365,7 @@ static VOID generic_unbind_memory(struct agp_staticdata * agpsd, ULONG offset, U
     ReleaseSemaphore(&agpsd->driverlock);
 }
 
-static VOID generic_bind_memory(struct agp_staticdata * agpsd, IPTR address, ULONG size, ULONG offset)
+static VOID generic_bind_memory(struct agp_staticdata * agpsd, IPTR address, ULONG size, ULONG offset, UBYTE type)
 {
     ULONG i;
 
@@ -374,7 +380,7 @@ static VOID generic_bind_memory(struct agp_staticdata * agpsd, IPTR address, ULO
     
     /* TODO: get mask type */
     
-    /* TODO: Check if each entry in GATT to be written in unbound (might not work due to CPU caches problem - see HACK*/
+    /* TODO: Check if each entry in GATT to be written is unbound */
     
     /* Flush incomming memory - will be done in flush_cpu_cache below */
     
@@ -1030,8 +1036,184 @@ static VOID intel_810_enable_agp(struct agp_staticdata * agpsd, ULONG requestedm
     /* This function is a NOOP */
 }
 
+#define GFX_INTEL_I915_REGSADDR         0x10
+#define GFX_INTEL_I915_GATTADDR         0x1C
+#define GFX_INTEL_I915_GMADDR           0x18
+#define GFX_INTEL_I810_PGETBL_CTL       0x2020
+#define GFX_INTEL_I810_PGETBL_ENABLED   0x00000001
+#define AGP_INTEL_I830_GMCH_CTRL        0x52
+#define AGP_INTEL_I830_GMCH_ENABLED     0x4
 
-#define IS_845(x)                       \
+static VOID intel_915_initialize_chipset(struct agp_staticdata * agpsd)
+{
+    OOP_Object * bridgedev = agpsd->bridge->PciDevice;
+    OOP_Object * videodev = agpsd->videocard->PciDevice;
+    UWORD gmchctrl = 0;
+    ULONG entries = 0, i = 0;
+  
+    /* Getting GART size - from video card */
+    OOP_GetAttr(videodev, aHidd_PCIDevice_Size2, (APTR)&agpsd->bridgeapersize);
+    
+    D(bug("[AGP] [Intel 915] Read aperture size: %d MB\n", (ULONG)agpsd->bridgeapersize));
+
+    /* Creation of GATT table */
+    agpsd->create_gatt_table(agpsd);
+
+    /* Getting GART base */
+    agpsd->bridgeaperbase = (IPTR)readconfiglong(videodev, GFX_INTEL_I915_GMADDR);
+    agpsd->bridgeaperbase &= (~0x0fUL) /* PCI_BASE_ADDRESS_MEM_MASK */;
+    D(bug("[AGP] [Intel 915] Reading aperture base: 0x%x\n", (ULONG)agpsd->bridgeaperbase));
+    
+    /* Enabled GATT */
+    gmchctrl = readconfigword(bridgedev, AGP_INTEL_I830_GMCH_CTRL);
+    gmchctrl |= AGP_INTEL_I830_GMCH_ENABLED;
+    writeconfigword(bridgedev, AGP_INTEL_I830_GMCH_CTRL, gmchctrl);
+    writel((ULONG)agpsd->gatttable | GFX_INTEL_I810_PGETBL_ENABLED,
+        agpsd->intelregs + GFX_INTEL_I810_PGETBL_CTL);
+    readl(agpsd->intelregs + GFX_INTEL_I810_PGETBL_CTL); /* PCI Posting */
+    
+    /* Bind GATT to scratch page */
+    entries = agpsd->bridgeapersize * 1024 * 1024 / 4096;
+    for (i = agpsd->intelfirstgattentry; i < entries; i++)
+    {
+        writel((ULONG)agpsd->scratchmem, agpsd->intelgatttable + i);
+    }
+    readl(agpsd->intelgatttable + i - 1);   /* PCI Posting. */
+    
+    flush_cpu_cache();
+
+    /* TODO: Setup chipset flushing */
+    agpsd->intelflushpage = NULL;
+    
+    agpsd->bridgesupported = TRUE;
+}
+
+static VOID intel_915_deinitialize_chipset(struct agp_staticdata * agpsd)
+{
+    /* TODO: unmap flush page */
+    /* TODO: release flush page resource */
+    /* TODO: unmap agpsd->intelgatttable */
+    /* TODO: unmap agpsd->intelregs */
+}
+
+static VOID intel_915_flush_chipset(struct agp_staticdata * agpsd)
+{
+    if (agpsd->intelflushpage)
+        writel(1, agpsd->intelflushpage);
+}
+
+static VOID intel_915_create_gatt_table(struct agp_staticdata * agpsd)
+{
+    /* The GATT table is automatically created during POST - just use it */
+    OOP_Object * videodev = agpsd->videocard->PciDevice;
+    /* ULONG gattsize = 256 * 1024; */ /* TODO: 1MB for G33 */
+    ULONG gatttableaddr = 0; /* Address of GATT table */
+    ULONG registersaddr = 0; /* Address of registers */
+    
+    gatttableaddr = readconfiglong(videodev, GFX_INTEL_I915_GATTADDR);
+    registersaddr = readconfiglong(videodev, GFX_INTEL_I915_REGSADDR);
+    registersaddr &= 0xfff80000;
+    
+    /* TODO: PCI MAP: agpsd->intelgatttable = (gatttableaddr, gatttablesize) */
+    agpsd->intelgatttable = (ULONG*)gatttableaddr;
+    
+    /* TODO: PCI MAP: agpsd->intelregs = (registersaddr, 128 * 4096) */
+    agpsd->intelregs = (UBYTE*)registersaddr;
+    
+    agpsd->gatttablebuffer = NULL;
+    agpsd->gatttable = (ULONG*)(readl(agpsd->intelregs + GFX_INTEL_I810_PGETBL_CTL) & 0xfffff000);
+
+    D(bug("[AGP] [Intel 915] Intel GATT table 0x%x, Regs 0x%x, GATT 0x%x\n",
+        (ULONG)agpsd->intelgatttable, (ULONG)agpsd->intelregs, (ULONG)agpsd->gatttable));
+
+    flush_cpu_cache();
+    
+    /* Create scratch page */
+    agpsd->scratchmembuffer = AllocVec(4096 * 2, MEMF_PUBLIC | MEMF_CLEAR);
+    agpsd->scratchmem = (ULONG*)(ALIGN((IPTR)agpsd->scratchmembuffer, 4096));
+    D(bug("[AGP] [Intel 915] Created scratch memory at 0x%x\n", (ULONG)agpsd->scratchmem));
+    
+    /* TODO: Detect the amount of stolen memory */
+    agpsd->intelfirstgattentry = 0;
+}
+
+static VOID intel_915_bind_memory(struct agp_staticdata * agpsd, IPTR address, ULONG size, ULONG offset, UBYTE type)
+{
+    ULONG i;
+    ULONG additionalmask = 0x00000000;
+
+    D(bug("[AGP] [Intel 915] Bind address 0x%x into offset %d, size %d\n", (ULONG)address, offset, size));
+
+    if (!agpsd->enabled)
+        return;
+
+    ObtainSemaphore(&agpsd->driverlock);
+
+    /* TODO: Check if offset is not before intelfirstgattentry */
+
+    /* TODO: check if offset + size / 4096 ends before gatt_table end */
+    
+    /* TODO: get mask type - check if mast type is of supported type */
+
+    /* Flush incomming memory - will be done in flush_cpu_cache below */
+
+    /* Additional mask for cached memory */    
+    if (type == AGP_MEMORY_TYPE_CACHED)
+        additionalmask = 0x00000006;
+    
+    /* Insert entries into GATT table */
+    for(i = 0; i < size / 4096; i++)
+    {
+        /* Write masked memory address into GATT */
+        writel((address + (4096 * i)) | agpsd->memmask | additionalmask,
+            agpsd->intelgatttable + offset + i);
+    }
+    
+    readl(agpsd->intelgatttable + offset + i - 1); /* PCI posting */
+
+    /* Flush CPU cache - make sure data in GATT is up to date */
+    flush_cpu_cache();
+
+    /* Flush GATT table at card */
+    agpsd->flush_gatt_table(agpsd);
+
+    ReleaseSemaphore(&agpsd->driverlock);
+}
+
+static VOID intel_915_unbind_memory(struct agp_staticdata * agpsd, ULONG offset, ULONG size)
+{
+    ULONG i;
+
+    D(bug("[AGP] [Intel 915] Unbind offset %d, size %d\n", offset, size));
+
+    if (!agpsd->enabled)
+        return;
+
+    if (size == 0)
+        return;
+
+    ObtainSemaphore(&agpsd->driverlock);
+
+    /* TODO: Check if offset is not before intelfirstgattentry */
+
+    /* Remove entries from GATT table */
+    for(i = 0; i < size / 4096; i++)
+    {
+        writel((ULONG)agpsd->scratchmem, agpsd->intelgatttable + offset + i);
+    }
+    
+    readl(agpsd->intelgatttable + offset + i - 1); /* PCI posting */
+    
+    /* Flush CPU cache - make sure data in GATT is up to date */
+    flush_cpu_cache();
+
+    /* Flush GATT table */
+    agpsd->flush_gatt_table(agpsd);
+    
+    ReleaseSemaphore(&agpsd->driverlock);
+}
+
+#define IS_845_BRIDGE(x)                \
 (                                       \
     (x == 0x2570) || /* 82865_HB */     \
     (x == 0x1a30) || /* 82845_HB */     \
@@ -1042,7 +1224,7 @@ static VOID intel_810_enable_agp(struct agp_staticdata * agpsd, ULONG requestedm
     (x == 0x2578)    /* 82875_HB */     \
 )                                       \
 
-#define IS_915(x)                       \
+#define IS_915_BRIDGE(x)                \
 (                                       \
     (x == 0x2588) || /* 915 */          \
     (x == 0x2580) || /* 82915G_HB */    \
@@ -1051,6 +1233,17 @@ static VOID intel_810_enable_agp(struct agp_staticdata * agpsd, ULONG requestedm
     (x == 0x27A0) || /* 82945GM_HB */   \
     (x == 0x27AC)    /* 82945GME_HB */  \
 )                                       \
+
+#define IS_915_GFX(x)                   \
+(                                       \
+    (x == 0x258a) || /* 915 */          \
+    (x == 0x2582) || /* 82915G_IG */    \
+    (x == 0x2592) || /* 82915GM_IG */   \
+    (x == 0x2772) || /* 82945G_IG */    \
+    (x == 0x27A2) || /* 82945GM_IG */   \
+    (x == 0x27AE)    /* 82945GME_IG */  \
+)                                       \
+
 
 static VOID intel_initialize_agp(struct agp_staticdata * agpsd)
 {
@@ -1082,7 +1275,7 @@ static VOID intel_initialize_agp(struct agp_staticdata * agpsd)
     
     D(bug("[AGP] [Intel] Reading mode: 0x%x\n", agpsd->bridgemode));
     
-    if (IS_845(agpsd->bridge->ProductID))
+    if (IS_845_BRIDGE(agpsd->bridge->ProductID))
     {
         D(bug("[AGP] [Intel 845] Setting up pointers for 0x%x\n", agpsd->bridge->ProductID));
         agpsd->memmask = 0x00000017;
@@ -1093,21 +1286,26 @@ static VOID intel_initialize_agp(struct agp_staticdata * agpsd)
         supporteddevicefound = TRUE;
     }
     
-    if (IS_915(agpsd->bridge->ProductID))
+    if (IS_915_BRIDGE(agpsd->bridge->ProductID))
     {
-        D(bug("[AGP] [Intel 915] Setting up pointers for 0x%x\n", agpsd->bridge->ProductID));
-        /* TODO: fill functions */
-        agpsd->create_gatt_table = NULL;
-        agpsd->unbind_memory = NULL;
-        agpsd->flush_gatt_table = intel_810_flush_gatt_table;
-        agpsd->bind_memory = NULL;
-        agpsd->enable_agp = intel_810_enable_agp;
-        agpsd->initialize_chipset = NULL;
-        agpsd->deinitialize_chipset = NULL;
-        agpsd->free_gatt_table = intel_830_free_gatt_table;
-        agpsd->memmask = 0x00000000;
-        agpsd->flush_chipset = NULL;
-        supporteddevicefound = TRUE;
+        /* If there is external videocard, chipset will match, 
+           but video card will not. Make sure this code is executed only for 
+           cases when integrated video card is the one actually used */
+        if (agpsd->videocard && IS_915_GFX(agpsd->videocard->ProductID))
+        {
+            D(bug("[AGP] [Intel 915] Setting up pointers for 0x%x\n", agpsd->bridge->ProductID));
+            agpsd->create_gatt_table = intel_915_create_gatt_table;
+            agpsd->unbind_memory = intel_915_unbind_memory;
+            agpsd->flush_gatt_table = intel_810_flush_gatt_table;
+            agpsd->bind_memory = intel_915_bind_memory;
+            agpsd->enable_agp = intel_810_enable_agp;
+            agpsd->initialize_chipset = intel_915_initialize_chipset;
+            agpsd->deinitialize_chipset = intel_915_deinitialize_chipset;
+            agpsd->free_gatt_table = intel_830_free_gatt_table;
+            agpsd->memmask = 0x00000001;
+            agpsd->flush_chipset = intel_915_flush_chipset;
+            supporteddevicefound = TRUE;
+        }
     }
     
     if (supporteddevicefound)
@@ -1238,9 +1436,19 @@ static VOID select_bridge_and_videocard(struct agp_staticdata * agpsd)
         }
 
         /* FIXME: HACK for selecting Intel integrated bridge */
-        if ((!agpsd->bridge) && (IS_915(pciagpdev->ProductID)))
+        if ((!agpsd->bridge) && (pciagpdev->Class == 0x06) &&
+            (pciagpdev->VendorID = 0x8086) &&
+            (IS_915_BRIDGE(pciagpdev->ProductID)))
         {
             agpsd->bridge = pciagpdev;
+        }
+
+        /* FIXME: HACK for selecting Intel integrated video */
+        if ((!agpsd->videocard) && (pciagpdev->Class == 0x03) &&
+            (pciagpdev->VendorID = 0x8086) &&
+            (IS_915_GFX(pciagpdev->ProductID)))
+        {
+            agpsd->videocard = pciagpdev;
         }
     }
 }
@@ -1408,9 +1616,9 @@ VOID aros_agp_hack_unbind_memory(ULONG offset, ULONG size)
     agpsd_global.unbind_memory(&agpsd_global, offset, size);
 }
 
-VOID aros_agp_hack_bind_memory(IPTR address, ULONG size, ULONG offset)
+VOID aros_agp_hack_bind_memory(IPTR address, ULONG size, ULONG offset, UBYTE type)
 {
-    agpsd_global.bind_memory(&agpsd_global, address, size, offset);
+    agpsd_global.bind_memory(&agpsd_global, address, size, offset, type);
 }
 
 VOID aros_agp_hack_enable_agp(ULONG mode)
