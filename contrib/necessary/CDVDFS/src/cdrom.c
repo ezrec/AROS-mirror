@@ -4,13 +4,14 @@
  *
  * ----------------------------------------------------------------------
  * This code is (C) Copyright 1993,1994 by Frank Munkert.
- *              (C) Copyright 2002-2009 The AROS Development Team
+ *              (C) Copyright 2002-2010 The AROS Development Team
  * All rights reserved.
  * This software may be freely distributed and redistributed for
  * non-commercial purposes, provided this notice is included.
  * ----------------------------------------------------------------------
  * History:
  *
+ * 01-Mar-10 neil    Do not read past end of disc.
  * 12-Jun-09 neil    If drive returns incorrect TOC length, calculate it
  *                   based on the number of tracks.
  * 09-May-09 weissms   - Let Do_SCSI_Command result depend on DoIO result.
@@ -268,11 +269,14 @@ int Read_From_Drive
  * this procedure delivers you buffer that is 'valid' until the next 16-sector-boundary.
  * if you want to read from sec 14 till 34, then you have to do 3 calls (14-16, 16-32, 32-34)
  */
-int Read_Chunk(CDROM *p_cd, long p_sector) 
+int Read_Chunk(CDROM *p_cd, long p_sector)
 {
     int status;
     int i;
     int loc;
+    long vol_size;
+    long start;
+    int count;
 
     D(bug("[CDVDFS]\tClient requested sector %ld\n", p_sector));
 
@@ -328,8 +332,18 @@ int Read_Chunk(CDROM *p_cd, long p_sector)
      * read **16** sectors
      * NOTE: all DVD discs require chunk size to be at least n*16 sectors
      * most of the CDs have enough padding (18 sectors) at the end
+     * (but not all)
      */
-    status = Read_From_Drive(p_cd,p_cd->buffers[loc], SCSI_BUFSIZE, p_sector & ~0xf, 16);
+    start = p_sector & ~0xf;
+    count = 16;
+    if (global->g_volume != NULL)
+        vol_size = Volume_Size(global->g_volume);
+    else
+        vol_size = 0;
+    if (vol_size != 0 && vol_size - start < count)
+        count = vol_size - start;
+    status =
+        Read_From_Drive(p_cd, p_cd->buffers[loc], SCSI_BUFSIZE, start, count);
 
     if (status)
     {
