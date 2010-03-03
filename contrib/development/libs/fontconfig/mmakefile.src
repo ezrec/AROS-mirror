@@ -1,9 +1,9 @@
-# Copyright © 2009, The AROS Development Team. All rights reserved.
+# Copyright © 2009, 2010, The AROS Development Team. All rights reserved.
 # $Id$
 
 -include $(TOP)/config/make.cfg
 
-#MM- contrib-fontconfig : contrib-libiconv contrib-libxml2 development-fontconfig
+#MM- contrib-fontconfig : linklibs workbench-libs-freetype-complete development-libxml2 development-fontconfig
 
 %fetch_and_build_gnu_development package=fontconfig version=2.6.0 \
     srcdir=fontconfig-2.6.0 patch=yes suffixes="tar.gz" \
