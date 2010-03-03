@@ -946,6 +946,8 @@ static VOID via_initialize_agp(struct agp_staticdata * agpsd)
 #define AGP_INTEL_I845_AGPM     0x51
 #define AGP_INTEL_I845_ERRSTS   0xc8
 
+#define AGP_INTEL_I7505_MCHCFG  0x50
+
 static VOID intel_845_initialize_chipset(struct agp_staticdata * agpsd)
 {
     OOP_Object * bridgedev = agpsd->bridge->PciDevice;
@@ -1213,6 +1215,52 @@ static VOID intel_915_unbind_memory(struct agp_staticdata * agpsd, ULONG offset,
     ReleaseSemaphore(&agpsd->driverlock);
 }
 
+static VOID intel_7505_initialize_chipset(struct agp_staticdata * agpsd)
+{
+    OOP_Object * bridgedev = agpsd->bridge->PciDevice;
+    UBYTE aperture_size_value = 0;
+    UWORD mchcfg = 0;
+    
+    /* Getting GART size */
+    aperture_size_value = readconfigbyte(bridgedev, AGP_INTEL_APER_SIZE);
+    D(bug("[AGP] [Intel 7505] Reading aperture size value: %x\n", aperture_size_value));
+    
+    switch(aperture_size_value)
+    {
+        case(63): agpsd->bridgeapersize = 4; break;
+        case(62): agpsd->bridgeapersize = 8; break;
+        case(60): agpsd->bridgeapersize = 16; break;
+        case(56): agpsd->bridgeapersize = 32; break;
+        case(48): agpsd->bridgeapersize = 64; break;
+        case(32): agpsd->bridgeapersize = 128; break;
+        case(0): agpsd->bridgeapersize = 256; break;
+        default: agpsd->bridgeapersize = 0; break;
+    }
+    
+    D(bug("[AGP] [Intel 7505] Calculated aperture size: %d MB\n", (ULONG)agpsd->bridgeapersize));
+
+    /* Creation of GATT table */
+    agpsd->create_gatt_table(agpsd);
+    
+    /* Getting GART base */
+    agpsd->bridgeaperbase = (IPTR)readconfiglong(bridgedev, AGP_APER_BASE);
+    agpsd->bridgeaperbase &= (~0x0fUL) /* PCI_BASE_ADDRESS_MEM_MASK */;
+    D(bug("[AGP] [Intel 7505] Reading aperture base: 0x%x\n", (ULONG)agpsd->bridgeaperbase));
+
+    /* Set GATT pointer */
+    writeconfiglong(bridgedev, AGP_INTEL_GATT_BASE, (ULONG)agpsd->gatttable);
+    D(bug("[AGP] [Intel 7505] Set GATT pointer to 0x%x\n", (ULONG)agpsd->gatttable));
+    
+    /* Control register */
+    writeconfiglong(bridgedev, AGP_INTEL_CTRL, 0x00000000);
+    
+    /* MCHCFG*/
+    mchcfg = readconfigword(bridgedev, AGP_INTEL_I7505_MCHCFG);
+    writeconfigword(bridgedev, AGP_INTEL_I7505_MCHCFG, mchcfg | (1 << 9));
+    
+    agpsd->bridgesupported = TRUE;
+}
+
 #define IS_845_BRIDGE(x)                \
 (                                       \
     (x == 0x2570) || /* 82865_HB */     \
@@ -1242,6 +1290,12 @@ static VOID intel_915_unbind_memory(struct agp_staticdata * agpsd, ULONG offset,
     (x == 0x2772) || /* 82945G_IG */    \
     (x == 0x27A2) || /* 82945GM_IG */   \
     (x == 0x27AE)    /* 82945GME_IG */  \
+)                                       \
+
+#define IS_7505_BRIDGE(x)               \
+(                                       \
+    (x == 0x2550) || /* 7505_0 */       \
+    (x == 0x255d)    /* 7205_0 */       \
 )                                       \
 
 
@@ -1283,6 +1337,17 @@ static VOID intel_initialize_agp(struct agp_staticdata * agpsd)
         agpsd->initialize_chipset = intel_845_initialize_chipset;
         agpsd->deinitialize_chipset = intel_8XX_deinitialize_chipset;
         agpsd->flush_chipset = intel_830_flush_chipset;
+        supporteddevicefound = TRUE;
+    }
+
+    if (IS_7505_BRIDGE(agpsd->bridge->ProductID))
+    {
+        D(bug("[AGP] [Intel 7505] Setting up pointers for 0x%x\n", agpsd->bridge->ProductID));
+        agpsd->memmask = 0x00000017;
+        agpsd->flush_gatt_table = intel_8XX_flush_gatt_table;
+        agpsd->initialize_chipset = intel_7505_initialize_chipset;
+        agpsd->deinitialize_chipset = intel_8XX_deinitialize_chipset;
+        agpsd->flush_chipset = generic_flush_chipset;
         supporteddevicefound = TRUE;
     }
     
