@@ -1,10 +1,5 @@
 Known issues with AROS port:
 
-BoopsiClasses
-    The classes should be shown in a tree which shows parent/child
-    relations. But on AROS they are shown flat, though some have
-    an arrow.
-
 Locks
     List is empty.
 
