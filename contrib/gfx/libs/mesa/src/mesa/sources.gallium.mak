@@ -2,6 +2,9 @@
 
 AROS_STATE_TRACKER_SOURCES = \
             state_trackers/aros/arosmesa_api \
+
+AROS_STATE_TRACKER_HIDD_SOURCES = \
+            state_trackers/aros/arosmesa_api_hidd \
             
 AROS_WINSYS_SOURCES = \
             winsys/aros/arosmesa_winsys \
