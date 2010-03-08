@@ -17,6 +17,8 @@ include $(SRCDIR)/$(CURDIR)/sources.gallium.mak
 
 #MM mesa-mesa-gallium-linklib : includes contrib-gfx-libs-mesa-includes
 
+#MM gallium-auxiliary-linklib : includes
+
 SHARED_LIB_SOURCES = \
             aros_libapi \
             aros_libinit \
@@ -119,5 +121,22 @@ USER_CFLAGS := -DUSE_MGL_NAMESPACE -DAROS_MESA_SHARED -ffast-math $(FFIXED)
 
 %build_archspecific mainmmake=mesa-mesa-gallium-module asmfiles=aros_wbinvd_hack \
     maindir=$(CURDIR)/gallium-module arch=i386 modulename=mesa
+
+#
+#   Experimental separation of gallium from mesa.library
+#
+#
+
+USER_INCLUDES := \
+            -I$(AROS_DEVELOPMENT)/include/gallium \
+
+USER_CFLAGS := -ffast-math $(FFIXED)
+
+LIB_GALLIUM_AUXILIARY_SOURCES = \
+            $(addprefix $(GALLIUM_SUBPATH)/,$(GALLIUM_AUXILIARY_SOURCES)) \
+
+%build_linklib mmake=gallium-auxiliary-linklib libname=galliumauxiliary \
+    files="$(LIB_GALLIUM_AUXILIARY_SOURCES)" \
+    objdir=$(GENDIR)/$(CURDIR)/gallium-auxiliary-linklib
 
 %common
