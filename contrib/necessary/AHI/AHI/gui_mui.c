@@ -1,17 +1,17 @@
 /*
      AHI - The AHI preferences program
      Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
-     
+
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
      as published by the Free Software Foundation; either version 2
      of the License, or (at your option) any later version.
-     
+
      This program is distributed in the hope that it will be useful,
      but WITHOUT ANY WARRANTY; without even the implied warranty of
      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
      GNU General Public License for more details.
-     
+
      You should have received a copy of the GNU General Public License
      along with this program; if not, write to the Free Software
      Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
@@ -62,7 +62,7 @@ static ULONG
 gw_HookEntry( void )
 {
   struct Hook* h   = (struct Hook*) REG_A0;
-  void*        o   = (void*)        REG_A2; 
+  void*        o   = (void*)        REG_A2;
   void*        msg = (void*)        REG_A1;
 
   return ( ( (ULONG(*)(struct Hook*, void*, void*)) *h->h_SubEntry)( h, o, msg ) );
@@ -105,21 +105,21 @@ enum actionIDs {
 
   ACTID_TABS, ACTID_PAGE,
 
-  ACTID_UNIT, ACTID_MODE, 
+  ACTID_UNIT, ACTID_MODE,
   SHOWID_MODE,
 
   ACTID_FREQ, ACTID_CHANNELS, ACTID_OUTVOL, ACTID_MONVOL, ACTID_GAIN,
   ACTID_INPUT, ACTID_OUTPUT,
   SHOWID_FREQ, SHOWID_CHANNELS, SHOWID_OUTVOL, SHOWID_MONVOL, SHOWID_GAIN,
   SHOWID_INPUT, SHOWID_OUTPUT,
-  
+
   ACTID_PLAY,
 
   ACTID_DEBUG, ACTID_SURROUND, ACTID_ECHO, ACTID_CLIPMV,
   ACTID_CPULIMIT, SHOWID_CPULIMIT,
   ACTID_ACTIME, SHOWID_ACTIME,
   ACTID_SCALEMODE,
-  
+
 
   ACTID_COUNT
 };
@@ -227,7 +227,7 @@ static void UpdateStrings(void) {
 
   struct NewMenu   *menuptr;
   char           ***stringptr;
-  
+
   menuptr   = (struct NewMenu *) &Menus;
   stringptr = (char ***) &strings;
 
@@ -290,7 +290,7 @@ static void GUINewSettings(void)
   set(MUICpu, MUIA_Cycle_Active, (globalprefs.ahigp_MaxCPU * 100 + 32768) >> 16);
   set(MUIACTime, MUIA_Cycle_Active, (globalprefs.ahigp_AntiClickTime * 1000 + 32768) >> 16);
   set(MUIScalemode, MUIA_Cycle_Active, globalprefs.ahigp_ScaleMode);
-  
+
   GUINewUnit();
 }
 
@@ -490,7 +490,7 @@ static Object* SpecialButton(STRPTR label)
 {
   Object *button = NULL;
   STRPTR lab;
-  
+
   lab = AllocVec(strlen(label)+1,0);
 
   if( lab != NULL )
@@ -561,8 +561,8 @@ BOOL BuildGUI(char *screenname)
     return FALSE;
   }
 #endif
-  
-  
+
+
   page1 = HGroup,
     Child, VGroup,
       Child, MUIUnit = CycleObject,
@@ -709,14 +709,14 @@ BOOL BuildGUI(char *screenname)
          Child, page2,
        End,
        Child, HGroup,
-          Child, MUISave = SimpleButton(msgButtonSave),
-          Child, MUIUse = SimpleButton(msgButtonUse),
-          Child, MUICancel = SimpleButton(msgButtonCancel),
+          Child, MUISave = ImageButton(msgButtonSave, "THEME:Images/Gadgets/Prefs/Save"),
+          Child, MUIUse =  ImageButton(msgButtonUse,"THEME:Images/Gadgets/Prefs/Use"),
+          Child, MUICancel =  ImageButton(msgButtonCancel,"THEME:Images/Gadgets/Prefs/Cancel"),
         End,
       End,
     End,
   End;
-  
+
   if( MUIApp != NULL )
   {
     APTR item = (APTR)DoMethod(MUIMenu,MUIM_FindUData,ACTID_ICONS);
@@ -807,10 +807,10 @@ void EventLoop(void)
       {
         struct FileRequester *request;
 
-        request = MUI_AllocAslRequestTags(ASL_FileRequest, 
+        request = MUI_AllocAslRequestTags(ASL_FileRequest,
             ASLFR_Window, xget(MUIWindow, MUIA_Window_Window),
-            ASLFR_TitleText, msgTextProgramName, 
-            ASLFR_RejectIcons, TRUE, 
+            ASLFR_TitleText, msgTextProgramName,
+            ASLFR_RejectIcons, TRUE,
             ASLFR_InitialDrawer, "SYS:Prefs/Presets",
             TAG_DONE );
         if( request != NULL )
@@ -821,9 +821,9 @@ void EventLoop(void)
             char *file;
 
             DoMethod(MUIApp, MUIA_Application_Sleep, FALSE);
-            
+
             file = AllocVec(strlen(request->fr_Drawer)+128,0);
-            
+
             if( file != NULL )
             {
               CopyMem(request->fr_Drawer, file, strlen(request->fr_Drawer)+1);
@@ -853,7 +853,7 @@ void EventLoop(void)
             ASLFR_DoSaveMode, TRUE,
             ASLFR_InitialDrawer, "SYS:Prefs/Presets",
             TAG_DONE);
-            
+
         if(request != NULL )
         {
           DoMethod(MUIApp, MUIA_Application_Sleep, TRUE);
@@ -863,9 +863,9 @@ void EventLoop(void)
             char *file;
 
             DoMethod(MUIApp, MUIA_Application_Sleep, FALSE);
-            
+
             file = AllocVec(strlen(request->fr_Drawer)+128,0);
-            
+
             if( file != NULL )
             {
               CopyMem(request->fr_Drawer, file, strlen(request->fr_Drawer)+1);
@@ -889,7 +889,7 @@ void EventLoop(void)
 
       case ACTID_ABOUT:
       {
-        char* args[] = { "\033c", 
+        char* args[] = { "\033c",
                          (char*)msgTextProgramName,
                          "1996-2005 Stéphane Barbaray/Martin Blom"
                        };
@@ -969,7 +969,7 @@ void EventLoop(void)
         NewMode(xget(MUIList, MUIA_List_Active));
         GUINewMode();
         break;
-        
+
       case ACTID_PLAY:
       {
         int              unit_id;
@@ -978,7 +978,7 @@ void EventLoop(void)
         FillUnit();
         unit_id = xget( MUIUnit, MUIA_Cycle_Active );
         unit    = (struct UnitNode *) GetNode( unit_id, UnitList );
-        
+
         PlaySound( &unit->prefs );
         break;
       }
