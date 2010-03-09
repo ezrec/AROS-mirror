@@ -32,21 +32,21 @@
 #undef HiddGalliumBaseDriverAttrBase
 #define HiddGalliumBaseDriverAttrBase   (SD(cl)->hiddGalliumBaseDriverAB)
 
-struct arosmesa_buffer
+struct HiddSoftpipeBuffer
 {
-    struct pipe_buffer base;
-    void *buffer; /* Real buffer pointer */
-    void *data; /* Aligned buffer pointer (inside real buffer) */
-    void *mapped;
+    struct pipe_buffer  base;
+    APTR                buffer; /* Real buffer pointer */
+    APTR                data;   /* Aligned buffer pointer (inside real buffer) */
+    APTR                mapped;
 };
 
 static struct pipe_buffer *
-arosmesa_buffer_create(struct pipe_winsys *pws, 
+HiddSoftpipeBufferCreate(struct pipe_winsys *pws, 
                         unsigned alignment, 
                         unsigned usage,
                         unsigned size)
 {
-    struct arosmesa_buffer *buffer = AllocVec(sizeof(struct arosmesa_buffer), MEMF_PUBLIC|MEMF_CLEAR);
+    struct HiddSoftpipeBuffer *buffer = AllocVec(sizeof(struct HiddSoftpipeBuffer), MEMF_PUBLIC|MEMF_CLEAR);
 
     pipe_reference_init(&buffer->base.reference, 1);
     buffer->base.alignment = alignment;
@@ -62,9 +62,9 @@ arosmesa_buffer_create(struct pipe_winsys *pws,
 }
 
 static struct pipe_buffer *
-arosmesa_user_buffer_create(struct pipe_winsys *pws, void *ptr, unsigned bytes)
+HiddSoftpipeUserBufferCreate(struct pipe_winsys *pws, void *ptr, unsigned bytes)
 {
-   struct arosmesa_buffer *buffer = AllocVec(sizeof(struct arosmesa_buffer), MEMF_PUBLIC|MEMF_CLEAR);
+   struct HiddSoftpipeBuffer *buffer = AllocVec(sizeof(struct HiddSoftpipeBuffer), MEMF_PUBLIC|MEMF_CLEAR);
    pipe_reference_init(&buffer->base.reference, 1);
    buffer->base.size = bytes;
    buffer->data = ptr;
@@ -73,37 +73,37 @@ arosmesa_user_buffer_create(struct pipe_winsys *pws, void *ptr, unsigned bytes)
 }
 
 static void *
-arosmesa_buffer_map(struct pipe_winsys *pws, struct pipe_buffer *buf,
+HiddSoftpipeBufferMap(struct pipe_winsys *pws, struct pipe_buffer *buf,
               unsigned flags)
 {
-    struct arosmesa_buffer *amesa_buf = (struct arosmesa_buffer *)buf;
-    amesa_buf->mapped = amesa_buf->data;
-    return amesa_buf->mapped;
+    struct HiddSoftpipeBuffer *hiddsoftpipebuffer = (struct HiddSoftpipeBuffer *)buf;
+    hiddsoftpipebuffer->mapped = hiddsoftpipebuffer->data;
+    return hiddsoftpipebuffer->mapped;
 }
 
 static void
-arosmesa_buffer_unmap(struct pipe_winsys *pws, struct pipe_buffer *buf)
+HiddSoftpipeBufferUnmap(struct pipe_winsys *pws, struct pipe_buffer *buf)
 {
-    struct arosmesa_buffer *amesa_buf = (struct arosmesa_buffer *)buf;
-    amesa_buf->mapped = NULL;
+    struct HiddSoftpipeBuffer *hiddsoftpipebuffer = (struct HiddSoftpipeBuffer *)buf;
+    hiddsoftpipebuffer->mapped = NULL;
 }
 
 static void
-arosmesa_buffer_destroy(struct pipe_buffer *buf)
+HiddSoftpipeBufferDestroy(struct pipe_buffer *buf)
 {
-    struct arosmesa_buffer *amesa_buf = (struct arosmesa_buffer *)buf;
+    struct HiddSoftpipeBuffer *hiddsoftpipebuffer = (struct HiddSoftpipeBuffer *)buf;
 
-    if (amesa_buf->buffer) {
-        FreeVec(amesa_buf->buffer);  
-        amesa_buf->data = NULL;
-        amesa_buf->buffer = NULL;
+    if (hiddsoftpipebuffer->buffer) {
+        FreeVec(hiddsoftpipebuffer->buffer);  
+        hiddsoftpipebuffer->data = NULL;
+        hiddsoftpipebuffer->buffer = NULL;
     }
 
-    FreeVec(amesa_buf);
+    FreeVec(hiddsoftpipebuffer);
 }
 
 static struct pipe_buffer *
-arosmesa_surface_buffer_create(struct pipe_winsys *winsys,
+HiddSoftpipeSurfaceBufferCreate(struct pipe_winsys *winsys,
                          unsigned width, unsigned height,
                          enum pipe_format format,
                          unsigned usage,
@@ -122,7 +122,7 @@ arosmesa_surface_buffer_create(struct pipe_winsys *winsys,
 }
 
 static void 
-arosmesa_softpipe_flush_frontbuffer(struct pipe_winsys *ws,
+HiddSoftpipeFlushFrontBuffer(struct pipe_winsys *ws,
                                 struct pipe_surface *surf,
                                 void *context_private)
 {
@@ -130,19 +130,19 @@ arosmesa_softpipe_flush_frontbuffer(struct pipe_winsys *ws,
 }
 
 static void 
-arosmesa_softpipe_update_buffer( struct pipe_winsys *ws, void *context_private )
+HiddSoftpipeUpdateBuffer( struct pipe_winsys *ws, void *context_private )
 {
     /* No Op */
 }
 
 static void
-arosmesa_softpipe_destroy( struct pipe_winsys *ws)
+HiddSoftpipeDestroy( struct pipe_winsys *ws)
 {
     FreeVec(ws);
 }
 
 static struct pipe_winsys *
-arosmesa_create_softpipe_winsys( void )
+HiddSoftpipeCreateSoftpipeWinsys( void )
 {
     struct pipe_winsys *ws = NULL;
 
@@ -151,22 +151,22 @@ arosmesa_create_softpipe_winsys( void )
     /* Fill in this struct with callbacks that pipe will need to
     * communicate with the window system, buffer manager, etc. 
     */
-    ws->buffer_create = arosmesa_buffer_create;
-    ws->user_buffer_create = arosmesa_user_buffer_create;
-    ws->buffer_map = arosmesa_buffer_map;
-    ws->buffer_unmap = arosmesa_buffer_unmap;
-    ws->buffer_destroy = arosmesa_buffer_destroy;
+    ws->buffer_create = HiddSoftpipeBufferCreate;
+    ws->user_buffer_create = HiddSoftpipeUserBufferCreate;
+    ws->buffer_map = HiddSoftpipeBufferMap;
+    ws->buffer_unmap = HiddSoftpipeBufferUnmap;
+    ws->buffer_destroy = HiddSoftpipeBufferDestroy;
 
-    ws->surface_buffer_create = arosmesa_surface_buffer_create;
+    ws->surface_buffer_create = HiddSoftpipeSurfaceBufferCreate;
 
     ws->fence_reference = NULL; /* FIXME */
     ws->fence_signalled = NULL; /* FIXME */
     ws->fence_finish = NULL; /* FIXME */
 
-    ws->flush_frontbuffer = arosmesa_softpipe_flush_frontbuffer;
-    ws->update_buffer = arosmesa_softpipe_update_buffer;
+    ws->flush_frontbuffer = HiddSoftpipeFlushFrontBuffer;
+    ws->update_buffer = HiddSoftpipeUpdateBuffer;
     ws->get_name = NULL; /* FIXME */
-    ws->destroy = arosmesa_softpipe_destroy;
+    ws->destroy = HiddSoftpipeDestroy;
 
     return ws;
 }
@@ -202,7 +202,7 @@ APTR METHOD(GALLIUMSOFTPIPEDRIVER, Hidd_GalliumBaseDriver, CreatePipeScreen)
     struct pipe_winsys *winsys;
     struct pipe_screen *screen;
 
-    winsys = arosmesa_create_softpipe_winsys();
+    winsys = HiddSoftpipeCreateSoftpipeWinsys();
     if (winsys == NULL)
         return NULL;
 
@@ -229,11 +229,11 @@ VOID METHOD(GALLIUMSOFTPIPEDRIVER, Hidd_GalliumBaseDriver, DisplaySurface)
 {
     struct pipe_surface * surf = (struct pipe_surface *)msg->surface;
     struct softpipe_texture *spt = softpipe_texture(surf->texture);
-    struct arosmesa_buffer *amesa_buf = (struct arosmesa_buffer *)(spt->buffer);
+    struct HiddSoftpipeBuffer *hiddsoftpipebuffer = (struct HiddSoftpipeBuffer *)(spt->buffer);
     struct RastPort * rp = CloneRastPort(msg->rastport);
 
     WritePixelArray(
-        amesa_buf->data, 
+        hiddsoftpipebuffer->data, 
         0,
         0,
         spt->stride[surf->level],
