@@ -18,6 +18,7 @@ struct HIDDGalliumSoftpipeDriverData
 struct softpipestaticdata 
 {
     OOP_Class       *galliumSoftpipeDriverClass;
+    OOP_AttrBase    hiddGalliumBaseDriverAB;
     struct Library  *SoftpipeCyberGfxBase;
 };
 

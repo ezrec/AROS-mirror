@@ -463,7 +463,7 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
     /* Try to open gallium.hidd */
     if (AROSMesaHIDDGalliumBase == NULL)
     {
-        if (!(AROSMesaHIDDGalliumBase = OpenLibrary((STRPTR)"gallium.hidd", 0)))
+        if (!(AROSMesaHIDDGalliumBase = OpenLibrary((STRPTR)"gallium.hidd", 1)))
             return NULL;
     }
     
@@ -475,13 +475,8 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
         
         if (galliumdriverfactory)
         {
-            struct pHidd_GalliumDriverFactory_GetDriver gdmsg = {
-            mID : OOP_GetMethodID(IID_Hidd_GalliumDriverFactory, moHidd_GalliumDriverFactory_GetDriver),
-            galliuminterfaceversion : 15 /* TODO: Get from common header */
-            };
-
             /* Ask for gallium driver */
-            driver = (OOP_Object*)OOP_DoMethod(galliumdriverfactory, (OOP_Msg)&gdmsg);
+            driver = HIDD_GalliumDriverFactory_GetDriver(galliumdriverfactory);
 
             /* Dispose factory */
             OOP_DisposeObject(galliumdriverfactory);

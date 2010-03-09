@@ -28,7 +28,12 @@ VOID METHOD(GALLIUMBASEDRIVER, Root, Get)
         switch (idx)
         {
             case aoHidd_GalliumBaseDriver_GalliumInterfaceVersion:
-                *msg->storage = 15; /* TODO: Get from some header */
+                /* Always return 0 here. It is up to child class to return its
+                   proper version. We can end up in situation where child classes
+                   are from different build than base driver class. In such case,
+                   returning here proper version would made the client use child
+                   class even though it had different interface version */
+                *msg->storage = 0; 
                 break;
         }
     }

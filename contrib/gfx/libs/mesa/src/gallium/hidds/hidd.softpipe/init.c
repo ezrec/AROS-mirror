@@ -14,7 +14,10 @@ static int SoftpipeHidd_ExpungeLib(LIBBASETYPEPTR LIBBASE)
 {
     if (LIBBASE->sd.SoftpipeCyberGfxBase)
         CloseLibrary(LIBBASE->sd.SoftpipeCyberGfxBase);
-        
+
+    if (LIBBASE->sd.hiddGalliumBaseDriverAB)
+        OOP_ReleaseAttrBase((STRPTR)IID_Hidd_GalliumBaseDriver);
+
     return TRUE;
 }
 
@@ -22,7 +25,9 @@ static int SoftpipeHidd_InitLib(LIBBASETYPEPTR LIBBASE)
 {
     LIBBASE->sd.SoftpipeCyberGfxBase = OpenLibrary((STRPTR)"cybergraphics.library",0);
 
-    if (LIBBASE->sd.SoftpipeCyberGfxBase)
+    LIBBASE->sd.hiddGalliumBaseDriverAB = OOP_ObtainAttrBase((STRPTR)IID_Hidd_GalliumBaseDriver);
+
+    if (LIBBASE->sd.SoftpipeCyberGfxBase && LIBBASE->sd.hiddGalliumBaseDriverAB)
         return TRUE;
 
     return FALSE;

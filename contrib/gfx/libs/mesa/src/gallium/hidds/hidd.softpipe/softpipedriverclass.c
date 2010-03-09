@@ -29,7 +29,8 @@
 
 #define CyberGfxBase    (&BASE(cl->UserData)->sd)->SoftpipeCyberGfxBase
 
-
+#undef HiddGalliumBaseDriverAttrBase
+#define HiddGalliumBaseDriverAttrBase   (SD(cl)->hiddGalliumBaseDriverAB)
 
 struct arosmesa_buffer
 {
@@ -175,6 +176,25 @@ OOP_Object *METHOD(GALLIUMSOFTPIPEDRIVER, Root, New)
     o = (OOP_Object *)OOP_DoSuperMethod(cl, o, (OOP_Msg) msg);
 
     return o;
+}
+
+VOID METHOD(GALLIUMSOFTPIPEDRIVER, Root, Get)
+{
+    ULONG idx;
+
+    if (IS_GALLIUMBASEDRIVER_ATTR(msg->attrID, idx))
+    {
+        switch (idx)
+        {
+            /* Overload the property */
+            case aoHidd_GalliumBaseDriver_GalliumInterfaceVersion:
+                *msg->storage = GALLIUM_INTERFACE_VERSION;
+                return;
+        }
+    }
+    
+    /* Use parent class for all other properties */
+    OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
 }
 
 APTR METHOD(GALLIUMSOFTPIPEDRIVER, Hidd_GalliumBaseDriver, CreatePipeScreen)

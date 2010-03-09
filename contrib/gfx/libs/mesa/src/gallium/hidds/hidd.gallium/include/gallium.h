@@ -18,6 +18,11 @@
 #include <oop/oop.h>
 #endif
 
+#ifndef P_AROS_VERSION_H
+/* Gallium3D interface version. This is separate from gallium.hidd versioning */
+#include <gallium/pipe/p_aros_version.h>
+#endif
+
 /* Gallium BaseDriver class */
 
 #define CLID_Hidd_GalliumBaseDriver   "hidd.gallium.basedriver"
@@ -99,5 +104,15 @@ struct pHidd_GalliumDriverFactory_GetDriver
     OOP_MethodID    mID;
     ULONG           galliuminterfaceversion;
 };
+
+/* Stub that uses predefined Gallium interface version */
+#define HIDD_GalliumDriverFactory_GetDriver(__o)                                                        \
+    ({                                                                                                  \
+        struct pHidd_GalliumDriverFactory_GetDriver gdmsg = {                                           \
+        mID : OOP_GetMethodID(IID_Hidd_GalliumDriverFactory, moHidd_GalliumDriverFactory_GetDriver),    \
+        galliuminterfaceversion : GALLIUM_INTERFACE_VERSION                                             \
+        };                                                                                              \
+        (OOP_Object*)OOP_DoMethod(__o, (OOP_Msg)&gdmsg);                                                \
+    })
 
 #endif

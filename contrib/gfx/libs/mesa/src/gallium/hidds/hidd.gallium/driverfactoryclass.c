@@ -6,6 +6,7 @@
 #include <hidd/gallium.h>
 #include <proto/oop.h>
 #include <proto/exec.h>
+#include <aros/debug.h>
 
 #include "gallium.h"
 
@@ -28,15 +29,14 @@ OOP_Object * METHOD(GALLIUMDRIVERFACTORY, Hidd_GalliumDriverFactory, GetDriver)
     
     if (HIDDSoftpipeBase == NULL)
     {
-        if (!(HIDDSoftpipeBase = OpenLibrary("softpipe.hidd", 0)))
+        if (!(HIDDSoftpipeBase = OpenLibrary("softpipe.hidd", 1)))
             return NULL;
     }
     
-//    driver = OOP_NewObject(NULL, CLID_Hidd_GalliumBaseDriver, NULL);
     driver = OOP_NewObject(NULL, "hidd.gallium.softpipedriver", NULL);
     
     
-    /* Check driver versioning */
+    /* Check driver interface version in relation to client version */
     if (driver)
     {
         /* Check interface version */
@@ -46,6 +46,8 @@ OOP_Object * METHOD(GALLIUMDRIVERFACTORY, Hidd_GalliumDriverFactory, GetDriver)
         /* Only matching version is allowed */
         if (msg->galliuminterfaceversion != (ULONG)galliuminterfaceversion)
         {
+            bug("[GalliumDriverFactory] Error - client requested interface version %d while driver supplies version %d\n",
+                msg->galliuminterfaceversion, galliuminterfaceversion);
             OOP_DisposeObject(driver);
             driver = NULL;
         }
