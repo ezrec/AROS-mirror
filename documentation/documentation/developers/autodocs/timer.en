@@ -140,9 +140,9 @@ Result
 ~~~~~~
 ::
 
-     < 0 if dest has more time than src (ie dest > src)
-     = 0 if dest and src are the same (ie dest == src)
-     > 0 if dest has less time than src (ie dest < src)
+     -1 if dest has more time than src (i.e. dest > src)
+      0 if dest and src are the same (i.e. dest == src)
+     +1 if dest has less time than src (i.e. dest < src)
 
 
 Notes
