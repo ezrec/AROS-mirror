@@ -136,7 +136,7 @@ HiddSoftpipeUpdateBuffer( struct pipe_winsys *ws, void *context_private )
 }
 
 static void
-HiddSoftpipeDestroy( struct pipe_winsys *ws)
+HiddSoftpipeDestroyWinSys( struct pipe_winsys *ws)
 {
     FreeVec(ws);
 }
@@ -166,7 +166,7 @@ HiddSoftpipeCreateSoftpipeWinsys( void )
     ws->flush_frontbuffer = HiddSoftpipeFlushFrontBuffer;
     ws->update_buffer = HiddSoftpipeUpdateBuffer;
     ws->get_name = NULL; /* FIXME */
-    ws->destroy = HiddSoftpipeDestroy;
+    ws->destroy = HiddSoftpipeDestroyWinSys;
 
     return ws;
 }

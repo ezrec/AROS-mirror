@@ -16,7 +16,9 @@
 #include "aros_agp_hack.h"
 
 OOP_AttrBase __IHidd_PCIDev = 0;
+#if !defined(HIDD_BUILD)
 struct Library * OOPBase    = NULL;
+#endif
 OOP_Object * pciDriver      = NULL;
 OOP_Object * pciBus         = NULL;
 
@@ -85,6 +87,7 @@ AROS_UFH3(void, Enumerator,
 static void 
 drm_aros_pci_find_card(struct drm_driver *drv)
 {
+#if !defined(HIDD_BUILD)
     if (!OOPBase)
     {
         if ((OOPBase=OpenLibrary("oop.library", 0)) != NULL)
@@ -97,6 +100,9 @@ drm_aros_pci_find_card(struct drm_driver *drv)
             return;
         }
     }
+#else
+    __IHidd_PCIDev = OOP_ObtainAttrBase(IID_Hidd_PCIDevice);
+#endif
 
     DRM_DEBUG("Creating PCI object\n");
 
@@ -180,10 +186,12 @@ void drm_aros_pci_shutdown(struct drm_driver *drv)
         __IHidd_PCIDev = 0;
     }
     
+#if !defined(HIDD_BUILD)
     if (OOPBase)
     {
         CloseLibrary(OOPBase);
         OOPBase = NULL;
     }
+#endif
 }
 

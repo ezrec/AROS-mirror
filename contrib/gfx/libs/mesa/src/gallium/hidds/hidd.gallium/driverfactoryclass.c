@@ -14,6 +14,7 @@
 #define HiddGalliumBaseDriverAttrBase   (SD(cl)->hiddGalliumBaseDriverAB)
 
 struct Library * HIDDSoftpipeBase = NULL;
+struct Library * HIDDNouveauBase = NULL;
 
 OOP_Object * METHOD(GALLIUMDRIVERFACTORY, Root, New)
 {
@@ -24,17 +25,39 @@ OOP_Object * METHOD(GALLIUMDRIVERFACTORY, Root, New)
 
 OOP_Object * METHOD(GALLIUMDRIVERFACTORY, Hidd_GalliumDriverFactory, GetDriver)
 {
-    /* TODO: add logic to crate specialized drivers */
     OOP_Object * driver = NULL;
+    BOOL isnvidiahiddloaded = FALSE;
+    /* Make sure this method is stateless */
     
-    if (HIDDSoftpipeBase == NULL)
+    /* TODO: Use locking for the part of loading hidds */
+    
+    /* TODO: Detect if nvidia.hidd is loaded */
+
+    if (!isnvidiahiddloaded)
     {
-        if (!(HIDDSoftpipeBase = OpenLibrary("softpipe.hidd", 1)))
-            return NULL;
+        /* nvidia.hidd is not loaded so we might try loading nouveau.hidd */
+        if (!HIDDNouveauBase)
+            HIDDNouveauBase = OpenLibrary("nouveau.hidd", 1);
+        
+        if (HIDDNouveauBase)
+        {
+            /* If the nouveau.hidd loaded, it means compatible nvidia card
+               was found */
+            driver = OOP_NewObject(NULL, "hidd.gallium.nouveaudriver", NULL);
+        }
     }
     
-    driver = OOP_NewObject(NULL, "hidd.gallium.softpipedriver", NULL);
-    
+    if (!driver)
+    {
+        /* No driver so far. Try loading the softpipe driver */        
+        if (HIDDSoftpipeBase == NULL)
+        {
+            if (!(HIDDSoftpipeBase = OpenLibrary("softpipe.hidd", 1)))
+                return NULL;
+        }
+        
+        driver = OOP_NewObject(NULL, "hidd.gallium.softpipedriver", NULL);
+    }
     
     /* Check driver interface version in relation to client version */
     if (driver)
