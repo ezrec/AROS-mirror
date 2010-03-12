@@ -3,7 +3,7 @@ AROS Debugging Manual
 =====================
 
 :Authors:   David Le Corfec
-:Copyright: Copyright (C) 2004-2008, The AROS Development Team
+:Copyright: Copyright (C) 2004-2010, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Work in progress.
@@ -31,9 +31,6 @@ the native port.
 Application developers need to ensure that their programs release all
 the resources they take. AROS provides some tools for this.
 
-If you need to debug a problem that only arises without ``--enable-debug``
-you can try to ``./configure --enable-debug --with-optimization=-O2``.
-
 -------------------------
 Printing debug statements
 -------------------------
@@ -49,7 +46,7 @@ Printing debug statements
 Use ``bug()`` alone to force debug output whatever is the value of ``DEBUG``.
 The usage is the same as ``printf()``.
 On hosted, the output will be displayed in the console where AROS
-has been started.
+has been started. On native you have to use the tool Sashimi.
 
 ---------------------------
 With AROS hosted: using GDB
@@ -59,6 +56,11 @@ You can either run AROS under GDB, or use GDB after AROS has terminated
 and left a core dump. Don't forget to compile AROS with debugging enabled
 first (``./configure --enable-debug``).
 
+If you need to debug a problem that only arises without ``--enable-debug``
+you can try to ``./configure --enable-debug --with-optimization=-O2``.
+
+GDB must be started from the directory where the file .gdbinit exists, not
+from the boot subdirectory.
 
 Live debugging
 ==============
@@ -66,7 +68,7 @@ Live debugging
 Start GDB like below::
 
     > cd /AROS/bin/linux-i386/AROS/
-    > gdb aros
+    > gdb boot/aros-unix
     GNU gdb 6.0-debian
     Copyright 2003 Free Software Foundation, Inc.
     GDB is free software, covered by the GNU General Public License, and you are
@@ -95,7 +97,7 @@ Then run AROS and generate a core dump::
 
     > cd /AROS/bin/linux-i386/AROS/
     > ulimit -c unlimited # see your shell manual to enable core dumps
-    > ./aros
+    > ./boot/aros-unix
     Quit (core dumped)
 
 Now you can start GDB, by specifying the aros executable name and the core file::
@@ -298,7 +300,7 @@ So hopefully you can find the error::
 
 Repeat for the remaining addresses you wish to resolve.
 
-There is the new ``loadseg`` function which makes ``findaddr`` and ``add-symbol-file``
+There is the ``loadseg`` function which makes ``findaddr`` and ``add-symbol-file``
 in one step. Use it with the address argument which you'd use with ``findaddr``.
 
 Using thistask
@@ -329,6 +331,16 @@ debugging when a specific condition occurs::
 
     if (byteSize == 112)
         asm("int3");
+
+Debugging without build system
+------------------------------
+
+You can debug applications and modules which weren't created by
+the build-system. You have to build them debugging friendly like
+described in the GDB manual under "Compiling for Debugging". In
+short: use -g, don't use -O and -fomit-frame-pointer. Of course,
+AROS itself must be built with --enable-debug.
+
 
 GUI frontends
 -------------
@@ -425,15 +437,22 @@ Misc Wanderer tools
 Snoopy
 ------
 
-Snoopy (sys:utilities/snoopy) patches some library functions in such a way that their arguments
-and result are print to the debugging console.
+Snoopy (sys:utilities/snoopy) patches some library functions in such
+a way that their arguments and result are print to the debugging console.
 
 Sashimi
 -------
 
-Sashimi (sys:tools/debug/sashimi) shows all debugging output in a Wanderer window.
-This is useful when you want to see debug output of AROS when it's build without debug support
-or you can't read the serial output.
+Sashimi (sys:tools/debug/sashimi) shows all debugging output in a
+Wanderer window. This is useful when you want to see debug output of AROS
+when it's build without debug support or you can't read the serial output.
+
+Scout
+-----
+
+Scout is a tool that allows you to monitor your computer system. It displays
+many different things -- like tasks, ports, assigns, expansion boards, resident
+commands, interrupts, etc. -- and you can perform some certain actions on them. 
 
 
 Tips and tricks
