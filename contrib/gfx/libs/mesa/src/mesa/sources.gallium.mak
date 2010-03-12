@@ -14,8 +14,11 @@ AROS_WINSYS_SOURCES = \
             winsys/drm/intel/gem/intel_drm_batchbuffer \
             winsys/drm/intel/gem/intel_drm_fence \
             winsys/drm/intel/gem/intel_drm_buffer \
+
+AROS_LIBDRM_CORE_SOURCES = \
+            winsys/aros/drm/libdrm/arosdrm \
             
-AROS_LIBDRM_SOURCES = \
+AROS_LIBDRM_NVIDIA_SOURCES = \
             winsys/aros/drm/libdrm/nouveau/nouveau_device \
             winsys/aros/drm/libdrm/nouveau/nouveau_resource \
             winsys/aros/drm/libdrm/nouveau/nouveau_pushbuf \
@@ -24,9 +27,12 @@ AROS_LIBDRM_SOURCES = \
             winsys/aros/drm/libdrm/nouveau/nouveau_channel \
             winsys/aros/drm/libdrm/nouveau/nouveau_bo \
             winsys/aros/drm/libdrm/nouveau/nouveau_reloc \
+            winsys/aros/drm/libdrm/arosdrm_nouveau \
+
+AROS_LIBDRM_INTEL_SOURCES = \
             winsys/aros/drm/libdrm/intel/intel_bufmgr \
             winsys/aros/drm/libdrm/intel/intel_bufmgr_gem \
-            winsys/aros/drm/libdrm/arosdrm \
+            winsys/aros/drm/libdrm/arosdrm_intel \
 
 AROS_DRM_CORE_SOURCES = \
             winsys/aros/drm/drm-aros/aros_agp_hack \
@@ -303,7 +309,9 @@ GALLIUM_I915_SOURCES = \
 AROS_GALLIUM_SOURCES = \
             $(AROS_STATE_TRACKER_SOURCES) \
             $(AROS_WINSYS_SOURCES) \
-            $(AROS_LIBDRM_SOURCES) \
+            $(AROS_LIBDRM_CORE_SOURCES) \
+            $(AROS_LIBDRM_NVIDIA_SOURCES) \
+            $(AROS_LIBDRM_INTEL_SOURCES) \
             $(AROS_DRM_CORE_SOURCES) \
             $(AROS_DRM_NVIDIA_SOURCES) \
             $(AROS_DRM_INTEL_SOURCES) \
