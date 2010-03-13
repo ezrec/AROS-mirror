@@ -11355,7 +11355,7 @@ Function
 ~~~~~~~~
 ::
 
-     Puch the character c character back into the stream.
+     Push the character c character back into the stream.
 
 
 Inputs

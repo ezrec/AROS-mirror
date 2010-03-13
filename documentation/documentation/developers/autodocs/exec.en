@@ -2529,7 +2529,7 @@ Inputs
 
      source - Pointer to source area
      dest   - Pointer to destination
-     size   - number of bytes to copy
+     size   - number of bytes to copy (may be zero)
 
 
 Notes
@@ -2573,14 +2573,15 @@ Inputs
 
      source - Pointer to source area (must be ULONG aligned)
      dest   - Pointer to destination (must be ULONG aligned)
-     size   - number of bytes to copy (must be a multiple of sizeof(ULONG))
+     size   - number of bytes to copy (must be a multiple of sizeof(ULONG)).
+              May be zero.
 
 
 Notes
 ~~~~~
 ::
 
-     The source and destination area are not allowed to overlap.
+     The source and destination areas are not allowed to overlap.
 
 
 
@@ -4322,7 +4323,7 @@ Inputs
 
      devName    - Pointer to the devices's name.
      unitNumber - The unit number. Most often 0.
-     iORequest  - Pointer do device specific information.
+     iORequest  - Pointer to device specific information.
                   Will be filled out by the device.
                   Must lie in public (or at least shared) memory.
      flags      - Some flags to give to the device.
