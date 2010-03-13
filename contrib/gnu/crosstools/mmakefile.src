@@ -1,10 +1,10 @@
-# Copyright © 2008, The AROS Development Team. All rights reserved.
+# Copyright © 2008, 2010, The AROS Development Team. All rights reserved.
 # $Id$
 
 -include $(TOP)/config/make.cfg
 
 GCC_VERSION = 4.2.2
-BINUTILS_VERSION = 2.19
+BINUTILS_VERSION = 2.20.1
 
 GCC_LANGUAGES = c,c++
 
