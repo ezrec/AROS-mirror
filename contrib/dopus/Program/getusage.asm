@@ -30,7 +30,7 @@
 
 	XDEF _getusage
 
-	section code
+	section code,code
 
 _getusage:
 	movem.l d1-d3/a6,-(sp)
@@ -65,6 +65,13 @@ getpcent:
 	add.l d1,d3
 	move.l d0,d1
 	move.l d3,d0
+	IFGE __CPU-68020
+	tst d1
+	beq.s div_by_0
+	divu.l d1,d0
+div_by_0
+	rts
+	ELSE
 	bsr div32
 	rts
 
@@ -138,8 +145,9 @@ div7
 	exg d1,d0
 div8
 	rts
+	ENDIF
 
-	section data
+;	section data,data
 
 oldidl
 	dc.l 0

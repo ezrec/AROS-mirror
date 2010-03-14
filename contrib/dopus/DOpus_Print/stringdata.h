@@ -32,7 +32,7 @@ the existing commercial status of Directory Opus 5.
 #define STRING_DATA_H
 
 struct DefaultString {
-	USHORT string_id;
+	UWORD string_id;
 	char *string;
 };
 

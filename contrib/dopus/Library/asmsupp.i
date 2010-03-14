@@ -34,3 +34,6 @@ _LVOFreeRemember equ -$198
 _LVOSetWindowPointerA equ -$330
 
 _LVOSPMul equ -$4e
+
+_LVOToLower equ -$b4
+_LVOToUpper equ -$ae

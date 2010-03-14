@@ -225,7 +225,7 @@ char *name;
 		**ttarray,**oldtooltypes,**tttemp;
 	struct DOpusDateTime datetime;
 	ULONG class;
-	USHORT code;
+	UWORD code;
 	int a,b,x,y,gadgetid,ret,gotid=0,newdef,ttcount=0,curtt=-1,compflag=0;
 	BPTR lock;
 	struct InfoData __aligned infodata;
@@ -894,7 +894,7 @@ void remapimage(icon)
 struct Image *icon;
 {
 	int wordwidth,row,col,plane,planesize,rowpos,pen,bit;
-	USHORT *plane_ptr[8];
+	UWORD *plane_ptr[8];
 
 	wordwidth=(icon->Width+15)/16;
 	planesize=wordwidth*icon->Height;

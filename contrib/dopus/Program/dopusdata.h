@@ -33,7 +33,7 @@ the existing commercial status of Directory Opus 5.
 
 /* SAS Detach information */
 
-extern long _stack;                              /* Stack size needed */
+//extern long _stack;                              /* Stack size needed */
 extern long _priority;                           /* Default task priority */
 extern long _BackGroundIO;                       /* Background IO off */
 extern char *_procname;                          /* Task name */
@@ -45,13 +45,24 @@ extern struct IntuitionBase *IntuitionBase;      /* intuition.library */
 extern struct GfxBase *GfxBase;                  /* graphics.library */
 extern struct Library *IconBase;                 /* icon.library */
 extern struct Library *DiskfontBase;             /* diskfont.library */
-extern struct Library *PPBase;                   /* powerpacker.library */
+extern struct PPBase *PPBase;                    /* powerpacker.library */
 extern struct Library *LayersBase;               /* layers.library */
 extern struct Library *WorkbenchBase;            /* workbench.library */
-extern struct Library *MUSICBase;                /* music.library */
+extern struct MusicBase *MUSICBase;              /* music.library */
 extern struct Library *CxBase;                   /* commodities.library */
+extern struct Library *RexxSysBase;              /* rexxsyslib.library */
 extern struct Library *AccountsBase;             /* accounts.library */
-extern struct UtilityBase *UtilityBase;              /* utility.library */
+extern struct Library *UtilityBase;              /* utility.library */
+extern struct Library *CyberGfxBase;             /* cybergraphics.library */
+extern struct PopupMenuBase *PopupMenuBase;      /* popupmenu.library */
+extern struct xfdMasterBase *xfdMasterBase;      /* xfdmaster.library */
+extern struct xadMasterBase *xadMasterBase;      /* xadmaster.library */
+extern struct Library *SysInfoBase;              /* sysinfo.library */
+extern struct Library *LocaleBase;               /* locale.library */
+extern struct muBase *muBase;                    /* multiuser.library */
+extern struct Library *DataTypesBase;            /* datatypes.library */
+extern struct Library *AmigaGuideBase;           /* amigaguide.library */
+extern struct Library *GadToolsBase;             /* gadtools.library */
 
 extern struct DosLibrary *DOSBase;               /* dos.library */
 extern struct ExecBase *SysBase;                 /* exec.library */
@@ -67,13 +78,12 @@ extern struct Window *Window;                    /* Main window */
 extern struct Window *fontwindow;                /* Window for font display */
 extern struct Window *ansiread_window;           /* Window for rendering ANSI text */
 extern struct Window *reqoverride;               /* Pointer for SimpleRequest window */
+extern struct PopupMenu *sortmenu;               /* Sort pop-up menu */
 
 /* Graphics objects */
 
-extern struct ViewPort *main_vp;                 /* Main screen ViewPort */
-
+//extern struct ViewPort *main_vp;                 /* Main screen ViewPort */
 extern struct RastPort *main_rp;                 /* Main window RastPort */
-extern struct RastPort *font_rp;                 /* Font window RastPort */
 extern struct RastPort *bar_rp;                  /* Screen BarLayer RastPort */
 extern struct RastPort dir_rp[2];                /* Directory window RastPorts */
 
@@ -93,17 +103,17 @@ extern struct Task *clock_task;                  /* Clock Task */
 
 extern struct MsgPort *count_port;               /* Port to establish run count */
 extern struct MsgPort *general_port;             /* General Message Port */
-extern struct MsgPort *audio_port[2];            /* 8SVX Sound player Ports */
 extern struct MsgPort *appmsg_port;              /* AppObject Message Port */
 extern struct MsgPort *arexx_port;               /* ARexx Port */
+extern struct MsgPort *snm_port;                 /* ScreenNotify Port */
 
 extern struct MsgPort *hotkeymsg_port;           /* Messages to the hotkey task */
 extern struct MsgPort *clockmsg_port;            /* Messages to the clock task */
 
-extern struct IOStdReq *keyboard_req;            /* Keyboard IO Request block */
+//extern struct IOStdReq *keyboard_req;            /* Keyboard IO Request block */
 extern struct IOStdReq *input_req;               /* Input IO Request block */
-extern struct IOAudio *audio_req1[2];            /* Audio IO Request block #1 */
-extern struct IOAudio *audio_req2[2];            /* Audio IO Request block #2 */
+
+extern struct SysInfo *sysinfo;                  /* SysInfo.library */
 
 /* DOS objects */
 
@@ -120,16 +130,19 @@ extern void *old_pr_consoletask;                 /* Old pr_ConsoleTask pointer *
 extern struct DOpusRemember *general_key;        /* General memory key */
 extern struct DOpusRemember *help_key;           /* Memory key for help files */
 extern struct DOpusRemember *filetype_key;       /* Memory key for filetype list */
-extern struct DOpusRemember *audio_key;          /* Memory key for 8SVX player */
 extern struct DOpusRemember *menu_key;           /* Memory key for menus */
 
-extern USHORT *nullpalette;                      /* Pointer to a black palette */
-extern UBYTE *audiodata;                         /* Audio data to play */
-extern ULONG audio_size;                         /* Size of audio data */
+extern UWORD *nullpalette;                      /* Pointer to a black palette */
 
 extern struct UserInfo *user_info;               /* UserInfo for envoy */
 extern struct GroupInfo *group_info;             /* GroupInfo for envoy */
+extern struct muUserInfo *mu_userinfo;           /* UserInfo for multiuser */
+extern struct muGroupInfo *mu_groupinfo;         /* GroupInfo for multiuser */
 
+extern struct ScreenNotifyMessage *snm;
+extern APTR snm_handle;                          /* ScreenNotify handle */
+
+extern struct Locale *locale;
 
 /* Directory Opus Internal objects */
 
@@ -137,17 +150,17 @@ extern struct Directory *last_selected_entry;    /* The last entry selected */
 extern struct Help *dopus_firsthelp;             /* The first help message */
 extern struct dopusfiletype *dopus_firsttype;    /* The first filetype */
 extern struct dopusgadgetbanks
-	*dopus_firstgadbank;                           /* The first gadget bank */
+    *dopus_firstgadbank;                           /* The first gadget bank */
 extern struct dopusgadgetbanks
-	*dopus_curgadbank;                             /* The current gadget bank */
+    *dopus_curgadbank;                             /* The current gadget bank */
 extern struct dopushotkey *dopus_firsthotkey;    /* The first hotkey */
 extern struct dopushotkey *dopus_globalhotkey;   /* The last hotkey function */
 
 extern struct DirectoryWindow *dopus_curwin[2];  /* Currently displayed buffer */
 extern struct DirectoryWindow
-	*dopus_firstwin[2];                            /* First buffer in each window */
+    *dopus_firstwin[2];                            /* First buffer in each window */
 extern struct DirectoryWindow
-	*dopus_specialwin[2];                          /* Special buffer for each window */
+    *dopus_specialwin[2];                          /* Special buffer for each window */
 extern struct DirectoryWindow *dopus_oldwin[2];  /* Last buffer displayed */
 
 extern void *dir_memory_pool;                    /* Memory pool for allocations */
@@ -159,8 +172,8 @@ extern char str_config_basename[256];            /* Configuration file path name
 extern char str_config_file[256];                /* Configuration file */
 extern char str_dopusrt_path[256];               /* DOpusRT path name */
 
-extern char str_select_info[80];                 /* Status bar text for selection info */
-extern char *str_select_pattern[3];              /* Three different Select patterns */
+extern char str_select_info[128];                /* Status bar text for selection info */
+extern char *str_select_pattern[4];              /* Four different Select patterns */
 extern char *str_arexx_command;                  /* Entered ARexx command string */
 extern char *str_space_string;                   /* 255 spaces in a string */
 extern char str_hunt_name[80];                   /* File name to hunt for */
@@ -168,14 +181,17 @@ extern char str_hunt_name_parsed[164];           /* Hunt file parsed */
 extern char str_search_string[80];               /* String to search for */
 extern char str_filter[40];                      /* File filter for searching */
 extern char str_filter_parsed[84];               /* File filter parsed */
+extern char str_arcorgname[FILEBUF_SIZE];
 
 extern char str_version_string[30];              /* Current version string */
 extern char str_arexx_portname[30];              /* ARexx Port name */
 
-extern UBYTE var_key_matrix[13];                 /* Keyboard matrix data area */
+//extern UBYTE var_key_matrix[13];                 /* Keyboard matrix data area */
 extern char *str_last_statustext;                /* Last status text displayed */
 
-extern char str_last_rexx_result[256];           /* Last ARexx result */
+extern char *str_last_rexx_result;               /* Last ARexx result */
+
+extern const char *str_protbits;
 
 /* Various data */
 
@@ -191,7 +207,7 @@ extern ULONG status_flags;                       /* Various status bits */
 extern BYTE data_active_window;                  /* Active directory window */
 extern UBYTE data_buffer_count[2];               /* Number of buffers in each window */
 extern BYTE data_gadgetrow_offset;               /* Gadget row offset */
-extern SHORT data_drive_offset;                  /* Current drive offset */
+extern WORD data_drive_offset;                  /* Current drive offset */
 extern ULONG data_colorclock;                    /* Color clock value for this system */
 
 extern ULONG time_current_sec;                   /* Current Second (from Intuition) */
@@ -202,13 +218,14 @@ extern ULONG time_previous_micro;                /* Previous Micro (from Intuiti
 extern UBYTE system_version2;                    /* OS version 2 or greater */
 extern int system_dopus_runcount;                /* Run count of this copy */
 
-extern ULONG data_window_refresh;                /* Windows that need refreshing */
+extern UWORD scr_gadget_rows;                   /* Number of button rows */
+extern UWORD scr_gadget_bank_count;             /* Number of button banks */
 
-extern USHORT scr_gadget_rows;                   /* Number of button rows */
-extern USHORT scr_gadget_bank_count;             /* Number of button banks */
+extern UWORD scr_min_width;                     /* Minimum window width */
+extern UWORD scr_min_height;                    /* Minimum window height */
 
-extern USHORT scr_min_width;                     /* Minimum window width */
-extern USHORT scr_min_height;                    /* Minimum window height */
+extern int askeach;                              /* Should replace requester be displayed */
+extern int autoskip;                             /* Should files be automatically owerwritten */
 
 /* Configuration data */
 
@@ -217,14 +234,22 @@ extern BPTR configopus_segment;                  /* Segment pointer for ConfigOp
 extern BPTR external_mod_segment[3];             /* External module segments */
 extern BYTE config_changed;                      /* Configuration has been changed */
 
+extern const char *config_replyport_basename;
+
 /* Disk and DOS operations data */
 
 extern UBYTE disk_change_state;                  /* Lower bits indicate change state */
-
+#ifndef __GNUC__
 extern ULONG dos_global_bytecount;               /* Global byte count from recursive op */
 extern ULONG dos_global_copiedbytes;             /* Bytes copied in a recursive op */
 extern ULONG dos_global_deletedbytes;            /* Bytes copied in a recursive op */
+#else
+extern unsigned long long dos_global_bytecount;               /* Global byte count from recursive op */
+extern unsigned long long dos_global_copiedbytes;             /* Bytes copied in a recursive op */
+extern unsigned long long dos_global_deletedbytes;            /* Bytes copied in a recursive op */
+#endif
 extern ULONG dos_global_blocksneeded;            /* Number of blocks needed to copy */
+extern ULONG dos_global_files;                   /* Number of files found in recursive op */
 
 extern struct DateStamp dos_copy_date;           /* DateStamp of file last copied */
 extern ULONG dos_copy_protection;                /* Protection of file last copied */
@@ -242,25 +267,21 @@ extern char dos_notify_names[2][256];            /* Notify requests name buffers
 extern struct recpath *rec_firstpath;            /* Directory path list pointer */
 extern struct DOpusRemember *rec_pathkey;        /* Memory key for dir list */
 
-extern struct Requester dopus_busy_requester;    /* Busy requester */
-
 extern char *icon_type_names[];                  /* Names of different icon types */
 
 extern struct DOpusRemember *recurse_dir_key;    /* Memory key for RecursiveDirectory's */
 extern struct RecursiveDirectory *first_recurse; /* First recursive directory pointer */
 extern int recurse_max_depth;                    /* Maximum depth reached */
-extern struct RecursiveDirectory
-	**recurse_parent_array;                        /* Array of parent directories */
 
 extern struct path_complete completion[2];       /* Path-name completion data */
 
 /* DateTime stuff */
 
-extern char *date_months[12];                    /* Months */
-extern char *date_shortmonths[12];               /* Short months */
-extern char *date_weekdays[7];                   /* Weekdays */
-extern char *date_shortweekdays[7];              /* Short weekdays */
-extern char *date_special[4];                    /* Special days */
+//extern char *date_months[12];                    /* Months */
+//extern char *date_shortmonths[12];               /* Short months */
+//extern char *date_weekdays[7];                   /* Weekdays */
+//extern char *date_shortweekdays[7];              /* Short weekdays */
+//extern char *date_special[4];                    /* Special days */
 
 extern struct StringData stringdata;             /* String data */
 
@@ -272,5 +293,6 @@ extern struct Gadget closegadget_gad;
 extern struct Gadget upfrontgadget_gad;
 extern struct Gadget downbackgadget_gad;
 
+extern struct DiskObject *user_appicon;          // HUX: User selected app icon
 
 #endif

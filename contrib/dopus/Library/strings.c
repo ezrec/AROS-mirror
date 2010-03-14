@@ -30,160 +30,54 @@ the existing commercial status of Directory Opus 5.
 
 #include "dopuslib.h"
 
-/*****************************************************************************
-
-    NAME */
-
-	AROS_LH4(int, StrCombine,
-
-/*  SYNOPSIS */
-	AROS_LHA(char *, buf, A0),
-	AROS_LHA(char *, one, A1),
-	AROS_LHA(char *, two, A2),
-	AROS_LHA(int, lim, D0),
-
-/*  LOCATION */
-	struct Library *, DOpusBase, 25, DOpus)
-/*  FUNCTION
-
-    INPUTS
-
-    RESULT
-
-    NOTES
-
-    EXAMPLE
-
-    BUGS
-
-    SEE ALSO
-
-    INTERNALS
-
-    HISTORY
-	27-11-96    digulla automatically created from
-			    asl_lib.fd and clib/asl_protos.h
-
-*****************************************************************************/
+__saveds DoStrCombine(register char *buf __asm("a0"),
+    register char *one __asm("a1"),
+    register char *two __asm("a2"),
+    register int lim __asm("d0"))
 {
-	AROS_LIBFUNC_INIT
-	
-	register int a;
+    register int a;
 
-	a=strlen(one); if (a>=lim) a=lim-1;
-	strncpy(buf,one,a); buf[a]=0;
-	return(StrConcat(buf,two,lim));
-
-	AROS_LIBFUNC_EXIT
+    a=strlen(one); if (a>=lim) a=lim-1;
+    LStrnCpy(buf,one,a); buf[a]=0;
+    return(DoStrConcat(buf,two,lim));
 }
 
-/*****************************************************************************
-
-    NAME */
-
-	AROS_LH3(int, StrConcat,
-
-/*  SYNOPSIS */
-	AROS_LHA(char *, buf, A0),
-	AROS_LHA(char *, cat, A1),
-	AROS_LHA(int, lim, D0),
-
-/*  LOCATION */
-	struct Library *, DOpusBase, 26, DOpus)
-/*  FUNCTION
-
-    INPUTS
-
-    RESULT
-
-    NOTES
-
-    EXAMPLE
-
-    BUGS
-
-    SEE ALSO
-
-    INTERNALS
-
-    HISTORY
-	27-11-96    digulla automatically created from
-			    asl_lib.fd and clib/asl_protos.h
-
-*****************************************************************************/
+__saveds DoStrConcat(register char *buf __asm("a0"),
+    register char *cat __asm("a1"),
+    register int lim __asm("d0"))
 {
-	AROS_LIBFUNC_INIT
+    register int a,b;
 
-	register int a,b;
-
-	a=strlen(cat); b=strlen(buf);
-	--lim;
-	if (a+b<lim) {
-		strncpy(&buf[b],cat,a); buf[b+a]=0;
-		return(1);
-	}
-	if (lim>b) strncpy(&buf[b],cat,lim-b); buf[lim]=0;
-	return(0);
-	
-	AROS_LIBFUNC_EXIT
+    a=strlen(cat); b=strlen(buf);
+    --lim;
+    if (a+b<lim) {
+        LStrnCpy(&buf[b],cat,a); buf[b+a]=0;
+        return(1);
+    }
+    if (lim>b) LStrnCpy(&buf[b],cat,lim-b); buf[lim]=0;
+    return(0);
 }
 
-
-/*****************************************************************************
-
-    NAME */
-
-	AROS_LH2(int, Atoh,
-
-/*  SYNOPSIS */
-	AROS_LHA(char *, buf, A0),
-	AROS_LHA(int, len, D0),
-
-/*  LOCATION */
-	struct Library *, DOpusBase, 66, DOpus)
-/*  FUNCTION
-
-    INPUTS
-
-    RESULT
-
-    NOTES
-
-    EXAMPLE
-
-    BUGS
-
-    SEE ALSO
-
-    INTERNALS
-
-    HISTORY
-	27-11-96    digulla automatically created from
-			    asl_lib.fd and clib/asl_protos.h
-
-*****************************************************************************/
+__saveds DoAtoh(register unsigned char *buf __asm("a0"),
+    register int len __asm("d0"))
 {
-	AROS_LIBFUNC_INIT
+    int a,c,d,e,f;
 
-	int a,c,d,e,f;
-
-	c=e=0;
-	for (a=0;;a++) {
-		if (!buf[a] || !((buf[a]>='0' && buf[a]<='9') || (buf[a]>='a' && buf[a]<='f') ||
-			(buf[a]>='A' && buf[a]<='F'))) break;
-		if ((++e)==len) break;
-	}
-	if (e==0) return(0);
-	f=1;
-	for (a=1;a<e;a++) f*=16;
-	for (a=0;a<e;a++) {
-		if (buf[a]>='0' && buf[a]<='9') d=buf[a]-'0';
-		else if (buf[a]>='A' && buf[a]<='F') d=10+(buf[a]-'A');
-		else if (buf[a]>='a' && buf[a]<='f') d=10+(buf[a]-'a');
-		c+=(d*f);
-		f/=16;
-	}
-	return(c);
-	
-	AROS_LIBFUNC_EXIT
+    c=e=0;
+    for (a=0;;a++) {
+        if (!buf[a] || !((buf[a]>='0' && buf[a]<='9') || (buf[a]>='a' && buf[a]<='f') ||
+            (buf[a]>='A' && buf[a]<='F'))) break;
+        if ((++e)==len) break;
+    }
+    if (e==0) return(0);
+    f=1;
+    for (a=1;a<e;a++) f*=16;
+    for (a=0;a<e;a++) {
+        if (buf[a]>='0' && buf[a]<='9') d=buf[a]-'0';
+        else if (buf[a]>='A' && buf[a]<='F') d=10+(buf[a]-'A');
+        else if (buf[a]>='a' && buf[a]<='f') d=10+(buf[a]-'a');
+        c+=(d*f);
+        f/=16;
+    }
+    return(c);
 }

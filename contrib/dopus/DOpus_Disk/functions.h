@@ -28,8 +28,6 @@ the existing commercial status of Directory Opus 5.
 
 */
 
-void lsprintf __ARGS((char *,char *,...));
-
 void main(int,char **);
 void get_vis_info(struct VisInfo *,char *);
 dopus_message(int,APTR,char *);

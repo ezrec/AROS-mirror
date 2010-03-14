@@ -130,7 +130,7 @@ char *argv[];
 	struct DOpusListView *devicelist,*view;
 	struct Gadget *gadlist;
 	ULONG class,mask;
-	USHORT code,gadgetid;
+	UWORD code,gadgetid;
 	APTR iaddress;
 	int gadcount=0,ignorechange=0,a,b;
 	int start=-1,startffs=0,startnoboot=0;
@@ -238,7 +238,7 @@ char *argv[];
 						break;
 
 					case IDCMP_VANILLAKEY:	
-						code=toupper(code);
+						code=ToUpper(code);
 						switch (code) {
 							case 'F':
 								if (!mask) {

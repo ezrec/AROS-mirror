@@ -1,19 +1,19 @@
-#include "dopus.h"
+#include <proto/exec.h>
+#include <exec/execbase.h>
 
 
-ULONG oldidle;
-ULONG olddisp;
+static ULONG oldidle,olddisp;
 
-int getusage()
+int getusage(void)
 {
-	LONG idlediff, dispdiff;
-	
-	idlediff = SysBase->IdleCount - oldidle;
-	dispdiff = SysBase->DispCount - olddisp;
-	
-	oldidle = SysBase->IdleCount;
-	olddisp = SysBase->DispCount;
-	
-	return (idlediff / (idlediff + dispdiff)) * 100;
-	
+    LONG idlediff, dispdiff;
+    
+    idlediff = SysBase->IdleCount - oldidle;
+    dispdiff = SysBase->DispCount - olddisp;
+    
+    oldidle = SysBase->IdleCount;
+    olddisp = SysBase->DispCount;
+
+    return ((idlediff+dispdiff)?(dispdiff * 100 / (idlediff + dispdiff)):100);
+    
 }

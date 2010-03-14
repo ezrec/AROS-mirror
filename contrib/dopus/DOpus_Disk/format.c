@@ -198,7 +198,7 @@ char *argv[];
 	struct DOpusListView *devicelist,*view;
 	struct Gadget *gadlist,*gad,*gad_international=NULL,*gad_caching=NULL;
 	ULONG class,mask,flags;
-	USHORT code,gadgetid;
+	UWORD code,gadgetid;
 	APTR iaddress;
 	struct StringExtend stringex;
 	char *diskname;
@@ -357,7 +357,7 @@ char *argv[];
 
 					case IDCMP_VANILLAKEY:	
 						a=0;
-						code=toupper(code);
+						code=ToUpper(code);
 						switch (code) {
 							case 'N':
 								ActivateStrGad(gadlist,window);

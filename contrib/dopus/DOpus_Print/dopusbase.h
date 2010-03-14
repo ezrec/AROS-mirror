@@ -341,7 +341,7 @@ char LToLower(char);
 char LToUpper(char);
 PathName(BPTR,char *,int);
 Random(int);
-RawkeyToStr(USHORT,USHORT,char *,char *,int);
+RawkeyToStr(UWORD,UWORD,char *,char *,int);
 RefreshListView(struct DOpusListView *,int);
 void RefreshStrGad(struct Gadget *,struct Window *);
 RemoveListView(struct DOpusListView *,int);

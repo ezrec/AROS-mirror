@@ -1,14 +1,10 @@
 # $Id$
 include $(SRCDIR)/$(CURDIR)/../make.cfg
 
-FILES	:= data
-
-FUNCTIONS	:= \
+FILES	:= \
+	functions	\
 	simplerequest	\
 	filereq		\
-	graphics	\
-	asmfuncs_in_c	\
-	asmfuncs_in_c_2	\
 	strings		\
 	imagery		\
 	borders		\
@@ -22,7 +18,8 @@ FUNCTIONS	:= \
 	language	\
 	wildcard	\
 	dates		\
-	requesters
+	requesters	\
+	data
 
 #MM- dopus-library : setup includes linklibs
 
@@ -30,5 +27,5 @@ USER_CFLAGS := -D__DOPUS_NOLIBBASE__ -I$(DOPUSDIR)/Development/include
 
 %build_module mmake=dopus-library \
     modname=dopus modtype=library prefix=$(DOPUSDIR) \
-    files="dopus_init $(FUNCTIONS) $(FILES)" \
+    files="dopus_init $(FILES)" \
     uselibs=rom

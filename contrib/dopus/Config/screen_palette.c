@@ -33,45 +33,45 @@ the existing commercial status of Directory Opus 5.
 void showpalettegad(one)
 int one;
 {
-	int a,b,x,y,w,h;
+    int a,b,x,y,w,h;
 
-	b=1<<screen_depth;
-	if (b==4) w=54; else w=27;
-	if (b==16) h=6; else h=12;
-	x=x_off+298;
-	y=y_off+34;
-	for (a=0;a<b;a++) {
-		SetAPen(rp,screen_pens[a].pen);
-		RectFill(rp,x,y,x+w-1,y+h-1);
-		palettegad_xy[a][0]=x;
-		palettegad_xy[a][1]=y;
-		palettegad_xy[a][2]=x+w-1;
-		palettegad_xy[a][3]=y+h-1;
-		if (a==one) drawcompbox(rp,x,y,w,h);
-		x+=w;
-		if (a==7) {
-			x=x_off+298;
-			y=y_off+40;
-		}
-	}
+    b=1<<((screen_depth > 4) ? 4 : screen_depth);
+    if (b==4) w=54; else w=27;
+    if (b==16) h=6; else h=12;
+    x=x_off+298;
+    y=y_off+34;
+    for (a=0;a<b;a++) {
+        SetAPen(rp,screen_pens[a].pen);
+        RectFill(rp,x,y,x+w-1,y+h-1);
+        palettegad_xy[a][0]=x;
+        palettegad_xy[a][1]=y;
+        palettegad_xy[a][2]=x+w-1;
+        palettegad_xy[a][3]=y+h-1;
+        if (a==one) drawcompbox(rp,x,y,w,h);
+        x+=w;
+        if (a==7) {
+            x=x_off+298;
+            y=y_off+40;
+        }
+    }
 }
 
 void scalecol(col)
 ULONG *col;
 {
-	int and;
+    int and;
 
-	and=(1<<bpg)-1;
-	*col&=~and;
-	*col>>=(32-bpg);
+    and=(1<<bpg)-1;
+    *col&=~and;
+    *col>>=(32-bpg);
 }
 
 void scalecolup(col)
 ULONG *col;
 {
-	int and;
+    int and;
 
-	*col<<=(32-bpg);
-	and=(1<<bpg)-1;
-	*col&=~and;
+    *col<<=(32-bpg);
+    and=(1<<bpg)-1;
+    *col&=~and;
 }

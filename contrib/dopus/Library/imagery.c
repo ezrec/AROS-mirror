@@ -19,7 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 All users of Directory Opus 4 (including versions distributed
-
 under the GPL) are entitled to upgrade to the latest version of
 Directory Opus version 5 at a reduced price. Please see
 http://www.gpsoft.com.au for more information.
@@ -29,573 +28,310 @@ the existing commercial status of Directory Opus 5.
 
 */
 
+#define PROTO_DOPUS_H
+#include <dopus/dopusbase.h>
 #include "dopuslib.h"
-#include <aros/macros.h>
-#include <aros/debug.h>
 
-#define DB(x) ((struct DOpusBase *)x)
+extern __chip UWORD pdb_cycletop[];
+extern __chip UWORD pdb_cyclebot[];
+extern __chip UWORD pdb_check[];
 
-struct Image *get_image_data(struct DOpusRemember **,int,int,int,struct BitMap *,struct RastPort *);
-void drawline(struct RastPort *rp,int,int,int,int);
-
-
-/*****************************************************************************
-
-    NAME */
-
-	AROS_LH8(void, DoArrow,
-
-/*  SYNOPSIS */
-	AROS_LHA(struct RastPort *, p, A0),
-	AROS_LHA(int, x, D0),
-	AROS_LHA(int, y, D1),
-	AROS_LHA(int, w, D2),
-	AROS_LHA(int, h, D3),
-	AROS_LHA(int, fg, D4),
-	AROS_LHA(int, bg, D5),
-	AROS_LHA(int, d,  D6),
-
-/*  LOCATION */
-	struct Library *, DOpusBase, 9, DOpus)
-/*  FUNCTION
-
-    INPUTS
-
-    RESULT
-
-    NOTES
-
-    EXAMPLE
-
-    BUGS
-
-    SEE ALSO
-
-    INTERNALS
-
-    HISTORY
-	27-11-96    digulla automatically created from
-			    asl_lib.fd and clib/asl_protos.h
-
-*****************************************************************************/
-
+struct Image * __regargs get_image_data(struct DOpusRemember **key,int width,int height,int depth,struct BitMap *bm,struct RastPort *rp)
 {
-	AROS_LIBFUNC_INIT
+    struct Image *image;
+    UWORD *data;
+    short a,words;
 
-	int x1,y1,x2,y2,x3,y3,x4,y4,xb;
-/* kprintf("DoArrow(rp=%p, x=%d, y=%d, w=%d, h=%d, fg=%d, bg=%d, d=%d)\n"
-	, p, x, y, w, h, fg, bg, d);
-*/
-	SetAPen(p,bg);
-	xb=x+w;
-	RectFill(p,x,y,xb-1,y+h-1);
-	SetAPen(p,fg);
-	switch (d) {
-		case 0:
-			y1=y+h-2;
-			y3=y+1;
-			goto sameupdown;
+    words=(width+15)/16;
 
-		case 1:
-			y1=y+1;
-			y3=y+h-2;
-sameupdown:
-			x1=x+2;
-			x2=xb-3;
-			x3=x+(w/2)-1;
-			x4=xb-(w/2);
-			y2=y1;
-			y4=y3;
-			break;
+    if (!(image=DoAllocRemember(key,sizeof(struct Image),MEMF_CLEAR)) ||
+        !(data=DoAllocRemember(key,words*2*height*depth,MEMF_CHIP|MEMF_CLEAR)))
+        return(NULL);
 
-		case 2:
-			x1=x+1;
-			x3=xb-2;
-			goto sameleftright;
+    InitBitMap(bm,depth,width,height);
+    for (a=0;a<depth;a++) bm->Planes[a]=(PLANEPTR)&data[words*height*a];
+    InitRastPort(rp);
+    rp->BitMap=bm;
 
-		case 3:
-			x1=xb-2;
-			x3=x+1;
-sameleftright:
-			x2=x1;
-			y1=y+1;
-			y2=y+h-2;
-			y3=y+(h/2);
-			if (h%2==0) --y3;
-			x4=x3;
-			y4=y3;
-			break;
-	}
-	drawline(p,x1,y1,x3,y3);
-	drawline(p,x2,y2,x4,y4);
-	
-	AROS_LIBFUNC_EXIT
+    image->Width=width;
+    image->Height=height;
+    image->Depth=depth;
+    image->ImageData=data;
+    image->PlanePick=(1<<depth)-1;
+
+    return(image);
 }
-
-
-/*****************************************************************************
-
-    NAME */
-
-	AROS_LH7(void, DrawRadioButton,
-
-/*  SYNOPSIS */
-	AROS_LHA(struct RastPort *, rp,  A0),
-	AROS_LHA(int, x, 	D0),
-	AROS_LHA(int, y, 	D1),
-	AROS_LHA(int, w, 	D2),
-	AROS_LHA(int, h, 	D3),
-	AROS_LHA(int, hi, 	D4),
-	AROS_LHA(int, lo, 	D5),
-
-/*  LOCATION */
-	struct Library *, DOpusBase, 83, DOpus)
-/*  FUNCTION
-
-    INPUTS
-
-    RESULT
-
-    NOTES
-
-    EXAMPLE
-
-    BUGS
-
-    SEE ALSO
-
-    INTERNALS
-
-    HISTORY
-	27-11-96    digulla automatically created from
-			    asl_lib.fd and clib/asl_protos.h
-
-*****************************************************************************/
-{
-	AROS_LIBFUNC_INIT
-
-	SetAPen(rp,hi);
-	drawline(rp,x,y-1,x+w-3,y-1);
-	drawline(rp,x-1,y,x,y);
-	drawline(rp,x-2,y+1,x-2,y+h-4);
-	drawline(rp,x-1,y+1,x-1,y+h-4);
-	drawline(rp,x-1,y+h-3,x,y+h-3);
-	SetAPen(rp,lo);
-	drawline(rp,x,y+h-2,x+w-3,y+h-2);
-	drawline(rp,x+w-3,y+h-3,x+w-2,y+h-3);
-	drawline(rp,x+w-1,y+h-4,x+w-1,y+1);
-	drawline(rp,x+w-2,y+h-4,x+w-2,y+1);
-	drawline(rp,x+w-3,y,x+w-2,y);
-	
-	AROS_LIBFUNC_EXIT
-}
-
-void drawline(rp,x1,y1,x2,y2)
+/*
+__inline void drawline(rp,x1,y1,x2,y2)
 struct RastPort *rp;
 int x1,y1,x2,y2;
 {
-	Move(rp,x1,y1);
-	Draw(rp,x2,y2);
+    Move(rp,x1,y1);
+    Draw(rp,x2,y2);
+}
+*/
+#define drawline(rp,x1,y1,x2,y2) Move(rp,x1,y1);Draw(rp,x2,y2)
+
+void __saveds Do3DBox(register struct RastPort *rp __asm("a0"),register int x __asm("d0"),register int y __asm("d1"),register int w __asm("d2"),register int h __asm("d3"),register int tp __asm("d4"),register int bp __asm("d5"))
+{
+//D(bug("Do3DBox()\n"));
+    SetAPen(rp,tp);
+
+    drawline(rp,x-2,y-1,x+w,y-1);
+    drawline(rp,x-2,y-1,x-2,y+h);
+    drawline(rp,x-1,y-1,x-1,y+h-1);
+
+    SetAPen(rp,bp);
+
+    drawline(rp,x-1,y+h,x+w+1,y+h);
+    Draw(rp,x+w+1,y-1);
+
+    drawline(rp,x+w,y+h,x+w,y);
 }
 
-/*****************************************************************************
-
-    NAME */
-
-	AROS_LH7(struct Image *, GetButtonImage,
-
-/*  SYNOPSIS */
-	AROS_LHA(int, w, 	D0),
-	AROS_LHA(int, h, 	D1),
-	AROS_LHA(int, fg, 	D2),
-	AROS_LHA(int, bg, 	D3),
-	AROS_LHA(int, fpen, 	D4),
-	AROS_LHA(int, bpen, 	D5),
-	AROS_LHA(struct DOpusRemember **, key, A0),
-
-/*  LOCATION */
-	struct Library *, DOpusBase, 84, DOpus)
-/*  FUNCTION
-
-    INPUTS
-
-    RESULT
-
-    NOTES
-
-    EXAMPLE
-
-    BUGS
-
-    SEE ALSO
-
-    INTERNALS
-
-    HISTORY
-	27-11-96    digulla automatically created from
-			    asl_lib.fd and clib/asl_protos.h
-
-*****************************************************************************/
+void __saveds Do3DStringBox(register struct RastPort *rp __asm("a0"),register int x __asm("d0"),register int y __asm("d1"),register int w __asm("d2"),register int h __asm("d3"),register int tp __asm("d4"),register int bp __asm("d5"))
 {
-	AROS_LIBFUNC_INIT
+//D(bug("Do3DStringBox()\n"));
+    Do3DBox(rp,x-2,y-1,w+4,h+2,tp,bp);
 
-	struct Image *image;
-	short a,b,depth;
-	struct BitMap tbm;
-	struct RastPort trp;
-	
+    SetAPen(rp,bp);
 
-	b=(fg>bg)?fg:bg;
-	if (fpen>b) b=fpen;
-	if (bpen>b) b=bpen;
+    drawline(rp,x-2,y-1,x+w+1,y-1);
+    drawline(rp,x-2,y-1,x-2,y+h+1);
+    drawline(rp,x-1,y-1,x-1,y+h-1);
 
-	depth=2; w+=4;
-	for (a=0;a<8;a++) if (b&(1<<a)) depth=a+1;
-	
+    SetAPen(rp,tp);
 
-	if (!(image=get_image_data(key,w,h,depth,&tbm,&trp))) {
-		return(NULL);
-	}
+    drawline(rp,x-1,y+h,x+w+1,y+h);
+    Draw(rp,x+w+1,y-1);
 
-#warning AROS: graphics.library functions dont seem to work on standard hand made (InitBitmap = no AllocBitmap) planar bitmaps
-
-#if 0
-	SetAPen(&trp,bpen);
-	RectFill(&trp,0,0,w-1,h-1);
-	DrawRadioButton(&trp,2,1,w-4,h,(fpen!=bpen)?bg:fg,(fpen!=bpen)?fg:bg);
-
-	if (w>10 && h>4 && fpen!=bpen) {
-		SetAPen(&trp,fpen);
-		RectFill(&trp,4,2,w-7,h-3);
-		SetAPen(&trp,bpen);
-		WritePixel(&trp,4,2);
-		WritePixel(&trp,4,h-3);
-		WritePixel(&trp,w-7,2);
-		WritePixel(&trp,w-7,h-3);
-	}
-#else
-	if ((w != 19) || (h != 9))
-	{
-	    kprintf("AROS-DOpus (contrib/dopus/Library/imagery.c): I can handle only 19 x 9 images here\n");
-	}
-	else
-	{
-	    static ULONG radio_data1[2*9] =
-	    {
-		0x00000000,
-		0x00018000,
-		0x0000C000,
-		0x0000C000,
-		0x0000C000,
-		0x0000C000,
-		0x0000C000,
-		0x00018000,
-		0x1FFF0000,
-		
-		0x1FFF0000,
-		0x30000000,
-		0x60000000,
-		0x60000000,
-		0x60000000,
-		0x60000000,
-		0x60000000,
-		0x30000000,
-		0x00000000
-	    };
-
-	    static ULONG radio_data2[2*9] =
-	    {
-                0x1FFF0000,
-		0x30000000,
-		0x63F80000,
-		0x67FC0000,
-		0x67FC0000,
-		0x67FC0000,
-		0x63F80000,
-		0x30000000,
-		0x00000000,
-		
-		0x00000000,
-		0x00018000,
-		0x03F8C000,
-		0x07FCC000,
-		0x07FCC000,
-		0x07FCC000,
-		0x03F8C000,
-		0x00018000,
-		0x1FFF0000
-		
-	    };
-
-	    ULONG *src = (fpen != bpen) ? radio_data2 : radio_data1;
-	    ULONG *dest = (ULONG *)tbm.Planes[0];
-	    
-	    WORD y;
-	
-	    for(y = 0; y < 9 * 2; y++)
-	    {
-	    	ULONG gfx = *src++;
-		
-	        *dest = AROS_LONG2BE(gfx);
-		dest += (tbm.BytesPerRow / 4);
-	    }	    
-	}
-	
-#endif
-
-	image->LeftEdge=-2;
-	image->TopEdge=-1;
-	return(image);
-	
-	AROS_LIBFUNC_EXIT
+    drawline(rp,x+w,y+h,x+w,y);
 }
 
-/*****************************************************************************
-
-    NAME */
-
-	AROS_LH4(struct Image *, GetCheckImage,
-
-/*  SYNOPSIS */
-	AROS_LHA(int, fg, D0),
-	AROS_LHA(int, bg, D1),
-	AROS_LHA(int, pen, D2),
-	AROS_LHA(struct DOpusRemember **, key, A0),
-
-/*  LOCATION */
-	struct Library *, DOpusBase, 87, DOpus)
-/*  FUNCTION
-
-    INPUTS
-
-    RESULT
-
-    NOTES
-
-    EXAMPLE
-
-    BUGS
-
-    SEE ALSO
-
-    INTERNALS
-
-    HISTORY
-	27-11-96    digulla automatically created from
-			    asl_lib.fd and clib/asl_protos.h
-
-*****************************************************************************/
+void __saveds Do3DCycleBox(register struct RastPort *rp __asm("a0"),register int x __asm("d0"),register int y __asm("d1"),register int w __asm("d2"),register int h __asm("d3"),register int tp __asm("d4"),register int bp __asm("d5"))
 {
-	AROS_LIBFUNC_INIT
+    UBYTE old_drmd;
 
-	struct Image *image;
-	int a,b,depth;
-	struct BitMap tbm;
-	struct RastPort trp;
-	
-	b=(fg>bg)?fg:bg;
-	depth=2;
-	for (a=0;a<8;a++) if (b&(1<<a)) depth=a+1;
+//D(bug("Do3DCycleBox(%lx,%lx)\n",pdb_cycletop,pdb_cyclebot));
+    Do3DBox(rp,x,y,w,h,tp,bp);
 
-	if (!(image=get_image_data(key,13,7,depth,&tbm,&trp))) return(NULL);
+    old_drmd = GetDrMd(rp);
+    SetDrMd(rp,JAM1);
 
-	SetDrMd(&trp,JAM1);
-	SetAPen(&trp,bg);
-	
-#warning AROS: graphics.library functions dont seem to work on standard hand made (InitBitmap = no AllocBitmap) planar bitmaps
+    SetAPen(rp,bp);
 
-#if 0
-	RectFill(&trp,0,0,12,6);
+    if (/*DOpusBase->*/pdb_cycletop)
+     {
+      BltTemplate(/*DOpusBase->*/pdb_cycletop,0,2,rp,x+4,y+1,11,6);
+     }
+    if (/*DOpusBase->*/pdb_cyclebot)
+     {
+      BltTemplate(/*DOpusBase->*/pdb_cyclebot,0,2,rp,x+4,y+1+h-12+7,11,2);
+     }
 
-	if (pen) {
-		SetAPen(&trp,fg);
-		BltTemplate((char *)DB(DOpusBase)->pdb_check,0,2,&trp,0,0,13,7);
-	}
-#else
-	if (pen) {
-	    UWORD *src = (UWORD *)DB(DOpusBase)->pdb_check;
-	    UWORD *dest = (UWORD *)tbm.Planes[0];
-	    
-	    WORD y;
-	
-	    for(y = 0; y < 7; y++)
-	    {
-	    	UWORD gfx = *src++;
-		
-		/* no need to fix endianess here, because the read above plus the write
-		   below cause two byte swappings on little endian machines => it ends
-		   up as it was in src = big endian = correct */
-	        *dest = gfx; /* AROS_WORD2BE(gfx); */
-		dest += (tbm.BytesPerRow / 2);
-	    }
-	}
-#endif
-	image->LeftEdge=7;
-	image->TopEdge=2;
+    drawline(rp,x+4,y+7,x+4,/*y+7+*/y+1+h-12+7/*-12*/);
+    drawline(rp,x+5,y+7,x+5,/*y+7+*/y+1+h-12+7/*-12*/);
+    drawline(rp,x+18,y+1,x+18,y+h-2);
 
-	return(image);
-	
-	AROS_LIBFUNC_EXIT
+    SetAPen(rp,tp);
+
+    drawline(rp,x+19,y+1,x+19,y+h-2);
+
+    SetDrMd(rp,old_drmd);
 }
 
-/*****************************************************************************
-
-    NAME */
-
-	AROS_LH8(void, Do3DFrame,
-
-/*  SYNOPSIS */
-	AROS_LHA(struct RastPort *, rp,  A0),
-	AROS_LHA(int, x, D0),
-	AROS_LHA(int, y, D1),
-	AROS_LHA(int, w, D2),
-	AROS_LHA(int, h, D3),
-	AROS_LHA(char *, title, A1),
-	AROS_LHA(int, hi, D4),
-	AROS_LHA(int, lo, D5),
-
-/*  LOCATION */
-	struct Library *, DOpusBase, 76, DOpus)
-/*  FUNCTION
-
-    INPUTS
-
-    RESULT
-
-    NOTES
-
-    EXAMPLE
-
-    BUGS
-
-    SEE ALSO
-
-    INTERNALS
-
-    HISTORY
-	27-11-96    digulla automatically created from
-			    asl_lib.fd and clib/asl_protos.h
-
-*****************************************************************************/
+void __saveds DrawCheckMark(register struct RastPort *rp __asm("a0"),register int x __asm("d0"),register int y __asm("d1"),register int clear __asm("d2"))
 {
-	AROS_LIBFUNC_INIT
+    UBYTE old_apen;
+    UBYTE old_drmd = GetDrMd(rp);
 
-	char of,ob;
-	int a,l;
+D(bug("DrawCheckMark(%lx)\n",pdb_check));
+    SetDrMd(rp,JAM1);
 
-	of=rp->FgPen; ob=rp->BgPen;
-	Do3DBox(rp,x+2,y+1,w-4,h-2,lo,hi);
-	Do3DBox(rp,x+4,y+2,w-8,h-4,hi,lo);
-	SetAPen(rp,of); SetBPen(rp,ob);
-	if (title) {
-		a=strlen(title);
-		x+=((w-(l=(TextLength(rp,title,a))))/2);
-		SetAPen(rp,ob);
-		RectFill(rp,
-			x-rp->Font->tf_XSize/2,y+2-rp->Font->tf_Baseline,
-			x+l+rp->Font->tf_XSize/2,y+2-rp->Font->tf_Baseline+rp->Font->tf_YSize);
-		SetAPen(rp,of);
-		Move(rp,x,y+2); Text(rp,title,a);
-	}
-	
-	AROS_LIBFUNC_EXIT
+    if (clear==0)
+     {
+      old_apen = GetAPen(rp);
+      SetAPen(rp,GetBPen(rp));
+     }
+    if (/*DOpusBase->*/pdb_check)
+     {
+      BltTemplate(/*DOpusBase->*/pdb_check,0,2,rp,x,y,13,7);
+     }
+    if (clear==0)
+     {
+      SetAPen(rp,old_apen);
+     }
+    SetDrMd(rp,old_drmd);
 }
 
-
-/*****************************************************************************
-
-    NAME */
-
-/* AROS: we have no __chip keyword */
-extern UBYTE /* __chip */ glass_image1[];
-extern UBYTE /* __chip */ glass_image2[];
-
-	AROS_LH5(void, DoGlassImage,
-
-/*  SYNOPSIS */
-	AROS_LHA(struct RastPort *, rp,  A0),
-	AROS_LHA(struct Gadget *, gadget, A1),
-	AROS_LHA(int, shine,	D0),
-	AROS_LHA(int, shadow, 	D1),
-	AROS_LHA(int, type, 	D2),
-
-/*  LOCATION */
-	struct Library *, DOpusBase, 93, DOpus)
-/*  FUNCTION
-
-    INPUTS
-
-    RESULT
-
-    NOTES
-
-    EXAMPLE
-
-    BUGS
-
-    SEE ALSO
-
-    INTERNALS
-
-    HISTORY
-	27-11-96    digulla automatically created from
-			    asl_lib.fd and clib/asl_protos.h
-
-*****************************************************************************/
+void __saveds DoDoArrow(register struct RastPort *p __asm("a0"), register int x __asm("d0"), register int y __asm("d1"), register int w __asm("d2"), register int h __asm("d3"), register int fg __asm("d4"), register int bg __asm("d5"), register int d __asm("d6"))
 {
-	AROS_LIBFUNC_INIT
+    int x1,y1,x2,y2,x3,y3,x4,y4,xb;
 
+    SetAPen(p,bg);
+    xb=x+w;
+    RectFill(p,x,y,xb-1,y+h-1);
+    SetAPen(p,fg);
+    switch (d) {
+        case 0:
+            y1=y+h-2;
+            y3=y+1;
+            goto sameupdown;
 
-	int x,y;
-	char op,om;
+        case 1:
+            y1=y+1;
+            y3=y+h-2;
+sameupdown:
+            x1=x+2;
+            x2=xb-3;
+            x3=x+(w/2)-1;
+            x4=xb-(w/2);
+            y2=y1;
+            y4=y3;
+            break;
 
-	om=rp->DrawMode; op=rp->FgPen;
-	SetDrMd(rp,JAM1);
+        case 2:
+            x1=x+1;
+            x3=xb-2;
+            goto sameleftright;
 
-	if (type==0) {
-		x=gadget->LeftEdge+((gadget->Width-16)/2);
-		y=gadget->TopEdge+((gadget->Height-8)/2);
-		SetAPen(rp,shine);
-		BltTemplate((char *)glass_image2,0,2,rp,x,y,16,8);
-		SetAPen(rp,shadow);
-		BltTemplate((char *)glass_image1,0,2,rp,x,y,16,8);
-	}
-
-	SetAPen(rp,op);
-	SetDrMd(rp,om);
-	
-	AROS_LIBFUNC_EXIT
+        default:
+//        case 3:
+            x1=xb-2;
+            x3=x+1;
+sameleftright:
+            x2=x1;
+            y1=y+1;
+            y2=y+h-2;
+            y3=y+(h/2);
+            if (h%2==0) --y3;
+            x4=x3;
+            y4=y3;
+            break;
+    }
+    drawline(p,x1,y1,x3,y3);
+    drawline(p,x2,y2,x4,y4);
 }
 
-struct Image *get_image_data(key,width,height,depth,bm,rp)
-struct DOpusRemember **key;
-int width,height,depth;
-struct BitMap *bm;
-struct RastPort *rp;
+void __saveds DoDrawRadioButton(register struct RastPort *rp __asm("a0"), register int x __asm("d0"), register int y __asm("d1"), register int w __asm("d2"), register int h __asm("d3"), register int hi __asm("d4"), register int lo __asm("d5"))
 {
-	struct Image *image;
-	USHORT *data;
-	short a,words;
-	
-	words=(width+15)/16;
+    SetAPen(rp,hi);
+    drawline(rp,x,y-1,x+w-3,y-1);
+    drawline(rp,x-1,y,x,y);
+    drawline(rp,x-2,y+1,x-2,y+h-4);
+    drawline(rp,x-1,y+1,x-1,y+h-4);
+    drawline(rp,x-1,y+h-3,x,y+h-3);
+    SetAPen(rp,lo);
+    drawline(rp,x,y+h-2,x+w-3,y+h-2);
+    drawline(rp,x+w-3,y+h-3,x+w-2,y+h-3);
+    drawline(rp,x+w-1,y+h-4,x+w-1,y+1);
+    drawline(rp,x+w-2,y+h-4,x+w-2,y+1);
+    drawline(rp,x+w-3,y,x+w-2,y);
+}
 
-	if (!(image=LAllocRemember(key,sizeof(struct Image),MEMF_CLEAR)) ||
-		!(data=LAllocRemember(key,words*2*height*depth,MEMF_CHIP|MEMF_CLEAR))) {
+__saveds struct Image *DoGetButtonImage(register int w __asm("d0"), register int h __asm("d1"), register int fg __asm("d2"), register int bg __asm("d3"), register int fpen __asm("d4"), register int bpen __asm("d5"), register struct DOpusRemember **key __asm("a0"))
+{
+    struct Image *image;
+    short a,b,depth;
+    struct BitMap tbm;
+    struct RastPort trp;
 
-		return(NULL);
-	}
+    b=(fg>bg)?fg:bg;
+    if (fpen>b) b=fpen;
+    if (bpen>b) b=bpen;
 
-	InitBitMap(bm,depth,width,height);
-	for (a=0;a<depth;a++) bm->Planes[a]=(PLANEPTR)&data[words*height*a];
-	InitRastPort(rp);
-	
-	rp->BitMap=bm;
+    depth=2; w+=4;
+    for (a=0;a<8;a++) if (b&(1<<a)) depth=a+1;
 
-	image->Width=width;
-	image->Height=height;
-	image->Depth=depth;
-	image->ImageData=data;
-	image->PlanePick=(1<<depth)-1;
+    if (!(image=get_image_data(key,w,h,depth,&tbm,&trp))) return(NULL);
 
-	return(image);
+    SetAPen(&trp,bpen);
+    RectFill(&trp,0,0,w-1,h-1);
+    DoDrawRadioButton(&trp,2,1,w-4,h,(fpen!=bpen)?bg:fg,(fpen!=bpen)?fg:bg);
+    if (w>10 && h>4 && fpen!=bpen) {
+        SetAPen(&trp,fpen);
+        RectFill(&trp,4,2,w-7,h-3);
+        SetAPen(&trp,bpen);
+        WritePixel(&trp,4,2);
+        WritePixel(&trp,4,h-3);
+        WritePixel(&trp,w-7,2);
+        WritePixel(&trp,w-7,h-3);
+    }
+
+    image->LeftEdge=-2;
+    image->TopEdge=-1;
+    return(image);
+}
+
+__saveds struct Image *DoGetCheckImage(register UBYTE fg __asm("d0"), register UBYTE bg __asm("d1"), register int pen __asm("d2"), register struct DOpusRemember **key __asm("a0"))
+{
+    struct Image *image;
+    int a,b,depth;
+    struct BitMap tbm;
+    struct RastPort trp;
+
+D(bug("DoGetCheckImage: fg = %ld, bg = %ld\n",fg,bg));
+    b=(fg>bg)?fg:bg;
+    depth=2;
+    for (a=0;a<8;a++) if (b&(1<<a)) depth=a+1;
+
+    if (!(image=get_image_data(key,13,7,depth,&tbm,&trp))) return(NULL);
+
+    SetDrMd(&trp,JAM1);
+    SetAPen(&trp,bg);
+    RectFill(&trp,0,0,12,6);
+    if (pen) {
+        SetAPen(&trp,fg);
+        BltTemplate(/*(char *)DOpusBase->*/pdb_check,0,2,&trp,0,0,13,7);
+    }
+
+    image->LeftEdge=7;
+    image->TopEdge=2;
+    return(image);
+}
+
+void __saveds DoDo3DFrame(register struct RastPort *rp __asm("a0"), register int x __asm("d0"), register int y __asm("d1"), register int w __asm("d2"), register int h __asm("d3"), register char *title __asm("a1"), register int hi __asm("d4"), register int lo __asm("d5"))
+{
+    char of,ob;
+    int a,l;
+
+    of=rp->FgPen; ob=rp->BgPen;
+    Do3DBox(rp,x+2,y+1,w-4,h-2,lo,hi);
+    Do3DBox(rp,x+4,y+2,w-8,h-4,hi,lo);
+    SetAPen(rp,of); SetBPen(rp,ob);
+    if (title) {
+        a=strlen(title);
+        x+=((w-(l=(TextLength(rp,title,a))))/2);
+        SetAPen(rp,ob);
+        RectFill(rp,
+            x-rp->Font->tf_XSize/2,y+2-rp->Font->tf_Baseline,
+            x+l+rp->Font->tf_XSize/2,y+2-rp->Font->tf_Baseline+rp->Font->tf_YSize);
+        SetAPen(rp,of);
+        Move(rp,x,y+2); Text(rp,title,a);
+    }
+}
+
+extern UWORD __chip glass_image1[];
+extern UWORD __chip glass_image2[];
+
+void __saveds DoDoGlassImage(register struct RastPort *rp __asm("a0"), register struct Gadget *gadget __asm("a1"), register int shine __asm("d0"), register int shadow __asm("d1"), register int type __asm("d2"))
+{
+    int x,y;
+    char op,om;
+
+    om=rp->DrawMode; op=rp->FgPen;
+    SetDrMd(rp,JAM1);
+
+    if (type==0) {
+        x=gadget->LeftEdge+((gadget->Width-16)/2);
+        y=gadget->TopEdge+((gadget->Height-8)/2);
+
+        SetAPen(rp,shine);
+        BltTemplate((char *)glass_image2,0,2,rp,x,y,16,8);
+        SetAPen(rp,shadow);
+        BltTemplate((char *)glass_image1,0,2,rp,x,y,16,8);
+    }
+
+    SetAPen(rp,op);
+    SetDrMd(rp,om);
 }

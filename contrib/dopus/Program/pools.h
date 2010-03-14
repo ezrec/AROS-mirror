@@ -27,13 +27,12 @@ The release of Directory Opus 4 under the GPL in NO WAY affects
 the existing commercial status of Directory Opus 5.
 
 */
-#warning Where is the code for this ?
 
-#if 0
-void * __asm AsmCreatePool(register __d0 ULONG,register __d1 ULONG,register __d2 ULONG,register __a6 struct ExecBase *);
-void __asm AsmDeletePool(register __a0 void *,register __a6 struct ExecBase *);
-void * __asm AsmAllocPooled(register __a0 void *,register __d0 ULONG,register __a6 struct ExecBase *);
-void __asm AsmFreePooled(register __a0 void *,register __a1 void *,register __d0 ULONG,register __a6 struct ExecBase *);
+/*
+void * AsmCreatePool(register ULONG __asm("d0"),register ULONG __asm("d1"),register ULONG __asm("d2"),register struct ExecBase * __asm("a6"));
+void AsmDeletePool(register void * __asm("a0"),register struct ExecBase * __asm("a6"));
+void * AsmAllocPooled(register void * __asm("a0"),register ULONG __asm("d0"),register struct ExecBase * __asm("a6"));
+void AsmFreePooled(register void * __asm("a0"),register void * __asm("a1"),register ULONG __asm("d0"),register struct ExecBase * __asm("a6"));
 
 #define	CreatePool(x,y,z)	AsmCreatePool(x,y,z,(struct ExecBase *)SysBase)
 #define	DeletePool(x)		AsmDeletePool(x,(struct ExecBase *)SysBase)
@@ -41,8 +40,15 @@ void __asm AsmFreePooled(register __a0 void *,register __a1 void *,register __d0
 #define	FreePooled(x,y,z)	AsmFreePooled(x,y,z,(struct ExecBase *)SysBase)
 
 #define	LibCreatePool(x,y,z)	AsmCreatePool(x,y,z,(struct ExecBase *)SysBase)
-#define	LibDeletePool(x)	AsmDeletePool(x,(struct ExecBase *)SysBase)
+#define	LibDeletePool(x)		AsmDeletePool(x,(struct ExecBase *)SysBase)
 #define	LibAllocPooled(x,y)	AsmAllocPooled(x,y,(struct ExecBase *)SysBase)
 #define	LibFreePooled(x,y,z)	AsmFreePooled(x,y,z,(struct ExecBase *)SysBase)
+*/
 
-#endif
+#include <proto/exec.h>
+
+#define	LibCreatePool(x,y,z)	CreatePool(x,y,z)
+#define	LibDeletePool(x)		DeletePool(x)
+#define	LibAllocPooled(x,y)	AllocPooled(x,y)
+#define	LibFreePooled(x,y,z)	FreePooled(x,y,z)
+

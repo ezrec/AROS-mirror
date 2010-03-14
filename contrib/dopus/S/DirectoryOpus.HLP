@@ -1,0 +1,788 @@
+**Versionstring
+$VER: DOpus4_English.HLP 1.1 (20.01.2002)
+^
+**Assign
+This function allows you to assign a logical device name to the
+currently active directory. The C: device is an example of a logical
+device; it is not a physical disk itself, but is a directory that has
+been assigned the name C:. For example, a simple name as Text: can be
+assigned to a long and complicated pathname such as:
+
+   DH0:Projects/Work/1989/April/Bits&Pieces/Text
+
+From then on, whenever you enter Text: into a directory string gadget
+you will go straight to the directory at the end of the assigned path,
+instead of having to go through all the sub-directories on the way.
+You can use the assignment in any other program as well. Logical
+device names always end with a colon.
+
+"Assign" also allows you to cancel a previously assigned logical
+device, or reassign a device to another directory. To do this, press
+the right mouse button over the S (select) button to activate the
+GetDevices command. Select the assigned device(s) you wish to change,
+and invoke the "Assign" command. A requester will appear, into which
+you can type the new pathname to be assigned to each device selected.
+If you enter a blank string, that logical device will be unassigned.^
+**CD
+This function allows you to set the current working directory for Directory
+Opus. This is the directory that is read if you press return on an empty
+directory button.^
+**ErrorHelp
+This gives you more information about AmigaDOS error messages and codes than
+is generally available. When selected, you are asked for the error code. Once
+this is entered, you are shown the standard error message as well as a
+description of the error.^
+**Configure
+This will either load the configuration program ConfigOpus into memory and
+run it, or if it is already in memory, invoke it. Consult the manual for
+information on the many configuration items.^
+**About
+This function displays the program's "title screen", and gives the
+current version number and copyright information.^
+**Alarm
+This function plays a alarm like sound.^
+**Beep
+This function plays a beep like sound.^
+**SetVar
+Sets the specified internal variable to the given value.^
+**Version
+This function displays a window containing the version numbers of the
+software, Kickstart and Workbench, and other information which you may
+need when seeking technical support.^
+**Iconify
+This allows you to close the Directory Opus screen, to free up as much
+memory as possible.
+
+You can configure the state you wish Directory Opus to take in iconified
+mode, including a window (with or without clock and memory monitor), and
+an AppIcon.^
+**ButtonIconify
+This performs a similar function to the Iconify command except that the
+window that is opened on the Workbench screen contains all your custom
+buttons, and has the custom menus attached to it. This allows you to launch
+programs from Directory Opus even when it is iconified.^
+**Quit
+This function exits Directory Opus. If the configuration has been changed
+since it was last saved, you are given the option of saving it first.^
+**Filter
+This allows you to set a filter that specifies which files are used
+during recursive directory operations.^
+**Diskcopy
+This allows you to copy one disk to another. It makes an exact copy of the
+original disk. It will not copy any protected software, or non-AmigaDOS
+format disks. This function is contained in the external DOpus_Disk module.
+
+When this function is chosen, a window appears containing two lists of
+devices. Select a source disk from the left hand list, and the destination
+disk from the right hand list.
+
+If "Verify" is selected, the copy will be verified after writing each track,
+to make sure it was copied successfully. The "Bump name" option will modify
+the name of the destination disk, to prevent problems that can be caused
+for having identical disks present in the system.
+
+The [Check] button at the bottom of the requester does not copy disks,
+instead it will check two disks to find out if they are identical.^
+**Format
+This allows you to format a new disk. All new disks need to be formatted
+before the computer can write to them. This function is contained in the
+external DOpus_Disk module.
+
+When this is selected, a window appears containing a list of devices, and
+several options. Select in the list the disk you wish to format. Several
+options will be available to select the type of format you wish (FFS,
+Dir Caching, etc).
+
+If "Verify" is selected, the format will be verified after writing each
+track, to make sure it was formatted successfully. The "Put Trashcan" option
+causes the Trashcan directory and icon to be created on the new disk.
+
+[Quick format] allows you to initialise an already-formatted disk. This
+provides an extremely fast way of erasing old disks, but will not work on
+new disks - you must use [Format] to format brand new disks.^
+**Install
+This function allows you to make a disk bootable. All bootable disks have
+special information written on the first sector of the disk. Without this, the
+disk will not boot. This function is contained in the external DOpus_Disk
+module.
+
+This function opens a window with a list containing the available drives
+(note that you can only install floppy disks with this option). Select
+the drive you wish to install from the list.^
+**Relabel
+This allows you to change the name (label) of the disk that is opened in the
+active directory window.^
+**PrintDir
+This function allows you to print the contents of the active directory window
+You may select which information to print, including file sizes, protection
+bits, dates, comments and filetypes. You may also choose to send the output
+to a disk file instead of the printer.
+
+This function is contained in the external DOpus_Print module.^
+**DiskInfo
+This function displays some information about the disk the active directory
+resides on, including space used and free, datestamp and number of
+errors on the disk.^
+*LHA Add
+This function allows you to create and add files to an LHA archive.
+
+To add files to an archive, open the directory you wish the archive to be
+written to in the inactive window, select the files and directories you wish
+to add, and select this function. You will be asked for the name of the
+archive to be created or added to.^
+*ARC Add
+This function allows you to create and add files to an ARC archive.
+
+To add files to an archive, open the directory you wish the archive to be
+written to in the inactive window, select the files and directories you wish
+to add, and select this function. You will be asked for the name of the
+archive to be created or added to.^
+*ZOO Add
+This function allows you to create and add files to a ZOO archive.
+
+To add files to an archive, open the directory you wish the archive to be
+written to in the inactive window, select the files and directories you wish
+to add, and select this function. You will be asked for the name of the
+archive to be created or added to.^
+**All
+This function selects all files and directories in the active directory
+window.^
+**Toggle
+This function reverses the state of all files and directories in the active
+directory (ie, all selected entries are deselected, and vice versa).^
+**None
+This function unselects all files and directories in the active directory
+window.^
+**Parent
+This function reads the parent directory of the active directory window.^
+**Root
+This function reads the root directory of the active directory window.^
+**Copy
+This function copies all selected files and directories in the active
+directory window to the inactive directory window, keeping the same names.^
+**CopyAs
+This function copies all selected files and directories in the active
+directory window to the inactive directory window, and allows you to specify
+a new name for each file/directory.^
+**Move
+This allows you to move all selected files and directories from the active
+directory window to the inactive window. The file or directory will be
+copied to the destination, and the original will be deleted.^
+**MoveAs
+This allows you to move all selected files and directories from the active
+directory window to the inactive window, giving each file a new name. The file
+or directory will be copied to the destination under the new name, and the
+original will be deleted.^
+**Rename
+This allows you to rename all selected files and directories. You may use a
+* to specify a pattern. If no *'s are used, you are asked for a new name for
+each individual file.
+
+To add a prefix or a suffix (or both) to all selected entries, use a * in the
+second string button. For example, to add "HIRES" as a prefix and .pic as a
+suffix to all selected entries, enter "HIRES*.pic".
+
+To change a prefix or a suffix (or both) of all selected entries, use a * in
+the top string button. For example, to change "HIRES" to "MEDRES" as a prefix,
+and ".pic" to ".iff" as a suffix, enter "HIRES*.pic" in the top string button,
+and "MEDRES*.iff" in the bottom string button.^
+**Clone
+This function makes an identical copy of the selected files and directories,
+in the same directory, but with different names.^
+**Delete
+This function deletes all selected files and directories in the active
+directory window. CAREFUL!
+
+This function can also be used to remove assigns: Just display the device list
+(press the right mouse button over the tiny S button in the center of DirOpus'
+window), select the assign(s) you want to remove, and then invoke the "Delete"
+command.^
+**MakeDir
+This function allows you to create a directory in the active directory window.^
+**CheckFit
+Important Note!
+
+This command is heavily outdated. It only knows about FFS partitions with
+512 Bytes per block. It will fail (in other words: report wrong values) on any
+partition that does not match these specs exactly. Avoid this command if you're
+not sure that all of your partitions are FFS, 512 Bytes/block!
+
+----------
+
+This function will calculate whether all the files and directories you have
+selected would fit in the destination directory, were they to be copied
+there. It performs a similar function to the GetSizes command, except that
+it is far more accurate. The only disadvantage to this command is that
+even if the directories you have selected already have sizes displayed for
+them, they may have to be rescanned if the destination drive has changed.^
+**GetSizes
+This function works in a similar way to "CheckFit". It scans through all
+selected directories, calculating the total number of bytes in each
+directory, and adds the directory sizes to the list. It then displays a
+Y or N character to indicate whether the selected entries would fit in the
+destination were they to be copied there. This is only a very rough
+indication; to be completely accurate you should use the "CheckFit" command
+instead.^
+**ClearSizes
+This will remove the size displayed for all selected directories. You may
+wish to do this if you know the size of the directory has changed. You can
+then reselect the directory and use the "GetSizes" or "CheckFit" functions to
+get an accurate size.^
+**Hunt
+This function allows you to search through all selected directories and their
+sub-directories for a specified file, or for a group of files matching a given
+pattern. If the specified files are found, the directory containing them will
+be read, and the files will be selected.^
+**Search
+This function allows you to search all selected files for a specified string,
+which can optionally contain wildcards. If a match is found, you are told
+which file contains the string, and given the option to enter the text viewer
+and read the file. If you opt to do this, a search for the string is
+automatically initiated once the file has been read by the text viewer.
+Check the manual for more information (i.e. searching for ASCII codes).^
+**Run
+This function runs each selected file in turn. You are prompted for any
+arguments before each file is run. The file is run using default parameters
+that should be suitable for most programs - if the program does not seem to
+work this way, try running it from the Workbench instead.^
+**Execute
+This function executes each selected file in turn (it assumes that they are
+all AmigaDOS scripts). Note: Only files with the 'S' protection bit set are
+recognised as script files!^
+**Comment
+This function allows you to change the comment, or filenote, of the selected
+files and directories in the active directory window. 
+
+For each entry, you are presented with a requester containing the current
+comment attached to that entry. To change the comment, simple edit it and
+press <Return>. To keep the same comment, press <Return> without editing.
+
+To set the comment of all the selected entries you should select the [All]
+button from the comment requester; choosing [Okay] or pressing <Return> will
+set the comment a file at a time.^
+**DateStamp
+This function allows you to change the datestamp of the selected files and
+directories in the active directory window. 
+
+For each entry, you are presented with a requester. If you wish the file
+to have its datestamp set to the current date and time, simply press <Return>.
+Otherwise, enter the desired date and time.
+
+To set the datestamp of all selected entries you should select the [All]
+button from the datestamp requester; choosing [Okay] or pressing <Return>
+will set the datestamp a file at a time.^
+**Protect
+This function allows you to modify the protection bits of the selected files
+and directories in the active directory window.
+
+For each entry, you are presented with a requester displaying the protection
+bits currently set for that entry. The protection bits are H (hold), S
+(script), P (pure), A (archived), R (readable), W (writeable), E (executable)
+and D (deleteable).
+
+To toggle bits on or off, click on the appropriate buttons, or press the
+appropriate keys. To set all bits, select the [All bits] button. To
+unset all bits, select the [None] button. To reverse the state of the bits,
+select the [Toggle] button. To revert to the bits that were set originally,
+select the [Revert] button.
+
+The mask setting allows you to specify bits that are to be unaffected by this
+operation. This allows you, for instance, to set the RW bits in a file,
+leaving any other bits that should be left alone. To turn a bit on or off
+in the mask, click on the appropriate area or press the key while holding
+down any <Shift> key.
+
+To set the protection bits of all selected entries you should select the
+[All] button from the protection requester; choosing [Okay] will set the
+protection bits one file at a time.^
+**IconInfo
+This allows you to modify the parameters of icons, much the same way
+as the "Information" menu item of Workbench does. You can modify protection
+bits, stack size, comments, default tool and tooltypes this way.^
+**AddIcon
+This will add icons to all selected files and directories in the active
+directory window. Directory Opus automatically senses what sort of object
+it is (drawer, project or tool) and will add the appropriate icon. You may
+specify your own icons in the configuration, if the default icons are
+not suitable.^
+**Encrypt
+This function allows you to keep important data secret by encrypting files
+with a given password. All selected files in the active directory window
+will be encrypted, and the encrypted files will be written to the destination
+window. If the password starts with a - (minus) character, the file will be
+decrypted instead.^
+*Arc Ext
+This button calls the filetype command "User1" on the selected files. It is
+labelled "Arc Ext", as this is what the default filetypes are primarily set
+up to do - extract archives. You should read the manual for more information
+on the filetype features.^
+**Read
+This function allows you to read a text file using the mouse.
+
+To auto-scroll the file, press the left mouse button. The direction and
+speed are determined by the Y-position of the mouse. You can also use
+the cursor keys, the arrow buttons, and the slider (if enabled) to move
+around in the file.
+
+To jump to a specified line, click on the number immediately after "Lines".
+To jump to a specified percentage, click on the percentage display.
+
+To move up or down a page, click on the [U] or [D] buttons, or press that
+key. You can also press Shift + CursorUp/CursorDown or Space/Backspace.
+
+To move to the top or bottom, click on [T] or [B], or press that key.
+You can also press Control + CursorUp/CursorDown.
+
+To search for a string, press <S> or click the [S] button; to look for
+the next instance of the string, press <N>. To print the current page,
+press <C>. To print the whole file, press <P>. To exit, click on the [X]
+button, or press <ESC>, <X> or <Q>.
+
+Note that this function does not display ANSI control sequences or tab
+characters; you must use the "AnsiRead" function for that.^
+**AnsiRead
+This function operates in exactly the same way as the "Read" function, except
+that it displays ANSI control sequences (colours and text styles) properly,
+and also handles tab characters correctly.^
+**HexRead
+This function allows you to hex read a file, something very useful to
+examine binary files. The file is displayed in hexadecimal, with 16 bytes
+per line. The text viewer operates the same way as when the file is being
+viewed as ASCII.^
+**Show
+This function will show each selected file in turn, if the file is an
+IFF ILBM picture, ANIM animation, an icon, or a font. If it is an icon that
+is being shown, the alternate imagery (if any) can be displayed by pressing
+<Return>. To leave a picture, press the left mouse button. If the picture has
+colour cycling defined, you can start and stop cycling with the <TAB> key.
+
+Pressing <P>, <HELP> or the SPACE bar will take you to the Print control
+screen. This allows you to configure the printer and ultimately print the
+current picture. It also displays some important information about the
+current picture.
+
+If the picture is larger than the screen, you can scroll around in it by
+using the cursor keys, or by moving the mouse. This function will also show
+pictures crunched with PowerPacker or similar packers, provided you have
+the xfdmaster.library present (see the manual).^
+**Play
+This function allows you to play IFF 8SVX sampled sounds and other files.
+To stop a sound while it is playing, press the left mouse button.
+If you have a copy of the inovamusic.library in your LIBS: directory, this
+function will also play sound modules.^
+**LoopPlay
+This function allows you to play IFF 8SVX sampled sounds and other files.
+Each sound is played continuously; to advance to the next sound, you must
+press the left mouse button.^
+*Edit
+This will invoke an editor to edit the selected files. This is not a built-in
+function, but just a button configured to launch an external editor called
+"c:Ed". You may (and probably will) want to change this in the configuration.^
+*New File
+This will invoke an editor in the same way as the [Edit] button will. However,
+this function allows you to create a new file with the editor, and will
+ask you for a filename.^
+**Print
+This function will print all selected files, and it is actually a powerful
+print formatter on its own. There are several configuration items in the
+print requester; the Print routine is contained in the external DOpus_Print
+module.
+
+You may configure the top and bottom margins (in lines), and the left and
+right margins (in characters). Tab size is the number of spaces a tab
+character is equivalent to. You may select either Pica, Elite or Fine as the
+print pitch, and either Draft or Letter as print quality.
+
+You can configure individually the contents of the header and footer by
+choosing to include the title, date and page number. If none of these are
+selected, no header or footer will be created. If "Title" is selected and
+anything is entered in the field to the right of the "Title" button, that
+string will be used as the title; if this field is left blank, the name
+of the file will be used instead.
+
+You can select to output to the printer, or to a disk file. The [Print] button
+will start the actual print operation, whereas [Exit] will cancel the requester
+completely.^
+**GetDevices
+This function displays a list of all drives, volumes and assigned directories
+present in the system. You may then read these drives by double-clicking them
+in the list. You can also select entire drives for use with the "Hunt" and
+"Search" functions. Additionally, it is possible to select one or more assigned
+directories and cancel the assign(s) by invoking the "Delete" command.^
+**Select
+This allows you to select files and directories in the active directory
+window based upon name (using pattern matching), creation date or protection
+bits. For selection upon name, all standard wildcards are supported
+(*,~,? etc..) as well as the AmigaDOS wildcards #? and ?. Please see the
+manual for more information on using wildcards.
+
+Selection upon date allows you to specify date ranges, in the form
+DD-MMM-YY > DD-MMM-YY. You can leave out either of the two dates to
+specify from the beginning of time, or until the current date. You may also
+enter times in the form HH:MM:SS as well as dates.
+
+To specify protection bits, use the character codes "hsparwed". If you
+precede a bit with a "-" character, the bit must not be set for the file
+to be selected. Consult the manual for more information on file selection.^
+**Arexx
+This allows you to launch an ARexx script or execute an ARexx command from
+within Directory Opus. See the manual for more information on ARexx.^
+**DirTree
+This function generates a list of all sub-directories in the directory
+displayed in the active window, in tree format. You may instantly read any
+sub-directory by double-clicking on its entry in the tree, rather than
+traveling there via all the prior directories.^
+**Reselect
+This function will reselect all entries that were selected before the last
+operation was initiated. The entries are reselected only if they still exist.^
+**Rescan
+This function will re-read the directory opened in the active directory window.
+This has the same effect as activating the directory string button, and
+pressing <Return> without changing the path name.^
+**BufferList
+This function displays a list of all the directories contained in Directory
+Opus' internal buffers. You may then double-click on one of the displayed
+buffers to jump to that buffer immediately, rather than clicking the arrows
+to cycle through the buffers one by one.^
+**ClearBuffers
+This function will clear the contents of all buffers other than the two that
+are currently displayed. All used memory will be deallocated; this is a good
+way to free up memory quickly if you have lots of used buffers and are
+running low on memory.^
+**DriveGadgets
+These are the drive buttons. Selecting these reads the
+given drive or path into the active directory window.^
+*!103
+Not enough memory
+
+Probable cause:
+Not enough memory in your Amiga to carry out the operation.
+
+Recovery suggestion:
+Close any unneeded windows and applications, then reissue the command.
+If it still doesn't work, try rebooting. It may be that you have enough
+memory but it has become fragmented. It is possible that you may need to
+add more RAM to your system.^
+*!104
+Process table full
+
+Probable cause:
+There is a limit to the number of possible processes.
+
+Recovery suggestion:
+Stop one or more tasks.^
+*!114
+Bad template
+
+Probable cause:
+Incorrect command line.
+
+Recovery suggestion:
+Consult the documentation for the correct command format.^
+*!115
+Bad number
+
+Probable cause:
+The program was expecting a numeric argument.
+
+Recovery suggestion:
+Consult the documentation for the correct command format.^
+*!116
+Required argument missing
+
+Probable cause:
+Incorrect command line.
+
+Recovery suggestion:
+Consult the documentation for the correct command format.^
+*!117
+Argument after "=" missing
+
+Probable cause:
+Incorrect command line.
+
+Recovery suggestion:
+Consult the documentation for the correct command format.^
+*!118
+Too many arguments
+
+Probable cause:
+Incorrect command line.
+
+Recovery suggestion:
+Consult the documentation for the correct command format.^
+*!119
+Unmatched quotes
+
+Probable cause:
+Incorrect command line.
+
+Recovery suggestion:
+Consult the documentation for the correct command format.^
+*!120
+Argument line invalid or too long
+
+Probable cause:
+Your command line is incorrect or contains too many arguments.
+
+Recovery suggestion:
+Consult the documentation for the correct command format.^
+*!121
+File is not executable
+
+Probable cause:
+You misspelled the command name, or the file may not be a loadable
+(program or script) file.
+
+Recovery suggestion:
+Retype the filename and make sure that the file is a program file.
+Remember, to execute a script, either the "s" bit must be set or the EXECUTE
+command must be used.^
+*!122
+Invalid resident library
+
+Probable cause:
+You are trying to use commands with a previous version of AmigaDOS; for
+example, Version 2.0 commands with Version 1.3 Kickstart.
+
+Recovery suggestion:
+Reboot with the current version of AmigaDOS.^
+*!202
+Object is in use
+
+Probable cause:
+The specified file or directory is already being used by another
+application. If an application is reading a file, no other program can
+write to it, and vice versa.
+
+Recovery suggestion:
+Stop the other application that is using the file or directory, and
+reissue the command.^
+*!203
+Object already exists
+
+Probable cause:
+The name that you specified already belongs to another file or directory.
+
+Recovery suggestion:
+Use another name, or delete the existing file or directory, and replace it.^
+*!204
+Directory not found
+
+Probable cause:
+AmigaDOS cannot find the directory you specified. You may have made
+a typing or spelling error.
+
+Recovery suggestion:
+Check the directory name and reissue the command.^
+*!205
+Object not found
+
+Probable cause:
+AmigaDOS cannot find the file or drive you specified. You may have
+made a typing or spelling error.
+
+Recovery suggestion:
+Check the filename or the drive name and reissue the command.^
+*!206
+Invalid window description
+
+Probable cause:
+This error occurs when specifying a window size for the Output Window, a
+Shell, ED or ICONX window. You may have made the window too big or too
+small, or you may have omitted an argument. This error also occurs with
+the NEWSHELL command, if you supply a device name that is not a window.
+
+Recovery suggestion:
+Reissue the window specification.^
+*!209
+Packet request type unknown
+
+Probable cause:
+You have asked a device handler to attempt an operation it cannot do.
+For example, the console handler cannot rename anything.
+
+Recovery suggestion:
+Check the request code passed to device handlers for the appropriate
+response.^
+*!210
+Object name invalid
+
+Probable cause:
+There is an invalid character in the filename or the filename is too long.
+Remember, filenames cannot be longer than 30 characters when using the
+Amiga's inbuilt filesystem ("FFS"), and cannot contain control characters.
+
+Recovery suggestion:
+Retype the name, being sure not to use any invalid characters, or
+exceed the maximum length.^
+*!211
+Invalid object lock
+
+Probable cause:
+You have used something that is not a valid lock.
+
+Recovery suggestion:
+Check that your code only passes valid locks to AmigaDOS calls that
+expect locks.^
+*!212
+Object not of required type
+
+Probable cause:
+You may have specified a filename for an operation that requires a
+directory name, or vice versa.
+
+Recovery suggestion:
+Consult the documentation for the correct command format.^
+*!213
+Disk not validated
+
+Probable cause:
+If you have just inserted a disk, the disk validation process may still
+be in progress. It is also possible that the disk is corrupt.
+
+Recovery suggestion:
+If you've just inserted the disk, wait for the validation process to
+finish. This may take less than a minute for a floppy disk or up to several
+minutes for a hard disk. If the disk is corrupt, it cannot be validated.
+In this case, try to retrieve the disk's files and copy them to another
+disk.^
+*!214
+Disk is write-protected
+
+Probable cause:
+The plastic tab is in the write-protect position.
+
+Recovery suggestion:
+If you're certain you want to write to that particular disk, remove the
+disk, move the tab, and re-insert the disk. Otherwise, use a different disk.^
+*!215
+Rename across devices attempted
+
+Probable cause:
+RENAME only changes a filename on the same volume. You can use RENAME
+to move a file from one directory to another, but you cannot move files
+from one volume to another.
+
+Recovery suggestion:
+Use the MOVE command instead. Alternatively, use COPY to copy the file to
+the destination volume, and delete it from the source volume if desired.^
+*!216
+Directory not empty
+
+Probable cause:
+This error occurs if you attempt to delete a directory that contains
+files or sub-directories.
+
+Recovery suggestion:
+If you are sure you want to delete the complete directory, use the ALL
+option of DELETE.^
+*!217
+Too many levels
+
+Probable cause:
+You've exceeded the limit of 15 soft links.
+
+Recovery suggestion:
+Reduce the number of soft links.^
+*!218
+Device (or volume) not mounted
+
+Probable cause:
+If the device is a floppy disk, it has not been inserted in a drive.
+If it is another type of device, it has not been mounted with the MOUNT
+command. It is also possible that you have made a typing error when
+specifying the device name.
+
+Recovery suggestion:
+Insert the correct floppy disk, check the spelling of the device name,
+mount the device, or revise your MountList file.^
+*!219
+Seek error
+
+Probable cause:
+You have attempted to call SEEK with invalid arguments.
+
+Recovery suggestion:
+Make sure that you only SEEK within the file. You cannot SEEK outside the
+bounds of the file.^
+*!220
+Comment is too long
+
+Probable cause:
+Your filenote has exceeded the maximum number of characters (79).
+
+Recovery suggestion:
+Use a shorter comment.^
+*!221
+Disk is full
+
+Probable cause:
+There is not enough room on the disk to perform the requested operation.
+
+Recovery suggestion:
+Delete some unnecessary files or directories, or use a different disk.^
+*!222
+Object is protected from deletion
+
+Probable cause:
+The "d" (deleteable) protection bit of the file or directory is clear.
+
+Recovery suggestion:
+If you are certain that you want to delete the file or directory, use
+PROTECT to set the "d" bit.^
+*!223
+File is write protected
+
+Probable cause:
+The "w" (writeable) protection bit of the file is clear.
+
+Recovery suggestion:
+If you are certain that you want to overwrite the file, use PROTECT to
+set the "w" bit.^
+*!224
+File is read protected
+
+Probable cause:
+The "r" (readable) protection bit of the file is clear.
+
+Recovery suggestion:
+Use PROTECT to set the "r" bit of the file.^
+*!225
+Not a valid DOS disk
+
+Probable cause:
+The disk in the drive is not an AmigaDOS disk, it has not been formatted,
+or it is corrupt.
+
+Recovery suggestion:
+Make sure you are using the correct disk. If you know the disk worked
+before, use a disk recovery program to salvage its files. If the disk
+has not been formatted, use FORMAT to do so.^
+*!226
+No disk in drive
+
+Probable cause:
+The disk is not properly inserted in the specified drive.
+
+Recovery suggestion:
+Insert the appropriate disk in the specified drive.^
+*!232
+No more entries in directory
+
+Probable cause:
+This indicates that the AmigaDOS call EXNEXT has no more entries in the
+directory you are examining.
+
+Recovery suggestion:
+Stop calling EXNEXT.^
+*!233
+Object is soft link
+
+Probable cause:
+You tried to perform an operation on a soft link that should only be
+performed on a file or directory.
+
+Recovery suggestion:
+AmigaDOS uses the Action_Read_Link packet to resolve the soft link and
+retries the operation.^

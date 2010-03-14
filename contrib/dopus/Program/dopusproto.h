@@ -28,80 +28,46 @@ the existing commercial status of Directory Opus 5.
 
 */
 
-/* AROS: This is defined in proto/arossupport.h
-void KPrintF __ARGS((char *,...));
+#include <rexx/storage.h>
 
-*/
+/* assembly.c */
 
-#include "ushort.h"
-
-/* AROS: Need some predeclarations */
-
-struct DirectoryWindow;
-struct Directory;
-struct ConfigStuff;            
-struct dopusfunction;
-struct PrintDirData;
-struct newdopusfunction;
-struct RexxMsg;
-struct makedirlist;
-struct DirWindowPars;
-struct dopusfuncpar;
-struct function_data;
-struct CommandList;
-struct C_Range;
-struct BitHeader;
-struct RLEinfo;
-struct ViewData;
-struct DOpusArgsList;
-struct VisInfo;
-struct RememberData;
-struct RecursiveDirectory;
-struct dopus_func_start;
-/* assembly */
-
-/* AROS: assembly functions are rewritten in C
-*/
-
-#if 0
-/* void Keyhandler(void); */
-__asm countlines(register __a0 struct ViewData *);
-__asm smartcountlines(register __a0 struct ViewData *);
-__asm ansicountlines(register __a0 struct ViewData *);
-void __asm removetabs(register __a0 struct ViewData *);
-__stdargs getusage(void);
-void dprintf __ARGS((char *,char *,...));
-__stdargs filteroff(void);
-void __stdargs filteron(void);
-
+#if defined(__PPC__) || defined(__AROS__)
+#define lsprintf sprintf
 #else
-
-#warning Fix varargs
 void lsprintf (char *,char *,...);
-int getusage(void); /* AROS FIX: is in getusage.c: converted from asm */
-int countlines(struct ViewData *vd); /* AROS FIX: in asmfuncs_in_c.c*/
-int smartcountlines(struct ViewData *vd);  /* AROS FIX: in asmfuncs_in_c.c*/
-int ansicountlines(struct ViewData *vd);  /* AROS FIX: in asmfuncs_in_c.c*/
-void removetabs(struct ViewData *vd);    /* AROS FIX: in asmfuncs_in_c.c*/
-
-
 #endif
+/* void Keyhandler(void); */
+int countlines(struct ViewData *);
+int smartcountlines(struct ViewData *);
+int ansicountlines(struct ViewData *);
+void removetabs(struct ViewData *);
+int getusage(void);
+void dprintf (char *,char *,...);
+int filteroff(void);
+void filteron(void);
 
 /* about.c */
 
 void about(void);
 void give_version_info(void);
 
-
 /* arbiter.c */
 
 int install_arbiter(void);
 void remove_arbiter(void);
 int arbiter_command(int,APTR,int);
-
-/* AROS: No __saveds keyword */
-void /* __saveds */ arbiter_process(void);
+void __saveds arbiter_process(void);
 struct Screen *open_subprocess_screen(char *,struct TextFont *,struct DOpusRemember **,short *);
+
+/* archive.c */
+
+int readarchive(struct DirectoryWindow *,int);
+void freearchive(struct DirectoryWindow *);
+BOOL unarcfiledir(const struct DirectoryWindow *, const char *, char *, const char *);
+BOOL getsourcefromarc(struct DirectoryWindow *, char *, char *);
+void arcfillfib(struct FileInfoBlock *, struct Directory *);
+void removetemparcfile(const char *);
 
 /* buffers.c */
 
@@ -125,9 +91,10 @@ void check_old_buffer(int);
 void refreshwindow(int,int);
 void go_to_buffer(int,struct DirectoryWindow *);
 
-/* main.c */
+/* 
+main.c */
 
-void main(int,char **);
+int main(int,char **);
 int SetUp(int);
 void setupdisplay(int);
 void drawscreen(void);
@@ -144,11 +111,13 @@ void read_data_files(int);
 int get_data_file(char *,char *,int);
 void get_config_file(char *,char *);
 void setup_draw_info(void);
+struct Library *OpenXFDlib(void);
+struct Library *OpenXADlib(void);
 
 /* main1.c */
 
 int readsetup(char *);
-int savesetup(void);
+int savesetup(char *);
 void getdefaultconfig(void);
 void fixcstuff(struct ConfigStuff *);
 void cstufffix(struct ConfigStuff *);
@@ -171,33 +140,35 @@ void findfirstchar(int,char);
 void doinfodisplay(struct Directory *,int);
 void nodayseedate(struct DateStamp *,char *);
 void display_entry(struct Directory *,int,int,int);
-void entry_text(struct RastPort *,struct Directory *,char *,int,int,int);
+void entry_text(int,struct Directory *,char *,int,int,int);
 void builddisplaystring(struct Directory *,char *,int);
 void setdispcol(struct Directory *,int);
 void displaydirgiven(int,struct Directory *,char);
 void endfollow(int);
+void getprotdatelengths(struct RastPort *);
+void setsizedisplen(struct RastPort *);
+void buildkmgstring(char *,unsigned long long,int);
 
 /* main3.c */
 
 int doparent(char *);
 int doroot(char *);
-int addfile(struct DirectoryWindow *,int,char *,int,int,
+struct Directory *addfile(struct DirectoryWindow *,int,char *,long long,int,
           struct DateStamp *,char *,int,int,int,char *,struct Directory *,UWORD,UWORD);
 int namesort(char *,char *);
 int inter_sort(char *,char *);
 char *getstrafternum(char *);
 void removefile(struct Directory *,struct DirectoryWindow *,int,int);
+void sortdir(struct DirectoryWindow *, int);
 int dorun(char *,int,int);
 void busy(void);
 void unbusy(void);
-void flushidcmp(void);
 void setnullpointer(struct Window *);
 void free_file_memory(struct Directory *);
 
 /* main4.c */
 
 void makedir(int);
-void blackout(struct Screen *,ULONG *);
 int iconwrite(int,char *);
 int copyicon(char *,char *,int *);
 char *isicon(char *);
@@ -205,18 +176,22 @@ char *getarexxpath(int,int,int,int);
 int readfile(char *,char **,int *);
 int getnewprot(int,int,int);
 int dateformat(int);
-void dosound(int);
 int checkscreenmode(int);
 void doarrowgadgets(struct Gadget *,int);
 void makermbgad(struct RMBGadget *,struct Gadget *,int);
 void dolittlegads(struct Gadget *,char *,int);
 void rectfill(struct RastPort *,int,int,int,int);
-int isinwindow(int,int);
 int isvalidwindow(int);
+int _isdigit(unsigned char);
+int _isxdigit(unsigned char);
+int _isprint(unsigned char);
+int _isspace(unsigned char);
+int _isupper(unsigned char);
+int _ispunct(unsigned char);
 
 /* main5.c */
 
-int copyfile(char *,char *,int *,int,char *,int);
+int copyfile(char *,char *,int *,/*int,*/char *,int);
 struct Directory *checktot(struct DirectoryWindow *);
 struct Directory *checkdirtot(struct DirectoryWindow *);
 struct Directory *checkdevtot(struct DirectoryWindow *);
@@ -227,7 +202,7 @@ int getwildrename(char *,char *,char *,char *);
 void filloutcopydata(struct Directory *);
 void filloutcopydatafile(char *);
 void update_buffer_stamp(int,int);
-int check_key_press(struct dopusfunction *,USHORT,USHORT);
+int check_key_press(struct dopusfunction *,UWORD,UWORD);
 
 /* main6.c */
 
@@ -241,7 +216,6 @@ int gadgetfrompos(int,int);
 int isvalidgad(struct newdopusfunction *);
 int getpal(void);
 void quickfixmenus(void);
-void sendmouseevent(UBYTE,UWORD,int,int);
 int getdummypath(char *,int);
 char *getfiledescription(char *,int);
 void fixhlen(int);
@@ -252,10 +226,11 @@ void change_port_name(char *);
 
 int showpic(char *,int);
 int readicon(char *,int);
-void drawrecaround(struct RastPort *,int,int,int,int,int,int,int,int);
+void drawrecaround(struct RastPort *,/*int,int,*/int,int,int,int,int,int);
 int doplay8svx(char *,int);
 void kill8svx(void);
 void handle8svxerror(int);
+void dosound(int);
 int playmod(char *);
 char DUnpack(char *,int,char *,char);
 int check_is_module(char *);
@@ -264,7 +239,7 @@ int EnvoyPacket(char *,ULONG,ULONG,UWORD,APTR);
 /* main8.c */
 
 int checkexec(char *);
-void newcli(void);
+void newcli(char *);
 void getprot(int,char *);
 int getprotval(char *);
 int checkexistreplace(char *,char *,struct DateStamp *,int,int);
@@ -284,10 +259,14 @@ void removewindowgadgets(struct Window *);
 
 /* main9.c */
 
-int bytes(char *,int *,int *);
+#ifdef __SASC__
+bigint bytes(char *,bigint *,int *);
+#else
+long long bytes(char *,long long *,int *);
+#endif
 void get_colour_table(void);
 void free_colour_table(void);
-void SetDrawModes(struct RastPort *,char,char,char);
+void SetDrawModes(struct RastPort *,UBYTE,UBYTE,UBYTE);
 void do3dbox(struct RastPort *,int,int,int,int);
 
 /* main10.c */
@@ -302,7 +281,7 @@ void checksize(int);
 void centerwindow(struct NewWindow *);
 char *parsedatetime(char *,char *,char *,int *);
 void copy_datestamp(struct DateStamp *,struct DateStamp *);
-void readkeys(APTR);
+//void readkeys(APTR);
 ULONG clone_screen(struct Screen *,struct ExtNewScreen *);
 int copy_string(char *,char **,struct DOpusRemember **);
 char *strstri(char *,char *);
@@ -313,7 +292,7 @@ int identify_and_load(int,int);
 
 void iconify(int,int,int);
 void remiclock(void);
-int getmaxmem(ULONG,ULONG);
+int getmaxmem(ULONG/*,ULONG*/);
 void iconstatustext(char *,int);
 void cleanupiconify(void);
 
@@ -322,7 +301,11 @@ void cleanupiconify(void);
 void setupchangestate(void);
 void dodiskinfo(char *);
 void get_device_task(BPTR,char *,struct MsgPort *);
-void getsizestring(char *,ULONG);
+#ifdef __SASC__
+void getsizestring(char *,bigint);
+#else
+void getsizestring(char *,unsigned long long);
+#endif
 void getfloatstr(double,char *);
 
 /* main13.c */
@@ -365,26 +348,26 @@ void readhelp(char *);
 void doreadhelp(char *);
 void dohelp(char *,char *,int,int,char *);
 void checkstringgads(int);
-void setdirsize(struct Directory *,int,int);
+void setdirsize(struct Directory *,long long,int);
 
 /* main17.c */
 
 int rexxdisp(struct RexxMsg *,struct CommandList *,char *);
-int parse(char *);
+int parse(unsigned char *);
 void changebuffer(int);
 char *dosstatus(int,char *,char *);
 void dopustofront(void);
 void dopustoback(void);
 int checkkeyword(char **,int,int);
 void removeargstring(int);
-void modify(char *);
-void rexx_return(struct RexxMsg *,int);
+void modify(unsigned char *);
+void rexx_return(struct RexxMsg *,long long);
 
 /* main18.c */
 
 int recursedir(char *,char *,int,int);
-int addrecurse(struct DOpusRemember **,char *,char *,int,APTR,APTR,BPTR,struct FileInfoBlock *);
-int copymakedir(struct DOpusRemember **,struct makedirlist **,char *,struct FileInfoBlock *);
+int addrecurse(struct DOpusRemember **,char *,char *,int,APTR,APTR,BPTR,struct FileInfoBlock *,struct Directory *,struct DirectoryWindow *);
+int getdircontentsinfo(char *, unsigned long long *, ULONG *);
 
 /* main19.c */
 
@@ -393,19 +376,13 @@ void makereselect(struct DirWindowPars *,int);
 void doreselect(struct DirWindowPars *,int);
 void shutthingsdown(int);
 void setupwindreq(struct Window *);
-void hilite_req_gadget(struct Window *,USHORT);
-
-#warning Handle varargs
-#if 0
-int simplerequest __ARGS((char *,...));
-#else
+void hilite_req_gadget(struct Window *,UWORD);
 int simplerequest (char *,...);
-#endif
 int whatsit(char *,int,char *,char *);
 struct dopusfiletype *checkfiletype(char *,int,int);
 int checkfiletypefunc(char *,int);
 int dochecktype(struct dopusfiletype *,char *,int,struct FileInfoBlock *);
-int checktypechars(int,unsigned char *);
+int checktypechars(int,unsigned char *,int);
 int typesearch(int,char *,int,char *,int);
 int dorequest(struct DOpusSimpleRequest *,char *,char **,int *,struct Window *);
 int searchbuffer(char *,int,char *,int,int);
@@ -441,6 +418,7 @@ int maxgadwidth(struct TextFont *,char **,int);
 int gettextlength(struct TextFont *,char *,int *,int);
 int dotextlength(struct RastPort *,char *,int *,int);
 void doposdriveprop(void);
+int getgadbankcount(void);
 void doposgadgetprop(int);
 void fixgadgetprop(void);
 int makeusstring(char *,char *,int *);
@@ -480,9 +458,7 @@ void build_default_string(char *,char *,char *,char *,char *);
 
 /* cycling.c */
 
-/* AROS: No __saveds keyword */
-void /* __saveds */ colourcycle(void);
-
+void __saveds colourcycle(void);
 int initcycle(struct ViewPort *,UWORD *,int,struct C_Range *,int);
 void stopcycle(void);
 void togglecycle(void);
@@ -491,7 +467,7 @@ int checkcycling(void);
 /* doerror.c */
 
 int doerror(int);
-int geterrorstring(char *,int);
+void geterrorstring(char *,int);
 void dostatustext(char *);
 void okay(void);
 void myabort(void);
@@ -503,35 +479,32 @@ int checkerror(char *,char *,int);
 
 void doidcmp(void);
 struct IntuiMessage *getintuimsg(void);
+void flushidcmp(void);
+int isinwindow(int,int);
 
 /* iffload.c */
 
 int LoadPic(char *);
 int checkiff(void);
-struct BitMap *getbitmap(int,int,int);
-void freebitmap(struct BitMap *,int,int);
-void cleanupbitmap(void);
 void rletobuffer(unsigned char *,int,int,struct BitMap *,char,char);
-void readpic(struct BitHeader *,unsigned char *,struct BitMap *);
+void readpic(struct BitMapHeader *,unsigned char *,struct BitMap *);
 void decoderle(struct RLEinfo *);
 void doanimframe(void);
 void doriff(unsigned char *,struct BitMap *,int,int,int);
 void doriff7(unsigned char *,struct BitMap *,int,int);
 void decode_riff_xor(unsigned char *,char *,int,int);
 void decode_riff_set(unsigned char *,char *,int,int);
-void decode_riff_short(USHORT *,unsigned char *,int,int);
+void decode_riff_short(UWORD *,unsigned char *,int,int);
 void decode_riff_long(ULONG *,unsigned char *,int,int);
-void decode_riff7_short(USHORT *,unsigned char *,unsigned char *,int,int);
+void decode_riff7_short(UWORD *,unsigned char *,unsigned char *,int,int);
 void decode_riff7_long(ULONG *,unsigned char *,unsigned char *,int,int);
 int WaitForMouseClick(int,struct Window *);
 int chunkread(void *,ULONG);
 void getcolstring(char *);
-void dotitle(void);
 void gfxprint(struct Window *,struct RastPort *,int,int,int,int,int);
 int InitDHIRES(int);
 void getviewmodes(char *);
 int initsham(void);
-void docheckrasscroll(struct Screen *);
 void iffinfotxt(struct RastPort *,char *,int,int);
 void build_palettes(unsigned char *,int,UWORD *,ULONG *);
 
@@ -563,7 +536,7 @@ void defselect(int,int,int);
 void globalselect(int,int);
 void globaltoggle(int);
 void doselect(int);
-void wildselect(char *,int,int);
+void wildselect(char *,int,int,int);
 void dateselect(struct DateStamp *,struct DateStamp *,int,int);
 void getprotselvals(char *,int *);
 void getseldatestamps(char *,struct DateStamp *,struct DateStamp *);
@@ -585,65 +558,24 @@ void centergadtext(struct Window *,struct Gadget *,char *);
 
 /* tasks.c */
 
-/* AROS: No __saveds keyword */
-void /* __saveds */ hotkeytaskcode(void);
+void __saveds hotkeytaskcode(void);
 void add_hotkey_objects(CxObj *,struct MsgPort *,int);
-CxObj *set_dopus_filter(CxObj *,struct MsgPort *,char *,USHORT,USHORT,int,int);
-void set_hotkey(CxObj *,USHORT,USHORT);
-void dummy_idcmp(struct MsgPort *,ULONG,USHORT,APTR,int,int);
-/* AROS: No __saveds keyword */
-void /*__saveds */ clocktask(void);
-
-/* AROS: asm code rewriten in C */
-#if 0
-struct InputEvent *__saveds __asm keyhandler(register __a0 struct InputEvent *,register __a1 APTR);
+CxObj *set_dopus_filter(CxObj *,struct MsgPort *,char *,UWORD,UWORD,int,int);
+void set_hotkey(CxObj *,UWORD,UWORD);
+void dummy_idcmp(struct MsgPort *,ULONG,UWORD,APTR,int,int);
+void __saveds clocktask(void);
+#ifdef __MORPHOS__
+struct InputEvent * keyhandler(void);
 #else
-
+struct InputEvent *__saveds keyhandler(register struct InputEvent * __asm("a0"),register APTR __asm("a1"));
 #endif
 void openprogresswindow(char *,int,int,int);
 void progresstext(int,int,int,char *);
-void progressbar(int,int,int,int);
 
 /* view.c */
 
 int viewfile(char *,char *,int,char *,struct ViewData *,int,int);
-/* AROS: have no __saveds keyword */
-void /* __saveds */ view_file_process(void);
 void cleanupviewfile(struct ViewData *);
-void view_display(struct ViewData *,int,int);
-void view_displayall(struct ViewData *);
-void view_print(struct ViewData *,char *,int,int);
-void view_update_status(struct ViewData *);
-void view_pensrp(struct ViewData *);
-void view_penrp(struct ViewData *);
-void view_pageup(struct ViewData *);
-void view_pagedown(struct ViewData *);
-void view_gotop(struct ViewData *);
-void view_gobottom(struct ViewData *);
-void view_search(struct ViewData *,int);
-void view_busy(struct ViewData *);
-void view_unbusy(struct ViewData *);
-void view_doscroll(struct ViewData *,int,int);
-int view_lineup(struct ViewData *);
-int view_linedown(struct ViewData *);
-void view_status_text(struct ViewData *,char *);
-void view_printtext(struct ViewData *,int);
-void view_checkprint(struct ViewData *,int);
-void view_makeuphex(struct ViewData *,char *,unsigned char *,int);
-void view_togglescroll(struct ViewData *);
-void view_setupscreen(struct ViewData *);
-void view_viewhilite(struct ViewData *,int,int,int,int);
-void view_clearhilite(struct ViewData *,int);
-void view_fix_scroll_gadget(struct ViewData *);
-void view_clearsearch(struct ViewData *);
-void view_readkeys(struct IOStdReq *,APTR);
-#warning Handle varargs correctly
-#if 0
-int view_simplerequest __ARGS((struct ViewData *,char *,...));
-#else
-int view_simplerequest (struct ViewData *,char *,...);
-#endif
-int view_whatsit(struct ViewData *,char *,int,char *);
 
 
 /* launchexternal.c */
@@ -653,16 +585,16 @@ int close_external(struct dopus_func_start *,int);
 int set_wb_arg(struct WBArg *,char *,BPTR,int);
 void doconfig(void);
 void dopus_diskop(int,int,int);
-/* AROS: No __saveds keyword */
-void /* __saveds */ launch_diskop(void);
+void __saveds launch_diskop(void);
 void dopus_print(int,struct DOpusArgsList *,int,char *,struct ViewData *);
 int dopus_iconinfo(char *);
 void setup_externals(void);
 void fill_out_visinfo(struct VisInfo *,struct Screen *);
 
-/* strings.c */
+/* localefunc.c */
 
 void readstrings(char *);
+int getkeyshortcut(const char *);
 
 /* searchdata.c */
 
@@ -670,7 +602,7 @@ int get_search_data(char *,int *,struct Window *,struct TextFont *);
 
 /* complete.c */
 
-void do_path_completion(int,USHORT);
+void do_path_completion(int,UWORD);
 
 /* remember.c */
 
@@ -687,3 +619,13 @@ int get_multi_volume(BPTR,char **,struct DOpusRemember **);
 void dotree(int);
 int build_tree(struct RecursiveDirectory *);
 void draw_dirtree_gfx(struct RastPort *,int,int,int);
+
+/* popupmenu.c */
+
+void handlelistermenu(int);
+void initlistermenu(void);
+
+/* makelinkdata.c */
+
+int makelink(int);
+

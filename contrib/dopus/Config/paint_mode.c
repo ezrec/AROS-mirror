@@ -37,7 +37,7 @@ int *fg,*bg,type;
 	struct Window *window;
 	struct IntuiMessage *msg;
 	ULONG class;
-	USHORT code;
+	UWORD code;
 	int x,y,gadgetid;
 
 	dummylist.w=330;

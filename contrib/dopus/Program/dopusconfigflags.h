@@ -53,13 +53,6 @@ the existing commercial status of Directory Opus 5.
 #define ERROR_ENABLE_DOS  1
 #define ERROR_ENABLE_OPUS 2
 
-/* GeneralFlags */
-
-#define GENERAL_DISPLAYINFO 2
-#define GENERAL_DOUBLECLICK 8
-#define GENERAL_ACTIVATE    64
-#define GENERAL_DRAG        128
-
 /* IconFlags */
 
 #define ICONFLAG_MAKEDIRICON   1

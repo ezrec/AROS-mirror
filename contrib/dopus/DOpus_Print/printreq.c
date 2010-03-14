@@ -411,7 +411,7 @@ char *argv[];
 	struct MsgPort *appport=NULL;
 	struct AppMessage *appmsg;
 	ULONG class;
-	USHORT code,gadgetid,qual;
+	UWORD code,gadgetid,qual;
 	APTR iaddress;
 	struct StringExtend stringex;
 	PrintData *printdata;
@@ -859,7 +859,7 @@ check_print_gadget(window,gad,min,max,code)
 struct Window *window;
 struct Gadget *gad;
 int min,max;
-USHORT code;
+UWORD code;
 {
 	if (CheckNumGad(gad,window,min,max)) {
 		DisplayBeep(NULL);

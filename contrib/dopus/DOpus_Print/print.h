@@ -111,10 +111,10 @@ typedef struct HeadFootData {
 } HeaderFooter;
 
 typedef struct MyPrinterData {
-	USHORT top_margin;
-	USHORT bottom_margin;
-	USHORT left_margin;
-	USHORT right_margin;
+	UWORD top_margin;
+	UWORD bottom_margin;
+	UWORD left_margin;
+	UWORD right_margin;
 	char tab_size;
 	char print_pitch;
 	char text_quality;

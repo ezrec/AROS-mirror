@@ -30,341 +30,161 @@ the existing commercial status of Directory Opus 5.
 
 #include "dopuslib.h"
 
-#include <proto/console.h>
-
-/*****************************************************************************
-
-    NAME */
-
-	AROS_LH5(int, RawkeyToStr,
-
-/*  SYNOPSIS */
-	AROS_LHA(USHORT, code,	D0),
-	AROS_LHA(USHORT, qual,	D1),
-	AROS_LHA(char *, buf,	A0),
-	AROS_LHA(char *, kbuf,	A1),
-	AROS_LHA(int, len, 	D2),
-
-/*  LOCATION */
-	struct Library *, DOpusBase, 59, DOpus)
-/*  FUNCTION
-
-    INPUTS
-
-    RESULT
-
-    NOTES
-
-    EXAMPLE
-
-    BUGS
-
-    SEE ALSO
-
-    INTERNALS
-
-    HISTORY
-	27-11-96    digulla automatically created from
-			    asl_lib.fd and clib/asl_protos.h
-
-*****************************************************************************/
+int __saveds DoRawkeyToStr(register UWORD code __asm("d0"),
+    register UWORD qual __asm("d1"),
+    register char *buf __asm("a0"),
+    register char *kbuf __asm("a1"),
+    register int len __asm("d2"))
 {
-	AROS_LIBFUNC_INIT
+    struct InputEvent inev;
+    struct MsgPort *port;
+    struct IOStdReq *req;
+    struct Process *myproc;
+    struct ConsoleDevice *ConsoleDevice;
+    char ocbuf[20],cbuf[20],*foo;
 
-	struct InputEvent inev;
-	struct MsgPort *port;
-	struct IOStdReq *req;
-	struct Process *myproc;
-	struct ConsoleDevice *ConsoleDevice;
-	char ocbuf[20],cbuf[20],*foo;
-
-	if (buf) buf[0]=0; ocbuf[0]=cbuf[0]=0;
-	if (code!=(USHORT)~0 && code!=0xff) {
-		if (code&IECODE_UP_PREFIX) code-=0x80;
-		if (code>=0x50 && code<=0x59) LSprintf(cbuf,"F%ld",code-0x4f);
-		else if (code!=(USHORT)~0 && code!=0xff) {
-			foo=NULL;
-			switch (code) {
-				case 0x45: foo="ESCAPE"; break;
-				case 0x46: foo="DELETE"; break;
-				case 0x41: foo="BACKSPACE"; break;
-				case 0x42: foo="TAB"; break;
-				case 0x44:
-				case 0x2b: foo="RETURN"; break;
-				case 0x5f: foo="HELP"; break;
-				case 0x60:
-				case 0x4c: foo="CURSOR-UP"; break;
-				case 0x4d: foo="CURSOR-DOWN"; break;
-				case 0x4f: foo="CURSOR-LEFT"; break;
-				case 0x4e: foo="CURSOR-RIGHT"; break;
-				case 0x43: foo="ENTER"; break;
-				case 0x40: foo="SPACE"; break;
-			}
-			if (foo) strcpy(cbuf,foo);
-			if (!(myproc=(struct Process *)FindTask(NULL))) return(0);
-			port=&myproc->pr_MsgPort;
-			if (!(req=(struct IOStdReq *)LCreateExtIO(port,sizeof(struct IOStdReq)))) return(0);
-			if (OpenDevice("console.device",-1,(struct IORequest *)req,0)) {
-				LDeleteExtIO((struct IORequest *)req);
-				return(0);
-			}
-			ConsoleDevice=(struct ConsoleDevice *)req->io_Device;
-			inev.ie_NextEvent=NULL;
-			inev.ie_Class=IECLASS_RAWKEY;
-			inev.ie_SubClass=NULL;
-			inev.ie_Code=code;
-			inev.ie_Qualifier=qual&(IEQUALIFIER_LSHIFT|IEQUALIFIER_RSHIFT);
-			inev.ie_EventAddress=NULL;
-			ocbuf[0]=0;
-			RawKeyConvert(&inev,ocbuf,2,NULL);
-			ocbuf[1]=0;
-			CloseDevice((struct IORequest *)req);
-			LDeleteExtIO((struct IORequest *)req);
-			if (kbuf) kbuf[0]=ocbuf[0];
-			if (!foo) strcpy(cbuf,ocbuf);
-		}
-	}
-	if (buf) {
-		if (qual&IEQUALIFIER_LCOMMAND) StrConcat(buf,"LAMIGA + ",len);
-		if (qual&IEQUALIFIER_RCOMMAND) StrConcat(buf,"RAMIGA + ",len);
-		if (qual&IEQUALIFIER_CONTROL) StrConcat(buf,"CONTROL + ",len);
-		if (qual&IEQUALIFIER_LSHIFT) StrConcat(buf,"LSHIFT + ",len);
-		if (qual&IEQUALIFIER_RSHIFT) StrConcat(buf,"RSHIFT + ",len);
-		if (qual&IEQUALIFIER_LALT) StrConcat(buf,"LALT + ",len);
-		if (qual&IEQUALIFIER_RALT) StrConcat(buf,"RALT + ",len);
-		if ((code==(USHORT)~0 || code==0xff || code==0) && buf[0]) buf[strlen(buf)-3]=0;
-		else if (cbuf[0]) {
-			StrToUpper(cbuf,ocbuf);
-			StrConcat(buf,"'",len);
-			StrConcat(buf,ocbuf,len);
-			StrConcat(buf,"'",len);
-		}
-	}
-	return(1);
-	
-	AROS_LIBFUNC_EXIT
+    if (buf) buf[0]=0; ocbuf[0]=cbuf[0]=0;
+    if (code!=(UWORD)~0 && code!=0xff) {
+        if (code&IECODE_UP_PREFIX) code-=0x80;
+        if (code>=0x50 && code<=0x59) LSprintf(cbuf,"F%ld",code-0x4f);
+        else if (code!=(UWORD)~0 && code!=0xff) {
+            foo=NULL;
+            switch (code) {
+                case 0x45: foo="ESCAPE"; break;
+                case 0x46: foo="DELETE"; break;
+                case 0x41: foo="BACKSPACE"; break;
+                case 0x42: foo="TAB"; break;
+                case 0x44:
+                case 0x2b: foo="RETURN"; break;
+                case 0x5f: foo="HELP"; break;
+                case 0x60:
+                case 0x4c: foo="CURSOR-UP"; break;
+                case 0x4d: foo="CURSOR-DOWN"; break;
+                case 0x4f: foo="CURSOR-LEFT"; break;
+                case 0x4e: foo="CURSOR-RIGHT"; break;
+                case 0x43: foo="ENTER"; break;
+                case 0x40: foo="SPACE"; break;
+            }
+            if (foo) LStrCpy(cbuf,foo);
+            if (!(myproc=(struct Process *)FindTask(NULL))) return(0);
+            port=&myproc->pr_MsgPort;
+            if (!(req=(struct IOStdReq *)CreateExtIO(port,sizeof(struct IOStdReq)))) return(0);
+            if (OpenDevice("console.device",-1,(struct IORequest *)req,0)) {
+                DeleteExtIO((struct IORequest *)req);
+                return(0);
+            }
+            ConsoleDevice=(struct ConsoleDevice *)req->io_Device;
+            inev.ie_NextEvent=NULL;
+            inev.ie_Class=IECLASS_RAWKEY;
+            inev.ie_SubClass=NULL;
+            inev.ie_Code=code;
+            inev.ie_Qualifier=qual&(IEQUALIFIER_LSHIFT|IEQUALIFIER_RSHIFT);
+            inev.ie_EventAddress=NULL;
+            ocbuf[0]=0;
+            RawKeyConvert(&inev,ocbuf,2,NULL);
+            ocbuf[1]=0;
+            CloseDevice((struct IORequest *)req);
+            DeleteExtIO((struct IORequest *)req);
+            if (kbuf) kbuf[0]=ocbuf[0];
+            if (!foo) LStrCpy(cbuf,ocbuf);
+        }
+    }
+    if (buf) {
+        if (qual&IEQUALIFIER_LCOMMAND) DoStrConcat(buf,"LAMIGA + ",len);
+        if (qual&IEQUALIFIER_RCOMMAND) DoStrConcat(buf,"RAMIGA + ",len);
+        if (qual&IEQUALIFIER_CONTROL) DoStrConcat(buf,"CONTROL + ",len);
+        if (qual&IEQUALIFIER_LSHIFT) DoStrConcat(buf,"LSHIFT + ",len);
+        if (qual&IEQUALIFIER_RSHIFT) DoStrConcat(buf,"RSHIFT + ",len);
+        if (qual&IEQUALIFIER_LALT) DoStrConcat(buf,"LALT + ",len);
+        if (qual&IEQUALIFIER_RALT) DoStrConcat(buf,"RALT + ",len);
+        if ((code==(UWORD)~0 || code==0xff/* || code==0*/) && buf[0]) buf[strlen(buf)-3]=0;
+        else if (cbuf[0]) {
+            StrToUpper(cbuf,ocbuf);
+            DoStrConcat(buf,"'",len);
+            DoStrConcat(buf,ocbuf,len);
+            DoStrConcat(buf,"'",len);
+        }
+    }
+    return(1);
 }
 
-
-/*****************************************************************************
-
-    NAME */
-
-	AROS_LH4(int, CheckNumGad,
-
-/*  SYNOPSIS */
-	AROS_LHA(struct Gadget *, gad,	A0),
-	AROS_LHA(struct Window *, win,	A1),
-	AROS_LHA(int, min, 	D0),
-	AROS_LHA(int, max, 	D1),
-
-/*  LOCATION */
-	struct Library *, DOpusBase, 64, DOpus)
-/*  FUNCTION
-
-    INPUTS
-
-    RESULT
-
-    NOTES
-
-    EXAMPLE
-
-    BUGS
-
-    SEE ALSO
-
-    INTERNALS
-
-    HISTORY
-	27-11-96    digulla automatically created from
-			    asl_lib.fd and clib/asl_protos.h
-
-*****************************************************************************/
+int __saveds DoCheckNumGad(register struct Gadget *gad __asm("a0"),
+    register struct Window *win __asm("a1"),
+    register int min __asm("d0"),
+    register int max __asm("d1"))
 {
-	AROS_LIBFUNC_INIT
+    struct StringInfo *sinfo;
+    int a,b;
 
-	struct StringInfo *sinfo;
-	int a,b;
-
-	sinfo=(struct StringInfo *)gad->SpecialInfo;
-	a=b=atoi((char *)sinfo->Buffer);
-	if (a<min) a=min;
-	else if (a>max) a=max;
-	LSprintf((char *)sinfo->Buffer,"%ld",a);
-	if (a!=b) {
-		if (win) RefreshStrGad(gad,win);
-		return(1);
-	}
-	return(0);
-	
-	AROS_LIBFUNC_EXIT
+    sinfo=(struct StringInfo *)gad->SpecialInfo;
+    a=b=atoi((char *)sinfo->Buffer);
+    if (a<min) a=min;
+    else if (a>max) a=max;
+    LSprintf((char *)sinfo->Buffer,"%ld",a);
+    if (a!=b) {
+        if (win) RefreshStrGad(gad,win);
+        return(1);
+    }
+    return(0);
 }
 
-
-/*****************************************************************************
-
-    NAME */
-
-	AROS_LH4(int, CheckHexGad,
-
-/*  SYNOPSIS */
-	AROS_LHA(struct Gadget *, gad,	A0),
-	AROS_LHA(struct Window *, win,	A1),
-	AROS_LHA(int, min, 	D0),
-	AROS_LHA(int, max, 	D1),
-
-/*  LOCATION */
-	struct Library *, DOpusBase, 65, DOpus)
-/*  FUNCTION
-
-    INPUTS
-
-    RESULT
-
-    NOTES
-
-    EXAMPLE
-
-    BUGS
-
-    SEE ALSO
-
-    INTERNALS
-
-    HISTORY
-	27-11-96    digulla automatically created from
-			    asl_lib.fd and clib/asl_protos.h
-
-*****************************************************************************/
+int __saveds DoCheckHexGad(register struct Gadget *gad __asm("a0"),
+    register struct Window *win __asm("a1"),
+    register int min __asm("d0"),
+    register int max __asm("d1"))
 {
-	AROS_LIBFUNC_INIT
+    struct StringInfo *sinfo;
+    int a,b;
 
-	struct StringInfo *sinfo;
-	int a,b;
-
-	sinfo=(struct StringInfo *)gad->SpecialInfo;
-	b=Atoh((char *)sinfo->Buffer,0);
-	if (sinfo->Buffer[0]==0) a=0;
-	else {
-		a=b;
-		if (a<min) a=min;
-		else if (a>max) a=max;
-	}
-	LSprintf((char *)sinfo->Buffer,"%lx",a);
-	if (a!=b) {
-		if (win) RefreshStrGad(gad,win);
-		return(1);
-	}
-	return(0);
-	
-	AROS_LIBFUNC_EXIT
+    sinfo=(struct StringInfo *)gad->SpecialInfo;
+    b=DoAtoh((char *)sinfo->Buffer,0);
+    if (sinfo->Buffer[0]==0) a=0;
+    else {
+        a=b;
+        if (a<min) a=min;
+        else if (a>max) a=max;
+    }
+    LSprintf((char *)sinfo->Buffer,"%lx",a);
+    if (a!=b) {
+        if (win) RefreshStrGad(gad,win);
+        return(1);
+    }
+    return(0);
 }
 
-/*****************************************************************************
-
-    NAME */
-
-	AROS_LH3(void, Decode_RLE,
-
-/*  SYNOPSIS */
-	AROS_LHA(char *, source,	A0),
-	AROS_LHA(char *, dest,		A1),
-	AROS_LHA(int, size, 	D0),
-
-/*  LOCATION */
-	struct Library *, DOpusBase, 94, DOpus)
-/*  FUNCTION
-
-    INPUTS
-
-    RESULT
-
-    NOTES
-
-    EXAMPLE
-
-    BUGS
-
-    SEE ALSO
-
-    INTERNALS
-
-    HISTORY
-	27-11-96    digulla automatically created from
-			    asl_lib.fd and clib/asl_protos.h
-
-*****************************************************************************/
+void __saveds DoDecode_RLE(register char *source __asm("a0"),
+    register char *dest __asm("a1"),
+    register int size __asm("d0"))
 {
-	AROS_LIBFUNC_INIT
+    register int a;
+    register char copy,count;
 
-	register int a;
-	register char copy,count;
-
-	for (a=0;a<size;) {
-		if ((count=source[a++])>=0) {
-			copy=count+1;
-			while (copy--) *dest++=source[a++];
-		}
-		else if (count!=-128) {
-			copy=1-count;
-			while (copy--) *dest++=source[a];
-			++a;
-		}
-	}
-	
-	AROS_LIBFUNC_EXIT
+    for (a=0;a<size;) {
+        if ((count=source[a++])>=0) {
+            copy=count+1;
+            while (copy--) *dest++=source[a++];
+        }
+        else if (count!=-128) {
+            copy=1-count;
+            while (copy--) *dest++=source[a];
+            ++a;
+        }
+    }
 }
 
-static struct TagItem
-	busytags[2]={
-		{WA_BusyPointer,1},
-		{TAG_DONE,0}};
+const static struct TagItem
+    busytags[2]={
+        {WA_BusyPointer,1},
+        {TAG_DONE,0}};
 
-/* AROS: No  __chip keyword */
-extern USHORT /* __chip  */ busydata13[];
-extern USHORT /* __chip  */ busydata20[];
+//extern UWORD __chip busydata13[];
+//extern UWORD __chip busydata20[];
 
-/*****************************************************************************
-
-    NAME */
-
-	AROS_LH1(void, SetBusyPointer,
-
-/*  SYNOPSIS */
-	AROS_LHA(struct Window *, wind,	A0),
-
-/*  LOCATION */
-	struct Library *, DOpusBase, 50, DOpus)
-/*  FUNCTION
-
-    INPUTS
-
-    RESULT
-
-    NOTES
-
-    EXAMPLE
-
-    BUGS
-
-    SEE ALSO
-
-    INTERNALS
-
-    HISTORY
-	27-11-96    digulla automatically created from
-			    asl_lib.fd and clib/asl_protos.h
-
-*****************************************************************************/
+void __saveds DoSetBusyPointer(register struct Window *wind __asm("a0"))
 {
-	AROS_LIBFUNC_INIT
-
-	if (IntuitionBase->LibNode.lib_Version>38)
-		SetWindowPointerA(wind,busytags);
-	else if (IntuitionBase->LibNode.lib_Version<36)
-		SetPointer(wind,busydata13,22,16,-6,0);
-	else SetPointer(wind,busydata20,16,16,-6,0);
-	
-	AROS_LIBFUNC_EXIT
+//    if (IntuitionBase->LibNode.lib_Version>38)
+        SetWindowPointerA(wind,busytags);
+//    else if (IntuitionBase->LibNode.lib_Version<36)
+//        SetPointer(wind,busydata13,22,16,-6,0);
+//    else SetPointer(wind,busydata20,16,16,-6,0);
 }

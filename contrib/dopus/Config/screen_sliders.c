@@ -57,24 +57,24 @@ int x,y,num;
 	Do3DBox(rp,
 		sx,y,
 		16,94,
-		screen_pens[(int)config->gadgettopcol].pen,screen_pens[(int)config->gadgetbotcol].pen);
+		screen_pens[config->gadgettopcol].pen,screen_pens[config->gadgetbotcol].pen);
 
 	Do3DBox(rp,
 		sx,y+96,
 		16,13,
-		screen_pens[(int)config->gadgettopcol].pen,screen_pens[(int)config->gadgetbotcol].pen);
+		screen_pens[config->gadgettopcol].pen,screen_pens[config->gadgetbotcol].pen);
 
 	Do3DBox(rp,
 		sx,y+111,
 		16,13,
-		screen_pens[(int)config->gadgettopcol].pen,screen_pens[(int)config->gadgetbotcol].pen);
+		screen_pens[config->gadgettopcol].pen,screen_pens[config->gadgetbotcol].pen);
 
-	SetAPen(rp,screen_pens[(int)config->sliderbgcol].pen);
+	SetAPen(rp,screen_pens[config->sliderbgcol].pen);
 	RectFill(rp,
 		sx,y,
 		sx+15,y+93);
 
-	SetAPen(rp,screen_pens[(int)config->slidercol].pen);
+	SetAPen(rp,screen_pens[config->slidercol].pen);
 	RectFill(rp,
 		sx+2,y+1,
 		sx+13,y+92);
@@ -82,19 +82,19 @@ int x,y,num;
 	DoArrow(rp,
 		sx,y+96,
 		16,13,
-		screen_pens[(int)config->arrowfg].pen,screen_pens[(int)config->arrowbg].pen,0);
+		screen_pens[config->arrowfg].pen,screen_pens[config->arrowbg].pen,0);
 
 	DoArrow(rp,
 		sx,y+111,
 		16,13,
-		screen_pens[(int)config->arrowfg].pen,screen_pens[(int)config->arrowbg].pen,1);
+		screen_pens[config->arrowfg].pen,screen_pens[config->arrowbg].pen,1);
 
 	Do3DBox(rp,
 		bx,y,
 		167,124,
-		screen_pens[(int)config->gadgettopcol].pen,screen_pens[(int)config->gadgetbotcol].pen);
+		screen_pens[config->gadgettopcol].pen,screen_pens[config->gadgetbotcol].pen);
 
-	SetAPen(rp,screen_pens[(int)config->filesbg].pen);
+	SetAPen(rp,screen_pens[config->filesbg].pen);
 	RectFill(rp,
 		bx,y,
 		bx+166,y+123);

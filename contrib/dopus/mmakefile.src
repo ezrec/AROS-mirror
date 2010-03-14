@@ -1,0 +1,23 @@
+# Copyright © 2004-2010, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(SRCDIR)/$(CURDIR)/make.cfg
+
+SFILES := Package-Startup ConfigOpus.HLP DirectoryOpus.HLP
+
+#MM contrib-dopus : dopus-library DirOpus ConfigOpus DOpusRT DOpus_Disk DOpus_Icon
+contrib-dopus : $(SFILES:%=$(DOPUSDIR)/S/%)
+
+$(DOPUSDIR)/S/% : S/%
+	@$(MKDIR) $(dir $@)
+	@$(CP) $< $@
+
+#MM
+contrib-dopus :
+	$(ECHO) "Extras:DOpus" >$(AROS_PACKAGES)/DOpus
+
+#MM contrib-dopus : dopus-includes
+
+%copy_dir_recursive mmake=dopus-includes src=include \
+	dst=$(DOPUSDIR)/Development/include
+

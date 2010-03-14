@@ -8,13 +8,19 @@ FILES := about arbiter main main1 main2 main3 main4 main5 main6 main7\
          icondata iffload rexx protectdata renamedata select selectdata\
          strings tasks view screendata dopusfunctions\
          launchexternal searchdata complete remember parentmulti\
-          dirtree getusage asmfuncs_in_c lsprintf dummy_asyncio # assembly
+         dirtree getusage assembly dummy_asyncio\
+         archive makelinkdata
 
 EXEDIR := $(DOPUSDIR)
 
 #MM- DirOpus : dopus-library workbench-libs-rexxsyslib
 
-USER_CFLAGS := -I$(DOPUSDIR)/Development/include
+USER_CFLAGS := -I$(DOPUSDIR)/Development/include \
+    -I$(SRCDIR)/$(CURDIR)/../include \
+    -D__REXXSYSLIB_STDLIBBASE__ \
+    -D__UTILITY_STDLIBBASE__ \
+    -D__LOCALE_STDLIBBASE__ \
+    -DDEBUG=1
 
 %build_prog mmake=DirOpus \
     progname=DirectoryOpus targetdir=$(EXEDIR) \

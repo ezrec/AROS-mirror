@@ -28,76 +28,107 @@ the existing commercial status of Directory Opus 5.
 
 */
 
+#ifdef __AROS__
+  #include <aros/debug.h>
+#else
+#ifdef DEBUG
+  #include <debug.h>
+  #define bug kprintf
+  #define D(x) x
+#else
+  #define D(x)
+#endif
+#endif
+
+#if defined(__PPC__) || defined(__AROS__)
+  #undef  __saveds
+  #define __saveds
+  #define __chip
+  #define __aligned __attribute__((__aligned__(4)))
+  #define lsprintf sprintf
+  #define __asm(A)
+#endif
+
 #ifndef DOPUS_INCLUDE
 #define DOPUS_INCLUDE
 
-#include <assert.h>
-#include <ctype.h>
+//#include <fctype.h>
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <exec/types.h>
 #include <exec/memory.h>
 #include <exec/execbase.h>
+#include <exec/alerts.h>
 #include <dos/dos.h>
 #include <dos/dosextens.h>
 #include <dos/exall.h>
 #include <intuition/intuitionbase.h>
+#include <intuition/iobsolete.h>
 #include <intuition/sghooks.h>
 #include <graphics/gfxbase.h>
 #include <graphics/gfxmacros.h>
 #include <libraries/commodities.h>
 #include <workbench/workbench.h>
 #include <workbench/startup.h>
+#include <devices/audio.h>
 #include <devices/input.h>
 #include <devices/keyboard.h>
 #include <devices/trackdisk.h>
-
-#warning Missing includes
-/*
-#include <devices/audio.h>
 #include <devices/printer.h>
 #include <devices/prtbase.h>
-*/
 #include <devices/conunit.h>
 #include <hardware/intbits.h>
 #include <datatypes/datatypesclass.h>
-
-/*
-#include <proto/all.h>
-
-*/
-
+#include <proto/alib.h>
+#include <proto/amigaguide.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
+#include <proto/datatypes.h>
+#include <proto/diskfont.h>
+#include <proto/icon.h>
 #include <proto/intuition.h>
 #include <proto/graphics.h>
-#include <proto/icon.h>
-#include <proto/diskfont.h>
-#include <proto/arossupport.h>
-#include <proto/alib.h>
-#include <proto/dopus.h>
-#include <proto/utility.h>
-#include <proto/workbench.h>
+#include <proto/layers.h>
+#include <proto/locale.h>
+#include <proto/commodities.h>
+#include <proto/wb.h>
 #include <proto/rexxsyslib.h>
+#include <proto/timer.h>
+#include <proto/utility.h>
 
-#include "ushort.h"
-
-#include "dopusbase.h"
-#include "requesters.h"
-#include "dopusproto.h"
-#include "stringdata.h"
+#include <proto/dopus.h>
+#ifndef __AROS__
+#include <proto/accounts.h>
+#endif
 #include "pools.h"
 
+//#define lsprintf sprintf
+
+#include <dopus/dopusmessage.h>
+#include <dopus/config.h>
+#include <dopus/configflags.h>
+#include <dopus/stringdata.h>
+#include <dopus/requesters.h>
+#include "arbiter.h"
+#include "dopusstructures.h"
+#include "dopusflags.h"
+#include "dopusiff.h"
+#include "dopusfunctions.h"
+#include "dopusdata.h"
+#include "dopusstrings.h"
+#include "screendata.h"
+#include "dopusreqdata.h"
+#include "launchexternal.h"
+#include "view.h"
+
+#include "dopusproto.h"
 
 #define CONFIG_STRUCTURE_SIZE 9200
 
-#define DOPUSLIB_VERSION 21
-
-#define DOPUS_VERSION  4
-#define DOPUS_REV      "12"
-
-#define DOPUS_REVISION DOPUS_REV
+#define DOPUSLIB_VERSION 22
+#define DOPUSLIB_REVISION 20
 
 #define OSVER_34 0
 #define OSVER_37 1
@@ -107,7 +138,7 @@ the existing commercial status of Directory Opus 5.
 
 #define ASYNC_READ_SIZE  16384
 #define ASYNC_WRITE_SIZE 16384
-#define COPY_BUF_SIZE    2048
+#define COPY_BUF_SIZE    16384 //2048
 
 #define CURSOR_LEFT 0x4f
 #define CURSOR_RIGHT 0x4e
@@ -121,6 +152,7 @@ the existing commercial status of Directory Opus 5.
 #define PROGRESS_OPEN         100
 #define PROGRESS_UPDATE       101
 #define PROGRESS_CLOSE        102
+#define PROGRESS_INCREASE     103
 #define HOTKEY_HOTKEYCHANGE   120
 #define HOTKEY_NEWHOTKEYS     121
 #define HOTKEY_KILLHOTKEYS    122
@@ -133,9 +165,9 @@ the existing commercial status of Directory Opus 5.
 #define IEQUALIFIER_ANYSHIFT (IEQUALIFIER_LSHIFT|IEQUALIFIER_RSHIFT)
 
 #define ICON_IDCMP (IDCMP_CLOSEWINDOW|IDCMP_MOUSEBUTTONS|IDCMP_DISKINSERTED|\
-										IDCMP_DISKREMOVED|IDCMP_GADGETUP|IDCMP_GADGETDOWN|\
-										IDCMP_ACTIVEWINDOW|IDCMP_INACTIVEWINDOW|IDCMP_MOUSEMOVE|\
-										IDCMP_MENUPICK)
+                                        IDCMP_DISKREMOVED|IDCMP_GADGETUP|IDCMP_GADGETDOWN|\
+                                        IDCMP_ACTIVEWINDOW|IDCMP_INACTIVEWINDOW|IDCMP_MOUSEMOVE|\
+                                        IDCMP_MENUPICK)
 
 #define IFFERR_NOTILBM  -2
 #define IFFERR_BADIFF   -3
@@ -162,13 +194,9 @@ the existing commercial status of Directory Opus 5.
 
 #define ENTRYTYPE(t) ((t==ENTRY_CUSTOM)?ENTRY_CUSTOM:((t==0)?ENTRY_DEVICE:((t<0)?ENTRY_FILE:ENTRY_DIRECTORY)))
 
-#define MAXDISPLAYLENGTH  256
+#define MAXDISPLAYLENGTH  300
 
-#define isonlyword(c) (!c || c==10 || c==13 || isspace(c) || ispunct(c))
-
-#define OLD_CONFIG_VERSION 9999
-#define CONFIG_VERSION 10000
-#define CONFIG_MAGIC 0xFACE
+#define isonlyword(c) (!c || c==10 || c==13 || _isspace(c) || _ispunct(c))
 
 #define MENUCOUNT 100
 #define GADCOUNT 84
@@ -192,12 +220,6 @@ the existing commercial status of Directory Opus 5.
 
 #define ABSI(n) ((n<0)?-n:n)
 
-#define CONFIG_GET_CONFIG 1
-#define CONFIG_HERES_CONFIG 2
-#define CONFIG_ALL_DONE 3
-#define CONFIG_NEW_HOTKEY 4
-#define CONFIG_HOTKEYS_CHANGE 5
-
 #define PSTYLE_NORMAL  1
 #define PSTYLE_BOLD    2
 #define PSTYLE_ITALICS 3
@@ -215,8 +237,8 @@ the existing commercial status of Directory Opus 5.
 #define HEADER_DATE    2
 #define HEADER_PAGE    4
 
-#define	PNLQ_ON  "\x1b[2\"z"
-#define	PNLQ_OFF "\x1b[1\"z"
+#define PNLQ_ON  "\x1b[2\"z"
+#define PNLQ_OFF "\x1b[1\"z"
 
 #define MODE_WORKBENCHUSE         1
 #define MODE_WORKBENCHCLONE       2
@@ -247,38 +269,25 @@ the existing commercial status of Directory Opus 5.
 #define STATUS_SQUAREPIXEL  1024 /* Screen has square pixels */
 #define STATUS_NEWLOOK      2048 /* New-look sliders */
 
-#include "arbiter.h"
-#include "dopusstructures.h"
-#include "dopusflags.h"
-#include "dopusconfigflags.h"
-#include "dopusiff.h"
-#include "dopusfunctions.h"
-#include "dopusdata.h"
-#include "dopusstrings.h"
-#include "screendata.h"
-#include "dopusreqdata.h"
-#include "chipimage.h"
-#include "launchexternal.h"
-
 extern struct DiskObject *icontable[4];
 extern char *comp_date,*comp_time;
 
 #define MAXMENULENGTH 64
 
 /* Envoy stuff */
-
+/*
 struct UserInfo
 {
-	UBYTE	ui_UserName[32];
-	UWORD	ui_UserID;
-	UWORD	ui_PrimaryGroupID;
-	ULONG   ui_Flags;
+    UBYTE   ui_UserName[32];
+    UWORD   ui_UserID;
+    UWORD   ui_PrimaryGroupID;
+    ULONG   ui_Flags;
 };
 
 struct GroupInfo
 {
-	UBYTE	gi_GroupName[32];
-	UWORD	gi_GroupID;
+    UBYTE   gi_GroupName[32];
+    UWORD   gi_GroupID;
 };
 
 struct UserInfo *AllocUserInfo( void );
@@ -289,8 +298,6 @@ void FreeGroupInfo( struct GroupInfo * );
 ULONG IDToUser( unsigned long userID, struct UserInfo *user );
 ULONG IDToGroup( unsigned long groupID, struct GroupInfo *group );
 
-/* AROS: we don't use pragmas
-
 #pragma libcall AccountsBase AllocUserInfo 1e 00
 #pragma libcall AccountsBase AllocGroupInfo 24 00
 #pragma libcall AccountsBase FreeUserInfo 2a 801
@@ -299,10 +306,27 @@ ULONG IDToGroup( unsigned long groupID, struct GroupInfo *group );
 #pragma libcall AccountsBase IDToUser 4e 8002
 #pragma libcall AccountsBase IDToGroup 54 8002
 */
+
 #ifdef __SASC_60
-#define CHIP_DATA __chip UBYTE
+
+extern __chip UBYTE
+    pageflip_data1[10],
+    pageflip_data2[6],
+    null_pointer[12];
+
+extern __chip BYTE beepwave[16];
+
 #else
-#define CHIP_DATA UBYTE /* __chip */
+
+extern UBYTE __chip
+    pageflip_data1[10],
+    pageflip_data2[6],
+    null_pointer[12];
+
+extern BYTE __chip beepwave[16];
+
 #endif
+
+extern struct Image appicon_image;
 
 #endif

@@ -28,251 +28,178 @@ the existing commercial status of Directory Opus 5.
 
 */
 
-#include <aros/debug.h>
 #include "dopuslib.h"
 
-
-/*****************************************************************************
-
-    NAME */
-
-	AROS_LH4(int, SendPacket,
-
-/*  SYNOPSIS */
-	AROS_LHA(struct MsgPort *, port, A0),
-	AROS_LHA(int , action, 		D0),
-	AROS_LHA(ULONG * , args, 	A1),
-	AROS_LHA(int , nargs, 		D1),
-
-/*  LOCATION */
-	struct Library *, DOpusBase, 36, DOpus)
-/*  FUNCTION
-
-    INPUTS
-
-    RESULT
-
-    NOTES
-
-    EXAMPLE
-
-    BUGS
-
-    SEE ALSO
-
-    INTERNALS
-
-    HISTORY
-	27-11-96    digulla automatically created from
-			    asl_lib.fd and clib/asl_protos.h
-
-*****************************************************************************/
+int __saveds DoSendPacket(register struct MsgPort *port __asm("a0"), register int action __asm("d0"), register ULONG *args __asm("a1"), register int nargs __asm("d1"))
 {
-	AROS_LIBFUNC_INIT
+    struct StandardPacket *packet;
+    struct MsgPort *repport;
+    struct Process *myproc;
+    int count,res1=0;
+    ULONG *pargs;
 
-	struct StandardPacket *packet;
-	struct MsgPort *repport;
-	struct Process *myproc;
-	int count,res1,a;
-	ULONG *pargs;
-	
-	
-	kprintf("!!! SendPacket() CALLED. PACKETS ARE NOT IMPLEMENTED IN AROS !!!\n");
+    if (packet=AllocMem(sizeof(struct StandardPacket),MEMF_PUBLIC|MEMF_CLEAR))
+     {
+      if (repport=CreatePort(NULL,0))
+       {
+        packet->sp_Msg.mn_Node.ln_Name=(char *)&(packet->sp_Pkt);
+        packet->sp_Pkt.dp_Link=&(packet->sp_Msg);
+        packet->sp_Pkt.dp_Port=repport;
+        packet->sp_Pkt.dp_Type=action;
 
-	myproc=(struct Process *)FindTask(NULL);
-	if (!(packet=AllocMem(sizeof(struct StandardPacket),MEMF_PUBLIC|MEMF_CLEAR)))
-		return(0);
-	if (!(repport=LCreatePort(NULL,0))) {
-		FreeMem(packet,sizeof(struct StandardPacket));	
-		return(0);
-	}
+        pargs=(ULONG *)&(packet->sp_Pkt.dp_Arg1);
+        if (nargs>7) nargs=7;
+        for (count=0;count<nargs;count++) pargs[count]=args[count];
 
-	packet->sp_Msg.mn_Node.ln_Name=(char *)&(packet->sp_Pkt);
-	packet->sp_Pkt.dp_Link=&(packet->sp_Msg);
-	packet->sp_Pkt.dp_Port=repport;
-	packet->sp_Pkt.dp_Type=action;
+        PutMsg(port,(struct Message *)packet);
+        WaitPort(repport);
+        GetMsg(repport);
 
-	pargs=(ULONG *)&(packet->sp_Pkt.dp_Arg1);
-	if (nargs>7) nargs=7;
-	for (count=0;count<nargs;count++) pargs[count]=args[count];
+        res1=packet->sp_Pkt.dp_Res1;
 
-	PutMsg(port,(struct Message *)packet);
-	WaitPort(repport);
-	GetMsg(repport);
+        if (myproc=(struct Process *)FindTask(NULL)) myproc->pr_Result2=packet->sp_Pkt.dp_Res2;
 
-	res1=packet->sp_Pkt.dp_Res1;
-	a=packet->sp_Pkt.dp_Res2;
-	FreeMem(packet,sizeof(struct StandardPacket));
-	LDeletePort(repport);
-	if (myproc) myproc->pr_Result2=a;
-	return(res1);   
-	
-	AROS_LIBFUNC_EXIT
+        DeletePort(repport);
+       }
+      FreeMem(packet,sizeof(struct StandardPacket));
+     }
+    return res1;
 }
 
-/*****************************************************************************
+struct DOpusPool
+ {
+  APTR fast;
+  APTR chip;
+ };
 
-    NAME */
-
-	AROS_LH3(void *, LAllocRemember,
-
-/*  SYNOPSIS */
-	AROS_LHA(struct DOpusRemember **, key, A0),
-	AROS_LHA(ULONG, size, 	D0),
-	AROS_LHA(ULONG, type, 	D1),
-
-/*  LOCATION */
-	struct Library *, DOpusBase, 48, DOpus)
-/*  FUNCTION
-
-    INPUTS
-
-    RESULT
-
-    NOTES
-
-    EXAMPLE
-
-    BUGS
-
-    SEE ALSO
-
-    INTERNALS
-
-    HISTORY
-	27-11-96    digulla automatically created from
-			    asl_lib.fd and clib/asl_protos.h
-
-*****************************************************************************/
+APTR __saveds DoAllocRemember(register struct DOpusRemember **key __asm("a0"), register ULONG size __asm("d0"), register ULONG type __asm("d1"))
 {
-	AROS_LIBFUNC_INIT
+    APTR *pool;
+    ULONG *mem;
 
-	struct DOpusRemember *node,*cur;
-	size+=sizeof(struct DOpusRemember);
-	if (!(node=AllocMem(size,type))) return(NULL);
-	node->next=NULL;
-	if ((*key)==NULL) {
-		node->current=node;
-		(*key)=node;
-	}
-	else {
-		cur=(*key)->current;
-		(*key)->current=node;
-		cur->next=node;
-	}
-	node->size=size;
-	size=(ULONG)node+sizeof(struct DOpusRemember);
-	return (void *)((ULONG)size);
-	
-	AROS_LIBFUNC_EXIT
+    if (*key == NULL)
+     {
+      *key = AllocMem(sizeof(struct DOpusPool),MEMF_ANY | MEMF_CLEAR);
+      if (*key == NULL) return (0);
+     }
+//kprintf("LAllocRemember(%lx,%ld,%s): ",*key,size,(type & MEMF_CHIP)?"CHIP":"ANY");
+    if (type & MEMF_CHIP) pool = &((struct DOpusPool *)*key)->chip;
+    else pool = &((struct DOpusPool *)*key)->fast;
+
+    if (*pool == NULL) *pool = CreatePool(type | MEMF_CLEAR, 1024, 1024);
+//kprintf("pool = %lx\t",*pool);
+    size += sizeof(ULONG);
+    if (*pool) if (mem = AllocPooled(*pool,size))
+     {
+//kprintf("mem = %lx\n",mem);
+      mem[0] = size;
+      return (mem+1);
+     }
+//kprintf("error!\n");
+    return 0;
+/*
+    struct DOpusRemember *node,*cur;
+
+    size+=sizeof(struct DOpusRemember);
+    if (!(node=AllocMem(size,type))) return(NULL);
+    node->next=NULL;
+    if ((*key)==NULL) {
+        node->current=node;
+        (*key)=node;
+    }
+    else {
+        cur=(*key)->current;
+        (*key)->current=node;
+        cur->next=node;
+    }
+    node->size=size;
+    size=(ULONG)node+sizeof(struct DOpusRemember);
+    return((ULONG)size);
+*/
 }
 
-
-/*****************************************************************************
-
-    NAME */
-
-	AROS_LH1(void, LFreeRemember,
-
-/*  SYNOPSIS */
-	AROS_LHA(struct DOpusRemember **, key, A0),
-
-/*  LOCATION */
-	struct Library *, DOpusBase, 49, DOpus)
-/*  FUNCTION
-
-    INPUTS
-
-    RESULT
-
-    NOTES
-
-    EXAMPLE
-
-    BUGS
-
-    SEE ALSO
-
-    INTERNALS
-
-    HISTORY
-	27-11-96    digulla automatically created from
-			    asl_lib.fd and clib/asl_protos.h
-
-*****************************************************************************/
+void __saveds DoFreeRemember(register struct DOpusRemember **key __asm("a0"))
 {
-	AROS_LIBFUNC_INIT
+    struct DOpusPool *pool = (struct DOpusPool *)(*key);
+    if (*key)
+     {
+//kprintf("LFreeRemember(%lx)\n",*key);
+      if (pool->fast) DeletePool(pool->fast);
+      if (pool->chip) DeletePool(pool->chip);
+      FreeMem(*key,sizeof(struct DOpusPool));
+      *key = NULL;
+     }
+/*
+    struct DOpusRemember *node,*cur;
 
-	struct DOpusRemember *node,*cur;
-
-	if ((*key)==NULL) return;
-	node=(*key);
-	while (node) {
-		cur=node->next;
-		FreeMem(node,node->size);
-		node=cur;
-	}
-	(*key)=NULL;
-	
-	AROS_LIBFUNC_EXIT
+    if ((*key)==NULL) return;
+    node=(*key);
+    while (node) {
+        cur=node->next;
+        FreeMem(node,node->size);
+        node=cur;
+    }
+    (*key)=NULL;
+*/
 }
 
-/*****************************************************************************
-
-    NAME */
-
-	AROS_LH2(void, LFreeRemEntry,
-
-/*  SYNOPSIS */
-	AROS_LHA(struct DOpusRemember **, key, A0),
-	AROS_LHA(char *, pointer, A1),
-
-/*  LOCATION */
-	struct Library *, DOpusBase, 97, DOpus)
-/*  FUNCTION
-
-    INPUTS
-
-    RESULT
-
-    NOTES
-
-    EXAMPLE
-
-    BUGS
-
-    SEE ALSO
-
-    INTERNALS
-
-    HISTORY
-	27-11-96    digulla automatically created from
-			    asl_lib.fd and clib/asl_protos.h
-
-*****************************************************************************/
+void __saveds DoFreeRemEntry(register struct DOpusRemember **key __asm("a0"), register char *pointer __asm("a1"))
 {
-	AROS_LIBFUNC_INIT
+    struct DOpusPool *pool;
+    ULONG *ptr = (ULONG *)pointer;
 
-	struct DOpusRemember *node,*last=NULL;
+    if ((*key) == NULL) return;
+    if (TypeOfMem(pointer) & MEMF_CHIP) pool = ((struct DOpusPool *)(*key))->chip;
+    else pool = ((struct DOpusPool *)(*key))->fast;
 
-	if ((*key)==NULL) return;
-	pointer-=sizeof(struct DOpusRemember);
+    FreePooled(pool,ptr-1,*(ptr-1));
+//kprintf("LFreeRemEntry(%lx,%lx): pool = %lx\n",*key,ptr-1,pool);
+/*
+    struct DOpusRemember *node,*last=NULL;
 
-	node=(*key);
-	while (node) {
-		if (node==(struct DOpusRemember *)pointer) {
-			if (last) last->next=node->next;
-			if ((*key)->current==node) (*key)->current=last;
-			if (node==(*key)) {
-				last=(*key)->current;
-				if (((*key)=node->next)) (*key)->current=last;
-			}
-			FreeMem(node,node->size);
-			break;
-		}
-		last=node;
-		node=node->next;
-	}
-	
-	AROS_LIBFUNC_EXIT
+    if ((*key)==NULL) return;
+    pointer-=sizeof(struct DOpusRemember);
+
+    node=(*key);
+    while (node) {
+        if (node==(struct DOpusRemember *)pointer) {
+            if (last) last->next=node->next;
+            if ((*key)->current==node) (*key)->current=last;
+            if (node==(*key)) {
+                last=(*key)->current;
+                if (((*key)=node->next)) (*key)->current=last;
+            }
+            FreeMem(node,node->size);
+            break;
+        }
+        last=node;
+        node=node->next;
+    }
+*/
 }
+
+struct IORequest * __saveds DoCreateExtIO(register struct MsgPort *port __asm("a0"), register int size __asm("d0"))
+ {
+D(bug("LCreateExtIO()\n")/*;Delay(50)*/;)
+  return CreateExtIO(port,size);
+ }
+
+void __saveds DoDeleteExtIO(register struct IORequest *extio __asm("a0"))
+ {
+D(bug("LDeleteExtIO()\n");/*Delay(50);*/)
+  DeleteExtIO(extio);
+ }
+
+struct MsgPort * __saveds DoCreatePort(register char *name __asm("a0"), register int pri __asm("d0"))
+ {
+D(bug("LCreatePort()\n");/*Delay(50);*/)
+  return CreatePort(name,pri);
+ }
+
+void __saveds DoDeletePort(register struct MsgPort *port __asm("a0"))
+ {
+D(bug("LDeletePort()\n");/*Delay(50);*/)
+  DeletePort(port);
+ }
+
+

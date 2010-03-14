@@ -28,22 +28,26 @@ the existing commercial status of Directory Opus 5.
 
 */
 
-/* #include <fctype.h>
-*/
+#ifdef DEBUG
+  #define bug kprintf
+  #define D(x) x
+#else
+  #define D(x)
+#endif
 
-#include <proto/exec.h>
-#include <proto/dos.h>
-#include <proto/intuition.h>
-#include <proto/graphics.h>
-#include <proto/diskfont.h>
-#include <proto/icon.h>
-#include <proto/layers.h>
-#include <proto/workbench.h>
-#include <proto/arossupport.h>
+#if defined(__PPC__) || defined(__AROS__)
+  #undef  __saveds
+  #define __saveds
+  #define __chip
+  #define __aligned __attribute__((__aligned__(4)))
+  #define lsprintf sprintf     
+  #define __asm(A)
+  #define __stdargs
+  #define __regargs
+  #define _exit exit
+#endif
 
-#include <proto/dopus.h>
-
-#include <assert.h>
+//#include <fctype.h>
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
@@ -56,20 +60,34 @@ the existing commercial status of Directory Opus 5.
 #include <dos/dosextens.h>
 #include <dos/exall.h>
 #include <intuition/intuitionbase.h>
-#include <intuition/intuition.h>
-
-
 #include <intuition/iobsolete.h>
-
 #include <intuition/sghooks.h>
 #include <graphics/gfxbase.h>
 #include <graphics/gfxmacros.h>
 #include <workbench/workbench.h>
 #include <workbench/startup.h>
-/* #include <proto/all.h>
-*/
-#include "dopusbase.h"
-#include "stringdata.h"
+#include <diskfont/diskfont.h>
+#include <proto/exec.h>
+#include <proto/dos.h>
+#include <proto/intuition.h>
+#include <proto/graphics.h>
+#include <proto/layers.h>
+#include <proto/asl.h>
+#include <proto/utility.h>
+#include <proto/console.h>
+#include <proto/locale.h>
+#include <proto/dopus.h>
+#include <proto/diskfont.h>
+#include <proto/icon.h>
+#include <proto/workbench.h>
+#include <clib/alib_protos.h>
+
+#include <proto/dopus.h>
+#include <dopus/config.h>
+#include <dopus/configflags.h>
+#include <dopus/dopusmessage.h>
+#include <dopus/stringdata.h>
+#undef CONFIG_VERSION
 
 #define NUM_MODULES 4
 
@@ -85,25 +103,21 @@ the existing commercial status of Directory Opus 5.
 
 #define CONFIG_STRUCTURE_SIZE 9200
 
-#define OLD_CONFIG_VERSION 9999
-#define CONFIG_VERSION 10000
-#define CONFIG_MAGIC 0xFACE
-
 enum {
-	FONT_GENERAL,
-	FONT_DIRS,
-	FONT_TEXT,
-	FONT_GADGETS,
-	FONT_MENUS,
-	FONT_STATUS,
-	FONT_NAMES,
-	FONT_CLOCK,
-	FONT_REQUEST,
-	FONT_STRING,
-	FONT_ICONIFY,
-	FONT_SCREEN,
+    FONT_GENERAL,
+    FONT_DIRS,
+    FONT_TEXT,
+    FONT_GADGETS,
+    FONT_MENUS,
+    FONT_STATUS,
+    FONT_NAMES,
+    FONT_CLOCK,
+    FONT_REQUEST,
+    FONT_STRING,
+    FONT_ICONIFY,
+    FONT_SCREEN,
 
-	FONT_COUNT};
+    FONT_COUNT};
 
 #define FFLAG_8ONLY   1
 #define FFLAG_NOPROP  2
@@ -194,238 +208,25 @@ enum {
 #define FTYC_MOVETO       7
 #define FTYC_MOVE         8
 #define FTYC_SEARCHFOR    9
+#define FTYC_MATCHI      10
 #define FTYC_OR         253
 #define FTYC_AND        254
 #define FTYC_ENDSECTION 255
 
 #define FTYC_ENDLIMIT   252
-#define FTYC_COMMANDOK   10
+#define FTYC_COMMANDOK   11
 #define FTYC_CYCLEEND    12
 
 #define FILETYPE_FUNCNUM   16
 
-struct dopusfunction {
-	char name[16];
-	int which,stack;
-	unsigned char key,qual;
-	char type,pri,delay;
-	char fpen,bpen;
-	char pad;
-	char *function;
-};
-
-/*
-struct newdopusfunction {
-	char *name;
-	char *image[2];
-	int pad2;
-	int which,stack;
-	unsigned char key,qual;
-	char type,pri,delay;
-	char fpen,bpen;
-	char pad;
-	char *function;
-};
-*/
-
-struct newdopusfunction {
-	char *name;
-	int pad2[3];
-	int which,stack;
-	unsigned char key,qual;
-	char type,pri,delay;
-	char fpen,bpen;
-	char pad;
-	char *function;
-};
-
-struct dopusfiletype {
-	struct dopusfiletype *next;
-	char type[32];
-	char typeid[8];
-	char actionstring[FILETYPE_FUNCNUM][40];
-	int which[FILETYPE_FUNCNUM],stack[FILETYPE_FUNCNUM];
-	char pri[FILETYPE_FUNCNUM],delay[FILETYPE_FUNCNUM];
-	unsigned char *recognition;
-	char *function[FILETYPE_FUNCNUM];
-	char *iconpath;
-};
-
 struct fileclass {
-	struct fileclass *last,*next;
-	char type[32];
-	char typeid[8];
-	unsigned char *recognition;
+    struct fileclass *last,*next;
+    char type[32];
+    char typeid[8];
+    unsigned char *recognition;
 };
 
-struct dopusgadgetbanks {
-	struct newdopusfunction gadgets[GADCOUNT];
-	struct dopusgadgetbanks *next;
-};
-
-struct dopushotkey {
-	struct dopushotkey *next;
-	UWORD code,qualifier;
-	char name[40];
-	struct dopusfunction func;
-};
-
-
-struct Config {
-	USHORT version;
-	USHORT magic;
-
-	char copyflags;
-	char deleteflags;
-	char errorflags;
-	unsigned char generalflags;
-	char iconflags;
-	char existflags;
-	char sepflags;
-	char sortflags;
-	char dynamicflags;
-	char sortmethod[2];
-
-	char hotkeyflags;
-
-	char menutit[5][16];
-	struct newdopusfunction menu[MENUCOUNT];
-
-	struct dopusfunction drive[DRIVECOUNT];
-
-	char outputcmd[80],output[80];
-	int gadgetrows;
-
-	char separatemethod[2];
-
-	char language[30];
-
-	char displaypos[2][16];
-	char displaylength[2][16];
-
-	char pubscreen_name[80];
-
-	USHORT Palette[16];
-	char gadgettopcol,gadgetbotcol;
-	char statusfg,statusbg;
-	char filesfg,filesbg,filesselfg,filesselbg;
-	char dirsfg,dirsbg,dirsselfg,dirsselbg;
-	char clockfg,clockbg;
-	char requestfg,requestbg;
-	char disknamefg,disknamebg,disknameselfg,disknameselbg;
-	char slidercol,arrowfg,arrowbg,littlegadfg,littlegadbg;
-
-	char pad3;
-
-	char scrdepth;
-	char screenflags;
-	int screenmode;
-	int scrw,scrh;
-	char fontbuf[40];
-	char arrowpos[3];
-
-	char pad4;
-
-	char startupscript[80];
-	char dirflags;
-	unsigned char bufcount;
-
-	char pad5[2];
-
-	char autodirs[2][30];
-	char pad5a[80];
-	UWORD hotkeycode,hotkeyqual;
-
-	char toolicon[80],projecticon[80],drawericon[80],defaulttool[80];
-	char priority;
-	char showdelay,viewbits,fadetime,tabsize;
-
-	char pad7[2];
-
-	char hiddenbit;
-	char showpat[40],hidepat[40];
-	char showpatparsed[40],hidepatparsed[40];
-	char icontype,scrclktype,showfree;
-
-	char pad8;
-
-	short iconx,icony;
-	short wbwinx,wbwiny;
-
-	char configreturnscript[80];
-
-	char fontsizes[NUMFONTS];
-	char fontbufs[NUMFONTS][40];
-
-	char uniconscript[80];
-	char sliderbgcol;
-
-	char pad_foo;
-
-	short scr_winx,scr_winy;
-	short scr_winw,scr_winh;
-
-	char morepadding[231];
-
-	char old_displaypos[2][8];
-	char dateformat,addiconflags;
-	char stringfgcol,stringbgcol;
-	char namelength[2];
-	char sliderwidth,sliderheight;
-	char formatflags;
-	short iconbutx,iconbuty;
-	char stringheight;
-	char stringselfgcol,stringselbgcol;
-	char generalscreenflags;
-
-	struct Rectangle scrollborders[2];
-
-	char old_displaylength[2][8];
-
-	char shellstartup[30];
-
-	char windowdelta;
-
-	char pad9a[397];
-
-	int loadexternal;
-
-	ULONG new_palette[48];
-
-	char arrowsize[3];
-
-	char slider_pos;
-
-	short config_x;
-	short config_y;
-
-	char pad10[1414];
-};
-
-struct dopusconfigmsg {
-	struct Message msg;
-	int command;
-	char *buffer;
-};
-
-#define CONFIG_GET_CONFIG 1
-#define CONFIG_HERES_CONFIG 2
-#define CONFIG_ALL_DONE 3
-#define CONFIG_NEW_HOTKEY 4
-#define CONFIG_HOTKEYS_CHANGE 5
-
-struct configconfig {
-	struct Config *config;
-	struct dopusfiletype *firsttype;
-	struct DOpusRemember *typekey;
-	struct dopusgadgetbanks *firstbank;
-	int changed;
-	char configname[256];
-	struct Window *Window;
-	struct Screen *Screen;
-	struct dopushotkey *firsthotkey;
-};
-
+extern struct TagItem scr_taglist[];
 extern struct ExtNewScreen configscr;
 extern struct NewWindow configwin,requestwin;
 extern struct ExecBase *SysBase;
@@ -433,6 +234,7 @@ extern struct DOpusBase *DOpusBase;
 extern struct GfxBase *GfxBase;
 extern struct DosLibrary *DOSBase;
 extern struct IntuitionBase *IntuitionBase;
+extern struct muBase *muBase;
 extern struct Screen *Screen;
 extern struct Window *Window;
 extern struct ViewPort *vp;
@@ -449,7 +251,7 @@ extern struct dopushotkey *firsthotkey;
 extern struct dopusgadgetbanks *firstbank,*curbank;
 extern struct DOpusRemember *typekey,*fontkey;
 extern char configname[256],loadnamebuf[256];
-extern char filebuf[32],dirbuf[258];
+extern char filebuf[256],dirbuf[258];
 extern struct DOpusFileReq filereq;
 extern int version2;
 extern struct MsgPort *conport,*cmdport,*appport;
@@ -457,15 +259,15 @@ extern struct MsgPort *conport,*cmdport,*appport;
 extern struct MsgPort *clip_port;
 extern struct IOClipReq *clip_io;
 */
-
+/*
 struct ConfigStuff {
-	struct Config *config;
-	struct DOpusRemember *typekey;
-	struct dopusfiletype *firsttype;
-	struct dopusgadgetbanks *firstbank,*curbank;
-	struct dopushotkey *firsthotkey;
+    struct Config *config;
+    struct DOpusRemember *typekey;
+    struct dopusfiletype *firsttype;
+    struct dopusgadgetbanks *firstbank,*curbank;
+    struct dopushotkey *firsthotkey;
 };
-
+*/
 extern struct ConfigStuff cstuff;
 extern struct DOpusRemember *mainkey,*gadgetkey,*tickkey,*screenkey,*clipkey,*buttonkey;
 extern struct Gadget *maingad,*tickgad,*gadgads,*menugads,*drivegads;
@@ -477,9 +279,9 @@ extern UWORD drawinfo[];
 extern int lchanged,changed;
 
 extern struct Image
-	*checkonimage,*checkoffimage,
-	*buttononimage,*buttonoffimage,
-	copy_checkonimage,copy_checkoffimage;
+    *checkonimage,*checkoffimage,
+    *buttononimage,*buttonoffimage,
+    copy_checkonimage,copy_checkoffimage;
 
 #define CTYPE_MOVEREL -3
 #define CTYPE_MOVE -2
@@ -492,15 +294,15 @@ extern struct Image
 #define CTYPE_MRAD  6
 
 struct ConfigGadget {
-	char type;
-	char value;
-	int nameentry;
-	short x,y;
-	short w,h;
-	int bit;
-	int mutualex;
-	char *buffer;
-	struct Gadget *gad;
+    char type;
+    char value;
+    int nameentry;
+    short x,y;
+    short w,h;
+    int bit;
+    int mutualex;
+    char *buffer;
+    struct Gadget *gad;
 };
 
 #define CFG_MAINMENU  11
@@ -666,6 +468,7 @@ struct ConfigGadget {
 #define FORMAT_LENGTH      503
 #define FORMAT_SEPARATE    510
 #define FORMAT_REVERSESORT 511
+#define FORMAT_SIZEKMG     512 // HUX
 
 #define ICON_ICONREQ       600
 #define ICON_ICONPATH      601
@@ -712,56 +515,54 @@ struct ConfigGadget {
 #define COLOURS_STRINGS      (1<<COLBIT_STRINGS)
 #define COLOURS_SELSTRINGS   (1<<COLBIT_SELSTRINGS)
 
-/* AROS FIX */
-/*#define COLOURS_ALL          (1<<32)-1*/
-#define COLOURS_ALL 0xFFFFFFFF
+#define COLOURS_ALL          ~0
 
 struct ColourSel {
-	char item;
-	short x1,y1,x2,y2;
+    char item;
+    short x1,y1,x2,y2;
 };
 
 extern struct ColourSel coloursel[];
 
 extern char
-	*mainmenugads[14],
-	*listviewgads[3],
-	*listviewgads2[4],
-	*operationgads[14],
-	*systemgads[14],
-	*gadgetgads[11],
-	*functypelist[],
-	ftype_funcmap[],
-	*functypestr[],
-	*editfuncgads[6],
-	*editfuncgads2[16],
-	*gadflaglist[17],
-	*editclassgads[10],
-	*menugadgets[11],
-	*drivegadgets[11],
-	*drivegadgets2[5],
-	*screengadgets[14],
-	*formatgadgets[10],
-	*hotkeygadgets[3],
-	*arrowgadtxt[4],
-	*arrowtypetxt[3],
-	*filetypeactiongadgets[11],
+    *mainmenugads[14],
+    *listviewgads[3],
+    *listviewgads2[4],
+    *operationgads[14],
+    *systemgads[14],
+    *gadgetgads[11],
+    *functypelist[],
+    ftype_funcmap[],
+    *functypestr[],
+    *editfuncgads[6],
+    *editfuncgads2[16],
+    *gadflaglist[17],
+    *editclassgads[10],
+    *menugadgets[11],
+    *drivegadgets[11],
+    *drivegadgets2[5],
+    *screengadgets[14],
+    *formatgadgets[11], // JRZ: was 10
+    *hotkeygadgets[3],
+    *arrowgadtxt[4],
+    *arrowtypetxt[3],
+    *filetypeactiongadgets[11],
 
-	*commandlist[95],
-	*arglist[18],
-	*classopslist[12],
+    *commandlist[95],
+    *arglist[18],
+    *classopslist[], // JRZ: was 12
 
-	*formatnames[FORMAT_MAXNUM+1],
-	*selectedformatnames[FORMAT_MAXNUM+1],
+    *formatnames[FORMAT_MAXNUM+1],
+    *selectedformatnames[FORMAT_MAXNUM+1],
 
-	*defdir[],
-	*palettegadgets[],*coloursgadgets[],
-	*screenmodegadgets[],
-	*hotkeysgadgets[],
-	*windownames[2],*errorcheckingtxt[],*separatenames[3];
+    *defdir[],
+    *palettegadgets[],*coloursgadgets[],
+    *screenmodegadgets[],
+    *hotkeysgadgets[],
+    *windownames[2],*errorcheckingtxt[],*separatenames[3];
 
 extern struct ConfigGadget
-	*operationgadgets[8],*systemgadgets[9],scr_generalgadgets[];
+    *operationgadgets[8],*systemgadgets[9],scr_generalgadgets[];
 
 
 #define UNDO_MAIN      1
@@ -773,14 +574,14 @@ extern struct ConfigGadget
 #define UNDO_ALL       (UNDO_MAIN|UNDO_GADGET|UNDO_MENU|UNDO_FILETYPE|UNDO_DRIVE|UNDO_HOTKEYS)
 
 struct ConfigUndo {
-	struct Config *config;
-	struct newdopusfunction *menu;
-	struct dopusfunction *drive;
-	struct dopusfiletype *firsttype;
-	struct dopusgadgetbanks *firstbank;
-	struct DOpusRemember *key;
-	struct dopushotkey *firsthotkey;
-	char menutit[5][16];
+    struct Config *config;
+    struct newdopusfunction *menu;
+    struct dopusfunction *drive;
+    struct dopusfiletype *firsttype;
+    struct dopusgadgetbanks *firstbank;
+    struct DOpusRemember *key;
+    struct dopushotkey *firsthotkey;
+    char menutit[5][16];
 };
 
 extern struct ConfigUndo *makeundo();
@@ -790,49 +591,42 @@ extern struct dopusgadgetbanks *lastbank();
 extern int fontplaceflags[],fontplacevals[];
 extern struct RMBGadget nextbankrmb,insertbankrmb,formatclearrmb,sampleclearrmb;
 extern struct DOpusListView
-	editlists[3],cmdlist,screenmodeview,listlist,iconlistview,
-	fontsizelistview,fontlistview,fontplacelist,editclasslist,hotkeyslist,
-	helplist,filetypeactionlist,
-	modulelist,languagelist;
+    editlists[3],cmdlist,screenmodeview,listlist,iconlistview,
+    fontsizelistview,fontlistview,fontplacelist,editclasslist,hotkeyslist,
+    helplist,filetypeactionlist,
+    modulelist/*,languagelist*/;
 extern char *external_module_list[],*external_module_name[];
 extern int external_module_map[];
 
 extern struct Gadget
-	editfuncgadgets[15],cmdcancelgad,menuslidergads[3],editdrivegadgets[4],
-	palettegads[6],coloursgad,screenmodegads[7],editclassgadgets[14],
-	listokaygad[3],formatgads[10],hotkeygad,hotkeymmbgad,arrowgadgets[8],
-	fontsizegadget,helpgad,helpcancelgad,draggad,icongads[4],depthgads[2],
-	screen_sliders_gadgets[];
+    editfuncgadgets[15],cmdcancelgad,menuslidergads[3],editdrivegadgets[4],
+    palettegads[6],coloursgad,screenmodegads[7],editclassgadgets[14],
+    listokaygad[3],formatgads[11 /* HUX: was 10 */],hotkeygad,hotkeymmbgad,arrowgadgets[8],
+    fontsizegadget,helpgad,helpcancelgad,draggad,icongads[4],depthgads[2],
+    screen_sliders_gadgets[];
 
 extern struct Image menusliderimage;
 extern struct PropInfo menusliderprop,paletteprop[3];
 
 extern char
-	edit_namebuf[256],edit_stackbuf[7],edit_prioritybuf[5],edit_delaybuf[3],
-	edit_funcbuf[256],edit_pathbuf[256],edit_actionbuf[40],
-	palette_buf[3][4],screenwidth_buf[6],screenheight_buf[6],screendepth_buf[3],
-	formatlen_buf[5][3],fontsize_buf[12],edit_typeidbuf[8];
+    edit_namebuf[256],edit_stackbuf[7],edit_prioritybuf[5],edit_delaybuf[3],
+    edit_funcbuf[256],edit_pathbuf[256],edit_actionbuf[40],
+    palette_buf[3][4],screenwidth_buf[6],screenheight_buf[6],screendepth_buf[4],
+    formatlen_buf[5][8],fontsize_buf[12],edit_typeidbuf[8];
 
 extern struct StringInfo namesinfo,funcsinfo;
 
-/* AROS: No point in __chip keyword */
-#ifdef __AROS__
-#define __chip
-#endif
-
 #ifdef __SASC_60
 extern __chip UBYTE
-	glass_data[2][36],uparrow_data[12],downarrow_data[12],
-	pageflip_data1[10],pageflip_data2[6];
+    glass_data[2][18],uparrow_data[6],downarrow_data[6],
+    pageflip_data1[5],pageflip_data2[3];
 #else
 extern UBYTE
-	__chip glass_data[2][36],
-	__chip uparrow_data[12],
-	__chip downarrow_data[12],
-/*	__chip leftarrow_data[6],
-	__chip rightarrow_data[6],*/ /* AROS: unused ? */
-	__chip pageflip_data1[10],
-	__chip pageflip_data2[6];
+    __chip glass_data[2][36],
+    __chip uparrow_data[12],
+    __chip downarrow_data[12],
+    __chip pageflip_data1[10],
+    __chip pageflip_data2[6];
 #endif
 
 extern struct IntuiMessage *getintuimsg();
@@ -841,13 +635,13 @@ extern struct newdopusfunction *selgad;
 extern struct Gadget *seligad;
 
 struct ScreenMode {
-	struct ScreenMode *next;
-	char name[80];
-	UWORD minw,minh;
-	UWORD maxw,maxh;
-	UWORD defw,defh;
-	UWORD maxdepth;
-	ULONG mode;
+    struct ScreenMode *next;
+    char name[80];
+    UWORD minw,minh;
+    UWORD maxw,maxh;
+    UWORD defw,defh;
+    UWORD maxdepth;
+    ULONG mode;
 };
 
 #define MODE_WORKBENCHUSE        1
@@ -864,32 +658,31 @@ extern struct ScreenMode *showdisplaydesc(),*getscreenmode();
 #define SCRFLAGS_HALFHEIGHT 4
 
 extern struct MenuItem
-	projectitems[],edititems[],gadrowsitems[],classitems[],neatstuffitem;
+    projectitems[],edititems[],gadrowsitems[],classitems[],neatstuffitem;
 extern struct Menu projectmenu,editmenu,gadrowsmenu,classmenu,neatstuffmenu;
 
 extern int changed,curoperation,clipcount;
 
 struct Clip {
-	struct Clip *next;
-	char name[256];
-	struct dopusfunction func;
+    struct Clip *next;
+    char name[256];
+    struct dopusfunction func;
 };
 
 extern struct Clip *firstclip;
 
-extern USHORT defpalettes[11][4],def_dopus_palette[16];
+extern UWORD defpalettes[11][4],def_dopus_palette[16];
 extern struct DOpusListView palettelist,listformatlists[2];
 extern int rowtrans[5];
 
 extern struct Library *DiskfontBase;
 extern struct Library *WorkbenchBase;
 extern struct Library *IconBase;
-extern struct Library *PPBase;
 extern struct TextFont *tfont;
 extern char
-	*fontdatabuf,**fontlist,*(**fontsizelist),
-	**noproplist,*(**nopropsizelist),
-	**only8list,*only8sizelist[];
+    *fontdatabuf,**fontlist,*(**fontsizelist),
+    **noproplist,*(**nopropsizelist),
+    **only8list,*only8sizelist[];
 
 extern int gadflagvals[];
 
@@ -908,6 +701,7 @@ extern char maxlength[5];
 extern struct StringExtend stringex;
 
 extern struct DiskObject dropboxobj;
+extern struct DiskObject *dropboxicon;
 extern void *appobject;
 extern struct AppMessage *appmsg;
 
@@ -921,10 +715,10 @@ extern char *fileview_types[];
 extern char *icontypes[],*palettenames[14],*fontplacenames[FONT_COUNT+1];
 
 extern struct IntuiText
-	newtext,opentext,savetext,saveastext,cuttext,copytext,
-	pastetext,erasetext,newclasstext,editclasstext,deleteclasstext,
-	clearclasstext,duplicateclasstext,clearcliptext,
-	gadrowstext[5],paintmodetext;
+    newtext,opentext,savetext,saveastext,cuttext,copytext,
+    pastetext,erasetext,newclasstext,editclasstext,deleteclasstext,
+    clearclasstext,duplicateclasstext,clearcliptext,
+    gadrowstext[5],paintmodetext;
 
 extern int network;
 
@@ -944,21 +738,21 @@ extern int paint_state,paint_fg,paint_bg;
 extern int screen_depth;
 
 extern short
-	editfuncgadgets_xy[15][2],
-	editdrivegadgets_xy[4][2],
-	menuslidergads_xy[3][2],
-	palettegads_xy[6][2],
-	coloursgad_xy[2],
-	screenmodegads_xy[7][2],
-	formatgads_xy[10][2],
-	icongads_xy[4][2],
-	hotkeymmbgad_xy[2],
-	hotkeygad_xy[2],
-	arrowgadgets_xy[8][2],
-	fontsizegadget_xy[2],
-	editclassgadgets_xy[14][2],
-	screen_sliders_gadgets_xy[2][2];
-
+    editfuncgadgets_xy[15][2],
+    editdrivegadgets_xy[4][2],
+    menuslidergads_xy[3][2],
+    palettegads_xy[6][2],
+    coloursgad_xy[2],
+    screenmodegads_xy[7][2],
+    formatgads_xy[11 /* HUX: was 10 */][2],
+    icongads_xy[4][2],
+    hotkeymmbgad_xy[2],
+    hotkeygad_xy[2],
+    arrowgadgets_xy[8][2],
+    fontsizegadget_xy[2],
+    editclassgadgets_xy[14][2],
+    screen_sliders_gadgets_xy[2][2];
+/*
 #define FTFUNC_AUTOFUNC1   0
 #define FTFUNC_AUTOFUNC2   1
 #define FTFUNC_DOUBLECLICK 2
@@ -971,7 +765,7 @@ extern short
 #define FTFUNC_AUTOFUNC4   9
 #define FTFUNC_READ        10
 #define FTFUNC_SHOW        11
-
+*/
 #define FREQ_FILETYPE  10
 #define FREQ_FILECLASS 11
 #define FREQ_ARGREQ    12
@@ -979,11 +773,11 @@ extern short
 #define FREQ_GENERIC   21
 
 struct ColourTable {
-	ULONG red;
-	ULONG green;
-	ULONG blue;
-	unsigned char pen;
-	char alloc;
+    ULONG red;
+    ULONG green;
+    ULONG blue;
+    unsigned char pen;
+    char alloc;
 };
 
 extern struct ColourTable screen_pens[16];
@@ -1001,3 +795,4 @@ extern char *left_right_cycle[3];
 #include "configstrings.h"
 
 #include "functions.h"
+

@@ -28,8 +28,18 @@ the existing commercial status of Directory Opus 5.
 
 */
 
-#include <fctype.h>
+#if defined(__PPC__) || defined(__AROS__)
+  #undef  __saveds
+  #define __saveds
+  #define __chip
+  #define __aligned __attribute__((__aligned__(4)))
+  #define lsprintf sprintf
+  #define __asm(A)
+  #define _exit exit
+#endif
+
 #include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <exec/types.h>
@@ -44,16 +54,27 @@ the existing commercial status of Directory Opus 5.
 #include <workbench/startup.h>
 #include <devices/trackdisk.h>
 #include <datatypes/datatypesclass.h>
-#include <proto/all.h>
+#include <proto/exec.h>
+#include <proto/dos.h>
+#include <proto/intuition.h>
+#include <proto/graphics.h>
+#include <proto/layers.h>
+#include <proto/asl.h>
+#include <proto/utility.h>
+#include <proto/console.h>
+#include <proto/locale.h>
+#include <proto/dopus.h>
+#include <proto/diskfont.h>
+#include <proto/icon.h>
+#include <proto/workbench.h>
+#include <clib/alib_protos.h>
 
-#include "dopusbase.h"
-#include "dopuspragmas.h"
-#include "requesters.h"
-#include "stringdata.h"
+#include <dopus/dopusbase.h>
+#include <dopus/requesters.h>
+#include <dopus/stringdata.h>
 
 #include "dopusmessage.h"
 
-#include "functions.h"
 #include "diskstrings.h"
 
 extern struct DOpusBase *DOpusBase;
@@ -139,3 +160,6 @@ struct DeviceHandle {
 extern struct DefaultString default_strings[];
 
 #define STRING_VERSION 1
+
+#include "functions.h"
+

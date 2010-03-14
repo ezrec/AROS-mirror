@@ -29,7 +29,6 @@ the existing commercial status of Directory Opus 5.
 */
 
 #include "dopuslib.h"
-#include "ushort.h"
 
 #ifndef __AROS__
 struct ExecBase *SysBase;
@@ -44,23 +43,23 @@ struct DOpusBase *DOpusBase;
 /* AROS : We make this arrays of UBYTE instead to avoid endianess problems */
 
 #if 0
-const USHORT /* __chip */
+const UWORD /* __chip */
 	pdb_cycletop[]={
 		0x7f00,0xc180,0xc180,0xc7e0,0xc3c0,0xc180};
 
-const USHORT /* __chip */
+const UWORD /* __chip */
 	pdb_cyclebot[]={
 		0xc180,0x7f00};
 
-const USHORT /* __chip */
+const UWORD /* __chip */
 	pdb_check[]={
 		0x0038,0x0060,0x00c0,0xe180,0x7300,0x3e00,0x1c00};
 
-const USHORT /* __chip */
+const UWORD /* __chip */
 	glass_image1[]={
 		0x0f80,0x7070,0xc218,0xc818,0xc018,0x7070,0x0fbc,0x000f};
 
-const USHORT /* __chip */
+const UWORD /* __chip */
 	glass_image2[]={
 		0x0000,0x0f80,0x3de0,0x37e0,0x3fe0,0x0f80,0x0000,0x0000};
 #else
@@ -96,7 +95,7 @@ const UBYTE /* __chip */
 #endif
 
 
-const USHORT /* __chip */
+const UWORD /* __chip */
 	busydata13[]={
 		0x0000,0x0000,
 		0x0600,0x0600,0x0f40,0x0f40,0x3fe0,0x3fe0,0x7fe0,0x7fe0,
@@ -107,7 +106,7 @@ const USHORT /* __chip */
 		0x00e0,0x00e0,0x0040,0x0040,
 		0x0000,0x0000};
 
-const USHORT /* __chip */
+const UWORD /* __chip */
 	busydata20[]={
 		0x0000,0x0000,
 		0x0400,0x07c0,0x0000,0x07c0,0x0100,0x0380,0x0000,0x07e0,

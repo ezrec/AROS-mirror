@@ -28,9 +28,21 @@ the existing commercial status of Directory Opus 5.
 
 */
 
-#include <fctype.h>
+#include <aros/debug.h>
+#if defined(__PPC__) || defined(__AROS__)
+  #undef  __saveds
+  #define __saveds
+  #define __chip
+  #define __aligned __attribute__((__aligned__(4)))
+  #define lsprintf sprintf
+  #define __asm(A)
+  #define _exit exit
+#endif
+
+//#include <fctype.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <stdarg.h>
 #include <exec/types.h>
 #include <exec/memory.h>
@@ -39,15 +51,34 @@ the existing commercial status of Directory Opus 5.
 #include <dos/dosextens.h>
 #include <intuition/intuitionbase.h>
 #include <intuition/sghooks.h>
+#include <intuition/iobsolete.h>
 #include <workbench/workbench.h>
 #include <workbench/startup.h>
-#include <proto/all.h>
+//#include <proto/all.h>
+#include <proto/exec.h>
+#include <proto/dos.h>
+#include <proto/intuition.h>
+#include <proto/graphics.h>
+#include <proto/layers.h>
+#include <proto/asl.h>
+#include <proto/utility.h>
+#include <proto/console.h>
+#include <proto/locale.h>
+#include <proto/dopus.h>
+#include <proto/diskfont.h>
+#include <proto/icon.h>
+#include <proto/workbench.h>
+#include <clib/alib_protos.h>
 
-#include "dopusbase.h"
+//#include "dopusbase.h"
+#include <dopus/dopusbase.h>
+#ifndef __AROS__
 #include "dopuspragmas.h"
-#include "requesters.h"
-#include "dopusmessage.h"
-#include "stringdata.h"
+#endif
+//#include "requesters.h"
+#include <dopus/requesters.h>
+#include <dopus/dopusmessage.h>
+#include <dopus/stringdata.h>
 #include "iconstrings.h"
 
 #define II_TTLINES 5                      /* Number of tooltype lines */
@@ -69,7 +100,7 @@ extern struct IntuitionBase *IntuitionBase;
 extern struct GfxBase *GfxBase;
 extern struct Library *IconBase;
 extern struct Library *LayersBase;
-extern struct Library *SysBase;
+//extern struct Library *SysBase;
 
 extern char protect_flags[6];
 extern char *specific_gadtext[5][6];

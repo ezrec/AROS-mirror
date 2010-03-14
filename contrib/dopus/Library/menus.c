@@ -30,175 +30,142 @@ the existing commercial status of Directory Opus 5.
 
 #include "dopuslib.h"
 
-/*****************************************************************************
-
-    NAME */
-
-	AROS_LH2(int, FSSetMenuStrip,
-
-/*  SYNOPSIS */
-	AROS_LHA(struct Window *, window, 	A0),
-	AROS_LHA(struct Menu *, firstmenu, 	A1),
-
-/*  LOCATION */
-	struct Library *, DOpusBase, 101, DOpus)
-/*  FUNCTION
-
-    INPUTS
-
-    RESULT
-
-    NOTES
-
-    EXAMPLE
-
-    BUGS
-
-    SEE ALSO
-
-    INTERNALS
-
-    HISTORY
-	27-11-96    digulla automatically created from
-			    asl_lib.fd and clib/asl_protos.h
-
-*****************************************************************************/
+__saveds DoFSSetMenuStrip(register struct Window *window __asm("a0"),
+    register struct Menu *firstmenu __asm("a1"))
 {
-	AROS_LIBFUNC_INIT
+    struct Menu *menu;
+    struct MenuItem *item;
+    struct DrawInfo *drinfo;
+    int fpen,bpen;
+    int y,offset,xpos=0,iwidth,comwidth,checkwidth;
+    struct IntuiText testtext;
+    struct TextAttr testattr;
 
-	struct Menu *menu;
-	struct MenuItem *item;
-	struct DrawInfo *drinfo;
-	int fpen,bpen;
-	int y,offset,xpos=0,iwidth,comwidth,checkwidth;
-	struct IntuiText testtext;
-	struct TextAttr testattr;
+    comwidth=COMMWIDTH;
+    checkwidth=CHECKWIDTH;
 
-	comwidth=COMMWIDTH;
-	checkwidth=CHECKWIDTH;
+    AskFont(&window->WScreen->RastPort,&testattr);
+    testtext.FrontPen=1;
+    testtext.DrawMode=JAM1;
+    testtext.NextText=NULL;
 
-	AskFont(&window->WScreen->RastPort,&testattr);
-	testtext.FrontPen=1;
-	testtext.DrawMode=JAM1;
-	testtext.NextText=NULL;
+    if (//IntuitionBase->LibNode.lib_Version>36 &&
+        (drinfo=GetScreenDrawInfo(window->WScreen))) {
+//        if (IntuitionBase->LibNode.lib_Version>=39) {
+            fpen=drinfo->dri_Pens[BARDETAILPEN];
+            bpen=drinfo->dri_Pens[BARBLOCKPEN];
+            if (drinfo->dri_AmigaKey) comwidth=drinfo->dri_AmigaKey->Width;
+            if (drinfo->dri_CheckMark) checkwidth=drinfo->dri_CheckMark->Width;
+/*
+        }
+        else {
+            fpen=drinfo->dri_Pens[DETAILPEN];
+            bpen=drinfo->dri_Pens[BLOCKPEN];
+        }
+*/
+        FreeScreenDrawInfo(window->WScreen,drinfo);
+    }
+    else {
+        fpen=0;
+        bpen=1;
+    }
 
-	if (IntuitionBase->LibNode.lib_Version>36 &&
-		(drinfo=GetScreenDrawInfo(window->WScreen))) {
-		if (IntuitionBase->LibNode.lib_Version>=39) {
-			fpen=drinfo->dri_Pens[BARDETAILPEN];
-			bpen=drinfo->dri_Pens[BARBLOCKPEN];
-			if (drinfo->dri_AmigaKey) comwidth=drinfo->dri_AmigaKey->Width;
-			if (drinfo->dri_CheckMark) checkwidth=drinfo->dri_CheckMark->Width;
-		}
-		else {
-			fpen=drinfo->dri_Pens[DETAILPEN];
-			bpen=drinfo->dri_Pens[BLOCKPEN];
-		}
-		FreeScreenDrawInfo(window->WScreen,drinfo);
-	}
-	else {
-		fpen=0;
-		bpen=1;
-	}
+    offset=window->WScreen->Font->ta_YSize+3;
+    menu=firstmenu;
+    while (menu) {
+        if (xpos==0) xpos=menu->LeftEdge;
+        else menu->LeftEdge=xpos;
+        menu->Width=
+            TextLength(&window->WScreen->RastPort,menu->MenuName,strlen(menu->MenuName))+
+            window->WScreen->RastPort.Font->tf_XSize;
+        xpos+=menu->Width+16;
 
-	offset=window->WScreen->Font->ta_YSize+3;
-	menu=firstmenu;
-	while (menu) {
-		if (xpos==0) xpos=menu->LeftEdge;
-		else menu->LeftEdge=xpos;
-		menu->Width=
-			TextLength(&window->WScreen->RastPort,menu->MenuName,strlen(menu->MenuName))+
-			window->WScreen->RastPort.Font->tf_XSize;
-		xpos+=menu->Width+16;
+        y=0;
+        iwidth=0;
+        item=menu->FirstItem;
 
-		y=0;
-		iwidth=0;
-		item=menu->FirstItem;
+        while (item) {
+            item->TopEdge=y;
 
-		while (item) {
-			item->TopEdge=y;
+            if (item->Flags&ITEMTEXT) {
+                struct IntuiText *text;
+                int wid,mwidth=0,first=0;
 
-			if (item->Flags&ITEMTEXT) {
-				struct IntuiText *text;
-				int wid,mwidth=0,first=0;
+                item->Height=offset-1;
 
-				item->Height=offset-1;
+                text=(struct IntuiText *)item->ItemFill;
+                while (text) {
+                    text->FrontPen=fpen;
+                    text->BackPen=bpen;
 
-				text=(struct IntuiText *)item->ItemFill;
-				while (text) {
-					text->FrontPen=fpen;
-					text->BackPen=bpen;
+                    if (first==0) {
+                        if (LStrnCmp(text->IText,"   ",3)==0) text->IText=&text->IText[3];
+                        if (item->Flags&CHECKIT) text->LeftEdge=checkwidth;
+                        else text->LeftEdge=0;
+                    }
 
-					if (first==0) {
-						if (strncmp(text->IText,"   ",3)==0) text->IText=&text->IText[3];
-						if (item->Flags&CHECKIT) text->LeftEdge=checkwidth;
-						else text->LeftEdge=0;
-					}
+                    if (text->ITextFont) testtext.ITextFont=text->ITextFont;
+                    else testtext.ITextFont=&testattr;
+                    testtext.IText=text->IText;
 
-					if (text->ITextFont) testtext.ITextFont=text->ITextFont;
-					else testtext.ITextFont=&testattr;
-					testtext.IText=text->IText;
+                    wid=text->LeftEdge+IntuiTextLength(&testtext)+window->WScreen->RastPort.Font->tf_XSize;
+                    if (wid>mwidth) mwidth=wid;
 
-					wid=text->LeftEdge+IntuiTextLength(&testtext)+window->WScreen->RastPort.Font->tf_XSize;
-					if (wid>mwidth) mwidth=wid;
+                    if (text=text->NextText) {
+                        y+=offset;
+                        text->TopEdge=offset+3;
+                    }
+                    ++first;
+                }
+                if (item->Flags&COMMSEQ)
+                    mwidth+=comwidth+TextLength(&window->WScreen->RastPort,&item->Command,1);
+                if (mwidth>iwidth) iwidth=mwidth;
 
-					if ((text=text->NextText)) {
-						y+=offset;
-						text->TopEdge=offset+3;
-					}
-					++first;
-				}
-				if (item->Flags&COMMSEQ)
-					mwidth+=comwidth+TextLength(&window->WScreen->RastPort,&item->Command,1);
-				if (mwidth>iwidth) iwidth=mwidth;
+                y+=offset;
+            }
+            else {
+                struct Image *image;
+                int wid;
 
-				y+=offset;
-			}
-			else {
-				struct Image *image;
-				int wid;
+                ++item->TopEdge;
 
-				++item->TopEdge;
+                image=(struct Image *)item->ItemFill;
+                while (image) {
+                    if (image->ImageData==NULL) {
+                        image->Height=2;
+                        image->PlaneOnOff=fpen;
+                    }
+                    else {
+                        wid=image->LeftEdge+image->Width;
+                        if (wid>iwidth) iwidth=wid;
+                    }
 
-				image=(struct Image *)item->ItemFill;
-				while (image) {
-					if (image->ImageData==NULL) {
-						image->Height=2;
-						image->PlaneOnOff=fpen;
-					}
-					else {
-						wid=image->LeftEdge+image->Width;
-						if (wid>iwidth) iwidth=wid;
-					}
+                    y+=image->TopEdge+image->Height;
 
-					y+=image->TopEdge+image->Height;
+                    image=image->NextImage;
+                }
+                y+=3;
+            }
+            item=item->NextItem;
+        }
 
-					image=image->NextImage;
-				}
-				y+=3;
-			}
-			item=item->NextItem;
-		}
+        item=menu->FirstItem;
+        while (item) {
+            item->Width=iwidth;
+            if (!(item->Flags&ITEMTEXT)) {
+                struct Image *image;
 
-		item=menu->FirstItem;
-		while (item) {
-			item->Width=iwidth;
-			if (!(item->Flags&ITEMTEXT)) {
-				struct Image *image;
+                image=(struct Image *)item->ItemFill;
+                while (image) {
+                    if (image->ImageData==NULL) image->Width=iwidth;
+                    image=image->NextImage;
+                }
+            }
+            item=item->NextItem;
+        }
 
-				image=(struct Image *)item->ItemFill;
-				while (image) {
-					if (image->ImageData==NULL) image->Width=iwidth;
-					image=image->NextImage;
-				}
-			}
-			item=item->NextItem;
-		}
+        menu=menu->NextMenu;
+    }
 
-		menu=menu->NextMenu;
-	}
-
-	return((int)SetMenuStrip(window,firstmenu));
-	
-	AROS_LIBFUNC_EXIT
+    return((int)SetMenuStrip(window,firstmenu));
 }

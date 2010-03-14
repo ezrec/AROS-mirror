@@ -39,34 +39,34 @@ the existing commercial status of Directory Opus 5.
 /* TextAttr structures */
 
 extern struct TextAttr
-	main_screen_attr,                              /* Main screen font */
-	screen_attr,                                   /* General screen font */
-	menu_attr;                                     /* Menu font */
+    main_screen_attr,                              /* Main screen font */
+    screen_attr,                                   /* General screen font */
+    menu_attr;                                     /* Menu font */
 
 /* Screen tag lists */
 
 extern UWORD scr_drawinfo[NUMDRIPENS+1];         /* Pen lists */
 
 extern struct TagItem
-	mainscreen_tags[],                             /* Tags for the main screen */
-	stdscreen_tags[],                              /* Tags for a standard HIRES screen */
-	mainwindow_tags[];                             /* Tags for the main window */
+    mainscreen_tags[],                             /* Tags for the main screen */
+    stdscreen_tags[],                              /* Tags for a standard HIRES screen */
+    mainwindow_tags[];                             /* Tags for the main window */
 
 /* NewScreen structures */
 
 extern struct ExtNewScreen
-	main_scr,                                      /* Main screen */
-	font_scr,                                      /* Font screen */
-	blank_scr;                                     /* Blank screen */
+    main_scr,                                      /* Main screen */
+    font_scr,                                      /* Font screen */
+    blank_scr;                                     /* Blank screen */
 
 /* NewWindow structures */
 
 extern struct ExtNewWindow
-	main_win;                                      /* Main window */
+    main_win;                                      /* Main window */
 
 extern struct NewWindow
-	font_win,                                      /* Font window */
-	disk_win;                                      /* DiskInfo window */
+    font_win,                                      /* Font window */
+    disk_win;                                      /* DiskInfo window */
 
 extern struct NewWindow icon_win;                /* Iconified window */
 
@@ -87,75 +87,75 @@ extern UBYTE menu_real_number[5];                /* The real ordinal number of e
 
 extern struct ColourTable screen_pens[16];       /* Colour pen table */
 
-extern USHORT scrdata_norm_width;                /* Normal width of the display */
-extern USHORT scrdata_norm_height;               /* Normal height of the display */
-extern USHORT scrdata_scr_height;                /* Main screen/window height */
+extern UWORD scrdata_norm_width;                /* Normal width of the display */
+extern UWORD scrdata_norm_height;               /* Normal height of the display */
+extern UWORD scrdata_scr_height;                /* Main screen/window height */
 
-extern USHORT scrdata_dispwin_lines;             /* Number of lines in each window */
-extern USHORT scrdata_dispwin_width[2];          /* Displayed width in each window */
-extern USHORT scrdata_dispwin_height;            /* Height of directory windows */
-extern USHORT scrdata_dispwin_nchars[2];         /* Width of each window in characters */
-extern USHORT scrdata_dispwin_ypos;              /* Y-Position of directory windows */
-extern USHORT scrdata_dispwin_left[2];           /* Left edge of directory windows */
-extern USHORT scrdata_dispwin_xpos[2];           /* Left edge of text in windows */
-extern USHORT scrdata_dispwin_center;            /* Center of the two windows */
+extern UWORD scrdata_dispwin_lines;             /* Number of lines in each window */
+extern UWORD scrdata_dispwin_width[2];          /* Displayed width in each window */
+extern UWORD scrdata_dispwin_height;            /* Height of directory windows */
+extern UWORD scrdata_dispwin_nchars[2];         /* Width of each window in characters */
+extern UWORD scrdata_dispwin_ypos;              /* Y-Position of directory windows */
+extern UWORD scrdata_dispwin_left[2];           /* Left edge of directory windows */
+extern UWORD scrdata_dispwin_xpos[2];           /* Left edge of text in windows */
+extern UWORD scrdata_dispwin_center;            /* Center of the two windows */
 
-extern USHORT scrdata_dirwin_xpos[2];            /* Rendered X-Position of each window */
-extern USHORT scrdata_dirwin_ypos[2];            /* Rendered Y-Position of each window */
-extern USHORT scrdata_dirwin_width[2];           /* Rendered width of each window */
-extern USHORT scrdata_dirwin_height;             /* Rendered height of directory windows */
-extern USHORT scrdata_dirwin_bottom;             /* Rendered bottom of each window */
-extern USHORT scrdata_dirwin_center;             /* Rendered center of the two windows */
+extern UWORD scrdata_dirwin_xpos[2];            /* Rendered X-Position of each window */
+extern UWORD scrdata_dirwin_ypos[2];            /* Rendered Y-Position of each window */
+extern UWORD scrdata_dirwin_width[2];           /* Rendered width of each window */
+extern UWORD scrdata_dirwin_height;             /* Rendered height of directory windows */
+extern UWORD scrdata_dirwin_bottom;             /* Rendered bottom of each window */
+extern UWORD scrdata_dirwin_center;             /* Rendered center of the two windows */
 
-extern USHORT scrdata_drive_width;               /* Width of the drive gadgets */
-extern USHORT scrdata_gadget_offset;             /* X-Offset of entire gadget display */
-extern USHORT scrdata_gadget_xpos;               /* X-Position of the custom gadgets */
-extern USHORT scrdata_gadget_ypos;               /* Y-Position of the custom gadgets */
-extern USHORT scrdata_gadget_width;              /* Width of the custom gadgets */
-extern USHORT scrdata_gadget_height;             /* Height of the custom gadgets */
+extern UWORD scrdata_drive_width;               /* Width of the drive gadgets */
+extern UWORD scrdata_gadget_offset;             /* X-Offset of entire gadget display */
+extern UWORD scrdata_gadget_xpos;               /* X-Position of the custom gadgets */
+extern UWORD scrdata_gadget_ypos;               /* Y-Position of the custom gadgets */
+extern UWORD scrdata_gadget_width;              /* Width of the custom gadgets */
+extern UWORD scrdata_gadget_height;             /* Height of the custom gadgets */
 
-extern USHORT scrdata_clock_width;               /* Width of the clock bar */
-extern USHORT scrdata_clock_height;              /* Height of the clock bar */
-extern USHORT scrdata_clock_xpos;                /* x-pos of the clock bar */
-extern USHORT scrdata_clock_ypos;                /* y-pos of the clock bar */
-extern USHORT scrdata_status_xpos;               /* X-Position of the status bar */
-extern USHORT scrdata_status_ypos;               /* Y-Position of the status bar */
-extern USHORT scrdata_status_width;              /* Width of the status bar */
-extern USHORT scrdata_status_height;             /* Height of the status bar */
-extern USHORT scrdata_diskname_width[2];         /* Width of each diskname display */
-extern USHORT scrdata_diskname_height;           /* Height of the diskname displays */
-extern USHORT scrdata_diskname_ypos;             /* Y-Position of the diskname displays */
-extern USHORT scrdata_diskname_xpos[2];          /* X-Position of each diskname display */
-extern USHORT scrdata_prop_height;               /* Height of the vertical sliders */
-extern USHORT scrdata_string_height;             /* Height of the path string gadgets */
-extern USHORT scrdata_closegad_width;            /* Width of the screen close gadget */
+extern UWORD scrdata_clock_width;               /* Width of the clock bar */
+extern UWORD scrdata_clock_height;              /* Height of the clock bar */
+extern UWORD scrdata_clock_xpos;                /* x-pos of the clock bar */
+extern UWORD scrdata_clock_ypos;                /* y-pos of the clock bar */
+extern UWORD scrdata_status_xpos;               /* X-Position of the status bar */
+extern UWORD scrdata_status_ypos;               /* Y-Position of the status bar */
+extern UWORD scrdata_status_width;              /* Width of the status bar */
+extern UWORD scrdata_status_height;             /* Height of the status bar */
+extern UWORD scrdata_diskname_width[2];         /* Width of each diskname display */
+extern UWORD scrdata_diskname_height;           /* Height of the diskname displays */
+extern UWORD scrdata_diskname_ypos;             /* Y-Position of the diskname displays */
+extern UWORD scrdata_diskname_xpos[2];          /* X-Position of each diskname display */
+extern UWORD scrdata_prop_height;               /* Height of the vertical sliders */
+extern UWORD scrdata_string_height;             /* Height of the path string gadgets */
+extern UWORD scrdata_closegad_width;            /* Width of the screen close gadget */
 
-extern USHORT scrdata_font_xsize;                /* X-Size of the dir window font */
-extern USHORT scrdata_font_ysize;                /* Y-Size of the dir window font */
-extern USHORT scrdata_font_baseline;             /* Baseline of the dir window font */
+extern UWORD scrdata_font_xsize;                /* X-Size of the dir window font */
+extern UWORD scrdata_font_ysize;                /* Y-Size of the dir window font */
+extern UWORD scrdata_font_baseline;             /* Baseline of the dir window font */
 
 extern UBYTE scrdata_is_pal;                     /* Indicates PAL or NTSC system */
 extern UBYTE scrdata_statustext_pos;             /* Status text positioning */
 extern LONG scrdata_old_offset_store;            /* Stored offset in directory window */
 
-extern USHORT scrdata_xoffset;                   /* General x-offset */
-extern USHORT scrdata_yoffset;                   /* General y-offset */
-extern USHORT scrdata_width;                     /* Display width */
-extern USHORT scrdata_height;                    /* Display height */
+extern UWORD scrdata_xoffset;                   /* General x-offset */
+extern UWORD scrdata_yoffset;                   /* General y-offset */
+extern UWORD scrdata_width;                     /* Display width */
+extern UWORD scrdata_height;                    /* Display height */
 
 /* Definitions of screen objects */
 
 extern struct PropInfo
-	vert_propinfo[2],                              /* Vertical slider PropInfo */
-	horiz_propinfo[2],                             /* Horizontal slider PropInfo */
-	drive_propinfo,                                /* Drive banks slider PropInfo */
-	gadget_propinfo;                               /* Gadget banks slider PropInfo */
+    vert_propinfo[2],                              /* Vertical slider PropInfo */
+    horiz_propinfo[2],                             /* Horizontal slider PropInfo */
+    drive_propinfo,                                /* Drive banks slider PropInfo */
+    gadget_propinfo;                               /* Gadget banks slider PropInfo */
 
 extern struct Image
-	vert_propimage[2],                             /* Vertical slider Image */
-	horiz_propimage[2],                            /* Horizontal slider Image */
-	drive_propimage,                               /* Drive banks slider Image */
-	gadget_propimage;                              /* Gadget banks slider Image */
+    vert_propimage[2],                             /* Vertical slider Image */
+    horiz_propimage[2],                            /* Horizontal slider Image */
+    drive_propimage,                               /* Drive banks slider Image */
+    gadget_propimage;                              /* Gadget banks slider Image */
 
 extern struct StringExtend string_extend;        /* Path fields StringExtension */
 extern struct StringExtend requester_stringex;   /* Path fields StringExtension */
@@ -164,17 +164,17 @@ extern char str_pathbuffer[2][256];              /* Path fields buffers */
 extern char str_undobuffer[256];                 /* General undo buffer for string gads */
 
 extern struct StringInfo                         /* Path fields StringInfos */
-	path_stringinfo[2];
+    path_stringinfo[2];
 
 extern struct Gadget
-	*main_gadgets,                                 /* Custom gadgets */
-	*drive_gadgets,                                /* Drive gadgets */
-	path_strgadget[2],                             /* Path field gadgets */
-	vert_propgad[2],                               /* Vertical slider gadgets */
-	horiz_propgad[2],                              /* Horizontal slider gadgets */
-	drive_propgad,                                 /* Drive banks slider gadget */
-	gadget_propgad,                                /* Gadget banks slider gadget */
-	screen_gadgets[24];                            /* General screen gadgets */
+    *main_gadgets,                                 /* Custom gadgets */
+    *drive_gadgets,                                /* Drive gadgets */
+    path_strgadget[2],                             /* Path field gadgets */
+    vert_propgad[2],                               /* Vertical slider gadgets */
+    horiz_propgad[2],                              /* Horizontal slider gadgets */
+    drive_propgad,                                 /* Drive banks slider gadget */
+    gadget_propgad,                                /* Gadget banks slider gadget */
+    screen_gadgets[24];                            /* General screen gadgets */
 
 extern struct Gadget size_gadgets[];
 
@@ -218,7 +218,7 @@ extern struct Gadget size_gadgets[];
 extern struct Gadget iconbutpropgad;             /* Button iconify slider */
 
 extern struct RMBGadget
-	mainrmbgads[7];                                /* Screen right mouse button gadgets */
+    mainrmbgads[7];                                /* Screen right mouse button gadgets */
 
 
 /* Click-M-Click dragging data */

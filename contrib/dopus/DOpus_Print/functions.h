@@ -54,7 +54,7 @@ void print_status(struct PrintHandle *,char *,int);
 printfile(struct RequesterBase *,char *,PrintData *,struct Requester *);
 check_print_abort(struct RequesterBase *);
 
-check_print_gadget(struct Window *,struct Gadget *,int,int,USHORT);
+check_print_gadget(struct Window *,struct Gadget *,int,int,UWORD);
 
 void do_printdir(struct VisInfo *,char *,int);
 void printdirectory(struct RequesterBase *,char *,int,char *,int);

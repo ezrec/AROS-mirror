@@ -87,18 +87,16 @@ VOID PlayFaster(void);
 VOID PlaySlower(void);
 VOID TempoReset(void);
 
-/* AROS: We don't use pragmas
-
-#pragma libcall MUSICBase PlayModule   1e 0802
+#ifndef __AROS__
+#pragma libcall MUSICBase PlayModule   1e 0802  /* A0, D0 */
 #pragma libcall MUSICBase StopModule   24 0
-#pragma libcall MUSICBase IsModule     2a 801
+#pragma libcall MUSICBase IsModule     2a 801   /* D0 */
 #pragma libcall MUSICBase FlushModule  30 0
 #pragma libcall MUSICBase ContModule   36 0
-#pragma libcall MUSICBase SetVolume    3c 801
+#pragma libcall MUSICBase SetVolume    3c 801   /* D0 */
 #pragma libcall MUSICBase PlayFaster   42 0
 #pragma libcall MUSICBase PlaySlower   48 0
 #pragma libcall MUSICBase TempoReset   4e 0
+#endif
 
-
-*/
 

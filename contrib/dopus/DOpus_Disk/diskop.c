@@ -41,10 +41,14 @@ char *argv[];
 	int arg;
 
 	if (!(DOpusBase=(struct DOpusBase *)OpenLibrary("dopus.library",18)))
+#ifdef __AROS__
+		exit(0);
+#else
 #ifdef __SASC_60
 		__exit(0);
 #else
 		_exit(0);
+#endif
 #endif
 
 	if ((vis=LAllocRemember(&memkey,sizeof(struct VisInfo),MEMF_CLEAR)) &&
@@ -129,10 +133,14 @@ char *argv[];
 	LFreeRemember(&memkey);
 
 	CloseLibrary((struct Library *)DOpusBase);
-#ifdef __SASC_60
-	__exit(0);
+#ifdef __AROS__
+		exit(0);
 #else
-	_exit(0);
+#ifdef __SASC_60
+		__exit(0);
+#else
+		_exit(0);
+#endif
 #endif
 }
 
@@ -296,11 +304,15 @@ ULONG state;
 {
 	struct MsgPort *handler;
 
+#if 0
 	if (DOSBase->dl_lib.lib_Version<36) {
 		if (handler=(struct MsgPort *)DeviceProc(device))
 			SendPacket(handler,ACTION_INHIBIT,&state,1);
 	}
 	else Inhibit(device,state);
+#else
+	Inhibit(device,state);
+#endif
 }
 
 void border_text(reqbase,border,infobuf)
@@ -330,6 +342,7 @@ char *infobuf;
 struct DeviceNode *find_device(name)
 char *name;
 {
+#ifndef __AROS__
 	struct RootNode *rootnode;
 	struct DosInfo *dosinfo;
 	struct DeviceNode *devnode;
@@ -363,56 +376,70 @@ char *name;
 
 	Permit();
 	return(NULL);
+#else
+	struct DosList *dl;
+
+	if (dl = LockDosList(LDF_DEVICES | LDF_READ))
+		dl = (APTR)FindDosEntry(dl,name,LDF_DEVICES);
+	UnLockDosList(LDF_DEVICES | LDF_READ);
+	return dl;
+#endif
 }
 
 char **get_device_list(key,alike)
 struct DOpusRemember **key;
 char *alike;
 {
-	struct RootNode *rootnode;
-	struct DosInfo *dosinfo;
-	struct DeviceNode *devnode,*alikenode=NULL;
-	int count=1;
-	char **listtable,devname[32];
+//    struct RootNode *rootnode;
+//    struct DosInfo *dosinfo;
+    struct DeviceNode *devnode,*alikenode=NULL;
+    int count=1;
+    char **listtable,devname[32];
+    
+    if (alike) alikenode=find_device(alike);
+/*
+    Forbid();   
+        
+    rootnode=(struct RootNode *) DOSBase->dl_Root;
+    dosinfo=(struct DosInfo *) BADDR(rootnode->rn_Info);
+    devnode=(struct DeviceNode *) BADDR(dosinfo->di_DevInfo);
+*/
+    devnode = (struct DeviceNode *)LockDosList(LDF_READ | LDF_DEVICES);
+      
+    while ((devnode = (struct DeviceNode *)NextDosEntry((struct DosList *)devnode,LDF_DEVICES))) {
+        if (/*devnode->dn_Type==DLT_DEVICE && devnode->dn_Task &&*/
+            devnode->dn_Startup>512) {
+            if (!alikenode || like_devices(devnode,alikenode)) 
+                ++count;
+        }
+//        devnode=(struct DeviceNode *) BADDR(devnode->dn_Next);
+    }
+          
+    if ((listtable=LAllocRemember(key,count*4,MEMF_CLEAR))) {
+        devnode = (struct DeviceNode *)LockDosList(LDF_READ | LDF_DEVICES);
+//        devnode=(struct DeviceNode *) BADDR(dosinfo->di_DevInfo);
+        count=0;
+        while ((devnode = (struct DeviceNode *)NextDosEntry((struct DosList *)devnode,LDF_DEVICES))) {
+//        while (devnode) {
+            if (/*devnode->dn_Type==DLT_DEVICE && devnode->dn_Task &&*/
+                devnode->dn_Startup>512) {
+                if (!alikenode || like_devices(devnode,alikenode)) {
+                    BtoCStr((BPTR)devnode->dn_Name,devname,32);
+                    strcat(devname,":");
+                    if ((listtable[count]=LAllocRemember(key,strlen(devname)+5,0)))
+                        strcpy(listtable[count],devname);
+                    ++count;
+                }
+            }
+//            devnode=(struct DeviceNode *) BADDR(devnode->dn_Next);
+        }
+        UnLockDosList(LDF_READ | LDF_DEVICES);
+        sort_device_list(listtable);
+    }
+    UnLockDosList(LDF_READ | LDF_DEVICES);
 
-	if (alike) alikenode=find_device(alike);
-
-	Forbid();
-
-	rootnode=(struct RootNode *) DOSBase->dl_Root;
-	dosinfo=(struct DosInfo *) BADDR(rootnode->rn_Info);
-	devnode=(struct DeviceNode *) BADDR(dosinfo->di_DevInfo);
-
-	while (devnode) {
-		if (devnode->dn_Type==DLT_DEVICE && devnode->dn_Task &&
-			devnode->dn_Startup>512) {
-			if (!alikenode || like_devices(devnode,alikenode))
-				++count;
-		}
-		devnode=(struct DeviceNode *) BADDR(devnode->dn_Next);
-	}
-
-	if (listtable=LAllocRemember(key,count*4,MEMF_CLEAR)) {
-		devnode=(struct DeviceNode *) BADDR(dosinfo->di_DevInfo);
-		count=0;
-		while (devnode) {
-			if (devnode->dn_Type==DLT_DEVICE && devnode->dn_Task &&
-				devnode->dn_Startup>512) {
-				if (!alikenode || like_devices(devnode,alikenode)) {
-					BtoCStr((BPTR)devnode->dn_Name,devname,32);
-					strcat(devname,":");
-					if (listtable[count]=LAllocRemember(key,strlen(devname)+1,0))
-						strcpy(listtable[count],devname);
-					++count;
-				}
-			}
-			devnode=(struct DeviceNode *) BADDR(devnode->dn_Next);
-		}
-		sort_device_list(listtable);
-	}
-
-	Permit();
-	return(listtable);
+//    Permit();
+    return(listtable);
 }
 
 void sort_device_list(table)

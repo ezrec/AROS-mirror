@@ -30,7 +30,7 @@ the existing commercial status of Directory Opus 5.
 
 #include "diskop.h"
 
-char *version="$VER: DOpus_Disk 2.2 (20 Mar 93) Copyright © 1993 Jonathan Potter";
+char *version="$VER: DOpus_Disk 2.2 (" __DATE__ ")";
 
 struct DOpusBase *DOpusBase;
 struct IntuitionBase *IntuitionBase;
@@ -47,7 +47,7 @@ ULONG BitTable[32]={
 	0xfeffffff,0xfdffffff,0xfbffffff,0xf7ffffff,
 	0xefffffff,0xdfffffff,0xbfffffff,0x7fffffff};
 
-USHORT
+UWORD
 	trashcanicon_1_data[]={
 		0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,
 		0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,

@@ -239,7 +239,7 @@ int wind;
 	struct Window *window;
 	struct Gadget *gadgets[PRINTDIR_NUM_GADGETS];
 	ULONG class;
-	USHORT code,gadgetid;
+	UWORD code,gadgetid;
 	APTR iaddress;
 	struct StringExtend stringex;
 	struct Requester busyreq;

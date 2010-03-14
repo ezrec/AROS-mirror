@@ -33,77 +33,77 @@ the existing commercial status of Directory Opus 5.
 int readsetup(file)
 char *file;
 {
-	struct ConfigStuff cstuff;
-	char *s;
-	int a;
+    struct ConfigStuff cstuff;
+    char *s;
+    int a;
 
-	strcpy(str_config_file,file);
-	strcpy(str_config_basename,file);
-	if ((s=strstri(BaseName(str_config_basename),".CFG"))) *s=0;
+    strcpy(str_config_file,file);
+    strcpy(str_config_basename,file);
+    if ((s=strstri(BaseName(str_config_basename),".CFG"))) *s=0;
 
-	fixcstuff(&cstuff);
-	if ((a=ReadConfig(file,&cstuff))!=1) DefaultConfig(&cstuff);
-	cstufffix(&cstuff);
+    fixcstuff(&cstuff);
+    if ((a=ReadConfig(file,&cstuff))!=1) DefaultConfig(&cstuff);
+    cstufffix(&cstuff);
 
-	if (a==1) {
-		dopus_curgadbank=dopus_firstgadbank;
-		data_gadgetrow_offset=data_drive_offset=0;
-		CheckConfig(&cstuff);
-	}
-	config_changed=0;
-	return(a);
+    if (a==1) {
+        dopus_curgadbank=dopus_firstgadbank;
+        data_gadgetrow_offset=data_drive_offset=0;
+        CheckConfig(&cstuff);
+    }
+    config_changed=0;
+    return(a);
 }
 
-int savesetup()
+int savesetup(char *path)
 {
-	struct ConfigStuff cstuff;
-	int a;
+    struct ConfigStuff cstuff;
+    int a;
 
-	fixcstuff(&cstuff);
-	if (!status_iconified && status_publicscreen && Window) {
-		if (MainScreen) {
-			config->scr_winx=Window->LeftEdge;
-			config->scr_winy=Window->TopEdge;
-		}
-		else {
-			config->wbwinx=Window->LeftEdge;
-			config->wbwiny=Window->TopEdge;
-		}
-	}
-	a=SaveConfig(str_config_file,&cstuff);
-	cstufffix(&cstuff);
-	if (a) config_changed=0;
-	return(a);
+    fixcstuff(&cstuff);
+    if (!status_iconified && status_publicscreen && Window) {
+        if (MainScreen) {
+            config->scr_winx=Window->LeftEdge;
+            config->scr_winy=Window->TopEdge;
+        }
+        else {
+            config->wbwinx=Window->LeftEdge;
+            config->wbwiny=Window->TopEdge;
+        }
+    }
+    a=SaveConfig(path?path:str_config_file,&cstuff);
+    cstufffix(&cstuff);
+    if (a) config_changed=0;
+    return(a);
 }
 
 void getdefaultconfig()
 {
-	struct ConfigStuff cstuff;
+    struct ConfigStuff cstuff;
 
-	fixcstuff(&cstuff);
-	DefaultConfig(&cstuff);
-	cstufffix(&cstuff);
-	config_changed=0;
+    fixcstuff(&cstuff);
+    DefaultConfig(&cstuff);
+    cstufffix(&cstuff);
+    config_changed=0;
 }
 
 void fixcstuff(cstuff)
 struct ConfigStuff *cstuff;
 {
-	cstuff->config=config;
-	cstuff->typekey=filetype_key;
-	cstuff->firsttype=dopus_firsttype;
-	cstuff->firstbank=dopus_firstgadbank;
-	cstuff->curbank=dopus_curgadbank;
-	cstuff->firsthotkey=dopus_firsthotkey;
+    cstuff->config=config;
+    cstuff->typekey=filetype_key;
+    cstuff->firsttype=dopus_firsttype;
+    cstuff->firstbank=dopus_firstgadbank;
+    cstuff->curbank=dopus_curgadbank;
+    cstuff->firsthotkey=dopus_firsthotkey;
 }
 
 void cstufffix(cstuff)
 struct ConfigStuff *cstuff;
 {
-	config=cstuff->config;
-	filetype_key=cstuff->typekey;
-	dopus_firsttype=cstuff->firsttype;
-	dopus_firstgadbank=cstuff->firstbank;
-	dopus_curgadbank=cstuff->curbank;
-	dopus_firsthotkey=cstuff->firsthotkey;
+    config=cstuff->config;
+    filetype_key=cstuff->typekey;
+    dopus_firsttype=cstuff->firsttype;
+    dopus_firstgadbank=cstuff->firstbank;
+    dopus_curgadbank=cstuff->curbank;
+    dopus_firsthotkey=cstuff->firsthotkey;
 }

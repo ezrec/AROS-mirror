@@ -28,11 +28,7 @@ the existing commercial status of Directory Opus 5.
 
 */
 
-/* AROS: Does not need this
-
-void KPrintF __ARGS((char *,...));
-*/
-
+//void KPrintF __ARGS((char *,...));
 
 /* main.c */
 
@@ -74,7 +70,8 @@ void open_screen(void);
 void close_screen(void);
 void get_colour_table(void);
 void free_colour_table(struct ColorMap *);
-void loadrgb4(struct Screen *,USHORT *,int);
+void loadrgb4(struct Screen *,UWORD *,int);
+unsigned char getkeyshortcut(const char *str);
 
 /* main1.c */
 
@@ -118,7 +115,7 @@ void freefunclist(char **);
 void docolourbox(struct RastPort *,int,int,int,int);
 void docoloursel(struct RastPort *,int,int,int);
 void drawcompbox(struct RastPort *,int,int,int,int);
-void showkey(USHORT,USHORT,int,int,int,int);
+void showkey(UWORD,UWORD,int,int,int,int);
 void showfuncob(struct RastPort *,char *,int,int,int,int,int);
 void makeselflags(int,char *);
 int getselflags(char *);
@@ -216,8 +213,6 @@ struct ScreenMode *getscreenmode(int);
 
 /* screen_fonts.c */
 
-struct AvailFonts; /* Keep compiler happy */
-
 int initfontlist(int,int,int);
 void sortfontlist(struct AvailFonts *,int,int);
 void dofontdemo(char *,int);
@@ -259,7 +254,7 @@ char *strstri(char *,char *);
 int dohotkeysconfig(void);
 void makehotkeylist(void);
 int doedithotkey(struct dopushotkey *);
-void loadpalette(USHORT *,ULONG *,int);
+void loadpalette(UWORD *,ULONG *,int);
 void loadrgbtable(struct ViewPort *,ULONG *,int,int);
 void drawcornerimage(struct RastPort *,int,int,int,int);
 int fixrmbimage(struct RMBGadget *,struct Gadget *,int,int,int);
@@ -283,14 +278,8 @@ void setup_list_window(struct NewWindow *,struct DOpusListView *,struct Gadget *
 
 /* lsprintf.asm */
 
-/* AROS: Must be changed to C code
-__asm SwapMem(register __a0 char *src,register __a1 char *dst,register __d0 int size);
-void lsprintf __ARGS((char *,char *,...));
-
-*/
-
-void SwapMem(char *sr, char *dst, int size);
-void lsprintf(char *buf, char *fmt, ...);
+void SwapMem(register char *src __asm("a0"),register char *dst __asm("a1"),register int size __asm("d0"));
+void lsprintf (char *,char *,...);
 
 /* strings.c */
 

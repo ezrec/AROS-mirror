@@ -30,7 +30,7 @@ the existing commercial status of Directory Opus 5.
 
 #include "iconinfo.h"
 
-char *version="$VER: DOpus_Icon 1.7 (7 Mar 93) Copyright © 1993 Jonathan Potter";
+char *version="$VER: DOpus_Icon 1.7 (" __DATE__ ")";
 
 struct DOpusBase *DOpusBase;
 struct IntuitionBase *IntuitionBase;

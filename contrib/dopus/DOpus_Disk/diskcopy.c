@@ -165,7 +165,7 @@ char *argv[];
 	struct DOpusListView *sourcelist,*destinationlist,*view;
 	struct Gadget *gadlist;
 	ULONG class;
-	USHORT code,gadgetid;
+	UWORD code,gadgetid;
 	APTR iaddress;
 	int a,b,gadcount=0,ignorechange=0;
 	int source=-1,dest=-1,startverify=0,bumpnames=0,oldsel;
@@ -318,7 +318,7 @@ char *argv[];
 						break;
 
 					case IDCMP_VANILLAKEY:	
-						code=toupper(code);
+						code=ToUpper(code);
 						switch (code) {
 							case 'V':
 								gadlist->Flags^=GFLG_SELECTED;
