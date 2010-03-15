@@ -21,7 +21,7 @@ FILES	:= \
 	requesters	\
 	data
 
-#MM- dopus-library : setup includes linklibs
+#MM- dopus-library : setup includes linklibs dopus-includes
 
 USER_CFLAGS := -D__DOPUS_NOLIBBASE__ -I$(DOPUSDIR)/Development/include
 

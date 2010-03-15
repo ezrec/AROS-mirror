@@ -1,13 +1,13 @@
 # $Id$
 include $(SRCDIR)/$(CURDIR)/../make.cfg
 
+#MM- DOpus_Icon : dopus-library
+
 USER_CFLAGS := -I$(DOPUSDIR)/Development/include \
     -I$(SRCDIR)/$(CURDIR)/../include \
     -D__REXXSYSLIB_STDLIBBASE__ \
     -D__UTILITY_STDLIBBASE__ \
-    -D__LOCALE_STDLIBBASE__ \
-
-#    -DDEBUG=1
+    -D__LOCALE_STDLIBBASE__
 
 %build_prog mmake=DOpus_Icon \
     progname=DOpus_Icon targetdir=$(DOPUSDIR)/Modules \

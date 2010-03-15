@@ -1,6 +1,8 @@
 # $Id$
 include $(SRCDIR)/$(CURDIR)/../make.cfg
 
+#MM- DOpusRT : dopus-library
+
 EXEDIR := $(DOPUSDIR)/C
 
 USER_CFLAGS := -I$(DOPUSDIR)/Development/include \
