@@ -163,6 +163,6 @@ LIB_MESAHIDD_SOURCES = \
 %build_module mmake=mesa-mesahidd-module \
     modname=mesa modtype=library linklibname=GLHIDD conffile=arosmesa.conf linklibfiles="arosmesa_getprocaddress" \
     files="$(SHARED_LIB_SOURCES) $(LIB_MESAHIDD_SOURCES)" objdir=$(GENDIR)/$(CURDIR)/mesa-mesahidd-module \
-    uselibs="rom galliumauxiliary"
+    uselibs="galliumauxiliary rom"
 
 %common

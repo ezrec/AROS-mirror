@@ -25,6 +25,6 @@ endif
 USER_CFLAGS := $(FFIXED)
 
 %build_module mmake=hidd-gallium modname=gallium modtype=hidd \
-    files="$(FILES)" uselibs="oop"
+    files="$(FILES)" uselibs="oop rom"
     
 %common

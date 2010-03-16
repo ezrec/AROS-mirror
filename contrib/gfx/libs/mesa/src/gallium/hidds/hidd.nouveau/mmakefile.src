@@ -4,7 +4,7 @@ include $(TOP)/config/make.cfg
 
 include $(SRCDIR)/$(CURDIR)/../../../mesa/sources.gallium.mak
 
-#MM hidd-softpipe : includes hidd-gallium gallium-auxiliary-linklib
+#MM hidd-nouveau : includes hidd-gallium gallium-auxiliary-linklib
 
 ifeq ($(AROS_TARGET_CPU), i386)
   FFIXED = -ffixed-ebx
