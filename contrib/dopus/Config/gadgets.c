@@ -604,7 +604,7 @@ struct Gadget
             GFLG_GADGHCOMP,GACT_RELVERIFY,
             GTYP_BOOLGADGET,NULL,NULL,NULL,GAD_CYCLE,NULL,SCREEN_SLIDER_RIGHTCYCLE,NULL}};
 
-extern UBYTE glass_data[2][];
+extern UBYTE glass_data[2][36];
 extern UBYTE uparrow_data[];
 extern UBYTE downarrow_data[];
 

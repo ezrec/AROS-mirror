@@ -65,7 +65,7 @@ static struct InputEvent *keyhandler(void);
 static struct EmulLibEntry GATE_keyhandler = { TRAP_LIB, 0, (void (*)(void))keyhandler };
 #endif
 #endif
-static struct Gadget
+struct Gadget
   abortopgad={
     NULL,0,0,104,0,GFLG_GADGHCOMP,GACT_RELVERIFY,GTYP_BOOLGADGET,
     NULL,NULL,NULL,NULL,NULL,0,NULL};

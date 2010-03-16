@@ -32,10 +32,10 @@ the existing commercial status of Directory Opus 5.
 #include "view.h"
 #include <dos/dostags.h>
 
-static struct MsgPort *arbiter_reply_port;
-static struct MsgPort *arbiter_msg_port;
-static struct ProcessStart *arbiter_seglist=NULL;
-static struct Message arbiter_startup;
+struct MsgPort *arbiter_reply_port;
+struct MsgPort *arbiter_msg_port;
+struct ProcessStart *arbiter_seglist=NULL;
+struct Message arbiter_startup;
 
 #ifdef __MORPHOS__
 struct EmulLibEntry GATE_arbiter_process = { TRAP_LIB, 0, (void (*)(void))&arbiter_process };
