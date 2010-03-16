@@ -1400,6 +1400,13 @@ AROS_UFH3(void, PciDevicesEnumerator,
     /* Select bridges and AGP devices */
     if ((class == 0x06) || (agpcapptr))
     {
+        IPTR intline;
+        OOP_GetAttr(pciDevice, aHidd_PCIDevice_INTLine, &intline);
+
+        /* If the device is not a bridge and it has not interrupt line set, skip it */
+        if ((class != 0x06) && ((intline == 0) || (intline >= 255)))
+            return;
+
         struct PciAgpDevice * pciagpdev = 
             (struct PciAgpDevice *)AllocVec(sizeof(struct PciAgpDevice), MEMF_ANY | MEMF_CLEAR);
         IPTR temp;

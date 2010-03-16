@@ -31,6 +31,7 @@ AROS_UFH3(void, Enumerator,
 
     IPTR ProductID;
     IPTR VendorID;
+    IPTR INTLine;
     struct drm_driver *drv = (struct drm_driver *)hook->h_Data;
     struct drm_pciid *sup = drv->PciIDs;
     
@@ -39,6 +40,14 @@ AROS_UFH3(void, Enumerator,
     OOP_GetAttr(pciDevice, aHidd_PCIDevice_VendorID, &VendorID);
 
     DRM_DEBUG("VendorID: %x, ProductID: %x\n", VendorID, ProductID);
+    
+    /* Check interrupt line. If it is not set, just skip the device */
+    OOP_GetAttr(pciDevice, aHidd_PCIDevice_INTLine, &INTLine);
+    if ((INTLine == 0) || (INTLine >= 255))
+    {
+        DRM_DEBUG("INT line is not set. Skipping device.\n");
+        return;
+    }
     
     while (sup->VendorID)
     {
