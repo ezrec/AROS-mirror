@@ -37,7 +37,7 @@ OOP_Object * METHOD(GALLIUMDRIVERFACTORY, Hidd_GalliumDriverFactory, GetDriver)
     {
         /* nvidia.hidd is not loaded so we might try loading nouveau.hidd */
         if (!HIDDNouveauBase)
-            HIDDNouveauBase = OpenLibrary("nouveau.hidd", 1);
+            HIDDNouveauBase = OpenLibrary("nouveau.hidd", 2);
         
         if (HIDDNouveauBase)
         {
@@ -52,7 +52,7 @@ OOP_Object * METHOD(GALLIUMDRIVERFACTORY, Hidd_GalliumDriverFactory, GetDriver)
         /* No driver so far. Try loading the softpipe driver */        
         if (HIDDSoftpipeBase == NULL)
         {
-            if (!(HIDDSoftpipeBase = OpenLibrary("softpipe.hidd", 1)))
+            if (!(HIDDSoftpipeBase = OpenLibrary("softpipe.hidd", 2)))
                 return NULL;
         }
         

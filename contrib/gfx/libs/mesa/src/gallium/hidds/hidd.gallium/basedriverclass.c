@@ -60,3 +60,8 @@ VOID METHOD(GALLIUMBASEDRIVER, Hidd_GalliumBaseDriver, DisplaySurface)
 {
     bug("[GalliumBaseDriver]::DisplaySurface - abstract called\n");
 }
+
+VOID METHOD(GALLIUMBASEDRIVER, Hidd_GalliumBaseDriver, DestroyPipeScreen)
+{
+    bug("[GalliumBaseDriver]::DestroyPipeScreen - abstract called\n");
+}

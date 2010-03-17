@@ -41,7 +41,7 @@ USER_INCLUDES := \
             -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/winsys/aros/drm/drm-unchanged \
             -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/winsys/aros/drm/drm-unchanged/nouveau \
 
-USER_CFLAGS := $(FFIXED) -DHIDD_BUILD
+USER_CFLAGS := $(FFIXED)
 
 %build_module mmake=hidd-nouveau modname=nouveau modtype=hidd \
     files="$(NOUVEAU_HIDD_SOURCES)" uselibs="oop galliumauxiliary rom"

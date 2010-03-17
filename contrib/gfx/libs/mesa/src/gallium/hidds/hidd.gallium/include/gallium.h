@@ -41,6 +41,7 @@ enum
     moHidd_GalliumBaseDriver_CreatePipeScreen = 0,
     moHidd_GalliumBaseDriver_QueryDepthStencil,
     moHidd_GalliumBaseDriver_DisplaySurface,
+    moHidd_GalliumBaseDriver_DestroyPipeScreen,
 
     NUM_GALLIUMBASEDRIVER_METHODS
 };
@@ -72,12 +73,21 @@ struct pHidd_GalliumBaseDriver_QueryDepthStencil
 struct pHidd_GalliumBaseDriver_DisplaySurface
 {
     OOP_MethodID    mID;
+    APTR            context;
     APTR            rastport;
     ULONG           left;
+    ULONG           right;
     ULONG           top;
+    ULONG           bottom;
     ULONG           width;
     ULONG           height;
     APTR            surface;
+};
+
+struct pHidd_GalliumBaseDriver_DestroyPipeScreen
+{
+    OOP_MethodID    mID;
+    APTR            screen;
 };
 
 /* Gallium DriverFactory class */

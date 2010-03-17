@@ -246,3 +246,11 @@ VOID METHOD(GALLIUMSOFTPIPEDRIVER, Hidd_GalliumBaseDriver, DisplaySurface)
 
     FreeRastPort(rp);
 }
+
+VOID METHOD(GALLIUMSOFTPIPEDRIVER, Hidd_GalliumBaseDriver, DestroyPipeScreen)
+{
+    struct pipe_screen * screen = (struct pipe_screen *)msg->screen;
+
+    if (screen)
+        screen->destroy(screen);
+}

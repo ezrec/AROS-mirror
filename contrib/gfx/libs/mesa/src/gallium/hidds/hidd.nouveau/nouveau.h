@@ -1,5 +1,5 @@
-#ifndef _GALLIUM_H
-#define _GALLIUM_H
+#ifndef _NOUVEAU_H
+#define _NOUVEAU_H
 
 /*
     Copyright 2010, The AROS Development Team. All rights reserved.

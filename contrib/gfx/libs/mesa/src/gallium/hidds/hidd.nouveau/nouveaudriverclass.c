@@ -5,6 +5,8 @@
 
 #include <hidd/gallium.h>
 #include <proto/oop.h>
+#include <proto/graphics.h>
+#include <proto/layers.h>
 #include <aros/debug.h>
 
 #include "nouveau.h"
@@ -23,10 +25,8 @@ struct HiddNouveauWinSys {
 
     struct pipe_screen *pscreen;
 
-    unsigned nr_pctx;
-    struct pipe_context **pctx;
-
-    struct pipe_surface *front;
+    /* Surface covering the whole visible screen */
+    struct pipe_surface * visiblescreen;
 };
 
 static INLINE struct HiddNouveauWinSys *
@@ -52,7 +52,92 @@ HiddNouveauDestroyWinSys(struct pipe_winsys *ws)
     FREE(nvws);
 }
 
+static struct pipe_buffer *
+HiddNouveauPipeBufferFromHandle(struct pipe_screen *pscreen, ULONG handle)
+{
+    struct nouveau_device *dev = nouveau_screen(pscreen)->device;
+    struct pipe_buffer *pb;
+    int ret;
 
+    pb = CALLOC(1, sizeof(struct pipe_buffer) + sizeof(struct nouveau_bo*));
+    if (!pb)
+        return NULL;
+
+    ret = nouveau_bo_handle_ref(dev, handle, (struct nouveau_bo**)(pb+1));
+    if (ret) {
+        D(bug("%s: ref name 0x%08x failed with %d\n",
+                 __func__, handle, ret));
+        FREE(pb);
+        return NULL;
+    }
+
+    pipe_reference_init(&pb->reference, 1);
+    pb->screen = pscreen;
+    pb->alignment = 0;
+    pb->usage = PIPE_BUFFER_USAGE_GPU_READ_WRITE |
+            PIPE_BUFFER_USAGE_CPU_READ_WRITE;
+    pb->size = nouveau_bo(pb)->size;
+    
+    return pb;
+}
+
+static struct pipe_surface *
+HiddNouveauGetScreenSurface(struct pipe_screen * screen, LONG width, LONG height, LONG bpp)
+{
+    struct pipe_surface *surface = NULL;
+    struct pipe_texture *texture = NULL;
+    struct pipe_texture templat;
+    struct pipe_buffer *buf = NULL;
+    unsigned pitch = width * bpp / 8;
+
+    buf = HiddNouveauPipeBufferFromHandle(screen, 1 /* driver makes sure object with ID 1 is visible framebuffer */);
+    if (!buf)
+        return NULL;
+
+    memset(&templat, 0, sizeof(templat));
+    templat.tex_usage = PIPE_TEXTURE_USAGE_PRIMARY |
+                        NOUVEAU_TEXTURE_USAGE_LINEAR;
+    templat.target = PIPE_TEXTURE_2D;
+    templat.last_level = 0;
+    templat.depth0 = 1;
+    switch(bpp)
+    {
+        case(16):
+            templat.format = PIPE_FORMAT_R5G6B5_UNORM;
+            break;
+        case(32):
+            templat.format = PIPE_FORMAT_A8R8G8B8_UNORM;
+            break;
+        default:
+            /* Fail */
+            pipe_buffer_reference(&buf, NULL);
+            return NULL;
+    }
+    templat.width0 = width;
+    templat.height0 = height;
+
+    texture = screen->texture_blanket(screen,
+                                        &templat,
+                                        &pitch,
+                                        buf);
+
+    /* we don't need the buffer from this point on */
+    pipe_buffer_reference(&buf, NULL);
+
+    if (!texture)
+        return NULL;
+
+    surface = screen->get_tex_surface(screen, texture, 0, 0, 0,
+                                        PIPE_BUFFER_USAGE_GPU_READ |
+                                        PIPE_BUFFER_USAGE_GPU_WRITE);
+
+    /* we don't need the texture from this point on */
+    pipe_texture_reference(&texture, NULL);
+
+    return surface;
+}
+
+/* METHODS */
 OOP_Object *METHOD(GALLIUMNOUVEAUDRIVER, Root, New)
 {
     o = (OOP_Object *)OOP_DoSuperMethod(cl, o, (OOP_Msg) msg);
@@ -108,8 +193,8 @@ APTR METHOD(GALLIUMNOUVEAUDRIVER, Hidd_GalliumBaseDriver, CreatePipeScreen)
         init = nv50_screen_create;
         break;
     default:
-        debug_printf("%s: unknown chipset nv%02x\n", __func__,
-                 dev->chipset);
+        D(bug("%s: unknown chipset nv%02x\n", __func__,
+                 dev->chipset));
         return NULL;
     }
 
@@ -129,6 +214,10 @@ APTR METHOD(GALLIUMNOUVEAUDRIVER, Hidd_GalliumBaseDriver, CreatePipeScreen)
     }
     
     nvws->pscreen->flush_frontbuffer = HiddNouveauFlushFrontBuffer;
+
+    /* Get surface for the whole screen */
+    /* FIXME: Remove hardcoded screen dimensions */
+    nvws->visiblescreen = HiddNouveauGetScreenSurface(nvws->pscreen, 1024, 768, 32);
     
     return nvws->pscreen;
 }
@@ -141,5 +230,85 @@ VOID METHOD(GALLIUMNOUVEAUDRIVER, Hidd_GalliumBaseDriver, QueryDepthStencil)
 
 VOID METHOD(GALLIUMNOUVEAUDRIVER, Hidd_GalliumBaseDriver, DisplaySurface)
 {
-    /* TODO : Implement */
+    struct Layer *L = ((struct RastPort *)msg->rastport)->Layer;
+    struct ClipRect *CR;
+    struct Rectangle renderableLayerRect;
+    struct pipe_context * pipe = (struct pipe_context *)msg->context;
+    struct pipe_surface * surface = (struct pipe_surface *)msg->surface;
+    struct pipe_surface * visiblescreen = ((struct HiddNouveauWinSys*)pipe->winsys)->visiblescreen;
+
+    if (visiblescreen == NULL)
+    {
+        D(bug("Screen surface not provided\n"));
+        return;
+    }
+
+    if (L == NULL)
+    {
+        D(bug("Layer not provided\n"));
+        /* FIXME: Implement rendering path - render at 0,0 full size of buffer? */
+        return;
+    }
+
+    if (!IsLayerVisible(L))
+        return;
+
+    LockLayerRom(L);
+    
+    renderableLayerRect.MinX = L->bounds.MinX + msg->left;
+    renderableLayerRect.MaxX = L->bounds.MaxX - msg->right;
+    renderableLayerRect.MinY = L->bounds.MinY + msg->top;
+    renderableLayerRect.MaxY = L->bounds.MaxY - msg->bottom;
+    
+    /*  Do not clip renderableLayerRect to screen rast port. CRs are already clipped and unclipped 
+        layer coords are needed: see surface_copy */
+    
+    CR = L->ClipRect;
+    
+    for (;NULL != CR; CR = CR->Next)
+    {
+        D(bug("Cliprect (%d, %d, %d, %d), lobs=%p\n",
+            CR->bounds.MinX, CR->bounds.MinY, CR->bounds.MaxX, CR->bounds.MaxY,
+            CR->lobs));
+
+        /* I assume this means the cliprect is visible */
+        if (NULL == CR->lobs)
+        {
+            struct Rectangle result;
+            
+            if (AndRectRect(&renderableLayerRect, &CR->bounds, &result))
+            {
+                /* This clip rect intersects renderable layer rect */
+                
+                /* FIXME: clip last 4 parameters to actuall surface deminsions */
+                pipe->surface_copy(pipe, visiblescreen, 
+                            result.MinX, 
+                            result.MinY, 
+                            surface, 
+                            result.MinX - L->bounds.MinX - msg->left, 
+                            result.MinY - L->bounds.MinY - msg->top, 
+                            result.MaxX - result.MinX + 1, 
+                            result.MaxY - result.MinY + 1);
+            }
+        }
+    }
+
+    /* Flush all copy operations done */
+    pipe->flush(pipe, PIPE_FLUSH_RENDER_CACHE, NULL);
+
+    UnlockLayerRom(L);
+}
+
+VOID METHOD(GALLIUMNOUVEAUDRIVER, Hidd_GalliumBaseDriver, DestroyPipeScreen)
+{
+    struct pipe_screen * screen = (struct pipe_screen *)msg->screen;
+
+    if (screen)
+    {
+        /* Release visible screen surface reference */
+        if (((struct HiddNouveauWinSys*)screen->winsys)->visiblescreen)
+            pipe_surface_reference(&(((struct HiddNouveauWinSys*)screen->winsys)->visiblescreen), NULL);
+
+        screen->destroy(screen);
+    }
 }

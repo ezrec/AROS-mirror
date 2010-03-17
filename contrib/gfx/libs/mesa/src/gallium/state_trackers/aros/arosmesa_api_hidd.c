@@ -12,6 +12,7 @@
 
 #include <proto/exec.h>
 #include <proto/utility.h>
+#define DEBUG 0
 #include <aros/debug.h>
 
 #include <proto/cybergraphics.h>
@@ -463,7 +464,7 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
     /* Try to open gallium.hidd */
     if (AROSMesaHIDDGalliumBase == NULL)
     {
-        if (!(AROSMesaHIDDGalliumBase = OpenLibrary((STRPTR)"gallium.hidd", 1)))
+        if (!(AROSMesaHIDDGalliumBase = OpenLibrary((STRPTR)"gallium.hidd", 2)))
             return NULL;
     }
     
@@ -528,11 +529,6 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
         FreeVec(amesa);
         return NULL;
     }
-
-    /* FIXME: Needs redesign when gallium merged with 2D HIDDs - how screen resolution change will be handled? */
-//    amesa->screen_surface = driver->get_screen_surface(screen, amesa->ScreenInfo.Width, amesa->ScreenInfo.Height, 
-//                                   amesa->ScreenInfo.BitsPerPixel);
-    /* amesa->screen_surface may be NULL */
 
     pipe = screen->context_create(screen, NULL);
     
@@ -618,9 +614,12 @@ void AROSMesaSwapBuffers(AROSMesaContext amesa)
     if (surf) {
         struct pHidd_GalliumBaseDriver_DisplaySurface dsmsg = {
         mID : OOP_GetMethodID(IID_Hidd_GalliumBaseDriver, moHidd_GalliumBaseDriver_DisplaySurface),
+        context : amesa->st->pipe,
         rastport : amesa->visible_rp,
         left : amesa->left,
+        right : amesa->right,
         top : amesa->top,
+        bottom : amesa->bottom,
         width : amesa->width,
         height : amesa->height,
         surface : surf
@@ -663,7 +662,10 @@ void AROSMesaDestroyContext(AROSMesaContext amesa)
 
     if (ctx)
     {
-        struct pipe_screen * screen = ctx->st->pipe->screen;
+        struct pHidd_GalliumBaseDriver_DestroyPipeScreen dpsmsg = {
+        mID : OOP_GetMethodID(IID_Hidd_GalliumBaseDriver, moHidd_GalliumBaseDriver_DestroyPipeScreen),
+        screen : ctx->st->pipe->screen
+        };
         
         GET_CURRENT_CONTEXT(cur_ctx);
 
@@ -675,17 +677,13 @@ void AROSMesaDestroyContext(AROSMesaContext amesa)
 
         st_finish(ctx->st);
 
-        /* Release amesa->screen_surface reference */
-        if (amesa->screen_surface)
-            pipe_surface_reference(&amesa->screen_surface, NULL);
-
         st_destroy_context(ctx->st);
         
         aros_destroy_framebuffer(amesa->framebuffer);
         aros_destroy_visual(amesa->visual);
         aros_destroy_context(amesa);
 
-        screen->destroy(screen);
+        OOP_DoMethod(driver, (OOP_Msg)&dpsmsg);
     }
     
     RESTORE_REG

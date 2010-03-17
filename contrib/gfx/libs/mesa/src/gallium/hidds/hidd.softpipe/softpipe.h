@@ -1,5 +1,5 @@
-#ifndef _GALLIUM_H
-#define _GALLIUM_H
+#ifndef _SOFTPIPE_H
+#define _SOFTPIPE_H
 
 /*
     Copyright 2010, The AROS Development Team. All rights reserved.
