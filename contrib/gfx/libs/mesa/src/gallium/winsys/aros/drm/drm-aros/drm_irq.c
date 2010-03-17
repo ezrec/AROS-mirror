@@ -4,6 +4,7 @@
 */
 
 #include "drmP.h"
+#include "drm_aros.h"
 
 #include <proto/oop.h>
 #include <hidd/pci.h>

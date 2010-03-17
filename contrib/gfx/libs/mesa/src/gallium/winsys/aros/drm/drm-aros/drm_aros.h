@@ -7,10 +7,11 @@
 #define DRM_AROS_H
 
 #include <hidd/irq.h>
-extern struct Library   * OOPBase;
+extern struct Library   * OOPBase_Nouveau;
 extern OOP_Object       * pciDriver;
 extern OOP_Object       * pciBus;
 struct drm_driver;
+#define OOPBase OOPBase_Nouveau
 
 LONG        drm_aros_pci_find_supported_video_card(struct drm_driver *drv);
 void        drm_aros_pci_shutdown(struct drm_driver *drv);

@@ -4,6 +4,7 @@
 */
 
 #include "drmP.h"
+#include "drm_aros.h"
 
 #include <aros/libcall.h>
 
@@ -16,11 +17,9 @@
 #include "aros_agp_hack.h"
 
 OOP_AttrBase __IHidd_PCIDev = 0;
-#if !defined(HIDD_BUILD)
-struct Library * OOPBase    = NULL;
-#endif
-OOP_Object * pciDriver      = NULL;
-OOP_Object * pciBus         = NULL;
+struct Library * OOPBase_Nouveau    = NULL;
+OOP_Object * pciDriver              = NULL;
+OOP_Object * pciBus                 = NULL;
 
 AROS_UFH3(void, Enumerator,
     AROS_UFHA(struct Hook *, hook, A0),
@@ -96,22 +95,16 @@ AROS_UFH3(void, Enumerator,
 static void 
 drm_aros_pci_find_card(struct drm_driver *drv)
 {
-#if !defined(HIDD_BUILD)
-    if (!OOPBase)
+    if (!OOPBase_Nouveau)
     {
-        if ((OOPBase=OpenLibrary("oop.library", 0)) != NULL)
-        {
-            __IHidd_PCIDev = OOP_ObtainAttrBase(IID_Hidd_PCIDevice);
-        }
-        else
+        if ((OOPBase_Nouveau = OpenLibrary("oop.library", 0)) == NULL)
         {
             /* Failure */
             return;
         }
     }
-#else
+
     __IHidd_PCIDev = OOP_ObtainAttrBase(IID_Hidd_PCIDevice);
-#endif
 
     DRM_DEBUG("Creating PCI object\n");
 
@@ -150,7 +143,7 @@ LONG drm_aros_pci_find_supported_video_card(struct drm_driver *drv)
     drv->IsPCIE = FALSE;
     pciBus = NULL;
     pciDriver = NULL;
-    OOPBase = NULL;
+    OOPBase_Nouveau = NULL;
     
     drm_aros_pci_find_card(drv);
 
@@ -195,12 +188,10 @@ void drm_aros_pci_shutdown(struct drm_driver *drv)
         __IHidd_PCIDev = 0;
     }
     
-#if !defined(HIDD_BUILD)
-    if (OOPBase)
+    if (OOPBase_Nouveau)
     {
-        CloseLibrary(OOPBase);
-        OOPBase = NULL;
+        CloseLibrary(OOPBase_Nouveau);
+        OOPBase_Nouveau = NULL;
     }
-#endif
 }
 

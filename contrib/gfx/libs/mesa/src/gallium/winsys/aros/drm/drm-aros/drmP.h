@@ -35,8 +35,11 @@
 #if !defined(DRMP_H)
 #define DRMP_H
 
+#define DEBUG 0
+#include <aros/debug.h>
+
 #include "drm.h"
-#include "drm_aros.h"
+#include <hidd/irq.h>
 #include "drm_aros_config.h"
 #include "drm_compat_funcs.h"
 #include "drm_redefines.h"
@@ -44,10 +47,6 @@
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
-
-
-#define DEBUG 0
-#include <aros/debug.h>
 
 /* NEEDED */
 

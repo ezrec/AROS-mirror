@@ -4,7 +4,7 @@
 */
 
 #include "drmP.h"
-#include "drm_compat_funcs.h"
+#include "drm_aros.h"
 
 struct drm_driver *current_drm_driver = NULL;
 

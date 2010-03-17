@@ -35,8 +35,6 @@
 #include <linux/module.h>
 #include <linux/mman.h>
 #include <linux/pagemap.h>
-#else
-#include "drm_compat_funcs.h"
 #endif
 #include "drmP.h"
 

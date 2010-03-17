@@ -675,8 +675,13 @@ int nouveau_load(struct drm_device *dev, unsigned long flags)
 	dev_priv->flags = flags & NOUVEAU_FLAGS;
 	dev_priv->init_state = NOUVEAU_CARD_INIT_DOWN;
 
+#if !defined(__AROS__)
 	NV_DEBUG(dev, "vendor: 0x%X device: 0x%X class: 0x%X\n",
 		 dev->pci_vendor, dev->pci_device, dev->pdev->class);
+#else
+	NV_DEBUG(dev, "vendor: 0x%X device: 0x%X\n",
+		 dev->pci_vendor, dev->pci_device);
+#endif
 
 #if !defined(__AROS__)
 	dev_priv->acpi_dsm = nouveau_dsm_probe(dev);
