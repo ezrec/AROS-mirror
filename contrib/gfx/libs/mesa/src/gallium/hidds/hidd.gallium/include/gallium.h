@@ -23,9 +23,8 @@
 #include <gallium/pipe/p_aros_version.h>
 #endif
 
-/* Gallium BaseDriver class */
+/* Gallium BaseDriver interface */
 
-#define CLID_Hidd_GalliumBaseDriver   "hidd.gallium.basedriver"
 #define IID_Hidd_GalliumBaseDriver    "hidd.gallium.basedriver"
 
 #define HiddGalliumBaseDriverAttrBase	__IHidd_GalliumBaseDriver

@@ -19,9 +19,11 @@ struct HIDDGalliumDriverFactoryData
 
 struct galliumstaticdata 
 {
-    OOP_Class       *galliumBaseDriverClass;
     OOP_Class       *galliumDriverFactoryClass;
     OOP_AttrBase    hiddGalliumBaseDriverAB;
+    struct Library  *loadedDriverHidd;
+    STRPTR          loadedDriverClassName;
+    OOP_Object      *driver;
 };
 
 LIBBASETYPE 

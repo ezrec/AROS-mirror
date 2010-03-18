@@ -13,8 +13,38 @@
 #undef HiddGalliumBaseDriverAttrBase
 #define HiddGalliumBaseDriverAttrBase   (SD(cl)->hiddGalliumBaseDriverAB)
 
-struct Library * HIDDSoftpipeBase = NULL;
-struct Library * HIDDNouveauBase = NULL;
+static VOID HiddGalliumLoadDriverHidd(struct galliumstaticdata * sd)
+{
+    /* This function is designed to contain all the ugly hardcodes */
+    BOOL isnvidiahiddloaded = FALSE;
+    /* TODO: Detect if nvidia.hidd is loaded */
+
+    if (!isnvidiahiddloaded)
+    {
+        /* nvidia.hidd is not loaded so we might try loading nouveau.hidd */
+        if (!sd->loadedDriverHidd)
+        {
+            sd->loadedDriverHidd = OpenLibrary("nouveau.hidd", 3);
+            if (sd->loadedDriverHidd)
+            {
+                /* If the nouveau.hidd loaded, it means compatible nvidia card
+                   was found */
+                sd->loadedDriverClassName = "hidd.gallium.nouveaudriver";
+            }
+        }
+    }
+
+    /* Last option - softpipe.hidd */
+    if (!sd->loadedDriverHidd)
+    {
+        sd->loadedDriverHidd = OpenLibrary("softpipe.hidd", 3);
+        if (sd->loadedDriverHidd)
+        {
+            sd->loadedDriverClassName = "hidd.gallium.softpipedriver";
+        }
+    }
+}
+
 
 OOP_Object * METHOD(GALLIUMDRIVERFACTORY, Root, New)
 {
@@ -25,57 +55,44 @@ OOP_Object * METHOD(GALLIUMDRIVERFACTORY, Root, New)
 
 OOP_Object * METHOD(GALLIUMDRIVERFACTORY, Hidd_GalliumDriverFactory, GetDriver)
 {
-    OOP_Object * driver = NULL;
-    BOOL isnvidiahiddloaded = FALSE;
-    /* Make sure this method is stateless */
+    /* Make sure this method is stateless and does lazy load of selected hidd.
+       The selection of driver implementation (nouvea.hidd, softpipe.hidd)
+       cannot happed during gallium.hidd initilization, because the driver
+       implementation requires the gallium.hidd to be already loaded and
+       initizalized */
     
-    /* TODO: Use locking for the part of loading hidds */
-    
-    /* TODO: Detect if nvidia.hidd is loaded */
+    /* TODO: Use semaphore lock the operation */
 
-    if (!isnvidiahiddloaded)
+    /* Load driver hidd */
+    if (!SD(cl)->loadedDriverHidd)
+        HiddGalliumLoadDriverHidd(SD(cl));
+
+    /* Create driver from selected driver implementation */
+    if (!SD(cl)->driver)
     {
-        /* nvidia.hidd is not loaded so we might try loading nouveau.hidd */
-        if (!HIDDNouveauBase)
-            HIDDNouveauBase = OpenLibrary("nouveau.hidd", 2);
-        
-        if (HIDDNouveauBase)
-        {
-            /* If the nouveau.hidd loaded, it means compatible nvidia card
-               was found */
-            driver = OOP_NewObject(NULL, "hidd.gallium.nouveaudriver", NULL);
-        }
+        if (SD(cl)->loadedDriverHidd)
+            SD(cl)->driver = OOP_NewObject(NULL, SD(cl)->loadedDriverClassName, NULL);
+        else
+            bug("[GalliumDriverFactory] Error - no driver implementation available\n");
     }
     
-    if (!driver)
-    {
-        /* No driver so far. Try loading the softpipe driver */        
-        if (HIDDSoftpipeBase == NULL)
-        {
-            if (!(HIDDSoftpipeBase = OpenLibrary("softpipe.hidd", 2)))
-                return NULL;
-        }
-        
-        driver = OOP_NewObject(NULL, "hidd.gallium.softpipedriver", NULL);
-    }
-    
-    /* Check driver interface version in relation to client version */
-    if (driver)
+    /* Check driver interface version in relation to client version. This check
+       needs to happen for each request, not only for the first one! */
+    if (SD(cl)->driver)
     {
         /* Check interface version */
         IPTR galliuminterfaceversion = 0;
-        OOP_GetAttr(driver, aHidd_GalliumBaseDriver_GalliumInterfaceVersion, &galliuminterfaceversion);
+        OOP_GetAttr(SD(cl)->driver, aHidd_GalliumBaseDriver_GalliumInterfaceVersion, &galliuminterfaceversion);
         
         /* Only matching version is allowed */
         if (msg->galliuminterfaceversion != (ULONG)galliuminterfaceversion)
         {
             bug("[GalliumDriverFactory] Error - client requested interface version %d while driver supplies version %d\n",
                 msg->galliuminterfaceversion, galliuminterfaceversion);
-            OOP_DisposeObject(driver);
-            driver = NULL;
+            return NULL;
         }
     }
     
-    return driver;
+    return SD(cl)->driver;
 }
 
