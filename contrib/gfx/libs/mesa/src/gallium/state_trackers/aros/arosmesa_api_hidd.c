@@ -21,12 +21,51 @@
 #include <graphics/rpattr.h>
 #include <proto/oop.h>
 #include <hidd/gallium.h>
+#include <aros/symbolsets.h>
 
-struct Library * AROSMesaCyberGfxBase = NULL;    /* Base address for cybergfx */
-struct Library * AROSMesaOOPBase = NULL;
-struct Library * AROSMesaHIDDGalliumBase = NULL;
+struct Library * AROSMesaCyberGfxBase = NULL;
+static struct Library * AROSMesaOOPBase = NULL;
+static struct Library * AROSMesaHIDDGalliumBase = NULL;
 #define OOPBase AROSMesaOOPBase
-OOP_Object * driver = NULL;
+static OOP_Object * driver = NULL;
+
+/*****************************************************************************/
+/*                             INIT FUNCTIONS                                */
+/*****************************************************************************/
+
+static BOOL AROSMesaHiddInit()
+{
+    /* Open required libraries and hidds */
+    AROSMesaCyberGfxBase = OpenLibrary((STRPTR)"cybergraphics.library",0);
+    AROSMesaOOPBase = OpenLibrary((STRPTR)"oop.library", 0);
+    AROSMesaHIDDGalliumBase = OpenLibrary((STRPTR)"gallium.hidd", 3);
+
+    if ((!AROSMesaCyberGfxBase) || (!AROSMesaOOPBase) || (!AROSMesaHIDDGalliumBase))
+        return FALSE;
+
+    return TRUE;
+}
+
+static BOOL AROSMesaHiddExit()
+{
+    /* Close libraries and hidds. Do not dispose the driver. It is handled in
+       gallium.hidd */
+    driver = NULL;
+
+    if (AROSMesaHIDDGalliumBase)
+        CloseLibrary(AROSMesaHIDDGalliumBase);
+
+    if (AROSMesaOOPBase)
+        CloseLibrary(AROSMesaOOPBase);
+
+    if (AROSMesaCyberGfxBase)
+        CloseLibrary(AROSMesaCyberGfxBase);
+
+    return TRUE;
+}
+
+ADD2INIT(AROSMesaHiddInit, 0);
+ADD2EXIT(AROSMesaHiddExit, 0);
 
 /*****************************************************************************/
 /*                             PRIVATE FUNCTIONS                             */
@@ -426,6 +465,7 @@ aros_standard_init(AROSMesaContext amesa, struct TagItem *tagList)
 
 
 
+
 /*****************************************************************************/
 /*                             PUBLIC FUNCTIONS                              */
 /*****************************************************************************/
@@ -445,29 +485,6 @@ AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
     struct pipe_context * pipe = NULL;
     struct pHidd_GalliumBaseDriver_CreatePipeScreen cpsmsg;
 
-    /* TODO: Move openining/closing of library into library init code */
-
-    /* Try to open cybergraphics.library */
-    if (CyberGfxBase == NULL)
-    {
-        if (!(CyberGfxBase = OpenLibrary((STRPTR)"cybergraphics.library",0)))
-            return NULL;
-    }
-    
-    /* Try to open oop.library */
-    if (OOPBase == NULL)
-    {
-        if (!(OOPBase = OpenLibrary((STRPTR)"oop.library", 0)))
-            return NULL;
-    }
-
-    /* Try to open gallium.hidd */
-    if (AROSMesaHIDDGalliumBase == NULL)
-    {
-        if (!(AROSMesaHIDDGalliumBase = OpenLibrary((STRPTR)"gallium.hidd", 2)))
-            return NULL;
-    }
-    
     if (driver == NULL)
     {
         /* Create gallium driver factory */
