@@ -13,13 +13,32 @@
 #undef HiddGalliumBaseDriverAttrBase
 #define HiddGalliumBaseDriverAttrBase   (SD(cl)->hiddGalliumBaseDriverAB)
 
+static BOOL HiddGalliumIsLibLoaded(STRPTR libname)
+{
+    struct Library * library = NULL;
+    
+    Forbid();
+    
+    for(library = (struct Library *)SysBase->LibList.lh_Head; library->lib_Node.ln_Succ != NULL;
+            library = (struct Library *)library->lib_Node.ln_Succ)
+    {
+        if (strcmp(library->lib_Node.ln_Name, libname) == 0)
+        {
+            Permit();
+            return TRUE;
+        }
+    }
+    
+    Permit();
+    return FALSE;
+}
+
 static VOID HiddGalliumLoadDriverHidd(struct galliumstaticdata * sd)
 {
     /* This function is designed to contain all the ugly hardcodes */
-    BOOL isnvidiahiddloaded = FALSE;
-    /* TODO: Detect if nvidia.hidd is loaded */
 
-    if (!isnvidiahiddloaded)
+    /* Try loading nouveau.hidd */
+    if (!HiddGalliumIsLibLoaded("nvidia.hidd"))
     {
         /* nvidia.hidd is not loaded so we might try loading nouveau.hidd */
         if (!sd->loadedDriverHidd)
