@@ -81,14 +81,59 @@ HiddNouveauPipeBufferFromHandle(struct pipe_screen *pscreen, ULONG handle)
     return pb;
 }
 
+/* ========================================================================== */
+#include <proto/cybergraphics.h>
+#include <proto/intuition.h>
+#include <cybergraphx/cybergraphics.h>
+
+static BOOL HiddNouveauGetScreenParameters(LONG * width, LONG * height, LONG * bpp)
+{
+    /* HACK */
+    /* This only works, because in VESA mode it is not possible to change resolution at
+       runtime or have screens of different resolution, so the resolution is always
+       fixed to default public screen resolution */
+    struct Screen * pubscreen;
+    struct Library * CyberGfxBase = NULL;
+    
+    CyberGfxBase = OpenLibrary("cybergraphics.library", 0);
+    
+    if (!CyberGfxBase)
+        return FALSE;
+    
+    pubscreen = LockPubScreen(NULL);
+    
+    if (!pubscreen)
+        return FALSE;
+
+    *bpp    = GetCyberMapAttr(pubscreen->RastPort.BitMap, CYBRMATTR_BPPIX) * 8;
+    *width  = GetCyberMapAttr(pubscreen->RastPort.BitMap, CYBRMATTR_WIDTH);
+    *height = GetCyberMapAttr(pubscreen->RastPort.BitMap, CYBRMATTR_HEIGHT); 
+    
+    UnlockPubScreen(NULL, pubscreen);
+    
+    CloseLibrary(CyberGfxBase);
+
+    return TRUE;
+}
+
+/* ========================================================================== */
+
 static struct pipe_surface *
-HiddNouveauGetScreenSurface(struct pipe_screen * screen, LONG width, LONG height, LONG bpp)
+HiddNouveauGetScreenSurface(struct pipe_screen * screen)
 {
     struct pipe_surface *surface = NULL;
     struct pipe_texture *texture = NULL;
     struct pipe_texture templat;
     struct pipe_buffer *buf = NULL;
-    unsigned pitch = width * bpp / 8;
+    LONG width = 0;
+    LONG height = 0;
+    LONG bpp = 0;
+    unsigned pitch = 0;
+
+    if (!HiddNouveauGetScreenParameters(&width, &height, &bpp))
+        return NULL;
+    
+    pitch = width * bpp / 8;
 
     buf = HiddNouveauPipeBufferFromHandle(screen, 1 /* driver makes sure object with ID 1 is visible framebuffer */);
     if (!buf)
@@ -216,8 +261,7 @@ APTR METHOD(GALLIUMNOUVEAUDRIVER, Hidd_GalliumBaseDriver, CreatePipeScreen)
     nvws->pscreen->flush_frontbuffer = HiddNouveauFlushFrontBuffer;
 
     /* Get surface for the whole screen */
-    /* FIXME: Remove hardcoded screen dimensions */
-    nvws->visiblescreen = HiddNouveauGetScreenSurface(nvws->pscreen, 1024, 768, 32);
+    nvws->visiblescreen = HiddNouveauGetScreenSurface(nvws->pscreen);
     
     return nvws->pscreen;
 }
