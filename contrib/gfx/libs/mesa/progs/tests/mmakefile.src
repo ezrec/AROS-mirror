@@ -8,7 +8,7 @@ FILES 	    :=  mesasimplerendering \
                 
 EXEDIR      := $(AROSDIR)/Tests
 
-#MM- contrib-gfx-libs-mesa-tests : contrib-gfx-libs-mesa-includes includes contrib-gfx-libs-mesa-mesa-module
+#MM- contrib-gfx-libs-mesa-tests : contrib-gfx-libs-mesa-includes includes mesa-mesahidd-module
 
 #MM- mesa-tests-gallium : contrib-gfx-libs-mesa-includes includes mesa-mesa-gallium-linklib
 

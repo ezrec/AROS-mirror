@@ -49,6 +49,54 @@ ifeq ($(AROS_TARGET_CPU), ppc)
   FFIXED = -ffixed-r14
 endif
 
+#
+#   mesa.library which uses Gallium as HIDD
+#
+#
+
+USER_INCLUDES := \
+            -I$(AROS_DEVELOPMENT)/include/gallium \
+
+USER_CFLAGS := -ffast-math $(FFIXED)
+
+LIB_GALLIUM_AUXILIARY_SOURCES = \
+            $(addprefix $(GALLIUM_SUBPATH)/,$(GALLIUM_AUXILIARY_SOURCES)) \
+
+%build_linklib mmake=gallium-auxiliary-linklib libname=galliumauxiliary \
+    files="$(LIB_GALLIUM_AUXILIARY_SOURCES)" \
+    objdir=$(GENDIR)/$(CURDIR)/gallium-auxiliary-linklib
+
+
+USER_INCLUDES := \
+            -I$(SRCDIR)/$(CURDIR)/../../include \
+            -I$(SRCDIR)/$(CURDIR)/../../include/GL \
+            -I$(SRCDIR)/$(CURDIR) \
+            -I$(SRCDIR)/$(CURDIR)/main \
+            -I$(SRCDIR)/$(CURDIR)/glapi \
+            -I$(SRCDIR)/$(CURDIR)/shader \
+            -I$(SRCDIR)/$(CURDIR)/shader/slang \
+            -I$(SRCDIR)/$(CURDIR)/shader/grammar \
+            -I$(AROS_DEVELOPMENT)/include/gallium \
+
+USER_CFLAGS := -DUSE_MGL_NAMESPACE -DAROS_MESA_SHARED -ffast-math $(FFIXED)
+
+LIB_MESAHIDD_SOURCES = \
+            $(MESA_GALLIUM_SOURCES:.c=) \
+            $(GLAPI_SOURCES:.c=) \
+            $(addprefix $(GALLIUM_SUBPATH)/,$(AROS_STATE_TRACKER_HIDD_SOURCES)) \
+
+%build_module mmake=mesa-mesahidd-module \
+    modname=mesa modtype=library linklibname=GL conffile=arosmesa.conf linklibfiles="arosmesa_getprocaddress" \
+    files="$(SHARED_LIB_SOURCES) $(LIB_MESAHIDD_SOURCES)" objdir=$(GENDIR)/$(CURDIR)/mesa-mesahidd-module \
+    uselibs="galliumauxiliary rom"
+
+
+#
+#   mesa.library which uses classing AROS driver
+#
+#
+
+
 LIB_MESA_SOURCES = \
             $(MESA_SOURCES:.c=)\
             $(GLAPI_SOURCES:.c=) \
@@ -79,9 +127,14 @@ USER_INCLUDES := \
 USER_CFLAGS := -DUSE_MGL_NAMESPACE -DAROS_MESA_SHARED -ffast-math $(FFIXED)
 
 %build_module mmake=contrib-gfx-libs-mesa-mesa-module \
-    modname=mesa modtype=library linklibname=GL conffile=arosmesa.conf linklibfiles="arosmesa_getprocaddress" \
+    modname=mesa modtype=library linklibname=GLClassic conffile=arosmesa.conf linklibfiles="arosmesa_getprocaddress" \
     files="$(SHARED_LIB_SOURCES) $(LIB_MESA_SOURCES)" objdir=$(GENDIR)/$(CURDIR)/module \
     uselibs="rom"
+
+#
+#   mesa.library which uses Gallium compiled into the library
+#
+#
 
 USER_INCLUDES := \
             -I$(SRCDIR)/$(CURDIR)/../../include \
@@ -123,46 +176,5 @@ USER_CFLAGS := -DUSE_MGL_NAMESPACE -DAROS_MESA_SHARED -ffast-math $(FFIXED)
 
 %build_archspecific mainmmake=mesa-mesa-gallium-module asmfiles=aros_wbinvd_hack \
     maindir=$(CURDIR)/gallium-module arch=i386 modulename=mesa
-
-#
-#   Experimental separation of gallium from mesa.library
-#
-#
-
-USER_INCLUDES := \
-            -I$(AROS_DEVELOPMENT)/include/gallium \
-
-USER_CFLAGS := -ffast-math $(FFIXED)
-
-LIB_GALLIUM_AUXILIARY_SOURCES = \
-            $(addprefix $(GALLIUM_SUBPATH)/,$(GALLIUM_AUXILIARY_SOURCES)) \
-
-%build_linklib mmake=gallium-auxiliary-linklib libname=galliumauxiliary \
-    files="$(LIB_GALLIUM_AUXILIARY_SOURCES)" \
-    objdir=$(GENDIR)/$(CURDIR)/gallium-auxiliary-linklib
-
-
-USER_INCLUDES := \
-            -I$(SRCDIR)/$(CURDIR)/../../include \
-            -I$(SRCDIR)/$(CURDIR)/../../include/GL \
-            -I$(SRCDIR)/$(CURDIR) \
-            -I$(SRCDIR)/$(CURDIR)/main \
-            -I$(SRCDIR)/$(CURDIR)/glapi \
-            -I$(SRCDIR)/$(CURDIR)/shader \
-            -I$(SRCDIR)/$(CURDIR)/shader/slang \
-            -I$(SRCDIR)/$(CURDIR)/shader/grammar \
-            -I$(AROS_DEVELOPMENT)/include/gallium \
-
-USER_CFLAGS := -DUSE_MGL_NAMESPACE -DAROS_MESA_SHARED -ffast-math $(FFIXED)
-
-LIB_MESAHIDD_SOURCES = \
-            $(MESA_GALLIUM_SOURCES:.c=) \
-            $(GLAPI_SOURCES:.c=) \
-            $(addprefix $(GALLIUM_SUBPATH)/,$(AROS_STATE_TRACKER_HIDD_SOURCES)) \
-
-%build_module mmake=mesa-mesahidd-module \
-    modname=mesa modtype=library linklibname=GLHIDD conffile=arosmesa.conf linklibfiles="arosmesa_getprocaddress" \
-    files="$(SHARED_LIB_SOURCES) $(LIB_MESAHIDD_SOURCES)" objdir=$(GENDIR)/$(CURDIR)/mesa-mesahidd-module \
-    uselibs="galliumauxiliary rom"
 
 %common

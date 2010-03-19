@@ -3,5 +3,6 @@
 include $(TOP)/config/make.cfg
 
 #MM- contrib-gfx-libs : contrib-gfx-libs-mesa
-#MM- contrib-gfx-libs-mesa : contrib-gfx-libs-mesa-mesa-module contrib-gfx-libs-mesa-glu-linklib \
-#MM     contrib-gfx-libs-mesa-glut-linklib contrib-gfx-libs-mesa-tests contrib-gfx-libs-mesa-demos
+#MM- contrib-gfx-libs-mesa : mesa-mesahidd-module contrib-gfx-libs-mesa-glu-linklib \
+#MM     contrib-gfx-libs-mesa-glut-linklib contrib-gfx-libs-mesa-tests contrib-gfx-libs-mesa-demos \
+#MM     hidd-gallium hidd-softpipe gallium-auxiliary-linklib
