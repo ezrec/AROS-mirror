@@ -19,6 +19,7 @@
 #include <cybergraphx/cybergraphics.h>
 #include <proto/graphics.h>
 #include <graphics/rpattr.h>
+#include <proto/intuition.h>
 
 struct Library * AROSMesaCyberGfxBase = NULL;    /* Base address for cybergfx */
 struct arosmesa_driver * driver = NULL;
@@ -571,8 +572,13 @@ void AROSMesaSwapBuffers(AROSMesaContext amesa)
     /* FIXME: should be ST_SURFACE_BACK_LEFT */
     st_get_framebuffer_surface(amesa->framebuffer->stfb, ST_SURFACE_FRONT_LEFT, &surf);
 
-    if (surf) {
-        driver->display_surface(amesa, surf);
+    if (surf) 
+    {
+        /* Render only if screen is visible */
+        if (amesa->window->WScreen == IntuitionBase->FirstScreen)
+        {    
+            driver->display_surface(amesa, surf);
+        }
     }
 
     /* Flush. Executes all code posted in driver->display_surface */

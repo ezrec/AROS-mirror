@@ -22,6 +22,7 @@
 #include <proto/oop.h>
 #include <hidd/gallium.h>
 #include <aros/symbolsets.h>
+#include <proto/intuition.h>
 
 struct Library * AROSMesaCyberGfxBase = NULL;
 static struct Library * AROSMesaOOPBase = NULL;
@@ -614,20 +615,26 @@ void AROSMesaSwapBuffers(AROSMesaContext amesa)
     /* FIXME: should be ST_SURFACE_BACK_LEFT */
     st_get_framebuffer_surface(amesa->framebuffer->stfb, ST_SURFACE_FRONT_LEFT, &surf);
 
-    if (surf) {
-        struct pHidd_GalliumBaseDriver_DisplaySurface dsmsg = {
-        mID : OOP_GetMethodID(IID_Hidd_GalliumBaseDriver, moHidd_GalliumBaseDriver_DisplaySurface),
-        context : amesa->st->pipe,
-        rastport : amesa->visible_rp,
-        left : amesa->left,
-        right : amesa->right,
-        top : amesa->top,
-        bottom : amesa->bottom,
-        width : amesa->width,
-        height : amesa->height,
-        surface : surf
-        };
-        OOP_DoMethod(driver, (OOP_Msg)&dsmsg);
+    if (surf) 
+    {
+        /* Render only if screen is visible */
+        /* TODO: Rethink DisplaySurface method should work */
+        if (amesa->window->WScreen == IntuitionBase->FirstScreen)
+        {   
+            struct pHidd_GalliumBaseDriver_DisplaySurface dsmsg = {
+            mID : OOP_GetMethodID(IID_Hidd_GalliumBaseDriver, moHidd_GalliumBaseDriver_DisplaySurface),
+            context : amesa->st->pipe,
+            rastport : amesa->visible_rp,
+            left : amesa->left,
+            right : amesa->right,
+            top : amesa->top,
+            bottom : amesa->bottom,
+            width : amesa->width,
+            height : amesa->height,
+            surface : surf
+            };
+            OOP_DoMethod(driver, (OOP_Msg)&dsmsg);
+        }
     }
 
     /* Flush. Executes all code posted in DisplaySurface */
