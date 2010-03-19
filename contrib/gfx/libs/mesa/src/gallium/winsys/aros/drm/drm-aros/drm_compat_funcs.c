@@ -419,19 +419,12 @@ int pci_read_config_word(void *dev, int where, u16 *val)
 int pci_read_config_dword(void *dev, int where, u32 *val)
 {
 #if !defined(HOSTED_BUILD)
-    /* Has to be done like this because of bug in PciDevice ReadConfigLong
-       method (return type was UBYTE instead of ULONG) */
-    /* FIXME: Fix when pci.hidd is fixed */
-    ULONG result = 0;
-    UWORD restemp = 0;
+    struct pHidd_PCIDevice_ReadConfigLong rclmsg = {
+    mID: OOP_GetMethodID(IID_Hidd_PCIDevice, moHidd_PCIDevice_ReadConfigLong),
+    reg: (UBYTE)where,
+    }, *msg = &rclmsg;
     
-    pci_read_config_word(dev, where + 2, &restemp);
-    result += restemp;
-    result <<= 16;
-    pci_read_config_word(dev, where, &restemp);
-    result |= restemp;
-
-    return result;
+    *val = (ULONG)OOP_DoMethod((OOP_Object*)dev, (OOP_Msg)msg);
 #else
 #if HOSTED_BUILD_HARDWARE == HOSTED_BUILD_HARDWARE_I915
     switch(where)

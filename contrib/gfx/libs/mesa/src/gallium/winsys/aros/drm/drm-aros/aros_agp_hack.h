@@ -1,10 +1,6 @@
 #include <exec/types.h>
 #include <oop/oop.h>
 
-/* pci.hidd (?)*/
-BOOL aros_agp_hack_device_is_agp(OOP_Object * pciDevice);
-BOOL aros_agp_hack_device_is_pcie(OOP_Object * pciDevice);
-
 /* agp.hidd */
 #define AGP_MEMORY_TYPE_NORMAL  1
 #define AGP_MEMORY_TYPE_CACHED  2

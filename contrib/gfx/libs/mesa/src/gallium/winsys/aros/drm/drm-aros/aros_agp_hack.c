@@ -42,15 +42,12 @@ static UWORD readconfigword(OOP_Object * pciDevice, UBYTE where)
 
 static ULONG readconfiglong(OOP_Object * pciDevice, UBYTE where)
 {
-    /* Has to be done like this because of bug in PciDevice ReadConfigLong
-       method (return type was UBYTE instead of ULONG) */
-
-    ULONG result = 0;
+    struct pHidd_PCIDevice_ReadConfigLong rclmsg = {
+    mID: OOP_GetMethodID(IID_Hidd_PCIDevice, moHidd_PCIDevice_ReadConfigLong),
+    reg: where,
+    }, *msg = &rclmsg;
     
-    result = readconfigword(pciDevice, where + 2);
-    result <<= 16;
-    result |= readconfigword(pciDevice, where);
-    return result;
+    return (ULONG)OOP_DoMethod(pciDevice, (OOP_Msg)msg);
 }
 
 static void writeconfiglong(OOP_Object * pciDevice, UBYTE where, ULONG val)
@@ -84,41 +81,6 @@ static void writeconfigword(OOP_Object * pciDevice, UBYTE where, UWORD val)
     }, *msg = &wcwmsg;
     
     OOP_DoMethod(pciDevice, (OOP_Msg)msg); 
-}
-
-/* This needs to be added to pci.hidd */
-static UBYTE aros_agp_hack_get_capabilities_ptr(OOP_Object * pciDevice, UBYTE cap)
-{
-    UWORD where = 0x34; /*  First cap list entry */
-    UBYTE capid = 0;
-    
-    while(where < 0xff)
-    {
-        where = readconfigbyte(pciDevice, (UBYTE)where);
-
-        if (where < 0x40)
-            break;
-        where &= ~3; /* ?? */
-        capid = readconfigbyte(pciDevice, (UBYTE)where);
-        if (capid == 0xff)
-            break;
-
-        if (capid == cap) return (UBYTE)where;
-    
-        where += 1; /* next cap */
-    }
-    
-    return (UBYTE)0;
-}
-
-BOOL aros_agp_hack_device_is_agp(OOP_Object * pciDevice)
-{
-    return (aros_agp_hack_get_capabilities_ptr(pciDevice, CAPABILITY_AGP) != (UBYTE)0);
-}
-
-BOOL aros_agp_hack_device_is_pcie(OOP_Object * pciDevice)
-{
-    return (aros_agp_hack_get_capabilities_ptr(pciDevice, CAPABILITY_PCIE) != (UBYTE)0);
 }
 
 /* AGP Support */
@@ -1391,11 +1353,11 @@ AROS_UFH3(void, PciDevicesEnumerator,
 {
     AROS_USERFUNC_INIT
 
-    IPTR class;
-    UBYTE agpcapptr = aros_agp_hack_get_capabilities_ptr(pciDevice, CAPABILITY_AGP);
+    IPTR class, agpcapptr;
     struct agp_staticdata * agpsd = (struct agp_staticdata*)hook->h_Data;
 
     OOP_GetAttr(pciDevice, aHidd_PCIDevice_Class, &class);
+    OOP_GetAttr(pciDevice, aHidd_PCIDevice_CapabilityAGP, (APTR)&agpcapptr);
     
     /* Select bridges and AGP devices */
     if ((class == 0x06) || (agpcapptr))
@@ -1411,7 +1373,7 @@ AROS_UFH3(void, PciDevicesEnumerator,
             (struct PciAgpDevice *)AllocVec(sizeof(struct PciAgpDevice), MEMF_ANY | MEMF_CLEAR);
         IPTR temp;
         pciagpdev->PciDevice = pciDevice;
-        pciagpdev->AgpCapability = agpcapptr;
+        pciagpdev->AgpCapability = (UBYTE)agpcapptr;
         pciagpdev->Class = (UBYTE)class;
         OOP_GetAttr(pciDevice, aHidd_PCIDevice_VendorID, &temp);
         pciagpdev->VendorID = (UWORD)temp;

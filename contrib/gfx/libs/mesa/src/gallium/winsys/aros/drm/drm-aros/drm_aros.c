@@ -13,9 +13,6 @@
 #include <hidd/pci.h>
 #include <hidd/hidd.h>
 
-/* FIXME: Temp - remove after agp.hidd implemented */
-#include "aros_agp_hack.h"
-
 OOP_AttrBase __IHidd_PCIDev = 0;
 struct Library * OOPBase_Nouveau    = NULL;
 OOP_Object * pciDriver              = NULL;
@@ -53,6 +50,7 @@ AROS_UFH3(void, Enumerator,
         if (sup->VendorID == VendorID && sup->ProductID == ProductID)
         {
             OOP_Object *driver;
+            IPTR AGPCap = 0, PCIECap = 0;
             
             struct TagItem attrs[] = {
             { aHidd_PCIDevice_isIO,     FALSE },    /* Don't listen IO transactions */
@@ -77,9 +75,12 @@ AROS_UFH3(void, Enumerator,
             OOP_GetAttr(pciDevice, aHidd_PCIDevice_Driver, (APTR)&driver);
             pciDriver = driver;
 
-            /* FIXME: Change into pci.hidd calls when implemented */
-            drv->IsAGP = aros_agp_hack_device_is_agp(pciDevice);
-            drv->IsPCIE = aros_agp_hack_device_is_pcie(pciDevice);
+            /* Check AGP/PCIE capabilities */
+            OOP_GetAttr(pciDevice, aHidd_PCIDevice_CapabilityAGP, (APTR)&AGPCap);
+            OOP_GetAttr(pciDevice, aHidd_PCIDevice_CapabilityPCIE, (APTR)&PCIECap);
+            
+            drv->IsAGP = (AGPCap != 0);
+            drv->IsPCIE = (PCIECap != 0);
 
             DRM_DEBUG("Acquired pcidriver\n");
             
