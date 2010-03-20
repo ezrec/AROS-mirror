@@ -13,8 +13,8 @@
 #include <hidd/pci.h>
 #include <hidd/hidd.h>
 
-OOP_AttrBase __IHidd_PCIDev = 0;
-struct Library * OOPBase_Nouveau    = NULL;
+OOP_AttrBase HiddPCIDeviceAttrBase  = 0;
+struct Library * OOPBase_DRM        = NULL;
 OOP_Object * pciDriver              = NULL;
 OOP_Object * pciBus                 = NULL;
 
@@ -96,21 +96,6 @@ AROS_UFH3(void, Enumerator,
 static void 
 drm_aros_pci_find_card(struct drm_driver *drv)
 {
-    if (!OOPBase_Nouveau)
-    {
-        if ((OOPBase_Nouveau = OpenLibrary("oop.library", 0)) == NULL)
-        {
-            /* Failure */
-            return;
-        }
-    }
-
-    __IHidd_PCIDev = OOP_ObtainAttrBase(IID_Hidd_PCIDevice);
-
-    DRM_DEBUG("Creating PCI object\n");
-
-    pciBus = OOP_NewObject(NULL, CLID_Hidd_PCI, NULL);
-
     if (pciBus)
     {
         struct Hook FindHook = {
@@ -142,9 +127,7 @@ LONG drm_aros_pci_find_supported_video_card(struct drm_driver *drv)
     drv->ProductID = 0x0;
     drv->IsAGP = FALSE;
     drv->IsPCIE = FALSE;
-    pciBus = NULL;
     pciDriver = NULL;
-    OOPBase_Nouveau = NULL;
     
     drm_aros_pci_find_card(drv);
 
@@ -166,7 +149,30 @@ LONG drm_aros_pci_find_supported_video_card(struct drm_driver *drv)
     }
 }
 
-void drm_aros_pci_shutdown(struct drm_driver *drv)
+LONG drm_aros_pci_init(struct drm_driver * drv)
+{
+    if (!OOPBase_DRM)
+    {
+        if ((OOPBase_DRM = OpenLibrary("oop.library", 0)) == NULL)
+        {
+            /* Failure */
+            return -1;
+        }
+    }
+
+    HiddPCIDeviceAttrBase = OOP_ObtainAttrBase(IID_Hidd_PCIDevice);
+
+    if (!pciBus)
+    {
+        pciBus = OOP_NewObject(NULL, CLID_Hidd_PCI, NULL);
+        if (!pciBus)
+            return -1;
+    }
+    
+    return 0;
+}
+
+VOID drm_aros_pci_shutdown(struct drm_driver *drv)
 {
     /* Release AROS-specific PCI objects. Should be called at driver shutdown */
     
@@ -183,16 +189,16 @@ void drm_aros_pci_shutdown(struct drm_driver *drv)
 
     pciDriver = NULL;
     
-    if (__IHidd_PCIDev != 0)
+    if (HiddPCIDeviceAttrBase != 0)
     {
         OOP_ReleaseAttrBase(IID_Hidd_PCIDevice);
-        __IHidd_PCIDev = 0;
+        HiddPCIDeviceAttrBase = 0;
     }
     
-    if (OOPBase_Nouveau)
+    if (OOPBase_DRM)
     {
-        CloseLibrary(OOPBase_Nouveau);
-        OOPBase_Nouveau = NULL;
+        CloseLibrary(OOPBase_DRM);
+        OOPBase_DRM = NULL;
     }
 }
 

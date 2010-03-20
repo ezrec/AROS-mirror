@@ -97,6 +97,9 @@ static int drm_init_device(struct drm_driver * driver)
 
 int drm_init(struct drm_driver * driver)
 {
+    if (drm_aros_pci_init(driver))
+        return -1;
+
 #if !defined(HOSTED_BUILD)
     if (drm_aros_pci_find_supported_video_card(driver))
         return -1;
