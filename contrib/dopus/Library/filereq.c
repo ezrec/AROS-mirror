@@ -99,17 +99,17 @@ char *devtypes[5]={"  <DEV>","  <ASN>","  <VOL>","  <DFR>","  <NBD>"};
 
 extern char nullstring[];
 
-inline void __regargs doprops(struct FileReqData *freqdata)
+static inline void __regargs doprops(struct FileReqData *freqdata)
 {
     DoFixSliderPot(freqdata->fr_Window,&freqdata->reqgads[8],freqdata->fileoffset,freqdata->fileentries,freqdata->freq->lines,1);
 }
 
-inline void __regargs fixprop(struct FileReqData *freqdata)
+static inline void __regargs fixprop(struct FileReqData *freqdata)
 {
     DoFixSliderBody(freqdata->fr_Window,&freqdata->reqgads[8],freqdata->fileentries,freqdata->freq->lines,1);
 }
 
-inline void __regargs activatefilegad(struct FileReqData *freqdata)
+static inline void __regargs activatefilegad(struct FileReqData *freqdata)
 {
     ActivateStrGad(&freqdata->reqgads[(freqdata->flags&DFRF_DIRREQ)?1:0],freqdata->fr_Window);
 }
