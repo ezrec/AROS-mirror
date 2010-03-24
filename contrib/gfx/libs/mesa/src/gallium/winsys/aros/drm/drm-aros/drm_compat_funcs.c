@@ -455,8 +455,12 @@ int pci_write_config_dword(void *dev, int where, u32 val)
     return 0;
 }
 
+#include <hidd/agp.h>
+
 /* AGP handling */
-struct agp_bridge_data * global_agp_bridge = NULL;
+struct agp_bridge_data * global_agp_bridge = NULL; /* TODO: implement freeing */
+struct Library * HiddAgpBase = NULL; /* TODO: Implement  freeing */
+OOP_AttrBase HiddAGPBridgeDeviceAttrBase = 0; /* TODO: Implement  freeing */
 
 struct agp_bridge_data *agp_backend_acquire(void * dev)
 {
@@ -513,30 +517,58 @@ int agp_copy_info(struct agp_bridge_data * bridge, struct agp_kern_info * info)
     return 0;
 }
 
-/* FIXME: Temp until agp.hidd implemented */
-#include "aros_agp_hack.h"
-
 struct agp_bridge_data * agp_find_bridge(void * dev)
 {
-    bug("[AGP-API] agp_find_bridge\n");
+    OOP_Object * agpbus = NULL;
 
     if (global_agp_bridge)
         return global_agp_bridge;
 
 #if !defined(HOSTED_BUILD)
-    if (aros_agp_hack_is_agp_bridge_present())
+    if (!HiddAgpBase)
     {
-        global_agp_bridge = AllocVec(sizeof(struct agp_bridge_data), 
-                                            MEMF_PUBLIC | MEMF_CLEAR);
-        global_agp_bridge->pciDevice = (IPTR)aros_agp_hack_get_agp_bridge();
-        global_agp_bridge->mode = aros_agp_hack_get_bridge_mode();
-        global_agp_bridge->aperturebase = aros_agp_hack_get_bridge_aperture_base();
-        global_agp_bridge->aperturesize = aros_agp_hack_get_bridge_aperture_size();
+        HiddAgpBase = OpenLibrary("agp.hidd", 1);
+        HiddAGPBridgeDeviceAttrBase = OOP_ObtainAttrBase((STRPTR)IID_Hidd_AGPBridgeDevice);
     }
+
+    /* Get AGP bus object */
+    agpbus = OOP_NewObject(NULL, CLID_Hidd_AGP, NULL);
+    
+    if(agpbus)
+    {
+        struct pHidd_AGP_GetBridgeDevice gbdmsg = {
+        mID : OOP_GetMethodID(IID_Hidd_AGP, moHidd_AGP_GetBridgeDevice)
+        };
+        OOP_Object * bridgedevice = NULL;
+        
+        bridgedevice = (OOP_Object*)OOP_DoMethod(agpbus, (OOP_Msg)&gbdmsg);
+        
+        OOP_DisposeObject(agpbus);
+
+        /* AGP bridge was found and initialized */        
+        if (bridgedevice)
+        {
+            IPTR mode = 0, aperbase = 0, apersize = 0;
+
+            global_agp_bridge = AllocVec(sizeof(struct agp_bridge_data), 
+                                                MEMF_PUBLIC | MEMF_CLEAR);
+            global_agp_bridge->agpbridgedevice = (IPTR)bridgedevice;
+
+            OOP_GetAttr(bridgedevice, aHidd_AGPBridgeDevice_Mode, (APTR)&mode);
+            global_agp_bridge->mode = mode;
+            
+            OOP_GetAttr(bridgedevice, aHidd_AGPBridgeDevice_ApertureBase, (APTR)&aperbase);
+            global_agp_bridge->aperturebase = aperbase;
+            
+            OOP_GetAttr(bridgedevice, aHidd_AGPBridgeDevice_ApertureSize, (APTR)&apersize);
+            global_agp_bridge->aperturesize = apersize;
+        }
+    }
+
 #else
     global_agp_bridge = AllocVec(sizeof(struct agp_bridge_data), 
                                         MEMF_PUBLIC | MEMF_CLEAR);
-    global_agp_bridge->pciDevice = (IPTR)NULL;
+    global_agp_bridge->agpbridgedevice = (IPTR)NULL;
 #if HOSTED_BUILD_HARDWARE == HOSTED_BUILD_HARDWARE_NVIDIA
     global_agp_bridge->mode = 0x1f004e1b;
     global_agp_bridge->aperturebase = 0xd8000000;
@@ -554,16 +586,21 @@ struct agp_bridge_data * agp_find_bridge(void * dev)
 
 void agp_enable(struct agp_bridge_data * bridge, u32 mode)
 {
-    bug("[AGP-API] agp_enable\n");
+    if (!bridge || !bridge->agpbridgedevice)
+        return;
+
 #if !defined(HOSTED_BUILD)
-    aros_agp_hack_enable_agp(mode);
+    struct pHidd_AGPBridgeDevice_Enable emsg = {
+    mID:            OOP_GetMethodID(IID_Hidd_AGPBridgeDevice, moHidd_AGPBridgeDevice_Enable),
+    requestedmode:  mode
+    };
+    
+    OOP_DoMethod((OOP_Object *)bridge->agpbridgedevice, (OOP_Msg)&emsg);
 #endif
 }
 
 int agp_bind_memory(struct agp_memory * mem, off_t offset)
 {
-    bug("[AGP-API] agp_bind_memory\n");
-
     if (!mem || mem->is_bound)
         return -EINVAL;
     
@@ -582,10 +619,16 @@ int agp_bind_memory(struct agp_memory * mem, off_t offset)
     
     /* TODO: agp_map_memory */
     /* TODO: Move flush/map into bind call on the side of agp.hidd */
+
+    struct pHidd_AGPBridgeDevice_BindMemory bmmsg = {
+    mID:        OOP_GetMethodID(IID_Hidd_AGPBridgeDevice, moHidd_AGPBridgeDevice_BindMemory),
+    address:    (IPTR)(mem->pages[0]->address),
+    size:       mem->page_count * PAGE_SIZE,
+    offset:     offset,
+    type:       (mem->type == AGP_USER_MEMORY ? vHidd_AGP_NormalMemory : vHidd_AGP_CachedMemory)
+    };
     
-    aros_agp_hack_bind_memory((IPTR)(mem->pages[0]->address), 
-        mem->page_count * PAGE_SIZE, offset,
-        (mem->type == AGP_USER_MEMORY ? AGP_MEMORY_TYPE_NORMAL : AGP_MEMORY_TYPE_CACHED));
+    OOP_DoMethod((OOP_Object *)global_agp_bridge->agpbridgedevice, (OOP_Msg)&bmmsg);
 #endif
     mem->is_bound = TRUE;
     mem->pg_start = offset;
@@ -594,13 +637,17 @@ int agp_bind_memory(struct agp_memory * mem, off_t offset)
 
 int agp_unbind_memory(struct agp_memory * mem)
 {
-    bug("[AGP-API] agp_unbind_memory\n");
-
     if (!mem || !mem->is_bound)
         return -EINVAL;
 #if !defined(HOSTED_BUILD)
-    aros_agp_hack_unbind_memory(mem->pg_start, mem->page_count * PAGE_SIZE);
+    struct pHidd_AGPBridgeDevice_UnBindMemory ubmmsg = {
+    mID:        OOP_GetMethodID(IID_Hidd_AGPBridgeDevice, moHidd_AGPBridgeDevice_UnBindMemory),
+    offset:     mem->pg_start,
+    size:       mem->page_count * PAGE_SIZE,
+    };
     
+    OOP_DoMethod((OOP_Object *)global_agp_bridge->agpbridgedevice, (OOP_Msg)&ubmmsg);
+
     /* TODO: agp_unmap_memory */
 #endif
     mem->is_bound = FALSE;
@@ -610,10 +657,15 @@ int agp_unbind_memory(struct agp_memory * mem)
 
 void agp_flush_chipset(struct agp_bridge_data * bridge)
 {
-    bug("[AGP-API] agp_flush_chipset\n");
+    if (!bridge || !bridge->agpbridgedevice)
+        return;
 
 #if !defined(HOSTED_BUILD)
-    aros_agp_hack_flush_chipset();
+    struct pHidd_AGPBridgeDevice_FlushChipset fcmsg = {
+    mID:        OOP_GetMethodID(IID_Hidd_AGPBridgeDevice, moHidd_AGPBridgeDevice_FlushChipset),
+    };
+    
+    OOP_DoMethod((OOP_Object *)bridge->agpbridgedevice, (OOP_Msg)&fcmsg);
 #endif
 }
 

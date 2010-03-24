@@ -35,7 +35,6 @@ AROS_LIBDRM_INTEL_SOURCES = \
             winsys/aros/drm/libdrm/arosdrm_intel \
 
 AROS_DRM_CORE_SOURCES = \
-            winsys/aros/drm/drm-aros/aros_agp_hack \
             winsys/aros/drm/drm-aros/drm_aros \
             winsys/aros/drm/drm-aros/drm_bufs \
             winsys/aros/drm/drm-aros/drm_irq \

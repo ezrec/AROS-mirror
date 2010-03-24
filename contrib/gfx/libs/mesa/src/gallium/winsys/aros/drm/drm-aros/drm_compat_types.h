@@ -76,7 +76,7 @@ struct io_mapping
 /* AGP support */
 struct agp_bridge_data
 {
-    IPTR pciDevice;
+    IPTR agpbridgedevice;
     ULONG mode;
     IPTR aperturebase;
     ULONG aperturesize;
