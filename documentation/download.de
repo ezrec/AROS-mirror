@@ -38,7 +38,7 @@ Icaros Desktop VE
    :align: left
 
 `Icaros Desktop VE (Virtual Environment)`__ ist eine vollständige AROS-
-Umgebung, die unter der virtuellen Maschine `VMware`__ läuft. An Anwendern
+Umgebung, die unter der virtuellen Maschine `VirtualBox`__ läuft. An Anwendern
 und Entwicklern gerichtet, ermöglicht Icaros Desktop VE das Testen und
 Benutzen des AROS-Betriebssystems, ohne es wirklich auf eine Festplatte
 zu installieren. Es ist ein sicherer Weg, um AROS auf Hardware zu testen,
@@ -47,7 +47,7 @@ wird.
 
 __ http://live.icarosdesktop.org/
 __ http://ve.icarosdesktop.org/
-__ http://vmware.com/
+__ http://virtualbox.org/
 
 
 Snapshots

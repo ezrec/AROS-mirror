@@ -35,7 +35,7 @@ Icaros Desktop VE
    :align: left
 
 `Icaros Desktop VE (Virtual Environment)`__ - готовая к использованию рабочая
-среда AROS, работающая на виртуальных машинах `VMware`__. Предназначенная для
+среда AROS, работающая на виртуальных машинах `VirtualBox`__. Предназначенная для
 конечных пользователей и разработчиков, Icaros Desktop VE позволяет тестировать
 и использовать AROS без необходимости установки её на жёсткий диск. Это надёжный
 путь для владельцев мощного, но не неподдерживаемого оборудования испытать эту
@@ -43,7 +43,7 @@ Icaros Desktop VE
 
 __ http://live.icarosdesktop.org/
 __ http://ve.icarosdesktop.org/
-__ http://vmware.com/
+__ http://virtualbox.org/
 
 Снимки
 ======
