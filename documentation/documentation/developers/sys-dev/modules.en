@@ -3,7 +3,7 @@ AROS Application Development Manual
 ===================================
 
 :Authors:   Matthias Rustler (some parts copied from other documents)
-:Copyright: Copyright (C) 2008, The AROS Development Team
+:Copyright: Copyright (C) 2008-2010, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Unfinished
@@ -278,7 +278,10 @@ to the last non white-space character on that line.
     Name of the abortio function of a device.
 
 ``initpri``
-    FIXME
+    Sets the priority of initialization if you have more than one class
+    in a conf file. Use this if you want to ensure that a base class
+    is initialized before a sub class. The class with the highest
+    value is initialized first.
 
 ``getidfunc``
     FIXME
