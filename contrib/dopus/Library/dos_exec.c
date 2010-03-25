@@ -88,12 +88,13 @@ APTR __saveds DoAllocRemember(register struct DOpusRemember **key __asm("a0"), r
 
     if (*pool == NULL) *pool = CreatePool(type | MEMF_CLEAR, 1024, 1024);
 //kprintf("pool = %lx\t",*pool);
-    size += sizeof(ULONG);
+    size += sizeof(ULONG) * 2;
     if (*pool) if (mem = AllocPooled(*pool,size))
      {
 //kprintf("mem = %lx\n",mem);
-      mem[0] = size;
-      return (mem+1);
+      mem[0] = type;
+      mem[1] = size;
+      return (mem+2);
      }
 //kprintf("error!\n");
     return 0;
@@ -149,10 +150,10 @@ void __saveds DoFreeRemEntry(register struct DOpusRemember **key __asm("a0"), re
     ULONG *ptr = (ULONG *)pointer;
 
     if ((*key) == NULL) return;
-    if (TypeOfMem(pointer) & MEMF_CHIP) pool = ((struct DOpusPool *)(*key))->chip;
+    if (*(ptr-2) & MEMF_CHIP) pool = ((struct DOpusPool *)(*key))->chip;
     else pool = ((struct DOpusPool *)(*key))->fast;
 
-    FreePooled(pool,ptr-1,*(ptr-1));
+    FreePooled(pool,ptr-2,*(ptr-1));
 //kprintf("LFreeRemEntry(%lx,%lx): pool = %lx\n",*key,ptr-1,pool);
 /*
     struct DOpusRemember *node,*last=NULL;
