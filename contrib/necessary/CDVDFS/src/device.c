@@ -1134,7 +1134,7 @@ void btos(BSTR bstr, char *buf)
     UBYTE *src = BADDR(bstr);
     UBYTE len = *src++;
 
-    memcpy(buf, src, len);
+    CopyMem(src, buf, len);
     buf[len] = 0;
 }
 #endif
