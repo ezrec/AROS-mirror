@@ -897,12 +897,12 @@ int view_setupdisplay(struct ViewData *vdata)
 {
   static char            viewGNames[7*2];
   static struct TextAttr viewGta;
-  static ULONG           viewGTags[] = {
+  static IPTR           viewGTags[] = {
   	  GTSC_Arrows, 12, PGA_Freedom, LORIENT_VERT, GA_RelVerify, TRUE, GA_Immediate, TRUE, TAG_DONE,
-  	  GTNM_FrontPen, 0, GTNM_BackPen, 0, GTNM_Justification, GTJ_RIGHT, GTNM_Format, (ULONG)"%3ld%%", TAG_DONE,
+  	  GTNM_FrontPen, 0, GTNM_BackPen, 0, GTNM_Justification, GTJ_RIGHT, GTNM_Format, (IPTR)"%3ld%%", TAG_DONE,
   	  GTNM_FrontPen, 0, GTNM_BackPen, 0, GTNM_Justification, GTJ_RIGHT, TAG_DONE,
-  	  GTNM_FrontPen, 0, GTNM_BackPen, 0, GTNM_Format, (ULONG)" - %ld", TAG_DONE,
-  	  GTNM_FrontPen, 0, GTNM_BackPen, 0, GTNM_Format, (ULONG)" / %ld", TAG_DONE,
+  	  GTNM_FrontPen, 0, GTNM_BackPen, 0, GTNM_Format, (IPTR)" - %ld", TAG_DONE,
+  	  GTNM_FrontPen, 0, GTNM_BackPen, 0, GTNM_Format, (IPTR)" / %ld", TAG_DONE,
   	  GTTX_FrontPen, 0, GTTX_BackPen, 0, GTTX_Clipped, TRUE, TAG_DONE,
   };
 
