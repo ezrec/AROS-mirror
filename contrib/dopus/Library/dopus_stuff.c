@@ -637,14 +637,14 @@ const static char
         "*None","*Move","*Assign","*Search","","*Datestamp","*HexRead",
         "*Parent","*Rename","*CheckFit","","","*Protect","*Show",
         "*Root","","*GetSizes","","","*IconInfo","*Play",
-        "","","","","","*User1","Ed {f}",
+        "","","","","","*User1","SYS:Tools/Editor {f}",
         "","*DELETE","","","","*Encrypt","*Print"},
     *revfuncs[35]={
         "*Toggle","*CopyAs","","","","","*ANSIRead",
         "","*MoveAs","","","","","",
         "","*Clone","","","","","",
         "","","*ClearSizes","","","*AddIcon","*LoopPlay",
-        "","","","","","","Ed {RsEnter filename to create new file:Untitled}"},
+        "","","","","","","SYS:Tools/Editor {RsEnter filename to create new file:Untitled}"},
 
     *defmenus1[9]={
         "Current dir~","Help!","Error help~",
