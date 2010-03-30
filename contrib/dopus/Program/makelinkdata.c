@@ -72,7 +72,7 @@ static struct TagItem
         {RO_Width,38},
         {RO_StringBuf,0},
         {RO_StringLen,107},
-        {RO_StringUndo,(ULONG)str_undobuffer},
+        {RO_StringUndo,(IPTR)str_undobuffer},
         {TAG_END,0}},
 
     makelink_destname_gadget[]={
@@ -89,7 +89,7 @@ static struct TagItem
         {RO_WidthFine,2},
         {RO_StringBuf,0},
         {RO_StringLen,255},
-        {RO_StringUndo,(ULONG)str_undobuffer},
+        {RO_StringUndo,(IPTR)str_undobuffer},
         {TAG_END,0}},
 
     makelink_glass_gadget[]={
@@ -198,8 +198,8 @@ int getmakelinkdata(char *namebuf, char *destbuf, int *type)
 
     fix_requester(&makelink_req,globstring[STR_ENTER_MAKELINK_PARAMS]);
 
-    set_reqobject(makelink_name_gadget,RO_StringBuf,(ULONG)makelink_namebuf);
-    set_reqobject(makelink_destname_gadget,RO_StringBuf,(ULONG)makelink_destbuf);
+    set_reqobject(makelink_name_gadget,RO_StringBuf,(IPTR)makelink_namebuf);
+    set_reqobject(makelink_destname_gadget,RO_StringBuf,(IPTR)makelink_destbuf);
 
     if (!(swindow=OpenRequester(&makelink_req)) ||
         !(name_gad=addreqgadgets(&makelink_req,makelink_gadgets,0,NULL)) ||

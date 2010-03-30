@@ -862,11 +862,11 @@ int __saveds DoFileRequest(register struct DOpusFileReq *freq __asm("a0"))
 
         if (freq->title) {
             asltags[0].ti_Tag=ASLFR_TitleText;
-            asltags[0].ti_Data=(ULONG)freq->title;
+            asltags[0].ti_Data=(IPTR)freq->title;
         }
 
         asltags[1].ti_Tag=ASL_Window;
-        asltags[1].ti_Data=(ULONG)((freq->window)?freq->window:IntuitionBase->ActiveWindow);
+        asltags[1].ti_Data=(IPTR)((freq->window)?freq->window:IntuitionBase->ActiveWindow);
 
         if (freq->x>0) {
             asltags[2].ti_Tag=ASL_LeftEdge;
@@ -889,18 +889,18 @@ int __saveds DoFileRequest(register struct DOpusFileReq *freq __asm("a0"))
             }
             else initialfont[0]=0;
             asltags[5].ti_Tag=ASLFO_InitialName;
-            asltags[5].ti_Data=(ULONG)initialfont;
+            asltags[5].ti_Data=(IPTR)initialfont;
             asltags[6].ti_Tag=ASLFO_InitialSize;
             asltags[6].ti_Data=atoi(freq->filebuf);
         }
         else {
             if (freq->filebuf) {
                 asltags[5].ti_Tag=ASL_File;
-                asltags[5].ti_Data=(ULONG)freq->filebuf;
+                asltags[5].ti_Data=(IPTR)freq->filebuf;
             }
             if (freq->dirbuf) {
                 asltags[6].ti_Tag=ASL_Dir;
-                asltags[6].ti_Data=(ULONG)freq->dirbuf;
+                asltags[6].ti_Data=(IPTR)freq->dirbuf;
             }
         }
 

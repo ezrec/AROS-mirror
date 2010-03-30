@@ -704,7 +704,7 @@ D(bug("VANILLAKEY: %lx,%lx\n",code,qual));
           code = ToUpper(code);
           if (strchr(globstring[STR_VIEW_BUTTONS],code))
            {
-            switch((ULONG)strchr(globstring[STR_VIEW_BUTTONS],code) - (ULONG)globstring[STR_VIEW_BUTTONS])
+            switch((IPTR)strchr(globstring[STR_VIEW_BUTTONS],code) - (IPTR)globstring[STR_VIEW_BUTTONS])
              {
               case 0:
                 view_pageup(vdata);

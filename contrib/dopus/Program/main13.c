@@ -86,9 +86,9 @@ struct DateStamp *date;
             bstrname[0]=strlen(&bstrname[1]);
 
             arg[0]=0;
-            arg[1]=(ULONG)parentlock;
-            arg[2]=(ULONG)bstrname>>2;
-            arg[3]=(ULONG)date;
+            arg[1]=(IPTR)parentlock;
+            arg[2]=(IPTR)MKBADDR(bstrname);
+            arg[3]=(IPTR)date;
             rc=SendPacket(handler,ACTION_SET_DATE,arg,4);
             UnLock(parentlock);
         }
@@ -349,7 +349,7 @@ D(bug("Relabel(%s,%s)\n",buf,name));
     bstr=(char *) AllocMem(a+2,MEMF_CLEAR))
     bstr[0]=(char)a;
     strcpy(bstr+1,name);
-    arg=(ULONG)bstr>>2;
+    arg=(IPTR)MKBADDR(bstr);
     if (!(SendPacket(port,ACTION_RENAME_DISK,&arg,1))) doerror(-1);
 */
     else if ((!status_iconified) && (dopus_curwin[data_active_window] != dopus_specialwin[data_active_window])) {

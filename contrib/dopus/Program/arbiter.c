@@ -315,7 +315,7 @@ short *pens;
     screentags[0].ti_Tag=SA_DisplayID;
     screentags[0].ti_Data=clone_screen(MainScreen,&newscreen);
     screentags[1].ti_Tag=SA_Pens;
-    screentags[1].ti_Data=(ULONG)screen_drawinfo;
+    screentags[1].ti_Data=(IPTR)screen_drawinfo;
     screentags[2].ti_Tag=SA_AutoScroll;
     screentags[2].ti_Data=TRUE;
     screentags[3].ti_Tag=SA_Interleaved;

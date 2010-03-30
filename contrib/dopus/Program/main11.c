@@ -737,7 +737,7 @@ ULONG type/*,nottype*/;
     while (memory->mh_Node.ln_Succ) {
         if ((!type || (memory->mh_Attributes&type)) &&
             (!nottype || !(memory->mh_Attributes&nottype))) {
-            size+=(ULONG)((ULONG)memory->mh_Upper-(ULONG)memory->mh_Lower);
+            size+=(ULONG)((IPTR)memory->mh_Upper-(IPTR)memory->mh_Lower);
         }
         memory=(struct MemHeader *)memory->mh_Node.ln_Succ;
     }

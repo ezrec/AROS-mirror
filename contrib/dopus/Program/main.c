@@ -574,7 +574,7 @@ int tit;
             if ((handle=FindDisplayInfo(config->screenmode)) &&
                 (GetDisplayInfoData(handle,(UBYTE *)&dims,sizeof(struct DimensionInfo),
                 DTAG_DIMS,0))) {
-                mainscreen_tags[SCREENTAGS_DISPLAYID].ti_Data=(ULONG)config->screenmode;
+                mainscreen_tags[SCREENTAGS_DISPLAYID].ti_Data=(IPTR)config->screenmode;
                 if (config->screenflags&SCRFLAGS_DEFWIDTH)
                     main_scr.Width=(dims.TxtOScan.MaxX-dims.TxtOScan.MinX)+1;
                 else main_scr.Width=config->scrw;
@@ -645,7 +645,7 @@ tryfonts:
         else if (pubscr) {
             main_win.Type=PUBLICSCREEN;
             mainwindow_tags[0].ti_Tag=WA_PubScreen;
-            mainwindow_tags[0].ti_Data=(ULONG)pubscr;
+            mainwindow_tags[0].ti_Data=(IPTR)pubscr;
         }
         else {
             main_win.Type=CUSTOMSCREEN;

@@ -56,7 +56,7 @@ D(bug("readarchive: %s\n",dir->directory)); //Delay(100);
      if (c == arcname) return 0;
      if (c > arcname) *(c-1) = 0;
 //D(bug("arcname2: %s\n",arcname));
-     strcpy(arcdir,dir->directory+(ULONG)c-(ULONG)arcname);
+     strcpy(arcdir,dir->directory+(IPTR)c-(IPTR)arcname);
     }
    len = strlen(arcdir);
 //D(bug("arcdir: %s\n",arcdir));
@@ -91,10 +91,10 @@ D(bug("done\n"));
                ti2[0].ti_Tag = XAD_ENTRYNUMBER;
                ti2[0].ti_Data = dir->xai->xai_DiskInfo->xdi_EntryNumber;
                ti2[1].ti_Tag = TAG_MORE;
-               ti2[1].ti_Data = (ULONG)ti;
+               ti2[1].ti_Data = (IPTR)ti;
 
 D(bug("Allocated dir->xai2: %lx\n",xai2));
-               if(!(err=xadGetDiskInfo(xai2, XAD_NOEMPTYERROR, 1, XAD_INDISKARCHIVE, (ULONG)ti2, TAG_DONE)))
+               if(!(err=xadGetDiskInfo(xai2, XAD_NOEMPTYERROR, 1, XAD_INDISKARCHIVE, (IPTR)ti2, TAG_DONE)))
                 {
 D(bug("xai2 initialized\n"));
                  if (xai2->xai_FileInfo)
@@ -286,7 +286,7 @@ D(bug("unarcfiledir: arcdir = %s\n",arcdir));
      if (xfi) while(err != XADERR_OK)
       {
        err = xadFileUnArc(dir->xai,XAD_ENTRYNUMBER, xfi->xfi_EntryNumber,
-                                   XAD_OUTFILENAME, (ULONG)arcname,
+                                   XAD_OUTFILENAME, (IPTR)arcname,
                                    dir->arcpassword[0]?XAD_PASSWORD:TAG_IGNORE, dir->arcpassword,
                                    TAG_END);
        switch (err)

@@ -748,11 +748,18 @@ char *disk;
 
 			if (port=(struct MsgPort *)DeviceProc(disk)) {
 				char __aligned bstr_name[36];
-				ULONG arg;
+				IPTR arg;
 
+#ifdef __AROS__
+				bstr_name = MKBADDR(bstr_name);
+				CopyMem(namebuf, AROS_BSTR_ADDR(bstr_name), strlen(namebuf));
+				AROS_BSTR_setstrlen(bstr_name, strlen(namebuf));
+				arg=(IPTR)bstr_name;
+#else
 				bstr_name[0]=strlen(namebuf);
 				strcpy(&bstr_name[1],namebuf);
 				arg=(ULONG)bstr_name>>2;
+#endif
 				SendPacket(port,ACTION_RENAME_DISK,&arg,1);
 			}
 		}
