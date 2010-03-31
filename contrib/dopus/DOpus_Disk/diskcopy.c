@@ -751,10 +751,10 @@ char *disk;
 				IPTR arg;
 
 #ifdef __AROS__
-				bstr_name = MKBADDR(bstr_name);
-				CopyMem(namebuf, AROS_BSTR_ADDR(bstr_name), strlen(namebuf));
-				AROS_BSTR_setstrlen(bstr_name, strlen(namebuf));
-				arg=(IPTR)bstr_name;
+				BPTR bstr = MKBADDR(bstr_name);
+				CopyMem(namebuf, AROS_BSTR_ADDR(bstr), strlen(namebuf));
+				AROS_BSTR_setstrlen(bstr, strlen(namebuf));
+				arg=(IPTR)bstr;
 #else
 				bstr_name[0]=strlen(namebuf);
 				strcpy(&bstr_name[1],namebuf);
