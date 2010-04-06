@@ -30,7 +30,7 @@ the existing commercial status of Directory Opus 5.
 
 #include "iconinfo.h"
 
-void main(argc,argv)
+int main(argc,argv)
 int argc;
 char *argv[];
 {
@@ -97,7 +97,7 @@ char *argv[];
 
 	CloseLibrary(IconBase);
 	CloseLibrary((struct Library *)DOpusBase);
-	_exit(0);
+	return(0);
 }
 
 void get_vis_info(vis,portname)
@@ -131,7 +131,7 @@ char *portname;
 	}
 }
 
-dopus_message(cmd,data,portname)
+int dopus_message(cmd,data,portname)
 int cmd;
 APTR data;
 char *portname;

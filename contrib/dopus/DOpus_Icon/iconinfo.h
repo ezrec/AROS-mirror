@@ -92,8 +92,7 @@ enum {
 	II_DEFAULTTOOL,                         /* Default tool field */
 	II_TOOLTYPE,                            /* ToolType string gadget */
 	II_NEW,                                 /* New ToolType */
-	II_DELETE,                              /* Delete ToolType */
-	II_REMAP};                              /* Remap colours 1.3/2.0 */
+	II_DELETE};                             /* Delete ToolType */
 
 extern struct DOpusBase *DOpusBase;
 extern struct IntuitionBase *IntuitionBase;

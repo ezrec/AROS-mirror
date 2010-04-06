@@ -31,18 +31,6 @@ the existing commercial status of Directory Opus 5.
 #include "iconinfo.h"
 
 struct TagItem
-	iconinfo_remap_gadget[]={
-		{RO_Type,OBJECT_GADGET},
-		{RO_GadgetType,GADGET_BOOLEAN},
-		{RO_GadgetID,II_REMAP},
-		{RO_LeftFine,408},
-		{RO_TopFine,92},
-		{RO_WidthFine,114},
-		{RO_HeightFine,12},
-		{RO_TextNum,STR_REMAP_COLORS},
-		{RO_TextPos,TEXTPOS_CENTER},
-		{RO_HighRecess,TRUE},
-		{TAG_END,0}},
 	iconinfo_save_gadget[]={
 		{RO_Type,OBJECT_GADGET},
 		{RO_GadgetType,GADGET_BOOLEAN},
@@ -176,14 +164,12 @@ struct TagItem
 		{TAG_END,0}},
 
 	*iconinfo_general_gadgets[]={
-		iconinfo_remap_gadget,
 		iconinfo_save_gadget,
 		iconinfo_skip_gadget,
 		iconinfo_cancel_gadget,
 		NULL},
 
 	*iconinfo_short_general_gadgets[]={
-		iconinfo_remap_gadget,
 		NULL},
 
 	*iconinfo_tooltype_gadgets[]={
@@ -213,12 +199,11 @@ struct MenuItem
 struct Menu
 	icon_menu={NULL,8,0,100,0,MENUENABLED,NULL,&cancel_item};
 
-doiconinfo(vis,name)
+int doiconinfo(vis,name)
 struct VisInfo *vis;
 char *name;
 {
 	struct DiskObject *dobj;
-	struct Image *image1,*image2,*im;
 	struct DOpusListView *view;
 	char
 		buf[256],namebuf[256],inamebuf[33],*ptr,date[11],time[11],*olddeftool,
@@ -254,9 +239,6 @@ char *name;
 	strcpy(namebuf,name); if ((ptr=strstr(namebuf,".info"))) *ptr=0;
 	if (!(dobj=GetDiskObject(namebuf))) return(-2);
 	icongad=(struct Gadget *)&(dobj->do_Gadget);
-	im=image1=(struct Image *)icongad->GadgetRender;
-	if (icongad->Flags&GADGHIMAGE) image2=(struct Image *)icongad->SelectRender;
-	else image2=NULL;
 	oldtooltypes=dobj->do_ToolTypes;
 
 	switch (dobj->do_Type) {
@@ -490,7 +472,7 @@ char *name;
 		icon_rec.MinX,icon_rec.MinY,
 		(icon_rec.MaxX-icon_rec.MinX+1),(icon_rec.MaxY-icon_rec.MinY+1),
 		vis->vi_shine,vis->vi_shadow);
-	drawicon(window,image1,&icon_rec);
+	drawicon(window,dobj,FALSE,&icon_rec);
 
 	StrCombine(buf,inamebuf," (",256);
 	strcat(buf,icon_type_names[dobj->do_Type-1]);
@@ -612,15 +594,8 @@ char *name;
 							if (x>=icon_rec.MinX && x<=icon_rec.MaxX &&
 								y>=icon_rec.MinY && y<=icon_rec.MaxY) {
 hiliteimage:
-								if (icongad->Flags&GADGHIMAGE && image2) {
-									im=(im==image1)?image2:image1;
-									drawicon(window,im,&icon_rec);
-									break;
-								}
-								else {
-									compicon(rp,image1,&icon_rec);
-									compflag=1-compflag;
-								}
+								compflag = 1 - compflag;
+								drawicon(window,dobj,compflag,&icon_rec);
 							}
 						}
 						break;
@@ -666,15 +641,6 @@ hiliteimage:
 
 					case IDCMP_GADGETUP:
 						switch (gadgetid) {
-							case II_REMAP:
-								SetBusyPointer(window);
-								remapimage(image1);
-								if (image2) remapimage(image2);
-								else if (compflag) compicon(rp,image1,&icon_rec);
-								drawicon(window,im,&icon_rec);
-								if (compflag) compicon(rp,image1,&icon_rec);
-								ClearPointer(window);
-								break;
 
 							case II_DELETE:
 deletettype:
@@ -825,99 +791,52 @@ endreq:
 	return(ret);
 }
 
-void drawicon(window,image,rect)
+void drawicon(window,dobj,selected,rect)
 struct Window *window;
-struct Image *image;
+struct DiskObject *dobj;
+BOOL selected;
 struct Rectangle *rect;
 {
 	struct Region *reg,*oldreg;
-	int x,y;
-
-	x=((rect->MaxX-rect->MinX+1)-image->Width)/2;
-	y=((rect->MaxY-rect->MinY+1)-image->Height)/2;
-
-	if (image->NextImage) image->NextImage=NULL;
-
-	if (x>0 && y>0) {
-		drawrecaround(window->RPort,
-			rect->MinX,rect->MinY,
-			x,y,
-			x+image->Width,y+image->Height,
-			(rect->MaxX-rect->MinX+1),(rect->MaxY-rect->MinY+1));
-		DrawImage(window->RPort,image,x+rect->MinX,y+rect->MinY);
-	}
-	else if (reg=NewRegion()) {
-		OrRectRegion(reg,rect);
-		oldreg=InstallClipRegion(window->WLayer,reg);
-		DrawImage(window->RPort,image,(x<0)?rect->MinX:rect->MinX+x,(y<0)?rect->MinY:rect->MinY+y);
-		InstallClipRegion(window->WLayer,oldreg);
-		DisposeRegion(reg);
-	}
-}
-
-void drawrecaround(r,l,t,x,y,x1,y1,width,height)
-struct RastPort *r;
-int l,t,x,y,x1,y1,width,height;
-{
-	char o;
-
-	o=r->FgPen; SetAPen(r,0);
-	if (x>0) RectFill(r,l,t,l+x-1,t+height-1);
-	if (y>0) RectFill(r,l,t,l+width-1,t+y-1);
-	if (x1<l+width) RectFill(r,l+x1,t,l+width-1,t+height-1);
-	if (y1<t+height) RectFill(r,l,t+y1,l+width-1,t+height-1);
-	SetAPen(r,o);
-}
-
-void compicon(rp,image,rect)
-struct RastPort *rp;
-struct Image *image;
-struct Rectangle *rect;
-{
 	int x,y,w,h;
 
-	w=(rect->MaxX-rect->MinX+1);
-	h=(rect->MaxY-rect->MinY+1);
-	x=(w-image->Width)/2;
-	y=(h-image->Height)/2;
+	struct Rectangle size = {0};
 
-	SetDrMd(rp,COMPLEMENT);
-	RectFill(rp,
-		(x<0)?rect->MinX:rect->MinX+x,
-		(y<0)?rect->MinY:rect->MinY+y,
-		(x<0)?rect->MaxX:(rect->MaxX-w)+x+image->Width,
-		(y<0)?rect->MaxY:(rect->MaxY-h)+y+image->Height);
-	SetDrMd(rp,JAM2);
-}
+	if
+	(
+		GetIconRectangle
+		(
+			window->RPort, dobj, NULL, &size, 
+			ICONDRAWA_Borderless, TRUE, 
+			TAG_DONE 
+		)
+	)
+	{
+		w = size.MaxX - size.MinX + 1;
+		h = size.MaxY - size.MinY + 1;
 
-void remapimage(icon)
-struct Image *icon;
-{
-	int wordwidth,row,col,plane,planesize,rowpos,pen,bit;
-	UWORD *plane_ptr[8];
+	}
 
-	wordwidth=(icon->Width+15)/16;
-	planesize=wordwidth*icon->Height;
+	x = ((rect->MaxX - rect->MinX + 1) - w)/2;
+	y = ((rect->MaxY - rect->MinY + 1) - h)/2;
+	if (x < 0) x = 0;
+	if (y < 0) y = 0;
 
-	for (plane=0;plane<icon->Depth;plane++)
-		plane_ptr[plane]=icon->ImageData+(planesize*plane);
+	if (reg=NewRegion()) {
+		OrRectRegion(reg,rect);
+		oldreg=InstallClipRegion(window->WLayer,reg);
+		DrawIconState
+		(
+			window->RPort, dobj, NULL, 
+			x+rect->MinX, y+rect->MinY, selected ? IDS_SELECTED : IDS_NORMAL, 
 
-	for (row=0,rowpos=0;row<icon->Height;row++,rowpos+=wordwidth) {
-		for (col=0;col<wordwidth;col++) {
-			for (bit=0;bit<16;bit++) {
-				pen=0;
-				for (plane=0;plane<icon->Depth;plane++) {
-					if (plane_ptr[plane][rowpos+col]&(1<<bit)) pen|=1<<plane;
-				}
-				if (pen==1 || pen==2) {
-					pen=1-(pen-1);
-					for (plane=0;plane<icon->Depth;plane++) {
-						if (plane==pen) plane_ptr[plane][rowpos+col]|=1<<bit;
-						else plane_ptr[plane][rowpos+col]&=~(1<<bit);
-					}
-				}
-			}
-		}
+			ICONDRAWA_Frameless,       TRUE,
+			ICONDRAWA_Borderless,      TRUE,
+			ICONDRAWA_EraseBackground, TRUE,
+			TAG_DONE
+		);
+		InstallClipRegion(window->WLayer,oldreg);
+		DisposeRegion(reg);
 	}
 }
 
@@ -945,7 +864,7 @@ struct Gadget *gads;
 	}
 }
 
-doroot(str)
+int doroot(str)
 char *str;
 {
 	int i,b,f=0,c;
@@ -959,7 +878,7 @@ char *str;
 	return(1);
 }
 
-getroot(name,ds)
+int getroot(name,ds)
 char *name;
 struct DateStamp *ds;
 {

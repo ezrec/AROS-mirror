@@ -30,22 +30,18 @@ the existing commercial status of Directory Opus 5.
 
 //void lsprintf __ARGS((char *,char *,...));
 
-void main(int,char **);
 void get_vis_info(struct VisInfo *,char *);
-dopus_message(int,APTR,char *);
+int dopus_message(int,APTR,char *);
 void fill_out_req(struct RequesterBase *,struct VisInfo *);
 struct Gadget *addreqgadgets(struct RequesterBase *,struct TagItem **);
 void fix_listview(struct RequesterBase *,struct DOpusListView *);
 void setup_strings(void);
 
-doiconinfo(struct VisInfo *,char *);
+int doiconinfo(struct VisInfo *,char *);
 
-void drawicon(struct Window *,struct Image *,struct Rectangle *);
-void drawrecaround(struct RastPort *,int,int,int,int,int,int,int,int);
-void compicon(struct RastPort *,struct Image *,struct Rectangle *);
-void remapimage(struct Image *);
+void drawicon(struct Window *,struct DiskObject *,BOOL,struct Rectangle *);
 void offttgads(struct Window *,struct Gadget *);
 void onttgads(struct Window *,struct Gadget *);
 
-doroot(char *);
-getroot(char *,struct DateStamp *);
+int doroot(char *);
+int getroot(char *,struct DateStamp *);
