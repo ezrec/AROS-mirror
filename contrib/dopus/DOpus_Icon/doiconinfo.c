@@ -878,10 +878,78 @@ char *str;
 	return(1);
 }
 
+BPTR getrootlock(lock1)
+BPTR lock1;
+{
+    BPTR lock2;
+
+    while ((lock2=ParentDir(lock1))) {
+        UnLock(lock1);
+        lock1=lock2;
+    }
+    return(lock1);
+}
+
 int getroot(name,ds)
 char *name;
 struct DateStamp *ds;
 {
+#ifdef __AROS__
+        struct DosList *dl;
+        BPTR           lock;
+        BOOL           success;
+        char           buf[MAXFILENAMELENGTH];
+
+        //kprintf("!!!! getroot(%s)\n", name);
+
+        lock = Lock(name, ACCESS_READ);
+        if (NULL == lock)
+        {
+            //kprintf("Could not get lock in getroot()\n");
+            return 0;
+        }
+
+        /* Get lock on root device */
+
+        SetIoErr(0);
+        lock = getrootlock(lock);
+
+        /* Get the name from lock */
+        success = NameFromLock(lock, buf, MAXFILENAMELENGTH);
+
+        UnLock(lock);
+
+        if (!success)
+        {
+            //kprintf("Could not get lock for name\n");
+            return 0;
+        }
+
+        dl = LockDosList(LDF_DEVICES | LDF_VOLUMES | LDF_READ);
+        dl = FindDosEntry(dl, buf, LDF_DEVICES |  LDF_VOLUMES);
+
+        if (NULL == dl) {
+
+            UnLockDosList(LDF_DEVICES | LDF_VOLUMES | LDF_READ);
+            kprintf("Could not get device list\n");
+            return 0;
+        }
+
+        /* Get the volume name */
+
+        BtoCStr(dl->dol_Name, name, 32);
+
+        /* Get the volume date */
+        if (ds)
+        {
+            CopyMem(&dl->dol_misc.dol_volume.dol_VolumeDate, ds, sizeof (*ds));
+        }
+
+        UnLockDosList(LDF_DEVICES | LDF_VOLUMES | LDF_READ);
+
+        return 1;
+
+#else
 	BPTR lock1;
 	struct FileLock *lock2;
 	char *p;
@@ -897,4 +965,6 @@ struct DateStamp *ds;
 	if (ds) CopyMem((char *)&dl->dl_VolumeDate,(char *)ds,sizeof(struct DateStamp));
 	UnLock(lock1);
 	return(1);
+#endif
 }
+
