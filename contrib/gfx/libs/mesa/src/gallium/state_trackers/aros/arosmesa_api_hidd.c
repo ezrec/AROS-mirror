@@ -188,6 +188,7 @@ static AROSMesaFrameBuffer AROSMesaHiddNewFrameBuffer(AROSMesaContext amesa, ARO
             D(bug("[AROSMESA] AROSMesaHiddNewFrameBuffer - ERROR - Unsupported redBits value\n"));
             return NULL;
     }
+    /* TODO: screen->is_format_supported should be used here */
     
     switch(vis->depthBits)
     {
@@ -204,6 +205,7 @@ static AROSMesaFrameBuffer AROSMesaHiddNewFrameBuffer(AROSMesaContext amesa, ARO
             D(bug("[AROSMESA] AROSMesaHiddNewFrameBuffer - ERROR - Unsupported depthBits value\n"));
             return NULL;
     }
+    /* TODO: screen->is_format_supported should be used here */
     
     switch(vis->stencilBits)
     {
@@ -220,6 +222,7 @@ static AROSMesaFrameBuffer AROSMesaHiddNewFrameBuffer(AROSMesaContext amesa, ARO
             D(bug("[AROSMESA] AROSMesaHiddNewFrameBuffer - ERROR - Unsupported stencilBits value\n"));
             return NULL;
     }
+    /* TODO: screen->is_format_supported should be used here */
 
     /* Allocate memory for aros structure */
     aros_fb = AllocVec(sizeof(struct arosmesa_framebuffer), MEMF_PUBLIC | MEMF_CLEAR);
