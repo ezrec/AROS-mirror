@@ -42,20 +42,20 @@ static void r300_draw_emit_attrib(struct r300_context* r300,
                                   enum interp_mode interp,
                                   int index)
 {
-    struct tgsi_shader_info* info = &r300->vs->info;
+    struct r300_vertex_shader* vs = r300->vs_state.state;
+    struct tgsi_shader_info* info = &vs->info;
     int output;
 
     output = draw_find_shader_output(r300->draw,
                                      info->output_semantic_name[index],
                                      info->output_semantic_index[index]);
-    draw_emit_vertex_attr(
-        (struct vertex_info*)r300->vertex_format_state.state,
-        emit, interp, output);
+    draw_emit_vertex_attr(&r300->vertex_info, emit, interp, output);
 }
 
 static void r300_draw_emit_all_attribs(struct r300_context* r300)
 {
-    struct r300_shader_semantics* vs_outputs = &r300->vs->outputs;
+    struct r300_vertex_shader* vs = r300->vs_state.state;
+    struct r300_shader_semantics* vs_outputs = &vs->outputs;
     int i, gen_count;
 
     /* Position. */
@@ -104,30 +104,29 @@ static void r300_draw_emit_all_attribs(struct r300_context* r300)
 }
 
 /* Update the PSC tables. */
+/* XXX move this function into r300_state.c after TCL-bypass gets removed
+ * XXX because this one is dependent only on vertex elements. */
 static void r300_vertex_psc(struct r300_context* r300)
 {
-    struct r300_vertex_info *vformat =
-        (struct r300_vertex_info*)r300->vertex_format_state.state;
+    struct r300_vertex_shader* vs = r300->vs_state.state;
+    struct r300_vertex_stream_state *vformat =
+        (struct r300_vertex_stream_state*)r300->vertex_stream_state.state;
     uint16_t type, swizzle;
     enum pipe_format format;
     unsigned i;
     int identity[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
     int* stream_tab;
 
-    /* If TCL is bypassed, map vertex streams to equivalent VS output
-     * locations. */
-    if (r300->tcl_bypass) {
-        stream_tab = r300->vs->stream_loc_notcl;
-    } else {
-        stream_tab = identity;
-    }
+    memset(vformat, 0, sizeof(struct r300_vertex_stream_state));
+
+    stream_tab = identity;
 
     /* Vertex shaders have no semantics on their inputs,
      * so PSC should just route stuff based on the vertex elements,
      * and not on attrib information. */
     DBG(r300, DBG_DRAW, "r300: vs expects %d attribs, routing %d elements"
             " in psc\n",
-            r300->vs->info.num_inputs,
+            vs->info.num_inputs,
             r300->vertex_element_count);
 
     for (i = 0; i < r300->vertex_element_count; i++) {
@@ -154,18 +153,24 @@ static void r300_vertex_psc(struct r300_context* r300)
     }
     vformat->vap_prog_stream_cntl[i >> 1] |=
         (R300_LAST_VEC << (i & 1 ? 16 : 0));
+
+    vformat->count = (i >> 1) + 1;
+    r300->vertex_stream_state.size = (1 + vformat->count) * 2;
 }
 
 /* Update the PSC tables for SW TCL, using Draw. */
 static void r300_swtcl_vertex_psc(struct r300_context* r300)
 {
-    struct r300_vertex_info *vformat =
-        (struct r300_vertex_info*)r300->vertex_format_state.state;
-    struct vertex_info* vinfo = &vformat->vinfo;
+    struct r300_vertex_shader* vs = r300->vs_state.state;
+    struct r300_vertex_stream_state *vformat =
+        (struct r300_vertex_stream_state*)r300->vertex_stream_state.state;
+    struct vertex_info* vinfo = &r300->vertex_info;
     uint16_t type, swizzle;
     enum pipe_format format;
     unsigned i, attrib_count;
-    int* vs_output_tab = r300->vs->stream_loc_notcl;
+    int* vs_output_tab = vs->stream_loc_notcl;
+
+    memset(vformat, 0, sizeof(struct r300_vertex_stream_state));
 
     /* For each Draw attribute, route it to the fragment shader according
      * to the vs_output_tab. */
@@ -208,6 +213,9 @@ static void r300_swtcl_vertex_psc(struct r300_context* r300)
     }
     vformat->vap_prog_stream_cntl[i >> 1] |=
         (R300_LAST_VEC << (i & 1 ? 16 : 0));
+
+    vformat->count = (i >> 1) + 1;
+    r300->vertex_stream_state.size = (1 + vformat->count) * 2;
 }
 
 static void r300_rs_col(struct r300_rs_block* rs, int id, int ptr,
@@ -416,31 +424,29 @@ static void r300_update_rs_block(struct r300_context* r300,
     /* Now, after all that, see if we actually need to update the state. */
     if (memcmp(r300->rs_block_state.state, &rs, sizeof(struct r300_rs_block))) {
         memcpy(r300->rs_block_state.state, &rs, sizeof(struct r300_rs_block));
-        r300->rs_block_state.size = 5 + count;
-        r300->rs_block_state.dirty = TRUE;
+        r300->rs_block_state.size = 5 + count*2;
     }
 }
 
 /* Update the shader-dependant states. */
 static void r300_update_derived_shader_state(struct r300_context* r300)
 {
+    struct r300_vertex_shader* vs = r300->vs_state.state;
     struct r300_screen* r300screen = r300_screen(r300->context.screen);
-    struct r300_vertex_info *vformat =
-        (struct r300_vertex_info*)r300->vertex_format_state.state;
-    struct vertex_info* vinfo = &vformat->vinfo;
+    struct r300_vap_output_state *vap_out =
+        (struct r300_vap_output_state*)r300->vap_output_state.state;
 
-    /* Mmm, delicious hax */
-    memset(r300->vertex_format_state.state, 0, sizeof(struct r300_vertex_info));
-    memcpy(vinfo->hwfmt, r300->vs->hwfmt, sizeof(uint)*4);
+    /* XXX Mmm, delicious hax */
+    memset(&r300->vertex_info, 0, sizeof(struct vertex_info));
+    memcpy(vap_out, vs->hwfmt, sizeof(uint)*4);
 
-    r300_update_rs_block(r300, &r300->vs->outputs, &r300->fs->inputs);
+    r300_update_rs_block(r300, &vs->outputs, &r300->fs->inputs);
 
     if (r300screen->caps->has_tcl) {
         r300_vertex_psc(r300);
     } else {
         r300_draw_emit_all_attribs(r300);
-        draw_compute_vertex_size(
-            (struct vertex_info*)r300->vertex_format_state.state);
+        draw_compute_vertex_size(&r300->vertex_info);
         r300_swtcl_vertex_psc(r300);
     }
 }
@@ -516,13 +522,73 @@ static void r300_update_ztop(struct r300_context* r300)
     r300->ztop_state.dirty = TRUE;
 }
 
+static void r300_merge_textures_and_samplers(struct r300_context* r300)
+{
+    struct r300_textures_state *state =
+        (struct r300_textures_state*)r300->textures_state.state;
+    struct r300_texture_sampler_state *texstate;
+    struct r300_sampler_state *sampler;
+    struct r300_texture *tex;
+    unsigned min_level, max_level, i, size;
+    unsigned count = MIN2(state->texture_count, state->sampler_count);
+
+    state->tx_enable = 0;
+    size = 2;
+
+    for (i = 0; i < count; i++) {
+        if (state->textures[i] && state->sampler_states[i]) {
+            state->tx_enable |= 1 << i;
+
+            tex = state->textures[i];
+            sampler = state->sampler_states[i];
+
+            texstate = &state->regs[i];
+            memcpy(texstate->format, &tex->state, sizeof(uint32_t)*3);
+            texstate->filter[0] = sampler->filter0;
+            texstate->filter[1] = sampler->filter1;
+            texstate->border_color = sampler->border_color;
+            texstate->tile_config = R300_TXO_MACRO_TILE(tex->macrotile) |
+                                    R300_TXO_MICRO_TILE(tex->microtile);
+
+            /* to emulate 1D textures through 2D ones correctly */
+            if (tex->tex.target == PIPE_TEXTURE_1D) {
+                texstate->filter[0] &= ~R300_TX_WRAP_T_MASK;
+                texstate->filter[0] |= R300_TX_WRAP_T(R300_TX_CLAMP_TO_EDGE);
+            }
+
+            if (tex->is_npot) {
+                /* NPOT textures don't support mip filter, unfortunately.
+                 * This prevents incorrect rendering. */
+                texstate->filter[0] &= ~R300_TX_MIN_FILTER_MIP_MASK;
+            } else {
+                /* determine min/max levels */
+                /* the MAX_MIP level is the largest (finest) one */
+                max_level = MIN2(sampler->max_lod, tex->tex.last_level);
+                min_level = MIN2(sampler->min_lod, max_level);
+                texstate->format[0] |= R300_TX_NUM_LEVELS(max_level);
+                texstate->filter[0] |= R300_TX_MAX_MIP_LEVEL(min_level);
+            }
+
+            texstate->filter[0] |= i << 28;
+
+            size += 16;
+            state->count = i+1;
+        }
+    }
+
+    r300->textures_state.size = size;
+}
+
 void r300_update_derived_state(struct r300_context* r300)
 {
-    /* XXX */
-    if (r300->dirty_state &
-        (R300_NEW_FRAGMENT_SHADER | R300_NEW_VERTEX_SHADER) ||
-        r300->vertex_format_state.dirty || r300->rs_state.dirty) {
+    if (r300->rs_block_state.dirty ||
+        r300->vertex_stream_state.dirty || /* XXX put updating this state out of this file */
+        r300->rs_state.dirty) {  /* XXX and remove this one (tcl_bypass dependency) */
         r300_update_derived_shader_state(r300);
+    }
+
+    if (r300->textures_state.dirty) {
+        r300_merge_textures_and_samplers(r300);
     }
 
     r300_update_ztop(r300);

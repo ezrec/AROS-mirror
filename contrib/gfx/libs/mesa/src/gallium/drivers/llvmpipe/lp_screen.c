@@ -83,7 +83,7 @@ llvmpipe_get_param(struct pipe_screen *screen, int param)
    case PIPE_CAP_MAX_TEXTURE_IMAGE_UNITS:
       return PIPE_MAX_SAMPLERS;
    case PIPE_CAP_MAX_VERTEX_TEXTURE_UNITS:
-      return PIPE_MAX_VERTEX_SAMPLERS;
+      return 0;
    case PIPE_CAP_MAX_COMBINED_SAMPLERS:
       return PIPE_MAX_SAMPLERS + PIPE_MAX_VERTEX_SAMPLERS;
    case PIPE_CAP_NPOT_TEXTURES:
@@ -194,9 +194,7 @@ llvmpipe_is_format_supported( struct pipe_screen *_screen,
          format_desc->block.height != 1)
          return FALSE;
 
-      if(format_desc->layout != UTIL_FORMAT_LAYOUT_SCALAR &&
-         format_desc->layout != UTIL_FORMAT_LAYOUT_ARITH &&
-         format_desc->layout != UTIL_FORMAT_LAYOUT_ARRAY)
+      if(format_desc->layout != UTIL_FORMAT_LAYOUT_PLAIN)
          return FALSE;
 
       if(format_desc->colorspace != UTIL_FORMAT_COLORSPACE_RGB &&
@@ -224,14 +222,15 @@ llvmpipe_is_format_supported( struct pipe_screen *_screen,
          format_desc->block.height != 1)
          return FALSE;
 
-      if(format_desc->layout != UTIL_FORMAT_LAYOUT_SCALAR &&
-         format_desc->layout != UTIL_FORMAT_LAYOUT_ARITH &&
-         format_desc->layout != UTIL_FORMAT_LAYOUT_ARRAY)
+      if(format_desc->layout != UTIL_FORMAT_LAYOUT_PLAIN)
          return FALSE;
 
       if(format_desc->colorspace != UTIL_FORMAT_COLORSPACE_RGB &&
-         format_desc->colorspace != UTIL_FORMAT_COLORSPACE_SRGB &&
          format_desc->colorspace != UTIL_FORMAT_COLORSPACE_ZS)
+         return FALSE;
+
+      /* not supported yet */
+      if (format == PIPE_FORMAT_Z16_UNORM)
          return FALSE;
    }
 

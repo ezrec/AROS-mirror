@@ -43,6 +43,12 @@
 /* r300_state: Functions used to intialize state context by translating
  * Gallium state objects into semi-native r300 state objects. */
 
+#define UPDATE_STATE(cso, atom) \
+    if (cso != atom.state) { \
+        atom.state = cso;    \
+        atom.dirty = TRUE;   \
+    }
+
 static boolean blend_discard_if_src_alpha_0(unsigned srcRGB, unsigned srcA,
                                             unsigned dstRGB, unsigned dstA)
 {
@@ -328,8 +334,7 @@ static void r300_bind_blend_state(struct pipe_context* pipe,
 {
     struct r300_context* r300 = r300_context(pipe);
 
-    r300->blend_state.state = state;
-    r300->blend_state.dirty = TRUE;
+    UPDATE_STATE(state, r300->blend_state);
 }
 
 /* Free blend state. */
@@ -356,7 +361,7 @@ static void r300_set_blend_color(struct pipe_context* pipe,
         (struct r300_blend_color_state*)r300->blend_color_state.state;
     union util_color uc;
 
-    util_pack_color(color->color, PIPE_FORMAT_A8R8G8B8_UNORM, &uc);
+    util_pack_color(color->color, PIPE_FORMAT_B8G8R8A8_UNORM, &uc);
     state->blend_color = uc.ui;
 
     /* XXX if FP16 blending is enabled, we should use the FP16 format */
@@ -375,6 +380,8 @@ static void r300_set_clip_state(struct pipe_context* pipe,
                                 const struct pipe_clip_state* state)
 {
     struct r300_context* r300 = r300_context(pipe);
+
+    r300->clip = *state;
 
     if (r300_screen(pipe->screen)->caps->has_tcl) {
         memcpy(r300->clip_state.state, state, sizeof(struct pipe_clip_state));
@@ -476,11 +483,8 @@ static void r300_bind_dsa_state(struct pipe_context* pipe,
                                 void* state)
 {
     struct r300_context* r300 = r300_context(pipe);
-    struct r300_screen* r300screen = r300_screen(pipe->screen);
 
-    r300->dsa_state.state = state;
-    r300->dsa_state.size = r300screen->caps->is_r500 ? 8 : 6;
-    r300->dsa_state.dirty = TRUE;
+    UPDATE_STATE(state, r300->dsa_state);
 }
 
 /* Free DSA state. */
@@ -598,7 +602,8 @@ static void
 
     memcpy(r300->fb_state.state, state, sizeof(struct pipe_framebuffer_state));
 
-    r300->fb_state.size = (10 * state->nr_cbufs) + (state->zsbuf ? 10 : 0) + 6;
+    r300->fb_state.size = (10 * state->nr_cbufs) + (2 * (4 - state->nr_cbufs)) +
+                          (state->zsbuf ? 10 : 0) + 8;
 
     r300_fb_update_tiling_flags(r300, r300->fb_state.state, state);
 
@@ -658,8 +663,10 @@ static void r300_bind_fs_state(struct pipe_context* pipe, void* shader)
     r300->fs = fs;
     r300_pick_fragment_shader(r300);
 
-    if (r300->vs && r300_vertex_shader_setup_wpos(r300)) {
-        r300->vertex_format_state.dirty = TRUE;
+    r300->rs_block_state.dirty = TRUE; /* Will be updated before the emission. */
+
+    if (r300->vs_state.state && r300_vertex_shader_setup_wpos(r300)) {
+        r300->vap_output_state.dirty = TRUE;
     }
 
     r300->dirty_state |= R300_NEW_FRAGMENT_SHADER | R300_NEW_FRAGMENT_SHADER_CONSTANTS;
@@ -711,29 +718,12 @@ static void* r300_create_rs_state(struct pipe_context* pipe,
 
     /* If bypassing TCL, or if no TCL engine is present, turn off the HW TCL.
      * Else, enable HW TCL and force Draw's TCL off. */
-    if (state->bypass_vs_clip_and_viewport ||
-            !r300screen->caps->has_tcl) {
+    if (!r300screen->caps->has_tcl) {
         rs->vap_control_status |= R300_VAP_TCL_BYPASS;
     }
 
     rs->point_size = pack_float_16_6x(state->point_size) |
         (pack_float_16_6x(state->point_size) << R300_POINTSIZE_X_SHIFT);
-
-        /* Point minimum and maximum sizes. This register has to be emitted,
-         * and it'd be a step backwards to put it in invariant state. */
-        if (r300screen->caps->is_r500) {
-            rs->point_minmax =
-            ((int)(0.0 * 6.0) << R300_GA_POINT_MINMAX_MIN_SHIFT) |
-            ((int)(4096.0 * 6.0) << R300_GA_POINT_MINMAX_MAX_SHIFT);
-        } else if (r300screen->caps->is_r400) {
-            rs->point_minmax =
-            ((int)(0.0 * 6.0) << R300_GA_POINT_MINMAX_MIN_SHIFT) |
-            ((int)(4021.0 * 6.0) << R300_GA_POINT_MINMAX_MAX_SHIFT);
-        } else {
-            rs->point_minmax =
-            ((int)(0.0 * 6.0) << R300_GA_POINT_MINMAX_MIN_SHIFT) |
-            ((int)(2560.0 * 6.0) << R300_GA_POINT_MINMAX_MAX_SHIFT);
-        }
 
     rs->line_control = pack_float_16_6x(state->line_width) |
         R300_GA_LINE_CNTL_END_TYPE_COMP;
@@ -824,15 +814,14 @@ static void r300_bind_rs_state(struct pipe_context* pipe, void* state)
     }
 
     if (rs) {
-        r300->tcl_bypass = rs->rs.bypass_vs_clip_and_viewport;
         r300->polygon_offset_enabled = rs->rs.offset_cw || rs->rs.offset_ccw;
     } else {
-        r300->tcl_bypass = FALSE;
         r300->polygon_offset_enabled = FALSE;
     }
 
-    r300->rs_state.state = rs;
-    r300->rs_state.dirty = TRUE;
+    UPDATE_STATE(state, r300->rs_state);
+    r300->rs_state.size = 17 + (r300->polygon_offset_enabled ? 5 : 0);
+
     /* XXX Why is this still needed, dammit!? */
     r300->scissor_state.dirty = TRUE;
     r300->viewport_state.dirty = TRUE;
@@ -871,7 +860,7 @@ static void*
                                                    state->max_anisotropy > 0);
 
     /* Unfortunately, r300-r500 don't support floating-point mipmap lods. */
-    /* We must pass these to the emit function to clamp them properly. */
+    /* We must pass these to the merge function to clamp them properly. */
     sampler->min_lod = MAX2((unsigned)state->min_lod, 0);
     sampler->max_lod = MAX2((unsigned)ceilf(state->max_lod), 0);
 
@@ -881,7 +870,7 @@ static void*
 
     sampler->filter1 |= r300_anisotropy(state->max_anisotropy);
 
-    util_pack_color(state->border_color, PIPE_FORMAT_A8R8G8B8_UNORM, &uc);
+    util_pack_color(state->border_color, PIPE_FORMAT_B8G8R8A8_UNORM, &uc);
     sampler->border_color = uc.ui;
 
     /* R500-specific fixups and optimizations */
@@ -897,23 +886,20 @@ static void r300_bind_sampler_states(struct pipe_context* pipe,
                                      void** states)
 {
     struct r300_context* r300 = r300_context(pipe);
-    int i;
+    struct r300_textures_state* state =
+        (struct r300_textures_state*)r300->textures_state.state;
 
     if (count > 8) {
         return;
     }
 
-    for (i = 0; i < count; i++) {
-        if (r300->sampler_states[i] != states[i]) {
-            r300->sampler_states[i] = (struct r300_sampler_state*)states[i];
-            r300->dirty_state |= (R300_NEW_SAMPLER << i);
-        }
-    }
+    memcpy(state->sampler_states, states, sizeof(void*) * count);
+    state->sampler_count = count;
 
-    r300->sampler_count = count;
+    r300->textures_state.dirty = TRUE;
 
     /* Pick a fragment shader based on the texture compare state. */
-    if (r300->fs && (r300->dirty_state & R300_ANY_NEW_SAMPLERS)) {
+    if (r300->fs && count) {
         if (r300_pick_fragment_shader(r300)) {
             r300->dirty_state |= R300_NEW_FRAGMENT_SHADER |
                                  R300_NEW_FRAGMENT_SHADER_CONSTANTS;
@@ -937,22 +923,25 @@ static void r300_set_sampler_textures(struct pipe_context* pipe,
                                       struct pipe_texture** texture)
 {
     struct r300_context* r300 = r300_context(pipe);
+    struct r300_textures_state* state =
+        (struct r300_textures_state*)r300->textures_state.state;
+    unsigned i;
     boolean is_r500 = r300_screen(r300->context.screen)->caps->is_r500;
-    int i;
+    boolean dirty_tex = FALSE;
 
     /* XXX magic num */
     if (count > 8) {
         return;
     }
-    
-    for (i = 0; i < count; i++) {
-        if (r300->textures[i] != (struct r300_texture*)texture[i]) {
-            pipe_texture_reference((struct pipe_texture**)&r300->textures[i],
-                texture[i]);
-            r300->dirty_state |= (R300_NEW_TEXTURE << i);
 
-            /* R300-specific - set the texrect factor in a fragment shader */
-            if (!is_r500 && r300->textures[i]->is_npot) {
+    for (i = 0; i < count; i++) {
+        if (state->textures[i] != (struct r300_texture*)texture[i]) {
+            pipe_texture_reference((struct pipe_texture**)&state->textures[i],
+                                   texture[i]);
+            dirty_tex = TRUE;
+
+            /* R300-specific - set the texrect factor in the fragment shader */
+            if (!is_r500 && state->textures[i]->is_npot) {
                 /* XXX It would be nice to re-emit just 1 constant,
                  * XXX not all of them */
                 r300->dirty_state |= R300_NEW_FRAGMENT_SHADER_CONSTANTS;
@@ -961,14 +950,19 @@ static void r300_set_sampler_textures(struct pipe_context* pipe,
     }
 
     for (i = count; i < 8; i++) {
-        if (r300->textures[i]) {
-            pipe_texture_reference((struct pipe_texture**)&r300->textures[i],
+        if (state->textures[i]) {
+            pipe_texture_reference((struct pipe_texture**)&state->textures[i],
                 NULL);
-            r300->dirty_state |= (R300_NEW_TEXTURE << i);
         }
     }
 
-    r300->texture_count = count;
+    state->texture_count = count;
+
+    r300->textures_state.dirty = TRUE;
+
+    if (dirty_tex) {
+        r300->texture_cache_inval.dirty = TRUE;
+    }
 }
 
 static void r300_set_scissor_state(struct pipe_context* pipe,
@@ -988,6 +982,8 @@ static void r300_set_viewport_state(struct pipe_context* pipe,
     struct r300_context* r300 = r300_context(pipe);
     struct r300_viewport_state* viewport =
         (struct r300_viewport_state*)r300->viewport_state.state;
+
+    r300->viewport = *state;
 
     /* Do the transform in HW. */
     viewport->vte_control = R300_VTX_W0_FMT;
@@ -1028,17 +1024,24 @@ static void r300_set_vertex_buffers(struct pipe_context* pipe,
                                     const struct pipe_vertex_buffer* buffers)
 {
     struct r300_context* r300 = r300_context(pipe);
+    unsigned i, max_index = ~0;
 
     memcpy(r300->vertex_buffer, buffers,
         sizeof(struct pipe_vertex_buffer) * count);
+
+    for (i = 0; i < count; i++) {
+        max_index = MIN2(buffers[i].max_index, max_index);
+    }
+
     r300->vertex_buffer_count = count;
+    r300->vertex_buffer_max_index = max_index;
 
     if (r300->draw) {
         draw_flush(r300->draw);
         draw_set_vertex_buffers(r300->draw, count, buffers);
+    } else {
+        r300->vertex_stream_state.dirty = TRUE;
     }
-
-    r300->vertex_format_state.dirty = TRUE;
 }
 
 static boolean r300_validate_aos(struct r300_context *r300)
@@ -1107,21 +1110,25 @@ static void r300_bind_vs_state(struct pipe_context* pipe, void* shader)
         struct r300_vertex_shader* vs = (struct r300_vertex_shader*)shader;
 
         if (vs == NULL) {
-            r300->vs = NULL;
+            r300->vs_state.state = NULL;
             return;
         } else if (!vs->translated) {
             r300_translate_vertex_shader(r300, vs);
         }
 
-        r300->vs = vs;
+        UPDATE_STATE(shader, r300->vs_state);
+        r300->vs_state.size = vs->code.length + 9;
+
+        r300->rs_block_state.dirty = TRUE; /* Will be updated before the emission. */
+        r300->vap_output_state.dirty = TRUE;
+        r300->vertex_stream_state.dirty = TRUE; /* XXX needed for TCL bypass */
+        r300->pvs_flush.dirty = TRUE;
+
         if (r300->fs) {
             r300_vertex_shader_setup_wpos(r300);
         }
 
-        r300->vertex_format_state.dirty = TRUE;
-
-        r300->dirty_state |=
-            R300_NEW_VERTEX_SHADER | R300_NEW_VERTEX_SHADER_CONSTANTS;
+        r300->dirty_state |= R300_NEW_VERTEX_SHADER_CONSTANTS;
     } else {
         draw_flush(r300->draw);
         draw_bind_vertex_shader(r300->draw,
@@ -1193,8 +1200,10 @@ static void r300_set_constant_buffer(struct pipe_context *pipe,
     r300->shader_constants[shader].count = buf->size / (4 * sizeof(float));
     pipe_buffer_unmap(pipe->screen, buf);
 
-    if (shader == PIPE_SHADER_VERTEX)
+    if (shader == PIPE_SHADER_VERTEX) {
         r300->dirty_state |= R300_NEW_VERTEX_SHADER_CONSTANTS;
+        r300->pvs_flush.dirty = TRUE;
+    }
     else if (shader == PIPE_SHADER_FRAGMENT)
         r300->dirty_state |= R300_NEW_FRAGMENT_SHADER_CONSTANTS;
 }

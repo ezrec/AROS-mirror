@@ -95,6 +95,8 @@ cell_get_param(struct pipe_screen *screen, int param)
    case PIPE_CAP_TGSI_FS_COORD_ORIGIN_LOWER_LEFT:
    case PIPE_CAP_TGSI_FS_COORD_PIXEL_CENTER_INTEGER:
       return 0;
+   case PIPE_CAP_BLEND_EQUATION_SEPARATE:
+      return 1;
    default:
       return 0;
    }
@@ -134,12 +136,16 @@ cell_is_format_supported( struct pipe_screen *screen,
                           unsigned tex_usage, 
                           unsigned geom_flags )
 {
-   /* cell supports most formats, XXX for now anyway */
-   if (format == PIPE_FORMAT_DXT5_RGBA ||
-       format == PIPE_FORMAT_R8G8B8A8_SRGB)
-      return FALSE;
-   else
+   /* only a few formats are known to work at this time */
+   switch (format) {
+   case PIPE_FORMAT_Z24S8_UNORM:
+   case PIPE_FORMAT_Z24X8_UNORM:
+   case PIPE_FORMAT_B8G8R8A8_UNORM:
+   case PIPE_FORMAT_I8_UNORM:
       return TRUE;
+   default:
+      return FALSE;
+   }
 }
 
 

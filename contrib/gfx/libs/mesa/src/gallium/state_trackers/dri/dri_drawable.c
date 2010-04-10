@@ -134,12 +134,13 @@ dri_get_buffers(__DRIdrawable * dPriv)
 
    if ((dri_screen->dri2.loader
         && (dri_screen->dri2.loader->base.version > 2)
-        && (dri_screen->dri2.loader->getBuffersWithFormat != NULL)))
+        && (dri_screen->dri2.loader->getBuffersWithFormat != NULL))) {
       buffers = (*dri_screen->dri2.loader->getBuffersWithFormat)
                 (dri_drawable, &dri_drawable->w, &dri_drawable->h,
                  drawable->attachments, drawable->num_attachments,
                  &count, dri_drawable->loaderPrivate);
-   else
+   } else {
+      assert(dri_screen->dri2.loader);
       buffers = (*dri_screen->dri2.loader->getBuffers) (dri_drawable,
                                                         &dri_drawable->w,
                                                         &dri_drawable->h,
@@ -148,6 +149,7 @@ dri_get_buffers(__DRIdrawable * dPriv)
                                                         num_attachments, &count,
                                                         dri_drawable->
                                                         loaderPrivate);
+   }
 
    if (buffers == NULL) {
       return;
@@ -291,8 +293,6 @@ dri_update_buffer(struct pipe_screen *screen, void *context_private)
    ctx->d_stamp = *ctx->dPriv->pStamp;
    ctx->r_stamp = *ctx->rPriv->pStamp;
 
-   st_flush(ctx->st, PIPE_FLUSH_RENDER_CACHE, NULL);
-
    /* Ask the X server for new renderbuffers. */
    dri_get_buffers(ctx->dPriv);
    if (ctx->dPriv != ctx->rPriv)
@@ -349,11 +349,11 @@ dri_create_buffer(__DRIscreen * sPriv,
 
    if (visual->redBits == 8) {
       if (visual->alphaBits == 8)
-         drawable->color_format = PIPE_FORMAT_A8R8G8B8_UNORM;
+         drawable->color_format = PIPE_FORMAT_B8G8R8A8_UNORM;
       else
-         drawable->color_format = PIPE_FORMAT_X8R8G8B8_UNORM;
+         drawable->color_format = PIPE_FORMAT_B8G8R8X8_UNORM;
    } else {
-      drawable->color_format = PIPE_FORMAT_R5G6B5_UNORM;
+      drawable->color_format = PIPE_FORMAT_B5G6R5_UNORM;
    }
 
    switch(visual->depthBits) {
@@ -367,12 +367,12 @@ dri_create_buffer(__DRIscreen * sPriv,
    case 24:
       if (visual->stencilBits == 0) {
 	 drawable->depth_stencil_format = (screen->d_depth_bits_last) ?
-                                          PIPE_FORMAT_X8Z24_UNORM:
-                                          PIPE_FORMAT_Z24X8_UNORM;
+                                          PIPE_FORMAT_Z24X8_UNORM:
+                                          PIPE_FORMAT_X8Z24_UNORM;
       } else {
 	 drawable->depth_stencil_format = (screen->sd_depth_bits_last) ?
-                                          PIPE_FORMAT_S8Z24_UNORM:
-                                          PIPE_FORMAT_Z24S8_UNORM;
+                                          PIPE_FORMAT_Z24S8_UNORM:
+                                          PIPE_FORMAT_S8Z24_UNORM;
       }
       break;
    case 32:

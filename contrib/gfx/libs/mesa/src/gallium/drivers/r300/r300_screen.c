@@ -210,6 +210,9 @@ static boolean r300_is_format_supported(struct pipe_screen* screen,
 {
     uint32_t retval = 0;
     boolean is_r500 = r300_screen(screen)->caps->is_r500;
+    boolean is_z24 = format == PIPE_FORMAT_X8Z24_UNORM ||
+                     format == PIPE_FORMAT_S8Z24_UNORM;
+    boolean is_color2101010 = format == PIPE_FORMAT_R10G10B10A2_UNORM;
 
     if (target >= PIPE_MAX_TEXTURE_TYPES) {
         debug_printf("r300: Implementation error: Received bogus texture "
@@ -217,90 +220,34 @@ static boolean r300_is_format_supported(struct pipe_screen* screen,
         return FALSE;
     }
 
-    switch (format) {
-        /* Supported formats. */
-        /* Colorbuffer */
-        case PIPE_FORMAT_A8_UNORM:
-        case PIPE_FORMAT_L8_UNORM:
-            retval = usage &
-                (PIPE_TEXTURE_USAGE_RENDER_TARGET |
-                 PIPE_TEXTURE_USAGE_DISPLAY_TARGET |
-                 PIPE_TEXTURE_USAGE_PRIMARY);
-            break;
-
-        /* Texture */
-        case PIPE_FORMAT_A8R8G8B8_SRGB:
-        case PIPE_FORMAT_R8G8B8A8_SRGB:
-        case PIPE_FORMAT_DXT1_RGB:
-        case PIPE_FORMAT_DXT1_RGBA:
-        case PIPE_FORMAT_DXT3_RGBA:
-        case PIPE_FORMAT_DXT5_RGBA:
-        case PIPE_FORMAT_YCBCR:
-        case PIPE_FORMAT_L8_SRGB:
-        case PIPE_FORMAT_A8L8_SRGB:
-        case PIPE_FORMAT_A8L8_UNORM:
-            retval = usage & PIPE_TEXTURE_USAGE_SAMPLER;
-            break;
-
-        /* Colorbuffer or texture */
-        case PIPE_FORMAT_R5G6B5_UNORM:
-        case PIPE_FORMAT_A1R5G5B5_UNORM:
-        case PIPE_FORMAT_A4R4G4B4_UNORM:
-        case PIPE_FORMAT_A8R8G8B8_UNORM:
-        case PIPE_FORMAT_X8R8G8B8_UNORM:
-        case PIPE_FORMAT_R8G8B8A8_UNORM:
-        case PIPE_FORMAT_R8G8B8X8_UNORM:
-        case PIPE_FORMAT_I8_UNORM:
-            retval = usage &
-                (PIPE_TEXTURE_USAGE_RENDER_TARGET |
-                 PIPE_TEXTURE_USAGE_DISPLAY_TARGET |
-                 PIPE_TEXTURE_USAGE_PRIMARY |
-                 PIPE_TEXTURE_USAGE_SAMPLER);
-            break;
-
-        /* Z buffer or texture */
-        case PIPE_FORMAT_Z16_UNORM:
-            retval = usage &
-                (PIPE_TEXTURE_USAGE_DEPTH_STENCIL |
-                 PIPE_TEXTURE_USAGE_SAMPLER);
-            break;
-
-        /* 24bit Z buffer can only be used as a texture on R500. */
-        case PIPE_FORMAT_Z24X8_UNORM:
-        /* Z buffer with stencil or texture */
-        case PIPE_FORMAT_Z24S8_UNORM:
-            retval = usage &
-                (PIPE_TEXTURE_USAGE_DEPTH_STENCIL |
-                 (is_r500 ? PIPE_TEXTURE_USAGE_SAMPLER : 0));
-            break;
-
-        /* Definitely unsupported formats. */
-        /* Non-usable Z buffer/stencil formats. */
-        case PIPE_FORMAT_Z32_UNORM:
-        case PIPE_FORMAT_S8Z24_UNORM:
-        case PIPE_FORMAT_X8Z24_UNORM:
-            SCREEN_DBG(r300_screen(screen), DBG_TEX,
-                       "r300: Note: Got unsupported format: %s in %s\n",
-                       util_format_name(format), __FUNCTION__);
-            return FALSE;
-
-        /* XXX Add all remaining gallium-supported formats,
-         * see util/u_format.csv. */
-
-        default:
-            /* Unknown format... */
-            debug_printf("r300: Warning: Got unknown format: %s in %s\n",
-                util_format_name(format), __FUNCTION__);
-            break;
+    /* Check sampler format support. */
+    if ((usage & PIPE_TEXTURE_USAGE_SAMPLER) &&
+        /* Z24 cannot be sampled from on non-r5xx. */
+        (is_r500 || !is_z24) &&
+        r300_is_sampler_format_supported(format)) {
+        retval |= PIPE_TEXTURE_USAGE_SAMPLER;
     }
 
-    /* If usage was a mask that contained multiple bits, and not all of them
-     * are supported, this will catch that and return FALSE.
-     * e.g. usage = 2 | 4; retval = 4; (retval >= usage) == FALSE
-     *
-     * This also returns FALSE for any unknown formats.
-     */
-    return (retval >= usage);
+    /* Check colorbuffer format support. */
+    if ((usage & (PIPE_TEXTURE_USAGE_RENDER_TARGET |
+                  PIPE_TEXTURE_USAGE_DISPLAY_TARGET |
+                  PIPE_TEXTURE_USAGE_PRIMARY)) &&
+        /* 2101010 cannot be rendered to on non-r5xx. */
+        (is_r500 || !is_color2101010) &&
+        r300_is_colorbuffer_format_supported(format)) {
+        retval |= usage &
+            (PIPE_TEXTURE_USAGE_RENDER_TARGET |
+             PIPE_TEXTURE_USAGE_DISPLAY_TARGET |
+             PIPE_TEXTURE_USAGE_PRIMARY);
+    }
+
+    /* Check depth-stencil format support. */
+    if (usage & PIPE_TEXTURE_USAGE_DEPTH_STENCIL &&
+        r300_is_zs_format_supported(format)) {
+        retval |= PIPE_TEXTURE_USAGE_DEPTH_STENCIL;
+    }
+
+    return retval == usage;
 }
 
 static struct pipe_transfer*

@@ -89,14 +89,11 @@ static const int pos_table16[16][2] = {
  * Shade all pixels in a 4x4 block.
  */
 static void
-block_full_4( struct lp_rasterizer_task *rast_task,
-              const struct lp_rast_triangle *tri,
-              int x, int y )
+block_full_4(struct lp_rasterizer_task *task,
+             const struct lp_rast_triangle *tri,
+             int x, int y)
 {
-   lp_rast_shade_quads_all(rast_task->rast,
-                           rast_task->thread_index,
-                           &tri->inputs, 
-                           x, y);
+   lp_rast_shade_quads_all(task, &tri->inputs, x, y);
 }
 
 
@@ -104,16 +101,16 @@ block_full_4( struct lp_rasterizer_task *rast_task,
  * Shade all pixels in a 16x16 block.
  */
 static void
-block_full_16( struct lp_rasterizer_task *rast_task,
-               const struct lp_rast_triangle *tri,
-               int x, int y )
+block_full_16(struct lp_rasterizer_task *task,
+              const struct lp_rast_triangle *tri,
+              int x, int y)
 {
    unsigned ix, iy;
    assert(x % 16 == 0);
    assert(y % 16 == 0);
    for (iy = 0; iy < 16; iy += 4)
       for (ix = 0; ix < 16; ix += 4)
-	 block_full_4(rast_task, tri, x + ix, y + iy);
+	 block_full_4(task, tri, x + ix, y + iy);
 }
 
 
@@ -123,18 +120,15 @@ block_full_16( struct lp_rasterizer_task *rast_task,
  * will be done as part of the fragment shader.
  */
 static void
-do_block_4( struct lp_rasterizer_task *rast_task,
-	    const struct lp_rast_triangle *tri,
-	    int x, int y,
-	    int c1,
-	    int c2,
-	    int c3 )
+do_block_4(struct lp_rasterizer_task *task,
+           const struct lp_rast_triangle *tri,
+           int x, int y,
+           int c1, int c2, int c3)
 {
-   lp_rast_shade_quads(rast_task->rast,
-                       rast_task->thread_index,
-                       &tri->inputs, 
-                       x, y,
-                       -c1, -c2, -c3);
+   assert(x >= 0);
+   assert(y >= 0);
+
+   lp_rast_shade_quads(task, &tri->inputs, x, y, -c1, -c2, -c3);
 }
 
 
@@ -143,44 +137,57 @@ do_block_4( struct lp_rasterizer_task *rast_task,
  * of the triangle's bounds.
  */
 static void
-do_block_16( struct lp_rasterizer_task *rast_task,
-             const struct lp_rast_triangle *tri,
-             int x, int y,
-             int c1,
-             int c2,
-             int c3 )
+do_block_16(struct lp_rasterizer_task *task,
+            const struct lp_rast_triangle *tri,
+            int x, int y,
+            int c0, int c1, int c2)
 {
-   const int eo1 = tri->eo1 * 4;
-   const int eo2 = tri->eo2 * 4;
-   const int eo3 = tri->eo3 * 4;
-   const int *step0 = tri->inputs.step[0];
-   const int *step1 = tri->inputs.step[1];
-   const int *step2 = tri->inputs.step[2];
-   int i;
+   unsigned mask = 0;
+   int eo[3];
+   int c[3];
+   int i, j;
 
+   assert(x >= 0);
+   assert(y >= 0);
    assert(x % 16 == 0);
    assert(y % 16 == 0);
 
-   for (i = 0; i < 16; i++) {
-      int cx1 = c1 + step0[i] * 4;
-      int cx2 = c2 + step1[i] * 4;
-      int cx3 = c3 + step2[i] * 4;
+   eo[0] = tri->eo1 * 4;
+   eo[1] = tri->eo2 * 4;
+   eo[2] = tri->eo3 * 4;
 
-      if (cx1 + eo1 < 0 ||
-          cx2 + eo2 < 0 ||
-          cx3 + eo3 < 0) {
-         /* the block is completely outside the triangle - nop */
-         LP_COUNT(nr_empty_4);
+   c[0] = c0;
+   c[1] = c1;
+   c[2] = c2;
+
+   for (j = 0; j < 3; j++) {
+      const int *step = tri->inputs.step[j];
+      const int cx = c[j] + eo[j];
+
+      /* Mask has bits set whenever we are outside any of the edges.
+       */
+      for (i = 0; i < 16; i++) {
+         int out = cx + step[i] * 4;
+         mask |= (out >> 31) & (1 << i);
       }
-      else {
-         int px = x + pos_table4[i][0];
-         int py = y + pos_table4[i][1];
-         /* Don't bother testing if the 4x4 block is entirely in/out of
-          * the triangle.  It's a little faster to do it in the jit code.
-          */
-         LP_COUNT(nr_non_empty_4);
-         do_block_4(rast_task, tri, px, py, cx1, cx2, cx3);
-      }
+   }
+
+   mask = ~mask & 0xffff;
+   while (mask) {
+      int i = ffs(mask) - 1;
+      int px = x + pos_table4[i][0];
+      int py = y + pos_table4[i][1];
+      int cx1 = c0 + tri->inputs.step[0][i] * 4;
+      int cx2 = c1 + tri->inputs.step[1][i] * 4;
+      int cx3 = c2 + tri->inputs.step[2][i] * 4;
+
+      mask &= ~(1 << i);
+
+      /* Don't bother testing if the 4x4 block is entirely in/out of
+       * the triangle.  It's a little faster to do it in the jit code.
+       */
+      LP_COUNT(nr_non_empty_4);
+      do_block_4(task, tri, px, py, cx1, cx2, cx3);
    }
 }
 
@@ -190,62 +197,84 @@ do_block_16( struct lp_rasterizer_task *rast_task,
  * for this triangle.
  */
 void
-lp_rast_triangle( struct lp_rasterizer *rast,
-                  unsigned thread_index,
-                  const union lp_rast_cmd_arg arg )
+lp_rast_triangle(struct lp_rasterizer_task *task,
+                 const union lp_rast_cmd_arg arg)
 {
-   struct lp_rasterizer_task *rast_task = &rast->tasks[thread_index];
    const struct lp_rast_triangle *tri = arg.triangle;
+   const int x = task->x, y = task->y;
+   int ei[3], eo[3], c[3];
+   unsigned outmask, inmask, partial_mask;
+   unsigned i, j;
 
-   int x = rast_task->x;
-   int y = rast_task->y;
-   unsigned i;
+   c[0] = tri->c1 + tri->dx12 * y - tri->dy12 * x;
+   c[1] = tri->c2 + tri->dx23 * y - tri->dy23 * x;
+   c[2] = tri->c3 + tri->dx31 * y - tri->dy31 * x;
 
-   int c1 = tri->c1 + tri->dx12 * y - tri->dy12 * x;
-   int c2 = tri->c2 + tri->dx23 * y - tri->dy23 * x;
-   int c3 = tri->c3 + tri->dx31 * y - tri->dy31 * x;
+   eo[0] = tri->eo1 * 16;
+   eo[1] = tri->eo2 * 16;
+   eo[2] = tri->eo3 * 16;
 
-   int ei1 = tri->ei1 * 16;
-   int ei2 = tri->ei2 * 16;
-   int ei3 = tri->ei3 * 16;
+   ei[0] = tri->ei1 * 16;
+   ei[1] = tri->ei2 * 16;
+   ei[2] = tri->ei3 * 16;
 
-   int eo1 = tri->eo1 * 16;
-   int eo2 = tri->eo2 * 16;
-   int eo3 = tri->eo3 * 16;
+   outmask = 0;
+   inmask = 0xffff;
 
-   LP_DBG(DEBUG_RAST, "lp_rast_triangle\n");
+   for (j = 0; j < 3; j++) {
+      const int *step = tri->inputs.step[j];
+      const int cox = c[j] + eo[j];
+      const int cio = ei[j]- eo[j];
 
-   /* Walk over the tile to build a list of 4x4 pixel blocks which will
-    * be filled/shaded.  We do this at two granularities: 16x16 blocks
-    * and then 4x4 blocks.
+      /* Outmask has bits set whenever we are outside any of the
+       * edges.
+       */
+      /* Inmask has bits set whenever we are inside all of the edges.
+       */
+      for (i = 0; i < 16; i++) {
+         int out = cox + step[i] * 16;
+         int in = out + cio;
+         outmask |= (out >> 31) & (1 << i);
+         inmask &= ~((in >> 31) & (1 << i));
+      }
+   }
+
+   assert((outmask & inmask) == 0);
+
+   if (outmask == 0xffff)
+      return;
+
+   /* Invert mask, so that bits are set whenever we are at least
+    * partially inside all of the edges:
     */
-   for (i = 0; i < 16; i++) {
-      int cx1 = c1 + (tri->inputs.step[0][i] * 16);
-      int cx2 = c2 + (tri->inputs.step[1][i] * 16);
-      int cx3 = c3 + (tri->inputs.step[2][i] * 16);
+   partial_mask = ~inmask & ~outmask & 0xffff;
 
-      if (cx1 + eo1 < 0 ||
-          cx2 + eo2 < 0 ||
-          cx3 + eo3 < 0) {
-         /* the block is completely outside the triangle - nop */
-         LP_COUNT(nr_empty_16);
-      }
-      else {
-         int px = x + pos_table16[i][0];
-         int py = y + pos_table16[i][1];
+   /* Iterate over partials:
+    */
+   while (partial_mask) {
+      int i = ffs(partial_mask) - 1;
+      int px = x + pos_table16[i][0];
+      int py = y + pos_table16[i][1];
+      int cx1 = c[0] + tri->inputs.step[0][i] * 16;
+      int cx2 = c[1] + tri->inputs.step[1][i] * 16;
+      int cx3 = c[2] + tri->inputs.step[2][i] * 16;
 
-         if (cx1 + ei1 > 0 &&
-             cx2 + ei2 > 0 &&
-             cx3 + ei3 > 0) {
-            /* the block is completely inside the triangle */
-            LP_COUNT(nr_fully_covered_16);
-            block_full_16(rast_task, tri, px, py);
-         }
-         else {
-            /* the block is partially in/out of the triangle */
-            LP_COUNT(nr_partially_covered_16);
-            do_block_16(rast_task, tri, px, py, cx1, cx2, cx3);
-         }
-      }
+      partial_mask &= ~(1 << i);
+
+      LP_COUNT(nr_partially_covered_16);
+      do_block_16(task, tri, px, py, cx1, cx2, cx3);
+   }
+
+   /* Iterate over fulls: 
+    */
+   while (inmask) {
+      int i = ffs(inmask) - 1;
+      int px = x + pos_table16[i][0];
+      int py = y + pos_table16[i][1];
+
+      inmask &= ~(1 << i);
+
+      LP_COUNT(nr_fully_covered_16);
+      block_full_16(task, tri, px, py);
    }
 }

@@ -25,12 +25,6 @@
 #include "nv50_context.h"
 #include "nouveau/nouveau_stateobj.h"
 
-#define NV50_CBUF_FORMAT_CASE(n) \
-	case PIPE_FORMAT_##n: so_data(so, NV50TCL_RT_FORMAT_##n); break
-
-#define NV50_ZETA_FORMAT_CASE(n) \
-	case PIPE_FORMAT_##n: so_data(so, NV50TCL_ZETA_FORMAT_##n); break
-
 static void
 nv50_state_validate_fb(struct nv50_context *nv50)
 {
@@ -71,14 +65,30 @@ nv50_state_validate_fb(struct nv50_context *nv50)
 		so_reloc (so, bo, fb->cbufs[i]->offset, NOUVEAU_BO_VRAM |
 			      NOUVEAU_BO_LOW | NOUVEAU_BO_RDWR, 0, 0);
 		switch (fb->cbufs[i]->format) {
-		NV50_CBUF_FORMAT_CASE(A8R8G8B8_UNORM);
-		NV50_CBUF_FORMAT_CASE(X8R8G8B8_UNORM);
-		NV50_CBUF_FORMAT_CASE(R5G6B5_UNORM);
-		NV50_CBUF_FORMAT_CASE(R16G16B16A16_SNORM);
-		NV50_CBUF_FORMAT_CASE(R16G16B16A16_UNORM);
-		NV50_CBUF_FORMAT_CASE(R32G32B32A32_FLOAT);
-		NV50_CBUF_FORMAT_CASE(R16G16_SNORM);
-		NV50_CBUF_FORMAT_CASE(R16G16_UNORM);
+		case PIPE_FORMAT_B8G8R8A8_UNORM:
+			so_data(so, NV50TCL_RT_FORMAT_A8R8G8B8_UNORM);
+			break;
+		case PIPE_FORMAT_B8G8R8X8_UNORM:
+			so_data(so, NV50TCL_RT_FORMAT_X8R8G8B8_UNORM);
+			break;
+		case PIPE_FORMAT_B5G6R5_UNORM:
+			so_data(so, NV50TCL_RT_FORMAT_R5G6B5_UNORM);
+			break;
+		case PIPE_FORMAT_R16G16B16A16_SNORM:
+			so_data(so, NV50TCL_RT_FORMAT_R16G16B16A16_SNORM);
+			break;
+		case PIPE_FORMAT_R16G16B16A16_UNORM:
+			so_data(so, NV50TCL_RT_FORMAT_R16G16B16A16_UNORM);
+			break;
+		case PIPE_FORMAT_R32G32B32A32_FLOAT:
+			so_data(so, NV50TCL_RT_FORMAT_R32G32B32A32_FLOAT);
+			break;
+		case PIPE_FORMAT_R16G16_SNORM:
+			so_data(so, NV50TCL_RT_FORMAT_R16G16_SNORM);
+			break;
+		case PIPE_FORMAT_R16G16_UNORM:
+			so_data(so, NV50TCL_RT_FORMAT_R16G16_UNORM);
+			break;
 		default:
 			NOUVEAU_ERR("AIIII unknown format %s\n",
 			            util_format_name(fb->cbufs[i]->format));
@@ -112,10 +122,18 @@ nv50_state_validate_fb(struct nv50_context *nv50)
 		so_reloc (so, bo, fb->zsbuf->offset, NOUVEAU_BO_VRAM |
 			      NOUVEAU_BO_LOW | NOUVEAU_BO_RDWR, 0, 0);
 		switch (fb->zsbuf->format) {
-		NV50_ZETA_FORMAT_CASE(S8Z24_UNORM);
-		NV50_ZETA_FORMAT_CASE(X8Z24_UNORM);
-		NV50_ZETA_FORMAT_CASE(Z24S8_UNORM);
-		NV50_ZETA_FORMAT_CASE(Z32_FLOAT);
+		case PIPE_FORMAT_Z24S8_UNORM:
+			so_data(so, NV50TCL_ZETA_FORMAT_S8Z24_UNORM);
+			break;
+		case PIPE_FORMAT_Z24X8_UNORM:
+			so_data(so, NV50TCL_ZETA_FORMAT_X8Z24_UNORM);
+			break;
+		case PIPE_FORMAT_S8Z24_UNORM:
+			so_data(so, NV50TCL_ZETA_FORMAT_Z24S8_UNORM);
+			break;
+		case PIPE_FORMAT_Z32_FLOAT:
+			so_data(so, NV50TCL_ZETA_FORMAT_Z32_FLOAT);
+			break;
 		default:
 			NOUVEAU_ERR("AIIII unknown format %s\n",
 			            util_format_name(fb->zsbuf->format));
@@ -375,50 +393,32 @@ nv50_state_validate(struct nv50_context *nv50)
 scissor_uptodate:
 
 	if (nv50->dirty & (NV50_NEW_VIEWPORT | NV50_NEW_RASTERIZER)) {
-		unsigned bypass;
-
-		if (!nv50->rasterizer->pipe.bypass_vs_clip_and_viewport)
-			bypass = 0;
-		else
-			bypass = 1;
-
 		if (nv50->state.viewport &&
-		    (bypass || !(nv50->dirty & NV50_NEW_VIEWPORT)) &&
-		    nv50->state.viewport_bypass == bypass)
+		    !(nv50->dirty & NV50_NEW_VIEWPORT))
 			goto viewport_uptodate;
-		nv50->state.viewport_bypass = bypass;
 
 		so = so_new(5, 9, 0);
-		if (!bypass) {
-			so_method(so, tesla, NV50TCL_VIEWPORT_TRANSLATE_X(0), 3);
-			so_data  (so, fui(nv50->viewport.translate[0]));
-			so_data  (so, fui(nv50->viewport.translate[1]));
-			so_data  (so, fui(nv50->viewport.translate[2]));
-			so_method(so, tesla, NV50TCL_VIEWPORT_SCALE_X(0), 3);
-			so_data  (so, fui(nv50->viewport.scale[0]));
-			so_data  (so, fui(nv50->viewport.scale[1]));
-			so_data  (so, fui(nv50->viewport.scale[2]));
+		so_method(so, tesla, NV50TCL_VIEWPORT_TRANSLATE_X(0), 3);
+		so_data  (so, fui(nv50->viewport.translate[0]));
+		so_data  (so, fui(nv50->viewport.translate[1]));
+		so_data  (so, fui(nv50->viewport.translate[2]));
+		so_method(so, tesla, NV50TCL_VIEWPORT_SCALE_X(0), 3);
+		so_data  (so, fui(nv50->viewport.scale[0]));
+		so_data  (so, fui(nv50->viewport.scale[1]));
+		so_data  (so, fui(nv50->viewport.scale[2]));
 
-			so_method(so, tesla, NV50TCL_VIEWPORT_TRANSFORM_EN, 1);
-			so_data  (so, 1);
-			/* 0x0000 = remove whole primitive only (xyz)
-			 * 0x1018 = remove whole primitive only (xy), clamp z
-			 * 0x1080 = clip primitive (xyz)
-			 * 0x1098 = clip primitive (xy), clamp z
-			 */
-			so_method(so, tesla, NV50TCL_VIEW_VOLUME_CLIP_CTRL, 1);
-			so_data  (so, 0x1080);
-			/* no idea what 0f90 does */
-			so_method(so, tesla, 0x0f90, 1);
-			so_data  (so, 0);
-		} else {
-			so_method(so, tesla, NV50TCL_VIEWPORT_TRANSFORM_EN, 1);
-			so_data  (so, 0);
-			so_method(so, tesla, NV50TCL_VIEW_VOLUME_CLIP_CTRL, 1);
-			so_data  (so, 0x0000);
-			so_method(so, tesla, 0x0f90, 1);
-			so_data  (so, 1);
-		}
+		so_method(so, tesla, NV50TCL_VIEWPORT_TRANSFORM_EN, 1);
+		so_data  (so, 1);
+		/* 0x0000 = remove whole primitive only (xyz)
+		 * 0x1018 = remove whole primitive only (xy), clamp z
+		 * 0x1080 = clip primitive (xyz)
+		 * 0x1098 = clip primitive (xy), clamp z
+		 */
+		so_method(so, tesla, NV50TCL_VIEW_VOLUME_CLIP_CTRL, 1);
+		so_data  (so, 0x1080);
+		/* no idea what 0f90 does */
+		so_method(so, tesla, 0x0f90, 1);
+		so_data  (so, 0);
 
 		so_ref(so, &nv50->state.viewport);
 		so_ref(NULL, &so);

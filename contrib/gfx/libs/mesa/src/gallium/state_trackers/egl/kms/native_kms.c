@@ -201,6 +201,8 @@ kms_surface_swap_buffers(struct native_surface *nsurf)
 
    /* the front/back textures are swapped */
    ksurf->sequence_number++;
+   kdpy->event_handler->invalid_surface(&kdpy->base,
+         &ksurf->base, ksurf->sequence_number);
 
    return TRUE;
 }
@@ -499,7 +501,10 @@ kms_display_get_modes(struct native_display *ndpy,
       kmode->base.desc = kmode->mode.name;
       kmode->base.width = kmode->mode.hdisplay;
       kmode->base.height = kmode->mode.vdisplay;
-      kmode->base.refresh_rate = kmode->mode.vrefresh / 1000;
+      kmode->base.refresh_rate = kmode->mode.vrefresh;
+      /* not all kernels have vrefresh = refresh_rate * 1000 */
+      if (kmode->base.refresh_rate > 1000)
+         kmode->base.refresh_rate = (kmode->base.refresh_rate + 500) / 1000;
    }
 
    nmodes_return = malloc(count * sizeof(*nmodes_return));
@@ -606,9 +611,9 @@ kms_display_get_configs(struct native_display *ndpy, int *num_configs)
       /* always double-buffered */
       nconf->mode.doubleBufferMode = TRUE;
 
-      format = PIPE_FORMAT_A8R8G8B8_UNORM;
+      format = PIPE_FORMAT_B8G8R8A8_UNORM;
       if (!kms_display_is_format_supported(&kdpy->base, format, TRUE)) {
-         format = PIPE_FORMAT_B8G8R8A8_UNORM;
+         format = PIPE_FORMAT_A8R8G8B8_UNORM;
          if (!kms_display_is_format_supported(&kdpy->base, format, TRUE))
             format = PIPE_FORMAT_NONE;
       }
@@ -622,9 +627,9 @@ kms_display_get_configs(struct native_display *ndpy, int *num_configs)
       nconf->mode.alphaBits = 8;
       nconf->mode.rgbBits = 32;
 
-      format = PIPE_FORMAT_S8Z24_UNORM;
+      format = PIPE_FORMAT_Z24S8_UNORM;
       if (!kms_display_is_format_supported(&kdpy->base, format, FALSE)) {
-         format = PIPE_FORMAT_Z24S8_UNORM;
+         format = PIPE_FORMAT_S8Z24_UNORM;
          if (!kms_display_is_format_supported(&kdpy->base, format, FALSE))
             format = PIPE_FORMAT_NONE;
       }
@@ -658,6 +663,21 @@ kms_display_get_configs(struct native_display *ndpy, int *num_configs)
    }
 
    return configs;
+}
+
+static int
+kms_display_get_param(struct native_display *ndpy,
+                      enum native_param_type param)
+{
+   int val;
+
+   switch (param) {
+   default:
+      val = 0;
+      break;
+   }
+
+   return val;
 }
 
 static void
@@ -759,13 +779,17 @@ static struct native_display_modeset kms_display_modeset = {
 };
 
 static struct native_display *
-kms_create_display(EGLNativeDisplayType dpy, struct drm_api *api)
+kms_create_display(EGLNativeDisplayType dpy,
+                   struct native_event_handler *event_handler,
+                   struct drm_api *api)
 {
    struct kms_display *kdpy;
 
    kdpy = CALLOC_STRUCT(kms_display);
    if (!kdpy)
       return NULL;
+
+   kdpy->event_handler = event_handler;
 
    kdpy->api = api;
    if (!kdpy->api) {
@@ -802,6 +826,7 @@ kms_create_display(EGLNativeDisplayType dpy, struct drm_api *api)
    }
 
    kdpy->base.destroy = kms_display_destroy;
+   kdpy->base.get_param = kms_display_get_param;
    kdpy->base.get_configs = kms_display_get_configs;
    kdpy->base.create_pbuffer_surface = kms_display_create_pbuffer_surface;
 
@@ -842,7 +867,8 @@ native_get_name(void)
 }
 
 struct native_display *
-native_create_display(EGLNativeDisplayType dpy)
+native_create_display(EGLNativeDisplayType dpy,
+                      struct native_event_handler *event_handler)
 {
    struct native_display *ndpy = NULL;
 
@@ -850,7 +876,7 @@ native_create_display(EGLNativeDisplayType dpy)
       drm_api = drm_api_create();
 
    if (drm_api)
-      ndpy = kms_create_display(dpy, drm_api);
+      ndpy = kms_create_display(dpy, event_handler, drm_api);
 
    return ndpy;
 }

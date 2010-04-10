@@ -85,32 +85,32 @@ static GLuint translate_tex_format( enum pipe_format pf )
       return BRW_SURFACEFORMAT_A16_UNORM; 
       */
 
-   case PIPE_FORMAT_A8L8_UNORM:
+   case PIPE_FORMAT_L8A8_UNORM:
       return BRW_SURFACEFORMAT_L8A8_UNORM;
 
-   case PIPE_FORMAT_R5G6B5_UNORM:
+   case PIPE_FORMAT_B5G6R5_UNORM:
       return BRW_SURFACEFORMAT_B5G6R5_UNORM;
 
-   case PIPE_FORMAT_A1R5G5B5_UNORM:
+   case PIPE_FORMAT_B5G5R5A1_UNORM:
       return BRW_SURFACEFORMAT_B5G5R5A1_UNORM;
 
-   case PIPE_FORMAT_A4R4G4B4_UNORM:
+   case PIPE_FORMAT_B4G4R4A4_UNORM:
       return BRW_SURFACEFORMAT_B4G4R4A4_UNORM;
 
-   case PIPE_FORMAT_X8R8G8B8_UNORM:
+   case PIPE_FORMAT_B8G8R8X8_UNORM:
       return BRW_SURFACEFORMAT_R8G8B8X8_UNORM;
 
-   case PIPE_FORMAT_A8R8G8B8_UNORM:
+   case PIPE_FORMAT_B8G8R8A8_UNORM:
       return BRW_SURFACEFORMAT_B8G8R8A8_UNORM;
 
    /*
     * Video formats
     */
 
-   case PIPE_FORMAT_YCBCR_REV:
+   case PIPE_FORMAT_YUYV:
       return BRW_SURFACEFORMAT_YCRCB_NORMAL;
 
-   case PIPE_FORMAT_YCBCR:
+   case PIPE_FORMAT_UYVY:
       return BRW_SURFACEFORMAT_YCRCB_SWAPUVY;
 
    /*
@@ -137,10 +137,10 @@ static GLuint translate_tex_format( enum pipe_format pf )
     * sRGB formats
     */
 
-   case PIPE_FORMAT_R8G8B8A8_SRGB:
+   case PIPE_FORMAT_A8B8G8R8_SRGB:
       return BRW_SURFACEFORMAT_B8G8R8A8_UNORM_SRGB;
 
-   case PIPE_FORMAT_A8L8_SRGB:
+   case PIPE_FORMAT_L8A8_SRGB:
       return BRW_SURFACEFORMAT_L8A8_UNORM_SRGB;
 
    case PIPE_FORMAT_L8_SRGB:
@@ -156,8 +156,8 @@ static GLuint translate_tex_format( enum pipe_format pf )
    case PIPE_FORMAT_Z16_UNORM:
          return BRW_SURFACEFORMAT_I16_UNORM;
 
-   case PIPE_FORMAT_S8Z24_UNORM:
-   case PIPE_FORMAT_X8Z24_UNORM:
+   case PIPE_FORMAT_Z24S8_UNORM:
+   case PIPE_FORMAT_Z24X8_UNORM:
          return BRW_SURFACEFORMAT_I24X8_UNORM;
 
    case PIPE_FORMAT_Z32_FLOAT:
@@ -191,6 +191,7 @@ static struct pipe_texture *brw_texture_create( struct pipe_screen *screen,
    struct brw_texture *tex;
    enum brw_buffer_type buffer_type;
    enum pipe_error ret;
+   GLuint format;
    
    tex = CALLOC_STRUCT(brw_texture);
    if (tex == NULL)
@@ -248,8 +249,10 @@ static struct pipe_texture *brw_texture_create( struct pipe_screen *screen,
 
    tex->ss.ss0.mipmap_layout_mode = BRW_SURFACE_MIPMAPLAYOUT_BELOW;
    tex->ss.ss0.surface_type = translate_tex_target(tex->base.target);
-   tex->ss.ss0.surface_format = translate_tex_format(tex->base.format);
-   assert(tex->ss.ss0.surface_format != BRW_SURFACEFORMAT_INVALID);
+
+   format = translate_tex_format(tex->base.format);
+   assert(format != BRW_SURFACEFORMAT_INVALID);
+   tex->ss.ss0.surface_format = format;
 
    /* This is ok for all textures with channel width 8bit or less:
     */
@@ -474,6 +477,7 @@ brw_texture_blanket_winsys_buffer(struct pipe_screen *screen,
 {
    struct brw_screen *bscreen = brw_screen(screen);
    struct brw_texture *tex;
+   GLuint format;
 
    if (templ->target != PIPE_TEXTURE_2D ||
        templ->last_level != 0 ||
@@ -518,8 +522,10 @@ brw_texture_blanket_winsys_buffer(struct pipe_screen *screen,
 
    tex->ss.ss0.mipmap_layout_mode = BRW_SURFACE_MIPMAPLAYOUT_BELOW;
    tex->ss.ss0.surface_type = translate_tex_target(tex->base.target);
-   tex->ss.ss0.surface_format = translate_tex_format(tex->base.format);
-   assert(tex->ss.ss0.surface_format != BRW_SURFACEFORMAT_INVALID);
+
+   format = translate_tex_format(tex->base.format);
+   assert(format != BRW_SURFACEFORMAT_INVALID);
+   tex->ss.ss0.surface_format = format;
 
    /* This is ok for all textures with channel width 8bit or less:
     */

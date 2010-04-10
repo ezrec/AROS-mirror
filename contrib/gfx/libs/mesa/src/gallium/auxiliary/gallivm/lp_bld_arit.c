@@ -614,6 +614,22 @@ lp_build_max(struct lp_build_context *bld,
 
 
 /**
+ * Generate clamp(a, min, max)
+ * Do checks for special cases.
+ */
+LLVMValueRef
+lp_build_clamp(struct lp_build_context *bld,
+               LLVMValueRef a,
+               LLVMValueRef min,
+               LLVMValueRef max)
+{
+   a = lp_build_min(bld, a, max);
+   a = lp_build_max(bld, a, min);
+   return a;
+}
+
+
+/**
  * Generate abs(a)
  */
 LLVMValueRef
@@ -649,6 +665,14 @@ lp_build_abs(struct lp_build_context *bld,
    }
 
    return lp_build_max(bld, a, LLVMBuildNeg(bld->builder, a, ""));
+}
+
+
+LLVMValueRef
+lp_build_negate(struct lp_build_context *bld,
+                LLVMValueRef a)
+{
+   return LLVMBuildNeg(bld->builder, a, "");
 }
 
 
@@ -691,6 +715,64 @@ lp_build_sgn(struct lp_build_context *bld,
 
    return res;
 }
+
+
+/**
+ * Set the sign of float vector 'a' according to 'sign'.
+ * If sign==0, return abs(a).
+ * If sign==1, return -abs(a);
+ * Other values for sign produce undefined results.
+ */
+LLVMValueRef
+lp_build_set_sign(struct lp_build_context *bld,
+                  LLVMValueRef a, LLVMValueRef sign)
+{
+   const struct lp_type type = bld->type;
+   LLVMTypeRef int_vec_type = lp_build_int_vec_type(type);
+   LLVMTypeRef vec_type = lp_build_vec_type(type);
+   LLVMValueRef shift = lp_build_int_const_scalar(type, type.width - 1);
+   LLVMValueRef mask = lp_build_int_const_scalar(type,
+                             ~((unsigned long long) 1 << (type.width - 1)));
+   LLVMValueRef val, res;
+
+   assert(type.floating);
+
+   /* val = reinterpret_cast<int>(a) */
+   val = LLVMBuildBitCast(bld->builder, a, int_vec_type, "");
+   /* val = val & mask */
+   val = LLVMBuildAnd(bld->builder, val, mask, "");
+   /* sign = sign << shift */
+   sign = LLVMBuildShl(bld->builder, sign, shift, "");
+   /* res = val | sign */
+   res = LLVMBuildOr(bld->builder, val, sign, "");
+   /* res = reinterpret_cast<float>(res) */
+   res = LLVMBuildBitCast(bld->builder, res, vec_type, "");
+
+   return res;
+}
+
+
+/**
+ * Convert vector of int to vector of float.
+ */
+LLVMValueRef
+lp_build_int_to_float(struct lp_build_context *bld,
+                      LLVMValueRef a)
+{
+   const struct lp_type type = bld->type;
+
+   assert(type.floating);
+   /*assert(lp_check_value(type, a));*/
+
+   {
+      LLVMTypeRef vec_type = lp_build_vec_type(type);
+      /*LLVMTypeRef int_vec_type = lp_build_int_vec_type(type);*/
+      LLVMValueRef res;
+      res = LLVMBuildSIToFP(bld->builder, a, vec_type, "");
+      return res;
+   }
+}
+
 
 
 enum lp_build_round_sse41_mode
@@ -818,8 +900,21 @@ lp_build_ceil(struct lp_build_context *bld,
 
 
 /**
+ * Return fractional part of 'a' computed as a - floor(f)
+ * Typically used in texture coord arithmetic.
+ */
+LLVMValueRef
+lp_build_fract(struct lp_build_context *bld,
+               LLVMValueRef a)
+{
+   assert(bld->type.floating);
+   return lp_build_sub(bld, a, lp_build_floor(bld, a));
+}
+
+
+/**
  * Convert to integer, through whichever rounding method that's fastest,
- * typically truncating to zero.
+ * typically truncating toward zero.
  */
 LLVMValueRef
 lp_build_itrunc(struct lp_build_context *bld,

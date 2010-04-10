@@ -84,7 +84,7 @@ static AROSMesaVisual AROSMesaHiddNewVisual(GLint bpp, struct TagItem *tagList)
 {
     AROSMesaVisual aros_vis = NULL;
     GLvisual * vis = NULL;
-    GLint  indexBits, redBits, greenBits, blueBits, alphaBits, accumBits;
+    GLint  redBits, greenBits, blueBits, alphaBits, accumBits;
     UBYTE depthBits, stencilBits;
     struct pHidd_GalliumBaseDriver_QueryDepthStencil qdsmsg = {
     mID : OOP_GetMethodID(IID_Hidd_GalliumBaseDriver, moHidd_GalliumBaseDriver_QueryDepthStencil),
@@ -98,14 +98,12 @@ static AROSMesaVisual AROSMesaHiddNewVisual(GLint bpp, struct TagItem *tagList)
     switch(bpp)
     {
         case(16):
-            indexBits   = 0;
             redBits     = 5;
             greenBits   = 6;
             blueBits    = 5;
             alphaBits   = 0;
             break;
         case(32):
-            indexBits   = 0;
             redBits     = 8;
             greenBits   = 8;
             blueBits    = 8;
@@ -139,21 +137,19 @@ static AROSMesaVisual AROSMesaHiddNewVisual(GLint bpp, struct TagItem *tagList)
 
     /* Initialize mesa structure */
     if(!_mesa_initialize_visual(vis,
-                                GL_TRUE,        /* RGB */
                                 GL_FALSE,       /* Double buffer - AROSMesa uses front buffer as back buffer */
                                 GL_FALSE,       /* stereo */
                                 redBits,
                                 greenBits,
                                 blueBits,
                                 alphaBits,
-                                indexBits,
                                 depthBits,
                                 stencilBits,
                                 accumBits,
                                 accumBits,
                                 accumBits,
                                 alphaBits ? accumBits : 0,
-                                1))
+                                0))
     {
         AROSMesaHiddDestroyVisual(aros_vis);
         return NULL;
@@ -183,10 +179,10 @@ static AROSMesaFrameBuffer AROSMesaHiddNewFrameBuffer(AROSMesaContext amesa, ARO
     switch(vis->redBits)
     {
         case(5):
-            colorFormat = PIPE_FORMAT_R5G6B5_UNORM;
+            colorFormat = PIPE_FORMAT_B5G6R5_UNORM;
             break;
         case(8):
-            colorFormat = PIPE_FORMAT_A8R8G8B8_UNORM;
+            colorFormat = PIPE_FORMAT_B8G8R8A8_UNORM;
             break;
         default:
             D(bug("[AROSMESA] AROSMesaHiddNewFrameBuffer - ERROR - Unsupported redBits value\n"));
@@ -202,7 +198,7 @@ static AROSMesaFrameBuffer AROSMesaHiddNewFrameBuffer(AROSMesaContext amesa, ARO
             depthFormat = PIPE_FORMAT_Z16_UNORM;
             break;
         case(24):
-            depthFormat = PIPE_FORMAT_Z24S8_UNORM;
+            depthFormat = PIPE_FORMAT_S8Z24_UNORM;
             break;
         default:
             D(bug("[AROSMESA] AROSMesaHiddNewFrameBuffer - ERROR - Unsupported depthBits value\n"));
@@ -215,8 +211,8 @@ static AROSMesaFrameBuffer AROSMesaHiddNewFrameBuffer(AROSMesaContext amesa, ARO
             stencilFormat = PIPE_FORMAT_NONE;
             break;
         case(8):
-            if (depthFormat == PIPE_FORMAT_Z24S8_UNORM)
-                stencilFormat = PIPE_FORMAT_Z24S8_UNORM;
+            if (depthFormat == PIPE_FORMAT_S8Z24_UNORM)
+                stencilFormat = PIPE_FORMAT_S8Z24_UNORM;
             else
                 stencilFormat = PIPE_FORMAT_S8_UNORM;
             break;
