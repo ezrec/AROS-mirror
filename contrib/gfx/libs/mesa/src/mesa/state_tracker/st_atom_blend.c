@@ -159,13 +159,12 @@ static GLboolean
 colormask_per_rt(GLcontext *ctx)
 {
    /* a bit suboptimal have to compare lots of values */
-//   unsigned i;
-//   for (i = 1; i < ctx->Const.MaxDrawBuffers; i++) {
-//      if (memcmp(ctx->Color.ColorMask[0], ctx->Color.ColorMask[i], 4)) {
-//         return GL_TRUE;
-//      }
-//   }
-    /* FIXME: always return false for now */
+   unsigned i;
+   for (i = 1; i < ctx->Const.MaxDrawBuffers; i++) {
+      if (memcmp(ctx->Color.ColorMask[0], ctx->Color.ColorMask[i], 4)) {
+         return GL_TRUE;
+      }
+   }
    return GL_FALSE;
 }
 
@@ -175,11 +174,10 @@ colormask_per_rt(GLcontext *ctx)
 static GLboolean
 blend_per_rt(GLcontext *ctx)
 {
-//   if (ctx->Color.BlendEnabled &&
-//      (ctx->Color.BlendEnabled != ((1 << ctx->Const.MaxDrawBuffers) - 1))) {
-//      return GL_TRUE;
-//   }
-    /* FIXME: always return false for now */
+   if (ctx->Color.BlendEnabled &&
+      (ctx->Color.BlendEnabled != ((1 << ctx->Const.MaxDrawBuffers) - 1))) {
+      return GL_TRUE;
+   }
    return GL_FALSE;
 }
 
@@ -245,14 +243,16 @@ update_blend( struct st_context *st )
    }
 
    /* Colormask - maybe reverse these bits? */
-   if (st->ctx->Color.ColorMask[0])
-      blend->rt[0].colormask |= PIPE_MASK_R;
-   if (st->ctx->Color.ColorMask[1])
-      blend->rt[0].colormask |= PIPE_MASK_G;
-   if (st->ctx->Color.ColorMask[2])
-      blend->rt[0].colormask |= PIPE_MASK_B;
-   if (st->ctx->Color.ColorMask[3])
-      blend->rt[0].colormask |= PIPE_MASK_A;
+   for (i = 0; i < num_state; i++) {
+      if (st->ctx->Color.ColorMask[i][0])
+         blend->rt[i].colormask |= PIPE_MASK_R;
+      if (st->ctx->Color.ColorMask[i][1])
+         blend->rt[i].colormask |= PIPE_MASK_G;
+      if (st->ctx->Color.ColorMask[i][2])
+         blend->rt[i].colormask |= PIPE_MASK_B;
+      if (st->ctx->Color.ColorMask[i][3])
+         blend->rt[i].colormask |= PIPE_MASK_A;
+   }
 
    if (st->ctx->Color.DitherFlag)
       blend->dither = 1;

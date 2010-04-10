@@ -1025,4 +1025,15 @@
 #undef glMultiDrawElementsBaseVertex
 #undef glProvokingVertex
 #undef glRenderbufferStorageMultisampleEXT
+#undef glColorMaskIndexedEXT
+#undef glGetBooleanIndexedvEXT
+#undef glGetIntegerIndexedvEXT
+#undef glEnableIndexedEXT
+#undef glDisableIndexedEXT
+#undef glIsEnabledIndexedEXT
+#undef glBeginConditionalRenderNV
+#undef glEndConditionalRenderNV
+#undef glObjectPurgeableAPPLE
+#undef glObjectUnpurgeableAPPLE
+#undef glGetObjectParameterivAPPLE
 

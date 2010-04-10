@@ -91,6 +91,6 @@ st_EndConditionalRender(GLcontext *ctx, struct gl_query_object *q)
 
 void st_init_cond_render_functions(struct dd_function_table *functions)
 {
-//FIXME!!   functions->BeginConditionalRender = st_BeginConditionalRender;
-//FIXME!!   functions->EndConditionalRender = st_EndConditionalRender;
+   functions->BeginConditionalRender = st_BeginConditionalRender;
+   functions->EndConditionalRender = st_EndConditionalRender;
 }

@@ -105,7 +105,6 @@ GALLIUM_AUXILIARY_SOURCES = \
             auxiliary/util/u_blit \
             auxiliary/util/u_cache \
             auxiliary/util/u_draw_quad \
-            auxiliary/util/u_format \
             auxiliary/util/u_format_access \
             auxiliary/util/u_format_table \
             auxiliary/util/u_gen_mipmap \

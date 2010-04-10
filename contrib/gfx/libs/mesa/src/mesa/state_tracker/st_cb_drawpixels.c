@@ -88,12 +88,7 @@ is_passthrough_program(const struct gl_fragment_program *prog)
    return GL_FALSE;
 }
 
-static INLINE struct gl_fragment_program *
-_mesa_clone_fragment_program(GLcontext *ctx,
-                             const struct gl_fragment_program *prog)
-{
-   return (struct gl_fragment_program *) _mesa_clone_program(ctx, &prog->Base);
-}
+
 
 /**
  * Make fragment shader for glDraw/CopyPixels.  This shader is made
@@ -324,7 +319,7 @@ make_texture(struct st_context *st,
 
    pipeFormat = st_mesa_format_to_pipe_format(mformat);
    assert(pipeFormat);
-   cpp = st_sizeof_format(pipeFormat);
+   cpp = util_format_get_blocksize(pipeFormat);
 
    pixels = _mesa_map_pbo_source(ctx, unpack, pixels);
    if (!pixels)
@@ -410,7 +405,7 @@ make_texture(struct st_context *st,
 
 /**
  * Draw quad with texcoords and optional color.
- * Coords are window coords with y=0=bottom.
+ * Coords are gallium window coords with y=0=top.
  * \param color  may be null
  * \param invertTex  if true, flip texcoords vertically
  */
@@ -577,11 +572,11 @@ draw_textured_quad(GLcontext *ctx, GLint x, GLint y, GLfloat z,
       struct pipe_viewport_state vp;
       vp.scale[0] =  0.5f * w;
       vp.scale[1] = -0.5f * h;
-      vp.scale[2] = 1.0f;
+      vp.scale[2] = 0.5f;
       vp.scale[3] = 1.0f;
       vp.translate[0] = 0.5f * w;
       vp.translate[1] = 0.5f * h;
-      vp.translate[2] = 0.0f;
+      vp.translate[2] = 0.5f;
       vp.translate[3] = 0.0f;
       cso_set_viewport(cso, &vp);
    }
@@ -597,14 +592,22 @@ draw_textured_quad(GLcontext *ctx, GLint x, GLint y, GLfloat z,
       pipe->set_fragment_sampler_textures(pipe, 1, &pt);
    }
 
-   /* Compute window coords (y=0=bottom) with pixel zoom.
+   /* Compute Gallium window coords (y=0=top) with pixel zoom.
     * Recall that these coords are transformed by the current
     * vertex shader and viewport transformation.
     */
+   if (st_fb_orientation(ctx->DrawBuffer) == Y_0_BOTTOM) {
+      y = ctx->DrawBuffer->Height - (int) (y + height * ctx->Pixel.ZoomY);
+      invertTex = !invertTex;
+   }
+
    x0 = (GLfloat) x;
    x1 = x + width * ctx->Pixel.ZoomX;
    y0 = (GLfloat) y;
    y1 = y + height * ctx->Pixel.ZoomY;
+
+   /* convert Z from [0,1] to [-1,-1] to match viewport Z scale/bias */
+   z = z * 2.0 - 1.0;
 
    draw_quad(ctx, x0, y0, z, x1, y1, color, invertTex,
 	     (GLfloat) width / pt->width0,
@@ -715,7 +718,7 @@ draw_stencil_pixels(GLcontext *ctx, GLint x, GLint y,
                   memcpy(dest, sValues, spanWidth);
                }
                break;
-            case PIPE_FORMAT_S8Z24_UNORM:
+            case PIPE_FORMAT_Z24S8_UNORM:
                if (format == GL_DEPTH_STENCIL) {
                   uint *dest = (uint *) (stmap + spanY * pt->stride + spanX*4);
                   GLint k;
@@ -733,7 +736,7 @@ draw_stencil_pixels(GLcontext *ctx, GLint x, GLint y,
                   }
                }
                break;
-            case PIPE_FORMAT_Z24S8_UNORM:
+            case PIPE_FORMAT_S8Z24_UNORM:
                if (format == GL_DEPTH_STENCIL) {
                   uint *dest = (uint *) (stmap + spanY * pt->stride + spanX*4);
                   GLint k;
@@ -833,7 +836,7 @@ copy_stencil_pixels(GLcontext *ctx, GLint srcx, GLint srcy,
    ubyte *buffer;
    int i;
 
-   buffer = _mesa_malloc(width * height * sizeof(ubyte));
+   buffer = malloc(width * height * sizeof(ubyte));
    if (!buffer) {
       _mesa_error(ctx, GL_OUT_OF_MEMORY, "glCopyPixels(stencil)");
       return;
@@ -881,7 +884,7 @@ copy_stencil_pixels(GLcontext *ctx, GLint srcx, GLint srcy,
       src = buffer + i * width;
 
       switch (ptDraw->texture->format) {
-      case PIPE_FORMAT_S8Z24_UNORM:
+      case PIPE_FORMAT_Z24S8_UNORM:
          {
             uint *dst4 = (uint *) dst;
             int j;
@@ -892,7 +895,7 @@ copy_stencil_pixels(GLcontext *ctx, GLint srcx, GLint srcy,
             }
          }
          break;
-      case PIPE_FORMAT_Z24S8_UNORM:
+      case PIPE_FORMAT_S8Z24_UNORM:
          {
             uint *dst4 = (uint *) dst;
             int j;
@@ -912,7 +915,7 @@ copy_stencil_pixels(GLcontext *ctx, GLint srcx, GLint srcy,
       }
    }
 
-   _mesa_free(buffer);
+   free(buffer);
 
    /* unmap the stencil buffer */
    screen->transfer_unmap(screen, ptDraw);
@@ -934,38 +937,13 @@ st_CopyPixels(GLcontext *ctx, GLint srcx, GLint srcy,
    GLfloat *color;
    enum pipe_format srcFormat, texFormat;
    int ptw, pth;
+   GLboolean invertTex = GL_FALSE;
+   GLint readX, readY, readW, readH;
+   struct gl_pixelstore_attrib pack = ctx->DefaultPacking;
 
    pipe->flush(pipe, PIPE_FLUSH_RENDER_CACHE, NULL);
 
    st_validate_state(st);
-
-   if (srcx < 0) {
-      width -= -srcx;
-      dstx += -srcx;
-      srcx = 0;
-   }
-
-   if (srcy < 0) {
-      height -= -srcy;
-      dsty += -srcy;
-      srcy = 0;
-   }
-
-   if (dstx < 0) {
-      width -= -dstx;
-      srcx += -dstx;
-      dstx = 0;
-   }
-
-   if (dsty < 0) {
-      height -= -dsty;
-      srcy += -dsty;
-      dsty = 0;
-   }
-
-   if (width < 0 || height < 0)
-      return;
-
 
    if (type == GL_STENCIL) {
       /* can't use texturing to do stencil */
@@ -999,7 +977,7 @@ st_CopyPixels(GLcontext *ctx, GLint srcx, GLint srcy,
          texFormat = st_choose_format(screen, GL_DEPTH_COMPONENT,
                                       PIPE_TEXTURE_2D, 
                                       PIPE_TEXTURE_USAGE_DEPTH_STENCIL);
-         assert(texFormat != PIPE_FORMAT_NONE); /* XXX no depth texture formats??? */
+         assert(texFormat != PIPE_FORMAT_NONE);
       }
       else {
          /* default color format */
@@ -1009,17 +987,25 @@ st_CopyPixels(GLcontext *ctx, GLint srcx, GLint srcy,
       }
    }
 
-   if (st_fb_orientation(ctx->DrawBuffer) == Y_0_TOP) {
-      srcy = ctx->DrawBuffer->Height - srcy - height;
-
-      if (srcy < 0) {
-         height -= -srcy;
-         srcy = 0;
-      }
-
-      if (height < 0)
-         return;
+   /* Invert src region if needed */
+   if (st_fb_orientation(ctx->ReadBuffer) == Y_0_TOP) {
+      srcy = ctx->ReadBuffer->Height - srcy - height;
+      invertTex = !invertTex;
    }
+
+   /* Clip the read region against the src buffer bounds.
+    * We'll still allocate a temporary buffer/texture for the original
+    * src region size but we'll only read the region which is on-screen.
+    * This may mean that we draw garbage pixels into the dest region, but
+    * that's expected.
+    */
+   readX = srcx;
+   readY = srcy;
+   readW = width;
+   readH = height;
+   _mesa_clip_readpixels(ctx, &readX, &readY, &readW, &readH, &pack);
+   readW = MAX2(0, readW);
+   readH = MAX2(0, readH);
 
    /* Need to use POT texture? */
    ptw = width;
@@ -1048,7 +1034,8 @@ st_CopyPixels(GLcontext *ctx, GLint srcx, GLint srcy,
    if (!pt)
       return;
 
-
+   /* Make temporary texture which is a copy of the src region.
+    */
    if (srcFormat == texFormat) {
       /* copy source framebuffer surface into mipmap/texture */
       struct pipe_surface *psRead = screen->get_tex_surface(screen,
@@ -1058,17 +1045,24 @@ st_CopyPixels(GLcontext *ctx, GLint srcx, GLint srcy,
                                       PIPE_BUFFER_USAGE_GPU_WRITE );
       if (pipe->surface_copy) {
          pipe->surface_copy(pipe,
-                            psTex, /* dest */
-                            0, 0, /* destx/y */
-                            psRead,
-                            srcx, srcy, width, height);
+                            psTex,                               /* dest surf */
+                            pack.SkipPixels, pack.SkipRows,      /* dest pos */
+                            psRead,                              /* src surf */
+                            readX, readY, readW, readH);         /* src region */
       } else {
          util_surface_copy(pipe, FALSE,
                            psTex,
-                           0, 0,
+                           pack.SkipPixels, pack.SkipRows,
                            psRead,
-                           srcx, srcy, width, height);
+                           readX, readY, readW, readH);
       }
+
+      if (0) {
+         /* debug */
+         debug_dump_surface("copypixsrcsurf", psRead);
+         debug_dump_surface("copypixtemptex", psTex);
+      }
+
       pipe_surface_reference(&psRead, NULL); 
       pipe_surface_reference(&psTex, NULL);
    }
@@ -1076,8 +1070,8 @@ st_CopyPixels(GLcontext *ctx, GLint srcx, GLint srcy,
       /* CPU-based fallback/conversion */
       struct pipe_transfer *ptRead =
          st_cond_flush_get_tex_transfer(st, rbRead->texture, 0, 0, 0,
-					PIPE_TRANSFER_READ, srcx, srcy, width,
-					height);
+                                        PIPE_TRANSFER_READ,
+                                        readX, readY, readW, readH);
       struct pipe_transfer *ptTex;
       enum pipe_transfer_usage transfer_usage;
 
@@ -1092,34 +1086,37 @@ st_CopyPixels(GLcontext *ctx, GLint srcx, GLint srcy,
       ptTex = st_cond_flush_get_tex_transfer(st, pt, 0, 0, 0, transfer_usage,
                                              0, 0, width, height);
 
+      /* copy image from ptRead surface to ptTex surface */
       if (type == GL_COLOR) {
          /* alternate path using get/put_tile() */
-         GLfloat *buf = (GLfloat *) _mesa_malloc(width * height * 4 * sizeof(GLfloat));
-
-         pipe_get_tile_rgba(ptRead, 0, 0, width, height, buf);
-         pipe_put_tile_rgba(ptTex, 0, 0, width, height, buf);
-
-         _mesa_free(buf);
+         GLfloat *buf = (GLfloat *) malloc(width * height * 4 * sizeof(GLfloat));
+         pipe_get_tile_rgba(ptRead, readX, readY, readW, readH, buf);
+         pipe_put_tile_rgba(ptTex, pack.SkipPixels, pack.SkipRows,
+                            readW, readH, buf);
+         free(buf);
       }
       else {
          /* GL_DEPTH */
-         GLuint *buf = (GLuint *) _mesa_malloc(width * height * sizeof(GLuint));
-         pipe_get_tile_z(ptRead, 0, 0, width, height, buf);
-         pipe_put_tile_z(ptTex, 0, 0, width, height, buf);
-         _mesa_free(buf);
+         GLuint *buf = (GLuint *) malloc(width * height * sizeof(GLuint));
+         pipe_get_tile_z(ptRead, readX, readY, readW, readH, buf);
+         pipe_put_tile_z(ptTex, pack.SkipPixels, pack.SkipRows,
+                            readW, readH, buf);
+         free(buf);
       }
 
       screen->tex_transfer_destroy(ptRead);
       screen->tex_transfer_destroy(ptTex);
    }
 
-   /* draw textured quad */
+   /* OK, the texture 'pt' contains the src image/pixels.  Now draw a
+    * textured quad with that texture.
+    */
    draw_textured_quad(ctx, dstx, dsty, ctx->Current.RasterPos[2],
                       width, height, ctx->Pixel.ZoomX, ctx->Pixel.ZoomY,
                       pt, 
                       driver_vp, 
                       driver_fp,
-                      color, GL_TRUE);
+                      color, invertTex);
 
    pipe_texture_reference(&pt, NULL);
 }

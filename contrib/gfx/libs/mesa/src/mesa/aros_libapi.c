@@ -19298,3 +19298,214 @@ AROS_LH5(void, glRenderbufferStorageMultisampleEXT,
     AROS_LIBFUNC_EXIT
 }
 
+AROS_LH5(void, glColorMaskIndexedEXT,
+    AROS_LHA(GLuint, a, D0),
+    AROS_LHA(GLboolean, b, D1),
+    AROS_LHA(GLboolean, c, D2),
+    AROS_LHA(GLboolean, d, D3),
+    AROS_LHA(GLboolean, e, D4),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    mglColorMaskIndexedEXT(a, b, c, d, e);
+
+    RESTORE_REG
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(void, glGetBooleanIndexedvEXT,
+    AROS_LHA(GLenum, a, D0),
+    AROS_LHA(GLuint, b, D1),
+    AROS_LHA(GLboolean *, c, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    mglGetBooleanIndexedvEXT(a, b, c);
+
+    RESTORE_REG
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(void, glGetIntegerIndexedvEXT,
+    AROS_LHA(GLenum, a, D0),
+    AROS_LHA(GLuint, b, D1),
+    AROS_LHA(GLint *, c, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    mglGetIntegerIndexedvEXT(a, b, c);
+
+    RESTORE_REG
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH2(void, glEnableIndexedEXT,
+    AROS_LHA(GLenum, a, D0),
+    AROS_LHA(GLuint, b, D1),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    mglEnableIndexedEXT(a, b);
+
+    RESTORE_REG
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH2(void, glDisableIndexedEXT,
+    AROS_LHA(GLenum, a, D0),
+    AROS_LHA(GLuint, b, D1),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    mglDisableIndexedEXT(a, b);
+
+    RESTORE_REG
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH2(GLboolean, glIsEnabledIndexedEXT,
+    AROS_LHA(GLenum, a, D0),
+    AROS_LHA(GLuint, b, D1),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    GLboolean _return = mglIsEnabledIndexedEXT(a, b);
+
+    RESTORE_REG
+
+    return _return;
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH2(void, glBeginConditionalRenderNV,
+    AROS_LHA(GLuint, a, D0),
+    AROS_LHA(GLenum, b, D1),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    mglBeginConditionalRenderNV(a, b);
+
+    RESTORE_REG
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH0(void, glEndConditionalRenderNV,
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    mglEndConditionalRenderNV();
+
+    RESTORE_REG
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(GLenum, glObjectPurgeableAPPLE,
+    AROS_LHA(GLenum, a, D0),
+    AROS_LHA(GLuint, b, D1),
+    AROS_LHA(GLenum, c, D2),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    GLenum _return = mglObjectPurgeableAPPLE(a, b, c);
+
+    RESTORE_REG
+
+    return _return;
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH3(GLenum, glObjectUnpurgeableAPPLE,
+    AROS_LHA(GLenum, a, D0),
+    AROS_LHA(GLuint, b, D1),
+    AROS_LHA(GLenum, c, D2),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    GLenum _return = mglObjectUnpurgeableAPPLE(a, b, c);
+
+    RESTORE_REG
+
+    return _return;
+
+    AROS_LIBFUNC_EXIT
+}
+
+AROS_LH4(void, glGetObjectParameterivAPPLE,
+    AROS_LHA(GLenum, a, D0),
+    AROS_LHA(GLuint, b, D1),
+    AROS_LHA(GLenum, c, D2),
+    AROS_LHA(GLint *, d, A0),
+    struct Library *, MesaBase, 0, Mesa)
+{
+    AROS_LIBFUNC_INIT
+
+    SAVE_REG
+
+    PUT_MESABASE_IN_REG
+
+    mglGetObjectParameterivAPPLE(a, b, c, d);
+
+    RESTORE_REG
+
+    AROS_LIBFUNC_EXIT
+}
+

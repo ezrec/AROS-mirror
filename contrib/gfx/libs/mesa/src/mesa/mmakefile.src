@@ -35,6 +35,24 @@ AROS_DRIVER_SOURCES = \
             drivers/aros/aros_swrast_functions \
             drivers/aros/aros_visual_functions
 
+GLSL_SOURCES = \
+            ../glsl/cl/sl_cl_parse \
+            ../glsl/pp/sl_pp_context \
+            ../glsl/pp/sl_pp_define \
+            ../glsl/pp/sl_pp_dict \
+            ../glsl/pp/sl_pp_error \
+            ../glsl/pp/sl_pp_expression \
+            ../glsl/pp/sl_pp_extension \
+            ../glsl/pp/sl_pp_if \
+            ../glsl/pp/sl_pp_line \
+            ../glsl/pp/sl_pp_macro \
+            ../glsl/pp/sl_pp_pragma \
+            ../glsl/pp/sl_pp_process \
+            ../glsl/pp/sl_pp_purify \
+            ../glsl/pp/sl_pp_token \
+            ../glsl/pp/sl_pp_token_util \
+            ../glsl/pp/sl_pp_version \
+
 GALLIUM_SUBPATH = ../gallium
 
 ifeq ($(AROS_TARGET_CPU), i386)
@@ -84,12 +102,12 @@ LIB_MESAHIDD_SOURCES = \
             $(MESA_GALLIUM_SOURCES:.c=) \
             $(GLAPI_SOURCES:.c=) \
             $(addprefix $(GALLIUM_SUBPATH)/,$(AROS_STATE_TRACKER_HIDD_SOURCES)) \
+            $(GLSL_SOURCES) \
 
 %build_module mmake=mesa-mesahidd-module \
     modname=mesa modtype=library linklibname=GL conffile=arosmesa.conf linklibfiles="arosmesa_getprocaddress" \
     files="$(SHARED_LIB_SOURCES) $(LIB_MESAHIDD_SOURCES)" objdir=$(GENDIR)/$(CURDIR)/mesa-mesahidd-module \
     uselibs="galliumauxiliary rom"
-
 
 #
 #   mesa.library which uses classing AROS driver

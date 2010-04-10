@@ -831,18 +831,76 @@ st_translate_mesa_program(
     * Declare input attributes.
     */
    if (procType == TGSI_PROCESSOR_FRAGMENT) {
+      struct gl_fragment_program* fp = (struct gl_fragment_program*)program;
       for (i = 0; i < numInputs; i++) {
-         t->inputs[i] = ureg_DECL_fs_input(ureg,
-                                           inputSemanticName[i],
-                                           inputSemanticIndex[i],
-                                           interpMode[i]);
+         if (program->InputFlags[0] & PROG_PARAM_BIT_CYL_WRAP) {
+            t->inputs[i] = ureg_DECL_fs_input_cyl(ureg,
+                                                  inputSemanticName[i],
+                                                  inputSemanticIndex[i],
+                                                  interpMode[i],
+                                                  TGSI_CYLINDRICAL_WRAP_X);
+         }
+         else {
+            t->inputs[i] = ureg_DECL_fs_input(ureg,
+                                              inputSemanticName[i],
+                                              inputSemanticIndex[i],
+                                              interpMode[i]);
+         }
       }
 
       if (program->InputsRead & FRAG_BIT_WPOS) {
          /* Must do this after setting up t->inputs, and before
           * emitting constant references, below:
           */
-         emit_inverted_wpos( t, program );
+         struct pipe_screen* pscreen = st_context(ctx)->pipe->screen;
+         boolean invert = FALSE;
+
+         if (fp->OriginUpperLeft) {
+            if (pscreen->get_param(pscreen, PIPE_CAP_TGSI_FS_COORD_ORIGIN_UPPER_LEFT)) {
+            }
+            else if (pscreen->get_param(pscreen, PIPE_CAP_TGSI_FS_COORD_ORIGIN_LOWER_LEFT)) {
+               ureg_property_fs_coord_origin(ureg, TGSI_FS_COORD_ORIGIN_LOWER_LEFT);
+               invert = TRUE;
+            }
+            else
+               assert(0);
+         }
+         else {
+            if (pscreen->get_param(pscreen, PIPE_CAP_TGSI_FS_COORD_ORIGIN_LOWER_LEFT))
+               ureg_property_fs_coord_origin(ureg, TGSI_FS_COORD_ORIGIN_LOWER_LEFT);
+            else if (pscreen->get_param(pscreen, PIPE_CAP_TGSI_FS_COORD_ORIGIN_UPPER_LEFT))
+               invert = TRUE;
+            else
+               assert(0);
+         }
+
+         if (fp->PixelCenterInteger) {
+            if (pscreen->get_param(pscreen, PIPE_CAP_TGSI_FS_COORD_PIXEL_CENTER_INTEGER))
+               ureg_property_fs_coord_pixel_center(ureg, TGSI_FS_COORD_PIXEL_CENTER_INTEGER);
+            else if (pscreen->get_param(pscreen, PIPE_CAP_TGSI_FS_COORD_PIXEL_CENTER_HALF_INTEGER))
+               emit_adjusted_wpos(t, program, invert ? 0.5f : -0.5f);
+            else
+               assert(0);
+         }
+         else {
+            if (pscreen->get_param(pscreen, PIPE_CAP_TGSI_FS_COORD_PIXEL_CENTER_HALF_INTEGER)) {
+            }
+            else if (pscreen->get_param(pscreen, PIPE_CAP_TGSI_FS_COORD_PIXEL_CENTER_INTEGER)) {
+               ureg_property_fs_coord_pixel_center(ureg, TGSI_FS_COORD_PIXEL_CENTER_INTEGER);
+               emit_adjusted_wpos(t, program, invert ? -0.5f : 0.5f);
+            }
+            else
+               assert(0);
+         }
+
+         /* we invert after adjustment so that we avoid the MOV to temporary,
+          * and reuse the adjustment ADD instead */
+         if (invert)
+            emit_inverted_wpos(t, program);
+      }
+
+      if (program->InputsRead & FRAG_BIT_FACE) {
+         emit_face_var( t, program );
       }
 
       /*
@@ -878,7 +936,24 @@ st_translate_mesa_program(
          t->outputs[i] = ureg_DECL_output( ureg,
                                            outputSemanticName[i],
                                            outputSemanticIndex[i] );
+         if ((outputSemanticName[i] == TGSI_SEMANTIC_PSIZE) && program->Id) {
+            static const gl_state_index pointSizeClampState[STATE_LENGTH]
+               = { STATE_INTERNAL, STATE_POINT_SIZE_IMPL_CLAMP, 0, 0, 0 };
+               /* XXX: note we are modifying the incoming shader here!  Need to
+               * do this before emitting the constant decls below, or this
+               * will be missed:
+               */
+            unsigned pointSizeClampConst = _mesa_add_state_reference(program->Parameters,
+                                                                     pointSizeClampState);
+            struct ureg_dst psizregtemp = ureg_DECL_temporary( ureg );
+            t->pointSizeConst = ureg_DECL_constant( ureg, pointSizeClampConst );
+            t->psizregreal = t->outputs[i];
+            t->psizoutindex = i;
+            t->outputs[i] = psizregtemp;
+         }
       }
+      if (passthrough_edgeflags)
+         emit_edgeflags( t, program );
    }
 
    /* Declare address register.
@@ -980,7 +1055,7 @@ out:
 
 
 /**
- * Tokens cannot be free with _mesa_free otherwise the builtin gallium
+ * Tokens cannot be free with free otherwise the builtin gallium
  * malloc debugging will get confused.
  */
 void

@@ -15,6 +15,7 @@ MAIN_SOURCES = \
 	main/clear.c \
 	main/clip.c \
 	main/colortab.c \
+	main/condrender.c \
 	main/context.c \
 	main/convolve.c \
 	main/cpuinfo.c \
@@ -80,13 +81,15 @@ MAIN_SOURCES = \
 	main/texstate.c \
 	main/texstore.c \
 	main/varray.c \
+	main/version.c \
 	main/viewport.c \
 	main/vtxfmt.c
 
 GLAPI_SOURCES = \
-	main/dispatch.c \
 	glapi/glapi.c \
+	glapi/glapi_dispatch.c \
 	glapi/glapi_getproc.c \
+	glapi/glapi_nop.c \
 	glapi/glthread.c
 
 MATH_SOURCES = \
@@ -217,7 +220,6 @@ SHADER_SOURCES = \
 	shader/arbprogparse.c \
 	shader/arbprogram.c \
 	shader/atifragshader.c \
-	shader/grammar/grammar_mesa.c \
 	shader/hash_table.c \
 	shader/lex.yy.c \
 	shader/nvfragparse.c \
@@ -254,7 +256,6 @@ SLANG_SOURCES =	\
 	shader/slang/slang_link.c	\
 	shader/slang/slang_log.c	\
 	shader/slang/slang_mem.c	\
-	shader/slang/slang_preprocess.c	\
 	shader/slang/slang_print.c	\
 	shader/slang/slang_simplify.c	\
 	shader/slang/slang_storage.c	\
@@ -363,6 +364,12 @@ GLAPI_OBJECTS = \
 
 COMMON_DRIVER_OBJECTS = $(COMMON_DRIVER_SOURCES:.c=.o)
 
+
+### Other archives/libraries
+
+GLSL_LIBS = \
+	$(TOP)/src/glsl/pp/libglslpp.a \
+	$(TOP)/src/glsl/cl/libglslcl.a
 
 
 ### Include directories

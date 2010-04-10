@@ -121,7 +121,7 @@ st_prepare_vertex_program(struct st_context *st,
    /* Compute mapping of vertex program outputs to slots.
     */
    for (attr = 0; attr < VERT_RESULT_MAX; attr++) {
-      if ((stvp->Base.Base.OutputsWritten & (1 << attr)) == 0) {
+      if ((stvp->Base.Base.OutputsWritten & BITFIELD64_BIT(attr)) == 0) {
          stvp->result_to_output[attr] = ~0;
       }
       else {
@@ -205,8 +205,10 @@ st_translate_vertex_program(struct st_context *st,
    unsigned num_outputs;
 
    ureg = ureg_create( TGSI_PROCESSOR_VERTEX );
-   if (ureg == NULL)
+   if (ureg == NULL) {
+      FREE(vpv);
       return NULL;
+   }
 
    vpv->num_inputs = stvp->num_inputs;
    num_outputs = stvp->num_outputs;
@@ -386,7 +388,7 @@ st_translate_fragment_program(struct st_context *st,
       GLbitfield64 outputsWritten = stfp->Base.Base.OutputsWritten;
 
       /* if z is written, emit that first */
-      if (outputsWritten & (1 << FRAG_RESULT_DEPTH)) {
+      if (outputsWritten & BITFIELD64_BIT(FRAG_RESULT_DEPTH)) {
          fs_output_semantic_name[fs_num_outputs] = TGSI_SEMANTIC_POSITION;
          fs_output_semantic_index[fs_num_outputs] = 0;
          outputMapping[FRAG_RESULT_DEPTH] = fs_num_outputs;
@@ -396,7 +398,7 @@ st_translate_fragment_program(struct st_context *st,
 
       /* handle remaning outputs (color) */
       for (attr = 0; attr < FRAG_RESULT_MAX; attr++) {
-         if (outputsWritten & (1 << attr)) {
+         if (outputsWritten & BITFIELD64_BIT(attr)) {
             switch (attr) {
             case FRAG_RESULT_DEPTH:
                /* handled above */

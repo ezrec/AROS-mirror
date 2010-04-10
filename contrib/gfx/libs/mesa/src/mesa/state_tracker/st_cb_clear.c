@@ -62,11 +62,9 @@ st_init_clear(struct st_context *st)
 {
    struct pipe_context *pipe = st->pipe;
 
-   memset(&st->clear.raster, 0, sizeof(st->clear.raster));
-   st->clear.raster.gl_rasterization_rules = 1;
+   memset(&st->clear, 0, sizeof(st->clear));
 
-   /* rasterizer state: bypass vertex shader, clipping and viewport */
-   st->clear.raster.bypass_vs_clip_and_viewport = 1;
+   st->clear.raster.gl_rasterization_rules = 1;
 
    /* fragment shader state: color pass-through program */
    st->clear.fs =
@@ -104,9 +102,7 @@ st_destroy_clear(struct st_context *st)
 
 /**
  * Draw a screen-aligned quadrilateral.
- * Coords are window coords with y=0=bottom.  These will be passed
- * through unmodified to the rasterizer as we have set
- * rasterizer->bypass_vs_clip_and_viewport.
+ * Coords are clip coords with y=0=bottom.
  */
 static void
 draw_quad(GLcontext *ctx,
@@ -192,18 +188,13 @@ clear_with_quad(GLcontext *ctx,
                 GLboolean color, GLboolean depth, GLboolean stencil)
 {
    struct st_context *st = ctx->st;
-   const GLfloat x0 = (GLfloat) ctx->DrawBuffer->_Xmin;
-   const GLfloat x1 = (GLfloat) ctx->DrawBuffer->_Xmax;
-   GLfloat y0, y1;
-
-   if (st_fb_orientation(ctx->DrawBuffer) == Y_0_TOP) {
-      y0 = (GLfloat) (ctx->DrawBuffer->Height - ctx->DrawBuffer->_Ymax);
-      y1 = (GLfloat) (ctx->DrawBuffer->Height - ctx->DrawBuffer->_Ymin);
-   }
-   else {
-      y0 = (GLfloat) ctx->DrawBuffer->_Ymin;
-      y1 = (GLfloat) ctx->DrawBuffer->_Ymax;
-   }
+   const struct gl_framebuffer *fb = ctx->DrawBuffer;
+   const GLfloat fb_width = (GLfloat) fb->Width;
+   const GLfloat fb_height = (GLfloat) fb->Height;
+   const GLfloat x0 = (GLfloat) ctx->DrawBuffer->_Xmin / fb_width * 2.0f - 1.0f;
+   const GLfloat x1 = (GLfloat) ctx->DrawBuffer->_Xmax / fb_width * 2.0f - 1.0f;
+   const GLfloat y0 = (GLfloat) ctx->DrawBuffer->_Ymin / fb_height * 2.0f - 1.0f;
+   const GLfloat y1 = (GLfloat) ctx->DrawBuffer->_Ymax / fb_height * 2.0f - 1.0f;
 
    /*
    printf("%s %s%s%s %f,%f %f,%f\n", __FUNCTION__, 
@@ -218,6 +209,8 @@ clear_with_quad(GLcontext *ctx,
    cso_save_stencil_ref(st->cso_context);
    cso_save_depth_stencil_alpha(st->cso_context);
    cso_save_rasterizer(st->cso_context);
+   cso_save_viewport(st->cso_context);
+   cso_save_clip(st->cso_context);
    cso_save_fragment_shader(st->cso_context);
    cso_save_vertex_shader(st->cso_context);
 
@@ -229,15 +222,14 @@ clear_with_quad(GLcontext *ctx,
       blend.rt[0].alpha_src_factor = PIPE_BLENDFACTOR_ONE;
       blend.rt[0].rgb_dst_factor = PIPE_BLENDFACTOR_ZERO;
       blend.rt[0].alpha_dst_factor = PIPE_BLENDFACTOR_ZERO;
-
       if (color) {
-         if (ctx->Color.ColorMask[0])
+         if (ctx->Color.ColorMask[0][0])
             blend.rt[0].colormask |= PIPE_MASK_R;
-         if (ctx->Color.ColorMask[1])
+         if (ctx->Color.ColorMask[0][1])
             blend.rt[0].colormask |= PIPE_MASK_G;
-         if (ctx->Color.ColorMask[2])
+         if (ctx->Color.ColorMask[0][2])
             blend.rt[0].colormask |= PIPE_MASK_B;
-         if (ctx->Color.ColorMask[3])
+         if (ctx->Color.ColorMask[0][3])
             blend.rt[0].colormask |= PIPE_MASK_A;
          if (st->ctx->Color.DitherFlag)
             blend.dither = 1;
@@ -274,6 +266,22 @@ clear_with_quad(GLcontext *ctx,
 
    cso_set_rasterizer(st->cso_context, &st->clear.raster);
 
+   /* viewport state: viewport matching window dims */
+   {
+      const GLboolean invert = (st_fb_orientation(fb) == Y_0_TOP);
+      struct pipe_viewport_state vp;
+      vp.scale[0] = 0.5f * fb_width;
+      vp.scale[1] = fb_height * (invert ? -0.5f : 0.5f);
+      vp.scale[2] = 1.0f;
+      vp.scale[3] = 1.0f;
+      vp.translate[0] = 0.5f * fb_width;
+      vp.translate[1] = 0.5f * fb_height;
+      vp.translate[2] = 0.0f;
+      vp.translate[3] = 0.0f;
+      cso_set_viewport(st->cso_context, &vp);
+   }
+
+   cso_set_clip(st->cso_context, &st->clear.clip);
    cso_set_fragment_shader_handle(st->cso_context, st->clear.fs);
    cso_set_vertex_shader_handle(st->cso_context, st->clear.vs);
 
@@ -285,9 +293,10 @@ clear_with_quad(GLcontext *ctx,
    cso_restore_stencil_ref(st->cso_context);
    cso_restore_depth_stencil_alpha(st->cso_context);
    cso_restore_rasterizer(st->cso_context);
+   cso_restore_viewport(st->cso_context);
+   cso_restore_clip(st->cso_context);
    cso_restore_fragment_shader(st->cso_context);
    cso_restore_vertex_shader(st->cso_context);
-
 }
 
 
@@ -304,10 +313,10 @@ check_clear_color_with_quad(GLcontext *ctx, struct gl_renderbuffer *rb)
         ctx->Scissor.Height < rb->Height))
       return TRUE;
 
-   if (!ctx->Color.ColorMask[0] ||
-       !ctx->Color.ColorMask[1] ||
-       !ctx->Color.ColorMask[2] ||
-       !ctx->Color.ColorMask[3])
+   if (!ctx->Color.ColorMask[0][0] ||
+       !ctx->Color.ColorMask[0][1] ||
+       !ctx->Color.ColorMask[0][2] ||
+       !ctx->Color.ColorMask[0][3])
       return TRUE;
 
    return FALSE;
