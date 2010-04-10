@@ -148,10 +148,10 @@ HiddNouveauGetScreenSurface(struct pipe_screen * screen)
     switch(bpp)
     {
         case(16):
-            templat.format = PIPE_FORMAT_R5G6B5_UNORM;
+            templat.format = PIPE_FORMAT_B5G6R5_UNORM;
             break;
         case(32):
-            templat.format = PIPE_FORMAT_A8R8G8B8_UNORM;
+            templat.format = PIPE_FORMAT_B8G8R8A8_UNORM;
             break;
         default:
             /* Fail */

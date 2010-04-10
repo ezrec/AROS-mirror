@@ -221,7 +221,7 @@ fail:
 
 VOID METHOD(GALLIUMSOFTPIPEDRIVER, Hidd_GalliumBaseDriver, QueryDepthStencil)
 {
-    *msg->depthbits = 16;
+    *msg->depthbits = 24;
     *msg->stencilbits = 8;
 }
 
