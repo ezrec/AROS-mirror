@@ -1,6 +1,6 @@
-diff -ur -x .svn /data/deadwood/source/mesa-f7aea808a4724a9e50bf3afa5a1bf547d0da5d65/src/gallium/auxiliary/os/os_time.c gallium/auxiliary/os/os_time.c
---- /data/deadwood/source/mesa-f7aea808a4724a9e50bf3afa5a1bf547d0da5d65/src/gallium/auxiliary/os/os_time.c	2010-02-16 18:37:43.000000000 +0100
-+++ gallium/auxiliary/os/os_time.c	2010-02-21 09:26:25.000000000 +0100
+diff -ur -x.svn /data/deadwood/source/Mesa-7.8.1-staging/src/gallium/auxiliary/os/os_time.c ./gallium/auxiliary/os/os_time.c
+--- /data/deadwood/source/Mesa-7.8.1-staging/src/gallium/auxiliary/os/os_time.c	2010-04-04 17:46:26.000000000 +0200
++++ ./gallium/auxiliary/os/os_time.c	2010-04-08 19:42:16.000000000 +0200
 @@ -37,7 +37,7 @@
  
  #if !defined(PIPE_OS_EMBEDDED)
@@ -19,10 +19,9 @@ diff -ur -x .svn /data/deadwood/source/mesa-f7aea808a4724a9e50bf3afa5a1bf547d0da
  
     struct timeval tv;
     gettimeofday(&tv, NULL);
-Only in /data/deadwood/source/mesa-f7aea808a4724a9e50bf3afa5a1bf547d0da5d65/src/gallium/auxiliary/util: .gitignore
-diff -ur -x .svn /data/deadwood/source/mesa-f7aea808a4724a9e50bf3afa5a1bf547d0da5d65/src/gallium/auxiliary/util/u_math.c gallium/auxiliary/util/u_math.c
---- /data/deadwood/source/mesa-f7aea808a4724a9e50bf3afa5a1bf547d0da5d65/src/gallium/auxiliary/util/u_math.c	2010-02-16 18:37:43.000000000 +0100
-+++ gallium/auxiliary/util/u_math.c	2010-02-21 09:31:09.000000000 +0100
+diff -ur -x.svn /data/deadwood/source/Mesa-7.8.1-staging/src/gallium/auxiliary/util/u_math.c ./gallium/auxiliary/util/u_math.c
+--- /data/deadwood/source/Mesa-7.8.1-staging/src/gallium/auxiliary/util/u_math.c	2010-02-04 16:10:40.000000000 +0100
++++ ./gallium/auxiliary/util/u_math.c	2010-04-08 19:42:43.000000000 +0200
 @@ -42,6 +42,13 @@
        pow2_table[i] = (float) pow(2.0, (i - POW2_TABLE_OFFSET) / POW2_TABLE_SCALE);
  }
@@ -37,9 +36,9 @@ diff -ur -x .svn /data/deadwood/source/mesa-f7aea808a4724a9e50bf3afa5a1bf547d0da
  
  /** log2(x), for x in [1.0, 2.0) */
  float log2_table[LOG2_TABLE_SIZE];
-diff -ur -x .svn /data/deadwood/source/mesa-f7aea808a4724a9e50bf3afa5a1bf547d0da5d65/src/gallium/auxiliary/util/u_math.h gallium/auxiliary/util/u_math.h
---- /data/deadwood/source/mesa-f7aea808a4724a9e50bf3afa5a1bf547d0da5d65/src/gallium/auxiliary/util/u_math.h	2010-02-16 18:37:43.000000000 +0100
-+++ gallium/auxiliary/util/u_math.h	2010-02-21 09:30:01.000000000 +0100
+diff -ur -x.svn /data/deadwood/source/Mesa-7.8.1-staging/src/gallium/auxiliary/util/u_math.h ./gallium/auxiliary/util/u_math.h
+--- /data/deadwood/source/Mesa-7.8.1-staging/src/gallium/auxiliary/util/u_math.h	2010-04-04 17:46:26.000000000 +0200
++++ ./gallium/auxiliary/util/u_math.h	2010-04-08 19:43:43.000000000 +0200
 @@ -392,6 +392,8 @@
  }
  #elif defined(__MINGW32__)
@@ -49,9 +48,9 @@ diff -ur -x .svn /data/deadwood/source/mesa-f7aea808a4724a9e50bf3afa5a1bf547d0da
  #endif
  
  #ifdef __MINGW32__
-diff -ur -x .svn /data/deadwood/source/mesa-f7aea808a4724a9e50bf3afa5a1bf547d0da5d65/src/gallium/drivers/nouveau/nouveau_screen.c gallium/drivers/nouveau/nouveau_screen.c
---- /data/deadwood/source/mesa-f7aea808a4724a9e50bf3afa5a1bf547d0da5d65/src/gallium/drivers/nouveau/nouveau_screen.c	2010-02-16 18:37:43.000000000 +0100
-+++ gallium/drivers/nouveau/nouveau_screen.c	2010-02-24 19:54:44.000000000 +0100
+diff -ur -x.svn /data/deadwood/source/Mesa-7.8.1-staging/src/gallium/drivers/nouveau/nouveau_screen.c ./gallium/drivers/nouveau/nouveau_screen.c
+--- /data/deadwood/source/Mesa-7.8.1-staging/src/gallium/drivers/nouveau/nouveau_screen.c	2010-04-05 10:05:16.000000000 +0200
++++ ./gallium/drivers/nouveau/nouveau_screen.c	2010-04-08 19:45:01.000000000 +0200
 @@ -61,6 +61,20 @@
  	if (usage & NOUVEAU_BUFFER_USAGE_TRANSFER)
  		flags |= NOUVEAU_BO_GART;
@@ -81,9 +80,9 @@ diff -ur -x .svn /data/deadwood/source/mesa-f7aea808a4724a9e50bf3afa5a1bf547d0da
  
  	if (usage & PIPE_BUFFER_USAGE_PIXEL) {
  		if (usage & NOUVEAU_BUFFER_USAGE_TEXTURE)
-diff -ur -x .svn /data/deadwood/source/mesa-f7aea808a4724a9e50bf3afa5a1bf547d0da5d65/src/gallium/include/pipe/p_config.h gallium/include/pipe/p_config.h
---- /data/deadwood/source/mesa-f7aea808a4724a9e50bf3afa5a1bf547d0da5d65/src/gallium/include/pipe/p_config.h	2010-02-16 18:37:43.000000000 +0100
-+++ gallium/include/pipe/p_config.h	2010-02-21 09:17:02.000000000 +0100
+diff -ur -x.svn /data/deadwood/source/Mesa-7.8.1-staging/src/gallium/include/pipe/p_config.h ./gallium/include/pipe/p_config.h
+--- /data/deadwood/source/Mesa-7.8.1-staging/src/gallium/include/pipe/p_config.h	2010-04-04 17:46:26.000000000 +0200
++++ ./gallium/include/pipe/p_config.h	2010-04-08 19:38:14.000000000 +0200
 @@ -165,6 +165,10 @@
  #define PIPE_OS_UNIX
  #endif
