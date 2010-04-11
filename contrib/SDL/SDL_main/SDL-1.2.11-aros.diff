@@ -1,6 +1,6 @@
 diff -ruN SDL-1.2.11/configure SDL-1.2.11-aros/configure
 --- SDL-1.2.11/configure	2006-06-27 06:48:54.000000000 +0200
-+++ SDL-1.2.11-aros/configure	2010-01-13 20:08:31.000000000 +0100
++++ SDL-1.2.11-aros/configure	2010-04-03 10:03:45.000000000 +0200
 @@ -485,6 +485,7 @@
  verbose=
  x_includes=NONE
@@ -152,7 +152,7 @@ diff -ruN SDL-1.2.11/include/SDL_config.h SDL-1.2.11-aros/include/SDL_config.h
 -#endif /* _SDL_config_h */
 diff -ruN SDL-1.2.11/Makefile.in SDL-1.2.11-aros/Makefile.in
 --- SDL-1.2.11/Makefile.in	2006-06-20 07:49:00.000000000 +0200
-+++ SDL-1.2.11-aros/Makefile.in	2010-01-13 20:08:31.000000000 +0100
++++ SDL-1.2.11-aros/Makefile.in	2010-04-03 10:03:45.000000000 +0200
 @@ -30,7 +30,7 @@
  AR	= @AR@
  RANLIB	= @RANLIB@
@@ -208,7 +208,7 @@ diff -ruN SDL-1.2.11/Makefile.in SDL-1.2.11-aros/Makefile.in
  	rm -f $(datadir)/aclocal/sdl.m4
 diff -ruN SDL-1.2.11/src/audio/amigaos/mydebug.h SDL-1.2.11-aros/src/audio/amigaos/mydebug.h
 --- SDL-1.2.11/src/audio/amigaos/mydebug.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.11-aros/src/audio/amigaos/mydebug.h	2010-01-13 20:08:31.000000000 +0100
++++ SDL-1.2.11-aros/src/audio/amigaos/mydebug.h	2010-04-03 10:03:45.000000000 +0200
 @@ -0,0 +1,14 @@
 +#ifndef MYDEBUG
 +
@@ -226,7 +226,7 @@ diff -ruN SDL-1.2.11/src/audio/amigaos/mydebug.h SDL-1.2.11-aros/src/audio/amiga
 +#endif
 diff -ruN SDL-1.2.11/src/audio/amigaos/SDL_ahiaudio.c SDL-1.2.11-aros/src/audio/amigaos/SDL_ahiaudio.c
 --- SDL-1.2.11/src/audio/amigaos/SDL_ahiaudio.c	2006-05-01 10:02:41.000000000 +0200
-+++ SDL-1.2.11-aros/src/audio/amigaos/SDL_ahiaudio.c	2010-01-13 20:08:31.000000000 +0100
++++ SDL-1.2.11-aros/src/audio/amigaos/SDL_ahiaudio.c	2010-04-03 10:03:45.000000000 +0200
 @@ -114,7 +114,7 @@
  }
  
@@ -250,7 +250,7 @@ diff -ruN SDL-1.2.11/src/audio/amigaos/SDL_ahiaudio.c SDL-1.2.11-aros/src/audio/
  				this->hidden->type = AHIST_M16S;
 diff -ruN SDL-1.2.11/src/audio/amigaos/SDL_ahiaudio.h SDL-1.2.11-aros/src/audio/amigaos/SDL_ahiaudio.h
 --- SDL-1.2.11/src/audio/amigaos/SDL_ahiaudio.h	2006-05-01 10:02:41.000000000 +0200
-+++ SDL-1.2.11-aros/src/audio/amigaos/SDL_ahiaudio.h	2010-01-13 20:08:31.000000000 +0100
++++ SDL-1.2.11-aros/src/audio/amigaos/SDL_ahiaudio.h	2010-04-03 10:03:45.000000000 +0200
 @@ -26,7 +26,7 @@
  
  #include <exec/exec.h>
@@ -262,7 +262,7 @@ diff -ruN SDL-1.2.11/src/audio/amigaos/SDL_ahiaudio.h SDL-1.2.11-aros/src/audio/
  #include <inline/exec.h>
 diff -ruN SDL-1.2.11/src/audio/SDL_audio.c SDL-1.2.11-aros/src/audio/SDL_audio.c
 --- SDL-1.2.11/src/audio/SDL_audio.c	2006-05-09 10:47:05.000000000 +0200
-+++ SDL-1.2.11-aros/src/audio/SDL_audio.c	2010-01-13 20:08:31.000000000 +0100
++++ SDL-1.2.11-aros/src/audio/SDL_audio.c	2010-04-03 10:03:45.000000000 +0200
 @@ -116,6 +116,7 @@
  void SDL_AudioQuit(void);
  
@@ -273,7 +273,7 @@ diff -ruN SDL-1.2.11/src/audio/SDL_audio.c SDL-1.2.11-aros/src/audio/SDL_audio.c
  
 diff -ruN SDL-1.2.11/src/joystick/amigaos/mydebug.h SDL-1.2.11-aros/src/joystick/amigaos/mydebug.h
 --- SDL-1.2.11/src/joystick/amigaos/mydebug.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.11-aros/src/joystick/amigaos/mydebug.h	2010-01-13 20:08:31.000000000 +0100
++++ SDL-1.2.11-aros/src/joystick/amigaos/mydebug.h	2010-04-03 10:03:45.000000000 +0200
 @@ -0,0 +1,14 @@
 +#ifndef MYDEBUG
 +
@@ -291,7 +291,7 @@ diff -ruN SDL-1.2.11/src/joystick/amigaos/mydebug.h SDL-1.2.11-aros/src/joystick
 +#endif
 diff -ruN SDL-1.2.11/src/joystick/amigaos/SDL_sysjoystick.c SDL-1.2.11-aros/src/joystick/amigaos/SDL_sysjoystick.c
 --- SDL-1.2.11/src/joystick/amigaos/SDL_sysjoystick.c	2006-05-01 10:02:39.000000000 +0200
-+++ SDL-1.2.11-aros/src/joystick/amigaos/SDL_sysjoystick.c	2010-01-14 21:42:13.000000000 +0100
++++ SDL-1.2.11-aros/src/joystick/amigaos/SDL_sysjoystick.c	2010-04-03 10:03:45.000000000 +0200
 @@ -26,7 +26,8 @@
  /* This is the system specific header for the SDL joystick API */
  
@@ -435,7 +435,7 @@ diff -ruN SDL-1.2.11/src/joystick/amigaos/SDL_sysjoystick.c SDL-1.2.11-aros/src/
  		for(i=0;i<joystick->nbuttons;i++)
 diff -ruN SDL-1.2.11/src/thread/amigaos/mydebug.h SDL-1.2.11-aros/src/thread/amigaos/mydebug.h
 --- SDL-1.2.11/src/thread/amigaos/mydebug.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.11-aros/src/thread/amigaos/mydebug.h	2010-01-13 20:08:31.000000000 +0100
++++ SDL-1.2.11-aros/src/thread/amigaos/mydebug.h	2010-04-03 10:03:45.000000000 +0200
 @@ -0,0 +1,14 @@
 +#ifndef MYDEBUG
 +
@@ -453,7 +453,7 @@ diff -ruN SDL-1.2.11/src/thread/amigaos/mydebug.h SDL-1.2.11-aros/src/thread/ami
 +#endif
 diff -ruN SDL-1.2.11/src/thread/amigaos/SDL_sysmutex.c SDL-1.2.11-aros/src/thread/amigaos/SDL_sysmutex.c
 --- SDL-1.2.11/src/thread/amigaos/SDL_sysmutex.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.11-aros/src/thread/amigaos/SDL_sysmutex.c	2010-01-13 20:08:31.000000000 +0100
++++ SDL-1.2.11-aros/src/thread/amigaos/SDL_sysmutex.c	2010-04-03 10:03:45.000000000 +0200
 @@ -0,0 +1,130 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -587,7 +587,7 @@ diff -ruN SDL-1.2.11/src/thread/amigaos/SDL_sysmutex.c SDL-1.2.11-aros/src/threa
 +}
 diff -ruN SDL-1.2.11/src/thread/amigaos/SDL_systhread.c SDL-1.2.11-aros/src/thread/amigaos/SDL_systhread.c
 --- SDL-1.2.11/src/thread/amigaos/SDL_systhread.c	2006-05-01 10:02:48.000000000 +0200
-+++ SDL-1.2.11-aros/src/thread/amigaos/SDL_systhread.c	2010-01-13 20:08:31.000000000 +0100
++++ SDL-1.2.11-aros/src/thread/amigaos/SDL_systhread.c	2010-04-03 10:03:45.000000000 +0200
 @@ -40,7 +40,7 @@
  
  #if defined(__SASC) && !defined(__PPC__) 
@@ -608,7 +608,7 @@ diff -ruN SDL-1.2.11/src/thread/amigaos/SDL_systhread.c SDL-1.2.11-aros/src/thre
  					TAG_DONE);
 diff -ruN SDL-1.2.11/src/thread/amigaos/SDL_systhread_c.h SDL-1.2.11-aros/src/thread/amigaos/SDL_systhread_c.h
 --- SDL-1.2.11/src/thread/amigaos/SDL_systhread_c.h	2006-05-01 10:02:48.000000000 +0200
-+++ SDL-1.2.11-aros/src/thread/amigaos/SDL_systhread_c.h	2010-01-13 20:08:31.000000000 +0100
++++ SDL-1.2.11-aros/src/thread/amigaos/SDL_systhread_c.h	2010-04-03 10:03:45.000000000 +0200
 @@ -24,7 +24,7 @@
  #include <exec/exec.h>
  #include <dos/dos.h>
@@ -620,7 +620,7 @@ diff -ruN SDL-1.2.11/src/thread/amigaos/SDL_systhread_c.h SDL-1.2.11-aros/src/th
  #else
 diff -ruN SDL-1.2.11/src/timer/amigaos/mydebug.h SDL-1.2.11-aros/src/timer/amigaos/mydebug.h
 --- SDL-1.2.11/src/timer/amigaos/mydebug.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.11-aros/src/timer/amigaos/mydebug.h	2010-01-13 20:08:31.000000000 +0100
++++ SDL-1.2.11-aros/src/timer/amigaos/mydebug.h	2010-04-03 10:03:45.000000000 +0200
 @@ -0,0 +1,14 @@
 +#ifndef MYDEBUG
 +
@@ -638,7 +638,7 @@ diff -ruN SDL-1.2.11/src/timer/amigaos/mydebug.h SDL-1.2.11-aros/src/timer/amiga
 +#endif
 diff -ruN SDL-1.2.11/src/timer/amigaos/SDL_systimer.c SDL-1.2.11-aros/src/timer/amigaos/SDL_systimer.c
 --- SDL-1.2.11/src/timer/amigaos/SDL_systimer.c	2006-05-01 10:02:36.000000000 +0200
-+++ SDL-1.2.11-aros/src/timer/amigaos/SDL_systimer.c	2010-01-13 20:08:31.000000000 +0100
++++ SDL-1.2.11-aros/src/timer/amigaos/SDL_systimer.c	2010-04-03 10:03:45.000000000 +0200
 @@ -23,6 +23,9 @@
  
  #ifdef SDL_TIMER_AMIGA
@@ -818,7 +818,7 @@ diff -ruN SDL-1.2.11/src/timer/amigaos/SDL_systimer.c SDL-1.2.11-aros/src/timer/
  	{
 diff -ruN SDL-1.2.11/src/video/cybergfx/mydebug.h SDL-1.2.11-aros/src/video/cybergfx/mydebug.h
 --- SDL-1.2.11/src/video/cybergfx/mydebug.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.11-aros/src/video/cybergfx/mydebug.h	2010-01-13 20:08:31.000000000 +0100
++++ SDL-1.2.11-aros/src/video/cybergfx/mydebug.h	2010-04-03 10:03:45.000000000 +0200
 @@ -0,0 +1,14 @@
 +#ifndef MYDEBUG
 +
@@ -836,7 +836,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/mydebug.h SDL-1.2.11-aros/src/video/cybe
 +#endif
 diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_amigaevents.c SDL-1.2.11-aros/src/video/cybergfx/SDL_amigaevents.c
 --- SDL-1.2.11/src/video/cybergfx/SDL_amigaevents.c	2006-05-01 10:02:46.000000000 +0200
-+++ SDL-1.2.11-aros/src/video/cybergfx/SDL_amigaevents.c	2010-01-13 20:08:31.000000000 +0100
++++ SDL-1.2.11-aros/src/video/cybergfx/SDL_amigaevents.c	2010-04-03 10:03:45.000000000 +0200
 @@ -37,7 +37,7 @@
  
  /* The translation tables from an Amiga keysym to a SDL keysym */
@@ -1017,7 +1017,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_amigaevents.c SDL-1.2.11-aros/src/vi
  #endif
 diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxgl.c SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxgl.c
 --- SDL-1.2.11/src/video/cybergfx/SDL_cgxgl.c	2006-05-01 10:02:46.000000000 +0200
-+++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxgl.c	2010-01-13 20:08:31.000000000 +0100
++++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxgl.c	2010-04-11 14:38:29.000000000 +0200
 @@ -21,32 +21,32 @@
  */
  #include "SDL_config.h"
@@ -1044,13 +1044,18 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxgl.c SDL-1.2.11-aros/src/video/cy
 +	struct Window *win = (struct Window *)SDL_Window;
  
 -	// default config. Always used...
-+	/* default config. Always used... */
- 	attributes[i].ti_Tag = AMA_Window;	attributes[i++].ti_Data = (unsigned long)win;
- 	attributes[i].ti_Tag = AMA_Left;		attributes[i++].ti_Data = 0;
- 	attributes[i].ti_Tag = AMA_Bottom;	attributes[i++].ti_Data = 0;
- 	attributes[i].ti_Tag = AMA_Width;	attributes[i++].ti_Data = win->Width-win->BorderLeft-win->BorderRight;
- 	attributes[i].ti_Tag = AMA_Height;	attributes[i++].ti_Data = win->Height-win->BorderBottom-win->BorderTop;
+-	attributes[i].ti_Tag = AMA_Window;	attributes[i++].ti_Data = (unsigned long)win;
+-	attributes[i].ti_Tag = AMA_Left;		attributes[i++].ti_Data = 0;
+-	attributes[i].ti_Tag = AMA_Bottom;	attributes[i++].ti_Data = 0;
+-	attributes[i].ti_Tag = AMA_Width;	attributes[i++].ti_Data = win->Width-win->BorderLeft-win->BorderRight;
+-	attributes[i].ti_Tag = AMA_Height;	attributes[i++].ti_Data = win->Height-win->BorderBottom-win->BorderTop;
 -	attributes[i].ti_Tag = AMA_DirectRender; attributes[i++].ti_Data = GL_TRUE;
++	/* default config. Always used... */
++	attributes[i].ti_Tag = AMA_Window;	attributes[i++].ti_Data = (IPTR)win;
++	attributes[i].ti_Tag = AMA_Left;	attributes[i++].ti_Data = win->BorderLeft;
++	attributes[i].ti_Tag = AMA_Top;	    attributes[i++].ti_Data = win->BorderTop;
++	attributes[i].ti_Tag = AMA_Right;	attributes[i++].ti_Data = win->BorderRight;
++	attributes[i].ti_Tag = AMA_Bottom;	attributes[i++].ti_Data = win->BorderBottom;
 +	/* attributes[i].ti_Tag = AMA_DirectRender; attributes[i++].ti_Data = GL_TRUE; */ /*NOT SUPPORTED */
  
 -	// double buffer ?
@@ -1086,10 +1091,13 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxgl.c SDL-1.2.11-aros/src/video/cy
  		attributes[i++].ti_Data = GL_TRUE;
  	}
 -	// no accum buffer ?
+-	if ( this->gl_config.accum_red_size   != 0 &&
+-	     this->gl_config.accum_blue_size  != 0 &&
+-	     this->gl_config.accum_green_size != 0 ) {
 +	/* no accum buffer ? */
- 	if ( this->gl_config.accum_red_size   != 0 &&
- 	     this->gl_config.accum_blue_size  != 0 &&
- 	     this->gl_config.accum_green_size != 0 ) {
++	if ( this->gl_config.accum_red_size   == 0 &&
++	     this->gl_config.accum_blue_size  == 0 &&
++	     this->gl_config.accum_green_size == 0 ) {
  		attributes[i].ti_Tag = AMA_NoAccum;
  		attributes[i++].ti_Data = GL_TRUE;
  	}
@@ -1158,7 +1166,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxgl.c SDL-1.2.11-aros/src/video/cy
  
 diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxgl_c.h SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxgl_c.h
 --- SDL-1.2.11/src/video/cybergfx/SDL_cgxgl_c.h	2006-05-01 10:02:46.000000000 +0200
-+++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxgl_c.h	2010-01-13 20:08:31.000000000 +0100
++++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxgl_c.h	2010-04-03 10:03:45.000000000 +0200
 @@ -21,15 +21,14 @@
  */
  #include "SDL_config.h"
@@ -1179,7 +1187,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxgl_c.h SDL-1.2.11-aros/src/video/
  struct SDL_PrivateGLData {
 diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgximage.c SDL-1.2.11-aros/src/video/cybergfx/SDL_cgximage.c
 --- SDL-1.2.11/src/video/cybergfx/SDL_cgximage.c	2006-05-01 10:02:46.000000000 +0200
-+++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgximage.c	2010-01-13 20:08:31.000000000 +0100
++++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgximage.c	2010-04-03 10:03:45.000000000 +0200
 @@ -28,8 +28,15 @@
  #include <kstat.h>
  #endif
@@ -1436,7 +1444,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgximage.c SDL-1.2.11-aros/src/video
  			register unsigned char *src,*dest;
 diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxmodes.c SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxmodes.c
 --- SDL-1.2.11/src/video/cybergfx/SDL_cgxmodes.c	2006-05-01 10:02:46.000000000 +0200
-+++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxmodes.c	2010-01-13 20:08:31.000000000 +0100
++++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxmodes.c	2010-04-03 10:03:45.000000000 +0200
 @@ -208,7 +208,7 @@
      int i;
      for(i = 0; i < this->hidden->nvisuals; i++)
@@ -1448,7 +1456,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxmodes.c SDL-1.2.11-aros/src/video
      return 0;
 diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxvideo.c
 --- SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c	2006-05-01 10:02:46.000000000 +0200
-+++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxvideo.c	2010-01-13 20:08:31.000000000 +0100
++++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxvideo.c	2010-04-11 14:35:24.000000000 +0200
 @@ -53,8 +53,10 @@
  /* CGX driver bootstrap functions */
  
@@ -2031,7 +2039,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  	if ( GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_PIXFMT)==PIXFMT_LUT8 || bpp==8 ) {
  	    int ncolors,i;
  	    D(bug("XPixels palette allocation...\n"));
-@@ -786,38 +761,37 @@
+@@ -786,38 +761,30 @@
  	/* Create (or use) the X11 display window */
  
  	if ( !SDL_windowid ) {
@@ -2042,23 +2050,9 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
 -											WA_IDCMP,IDCMP_RAWKEY|IDCMP_MOUSEBUTTONS|IDCMP_MOUSEMOVE,
 -											WA_CustomScreen,(ULONG)SDL_Display,
 -											TAG_DONE);
-+		if( flags & SDL_FULLSCREEN ) {
-+			SDL_Window = OpenWindowTags(NULL,WA_Width,w,WA_Height,h,
-+					WA_Flags,WFLG_ACTIVATE|WFLG_RMBTRAP|WFLG_BORDERLESS|WFLG_BACKDROP|WFLG_REPORTMOUSE,
-+					WA_IDCMP,IDCMP_RAWKEY|IDCMP_MOUSEBUTTONS|IDCMP_MOUSEMOVE,
-+					WA_CustomScreen,(ULONG)SDL_Display,
-+					TAG_DONE);
- 
+-
 -				D(bug("Opening backdrop window %ldx%ld on display %lx!\n",w,h,SDL_Display));
-+			D(bug("Opening backdrop window %ldx%ld on display %lx!\n",w,h,SDL_Display));
-+		}
-+		else
-+		{
-+			/* Create GimmeZeroZero window when OpenGL is used */
-+			unsigned long gzz = FALSE;
-+			if( flags & SDL_OPENGL ) {
-+				gzz = TRUE;
- 			}
+-			}
 -			else
 -			{
 -				/* Create GimmeZeroZero window when OpenGL is used */
@@ -2066,6 +2060,12 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
 -				if( flags & SDL_OPENGL ) {
 -					gzz = TRUE;
 -				}
++		if( flags & SDL_FULLSCREEN ) {
++			SDL_Window = OpenWindowTags(NULL,WA_Width,w,WA_Height,h,
++					WA_Flags,WFLG_ACTIVATE|WFLG_RMBTRAP|WFLG_BORDERLESS|WFLG_BACKDROP|WFLG_REPORTMOUSE,
++					WA_IDCMP,IDCMP_RAWKEY|IDCMP_MOUSEBUTTONS|IDCMP_MOUSEMOVE,
++					WA_CustomScreen,(ULONG)SDL_Display,
++					TAG_DONE);
  
 -				SDL_Window = OpenWindowTags(NULL,WA_InnerWidth,w,WA_InnerHeight,h,
 -											WA_Flags,WFLG_REPORTMOUSE|WFLG_ACTIVATE|WFLG_RMBTRAP | ((flags&SDL_NOFRAME) ? 0 : (WFLG_DEPTHGADGET|WFLG_CLOSEGADGET|WFLG_DRAGBAR | ((flags&SDL_RESIZABLE) ? WFLG_SIZEGADGET|WFLG_SIZEBBOTTOM : 0))),
@@ -2075,11 +2075,14 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
 -														TAG_DONE);
 -				D(bug("Opening WB window of size: %ldx%ld!\n",w,h));
 -			}
++			D(bug("Opening backdrop window %ldx%ld on display %lx!\n",w,h,SDL_Display));
++		}
++		else
++		{
 +			SDL_Window = OpenWindowTags(NULL,WA_InnerWidth,w,WA_InnerHeight,h,
 +					WA_Flags,WFLG_REPORTMOUSE|WFLG_ACTIVATE|WFLG_RMBTRAP | ((flags&SDL_NOFRAME) ? 0 : (WFLG_DEPTHGADGET|WFLG_CLOSEGADGET|WFLG_DRAGBAR | ((flags&SDL_RESIZABLE) ? WFLG_SIZEGADGET|WFLG_SIZEBBOTTOM : 0))),
 +					WA_IDCMP,IDCMP_RAWKEY|IDCMP_CLOSEWINDOW|IDCMP_MOUSEBUTTONS|IDCMP_NEWSIZE|IDCMP_MOUSEMOVE,
 +					WA_PubScreen,(ULONG)SDL_Display,
-+					WA_GimmeZeroZero, gzz,
 +					TAG_DONE);
 +			D(bug("Opening WB window of size: %ldx%ld!\n",w,h));
 +		}
@@ -2093,7 +2096,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  
  	if(screen->flags & SDL_DOUBLEBUF)
  	{
-@@ -836,15 +810,10 @@
+@@ -836,15 +803,10 @@
  
  	if( !SDL_windowid ) {
  	    CGX_SetSizeHints(this, w, h, flags);
@@ -2111,7 +2114,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  	/* Map them both and go fullscreen, if requested */
  	if ( ! SDL_windowid ) {
  		if ( flags & SDL_FULLSCREEN ) {
-@@ -875,6 +844,8 @@
+@@ -875,6 +837,8 @@
  				screen->flags |= SDL_OPENGL;
  		}
  	}
@@ -2120,7 +2123,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  }
  
  int CGX_ResizeWindow(_THIS,
-@@ -885,6 +856,8 @@
+@@ -885,6 +849,8 @@
  	if ( ! SDL_windowid ) {
  		/* Resize the window manager window */
  		CGX_SetSizeHints(this, w, h, flags);
@@ -2129,7 +2132,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  
  		ChangeWindowBox(SDL_Window,SDL_Window->LeftEdge,SDL_Window->TopEdge, w+SDL_Window->BorderLeft+SDL_Window->BorderRight,
  					h+SDL_Window->BorderTop+SDL_Window->BorderBottom);
-@@ -894,7 +867,8 @@
+@@ -894,7 +860,8 @@
  		screen->pitch = SDL_CalculatePitch(screen);
  		CGX_ResizeImage(this, screen, flags);
  	}
@@ -2139,7 +2142,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  }
  
  static SDL_Surface *CGX_SetVideoMode(_THIS, SDL_Surface *current,
-@@ -903,15 +877,19 @@
+@@ -903,15 +870,19 @@
  	Uint32 saved_flags;
  	int needcreate=0;
  
@@ -2161,7 +2164,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  
  // Check if we need to close an already existing videomode...
  
-@@ -947,9 +925,9 @@
+@@ -947,9 +918,9 @@
  		if ( SDL_windowid ) {
  			flags &= ~SDL_FULLSCREEN;
  		}
@@ -2174,7 +2177,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  				(this->hidden && this->hidden->depth!=bpp))
  			{
  				D(bug("Deleting previous window...\n"));
-@@ -969,7 +947,7 @@
+@@ -969,7 +940,7 @@
  
  			GFX_Display=NULL;
  
@@ -2183,7 +2186,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  
  			if(okid!=INVALID_ID)
  				GFX_Display=OpenScreenTags(NULL,
-@@ -980,24 +958,28 @@
+@@ -980,24 +951,28 @@
  								SA_DisplayID,okid,
  								TAG_DONE);
  
@@ -2217,7 +2220,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  							extern struct MsgPort *safeport,*dispport;
  
  							safeport=CreateMsgPort();
-@@ -1030,7 +1012,8 @@
+@@ -1030,7 +1005,8 @@
  								ok=1;
  								D(bug("Dbuffering enabled!\n"));
  								this->hidden->dbuffer=1;
@@ -2227,7 +2230,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  							}
  						}
  						else {
-@@ -1039,16 +1022,23 @@
+@@ -1039,16 +1015,23 @@
  						}
  					}
  
@@ -2256,7 +2259,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  		D(bug("Setting screen depth to: %ld\n",this->hidden->depth));
  
  		for ( i = 0; i < this->hidden->nvisuals; i++ )
-@@ -1067,29 +1057,20 @@
+@@ -1067,29 +1050,20 @@
  	saved_flags = current->flags;
  
  	if (SDL_Window && (saved_flags&SDL_OPENGL) == (flags&SDL_OPENGL)
@@ -2289,7 +2292,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  	current->flags |= (flags&SDL_RESIZABLE); // Resizable only if the user asked it
  
    done:
-@@ -1135,74 +1116,6 @@
+@@ -1135,74 +1109,6 @@
  	return(1);
  }
  
@@ -2364,7 +2367,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  /* Update the current mouse state and position */
  static void CGX_UpdateMouse(_THIS)
  {
-@@ -1246,12 +1159,10 @@
+@@ -1246,12 +1152,10 @@
  		xcmap[0]=(ncolors<<16);
  		xcmap[0]+=firstcolor;
  
@@ -2380,7 +2383,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  		}
  		xcmap[ncolors*3+1]=0;
  		LoadRGB32(&GFX_Display->ViewPort,xcmap);
-@@ -1266,37 +1177,23 @@
+@@ -1266,37 +1170,23 @@
  
  		if(this->hidden->depth==8)
  		{
@@ -2425,7 +2428,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  
 diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.h SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxvideo.h
 --- SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.h	2006-05-01 10:02:46.000000000 +0200
-+++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxvideo.h	2010-01-13 20:08:31.000000000 +0100
++++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxvideo.h	2010-04-03 10:03:45.000000000 +0200
 @@ -30,7 +30,7 @@
  #include <graphics/scale.h>
  #include <graphics/gfx.h>
