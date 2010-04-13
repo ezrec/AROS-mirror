@@ -1980,17 +1980,8 @@ Notes
 ::
 
 
- If scanning a filesystem tree recursively, you'll need to allocated a
- new FilInfoBlock for each directory level.
-
-
-Bugs
-~~~~
-::
-
-     At the moment it is necessary that the lock passed to this
-     function is a directory(!!) that has previously been 
-     assigned (i.e. assign env: env).
+ If scanning a filesystem tree recursively, you'll need to allocate a
+ new FileInfoBlock for each directory level.
 
 
 
