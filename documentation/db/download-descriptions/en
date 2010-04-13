@@ -72,6 +72,10 @@ pc-x86_64-boot-iso:
     The native version for 64-bit (x86_64, amd64) PC computers.
     This is the bootable CDROM ISO image, which
     contains all AROS system and contributed programs.
+sam440-ppc-boot-iso:
+    The native version for Sam440EP and Sam440EP Flex computers. 
+    This is the bootable CDROM ISO image including ub2lb (Parthenope) 
+    SLB. It contains all AROS system and contributed programs.
 pc-i386-contrib:
     This archive contains all the contributed programs
     compiled for the i386 architecture. They will work in
@@ -85,11 +89,19 @@ linux-ppc-contrib:
     This archive contains all the contributed programs
     compiled for the PowerPC architecture, for use with the
     Linux/PowerPC port.
+sam440-ppc-contrib:
+    This archive contains all the contributed programs
+    compiled for the PowerPC architecture, for use with the
+    Sam440EP port.
 pc-i386-sdk:
     Set of files and tools to build your own AROS programs
     on your preferred machine. You'll need also gcc and the
     binutils configured to produce i386-elf executables.
 linux-ppc-sdk:
+    Set of files and tools to build your own AROS programs
+    on your preferred machine. You'll need also gcc and the
+    binutils configured to produce ppc-elf executables.
+sam440-ppc-sdk:
     Set of files and tools to build your own AROS programs
     on your preferred machine. You'll need also gcc and the
     binutils configured to produce ppc-elf executables.
