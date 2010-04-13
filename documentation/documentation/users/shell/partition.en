@@ -22,7 +22,7 @@ Synopsis
 
 
      DEVICE, UNIT/N, SYSSIZE/K/N, SYSTYPE/K, SYSNAME/K, WORKSIZE/K/N,
-     MAXWORK/S, WORKTYPE/K, WORKNAME/K, WIPE/S, FORCE/S, QUIET/S
+     MAXWORK/S, WORKTYPE/K, WORKNAME/K, WIPE/S, FORCE/S, QUIET/S, RDB/S
 
 
 Location
@@ -97,6 +97,8 @@ Inputs
      FORCE -- Do not ask for confirmation before partitioning the drive.
      QUIET -- Do not print any output. This option can only be used when
          FORCE is also specified.
+     RDB -- Create only RDB partitions, no MBR or EBR partitions will be
+         created.
 
 
 Result
