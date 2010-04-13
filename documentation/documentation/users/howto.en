@@ -140,8 +140,7 @@ The codes can be combined by separating them with a semicolon.
 How do I launch AROS-hosted in fullscreen?
 ------------------------------------------
 
-Call "export AROS_X11_FULLSCREEN=1" in a shell. Start AROS and change the 
-screen resolution in the screenmode preferences. Quit AROS and start it again.
+Start AROS with the option "--fullscreen".
 
 
 How to make 2-state AROS Icons?
