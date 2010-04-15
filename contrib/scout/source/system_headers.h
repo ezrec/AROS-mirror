@@ -40,8 +40,9 @@
 /*****************************************************************************/
 
 #if defined(__AROS__)
-    #define MUIMASTER_YES_INLINE_STDARG
-    #define MUI_OBSOLETE
+#include <aros/asmcall.h>
+#define MUIMASTER_YES_INLINE_STDARG
+#define MUI_OBSOLETE
 #endif
 #include <devices/ahi.h>
 #include <devices/audio.h>
@@ -358,9 +359,6 @@ struct TimeRequest
     #define AFF_68882   (1L<<5)
     #define	AFF_FPU40   (1L<<6)
     #define AFF_68060   (1L<<7)
-
-    #undef Printf
-    #define Printf(...) printf(__VA_ARGS__)
 
 #endif
 

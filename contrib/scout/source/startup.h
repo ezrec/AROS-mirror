@@ -32,5 +32,8 @@ startup.c
 
 extern struct Args opts;
 
+#ifdef __AROS__
+ULONG startup(struct ExecBase *);
+#else
 ULONG SAVEDS startup(void);
-
+#endif

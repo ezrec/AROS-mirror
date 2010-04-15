@@ -24,8 +24,8 @@
  */
 
 #if defined(__AROS__)
-    #define NO_INLINE_STDARG
-    // Needed for NList classes
+#include <proto/dos.h>   /* Includes Printf() before defining NO_INLINE_STDARRG */
+#define NO_INLINE_STDARG /* Needed for NList classes */
 #endif
 
 #include "system_headers.h"

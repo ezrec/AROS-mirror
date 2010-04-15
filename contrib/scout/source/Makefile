@@ -28,8 +28,15 @@ endif
 # target-dependent options
 ifeq ($(HOST_OS),aros)
     NOIXEMUL :=
+    SYSLIB   := -larossupport -larosm -lmui -lrom
 else
     NOIXEMUL := -noixemul
+    SYSLIB   := -lc -ldebug -lmath
+endif
+ifeq ($(HOST_OS),morphos)
+    ALIB := -labox -laboxstubs
+else
+    ALIB := -lamiga
 endif
 ifeq ($(HOST_CPU),ppc)
     CPU := -mcpu=750
@@ -48,7 +55,7 @@ CC=                 $(PREFIX)gcc
 LD=                 $(PREFIX)gcc
 STRIP=              $(PREFIX)strip
 OBJDUMP=	    $(PREFIX)objdump
-RM=                 rm
+RM=                 rm -f
 
 OBJDIR=             .obj
 CLASSESDIR=         classes
@@ -56,7 +63,7 @@ EXTRASRC=           extrasrc
 
 OPTIMIZE=           -O3
 DEFINE=
-CFLAGS=             -Wall $(NOIXEMUL) $(CPU) -I. -idirafter ./include -I./classes -I./tbLib -c
+CFLAGS:=            $(USER_CFLAGS) -Wall $(NOIXEMUL) $(CPU) -I. -idirafter ./include -I./classes -I./tbLib -c
 LFLAGS=             $(NOIXEMUL) -nostartfiles
 
 LOCALE=             locale
@@ -213,7 +220,7 @@ HEADERS=system_headers.h startup.h Scout.h \
    SmartReadArgs.h \
    include/extra.h
 
-LIBS = -L./netlib -L./tbLib -L./lib -lc -labox -laboxstubs -ldebug -ltblib -lidentify -lmath
+LIBS = -L./netlib -L./tbLib -L./lib $(ALIB) $(SYSLIB) -ltblib
 
 all: $(OBJDIR) $(HEADERS) $(TARGET)
 
@@ -227,13 +234,13 @@ $(OBJDIR)/%.o: %.c
 $(LOCALE)/%.catalog: $(LOCALE)/%.ct
 	flexcat $(LOCALE)/scout.cd $< catalog $@ flush
 
-$(TARGET): $(OBJECTS) tbLib/libtblib.a lib/libidentify.a
+$(TARGET): $(OBJECTS) tbLib/libtblib.a
 	$(LD) $(OBJECTS) -o $@.debug $(LIBS) $(LFLAGS)
 	$(STRIP) --remove-section=.comment $@.debug -o $@
-	protect $@ rwed
+	chmod +x $@
 
 scout_cat.h: $(LOCALE)/scout.cd
-	flexcat locale/Scout.cd scout_cat.h=C_h.sd scout_cat.c=C_c.sd
+	flexcat locale/scout.cd scout_cat.h=C_h.sd scout_cat.c=C_c.sd
 
 $(OBJDIR)/scout_cat.o: scout_cat.h
 
@@ -249,16 +256,11 @@ $(OBJDIR)/$(CLASSESDIR)/scout_version.o: $(CLASSESDIR)/scout_version.c $(CLASSES
 $(OBJDIR)/all_gcc.o: all_gcc.c $(EXTRASRC)/init_inet_daemon.c $(EXTRASRC)/set_socket_stdio.c $(EXTRASRC)/vasprintf.c
 
 tbLib/libtblib.a:
-	@cd tbLib; make -f Makefile.mos
-
-lib/libidentify.a:
-	@mkdir -p lib
-	@echo Generating lib/libidentify.a
-	@cvinclude.pl --fd=include/fd/identify_lib.fd --clib=include/clib/identify_protos.h --gluelib=lib/libidentify.a
+	@cd tbLib; make OS=$(OS) USER_CFLAGS=$(USER_CFLAGS)
 
 clean:
 	-$(RM) $(OBJDIR)/*.o $(OBJDIR)/$(CLASSESDIR)/*.o $(TARGET) $(TARGET).debug $(TARGET).dump
-	@cd tbLib; make -f Makefile.mos $@
+	@cd tbLib; make $@
 
 realclean: clean
 

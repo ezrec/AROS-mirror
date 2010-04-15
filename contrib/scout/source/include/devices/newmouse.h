@@ -9,7 +9,9 @@
 
 #define NEWMOUSE_VERSION	1
 
+#ifndef IECLASS_NEWMOUSE
 #define IECLASS_NEWMOUSE	(0x16)  /* IECLASS_MAX + 1 as of V40 */ 
+#endif
 
 /* These are issued both under IECLASS_NEWMOUSE and IECLASS_RAWKEY 	*/ 
 /* by the NewMouse driver											*/

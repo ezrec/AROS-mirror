@@ -10,7 +10,7 @@ EXE := Scout
 # FIXME: Target directory?
 EXEDIR := $(AROS_CONTRIB)/System/Scout
 
-USER_INCLUDES := -D_UTMP_H_ -I$(SRCDIR)/$(CURDIR) -I$(SRCDIR)/$(CURDIR)/includearos -I$(SRCDIR)/$(CURDIR)/classes -I$(SRCDIR)/$(CURDIR)/tbLib
+USER_INCLUDES := -D_UTMP_H_ -I$(SRCDIR)/$(CURDIR) -idirafter$(SRCDIR)/$(CURDIR)/include -I$(SRCDIR)/$(CURDIR)/classes -I$(SRCDIR)/$(CURDIR)/tbLib
 USER_LDFLAGS  := -L$(EXEDIR)/libs
 
 FILES := \

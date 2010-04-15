@@ -23,6 +23,7 @@
  * @author Richard Körber <rkoerber@gmx.de>
  */
 
+#include <aros/debug.h>
 #include "system_headers.h"
 
 /*********************************************************************
@@ -220,6 +221,7 @@ STATIC BOOL init1( void )
     if ((globalPool = tbCreatePool(MEMF_CLEAR, 4096, 4096)) == NULL) {
         return FALSE;
     }
+    bug("Inited!\n");
 
     return TRUE;
 }
@@ -246,6 +248,7 @@ STATIC BOOL init2( void )
     if (!CreateCustomClasses()) {
         return FALSE;
     }
+    bug("Inited 2\n");
 
     return TRUE;
 }

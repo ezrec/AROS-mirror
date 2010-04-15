@@ -25,14 +25,16 @@
 
 #include "system_headers.h"
 
+#ifndef __AROS__
 #define EXECBASE        (*(struct ExecBase **)4)
+#endif
 
 struct ExecBase *SysBase;
 struct DosLibrary *DOSBase;
 struct IntuitionBase *IntuitionBase;
 struct Library *IconBase;
-#if defined(__MORPHOS__)
 struct GfxBase *GfxBase;
+#if defined(__MORPHOS__)
 struct Library *CxBase;
 struct Library *RexxSysBase;
 struct Library *SocketBase;
@@ -64,7 +66,21 @@ long __stack = 16384;
 #endif
 #endif
 
-#if defined(__amigaos4__)
+#if defined(__AROS__)
+AROS_UFH3(__startup static ULONG, _start,
+	  AROS_UFHA(char *, argstr, A0),
+	  AROS_UFHA(ULONG, argsize, D0),
+	  AROS_UFHA(struct ExecBase *, sBase, A6))
+{
+    AROS_USERFUNC_INIT
+    
+    return startup(sBase);
+    
+    AROS_USERFUNC_EXIT
+}
+
+ULONG startup(struct ExecBase *EXECBASE)
+#elif defined(__amigaos4__)
 ULONG _start(void)
 #else
 ULONG SAVEDS startup(void)
@@ -177,4 +193,3 @@ ULONG SAVEDS startup(void)
 
     return rc;
 }
-
