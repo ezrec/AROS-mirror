@@ -236,7 +236,7 @@ $(LOCALE)/%.catalog: $(LOCALE)/%.ct
 
 $(TARGET): $(OBJECTS) tbLib/libtblib.a
 	$(LD) $(OBJECTS) -o $@.debug $(LIBS) $(LFLAGS)
-	$(STRIP) --remove-section=.comment $@.debug -o $@
+	$(STRIP) -R.comment -R.sdata2 -S $@.debug -o $@
 	chmod +x $@
 
 scout_cat.h: $(LOCALE)/scout.cd
