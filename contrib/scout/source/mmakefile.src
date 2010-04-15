@@ -85,14 +85,14 @@ FILES := \
    classes/flags_button \
    classes/task_button \
    hexdump \
-   aros \
+   startup \
    scout_cat \
    SmartReadArgs \
    all_gcc
 
 %build_prog mmake=contrib-scout-bin \
 	progname=$(EXE) targetdir=$(EXEDIR) \
-	files=$(FILES) uselibs="arossupport amiga arosc m mui tblib"
+	files=$(FILES) uselibs="arossupport amiga m mui tblib rom" usestartup=no
 
 
 #MM
