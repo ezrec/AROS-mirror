@@ -362,8 +362,6 @@ struct TimeRequest
     #undef Printf
     #define Printf(...) printf(__VA_ARGS__)
 
-    struct Interrupt *AddICRVector( struct Library *resource, LONG iCRBit, struct Interrupt *interrupt );
-    VOID RemICRVector( struct Library *resource, LONG iCRBit, struct Interrupt *interrupt );
 #endif
 
 /*****************************************************************************/

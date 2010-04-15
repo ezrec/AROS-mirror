@@ -152,21 +152,6 @@ UBYTE *crypt( UBYTE *key, UBYTE *set )
     return 0;
 }
 
-
-/* CIA ********************************************************************/
-
-struct Interrupt *AddICRVector( struct Library *resource, LONG iCRBit, struct Interrupt *interrupt )
-{
-    bug("%s not implemented!\n", __func__);
-    return 0;
-}
-
-VOID RemICRVector( struct Library *resource, LONG iCRBit, struct Interrupt *interrupt )
-{
-    bug("%s not implemented!\n", __func__);
-}
-
-
 /* main *******************************************************************/
 
 struct Args opts;
