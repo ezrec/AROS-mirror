@@ -73,6 +73,7 @@ OBJS = $(OBJDIR)/ports_AllocPort.o \
 	$(OBJDIR)/math64_cmp64_c.o \
 	$(OBJDIR)/envvar_GetEnvVar.o \
 	$(OBJDIR)/envvar_SetEnvVar.o \
+	$(OBJDIR)/mui_DoSuperNew.o \
 	$(OBJDIR)/mui_MakeButton.o \
 	$(OBJDIR)/mui_MakeCheckmark.o \
 	$(OBJDIR)/errorreq_ErrorMsg.o \
