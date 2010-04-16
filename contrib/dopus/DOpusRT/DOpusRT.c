@@ -89,7 +89,9 @@ struct InputEvent *InputHandler(register struct InputEvent *ie __asm("a0"),regis
   {
    if (ie->ie_Code & IECODE_LBUTTON)
     {
+#if !defined(__AROS__)
      register struct ExecBase *SysBase __asm("a6") = *(struct ExecBase **)4L;
+#endif
 
      Signal(task,(ie->ie_Code & IECODE_UP_PREFIX)?2:1);
     }
