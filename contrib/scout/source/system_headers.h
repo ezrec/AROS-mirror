@@ -21,6 +21,7 @@
  *
  * @author Andreas Gelhausen
  * @author Richard Körber <rkoerber@gmx.de>
+ * @author Pavel Fedin <sonic_amiga@mail.ru>
  */
 
 #ifndef _SYSTEM_HEADERS_H
@@ -279,6 +280,7 @@
 #include "flags_button.h"
 #include "task_button.h"
 #include "port_button.h"
+#include "scout_monitors.h"
 
 #if defined(__GNUC__)
     #define USE_NATIVE_64BIT_MATH          1

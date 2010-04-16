@@ -21,6 +21,7 @@
  *
  * @author Andreas Gelhausen
  * @author Richard Körber <rkoerber@gmx.de>
+ * @author Pavel Fedin <sonic_amiga@mail.ru>
  */
 
 #include "system_headers.h"
@@ -160,7 +161,7 @@ STATIC ULONG mNew( struct IClass *cl,
                 Child, (IPTR)(button[26] = MakeButton(txtMainCatalogs)),
                 Child, (IPTR)(button[27] = MakeButton(txtMainAudioModes)),
                 Child, (IPTR)(button[28] = MakeButton(txtMainResetHandlers)),
-                Child, (IPTR)HSpace(0),
+                Child, (IPTR)(button[29] = MakeButton(txtMainMonitors)),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
@@ -205,6 +206,7 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(button[26], MUIM_Notify,  MUIA_Pressed, FALSE, obj, 1, MUIM_MainWin_ShowCatalogs);
         DoMethod(button[27], MUIM_Notify,  MUIA_Pressed, FALSE, obj, 1, MUIM_MainWin_ShowAudioModes);
         DoMethod(button[28], MUIM_Notify,  MUIA_Pressed, FALSE, obj, 1, MUIM_MainWin_ShowResetHandlers);
+	DoMethod(button[29], MUIM_Notify,  MUIA_Pressed, FALSE, obj, 1, MUIM_MainWin_ShowMonitors);
 
     #if defined(__amigaos4__) || defined(__AROS__)
         set(button[25], MUIA_Disabled, TRUE);
@@ -516,6 +518,15 @@ STATIC ULONG mShowResetHandlers( struct IClass *cl,
     return 0;
 }
 
+STATIC ULONG mShowMonitors( struct IClass *cl,
+                                 Object *obj,
+                                 Msg msg )
+{
+    CreateSubWindow(cl, obj, 29, MonitorsWinClass, MUIM_MonitorsWin_Update);
+
+    return 0;
+}
+
 STATIC ULONG mFlushDevices( struct IClass *cl,
                             Object *obj,
                             Msg msg )
@@ -603,6 +614,7 @@ DISPATCHER(MainWinDispatcher)
         case MUIM_MainWin_ShowCatalogs:      return (mShowCatalogs(cl, obj, (APTR)msg));
         case MUIM_MainWin_ShowAudioModes:    return (mShowAudioModes(cl, obj, (APTR)msg));
         case MUIM_MainWin_ShowResetHandlers: return (mShowResetHandlers(cl, obj, (APTR)msg));
+	case MUIM_MainWin_ShowMonitors:      return (mShowMonitors(cl, obj, (APTR)msg));
         case MUIM_MainWin_FlushDevices:      return (mFlushDevices(cl, obj, (APTR)msg));
         case MUIM_MainWin_FlushFonts:        return (mFlushFonts(cl, obj, (APTR)msg));
         case MUIM_MainWin_FlushLibraries:    return (mFlushLibraries(cl, obj, (APTR)msg));

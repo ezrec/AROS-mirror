@@ -184,6 +184,13 @@
 #define MUIM_ResetHandlersWin_More                  (TAGBASE_TBOECKEL | 0x11c4)
 #define MUIM_ResetHandlersWin_ListChange            (TAGBASE_TBOECKEL | 0x11c5)
 
+#define MUIM_MonitorsWin_Update			    (TAGBASE_TBOECKEL | 0x11d0)
+#define MUIM_MonitorsWin_Print                      (TAGBASE_TBOECKEL | 0x11d1)
+#define MUIM_MonitorsWin_Remove                     (TAGBASE_TBOECKEL | 0x11d2)
+#define MUIM_MonitorsWin_Priority                   (TAGBASE_TBOECKEL | 0x11d3)
+#define MUIM_MonitorsWin_More                       (TAGBASE_TBOECKEL | 0x11d4)
+#define MUIM_MonitorsWin_ListChange                 (TAGBASE_TBOECKEL | 0x11d5)
+
 #define MUIM_MainWin_About                          (TAGBASE_TBOECKEL | 0x1200)
 #define MUIM_MainWin_ShowAllocations                (TAGBASE_TBOECKEL | 0x1201)
 #define MUIM_MainWin_ShowAssigns                    (TAGBASE_TBOECKEL | 0x1202)
@@ -214,12 +221,12 @@
 #define MUIM_MainWin_ShowCatalogs                   (TAGBASE_TBOECKEL | 0x121b)
 #define MUIM_MainWin_ShowAudioModes                 (TAGBASE_TBOECKEL | 0x121c)
 #define MUIM_MainWin_ShowResetHandlers              (TAGBASE_TBOECKEL | 0x121d)
+#define MUIM_MainWin_ShowMonitors	            (TAGBASE_TBOECKEL | 0x121e)
 #define MUIM_MainWin_FlushDevices                   (TAGBASE_TBOECKEL | 0x1250)
 #define MUIM_MainWin_FlushFonts                     (TAGBASE_TBOECKEL | 0x1251)
 #define MUIM_MainWin_FlushLibraries                 (TAGBASE_TBOECKEL | 0x1252)
 #define MUIM_MainWin_FlushAll                       (TAGBASE_TBOECKEL | 0x1253)
 #define MUIM_MainWin_UpdateAll                      (TAGBASE_TBOECKEL | 0x1260)
-
 
 
 

@@ -54,6 +54,7 @@ FILES := \
    classes/scout_main \
    classes/scout_memory \
    classes/scout_memory_detail \
+   classes/scout_monitors \
    classes/scout_mount \
    classes/scout_mount_detail \
    classes/scout_parentwindow \

@@ -61,6 +61,7 @@ extern struct MUI_CustomClass *DisassemblerButtonClass;
 extern struct MUI_CustomClass *FlagsButtonClass;
 extern struct MUI_CustomClass *TaskButtonClass;
 extern struct MUI_CustomClass *PortButtonClass;
+extern struct MUI_CustomClass *MonitorsWinClass;
 
 BOOL CreateCustomClasses( void );
 

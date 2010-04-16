@@ -21,6 +21,7 @@
  *
  * @author Andreas Gelhausen
  * @author Richard Körber <rkoerber@gmx.de>
+ * @author Pavel Fedin <sonic_amiga@mail.ru>
  */
 
 #ifndef SCOUT_DEFS_H
@@ -44,6 +45,8 @@
 #define TMP_STRING_LENGTH   1024
 #define TS_FROZEN           0xff
 #define PATTERN_LENGTH      (PATH_LENGTH * 2 + 2)
+#define NODESUBSYS_LENGTH   32
+#define NODESUBTYPE_LENGTH  32
 
 #define ITERATE_LIST(list, type, node)                  for (node = (type)((struct List *)(list))->lh_Head; ((struct Node *)node)->ln_Succ; node = (type)((struct Node *)node)->ln_Succ)
 #define ITERATE_LIST_REVERSE(list, type, node)          for (node = (type)((struct List *)(list))->lh_TailPred; ((struct Node *)node)->ln_Pred; node = (type)((struct Node *)node)->ln_Pred)

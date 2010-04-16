@@ -4763,3 +4763,40 @@ TaskPoolThreshSize
 txtCommandNotLoaded (//)
 DEFER
 ;
+txtMainMonitors (//)
+Monitors
+;
+txtMonitorsTitle (//)
+MONITORS
+;
+msgWantToRemoveMonitor (//)
+Do you really want to remove monitor\n\
+\"%s\"?
+;
+txtMonitorsPrintHeader (//)
+\n  Address  Type          Pri Subsystem     Subtype         Name\n\n
+;
+txtMonitorsPrintLine (//)
+ %s %-12s %4s %-13s %-15s %s\n
+;
+txtNodeSubsystem (//)
+xln_Subsystem
+;
+txtNodeSubtype (//)
+xln_Subtype
+;
+txtNodeSubsystemGraphics (//)
+graphics
+;
+txtNodeSubtypeViewExtra (//)
+view extra
+;
+txtNodeSubTypeViewPortExtra (//)
+viewport extra
+;
+txtNodeSubTypeSpecialMonitor (//)
+special monitor
+;
+txtNodeSubTypeMonitorSpec (//)
+monitor spec
+;
