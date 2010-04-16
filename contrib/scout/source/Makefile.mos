@@ -193,7 +193,7 @@ $(TARGET): $(OBJECTS) tbLib/libtblib.a lib/libidentify.a
 	protect $@ rwed
 
 scout_cat.h: $(LOCALE)/scout.cd
-	flexcat locale/Scout.cd scout_cat.h=C_h.sd scout_cat.c=C_c.sd
+	flexcat locale/scout.cd scout_cat.h=C_h.sd scout_cat.c=C_c.sd
 
 $(OBJDIR)/scout_cat.o: scout_cat.h
 

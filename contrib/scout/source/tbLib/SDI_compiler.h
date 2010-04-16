@@ -221,7 +221,7 @@
 #if !defined(DEPRECATED)
   #define DEPRECATED
 #endif
-#if !defined(__AROS__) && !defined(IPTR)
+#if !defined(__AROS__) && !defined(__MORPHOS__) && !defined(IPTR)
   #define IPTR ULONG
 #endif
 #if !defined(__AROS__) && !defined(STACKED)
