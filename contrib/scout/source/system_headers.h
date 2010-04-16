@@ -167,7 +167,6 @@
 #include <proto/gadtools.h>
 #include <proto/graphics.h>
 #include <proto/icon.h>
-#include <proto/identify.h>
 #include <proto/intuition.h>
 #include <proto/keymap.h>
 #include <proto/layers.h>
@@ -201,6 +200,9 @@
 #include <sys/socket.h>
 
 #include <tblib.h>
+
+#define USE_INLINE_STDARG
+#include <proto/identify.h>
 
 #include "scout_cat.h"
 #include "scout_defs.h"

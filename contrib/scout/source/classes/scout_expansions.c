@@ -21,6 +21,7 @@
  *
  * @author Andreas Gelhausen
  * @author Richard Körber <rkoerber@gmx.de>
+ * @author Pavel Fedin <sonic_amiga@mail.ru>
  */
 
 #include "system_headers.h"
@@ -204,16 +205,16 @@ STATIC void IterateList( void (* callback)( struct ExpansionEntry *ee, void *use
                 while ((pci = IPCI->FindDeviceTags(FDT_Index, index, TAG_DONE)) != NULL) {
                     ee->ee_Addr = (APTR)pci;
                     _snprintf(ee->ee_Address, sizeof(ee->ee_Address), "$%08lx", pci);
-                    _snprintf(ee->ee_Flags, sizeof(ee->ee_Flags), "$%02lx", 0);
-                    _snprintf(ee->ee_BoardAddr, sizeof(ee->ee_BoardAddr), "$%08lx", 0);
-                    _snprintf(ee->ee_BoardSize, sizeof(ee->ee_BoardSize), "$%08lx", 0);
-                    _snprintf(ee->ee_Type, sizeof(ee->ee_Type), "$%02lx", 0);
+		    _snprintf(ee->ee_Flags, sizeof(ee->ee_Flags), txtNotAvailable);
+		    _snprintf(ee->ee_BoardAddr, sizeof(ee->ee_BoardAddr), "---");
+		    _snprintf(ee->ee_BoardSize, sizeof(ee->ee_BoardSize), txtNotAvailable);
+		    _snprintf(ee->ee_Type, sizeof(ee->ee_Type), "PCI");
                     _snprintf(ee->ee_Product, sizeof(ee->ee_Product), "$%04lx", pci->ReadConfigWord(PCI_DEVICE_ID));
                     _snprintf(ee->ee_ProdName, sizeof(ee->ee_ProdName), "$%04lx", pci->ReadConfigWord(PCI_DEVICE_ID));
                     _snprintf(ee->ee_Manufacturer, sizeof(ee->ee_Manufacturer), "$%04lx", pci->ReadConfigWord(PCI_VENDOR_ID));
                     _snprintf(ee->ee_ManufName, sizeof(ee->ee_ManufName), "$%04lx", pci->ReadConfigWord(PCI_VENDOR_ID));
                     _snprintf(ee->ee_ProdClass, sizeof(ee->ee_ProdClass), "$%04lx", pci->ReadConfigWord(PCI_CLASS_DEVICE));
-                    _snprintf(ee->ee_SerialNumber, sizeof(ee->ee_SerialNumber), "%lU", 0);
+		    _snprintf(ee->ee_SerialNumber, sizeof(ee->ee_SerialNumber), txtNotAvailable);
                     stccpy(ee->ee_HardwareType, "PCI", sizeof(ee->ee_HardwareType));
 
                     IPCI->FreeDevice(pci);
@@ -239,16 +240,16 @@ STATIC void IterateList( void (* callback)( struct ExpansionEntry *ee, void *use
             while ((dev = pci_find_device(0xffff, 0xffff, dev)) != NULL) {
                 ee->ee_Addr = (APTR)dev;
                 _snprintf(ee->ee_Address, sizeof(ee->ee_Address), "$%08lx", dev);
-                _snprintf(ee->ee_Flags, sizeof(ee->ee_Flags), "$%02lx", 0);
-                _snprintf(ee->ee_BoardAddr, sizeof(ee->ee_BoardAddr), "$%08lx", 0);
-                _snprintf(ee->ee_BoardSize, sizeof(ee->ee_BoardSize), "$%08lx", 0);
-                _snprintf(ee->ee_Type, sizeof(ee->ee_Type), "$%02lx", 0);
+		_snprintf(ee->ee_Flags, sizeof(ee->ee_Flags), txtNotAvailable);
+		_snprintf(ee->ee_BoardAddr, sizeof(ee->ee_BoardAddr), "---");
+		_snprintf(ee->ee_BoardSize, sizeof(ee->ee_BoardSize), txtNotAvailable);
+		_snprintf(ee->ee_Type, sizeof(ee->ee_Type), "PCI");
                 _snprintf(ee->ee_Product, sizeof(ee->ee_Product), "$%04lx", dev->device);
                 _snprintf(ee->ee_ProdName, sizeof(ee->ee_ProdName), "$%04lx", dev->device);
                 _snprintf(ee->ee_Manufacturer, sizeof(ee->ee_Manufacturer), "$%04lx", dev->vendor);
                 _snprintf(ee->ee_ManufName, sizeof(ee->ee_ManufName), "$%04lx", dev->vendor);
                 _snprintf(ee->ee_ProdClass, sizeof(ee->ee_ProdClass), "$%04lx", dev->class);
-                _snprintf(ee->ee_SerialNumber, sizeof(ee->ee_SerialNumber), "%lU", 0);
+		_snprintf(ee->ee_SerialNumber, sizeof(ee->ee_SerialNumber), txtNotAvailable);
                 stccpy(ee->ee_HardwareType, "PCI", sizeof(ee->ee_HardwareType));
 
                 if (PCIIDSBase) {

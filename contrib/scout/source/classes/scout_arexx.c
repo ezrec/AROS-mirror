@@ -21,6 +21,7 @@
  *
  * @author Andreas Gelhausen
  * @author Richard Körber <rkoerber@gmx.de>
+ * @author Pavel Fedin <sonic_amiga@mail.ru>
  */
 
 #include "system_headers.h"
@@ -1242,7 +1243,7 @@ STATIC STRPTR nodetype[] = {
    "LIBRARY", "DEVICE", "RESOURCE", "MEMORY", "SEMAPHORE",
    "PORT", "INPUTHANDLER", "LOWMEMORY", "COMMODITIES",
    "CLASSES", "TIMER_MICRO", "TIMER_VBLANK", "RESETHANDLER",
-   "RESETCALLBACK", NULL
+   "RESETCALLBACK", "MONITOR", NULL
 };
 
 struct List *MyGetList( STRPTR type )
@@ -1483,6 +1484,9 @@ struct List *MyGetList( STRPTR type )
                }
 				#endif
                break;
+	    case 14:
+	       list = &GfxBase->MonitorList;
+	       break;
           }
       }
       i++;
