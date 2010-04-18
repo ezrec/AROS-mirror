@@ -9,11 +9,11 @@ FILES := about arbiter main main1 main2 main3 main4 main5 main6 main7\
          strings tasks view screendata dopusfunctions\
          launchexternal searchdata complete remember parentmulti\
          dirtree getusage assembly dummy_asyncio\
-         archive makelinkdata
+         archive makelinkdata popupmenu
 
 EXEDIR := $(DOPUSDIR)
 
-#MM- DirOpus : dopus-library workbench-libs-rexxsyslib
+#MM- DirOpus : dopus-library workbench-libs-rexxsyslib workbench-libs-popupmenu
 
 USER_CFLAGS := -I$(DOPUSDIR)/Development/include \
     -I$(SRCDIR)/$(CURDIR)/../include \
@@ -24,6 +24,6 @@ USER_CFLAGS := -I$(DOPUSDIR)/Development/include \
 
 %build_prog mmake=DirOpus \
     progname=DirectoryOpus targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="rexxsyslib amiga arosc m"
+    files=$(FILES) uselibs="popupmenu rexxsyslib amiga arosc m"
 
 %common
