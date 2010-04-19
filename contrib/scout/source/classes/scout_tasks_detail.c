@@ -56,7 +56,7 @@ STATIC CONST struct LongFlag processFlags[] = {
     { PRF_CLOSEINPUT,   "PRF_CLOSEINPUT"   },
     { PRF_CLOSEOUTPUT,  "PRF_CLOSEOUTPUT"  },
     { PRF_FREEARGS,     "PRF_FREEARGS"     },
-#if defined(__amigaos4__) || defined(__MORPHOS__)
+#if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
     { PRF_CLOSEERROR,   "PRF_CLOSEERROR"   },
 #else
     { 0x00000040,       "< ??? >"          },
