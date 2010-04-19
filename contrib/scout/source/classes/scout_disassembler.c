@@ -21,6 +21,7 @@
  *
  * @author Andreas Gelhausen
  * @author Richard Körber <rkoerber@gmx.de>
+ * @author Pavel Fedin <sonic_amiga@mail.ru>
  */
 
 #if defined(__AROS__)
@@ -107,7 +108,7 @@ STATIC ULONG mNew( struct IClass *cl,
         dwd->dwd_Buffer = tbAllocVecPooled(globalPool, 128);
         dwd->dwd_BufferSize = 128;
 
-    #if !defined(__amigaos4__) && !defined(__AROS__)
+    #if !defined(__amigaos4__)
         dwd->dwd_DisassemblerBase = OpenLibrary(DISASSEMBLER_NAME, 40);
     #endif
     #if defined(__MORPHOS__)

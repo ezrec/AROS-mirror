@@ -21,6 +21,7 @@
  *
  * @author Andreas Gelhausen
  * @author Richard Körber <rkoerber@gmx.de>
+ * @author Pavel Fedin <sonic_amiga@mail.ru>
  */
 
 #if defined(__AROS__)
@@ -524,9 +525,7 @@ BOOL isValidPointer( APTR ptr )
             return TRUE;
         }
     }
-#elif defined(__AROS__)
-    return FALSE;  // FIXME
-#else
+#elif !defined(__AROS__)
     if (MMUBase) {
         ULONG flags;
 
