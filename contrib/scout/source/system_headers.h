@@ -324,48 +324,6 @@ struct TimeRequest
 
 #endif
 
-#if defined(__AROS__)
-    typedef UQUAD uint64;
-    typedef QUAD int64;
-    extern struct Library *IdentifyBase;
-    extern struct Library *UserGroupBase;
-    #define CIAANAME "ciaa.resource"
-    #define CIABNAME "ciab.resource"
-    #define CARDRESNAME "card.resource"
-
-    #define DRF_ALLOC0  (1<<0)
-    #define DRF_ALLOC1  (1<<1)
-    #define DRF_ALLOC2  (1<<2)
-    #define DRF_ALLOC3  (1<<3)
-    #define DRF_ACTIVE  (1<<7)
-    #define DISKNAME    "disk.resource"
-
-    struct DiscResource {
-        struct Library          dr_Library;
-        struct DiscResourceUnit *dr_Current;
-        UBYTE                   dr_Flags;
-        UBYTE                   dr_pad;
-        struct Library          *dr_SysLib;
-        struct Library          *dr_CiaResource;
-        ULONG                   dr_UnitID[4];
-        struct List             dr_Waiting;
-        struct Interrupt        dr_DiscBlock;
-        struct Interrupt        dr_DiscSync;
-        struct Interrupt        dr_Index;
-        struct Task             *dr_CurrTask;
-    };
-
-    #define AFF_68010   (1L<<0)
-    #define AFF_68020   (1L<<1)
-    #define AFF_68030   (1L<<2)
-    #define AFF_68040   (1L<<3)
-    #define AFF_68881   (1L<<4)
-    #define AFF_68882   (1L<<5)
-    #define	AFF_FPU40   (1L<<6)
-    #define AFF_68060   (1L<<7)
-
-#endif
-
 /*****************************************************************************/
 
 #endif /* _SYSTEM_HEADERS_H */
