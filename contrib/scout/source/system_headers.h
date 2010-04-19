@@ -96,6 +96,9 @@
 #include <intuition/intuitionbase.h>
 #include <intuition/screens.h>
 #include <intuition/sghooks.h>
+#ifdef __MORPHOS__
+#include <intuition/monitorclass.h>
+#endif
 #include <libraries/commodities.h>
 #if !defined(__AROS__)
     #include <libraries/commodities_private.h>

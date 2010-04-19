@@ -4800,3 +4800,6 @@ special monitor
 txtNodeSubTypeMonitorSpec (//)
 monitor spec
 ;
+txtNodeTypeMonitorclass (//)
+monitorclass
+;

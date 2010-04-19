@@ -26,7 +26,7 @@
 
 struct MonitorEntry {
     struct MinNode mon_Node;
-    struct MonitorSpec *mon_Addr;
+    APTR mon_Addr;
     TEXT mon_Address[ADDRESS_LENGTH];
     TEXT mon_Name[NODENAME_LENGTH];
     TEXT mon_Type[NODETYPE_LENGTH];
