@@ -11,12 +11,14 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 20-Apr-10 neil    - Added work-around for Rock Ridge discs that have
+ *                     version numbers in file names.
  * 10-Feb-10 neil    - Removed error in fetching Rock Ridge names.
  * 06-Mar-09 error   - Removed madness, fixed insanity. Cleanup started
  * 16-Jun-08 sonic   - Skip files with "Associated" flag set. Helps to
  *                     read ISO discs created under MacOS.
  *                   - Supports "Hidden" flag.
- * 06-May-07 sonic   - Rewritten routines dealing wkith object names.
+ * 06-May-07 sonic   - Rewritten routines dealing with object names.
  *                   - Added support for RockRidge protection bits and file comments.
  * 08-Apr-07 sonic   - removed redundant "TRACKDISK" option
  * 31-Mar-07 sonic   - added Joliet support.
@@ -391,7 +393,8 @@ int Names_Equal(VOLUME *volume, directory_record *dir, char *p_name)
 	return TRUE;
     }
 
-    if (volume->protocol == PRO_ROCK)
+    if (volume->protocol == PRO_ROCK
+        && !(buf[len-2] == ';' && buf[len-1] == '1'))
     {
 	D(bug("[CDVDFS]\t-> Not Equal\n"));
 	return FALSE;
