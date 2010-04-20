@@ -121,11 +121,9 @@
 #include <mui/NFloattext_mcc.h>
 #include <mui/NList_mcc.h>
 #include <mui/Urltext_mcc.h>
-#if !defined(__AROS__)
-    #include <resources/card.h>
-    #include <resources/cia.h>
-    #include <resources/disk.h>
-#endif
+#include <resources/card.h>
+#include <resources/cia.h>
+#include <resources/disk.h>
 #include <resources/filesysres.h>
 #include <resources/misc.h>
 #include <rexx/rxslib.h>
