@@ -1,0 +1,101 @@
+#include <aros/debug.h>
+#include <aros/asmcall.h>
+#include <aros/libcall.h>
+#include <clib/alib_protos.h>
+#include <libraries/disassembler.h>
+#include <proto/exec.h>
+
+#include <stdarg.h>
+
+#include "dis-asm.h"
+#include "library.h"
+#include "support.h"
+#include "bfd.h"
+
+#if __WORDSIZE == 64
+#define ADDRESS_FORMAT "%016lx%lc "
+#else
+#define ADDRESS_FORMAT "%08lx%lc "
+#endif
+
+#define BUFFER_SIZE 64
+
+struct StringBuffer
+{
+    int pos;
+    char buf[BUFFER_SIZE];
+};
+
+AROS_UFH2(static void, dsPutCh,
+	  AROS_UFHA(UBYTE, c, D0),
+	  AROS_UFHA(struct DisData *, ds, A3))
+{
+    AROS_USERFUNC_INIT
+    
+    AROS_UFC3(void, ds->ds_PutProc,
+	      AROS_UFCA(UBYTE, c, D0),
+	      AROS_UFCA(APTR, ds->ds_UserData, A3),
+	      AROS_UFCA(APTR, ds->ds_UserBase, A4));
+
+    AROS_USERFUNC_EXIT
+}
+
+static int sbprintf(struct StringBuffer *sb, const char *fmt, ...)
+{
+    int l = BUFFER_SIZE - sb->pos;
+    va_list ap;
+
+    va_start(ap, fmt);
+    l = vsnprintf(&sb->buf[sb->pos], l, fmt, ap);
+    va_end(ap);
+    sb->pos += l;
+
+    return l;
+}
+
+AROS_LH1(APTR, Disassemble,
+	 AROS_LHA(struct DisData *, ds, A0),
+	 struct DisasmBase *, DisassemblerBase, 5, Disassembler)
+{
+    AROS_LIBFUNC_INIT
+
+    bfd abfd;
+    disassembler_ftype disasm;
+    disassemble_info dinfo;
+    struct StringBuffer sbuf;
+    unsigned char *addr;
+    int len, i;
+
+    D(bug("[Disassembler] Disassemble() from %p to %p\n", ds->ds_From, ds->ds_UpTo));
+
+    init_disassemble_info(&dinfo, &sbuf, sbprintf);
+    set_default_machine(&abfd, &dinfo);
+    set_memory_bounds(&dinfo, ds->ds_From);
+
+    disasm = disassembler(&abfd);
+    D(bug("[Disassembler] Obtained disassembler function 0x%p\n", disasm));
+    if (!disasm) {
+        NewRawDoFmt("%s\n", dsPutCh, ds, "Error: unsupported architecture");
+	return ds->ds_From;
+    }
+
+    for (addr = ds->ds_From; addr <= (unsigned char *)ds->ds_UpTo; addr += len) {
+	NewRawDoFmt(ADDRESS_FORMAT, dsPutCh, ds, addr, (addr == ds->ds_PC) ? '*' : ' ');
+	sbuf.pos = 0;
+
+	/* Libopcode is not reentrant, we use a semaphore until we find a better solution */
+	ObtainSemaphore(&DisassemblerBase->sem);
+        len = disasm((IPTR)addr, &dinfo);
+	ReleaseSemaphore(&DisassemblerBase->sem);
+
+	for (i = 0; i < len; i++)
+	    NewRawDoFmt("%02x ", dsPutCh, ds, addr[i]);
+	for (; i < dinfo.bytes_per_line; i++)
+	    RawDoFmt("    ", NULL, dsPutCh, ds);
+	NewRawDoFmt("%s\n", dsPutCh, ds, sbuf.buf);
+    }
+
+    return addr;
+
+    AROS_LIBFUNC_EXIT
+}

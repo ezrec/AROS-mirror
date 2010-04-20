@@ -1,0 +1,7 @@
+##base _DisassemblerBase
+##bias 66
+** 6 slots reserved here
+##public
+Disassemble(data)(a0)
+FindStartPosition(startpc,min,max)(a0,d0,d1)
+##end

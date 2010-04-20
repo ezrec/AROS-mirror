@@ -1,0 +1,14 @@
+Short:    A library based disassembler
+Uploader: Pavel Fedin <pavel_fedin@mail.ru>
+Author:   Pavel Fedin <pavel_fedin@mail.ru>
+Type:     util/libs
+Requires: Os 2.04
+Version:  41.0
+Architecture: all
+
+-----------------------------------------------------------------------------
+
+This is an opensource reimplementation of disassembler.library v40 by Thomas Richter.
+Unlike oririginal, this library is portable and can disassemble not only m68k code.
+
+Includes libopcode from binutils v2.19 package
