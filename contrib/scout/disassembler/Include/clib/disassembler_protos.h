@@ -2,12 +2,13 @@
 #define  CLIB_DISASSEMBLER_PROTOS_H
 
 /*
-**      $VER: disassembler_protos.h 40.2 (31.10.99)
-**      Includes Release 40.2
+**      $VER: disassembler_protos.h 41.0 (20.04.2010)
+**      Includes Release 41.0
 **
 **      C prototypes.
 **
 **      © 1999 THOR-Software (Thomas Richter)
+**	© 2010 Pavel Fedin
 **
 */
 

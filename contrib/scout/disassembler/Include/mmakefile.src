@@ -1,0 +1,26 @@
+include $(TOP)/config/make.cfg
+
+FILES := $(AROS_INCLUDES)/proto/disassembler.h \
+	 $(AROS_INCLUDES)/defines/disassembler.h \
+	 $(AROS_INCLUDES)/clib/disassembler_protos.h \
+	 $(AROS_INCLUDES)/libraries/disassembler.h
+
+DEPS := $(SRCDIR)/$(CURDIR)/disassembler_lib.fd $(SRCDIR)/$(CURDIR)/clib/disassembler_protos.h
+
+#MM
+contrib-scout-disassembler-includes: $(FILES)
+
+%copy_includes path=clib dir=include/clib
+%copy_includes path=libraries dir=include/libraries
+
+$(AROS_INCLUDES)/libraries/disassembler.h: $(SRCDIR)/$(CURDIR)/libraries/disassembler.h
+	$(CP) -f $^ $@
+
+$(AROS_INCLUDES)/clib/disassembler_protos.h: $(SRCDIR)/$(CURDIR)/clib/disassembler_protos.h
+	$(CP) -f $^ $@
+
+$(AROS_INCLUDES)/proto/disassembler.h: $(DEPS)
+	fd2inline --mode=proto $^ -o $@
+
+$(AROS_INCLUDES)/defines/disassembler.h: $(DEPS)
+	fd2inline --mode=new --target=x-aros $^ -o $@

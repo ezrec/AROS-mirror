@@ -1,6 +1,7 @@
 #include <aros/cpu.h>
 #include <exec/execbase.h>
 #include <exec/memory.h>
+#include <proto/arossupport.h>
 #include <proto/exec.h>
 
 #include "dis-asm.h"
@@ -74,6 +75,7 @@ void set_memory_bounds(disassemble_info *dinfo, APTR address)
 void _abort(char *file, unsigned int line)
 {
     kprintf("*** abort() in file %s at line %u\n", file, line);
+    kprintf("This should never happen. Program halted.\n");
     for (;;)
         Wait(0);
 }

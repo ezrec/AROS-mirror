@@ -1,0 +1,26 @@
+#   $Id: mmakefile.src 31014 2009-03-25 11:54:33Z NicJA $
+
+#   AROS metamakefile for codesetslib
+
+include $(TOP)/config/make.cfg
+
+FILES := library disassemble findstartposition support
+
+USER_CFLAGS  := -I$(SRCDIR)/$(CURDIR)/bfd -I$(SRCDIR)/$(CURDIR)/opcodes/include
+USER_LDFLAGS := -L$(GENDIR)/$(CURDIR)/opcodes
+
+#MM contrib-scout-disassembler : contrib-scout-disassembler-includes contrib-scout-disassembler-opcodes includes linklibs
+#MM contrib-scout-disassembler-quick : contrib-scout-disassembler-includes contrib-scout-disassembler-opcodes-quick
+
+# We use 'usehostlibs' here because libraries listed there are not included into dependencies list.
+# We have to repeat 'rom' because otherwise references from libopcodes are not resolved correctly
+# (libraries are always searched in they order in which they are specified in linker command line
+# and usehostlibs goes after uselibs)
+
+%build_module_simple mmake=contrib-scout-disassembler \
+    modname=disassembler modtype=library \
+    files=$(FILES) \
+    uselibs="arossupport rom" \
+    usehostlibs="opcodes rom"
+
+%common

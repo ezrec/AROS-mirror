@@ -1,19 +1,16 @@
 ;*************************************************************************
 ;** disassembler.library                                                **
 ;**                                                                     **
-;** a simple system library for disassembling a86K binaries             **
+;** An LGPL reimplementation of disassembler.library v40                **
+;** © 2010 Pavel Fedin                                                  **
 ;**                                                                     **
+;** disassembler.libary v40 is:                                         **
 ;** © 1999 THOR-Software, Thomas Richter                                **
-;** No commercial use, reassembly, modification without prior, written  **
-;** permission of the authors.                                          **
-;** Including this library in any commercial software REQUIRES a        **
-;** written permission and the payment of a small fee.                  **
-;**                                                                     **
 ;**---------------------------------------------------------------------**
 ;** Definition of the library, and structures                           **
 ;**									**
-;** $VER: 40.2 (31.10.99) © THOR                       			**
-;*************************************************************************
+;** $VER: 41.0 (20.04.2010)                        			**
+;*************************************************************************/
 
         IFND LIBRARIES_DISASSEMBLER_I
 

@@ -1,0 +1,9 @@
+include $(TOP)/config/make.cfg
+
+#MM- contrib-scout-disassembler-opcodes: contrib-scout-disassembler-opcodes-setup
+#MM- contrib-scout-disassembler-opcodes-quick: contrib-scout-disassembler-opcodes-setup
+
+%copy_dir_recursive mmake=contrib-scout-disassembler-opcodes-setup src=../bfd dst=$(GENDIR)/$(CURDIR)/../bfd
+
+%build_with_configure mmake=contrib-scout-disassembler-opcodes prefix=$(AROSDIR) \
+    install_target=""
