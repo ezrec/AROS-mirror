@@ -11,7 +11,7 @@ OBJS  := library.o disassemble.o findstartposition.o support.o
 all: $(TARGET)
 
 $(TARGET): $(OBJS) includes libopcodes
-	$(CC) $(LDFLAGS) $^ -o $@ -L opcodes -lopcodes $(LIBS) -nostartfiles
+	$(CC) $(LDFLAGS) $(OBJS) -o $@ -L opcodes -lopcodes $(LIBS) -nostartfiles
 
 includes:
 	make -C Include
