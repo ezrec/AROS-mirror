@@ -21,6 +21,7 @@
  *
  * @author Andreas Gelhausen
  * @author Richard Körber <rkoerber@gmx.de>
+ * @author Pavel Fedin <sonic_amiga@mail.ru>
  */
 
 #include "system_headers.h"
@@ -215,6 +216,18 @@ STATIC ULONG mShowFunctions( struct IClass *cl,
             NoReqOn();
 
             for (offset = LIB_VECTSIZE; offset <= max; offset += LIB_VECTSIZE) {
+#ifdef __AROS__
+		struct JumpVec *je;
+		
+		je = (struct JumpVec *)((UBYTE *)lib - offset);
+		
+		fe->fe_Address = *((APTR *)je->vec);
+		if (points2ram(fe->fe_Address)) {
+                    _snprintf(fe->fe_AddressStr, sizeof(fe->fe_AddressStr), MUIX_PH "$%08lx" MUIX_PT, fe->fe_Address);
+                } else {
+                    _snprintf(fe->fe_AddressStr, sizeof(fe->fe_AddressStr), "$%08lx", fe->fe_Address);
+                }
+#else
                 struct JumpEntry *je;
 
                 je = (struct JumpEntry *)((UBYTE *)lib - offset);
@@ -234,6 +247,7 @@ STATIC ULONG mShowFunctions( struct IClass *cl,
                     fe->fe_Address = (APTR)-1;
                     stccpy(fe->fe_AddressStr, txtNoJump, sizeof(fe->fe_AddressStr));
                 }
+#endif
 
                 fe->fe_Offset = offset;
                 _snprintf(fe->fe_OffsetDec, sizeof(fe->fe_OffsetDec), "-%ld", offset);
