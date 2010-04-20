@@ -26,16 +26,32 @@ struct StringBuffer
     char buf[BUFFER_SIZE];
 };
 
+struct OutputContext
+{
+    UWORD cnt;
+    struct DisData *ds;
+};
+
 AROS_UFH2(static void, dsPutCh,
 	  AROS_UFHA(UBYTE, c, D0),
-	  AROS_UFHA(struct DisData *, ds, A3))
+	  AROS_UFHA(struct OutputContext *, ctx, A3))
 {
     AROS_USERFUNC_INIT
-    
-    AROS_UFC3(void, ds->ds_PutProc,
+
+    if (ctx->ds->ds_Truncate) {
+        if ((c == '\n') || (!c))
+	    ctx->cnt = 0;
+	else {
+	    if (ctx->cnt == ctx->ds->ds_Truncate)
+	        return;
+	    ctx->cnt++;
+	}
+    }
+
+    AROS_UFC3(void, ctx->ds->ds_PutProc,
 	      AROS_UFCA(UBYTE, c, D0),
-	      AROS_UFCA(APTR, ds->ds_UserData, A3),
-	      AROS_UFCA(APTR, ds->ds_UserBase, A4));
+	      AROS_UFCA(APTR, ctx->ds->ds_UserData, A3),
+	      AROS_UFCA(APTR, ctx->ds->ds_UserBase, A4));
 
     AROS_USERFUNC_EXIT
 }
@@ -65,6 +81,10 @@ AROS_LH1(APTR, Disassemble,
     struct StringBuffer sbuf;
     unsigned char *addr;
     int len, i;
+    struct OutputContext ctx = {
+	0,
+	ds
+    };
 
     D(bug("[Disassembler] Disassemble() from %p to %p\n", ds->ds_From, ds->ds_UpTo));
 
@@ -80,7 +100,7 @@ AROS_LH1(APTR, Disassemble,
     }
 
     for (addr = ds->ds_From; addr <= (unsigned char *)ds->ds_UpTo; addr += len) {
-	NewRawDoFmt(ADDRESS_FORMAT, dsPutCh, ds, addr, (addr == ds->ds_PC) ? '*' : ' ');
+	NewRawDoFmt(ADDRESS_FORMAT, dsPutCh, &ctx, addr, (addr == ds->ds_PC) ? '*' : ' ');
 	sbuf.pos = 0;
 
 	/* Libopcode is not reentrant, we use a semaphore until we find a better solution */
@@ -89,10 +109,10 @@ AROS_LH1(APTR, Disassemble,
 	ReleaseSemaphore(&DisassemblerBase->sem);
 
 	for (i = 0; i < len; i++)
-	    NewRawDoFmt("%02x ", dsPutCh, ds, addr[i]);
+	    NewRawDoFmt("%02x ", dsPutCh, &ctx, addr[i]);
 	for (; i < dinfo.bytes_per_line; i++)
-	    RawDoFmt("    ", NULL, dsPutCh, ds);
-	NewRawDoFmt("%s\n", dsPutCh, ds, sbuf.buf);
+	    RawDoFmt("    ", NULL, dsPutCh, &ctx);
+	NewRawDoFmt("%s\n", dsPutCh, &ctx, sbuf.buf);
     }
 
     return addr;
