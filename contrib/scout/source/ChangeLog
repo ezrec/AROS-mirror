@@ -2,8 +2,13 @@
 Scout Open Source - ChangeLog
 -----------------------------
 
-$Id: ChangeLog,v 1.148 2010/04/10 11:40:52 henes Exp $
-$Source: /cvsroot-fuse/scoutos/scoutos/source/ChangeLog,v $
+$Id: ChangeLog,v 1.151 2010/04/21 17:10:24 sonic_amiga Exp $
+$Source: /cvsroot/scoutos/scoutos/source/ChangeLog,v $
+
+2010-04-21  Pavel Fedin <pavel_fedin@mail.ru>
+  * Misc fixes for AROS build
+  * Added listing monitors
+  * Improved server mode, does not require set_socket_stdio() hack
 
 2010-04-10  Nicolas Sallin <henes@biclodon.com>
   * Misc fixes for MorphOS build.

@@ -83,20 +83,20 @@ STATIC void SetDetails( struct IClass *cl,
 
     MySetContents(mdwd->mdwd_Texts[ 0], "%s", Mspc->ms_Node.xln_Name);
     MySetContents(mdwd->mdwd_Texts[ 1], "$%08lx", Mspc);
-    MySetContents(mdwd->mdwd_Texts[ 2], "$%04lx", Mspc->ms_Flags);
+    set(mdwd->mdwd_Texts[ 2], MUIA_FlagsButton_Flags, Mspc->ms_Flags);
     MySetContents(mdwd->mdwd_Texts[ 3], "%lD x %lD", Mspc->ratioh, Mspc->ratiov);
     MySetContents(mdwd->mdwd_Texts[ 4], "%lD", Mspc->total_rows);
     MySetContents(mdwd->mdwd_Texts[ 5], "%lD", Mspc->total_colorclocks);
     MySetContents(mdwd->mdwd_Texts[ 6], "%lDµs", (ULONG)Mspc->total_colorclocks * 280);
     MySetContents(mdwd->mdwd_Texts[ 7], "%lD", Mspc->DeniseMaxDisplayColumn);
-    MySetContents(mdwd->mdwd_Texts[ 8], "$%04lx", Mspc->BeamCon0);
+    set(mdwd->mdwd_Texts[ 8], MUIA_FlagsButton_Flags, Mspc->BeamCon0);
     MySetContents(mdwd->mdwd_Texts[ 9], "%lD", Mspc->min_row);
     MySetContents(mdwd->mdwd_Texts[10], "%lD", Mspc->ms_OpenCount);
     set(mdwd->mdwd_Texts[11], MUIA_DisassemblerButton_Address, Mspc->ms_transform);
     set(mdwd->mdwd_Texts[12], MUIA_DisassemblerButton_Address, Mspc->ms_translate);
     set(mdwd->mdwd_Texts[13], MUIA_DisassemblerButton_Address, Mspc->ms_scale);
     MySetContents(mdwd->mdwd_Texts[14], "%lD x %lD", Mspc->ms_xoffset, Mspc->ms_yoffset);
-    MySetContents(mdwd->mdwd_Texts[15], "%lD x %lD (%lD x %lD)", Mspc->ms_LegalView.MaxX - Mspc->ms_LegalView.MinX + 1, Mspc->ms_LegalView.MaxY - Mspc->ms_LegalView.MinY + 1, Mspc->ms_LegalView.MinX, Mspc->ms_LegalView.MinY);
+    MySetContents(mdwd->mdwd_Texts[15], "%lD x %lD - %lD x %lD", Mspc->ms_LegalView.MinX, Mspc->ms_LegalView.MinY, Mspc->ms_LegalView.MaxX, Mspc->ms_LegalView.MaxY);
     set(mdwd->mdwd_Texts[16], MUIA_DisassemblerButton_Address, Mspc->ms_maxoscan);
     set(mdwd->mdwd_Texts[17], MUIA_DisassemblerButton_Address, Mspc->ms_videoscan);
     MySetContents(mdwd->mdwd_Texts[18], "%lD", Mspc->DeniseMaxDisplayColumn);
