@@ -5,8 +5,8 @@ LIBS   := -larossupport -lrom
 TARGET := disassembler.library
 INCLUDES := -Ibfd -Iopcodes/include -isystem Include
 
-FILES := library.c disassemble.c findstartposition.c support.c
-OBJS  := library.o disassemble.o findstartposition.o support.o
+FILES := library.c disassemble.c findstartposition.c libbfd.c support.c
+OBJS  := library.o disassemble.o findstartposition.o libbfd.o support.o
 
 all: $(TARGET)
 
@@ -26,6 +26,9 @@ disassemble.o: disassemble.c support.h bfd/bfd.h opcodes/include/dis-asm.h
 	$(CC) -c $(CFLAGS) $(INCLUDES) $<
 
 findstartposition.o: findstartposition.c
+	$(CC) -c $(CFLAGS) $(INCLUDES) $<
+
+libbfd.o: libbfd.c bfd/bfd.h
 	$(CC) -c $(CFLAGS) $(INCLUDES) $<
 
 library.o: library.c library.h
