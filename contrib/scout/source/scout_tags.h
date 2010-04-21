@@ -271,7 +271,7 @@
 
 #define MUIA_LowMemoryDetailWin_LowMemoryHandler    (TAGBASE_TBOECKEL | 0x2120)
 
-
+#define MUIA_MonitorsDetailWin_MonitorSpec	    (TAGBASE_TBOECKEL | 0x2130)
 
 
 

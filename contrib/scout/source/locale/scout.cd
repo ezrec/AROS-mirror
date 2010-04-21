@@ -4803,3 +4803,96 @@ monitor spec
 txtNodeTypeMonitorclass (//)
 monitorclass
 ;
+txtMonitorsDetailTitle (//)
+MONITOR
+;
+txtMonitorFlagsTitle (//)
+MonitorSpec flags
+;
+txtMonitorFlags (//)
+ms_Flags
+;
+txtMonitorFlags2 (//)
+ms_Flags:
+;
+txtMonitorRatio (//)
+ratio:
+;
+txtMonitorTotalRows (//)
+total_rows:
+;
+txtMonitorTotalColorClocks (//)
+total_color_clocks:
+;
+txtMonitorDeniseMaxDisplayColumn (//)
+DeniseMaxDisplayColumn:
+;
+txtMonitorBeamCon0Title (//)
+BeamCon0 bits
+;
+txtMonitorBeamCon0 (//)
+BeamCon0
+;
+txtMonitorBeamCon0_2 (//)
+BeamCon0:
+;
+txtMonitorMinRow (//)
+min_row:
+;
+txtMonitorTransform (//)
+ms_transform:
+;
+txtMonitorTranslate (//)
+ms_translate:
+;
+txtMonitorScale (//)
+ms_scale:
+;
+txtMonitorOffset (//)
+offset:
+;
+txtMonitorLegalView (//)
+ms_LegalView:
+;
+txtMonitorMaxoscan (//)
+ms_maxoscan:
+;
+txtMonitorVideoscan (//)
+ms_videoscan:
+;
+txtMonitorDeniseMinDisplayColumn (//)
+DeniseMinDisplayColumn:
+;
+txtMonitorDisplayCompatible (//)
+DisplayCompatible:
+;
+txtMonitorMrgCop (//)
+ms_MrgCop:
+;
+txtMonitorLoadView (//)
+ms_LoadView:
+;
+txtMonitorKillView (//)
+ms_KillView:
+;
+txtMonitorSpecial (//)
+ms_Special
+;
+txtSpecialMonitorFlags (//)
+spm_Flags:
+;
+txtSpecialMonitorDoMonitor (//)
+do_monitor:
+;
+txtSpecialMonitorHBlank (//)
+hblank:
+;
+txtSpecialMonitorVBlank (//)
+vblank:
+;
+txtSpecialMonitorHSync (//)
+hsync:
+;
+txtSpecialMonitorVSync (//)
+vsync:
+;

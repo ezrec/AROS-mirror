@@ -414,17 +414,19 @@ STATIC ULONG mMore( struct IClass *cl,
 
         if ((me = (struct MonitorEntry *)GetActiveEntry(ihwd->mwd_MonitorList)) != NULL) {
             APTR detailWin;
-/* Not written yet
-            if ((detailWin = (Object *)MonitorsDetailWindowObject,
-                    MUIA_Window_ParentWindow, (IPTR)obj,
-                    MUIA_Window_MaxChildWindowCount, (opts.SingleWindows) ? 1 : 0,
-                End) != NULL) {
-                COLLECT_RETURNIDS;
-                SetAttrs(detailWin, MUIA_MonitorsDetailWin_Monitor, me,
-                                    MUIA_Window_Open, TRUE,
-                                    TAG_DONE);
-                REISSUE_RETURNIDS;
-            }*/
+	    
+	    if (strcmp(me->mon_Pri, "---")) {
+                if ((detailWin = (Object *)MonitorsDetailWindowObject,
+                        MUIA_Window_ParentWindow, (IPTR)obj,
+                        MUIA_Window_MaxChildWindowCount, (opts.SingleWindows) ? 1 : 0,
+                    End) != NULL) {
+                    COLLECT_RETURNIDS;
+                    SetAttrs(detailWin, MUIA_MonitorsDetailWin_MonitorSpec, me->mon_Addr,
+                                        MUIA_Window_Open, TRUE,
+                                        TAG_DONE);
+                    REISSUE_RETURNIDS;
+		}
+            }
         }
     }
 

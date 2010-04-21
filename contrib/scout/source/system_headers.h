@@ -284,6 +284,7 @@
 #include "task_button.h"
 #include "port_button.h"
 #include "scout_monitors.h"
+#include "scout_monitors_detail.h"
 
 #if defined(__GNUC__)
     #define USE_NATIVE_64BIT_MATH          1
