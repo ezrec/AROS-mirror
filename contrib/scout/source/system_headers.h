@@ -325,6 +325,11 @@ struct TimeRequest
 
 #endif
 
+#if defined(__AROS__)
+    typedef UQUAD uint64;
+    typedef QUAD int64;
+#endif
+
 /*****************************************************************************/
 
 #endif /* _SYSTEM_HEADERS_H */
