@@ -85,6 +85,7 @@ FILES := \
    classes/disassembler_button \
    classes/scout_disassembler \
    classes/flags_button \
+   classes/monitor_button \
    classes/task_button \
    hexdump \
    startup \

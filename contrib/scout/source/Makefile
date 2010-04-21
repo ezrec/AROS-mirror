@@ -143,6 +143,7 @@ OBJECTS=$(OBJDIR)/startup.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_disassembler.o \
    $(OBJDIR)/$(CLASSESDIR)/disassembler_button.o \
    $(OBJDIR)/$(CLASSESDIR)/flags_button.o \
+   $(OBJDIR)/$(CLASSESDIR)/monitor_button.o \
    $(OBJDIR)/$(CLASSESDIR)/task_button.o \
    $(OBJDIR)/hexdump.o \
    $(OBJDIR)/scout_cat.o \

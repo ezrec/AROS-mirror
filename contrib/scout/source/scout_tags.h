@@ -328,6 +328,9 @@
 #define MUIM_PortButton_ShowPort                    (TAGBASE_TBOECKEL | 0x8400)
 #define MUIA_PortButton_Port                        (TAGBASE_TBOECKEL | 0x8401)
 
+#define MUIM_MonitorButton_ShowMonitorSpec	    (TAGBASE_TBOECKEL | 0x8500)
+#define MUIA_MonitorButton_MonitorSpec	    	    (TAGBASE_TBOECKEL | 0x8501)
+
 #define MUIA_Window_ParentWindow                    (TAGBASE_TBOECKEL | 0xe000)
 #define MUIA_Window_MaxChildWindowCount             (TAGBASE_TBOECKEL | 0xe001)
 #define MUIA_Window_LayoutString                    (TAGBASE_TBOECKEL | 0xe002)

@@ -2202,7 +2202,7 @@ Monitor info
 ;
 ;
 txtScreenModeOpenCount (//)
-OpenCnt:
+ms_OpenCnt:
 ;
 ;
 txtScreenModeViewPosition (//)
@@ -4895,4 +4895,7 @@ hsync:
 ;
 txtSpecialMonitorVSync (//)
 vsync:
+;
+txtScreenModeMonitorSpec (//)
+MonitorSpec:
 ;

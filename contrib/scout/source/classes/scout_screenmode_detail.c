@@ -110,9 +110,7 @@ STATIC void SetDetails( struct IClass *cl,
         }
         MySetContents(smdwd->smdwd_Texts[ 1], "$%08lx", sme->sme_ModeID);
 
-        MySetContents(smdwd->smdwd_Texts[ 2], "%s", smd->monitor.Mspc->ms_Node.xln_Name);
-        MySetContents(smdwd->smdwd_Texts[ 3], "$%08lx", smd->monitor.Mspc);
-        MySetContents(smdwd->smdwd_Texts[ 4], "%lD", smd->monitor.Mspc->ms_OpenCount);
+	set(smdwd->smdwd_Texts[ 2], MUIA_MonitorButton_MonitorSpec, smd->monitor.Mspc);
         MySetContents(smdwd->smdwd_Texts[ 5], "%lD x %lD", smd->monitor.ViewPosition.x, smd->monitor.ViewPosition.y);
         MySetContents(smdwd->smdwd_Texts[ 6], "%lD x %lD", smd->monitor.ViewResolution.x, smd->monitor.ViewResolution.y);
         MySetContents(smdwd->smdwd_Texts[ 7], "%lD x %lD - %lD x %lD", smd->monitor.ViewPositionRange.MinX, smd->monitor.ViewPositionRange.MinY, smd->monitor.ViewPositionRange.MaxX, smd->monitor.ViewPositionRange.MaxY);
@@ -202,12 +200,8 @@ STATIC ULONG mNew( struct IClass *cl,
                         Child, VGroup,
                             GroupFrameT(txtScreenModeMonitorInfo),
                             Child, ColGroup(2),
-                                Child, MyLabel2(txtName2),
-                                Child, (IPTR)(texts[ 2] = MyTextObject6()),
-                                Child, MyLabel2(txtAddress2),
-                                Child, (IPTR)(texts[ 3] = MyTextObject6()),
-                                Child, MyLabel2(txtScreenModeOpenCount),
-                                Child, (IPTR)(texts[ 4] = MyTextObject6()),
+                                Child, MyLabel2(txtScreenModeMonitorSpec),
+                                Child, (IPTR)(texts[ 2] = (Object *)MonitorButtonObject, End),
                                 Child, MyLabel2(txtScreenModeViewPosition),
                                 Child, (IPTR)(texts[ 5] = MyTextObject6()),
                                 Child, MyLabel2(txtScreenModeViewResolution),

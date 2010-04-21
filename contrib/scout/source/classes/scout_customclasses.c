@@ -63,6 +63,7 @@ struct MUI_CustomClass *TaskButtonClass = NULL;
 struct MUI_CustomClass *PortButtonClass = NULL;
 struct MUI_CustomClass *MonitorsWinClass = NULL;
 struct MUI_CustomClass *MonitorsDetailWinClass = NULL;
+struct MUI_CustomClass *MonitorButtonClass = NULL;
 
 BOOL CreateCustomClasses( void )
 {
@@ -129,6 +130,7 @@ BOOL CreateCustomClasses( void )
     if ((DisassemblerWinClass        = MakeDisassemblerWinClass()))
     if ((MonitorsWinClass            = MakeMonitorsWinClass()))
     if ((MonitorsDetailWinClass	     = MakeMonitorsDetailWinClass()))
+    if ((MonitorButtonClass	     = MakeMonitorButtonClass()))
     {
         return TRUE;
     }
@@ -202,4 +204,5 @@ void DeleteCustomClasses( void )
     if (FontDisplayClass)             MUI_DeleteCustomClass(FontDisplayClass);
     if (MonitorsWinClass)             MUI_DeleteCustomClass(MonitorsWinClass);
     if (MonitorsDetailWinClass)       MUI_DeleteCustomClass(MonitorsDetailWinClass);
+    if (MonitorButtonClass)           MUI_DeleteCustomClass(MonitorButtonClass);
 }
