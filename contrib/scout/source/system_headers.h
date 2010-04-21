@@ -294,10 +294,12 @@
     #include "i64.h"
 #endif
 
-#if !defined(__amigaos4__) && !defined(__AROS__)
+#if !defined(__amigaos4__)
     #include <showpatch.h>
     #include <setman.h>
+    #ifndef __AROS__
     #include <patchcontrol.h>
+    #endif
     #if !defined(__MORPHOS__)
     #include <pragmas/cia_private_pragmas.h>
     #endif

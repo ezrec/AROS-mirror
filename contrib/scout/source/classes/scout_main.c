@@ -167,10 +167,10 @@ STATIC ULONG mNew( struct IClass *cl,
         TAG_MORE, msg->ops_AttrList)) != NULL)
     {
         struct MainWinData *mwd = INST_DATA(cl, obj);
-    #if !defined(__amigaos4__) && !defined(__AROS__)
+    #if !defined(__amigaos4__)
         struct PatchPort *pp;
         struct SetManPort *sp;
-        struct Library *pc;
+        struct Library *pc = NULL;
     #endif
 
         set(obj, MUIA_Window_Title, MyGetWindowTitle("\0", mwd->mwd_Title, sizeof(mwd->mwd_Title)));
@@ -208,13 +208,15 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(button[28], MUIM_Notify,  MUIA_Pressed, FALSE, obj, 1, MUIM_MainWin_ShowResetHandlers);
 	DoMethod(button[29], MUIM_Notify,  MUIA_Pressed, FALSE, obj, 1, MUIM_MainWin_ShowMonitors);
 
-    #if defined(__amigaos4__) || defined(__AROS__)
+    #if defined(__amigaos4__)
         set(button[25], MUIA_Disabled, TRUE);
     #else
         Forbid();
         pp = (struct PatchPort *)FindPort(PATCHPORT_NAME);
         sp = (struct SetManPort *)FindPort(SETMANPORT_NAME);
+#ifndef __AROS__
         pc = (struct Library *)OpenResource(PATCHRES_NAME);
+#endif
         Permit();
         set(button[25], MUIA_Disabled, (pp == NULL && sp == NULL && pc == NULL));
     #endif

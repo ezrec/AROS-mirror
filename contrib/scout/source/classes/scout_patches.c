@@ -107,7 +107,7 @@ STATIC LONG patchlist_cmp2colfunc( struct PatchEntry *pe1,
     return cmp;
 }
 
-#if !defined(__amigaos4__) && !defined(__AROS__)
+#if !defined(__amigaos4__)
 STATIC LONG patchlist_cmpfunc( const struct Node *n1,
                                const struct Node *n2 )
 {
@@ -151,7 +151,7 @@ STATIC SAVEDS LONG patchlist_cmp2func( struct Hook *hook, Object *obj, struct NL
 }
 MakeStaticHook(patchlist_cmp2hook, patchlist_cmp2func);
 
-#if !defined(__amigaos4__) && !defined(__AROS__)
+#if !defined(__amigaos4__)
 STATIC void GetFunctionName( struct Library *lib,
                              LONG offset,
                              struct PatchEntry *pe )
@@ -201,7 +201,7 @@ STATIC void GetFunctionName( struct Library *lib,
 }
 #endif
 
-#if !defined(__amigaos4__) && !defined(__AROS__)
+#if !defined(__amigaos4__)
 STATIC void IterateSaferPatchesList( struct MinList *tmplist,
                                      struct PatchPort *pp )
 {
@@ -254,6 +254,7 @@ STATIC void IterateSaferPatchesList( struct MinList *tmplist,
     NoReqOff();
 }
 
+#ifndef __AROS__
 STATIC void IteratePatchControlList( struct MinList *tmplist,
                                      struct Library *PatchBase )
 {
@@ -297,6 +298,7 @@ STATIC void IteratePatchControlList( struct MinList *tmplist,
 
     FreePatchList(list);
 }
+#endif
 
 STATIC void IterateSetManList( struct MinList *tmplist,
                                struct SetManPort *sp )
@@ -375,7 +377,7 @@ STATIC void IterateList( void (* callback)( struct PatchEntry *pe, void *userDat
                          void *userData,
                          BOOL sort )
 {
-#if !defined(__amigaos4__) && !defined(__AROS__)
+#if !defined(__amigaos4__)
     struct MinList tmplist;
     struct PatchEntry *pe;
     struct PatchPort *pp;
@@ -387,13 +389,17 @@ STATIC void IterateList( void (* callback)( struct PatchEntry *pe, void *userDat
     Forbid();
     pp = (struct PatchPort *)FindPort(PATCHPORT_NAME);
     sp = (struct SetManPort *)FindPort(SETMANPORT_NAME);
+#ifndef __AROS__
     pc = (struct Library *)OpenResource(PATCHRES_NAME);
+#endif
     Permit();
 
     if (pp) {
         IterateSaferPatchesList(&tmplist, pp);
+#ifndef __AROS__
     } else if (pc) {
         IteratePatchControlList(&tmplist, pc);
+#endif
     } else if (sp) {
         IterateSetManList(&tmplist, sp);
     } else {
@@ -484,7 +490,7 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(exitButton,    MUIM_Notify, MUIA_Pressed,             FALSE,          obj,                     3, MUIM_Set, MUIA_Window_CloseRequest, TRUE);
         DoMethod(patchlist,     MUIM_NList_Sort3, MUIV_NList_Sort3_SortType_1, MUIV_NList_SortTypeAdd_None, MUIV_NList_Sort3_SortType_Both);
 
-    #if !defined(__amigaos4__) && !defined(__AROS__)
+    #if !defined(__amigaos4__)
         Forbid();
         pwd->pwd_SetManPort = (struct SetManPort *)FindPort(SETMANPORT_NAME);
         Permit();
@@ -573,7 +579,7 @@ STATIC ULONG mEnable( struct IClass *cl,
                       Object *obj,
                       Msg msg )
 {
-#if !defined(__amigaos4__) && !defined(__AROS__)
+#if !defined(__amigaos4__)
     struct PatchesWinData *pwd = INST_DATA(cl, obj);
     ULONG id = MUIV_NList_NextSelected_Start;
 
@@ -626,7 +632,7 @@ STATIC ULONG mDisable( struct IClass *cl,
                        Object *obj,
                        Msg msg )
 {
-#if !defined(__amigaos4__) && !defined(__AROS__)
+#if !defined(__amigaos4__)
     struct PatchesWinData *pwd = INST_DATA(cl, obj);
     ULONG id = MUIV_NList_NextSelected_Start;
     ULONG disableMode = 1;
