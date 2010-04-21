@@ -6,6 +6,8 @@
 #include <libraries/disassembler.h>
 #include <proto/exec.h>
 
+#include <setjmp.h>
+
 #include "library.h"
 
 #define LIBNAME "disassembler.library"

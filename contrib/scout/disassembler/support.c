@@ -1,10 +1,14 @@
 #include <aros/cpu.h>
 #include <exec/execbase.h>
 #include <exec/memory.h>
+#include <exec/tasks.h>
 #include <proto/arossupport.h>
 #include <proto/exec.h>
 
+#include <setjmp.h>
+
 #include "dis-asm.h"
+#include "library.h"
 #include "support.h"
 #include "bfd.h"
 
@@ -63,7 +67,7 @@ void set_memory_bounds(disassemble_info *dinfo, APTR address)
 	if(address>=mh->mh_Lower&&address<mh->mh_Upper)
 	{
 	    dinfo->buffer_vma = (IPTR)mh->mh_Lower;
-	    dinfo->buffer = dinfo->buffer_vma;
+	    dinfo->buffer = mh->mh_Lower;
 	    dinfo->buffer_length = mh->mh_Upper - mh->mh_Lower;
 	    break;
 	}
@@ -74,8 +78,12 @@ void set_memory_bounds(disassemble_info *dinfo, APTR address)
 
 void _abort(char *file, unsigned int line)
 {
-    kprintf("*** abort() in file %s at line %u\n", file, line);
-    kprintf("This should never happen. Program halted.\n");
-    for (;;)
-        Wait(0);
+    struct Task *me;
+    struct AbortContext *ctx;
+
+    me = FindTask(NULL);
+    ctx = (struct AbortContext *)me->tc_UserData;
+    ctx->file = file;
+    ctx->line = line;
+    longjmp(ctx->buf, -1);
 }
