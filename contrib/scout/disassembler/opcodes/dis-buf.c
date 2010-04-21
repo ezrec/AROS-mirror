@@ -19,12 +19,18 @@
    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston,
    MA 02110-1301, USA.  */
 
-#include <aros/debug.h>
+#ifdef __AROS__
+#include <clib/arossupport_protos.h>
+#else
+#include <clib/debug_protos.h>
+#endif
 
 #include "sysdep.h"
 #include "dis-asm.h"
 #include <errno.h>
 #include "opintl.h"
+
+#define D(x)
 
 /* Get LENGTH bytes from info's buffer, at target address memaddr.
    Transfer them to myaddr.  */
@@ -39,13 +45,13 @@ buffer_read_memory (bfd_vma memaddr,
   unsigned int max_addr_offset = info->buffer_length / opb; 
   unsigned int octets = (memaddr - info->buffer_vma) * opb;
 
-  D(bug("[buffer_read_memory] memaddr = 0x%p, length = %u, buffer_vma = 0x%p, buffer_length = %u, buffer = %p\n",
+  D(kprintf("[buffer_read_memory] memaddr = 0x%p, length = %u, buffer_vma = 0x%p, buffer_length = %u, buffer = %p\n",
          memaddr, length, info->buffer_vma, info->buffer_length, info->buffer));
   if (memaddr < info->buffer_vma
       || memaddr - info->buffer_vma + end_addr_offset > max_addr_offset)
     /* Out of bounds.  Use EIO because GDB uses it.  */
     return EIO;
-  D(bug("[buffer_read_memory] Reading %u bytes from 0x%p\n", length, info->buffer + octets));
+  D(kprintf("[buffer_read_memory] Reading %u bytes from 0x%p\n", length, info->buffer + octets));
   memcpy (myaddr, info->buffer + octets, length);
 
   return 0;

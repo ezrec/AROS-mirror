@@ -1128,6 +1128,11 @@ case "${targ}" in
   powerpc-*-macos*)
     targ_defvec=pmac_xcoff_vec
     ;;
+  powerpc-*-morphos*)
+    targ_defvec=bfd_elf32_morphos_vec
+    targ_selvecs="rs6000coff_vec bfd_elf32_powerpc_vec bfd_elf32_powerpcle_vec ppcboot_vec"
+    targ64_selvecs="bfd_elf64_powerpc_vec bfd_elf64_powerpcle_vec"
+    ;;
   powerpc-*-lynxos*)
     targ_defvec=bfd_elf32_powerpc_vec
     targ_selvecs="rs6000coff_vec"
