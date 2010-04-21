@@ -119,6 +119,8 @@ AROS_LH1(APTR, Disassemble,
 	    ObtainSemaphore(&DisassemblerBase->sem);
             len = disasm((IPTR)addr, &dinfo);
 	    ReleaseSemaphore(&DisassemblerBase->sem);
+	    if (len == -1)
+		break;
 
 	    for (i = 0; i < len; i++)
 	        NewRawDoFmt("%02x ", dsPutCh, &ctx, addr[i]);

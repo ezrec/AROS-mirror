@@ -9,6 +9,12 @@
 
 #include <exec/types.h>
 
+#ifdef __WORDSIZE
+#define BFD_DEFAULT_TARGET_SIZE __WORDSIZE
+#else
+#define BFD_DEFAULT_TARGET_SIZE 32
+#endif
+
 typedef IPTR bfd_vma;
 typedef SIPTR bfd_signed_vma;
 typedef IPTR symvalue;
@@ -542,11 +548,16 @@ enum bfd_endian { BFD_ENDIAN_BIG, BFD_ENDIAN_LITTLE, BFD_ENDIAN_UNKNOWN };
 typedef struct bfd
 {
     enum bfd_architecture arch;
+    unsigned long mach;
     enum bfd_endian endian;
 } bfd;
 
 #define bfd_get_arch(abfd) abfd->arch
+#define bfd_get_mach(abfd) abfd->mach
 #define bfd_big_endian(abfd) (abfd->endian == BFD_ENDIAN_BIG)
+
+bfd_vma	bfd_getb32(const unsigned char *);
+bfd_vma	bfd_getl32(const unsigned char *);
 
 /* Incomplete, ARM is claimed to need this */
 

@@ -52,6 +52,7 @@ void set_default_machine(bfd *abfd, disassemble_info *dinfo)
 #endif
 
     abfd->arch = dinfo->arch;
+    abfd->mach = dinfo->mach;
     abfd->endian = dinfo->endian;
 }
 
@@ -86,4 +87,11 @@ void _abort(char *file, unsigned int line)
     ctx->file = file;
     ctx->line = line;
     longjmp(ctx->buf, -1);
+}
+
+/* This is just a quick kludge which will allow PPC target to compile.
+   It will not work until this is written */
+void *calloc(size_t nmemb, size_t size)
+{
+    return NULL;
 }
