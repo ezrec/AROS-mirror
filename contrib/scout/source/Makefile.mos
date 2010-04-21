@@ -207,7 +207,7 @@ $(OBJDIR)/$(CLASSESDIR)/scout_about.o: $(CLASSESDIR)/scout_about.c $(CLASSESDIR)
 $(OBJDIR)/$(CLASSESDIR)/scout_version.o: $(CLASSESDIR)/scout_version.c $(CLASSESDIR)/scout_version.h Scout_rev.h
 	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINE) $< -o $@
 
-$(OBJDIR)/all_gcc.o: all_gcc.c $(EXTRASRC)/init_inet_daemon.c $(EXTRASRC)/set_socket_stdio.c $(EXTRASRC)/vasprintf.c
+$(OBJDIR)/all_gcc.o: all_gcc.c $(EXTRASRC)/init_inet_daemon.c $(EXTRASRC)/vasprintf.c
 
 tbLib/libtblib.a:
 	@cd tbLib; make -f Makefile.mos

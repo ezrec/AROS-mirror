@@ -215,7 +215,7 @@ $(OBJDIR)/$(CLASSESDIR)/scout_version.o: $(CLASSESDIR)/scout_version.c $(CLASSES
 	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINE) $< -o $@
 
 $(OBJDIR)/all_gcc.o: all_gcc.c $(EXTRASRC)/stccpy.c $(EXTRASRC)/stcd_i.c $(EXTRASRC)/stcd_l.c \
-    $(EXTRASRC)/init_inet_daemon.c $(EXTRASRC)/set_socket_stdio.c
+    $(EXTRASRC)/init_inet_daemon.c
 
 tbLib/libtblib.a:
 	-make -C tbLib $@

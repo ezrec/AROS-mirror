@@ -80,7 +80,6 @@ struct Library*         UserGroupBase;
 #endif
 
 extern int init_inet_daemon(void);
-extern int set_socket_stdio(int sock);
 
 void failtcp( void )
 {
@@ -468,9 +467,8 @@ int isNetCall (void)
 
    server_socket = init_inet_daemon();
    if (server_socket >= 0) {
-      set_socket_stdio (server_socket);
       sinlen = sizeof (sin);
-      if (getpeername (0, (struct sockaddr *) &sin, (socklen_t *)&sinlen) == -1) {
+      if (getpeername (server_socket, (struct sockaddr *) &sin, (socklen_t *)&sinlen) == -1) {
 //         logprint ("scout: getpeername() failed\n");
          rc = FALSE;
       }
@@ -502,7 +500,7 @@ int VARARGS68K STDARGS SendClient( CONST_STRPTR fmt, ... )
     VA_START(args,fmt);
 
     if ((buf = VASPrintf(fmt, VA_ARG(args, APTR))) != NULL) {
-        if (send(0, buf, strlen(buf) + 1, 0) == strlen(buf) + 1) {
+        if (send(server_socket, buf, strlen(buf) + 1, 0) == strlen(buf) + 1) {
             result = TRUE;
         }
 
@@ -524,7 +522,7 @@ BOOL SendEncodedEntry( void *structure,
         if (s[i] == '\0') s[i] = '\1';
     }
 
-    return (BOOL)((send(0, structure, length, 0) == length) ? TRUE : FALSE);
+    return (BOOL)((send(server_socket, structure, length, 0) == length) ? TRUE : FALSE);
 }
 
 long VARARGS68K STDARGS SendResultString( CONST_STRPTR fmt, ... )
@@ -660,21 +658,21 @@ ULONG netdaemon (VOID) {
    if ((rootpw = getpwnam ("root")) != NULL)
       rootid = rootpw->pw_gid;
 
-   if ((sgets (0, buffer, LINELEN)) && (strcmp (buffer, CMD_BEGIN) == 0)) {
+   if ((sgets (server_socket, buffer, LINELEN)) && (strcmp (buffer, CMD_BEGIN) == 0)) {
 //logprint ("BEGIN\n");
-      if ((sgets (0, buffer, LINELEN)) && (len = isCommand (buffer, CMD_USER)) \
+      if ((sgets (server_socket, buffer, LINELEN)) && (len = isCommand (buffer, CMD_USER)) \
         && (pw = getpwnam (buffer + len))) {
 //logprint ("USER %s\n", buffer + len);
 
          if (((rootpw) && (rootid == pw->pw_gid)) || (! rootpw)) {
 
-            if ((sgets (0, buffer, LINELEN)) && (len = isCommand (buffer, CMD_PASSWORD))
+            if ((sgets (server_socket, buffer, LINELEN)) && (len = isCommand (buffer, CMD_PASSWORD))
               && (strcmp ((char *)crypt ((UBYTE *)buffer + len, (UBYTE *)pw->pw_passwd), pw->pw_passwd) == 0)) {
 //logprint ("PASSWORD %s\n", buffer + len);
 
                if (SendClient (CMD_CONNECTED)) {
 //logprint ("'CONNECTED' send!\n");
-                  while (sgets (0, buffer, LINELEN)) {
+                  while (sgets (server_socket, buffer, LINELEN)) {
 //logprint ("COMMAND '%s'\n", buffer);
                      if (strcmp (buffer, CMD_END) == 0) {
                         break;
