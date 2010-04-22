@@ -2,8 +2,10 @@ CC     := gcc
 CFLAGS := -O3
 LIBS   := -larossupport -lrom
 
-TARGET := disassembler.library
+TARGET   := disassembler.library
 INCLUDES := -Ibfd -Iopcodes/include -isystem Include
+
+include makefile.inc
 
 FILES := library.c disassemble.c findstartposition.c libbfd.c libc.c object.c support.c
 OBJS  := $(FILES:%.c=%.o)
@@ -11,7 +13,7 @@ OBJS  := $(FILES:%.c=%.o)
 all: $(TARGET)
 
 $(TARGET): $(OBJS) includes libopcodes
-	$(CC) $(LDFLAGS) $(OBJS) -o $@ -L opcodes -lopcodes $(LIBS) -nostartfiles
+	$(CC) $(LDFLAGS) $(OBJS) -o $@ -Lopcodes -lopcodes $(LIBS) -nostartfiles
 
 includes:
 	make -C Include

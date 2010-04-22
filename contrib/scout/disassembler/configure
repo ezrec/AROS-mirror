@@ -1,0 +1,54 @@
+#!/bin/sh
+
+# Small and fast configure script for Amiga family of operating systems
+
+# Modify this line in order to add or remove additional subdirectories
+# that also need to be configured
+extra_packages="opcodes"
+
+for arg in $@; do
+    case $1 in
+        --help)
+	    echo "Usage: $0 [--host=<cpu>-<os>]"
+	    echo "<cpu> is target CPU"
+	    echo "<os> is one of: amigaos, morphos, aros"
+	    echo "By default your current CPU and OS are autodetected"
+	    exit
+	    ;;
+        --host=*)
+	    echo -n "Checking target operating system... "
+	    host=`echo $1 | cut -d= -f2`
+	    cpu=`echo $host | cut -d- -f1`
+	    os=`echo $host | cut -d- -f2`
+	    echo $host
+	    ;;
+    esac
+done
+
+if [ "$os" = "" ]; then
+    echo -n "Checking host operating system... "
+    os=`uname`
+    echo $os
+    os=`echo $os | tr '[A-Z]' '[a-z]'`
+fi
+
+if [ ! -d "config/$os" ]; then
+    echo "Error: Unsupported operating system"
+    exit
+fi
+
+echo "Writing makefile.inc"
+
+cp -f config/$os/makefile.inc makefile.inc
+if [ "$cpu" != "" ]; then
+    echo >>makefile.inc
+    echo >>makefile.inc "CC := $cpu-$os-gcc"
+fi
+
+echo "Configuring additional packages"
+
+for pkg in $extra_packages; do
+    echo "Configuring $pkg..."
+    echo
+    cd $pkg && ./configure $@
+done
