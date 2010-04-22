@@ -96,13 +96,12 @@ disassembler.library/Disassemble
 	continue at the right place.
 
     NOTES
-	this call will make use of the mmu.libary if available. It won't
-	access illegal memory or I/O space, provided the mmu table is
-	setup correctly.
-
-	This routine is interrupt and supervisor callable, provided your
-	provided bs_PutProc is. This makes this library function ideal for
-	debugging tools and monitors.
+	Unlike v40, this routine may not be called from within interrupts and
+	such. Since the library is portable, internal disassembler implementation
+	is much more complex than it was in v40. It can allocate memory, use
+	semaphores, etc.
+	Anyway, if your debugger talks to the user inside an exception, it's really
+	badly designed. Fix it.
 
     BUGS
 

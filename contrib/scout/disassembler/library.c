@@ -6,8 +6,7 @@
 #include <libraries/disassembler.h>
 #include <proto/exec.h>
 
-#include <setjmp.h>
-
+#include "bfd.h"
 #include "library.h"
 
 #define LIBNAME "disassembler.library"
@@ -136,6 +135,7 @@ static struct DisasmBase *_LIB_Init(struct DisasmBase *DisassemblerBase,
     DisassemblerBase->seglist = SegList;
 
     InitSemaphore(&DisassemblerBase->sem);
+    init_default_bfd(&DisassemblerBase->default_bfd);
 
     return DisassemblerBase;
 }

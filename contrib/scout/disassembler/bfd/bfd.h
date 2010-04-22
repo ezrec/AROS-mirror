@@ -556,6 +556,7 @@ typedef struct bfd
 #define bfd_get_mach(abfd) abfd->mach
 #define bfd_big_endian(abfd) (abfd->endian == BFD_ENDIAN_BIG)
 
+void init_default_bfd(bfd *abfd);
 bfd_vma	bfd_getb32(const unsigned char *);
 bfd_vma	bfd_getl32(const unsigned char *);
 

@@ -4,7 +4,7 @@
 
 include $(TOP)/config/make.cfg
 
-FILES := library disassemble findstartposition libbfd support
+FILES := library disassemble findstartposition libbfd libc object support
 
 USER_CFLAGS  := -I$(SRCDIR)/$(CURDIR)/bfd -I$(SRCDIR)/$(CURDIR)/opcodes/include
 USER_LDFLAGS := -L$(GENDIR)/$(CURDIR)/opcodes
