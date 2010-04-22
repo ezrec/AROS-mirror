@@ -11,16 +11,21 @@ USER_LDFLAGS := -L$(GENDIR)/$(CURDIR)/opcodes
 
 #MM contrib-scout-disassembler : contrib-scout-disassembler-includes contrib-scout-disassembler-opcodes includes linklibs
 #MM contrib-scout-disassembler-quick : contrib-scout-disassembler-includes contrib-scout-disassembler-opcodes-quick
+contrib-scout-disassembler: $(GENDIR)/$(CURDIR)/opcodes/libmyopcodes.a
 
-# We use 'usehostlibs' here because libraries listed there are not included into dependencies list.
-# We have to repeat 'rom' because otherwise references from libopcodes are not resolved correctly
-# (libraries are always searched in they order in which they are specified in linker command line
-# and usehostlibs goes after uselibs)
+# We use 'usehostlibs' here because libraries listed there are not included 
+# into dependencies list. We have to repeat 'rom' because otherwise references 
+# from libopcodes are not resolved correctly (libraries are always searched in 
+# the order in which they are specified in linker command line and usehostlibs 
+# goes after uselibs)
+
+$(GENDIR)/$(CURDIR)/opcodes/libmyopcodes.a: $(GENDIR)/$(CURDIR)/opcodes/libopcodes.a
+	@$(CP) $^ $@
 
 %build_module_simple mmake=contrib-scout-disassembler \
     modname=disassembler modtype=library \
     files=$(FILES) \
     uselibs="arossupport rom" \
-    usehostlibs="opcodes rom"
+    usehostlibs="myopcodes rom"
 
 %common
