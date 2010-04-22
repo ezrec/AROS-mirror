@@ -71,6 +71,10 @@ static int sbprintf(struct StringBuffer *sb, const char *fmt, ...)
  *
  * Remember that objects are no way reentrant! You may not use the same object from within several
  * threads (processes).
+ *
+ * Supplied with tags, these functions could become a nice new library API, enabling the user to
+ * specify for which CPU to disassemble, where to take the code (it is possible to read
+ * a large file in pieces into a small buffer and disassemble it), etc.
  */
 
 APTR CreateDisassemblerObject(bfd *abfd)

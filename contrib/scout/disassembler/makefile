@@ -5,8 +5,8 @@ LIBS   := -larossupport -lrom
 TARGET := disassembler.library
 INCLUDES := -Ibfd -Iopcodes/include -isystem Include
 
-FILES := library.c disassemble.c findstartposition.c libbfd.c support.c
-OBJS  := library.o disassemble.o findstartposition.o libbfd.o support.o
+FILES := library.c disassemble.c findstartposition.c libbfd.c libc.c object.c support.c
+OBJS  := $(FILES:%.c=%.o)
 
 all: $(TARGET)
 
@@ -19,20 +19,20 @@ includes:
 libopcodes:
 	make -C opcodes
 
-support.o: support.c support.h bfd/bfd.h opcodes/include/dis-asm.h
+$(OBJS): %.o: %.c
 	$(CC) -c $(CFLAGS) $(INCLUDES) $<
 
-disassemble.o: disassemble.c support.h bfd/bfd.h opcodes/include/dis-asm.h
-	$(CC) -c $(CFLAGS) $(INCLUDES) $<
-
-findstartposition.o: findstartposition.c
-	$(CC) -c $(CFLAGS) $(INCLUDES) $<
+disassemble.o: library.h object.h bfd/bfd.h
 
 libbfd.o: libbfd.c bfd/bfd.h
-	$(CC) -c $(CFLAGS) $(INCLUDES) $<
 
-library.o: library.c library.h
-	$(CC) -c $(CFLAGS) $(INCLUDES) $<
+libc.o: libc.h
+
+library.o: library.h bfd/bfd.h
+
+object.o: library.h object.h libc.h object_intern.h support.h bfd/bfd.h opcodes/include/dis-asm.h
+
+support.o: library.h support.h bfd/bfd.h opcodes/include/dis-asm.h
 
 clean:
 	rm -f *.o $(TARGET)
