@@ -1,6 +1,5 @@
 CC     := gcc
 CFLAGS := -O3
-LIBS   := -larossupport -lrom
 
 TARGET   := disassembler.library
 INCLUDES := -Ibfd -Iopcodes/include -isystem Include
