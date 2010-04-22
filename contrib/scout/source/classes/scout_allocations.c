@@ -88,9 +88,11 @@ STATIC STRPTR AlcCIAUser( STRPTR res,
         dummyInt.is_Node.ln_Name = "« Scout's Dummy Int »";
         dummyInt.is_Code = (void (*)())DummyIntFunc;
 
+#ifndef __AROS__
         Disable();
         if ((intr = AddICRVector(CiaBase, unit, &dummyInt)) == NULL) RemICRVector(CiaBase, unit, &dummyInt);
         Enable();
+#endif
 
         if (intr) {
             return (intr->is_Node.ln_Name) ? (STRPTR)intr->is_Node.ln_Name : txtAllocationAllocated;

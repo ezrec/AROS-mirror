@@ -37,7 +37,9 @@ struct SystemCallbackUserData {
 STATIC STRPTR MyIdHardware( ULONG num )
 {
     if (IdentifyBase) {
+#ifndef __AROS__
         return IdHardwareTags(num, IDTAG_Localize, FALSE, TAG_DONE);
+#endif
     }
     return (STRPTR)txtNoIdentifyLibrary;
 }
@@ -45,7 +47,9 @@ STATIC STRPTR MyIdHardware( ULONG num )
 STATIC ULONG MyIdHardwareNum( ULONG num )
 {
     if (IdentifyBase) {
+#ifndef __AROS__
         return IdHardwareNum(num, NULL);
+#endif
     } else {
         return 0;
     }
@@ -54,7 +58,9 @@ STATIC ULONG MyIdHardwareNum( ULONG num )
 STATIC int MyIdCheck( ULONG num )
 {
     if (IdentifyBase) {
+#ifndef __AROS__
         return (int)IdHardwareTags(num, IDTAG_NULL4NA, TRUE, TAG_DONE);
+#endif
     } else {
         return 0;
     }
@@ -121,7 +127,9 @@ STATIC void IterateList( void (* callback)( struct SystemEntry *se, void *userDa
     struct SystemEntry *se;
 
     if (IdentifyBase) {
+#ifndef __AROS__
         IdHardwareUpdate(); // Liste auf dem aktuellsten Stand
+#endif
     }
 
     if ((se = tbAllocVecPooled(globalPool, sizeof(struct SystemEntry))) != NULL) {
@@ -544,10 +552,12 @@ STATIC void IterateList( void (* callback)( struct SystemEntry *se, void *userDa
             }
 
             if (IdentifyBase) {
+#ifndef __AROS__
                 IdAlertTags(lastalert, IDTAG_DeadStr, se->se_AlertDeadend, IDTAG_StrLength, sizeof(se->se_AlertDeadend), TAG_DONE);
                 IdAlertTags(lastalert, IDTAG_SubsysStr, se->se_AlertSubsystem, IDTAG_StrLength, sizeof(se->se_AlertSubsystem), TAG_DONE);
                 IdAlertTags(lastalert, IDTAG_GeneralStr, se->se_AlertGeneral, IDTAG_StrLength, sizeof(se->se_AlertGeneral), TAG_DONE);
                 IdAlertTags(lastalert, IDTAG_SpecStr, se->se_AlertSpecific, IDTAG_StrLength, sizeof(se->se_AlertSpecific), TAG_DONE);
+#endif
             }
         }
 
