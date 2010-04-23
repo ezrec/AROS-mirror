@@ -159,8 +159,17 @@ APTR DisassembleObject(APTR ob, struct DisData *ds, struct DisasmBase *Disassemb
 		break;
 	    }
 
-	    for (i = 0; i < len; i++)
-	        NewRawDoFmt("%02x ", dsPutCh, ds, addr[i]);
+	    i = 0;
+	    while (i < len) {
+	        NewRawDoFmt("%02x ", dsPutCh, ds, addr[i++]);
+		if (i == obj->dinfo.bytes_per_line) {
+		    RawDoFmt("\n", NULL, dsPutCh, ds);
+		    addr += obj->dinfo.bytes_per_line;
+		    len -= obj->dinfo.bytes_per_line;
+		    i = 0;
+		    NewRawDoFmt(ADDRESS_FORMAT, dsPutCh, ds, addr, ' ');
+		};
+	    }
 	    for (; i < obj->dinfo.bytes_per_line; i++)
 		RawDoFmt("   ", NULL, dsPutCh, ds);
 	    NewRawDoFmt("%s\n", dsPutCh, ds, obj->sbuf.buf);
