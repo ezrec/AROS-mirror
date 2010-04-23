@@ -97,9 +97,6 @@ IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...)
 {
   AROS_SLOWSTACKTAGS_PRE(tag1)
   
-  D(DBF_ALWAYS, "DoSuperNew()\n");
-  DumpTagList(AROS_SLOWSTACKTAGS_ARG(tag1));
-  
   retval = DoSuperNewTagList(cl, obj, NULL, AROS_SLOWSTACKTAGS_ARG(tag1));
 
   AROS_SLOWSTACKTAGS_POST
