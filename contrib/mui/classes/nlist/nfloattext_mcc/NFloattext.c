@@ -40,6 +40,42 @@
     MUIA_Image_Spec, (long) nr,\
   End
 
+#ifdef DEBUG_TAGLISTS
+
+static void DumpTagList(struct TagItem *tags)
+{
+    kprintf("TagList at 0x%p:\n", tags);
+
+    while (tags && (tags->ti_Tag != TAG_DONE)) {
+        kprintf("0x%p 0x%08lX 0x%p\n", tags, tags->ti_Tag, tags->ti_Data);
+	if (tags->ti_Tag == TAG_MORE)
+	    tags = tags->ti_Data;
+	else
+	    tags++;
+    }
+}
+
+#else
+
+#define DumpTagList(x)
+
+#endif
+
+#ifdef DEBUG_STACK
+
+static void inline CheckStack()
+{
+    struct Task *me = FindTask(NULL);
+    
+    kprintf("SP Lower: 0x%p, Upper: 0x%p, Current: 0x%p\n", me->tc_SPLower, me->tc_SPUpper, me->tc_SPReg);
+}
+
+#else
+
+#define CheckStack()
+
+#endif
+
 static char *CopyText(char *textin)
 {
   char *textout = NULL;
@@ -56,10 +92,13 @@ static char *CopyText(char *textin)
 }
 
 #ifdef __AROS__
-static IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...) __stackparm;
-static IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...)
+IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...) __stackparm;
+IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...)
 {
   AROS_SLOWSTACKTAGS_PRE(tag1)
+  
+  D(DBF_ALWAYS, "DoSuperNew()\n");
+  DumpTagList(AROS_SLOWSTACKTAGS_ARG(tag1));
   
   retval = DoSuperNewTagList(cl, obj, NULL, AROS_SLOWSTACKTAGS_ARG(tag1));
 
@@ -89,6 +128,8 @@ static IPTR mNFT_New(struct IClass *cl,Object *obj,struct opSet *msg)
   LONG tagts = MUIA_NList_TypeSelect;
   LONG tagip = MUIA_NList_Input;
   LONG Copied = FALSE;
+
+  D(DBF_ALWAYS, "NFloattext::New()");
 
   if((tag = FindTagItem(MUIA_NFloattext_SkipChars, msg->ops_AttrList)))
     tag->ti_Tag = MUIA_NList_SkipChars;
@@ -146,6 +187,9 @@ static IPTR mNFT_New(struct IClass *cl,Object *obj,struct opSet *msg)
     else
       Justify = FALSE;
   }
+
+  D(DBF_ALWAYS, "tagts: 0x%08lX, tagip: 0x%08lX\n", tagts, tagip);
+  CheckStack();
 
   obj = (Object *) DoSuperNew(cl,obj,
     tagts, MUIV_NList_TypeSelect_Char,
