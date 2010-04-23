@@ -572,22 +572,19 @@ ULONG stackswap_call(struct StackSwapStruct *stack,
 
    return NewPPCStackSwap(stack, function, &swapargs);
 }
-#else
-/* FIXME: This does not work because it can't work. 'arg' variable is also on stack.
-          On AmigaOS v4 it ocassionally works because function's parameters are placed
-          in registers on PPC */
-ULONG REGARGS stackswap_call(struct StackSwapStruct *stack,
+#elif defined(__AROS__)
+ULONG stackswap_call(struct StackSwapStruct *stack,
                              ULONG (*function)(struct LibraryHeader *),
                              struct LibraryHeader *arg)
 {
-   register ULONG result;
+   struct StackSwapArgs swapargs;
 
-   StackSwap(stack);
-   result = function(arg);
-   StackSwap(stack);
+   swapargs.Args[0] = (ULONG)arg;
 
-   return result;
+   return NewStackSwap(stack, function, &swapargs);
 }
+#else
+#error Bogus operating system
 #endif
 
 static BOOL callMccFunction(ULONG (*function)(struct LibraryHeader *), struct LibraryHeader *arg)
