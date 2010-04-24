@@ -2,7 +2,7 @@
 #include "SDI_stdarg.h"
 #include <proto/exec.h>
 
-#if defined(__MORPHOS__)
+#if defined(__MORPHOS__) || defined(__AROS__)
 #include <exec/rawfmt.h>
 
 STRPTR VASPrintf( CONST_STRPTR fmt,
@@ -11,7 +11,11 @@ STRPTR VASPrintf( CONST_STRPTR fmt,
 	STRPTR buf = NULL;
 	ULONG len = 0;
 
+#ifdef __AROS__
+	VNewRawDoFmt(fmt, (APTR)RAWFMTFUNC_COUNT, (APTR)&len, args);
+#else
 	RawDoFmt(fmt, (APTR)args, (APTR)RAWFMTFUNC_COUNT, (APTR)&len);
+#endif
 
 	if (len > 0) {
         if ((buf = AllocVec(len, MEMF_ANY)) != NULL) {
