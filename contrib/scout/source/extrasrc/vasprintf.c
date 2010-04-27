@@ -11,7 +11,7 @@ STRPTR VASPrintf( CONST_STRPTR fmt,
 	STRPTR buf = NULL;
 	ULONG len = 0;
 
-#ifdef __AROS__
+#ifdef NO_LINEAR_VARARGS
 	VNewRawDoFmt(fmt, (APTR)RAWFMTFUNC_COUNT, (APTR)&len, args);
 #else
 	RawDoFmt(fmt, (APTR)args, (APTR)RAWFMTFUNC_COUNT, (APTR)&len);

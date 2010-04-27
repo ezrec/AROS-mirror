@@ -68,7 +68,7 @@ BOOL _vsnprintf( STRPTR buffer,
         fc.fc_Size = maxlen;
         fc.fc_Overflow = FALSE;
 
-#ifdef __AROS__
+#ifdef NO_LINEAR_VARARGS
         VNewRawDoFmt(fmt, (VOID (*)())StuffChar, (APTR)&fc, args);
 #else
         RawDoFmt(fmt, (APTR)args, (VOID (*)())StuffChar, (APTR)&fc);
