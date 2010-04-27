@@ -140,7 +140,6 @@ APTR DisassembleObject(APTR ob, struct DisData *ds, struct DisasmBase *Disassemb
 	   it tells us how many bytes were processed. So we are able to dump an instruction
 	   in hex and only after this we fire our accumulated buffer */
 	for (; addr <= (unsigned char *)ds->ds_UpTo; addr += len) {
-	    NewRawDoFmt(ADDRESS_FORMAT, dsPutCh, ds, addr, (addr == ds->ds_PC) ? '*' : ' ');
 	    obj->sbuf.pos = 0;
 
 	    /* Libopcode is not reentrant and it uses static variables, so for now we use a semaphore.
@@ -159,17 +158,17 @@ APTR DisassembleObject(APTR ob, struct DisData *ds, struct DisasmBase *Disassemb
 		break;
 	    }
 
-	    i = 0;
-	    while (i < len) {
-	        NewRawDoFmt("%02x ", dsPutCh, ds, addr[i++]);
-		if (i == obj->dinfo.bytes_per_line) {
-		    RawDoFmt("\n", NULL, dsPutCh, ds);
-		    addr += obj->dinfo.bytes_per_line;
-		    len -= obj->dinfo.bytes_per_line;
-		    i = 0;
-		    NewRawDoFmt(ADDRESS_FORMAT, dsPutCh, ds, addr, ' ');
-		};
+	    for (;;) {
+	        NewRawDoFmt(ADDRESS_FORMAT, dsPutCh, ds, addr, (addr == ds->ds_PC) ? '*' : ' ');
+	        for (i = 0; i < obj->dinfo.bytes_per_line;) {
+	            NewRawDoFmt("%02x ", dsPutCh, ds, *addr++);
+		    i++;
+		    if (--len == 0)
+		        goto break_hexdump;
+	        }
+		RawDoFmt("\n", NULL, dsPutCh, ds);
 	    }
+break_hexdump:
 	    for (; i < obj->dinfo.bytes_per_line; i++)
 		RawDoFmt("   ", NULL, dsPutCh, ds);
 	    NewRawDoFmt("%s\n", dsPutCh, ds, obj->sbuf.buf);
