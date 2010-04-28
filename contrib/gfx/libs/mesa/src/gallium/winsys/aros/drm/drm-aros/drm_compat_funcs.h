@@ -41,6 +41,10 @@
 #define min(a, b)                       ((a) < (b) ? (a) : (b))
 #define is_power_of_2(x)                (x != 0 && ((x & (x - 1)) == 0))
 #define access_ok(a, b, c)              TRUE
+#define le16_to_cpu(x)                  AROS_LE2WORD(x)
+#define le32_to_cpu(x)                  AROS_LE2LONG(x)
+#define mdelay(x)                       udelay(1000 * x)
+#define msleep(x)                       udelay(1000 * x)
 
 #define MODULE_FIRMWARE(x)
 
@@ -52,11 +56,7 @@ unsigned int ioread16(void * addr);
 void iowrite8(u8 val, void * addr);
 unsigned int ioread8(void * addr);
 
-static inline void udelay(unsigned long usecs)
-{
-    /*FIXME: THIS IS PROBABLY A VERY BAD IDEA */
-    /*FIXME: IT WILL GET OPTIMIZED OUT ANYWAY */
-}
+void udelay(unsigned long usecs);
 
 static inline ULONG copy_from_user(APTR to, APTR from, IPTR size)
 {

@@ -84,7 +84,83 @@ int test_bit(int nr, volatile void *addr)
     return (*(unsigned long*)addr) & mask;
 }
 
+/* Delay handling */
+#include <aros/symbolsets.h>
+#include <devices/timer.h>
+struct MsgPort *p = NULL;
+struct timerequest *io = NULL;
 
+void udelay(unsigned long usecs)
+{
+    /* Create local clone so that the function is task safe */
+    struct timerequest  timerio;
+    struct MsgPort 	timermp;
+
+    memset(&timermp, 0, sizeof(timermp));
+
+    timermp.mp_Node.ln_Type = NT_MSGPORT;
+    timermp.mp_Flags 	    = PA_SIGNAL;
+    timermp.mp_SigBit	    = SIGB_SINGLE;
+    timermp.mp_SigTask	    = FindTask(NULL);    
+    NEWLIST(&timermp.mp_MsgList);
+
+    timerio = *io;
+
+    timerio.tr_node.io_Message.mn_Node.ln_Type  = NT_REPLYMSG;
+    timerio.tr_node.io_Message.mn_ReplyPort     = &timermp;    
+    timerio.tr_node.io_Command                  = TR_ADDREQUEST;
+    timerio.tr_time.tv_secs                     = usecs / 1000000;
+    timerio.tr_time.tv_micro                    = usecs - (timerio.tr_time.tv_secs * 1000000);
+
+    SetSignal(0, SIGF_SINGLE);
+
+    DoIO((struct IORequest*)&timerio);
+}
+
+static BOOL init_timer()
+{
+    p = CreateMsgPort();
+    
+    if (!p)
+        return FALSE;
+
+    io = CreateIORequest(p, sizeof(struct timerequest));
+    
+    if(!io)
+    {
+        DeleteMsgPort(p);
+        return FALSE;
+    }
+    
+    if (OpenDevice("timer.device", UNIT_MICROHZ, (struct IORequest *)io, 0) != 0)
+    {
+        DeleteIORequest(io);
+        DeleteMsgPort(p);
+    }
+
+    return TRUE;
+}
+
+static BOOL deinit_timer()
+{
+    if (io)
+    {
+        CloseDevice((struct IORequest *)io);
+        DeleteIORequest((struct IORequest *)io);
+        io = NULL;
+    }
+    
+    if (p)
+    {
+        DeleteMsgPort(p);
+        p = NULL;
+    }
+    
+    return TRUE;
+}
+
+ADD2INIT(init_timer, 5);
+ADD2EXIT(deinit_timer, 5);
 
 /* Page handling */
 void __free_page(struct page * p)
@@ -519,7 +595,9 @@ int agp_copy_info(struct agp_bridge_data * bridge, struct agp_kern_info * info)
 
 struct agp_bridge_data * agp_find_bridge(void * dev)
 {
+#if !defined(HOSTED_BUILD)
     OOP_Object * agpbus = NULL;
+#endif
 
     if (global_agp_bridge)
         return global_agp_bridge;
