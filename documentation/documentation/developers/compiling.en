@@ -9,7 +9,7 @@ Compiling AROS
             + Aaron Digulla
             + Adam Chodorowski
             + Neil Cafferkey
-:Copyright: Copyright (C) 2001-2008, The AROS Development Team
+:Copyright: Copyright (C) 2001-2010, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -49,7 +49,6 @@ If you want to build the ISO image of i386-pc or x86-64-pc ports with
 the GRUB 2 bootloader (the default), the following is also required:
 
 + ncurses
-+ development files for lzo library
 
 Mac OS X
 --------
@@ -243,7 +242,6 @@ names for i386 architecture):
 * automake-1.9.6.all.tar.gz
 * perl-5.7.2.i386-aros.tar.gz
 * python-2.5.2.i386-aros.tar.gz
-* lzo-2.03.i386.tar.gz
 
 Install these packages by unpacking them in the parent directory of Development::
 
@@ -252,7 +250,6 @@ Install these packages by unpacking them in the parent directory of Development:
     > tar -xzf RAM:automake-1.9.6.all.tar.gz
     > tar -xzf RAM:perl-5.7.2.i386-aros.tar.gz
     > tar -xzf RAM:python-2.5.2.i386-aros.tar.gz
-    > tar -xzf RAM:lzo-2.03.i386.tar.gz
 
 Now download and unpack the AROS source code and contributed software source
 code. To unpack you need to have bzip2 installed. In nightly builds it should
