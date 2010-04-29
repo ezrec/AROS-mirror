@@ -57,6 +57,7 @@ STRPTR forbiddenResources[] = {
     "bootmenu.resource",
     "dosboot.resource",
     "hostlib.resource",
+    "kernel.resource",
 #endif
     NULL,
 };
