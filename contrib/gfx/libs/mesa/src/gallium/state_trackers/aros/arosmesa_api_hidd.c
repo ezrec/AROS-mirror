@@ -175,7 +175,7 @@ static AROSMesaFrameBuffer AROSMesaHiddNewFrameBuffer(AROSMesaContext amesa, ARO
     D(bug("[AROSMESA] AROSMesaHiddNewFrameBuffer\n"));
 
     stencilFormat = PIPE_FORMAT_NONE;
-    
+
     switch(vis->redBits)
     {
         case(5):
@@ -379,7 +379,7 @@ static BOOL AROSMesaHiddStandardInit(AROSMesaContext amesa, struct TagItem *tagL
 {
     GLint requestedwidth = 0, requestedheight = 0;
     GLint requestedright = 0, requestedbottom = 0;
-    
+
     D(bug("[AROSMESA] AROSMesaHiddStandardInit(amesa @ %x, taglist @ %x)\n", amesa, tagList));
     D(bug("[AROSMESA] AROSMesaHiddStandardInit: Using RastPort @ %x\n", amesa->visible_rp));
 

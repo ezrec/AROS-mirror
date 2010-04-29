@@ -26,7 +26,6 @@
 
 #include "nv50_display.h"
 #include "nouveau_crtc.h"
-#if !defined(__AROS__)
 #include "nouveau_encoder.h"
 #include "nouveau_connector.h"
 #include "nouveau_fb.h"
@@ -550,6 +549,7 @@ int nv50_display_destroy(struct drm_device *dev)
 	return 0;
 }
 
+#if !defined(__AROS__)
 static inline uint32_t
 nv50_display_mode_ctrl(struct drm_device *dev, bool sor, int or)
 {

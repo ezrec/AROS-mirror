@@ -48,12 +48,11 @@
 #include <stdio.h>
 #include <string.h>
 
-/* NEEDED */
-
 #include "drm_mm.h"
 
 #define DRM_ERROR(fmt, ...) bug("[" DRM_NAME "(ERROR):%s] " fmt, __func__ , ##__VA_ARGS__)
 #define DRM_DEBUG(fmt, ...) D(bug("[" DRM_NAME "(DEBUG):%s] " fmt, __func__ , ##__VA_ARGS__))
+#define DRM_DEBUG_KMS(fmt, ...) D(bug("[" DRM_NAME "(DEBUG):%s] " fmt, __func__ , ##__VA_ARGS__))
 #define DRM_IMPL(fmt, ...)  bug("------IMPLEMENT(%s): " fmt, __func__ , ##__VA_ARGS__)
 #define DRM_INFO(fmt, ...)  bug("[" DRM_NAME "(INFO)] " fmt, ##__VA_ARGS__)
 #define DRM_DEBUG_DRIVER    DRM_DEBUG
@@ -172,16 +171,13 @@ struct drm_agp_head {
     unsigned long page_mask;
 };
 
-struct drm_mode_config
-{
-    resource_size_t fb_base;
-};
-
 struct drm_pciid 
 {
     UWORD VendorID;
     UWORD ProductID;
 };
+
+#include "drm_crtc.h"
 
 /* Contains a collection of functions common to each drm driver */
 
@@ -266,12 +262,6 @@ static __inline__ int drm_core_check_feature(struct drm_device *dev,
 {
     return ((dev->driver->driver_features & feature) ? 1 : 0);
 }
-
-struct drm_crtc
-{
-    /* Don't remove it */
-    int dummy;
-};
 
 typedef struct drm_dma_handle {
 	dma_addr_t busaddr;
@@ -492,106 +482,5 @@ static inline int mtrr_add(unsigned long base, unsigned long size,
 {
     return -ENODEV;
 }
-
-/* NEEDED ENDS */
-
-
-//#define max(a,b) (a > b) ? a : b
-
-
-
-// /* FIXME: Need to find a way to remove the need for these defines */
-
-// #define EXPORT_SYMBOL(a)
-
-// 
-
-
-
-// 
-
-
-// 
-//    
-// #define DRM_MEM_DRIVER     2
-// #define DRM_MEM_MAPS       5
-// #define DRM_MEM_BUFS       7
-// #define DRM_MEM_PAGES      9
-// #define DRM_MEM_SGLISTS   20
-// /* FIXME: Implement missing */
-
-
-
-
-
-/* */
-// 
-
-
-// 
-// /* FIXME: Implement missing */
-// /** Read a byte from a MMIO region */
-// //#define DRM_READ8(map, offset)      readb((map)->handle + (offset))
-// /** Read a word from a MMIO region */
-// //#define DRM_READ16(map, offset)     readw((map)->handle + (offset))
-// /** Read a dword from a MMIO region */
-// #define DRM_READ32(map, offset)         readl((map)->handle + (offset))
-// /** Write a byte into a MMIO region */
-// //#define DRM_WRITE8(map, offset, val)    writeb(val, (map)->handle + (offset))
-// /** Write a word into a MMIO region */
-// //#define DRM_WRITE16(map, offset, val)   writew(val, (map)->handle + (offset))
-// /** Write a dword into a MMIO region */
-// #define DRM_WRITE32(map, offset, val)   writel(val, (map)->handle + (offset))
-
-
-
-
-// //
-// #define DRM_INFO(fmt, ...)
-
-
-// #define printk(fmt, ...)
-// 
-
-
-
-
-
-
-
-
-
-
-
-// 
-
-// 
-
-// 
-// #define drm_core_has_MTRR(dev) (0)
-
-
-// 
-// static __inline__ int mtrr_del(int reg, unsigned long base, unsigned long size)
-// {
-//     return -ENODEV;
-// }
-// 
-// 
-// /*  */
-// 
-
-// 
-           
-// 
-
-// 
-
-
-// 
-
-// 
-
-// 
 
 #endif

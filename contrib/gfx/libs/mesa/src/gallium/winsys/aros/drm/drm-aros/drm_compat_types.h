@@ -26,6 +26,8 @@
 #define dma_addr_t                  IPTR
 #define loff_t                      IPTR
 #define pgprot_t                    ULONG
+#define INT_MAX                     2147483647
+#define __le16                      WORD /* WRONG! IT WILL ONLY WORK ON LE MACHINES */
 
 #undef offsetof
 #define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
@@ -65,7 +67,7 @@ struct page
 #define ALIGN(val, align)       (val + align - 1) & (~(align - 1))
 #define BITS_TO_LONGS(x)        ((x / (sizeof(long) * 8)) + 1)
 
-struct work_struct;
+
 
 /* io_mapping support */
 struct io_mapping
@@ -129,6 +131,30 @@ struct idr
     ULONG last_starting_id;
     IPTR * pointers;
 };
+
+/* I2C handling */
+struct i2c_adapter
+{
+    ULONG dummy;
+};
+struct i2c_client;
+struct i2c_board_info;
+struct i2c_driver
+{
+    ULONG dummy;
+};
+
+/* FB handling */
+struct fb_var_screeninfo;
+struct fb_cmap;
+struct fb_fillrect;
+struct fb_image;
+struct fb_copyarea;
+
+/* Other */
+struct work_struct;
+struct module;
+struct edid;
 
 #include "drm_linux_list.h"
 

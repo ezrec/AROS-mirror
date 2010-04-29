@@ -42,6 +42,8 @@ INIT_LIST_HEAD(struct list_head *head) {
 	(head)->prev = head;
 }
 
+#define LIST_HEAD(name) struct list_head name = {&name, &name}
+
 static __inline__ int
 list_empty(struct list_head *head) {
 	return (head)->next == head;

@@ -43,8 +43,12 @@
 #define access_ok(a, b, c)              TRUE
 #define le16_to_cpu(x)                  AROS_LE2WORD(x)
 #define le32_to_cpu(x)                  AROS_LE2LONG(x)
+#define cpu_to_le16(x)                  AROS_WORD2LE(x)
 #define mdelay(x)                       udelay(1000 * x)
 #define msleep(x)                       udelay(1000 * x)
+#define KHZ2PICOS(x)                    (1000000000UL/(x))
+#define uninitialized_var(x)            x
+
 
 #define MODULE_FIRMWARE(x)
 
@@ -57,6 +61,7 @@ void iowrite8(u8 val, void * addr);
 unsigned int ioread8(void * addr);
 
 void udelay(unsigned long usecs);
+int abs(int j); /* Code in librom.a */
 
 static inline ULONG copy_from_user(APTR to, APTR from, IPTR size)
 {
@@ -103,11 +108,14 @@ static inline IPTR IS_ERR(APTR ptr)
 /* Kernel debug */
 #define KERN_ERR
 #define KERN_DEBUG
+#define KERN_WARNING
+#define KERN_INFO
 #define printk(fmt, ...)                bug(fmt, ##__VA_ARGS__)
 #define IMPLEMENT(fmt, ...)             bug("------IMPLEMENT(%s): " fmt, __func__ , ##__VA_ARGS__)
 #define TRACE(fmt, ...)                 D(bug("[TRACE](%s): " fmt, __func__ , ##__VA_ARGS__))
 #define BUG(x)                          bug("BUG:(%s)\n", __func__)
 #define WARN(condition, message, ...)   do { if (unlikely(condition)) bug("WARN: %s:%d" message "\n", __FILE__, __LINE__, ##__VA_ARGS__); } while(0)
+#define dev_warn(dev, fmt, ...)         bug(fmt, ##__VA_ARGS__)
 
 /* PCI handling */
 void * ioremap(resource_size_t offset, unsigned long size);
@@ -296,4 +304,12 @@ static inline void io_mapping_free(struct io_mapping *mapping)
 /* jiffies (lame) handling */
 #define jiffies get_jiffies()
 unsigned long get_jiffies();
+
+/* other */
+#define do_div(n,base) ({ \
+int __res; \
+__res = ((unsigned long) n) % (unsigned) base; \
+n = ((unsigned long) n) / (unsigned) base; \
+__res; })
+
 #endif /* _DRM_COMPAT_FUNCS_ */
