@@ -52,7 +52,6 @@ STRPTR forbiddenResources[] = {
     "newfilesystem.resource",
     "biosversion.resource",
 #elif defined(__AROS__)
-    "battclock.resource",
     "bootloader.resource",
     "bootmenu.resource",
     "dosboot.resource",
