@@ -15,115 +15,6 @@ AROS_WINSYS_SOURCES = \
             winsys/drm/intel/gem/intel_drm_fence \
             winsys/drm/intel/gem/intel_drm_buffer \
 
-AROS_LIBDRM_CORE_SOURCES = \
-            winsys/aros/drm/libdrm/arosdrm \
-            
-AROS_LIBDRM_NVIDIA_SOURCES = \
-            winsys/aros/drm/libdrm/nouveau/nouveau_device \
-            winsys/aros/drm/libdrm/nouveau/nouveau_resource \
-            winsys/aros/drm/libdrm/nouveau/nouveau_pushbuf \
-            winsys/aros/drm/libdrm/nouveau/nouveau_notifier \
-            winsys/aros/drm/libdrm/nouveau/nouveau_grobj \
-            winsys/aros/drm/libdrm/nouveau/nouveau_channel \
-            winsys/aros/drm/libdrm/nouveau/nouveau_bo \
-            winsys/aros/drm/libdrm/nouveau/nouveau_reloc \
-            winsys/aros/drm/libdrm/arosdrm_nouveau \
-
-AROS_LIBDRM_INTEL_SOURCES = \
-            winsys/aros/drm/libdrm/intel/intel_bufmgr \
-            winsys/aros/drm/libdrm/intel/intel_bufmgr_gem \
-            winsys/aros/drm/libdrm/arosdrm_intel \
-
-AROS_DRM_CORE_SOURCES = \
-            winsys/aros/drm/drm-aros/drm_aros \
-            winsys/aros/drm/drm-aros/drm_bufs \
-            winsys/aros/drm/drm-aros/drm_irq \
-            winsys/aros/drm/drm-aros/drm_pci \
-            winsys/aros/drm/drm-aros/drm_drv \
-            winsys/aros/drm/drm-aros/drm_compat_funcs \
-            winsys/aros/drm/drm-changed/drm_mm \
-            winsys/aros/drm/drm-changed/drm_gem \
-            winsys/aros/drm/drm-changed/drm_cache \
-            winsys/aros/drm/drm-changed/drm_crtc \
-            winsys/aros/drm/drm-changed/drm_edid \
-            winsys/aros/drm/drm-changed/drm_fb_helper \
-            winsys/aros/drm/drm-changed/drm_memory \
-            winsys/aros/drm/drm-changed/drm_modes \
-            winsys/aros/drm/drm-changed/drm_agpsupport \
-            winsys/aros/drm/drm-changed/ttm/ttm_global \
-            winsys/aros/drm/drm-changed/ttm/ttm_bo \
-            winsys/aros/drm/drm-changed/ttm/ttm_bo_util \
-            winsys/aros/drm/drm-changed/ttm/ttm_tt \
-            winsys/aros/drm/drm-changed/ttm/ttm_agp_backend \
-            winsys/aros/drm/drm-unchanged/drm_crtc_helper \
-
-AROS_DRM_NVIDIA_SOURCES = \
-            winsys/aros/drm/drm-aros/nouveau/nouveau_drv \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_bios \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_dp \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_i2c \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_calc \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_connector \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_hw \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_state \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_mem \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_fbcon \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_fence \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_grctx \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_sgdma \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_ttm \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_irq \
-            winsys/aros/drm/drm-changed/nouveau/nv04_display \
-            winsys/aros/drm/drm-changed/nouveau/nv04_tv \
-            winsys/aros/drm/drm-changed/nouveau/nv50_instmem \
-            winsys/aros/drm/drm-changed/nouveau/nv50_display \
-            winsys/aros/drm/drm-changed/nouveau/nouveau_bo_renamed \
-            winsys/aros/drm/drm-unchanged/nouveau/nouveau_channel_renamed \
-            winsys/aros/drm/drm-unchanged/nouveau/nouveau_display \
-            winsys/aros/drm/drm-unchanged/nouveau/nouveau_dma \
-            winsys/aros/drm/drm-unchanged/nouveau/nouveau_object \
-            winsys/aros/drm/drm-unchanged/nouveau/nouveau_notifier_renamed \
-            winsys/aros/drm/drm-unchanged/nouveau/nouveau_gem \
-            winsys/aros/drm/drm-unchanged/nouveau/nv04_crtc \
-            winsys/aros/drm/drm-unchanged/nouveau/nv04_cursor \
-            winsys/aros/drm/drm-unchanged/nouveau/nv04_dac \
-            winsys/aros/drm/drm-unchanged/nouveau/nv04_dfp \
-            winsys/aros/drm/drm-unchanged/nouveau/nv04_fb \
-            winsys/aros/drm/drm-unchanged/nouveau/nv04_fifo \
-            winsys/aros/drm/drm-unchanged/nouveau/nv04_graph \
-            winsys/aros/drm/drm-unchanged/nouveau/nv04_instmem \
-            winsys/aros/drm/drm-unchanged/nouveau/nv04_mc \
-            winsys/aros/drm/drm-unchanged/nouveau/nv04_timer \
-            winsys/aros/drm/drm-unchanged/nouveau/nv10_fb \
-            winsys/aros/drm/drm-unchanged/nouveau/nv10_fifo \
-            winsys/aros/drm/drm-unchanged/nouveau/nv10_graph \
-            winsys/aros/drm/drm-unchanged/nouveau/nv17_gpio \
-            winsys/aros/drm/drm-unchanged/nouveau/nv17_tv \
-            winsys/aros/drm/drm-unchanged/nouveau/nv17_tv_modes \
-            winsys/aros/drm/drm-unchanged/nouveau/nv20_graph \
-            winsys/aros/drm/drm-unchanged/nouveau/nv40_fb \
-            winsys/aros/drm/drm-unchanged/nouveau/nv40_fifo \
-            winsys/aros/drm/drm-unchanged/nouveau/nv40_graph \
-            winsys/aros/drm/drm-unchanged/nouveau/nv40_grctx \
-            winsys/aros/drm/drm-unchanged/nouveau/nv40_mc \
-            winsys/aros/drm/drm-unchanged/nouveau/nv50_crtc \
-            winsys/aros/drm/drm-unchanged/nouveau/nv50_cursor \
-            winsys/aros/drm/drm-unchanged/nouveau/nv50_dac \
-            winsys/aros/drm/drm-unchanged/nouveau/nv50_fifo \
-            winsys/aros/drm/drm-unchanged/nouveau/nv50_mc \
-            winsys/aros/drm/drm-unchanged/nouveau/nv50_graph \
-            winsys/aros/drm/drm-unchanged/nouveau/nv50_grctx \
-            winsys/aros/drm/drm-unchanged/nouveau/nv50_sor \
-
-AROS_DRM_INTEL_SOURCES = \
-            winsys/aros/drm/drm-aros/i915/i915_drv \
-            winsys/aros/drm/drm-changed/i915/i915_dma \
-            winsys/aros/drm/drm-changed/i915/i915_gem \
-            winsys/aros/drm/drm-changed/i915/i915_gem_tiling \
-            winsys/aros/drm/drm-changed/i915/i915_irq \
-            winsys/aros/drm/drm-changed/i915/i915_mem \
-
-
 GALLIUM_AUXILIARY_SOURCES = \
             auxiliary/util/u_debug \
             auxiliary/util/u_debug_symbol \
@@ -333,12 +224,6 @@ GALLIUM_I915_SOURCES = \
 AROS_GALLIUM_SOURCES = \
             $(AROS_STATE_TRACKER_SOURCES) \
             $(AROS_WINSYS_SOURCES) \
-            $(AROS_LIBDRM_CORE_SOURCES) \
-            $(AROS_LIBDRM_NVIDIA_SOURCES) \
-            $(AROS_LIBDRM_INTEL_SOURCES) \
-            $(AROS_DRM_CORE_SOURCES) \
-            $(AROS_DRM_NVIDIA_SOURCES) \
-            $(AROS_DRM_INTEL_SOURCES) \
             $(GALLIUM_AUXILIARY_SOURCES) \
             $(GALLIUM_SOFTPIPE_SOURCES) \
             $(GALLIUM_NVIDIA_SOURCES) \

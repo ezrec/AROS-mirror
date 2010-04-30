@@ -3,6 +3,7 @@
 include $(TOP)/config/make.cfg
 
 include $(SRCDIR)/$(CURDIR)/../../../mesa/sources.gallium.mak
+include $(SRCDIR)/$(CURDIR)/../../winsys/aros/drm/sources.drm.mak
 
 #MM- hidd-nouveau-pc-i386 : hidd-nouveau
 
@@ -21,27 +22,28 @@ ifeq ($(AROS_TARGET_CPU), ppc)
 endif
 
 GALLIUM_SUBPATH = ../../
+DRM_SUBPATH = ../../winsys/aros/drm/
 
 NOUVEAU_HIDD_SOURCES := \
             nouveaudriverclass \
             init \
             ../../../mesa/arosc_emul \
-            $(addprefix $(GALLIUM_SUBPATH),$(AROS_DRM_NVIDIA_SOURCES)) \
-            $(addprefix $(GALLIUM_SUBPATH),$(AROS_DRM_CORE_SOURCES)) \
+            $(addprefix $(DRM_SUBPATH),$(AROS_DRM_NVIDIA_SOURCES)) \
+            $(addprefix $(DRM_SUBPATH),$(AROS_DRM_CORE_SOURCES)) \
             $(addprefix $(GALLIUM_SUBPATH),$(GALLIUM_NVIDIA_SOURCES)) \
-            $(addprefix $(GALLIUM_SUBPATH),$(AROS_LIBDRM_NVIDIA_SOURCES)) \
-            $(addprefix $(GALLIUM_SUBPATH),$(AROS_LIBDRM_CORE_SOURCES)) \
+            $(addprefix $(DRM_SUBPATH),$(AROS_LIBDRM_NVIDIA_SOURCES)) \
+            $(addprefix $(DRM_SUBPATH),$(AROS_LIBDRM_CORE_SOURCES)) \
 
 USER_INCLUDES := \
             -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/drivers \
             -I$(AROS_DEVELOPMENT)/include/gallium \
-            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/winsys/aros/drm/libdrm \
-            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/winsys/aros/drm/drm-aros \
-            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/winsys/aros/drm/drm-aros/nouveau \
-            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/winsys/aros/drm/drm-changed \
-            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/winsys/aros/drm/drm-changed/nouveau \
-            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/winsys/aros/drm/drm-unchanged \
-            -I$(SRCDIR)/$(CURDIR)/$(GALLIUM_SUBPATH)/winsys/aros/drm/drm-unchanged/nouveau \
+            -I$(SRCDIR)/$(CURDIR)/$(DRM_SUBPATH)/libdrm \
+            -I$(SRCDIR)/$(CURDIR)/$(DRM_SUBPATH)/drm-aros \
+            -I$(SRCDIR)/$(CURDIR)/$(DRM_SUBPATH)/drm-aros/nouveau \
+            -I$(SRCDIR)/$(CURDIR)/$(DRM_SUBPATH)/drm-changed \
+            -I$(SRCDIR)/$(CURDIR)/$(DRM_SUBPATH)/drm-changed/nouveau \
+            -I$(SRCDIR)/$(CURDIR)/$(DRM_SUBPATH)/drm-unchanged \
+            -I$(SRCDIR)/$(CURDIR)/$(DRM_SUBPATH)/drm-unchanged/nouveau \
 
 USER_CFLAGS := $(FFIXED) -march=i486
 
