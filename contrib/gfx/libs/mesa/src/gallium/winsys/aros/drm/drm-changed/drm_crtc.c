@@ -975,7 +975,6 @@ void drm_mode_config_cleanup(struct drm_device *dev)
 }
 EXPORT_SYMBOL(drm_mode_config_cleanup);
 
-#if !defined(__AROS__)
 /**
  * drm_crtc_convert_to_umode - convert a drm_display_mode into a modeinfo
  * @out: drm_mode_modeinfo struct to return to the user
@@ -1040,6 +1039,7 @@ void drm_crtc_convert_umode(struct drm_display_mode *out,
 	out->name[DRM_DISPLAY_MODE_LEN-1] = 0;
 }
 
+#if !defined(__AROS__)
 /**
  * drm_mode_getresources - get graphics configuration
  * @inode: inode from the ioctl
@@ -1458,6 +1458,7 @@ out:
 	mutex_unlock(&dev->mode_config.mutex);
 	return ret;
 }
+#endif
 
 /**
  * drm_mode_setcrtc - set CRTC configuration
@@ -1596,6 +1597,7 @@ out:
 	return ret;
 }
 
+#if !defined(__AROS__)
 int drm_mode_cursor_ioctl(struct drm_device *dev,
 			void *data, struct drm_file *file_priv)
 {
@@ -1642,6 +1644,7 @@ out:
 	mutex_unlock(&dev->mode_config.mutex);
 	return ret;
 }
+#endif
 
 /**
  * drm_mode_addfb - add an FB to the graphics configuration
@@ -1697,6 +1700,7 @@ out:
 	return ret;
 }
 
+#if !defined(__AROS__)
 /**
  * drm_mode_rmfb - remove an FB from the configuration
  * @inode: inode from the ioctl

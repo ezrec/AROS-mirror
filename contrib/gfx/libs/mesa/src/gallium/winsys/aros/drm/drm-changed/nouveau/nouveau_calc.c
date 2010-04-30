@@ -25,7 +25,6 @@
 #include "nouveau_drv.h"
 #include "nouveau_hw.h"
 
-#if !defined(__AROS__)
 /****************************************************************************\
 *                                                                            *
 * The video arbitration routines calculate some "magic" numbers.  Fixes      *
@@ -210,6 +209,7 @@ nv04_update_arb(struct drm_device *dev, int VClk, int bpp,
 	sim_data.two_heads = nv_two_heads(dev);
 	if ((dev->pci_device & 0xffff) == 0x01a0 /*CHIPSET_NFORCE*/ ||
 	    (dev->pci_device & 0xffff) == 0x01f0 /*CHIPSET_NFORCE2*/) {
+#if !defined(__AROS__)
 		uint32_t type;
 
 		pci_read_config_dword(pci_get_bus_and_slot(0, 1), 0x7c, &type);
@@ -218,6 +218,9 @@ nv04_update_arb(struct drm_device *dev, int VClk, int bpp,
 		sim_data.memory_width = 64;
 		sim_data.mem_latency = 3;
 		sim_data.mem_page_miss = 10;
+#else
+IMPLEMENT("Support for NFORCE/NFORCE2 chipsets\n");
+#endif
 	} else {
 		sim_data.memory_type = nvReadFB(dev, NV_PFB_CFG0) & 0x1;
 		sim_data.memory_width = (nvReadEXTDEV(dev, NV_PEXTDEV_BOOT_0) & 0x10) ? 128 : 64;
@@ -246,12 +249,10 @@ nv30_update_arb(int *burst, int *lwm)
 	*burst = ilog2(burst_size >> 5);
 	*lwm = graphics_lwm >> 3;
 }
-#endif
 
 void
 nouveau_calc_arb(struct drm_device *dev, int vclk, int bpp, int *burst, int *lwm)
 {
-#if !defined(__AROS__)
 	struct drm_nouveau_private *dev_priv = dev->dev_private;
 
 	if (dev_priv->card_type < NV_30)
@@ -262,9 +263,6 @@ nouveau_calc_arb(struct drm_device *dev, int vclk, int bpp, int *burst, int *lwm
 		*lwm = 0x0480;
 	} else
 		nv30_update_arb(burst, lwm);
-#else
-IMPLEMENT(" \n");
-#endif
 }
 
 static int

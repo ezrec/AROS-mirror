@@ -37,8 +37,11 @@
 #define unlikely(x)                     __builtin_expect((ULONG)(x),0)
 #define mb()                            __asm __volatile("lock; addl $0,0(%%esp)" : : : "memory");
 #define ffs(x)                          __builtin_ffs(x)
+#define fls_long(x)                     ((sizeof(x) * 8) - __builtin_clzl(x))
 #define max(a, b)                       ((a) > (b) ? (a) : (b))
 #define min(a, b)                       ((a) < (b) ? (a) : (b))
+#define ilog2(n)                        (fls_long(n) - 1)
+#define rounddown_pow_of_two(n)         (1UL << ilog2(n))
 #define is_power_of_2(x)                (x != 0 && ((x & (x - 1)) == 0))
 #define access_ok(a, b, c)              TRUE
 #define le16_to_cpu(x)                  AROS_LE2WORD(x)
@@ -48,6 +51,7 @@
 #define msleep(x)                       udelay(1000 * x)
 #define KHZ2PICOS(x)                    (1000000000UL/(x))
 #define uninitialized_var(x)            x
+#define get_user(x, p)                  ({u32 ret = 0; x = *(p); ret;})
 
 
 #define MODULE_FIRMWARE(x)
