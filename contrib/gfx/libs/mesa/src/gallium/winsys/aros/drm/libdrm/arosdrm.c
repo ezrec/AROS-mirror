@@ -70,6 +70,7 @@ drmOpen(const char *name, const char *busid)
         {
             drm_files[i] = AllocVec(sizeof(struct drm_file), MEMF_PUBLIC | MEMF_CLEAR);
             spin_lock_init(&drm_files[i]->table_lock);
+            INIT_LIST_HEAD(&drm_files[i]->fbs);
             if (current_drm_driver->open)
                 current_drm_driver->open(current_drm_driver->dev, drm_files[i]);
             return i;
@@ -151,6 +152,12 @@ int drmIoctl(int fd, unsigned long request, void *arg)
                 break;
             case(DRM_IOCTL_GEM_FLINK):
                 ret = drm_gem_flink_ioctl(current_drm_driver->dev, arg, drm_files[fd]);
+                break;
+            case(DRM_IOCTL_MODE_ADDFB):
+                ret = drm_mode_addfb(current_drm_driver->dev, arg, drm_files[fd]);
+                break;
+            case(DRM_IOCTL_MODE_SETCRTC):
+                ret = drm_mode_setcrtc(current_drm_driver->dev, arg, drm_files[fd]);
                 break;
             default:
                 DRM_IMPL("GEM COMMAND %d\n", request);

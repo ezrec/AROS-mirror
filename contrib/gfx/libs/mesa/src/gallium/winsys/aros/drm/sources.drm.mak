@@ -2,6 +2,7 @@
 
 AROS_LIBDRM_CORE_SOURCES = \
             libdrm/arosdrm \
+            libdrm/arosdrmmode \
             
 AROS_LIBDRM_NVIDIA_SOURCES = \
             libdrm/nouveau/nouveau_device \
