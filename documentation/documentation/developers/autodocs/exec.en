@@ -11,38 +11,38 @@ exec
 ======================================= ======================================= ======================================= ======================================= 
 `AbortIO()`_                            `AddDevice()`_                          `AddHead()`_                            `AddIntServer()`_                       
 `AddLibrary()`_                         `AddMemHandler()`_                      `AddMemList()`_                         `AddPort()`_                            
-`AddResource()`_                        `AddSemaphore()`_                       `AddTail()`_                            `AddTask()`_                            
-`Alert()`_                              `AllocAbs()`_                           `Allocate()`_                           `AllocEntry()`_                         
-`AllocMem()`_                           `AllocPooled()`_                        `AllocSignal()`_                        `AllocTrap()`_                          
-`AllocVec()`_                           `AttemptSemaphore()`_                   `AttemptSemaphoreShared()`_             `AvailMem()`_                           
-`AVL_AddNode()`_                        `AVL_FindFirstNode()`_                  `AVL_FindLastNode()`_                   `AVL_FindNextNodeByAddress()`_          
-`AVL_FindNextNodeByKey()`_              `AVL_FindNode()`_                       `AVL_FindPrevNodeByAddress()`_          `AVL_FindPrevNodeByKey()`_              
-`AVL_RemNodeByAddress()`_               `AVL_RemNodeByKey()`_                   `CacheClearE()`_                        `CacheClearU()`_                        
-`CacheControl()`_                       `CachePostDMA()`_                       `CachePreDMA()`_                        `Cause()`_                              
-`CheckIO()`_                            `ChildFree()`_                          `ChildOrphan()`_                        `ChildStatus()`_                        
-`ChildWait()`_                          `CloseDevice()`_                        `CloseLibrary()`_                       `ColdReboot()`_                         
-`CopyMem()`_                            `CopyMemQuick()`_                       `CreateIORequest()`_                    `CreateMsgPort()`_                      
-`CreatePool()`_                         `Deallocate()`_                         `Debug()`_                              `DeleteIORequest()`_                    
-`DeleteMsgPort()`_                      `DeletePool()`_                         `Disable()`_                            `DoIO()`_                               
-`Enable()`_                             `Enqueue()`_                            `FindName()`_                           `FindPort()`_                           
-`FindResident()`_                       `FindSemaphore()`_                      `FindTask()`_                           `Forbid()`_                             
-`FreeEntry()`_                          `FreeMem()`_                            `FreePooled()`_                         `FreeSignal()`_                         
-`FreeTrap()`_                           `FreeVec()`_                            `GetCC()`_                              `GetMsg()`_                             
-`InitCode()`_                           `InitResident()`_                       `InitSemaphore()`_                      `InitStruct()`_                         
-`Insert()`_                             `MakeFunctions()`_                      `MakeLibrary()`_                        `NewAddTask()`_                         
-`NewAllocEntry()`_                      `NewStackSwap()`_                       `ObtainQuickVector()`_                  `ObtainSemaphoreList()`_                
-`ObtainSemaphoreShared()`_              `OldOpenLibrary()`_                     `OpenDevice()`_                         `OpenLibrary()`_                        
-`OpenResource()`_                       `Permit()`_                             `Procure()`_                            `PutMsg()`_                             
-`RawDoFmt()`_                           `ReleaseSemaphore()`_                   `ReleaseSemaphoreList()`_               `RemDevice()`_                          
-`RemHead()`_                            `RemIntServer()`_                       `RemLibrary()`_                         `RemMemHandler()`_                      
-`Remove()`_                             `RemPort()`_                            `RemResource()`_                        `RemSemaphore()`_                       
-`RemTail()`_                            `RemTask()`_                            `ReplyMsg()`_                           `SendIO()`_                             
-`SetExcept()`_                          `SetFunction()`_                        `SetIntVector()`_                       `SetSignal()`_                          
-`SetSR()`_                              `SetTaskPri()`_                         `ShutdownA()`_                          `Signal()`_                             
-`StackSwap()`_                          `SumKickData()`_                        `SumLibrary()`_                         `SuperState()`_                         
-`Supervisor()`_                         `Switch()`_                             `TypeOfMem()`_                          `UserState()`_                          
-`Vacate()`_                             `VNewRawDoFmt()`_                       `Wait()`_                               `WaitIO()`_                             
-`WaitPort()`_                           
+`AddResetCallback()`_                   `AddResource()`_                        `AddSemaphore()`_                       `AddTail()`_                            
+`AddTask()`_                            `Alert()`_                              `AllocAbs()`_                           `Allocate()`_                           
+`AllocEntry()`_                         `AllocMem()`_                           `AllocPooled()`_                        `AllocSignal()`_                        
+`AllocTrap()`_                          `AllocVec()`_                           `AttemptSemaphore()`_                   `AttemptSemaphoreShared()`_             
+`AvailMem()`_                           `AVL_AddNode()`_                        `AVL_FindFirstNode()`_                  `AVL_FindLastNode()`_                   
+`AVL_FindNextNodeByAddress()`_          `AVL_FindNextNodeByKey()`_              `AVL_FindNode()`_                       `AVL_FindPrevNodeByAddress()`_          
+`AVL_FindPrevNodeByKey()`_              `AVL_RemNodeByAddress()`_               `AVL_RemNodeByKey()`_                   `CacheClearE()`_                        
+`CacheClearU()`_                        `CacheControl()`_                       `CachePostDMA()`_                       `CachePreDMA()`_                        
+`Cause()`_                              `CheckIO()`_                            `ChildFree()`_                          `ChildOrphan()`_                        
+`ChildStatus()`_                        `ChildWait()`_                          `CloseDevice()`_                        `CloseLibrary()`_                       
+`ColdReboot()`_                         `CopyMem()`_                            `CopyMemQuick()`_                       `CreateIORequest()`_                    
+`CreateMsgPort()`_                      `CreatePool()`_                         `Deallocate()`_                         `Debug()`_                              
+`DeleteIORequest()`_                    `DeleteMsgPort()`_                      `DeletePool()`_                         `Disable()`_                            
+`DoIO()`_                               `Enable()`_                             `Enqueue()`_                            `FindName()`_                           
+`FindPort()`_                           `FindResident()`_                       `FindSemaphore()`_                      `FindTask()`_                           
+`Forbid()`_                             `FreeEntry()`_                          `FreeMem()`_                            `FreePooled()`_                         
+`FreeSignal()`_                         `FreeTrap()`_                           `FreeVec()`_                            `GetCC()`_                              
+`GetMsg()`_                             `InitCode()`_                           `InitResident()`_                       `InitSemaphore()`_                      
+`InitStruct()`_                         `Insert()`_                             `MakeFunctions()`_                      `MakeLibrary()`_                        
+`NewAddTask()`_                         `NewAllocEntry()`_                      `NewStackSwap()`_                       `ObtainQuickVector()`_                  
+`ObtainSemaphoreList()`_                `ObtainSemaphoreShared()`_              `OldOpenLibrary()`_                     `OpenDevice()`_                         
+`OpenLibrary()`_                        `OpenResource()`_                       `Permit()`_                             `Procure()`_                            
+`PutMsg()`_                             `RawDoFmt()`_                           `ReleaseSemaphore()`_                   `ReleaseSemaphoreList()`_               
+`RemDevice()`_                          `RemHead()`_                            `RemIntServer()`_                       `RemLibrary()`_                         
+`RemMemHandler()`_                      `Remove()`_                             `RemPort()`_                            `RemResetCallback()`_                   
+`RemResource()`_                        `RemSemaphore()`_                       `RemTail()`_                            `RemTask()`_                            
+`ReplyMsg()`_                           `SendIO()`_                             `SetExcept()`_                          `SetFunction()`_                        
+`SetIntVector()`_                       `SetSignal()`_                          `SetSR()`_                              `SetTaskPri()`_                         
+`ShutdownA()`_                          `Signal()`_                             `StackSwap()`_                          `SumKickData()`_                        
+`SumLibrary()`_                         `SuperState()`_                         `Supervisor()`_                         `Switch()`_                             
+`TypeOfMem()`_                          `UserState()`_                          `Vacate()`_                             `VNewRawDoFmt()`_                       
+`Wait()`_                               `WaitIO()`_                             `WaitPort()`_                           
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -338,6 +338,45 @@ Inputs
 ::
 
      port - Pointer to messageport structure.
+
+
+
+----------
+
+AddResetCallback()
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL AddResetCallback(
+          struct Interrupt * interrupt );
+
+Function
+~~~~~~~~
+::
+
+     The given Interrupr structure is inserted into list according to
+     its proirity. The callback code is called with the following arguments:
+     
+         A0 - scratch (set to NULL)
+         A6 - struct ExecBase *
+         A1 - is_Data
+
+
+Inputs
+~~~~~~
+::
+
+     interrupt - A pointer to an Interrupt structure
+
+
+Result
+~~~~~~
+::
+
+     TRUE for success, FALSE for failure
 
 
 
@@ -4998,6 +5037,40 @@ Inputs
 ::
 
      port - Pointer to messageport structure.
+
+
+
+----------
+
+RemResetCallback()
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ void RemResetCallback(
+          struct Interrupt * interrupt );
+
+Function
+~~~~~~~~
+::
+
+     Remove reset handler previously installed using AddResetCallBack()
+
+
+Inputs
+~~~~~~
+::
+
+     interrupt - A pointer to an Interrupt structure
+
+
+Result
+~~~~~~
+::
+
+     None.
 
 
 

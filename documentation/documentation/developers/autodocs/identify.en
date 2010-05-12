@@ -1,0 +1,158 @@
+========
+identify
+========
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_
+
+----------
+
+======================================= ======================================= ======================================= ======================================= 
+`IdAlert()`_                            `IdEstimateFormatSize()`_               `IdExpansion()`_                        `IdFormatString()`_                     
+`IdFunction()`_                         `IdHardware()`_                         `IdHardwareNum()`_                      `IdHardwareUpdate()`_                   
+
+======================================= ======================================= ======================================= ======================================= 
+
+-----------
+
+IdAlert()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG IdAlert(
+          ULONG id,
+          struct TagItem * taglist );
+ 
+ LONG IdAlertTags(
+          ULONG id,
+          TAG tag, ... );
+
+
+----------
+
+IdEstimateFormatSize()
+======================
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG IdEstimateFormatSize(
+          STRPTR String,
+          struct TagItem * Tags );
+ 
+ ULONG IdEstimateFormatSizeTags(
+          STRPTR String,
+          TAG tag, ... );
+
+
+----------
+
+IdExpansion()
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG IdExpansion(
+          struct TagItem * taglist );
+ 
+ LONG IdExpansionTags(
+          TAG tag, ... );
+
+
+----------
+
+IdFormatString()
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG IdFormatString(
+          STRPTR string,
+          STRPTR buffer,
+          ULONG len,
+          struct TagItem * tags );
+ 
+ ULONG IdFormatStringTags(
+          STRPTR string,
+          STRPTR buffer,
+          ULONG len,
+          TAG tag, ... );
+
+
+----------
+
+IdFunction()
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG IdFunction(
+          STRPTR libname,
+          LONG offset,
+          struct TagItem * taglist );
+ 
+ LONG IdFunctionTags(
+          STRPTR libname,
+          LONG offset,
+          TAG tag, ... );
+
+
+----------
+
+IdHardware()
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ CONST_STRPTR IdHardware(
+          ULONG type,
+          struct TagItem * taglist );
+ 
+ CONST_STRPTR IdHardwareTags(
+          ULONG type,
+          TAG tag, ... );
+
+
+----------
+
+IdHardwareNum()
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG IdHardwareNum(
+          ULONG type,
+          struct TagItem * taglist );
+ 
+ ULONG IdHardwareNumTags(
+          ULONG type,
+          TAG tag, ... );
+
+
+----------
+
+IdHardwareUpdate()
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ void IdHardwareUpdate();
+
+

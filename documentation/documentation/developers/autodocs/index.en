@@ -30,6 +30,7 @@ Autodocs for Modules
 + `graphics <graphics>`_
 + `hyperlayers <hyperlayers>`_
 + `icon <icon>`_
++ `identify <identify>`_
 + `iffparse <iffparse>`_
 + `intuition <intuition>`_
 + `keymap <keymap>`_
