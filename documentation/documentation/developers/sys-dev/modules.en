@@ -23,9 +23,9 @@ Introduction
 Modules are shared binaries. Their main purpose is to deliver tables of functions and
 classes for object oriented access to GUI elements and multimedia data.
 
-Building modules consists of two parts. First is a macro to use in
-mmakefile.src files. Another is a configuration file that describes the
-contents of the module.
+Building modules consists of two parts:
++ a macro to use in mmakefile.src files
++ a configuration file that describes the contents of the module.
 
 Metamake
 ========
@@ -122,6 +122,9 @@ Module Types
 ``library``
     Collection of functions.
 
+``usbclass``
+    Driver for USB devices.
+
 ``mcc``
     MUI custom class.
 
@@ -164,8 +167,8 @@ sections with definitions::
     <definitions>
     ##end <sectionname>
 
-Sectionname can be "config", "class", "cdefprivate", "cdef", "functionlist"
-or "methodlist".
+Sectionname can be "config", "class", "cdefprivate", "cdef", "functionlist",
+"methodlist" or "startup".
 
 
 Section "config"
@@ -222,6 +225,12 @@ to the last non white-space character on that line.
     library. By default no base variable will be present in the link
     library.
 
+``superclass``
+    FIXME
+
+``superclass_field``
+    FIXME
+
 ``residentpri``
     FIXME
     
@@ -259,9 +268,6 @@ to the last non white-space character on that line.
     ``noautoinit``
         FIXME
 
-    ``private``
-        FIXME
-
 ``sysbase_field``
     FIXME
 
@@ -271,17 +277,35 @@ to the last non white-space character on that line.
 ``rootbase_field``
     FIXME
 
+``classptr_field``
+    FIXME
+
+``classptr_var``
+    FIXME
+
+``classid``
+    FIXME
+
+``classdatatype``
+    FIXME
+
 ``beginio_func``
     Name of the beginio function of a device.
 
 ``abortio_func``
     Name of the abortio function of a device.
 
+``dispatcher``
+    FIXME
+
 ``initpri``
     Sets the priority of initialization if you have more than one class
     in a conf file. Use this if you want to ensure that a base class
     is initialized before a sub class. The class with the highest
     value is initialized first.
+
+``type``
+    FIXME
 
 ``getidfunc``
     FIXME
@@ -396,6 +420,9 @@ There are some tags which influence the previously defined function.
 ``.alias name``
     Define an alternate name for the function.
 
+``.function name``
+    FIXME
+
 ``.cfunction``
     FIXME
 
@@ -421,8 +448,14 @@ There are some tags which influence the previously defined method.
 ``.function name``
     FIXME
 
-``.interface``
+``.interface name``
     FIXME
+
+
+Section "startup"
+-----------------
+
+FIXME
 
 
 Defaults
