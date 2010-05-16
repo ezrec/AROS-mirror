@@ -81,7 +81,7 @@ static void handle_events(void)
             */
             ReplyMsg((struct Message *)imsg);       
 
-            switch (imsg->Class)
+            switch (iclass)
             {
                 case IDCMP_CLOSEWINDOW:
                     puts("IDCMP_CLOSEWINDOW");
