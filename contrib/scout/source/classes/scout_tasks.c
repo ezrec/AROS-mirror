@@ -77,21 +77,19 @@ STATIC LONG totalmicros;
 #endif
 TEXT updatetimetext[8];
 
-STATIC SAVEDS LONG taskslist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(taskslist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct TaskEntry));
 }
 MakeStaticHook(taskslist_con2hook, taskslist_con2func);
 
-STATIC SAVEDS LONG taskslist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(taskslist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(taskslist_des2hook, taskslist_des2func);
 
-STATIC SAVEDS LONG taskslist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(taskslist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct TaskEntry *te = (struct TaskEntry *)msg->entry;
 
@@ -121,22 +119,19 @@ STATIC SAVEDS LONG taskslist_dsp2func( struct Hook *hook, Object *obj, struct NL
 #ifdef __MORPHOS__
         msg->strings[9] = txtTaskFreeStackPPC;
 #endif
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
-        msg->preparses[3] = MUIX_B;
-        msg->preparses[4] = MUIX_B;
-        msg->preparses[5] = MUIX_B;
-        msg->preparses[6] = MUIX_B;
-        msg->preparses[7] = MUIX_B;
-        msg->preparses[8] = MUIX_B;
-        msg->preparses[9] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
+        msg->preparses[3] = (STRPTR)MUIX_B;
+        msg->preparses[4] = (STRPTR)MUIX_B;
+        msg->preparses[5] = (STRPTR)MUIX_B;
+        msg->preparses[6] = (STRPTR)MUIX_B;
+        msg->preparses[7] = (STRPTR)MUIX_B;
+        msg->preparses[8] = (STRPTR)MUIX_B;
 #ifdef __MORPHOS__
-        msg->preparses[9] = MUIX_B;
+        msg->preparses[9] = (STRPTR)MUIX_B;
 #endif
     }
-
-    return 0;
 }
 MakeStaticHook(taskslist_dsp2hook, taskslist_dsp2func);
 
@@ -167,7 +162,7 @@ STATIC LONG tasklist_cmpfunc( const struct Node *n1,
     return stricmp(((struct TaskEntry *)n1)->te_Name, ((struct TaskEntry *)n2)->te_Name);
 }
 
-STATIC SAVEDS LONG taskslist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(taskslist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct TaskEntry *te1, *te2;
@@ -179,7 +174,7 @@ STATIC SAVEDS LONG taskslist_cmp2func( struct Hook *hook, Object *obj, struct NL
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = taskslist_cmp2colfunc(te2, te1, col1);
@@ -229,7 +224,7 @@ STATIC LONG ParseUpdateTime( APTR obj,
     return result;
 }
 
-STATIC SAVEDS LONG cpuinterval_callfunc( struct Hook *hook, Object *obj, STRPTR *contents )
+HOOKPROTONH(cpuinterval_callfunc, void, Object *obj, STRPTR *contents )
 {
     struct TasksWinData *twd = INST_DATA(OCLASS(obj), obj);
 
@@ -240,12 +235,10 @@ STATIC SAVEDS LONG cpuinterval_callfunc( struct Hook *hook, Object *obj, STRPTR 
         twd->twd_TimerHandler.ihn_Millis = ParseUpdateTime(twd->twd_RefreshString, *contents);
         DoMethod(twd->twd_Application, MUIM_Application_AddInputHandler, &twd->twd_TimerHandler);
     }
-
-    return 0;
 }
 MakeStaticHook(cpuinterval_callhook, cpuinterval_callfunc);
 
-SAVEDS ULONG realstring_editfunc( struct Hook *hook, struct SGWork *sgw, ULONG *msg )
+HOOKPROTONH(realstring_editfunc, ULONG, struct SGWork *sgw, ULONG *msg)
 {
     ULONG return_code;
     ULONG i = 0, punkte = 0, notzeros = 0;
@@ -355,8 +348,8 @@ struct Task *TaskExists( struct Task *tasktofind )
     return result;
 }
 
-STRPTR GetTaskState( UBYTE state,
-                     ULONG waitmask )
+CONST_STRPTR GetTaskState( UBYTE state,
+                           ULONG waitmask )
 {
     switch (state) {
         case TS_FROZEN:    return txtTaskStateFrozen;
@@ -389,7 +382,7 @@ STRPTR GetTaskState( UBYTE state,
     }
 }
 
-STRPTR GetNodeType( UBYTE type )
+CONST_STRPTR GetNodeType( UBYTE type )
 {
     STATIC TEXT invalidType[64];
 
@@ -459,7 +452,7 @@ STRPTR GetTaskName( struct Task *task,
     return buffer;
 }
 
-STRPTR GetSigBitName( LONG bit )
+CONST_STRPTR GetSigBitName( LONG bit )
 {
     STATIC TEXT sigNameBuffer[16];
 
@@ -480,8 +473,8 @@ STRPTR GetSigBitName( LONG bit )
     }
 }
 
-STATIC void GetCPUUsage( struct Task *task,
-                         struct TaskEntry *te )
+STATIC void GetCPUUsage( UNUSED struct Task *task,
+                         UNUSED struct TaskEntry *te )
 {
 #if !defined(__amigaos4__)
 // FIXME: AROS?
@@ -507,9 +500,9 @@ STATIC void GetCPUUsage( struct Task *task,
 #endif
 }
 
-STATIC void UpdateTaskEntry( struct Task *task,
-                             struct TaskEntry *te,
-                             BOOL cpuflag )
+STATIC void UpdateTaskEntry( UNUSED struct Task *task,
+                             UNUSED struct TaskEntry *te,
+                             UNUSED BOOL cpuflag )
 {
 #ifdef __MORPHOS__
     register ULONG REG_GPR1 __asm("r1");
@@ -652,7 +645,7 @@ STATIC void PrintCallback( struct TaskEntry *te,
 }
 
 STATIC void SendCallback( struct TaskEntry *te,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(te, sizeof(struct TaskEntry));
 }
@@ -852,7 +845,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct TasksWinData *twd = INST_DATA(cl, obj);
     struct TasksCallbackUserData ud;
@@ -891,9 +884,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintTasks(NULL);
 
@@ -902,7 +895,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mRemove( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct TasksWinData *twd = INST_DATA(cl, obj);
     struct TaskEntry *te;
@@ -924,7 +917,7 @@ STATIC ULONG mRemove( struct IClass *cl,
 
 STATIC ULONG mPriority( struct IClass *cl,
                         Object *obj,
-                        Msg msg )
+                        UNUSED Msg msg )
 {
     struct TasksWinData *twd = INST_DATA(cl, obj);
     struct TaskEntry *te;
@@ -946,7 +939,7 @@ STATIC ULONG mPriority( struct IClass *cl,
 
 STATIC ULONG mMore( struct IClass *cl,
                     Object *obj,
-                    Msg msg )
+                    UNUSED Msg msg )
 {
     if (!clientstate) {
         struct TasksWinData *twd = INST_DATA(cl, obj);
@@ -979,7 +972,7 @@ STATIC ULONG mMore( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct TasksWinData *twd = INST_DATA(cl, obj);
     struct TaskEntry *te;
@@ -1002,7 +995,7 @@ STATIC ULONG mListChange( struct IClass *cl,
 
 STATIC ULONG mFreeze( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct TasksWinData *twd = INST_DATA(cl, obj);
     struct TaskEntry *te;
@@ -1019,7 +1012,7 @@ STATIC ULONG mFreeze( struct IClass *cl,
 
 STATIC ULONG mActivate( struct IClass *cl,
                         Object *obj,
-                        Msg msg )
+                        UNUSED Msg msg )
 {
     struct TasksWinData *twd = INST_DATA(cl, obj);
     struct TaskEntry *te;
@@ -1036,7 +1029,7 @@ STATIC ULONG mActivate( struct IClass *cl,
 
 STATIC ULONG mSignal( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct TasksWinData *twd = INST_DATA(cl, obj);
     struct TaskEntry *te;
@@ -1063,7 +1056,7 @@ STATIC ULONG mSignal( struct IClass *cl,
 
 STATIC ULONG mBreak( struct IClass *cl,
                      Object *obj,
-                     Msg msg )
+                     UNUSED Msg msg )
 {
     struct TasksWinData *twd = INST_DATA(cl, obj);
     struct TaskEntry *te;
@@ -1080,7 +1073,7 @@ STATIC ULONG mBreak( struct IClass *cl,
 
 STATIC ULONG mCPUCheckChange( struct IClass *cl,
                               Object *obj,
-                              Msg msg )
+                              UNUSED Msg msg )
 {
     struct TasksWinData *twd = INST_DATA(cl, obj);
     struct CPUCheckChangeMessage *cccm = (struct CPUCheckChangeMessage *)msg;
@@ -1132,7 +1125,7 @@ STATIC ULONG mCPUCheckChange( struct IClass *cl,
 
 STATIC ULONG mCPUCheck( struct IClass *cl,
                         Object *obj,
-                        Msg msg )
+                        UNUSED Msg msg )
 {
     struct TasksWinData *twd = INST_DATA(cl, obj);
     struct TasksCallbackUserData ud;
@@ -1198,9 +1191,9 @@ STATIC ULONG mCPUCheck( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mCPUCheckQuick( struct IClass *cl,
+STATIC ULONG mCPUCheckQuick( UNUSED struct IClass *cl,
                              Object *obj,
-                             Msg msg )
+                             UNUSED Msg msg )
 {
     if (PatchesInstalled && SwitchState != 0) {
         DoMethod(obj, MUIM_TasksWin_CPUCheck);
@@ -1231,7 +1224,6 @@ DISPATCHER(TasksWinDispatcher)
 
     return (DoSuperMethodA(cl, obj, msg));
 }
-DISPATCHER_END
 
 void PrintTasks( STRPTR filename )
 {
@@ -1252,6 +1244,6 @@ void SendTaskList( STRPTR UNUSED dummy )
 
 APTR MakeTasksWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct TasksWinData), DISPATCHER_REF(TasksWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct TasksWinData), ENTRY(TasksWinDispatcher));
 }
 

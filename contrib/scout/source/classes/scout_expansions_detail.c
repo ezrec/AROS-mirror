@@ -77,8 +77,8 @@ STATIC void SetDetails( struct IClass *cl,
     struct ConfigDev *cd = ee->ee_Addr;
     ULONG i, memsize;
     STATIC TEXT ertype[] = { ERTF_MEMLIST, ERTF_DIAGVALID, ERTF_CHAINEDCONFIG, 0 };
-    STATIC TEXT *ertypetext[] = { "ERTF_MEMLIST", "ERTF_DIAGVALID", "ERTF_CHAINEDCONFIG" };
-    STATIC TEXT *z3subsize[] = { "SAME", "AUTO", "64K", "128K", "256K", "512K", "1M", "2M", "4M", "6M", "8M", "10M", "12M", "14M", "RESERVED", "RESERVED" };
+    STATIC CONST_STRPTR ertypetext[] = { "ERTF_MEMLIST", "ERTF_DIAGVALID", "ERTF_CHAINEDCONFIG" };
+    STATIC CONST_STRPTR z3subsize[] = { "SAME", "AUTO", "64K", "128K", "256K", "512K", "1M", "2M", "4M", "6M", "8M", "10M", "12M", "14M", "RESERVED", "RESERVED" };
 
     MySetContents(edwd->edwd_Texts[ 0], " %4lu ", cd->cd_Rom.er_Manufacturer);
     MySetContents(edwd->edwd_Texts[ 2], " %4lu ", cd->cd_Rom.er_Product);
@@ -344,11 +344,10 @@ DISPATCHER(ExpansionsDetailWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeExpansionsDetailWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct ExpansionsDetailWinData), DISPATCHER_REF(ExpansionsDetailWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct ExpansionsDetailWinData), ENTRY(ExpansionsDetailWinDispatcher));
 }
 
 

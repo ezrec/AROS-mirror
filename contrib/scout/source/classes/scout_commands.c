@@ -38,23 +38,21 @@ struct CommandsCallbackUserData {
     ULONG ud_Count;
 };
 
-STATIC SAVEDS LONG comtree_confunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_ConstructMessage *msg )
+HOOKPROTONHNO(comtree_confunc, LONG, struct MUIP_NListtree_ConstructMessage *msg)
 {
     return AllocListEntry(msg->MemPool, msg->UserData, sizeof(struct CommandEntry));
 }
 MakeStaticHook(comtree_conhook, comtree_confunc);
 
-STATIC SAVEDS LONG comtree_desfunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_DestructMessage *msg )
+HOOKPROTONHNO(comtree_desfunc, void, struct MUIP_NListtree_DestructMessage *msg)
 {
     FreeListEntry(msg->MemPool, &msg->UserData);
-
-    return 0;
 }
 MakeStaticHook(comtree_deshook, comtree_desfunc);
 
-STATIC SAVEDS LONG comtree_dspfunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_DisplayMessage *msg )
+HOOKPROTONHNO(comtree_dspfunc, void, struct MUIP_NListtree_DisplayMessage *msg)
 {
-    STATIC STRPTR empty = "\0";
+    STATIC CONST_STRPTR empty = "\0";
 
     if (msg->TreeNode) {
         struct CommandEntry *ce = msg->TreeNode->tn_User;
@@ -68,17 +66,17 @@ STATIC SAVEDS LONG comtree_dspfunc( struct Hook *hook, Object *obj, struct MUIP_
             msg->Array[5] = ce->ce_Upper;
             msg->Array[6] = ce->ce_Size;
         } else {
-            msg->Array[0] = empty;
-            msg->Array[1] = empty;
-            msg->Array[2] = empty;
+            msg->Array[0] = (STRPTR)empty;
+            msg->Array[1] = (STRPTR)empty;
+            msg->Array[2] = (STRPTR)empty;
             msg->Array[3] = ce->ce_SegmentNumStr;
             msg->Array[4] = ce->ce_Lower;
             msg->Array[5] = ce->ce_Upper;
             msg->Array[6] = ce->ce_Size;
         }
-        msg->Preparse[4] = MUIX_C;
-        msg->Preparse[5] = MUIX_C;
-        msg->Preparse[6] = MUIX_R;
+        msg->Preparse[4] = (STRPTR)MUIX_C;
+        msg->Preparse[5] = (STRPTR)MUIX_C;
+        msg->Preparse[6] = (STRPTR)MUIX_R;
     } else {
         msg->Array[0] = txtAddress;
         msg->Array[1] = txtName;
@@ -87,20 +85,18 @@ STATIC SAVEDS LONG comtree_dspfunc( struct Hook *hook, Object *obj, struct MUIP_
         msg->Array[4] = txtCommandLower;
         msg->Array[5] = txtCommandUpper;
         msg->Array[6] = txtCommandSize;
-        msg->Preparse[0] = MUIX_B;
-        msg->Preparse[1] = MUIX_B;
-        msg->Preparse[2] = MUIX_B;
-        msg->Preparse[3] = MUIX_B;
-        msg->Preparse[4] = MUIX_B MUIX_C;
-        msg->Preparse[5] = MUIX_B MUIX_C;
-        msg->Preparse[6] = MUIX_B MUIX_R;
+        msg->Preparse[0] = (STRPTR)MUIX_B;
+        msg->Preparse[1] = (STRPTR)MUIX_B;
+        msg->Preparse[2] = (STRPTR)MUIX_B;
+        msg->Preparse[3] = (STRPTR)MUIX_B;
+        msg->Preparse[4] = (STRPTR)MUIX_B MUIX_C;
+        msg->Preparse[5] = (STRPTR)MUIX_B MUIX_C;
+        msg->Preparse[6] = (STRPTR)MUIX_B MUIX_R;
     }
-
-    return 0;
 }
 MakeStaticHook(comtree_dsphook, comtree_dspfunc);
 
-STATIC SAVEDS LONG comtree_cmpfunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_CompareMessage *msg )
+HOOKPROTONHNO(comtree_cmpfunc, LONG, struct MUIP_NListtree_CompareMessage *msg)
 {
     LONG cmp;
 
@@ -117,7 +113,7 @@ STATIC SAVEDS LONG comtree_cmpfunc( struct Hook *hook, Object *obj, struct MUIP_
 }
 MakeStaticHook(comtree_cmphook, comtree_cmpfunc);
 
-STATIC SAVEDS LONG comtree_findfunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_FindUserDataMessage *msg )
+HOOKPROTONHNO(comtree_findfunc, LONG, struct MUIP_NListtree_FindUserDataMessage *msg)
 {
     struct CommandEntry *ce;
 
@@ -170,7 +166,7 @@ STATIC void ReceiveList( void (* callback)( struct CommandEntry *ce, void *userD
 }
 
 STATIC void ScanSegments( struct List *list,
-                          LONG system )
+                          UNUSED LONG system )
 {
 #if defined(__amigaos4__)
     struct DosResidentSeg *seg;
@@ -323,7 +319,7 @@ STATIC void PrintCallback( struct CommandEntry *ce,
 }
 
 STATIC void SendCallback( struct CommandEntry *ce,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(ce, sizeof(struct CommandEntry));
 }
@@ -393,7 +389,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct CommandsWinData *cwd = INST_DATA(cl, obj);
     struct CommandsCallbackUserData ud;
@@ -421,9 +417,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintCommands(NULL);
 
@@ -432,7 +428,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mRemove( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct CommandsWinData *cwd = INST_DATA(cl, obj);
     struct MUI_NListtree_TreeNode *tn;
@@ -460,7 +456,7 @@ STATIC ULONG mRemove( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct CommandsWinData *cwd = INST_DATA(cl, obj);
     struct MUI_NListtree_TreeNode *tn;
@@ -488,7 +484,6 @@ DISPATCHER(CommandsWinDispatcher)
 
     return (DoSuperMethodA(cl, obj, msg));
 }
-DISPATCHER_END
 
 void PrintCommands( STRPTR filename )
 {
@@ -509,6 +504,6 @@ void SendComList( STRPTR UNUSED dummy )
 
 APTR MakeCommandsWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct CommandsWinData), DISPATCHER_REF(CommandsWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct CommandsWinData), ENTRY(CommandsWinDispatcher));
 }
 

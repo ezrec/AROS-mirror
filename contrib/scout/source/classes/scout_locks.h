@@ -39,9 +39,9 @@ void PrintLocks( STRPTR );
 
 void SendLockList( STRPTR );
 
-ULONG CountLocks( STRPTR );
+ULONG CountLocks( CONST_STRPTR );
 
-void RemoveLock( STRPTR );
+void RemoveLock( CONST_STRPTR );
 
 #define LocksWindowObject                    NewObject(LocksWinClass->mcc_Class, NULL
 

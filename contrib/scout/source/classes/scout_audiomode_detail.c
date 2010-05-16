@@ -31,8 +31,22 @@ struct AudioModesDetailWinData {
     struct AudioModeEntry *amdwd_AudioMode;
 };
 
-#ifdef __MORPHOS__
-extern struct Library *AHIBase;
+#if defined(__amigaos4__)
+	#undef NEED_GLOBAL_AHIBASE
+#elif defined(__MORPHOS__)
+	#define NEED_GLOBAL_AHIBASE
+#elif defined(__AROS__)
+	#undef NEED_GLOBAL_AHIBASE
+#else
+	#if defined(__SASC)
+		#undef NEED_GLOBAL_AHIBASE
+	#else
+		#define NEED_GLOBAL_AHIBASE
+	#endif
+#endif
+
+#if defined(NEED_GLOBAL_AHIBASE)
+struct Library *AHIBase;
 #endif
 
 STATIC void SetDetails( struct IClass *cl,
@@ -52,11 +66,11 @@ STATIC void SetDetails( struct IClass *cl,
                 ahir->ahir_Version = 4;
 
                 if (OpenDevice(AHINAME, 0, (struct IORequest *)ahir, 0) == 0) {
-                #ifndef __MORPHOS__
-                    struct Device *AHIBase;
+                #if !defined(NEED_GLOBAL_AHIBASE)
+                    struct Library *AHIBase;
+                #endif
                 #if defined(__amigaos4__)
                     struct AHIIFace *IAHI;
-                #endif
                 #endif
                     ULONG bits, maxchannels, minfreq, maxfreq, numfreqs, maxplaysamp, maxrecsamp;
                     Fixed minmonivol, maxmonivol;
@@ -64,7 +78,7 @@ STATIC void SetDetails( struct IClass *cl,
                     Fixed minoutputvol, maxoutputvol;
                     ULONG volume, stereo, panning, hifi, pingpong, record, fullduplex, realtime;
 
-                    AHIBase = ahir->ahir_Std.io_Device;
+                    AHIBase = (struct Library *)ahir->ahir_Std.io_Device;
 
                     if (GETINTERFACE(IAHI, AHIBase)) {
                         MySetContents(amdwd->amdwd_Texts[ 0], ame->ame_Name);
@@ -148,6 +162,9 @@ STATIC void SetDetails( struct IClass *cl,
                     }
 
                     CloseDevice((struct IORequest *)ahir);
+                #if defined(NEED_GLOBAL_AHIBASE)
+                    AHIBase = NULL;
+                #endif
                 } else {
                     MyRequest(msgErrorContinue, msgCantOpenAHIDevice, AHINAME, ahir->ahir_Version);
                 }
@@ -298,10 +315,9 @@ DISPATCHER(AudioModesDetailWinDispatcher)
 
     return (DoSuperMethodA(cl, obj, msg));
 }
-DISPATCHER_END
 
 APTR MakeAudioModesDetailWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct AudioModesDetailWinData), DISPATCHER_REF(AudioModesDetailWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct AudioModesDetailWinData), ENTRY(AudioModesDetailWinDispatcher));
 }
 

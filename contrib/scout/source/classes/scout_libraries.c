@@ -42,21 +42,19 @@ struct LibrariesCallbackUserData {
     ULONG ud_Count;
 };
 
-STATIC SAVEDS LONG liblist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(liblist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct LibraryEntry));
 }
 MakeStaticHook(liblist_con2hook, liblist_con2func);
 
-STATIC SAVEDS LONG liblist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(liblist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(liblist_des2hook, liblist_des2func);
 
-STATIC SAVEDS LONG liblist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(liblist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct LibraryEntry *le = (struct LibraryEntry *)msg->entry;
 
@@ -78,17 +76,15 @@ STATIC SAVEDS LONG liblist_dsp2func( struct Hook *hook, Object *obj, struct NLis
         msg->strings[5] = txtLibraryOpenCount;
         msg->strings[6] = txtLibraryRPC;
         msg->strings[7] = txtLibraryCodeType;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
-        msg->preparses[3] = MUIX_B;
-        msg->preparses[4] = MUIX_B;
-        msg->preparses[5] = MUIX_B;
-        msg->preparses[6] = MUIX_B;
-        msg->preparses[7] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
+        msg->preparses[3] = (STRPTR)MUIX_B;
+        msg->preparses[4] = (STRPTR)MUIX_B;
+        msg->preparses[5] = (STRPTR)MUIX_B;
+        msg->preparses[6] = (STRPTR)MUIX_B;
+        msg->preparses[7] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(liblist_dsp2hook, liblist_dsp2func);
 
@@ -115,7 +111,7 @@ STATIC LONG liblist_cmpfunc( const struct Node *n1,
     return stricmp(((struct LibraryEntry *)n1)->le_Name, ((struct LibraryEntry *)n2)->le_Name);
 }
 
-STATIC SAVEDS LONG liblist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(liblist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct LibraryEntry *le1, *le2;
@@ -126,7 +122,7 @@ STATIC SAVEDS LONG liblist_cmp2func( struct Hook *hook, Object *obj, struct NLis
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = liblist_cmp2colfunc(le2, le1, col1);
@@ -260,7 +256,7 @@ STATIC void PrintCallback( struct LibraryEntry *le,
 }
 
 STATIC void SendCallback( struct LibraryEntry *le,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(le, sizeof(struct LibraryEntry));
 }
@@ -352,7 +348,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct LibrariesWinData *lwd = INST_DATA(cl, obj);
     struct LibrariesCallbackUserData ud;
@@ -385,9 +381,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintLibraries(NULL);
 
@@ -396,7 +392,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mRemove( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct LibrariesWinData *lwd = INST_DATA(cl, obj);
     struct LibraryEntry *le;
@@ -414,7 +410,7 @@ STATIC ULONG mRemove( struct IClass *cl,
 
 STATIC ULONG mPriority( struct IClass *cl,
                         Object *obj,
-                        Msg msg )
+                        UNUSED Msg msg )
 {
     struct LibrariesWinData *lwd = INST_DATA(cl, obj);
     struct LibraryEntry *le;
@@ -436,7 +432,7 @@ STATIC ULONG mPriority( struct IClass *cl,
 
 STATIC ULONG mClose( struct IClass *cl,
                      Object *obj,
-                     Msg msg )
+                     UNUSED Msg msg )
 {
     struct LibrariesWinData *lwd = INST_DATA(cl, obj);
     struct LibraryEntry *le;
@@ -472,7 +468,7 @@ STATIC ULONG mClose( struct IClass *cl,
 
 STATIC ULONG mMore( struct IClass *cl,
                     Object *obj,
-                    Msg msg )
+                    UNUSED Msg msg )
 {
     if (!clientstate) {
         struct LibrariesWinData *lwd = INST_DATA(cl, obj);
@@ -498,7 +494,7 @@ STATIC ULONG mMore( struct IClass *cl,
 
 STATIC ULONG mFunctions( struct IClass *cl,
                          Object *obj,
-                         Msg msg )
+                         UNUSED Msg msg )
 {
     struct LibrariesWinData *lwd = INST_DATA(cl, obj);
     struct LibraryEntry *le;
@@ -518,7 +514,7 @@ STATIC ULONG mFunctions( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct LibrariesWinData *lwd = INST_DATA(cl, obj);
     struct LibraryEntry *le;
@@ -553,7 +549,6 @@ DISPATCHER(LibrariesWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 void PrintLibraries( STRPTR filename )
 {
@@ -574,6 +569,6 @@ void SendLibList( STRPTR UNUSED dummy )
 
 APTR MakeLibrariesWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct LibrariesWinData), DISPATCHER_REF(LibrariesWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct LibrariesWinData), ENTRY(LibrariesWinDispatcher));
 }
 

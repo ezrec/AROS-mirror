@@ -37,12 +37,16 @@ struct GfxBase *GfxBase;
 #if defined(__MORPHOS__)
 struct Library *CxBase;
 struct Library *RexxSysBase;
+struct Library *AslBase;
+#endif
+#if defined(__MORPHOS__) || !defined(__amigaos4__) || !defined(__AROS__)
 struct Library *SocketBase;
 struct Library *UserGroupBase;
-struct Library *AslBase;
-struct Library *UtilityBase;
-#else
+#endif
+#if defined(__amigaos4__) || defined(__AROS__) || !defined(__GNUC__)
 struct UtilityBase *UtilityBase;
+#else
+struct Library *UtilityBase;
 #endif
 #if defined(__amigaos4__)
 struct ExecIFace *IExec;
@@ -56,14 +60,17 @@ struct Interface *INewlib __attribute__((force_no_baserel));
 #endif
 #endif
 
+#if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__) && !defined(__SASC)
+extern struct Library *__UtilityBase;   // clib2
+#endif
+
 struct Args opts;
 #if defined(__MORPHOS__)
 const ULONG __abox__ = 1;
-#else
+#elif defined(__amigaos4__)
 const UBYTE USED_VAR stack[] = "$STACK: 16384\n";
-#if !defined(__amigaos4__) && defined(__SASC)
+#elif defined(__SASC)
 long __stack = 16384;
-#endif
 #endif
 
 #if defined(__AROS__)
@@ -83,7 +90,7 @@ ULONG startup(struct ExecBase *EXECBASE)
 #elif defined(__amigaos4__)
 ULONG _start(void)
 #else
-ULONG SAVEDS startup(void)
+ULONG SAVEDS realstartup(void)
 #endif
 {
     ULONG rc = RETURN_FAIL;
@@ -109,7 +116,7 @@ ULONG SAVEDS startup(void)
             if (GETINTERFACE(IDOS, DOSBase)) {
                 if ((IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library", 37)) != NULL) {
                     if (GETINTERFACE(IIntuition, IntuitionBase)) {
-                        if ((UtilityBase = (struct UtilityBase *)OpenLibrary(UTILITYNAME, 37)) != NULL) {
+                        if ((UtilityBase = (APTR)OpenLibrary(UTILITYNAME, 37)) != NULL) {
                             if (GETINTERFACE(IUtility, UtilityBase)) {
                                 if ((IconBase = OpenLibrary(ICONNAME, 37)) != NULL) {
                                     if (GETINTERFACE(IIcon, IconBase)) {
@@ -119,11 +126,15 @@ ULONG SAVEDS startup(void)
                                     #endif
                                                 struct SmartArgs sa;
 
+                                           #if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)  && !defined(__SASC)
+                                                __UtilityBase = UtilityBase;
+                                           #endif
+
                                                 memset(&sa, 0x00, sizeof(struct SmartArgs));
-                                                sa.sa_Template = TEMPLATE;
+                                                sa.sa_Template = (STRPTR)TEMPLATE;
                                                 sa.sa_Parameter = (IPTR *)&opts;
                                                 sa.sa_FileParameter = -1;
-                                                sa.sa_Window = "CON:20/20/400/100/Scout/AUTO/CLOSE/WAIT";
+                                                sa.sa_Window = (STRPTR)"CON:20/20/400/100/Scout/AUTO/CLOSE/WAIT";
 
                                                 if (SmartReadArgs(wbmsg, &sa) == 0) {
                                                     if (opts.ToolPri != NULL && (*opts.ToolPri < -128 || *opts.ToolPri > 127)) {

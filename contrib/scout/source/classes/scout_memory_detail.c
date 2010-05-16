@@ -92,7 +92,7 @@ STATIC CONST struct LongFlag memFlags[] = {
     { 0,               NULL }
 };
 
-STATIC SAVEDS LONG memmorelist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(memmorelist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct MemoryFreeEntry *mfe = (struct MemoryFreeEntry *)msg->entry;
 
@@ -104,12 +104,10 @@ STATIC SAVEDS LONG memmorelist_dsp2func( struct Hook *hook, Object *obj, struct 
         msg->strings[0] = txtMemoryLower3;
         msg->strings[1] = txtMemoryUpper3;
         msg->strings[2] = txtMemorySize;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(memmorelist_dsp2hook, memmorelist_dsp2func);
 
@@ -125,7 +123,7 @@ STATIC LONG memmorelist_cmp2colfunc( struct MemoryFreeEntry *mfe1,
     }
 }
 
-STATIC SAVEDS LONG memmorelist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(memmorelist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct MemoryFreeEntry *mfe1, *mfe2;
@@ -136,7 +134,7 @@ STATIC SAVEDS LONG memmorelist_cmp2func( struct Hook *hook, Object *obj, struct 
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = memmorelist_cmp2colfunc(mfe2, mfe1, col1);
@@ -193,7 +191,7 @@ STATIC void SetDetails( struct IClass *cl,
             mccnt++;
             mc = mc->mc_Next;
         }
-        mccnt += (mccnt / 10 < 0) ? 10 : (mccnt / 10);
+        mccnt += MAX(10, mccnt / 10);
 
         if ((mfel = tbAllocVecPooled(mdwd->mdwd_MemoryPool, mccnt * sizeof(struct MemoryFreeEntry))) != NULL) {
             struct MemoryFreeEntry *mfe;
@@ -349,10 +347,9 @@ DISPATCHER(MemoryDetailWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeMemoryDetailWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct MemoryDetailWinData), DISPATCHER_REF(MemoryDetailWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct MemoryDetailWinData), ENTRY(MemoryDetailWinDispatcher));
 }
 

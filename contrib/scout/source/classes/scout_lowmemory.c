@@ -41,21 +41,19 @@ struct LowMemoryCallbackUserData {
     ULONG ud_Count;
 };
 
-STATIC SAVEDS LONG lowmemlist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(lowmemlist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct LowMemoryEntry));
 }
 MakeStaticHook(lowmemlist_con2hook, lowmemlist_con2func);
 
-STATIC SAVEDS LONG lowmemlist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(lowmemlist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(lowmemlist_des2hook, lowmemlist_des2func);
 
-STATIC SAVEDS LONG lowmemlist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(lowmemlist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct LowMemoryEntry *lme = (struct LowMemoryEntry *)msg->entry;
 
@@ -73,15 +71,13 @@ STATIC SAVEDS LONG lowmemlist_dsp2func( struct Hook *hook, Object *obj, struct N
         msg->strings[3] = txtNodePri;
         msg->strings[4] = txtInterruptData;
         msg->strings[5] = txtInterruptCode;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
-        msg->preparses[3] = MUIX_B;
-        msg->preparses[4] = MUIX_B;
-        msg->preparses[5] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
+        msg->preparses[3] = (STRPTR)MUIX_B;
+        msg->preparses[4] = (STRPTR)MUIX_B;
+        msg->preparses[5] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(lowmemlist_dsp2hook, lowmemlist_dsp2func);
 
@@ -100,7 +96,7 @@ STATIC LONG lowmemlist_cmp2colfunc( struct LowMemoryEntry *lme1,
     }
 }
 
-STATIC SAVEDS LONG lowmemlist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(lowmemlist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct LowMemoryEntry *lme1, *lme2;
@@ -111,7 +107,7 @@ STATIC SAVEDS LONG lowmemlist_cmp2func( struct Hook *hook, Object *obj, struct N
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = lowmemlist_cmp2colfunc(lme2, lme1, col1);
@@ -203,7 +199,7 @@ STATIC void PrintCallback( struct LowMemoryEntry *lme,
 }
 
 STATIC void SendCallback( struct LowMemoryEntry *lme,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(lme, sizeof(struct LowMemoryEntry));
 }
@@ -286,7 +282,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct LowMemoryWinData *lmwd = INST_DATA(cl, obj);
     struct LowMemoryCallbackUserData ud;
@@ -318,9 +314,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintLowMemory(NULL);
 
@@ -329,7 +325,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mCause( struct IClass *cl,
                      Object *obj,
-                     Msg msg )
+                     UNUSED Msg msg )
 {
     struct LowMemoryWinData *lmwd = INST_DATA(cl, obj);
     struct LowMemoryEntry *lme;
@@ -345,7 +341,7 @@ STATIC ULONG mCause( struct IClass *cl,
 
 STATIC ULONG mRemove( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct LowMemoryWinData *lmwd = INST_DATA(cl, obj);
     struct LowMemoryEntry *lme;
@@ -363,7 +359,7 @@ STATIC ULONG mRemove( struct IClass *cl,
 
 STATIC ULONG mPriority( struct IClass *cl,
                         Object *obj,
-                        Msg msg )
+                        UNUSED Msg msg )
 {
     struct LowMemoryWinData *lmwd = INST_DATA(cl, obj);
     struct LowMemoryEntry *lme;
@@ -385,7 +381,7 @@ STATIC ULONG mPriority( struct IClass *cl,
 
 STATIC ULONG mMore( struct IClass *cl,
                     Object *obj,
-                    Msg msg )
+                    UNUSED Msg msg )
 {
     if (!clientstate) {
         struct LowMemoryWinData *lmwd = INST_DATA(cl, obj);
@@ -412,7 +408,7 @@ STATIC ULONG mMore( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct LowMemoryWinData *lmwd = INST_DATA(cl, obj);
     struct LowMemoryEntry *lme;
@@ -445,7 +441,6 @@ DISPATCHER(LowMemoryWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 void PrintLowMemory( STRPTR filename )
 {
@@ -466,6 +461,6 @@ void SendLowMemory( STRPTR UNUSED dummy )
 
 APTR MakeLowMemoryWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct LowMemoryWinData), DISPATCHER_REF(LowMemoryWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct LowMemoryWinData), ENTRY(LowMemoryWinDispatcher));
 }
 

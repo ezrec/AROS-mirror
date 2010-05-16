@@ -40,21 +40,19 @@ struct PortsCallbackUserData {
     ULONG ud_Count;
 };
 
-STATIC SAVEDS LONG portslist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(portslist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct PortEntry));
 }
 MakeStaticHook(portslist_con2hook, portslist_con2func);
 
-STATIC SAVEDS LONG portslist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(portslist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(portslist_des2hook, portslist_des2func);
 
-STATIC SAVEDS LONG portslist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(portslist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct PortEntry *pe = (struct PortEntry *)msg->entry;
 
@@ -72,15 +70,13 @@ STATIC SAVEDS LONG portslist_dsp2func( struct Hook *hook, Object *obj, struct NL
         msg->strings[3] = txtPortFlags;
         msg->strings[4] = txtPortSigBit;
         msg->strings[5] = txtPortSigTask;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
-        msg->preparses[3] = MUIX_B;
-        msg->preparses[4] = MUIX_B;
-        msg->preparses[5] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
+        msg->preparses[3] = (STRPTR)MUIX_B;
+        msg->preparses[4] = (STRPTR)MUIX_B;
+        msg->preparses[5] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(portslist_dsp2hook, portslist_dsp2func);
 
@@ -105,7 +101,7 @@ STATIC LONG portlist_cmpfunc( const struct Node *n1,
     return stricmp(((struct PortEntry *)n1)->pe_Name, ((struct PortEntry *)n2)->pe_Name);
 }
 
-STATIC SAVEDS LONG portslist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(portslist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct PortEntry *pe1, *pe2;
@@ -116,7 +112,7 @@ STATIC SAVEDS LONG portslist_cmp2func( struct Hook *hook, Object *obj, struct NL
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = portslist_cmp2colfunc(pe2, pe1, col1);
@@ -210,7 +206,7 @@ STATIC void PrintCallback( struct PortEntry *pe,
 }
 
 STATIC void SendCallback( struct PortEntry *pe,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(pe, sizeof(struct PortEntry));
 }
@@ -291,7 +287,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct PortsWinData *pwd = INST_DATA(cl, obj);
     struct PortsCallbackUserData ud;
@@ -323,9 +319,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintPorts(NULL);
 
@@ -334,7 +330,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mRemove( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct PortsWinData *pwd = INST_DATA(cl, obj);
     struct PortEntry *pe;
@@ -352,7 +348,7 @@ STATIC ULONG mRemove( struct IClass *cl,
 
 STATIC ULONG mPriority( struct IClass *cl,
                         Object *obj,
-                        Msg msg )
+                        UNUSED Msg msg )
 {
     struct PortsWinData *pwd = INST_DATA(cl, obj);
     struct PortEntry *pe;
@@ -374,7 +370,7 @@ STATIC ULONG mPriority( struct IClass *cl,
 
 STATIC ULONG mMore( struct IClass *cl,
                     Object *obj,
-                    Msg msg )
+                    UNUSED Msg msg )
 {
     if (!clientstate) {
         struct PortsWinData *pwd = INST_DATA(cl, obj);
@@ -401,7 +397,7 @@ STATIC ULONG mMore( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct PortsWinData *pwd = INST_DATA(cl, obj);
     struct PortEntry *pe;
@@ -432,7 +428,6 @@ DISPATCHER(PortsWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 void PrintPorts( STRPTR filename )
 {
@@ -453,6 +448,6 @@ void SendPortList( STRPTR UNUSED dummy )
 
 APTR MakePortsWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct PortsWinData), DISPATCHER_REF(PortsWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct PortsWinData), ENTRY(PortsWinDispatcher));
 }
 

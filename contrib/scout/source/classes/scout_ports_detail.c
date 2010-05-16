@@ -176,10 +176,9 @@ DISPATCHER(PortsDetailWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakePortsDetailWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct PortsDetailWinData), DISPATCHER_REF(PortsDetailWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct PortsDetailWinData), ENTRY(PortsDetailWinDispatcher));
 }
 

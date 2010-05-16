@@ -52,6 +52,10 @@
 #include <dos/dosextens.h>
 #endif
 
+#ifndef BSDSOCKET_BASE_NAME
+#define BSDSOCKET_BASE_NAME "bsdsocket.library"
+#endif
+
 #define socket(domain, type, protocol) ({ \
   LONG _socket_domain = (domain); \
   LONG _socket_type = (type); \

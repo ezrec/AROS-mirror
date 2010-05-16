@@ -324,10 +324,9 @@ DISPATCHER(FontsDetailWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeFontsDetailWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct FontsDetailWinData), DISPATCHER_REF(FontsDetailWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct FontsDetailWinData), ENTRY(FontsDetailWinDispatcher));
 }
 

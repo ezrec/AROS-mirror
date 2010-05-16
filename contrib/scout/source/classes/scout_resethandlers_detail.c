@@ -151,10 +151,9 @@ DISPATCHER(ResetHandlersDetailWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeResetHandlersDetailWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct ResetHandlersDetailWinData), DISPATCHER_REF(ResetHandlersDetailWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct ResetHandlersDetailWinData), ENTRY(ResetHandlersDetailWinDispatcher));
 }
 

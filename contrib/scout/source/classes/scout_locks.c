@@ -40,27 +40,25 @@ struct LocksCallbackUserData {
     APTR ud_List;
     APTR ud_Application;
     APTR ud_Status;
-    STRPTR ud_Pattern;
+    CONST_STRPTR ud_Pattern;
     ULONG ud_Shown;
     ULONG ud_Hidden;
     BPTR ud_Handle;
 };
 
-STATIC SAVEDS LONG locklist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(locklist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct LockEntry));
 }
 MakeStaticHook(locklist_con2hook, locklist_con2func);
 
-STATIC SAVEDS LONG locklist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(locklist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(locklist_des2hook, locklist_des2func);
 
-STATIC SAVEDS LONG locklist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(locklist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct LockEntry *le = (struct LockEntry *)msg->entry;
 
@@ -72,12 +70,10 @@ STATIC SAVEDS LONG locklist_dsp2func( struct Hook *hook, Object *obj, struct NLi
         msg->strings[0] = txtAddress;
         msg->strings[1] = txtLockAccess;
         msg->strings[2] = txtLockPath;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(locklist_dsp2hook, locklist_dsp2func);
 
@@ -97,7 +93,7 @@ STATIC LONG locklist_cmp2colfunc( struct LockEntry *le1,
     return cmp;
 }
 
-STATIC SAVEDS LONG locklist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(locklist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct LockEntry *le1, *le2;
@@ -108,7 +104,7 @@ STATIC SAVEDS LONG locklist_cmp2func( struct Hook *hook, Object *obj, struct NLi
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = locklist_cmp2colfunc(le2, le1, col1);
@@ -279,19 +275,19 @@ STATIC void PrintCallback( struct LockEntry *le,
 }
 
 STATIC void SendCallback( struct LockEntry *le,
-                          void *userData )
+                          UNUSED void *userData )
 {
     if (le->le_Addr) SendEncodedEntry(le, sizeof(struct LockEntry));
 }
 
-STATIC void CountCallback( struct LockEntry *le,
-                           void *userData )
+STATIC void CountCallback( UNUSED struct LockEntry *le,
+                           UNUSED void *userData )
 {
     // no op, locks are already counted in IterateList()
 }
 
 STATIC void RemoveCallback( struct LockEntry *le,
-                            void *userData )
+                            UNUSED void *userData )
 {
     if (le->le_Addr) UnLock(le->le_Addr);
 }
@@ -379,7 +375,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct LocksWinData *lwd = INST_DATA(cl, obj);
     struct LocksCallbackUserData ud;
@@ -413,9 +409,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintLocks(NULL);
 
@@ -424,7 +420,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mRemove( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct LocksWinData *lwd = INST_DATA(cl, obj);
     STRPTR tmp;
@@ -437,7 +433,7 @@ STATIC ULONG mRemove( struct IClass *cl,
             struct LockEntry *le;
 
             DoMethod(lwd->lwd_LockList, MUIM_NList_NextSelected, &id);
-            if (id == MUIV_NList_NextSelected_End) break;
+            if ((LONG)id == MUIV_NList_NextSelected_End) break;
             if (remMode == 0) break;
 
             DoMethod(lwd->lwd_LockList, MUIM_NList_GetEntry, id, &le);
@@ -478,7 +474,7 @@ STATIC ULONG mRemove( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct LocksWinData *lwd = INST_DATA(cl, obj);
     struct LockEntry *le;
@@ -504,7 +500,6 @@ DISPATCHER(LocksWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 void PrintLocks( STRPTR filename )
 {
@@ -530,7 +525,7 @@ void SendLockList( STRPTR UNUSED dummy )
     IterateList(SendCallback, NULL);
 }
 
-ULONG CountLocks( STRPTR pattern )
+ULONG CountLocks( CONST_STRPTR pattern )
 {
     struct LocksCallbackUserData ud;
 
@@ -543,7 +538,7 @@ ULONG CountLocks( STRPTR pattern )
     return ud.ud_Shown;
 }
 
-void RemoveLock( STRPTR addr )
+void RemoveLock( CONST_STRPTR addr )
 {
     struct LocksCallbackUserData ud;
 
@@ -556,6 +551,6 @@ void RemoveLock( STRPTR addr )
 
 APTR MakeLocksWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct LocksWinData), DISPATCHER_REF(LocksWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct LocksWinData), ENTRY(LocksWinDispatcher));
 }
 

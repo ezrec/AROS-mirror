@@ -128,21 +128,19 @@ struct ETask
 #define pr_ReturnAddr                   pr_ra
 #endif
 
-STATIC SAVEDS LONG seglist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(seglist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct SegListEntry));
 }
 MakeStaticHook(seglist_con2hook, seglist_con2func);
 
-STATIC SAVEDS LONG seglist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(seglist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(seglist_des2hook, seglist_des2func);
 
-STATIC SAVEDS LONG seglist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(seglist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct SegListEntry *sle = (struct SegListEntry *)msg->entry;
 
@@ -154,12 +152,10 @@ STATIC SAVEDS LONG seglist_dsp2func( struct Hook *hook, Object *obj, struct NLis
         msg->strings[0] = txtSegListLower;
         msg->strings[1] = txtSegListUpper;
         msg->strings[2] = txtSegListSize;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(seglist_dsp2hook, seglist_dsp2func);
 
@@ -175,7 +171,7 @@ STATIC LONG seglist_cmp2colfunc( struct SegListEntry *sle1,
     }
 }
 
-STATIC SAVEDS LONG seglist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(seglist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct SegListEntry *sle1, *sle2;
@@ -186,7 +182,7 @@ STATIC SAVEDS LONG seglist_cmp2func( struct Hook *hook, Object *obj, struct NLis
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = seglist_cmp2colfunc(sle2, sle1, col1);
@@ -330,7 +326,7 @@ STATIC void SetDetails( struct IClass *cl,
     if (tc->tc_Node.ln_Type != NT_PROCESS) {
         set(obj, MUIA_Window_Title, MyGetChildWindowTitle(txtTasksDetailTaskTitle, te->te_Name, tdwd->tdwd_Title, sizeof(tdwd->tdwd_Title)));
     } else {
-        APTR subgroup, texts[41], seglist;
+        APTR subgroup, texts[40], seglist;
         struct Process *pr = (struct Process *)te->te_Addr;
         STRPTR path;
         LONG *seg = NULL;
@@ -445,37 +441,34 @@ STATIC void SetDetails( struct IClass *cl,
                 Child, texts[30] = DisassemblerButtonObject,
                     MUIA_DisassemblerButton_ForceHexDump, TRUE,
                 End,
-                Child, MyLabel2(txtTaskProcessFLCHandler),
-                Child, texts[31] = PortButtonObject,
-                End,
                 Child, MyLabel2(txtTaskProcessDeathSigTask),
-                Child, texts[32] = TaskButtonObject,
+                Child, texts[31] = TaskButtonObject,
                 End,
                 Child, MyLabel2(txtTaskProcessDeathSigBit),
-                Child, texts[33] = MyTextObject6(),
+                Child, texts[32] = MyTextObject6(),
                 Child, MyLabel2(txtTaskProcessDeathMessage),
-                Child, texts[34] = DisassemblerButtonObject,
+                Child, texts[33] = DisassemblerButtonObject,
                 End,
                 Child, MyLabel2(txtTaskProcessEntryCode),
-                Child, texts[35] = DisassemblerButtonObject,
+                Child, texts[34] = DisassemblerButtonObject,
                 End,
                 Child, MyLabel2(txtTaskProcessEntryData),
-                Child, texts[36] = DisassemblerButtonObject,
+                Child, texts[35] = DisassemblerButtonObject,
                     MUIA_DisassemblerButton_ForceHexDump, TRUE,
                 End,
                 Child, MyLabel2(txtTaskProcessFinalCode),
-                Child, texts[37] = DisassemblerButtonObject,
+                Child, texts[36] = DisassemblerButtonObject,
                 End,
                 Child, MyLabel2(txtTaskProcessFinalData),
-                Child, texts[38] = DisassemblerButtonObject,
+                Child, texts[37] = DisassemblerButtonObject,
                     MUIA_DisassemblerButton_ForceHexDump, TRUE,
                 End,
                 Child, MyLabel2(txtTaskProcessDLNotifyData),
-                Child, texts[39] = DisassemblerButtonObject,
+                Child, texts[38] = DisassemblerButtonObject,
                     MUIA_DisassemblerButton_ForceHexDump, TRUE,
                 End,
                 Child, MyLabel2(txtTaskProcessPLNotifyData),
-                Child, texts[40] = DisassemblerButtonObject,
+                Child, texts[39] = DisassemblerButtonObject,
                     MUIA_DisassemblerButton_ForceHexDump, TRUE,
                 End,
             #endif
@@ -564,16 +557,15 @@ STATIC void SetDetails( struct IClass *cl,
         MySetContents(texts[28], "%lU", pr->pr_ProcessID);
         set(texts[29], MUIA_DisassemblerButton_Address, pr->pr_OGLContextPtr);
         set(texts[30], MUIA_DisassemblerButton_Address, pr->pr_CLibData);
-        set(texts[31], MUIA_PortButton_Port, pr->pr_FLCHandler);
         set(texts[32], MUIA_TaskButton_Task, pr->pr_DeathSigTask);
-        MySetContents(texts[33], "%s", GetSigBitName(pr->pr_DeathSigBit));
-        set(texts[34], MUIA_DisassemblerButton_Address, pr->pr_DeathMessage);
-        set(texts[35], MUIA_DisassemblerButton_Address, pr->pr_EntryCode);
-        set(texts[36], MUIA_DisassemblerButton_Address, pr->pr_EntryData);
-        set(texts[37], MUIA_DisassemblerButton_Address, pr->pr_FinalCode);
-        set(texts[38], MUIA_DisassemblerButton_Address, pr->pr_FinalData);
-        set(texts[39], MUIA_DisassemblerButton_Address, pr->pr_DLNotifyData);
-        set(texts[40], MUIA_DisassemblerButton_Address, pr->pr_PLNotifyData);
+        MySetContents(texts[32], "%s", GetSigBitName(pr->pr_DeathSigBit));
+        set(texts[33], MUIA_DisassemblerButton_Address, pr->pr_DeathMessage);
+        set(texts[34], MUIA_DisassemblerButton_Address, pr->pr_EntryCode);
+        set(texts[35], MUIA_DisassemblerButton_Address, pr->pr_EntryData);
+        set(texts[36], MUIA_DisassemblerButton_Address, pr->pr_FinalCode);
+        set(texts[37], MUIA_DisassemblerButton_Address, pr->pr_FinalData);
+        set(texts[38], MUIA_DisassemblerButton_Address, pr->pr_DLNotifyData);
+        set(texts[39], MUIA_DisassemblerButton_Address, pr->pr_PLNotifyData);
     #endif
 
         NewList((struct List *)&tmplist);
@@ -873,10 +865,9 @@ DISPATCHER(TasksDetailWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeTasksDetailWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct TasksDetailWinData), DISPATCHER_REF(TasksDetailWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct TasksDetailWinData), ENTRY(TasksDetailWinDispatcher));
 }
 

@@ -15,6 +15,9 @@ extern int stcd_i(const char *in, int *value);
 
 
 #if !defined(__amigaos4__)
+#include <exec/types.h>
+#include "SDI_stdarg.h"
+
 STRPTR VASPrintf( CONST_STRPTR fmt, VA_LIST args );
 STRPTR VARARGS68K STDARGS ASPrintf( CONST_STRPTR fmt, ... );
 #endif /* !__amigaos4__ */
@@ -24,9 +27,6 @@ STRPTR VARARGS68K STDARGS ASPrintf( CONST_STRPTR fmt, ... );
 #endif
 
 #if defined(__MORPHOS__)
-typedef UQUAD uint64;
-typedef QUAD int64;
-
 #ifndef IECLASS_EXTRAWKEY
 #define IECLASS_EXTRAWKEY 0x18
 #endif

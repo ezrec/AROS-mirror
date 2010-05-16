@@ -96,7 +96,7 @@ STATIC ULONG mAskMinMax( struct IClass *cl,
 
 STATIC ULONG mShowPort( struct IClass *cl,
                         Object *obj,
-                        Msg msg )
+                        UNUSED Msg msg )
 {
     struct PortButtonData *pbd = INST_DATA(cl, obj);
     APTR parentWin;
@@ -133,10 +133,9 @@ DISPATCHER(PortButtonDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakePortButtonClass( void )
 {
-    return MUI_CreateCustomClass(NULL, MUIC_Text, NULL, sizeof(struct PortButtonData), DISPATCHER_REF(PortButtonDispatcher));
+    return MUI_CreateCustomClass(NULL, MUIC_Text, NULL, sizeof(struct PortButtonData), ENTRY(PortButtonDispatcher));
 }
 

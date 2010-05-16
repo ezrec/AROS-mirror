@@ -26,6 +26,10 @@
 #include <workbench/startup.h>
 #endif
 
+#if !defined(AROS) && !defined(IPTR)
+#define IPTR  ULONG
+#endif
+
 struct SmartArgs
 {
    /* Readargs template */

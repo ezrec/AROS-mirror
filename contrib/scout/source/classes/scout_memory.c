@@ -38,21 +38,19 @@ struct MemoryCallbackUserData {
     ULONG ud_Count;
 };
 
-STATIC SAVEDS LONG memlist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(memlist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct MemoryEntry));
 }
 MakeStaticHook(memlist_con2hook, memlist_con2func);
 
-STATIC SAVEDS LONG memlist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(memlist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(memlist_des2hook, memlist_des2func);
 
-STATIC SAVEDS LONG memlist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(memlist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct MemoryEntry *me = (struct MemoryEntry *)msg->entry;
 
@@ -72,16 +70,14 @@ STATIC SAVEDS LONG memlist_dsp2func( struct Hook *hook, Object *obj, struct NLis
         msg->strings[4] = txtMemoryLower;
         msg->strings[5] = txtMemoryUpper;
         msg->strings[6] = txtMemoryAttr;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
-        msg->preparses[3] = MUIX_B;
-        msg->preparses[4] = MUIX_B;
-        msg->preparses[5] = MUIX_B;
-        msg->preparses[6] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
+        msg->preparses[3] = (STRPTR)MUIX_B;
+        msg->preparses[4] = (STRPTR)MUIX_B;
+        msg->preparses[5] = (STRPTR)MUIX_B;
+        msg->preparses[6] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(memlist_dsp2hook, memlist_dsp2func);
 
@@ -101,7 +97,7 @@ STATIC LONG memlist_cmp2colfunc( struct MemoryEntry *me1,
     }
 }
 
-STATIC SAVEDS LONG memlist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(memlist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct MemoryEntry *me1, *me2;
@@ -112,7 +108,7 @@ STATIC SAVEDS LONG memlist_cmp2func( struct Hook *hook, Object *obj, struct NLis
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = memlist_cmp2colfunc(me2, me1, col1);
@@ -198,7 +194,7 @@ STATIC void PrintCallback( struct MemoryEntry *me,
 }
 
 STATIC void SendCallback( struct MemoryEntry *me,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(me, sizeof(struct MemoryEntry));
 }
@@ -273,7 +269,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct MemoryWinData *mwd = INST_DATA(cl, obj);
     struct MemoryCallbackUserData ud;
@@ -302,9 +298,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintMemory(NULL);
 
@@ -313,7 +309,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mPriority( struct IClass *cl,
                         Object *obj,
-                        Msg msg )
+                        UNUSED Msg msg )
 {
     struct MemoryWinData *mwd = INST_DATA(cl, obj);
     struct MemoryEntry *me;
@@ -335,7 +331,7 @@ STATIC ULONG mPriority( struct IClass *cl,
 
 STATIC ULONG mMore( struct IClass *cl,
                     Object *obj,
-                    Msg msg )
+                    UNUSED Msg msg )
 {
     if (!clientstate) {
         struct MemoryWinData *mwd = INST_DATA(cl, obj);
@@ -360,7 +356,7 @@ STATIC ULONG mMore( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct MemoryWinData *mwd = INST_DATA(cl, obj);
     struct MemoryEntry *me;
@@ -389,7 +385,6 @@ DISPATCHER(MemoryWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 void PrintMemory( STRPTR filename )
 {
@@ -410,5 +405,5 @@ void SendMemList( STRPTR UNUSED dummy )
 
 APTR MakeMemoryWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct MemoryWinData), DISPATCHER_REF(MemoryWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct MemoryWinData), ENTRY(MemoryWinDispatcher));
 }

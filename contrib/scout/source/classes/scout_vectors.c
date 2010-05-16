@@ -76,10 +76,10 @@ STATIC void IterateList( void (* callback)( struct VectorEntry *ve, void *userDa
 
     if ((ve = tbAllocVecPooled(globalPool, sizeof(struct VectorEntry))) != NULL) {
         UBYTE *vbr = NULL;
+	ULONG vec;
 #if !defined(__AROS__)
         vbr = (UBYTE *)GetVBR();
 #endif
-        ULONG vec;
 
         Forbid();
 
@@ -162,7 +162,7 @@ STATIC void PrintCallback( struct VectorEntry *ve,
 }
 
 STATIC void SendCallback( struct VectorEntry *ve,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(ve, sizeof(struct VectorEntry));
 }
@@ -315,7 +315,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct VectorsWinData *vwd = INST_DATA(cl, obj);
     struct VectorsCallbackUserData ud;
@@ -333,9 +333,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintVectors(NULL);
 
@@ -353,7 +353,6 @@ DISPATCHER(VectorsWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 void PrintVectors( STRPTR filename )
 {
@@ -373,6 +372,6 @@ void SendVectorList( STRPTR UNUSED dummy )
 
 APTR MakeVectorsWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct VectorsWinData), DISPATCHER_REF(VectorsWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct VectorsWinData), ENTRY(VectorsWinDispatcher));
 }
 

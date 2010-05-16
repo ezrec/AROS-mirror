@@ -23,6 +23,20 @@ void FreePatchList( APTR list );
 #pragma libcall PatchBase GetPatchList 6 00
 #pragma libcall PatchBase FreePatchList c 801
 
+#if defined(__GNUC__) && !defined(__amigaos4__)
+#ifndef __INLINE_MACROS_H
+#include <inline/macros.h>
+#endif
+
+#define GetPatchList() \
+	LP0(6, APTR, GetPatchList, \
+		, PatchBase)
+#define FreePatchList(__p0) \
+	LP1NR(12, FreePatchList, \
+		APTR, __p0, a0, \
+		, PatchBase)
+#endif
+
 #else
 
 #ifndef __PPCINLINE_MACROS_H

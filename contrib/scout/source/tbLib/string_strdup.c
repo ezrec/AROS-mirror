@@ -5,7 +5,7 @@
 #include "SDI_compiler.h"
 
 /* /// "_strdup()" */
-STRPTR _strdup( STRPTR str )
+STRPTR _strdup( CONST_STRPTR str )
 {
     STRPTR tmp;
 

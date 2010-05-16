@@ -711,10 +711,9 @@ DISPATCHER(WindowsDetailWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeWindowsDetailWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct WindowsDetailWinData), DISPATCHER_REF(WindowsDetailWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct WindowsDetailWinData), ENTRY(WindowsDetailWinDispatcher));
 }
 

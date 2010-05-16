@@ -95,7 +95,7 @@ static ULONG mAskMinMax( struct IClass *cl,
 
 static ULONG mDisassemble( struct IClass *cl,
                            Object *obj,
-                           Msg msg )
+                           UNUSED Msg msg )
 {
     struct DisassemblerButtonData *dbd = INST_DATA(cl, obj);
     APTR parentWin;
@@ -129,10 +129,9 @@ DISPATCHER(DisassemblerButtonDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeDisassemblerButtonClass( void )
 {
-    return MUI_CreateCustomClass(NULL, MUIC_Text, NULL, sizeof(struct DisassemblerButtonData), DISPATCHER_REF(DisassemblerButtonDispatcher));
+    return MUI_CreateCustomClass(NULL, MUIC_Text, NULL, sizeof(struct DisassemblerButtonData), ENTRY(DisassemblerButtonDispatcher));
 }
 

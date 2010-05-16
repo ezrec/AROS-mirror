@@ -64,21 +64,19 @@ STRPTR GetNodeSubtype( UBYTE type )
     };
 }
 
-STATIC SAVEDS LONG monitorlist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(monitorlist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct MonitorEntry));
 }
 MakeStaticHook(monitorlist_con2hook, monitorlist_con2func);
 
-STATIC SAVEDS LONG monitorlist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(monitorlist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(monitorlist_des2hook, monitorlist_des2func);
 
-STATIC SAVEDS LONG monitorlist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(monitorlist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct MonitorEntry *me = (struct MonitorEntry *)msg->entry;
 
@@ -87,24 +85,22 @@ STATIC SAVEDS LONG monitorlist_dsp2func( struct Hook *hook, Object *obj, struct 
         msg->strings[1] = me->mon_Name;
         msg->strings[2] = me->mon_Type;
         msg->strings[3] = me->mon_Pri;
-	msg->strings[4] = me->mon_Subsystem;
-	msg->strings[5] = me->mon_Subtype;
+        msg->strings[4] = me->mon_Subsystem;
+        msg->strings[5] = me->mon_Subtype;
     } else {
         msg->strings[0] = txtAddress;
         msg->strings[1] = txtNodeName;
         msg->strings[2] = txtNodeType;
         msg->strings[3] = txtNodePri;
-	msg->strings[4] = txtNodeSubsystem;
-	msg->strings[5] = txtNodeSubtype;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
-        msg->preparses[3] = MUIX_B;
-	msg->preparses[4] = MUIX_B;
-	msg->preparses[5] = MUIX_B;
+        msg->strings[4] = txtNodeSubsystem;
+        msg->strings[5] = txtNodeSubtype;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
+        msg->preparses[3] = (STRPTR)MUIX_B;
+        msg->preparses[4] = (STRPTR)MUIX_B;
+        msg->preparses[5] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(monitorlist_dsp2hook, monitorlist_dsp2func);
 
@@ -121,7 +117,7 @@ STATIC LONG monitorlist_cmp2colfunc( struct MonitorEntry *me1,
     }
 }
 
-STATIC SAVEDS LONG monitorlist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(monitorlist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct MonitorEntry *me1, *me2;
@@ -132,7 +128,7 @@ STATIC SAVEDS LONG monitorlist_cmp2func( struct Hook *hook, Object *obj, struct 
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = monitorlist_cmp2colfunc(me2, me1, col1);
@@ -193,7 +189,7 @@ STATIC void IterateList( void (* callback)( struct MonitorEntry *me, void *userD
             AddTail((struct List *)&tmplist, (struct Node *)me);
         }
     }
-    
+
     ReleaseSemaphore(GfxBase->MonitorListSemaphore);
 
 #ifdef __MORPHOS__
@@ -246,7 +242,7 @@ STATIC void PrintCallback( struct MonitorEntry *me,
 }
 
 STATIC void SendCallback( struct MonitorEntry *me,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(me, sizeof(struct MonitorEntry));
 }
@@ -325,7 +321,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct MonitorsWinData *ihwd = INST_DATA(cl, obj);
     struct InputCallbackUserData ud;
@@ -356,9 +352,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintMonitors(NULL);
 
@@ -367,7 +363,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mRemove( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct MonitorsWinData *ihwd = INST_DATA(cl, obj);
     struct MonitorEntry *me;
@@ -385,7 +381,7 @@ STATIC ULONG mRemove( struct IClass *cl,
 
 STATIC ULONG mPriority( struct IClass *cl,
                         Object *obj,
-                        Msg msg )
+                        UNUSED Msg msg )
 {
     struct MonitorsWinData *ihwd = INST_DATA(cl, obj);
     struct MonitorEntry *me;
@@ -406,7 +402,7 @@ STATIC ULONG mPriority( struct IClass *cl,
 
 STATIC ULONG mMore( struct IClass *cl,
                     Object *obj,
-                    Msg msg )
+                    UNUSED Msg msg )
 {
     if (!clientstate) {
         struct MonitorsWinData *ihwd = INST_DATA(cl, obj);
@@ -414,7 +410,7 @@ STATIC ULONG mMore( struct IClass *cl,
 
         if ((me = (struct MonitorEntry *)GetActiveEntry(ihwd->mwd_MonitorList)) != NULL) {
             APTR detailWin;
-	    
+
 	    if (strcmp(me->mon_Pri, "---")) {
                 if ((detailWin = (Object *)MonitorsDetailWindowObject,
                         MUIA_Window_ParentWindow, (IPTR)obj,
@@ -435,7 +431,7 @@ STATIC ULONG mMore( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct MonitorsWinData *ihwd = INST_DATA(cl, obj);
     struct MonitorEntry *me;
@@ -471,7 +467,6 @@ DISPATCHER(MonitorsWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 void PrintMonitors( STRPTR filename )
 {
@@ -492,5 +487,5 @@ void SendMonitorsList( STRPTR UNUSED dummy )
 
 APTR MakeMonitorsWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct MonitorsWinData), DISPATCHER_REF(MonitorsWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct MonitorsWinData), ENTRY(MonitorsWinDispatcher));
 }

@@ -200,10 +200,9 @@ DISPATCHER(LibrariesDetailWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeLibrariesDetailWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct LibrariesDetailWinData), DISPATCHER_REF(LibrariesDetailWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct LibrariesDetailWinData), ENTRY(LibrariesDetailWinDispatcher));
 }
 

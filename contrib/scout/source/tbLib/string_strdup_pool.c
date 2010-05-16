@@ -5,7 +5,7 @@
 #include "SDI_compiler.h"
 
 /* /// "_strdup_pool()" */
-STRPTR _strdup_pool( STRPTR str,
+STRPTR _strdup_pool( CONST_STRPTR str,
                      APTR pool )
 {
     STRPTR tmp;

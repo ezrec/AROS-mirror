@@ -158,10 +158,9 @@ DISPATCHER(FontDisplayDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeFontDisplayClass( void )
 {
-    return MUI_CreateCustomClass(NULL, MUIC_Area, NULL, sizeof(struct FontDisplayData), DISPATCHER_REF(FontDisplayDispatcher));
+    return MUI_CreateCustomClass(NULL, MUIC_Area, NULL, sizeof(struct FontDisplayData), ENTRY(FontDisplayDispatcher));
 }
 

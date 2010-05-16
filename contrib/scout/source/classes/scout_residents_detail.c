@@ -190,10 +190,9 @@ DISPATCHER(ResidentsDetailWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeResidentsDetailWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct ResidentsDetailWinData), DISPATCHER_REF(ResidentsDetailWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct ResidentsDetailWinData), ENTRY(ResidentsDetailWinDispatcher));
 }
 

@@ -6,7 +6,7 @@
 
 /* /// "_strcatn()" */
 void _strcatn( STRPTR str,
-               STRPTR cat,
+               CONST_STRPTR cat,
                ULONG maxlen )
 {
     ULONG sl, cl;

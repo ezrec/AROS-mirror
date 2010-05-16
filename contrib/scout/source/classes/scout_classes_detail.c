@@ -216,11 +216,10 @@ DISPATCHER(ClassesDetailWinDispatcher)
 
     return (DoSuperMethodA(cl, obj, msg));
 }
-DISPATCHER_END
 
 APTR MakeClassesDetailWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct ClassesDetailWinData), DISPATCHER_REF(ClassesDetailWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct ClassesDetailWinData), ENTRY(ClassesDetailWinDispatcher));
 }
 
 

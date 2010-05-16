@@ -39,7 +39,7 @@ ULONG VARARGS68K STDARGS MyRequest( STRPTR gadgets,
     struct Window *myreq_window;
 
     VA_START(args, fmt);
-#if defined(__amigaos4__) || defined(__MORPHOS__)
+#if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
     if ((buf = VASPrintf(fmt, VA_ARG(args, APTR))) != NULL) {
 #else
     if ((buf = AllocVec(TMP_STRING_LENGTH, MEMF_ANY)) != NULL) {

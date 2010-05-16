@@ -36,13 +36,11 @@ struct MainWinData {
     #define MUIA_Dtpic_Name 0x80423d72
 #endif
 
-STATIC SAVEDS LONG close_callfunc( struct Hook *hook, Object *obj, ULONG *index )
+HOOKPROTONH(close_callfunc, void, Object *obj, ULONG *index)
 {
     struct MainWinData *mwd = INST_DATA(OCLASS(obj), obj);
 
     mwd->mwd_Windows[*index] = NULL;
-
-    return 0;
 }
 MakeStaticHook(close_callhook, close_callfunc);
 
@@ -93,8 +91,8 @@ STATIC void CreateSubWindow( struct IClass *cl,
         APTR win;
 
         if ((win = NewObject(mcc->mcc_Class, NULL, MUIA_Window_ParentWindow, obj,
-                                                  MUIA_Window_MaxChildWindowCount, (opts.SingleWindows) ? 1 : 0,
-                                                  TAG_DONE)) != NULL) {
+                                                   MUIA_Window_MaxChildWindowCount, (opts.SingleWindows) ? 1 : 0,
+                                                   TAG_DONE)) != NULL) {
             COLLECT_RETURNIDS;
             mwd->mwd_Windows[idx] = win;
             mwd->mwd_UpdateCommands[idx] = cmd;
@@ -170,7 +168,7 @@ STATIC ULONG mNew( struct IClass *cl,
     #if !defined(__amigaos4__)
         struct PatchPort *pp;
         struct SetManPort *sp;
-        struct Library *pc = NULL;
+        struct Library *pc;
     #endif
 
         set(obj, MUIA_Window_Title, MyGetWindowTitle("\0", mwd->mwd_Title, sizeof(mwd->mwd_Title)));
@@ -206,7 +204,7 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(button[26], MUIM_Notify,  MUIA_Pressed, FALSE, obj, 1, MUIM_MainWin_ShowCatalogs);
         DoMethod(button[27], MUIM_Notify,  MUIA_Pressed, FALSE, obj, 1, MUIM_MainWin_ShowAudioModes);
         DoMethod(button[28], MUIM_Notify,  MUIA_Pressed, FALSE, obj, 1, MUIM_MainWin_ShowResetHandlers);
-	DoMethod(button[29], MUIM_Notify,  MUIA_Pressed, FALSE, obj, 1, MUIM_MainWin_ShowMonitors);
+        DoMethod(button[29], MUIM_Notify,  MUIA_Pressed, FALSE, obj, 1, MUIM_MainWin_ShowMonitors);
 
     #if defined(__amigaos4__)
         set(button[25], MUIA_Disabled, TRUE);
@@ -214,9 +212,9 @@ STATIC ULONG mNew( struct IClass *cl,
         Forbid();
         pp = (struct PatchPort *)FindPort(PATCHPORT_NAME);
         sp = (struct SetManPort *)FindPort(SETMANPORT_NAME);
-#ifndef __AROS__
+        #if !defined(__AROS__)
         pc = (struct Library *)OpenResource(PATCHRES_NAME);
-#endif
+        #endif
         Permit();
         set(button[25], MUIA_Disabled, (pp == NULL && sp == NULL && pc == NULL));
     #endif
@@ -234,9 +232,9 @@ STATIC ULONG mDispose( struct IClass *cl,
     return DoSuperMethodA(cl, obj, msg);
 }
 
-STATIC ULONG mAbout( struct IClass *cl,
+STATIC ULONG mAbout( UNUSED struct IClass *cl,
                      Object *obj,
-                     Msg msg )
+                     UNUSED Msg msg )
 {
     APTR aboutWin;
 
@@ -261,7 +259,7 @@ STATIC ULONG mAbout( struct IClass *cl,
 
 STATIC ULONG mShowAllocations( struct IClass *cl,
                                Object *obj,
-                               Msg msg )
+                               UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 0, AllocationsWinClass, MUIM_AllocationsWin_Update);
 
@@ -270,7 +268,7 @@ STATIC ULONG mShowAllocations( struct IClass *cl,
 
 STATIC ULONG mShowAssigns( struct IClass *cl,
                            Object *obj,
-                           Msg msg )
+                           UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 1, AssignsWinClass, MUIM_AssignsWin_Update);
 
@@ -279,7 +277,7 @@ STATIC ULONG mShowAssigns( struct IClass *cl,
 
 STATIC ULONG mShowClasses( struct IClass *cl,
                            Object *obj,
-                           Msg msg )
+                           UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 2, ClassesWinClass, MUIM_ClassesWin_Update);
 
@@ -288,7 +286,7 @@ STATIC ULONG mShowClasses( struct IClass *cl,
 
 STATIC ULONG mShowCommodities( struct IClass *cl,
                                Object *obj,
-                               Msg msg )
+                               UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 3, CommoditiesWinClass, MUIM_CommoditiesWin_Update);
 
@@ -297,7 +295,7 @@ STATIC ULONG mShowCommodities( struct IClass *cl,
 
 STATIC ULONG mShowDevices( struct IClass *cl,
                            Object *obj,
-                           Msg msg )
+                           UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 4, DevicesWinClass, MUIM_DevicesWin_Update);
 
@@ -306,7 +304,7 @@ STATIC ULONG mShowDevices( struct IClass *cl,
 
 STATIC ULONG mShowExpansions( struct IClass *cl,
                               Object *obj,
-                              Msg msg )
+                              UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 5, ExpansionsWinClass, MUIM_ExpansionsWin_Update);
 
@@ -315,7 +313,7 @@ STATIC ULONG mShowExpansions( struct IClass *cl,
 
 STATIC ULONG mShowFonts( struct IClass *cl,
                          Object *obj,
-                         Msg msg )
+                         UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 6, FontsWinClass, MUIM_FontsWin_Update);
 
@@ -324,7 +322,7 @@ STATIC ULONG mShowFonts( struct IClass *cl,
 
 STATIC ULONG mShowInputHandlers( struct IClass *cl,
                                  Object *obj,
-                                 Msg msg )
+                                 UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 7, InputHandlersWinClass, MUIM_InputHandlersWin_Update);
 
@@ -333,7 +331,7 @@ STATIC ULONG mShowInputHandlers( struct IClass *cl,
 
 STATIC ULONG mShowInterrupts( struct IClass *cl,
                               Object *obj,
-                              Msg msg )
+                              UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 8, InterruptsWinClass, MUIM_InterruptsWin_Update);
 
@@ -342,7 +340,7 @@ STATIC ULONG mShowInterrupts( struct IClass *cl,
 
 STATIC ULONG mShowLibraries( struct IClass *cl,
                              Object *obj,
-                             Msg msg )
+                             UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 9, LibrariesWinClass, MUIM_LibrariesWin_Update);
 
@@ -351,7 +349,7 @@ STATIC ULONG mShowLibraries( struct IClass *cl,
 
 STATIC ULONG mShowLocks( struct IClass *cl,
                          Object *obj,
-                         Msg msg )
+                         UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 10, LocksWinClass, MUIM_LocksWin_Update);
 
@@ -360,7 +358,7 @@ STATIC ULONG mShowLocks( struct IClass *cl,
 
 STATIC ULONG mShowLowMemory( struct IClass *cl,
                              Object *obj,
-                             Msg msg )
+                             UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 11, LowMemoryWinClass, MUIM_LowMemoryWin_Update);
 
@@ -369,7 +367,7 @@ STATIC ULONG mShowLowMemory( struct IClass *cl,
 
 STATIC ULONG mShowMemory( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 12, MemoryWinClass, MUIM_MemoryWin_Update);
 
@@ -378,7 +376,7 @@ STATIC ULONG mShowMemory( struct IClass *cl,
 
 STATIC ULONG mShowMounts( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 13, MountsWinClass, MUIM_MountsWin_Update);
 
@@ -387,7 +385,7 @@ STATIC ULONG mShowMounts( struct IClass *cl,
 
 STATIC ULONG mShowPorts( struct IClass *cl,
                          Object *obj,
-                         Msg msg )
+                         UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 14, PortsWinClass, MUIM_PortsWin_Update);
 
@@ -396,7 +394,7 @@ STATIC ULONG mShowPorts( struct IClass *cl,
 
 STATIC ULONG mShowResidents( struct IClass *cl,
                              Object *obj,
-                             Msg msg )
+                             UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 15, ResidentsWinClass, MUIM_ResidentsWin_Update);
 
@@ -405,7 +403,7 @@ STATIC ULONG mShowResidents( struct IClass *cl,
 
 STATIC ULONG mShowCommands( struct IClass *cl,
                             Object *obj,
-                            Msg msg )
+                            UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 16, CommandsWinClass, MUIM_CommandsWin_Update);
 
@@ -414,7 +412,7 @@ STATIC ULONG mShowCommands( struct IClass *cl,
 
 STATIC ULONG mShowResources( struct IClass *cl,
                              Object *obj,
-                             Msg msg )
+                             UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 17, ResourcesWinClass, MUIM_ResourcesWin_Update);
 
@@ -423,7 +421,7 @@ STATIC ULONG mShowResources( struct IClass *cl,
 
 STATIC ULONG mShowScreenModes( struct IClass *cl,
                                Object *obj,
-                               Msg msg )
+                               UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 18, ScreenModesWinClass, MUIM_ScreenModesWin_Update);
 
@@ -432,7 +430,7 @@ STATIC ULONG mShowScreenModes( struct IClass *cl,
 
 STATIC ULONG mShowSemaphores( struct IClass *cl,
                               Object *obj,
-                              Msg msg )
+                              UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 19, SemaphoresWinClass, MUIM_SemaphoresWin_Update);
 
@@ -441,7 +439,7 @@ STATIC ULONG mShowSemaphores( struct IClass *cl,
 
 STATIC ULONG mShowSystem( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 20, SystemWinClass, MUIM_SystemWin_Update);
 
@@ -450,7 +448,7 @@ STATIC ULONG mShowSystem( struct IClass *cl,
 
 STATIC ULONG mShowTasks( struct IClass *cl,
                          Object *obj,
-                         Msg msg )
+                         UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 21, TasksWinClass, MUIM_TasksWin_Update);
 
@@ -459,7 +457,7 @@ STATIC ULONG mShowTasks( struct IClass *cl,
 
 STATIC ULONG mShowTimers( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 22, TimersWinClass, MUIM_TimersWin_Update);
 
@@ -468,7 +466,7 @@ STATIC ULONG mShowTimers( struct IClass *cl,
 
 STATIC ULONG mShowVectors( struct IClass *cl,
                            Object *obj,
-                           Msg msg )
+                           UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 23, VectorsWinClass, MUIM_VectorsWin_Update);
 
@@ -477,7 +475,7 @@ STATIC ULONG mShowVectors( struct IClass *cl,
 
 STATIC ULONG mShowWindows( struct IClass *cl,
                            Object *obj,
-                           Msg msg )
+                           UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 24, WindowsWinClass, MUIM_WindowsWin_Update);
 
@@ -486,7 +484,7 @@ STATIC ULONG mShowWindows( struct IClass *cl,
 
 STATIC ULONG mShowPatches( struct IClass *cl,
                            Object *obj,
-                           Msg msg )
+                           UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 25, PatchesWinClass, MUIM_PatchesWin_Update);
 
@@ -495,7 +493,7 @@ STATIC ULONG mShowPatches( struct IClass *cl,
 
 STATIC ULONG mShowCatalogs( struct IClass *cl,
                            Object *obj,
-                           Msg msg )
+                           UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 26, CatalogsWinClass, MUIM_CatalogsWin_Update);
 
@@ -504,7 +502,7 @@ STATIC ULONG mShowCatalogs( struct IClass *cl,
 
 STATIC ULONG mShowAudioModes( struct IClass *cl,
                               Object *obj,
-                              Msg msg )
+                              UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 27, AudioModesWinClass, MUIM_AudioModesWin_Update);
 
@@ -513,7 +511,7 @@ STATIC ULONG mShowAudioModes( struct IClass *cl,
 
 STATIC ULONG mShowResetHandlers( struct IClass *cl,
                                  Object *obj,
-                                 Msg msg )
+                                 UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 28, ResetHandlersWinClass, MUIM_ResetHandlersWin_Update);
 
@@ -522,43 +520,43 @@ STATIC ULONG mShowResetHandlers( struct IClass *cl,
 
 STATIC ULONG mShowMonitors( struct IClass *cl,
                                  Object *obj,
-                                 Msg msg )
+                                 UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 29, MonitorsWinClass, MUIM_MonitorsWin_Update);
 
     return 0;
 }
 
-STATIC ULONG mFlushDevices( struct IClass *cl,
-                            Object *obj,
-                            Msg msg )
+STATIC ULONG mFlushDevices( UNUSED struct IClass *cl,
+                            UNUSED Object *obj,
+                            UNUSED Msg msg )
 {
     MyDoCommand("FLUSHDEVS");
 
     return 0;
 }
 
-STATIC ULONG mFlushFonts( struct IClass *cl,
-                          Object *obj,
-                          Msg msg )
+STATIC ULONG mFlushFonts( UNUSED struct IClass *cl,
+                          UNUSED Object *obj,
+                          UNUSED Msg msg )
 {
     MyDoCommand("FLUSHFONTS");
 
     return 0;
 }
 
-STATIC ULONG mFlushLibraries( struct IClass *cl,
-                              Object *obj,
-                              Msg msg )
+STATIC ULONG mFlushLibraries( UNUSED struct IClass *cl,
+                              UNUSED Object *obj,
+                              UNUSED Msg msg )
 {
     MyDoCommand("FLUSHLIBS");
 
     return 0;
 }
 
-STATIC ULONG mFlushAll( struct IClass *cl,
-                        Object *obj,
-                        Msg msg )
+STATIC ULONG mFlushAll( UNUSED struct IClass *cl,
+                        UNUSED Object *obj,
+                        UNUSED Msg msg )
 {
     MyDoCommand("FLUSHALL");
 
@@ -567,7 +565,7 @@ STATIC ULONG mFlushAll( struct IClass *cl,
 
 STATIC ULONG mUpdateAll( struct IClass *cl,
                          Object *obj,
-                         Msg msg )
+                         UNUSED Msg msg )
 {
     struct MainWinData *mwd = INST_DATA(cl, obj);
     ULONG i;
@@ -616,7 +614,7 @@ DISPATCHER(MainWinDispatcher)
         case MUIM_MainWin_ShowCatalogs:      return (mShowCatalogs(cl, obj, (APTR)msg));
         case MUIM_MainWin_ShowAudioModes:    return (mShowAudioModes(cl, obj, (APTR)msg));
         case MUIM_MainWin_ShowResetHandlers: return (mShowResetHandlers(cl, obj, (APTR)msg));
-	case MUIM_MainWin_ShowMonitors:      return (mShowMonitors(cl, obj, (APTR)msg));
+        case MUIM_MainWin_ShowMonitors:      return (mShowMonitors(cl, obj, (APTR)msg));
         case MUIM_MainWin_FlushDevices:      return (mFlushDevices(cl, obj, (APTR)msg));
         case MUIM_MainWin_FlushFonts:        return (mFlushFonts(cl, obj, (APTR)msg));
         case MUIM_MainWin_FlushLibraries:    return (mFlushLibraries(cl, obj, (APTR)msg));
@@ -626,10 +624,9 @@ DISPATCHER(MainWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeMainWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct MainWinData), DISPATCHER_REF(MainWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct MainWinData), ENTRY(MainWinDispatcher));
 }
 

@@ -96,8 +96,8 @@ static ULONG mAskMinMax( struct IClass *cl,
 }
 
 static ULONG mShowMonitorSpec( struct IClass *cl,
-                        Object *obj,
-                        Msg msg )
+                               Object *obj,
+                               UNUSED Msg msg )
 {
     struct MonitorButtonData *mbd = INST_DATA(cl, obj);
     Object *monitorWin;
@@ -132,10 +132,9 @@ DISPATCHER(MonitorButtonDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeMonitorButtonClass( void )
 {
-    return MUI_CreateCustomClass(NULL, MUIC_Text, NULL, sizeof(struct MonitorButtonData), DISPATCHER_REF(MonitorButtonDispatcher));
+    return MUI_CreateCustomClass(NULL, MUIC_Text, NULL, sizeof(struct MonitorButtonData), ENTRY(MonitorButtonDispatcher));
 }
 

@@ -34,16 +34,17 @@ struct PriorityWinData {
     APTR pwd_OkButton;
 };
 
-STATIC SAVEDS LONG pri_callfunc( struct Hook *hook, Object *obj, STRPTR *contents )
+HOOKPROTONHNP(pri_callfunc, LONG, Object *obj)
 {
     struct PriorityWinData *pwd = INST_DATA(OCLASS(obj), obj);
     STRPTR pristring;
-    LONG pri = 0, length;
+    LONG pri = 0;
+    LONG length;
 
     pristring = (STRPTR)xget(pwd->pwd_PriorityString, MUIA_String_Contents);
 
     length = stcd_l(pristring, (LONG *)&pri);
-    if (length == strlen(pristring) && pri >= -128 && pri <= 127) {
+    if (length == (LONG)strlen(pristring) && pri >= -128 && pri <= 127) {
         set(pwd->pwd_PrioritySlider, MUIA_Slider_Level, pri);
         set(obj, MUIA_Window_ActiveObject, pwd->pwd_OkButton);
     } else {
@@ -183,9 +184,9 @@ STATIC ULONG mGet( struct IClass *cl,
     return DoSuperMethodA(cl, obj, (Msg)msg);
 }
 
-STATIC ULONG mGetPriority( struct IClass *cl,
+STATIC ULONG mGetPriority( UNUSED struct IClass *cl,
                            Object *obj,
-                           Msg msg )
+                           UNUSED Msg msg )
 {
     BOOL done = FALSE;
     ULONG result = 0;
@@ -234,9 +235,8 @@ DISPATCHER(PriorityWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakePriorityWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, MUIC_Window,  NULL, sizeof(struct PriorityWinData), DISPATCHER_REF(PriorityWinDispatcher));
+    return MUI_CreateCustomClass(NULL, MUIC_Window,  NULL, sizeof(struct PriorityWinData), ENTRY(PriorityWinDispatcher));
 }

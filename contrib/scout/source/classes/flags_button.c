@@ -139,7 +139,7 @@ static ULONG mAskMinMax( struct IClass *cl,
 
 static ULONG mShowFlags( struct IClass *cl,
                          Object *obj,
-                         Msg msg )
+                         UNUSED Msg msg )
 {
     struct FlagsButtonData *fbd = INST_DATA(cl, obj);
     APTR parentWin;
@@ -172,10 +172,9 @@ DISPATCHER(FlagsButtonDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeFlagsButtonClass( void )
 {
-    return MUI_CreateCustomClass(NULL, MUIC_Text, NULL, sizeof(struct FlagsButtonData), DISPATCHER_REF(FlagsButtonDispatcher));
+    return MUI_CreateCustomClass(NULL, MUIC_Text, NULL, sizeof(struct FlagsButtonData), ENTRY(FlagsButtonDispatcher));
 }
 

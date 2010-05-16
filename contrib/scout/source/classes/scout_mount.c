@@ -38,21 +38,19 @@ struct MountCallbackUserData {
     ULONG ud_Count;
 };
 
-STATIC SAVEDS LONG mountlist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(mountlist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct MountEntry));
 }
 MakeStaticHook(mountlist_con2hook, mountlist_con2func);
 
-STATIC SAVEDS LONG mountlist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(mountlist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(mountlist_des2hook, mountlist_des2func);
 
-STATIC SAVEDS LONG mountlist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(mountlist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct MountEntry *me = (struct MountEntry *)msg->entry;
 
@@ -76,18 +74,16 @@ STATIC SAVEDS LONG mountlist_dsp2func( struct Hook *hook, Object *obj, struct NL
         msg->strings[6] = txtMountDevice;
         msg->strings[7] = txtMountUnit;
         msg->strings[8] = txtMountHandler;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
-        msg->preparses[3] = MUIX_B;
-        msg->preparses[4] = MUIX_B;
-        msg->preparses[5] = MUIX_B;
-        msg->preparses[6] = MUIX_B;
-        msg->preparses[7] = MUIX_B;
-        msg->preparses[8] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
+        msg->preparses[3] = (STRPTR)MUIX_B;
+        msg->preparses[4] = (STRPTR)MUIX_B;
+        msg->preparses[5] = (STRPTR)MUIX_B;
+        msg->preparses[6] = (STRPTR)MUIX_B;
+        msg->preparses[7] = (STRPTR)MUIX_B;
+        msg->preparses[8] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 
 MakeStaticHook(mountlist_dsp2hook, mountlist_dsp2func);
@@ -116,7 +112,7 @@ STATIC LONG mountlist_cmpfunc( const struct Node *n1,
     return stricmp(((struct MountEntry *)n1)->me_Name, ((struct MountEntry *)n2)->me_Name);
 }
 
-STATIC SAVEDS LONG mountlist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(mountlist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct MountEntry *me1, *me2;
@@ -127,7 +123,7 @@ STATIC SAVEDS LONG mountlist_cmp2func( struct Hook *hook, Object *obj, struct NL
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = mountlist_cmp2colfunc(me2, me1, col1);
@@ -150,7 +146,7 @@ MakeStaticHook(mountlist_cmp2hook, mountlist_cmp2func);
 STRPTR GetDiskState( LONG state )
 {
     ULONG i = 0;
-    STATIC ULONG diskstates[]= { ID_WRITE_PROTECTED, ID_VALIDATING, ID_VALIDATED, 0 };
+    STATIC LONG diskstates[]= { ID_WRITE_PROTECTED, ID_VALIDATING, ID_VALIDATED, 0 };
     STATIC STRPTR diskstatestext[] = { NULL, NULL, NULL, NULL };
 
     diskstatestext[0] = txtReadOnly;
@@ -311,7 +307,7 @@ STATIC void IterateList( void (* callback)( struct MountEntry *me, void *userDat
                 BPTR lock;
                 BOOL infoSuccessful = FALSE;
 
-                if (env->de_Surfaces < -42 * 42 || env->de_Surfaces < 42 * 42) {
+                if (env->de_Surfaces < 42 * 42) {
                     _snprintf(me->me_Heads, sizeof(me->me_Heads), "%6lD", env->de_Surfaces);
                 }
 
@@ -393,7 +389,7 @@ STATIC void PrintCallback( struct MountEntry *me,
 }
 
 STATIC void SendCallback( struct MountEntry *me,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(me, sizeof(struct MountEntry));
 }
@@ -465,7 +461,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct MountsWinData *mwd = INST_DATA(cl, obj);
     struct MountCallbackUserData ud;
@@ -493,9 +489,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintMounts(NULL);
 
@@ -504,7 +500,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mMore( struct IClass *cl,
                     Object *obj,
-                    Msg msg )
+                    UNUSED Msg msg )
 {
     if (!clientstate) {
         struct MountsWinData *mwd = INST_DATA(cl, obj);
@@ -529,7 +525,7 @@ STATIC ULONG mMore( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct MountsWinData *mwd = INST_DATA(cl, obj);
     struct MountEntry *me;
@@ -555,7 +551,6 @@ DISPATCHER(MountsWinDispatcher)
 
     return (DoSuperMethodA(cl, obj, msg));
 }
-DISPATCHER_END
 
 void PrintMounts( STRPTR filename )
 {
@@ -576,6 +571,6 @@ void SendMountList( STRPTR UNUSED dummy )
 
 APTR MakeMountsWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct MountsWinData), DISPATCHER_REF(MountsWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct MountsWinData), ENTRY(MountsWinDispatcher));
 }
 

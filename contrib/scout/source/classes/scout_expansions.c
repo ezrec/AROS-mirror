@@ -39,21 +39,19 @@ struct ExpansionCallbackUserData {
     ULONG ud_Count;
 };
 
-STATIC SAVEDS LONG explist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(explist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct ExpansionEntry));
 }
 MakeStaticHook(explist_con2hook, explist_con2func);
 
-STATIC SAVEDS LONG explist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(explist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(explist_des2hook, explist_des2func);
 
-STATIC SAVEDS LONG explist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(explist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct ExpansionEntry *ee = (struct ExpansionEntry *)msg->entry;
 
@@ -71,15 +69,13 @@ STATIC SAVEDS LONG explist_dsp2func( struct Hook *hook, Object *obj, struct NLis
         msg->strings[3] = txtExpansionManufacturer;
         msg->strings[4] = txtExpansionProduct;
         msg->strings[5] = txtExpansionClass;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
-        msg->preparses[3] = MUIX_B;
-        msg->preparses[4] = MUIX_B;
-        msg->preparses[5] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
+        msg->preparses[3] = (STRPTR)MUIX_B;
+        msg->preparses[4] = (STRPTR)MUIX_B;
+        msg->preparses[5] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(explist_dsp2hook, explist_dsp2func);
 
@@ -98,7 +94,7 @@ STATIC LONG explist_cmp2colfunc( struct ExpansionEntry *ee1,
     }
 }
 
-STATIC SAVEDS LONG explist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(explist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct ExpansionEntry *ee1, *ee2;
@@ -109,7 +105,7 @@ STATIC SAVEDS LONG explist_cmp2func( struct Hook *hook, Object *obj, struct NLis
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = explist_cmp2colfunc(ee2, ee1, col1);
@@ -205,16 +201,16 @@ STATIC void IterateList( void (* callback)( struct ExpansionEntry *ee, void *use
                 while ((pci = IPCI->FindDeviceTags(FDT_Index, index, TAG_DONE)) != NULL) {
                     ee->ee_Addr = (APTR)pci;
                     _snprintf(ee->ee_Address, sizeof(ee->ee_Address), "$%08lx", pci);
-		    _snprintf(ee->ee_Flags, sizeof(ee->ee_Flags), txtNotAvailable);
-		    _snprintf(ee->ee_BoardAddr, sizeof(ee->ee_BoardAddr), "---");
-		    _snprintf(ee->ee_BoardSize, sizeof(ee->ee_BoardSize), txtNotAvailable);
-		    _snprintf(ee->ee_Type, sizeof(ee->ee_Type), "PCI");
+                    _snprintf(ee->ee_Flags, sizeof(ee->ee_Flags), txtNotAvailable);
+                    _snprintf(ee->ee_BoardAddr, sizeof(ee->ee_BoardAddr), "---");
+                    _snprintf(ee->ee_BoardSize, sizeof(ee->ee_BoardSize), txtNotAvailable);
+                    _snprintf(ee->ee_Type, sizeof(ee->ee_Type), "PCI");
                     _snprintf(ee->ee_Product, sizeof(ee->ee_Product), "$%04lx", pci->ReadConfigWord(PCI_DEVICE_ID));
                     _snprintf(ee->ee_ProdName, sizeof(ee->ee_ProdName), "$%04lx", pci->ReadConfigWord(PCI_DEVICE_ID));
                     _snprintf(ee->ee_Manufacturer, sizeof(ee->ee_Manufacturer), "$%04lx", pci->ReadConfigWord(PCI_VENDOR_ID));
                     _snprintf(ee->ee_ManufName, sizeof(ee->ee_ManufName), "$%04lx", pci->ReadConfigWord(PCI_VENDOR_ID));
                     _snprintf(ee->ee_ProdClass, sizeof(ee->ee_ProdClass), "$%04lx", pci->ReadConfigWord(PCI_CLASS_DEVICE));
-		    _snprintf(ee->ee_SerialNumber, sizeof(ee->ee_SerialNumber), txtNotAvailable);
+                    _snprintf(ee->ee_SerialNumber, sizeof(ee->ee_SerialNumber), txtNotAvailable);
                     stccpy(ee->ee_HardwareType, "PCI", sizeof(ee->ee_HardwareType));
 
                     IPCI->FreeDevice(pci);
@@ -240,16 +236,22 @@ STATIC void IterateList( void (* callback)( struct ExpansionEntry *ee, void *use
             while ((dev = pci_find_device(0xffff, 0xffff, dev)) != NULL) {
                 ee->ee_Addr = (APTR)dev;
                 _snprintf(ee->ee_Address, sizeof(ee->ee_Address), "$%08lx", dev);
-		_snprintf(ee->ee_Flags, sizeof(ee->ee_Flags), txtNotAvailable);
-		_snprintf(ee->ee_BoardAddr, sizeof(ee->ee_BoardAddr), "---");
-		_snprintf(ee->ee_BoardSize, sizeof(ee->ee_BoardSize), txtNotAvailable);
-		_snprintf(ee->ee_Type, sizeof(ee->ee_Type), "PCI");
+                _snprintf(ee->ee_Flags, sizeof(ee->ee_Flags), txtNotAvailable);
+                _snprintf(ee->ee_BoardAddr, sizeof(ee->ee_BoardAddr), "---");
+                _snprintf(ee->ee_BoardSize, sizeof(ee->ee_BoardSize), txtNotAvailable);
+                _snprintf(ee->ee_Type, sizeof(ee->ee_Type), "PCI");
                 _snprintf(ee->ee_Product, sizeof(ee->ee_Product), "$%04lx", dev->device);
                 _snprintf(ee->ee_ProdName, sizeof(ee->ee_ProdName), "$%04lx", dev->device);
                 _snprintf(ee->ee_Manufacturer, sizeof(ee->ee_Manufacturer), "$%04lx", dev->vendor);
                 _snprintf(ee->ee_ManufName, sizeof(ee->ee_ManufName), "$%04lx", dev->vendor);
+                /* New MorphOS SDK has this field renamed because of conflict with C++ keyword.
+                   Perhaps m68k SDK should be upgraded too. */
+            #if defined(__MORPHOS__)
+                _snprintf(ee->ee_ProdClass, sizeof(ee->ee_ProdClass), "$%04lx", dev->devclass);
+            #else
                 _snprintf(ee->ee_ProdClass, sizeof(ee->ee_ProdClass), "$%04lx", dev->class);
-		_snprintf(ee->ee_SerialNumber, sizeof(ee->ee_SerialNumber), txtNotAvailable);
+            #endif
+                _snprintf(ee->ee_SerialNumber, sizeof(ee->ee_SerialNumber), txtNotAvailable);
                 stccpy(ee->ee_HardwareType, "PCI", sizeof(ee->ee_HardwareType));
 
                 if (PCIIDSBase) {
@@ -289,7 +291,7 @@ STATIC void PrintCallback( struct ExpansionEntry *ee,
 }
 
 STATIC void SendCallback( struct ExpansionEntry *ee,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(ee, sizeof(struct ExpansionEntry));
 }
@@ -359,7 +361,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct ExpansionsWinData *ewd = INST_DATA(cl, obj);
     struct ExpansionCallbackUserData ud;
@@ -386,9 +388,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintExpansions(NULL);
 
@@ -397,7 +399,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mMore( struct IClass *cl,
                     Object *obj,
-                    Msg msg )
+                    UNUSED Msg msg )
 {
     if (!clientstate) {
         struct ExpansionsWinData *ewd = INST_DATA(cl, obj);
@@ -424,7 +426,7 @@ STATIC ULONG mMore( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct ExpansionsWinData *ewd = INST_DATA(cl, obj);
     struct ExpansionEntry *ee;
@@ -450,7 +452,6 @@ DISPATCHER(ExpansionsWinDispatcher)
 
     return (DoSuperMethodA(cl, obj, msg));
 }
-DISPATCHER_END
 
 void PrintExpansions( STRPTR filename )
 {
@@ -471,7 +472,7 @@ void SendExpList( STRPTR UNUSED dummy )
 
 APTR MakeExpansionsWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct ExpansionsWinData), DISPATCHER_REF(ExpansionsWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct ExpansionsWinData), ENTRY(ExpansionsWinDispatcher));
 }
 
 

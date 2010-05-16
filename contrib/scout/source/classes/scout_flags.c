@@ -46,21 +46,19 @@ struct FlagsEntry {
     TEXT fe_Value[32];
 };
 
-STATIC SAVEDS LONG flaglist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(flaglist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct FlagsEntry));
 }
 MakeStaticHook(flaglist_con2hook, flaglist_con2func);
 
-STATIC SAVEDS LONG flaglist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(flaglist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(flaglist_des2hook, flaglist_des2func);
 
-STATIC SAVEDS LONG flaglist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(flaglist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct FlagsEntry *fe = (struct FlagsEntry *)msg->entry;
 
@@ -70,15 +68,13 @@ STATIC SAVEDS LONG flaglist_dsp2func( struct Hook *hook, Object *obj, struct NLi
     } else {
         msg->strings[0] = txtFlagsName;
         msg->strings[1] = txtFlagsValue;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(flaglist_dsp2hook, flaglist_dsp2func);
 
-STATIC SAVEDS LONG flaglist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(flaglist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     struct FlagsEntry *fe1, *fe2;
 
@@ -233,10 +229,9 @@ DISPATCHER(FlagsWinDispatcher)
 
     return (DoSuperMethodA(cl, obj, msg));
 }
-DISPATCHER_END
 
 APTR MakeFlagsWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct FlagsWinData), DISPATCHER_REF(FlagsWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct FlagsWinData), ENTRY(FlagsWinDispatcher));
 }
 

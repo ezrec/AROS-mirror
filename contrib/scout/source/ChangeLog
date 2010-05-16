@@ -2,8 +2,47 @@
 Scout Open Source - ChangeLog
 -----------------------------
 
-$Id: ChangeLog,v 1.151 2010/04/21 17:10:24 sonic_amiga Exp $
+$Id: ChangeLog,v 1.164 2010/05/05 06:12:18 thboeckel Exp $
 $Source: /cvsroot/scoutos/scoutos/source/ChangeLog,v $
+
+2010-05-05  Thore Boeckelmann <tboeckel@gmx.de>
+
+  * Makefile.os3, Makefile.mos: changed LIBS definition to use the correct
+    system specific library directory.
+
+2010-05-04  Thore Boeckelmann <tboeckel@gmx.de>
+
+  * misc: some changes to make Scout cross compilable for MorphOS.
+
+2010-05-04  Pavel Fedin <pavel_fedin@mail.ru>
+
+  * misc: Added some AROS-specific fixes, now should work on PPC AROS
+  * classes/scout_expansions.c: fixed compiling with new MorphOS SDK
+
+2010-04-29  Thore Boeckelmann <tboeckel@gmx.de>
+
+  * misc: lots of changes to get Scout compilable for OS3 using gcc. The
+    resulting binary is not yet fully working, but at least it can be run.
+  * include/patchcontrol.h: fixed inline functions for the OS3/gcc build.
+  * classes/scout_audiomode.c: fixed audiomode scanning for the OS3/gcc
+    build.
+  * smakefile, startup.c: final fixes for the OS3/SAS/C build.
+  * classes/scout_version.c: the used compiler will now be shown in the
+    About window.
+
+2010-04-26  Thore Boeckelmann <tboeckel@gmx.de>
+
+  * misc: added lots of UNUSED keywords to avoid warnings about unused
+    variables. Also the SDI macros are used to define all hook functions.
+
+2010-04-24  Nicolas Sallin <henes@biclodon.com>
+  * Changed to declare TimeRequest in one single place and early enough to
+    avoid a lot of warnings on non os4 systems.
+
+2010-04-24  Thore Boeckelmann <tboeckel@gmx.de>
+  * lots of changes to get Scout running compilable again for OS4.
+  * define USE_INLINE_STDARG for AROS only.
+  * fixed lots of warnings by declaring lots of strings as constants.
 
 2010-04-21  Pavel Fedin <pavel_fedin@mail.ru>
   * Misc fixes for AROS build

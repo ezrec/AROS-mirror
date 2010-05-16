@@ -150,7 +150,7 @@ OBJECTS=$(OBJDIR)/startup.o \
    $(OBJDIR)/SmartReadArgs.o \
    $(OBJDIR)/all_gcc.o
 
-HEADERS=system_headers.h startup.h Scout.h \
+HEADERS=system_headers.h startup.h scout.h \
    scout_logo.h scout_net.h \
    scout_defs.h scout_tags.h startup_defs.h \
    $(CLASSESDIR)/fontdisplay_class.h \

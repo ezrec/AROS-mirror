@@ -40,7 +40,7 @@ struct MUIP_SigBitChanged { ULONG whichbit; ULONG state; };
 
 struct MUIP_SigStrChanged { UBYTE str; };
 
-STATIC SAVEDS ULONG hex_editfunc( struct Hook *hook, struct SGWork *sgw, ULONG *msg )
+HOOKPROTONH(hex_editfunc, ULONG, struct SGWork *sgw, ULONG *msg)
 {
     ULONG return_code;
 
@@ -83,7 +83,7 @@ STATIC SAVEDS ULONG hex_editfunc( struct Hook *hook, struct SGWork *sgw, ULONG *
 }
 MakeStaticHook(hex_edithook, hex_editfunc);
 
-STATIC SAVEDS LONG sigbitchanged_func( struct Hook *hook, Object *obj, struct MUIP_SigBitChanged *msg )
+HOOKPROTONH(sigbitchanged_func, void, Object *obj, struct MUIP_SigBitChanged *msg)
 {
     struct SignalWinData *swd = INST_DATA(OCLASS(obj), obj);
     STRPTR sigstr;
@@ -97,12 +97,10 @@ STATIC SAVEDS LONG sigbitchanged_func( struct Hook *hook, Object *obj, struct MU
         CLEAR_BIT(sigs, msg->whichbit);
     }
     MySetStringContents(swd->swd_SignalString, "$%08lx", sigs);
-
-    return 0;
 }
 MakeStaticHook(sigbitchanged_hook, sigbitchanged_func);
 
-STATIC SAVEDS LONG sigstrchanged_func( struct Hook *hook, Object *obj, struct MUIP_SigStrChanged *msg )
+HOOKPROTONHNP(sigstrchanged_func, void, Object *obj)
 {
     struct SignalWinData *swd = INST_DATA(OCLASS(obj), obj);
     STRPTR sigstr;
@@ -113,8 +111,6 @@ STATIC SAVEDS LONG sigstrchanged_func( struct Hook *hook, Object *obj, struct MU
     for (bit = 0; bit < 32; bit++) {
         nnset(swd->swd_SignalCheckmarks[bit], MUIA_Selected, BIT_IS_SET(sigs, bit));
     }
-
-    return 0;
 }
 MakeStaticHook(sigstrchanged_hook, sigstrchanged_func);
 
@@ -293,10 +289,9 @@ DISPATCHER(SignalWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeSignalWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct SignalWinData), DISPATCHER_REF(SignalWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct SignalWinData), ENTRY(SignalWinDispatcher));
 }
 

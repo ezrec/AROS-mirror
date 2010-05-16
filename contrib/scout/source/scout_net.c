@@ -70,10 +70,6 @@ struct Library*         UserGroupBase;
 struct UserGroupIFace*  IUserGroup;
 #endif
 
-#if defined(__MORPHOS__)
-typedef LONG socklen_t;
-#endif
-
 #if defined(__AROS__)
 struct Library*         SocketBase;
 struct Library*         UserGroupBase;
@@ -312,9 +308,9 @@ int VARARGS68K STDARGS SendDaemon( CONST_STRPTR fmt, ... )
 
     VA_START(args, fmt);
 
-    if ((buf = VASPrintf(fmt, VA_ARG(args, APTR))) != NULL) {
+    if ((buf = VASPrintf(fmt, args)) != NULL) {
 
-        if (send(client_socket, buf, strlen(buf) + 1, 0) == strlen(buf) + 1) {
+        if (send(client_socket, buf, strlen(buf) + 1, 0) == (LONG)strlen(buf) + 1) {
             result = TRUE;
         }
 
@@ -332,7 +328,7 @@ STATIC ULONG NetCommand( STRPTR text )
     STRPTR buf;
 
     if ((buf = tbAllocVecPooled(globalPool, LINELEN)) != NULL) {
-        if (send(client_socket, text, strlen(text) + 1, 0) == strlen(text) + 1) {
+        if (send(client_socket, text, strlen(text) + 1, 0) == (LONG)strlen(text) + 1) {
             while (sgets(client_socket, buf, LINELEN)) {
                 if (strcmp(buf, CMD_DONE) == 0) {
                     rc = RETURN_OK;
@@ -499,8 +495,8 @@ int VARARGS68K STDARGS SendClient( CONST_STRPTR fmt, ... )
 
     VA_START(args,fmt);
 
-    if ((buf = VASPrintf(fmt, VA_ARG(args, APTR))) != NULL) {
-        if (send(server_socket, buf, strlen(buf) + 1, 0) == strlen(buf) + 1) {
+    if ((buf = VASPrintf(fmt, args)) != NULL) {
+        if (send(server_socket, buf, strlen(buf) + 1, 0) == (LONG)strlen(buf) + 1) {
             result = TRUE;
         }
 
@@ -522,7 +518,7 @@ BOOL SendEncodedEntry( void *structure,
         if (s[i] == '\0') s[i] = '\1';
     }
 
-    return (BOOL)((send(server_socket, structure, length, 0) == length) ? TRUE : FALSE);
+    return (BOOL)((send(server_socket, structure, length, 0) == (LONG)length) ? TRUE : FALSE);
 }
 
 long VARARGS68K STDARGS SendResultString( CONST_STRPTR fmt, ... )
@@ -532,7 +528,7 @@ long VARARGS68K STDARGS SendResultString( CONST_STRPTR fmt, ... )
 
     VA_START(args, fmt);
 
-    if ((buf = VASPrintf(fmt, VA_ARG(args, APTR))) != NULL) {
+    if ((buf = VASPrintf(fmt, args)) != NULL) {
         if (serverstate) {
             strcat(buf, "\n");
             SendClient(buf);
@@ -559,7 +555,7 @@ void VARARGS68K STDARGS PrintFOneLine( BPTR hd,
 
     VA_START(args, fmt);
 
-    if ((buf = VASPrintf(fmt, VA_ARG(args, APTR))) != NULL) {
+    if ((buf = VASPrintf(fmt, args)) != NULL) {
         if (serverstate) {
             SendClient(buf);
         } else {
@@ -655,7 +651,7 @@ ULONG netdaemon (VOID) {
 
    serverstate = TRUE;
 
-   if ((rootpw = getpwnam ("root")) != NULL)
+   if ((rootpw = getpwnam ((char *)"root")) != NULL)
       rootid = rootpw->pw_gid;
 
    if ((sgets (server_socket, buffer, LINELEN)) && (strcmp (buffer, CMD_BEGIN) == 0)) {
@@ -713,7 +709,7 @@ ULONG VARARGS68K STDARGS MyDoCommand( CONST_STRPTR fmt, ... )
 
     VA_START(args, fmt);
 
-    if ((buf = VASPrintf(fmt, VA_ARG(args, APTR))) != NULL) {
+    if ((buf = VASPrintf(fmt, args)) != NULL) {
         if (clientstate) {
             result = NetCommand(buf);
         } else {

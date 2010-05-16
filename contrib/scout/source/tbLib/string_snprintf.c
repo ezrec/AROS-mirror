@@ -71,7 +71,7 @@ BOOL _vsnprintf( STRPTR buffer,
 #ifdef NO_LINEAR_VARARGS
         VNewRawDoFmt(fmt, (VOID (*)())StuffChar, (APTR)&fc, args);
 #else
-        RawDoFmt(fmt, (APTR)args, (VOID (*)())StuffChar, (APTR)&fc);
+	RawDoFmt(fmt, VA_ARG(args, APTR), (VOID (*)())StuffChar, (APTR)&fc);
 #endif
 
         if (!fc.fc_Overflow) {

@@ -1,9 +1,9 @@
 PROJECT=            Scout
-TARGET=             Scout.os3
+TARGET=             Scout.sas
 
 VERSION=            37
 
-OBJDIR=             .obj_os3
+OBJDIR=             .obj_sas
 CLASSESDIR=         classes
 EXTRASRC=           extrasrc
 
@@ -57,6 +57,8 @@ OBJECTS=$(OBJDIR)/startup.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_main.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_memory.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_memory_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_monitors.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_monitors_detail.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_mount.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_mount_detail.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_parentwindow.o \
@@ -86,6 +88,7 @@ OBJECTS=$(OBJDIR)/startup.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_disassembler.o \
    $(OBJDIR)/$(CLASSESDIR)/disassembler_button.o \
    $(OBJDIR)/$(CLASSESDIR)/flags_button.o \
+   $(OBJDIR)/$(CLASSESDIR)/monitor_button.o \
    $(OBJDIR)/$(CLASSESDIR)/task_button.o \
    $(OBJDIR)/$(CLASSESDIR)/port_button.o \
    $(OBJDIR)/hexdump.o \
@@ -133,6 +136,8 @@ HEADERS=system_headers.h startup.h Scout.h \
    classes/scout_main.h \
    classes/scout_memory.h \
    classes/scout_memory_detail.h \
+   classes/scout_monitors.h \
+   classes/scout_monitors_detail.h \
    classes/scout_mount.h \
    classes/scout_mount_detail.h \
    classes/scout_parentwindow.h \
@@ -168,41 +173,49 @@ HEADERS=system_headers.h startup.h Scout.h \
    scout_cat.h \
    SmartReadArgs.h
 
-LIBS=               netlib/net.lib lib:sc.lib lib:amiga.lib lib:debug.lib tbLib/tblib.lib
+LIBS=               netlib/net.lib lib:sc.lib lib:amiga.lib lib:debug.lib tbLib/bin_sas/tblib.lib
 
-all:                $(OBJDIR) $(OBJDIR)/$(PROJECT).gst $(TARGET)
+all:                $(OBJDIR) $(TARGET)
 
 .c.o:
-					sc $(CFLAGS) $(OPTIMIZE) $(DEBUG) $< objname=$@
+                    @echo "  SC $<"
+					@sc $(CFLAGS) $(OPTIMIZE) $(DEBUG) $< objname=$@
 
 .asm.o:
-					sc $(AFLAGS) $(DEBUG) $< objname=$@
+                    @echo "  AS $<"
+					@sc $(AFLAGS) $(DEBUG) $< objname=$@
 
 .ct.catalog:
-					flexcat $(LOCALE)/scout.cd $< catalog $@ flush
+                    @echo "  FC $<"
+					@flexcat $(LOCALE)/scout.cd $< catalog $@ flush
 
 $(OBJDIR):
+	@echo "  MK $@"
 	@makedir $(OBJDIR)
 	@makedir $(OBJDIR)/$(CLASSESDIR)
 
 $(OBJDIR)/$(PROJECT).gst: $(HEADERS) system_headers.c
-					gst unload $@
-					sc $(CFLAGS) nodebug noobjname noicons nogst makegst=$@ system_headers.c
+					@gst unload $@
+                    @echo "  MK $@"
+					@sc $(CFLAGS) nodebug noobjname noicons nogst makegst=$@ system_headers.c
 
-$(TARGET) :         $(OBJDIR)/$(PROJECT).gst $(LIBS) $(OBJECTS)
-					slink with <<
+$(TARGET) :         $(OBJDIR) $(OBJDIR)/$(PROJECT).gst $(LIBS) $(OBJECTS)
+                    @echo "  SL $@.debug"
+					@slink with <<
 						from $(OBJECTS) \
 						to $@.debug \
 						lib $(LIBS) \
 						$(LFLAGS) \
 						map $(OBJDIR)/$@.map,fhx fwidth 32 pwidth 32 swidth 32 width 100
 					<
-					slink $@.debug to $@ noicons nodebug
+                    @echo "  SL $@"
+					@slink $@.debug to $@ noicons nodebug
 
 catalogs:           #$(LOCALE)/français.catalog
 
 scout_cat.h:        $(LOCALE)/scout.cd
-					flexcat locale/Scout.cd scout_cat.h=C_h.sd scout_cat.c=C_c.sd
+                    @echo "  FC $<"
+					@flexcat locale/Scout.cd scout_cat.h=C_h.sd scout_cat.c=C_c.sd
 
 $(OBJDIR)/startup.o: startup.c startup.h
 
@@ -227,6 +240,9 @@ $(OBJDIR)/$(CLASSESDIR)/flags_button.o: classes/flags_button.c classes/flags_but
 	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
 
 $(OBJDIR)/$(CLASSESDIR)/fontdisplay_class.o: classes/fontdisplay_class.c classes/fontdisplay_class.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/monitor_button.o: classes/monitor_button.c classes/monitor_button.h \
 	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
 
 $(OBJDIR)/$(CLASSESDIR)/port_button.o: classes/port_button.c classes/port_button.h \
@@ -340,6 +356,12 @@ $(OBJDIR)/$(CLASSESDIR)/scout_memory.o: classes/scout_memory.c classes/scout_mem
 $(OBJDIR)/$(CLASSESDIR)/scout_memory_detail.o: classes/scout_memory_detail.c classes/scout_memory_detail.h \
 	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
 
+$(OBJDIR)/$(CLASSESDIR)/scout_monitors.o: classes/scout_monitors.c classes/scout_monitors.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_monitors_detail.o: classes/scout_monitors_detail.c classes/scout_monitors_detail.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
 $(OBJDIR)/$(CLASSESDIR)/scout_mount.o: classes/scout_mount.c classes/scout_mount.h \
 	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
 
@@ -423,7 +445,7 @@ $(OBJDIR)/$(CLASSESDIR)/task_button.o: classes/task_button.c classes/task_button
 
 $(OBJDIR)/all_sas.o: all_sas.c $(EXTRASRC)/xcexit.c
 
-tbLib/tbLib.lib:
+tbLib/bin_sas/tbLib.lib:
 					@execute <<
 						cd tbLib
 						smake

@@ -149,7 +149,7 @@ static ULONG mAskMinMax( struct IClass *cl,
 
 static ULONG mShowTask( struct IClass *cl,
                         Object *obj,
-                        Msg msg )
+                        UNUSED Msg msg )
 {
     struct TaskButtonData *tbd = INST_DATA(cl, obj);
     TEXT ctask[ADDRESS_LENGTH];
@@ -192,10 +192,9 @@ DISPATCHER(TaskButtonDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeTaskButtonClass( void )
 {
-    return MUI_CreateCustomClass(NULL, MUIC_Text, NULL, sizeof(struct TaskButtonData), DISPATCHER_REF(TaskButtonDispatcher));
+    return MUI_CreateCustomClass(NULL, MUIC_Text, NULL, sizeof(struct TaskButtonData), ENTRY(TaskButtonDispatcher));
 }
 

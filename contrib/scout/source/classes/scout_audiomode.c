@@ -38,25 +38,37 @@ struct AudioModesCallbackUserData {
     ULONG ud_Count;
 };
 
-#ifdef __MORPHOS__
+#if defined(__amigaos4__)
+	#undef NEED_GLOBAL_AHIBASE
+#elif defined(__MORPHOS__)
+	#define NEED_GLOBAL_AHIBASE
+#elif defined(__AROS__)
+	#undef NEED_GLOBAL_AHIBASE
+#else
+	#if defined(__SASC)
+		#undef NEED_GLOBAL_AHIBASE
+	#else
+		#define NEED_GLOBAL_AHIBASE
+	#endif
+#endif
+
+#if defined(NEED_GLOBAL_AHIBASE)
 struct Library *AHIBase;
 #endif
 
-STATIC SAVEDS LONG amodelist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(amodelist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct AudioModeEntry));
 }
 MakeStaticHook(amodelist_con2hook, amodelist_con2func);
 
-STATIC SAVEDS LONG amodelist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(amodelist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(amodelist_des2hook, amodelist_des2func);
 
-STATIC SAVEDS LONG amodelist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(amodelist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct AudioModeEntry *ame = (struct AudioModeEntry *)msg->entry;
 
@@ -72,14 +84,12 @@ STATIC SAVEDS LONG amodelist_dsp2func( struct Hook *hook, Object *obj, struct NL
         msg->strings[2] = txtAudioModeBits;
         msg->strings[3] = txtAudioModeMinFreq;
         msg->strings[4] = txtAudioModeMaxFreq;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
-        msg->preparses[3] = MUIX_B;
-        msg->preparses[4] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
+        msg->preparses[3] = (STRPTR)MUIX_B;
+        msg->preparses[4] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(amodelist_dsp2hook, amodelist_dsp2func);
 
@@ -103,7 +113,7 @@ STATIC LONG amodelist_cmpfunc( const struct Node *n1,
     return stricmp(((struct AudioModeEntry *)n1)->ame_Name, ((struct AudioModeEntry *)n2)->ame_Name);
 }
 
-STATIC SAVEDS LONG amodelist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(amodelist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct AudioModeEntry *ame1, *ame2;
@@ -114,7 +124,7 @@ STATIC SAVEDS LONG amodelist_cmp2func( struct Hook *hook, Object *obj, struct NL
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = amodelist_cmp2colfunc(ame2, ame1, col1);
@@ -167,17 +177,18 @@ STATIC void IterateList( void (* callback)( struct AudioModeEntry *ame, void *us
             ahir->ahir_Version = 4;
 
             if (OpenDevice(AHINAME, AHI_NO_UNIT, (struct IORequest *)ahir, 0) == 0) {
-            #ifndef __MORPHOS__
-                struct Device *AHIBase;
+            #if !defined(NEED_GLOBAL_AHIBASE)
+                struct Library *AHIBase;
+            #endif
             #if defined(__amigaos4__)
                 struct AHIIFace *IAHI;
             #endif
-            #endif
-                ULONG id = AHI_INVALID_ID;
 
-                AHIBase = ahir->ahir_Std.io_Device;
+                AHIBase = (struct Library *)ahir->ahir_Std.io_Device;
 
                 if (GETINTERFACE(IAHI, AHIBase)) {
+	                ULONG id = AHI_INVALID_ID;
+
                     while ((id = AHI_NextAudioID(id)) != AHI_INVALID_ID) {
                         if ((ame = AllocVec(sizeof(struct AudioModeEntry), MEMF_CLEAR)) != NULL) {
                             ULONG bits, minfreq, maxfreq, numfreqs;
@@ -210,6 +221,10 @@ STATIC void IterateList( void (* callback)( struct AudioModeEntry *ame, void *us
                 }
 
                 CloseDevice((struct IORequest *)ahir);
+
+            #if defined(NEED_GLOBAL_AHIBASE)
+                AHIBase = NULL;
+            #endif
             } else {
                 MyRequest(msgErrorContinue, msgCantOpenAHIDevice, AHINAME, ahir->ahir_Version);
             }
@@ -244,7 +259,7 @@ STATIC void PrintCallback( struct AudioModeEntry *ame,
 }
 
 STATIC void SendCallback( struct AudioModeEntry *ame,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(ame, sizeof(struct AudioModeEntry));
 }
@@ -316,7 +331,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct AudioModesWinData *amwd = INST_DATA(cl, obj);
     struct AudioModesCallbackUserData ud;
@@ -344,9 +359,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintAudioModes(NULL);
 
@@ -355,7 +370,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mMore( struct IClass *cl,
                     Object *obj,
-                    Msg msg )
+                    UNUSED Msg msg )
 {
     if (!clientstate) {
         struct AudioModesWinData *amwd = INST_DATA(cl, obj);
@@ -380,7 +395,7 @@ STATIC ULONG mMore( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct AudioModesWinData *amwd = INST_DATA(cl, obj);
     struct AudioModeEntry *ame;
@@ -406,7 +421,6 @@ DISPATCHER(AudioModesWinDispatcher)
 
     return (DoSuperMethodA(cl, obj, msg));
 }
-DISPATCHER_END
 
 void PrintAudioModes( STRPTR filename )
 {
@@ -427,6 +441,6 @@ void SendAudioModeList( STRPTR UNUSED dummy )
 
 APTR MakeAudioModesWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct AudioModesWinData), DISPATCHER_REF(AudioModesWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct AudioModesWinData), ENTRY(AudioModesWinDispatcher));
 }
 

@@ -40,21 +40,19 @@ struct FontCallbackUserData {
     ULONG ud_Count;
 };
 
-STATIC SAVEDS LONG fontslist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(fontslist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct FontEntry));
 }
 MakeStaticHook(fontslist_con2hook, fontslist_con2func);
 
-STATIC SAVEDS LONG fontslist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(fontslist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(fontslist_des2hook, fontslist_des2func);
 
-STATIC SAVEDS LONG fontslist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(fontslist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct FontEntry *fe = (struct FontEntry *)msg->entry;
 
@@ -80,19 +78,17 @@ STATIC SAVEDS LONG fontslist_dsp2func( struct Hook *hook, Object *obj, struct NL
         msg->strings[7] = txtFontsLoChar;
         msg->strings[8] = txtFontsHiChar;
         msg->strings[9] = txtFontsType;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
-        msg->preparses[3] = MUIX_B;
-        msg->preparses[4] = MUIX_B;
-        msg->preparses[5] = MUIX_B;
-        msg->preparses[6] = MUIX_B;
-        msg->preparses[7] = MUIX_B;
-        msg->preparses[8] = MUIX_B;
-        msg->preparses[9] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
+        msg->preparses[3] = (STRPTR)MUIX_B;
+        msg->preparses[4] = (STRPTR)MUIX_B;
+        msg->preparses[5] = (STRPTR)MUIX_B;
+        msg->preparses[6] = (STRPTR)MUIX_B;
+        msg->preparses[7] = (STRPTR)MUIX_B;
+        msg->preparses[8] = (STRPTR)MUIX_B;
+        msg->preparses[9] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(fontslist_dsp2hook, fontslist_dsp2func);
 
@@ -119,13 +115,13 @@ STATIC LONG fontslist_cmp2colfunc( struct FontEntry *fe1,
     return cmp;
 }
 
-STATIC LONG fontlist_cmpfunc( const struct Node *n1,
+STATIC LONG fontslist_cmpfunc( const struct Node *n1,
                               const struct Node *n2 )
 {
     return stricmp(((struct FontEntry *)n1)->fe_Name, ((struct FontEntry *)n2)->fe_Name);
 }
 
-STATIC SAVEDS LONG fontslist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(fontslist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct FontEntry *fe1, *fe2;
@@ -136,7 +132,7 @@ STATIC SAVEDS LONG fontslist_cmp2func( struct Hook *hook, Object *obj, struct NL
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = fontslist_cmp2colfunc(fe2, fe1, col1);
@@ -156,7 +152,7 @@ STATIC SAVEDS LONG fontslist_cmp2func( struct Hook *hook, Object *obj, struct NL
 }
 MakeStaticHook(fontslist_cmp2hook, fontslist_cmp2func);
 
-void FlushFonts (void)
+void FlushFonts(void)
 {
     struct TextFont *tf;
 
@@ -232,7 +228,7 @@ STATIC void IterateList( void (* callback)( struct FontEntry *fe, void *userData
 
     Permit();
 
-    if (sort) SortLinkedList((struct List *)&tmplist, fontlist_cmpfunc);
+    if (sort) SortLinkedList((struct List *)&tmplist, fontslist_cmpfunc);
 
     ITERATE_LIST(&tmplist, struct FontEntry *, fe) {
         callback(fe, userData);
@@ -256,7 +252,7 @@ STATIC void PrintCallback( struct FontEntry *fe,
 }
 
 STATIC void SendCallback( struct FontEntry *fe,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(fe, sizeof(struct FontEntry));
 }
@@ -337,7 +333,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct FontsWinData *fwd = INST_DATA(cl, obj);
     struct FontCallbackUserData ud;
@@ -369,9 +365,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintFonts(NULL);
 
@@ -380,7 +376,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mClose( struct IClass *cl,
                      Object *obj,
-                     Msg msg )
+                     UNUSED Msg msg )
 {
     struct FontsWinData *fwd = INST_DATA(cl, obj);
     struct FontEntry *fe;
@@ -416,7 +412,7 @@ STATIC ULONG mClose( struct IClass *cl,
 
 STATIC ULONG mRemove( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct FontsWinData *fwd = INST_DATA(cl, obj);
     struct FontEntry *fe;
@@ -438,7 +434,7 @@ STATIC ULONG mRemove( struct IClass *cl,
 
 STATIC ULONG mMore( struct IClass *cl,
                     Object *obj,
-                    Msg msg )
+                    UNUSED Msg msg )
 {
     if (!clientstate) {
         struct FontsWinData *fwd = INST_DATA(cl, obj);
@@ -463,7 +459,7 @@ STATIC ULONG mMore( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct FontsWinData *fwd = INST_DATA(cl, obj);
     struct FontEntry *fe;
@@ -494,7 +490,6 @@ DISPATCHER(FontsWinDispatcher)
 
     return (DoSuperMethodA(cl, obj, msg));
 }
-DISPATCHER_END
 
 void PrintFonts( STRPTR filename )
 {
@@ -515,6 +510,6 @@ void SendFontList( STRPTR UNUSED dummy )
 
 APTR MakeFontsWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct FontsWinData), DISPATCHER_REF(FontsWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct FontsWinData), ENTRY(FontsWinDispatcher));
 }
 

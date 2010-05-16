@@ -40,21 +40,19 @@ struct ResetCallbackUserData {
     ULONG ud_Count;
 };
 
-STATIC SAVEDS LONG resetlist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(resetlist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct ResetHandlerEntry));
 }
 MakeStaticHook(resetlist_con2hook, resetlist_con2func);
 
-STATIC SAVEDS LONG resetlist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(resetlist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(resetlist_des2hook, resetlist_des2func);
 
-STATIC SAVEDS LONG resetlist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(resetlist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct ResetHandlerEntry *rhe = (struct ResetHandlerEntry *)msg->entry;
 
@@ -72,15 +70,13 @@ STATIC SAVEDS LONG resetlist_dsp2func( struct Hook *hook, Object *obj, struct NL
         msg->strings[3] = txtNodePri;
         msg->strings[4] = txtInterruptData;
         msg->strings[5] = txtInterruptCode;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
-        msg->preparses[3] = MUIX_B;
-        msg->preparses[4] = MUIX_B;
-        msg->preparses[5] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
+        msg->preparses[3] = (STRPTR)MUIX_B;
+        msg->preparses[4] = (STRPTR)MUIX_B;
+        msg->preparses[5] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(resetlist_dsp2hook, resetlist_dsp2func);
 
@@ -99,7 +95,7 @@ STATIC LONG resetlist_cmp2colfunc( struct ResetHandlerEntry *rhe1,
     }
 }
 
-STATIC SAVEDS LONG resetlist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(resetlist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct ResetHandlerEntry *rhe1, *rhe2;
@@ -110,7 +106,7 @@ STATIC SAVEDS LONG resetlist_cmp2func( struct Hook *hook, Object *obj, struct NL
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = resetlist_cmp2colfunc(rhe2, rhe1, col1);
@@ -130,15 +126,15 @@ STATIC SAVEDS LONG resetlist_cmp2func( struct Hook *hook, Object *obj, struct NL
 }
 MakeStaticHook(resetlist_cmp2hook, resetlist_cmp2func);
 
-STATIC void ASM SAVEDS dummyResetHandler( REG(a1, APTR handlerData) )
+STATIC void ASM SAVEDS dummyResetHandler( REG(a1, UNUSED APTR handlerData) )
 {
     return;
 }
 
 #if defined(__amigaos4__)
-STATIC uint32 dummyResetCallback( struct ExceptionContext *ctx,
-                                  struct Library *ExecBase,
-                                  APTR is_Data )
+STATIC uint32 dummyResetCallback( UNUSED struct ExceptionContext *ctx,
+                                  UNUSED struct Library *ExecBase,
+                                  UNUSED APTR is_Data )
 {
     return 0;
 }
@@ -181,7 +177,7 @@ STATIC void IterateList( void (* callback)( struct ResetHandlerEntry *rhe, void 
 
                     myirq->is_Node.ln_Type = NT_INTERRUPT;
                     myirq->is_Node.ln_Pri = 32;
-                    myirq->is_Node.ln_Name = "Scout";
+                    myirq->is_Node.ln_Name = (STRPTR)"Scout";
                     myirq->is_Code = (void (*)())dummyResetHandler;
                     myirq->is_Data = NULL;
 
@@ -237,7 +233,7 @@ STATIC void IterateList( void (* callback)( struct ResetHandlerEntry *rhe, void 
     if ((myirq = tbAllocVecPooled(globalPool, sizeof(struct Interrupt))) != NULL) {
         myirq->is_Node.ln_Type = NT_EXTINTERRUPT;
         myirq->is_Node.ln_Pri = 127;
-        myirq->is_Node.ln_Name = "Scout";
+        myirq->is_Node.ln_Name = (STRPTR)"Scout";
         myirq->is_Code = (void (*)())dummyResetCallback;
         myirq->is_Data = NULL;
 
@@ -301,7 +297,7 @@ STATIC void PrintCallback( struct ResetHandlerEntry *rhe,
 }
 
 STATIC void SendCallback( struct ResetHandlerEntry *rhe,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(rhe, sizeof(struct ResetHandlerEntry));
 }
@@ -380,7 +376,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct ResetHandlersWinData *rhwd = INST_DATA(cl, obj);
     struct ResetCallbackUserData ud;
@@ -411,9 +407,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintResetHandlers(NULL);
 
@@ -422,7 +418,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mRemove( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct ResetHandlersWinData *rhwd = INST_DATA(cl, obj);
     struct ResetHandlerEntry *rhe;
@@ -440,7 +436,7 @@ STATIC ULONG mRemove( struct IClass *cl,
 
 STATIC ULONG mPriority( struct IClass *cl,
                         Object *obj,
-                        Msg msg )
+                        UNUSED Msg msg )
 {
     struct ResetHandlersWinData *rhwd = INST_DATA(cl, obj);
     struct ResetHandlerEntry *rhe;
@@ -461,7 +457,7 @@ STATIC ULONG mPriority( struct IClass *cl,
 
 STATIC ULONG mMore( struct IClass *cl,
                     Object *obj,
-                    Msg msg )
+                    UNUSED Msg msg )
 {
     if (!clientstate) {
         struct ResetHandlersWinData *rhwd = INST_DATA(cl, obj);
@@ -488,7 +484,7 @@ STATIC ULONG mMore( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct ResetHandlersWinData *rhwd = INST_DATA(cl, obj);
     struct ResetHandlerEntry *rhe;
@@ -519,7 +515,6 @@ DISPATCHER(ResetHandlersWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 void PrintResetHandlers( STRPTR filename )
 {
@@ -540,6 +535,6 @@ void SendResetHandlersList( STRPTR UNUSED dummy )
 
 APTR MakeResetHandlersWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct ResetHandlersWinData), DISPATCHER_REF(ResetHandlersWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct ResetHandlersWinData), ENTRY(ResetHandlersWinDispatcher));
 }
 

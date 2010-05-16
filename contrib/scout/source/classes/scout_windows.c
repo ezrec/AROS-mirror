@@ -40,23 +40,21 @@ struct WindowsCallbackUserData {
     ULONG ud_Count;
 };
 
-STATIC SAVEDS LONG wintree_confunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_ConstructMessage *msg )
+HOOKPROTONHNO(wintree_confunc, LONG, struct MUIP_NListtree_ConstructMessage *msg)
 {
     return AllocListEntry(msg->MemPool, msg->UserData, sizeof(struct WindowEntry));
 }
 MakeStaticHook(wintree_conhook, wintree_confunc);
 
-STATIC SAVEDS LONG wintree_desfunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_DestructMessage *msg )
+HOOKPROTONHNO(wintree_desfunc, void, struct MUIP_NListtree_DestructMessage *msg)
 {
     FreeListEntry(msg->MemPool, &msg->UserData);
-
-    return 0;
 }
 MakeStaticHook(wintree_deshook, wintree_desfunc);
 
-STATIC SAVEDS LONG wintree_dspfunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_DisplayMessage *msg )
+HOOKPROTONHNO(wintree_dspfunc, void, struct MUIP_NListtree_DisplayMessage *msg)
 {
-    STATIC STRPTR empty = "\0";
+    STATIC CONST_STRPTR empty = "\0";
 
     if (msg->TreeNode != NULL) {
         struct WindowEntry *we = msg->TreeNode->tn_User;
@@ -66,14 +64,14 @@ STATIC SAVEDS LONG wintree_dspfunc( struct Hook *hook, Object *obj, struct MUIP_
             msg->Array[1] = we->we_Position;
             msg->Array[2] = we->we_Size;
             msg->Array[3] = we->we_Flags;
-            msg->Array[4] = empty;
+            msg->Array[4] = (STRPTR)empty;
             msg->Array[5] = we->we_Title;
-            msg->Preparse[0] = MUIX_PH;
-            msg->Preparse[1] = MUIX_PH;
-            msg->Preparse[2] = MUIX_PH;
-            msg->Preparse[3] = MUIX_PH;
-            msg->Preparse[4] = MUIX_PH;
-            msg->Preparse[5] = MUIX_PH;
+            msg->Preparse[0] = (STRPTR)MUIX_PH;
+            msg->Preparse[1] = (STRPTR)MUIX_PH;
+            msg->Preparse[2] = (STRPTR)MUIX_PH;
+            msg->Preparse[3] = (STRPTR)MUIX_PH;
+            msg->Preparse[4] = (STRPTR)MUIX_PH;
+            msg->Preparse[5] = (STRPTR)MUIX_PH;
         } else if (stricmp(we->we_Type, "WINDOW") == 0) {
             msg->Array[0] = we->we_Address;
             msg->Array[1] = we->we_Position;
@@ -89,19 +87,17 @@ STATIC SAVEDS LONG wintree_dspfunc( struct Hook *hook, Object *obj, struct MUIP_
         msg->Array[3] = txtWindowFlags;
         msg->Array[4] = txtWindowIDCMP;
         msg->Array[5] = txtWindowTitle;
-        msg->Preparse[0] = MUIX_B;
-        msg->Preparse[1] = MUIX_B;
-        msg->Preparse[2] = MUIX_B;
-        msg->Preparse[3] = MUIX_B;
-        msg->Preparse[4] = MUIX_B;
-        msg->Preparse[5] = MUIX_B;
+        msg->Preparse[0] = (STRPTR)MUIX_B;
+        msg->Preparse[1] = (STRPTR)MUIX_B;
+        msg->Preparse[2] = (STRPTR)MUIX_B;
+        msg->Preparse[3] = (STRPTR)MUIX_B;
+        msg->Preparse[4] = (STRPTR)MUIX_B;
+        msg->Preparse[5] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(wintree_dsphook, wintree_dspfunc);
 
-STATIC SAVEDS LONG wintree_cmpfunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_CompareMessage *msg )
+HOOKPROTONHNO(wintree_cmpfunc, LONG, struct MUIP_NListtree_CompareMessage *msg)
 {
     struct WindowEntry *we1, *we2;
 
@@ -116,7 +112,7 @@ STATIC SAVEDS LONG wintree_cmpfunc( struct Hook *hook, Object *obj, struct MUIP_
 }
 MakeStaticHook(wintree_cmphook, wintree_cmpfunc);
 
-STATIC SAVEDS LONG wintree_findfunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_FindUserDataMessage *msg )
+HOOKPROTONHNO(wintree_findfunc, LONG, struct MUIP_NListtree_FindUserDataMessage *msg)
 {
     struct WindowEntry *we;
 
@@ -288,7 +284,7 @@ STATIC void PrintCallback( struct WindowEntry *we,
 }
 
 STATIC void SendCallback( struct WindowEntry *we,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(we, sizeof(struct WindowEntry));
 }
@@ -371,7 +367,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct WindowsWinData *wwd = INST_DATA(cl, obj);
     struct WindowsCallbackUserData ud;
@@ -403,9 +399,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintWindows(NULL);
 
@@ -414,7 +410,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mClose( struct IClass *cl,
                      Object *obj,
-                     Msg msg )
+                     UNUSED Msg msg )
 {
     struct WindowsWinData *wwd = INST_DATA(cl, obj);
     struct MUI_NListtree_TreeNode *tn;
@@ -442,7 +438,7 @@ STATIC ULONG mClose( struct IClass *cl,
 
 STATIC ULONG mToFront( struct IClass *cl,
                        Object *obj,
-                       Msg msg )
+                       UNUSED Msg msg )
 {
     struct WindowsWinData *wwd = INST_DATA(cl, obj);
     struct MUI_NListtree_TreeNode *tn;
@@ -458,7 +454,7 @@ STATIC ULONG mToFront( struct IClass *cl,
 
 STATIC ULONG mMakeVisible( struct IClass *cl,
                            Object *obj,
-                           Msg msg )
+                           UNUSED Msg msg )
 {
     struct WindowsWinData *wwd = INST_DATA(cl, obj);
     struct MUI_NListtree_TreeNode *tn;
@@ -474,7 +470,7 @@ STATIC ULONG mMakeVisible( struct IClass *cl,
 
 STATIC ULONG mMore( struct IClass *cl,
                     Object *obj,
-                    Msg msg )
+                    UNUSED Msg msg )
 {
     if (!clientstate) {
         struct WindowsWinData *wwd = INST_DATA(cl, obj);
@@ -511,7 +507,7 @@ STATIC ULONG mMore( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct WindowsWinData *wwd = INST_DATA(cl, obj);
     struct MUI_NListtree_TreeNode *tn;
@@ -546,7 +542,6 @@ DISPATCHER(WindowsWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 void PrintWindows( STRPTR filename )
 {
@@ -567,6 +562,6 @@ void SendWinList( STRPTR UNUSED dummy )
 
 APTR MakeWindowsWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct WindowsWinData), DISPATCHER_REF(WindowsWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct WindowsWinData), ENTRY(WindowsWinDispatcher));
 }
 

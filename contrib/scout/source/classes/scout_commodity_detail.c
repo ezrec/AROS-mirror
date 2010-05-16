@@ -61,21 +61,19 @@ struct myCxFilter {
     struct InputXpression *cf_Hotkey;
 };
 
-STATIC SAVEDS LONG cxsublist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(cxsublist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct CxSubEntry));
 }
 MakeStaticHook(cxsublist_con2hook, cxsublist_con2func);
 
-STATIC SAVEDS LONG cxsublist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(cxsublist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(cxsublist_des2hook, cxsublist_des2func);
 
-STATIC SAVEDS LONG cxsublist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(cxsublist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct CxSubEntry *cxse = (struct CxSubEntry *)msg->entry;
 
@@ -89,13 +87,11 @@ STATIC SAVEDS LONG cxsublist_dsp2func( struct Hook *hook, Object *obj, struct NL
         msg->strings[1] = txtNodeType;
         msg->strings[2] = txtNodePri;
         msg->strings[3] = txtCommodityHotkey;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
-        msg->preparses[3] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
+        msg->preparses[3] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(cxsublist_dsp2hook, cxsublist_dsp2func);
 
@@ -183,7 +179,7 @@ STATIC void ExtractHotkey( struct Node *node,
 
         if (ix->ix_Class == IECLASS_RAWKEY /* && ix->ix_Version == IX_VERSION */) {
             UWORD c = ix->ix_Code;
-            STRPTR key;
+            CONST_STRPTR key;
 
             CLEAR_FLAG(c, IECODE_UP_PREFIX);
             switch (c) {
@@ -280,7 +276,7 @@ STATIC void ExtractHotkey( struct Node *node,
                 }
             }
         } else if (ix->ix_Class == IECLASS_RAWMOUSE) {
-            STRPTR key;
+            CONST_STRPTR key;
 
             switch (ix->ix_Code) {
                 case 0x00: key = ""; break;
@@ -302,7 +298,7 @@ STATIC void ExtractHotkey( struct Node *node,
                 _snprintf(&buffer[strlen(buffer)], maxlen - strlen(buffer), "?? (code=$%04lx)", ix->ix_Code);
             }
         } else if (ix->ix_Class == IECLASS_NEWMOUSE) {
-            STRPTR key;
+            CONST_STRPTR key;
 
             switch (ix->ix_Code) {
                 case 0x00: key = ""; break;
@@ -520,11 +516,10 @@ DISPATCHER(CommoditiesDetailWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeCommoditiesDetailWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct CommoditiesDetailWinData), DISPATCHER_REF(CommoditiesDetailWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct CommoditiesDetailWinData), ENTRY(CommoditiesDetailWinDispatcher));
 }
 
 

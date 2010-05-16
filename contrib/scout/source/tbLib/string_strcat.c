@@ -6,7 +6,7 @@
 
 /* /// "_strcat()" */
 void _strcat( STRPTR *str,
-              STRPTR cat )
+              CONST_STRPTR cat )
 {
     STRPTR tmp;
 

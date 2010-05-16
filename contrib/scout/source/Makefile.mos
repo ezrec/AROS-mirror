@@ -1,30 +1,72 @@
+# find out the HOST operating system
+# on which this makefile is run
+HOST ?= $(shell uname)
+ifeq ($(HOST), MorphOS)
+  ifeq ($(shell uname -m), powerpc)
+    HOST = MorphOS
+  endif
+  ifeq ($(shell uname -m), ppc)
+    HOST = MorphOS
+  endif
+endif
+
+# if no host is identifed (no uname tool)
+# we assume a MorphOS build
+ifeq ($(HOST),)
+  HOST = MorphOS
+endif
+
 PROJECT=            Scout
 TARGET=             $(PROJECT).mos
 
 VERSION=            37
 
-OUT=                Scout
-
-CC=                 ppc-morphos-gcc
-LD=                 ppc-morphos-gcc
-STRIP=              ppc-morphos-strip
-RM=                 rm
+ifeq ($(HOST), MorphOS)
+  CC     = gcc
+  LD     = gcc
+  STRIP  = strip
+  OBJDUMP= objdump
+  MKDIR  = makedir
+  RM     = delete quiet
+  RMDIR  = delete quiet
+  CHMOD  = protect flags=rwed
+  MUISDK = .
+else
+  CC     = ppc-morphos-gcc
+  LD     = ppc-morphos-gcc
+  STRIP  = ppc-morphos-strip
+  OBJDUMP= ppc-morphos-objdump
+  MKDIR  = mkdir -p
+  RM     = rm
+  RMDIR  = rm -rf
+  CHMOD  = chmod 755
+  MUISDK = .
+endif
 
 OBJDIR=             .obj_mos
 CLASSESDIR=         classes
 EXTRASRC=           extrasrc
 
-OPTIMIZE=           -O3
-DEFINE=
-CFLAGS=             -Wall -noixemul -mcpu=750 -I. -idirafter ./include -I./classes -I./tbLib -c
-LFLAGS=             -noixemul -nostartfiles
+PROJECT=            Scout
+TARGET=             $(PROJECT).mos
+
+VERSION=            37
+
+CPU=                -mcpu=750
+WARN=               -W -Wall -Wwrite-strings -Wpointer-arith -Wsign-compare
+REDEFINE=
+OPTFLAGS=           -O3 -fomit-frame-pointer -funroll-loops
+DEBUG=              -g -gstabs
+CFLAGS=             -noixemul -I. -idirafter ./include -I./netinclude -I./classes -I./tbLib -I$(MUISDK) -DNO_INLINE_STDARG $(CPU) $(WARN) $(OPTFLAGS) $(REDEFINE) $(DEBUG)
+LFLAGS=             -noixemul -nostartfiles -Wl,--cref,-M,-Map=$@.map
 
 LOCALE=             locale
 
 # $(PROJECT).o _has_ to be the first module !!! (Because we use no
 # startup-code)
 
-OBJECTS=$(OBJDIR)/startup.o \
+OBJECTS=$(OBJDIR)/prestartup.o \
+   $(OBJDIR)/startup.o \
    $(OBJDIR)/Scout.o \
    $(OBJDIR)/scout_logo.o \
    $(OBJDIR)/scout_net.o \
@@ -103,7 +145,7 @@ OBJECTS=$(OBJDIR)/startup.o \
    $(OBJDIR)/SmartReadArgs.o \
    $(OBJDIR)/all_gcc.o
 
-HEADERS=system_headers.h startup.h Scout.h \
+HEADERS=system_headers.h startup.h scout.h \
    scout_logo.h scout_net.h \
    scout_defs.h scout_tags.h startup_defs.h \
    $(CLASSESDIR)/fontdisplay_class.h \
@@ -176,24 +218,30 @@ HEADERS=system_headers.h startup.h Scout.h \
    SmartReadArgs.h \
    include/extra.h
 
-LIBS = -L./netlib -L./tbLib -L./lib -lc -labox -laboxstubs -ldebug -ltblib -lidentify -lmath
+LIBS = -L./netlib -L./tbLib/bin_mos -L./lib/mos -lc -labox -laboxstubs -ldebug -ltblib -lidentify -lmath
 
 all: $(OBJDIR) $(HEADERS) $(TARGET)
 
+# make the object directories
 $(OBJDIR):
-	@makedir $(OBJDIR)
-	@makedir $(OBJDIR)/$(CLASSESDIR)
+	@echo "  MK $@"
+	@$(MKDIR) $(OBJDIR)
+	@$(MKDIR) $(OBJDIR)/$(CLASSESDIR)
 
+# for compiling single .c files
 $(OBJDIR)/%.o: %.c
-	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINE) $< -o $@
+	@echo "  CC $<"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(LOCALE)/%.catalog: $(LOCALE)/%.ct
 	flexcat $(LOCALE)/scout.cd $< catalog $@ flush
 
-$(TARGET): $(OBJECTS) tbLib/libtblib.a lib/libidentify.a
-	$(LD) $(OBJECTS) -o $@.debug $(LIBS) $(LFLAGS)
-	$(STRIP) --remove-section=.comment $@.debug -o $@
-	protect $@ rwed
+$(TARGET): $(OBJDIR) $(HEADERS) $(OBJECTS) tbLib/bin_mos/libtblib.a
+	@echo "  LD $@.debug"
+	@$(LD) $(LFLAGS) $(OBJECTS) -o $@.debug $(LIBS)
+	@echo "  LD $@"
+	@$(STRIP) -R ".comment" -o $@ $@.debug
+	@$(CHMOD) $@
 
 scout_cat.h: $(LOCALE)/scout.cd
 	flexcat locale/scout.cd scout_cat.h=C_h.sd scout_cat.c=C_c.sd
@@ -201,29 +249,28 @@ scout_cat.h: $(LOCALE)/scout.cd
 $(OBJDIR)/scout_cat.o: scout_cat.h
 
 $(OBJDIR)/$(CLASSESDIR)/scout_customclasses.o: $(CLASSESDIR)/scout_customclasses.c
-	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINE) $< -o $@
+	@echo "  CC $<"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR)/$(CLASSESDIR)/scout_about.o: $(CLASSESDIR)/scout_about.c $(CLASSESDIR)/scout_version.h Scout_rev.h
-	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINE) $< -o $@
+	@echo "  CC $<"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR)/$(CLASSESDIR)/scout_version.o: $(CLASSESDIR)/scout_version.c $(CLASSESDIR)/scout_version.h Scout_rev.h
-	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINE) $< -o $@
+	@echo "  CC $<"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR)/all_gcc.o: all_gcc.c $(EXTRASRC)/init_inet_daemon.c $(EXTRASRC)/vasprintf.c
 
-tbLib/libtblib.a:
-	@cd tbLib; make -f Makefile.mos
-
-lib/libidentify.a:
-	@mkdir -p lib
-	@echo Generating lib/libidentify.a
-	@cvinclude.pl --fd=include/fd/identify_lib.fd --clib=include/clib/identify_protos.h --gluelib=lib/libidentify.a
+tbLib/bin_mos/libtblib.a:
+	@$(MAKE) -C tbLib -f Makefile.mos all
 
 clean:
 	-$(RM) $(OBJDIR)/*.o $(OBJDIR)/$(CLASSESDIR)/*.o $(TARGET) $(TARGET).debug $(TARGET).dump
-	@cd tbLib; make -f Makefile.mos $@
+	-make -C tbLib $@
 
 realclean: clean
+	-$(RMDIR) $(OBJDIR)
 
 version:
 	bumprev2 $(VERSION) $(PROJECT)
@@ -235,7 +282,7 @@ date:
 	@smake version
 
 dump:
-	ppc-morphos-objdump --section-headers --all-headers --reloc --syms --disassemble-all $(TARGET).debug >$(TARGET).dump
+	$(OBJDUMP) --section-headers --all-headers --reloc --syms --disassemble-all $(TARGET).debug >$(TARGET).dump
 
 install: $(PROJECT)
 	copy $(PROJECT) Work:Debug/Scout

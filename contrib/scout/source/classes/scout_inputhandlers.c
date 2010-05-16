@@ -40,21 +40,19 @@ struct InputCallbackUserData {
     ULONG ud_Count;
 };
 
-STATIC SAVEDS LONG inputlist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(inputlist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct InputHandlerEntry));
 }
 MakeStaticHook(inputlist_con2hook, inputlist_con2func);
 
-STATIC SAVEDS LONG inputlist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(inputlist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(inputlist_des2hook, inputlist_des2func);
 
-STATIC SAVEDS LONG inputlist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(inputlist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct InputHandlerEntry *ihe = (struct InputHandlerEntry *)msg->entry;
 
@@ -72,15 +70,13 @@ STATIC SAVEDS LONG inputlist_dsp2func( struct Hook *hook, Object *obj, struct NL
         msg->strings[3] = txtNodePri;
         msg->strings[4] = txtInterruptData;
         msg->strings[5] = txtInterruptCode;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
-        msg->preparses[3] = MUIX_B;
-        msg->preparses[4] = MUIX_B;
-        msg->preparses[5] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
+        msg->preparses[3] = (STRPTR)MUIX_B;
+        msg->preparses[4] = (STRPTR)MUIX_B;
+        msg->preparses[5] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(inputlist_dsp2hook, inputlist_dsp2func);
 
@@ -99,7 +95,7 @@ STATIC LONG inputlist_cmp2colfunc( struct InputHandlerEntry *ihe1,
     }
 }
 
-STATIC SAVEDS LONG inputlist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(inputlist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct InputHandlerEntry *ihe1, *ihe2;
@@ -110,7 +106,7 @@ STATIC SAVEDS LONG inputlist_cmp2func( struct Hook *hook, Object *obj, struct NL
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = inputlist_cmp2colfunc(ihe2, ihe1, col1);
@@ -131,7 +127,7 @@ STATIC SAVEDS LONG inputlist_cmp2func( struct Hook *hook, Object *obj, struct NL
 MakeStaticHook(inputlist_cmp2hook, inputlist_cmp2func);
 
 STATIC struct InputEvent * ASM SAVEDS dummyIRQFunc( REG(a0, struct InputEvent *ie),
-                                                    REG(a1, APTR handlerData) )
+                                                    REG(a1, UNUSED APTR handlerData) )
 {
     return ie;
 }
@@ -174,7 +170,7 @@ STATIC void IterateList( void (* callback)( struct InputHandlerEntry *ihe, void 
 
                     myirq->is_Node.ln_Type = NT_INTERRUPT;
                     myirq->is_Node.ln_Pri = 32;
-                    myirq->is_Node.ln_Name = "Scout";
+                    myirq->is_Node.ln_Name = (STRPTR)"Scout";
                     myirq->is_Code = (void (*)())dummyIRQFunc;
                     myirq->is_Data = NULL;
 
@@ -247,7 +243,7 @@ STATIC void PrintCallback( struct InputHandlerEntry *ihe,
 }
 
 STATIC void SendCallback( struct InputHandlerEntry *ihe,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(ihe, sizeof(struct InputHandlerEntry));
 }
@@ -326,7 +322,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct InputHandlersWinData *ihwd = INST_DATA(cl, obj);
     struct InputCallbackUserData ud;
@@ -357,9 +353,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintInputHandlers(NULL);
 
@@ -368,7 +364,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mRemove( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct InputHandlersWinData *ihwd = INST_DATA(cl, obj);
     struct InputHandlerEntry *ihe;
@@ -386,7 +382,7 @@ STATIC ULONG mRemove( struct IClass *cl,
 
 STATIC ULONG mPriority( struct IClass *cl,
                         Object *obj,
-                        Msg msg )
+                        UNUSED Msg msg )
 {
     struct InputHandlersWinData *ihwd = INST_DATA(cl, obj);
     struct InputHandlerEntry *ihe;
@@ -407,7 +403,7 @@ STATIC ULONG mPriority( struct IClass *cl,
 
 STATIC ULONG mMore( struct IClass *cl,
                     Object *obj,
-                    Msg msg )
+                    UNUSED Msg msg )
 {
     if (!clientstate) {
         struct InputHandlersWinData *ihwd = INST_DATA(cl, obj);
@@ -434,7 +430,7 @@ STATIC ULONG mMore( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct InputHandlersWinData *ihwd = INST_DATA(cl, obj);
     struct InputHandlerEntry *ihe;
@@ -465,7 +461,6 @@ DISPATCHER(InputHandlersWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 void PrintInputHandlers( STRPTR filename )
 {
@@ -486,5 +481,5 @@ void SendInputList( STRPTR UNUSED dummy )
 
 APTR MakeInputHandlersWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct InputHandlersWinData), DISPATCHER_REF(InputHandlersWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct InputHandlersWinData), ENTRY(InputHandlersWinDispatcher));
 }

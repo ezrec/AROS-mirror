@@ -1,9 +1,9 @@
 ##
 ##
 
-TARGET=             tblib.lib
-
-OBJDIR=             .obj_os3
+OBJDIR=             .obj_sas
+BINDIR=             bin_sas
+TARGET=             $(BINDIR)/tblib.lib
 
 OPTIMIZE=           opt opttime optsched
 DEBUG=              debug=line #define=DEBUG
@@ -54,16 +54,21 @@ OBJS=               $(OBJDIR)/ports_AllocPort.o \
 INCLUDES=           tblib.h \
                     SDI_compiler.h
 
-all:                $(TARGET)
+all:                $(OBJDIR) $(BINDIR) $(TARGET)
 
 .c.o:
                     sc $(CFLAGS) $(OPTIMIZE) $(DEBUG) $< objname=$@
 .asm.o:
-                    prog:phxass/phxass $(AFLAGS) $< to $@
+                    phxass $(AFLAGS) $< to $@
 
+$(OBJDIR):
+                    makedir $(OBJDIR)
 
-$(TARGET):          $(OBJS)
-                    oml tblib.lib r $(OBJS)
+$(BINDIR):
+                    makedir $(BINDIR)
+
+$(TARGET):          $(OBJDIR) $(BINDIR) $(OBJS)
+                    oml $(BINDIR)/tblib.lib r $(OBJS)
                     #-copy tblib.lib sc:lib
                     #-copy tblib.h sc:include
 

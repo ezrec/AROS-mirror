@@ -19,7 +19,11 @@ STRPTR VASPrintf( CONST_STRPTR fmt,
 
 	if (len > 0) {
         if ((buf = AllocVec(len, MEMF_ANY)) != NULL) {
+#ifdef NO_LINEAR_VARARGS
+		VNewRawDoFmt(fmt, (APTR)RAWFMTFUNC_STRING, (APTR)buf, args);
+#else
 	    	RawDoFmt(fmt, (APTR)args, (APTR)RAWFMTFUNC_STRING, (APTR)buf);
+#endif
         }
 	}
 
@@ -33,7 +37,7 @@ struct FormatContext {
     STRPTR fc_Buffer;
 };
 
-STATIC VOID ASM CountChar( REG(d0, UBYTE c),
+STATIC VOID ASM CountChar( REG(d0, UNUSED UBYTE c),
                            REG(a3, struct FormatContext *fc) )
 {
     fc->fc_Length++;
@@ -66,7 +70,7 @@ STRPTR VASPrintf( CONST_STRPTR fmt,
 }
 #endif
 
-STRPTR ASPrintf( CONST_STRPTR fmt, ... )
+STRPTR VARARGS68K STDARGS ASPrintf( CONST_STRPTR fmt, ... )
 {
     VA_LIST args;
     STRPTR result;

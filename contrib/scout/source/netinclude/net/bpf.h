@@ -50,7 +50,7 @@
  *
  *      @(#)bpf.h	8.2 (Berkeley) 1/9/95
  *
- * @(#) $Header: /cvsroot/scoutos/scoutos/source/netinclude/net/bpf.h,v 1.1 2006/03/06 06:56:53 thboeckel Exp $ (LBL)
+ * @(#) $Header: /cvsroot/scoutos/scoutos/source/netinclude/net/bpf.h,v 1.3 2010/04/15 21:23:50 sonic_amiga Exp $ (LBL)
  */
 
 #ifndef _NET_BPF_H

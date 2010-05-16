@@ -60,21 +60,19 @@ struct NSDCommandEntry {
     TEXT nce_CmdName[64];
 };
 
-STATIC SAVEDS LONG nsdlist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(nsdlist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct NSDCommandEntry));
 }
 MakeStaticHook(nsdlist_con2hook, nsdlist_con2func);
 
-STATIC SAVEDS LONG nsdlist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(nsdlist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(nsdlist_des2hook, nsdlist_des2func);
 
-STATIC SAVEDS LONG nsdlist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(nsdlist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct NSDCommandEntry *nce = (struct NSDCommandEntry *)msg->entry;
 
@@ -86,12 +84,10 @@ STATIC SAVEDS LONG nsdlist_dsp2func( struct Hook *hook, Object *obj, struct NLis
         msg->strings[0] = txtDeviceNSDCmdNumberDec;
         msg->strings[1] = txtDeviceNSDCmdNumberHex;
         msg->strings[2] = txtDeviceNSDCmdName;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 
 MakeStaticHook(nsdlist_dsp2hook, nsdlist_dsp2func);
@@ -108,7 +104,7 @@ STATIC LONG nsdlist_cmp2colfunc( struct NSDCommandEntry *nce1,
     }
 }
 
-STATIC SAVEDS LONG nsdlist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(nsdlist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct NSDCommandEntry *nce1, *nce2;
@@ -119,7 +115,7 @@ STATIC SAVEDS LONG nsdlist_cmp2func( struct Hook *hook, Object *obj, struct NLis
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = nsdlist_cmp2colfunc(nce2, nce1, col1);
@@ -216,10 +212,10 @@ STATIC LONG NSDQuery( STRPTR dev,
     return result;
 }
 
-STATIC STRPTR NSDTypeToCmdName( ULONG nsdType,
-                                UWORD cmd )
+STATIC CONST_STRPTR NSDTypeToCmdName( ULONG nsdType,
+                                      UWORD cmd )
 {
-    STRPTR result;
+    CONST_STRPTR result;
 
     switch (cmd) {
         case CMD_INVALID      : result = "CMD_INVALID";       break;
@@ -700,10 +696,9 @@ DISPATCHER(DevicesDetailWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeDevicesDetailWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct DevicesDetailWinData), DISPATCHER_REF(DevicesDetailWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct DevicesDetailWinData), ENTRY(DevicesDetailWinDispatcher));
 }
 

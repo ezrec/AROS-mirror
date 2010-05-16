@@ -21,6 +21,7 @@
  *
  * @author Andreas Gelhausen
  * @author Richard Körber <rkoerber@gmx.de>
+ * @author Pavel Fedin <pavel_fedin@mail.ru>
  */
 
 #include "system_headers.h"
@@ -41,7 +42,7 @@ struct ResourcesCallbackUserData {
     ULONG ud_Count;
 };
 
-STRPTR forbiddenResources[] = {
+CONST_STRPTR forbiddenResources[] = {
     FSRNAME,
     KEYMAPRESNAME,
 #if defined(__amigaos4__)
@@ -61,21 +62,19 @@ STRPTR forbiddenResources[] = {
     NULL,
 };
 
-STATIC SAVEDS LONG reslist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(reslist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct ResourceEntry));
 }
 MakeStaticHook(reslist_con2hook, reslist_con2func);
 
-STATIC SAVEDS LONG reslist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(reslist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(reslist_des2hook, reslist_des2func);
 
-STATIC SAVEDS LONG reslist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(reslist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct ResourceEntry *re = (struct ResourceEntry *)msg->entry;
 
@@ -95,16 +94,14 @@ STATIC SAVEDS LONG reslist_dsp2func( struct Hook *hook, Object *obj, struct NLis
         msg->strings[4] = txtResourceVersion;
         msg->strings[5] = txtResourceOpenCount;
         msg->strings[6] = txtResourceRPC;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
-        msg->preparses[3] = MUIX_B;
-        msg->preparses[4] = MUIX_B;
-        msg->preparses[5] = MUIX_B;
-        msg->preparses[6] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
+        msg->preparses[3] = (STRPTR)MUIX_B;
+        msg->preparses[4] = (STRPTR)MUIX_B;
+        msg->preparses[5] = (STRPTR)MUIX_B;
+        msg->preparses[6] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(reslist_dsp2hook, reslist_dsp2func);
 
@@ -130,7 +127,7 @@ STATIC LONG reslist_cmpfunc( const struct Node *n1,
     return stricmp(((struct ResourceEntry *)n1)->re_Name, ((struct ResourceEntry *)n2)->re_Name);
 }
 
-STATIC SAVEDS LONG reslist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(reslist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct ResourceEntry *re1, *re2;
@@ -141,7 +138,7 @@ STATIC SAVEDS LONG reslist_cmp2func( struct Hook *hook, Object *obj, struct NLis
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = reslist_cmp2colfunc(re2, re1, col1);
@@ -264,7 +261,7 @@ STATIC void PrintCallback( struct ResourceEntry *re,
 }
 
 STATIC void SendCallback( struct ResourceEntry *re,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(re, sizeof(struct ResourceEntry));
 }
@@ -352,7 +349,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct ResourcesWinData *rwd = INST_DATA(cl, obj);
     struct ResourcesCallbackUserData ud;
@@ -384,9 +381,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintResources(NULL);
 
@@ -395,7 +392,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mRemove( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct ResourcesWinData *rwd = INST_DATA(cl, obj);
     struct ResourceEntry *re;
@@ -413,7 +410,7 @@ STATIC ULONG mRemove( struct IClass *cl,
 
 STATIC ULONG mPriority( struct IClass *cl,
                         Object *obj,
-                        Msg msg )
+                        UNUSED Msg msg )
 {
     struct ResourcesWinData *rwd = INST_DATA(cl, obj);
     struct ResourceEntry *re;
@@ -435,7 +432,7 @@ STATIC ULONG mPriority( struct IClass *cl,
 
 STATIC ULONG mMore( struct IClass *cl,
                     Object *obj,
-                    Msg msg )
+                    UNUSED Msg msg )
 {
     if (!clientstate) {
         struct ResourcesWinData *rwd = INST_DATA(cl, obj);
@@ -461,7 +458,7 @@ STATIC ULONG mMore( struct IClass *cl,
 
 STATIC ULONG mFunctions( struct IClass *cl,
                          Object *obj,
-                         Msg msg )
+                         UNUSED Msg msg )
 {
     struct ResourcesWinData *rwd = INST_DATA(cl, obj);
     struct ResourceEntry *re;
@@ -481,7 +478,7 @@ STATIC ULONG mFunctions( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct ResourcesWinData *rwd = INST_DATA(cl, obj);
     struct ResourceEntry *re;
@@ -514,7 +511,6 @@ DISPATCHER(ResourcesWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 void PrintResources( STRPTR filename )
 {
@@ -535,6 +531,6 @@ void SendResList( STRPTR UNUSED dummy )
 
 APTR MakeResourcesWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct ResourcesWinData), DISPATCHER_REF(ResourcesWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct ResourcesWinData), ENTRY(ResourcesWinDispatcher));
 }
 

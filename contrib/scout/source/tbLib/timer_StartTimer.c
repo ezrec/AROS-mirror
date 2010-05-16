@@ -1,20 +1,7 @@
 #include <devices/timer.h>
 #include <proto/exec.h>
 #include "SDI_compiler.h"
-
-#if !defined(__amigaos4__) || !defined(__NEW_TIMEVAL_DEFINITION_USED__)
-struct TimeVal
-{
-  ULONG Seconds;
-  ULONG Microseconds;
-};
-
-struct TimeRequest
-{
-  struct IORequest Request;
-  struct TimeVal   Time;
-};
-#endif
+#include "tblib.h"
 
 /* /// "StartTimer()" */
 void StartTimer( struct TimeRequest *treq,

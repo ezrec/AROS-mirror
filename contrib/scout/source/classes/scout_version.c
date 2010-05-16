@@ -26,11 +26,11 @@
 #include "system_headers.h"
 #include "Scout_rev.h"
 
-STRPTR USED_VAR vers = VERS;
-STRPTR USED_VAR vstring = VERS " " CPU " (" DATE ")";
-STRPTR USED_VAR verstag = VERSTAG;
-STRPTR USED_VAR version_date = PROGNAME " " VERS " (" DATE ")";
-STRPTR USED_VAR release = "Release " RELEASEVERSION "." RELEASEREVISION;
+CONST_STRPTR USED_VAR vers = VERS;
+CONST_STRPTR USED_VAR vstring = VERS " " CPU " (" DATE ")";
+CONST_STRPTR USED_VAR verstag = VERSTAG;
+CONST_STRPTR USED_VAR version_date = PROGNAME " " VERS " (" DATE ")";
+CONST_STRPTR USED_VAR release = "Release " RELEASEVERSION "." RELEASEREVISION " (" COMPILER ")";
 CONST ULONG version_ulong = VERSION;
 CONST ULONG revision_ulong = REVISION;
 

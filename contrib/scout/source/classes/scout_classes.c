@@ -39,21 +39,19 @@ struct ClassesCallbackUserData {
     ULONG ud_Count;
 };
 
-STATIC SAVEDS LONG classtree_confunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_ConstructMessage *msg )
+HOOKPROTONHNO(classtree_confunc, LONG, struct MUIP_NListtree_ConstructMessage *msg)
 {
     return AllocListEntry(msg->MemPool, msg->UserData, sizeof(struct ClassEntry));
 }
 MakeStaticHook(classtree_conhook, classtree_confunc);
 
-STATIC SAVEDS LONG classtree_desfunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_DestructMessage *msg )
+HOOKPROTONHNO(classtree_desfunc, void, struct MUIP_NListtree_DestructMessage *msg)
 {
     FreeListEntry(msg->MemPool, &msg->UserData);
-
-    return 0;
 }
 MakeStaticHook(classtree_deshook, classtree_desfunc);
 
-STATIC SAVEDS LONG classtree_dspfunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_DisplayMessage *msg )
+HOOKPROTONHNO(classtree_dspfunc, void, struct MUIP_NListtree_DisplayMessage *msg)
 {
     if (msg->TreeNode != NULL) {
         struct ClassEntry *ce = msg->TreeNode->tn_User;
@@ -69,18 +67,16 @@ STATIC SAVEDS LONG classtree_dspfunc( struct Hook *hook, Object *obj, struct MUI
         msg->Array[2] = txtClassObjects;
         msg->Array[3] = txtClassSubclasses;
         msg->Array[4] = txtClassDispatcher;
-        msg->Preparse[0] = MUIX_B;
-        msg->Preparse[1] = MUIX_B;
-        msg->Preparse[2] = MUIX_B;
-        msg->Preparse[3] = MUIX_B;
-        msg->Preparse[4] = MUIX_B;
+        msg->Preparse[0] = (STRPTR)MUIX_B;
+        msg->Preparse[1] = (STRPTR)MUIX_B;
+        msg->Preparse[2] = (STRPTR)MUIX_B;
+        msg->Preparse[3] = (STRPTR)MUIX_B;
+        msg->Preparse[4] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(classtree_dsphook, classtree_dspfunc);
 
-STATIC SAVEDS LONG classtree_cmpfunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_CompareMessage *msg )
+HOOKPROTONHNO(classtree_cmpfunc, LONG, struct MUIP_NListtree_CompareMessage *msg)
 {
     struct ClassEntry *ce1, *ce2;
     LONG cmp;
@@ -95,7 +91,7 @@ STATIC SAVEDS LONG classtree_cmpfunc( struct Hook *hook, Object *obj, struct MUI
 }
 MakeStaticHook(classtree_cmphook, classtree_cmpfunc);
 
-STATIC SAVEDS LONG classtree_findfunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_FindUserDataMessage *msg )
+HOOKPROTONHNO(classtree_findfunc, LONG, struct MUIP_NListtree_FindUserDataMessage *msg )
 {
     struct ClassEntry *ce;
 
@@ -192,7 +188,7 @@ STATIC void IterateList( void (* callback)( struct ClassEntry *ce, void *userDat
 }
 
 STATIC void UpdateCallback( struct ClassEntry *ce,
-                            void *userData )
+                            UNUSED void *userData )
 {
     struct ClassesCallbackUserData *ud = (struct ClassesCallbackUserData *)userData;
     struct MUI_NListtree_TreeNode *parent;
@@ -220,7 +216,7 @@ STATIC void PrintCallback( struct ClassEntry *ce,
 }
 
 STATIC void SendCallback( struct ClassEntry *ce,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(ce, sizeof(struct ClassEntry));
 }
@@ -297,7 +293,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct ClassesWinData *cwd = INST_DATA(cl, obj);
     struct ClassesCallbackUserData ud;
@@ -328,9 +324,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintClass(NULL);
 
@@ -339,7 +335,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mRemove( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct ClassesWinData *cwd = INST_DATA(cl, obj);
     struct MUI_NListtree_TreeNode *tn;
@@ -359,7 +355,7 @@ STATIC ULONG mRemove( struct IClass *cl,
 
 STATIC ULONG mMore( struct IClass *cl,
                     Object *obj,
-                    Msg msg )
+                    UNUSED Msg msg )
 {
     if (!clientstate) {
         struct ClassesWinData *cwd = INST_DATA(cl, obj);
@@ -385,7 +381,7 @@ STATIC ULONG mMore( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct ClassesWinData *cwd = INST_DATA(cl, obj);
     struct MUI_NListtree_TreeNode *tn;
@@ -416,7 +412,6 @@ DISPATCHER(ClassesWinDispatcher)
 
     return (DoSuperMethodA(cl, obj, msg));
 }
-DISPATCHER_END
 
 void PrintClass( STRPTR filename )
 {
@@ -437,6 +432,6 @@ void SendClassList( STRPTR UNUSED dummy )
 
 APTR MakeClassesWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct ClassesWinData), DISPATCHER_REF(ClassesWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct ClassesWinData), ENTRY(ClassesWinDispatcher));
 }
 

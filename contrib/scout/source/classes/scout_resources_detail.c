@@ -66,21 +66,19 @@ STATIC CONST struct LongFlag diskResFlags[] = {
     { 0,          NULL },
 };
 
-STATIC SAVEDS LONG fselist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(fselist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct FileSystemEntry));
 }
 MakeStaticHook(fselist_con2hook, fselist_con2func);
 
-STATIC SAVEDS LONG fselist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(fselist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(fselist_des2hook, fselist_des2func);
 
-STATIC SAVEDS LONG fselist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(fselist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct FileSystemEntry *fse = (struct FileSystemEntry *)msg->entry;
 
@@ -96,14 +94,12 @@ STATIC SAVEDS LONG fselist_dsp2func( struct Hook *hook, Object *obj, struct NLis
         msg->strings[2] = txtResourceFileSystemVersion;
         msg->strings[3] = txtResourceFileSystemPatchFlags;
         msg->strings[4] = txtResourceFileSystemCreator;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
-        msg->preparses[3] = MUIX_B;
-        msg->preparses[4] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
+        msg->preparses[3] = (STRPTR)MUIX_B;
+        msg->preparses[4] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(fselist_dsp2hook, fselist_dsp2func);
 
@@ -121,7 +117,7 @@ STATIC LONG fselist_cmp2colfunc( struct FileSystemEntry *fse1,
     }
 }
 
-STATIC SAVEDS LONG fselist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(fselist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct FileSystemEntry *fse1, *fse2;
@@ -132,7 +128,7 @@ STATIC SAVEDS LONG fselist_cmp2func( struct Hook *hook, Object *obj, struct NLis
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = fselist_cmp2colfunc(fse2, fse1, col1);
@@ -400,10 +396,9 @@ DISPATCHER(ResourcesDetailWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeResourcesDetailWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct ResourcesDetailWinData), DISPATCHER_REF(ResourcesDetailWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct ResourcesDetailWinData), ENTRY(ResourcesDetailWinDispatcher));
 }
 

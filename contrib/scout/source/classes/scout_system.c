@@ -78,7 +78,7 @@ STATIC void DateToInt( struct DateStamp *ds,
 STATIC void IntToDate( ULONG r,
                        struct DateStamp *ds )
 {
-#if defined(__PPC__) || defined(__AROS__)
+#if defined(__GNUC__)
     // FIXME: is this correct for AROS?
     ULONG d;
 
@@ -497,6 +497,7 @@ STATIC void IterateList( void (* callback)( struct SystemEntry *se, void *userDa
             lastalerttask = MyIdHardwareNum(IDHW_LASTALERTTASK);
         } else {
         #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
+        	#if defined(__SASC)
             struct MMUBase *MMUBase;
 
             if ((MMUBase = (struct MMUBase *)OpenLibrary(MMU_NAME, 43)) != NULL) {
@@ -522,6 +523,11 @@ STATIC void IterateList( void (* callback)( struct SystemEntry *se, void *userDa
                 lastalert = *((ULONG *)0x100);
                 lastalerttask = *((ULONG *)0x104);
             }
+            #else
+            // Sorry, but this will definitely cause an Enforcer hit!! No way 'round...
+            lastalert = *((ULONG *)0x100);
+            lastalerttask = *((ULONG *)0x104);
+            #endif
         #endif
         }
 
@@ -696,7 +702,7 @@ STATIC void PrintCallback( struct SystemEntry *se,
 }
 
 STATIC void SendCallback( struct SystemEntry *se,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(se, sizeof(struct SystemEntry));
 }
@@ -951,7 +957,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct SystemWinData *swd = INST_DATA(cl, obj);
     struct SystemCallbackUserData ud;
@@ -971,9 +977,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintSystem(NULL);
 
@@ -991,7 +997,6 @@ DISPATCHER(SystemWinDispatcher)
 
     return (DoSuperMethodA(cl, obj, msg));
 }
-DISPATCHER_END
 
 void PrintSystem( STRPTR filename )
 {
@@ -1011,6 +1016,6 @@ void SendSystemList( STRPTR UNUSED dummy )
 
 APTR MakeSystemWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct SystemWinData), DISPATCHER_REF(SystemWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct SystemWinData), ENTRY(SystemWinDispatcher));
 }
 

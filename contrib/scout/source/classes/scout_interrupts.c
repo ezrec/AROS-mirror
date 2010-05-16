@@ -41,7 +41,7 @@ struct InterruptsCallbackUserData {
     struct Interrupt *ud_FoundThis;
 };
 
-STATIC STRPTR intTypeShort[] = {
+STATIC CONST_STRPTR intTypeShort[] = {
     "1 / Serial Out",
     "1 / Disk Block",
     "1 / SoftInt",
@@ -60,23 +60,21 @@ STATIC STRPTR intTypeShort[] = {
     "7 / NMI"
 };
 
-STATIC SAVEDS LONG inttree_confunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_ConstructMessage *msg )
+HOOKPROTONHNO(inttree_confunc, LONG, struct MUIP_NListtree_ConstructMessage *msg)
 {
     return AllocListEntry(msg->MemPool, msg->UserData, sizeof(struct InterruptEntry));
 }
 MakeStaticHook(inttree_conhook, inttree_confunc);
 
-STATIC SAVEDS LONG inttree_desfunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_DestructMessage *msg )
+HOOKPROTONHNO(inttree_desfunc, void, struct MUIP_NListtree_DestructMessage *msg)
 {
     FreeListEntry(msg->MemPool, &msg->UserData);
-
-    return 0;
 }
 MakeStaticHook(inttree_deshook, inttree_desfunc);
 
-STATIC SAVEDS LONG inttree_dspfunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_DisplayMessage *msg )
+HOOKPROTONHNO(inttree_dspfunc, void, struct MUIP_NListtree_DisplayMessage *msg)
 {
-    STATIC STRPTR empty = "\0";
+    STATIC CONST_STRPTR empty = "\0";
 
     if (msg->TreeNode != NULL) {
         struct InterruptEntry *ie = msg->TreeNode->tn_User;
@@ -92,7 +90,7 @@ STATIC SAVEDS LONG inttree_dspfunc( struct Hook *hook, Object *obj, struct MUIP_
         } else if (stricmp(ie->ie_Type, "SERVER_LIST") == 0) {
             msg->Array[0] = ie->ie_Address;
             msg->Array[1] = ie->ie_Number;
-            msg->Array[2] = empty;
+            msg->Array[2] = (STRPTR)empty;
             msg->Array[3] = ie->ie_Kind;
             msg->Array[4] = ie->ie_Pri;
             msg->Array[5] = ie->ie_Data;
@@ -101,7 +99,7 @@ STATIC SAVEDS LONG inttree_dspfunc( struct Hook *hook, Object *obj, struct MUIP_
             msg->Array[0] = ie->ie_Address;
             msg->Array[1] = ie->ie_Number;
             msg->Array[2] = ie->ie_Name;
-            msg->Array[3] = empty;
+            msg->Array[3] = (STRPTR)empty;
             msg->Array[4] = ie->ie_Pri;
             msg->Array[5] = ie->ie_Data;
             msg->Array[6] = ie->ie_Code;
@@ -114,20 +112,18 @@ STATIC SAVEDS LONG inttree_dspfunc( struct Hook *hook, Object *obj, struct MUIP_
         msg->Array[4] = txtNodePri;
         msg->Array[5] = txtInterruptData;
         msg->Array[6] = txtInterruptCode;
-        msg->Preparse[0] = MUIX_B;
-        msg->Preparse[1] = MUIX_B;
-        msg->Preparse[2] = MUIX_B;
-        msg->Preparse[3] = MUIX_B;
-        msg->Preparse[4] = MUIX_B;
-        msg->Preparse[5] = MUIX_B;
-        msg->Preparse[6] = MUIX_B;
+        msg->Preparse[0] = (STRPTR)MUIX_B;
+        msg->Preparse[1] = (STRPTR)MUIX_B;
+        msg->Preparse[2] = (STRPTR)MUIX_B;
+        msg->Preparse[3] = (STRPTR)MUIX_B;
+        msg->Preparse[4] = (STRPTR)MUIX_B;
+        msg->Preparse[5] = (STRPTR)MUIX_B;
+        msg->Preparse[6] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(inttree_dsphook, inttree_dspfunc);
 
-STATIC SAVEDS LONG inttree_findfunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_FindUserDataMessage *msg )
+HOOKPROTONHNO(inttree_findfunc, LONG, struct MUIP_NListtree_FindUserDataMessage *msg)
 {
     struct InterruptEntry *ie;
 
@@ -305,7 +301,7 @@ STATIC void PrintCallback( struct InterruptEntry *ie,
 }
 
 STATIC void SendCallback( struct InterruptEntry *ie,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(ie, sizeof(struct InterruptEntry));
 }
@@ -400,7 +396,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct InterruptsWinData *iwd = INST_DATA(cl, obj);
     struct InterruptsCallbackUserData ud;
@@ -431,9 +427,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintInterrupts(NULL);
 
@@ -442,7 +438,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mRemove( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct InterruptsWinData *iwd = INST_DATA(cl, obj);
     struct MUI_NListtree_TreeNode *tn;
@@ -466,7 +462,7 @@ STATIC ULONG mRemove( struct IClass *cl,
 
 STATIC ULONG mMore( struct IClass *cl,
                     Object *obj,
-                    Msg msg )
+                    UNUSED Msg msg )
 {
     if (!clientstate) {
         struct InterruptsWinData *iwd = INST_DATA(cl, obj);
@@ -495,7 +491,7 @@ STATIC ULONG mMore( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct InterruptsWinData *iwd = INST_DATA(cl, obj);
     struct MUI_NListtree_TreeNode *tn;
@@ -540,7 +536,6 @@ DISPATCHER(InterruptsWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 void PrintInterrupts( STRPTR filename )
 {
@@ -585,6 +580,6 @@ struct Interrupt *RemoveInterrupt( STRPTR name )
 
 APTR MakeInterruptsWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct InterruptsWinData), DISPATCHER_REF(InterruptsWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct InterruptsWinData), ENTRY(InterruptsWinDispatcher));
 }
 

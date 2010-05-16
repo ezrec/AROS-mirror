@@ -50,21 +50,19 @@ struct FunctionsEntry {
     TEXT fe_FuncName[FILENAME_LENGTH];
 };
 
-STATIC SAVEDS LONG funclist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(funclist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct FunctionsEntry));
 }
 MakeStaticHook(funclist_con2hook, funclist_con2func);
 
-STATIC SAVEDS LONG funclist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(funclist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(funclist_des2hook, funclist_des2func);
 
-STATIC SAVEDS LONG funclist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(funclist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct FunctionsEntry *fe = (struct FunctionsEntry *)msg->entry;
 
@@ -78,13 +76,11 @@ STATIC SAVEDS LONG funclist_dsp2func( struct Hook *hook, Object *obj, struct NLi
         msg->strings[1] = txtHexadecimal;
         msg->strings[2] = txtAddress;
         msg->strings[3] = txtName;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
-        msg->preparses[3] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
+        msg->preparses[3] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(funclist_dsp2hook, funclist_dsp2func);
 
@@ -101,7 +97,7 @@ STATIC LONG funclist_cmp2colfunc( struct FunctionsEntry *fe1,
     }
 }
 
-STATIC SAVEDS LONG funclist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(funclist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct FunctionsEntry *fe1, *fe2;
@@ -112,7 +108,7 @@ STATIC SAVEDS LONG funclist_cmp2func( struct Hook *hook, Object *obj, struct NLi
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = funclist_cmp2colfunc(fe2, fe1, col1);
@@ -218,9 +214,9 @@ STATIC ULONG mShowFunctions( struct IClass *cl,
             for (offset = LIB_VECTSIZE; offset <= max; offset += LIB_VECTSIZE) {
 #ifdef __AROS__
 		struct JumpVec *je;
-		
+
 		je = (struct JumpVec *)((UBYTE *)lib - offset);
-		
+
 		fe->fe_Address = *((APTR *)je->vec);
 		if (points2ram(fe->fe_Address)) {
                     _snprintf(fe->fe_AddressStr, sizeof(fe->fe_AddressStr), MUIX_PH "$%08lx" MUIX_PT, fe->fe_Address);
@@ -255,7 +251,7 @@ STATIC ULONG mShowFunctions( struct IClass *cl,
 
                 if ((offset <= LIB_VECTSIZE * 6 && sfm->nodeType == MUIV_FunctionsWin_NodeType_Device) ||
                     (offset <= LIB_VECTSIZE * 4 && sfm->nodeType == MUIV_FunctionsWin_NodeType_Library)) {
-                    STRPTR help;
+                    CONST_STRPTR help;
 
                     switch (offset) {
                         case LIB_VECTSIZE * 1: help = "Open";    break;
@@ -272,13 +268,13 @@ STATIC ULONG mShowFunctions( struct IClass *cl,
 
                     if (sfm->name) {
                         if (stricmp(sfm->name, CIAANAME) == 0 || stricmp(sfm->name, CIABNAME) == 0) {
-                            error = IdFunctionTags("cia.resource", offset, IDTAG_FuncNameStr, fe->fe_FuncName,
-                                                                           IDTAG_StrLength, sizeof(fe->fe_FuncName),
-                                                                           TAG_DONE);
+                            error = IdFunctionTags((STRPTR)"cia.resource", offset, IDTAG_FuncNameStr, fe->fe_FuncName,
+                                                                                   IDTAG_StrLength, sizeof(fe->fe_FuncName),
+                                                                                   TAG_DONE);
                         } else if (stricmp(sfm->name, CARDRESNAME) == 0) {
-                            error = IdFunctionTags("cardres.resource", offset, IDTAG_FuncNameStr, fe->fe_FuncName,
-                                                                             IDTAG_StrLength, sizeof(fe->fe_FuncName),
-                                                                             TAG_DONE);
+                            error = IdFunctionTags((STRPTR)"cardres.resource", offset, IDTAG_FuncNameStr, fe->fe_FuncName,
+                                                                                       IDTAG_StrLength, sizeof(fe->fe_FuncName),
+                                                                                       TAG_DONE);
                         } else {
                             error = IdFunctionTags(sfm->name, offset, IDTAG_FuncNameStr, fe->fe_FuncName,
                                                                       IDTAG_StrLength, sizeof(fe->fe_FuncName),
@@ -326,7 +322,7 @@ STATIC ULONG mShowFunctions( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct FunctionsWinData *fwd = INST_DATA(cl, obj);
     struct FunctionsEntry *fe;
@@ -345,7 +341,7 @@ STATIC ULONG mListChange( struct IClass *cl,
 
 STATIC ULONG mDisassemble( struct IClass *cl,
                            Object *obj,
-                           Msg msg )
+                           UNUSED Msg msg )
 {
     struct FunctionsWinData *fwd = INST_DATA(cl, obj);
     struct FunctionsEntry *fe;
@@ -379,10 +375,9 @@ DISPATCHER(FunctionsWinDispatcher)
 
     return (DoSuperMethodA(cl, obj, msg));
 }
-DISPATCHER_END
 
 APTR MakeFunctionsWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct FunctionsWinData), DISPATCHER_REF(FunctionsWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct FunctionsWinData), ENTRY(FunctionsWinDispatcher));
 }
 

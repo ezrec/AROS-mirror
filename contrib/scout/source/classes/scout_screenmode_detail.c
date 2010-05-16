@@ -131,7 +131,7 @@ STATIC void SetDetails( struct IClass *cl,
             case MCOMPAT_MIXED: tmp = msgScreenModeCompatMixed; break;
             case MCOMPAT_SELF: tmp = msgScreenModeCompatSelf; break;
             case MCOMPAT_NOBODY: tmp = msgScreenModeCompatNobody; break;
-            default: tmp = MUIX_PH "< ??? >" MUIX_PT;
+            default: tmp = (STRPTR)MUIX_PH "< ??? >" MUIX_PT;
         }
         MySetContents(smdwd->smdwd_Texts[14], " %lD ", smd->monitor.Compatibility);
         MySetContents(smdwd->smdwd_Texts[15], "%s", tmp);
@@ -360,10 +360,9 @@ DISPATCHER(ScreenModesDetailWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeScreenModesDetailWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct ScreenModesDetailWinData), DISPATCHER_REF(ScreenModesDetailWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct ScreenModesDetailWinData), ENTRY(ScreenModesDetailWinDispatcher));
 }
 

@@ -41,21 +41,19 @@ struct SemaphoresCallbackUserData {
     ULONG ud_Count;
 };
 
-STATIC SAVEDS LONG semalist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(semalist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct SemaphoreEntry));
 }
 MakeStaticHook(semalist_con2hook, semalist_con2func);
 
-STATIC SAVEDS LONG semalist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(semalist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(semalist_des2hook, semalist_des2func);
 
-STATIC SAVEDS LONG semalist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(semalist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct SemaphoreEntry *se = (struct SemaphoreEntry *)msg->entry;
 
@@ -73,15 +71,13 @@ STATIC SAVEDS LONG semalist_dsp2func( struct Hook *hook, Object *obj, struct NLi
         msg->strings[3] = txtSemaphoreNestCount;
         msg->strings[4] = txtSemaphoreQueueCount;
         msg->strings[5] = txtSemaphoreOwner;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
-        msg->preparses[3] = MUIX_B;
-        msg->preparses[4] = MUIX_B;
-        msg->preparses[5] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
+        msg->preparses[3] = (STRPTR)MUIX_B;
+        msg->preparses[4] = (STRPTR)MUIX_B;
+        msg->preparses[5] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(semalist_dsp2hook, semalist_dsp2func);
 
@@ -106,7 +102,7 @@ STATIC LONG semalist_cmpfunc( const struct Node *n1,
     return stricmp(((struct SemaphoreEntry *)n1)->se_Name, ((struct SemaphoreEntry *)n2)->se_Name);
 }
 
-STATIC SAVEDS LONG semalist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(semalist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct SemaphoreEntry *se1, *se2;
@@ -117,7 +113,7 @@ STATIC SAVEDS LONG semalist_cmp2func( struct Hook *hook, Object *obj, struct NLi
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = semalist_cmp2colfunc(se2, se1, col1);
@@ -210,7 +206,7 @@ STATIC void PrintCallback( struct SemaphoreEntry *se,
 }
 
 STATIC void SendCallback( struct SemaphoreEntry *se,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(se, sizeof(struct SemaphoreEntry));
 }
@@ -294,7 +290,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct SemaphoresWinData *swd = INST_DATA(cl, obj);
     struct SemaphoresCallbackUserData ud;
@@ -326,9 +322,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintSemaphores(NULL);
 
@@ -337,7 +333,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mObtain( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct SemaphoresWinData *swd = INST_DATA(cl, obj);
     struct SemaphoreEntry *se;
@@ -355,7 +351,7 @@ STATIC ULONG mObtain( struct IClass *cl,
 
 STATIC ULONG mRelease( struct IClass *cl,
                        Object *obj,
-                       Msg msg )
+                       UNUSED Msg msg )
 {
     struct SemaphoresWinData *swd = INST_DATA(cl, obj);
     struct SemaphoreEntry *se;
@@ -379,7 +375,7 @@ STATIC ULONG mRelease( struct IClass *cl,
 
 STATIC ULONG mRemove( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct SemaphoresWinData *swd = INST_DATA(cl, obj);
     struct SemaphoreEntry *se;
@@ -397,7 +393,7 @@ STATIC ULONG mRemove( struct IClass *cl,
 
 STATIC ULONG mPriority( struct IClass *cl,
                         Object *obj,
-                        Msg msg )
+                        UNUSED Msg msg )
 {
     struct SemaphoresWinData *swd = INST_DATA(cl, obj);
     struct SemaphoreEntry *se;
@@ -419,7 +415,7 @@ STATIC ULONG mPriority( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct SemaphoresWinData *swd = INST_DATA(cl, obj);
     struct SemaphoreEntry *se;
@@ -452,7 +448,6 @@ DISPATCHER(SemaphoresWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 void PrintSemaphores( STRPTR filename )
 {
@@ -473,6 +468,6 @@ void SendSemList( STRPTR UNUSED dummy )
 
 APTR MakeSemaphoresWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct SemaphoresWinData), DISPATCHER_REF(SemaphoresWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct SemaphoresWinData), ENTRY(SemaphoresWinDispatcher));
 }
 

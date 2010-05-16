@@ -1,19 +1,49 @@
-##
-##
+# find out the HOST operating system
+# on which this makefile is run
+HOST ?= $(shell uname)
+ifeq ($(HOST), AmigaOS)
+  ifeq ($(shell uname -m), powerpc)
+    HOST = AmigaOS4
+  endif
+  ifeq ($(shell uname -m), ppc)
+    HOST = AmigaOS4
+  endif
+endif
 
-TARGET = libtblib.a
+# if no host is identifed (no uname tool)
+# we assume a AmigaOS build
+ifeq ($(HOST),)
+  HOST = AmigaOS
+endif
 
-CC = gcc
-AR = ar
+ifeq ($(HOST), AmigaOS4)
+  CC    = gcc
+  AR    = ar
+  MKDIR = makedir
+  RM    = delete quiet
+  RMDIR = delete quiet
+  MUISDK= /SDK/MUI/C/include
+else
+  CC    = ppc-amigaos-gcc
+  AR    = ppc-amigaos-ar
+  MKDIR = mkdir -p
+  RM    = rm
+  RMDIR = rm -rf
+  MUISDK= /usr/local/amiga/ppc-amigaos/SDK/MUI/C/include
+endif
 
-OBJDIR=             .obj_os4
+OBJDIR = .obj_os4
+BINDIR = bin_os4
+
+TARGET = $(BINDIR)/libtblib.a
 
 CRT=                newlib
 
-REDEFINE= 			-DCoerceMethod=ICoerceMethod -DDoMethod=IDoMethod -DDoSuperMethod=IDoSuperMethod -DDoSuperMethodA=IDoSuperMethodA
+CPU      = -mcpu=powerpc -mstrict-align
+REDEFINE = -DCoerceMethod=ICoerceMethod -DDoMethod=IDoMethod -DDoSuperMethod=IDoSuperMethod -DDoSuperMethodA=IDoSuperMethodA
 OPTIMIZE = -O2
-DEBUG    = -ggdb
-CFLAGS   = -mcrt=$(CRT) -Wall -Wwrite-strings -I../include -ISDK:MUI/C/Include $(REDEFINE) $(DEBUG) -D__USE_INLINE__ -D__NEW_TIMEVAL_DEFINITION_USED__ -c
+DEBUG    = -g -gstabs
+CFLAGS   = -mcrt=$(CRT) -Wall -Wwrite-strings -I../include -I$(MUISDK) $(CPU) $(REDEFINE) $(DEBUG) -D__USE_INLINE__ -D__NEW_TIMEVAL_DEFINITION_USED__ -c
 
 OBJS = $(OBJDIR)/ports_AllocPort.o \
 	$(OBJDIR)/ports_FreePort.o \
@@ -51,22 +81,25 @@ OBJS = $(OBJDIR)/ports_AllocPort.o \
 INCLUDES= tblib.h \
 	SDI_compiler.h
 
-all: $(OBJDIR) $(TARGET)
+all: $(OBJDIR) $(BINDIR) $(TARGET)
 
 $(OBJDIR)/%.o: %.c
 	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINE) $< -o $@
 
 $(OBJDIR):
-	@makedir $(OBJDIR)
+	@$(MKDIR) $(OBJDIR)
+
+$(BINDIR):
+	@$(MKDIR) $(BINDIR)
 
 $(TARGET): $(OBJS)
-	$(AR) -r libtblib.a $(OBJS)
+	$(AR) -r $(TARGET) $(OBJS)
 
 clean:
-	-delete $(OBJS) $(TARGET) quiet
+	-$(RM) $(OBJS) $(TARGET) quiet
 
-realclean:
-	@make clean
+realclean: clean
+	-$(RMDIR) $(OBJDIR) $(BINDIR)
 
 date:
 	@;

@@ -67,7 +67,7 @@ STRPTR MyGetWindowTitle( CONST_STRPTR , STRPTR , ULONG );
 
 STRPTR MyGetChildWindowTitle( CONST_STRPTR , CONST_STRPTR, STRPTR, ULONG );
 
-BOOL CheckMCCVersion( STRPTR mcc, ULONG minver, ULONG minrev, BOOL errorReq );
+BOOL CheckMCCVersion( CONST_STRPTR mcc, ULONG minver, ULONG minrev, BOOL errorReq );
 
 void ApplicationSleep( BOOL );
 
@@ -98,15 +98,15 @@ APTR MyTextObject( void );
 
 APTR MyTextObject2( void );
 
-APTR MyTextObject3( STRPTR );
+APTR MyTextObject3( CONST_STRPTR );
 
-APTR MyTextObject4( STRPTR );
+APTR MyTextObject4( CONST_STRPTR );
 
-APTR MyTextObject5( STRPTR );
+APTR MyTextObject5( CONST_STRPTR );
 
 APTR MyTextObject6( void );
 
-APTR MyTextObject7( STRPTR );
+APTR MyTextObject7( CONST_STRPTR );
 
 APTR MyCheckmarkImage( void );
 
@@ -117,15 +117,15 @@ BOOL points2ram( APTR addr );
 
 STRPTR StripMUIFormatting( STRPTR str );
 
-BOOL IsReal( STRPTR );
-BOOL IsHex( STRPTR , LONG * );
-BOOL IsUHex( STRPTR , ULONG * );
-BOOL IsDec( STRPTR , LONG * );
+BOOL IsReal( CONST_STRPTR );
+BOOL IsHex( CONST_STRPTR , LONG * );
+BOOL IsUHex( CONST_STRPTR , ULONG * );
+BOOL IsDec( CONST_STRPTR , LONG * );
 
-LONG HexCompare( STRPTR hex1str, STRPTR hex2str );
-LONG IntegerCompare( STRPTR int1str, STRPTR int2str );
-LONG VersionCompare( STRPTR ver1str, STRPTR ver2str );
-LONG PriorityCompare( STRPTR pri1str, STRPTR pri2str );
+LONG HexCompare( CONST_STRPTR hex1str, CONST_STRPTR hex2str );
+LONG IntegerCompare( CONST_STRPTR int1str, CONST_STRPTR int2str );
+LONG VersionCompare( CONST_STRPTR ver1str, CONST_STRPTR ver2str );
+LONG PriorityCompare( CONST_STRPTR pri1str, CONST_STRPTR pri2str );
 
 void SortLinkedList( struct List *lh, LONG (* compare)( const struct Node *, const struct Node *) );
 void FreeLinkedList( struct List *lh );

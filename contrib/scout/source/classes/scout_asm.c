@@ -68,7 +68,7 @@ void ASM FAR UninstallPatches( void )
     GetTaskData
 **********************************************************************/
 
-ULONG ASM FAR GetTaskData( REG( d0, struct Task *task) )
+ULONG ASM FAR GetTaskData( REG( d0, UNUSED struct Task *task) )
 {
 #ifdef __MORPHOS__
     UQUAD lastseccputime;

@@ -53,21 +53,19 @@ struct MUIP_CommoditiesWin_CxCommand {
     UBYTE *command;
 };
 
-STATIC SAVEDS LONG cxlist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(cxlist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct CxEntry));
 }
 MakeStaticHook(cxlist_con2hook, cxlist_con2func);
 
-STATIC SAVEDS LONG cxlist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(cxlist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(cxlist_des2hook, cxlist_des2func);
 
-STATIC SAVEDS LONG cxlist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(cxlist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct CxEntry *cxe = (struct CxEntry *)msg->entry;
 
@@ -85,15 +83,13 @@ STATIC SAVEDS LONG cxlist_dsp2func( struct Hook *hook, Object *obj, struct NList
         msg->strings[3] = txtNodePri;
         msg->strings[4] = txtCommodityFlags;
         msg->strings[5] = txtCommodityPort;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
-        msg->preparses[3] = MUIX_B;
-        msg->preparses[4] = MUIX_B;
-        msg->preparses[5] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
+        msg->preparses[3] = (STRPTR)MUIX_B;
+        msg->preparses[4] = (STRPTR)MUIX_B;
+        msg->preparses[5] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(cxlist_dsp2hook, cxlist_dsp2func);
 
@@ -118,7 +114,7 @@ STATIC LONG cxlist_cmpfunc( const struct Node *n1,
     return stricmp(((struct CxEntry *)n1)->cxe_Name, ((struct CxEntry *)n2)->cxe_Name);
 }
 
-STATIC SAVEDS LONG cxlist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(cxlist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct CxEntry *cxe1, *cxe2;
@@ -129,7 +125,7 @@ STATIC SAVEDS LONG cxlist_cmp2func( struct Hook *hook, Object *obj, struct NList
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = cxlist_cmp2colfunc(cxe2, cxe1, col1);
@@ -201,7 +197,7 @@ STATIC void IterateList( void (* callback)( struct CxEntry *cxe, void *userData 
             struct MsgPort *cxport;
 
             if ((cxport = CreateMsgPort()) != NULL) {
-                struct NewBroker cxnewbroker = { NB_VERSION, "« Scout Dummy »", "« Scout Dummy »", "Dummy Broker", 0, 0, 0, NULL, 0 };
+                struct NewBroker cxnewbroker = { NB_VERSION, (STRPTR)"« Scout Dummy »", (STRPTR)"« Scout Dummy »", (STRPTR)"Dummy Broker", 0, 0, 0, NULL, 0 };
                 struct PrivateCxObj *cxbroker;
 
                 cxnewbroker.nb_Port = cxport;
@@ -273,7 +269,7 @@ STATIC void PrintCallback( struct CxEntry *cxe,
 }
 
 STATIC void SendCallback( struct CxEntry *cxe,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(cxe, sizeof(struct CxEntry));
 }
@@ -385,7 +381,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct CommoditiesWinData *cwd = INST_DATA(cl, obj);
     struct CxCallbackUserData ud;
@@ -423,9 +419,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintCx(NULL);
 
@@ -434,7 +430,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mRemove( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct CommoditiesWinData *cwd = INST_DATA(cl, obj);
     struct CxEntry *cxe;
@@ -452,7 +448,7 @@ STATIC ULONG mRemove( struct IClass *cl,
 
 STATIC ULONG mPriority( struct IClass *cl,
                         Object *obj,
-                        Msg msg )
+                        UNUSED Msg msg )
 {
     struct CommoditiesWinData *cwd = INST_DATA(cl, obj);
     struct CxEntry *cxe;
@@ -474,7 +470,7 @@ STATIC ULONG mPriority( struct IClass *cl,
 
 STATIC ULONG mMore( struct IClass *cl,
                     Object *obj,
-                    Msg msg )
+                    UNUSED Msg msg )
 {
     if (!clientstate) {
         struct CommoditiesWinData *cwd = INST_DATA(cl, obj);
@@ -500,7 +496,7 @@ STATIC ULONG mMore( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct CommoditiesWinData *cwd = INST_DATA(cl, obj);
     struct CxEntry *cxe;
@@ -557,7 +553,6 @@ DISPATCHER(CommoditiesWinDispatcher)
 
     return (DoSuperMethodA(cl, obj, msg));
 }
-DISPATCHER_END
 
 void PrintCx( STRPTR filename )
 {
@@ -578,7 +573,7 @@ void SendCxList( STRPTR UNUSED dummy )
 
 APTR MakeCommoditiesWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct CommoditiesWinData), DISPATCHER_REF(CommoditiesWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct CommoditiesWinData), ENTRY(CommoditiesWinDispatcher));
 }
 
 

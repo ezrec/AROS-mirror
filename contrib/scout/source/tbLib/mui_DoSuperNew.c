@@ -17,6 +17,7 @@ IPTR DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...)
   AROS_SLOWSTACKTAGS_POST
 }
 #else
+#ifndef __MORPHOS__
 ULONG VARARGS68K STDARGS DoSuperNew( struct IClass *cl,
                                      Object *obj, ... )
 {
@@ -29,6 +30,7 @@ ULONG VARARGS68K STDARGS DoSuperNew( struct IClass *cl,
 
     return rc;
 }
+#endif
 #endif
 
 /* \\\ */

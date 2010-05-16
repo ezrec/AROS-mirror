@@ -51,21 +51,19 @@ typedef union {
 #endif
 } EClockUnion;
 
-STATIC SAVEDS LONG timerlist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(timerlist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct TimerEntry));
 }
 MakeStaticHook(timerlist_con2hook, timerlist_con2func);
 
-STATIC SAVEDS LONG timerlist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(timerlist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(timerlist_des2hook, timerlist_des2func);
 
-STATIC SAVEDS LONG timerlist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(timerlist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct TimerEntry *te = (struct TimerEntry *)msg->entry;
 
@@ -81,14 +79,12 @@ STATIC SAVEDS LONG timerlist_dsp2func( struct Hook *hook, Object *obj, struct NL
         msg->strings[2] = txtTime;
         msg->strings[3] = txtUnit;
         msg->strings[4] = txtReplyPort;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
-        msg->preparses[3] = MUIX_B;
-        msg->preparses[4] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
+        msg->preparses[3] = (STRPTR)MUIX_B;
+        msg->preparses[4] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(timerlist_dsp2hook, timerlist_dsp2func);
 
@@ -112,7 +108,7 @@ STATIC LONG timerlist_cmpfunc( const struct Node *n1,
     return stricmp(((struct TimerEntry *)n1)->te_Name, ((struct TimerEntry *)n2)->te_Name);
 }
 
-STATIC SAVEDS LONG timerlist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(timerlist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct TimerEntry *te1, *te2;
@@ -123,7 +119,7 @@ STATIC SAVEDS LONG timerlist_cmp2func( struct Hook *hook, Object *obj, struct NL
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = timerlist_cmp2colfunc(te2, te1, col1);
@@ -414,7 +410,7 @@ STATIC void PrintCallback( struct TimerEntry *te,
 }
 
 STATIC void SendCallback( struct TimerEntry *te,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(te, sizeof(struct TimerEntry));
 }
@@ -484,7 +480,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct TimersWinData *twd = INST_DATA(cl, obj);
     struct TimersCallbackUserData ud;
@@ -512,9 +508,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintTimer(NULL);
 
@@ -523,7 +519,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mAbort( struct IClass *cl,
                      Object *obj,
-                     Msg msg )
+                     UNUSED Msg msg )
 {
     struct TimersWinData *twd = INST_DATA(cl, obj);
     struct TimerEntry *te;
@@ -542,7 +538,7 @@ STATIC ULONG mAbort( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct TimersWinData *twd = INST_DATA(cl, obj);
     struct TimerEntry *te;
@@ -568,7 +564,6 @@ DISPATCHER(TimersWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 void PrintTimer( STRPTR filename )
 {
@@ -589,6 +584,6 @@ void SendTimerList( STRPTR UNUSED dummy )
 
 APTR MakeTimersWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct TimersWinData), DISPATCHER_REF(TimersWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct TimersWinData), ENTRY(TimersWinDispatcher));
 }
 

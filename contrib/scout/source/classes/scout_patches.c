@@ -40,21 +40,19 @@ struct PatchesCallbackUserData {
     ULONG ud_Count;
 };
 
-STATIC SAVEDS LONG patchlist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(patchlist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct PatchEntry));
 }
 MakeStaticHook(patchlist_con2hook, patchlist_con2func);
 
-STATIC SAVEDS LONG patchlist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(patchlist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(patchlist_des2hook, patchlist_des2func);
 
-STATIC SAVEDS LONG patchlist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(patchlist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct PatchEntry *pe = (struct PatchEntry *)msg->entry;
 
@@ -74,16 +72,14 @@ STATIC SAVEDS LONG patchlist_dsp2func( struct Hook *hook, Object *obj, struct NL
         msg->strings[4] = txtFunction;
         msg->strings[5] = txtState;
         msg->strings[6] = txtPatcher;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
-        msg->preparses[3] = MUIX_B;
-        msg->preparses[4] = MUIX_B;
-        msg->preparses[5] = MUIX_B;
-        msg->preparses[6] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
+        msg->preparses[3] = (STRPTR)MUIX_B;
+        msg->preparses[4] = (STRPTR)MUIX_B;
+        msg->preparses[5] = (STRPTR)MUIX_B;
+        msg->preparses[6] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(patchlist_dsp2hook, patchlist_dsp2func);
 
@@ -107,7 +103,7 @@ STATIC LONG patchlist_cmp2colfunc( struct PatchEntry *pe1,
     return cmp;
 }
 
-#if !defined(__amigaos4__)
+#if !defined(__amigaos4__) && !defined(__AROS__)
 STATIC LONG patchlist_cmpfunc( const struct Node *n1,
                                const struct Node *n2 )
 {
@@ -120,7 +116,7 @@ STATIC LONG patchlist_cmpfunc( const struct Node *n1,
 }
 #endif
 
-STATIC SAVEDS LONG patchlist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(patchlist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct PatchEntry *pe1, *pe2;
@@ -131,7 +127,7 @@ STATIC SAVEDS LONG patchlist_cmp2func( struct Hook *hook, Object *obj, struct NL
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = patchlist_cmp2colfunc(pe2, pe1, col1);
@@ -151,7 +147,7 @@ STATIC SAVEDS LONG patchlist_cmp2func( struct Hook *hook, Object *obj, struct NL
 }
 MakeStaticHook(patchlist_cmp2hook, patchlist_cmp2func);
 
-#if !defined(__amigaos4__)
+#if !defined(__amigaos4__) && !defined(__AROS__)
 STATIC void GetFunctionName( struct Library *lib,
                              LONG offset,
                              struct PatchEntry *pe )
@@ -160,7 +156,7 @@ STATIC void GetFunctionName( struct Library *lib,
 
     if ((absOffset <= LIB_VECTSIZE * 6 && lib->lib_Node.ln_Type == NT_DEVICE) ||
         (absOffset <= LIB_VECTSIZE * 4 && lib->lib_Node.ln_Type == NT_LIBRARY)) {
-        STRPTR help;
+        CONST_STRPTR help;
 
         switch (absOffset) {
             case LIB_VECTSIZE * 1: help = "Open";    break;
@@ -201,7 +197,7 @@ STATIC void GetFunctionName( struct Library *lib,
 }
 #endif
 
-#if !defined(__amigaos4__)
+#if !defined(__amigaos4__) && !defined(__AROS__)
 STATIC void IterateSaferPatchesList( struct MinList *tmplist,
                                      struct PatchPort *pp )
 {
@@ -254,7 +250,6 @@ STATIC void IterateSaferPatchesList( struct MinList *tmplist,
     NoReqOff();
 }
 
-#ifndef __AROS__
 STATIC void IteratePatchControlList( struct MinList *tmplist,
                                      struct Library *PatchBase )
 {
@@ -298,7 +293,6 @@ STATIC void IteratePatchControlList( struct MinList *tmplist,
 
     FreePatchList(list);
 }
-#endif
 
 STATIC void IterateSetManList( struct MinList *tmplist,
                                struct SetManPort *sp )
@@ -373,11 +367,11 @@ STATIC void ReceiveList( void (* callback)( struct PatchEntry *pe, void *userDat
     }
 }
 
-STATIC void IterateList( void (* callback)( struct PatchEntry *pe, void *userData ),
-                         void *userData,
-                         BOOL sort )
+STATIC void IterateList( UNUSED void (* callback)( struct PatchEntry *pe, void *userData ),
+                         UNUSED void *userData,
+                         UNUSED BOOL sort )
 {
-#if !defined(__amigaos4__)
+#if !defined(__amigaos4__) && !defined(__AROS__)
     struct MinList tmplist;
     struct PatchEntry *pe;
     struct PatchPort *pp;
@@ -389,17 +383,13 @@ STATIC void IterateList( void (* callback)( struct PatchEntry *pe, void *userDat
     Forbid();
     pp = (struct PatchPort *)FindPort(PATCHPORT_NAME);
     sp = (struct SetManPort *)FindPort(SETMANPORT_NAME);
-#ifndef __AROS__
     pc = (struct Library *)OpenResource(PATCHRES_NAME);
-#endif
     Permit();
 
     if (pp) {
         IterateSaferPatchesList(&tmplist, pp);
-#ifndef __AROS__
     } else if (pc) {
         IteratePatchControlList(&tmplist, pc);
-#endif
     } else if (sp) {
         IterateSetManList(&tmplist, sp);
     } else {
@@ -431,7 +421,7 @@ STATIC void PrintCallback( struct PatchEntry *pe,
 }
 
 STATIC void SendCallback( struct PatchEntry *pe,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(pe, sizeof(struct PatchEntry));
 }
@@ -490,7 +480,7 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(exitButton,    MUIM_Notify, MUIA_Pressed,             FALSE,          obj,                     3, MUIM_Set, MUIA_Window_CloseRequest, TRUE);
         DoMethod(patchlist,     MUIM_NList_Sort3, MUIV_NList_Sort3_SortType_1, MUIV_NList_SortTypeAdd_None, MUIV_NList_Sort3_SortType_Both);
 
-    #if !defined(__amigaos4__)
+    #if !defined(__amigaos4__) && !defined(__AROS__)
         Forbid();
         pwd->pwd_SetManPort = (struct SetManPort *)FindPort(SETMANPORT_NAME);
         Permit();
@@ -516,7 +506,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct PatchesWinData *pwd = INST_DATA(cl, obj);
     struct PatchesCallbackUserData ud;
@@ -547,9 +537,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintPatches(NULL);
 
@@ -558,7 +548,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct PatchesWinData *pwd = INST_DATA(cl, obj);
     struct PatchEntry *pe;
@@ -575,11 +565,11 @@ STATIC ULONG mListChange( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mEnable( struct IClass *cl,
-                      Object *obj,
-                      Msg msg )
+STATIC ULONG mEnable( UNUSED struct IClass *cl,
+                      UNUSED Object *obj,
+                      UNUSED Msg msg )
 {
-#if !defined(__amigaos4__)
+#if !defined(__amigaos4__) && !defined(__AROS__)
     struct PatchesWinData *pwd = INST_DATA(cl, obj);
     ULONG id = MUIV_NList_NextSelected_Start;
 
@@ -628,11 +618,11 @@ STATIC ULONG mEnable( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mDisable( struct IClass *cl,
-                       Object *obj,
-                       Msg msg )
+STATIC ULONG mDisable( UNUSED struct IClass *cl,
+                       UNUSED Object *obj,
+                       UNUSED Msg msg )
 {
-#if !defined(__amigaos4__)
+#if !defined(__amigaos4__) && !defined(__AROS__)
     struct PatchesWinData *pwd = INST_DATA(cl, obj);
     ULONG id = MUIV_NList_NextSelected_Start;
     ULONG disableMode = 1;
@@ -706,7 +696,6 @@ DISPATCHER(PatchesWinDispatcher)
 
     return (DoSuperMethodA(cl, obj, msg));
 }
-DISPATCHER_END
 
 void PrintPatches( STRPTR filename )
 {
@@ -727,6 +716,6 @@ void SendPatchList( STRPTR UNUSED dummy )
 
 APTR MakePatchesWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct PatchesWinData), DISPATCHER_REF(PatchesWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct PatchesWinData), ENTRY(PatchesWinDispatcher));
 }
 

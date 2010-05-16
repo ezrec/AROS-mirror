@@ -28,29 +28,29 @@
 objects/scout_arexx.c
  */
 
-extern struct MUI_Command arexx_list[56];
+extern const struct MUI_Command arexx_list[56];
 
 STRPTR FindMyARexxPort( CONST_STRPTR );
 
-ULONG SafePutToPort( struct Message * , STRPTR );
+ULONG SafePutToPort( struct Message * , CONST_STRPTR );
 
-short SendStartupMsg( STRPTR, STRPTR, BOOL );
+short SendStartupMsg( CONST_STRPTR, CONST_STRPTR, BOOL );
 
-struct Task * MyFindTask( STRPTR );
+struct Task * MyFindTask( CONST_STRPTR );
 
-BOOL MyRemoveTask( STRPTR, BOOL );
+BOOL MyRemoveTask( CONST_STRPTR, BOOL );
 
-BOOL MyFreezeTask( STRPTR );
+BOOL MyFreezeTask( CONST_STRPTR );
 
-BOOL MyActivateTask( STRPTR );
+BOOL MyActivateTask( CONST_STRPTR );
 
-BOOL MySignalTask( STRPTR, STRPTR );
+BOOL MySignalTask( CONST_STRPTR, CONST_STRPTR );
 
-struct List * MyGetList( STRPTR );
+struct List * MyGetList( CONST_STRPTR );
 
-struct Node * MyFindName( STRPTR , STRPTR );
+struct Node * MyFindName( CONST_STRPTR , CONST_STRPTR );
 
-struct Screen * MyFindScreen( STRPTR );
+struct Screen * MyFindScreen( CONST_STRPTR );
 
-struct Window * MyFindWindow( STRPTR );
+struct Window * MyFindWindow( CONST_STRPTR );
 

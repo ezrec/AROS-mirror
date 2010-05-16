@@ -233,12 +233,12 @@ STATIC void ASM _putchar( REG(d0, UBYTE c),
 
 STATIC ULONG mDisassemble( struct IClass *cl,
                            Object *obj,
-                           Msg msg )
+                           UNUSED Msg msg )
 {
     struct DisassemblerWinData *dwd = INST_DATA(cl, obj);
     ULONG maxSize;
 
-    if (dwd->dwd_Address == -1)
+    if (dwd->dwd_Address == (APTR)-1)
     {
         DoMethod(dwd->dwd_SourceFloattext, MUIM_List_Clear);
         return 0;
@@ -275,7 +275,7 @@ STATIC ULONG mDisassemble( struct IClass *cl,
             if (size & 1) size++;
             while (size > 0) {
                 LONG s;
-                ULONG word;
+                LONG word;
                 UWORD memory[8];
 
                 RawDoFmt("$%08lx:", (APTR)&addr, (void(*)(void))&_putchar, &dc);
@@ -373,7 +373,7 @@ STATIC ULONG mDisassemble( struct IClass *cl,
             struct TagItem tags[] = {
                 { DISASS_DEFINEPC, (IPTR)*((struct EmulLibEntry *)dwd->dwd_Address)->Func },
                 { DISASS_SHOWDATA, TRUE },
-                { TAG_DONE }
+                { TAG_DONE, 0 }
             };
             APTR dobj;
 
@@ -385,7 +385,7 @@ STATIC ULONG mDisassemble( struct IClass *cl,
 
                 while (todo >= 4)
                 {
-                    struct TagItem tags[] = { { DISASS_BUFFER, (IPTR)buffer }, { TAG_DONE } };
+                    struct TagItem tags[] = { { DISASS_BUFFER, (IPTR)buffer }, { TAG_DONE, 0 } };
 
                     todo -= 4;
                     PPCDissTranslateTagList(dobj, tags);
@@ -509,10 +509,9 @@ DISPATCHER(DisassemblerWinDispatcher)
 
     return (DoSuperMethodA(cl, obj, msg));
 }
-DISPATCHER_END
 
 APTR MakeDisassemblerWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct DisassemblerWinData), DISPATCHER_REF(DisassemblerWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct DisassemblerWinData), ENTRY(DisassemblerWinDispatcher));
 }
 

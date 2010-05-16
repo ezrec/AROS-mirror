@@ -188,6 +188,9 @@
 #endif
 #include <proto/utility.h>
 #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
+	#ifndef PATH_MAX
+		#define PATH_MAX 1024
+	#endif
     #include <proto/mmu.h>
     #include <dos.h>    // for getreg(), etc
 #endif
@@ -202,7 +205,9 @@
 
 #include <tblib.h>
 
+#if defined(__MORPHOS__)
 #define USE_INLINE_STDARG
+#endif
 #include <proto/identify.h>
 
 #include "scout_cat.h"
@@ -289,6 +294,12 @@
 
 #if defined(__GNUC__)
     #define USE_NATIVE_64BIT_MATH          1
+	#ifndef int64
+		typedef long long int64;
+	#endif
+	#ifndef uint64
+		typedef unsigned long long uint64;
+	#endif
 #else
     #undef USE_NATIVE_64BIT_MATH
     #include "i64.h"
@@ -300,7 +311,7 @@
     #ifndef __AROS__
     #include <patchcontrol.h>
     #endif
-    #if !defined(__MORPHOS__)
+    #if !defined(__MORPHOS__) && !defined(__GNUC__)
     #include <pragmas/cia_private_pragmas.h>
     #endif
 #endif
@@ -309,29 +320,9 @@
 #include "extra.h"
 
 #if !defined(__amigaos4__) //|| !defined(__NEW_TIMEVAL_DEFINITION_USED__)
-struct TimeVal
-{
-  ULONG Seconds;
-  ULONG Microseconds;
-};
-
-struct TimeRequest
-{
-  struct IORequest Request;
-  struct TimeVal   Time;
-};
-
 #define TIMEVAL(x)  (struct timeval *)(x)
-
 #else
-
 #define TIMEVAL(x)  (x)
-
-#endif
-
-#if defined(__AROS__)
-    typedef UQUAD uint64;
-    typedef QUAD int64;
 #endif
 
 /*****************************************************************************/

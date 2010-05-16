@@ -28,13 +28,17 @@
 objects/scout_version.c
  */
 
-extern STRPTR vers;
-extern STRPTR vstring;
-extern STRPTR verstag;
-extern STRPTR version_date;
-extern STRPTR release;
+extern CONST_STRPTR vers;
+extern CONST_STRPTR vstring;
+extern CONST_STRPTR verstag;
+extern CONST_STRPTR version_date;
+extern CONST_STRPTR release;
 extern const ULONG version_ulong;
 extern const ULONG revision_ulong;
+
+// transforms a define into a string
+#define STR(x)  STR2(x)
+#define STR2(x) #x
 
 #if defined(__AROS__)
     #if defined __i386__
@@ -62,10 +66,23 @@ extern const ULONG revision_ulong;
     #define CPU             "[OS3/68k]"
 #endif
 
+#if defined(__GNUC__)
+  #if defined(__GNUC_PATCHLEVEL__)
+    #define COMPILER "GCC " STR(__GNUC__) "." STR(__GNUC_MINOR__) "." STR(__GNUC_PATCHLEVEL__)
+  #else
+    #define COMPILER "GCC " STR(__GNUC__) "." STR(__GNUC_MINOR__) ".x"
+  #endif
+#elif defined(__SASC)
+  #define COMPILER "SAS/C " STR(__VERSION__) "." STR(__REVISION__)
+#else
+  #define COMPILER "unknown"
+  #warning "unknown compiler specification"
+#endif
+
 #define PROGNAME            "Scout"
 #define RELEASEVERSION      "3"
 #define RELEASEREVISION     "7"
-#define COPYRIGHT           "  ©2004-2009 Scout Open Source Team  \n  ©2001-2003 Thore Böckelmann  \n  ©1994-1997 Andreas Gelhausen, Richard Körber  "
+#define COPYRIGHT           "  ©2004-2010 Scout Open Source Team  \n  ©2001-2003 Thore Böckelmann  \n  ©1994-1997 Andreas Gelhausen, Richard Körber  "
 #define AUTHOR              "Thore Böckelmann"
 #define DESCRIPTION         "System monitor"
 #define HOMEPAGE            "http://sourceforge.net/projects/scoutos/"

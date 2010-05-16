@@ -39,9 +39,13 @@ extern struct  ExecBase *SysBase;
 struct Library          *MUIMasterBase;
 struct Library          *IdentifyBase;
 #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
+#if defined(__GNUC__)
+struct Library          *MMUBase;
+#else
 struct MMUBase          *MMUBase;
 #endif
-#if defined(__SASC) || defined(__AROS__)
+#endif
+#if defined(__SASC) || defined(__AROS__) || (defined(__GNUC__) && !defined(__amigaos4__) && !defined(__MORPHOS__))
 struct RxsLib           *RexxSysBase;
 struct LocaleBase       *LocaleBase;
 #else
@@ -168,11 +172,7 @@ STATIC BOOL init1( void )
         return FALSE;
     }
 
-#if defined(__SASC) || defined(__AROS__)
-    if ((RexxSysBase = (struct RxsLib *)MyOpenLibrary(RXSNAME, 0)) == NULL) {
-#else
-    if ((RexxSysBase = MyOpenLibrary(RXSNAME, 0)) == NULL) {
-#endif
+    if ((RexxSysBase = (APTR)MyOpenLibrary(RXSNAME, 0)) == NULL) {
         return FALSE;
     }
     if (!GETINTERFACE(IRexxSys, RexxSysBase)) {
@@ -185,15 +185,11 @@ STATIC BOOL init1( void )
     }
 
 #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
-    MMUBase = (struct MMUBase *)OpenLibrary(MMU_NAME, 43);
+    MMUBase = (APTR)OpenLibrary(MMU_NAME, 43);
 #endif
 
     decimalSeparator = ","; // english separator for 1000s
-#if defined(__SASC) || defined(__AROS__)
-    if ((LocaleBase = (struct LocaleBase *)OpenLibrary("locale.library", MYLIBVERSION)) != NULL) {
-#else
-    if ((LocaleBase = OpenLibrary("locale.library", MYLIBVERSION)) != NULL) {
-#endif
+    if ((LocaleBase = (APTR)OpenLibrary("locale.library", MYLIBVERSION)) != NULL) {
         if (GETINTERFACE(ILocale, LocaleBase)) {
             if ((currentLocale = OpenLocale(NULL)) != NULL) {
                 decimalSeparator = currentLocale->loc_GroupSeparator;
@@ -324,7 +320,7 @@ ULONG scout_main( void )
     if ((portname = FindMyARexxPort("SCOUT")) != NULL) {
         myarexxport = FindPort(portname);
     } else {
-        portname = " < ERROR > ";
+        portname = (STRPTR)" < ERROR > ";
         myarexxport = NULL;
     }
 
@@ -374,7 +370,7 @@ ULONG scout_main( void )
     {
         ULONG sigs = 0;
 
-        while (DoMethod(AP_Scout, MUIM_Application_NewInput, &sigs) != MUIV_Application_ReturnID_Quit) {
+        while ((LONG)DoMethod(AP_Scout, MUIM_Application_NewInput, &sigs) != MUIV_Application_ReturnID_Quit) {
             if (sigs) {
                 sigs = Wait(sigs | SIGBREAKF_CTRL_C | SIGBREAKF_CTRL_D | SIGBREAKF_CTRL_E | SIGBREAKF_CTRL_F);
 

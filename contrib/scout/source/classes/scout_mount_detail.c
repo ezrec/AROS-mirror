@@ -265,7 +265,7 @@ STATIC void SetDetails( struct IClass *cl,
                 DeleteMsgPort(mp);
             }
 
-            type = "---";
+            type = (STRPTR)"---";
         }
 
     #if defined(USE_NATIVE_64BIT_MATH)
@@ -521,10 +521,9 @@ DISPATCHER(MountsDetailWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeMountsDetailWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct MountsDetailWinData), DISPATCHER_REF(MountsDetailWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct MountsDetailWinData), ENTRY(MountsDetailWinDispatcher));
 }
 

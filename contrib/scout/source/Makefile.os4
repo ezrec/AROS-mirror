@@ -1,12 +1,47 @@
+# find out the HOST operating system
+# on which this makefile is run
+HOST ?= $(shell uname)
+ifeq ($(HOST), AmigaOS)
+  ifeq ($(shell uname -m), powerpc)
+    HOST = AmigaOS4
+  endif
+  ifeq ($(shell uname -m), ppc)
+    HOST = AmigaOS4
+  endif
+endif
+
+# if no host is identifed (no uname tool)
+# we assume a AmigaOS build
+ifeq ($(HOST),)
+  HOST = AmigaOS
+endif
+
 PROJECT=            Scout
 TARGET=             $(PROJECT).os4
 
 VERSION=            37
 
-CC=                 gcc
-LD=                 gcc
-STRIP=              strip
-RM=					delete quiet
+ifeq ($(HOST), AmigaOS4)
+  CC     = gcc
+  LD     = gcc
+  STRIP  = strip
+  OBJDUMP= objdump
+  MKDIR  = makedir
+  RM     = delete quiet
+  RMDIR  = delete quiet
+  CHMOD  = protect flags=rwed
+  MUISDK = /SDK/MUI/C/include
+else
+  CC     = ppc-amigaos-gcc
+  LD     = ppc-amigaos-gcc
+  STRIP  = ppc-amigaos-strip
+  OBJDUMP= ppc-amigaos-objdump
+  MKDIR  = mkdir -p
+  RM     = rm
+  RMDIR  = rm -rf
+  CHMOD  = chmod 755
+  MUISDK = /usr/local/amiga/ppc-amigaos/SDK/MUI/C/include
+endif
 
 OBJDIR=             .obj_os4
 CLASSESDIR=         classes
@@ -14,12 +49,13 @@ EXTRASRC=           extrasrc
 
 CRT=                newlib
 
+CPU=                -mcpu=powerpc -mstrict-align
+WARN=               -W -Wall -Wwrite-strings -Wpointer-arith -Wsign-compare -Wdeclaration-after-statement -Wdisabled-optimization #-Wunreachable-code
 REDEFINE= 			-DCoerceMethod=ICoerceMethod -DDoMethod=IDoMethod -DDoSuperMethod=IDoSuperMethod -DDoSuperMethodA=IDoSuperMethodA
-OPTIMIZE=           -O2
-DEBUG=              -ggdb
-DEFINE=
-CFLAGS=             -mcrt=$(CRT) -Wall -Wwrite-strings -I. -idirafter ./include -I./netinclude -I./classes -I./tbLib -ISDK:MUI/C/Include -D__USE_INLINE__ -D__USE_BASETYPE__ -D__NEW_TIMEVAL_DEFINITION_USED__ $(REDEFINE) $(DEBUG) -c
-LFLAGS=             -mcrt=$(CRT) -nostartfiles
+OPTFLAGS=           -O3 -fomit-frame-pointer -funroll-loops
+DEBUG=              -g -gstabs
+CFLAGS=             -mcrt=$(CRT) -I. -idirafter ./include -I./netinclude -I./classes -I./tbLib -I$(MUISDK) -D__USE_INLINE__ -D__USE_BASETYPE__ -D__NEW_TIMEVAL_DEFINITION_USED__ $(CPU) $(WARN) $(OPTFLAGS) $(REDEFINE) $(DEBUG) -Wa,-mregnames
+LFLAGS=             -mcrt=$(CRT) -nostartfiles -Wl,--cref,-M,-Map=$@.map
 
 LOCALE=             locale
 
@@ -105,7 +141,7 @@ OBJECTS=$(OBJDIR)/startup.o \
    $(OBJDIR)/SmartReadArgs.o \
    $(OBJDIR)/all_gcc.o
 
-HEADERS=system_headers.h startup.h Scout.h \
+HEADERS=system_headers.h startup.h scout.h \
    scout_logo.h scout_net.h \
    scout_defs.h scout_tags.h startup_defs.h \
    $(CLASSESDIR)/fontdisplay_class.h \
@@ -178,55 +214,65 @@ HEADERS=system_headers.h startup.h Scout.h \
    SmartReadArgs.h \
    include/extra.h
 
-LIBS = -LtbLib -lauto -ltblib
+LIBS = -LtbLib/bin_os4 -lauto -ltblib
 
-all: tblib $(OBJDIR) $(HEADERS) $(TARGET)
+all: $(TARGET)
 
 .PHONY: tblib
 
 tblib:
 	@$(MAKE) -C tbLib -f Makefile.os4 all
 
+# make the object directories
 $(OBJDIR):
-	@makedir $(OBJDIR)
-	@makedir $(OBJDIR)/$(CLASSESDIR)
+	@echo "  MK $@"
+	@$(MKDIR) $(OBJDIR)
+	@$(MKDIR) $(OBJDIR)/$(CLASSESDIR)
 
+# for compiling single .c files
 $(OBJDIR)/%.o: %.c
-	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINE) $< -o $@
+	@echo "  CC $<"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(LOCALE)/%.catalog: $(LOCALE)/%.ct
 	flexcat $(LOCALE)/scout.cd $< catalog $@ flush
 
-$(TARGET): $(OBJECTS) tbLib/libtblib.a
-	$(LD) $(LFLAGS) $(OBJECTS) -o $@.debug $(LIBS)
+$(TARGET): $(OBJDIR) $(HEADERS) $(OBJECTS) tbLib/bin_os4/libtblib.a
+	@echo "  LD $@.debug"
+	@$(LD) $(LFLAGS) $(OBJECTS) -o $@.debug $(LIBS)
+	@echo "  LD $@"
 	@$(STRIP) -R ".comment" -o $@ $@.debug
-	@protect $@ rwed
+	@$(CHMOD) $@
 
 scout_cat.h: $(LOCALE)/scout.cd
-	flexcat locale/Scout.cd scout_cat.h=C_h.sd scout_cat.c=C_c.sd
+	flexcat $(LOCALE)/scout.cd scout_cat.h=C_h.sd scout_cat.c=C_c.sd
 
 $(OBJDIR)/scout_cat.o: scout_cat.h
 
 $(OBJDIR)/$(CLASSESDIR)/scout_customclasses.o: $(CLASSESDIR)/scout_customclasses.c
-	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINE) $< -o $@
+	@echo "  CC $<"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR)/$(CLASSESDIR)/scout_about.o: $(CLASSESDIR)/scout_about.c $(CLASSESDIR)/scout_version.h Scout_rev.h
-	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINE) $< -o $@
+	@echo "  CC $<"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR)/$(CLASSESDIR)/scout_version.o: $(CLASSESDIR)/scout_version.c $(CLASSESDIR)/scout_version.h Scout_rev.h
-	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINE) $< -o $@
+	@echo "  CC $<"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR)/all_gcc.o: all_gcc.c $(EXTRASRC)/stccpy.c $(EXTRASRC)/stcd_i.c $(EXTRASRC)/stcd_l.c \
     $(EXTRASRC)/init_inet_daemon.c
 
-tbLib/libtblib.a:
-	-make -C tbLib $@
+tbLib/bin_os4/libtblib.a:
+	-make -C tbLib -f Makefile.os4 all
 
 clean:
 	-$(RM) $(OBJDIR)/*.o $(OBJDIR)/$(CLASSESDIR)/*.o $(TARGET) $(TARGET).debug $(TARGET).dump
 	-make -C tbLib $@
 
 realclean: clean
+	-$(RMDIR) $(OBJDIR)
 
 version:
 	bumprev $(VERSION) $(PROJECT)
@@ -238,7 +284,7 @@ date:
 	@smake version
 
 dump:
-	objdump --section-headers --all-headers --reloc --syms --disassemble-all $(TARGET).debug >$(TARGET).dump
+	$(OBJDUMP) --section-headers --all-headers --reloc --syms --disassemble-all $(TARGET).debug >$(TARGET).dump
 
 install: $(TARGET)
 	copy $(TARGET) Work:Debug/Scout

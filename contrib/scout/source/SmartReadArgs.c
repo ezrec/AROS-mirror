@@ -103,7 +103,7 @@ extern struct WBStartup *_WBenchMsg;
 /* -------------------------- static prototypes --------------------------- */
 
 static struct DiskObject *smart_get_icon(struct SmartArgs *args, struct WBStartup *wbarg);
-static void fstrcpy(struct SmartArgs *args, STRPTR string);
+static void fstrcpy(struct SmartArgs *args, CONST_STRPTR string);
 static void get_arg_name(struct SmartArgs *args, STRPTR buffer, ULONG size, ULONG * modes);
 static void get_wbarg_name(struct WBArg *wbarg, STRPTR buffer, ULONG size);
 static BOOL is_in_template(STRPTR name, STRPTR template);
@@ -555,7 +555,7 @@ static struct DiskObject *smart_get_icon(struct SmartArgs *args, struct WBStartu
    return (dob);
 }
 
-static void fstrcpy(struct SmartArgs *args, STRPTR string)
+static void fstrcpy(struct SmartArgs *args, CONST_STRPTR string)
 {
    STRPTR ptr = args->sa_ActualPtr;
    STRPTR end = args->sa_EndPtr;

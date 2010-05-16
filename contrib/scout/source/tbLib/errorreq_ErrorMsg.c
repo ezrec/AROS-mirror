@@ -8,8 +8,8 @@
 #include "SDI_compiler.h"
 
 /* /// "ErrorMsg()" */
-void VARARGS68K STDARGS ErrorMsg( STRPTR title,
-                                  STRPTR msg, ... )
+void VARARGS68K STDARGS ErrorMsg( CONST_STRPTR title,
+                                  CONST_STRPTR msg, ... )
 {
     VA_LIST args;
     struct EasyStruct es;

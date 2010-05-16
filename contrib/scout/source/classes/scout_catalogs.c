@@ -37,21 +37,19 @@ struct CatalogsCallbackUserData {
     ULONG ud_Count;
 };
 
-STATIC SAVEDS LONG catlist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(catlist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct CatalogEntry));
 }
 MakeStaticHook(catlist_con2hook, catlist_con2func);
 
-STATIC SAVEDS LONG catlist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(catlist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(catlist_des2hook, catlist_des2func);
 
-STATIC SAVEDS LONG catlist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(catlist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct CatalogEntry *ce = (struct CatalogEntry *)msg->entry;
 
@@ -65,13 +63,11 @@ STATIC SAVEDS LONG catlist_dsp2func( struct Hook *hook, Object *obj, struct NLis
         msg->strings[1] = txtCatalogName;
         msg->strings[2] = txtCatalogVersion;
         msg->strings[3] = txtCatalogLanguage;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
-        msg->preparses[3] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
+        msg->preparses[3] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(catlist_dsp2hook, catlist_dsp2func);
 
@@ -94,7 +90,7 @@ STATIC LONG catlist_cmpfunc( const struct Node *n1,
     return stricmp(((struct CatalogEntry *)n1)->ce_Name, ((struct CatalogEntry *)n2)->ce_Name);
 }
 
-STATIC SAVEDS LONG catlist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(catlist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct CatalogEntry *ce1, *ce2;
@@ -105,7 +101,7 @@ STATIC SAVEDS LONG catlist_cmp2func( struct Hook *hook, Object *obj, struct NLis
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = catlist_cmp2colfunc(ce2, ce1, col1);
@@ -215,7 +211,7 @@ STATIC void PrintCallback( struct CatalogEntry *ce,
 }
 
 STATIC void SendCallback( struct CatalogEntry *ce,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(ce, sizeof(struct CatalogEntry));
 }
@@ -282,7 +278,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct CatalogsWinData *cwd = INST_DATA(cl, obj);
     struct CatalogsCallbackUserData ud;
@@ -309,9 +305,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintCatalogs(NULL);
 
@@ -320,7 +316,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct CatalogsWinData *cwd = INST_DATA(cl, obj);
     struct CatalogEntry *ce;
@@ -344,7 +340,6 @@ DISPATCHER(CatalogsWinDispatcher)
 
     return (DoSuperMethodA(cl, obj, msg));
 }
-DISPATCHER_END
 
 void PrintCatalogs( STRPTR filename )
 {
@@ -365,6 +360,6 @@ void SendCatalogList( STRPTR UNUSED dummy )
 
 APTR MakeCatalogsWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct CatalogsWinData), DISPATCHER_REF(CatalogsWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct CatalogsWinData), ENTRY(CatalogsWinDispatcher));
 }
 

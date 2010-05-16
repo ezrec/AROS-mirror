@@ -32,7 +32,7 @@
 #include <proto/intuition.h>
 #include <proto/muimaster.h>
 #include <mui/Urltext_mcc.h>
-#include <tblib/tblib.h>
+#include <tblib.h>
 #include "scout.h"
 #include "scout_about.h"
 #include "scout_cat.h"
@@ -42,6 +42,7 @@
 #include "scout_version.h"
 */
 #include "system_headers.h"
+#include <proto/muimaster.h>
 
 struct AboutWinData {
     APTR awd_dummy;
@@ -109,9 +110,9 @@ STATIC ULONG mDispose( struct IClass *cl,
     return DoSuperMethodA(cl, obj, msg);
 }
 
-STATIC ULONG mAbout( struct IClass *cl,
+STATIC ULONG mAbout( UNUSED struct IClass *cl,
                      Object *obj,
-                     Msg msg )
+                     UNUSED Msg msg )
 {
     APTR app;
     BOOL done = FALSE;
@@ -153,10 +154,9 @@ DISPATCHER(AboutWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeAboutWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct AboutWinData), DISPATCHER_REF(AboutWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct AboutWinData), ENTRY(AboutWinDispatcher));
 }
 

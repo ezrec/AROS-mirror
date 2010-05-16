@@ -108,7 +108,7 @@ void VARARGS68K STDARGS MySetContents( APTR textfield,
 
     VA_START(args, fmt);
 
-#if defined(__amigaos4__) || defined(__MORPHOS__)
+#if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
     if ((buf = VASPrintf(fmt, VA_ARG(args, APTR))) != NULL) {
 #else
     if ((buf = AllocVec(TMP_STRING_LENGTH, MEMF_ANY)) != NULL) {
@@ -130,7 +130,7 @@ void VARARGS68K STDARGS MySetContentsHealed( APTR textfield,
 
     VA_START(args, fmt);
 
-#if defined(__amigaos4__) || defined(__MORPHOS__)
+#if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
     if ((buf = VASPrintf(fmt, VA_ARG(args, APTR))) != NULL) {
 #else
     if ((buf = AllocVec(TMP_STRING_LENGTH, MEMF_ANY)) != NULL) {
@@ -153,7 +153,7 @@ void VARARGS68K STDARGS MySetStringContents( APTR textfield,
 
     VA_START(args, fmt);
 
-#if defined(__amigaos4__) || defined(__MORPHOS__)
+#if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
     if ((buf = VASPrintf(fmt, VA_ARG(args, APTR))) != NULL) {
 #else
     if ((buf = AllocVec(TMP_STRING_LENGTH, MEMF_ANY)) != NULL) {
@@ -219,7 +219,7 @@ STRPTR MyGetChildWindowTitle( CONST_STRPTR part1,
     return title;
 }
 
-BOOL CheckMCCVersion( STRPTR mcc,
+BOOL CheckMCCVersion( CONST_STRPTR mcc,
                       ULONG minver,
                       ULONG minrev,
                       BOOL errorReq )
@@ -441,17 +441,17 @@ APTR MyTextObject2( void )
     return (TextObject, MyTextFrame, MUIA_Text_SetMax, TRUE, End);
 }
 
-APTR MyTextObject3( STRPTR text )
+APTR MyTextObject3( CONST_STRPTR text )
 {
     return (TextObject, MyTextFrame, MUIA_Text_Contents, text, End);
 }
 
-APTR MyTextObject4( STRPTR text )
+APTR MyTextObject4( CONST_STRPTR text )
 {
     return (TextObject, MyTextFrame, MUIA_Text_SetMax, TRUE, MUIA_Text_Contents, text, End);
 }
 
-APTR MyTextObject5( STRPTR text )
+APTR MyTextObject5( CONST_STRPTR text )
 {
     return (TextObject, MyTextFrame, MUIA_Text_SetMin, TRUE, MUIA_Text_Contents, text, End);
 }
@@ -461,7 +461,7 @@ APTR MyTextObject6( void )
     return (TextObject, MyTextFrame, MUIA_Text_SetMin, FALSE, MUIA_Text_PreParse, MUIX_C, End);
 }
 
-APTR MyTextObject7( STRPTR text )
+APTR MyTextObject7( CONST_STRPTR text )
 {
     return (TextObject, MyTextFrame, MUIA_Text_SetMin, FALSE, MUIA_Text_PreParse, MUIX_C, MUIA_Text_Contents, text, End);
 }
@@ -487,24 +487,26 @@ BOOL isValidPointer( APTR ptr )
     }
 
 #if defined(__amigaos4__)
-    struct MMUIFace *IMMU;
+	{
+	    struct MMUIFace *IMMU;
 
-    if ((IMMU = (struct MMUIFace *)GetInterface((struct Library *)SysBase, "mmu", 1, NULL)) != NULL) {
-        APTR sysStack;
-        ULONG flags;
+	    if ((IMMU = (struct MMUIFace *)GetInterface((struct Library *)SysBase, "mmu", 1, NULL)) != NULL) {
+	        APTR sysStack;
+	        ULONG flags;
 
-        sysStack = SuperState();
-        flags = IMMU->GetMemoryAttrs(ptr, 0);
-        UserState(sysStack);
+	        sysStack = SuperState();
+	        flags = IMMU->GetMemoryAttrs(ptr, 0);
+	        UserState(sysStack);
 
-        DropInterface((struct Interface *)IMMU);
+	        DropInterface((struct Interface *)IMMU);
 
-        if (FLAG_IS_SET(flags, MEMATTRF_NOT_MAPPED)) {
-            return FALSE;
-        } else {
-            return TRUE;
-        }
-    }
+	        if (FLAG_IS_SET(flags, MEMATTRF_NOT_MAPPED)) {
+	            return FALSE;
+	        } else {
+	            return TRUE;
+	        }
+	    }
+	}
 #elif defined(__MORPHOS__)
     {
         ULONG RomStart, RomEnd;
@@ -620,7 +622,7 @@ STRPTR StripMUIFormatting( STRPTR str )
     return buffer;
 }
 
-BOOL IsReal( STRPTR text )
+BOOL IsReal( CONST_STRPTR text )
 {
     ULONG punkte = 0;
     TEXT c;
@@ -639,7 +641,7 @@ BOOL IsReal( STRPTR text )
     return TRUE;
 }
 
-BOOL IsHex( STRPTR text,
+BOOL IsHex( CONST_STRPTR text,
             LONG *result )
 {
     // FIXME: 64 bit AROS?
@@ -665,7 +667,7 @@ BOOL IsHex( STRPTR text,
     return FALSE;
 }
 
-BOOL IsUHex( STRPTR text,
+BOOL IsUHex( CONST_STRPTR text,
              ULONG *result)
 {
     ULONG i;
@@ -689,7 +691,7 @@ BOOL IsUHex( STRPTR text,
     return FALSE;
 }
 
-BOOL IsDec( STRPTR text,
+BOOL IsDec( CONST_STRPTR text,
             LONG *result)
 {
     while (*text != '\0' && isspace(*text)) {
@@ -699,8 +701,8 @@ BOOL IsDec( STRPTR text,
     return (BOOL)(stcd_l(text, result) > 0);
 }
 
-LONG HexCompare( STRPTR hex1str,
-                 STRPTR hex2str )
+LONG HexCompare( CONST_STRPTR hex1str,
+                 CONST_STRPTR hex2str )
 {
     LONG hex1, hex2;
 
@@ -710,8 +712,8 @@ LONG HexCompare( STRPTR hex1str,
     return hex1 - hex2;
 }
 
-LONG IntegerCompare( STRPTR int1str,
-                     STRPTR int2str )
+LONG IntegerCompare( CONST_STRPTR int1str,
+                     CONST_STRPTR int2str )
 {
     LONG int1, int2;
 
@@ -721,8 +723,8 @@ LONG IntegerCompare( STRPTR int1str,
     return int1 - int2;
 }
 
-LONG VersionCompare( STRPTR ver1str,
-                     STRPTR ver2str )
+LONG VersionCompare( CONST_STRPTR ver1str,
+                     CONST_STRPTR ver2str )
 {
     STRPTR copy1, copy2;
     LONG ver1, ver2, rev1, rev2;
@@ -753,8 +755,8 @@ LONG VersionCompare( STRPTR ver1str,
     return result;
 }
 
-LONG PriorityCompare( STRPTR pri1str,
-                      STRPTR pri2str )
+LONG PriorityCompare( CONST_STRPTR pri1str,
+                      CONST_STRPTR pri2str )
 {
     LONG pri1, pri2;
 

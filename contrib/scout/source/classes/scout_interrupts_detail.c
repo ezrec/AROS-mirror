@@ -181,10 +181,9 @@ DISPATCHER(InterruptsDetailWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeInterruptsDetailWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct InterruptsDetailWinData), DISPATCHER_REF(InterruptsDetailWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct InterruptsDetailWinData), ENTRY(InterruptsDetailWinDispatcher));
 }
 

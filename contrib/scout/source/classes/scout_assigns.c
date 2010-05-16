@@ -38,30 +38,28 @@ struct AssignsCallbackUserData {
     ULONG ud_Count;
 };
 
-STATIC SAVEDS LONG asstree_confunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_ConstructMessage *msg )
+HOOKPROTONHNO(asstree_confunc, LONG, struct MUIP_NListtree_ConstructMessage *msg)
 {
     return AllocListEntry(msg->MemPool, msg->UserData, sizeof(struct AssignEntry));
 }
 MakeStaticHook(asstree_conhook, asstree_confunc);
 
-STATIC SAVEDS LONG asstree_desfunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_DestructMessage *msg )
+HOOKPROTONHNO(asstree_desfunc, void, struct MUIP_NListtree_DestructMessage *msg)
 {
     FreeListEntry(msg->MemPool, &msg->UserData);
-
-    return 0;
 }
 MakeStaticHook(asstree_deshook, asstree_desfunc);
 
-STATIC SAVEDS LONG asstree_dspfunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_DisplayMessage *msg )
+HOOKPROTONHNO(asstree_dspfunc, void, struct MUIP_NListtree_DisplayMessage *msg)
 {
-    STATIC STRPTR empty = "\0";
+    STATIC CONST_STRPTR empty = "\0";
 
     if (msg->TreeNode != NULL) {
         struct AssignEntry *ae = msg->TreeNode->tn_User;
 
         if (stricmp(ae->ae_Type, "ADD_NODE") == 0) {
             msg->Array[0] = ae->ae_Address;
-            msg->Array[1] = empty;
+            msg->Array[1] = (STRPTR)empty;
             msg->Array[2] = ae->ae_Path;
         } else {
             msg->Array[0] = ae->ae_Address;
@@ -72,12 +70,10 @@ STATIC SAVEDS LONG asstree_dspfunc( struct Hook *hook, Object *obj, struct MUIP_
         msg->Array[0] = txtAddress;
         msg->Array[1] = txtName;
         msg->Array[2] = txtAssignsPath;
-        msg->Preparse[0] = MUIX_B;
-        msg->Preparse[1] = MUIX_B;
-        msg->Preparse[2] = MUIX_B;
+        msg->Preparse[0] = (STRPTR)MUIX_B;
+        msg->Preparse[1] = (STRPTR)MUIX_B;
+        msg->Preparse[2] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(asstree_dsphook, asstree_dspfunc);
 
@@ -96,13 +92,13 @@ STATIC LONG asslist_cmpfunc( const struct Node *n1,
     return cmp;
 }
 
-STATIC SAVEDS LONG asstree_cmpfunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_CompareMessage *msg )
+HOOKPROTONHNO(asstree_cmpfunc, LONG, struct MUIP_NListtree_CompareMessage *msg)
 {
     return asslist_cmpfunc((const struct Node *)msg->TreeNode1->tn_User, (const struct Node *)msg->TreeNode2->tn_User);
 }
 MakeStaticHook(asstree_cmphook, asstree_cmpfunc);
 
-STATIC SAVEDS LONG asstree_findfunc( struct Hook *hook, Object *obj, struct MUIP_NListtree_FindUserDataMessage *msg )
+HOOKPROTONHNO(asstree_findfunc, LONG, struct MUIP_NListtree_FindUserDataMessage *msg)
 {
     struct AssignEntry *ae;
 
@@ -263,7 +259,7 @@ STATIC void PrintCallback( struct AssignEntry *ae,
 }
 
 STATIC void SendCallback( struct AssignEntry *ae,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(ae, sizeof(struct AssignEntry));
 }
@@ -334,7 +330,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct AssignsWinData *awd = INST_DATA(cl, obj);
     struct AssignsCallbackUserData ud;
@@ -362,9 +358,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintAssigns(NULL);
 
@@ -373,7 +369,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mRemove( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct AssignsWinData *awd = INST_DATA(cl, obj);
     struct MUI_NListtree_TreeNode *tn;
@@ -401,7 +397,7 @@ STATIC ULONG mRemove( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct AssignsWinData *awd = INST_DATA(cl, obj);
     struct MUI_NListtree_TreeNode *tn;
@@ -429,7 +425,6 @@ DISPATCHER(AssignsWinDispatcher)
 
     return (DoSuperMethodA(cl, obj, msg));
 }
-DISPATCHER_END
 
 void PrintAssigns( STRPTR filename )
 {
@@ -450,6 +445,6 @@ void SendAssList( STRPTR UNUSED dummy )
 
 APTR MakeAssignsWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct AssignsWinData), DISPATCHER_REF(AssignsWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct AssignsWinData), ENTRY(AssignsWinDispatcher));
 }
 

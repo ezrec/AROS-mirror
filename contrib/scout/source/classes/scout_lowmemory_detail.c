@@ -151,10 +151,9 @@ DISPATCHER(LowMemoryDetailWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeLowMemoryDetailWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct LowMemoryDetailWinData), DISPATCHER_REF(LowMemoryDetailWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct LowMemoryDetailWinData), ENTRY(LowMemoryDetailWinDispatcher));
 }
 

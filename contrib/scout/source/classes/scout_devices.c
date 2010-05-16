@@ -41,21 +41,19 @@ struct DeviceCallbackUserData {
     ULONG ud_Count;
 };
 
-STATIC SAVEDS LONG devlist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(devlist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct DeviceEntry));
 }
 MakeStaticHook(devlist_con2hook, devlist_con2func);
 
-STATIC SAVEDS LONG devlist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(devlist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(devlist_des2hook, devlist_des2func);
 
-STATIC SAVEDS LONG devlist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(devlist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct DeviceEntry *de = (struct DeviceEntry *)msg->entry;
 
@@ -77,17 +75,15 @@ STATIC SAVEDS LONG devlist_dsp2func( struct Hook *hook, Object *obj, struct NLis
         msg->strings[5] = txtDeviceOpenCount;
         msg->strings[6] = txtDeviceRPC;
         msg->strings[7] = txtDeviceCodeType;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
-        msg->preparses[3] = MUIX_B;
-        msg->preparses[4] = MUIX_B;
-        msg->preparses[5] = MUIX_B;
-        msg->preparses[6] = MUIX_B;
-        msg->preparses[7] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
+        msg->preparses[3] = (STRPTR)MUIX_B;
+        msg->preparses[4] = (STRPTR)MUIX_B;
+        msg->preparses[5] = (STRPTR)MUIX_B;
+        msg->preparses[6] = (STRPTR)MUIX_B;
+        msg->preparses[7] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(devlist_dsp2hook, devlist_dsp2func);
 
@@ -114,7 +110,7 @@ STATIC LONG devlist_cmpfunc( const struct Node *n1,
     return stricmp(((struct DeviceEntry *)n1)->de_Name, ((struct DeviceEntry *)n2)->de_Name);
 }
 
-STATIC SAVEDS LONG devlist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(devlist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct DeviceEntry *de1, *de2;
@@ -125,7 +121,7 @@ STATIC SAVEDS LONG devlist_cmp2func( struct Hook *hook, Object *obj, struct NLis
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = devlist_cmp2colfunc(de2, de1, col1);
@@ -259,7 +255,7 @@ STATIC void PrintCallback( struct DeviceEntry *de,
 }
 
 STATIC void SendCallback( struct DeviceEntry *de,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(de, sizeof(struct DeviceEntry));
 }
@@ -347,7 +343,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct DevicesWinData *dwd = INST_DATA(cl, obj);
     struct DeviceCallbackUserData ud;
@@ -379,9 +375,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintDevices(NULL);
 
@@ -390,7 +386,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mRemove( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct DevicesWinData *dwd = INST_DATA(cl, obj);
     struct DeviceEntry *de;
@@ -408,7 +404,7 @@ STATIC ULONG mRemove( struct IClass *cl,
 
 STATIC ULONG mPriority( struct IClass *cl,
                         Object *obj,
-                        Msg msg )
+                        UNUSED Msg msg )
 {
     struct DevicesWinData *dwd = INST_DATA(cl, obj);
     struct DeviceEntry *de;
@@ -430,7 +426,7 @@ STATIC ULONG mPriority( struct IClass *cl,
 
 STATIC ULONG mMore( struct IClass *cl,
                     Object *obj,
-                    Msg msg )
+                    UNUSED Msg msg )
 {
     if (!clientstate) {
         struct DevicesWinData *dwd = INST_DATA(cl, obj);
@@ -457,7 +453,7 @@ STATIC ULONG mMore( struct IClass *cl,
 
 STATIC ULONG mFunctions( struct IClass *cl,
                          Object *obj,
-                         Msg msg )
+                         UNUSED Msg msg )
 {
     struct DevicesWinData *dwd = INST_DATA(cl, obj);
     struct DeviceEntry *de;
@@ -477,7 +473,7 @@ STATIC ULONG mFunctions( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct DevicesWinData *dwd = INST_DATA(cl, obj);
     struct DeviceEntry *de;
@@ -510,7 +506,6 @@ DISPATCHER(DevicesWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 void PrintDevices( STRPTR filename )
 {
@@ -531,6 +526,6 @@ void SendDevList( STRPTR UNUSED dummy )
 
 APTR MakeDevicesWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct DevicesWinData), DISPATCHER_REF(DevicesWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct DevicesWinData), ENTRY(DevicesWinDispatcher));
 }
 

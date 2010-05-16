@@ -256,7 +256,7 @@ STATIC ULONG mRemChildWindow( struct IClass *cl,
 
 STATIC ULONG mCloseChildWindows( struct IClass *cl,
                                  Object *obj,
-                                 Msg msg )
+                                 UNUSED Msg msg )
 {
     struct ParentWinData *pwd = INST_DATA(cl, obj);
 
@@ -279,10 +279,9 @@ DISPATCHER(ParentWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 APTR MakeParentWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, MUIC_Window,  NULL, sizeof(struct ParentWinData), DISPATCHER_REF(ParentWinDispatcher));
+    return MUI_CreateCustomClass(NULL, MUIC_Window,  NULL, sizeof(struct ParentWinData), ENTRY(ParentWinDispatcher));
 }
 

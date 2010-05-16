@@ -29,7 +29,7 @@
 /********************************************************************/
 /*                        ARexx-Funktionen                          */
 /********************************************************************/
-STATIC SAVEDS LONG printlist_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(printlist_rxfunc, LONG, ULONG *arg)
 {
    if (arg[2])
       PrintHandleMode = MODE_OLDFILE;
@@ -88,7 +88,7 @@ STATIC SAVEDS LONG printlist_rxfunc( struct Hook *hook, Object *obj, ULONG *arg 
 }
 MakeStaticHook(printlist_rxhook, printlist_rxfunc);
 
-STATIC SAVEDS LONG findtask_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(findtask_rxfunc, LONG, ULONG *arg)
 {
    struct   Task     *task;
    long result = RETURN_ERROR;
@@ -102,7 +102,7 @@ STATIC SAVEDS LONG findtask_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
 }
 MakeStaticHook(findtask_rxhook, findtask_rxfunc);
 
-STATIC SAVEDS LONG removetask_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(removetask_rxfunc, LONG, ULONG *arg)
 {
    if (MyRemoveTask ((STRPTR)arg[0], (BOOL) arg[1]))
       return (RETURN_OK);
@@ -111,7 +111,7 @@ STATIC SAVEDS LONG removetask_rxfunc( struct Hook *hook, Object *obj, ULONG *arg
 }
 MakeStaticHook(removetask_rxhook, removetask_rxfunc);
 
-STATIC SAVEDS LONG freezetask_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(freezetask_rxfunc, LONG, ULONG *arg)
 {
    if (MyFreezeTask ((STRPTR)arg[0]))
       return (RETURN_OK);
@@ -120,7 +120,7 @@ STATIC SAVEDS LONG freezetask_rxfunc( struct Hook *hook, Object *obj, ULONG *arg
 }
 MakeStaticHook(freezetask_rxhook, freezetask_rxfunc);
 
-STATIC SAVEDS LONG activatetask_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(activatetask_rxfunc, LONG, ULONG *arg)
 {
    if (MyActivateTask ((STRPTR)arg[0]))
       return (RETURN_OK);
@@ -129,7 +129,7 @@ STATIC SAVEDS LONG activatetask_rxfunc( struct Hook *hook, Object *obj, ULONG *a
 }
 MakeStaticHook(activatetask_rxhook, activatetask_rxfunc);
 
-STATIC SAVEDS LONG signaltask_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(signaltask_rxfunc, LONG, ULONG *arg)
 {
    if (MySignalTask ((STRPTR)arg[0], (STRPTR)arg[1]))
       return (RETURN_OK);
@@ -138,7 +138,7 @@ STATIC SAVEDS LONG signaltask_rxfunc( struct Hook *hook, Object *obj, ULONG *arg
 }
 MakeStaticHook(signaltask_rxhook, signaltask_rxfunc);
 
-STATIC SAVEDS LONG breaktask_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(breaktask_rxfunc, LONG, ULONG *arg)
 {
    if (MySignalTask ((STRPTR)arg[0], "0x1000"))
       return (RETURN_OK);
@@ -147,7 +147,7 @@ STATIC SAVEDS LONG breaktask_rxfunc( struct Hook *hook, Object *obj, ULONG *arg 
 }
 MakeStaticHook(breaktask_rxhook, breaktask_rxfunc);
 
-STATIC SAVEDS LONG settaskpri_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(settaskpri_rxfunc, LONG, ULONG *arg)
 {
    struct   Task     *task;
    LONG     pri, result = RETURN_ERROR;
@@ -163,7 +163,7 @@ STATIC SAVEDS LONG settaskpri_rxfunc( struct Hook *hook, Object *obj, ULONG *arg
 }
 MakeStaticHook(settaskpri_rxhook, settaskpri_rxfunc);
 
-STATIC SAVEDS LONG removeport_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(removeport_rxfunc, LONG, ULONG *arg)
 {
    struct   MsgPort  *port;
 
@@ -175,7 +175,7 @@ STATIC SAVEDS LONG removeport_rxfunc( struct Hook *hook, Object *obj, ULONG *arg
 }
 MakeStaticHook(removeport_rxhook, removeport_rxfunc);
 
-STATIC SAVEDS LONG getlocknumber_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(getlocknumber_rxfunc, LONG, ULONG *arg)
 {
    if (SendResultString("%ld", CountLocks((STRPTR)*arg))) return RETURN_OK;
 
@@ -183,7 +183,7 @@ STATIC SAVEDS LONG getlocknumber_rxfunc( struct Hook *hook, Object *obj, ULONG *
 }
 MakeStaticHook(getlocknumber_rxhook, getlocknumber_rxfunc);
 
-STATIC SAVEDS LONG removelocks_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(removelocks_rxfunc, LONG, ULONG *arg)
 {
    RemoveLock((STRPTR)*arg);
 
@@ -191,7 +191,7 @@ STATIC SAVEDS LONG removelocks_rxfunc( struct Hook *hook, Object *obj, ULONG *ar
 }
 MakeStaticHook(removelocks_rxhook, removelocks_rxfunc);
 
-STATIC SAVEDS LONG removelock_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(removelock_rxfunc, LONG, ULONG *arg)
 {
    LONG  nobptr;
 
@@ -203,7 +203,7 @@ STATIC SAVEDS LONG removelock_rxfunc( struct Hook *hook, Object *obj, ULONG *arg
 }
 MakeStaticHook(removelock_rxhook, removelock_rxfunc);
 
-STATIC SAVEDS LONG getpriority_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(getpriority_rxfunc, LONG, ULONG *arg)
 {
    LONG  address;
 
@@ -215,7 +215,7 @@ STATIC SAVEDS LONG getpriority_rxfunc( struct Hook *hook, Object *obj, ULONG *ar
 }
 MakeStaticHook(getpriority_rxhook, getpriority_rxfunc);
 
-STATIC SAVEDS LONG setpriority_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(setpriority_rxfunc, LONG, ULONG *arg)
 {
     struct Node *node;
    struct   List  *list;
@@ -238,7 +238,7 @@ STATIC SAVEDS LONG setpriority_rxfunc( struct Hook *hook, Object *obj, ULONG *ar
 }
 MakeStaticHook(setpriority_rxhook, setpriority_rxfunc);
 
-STATIC SAVEDS LONG findnode_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(findnode_rxfunc, LONG, ULONG *arg)
 {
     struct Node *node;
 
@@ -250,7 +250,7 @@ STATIC SAVEDS LONG findnode_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
 }
 MakeStaticHook(findnode_rxhook, findnode_rxfunc);
 
-STATIC SAVEDS LONG closelib_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(closelib_rxfunc, LONG, ULONG *arg)
 {
     struct Node *node;
 
@@ -262,7 +262,7 @@ STATIC SAVEDS LONG closelib_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
 }
 MakeStaticHook(closelib_rxhook, closelib_rxfunc);
 
-STATIC SAVEDS LONG removelib_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(removelib_rxfunc, LONG, ULONG *arg)
 {
     struct Node *node;
 
@@ -275,7 +275,7 @@ STATIC SAVEDS LONG removelib_rxfunc( struct Hook *hook, Object *obj, ULONG *arg 
 }
 MakeStaticHook(removelib_rxhook, removelib_rxfunc);
 
-STATIC SAVEDS LONG removedev_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(removedev_rxfunc, LONG, ULONG *arg)
 {
     struct Node *node;
 
@@ -288,7 +288,7 @@ STATIC SAVEDS LONG removedev_rxfunc( struct Hook *hook, Object *obj, ULONG *arg 
 }
 MakeStaticHook(removedev_rxhook, removedev_rxfunc);
 
-STATIC SAVEDS LONG removeres_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(removeres_rxfunc, LONG, ULONG *arg)
 {
     struct Node *node;
 
@@ -300,7 +300,7 @@ STATIC SAVEDS LONG removeres_rxfunc( struct Hook *hook, Object *obj, ULONG *arg 
 }
 MakeStaticHook(removeres_rxhook, removeres_rxfunc);
 
-STATIC SAVEDS LONG obtainsem_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(obtainsem_rxfunc, LONG, ULONG *arg)
 {
     struct Node *node;
 
@@ -312,7 +312,7 @@ STATIC SAVEDS LONG obtainsem_rxfunc( struct Hook *hook, Object *obj, ULONG *arg 
 }
 MakeStaticHook(obtainsem_rxhook, obtainsem_rxfunc);
 
-STATIC SAVEDS LONG releasesem_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(releasesem_rxfunc, LONG, ULONG *arg)
 {
     struct Node *node;
 
@@ -325,7 +325,7 @@ STATIC SAVEDS LONG releasesem_rxfunc( struct Hook *hook, Object *obj, ULONG *arg
 }
 MakeStaticHook(releasesem_rxhook, releasesem_rxfunc);
 
-STATIC SAVEDS LONG removesem_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(removesem_rxfunc, LONG, ULONG *arg)
 {
     struct Node *node;
 
@@ -337,7 +337,7 @@ STATIC SAVEDS LONG removesem_rxfunc( struct Hook *hook, Object *obj, ULONG *arg 
 }
 MakeStaticHook(removesem_rxhook, removesem_rxfunc);
 
-STATIC SAVEDS LONG removeinput_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(removeinput_rxfunc, LONG, ULONG *arg)
 {
     LONG result = RETURN_ERROR;
     struct MsgPort *port;
@@ -369,7 +369,7 @@ STATIC SAVEDS LONG removeinput_rxfunc( struct Hook *hook, Object *obj, ULONG *ar
 }
 MakeStaticHook(removeinput_rxhook, removeinput_rxfunc);
 
-STATIC SAVEDS LONG removelowmemory_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(removelowmemory_rxfunc, LONG, ULONG *arg)
 {
    struct Interrupt *intr;
 
@@ -382,7 +382,7 @@ STATIC SAVEDS LONG removelowmemory_rxfunc( struct Hook *hook, Object *obj, ULONG
 }
 MakeStaticHook(removelowmemory_rxhook, removelowmemory_rxfunc);
 
-STATIC SAVEDS LONG causelowmemory_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(causelowmemory_rxfunc, LONG, ULONG *arg)
 {
    struct Interrupt *intr;
    struct MemHandlerData mhd = {1000, MEMF_ANY, 0};
@@ -395,7 +395,7 @@ STATIC SAVEDS LONG causelowmemory_rxfunc( struct Hook *hook, Object *obj, ULONG 
 }
 MakeStaticHook(causelowmemory_rxhook, causelowmemory_rxfunc);
 
-STATIC SAVEDS LONG findresident_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(findresident_rxfunc, LONG, ULONG *arg)
 {
    struct   Resident *resi;
 
@@ -407,7 +407,7 @@ STATIC SAVEDS LONG findresident_rxfunc( struct Hook *hook, Object *obj, ULONG *a
 }
 MakeStaticHook(findresident_rxhook, findresident_rxfunc);
 
-STATIC SAVEDS LONG findinterrupt_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(findinterrupt_rxfunc, LONG, ULONG *arg)
 {
     struct Interrupt *intr;
 
@@ -421,7 +421,7 @@ STATIC SAVEDS LONG findinterrupt_rxfunc( struct Hook *hook, Object *obj, ULONG *
 }
 MakeStaticHook(findinterrupt_rxhook, findinterrupt_rxfunc);
 
-STATIC SAVEDS LONG removeinterrupt_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(removeinterrupt_rxfunc, LONG, ULONG *arg)
 {
     struct Interrupt *intr;
 
@@ -433,7 +433,7 @@ STATIC SAVEDS LONG removeinterrupt_rxfunc( struct Hook *hook, Object *obj, ULONG
 }
 MakeStaticHook(removeinterrupt_rxhook, removeinterrupt_rxfunc);
 
-STATIC SAVEDS LONG removeclass_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(removeclass_rxfunc, LONG, ULONG *arg)
 {
    struct IClass *node;
    BOOL ret;
@@ -449,7 +449,7 @@ STATIC SAVEDS LONG removeclass_rxfunc( struct Hook *hook, Object *obj, ULONG *ar
 }
 MakeStaticHook(removeclass_rxhook, removeclass_rxfunc);
 
-STATIC SAVEDS LONG aborttimer_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(aborttimer_rxfunc, LONG, ULONG *arg)
 {
     struct timerequest *tr;
 
@@ -466,9 +466,7 @@ STATIC SAVEDS LONG aborttimer_rxfunc( struct Hook *hook, Object *obj, ULONG *arg
 }
 MakeStaticHook(aborttimer_rxhook, aborttimer_rxfunc);
 
-
-
-STATIC SAVEDS LONG flushdevs_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNONP(flushdevs_rxfunc, LONG)
 {
    FlushDevices();
 
@@ -476,7 +474,7 @@ STATIC SAVEDS LONG flushdevs_rxfunc( struct Hook *hook, Object *obj, ULONG *arg 
 }
 MakeStaticHook(flushdevs_rxhook, flushdevs_rxfunc);
 
-STATIC SAVEDS LONG flushfonts_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNONP(flushfonts_rxfunc, LONG)
 {
    FlushFonts();
 
@@ -484,7 +482,7 @@ STATIC SAVEDS LONG flushfonts_rxfunc( struct Hook *hook, Object *obj, ULONG *arg
 }
 MakeStaticHook(flushfonts_rxhook, flushfonts_rxfunc);
 
-STATIC SAVEDS LONG flushlibs_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNONP(flushlibs_rxfunc, LONG)
 {
    FlushLibraries();
 
@@ -492,7 +490,7 @@ STATIC SAVEDS LONG flushlibs_rxfunc( struct Hook *hook, Object *obj, ULONG *arg 
 }
 MakeStaticHook(flushlibs_rxhook, flushlibs_rxfunc);
 
-STATIC SAVEDS LONG flushall_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNONP(flushall_rxfunc, LONG)
 {
    FlushDevices();
    FlushFonts();
@@ -502,7 +500,7 @@ STATIC SAVEDS LONG flushall_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
 }
 MakeStaticHook(flushall_rxhook, flushall_rxfunc);
 
-STATIC SAVEDS LONG clearreset_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNONP(clearreset_rxfunc, LONG)
 {
    ClearResetVectors();
 
@@ -510,7 +508,7 @@ STATIC SAVEDS LONG clearreset_rxfunc( struct Hook *hook, Object *obj, ULONG *arg
 }
 MakeStaticHook(clearreset_rxhook, clearreset_rxfunc);
 
-STATIC SAVEDS LONG poptofront_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(poptofront_rxfunc, LONG, ULONG *arg)
 {
    struct   Window   *window;
    struct   Screen   *screen;
@@ -527,7 +525,7 @@ STATIC SAVEDS LONG poptofront_rxfunc( struct Hook *hook, Object *obj, ULONG *arg
 }
 MakeStaticHook(poptofront_rxhook, poptofront_rxfunc);
 
-STATIC SAVEDS LONG makevisible_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(makevisible_rxfunc, LONG, ULONG *arg)
 {
     struct   Window   *window;
     struct   Screen   *screen;
@@ -590,7 +588,7 @@ STATIC SAVEDS LONG makevisible_rxfunc( struct Hook *hook, Object *obj, ULONG *ar
 }
 MakeStaticHook(makevisible_rxhook, makevisible_rxfunc);
 
-STATIC SAVEDS LONG closewindow_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(closewindow_rxfunc, LONG, ULONG *arg)
 {
    struct   Window   *window;
 
@@ -602,7 +600,7 @@ STATIC SAVEDS LONG closewindow_rxfunc( struct Hook *hook, Object *obj, ULONG *ar
 }
 MakeStaticHook(closewindow_rxhook, closewindow_rxfunc);
 
-STATIC SAVEDS LONG closescreen_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(closescreen_rxfunc, LONG, ULONG *arg)
 {
    struct   Screen   *screen;
 
@@ -615,7 +613,7 @@ STATIC SAVEDS LONG closescreen_rxfunc( struct Hook *hook, Object *obj, ULONG *ar
 }
 MakeStaticHook(closescreen_rxhook, closescreen_rxfunc);
 
-STATIC SAVEDS LONG closefont_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(closefont_rxfunc, LONG, ULONG *arg)
 {
     LONG font;
 
@@ -627,7 +625,7 @@ STATIC SAVEDS LONG closefont_rxfunc( struct Hook *hook, Object *obj, ULONG *arg 
 }
 MakeStaticHook(closefont_rxhook, closefont_rxfunc);
 
-STATIC SAVEDS LONG removefont_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(removefont_rxfunc, LONG, ULONG *arg)
 {
     LONG font;
 
@@ -640,7 +638,7 @@ STATIC SAVEDS LONG removefont_rxfunc( struct Hook *hook, Object *obj, ULONG *arg
 }
 MakeStaticHook(removefont_rxhook, removefont_rxfunc);
 
-STATIC SAVEDS LONG removecommand_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(removecommand_rxfunc, LONG, ULONG *arg)
 {
     LONG seg;
 
@@ -653,7 +651,7 @@ STATIC SAVEDS LONG removecommand_rxfunc( struct Hook *hook, Object *obj, ULONG *
 }
 MakeStaticHook(removecommand_rxhook, removecommand_rxfunc);
 
-STATIC SAVEDS LONG removeassign_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(removeassign_rxfunc, LONG, ULONG *arg)
 {
 
    if (AssignLock((STRPTR)arg[0], (BPTR)NULL)) {
@@ -663,7 +661,7 @@ STATIC SAVEDS LONG removeassign_rxfunc( struct Hook *hook, Object *obj, ULONG *a
 }
 MakeStaticHook(removeassign_rxhook, removeassign_rxfunc);
 
-STATIC SAVEDS LONG removeassignlist_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(removeassignlist_rxfunc, LONG, ULONG *arg)
 {
    BPTR  address;
 
@@ -677,7 +675,7 @@ STATIC SAVEDS LONG removeassignlist_rxfunc( struct Hook *hook, Object *obj, ULON
 MakeStaticHook(removeassignlist_rxhook, removeassignlist_rxfunc);
 
 STATIC struct WindowCmd {
-    STRPTR wc_Name;
+    CONST_STRPTR wc_Name;
     ULONG wc_Method;
 } wincmds[] = {
     { "Allocations",   MUIM_MainWin_ShowAllocations   },
@@ -711,7 +709,7 @@ STATIC struct WindowCmd {
     { NULL,            0                              }
 };
 
-STATIC SAVEDS LONG openwindow_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(openwindow_rxfunc, LONG, ULONG *arg)
 {
     if (AP_Scout) {
         ULONG i = 0;
@@ -755,49 +753,49 @@ STATIC LONG cxfunc( STRPTR cx,
     return result;
 }
 
-STATIC SAVEDS LONG cxappear_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(cxappear_rxfunc, LONG, ULONG *arg)
 {
     return cxfunc((STRPTR)arg[0], CXCMD_APPEAR);
 }
 MakeStaticHook(cxappear_rxhook, cxappear_rxfunc);
 
-STATIC SAVEDS LONG cxdisappear_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(cxdisappear_rxfunc, LONG, ULONG *arg)
 {
     return cxfunc((STRPTR)arg[0], CXCMD_DISAPPEAR);
 }
 MakeStaticHook(cxdisappear_rxhook, cxdisappear_rxfunc);
 
-STATIC SAVEDS LONG cxenable_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(cxenable_rxfunc, LONG, ULONG *arg)
 {
     return cxfunc((STRPTR)arg[0], CXCMD_ENABLE);
 }
 MakeStaticHook(cxenable_rxhook, cxenable_rxfunc);
 
-STATIC SAVEDS LONG cxdisable_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(cxdisable_rxfunc, LONG, ULONG *arg)
 {
     return cxfunc((STRPTR)arg[0], CXCMD_DISABLE);
 }
 MakeStaticHook(cxdisable_rxhook, cxdisable_rxfunc);
 
-STATIC SAVEDS LONG cxkill_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(cxkill_rxfunc, LONG, ULONG *arg)
 {
     return cxfunc((STRPTR)arg[0], CXCMD_KILL);
 }
 MakeStaticHook(cxkill_rxhook, cxkill_rxfunc);
 
-STATIC SAVEDS LONG cxlistchg_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(cxlistchg_rxfunc, LONG, ULONG *arg)
 {
     return cxfunc((STRPTR)arg[0], CXCMD_LIST_CHG);
 }
 MakeStaticHook(cxlistchg_rxhook, cxlistchg_rxfunc);
 
-STATIC SAVEDS LONG cxunique_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(cxunique_rxfunc, LONG, ULONG *arg)
 {
     return cxfunc((STRPTR)arg[0], CXCMD_UNIQUE);
 }
 MakeStaticHook(cxunique_rxhook, cxunique_rxfunc);
 
-STATIC SAVEDS LONG removecx_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(removecx_rxfunc, LONG, ULONG *arg)
 {
     struct Node *node;
     LONG result = RETURN_ERROR;
@@ -826,7 +824,7 @@ STATIC SAVEDS LONG removecx_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
 }
 MakeStaticHook(removecx_rxhook, removecx_rxfunc);
 
-STATIC SAVEDS LONG setcxpri_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(setcxpri_rxfunc, LONG, ULONG *arg)
 {
     struct Node *node;
    LONG   pri;
@@ -846,7 +844,7 @@ STATIC SAVEDS LONG setcxpri_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
 }
 MakeStaticHook(setcxpri_rxhook, setcxpri_rxfunc);
 
-STATIC SAVEDS LONG removereset_rxfunc( struct Hook *hook, Object *obj, ULONG *arg )
+HOOKPROTONHNO(removereset_rxfunc, LONG, ULONG *arg)
 {
     LONG result = RETURN_ERROR;
     struct MsgPort *port;
@@ -892,63 +890,63 @@ STATIC SAVEDS LONG removereset_rxfunc( struct Hook *hook, Object *obj, ULONG *ar
 MakeStaticHook(removereset_rxhook, removereset_rxfunc);
 
 
-struct MUI_Command arexx_list[] = {
-   {"PrintList"         , "LIST/A,FILENAME/A,APPEND/S", 3, &printlist_rxhook },
-   {"FindTask"          , "NAME=ADDRESS/A"           , 1, &findtask_rxhook },
-   {"FreezeTask"        , "NAME=ADDRESS/A"           , 1, &freezetask_rxhook },
-   {"ActivateTask"      , "NAME=ADDRESS/A"           , 1, &activatetask_rxhook },
-   {"RemoveTask"        , "NAME=ADDRESS/A,WITHPORTS/S", 2, &removetask_rxhook },
-   {"BreakTask"         , "NAME=ADDRESS/A"           , 1, &breaktask_rxhook },
-   {"SignalTask"        , "NAME=ADDRESS/A,HEXSIGNAL/A", 2, &signaltask_rxhook },
-   {"SetTaskPri"        , "NAME=ADDRESS/A,PRIORITY/A", 2, &settaskpri_rxhook },
-   {"RemovePort"        , "NAME=ADDRESS/A"           , 1, &removeport_rxhook },
-   {"GetLockNumber"     , "LOCKPATTERN/F"            , 1, &getlocknumber_rxhook },
-   {"RemoveLocks"       , "LOCKPATTERN/F"            , 1, &removelocks_rxhook },
-   {"RemoveLock"        , "ADDRESS/A"                , 1, &removelock_rxhook },
-   {"GetPriority"       , "ADDRESS/A"                , 1, &getpriority_rxhook },
-   {"SetPriority"       , "TYPE/A,NAME=ADDRESS/A,PRIORITY/N", 3, &setpriority_rxhook },
-   {"FindNode"          , "TYPE/A,NAME=ADDRESS/A"    , 2, &findnode_rxhook },
-   {"CloseLibrary"      , "NAME=ADDRESS/A"           , 1, &closelib_rxhook },
-   {"RemoveLibrary"     , "NAME=ADDRESS/A"           , 1, &removelib_rxhook },
-   {"RemoveDevice"      , "NAME=ADDRESS/A"           , 1, &removedev_rxhook },
-   {"RemoveResource"    , "NAME=ADDRESS/A"           , 1, &removeres_rxhook },
-   {"ObtainSemaphore"   , "NAME=ADDRESS/A"           , 1, &obtainsem_rxhook },
-   {"ReleaseSemaphore"  , "NAME=ADDRESS/A"           , 1, &releasesem_rxhook },
-   {"RemoveSemaphore"   , "NAME=ADDRESS/A"           , 1, &removesem_rxhook },
-   {"RemoveInputHandler", "NAME=ADDRESS/A"           , 1, &removeinput_rxhook },
-   {"RemoveLowMemory"   , "NAME=ADDRESS/A"           , 1, &removelowmemory_rxhook },
-   {"CauseLowMemory"    , "NAME=ADDRESS/A"           , 1, &causelowmemory_rxhook },
-   {"FindResident"      , "NAME=ADDRESS/A"           , 1, &findresident_rxhook },
-   {"FindInterrupt"     , "NAME/A"                   , 1, &findinterrupt_rxhook },
-   {"RemoveInterrupt"   , "NAME/A"                   , 1, &removeinterrupt_rxhook },
-   {"FlushDevs"         , NULL                       , 0, &flushdevs_rxhook },
-   {"FlushFonts"        , NULL                       , 0, &flushfonts_rxhook },
-   {"FlushLibs"         , NULL                       , 0, &flushlibs_rxhook },
-   {"FlushAll"          , NULL                       , 0, &flushall_rxhook },
-   {"ClearResetVectors" , NULL                       , 0, &clearreset_rxhook },
-   {"PopToFront"        , "TITLE=ADDRESS/A"          , 1, &poptofront_rxhook },
-   {"MakeVisible"       , "TITLE=ADDRESS/A"          , 1, &makevisible_rxhook },
-   {"CloseWindow"       , "TITLE=ADDRESS/A"          , 1, &closewindow_rxhook },
-   {"CloseScreen"       , "TITLE=ADDRESS/A"          , 1, &closescreen_rxhook },
-   {"CloseFont"         , "ADDRESS/A"                , 1, &closefont_rxhook },
-   {"RemoveFont"        , "ADDRESS/A"                , 1, &removefont_rxhook },
-   {"RemoveCommand"     , "ADDRESS/A"                , 1, &removecommand_rxhook },
-   {"RemoveAssign"      , "NAME/A"                   , 1, &removeassign_rxhook },
-   {"RemoveAssignList"  , "NAME/A,ADDRESS/A"         , 2, &removeassignlist_rxhook },
-   {"OpenWindow"        , "WINDOWID/F"               , 1, &openwindow_rxhook },
-   {"CxAppear"          , "NAME/A"                   , 1, &cxappear_rxhook },
-   {"CxDisappear"       , "NAME/A"                   , 1, &cxdisappear_rxhook },
-   {"CxEnable"          , "NAME/A"                   , 1, &cxenable_rxhook },
-   {"CxDisable"         , "NAME/A"                   , 1, &cxdisable_rxhook },
-   {"CxKill"            , "NAME/A"                   , 1, &cxkill_rxhook },
-   {"CxListChg"         , "NAME/A"                   , 1, &cxlistchg_rxhook },
-   {"CxUnique"          , "NAME/A"                   , 1, &cxunique_rxhook },
-   {"RemoveCx"          , "NAME=ADDRESS/A"           , 1, &removecx_rxhook },
-   {"SetCxPri"          , "NAME=ADDRESS/A,PRIORITY/A", 2, &setcxpri_rxhook },
-   {"RemoveClass"       , "NAME/A"                   , 1, &removeclass_rxhook },
-   {"AbortTimer"        , "ADDRESS/A"                , 1, &aborttimer_rxhook },
-   {"RemoveResetHandler", "NAME=ADDRESS/A"           , 1, &removereset_rxhook },
-   { NULL, NULL, 0, NULL }
+const struct MUI_Command arexx_list[] = {
+   {(STRPTR)"PrintList"         , (STRPTR)"LIST/A,FILENAME/A,APPEND/S", 3, &printlist_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"FindTask"          , (STRPTR)"NAME=ADDRESS/A"            , 1, &findtask_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"FreezeTask"        , (STRPTR)"NAME=ADDRESS/A"            , 1, &freezetask_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"ActivateTask"      , (STRPTR)"NAME=ADDRESS/A"            , 1, &activatetask_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"RemoveTask"        , (STRPTR)"NAME=ADDRESS/A,WITHPORTS/S", 2, &removetask_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"BreakTask"         , (STRPTR)"NAME=ADDRESS/A"            , 1, &breaktask_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"SignalTask"        , (STRPTR)"NAME=ADDRESS/A,HEXSIGNAL/A", 2, &signaltask_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"SetTaskPri"        , (STRPTR)"NAME=ADDRESS/A,PRIORITY/A" , 2, &settaskpri_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"RemovePort"        , (STRPTR)"NAME=ADDRESS/A"            , 1, &removeport_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"GetLockNumber"     , (STRPTR)"LOCKPATTERN/F"             , 1, &getlocknumber_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"RemoveLocks"       , (STRPTR)"LOCKPATTERN/F"             , 1, &removelocks_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"RemoveLock"        , (STRPTR)"ADDRESS/A"                 , 1, &removelock_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"GetPriority"       , (STRPTR)"ADDRESS/A"                 , 1, &getpriority_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"SetPriority"       , (STRPTR)"TYPE/A,NAME=ADDRESS/A,PRIORITY/N", 3, &setpriority_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"FindNode"          , (STRPTR)"TYPE/A,NAME=ADDRESS/A"     , 2, &findnode_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"CloseLibrary"      , (STRPTR)"NAME=ADDRESS/A"            , 1, &closelib_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"RemoveLibrary"     , (STRPTR)"NAME=ADDRESS/A"            , 1, &removelib_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"RemoveDevice"      , (STRPTR)"NAME=ADDRESS/A"            , 1, &removedev_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"RemoveResource"    , (STRPTR)"NAME=ADDRESS/A"            , 1, &removeres_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"ObtainSemaphore"   , (STRPTR)"NAME=ADDRESS/A"            , 1, &obtainsem_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"ReleaseSemaphore"  , (STRPTR)"NAME=ADDRESS/A"            , 1, &releasesem_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"RemoveSemaphore"   , (STRPTR)"NAME=ADDRESS/A"            , 1, &removesem_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"RemoveInputHandler", (STRPTR)"NAME=ADDRESS/A"            , 1, &removeinput_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"RemoveLowMemory"   , (STRPTR)"NAME=ADDRESS/A"            , 1, &removelowmemory_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"CauseLowMemory"    , (STRPTR)"NAME=ADDRESS/A"            , 1, &causelowmemory_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"FindResident"      , (STRPTR)"NAME=ADDRESS/A"            , 1, &findresident_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"FindInterrupt"     , (STRPTR)"NAME/A"                    , 1, &findinterrupt_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"RemoveInterrupt"   , (STRPTR)"NAME/A"                    , 1, &removeinterrupt_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"FlushDevs"         , NULL                                , 0, &flushdevs_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"FlushFonts"        , NULL                                , 0, &flushfonts_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"FlushLibs"         , NULL                                , 0, &flushlibs_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"FlushAll"          , NULL                                , 0, &flushall_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"ClearResetVectors" , NULL                                , 0, &clearreset_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"PopToFront"        , (STRPTR)"TITLE=ADDRESS/A"           , 1, &poptofront_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"MakeVisible"       , (STRPTR)"TITLE=ADDRESS/A"           , 1, &makevisible_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"CloseWindow"       , (STRPTR)"TITLE=ADDRESS/A"           , 1, &closewindow_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"CloseScreen"       , (STRPTR)"TITLE=ADDRESS/A"           , 1, &closescreen_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"CloseFont"         , (STRPTR)"ADDRESS/A"                 , 1, &closefont_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"RemoveFont"        , (STRPTR)"ADDRESS/A"                 , 1, &removefont_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"RemoveCommand"     , (STRPTR)"ADDRESS/A"                 , 1, &removecommand_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"RemoveAssign"      , (STRPTR)"NAME/A"                    , 1, &removeassign_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"RemoveAssignList"  , (STRPTR)"NAME/A,ADDRESS/A"          , 2, &removeassignlist_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"OpenWindow"        , (STRPTR)"WINDOWID/F"                , 1, &openwindow_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"CxAppear"          , (STRPTR)"NAME/A"                    , 1, &cxappear_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"CxDisappear"       , (STRPTR)"NAME/A"                    , 1, &cxdisappear_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"CxEnable"          , (STRPTR)"NAME/A"                    , 1, &cxenable_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"CxDisable"         , (STRPTR)"NAME/A"                    , 1, &cxdisable_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"CxKill"            , (STRPTR)"NAME/A"                    , 1, &cxkill_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"CxListChg"         , (STRPTR)"NAME/A"                    , 1, &cxlistchg_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"CxUnique"          , (STRPTR)"NAME/A"                    , 1, &cxunique_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"RemoveCx"          , (STRPTR)"NAME=ADDRESS/A"            , 1, &removecx_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"SetCxPri"          , (STRPTR)"NAME=ADDRESS/A,PRIORITY/A" , 2, &setcxpri_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"RemoveClass"       , (STRPTR)"NAME/A"                    , 1, &removeclass_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"AbortTimer"        , (STRPTR)"ADDRESS/A"                 , 1, &aborttimer_rxhook, {0, 0, 0, 0, 0} },
+   {(STRPTR)"RemoveResetHandler", (STRPTR)"NAME=ADDRESS/A"            , 1, &removereset_rxhook, {0, 0, 0, 0, 0} },
+   { NULL, NULL, 0, NULL, {0, 0, 0, 0, 0}  }
 };
 
 STRPTR FindMyARexxPort( CONST_STRPTR name )
@@ -979,7 +977,7 @@ STRPTR FindMyARexxPort( CONST_STRPTR name )
    return result;
 }
 
-ULONG SafePutToPort(struct Message *message, STRPTR portname) {
+ULONG SafePutToPort(struct Message *message, CONST_STRPTR portname) {
    struct MsgPort *port;
 
    Forbid();
@@ -989,7 +987,7 @@ ULONG SafePutToPort(struct Message *message, STRPTR portname) {
    return ((ULONG) port); /* If zero, the port has gone away */
 }
 
-short SendStartupMsg( STRPTR PortName, STRPTR RString, BOOL IsFileName )
+short SendStartupMsg( CONST_STRPTR PortName, CONST_STRPTR RString, BOOL IsFileName )
 {
    register struct   RexxMsg  *rmsg;
    register short    flag = FALSE;
@@ -1036,15 +1034,15 @@ short SendStartupMsg( STRPTR PortName, STRPTR RString, BOOL IsFileName )
 /*         Neue Hilfsroutinen für die ARexx-Funktionen              */
 /********************************************************************/
 
-struct Task *MyFindTask( STRPTR stask )
+struct Task *MyFindTask( CONST_STRPTR stask )
 {
    struct Task  *lauf, *task, *result = NULL;
    STRPTR tmp;
 
    if ((tmp = tbAllocVecPooled(globalPool, TMP_STRING_LENGTH)) != NULL) {
-       LONG _task;
+       IPTR _task;
 
-       if (IsUHex (stask, &_task)) {
+       if (IsUHex(stask, &_task)) {
           task = (struct Task *)_task;
 
           Forbid();
@@ -1106,7 +1104,7 @@ struct Task *MyFindTask( STRPTR stask )
    return (result);
 }
 
-BOOL MyRemoveTask( STRPTR stask, BOOL withports )
+BOOL MyRemoveTask( CONST_STRPTR stask, BOOL withports )
 {
    struct   Task     *task;
    struct   Window   *window, *nextwindow;
@@ -1189,7 +1187,7 @@ BOOL MyRemoveTask( STRPTR stask, BOOL withports )
    return (FALSE);
 }
 
-BOOL MyFreezeTask( STRPTR stask )
+BOOL MyFreezeTask( CONST_STRPTR stask )
 {
    BOOL result = FALSE;
    struct   Task     *task;
@@ -1206,7 +1204,7 @@ BOOL MyFreezeTask( STRPTR stask )
    return result;
 }
 
-BOOL MyActivateTask( STRPTR stask )
+BOOL MyActivateTask( CONST_STRPTR stask )
 {
    BOOL result = FALSE;
    struct   Task     *task;
@@ -1223,7 +1221,7 @@ BOOL MyActivateTask( STRPTR stask )
    return result;
 }
 
-BOOL MySignalTask (STRPTR stask, STRPTR ssignal )
+BOOL MySignalTask (CONST_STRPTR stask, CONST_STRPTR ssignal )
 {
    BOOL result = FALSE;
    struct Task *task;
@@ -1239,14 +1237,14 @@ BOOL MySignalTask (STRPTR stask, STRPTR ssignal )
    return result;
 }
 
-STATIC STRPTR nodetype[] = {
+STATIC CONST_STRPTR nodetype[] = {
    "LIBRARY", "DEVICE", "RESOURCE", "MEMORY", "SEMAPHORE",
    "PORT", "INPUTHANDLER", "LOWMEMORY", "COMMODITIES",
    "CLASSES", "TIMER_MICRO", "TIMER_VBLANK", "RESETHANDLER",
    "RESETCALLBACK", "MONITOR", NULL
 };
 
-struct List *MyGetList( STRPTR type )
+struct List *MyGetList( CONST_STRPTR type )
 {
    int i = 0;
    struct List *list = NULL;
@@ -1330,9 +1328,9 @@ struct List *MyGetList( STRPTR type )
                   struct NewBroker cxnewbroker =
                   {
                     NB_VERSION,
-                    "« Scout Dummy »",
-                    "« Scout Dummy »",
-                    "Dummy Broker",
+                    (STRPTR)"« Scout Dummy »",
+                    (STRPTR)"« Scout Dummy »",
+                    (STRPTR)"Dummy Broker",
                     0,
                     0,
                     0,
@@ -1465,7 +1463,7 @@ struct List *MyGetList( STRPTR type )
                     if ((myirq = tbAllocVecPooled(globalPool, sizeof(struct Interrupt))) != NULL) {
                         myirq->is_Node.ln_Type = NT_EXTINTERRUPT;
                         myirq->is_Node.ln_Pri = 127;
-                        myirq->is_Node.ln_Name = "Scout";
+                        myirq->is_Node.ln_Name = (STRPTR)"Scout";
                         myirq->is_Code = (void (*)())NULL;
                         myirq->is_Data = NULL;
 
@@ -1494,7 +1492,7 @@ struct List *MyGetList( STRPTR type )
    return (list);
 }
 
-struct Node *MyFindName (STRPTR type, STRPTR sname)
+struct Node *MyFindName (CONST_STRPTR type, CONST_STRPTR sname)
 {
    struct   List  *list;
    struct   Node  *lauf, *node, *result = NULL;
@@ -1523,13 +1521,13 @@ struct Node *MyFindName (STRPTR type, STRPTR sname)
    return (result);
 }
 
-struct Screen *MyFindScreen( STRPTR sname )
+struct Screen *MyFindScreen( CONST_STRPTR sname )
 {
     struct Screen *screen, *lauf;
-    LONG _screen;
+    IPTR _screen;
 
     lauf = IntuitionBase->FirstScreen;
-    if (IsUHex(sname, (LONG *)&_screen)) {
+    if (IsUHex(sname, &_screen)) {
         screen = (struct Screen *)_screen;
 
         while (lauf) {
@@ -1550,12 +1548,12 @@ struct Screen *MyFindScreen( STRPTR sname )
     return NULL;
 }
 
-struct Window *MyFindWindow( STRPTR sname )
+struct Window *MyFindWindow( CONST_STRPTR sname )
 {
     struct Window *window, *lauf, *result = NULL;
     struct Screen *screen;
     ULONG lock;
-    LONG _window;
+    IPTR _window;
 
     lock = LockIBase(0);
 

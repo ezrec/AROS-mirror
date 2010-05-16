@@ -1,18 +1,39 @@
-##
-##
+# find out the HOST operating system
+# on which this makefile is run
+HOST ?= $(shell uname)
 
-TARGET = libtblib.a
+# if no host is identifed (no uname tool)
+# we assume a MorphOS build
+ifeq ($(HOST),)
+  HOST = MorphOS
+endif
 
-CC = ppc-morphos-gcc
-AR = ppc-morphos-ar
+ifeq ($(HOST), MorphOS)
+  CC    = gcc
+  AR    = ar
+  MKDIR = makedir
+  RM    = delete quiet
+  RMDIR = delete quiet
+  MUISDK= .
+else
+  CC    = ppc-morphos-gcc
+  AR    = ppc-morphos-ar
+  MKDIR = mkdir -p
+  RM    = rm
+  RMDIR = rm -rf
+  MUISDK= .
+endif
 
-OBJDIR=             .obj_mos
+OBJDIR = .obj_mos
+BINDIR = bin_mos
 
-REDEFINE=
-OPTIMIZE=           -O3
-DEBUG   =
-CFLAGS  =           -Wall -Werror -noixemul -mcpu=750 -I../include $(REDEFINE) $(DEBUG) -c
+TARGET = $(BINDIR)/libtblib.a
 
+CPU      = -mcpu=750
+REDEFINE =
+OPTIMIZE = -O3
+DEBUG    = -g -gstabs
+CFLAGS   = -noixemul -Wall -Wwrite-strings -I../include -I$(MUISDK) $(CPU) $(REDEFINE) $(DEBUG) -DNO_INLINE_STDARG -c
 
 OBJS = $(OBJDIR)/ports_AllocPort.o \
 	$(OBJDIR)/ports_FreePort.o \
@@ -49,19 +70,22 @@ OBJS = $(OBJDIR)/ports_AllocPort.o \
 INCLUDES= tblib.h \
 	SDI_compiler.h
 
-all: $(OBJDIR) $(TARGET)
+all: $(OBJDIR) $(BINDIR) $(TARGET)
 
 $(OBJDIR)/%.o: %.c
 	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINE) $< -o $@
 
 $(OBJDIR):
-	@makedir $(OBJDIR)
+	@mkdir $(OBJDIR)
+
+$(BINDIR):
+	@mkdir $(BINDIR)
 
 $(TARGET): $(OBJS)
-	$(AR) -r libtblib.a $(OBJS)
+	$(AR) -r $(BINDIR)/libtblib.a $(OBJS)
 
 clean:
-	-delete $(OBJS) $(TARGET) quiet
+	-@rm -rf $(OBJS) $(TARGET)
 
 realclean:
 	@make clean

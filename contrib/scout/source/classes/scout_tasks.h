@@ -47,13 +47,13 @@ struct TaskEntry {
 
 struct Task *TaskExists( struct Task *tasktofind );
 
-STRPTR GetTaskState( UBYTE state, ULONG waitmask );
+CONST_STRPTR GetTaskState( UBYTE state, ULONG waitmask );
 
-STRPTR GetNodeType( UBYTE );
+CONST_STRPTR GetNodeType( UBYTE );
 
 STRPTR GetTaskName( struct Task *, STRPTR , ULONG );
 
-STRPTR GetSigBitName( LONG );
+CONST_STRPTR GetSigBitName( LONG );
 
 void GetTaskEntry( struct Task *task, struct TaskEntry *te, BOOL cpuflag );
 

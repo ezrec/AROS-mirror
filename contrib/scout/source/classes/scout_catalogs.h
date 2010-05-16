@@ -59,20 +59,17 @@ struct IntLocaleBase
 
 #else
 
-#if !defined(__SASC)
-#pragma pack(2)
-#endif
+#include <amiga-align.h>
 
 struct IntLocaleBase
 {
-    struct LocaleBase        lb_LocaleBase;
+    struct Library           lb_LocaleBase;
+    BOOL                     lb_PatchesInstalled;
     struct SignalSemaphore   lb_LocaleLock;
     struct SignalSemaphore   lb_CatalogLock;
     struct MinList           lb_CatalogList;
 };
 
-#if !defined(__SASC)
-#pragma pack()
-#endif
+#include <default-align.h>
 
 #endif

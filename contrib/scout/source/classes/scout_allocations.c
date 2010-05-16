@@ -74,7 +74,7 @@ STATIC STRPTR AlcMiscUser( ULONG unit )
     return result;
 }
 
-STATIC STRPTR AlcCIAUser( STRPTR res,
+STATIC STRPTR AlcCIAUser( CONST_STRPTR res,
                           WORD unit )
 {
     struct Library *CiaBase;
@@ -85,7 +85,7 @@ STATIC STRPTR AlcCIAUser( STRPTR res,
         memset(&dummyInt, 0x00, sizeof(struct Interrupt));
         dummyInt.is_Node.ln_Type = NT_INTERRUPT;
         dummyInt.is_Node.ln_Pri = -127;
-        dummyInt.is_Node.ln_Name = "« Scout's Dummy Int »";
+        dummyInt.is_Node.ln_Name = (STRPTR)"« Scout's Dummy Int »";
         dummyInt.is_Code = (void (*)())DummyIntFunc;
 
         Disable();
@@ -168,7 +168,7 @@ STATIC void PrintCallback( struct AllocationEntry *ae,
 }
 
 STATIC void SendCallback( struct AllocationEntry *ae,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(ae, sizeof(struct AllocationEntry));
 }
@@ -290,7 +290,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct AllocationsWinData *awd = INST_DATA(cl, obj);
     struct AllocationsCallbackUserData ud;
@@ -308,9 +308,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintAllocations(NULL);
 
@@ -328,7 +328,6 @@ DISPATCHER(AllocationsWinDispatcher)
 
     return (DoSuperMethodA(cl, obj, msg));
 }
-DISPATCHER_END
 
 void PrintAllocations( STRPTR filename )
 {
@@ -348,6 +347,6 @@ void SendAlcList( STRPTR UNUSED dummy )
 
 APTR MakeAllocationsWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct AllocationsWinData), DISPATCHER_REF(AllocationsWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct AllocationsWinData), ENTRY(AllocationsWinDispatcher));
 }
 

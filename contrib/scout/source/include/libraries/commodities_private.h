@@ -49,6 +49,25 @@ LONG BrokerCommand( STRPTR text, LONG id );
         #define BrokerCommand(text, id) \
             LP2(0xc6, LONG, BrokerCommand, STRPTR *, text, a0, LONG, id, d0, \
             , COMMODITIES_BASE_NAME, IF_CACHEFLUSHALL, NULL, 0, IF_CACHEFLUSHALL, NULL, 0)
+    #elif !defined(__amigaos4__)
+    	#ifndef __INLINE_MACROS_H
+    	#include <inline/macros.h>
+    	#endif
+        #define FindBroker(name) \
+            LP1(0x6c, CxObj *, FindBroker, STRPTR, name, a1, \
+            , COMMODITIES_BASE_NAME)
+
+        #define CopyBrokerList(list) \
+            LP1(0xba, LONG, CopyBrokerList, struct List *, list, a0, \
+            , COMMODITIES_BASE_NAME)
+
+        #define FreeBrokerList(list) \
+            LP1(0xc0, LONG, FreeBrokerList, struct List *, list, a0, \
+            , COMMODITIES_BASE_NAME)
+
+        #define BrokerCommand(text, id) \
+            LP2(0xc6, LONG, BrokerCommand, STRPTR *, text, a0, LONG, id, d0, \
+            , COMMODITIES_BASE_NAME)
     #endif
 #endif
 

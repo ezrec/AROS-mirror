@@ -38,21 +38,19 @@ struct ResidentsCallbackUserData {
     ULONG ud_Count;
 };
 
-STATIC SAVEDS LONG resilist_con2func( struct Hook *hook, Object *obj, struct NList_ConstructMessage *msg )
+HOOKPROTONHNO(resilist_con2func, LONG, struct NList_ConstructMessage *msg)
 {
     return AllocListEntry(msg->pool, msg->entry, sizeof(struct ResidentEntry));
 }
 MakeStaticHook(resilist_con2hook, resilist_con2func);
 
-STATIC SAVEDS LONG resilist_des2func( struct Hook *hook, Object *obj, struct NList_DestructMessage *msg )
+HOOKPROTONHNO(resilist_des2func, void, struct NList_DestructMessage *msg)
 {
     FreeListEntry(msg->pool, &msg->entry);
-
-    return 0;
 }
 MakeStaticHook(resilist_des2hook, resilist_des2func);
 
-STATIC SAVEDS LONG resilist_dsp2func( struct Hook *hook, Object *obj, struct NList_DisplayMessage *msg )
+HOOKPROTONHNO(resilist_dsp2func, void, struct NList_DisplayMessage *msg)
 {
     struct ResidentEntry *re = (struct ResidentEntry *)msg->entry;
 
@@ -66,13 +64,11 @@ STATIC SAVEDS LONG resilist_dsp2func( struct Hook *hook, Object *obj, struct NLi
         msg->strings[1] = txtResidentName;
         msg->strings[2] = txtResidentPri;
         msg->strings[3] = txtResidentIdString;
-        msg->preparses[0] = MUIX_B;
-        msg->preparses[1] = MUIX_B;
-        msg->preparses[2] = MUIX_B;
-        msg->preparses[3] = MUIX_B;
+        msg->preparses[0] = (STRPTR)MUIX_B;
+        msg->preparses[1] = (STRPTR)MUIX_B;
+        msg->preparses[2] = (STRPTR)MUIX_B;
+        msg->preparses[3] = (STRPTR)MUIX_B;
     }
-
-    return 0;
 }
 MakeStaticHook(resilist_dsp2hook, resilist_dsp2func);
 
@@ -108,7 +104,7 @@ STATIC LONG resilist_cmpfunc( const struct Node *n1,
     return cmp;
 }
 
-STATIC SAVEDS LONG resilist_cmp2func( struct Hook *hook, Object *obj, struct NList_CompareMessage *msg )
+HOOKPROTONHNO(resilist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
     LONG cmp;
     struct ResidentEntry *re1, *re2;
@@ -119,7 +115,7 @@ STATIC SAVEDS LONG resilist_cmp2func( struct Hook *hook, Object *obj, struct NLi
     col1 = msg->sort_type & MUIV_NList_TitleMark_ColMask;
     col2 = msg->sort_type2 & MUIV_NList_TitleMark2_ColMask;
 
-    if (msg->sort_type == MUIV_NList_SortType_None) return 0;
+    if ((ULONG)msg->sort_type == MUIV_NList_SortType_None) return 0;
 
     if (msg->sort_type & MUIV_NList_TitleMark_TypeMask) {
         cmp = resilist_cmp2colfunc(re2, re1, col1);
@@ -251,7 +247,7 @@ STATIC void PrintCallback( struct ResidentEntry *re,
 }
 
 STATIC void SendCallback( struct ResidentEntry *re,
-                          void *userData )
+                          UNUSED void *userData )
 {
     SendEncodedEntry(re, sizeof(struct ResidentEntry));
 }
@@ -323,7 +319,7 @@ STATIC ULONG mDispose( struct IClass *cl,
 
 STATIC ULONG mUpdate( struct IClass *cl,
                       Object *obj,
-                      Msg msg )
+                      UNUSED Msg msg )
 {
     struct ResidentsWinData *rwd = INST_DATA(cl, obj);
     struct ResidentsCallbackUserData ud;
@@ -351,9 +347,9 @@ STATIC ULONG mUpdate( struct IClass *cl,
     return 0;
 }
 
-STATIC ULONG mPrint( struct IClass *cl,
-                     Object *obj,
-                     Msg msg )
+STATIC ULONG mPrint( UNUSED struct IClass *cl,
+                     UNUSED Object *obj,
+                     UNUSED Msg msg )
 {
     PrintResidents(NULL);
 
@@ -362,7 +358,7 @@ STATIC ULONG mPrint( struct IClass *cl,
 
 STATIC ULONG mMore( struct IClass *cl,
                     Object *obj,
-                    Msg msg )
+                    UNUSED Msg msg )
 {
     if (!clientstate) {
         struct ResidentsWinData *rwd = INST_DATA(cl, obj);
@@ -388,7 +384,7 @@ STATIC ULONG mMore( struct IClass *cl,
 
 STATIC ULONG mListChange( struct IClass *cl,
                           Object *obj,
-                          Msg msg )
+                          UNUSED Msg msg )
 {
     struct ResidentsWinData *rwd = INST_DATA(cl, obj);
     struct ResidentEntry *re;
@@ -414,7 +410,6 @@ DISPATCHER(ResidentsWinDispatcher)
 
     return DoSuperMethodA(cl, obj, msg);
 }
-DISPATCHER_END
 
 void PrintResidents( STRPTR filename )
 {
@@ -435,6 +430,6 @@ void SendResiList( STRPTR UNUSED dummy )
 
 APTR MakeResidentsWinClass( void )
 {
-    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct ResidentsWinData), DISPATCHER_REF(ResidentsWinDispatcher));
+    return MUI_CreateCustomClass(NULL, NULL, ParentWinClass, sizeof(struct ResidentsWinData), ENTRY(ResidentsWinDispatcher));
 }
 

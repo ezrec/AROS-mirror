@@ -14,6 +14,7 @@ struct MUI_CustomClass *CommoditiesWinClass = NULL;
 struct MUI_CustomClass *CommoditiesDetailWinClass = NULL;
 struct MUI_CustomClass *DevicesWinClass = NULL;
 struct MUI_CustomClass *DevicesDetailWinClass = NULL;
+struct MUI_CustomClass *DisassemblerWinClass = NULL;
 struct MUI_CustomClass *ExpansionsWinClass = NULL;
 struct MUI_CustomClass *ExpansionsDetailWinClass = NULL;
 struct MUI_CustomClass *FlagsWinClass = NULL;
@@ -32,6 +33,8 @@ struct MUI_CustomClass *LowMemoryDetailWinClass = NULL;
 struct MUI_CustomClass *MainWinClass = NULL;
 struct MUI_CustomClass *MemoryWinClass = NULL;
 struct MUI_CustomClass *MemoryDetailWinClass = NULL;
+struct MUI_CustomClass *MonitorsWinClass = NULL;
+struct MUI_CustomClass *MonitorsDetailWinClass = NULL;
 struct MUI_CustomClass *MountsWinClass = NULL;
 struct MUI_CustomClass *MountsDetailWinClass = NULL;
 struct MUI_CustomClass *ParentWinClass = NULL;
@@ -56,14 +59,12 @@ struct MUI_CustomClass *TimersWinClass = NULL;
 struct MUI_CustomClass *VectorsWinClass = NULL;
 struct MUI_CustomClass *WindowsWinClass = NULL;
 struct MUI_CustomClass *WindowsDetailWinClass = NULL;
-struct MUI_CustomClass *DisassemblerWinClass = NULL;
+
 struct MUI_CustomClass *DisassemblerButtonClass = NULL;
 struct MUI_CustomClass *FlagsButtonClass = NULL;
-struct MUI_CustomClass *TaskButtonClass = NULL;
-struct MUI_CustomClass *PortButtonClass = NULL;
-struct MUI_CustomClass *MonitorsWinClass = NULL;
-struct MUI_CustomClass *MonitorsDetailWinClass = NULL;
 struct MUI_CustomClass *MonitorButtonClass = NULL;
+struct MUI_CustomClass *PortButtonClass = NULL;
+struct MUI_CustomClass *TaskButtonClass = NULL;
 
 BOOL CreateCustomClasses( void )
 {
@@ -72,6 +73,7 @@ BOOL CreateCustomClasses( void )
     if ((DisassemblerButtonClass     = MakeDisassemblerButtonClass()))
     if ((FlagsButtonClass            = MakeFlagsButtonClass()))
     if ((TaskButtonClass             = MakeTaskButtonClass()))
+    if ((MonitorButtonClass	         = MakeMonitorButtonClass()))
     if ((PortButtonClass             = MakePortButtonClass()))
     if ((AboutWinClass               = MakeAboutWinClass()))
     if ((AllocationsWinClass         = MakeAllocationsWinClass()))
@@ -86,6 +88,7 @@ BOOL CreateCustomClasses( void )
     if ((CommoditiesDetailWinClass   = MakeCommoditiesDetailWinClass()))
     if ((DevicesWinClass             = MakeDevicesWinClass()))
     if ((DevicesDetailWinClass       = MakeDevicesDetailWinClass()))
+    if ((DisassemblerWinClass        = MakeDisassemblerWinClass()))
     if ((ExpansionsWinClass          = MakeExpansionsWinClass()))
     if ((ExpansionsDetailWinClass    = MakeExpansionsDetailWinClass()))
     if ((FlagsWinClass               = MakeFlagsWinClass()))
@@ -104,6 +107,8 @@ BOOL CreateCustomClasses( void )
     if ((MainWinClass                = MakeMainWinClass()))
     if ((MemoryWinClass              = MakeMemoryWinClass()))
     if ((MemoryDetailWinClass        = MakeMemoryDetailWinClass()))
+    if ((MonitorsWinClass            = MakeMonitorsWinClass()))
+    if ((MonitorsDetailWinClass	     = MakeMonitorsDetailWinClass()))
     if ((MountsWinClass              = MakeMountsWinClass()))
     if ((MountsDetailWinClass        = MakeMountsDetailWinClass()))
     if ((PatchesWinClass             = MakePatchesWinClass()))
@@ -127,10 +132,6 @@ BOOL CreateCustomClasses( void )
     if ((VectorsWinClass             = MakeVectorsWinClass()))
     if ((WindowsWinClass             = MakeWindowsWinClass()))
     if ((WindowsDetailWinClass       = MakeWindowsDetailWinClass()))
-    if ((DisassemblerWinClass        = MakeDisassemblerWinClass()))
-    if ((MonitorsWinClass            = MakeMonitorsWinClass()))
-    if ((MonitorsDetailWinClass	     = MakeMonitorsDetailWinClass()))
-    if ((MonitorButtonClass	     = MakeMonitorButtonClass()))
     {
         return TRUE;
     }
@@ -153,6 +154,7 @@ void DeleteCustomClasses( void )
     if (CommoditiesDetailWinClass)    MUI_DeleteCustomClass(CommoditiesDetailWinClass);
     if (DevicesWinClass)              MUI_DeleteCustomClass(DevicesWinClass);
     if (DevicesDetailWinClass)        MUI_DeleteCustomClass(DevicesDetailWinClass);
+    if (DisassemblerWinClass)         MUI_DeleteCustomClass(DisassemblerWinClass);
     if (ExpansionsWinClass)           MUI_DeleteCustomClass(ExpansionsWinClass);
     if (ExpansionsDetailWinClass)     MUI_DeleteCustomClass(ExpansionsDetailWinClass);
     if (FlagsWinClass)                MUI_DeleteCustomClass(FlagsWinClass);
@@ -171,6 +173,8 @@ void DeleteCustomClasses( void )
     if (MainWinClass)                 MUI_DeleteCustomClass(MainWinClass);
     if (MemoryWinClass)               MUI_DeleteCustomClass(MemoryWinClass);
     if (MemoryDetailWinClass)         MUI_DeleteCustomClass(MemoryDetailWinClass);
+    if (MonitorsWinClass)             MUI_DeleteCustomClass(MonitorsWinClass);
+    if (MonitorsDetailWinClass)       MUI_DeleteCustomClass(MonitorsDetailWinClass);
     if (MountsWinClass)               MUI_DeleteCustomClass(MountsWinClass);
     if (MountsDetailWinClass)         MUI_DeleteCustomClass(MountsDetailWinClass);
     if (PatchesWinClass)              MUI_DeleteCustomClass(PatchesWinClass);
@@ -194,7 +198,6 @@ void DeleteCustomClasses( void )
     if (VectorsWinClass)              MUI_DeleteCustomClass(VectorsWinClass);
     if (WindowsWinClass)              MUI_DeleteCustomClass(WindowsWinClass);
     if (WindowsDetailWinClass)        MUI_DeleteCustomClass(WindowsDetailWinClass);
-    if (DisassemblerWinClass)         MUI_DeleteCustomClass(DisassemblerWinClass);
 
     if (PortButtonClass)              MUI_DeleteCustomClass(PortButtonClass);
     if (TaskButtonClass)              MUI_DeleteCustomClass(TaskButtonClass);
@@ -202,7 +205,5 @@ void DeleteCustomClasses( void )
     if (DisassemblerButtonClass)      MUI_DeleteCustomClass(DisassemblerButtonClass);
     if (ParentWinClass)               MUI_DeleteCustomClass(ParentWinClass);
     if (FontDisplayClass)             MUI_DeleteCustomClass(FontDisplayClass);
-    if (MonitorsWinClass)             MUI_DeleteCustomClass(MonitorsWinClass);
-    if (MonitorsDetailWinClass)       MUI_DeleteCustomClass(MonitorsDetailWinClass);
     if (MonitorButtonClass)           MUI_DeleteCustomClass(MonitorButtonClass);
 }

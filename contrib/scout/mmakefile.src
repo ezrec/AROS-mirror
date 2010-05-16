@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib-scout : contrib-scout-bin contrib-scout-disassembler contrib-scout-files
+#MM- contrib-scout : contrib-scout-bin contrib-scout-files
 
 FILES := COPYING SCOUT-SOURCE.readme
 EXEDIR := $(AROS_CONTRIB)/System/Scout
