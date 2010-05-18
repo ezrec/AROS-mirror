@@ -171,8 +171,8 @@ char *argv[];
     RexxSysBase = (struct RxsLib *)OpenLibrary("rexxsyslib.library",0);
     UtilityBase = (struct UtilityBase *)OpenLibrary("utility.library",37);
     CyberGfxBase = OpenLibrary("cybergraphics.library",40);
-    PopupMenuBase = (struct PopupMenuBase *)OpenLibrary("popupmenu.library", 9);
 #ifndef __AROS__
+    PopupMenuBase = (struct PopupMenuBase *)OpenLibrary("popupmenu.library", 9);
 
 //    AccountsBase=NULL;
 

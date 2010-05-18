@@ -29,18 +29,10 @@ the existing commercial status of Directory Opus 5.
 */
 
 #include "dopus.h"
-
-#ifndef __AROS__
 #define NO_INLINE_STDARG
-#endif
-
 #define _NO_PPCINLINE
 #define NO_PPCINLINE_STDARG
-#ifdef __AROS__
-#include <proto/popupmenu.h>
-#else
 #include <proto/pm.h>
-#endif
 
 enum SortBy {
         sbName=DISPLAY_NAME+1, sbSize, sbProt, sbDate, sbComment, sbType, sbOwner, sbGroup, sbNetprot, sbExt,
@@ -62,13 +54,6 @@ ULONG MenuHandlerFunc(void)
   struct Hook *hook = (struct Hook *)REG_A0;
   struct PopupMenu *pm = (struct PopupMenu *)REG_A2;
 //  APTR msg = (APTR)REG_A1;
-#elif __AROS__
-AROS_UFH3(ULONG, MenuHandlerFunc,
-AROS_UFHA(struct Hook *, hook, A0),
-AROS_UFHA(struct PopupMenu *, pm, A2),
-AROS_UFHA(APTR, msg, A1))
-{
-    AROS_USERFUNC_INIT
 #else
 __saveds ULONG MenuHandlerFunc(register struct Hook *hook __asm("a0"),\
                                register struct PopupMenu *pm __asm("a2"),\
@@ -116,10 +101,6 @@ __saveds ULONG MenuHandlerFunc(register struct Hook *hook __asm("a0"),\
     }
   }
  return 0;
-
-#ifdef __AROS__
-  AROS_USERFUNC_EXIT
-#endif
 }
 
 /* end of code */
@@ -229,81 +210,77 @@ void initlistermenu(void)
  {
   BOOL userinfo = AccountsBase || muBase;
 
-  sortmenu = PM_MakeMenu(
-      PM_Item, PM_MakeItem(PM_Hidden, TRUE, TAG_DONE),
-      PM_Item, PM_MakeItem(PM_Title, globstring[STR_LISTER_MENU], PM_NoSelect, TRUE, PM_ShinePen, TRUE, PM_Shadowed, TRUE, PM_Center, TRUE, TAG_DONE),
-      PM_Item, PM_MakeItem(PM_WideTitleBar, TRUE, TAG_DONE),
-
-      PM_Item, PM_MakeItem(PM_Title, globstring[STR_SORTBY], PM_NoSelect, TRUE, PM_ShinePen, TRUE,
+  sortmenu = PMMenu(globstring[STR_LISTER_MENU]),
+      PMInfo(globstring[STR_SORTBY]),
         PM_Center, TRUE,
-        TAG_END),
-      PM_Item, PM_MakeItem(PM_Title, globstring[STR_FILE_NAME], PM_ID, sbName, PM_Checkit, TRUE,
+        End,
+      PMCheckItem(globstring[STR_FILE_NAME],sbName),
       	PM_Exclude, PM_ExLst(sbSize,sbProt,sbDate,sbComment,sbType,sbOwner,sbGroup,sbNetprot,sbExt,0),
-        TAG_END),
-      PM_Item, PM_MakeItem(PM_Title, globstring[STR_FILE_EXTENSION], PM_ID, sbExt, PM_Checkit, TRUE,
+        End,
+      PMCheckItem(globstring[STR_FILE_EXTENSION],sbExt),
       	PM_Exclude, PM_ExLst(sbName,sbSize,sbProt,sbDate,sbComment,sbType,sbOwner,sbGroup,sbNetprot,0),
-        TAG_END),
-      PM_Item, PM_MakeItem(PM_Title, globstring[STR_FILE_SIZE], PM_ID, sbSize, PM_Checkit, TRUE,
+        End,
+      PMCheckItem(globstring[STR_FILE_SIZE],sbSize),
       	PM_Exclude, PM_ExLst(sbName,sbProt,sbDate,sbComment,sbType,sbOwner,sbGroup,sbNetprot,sbExt,0),
-        TAG_END),
-      PM_Item, PM_MakeItem(PM_Title, globstring[STR_PROTECTION_BITS], PM_ID, sbProt, PM_Checkit, TRUE,
+        End,
+      PMCheckItem(globstring[STR_PROTECTION_BITS],sbProt),
       	PM_Exclude, PM_ExLst(sbName,sbSize,sbDate,sbComment,sbType,sbOwner,sbGroup,sbNetprot,sbExt,0),
-        TAG_END),
-      PM_Item, PM_MakeItem(PM_Title, globstring[STR_CREATION_DATE], PM_ID, sbDate, PM_Checkit, TRUE,
+        End,
+      PMCheckItem(globstring[STR_CREATION_DATE],sbDate),
       	PM_Exclude, PM_ExLst(sbName,sbSize,sbProt,sbComment,sbType,sbOwner,sbGroup,sbNetprot,sbExt,0),
-        TAG_END),
-      PM_Item, PM_MakeItem(PM_Title, globstring[STR_FILE_COMMENT], PM_ID, sbComment, PM_Checkit, TRUE,
+        End,
+      PMCheckItem(globstring[STR_FILE_COMMENT],sbComment),
       	PM_Exclude, PM_ExLst(sbName,sbSize,sbProt,sbDate,sbType,sbOwner,sbGroup,sbNetprot,sbExt,0),
-        TAG_END),
-      PM_Item, PM_MakeItem(PM_Title, globstring[STR_FILE_TYPE], PM_ID, sbType, PM_Checkit, TRUE,
+        End,
+      PMCheckItem(globstring[STR_FILE_TYPE],sbType),
       	PM_Exclude, PM_ExLst(sbName,sbSize,sbProt,sbDate,sbComment,sbOwner,sbGroup,sbNetprot,sbExt,0),
-        TAG_END),
-      PM_Item, PM_MakeItem(PM_Title, globstring[STR_OWNER], PM_ID, sbOwner, PM_Checkit, TRUE,
+        End,
+      PMCheckItem(globstring[STR_OWNER],sbOwner),
       	PM_Exclude, PM_ExLst(sbName,sbSize,sbProt,sbDate,sbComment,sbType,sbGroup,sbNetprot,sbExt,0),
         PM_Hidden, ! userinfo,
-        TAG_END),
-      PM_Item, PM_MakeItem(PM_Title, globstring[STR_GROUP], PM_ID, sbGroup, PM_Checkit, TRUE,
+        End,
+      PMCheckItem(globstring[STR_GROUP],sbGroup),
       	PM_Exclude, PM_ExLst(sbName,sbSize,sbProt,sbDate,sbComment,sbType,sbOwner,sbNetprot,sbExt,0),
         PM_Hidden, ! userinfo,
-        TAG_END),
-      PM_Item, PM_MakeItem(PM_Title, globstring[STR_NET_PROTECTION_BITS], PM_ID, sbNetprot, PM_Checkit, TRUE,
+        End,
+      PMCheckItem(globstring[STR_NET_PROTECTION_BITS],sbNetprot),
       	PM_Exclude, PM_ExLst(sbName,sbSize,sbProt,sbDate,sbComment,sbType,sbOwner,sbGroup,sbExt,0),
         PM_Hidden, ! userinfo,
-        TAG_END),
-      PM_Item, PM_MakeItem(PM_TitleBar, TRUE,
-      	TAG_END),
-      PM_Item, PM_MakeItem(PM_Title, globstring[STR_REVERSE_ORDER], PM_ID, sbReverse, PM_Checkit, TRUE,
-      	TAG_END),
-      PM_Item, PM_MakeItem(PM_TitleBar, TRUE,
-      	TAG_END),
-      PM_Item, PM_MakeItem(PM_Title, globstring[STR_MIXDIRSFILES], PM_ID, sbMix, PM_Checkit, TRUE,
+        End,
+      PMBar,
+      	End,
+      PMCheckItem(globstring[STR_REVERSE_ORDER],sbReverse),
+      	End,
+      PMBar,
+      	End,
+      PMCheckItem(globstring[STR_MIXDIRSFILES],sbMix),
       	PM_Exclude, PM_ExLst(sbDirF,sbFileF,0),
-      	TAG_END),
-      PM_Item, PM_MakeItem(PM_Title, globstring[STR_DIRSFIRST], PM_ID, sbDirF, PM_Checkit, TRUE,
+      	End,
+      PMCheckItem(globstring[STR_DIRSFIRST],sbDirF),
       	PM_Exclude, PM_ExLst(sbMix,sbFileF,0),
-        TAG_END),
-      PM_Item, PM_MakeItem(PM_Title, globstring[STR_FILESFIRST], PM_ID, sbFileF, PM_Checkit, TRUE,
+        End,
+      PMCheckItem(globstring[STR_FILESFIRST],sbFileF),
       	PM_Exclude, PM_ExLst(sbMix,sbDirF,0),
-        TAG_END),
-      PM_Item, PM_MakeItem(PM_TitleBar, TRUE,
-      	TAG_END),
-      PM_Item, PM_MakeItem(PM_Title, globstring[STR_NAMESORT_MENU], PM_NoSelect, TRUE, PM_ShinePen, TRUE,
+        End,
+      PMBar,
+      	End,
+      PMInfo(globstring[STR_NAMESORT_MENU]),
         PM_Center, TRUE,
-        TAG_END),
-      PM_Item, PM_MakeItem(PM_Title, globstring[STR_SORTALPHA], PM_ID, sbSortA, PM_Checkit, TRUE,
+        End,
+      PMCheckItem(globstring[STR_SORTALPHA],sbSortA),
       	PM_Exclude, PM_ExLst(sbSortD,sbSortH,0),
-      	TAG_END),
-      PM_Item, PM_MakeItem(PM_Title, globstring[STR_SORTDEC], PM_ID, sbSortD, PM_Checkit, TRUE,
+      	End,
+      PMCheckItem(globstring[STR_SORTDEC],sbSortD),
       	PM_Exclude, PM_ExLst(sbSortA,sbSortH,0),
-        TAG_END),
-      PM_Item, PM_MakeItem(PM_Title, globstring[STR_SORTHEX], PM_ID, sbSortH, PM_Checkit, TRUE,
+        End,
+      PMCheckItem(globstring[STR_SORTHEX],sbSortH),
       	PM_Exclude, PM_ExLst(sbSortA,sbSortD,0),
-        TAG_END),
-      PM_Item, PM_MakeItem(PM_TitleBar, TRUE,
-      	TAG_END),
-      PM_Item, PM_MakeItem(PM_Title, globstring[STR_SIZE_AS_KMG], PM_ID, sbKMG, PM_Checkit, TRUE,
-      	TAG_END),
-      TAG_END);
+        End,
+      PMBar,
+      	End,
+      PMCheckItem(globstring[STR_SIZE_AS_KMG],sbKMG),
+      	End,
+      End;
  }
 }
 

@@ -890,7 +890,9 @@ nextgadgetbank:
                                 time_previous_sec=time_current_sec;
                                 time_previous_micro=time_current_micro;
 
+#ifndef __AROS__
                                 handlelistermenu(1-a);
+#endif
                             }
                             checksize(1-a);
                         }
