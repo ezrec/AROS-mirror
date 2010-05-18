@@ -233,6 +233,27 @@ Synopsis
  BOOL IsCyberModeID(
           ULONG modeID );
 
+Function
+~~~~~~~~
+::
+
+     Check if the given display mode ID belongs to an RTG driver
+
+
+Inputs
+~~~~~~
+::
+
+     modeID - a display mode ID to check
+
+
+Result
+~~~~~~
+::
+
+     TRUE if the mode belongs to an RTG driver, FALSE otherwise
+
+
 
 ----------
 

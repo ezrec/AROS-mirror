@@ -1,5 +1,5 @@
 =========
-CopytoPAR
+CopyToPAR
 =========
 
 .. This document is automatically generated. Don't edit it!
@@ -13,7 +13,7 @@ Name
 ::
 
 
-     CopytoPAR
+     CopyToPAR
 
 
 Synopsis
@@ -21,7 +21,7 @@ Synopsis
 ::
 
 
-     FILE/A,QUIET/S
+     FILE/A,USB/S,QUIET/S
 
 
 Location
@@ -37,7 +37,7 @@ Function
 ::
 
 
-     Copies (or sends a) file to parallel.device.
+     Copies (or sends) a file to parallel.device or usbparallel.device.
      
 
 Inputs
@@ -46,6 +46,8 @@ Inputs
 
 
      FILE   --  Either a file, a directory or a pattern to match.
+
+     USB    --  Use usbparallel.device.
 
      QUIET  --  Suppresses any output to the shell.
 
