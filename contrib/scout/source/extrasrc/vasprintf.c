@@ -12,7 +12,10 @@ STRPTR VASPrintf( CONST_STRPTR fmt,
 	ULONG len = 0;
 
 #ifdef NO_LINEAR_VARARGS
-	VNewRawDoFmt(fmt, (APTR)RAWFMTFUNC_COUNT, (APTR)&len, args);
+	va_list args2;
+
+	__va_copy(args2, args);
+	VNewRawDoFmt(fmt, (APTR)RAWFMTFUNC_COUNT, (APTR)&len, args2);
 #else
 	RawDoFmt(fmt, (APTR)args, (APTR)RAWFMTFUNC_COUNT, (APTR)&len);
 #endif
