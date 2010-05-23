@@ -17,9 +17,7 @@ include $(SRCDIR)/$(CURDIR)/sources.gallium.mak
 
 #MM mesa-mesa-gallium-linklib : includes contrib-gfx-libs-mesa-includes
 
-#MM gallium-auxiliary-linklib : includes
-
-#MM mesa-mesahidd-module : includes contrib-gfx-libs-mesa-includes gallium-auxiliary-linklib
+#MM mesa-mesahidd-module : includes contrib-gfx-libs-mesa-includes linklibs-galliumauxiliary
 
 SHARED_LIB_SOURCES = \
             aros_libapi \
@@ -71,19 +69,6 @@ endif
 #   mesa.library which uses Gallium as HIDD
 #
 #
-
-USER_INCLUDES := \
-            -I$(AROS_DEVELOPMENT)/include/gallium \
-
-USER_CFLAGS := -ffast-math $(FFIXED)
-
-LIB_GALLIUM_AUXILIARY_SOURCES = \
-            $(addprefix $(GALLIUM_SUBPATH)/,$(GALLIUM_AUXILIARY_SOURCES)) \
-
-%build_linklib mmake=gallium-auxiliary-linklib libname=galliumauxiliary \
-    files="$(LIB_GALLIUM_AUXILIARY_SOURCES)" \
-    objdir=$(GENDIR)/$(CURDIR)/gallium-auxiliary-linklib
-
 
 USER_INCLUDES := \
             -I$(SRCDIR)/$(CURDIR)/../../include \
