@@ -91,7 +91,7 @@
 #endif /* !NO_INLINE_STDARG */
 
 #define IdHardwareUpdate() \
-	AROS_LC0(void, IdHardwareUpdate, \
+	AROS_LC0NR(void, IdHardwareUpdate, \
 	struct Library *, IDENTIFY_BASE_NAME, 10, /* s */)
 
 #endif /* !_INLINE_IDENTIFY_H */
