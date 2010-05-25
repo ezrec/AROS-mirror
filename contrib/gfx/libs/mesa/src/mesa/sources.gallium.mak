@@ -15,36 +15,6 @@ AROS_WINSYS_SOURCES = \
             winsys/drm/intel/gem/intel_drm_fence \
             winsys/drm/intel/gem/intel_drm_buffer \
 
-GALLIUM_SOFTPIPE_SOURCES = \
-            drivers/softpipe/sp_fs_exec \
-            drivers/softpipe/sp_fs_sse \
-            drivers/softpipe/sp_clear \
-            drivers/softpipe/sp_flush \
-            drivers/softpipe/sp_query \
-            drivers/softpipe/sp_context \
-            drivers/softpipe/sp_draw_arrays \
-            drivers/softpipe/sp_prim_vbuf \
-            drivers/softpipe/sp_quad_pipe \
-            drivers/softpipe/sp_quad_blend \
-            drivers/softpipe/sp_quad_depth_test \
-            drivers/softpipe/sp_quad_fs \
-            drivers/softpipe/sp_quad_stipple \
-            drivers/softpipe/sp_screen \
-            drivers/softpipe/sp_setup \
-            drivers/softpipe/sp_state_blend \
-            drivers/softpipe/sp_state_clip \
-            drivers/softpipe/sp_state_derived \
-            drivers/softpipe/sp_state_fs \
-            drivers/softpipe/sp_state_sampler \
-            drivers/softpipe/sp_state_rasterizer \
-            drivers/softpipe/sp_state_surface \
-            drivers/softpipe/sp_state_vertex \
-            drivers/softpipe/sp_texture \
-            drivers/softpipe/sp_tex_sample \
-            drivers/softpipe/sp_tile_cache \
-            drivers/softpipe/sp_tex_tile_cache \
-            drivers/softpipe/sp_surface
-
 GALLIUM_NVIDIA_SOURCES = \
             drivers/nouveau/nouveau_screen \
             drivers/nouveau/nouveau_context \
@@ -130,6 +100,5 @@ GALLIUM_I915_SOURCES = \
 AROS_GALLIUM_SOURCES = \
             $(AROS_STATE_TRACKER_SOURCES) \
             $(AROS_WINSYS_SOURCES) \
-            $(GALLIUM_SOFTPIPE_SOURCES) \
             $(GALLIUM_NVIDIA_SOURCES) \
             $(GALLIUM_I915_SOURCES) \
