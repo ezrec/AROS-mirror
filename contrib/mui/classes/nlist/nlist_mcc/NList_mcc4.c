@@ -541,49 +541,16 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
           ptr1++;
           if (ptr1[0] == '[')
           {
-            LONG dx,dy;
-            LONG minx = 2,button = -1;
-            ULONG tag=0L,tagval=0L;
-            long np = 1;
+            LONG dx = -1, dy = -1;
+            LONG minx = 2, button = -1;
+            ULONG tag=0L, tagval=0L;
+            size_t np = 1;
 
-            dx = -1;
-            dy = -1;
-            while ((ptr1[np] != '\0') && (ptr1[np] != '\n') && (ptr1[np] != '\r') && (ptr1[np] != ']') && (ptr1[np] != '|') && (ptr1[np] != ','))
+            // skip everything until we find the final closing brace
+            while(ptr1[np] != '\0' && ptr1[np] != ']')
               np++;
-            if (np < 64)
-            {
-              if (ptr1[np] == ',')
-              { np++;
-                minx = atol(&ptr1[np]);
-                while ((ptr1[np] != '\0') && (ptr1[np] != '\n') && (ptr1[np] != '\r') && (ptr1[np] != '|') && (ptr1[np] != ']'))
-                  np++;
-              }
-              if (ptr1[np] == '|')
-              { np++;
-                if ((ptr1[np] != '\0') && (ptr1[np] != '\n') && (ptr1[np] != '\r') && (ptr1[np] != '|') && (ptr1[np] != ']') && (ptr1[np] != ','))
-                  dx = atol(&ptr1[np]);
-                while ((ptr1[np] != '\0') && (ptr1[np] != '\n') && (ptr1[np] != '\r') && (ptr1[np] != '|') && (ptr1[np] != ']') && (ptr1[np] != ','))
-                  np++;
-                if (ptr1[np] == '|')
-                { np++;
-                  if ((ptr1[np] != '\0') && (ptr1[np] != '\n') && (ptr1[np] != '\r') && (ptr1[np] != ']') && (ptr1[np] != ','))
-                  {
-                    dy = atol(&ptr1[np]);
-                    if (dy > data->vinc)
-                      dy = data->vinc;
-                  }
-                  while ((ptr1[np] != '\0') && (ptr1[np] != '\n') && (ptr1[np] != '\r') && (ptr1[np] != ']') && (ptr1[np] != ','))
-                    np++;
-                }
-              }
-              if (ptr1[np] == ',')
-              { np++;
-                minx = atol(&ptr1[np]);
-                while ((ptr1[np] != '\0') && (ptr1[np] != '\n') && (ptr1[np] != '\r') && (ptr1[np] != ']'))
-                  np++;
-              }
-            }
-            if (ptr1[np] == ']')
+
+            if(ptr1[np] == ']')
             {
               if (afinfo->len > 0)
               { ni++;
@@ -596,15 +563,9 @@ void ParseColumn(Object *obj,struct NLData *data,WORD column,ULONG mypen)
               afinfo->addchar = 0;
               afinfo->addinfo = 0;
               afinfo->style = STYLE_IMAGE;
-              { char *imgptr = (char *) &ptr1[1];
-                long imgnp = 0;
-                while ((imgnp < 64) && (ptr1[imgnp] != '\0') && (imgptr[imgnp] != '|') && (imgptr[imgnp] != ']') && (imgptr[imgnp] != ','))
-                { data->imagebuf[imgnp] = imgptr[imgnp];
-                  imgnp++;
-                }
-                data->imagebuf[imgnp] = '\0';
-              }
+              strlcpy(data->imagebuf, &ptr1[1], MIN(np, sizeof(data->imagebuf)));
               afinfo->pos = (WORD) (ptro - ptrs);
+              D(DBF_ALWAYS, "image spec '%s' tag %ld, tagval %ld, button %08lx, dx %ld, dy %ld, minx %ld", data->imagebuf, tag, tagval, button, dx, dy, minx);
               if (data->imagebuf[0] == '\0')
                 afinfo->strptr = NULL;
               else

@@ -32,14 +32,16 @@
 #endif
 
 #include <proto/intuition.h>
-
 APTR NewObject( struct IClass *classPtr, CONST_STRPTR classID, Tag tag1, ... )
 { return NewObjectA(classPtr, classID, (struct TagItem *)&tag1); }
 ULONG SetAttrs( APTR object, ULONG tag1, ... )
 { return SetAttrsA(object, (struct TagItem *)&tag1); }
 
-#include <proto/datatypes.h>
+#include <proto/graphics.h>
+LONG ObtainBestPen( struct ColorMap *cm, ULONG r, ULONG g, ULONG b, Tag tag1, ... )
+{ return ObtainBestPenA(cm, r, g, b, (struct TagItem *)&tag1); }
 
+#include <proto/datatypes.h>
 Object *NewDTObject( APTR name, Tag tag1, ... )
 { return NewDTObjectA(name, (struct TagItem *)&tag1); }
 ULONG SetDTAttrs( Object *o, struct Window *win, struct Requester *req, Tag tag1, ... )

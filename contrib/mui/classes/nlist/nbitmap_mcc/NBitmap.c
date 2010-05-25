@@ -50,34 +50,35 @@
 #include <libraries/mui.h>
 
 // local includes
-#include "NBitmap.h"
 #include "private.h"
+#include "NBitmap.h"
+#include "DitherImage.h"
 #include "version.h"
 #include "Debug.h"
 
-#if !defined(__amigaos4__) && !defined(__MORPHOS__)
-//#include "WritePixelArrayAlpha.c"
-  #ifndef WritePixelArrayAlpha
-    #if defined(__SASC)
-      ULONG WritePixelArrayAlpha(APTR, UWORD, UWORD, UWORD, struct RastPort *, UWORD, UWORD, UWORD, UWORD, ULONG);
-      #pragma libcall CyberGfxBase WritePixelArrayAlpha d8 76543921080A
-    #else
-      #define WritePixelArrayAlpha(__p0, __p1, __p2, __p3, __p4, __p5, __p6, __p7, __p8, __p9) \
-        LP10(216, ULONG , WritePixelArrayAlpha, \
-          APTR , __p0, a0, \
-          UWORD , __p1, d0, \
-          UWORD , __p2, d1, \
-          UWORD , __p3, d2, \
-          struct RastPort *, __p4, a1, \
-          UWORD , __p5, d3, \
-          UWORD , __p6, d4, \
-          UWORD , __p7, d5, \
-          UWORD , __p8, d6, \
-          ULONG , __p9, d7, \
-          , CYBERGRAPHICS_BASE_NAME)
-    #endif
-  #endif
-#endif
+// constant data
+/// default color map
+const uint32 defaultColorMap[256] =
+{
+  0x00000000, 0x00000055, 0x000000aa, 0x000000ff, 0x00002400, 0x00002455, 0x000024aa, 0x000024ff, 0x00004900, 0x00004955, 0x000049aa, 0x000049ff, 0x00006d00, 0x00006d55, 0x00006daa, 0x00006dff,
+  0x00009200, 0x00009255, 0x000092aa, 0x000092ff, 0x0000b600, 0x0000b655, 0x0000b6aa, 0x0000b6ff, 0x0000db00, 0x0000db55, 0x0000dbaa, 0x0000dbff, 0x0000ff00, 0x0000ff55, 0x0000ffaa, 0x0000ffff,
+  0x00240000, 0x00240055, 0x002400aa, 0x002400ff, 0x00242400, 0x00242455, 0x002424aa, 0x002424ff, 0x00244900, 0x00244955, 0x002449aa, 0x002449ff, 0x00246d00, 0x00246d55, 0x00246daa, 0x00246dff,
+  0x00249200, 0x00249255, 0x002492aa, 0x002492ff, 0x0024b600, 0x0024b655, 0x0024b6aa, 0x0024b6ff, 0x0024db00, 0x0024db55, 0x0024dbaa, 0x0024dbff, 0x0024ff00, 0x0024ff55, 0x0024ffaa, 0x0024ffff,
+  0x00490000, 0x00490055, 0x004900aa, 0x004900ff, 0x00492400, 0x00492455, 0x004924aa, 0x004924ff, 0x00494900, 0x00494955, 0x004949aa, 0x004949ff, 0x00496d00, 0x00496d55, 0x00496daa, 0x00496dff,
+  0x00499200, 0x00499255, 0x004992aa, 0x004992ff, 0x0049b600, 0x0049b655, 0x0049b6aa, 0x0049b6ff, 0x0049db00, 0x0049db55, 0x0049dbaa, 0x0049dbff, 0x0049ff00, 0x0049ff55, 0x0049ffaa, 0x0049ffff,
+  0x006d0000, 0x006d0055, 0x006d00aa, 0x006d00ff, 0x006d2400, 0x006d2455, 0x006d24aa, 0x006d24ff, 0x006d4900, 0x006d4955, 0x006d49aa, 0x006d49ff, 0x006d6d00, 0x006d6d55, 0x006d6daa, 0x006d6dff,
+  0x006d9200, 0x006d9255, 0x006d92aa, 0x006d92ff, 0x006db600, 0x006db655, 0x006db6aa, 0x006db6ff, 0x006ddb00, 0x006ddb55, 0x006ddbaa, 0x006ddbff, 0x006dff00, 0x006dff55, 0x006dffaa, 0x006dffff,
+  0x00920000, 0x00920055, 0x009200aa, 0x009200ff, 0x00922400, 0x00922455, 0x009224aa, 0x009224ff, 0x00924900, 0x00924955, 0x009249aa, 0x009249ff, 0x00926d00, 0x00926d55, 0x00926daa, 0x00926dff,
+  0x00929200, 0x00929255, 0x009292aa, 0x009292ff, 0x0092b600, 0x0092b655, 0x0092b6aa, 0x0092b6ff, 0x0092db00, 0x0092db55, 0x0092dbaa, 0x0092dbff, 0x0092ff00, 0x0092ff55, 0x0092ffaa, 0x0092ffff,
+  0x00b60000, 0x00b60055, 0x00b600aa, 0x00b600ff, 0x00b62400, 0x00b62455, 0x00b624aa, 0x00b624ff, 0x00b64900, 0x00b64955, 0x00b649aa, 0x00b649ff, 0x00b66d00, 0x00b66d55, 0x00b66daa, 0x00b66dff,
+  0x00b69200, 0x00b69255, 0x00b692aa, 0x00b692ff, 0x00b6b600, 0x00b6b655, 0x00b6b6aa, 0x00b6b6ff, 0x00b6db00, 0x00b6db55, 0x00b6dbaa, 0x00b6dbff, 0x00b6ff00, 0x00b6ff55, 0x00b6ffaa, 0x00b6ffff,
+  0x00db0000, 0x00db0055, 0x00db00aa, 0x00db00ff, 0x00db2400, 0x00db2455, 0x00db24aa, 0x00db24ff, 0x00db4900, 0x00db4955, 0x00db49aa, 0x00db49ff, 0x00db6d00, 0x00db6d55, 0x00db6daa, 0x00db6dff,
+  0x00db9200, 0x00db9255, 0x00db92aa, 0x00db92ff, 0x00dbb600, 0x00dbb655, 0x00dbb6aa, 0x00dbb6ff, 0x00dbdb00, 0x00dbdb55, 0x00dbdbaa, 0x00dbdbff, 0x00dbff00, 0x00dbff55, 0x00dbffaa, 0x00dbffff,
+  0x00ff0000, 0x00ff0055, 0x00ff00aa, 0x00ff00ff, 0x00ff2400, 0x00ff2455, 0x00ff24aa, 0x00ff24ff, 0x00ff4900, 0x00ff4955, 0x00ff49aa, 0x00ff49ff, 0x00ff6d00, 0x00ff6d55, 0x00ff6daa, 0x00ff6dff,
+  0x00ff9200, 0x00ff9255, 0x00ff92aa, 0x00ff92ff, 0x00ffb600, 0x00ffb655, 0x00ffb6aa, 0x00ffb6ff, 0x00ffdb00, 0x00ffdb55, 0x00ffdbaa, 0x00ffdbff, 0x00ffff00, 0x00ffff55, 0x00ffffaa, 0x00ffffff
+};
+
+///
 
 // functions
 /// GetConfigItem()
@@ -95,10 +96,11 @@ ULONG GetConfigItem(Object *obj, ULONG configitem, ULONG defaultsetting)
   RETURN(result);
   return result;
 }
+
 ///
 /// InitConfig()
 //
-VOID InitConfig(Object *obj, struct InstData *data)
+static void InitConfig(Object *obj, struct InstData *data)
 {
   ENTER();
 
@@ -117,10 +119,11 @@ VOID InitConfig(Object *obj, struct InstData *data)
 
   LEAVE();
 }
+
 ///
 /// FreeConfig()
 //
-VOID FreeConfig(struct InstData *data)
+static void FreeConfig(struct InstData *data)
 {
   ENTER();
 
@@ -131,6 +134,7 @@ VOID FreeConfig(struct InstData *data)
 
   LEAVE();
 }
+
 ///
 /// NBitmap_LoadImage()
 //
@@ -138,6 +142,10 @@ BOOL NBitmap_LoadImage(STRPTR filename, uint32 item, struct IClass *cl, Object *
 {
   BOOL result = FALSE;
   struct InstData *data;
+
+  ENTER();
+
+  SHOWSTRING(DBF_DATATYPE, filename);
 
   if((data = INST_DATA(cl, obj)) != NULL && filename != NULL)
   {
@@ -156,180 +164,160 @@ BOOL NBitmap_LoadImage(STRPTR filename, uint32 item, struct IClass *cl, Object *
   RETURN(result);
   return result;
 }
+
+///
+/// NBitmap_ExamineData()
+//
+static BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, Object *obj)
+{
+  BOOL result = FALSE;
+  ULONG arraysize;
+
+  struct pdtBlitPixelArray pbpa;
+  struct InstData *data = INST_DATA(cl, obj);
+
+  if(dt_obj != NULL)
+  {
+    /* bitmap header */
+    GetDTAttrs(dt_obj, PDTA_BitMapHeader, &data->dt_header[item], TAG_DONE);
+    D(DBF_DATATYPE, "examine: BMHD dimensions %ldx%ldx%ld", data->dt_header[item]->bmh_Width, data->dt_header[item]->bmh_Height, data->dt_header[item]->bmh_Depth);
+    data->depth = data->dt_header[item]->bmh_Depth;
+
+    if(data->depth>0 && data->depth<=8)
+    {
+      /* colour lookup bitmap */
+      data->fmt = PBPAFMT_LUT8;
+
+      /* bitmap header */
+      data->width =  data->dt_header[0]->bmh_Width;
+      data->height =  data->dt_header[0]->bmh_Height;
+
+      result = TRUE;
+      D(DBF_DATATYPE, "examine: using LUT8 bitmaps");
+    }
+    else if(data->depth >=24)
+    {
+      #if defined(__MORPHOS__)
+      /* XXX: Check out is this needed in OS 3 */
+      IPTR use_alpha;
+
+      GetDTAttrs(dt_obj, PDTA_AlphaChannel, (IPTR)&use_alpha, TAG_DONE);
+
+      if (use_alpha)
+        data->depth = 32;
+      #endif
+
+      /* true colour bitmap */
+      if(data->depth == 24)
+      {
+        data->fmt = PBPAFMT_RGB;
+        D(DBF_DATATYPE, "examine: using 24bit RGB data");
+      }
+      else if(data->depth == 32)
+      {
+        data->fmt = PBPAFMT_ARGB;
+        D(DBF_DATATYPE, "examine: using 32bit ARGB data");
+      }
+
+      data->width =  data->dt_header[0]->bmh_Width;
+      data->height =  data->dt_header[0]->bmh_Height;
+      data->arraybpp = data->depth/8;
+      data->arraybpr = data->arraybpp * data->width;
+
+      #if defined(__MORPHOS__)
+      if (SysBase->LibNode.lib_Version >= 51)
+      {
+        ULONG altivec_align = 0;
+
+        NewGetSystemAttrs(&altivec_align, sizeof(altivec_align), SYSTEMINFOTYPE_PPC_ALTIVEC, TAG_DONE);
+
+        if (altivec_align)
+          data->arraybpr = (data->arraybpr + 15) & ~15;
+      }
+      #endif
+
+      arraysize = (data->arraybpr) * data->height;
+
+      /* get array of pixels */
+      if((data->arraypixels[item] = AllocVec(arraysize, MEMF_ANY|MEMF_CLEAR)) != NULL)
+      {
+        ULONG error;
+
+        memset(&pbpa, 0, sizeof(struct pdtBlitPixelArray));
+
+        pbpa.MethodID = PDTM_READPIXELARRAY;
+        pbpa.pbpa_PixelData = data->arraypixels[item];
+        pbpa.pbpa_PixelFormat = data->fmt;
+        pbpa.pbpa_PixelArrayMod = data->arraybpr;
+        pbpa.pbpa_Left = 0;
+        pbpa.pbpa_Top = 0;
+        pbpa.pbpa_Width = data->width;
+        pbpa.pbpa_Height = data->height;
+
+        error = DoMethodA(dt_obj, (Msg)(VOID*)&pbpa);
+        D(DBF_DATATYPE, "examine: READPIXELARRAY returned %ld", error);
+
+        result = TRUE;
+      }
+    }
+  }
+
+  return(result);
+}
+
 ///
 /// NBitmap_UpdateImage()
 //
 VOID NBitmap_UpdateImage(uint32 item, STRPTR filename, struct IClass *cl, Object *obj)
+{
+  struct InstData *data = NULL;
+  struct Screen *scr = NULL;
+
+  if((data = INST_DATA(cl, obj)) != NULL)
   {
-    struct InstData *data = NULL;
-    struct Screen *scr = NULL;
-
-    if((data = INST_DATA(cl, obj)) != NULL)
+    if(filename != NULL)
     {
-      if(filename != NULL)
+      if(data->dt_obj[item] != NULL)
       {
-        if(data->dt_obj[item] != NULL)
+        /* free old image data */
+        if(data->fmt == PBPAFMT_LUT8)
+          SetDTAttrs(data->dt_obj[item], NULL, NULL, PDTA_Screen, NULL, TAG_DONE);
+
+        DisposeDTObject(data->dt_obj[item]);
+        data->dt_obj[item] = NULL;
+
+        if(data->arraypixels[item] != NULL)
         {
-          /* free old image data */
-          if(data->fmt == PBPAFMT_LUT8)
-            SetDTAttrs(data->dt_obj[item], NULL, NULL, PDTA_Screen, NULL, TAG_DONE);
+          FreeVec(data->arraypixels[item]);
+          data->arraypixels[item] = NULL;
+        }
 
-          DisposeDTObject(data->dt_obj[item]);
-          data->dt_obj[item] = NULL;
-
-          if(data->arraypixels[item] != NULL)
+        /* load new image */
+        if((NBitmap_LoadImage(filename, item, cl, obj)) != FALSE)
+        {
+          /* setup new image */
+          if((NBitmap_ExamineData(data->dt_obj[item], item, cl, obj)) != FALSE)
           {
-            FreeVec(data->arraypixels[item]);
-            data->arraypixels[item] = NULL;
-          }
+            /* screen */
+            scr = _screen(obj);
+            data->scrdepth = GetBitMapAttr(scr->RastPort.BitMap, BMA_DEPTH);
 
-          /* load new image */
-          if((NBitmap_LoadImage(filename, item, cl, obj)) != FALSE)
-          {
-            /* setup new image */
-            if((NBitmap_ExamineData(data->dt_obj[item], item, cl, obj)) != FALSE)
+            if(data->fmt == PBPAFMT_LUT8)
             {
-              /* screen */
-              scr = _screen(obj);
-              data->scrdepth = GetBitMapAttr(scr->RastPort.BitMap, BMA_DEPTH);
-
-              if(data->fmt == PBPAFMT_LUT8)
+              /* layout image */
+              SetDTAttrs(data->dt_obj[item], NULL, NULL, PDTA_Screen, scr, TAG_DONE);
+              if(DoMethod(data->dt_obj[item], DTM_PROCLAYOUT, NULL, 1))
               {
-                /* layout image */
-                SetDTAttrs(data->dt_obj[item], NULL, NULL, PDTA_Screen, scr, TAG_DONE);
-                if(DoMethod(data->dt_obj[item], DTM_PROCLAYOUT, NULL, 1))
-                {
-                  GetDTAttrs(data->dt_obj[item], PDTA_CRegs, &data->dt_colours[item], TAG_DONE);
-                  GetDTAttrs(data->dt_obj[item], PDTA_MaskPlane, &data->dt_mask[item], TAG_DONE);
-                  GetDTAttrs(data->dt_obj[item], PDTA_DestBitMap, &data->dt_bitmap[item], TAG_DONE);
+                GetDTAttrs(data->dt_obj[item], PDTA_CRegs, &data->dt_colours[item], TAG_DONE);
+                GetDTAttrs(data->dt_obj[item], PDTA_MaskPlane, &data->dt_mask[item], TAG_DONE);
+                GetDTAttrs(data->dt_obj[item], PDTA_DestBitMap, &data->dt_bitmap[item], TAG_DONE);
 
-                  if(data->dt_bitmap[item] == NULL) GetDTAttrs(data->dt_obj[item], PDTA_BitMap, &data->dt_bitmap[item], TAG_DONE);
-                }
+                if(data->dt_bitmap[item] == NULL) GetDTAttrs(data->dt_obj[item], PDTA_BitMap, &data->dt_bitmap[item], TAG_DONE);
               }
             }
           }
-
-        }
-      }
-    }
-  }
-///
-/// NBitmap_ExamineData()
-//
-BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, Object *obj)
-  {
-    BOOL result = FALSE;
-    ULONG arraysize;
-
-    struct pdtBlitPixelArray pbpa;
-    struct InstData *data = INST_DATA(cl, obj);
-
-    if(dt_obj != NULL)
-    {
-      /* bitmap header */
-      GetDTAttrs(dt_obj, PDTA_BitMapHeader, &data->dt_header[item], TAG_DONE);
-      D(DBF_DATATYPE, "examine: BMHD dimensions %ldx%ldx%ld", data->dt_header[item]->bmh_Width, data->dt_header[item]->bmh_Height, data->dt_header[item]->bmh_Depth);
-      data->depth = data->dt_header[item]->bmh_Depth;
-
-      if(data->depth>0 && data->depth<=8)
-      {
-        /* colour lookup bitmap */
-        data->fmt = PBPAFMT_LUT8;
-
-        /* bitmap header */
-        data->width =  data->dt_header[0]->bmh_Width;
-        data->height =  data->dt_header[0]->bmh_Height;
-
-        result = TRUE;
-        D(DBF_DATATYPE, "examine: using LUT8 bitmaps");
-      }
-      else if(data->depth >=24)
-      {
-        #if defined(__MORPHOS__)
-        /* XXX: Check out is this needed in OS 3 */
-        IPTR use_alpha;
-
-        GetDTAttrs(dt_obj, PDTA_AlphaChannel, (IPTR)&use_alpha, TAG_DONE);
-
-        if (use_alpha)
-          data->depth = 32;
-        #endif
-
-        /* true colour bitmap */
-        if(data->depth == 24)
-        {
-          data->fmt = PBPAFMT_RGB;
-          D(DBF_DATATYPE, "examine: using 24bit RGB data");
-        }
-        else if(data->depth == 32)
-        {
-          data->fmt = PBPAFMT_ARGB;
-          D(DBF_DATATYPE, "examine: using 32bit ARGB data");
         }
 
-        data->width =  data->dt_header[0]->bmh_Width;
-        data->height =  data->dt_header[0]->bmh_Height;
-        data->arraybpp = data->depth/8;
-        data->arraybpr = data->arraybpp * data->width;
-
-        #if defined(__MORPHOS__)
-        if (SysBase->LibNode.lib_Version >= 51)
-        {
-          ULONG altivec_align = 0;
-
-          NewGetSystemAttrs(&altivec_align, sizeof(altivec_align), SYSTEMINFOTYPE_PPC_ALTIVEC, TAG_DONE);
-
-          if (altivec_align)
-            data->arraybpr = (data->arraybpr + 15) & ~15;
-        }
-        #endif
-
-        arraysize = (data->arraybpr) * data->height;
-
-        /* get array of pixels */
-        if((data->arraypixels[item] = AllocVec(arraysize, MEMF_ANY|MEMF_CLEAR)) != NULL)
-        {
-          ULONG error;
-
-          memset(&pbpa, 0, sizeof(struct pdtBlitPixelArray));
-
-          pbpa.MethodID = PDTM_READPIXELARRAY;
-          pbpa.pbpa_PixelData = data->arraypixels[item];
-          pbpa.pbpa_PixelFormat = data->fmt;
-          pbpa.pbpa_PixelArrayMod = data->arraybpr;
-          pbpa.pbpa_Left = 0;
-          pbpa.pbpa_Top = 0;
-          pbpa.pbpa_Width = data->width;
-          pbpa.pbpa_Height = data->height;
-
-          error = DoMethodA(dt_obj, (Msg)(VOID*)&pbpa);
-          D(DBF_DATATYPE, "examine: READPIXELARRAY returned %ld", error);
-
-          result = TRUE;
-        }
-      }
-    }
-
-    return(result);
-  }
-///
-/// NBitmap_FreeImage()
-//
-VOID NBitmap_FreeImage(uint32 item, struct IClass *cl, Object *obj)
-{
-  struct InstData *data = NULL;
-
-  if(((data = INST_DATA(cl, obj)) != NULL))
-  {
-    if(data->dt_obj[item] != NULL)
-    {
-      DisposeDTObject(data->dt_obj[item]);
-      data->dt_obj[item] = NULL;
-
-      if(data->arraypixels[item] != NULL)
-      {
-        FreeVec(data->arraypixels[item]);
-        data->arraypixels[item] = NULL;
       }
     }
   }
@@ -456,14 +444,37 @@ BOOL NBitmap_NewImage(struct IClass *cl, Object *obj)
 
   ENTER();
 
-  if(((data = INST_DATA(cl, obj))!=NULL) && (data->dt_obj[0]))
+  if((data = INST_DATA(cl, obj)) != NULL)
   {
-    ULONG i;
-
-    for(i=0;i<3;i++)
+    switch(data->type)
     {
-      if(data->dt_obj[i] != NULL)
-        result = NBitmap_ExamineData(data->dt_obj[i], i, cl, obj);
+      case MUIV_NBitmap_Type_File:
+      case MUIV_NBitmap_Type_DTObject:
+      {
+        if(data->dt_obj[0] != NULL)
+        {
+          ULONG i;
+
+          // assume success for the moment
+          result = TRUE;
+
+          for(i=0;i<3;i++)
+          {
+            if(data->dt_obj[i] != NULL)
+              result &= NBitmap_ExamineData(data->dt_obj[i], i, cl, obj);
+          }
+        }
+      }
+      break;
+
+      case MUIV_NBitmap_Type_CLUT8:
+      case MUIV_NBitmap_Type_RGB24:
+      case MUIV_NBitmap_Type_ARGB32:
+      {
+        // no further requirements, instant success
+        result = TRUE;
+      }
+      break;
     }
   }
 
@@ -554,6 +565,7 @@ BOOL NBitmap_OldNewImage(struct IClass *cl, Object *obj)
   RETURN(result);
   return result;
 }
+
 ///
 /// NBitmap_DisposeImage()
 //
@@ -602,6 +614,7 @@ VOID NBitmap_DisposeImage(struct IClass *cl, Object *obj)
 
   LEAVE();
 }
+
 ///
 /// NBitmap_SetupImage()
 //
@@ -635,37 +648,110 @@ BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj)
       DoMethod(_win(obj), MUIM_Window_AddEventHandler, &data->ehnode);
     }
 
-    /* 8-bit data */
-    if(data->fmt == PBPAFMT_LUT8 && data->dt_obj[0] != NULL)
+    switch(data->type)
     {
-      ULONG i;
-
-      /* layout image */
-      for(i = 0; i < 3; i++)
+      case MUIV_NBitmap_Type_File:
+      case MUIV_NBitmap_Type_DTObject:
       {
-        // set the new screen for this object
-        SetDTAttrs(data->dt_obj[i], NULL, NULL, PDTA_Screen, scr, TAG_DONE);
-        if(DoMethod(data->dt_obj[i], DTM_PROCLAYOUT, NULL, 1))
-        {
-          GetDTAttrs(data->dt_obj[i], PDTA_CRegs, &data->dt_colours[i],
-                                      PDTA_MaskPlane, &data->dt_mask[i],
-                                      PDTA_DestBitMap, &data->dt_bitmap[i],
-                                      TAG_DONE);
-          if(data->dt_bitmap[i] == NULL)
-            GetDTAttrs(data->dt_obj[i], PDTA_BitMap, &data->dt_bitmap[i], TAG_DONE);
-          SHOWVALUE(DBF_DATATYPE, data->dt_bitmap[i]);
-        }
-      }
 
-      result = TRUE;
+        /* 8-bit data */
+        if(data->fmt == PBPAFMT_LUT8 && data->dt_obj[0] != NULL)
+        {
+          ULONG i;
+
+          /* layout image */
+          for(i = 0; i < 3; i++)
+          {
+            // set the new screen for this object
+            SetDTAttrs(data->dt_obj[i], NULL, NULL, PDTA_Screen, scr, TAG_DONE);
+            if(DoMethod(data->dt_obj[i], DTM_PROCLAYOUT, NULL, 1))
+            {
+              GetDTAttrs(data->dt_obj[i], PDTA_CRegs, &data->dt_colours[i],
+                                          PDTA_MaskPlane, &data->dt_mask[i],
+                                          PDTA_DestBitMap, &data->dt_bitmap[i],
+                                          TAG_DONE);
+              if(data->dt_bitmap[i] == NULL)
+                GetDTAttrs(data->dt_obj[i], PDTA_BitMap, &data->dt_bitmap[i], TAG_DONE);
+              SHOWVALUE(DBF_DATATYPE, data->dt_bitmap[i]);
+            }
+          }
+
+          result = TRUE;
+        }
+        else if(data->depth > 8)
+          result = NBitmap_SetupShades(data);
+        }
+      break;
+
+      case MUIV_NBitmap_Type_CLUT8:
+      case MUIV_NBitmap_Type_RGB24:
+      case MUIV_NBitmap_Type_ARGB32:
+      {
+        // in case we are to be displayed on a colormapped screen we have to create
+        // dithered copies of the images
+        if(data->scrdepth <= 8)
+        {
+          ULONG i;
+          const uint32 *colorMap;
+
+          // use a user definable colormap or the default color map
+          if(data->clut != NULL)
+            colorMap = data->clut;
+          else
+            colorMap = defaultColorMap;
+
+          // allocate all pens
+          for(i = 0; i < 256; i++)
+            data->ditherPenMap[i] = ObtainBestPen(scr->ViewPort.ColorMap, ((colorMap[i] >> 16) & 0xff) * 0x01010101UL,
+                                                                          ((colorMap[i] >>  8) & 0xff) * 0x01010101UL,
+                                                                          ((colorMap[i] >>  0) & 0xff) * 0x01010101UL,
+                                                                          OBP_Precision, PRECISION_IMAGE,
+                                                                          TAG_DONE);
+
+          for(i = 0; i < 3; i++)
+          {
+            if(data->data[i] != NULL)
+            {
+              // create a dithered copy of the raw image
+              data->ditheredImage[i] = DitherImage(DITHERA_Data, (uint32)data->data[i],
+                                                   DITHERA_Width, data->width,
+                                                   DITHERA_Height, data->height,
+                                                   DITHERA_Format, data->type,
+                                                   DITHERA_ColorMap, (uint32)colorMap,
+                                                   DITHERA_PenMap, (uint32)data->ditherPenMap,
+                                                   DITHERA_MaskPlane, (uint32)&data->ditheredMask[i],
+                                                   TAG_DONE);
+
+              #if !defined(__amigaos4__)
+              if(data->ditheredImage[i] != NULL)
+              {
+                // CyberGraphics cannot blit raw data through a mask, thus we have to
+                // take this ugly workaround and take the detour using a bitmap.
+                if((data->ditheredBitmap[i] = AllocBitMap(data->width, data->height, 8, BMF_MINPLANES, NULL)) != NULL)
+                {
+                  struct RastPort tempRP;
+
+                  InitRastPort(&tempRP);
+                  tempRP.BitMap = data->ditheredBitmap[i];
+
+                  WritePixelArray(data->ditheredImage[i], 0, 0, data->width, &tempRP, 0, 0, data->width, data->height, RECTFMT_LUT8);
+                }
+              }
+              #endif // !__amigaos4__
+            }
+          }
+        }
+        // no further requirements, instant success
+        result = TRUE;
+      }
+      break;
     }
-    else if(data->depth > 8)
-      result = NBitmap_SetupShades(data);
   }
 
   RETURN(result);
   return result;
 }
+
 ///
 /// NBitmap_CleanupImage()
 //
@@ -679,16 +765,61 @@ VOID NBitmap_CleanupImage(struct IClass *cl, Object *obj)
     if(data->button)
       DoMethod(_win(obj), MUIM_Window_RemEventHandler, &data->ehnode);
 
-    if(data->fmt == PBPAFMT_LUT8 && data->dt_obj[0] != NULL)
+    switch(data->type)
     {
-      ULONG i;
-
-      /* layout image */
-      for(i = 0; i < 3; i++)
+      case MUIV_NBitmap_Type_File:
+      case MUIV_NBitmap_Type_DTObject:
       {
-        // reset the screen pointer
-        SetDTAttrs(data->dt_obj[i], NULL, NULL, PDTA_Screen, NULL, TAG_DONE);
+        if(data->fmt == PBPAFMT_LUT8 && data->dt_obj[0] != NULL)
+        {
+          ULONG i;
+
+          /* layout image */
+          for(i = 0; i < 3; i++)
+          {
+            // reset the screen pointer
+            SetDTAttrs(data->dt_obj[i], NULL, NULL, PDTA_Screen, NULL, TAG_DONE);
+          }
+        }
       }
+      break;
+
+      case MUIV_NBitmap_Type_CLUT8:
+      case MUIV_NBitmap_Type_RGB24:
+      case MUIV_NBitmap_Type_ARGB32:
+      {
+        // nothing to do
+        ULONG i;
+        struct Screen *scr = _screen(obj);
+
+        // free the possibly dithered image copies
+        for(i = 0; i < 3; i++)
+        {
+          if(data->ditheredImage[i] != NULL)
+          {
+            FreeDitheredImage(data->ditheredImage[i], data->ditheredMask[i]);
+            data->ditheredImage[i] = NULL;
+          }
+          #if !defined(__amigaos4__)
+          if(data->ditheredBitmap[i] != NULL)
+          {
+            FreeBitMap(data->ditheredBitmap[i]);
+            data->ditheredBitmap[i] = NULL;
+          }
+          #endif // !__amigaos4__
+        }
+
+        // release all allocated pens
+        if(data->scrdepth <= 8)
+        {
+          for(i = 0; i < 256; i++)
+          {
+            if(data->ditherPenMap[i] != -1)
+              ReleasePen(scr->ViewPort.ColorMap, data->ditherPenMap[i]);
+          }
+        }
+      }
+      break;
     }
 
     NBitmap_CleanupShades(data);
@@ -697,10 +828,11 @@ VOID NBitmap_CleanupImage(struct IClass *cl, Object *obj)
     FreeConfig(data);
   }
 }
+
 ///
 /// NBitmap_DrawSimpleFrame()
 //
-VOID NBitmap_DrawSimpleFrame(Object *obj, uint32 x, uint32 y, uint32 w, uint32 h)
+static void NBitmap_DrawSimpleFrame(Object *obj, uint32 x, uint32 y, uint32 w, uint32 h)
 {
   ENTER();
 
@@ -715,13 +847,13 @@ VOID NBitmap_DrawSimpleFrame(Object *obj, uint32 x, uint32 y, uint32 w, uint32 h
 
   LEAVE();
 }
+
 ///
 /// NBitmap_DrawImage()
 //
-BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
+void NBitmap_DrawImage(struct IClass *cl, Object *obj)
 {
   struct InstData *data;
-  struct MUI_AreaData *areadata = NULL;
 
   ENTER();
 
@@ -730,130 +862,280 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
     LONG item;
     ULONG x, y, twidth, theight;
 
-    areadata = muiAreaData(obj);
-
     /* coordinates */
     item = 0;
-    x = areadata->mad_Box.Left;
-    y = areadata->mad_Box.Top;
+    x = _left(obj);
+    y = _top(obj);
     twidth = (data->width + data->border_horiz) - 2;      /* subtract standard 1 pixel border */
     theight = (data->height + data->border_vert) - 2;
 
-   /* clear */
-   if(data->button) DoMethod(obj, MUIM_DrawBackground, areadata->mad_Box.Left, areadata->mad_Box.Top, areadata->mad_Box.Width, areadata->mad_Box.Height, 0, 0);
+    /* clear */
+    if(data->button)
+      DoMethod(obj, MUIM_DrawBackground, _left(obj), _top(obj), _width(obj), _height(obj), 0, 0);
 
-   /* label */
-   if(data->label != NULL && data->button != FALSE)
-   {
-     uint32 labelx;
+    /* label */
+    if(data->label != NULL && data->button != FALSE)
+    {
+      uint32 labelx;
 
-     SetFont(_rp(obj), _font(obj));
-     SetAPen(_rp(obj), 1);
+      SetFont(_rp(obj), _font(obj));
+      SetAPen(_rp(obj), 1);
 
-     labelx = (twidth/2) - (data->labelte.te_Width/2);
+      labelx = (twidth/2) - (data->labelte.te_Width/2);
 
-     Move(_rp(obj), x + labelx, _bottom(obj) - 3);
-     Text(_rp(obj), data->label, strlen(data->label));
-   }
+      Move(_rp(obj), x + labelx, _bottom(obj) - 3);
+      Text(_rp(obj), data->label, strlen(data->label));
+    }
 
     /* draw image */
-    if(data->fmt == PBPAFMT_LUT8)
+    switch(data->type)
     {
-      #if defined(__amigaos4__)
-      uint32 error;
-      #endif
+      case MUIV_NBitmap_Type_File:
+      case MUIV_NBitmap_Type_DTObject:
+      {
+        if(data->dt_obj[0] != NULL)
+        {
+          if(data->fmt == PBPAFMT_LUT8)
+          {
+            #if defined(__amigaos4__)
+            uint32 error;
+            #endif
 
-      /* select bitmap */
-      if(data->button && data->pressed && data->overlay && data->dt_bitmap[2])
-        item = 2;
+            /* select bitmap */
+            if(data->button && data->pressed && data->overlay && data->dt_bitmap[2])
+              item = 2;
 
-      SHOWVALUE(DBF_DRAW, item);
-      SHOWVALUE(DBF_DRAW, data->dt_bitmap[item]);
-      SHOWVALUE(DBF_DRAW, data->dt_mask[item]);
+            SHOWVALUE(DBF_DRAW, item);
+            SHOWVALUE(DBF_DRAW, data->dt_bitmap[item]);
+            SHOWVALUE(DBF_DRAW, data->dt_mask[item]);
 
-      #if defined(__amigaos4__)
-      error = BltBitMapTags(BLITA_Source, data->dt_bitmap[item],
+            #if defined(__amigaos4__)
+            error = BltBitMapTags(BLITA_Source, data->dt_bitmap[item],
+                                  BLITA_Dest, _rp(obj),
+                                  BLITA_SrcX, 0,
+                                  BLITA_SrcY, 0,
+                                  BLITA_DestX, x + (data->border_horiz / 2),
+                                  BLITA_DestY, y + ((data->border_vert / 2) - (data->label_vert/2)),
+                                  BLITA_Width, data->width,
+                                  BLITA_Height, data->height,
+                                  BLITA_SrcType, BLITT_BITMAP,
+                                  BLITA_DestType, BLITT_RASTPORT,
+                                  BLITA_MaskPlane, data->dt_mask[item],
+                                  TAG_DONE);
+            SHOWVALUE(DBF_DRAW, error);
+
+            #else
+
+            if(data->dt_mask[item] != NULL)
+            {
+              BltMaskBitMapRastPort(data->dt_bitmap[item], 0, 0, _rp(obj),
+                _left(obj) + (data->border_horiz / 2),
+                _top(obj) + (data->border_vert / 2),
+                data->width,
+                data->height,
+                0xc0,
+                (APTR)data->dt_mask[item]);
+            }
+            else
+            {
+              BltBitMapRastPort(data->dt_bitmap[item], 0, 0, _rp(obj),
+                _left(obj) + (data->border_horiz / 2),
+                _top(obj) + (data->border_vert / 2),
+                data->width,
+                data->height,
+                0xc0);
+            }
+            #endif
+          }
+          else
+          {
+            /* select bitmap */
+            if(data->button && data->pressed && data->overlay && data->arraypixels[2] != NULL)
+              item = 2;
+
+            SHOWVALUE(DBF_DRAW, item);
+            SHOWVALUE(DBF_DRAW, data->arraypixels[item]);
+
+            if(data->arraypixels[item] != NULL)
+            {
+              #if defined(__amigaos4__)
+              int32 srctype;
+              uint32 error;
+
+              if(data->depth == 24)
+               srctype = BLITT_RGB24;
+              else
+               srctype = BLITT_ARGB32;
+
+              error = BltBitMapTags(BLITA_Source, data->arraypixels[item],
+                                    BLITA_Dest, _rp(obj),
+                                    BLITA_SrcX, 0,
+                                    BLITA_SrcY, 0,
+                                    BLITA_DestX, x + (data->border_horiz / 2),
+                                    BLITA_DestY, y + ((data->border_vert / 2) - (data->label_vert/2)),
+                                    BLITA_Width, data->width,
+                                    BLITA_Height, data->height,
+                                    BLITA_SrcType, srctype,
+                                    BLITA_DestType, BLITT_RASTPORT,
+                                    BLITA_SrcBytesPerRow, data->arraybpr,
+                                    BLITA_UseSrcAlpha, TRUE,
+                                    TAG_DONE);
+
+              SHOWVALUE(DBF_DRAW, error);
+
+              #else
+
+              if(data->depth == 24)
+                WritePixelArray(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, RECTFMT_RGB);
+              else
+                WritePixelArrayAlpha(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, 0xffffffff);
+
+              #endif
+            }
+          }
+        }
+      }
+      break;
+
+      case MUIV_NBitmap_Type_CLUT8:
+      case MUIV_NBitmap_Type_RGB24:
+      case MUIV_NBitmap_Type_ARGB32:
+      {
+        int w = min((uint32)_mwidth (obj), data->width );
+        int h = min((uint32)_mheight(obj), data->height);
+
+        /* select bitmap */
+        if(data->button && data->pressed && data->overlay && data->data[2] != NULL)
+          item = 2;
+
+        if(data->data[item] != NULL)
+        {
+          #if defined(__amigaos4__)
+          if(data->scrdepth <= 8 && data->ditheredImage[item] != NULL)
+          {
+            if(data->ditheredMask[item] != NULL)
+            {
+              BltBitMapTags(BLITA_Source, data->ditheredImage[item],
                             BLITA_Dest, _rp(obj),
                             BLITA_SrcX, 0,
                             BLITA_SrcY, 0,
                             BLITA_DestX, x + (data->border_horiz / 2),
                             BLITA_DestY, y + ((data->border_vert / 2) - (data->label_vert/2)),
-                            BLITA_Width, data->width,
-                            BLITA_Height, data->height,
-                            BLITA_SrcType, BLITT_BITMAP,
+                            BLITA_Width, w,
+                            BLITA_Height, h,
+                            BLITA_SrcType, BLITT_CHUNKY,
                             BLITA_DestType, BLITT_RASTPORT,
-                            BLITA_MaskPlane, data->dt_mask[item],
+                            BLITA_SrcBytesPerRow, data->width,
+                            BLITA_MaskPlane, data->ditheredMask[item],
+                            BLITA_Minterm, (ABC|ABNC|ANBC),
                             TAG_DONE);
-      SHOWVALUE(DBF_DRAW, error);
-
-      #else
-
-      if(data->dt_mask[item] != NULL)
-      {
-        BltMaskBitMapRastPort(data->dt_bitmap[item], 0, 0, _rp(obj),
-          _left(obj) + (data->border_horiz / 2),
-          _top(obj) + (data->border_vert / 2),
-          data->width,
-          data->height,
-          0xc0,
-          (APTR)data->dt_mask[item]);
-      }
-      else
-      {
-        BltBitMapRastPort(data->dt_bitmap[item], 0, 0, _rp(obj),
-          _left(obj) + (data->border_horiz / 2),
-          _top(obj) + (data->border_vert / 2),
-          data->width,
-          data->height,
-          0xc0);
-      }
-      #endif
-    }
-    else
-    {
-      /* select bitmap */
-      if(data->button && data->pressed && data->overlay && data->arraypixels[2] != NULL)
-        item = 2;
-
-      SHOWVALUE(DBF_DRAW, item);
-      SHOWVALUE(DBF_DRAW, data->arraypixels[item]);
-
-      if(data->arraypixels[item] != NULL)
-      {
-        #if defined(__amigaos4__)
-        int32 srctype;
-        uint32 error;
-
-        if(data->depth == 24)
-         srctype = BLITT_RGB24;
-        else
-         srctype = BLITT_ARGB32;
-
-        error = BltBitMapTags(BLITA_Source, data->arraypixels[item],
+            }
+            else
+            {
+              BltBitMapTags(BLITA_Source, data->ditheredImage[item],
+                            BLITA_Dest, _rp(obj),
+                            BLITA_SrcX, 0,
+                            BLITA_SrcY, 0,
+                            BLITA_DestX, x + (data->border_horiz / 2),
+                            BLITA_DestY, y + ((data->border_vert / 2) - (data->label_vert/2)),
+                            BLITA_Width, w,
+                            BLITA_Height, h,
+                            BLITA_SrcType, BLITT_CHUNKY,
+                            BLITA_DestType, BLITT_RASTPORT,
+                            BLITA_SrcBytesPerRow, data->width,
+                            BLITA_Minterm, (ABC|ABNC),
+                            TAG_DONE);
+            }
+          }
+          #else // __amigaos4__
+          if(data->scrdepth <= 8 && data->ditheredBitmap[item] != NULL)
+          {
+            // CyberGraphics cannot blit raw data through a mask, thus we have to
+            // take this ugly workaround and take the detour using a bitmap.
+            if(data->ditheredMask[item] != NULL)
+            {
+              BltMaskBitMapRastPort(data->ditheredBitmap[item], 0, 0, _rp(obj), x + (data->border_horiz / 2), y + ((data->border_vert / 2) - (data->label_vert/2)), w, h, (ABC|ABNC|ANBC), data->ditheredMask[item]);
+            }
+            else
+            {
+              BltBitMapRastPort(data->ditheredBitmap[item], 0, 0, _rp(obj), x + (data->border_horiz / 2), y + ((data->border_vert / 2) - (data->label_vert/2)), w, h, (ABC|ABNC));
+            }
+          }
+          #endif // __amigaos4__
+          else
+          {
+            #if defined(__amigaos4__)
+            switch(data->type)
+            {
+              case MUIV_NBitmap_Type_CLUT8:
+                BltBitMapTags(BLITA_Source, data->data[item],
                               BLITA_Dest, _rp(obj),
                               BLITA_SrcX, 0,
                               BLITA_SrcY, 0,
                               BLITA_DestX, x + (data->border_horiz / 2),
                               BLITA_DestY, y + ((data->border_vert / 2) - (data->label_vert/2)),
-                              BLITA_Width, data->width,
-                              BLITA_Height, data->height,
-                              BLITA_SrcType, srctype,
+                              BLITA_Width, w,
+                              BLITA_Height, h,
+                              BLITA_SrcType, BLITT_CHUNKY,
                               BLITA_DestType, BLITT_RASTPORT,
-                              BLITA_SrcBytesPerRow, data->arraybpr,
-                              BLITA_UseSrcAlpha, TRUE,
+                              BLITA_SrcBytesPerRow, data->width,
+                              BLITA_CLUT, data->clut,
                               TAG_DONE);
+              break;
 
-        SHOWVALUE(DBF_DRAW, error);
+              case MUIV_NBitmap_Type_RGB24:
+                BltBitMapTags(BLITA_Source, data->data[item],
+                              BLITA_Dest, _rp(obj),
+                              BLITA_SrcX, 0,
+                              BLITA_SrcY, 0,
+                              BLITA_DestX, x + (data->border_horiz / 2),
+                              BLITA_DestY, y + ((data->border_vert / 2) - (data->label_vert/2)),
+                              BLITA_Width, w,
+                              BLITA_Height, h,
+                              BLITA_SrcType, BLITT_RGB24,
+                              BLITA_DestType, BLITT_RASTPORT,
+                              BLITA_SrcBytesPerRow, data->width*3,
+                              BLITA_Alpha, data->alpha,
+                              TAG_DONE);
+              break;
 
-        #else
+              case MUIV_NBitmap_Type_ARGB32:
+                BltBitMapTags(BLITA_Source, data->data[item],
+                              BLITA_Dest, _rp(obj),
+                              BLITA_SrcX, 0,
+                              BLITA_SrcY, 0,
+                              BLITA_DestX, x + (data->border_horiz / 2),
+                              BLITA_DestY, y + ((data->border_vert / 2) - (data->label_vert/2)),
+                              BLITA_Width, w,
+                              BLITA_Height, h,
+                              BLITA_SrcType, BLITT_ARGB32,
+                              BLITA_DestType, BLITT_RASTPORT,
+                              BLITA_SrcBytesPerRow, data->width*4,
+                              BLITA_UseSrcAlpha, TRUE,
+                              BLITA_Alpha, data->alpha,
+                              TAG_DONE);
+              break;
+            }
+            #else // __amigaos4__
+            switch(data->type)
+            {
+              case MUIV_NBitmap_Type_CLUT8:
+                WriteLUTPixelArray(data->data[item], 0, 0, data->width, _rp(obj), (APTR)data->clut, x + (data->border_horiz / 2), y + ((data->border_vert / 2) - (data->label_vert/2)), w, h, CTABFMT_XRGB8);
+              break;
 
-        if(data->depth == 24)
-          WritePixelArray(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, RECTFMT_RGB);
-        else
-          WritePixelArrayAlpha(data->arraypixels[item], 0, 0, data->arraybpr, _rp(obj), _left(obj) + (data->border_horiz / 2), _top(obj) + (data->border_vert / 2), data->width, data->height, 0xffffffff);
+              case MUIV_NBitmap_Type_RGB24:
+                WritePixelArray(data->data[item], 0, 0, data->width*3, _rp(obj), x + (data->border_horiz / 2), y + ((data->border_vert / 2) - (data->label_vert/2)), w, h, RECTFMT_RGB);
+              break;
 
-        #endif
+              case MUIV_NBitmap_Type_ARGB32:
+                WritePixelArrayAlpha(data->data[item], 0, 0, data->width*4, _rp(obj), x + (data->border_horiz / 2), y + ((data->border_vert / 2) - (data->label_vert/2)), w, h, data->alpha);
+              break;
+            }
+            #endif // __amigaos4__
+          }
+        }
       }
+      break;
     }
 
     /* overlay */
@@ -863,9 +1145,9 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
       {
         /* standard overlay */
         if(data->pressed)
-          NBitmap_DrawSimpleFrame(obj, _left(obj), _top(obj), data->width, data->height);
+          NBitmap_DrawSimpleFrame(obj, x + (data->border_horiz / 2), y + ((data->border_vert / 2) - (data->label_vert/2)), data->width, data->height);
         else
-          NBitmap_DrawSimpleFrame(obj, _left(obj), _top(obj), data->width, data->height);
+          NBitmap_DrawSimpleFrame(obj, x + (data->border_horiz / 2), y + ((data->border_vert / 2) - (data->label_vert/2)), data->width, data->height);
       }
       else
       {
@@ -915,8 +1197,7 @@ BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj)
     }
   }
 
-  RETURN(FALSE);
-  return FALSE;
+  LEAVE();
 }
-///
 
+///

@@ -3,7 +3,188 @@ MUI NList MCC classes - ChangeLog
 ---------------------------------
 
 $Id$
-$URL: https://nlist-classes.svn.sourceforge.net/svnroot/nlist-classes/releases/0.103/ChangeLog $
+$URL: https://nlist-classes.svn.sourceforge.net/svnroot/nlist-classes/trunk/ChangeLog $
+
+2010-05-20 Mariusz Danilewicz <mandi@interia.pl>
+
+ * ChangeLog: updated - missed last time.
+
+2010-05-20 Mariusz Danilewicz <mandi@interia.pl>
+
+ * nlistviews_mcp\locale\NListviews_mcp.cd: fixed typo in
+   MSG_FUNC_DEFALLORDERCOL and updated (c) notice in MSG_EXAMPLE_TEXT
+ * nlistviews_mcp\locale\polish.ct: added Polish translation
+ * nlisttree_mcp\locale\polish.ct: added Polish translation
+ * tools\mkrelease.sh: added generating Polish catalog to release
+ * nlistviews_mcp\makefile and mmakefile.src: added generating Polish catalog
+ * nlisttree_mcp\makefile and mmakefile.src: added generating Polish catalog
+
+2010-05-20 Thore Böckelmann <tboeckel@gmx.de>
+
+  * Makefiles: add varargs stubs only for those systems which really need it.
+
+2010-05-19 Thore Böckelmann <tboeckel@gmx.de>
+
+  * demo/NBitmap-Demo.c: replaced the old and complete broken demo application
+    by our stripped down test application. A few bells and whistles less than
+    the former demo application, but at least it works without problems and
+    shows the new handling of raw image data.
+  * added stuff for automated build of release archives.
+
+#### v0.105 RELEASE ###########################################################
+
+2010-05-16  Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final v0.105 release preparations
+
+2010-05-11 Thore Böckelmann <tboeckel@gmx.de>
+
+  * include/mui/NList_mcc.h: added a comment to skip certain method IDs for
+    future extensions to avoid clashes with other classes.
+  * nlist_mcc/NList_mcc6.c: use GetBitMapAttr() to determine a bitmap's depth
+    of V39+ systems instead of peeking around.
+  * nlist_mcc: replaced custom stpcpy() function by uses of then overrun-save
+    functions strlcpy() and snprintf().
+  * nlist_mcc: removed now unused function ltoa().
+
+2010-05-07 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc2.c: clicks on the list's border are no longer taken as
+    valid clicks within the list. Before such clicks resulted in the first/last
+    entry to be selected, which is not very intuitive. This fixes bug #2951808.
+  * nlist_mcc/NList_mcc4.c: simplified the image spec handling. Specifying
+    additional dimensions was discouraged anyway and the old scanning  algorithm
+    completely broke the color handling. Effectively this fixes bug #1272693.
+  * doc/MCC_NList.doc: updated documentation about direct "ESC I[<s>]" image
+    specs. Only image specs followings the rules are supported from now on.
+
+2010-05-06 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc.c: the class will now forget that its MUIM_Setup method
+    has been invoked before deleting possibly added list images. Otherwise the
+    surrounding group would be told to perform a relayout, which is not a very
+    good thing to do while everything is being cleaned up. This fixes bug
+    #2977811.
+
+2010-05-04 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc/NBitmap.c: fixed slightly broken handling of RGB24 data.
+    Additionally the required bitmap for transparent colormapped blits with
+    CyberGraphics is now created once instead of on every redraw.
+
+2010-05-03 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc: implemented a simple dithering to be able to display truecolor
+    images on colormapped screens. A fixed but colorful palette will be used.
+
+#### v0.104 RELEASE ###########################################################
+
+2010-04-30  Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final v0.104 release preparations
+  * include/libraries/mui.h: added MORPHOS #ifdef to maskout the Rawimage
+    definition.
+
+2010-04-30 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/library.c: added version check for NBitmap.mcc. Only version V15.8+ can
+    handle raw image data.
+
+2010-04-29  Jens Langner <Jens.Langner@light-speed.de>
+
+  * nbitmap_mcc: unified the draw image routines of the raw data and dtobject
+    functionality so that the raw data can be used equivalently to the file
+    or dtobject based functionality. However, somehow this new functionality
+    have to be slightly tested before we can really roll it out. Especially
+    the shape drawing part have to be evaluated if this still work with raw
+    data as well.
+
+2010-04-29 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc/dispatcher.c: let OM_NEW fail if no valid type is specified.
+
+2010-04-28 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nbitmap_mcc/misc: added some new attributes to handle raw image data.
+
+2010-04-27 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/library: all systems now try to create a truecolor prefs image using
+    Rawimage.mcc first before falling back to the old 8bit images.
+
+2010-04-26 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/misc: merged all converted image data into one file, moved the image
+    files to a separate subdirectory, combined the prefs icon generation for
+    all platform into one function.
+
+2010-04-24 Thore Böckelmann <tboeckel@gmx.de>
+
+  * include/mccinit.c: updated to latest version. This fixes the stack swapping
+    for AROS.
+
+2010-04-23 Ilkka Lehtoranta <ilkleht@yahoo.com>
+
+  * mcp/misc: use bzip2 compressed 32bit prefs image on MorphOS 2.
+
+2010-04-12 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/misc: added 32bit truecolor prefs image done by Martin 'Mason' Merz.
+    This requires at least MUI3.9 and AmigaOS 4.1.
+
+2010-03-13 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcc/NListtree.c: added another check if compositing is really
+    enabled on the object's screen.
+
+2010-03-11 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcc/NListtree.c: finally it is possible to automatically open
+    closed nodes during drag'n'drop sessions by simply dragging an object over
+    a closed node and wait there for at least one second. Since opening the
+    node might cause bigger graphical updates on the screen this feature
+    requires a non-locked screen. That means that for example LockLayers()
+    must *NOT* have been called before. Currently this is only the fact with
+    the yet unreleased next MUI3.9 for OS4 and only on hi/truecolor screens.
+
+2010-01-08 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlistview_mcc/NListview.c: reverted the last change as it didn't really
+    work out and still caused some issues with dynamically added scrollbars.
+
+2010-01-06 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlistview_mcc/NListview.c: added a workaround to the layout issue when the
+    dynamically added/removed scrollbars caused a screwed up layout with objects
+    drawn over the window borders. Also cleaned up the source a lot.
+  * nlistview_mcc/NListview.c: cleaned up the code even more. Now all added
+    notifications are removed again when the scrollbars are removed from the
+    layout.
+
+2010-01-04 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/private.h: added missing rawkey definitions for PageUp, PageDown,
+    Pos1 and End keys. OS3 doesn't know these.
+
+2009-12-30 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc2.c: the PageUp, PageDown, Pos1 and End keys can now be
+    used to navigate within a list in addition to the standard MUI keys.
+  * nlist_mcc/NList_mcc2.c: simplified the code keyboard scrolling code a bit.
+
+2009-11-28 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/ClipboardServer.c, nlisttree_mcc/ClipboardServer.c: decreased the
+    stack size from 16K to 8K as the server process doesn't really need much
+    stack.
+
+2009-10-28 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcc/Debug.c: added the missing DBF_CLIPBOARD class.
+
+2009-10-26 Pär Boberg <pbobbenb@spray.se>
+
+  * nlistviews_mcp/locale/swedish.ct: very minor update.
 
 #### v0.103 RELEASE ###########################################################
 

@@ -105,7 +105,6 @@ static void NL_RequestIDCMP(Object *obj,struct NLData *data,LONG IDCMP_val)
 
 static void NL_RejectIDCMP(Object *obj,struct NLData *data,LONG IDCMP_val,BOOL really)
 {
-
   if (IDCMP_val & IDCMP_MOUSEMOVE)
     data->MOUSE_MOVE = FALSE;
   if ((really || !(IDCMP_val & IDCMP_MOUSEMOVE)) &&
@@ -117,10 +116,38 @@ static void NL_RejectIDCMP(Object *obj,struct NLData *data,LONG IDCMP_val,BOOL r
   }
 }
 
-
-IPTR mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+static BOOL GotoPage(struct IClass *cl, Object *obj, ULONG activePage)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
+  struct NLData *data = INST_DATA(cl, obj);
+  BOOL changed;
+
+  ENTER();
+
+  if(data->NList_Input && !data->NList_TypeSelect && data->EntriesArray != NULL)
+    changed = NL_List_Active(obj, data, activePage, NULL, data->NList_List_Select, FALSE);
+  else
+    changed = NL_List_First(obj, data, activePage, NULL);
+
+  RETURN(changed);
+  return changed;
+}
+
+static BOOL Scroll(struct IClass *cl, Object *obj, ULONG direction)
+{
+  struct NLData *data = INST_DATA(cl, obj);
+  BOOL scrolled;
+
+  ENTER();
+
+  scrolled = NL_List_Horiz_First(obj, data, direction, NULL);
+
+  RETURN(scrolled);
+  return scrolled;
+}
+
+IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *msg)
+{
+  struct NLData *data = INST_DATA(cl,obj);
   IPTR retval = 0;
   ULONG NotNotify = data->DoNotify;
   LONG tempbutton;
@@ -163,21 +190,16 @@ IPTR mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
       (data->width != _width(obj)) || (data->height != _height(obj)))
     NL_SetObjInfos(obj,data,FALSE);
 
-  if ((msg->muikey != MUIKEY_NONE) && !data->NList_Quiet && !data->NList_Disabled)
+  if(msg->muikey != MUIKEY_NONE && !data->NList_Quiet && !data->NList_Disabled)
   {
     data->ScrollBarsTime = SCROLLBARSTIME;
 
     SHOWVALUE(DBF_ALWAYS, msg->muikey);
-    switch (msg->muikey)
+    switch(msg->muikey)
     {
       case MUIKEY_UP:
       {
-        BOOL changed;
-
-        if(data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
-          changed = NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->NList_List_Select,FALSE);
-        else
-          changed = NL_List_First(obj,data,MUIV_NList_First_Up,NULL);
+        BOOL changed = GotoPage(cl, obj, MUIV_NList_First_Up);
 
         // if we have an object that we should make the new active object
         // of the window we do so in case this up key action didn't end up in
@@ -191,12 +213,7 @@ IPTR mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 
       case MUIKEY_DOWN:
       {
-        BOOL changed;
-
-        if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
-          changed = NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->NList_List_Select,FALSE);
-        else
-          changed = NL_List_First(obj,data,MUIV_NList_First_Down,NULL);
+        BOOL changed = GotoPage(cl, obj, MUIV_NList_First_Down);
 
         // if we have an object that we should make the new active object
         // of the window we do so in case this down key action didn't end up in
@@ -208,55 +225,36 @@ IPTR mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
       }
       break;
 
-      case MUIKEY_PAGEUP   :
-        if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
-        {
-          NL_List_Active(obj,data,MUIV_NList_Active_PageUp,NULL,data->NList_List_Select,FALSE);
-          retval = MUI_EventHandlerRC_Eat;
-        }
-        else
-        {
-          NL_List_First(obj,data,MUIV_NList_First_PageUp,NULL);
-          retval = MUI_EventHandlerRC_Eat;
-        }
-        break;
-      case MUIKEY_PAGEDOWN :
-        if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
-        {
-          NL_List_Active(obj,data,MUIV_NList_Active_PageDown,NULL,data->NList_List_Select,FALSE);
-          retval = MUI_EventHandlerRC_Eat;
-        }
-        else
-        {
-          NL_List_First(obj,data,MUIV_NList_First_PageDown,NULL);
-          retval = MUI_EventHandlerRC_Eat;
-        }
-        break;
-      case MUIKEY_TOP      :
-        if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
-        {
-          NL_List_Active(obj,data,MUIV_NList_Active_Top,NULL,data->NList_List_Select,FALSE);
-          retval = MUI_EventHandlerRC_Eat;
-        }
-        else
-        {
-          NL_List_First(obj,data,MUIV_NList_First_Top,NULL);
-          retval = MUI_EventHandlerRC_Eat;
-        }
-        break;
-      case MUIKEY_BOTTOM   :
-        if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
-        {
-          NL_List_Active(obj,data,MUIV_NList_Active_Bottom,NULL,data->NList_List_Select,FALSE);
-          retval = MUI_EventHandlerRC_Eat;
-        }
-        else
-        {
-          NL_List_First(obj,data,MUIV_NList_First_Bottom,NULL);
-          retval = MUI_EventHandlerRC_Eat;
-        }
-        break;
-      case MUIKEY_PRESS   :
+      case MUIKEY_PAGEUP:
+      {
+        GotoPage(cl, obj, MUIV_NList_Active_PageUp);
+        retval = MUI_EventHandlerRC_Eat;
+      }
+      break;
+
+      case MUIKEY_PAGEDOWN:
+      {
+        GotoPage(cl, obj, MUIV_NList_Active_PageDown);
+        retval = MUI_EventHandlerRC_Eat;
+      }
+      break;
+
+      case MUIKEY_TOP:
+      {
+        GotoPage(cl, obj, MUIV_NList_Active_Top);
+        retval = MUI_EventHandlerRC_Eat;
+      }
+      break;
+
+      case MUIKEY_BOTTOM:
+      {
+        GotoPage(cl, obj, MUIV_NList_Active_Bottom);
+        retval = MUI_EventHandlerRC_Eat;
+      }
+      break;
+
+      case MUIKEY_PRESS:
+      {
         if (data->NList_Input && !data->NList_TypeSelect && data->NList_Active >= 0)
         {
           data->click_x = data->hpos - data->NList_Horiz_First;
@@ -280,8 +278,11 @@ IPTR mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 
           retval = MUI_EventHandlerRC_Eat;
         }
-        break;
-      case MUIKEY_TOGGLE   :
+      }
+      break;
+
+      case MUIKEY_TOGGLE:
+      {
         if (data->multiselect && data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
         {
           MOREQUIET;
@@ -291,11 +292,12 @@ IPTR mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 
           retval = MUI_EventHandlerRC_Eat;
         }
-        break;
+      }
+      break;
 
       case MUIKEY_LEFT:
       {
-        BOOL scrolled = NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Left,NULL);
+        BOOL scrolled = Scroll(cl, obj, MUIV_NList_Horiz_First_Left);
 
         // if we have an object that we should make the new active object
         // of the window we do so in case this left key action didn't end up in
@@ -309,7 +311,7 @@ IPTR mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 
       case MUIKEY_RIGHT:
       {
-        BOOL scrolled = NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Right,NULL);
+        BOOL scrolled = Scroll(cl, obj, MUIV_NList_Horiz_First_Right);
 
         // if we have an object that we should make the new active object
         // of the window we do so in case this right key action didn't end up in
@@ -323,28 +325,28 @@ IPTR mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 
       case MUIKEY_WORDLEFT :
       {
-        NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_PageLeft,NULL);
+        Scroll(cl, obj, MUIV_NList_Horiz_First_PageLeft);
         retval = MUI_EventHandlerRC_Eat;
       }
       break;
 
       case MUIKEY_WORDRIGHT:
       {
-        NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_PageRight,NULL);
+        Scroll(cl, obj, MUIV_NList_Horiz_First_PageRight);
         retval = MUI_EventHandlerRC_Eat;
       }
       break;
 
       case MUIKEY_LINESTART:
       {
-        NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Start,NULL);
+        Scroll(cl, obj, MUIV_NList_Horiz_First_Start);
         retval = MUI_EventHandlerRC_Eat;
       }
       break;
 
-      case MUIKEY_LINEEND  :
+      case MUIKEY_LINEEND:
       {
-        NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_End,NULL);
+        Scroll(cl, obj, MUIV_NList_Horiz_First_End);
         retval = MUI_EventHandlerRC_Eat;
       }
       break;
@@ -437,213 +439,243 @@ IPTR mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
       break;
 
       case IDCMP_RAWKEY:
-
+      {
         data->ScrollBarsTime = SCROLLBARSTIME;
 
-        #if !defined(__amigaos4__)
-        // check for wheelmouse events first
-        if(_isinobject(msg->imsg->MouseX,msg->imsg->MouseY))
+        if(msg->imsg->Code == RAWKEY_PAGEUP)
         {
-          if(msg->imsg->Code == NM_WHEEL_UP)  /* MOUSE_WHEEL_UP */
-          {
-            if(WheelHorizQual && WheelFastQual)
-              NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Left4,NULL);
-            else if(WheelHorizQual)
-              NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Left,NULL);
-            else if(WheelFastQual)
-            {
-              int i;
-              for(i=0; i < data->NList_WheelFast; i++)
-                NL_List_First(obj,data,MUIV_NList_First_Up,NULL);
-            }
-            else
-            {
-              int i;
-              for(i=0; i < data->NList_WheelStep; i++)
-                NL_List_First(obj,data,MUIV_NList_First_Up,NULL);
-            }
-
-            retval = MUI_EventHandlerRC_Eat;
-          }
-          else if(msg->imsg->Code == NM_WHEEL_DOWN)  /* MOUSE_WHEEL_DOWN */
-          {
-            if(WheelHorizQual && WheelFastQual)
-              NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Right4,NULL);
-            else if(WheelHorizQual)
-              NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Right,NULL);
-            else if(WheelFastQual)
-            {
-              int i;
-              for(i=0; i < data->NList_WheelFast; i++)
-                NL_List_First(obj,data,MUIV_NList_First_Down,NULL);
-            }
-            else
-            {
-              int i;
-              for(i=0; i < data->NList_WheelStep; i++)
-                NL_List_First(obj,data,MUIV_NList_First_Down,NULL);
-            }
-
-            retval = MUI_EventHandlerRC_Eat;
-          }
-          else if(msg->imsg->Code == NM_WHEEL_LEFT)  /* MOUSE_WHEEL_LEFT */
-          {
-            NL_List_Horiz_First(obj, data, WheelFastQual ? MUIV_NList_Horiz_First_Left4 : MUIV_NList_Horiz_First_Left, NULL);
-
-            retval = MUI_EventHandlerRC_Eat;
-          }
-          else if(msg->imsg->Code == NM_WHEEL_RIGHT)  /* MOUSE_WHEEL_RIGHT */
-          {
-            NL_List_Horiz_First(obj, data, WheelFastQual ? MUIV_NList_Horiz_First_Right4 : MUIV_NList_Horiz_First_Right, NULL);
-
-            retval = MUI_EventHandlerRC_Eat;
-          }
+          GotoPage(cl, obj, MUIV_NList_Active_PageUp);
+          retval = MUI_EventHandlerRC_Eat;
         }
-        #endif
-
-        if((tagval = xget(_win(obj), MUIA_Window_ActiveObject)) &&
-           ((tagval == (LONG)obj) ||
-             (tagval && (tagval2 = xget((Object *)tagval, MUIA_Listview_List)) && (tagval2 == (LONG)obj)) ||
-             (!tagval && (tagval2 = xget(_win(obj), MUIA_Window_DefaultObject)) && (tagval2 == (LONG)obj)))
-           )
+        else if(msg->imsg->Code == RAWKEY_PAGEDOWN)
         {
-          if (data->NList_AutoCopyToClip)
+          GotoPage(cl, obj, MUIV_NList_Active_PageDown);
+          retval = MUI_EventHandlerRC_Eat;
+        }
+        else if(msg->imsg->Code == RAWKEY_HOME)
+        {
+          GotoPage(cl, obj, MUIV_NList_Active_Top);
+          retval = MUI_EventHandlerRC_Eat;
+        }
+        else if(msg->imsg->Code == RAWKEY_END)
+        {
+          GotoPage(cl, obj, MUIV_NList_Active_Bottom);
+          retval = MUI_EventHandlerRC_Eat;
+        }
+        else
+        {
+          #if !defined(__amigaos4__)
+          // check for wheelmouse events first
+          if(_isinobject(msg->imsg->MouseX,msg->imsg->MouseY))
           {
-            if (NL_TestKey(obj,data,KEYTAG_COPY_TO_CLIPBOARD,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+            if(msg->imsg->Code == NM_WHEEL_UP)  /* MOUSE_WHEEL_UP */
             {
-              NL_CopyTo(obj,data,MUIV_NList_CopyToClip_Selected,NULL,0L,NULL,NULL);
-              if (data->NList_TypeSelect == MUIV_NList_TypeSelect_Char)
-                SelectFirstPoint(obj,data,data->click_x,data->click_y);
+              if(WheelHorizQual && WheelFastQual)
+                NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Left4,NULL);
+              else if(WheelHorizQual)
+                NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Left,NULL);
+              else if(WheelFastQual)
+              {
+                int i;
+                for(i=0; i < data->NList_WheelFast; i++)
+                  NL_List_First(obj,data,MUIV_NList_First_Up,NULL);
+              }
+              else
+              {
+                int i;
+                for(i=0; i < data->NList_WheelStep; i++)
+                  NL_List_First(obj,data,MUIV_NList_First_Up,NULL);
+              }
+
+              retval = MUI_EventHandlerRC_Eat;
+            }
+            else if(msg->imsg->Code == NM_WHEEL_DOWN)  /* MOUSE_WHEEL_DOWN */
+            {
+              if(WheelHorizQual && WheelFastQual)
+                NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Right4,NULL);
+              else if(WheelHorizQual)
+                NL_List_Horiz_First(obj,data,MUIV_NList_Horiz_First_Right,NULL);
+              else if(WheelFastQual)
+              {
+                int i;
+                for(i=0; i < data->NList_WheelFast; i++)
+                  NL_List_First(obj,data,MUIV_NList_First_Down,NULL);
+              }
+              else
+              {
+                int i;
+                for(i=0; i < data->NList_WheelStep; i++)
+                  NL_List_First(obj,data,MUIV_NList_First_Down,NULL);
+              }
+
+              retval = MUI_EventHandlerRC_Eat;
+            }
+            else if(msg->imsg->Code == NM_WHEEL_LEFT)  /* MOUSE_WHEEL_LEFT */
+            {
+              NL_List_Horiz_First(obj, data, WheelFastQual ? MUIV_NList_Horiz_First_Left4 : MUIV_NList_Horiz_First_Left, NULL);
+
+              retval = MUI_EventHandlerRC_Eat;
+            }
+            else if(msg->imsg->Code == NM_WHEEL_RIGHT)  /* MOUSE_WHEEL_RIGHT */
+            {
+              NL_List_Horiz_First(obj, data, WheelFastQual ? MUIV_NList_Horiz_First_Right4 : MUIV_NList_Horiz_First_Right, NULL);
+
               retval = MUI_EventHandlerRC_Eat;
             }
           }
-          if (NL_TestKey(obj,data,KEYTAG_SELECT_TO_TOP,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+          #endif
+
+          if((tagval = xget(_win(obj), MUIA_Window_ActiveObject)) &&
+             ((tagval == (LONG)obj) ||
+               (tagval && (tagval2 = xget((Object *)tagval, MUIA_Listview_List)) && (tagval2 == (LONG)obj)) ||
+               (!tagval && (tagval2 = xget(_win(obj), MUIA_Window_DefaultObject)) && (tagval2 == (LONG)obj)))
+             )
           {
-            if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
+            if (data->NList_AutoCopyToClip)
             {
-            	LONG newactsel = MUIV_NList_Select_On;
-            	if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
-            		newactsel = MUIV_NList_Select_Off;
-              NL_List_Active(obj,data,MUIV_NList_Active_UntilTop,NULL,newactsel,FALSE);
-            }
-            retval = MUI_EventHandlerRC_Eat;
-          }
-          else if (NL_TestKey(obj,data,KEYTAG_SELECT_TO_BOTTOM,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
-          {
-            if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
-            {
-            	LONG newactsel = MUIV_NList_Select_On;
-            	if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
-            		newactsel = MUIV_NList_Select_Off;
-              NL_List_Active(obj,data,MUIV_NList_Active_UntilBottom,NULL,newactsel,FALSE);
-            }
-            retval = MUI_EventHandlerRC_Eat;
-          }
-          else if (NL_TestKey(obj,data,KEYTAG_SELECT_TO_PAGE_UP,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
-          {
-            /* Page up key pressed */
-            if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
-            {
-            	LONG newactsel = MUIV_NList_Select_On;
-            	if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
-            		newactsel = MUIV_NList_Select_Off;
-              NL_List_Active(obj,data,MUIV_NList_Active_UntilPageUp,NULL,newactsel,FALSE);
-            }
-            retval = MUI_EventHandlerRC_Eat;
-          }
-          else if (NL_TestKey(obj,data,KEYTAG_SELECT_TO_PAGE_DOWN,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
-          {
-          	/* Page down key pressed */
-            if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
-            {
-            	LONG newactsel = MUIV_NList_Select_On;
-            	if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
-            		newactsel = MUIV_NList_Select_Off;
-              NL_List_Active(obj,data,MUIV_NList_Active_UntilPageDown,NULL,newactsel,FALSE);
-            }
-            retval = MUI_EventHandlerRC_Eat;
-          }
-          else if (NL_TestKey(obj,data,KEYTAG_SELECT_UP,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
-          {
-          	/* Up key pressed */
-            if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
-            {
-            	LONG newactsel = MUIV_NList_Select_On;
-            	if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
-            		newactsel = MUIV_NList_Select_Off;
-             	NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,newactsel,FALSE);
-            }
-            retval = MUI_EventHandlerRC_Eat;
-          }
-          else if (NL_TestKey(obj,data,KEYTAG_SELECT_DOWN,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
-          {
-          	/* Down key pressed */
-            if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
-            {
-            	LONG newactsel = MUIV_NList_Select_On;
-            	if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
-            		newactsel = MUIV_NList_Select_Off;
-             	NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,newactsel,FALSE);
-            }
-            retval = MUI_EventHandlerRC_Eat;
-          }
-          else if (NL_TestKey(obj,data,KEYTAG_TOGGLE_ACTIVE,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
-          {
-            if (data->multiselect && data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
-              NL_List_Select(obj,data,MUIV_NList_Select_Active,MUIV_NList_Active_Off,MUIV_NList_Select_Toggle,NULL);
-            retval = MUI_EventHandlerRC_Eat;
-          }
-          else if (NL_TestKey(obj,data,KEYTAG_DEFAULT_WIDTH_COLUMN,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
-          { struct MUI_NList_TestPos_Result res;
-            res.char_number = -2;
-            NL_List_TestPos(obj,data,MUI_MAXMAX,0,&res);
-            if ((res.column >= 0) && (res.column < data->numcols) && !(res.flags & MUI_NLPR_BAR))
-            {
-              NL_RejectIDCMP(obj,data,IDCMP_MOUSEMOVE,TRUE);
-              data->selectskiped = FALSE;
-              data->moves = FALSE;
-              if (data->adjustbar != -1)
-              { data->adjustbar = -1;
-                do_draw = TRUE;
-                data->click_line = -2;
+              if (NL_TestKey(obj,data,KEYTAG_COPY_TO_CLIPBOARD,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+              {
+                NL_CopyTo(obj,data,MUIV_NList_CopyToClip_Selected,NULL,0L,NULL,NULL);
+                if (data->NList_TypeSelect == MUIV_NList_TypeSelect_Char)
+                  SelectFirstPoint(obj,data,data->click_x,data->click_y);
+                retval = MUI_EventHandlerRC_Eat;
               }
-              NL_ColWidth(obj,data,NL_ColumnToCol(obj,data,res.column),MUIV_NList_ColWidth_Default);
             }
-          }
-          else if (NL_TestKey(obj,data,KEYTAG_DEFAULT_WIDTH_ALL_COLUMNS,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
-            NL_ColWidth(obj,data,MUIV_NList_ColWidth_All,MUIV_NList_ColWidth_Default);
-          else if (NL_TestKey(obj,data,KEYTAG_DEFAULT_ORDER_COLUMN,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
-          { struct MUI_NList_TestPos_Result res;
-            res.char_number = -2;
-            NL_List_TestPos(obj,data,MUI_MAXMAX,0,&res);
-            if ((res.column >= 0) && (res.column < data->numcols) && !(res.flags & MUI_NLPR_BAR))
+            if (NL_TestKey(obj,data,KEYTAG_SELECT_TO_TOP,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
             {
-              NL_RejectIDCMP(obj,data,IDCMP_MOUSEMOVE,TRUE);
-              data->selectskiped = FALSE;
-              data->moves = FALSE;
-              if (data->adjustbar != -1)
-              { data->adjustbar = -1;
-                do_draw = TRUE;
-                data->click_line = -2;
+              if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
+              {
+              	LONG newactsel = MUIV_NList_Select_On;
+              	if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
+              		newactsel = MUIV_NList_Select_Off;
+                NL_List_Active(obj,data,MUIV_NList_Active_UntilTop,NULL,newactsel,FALSE);
               }
-              NL_SetCol(obj,data,res.column,MUIV_NList_SetColumnCol_Default);
+              retval = MUI_EventHandlerRC_Eat;
             }
-          }
-          else if (NL_TestKey(obj,data,KEYTAG_DEFAULT_ORDER_ALL_COLUMNS,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
-            NL_SetCol(obj,data,MUIV_NList_SetColumnCol_Default,MUIV_NList_SetColumnCol_Default);
+            else if (NL_TestKey(obj,data,KEYTAG_SELECT_TO_BOTTOM,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+            {
+              if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
+              {
+              	LONG newactsel = MUIV_NList_Select_On;
+              	if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
+              		newactsel = MUIV_NList_Select_Off;
+                NL_List_Active(obj,data,MUIV_NList_Active_UntilBottom,NULL,newactsel,FALSE);
+              }
+              retval = MUI_EventHandlerRC_Eat;
+            }
+            else if (NL_TestKey(obj,data,KEYTAG_SELECT_TO_PAGE_UP,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+            {
+              /* Page up key pressed */
+              if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
+              {
+              	LONG newactsel = MUIV_NList_Select_On;
+              	if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
+              		newactsel = MUIV_NList_Select_Off;
+                NL_List_Active(obj,data,MUIV_NList_Active_UntilPageUp,NULL,newactsel,FALSE);
+              }
+              retval = MUI_EventHandlerRC_Eat;
+            }
+            else if (NL_TestKey(obj,data,KEYTAG_SELECT_TO_PAGE_DOWN,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+            {
+            	/* Page down key pressed */
+              if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
+              {
+              	LONG newactsel = MUIV_NList_Select_On;
+              	if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
+              		newactsel = MUIV_NList_Select_Off;
+                NL_List_Active(obj,data,MUIV_NList_Active_UntilPageDown,NULL,newactsel,FALSE);
+              }
+              retval = MUI_EventHandlerRC_Eat;
+            }
+            else if (NL_TestKey(obj,data,KEYTAG_SELECT_UP,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+            {
+            	/* Up key pressed */
+              if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
+              {
+                LONG newactsel = MUIV_NList_Select_On;
+
+                if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
+              		newactsel = MUIV_NList_Select_Off;
+               	NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,newactsel,FALSE);
+              }
+              retval = MUI_EventHandlerRC_Eat;
+            }
+            else if (NL_TestKey(obj,data,KEYTAG_SELECT_DOWN,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+            {
+            	/* Down key pressed */
+              if (data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
+              {
+                LONG newactsel = MUIV_NList_Select_On;
+
+                if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
+              		newactsel = MUIV_NList_Select_Off;
+               	NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,newactsel,FALSE);
+              }
+              retval = MUI_EventHandlerRC_Eat;
+            }
+            else if (NL_TestKey(obj,data,KEYTAG_TOGGLE_ACTIVE,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+            {
+              if (data->multiselect && data->NList_Input && !data->NList_TypeSelect && data->EntriesArray)
+                NL_List_Select(obj,data,MUIV_NList_Select_Active,MUIV_NList_Active_Off,MUIV_NList_Select_Toggle,NULL);
+              retval = MUI_EventHandlerRC_Eat;
+            }
+            else if (NL_TestKey(obj,data,KEYTAG_DEFAULT_WIDTH_COLUMN,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+            {
+              struct MUI_NList_TestPos_Result res;
+
+              res.char_number = -2;
+              NL_List_TestPos(obj,data,MUI_MAXMAX,0,&res);
+              if ((res.column >= 0) && (res.column < data->numcols) && !(res.flags & MUI_NLPR_BAR))
+              {
+                NL_RejectIDCMP(obj,data,IDCMP_MOUSEMOVE,TRUE);
+                data->selectskiped = FALSE;
+                data->moves = FALSE;
+                if (data->adjustbar != -1)
+                { data->adjustbar = -1;
+                  do_draw = TRUE;
+                  data->click_line = -2;
+                }
+                NL_ColWidth(obj,data,NL_ColumnToCol(obj,data,res.column),MUIV_NList_ColWidth_Default);
+              }
+            }
+            else if (NL_TestKey(obj,data,KEYTAG_DEFAULT_WIDTH_ALL_COLUMNS,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+              NL_ColWidth(obj,data,MUIV_NList_ColWidth_All,MUIV_NList_ColWidth_Default);
+            else if (NL_TestKey(obj,data,KEYTAG_DEFAULT_ORDER_COLUMN,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+            {
+              struct MUI_NList_TestPos_Result res;
+
+              res.char_number = -2;
+              NL_List_TestPos(obj,data,MUI_MAXMAX,0,&res);
+              if ((res.column >= 0) && (res.column < data->numcols) && !(res.flags & MUI_NLPR_BAR))
+              {
+                NL_RejectIDCMP(obj,data,IDCMP_MOUSEMOVE,TRUE);
+                data->selectskiped = FALSE;
+                data->moves = FALSE;
+                if (data->adjustbar != -1)
+                { data->adjustbar = -1;
+                  do_draw = TRUE;
+                  data->click_line = -2;
+                }
+                NL_SetCol(obj,data,res.column,MUIV_NList_SetColumnCol_Default);
+              }
+            }
+            else if (NL_TestKey(obj,data,KEYTAG_DEFAULT_ORDER_ALL_COLUMNS,msg->imsg->Code,msg->imsg->Qualifier,FALSE))
+              NL_SetCol(obj,data,MUIV_NList_SetColumnCol_Default,MUIV_NList_SetColumnCol_Default);
 
 /*
- *           else
- *           { int posraw;
- *             posraw = DeadKeyConvert(data,msg->imsg,data->rawtext,MAXRAWBUF,0L);
- *             if (posraw > 0)
- *             {
- *   D(bug("RAWKEY BUF=%s \n",data->rawtext));
+ *             else
+ *             { int posraw;
+ *               posraw = DeadKeyConvert(data,msg->imsg,data->rawtext,MAXRAWBUF,0L);
+ *               if (posraw > 0)
+ *               {
+ *     D(bug("RAWKEY BUF=%s \n",data->rawtext));
+ *               }
  *             }
- *           }
  */
+          }
         }
-        break;
+      }
+      break;
 
       #if defined(__amigaos4__)
       case IDCMP_EXTENDEDMOUSE:
@@ -722,7 +754,11 @@ IPTR mNL_HandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
               (MultQual || (data->multiselect == MUIV_NList_MultiSelect_Always)))
             multi = 1;
           data->selectskiped = FALSE;
-          if (msg->imsg->Code==SELECTDOWN && _isinobject2(msg->imsg->MouseX,msg->imsg->MouseY))
+          // Using _isinobject2() here would also recognize clicks on the list's border
+          // as clicks inside the list. But clicking on the border above the list's title
+          // being interpreted like a click the first entry is not very intuitive. Thus
+          // we restrict ourself to clicks really inside the object here.
+          if (msg->imsg->Code==SELECTDOWN && _isinobject(msg->imsg->MouseX,msg->imsg->MouseY))
           {
             WORD ly = (msg->imsg->MouseY - data->vpos);
             WORD ly2 = (msg->imsg->MouseY - data->vdtitlepos);

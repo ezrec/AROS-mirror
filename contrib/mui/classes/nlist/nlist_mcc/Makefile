@@ -195,8 +195,7 @@ COBJS = NList_mcc.o       \
         NList_img2.o      \
         ClipboardServer.o \
         Pointer.o         \
-        Debug.o           \
-        vastubs.o
+        Debug.o
 
 TOBJS = NList-Test.o
 
@@ -244,7 +243,9 @@ ifeq ($(OS), os3)
   LDLIBS  += -ldebug -lmui
 
   # only the OS3 build needs the custom memory pool implementations if run on OS2.x
-  COBJS  += libpool.o
+  COBJS += libpool.o
+  # additional object files required
+  COBJS += vastubs.o
 
 else
 ifeq ($(OS), mos)
@@ -333,6 +334,27 @@ else
 all: depend
 	@make --no-print-directory all
 endif
+
+# for making a release we compile ALL target with no debug
+release:
+	@echo "  CC $<"
+	make OS=os4 clean
+	make OS=os4 DEBUG=
+	@echo "  CC $<"
+	make OS=os3 clean
+	make OS=os3 DEBUG=
+	@echo "  CC $<"
+	make OS=mos clean
+	make OS=mos DEBUG=
+	@echo "  CC $<"
+	make OS=aros-i386 clean
+	make OS=aros-i386 DEBUG=
+	@echo "  CC $<"
+	make OS=aros-ppc clean
+	make OS=aros-ppc DEBUG=
+	@echo "  CC $<"
+	make OS=aros-x86_64 clean
+	make OS=aros-x86_64 DEBUG=
 
 # make the object directories
 $(OBJDIR):

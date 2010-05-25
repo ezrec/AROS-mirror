@@ -81,19 +81,20 @@ void SetupDebug(void)
 
     static struct { const char *token; unsigned long flag; } dbflags[] =
     {
-      { "always",   DBF_ALWAYS  },
-      { "startup",  DBF_STARTUP },
-      { "draw",     DBF_DRAW    },
-      { "getset",   DBF_GETSET  },
-      { "memory",   DBF_MEMORY  },
-      { "listtree", DBF_LISTTREE},
-      { "setup",    DBF_SETUP   },
-      { "input",    DBF_INPUT   },
-      { "dragdrop", DBF_DRAGDROP},
-      { "images",   DBF_IMAGES  },
-      { "notify",   DBF_NOTIFY  },
-      { "all",      DBF_ALL     },
-      { NULL,       0           }
+      { "always",    DBF_ALWAYS    },
+      { "startup",   DBF_STARTUP   },
+      { "draw",      DBF_DRAW      },
+      { "getset",    DBF_GETSET    },
+      { "memory",    DBF_MEMORY    },
+      { "listtree",  DBF_LISTTREE  },
+      { "setup",     DBF_SETUP     },
+      { "input",     DBF_INPUT     },
+      { "dragdrop",  DBF_DRAGDROP  },
+      { "images",    DBF_IMAGES    },
+      { "notify",    DBF_NOTIFY    },
+      { "clipboard", DBF_CLIPBOARD },
+      { "all",       DBF_ALL       },
+      { NULL,        0             }
     };
 
     // we parse the env variable token-wise

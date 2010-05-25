@@ -139,9 +139,6 @@ NListtree.mcc/MUIM_NListtree_TestPos
     To exchange data with other objects, you have to create your own
     subclass of NListtree class and react on the drag methods.
 
-
-    Author: Carsten Scholling    (c)1999-2000    email: cs@aphaso.de
-
 NListtree.mcc/MUIA_NListtree_Active       NListtree.mcc/MUIA_NListtree_Active
 
    NAME    

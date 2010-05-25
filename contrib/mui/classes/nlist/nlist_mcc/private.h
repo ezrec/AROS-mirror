@@ -82,6 +82,18 @@
 
 #define IEQUALIFIER_MASK       (IEQUALIFIER_CONTROL|IEQUALIFIER_SHIFT|IEQUALIFIER_ALT|IEQUALIFIER_COMMAND)
 
+#ifndef RAWKEY_PAGEUP
+#define RAWKEY_PAGEUP    0x48
+#endif
+#ifndef RAWKEY_PAGEDOWN
+#define RAWKEY_PAGEDOWN  0x49
+#endif
+#ifndef RAWKEY_HOME
+#define RAWKEY_HOME      0x70
+#endif
+#ifndef RAWKEY_END
+#define RAWKEY_END       0x71
+#endif
 
 #define SCROLLBARSTIME 10
 
@@ -595,10 +607,6 @@ extern struct TextFont *Topaz_8;
 #define	MUIV_NList_PoolPuddleSize_Default	2048
 #define	MUIV_NList_PoolThreshSize_Default	1024
 
-#if !defined(__MORPHOS__) && !defined(__AROS__)
-extern char *stpcpy(char *to, char *from);
-#endif
-
 /// xget()
 //  Gets an attribute value from a MUI object
 ULONG xget(Object *obj, const IPTR attr);
@@ -610,5 +618,12 @@ ULONG xget(Object *obj, const IPTR attr);
   #define xget(OBJ, ATTR) ({IPTR b=0; GetAttr(ATTR, OBJ, &b); b;})
 #endif
 ///
+
+#ifndef MIN
+  #define MIN(a,b) (((a) < (b)) ? (a) : (b))
+#endif
+#ifndef MAX
+  #define MAX(a,b) (((a) > (b)) ? (a) : (b))
+#endif
 
 #endif /* MUI_NList_priv_MCC_H */

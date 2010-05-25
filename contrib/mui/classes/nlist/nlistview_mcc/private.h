@@ -42,16 +42,16 @@ struct NLVData
   Object *PR_Vert;
   Object *PR_Horiz;
   Object *Group;
-  LONG   Vert_Attached;
-  LONG   Horiz_Attached;
+  BOOL   Vert_Attached;
+  BOOL   Horiz_Attached;
   LONG   VertSB;
   LONG   HorizSB;
   LONG   Vert_ScrollBar;
   LONG   Horiz_ScrollBar;
   BOOL   sem;
   BOOL   SETUP;
-	UBYTE  ControlChar;
-	struct MUI_EventHandlerNode eh;
+  UBYTE  ControlChar;
+  struct MUI_EventHandlerNode eh;
 };
 
 #endif /* MUI_NListview_priv_MCC_H */

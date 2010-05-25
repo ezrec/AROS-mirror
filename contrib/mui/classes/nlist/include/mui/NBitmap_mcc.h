@@ -45,10 +45,16 @@
 #define MUIA_NBitmap_Height         0xa94f0007UL
 #define MUIA_NBitmap_MaxWidth       0xa94f0008UL
 #define MUIA_NBitmap_MaxHeight      0xa94f0009UL
+#define MUIA_NBitmap_CLUT           0xa94f000aUL
+#define MUIA_NBitmap_Alpha          0xa94f000bUL
 
 /* source types */
 #define MUIV_NBitmap_Type_File      0
 #define MUIV_NBitmap_Type_DTObject  1
+#define MUIV_NBitmap_Type_CLUT8     2
+#define MUIV_NBitmap_Type_RGB24     3
+#define MUIV_NBitmap_Type_ARGB32    4
+
 
 /* macros */
 #define NBitmapFile(filename)       NBitmapObject, \

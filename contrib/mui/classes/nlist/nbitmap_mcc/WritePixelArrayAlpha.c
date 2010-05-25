@@ -1,10 +1,10 @@
-STATIC LONG do_alpha(LONG a, LONG v) 
+STATIC LONG do_alpha(LONG a, LONG v)
 {
 	LONG tmp  = (a*v);
 	return ((tmp<<8) + tmp + 32768)>>16;
 }
 
-VOID WritePixelArrayAlpha(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct RastPort *rp, UWORD destx, UWORD desty, UWORD width, UWORD height, ULONG globalalpha)
+VOID _WritePixelArrayAlpha(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct RastPort *rp, UWORD destx, UWORD desty, UWORD width, UWORD height, ULONG globalalpha)
 {
 	if (width > 0 && height > 0)
 	{
@@ -37,7 +37,7 @@ VOID WritePixelArrayAlpha(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct
 					g = (srcpix >> 8) & 0xff;
 					b = (srcpix >> 0) & 0xff;
 
-					a = a - globalalpha;  
+					a = a - globalalpha;
 
 					if (a > 0)
 					{
@@ -63,4 +63,4 @@ VOID WritePixelArrayAlpha(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct
 			FreeMem(buf, width * sizeof(ULONG));
 		}
 	}
-}      
+}

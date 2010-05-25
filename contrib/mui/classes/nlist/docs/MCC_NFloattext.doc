@@ -45,7 +45,6 @@ NFloattext.mcc/MUIM_NFloattext_GetEntry
         MUIM_NFloattext_GetEntry or MUIM_List_GetEntry. Or use
         MUIM_NList_GetEntryInfo and MUIM_NList_GetEntry.
 
-    Author: Gilles Masson    (c) 1996-1997    email: masson@iut-soph.unice.fr
 NFloattext.mcc/MUIA_NFloattext_Align
 
     NAME

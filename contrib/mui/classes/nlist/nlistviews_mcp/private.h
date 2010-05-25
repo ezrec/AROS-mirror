@@ -34,20 +34,6 @@
 
 #include <mcc_common.h>
 
-#define PREFSIMAGEOBJECT \
-  BodychunkObject,\
-    MUIA_FixWidth,              LIST_WIDTH,\
-    MUIA_FixHeight,             LIST_HEIGHT,\
-    MUIA_Bitmap_Width,          LIST_WIDTH ,\
-    MUIA_Bitmap_Height,         LIST_HEIGHT,\
-    MUIA_Bodychunk_Depth,       LIST_DEPTH,\
-    MUIA_Bodychunk_Body,        (UBYTE *)list_body,\
-    MUIA_Bodychunk_Compression, LIST_COMPRESSION,\
-    MUIA_Bodychunk_Masking,     LIST_MASKING,\
-    MUIA_Bitmap_SourceColors,   (ULONG *)list_colors,\
-    MUIA_Bitmap_Transparent,    0,\
-  End
-
 #define MCPMAXRAWBUF 64
 
 struct NListviews_MCP_Data

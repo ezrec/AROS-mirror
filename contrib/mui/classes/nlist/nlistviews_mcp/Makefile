@@ -179,7 +179,7 @@ LOBJS = library.o
 
 COBJS = locale.o \
         NListviews.o \
-        vastubs.o \
+        icon.o \
         Debug.o
 
 TOBJS = NListviews-Prefs.o
@@ -191,7 +191,8 @@ TESTOBJS = $(addprefix $(OBJDIR)/,$(COBJS)) $(addprefix $(OBJDIR)/,$(TOBJS))
 CATALOGS = $(LOCALE)/czech.catalog \
            $(LOCALE)/french.catalog \
            $(LOCALE)/german.catalog \
-           $(LOCALE)/swedish.catalog
+           $(LOCALE)/swedish.catalog \
+           $(LOCALE)/polish.catalog
 
 # different options per target OS
 ifeq ($(OS), os4)
@@ -235,6 +236,9 @@ ifeq ($(OS), os3)
   CFLAGS  += -noixemul -DNO_INLINE_STDARG
   LDFLAGS += -noixemul
   LDLIBS  += -ldebug -lmui
+
+  # additional object files required
+  COBJS += vastubs.o
 
 else
 ifeq ($(OS), mos)
@@ -320,6 +324,27 @@ else
 all: depend
 	@make --no-print-directory all
 endif
+
+# for making a release we compile ALL target with no debug
+release:
+	@echo "  CC $<"
+	make OS=os4 clean
+	make OS=os4 DEBUG=
+	@echo "  CC $<"
+	make OS=os3 clean
+	make OS=os3 DEBUG=
+	@echo "  CC $<"
+	make OS=mos clean
+	make OS=mos DEBUG=
+	@echo "  CC $<"
+	make OS=aros-i386 clean
+	make OS=aros-i386 DEBUG=
+	@echo "  CC $<"
+	make OS=aros-ppc clean
+	make OS=aros-ppc DEBUG=
+	@echo "  CC $<"
+	make OS=aros-x86_64 clean
+	make OS=aros-x86_64 DEBUG=
 
 # make the object directories
 $(OBJDIR):

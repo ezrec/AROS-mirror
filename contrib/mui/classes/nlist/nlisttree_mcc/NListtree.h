@@ -174,8 +174,9 @@ struct NListtree_Data
   /*
   **  Drag'n Drop stuff.
   */
-  struct  MUI_NListtree_TreeNode  *DropTarget;      // ***  The entry which is currently the drop target.
-  struct  MUI_NListtree_TreeNode  *OldDropTarget;   // ***  The entry which is currently the drop target.
+  struct MUI_NListtree_TreeNode *DropTarget;      // ***  The entry which is currently the drop target.
+  struct MUI_NListtree_TreeNode *OldDropTarget;   // ***  The entry which is currently the drop target.
+  LONG compositingActive;
 
   ULONG             DropTargetPos;      // ***  Position of target drop entry.
   ULONG             DropType;       // ***  The dropping type (above, below, onto...)

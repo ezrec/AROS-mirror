@@ -106,6 +106,15 @@ struct InstData
   struct BitMapHeader *dt_header[3];
   struct TextExtent labelte;
 
+  uint32 alpha;
+  const uint32 *clut;
+  APTR ditheredImage[3];
+  APTR ditheredMask[3];
+  int32 ditherPenMap[256];
+  #if !defined(__amigaos4__)
+  struct BitMap *ditheredBitmap[3];
+  #endif
+
   struct MUI_EventHandlerNode ehnode;
 };
 
@@ -129,36 +138,18 @@ struct InstData
 /* prototypes */
 BOOL NBitmap_LoadImage(STRPTR filename, uint32 item, struct IClass *cl, Object *obj);
 VOID NBitmap_UpdateImage(uint32 item, STRPTR filename, struct IClass *cl, Object *obj);
-BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, Object *obj);
-VOID NBitmap_FreeImage(uint32 item, struct IClass *cl, Object *obj);
+//BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, Object *obj);
+//VOID NBitmap_FreeImage(uint32 item, struct IClass *cl, Object *obj);
 BOOL NBitmap_NewImage(struct IClass *cl, Object *obj);
 VOID NBitmap_DisposeImage(struct IClass *cl, Object *obj);
 BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj);
 VOID NBitmap_CleanupImage(struct IClass *cl, Object *obj);
-BOOL NBitmap_DrawImage(struct IClass *cl, Object *obj);
+VOID NBitmap_DrawImage(struct IClass *cl, Object *obj);
 BOOL NBitmap_SetupShades(struct InstData *data);
 void NBitmap_CleanupShades(struct InstData *data);
 
-#if defined(__MORPHOS__)
-#ifndef WritePixelArrayAlpha
-#define WritePixelArrayAlpha(__p0, __p1, __p2, __p3, __p4, __p5, __p6, __p7, __p8, __p9) \
-  LP10(216, ULONG , WritePixelArrayAlpha, \
-    APTR , __p0, a0, \
-    UWORD , __p1, d0, \
-    UWORD , __p2, d1, \
-    UWORD , __p3, d2, \
-    struct RastPort *, __p4, a1, \
-    UWORD , __p5, d3, \
-    UWORD , __p6, d4, \
-    UWORD , __p7, d5, \
-    UWORD , __p8, d6, \
-    ULONG , __p9, d7, \
-    , CYBERGRAPHICS_BASE_NAME, 0, 0, 0, 0, 0, 0)
-#endif
-#endif
-
 #if defined(__M68K__)
-VOID WritePixelArrayAlpha(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct RastPort *rp, UWORD destx, UWORD desty, UWORD width, UWORD height, ULONG globalalpha);
+VOID _WritePixelArrayAlpha(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct RastPort *rp, UWORD destx, UWORD desty, UWORD width, UWORD height, ULONG globalalpha);
 #endif
 
 #ifndef PDTA_AlphaChannel

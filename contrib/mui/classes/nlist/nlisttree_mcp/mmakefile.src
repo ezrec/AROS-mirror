@@ -5,7 +5,7 @@ include $(TOP)/config/make.cfg
 
 USER_INCLUDES = -I$(SRCDIR)/$(CURDIR)/../include
 USER_CFLAGS := -DNO_INLINE_STDARG
-FILES := library NListtree locale
+FILES := library icon NListtree locale
 
 %build_module_simple mmake=contrib-zune-classes-nlisttree-mcp \
   modname=NListtree modtype=mcp moduledir=$(CONTRIBDIR)/Zune/MCC_NList/Classes/Zune \

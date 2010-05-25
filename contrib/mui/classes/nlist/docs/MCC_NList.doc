@@ -133,7 +133,7 @@ NList.mcc/MUIM_NList_UseImage
 NList.mcc/NList.mcc
 
     *******************************************************************
-    Copyright (C) 2001-2007 by NList Open Source Team
+    Copyright (C) 2001-2010 by NList Open Source Team
     $Id$
 
     This MCC public custom class is very similar to the MUI's list
@@ -667,11 +667,8 @@ NList.mcc/MUIM_NList_UseImage
         These ones are new or modified :
 
         ESC j       Justify left and right current line. only at beginning.
-        ESC I[<s>]                     (ESC I[<s>|<width>|<height>,<minwidth>])
-                    Draw MUI image with specification <s>.
+        ESC I[<s>]  Draw MUI image with specification <s>.
                     See Image.mui/MUIA_Image_Spec for image spec definition.
-                    <width> and <height> should be omited because NList
-                    draw the image to its standard size himself now.
         ESC O[<p>]                     (ESC O[<s>|<width>|<height>,<minwidth>])
                     Draw the MUIM_NList_CreateImage at adress <p>.
                     (<p> should be an 8 hex digits number).

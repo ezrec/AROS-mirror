@@ -1,6 +1,6 @@
 ## chunk AUTH Pär Boberg
 ## language svenska
-## version $VER: NListviews_mcp.ct 2.1 (09.03.08)
+## version $VER: NListviews_mcp.ct 2.1 (26.10.09)
 MSG_FONTS
 Typsnitt
 ;#DEF Fonts
@@ -42,8 +42,8 @@ Var god välj ett fast typsnitt...
 ;#DEF Please select a fixed font...
 ;#SET (9//)
 MSG_FONT_MARGIN
-Typsnittsmarginal
-;#DEF Font Margin
+Typsnittsmarginal:
+;#DEF Font Margin:
 ;#SET (10//)
 MSG_FONT_MARGIN_HELP
 Tillåter att sätta en vertikal marginal\nsom läggs till på typsnitts\nhöjden och resulterar i den förvalda\nlinjehöjden i ett NList objekt.

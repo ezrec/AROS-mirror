@@ -534,6 +534,10 @@ struct MUI_NList_GetSelectInfo
 #define MUIM_NList_GoActive           0x9d5100A5UL /* GM */
 #define MUIM_NList_GoInactive         0x9d5100A6UL /* GM */
 
+/*
+for future extensions, skip 0x9d5100AF as method ID, this one is already used by NFloattext
+*/
+
 struct MUIP_NList_Clear              { STACKED ULONG MethodID; };
 struct MUIP_NList_CreateImage        { STACKED ULONG MethodID; STACKED Object *obj; STACKED ULONG flags; };
 struct MUIP_NList_DeleteImage        { STACKED ULONG MethodID; STACKED APTR listimg; };

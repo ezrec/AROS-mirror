@@ -7,7 +7,7 @@ include $(TOP)/config/make.cfg
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include
 USER_CFLAGS := -DNO_INLINE_STDARG
 
-FILES := dispatcher NBitmap Debug vastubs
+FILES := dispatcher DitherImage NBitmap Debug vastubs
 
 %build_module_simple mmake=contrib-zune-classes-nbitmap-class \
   modname=NBitmap modtype=mcc moduledir=$(CONTRIBDIR)/Zune/MCC_NList/Classes/Zune \

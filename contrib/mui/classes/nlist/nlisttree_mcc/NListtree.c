@@ -314,7 +314,7 @@ INLINE VOID DrawTreeVertBar( struct TreeImage_Data *data, struct MyImage *im, WO
       break;
   }
 
-    LEAVE();
+  LEAVE();
 }
 
 
@@ -392,7 +392,7 @@ INLINE VOID DrawTreeVertBarT( struct TreeImage_Data *data, struct MyImage *im, W
       break;
   }
 
-    LEAVE();
+  LEAVE();
 }
 
 
@@ -471,7 +471,7 @@ INLINE VOID DrawTreeVertBarEnd( struct TreeImage_Data *data, struct MyImage *im,
       break;
   }
 
-    LEAVE();
+  LEAVE();
 }
 
 
@@ -504,7 +504,7 @@ INLINE VOID DrawTreeHorBar( struct TreeImage_Data *data, struct MyImage *im, WOR
       break;
   }
 
-    LEAVE();
+  LEAVE();
 }
 
 
@@ -520,11 +520,11 @@ INLINE VOID DrawTreeHorBar( struct TreeImage_Data *data, struct MyImage *im, WOR
 /*
 **  Draw function for special tree image class.
 */
-IPTR TreeImage_Draw( struct IClass *cl, Object *obj, struct MUIP_Draw *msg )
+IPTR TreeImage_Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
 {
   struct TreeImage_Data *data = INST_DATA( cl, obj );
 
-  DoSuperMethodA( cl, obj, (Msg)msg );
+  DoSuperMethodA( cl, obj, (Msg)msg);
 
   if ( ( msg->flags & MADF_DRAWOBJECT ) || ( msg->flags & MADF_DRAWUPDATE ) )
   {
@@ -574,11 +574,11 @@ IPTR TreeImage_Draw( struct IClass *cl, Object *obj, struct MUIP_Draw *msg )
 /*
 **  Special tree image class creation.
 */
-IPTR TreeImage_New( struct IClass *cl, Object *obj, struct opSet *msg )
+IPTR TreeImage_New(struct IClass *cl, Object *obj, struct opSet *msg)
 {
   struct TreeImage_Data *data;
 
-  if ( !( obj = (Object *)DoSuperMethodA( cl, obj, (Msg)msg ) ) )
+  if ( !( obj = (Object *)DoSuperMethodA( cl, obj, (Msg)msg) ) )
     return( 0 );
 
   ENTER();
@@ -589,19 +589,19 @@ IPTR TreeImage_New( struct IClass *cl, Object *obj, struct opSet *msg )
   data->spec = 0;
 
   RETURN(obj);
-  return( (IPTR)obj );
+  return (IPTR)obj;
 }
 
 
 /*
 **  Attribute setting function for special tree image class.
 */
-ULONG TreeImage_Set( struct IClass *cl, Object *obj, Msg msg )
+ULONG TreeImage_Set(struct IClass *cl, Object *obj, Msg msg)
 {
   struct TreeImage_Data *data = INST_DATA( cl, obj );
   struct TagItem *tags, *tag;
 
-  for(tags = ((struct opSet *)msg )->ops_AttrList; (tag = (struct TagItem *)NextTagItem((APTR)&tags));)
+  for(tags = ((struct opSet *)msg)->ops_AttrList; (tag = (struct TagItem *)NextTagItem((APTR)&tags));)
   {
     switch( tag->ti_Tag )
     {
@@ -625,12 +625,12 @@ DISPATCHER(TreeImage_Dispatcher)
 {
   switch( msg->MethodID )
   {
-    case OM_NEW:      return( TreeImage_New(      cl, obj, (APTR)msg ) );
-    case OM_SET:      return( TreeImage_Set(      cl, obj, (APTR)msg ) );
-    case MUIM_Draw:   return( TreeImage_Draw(     cl, obj, (APTR)msg ) );
+    case OM_NEW:      return( TreeImage_New(      cl, obj, (APTR)msg) );
+    case OM_SET:      return( TreeImage_Set(      cl, obj, (APTR)msg) );
+    case MUIM_Draw:   return( TreeImage_Draw(     cl, obj, (APTR)msg) );
   }
 
-  return( DoSuperMethodA( cl, obj, msg ) );
+  return( DoSuperMethodA( cl, obj, msg) );
 }
 
 /*
@@ -663,7 +663,7 @@ DISPATCHER(NodeImage_Dispatcher)
     D(DBF_IMAGES, "=====> DefWidth: %ld, DefHeight: %ld, MaxWidth: %ld", w, h, im->nltdata->MaxImageWidth);
   }
 
-  return( DoSuperMethodA( cl, obj, (Msg)msg ) );
+  return( DoSuperMethodA( cl, obj, (Msg)msg) );
 }
 
 /*****************************************************************************\
@@ -5318,13 +5318,13 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 }
 
 
-BOOL GetAttributes( struct NListtree_Data *data, Msg msg )
+BOOL GetAttributes( struct NListtree_Data *data, Msg msg)
 {
-  IPTR *store = ( (struct opGet *)msg )->opg_Storage;
+  IPTR *store = ( (struct opGet *)msg)->opg_Storage;
 
   *store = 0;
 
-  switch( ( (struct opGet *)msg )->opg_AttrID )
+  switch( ( (struct opGet *)msg)->opg_AttrID )
   {
     case MUIA_Version:
       *store = LIB_VERSION;
@@ -5415,7 +5415,7 @@ BOOL GetAttributes( struct NListtree_Data *data, Msg msg )
       break;
 
     default:
-      D(DBF_GETSET, "GET 0x%08lx", ( (struct opGet *)msg )->opg_AttrID);
+      D(DBF_GETSET, "GET 0x%08lx", ( (struct opGet *)msg)->opg_AttrID);
       break;
   }
 
@@ -5432,7 +5432,7 @@ BOOL GetAttributes( struct NListtree_Data *data, Msg msg )
 *******************************************************************************
 \*****************************************************************************/
 
-IPTR _New( struct IClass *cl, Object *obj, struct opSet *msg )
+IPTR _New(struct IClass *cl, Object *obj, struct opSet *msg)
 {
   struct NListtree_Data ld;
 
@@ -5512,7 +5512,7 @@ IPTR _New( struct IClass *cl, Object *obj, struct opSet *msg )
 
         if ( obj )
         {
-          struct NListtree_Data *data = INST_DATA( cl, obj );
+          struct NListtree_Data *data = INST_DATA(cl, obj);
           struct Task *mytask;
           const char *taskname;
           ULONG ver, rev;
@@ -5628,9 +5628,9 @@ IPTR _New( struct IClass *cl, Object *obj, struct opSet *msg )
 }
 
 
-IPTR _Dispose( struct IClass *cl, Object *obj, Msg msg )
+IPTR _Dispose(struct IClass *cl, Object *obj, Msg msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   ULONG ret;
   struct MUI_CustomClass *im1, *im2;
   APTR mempool, treepool;
@@ -5649,7 +5649,7 @@ IPTR _Dispose( struct IClass *cl, Object *obj, Msg msg )
   mempool = data->MemoryPool;
   treepool = data->TreePool;
 
-  ret = DoSuperMethodA( cl, obj, msg );
+  ret = DoSuperMethodA(cl, obj, msg);
 
   if(treepool != NULL)
   {
@@ -5679,47 +5679,49 @@ IPTR _Dispose( struct IClass *cl, Object *obj, Msg msg )
     MUI_DeleteCustomClass( im2 );
 
   RETURN(ret);
-    return( ret );
+  return( ret );
 }
 
 
 
-IPTR _Set( struct IClass *cl, Object *obj, struct opSet *msg )
+IPTR _Set(struct IClass *cl, Object *obj, struct opSet *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
 
   SetAttributes( data, msg, FALSE );
 
-  return( DoSuperMethodA( cl, obj, (Msg)msg ) );
+  return( DoSuperMethodA( cl, obj, (Msg)msg) );
 }
 
 
-IPTR _Get( struct IClass *cl, Object *obj, Msg msg )
+IPTR _Get(struct IClass *cl, Object *obj, Msg msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
 
   if ( !( data->Flags & NLTF_GET_PARENT_ATTR ) )
   {
-    if ( GetAttributes( data, msg ) )
+    if ( GetAttributes( data, msg) )
       return( TRUE );
   }
 
-  return( DoSuperMethodA( cl, obj, msg ) );
+  return( DoSuperMethodA( cl, obj, msg) );
 }
 
 
-IPTR _Setup( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
+IPTR _Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   Object *pdobj, *idobj;
   LONG d;
   BOOL x;
 
   ENTER();
 
-
-  if ( !( DoSuperMethodA( cl, obj, (Msg)msg ) ) )
-    return( FALSE );
+  if(!(DoSuperMethodA(cl, obj, (Msg)msg)))
+  {
+    RETURN(FALSE);
+    return FALSE;
+  }
 
   D(DBF_SETUP, "Before: cl_SubclassCount = %ld, cl_ObjectCount = %ld", cl->cl_SubclassCount, cl->cl_ObjectCount);
 
@@ -5736,6 +5738,11 @@ IPTR _Setup( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
   data->Image[IMAGE_Tree].Image = NewObject( data->CL_TreeImage->mcc_Class, NULL, MUIA_FillArea, FALSE, NoFrame, MUIA_UserData, &data->Image[IMAGE_Tree], TAG_DONE);
   data->Image[IMAGE_Tree].ListImage = (Object *)DoMethod( obj, MUIM_NList_CreateImage, data->Image[IMAGE_Tree].Image, 0L );
 
+  data->compositingActive = 0;
+  #if defined(__amigaos4__)
+  // check whether compositing is enabled on our screen
+  GetScreenAttrs(_screen(obj), SA_Compositing, &data->compositingActive, TAG_DONE);
+  #endif
 
   /*
   **  Get and set image config.
@@ -5913,13 +5920,13 @@ IPTR _Setup( struct IClass *cl, Object *obj, struct MUIP_Setup *msg )
   DoRefresh( data );
 
   RETURN(TRUE);
-    return( TRUE );
+  return TRUE;
 }
 
 
-IPTR _Cleanup( struct IClass *cl, Object *obj, Msg msg )
+IPTR _Cleanup(struct IClass *cl, Object *obj, Msg msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   UBYTE i;
 
   D(DBF_SETUP, "Before: cl_SubclassCount = %ld, cl_ObjectCount = %ld", cl->cl_SubclassCount, cl->cl_ObjectCount);
@@ -5941,15 +5948,15 @@ IPTR _Cleanup( struct IClass *cl, Object *obj, Msg msg )
 
   D(DBF_SETUP, "After: cl_SubclassCount = %ld, cl_ObjectCount = %ld", cl->cl_SubclassCount, cl->cl_ObjectCount);
 
-  return( DoSuperMethodA( cl, obj, msg ) );
+  return( DoSuperMethodA( cl, obj, msg) );
 }
 
 
-IPTR _Show( struct IClass *cl, Object *obj, Msg msg )
+IPTR _Show(struct IClass *cl, Object *obj, Msg msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
 
-  if (!DoSuperMethodA( cl, obj, (Msg)msg ))
+  if (!DoSuperMethodA( cl, obj, (Msg)msg))
     return 0;
 
   data->EHNode.ehn_Priority = 1;
@@ -5964,19 +5971,19 @@ IPTR _Show( struct IClass *cl, Object *obj, Msg msg )
 }
 
 
-IPTR _Hide( struct IClass *cl, Object *obj, Msg msg )
+IPTR _Hide(struct IClass *cl, Object *obj, Msg msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
 
   DoMethod( _win( obj ), MUIM_Window_RemEventHandler, &data->EHNode );
   //DeactivateNotify( data );
-  return DoSuperMethodA( cl, obj, msg );
+  return DoSuperMethodA(cl, obj, msg);
 }
 
 
-IPTR _AskMinMax( struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg )
+IPTR _AskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg)
 {
-  DoSuperMethodA( cl, obj, (Msg)msg );
+  DoSuperMethodA( cl, obj, (Msg)msg);
 
   msg->MinMaxInfo->MinWidth  += 20;
   msg->MinMaxInfo->DefWidth  += 50;
@@ -5991,17 +5998,17 @@ IPTR _AskMinMax( struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg )
 
 
 
-IPTR _Draw( struct IClass *cl, Object *obj, struct MUIP_Draw *msg )
+IPTR _Draw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg)
 {
-  return( DoSuperMethodA( cl, obj, (Msg)msg ) );
+  return( DoSuperMethodA( cl, obj, (Msg)msg) );
 }
 
 
-IPTR _HandleEvent( struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg )
+IPTR _HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
 {
   #define _between( a, x, b )   ( ( x ) >= ( a ) && ( x ) <= ( b ) )
   #define _isinobject( x, y )   ( _between( _mleft( obj ), ( x ), _mright( obj ) ) && _between( _mtop( obj ), ( y ), _mbottom( obj ) ) )
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   IPTR ret = 0;
 
   if ( msg->muikey )
@@ -6083,7 +6090,7 @@ IPTR _HandleEvent( struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg 
     }
   }
 
-  if ( msg->imsg )
+  if ( msg->imsg)
   {
     WORD mx, my;
 
@@ -6330,37 +6337,39 @@ IPTR _HandleEvent( struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg 
 
 
 
-IPTR _DragNDrop_DragQuery( struct IClass *cl, Object *obj, Msg msg )
+IPTR _DragNDrop_DragQuery(struct IClass *cl, Object *obj, Msg msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   struct MUIP_DragQuery *d = (struct MUIP_DragQuery *)msg;
   ULONG result;
 
   ENTER();
 
-  if ( d->obj == obj )
+  if(d->obj == obj)
   {
-    //if ( ( data->Flags & NLTF_DRAGDROPSORT ) && !( data->Flags & NLTF_OVER_ARROW ) )
-    if ( data->Flags & NLTF_DRAGDROPSORT )
+    //if(isFlagSet(data->Flags, NLTF_DRAGDROPSORT) && isFlagClear(data->Flags, NLTF_OVER_ARROW))
+    if(isFlagSet(data->Flags, NLTF_DRAGDROPSORT))
     {
-      return( MUIV_DragQuery_Accept );
+      RETURN(MUIV_DragQuery_Accept);
+      return MUIV_DragQuery_Accept;
     }
     else
     {
-      return( MUIV_DragQuery_Refuse );
+      RETURN(MUIV_DragQuery_Refuse);
+      return MUIV_DragQuery_Refuse;
     }
   }
 
-  result = DoSuperMethodA( cl, obj, msg );
+  result = DoSuperMethodA(cl, obj, msg);
 
   RETURN(result);
   return result;
 }
 
 
-IPTR _DragNDrop_DragBegin( struct IClass *cl, Object *obj, Msg msg )
+IPTR _DragNDrop_DragBegin(struct IClass *cl, Object *obj, Msg msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   IPTR result;
 
   ENTER();
@@ -6377,136 +6386,148 @@ IPTR _DragNDrop_DragBegin( struct IClass *cl, Object *obj, Msg msg )
   */
 
   data->Flags |= NLTF_DRAGDROP;
-/*
-  // not yet working, see comment in _DragNDrop_DropType()
   data->OldDropTarget = NULL;
-*/
 
-  result = DoSuperMethodA( cl, obj, msg );
+  result = DoSuperMethodA(cl, obj, msg);
 
   RETURN(result);
   return result;
 }
 
 
-IPTR _DragNDrop_DragReport( struct IClass *cl, Object *obj, Msg msg )
+#ifndef _between
+#define _between(a, x, b) ((x) >= (a) && (x) <= (b))
+#endif
+#ifndef _isinobject
+#define _isinobject(x, y) (_between(_mleft(obj), (x), _mright(obj)) && _between(_mtop(obj), (y), _mbottom(obj)))
+#endif
+IPTR _DragNDrop_DragReport(struct IClass *cl, Object *obj, Msg msg)
 {
-  #define _between( a, x, b ) ( ( x ) >= ( a ) && ( x ) <= ( b ) )
-  #define _isinobject( x, y ) ( _between( _mleft( obj ), ( x ), _mright( obj ) ) && _between( _mtop( obj ), ( y ), _mbottom( obj ) ) )
   struct MUIP_DragReport *d = (struct MUIP_DragReport *)msg;
   IPTR result;
 
   ENTER();
 
-  if ( !_isinobject( d->x, d->y ) )
-    return( MUIV_DragReport_Abort );
-
-  result = DoSuperMethodA( cl, obj, msg );
+  if(_isinobject(d->x, d->y))
+    result = DoSuperMethodA(cl, obj, msg);
+  else
+    result = MUIV_DragReport_Abort;
 
   RETURN(result);
   return result;
 }
 
 
-IPTR _DragNDrop_DropType( struct IClass *cl, Object *obj, struct MUIP_NList_DropType *msg )
+IPTR _DragNDrop_DropType(struct IClass *cl, Object *obj, struct MUIP_NList_DropType *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
 
-  DoMethod( obj, MUIM_NList_GetEntry, *msg->pos, &data->DropTarget );
+  ENTER();
+
+  DoMethod(obj, MUIM_NList_GetEntry, *msg->pos, &data->DropTarget);
 
   data->DropTargetPos = *msg->pos;
 
-  if ( !IsXChildOfListMember( data->DropTarget, &data->SelectedTable ) )
+  if(IsXChildOfListMember(data->DropTarget, &data->SelectedTable) == NULL)
   {
-    if ( msg->mousey <= ( msg->miny + 2 ) )
+    if(msg->mousey <= msg->miny + 2)
+    {
       *msg->type = MUIV_NListtree_DropType_Above;
-
-    else if ( msg->mousey >= ( msg->maxy - 2 )  )
+    }
+    else if(msg->mousey >= msg->maxy - 2)
     {
       *msg->type = MUIV_NListtree_DropType_Below;
       *msg->pos -= 1;
     }
-
     else
+    {
       *msg->type = MUIV_NListtree_DropType_Onto;
+    }
   }
   else
+  {
     *msg->type = MUIV_NListtree_DropType_None;
+  }
 
-  if ( ( *msg->type == MUIV_NListtree_DropType_Onto ) && ( data->DropTarget->tn_Flags & TNF_LIST ) )
+  if(*msg->type == MUIV_NListtree_DropType_Onto && isFlagSet(data->DropTarget->tn_Flags, TNF_LIST))
     data->DropType = MUIV_NListtree_DropType_Sorted;
   else
     data->DropType = *msg->type;
 
-  DoMethod( obj, MUIM_NListtree_DropType, &data->DropTargetPos, &data->DropType, msg->minx, msg->maxx, msg->miny, msg->maxy, msg->mousex, msg->mousey );
+  DoMethod(obj, MUIM_NListtree_DropType, &data->DropTargetPos, &data->DropType, msg->minx, msg->maxx, msg->miny, msg->maxy, msg->mousex, msg->mousey);
 
-  if ( ( *msg->type == MUIV_NListtree_DropType_Below ) && ( data->DropType != MUIV_NListtree_DropType_Below ) )
+  if(*msg->type == MUIV_NListtree_DropType_Below && data->DropType != MUIV_NListtree_DropType_Below)
     *msg->pos += 1;
 
-  if ( data->DropType == MUIV_NListtree_DropType_Sorted )
+  if(data->DropType == MUIV_NListtree_DropType_Sorted)
     *msg->type = MUIV_NListtree_DropType_Onto;
   else
     *msg->type = data->DropType;
 
-  D(DBF_DRAGDROP, "OPos: %ld, OType: %ld, Pos: %ld, Type: %ld", *msg->pos, *msg->type,
-    data->DropTargetPos, data->DropType);
+  D(DBF_DRAGDROP, "OPos: %ld, OType: %ld, Pos: %ld, Type: %ld", *msg->pos, *msg->type, data->DropTargetPos, data->DropType);
 
-/*
-// this causes problems as soon as a list is expanded und hence a scroll bar is
-// displayed.
-// First the scroll bar is not displayed properly and second the dragging becomes
-// *very* slow. If the mouse pointer is then moved outside the object the dragging
-// is hanging completely. All in all this must be an issue in NList.mcc.  if((data->DropTarget->tn_Flags & TNF_LIST) && !(data->DropTarget->tn_Flags & TNF_OPEN))
+  if(isFlagSet(data->DropTarget->tn_Flags, TNF_LIST) && isFlagClear(data->DropTarget->tn_Flags, TNF_OPEN) && *msg->type == MUIV_NListtree_DropType_Onto)
   {
-    // the current possible drop target is a closed list node
-    if(data->OldDropTarget != data->DropTarget)
+    // Make sure the screen is currently not locked because of the current DnD action.
+    // Opening the node now might lead to a deadlock, because the redraw might require
+    // another lock. However, OS4's MUI is able to perform lockless DnD actions on true
+    // color screens.
+    if(data->compositingActive != 0 && _screen(obj)->LayerInfo.Lock.ss_Owner == NULL)
     {
-      // the possible drop target node has changed
-      // remember the current time
-      CurrentTime(&data->OpenDropListSecs, &data->OpenDropListMicros);
-    }
-    else
-    {
-      // no target change and we can drop something on the node
-      // now check if the desired delay has passed
-      ULONG secs;
-      ULONG micros;
-      ULONG diffSecs;
-      ULONG diffMicros;
-
-      // get the current system time
-      CurrentTime(&secs, &micros);
-      // calculate the difference to the last time
-      diffSecs = secs - data->OpenDropListSecs;
-      if(micros < data->OpenDropListMicros)
+      // the current possible drop target is a closed list node
+      if(data->OldDropTarget != data->DropTarget)
       {
-        diffMicros = micros + 1000000L - data->OpenDropListMicros;
-        diffSecs--;
+        D(DBF_DRAGDROP, "drop target changed, old='%s', new='%s'", data->OldDropTarget != NULL ? data->OldDropTarget->tn_Name : (STRPTR)"NULL", data->DropTarget ? data->DropTarget->tn_Name : (STRPTR)"NULL");
+        // the possible drop target node has changed
+        // remember the current time
+        CurrentTime(&data->OpenDropListSecs, &data->OpenDropListMicros);
       }
       else
-        diffMicros = micros - data->OpenDropListMicros;
-
-      if((diffSecs == 0 && diffMicros >= 500000L) || diffSecs > 0)
       {
-        // the time has passed, now open the list node
-        DoMethod(obj, MUIM_NListtree_Open, GetParent( data->DropTarget ), data->DropTarget, 0);
-        // reset the start time
-        data->OpenDropListSecs = secs;
-        data->OpenDropListMicros = micros;
+        // no target change and we can drop something on the node
+        // now check if the desired delay has passed
+        ULONG secs;
+        ULONG micros;
+        ULONG diffSecs;
+        ULONG diffMicros;
+
+        // get the current system time
+        CurrentTime(&secs, &micros);
+        // calculate the difference to the last time
+        diffSecs = secs - data->OpenDropListSecs;
+        if(micros < data->OpenDropListMicros)
+        {
+          diffMicros = micros + 1000000L - data->OpenDropListMicros;
+          diffSecs--;
+        }
+        else
+          diffMicros = micros - data->OpenDropListMicros;
+
+        // open the node if the user held the mouse for at least one second
+        // over the closed node
+        if(diffSecs >= 1)
+        {
+          D(DBF_DRAGDROP, "drop target same since one second '%s'", data->DropTarget ? data->DropTarget->tn_Name : (STRPTR)"NULL");
+          // the time has passed, now open the list node
+          DoMethod(obj, MUIM_NListtree_Open, GetParent(data->DropTarget), data->DropTarget, 0);
+          // reset the start time
+          data->OpenDropListSecs = secs;
+          data->OpenDropListMicros = micros;
+        }
       }
     }
   }
 
   data->OldDropTarget = data->DropTarget;
-*/
 
-  return( 0 );
+  LEAVE();
+  return 0;
 }
 
 
-IPTR _DragNDrop_NDropDraw( struct IClass *cl, Object *obj, struct MUIP_NListtree_DropDraw *msg )
+IPTR _DragNDrop_NDropDraw(struct IClass *cl, Object *obj, struct MUIP_NListtree_DropDraw *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   struct RastPort *rp = _rp( obj );
   ULONG apen, bpen;
   UWORD *pens = _pens( obj );
@@ -6581,9 +6602,9 @@ IPTR _DragNDrop_NDropDraw( struct IClass *cl, Object *obj, struct MUIP_NListtree
 
 
 //$$$
-IPTR _DragNDrop_DropDraw( struct IClass *cl, Object *obj, struct MUIP_NList_DropDraw *msg )
+IPTR _DragNDrop_DropDraw(struct IClass *cl, Object *obj, struct MUIP_NList_DropDraw *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   struct MUI_NListtree_TreeNode *drawtarget;
 
   D(DBF_DRAGDROP, "DropType: %ld, DropPos: %ld", msg->type, msg->pos);
@@ -6596,25 +6617,25 @@ IPTR _DragNDrop_DropDraw( struct IClass *cl, Object *obj, struct MUIP_NList_Drop
 }
 
 
-IPTR _DragNDrop_DragFinish( struct IClass *cl, Object *obj, Msg msg )
+IPTR _DragNDrop_DragFinish(struct IClass *cl, Object *obj, Msg msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   IPTR result;
 
   ENTER();
 
   data->Flags &= ~NLTF_DRAGDROP;
 
-  result = DoSuperMethodA( cl, obj, msg );
+  result = DoSuperMethodA(cl, obj, msg);
 
   RETURN(result);
   return result;
 }
 
 
-IPTR _DragNDrop_DragDrop( struct IClass *cl, Object *obj, UNUSED Msg msg )
+IPTR _DragNDrop_DragDrop(struct IClass *cl, Object *obj, UNUSED Msg msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   struct MUI_NListtree_TreeNode *tn, *tn2, *dtn, *nexttn = NULL;
   struct MUI_NListtree_ListNode *ln = NULL;
 
@@ -6749,9 +6770,9 @@ IPTR _DragNDrop_DragDrop( struct IClass *cl, Object *obj, UNUSED Msg msg )
 
 
 //$$$
-IPTR _ContextMenuBuild( struct IClass *cl, Object *obj, struct MUIP_NList_ContextMenuBuild *msg )
+IPTR _ContextMenuBuild(struct IClass *cl, Object *obj, struct MUIP_NList_ContextMenuBuild *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
 
   STATIC struct NewMenu ContextMenu[] =
   {
@@ -6778,14 +6799,14 @@ IPTR _ContextMenuBuild( struct IClass *cl, Object *obj, struct MUIP_NList_Contex
   if ( !msg->ontop )
     return( (IPTR)MUI_MakeObject( MUIO_MenustripNM, ContextMenu, 0 ) );
 
-  return( DoSuperMethodA( cl, obj, (Msg)msg ) );
+  return( DoSuperMethodA( cl, obj, (Msg)msg) );
 }
 
 
 //$$$
-IPTR _ContextMenuChoice( struct IClass *cl, Object *obj, struct MUIP_ContextMenuChoice *msg )
+IPTR _ContextMenuChoice(struct IClass *cl, Object *obj, struct MUIP_ContextMenuChoice *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   struct MUI_NListtree_TreeNode *tn;
 
   if ( !data->MenuChoice.ontop )
@@ -6797,7 +6818,7 @@ IPTR _ContextMenuChoice( struct IClass *cl, Object *obj, struct MUIP_ContextMenu
   }
 
 
-  return( DoSuperMethodA( cl, obj, (Msg)msg ) );
+  return( DoSuperMethodA( cl, obj, (Msg)msg) );
 }
 
 
@@ -6882,9 +6903,9 @@ IPTR _ContextMenuChoice( struct IClass *cl, Object *obj, struct MUIP_ContextMenu
 ******************************************************************************
 *
 */
-IPTR _NListtree_Open( struct IClass *cl, Object *obj, struct MUIP_NListtree_Open *msg )
+IPTR _NListtree_Open(struct IClass *cl, Object *obj, struct MUIP_NListtree_Open *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   struct MUI_NListtree_TreeNode *tn, *tn2;
   struct MUI_NListtree_ListNode *ln;
   BOOL openall = FALSE;
@@ -7070,9 +7091,9 @@ IPTR _NListtree_Open( struct IClass *cl, Object *obj, struct MUIP_NListtree_Open
 ******************************************************************************
 *
 */
-IPTR _NListtree_Close( struct IClass *cl, Object *obj, struct MUIP_NListtree_Close *msg )
+IPTR _NListtree_Close(struct IClass *cl, Object *obj, struct MUIP_NListtree_Close *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   struct MUI_NListtree_TreeNode *tn;
   struct MUI_NListtree_ListNode *ln;
   BOOL closeall = FALSE;
@@ -7280,9 +7301,9 @@ IPTR _NListtree_Close( struct IClass *cl, Object *obj, struct MUIP_NListtree_Clo
 ******************************************************************************
 *
 */
-IPTR _NListtree_Insert( struct IClass *cl, Object *obj, struct MUIP_NListtree_Insert *msg )
+IPTR _NListtree_Insert(struct IClass *cl, Object *obj, struct MUIP_NListtree_Insert *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   struct MUI_NListtree_TreeNode *tn = NULL;
   struct MUI_NListtree_ListNode *ln;
   APTR user;
@@ -7642,10 +7663,10 @@ INLINE STRPTR mystrtok( STRPTR string, STRPTR buf, ULONG bufsize, STRPTR delimit
 
 
 
-IPTR _NListtree_InsertStruct( struct IClass *cl, Object *obj, struct MUIP_NListtree_InsertStruct *msg )
+IPTR _NListtree_InsertStruct(struct IClass *cl, Object *obj, struct MUIP_NListtree_InsertStruct *msg)
 {
   struct MUI_NListtree_TreeNode *temp, *lasttn = CTN( MUIV_NListtree_Insert_ListNode_Root );
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   STRPTR p, token;
   ULONG len;
   static const char *np = "*** NULL POINTER ***";
@@ -7761,9 +7782,9 @@ IPTR _NListtree_InsertStruct( struct IClass *cl, Object *obj, struct MUIP_NListt
 ******************************************************************************
 *
 */
-IPTR _NListtree_Remove( struct IClass *cl, Object *obj, struct MUIP_NListtree_Remove *msg )
+IPTR _NListtree_Remove(struct IClass *cl, Object *obj, struct MUIP_NListtree_Remove *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   struct MUI_NListtree_ListNode *li;
   struct MUI_NListtree_TreeNode *tn;
   LONG pos;
@@ -7955,9 +7976,9 @@ IPTR _NListtree_Remove( struct IClass *cl, Object *obj, struct MUIP_NListtree_Re
 ******************************************************************************
 *
 */
-IPTR _NListtree_Clear( struct IClass *cl, Object *obj, UNUSED struct MUIP_NListtree_Clear *msg )
+IPTR _NListtree_Clear(struct IClass *cl, Object *obj, UNUSED struct MUIP_NListtree_Clear *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   struct MUI_NListtree_ListNode *ln = NULL;
 
   ENTER();
@@ -8136,9 +8157,9 @@ IPTR _NListtree_Clear( struct IClass *cl, Object *obj, UNUSED struct MUIP_NListt
 ******************************************************************************
 *
 */
-IPTR _NListtree_Exchange( struct IClass *cl, Object *obj, struct MUIP_NListtree_Exchange *msg )
+IPTR _NListtree_Exchange(struct IClass *cl, Object *obj, struct MUIP_NListtree_Exchange *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   struct MUI_NListtree_ListNode *ln1, *ln2;
   struct MUI_NListtree_TreeNode *tn1, *tn2;
   struct Node *insnode1, *insnode2;
@@ -8429,9 +8450,9 @@ IPTR _NListtree_Exchange( struct IClass *cl, Object *obj, struct MUIP_NListtree_
 ******************************************************************************
 *
 */
-IPTR _NListtree_Move( struct IClass *cl, Object *obj, struct MUIP_NListtree_Move *msg )
+IPTR _NListtree_Move(struct IClass *cl, Object *obj, struct MUIP_NListtree_Move *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   struct MUI_NListtree_ListNode *ln1, *ln2;
   struct MUI_NListtree_TreeNode *tn1, *tn2;
 
@@ -8675,9 +8696,9 @@ IPTR _NListtree_Move( struct IClass *cl, Object *obj, struct MUIP_NListtree_Move
 ******************************************************************************
 *
 */
-IPTR _NListtree_Copy( struct IClass *cl, Object *obj, struct MUIP_NListtree_Copy *msg )
+IPTR _NListtree_Copy(struct IClass *cl, Object *obj, struct MUIP_NListtree_Copy *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   struct MUI_NListtree_ListNode *ln1, *ln2;
   struct MUI_NListtree_TreeNode *tn1, *tn2;
 
@@ -8866,9 +8887,9 @@ IPTR _NListtree_Copy( struct IClass *cl, Object *obj, struct MUIP_NListtree_Copy
 ******************************************************************************
 *
 */
-IPTR _NListtree_Rename( struct IClass *cl, Object *obj, struct MUIP_NListtree_Rename *msg )
+IPTR _NListtree_Rename(struct IClass *cl, Object *obj, struct MUIP_NListtree_Rename *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   struct MUI_NListtree_TreeNode *tn;
 
 
@@ -9016,9 +9037,9 @@ IPTR _NListtree_Rename( struct IClass *cl, Object *obj, struct MUIP_NListtree_Re
 ******************************************************************************
 *
 */
-IPTR _NListtree_FindName( struct IClass *cl, Object *obj, struct MUIP_NListtree_FindName *msg )
+IPTR _NListtree_FindName(struct IClass *cl, Object *obj, struct MUIP_NListtree_FindName *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   struct MUI_NListtree_ListNode *ln;
   struct MUI_NListtree_TreeNode *tn;
 
@@ -9153,9 +9174,9 @@ IPTR _NListtree_FindName( struct IClass *cl, Object *obj, struct MUIP_NListtree_
 ******************************************************************************
 *
 */
-IPTR _NListtree_FindUserData( struct IClass *cl, Object *obj, struct MUIP_NListtree_FindUserData *msg )
+IPTR _NListtree_FindUserData(struct IClass *cl, Object *obj, struct MUIP_NListtree_FindUserData *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   struct MUI_NListtree_ListNode *ln;
   struct MUI_NListtree_TreeNode *tn;
 
@@ -9293,9 +9314,9 @@ IPTR _NListtree_FindUserData( struct IClass *cl, Object *obj, struct MUIP_NListt
 ******************************************************************************
 *
 */
-IPTR _NListtree_GetEntry( struct IClass *cl, Object *obj, struct MUIP_NListtree_GetEntry *msg )
+IPTR _NListtree_GetEntry(struct IClass *cl, Object *obj, struct MUIP_NListtree_GetEntry *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   struct MUI_NListtree_TreeNode *tn = NULL;
   struct MUI_NListtree_ListNode *ln;
   LONG pos = 0;
@@ -9448,9 +9469,9 @@ IPTR _NListtree_GetEntry( struct IClass *cl, Object *obj, struct MUIP_NListtree_
 ******************************************************************************
 *
 */
-IPTR _NListtree_GetNr( struct IClass *cl, Object *obj, struct MUIP_NListtree_GetNr *msg )
+IPTR _NListtree_GetNr(struct IClass *cl, Object *obj, struct MUIP_NListtree_GetNr *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   struct MUI_NListtree_TreeNode *tn;
   struct MUI_NListtree_ListNode *ln;
   IPTR ret = 0;
@@ -9573,9 +9594,9 @@ IPTR _NListtree_GetNr( struct IClass *cl, Object *obj, struct MUIP_NListtree_Get
 ******************************************************************************
 *
 */
-IPTR _NListtree_Sort( struct IClass *cl, Object *obj, struct MUIP_NListtree_Sort *msg )
+IPTR _NListtree_Sort(struct IClass *cl, Object *obj, struct MUIP_NListtree_Sort *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   struct MUI_NListtree_ListNode *ln;
   LONG pos;
 
@@ -9703,7 +9724,7 @@ IPTR _NListtree_Sort( struct IClass *cl, Object *obj, struct MUIP_NListtree_Sort
 ******************************************************************************
 *
 */
-IPTR _NListtree_TestPos( UNUSED struct IClass *cl, Object *obj, struct MUIP_NListtree_TestPos *msg )
+IPTR _NListtree_TestPos( UNUSED struct IClass *cl, Object *obj, struct MUIP_NListtree_TestPos *msg)
 {
   struct MUI_NListtree_TestPos_Result *res = (struct MUI_NListtree_TestPos_Result *)msg->Result;
   struct MUI_NList_TestPos_Result lres;
@@ -9799,7 +9820,7 @@ IPTR _NListtree_TestPos( UNUSED struct IClass *cl, Object *obj, struct MUIP_NLis
 ******************************************************************************
 *
 */
-IPTR _NListtree_Redraw( struct IClass *cl, Object *obj, struct MUIP_NListtree_Redraw *msg )
+IPTR _NListtree_Redraw(struct IClass *cl, Object *obj, struct MUIP_NListtree_Redraw *msg)
 {
   struct NListtree_Data *data = INST_DATA(cl, obj);
 
@@ -9913,9 +9934,9 @@ IPTR _NListtree_Redraw( struct IClass *cl, Object *obj, struct MUIP_NListtree_Re
 ******************************************************************************
 *
 */
-IPTR _NListtree_Select( struct IClass *cl, Object *obj, struct MUIP_NListtree_Select *msg )
+IPTR _NListtree_Select(struct IClass *cl, Object *obj, struct MUIP_NListtree_Select *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   LONG state = 0;
 
   ENTER();
@@ -10047,9 +10068,9 @@ IPTR _NListtree_Select( struct IClass *cl, Object *obj, struct MUIP_NListtree_Se
 ******************************************************************************
 *
 */
-IPTR _NListtree_NextSelected( struct IClass *cl, Object *obj, struct MUIP_NListtree_NextSelected *msg )
+IPTR _NListtree_NextSelected(struct IClass *cl, Object *obj, struct MUIP_NListtree_NextSelected *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   LONG curr = data->SelectedTable.tb_Current;
 
   //D(bug( "TreeNode: 0x%08lx ", *msg->TreeNode ) );
@@ -10161,9 +10182,9 @@ IPTR _NListtree_NextSelected( struct IClass *cl, Object *obj, struct MUIP_NListt
 *
 */
 
-IPTR _NListtree_PrevSelected( struct IClass *cl, Object *obj, struct MUIP_NListtree_PrevSelected *msg )
+IPTR _NListtree_PrevSelected(struct IClass *cl, Object *obj, struct MUIP_NListtree_PrevSelected *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   LONG curr = data->SelectedTable.tb_Current;
 
   //D(bug( "TreeNode: 0x%08lx ", *msg->TreeNode ) );
@@ -10247,9 +10268,9 @@ IPTR _NListtree_PrevSelected( struct IClass *cl, Object *obj, struct MUIP_NListt
 ******************************************************************************
 *
 */
-IPTR _NListtree_CopyToClip( struct IClass *cl, Object *obj, struct MUIP_NListtree_CopyToClip *msg )
+IPTR _NListtree_CopyToClip(struct IClass *cl, Object *obj, struct MUIP_NListtree_CopyToClip *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   STRPTR string, str;
   BOOL alloc = FALSE;
 
@@ -10557,9 +10578,9 @@ IPTR _NListtree_CopyToClip( struct IClass *cl, Object *obj, struct MUIP_NListtre
 ******************************************************************************
 *
 */
-IPTR _NListtree_GetListActive( struct IClass *cl, Object *obj, UNUSED struct MUIP_NListtree_GetListActive *msg )
+IPTR _NListtree_GetListActive(struct IClass *cl, Object *obj, UNUSED struct MUIP_NListtree_GetListActive *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   struct MUI_NListtree_TreeNode *tn;
 
   /*
@@ -10584,9 +10605,9 @@ IPTR _NListtree_GetListActive( struct IClass *cl, Object *obj, UNUSED struct MUI
 }
 
 
-IPTR _NListtree_GetDoubleClick( struct IClass *cl, Object *obj, UNUSED struct MUIP_NListtree_GetListActive *msg )
+IPTR _NListtree_GetDoubleClick(struct IClass *cl, Object *obj, UNUSED struct MUIP_NListtree_GetListActive *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
 
   ENTER();
 
@@ -10658,9 +10679,9 @@ IPTR _NListtree_GetDoubleClick( struct IClass *cl, Object *obj, UNUSED struct MU
 ******************************************************************************
 *
 */
-IPTR _NListtree_Data( struct IClass *cl, Object *obj, struct MUIP_NListtree_Data *msg )
+IPTR _NListtree_Data(struct IClass *cl, Object *obj, struct MUIP_NListtree_Data *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
 
   switch( msg->ID )
   {
@@ -10678,9 +10699,9 @@ IPTR _NListtree_Data( struct IClass *cl, Object *obj, struct MUIP_NListtree_Data
 
 
 
-IPTR _NListtree_SelectChange( struct IClass *cl, Object *obj, struct MUIP_NList_SelectChange *msg )
+IPTR _NListtree_SelectChange(struct IClass *cl, Object *obj, struct MUIP_NList_SelectChange *msg)
 {
-  struct NListtree_Data *data = INST_DATA( cl, obj );
+  struct NListtree_Data *data = INST_DATA(cl, obj);
   struct MUI_NListtree_TreeNode *tn;
 
   D(DBF_LISTTREE, "NList selection change: Entry %ld changed to %ld%s", msg->pos, msg->state,
@@ -10779,72 +10800,72 @@ DISPATCHER(_Dispatcher)
     /*
     **  Base class methods.
     */
-    case OM_NEW:            return( _New            ( cl, obj, (APTR)msg ) );
-    case OM_DISPOSE:          return( _Dispose          ( cl, obj, (APTR)msg ) );
-    case OM_SET:            return( _Set            ( cl, obj, (APTR)msg ) );
-    case OM_GET:            return( _Get            ( cl, obj, (APTR)msg ) );
+    case OM_NEW:            return( _New            ( cl, obj, (APTR)msg) );
+    case OM_DISPOSE:          return( _Dispose          ( cl, obj, (APTR)msg) );
+    case OM_SET:            return( _Set            ( cl, obj, (APTR)msg) );
+    case OM_GET:            return( _Get            ( cl, obj, (APTR)msg) );
 
     /*
     **  MUI base class methods.
     */
-    case MUIM_Setup:          return( _Setup            ( cl, obj, (APTR)msg ) );
-    case MUIM_Cleanup:          return( _Cleanup          ( cl, obj, (APTR)msg ) );
-    case MUIM_Show:           return( _Show           ( cl, obj, (APTR)msg ) );
-    case MUIM_Hide:           return( _Hide           ( cl, obj, (APTR)msg ) );
-    case MUIM_Draw:           return( _Draw           ( cl, obj, (APTR)msg ) );
-    case MUIM_AskMinMax:        return( _AskMinMax          ( cl, obj, (APTR)msg ) );
-    case MUIM_HandleEvent:        return( _HandleEvent        ( cl, obj, (APTR)msg ) );
+    case MUIM_Setup:          return( _Setup            ( cl, obj, (APTR)msg) );
+    case MUIM_Cleanup:          return( _Cleanup          ( cl, obj, (APTR)msg) );
+    case MUIM_Show:           return( _Show           ( cl, obj, (APTR)msg) );
+    case MUIM_Hide:           return( _Hide           ( cl, obj, (APTR)msg) );
+    case MUIM_Draw:           return( _Draw           ( cl, obj, (APTR)msg) );
+    case MUIM_AskMinMax:        return( _AskMinMax          ( cl, obj, (APTR)msg) );
+    case MUIM_HandleEvent:        return( _HandleEvent        ( cl, obj, (APTR)msg) );
 
     /*
     **  MUI/NList drag&drop methods.
     */
-    case MUIM_DragQuery:        return( _DragNDrop_DragQuery    ( cl, obj, (APTR)msg ) );
-    case MUIM_DragBegin:        return( _DragNDrop_DragBegin    ( cl, obj, (APTR)msg ) );
-    case MUIM_DragReport:       return( _DragNDrop_DragReport   ( cl, obj, (APTR)msg ) );
-    case MUIM_DragFinish:       return( _DragNDrop_DragFinish   ( cl, obj, (APTR)msg ) );
-    case MUIM_DragDrop:         return( _DragNDrop_DragDrop     ( cl, obj, (APTR)msg ) );
-    case MUIM_NList_DropType:     return( _DragNDrop_DropType     ( cl, obj, (APTR)msg ) );
-    case MUIM_NList_DropDraw:     return( _DragNDrop_DropDraw     ( cl, obj, (APTR)msg ) );
-    case MUIM_NListtree_DropDraw:   return( _DragNDrop_NDropDraw    ( cl, obj, (APTR)msg ) );
+    case MUIM_DragQuery:        return( _DragNDrop_DragQuery    ( cl, obj, (APTR)msg) );
+    case MUIM_DragBegin:        return( _DragNDrop_DragBegin    ( cl, obj, (APTR)msg) );
+    case MUIM_DragReport:       return( _DragNDrop_DragReport   ( cl, obj, (APTR)msg) );
+    case MUIM_DragFinish:       return( _DragNDrop_DragFinish   ( cl, obj, (APTR)msg) );
+    case MUIM_DragDrop:         return( _DragNDrop_DragDrop     ( cl, obj, (APTR)msg) );
+    case MUIM_NList_DropType:     return( _DragNDrop_DropType     ( cl, obj, (APTR)msg) );
+    case MUIM_NList_DropDraw:     return( _DragNDrop_DropDraw     ( cl, obj, (APTR)msg) );
+    case MUIM_NListtree_DropDraw:   return( _DragNDrop_NDropDraw    ( cl, obj, (APTR)msg) );
 
     /*
     **  Specials.
     */
-    case MUIM_NList_ContextMenuBuild: return( _ContextMenuBuild     ( cl, obj, (APTR)msg ) );
-    case MUIM_ContextMenuChoice:    return( _ContextMenuChoice      ( cl, obj, (APTR)msg ) );
+    case MUIM_NList_ContextMenuBuild: return( _ContextMenuBuild     ( cl, obj, (APTR)msg) );
+    case MUIM_ContextMenuChoice:    return( _ContextMenuChoice      ( cl, obj, (APTR)msg) );
 
 
     /*
     **  NListtree methods sorted by kind.
     */
-    case MUIM_NListtree_Open:     return( _NListtree_Open       ( cl, obj, (APTR)msg ) );
-    case MUIM_NListtree_Close:      return( _NListtree_Close      ( cl, obj, (APTR)msg ) );
+    case MUIM_NListtree_Open:     return( _NListtree_Open       ( cl, obj, (APTR)msg) );
+    case MUIM_NListtree_Close:      return( _NListtree_Close      ( cl, obj, (APTR)msg) );
 
-    case MUIM_NListtree_Insert:     return( _NListtree_Insert     ( cl, obj, (APTR)msg ) );
-    case MUIM_NListtree_InsertStruct: return( _NListtree_InsertStruct   ( cl, obj, (APTR)msg ) );
-    case MUIM_NListtree_Remove:     return( _NListtree_Remove     ( cl, obj, (APTR)msg ) );
-    case MUIM_NListtree_Clear:      return( _NListtree_Clear      ( cl, obj, (APTR)msg ) );
+    case MUIM_NListtree_Insert:     return( _NListtree_Insert     ( cl, obj, (APTR)msg) );
+    case MUIM_NListtree_InsertStruct: return( _NListtree_InsertStruct   ( cl, obj, (APTR)msg) );
+    case MUIM_NListtree_Remove:     return( _NListtree_Remove     ( cl, obj, (APTR)msg) );
+    case MUIM_NListtree_Clear:      return( _NListtree_Clear      ( cl, obj, (APTR)msg) );
 
-    case MUIM_NListtree_Move:     return( _NListtree_Move       ( cl, obj, (APTR)msg ) );
-    case MUIM_NListtree_Copy:     return( _NListtree_Copy       ( cl, obj, (APTR)msg ) );
-    case MUIM_NListtree_Rename:     return( _NListtree_Rename     ( cl, obj, (APTR)msg ) );
-    case MUIM_NListtree_Exchange:   return( _NListtree_Exchange     ( cl, obj, (APTR)msg ) );
+    case MUIM_NListtree_Move:     return( _NListtree_Move       ( cl, obj, (APTR)msg) );
+    case MUIM_NListtree_Copy:     return( _NListtree_Copy       ( cl, obj, (APTR)msg) );
+    case MUIM_NListtree_Rename:     return( _NListtree_Rename     ( cl, obj, (APTR)msg) );
+    case MUIM_NListtree_Exchange:   return( _NListtree_Exchange     ( cl, obj, (APTR)msg) );
 
-    case MUIM_NListtree_FindName:   return( _NListtree_FindName     ( cl, obj, (APTR)msg ) );
-    case MUIM_NListtree_FindUserData: return( _NListtree_FindUserData   ( cl, obj, (APTR)msg ) );
+    case MUIM_NListtree_FindName:   return( _NListtree_FindName     ( cl, obj, (APTR)msg) );
+    case MUIM_NListtree_FindUserData: return( _NListtree_FindUserData   ( cl, obj, (APTR)msg) );
 
-    case MUIM_NListtree_GetEntry:   return( _NListtree_GetEntry     ( cl, obj, (APTR)msg ) );
-    case MUIM_NListtree_GetNr:      return( _NListtree_GetNr      ( cl, obj, (APTR)msg ) );
+    case MUIM_NListtree_GetEntry:   return( _NListtree_GetEntry     ( cl, obj, (APTR)msg) );
+    case MUIM_NListtree_GetNr:      return( _NListtree_GetNr      ( cl, obj, (APTR)msg) );
 
-    case MUIM_NListtree_Sort:     return( _NListtree_Sort       ( cl, obj, (APTR)msg ) );
-    case MUIM_NListtree_Redraw:     return( _NListtree_Redraw     ( cl, obj, (APTR)msg ) );
-    case MUIM_NListtree_TestPos:    return( _NListtree_TestPos      ( cl, obj, (APTR)msg ) );
+    case MUIM_NListtree_Sort:     return( _NListtree_Sort       ( cl, obj, (APTR)msg) );
+    case MUIM_NListtree_Redraw:     return( _NListtree_Redraw     ( cl, obj, (APTR)msg) );
+    case MUIM_NListtree_TestPos:    return( _NListtree_TestPos      ( cl, obj, (APTR)msg) );
 
-    case MUIM_NListtree_Select:     return( _NListtree_Select     ( cl, obj, (APTR)msg ) );
-    case MUIM_NListtree_NextSelected: return( _NListtree_NextSelected   ( cl, obj, (APTR)msg ) );
-    case MUIM_NListtree_PrevSelected: return( _NListtree_PrevSelected   ( cl, obj, (APTR)msg ) );
+    case MUIM_NListtree_Select:     return( _NListtree_Select     ( cl, obj, (APTR)msg) );
+    case MUIM_NListtree_NextSelected: return( _NListtree_NextSelected   ( cl, obj, (APTR)msg) );
+    case MUIM_NListtree_PrevSelected: return( _NListtree_PrevSelected   ( cl, obj, (APTR)msg) );
 
-    case MUIM_NListtree_CopyToClip:   return( _NListtree_CopyToClip   ( cl, obj, (APTR)msg ) );
+    case MUIM_NListtree_CopyToClip:   return( _NListtree_CopyToClip   ( cl, obj, (APTR)msg) );
 
 
     /*
@@ -10860,18 +10881,18 @@ DISPATCHER(_Dispatcher)
     /*
     **  Internal methods.
     */
-    case MUIM_NListtree_GetListActive:  return( _NListtree_GetListActive  ( cl, obj, (APTR)msg ) );
-    case MUIM_NListtree_GetDoubleClick: return( _NListtree_GetDoubleClick ( cl, obj, (APTR)msg ) );
-    case MUIM_NListtree_Data:     return( _NListtree_Data       ( cl, obj, (APTR)msg ) );
+    case MUIM_NListtree_GetListActive:  return( _NListtree_GetListActive  ( cl, obj, (APTR)msg) );
+    case MUIM_NListtree_GetDoubleClick: return( _NListtree_GetDoubleClick ( cl, obj, (APTR)msg) );
+    case MUIM_NListtree_Data:     return( _NListtree_Data       ( cl, obj, (APTR)msg) );
 
-    case MUIM_NList_SelectChange:   return( _NListtree_SelectChange   ( cl, obj, (APTR)msg ) );
+    case MUIM_NList_SelectChange:   return( _NListtree_SelectChange   ( cl, obj, (APTR)msg) );
 
     #ifdef MYDEBUG
     case MUIM_NList_Remove:
     {
       ULONG rc;
       D(DBF_LISTTREE, "MUIM_NList_Remove");
-      rc = DoSuperMethodA( cl, obj, msg );
+      rc = DoSuperMethodA(cl, obj, msg);
       D(DBF_LISTTREE, "MUIM_NList_Remove_End");
       return rc;
     }
@@ -10882,7 +10903,7 @@ DISPATCHER(_Dispatcher)
     {
       ULONG res;
 
-      res = DoSuperMethodA( cl, obj, msg );
+      res = DoSuperMethodA(cl, obj, msg);
 
       D(bug( "USEIMAGE ==> result: 0x%08lx    obj: 0x%08lx, imgnum: %ld, flags: 0x%08lx\n", res, m->obj, m->imgnum, m->flags ) );
 
@@ -10894,7 +10915,7 @@ DISPATCHER(_Dispatcher)
       struct MUIP_NList_UseImage *m = (struct MUIP_NList_UseImage *)msg;
       ULONG res;
 
-      res = DoSuperMethodA( cl, obj, msg );
+      res = DoSuperMethodA(cl, obj, msg);
 
       D(bug( "CREATEIMAGE ==> result: 0x%08lx    obj: 0x%08lx, flags: 0x%08lx\n", res, m->obj, m->flags ) );
 
@@ -10903,5 +10924,5 @@ DISPATCHER(_Dispatcher)
     */
   }
 
-  return( DoSuperMethodA( cl, obj, msg ) );
+  return( DoSuperMethodA( cl, obj, msg) );
 }

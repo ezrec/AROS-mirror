@@ -5,8 +5,8 @@ NBalance.mcc/MUIA_NBalance_Pointer
 NBalance.mcc/NBalance.mcc
 
     *******************************************************************
-    Copyright (C) 2001-2008 by NList Open Source Team
-    $Id: MCC_NBalance.doc 303 2008-06-24 06:54:22Z damato $
+    Copyright (C) 2001-2010 by NList Open Source Team
+    $Id: MCC_NBalance.doc 401 2010-04-30 17:37:20Z damato $
 
     This MCC public custom class is derived from the MUI standard
     balance class which handles the dragging/resizing of vertical and

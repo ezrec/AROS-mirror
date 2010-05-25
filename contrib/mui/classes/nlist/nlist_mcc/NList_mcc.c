@@ -1535,6 +1535,12 @@ IPTR mNL_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
   data->NList_Quiet++;
   data->VirtGroup = NULL;
 
+  // forget that this object has received a MUIM_Setup
+  // this must be done before calling NL_DeleteImages(), because that function
+  // will try to relayout the group data->NL_Group, which is not a very wise
+  // thing to do while we a cleaning up ourselves.
+  data->SETUP = FALSE;
+
   NL_DeleteImages(obj,data);
 
   if (data->NList_Keys && (data->NList_Keys != default_keys))
@@ -1570,7 +1576,6 @@ IPTR mNL_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
   data->UpdateScrollersRedrawn = FALSE;
 
   data->NList_Quiet--;
-  data->SETUP = FALSE;
 
 /*D(bug("%lx|mNL_Cleanup() 2 \n",obj));*/
 
