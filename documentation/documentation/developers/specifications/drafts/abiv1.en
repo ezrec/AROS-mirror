@@ -212,7 +212,14 @@ C library
   arosc2.library (new library) and reimplementing arosc.library as stub to 
   arosc.library was rejected - the ABI_V1 should be clean of such hacks
 
-STATUS: IN PROGRESS (first split off of code done locally)
+STATUS: IN PROGRESS (branch in svn: branches/ABI_V1/trunk-aroscsplit. First
+stage is completed. The C99 standard C part is split off from arosc.library.
+There are now two libraries implementing the C99 API: arosstdc.library and
+arosstdcdos.library. The former is linked into the kernel and is initialized
+as one of the first libraries so it can be used by all other modules in the
+kernel; the latter is a disk based library that needs DOS functions.
+The next stage is to convert the remaining library guided by the POSIX
+standard, named arosuxc.library)
 
 DECISION: A decision has been made on 2008-12-14 to include this item into 
 ABI_V1.
