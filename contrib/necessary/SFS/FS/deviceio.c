@@ -142,7 +142,7 @@ AROS_UFH3(LONG, changeintserver,
 {
     AROS_USERFUNC_INIT
  
-    intdata->diskchanged=1;
+    intdata->diskchanged=(ULONG *)1;
     Signal(intdata->task, intdata->signal);
     return(0);
      
@@ -220,12 +220,12 @@ LONG getgeometry(ULONG *sectors, ULONG *sectorsize)
     struct DriveGeometry dg;
     LONG errorcode;
 
-    if((globals->ioreq->io_Device->dd_Library.lib_Node.ln_Name=="scsi.device" && globals->ioreq->io_Device->dd_Library.lib_Version<=39) ||
-       (globals->ioreq->io_Device->dd_Library.lib_Node.ln_Name=="HardFrame.device") ||
-       (globals->ioreq->io_Device->dd_Library.lib_Node.ln_Name=="scsidev.device") ||
-       (globals->ioreq->io_Device->dd_Library.lib_Node.ln_Name=="hddisk.device") ||
-       (globals->ioreq->io_Device->dd_Library.lib_Node.ln_Name=="statram.device") ||
-       (globals->ioreq->io_Device->dd_Library.lib_Node.ln_Name=="ramdrive.device")) {
+    if((!strcmp(globals->ioreq->io_Device->dd_Library.lib_Node.ln_Name, "scsi.device") && globals->ioreq->io_Device->dd_Library.lib_Version<=39) ||
+       !strcmp(globals->ioreq->io_Device->dd_Library.lib_Node.ln_Name, "HardFrame.device") ||
+       !strcmp(globals->ioreq->io_Device->dd_Library.lib_Node.ln_Name, "scsidev.device") ||
+       !strcmp(globals->ioreq->io_Device->dd_Library.lib_Node.ln_Name, "hddisk.device") ||
+       !strcmp(globals->ioreq->io_Device->dd_Library.lib_Node.ln_Name, "statram.device") ||
+       !strcmp(globals->ioreq->io_Device->dd_Library.lib_Node.ln_Name, "ramdrive.device")) {
         return(IOERR_NOCMD);
     }
 
