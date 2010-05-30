@@ -7,8 +7,6 @@ include $(TOP)/config/make.cfg
 
 include $(SRCDIR)/$(CURDIR)/sources.mak
 
-include $(SRCDIR)/$(CURDIR)/sources.gallium.mak
-
 #MM contrib-gfx-libs-mesa-mesa-module : includes contrib-gfx-libs-mesa-includes linklibs
 
 #MM contrib-gfx-libs-mesa-mesa-linklib : includes contrib-gfx-libs-mesa-includes
@@ -18,6 +16,9 @@ include $(SRCDIR)/$(CURDIR)/sources.gallium.mak
 #MM mesa-mesa-gallium-linklib : includes contrib-gfx-libs-mesa-includes
 
 #MM mesa-mesahidd-module : includes contrib-gfx-libs-mesa-includes linklibs-galliumauxiliary
+
+AROS_STATE_TRACKER_HIDD_SOURCES = \
+            state_trackers/aros/arosmesa_api_hidd \
 
 SHARED_LIB_SOURCES = \
             aros_libapi \

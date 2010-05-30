@@ -5,5 +5,4 @@ include $(TOP)/config/make.cfg
 #MM- contrib-gfx-libs : contrib-gfx-libs-mesa
 #MM- contrib-gfx-libs-mesa : mesa-mesahidd-module contrib-gfx-libs-mesa-glu-linklib \
 #MM     contrib-gfx-libs-mesa-glut-linklib contrib-gfx-libs-mesa-tests contrib-gfx-libs-mesa-demos \
-#MM     hidd-gallium hidd-softpipe linklibs-galliumauxiliary \
-#MM     hidd-nouveau-$(AROS_TARGET_ARCH)-$(AROS_TARGET_CPU)
+#MM     hidd-gallium hidd-softpipe linklibs-galliumauxiliary
