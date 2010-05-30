@@ -455,6 +455,87 @@ static BOOL AROSMesaHiddStandardInit(AROSMesaContext amesa, struct TagItem *tagL
 }
 
 
+/* FIXME HACK FIXME */
+#include <proto/layers.h>
+
+static VOID HACK_BlitSurcaceOnRastport(AROSMesaContext amesa, struct pipe_surface * surf)
+{
+    struct Layer *L = amesa->visible_rp->Layer;
+    struct ClipRect *CR;
+    struct Rectangle renderableLayerRect;
+    
+    /* Render only if screen is visible */
+    if (amesa->window->WScreen != IntuitionBase->FirstScreen)
+        return;
+
+    if (!IsLayerVisible(L))
+        return;
+
+    LockLayerRom(L);
+    
+    renderableLayerRect.MinX = L->bounds.MinX + amesa->left;
+    renderableLayerRect.MaxX = L->bounds.MaxX - amesa->right;
+    renderableLayerRect.MinY = L->bounds.MinY + amesa->top;
+    renderableLayerRect.MaxY = L->bounds.MaxY - amesa->bottom;
+    
+    /*  Do not clip renderableLayerRect to screen rast port. CRs are already clipped and unclipped 
+        layer coords are needed: see surface_copy */
+    
+    CR = L->ClipRect;
+    
+    for (;NULL != CR; CR = CR->Next)
+    {
+        D(bug("Cliprect (%d, %d, %d, %d), lobs=%p\n",
+            CR->bounds.MinX, CR->bounds.MinY, CR->bounds.MaxX, CR->bounds.MaxY,
+            CR->lobs));
+
+        /* I assume this means the cliprect is visible */
+        if (NULL == CR->lobs)
+        {
+            struct Rectangle result;
+            
+            if (AndRectRect(&renderableLayerRect, &CR->bounds, &result))
+            {
+                /* This clip rect intersects renderable layer rect */
+                struct pHidd_GalliumBaseDriver_DisplaySurface dsmsg = {
+                mID : OOP_GetMethodID(IID_Hidd_GalliumBaseDriver, moHidd_GalliumBaseDriver_DisplaySurface),
+                context : amesa->st->pipe,
+                rastport : amesa->visible_rp,
+                left : result.MinX - L->bounds.MinX - amesa->left, /* x in the source buffer */
+                top : result.MinY - L->bounds.MinY - amesa->top, /* y in the source buffer */
+                width : result.MaxX - result.MinX + 1, /* width of the rect in source buffer */
+                height : result.MaxY - result.MinY + 1, /* height of the rect in source buffer */
+                surface : surf,
+                absx : result.MinX, /* Absolute (on screen) X of dest blit */
+                absy : result.MinY, /* Absolute (on screen) Y of the dest blit */
+                relx : result.MinX - L->bounds.MinX, /* Relative (on rastport) X of the desc blit */
+                rely : result.MinY - L->bounds.MinY /* Relative (on rastport) Y of the desc blit */
+                };
+                OOP_DoMethod(driver, (OOP_Msg)&dsmsg);
+                            
+                /* FIXME: clip last 4 parameters to actuall surface deminsions */
+/*                pipe->surface_copy(pipe, visiblescreen, 
+                            result.MinX, 
+                            result.MinY, 
+                            surface, 
+                            result.MinX - L->bounds.MinX - msg->left, 
+                            result.MinY - L->bounds.MinY - msg->top, 
+                            result.MaxX - result.MinX + 1, 
+                            result.MaxY - result.MinY + 1);*/
+            }
+        }
+    }
+
+    /* Flush all copy operations done */
+//    pipe->flush(pipe, PIPE_FLUSH_RENDER_CACHE, NULL);
+
+
+    UnlockLayerRom(L);
+}
+
+/* FIXME HACK FIXME */
+
+
 
 
 /*****************************************************************************/
@@ -616,24 +697,7 @@ void AROSMesaSwapBuffers(AROSMesaContext amesa)
 
     if (surf) 
     {
-        /* Render only if screen is visible */
-        /* TODO: Rethink DisplaySurface method should work */
-        if (amesa->window->WScreen == IntuitionBase->FirstScreen)
-        {   
-            struct pHidd_GalliumBaseDriver_DisplaySurface dsmsg = {
-            mID : OOP_GetMethodID(IID_Hidd_GalliumBaseDriver, moHidd_GalliumBaseDriver_DisplaySurface),
-            context : amesa->st->pipe,
-            rastport : amesa->visible_rp,
-            left : amesa->left,
-            right : amesa->right,
-            top : amesa->top,
-            bottom : amesa->bottom,
-            width : amesa->width,
-            height : amesa->height,
-            surface : surf
-            };
-            OOP_DoMethod(driver, (OOP_Msg)&dsmsg);
-        }
+        HACK_BlitSurcaceOnRastport(amesa, surf);
     }
 
     /* Flush. Executes all code posted in DisplaySurface */
