@@ -260,7 +260,7 @@ static void ticker(void)
         UBYTE col = chunkybuffer[ecx];
 
         col += chunkybuffer[ecx + 1];
-        if (ecx > W)
+        if (ecx >= W)
             col += chunkybuffer[ecx - W];
         col += chunkybuffer[ecx + W];
         col /= 4;
