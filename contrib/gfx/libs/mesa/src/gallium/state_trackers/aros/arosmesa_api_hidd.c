@@ -544,7 +544,9 @@ static VOID HACK_BlitSurcaceOnRastport(AROSMesaContext amesa, struct pipe_surfac
 
 AROSMesaContext AROSMesaCreateContextTags(long Tag1, ...)
 {
-  return AROSMesaCreateContext((struct TagItem *)&Tag1);
+  AROS_SLOWSTACKTAGS_PRE(Tag1)
+  retval = AROSMesaCreateContext(AROS_SLOWSTACKTAGS_ARG(Tag1));
+  AROS_SLOWSTACKTAGS_POST
 }
 
 AROSMesaContext AROSMesaCreateContext(struct TagItem *tagList)
