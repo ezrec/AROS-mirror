@@ -6,7 +6,7 @@
 #include <proto/intuition.h>
 #include <proto/muimaster.h>
 
-Object *DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1,...);
+Object *DoSuperNew(struct IClass *cl,Object *obj,Tag tag1,...);
 
 #else
 
@@ -33,7 +33,7 @@ Object *texta[8],*text1[8];
 APTR font;
 };
 
-static ULONG mNew(struct IClass *cl,Object *obj,struct opSet *msg)
+static IPTR mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
 obj=DoSuperNew(cl,obj,
 	MUIA_Group_Columns,9,
@@ -51,10 +51,10 @@ if(obj)
 	DoMethod(obj,OM_ADDMEMBER,HVSpace);
 	for(i=0;i<8;i++) DoMethod(obj,OM_ADDMEMBER,data->texta[i]=TextObject,MUIA_Font,MUIV_Font_Big,MUIA_Text_PreParse,"\033c\033b",MUIA_FixWidthTxt,"W",End);
 	}
-return (ULONG)obj;
+return (IPTR)obj;
 }
 
-static ULONG mDispose(struct IClass *cl,Object *obj,Msg msg)
+static IPTR mDispose(struct IClass *cl,Object *obj,Msg msg)
 {
 struct Data *data=(struct Data *)INST_DATA(cl,obj);
 return DoSuperMethodA(cl,obj,msg);

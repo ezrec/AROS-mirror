@@ -93,10 +93,19 @@ CloseLibrary(MUIMasterBase);
 
 #endif
 
+#ifdef __AROS__
+Object *DoSuperNew(struct IClass *cl,Object *obj,Tag tag1,...)
+{
+    AROS_SLOWSTACKTAGS_PRE(tag1)
+    retval = (IPTR)DoSuperMethod(cl,obj,OM_NEW,AROS_SLOWSTACKTAGS_ARG(tag1),0);
+    AROS_SLOWSTACKTAGS_POST
+}
+#else
 Object *DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1,...)
 {
 return(Object *)DoSuperMethod(cl,obj,OM_NEW,&tag1,0);
 }
+#endif
 
 static void FreePieces()
 {
@@ -255,7 +264,7 @@ if(lock=Lock("PROGDIR:Sounds",SHARED_LOCK))
 	tags[0].ti_Tag=DTA_GroupID;
 	tags[0].ti_Data=GID_SOUND;
 	tags[1].ti_Tag=SDTA_SignalTask;
-	tags[1].ti_Data=(ULONG)FindTask(0);
+	tags[1].ti_Data=(IPTR)FindTask(0);
 	tags[2].ti_Tag=SDTA_SignalBit;
 	tags[2].ti_Data=snd_sigmask;
 	tags[3].ti_Tag=SDTA_Volume;

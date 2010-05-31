@@ -10,7 +10,7 @@
 #include <proto/utility.h>
 #include <hardware/blit.h>
 
-Object *DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1,...);
+Object *DoSuperNew(struct IClass *cl,Object *obj,Tag tag1,...);
 
 #else
 
@@ -80,7 +80,7 @@ static char rboard[64]={
 63,62,61,60,59,58,57,56
 };
 
-static ULONG mFieldNew(struct IClass *cl,Object *obj,struct opSet *msg)
+static IPTR mFieldNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
 obj=DoSuperNew(cl,obj,
 	MUIA_FixWidth,pix_x,
@@ -114,9 +114,9 @@ mm->DefHeight+=pix_x;
 return 0;
 }
 
-static ULONG mFieldDragQuery(struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg)
+static IPTR mFieldDragQuery(struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg)
 {
-ULONG from,to,retval=MUIV_DragQuery_Refuse;
+IPTR from,to,retval=MUIV_DragQuery_Refuse;
 GetAttr(MUIA_UserData,msg->obj,&from);
 GetAttr(MUIA_UserData,obj,&to);
 from=flags&REVERSEBOARD?rboard[from]:nboard[from];
@@ -144,10 +144,10 @@ if(from!=to)
 return retval;
 }
 
-static ULONG mFieldDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
+static IPTR mFieldDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
 {
 int side=board.side;
-ULONG from,to;
+IPTR from,to;
 leaf *ptr;
 char cmd[6];
 GetAttr(MUIA_UserData,msg->obj,&from);
@@ -241,7 +241,7 @@ return 0;
 }
 
 #ifdef __AROS__
-AROS_UFH3S(ULONG, Dispatcher,
+AROS_UFH3S(IPTR, Dispatcher,
     AROS_UFHA(struct IClass *, cl, A0),
     AROS_UFHA(Object *, obj, A2),
     AROS_UFHA(Msg, msg, A1))
@@ -258,7 +258,7 @@ static ULONG Dispatcher(register __a0 struct IClass *cl,register __a2 Object *ob
 {
 #endif
 
-ULONG retval;
+IPTR retval;
 switch(msg->MethodID)
 	{
 	case OM_NEW:

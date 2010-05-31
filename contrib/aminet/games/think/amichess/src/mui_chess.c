@@ -13,7 +13,7 @@
 
 #warning "Fix DoSuperNew and NotifyWinCloseSelf"
 
-Object *DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1,...);
+Object *DoSuperNew(struct IClass *cl,Object *obj,Tag tag1,...);
 
 #define NotifyWinCloseSelf(o) DoMethod(o, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, o, 3, MUIM_Set, MUIA_Window_Open, FALSE)
 
@@ -167,7 +167,7 @@ static struct NewMenu nm[]={
 
 static ULONG playcol[][3]={{0xffffffff,0xffffffff,0xffffffff},{0,0,0}};
 
-static ULONG mNew(struct IClass *cl,Object *obj,struct opSet *msg)
+static IPTR mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
 Object *win,*col,*mymove,*think,*board,*lv_white,*lv_black;
 Object *timewin,*timem,*timet,*times;
@@ -467,7 +467,7 @@ if(obj)
 	DoMethod(promote_b,MUIM_Notify,MUIA_Pressed,0,obj,2,MUIM_Application_ReturnID,ID_Promote_Bishop);
 	DoMethod(promote_n,MUIM_Notify,MUIA_Pressed,0,obj,2,MUIM_Application_ReturnID,ID_Promote_Knight);
 	SetAttrs(promotewin,MUIA_Window_ActiveObject,promote_q,TAG_END);
-	data->filereq=(struct FileRequester *)MUI_AllocAslRequestTags(ASL_FileRequest,ASLFR_RejectIcons,TAG_END);
+	data->filereq=(struct FileRequester *)MUI_AllocAslRequestTags(ASL_FileRequest,ASLFR_RejectIcons,TRUE,TAG_END);
 	if((fib=(struct FileInfoBlock *)AllocDosObject(DOS_FIB,0)))
 		{
 		if((lock=Lock("PROGDIR:Boards",SHARED_LOCK)))
@@ -536,10 +536,10 @@ if(obj)
 		FreeDosObject(DOS_FIB,fib);
 		}
 	}
-return(ULONG)obj;
+return(IPTR)obj;
 }
 
-static ULONG mDispose(struct IClass *cl,Object *obj,Msg msg)
+static IPTR mDispose(struct IClass *cl,Object *obj,Msg msg)
 {
 struct Data *data=(struct Data *)INST_DATA(cl,obj);
 if(data->filereq) MUI_FreeAslRequest(data->filereq);
@@ -876,7 +876,7 @@ SetAttrs(data->col,MUIA_Colorfield_RGB,playcol[board.side],TAG_END);
 static void mChessBoard(Object *obj,struct MUIP_Chess_Board *msg)
 {
 char *name;
-GetAttr(MUIA_Menuitem_Title,msg->menu,(ULONG *)&name);
+GetAttr(MUIA_Menuitem_Title,msg->menu,(IPTR *)&name);
 LoadBoard(name);
 DoMethod(obj,MUIM_Chess_ShowBoard);
 }
@@ -884,7 +884,7 @@ DoMethod(obj,MUIM_Chess_ShowBoard);
 static void mChessPieces(Object *obj,struct MUIP_Chess_Pieces *msg)
 {
 char *name;
-GetAttr(MUIA_Menuitem_Title,msg->menu,(ULONG *)&name);
+GetAttr(MUIA_Menuitem_Title,msg->menu,(IPTR *)&name);
 LoadPieces(name);
 DoMethod(obj,MUIM_Chess_ShowBoard);
 }
@@ -996,7 +996,7 @@ SetAttrs(data->tx_score,MUIA_Text_Contents,text,TAG_END);
 }
 
 #ifdef __AROS__
-AROS_UFH3S(ULONG, Dispatcher,
+AROS_UFH3S(IPTR, Dispatcher,
     AROS_UFHA(struct IClass *, cl, A0),
     AROS_UFHA(Object *, obj, A2),
     AROS_UFHA(Msg, msg, A1))
