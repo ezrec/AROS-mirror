@@ -22,7 +22,7 @@ include $(TOP)/config/make.cfg
 #MM		demo-kitty \
 #MM		demo-powerzoom
 
-SCRIPTFILES = startsomedemos startsomedemos2 StartMesaDemos
+SCRIPTFILES = StartSomeDemos StartSomeDemos2 StartMesaDemos
 DSTDIR := $(CONTRIBDIR)/Demos
 
 #MM 
