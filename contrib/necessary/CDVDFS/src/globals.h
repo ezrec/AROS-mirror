@@ -30,6 +30,7 @@ struct Globals {
 	PROC		*DosProc;        /* Our Process */
 	DEVNODE     	*DosNode;        /* Our DOS node.. created by DOS for us */
 	ULONG		g_dos_sigbit;
+	struct DosPacket *g_death_packet; /* ACTION_DIE packet is held here until just before exit */
 
 	struct DeviceList	*DevList;/* Device List structure for our volume node */
 	struct MsgPort		*g_timer_mp; /*  timer message port		*/

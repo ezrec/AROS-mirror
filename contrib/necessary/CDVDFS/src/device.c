@@ -5,13 +5,17 @@
  *
  * ----------------------------------------------------------------------
  * This code is (C) Copyright 1993,1994 by Frank Munkert.
- *              (C) Copyright 2002-2009 The AROS Development Team
+ *              (C) Copyright 2002-2010 The AROS Development Team
  * All rights reserved.
  * This software may be freely distributed and redistributed for
  * non-commercial purposes, provided this notice is included.
  * ----------------------------------------------------------------------
  * History:
  *
+ * 04-Jun-10 neil      - No longer removes device node and seglist when
+ *                       exiting. It isn't our job.
+ *                     - Delay returning ACTION_DIE packet until handler is
+ *                       mostly closed down.
  * 20-Mar-09 sonic     - Fixed ID_CDFS_DISK redefinition warning when building with new
  *                       MorphOS SDK
  * 18-Mar-09 sonic     - Numerous BSTR handling adjustments, now can be compiled as a
@@ -196,12 +200,9 @@ ULONG __abox__ = 1;
 #ifdef AROS_KERNEL
 extern struct Globals *global;
 
-#define Remove_Seglist()
 #else
 struct Globals glob;
 struct Globals *global=&glob;
-
-void Remove_Seglist (void);
 
 char __version__[] = "\0$VER: CDVDFS 1.4 (16-Jun-2008)";
 
@@ -312,7 +313,6 @@ ULONG signals;
 		DeleteMsgPort(global->Dback);
             if (global->UtilityBase)
                 CloseLibrary((struct Library *)global->UtilityBase);
-	    Remove_Seglist();
 	    CloseLibrary ((struct Library *)DOSBase);
 	}
 	return 0;		        /*  exit process	        */
@@ -369,7 +369,14 @@ ULONG signals;
     Close_Intui ();
 
     /*
-     *	Remove processes, closedown, fall of the end of the world
+     * Delay returning a successful ACTION_DIE packet until now, to avoid
+     * inconveniences such as having the trackdisk device disappear before
+     * we close it.
+     */
+    returnpacket(global->g_death_packet);
+
+    /*
+     *	Remove processes, closedown, fall off the end of the world
      *	(which is how you kill yourself if a PROCESS.  A TASK would have
      *	had to RemTask(NULL) itself).
      */
@@ -378,7 +385,6 @@ ULONG signals;
     BUG2(dbuninit();)
     DeleteMsgPort(global->Dback);
     CloseLibrary((struct Library *)global->UtilityBase);
-    Remove_Seglist();
     CloseLibrary((struct Library *)DOSBase);
     return 0;
 }
@@ -1061,7 +1067,10 @@ openbreak:
 			{
 				BUG(dbprintf("RES=%06lx\n", packet->dp_Res1));
 			}
-			returnpacket(packet);
+			if (packet->dp_Type != ACTION_DIE)
+				returnpacket(packet);
+			else
+				global->g_death_packet = packet;
 		}
 	}
 	if (notdone)
@@ -1407,24 +1416,6 @@ void Mount (void)
   global->g_cd->t_changeint2 = global->g_cd->t_changeint;
   Send_Event (TRUE);
 }
-
-#ifndef AROS_KERNEL
-void Remove_Seglist (void)
-{
-struct DosList *dl;
-BPTR seglist;
-  dl = LockDosList(LDF_WRITE | LDF_DEVICES);
-  if (dl)
-  {
-    RemDosEntry((struct DosList *)global->DosNode);
-    seglist = global->DosNode->dn_SegList;
-    FreeDosEntry((struct DosList *)global->DosNode);
-    UnLockDosList(LDF_WRITE | LDF_DEVICES);
-    Forbid();
-    UnLoadSeg(seglist);
-  }
-}
-#endif
 
 /*  Remove a volume node from the DOS list.
  *  (Must be nested between Forbid() and Permit()!)
