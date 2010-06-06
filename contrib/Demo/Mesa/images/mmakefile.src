@@ -1,0 +1,10 @@
+#   $Id$
+#
+
+include $(TOP)/config/make.cfg
+
+IMGDIR      := $(CONTRIBDIR)/Demos/Mesa/images
+
+%copy_dir_recursive mmake=demo-mesa-images dst=$(IMGDIR)
+
+%common
