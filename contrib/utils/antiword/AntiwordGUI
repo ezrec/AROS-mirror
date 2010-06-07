@@ -1,7 +1,8 @@
 -- AntiwordGUI.alua -- AmiLua/Zulu GUI for antiword
 -- $VER: antiwordgui.alua 1.1 (28.01.2007)
 -- This is Public Domain software; use at your own risk
--- Send bug reports to mrustler@gmx.de
+
+-- $Id$
 
 require "muidefs"
 require "muifuncs"
