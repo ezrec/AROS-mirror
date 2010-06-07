@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 #MM- contrib : contrib-utils-antiword
 
 #MM  contrib-utils-antiword : includes linklibs contrib-utils-antiword-fetch \
-#MM  contrib-utils-antiword-docs contrib-utils-antiword-data contrib-utils-antiword-data-cpy
+#MM  contrib-utils-antiword-docs contrib-utils-antiword-data contrib-utils-antiword-cpy
 
 #MM  contrib-utils-antiword-docs : contrib-utils-antiword-fetch
 
@@ -50,7 +50,7 @@ dst=$(TARGETDIR)/Docs
 dst=$(TARGETDIR)/Data
 
 #MM
-contrib-utils-antiword-data-cpy :
-%define copy_files_q files=$(AntiwordGUI) src=. dst=$(TARGETDIR) maketarget=files-copy
+contrib-utils-antiword-cpy :
+%copy_files_q files=AntiwordGUI src=. dst=$(TARGETDIR) maketarget=contrib-utils-antiword-cpy
 
 %common
