@@ -1,0 +1,56 @@
+# Copyright © 2010 The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib : contrib-utils-antiword
+
+#MM  contrib-utils-antiword : includes linklibs contrib-utils-antiword-fetch \
+#MM  contrib-utils-antiword-docs contrib-utils-antiword-data contrib-utils-antiword-data-cpy
+
+#MM  contrib-utils-antiword-docs : contrib-utils-antiword-fetch
+
+#MM  contrib-utils-antiword-data : contrib-utils-antiword-fetch
+
+#MM  contrib-utils-antiword-quick : contrib-utils-antiword-fetch
+
+REPOSITORIES = http://www.winfield.demon.nl/linux
+ARCHBASE := antiword-0.37
+TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/Antiword
+DB := NDEBUG
+
+USER_CFLAGS := -Wall -pedantic -D$(DB)
+
+FILES := \
+	main_u asc85enc blocklist chartrans datalist depot \
+	dib2eps doclist fail finddata findtext fmt_text fontlist \
+	fonts fonts_u hdrftrlist imgexam imgtrans jpeg2eps \
+	listlist misc notes options out2window output pdf \
+	pictlist png2eps postscript prop0 prop2 prop6 prop8 \
+	properties propmod rowlist sectlist stylelist stylesheet \
+	summary tabstop text unix utf8 word2text worddos \
+	wordlib wordmac wordole wordwin xmalloc xml
+
+%build_prog mmake=contrib-utils-antiword progname=antiword \
+    srcdir=$(PORTSDIR)/antiword/$(ARCHBASE)/ \
+    files=$(FILES) targetdir=$(TARGETDIR) \
+    uselibs="arosc m"
+
+#MM
+contrib-utils-antiword-fetch :
+	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/antiword \
+	location=$(PORTSSOURCEDIR) \
+	archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+	patches_specs=antiword-0.37-aros.diff:antiword-0.37:-p1
+
+%copy_dir_recursive mmake=contrib-utils-antiword-docs src=$(PORTSDIR)/antiword/antiword-0.37/Docs \
+dst=$(TARGETDIR)/Docs
+
+%copy_dir_recursive mmake=contrib-utils-antiword-data src=$(PORTSDIR)/antiword/antiword-0.37/Resources \
+dst=$(TARGETDIR)/Data
+
+#MM
+contrib-utils-antiword-data-cpy :
+%define copy_files_q files=$(AntiwordGUI) src=. dst=$(TARGETDIR) maketarget=files-copy
+
+%common

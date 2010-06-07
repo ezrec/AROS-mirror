@@ -1,0 +1,26 @@
+diff -Naur antiword-0.37.orig/antiword.h antiword-0.37/antiword.h
+--- antiword-0.37.orig/antiword.h	2010-06-07 22:49:23.415858495 +0200
++++ antiword-0.37/antiword.h	2010-06-07 22:57:36.714600480 +0200
+@@ -195,6 +195,10 @@
+ #define GLOBAL_ANTIWORD_DIR	"C:\\antiword"
+ #define ANTIWORD_DIR		"antiword"
+ #define FONTNAMES_FILE		"fontname.txt"
++#elif defined(__AROS__)
++#define GLOBAL_ANTIWORD_DIR	"Antiword:data"
++#define ANTIWORD_DIR		"data"
++#define FONTNAMES_FILE		"fontnames"
+ #elif defined(__amigaos)
+ #define GLOBAL_ANTIWORD_DIR	"SYS:.antiword"
+ #define ANTIWORD_DIR		".antiword"
+diff -Naur antiword-0.37.orig/misc.c antiword-0.37/misc.c
+--- antiword-0.37.orig/misc.c	2010-06-07 22:49:23.404638612 +0200
++++ antiword-0.37/misc.c	2010-06-07 22:50:18.294600436 +0200
+@@ -39,6 +39,8 @@
+ 	szHome = decc$translate_vms(getenv("HOME"));
+ #elif defined(__Plan9__)
+ 	szHome = getenv("home");
++#elif defined(__AROS__)
++	szHome = "Antiword:";
+ #else
+ 	szHome = getenv("HOME");
+ #endif /* __vms */

@@ -1,0 +1,18 @@
+#   $Id$
+
+include $(TOP)/config/make.cfg
+
+FILES := Package-Startup Package-Shutdown
+
+#MM- contrib-utils-antiword-startup : workbench-prefs-envarc \
+#MM  contrib-utils-antiword-startupfiles contrib-utils-antiword-envpackage
+
+#MM
+contrib-utils-antiword-envpackage :
+	$(ECHO) "Extras:Utilities/Text/Antiword" >$(AROS_PACKAGES)/Antiword
+
+#MM- contrib-utils-antiword : contrib-utils-antiword-startup
+
+#MM contrib-utils-antiword-startupfiles :
+%copy_files_q dst=$(AROS_CONTRIB)/Utilities/Text/Antiword/S \
+maketarget=contrib-utils-antiword-startupfiles
