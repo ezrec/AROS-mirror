@@ -1,11 +1,11 @@
 # Copyright © 2004, The AROS Development Team. All rights reserved.
-# $Id: mmakefile.src 25968 2007-05-02 13:23:34Z paolone $
+# $Id$
 
 include $(TOP)/config/make.cfg
 
 #MM- iconset-Gorilla-contrib-icons : iconset-Gorilla-contrib-icons-extras
 
-ICONS := MultiMedia DOpus Demos Development Emu Games Networking
+ICONS := MultiMedia DOpus Demos Development Emu Games Networking Utilities
 
 #MM- iconset-Gorilla-contrib-icons-clean : iconset-Gorilla-contrib-icons-extras-clean
 %build_icons mmake=iconset-Gorilla-contrib-icons-extras icons=$(ICONS) dir=$(CONTRIBDIR)
