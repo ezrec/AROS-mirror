@@ -12,8 +12,6 @@ include $(TOP)/config/make.cfg
 
 #MM  contrib-utils-mathomatic-quick : contrib-utils-mathomatic-fetch
 
-http://www.panix.com/~gesslein/mathomatic-15.1.3.tar.bz2
-
 REPOSITORIES = http://www.panix.com/~gesslein
 ARCHBASE := mathomatic-15.1.3
 TARGETDIR := $(AROS_CONTRIB)/Utilities/Science/Mathomatic
