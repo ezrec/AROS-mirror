@@ -3,8 +3,6 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib : contrib-utils-antiword
-
 #MM  contrib-utils-antiword : includes linklibs contrib-utils-antiword-fetch \
 #MM  contrib-utils-antiword-docs contrib-utils-antiword-data contrib-utils-antiword-cpy
 

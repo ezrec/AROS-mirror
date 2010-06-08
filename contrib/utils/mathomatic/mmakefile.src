@@ -3,8 +3,6 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib : contrib-utils-mathomatic
-
 #MM  contrib-utils-mathomatic : includes linklibs contrib-utils-mathomatic-fetch \
 #MM  contrib-utils-mathomatic-docs contrib-utils-mathomatic-cpy
 
