@@ -1,5 +1,0 @@
-# Metamakefile for external applications
-
-#MM- contrib-extern : \
-#MM  contrib-extern-finder \
-#MM  contrib-extern-muibase
