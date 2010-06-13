@@ -1,0 +1,10 @@
+# Copyright © 2010, The AROS Development Team. All rights reserved.
+# $Id$
+
+#MM- contrib : ports
+
+#MM- ports : \
+#MM  ports-graphics \
+#MM  ports-scientific \
+#MM  ports-text
+

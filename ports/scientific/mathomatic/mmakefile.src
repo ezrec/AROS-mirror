@@ -3,42 +3,42 @@
 
 include $(TOP)/config/make.cfg
 
-#MM  contrib-utils-mathomatic : includes linklibs contrib-utils-mathomatic-fetch \
-#MM  contrib-utils-mathomatic-docs contrib-utils-mathomatic-cpy
+#MM  ports-scientific-mathomatic : includes linklibs ports-scientific-mathomatic-fetch \
+#MM  ports-scientific-mathomatic-docs ports-scientific-mathomatic-cpy
 
-#MM  contrib-utils-mathomatic-docs : contrib-utils-mathomatic-fetch
+#MM  ports-scientific-mathomatic-docs : ports-scientific-mathomatic-fetch
 
-#MM  contrib-utils-mathomatic-quick : contrib-utils-mathomatic-fetch
+#MM  ports-scientific-mathomatic-quick : ports-scientific-mathomatic-fetch
 
-REPOSITORIES = http://www.panix.com/~gesslein
-ARCHBASE := mathomatic-15.1.3
-TARGETDIR := $(AROS_CONTRIB)/Utilities/Science/Mathomatic
+REPOSITORIES := http://www.panix.com/~gesslein
+ARCHBASE     := mathomatic-15.1.3
+TARGETDIR    := $(AROS_CONTRIB)/Utilities/Scientific/Mathomatic
 
-USER_CFLAGS := -DVERSION=\"15.1.3\"
+USER_CFLAGS  := -DVERSION=\"15.1.3\"
 
 FILES := main globals am solve help parse cmds simplify \
 		 factor super unfactor poly diff integrate \
 		 complex complex_lib list gcd factor_int
 
-%build_prog mmake=contrib-utils-mathomatic progname=Mathomatic \
+%build_prog mmake=ports-scientific-mathomatic progname=Mathomatic \
     srcdir=$(PORTSDIR)/mathomatic/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc m"
 
 #MM
-contrib-utils-mathomatic-fetch :
+ports-scientific-mathomatic-fetch :
 	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/mathomatic \
 	location=$(PORTSSOURCEDIR) \
 	archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
 
-%copy_dir_recursive mmake=contrib-utils-mathomatic-docs src=$(PORTSDIR)/mathomatic/$(ARCHBASE)/doc \
-dst=$(TARGETDIR)/Docs
+%copy_dir_recursive mmake=ports-scientific-mathomatic-docs \
+src=$(PORTSDIR)/mathomatic/$(ARCHBASE)/doc dst=$(TARGETDIR)/Docs
 
 CPYFILES := changes.txt COPYING mathomatic.1 README.txt
 
 #MM
-contrib-utils-mathomatic-cpy :
+ports-scientific-mathomatic-cpy :
 %copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/mathomatic/$(ARCHBASE) \
-dst=$(TARGETDIR) maketarget=contrib-utils-mathomatic-cpy
+dst=$(TARGETDIR) maketarget=ports-scientific-mathomatic-cpy
 
 %common

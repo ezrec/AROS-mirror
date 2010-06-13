@@ -97,7 +97,7 @@ function main()
     if id == mui.MUIV_Application_ReturnID_Quit then
       running = false
     elseif id == ok_id then
-      local command = "antiword:antiword"
+      local command = "antiword"
       local format_opt = outputformat_rdio:getint(mui.MUIA_Radio_Active)
       local papersize_opt = papersizes:get(papersize_cyc:getint(mui.MUIA_Cycle_Active) + 1)
       local infile_opt = infile_str:getstr(mui.MUIA_String_Contents)

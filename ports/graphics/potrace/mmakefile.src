@@ -1,0 +1,16 @@
+# Copyright © 2010 The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+PACKAGE      := potrace
+VERSION      := 1.8
+TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/Potrace
+REPOSITORIES := sf://potrace
+
+%fetch_and_build mmake=ports-graphics-potrace prefix=$(TARGETDIR) \
+	package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
+	patch=no package_repo=$(REPOSITORIES) \
+	extraoptions="--enable-metric --enable-a4"
+
+%common

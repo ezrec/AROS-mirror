@@ -3,21 +3,20 @@
 
 include $(TOP)/config/make.cfg
 
-#MM  contrib-utils-antiword : includes linklibs contrib-utils-antiword-fetch \
-#MM  contrib-utils-antiword-docs contrib-utils-antiword-data contrib-utils-antiword-cpy
+#MM  ports-text-antiword : includes linklibs ports-text-antiword-fetch \
+#MM  ports-text-antiword-docs ports-text-antiword-data ports-text-antiword-cpy
 
-#MM  contrib-utils-antiword-docs : contrib-utils-antiword-fetch
+#MM  ports-text-antiword-docs : ports-text-antiword-fetch
 
-#MM  contrib-utils-antiword-data : contrib-utils-antiword-fetch
+#MM  ports-text-antiword-data : ports-text-antiword-fetch
 
-#MM  contrib-utils-antiword-quick : contrib-utils-antiword-fetch
+#MM  ports-text-antiword-quick : ports-text-antiword-fetch
 
-REPOSITORIES = http://www.winfield.demon.nl/linux
-ARCHBASE := antiword-0.37
-TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/Antiword
-DB := NDEBUG
-
-USER_CFLAGS := -Wall -pedantic -D$(DB)
+REPOSITORIES := http://www.winfield.demon.nl/linux
+ARCHBASE     := antiword-0.37
+TARGETDIR    := $(AROS_CONTRIB)/Utilities/Text/Antiword
+DB           := NDEBUG
+USER_CFLAGS  := -Wall -pedantic -D$(DB)
 
 FILES := \
 	main_u asc85enc blocklist chartrans datalist depot \
@@ -29,26 +28,26 @@ FILES := \
 	summary tabstop text unix utf8 word2text worddos \
 	wordlib wordmac wordole wordwin xmalloc xml
 
-%build_prog mmake=contrib-utils-antiword progname=antiword \
+%build_prog mmake=ports-text-antiword progname=antiword \
     srcdir=$(PORTSDIR)/antiword/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc m"
 
 #MM
-contrib-utils-antiword-fetch :
+ports-text-antiword-fetch :
 	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/antiword \
 	location=$(PORTSSOURCEDIR) \
 	archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
 	patches_specs=antiword-0.37-aros.diff:antiword-0.37:-p1
 
-%copy_dir_recursive mmake=contrib-utils-antiword-docs src=$(PORTSDIR)/antiword/antiword-0.37/Docs \
+%copy_dir_recursive mmake=ports-text-antiword-docs src=$(PORTSDIR)/antiword/antiword-0.37/Docs \
 dst=$(TARGETDIR)/Docs
 
-%copy_dir_recursive mmake=contrib-utils-antiword-data src=$(PORTSDIR)/antiword/antiword-0.37/Resources \
+%copy_dir_recursive mmake=ports-text-antiword-data src=$(PORTSDIR)/antiword/antiword-0.37/Resources \
 dst=$(TARGETDIR)/Data
 
 #MM
-contrib-utils-antiword-cpy :
-%copy_files_q files=AntiwordGUI src=. dst=$(TARGETDIR) maketarget=contrib-utils-antiword-cpy
+ports-text-antiword-cpy :
+%copy_files_q files=AntiwordGUI src=. dst=$(TARGETDIR) maketarget=ports-text-antiword-cpy
 
 %common

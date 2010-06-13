@@ -6,7 +6,7 @@ diff -Naur antiword-0.37.orig/antiword.h antiword-0.37/antiword.h
  #define ANTIWORD_DIR		"antiword"
  #define FONTNAMES_FILE		"fontname.txt"
 +#elif defined(__AROS__)
-+#define GLOBAL_ANTIWORD_DIR	"Antiword:data"
++#define GLOBAL_ANTIWORD_DIR	"PROGDIR:data"
 +#define ANTIWORD_DIR		"data"
 +#define FONTNAMES_FILE		"fontnames"
  #elif defined(__amigaos)
@@ -20,7 +20,7 @@ diff -Naur antiword-0.37.orig/misc.c antiword-0.37/misc.c
  #elif defined(__Plan9__)
  	szHome = getenv("home");
 +#elif defined(__AROS__)
-+	szHome = "Antiword:";
++	szHome = "PROGDIR:";
  #else
  	szHome = getenv("HOME");
  #endif /* __vms */
