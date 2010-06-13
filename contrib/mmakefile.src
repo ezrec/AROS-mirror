@@ -3,7 +3,7 @@
 include $(TOP)/config/make.cfg
 
 # The apps target points back to config/$(ARCH)/mmakefile:
-#MM- contrib : includes linklibs contrib-necessary contrib-complete
+#MM- contrib : includes linklibs contrib-necessary contrib-complete contrib-setup-dirs
 
 #MM- contrib-complete : contrib-aminet
 #MM- contrib-complete : contrib-fish
@@ -53,3 +53,29 @@ contrib-setup :
 	%mkdirs_q $(GENDIR)/contrib-disks
 	%mkdirs_q $(CONTRIB_DISK1_DEST_DIR)
 	%mkdirs_q $(CONTRIB_DISK2_DEST_DIR)
+
+#MM
+contrib-setup-dirs :
+	%mkdirs_q $(AROS_CONTRIB)/Demos
+	%mkdirs_q $(AROS_CONTRIB)/Development
+	%mkdirs_q $(AROS_CONTRIB)/Emu
+	%mkdirs_q $(AROS_CONTRIB)/Games
+	%mkdirs_q $(AROS_CONTRIB)/MultiMedia
+	%mkdirs_q $(AROS_CONTRIB)/MultiMedia/Audio
+	%mkdirs_q $(AROS_CONTRIB)/MultiMedia/Gfx
+	%mkdirs_q $(AROS_CONTRIB)/MultiMedia/Video
+	%mkdirs_q $(AROS_CONTRIB)/Networking
+	%mkdirs_q $(AROS_CONTRIB)/Office
+	%mkdirs_q $(AROS_CONTRIB)/Utilities
+	%mkdirs_q $(AROS_CONTRIB)/Utilities/Archive
+	%mkdirs_q $(AROS_CONTRIB)/Utilities/Benchmark
+	%mkdirs_q $(AROS_CONTRIB)/Utilities/Communication
+	%mkdirs_q $(AROS_CONTRIB)/Utilities/Docky
+	%mkdirs_q $(AROS_CONTRIB)/Utilities/Filetool
+	%mkdirs_q $(AROS_CONTRIB)/Utilities/Hardware
+	%mkdirs_q $(AROS_CONTRIB)/Utilities/Misc
+	%mkdirs_q $(AROS_CONTRIB)/Utilities/Print
+	%mkdirs_q $(AROS_CONTRIB)/Utilities/Scientific
+	%mkdirs_q $(AROS_CONTRIB)/Utilities/Shell
+	%mkdirs_q $(AROS_CONTRIB)/Utilities/Text
+	%mkdirs_q $(AROS_CONTRIB)/Utilities/Workbench

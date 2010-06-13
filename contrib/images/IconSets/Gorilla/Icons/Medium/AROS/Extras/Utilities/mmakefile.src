@@ -1,0 +1,12 @@
+# Copyright © 2010, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- iconset-Gorilla-contrib-icons-extras : iconset-Gorilla-contrib-icons-extras-utilities
+
+ICONS := Archive Benchmark Communication Docky Filetool Hardware Misc \
+         Print Scientific Shell Text Workbench
+
+#MM- iconset-Gorilla-contrib-icons-extras-clean : iconset-Gorilla-contrib-icons-extras-utilities-clean
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-utilities icons=$(ICONS) dir=$(AROS_CONTRIB)/Utilities
