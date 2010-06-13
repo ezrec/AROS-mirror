@@ -10,3 +10,7 @@ removal if you want.
 
   This code was considered obsolete. It was not the recent version and the
   author indicated that it was not developed anymore.
+
+2 Jan 2007: contrib/development/compilers/freepascal
+
+  Removed because it was a quite large paket which didn't work for AROS.
