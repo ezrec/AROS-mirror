@@ -1,0 +1,15 @@
+# Copyright © 2010, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- iconset-Gorilla-ports-icons-extras-utilities : \
+#MM  iconset-Gorilla-ports-icons-extras-utilities-text
+
+ICONS := Antiword
+
+#MM- iconset-Gorilla-ports-icons-extras-utilities-clean : \
+#MM  iconset-Gorilla-ports-icons-extras-utilities-text-clean
+
+%build_icons mmake=iconset-Gorilla-ports-icons-extras-utilities-text icons=$(ICONS) dir=$(CONTRIBDIR)/Utilities/Text
+

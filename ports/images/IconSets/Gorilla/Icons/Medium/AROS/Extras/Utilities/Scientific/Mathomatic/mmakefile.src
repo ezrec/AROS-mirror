@@ -1,0 +1,14 @@
+# Copyright © 2010, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- iconset-Gorilla-ports-icons-extras-utilities-scientific : \
+#MM  iconset-Gorilla-ports-icons-extras-utilities-scientific-mathomatic
+
+ICONS := Mathomatic
+
+#MM- iconset-Gorilla-ports-icons-extras-utilities-scientific-clean : \
+#MM  iconset-Gorilla-ports-icons-extras-utilities-scientific-mathomatic-clean
+
+%build_icons mmake=iconset-Gorilla-ports-icons-extras-utilities-scientific-mathomatic icons=$(ICONS) dir=$(AROS_CONTRIB)/Utilities/Scientific/Mathomatic
