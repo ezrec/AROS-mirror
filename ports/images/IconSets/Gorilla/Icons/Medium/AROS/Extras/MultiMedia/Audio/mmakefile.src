@@ -1,0 +1,14 @@
+# Copyright © 2010, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- iconset-Gorilla-ports-icons-extras-multimedia : \
+#MM  iconset-Gorilla-ports-icons-extras-multimedia-audio
+
+ICONS := Abcm2ps
+
+#MM- iconset-Gorilla-ports-icons-extras-multimedia-clean : \
+#MM  iconset-Gorilla-ports-icons-extras-multimedia-gfx-audio
+
+%build_icons mmake=iconset-Gorilla-ports-icons-extras-multimedia-audio icons=$(ICONS) dir=$(AROS_CONTRIB)/MultiMedia/Audio
