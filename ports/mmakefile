@@ -4,6 +4,7 @@
 #MM- contrib : ports
 
 #MM- ports : \
+#MM  ports-audio \
 #MM  ports-graphics \
 #MM  ports-scientific \
 #MM  ports-text
