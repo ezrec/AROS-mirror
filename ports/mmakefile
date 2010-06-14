@@ -5,6 +5,7 @@
 
 #MM- ports : \
 #MM  ports-audio \
+#MM  ports-game \
 #MM  ports-graphics \
 #MM  ports-scientific \
 #MM  ports-text

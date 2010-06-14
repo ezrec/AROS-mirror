@@ -1,0 +1,33 @@
+diff -Naur adv770c-orig/acode/adv770/src/adv00.c adv770c/acode/adv770/src/adv00.c
+--- adv770c-orig/acode/adv770/src/adv00.c	2010-06-14 20:27:56.198787072 +0200
++++ adv770c/acode/adv770/src/adv00.c	2010-06-14 20:29:29.177956126 +0200
+@@ -139,7 +139,7 @@
+ #include <sys/stat.h>
+ #endif 
+ #endif 
+-#if defined(unix) || defined(__CYGWIN__) || defined(__MACH__)
++#if defined(unix) || defined(__CYGWIN__) || defined(__MACH__) || defined(__AROS__)
+ #define q056 '/'
+ #else
+ #if defined(MSDOS) || defined(_WIN32)
+@@ -194,7 +194,7 @@
+ #undef m047
+ #endif
+ #else
+-#if !(defined(MSDOS) || defined (_WIN32))
++#if !(defined(MSDOS) || defined (_WIN32) || defined(__AROS__))
+ #define a039
+ #endif
+ #endif
+diff -Naur adv770c-orig/acode/adv770/src/adv01.c adv770c/acode/adv770/src/adv01.c
+--- adv770c-orig/acode/adv770/src/adv01.c	2010-06-14 20:27:56.198787072 +0200
++++ adv770c/acode/adv770/src/adv01.c	2010-06-14 20:31:33.739153150 +0200
+@@ -58,7 +58,7 @@
+ #endif 
+ #endif 
+ #if k004 > 11
+-#if defined(unix) || defined(__CYGWIN__) || defined(__MACH__)
++#if defined(unix) || defined(__CYGWIN__) || defined(__MACH__) || defined(__AROS__)
+ #define q056 '/'
+ #else
+ #if defined(MSDOS) || defined(_WIN32)
