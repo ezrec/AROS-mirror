@@ -4899,3 +4899,27 @@ vsync:
 txtScreenModeMonitorSpec (//)
 MonitorSpec:
 ;
+txtMainOOPClasses (//)
+_OOP Classes
+;
+txtOOPTitle (//)
+OOP CLASSES
+;
+txtOOPClassID (//)
+ID
+;
+txtOOPDoMethod (//)
+cl_DoMethod
+;
+txtOOPCoerceMethod (//)
+cl_CoerceMethod
+;
+txtOOPDoSuperMethod (//)
+cl_DoSuperMethod
+;
+txtOOPPrintHeader (//)
+\n  Address  Superclass                     DoMethod    CoerceMethod DoSuperMethod  Name\n\n
+;
+txtOOPPrintLine (//)
+ %s %-30s %-9.9s   %-9.9s    %-9.9s      %-30s\n
+;

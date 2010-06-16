@@ -111,6 +111,9 @@ STATIC void fail1( void )
         DROPINTERFACE(IRexxSys);
         CloseLibrary((struct Library *)RexxSysBase);
     }
+
+    CleanupOOP();
+
 #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
     if (MMUBase) {
         CloseLibrary((struct Library *)MMUBase);
@@ -187,6 +190,9 @@ STATIC BOOL init1( void )
 #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
     MMUBase = (APTR)OpenLibrary(MMU_NAME, 43);
 #endif
+
+    if (!InitOOP())
+        return FALSE;
 
     decimalSeparator = ","; // english separator for 1000s
     if ((LocaleBase = (APTR)OpenLibrary("locale.library", MYLIBVERSION)) != NULL) {

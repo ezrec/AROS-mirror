@@ -108,7 +108,7 @@ STATIC ULONG mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
-    APTR button[30];
+    APTR button[31];
 
     if ((obj = (Object *)DoSuperNew(cl, obj,
         MUIA_HelpNode, "Main",
@@ -160,6 +160,12 @@ STATIC ULONG mNew( struct IClass *cl,
                 Child, (IPTR)(button[27] = MakeButton(txtMainAudioModes)),
                 Child, (IPTR)(button[28] = MakeButton(txtMainResetHandlers)),
                 Child, (IPTR)(button[29] = MakeButton(txtMainMonitors)),
+		
+		Child, (IPTR)(button[30] = MakeButton(txtMainOOPClasses)),
+		Child, HSpace(0),
+		Child, HSpace(0),
+		Child, HSpace(0),
+		Child, HSpace(0),
             End,
         End,
         TAG_MORE, msg->ops_AttrList)) != NULL)
@@ -205,7 +211,11 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(button[27], MUIM_Notify,  MUIA_Pressed, FALSE, obj, 1, MUIM_MainWin_ShowAudioModes);
         DoMethod(button[28], MUIM_Notify,  MUIA_Pressed, FALSE, obj, 1, MUIM_MainWin_ShowResetHandlers);
         DoMethod(button[29], MUIM_Notify,  MUIA_Pressed, FALSE, obj, 1, MUIM_MainWin_ShowMonitors);
+	DoMethod(button[30], MUIM_Notify,  MUIA_Pressed, FALSE, obj, 1, MUIM_MainWin_ShowOOPClasses);
 
+/* TODO: Scout is able to run on a network, and there can be a situation where server
+         runs for example AROS and client runs AmigaOS. So we should be able to make
+	 decisions about supported extensions by querying server's OS, not by #ifdef's here */
     #if defined(__amigaos4__)
         set(button[25], MUIA_Disabled, TRUE);
     #else
@@ -218,6 +228,8 @@ STATIC ULONG mNew( struct IClass *cl,
         Permit();
         set(button[25], MUIA_Disabled, (pp == NULL && sp == NULL && pc == NULL));
     #endif
+
+    set(button[30], MUIA_Disabled, !arOS);
     }
 
     return (ULONG)obj;
@@ -280,6 +292,15 @@ STATIC ULONG mShowClasses( struct IClass *cl,
                            UNUSED Msg msg )
 {
     CreateSubWindow(cl, obj, 2, ClassesWinClass, MUIM_ClassesWin_Update);
+
+    return 0;
+}
+
+STATIC ULONG mShowOOPClasses( struct IClass *cl,
+                           Object *obj,
+                           UNUSED Msg msg )
+{
+    CreateSubWindow(cl, obj, 2, OOPWinClass, MUIM_OOPWin_Update);
 
     return 0;
 }
@@ -615,6 +636,7 @@ DISPATCHER(MainWinDispatcher)
         case MUIM_MainWin_ShowAudioModes:    return (mShowAudioModes(cl, obj, (APTR)msg));
         case MUIM_MainWin_ShowResetHandlers: return (mShowResetHandlers(cl, obj, (APTR)msg));
         case MUIM_MainWin_ShowMonitors:      return (mShowMonitors(cl, obj, (APTR)msg));
+	case MUIM_MainWin_ShowOOPClasses:    return (mShowOOPClasses(cl, obj, (APTR)msg));
         case MUIM_MainWin_FlushDevices:      return (mFlushDevices(cl, obj, (APTR)msg));
         case MUIM_MainWin_FlushFonts:        return (mFlushFonts(cl, obj, (APTR)msg));
         case MUIM_MainWin_FlushLibraries:    return (mFlushLibraries(cl, obj, (APTR)msg));
