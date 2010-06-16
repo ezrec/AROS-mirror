@@ -1,0 +1,64 @@
+# Copyright © 2010 The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM  ports-graphics-lunapaint : includes linklibs ports-graphics-lunapaint-fetch \
+#MM  ports-graphics-lunapaint-data ports-graphics-lunapaint-cpy
+
+#MM  ports-graphics-lunapaint-data : ports-graphics-lunapaint-fetch
+
+#MM  ports-graphics-lunapaint-quick : ports-graphics-lunapaint-fetch
+
+REPOSITORIES := http://download.berlios.de/lunapaintami
+ARCHBASE     := lunapaint-0.4
+TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/Lunapaint
+
+# Next version of Lunapaint shouldn't need -fgnu89-inline anymore
+USER_CFLAGS  := -fgnu89-inline
+USER_INCLUDES:= -I$(PORTSDIR)/lunapaint/lunapaint-0.4/src
+
+FILES := \
+	src/main \
+	src/math/math \
+	src/app/events \
+	src/app/gui \
+	src/app/text_to_brush \
+	src/app/toolbox \
+	src/app/preferences \
+	src/app/new_image \
+	src/app/layers \
+	src/app/parts \
+	src/app/canvas \
+	src/app/export_import \
+	src/app/project \
+	src/app/animation \
+	src/app/about_window \
+	src/app/palette_editor \
+	src/core/effects \
+	src/core/color \
+	src/core/drawtools \
+	src/core/canvas \
+	src/core/tools
+
+%build_prog mmake=ports-graphics-lunapaint progname=Lunapaint \
+    srcdir=$(PORTSDIR)/lunapaint/$(ARCHBASE)/ \
+    files=$(FILES) targetdir=$(TARGETDIR) \
+    uselibs="arosc m mui png z freetype2"
+
+#MM
+ports-graphics-lunapaint-fetch :
+	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/lunapaint \
+	location=$(PORTSSOURCEDIR) \
+	archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
+
+%copy_dir_recursive mmake=ports-graphics-lunapaint-data src=$(PORTSDIR)/lunapaint/$(ARCHBASE)/data \
+dst=$(TARGETDIR)/data
+
+CPFILES := BUGS Changelog COPYING default.palette Lunapaint.info lunapaint.prefs README TODO
+
+#MM
+ports-graphics-lunapaint-cpy :
+%copy_files_q files=$(CPFILES) src=$(PORTSDIR)/lunapaint/$(ARCHBASE) dst=$(TARGETDIR) maketarget=ports-graphics-lunapaint-cpy
+
+%common
