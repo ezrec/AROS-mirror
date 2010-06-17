@@ -232,7 +232,7 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('C','L','A','S'),
         WindowContents, VGroup,
 
-            Child, (IPTR)MyNListtreeObject(&classtree, "BAR,BAR,BAR P=" MUIX_R ",BAR P=" MUIX_R ",BAR", &classtree_conhook, &classtree_deshook, &classtree_dsphook, &classtree_cmphook, &classtree_findhook, 1),
+            Child, (IPTR)MyNListtreeObject(&classtree, "BAR,BAR,BAR P=" MUIX_R ",BAR P=" MUIX_R ",BAR", &classtree_conhook, &classtree_deshook, &classtree_dsphook, &classtree_cmphook, &classtree_findhook, 1, FALSE),
 
             Child, (IPTR)MyBelowListview(&classtext, &classcount),
 

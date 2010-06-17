@@ -300,7 +300,7 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('W','I','N','D'),
         WindowContents, VGroup,
 
-            Child, (IPTR)MyNListtreeObject(&wintree, "BAR,BAR P=" MUIX_C ",BAR P=" MUIX_C ",BAR,BAR,BAR", &wintree_conhook, &wintree_deshook, &wintree_dsphook, &wintree_cmphook, &wintree_findhook, 5),
+            Child, (IPTR)MyNListtreeObject(&wintree, "BAR,BAR P=" MUIX_C ",BAR P=" MUIX_C ",BAR,BAR,BAR", &wintree_conhook, &wintree_deshook, &wintree_dsphook, &wintree_cmphook, &wintree_findhook, 5, FALSE),
             Child, (IPTR)(wintext = MyTextObject()),
 
             Child, (IPTR)MyVSpace(4),

@@ -85,7 +85,7 @@ struct MUI_NListtree_TreeNode *GetActiveTreeNode( APTR tree );
 
 APTR MyNListviewObject( APTR * , ULONG , CONST_STRPTR , struct Hook * , struct Hook * , struct Hook * , struct Hook * , BOOL );
 
-APTR MyNListtreeObject( APTR * , CONST_STRPTR , struct Hook * , struct Hook * , struct Hook * , struct Hook * , struct Hook *, ULONG );
+APTR MyNListtreeObject( APTR * , CONST_STRPTR , struct Hook * , struct Hook * , struct Hook * , struct Hook * , struct Hook *, ULONG , BOOL);
 
 APTR MyBelowListview( APTR * , APTR * );
 

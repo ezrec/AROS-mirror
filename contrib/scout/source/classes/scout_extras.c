@@ -387,7 +387,8 @@ APTR MyNListtreeObject( APTR *tree,
                         struct Hook *dsphook,
                         struct Hook *cmphook,
                         struct Hook *findhook,
-                        ULONG column )
+                        ULONG column,
+			BOOL emptynodes)
 {
     APTR listview;
 
@@ -406,6 +407,7 @@ APTR MyNListtreeObject( APTR *tree,
             MUIA_NListtree_CompareHook, (cmphook) ? cmphook : (struct Hook *)MUIV_NListtree_CompareHook_Tail,
             (findhook) ? MUIA_NListtree_FindUserDataHook : TAG_IGNORE, findhook,
             MUIA_NListtree_TreeColumn, column,
+	    MUIA_NListtree_EmptyNodes, emptynodes,
             MUIA_NListtree_MultiSelect, MUIV_NListtree_MultiSelect_None,
             MUIA_ContextMenu, NULL,
             MUIA_NList_Pool, globalPool,

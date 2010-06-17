@@ -336,7 +336,7 @@ STATIC ULONG mNew( struct IClass *cl,
         MUIA_Window_ID, MakeID('I','N','T','E'),
         WindowContents, VGroup,
 
-            Child, (IPTR)MyNListtreeObject(&inttree, "BAR,BAR,BAR,BAR P=" MUIX_C ",BAR P=" MUIX_R ",BAR,BAR", &inttree_conhook, &inttree_deshook, &inttree_dsphook, NULL, &inttree_findhook, 1),
+            Child, (IPTR)MyNListtreeObject(&inttree, "BAR,BAR,BAR,BAR P=" MUIX_C ",BAR P=" MUIX_R ",BAR,BAR", &inttree_conhook, &inttree_deshook, &inttree_dsphook, NULL, &inttree_findhook, 1, FALSE),
             Child, (IPTR)MyBelowListview(&inttext, &intcount),
 
             Child, (IPTR)MyVSpace(4),
