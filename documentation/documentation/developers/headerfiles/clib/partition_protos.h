@@ -2,12 +2,16 @@
 #define CLIB_PARTITION_PROTOS_H
 
 /*
-    *** Automatically generated from 'partition.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/partition/partition.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <libraries/partition.h>
+
+__BEGIN_DECLS
+
 AROS_LP2(struct PartitionHandle *, OpenRootPartition,
          AROS_LPA(CONST_STRPTR, Device, A1),
          AROS_LPA(LONG, Unit, D1),
@@ -75,5 +79,7 @@ AROS_LP1(LONG, DestroyPartitionTable,
          AROS_LPA(struct PartitionHandle *, root, A1),
          LIBBASETYPEPTR, PartitionBase, 19, Partition
 );
+
+__END_DECLS
 
 #endif /* CLIB_PARTITION_PROTOS_H */

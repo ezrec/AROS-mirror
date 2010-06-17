@@ -2,7 +2,7 @@
 #define GRAPHICS_DISPLAYINFO_H
 
 /*
-    Copyright © 1995-2001, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: DisplayInfo definitions and structures.
@@ -52,7 +52,7 @@ struct DisplayInfo
     UBYTE GreenBits;
     UBYTE BlueBits;
     UBYTE pad2[5];
-    ULONG reserved[2];
+    IPTR reserved[2];
 };
 
 /* NotAvailable */
@@ -102,7 +102,7 @@ struct DimensionInfo
     struct Rectangle StdOScan;
 
     UBYTE pad[14];
-    ULONG reserved[2];
+    IPTR reserved[2];
 };
 
 struct MonitorInfo
@@ -121,7 +121,7 @@ struct MonitorInfo
     Point                MouseTicks;
     Point                DefaultViewPosition;
     ULONG                PreferredModeID;
-    ULONG                reserved[2];
+    IPTR                 reserved[2];
 };
 
 /* Compability */
@@ -135,7 +135,7 @@ struct NameInfo
     struct QueryHeader Header;
 
     UBYTE Name[DISPLAYNAMELEN];
-    ULONG reserved[2];
+    IPTR reserved[2];
 };
 
 /* Tags */
@@ -154,7 +154,7 @@ struct VecInfo
     APTR  Data;
     UWORD Type;
     UWORD pad[3];
-    ULONG reserved[2];
+    IPTR reserved[2];
 };
 
 #endif /* GRAPHICS_DISPLAYINFO_H */

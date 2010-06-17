@@ -2,15 +2,18 @@
 #define CLIB_AMIGAGUIDE_PROTOS_H
 
 /*
-    *** Automatically generated from 'amigaguide.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/amigaguide/amigaguide.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
 
+
 #ifndef LIBRARIES_AMIGAGUIDE_H
 #   include <libraries/amigaguide.h>
 #endif
+
+__BEGIN_DECLS
 
 /* Prototypes for stubs in amiga.lib */
 AMIGAGUIDEHOST AddAmigaGuideHost (struct Hook * hook, STRPTR name, Tag tag1, ...);
@@ -21,6 +24,11 @@ BOOL SendAmigaGuideCmd (AMIGAGUIDECONTEXT handle, STRPTR cmd, Tag tag1, ...);
 BOOL SendAmigaGuideContext (AMIGAGUIDECONTEXT handle, Tag tag1, ...);
 LONG SetAmigaGuideAttrs (AMIGAGUIDECONTEXT handle, Tag tag1, ...);
 BOOL SetAmigaGuideContext (AMIGAGUIDECONTEXT handle, ULONG context, Tag tag1, ...);
+
+__END_DECLS
+
+
+__BEGIN_DECLS
 
 AROS_LP1(LONG, LockAmigaGuideBase,
          AROS_LPA(AMIGAGUIDECONTEXT, handle, A0),
@@ -107,5 +115,7 @@ AROS_LP1(STRPTR, GetAmigaGuideString,
          AROS_LPA(ULONG, id, D0),
          LIBBASETYPEPTR, AmigaGuideBase, 35, AmigaGuide
 );
+
+__END_DECLS
 
 #endif /* CLIB_AMIGAGUIDE_PROTOS_H */

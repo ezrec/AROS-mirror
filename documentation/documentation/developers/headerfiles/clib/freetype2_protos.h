@@ -2,11 +2,12 @@
 #define CLIB_FREETYPE2_PROTOS_H
 
 /*
-    *** Automatically generated from 'freetype2.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/freetype/src/freetype2.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 
 #include <diskfont/glyph.h>
 #include <utility/tagitem.h>
@@ -25,6 +26,9 @@
 #include FT_MODULE_H
 #include FT_LIST_H
 #include FT_TRUETYPE_TABLES_H
+
+
+__BEGIN_DECLS
 
 AROS_LP0(struct GlyphEngine *, OpenEngine,
          LIBBASETYPEPTR, FreeType2Base, 5, FreeType2
@@ -89,23 +93,18 @@ FT_Error FTC_ImageCache_New(FTC_Manager manager, FTC_ImageCache *acache);
 FT_Error FTC_ImageCache_Lookup(FTC_ImageCache cache, FTC_ImageType type, FT_UInt gindex, FT_Glyph *aglyph, FTC_Node *anode);
 FT_Error FTC_SBitCache_New(FTC_Manager manager, FTC_SBitCache *acache);
 FT_Error FTC_SBitCache_Lookup(FTC_SBitCache cache, FTC_ImageType type, FT_UInt gindex, FTC_SBit *ansbit, FTC_Node *anode);
-FT_Error FTC_Image_Cache_Lookup(FTC_Image_Cache icache, FTC_Image_Desc *desc, FT_UInt gindex, FT_Glyph *aglyph);
-FT_Error FTC_SBit_Cache_Lookup(FTC_SBit_Cache cache, FTC_Image_Desc *desc, FT_UInt gindex, FTC_SBit *ansbit);
 void FTC_Manager_Done(FTC_Manager manager);
 void FTC_Manager_Reset(FTC_Manager manager);
 FT_Error FTC_CMapCache_New(FTC_Manager manager, FTC_CMapCache *acache);
-FT_UInt FTC_CMapCache_Lookup(FTC_CMapCache cache, FTC_CMapDesc desc, FT_UInt32 char_code);
-FT_Error FTC_Image_Cache_New(FTC_Manager manager, FTC_Image_Cache *acache);
-void FTC_Manager_Compress(FTC_Manager manager);
-FT_Error FTC_SBit_Cache_New(FTC_Manager manager, FTC_SBit_Cache *acache);
+FT_UInt FTC_CMapCache_Lookup(FTC_CMapCache cache, FTC_FaceID face_id, FT_Int cmap_index, FT_UInt32 char_code);
 FT_Long FT_MulDiv(FT_Long a, FT_Long b, FT_Long c);
 FT_Long FT_MulFix(FT_Long a, FT_Long b);
 FT_Long FT_DivFix(FT_Long a, FT_Long b);
 FT_Fixed FT_RoundFix(FT_Fixed a);
 FT_Fixed FT_CeilFix(FT_Fixed a);
 FT_Fixed FT_FloorFix(FT_Fixed a);
-void FT_Vector_Transform(FT_Vector *vector, FT_Matrix *matrix);
-void FT_Matrix_Multiply(FT_Matrix *a, FT_Matrix *b);
+void FT_Vector_Transform(FT_Vector *vector, const FT_Matrix *matrix);
+void FT_Matrix_Multiply(const FT_Matrix *a, FT_Matrix *b);
 FT_Error FT_Matrix_Invert(FT_Matrix *matrix);
 FT_Fixed FT_Sin(FT_Angle angle);
 FT_Fixed FT_Cos(FT_Angle angle);
@@ -149,5 +148,7 @@ FT_Renderer FT_Get_Renderer(FT_Library library, FT_Glyph_Format format);
 FT_Error FT_Set_Renderer(FT_Library library, FT_Renderer renderer, FT_UInt num_params, FT_Parameter *parameters);
 FT_Error FT_Stream_OpenGzip(FT_Stream stream, FT_Stream source);
 void * FT_Get_Sfnt_Table(FT_Face face, FT_Sfnt_Tag tag);
+
+__END_DECLS
 
 #endif /* CLIB_FREETYPE2_PROTOS_H */

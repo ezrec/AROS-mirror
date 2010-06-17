@@ -2,11 +2,15 @@
 #define CLIB_MATHIEEEDOUBBAS_PROTOS_H
 
 /*
-    *** Automatically generated from 'mathieeedoubbas.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/mathieeedoubbas/mathieeedoubbas.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
+
+__BEGIN_DECLS
+
 AROS_LPQUAD1(LONG, IEEEDPFix,
          AROS_LPAQUAD(double, y, D0, D1),
          LIBBASETYPEPTR, MathIeeeDoubBasBase, 5, MathIeeeDoubBas
@@ -60,5 +64,7 @@ AROS_LPQUAD1(double, IEEEDPCeil,
          AROS_LPAQUAD(double, y, D0, D1),
          LIBBASETYPEPTR, MathIeeeDoubBasBase, 16, MathIeeeDoubBas
 );
+
+__END_DECLS
 
 #endif /* CLIB_MATHIEEEDOUBBAS_PROTOS_H */

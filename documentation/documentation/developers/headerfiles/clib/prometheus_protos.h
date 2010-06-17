@@ -2,14 +2,18 @@
 #define CLIB_PROMETHEUS_PROTOS_H
 
 /*
-    *** Automatically generated from 'prometheus.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/prometheus/prometheus.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <utility/utility.h>
 #include <exec/interrupts.h>
 #include <libraries/prometheus.h>
+
+__BEGIN_DECLS
+
 AROS_LP2(PCIBoard *, Prm_FindBoardTagList,
          AROS_LPA(PCIBoard *, previous, A0),
          AROS_LPA(struct TagItem *, tag_list, A1),
@@ -81,5 +85,7 @@ AROS_LP1(APTR, Prm_GetPhysicalAddr,
          AROS_LPA(APTR, address, D0),
          LIBBASETYPEPTR, PrometheusBase, 18, Prometheus
 );
+
+__END_DECLS
 
 #endif /* CLIB_PROMETHEUS_PROTOS_H */

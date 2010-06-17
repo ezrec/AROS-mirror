@@ -2,11 +2,15 @@
 #define CLIB_NONVOLATILE_PROTOS_H
 
 /*
-    *** Automatically generated from 'nonvolatile.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/nonvolatile/nonvolatile.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
+
+__BEGIN_DECLS
+
 AROS_LP3(APTR, GetCopyNV,
          AROS_LPA(STRPTR, appName, A0),
          AROS_LPA(STRPTR, itemName, A1),
@@ -47,5 +51,7 @@ AROS_LP4(BOOL, SetNVProtection,
          AROS_LPA(BOOL, killRequesters, D1),
          LIBBASETYPEPTR, NonvolatileBase, 11, Nonvolatile
 );
+
+__END_DECLS
 
 #endif /* CLIB_NONVOLATILE_PROTOS_H */

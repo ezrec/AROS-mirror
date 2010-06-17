@@ -2,11 +2,15 @@
 #define CLIB_MATHIEEESINGTRANS_PROTOS_H
 
 /*
-    *** Automatically generated from 'mathieeesingtrans.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/mathieeesingtrans/mathieeesingtrans.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
+
+__BEGIN_DECLS
+
 AROS_LP1(LONG, IEEESPAtan,
          AROS_LPA(LONG, y, D0),
          LIBBASETYPEPTR, MathIeeeSingTransBase, 5, MathIeeeSingTrans
@@ -77,5 +81,7 @@ AROS_LP1(LONG, IEEESPLog10,
          AROS_LPA(LONG, y, D0),
          LIBBASETYPEPTR, MathIeeeSingTransBase, 21, MathIeeeSingTrans
 );
+
+__END_DECLS
 
 #endif /* CLIB_MATHIEEESINGTRANS_PROTOS_H */

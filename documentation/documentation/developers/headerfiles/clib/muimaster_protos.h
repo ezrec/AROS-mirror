@@ -2,11 +2,12 @@
 #define CLIB_MUIMASTER_PROTOS_H
 
 /*
-    *** Automatically generated from 'muimaster.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/muimaster/muimaster.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 
 #ifndef INTUITION_CLASSES_H
 #   include <intuition/classes.h>
@@ -37,6 +38,8 @@ extern struct Library *MUIMasterBase;
 
 /* Prototypes for stubs in mui.lib */
 
+__BEGIN_DECLS
+
 APTR 	MUI_AllocAslRequestTags(unsigned long reqType, Tag tag1, ...) __stackparm;
 BOOL 	MUI_AslRequestTags(APTR requester, Tag tag1, ...) __stackparm;
 Object *MUI_MakeObject(LONG type, ...);
@@ -44,9 +47,14 @@ Object *MUI_NewObject(char *classname, Tag tag1, ...) __stackparm;
 LONG    MUI_Request(APTR app, APTR win, LONG flags, char *title, char *gadgets, 
 char *format, APTR param1, ...) __stackparm;
 
+__END_DECLS
+
 /* Predeclaration of private structures */
 struct MUI_RenderInfo;
 struct MUI_PenSpec;
+
+
+__BEGIN_DECLS
 
 AROS_LP2(Object*, MUI_NewObjectA,
          AROS_LPA(ClassID, classid, A0),
@@ -181,5 +189,7 @@ AROS_LP2(void, MUI_EndRefresh,
          AROS_LPA(ULONG, flags, D0),
          LIBBASETYPEPTR, MUIMasterBase, 29, MUIMaster
 );
+
+__END_DECLS
 
 #endif /* CLIB_MUIMASTER_PROTOS_H */

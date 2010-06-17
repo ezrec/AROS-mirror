@@ -2,13 +2,17 @@
 #define CLIB_DISKFONT_PROTOS_H
 
 /*
-    *** Automatically generated from 'diskfont.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/diskfont/diskfont.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <dos/dos.h>
 #include <graphics/text.h>
+
+__BEGIN_DECLS
+
 AROS_LP1(struct TextFont *, OpenDiskFont,
          AROS_LPA(struct TextAttr *, textAttr, A0),
          LIBBASETYPEPTR, DiskfontBase, 5, Diskfont
@@ -33,5 +37,7 @@ AROS_LP2(struct DiskFont *, NewScaledDiskFont,
          AROS_LPA(struct TextAttr *, destTextAttr, A1),
          LIBBASETYPEPTR, DiskfontBase, 9, Diskfont
 );
+
+__END_DECLS
 
 #endif /* CLIB_DISKFONT_PROTOS_H */

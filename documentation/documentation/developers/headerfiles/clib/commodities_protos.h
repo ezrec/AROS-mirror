@@ -2,16 +2,20 @@
 #define CLIB_COMMODITIES_PROTOS_H
 
 /*
-    *** Automatically generated from 'commodities.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/commodities/commodities.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <exec/types.h>
 #include <exec/nodes.h>
 #include <devices/inputevent.h>
 #include <devices/keymap.h>
 #include <libraries/commodities.h>
+
+__BEGIN_DECLS
+
 AROS_LP3(CxObj *, CreateCxObj,
          AROS_LPA(ULONG, type, D0),
          AROS_LPA(IPTR, arg1, A0),
@@ -148,5 +152,7 @@ AROS_LP2(BOOL, MatchIX,
          AROS_LPA(IX *, ix, A1),
          LIBBASETYPEPTR, CxBase, 34, Commodities
 );
+
+__END_DECLS
 
 #endif /* CLIB_COMMODITIES_PROTOS_H */

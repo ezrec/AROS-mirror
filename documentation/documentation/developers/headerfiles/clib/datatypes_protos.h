@@ -2,11 +2,12 @@
 #define CLIB_DATATYPES_PROTOS_H
 
 /*
-    *** Automatically generated from 'datatypes.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/datatypes/datatypes.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <intuition/classes.h>
 #include <intuition/intuition.h>
 #include <intuition/gadgetclass.h>
@@ -14,12 +15,20 @@
 #include <datatypes/datatypes.h>
 #include <datatypes/datatypesclass.h>
 
+__BEGIN_DECLS
+
 ULONG GetDTAttrs (Object * o, Tag tag1, ...) __stackparm;
 ULONG SetDTAttrs (Object * o, struct Window * win, struct Requester *req, Tag tag1, ...) __stackparm;
 Object * NewDTObject (APTR name, Tag tag1, ...) __stackparm;
 void RefreshDTObject (Object * o, struct Window * win, struct Requester *req, Tag tag1, ...) __stackparm;
 void RefreshDTObjects (Object * o, struct Window * win, struct Requester *req, Tag tag1, ...) __stackparm;
 IPTR DoDTMethod (Object *, struct Window * win, struct Requester * req, ULONG MethodID, ...) __stackparm;
+
+__END_DECLS
+
+
+__BEGIN_DECLS
+
 AROS_LP3(struct DataType *, ObtainDataTypeA,
          AROS_LPA(ULONG, type, D0),
          AROS_LPA(APTR, handle, A0),
@@ -193,5 +202,7 @@ AROS_LP7(ULONG, DoDTDomainA,
          AROS_LPA(struct TagItem *, attrs, A5),
          LIBBASETYPEPTR, DataTypesBase, 51, DataTypes
 );
+
+__END_DECLS
 
 #endif /* CLIB_DATATYPES_PROTOS_H */

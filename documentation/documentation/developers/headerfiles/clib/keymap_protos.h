@@ -2,13 +2,17 @@
 #define CLIB_KEYMAP_PROTOS_H
 
 /*
-    *** Automatically generated from 'keymap.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/rom/keymap/keymap.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <devices/keymap.h>
 #include <devices/inputevent.h>
+
+__BEGIN_DECLS
+
 AROS_LP1(void, SetKeyMapDefault,
          AROS_LPA(struct KeyMap *, keyMap, A0),
          LIBBASETYPEPTR, KeymapBase, 5, Keymap
@@ -31,5 +35,7 @@ AROS_LP5(LONG, MapANSI,
          AROS_LPA(struct KeyMap *, keyMap, A2),
          LIBBASETYPEPTR, KeymapBase, 8, Keymap
 );
+
+__END_DECLS
 
 #endif /* CLIB_KEYMAP_PROTOS_H */

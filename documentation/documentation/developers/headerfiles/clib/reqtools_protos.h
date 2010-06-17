@@ -2,17 +2,20 @@
 #define CLIB_REQTOOLS_PROTOS_H
 
 /*
-    *** Automatically generated from 'reqtools.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/reqtools/reqtools.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <libraries/reqtools.h>
 
 struct PWCallBackArgs;
 typedef char * (*PWCALLBACKFUNPTR) (long, long, struct PWCallBackArgs *);
 
 /* Prototypes for stubs in reqtoolsstubs.lib */
+
+__BEGIN_DECLS
 
 APTR rtAllocRequest (ULONG type, Tag tag1, ...);
 LONG rtChangeReqAttr (APTR req, Tag tag1, ...);
@@ -25,6 +28,11 @@ ULONG rtFontRequest (struct rtFontRequester *fontreq, char *title, Tag tag1, ...
 LONG rtPaletteRequest (char *title, struct rtReqInfo *reqinfo, Tag tag1, ...);
 ULONG rtReqHandler (struct rtHandlerInfo *handlerinfo, ULONG sigs, Tag tag1, ...);
 ULONG rtScreenModeRequest (struct rtScreenModeRequester *screenmodereq, char *title, Tag tag1, ...);
+
+__END_DECLS
+
+
+__BEGIN_DECLS
 
 AROS_LP2(APTR, rtAllocRequestA,
          AROS_LPA(ULONG, type, D0),
@@ -166,5 +174,7 @@ AROS_LP0(struct ReqToolsPrefs *, rtLockPrefs,
 AROS_LP0(void, rtUnlockPrefs,
          LIBBASETYPEPTR, ReqToolsBase, 29, ReqTools
 );
+
+__END_DECLS
 
 #endif /* CLIB_REQTOOLS_PROTOS_H */

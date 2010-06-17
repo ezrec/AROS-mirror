@@ -1,5 +1,5 @@
 /*
-    Copyright  2002-2003, The AROS Development Team. All rights reserved.
+    Copyright  2002-2010, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -464,9 +464,9 @@ struct MUIP_DisconnectParent     {STACKED ULONG MethodID;};
 #define MUIA_Version             (MUIB_MUI|0x00422301) /* MUI: V4  ..g LONG                */
 
 /* Special values for MUIM_Notify */
-#define MUIV_TriggerValue    0x49893131
-#define MUIV_NotTriggerValue 0x49893133
-#define MUIV_EveryTime       0x49893131 /* as TrigVal */
+#define MUIV_TriggerValue    0x49893131UL
+#define MUIV_NotTriggerValue 0x49893133UL
+#define MUIV_EveryTime       0x49893131UL /* as TrigVal */
 
 enum
 {
@@ -1399,7 +1399,7 @@ struct MUI_AreaData
     BYTE               mad_InnerRight;
     BYTE               mad_InnerBottom;
 // offset 94
-    BYTE               mad_Frame;          /* frame setting -- private */
+    BYTE               mad_FrameOBSOLETE;          /* frame setting -- private */
 // offset 95
     BYTE               mad_InputMode;      /* how to react to events */
 // offset 96
@@ -1409,7 +1409,7 @@ struct MUI_AreaData
     BYTE               mad_TitleHeightAbove; /* height above frame */
 // 100
 // ?
-
+    IPTR               mad_Frame;
     WORD               mad_HardHeight;     /* if harcoded dim (see flags)  */
     WORD               mad_HardWidth;      /* if harcoded dim (see flags)  */
     CONST_STRPTR       mad_HardWidthTxt;
@@ -2303,7 +2303,7 @@ enum
 #define _MUI_CLASSES_LIST_H
 
 /*
-    Copyright © 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright © 2002-2009, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -2316,8 +2316,12 @@ enum
 
 /*** Methods ****************************************************************/
 #define MUIM_List_Clear               (MUIB_MUI|0x0042ad89) /* MUI: V4  */
+#define MUIM_List_Compare             (MUIB_MUI|0x00421b68) /* MUI: V20 */
+#define MUIM_List_Construct           (MUIB_MUI|0x0042d662) /* MUI: V20 */
 #define MUIM_List_CreateImage         (MUIB_MUI|0x00429804) /* MUI: V11 */
 #define MUIM_List_DeleteImage         (MUIB_MUI|0x00420f58) /* MUI: V11 */
+#define MUIM_List_Destruct            (MUIB_MUI|0x00427d51) /* MUI: V20 */
+#define MUIM_List_Display             (MUIB_MUI|0x00425377) /* MUI: V20 */
 #define MUIM_List_Exchange            (MUIB_MUI|0x0042468c) /* MUI: V4  */
 #define MUIM_List_GetEntry            (MUIB_MUI|0x004280ec) /* MUI: V4  */
 #define MUIM_List_Insert              (MUIB_MUI|0x00426c87) /* MUI: V4  */
@@ -2331,8 +2335,12 @@ enum
 #define MUIM_List_Sort                (MUIB_MUI|0x00422275) /* MUI: V4  */
 #define MUIM_List_TestPos             (MUIB_MUI|0x00425f48) /* MUI: V11 */
 struct MUIP_List_Clear                {STACKED ULONG MethodID;};
+struct MUIP_List_Compare              {STACKED ULONG MethodID; STACKED APTR entry1; STACKED APTR entry2; STACKED LONG sort_type1; STACKED LONG sort_type2;};
+struct MUIP_List_Construct            {STACKED ULONG MethodID; STACKED APTR entry; STACKED APTR pool;};
 struct MUIP_List_CreateImage          {STACKED ULONG MethodID; STACKED Object *obj; STACKED ULONG flags;};
 struct MUIP_List_DeleteImage          {STACKED ULONG MethodID; STACKED APTR listimg;};
+struct MUIP_List_Destruct             {STACKED ULONG MethodID; STACKED APTR entry; STACKED APTR pool;};
+struct MUIP_List_Display              {STACKED ULONG MethodID; STACKED APTR entry; STACKED STRPTR *array; STACKED LONG entry_pos; STACKED STRPTR *preparses;};
 struct MUIP_List_Exchange             {STACKED ULONG MethodID; STACKED LONG pos1; STACKED LONG pos2;};
 struct MUIP_List_GetEntry             {STACKED ULONG MethodID; STACKED LONG pos; STACKED APTR *entry;};
 struct MUIP_List_Insert               {STACKED ULONG MethodID; STACKED APTR *entries; STACKED LONG count; STACKED LONG pos;};
@@ -2346,13 +2354,7 @@ struct MUIP_List_Select               {STACKED ULONG MethodID; STACKED LONG pos;
 struct MUIP_List_Sort                 {STACKED ULONG MethodID;};
 struct MUIP_List_TestPos              {STACKED ULONG MethodID; STACKED LONG x; STACKED LONG y; STACKED struct MUI_List_TestPos_Result *res;};
 
-#define MUIM_List_InsertSingleAsTree  (MUIB_List | 0x00000005) /* Zune: V1 */
-struct MUIP_List_Construct            {STACKED ULONG MethodID; STACKED APTR entry; STACKED APTR pool;};
-struct MUIP_List_Destruct             {STACKED ULONG MethodID; STACKED APTR entry; STACKED APTR pool;};
-struct MUIP_List_Compare              {STACKED ULONG MethodID; STACKED APTR entry1; STACKED APTR entry2; STACKED LONG sort_type1; STACKED LONG sort_type2;};
-struct MUIP_List_Display              {STACKED ULONG MethodID; STACKED APTR entry; STACKED LONG entry_pos; STACKED STRPTR *strings; STACKED STRPTR *preparses;};
 struct MUIP_List_SelectChange         {STACKED ULONG MethodID; STACKED LONG pos; STACKED LONG state; STACKED ULONG flags;};
-struct MUIP_List_InsertSingleAsTree   {STACKED ULONG MethodID; STACKED APTR entry; STACKED LONG parent; STACKED LONG rel_entry_pos; STACKED ULONG flags;};
 
 /*** Attributes *************************************************************/
 #define MUIA_List_Active              (MUIB_MUI|0x0042391c) /* MUI: V4  isg LONG          */
@@ -2425,7 +2427,7 @@ enum
 
 enum
 {
-	  MUIV_List_Remove_First    =  0,
+    MUIV_List_Remove_First    =  0,
     MUIV_List_Remove_Active   = -1,
     MUIV_List_Remove_Last     = -2,
     MUIV_List_Remove_Selected = -3,
@@ -2486,31 +2488,7 @@ enum
 
 #define MUIV_NList_SelectChange_Flag_Multi (1 << 0)
 
-#define MUIV_List_InsertSingleAsTree_Root     (-1)
 
-#define MUIV_List_InsertSingleAsTree_Top      (0)
-#define MUIV_List_InsertSingleAsTree_Active   (-1)
-#define MUIV_List_InsertSingleAsTree_Sorted   (-2)
-#define MUIV_List_InsertSingleAsTree_Bottom   (-3)
-
-#define MUIV_List_InsertSingleAsTree_List    (1<<0)
-#define MUIV_List_InsertSingleAsTree_Closed  (1<<1)
-
-
-
-
-/****************************************************************************/
-/*** Name *******************************************************************/
-#define MUIC_Floattext           "Floattext.mui"
-
-/*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Floattext           (MUIB_ZUNE | 0x00001500)
-
-/*** Attributes *************************************************************/
-#define MUIA_Floattext_Justify   (MUIB_MUI|0x0042dc03) /* MUI: V4  isg BOOL   */
-#define MUIA_Floattext_SkipChars (MUIB_MUI|0x00425c7d) /* MUI: V4  is. STRPTR */
-#define MUIA_Floattext_TabSize   (MUIB_MUI|0x00427d17) /* MUI: V4  is. LONG   */
-#define MUIA_Floattext_Text      (MUIB_MUI|0x0042d16a) /* MUI: V4  isg STRPTR */
 
 
 
@@ -2527,6 +2505,31 @@ enum
 
 
 #endif /* _MUI_CLASSES_LIST_H */
+#endif
+
+#ifndef _MUI_CLASSES_FLOATTEXT_H
+#ifndef _MUI_CLASSES_FLOATTEXT_H
+#define _MUI_CLASSES_FLOATTEXT_H
+
+/*
+    Copyright © 2002-2010, The AROS Development Team. All rights reserved.
+    $Id$
+*/
+
+/*** Name *******************************************************************/
+#define MUIC_Floattext           "Floattext.mui"
+
+/*** Identifier base (for Zune extensions) **********************************/
+#define MUIB_Floattext           (MUIB_ZUNE | 0x00001500)
+
+/*** Attributes *************************************************************/
+#define MUIA_Floattext_Justify   (MUIB_MUI|0x0042dc03) /* MUI: V4  isg BOOL   */
+#define MUIA_Floattext_SkipChars (MUIB_MUI|0x00425c7d) /* MUI: V4  is. STRPTR */
+#define MUIA_Floattext_TabSize   (MUIB_MUI|0x00427d17) /* MUI: V4  is. LONG   */
+#define MUIA_Floattext_Text      (MUIB_MUI|0x0042d16a) /* MUI: V4  isg STRPTR */
+
+
+#endif /* _MUI_CLASSES_VOLUMELIST_H */
 #endif
 
 #ifndef _MUI_CLASSES_POPSTRING_H
@@ -2971,6 +2974,15 @@ struct MUIP_Settingsgroup_GadgetsToConfig  {STACKED ULONG MethodID; STACKED Obje
 #define MUICFG_CustomFrame_14           0x60d
 #define MUICFG_CustomFrame_15           0x60e
 #define MUICFG_CustomFrame_16           0x60f
+
+#define MUICFG_PublicScreen_PopToFront  0x700
+#define MUICFG_Iconification_Hotkey     0x701
+#define MUICFG_Iconification_ShowIcon   0x702
+#define MUICFG_Iconification_ShowMenu   0x703
+#define MUICFG_Iconification_OnStartup  0x704
+#define MUICFG_Interfaces_EnableARexx   0x705
+#define MUICFG_BubbleHelp_FirstDelay    0x706
+#define MUICFG_BubbleHelp_NextDelay     0x707
 
 #define MUIM_Configdata_GetWindowPos    (MUIB_Configdata | 0x0000002A)
 #define MUIM_Configdata_SetWindowPos    (MUIB_Configdata | 0x0000002B)
@@ -3560,7 +3572,7 @@ enum {
 #define _MUI_CLASSES_DTPIC_H
 
 /*
-    Copyright © 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright © 2002-2009, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -3568,7 +3580,7 @@ enum {
 #define MUIC_Dtpic          "Dtpic.mui"
 
 /*** Attributes *************************************************************/
-#define MUIA_Dtpic_Name     (MUIB_MUI|0x00423d72) /* i.. STRPTR */
+#define MUIA_Dtpic_Name     (MUIB_MUI|0x00423d72) /* MUI: V18 isg STRPTR */
 
 
 #endif /* _MUI_CLASSES_DTPIC_H */
@@ -3965,9 +3977,13 @@ struct MUI_Command
 #ifdef __GNUC__
 #define get(obj, attr, storage)                                         \
 ({                                                                      \
-    IPTR  __zune_get_storage = (IPTR)(*(storage));                      \
-    ULONG __zune_get_ret = GetAttr((attr), (obj), &__zune_get_storage); \
-    *(storage) = (typeof(*(storage)))__zune_get_storage;                \
+    union {                                                             \
+       IPTR  __zune_get_storage;                                        \
+       typeof(*storage) __zune_val_storage;                             \
+    } __tmp;                                                              \
+    __tmp.__zune_val_storage = *storage;                                  \
+    ULONG __zune_get_ret = GetAttr((attr), (obj), &__tmp.__zune_get_storage); \
+    *(storage) = __tmp.__zune_val_storage;                                \
     __zune_get_ret;                                                     \
 })
 #else  /* !__GNUC__ */

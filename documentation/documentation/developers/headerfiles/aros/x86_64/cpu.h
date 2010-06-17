@@ -1,7 +1,7 @@
 #ifndef AROS_X86_64_CPU_H
 #define AROS_X86_64_CPU_H
 /*
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
     $Id$
 
     NOTE: This file must compile *without* any other header !
@@ -23,6 +23,9 @@
 #define AROS_IPTRALIGN		   8 /* Alignment for IPTR */
 #define AROS_DOUBLEALIGN	   8 /* Alignment for double */
 #define AROS_WORSTALIGN 	   8 /* Worst case alignment */
+
+/* define this if we have no support for linear varargs in the compiler */
+#define NO_LINEAR_VARARGS       1
 
 #define AROS_SLOWSTACKTAGS      1
 #define AROS_SLOWSTACKMETHODS   1
@@ -55,7 +58,7 @@
 #define AROS_SIG_ATOMIC_MAX     0x7fffffff
 
 #ifndef __TINYC__
-register unsigned char * AROS_GET_SP asm("%rsp");
+register unsigned char * AROS_GET_SP __asm__("%rsp");
 #endif
 
 /*do we need a function attribute to get parameters on the stack? */
@@ -81,6 +84,19 @@ do \
     struct FullJumpVec *_v = v; \
     _v->jmp = 0xE9; \
     *((unsigned int *)(_v->vec))=(unsigned int)(a)-(unsigned int)(_v)-5;\
+} while (0)
+
+
+/*
+    Extracts and stores the start address from a loaded
+    executable segment. start_address may then be used by gdb.
+    It is calculated from _v->vec set in __AROS_SET_FULLJMP.
+*/
+#define __AROS_SET_START_ADDR(debug_segnode)\
+do \
+{  \
+    (debug_segnode)->start_address \
+	= (IPTR)(BADDR((debug_segnode)->seglist) + 8) + 5 + *(IPTR *)((char *)(BADDR((debug_segnode)->seglist) + 8) + 1); \
 } while (0)
 
 struct JumpVec

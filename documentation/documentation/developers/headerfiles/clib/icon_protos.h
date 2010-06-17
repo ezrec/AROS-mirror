@@ -2,15 +2,19 @@
 #define CLIB_ICON_PROTOS_H
 
 /*
-    *** Automatically generated from 'icon.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/icon/icon.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <intuition/intuition.h>
 #include <workbench/workbench.h>
 #include <workbench/icon.h>
 #include <utility/tagitem.h>
+
+__BEGIN_DECLS
+
 AROS_LP1(void, FreeFreeList,
          AROS_LPA(struct FreeList *, freelist, A0),
          LIBBASETYPEPTR, IconBase, 9, Icon
@@ -118,5 +122,7 @@ AROS_LP1(void, ChangeToSelectedIconColor,
          AROS_LPA(struct ColorRegister *, cr, A0),
          LIBBASETYPEPTR, IconBase, 33, Icon
 );
+
+__END_DECLS
 
 #endif /* CLIB_ICON_PROTOS_H */

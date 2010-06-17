@@ -30,8 +30,9 @@
 #define AROS_STACK_DEBUG    	    	1
 #define AROS_MODULES_DEBUG		1
 #define USE_XSHM	    	    	1
-#define USE_VIDMODE			0
+#define USE_VIDMODE			1
 
 #define ENABLE_DBUS			0
+#define ENABLE_X11			1
 
 #endif /* AROS_CONFIG_H */

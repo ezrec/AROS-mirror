@@ -2,11 +2,15 @@
 #define CLIB_MATHTRANS_PROTOS_H
 
 /*
-    *** Automatically generated from 'mathtrans.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/mathtrans/mathtrans.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
+
+__BEGIN_DECLS
+
 AROS_LP1(LONG, SPAtan,
          AROS_LPA(LONG, fnum1, D0),
          LIBBASETYPEPTR, MathTransBase, 5, MathTrans
@@ -77,5 +81,7 @@ AROS_LP1(LONG, SPLog10,
          AROS_LPA(LONG, fnum1, D0),
          LIBBASETYPEPTR, MathTransBase, 21, MathTrans
 );
+
+__END_DECLS
 
 #endif /* CLIB_MATHTRANS_PROTOS_H */

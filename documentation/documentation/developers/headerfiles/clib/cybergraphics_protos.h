@@ -2,16 +2,20 @@
 #define CLIB_CYBERGRAPHICS_PROTOS_H
 
 /*
-    *** Automatically generated from 'cybergraphics.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/cgfx/cybergraphics.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <utility/tagitem.h>
 #include <utility/hooks.h>
 #include <graphics/gfx.h>
 #include <graphics/rastport.h>
 #include <graphics/view.h>
+
+__BEGIN_DECLS
+
 AROS_LP1(BOOL, IsCyberModeID,
          AROS_LPA(ULONG, modeID, D0),
          LIBBASETYPEPTR, CyberGfxBase, 9, Cybergraphics
@@ -190,5 +194,7 @@ AROS_LP8(void, BltTemplateAlpha,
          AROS_LPA(LONG, height, D5),
          LIBBASETYPEPTR, CyberGfxBase, 37, Cybergraphics
 );
+
+__END_DECLS
 
 #endif /* CLIB_CYBERGRAPHICS_PROTOS_H */

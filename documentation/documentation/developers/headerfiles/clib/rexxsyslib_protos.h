@@ -2,12 +2,16 @@
 #define CLIB_REXXSYSLIB_PROTOS_H
 
 /*
-    *** Automatically generated from 'rexxsyslib.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/rexxsyslib/rexxsyslib.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <rexx/storage.h>
+
+__BEGIN_DECLS
+
 AROS_LP2(UBYTE *, CreateArgstring,
          AROS_LPA(UBYTE *, string, A0),
          AROS_LPA(ULONG, length, D0),
@@ -54,5 +58,7 @@ AROS_LP1(void, UnlockRexxBase,
          AROS_LPA(ULONG, resource, D0),
          LIBBASETYPEPTR, RexxSysBase, 76, RexxSys
 );
+
+__END_DECLS
 
 #endif /* CLIB_REXXSYSLIB_PROTOS_H */

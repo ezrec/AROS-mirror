@@ -2,14 +2,18 @@
 #define CLIB_LAYERS_PROTOS_H
 
 /*
-    *** Automatically generated from 'layers.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/rom/hyperlayers/layers.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <graphics/layers.h>
 #include <graphics/gfx.h>
 #include <graphics/clip.h>
+
+__BEGIN_DECLS
+
 AROS_LP1(void, InitLayers,
          AROS_LPA(struct Layer_Info *, li, A0),
          LIBBASETYPEPTR, LayersBase, 5, Layers
@@ -247,5 +251,7 @@ AROS_LP3(void, CollectPixelsLayer,
          AROS_LPA(struct Hook *, callback, A2),
          LIBBASETYPEPTR, LayersBase, 45, Layers
 );
+
+__END_DECLS
 
 #endif /* CLIB_LAYERS_PROTOS_H */

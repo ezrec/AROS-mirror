@@ -2,12 +2,16 @@
 #define CLIB_REALTIME_PROTOS_H
 
 /*
-    *** Automatically generated from 'realtime.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/realtime/realtime.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <utility/tagitem.h>
+
+__BEGIN_DECLS
+
 AROS_LP1(APTR, LockRealTime,
          AROS_LPA(ULONG, lockType, D0),
          LIBBASETYPEPTR, RealTimeBase, 5, RealTime
@@ -54,5 +58,7 @@ AROS_LP2(BOOL, GetPlayerAttrsA,
          AROS_LPA(struct TagItem *, tagList, A1),
          LIBBASETYPEPTR, RealTimeBase, 14, RealTime
 );
+
+__END_DECLS
 
 #endif /* CLIB_REALTIME_PROTOS_H */

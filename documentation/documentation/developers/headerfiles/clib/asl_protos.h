@@ -2,17 +2,26 @@
 #define CLIB_ASL_PROTOS_H
 
 /*
-    *** Automatically generated from 'asl.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/asl/asl.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <exec/types.h>
 #include <utility/tagitem.h>
 #include <libraries/asl.h>
 
+__BEGIN_DECLS
+
 APTR AllocAslRequestTags(ULONG reqType, Tag tag1, ...);
 BOOL AslRequestTags(APTR requester, Tag tag1, ...);
+
+__END_DECLS
+
+
+__BEGIN_DECLS
+
 AROS_LP0(struct FileRequester *, AllocFileRequest,
          LIBBASETYPEPTR, AslBase, 5, Asl
 );
@@ -46,5 +55,7 @@ AROS_LP1(void, ActivateAslRequest,
          AROS_LPA(APTR, requester, A0),
          LIBBASETYPEPTR, AslBase, 14, Asl
 );
+
+__END_DECLS
 
 #endif /* CLIB_ASL_PROTOS_H */

@@ -1,46 +1,67 @@
 #ifndef CLIB_OPENURL_PROTOS_H
 #define CLIB_OPENURL_PROTOS_H
 
-/*
-    *** Automatically generated from 'openurl.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
-*/
+/***************************************************************************
 
-#include <aros/libcall.h>
-#include <libraries/openurl.h>
+ openurl.library - universal URL display and browser launcher library
+ Copyright (C) 1998-2005 by Troels Walsted Hansen, et al.
+ Copyright (C) 2005-2009 by openurl.library Open Source Team
 
-ULONG URL_Open(STRPTR, Tag tags, ...);
-struct URL_Prefs *URL_GetPrefs(Tag tags, ...);
-VOID URL_FreePrefs(struct URL_Prefs *, Tag tags, ...);
-ULONG URL_SetPrefs(struct URL_Prefs *, Tag tags, ...);
-ULONG URL_LaunchPrefsApp(Tag tags, ...);
-AROS_LP2(ULONG, URL_OpenA,
-         AROS_LPA(STRPTR, URL, A0),
-         AROS_LPA(struct TagItem *, attrs, A1),
-         LIBBASETYPEPTR, OpenURLBase, 5, Openurl
-);
-AROS_LP1(struct URL_Prefs *, URL_GetPrefsA,
-         AROS_LPA(struct TagItem *, attrs, A0),
-         LIBBASETYPEPTR, OpenURLBase, 12, Openurl
-);
-AROS_LP2(VOID, URL_FreePrefsA,
-         AROS_LPA(struct URL_Prefs *, p, A0),
-         AROS_LPA(struct TagItem *, attrs, A1),
-         LIBBASETYPEPTR, OpenURLBase, 13, Openurl
-);
-AROS_LP2(ULONG, URL_SetPrefsA,
-         AROS_LPA(struct URL_Prefs *, p, A0),
-         AROS_LPA(struct TagItem *, attrs, A1),
-         LIBBASETYPEPTR, OpenURLBase, 14, Openurl
-);
-AROS_LP1(ULONG, URL_LaunchPrefsAppA,
-         AROS_LPA(struct TagItem *, tags, A0),
-         LIBBASETYPEPTR, OpenURLBase, 15, Openurl
-);
-AROS_LP2(ULONG, URL_GetAttr,
-         AROS_LPA(ULONG, attr, D0),
-         AROS_LPA(IPTR *, storage, A0),
-         LIBBASETYPEPTR, OpenURLBase, 16, Openurl
-);
+ This library is free software; it has been placed in the public domain
+ and you can freely redistribute it and/or modify it. Please note, however,
+ that some components may be under the LGPL or GPL license.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+ openurl.library project: http://sourceforge.net/projects/openurllib/
+
+ $Id$
+
+***************************************************************************/
+
+#ifndef LIBRARIES_OPENURL_H
+# include <libraries/openurl.h>
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
+
+/* Obsolete, don't use! */
+struct URL_Prefs *URL_OldGetPrefs(void);
+void URL_OldFreePrefs(struct URL_Prefs *);
+ULONG URL_OldSetPrefs(struct URL_Prefs *, BOOL);
+struct URL_Prefs *URL_OldGetDefaultPrefs(void);
+ULONG URL_OldLaunchPrefsApp(void);
+
+/* Reach URL */
+ULONG URL_OpenA(STRPTR, struct TagItem *);
+
+/* Preferences */
+struct URL_Prefs *URL_GetPrefsA(struct TagItem *);
+void URL_FreePrefsA(struct URL_Prefs *,struct TagItem *);
+ULONG URL_SetPrefsA(struct URL_Prefs *,struct TagItem *);
+
+/* Prefs application */
+ULONG URL_LaunchPrefsAppA(struct TagItem *);
+
+/* Information */
+ULONG URL_GetAttr(ULONG attr,ULONG *storage);
+
+#if defined(_DCC) || defined(__SASC) || defined (__STORM__) || defined(__GNUC__)
+ULONG URL_Open(STRPTR, Tag tag1, ...);
+struct URL_Prefs *URL_GetPrefs(Tag tag1, ...);
+void URL_FreePrefs(struct URL_Prefs *, Tag tag1, ...);
+ULONG URL_SetPrefs(struct URL_Prefs *, Tag tag1, ...);
+ULONG URL_LaunchPrefsApp(Tag tag1, ...);
+#endif
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
 
 #endif /* CLIB_OPENURL_PROTOS_H */

@@ -2,7 +2,7 @@
 #define HIDD_GRAPHICS_H
 
 /*
-    Copyright © 1995-2001, The AROS Development Team. All rights reserved.
+    Copyright  1995-2010, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Definitions for the Graphics HIDD system.
@@ -38,8 +38,8 @@
 #define CLID_Hidd_ChunkyBM "hidd.graphics.bitmap.chunkybm"
 
 
-typedef struct OOP_Object *HIDDT_BitMap;
-typedef struct OOP_Object *HIDDT_GC;
+typedef OOP_Object *HIDDT_BitMap;
+typedef OOP_Object *HIDDT_GC;
 
 
 /* Attrbases */
@@ -88,6 +88,14 @@ enum
     
     moHidd_Gfx_ShowImminentReset,
     
+    moHidd_Gfx_ModeProperties,
+    moHidd_Gfx_ShowViewPorts,
+
+    moHidd_Gfx_GetSync,
+
+    moHidd_Gfx_GetGamma,
+    moHidd_Gfx_SetGamma,
+
     num_Hidd_Gfx_Methods
 };
 
@@ -108,6 +116,7 @@ enum
     
     aoHidd_Gfx_NumSyncs,		/* [..G] (ULONG) - The number of different syncs the gfxcard can do */
     aoHidd_Gfx_SupportsHWCursor,	/* [..G] (BOOL) - if the hidd supports hardware cursors */
+    aoHidd_Gfx_NoFrameBuffer,		/* [..G] (BOOL) - if the hidd does not need a framebuffer */
     
     num_Hidd_Gfx_Attrs
 };
@@ -125,6 +134,7 @@ enum
 #define aHidd_Gfx_ModeTags		(HiddGfxAttrBase + aoHidd_Gfx_ModeTags			)
 #define aHidd_Gfx_NumSyncs		(HiddGfxAttrBase + aoHidd_Gfx_NumSyncs			)
 #define aHidd_Gfx_SupportsHWCursor	(HiddGfxAttrBase + aoHidd_Gfx_SupportsHWCursor		)
+#define aHidd_Gfx_NoFrameBuffer		(HiddGfxAttrBase + aoHidd_Gfx_NoFrameBuffer		)
 
 #define IS_GFX_ATTR(attr, idx)	\
 	( ( ( idx ) = (attr) - HiddGfxAttrBase) < num_Hidd_Gfx_Attrs)
@@ -156,6 +166,28 @@ typedef IPTR HIDDT_DrawMode;
 typedef IPTR HIDDT_ColorModel;
 typedef IPTR HIDDT_BitMapType;
 typedef IPTR HIDDT_ModeID;
+
+struct HIDD_ModeProperties
+{
+    ULONG DisplayInfoFlags; /* PropertyFlags value for struct DisplayInfo (see graphics/displayinfo.h).
+			       Does not include features emulated by software.				 */
+    UWORD NumHWSprites;	    /* Number of supported hardware sprites					 */
+    UWORD CompositionFlags; /* Supported composition types, see below					 */
+
+    /* This structure may grow in future */
+
+};
+
+#define COMPF_ABOVE 0x0001 /* We can see another screen above this screen */
+#define COMPF_BELOW 0x0002 /* ...below ...				  */
+#define COMPF_LEFT  0x0004 /* ... to the left of ...			  */
+#define COMPF_RIGHT 0x0008 /* ... to the right of ...			  */
+
+struct HIDD_ViewPortData
+{
+    struct HIDD_ViewPortData *Next;
+    OOP_Object *Bitmap;
+};
 
 #define vHidd_ModeID_Invalid ((HIDDT_ModeID)-1)
 
@@ -247,6 +279,8 @@ struct pHidd_Gfx_SetCursorShape
 {
     OOP_MethodID    mID;
     OOP_Object      *shape;
+    LONG	    xoffset;
+    LONG	    yoffset;
 };
 
 struct pHidd_Gfx_SetCursorPos
@@ -293,9 +327,37 @@ struct pHidd_Gfx_CopyBox
 struct pHidd_Gfx_SetMode
 {
     OOP_MethodID mID;
-    HIDDT_ModeID modeID;
+    OOP_Object   *Sync;
 };
 
+
+struct pHidd_Gfx_ModeProperties
+{
+    OOP_MethodID mID;
+    HIDDT_ModeID modeID;
+    struct HIDD_ModeProperties *props;
+    ULONG propsLen;
+};
+
+struct pHidd_Gfx_ShowViewPorts
+{
+    OOP_MethodID mID;
+    struct HIDD_ViewPortData *Data;
+};
+
+struct pHidd_Gfx_GetSync
+{
+    OOP_MethodID mID;
+    ULONG	 num;
+};
+
+struct pHidd_Gfx_Gamma
+{
+    OOP_MethodID mID;
+    UBYTE	 *Red;
+    UBYTE	 *Green;
+    UBYTE	 *Blue;
+};
 
 enum
 {
@@ -381,6 +443,27 @@ enum
 
     num_Hidd_AllPf
 };
+
+#if AROS_BIG_ENDIAN
+#define vHidd_StdPixFmt_ARGB32_Native vHidd_StdPixFmt_ARGB32
+#define vHidd_StdPixFmt_BGRA32_Native vHidd_StdPixFmt_BGRA32
+#define vHidd_StdPixFmt_RGBA32_Native vHidd_StdPixFmt_RGBA32
+#define vHidd_StdPixFmt_ABGR32_Native vHidd_StdPixFmt_ABGR32
+#define vHidd_StdPixFmt_0RGB32_Native vHidd_StdPixFmt_0RGB32
+#define vHidd_StdPixFmt_BGR032_Native vHidd_StdPixFmt_BGR032
+#define vHidd_StdPixFmt_RGB032_Native vHidd_StdPixFmt_RGB032
+#define vHidd_StdPixFmt_0BGR32_Native vHidd_StdPixFmt_0BGR32
+#else
+#define vHidd_StdPixFmt_ARGB32_Native vHidd_StdPixFmt_BGRA32
+#define vHidd_StdPixFmt_BGRA32_Native vHidd_StdPixFmt_ARGB32
+#define vHidd_StdPixFmt_RGBA32_Native vHidd_StdPixFmt_ABGR32
+#define vHidd_StdPixFmt_ABGR32_Native vHidd_StdPixFmt_RGBA32
+#define vHidd_StdPixFmt_0RGB32_Native vHidd_StdPixFmt_BGR032
+#define vHidd_StdPixFmt_BGR032_Native vHidd_StdPixFmt_0RGB32
+#define vHidd_StdPixFmt_RGB032_Native vHidd_StdPixFmt_0BGR32
+#define vHidd_StdPixFmt_0BGR32_Native vHidd_StdPixFmt_RGB032
+#endif
+
 #define FIRST_RGB_STDPIXFMT 	    	vHidd_StdPixFmt_RGB24
 #define LAST_RGB_STDPIXFMT  	    	vHidd_StdPixFmt_0BGR32
 #define NUM_RGB_STDPIXFMT   	    	(vHidd_StdPixFmt_0BGR32 - vHidd_StdPixFmt_RGB24 + 1)
@@ -430,8 +513,8 @@ enum
 typedef struct
 {
     UWORD	    depth;
-    UWORD	    size;	/* Size of pixel in bits */
-    UWORD   	    bytes_per_pixel;	
+    UWORD	    size;		/* Size of pixel in bits */
+    UWORD   	    bytes_per_pixel;
 
     HIDDT_Pixel     red_mask;
     HIDDT_Pixel     green_mask;
@@ -446,8 +529,8 @@ typedef struct
     HIDDT_Pixel     clut_mask;
     UBYTE   	    clut_shift;
 
-    HIDDT_StdPixFmt stdpixfmt;
-    ULONG   	    flags;
+    HIDDT_StdPixFmt stdpixfmt;		/* Number of corresponging standard format */
+    ULONG   	    flags;		/* Flags, see below */
 	
 } HIDDT_PixelFormat;
 
@@ -524,6 +607,8 @@ enum
     
     moHidd_BitMap_PrivateSet,
     moHidd_BitMap_SetRGBConversionFunction,
+
+    moHidd_BitMap_UpdateRect,
     
     num_Hidd_BitMap_Methods
 };
@@ -531,39 +616,41 @@ enum
 enum
 {
     /* Attributes for a bitmap */
-    aoHidd_BitMap_Width,         /* 0 ISG] Bitmap with                          */
-    aoHidd_BitMap_Height,        /* 1 [ISG] Bitmap height                        */
+    aoHidd_BitMap_Width,         /*  0 [ISG] Bitmap with                          */
+    aoHidd_BitMap_Height,        /*  1 [ISG] Bitmap height                        */
 #if 0
-    aoHidd_BitMap_Depth,         /* 2 [I.G] Bitmap depth                         */
+    aoHidd_BitMap_Depth,         /*    [I.G] Bitmap depth                         */
 #endif
-    aoHidd_BitMap_Displayable,   /* 3 [I.G] BOOL bitmap is displayable (default: FALSE)  */
-    aoHidd_BitMap_Visible,       /* 4 [..G] Check if a bitmap is visible         */
-    aoHidd_BitMap_IsLinearMem,   /* 5 [..G] Is the bitmap memory contigous       */
-    aoHidd_BitMap_BytesPerRow,   /* 6 [..G] Number of bytes in a row             */
-    aoHidd_BitMap_ColorMap,      /* 7[..G] Colormap of the bitmap               */
-    aoHidd_BitMap_Friend,	 /* 8 [I.G] Friend bitmap. The bitmap will be allocated so that it
+    aoHidd_BitMap_Displayable,   /*  2 [I.G] BOOL bitmap is displayable (default: FALSE)  */
+    aoHidd_BitMap_Visible,       /*  3 [..G] Check if a bitmap is visible         */
+    aoHidd_BitMap_IsLinearMem,   /*  4 [..G] Is the bitmap memory contigous       */
+    aoHidd_BitMap_BytesPerRow,   /*  5 [..G] Number of bytes in a row             */
+    aoHidd_BitMap_ColorMap,      /*  6 [..G] Colormap of the bitmap               */
+    aoHidd_BitMap_Friend,	 /*  7 [I.G] Friend bitmap. The bitmap will be allocated so that it
     				            is optimized for blitting to this bitmap */
-    aoHidd_BitMap_GfxHidd,	/* 9 [..G] Pointer to the gfxhidd object this bitmap was created with */
-    aoHidd_BitMap_StdPixFmt,	/* 10 [I..] (HIDDT_StdPixFmt) What stdpixel format the bitmap should have.
+    aoHidd_BitMap_GfxHidd,	 /*  8 [..G] Pointer to the gfxhidd object this bitmap was created with */
+    aoHidd_BitMap_StdPixFmt,	 /*  9 [I..] (HIDDT_StdPixFmt) What stdpixel format the bitmap should have.
 				             This is a shortcut to create a bitmap with a std pixelformat */
-    aoHidd_BitMap_PixFmt,	/* 11 [..G] (OOP_Object *) This is complete pixmft of a bitmap */
-    aoHidd_BitMap_ModeID,	/* 12 [I.G] (HIDDT_ModeID) may be passed on initialization of
-				            aHidd_BitMap_Displayable=TRUE bitmaps. May also be
-				            used with non-displayable bitmaps */
-    aoHidd_BitMap_ClassPtr,	/* 13 [I..] Only used by subclasses of the gfx hidd */
-    aoHidd_BitMap_ClassID,	/* 14 [I..] Only used by subclasses of the gfx hidd */
-    aoHidd_BitMap_PixFmtTags,	/* 15 [I..] Only used by subclasses of BitMap class */
+    aoHidd_BitMap_PixFmt,	 /* 10 [..G] (OOP_Object *) This is complete pixmft of a bitmap */
+    aoHidd_BitMap_ModeID,	 /* 11 [I.G] (HIDDT_ModeID) must be passed on initialization of
+				             aHidd_BitMap_Displayable=TRUE bitmaps. May also be
+				             used with non-displayable bitmaps */
+    aoHidd_BitMap_ClassPtr,	 /* 12 [I.G] Only used by subclasses of the gfx hidd */
+    aoHidd_BitMap_ClassID,	 /* 13 [I..] Only used by subclasses of the gfx hidd */
+    aoHidd_BitMap_PixFmtTags,	 /* 14 [I..] Only used by subclasses of BitMap class */
     
 #if 0    
-    aoHidd_BitMap_Mode,          /* [ISG] The display mode of this bitmap      */
-    aoHidd_BitMap_AllocBuffer,   /* [I..] BOOL allocate buffer (default: TRUE) */
+    aoHidd_BitMap_Mode,          /*    [ISG] The display mode of this bitmap      */
+    aoHidd_BitMap_AllocBuffer,   /*    [I..] BOOL allocate buffer (default: TRUE) */
     
-    aoHidd_BitMap_BestSize,      /* [..G] Best size for depth                  */
-    aoHidd_BitMap_LeftEdge,      /* [I.G] Left edge position of the bitmap     */
-    aoHidd_BitMap_TopEdge,       /* [I.G] Top edge position of the bitmap      */
+    aoHidd_BitMap_BestSize,      /*    [..G] Best size for depth                  */
 #endif
-    aoHidd_BitMap_FrameBuffer,	/* [I.G] BOOL - Allocate framebuffer ? */
-    
+    aoHidd_BitMap_FrameBuffer,	 /* 15 [I.G] BOOL - Allocate framebuffer	  */
+
+    aoHidd_BitMap_LeftEdge,      /* 16 [.SG] Left edge position of the bitmap     */
+    aoHidd_BitMap_TopEdge,       /* 17 [.SG] Top edge position of the bitmap      */
+    aoHidd_BitMap_Align,         /* 18 [I..] Number of pixels to align bitmap data width to */
+
     num_Hidd_BitMap_Attrs
 };    
 
@@ -597,6 +684,7 @@ enum
 #define aHidd_BitMap_ClassID	   (HiddBitMapAttrBase + aoHidd_BitMap_ClassID)
 #define aHidd_BitMap_PixFmtTags	   (HiddBitMapAttrBase + aoHidd_BitMap_PixFmtTags)
 #define aHidd_BitMap_FrameBuffer   (HiddBitMapAttrBase + aoHidd_BitMap_FrameBuffer)
+#define aHidd_BitMap_Align	   (HiddBitMapAttrBase + aoHidd_BitMap_Align)
 
 #define IS_BITMAP_ATTR(attr, idx) \
 	( ( ( idx ) = (attr) - HiddBitMapAttrBase) < num_Hidd_BitMap_Attrs)
@@ -682,7 +770,7 @@ struct pHidd_BitMap_PutTemplate
 {
     OOP_MethodID    mID;
     OOP_Object	    *gc;
-    UBYTE 	    *template;
+    UBYTE 	    *Template;
     ULONG	    modulo;
     WORD    	    srcx;
     WORD	    x, y;
@@ -690,6 +778,11 @@ struct pHidd_BitMap_PutTemplate
     BOOL    	    inverttemplate;
 };
 
+/* Compatibility hack. In C++ template is a reserved keyword, so we
+   can't use it as variable name */
+#ifndef __cplusplus
+#define template Template
+#endif
 
 struct pHidd_BitMap_PutAlphaTemplate
 {
@@ -1112,7 +1205,7 @@ struct pHidd_BitMap_PutMemTemplate8
 {
     OOP_MethodID    mID;
     OOP_Object	    *gc;
-    UBYTE   	    *template;
+    UBYTE   	    *Template;
     ULONG   	    modulo;
     WORD    	    srcx;
     APTR    	    dst;
@@ -1126,7 +1219,7 @@ struct pHidd_BitMap_PutMemTemplate16
 {
     OOP_MethodID    mID;
     OOP_Object	    *gc;
-    UBYTE   	    *template;
+    UBYTE   	    *Template;
     ULONG   	    modulo;
     WORD    	    srcx;
     APTR    	    dst;
@@ -1140,7 +1233,7 @@ struct pHidd_BitMap_PutMemTemplate24
 {
     OOP_MethodID    mID;
     OOP_Object	    *gc;
-    UBYTE   	    *template;
+    UBYTE   	    *Template;
     ULONG   	    modulo;
     WORD    	    srcx;
     APTR    	    dst;
@@ -1154,7 +1247,7 @@ struct pHidd_BitMap_PutMemTemplate32
 {
     OOP_MethodID    mID;
     OOP_Object	    *gc;
-    UBYTE   	    *template;
+    UBYTE   	    *Template;
     ULONG   	    modulo;
     WORD    	    srcx;
     APTR    	    dst;
@@ -1286,6 +1379,13 @@ struct pHidd_BitMap_SetRGBConversionFunction
     HIDDT_RGBConversionFunction	    	function;
 };
 
+struct pHidd_BitMap_UpdateRect
+{
+    OOP_MethodID    mID;
+    WORD            x, y;
+    WORD            width, height;
+};
+
 /**** Graphics context definitions ********************************************/
     /* Methods for a graphics context */
     
@@ -1381,13 +1481,18 @@ BOOL 	      HIDD_Gfx_CheckMode(OOP_Object *obj, HIDDT_ModeID modeID, OOP_Object 
 BOOL 	      HIDD_Gfx_GetMode(OOP_Object *obj, HIDDT_ModeID modeID, OOP_Object **syncPtr, OOP_Object **pixFmtPtr);
 HIDDT_ModeID  HIDD_Gfx_NextModeID(OOP_Object *obj, HIDDT_ModeID modeID, OOP_Object **syncPtr, OOP_Object **pixFmtPtr);
 
-BOOL HIDD_Gfx_SetCursorShape(OOP_Object *obj, OOP_Object *shape);
+BOOL HIDD_Gfx_SetCursorShape(OOP_Object *obj, OOP_Object *shape, LONG xoffset, LONG yoffset);
 BOOL HIDD_Gfx_SetCursorPos(OOP_Object *obj, LONG x, LONG y);
 VOID HIDD_Gfx_SetCursorVisible(OOP_Object *obj, BOOL visible);
 
 OOP_Object *HIDD_Gfx_Show(OOP_Object *obj, OOP_Object *bitMap, ULONG flags);
-BOOL 	    HIDD_Gfx_SetMode(OOP_Object *obj, HIDDT_ModeID modeID);
+BOOL 	    HIDD_Gfx_SetMode(OOP_Object *obj, OOP_Object *sync);
 VOID  	    HIDD_Gfx_CopyBox(OOP_Object *obj, OOP_Object *src, WORD srcX, WORD srcY, OOP_Object *dest, WORD destX, WORD destY, UWORD width, UWORD height, OOP_Object *gc);
+ULONG       HIDD_Gfx_ModeProperties(OOP_Object *obj, HIDDT_ModeID modeID, struct HIDD_ModeProperties *props, ULONG propsLen);
+ULONG	    HIDD_Gfx_ShowViewPorts(OOP_Object *obj, struct HIDD_ViewPortData *data);
+OOP_Object *HIDD_Gfx_GetSync(OOP_Object *obj, ULONG num);
+BOOL HIDD_Gfx_GetGamma(OOP_Object *obj, UBYTE *Red, UBYTE *Green, UBYTE *Blue);
+BOOL HIDD_Gfx_SetGamma(OOP_Object *obj, UBYTE *Red, UBYTE *Green, UBYTE *Blue);
 
 VOID HIDD_GC_SetClipRect(OOP_Object *gc, LONG x1, LONG y1, LONG x2, LONG y2);
 VOID HIDD_GC_UnsetClipRect(OOP_Object *gc);
@@ -1404,7 +1509,7 @@ ULONG       HIDD_BM_DrawPixel       	(OOP_Object *obj, OOP_Object *gc, WORD x, W
 VOID        HIDD_BM_GetImage	    	(OOP_Object *obj, UBYTE *pixelArray, ULONG modulo, WORD x, WORD y, WORD width, WORD height, HIDDT_StdPixFmt pixFmt);
 VOID	    HIDD_BM_PutImage 	    	(OOP_Object *obj, OOP_Object *gc, UBYTE *pixelArray, ULONG modulo, WORD x, WORD y, WORD width, WORD height, HIDDT_StdPixFmt pixFmt);
 VOID	    HIDD_BM_PutAlphaImage 	(OOP_Object *obj, OOP_Object *gc, UBYTE *pixelArray, ULONG modulo, WORD x, WORD y, WORD width, WORD height);
-VOID	    HIDD_BM_PutTemplate 	(OOP_Object *obj, OOP_Object *gc, UBYTE *template, ULONG modulo, WORD srcx, WORD x, WORD y, WORD width, WORD height, BOOL inverttemplate);
+VOID	    HIDD_BM_PutTemplate 	(OOP_Object *obj, OOP_Object *gc, UBYTE *Template, ULONG modulo, WORD srcx, WORD x, WORD y, WORD width, WORD height, BOOL inverttemplate);
 VOID	    HIDD_BM_PutAlphaTemplate 	(OOP_Object *obj, OOP_Object *gc, UBYTE *alpha, ULONG modulo, WORD x, WORD y, WORD width, WORD height, BOOL invertalpha);
 VOID	    HIDD_BM_PutPattern	 	(OOP_Object *obj, OOP_Object *gc, UBYTE *pattern, WORD patternsrcx, WORD patternsrcy, WORD patternheight, WORD patterndepth, HIDDT_PixelLUT *patternlut, BOOL invertpattern, UBYTE *mask, ULONG maskmodulo, WORD masksrcx, WORD x, WORD y, WORD width, WORD height);
 VOID        HIDD_BM_DrawLine        	(OOP_Object *obj, OOP_Object *gc, WORD x1, WORD y1, WORD x2, WORD y2);
@@ -1635,7 +1740,7 @@ VOID	HIDD_BM_GetMem32Image24(OOP_Object *obj,
 
 VOID	HIDD_BM_PutMemTemplate8	(OOP_Object *obj,
     	    	    	    	 OOP_Object *gc,
-				 UBYTE *template,
+				 UBYTE *Template,
 				 ULONG modulo,
 				 WORD srcx,
 				 APTR dst,
@@ -1648,7 +1753,7 @@ VOID	HIDD_BM_PutMemTemplate8	(OOP_Object *obj,
 				 
 VOID	HIDD_BM_PutMemTemplate16(OOP_Object *obj,
     	    	    	    	 OOP_Object *gc,
-				 UBYTE *template,
+				 UBYTE *Template,
 				 ULONG modulo,
 				 WORD srcx,
 				 APTR dst,
@@ -1661,7 +1766,7 @@ VOID	HIDD_BM_PutMemTemplate16(OOP_Object *obj,
 				 
 VOID	HIDD_BM_PutMemTemplate24(OOP_Object *obj,
     	    	    	    	 OOP_Object *gc,
-				 UBYTE *template,
+				 UBYTE *Template,
 				 ULONG modulo,
 				 WORD srcx,
 				 APTR dst,
@@ -1674,7 +1779,7 @@ VOID	HIDD_BM_PutMemTemplate24(OOP_Object *obj,
 				 
 VOID	HIDD_BM_PutMemTemplate32(OOP_Object *obj,
     	    	    	    	 OOP_Object *gc,
-				 UBYTE *template,
+				 UBYTE *Template,
 				 ULONG modulo,
 				 WORD srcx,
 				 APTR dst,
@@ -1772,10 +1877,14 @@ BOOL HIDD_BM_ObtainDirectAccess(OOP_Object *o,
 
 VOID HIDD_BM_ReleaseDirectAccess(OOP_Object *obj);
 
+VOID HIDD_BM_BitMapScale(OOP_Object *obj, OOP_Object *src, OOP_Object *dest, struct BitScaleArgs * bsa, OOP_Object *gc);
+
 HIDDT_RGBConversionFunction HIDD_BM_SetRGBConversionFunction(OOP_Object *o,
     	    	    	    	HIDDT_StdPixFmt srcPixFmt,
 				HIDDT_StdPixFmt dstPixFmt,
 				HIDDT_RGBConversionFunction function);
+
+VOID HIDD_BM_UpdateRect(OOP_Object *obj, WORD x, WORD y, WORD width, WORD height);
 				
 /*******************************************************/
 /**  PROTECTED DATA 
@@ -1847,6 +1956,9 @@ typedef struct
 
 
 /****************** PixFmt definitions **************************/
+
+/* Color model, bitmap type, and swapping bytes flag are stored
+   in Flags member of the HIDDT_PixelFormat structure */
 
 /* CM == Color model */
 enum
@@ -1987,7 +2099,8 @@ extern OOP_AttrBase HiddPlanarBMAttrBase;
 
 enum
 {
-    moHidd_PlanarBM_SetBitMap	/* AROS sepecific method */
+    moHidd_PlanarBM_SetBitMap,
+    moHidd_PlanarBM_GetBitMap,
 };
 
 struct pHidd_PlanarBM_SetBitMap
@@ -1996,7 +2109,14 @@ struct pHidd_PlanarBM_SetBitMap
     struct BitMap   *bitMap;
 };
 
+struct pHidd_PlanarBM_GetBitMap
+{
+    OOP_MethodID    mID;
+    struct BitMap   *bitMap;
+};
+
 BOOL HIDD_PlanarBM_SetBitMap(OOP_Object *obj, struct BitMap *bitMap);
+BOOL HIDD_PlanarBM_GetBitMap(OOP_Object *obj, struct BitMap *bitMap);
 
 enum
 {
@@ -2091,35 +2211,44 @@ extern OOP_AttrBase HiddSyncAttrBase;
 enum
 {
     
-    /* Linux framebuffer device alike specification */
-    aoHidd_Sync_PixelTime = 0,  /* [I.G] ULONG - pixel clock in picoseconds (1E-12 second)
-						ie. time it takes to draw one pixel */
+    /* Linux framebuffer device alike specification, deprecated */
+    aoHidd_Sync_PixelTime = 0,  /* [ISG] ULONG - pixel clock in picoseconds (1E-12 second) ie. time it takes to draw one pixel */
 
-    aoHidd_Sync_LeftMargin,	/* [I.G] ULONG */
-    aoHidd_Sync_RightMargin,	/* [I.G] ULONG */
-    aoHidd_Sync_HSyncLength,	/* [I.G] ULONG */
-    
-    aoHidd_Sync_UpperMargin,	/* [I.G] ULONG */
-    aoHidd_Sync_LowerMargin,	/* [I.G] ULONG */
-    aoHidd_Sync_VSyncLength,	/* [I.G] ULONG */
-    
-    
-    /* Alternative XF86Config Modeline like description
-    */
-    aoHidd_Sync_PixelClock,	/* [I.G] ULONG - Pixel clock in Hz */
-    
-    aoHidd_Sync_HDisp,		/* [I.G] ULONG - time to draw pixels which are displayed */
-    aoHidd_Sync_HSyncStart,	/* [I.G] ULONG - time to the start of the horizontal sync */
-    aoHidd_Sync_HSyncEnd,	/* [I.G] ULONG - time to the end of the horizontal synf */
-    aoHidd_Sync_HTotal,		/* [I.G] ULONG - total time to draw one line + the hsync time	*/
-    
+    aoHidd_Sync_LeftMargin,	/* [ISG] ULONG */
+    aoHidd_Sync_RightMargin,	/* [ISG] ULONG */
+    aoHidd_Sync_HSyncLength,	/* [ISG] ULONG */
+
+    aoHidd_Sync_UpperMargin,	/* [ISG] ULONG */
+    aoHidd_Sync_LowerMargin,	/* [ISG] ULONG */
+    aoHidd_Sync_VSyncLength,	/* [ISG] ULONG */
+
+    /* Alternative description used by newer drivers. Use this one. */
+    aoHidd_Sync_PixelClock,	/* [ISG] ULONG - Pixel clock in Hz */
+
+    aoHidd_Sync_HDisp,		/* [I.G] ULONG - displayed pixels per line */
+    aoHidd_Sync_HSyncStart,	/* [ISG] ULONG - time to the start of the horizontal sync */
+    aoHidd_Sync_HSyncEnd,	/* [ISG] ULONG - time to the end of the horizontal sync */
+    aoHidd_Sync_HTotal,		/* [ISG] ULONG - total time to draw one line + the hsync time	*/
+
     aoHidd_Sync_VDisp,		/* [I.G] ULONG - displayed rows */
-    aoHidd_Sync_VSyncStart,	/* [I.G] ULONG - rows to the start of the horizontal sync */
-    aoHidd_Sync_VSyncEnd,	/* [I.G] ULONG - rows to the end of the horizontal synf */
-    aoHidd_Sync_VTotal,		/* [I.G] ULONG - number of rows in the screen includeing vsync 	*/
-    
+    aoHidd_Sync_VSyncStart,	/* [ISG] ULONG - rows to the start of the horizontal sync */
+    aoHidd_Sync_VSyncEnd,	/* [ISG] ULONG - rows to the end of the horizontal synf */
+    aoHidd_Sync_VTotal,		/* [ISG] ULONG - number of rows in the screen includeing vsync 	*/
+
     aoHidd_Sync_Description,	/* [I.G] STRPTR - guess what */
-    
+
+    aoHidd_Sync_HMin,		/* [ISG] ULONG - minimum acceptable bitmap width */
+    aoHidd_Sync_HMax,		/* [ISG] ULONG - maximum acceptable bitmap width */
+    aoHidd_Sync_VMin,		/* [ISG] ULONG - minimum acceptable bitmap height */
+    aoHidd_Sync_VMax,		/* [ISG] ULONG - maximum acceptable bitmap height */
+
+    aoHidd_Sync_Flags,		/* [I.G] ULONG - mode tags */
+
+    aoHidd_Sync_Variable,	/* [I.G] BOOL  - data can be modified */
+    aoHidd_Sync_MonitorSpec,	/* [I.G] struct MonitorSpec *	- MonitorSpec structure		     */
+    aoHidd_Sync_GfxHidd,	/* [I.G] OOP_Object *		- Driver to which the object belongs */
+    aoHidd_Sync_BoardNumber,	/* [I..] ULONG - Number of board (replaces '%b' in description) */
+
     num_Hidd_Sync_Attrs
     
 };
@@ -2148,6 +2277,24 @@ enum
 #define aHidd_Sync_VTotal	(HiddSyncAttrBase + aoHidd_Sync_VTotal)
 
 #define aHidd_Sync_Description	(HiddSyncAttrBase + aoHidd_Sync_Description)
+
+#define aHidd_Sync_HMin		(HiddSyncAttrBase + aoHidd_Sync_HMin)
+#define aHidd_Sync_HMax 	(HiddSyncAttrBase + aoHidd_Sync_HMax)
+#define aHidd_Sync_VMin		(HiddSyncAttrBase + aoHidd_Sync_VMin)
+#define aHidd_Sync_VMax		(HiddSyncAttrBase + aoHidd_Sync_VMax)
+
+#define aHidd_Sync_Flags	(HiddSyncAttrBase + aoHidd_Sync_Flags)
+
+#define aHidd_Sync_Variable	(HiddSyncAttrBase + aoHidd_Sync_Variable)
+#define aHidd_Sync_MonitorSpec	(HiddSyncAttrBase + aoHidd_Sync_MonitorSpec)
+#define aHidd_Sync_GfxHidd	(HiddSyncAttrBase + aoHidd_Sync_GfxHidd)
+#define aHidd_Sync_BoardNumber	(HiddSyncAttrBase + aoHidd_Sync_BoardNumber)
+
+/* Sync flags */
+#define vHidd_Sync_HSyncPlus		0x0001	/* HSYNC + if set */
+#define vHidd_Sync_VSyncPlus		0x0002	/* VSYNC + if set */
+#define vHidd_Sync_Interlaced		0x0004 	/* Interlaced mode */
+#define vHidd_Sync_DblScan		0x0008 	/* Double scanline */
 
 #define IS_SYNC_ATTR(attr, idx) \
 	( ( ( idx ) = (attr) - HiddSyncAttrBase) < num_Hidd_Sync_Attrs)

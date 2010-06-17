@@ -2,14 +2,18 @@
 #define CLIB_IFFPARSE_PROTOS_H
 
 /*
-    *** Automatically generated from 'iffparse.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/iffparse/iffparse.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <utility/utility.h>
 #include <utility/hooks.h>
 #include <libraries/iffparse.h>
+
+__BEGIN_DECLS
+
 AROS_LP0(struct IFFHandle *, AllocIFF,
          LIBBASETYPEPTR, IFFParseBase, 5, IFFParse
 );
@@ -226,5 +230,7 @@ AROS_LP2(STRPTR, IDtoStr,
          AROS_LPA(STRPTR, buf, A0),
          LIBBASETYPEPTR, IFFParseBase, 45, IFFParse
 );
+
+__END_DECLS
 
 #endif /* CLIB_IFFPARSE_PROTOS_H */

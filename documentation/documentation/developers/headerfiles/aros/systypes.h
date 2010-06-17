@@ -53,7 +53,7 @@
     The downside of all this is that we will end up with quite a few
     signed/unsigned problems.
 */
-#define _AROS_WCHAR_T_	    LONG
+
 #define _AROS_WINT_T_	    LONG
 
 /*

@@ -2,11 +2,12 @@
 #define CLIB_INTUITION_PROTOS_H
 
 /*
-    *** Automatically generated from 'intuition.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/rom/intuition/intuition.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #ifndef INTUITION_CDEF_H
 #define INTUITION_CDEF_H
 #include <intuition/intuition.h>
@@ -20,6 +21,9 @@
 #include <aros/preprocessor/variadic/cast2iptr.hpp>
 
 /* Prototypes for stubs in amiga.lib */
+
+__BEGIN_DECLS
+
 IPTR DoGadgetMethod (struct Gadget * gad, struct Window * win,  
                     struct Requester * req, ULONG MethodID, ...);
 IPTR SetGadgetAttrs (struct Gadget * gad, struct Window * win,
@@ -151,6 +155,12 @@ LONG EasyRequest (struct Window * window, struct EasyStruct * easyStruct, ULONG 
 struct ICData;
 
 #endif
+
+__END_DECLS
+
+
+__BEGIN_DECLS
+
 AROS_LP3(UWORD, AddGadget,
          AROS_LPA(struct Window *, window, A0),
          AROS_LPA(struct Gadget *, gadget, A1),
@@ -854,10 +864,6 @@ AROS_LP1(void, FreeIntuiMessage,
          AROS_LPA(struct IntuiMessage *, imsg, A0),
          LIBBASETYPEPTR, IntuitionBase, 149, Intuition
 );
-AROS_LP1(BOOL, LateIntuiInit,
-         AROS_LPA(APTR, data, A0),
-         LIBBASETYPEPTR, IntuitionBase, 150, Intuition
-);
 AROS_LP2(void, SendIntuiMessage,
          AROS_LPA(struct Window *, window, A0),
          AROS_LPA(struct IntuiMessage *, imsg, A1),
@@ -899,5 +905,7 @@ AROS_LP1(BOOL, EndScreenNotify,
          AROS_LPA(IPTR, notify, A0),
          LIBBASETYPEPTR, IntuitionBase, 162, Intuition
 );
+
+__END_DECLS
 
 #endif /* CLIB_INTUITION_PROTOS_H */

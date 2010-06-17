@@ -2,11 +2,12 @@
 #define CLIB_GRAPHICS_PROTOS_H
 
 /*
-    *** Automatically generated from 'graphics.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/rom/graphics/graphics.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <graphics/gfx.h>
 #include <graphics/displayinfo.h>
 #include <graphics/gels.h>
@@ -18,10 +19,21 @@
 #include <graphics/sprite.h>
 #include <graphics/text.h>
 #include <graphics/scale.h>
+#include <graphics/renderfunc.h>
 #include <hardware/blit.h>
+#include <hidd/graphics.h>
 
 #include <utility/tagitem.h>
+
+__BEGIN_DECLS
+
 ULONG BestModeID(Tag, ...);
+
+__END_DECLS
+
+
+__BEGIN_DECLS
+
 AROS_LP11(LONG, BltBitMap,
          AROS_LPA(struct BitMap *, srcBitMap, A0),
          AROS_LPA(LONG, xSrc, D0),
@@ -416,7 +428,7 @@ AROS_LP0(void, OwnBlitter,
 AROS_LP0(void, DisownBlitter,
          LIBBASETYPEPTR, GfxBase, 77, Graphics
 );
-AROS_LP3(void, InitTmpRas,
+AROS_LP3(struct TmpRas *, InitTmpRas,
          AROS_LPA(struct TmpRas *, tmpras, A0),
          AROS_LPA(void *, buffer, A1),
          AROS_LPA(ULONG, size, D0),
@@ -987,34 +999,51 @@ AROS_LP1(void, FreeRastPort,
          AROS_LPA(struct RastPort *, rp, A1),
          LIBBASETYPEPTR, GfxBase, 180, Graphics
 );
-AROS_LP1(BOOL, LateGfxInit,
-         AROS_LPA(APTR, data, A0),
+AROS_LP2(LONG, AddDisplayDriverA,
+         AROS_LPA(APTR, gfxhidd, A0),
+         AROS_LPA(struct TagItem *, tags, A1),
          LIBBASETYPEPTR, GfxBase, 181, Graphics
 );
-AROS_LP1(struct BitMap *, AllocScreenBitMap,
-         AROS_LPA(ULONG, modeid, D0),
+AROS_LP9(LONG, WritePixels8,
+         AROS_LPA(struct RastPort *, rp, A0),
+         AROS_LPA(UBYTE *, array, A1),
+         AROS_LPA(ULONG, modulo, D0),
+         AROS_LPA(LONG, xstart, D1),
+         AROS_LPA(LONG, ystart, D2),
+         AROS_LPA(LONG, xstop, D3),
+         AROS_LPA(LONG, ystop, D4),
+         AROS_LPA(HIDDT_PixelLUT *, pixlut, A2),
+         AROS_LPA(BOOL, do_update, D5),
          LIBBASETYPEPTR, GfxBase, 182, Graphics
 );
-AROS_LP0(BOOL, MouseCoordsRelative,
+AROS_LP8(LONG, FillRectPenDrMd,
+         AROS_LPA(struct RastPort *, rp, A0),
+         AROS_LPA(LONG, x1, D0),
+         AROS_LPA(LONG, y1, D1),
+         AROS_LPA(LONG, x2, D2),
+         AROS_LPA(LONG, y2, D3),
+         AROS_LPA(HIDDT_Pixel, pix, D4),
+         AROS_LPA(HIDDT_DrawMode, drmd, D5),
+         AROS_LPA(BOOL, do_update, D6),
          LIBBASETYPEPTR, GfxBase, 183, Graphics
 );
-AROS_LP2(BOOL, SetFrontBitMap,
-         AROS_LPA(struct BitMap *, bitmap, A0),
-         AROS_LPA(BOOL, copyback, D0),
+AROS_LP6(LONG, DoRenderFunc,
+         AROS_LPA(struct RastPort *, rp, A0),
+         AROS_LPA(Point *, src, A1),
+         AROS_LPA(struct Rectangle *, rr, A2),
+         AROS_LPA(RENDERFUNC, render_func, A3),
+         AROS_LPA(APTR, funcdata, A4),
+         AROS_LPA(BOOL, do_update, D0),
          LIBBASETYPEPTR, GfxBase, 184, Graphics
 );
-AROS_LP2(void, SetPointerPos,
-         AROS_LPA(UWORD, x, D0),
-         AROS_LPA(UWORD, y, D1),
+AROS_LP6(LONG, DoPixelFunc,
+         AROS_LPA(struct RastPort *, rp, A0),
+         AROS_LPA(LONG, x, D0),
+         AROS_LPA(LONG, y, D1),
+         AROS_LPA(PIXELFUNC, render_func, A1),
+         AROS_LPA(APTR, funcdata, A2),
+         AROS_LPA(BOOL, do_update, D2),
          LIBBASETYPEPTR, GfxBase, 185, Graphics
-);
-AROS_LP5(void, SetPointerShape,
-         AROS_LPA(UWORD *, shape, A0),
-         AROS_LPA(UWORD, width, D0),
-         AROS_LPA(UWORD, height, D1),
-         AROS_LPA(UWORD, xoffset, D2),
-         AROS_LPA(UWORD, yoffset, D3),
-         LIBBASETYPEPTR, GfxBase, 186, Graphics
 );
 AROS_LP2(BOOL, ClearRegionRegion,
          AROS_LPA(struct Region *, R1, A0),
@@ -1081,24 +1110,7 @@ AROS_LP9(void, BltRastPortBitMap,
 AROS_LP0(void, ShowImminentReset,
          LIBBASETYPEPTR, GfxBase, 197, Graphics
 );
-AROS_LP4(APTR, SetRGBConversionFunctionA,
-         AROS_LPA(ULONG, srcPixFmt, D0),
-         AROS_LPA(ULONG, dstPixFmt, D1),
-         AROS_LPA(APTR, function, A0),
-         AROS_LPA(struct TagItem *, tags, A1),
-         LIBBASETYPEPTR, GfxBase, 198, Graphics
-);
-AROS_LP9(ULONG, ConvertPixelsA,
-         AROS_LPA(APTR, srcPixels, A0),
-         AROS_LPA(ULONG, srcMod, D0),
-         AROS_LPA(ULONG, srcPixFmt, D1),
-         AROS_LPA(APTR, dstPixels, A1),
-         AROS_LPA(ULONG, dstMod, D2),
-         AROS_LPA(ULONG, dstPixFmt, D3),
-         AROS_LPA(ULONG, width, D4),
-         AROS_LPA(ULONG, height, D5),
-         AROS_LPA(struct TagItem *, tags, A2),
-         LIBBASETYPEPTR, GfxBase, 199, Graphics
-);
+
+__END_DECLS
 
 #endif /* CLIB_GRAPHICS_PROTOS_H */

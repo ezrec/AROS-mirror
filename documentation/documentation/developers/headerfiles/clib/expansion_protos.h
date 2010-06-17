@@ -2,13 +2,17 @@
 #define CLIB_EXPANSION_PROTOS_H
 
 /*
-    *** Automatically generated from 'expansion.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/rom/expansion/expansion.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <dos/filehandler.h>
 #include <libraries/configvars.h>
+
+__BEGIN_DECLS
+
 AROS_LP1(void, AddConfigDev,
          AROS_LPA(struct ConfigDev *, configDev, A0),
          LIBBASETYPEPTR, ExpansionBase, 5, Expansion
@@ -107,5 +111,7 @@ AROS_LP3(BOOL, AddDosNode,
          AROS_LPA(struct DeviceNode *, deviceNode, A0),
          LIBBASETYPEPTR, ExpansionBase, 25, Expansion
 );
+
+__END_DECLS
 
 #endif /* CLIB_EXPANSION_PROTOS_H */

@@ -1,7 +1,7 @@
 #ifndef AROS_PPC_CPU_H
 #define AROS_PPC_CPU_H
 /*
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 1995-2010, The AROS Development Team. All rights reserved.
     $Id$
 
     NOTE: This file must compile *without* any other header !
@@ -27,11 +27,13 @@
 /*
  * PowerPC note:
  * Some (or maybe even all) PowerPC machines expect the stack to be aligned on 16-byte boundary.
- * This is the reason number one for AROS_WORSTALIGN=16. The second reason is, the 440 CPU will 
+ * This is the reason number one for AROS_WORSTALIGN=16. The second reason is, the 440 CPU will
  * generate an alignment exception if floating point data *crosses* the 16-byte boundary.
  */
 
 #define AROS_32BIT_TYPE         int
+/* For ABI V1 this should be done in common cpu.h */
+#define AROS_LARGEST_TYPE   long long
 
 /* Use C pointer and string for the BCPL pointers and strings
  * For a normal ABI these should not be defined for maximum source code
@@ -41,32 +43,21 @@
 #define AROS_FAST_BSTR 1
 
 /* do we need a function attribute to get parameters on the stack? */
-#define __stackparm __attribute__((stackparm))
+#define __stackparm
+
+/* define this if we have no support for linear varargs in the compiler */
+#define NO_LINEAR_VARARGS 1
+
+#define AROS_SLOWSTACKTAGS      1
+#define AROS_SLOWSTACKMETHODS   1
+#define AROS_SLOWSTACKHOOKS     1
 
 /* types and limits for sig_atomic_t */
 #define AROS_SIG_ATOMIC_T       int
 #define AROS_SIG_ATOMIC_MIN     (-0x7fffffff-1)
 #define AROS_SIG_ATOMIC_MAX     0x7fffffff
 
-register unsigned char* AROS_GET_SP asm("%sp");
-
-#define FLUSH_CACHES 1
-#define CACHE_BLOCK_SIZE 32
-
-#define DATA_CACHE_BST(x)	\
-    __asm__ __volatile__ (	\
-    "dcbst 0,%0 \n\t"		\
-    :				\
-    : "r"(x))
-
-#define INSTR_CACHE_BINV(x)	\
-    __asm__ __volatile__ (	\
-    "icbi 0,%0 \n\t"		\
-    :				\
-    : "r"(x))
-
-#define SYNC  __asm__ __volatile__ ("sync" )
-#define ISYNC __asm__ __volatile__ ("isync")
+register unsigned char* AROS_GET_SP __asm__("%sp");
 
 /*
      An offset value sometimes added to
@@ -156,12 +147,11 @@ struct JumpVec
 #define ALIASCODE                              \
         "EMITALIAS(%s, %s)\n"
 /*
-   We want to activate the execstubs and preserve all registers
-   when calling obtainsemaphore, obtainsemaphoreshared, releasesemaphore,
-   getcc, permit, forbid, enable, disable
+   No, we do not want to preserve the all registers in case of Semaphore and
+   multitasking handling functions. It made sence on m68k native target. On all
+   other targets the standard ABI rules the AROS world anyway...
 */
 #undef UseExecstubs
-#define UseExecstubs 1
 
 /* For debugging only: Pass errnos from the emulated OS. dos/Fault() will
    recognise them */

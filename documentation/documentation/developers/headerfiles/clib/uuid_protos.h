@@ -2,12 +2,16 @@
 #define CLIB_UUID_PROTOS_H
 
 /*
-    *** Automatically generated from 'uuid.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/uuid/uuid.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <libraries/uuid.h>
+
+__BEGIN_DECLS
+
 AROS_LP2(int, UUID_Compare,
          AROS_LPA(const uuid_t *, u1, A0),
          AROS_LPA(const uuid_t *, u2, A1),
@@ -52,5 +56,7 @@ AROS_LP2(void, UUID_Generate,
          AROS_LPA(uuid_t *, uuid, A0),
          LIBBASETYPEPTR, UUIDBase, 13, UUID
 );
+
+__END_DECLS
 
 #endif /* CLIB_UUID_PROTOS_H */

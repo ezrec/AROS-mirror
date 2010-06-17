@@ -2,13 +2,17 @@
 #define CLIB_PNG_PROTOS_H
 
 /*
-    *** Automatically generated from 'png.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/classes/datatypes/png/png.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <datatypes/datatypesclass.h>
 #include <datatypes/pictureclass.h>
+
+__BEGIN_DECLS
+
 AROS_LP1(LONG, PNG_CheckSig,
          AROS_LPA(STRPTR, name, A0),
          LIBBASETYPEPTR, PNGBase, 6, PNG
@@ -63,5 +67,7 @@ AROS_LP3(void, PNG_GetChunkInfo,
          AROS_LPA(ULONG*, sizeptr, A2),
          LIBBASETYPEPTR, PNGBase, 14, PNG
 );
+
+__END_DECLS
 
 #endif /* CLIB_PNG_PROTOS_H */

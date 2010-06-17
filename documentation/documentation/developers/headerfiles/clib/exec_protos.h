@@ -2,11 +2,12 @@
 #define CLIB_EXEC_PROTOS_H
 
 /*
-    *** Automatically generated from 'exec.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/rom/exec/exec.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <exec/types.h>
 #include <exec/tasks.h>
 #include <exec/memory.h>
@@ -21,7 +22,15 @@
 
 #include <stdarg.h>
 
+__BEGIN_DECLS
+
 STRPTR NewRawDoFmt(CONST_STRPTR FormatString, VOID_FUNC PutChProc, APTR PutChData, ...);
+
+__END_DECLS
+
+
+__BEGIN_DECLS
+
 AROS_LP1(ULONG, Supervisor,
          AROS_LPA(ULONG_FUNC, userFunction, A5),
          LIBBASETYPEPTR, SysBase, 5, Exec
@@ -67,8 +76,8 @@ AROS_LP5(struct Library *, MakeLibrary,
 );
 AROS_LP3(ULONG, MakeFunctions,
          AROS_LPA(APTR, target, A0),
-         AROS_LPA(APTR, functionArray, A1),
-         AROS_LPA(APTR, funcDispBase, A2),
+         AROS_LPA(CONST_APTR, functionArray, A1),
+         AROS_LPA(CONST_APTR, funcDispBase, A2),
          LIBBASETYPEPTR, SysBase, 15, Exec
 );
 AROS_LP1(struct Resident *, FindResident,
@@ -479,13 +488,13 @@ AROS_LP2(ULONG, CacheControl,
          AROS_LPA(ULONG, cacheMask, D1),
          LIBBASETYPEPTR, SysBase, 108, Exec
 );
-AROS_LP2(struct IORequest *, CreateIORequest,
+AROS_LP2(APTR, CreateIORequest,
          AROS_LPA(struct MsgPort *, ioReplyPort, A0),
          AROS_LPA(ULONG, size, D0),
          LIBBASETYPEPTR, SysBase, 109, Exec
 );
 AROS_LP1(void, DeleteIORequest,
-         AROS_LPA(struct IORequest *, iorequest, A0),
+         AROS_LPA(APTR, iorequest, A0),
          LIBBASETYPEPTR, SysBase, 110, Exec
 );
 AROS_LP0(struct MsgPort *, CreateMsgPort,
@@ -580,6 +589,12 @@ AROS_LP1(ULONG, ObtainQuickVector,
          AROS_LPA(APTR, interruptCode, A0),
          LIBBASETYPEPTR, SysBase, 131, Exec
 );
+AROS_LP3(IPTR, NewStackSwap,
+         AROS_LPA(struct StackSwapStruct *, newStack, A0),
+         AROS_LPA(APTR, function, A1),
+         AROS_LPA(struct StackSwapArgs *, args, A2),
+         LIBBASETYPEPTR, SysBase, 134, Exec
+);
 AROS_LP1(APTR, TaggedOpenLibrary,
          AROS_LPA(LONG, tag, D0),
          LIBBASETYPEPTR, SysBase, 135, Exec
@@ -665,5 +680,19 @@ AROS_LP4(APTR, NewAddTask,
          AROS_LPA(struct TagItem *, tagList, A4),
          LIBBASETYPEPTR, SysBase, 152, Exec
 );
+AROS_LP1(BOOL, AddResetCallback,
+         AROS_LPA(struct Interrupt *, resetCallback, A0),
+         LIBBASETYPEPTR, SysBase, 167, Exec
+);
+AROS_LP1(void, RemResetCallback,
+         AROS_LPA(struct Interrupt *, resetCallback, A0),
+         LIBBASETYPEPTR, SysBase, 168, Exec
+);
+AROS_LP1(ULONG, ShutdownA,
+         AROS_LPA(ULONG, action, D0),
+         LIBBASETYPEPTR, SysBase, 173, Exec
+);
+
+__END_DECLS
 
 #endif /* CLIB_EXEC_PROTOS_H */

@@ -2,16 +2,19 @@
 #define CLIB_GADTOOLS_PROTOS_H
 
 /*
-    *** Automatically generated from 'gadtools.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/gadtools/gadtools.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 
 #include <intuition/intuition.h>
 #include <intuition/screens.h>
 #include <utility/tagitem.h>
 #include <libraries/gadtools.h>
+
+__BEGIN_DECLS
 
 APTR           GetVisualInfo(struct Screen *, Tag, ...);
 struct Gadget *CreateGadget(ULONG, struct Gadget *, struct NewGadget *, Tag, ...);
@@ -20,6 +23,11 @@ void           GT_SetGadgetAttrs(struct Gadget *, struct Window *, struct Reques
 LONG           GT_GetGadgetAttrs(struct Gadget *, struct Window *, struct Requester *, Tag, ...);
 struct Menu *  CreateMenus(struct NewMenu *, Tag, ...);
 BOOL           LayoutMenus(struct Menu *, APTR, Tag, ...);
+
+__END_DECLS
+
+
+__BEGIN_DECLS
 
 AROS_LP4(struct Gadget *, CreateGadgetA,
          AROS_LPA(ULONG, kind, D0),
@@ -119,5 +127,7 @@ AROS_LP4(LONG, GT_GetGadgetAttrsA,
          AROS_LPA(struct TagItem *, taglist, A3),
          LIBBASETYPEPTR, GadToolsBase, 29, GadTools
 );
+
+__END_DECLS
 
 #endif /* CLIB_GADTOOLS_PROTOS_H */

@@ -2,13 +2,17 @@
 #define CLIB_THREAD_PROTOS_H
 
 /*
-    *** Automatically generated from 'thread.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/thread/thread.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <libraries/thread.h>
 #include <stdint.h>
+
+__BEGIN_DECLS
+
 AROS_LP2(uint32_t, CreateThread,
          AROS_LPA(ThreadEntryFunction, entry, A0),
          AROS_LPA(void *, data, A1),
@@ -68,5 +72,11 @@ AROS_LP1(void, BroadcastCondition,
          AROS_LPA(void *, cond, A0),
          LIBBASETYPEPTR, ThreadBase, 19, Thread
 );
+AROS_LP1(void, ExitThread,
+         AROS_LPA(void *, result, A0),
+         LIBBASETYPEPTR, ThreadBase, 20, Thread
+);
+
+__END_DECLS
 
 #endif /* CLIB_THREAD_PROTOS_H */

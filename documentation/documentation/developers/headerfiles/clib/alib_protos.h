@@ -2,7 +2,7 @@
 #define  CLIB_ALIB_PROTOS_H
 
 /*
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Prototypes for amiga.lib
@@ -58,6 +58,7 @@ struct Locale;
 */
 IPTR CallHookA (struct Hook * hook, APTR obj, APTR param);
 IPTR CallHook (struct Hook * hook, APTR obj, ...) __stackparm;
+UBYTE * ACrypt(UBYTE * buffer, const UBYTE * password, const UBYTE * user);
 
 /* Exec support */
 VOID BeginIO (struct IORequest *ioReq);
@@ -78,7 +79,7 @@ ULONG RangeRand (ULONG maxValue);
 ULONG FastRand (ULONG seed);
 LONG TimeDelay (LONG unit, ULONG secs, ULONG microsecs);
 void waitbeam (LONG pos);
-void __sprintf(UBYTE *buffer, UBYTE *format, ...) __stackparm;
+void __sprintf(UBYTE *buffer, UBYTE *format, ...);
 STRPTR StrDup(CONST_STRPTR str);
 APTR ReAllocVec(APTR oldmem, ULONG size, ULONG requirements);
 

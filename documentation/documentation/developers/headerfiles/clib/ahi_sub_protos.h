@@ -4,7 +4,7 @@
 #define CLIB_AHI_SUB_PROTOS_H
 
 /*
-**	$VER: ahi_sub_protos.h 23642 $Id$
+**	$VER: ahi_sub_protos.h 30794 $Id$
 **
 **	C prototypes. For use with 32 bit integers only.
 **

@@ -2,11 +2,12 @@
 #define CLIB_DOS_PROTOS_H
 
 /*
-    *** Automatically generated from 'dos.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/rom/dos/dos.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <dos/dos.h>
 #include <dos/dosextens.h>
 #include <dos/record.h>
@@ -25,10 +26,15 @@
 #define System(...) SystemTagList(__VA_ARGS__)
 
 /* Prototypes for stubs in amiga.lib */
+
+__BEGIN_DECLS
+
 APTR AllocDosObjectTags (ULONG type, Tag tag1, ...) __stackparm;
 struct Process * CreateNewProcTags (Tag tag1, ...) __stackparm;
 BPTR NewLoadSegTags (STRPTR file, Tag tag1, ...) __stackparm;
 LONG SystemTags (STRPTR command, Tag tag1, ...) __stackparm;
+
+__END_DECLS
 
 #if !defined(NO_INLINE_STDARG) && defined(__GNUC__)
 #define FWritef(fh, format, ...) \
@@ -49,6 +55,9 @@ LONG SystemTags (STRPTR command, Tag tag1, ...) __stackparm;
     VFPrintf(Output(), (format), __args); \
 })
 #endif
+
+
+__BEGIN_DECLS
 
 AROS_LP2(BPTR, Open,
          AROS_LPA(CONST_STRPTR, name, D1),
@@ -797,7 +806,7 @@ AROS_LP2(BOOL, MatchPatternNoCase,
          LIBBASETYPEPTR, DOSBase, 162, Dos
 );
 AROS_LP1(STRPTR, DosGetString,
-         AROS_LPA(LONG, stringNu, D0),
+         AROS_LPA(LONG, stringNum, D0),
          LIBBASETYPEPTR, DOSBase, 163, Dos
 );
 AROS_LP2(BOOL, SameDevice,
@@ -824,5 +833,7 @@ AROS_LP3(LONG, ScanVars,
          AROS_LPA(APTR, userdata, D3),
          LIBBASETYPEPTR, DOSBase, 167, Dos
 );
+
+__END_DECLS
 
 #endif /* CLIB_DOS_PROTOS_H */

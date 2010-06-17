@@ -91,6 +91,11 @@ struct StackSwapStruct
     APTR  stk_Pointer; /* Stack pointer at switch point */
 };
 
+struct StackSwapArgs
+{
+    IPTR Args[8];          /* The C function arguments */
+};
+
 /* tc_Flags Bits */
 #define TB_PROCTIME	0
 #define TB_ETASK	3
@@ -166,5 +171,9 @@ struct ETask
 #define TASKTAG_ARG7	(TASKTAG_Dummy + 22)
 #define TASKTAG_ARG8	(TASKTAG_Dummy + 23)
 
+/* Actions for ShutdownA() */
+
+#define SD_ACTION_POWEROFF   0
+#define SD_ACTION_COLDREBOOT 1
 
 #endif /* EXEC_TASKS_H */

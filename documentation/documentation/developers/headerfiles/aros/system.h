@@ -2,7 +2,7 @@
 #define AROS_SYSTEM_H
 
 /*
-    Copyright © 1995-2001, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Analyse the current kind of system and compiler.
@@ -70,7 +70,7 @@
  * C99 defines a new keyword restrict that can help do optimisation where
  * pointers are used in programs. We'd like to support optimisation :-)
  */
-#   if defined(__STDC__VERSION__) &&  __STDC__VERSION__ >= 199901L
+#   if defined(__STDC_VERSION__) &&  __STDC_VERSION__ >= 199901L
 #	define	    __restrict__    restrict
 #   else
 #	define	    __restrict__
@@ -185,7 +185,7 @@
 #endif
 
 #ifndef AROS_CSYM_FROM_ASM_NAME
-#   if defined(__ELF__) || defined(__MACH__) || defined(_WIN32)
+#   if defined(__ELF__) || defined(__MACH__) || defined(_WIN32) || defined(__CYGWIN__)
 #       define AROS_CSYM_FROM_ASM_NAME(n) n
 #   else
 #       error define AROS_CSYM_FROM_ASM_NAME for your architecture

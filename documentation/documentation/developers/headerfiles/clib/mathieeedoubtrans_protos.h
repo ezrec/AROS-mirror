@@ -2,11 +2,15 @@
 #define CLIB_MATHIEEEDOUBTRANS_PROTOS_H
 
 /*
-    *** Automatically generated from 'mathieeedoubtrans.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/mathieeedoubtrans/mathieeedoubtrans.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
+
+__BEGIN_DECLS
+
 AROS_LPQUAD1(double, IEEEDPAtan,
          AROS_LPAQUAD(double, y, D0, D1),
          LIBBASETYPEPTR, MathIeeeDoubTransBase, 5, MathIeeeDoubTrans
@@ -73,5 +77,7 @@ AROS_LPQUAD1(double, IEEEDPLog10,
          AROS_LPAQUAD(double, y, D0, D1),
          LIBBASETYPEPTR, MathIeeeDoubTransBase, 20, MathIeeeDoubTrans
 );
+
+__END_DECLS
 
 #endif /* CLIB_MATHIEEEDOUBTRANS_PROTOS_H */

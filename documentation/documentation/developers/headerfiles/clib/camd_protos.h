@@ -2,13 +2,17 @@
 #define CLIB_CAMD_PROTOS_H
 
 /*
-    *** Automatically generated from 'camd.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/camd/camd.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <utility/tagitem.h>
 #include <midi/camd.h>
+
+__BEGIN_DECLS
+
 AROS_LP1(APTR, LockCAMD,
          AROS_LPA(ULONG, locktype, D0),
          LIBBASETYPEPTR, CamdBase, 5, Camd
@@ -174,5 +178,7 @@ AROS_LP3(BOOL, Midi2Driver,
          AROS_LPA(ULONG, maxbuff, D1),
          LIBBASETYPEPTR, CamdBase, 40, Camd
 );
+
+__END_DECLS
 
 #endif /* CLIB_CAMD_PROTOS_H */

@@ -2,12 +2,16 @@
 #define CLIB_OOP_PROTOS_H
 
 /*
-    *** Automatically generated from 'oop.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/rom/oop/oop.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <oop/oop.h>
+
+__BEGIN_DECLS
+
 AROS_LP3(APTR, OOP_NewObject,
          AROS_LPA(struct OOP_IClass *, classPtr, A0),
          AROS_LPA(UBYTE *, classID, A1),
@@ -75,5 +79,11 @@ AROS_LP2(void *, OOP_GetMethod,
          AROS_LPA(OOP_MethodID, mid, D0),
          LIBBASETYPEPTR, OOPBase, 21, OOP
 );
+AROS_LP1(OOP_Class *, OOP_FindClass,
+         AROS_LPA(UBYTE *, classID, A0),
+         LIBBASETYPEPTR, OOPBase, 22, OOP
+);
+
+__END_DECLS
 
 #endif /* CLIB_OOP_PROTOS_H */

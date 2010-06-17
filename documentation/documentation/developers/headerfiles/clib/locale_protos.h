@@ -2,14 +2,17 @@
 #define CLIB_LOCALE_PROTOS_H
 
 /*
-    *** Automatically generated from 'locale.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/workbench/libs/locale/locale.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <utility/hooks.h>
 #include <dos/datetime.h>
 #include <libraries/locale.h>
+
+__BEGIN_DECLS
 
 struct Catalog *OpenCatalog
 (
@@ -18,6 +21,12 @@ struct Catalog *OpenCatalog
     Tag             tag1,
     ...
 );
+
+__END_DECLS
+
+
+__BEGIN_DECLS
+
 AROS_LP1(void, CloseCatalog,
          AROS_LPA(struct Catalog *, catalog, A0),
          LIBBASETYPEPTR, LocaleBase, 6, Locale
@@ -153,5 +162,7 @@ AROS_LP5(LONG, StrnCmp,
          AROS_LPA(ULONG, type, D1),
          LIBBASETYPEPTR, LocaleBase, 30, Locale
 );
+
+__END_DECLS
 
 #endif /* CLIB_LOCALE_PROTOS_H */

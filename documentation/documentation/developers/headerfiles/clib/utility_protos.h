@@ -2,11 +2,12 @@
 #define CLIB_UTILITY_PROTOS_H
 
 /*
-    *** Automatically generated from 'utility.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/rom/utility/utility.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <exec/types.h>
 #include <exec/ports.h>
 #include <utility/tagitem.h>
@@ -16,8 +17,17 @@
 
 /* Prototypes for stubs in amiga.lib */
 #ifndef AllocNamedObject
+
+__BEGIN_DECLS
+
 struct NamedObject *AllocNamedObject(STRPTR name, STACKULONG tag1, ...);
+
+__END_DECLS
+
 #endif
+
+__BEGIN_DECLS
+
 AROS_LP2(struct TagItem *, FindTagItem,
          AROS_LPA(Tag, tagValue, D0),
          AROS_LPA(const struct TagItem *, tagList, A0),
@@ -204,5 +214,7 @@ AROS_LP2(void, RemNamedObject,
 AROS_LP0(ULONG, GetUniqueID,
          LIBBASETYPEPTR, UtilityBase, 45, Utility
 );
+
+__END_DECLS
 
 #endif /* CLIB_UTILITY_PROTOS_H */

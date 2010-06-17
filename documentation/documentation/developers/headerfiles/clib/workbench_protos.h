@@ -2,11 +2,12 @@
 #define CLIB_WORKBENCH_PROTOS_H
 
 /*
-    *** Automatically generated from 'workbench.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/rom/workbench/workbench.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
 #include <workbench/workbench.h>
 #include <dos/bptr.h>
 
@@ -19,6 +20,9 @@ BOOL CloseWorkbenchObject( STRPTR name, Tag tag1, ... ) __stackparm;
 BOOL MakeWorkbenchObjectVisible( STRPTR name, Tag tag1, ... ) __stackparm;
 BOOL OpenWorkbenchObject( STRPTR name, Tag tag1, ... ) __stackparm;
 BOOL WorkbenchControl( STRPTR name, Tag tag1, ... ) __stackparm;
+
+__BEGIN_DECLS
+
 AROS_LP5(struct AppWindow *, AddAppWindowA,
          AROS_LPA(ULONG, id, D0),
          AROS_LPA(ULONG, userdata, D1),
@@ -131,5 +135,7 @@ AROS_LP2(struct DiskObject *, GetNextAppIcon,
          AROS_LPA(char*, text, A1),
          LIBBASETYPEPTR, WorkbenchBase, 27, Workbench
 );
+
+__END_DECLS
 
 #endif /* CLIB_WORKBENCH_PROTOS_H */

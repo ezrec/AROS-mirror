@@ -1,13 +1,20 @@
-#ifndef AUTOINIT_H
-#define AUTOINIT_H
+#ifndef __AROS_STARTUP_H
+#define __AROS_STARTUP_H
 
 #include <setjmp.h>
 #include <proto/exec.h>
+#include <aros/symbolsets.h>
+ 
+extern char *__argstr;
+extern ULONG __argsize;
+extern char **__argv;
+extern int __argc;
+struct WBStartup;
+extern struct WBStartup *WBenchMsg;
 
-struct aros_startup
-{
-    jmp_buf as_startup_jmp_buf;
-    LONG    as_startup_error;
-};
+extern LONG __startup_error;
 
-#endif /* !AUTOINIT_H */
+DECLARESET(PROGRAM_ENTRIES);
+void __startup_entries_next(void);
+
+#endif /* !__AROS_STARTUP_H */

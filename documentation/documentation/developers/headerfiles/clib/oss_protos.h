@@ -2,11 +2,15 @@
 #define CLIB_OSS_PROTOS_H
 
 /*
-    *** Automatically generated from 'oss.conf'. Edits will be lost. ***
-    Copyright © 1995-2008, The AROS Development Team. All rights reserved.
+    *** Automatically generated from '/home/mazze/projects/aros-src/arch/all-unix/libs/oss/oss.conf'. Edits will be lost. ***
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>
+
+
+__BEGIN_DECLS
+
 BOOL OSS_Open(char *filename, BOOL read, BOOL write, BOOL blocking);
 void OSS_Close();
 void OSS_Reset();
@@ -38,5 +42,7 @@ BOOL OSS_MMap(APTR *mapped_address, int len, BOOL read, BOOL write);
 void OSS_MUnmap(APTR mapped_address, int len);
 BOOL OSS_SetTrigger(BOOL input, BOOL output);
 int OSS_Write(APTR buf, int size);
+
+__END_DECLS
 
 #endif /* CLIB_OSS_PROTOS_H */

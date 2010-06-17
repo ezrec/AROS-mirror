@@ -2,7 +2,7 @@
 #define UTILITY_TAGITEM_H
 
 /*
-    Copyright © 1995-2001, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Tag-lists
@@ -25,8 +25,10 @@ struct TagItem
 };
 
 #ifdef AROS_SLOWSTACKTAGS
+__BEGIN_DECLS
     struct TagItem * GetTagsFromStack  (IPTR firstTag, va_list args);
     void             FreeTagsFromStack (struct TagItem * tags);
+__END_DECLS
 #endif
 
 /* constants for Tag.ti_Tag, control tag values */
@@ -82,8 +84,7 @@ struct TagItem
 	    va_start (args, arg);			\
 							\
 	    if ((tags = GetTagsFromStack (arg, args)))	\
-	    {						\
-		retval =
+	    {
 
 #	define AROS_SLOWSTACKTAGS_ARG(arg) tags
 
