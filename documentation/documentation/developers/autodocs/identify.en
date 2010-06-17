@@ -42,11 +42,11 @@ Synopsis
 ::
 
  ULONG IdEstimateFormatSize(
-          STRPTR String,
-          struct TagItem * Tags );
+          STRPTR string,
+          struct TagItem * tags );
  
  ULONG IdEstimateFormatSizeTags(
-          STRPTR String,
+          STRPTR string,
           TAG tag, ... );
 
 

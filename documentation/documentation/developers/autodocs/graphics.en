@@ -9,53 +9,53 @@ graphics
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AddAnimOb()`_                          `AddBob()`_                             `AddFont()`_                            `AddVSprite()`_                         
-`AllocBitMap()`_                        `AllocDBufInfo()`_                      `AllocRaster()`_                        `AllocSpriteDataA()`_                   
-`AndRectRect()`_                        `AndRectRegion()`_                      `AndRectRegionND()`_                    `AndRegionRegion()`_                    
-`AndRegionRegionND()`_                  `Animate()`_                            `AreaCircle()`_                         `AreaDraw()`_                           
-`AreaEllipse()`_                        `AreaEnd()`_                            `AreaMove()`_                           `AreRegionsEqual()`_                    
-`AskFont()`_                            `AskSoftStyle()`_                       `AttachPalExtra()`_                     `AttemptLockLayerRom()`_                
-`BestModeIDA()`_                        `BitMapScale()`_                        `BltBitMap()`_                          `BltBitMapRastPort()`_                  
-`BltClear()`_                           `BltMaskBitMapRastPort()`_              `BltPattern()`_                         `BltRastPortBitMap()`_                  
-`BltTemplate()`_                        `CalcIVG()`_                            `CBump()`_                              `ChangeExtSpriteA()`_                   
-`ChangeSprite()`_                       `ChangeVPBitMap()`_                     `ClearEOL()`_                           `ClearRectRegion()`_                    
-`ClearRectRegionND()`_                  `ClearRegion()`_                        `ClearRegionRegion()`_                  `ClearRegionRegionND()`_                
-`ClearScreen()`_                        `ClipBlit()`_                           `CloneRastPort()`_                      `CloseFont()`_                          
-`CloseMonitor()`_                       `CMove()`_                              `CoerceMode()`_                         `CopyRegion()`_                         
-`CopySBitMap()`_                        `CreateRastPort()`_                     `CWait()`_                              `DeinitRastPort()`_                     
-`DisownBlitter()`_                      `DisposeRegion()`_                      `DoCollision()`_                        `Draw()`_                               
-`DrawEllipse()`_                        `DrawGList()`_                          `EraseRect()`_                          `ExtendFont()`_                         
-`FindColor()`_                          `FindDisplayInfo()`_                    `Flood()`_                              `FontExtent()`_                         
-`FreeBitMap()`_                         `FreeColorMap()`_                       `FreeCopList()`_                        `FreeCprList()`_                        
-`FreeDBufInfo()`_                       `FreeGBuffers()`_                       `FreeRaster()`_                         `FreeRastPort()`_                       
-`FreeSprite()`_                         `FreeSpriteData()`_                     `FreeVPortCopLists()`_                  `GetAPen()`_                            
-`GetBitMapAttr()`_                      `GetBPen()`_                            `GetColorMap()`_                        `GetDisplayInfoData()`_                 
-`GetDrMd()`_                            `GetExtSpriteA()`_                      `GetGBuffers()`_                        `GetOutlinePen()`_                      
-`GetRGB32()`_                           `GetRGB4()`_                            `GetRPAttrsA()`_                        `GetSprite()`_                          
-`GetVPModeID()`_                        `GfxAssociate()`_                       `GfxFree()`_                            `GfxLookUp()`_                          
-`GfxNew()`_                             `InitArea()`_                           `InitBitMap()`_                         `InitGels()`_                           
-`InitGMasks()`_                         `InitMasks()`_                          `InitRastPort()`_                       `InitTmpRas()`_                         
-`InitView()`_                           `InitVPort()`_                          `IsPointInRegion()`_                    `LoadRGB32()`_                          
-`LoadRGB4()`_                           `LoadView()`_                           `LockLayerRom()`_                       `MakeVPort()`_                          
-`ModeNotAvailable()`_                   `Move()`_                               `MoveSprite()`_                         `MrgCop()`_                             
-`NewRectRegion()`_                      `NewRegion()`_                          `NextDisplayInfo()`_                    `ObtainBestPenA()`_                     
-`ObtainPen()`_                          `OpenFont()`_                           `OpenMonitor()`_                        `OrRectRegion()`_                       
-`OrRectRegionND()`_                     `OrRegionRegion()`_                     `OrRegionRegionND()`_                   `OwnBlitter()`_                         
-`PolyDraw()`_                           `QBlit()`_                              `QBSBlit()`_                            `ReadPixel()`_                          
-`ReadPixelArray8()`_                    `ReadPixelLine8()`_                     `RectFill()`_                           `ReleasePen()`_                         
-`RemFont()`_                            `RemIBob()`_                            `RemVSprite()`_                         `ScalerDiv()`_                          
-`ScrollRaster()`_                       `ScrollRasterBF()`_                     `ScrollRegion()`_                       `ScrollVPort()`_                        
-`SetABPenDrMd()`_                       `SetAPen()`_                            `SetBPen()`_                            `SetChipRev()`_                         
-`SetCollision()`_                       `SetDrMd()`_                            `SetFont()`_                            `SetMaxPen()`_                          
-`SetOutlinePen()`_                      `SetRast()`_                            `SetRegion()`_                          `SetRGB32()`_                           
-`SetRGB32CM()`_                         `SetRGB4()`_                            `SetRGB4CM()`_                          `SetRPAttrsA()`_                        
-`SetSoftStyle()`_                       `SetWriteMask()`_                       `SortGList()`_                          `StripFont()`_                          
-`SwapRegions()`_                        `SyncSBitMap()`_                        `Text()`_                               `TextExtent()`_                         
-`TextFit()`_                            `TextLength()`_                         `UCopperListInit()`_                    `UnlockLayerRom()`_                     
-`VBeamPos()`_                           `VideoControl()`_                       `WaitBlit()`_                           `WaitBOVP()`_                           
-`WaitTOF()`_                            `WeighTAMatch()`_                       `WriteChunkyPixels()`_                  `WritePixel()`_                         
-`WritePixelArray8()`_                   `WritePixelLine8()`_                    `XorRectRegion()`_                      `XorRectRegionND()`_                    
-`XorRegionRegion()`_                    `XorRegionRegionND()`_                  
+`AddAnimOb()`_                          `AddBob()`_                             `AddDisplayDriverA()`_                  `AddFont()`_                            
+`AddVSprite()`_                         `AllocBitMap()`_                        `AllocDBufInfo()`_                      `AllocRaster()`_                        
+`AllocSpriteDataA()`_                   `AndRectRect()`_                        `AndRectRegion()`_                      `AndRectRegionND()`_                    
+`AndRegionRegion()`_                    `AndRegionRegionND()`_                  `Animate()`_                            `AreaCircle()`_                         
+`AreaDraw()`_                           `AreaEllipse()`_                        `AreaEnd()`_                            `AreaMove()`_                           
+`AreRegionsEqual()`_                    `AskFont()`_                            `AskSoftStyle()`_                       `AttachPalExtra()`_                     
+`AttemptLockLayerRom()`_                `BestModeIDA()`_                        `BitMapScale()`_                        `BltBitMap()`_                          
+`BltBitMapRastPort()`_                  `BltClear()`_                           `BltMaskBitMapRastPort()`_              `BltPattern()`_                         
+`BltRastPortBitMap()`_                  `BltTemplate()`_                        `CalcIVG()`_                            `CBump()`_                              
+`ChangeExtSpriteA()`_                   `ChangeSprite()`_                       `ChangeVPBitMap()`_                     `ClearEOL()`_                           
+`ClearRectRegion()`_                    `ClearRectRegionND()`_                  `ClearRegion()`_                        `ClearRegionRegion()`_                  
+`ClearRegionRegionND()`_                `ClearScreen()`_                        `ClipBlit()`_                           `CloneRastPort()`_                      
+`CloseFont()`_                          `CloseMonitor()`_                       `CMove()`_                              `CoerceMode()`_                         
+`CopyRegion()`_                         `CopySBitMap()`_                        `CreateRastPort()`_                     `CWait()`_                              
+`DeinitRastPort()`_                     `DisownBlitter()`_                      `DisposeRegion()`_                      `DoCollision()`_                        
+`Draw()`_                               `DrawEllipse()`_                        `DrawGList()`_                          `EraseRect()`_                          
+`ExtendFont()`_                         `FindColor()`_                          `FindDisplayInfo()`_                    `Flood()`_                              
+`FontExtent()`_                         `FreeBitMap()`_                         `FreeColorMap()`_                       `FreeCopList()`_                        
+`FreeCprList()`_                        `FreeDBufInfo()`_                       `FreeGBuffers()`_                       `FreeRaster()`_                         
+`FreeRastPort()`_                       `FreeSprite()`_                         `FreeSpriteData()`_                     `FreeVPortCopLists()`_                  
+`GetAPen()`_                            `GetBitMapAttr()`_                      `GetBPen()`_                            `GetColorMap()`_                        
+`GetDisplayInfoData()`_                 `GetDrMd()`_                            `GetExtSpriteA()`_                      `GetGBuffers()`_                        
+`GetOutlinePen()`_                      `GetRGB32()`_                           `GetRGB4()`_                            `GetRPAttrsA()`_                        
+`GetSprite()`_                          `GetVPModeID()`_                        `GfxAssociate()`_                       `GfxFree()`_                            
+`GfxLookUp()`_                          `GfxNew()`_                             `InitArea()`_                           `InitBitMap()`_                         
+`InitGels()`_                           `InitGMasks()`_                         `InitMasks()`_                          `InitRastPort()`_                       
+`InitTmpRas()`_                         `InitView()`_                           `InitVPort()`_                          `IsPointInRegion()`_                    
+`LoadRGB32()`_                          `LoadRGB4()`_                           `LoadView()`_                           `LockLayerRom()`_                       
+`MakeVPort()`_                          `ModeNotAvailable()`_                   `Move()`_                               `MoveSprite()`_                         
+`MrgCop()`_                             `NewRectRegion()`_                      `NewRegion()`_                          `NextDisplayInfo()`_                    
+`ObtainBestPenA()`_                     `ObtainPen()`_                          `OpenFont()`_                           `OpenMonitor()`_                        
+`OrRectRegion()`_                       `OrRectRegionND()`_                     `OrRegionRegion()`_                     `OrRegionRegionND()`_                   
+`OwnBlitter()`_                         `PolyDraw()`_                           `QBlit()`_                              `QBSBlit()`_                            
+`ReadPixel()`_                          `ReadPixelArray8()`_                    `ReadPixelLine8()`_                     `RectFill()`_                           
+`ReleasePen()`_                         `RemFont()`_                            `RemIBob()`_                            `RemVSprite()`_                         
+`ScalerDiv()`_                          `ScrollRaster()`_                       `ScrollRasterBF()`_                     `ScrollRegion()`_                       
+`ScrollVPort()`_                        `SetABPenDrMd()`_                       `SetAPen()`_                            `SetBPen()`_                            
+`SetChipRev()`_                         `SetCollision()`_                       `SetDrMd()`_                            `SetFont()`_                            
+`SetMaxPen()`_                          `SetOutlinePen()`_                      `SetRast()`_                            `SetRegion()`_                          
+`SetRGB32()`_                           `SetRGB32CM()`_                         `SetRGB4()`_                            `SetRGB4CM()`_                          
+`SetRPAttrsA()`_                        `SetSoftStyle()`_                       `SetWriteMask()`_                       `SortGList()`_                          
+`StripFont()`_                          `SwapRegions()`_                        `SyncSBitMap()`_                        `Text()`_                               
+`TextExtent()`_                         `TextFit()`_                            `TextLength()`_                         `UCopperListInit()`_                    
+`UnlockLayerRom()`_                     `VBeamPos()`_                           `VideoControl()`_                       `WaitBlit()`_                           
+`WaitBOVP()`_                           `WaitTOF()`_                            `WeighTAMatch()`_                       `WriteChunkyPixels()`_                  
+`WritePixel()`_                         `WritePixelArray8()`_                   `WritePixelLine8()`_                    `XorRectRegion()`_                      
+`XorRectRegionND()`_                    `XorRegionRegion()`_                    `XorRegionRegionND()`_                  
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -137,6 +137,89 @@ See also
 ~~~~~~~~
 
 `InitGels()`_ `AddVSprite()`_ `graphics/rastport.h <../headerfiles/graphics/rastport.h>`_ `graphics/gels.h <../headerfiles/graphics/gels.h>`_ 
+
+----------
+
+AddDisplayDriverA()
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG AddDisplayDriverA(
+          APTR gfxhidd,
+          struct TagItem * tags );
+ 
+ ULONG AddDisplayDriver(
+          APTR gfxhidd,
+          TAG tag, ... );
+
+Function
+~~~~~~~~
+::
+
+     Add a display driver to the system.
+
+
+Inputs
+~~~~~~
+::
+
+     gfxhidd - A newly created driver object
+     tags    - An optional TagList. Valid tags are:
+
+         DDRV_BootMode     - A boolean value telling that a boot mode driver
+                             is being added. Boot mode drivers will automatically
+                             shutdown on next AddDisplayDriverA() call, unless
+                             DDRV_KeepBootMode = TRUE is specified. Defaults to FALSE.
+         DDRV_MonitorID    - Starting monitor ID to assign to the driver. Use it
+                             with care. Attempt to add already existing ID will
+                             fail with DD_ID_EXISTS code. By default a next available
+                             ID will be picked up automatically.
+         DDRV_ReserveIDs   - A number of subsequent monitor IDs to reserve. Reserved IDs
+                             can be reused only with DDRV_MonitorID tag. This tag is
+                             provided as an aid to support possible removable display
+                             devices. Defaults to 1.
+         DDRV_KeepBootMode - Do not shut down boot mode drivers. Use this tag if you
+                             are 100% sure that your driver won't conflict with boot mode
+                             driver (like VGA or VESA) and won't attempt to take over its
+                             hardware. Defaults to FALSE.
+
+
+Result
+~~~~~~
+::
+
+     error - One of following codes:
+
+         DD_OK        - Operation completed OK.
+         DD_NO_MEM    - There is not enough memory to set up internal data.
+         DD_ID_EXISTS - Attempt to assign monitor IDs that are already used.
+
+
+Notes
+~~~~~
+::
+
+     This function is AROS-specific.
+
+
+Bugs
+~~~~
+::
+
+     graphics.library tracks down usage of display drivers. If a driver currently
+     has something on display, it will not be shut down, even if it's boot mode
+     driver. This can cause problems if the new driver attempts to take over
+     the same hardware (for example native mode driver vs VESA driver). So be careful
+     while adding new display drivers on a working system. Know what you do.
+
+     There's no way to know which IDs have been reserved when using DDRV_ReserveIDs.
+
+     These issues will be addressed in future, this API is raw and incomplete.
+
+
 
 ----------
 
@@ -1433,7 +1516,7 @@ Function
 ~~~~~~~~
 ::
 
-     Moves a part of a bitmap around or into another bitmaps.
+     Moves part of a bitmap around or into another bitmap.
 
 
 
@@ -4815,12 +4898,26 @@ Synopsis
  void LoadView(
           struct View * view );
 
+Function
+~~~~~~~~
+::
+
+     Display a new view
+
+
 Inputs
 ~~~~~~
 ::
 
      view - pointer to the View structure which contains the pointer to the
             constructed coprocessor instructions list, or NULL
+
+
+Result
+~~~~~~
+::
+
+     None.
 
 
 
@@ -4884,6 +4981,14 @@ Synopsis
           struct View * view,
           struct ViewPort * viewport );
 
+Function
+~~~~~~~~
+::
+
+     Prepare a ViewPort to be displayed. Calculate all necessary internal data.
+     For Amiga(tm) chipset bitmaps this includes calculating preliminary copperlists.
+
+
 Inputs
 ~~~~~~
 ::
@@ -4897,7 +5002,14 @@ Result
 ~~~~~~
 ::
 
-     error -
+     error - Result of the operation:
+         MVP_OK         - Everything is OK, ViewPort is ready
+         MVP_NO_MEM     - There was not enough memory for internal data
+         MVP_NO_VPE     - There was no ViewPortExtra for this ViewPort and no memory to
+                          allocate a temporary one.
+         MVP_NO_DSPINS  - There was not enough memory for Amiga(tm) copperlist.
+         MVP_NO_DISPLAY - The BitMap can't be displayed using specified mode (for example,
+                          misaligned or wrong depth).
 
 
 
@@ -5023,6 +5135,10 @@ Notes
      AROS currently supports only one sprite #0 for mouse pointer.
      Other sprite numbers are ignored by this function.
 
+     ViewPort is also used in order to specify the physical display.
+     If it's not specified, Amiga(tm) chipset display is assumed.
+     This is available only on Amiga(tm) architecture.
+
 
 
 ----------
@@ -5041,23 +5157,23 @@ Function
 ~~~~~~~~
 ::
 
-     Merge together the display, color, sprite and user coprocessor
-             instructions into a single coprocessor instruction stream.
-             
+     Prepare the view for being displayed. Calculate necessary internal data.
+     For Amiga(tm) chipset this function also merges together the display, color, sprite and user
+     coprocessor instructions into a single coprocessor instruction stream.
+
 
 Inputs
 ~~~~~~
 ::
 
-     view - a pointer to the view structure whos coprocessor instructions
-                    are to be merged.
+     view - a pointer to the view structure to prepare
 
 
 Result
 ~~~~~~
 ::
 
-     error - ULONG error value indicating either lack of memory to build the system copper lists,
+     error - ULONG error value indicating either lack of memory to build the system data,
                      or that MrgCop() has no work to do - ie there where no viewPorts in the list.
 
 
@@ -5066,6 +5182,8 @@ Notes
 ::
 
      Pre-v39 AmigaOS returns void.
+     
+     If the given view is already on display, changes appear immediately.
 
 
 

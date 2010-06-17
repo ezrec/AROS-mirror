@@ -49,6 +49,40 @@ Synopsis
  ULONG BestCModeIDTags(
           TAG tag, ... );
 
+Function
+~~~~~~~~
+::
+
+     Finds best RTG display mode ID which matches parameters specified
+     by the taglist.
+
+
+Inputs
+~~~~~~
+::
+
+     tags - A pointer to a TagList
+
+
+Result
+~~~~~~
+::
+
+     Best matchind display mode ID or INVALID_ID if there is no match
+
+
+Bugs
+~~~~
+::
+
+     At the moment MonitorID and BoardName tags are not implemented
+
+
+
+See also
+~~~~~~~~
+
+`graphics.library/BestModeIDA() <./graphics#bestmodeida>`_ 
 
 ----------
 

@@ -9,10 +9,10 @@ oop
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`OOP_AddClass()`_                       `OOP_DisposeObject()`_                  `OOP_GetAttr()`_                        `OOP_GetAttrBase()`_                    
-`OOP_GetMethod()`_                      `OOP_GetMethodID()`_                    `OOP_NewObject()`_                      `OOP_ObtainAttrBase()`_                 
-`OOP_ObtainAttrBases()`_                `OOP_ParseAttrs()`_                     `OOP_ReleaseAttrBase()`_                `OOP_ReleaseAttrBases()`_               
-`OOP_RemoveClass()`_                    `OOP_SetAttrs()`_                       
+`OOP_AddClass()`_                       `OOP_DisposeObject()`_                  `OOP_FindClass()`_                      `OOP_GetAttr()`_                        
+`OOP_GetAttrBase()`_                    `OOP_GetMethod()`_                      `OOP_GetMethodID()`_                    `OOP_NewObject()`_                      
+`OOP_ObtainAttrBase()`_                 `OOP_ObtainAttrBases()`_                `OOP_ParseAttrs()`_                     `OOP_ReleaseAttrBase()`_                
+`OOP_ReleaseAttrBases()`_               `OOP_RemoveClass()`_                    `OOP_SetAttrs()`_                       
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -101,6 +101,45 @@ See also
 ~~~~~~~~
 
 `OOP_NewObject()`_ 
+
+----------
+
+OOP_FindClass()
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR OOP_FindClass(
+          UBYTE * classID );
+
+Function
+~~~~~~~~
+::
+
+     Finds a class with given ID in the list of public classes.
+
+
+Inputs
+~~~~~~
+::
+
+     classID  - Public ID of the class to find.
+
+
+Result
+~~~~~~
+::
+
+     Pointer to a public class or NULL if there's no such class
+
+
+
+See also
+~~~~~~~~
+
+`OOP_AddClass()`_ 
 
 ----------
 
