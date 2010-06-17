@@ -59,6 +59,7 @@ FILES := \
    classes/scout_mount \
    classes/scout_mount_detail \
    classes/scout_oop \
+   classes/scout_oop_detail \
    classes/scout_parentwindow \
    classes/scout_patches \
    classes/scout_ports \

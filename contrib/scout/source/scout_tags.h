@@ -280,7 +280,7 @@
 
 #define MUIA_MonitorsDetailWin_MonitorSpec	    (TAGBASE_TBOECKEL | 0x2130)
 
-
+#define MUIA_OOPDetailWin_Class                     (TAGBASE_TBOECKEL | 0x2140)
 
 
 

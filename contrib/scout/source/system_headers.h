@@ -260,6 +260,7 @@
 #include "scout_mount.h"
 #include "scout_mount_detail.h"
 #include "scout_oop.h"
+#include "scout_oop_detail.h"
 #include "scout_parentwindow.h"
 #include "scout_patches.h"
 #include "scout_ports.h"

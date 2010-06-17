@@ -38,6 +38,7 @@ struct MUI_CustomClass *MonitorsDetailWinClass = NULL;
 struct MUI_CustomClass *MountsWinClass = NULL;
 struct MUI_CustomClass *MountsDetailWinClass = NULL;
 struct MUI_CustomClass *OOPWinClass = NULL;
+struct MUI_CustomClass *OOPDetailWinClass = NULL;
 struct MUI_CustomClass *ParentWinClass = NULL;
 struct MUI_CustomClass *PatchesWinClass = NULL;
 struct MUI_CustomClass *PortsWinClass = NULL;
@@ -113,6 +114,7 @@ BOOL CreateCustomClasses( void )
     if ((MountsWinClass              = MakeMountsWinClass()))
     if ((MountsDetailWinClass        = MakeMountsDetailWinClass()))
     if ((OOPWinClass                 = MakeOOPWinClass()))
+    if ((OOPDetailWinClass           = MakeOOPDetailWinClass()))
     if ((PatchesWinClass             = MakePatchesWinClass()))
     if ((PortsWinClass               = MakePortsWinClass()))
     if ((PortsDetailWinClass         = MakePortsDetailWinClass()))
@@ -180,6 +182,7 @@ void DeleteCustomClasses( void )
     if (MountsWinClass)               MUI_DeleteCustomClass(MountsWinClass);
     if (MountsDetailWinClass)         MUI_DeleteCustomClass(MountsDetailWinClass);
     if (OOPWinClass)                  MUI_DeleteCustomClass(OOPWinClass);
+    if (OOPDetailWinClass)            MUI_DeleteCustomClass(OOPDetailWinClass);
     if (PatchesWinClass)              MUI_DeleteCustomClass(PatchesWinClass);
     if (PortsWinClass)                MUI_DeleteCustomClass(PortsWinClass);
     if (PortsDetailWinClass)          MUI_DeleteCustomClass(PortsDetailWinClass);

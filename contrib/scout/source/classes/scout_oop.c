@@ -36,6 +36,7 @@
 #include <oop/oop.h>
 #include <proto/oop.h>
 
+struct Library *OOPBase;
 OOP_AttrBase MetaAttrBase;
 
 #endif
@@ -78,7 +79,7 @@ HOOKPROTONHNO(classtree_dspfunc, void, struct MUIP_NListtree_DisplayMessage *msg
 	msg->Array[4] = ce->ce_SuperDispatcher;
     } else {
         msg->Array[0] = txtAddress;
-        msg->Array[1] = txtOOPClassID;
+        msg->Array[1] = txtNodeName;
         msg->Array[2] = txtOOPDoMethod;
 	msg->Array[3] = txtOOPCoerceMethod;
 	msg->Array[4] = txtOOPDoSuperMethod;
@@ -384,19 +385,20 @@ STATIC ULONG mMore( struct IClass *cl,
 {
     if (!clientstate) {
         struct OOPWinData *cwd = INST_DATA(cl, obj);
-        struct OOPClassEntry *ce;
+        struct MUI_NListtree_TreeNode *tn;
 
-        if ((ce = GetActiveEntry(cwd->cwd_ClassTree)) != NULL) {
+        if ((tn = GetActiveTreeNode(cwd->cwd_ClassTree)) != NULL) {
+            struct ClassEntry *ce = (struct ClassEntry *)tn->tn_User;
             APTR detailWin;
 
-/*          if ((detailWin = (Object *)(OOPDetailWindowObject,
+            if ((detailWin = (Object *)(OOPDetailWindowObject,
                     MUIA_Window_ParentWindow, (IPTR)obj,
                 End)) != NULL) {
                 COLLECT_RETURNIDS;
                 set(detailWin, MUIA_OOPDetailWin_Class, ce);
                 set(detailWin, MUIA_Window_Open, TRUE);
                 REISSUE_RETURNIDS;
-            }*/
+            }
         }
     }
 
@@ -408,9 +410,10 @@ STATIC ULONG mListChange( struct IClass *cl,
                           UNUSED Msg msg )
 {
     struct OOPWinData *cwd = INST_DATA(cl, obj);
-    struct OOPClassEntry *ce;
+    struct MUI_NListtree_TreeNode *tn;
 
-    if ((ce = GetActiveEntry(cwd->cwd_ClassTree)) != NULL) {
+    if ((tn = GetActiveTreeNode(cwd->cwd_ClassTree)) != NULL) {
+        struct ClassEntry *ce = (struct ClassEntry *)tn->tn_User;
 
         MySetContents(cwd->cwd_ClassText, "%s \"%s\"", ce->ce_Address, ce->ce_ClassName);
         DoMethod(obj, MUIM_MultiSet, MUIA_Disabled, FALSE, cwd->cwd_RemoveButton,
@@ -460,24 +463,15 @@ APTR MakeOOPWinClass( void )
 
 #ifdef __AROS__
 
-BOOL have_bases;
-struct Library *OOPBase;
-
-static struct OOP_ABDescr attrbases[] = {
-    { IID_Meta,           &MetaAttrBase},
-    { NULL,               NULL         }
-};
-
-
 BOOL InitOOP(void)
 {
     OOPBase = OpenLibrary("oop.library", 0);
     if (!OOPBase)
         return FALSE;
 
-    have_bases = OOP_ObtainAttrBases(attrbases);
+    MetaAttrBase = OOP_ObtainAttrBase(IID_Meta);
 
-    if (have_bases)
+    if (MetaAttrBase)
         return TRUE;
 
     CleanupOOP();
@@ -486,8 +480,8 @@ BOOL InitOOP(void)
 
 void CleanupOOP(void)
 {
-    if (have_bases)
-        OOP_ReleaseAttrBases(attrbases);
+    if (MetaAttrBase)
+        OOP_ReleaseAttrBase(IID_Meta);
 
     if (OOPBase) {
 	CloseLibrary(OOPBase);

@@ -4905,9 +4905,6 @@ _OOP Classes
 txtOOPTitle (//)
 OOP CLASSES
 ;
-txtOOPClassID (//)
-ID
-;
 txtOOPDoMethod (//)
 cl_DoMethod
 ;
@@ -4922,4 +4919,28 @@ txtOOPPrintHeader (//)
 ;
 txtOOPPrintLine (//)
  %s %-30s %-9.9s   %-9.9s    %-9.9s      %-30s\n
+;
+txtOOPDetailTitle (//)
+OOP CLASS
+;
+txtOOPBasePtr (//)
+OOPBasePtr:
+;
+txtOOPInstOffset (//)
+InstOffset:
+;
+txtOOPUserData (//)
+UserData:
+;
+txtOOPDoMethod2 (//)
+cl_DoMethod:
+;
+txtOOPCoerceMethod2 (//)
+cl_CoerceMethod:
+;
+txtOOPDoSuperMethod2 (//)
+cl_DoSuperMethod:
+;
+txtOOPSuper (//)
+superclass:
 ;

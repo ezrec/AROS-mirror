@@ -111,6 +111,8 @@ OBJECTS=$(OBJDIR)/prestartup.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_monitors_detail.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_mount.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_mount_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_oop.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_oop_detail.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_parentwindow.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_patches.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_ports.o \
