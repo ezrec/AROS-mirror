@@ -413,7 +413,7 @@ STATIC ULONG mListChange( struct IClass *cl,
     struct MUI_NListtree_TreeNode *tn;
 
     if ((tn = GetActiveTreeNode(cwd->cwd_ClassTree)) != NULL) {
-        struct ClassEntry *ce = (struct ClassEntry *)tn->tn_User;
+        struct OOPClassEntry *ce = (struct ClassEntry *)tn->tn_User;
 
         MySetContents(cwd->cwd_ClassText, "%s \"%s\"", ce->ce_Address, ce->ce_ClassName);
         DoMethod(obj, MUIM_MultiSet, MUIA_Disabled, FALSE, cwd->cwd_RemoveButton,
