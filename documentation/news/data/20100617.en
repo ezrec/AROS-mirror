@@ -1,0 +1,85 @@
+=============
+Status update
+=============
+
+:Author:   Paolo Besser
+:Date:     2010-06-17
+
+Latest updates
+--------------
+
+Many things happened since the latest status update.
+
+Michal Schulz developed the GMA950 hidd, so AROS can now use 2D native functions of the latest GPUs from Intel. This will be really handy for 
+people using Stephen Jones' iMica systems and netbooks like the Acer 
+Aspire One A150. 
+
+Krzysztof "Deadwood" Smiechowicz has gone really far with his Gallium3D 
+port to AROS: he has now integrated 2D and 3D accelerated functions in a 
+single driver called Nuveau, which supports 2D acceleration for almost 
+all GeForce GPUs starting from the ancient GeForce 2 cards
+until the recent GTX 200 
+series. 3D functions, however, are available only to GeForce FX (5x00), 
+cards and upwards. Some models and GPUs might not be supported yet.
+Users of Nvidia cards may now regularily use this driver, 
+instead of the old Nvidia one. This will also help 
+Krzysztof fixing it, as it is still work-in-progress. Please refer to this
+`AROS-EXEC topic`__ to help him spotting and fixing bug (and please
+remember he's not directly responsible for driver quality: he's just 
+adapting and porting to AROS what has been done by Nuveau/Gallium team).
+
+Pavel Fedin is reworking our graphics subsystem, cleaning it up and 
+making it behave like the original Amiga one: the day we won't need anymore
+to enter driver names in GRUB boot lines is approaching. Some 
+drivers can now be mounted moving them in the Monitors directory (like 
+on AmigaOS), while others not yet. But he's still working on it. Pavel 
+is also fixing linux framebuffer driver and his Win32-hosted version of 
+AROS, which can now move screens like classic Amigas.
+
+Neil Cafferkey has vastly improved our support to FAT partitions, and 
+also made AROS installable on USB pendrives (and bootable from them). 
+This means that regular nightly builds, but also `Icaros Destop version 
+1.2.2`__ can now be installed on netbooks and
+other USB-bootable systems using a memory stick instead of a DVD. Paolo
+Besser has written a complete `how-to`__ in PDF format, and placed it
+on the Icaros website.
+
+Pascal Papara has brought us a brand new distribution called 
+`Broadway`__, which is targeted to attract also people never involved with
+Amiga computers, and include a 
+stripped down version of the incoming AMC, the first media-center 
+environment based on AmigaOS-like systems. Broadway is not complete yet, 
+but a nice preview version can be downloaded from its website__.
+
+Steve "ClusterUK" Jones has announced a new silent version of his iMica 
+line of computers. This Atom-based system will be as performing as the 
+old one, but it will also run completely fanless. We also have to thank 
+Steve for his funding efforts: after paying Davy Wentzler for his useful 
+AHI HDAudio drivers, he also financed the port of the Catweasel MKIV 
+controller drivers and the development of Michal's GMA driver.
+
+Good news for ACube's SAM440EP users too: since April 14th, AROS 
+nightlies are available also for this nice PPC platform, which is still 
+actively mantained. Michal Shulz has also recently brought a EFIKA 
+version of AROS too.
+
+Nick "Kalamatee" Andrews has slightly improved Wanderer and some long-
+running bugs have been fixed. AROS won't nest directories recursively 
+anymore, when a drawer is placed into its own window by mistake, and 
+AROS desktop can now be populated using the leave out/put away options, 
+which are now finally enabled. He is also working on icon and list view: 
+files can now be listed by details and sorted as you prefer.
+
+There are also many small and big enhancements ongoing "under the hood" 
+and coming from third party software developers, but they are simply too 
+much to be mentioned here. We apologize with them, but we'd also like to 
+say a big "thank you!" to anyone helping us in any way, porting 
+applications, creating new ones, writing documentation and/or just 
+evangelizing AROS inside and outside the Amiga community.
+
+__ http://aros-exec.org/modules/newbb/viewtopic.php?viewmode=flat&topic_id=4724&forum=2
+__ http://vmwaros.blogspot.com/2010/05/icaros-desktop-122-update-ready-for.html
+__ http://vmwaros.blogspot.com/2010/06/create-your-own-icaros-stick.html
+__ http://www.aros-broadway.de/
+__ http://www.aros-broadway.de
+
