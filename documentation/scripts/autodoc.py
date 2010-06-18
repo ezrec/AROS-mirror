@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright © 2008, The AROS Development Team. All rights reserved.
+# Copyright © 2008-2010, The AROS Development Team. All rights reserved.
 # $Id$
 
 
@@ -83,7 +83,7 @@ $
 """, re.VERBOSE | re.MULTILINE)
 
 
-# don't generate autodocs from this files
+# don't generate autodocs from these files
 blacklist = (   "buildeasyrequestargs.c", "buildeasyrequestargs_morphos.c",
                 "buildsysrequest.c", "buildsysrequest_morphos.c",
                 "refreshwindowframe.c", "refreshwindowframe_morphos.c",
@@ -171,7 +171,7 @@ class autodoc:
         Arguments:
         
         filehandle - filehandle of a file to write the autodoc in
-        titles - what titles (e.g. Synopsis, Note) should be print
+        titles - what titles (e.g. Synopsis, Note) should be printed
         """
         
         for title in titles:
@@ -247,7 +247,7 @@ class shellautodoc(autodoc):
         Arguments:
         
         filehandle -    filehandle of a file to write the autodoc in
-        titles -        what titles (e.g. Synopsis, Note) should be print.
+        titles -        what titles (e.g. Synopsis, Note) should be printed.
                         Write them in the given capitalization.
 
         """
@@ -369,7 +369,7 @@ class libautodoc(autodoc):
         Arguments:
         
         filehandle -    filehandle of a file to write the autodoc in
-        titles -        what titles (e.g. Synopsis, Note) should be print.
+        titles -        what titles (e.g. Synopsis, Note) should be printed.
                         Write them in the given capitalization.
         """
 
@@ -450,7 +450,7 @@ class shelldoclist:
         Arguments:
         
         targedir -      name of a directory to where autodocs and index should be written
-        titles -        what titles (e.g. Synopsis, Note) should be print.
+        titles -        what titles (e.g. Synopsis, Note) should be printed.
                         Write them in the given capitalization.
         """
         
@@ -520,7 +520,7 @@ class libdoclist:
         Arguments:
         
         targedir -      name of a directory to where autodocs and index should be written
-        titles -        what titles (e.g. Synopsis, Note) should be print.
+        titles -        what titles (e.g. Synopsis, Note) should be printed.
                         Write them in the given capitalization.
         """
 
@@ -605,14 +605,14 @@ def write_index(filehandle, targetdir, indent):
             filehandle.write("%s+ `%s <%s>`_\n" %(indent * " ", docname, docname))
     
 def create_lib_docs():
-    """Create only the library docs.
+    """Create the library docs.
     """
     
     lib_titles = ("Synopsis","Template","Function",
         "Inputs","Tags", "Result","Example","Notes","Bugs","See also")  # The titles we want
-                                                                        # to be print
+                                                                        # to be printed
     targetdir = os.path.join("documentation", "developers", "autodocs")
-    srcdirs = ( os.path.join(topdir, "rom"), os.path.join(topdir, "workbench/libs") )
+    srcdirs = ( os.path.join(topdir, "rom"), os.path.join(topdir, "rom/devs"), os.path.join(topdir, "workbench/libs") )
     for dir in srcdirs:
         create_lib_docs_dir(dir, targetdir, lib_titles)
 
@@ -648,7 +648,7 @@ def create_lib_docs_dir(srcdir, targetdir, titles):
     
     srcdir -    parent directory of directory with autodocs.
     targetdir - the directory where the resulting ReST files should be stored
-    titles -    what titles (e.g. Synopsis, Note) should be print.
+    titles -    what titles (e.g. Synopsis, Note) should be printed.
                 Write them in the given capitalization.
     """
     
@@ -661,7 +661,7 @@ def create_lib_docs_dir(srcdir, targetdir, titles):
             libdocs.write(targetdir, titles)
 
 def create_shell_docs():
-    """Create only the Shell commands docs.
+    """Create the Shell commands docs.
     """
     
     srcdirs = ( os.path.join(topdir, "workbench", "c"),
@@ -674,7 +674,7 @@ def create_shell_docs():
     targetdir = os.path.join("documentation", "users", "shell") # relative to main build script
     shell_titles = ("Name","Format","Template","Synopsis","Location","Function",
         "Inputs","Tags","Result","Example","Notes","Bugs","See also")  # The titles we want
-                                                                       # to be print
+                                                                       # to be printed
     shelldocs = shelldoclist()
     for dir in srcdirs:
         shelldocs.read(dir)
@@ -682,7 +682,7 @@ def create_shell_docs():
     print "Done"
 
 def create_apps_docs():
-    """Create only the application docs.
+    """Create the application docs.
     """
     
     srcdirs = ( os.path.join(topdir, "workbench", "tools", "commodities"),
@@ -691,7 +691,7 @@ def create_apps_docs():
     targetdir = os.path.join("documentation", "users", "applications") # relative to main build script
     apps_titles = ("Name","Format","Template","Synopsis","Location","Function",
         "Inputs","Tags","Result","Example","Notes","Bugs","See also")  # The titles we want
-                                                                       # to be print
+                                                                       # to be printed
     appsdocs = appsdoclist()
     for dir in srcdirs:
         appsdocs.read(dir)
