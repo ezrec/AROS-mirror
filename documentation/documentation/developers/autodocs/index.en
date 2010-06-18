@@ -19,6 +19,7 @@ Autodocs for Modules
 + `cgxvideo <cgxvideo>`_
 + `clib <clib>`_
 + `commodities <commodities>`_
++ `console <console>`_
 + `coolimages <coolimages>`_
 + `datatypes <datatypes>`_
 + `desktop <desktop>`_
@@ -32,6 +33,7 @@ Autodocs for Modules
 + `icon <icon>`_
 + `identify <identify>`_
 + `iffparse <iffparse>`_
++ `input <input>`_
 + `intuition <intuition>`_
 + `keymap <keymap>`_
 + `locale <locale>`_
