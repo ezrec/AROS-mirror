@@ -83,6 +83,11 @@ xref_regx = re.compile(r"""
 $
 """, re.VERBOSE | re.MULTILINE)
 
+xref_kind_function = 1
+xref_kind_localfunction = 2
+xref_kind_header = 3
+xref_kind_string = 4
+xref_kind_any = 5
 
 # don't generate autodocs from these files
 blacklist = (   "buildeasyrequestargs.c", "buildeasyrequestargs_morphos.c",
@@ -142,19 +147,19 @@ class autodoc:
                     # check for allowed combinations
                     if libname and funcname and not localfuncname and not path and not command and not header:
                         # libname + funcname
-                        self.titles["XREF"].append( (1, libname, funcname) )
+                        self.titles["XREF"].append( (xref_kind_function, libname, funcname) )
                     elif not libname and not funcname and localfuncname and not path and not command and not header:
                         # localfuncname
-                        self.titles["XREF"].append( (2, localfuncname, "") )
+                        self.titles["XREF"].append( (xref_kind_localfunction, localfuncname, "") )
                     elif not libname and not funcname and not localfuncname and path and not command and not header:
                         # path
-                        self.titles["XREF"].append( (3, path, "") )
+                        self.titles["XREF"].append( (xref_kind_any, path, "") )
                     elif not libname and not funcname and not localfuncname and not path and command and not header:
                         # command
-                        self.titles["XREF"].append( (4, command, "") )
+                        self.titles["XREF"].append( (xref_kind_string, command, "") )
                     elif not libname and not funcname and not localfuncname and not path and not command and header:
                         # header
-                        self.titles["XREF"].append( (5, header, "") )
+                        self.titles["XREF"].append( (xref_kind_header, header, "") )
                     else:
                         print "*" * 20
                         print self.titles["SEE ALSO"]
@@ -201,23 +206,33 @@ class autodoc:
             if len(self.titles["XREF"]) > 0:
                 filehandle.write("See also\n~~~~~~~~\n\n")
                 for kind, name1, name2 in self.titles["XREF"]:
-                    if kind == 1:
-                        # library + function name
-                        filehandle.write("`%s.library/%s() <%s/%s#%s>`_ "
-                                        %(name1, name2, path_to_lib, name1, name2.lower()) )
-                    elif kind == 2:
-                        # localfuncname
-                        filehandle.write("`%s()`_ " %(name1) )
-                    elif kind == 3:
-                        # path (no hyperlink)
-                        filehandle.write("%s " %name1 )                  
-                    elif kind == 4:
-                        # command
-                        filehandle.write("`%s <%s>`_ " %(name1, name1.lower()) )
-                    elif kind == 5:
-                        # header
-                        filehandle.write("`%s <%s/%s>`_ " %(name1, path_to_header, name1 ) )
+                    if kind == xref_kind_function:
+                        self.write_xref_function(filehandle, name1, name2, path_to_lib)
+                    elif kind == xref_kind_localfunction:
+                        self.write_xref_localfunction(filehandle, name1)
+                    elif kind == xref_kind_any:
+                        self.write_xref_any(filehandle, name1)
+                    elif kind == xref_kind_string:
+                        self.write_xref_string(filehandle, name1)
+                    elif kind == xref_kind_header:
+                        self.write_xref_header(filehandle, name1, path_to_header)
                 filehandle.write("\n\n")
+
+    def write_xref_function(self, filehandle, libname, funcname, path_to_lib):
+        filehandle.write("`%s.library/%s() <%s/%s#%s>`_ "
+                        %(libname, funcname, path_to_lib, libname, funcname.lower()) )
+
+    def write_xref_localfunction(self, filehandle, funcname):
+        filehandle.write("`%s()`_ " %(funcname) )
+
+    def write_xref_header(self, filehandle, name, path):
+        filehandle.write("`%s <%s/%s>`_ " %(name, path, name) )
+    
+    def write_xref_string(self, filehandle, name):
+        filehandle.write("`%s`_ " %(name) )
+
+    def write_xref_any(self, filehandle, name):
+        filehandle.write("%s " %name)                  
 
 
 class shellautodoc(autodoc):
@@ -269,6 +284,9 @@ class shellautodoc(autodoc):
         filehandle.write("\n\n---------------\n\n")
         
         autodoc.write(self, filehandle, titles)
+
+    def write_xref_string(self, filehandle, name):
+        filehandle.write("`%s <%s>`_ " %(name, name.lower()) )
 
 
 class libautodoc(autodoc):
