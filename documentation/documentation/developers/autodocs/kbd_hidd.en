@@ -1,0 +1,231 @@
+========
+kbd_hidd
+========
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_
+
+----------
+
+========================================== ========================================== ========================================== ========================================== 
+`--background--`_                          `--hardware_drivers--`_                    `aoHidd_Kbd_IrqHandler`_                   `aoHidd_Kbd_IrqHandlerData`_               
+`moHidd_Kbd_AddHardwareDriver`_            `moHidd_Kbd_RemHardwareDriver`_            
+========================================== ========================================== ========================================== ========================================== 
+
+-----------
+
+--background--
+==============
+
+Notes
+~~~~~
+::
+
+     This class represents a "hub" for collecting input from various
+     keyboard devices in the system and sending them to clients.
+
+     In order to get an access to keyboard input subsystem you need to
+     create an object of CLID_Hidd_Kbd class. There can be two use
+     scenarios: driver mode and client mode.
+
+     If you wish to run in client mode (receive keyboard events), you
+     have to supply a callback using aoHidd_Kbd_IrqHandler attribute.
+     After this your callback will be called every time the event arrives
+     until you dispose your object.
+
+     Events from all keyboard devices are merged into a single stream
+     and propagated to all clients.
+
+     In driver mode you don't need to supply a callback (however it's not
+     forbidden). Instead you use the master object for registering your
+     hardware driver using HIDD_Kbd_AddHardwareDriver(). It is safe to
+     dispose the master object after adding a driver, the driver will
+     be internally kept in place.
+
+
+
+----------
+
+--hardware_drivers--
+====================
+
+Notes
+~~~~~
+::
+
+     A hardware driver should implement the same interface according to the following
+     rules:
+
+     1. A single object of driver class represents a single hardware unit.
+     2. A single driver object maintains a single callback address (passed to it
+        using aoHidd_Kbd_IrqHandler). Under normal conditions this callback is supplied
+        by CLID_Hidd_Kbd class.
+     3. HIDD_Kbd_AddHardwareDriver() and HIDD_Kbd_RemHardwareDriver() on a driver object
+        itself do not make sense, so there's no need to implement them.
+
+     A hardware driver class should be a subclass of CLID_Hidd in order to ensure
+     compatibility in future.
+
+
+
+----------
+
+aoHidd_Kbd_IrqHandler
+=====================
+
+Function
+~~~~~~~~
+::
+
+     Specifies a keyboard event handler. The handler will called be every time a
+     keyboard event happens. A "C" calling convention is used, declare the handler
+     functions as follows:
+
+     void KeyboardIRQ(APTR data, UWORD keyCode)
+
+     Handler parameters are:
+         data    - Anything you specify using aoHidd_Kbd_IrqHandlerData
+         keyCode - A raw key code as specified in devices/rawkeycodes.h.
+                   Key release event is indicated by ORing this value
+                   with IECODE_UP_PREFIX (defined in devices/inputevent.h)
+
+     The handler is called inside interrupts, so usual restrictions apply to it.
+
+
+Bugs
+~~~~
+::
+
+     Not all hosted drivers provide this attribute.
+
+
+
+See also
+~~~~~~~~
+
+`aoHidd_Kbd_IrqHandlerData <aohidd_kbd_irqhandlerdata>`_ 
+
+----------
+
+aoHidd_Kbd_IrqHandlerData
+=========================
+
+Function
+~~~~~~~~
+::
+
+     Specifies a user-defined value that will be passed to IRQ handler as a first
+     parameter. The purpose of this is to pass some static data to the handler.
+     The system will not assume anything about this value.
+
+     Defaults to NULL if not specified.
+
+
+
+See also
+~~~~~~~~
+
+`aoHidd_Kbd_IrqHandler <aohidd_kbd_irqhandler>`_ 
+
+----------
+
+moHidd_Kbd_AddHardwareDriver
+============================
+
+Synopsis
+~~~~~~~~
+::
+
+     OOP_Object *OOP_DoMethod(OOP_Object *obj, struct pHidd_Kbd_AddHardwareDriver *Msg);
+
+     OOP_Object *HIDD_Kbd_AddHardwareDriver(OOP_Object *obj, OOP_Class *driverClass,
+                                            struct TagItem *tags);
+
+
+Function
+~~~~~~~~
+::
+
+     Creates a hardware driver object and registers it in the system.
+
+     It does not matter on which instance of CLID_Hidd_Kbd class this method is
+     used. Hardware driver objects are shared between all of them.
+
+
+Inputs
+~~~~~~
+::
+
+     obj         - Any object of CLID_Hidd_Kbd class.
+     driverClass - A pointer to OOP class of the driver. In order to create an object
+                   of some previously registered public class, use
+                   oop.library/OOP_FindClass().
+     tags        - An optional taglist which will be passed to driver class' New() method.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to driver object.
+
+
+Notes
+~~~~~
+::
+
+     Do not dispose the returned object yourself, use HIDD_Kbd_RemHardwareDriver() for it.
+
+
+
+See also
+~~~~~~~~
+
+`moHidd_Kbd_RemHardwareDriver <mohidd_kbd_remhardwaredriver>`_ 
+
+----------
+
+moHidd_Kbd_RemHardwareDriver
+============================
+
+Synopsis
+~~~~~~~~
+::
+
+     void OOP_DoMethod(OOP_Object *obj, struct pHidd_Kbd_RemHardwareDriver *Msg);
+
+     void HIDD_Kbd_RemHardwareDriver(OOP_Object *obj, OOP_Object *driver);
+
+
+Function
+~~~~~~~~
+::
+
+     Unregisters and disposes keyboard hardware driver object.
+
+     It does not matter on which instance of CLID_Hidd_Kbd class this method is
+     used. Hardware driver objects are shared between all of them.
+
+
+Inputs
+~~~~~~
+::
+
+     obj    - Any object of CLID_Hidd_Kbd class.
+     driver - A pointer to a driver object, returned by HIDD_Kbd_AddHardwareDriver().
+
+
+Result
+~~~~~~
+::
+
+     None
+
+
+
+See also
+~~~~~~~~
+
+`moHidd_Kbd_AddHardwareDriver <mohidd_kbd_addhardwaredriver>`_ 
+
