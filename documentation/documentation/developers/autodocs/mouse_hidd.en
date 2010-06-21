@@ -75,6 +75,13 @@ Notes
 aoHidd_Mouse_Extended
 =====================
 
+Synopsis
+~~~~~~~~
+::
+
+     [..G], BOOL
+
+
 Function
 ~~~~~~~~
 ::
@@ -96,6 +103,13 @@ See also
 
 aoHidd_Mouse_IrqHandler
 =======================
+
+Synopsis
+~~~~~~~~
+::
+
+     [I..], APTR
+
 
 Function
 ~~~~~~~~
@@ -154,6 +168,13 @@ See also
 aoHidd_Mouse_IrqHandlerData
 ===========================
 
+Synopsis
+~~~~~~~~
+::
+
+     [I..], APTR
+
+
 Function
 ~~~~~~~~
 ::
@@ -184,6 +205,13 @@ See also
 aoHidd_Mouse_RelativeCoords
 ===========================
 
+Synopsis
+~~~~~~~~
+::
+
+     [..G], BOOL
+
+
 Function
 ~~~~~~~~
 ::
@@ -209,6 +237,13 @@ See also
 
 aoHidd_Mouse_State
 ==================
+
+Synopsis
+~~~~~~~~
+::
+
+     [..G], struct pHidd_Mouse_Event
+
 
 Function
 ~~~~~~~~

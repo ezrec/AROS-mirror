@@ -74,6 +74,13 @@ Notes
 aoHidd_Kbd_IrqHandler
 =====================
 
+Synopsis
+~~~~~~~~
+::
+
+     [I..], APTR
+
+
 Function
 ~~~~~~~~
 ::
@@ -110,6 +117,13 @@ See also
 
 aoHidd_Kbd_IrqHandlerData
 =========================
+
+Synopsis
+~~~~~~~~
+::
+
+     [I..], APTR
+
 
 Function
 ~~~~~~~~

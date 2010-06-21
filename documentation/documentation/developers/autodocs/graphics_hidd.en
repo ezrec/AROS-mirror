@@ -31,6 +31,13 @@ IID_HIDD_ColorMap
 aoHidd_ColorMap_NumEntries
 ==========================
 
+Synopsis
+~~~~~~~~
+::
+
+     [I.G], ULONG
+
+
 Function
 ~~~~~~~~
 ::
@@ -204,6 +211,13 @@ Notes
 aoHidd_Gfx_DMPSLevel
 ====================
 
+Synopsis
+~~~~~~~~
+::
+
+     [ISG], HIDDT_DPMSLevel
+
+
 Function
 ~~~~~~~~
 ::
@@ -226,6 +240,13 @@ Function
 
 aoHidd_Gfx_IsWindowed
 =====================
+
+Synopsis
+~~~~~~~~
+::
+
+     [..G], BOOL
+
 
 Function
 ~~~~~~~~
@@ -256,11 +277,11 @@ Bugs
 aoHidd_Gfx_ModeTags
 ===================
 
-Function
+Synopsis
 ~~~~~~~~
 ::
 
-     ...
+     [I..], struct TagItem *
 
 
 
@@ -268,6 +289,13 @@ Function
 
 aoHidd_Gfx_NoFrameBuffer
 ========================
+
+Synopsis
+~~~~~~~~
+::
+
+     [..G], BOOL
+
 
 Function
 ~~~~~~~~
@@ -305,6 +333,13 @@ See also
 aoHidd_Gfx_NumSyncs
 ===================
 
+Synopsis
+~~~~~~~~
+::
+
+     [..G], ULONG
+
+
 Function
 ~~~~~~~~
 ::
@@ -323,11 +358,11 @@ See also
 aoHidd_Gfx_PixFmtTags
 =====================
 
-Function
+Synopsis
 ~~~~~~~~
 ::
 
-     ...
+     [I..], struct TagItem *
 
 
 
@@ -335,6 +370,13 @@ Function
 
 aoHidd_Gfx_SupportsHWCursor
 ===========================
+
+Synopsis
+~~~~~~~~
+::
+
+     [..G], BOOL
+
 
 Function
 ~~~~~~~~
@@ -375,11 +417,11 @@ See also
 aoHidd_Gfx_SyncTags
 ===================
 
-Function
+Synopsis
 ~~~~~~~~
 ::
 
-     ...
+     [I..], struct TagItem *
 
 
 
@@ -1652,6 +1694,13 @@ IID_HIDD_BitMap
 aoHidd_BitMap_Align
 ===================
 
+Synopsis
+~~~~~~~~
+::
+
+     [I..]
+
+
 Function
 ~~~~~~~~
 ::
@@ -1664,6 +1713,13 @@ Function
 
 aoHidd_BitMap_BytesPerRow
 =========================
+
+Synopsis
+~~~~~~~~
+::
+
+     [..G]
+
 
 Function
 ~~~~~~~~
@@ -1678,6 +1734,13 @@ Function
 aoHidd_BitMap_ClassID
 =====================
 
+Synopsis
+~~~~~~~~
+::
+
+     [I..]
+
+
 Function
 ~~~~~~~~
 ::
@@ -1690,6 +1753,13 @@ Function
 
 aoHidd_BitMap_ClassPtr
 ======================
+
+Synopsis
+~~~~~~~~
+::
+
+     [I.G]
+
 
 Function
 ~~~~~~~~
@@ -1704,6 +1774,13 @@ Function
 aoHidd_BitMap_ColorMap
 ======================
 
+Synopsis
+~~~~~~~~
+::
+
+     [..G]
+
+
 Function
 ~~~~~~~~
 ::
@@ -1716,6 +1793,13 @@ Function
 
 aoHidd_BitMap_Displayable
 =========================
+
+Synopsis
+~~~~~~~~
+::
+
+     [I.G], BOOL
+
 
 Function
 ~~~~~~~~
@@ -1730,6 +1814,13 @@ Function
 aoHidd_BitMap_FrameBuffer
 =========================
 
+Synopsis
+~~~~~~~~
+::
+
+     [I.G], BOOL
+
+
 Function
 ~~~~~~~~
 ::
@@ -1742,6 +1833,13 @@ Function
 
 aoHidd_BitMap_Friend
 ====================
+
+Synopsis
+~~~~~~~~
+::
+
+     [I.G]
+
 
 Function
 ~~~~~~~~
@@ -1757,6 +1855,13 @@ Function
 aoHidd_BitMap_GfxHidd
 =====================
 
+Synopsis
+~~~~~~~~
+::
+
+     [..G]
+
+
 Function
 ~~~~~~~~
 ::
@@ -1769,6 +1874,13 @@ Function
 
 aoHidd_BitMap_Height
 ====================
+
+Synopsis
+~~~~~~~~
+::
+
+     [ISG]
+
 
 Function
 ~~~~~~~~
@@ -1783,6 +1895,13 @@ Function
 aoHidd_BitMap_IsLinearMem
 =========================
 
+Synopsis
+~~~~~~~~
+::
+
+     [..G]
+
+
 Function
 ~~~~~~~~
 ::
@@ -1796,6 +1915,13 @@ Function
 aoHidd_BitMap_LeftEdge
 ======================
 
+Synopsis
+~~~~~~~~
+::
+
+     [.SG]
+
+
 Function
 ~~~~~~~~
 ::
@@ -1808,6 +1934,13 @@ Function
 
 aoHidd_BitMap_ModeID
 ====================
+
+Synopsis
+~~~~~~~~
+::
+
+     [I.G], HIDDT_ModeID
+
 
 Function
 ~~~~~~~~
@@ -1823,6 +1956,13 @@ Function
 aoHidd_BitMap_PixFmt
 ====================
 
+Synopsis
+~~~~~~~~
+::
+
+     [..G], OOP_Object *
+
+
 Function
 ~~~~~~~~
 ::
@@ -1836,6 +1976,13 @@ Function
 aoHidd_BitMap_PixFmtTags
 ========================
 
+Synopsis
+~~~~~~~~
+::
+
+     [I..]
+
+
 Function
 ~~~~~~~~
 ::
@@ -1848,6 +1995,13 @@ Function
 
 aoHidd_BitMap_StdPixFmt
 =======================
+
+Synopsis
+~~~~~~~~
+::
+
+     [I..], HIDDT_StdPixFmt
+
 
 Function
 ~~~~~~~~
@@ -1863,6 +2017,13 @@ Function
 aoHidd_BitMap_TopEdge
 =====================
 
+Synopsis
+~~~~~~~~
+::
+
+     [.SG]
+
+
 Function
 ~~~~~~~~
 ::
@@ -1876,6 +2037,13 @@ Function
 aoHidd_BitMap_Visible
 =====================
 
+Synopsis
+~~~~~~~~
+::
+
+     [..G]
+
+
 Function
 ~~~~~~~~
 ::
@@ -1888,6 +2056,13 @@ Function
 
 aoHidd_BitMap_Width
 ===================
+
+Synopsis
+~~~~~~~~
+::
+
+     [ISG]
+
 
 Function
 ~~~~~~~~
@@ -2121,11 +2296,6 @@ Inputs
      x, y - coordinates of the pixel in hidd units
 
 
-
-See also
-~~~~~~~~
-
-`moHidd_Gfx_SetAttributes`_ 
 
 ----------
 
@@ -2905,6 +3075,13 @@ IID_HIDD_GC
 aoHidd_GC_Background
 ====================
 
+Synopsis
+~~~~~~~~
+::
+
+     [.SG]
+
+
 Function
 ~~~~~~~~
 ::
@@ -2917,6 +3094,13 @@ Function
 
 aoHidd_GC_BitMap
 ================
+
+Synopsis
+~~~~~~~~
+::
+
+     [I.G]
+
 
 Function
 ~~~~~~~~
@@ -2931,6 +3115,13 @@ Function
 aoHidd_GC_ColorExpansionMode
 ============================
 
+Synopsis
+~~~~~~~~
+::
+
+     [.SG]
+
+
 Function
 ~~~~~~~~
 ::
@@ -2943,6 +3134,13 @@ Function
 
 aoHidd_GC_ColorMask
 ===================
+
+Synopsis
+~~~~~~~~
+::
+
+     [.SG]
+
 
 Function
 ~~~~~~~~
@@ -2957,6 +3155,13 @@ Function
 aoHidd_GC_DrawMode
 ==================
 
+Synopsis
+~~~~~~~~
+::
+
+     [.SG]
+
+
 Function
 ~~~~~~~~
 ::
@@ -2969,6 +3174,13 @@ Function
 
 aoHidd_GC_Font
 ==============
+
+Synopsis
+~~~~~~~~
+::
+
+     [.SG]
+
 
 Function
 ~~~~~~~~
@@ -2983,6 +3195,13 @@ Function
 aoHidd_GC_Foreground
 ====================
 
+Synopsis
+~~~~~~~~
+::
+
+     [.SG]
+
+
 Function
 ~~~~~~~~
 ::
@@ -2995,6 +3214,13 @@ Function
 
 aoHidd_GC_LinePattern
 =====================
+
+Synopsis
+~~~~~~~~
+::
+
+     [.SG]
+
 
 Function
 ~~~~~~~~
@@ -3009,6 +3235,13 @@ Function
 aoHidd_GC_LinePatternCnt
 ========================
 
+Synopsis
+~~~~~~~~
+::
+
+     [.SG]
+
+
 Function
 ~~~~~~~~
 ::
@@ -3022,6 +3255,13 @@ Function
 aoHidd_GC_PlaneMask
 ===================
 
+Synopsis
+~~~~~~~~
+::
+
+     [.SG]
+
+
 Function
 ~~~~~~~~
 ::
@@ -3034,6 +3274,13 @@ Function
 
 aoHidd_GC_UserData
 ==================
+
+Synopsis
+~~~~~~~~
+::
+
+     [.SG]
+
 
 Function
 ~~~~~~~~
