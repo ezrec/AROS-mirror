@@ -27,6 +27,7 @@ from one directory level above.
 """
 
 # TODO:
+# - fix xref of HIDDs
 # - xref links to function macros
 # - differ between libraries, devices and linklibs
 
@@ -270,7 +271,6 @@ class shellautodoc(autodoc):
         autodoc.write(self, filehandle, titles)
 
 
-
 class libautodoc(autodoc):
     """Autodoc class for library functions (shared and static).
     """
@@ -371,6 +371,45 @@ class libautodoc(autodoc):
         filehandle -    filehandle of a file to write the autodoc in
         titles -        what titles (e.g. Synopsis, Note) should be printed.
                         Write them in the given capitalization.
+        """
+
+        filehandle.write(self.docname + "\n")
+        filehandle.write("=" * len(self.docname) + "\n\n")
+        autodoc.write(self, filehandle, titles)
+        filehandle.write("\n")
+
+
+class hiddautodoc(autodoc):
+    """Autodoc class for HIDD classes.
+    """
+    
+    def __init__(self, content):
+        """Constructor. Reads and parses autodoc string.
+
+        Arguments:
+
+        content - String of autodoc text chunk without sourrounding comment lines
+        """
+
+        autodoc.__init__(self, content)
+        self.prevdocfilename = ""
+        self.nextdocfilename = ""
+
+        # get docname
+        self.docname = self.titles["NAME"].split()[0]
+        if self.docname == "":
+            raise ValueError("docname is empty")
+        self.docfilename = self.docname.lower()
+
+    def write(self, filehandle, titles):
+        """Write autodoc elements to file.
+        
+        Arguments:
+        
+        filehandle -    filehandle of a file to write the autodoc in
+        titles -        what titles (e.g. Synopsis, Note) should be printed.
+                        Write them in the given capitalization.
+
         """
 
         filehandle.write(self.docname + "\n")
@@ -549,7 +588,7 @@ class libdoclist:
                 if (docnr + 1) % 4 == 0:
                     filehandle.write("\n")
             filehandle.write("\n" + tablesep)
-            filehandle.write("\n\n-----------\n\n")            
+            filehandle.write("\n\n-----------\n\n")
      
             for doc in self.doclist:
                 doc.write(filehandle, titles)
@@ -586,6 +625,119 @@ class appsdoclist(shelldoclist):
         filehandle.close()
 
 
+class hidddoclist:
+    """List of autodocs of HIDD classes.
+    
+    Handles the autodocs of a single directory.
+    """
+
+    def __init__(self):
+        """Constructor.
+        """
+        
+        self.doclist = {} # key is classname, content is list of documents per class
+        self.docfilename = ""
+
+    def read(self, srcdir, name=None):
+        """Scan directory for autodocs.
+        
+        Reads all *.c files of the given directory and scans them for autodocs.
+        
+        Arguments:
+        
+        srcdir - directory from which the autodocs should be read
+        name -  Name of the document. If no name is given the rightmost part of
+                srcdir will be used. This name will be later used for storing the file.
+        """
+
+        if name:
+            self.docfilename = name
+        else:
+            self.docfilename = os.path.basename(srcdir) + "_hidd" # rightmost part of the path
+        
+        cfiles = os.listdir(srcdir)
+        for file in cfiles:
+            if not (file in blacklist) and file[-2:]==".c":
+                filename = os.path.join(srcdir, file)
+                print "Reading from file", filename
+                filehandle = open(filename)
+                content = filehandle.read() # read whole file
+                for ad_entry in ad_regx.findall(content):
+                    ad = hiddautodoc(ad_entry)
+                    if ad.docname != "":
+                        if ad.titles.has_key("LOCATION"):
+                            classname = ad.titles["LOCATION"].strip()
+                            if self.doclist.has_key(classname):
+                                self.doclist[classname].append(ad)
+                            else:
+                                self.doclist[classname] = [ad]    
+                        else:
+                            raise ValueError("hidd doc has no LOCATION")
+                        
+                filehandle.close()
+
+        for k,v in self.doclist.iteritems():
+            v.sort()
+
+    def write(self, targetdir, titles):
+        """Write autodocs to directory.
+        
+        All autodocs will be written in a single file.
+        
+        Arguments:
+        
+        targedir -      name of a directory to where autodocs and index should be written
+        titles -        what titles (e.g. Synopsis, Note) should be printed.
+                        Write them in the given capitalization.
+        """
+
+        if len(self.doclist) > 0:
+            filename = os.path.join(targetdir, self.docfilename + ".en")
+            print "Writing to file", filename
+            filehandle = open(filename, "w")
+
+            # create header
+            underline = "=" * len(self.docfilename)
+            filehandle.write(underline + "\n")
+            filehandle.write(self.docfilename + "\n")
+            filehandle.write(underline + "\n\n")
+
+            filehandle.write(".. This document is automatically generated. Don't edit it!\n\n")
+            filehandle.write("`Index <index>`_\n\n")
+            filehandle.write("----------\n\n")
+
+            # create list of classes
+            if len(self.doclist) > 1: # only when more than one class exists
+                filehandle.write("Classes\n-------\n\n")
+                for classname, doclist in self.doclist.iteritems():
+                    filehandle.write("+ `" + classname + "`_\n")
+                filehandle.write("\n----------\n\n")
+
+            for classname, doclist in self.doclist.iteritems():
+                if len(self.doclist) > 1:
+                    filehandle.write(classname + "\n" + len(classname) * "-" + "\n\n")
+ 
+                # create toc
+                tablesep = (("=" * 42) + " ") * 4
+                filehandle.write(tablesep + "\n")
+                for docnr in range(len(doclist)):
+                    tocname = "`" + doclist[docnr].docname + "`_"
+                    tocname = tocname.ljust(43)
+                    filehandle.write(tocname)
+                    if (docnr + 1) % 4 == 0:
+                        filehandle.write("\n")
+                filehandle.write("\n" + tablesep)
+                filehandle.write("\n\n-----------\n\n")
+
+                for doc in doclist:
+                    doc.write(filehandle, titles)
+                    doc.write_xref(filehandle, "../../users/shell", ".", "../headerfiles")
+                    # write transition
+                    if doc is not doclist[-1]: # not last entry
+                        filehandle.write("----------\n\n")
+            filehandle.close()
+
+
 def write_index(filehandle, targetdir, indent):
     """Append directory listing to index file
     
@@ -604,17 +756,17 @@ def write_index(filehandle, targetdir, indent):
             docname = doc[:-3]
             filehandle.write("%s+ `%s <%s>`_\n" %(indent * " ", docname, docname))
     
-def create_lib_docs():
-    """Create the library docs.
+def create_module_docs():
+    """Create the module docs.
     """
     
-    lib_titles = ("Synopsis","Template","Function",
+    module_titles = ("Synopsis","Template","Function",
         "Inputs","Tags", "Result","Example","Notes","Bugs","See also")  # The titles we want
                                                                         # to be printed
     targetdir = os.path.join("documentation", "developers", "autodocs")
     srcdirs = ( os.path.join(topdir, "rom"), os.path.join(topdir, "rom/devs"), os.path.join(topdir, "workbench/libs") )
     for dir in srcdirs:
-        create_lib_docs_dir(dir, targetdir, lib_titles)
+        create_lib_docs_dir(dir, targetdir, module_titles)
 
     # add some docs for linker libs in AROS/compiler
     subdirs = ( os.path.join(topdir, "compiler", "alib"),
@@ -624,7 +776,12 @@ def create_lib_docs():
     for docpath in subdirs:
         libdocs = libdoclist()
         libdocs.read(docpath)
-        libdocs.write(targetdir, lib_titles)
+        libdocs.write(targetdir, module_titles)
+
+    # add HIDD docs
+    srcdirs = ( os.path.join(topdir, "rom/hidds"), os.path.join(topdir, "workbench/hidds/"))
+    for dir in srcdirs:
+        create_hidd_docs_dir(dir, targetdir, module_titles)
 
     # print index file
     filehandle = open(os.path.join(targetdir, "index.en"), "w")
@@ -659,6 +816,28 @@ def create_lib_docs_dir(srcdir, targetdir, titles):
             libdocs = libdoclist()
             libdocs.read(docpath)
             libdocs.write(targetdir, titles)
+
+def create_hidd_docs_dir(srcdir, targetdir, titles):
+    """Scan whole parent directory.
+    
+    Scans a parent directory like AROS/rom/hidds for subdirectories with
+    *.c files with autodoc headers.
+    
+    Arguments:
+    
+    srcdir -    parent directory of directory with autodocs.
+    targetdir - the directory where the resulting ReST files should be stored
+    titles -    what titles (e.g. Synopsis, Note) should be printed.
+                Write them in the given capitalization.
+    """
+    
+    subdirs = os.listdir(srcdir)
+    for dir in subdirs: # kbd, mouse, graphics etc.
+        docpath = os.path.join(srcdir, dir)
+        if (dir != ".svn") and os.path.isdir(docpath) :
+            hidddocs = hidddoclist()
+            hidddocs.read(docpath)
+            hidddocs.write(targetdir, titles)
 
 def create_shell_docs():
     """Create the Shell commands docs.
@@ -702,7 +881,7 @@ def create_all_docs():
     """Create all docs.
     """
     create_shell_docs()
-    create_lib_docs()
+    create_module_docs()
     create_apps_docs()
 
 
