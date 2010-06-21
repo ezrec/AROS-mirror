@@ -104,7 +104,7 @@ Bugs
 See also
 ~~~~~~~~
 
-`aoHidd_Kbd_IrqHandlerData <aohidd_kbd_irqhandlerdata>`_ 
+`aoHidd_Kbd_IrqHandlerData`_ 
 
 ----------
 
@@ -126,7 +126,7 @@ Function
 See also
 ~~~~~~~~
 
-`aoHidd_Kbd_IrqHandler <aohidd_kbd_irqhandler>`_ 
+`aoHidd_Kbd_IrqHandler`_ 
 
 ----------
 
@@ -182,7 +182,7 @@ Notes
 See also
 ~~~~~~~~
 
-`moHidd_Kbd_RemHardwareDriver <mohidd_kbd_remhardwaredriver>`_ 
+`moHidd_Kbd_RemHardwareDriver`_ 
 
 ----------
 
@@ -227,5 +227,5 @@ Result
 See also
 ~~~~~~~~
 
-`moHidd_Kbd_AddHardwareDriver <mohidd_kbd_addhardwaredriver>`_ 
+`moHidd_Kbd_AddHardwareDriver`_ 
 

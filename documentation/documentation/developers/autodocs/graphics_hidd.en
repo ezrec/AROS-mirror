@@ -298,7 +298,7 @@ Notes
 See also
 ~~~~~~~~
 
-`moHidd_Gfx_Show <mohidd_gfx_show>`_ 
+`moHidd_Gfx_Show`_ 
 
 ----------
 
@@ -316,7 +316,7 @@ Function
 See also
 ~~~~~~~~
 
-`moHidd_Gfx_GetSync <mohidd_gfx_getsync>`_ 
+`moHidd_Gfx_GetSync`_ 
 
 ----------
 
@@ -368,7 +368,7 @@ Notes
 See also
 ~~~~~~~~
 
-`moHidd_Gfx_ModeProperties <mohidd_gfx_modeproperties>`_ 
+`moHidd_Gfx_ModeProperties`_ 
 
 ----------
 
@@ -447,7 +447,7 @@ Bugs
 See also
 ~~~~~~~~
 
-`moHidd_Gfx_GetMode <mohidd_gfx_getmode>`_ 
+`moHidd_Gfx_GetMode`_ 
 
 ----------
 
@@ -561,7 +561,7 @@ Result
 See also
 ~~~~~~~~
 
-`moHidd_Gfx_NewBitMap <mohidd_gfx_newbitmap>`_ 
+`moHidd_Gfx_NewBitMap`_ 
 
 ----------
 
@@ -608,7 +608,7 @@ Result
 See also
 ~~~~~~~~
 
-`moHidd_Gfx_NewGC <mohidd_gfx_newgc>`_ 
+`moHidd_Gfx_NewGC`_ 
 
 ----------
 
@@ -667,7 +667,7 @@ Notes
 See also
 ~~~~~~~~
 
-`moHidd_Gfx_SetGamma <mohidd_gfx_setgamma>`_ 
+`moHidd_Gfx_SetGamma`_ 
 
 ----------
 
@@ -721,7 +721,7 @@ Notes
 See also
 ~~~~~~~~
 
-`moHidd_Gfx_NextModeID <mohidd_gfx_nextmodeid>`_ 
+`moHidd_Gfx_NextModeID`_ 
 
 ----------
 
@@ -862,7 +862,7 @@ Notes
 See also
 ~~~~~~~~
 
-`aoHidd_Gfx_SupportsHWCursor <aohidd_gfx_supportshwcursor>`_ 
+`aoHidd_Gfx_SupportsHWCursor`_ 
 
 ----------
 
@@ -953,7 +953,7 @@ Result
 See also
 ~~~~~~~~
 
-`moHidd_Gfx_DisposeBitMap <mohidd_gfx_disposebitmap>`_ 
+`moHidd_Gfx_DisposeBitMap`_ 
 
 ----------
 
@@ -1018,7 +1018,7 @@ Bugs
 See also
 ~~~~~~~~
 
-`moHidd_Gfx_DisposeGC <mohidd_gfx_disposegc>`_ 
+`moHidd_Gfx_DisposeGC`_ 
 
 ----------
 
@@ -1065,7 +1065,7 @@ Result
 See also
 ~~~~~~~~
 
-`moHidd_Gfx_GetMode <mohidd_gfx_getmode>`_ 
+`moHidd_Gfx_GetMode`_ 
 
 ----------
 
@@ -1123,7 +1123,7 @@ Result
 See also
 ~~~~~~~~
 
-`moHidd_Gfx_ReleaseModeIDs <mohidd_gfx_releasemodeids>`_ `moHidd_Gfx_NextModeID <mohidd_gfx_nextmodeid>`_ 
+`moHidd_Gfx_ReleaseModeIDs`_ `moHidd_Gfx_NextModeID`_ 
 
 ----------
 
@@ -1165,7 +1165,7 @@ Result
 See also
 ~~~~~~~~
 
-`moHidd_Gfx_QueryModeIDs <mohidd_gfx_querymodeids>`_ 
+`moHidd_Gfx_QueryModeIDs`_ 
 
 ----------
 
@@ -1224,7 +1224,7 @@ Notes
 See also
 ~~~~~~~~
 
-`moHidd_Gfx_SetCursorShape <mohidd_gfx_setcursorshape>`_ `moHidd_Gfx_SetCursorVisible <mohidd_gfx_setcursorvisible>`_ `graphics.library/MoveSprite() <./graphics#movesprite>`_ 
+`moHidd_Gfx_SetCursorShape`_ `moHidd_Gfx_SetCursorVisible`_ `graphics.library/MoveSprite() <./graphics#movesprite>`_ 
 
 ----------
 
@@ -1287,7 +1287,7 @@ Result
 See also
 ~~~~~~~~
 
-`moHidd_Gfx_SetCursorPos <mohidd_gfx_setcursorpos>`_ `moHidd_Gfx_SetCursorVisible <mohidd_gfx_setcursorvisible>`_ 
+`moHidd_Gfx_SetCursorPos`_ `moHidd_Gfx_SetCursorVisible`_ 
 
 ----------
 
@@ -1332,7 +1332,7 @@ Result
 See also
 ~~~~~~~~
 
-`moHidd_Gfx_SetCursorPos <mohidd_gfx_setcursorpos>`_ `moHidd_Gfx_SetCursorVisible <mohidd_gfx_setcursorvisible>`_ 
+`moHidd_Gfx_SetCursorPos`_ `moHidd_Gfx_SetCursorVisible`_ 
 
 ----------
 
@@ -1391,7 +1391,7 @@ Notes
 See also
 ~~~~~~~~
 
-`moHidd_Gfx_GetGamma <mohidd_gfx_getgamma>`_ 
+`moHidd_Gfx_GetGamma`_ 
 
 ----------
 
@@ -1516,7 +1516,7 @@ Result
 See also
 ~~~~~~~~
 
-`moHidd_Gfx_ShowViewPorts <mohidd_gfx_showviewports>`_ `graphics.library/LoadView() <./graphics#loadview>`_ 
+`moHidd_Gfx_ShowViewPorts`_ `graphics.library/LoadView() <./graphics#loadview>`_ 
 
 ----------
 
@@ -1626,7 +1626,7 @@ Result
 See also
 ~~~~~~~~
 
-`moHidd_Gfx_Show <mohidd_gfx_show>`_ 
+`moHidd_Gfx_Show`_ 
 
 IID_HIDD_BitMap
 ---------------
@@ -2125,7 +2125,7 @@ Inputs
 See also
 ~~~~~~~~
 
-`moHidd_Gfx_SetAttributes <mohidd_gfx_setattributes>`_ 
+`moHidd_Gfx_SetAttributes`_ 
 
 ----------
 

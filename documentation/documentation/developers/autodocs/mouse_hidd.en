@@ -90,7 +90,7 @@ Function
 See also
 ~~~~~~~~
 
-`aoHidd_Mouse_IrqHandler <aohidd_mouse_irqhandler>`_ 
+`aoHidd_Mouse_IrqHandler`_ 
 
 ----------
 
@@ -147,7 +147,7 @@ Bugs
 See also
 ~~~~~~~~
 
-`aoHidd_Mouse_IrqHandlerData <aohidd_mouse_irqhandlerdata>`_ `aoHidd_Mouse_Extended <aohidd_mouse_extended>`_ 
+`aoHidd_Mouse_IrqHandlerData`_ `aoHidd_Mouse_Extended`_ 
 
 ----------
 
@@ -177,7 +177,7 @@ Bugs
 See also
 ~~~~~~~~
 
-`aoHidd_Mouse_IrqHandler <aohidd_mouse_irqhandler>`_ 
+`aoHidd_Mouse_IrqHandler`_ 
 
 ----------
 
@@ -203,7 +203,7 @@ Function
 See also
 ~~~~~~~~
 
-`aoHidd_Mouse_IrqHandler <aohidd_mouse_irqhandler>`_ `aoHidd_Mouse_Extended <aohidd_mouse_extended>`_ 
+`aoHidd_Mouse_IrqHandler`_ `aoHidd_Mouse_Extended`_ 
 
 ----------
 
@@ -282,7 +282,7 @@ Notes
 See also
 ~~~~~~~~
 
-`moHidd_Mouse_RemHardwareDriver <mohidd_mouse_remhardwaredriver>`_ 
+`moHidd_Mouse_RemHardwareDriver`_ 
 
 ----------
 
@@ -327,5 +327,5 @@ Result
 See also
 ~~~~~~~~
 
-`moHidd_Mouse_AddHardwareDriver <mohidd_mouse_addhardwaredriver>`_ 
+`moHidd_Mouse_AddHardwareDriver`_ 
 
