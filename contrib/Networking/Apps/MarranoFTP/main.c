@@ -5,6 +5,20 @@
     $Id$
 */
 
+/*  
+
+    LuKeJerry Edit - 14 June 2010:
+    - Removed usage of MARRANO: assign, now prefs file is saved in the
+      same folder where MarranoFTP is launched (PROGDIR:) with filename "marranoftp.prefs" 
+    
+    - Changed button label "Change" to "Add/Update" and removed button "SAVE" from Address book window
+    - Changed code to save configuration file on exit from Address book window 
+    - Reduced main window size to not use 100% of screen
+    - Changed button labels Rename/Delete/Makedir to reflect the remote actions: 
+      "Remote Delete" - "Remote Rename" - "Remote Makedir" 
+*/     
+
+
 /* MarranoFTP - written by Stefano Crosara */
 /* This code is released under APL         */
 
@@ -73,10 +87,8 @@
 
 /*			TODO LIST
 
- - Se l'utente preme il bottone di chiusura mftp non salva la config
- - Quando si fa new nella Address Book e poi save nei textbox rimane il nuovo entry creato
-   ma nella selezione rimane selezionato un'altro entry, ripremendo save si salva le nuove
-   informazioni sul vecchio entry
+ - Quando si fa new nella Address Book e poi Add/Update per inserire i dati, 
+   la selezione non si sposta sulla nuova entry dell'address book. 
  - gestire il List quando i dati ricevuti sono + grandi del buffer di ricezione
  - gestione interattiva del logon, in caso di fallimento
  - Clear del listbox status? prende memoria?
@@ -99,7 +111,12 @@
    di scaricare file a metà
 
         DONE
-        
+ 
+ -  > Rimosso il bottone "SAVE" <
+    (Quando si fa new nella Address Book e poi save nei textbox rimane il nuovo entry creato
+    ma nella selezione rimane selezionato un'altro entry, ripremendo save si salva le nuove
+    informazioni sul vecchio entry)
+ - Se l'utente preme il bottone di chiusura mftp non salva la config 
  - Implementare l'upload
  - Implementare "Global Settings"
  - gestire tutti i comandi di errore in risposta (generico)
@@ -368,7 +385,7 @@ void OnSiteWindowNew();
 void OnSiteWindowChange();
 void OnSiteWindowSave(Connection *cn);
 void OnSiteWindowDelete();
-void OnSiteWindowExit();
+void OnSiteWindowExit(Connection *cn);
 void OnSiteWindowCancel();
 void OnSiteWindowHostsLVDBLClick(Connection *cn);
 void OnSiteWindowHostsSelectChange(Connection *cn);
@@ -927,7 +944,7 @@ static BOOL Init()
     g_GlobalSettings.SettingsArray[SETTING_LOCAL_REFRESH_AFTER_RETR] = OPT_NO_REFRESH_AFTER_RETR;
     QueueClear(cn);
 
-    caf_strncpy(g_config_filename, "MARRANO:marranoftp.moo", 512);
+    caf_strncpy(g_config_filename, "PROGDIR:marranoftp.prefs", 512); 
     return TRUE;
 }
 
@@ -995,7 +1012,7 @@ int main(int argc,char *argv[])
     /* MUI Gui Definition */    
     app = ApplicationObject,
         MUIA_Application_Title, (IPTR) "MarranoFTP",
-        MUIA_Application_Version, (IPTR) "$VER: MarranoFTP 0.70 (10.03.2009) © Stefano Crosara aka Suppah at marranosoft@gmail.com",
+        MUIA_Application_Version, (IPTR) "$VER: MarranoFTP 0.71 (22.06.2010) © Stefano Crosara aka Suppah at marranosoft@gmail.com",
         MUIA_Application_Copyright, (IPTR) "© Stefano Crosara aka Suppah",
         MUIA_Application_Author, (IPTR) "Stefano Crosara",
         MUIA_Application_Description,  (IPTR) "A very 'marrano' FTP client",
@@ -1005,9 +1022,9 @@ int main(int argc,char *argv[])
 
         // Main FTP Browse Window(s)
         SubWindow, (IPTR)(cn->Window = WindowObject,
-            MUIA_Window_Title, (IPTR) "MarranoFTP 0.70 (10.03.2009) © Stefano Crosara aka Suppah at marranosoft@gmail.com",
-            MUIA_Window_Width, MUIV_Window_Width_MinMax(100),
-            MUIA_Window_Height, MUIV_Window_Height_MinMax(100),
+            MUIA_Window_Title, (IPTR) "MarranoFTP 0.71 (22.06.2010) © Stefano Crosara aka Suppah at marranosoft@gmail.com",
+            MUIA_Window_Width, MUIV_Window_Width_Visible(100),
+            MUIA_Window_Height, MUIV_Window_Height_Visible(90),  /*  changed main window height from 100% to 90% and from MinMax to Visible*/
             MUIA_Window_ID, MAKE_ID('M','F','T','P'),
             WindowContents, VGroup,
 
@@ -1108,63 +1125,63 @@ int main(int argc,char *argv[])
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Download  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33cDownload", End,
                     End),
 
                     Child, (IPTR)(cn->BTN_UPLOAD = HGroup,
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Upload  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33cUpload", End,
                     End),
 
                     Child, (IPTR)(cn->BTN_DELETE = HGroup,
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Delete  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33cRemote Delete", End,
                     End),
 
                     Child, (IPTR)(cn->BTN_STOP = HGroup,
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Stop  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33cStop", End,
                     End),
 
                     Child, (IPTR)(cn->BTN_RUN_QUEUE = HGroup,
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Run Queue  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33cRun Queue", End,
                     End),
 
                     Child, (IPTR)(cn->BTN_STEP_QUEUE = HGroup,
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Step Queue  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33cStep Queue", End,
                     End),
 
                     Child, (IPTR)(cn->BTN_CLEAR_QUEUE = HGroup,
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Clear Queue  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33cClear Queue", End,
                     End),
 
                     Child, (IPTR)(cn->BTN_RENAME = HGroup,
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Rename  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33cRemote Rename", End,
                     End),
 
                     Child, (IPTR)(cn->BTN_MAKEDIR = HGroup,
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Makedir  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33cRemote Makedir", End,
                     End),
 
                     //
@@ -1181,28 +1198,28 @@ int main(int argc,char *argv[])
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Disconnect  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33cDisconnect", End,
                     End),
 
                     Child, (IPTR)(cn->BTN_QUIT = HGroup,
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  Quit  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33cQuit", End,
                     End),
 
                     Child, (IPTR)(cn->BTN_REFRESH_L = HGroup,
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  RefreshL  ", End,
+                        Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33cRefresh Left", End,
                     End),
 
                     Child, (IPTR)(cn->BTN_REFRESH_R = HGroup,
                         ButtonFrame,
                         MUIA_InputMode , MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
-                        Child,  TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c  RefreshR  ", End,
+                        Child,  TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33cRefresh Right", End,
                     End),
                 End,
             End,
@@ -1210,7 +1227,7 @@ int main(int argc,char *argv[])
 
         // Address Book Window
         SubWindow, g_AddressBook.Window = WindowObject,
-            MUIA_Window_Title, "Address Book",
+            MUIA_Window_Title, "Address book",
 //            MUIA_Window_Width, MUIV_Window_Width_MinMax(20),
 //            MUIA_Window_Height, MUIV_Window_Height_MinMax(20),
             MUIA_Window_ID, MAKE_ID('S','I','T','E'),
@@ -1288,7 +1305,7 @@ int main(int argc,char *argv[])
                             ButtonFrame,
                             MUIA_InputMode, MUIV_InputMode_RelVerify,
                             MUIA_Background, MUII_ButtonBack,
-                            Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c Change", End,
+                            Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c Add/Update", End,  
                         End),
 
                         Child, (IPTR)(g_AddressBook.BTN_DELETE = HGroup,
@@ -1305,12 +1322,13 @@ int main(int argc,char *argv[])
                             Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c Exit", End,
                         End),
 
-                        Child, (IPTR)(g_AddressBook.BTN_SAVE = HGroup,
+			/* Removed SAVE button as address-book entries are already saved somewhere else on add/update action or exit */ 
+                        /*Child, (IPTR)(g_AddressBook.BTN_SAVE = HGroup,    
                             ButtonFrame,
                             MUIA_InputMode, MUIV_InputMode_RelVerify,
                             MUIA_Background, MUII_ButtonBack,
                             Child, TextObject, MUIA_CycleChain, 1, MUIA_Text_Contents, "\33c Save", End,
-                        End),
+                        End),*/
                     End,
                 End,
             End,
@@ -1823,7 +1841,7 @@ int main(int argc,char *argv[])
                                 break;
                         
                         case ID_SITE_WINDOW_CLICKED_EXIT:
-                                OnSiteWindowExit();
+                                OnSiteWindowExit(cn);
                                 break;
                         
                         case ID_DBLCLICKED_SITE_WINDOW_HOSTS:
@@ -1891,7 +1909,9 @@ int main(int argc,char *argv[])
                         #ifdef DEBUGLV2
                         DebugOutput("MainLoop(): goodbye at mui\n");
                         #endif
-                        SaveConfig();
+
+                        SaveConfig();  
+
                         break;
                 }
         }
@@ -4254,7 +4274,7 @@ void LoadConfig(Connection *cn)
         // Tries to open the file
         iff->iff_Stream = (IPTR) Open(g_config_filename, MODE_OLDFILE);
         if (!iff->iff_Stream) {
-            caf_strncpy(g_config_filename, "PROGDIR:marranoftp.moo", 512);
+            caf_strncpy(g_config_filename, "PROGDIR:marranoftp.prefs", 512);  
             iff->iff_Stream = (IPTR) Open(g_config_filename, MODE_OLDFILE);
         }
 
@@ -4381,8 +4401,8 @@ void LoadConfig(Connection *cn)
 
             Close((BPTR) iff->iff_Stream);
         } else {
-            MUI_AddStatusWindow(cn, "ERROR: Cannot load configuration file in either PROGDIR: or MARRANO:");
-            caf_strncpy(g_config_filename, "MARRANO:marranoftp.moo", 512);
+            MUI_AddStatusWindow(cn, "ERROR: Cannot load configuration file marranoftp.prefs");  /* Removed references to PROGDIR: and renamed prefs file */ 
+            caf_strncpy(g_config_filename, "PROGDIR:marranoftp.prefs", 512);
         }
 
         FreeIFF(iff);
@@ -4418,7 +4438,7 @@ void LoadConfig2(Connection *cn)
         // Tries to open the file
         iff->iff_Stream = (IPTR) Open(g_config_filename, MODE_OLDFILE);
         if (!iff->iff_Stream) {
-            caf_strncpy(g_config_filename, "PROGDIR:marranoftp.moo", 512);
+            caf_strncpy(g_config_filename, "PROGDIR:marranoftp.prefs", 512); 
             iff->iff_Stream = (IPTR) Open(g_config_filename, MODE_OLDFILE);
         }
 
@@ -4526,8 +4546,8 @@ void LoadConfig2(Connection *cn)
 
             Close((BPTR) iff->iff_Stream);
         } else {
-            MUI_AddStatusWindow(cn, "ERROR: Cannot load configuration file in either PROGDIR: or MARRANO:");
-            caf_strncpy(g_config_filename, "MARRANO:marranoftp.moo", 512);
+            MUI_AddStatusWindow(cn, "ERROR: Cannot load configuration file marranoftp.prefs");
+            caf_strncpy(g_config_filename, "PROGDIR:marranoftp.prefs", 512); 
         }
 
         FreeIFF(iff);
@@ -4559,7 +4579,7 @@ BOOL SaveConfig()
 
         iff->iff_Stream = (IPTR) Open(g_config_filename, MODE_NEWFILE);
         if (!iff->iff_Stream) {
-            caf_strncpy(g_config_filename, "PROGDIR:marranoftp.moo", 512);
+            caf_strncpy(g_config_filename, "PROGDIR:marranoftp.prefs", 512); 
             iff->iff_Stream = (IPTR) Open(g_config_filename, MODE_NEWFILE);
         }
 
@@ -4676,7 +4696,7 @@ BOOL SaveConfig()
 
             Close((BPTR) iff->iff_Stream);
         } else
-            printf("ERROR: cannot save configuration file in either PROGDIR: or MARRANO:");
+            printf("ERROR: cannot save configuration file marranoftp.prefs");
 
         FreeIFF(iff);
     } else {
@@ -5298,9 +5318,14 @@ void OnSiteWindowSave(Connection *cn)
     }
 }
 
-void OnSiteWindowExit()
+void OnSiteWindowExit(Connection *cn)
 {
     set(g_AddressBook.Window, MUIA_Window_Open, FALSE);
+ 
+    /* Saving address book on window exit */
+    OnSiteWindowSave(cn);
+
+
 }
 
 void OnSiteWindowHostsLVDBLClick(Connection *cn)
