@@ -1,0 +1,183 @@
+# Copyright © 2010 The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM  ports-office-muibase : includes linklibs ports-office-muibase-fetch ports-office-muibase-create \
+#MM  ports-office-muibase-install ports-office-muibase-catalogs
+
+#MM- ports-office-muibase-install : ports-office-muibase-fetch \
+#MM  ports-office-muibase-demos ports-office-muibase-images \
+#MM  ports-office-muibase-icons ports-office-muibase-rexx \
+#MM  ports-office-muibase-instimages \
+#MM  ports-office-muibase-cpy ports-office-muibase-readme
+
+##MM  ports-office-muibase-docs ports-office-muibase-data ports-office-muibase-cpy
+
+##MM  ports-office-muibase-docs : ports-office-muibase-fetch
+
+##MM  ports-office-muibase-data : ports-office-muibase-fetch
+
+#MM  ports-office-muibase-quick : ports-office-muibase-fetch
+
+REPOSITORIES := sf://muibase
+ARCHBASE     := MUIbaseSource-2.9
+TARGETDIR    := $(AROS_CONTRIB)/Office/MUIbase
+BASE_SRCD    := src/base
+LANG_SRCD    := src/lang
+AMIGA_SRCD   := src/amiga
+MUI_SRCD     := src/amiga/mui
+MUIEXT_SRCD  := src/amiga/mui/extclasses
+
+FROMAM       := $(PORTSDIR)/muibase/$(ARCHBASE)/install/amiga
+FROMSH       := $(PORTSDIR)/muibase/$(ARCHBASE)/install/share
+FROMDOC      := $(PORTSDIR)/muibase/$(ARCHBASE)/doc/text
+
+USER_INCLUDES:= -I$(PORTSDIR)/muibase/$(ARCHBASE)/src -I$(PORTSDIR)/muibase/$(ARCHBASE)/$(BASE_SRCD) \
+                -I$(PORTSDIR)/muibase/$(ARCHBASE)/$(AMIGA_SRCD) -I$(PORTSDIR)/muibase/$(ARCHBASE)/$(LANG_SRCD)
+USER_CFLAGS  := -fno-strict-aliasing -Wno-implicit-function-declaration \
+                -DAMIGA -DMUI -DMBASE -DUSE_HOOKENTRY -DNO_INLINE_STDARG
+MB_VERSION   := 2
+MB_REVISION  := 9
+MB_VERSTR    := 2.9
+DATE         := date
+
+BASE_SRCS := $(BASE_SRCD)/main $(BASE_SRCD)/error $(BASE_SRCD)/server \
+	$(BASE_SRCD)/project $(BASE_SRCD)/table $(BASE_SRCD)/attribute \
+	$(BASE_SRCD)/record $(BASE_SRCD)/memo $(BASE_SRCD)/display \
+	$(BASE_SRCD)/gui $(BASE_SRCD)/buildgui $(BASE_SRCD)/preferences $(BASE_SRCD)/requesters \
+	$(BASE_SRCD)/structureeditor $(BASE_SRCD)/queryeditor \
+	$(BASE_SRCD)/imexport $(BASE_SRCD)/filter $(BASE_SRCD)/order $(BASE_SRCD)/search \
+	$(BASE_SRCD)/menuproject $(BASE_SRCD)/menuprefs $(BASE_SRCD)/menutable $(BASE_SRCD)/menuprogram \
+	$(BASE_SRCD)/menuhelp $(BASE_SRCD)/menueditor \
+	$(BASE_SRCD)/status $(BASE_SRCD)/name $(BASE_SRCD)/memory $(BASE_SRCD)/util \
+	$(BASE_SRCD)/formatmemo $(BASE_SRCD)/strhandle $(BASE_SRCD)/labels \
+	$(BASE_SRCD)/fileinfo $(BASE_SRCD)/textfile \
+	$(BASE_SRCD)/guidosutil $(BASE_SRCD)/dosutil
+
+LANG_SRCS := $(LANG_SRCD)/compile $(LANG_SRCD)/program $(LANG_SRCD)/programbingen $(LANG_SRCD)/programbinexe \
+	$(LANG_SRCD)/stack $(LANG_SRCD)/heap $(LANG_SRCD)/global $(LANG_SRCD)/functable \
+	$(LANG_SRCD)/func $(LANG_SRCD)/funccmp $(LANG_SRCD)/funcmath $(LANG_SRCD)/funcstr $(LANG_SRCD)/funcdate $(LANG_SRCD)/funclist \
+	$(LANG_SRCD)/funcio $(LANG_SRCD)/funcsfw $(LANG_SRCD)/funcdb $(LANG_SRCD)/funcprintf $(LANG_SRCD)/funcreq
+
+AMIGA_SRCS := $(AMIGA_SRCD)/codeset $(AMIGA_SRCD)/dosutil $(AMIGA_SRCD)/font $(AMIGA_SRCD)/exec
+
+MUI_SRCS := $(MUI_SRCD)/mui $(MUI_SRCD)/rexx_mui $(MUI_SRCD)/requesters_mui $(MUI_SRCD)/break_mui \
+	$(MUI_SRCD)/structureeditor_mui $(MUI_SRCD)/table_mui $(MUI_SRCD)/attribute_mui \
+	$(MUI_SRCD)/display_mui $(MUI_SRCD)/displayattribute_mui $(MUI_SRCD)/menu_mui $(MUI_SRCD)/imexport_mui \
+	$(MUI_SRCD)/buildgui_mui $(MUI_SRCD)/buildguiattribute_mui $(MUI_SRCD)/buildguitable_mui \
+	$(MUI_SRCD)/buildguiwindow_mui $(MUI_SRCD)/quicksearch_mui \
+	$(MUI_SRCD)/filter_mui $(MUI_SRCD)/order_mui $(MUI_SRCD)/search_mui $(MUI_SRCD)/queryeditor_mui \
+	$(MUI_SRCD)/programeditor_mui $(MUI_SRCD)/progoutput_mui $(MUI_SRCD)/setformats_mui
+
+MUIEXT_SRCS := $(MUIEXT_SRCD)/ExtEditor_mcc $(MUIEXT_SRCD)/ExtApplication_mcc $(MUIEXT_SRCD)/ExtWindow_mcc \
+	$(MUIEXT_SRCD)/StringText_mcc $(MUIEXT_SRCD)/NewCycle_mcc \
+	$(MUIEXT_SRCD)/DDList_mcc $(MUIEXT_SRCD)/SFWList_mcc $(MUIEXT_SRCD)/EditLabels_mcc \
+	$(MUIEXT_SRCD)/PopEditLabels_mcc $(MUIEXT_SRCD)/DataTypes_mcc $(MUIEXT_SRCD)/WindowButton_mcc \
+	$(MUIEXT_SRCD)/ActGroup_mcc
+
+AUTO_SRCS := y.tab appstrings_cat
+
+FILES := \
+	$(MUI_SRCS) \
+	$(MUIEXT_SRCS) \
+ 	$(BASE_SRCS) \
+	$(LANG_SRCS) \
+	$(AMIGA_SRCS) \
+	$(AUTO_SRCS)
+
+%build_prog mmake=ports-office-muibase progname=MUIbase \
+    srcdir=$(PORTSDIR)/muibase/$(ARCHBASE)/ \
+    files=$(FILES) targetdir=$(TARGETDIR) \
+    uselibs="amiga arossupport arosc mui m codesets"
+
+#MM
+ports-office-muibase-fetch :
+	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/muibase \
+	location=$(PORTSSOURCEDIR) \
+	archive_origins=$(REPOSITORIES) suffixes="tgz" \
+
+#MM
+ports-office-muibase-create : appstrings_cat.h y.tab.c builddate.h version.h
+
+appstrings_cat.h : $(PORTSDIR)/muibase/$(ARCHBASE)/src/Catalogs/MUIbase.cd
+	@$(ECHO) "Creating MUIbase catalog include file $@"
+	@$(FLEXCAT) $< $@=$(PORTSDIR)/muibase/$(ARCHBASE)/src/Catalogs/lib/AutoC_h.sd
+
+builddate.h:
+	$(DATE) "+#define BUILD_YEAR \"%Y\"" > $@
+	$(DATE) "+#define BUILD_DATE \"%d.%m.%Y\"" >> $@
+
+version.h: $(PORTSDIR)/muibase/$(ARCHBASE)
+	$(ECHO) "#define MB_VERSION $(MB_VERSION)" > $@
+	$(ECHO) "#define MB_REVISION $(MB_REVISION)" >> $@
+	$(ECHO) "#define MB_VERSTR \"$(MB_VERSTR)\"" >> $@
+
+$(PORTSDIR)/muibase/$(ARCHBASE)/y.tab.c: $(PORTSDIR)/muibase/$(ARCHBASE)/$(LANG_SRCD)/parser.y $(PORTSDIR)/muibase/$(ARCHBASE)/lex.yy.c
+	byacc -o $@ $<
+
+$(PORTSDIR)/muibase/$(ARCHBASE)/lex.yy.c: $(PORTSDIR)/muibase/$(ARCHBASE)/$(LANG_SRCD)/scanner.l
+	flex -8 -o$@ $<
+
+$(PORTSDIR)/muibase/$(ARCHBASE)/appstrings_cat.c : $(PORTSDIR)/muibase/$(ARCHBASE)/src/Catalogs/MUIbase.cd
+	@$(ECHO) "Creating MUIbase catalog code file $@"
+	@$(FLEXCAT) $< $@=$(PORTSDIR)/muibase/$(ARCHBASE)/src/Catalogs/lib/AutoC_c.sd
+
+
+
+#MM
+ports-office-muibase-cpy :
+%copy_files_q files="AUTHORS COPYING" src=$(PORTSDIR)/muibase/$(ARCHBASE) dst=$(TARGETDIR) maketarget=ports-office-muibase-cpy
+
+
+
+%copy_dir_recursive mmake=ports-office-muibase-demos \
+    src=$(FROMSH)/demos dst=$(TARGETDIR)/Demos
+
+%copy_dir_recursive mmake=ports-office-muibase-images \
+    src=$(FROMSH)/images dst=$(TARGETDIR)/Images
+
+%copy_dir_recursive mmake=ports-office-muibase-icons \
+    src=$(FROMAM)/png dst=$(TARGETDIR)/..
+
+%copy_dir_recursive mmake=ports-office-muibase-rexx \
+    src=$(FROMAM)/rexx dst=$(TARGETDIR)/rexx
+
+%copy_dir_recursive mmake=ports-office-muibase-instimages \
+    src=$(FROMAM)/Images dst=$(TARGETDIR)/Images
+
+#%copy_dir_recursive mmake=ports-office-muibase-docs \
+#    src=$(FROMAM)/Docs dst=$(TARGETDIR)/Docs
+
+
+
+#MM
+ports-office-muibase-readme : $(TARGETDIR)/ReadMe $(TARGETDIR)/LiesMich $(TARGETDIR)/LisezMoi
+
+$(TARGETDIR)/ReadMe : $(FROMDOC)/readme
+	iconv -f utf-8 -t iso-8859-1 $< -o $@
+
+$(TARGETDIR)/LiesMich : $(FROMDOC)/liesmich
+	iconv -f utf-8 -t iso-8859-1  $< -o $@
+
+$(TARGETDIR)/LisezMoi : $(FROMDOC)/lisezmoi
+	iconv -f utf-8 -t iso-8859-1  $< -o $@ 
+
+
+#MM
+ports-office-muibase-catalogs : $(TARGETDIR)/Catalogs/deutsch/MUIbase.catalog $(TARGETDIR)/Catalogs/français/MUIbase.catalog
+	$(NOP)
+
+$(TARGETDIR)/Catalogs/deutsch/MUIbase.catalog : $(PORTSDIR)/muibase/$(ARCHBASE)/src/Catalogs/Deutsch/MUIbase.ct $(PORTSDIR)/muibase/$(ARCHBASE)/src/Catalogs/MUIbase.cd
+	@$(ECHO) "Creating $(CATNAME) catalog for language 'deutsch'."
+	@$(MKDIR) $(TARGETDIR)/Catalogs/deutsch
+	@$(FLEXCAT) $(PORTSDIR)/muibase/$(ARCHBASE)/src/Catalogs/MUIbase.cd $< CATALOG=$@
+
+$(TARGETDIR)/Catalogs/français/MUIbase.catalog : $(PORTSDIR)/muibase/$(ARCHBASE)/src/Catalogs/Francais/MUIbase.ct $(PORTSDIR)/muibase/$(ARCHBASE)/src/Catalogs/MUIbase.cd
+	@$(ECHO) "Creating $(CATNAME) catalog for language 'français'."
+	@$(MKDIR) $(TARGETDIR)/Catalogs/français
+	@$(FLEXCAT) $(PORTSDIR)/muibase/$(ARCHBASE)/src/Catalogs/MUIbase.cd $< CATALOG=$@
+
+
+
+%common
