@@ -1,0 +1,37 @@
+# Copyright © 2010 The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM  ports-game-defendguin : includes linklibs development-SDL \
+#MM  ports-game-defendguin-data ports-game-defendguin-fetch
+
+#MM  ports-game-defendguin-data : ports-game-defendguin-fetch
+
+#MM  ports-game-defendguin-quick : ports-game-defendguin-fetch
+
+REPOSITORIES := ftp://ftp.tuxpaint.org/unix/x/defendguin/src
+ARCHBASE     := defendguin-0.0.12
+TARGETDIR    := $(AROS_CONTRIB)/Games/Defendguin
+SDL_PREFIX   := $(AROS_DEVELOPMENT)
+USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
+                -DDATA_PREFIX=\"PROGDIR:data/\" -DJOY_YES -D__SOUND
+
+FILES := src/defendguin
+
+%build_prog mmake=ports-game-defendguin progname=Defendguin \
+    srcdir=$(PORTSDIR)/defendguin/$(ARCHBASE)/ \
+    files=$(FILES) targetdir=$(TARGETDIR) \
+    uselibs="arosc SDL_mixer vorbisfile vorbis ogg SDL"
+
+#MM
+ports-game-defendguin-fetch :
+	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/defendguin \
+	location=$(PORTSSOURCEDIR) \
+	archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+	patches_specs=defendguin-0.0.12-aros.diff:$(ARCHBASE):-p1
+
+%copy_dir_recursive mmake=ports-game-defendguin-data src=$(PORTSDIR)/defendguin/$(ARCHBASE)/data \
+dst=$(TARGETDIR)/data
+
+%common

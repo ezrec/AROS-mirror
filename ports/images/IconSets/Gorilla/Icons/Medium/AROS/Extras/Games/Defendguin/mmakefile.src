@@ -1,0 +1,14 @@
+# Copyright © 2010, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src 33695 2010-06-25 01:08:14Z mazze $
+
+include $(TOP)/config/make.cfg
+
+#MM- iconset-Gorilla-ports-icons-extras-games : \
+#MM  iconset-Gorilla-ports-icons-extras-games-defendguin
+
+ICONS := Defendguin
+
+#MM- iconset-Gorilla-ports-icons-extras-games-clean : \
+#MM  iconset-Gorilla-ports-icons-extras-games-defendguin-clean
+
+%build_icons mmake=iconset-Gorilla-ports-icons-extras-games-defendguin icons=$(ICONS) dir=$(AROS_CONTRIB)/Games/Defendguin

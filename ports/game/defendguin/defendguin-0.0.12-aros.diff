@@ -1,0 +1,37 @@
+diff -Naur defendguin-0.0.12-orig/src/defendguin.c defendguin-0.0.12/src/defendguin.c
+--- defendguin-0.0.12-orig/src/defendguin.c	2010-06-25 15:31:32.732265468 +0200
++++ defendguin-0.0.12/src/defendguin.c	2010-06-25 15:36:15.942476447 +0200
+@@ -5882,9 +5882,15 @@
+   vol_effects = 5;
+   vol_music = 5;
+ 
++#if defined(__AROS__)
++  if (1)
++    {
++      strcpy(fname, "PROGDIR:.defendguinrc");
++#else
+   if (getenv("HOME") != NULL)
+     {
+       snprintf(fname, sizeof(fname), "%s/.defendguinrc", getenv("HOME"));
++#endif
+ 
+       fi = fopen(fname, "r");
+ 
+@@ -5945,10 +5951,16 @@
+ {
+   FILE * fi;
+   char fname[512];
+-  
++
++#if defined(__AROS__)
++  if (1)
++    {
++      strcpy(fname, "PROGDIR:.defendguinrc");
++#else
+   if (getenv("HOME") != NULL)
+     {
+       snprintf(fname, sizeof(fname), "%s/.defendguinrc", getenv("HOME"));
++#endif
+ 
+       fi = fopen(fname, "w");
+ 
