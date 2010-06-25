@@ -4,7 +4,7 @@
 include $(TOP)/config/make.cfg
 
 #MM  ports-game-vectoroids : includes linklibs development-SDL \
-#MM  ports-game-vectoroids-data ports-game-vectoroids-fetch
+#MM  ports-game-vectoroids-data ports-game-vectoroids-cpy ports-game-vectoroids-fetch
 
 #MM  ports-game-vectoroids-data : ports-game-vectoroids-fetch
 
@@ -33,5 +33,10 @@ ports-game-vectoroids-fetch :
 
 %copy_dir_recursive mmake=ports-game-vectoroids-data src=$(PORTSDIR)/vectoroids/$(ARCHBASE)/data \
 dst=$(TARGETDIR)/data
+
+CPYFILES := CHANGES.txt COPYING.txt README.txt vectoroids.6
+
+#MM ports-game-vectoroids-cpy
+%copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/vectoroids/$(ARCHBASE) dst=$(TARGETDIR) maketarget=ports-game-vectoroids-cpy
 
 %common
