@@ -1,0 +1,37 @@
+# Copyright © 2010 The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM  ports-game-vectoroids : includes linklibs development-SDL \
+#MM  ports-game-vectoroids-data ports-game-vectoroids-fetch
+
+#MM  ports-game-vectoroids-data : ports-game-vectoroids-fetch
+
+#MM  ports-game-vectoroids-quick : ports-game-vectoroids-fetch
+
+REPOSITORIES := ftp://ftp.tuxpaint.org/unix/x/vectoroids/src
+ARCHBASE     := vectoroids-1.1.0
+TARGETDIR    := $(AROS_CONTRIB)/Games/Vectoroids
+SDL_PREFIX   := $(AROS_DEVELOPMENT)
+USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
+                -DDATA_PREFIX=\"PROGDIR:data/\" -DJOY_YES -D__SOUND
+
+FILES := vectoroids
+
+%build_prog mmake=ports-game-vectoroids progname=Vectoroids \
+    srcdir=$(PORTSDIR)/vectoroids/$(ARCHBASE)/ \
+    files=$(FILES) targetdir=$(TARGETDIR) \
+    uselibs="arosc SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL z"
+
+#MM
+ports-game-vectoroids-fetch :
+	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/vectoroids \
+	location=$(PORTSSOURCEDIR) \
+	archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+	patches_specs=vectoroids-1.1.0-aros.diff:$(ARCHBASE):-p1
+
+%copy_dir_recursive mmake=ports-game-vectoroids-data src=$(PORTSDIR)/vectoroids/$(ARCHBASE)/data \
+dst=$(TARGETDIR)/data
+
+%common
