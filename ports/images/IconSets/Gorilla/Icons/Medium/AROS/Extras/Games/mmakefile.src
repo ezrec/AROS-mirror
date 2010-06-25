@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 #MM- iconset-Gorilla-ports-icons-extras : \
 #MM  iconset-Gorilla-ports-icons-extras-games
 
-ICONS := Adv770
+ICONS := Adv770 PenguinCommand
 
 #MM- iconset-Gorilla-ports-icons-extras-clean : \
 #MM  iconset-Gorilla-ports-icons-extras-games-clean

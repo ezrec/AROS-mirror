@@ -1,0 +1,23 @@
+# Copyright © 2010 The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-game-penguincommand : development-SDL
+
+PACKAGE      := penguin-command
+VERSION      := 1.6.11
+TARGETDIR    := $(AROS_CONTRIB)/Games/PenguinCommand
+REPOSITORIES := sf://penguin-command
+
+%fetch_and_build mmake=ports-game-penguincommand prefix=$(TARGETDIR) \
+	package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
+	patch=yes package_repo=$(REPOSITORIES) nix=no nix_dir_layout=no \
+	extraoptions="--program-transform-name='s/penguin-command/PenguinCommand/' --datadir='$$(PROGDIR)data' --mandir='$$(PROGDIR)man'"
+
+#MM
+ports-game-penguincommand-clean :
+	$(RM) $(TARGETDIR)
+	$(RM) $(GENDIR)/$(CURDIR)
+
+%common
