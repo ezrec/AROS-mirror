@@ -1,0 +1,17 @@
+diff -Naur gemdropx-0.9-orig/gemdropx.c gemdropx-0.9/gemdropx.c
+--- gemdropx-0.9-orig/gemdropx.c	2010-06-26 17:04:27.142239400 +0200
++++ gemdropx-0.9/gemdropx.c	2010-06-26 17:05:52.914960447 +0200
+@@ -2655,8 +2655,12 @@
+   
+   /* Get max level: */
+   
++#if defined(__AROS__)
++  strcpy(datafile, "PROGDIR:.gemdropx");
++#else
+   sprintf(datafile, "%s/.gemdropx", getenv("HOME"));
+-  
++#endif
++
+   fi = fopen(datafile, "r");
+   if (fi != NULL)
+     {

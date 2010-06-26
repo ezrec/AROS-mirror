@@ -3,7 +3,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- ports-game-penguincommand : development-SDL
+#MM- ports-game-penguincommand : contrib-sdl
 
 PACKAGE      := penguin-command
 VERSION      := 1.6.11

@@ -1,0 +1,42 @@
+# Copyright © 2010 The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM  ports-game-gemdropx : includes linklibs contrib-sdl \
+#MM  ports-game-gemdropx-data ports-game-gemdropx-cpy ports-game-gemdropx-fetch
+
+#MM  ports-game-gemdropx-data : ports-game-gemdropx-fetch
+
+#MM  ports-game-gemdropx-quick : ports-game-gemdropx-fetch
+
+REPOSITORIES := ftp://ftp.tuxpaint.org/unix/x/gemdropx/src
+ARCHBASE     := gemdropx-0.9
+TARGETDIR    := $(AROS_CONTRIB)/Games/GemDropX
+SDL_PREFIX   := $(AROS_DEVELOPMENT)
+USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
+                -DDATA_PREFIX=\"PROGDIR:data\" -DJOYSTICK -DSOUND -DNOT_EMBEDDED
+
+FILES := gemdropx
+
+%build_prog mmake=ports-game-gemdropx progname=GemDropX \
+    srcdir=$(PORTSDIR)/gemdropx/$(ARCHBASE)/ \
+    files=$(FILES) targetdir=$(TARGETDIR) \
+    uselibs="arosc SDL_mixer vorbisfile vorbis ogg SDL"
+
+#MM
+ports-game-gemdropx-fetch :
+	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/gemdropx \
+	location=$(PORTSSOURCEDIR) \
+	archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+	patches_specs=gemdropx-0.9-aros.diff:$(ARCHBASE):-p1
+
+%copy_dir_recursive mmake=ports-game-gemdropx-data src=$(PORTSDIR)/gemdropx/$(ARCHBASE)/data \
+dst=$(TARGETDIR)/data
+
+CPYFILES := CHANGES.txt COPYING.txt README.txt
+
+#MM ports-game-gemdropx-cpy
+%copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/gemdropx/$(ARCHBASE) dst=$(TARGETDIR) maketarget=ports-game-gemdropx-cpy
+
+%common

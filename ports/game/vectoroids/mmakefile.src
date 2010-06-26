@@ -3,7 +3,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM  ports-game-vectoroids : includes linklibs development-SDL \
+#MM  ports-game-vectoroids : includes linklibs contrib-sdl \
 #MM  ports-game-vectoroids-data ports-game-vectoroids-cpy ports-game-vectoroids-fetch
 
 #MM  ports-game-vectoroids-data : ports-game-vectoroids-fetch

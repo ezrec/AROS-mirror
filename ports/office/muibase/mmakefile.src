@@ -12,11 +12,7 @@ include $(TOP)/config/make.cfg
 #MM  ports-office-muibase-instimages \
 #MM  ports-office-muibase-cpy ports-office-muibase-readme
 
-##MM  ports-office-muibase-docs ports-office-muibase-data ports-office-muibase-cpy
-
 ##MM  ports-office-muibase-docs : ports-office-muibase-fetch
-
-##MM  ports-office-muibase-data : ports-office-muibase-fetch
 
 #MM  ports-office-muibase-quick : ports-office-muibase-fetch
 
@@ -98,7 +94,8 @@ ports-office-muibase-fetch :
 	archive_origins=$(REPOSITORIES) suffixes="tgz" \
 
 #MM
-ports-office-muibase-create : appstrings_cat.h y.tab.c builddate.h version.h
+ports-office-muibase-create : appstrings_cat.h y.tab.c builddate.h version.h $(PORTSDIR)/muibase/$(ARCHBASE)/y.tab.c $(PORTSDIR)/muibase/$(ARCHBASE)/appstrings_cat.c
+	$(NOP)
 
 appstrings_cat.h : $(PORTSDIR)/muibase/$(ARCHBASE)/src/Catalogs/MUIbase.cd
 	@$(ECHO) "Creating MUIbase catalog include file $@"
