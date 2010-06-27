@@ -1,9 +1,5 @@
 # Copyright © 2010 The AROS Development Team. All rights reserved.
 # $Id$
 
-#MM- ports-game : \
-#MM  ports-game-adv770 \
-#MM  ports-game-defendguin \
-#MM  ports-game-gemdropx \
-#MM  ports-game-vectoroids \
-#MM  ports-game-penguincommand
+#MM- ports : ports-game
+

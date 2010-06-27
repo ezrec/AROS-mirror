@@ -3,8 +3,11 @@
 
 include $(TOP)/config/make.cfg
 
+#MM- ports-scientific : ports-scientific-mathomatic
+
 #MM  ports-scientific-mathomatic : includes linklibs ports-scientific-mathomatic-fetch \
-#MM  ports-scientific-mathomatic-docs ports-scientific-mathomatic-cpy
+#MM  ports-scientific-mathomatic-docs ports-scientific-mathomatic-drawericon \
+#MM  ports-scientific-mathomatic-cpy
 
 #MM  ports-scientific-mathomatic-docs : ports-scientific-mathomatic-fetch
 
@@ -30,6 +33,13 @@ ports-scientific-mathomatic-fetch :
 	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/mathomatic \
 	location=$(PORTSSOURCEDIR) \
 	archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
+
+
+ICONS := Mathomatic
+
+%build_icons mmake=ports-scientific-mathomatic-drawericon \
+	icons=$(ICONS) dir=$(TARGETDIR)/..
+
 
 %copy_dir_recursive mmake=ports-scientific-mathomatic-docs \
 src=$(PORTSDIR)/mathomatic/$(ARCHBASE)/doc dst=$(TARGETDIR)/Docs

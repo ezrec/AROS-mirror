@@ -3,6 +3,8 @@
 
 include $(TOP)/config/make.cfg
 
+##MM- ports-office : ports-office-muibase
+
 #MM  ports-office-muibase : includes linklibs ports-office-muibase-fetch ports-office-muibase-create \
 #MM  ports-office-muibase-install ports-office-muibase-catalogs
 

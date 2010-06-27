@@ -3,9 +3,12 @@
 
 include $(TOP)/config/make.cfg
 
+#MM- ports-game : ports-game-defendguin
+
 #MM  ports-game-defendguin : includes linklibs contrib-sdl \
 #MM  ports-game-defendguin-data ports-game-defendguin-docs \
-#MM  ports-game-defendguin-cpy ports-game-defendguin-fetch
+#MM  ports-game-defendguin-cpy ports-game-defendguin-drawericon \
+#MM  ports-game-defendguin-fetch
 
 #MM  ports-game-defendguin-data : ports-game-defendguin-fetch
 
@@ -33,6 +36,13 @@ ports-game-defendguin-fetch :
 	location=$(PORTSSOURCEDIR) \
 	archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
 	patches_specs=defendguin-0.0.12-aros.diff:$(ARCHBASE):-p1
+
+
+ICONS := Defendguin
+
+%build_icons mmake=ports-game-defendguin-drawericon \
+	icons=$(ICONS) dir=$(TARGETDIR)/..
+
 
 %copy_dir_recursive mmake=ports-game-defendguin-data src=$(PORTSDIR)/defendguin/$(ARCHBASE)/data \
 dst=$(TARGETDIR)/data

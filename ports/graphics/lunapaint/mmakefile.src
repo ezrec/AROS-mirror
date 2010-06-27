@@ -3,8 +3,11 @@
 
 include $(TOP)/config/make.cfg
 
+#MM- ports-graphics : ports-graphics-lunapaint
+
 #MM  ports-graphics-lunapaint : includes linklibs ports-graphics-lunapaint-fetch \
-#MM  ports-graphics-lunapaint-data ports-graphics-lunapaint-cpy
+#MM  ports-graphics-lunapaint-data ports-graphics-lunapaint-drawericon \
+#MM  ports-graphics-lunapaint-cpy
 
 #MM  ports-graphics-lunapaint-data : ports-graphics-lunapaint-fetch
 
@@ -51,6 +54,13 @@ ports-graphics-lunapaint-fetch :
 	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/lunapaint \
 	location=$(PORTSSOURCEDIR) \
 	archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
+
+
+ICONS := Lunapaint
+
+%build_icons mmake=ports-graphics-lunapaint-drawericon \
+	icons=$(ICONS) dir=$(TARGETDIR)/..
+
 
 %copy_dir_recursive mmake=ports-graphics-lunapaint-data src=$(PORTSDIR)/lunapaint/$(ARCHBASE)/data \
 dst=$(TARGETDIR)/data

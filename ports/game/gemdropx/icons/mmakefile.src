@@ -1,0 +1,11 @@
+# Copyright © 2010, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-game-gemdropx : ports-game-gemdropx-icons
+
+ICONS     := GemDropX README.txt
+TARGETDIR := $(AROS_CONTRIB)/Games/GemDropX
+
+%build_icons mmake=ports-game-gemdropx-icons icons=$(ICONS) dir=$(TARGETDIR)

@@ -1,0 +1,11 @@
+# Copyright © 2010, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-scientific-mathomatic : ports-scientific-mathomatic-icons
+
+ICONS     := Mathomatic
+TARGETDIR := $(AROS_CONTRIB)/Utilities/Scientific/Mathomatic
+
+%build_icons mmake=ports-scientific-mathomatic-icons icons=$(ICONS) dir=$(TARGETDIR)

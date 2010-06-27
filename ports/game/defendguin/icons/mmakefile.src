@@ -1,0 +1,11 @@
+# Copyright © 2010, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-game-defendguin : ports-game-defendguin-icons
+
+ICONS     := Defendguin
+TARGETDIR := $(AROS_CONTRIB)/Games/Defendguin
+
+%build_icons mmake=ports-game-defendguin-icons icons=$(ICONS) dir=$(TARGETDIR)

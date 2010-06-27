@@ -1,0 +1,11 @@
+# Co$yright © 2010, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-game-gnurobbo : ports-game-gnurobbo-icons
+
+ICONS     := GnuRobbo README
+TARGETDIR := $(AROS_CONTRIB)/Games/GnuRobbo
+
+%build_icons mmake=ports-game-gnurobbo-icons icons=$(ICONS) dir=$(TARGETDIR)
