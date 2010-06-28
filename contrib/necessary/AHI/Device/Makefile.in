@@ -58,7 +58,7 @@ ENABLE_WARPUP	= @ENABLE_WARPUP@
 # Files
 ########################################
 
-LANGUAGES	= $(basename $(shell cd ${srcdir}/translations; for file in *.ct; do if [ -f $$file ]; then echo -n "$$file "; fi; done))
+LANGUAGES	= $(basename $(shell cd ${srcdir}/translations; for file in *.ct; do if [ -f $$file ]; then printf "%s" "$$file "; fi; done))
 CATALOGS	= $(addsuffix .catalog, $(LANGUAGES))
 
 OBJECTS		= header.o gateway.o gatestubs.o \
