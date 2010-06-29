@@ -1,0 +1,30 @@
+diff -Naur xpired-1.22-orig/src/xpired.c xpired-1.22/src/xpired.c
+--- xpired-1.22-orig/src/xpired.c	2010-06-29 20:23:22.065458321 +0200
++++ xpired-1.22/src/xpired.c	2010-06-29 20:33:17.776053830 +0200
+@@ -1767,7 +1767,11 @@
+   char LevelF[255];
+   char joystick=0;
+ 
+-#ifdef UNIX
++#ifdef __AROS__
++
++  strcpy(GAME_HOME, "PROGDIR:.xpired");
++
++#elif UNIX
+ 
+   strcpy(GAME_HOME,getenv("HOME"));
+   strcat(GAME_HOME,"/.xpired");
+diff -Naur xpired-1.22-orig/src/xpiredit.c xpired-1.22/src/xpiredit.c
+--- xpired-1.22-orig/src/xpiredit.c	2010-06-29 20:23:22.065458321 +0200
++++ xpired-1.22/src/xpiredit.c	2010-06-29 20:34:54.527711409 +0200
+@@ -969,7 +969,9 @@
+ int I;
+ char buf[255];
+ 
+-#ifdef UNIX
++#ifdef __AROS__
++  strcpy(GAME_HOME, "PROGDIR:.xpired");
++#elif UNIX
+   strcpy(GAME_HOME,getenv("HOME"));
+   strcat(GAME_HOME,"/.xpired");
+ #else
