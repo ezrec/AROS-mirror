@@ -105,7 +105,7 @@ ALboolean DuplicateStereo = AL_FALSE;
 
 /* NOTE: The AL_FORMAT_REAR* enums aren't handled here be cause they're
  *       converted to AL_FORMAT_QUAD* when loaded */
-__inline ALuint aluBytesFromFormat(ALenum format)
+ALuint aluBytesFromFormat(ALenum format)
 {
     switch(format)
     {
@@ -140,7 +140,7 @@ __inline ALuint aluBytesFromFormat(ALenum format)
     }
 }
 
-__inline ALuint aluChannelsFromFormat(ALenum format)
+ALuint aluChannelsFromFormat(ALenum format)
 {
     switch(format)
     {
