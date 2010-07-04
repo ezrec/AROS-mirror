@@ -24,8 +24,8 @@ enum {
 
 extern ALboolean DuplicateStereo;
 
-__inline ALuint aluBytesFromFormat(ALenum format);
-__inline ALuint aluChannelsFromFormat(ALenum format);
+ALuint aluBytesFromFormat(ALenum format);
+ALuint aluChannelsFromFormat(ALenum format);
 ALvoid aluInitPanning(ALCcontext *Context);
 ALvoid aluMixData(ALCcontext *context,ALvoid *buffer,ALsizei size,ALenum format);
 

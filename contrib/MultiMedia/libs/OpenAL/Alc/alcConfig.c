@@ -233,11 +233,11 @@ void ReadALConfig(void)
     }
     if(getenv("HOME") && *(getenv("HOME")))
     {
-        snprintf(buffer, sizeof(buffer), ".alsoftrc", "PROGDIR:");
+        snprintf(buffer, sizeof(buffer), "%s.alsoftrc", "PROGDIR:");
         f = fopen(buffer, "r");
         if(!f)
         {
-            snprintf(buffer, sizeof(buffer), ".openalrc", "PROGDIR:");
+            snprintf(buffer, sizeof(buffer), "%s.openalrc", "PROGDIR:");
             f = fopen(buffer, "r");
             if(f)
                 AL_PRINT("Reading ~/.openalrc; this file is deprecated\n"

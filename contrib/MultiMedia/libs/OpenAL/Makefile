@@ -1,7 +1,8 @@
-CC = gcc -mcrt=newlib
-AR = ar
-RM = delete
-CFLAGS = -O3 -Wall -DPIC -fPIC -I. -Iinclude -IOpenAL32/Include
+CC = ppc-amigaos-gcc
+AR = ppc-amigaos-ar
+RANLIB = ppc-amigaos-ranlib
+RM = rm -f
+CFLAGS = -O3 -ffast-math -Wall -fPIC -I. -Iinclude -IOpenAL32/Include
 LIBS = -L. -lopenal -lpthread
 
 OBJS = OpenAL32/alAuxEffectSlot.o \
@@ -22,12 +23,13 @@ all: libopenal.a libopenal.so examples/openal-info
 
 libopenal.a: $(OBJS)
 	$(AR) -crv $@ $^
-
+	$(RANLIB) $@
+	
 libopenal.so: $(OBJS)
-	$(CC) -shared -nostartfiles -o $@ $^ -lpthread
+	$(CC) -shared -nostartfiles -use-dynld -o $@ $^ -lpthread
 
-examples/openal-info: examples/openal-info.o libopenal.so
-	$(CC) -use-dynld -o $@ examples/openal-info.o $(LIBS)
+examples/openal-info: examples/openal-info.o
+	$(CC) -o $@ $^ $(LIBS)
 
 clean:
 	$(RM) $(OBJS)
