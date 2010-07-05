@@ -27,6 +27,7 @@ from one directory level above.
 """
 
 # TODO:
+# - handle classes which are embedded in libraries
 # - fix xref of HIDDs
 # - xref links to function macros
 # - differ between libraries, devices and linklibs
@@ -96,7 +97,9 @@ blacklist = (   "buildeasyrequestargs.c", "buildeasyrequestargs_morphos.c",
                 "setiprefs.c", "setiprefs_morphos.c",
                 "sysreqhandler.c", "sysreqhandler_morphos.c",
                 "match_old.c","dosdoio.c","exec_util.c","strerror_rom.c",
-                "runprocess.c")
+                "runprocess.c",
+                
+                "monitorclass.c")
 
 
 class autodoc:
