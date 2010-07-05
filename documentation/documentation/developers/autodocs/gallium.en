@@ -61,7 +61,7 @@ Synopsis
 ::
 
  struct pipe_screen * CreatePipeScreen(
-          struct TagItem * tagItem );
+          struct TagItem * tags );
  
  struct pipe_screen * CreatePipeScreenTags(
           TAG tag, ... );
@@ -77,7 +77,22 @@ Inputs
 ~~~~~~
 ::
 
- tagItem - a pointer to tags to be used during creation.
+ tags - a pointer to tags to be used during creation.
+
+
+Tags
+~~~~
+::
+
+ CPS_GalliumInterfaceVersion   - Indicates a version of gallium interface
+                                 that a client is expected to receive. The
+                                 client expected version must ideally match 
+                                 with the version that the driver provides,
+                                 because gallium interface is not backwards
+                                 compatible. This tag is required. Unless
+                                 otherwise needed, the value
+                                 GALLIUM_INTERFACE_VERSION should be passed.
+                                 See also CreatePipeScreenV.
 
 
 Result

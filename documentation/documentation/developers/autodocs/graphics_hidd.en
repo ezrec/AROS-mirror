@@ -11,117 +11,15 @@ graphics_hidd
 Classes
 -------
 
-+ `IID_HIDD_ColorMap`_
-+ `IID_HIDD_Gfx`_
-+ `IID_HIDD_BitMap`_
-+ `IID_HIDD_GC`_
++ `CLID_Hidd_Gfx`_
++ `CLID_Hidd_ColorMap`_
++ `CLID_Hidd_GC`_
++ `CLID_Hidd_BitMap`_
 
 ----------
 
-IID_HIDD_ColorMap
------------------
-
-========================================== ========================================== ========================================== ========================================== 
-`aoHidd_ColorMap_NumEntries`_              `moHidd_ColorMap_GetColor`_                `moHidd_ColorMap_GetPixel`_                `moHidd_ColorMap_SetColors`_               
-
-========================================== ========================================== ========================================== ========================================== 
-
------------
-
-aoHidd_ColorMap_NumEntries
-==========================
-
-Synopsis
-~~~~~~~~
-::
-
-     [I.G], ULONG
-
-
-Function
-~~~~~~~~
-::
-
-     Number of colors in the colormap.
-
-
-
-----------
-
-moHidd_ColorMap_GetColor
-========================
-
-Synopsis
-~~~~~~~~
-::
-
-     BOOL OOP_DoMethod(OOP_Object *o, struct pHidd_ColorMap_GetColor *msg);
-
-     BOOL HIDD_CM_GetColor(OOP_Object *obj, ULONG colorNo, HIDDT_Color *colorReturn);
-
-
-Inputs
-~~~~~~
-::
-
-     obj         -
-     colorNo     -
-     colorReturn -
-
-
-
-----------
-
-moHidd_ColorMap_GetPixel
-========================
-
-Synopsis
-~~~~~~~~
-::
-
-     HIDDT_Pixel OOP_DoMethod(OOP_Object *obj, struct pHidd_ColorMap_GetPixel *msg);
-
-     HIDDT_Pixel HIDD_CM_GetPixel(OOP_Object *obj, ULONG pixelNo);
-
-
-Inputs
-~~~~~~
-::
-
-     obj     -
-     pixelNo -
-
-
-
-----------
-
-moHidd_ColorMap_SetColors
-=========================
-
-Synopsis
-~~~~~~~~
-::
-
-     BOOL OOP_DoMethod(OOP_Object *obj, struct pHidd_ColorMap_SetColors *msg);
-
-     BOOL HIDD_CM_SetColors(OOP_Object *obj, HIDDT_Color *colors, ULONG firstColor,
-                            ULONG numColors, OOP_Object *pixFmt);
-
-
-Inputs
-~~~~~~
-::
-
-     obj        -
-     colors     -
-     firstColor -
-     numColors  -
-     pixFmt     -
-
-
-
-IID_HIDD_Gfx
-------------
+CLID_Hidd_Gfx
+-------------
 
 ========================================== ========================================== ========================================== ========================================== 
 `--background--`_                          `--display_modes--`_                       `aoHidd_Gfx_DMPSLevel`_                    `aoHidd_Gfx_IsWindowed`_                   
@@ -1630,7 +1528,7 @@ Function
      Show one or more bitmaps on the screen.
 
      It is completely up to the driver how to implement this function. The driver may
-     may or may not support hardware-assisted screens composition. Bitmaps are sorted
+     or may not support hardware-assisted screens composition. Bitmaps are sorted
      in the list in descending z-order. The driver is expected to put at least frontmost
      bitmap on display.
 
@@ -1670,26 +1568,445 @@ See also
 
 `moHidd_Gfx_Show`_ 
 
-IID_HIDD_BitMap
----------------
+CLID_Hidd_ColorMap
+------------------
 
 ========================================== ========================================== ========================================== ========================================== 
-`aoHidd_BitMap_Align`_                     `aoHidd_BitMap_BytesPerRow`_               `aoHidd_BitMap_ClassID`_                   `aoHidd_BitMap_ClassPtr`_                  
-`aoHidd_BitMap_ColorMap`_                  `aoHidd_BitMap_Displayable`_               `aoHidd_BitMap_FrameBuffer`_               `aoHidd_BitMap_Friend`_                    
-`aoHidd_BitMap_GfxHidd`_                   `aoHidd_BitMap_Height`_                    `aoHidd_BitMap_IsLinearMem`_               `aoHidd_BitMap_LeftEdge`_                  
-`aoHidd_BitMap_ModeID`_                    `aoHidd_BitMap_PixFmt`_                    `aoHidd_BitMap_PixFmtTags`_                `aoHidd_BitMap_StdPixFmt`_                 
-`aoHidd_BitMap_TopEdge`_                   `aoHidd_BitMap_Visible`_                   `aoHidd_BitMap_Width`_                     `moHidd_BitMap_BitMapScale`_               
-`moHidd_BitMap_BlitColorExpansion`_        `moHidd_BitMap_BytesPerLine`_              `moHidd_BitMap_Clear`_                     `moHidd_BitMap_DrawEllipse`_               
-`moHidd_BitMap_DrawLine`_                  `moHidd_BitMap_DrawPixel`_                 `moHidd_BitMap_DrawPolygon`_               `moHidd_BitMap_DrawRect`_                  
-`moHidd_BitMap_DrawText`_                  `moHidd_BitMap_FillEllipse`_               `moHidd_BitMap_FillPolygon`_               `moHidd_BitMap_FillRect`_                  
-`moHidd_BitMap_FillSpan`_                  `moHidd_BitMap_FillText`_                  `moHidd_BitMap_GetImage`_                  `moHidd_BitMap_GetImageLUT`_               
-`moHidd_BitMap_MapColor`_                  `moHidd_BitMap_ObtainDirectAccess`_        `moHidd_BitMap_PutAlphaImage`_             `moHidd_BitMap_PutAlphaTemplate`_          
-`moHidd_BitMap_PutImage`_                  `moHidd_BitMap_PutImageLUT`_               `moHidd_BitMap_PutPattern`_                `moHidd_BitMap_PutTemplate`_               
-`moHidd_BitMap_PutTranspImageLUT`_         `moHidd_BitMap_ReleaseDirectAccess`_       `moHidd_BitMap_SetColorMap`_               `moHidd_BitMap_SetColors`_                 
-`moHidd_BitMap_SetRGBConversionFunction`_  `moHidd_BitMap_UnmapPixel`_                `moHidd_BitMap_UpdateRect`_                
+`aoHidd_ColorMap_NumEntries`_              `moHidd_ColorMap_GetColor`_                `moHidd_ColorMap_GetPixel`_                `moHidd_ColorMap_SetColors`_               
+
 ========================================== ========================================== ========================================== ========================================== 
 
 -----------
+
+aoHidd_ColorMap_NumEntries
+==========================
+
+Synopsis
+~~~~~~~~
+::
+
+     [I.G], ULONG
+
+
+Function
+~~~~~~~~
+::
+
+     Number of colors in the colormap.
+
+
+
+----------
+
+moHidd_ColorMap_GetColor
+========================
+
+Synopsis
+~~~~~~~~
+::
+
+     BOOL OOP_DoMethod(OOP_Object *o, struct pHidd_ColorMap_GetColor *msg);
+
+     BOOL HIDD_CM_GetColor(OOP_Object *obj, ULONG colorNo, HIDDT_Color *colorReturn);
+
+
+Inputs
+~~~~~~
+::
+
+     obj         -
+     colorNo     -
+     colorReturn -
+
+
+
+----------
+
+moHidd_ColorMap_GetPixel
+========================
+
+Synopsis
+~~~~~~~~
+::
+
+     HIDDT_Pixel OOP_DoMethod(OOP_Object *obj, struct pHidd_ColorMap_GetPixel *msg);
+
+     HIDDT_Pixel HIDD_CM_GetPixel(OOP_Object *obj, ULONG pixelNo);
+
+
+Inputs
+~~~~~~
+::
+
+     obj     -
+     pixelNo -
+
+
+
+----------
+
+moHidd_ColorMap_SetColors
+=========================
+
+Synopsis
+~~~~~~~~
+::
+
+     BOOL OOP_DoMethod(OOP_Object *obj, struct pHidd_ColorMap_SetColors *msg);
+
+     BOOL HIDD_CM_SetColors(OOP_Object *obj, HIDDT_Color *colors, ULONG firstColor,
+                            ULONG numColors, OOP_Object *pixFmt);
+
+
+Inputs
+~~~~~~
+::
+
+     obj        -
+     colors     -
+     firstColor -
+     numColors  -
+     pixFmt     -
+
+
+
+CLID_Hidd_GC
+------------
+
+========================================== ========================================== ========================================== ========================================== 
+`aoHidd_GC_Background`_                    `aoHidd_GC_BitMap`_                        `aoHidd_GC_ColorExpansionMode`_            `aoHidd_GC_ColorMask`_                     
+`aoHidd_GC_DrawMode`_                      `aoHidd_GC_Font`_                          `aoHidd_GC_Foreground`_                    `aoHidd_GC_LinePattern`_                   
+`aoHidd_GC_LinePatternCnt`_                `aoHidd_GC_PlaneMask`_                     `aoHidd_GC_UserData`_                      `moHidd_GC_SetClipRect`_                   
+`moHidd_GC_UnsetClipRect`_                 
+========================================== ========================================== ========================================== ========================================== 
+
+-----------
+
+aoHidd_GC_Background
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+     [.SG]
+
+
+Function
+~~~~~~~~
+::
+
+     Background color
+
+
+
+----------
+
+aoHidd_GC_BitMap
+================
+
+Synopsis
+~~~~~~~~
+::
+
+     [I.G]
+
+
+Function
+~~~~~~~~
+::
+
+     Bitmap which this gc uses.
+
+
+
+----------
+
+aoHidd_GC_ColorExpansionMode
+============================
+
+Synopsis
+~~~~~~~~
+::
+
+     [.SG]
+
+
+Function
+~~~~~~~~
+::
+
+     Mode for color expansion
+ 
+
+
+----------
+
+aoHidd_GC_ColorMask
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+     [.SG]
+
+
+Function
+~~~~~~~~
+::
+
+     Prevents some color bits from changing.
+
+
+
+----------
+
+aoHidd_GC_DrawMode
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+     [.SG]
+
+
+Function
+~~~~~~~~
+::
+
+     Draw mode
+
+
+
+----------
+
+aoHidd_GC_Font
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+     [.SG]
+
+
+Function
+~~~~~~~~
+::
+
+     Current font
+
+
+
+----------
+
+aoHidd_GC_Foreground
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+     [.SG]
+
+
+Function
+~~~~~~~~
+::
+
+     Foreground color
+
+
+
+----------
+
+aoHidd_GC_LinePattern
+=====================
+
+Synopsis
+~~~~~~~~
+::
+
+     [.SG]
+
+
+Function
+~~~~~~~~
+::
+
+     Pattern for line drawing
+ 
+
+
+----------
+
+aoHidd_GC_LinePatternCnt
+========================
+
+Synopsis
+~~~~~~~~
+::
+
+     [.SG]
+
+
+Function
+~~~~~~~~
+::
+
+     Pattern start bit for line drawing.
+ 
+
+
+----------
+
+aoHidd_GC_PlaneMask
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+     [.SG]
+
+
+Function
+~~~~~~~~
+::
+
+     Shape bitmap 
+
+
+
+----------
+
+aoHidd_GC_UserData
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+     [.SG]
+
+
+Function
+~~~~~~~~
+::
+
+     User data
+
+
+
+----------
+
+moHidd_GC_SetClipRect
+=====================
+
+Synopsis
+~~~~~~~~
+::
+
+     VOID OOP_DoMethod(OOP_Object *obj, struct pHidd_GC_SetClipRect *msg);
+
+     VOID HIDD_GC_SetClipRect(OOP_Object *obj, LONG x1, LONG y1, LONG x2, LONG y2);
+
+
+Inputs
+~~~~~~
+::
+
+     obj -
+     x1  -
+     y1  -
+     x2  -
+     y2  -
+
+
+
+----------
+
+moHidd_GC_UnsetClipRect
+=======================
+
+Synopsis
+~~~~~~~~
+::
+
+     VOID OOP_DoMethod(OOP_Object *obj, struct pHidd_GC_UnsetClipRect *msg);
+
+     VOID HIDD_GC_UnsetClipRect(OOP_Object *obj);
+
+
+Inputs
+~~~~~~
+::
+
+     obj -
+
+
+
+CLID_Hidd_BitMap
+----------------
+
+========================================== ========================================== ========================================== ========================================== 
+`--background--`_                          `aoHidd_BitMap_Align`_                     `aoHidd_BitMap_BytesPerRow`_               `aoHidd_BitMap_ClassID`_                   
+`aoHidd_BitMap_ClassPtr`_                  `aoHidd_BitMap_ColorMap`_                  `aoHidd_BitMap_Displayable`_               `aoHidd_BitMap_FrameBuffer`_               
+`aoHidd_BitMap_Friend`_                    `aoHidd_BitMap_GfxHidd`_                   `aoHidd_BitMap_Height`_                    `aoHidd_BitMap_IsLinearMem`_               
+`aoHidd_BitMap_LeftEdge`_                  `aoHidd_BitMap_ModeID`_                    `aoHidd_BitMap_PixFmt`_                    `aoHidd_BitMap_PixFmtTags`_                
+`aoHidd_BitMap_StdPixFmt`_                 `aoHidd_BitMap_TopEdge`_                   `aoHidd_BitMap_Visible`_                   `aoHidd_BitMap_Width`_                     
+`moHidd_BitMap_BitMapScale`_               `moHidd_BitMap_BlitColorExpansion`_        `moHidd_BitMap_BytesPerLine`_              `moHidd_BitMap_Clear`_                     
+`moHidd_BitMap_DrawEllipse`_               `moHidd_BitMap_DrawLine`_                  `moHidd_BitMap_DrawPixel`_                 `moHidd_BitMap_DrawPolygon`_               
+`moHidd_BitMap_DrawRect`_                  `moHidd_BitMap_DrawText`_                  `moHidd_BitMap_FillEllipse`_               `moHidd_BitMap_FillPolygon`_               
+`moHidd_BitMap_FillRect`_                  `moHidd_BitMap_FillSpan`_                  `moHidd_BitMap_FillText`_                  `moHidd_BitMap_GetImage`_                  
+`moHidd_BitMap_GetImageLUT`_               `moHidd_BitMap_MapColor`_                  `moHidd_BitMap_ObtainDirectAccess`_        `moHidd_BitMap_PutAlphaImage`_             
+`moHidd_BitMap_PutAlphaTemplate`_          `moHidd_BitMap_PutImage`_                  `moHidd_BitMap_PutImageLUT`_               `moHidd_BitMap_PutPattern`_                
+`moHidd_BitMap_PutTemplate`_               `moHidd_BitMap_PutTranspImageLUT`_         `moHidd_BitMap_ReleaseDirectAccess`_       `moHidd_BitMap_SetColorMap`_               
+`moHidd_BitMap_SetColors`_                 `moHidd_BitMap_SetRGBConversionFunction`_  `moHidd_BitMap_UnmapPixel`_                `moHidd_BitMap_UpdateRect`_                
+
+========================================== ========================================== ========================================== ========================================== 
+
+-----------
+
+--background--
+==============
+
+Notes
+~~~~~
+::
+
+     Every display driver should implement at least one bitmap class for displayable
+     bitmaps.
+
+     Normally this class doesn't need to have public ID. In order to use it the driver
+     should pass class pointer as aoHidd_BitMap_ClassPtr value to the graphics base class
+     in its moHidd_Gfx_NewBitMap implementation.
+
+     BitMap base class is a in C++ terminology a pure virtual
+     baseclass. It will not allocate any bitmap data at all,
+     that is up to the subclass to do.
+
+     The main task of the BitMap baseclass is to store some information about the bitmap
+     like its size and pixelformat. A pixelformat is an object of private class which
+     stores the actual information about the format.
+
+     There are two ways the we can find out the pixfmt in our moHidd_Gfx_NewBitMap
+     implementation:
+
+     Displayable bitmap -
+         The tags will contrain a modeid.
+         One can use this modeid to get a pointer to an
+         allready registered pixfmt.
+
+     Non-displayable bitmap -
+         The aoHidd_BitMap_StdPixFmt or aoHidd_BitMap_Friend attribute will allways be
+         passed.
+
+
+
+----------
 
 aoHidd_BitMap_Align
 ===================
@@ -1705,7 +2022,19 @@ Function
 ~~~~~~~~
 ::
 
-     Number of pixels to align bitmap data width to
+     Specify number of pixels to align bitmap data width to.
+
+     This attribute can be added in CLID_Hidd_Gfx/moHidd_Gfx_NewBitMap implementation
+     in order to enforce alignment needed for example by blitting hardware.
+
+
+Bugs
+~~~~
+::
+
+     This attribute does not affect aoHidd_BitMap_BytesPerRow value.
+
+     This attribute is supported only by CLID_Hidd_PlanarBM class at the moment.
 
 
 
@@ -1718,14 +2047,14 @@ Synopsis
 ~~~~~~~~
 ::
 
-     [..G]
+     [..G], ULONG
 
 
 Function
 ~~~~~~~~
 ::
 
-     Number of bytes in a row 
+     Query number of bytes per row in the bitmap storage buffer
 
 
 
@@ -1745,9 +2074,29 @@ Function
 ~~~~~~~~
 ::
 
-     Only used by subclasses of the gfx hidd
+     Explicitly specify bitmap's class ID.
+
+     The purpose of this attribute is to let graphics driver base class to select a class
+     on which to call OOP_NewObject() in its moHidd_Gfx_NewBitMap implementation.
+
+     If neither this attribute nor aoHidd_BitMap_ClassPtr attribute is provided for
+     moHidd_Gfx_NewBitMap, graphics base class will do its best in order to find out the
+     correct class based on aoHidd_StdPixFmt attribute value or aoHidd_BitMap_ClassPtr value
+     of friend bitmap.
 
 
+Bugs
+~~~~
+::
+
+     The pointer to a given class will not be remembered as aoHidd_BitMap_ClassPtr value.
+
+
+
+See also
+~~~~~~~~
+
+`aoHidd_BitMap_ClassPtr`_ CLID_Hidd_Gfx/moHidd_Gfx_NewBitMap 
 
 ----------
 
@@ -1758,16 +2107,30 @@ Synopsis
 ~~~~~~~~
 ::
 
-     [I.G]
+     [I.G], OOP_Class *
 
 
 Function
 ~~~~~~~~
 ::
 
-     Only used by subclasses of the gfx hidd.
+     Explicitly specify bitmap's class pointer.
+
+     This attribute is simply remembered by bitmap base class. Its main purpose is to let
+     graphics driver base class to select a class on which to call OOP_NewObject() in
+     its moHidd_Gfx_NewBitMap implementation.
+     
+     If neither this attribute nor aoHidd_BitMap_ClassID attribute is provided for
+     moHidd_Gfx_NewBitMap, graphics base class will do its best in order to find out the
+     correct class based on aoHidd_StdPixFmt attribute value or aoHidd_BitMap_ClassPtr value
+     of friend bitmap.
 
 
+
+See also
+~~~~~~~~
+
+`aoHidd_BitMap_ClassID`_ CLID_Hidd_Gfx/moHidd_Gfx_NewBitMap 
 
 ----------
 
@@ -1778,16 +2141,28 @@ Synopsis
 ~~~~~~~~
 ::
 
-     [..G]
+     [..G], OOP_Object *
 
 
 Function
 ~~~~~~~~
 ::
 
-     Colormap of the bitmap
+     Return associated colormap (palette) object.
+
+     By default only displayable bitmaps have colormaps. However a colormap can be attached
+     to any bitmap using moHidd_BitMap_SetColors or moHidd_BitMap_SetColorMap.
+
+     Note that manual attaching of a colormap to a nondisplayable bitmap may cause undesired
+     side-effects on graphics.library behavior. It's better not to do this at all. The system
+     knows what it does better than you.
 
 
+
+See also
+~~~~~~~~
+
+`moHidd_BitMap_SetColorMap`_ moHidd_BitMap_SetColors. 
 
 ----------
 
@@ -1805,9 +2180,18 @@ Function
 ~~~~~~~~
 ::
 
-     Bitmap is displayable (default: FALSE)
+     The bitmap is displayable. A displayable bitmap is always managed by a display
+     driver and must have valid display mode ID specification.
+
+     If this attribute is not supplied during bitmap creation, its value defaults
+     to FALSE.
 
 
+
+See also
+~~~~~~~~
+
+`aoHidd_BitMap_ModeID`_ 
 
 ----------
 
@@ -1818,14 +2202,20 @@ Synopsis
 ~~~~~~~~
 ::
 
-     [I.G], BOOL
+     [I..], BOOL
 
 
 Function
 ~~~~~~~~
 ::
 
-     Allocate framebuffer
+     Specifies that the bitmap is a framebuffer bitmap.
+
+     A detailed description of a framebuffer is given in CLID_Hidd_Gfx/moHidd_Gfx_NewBitMap
+     and in CLID_Hidd_Gfx/moHidd_Gfx_Show documentation.
+
+     Specifying this attribute to moHidd_Gfx_NewBitMap method causes also implicit setting
+     of aoHidd_BitMap_Displayable to TRUE.
 
 
 
@@ -1838,15 +2228,22 @@ Synopsis
 ~~~~~~~~
 ::
 
-     [I.G]
+     [I.G], OOP_Object *
 
 
 Function
 ~~~~~~~~
 ::
 
-     Friend bitmap. The bitmap will be allocated so that it
+     Specify a friend bitmap. The bitmap will be allocated so that it
      is optimized for blitting to this bitmap.
+
+     Display drivers may query this attribute and then query friend bitmap
+     for anything they want (like pixelformat, mode ID, etc).
+
+     Note that explicit specification of mode ID and/or standard pixelformat
+     should override defaults provided by friend bitmap (i.e. actually breaking
+     the friendship).
 
 
 
@@ -1859,16 +2256,30 @@ Synopsis
 ~~~~~~~~
 ::
 
-     [..G]
+     [I.G], OOP_Object *
 
 
 Function
 ~~~~~~~~
 ::
 
-     Pointer to the gfxhidd object this bitmap was created with.
+     Specify display driver object this bitmap was created with.
+
+     Normally the user doesn't have to supply this attribute. Instead you should use
+     driver's moHidd_Gfx_NewBitMap method in order to create bitmaps. In this case
+     aoHidd_BitMap_GfxHidd attribute will be provided by graphics driver base class
+     with the correct value.
+
+     It is illegal to manually create bitmap objects with no driver associated.
+     graphics.library maintains at least a memory driver for nondisplayable
+     bitmaps in system RAM without any acceleration.
 
 
+
+See also
+~~~~~~~~
+
+CLID_Hidd_Gfx/moHidd_Gfx_NewBitMap 
 
 ----------
 
@@ -1879,16 +2290,25 @@ Synopsis
 ~~~~~~~~
 ::
 
-     [ISG]
+     [ISG], ULONG
 
 
 Function
 ~~~~~~~~
 ::
 
-     Bitmap height
+     Specifies bitmap height in pixels.
+     
+     Setting this attribute does not cause actual bitmap resize, just updates the information
+     about it. Use this only from within subclasses only if you know what you do. For example
+     SDL hosted driver sets it when framebufer changes the resolution.
 
 
+
+See also
+~~~~~~~~
+
+`aoHidd_BitMap_Width`_ 
 
 ----------
 
@@ -1899,16 +2319,37 @@ Synopsis
 ~~~~~~~~
 ::
 
-     [..G]
+     [..G], BOOL
 
 
 Function
 ~~~~~~~~
 ::
 
-     Is the bitmap memory contigous?
+     Check if the bitmap provides linear memory access.
 
 
+Notes
+~~~~~
+::
+
+     Used by cybergraphics.library/GetCyberMapAttr() for providing CYBRMATTR_ISLINEARMEM
+     value.
+
+
+Bugs
+~~~~
+::
+
+     Currently no display drivers implement this attribute despite many native mode
+     drivers actually provide linear memory.
+
+
+
+See also
+~~~~~~~~
+
+`moHidd_UpdateRect`_ 
 
 ----------
 
@@ -1926,9 +2367,37 @@ Function
 ~~~~~~~~
 ::
 
-     Left edge position of the bitmap
+     Controls horizontal position of a scrollable screen bitmap.
+
+     Size of displayable bitmaps may differ from actual screen size. In this case the
+     bitmap can be scrolled around the whole display area. If the bitmap is larger than
+     the display, only its part can be visible.
+
+     Setting this attribute causes changing left origin point of the bitmap. The value
+     of this attribute represents an offset from the physical edge of the display to the
+     logical edge of the bitmap. This means that if a large bitmap scrolls to the left in
+     order to reveal its right part, the offset will be negative. If the bitmap scrolls
+     to the left (possibly revealing another bitmap behind it), the offset will be positive.
+
+     It's up to the display driver to set scroll limits. If the value of the attribute
+     becomes unacceptable for any reason, the driver should adjust it and provide the real
+     resulting value back.
 
 
+Notes
+~~~~~
+::
+
+     Implementing screen scrolling does not enforce to implement screen composition, despite
+     the composition is really based on scrolling (in case of composition scrolling a bitmap
+     off-display is expected to reveal another bitmap behing it instead of empty space).
+
+
+
+See also
+~~~~~~~~
+
+`aoHidd_BitMap_TopEdge`_ 
 
 ----------
 
@@ -1946,8 +2415,12 @@ Function
 ~~~~~~~~
 ::
 
-     Must be passed on initialization of aHidd_BitMap_Displayable=TRUE bitmaps.
-     May also be used with non-displayable bitmaps.
+     Specify display mode ID for displayable bitmap.
+     
+     A displayable bitmap must have this attribute supplied with valid value. A nondisplayable
+     one may miss it, however it may remember it if it was created as a friend of displayable
+     one. This way you may create another displayable bitmap as a friend of nondisplayable
+     one which in turn is a friend of displayable one.
 
 
 
@@ -1960,14 +2433,17 @@ Synopsis
 ~~~~~~~~
 ::
 
-     [..G], OOP_Object *
+     [I.G], OOP_Object *
 
 
 Function
 ~~~~~~~~
 ::
 
-     This is complete pixmft of a bitmap.
+     Returns pixelformat descriptor object associated with the bitmap.
+
+     Every bitmap has some associated pixelformat object. Pixelformat objects are
+     shared data storages, so many bitmaps may refer to the same pixelformat objects.
 
 
 
@@ -2007,10 +2483,31 @@ Function
 ~~~~~~~~
 ::
 
-     What stdpixel format the bitmap should have.
-     This is a shortcut to create a bitmap with a std pixelformat.
+     Specify standard pixelformat code (one of vHidd_StdPixFmt_... values) for the
+     bitmap.
+
+     Values less than num_Hidd_PseudoStdPixFmt are illegal for this attribute.
+
+     Actually the bitmap class itself ignores this attribute. It is processed by
+     CLID_Hidd_Gfx/moHidd_Gfx_NewBitMap method in order to look up a corresponding
+     pixelformat object in the system's database.
 
 
+Notes
+~~~~~
+::
+
+     Bitmaps with this attribute set should be created as RAM bitmaps with direct CPU
+     access. It is not recommended to replace them with, for example, virtual surfaces on
+     hosted AROS. Such bitmaps are expected to be directly addressable and breaking
+     this may cause undesired side effects.
+
+
+
+See also
+~~~~~~~~
+
+`aoHidd_BitMap_PixFmt`_ CLID_Hidd_Gfx/moHidd_Gfx_NewBitMap 
 
 ----------
 
@@ -2028,7 +2525,30 @@ Function
 ~~~~~~~~
 ::
 
-     Top edge position of the bitmap.
+     Controls vertical position of a scrollable screen bitmap.
+
+     Size of displayable bitmaps may differ from actual screen size. In this case the
+     bitmap can be scrolled around the whole display area. If the bitmap is larger than
+     the display, only its part can be visible.
+
+     Setting this attribute causes changing top origin point of the bitmap. The value
+     of this attribute represents an offset from the physical edge of the display to the
+     logical edge of the bitmap. This means that if a large bitmap scrolls upwards in
+     order to reveal its bottom part, the offset will be negative. If the bitmap scrolls
+     downdards (possibly revealing another bitmap behind it), the offset will be positive.
+
+     It's up to the display driver to set scroll limits. If the value of the attribute
+     becomes unacceptable for any reason, the driver should adjust it and provide the real
+     resulting value back.
+
+
+Notes
+~~~~~
+::
+
+     Implementing screen scrolling does not enforce to implement screen composition, despite
+     the composition is really based on scrolling (in case of composition scrolling a bitmap
+     off-display is expected to reveal another bitmap behing it instead of empty space).
 
 
 
@@ -2041,14 +2561,22 @@ Synopsis
 ~~~~~~~~
 ::
 
-     [..G]
+     [..G], BOOL
 
 
 Function
 ~~~~~~~~
 ::
 
-     Check if a bitmap is visible
+     Check if the bitmap is currently visible on screen
+
+
+Bugs
+~~~~
+::
+
+     Not all display drivers implement this attribute. No AROS components currently rely
+     on its value.
 
 
 
@@ -2061,16 +2589,25 @@ Synopsis
 ~~~~~~~~
 ::
 
-     [ISG]
+     [ISG], ULONG
 
 
 Function
 ~~~~~~~~
 ::
 
-     Bitmap with
+     Specifies bitmap width in pixels.
+     
+     Setting this attribute does not cause actual bitmap resize, just updates the information
+     about it. Use this only from within subclasses only if you know what you do. For example
+     SDL hosted driver sets it when framebufer changes the resolution.
 
 
+
+See also
+~~~~~~~~
+
+`aoHidd_BitMap_Height`_ 
 
 ----------
 
@@ -3057,284 +3594,6 @@ Inputs
      x, y   -
      width  -
      height -
-
-
-
-IID_HIDD_GC
------------
-
-========================================== ========================================== ========================================== ========================================== 
-`aoHidd_GC_Background`_                    `aoHidd_GC_BitMap`_                        `aoHidd_GC_ColorExpansionMode`_            `aoHidd_GC_ColorMask`_                     
-`aoHidd_GC_DrawMode`_                      `aoHidd_GC_Font`_                          `aoHidd_GC_Foreground`_                    `aoHidd_GC_LinePattern`_                   
-`aoHidd_GC_LinePatternCnt`_                `aoHidd_GC_PlaneMask`_                     `aoHidd_GC_UserData`_                      `moHidd_GC_SetClipRect`_                   
-`moHidd_GC_UnsetClipRect`_                 
-========================================== ========================================== ========================================== ========================================== 
-
------------
-
-aoHidd_GC_Background
-====================
-
-Synopsis
-~~~~~~~~
-::
-
-     [.SG]
-
-
-Function
-~~~~~~~~
-::
-
-     Background color
-
-
-
-----------
-
-aoHidd_GC_BitMap
-================
-
-Synopsis
-~~~~~~~~
-::
-
-     [I.G]
-
-
-Function
-~~~~~~~~
-::
-
-     Bitmap which this gc uses.
-
-
-
-----------
-
-aoHidd_GC_ColorExpansionMode
-============================
-
-Synopsis
-~~~~~~~~
-::
-
-     [.SG]
-
-
-Function
-~~~~~~~~
-::
-
-     Mode for color expansion
- 
-
-
-----------
-
-aoHidd_GC_ColorMask
-===================
-
-Synopsis
-~~~~~~~~
-::
-
-     [.SG]
-
-
-Function
-~~~~~~~~
-::
-
-     Prevents some color bits from changing.
-
-
-
-----------
-
-aoHidd_GC_DrawMode
-==================
-
-Synopsis
-~~~~~~~~
-::
-
-     [.SG]
-
-
-Function
-~~~~~~~~
-::
-
-     Draw mode
-
-
-
-----------
-
-aoHidd_GC_Font
-==============
-
-Synopsis
-~~~~~~~~
-::
-
-     [.SG]
-
-
-Function
-~~~~~~~~
-::
-
-     Current font
-
-
-
-----------
-
-aoHidd_GC_Foreground
-====================
-
-Synopsis
-~~~~~~~~
-::
-
-     [.SG]
-
-
-Function
-~~~~~~~~
-::
-
-     Foreground color
-
-
-
-----------
-
-aoHidd_GC_LinePattern
-=====================
-
-Synopsis
-~~~~~~~~
-::
-
-     [.SG]
-
-
-Function
-~~~~~~~~
-::
-
-     Pattern for line drawing
- 
-
-
-----------
-
-aoHidd_GC_LinePatternCnt
-========================
-
-Synopsis
-~~~~~~~~
-::
-
-     [.SG]
-
-
-Function
-~~~~~~~~
-::
-
-     Pattern start bit for line drawing.
- 
-
-
-----------
-
-aoHidd_GC_PlaneMask
-===================
-
-Synopsis
-~~~~~~~~
-::
-
-     [.SG]
-
-
-Function
-~~~~~~~~
-::
-
-     Shape bitmap 
-
-
-
-----------
-
-aoHidd_GC_UserData
-==================
-
-Synopsis
-~~~~~~~~
-::
-
-     [.SG]
-
-
-Function
-~~~~~~~~
-::
-
-     User data
-
-
-
-----------
-
-moHidd_GC_SetClipRect
-=====================
-
-Synopsis
-~~~~~~~~
-::
-
-     VOID OOP_DoMethod(OOP_Object *obj, struct pHidd_GC_SetClipRect *msg);
-
-     VOID HIDD_GC_SetClipRect(OOP_Object *obj, LONG x1, LONG y1, LONG x2, LONG y2);
-
-
-Inputs
-~~~~~~
-::
-
-     obj -
-     x1  -
-     y1  -
-     x2  -
-     y2  -
-
-
-
-----------
-
-moHidd_GC_UnsetClipRect
-=======================
-
-Synopsis
-~~~~~~~~
-::
-
-     VOID OOP_DoMethod(OOP_Object *obj, struct pHidd_GC_UnsetClipRect *msg);
-
-     VOID HIDD_GC_UnsetClipRect(OOP_Object *obj);
-
-
-Inputs
-~~~~~~
-::
-
-     obj -
 
 
 
