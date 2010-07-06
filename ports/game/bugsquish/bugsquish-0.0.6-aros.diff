@@ -1,0 +1,12 @@
+diff -Naur bugsquish-0.0.6-orig/bugsquish.c bugsquish-0.0.6/bugsquish.c
+--- bugsquish-0.0.6-orig/bugsquish.c	2010-07-07 01:09:40.821534384 +0200
++++ bugsquish-0.0.6/bugsquish.c	2010-07-07 01:10:37.200275182 +0200
+@@ -2119,6 +2119,8 @@
+   
+   strcpy(filename, home);
+   strcat(filename, "/.bugsquish");
++#elif defined(__AROS__)
++  filename = "PROGDIR:.bugsquish";
+ #else
+   filename = "bugsquish.dat";
+ #endif
