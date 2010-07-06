@@ -1,0 +1,48 @@
+diff -Naur ctags-5.8-orig/main.c ctags-5.8/main.c
+--- ctags-5.8-orig/main.c	2007-06-07 06:35:21.000000000 +0200
++++ ctags-5.8/main.c	2009-07-10 00:03:57.000000000 +0200
+@@ -43,7 +43,7 @@
+  */
+ #ifdef AMIGA
+ # include <dos/dosasl.h>       /* for struct AnchorPath */
+-# include <clib/dos_protos.h>  /* function prototypes */
++# include <proto/dos.h>        /* function prototypes */
+ # define ANCHOR_BUF_SIZE 512
+ # define ANCHOR_SIZE (sizeof (struct AnchorPath) + ANCHOR_BUF_SIZE)
+ # ifdef __SASC
+@@ -95,7 +95,7 @@
+ 
+ #ifdef AMIGA
+ # include "ctags.h"
+-  static const char *VERsion = "$VER: "PROGRAM_NAME" "PROGRAM_VERSION" "
++  const char *VERsion = "$VER: "PROGRAM_NAME" "PROGRAM_VERSION" "
+ # ifdef __SASC
+   __AMIGADATE__
+ # else
+diff -Naur ctags-5.8-orig/routines.c ctags-5.8/routines.c
+--- ctags-5.8-orig/routines.c	2007-06-07 06:35:21.000000000 +0200
++++ ctags-5.8/routines.c	2010-07-06 23:46:49.231938412 +0200
+@@ -14,6 +14,11 @@
+ */
+ #include "general.h"  /* must always come first */
+ 
++#ifdef AMIGA
++#include <dos/dos.h>
++#include <proto/dos.h>
++#endif
++
+ #ifdef HAVE_STDLIB_H
+ # include <stdlib.h>  /* to declare malloc (), realloc () */
+ #endif
+@@ -862,7 +867,11 @@
+ 	if (tmpdir == NULL)
+ 		tmpdir = TMPDIR;
+ 	name = xMalloc (strlen (tmpdir) + 1 + strlen (pattern) + 1, char);
++#if defined(__AROS__)
++	sprintf (name, "T:%s", pattern);
++#else
+ 	sprintf (name, "%s%c%s", tmpdir, OUTPUT_PATH_SEPARATOR, pattern);
++#endif
+ 	fd = mkstemp (name);
+ 	eStatFree (file);
+ #elif defined(HAVE_TEMPNAM)
