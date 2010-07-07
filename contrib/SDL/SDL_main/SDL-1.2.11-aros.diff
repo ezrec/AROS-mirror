@@ -1,6 +1,6 @@
 diff -ruN SDL-1.2.11/configure SDL-1.2.11-aros/configure
 --- SDL-1.2.11/configure	2006-06-27 06:48:54.000000000 +0200
-+++ SDL-1.2.11-aros/configure	2010-04-03 10:03:45.000000000 +0200
++++ SDL-1.2.11-aros/configure	2010-06-12 09:08:10.000000000 +0200
 @@ -485,6 +485,7 @@
  verbose=
  x_includes=NONE
@@ -152,7 +152,7 @@ diff -ruN SDL-1.2.11/include/SDL_config.h SDL-1.2.11-aros/include/SDL_config.h
 -#endif /* _SDL_config_h */
 diff -ruN SDL-1.2.11/Makefile.in SDL-1.2.11-aros/Makefile.in
 --- SDL-1.2.11/Makefile.in	2006-06-20 07:49:00.000000000 +0200
-+++ SDL-1.2.11-aros/Makefile.in	2010-04-03 10:03:45.000000000 +0200
++++ SDL-1.2.11-aros/Makefile.in	2010-06-12 09:08:10.000000000 +0200
 @@ -30,7 +30,7 @@
  AR	= @AR@
  RANLIB	= @RANLIB@
@@ -208,7 +208,7 @@ diff -ruN SDL-1.2.11/Makefile.in SDL-1.2.11-aros/Makefile.in
  	rm -f $(datadir)/aclocal/sdl.m4
 diff -ruN SDL-1.2.11/src/audio/amigaos/mydebug.h SDL-1.2.11-aros/src/audio/amigaos/mydebug.h
 --- SDL-1.2.11/src/audio/amigaos/mydebug.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.11-aros/src/audio/amigaos/mydebug.h	2010-04-03 10:03:45.000000000 +0200
++++ SDL-1.2.11-aros/src/audio/amigaos/mydebug.h	2010-06-12 09:08:10.000000000 +0200
 @@ -0,0 +1,14 @@
 +#ifndef MYDEBUG
 +
@@ -226,7 +226,7 @@ diff -ruN SDL-1.2.11/src/audio/amigaos/mydebug.h SDL-1.2.11-aros/src/audio/amiga
 +#endif
 diff -ruN SDL-1.2.11/src/audio/amigaos/SDL_ahiaudio.c SDL-1.2.11-aros/src/audio/amigaos/SDL_ahiaudio.c
 --- SDL-1.2.11/src/audio/amigaos/SDL_ahiaudio.c	2006-05-01 10:02:41.000000000 +0200
-+++ SDL-1.2.11-aros/src/audio/amigaos/SDL_ahiaudio.c	2010-04-03 10:03:45.000000000 +0200
++++ SDL-1.2.11-aros/src/audio/amigaos/SDL_ahiaudio.c	2010-06-12 09:08:10.000000000 +0200
 @@ -114,7 +114,7 @@
  }
  
@@ -250,7 +250,7 @@ diff -ruN SDL-1.2.11/src/audio/amigaos/SDL_ahiaudio.c SDL-1.2.11-aros/src/audio/
  				this->hidden->type = AHIST_M16S;
 diff -ruN SDL-1.2.11/src/audio/amigaos/SDL_ahiaudio.h SDL-1.2.11-aros/src/audio/amigaos/SDL_ahiaudio.h
 --- SDL-1.2.11/src/audio/amigaos/SDL_ahiaudio.h	2006-05-01 10:02:41.000000000 +0200
-+++ SDL-1.2.11-aros/src/audio/amigaos/SDL_ahiaudio.h	2010-04-03 10:03:45.000000000 +0200
++++ SDL-1.2.11-aros/src/audio/amigaos/SDL_ahiaudio.h	2010-06-12 09:08:10.000000000 +0200
 @@ -26,7 +26,7 @@
  
  #include <exec/exec.h>
@@ -262,7 +262,7 @@ diff -ruN SDL-1.2.11/src/audio/amigaos/SDL_ahiaudio.h SDL-1.2.11-aros/src/audio/
  #include <inline/exec.h>
 diff -ruN SDL-1.2.11/src/audio/SDL_audio.c SDL-1.2.11-aros/src/audio/SDL_audio.c
 --- SDL-1.2.11/src/audio/SDL_audio.c	2006-05-09 10:47:05.000000000 +0200
-+++ SDL-1.2.11-aros/src/audio/SDL_audio.c	2010-04-03 10:03:45.000000000 +0200
++++ SDL-1.2.11-aros/src/audio/SDL_audio.c	2010-06-12 09:08:10.000000000 +0200
 @@ -116,6 +116,7 @@
  void SDL_AudioQuit(void);
  
@@ -273,7 +273,7 @@ diff -ruN SDL-1.2.11/src/audio/SDL_audio.c SDL-1.2.11-aros/src/audio/SDL_audio.c
  
 diff -ruN SDL-1.2.11/src/joystick/amigaos/mydebug.h SDL-1.2.11-aros/src/joystick/amigaos/mydebug.h
 --- SDL-1.2.11/src/joystick/amigaos/mydebug.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.11-aros/src/joystick/amigaos/mydebug.h	2010-04-03 10:03:45.000000000 +0200
++++ SDL-1.2.11-aros/src/joystick/amigaos/mydebug.h	2010-06-12 09:08:10.000000000 +0200
 @@ -0,0 +1,14 @@
 +#ifndef MYDEBUG
 +
@@ -291,7 +291,7 @@ diff -ruN SDL-1.2.11/src/joystick/amigaos/mydebug.h SDL-1.2.11-aros/src/joystick
 +#endif
 diff -ruN SDL-1.2.11/src/joystick/amigaos/SDL_sysjoystick.c SDL-1.2.11-aros/src/joystick/amigaos/SDL_sysjoystick.c
 --- SDL-1.2.11/src/joystick/amigaos/SDL_sysjoystick.c	2006-05-01 10:02:39.000000000 +0200
-+++ SDL-1.2.11-aros/src/joystick/amigaos/SDL_sysjoystick.c	2010-04-03 10:03:45.000000000 +0200
++++ SDL-1.2.11-aros/src/joystick/amigaos/SDL_sysjoystick.c	2010-06-12 09:08:10.000000000 +0200
 @@ -26,7 +26,8 @@
  /* This is the system specific header for the SDL joystick API */
  
@@ -435,7 +435,7 @@ diff -ruN SDL-1.2.11/src/joystick/amigaos/SDL_sysjoystick.c SDL-1.2.11-aros/src/
  		for(i=0;i<joystick->nbuttons;i++)
 diff -ruN SDL-1.2.11/src/thread/amigaos/mydebug.h SDL-1.2.11-aros/src/thread/amigaos/mydebug.h
 --- SDL-1.2.11/src/thread/amigaos/mydebug.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.11-aros/src/thread/amigaos/mydebug.h	2010-04-03 10:03:45.000000000 +0200
++++ SDL-1.2.11-aros/src/thread/amigaos/mydebug.h	2010-06-12 09:08:10.000000000 +0200
 @@ -0,0 +1,14 @@
 +#ifndef MYDEBUG
 +
@@ -453,7 +453,7 @@ diff -ruN SDL-1.2.11/src/thread/amigaos/mydebug.h SDL-1.2.11-aros/src/thread/ami
 +#endif
 diff -ruN SDL-1.2.11/src/thread/amigaos/SDL_sysmutex.c SDL-1.2.11-aros/src/thread/amigaos/SDL_sysmutex.c
 --- SDL-1.2.11/src/thread/amigaos/SDL_sysmutex.c	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.11-aros/src/thread/amigaos/SDL_sysmutex.c	2010-04-03 10:03:45.000000000 +0200
++++ SDL-1.2.11-aros/src/thread/amigaos/SDL_sysmutex.c	2010-06-12 09:08:10.000000000 +0200
 @@ -0,0 +1,130 @@
 +/*
 +    SDL - Simple DirectMedia Layer
@@ -587,7 +587,7 @@ diff -ruN SDL-1.2.11/src/thread/amigaos/SDL_sysmutex.c SDL-1.2.11-aros/src/threa
 +}
 diff -ruN SDL-1.2.11/src/thread/amigaos/SDL_systhread.c SDL-1.2.11-aros/src/thread/amigaos/SDL_systhread.c
 --- SDL-1.2.11/src/thread/amigaos/SDL_systhread.c	2006-05-01 10:02:48.000000000 +0200
-+++ SDL-1.2.11-aros/src/thread/amigaos/SDL_systhread.c	2010-04-03 10:03:45.000000000 +0200
++++ SDL-1.2.11-aros/src/thread/amigaos/SDL_systhread.c	2010-06-12 09:08:10.000000000 +0200
 @@ -40,7 +40,7 @@
  
  #if defined(__SASC) && !defined(__PPC__) 
@@ -608,7 +608,7 @@ diff -ruN SDL-1.2.11/src/thread/amigaos/SDL_systhread.c SDL-1.2.11-aros/src/thre
  					TAG_DONE);
 diff -ruN SDL-1.2.11/src/thread/amigaos/SDL_systhread_c.h SDL-1.2.11-aros/src/thread/amigaos/SDL_systhread_c.h
 --- SDL-1.2.11/src/thread/amigaos/SDL_systhread_c.h	2006-05-01 10:02:48.000000000 +0200
-+++ SDL-1.2.11-aros/src/thread/amigaos/SDL_systhread_c.h	2010-04-03 10:03:45.000000000 +0200
++++ SDL-1.2.11-aros/src/thread/amigaos/SDL_systhread_c.h	2010-06-12 09:08:10.000000000 +0200
 @@ -24,7 +24,7 @@
  #include <exec/exec.h>
  #include <dos/dos.h>
@@ -620,7 +620,7 @@ diff -ruN SDL-1.2.11/src/thread/amigaos/SDL_systhread_c.h SDL-1.2.11-aros/src/th
  #else
 diff -ruN SDL-1.2.11/src/timer/amigaos/mydebug.h SDL-1.2.11-aros/src/timer/amigaos/mydebug.h
 --- SDL-1.2.11/src/timer/amigaos/mydebug.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.11-aros/src/timer/amigaos/mydebug.h	2010-04-03 10:03:45.000000000 +0200
++++ SDL-1.2.11-aros/src/timer/amigaos/mydebug.h	2010-06-12 09:08:10.000000000 +0200
 @@ -0,0 +1,14 @@
 +#ifndef MYDEBUG
 +
@@ -638,7 +638,7 @@ diff -ruN SDL-1.2.11/src/timer/amigaos/mydebug.h SDL-1.2.11-aros/src/timer/amiga
 +#endif
 diff -ruN SDL-1.2.11/src/timer/amigaos/SDL_systimer.c SDL-1.2.11-aros/src/timer/amigaos/SDL_systimer.c
 --- SDL-1.2.11/src/timer/amigaos/SDL_systimer.c	2006-05-01 10:02:36.000000000 +0200
-+++ SDL-1.2.11-aros/src/timer/amigaos/SDL_systimer.c	2010-04-03 10:03:45.000000000 +0200
++++ SDL-1.2.11-aros/src/timer/amigaos/SDL_systimer.c	2010-06-12 09:08:10.000000000 +0200
 @@ -23,6 +23,9 @@
  
  #ifdef SDL_TIMER_AMIGA
@@ -818,7 +818,7 @@ diff -ruN SDL-1.2.11/src/timer/amigaos/SDL_systimer.c SDL-1.2.11-aros/src/timer/
  	{
 diff -ruN SDL-1.2.11/src/video/cybergfx/mydebug.h SDL-1.2.11-aros/src/video/cybergfx/mydebug.h
 --- SDL-1.2.11/src/video/cybergfx/mydebug.h	1970-01-01 01:00:00.000000000 +0100
-+++ SDL-1.2.11-aros/src/video/cybergfx/mydebug.h	2010-04-03 10:03:45.000000000 +0200
++++ SDL-1.2.11-aros/src/video/cybergfx/mydebug.h	2010-06-12 09:08:10.000000000 +0200
 @@ -0,0 +1,14 @@
 +#ifndef MYDEBUG
 +
@@ -836,7 +836,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/mydebug.h SDL-1.2.11-aros/src/video/cybe
 +#endif
 diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_amigaevents.c SDL-1.2.11-aros/src/video/cybergfx/SDL_amigaevents.c
 --- SDL-1.2.11/src/video/cybergfx/SDL_amigaevents.c	2006-05-01 10:02:46.000000000 +0200
-+++ SDL-1.2.11-aros/src/video/cybergfx/SDL_amigaevents.c	2010-04-03 10:03:45.000000000 +0200
++++ SDL-1.2.11-aros/src/video/cybergfx/SDL_amigaevents.c	2010-06-12 09:08:10.000000000 +0200
 @@ -37,7 +37,7 @@
  
  /* The translation tables from an Amiga keysym to a SDL keysym */
@@ -1015,9 +1015,104 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_amigaevents.c SDL-1.2.11-aros/src/vi
  			keysym->unicode = keybuf[0];
  		}
  #endif
+diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_amigamouse.c SDL-1.2.11-aros/src/video/cybergfx/SDL_amigamouse.c
+--- SDL-1.2.11/src/video/cybergfx/SDL_amigamouse.c	2006-05-01 10:02:46.000000000 +0200
++++ SDL-1.2.11-aros/src/video/cybergfx/SDL_amigamouse.c	2010-07-07 21:07:24.000000000 +0200
+@@ -29,16 +29,72 @@
+ 
+ /* The implementation dependent data for the window manager cursor */
+ 
+-typedef void * WMCursor;
++struct WMcursor
++{
++    APTR    Image;
++    UWORD   Width;
++    UWORD   Height;
++    UWORD   XHot;
++    UWORD   YHot;
++};
+ 
+ void amiga_FreeWMCursor(_THIS, WMcursor *cursor)
+ {
++    if (cursor)
++    {
++        if (cursor->Image)
++            FreeVec(cursor->Image);
++
++        FreeVec(cursor);
++    }
+ }
+ 
+ WMcursor *amiga_CreateWMCursor(_THIS,
+ 		Uint8 *data, Uint8 *mask, int w, int h, int hot_x, int hot_y)
+ {
+-	return (WMcursor *)1; // Amiga has an Hardware cursor, so it's ok to return something unuseful but true
++    struct WMcursor * cursor;
++    UWORD * image;
++    LONG y;
++        
++    cursor = AllocVec(sizeof(struct WMcursor), MEMF_PUBLIC | MEMF_CLEAR);
++    if (!cursor)
++        return NULL;
++
++    cursor->Width = w;
++    cursor->Height = h;
++    cursor->XHot = -hot_x;
++    cursor->YHot = -hot_y;
++    
++    cursor->Image = AllocVec(4 * h + 4, MEMF_PUBLIC | MEMF_CLEAR);
++    if (!cursor->Image)
++    {
++        FreeVec(cursor);
++        return NULL;
++    }
++    
++	image = ((UWORD*)cursor->Image) + 2;
++
++    for (y = 0; y < h; y++)
++    {
++        /* Case one: The image is <= 8: Use the data as the high byte of the
++        first plane, and the mask as the high byte of the second plane */
++        if (w <= 8)
++        {
++            *image++ = (*mask++)<<8;
++            *image++ = (*data++)<<8;
++        }
++        /* Case two: The image is 8 < w <= 16: Use two bytes of data in one word for
++        first plane, and two bytes of mask for the second plane */
++        else
++        {
++            *image++ = mask[0] << 8 | mask[1];
++            *image++ = data[0] << 8 | data[1];
++            data += 2;
++            mask += 2;
++        }
++    }
++
++    return cursor;
+ }
+ 
+ int amiga_ShowWMCursor(_THIS, WMcursor *cursor)
+@@ -54,12 +110,12 @@
+ 		SDL_Lock_EventThread();
+ 		if ( cursor == NULL ) {
+ 			if ( SDL_BlankCursor != NULL ) {
+-// Hide cursor HERE
+-				SetPointer(SDL_Window,(UWORD *)SDL_BlankCursor,1,1,0,0);
++				/* SLD_BlankCursor is just memory, not WMcursor structure */
++				SetPointer(SDL_Window,(UWORD *)SDL_BlankCursor, 1, 1, 0, 0);
+ 			}
+ 		} else {
+-// Show cursor
+-			ClearPointer(SDL_Window);
++            SetPointer(SDL_Window, (UWORD *)cursor->Image, 
++                cursor->Width, cursor->Height, cursor->XHot, cursor->YHot);
+ 		}
+ 		SDL_Unlock_EventThread();
+ 	}
 diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxgl.c SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxgl.c
 --- SDL-1.2.11/src/video/cybergfx/SDL_cgxgl.c	2006-05-01 10:02:46.000000000 +0200
-+++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxgl.c	2010-04-11 14:38:29.000000000 +0200
++++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxgl.c	2010-06-12 09:08:10.000000000 +0200
 @@ -21,32 +21,32 @@
  */
  #include "SDL_config.h"
@@ -1166,7 +1261,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxgl.c SDL-1.2.11-aros/src/video/cy
  
 diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxgl_c.h SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxgl_c.h
 --- SDL-1.2.11/src/video/cybergfx/SDL_cgxgl_c.h	2006-05-01 10:02:46.000000000 +0200
-+++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxgl_c.h	2010-04-03 10:03:45.000000000 +0200
++++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxgl_c.h	2010-06-12 09:08:10.000000000 +0200
 @@ -21,15 +21,14 @@
  */
  #include "SDL_config.h"
@@ -1187,7 +1282,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxgl_c.h SDL-1.2.11-aros/src/video/
  struct SDL_PrivateGLData {
 diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgximage.c SDL-1.2.11-aros/src/video/cybergfx/SDL_cgximage.c
 --- SDL-1.2.11/src/video/cybergfx/SDL_cgximage.c	2006-05-01 10:02:46.000000000 +0200
-+++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgximage.c	2010-04-03 10:03:45.000000000 +0200
++++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgximage.c	2010-06-12 09:08:10.000000000 +0200
 @@ -28,8 +28,15 @@
  #include <kstat.h>
  #endif
@@ -1444,7 +1539,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgximage.c SDL-1.2.11-aros/src/video
  			register unsigned char *src,*dest;
 diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxmodes.c SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxmodes.c
 --- SDL-1.2.11/src/video/cybergfx/SDL_cgxmodes.c	2006-05-01 10:02:46.000000000 +0200
-+++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxmodes.c	2010-04-03 10:03:45.000000000 +0200
++++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxmodes.c	2010-06-12 09:08:10.000000000 +0200
 @@ -208,7 +208,7 @@
      int i;
      for(i = 0; i < this->hidden->nvisuals; i++)
@@ -1456,7 +1551,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxmodes.c SDL-1.2.11-aros/src/video
      return 0;
 diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxvideo.c
 --- SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c	2006-05-01 10:02:46.000000000 +0200
-+++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxvideo.c	2010-04-11 14:35:24.000000000 +0200
++++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxvideo.c	2010-06-12 09:08:10.000000000 +0200
 @@ -53,8 +53,10 @@
  /* CGX driver bootstrap functions */
  
@@ -2428,7 +2523,7 @@ diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.c SDL-1.2.11-aros/src/video
  
 diff -ruN SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.h SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxvideo.h
 --- SDL-1.2.11/src/video/cybergfx/SDL_cgxvideo.h	2006-05-01 10:02:46.000000000 +0200
-+++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxvideo.h	2010-04-03 10:03:45.000000000 +0200
++++ SDL-1.2.11-aros/src/video/cybergfx/SDL_cgxvideo.h	2010-06-12 09:08:10.000000000 +0200
 @@ -30,7 +30,7 @@
  #include <graphics/scale.h>
  #include <graphics/gfx.h>
