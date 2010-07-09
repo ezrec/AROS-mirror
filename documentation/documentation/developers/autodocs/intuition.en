@@ -18,31 +18,31 @@ intuition
 `DisplayBeep()`_                        `DisposeObject()`_                      `DoGadgetMethodA()`_                    `DoubleClick()`_                        
 `DrawBorder()`_                         `DrawImage()`_                          `DrawImageState()`_                     `DumpIntuiState()`_                     
 `EasyRequestArgs()`_                    `EndRefresh()`_                         `EndRequest()`_                         `EndScreenNotify()`_                    
-`EraseImage()`_                         `FreeClass()`_                          `FreeRemember()`_                       `FreeScreenBuffer()`_                   
-`FreeScreenDrawInfo()`_                 `FreeSysRequest()`_                     `GadgetMouse()`_                        `GetAttr()`_                            
-`GetDefaultPubScreen()`_                `GetDefPrefs()`_                        `GetPrefs()`_                           `GetScreenData()`_                      
-`GetScreenDrawInfo()`_                  `HelpControl()`_                        `HideWindow()`_                         `InitRequester()`_                      
-`IntuiTextLength()`_                    `IsWindowVisible()`_                    `ItemAddress()`_                        `LendMenus()`_                          
-`LockIBase()`_                          `lockPubClass()`_                       `LockPubScreen()`_                      `LockPubScreenList()`_                  
-`MakeClass()`_                          `MakeScreen()`_                         `ModifyIDCMP()`_                        `ModifyProp()`_                         
-`MoveScreen()`_                         `MoveWindow()`_                         `MoveWindowInFrontOf()`_                `NewModifyProp()`_                      
-`NewObjectA()`_                         `NextObject()`_                         `NextPubScreen()`_                      `ObtainGIRPort()`_                      
-`OffGadget()`_                          `OffMenu()`_                            `OnGadget()`_                           `OnMenu()`_                             
-`OpenScreen()`_                         `OpenScreenTagList()`_                  `OpenWindow()`_                         `OpenWindowTagList()`_                  
-`OpenWorkBench()`_                      `PointInImage()`_                       `PrintIText()`_                         `PubScreenStatus()`_                    
-`QueryOverscan()`_                      `RefreshGadgets()`_                     `RefreshGList()`_                       `RefreshWindowFrame()`_                 
-`ReleaseGIRPort()`_                     `RemakeDisplay()`_                      `RemoveClass()`_                        `RemoveGadget()`_                       
-`RemoveGList()`_                        `ReportMouse()`_                        `Request()`_                            `ResetMenuStrip()`_                     
-`RethinkDisplay()`_                     `ScreenDepth()`_                        `ScreenPosition()`_                     `ScreenToBack()`_                       
-`ScreenToFront()`_                      `ScrollWindowRaster()`_                 `SetAttrsA()`_                          `SetDefaultPubScreen()`_                
-`SetDMRequest()`_                       `SetEditHook()`_                        `SetGadgetAttrsA()`_                    `SetIPrefs()`_                          
-`SetMenuStrip()`_                       `SetMouseQueue()`_                      `SetPointer()`_                         `SetPrefs()`_                           
-`SetPubScreenModes()`_                  `SetWindowPointerA()`_                  `SetWindowTitles()`_                    `ShowTitle()`_                          
-`ShowWindow()`_                         `SizeWindow()`_                         `StartScreenNotifyTagList()`_           `SysReqHandler()`_                      
-`TimedDisplayAlert()`_                  `UnlockIBase()`_                        `unlockPubClass()`_                     `UnlockPubScreen()`_                    
-`UnlockPubScreenList()`_                `ViewAddress()`_                        `ViewPortAddress()`_                    `WBenchToBack()`_                       
-`WBenchToFront()`_                      `WindowLimits()`_                       `WindowToBack()`_                       `WindowToFront()`_                      
-`ZipWindow()`_                          
+`EraseImage()`_                         `FreeClass()`_                          `FreeMonitorList()`_                    `FreeRemember()`_                       
+`FreeScreenBuffer()`_                   `FreeScreenDrawInfo()`_                 `FreeSysRequest()`_                     `GadgetMouse()`_                        
+`GetAttr()`_                            `GetDefaultPubScreen()`_                `GetDefPrefs()`_                        `GetMonitorList()`_                     
+`GetPrefs()`_                           `GetScreenData()`_                      `GetScreenDrawInfo()`_                  `HelpControl()`_                        
+`HideWindow()`_                         `InitRequester()`_                      `IntuiTextLength()`_                    `IsWindowVisible()`_                    
+`ItemAddress()`_                        `LendMenus()`_                          `LockIBase()`_                          `lockPubClass()`_                       
+`LockPubScreen()`_                      `LockPubScreenList()`_                  `MakeClass()`_                          `MakeScreen()`_                         
+`ModifyIDCMP()`_                        `ModifyProp()`_                         `MoveScreen()`_                         `MoveWindow()`_                         
+`MoveWindowInFrontOf()`_                `NewModifyProp()`_                      `NewObjectA()`_                         `NextObject()`_                         
+`NextPubScreen()`_                      `ObtainGIRPort()`_                      `OffGadget()`_                          `OffMenu()`_                            
+`OnGadget()`_                           `OnMenu()`_                             `OpenScreen()`_                         `OpenScreenTagList()`_                  
+`OpenWindow()`_                         `OpenWindowTagList()`_                  `OpenWorkBench()`_                      `PointInImage()`_                       
+`PrintIText()`_                         `PubScreenStatus()`_                    `QueryOverscan()`_                      `RefreshGadgets()`_                     
+`RefreshGList()`_                       `RefreshWindowFrame()`_                 `ReleaseGIRPort()`_                     `RemakeDisplay()`_                      
+`RemoveClass()`_                        `RemoveGadget()`_                       `RemoveGList()`_                        `ReportMouse()`_                        
+`Request()`_                            `ResetMenuStrip()`_                     `RethinkDisplay()`_                     `ScreenDepth()`_                        
+`ScreenPosition()`_                     `ScreenToBack()`_                       `ScreenToFront()`_                      `ScrollWindowRaster()`_                 
+`SetAttrsA()`_                          `SetDefaultPubScreen()`_                `SetDMRequest()`_                       `SetEditHook()`_                        
+`SetGadgetAttrsA()`_                    `SetIPrefs()`_                          `SetMenuStrip()`_                       `SetMouseQueue()`_                      
+`SetPointer()`_                         `SetPrefs()`_                           `SetPubScreenModes()`_                  `SetWindowPointerA()`_                  
+`SetWindowTitles()`_                    `ShowTitle()`_                          `ShowWindow()`_                         `SizeWindow()`_                         
+`StartScreenNotifyTagList()`_           `SysReqHandler()`_                      `TimedDisplayAlert()`_                  `UnlockIBase()`_                        
+`unlockPubClass()`_                     `UnlockPubScreen()`_                    `UnlockPubScreenList()`_                `ViewAddress()`_                        
+`ViewPortAddress()`_                    `WBenchToBack()`_                       `WBenchToFront()`_                      `WindowLimits()`_                       
+`WindowToBack()`_                       `WindowToFront()`_                      `ZipWindow()`_                          
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -1835,6 +1835,46 @@ Notes
 
 ----------
 
+FreeMonitorList()
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeMonitorList(
+          Object ** list );
+
+Function
+~~~~~~~~
+::
+
+     Frees an array of monitor class objects obtained using
+     GetMonitorList()
+
+
+Inputs
+~~~~~~
+::
+
+     list - a pointer to the list to free.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+
+See also
+~~~~~~~~
+
+`GetMonitorList()`_   
+
+----------
+
 FreeRemember()
 ==============
 
@@ -2203,6 +2243,62 @@ See also
 ~~~~~~~~
 
 `GetPrefs()`_ `SetPrefs()`_ 
+
+----------
+
+GetMonitorList()
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ Object ** GetMonitorList(
+          struct TagItem * tags );
+ 
+ Object ** GetMonitorListTags(
+          TAG tag, ... );
+
+Function
+~~~~~~~~
+::
+
+     Obtain an array of monitorclass objects installed in the
+     system
+
+
+Inputs
+~~~~~~
+::
+
+     tags - an optional pointer to a taglist with additional options.
+            Currently only one tag is defined:
+
+            GMLA_DisplayID - list only monitors matching the given
+                             display ID
+
+
+Result
+~~~~~~
+::
+
+     A pointer to a NULL-terminated array of BOOPSI object pointers.
+     This is a copy of internal list, you need to free it using
+     FreeMonitorList()
+
+
+Bugs
+~~~~
+::
+
+     Tags are currently ignored
+
+
+
+See also
+~~~~~~~~
+
+`FreeMonitorList()`_ 
 
 ----------
 
