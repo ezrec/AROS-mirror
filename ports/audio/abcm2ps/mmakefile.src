@@ -24,4 +24,10 @@ ICONS := Abcm2ps
 	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 
+#MM
+ports-audio-abcm2ps-clean :
+	$(RM) $(TARGETDIR)
+	$(RM) $(GENDIR)/$(CURDIR)
+
+
 %common
