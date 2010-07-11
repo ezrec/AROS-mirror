@@ -1,0 +1,15 @@
+diff -Naur madbomber-0.2.5-orig/madbomber.c madbomber-0.2.5/madbomber.c
+--- madbomber-0.2.5-orig/madbomber.c	2010-07-11 11:10:25.749486791 +0200
++++ madbomber-0.2.5/madbomber.c	2010-07-11 11:13:03.230740186 +0200
+@@ -4150,8 +4150,9 @@
+   char * filename, * home;
+   FILE * fi;
+   
+-  
+-#ifndef WIN32
++#if defined(__AROS__)
++  filename = "PROGDIR:.madbomber";
++#elif !defined(WIN32)
+   /* Get home directory (from $HOME variable)... if we can't determine it,
+      use the current directory ("."): */
+ 
