@@ -1,0 +1,53 @@
+# Copyright © 2010 The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-game : ports-game-circuslinux
+
+#MM  ports-game-circuslinux : includes linklibs contrib-sdl \
+#MM  ports-game-circuslinux-data ports-game-circuslinux-cpy \
+#MM  ports-game-circuslinux-drawericon ports-game-circuslinux-fetch
+
+#MM  ports-game-circuslinux-data : ports-game-circuslinux-fetch
+
+#MM  ports-game-circuslinux-quick : ports-game-circuslinux-fetch
+
+REPOSITORIES := ftp://ftp.tuxpaint.org/unix/x/circus-linux/src
+ARCHBASE     := circuslinux-1.0.3
+TARGETDIR    := $(AROS_CONTRIB)/Games/CircusLinux
+SDL_PREFIX   := $(AROS_DEVELOPMENT)
+USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
+                -DDATA_PREFIX=\"PROGDIR:data/\" -DJOY -D__SOUND -DVERSION=\"1.0.3\"
+
+FILES := circuslinux
+
+%build_prog mmake=ports-game-circuslinux progname=CircusLinux \
+    srcdir=$(PORTSDIR)/circuslinux/$(ARCHBASE)/ \
+    files=$(FILES) targetdir=$(TARGETDIR) \
+    uselibs="arosc SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL z"
+
+#MM
+ports-game-circuslinux-fetch :
+	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/circuslinux \
+	location=$(PORTSSOURCEDIR) \
+	archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+	patches_specs=circuslinux-1.0.3-aros.diff:$(ARCHBASE):-p1
+
+
+ICONS := CircusLinux
+
+%build_icons mmake=ports-game-circuslinux-drawericon \
+	icons=$(ICONS) dir=$(TARGETDIR)/..
+
+
+%copy_dir_recursive mmake=ports-game-circuslinux-data src=$(PORTSDIR)/circuslinux/$(ARCHBASE)/data \
+dst=$(TARGETDIR)/data
+
+CPYFILES := CHANGES.txt COPYING.txt FAQ.txt README.txt
+
+#MM ports-game-circuslinux-cpy
+%copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/circuslinux/$(ARCHBASE) dst=$(TARGETDIR) maketarget=ports-game-circuslinux-cpy
+
+
+%common

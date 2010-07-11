@@ -1,0 +1,11 @@
+# Copyright © 2010, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-game-circuslinux : ports-game-circuslinux-icons
+
+ICONS     := CircusLinux README.txt
+TARGETDIR := $(AROS_CONTRIB)/Games/CircusLinux
+
+%build_icons mmake=ports-game-circuslinux-icons icons=$(ICONS) dir=$(TARGETDIR)

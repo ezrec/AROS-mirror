@@ -1,0 +1,15 @@
+diff -Naur circuslinux-1.0.3-orig/circuslinux.c circuslinux-1.0.3/circuslinux.c
+--- circuslinux-1.0.3-orig/circuslinux.c	2001-04-29 08:38:01.000000000 +0200
++++ circuslinux-1.0.3/circuslinux.c	2010-07-11 10:27:52.599260558 +0200
+@@ -3434,8 +3434,9 @@
+   char * home;
+ #endif
+   
+-  
+-#ifdef LINUX
++#ifdef __AROS__
++  filename = "PROGDIR:.circuslinux";
++#elif LINUX
+   /* Get home directory (from $HOME variable)... if we can't determine it,
+      use the current directory ("."): */
+ 
