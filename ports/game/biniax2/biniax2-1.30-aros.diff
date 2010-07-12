@@ -1,0 +1,15 @@
+diff -Naur biniax2-1.30-orig/inc.h biniax2-1.30/inc.h
+--- biniax2-1.30-orig/inc.h	2010-07-12 20:43:07.908920886 +0200
++++ biniax2-1.30/inc.h	2010-07-12 20:43:36.218864313 +0200
+@@ -44,7 +44,10 @@
+ #include "snd.h"
+ #include "sys.h"
+ #include "cfg.h"
+-//#include "net.h"
++
++#if defined(__AROS__)
++#include "net.h"
++#endif
+ 
+ #include <SDL.h>
+ 
