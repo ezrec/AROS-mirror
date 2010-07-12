@@ -725,7 +725,7 @@ graphics;ClearRegion;1;1;2
 graphics;ClearScreen;1;1;2
 graphics;ClipBlit;1;1;2
 graphics;CloseFont;1;1;2
-graphics;CloseMonitor;1;1;0
+graphics;CloseMonitor;1;1;2
 graphics;CMOVE;1;1;2
 graphics;CoerceMode;1;1;0
 graphics;CopySBitMap;1;1;2
@@ -784,7 +784,7 @@ graphics;LoadRGB4;1;1;2
 graphics;LoadView;1;1;2
 graphics;LockLayerRom;1;1;1
 graphics;MakeVPort;1;1;1
-graphics;ModeNotAvailable;1;1;0
+graphics;ModeNotAvailable;1;1;1
 graphics;Move;1;1;2
 graphics;MoveSprite;1;1;1
 graphics;MrgCop;1;1;2
@@ -793,7 +793,7 @@ graphics;NextDisplayInfo;1;1;2
 graphics;ObtainBestPenA;1;1;1
 graphics;ObtainPen;1;1;2
 graphics;OpenFont;1;1;2
-graphics;OpenMonitor;1;1;0
+graphics;OpenMonitor;1;1;1
 graphics;OrRectRegion;1;1;2
 graphics;OrRegionRegion;1;1;2
 graphics;OwnBlitter;1;1;2
