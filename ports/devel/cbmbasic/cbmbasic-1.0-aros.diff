@@ -1,0 +1,21 @@
+diff -Naur cbmbasic-1.0-orig/runtime.c cbmbasic-1.0/runtime.c
+--- cbmbasic-1.0-orig/runtime.c	2009-04-08 05:00:03.000000000 +0200
++++ cbmbasic-1.0/runtime.c	2010-07-17 18:11:33.780545852 +0200
+@@ -390,7 +390,7 @@
+ 			putchar(13);
+ 			putchar(10);
+ 			break;
+-#ifdef _WIN32
++#if defined(_WIN32) || defined(__AROS__)
+ 		case 0x1D: /* CSR RIGHT */
+ 			putchar(' ');
+ 			break;
+@@ -608,6 +608,8 @@
+ 	st.wSecond       = (WORD)(seconds%60);
+ 	st.wMilliseconds = (WORD)((jiffies % 60) * 1000 / 60);
+ 	SetLocalTime(&st);
++#elif __AROS__
++    #warning SETTIM not implemented because of missing settimeofday()
+ #else
+     time_t  now = time(0);
+     struct tm       bd;
