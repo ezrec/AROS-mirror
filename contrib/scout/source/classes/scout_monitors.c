@@ -192,34 +192,6 @@ STATIC void IterateList( void (* callback)( struct MonitorEntry *me, void *userD
 
     ReleaseSemaphore(GfxBase->MonitorListSemaphore);
 
-#ifdef __MORPHOS__
-    if (IntuitionBase->LibNode.lib_Version > 49) {
-	Object **monList = GetMonitorList(NULL);
-
-	if (monList) {
-	    ULONG i;
-
-	    for (i = 0; monList[i]; i++) {
-		me = AllocVec(sizeof(struct MonitorEntry), MEMF_CLEAR);
-		if (me) {
-		    STRPTR name = NULL;
-
-		    GetAttr(MA_MonitorName, monList[i], &name);
-		    me->mon_Addr = monList[i];
-
-		    _snprintf(me->mon_Address, sizeof(me->mon_Address), "$%08lx", monList[i]);
-		    stccpy(me->mon_Name, nonetest(name), sizeof(me->mon_Name));
-		    stccpy(me->mon_Type, txtNodeTypeMonitorclass, sizeof(me->mon_Type));
-		    strcpy(me->mon_Pri, "---");
-		    strcpy(me->mon_Subsystem, "---");
-		    strcpy(me->mon_Subtype, "---");
-
-		    AddTail((struct List *)&tmplist, (struct Node *)me);
-		}
-	    }
-	}
-    }
-#endif
     ITERATE_LIST(&tmplist, struct MonitorEntry *, me) {
         callback(me, userData);
     }
@@ -411,17 +383,15 @@ STATIC ULONG mMore( struct IClass *cl,
         if ((me = (struct MonitorEntry *)GetActiveEntry(ihwd->mwd_MonitorList)) != NULL) {
             APTR detailWin;
 
-	    if (strcmp(me->mon_Pri, "---")) {
-                if ((detailWin = (Object *)MonitorsDetailWindowObject,
-                        MUIA_Window_ParentWindow, (IPTR)obj,
-                        MUIA_Window_MaxChildWindowCount, (opts.SingleWindows) ? 1 : 0,
-                    End) != NULL) {
-                    COLLECT_RETURNIDS;
-                    SetAttrs(detailWin, MUIA_MonitorsDetailWin_MonitorSpec, me->mon_Addr,
-                                        MUIA_Window_Open, TRUE,
-                                        TAG_DONE);
-                    REISSUE_RETURNIDS;
-		}
+	    if ((detailWin = (Object *)MonitorsDetailWindowObject,
+		MUIA_Window_ParentWindow, (IPTR)obj,
+		MUIA_Window_MaxChildWindowCount, (opts.SingleWindows) ? 1 : 0,
+		End) != NULL) {
+		COLLECT_RETURNIDS;
+		SetAttrs(detailWin, MUIA_MonitorsDetailWin_MonitorSpec, me->mon_Addr,
+				    MUIA_Window_Open, TRUE,
+				    TAG_DONE);
+		REISSUE_RETURNIDS;
             }
         }
     }
@@ -437,14 +407,8 @@ STATIC ULONG mListChange( struct IClass *cl,
     struct MonitorEntry *me;
 
     if ((me = (struct MonitorEntry *)GetActiveEntry(ihwd->mwd_MonitorList)) != NULL) {
-	ULONG disabled;
-
         MySetContents(ihwd->mwd_MonitorText, "%s \"%s\"", me->mon_Address, me->mon_Name);
-	if (strcmp(me->mon_Pri, "---"))
-	    disabled = FALSE;
-	else
-	    disabled = TRUE;
-	DoMethod(obj, MUIM_MultiSet, MUIA_Disabled, disabled, ihwd->mwd_RemoveButton, ihwd->mwd_PriorityButton, NULL);
+	DoMethod(obj, MUIM_MultiSet, MUIA_Disabled, FALSE, ihwd->mwd_RemoveButton, ihwd->mwd_PriorityButton, NULL);
 	if (!clientstate)
 	    SetAttrs(ihwd->mwd_MoreButton, MUIA_Disabled, FALSE, TAG_DONE);
     }

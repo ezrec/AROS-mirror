@@ -44,6 +44,10 @@
 #include <aros/asmcall.h>
 #define MUIMASTER_YES_INLINE_STDARG
 #define MUI_OBSOLETE
+#define HAVE_MONITORCLASS
+#endif
+#ifdef __MORPHOS__
+#define HAVE_MONITORCLASS
 #endif
 #include <devices/ahi.h>
 #include <devices/audio.h>
@@ -96,7 +100,7 @@
 #include <intuition/intuitionbase.h>
 #include <intuition/screens.h>
 #include <intuition/sghooks.h>
-#ifdef __MORPHOS__
+#ifdef HAVE_MONITORCLASS
 #include <intuition/monitorclass.h>
 #endif
 #include <libraries/commodities.h>
@@ -293,6 +297,8 @@
 #include "scout_monitors.h"
 #include "scout_monitors_detail.h"
 #include "monitor_button.h"
+#include "scout_monitorclass.h"
+#include "scout_monitorclass_detail.h"
 
 #if defined(__GNUC__)
     #define USE_NATIVE_64BIT_MATH          1

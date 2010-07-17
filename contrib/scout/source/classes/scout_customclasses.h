@@ -66,6 +66,8 @@ extern struct MUI_CustomClass *MonitorsDetailWinClass;
 extern struct MUI_CustomClass *MonitorButtonClass;
 extern struct MUI_CustomClass *OOPWinClass;
 extern struct MUI_CustomClass *OOPDetailWinClass;
+extern struct MUI_CustomClass *MonitorClassWinClass;
+extern struct MUI_CustomClass *MonitorClassDetailWinClass;
 
 BOOL CreateCustomClasses( void );
 

@@ -114,6 +114,8 @@ OBJECTS=$(OBJDIR)/startup.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_memory_detail.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_monitors.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_monitors_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_monitorclass.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_monitorclass_detail.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_mount.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_mount_detail.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_oop.o \

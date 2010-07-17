@@ -56,6 +56,8 @@ FILES := \
    classes/scout_memory_detail \
    classes/scout_monitors \
    classes/scout_monitors_detail \
+   classes/scout_monitorclass \
+   classes/scout_monitorclass_detail \
    classes/scout_mount \
    classes/scout_mount_detail \
    classes/scout_oop \

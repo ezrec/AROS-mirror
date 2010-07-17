@@ -170,8 +170,12 @@ STATIC void IterateList( void (* callback)( struct ClassEntry *ce, void *userDat
                     healstring(ce->ce_ClassName);
                     healstring(ce->ce_SuperClassName);
 
+#ifdef __MORPHOS__
+		    AddTail((struct List *)&tmplist, (struct Node *)ce);
+#else
                     // build the list in reverse order, because we need rootclass to be the very first element afterwards
                     AddHead((struct List *)&tmplist, (struct Node *)ce);
+#endif
                 }
             }
         }

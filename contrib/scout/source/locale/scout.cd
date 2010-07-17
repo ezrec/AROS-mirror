@@ -4944,3 +4944,156 @@ cl_DoSuperMethod:
 txtOOPSuper (//)
 superclass:
 ;
+txtMainMonitorClass (//)
+Monitorclass
+;
+txtMonitorClassTitle (//)
+MONITORCLASS
+;
+txtMonitorClassPrintHeader (//)
+\n  Address  Name\n\n
+;
+txtMonitorClassPrintLine (//)
+ %s %s\n
+;
+txtMonitorClassDetailTitle (//)
+MONITORCLASS
+;
+txtMonitorClassMonitorName (//)
+MA_MonitorName
+;
+txtMonitorClassManufacturer (//)
+MA_Manufacturer
+;
+txtMonitorClassManufacturerID (//)
+MA_ManufacturerID
+;
+txtMonitorClassProductID (//)
+MA_ProductID
+;
+txtMonitorClassMemorySize (//)
+MA_MemorySize
+;
+txtMonitorClassTopLeft (//)
+MA_TopLeftMonitor
+;
+txtMonitorClassTopMiddle (//)
+MA_TopMiddleMonitor
+;
+txtMonitorClassTopRight (//)
+MA_TopRightMonitor
+;
+txtMonitorClassMiddleLeft (//)
+MA_MiddleLeftMonitor
+;
+txtMonitorClassMiddleRight (//)
+MA_MiddleRightMonitor
+;
+txtMonitorClassBottomLeft (//)
+MA_BottomLeftMonitor
+;
+txtMonitorClassBottomMiddle (//)
+MA_BottomMiddleMonitor
+;
+txtMonitorClassBottomRight (//)
+MA_BottomRightMonitor
+;
+txtInvalid (//)
+<invalid>
+;
+txtMonitorClassGammaControl (//)
+MA_GammaControl
+;
+txtTrue (//)
+TRUE
+;
+txtFalse (//)
+FALSE
+;
+txtMonitorClassPointerType (//)
+MA_PointerType
+;
+txtMonitorClassPointerTypeTitle (//)
+MONITORCLASS pointer types
+;
+txtMonitorClassDriverName (//)
+MA_DriverName
+;
+txtMonitorClassDefaultPixelFormat (//)
+MM_GetDefaultPixelFormat
+;
+txtPixelFormat (//)
+PixelFormat
+;
+txtMonitorClassPointerBounds (//)
+MM_GetPointerBounds
+;
+txtPointerType (//)
+PointerType
+;
+txtPointerSize (//)
+Size
+;
+txtMonitorClassPixelFormatsGroup (//)
+PixelFormats
+;
+txtMonitorClassPixelFormats(//)
+MA_PixelFormats
+;
+txtMonitorClass3DSupport (//)
+MM_Query3DSupport
+;
+txtLUT8 (//)
+PIXFMT_LUT8
+;
+txtRGB15 (//)
+PIXFMT_RGB15
+;
+txtBGR15 (//)
+PIXFMT_BGR15
+;
+txtRGB15PC (//)
+PIXFMT_RGB15PC
+;
+txtBGR15PC (//)
+PIXFMT_BGR15PC
+;
+txtRGB16 (//)
+PIXFMT_RGB16
+;
+txtBGR16 (//)
+PIXFMT_BGR16
+;
+txtRGB16PC (//)
+PIXFMT_RGB16PC
+;
+txtBGR16PC (//)
+PIFXMT_BGR16PC
+;
+txtRGB24 (//)
+PIXFMT_RGB24
+;
+txtBGR24 (//)
+PIXFMT_BGR24
+;
+txtARGB32 (//)
+PIXFMT_ARGB32
+;
+txtBGRA32 (//)
+PIXFMT_BGRA32
+;
+txtRGBA32 (//)
+PIFXMT_RGBA32
+;
+txt3dUnknown (//)
+Unknown
+;
+txt3dNoDriver (//)
+None
+;
+txt3dSwDriver (//)
+Software
+;
+txt3dHwDriver (//)
+Hardware
+;

@@ -53,7 +53,7 @@ STATIC int client_socket = -1;
 STATIC int connected = FALSE;
 STATIC long type = SOCK_STREAM;
 
-STATIC long sinlen;
+STATIC LONG sinlen;
 STATIC struct sockaddr_in sin;
 
 BOOL clientstate = FALSE;
@@ -464,7 +464,7 @@ int isNetCall (void)
    server_socket = init_inet_daemon();
    if (server_socket >= 0) {
       sinlen = sizeof (sin);
-      if (getpeername (server_socket, (struct sockaddr *) &sin, (socklen_t *)&sinlen) == -1) {
+      if (getpeername (server_socket, (struct sockaddr *) &sin, &sinlen) == -1) {
 //         logprint ("scout: getpeername() failed\n");
          rc = FALSE;
       }

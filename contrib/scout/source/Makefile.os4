@@ -58,7 +58,7 @@ CFLAGS=             -mcrt=$(CRT) -I. -idirafter ./include -I./netinclude -I./cla
 LFLAGS=             -mcrt=$(CRT) -nostartfiles -Wl,--cref,-M,-Map=$@.map
 
 LOCALE=             locale
-
+`
 # $(PROJECT).o _has_ to be the first module !!! (Because we use no
 # startup-code)
 
@@ -105,6 +105,8 @@ OBJECTS=$(OBJDIR)/startup.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_memory_detail.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_monitors.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_monitors_detail.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_monitorclass.o \
+   $(OBJDIR)/$(CLASSESDIR)/scout_monitorclass_detail.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_mount.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_mount_detail.o \
    $(OBJDIR)/$(CLASSESDIR)/scout_oop.o \

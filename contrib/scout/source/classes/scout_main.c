@@ -108,7 +108,7 @@ STATIC ULONG mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
-    APTR button[31];
+    APTR button[32];
 
     if ((obj = (Object *)DoSuperNew(cl, obj,
         MUIA_HelpNode, "Main",
@@ -162,7 +162,7 @@ STATIC ULONG mNew( struct IClass *cl,
                 Child, (IPTR)(button[29] = MakeButton(txtMainMonitors)),
 		
 		Child, (IPTR)(button[30] = MakeButton(txtMainOOPClasses)),
-		Child, HSpace(0),
+		Child, (IPTR)(button[31] = MakeButton(txtMainMonitorClass)),
 		Child, HSpace(0),
 		Child, HSpace(0),
 		Child, HSpace(0),
@@ -212,6 +212,7 @@ STATIC ULONG mNew( struct IClass *cl,
         DoMethod(button[28], MUIM_Notify,  MUIA_Pressed, FALSE, obj, 1, MUIM_MainWin_ShowResetHandlers);
         DoMethod(button[29], MUIM_Notify,  MUIA_Pressed, FALSE, obj, 1, MUIM_MainWin_ShowMonitors);
 	DoMethod(button[30], MUIM_Notify,  MUIA_Pressed, FALSE, obj, 1, MUIM_MainWin_ShowOOPClasses);
+	DoMethod(button[31], MUIM_Notify,  MUIA_Pressed, FALSE, obj, 1, MUIM_MainWin_ShowMonitorClass);
 
 /* TODO: Scout is able to run on a network, and there can be a situation where server
          runs for example AROS and client runs AmigaOS. So we should be able to make
@@ -230,6 +231,7 @@ STATIC ULONG mNew( struct IClass *cl,
     #endif
 
     set(button[30], MUIA_Disabled, !arOS);
+    set(button[31], MUIA_Disabled, !(morphOS || arOS));
     }
 
     return (ULONG)obj;
@@ -548,6 +550,15 @@ STATIC ULONG mShowMonitors( struct IClass *cl,
     return 0;
 }
 
+STATIC ULONG mShowMonitorClass( struct IClass *cl,
+                                 Object *obj,
+                                 UNUSED Msg msg )
+{
+    CreateSubWindow(cl, obj, 29, MonitorClassWinClass, MUIM_MonitorClassWin_Update);
+
+    return 0;
+}
+
 STATIC ULONG mFlushDevices( UNUSED struct IClass *cl,
                             UNUSED Object *obj,
                             UNUSED Msg msg )
@@ -637,6 +648,7 @@ DISPATCHER(MainWinDispatcher)
         case MUIM_MainWin_ShowResetHandlers: return (mShowResetHandlers(cl, obj, (APTR)msg));
         case MUIM_MainWin_ShowMonitors:      return (mShowMonitors(cl, obj, (APTR)msg));
 	case MUIM_MainWin_ShowOOPClasses:    return (mShowOOPClasses(cl, obj, (APTR)msg));
+	case MUIM_MainWin_ShowMonitorClass:  return (mShowMonitorClass(cl, obj, (APTR)msg));
         case MUIM_MainWin_FlushDevices:      return (mFlushDevices(cl, obj, (APTR)msg));
         case MUIM_MainWin_FlushFonts:        return (mFlushFonts(cl, obj, (APTR)msg));
         case MUIM_MainWin_FlushLibraries:    return (mFlushLibraries(cl, obj, (APTR)msg));

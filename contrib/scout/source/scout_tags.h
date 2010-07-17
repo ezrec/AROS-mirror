@@ -197,6 +197,11 @@
 #define MUIM_OOPWin_More                            (TAGBASE_TBOECKEL | 0x11e3)
 #define MUIM_OOPWin_ListChange                      (TAGBASE_TBOECKEL | 0x11e4)
 
+#define MUIM_MonitorClassWin_Update		    (TAGBASE_TBOECKEL | 0x11f0)
+#define MUIM_MonitorClassWin_Print                  (TAGBASE_TBOECKEL | 0x11f1)
+#define MUIM_MonitorClassWin_More                   (TAGBASE_TBOECKEL | 0x11f2)
+#define MUIM_MonitorClassWin_ListChange             (TAGBASE_TBOECKEL | 0x11f3)
+
 #define MUIM_MainWin_About                          (TAGBASE_TBOECKEL | 0x1200)
 #define MUIM_MainWin_ShowAllocations                (TAGBASE_TBOECKEL | 0x1201)
 #define MUIM_MainWin_ShowAssigns                    (TAGBASE_TBOECKEL | 0x1202)
@@ -229,6 +234,7 @@
 #define MUIM_MainWin_ShowResetHandlers              (TAGBASE_TBOECKEL | 0x121d)
 #define MUIM_MainWin_ShowMonitors	            (TAGBASE_TBOECKEL | 0x121e)
 #define MUIM_MainWin_ShowOOPClasses		    (TAGBASE_TBOECKEL | 0x121f)
+#define MUIM_MainWin_ShowMonitorClass		    (TAGBASE_TBOECKEL | 0x1220)
 #define MUIM_MainWin_FlushDevices                   (TAGBASE_TBOECKEL | 0x1250)
 #define MUIM_MainWin_FlushFonts                     (TAGBASE_TBOECKEL | 0x1251)
 #define MUIM_MainWin_FlushLibraries                 (TAGBASE_TBOECKEL | 0x1252)
@@ -281,6 +287,8 @@
 #define MUIA_MonitorsDetailWin_MonitorSpec	    (TAGBASE_TBOECKEL | 0x2130)
 
 #define MUIA_OOPDetailWin_Class                     (TAGBASE_TBOECKEL | 0x2140)
+
+#define MUIA_MonitorClassDetailWin_MonitorObject    (TAGBASE_TBOECKEL | 0x2150)
 
 
 

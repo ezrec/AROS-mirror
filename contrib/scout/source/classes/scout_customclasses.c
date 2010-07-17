@@ -35,6 +35,8 @@ struct MUI_CustomClass *MemoryWinClass = NULL;
 struct MUI_CustomClass *MemoryDetailWinClass = NULL;
 struct MUI_CustomClass *MonitorsWinClass = NULL;
 struct MUI_CustomClass *MonitorsDetailWinClass = NULL;
+struct MUI_CustomClass *MonitorClassWinClass = NULL;
+struct MUI_CustomClass *MonitorClassDetailWinClass = NULL;
 struct MUI_CustomClass *MountsWinClass = NULL;
 struct MUI_CustomClass *MountsDetailWinClass = NULL;
 struct MUI_CustomClass *OOPWinClass = NULL;
@@ -111,6 +113,8 @@ BOOL CreateCustomClasses( void )
     if ((MemoryDetailWinClass        = MakeMemoryDetailWinClass()))
     if ((MonitorsWinClass            = MakeMonitorsWinClass()))
     if ((MonitorsDetailWinClass	     = MakeMonitorsDetailWinClass()))
+    if ((MonitorClassWinClass	     = MakeMonitorClassWinClass()))
+    if ((MonitorClassDetailWinClass  = MakeMonitorClassDetailWinClass()))
     if ((MountsWinClass              = MakeMountsWinClass()))
     if ((MountsDetailWinClass        = MakeMountsDetailWinClass()))
     if ((OOPWinClass                 = MakeOOPWinClass()))
@@ -179,6 +183,8 @@ void DeleteCustomClasses( void )
     if (MemoryDetailWinClass)         MUI_DeleteCustomClass(MemoryDetailWinClass);
     if (MonitorsWinClass)             MUI_DeleteCustomClass(MonitorsWinClass);
     if (MonitorsDetailWinClass)       MUI_DeleteCustomClass(MonitorsDetailWinClass);
+    if (MonitorClassWinClass)	      MUI_DeleteCustomClass(MonitorClassWinClass);
+    if (MonitorClassDetailWinClass)   MUI_DeleteCustomClass(MonitorClassDetailWinClass);
     if (MountsWinClass)               MUI_DeleteCustomClass(MountsWinClass);
     if (MountsDetailWinClass)         MUI_DeleteCustomClass(MountsDetailWinClass);
     if (OOPWinClass)                  MUI_DeleteCustomClass(OOPWinClass);
