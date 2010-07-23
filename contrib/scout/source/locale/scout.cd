@@ -5097,3 +5097,9 @@ Software
 txt3dHwDriver (//)
 Hardware
 ;
+txtMonitorClassMemoryClock (//)
+MA_MemoryClock
+;
+txtMonitorClassWindowed (//)
+MA_Windowed
+;

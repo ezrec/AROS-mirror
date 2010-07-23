@@ -30,7 +30,7 @@
 
 struct MonitorClassDetailWinData {
     TEXT mdwd_Title[WINDOW_TITLE_LENGTH];
-    APTR mdwd_Texts[52];
+    APTR mdwd_Texts[54];
     Object *mdwd_Monitor;
 };
 
@@ -78,21 +78,17 @@ static void GetMonitor(struct MonitorClassDetailWinData *mdwd, ULONG attrId, UBY
     STRPTR name;
 
     GetAttr(attrId, mdwd->mdwd_Monitor, (IPTR *)&obj);
-    /* Under MorphOS 2.4 on a single display these attributes return -1
-       instead of NULL. Obviously this is a bug. */
-    switch ((IPTR)obj) {
-    case 0:
-	name = NULL;
-	break;
-    case -1:
-	name = txtInvalid;
-	break;
-    default:
+#ifdef __AROS__
+    if (obj)
 	GetAttr(MA_MonitorName, obj, (IPTR *)&name);
-	break;
-    }
-
+    else
+	name = NULL;
     MySetContentsHealed(mdwd->mdwd_Texts[n], "%s", nonetest(name));
+#else
+    /* On production versions of MorphOS these attributes return monitor ID
+       instead of object pointer. This is going to be fixed in MorphOS v2.6 */
+    MySetContents(mdwd->mdwd_Texts[n], "$%08lx", obj);
+#endif
 }
 
 static void SetDefaultPixFmt(struct MonitorClassDetailWinData *mdwd, UBYTE depth, UBYTE n)
@@ -205,6 +201,12 @@ STATIC void SetDetails( struct IClass *cl,
     set(mdwd->mdwd_Texts[14], MUIA_FlagsButton_Flags, id);
     GetAttr(MA_DriverName, Mon, (IPTR *)&str);
     MySetContentsHealed(mdwd->mdwd_Texts[15], "%s", nonetest(str));
+    GetAttr(MA_MemoryClock, Mon, (IPTR *)&id);
+    MySetContents(mdwd->mdwd_Texts[52], "%12lD", id);
+#ifdef MA_Windowed
+    GetAttr(MA_Windowed, Mon, (IPTR *)&id);
+    MySetContents(mdwd->mdwd_Texts[53], "%s", boolstr(id));
+#endif
     SetDefaultPixFmt(mdwd,  8, 16);
     SetDefaultPixFmt(mdwd, 15, 17);
     SetDefaultPixFmt(mdwd, 16, 18);
@@ -249,7 +251,7 @@ STATIC ULONG mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
-    APTR group, texts[52], exitButton;
+    APTR group, texts[54], exitButton;
 
     if ((obj = (Object *)DoSuperNew(cl, obj,
 	MUIA_HelpNode, "MonitorClass",
@@ -301,6 +303,12 @@ STATIC ULONG mNew( struct IClass *cl,
 				End),
 			    Child, MyLabel2(txtMonitorClassDriverName),
 			    Child, (IPTR)(texts[15] = MyTextObject6()),
+			    Child, MyLabel2(txtMonitorClassMemoryClock),
+			    Child, (IPTR)(texts[52] = MyTextObject6()),
+#ifdef MA_Windowed
+			    Child, MyLabel2(txtMonitorClassWindowed),
+			    Child, (IPTR)(texts[53] = MyTextObject6()),
+#endif
 			End,
 		        Child, VGroup,
 			    GroupFrameT(txtMonitorClassDefaultPixelFormat),
