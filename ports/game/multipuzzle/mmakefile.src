@@ -1,0 +1,50 @@
+# Copyright © 2010, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+
+#MM- ports-game: ports-game-multipuzzle
+
+#MM  ports-game-multipuzzle : includes linklibs ports-game-multipuzzle-cpy \
+#MM  ports-game-multipuzzle-drawericon ports-game-multipuzzle-fetch
+
+#MM  ports-game-multipuzzle-cpy : ports-game-multipuzzle-fetch
+
+#MM  ports-game-multipuzzle-quick : ports-game-multipuzzle-fetch
+
+
+REPOSITORIES := http://archives.aros-exec.org/share/game/puzzle/
+ARCHBASE     := multipuzzle-src-1.3.2
+TARGETDIR    := $(AROS_CONTRIB)/Games/MultiPuzzle
+
+
+FILES := displayinit localize multipuzzle puzzle requesters multipuzzle_strings
+
+%build_prog mmake=ports-game-multipuzzle progname=MultiPuzzle \
+    srcdir=$(PORTSDIR)/multipuzzle/$(ARCHBASE)/ \
+    files=$(FILES) targetdir=$(TARGETDIR) \
+    uselibs="arosc"
+
+#MM
+ports-game-multipuzzle-fetch :
+	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/multipuzzle \
+	location=$(PORTSSOURCEDIR) \
+	archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
+
+
+ICONS := MultiPuzzle
+
+%build_icons mmake=ports-game-multipuzzle-drawericon \
+	icons=$(ICONS) dir=$(TARGETDIR)/..
+
+
+CPYFILES := beach.ilbm multipuzzle.guide multipuzzle.info
+
+# multipuzzle.guide.info not copied because it has wrong default tool
+
+#MM ports-game-multipuzzle-cpy
+%copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/multipuzzle/$(ARCHBASE) dst=$(TARGETDIR) maketarget=ports-game-multipuzzle-cpy
+
+
+%common

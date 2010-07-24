@@ -1,0 +1,11 @@
+# Copyright © 2010, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-game-multipuzzle : ports-game-multipuzzle-icons
+
+ICONS     := multipuzzle.guide
+TARGETDIR := $(AROS_CONTRIB)/Games/MultiPuzzle
+
+%build_icons mmake=ports-game-multipuzzle-icons icons=$(ICONS) dir=$(TARGETDIR)
