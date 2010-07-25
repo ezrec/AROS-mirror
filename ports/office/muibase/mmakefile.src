@@ -3,18 +3,16 @@
 
 include $(TOP)/config/make.cfg
 
-##MM- ports-office : ports-office-muibase
+#MM- ports-office : ports-office-muibase
 
-#MM  ports-office-muibase : includes linklibs ports-office-muibase-fetch ports-office-muibase-create \
-#MM  ports-office-muibase-install ports-office-muibase-catalogs
+#MM  ports-office-muibase : includes linklibs contrib-zune-classes-nlist ports-office-muibase-fetch \
+#MM  ports-office-muibase-create ports-office-muibase-install ports-office-muibase-catalogs
 
 #MM- ports-office-muibase-install : ports-office-muibase-fetch \
 #MM  ports-office-muibase-demos ports-office-muibase-images \
 #MM  ports-office-muibase-icons ports-office-muibase-rexx \
-#MM  ports-office-muibase-instimages \
+#MM  ports-office-muibase-instimages ports-office-muibase-projects \
 #MM  ports-office-muibase-cpy ports-office-muibase-readme
-
-##MM  ports-office-muibase-docs : ports-office-muibase-fetch
 
 #MM  ports-office-muibase-quick : ports-office-muibase-fetch
 
@@ -95,8 +93,11 @@ ports-office-muibase-fetch :
 	location=$(PORTSSOURCEDIR) \
 	archive_origins=$(REPOSITORIES) suffixes="tgz" \
 
+
+##### Generate some source files #####
+
 #MM
-ports-office-muibase-create : appstrings_cat.h y.tab.c builddate.h version.h $(PORTSDIR)/muibase/$(ARCHBASE)/y.tab.c $(PORTSDIR)/muibase/$(ARCHBASE)/appstrings_cat.c
+ports-office-muibase-create : appstrings_cat.h builddate.h version.h $(PORTSDIR)/muibase/$(ARCHBASE)/y.tab.c $(PORTSDIR)/muibase/$(ARCHBASE)/appstrings_cat.c
 	$(NOP)
 
 appstrings_cat.h : $(PORTSDIR)/muibase/$(ARCHBASE)/src/Catalogs/MUIbase.cd
@@ -124,10 +125,11 @@ $(PORTSDIR)/muibase/$(ARCHBASE)/appstrings_cat.c : $(PORTSDIR)/muibase/$(ARCHBAS
 
 
 
+##### Copy files and directories #####
+
 #MM
 ports-office-muibase-cpy :
 %copy_files_q files="AUTHORS COPYING" src=$(PORTSDIR)/muibase/$(ARCHBASE) dst=$(TARGETDIR) maketarget=ports-office-muibase-cpy
-
 
 
 %copy_dir_recursive mmake=ports-office-muibase-demos \
@@ -145,10 +147,8 @@ ports-office-muibase-cpy :
 %copy_dir_recursive mmake=ports-office-muibase-instimages \
     src=$(FROMAM)/Images dst=$(TARGETDIR)/Images
 
-#%copy_dir_recursive mmake=ports-office-muibase-docs \
-#    src=$(FROMAM)/Docs dst=$(TARGETDIR)/Docs
 
-
+##### Create ReadMe, LiesMich and LisezMoi #####
 
 #MM
 ports-office-muibase-readme : $(TARGETDIR)/ReadMe $(TARGETDIR)/LiesMich $(TARGETDIR)/LisezMoi
@@ -163,6 +163,15 @@ $(TARGETDIR)/LisezMoi : $(FROMDOC)/lisezmoi
 	iconv -f utf-8 -t iso-8859-1  $< -o $@ 
 
 
+##### Create Projects drawer #####
+
+#MM
+ports-office-muibase-projects :
+%mkdir_q dir=$(TARGETDIR)/Projects
+
+
+##### Create catalogs #####
+
 #MM
 ports-office-muibase-catalogs : $(TARGETDIR)/Catalogs/deutsch/MUIbase.catalog $(TARGETDIR)/Catalogs/français/MUIbase.catalog
 	$(NOP)
@@ -176,7 +185,6 @@ $(TARGETDIR)/Catalogs/français/MUIbase.catalog : $(PORTSDIR)/muibase/$(ARCHBASE)
 	@$(ECHO) "Creating $(CATNAME) catalog for language 'français'."
 	@$(MKDIR) $(TARGETDIR)/Catalogs/français
 	@$(FLEXCAT) $(PORTSDIR)/muibase/$(ARCHBASE)/src/Catalogs/MUIbase.cd $< CATALOG=$@
-
 
 
 %common
