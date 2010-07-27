@@ -1,0 +1,197 @@
+# Copyright © 2010, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-scientific : ports-scientific-mathx
+
+#MM  ports-scientific-mathx : includes linklibs ports-scientific-mathx-catalogs \
+#MM  ports-scientific-mathx-cpp ports-scientific-mathx-drawericon \
+#MM  ports-scientific-mathx-data ports-scientific-mathx-docs \
+#MM  ports-scientific-mathx-icons ports-scientific-mathx-images \
+#MM  ports-scientific-mathx-rexx ports-scientific-mathx-cpy \
+#MM  ports-scientific-mathx-directories ports-scientific-mathx-fetch
+
+#MM  ports-scientific-mathx-catalogs : ports-scientific-mathx-fetch
+
+#MM  ports-scientific-mathx-cpp : ports-scientific-mathx-fetch
+
+#MM  ports-scientific-mathx-drawericon : ports-scientific-mathx-fetch
+
+#MM  ports-scientific-mathx-data : ports-scientific-mathx-fetch
+
+#MM  ports-scientific-mathx-docs : ports-scientific-mathx-fetch
+
+#MM  ports-scientific-mathx-icons : ports-scientific-mathx-fetch
+
+#MM  ports-scientific-mathx-images : ports-scientific-mathx-fetch
+
+#MM  ports-scientific-mathx-rexx : ports-scientific-mathx-fetch
+
+#MM  ports-scientific-mathx-cpy : ports-scientific-mathx-fetch
+
+#MM  ports-scientific-mathx-quick : ports-scientific-mathx-fetch
+
+REPOSITORIES := http://archives.aros-exec.org/share/utility/scientific
+ARCHBASE     := muimathx-src-svn40
+TARGETDIR    := $(AROS_CONTRIB)/Utilities/Scientific/MathX
+TARGET_CXX   := $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-g++
+USER_CFLAGS  := -D__MATHX_VERDATE=\"`date +%d.%m.%Y`\" \
+                -D__MATHX_VERDAYS="`expr \`date +%s\` / 86400 - 2922`" \
+                -D__MATHX_BUILDID=\"$(BUILDID)\" \
+                -D__GRAPHICS_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ \
+                -D__REXXSYSLIB_STDLIBBASE__ -D__UTILITY_STDLIBBASE__ \
+                -DMUI_OBSOLETE \
+                -Wno-write-strings -funroll-loops -DDEBUG
+USER_INCLUDES:= -I$(PORTSDIR)/mathx/$(ARCHBASE) -I$(PORTSDIR)/mathx/$(ARCHBASE)/extrasrc
+
+# Remove C-only flags
+CXX_FLAGS    := $(subst -Wno-pointer-sign,, $(subst -Werror-implicit-function-declaration,, $(CFLAGS)))
+
+
+CXX_SOURCES := \
+	About \
+	AGraphics \
+	AGraphicsIO \
+	Alien \
+	Ausdruck \
+	ControlPanel \
+	Derivation \
+	Discussion \
+	Draw2D \
+	Draw3D \
+	DrawSIRDS \
+	Edit2D \
+	Edit3D \
+	EditSIRDS \
+	Eval \
+	FEditor \
+	Graph2D \
+	Graph3D \
+	GraphSIRDS \
+	Integration \
+	LineShow \
+	Locales \
+	mathX \
+	mathX_main \
+	Matrix \
+	MatrixWin \
+	MUITools \
+	Number \
+	Numeric \
+	Oper1 \
+	OperN \
+	PageList \
+	Parser \
+	Polynom \
+	Pool \
+	Settings \
+	StatusWin \
+	STools \
+	SymArr \
+	Symbol \
+	TabData \
+	Tangente \
+	Taylor \
+	TermPanel \
+	Termscript \
+	Textlist \
+	Tools \
+	Window2D \
+	Window3D \
+	WindowSIRDS
+
+
+OBJS  := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CXX_SOURCES))))
+
+
+#MM 
+ports-scientific-mathx-cpp : ports-scientific-mathx-directories ports-scientific-mathx-makeimages $(CXX_SOURCES)
+
+$(CXX_SOURCES) :
+%compile_q cmd=$(TARGET_CXX) opt=$(CXX_FLAGS) from=$(PORTSDIR)/mathx/$(ARCHBASE)/$@.cpp to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+
+#MM
+ports-scientific-mathx : ports-scientific-mathx-directories
+%link_q cmd=$(TARGET_CXX) from="$(OBJS)" to=$(TARGETDIR)/MathX libs="-lmui"
+
+
+#MM
+ports-scientific-mathx-fetch :
+	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/mathx \
+	location=$(PORTSSOURCEDIR) \
+	archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
+
+
+##### create drawer icon #####
+
+ICONS := MathX
+
+%build_icons mmake=ports-scientific-mathx-drawericon \
+	icons=$(ICONS) dir=$(TARGETDIR)/..
+
+
+##### copy directories #####
+
+%copy_dir_recursive mmake=ports-scientific-mathx-data \
+src=$(PORTSDIR)/mathx/$(ARCHBASE)/supportfiles/Data dst=$(TARGETDIR)/Data
+
+%copy_dir_recursive mmake=ports-scientific-mathx-docs \
+src=$(PORTSDIR)/mathx/$(ARCHBASE)/supportfiles/Docs dst=$(TARGETDIR)/Docs
+
+%copy_dir_recursive mmake=ports-scientific-mathx-icons \
+src=$(PORTSDIR)/mathx/$(ARCHBASE)/supportfiles/Icons dst=$(TARGETDIR)/Icons
+
+%copy_dir_recursive mmake=ports-scientific-mathx-images \
+src=$(PORTSDIR)/mathx/$(ARCHBASE)/supportfiles/Images dst=$(TARGETDIR)/Images
+
+%copy_dir_recursive mmake=ports-scientific-mathx-rexx \
+src=$(PORTSDIR)/mathx/$(ARCHBASE)/supportfiles/Rexx dst=$(TARGETDIR)/Rexx
+
+
+##### copy files #####
+
+CPYFILES := AUTHORS COPYING
+
+#MM
+ports-scientific-mathx-cpy :
+%copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/mathx/$(ARCHBASE) \
+dst=$(TARGETDIR) maketarget=ports-scientific-mathx-cpy
+
+
+##### setup directories #####
+
+#MM
+ports-scientific-mathx-directories :
+%mkdirs_q dirs="$(GENDIR)/$(CURDIR) images"
+
+
+##### localisation #####
+
+#MM
+ports-scientific-mathx-catalogs : Catalogs/mathX.h
+	$(NOP)
+
+Catalogs/mathX.h: $(PORTSDIR)/mathx/$(ARCHBASE)/Catalogs/mathX.cd
+	@$(ECHO) Generate catalog file $@
+	$(MKDIR) Catalogs
+	$(FLEXCAT) $< $@=$(TOOLDIR)/C_h_orig.sd
+
+
+#### build C files from IFF images  #####
+
+IMAGES := $(wildcard $(PORTSDIR)/mathx/$(ARCHBASE)/images/IMG_*.iff)
+IMAGES := $(patsubst %.iff,%.c,$(IMAGES))
+IMAGES := $(subst $(PORTSDIR)/mathx/$(ARCHBASE)/,,$(IMAGES))
+
+#MM
+ports-scientific-mathx-makeimages : ports-scientific-mathx-directories $(IMAGES)
+	$(NOP)
+
+images/IMG_%.c : $(PORTSDIR)/mathx/$(ARCHBASE)/images/IMG_%.iff
+	@$(ECHO) Create source from image file $<
+	$(ILBMTOC) -b2c $< > $@
+
+
+%common
