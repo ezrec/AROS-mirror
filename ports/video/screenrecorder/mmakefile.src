@@ -1,0 +1,74 @@
+# Copyright © 2010, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-video : ports-video-screenrecorder
+
+#MM  ports-video-screenrecorder : includes linklibs ports-video-screenrecorder-locale \
+#MM  ports-video-screenrecorder-drawericon ports-video-screenrecorder-cpy \
+#MM  ports-video-screenrecorder-fetch
+
+#MM  ports-video-screenrecorder-cpy : ports-video-screenrecorder-fetch
+
+#MM  ports-video-screenrecorder-quick : ports-video-screenrecorder-fetch
+
+REPOSITORIES := http://archives.aros-exec.org/share/video/record/
+ARCHBASE     := screenrecorder-src-svn17
+TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Video/ScreenRecorder
+USER_CFLAGS  := -D__LOCALE_STDLIBBASE__
+USER_INCLUDES:= -I$(PORTSDIR)/screenrecorder/$(ARCHBASE)/include
+
+FILES := \
+    audio \
+    main \
+    pointer \
+    video_avi \
+    video_mng \
+    mui \
+    scaling \
+    screenlistclass \
+    qport \
+    video_png \
+    utils \
+    recorder \
+    broker \
+    init \
+    appclass
+
+
+%build_prog mmake=ports-video-screenrecorder progname=ScreenRecorder \
+    srcdir=$(PORTSDIR)/screenrecorder/$(ARCHBASE)/ \
+    files=$(FILES) targetdir=$(TARGETDIR) \
+    uselibs="arosc amiga arossupport mui jpeg z"
+
+#MM
+ports-video-screenrecorder-fetch :
+	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/screenrecorder \
+	location=$(PORTSSOURCEDIR) \
+	archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
+
+
+ICONS := ScreenRecorder
+
+%build_icons mmake=ports-video-screenrecorder-drawericon \
+	icons=$(ICONS) dir=$(TARGETDIR)/..
+
+
+CPYFILES := ScreenRecorder.info
+
+#MM ports-video-screenrecorder-cpy :
+%copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/screenrecorder/$(ARCHBASE) dst=$(TARGETDIR) \
+maketarget=ports-video-screenrecorder-cpy
+
+
+#MM
+ports-video-screenrecorder-locale : locale.h
+	$(NOP)
+
+locale.h: $(PORTSDIR)/screenrecorder/$(ARCHBASE)/locale/screenrecorder.cd
+	@$(ECHO) Generate catalog file $@
+	@$(FLEXCAT) $< $@=$(TOOLDIR)/C_h_orig.sd
+
+
+%common
