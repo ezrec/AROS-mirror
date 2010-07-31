@@ -9,6 +9,8 @@ include $(TOP)/config/make.cfg
 #MM  ports-video-screenrecorder-drawericon ports-video-screenrecorder-cpy \
 #MM  ports-video-screenrecorder-fetch
 
+#MM  ports-video-screenrecorder-locale : ports-video-screenrecorder-fetch
+
 #MM  ports-video-screenrecorder-cpy : ports-video-screenrecorder-fetch
 
 #MM  ports-video-screenrecorder-quick : ports-video-screenrecorder-fetch
