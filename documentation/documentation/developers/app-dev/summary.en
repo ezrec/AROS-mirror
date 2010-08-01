@@ -3,7 +3,7 @@ AROS Application Development Manual
 ===================================
 
 :Authors:   AROS Developer Mailing List
-:Copyright: Copyright (C) 2008, The AROS Development Team
+:Copyright: Copyright (C) 2008-2010, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Big mess
@@ -16,7 +16,7 @@ Introduction
 
 This is an unordered summary of discussions of the AROS Deloper Mailing List,
 mainly about the build system, problems with shared libraries and Zune classes.
-This document needs a major overhaul, either turning it into a prober FAQ
+This document needs a major overhaul, either turning it into a proper FAQ
 or moving some parts in other documents.
 
 ::
@@ -502,3 +502,38 @@ or moving some parts in other documents.
     > Dont think this will help ..
 
     This helped very much.
+
+    -------------
+
+    > Do we actually have a common definition what AROS_HOST_CC,
+    > AROS_KERNEL_CC and AROS_TARGET_CC needs to actually do ?
+    > Especially I get a feeling AROS_KERNEL_CC currently has different
+    > meanings for different ports and host configurations. Can somebody make
+    > this clear as then it would be easier to get a bug free configure.in
+    > file.
+
+    In brief, HOST_CC compiles the build tools, KERNEL_CC compiles AROS 
+    kernel components, GRUB etc., and TARGET_CC compiles code that runs 
+    within AROS.
+
+    -------------
+
+    > What does 'kernel component' actually mean ?
+
+    I probably should have said just 'kernel'. I'm not sure which compiler 
+    is used for i386 kobjs for example.
+
+    > Why is KERNEL_CC different from TARGET_CC ?
+
+    Because you can't compile the kernel as if it's an AROS executable.
+    TARGET_CC is either a wrapper around KERNEL_CC or a true cross-compiler
+    built with crosstools.
+
+    > Actually there should not be a difference because in theory you should
+    > be able to choose between kobj or normal module at will. One port should
+    > be able to have something in the kernel and another port should be able
+    > to have it as a disk based module.
+
+    That's true for some ports, but for i386, the files linked into the kernel 
+    are different from the disk-based files. As I said though, I'm not sure if 
+    different compilers are used.
