@@ -200,9 +200,6 @@
 # /MultiMedia/AMP2/plugin/xanim/
 /MultiMedia/AMP2/plugin/xanim/mmakefile
 
-# /MultiMedia/abcm2ps/
-/MultiMedia/abcm2ps/mmakefile
-
 # /MultiMedia/libs/ptplay/Sources/
 /MultiMedia/libs/ptplay/Sources/mmakefile
 
@@ -974,9 +971,21 @@
 # /disk/cdrom/mkisofs/
 /disk/cdrom/mkisofs/mmakefile
 
+# /dopus/
+/dopus/mmakefile
+
 # /dopus/Config/
 /dopus/Config/*.err
 /dopus/Config/mmakefile
+
+# /dopus/DOpusRT/
+/dopus/DOpusRT/mmakefile
+
+# /dopus/DOpus_Disk/
+/dopus/DOpus_Disk/mmakefile
+
+# /dopus/DOpus_Icon/
+/dopus/DOpus_Icon/mmakefile
 
 # /dopus/Library/
 /dopus/Library/*.err
@@ -1068,9 +1077,6 @@
 
 # /emu/uae/src/od-aros/uae-gui/catalogs/
 /emu/uae/src/od-aros/uae-gui/catalogs/mmakefile
-
-# /extern/finder/
-/extern/finder/mmakefile
 
 # /fish/304_clines/
 /fish/304_clines/mmakefile
