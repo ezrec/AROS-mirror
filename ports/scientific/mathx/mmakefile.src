@@ -169,14 +169,9 @@ ports-scientific-mathx-directories :
 
 ##### localisation #####
 
-#MM
-ports-scientific-mathx-catalogs : Catalogs/mathX.h
-	$(NOP)
-
-Catalogs/mathX.h: $(PORTSDIR)/mathx/$(ARCHBASE)/Catalogs/mathX.cd
-	@$(ECHO) Generate catalog file $@
-	$(MKDIR) Catalogs
-	$(FLEXCAT) $< $@=$(TOOLDIR)/C_h_orig.sd
+%build_catalogs mmake=ports-scientific-mathx-catalogs name=mathX subdir= \
+    source="Catalogs/mathX.h" dir=$(TARGETDIR)/Catalogs \
+    srcdir=$(PORTSDIR)/mathx/$(ARCHBASE)/Catalogs
 
 
 #### build C files from IFF images  #####
