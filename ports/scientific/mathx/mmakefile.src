@@ -14,7 +14,7 @@ include $(TOP)/config/make.cfg
 
 #MM  ports-scientific-mathx-catalogs : ports-scientific-mathx-fetch
 
-#MM  ports-scientific-mathx-cpp : ports-scientific-mathx-fetch
+#MM  ports-scientific-mathx-cpp : ports-scientific-mathx-fetch contrib-gnu-crosstools
 
 #MM  ports-scientific-mathx-drawericon : ports-scientific-mathx-fetch
 
@@ -181,7 +181,7 @@ IMAGES := $(patsubst %.iff,%.c,$(IMAGES))
 IMAGES := $(subst $(PORTSDIR)/mathx/$(ARCHBASE)/,,$(IMAGES))
 
 #MM
-ports-scientific-mathx-makeimages : ports-scientific-mathx-directories $(IMAGES)
+ports-scientific-mathx-makeimages : $(IMAGES) | images
 	$(NOP)
 
 images/IMG_%.c : $(PORTSDIR)/mathx/$(ARCHBASE)/images/IMG_%.iff
