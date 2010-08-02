@@ -1,0 +1,10 @@
+include $(TOP)/config/make.cfg
+
+DESTDIR	:= $(CONTRIBDIR)/DiskSpeed
+ICONS := DiskSpeed ScsiSpeed DiskSpeed.doc
+
+%build_icons mmake=contrib-diskspeed-icons icons=$(ICONS) dir=$(DESTDIR)
+
+%build_icons mmake=contrib-scsispeed-icons icons=$(ICONS) dir=$(DESTDIR)
+
+%common

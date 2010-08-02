@@ -1,0 +1,7 @@
+include $(TOP)/config/make.cfg
+
+DESTDIR := $(CONTRIBDIR)/Demos/Flamme
+
+%build_icons mmake=demo-flamme-icons icons=Flamme dir=$(DESTDIR)
+
+%common

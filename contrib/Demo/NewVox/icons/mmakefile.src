@@ -1,0 +1,7 @@
+include $(TOP)/config/make.cfg
+
+DESTDIR := $(CONTRIBDIR)/Demos/NewVox
+
+%build_icons mmake=demo-newvox-icons icons=NewVox dir=$(DESTDIR)
+
+%common

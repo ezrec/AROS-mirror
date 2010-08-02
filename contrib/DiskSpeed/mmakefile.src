@@ -18,19 +18,6 @@ DISKSHARED := locale diskspeed/DiskSpeedCPU
 #MM contrib-diskspeed-comp : contrib-diskspeed-docs contrib-diskspeed-icons contrib-diskspeed-catalogs
 #MM contrib-scsispeed-comp : contrib-diskspeed-docs contrib-scsispeed-icons contrib-diskspeed-catalogs
 
-ICONS := DiskSpeed ScsiSpeed DiskSpeed.doc
-
-ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
-
-#MM
-contrib-diskspeed-icons : $(ICONFILES)
-
-#MM
-contrib-scsispeed-icons : $(ICONFILES)
-
-$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png | $(DESTDIR)
-	%makeicon2
-
 #MM
 contrib-diskspeed-docs : $(DESTDIR)/DiskSpeed.doc
 
@@ -39,3 +26,5 @@ $(DESTDIR)/DiskSpeed.doc : DiskSpeed.doc | $(DESTDIR)
 	cp $< $@
 
 %rule_makedirs dirs=$(DESTDIR)
+
+%common

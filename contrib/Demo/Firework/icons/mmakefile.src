@@ -1,0 +1,7 @@
+include $(TOP)/config/make.cfg
+
+DESTDIR	:= $(CONTRIBDIR)/Demos/Firework
+
+%build_icons mmake=demo-firework-icons icons=Firework dir=$(DESTDIR)
+
+%common

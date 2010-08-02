@@ -1,0 +1,7 @@
+include $(TOP)/config/make.cfg
+
+DESTDIR := $(CONTRIBDIR)/Demos/DawaFire
+
+%build_icons mmake=demo-dawafire-icons icons=DawaFire dir=$(DESTDIR)
+
+%common

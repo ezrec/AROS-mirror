@@ -8,16 +8,6 @@ DESTDIR := $(CONTRIBDIR)/Demos/Voxel
     progname=Voxel targetdir=$(DESTDIR) \
     files=voxel uselibs="arossupport amiga arosc m"
 
-
-ICONS := Voxel
-ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
-
-#MM
-demo-voxel-icons : $(ICONFILES)
-	
-$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png | $(DESTDIR)
-	%makeicon2
-
 IMAGES := clouds.pcx democ.pcx demoh.pcx
 IMAGEFILES := $(foreach f, $(IMAGES), $(DESTDIR)/$(f))
 

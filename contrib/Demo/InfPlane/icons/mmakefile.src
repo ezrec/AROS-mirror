@@ -1,0 +1,7 @@
+include $(TOP)/config/make.cfg
+
+DESTDIR	:= $(CONTRIBDIR)/Demos/InfPlane
+
+%build_icons mmake=demo-infplane-icons icons=InfPlane dir=$(DESTDIR)
+
+%common

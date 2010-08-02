@@ -25,13 +25,6 @@ DATAFILES	:= pattern.data pattern.pal
 
 $(addprefix $(DESTDIR)/,$(DATAFILES)) : | $(DESTDIR)
 
-ICONS := InfPlane
-ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
-
-#MM
-demo-infplane-icons : $(ICONFILES)
-	
-$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png | $(DESTDIR)
-	%makeicon2
-
 %rule_makedirs dirs=$(DESTDIR)
+
+%common

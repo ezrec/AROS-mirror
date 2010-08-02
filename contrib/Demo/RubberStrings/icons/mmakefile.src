@@ -1,0 +1,7 @@
+include $(TOP)/config/make.cfg
+
+DESTDIR := $(CONTRIBDIR)/Demos/RubberStrings
+
+%build_icons mmake=demo-rubberstrings-icons icons=Rubberstrings dir=$(DESTDIR)
+
+%common

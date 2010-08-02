@@ -8,14 +8,4 @@ DESTDIR := $(CONTRIBDIR)/Demos/Parallax
     progname=Parallax targetdir=$(DESTDIR) \
     files=parallax uselibs="arossupport amiga arosc m"
 
-
-ICONS := Parallax
-ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
-
-#MM
-demo-parallax-icons : $(ICONFILES)
-	
-$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png | $(DESTDIR)
-	%makeicon2
-
-%rule_makedirs dirs=$(DESTDIR)
+%common

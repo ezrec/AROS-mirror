@@ -1,0 +1,10 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+#MM- Doom-extra : Doom-extra-icons
+
+EXEDIR := $(CONTRIBDIR)/Games/Doom
+
+%build_icons mmake=Doom-extra-icons icons=Doom dir=$(EXEDIR)
+
+%common

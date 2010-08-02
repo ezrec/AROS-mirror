@@ -17,14 +17,6 @@ DATAFILES	:= pattern.data pattern.pal
 
 $(addprefix $(DESTDIR)/,$(DATAFILES)) : | $(DESTDIR)
 
-
-ICONS := Tunnel
-ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
-
-#MM
-demo-tunnel-icons : $(ICONFILES)
-	
-$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png | $(DESTDIR)
-	%makeicon2
-
 %rule_makedirs dirs=$(DESTDIR)
+
+%common

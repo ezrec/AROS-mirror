@@ -7,7 +7,7 @@ include $(TOP)/config/make.cfg
 FILES 	    := main 
 EXEDIR      := $(CONTRIBDIR)/Demos/Kitty
 
-#MM demo-kitty : includes linklibs demo-kitty-extra
+#MM demo-kitty : includes linklibs demo-kitty-extra demo-kitty-icons
 
 %build_prog mmake=demo-kitty \
     progname=Kitty targetdir=$(EXEDIR) \
@@ -15,7 +15,7 @@ EXEDIR      := $(CONTRIBDIR)/Demos/Kitty
 
 
 #MM
-demo-kitty-extra : demo-kitty-images demo-kitty-icons
+demo-kitty-extra : demo-kitty-images
 
 
 IMAGES      := kittysprite
@@ -30,14 +30,5 @@ demo-kitty-images : $(C_IMAGES)
 #MM
 clean ::
 	@$(RM) $(C_IMAGES)
-
-
-ICONS := Kitty
-ICONFILES := $(foreach f, $(ICONS), $(EXEDIR)/$(f).info)
-
-demo-kitty-icons : $(ICONFILES)
-	
-$(EXEDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png | $(EXEDIR)
-	%makeicon2
 
 %rule_makedirs dirs=$(EXEDIR)
