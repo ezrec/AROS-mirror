@@ -26,9 +26,6 @@ include $(TOP)/config/make.cfg
 SCRIPTFILES = StartSomeDemos StartSomeDemos2 StartMesaDemos
 DSTDIR := $(CONTRIBDIR)/Demos
 
-#MM 
-demo-startscripts:
-
-%copy_files_q files=$(SCRIPTFILES) dst=$(DSTDIR) maketarget=demo-startscripts
+%copy_files_q mmake=demo-startscripts files=$(SCRIPTFILES) dst=$(DSTDIR)
 
 %common

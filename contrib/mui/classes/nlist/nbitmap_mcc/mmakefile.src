@@ -19,14 +19,10 @@ FILES := dispatcher DitherImage NBitmap Debug vastubs
     uselibs="amiga mui arosc m"
 
 
-#MM includes-copy
-
 INCLUDE_FILES := ../include/mui/NBitmap_mcc.h
 %copy_includes path=mui dir=../include/mui
 
-#MM contrib-zune-classes-nbitmap-test-cpy
 
-%copy_files_q files=icon.png src=. dst=$(AROS_TESTS)/NList \
-    maketarget=contrib-zune-classes-nbitmap-test-cpy
+%copy_files_q mmake=contrib-zune-classes-nbitmap-test-cpy files=icon.png src=. dst=$(AROS_TESTS)/NList
 
 %common

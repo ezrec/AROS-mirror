@@ -67,6 +67,4 @@ FILES := $(OFILES) \
 TEST_FILES := addsupport typepkt forbid1 forbid2 ptrarith ados
 TESTS := $(addsuffix .rexx,$(TEST_FILES))
 
-#MM contrib-regina-test:
-%copy_files_q files=$(TESTS) src=arexx_test dst=$(EXEDIR)/arexx_test \
-    maketarget=contrib-regina-test
+%copy_files_q mmake=contrib-regina-test files=$(TESTS) src=arexx_test dst=$(EXEDIR)/arexx_test

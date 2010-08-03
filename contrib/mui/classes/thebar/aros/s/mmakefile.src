@@ -4,7 +4,8 @@ include $(TOP)/config/make.cfg
 
 FILES := Package-Startup Package-Shutdown
 
-#MM- contrib-zune-classes-thebar-startup : workbench-prefs-envarc contrib-zune-classes-thebar-startupfiles contrib-zune-classes-thebar-envpackage
+#MM- contrib-zune-classes-thebar-startup : workbench-prefs-envarc contrib-zune-classes-thebar-startupfiles \
+#MM  contrib-zune-classes-thebar-envpackage
 
 #MM
 contrib-zune-classes-thebar-envpackage :
@@ -14,6 +15,5 @@ contrib-zune-classes-thebar-envpackage :
 #MM- contrib-zune-classes-thebar-mccv     : contrib-zune-classes-thebar-startup
 #MM- contrib-zune-classes-thebar-mcp      : contrib-zune-classes-thebar-startup
 
-#MM contrib-zune-classes-thebar-startupfiles :
-%copy_files_q dst=$(CONTRIBDIR)/Zune/MCC_TheBar/s maketarget=contrib-zune-classes-thebar-startupfiles
+%copy_files_q mmake=contrib-zune-classes-thebar-startupfiles dst=$(CONTRIBDIR)/Zune/MCC_TheBar/s
 

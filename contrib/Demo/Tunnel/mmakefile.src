@@ -11,12 +11,6 @@ DESTDIR := $(CONTRIBDIR)/Demos/Tunnel
 
 DATAFILES	:= pattern.data pattern.pal
 
-#MM demo-tunnel-data
-%copy_files_q files=$(DATAFILES) dst=$(DESTDIR) \
-    maketarget=demo-tunnel-data
-
-$(addprefix $(DESTDIR)/,$(DATAFILES)) : | $(DESTDIR)
-
-%rule_makedirs dirs=$(DESTDIR)
+%copy_files_q mmake=demo-tunnel-data files=$(DATAFILES) dst=$(DESTDIR)
 
 %common

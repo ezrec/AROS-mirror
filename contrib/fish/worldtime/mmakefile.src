@@ -8,8 +8,4 @@ include $(TOP)/config/make.cfg
 
 FILES := worldtime.cfg worldtime.dat
 
-#MM fish-worldtime-files
-%copy_files_q files=$(FILES) dst=$(CONTRIBDIR)/Misc/fish/WorldTime maketarget=fish-worldtime-files
-
-$(addprefix $(CONTRIBDIR)/Misc/fish/WorldTime/,$(FILES)) : | $(CONTRIBDIR)/Misc/fish/WorldTime
-rule_makedirs dirs=$(CONTRIBDIR)/Misc/fish/WorldTime
+%copy_files_q mmake=fish-worldtime-files files=$(FILES) dst=$(CONTRIBDIR)/Misc/fish/WorldTime

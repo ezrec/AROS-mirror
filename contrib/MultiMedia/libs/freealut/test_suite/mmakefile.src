@@ -20,8 +20,8 @@ EXEDIR  := $(AROSDIR)/Tests
     targetdir=$(EXEDIR) \
     files="$(FILES)" uselibs="OpenAL alut"
 
-#MM
-contrib-alut-tests-copyfiles : files-copy
-%copy_files_q files=$(DATA_FILES) dst=$(EXEDIR)
+
+%copy_files_q mmake=contrib-alut-tests-copyfiles files=$(DATA_FILES) dst=$(EXEDIR)
+
 
 %common

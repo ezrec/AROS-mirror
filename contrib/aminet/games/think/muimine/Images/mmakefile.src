@@ -30,6 +30,4 @@ IMAGES =                        \
 EXEDIR := $(CONTRIBDIR)/Games/MUIMine
 IMAGEDIR := $(EXEDIR)/Images
 
-#MM setup-aminet-games-think-muimine-images
-
-%copy_files_q files=$(IMAGES) src=. dst=$(IMAGEDIR) maketarget=setup-aminet-games-think-muimine-images
+%copy_files_q mmake=setup-aminet-games-think-muimine-images files=$(IMAGES) src=. dst=$(IMAGEDIR)

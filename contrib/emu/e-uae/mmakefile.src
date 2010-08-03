@@ -22,11 +22,11 @@ euae-copy-files : files-copy
 	$(CP) $(CP_SRC)/COPYING   $(PROGDIR)
 	$(CP) $(CP_SRC)/README    $(PROGDIR)
 
-%copy_dir_recursive mmake=euae-docs-copy  src=$(CP_SRC)/docs  dst=$(PROGDIR)/docs
-%copy_dir_recursive mmake=euae-amiga-copy src=$(CP_SRC)/amiga dst=$(PROGDIR)/amiga
+#%copy_dir_recursive mmake=euae-docs-copy  src=$(CP_SRC)/docs  dst=$(PROGDIR)/docs
+#%copy_dir_recursive mmake=euae-amiga-copy src=$(CP_SRC)/amiga dst=$(PROGDIR)/amiga
 
-%copy_files_q files=".uaerc README.AmigaOS" dst=$(PROGDIR)
-%copy_files_q files="arexx.txt" dst=$(PROGDIR)/docs
+#%copy_files_q files=".uaerc README.AmigaOS" dst=$(PROGDIR)
+#%copy_files_q files="arexx.txt" dst=$(PROGDIR)/docs
 
 ##MM- contrib-euae-rebuild : contrib-euae-clean contrib-euae
 

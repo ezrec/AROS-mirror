@@ -1,8 +1,11 @@
 include $(TOP)/config/make.cfg
 
 #MM- demo-infplane : demo-infplane-$(AROS_TARGET_CPU)
+
 #MM demo-infplane-i386 : demo-infplane-common
+
 #MM demo-infplane-x86_64 : demo-infplane-common
+
 #MM- demo-infplane-common : demo-infplane-icons demo-infplane-data
 
 DESTDIR 	:= $(CONTRIBDIR)/Demos/InfPlane
@@ -19,12 +22,6 @@ DESTDIR 	:= $(CONTRIBDIR)/Demos/InfPlane
 
 DATAFILES	:= pattern.data pattern.pal
 
-#MM demo-infplane-data
-%copy_files_q files=$(DATAFILES) dst=$(DESTDIR) \
-    maketarget=demo-infplane-data
-
-$(addprefix $(DESTDIR)/,$(DATAFILES)) : | $(DESTDIR)
-
-%rule_makedirs dirs=$(DESTDIR)
+%copy_files_q mmake=demo-infplane-data files=$(DATAFILES) dst=$(DESTDIR)
 
 %common

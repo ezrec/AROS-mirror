@@ -18,11 +18,10 @@ USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../../../../commonaros
     progname=Toolbar-Demo targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="mui arossupport amiga arosc"
 
-#MM mcc_toolbar-demo-images :
+%copy_files_q mmake=mcc_toolbar-demo-images \
+                    src=../../../Demos/Images \
+                    dst=$(EXEDIR)/Images \
+                    files="ButtonBank1.bsh ButtonBank2.bsh"
 
-%copy_files_q src=../../../Demos/Images \
-	      dst=$(EXEDIR)/Images \
-	      files="ButtonBank1.bsh ButtonBank2.bsh" \
-	      maketarget=mcc_toolbar-demo-images
 
 %common

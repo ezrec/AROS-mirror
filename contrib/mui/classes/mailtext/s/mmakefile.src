@@ -3,15 +3,15 @@ include $(TOP)/config/make.cfg
 
 FILES := Package-Startup Package-Shutdown
 
-#MM- contrib-zune-classes-mailtext-startup : workbench-prefs-envarc contrib-zune-classes-mailtext-startupfiles contrib-zune-classes-mailtext-envpackage
+#MM- contrib-zune-classes-mailtext-startup : workbench-prefs-envarc contrib-zune-classes-mailtext-startupfiles \
+#MM  contrib-zune-classes-mailtext-envpackage
 
 #MM
 contrib-zune-classes-mailtext-envpackage :
 	$(ECHO) "Extras:Zune/MCC_MailText" >$(AROS_PACKAGES)/MCC_MailText
 
-#MM- contrib-zune-classes-mailtext-class      : contrib-zune-classes-mailtext-startup
+#MM- contrib-zune-classes-mailtext-class    : contrib-zune-classes-mailtext-startup
+
 #MM- contrib-zune-classes-mailtext-mcp      : contrib-zune-classes-mailtext-startup
 
-#MM contrib-zune-classes-mailtext-startupfiles :
-%copy_files_q dst=$(CONTRIBDIR)/Zune/MCC_Mailtext/S maketarget=contrib-zune-classes-mailtext-startupfiles
-
+%copy_files_q mmake=contrib-zune-classes-mailtext-startupfiles dst=$(CONTRIBDIR)/Zune/MCC_Mailtext/S

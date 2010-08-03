@@ -3,15 +3,15 @@ include $(TOP)/config/make.cfg
 
 FILES := Package-Startup Package-Shutdown
 
-#MM- contrib-zune-classes-toolbar-startup : workbench-prefs-envarc contrib-zune-classes-toolbar-startupfiles contrib-zune-classes-toolbar-envpackage
+#MM- contrib-zune-classes-toolbar-startup : workbench-prefs-envarc contrib-zune-classes-toolbar-startupfiles \
+#MM  contrib-zune-classes-toolbar-envpackage
 
 #MM
 contrib-zune-classes-toolbar-envpackage :
 	$(ECHO) "Extras:Zune/MCC_Toolbar" >$(AROS_PACKAGES)/MCC_Toolbar
 
-#MM- contrib-zune-classes-toolbar-class      : contrib-zune-classes-toolbar-startup
+#MM- contrib-zune-classes-toolbar-class    : contrib-zune-classes-toolbar-startup
+
 #MM- contrib-zune-classes-toolbar-mcp      : contrib-zune-classes-toolbar-startup
 
-#MM contrib-zune-classes-toolbar-startupfiles :
-%copy_files_q dst=$(CONTRIBDIR)/Zune/MCC_Toolbar/s maketarget=contrib-zune-classes-toolbar-startupfiles
-
+%copy_files_q mmake=contrib-zune-classes-toolbar-startupfiles dst=$(CONTRIBDIR)/Zune/MCC_Toolbar/s

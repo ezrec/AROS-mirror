@@ -5,20 +5,16 @@ include $(TOP)/config/make.cfg
 #MM- aros-tcpip-apps : aros-tcpip-apps-wget
 
 #MM- aros-tcpip-apps-wget : aros-tcpip-apps-wget-bin aros-tcpip-apps-wget-cpy \
-#MM  aros-tcpip-apps-wget-sample
+#MM  aros-tcpip-apps-wget-cpy-doc aros-tcpip-apps-wget-sample
 
 TARGETDIR := $(AROS_CONTRIB)/Networking/Apps/WGet
 
 CPYFILES := AUTHORS ChangeLog ChangeLog.Amiga COPYING NEWS README README.AROS TODO
 DOCFILES := wget.info sample.wgetrc
 
-#MM aros-tcpip-apps-wget-cpy
+%copy_files_q mmake=aros-tcpip-apps-wget-cpy files=$(CPYFILES) src=. dst=$(TARGETDIR)
 
-%copy_files_q files=$(CPYFILES) \
-    src=. dst=$(TARGETDIR) maketarget=aros-tcpip-apps-wget-cpy
-
-%copy_files_q files=$(DOCFILES) \
-    src=doc dst=$(TARGETDIR)/doc maketarget=aros-tcpip-apps-wget-cpy
+%copy_files_q mmake=aros-tcpip-apps-wget-cpy-doc files=$(DOCFILES) src=doc dst=$(TARGETDIR)/doc 
 
 #MM
 aros-tcpip-apps-wget-sample : $(AROS_ENVARC)/wgetcfg
