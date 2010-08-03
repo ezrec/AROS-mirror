@@ -44,11 +44,11 @@ ICONS := Mathomatic
 %copy_dir_recursive mmake=ports-scientific-mathomatic-docs \
 src=$(PORTSDIR)/mathomatic/$(ARCHBASE)/doc dst=$(TARGETDIR)/Docs
 
+
 CPYFILES := changes.txt COPYING mathomatic.1 README.txt
 
-#MM
-ports-scientific-mathomatic-cpy :
-%copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/mathomatic/$(ARCHBASE) \
-dst=$(TARGETDIR) maketarget=ports-scientific-mathomatic-cpy
+%copy_files_q mmake=ports-scientific-mathomatic-cpy files=$(CPYFILES) src=$(PORTSDIR)/mathomatic/$(ARCHBASE) \
+    dst=$(TARGETDIR)
+
 
 %common

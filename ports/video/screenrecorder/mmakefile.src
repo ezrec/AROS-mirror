@@ -59,9 +59,8 @@ ICONS := ScreenRecorder
 
 CPYFILES := ScreenRecorder.info
 
-#MM ports-video-screenrecorder-cpy :
-%copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/screenrecorder/$(ARCHBASE) dst=$(TARGETDIR) \
-maketarget=ports-video-screenrecorder-cpy
+%copy_files_q mmake=ports-video-screenrecorder-cpy files=$(CPYFILES) src=$(PORTSDIR)/screenrecorder/$(ARCHBASE) \
+    dst=$(TARGETDIR)
 
 
 %build_catalogs mmake=ports-video-screenrecorder-catalogs name=Screenrecorder subdir= \

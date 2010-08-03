@@ -55,12 +55,13 @@ ICONS := GnuRobbo
 
 
 %copy_dir_recursive mmake=ports-game-gnurobbo-data src=$(PORTSDIR)/gnurobbo/$(ARCHBASE)/data \
-dst=$(TARGETDIR)/data
+    dst=$(TARGETDIR)/data
+
 
 CPYFILES := ChangeLog NEWS COPYING README LICENSE-sound LICENSE-ttf
 
-#MM ports-game-gnurobbo-cpy
-%copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/gnurobbo/$(ARCHBASE) dst=$(TARGETDIR) maketarget=ports-game-gnurobbo-cpy
+%copy_files_q mmake=ports-game-gnurobbo-cpy files=$(CPYFILES) src=$(PORTSDIR)/gnurobbo/$(ARCHBASE) \
+    dst=$(TARGETDIR)
 
 
 %common

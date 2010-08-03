@@ -43,8 +43,8 @@ CPYFILES := beach.ilbm multipuzzle.guide multipuzzle.info
 
 # multipuzzle.guide.info not copied because it has wrong default tool
 
-#MM ports-game-multipuzzle-cpy
-%copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/multipuzzle/$(ARCHBASE) dst=$(TARGETDIR) maketarget=ports-game-multipuzzle-cpy
+%copy_files_q mmake=ports-game-multipuzzle-cpy files=$(CPYFILES) src=$(PORTSDIR)/multipuzzle/$(ARCHBASE) \
+    dst=$(TARGETDIR)
 
 
 %common

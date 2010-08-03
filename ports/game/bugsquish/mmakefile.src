@@ -42,12 +42,13 @@ ICONS := Bugsquish
 
 
 %copy_dir_recursive mmake=ports-game-bugsquish-data src=$(PORTSDIR)/bugsquish/$(ARCHBASE)/data \
-dst=$(TARGETDIR)/data
+    dst=$(TARGETDIR)/data
 
 
 CPYFILES := CHANGES.txt COPYING.txt README.txt
 
-#MM ports-game-bugsquish-cpy
-%copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/bugsquish/$(ARCHBASE) dst=$(TARGETDIR) maketarget=ports-game-bugsquish-cpy
+%copy_files_q mmake=ports-game-bugsquish-cpy files=$(CPYFILES) src=$(PORTSDIR)/bugsquish/$(ARCHBASE) \
+    dst=$(TARGETDIR)
+
 
 %common

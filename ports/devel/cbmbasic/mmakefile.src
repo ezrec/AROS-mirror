@@ -44,8 +44,8 @@ dst=$(TARGETDIR)/test
 
 CPYFILES := README.txt
 
-#MM ports-devel-cbmbasic-cpy
-%copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/cbmbasic/$(ARCHBASE) dst=$(TARGETDIR) maketarget=ports-devel-cbmbasic-cpy
+%copy_files_q mmake=ports-devel-cbmbasic-cpy files=$(CPYFILES) src=$(PORTSDIR)/cbmbasic/$(ARCHBASE) \
+    dst=$(TARGETDIR)
 
 
 %common

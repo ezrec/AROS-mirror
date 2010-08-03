@@ -39,8 +39,8 @@ ICONS := Adv770
 	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 
-#MM
-ports-game-adv770-cpy :
-%copy_files_q files=README.txt src=$(PORTSDIR)/adv770/$(ARCHBASE)/acode/adv770/src dst=$(TARGETDIR) maketarget=ports-game-adv770-cpy
+%copy_files_q mmake=ports-game-adv770-cpy files=README.txt src=$(PORTSDIR)/adv770/$(ARCHBASE)/acode/adv770/src \
+    dst=$(TARGETDIR)
+
 
 %common

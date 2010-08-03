@@ -51,13 +51,13 @@ ICONS := Antiword
 
 
 %copy_dir_recursive mmake=ports-text-antiword-docs src=$(PORTSDIR)/antiword/antiword-0.37/Docs \
-dst=$(TARGETDIR)/Docs
+    dst=$(TARGETDIR)/Docs
 
 %copy_dir_recursive mmake=ports-text-antiword-data src=$(PORTSDIR)/antiword/antiword-0.37/Resources \
-dst=$(TARGETDIR)/Data
+    dst=$(TARGETDIR)/Data
 
-#MM
-ports-text-antiword-cpy :
-%copy_files_q files=AntiwordGUI src=. dst=$(TARGETDIR) maketarget=ports-text-antiword-cpy
+
+%copy_files_q mmake=ports-text-antiword-cpy files=AntiwordGUI src=. dst=$(TARGETDIR)
+
 
 %common

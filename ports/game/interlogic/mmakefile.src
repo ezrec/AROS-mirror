@@ -40,9 +40,8 @@ ICONS := InterLogic
 
 CPYFILES := README
 
-#MM ports-game-interlogic-cpy
-%copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/interlogic/interlogic \
-dst=$(TARGETDIR) maketarget=ports-game-interlogic-cpy
+%copy_files_q mmake=ports-game-interlogic-cpy files=$(CPYFILES) src=$(PORTSDIR)/interlogic/interlogic \
+    dst=$(TARGETDIR)
 
 
 %common

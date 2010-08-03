@@ -65,10 +65,11 @@ ICONS := Lunapaint
 %copy_dir_recursive mmake=ports-graphics-lunapaint-data src=$(PORTSDIR)/lunapaint/$(ARCHBASE)/data \
 dst=$(TARGETDIR)/data
 
+
 CPFILES := BUGS Changelog COPYING default.palette Lunapaint.info lunapaint.prefs README TODO
 
-#MM
-ports-graphics-lunapaint-cpy :
-%copy_files_q files=$(CPFILES) src=$(PORTSDIR)/lunapaint/$(ARCHBASE) dst=$(TARGETDIR) maketarget=ports-graphics-lunapaint-cpy
+%copy_files_q mmake=ports-graphics-lunapaint-cpy files=$(CPFILES) src=$(PORTSDIR)/lunapaint/$(ARCHBASE) \
+    dst=$(TARGETDIR)
+
 
 %common

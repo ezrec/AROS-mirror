@@ -42,8 +42,8 @@ ICONS := SdlScavenger
 
 CPYFILES := DOC STRATEGY COPYING README
 
-#MM ports-game-sdlscavenger-cpy
-%copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/sdlscavenger/$(ARCHBASE) dst=$(TARGETDIR) maketarget=ports-game-sdlscavenger-cpy
+%copy_files_q mmake=ports-game-sdlscavenger-cpy files=$(CPYFILES) src=$(PORTSDIR)/sdlscavenger/$(ARCHBASE) \
+    dst=$(TARGETDIR)
 
 
 #MM

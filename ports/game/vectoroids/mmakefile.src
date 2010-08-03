@@ -42,11 +42,13 @@ ICONS := Vectoroids
 
 
 %copy_dir_recursive mmake=ports-game-vectoroids-data src=$(PORTSDIR)/vectoroids/$(ARCHBASE)/data \
-dst=$(TARGETDIR)/data
+    dst=$(TARGETDIR)/data
+
 
 CPYFILES := CHANGES.txt COPYING.txt README.txt vectoroids.6
 
-#MM ports-game-vectoroids-cpy
-%copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/vectoroids/$(ARCHBASE) dst=$(TARGETDIR) maketarget=ports-game-vectoroids-cpy
+%copy_files_q mmake=ports-game-vectoroids-cpy files=$(CPYFILES) src=$(PORTSDIR)/vectoroids/$(ARCHBASE) \
+    dst=$(TARGETDIR)
+
 
 %common

@@ -42,11 +42,12 @@ ICONS := GemDropX
 
 
 %copy_dir_recursive mmake=ports-game-gemdropx-data src=$(PORTSDIR)/gemdropx/$(ARCHBASE)/data \
-dst=$(TARGETDIR)/data
+    dst=$(TARGETDIR)/data
+
 
 CPYFILES := CHANGES.txt COPYING.txt README.txt
 
-#MM ports-game-gemdropx-cpy
-%copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/gemdropx/$(ARCHBASE) dst=$(TARGETDIR) maketarget=ports-game-gemdropx-cpy
+%copy_files_q mmake=ports-game-gemdropx-cpy files=$(CPYFILES) src=$(PORTSDIR)/gemdropx/$(ARCHBASE) \
+    dst=$(TARGETDIR)
 
 %common

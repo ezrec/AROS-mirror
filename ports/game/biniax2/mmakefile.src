@@ -44,12 +44,13 @@ ICONS := Biniax2
 
 
 %copy_dir_recursive mmake=ports-game-biniax2-data src=$(PORTSDIR)/biniax2/biniax2-1.30/data \
-dst=$(TARGETDIR)/data
+    dst=$(TARGETDIR)/data
 
 
 CPYFILES := LICENSE.txt
 
-#MM ports-game-biniax2-cpy
-%copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/biniax2/biniax2-1.30 dst=$(TARGETDIR) maketarget=ports-game-biniax2-cpy
+%copy_files_q mmake=ports-game-biniax2-cpy files=$(CPYFILES) src=$(PORTSDIR)/biniax2/biniax2-1.30 \
+    dst=$(TARGETDIR)
+
 
 %common

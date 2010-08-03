@@ -57,13 +57,13 @@ ICONS := Xpired
 dst=$(TARGETDIR)/data/img
 
 %copy_dir_recursive mmake=ports-game-xpired-snd src=$(PORTSDIR)/xpired/$(ARCHBASE)/src/snd \
-dst=$(TARGETDIR)/data/snd
+    dst=$(TARGETDIR)/data/snd
 
 
 CPYFILES := xpired.lvl xpired.cfg bgimages.txt readme.txt xpired.dmo
 
-#MM ports-game-xpired-cpy
-%copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/xpired/$(ARCHBASE)/src dst=$(TARGETDIR)/data maketarget=ports-game-xpired-cpy
+%copy_files_q mmake=ports-game-xpired-cpy files=$(CPYFILES) src=$(PORTSDIR)/xpired/$(ARCHBASE)/src \
+    dst=$(TARGETDIR)/data
 
 
 %common

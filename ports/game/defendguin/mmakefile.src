@@ -47,10 +47,13 @@ ICONS := Defendguin
 %copy_dir_recursive mmake=ports-game-defendguin-data src=$(PORTSDIR)/defendguin/$(ARCHBASE)/data \
 dst=$(TARGETDIR)/data
 
-%copy_dir_recursive mmake=ports-game-defendguin-docs src=$(PORTSDIR)/defendguin/$(ARCHBASE)/docs \
-dst=$(TARGETDIR)/Docs
 
-#MM ports-game-defendguin-cpy
-%copy_files_q files=defendguin.6 src=$(PORTSDIR)/defendguin/$(ARCHBASE)/src dst=$(TARGETDIR) maketarget=ports-game-defendguin-cpy
+%copy_dir_recursive mmake=ports-game-defendguin-docs src=$(PORTSDIR)/defendguin/$(ARCHBASE)/docs \
+    dst=$(TARGETDIR)/Docs
+
+
+%copy_files_q mmake=ports-game-defendguin-cpy files=defendguin.6 src=$(PORTSDIR)/defendguin/$(ARCHBASE)/src \
+    dst=$(TARGETDIR)
+
 
 %common

@@ -6,7 +6,8 @@ FILES := Package-Startup Package-Shutdown
 
 #MM- ports-office-muibase : ports-office-muibase-startup
 
-#MM- ports-office-muibase-startup : workbench-prefs-envarc ports-office-muibase-startupfiles ports-office-muibase-envpackage
+#MM- ports-office-muibase-startup : workbench-prefs-envarc ports-office-muibase-startupfiles \
+#MM  ports-office-muibase-envpackage
 
 
 #MM
@@ -14,5 +15,4 @@ ports-office-muibase-envpackage :
 	$(ECHO) "Extras:Office/MUIbase" >$(AROS_PACKAGES)/MUIbase
 
 
-#MM ports-office-muibase-startupfiles :
-%copy_files_q dst=$(AROS_CONTRIB)/Office/MUIbase/S maketarget=ports-office-muibase-startupfiles
+%copy_files_q mmake=ports-office-muibase-startupfiles dst=$(AROS_CONTRIB)/Office/MUIbase/S

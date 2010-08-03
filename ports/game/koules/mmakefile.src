@@ -50,8 +50,8 @@ ICONS := Koules
 
 CPYFILES := Koules.guide Koules.guide.info Koules.info
 
-#MM ports-game-koules-cpy
-%copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/koules/$(ARCHBASE) dst=$(TARGETDIR) maketarget=ports-game-koules-cpy
+%copy_files_q mmake=ports-game-koules-cpy files=$(CPYFILES) src=$(PORTSDIR)/koules/$(ARCHBASE) \
+    dst=$(TARGETDIR)
 
 
 %common

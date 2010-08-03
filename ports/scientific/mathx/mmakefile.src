@@ -154,10 +154,8 @@ src=$(PORTSDIR)/mathx/$(ARCHBASE)/supportfiles/Rexx dst=$(TARGETDIR)/Rexx
 
 CPYFILES := AUTHORS COPYING
 
-#MM
-ports-scientific-mathx-cpy :
-%copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/mathx/$(ARCHBASE) \
-dst=$(TARGETDIR) maketarget=ports-scientific-mathx-cpy
+%copy_files_q mmake=ports-scientific-mathx-cpy files=$(CPYFILES) src=$(PORTSDIR)/mathx/$(ARCHBASE) \
+    dst=$(TARGETDIR)
 
 
 ##### setup directories #####

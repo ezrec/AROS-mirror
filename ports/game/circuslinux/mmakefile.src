@@ -42,12 +42,13 @@ ICONS := CircusLinux
 
 
 %copy_dir_recursive mmake=ports-game-circuslinux-data src=$(PORTSDIR)/circuslinux/$(ARCHBASE)/data \
-dst=$(TARGETDIR)/data
+    dst=$(TARGETDIR)/data
+
 
 CPYFILES := CHANGES.txt COPYING.txt FAQ.txt README.txt
 
-#MM ports-game-circuslinux-cpy
-%copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/circuslinux/$(ARCHBASE) dst=$(TARGETDIR) maketarget=ports-game-circuslinux-cpy
+%copy_files_q mmake=ports-game-circuslinux-cpy files=$(CPYFILES) src=$(PORTSDIR)/circuslinux/$(ARCHBASE) \
+    dst=$(TARGETDIR)
 
 
 %common

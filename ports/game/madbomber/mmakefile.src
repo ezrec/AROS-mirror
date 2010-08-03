@@ -42,12 +42,13 @@ ICONS := MadBomber
 
 
 %copy_dir_recursive mmake=ports-game-madbomber-data src=$(PORTSDIR)/madbomber/$(ARCHBASE)/data \
-dst=$(TARGETDIR)/data
+    dst=$(TARGETDIR)/data
+
 
 CPYFILES := CHANGES.txt COPYING.txt README.txt
 
-#MM ports-game-madbomber-cpy
-%copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/madbomber/$(ARCHBASE) dst=$(TARGETDIR) maketarget=ports-game-madbomber-cpy
+%copy_files_q mmake=ports-game-madbomber-cpy files=$(CPYFILES) src=$(PORTSDIR)/madbomber/$(ARCHBASE) \
+    dst=$(TARGETDIR)
 
 
 %common

@@ -40,8 +40,8 @@ ICONS := SerialEcho
 
 CPYFILES := LICENSE SerialEcho.notes SerialEcho.readme
 
-#MM ports-shell-serialecho-cpy
-%copy_files_q files=$(CPYFILES) src=$(PORTSDIR)/serialecho/$(ARCHBASE) dst=$(TARGETDIR) maketarget=ports-shell-serialecho-cpy
+%copy_files_q mmake=ports-shell-serialecho-cpy files=$(CPYFILES) src=$(PORTSDIR)/serialecho/$(ARCHBASE) \
+    dst=$(TARGETDIR)
 
 
 %common

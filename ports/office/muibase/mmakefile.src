@@ -127,9 +127,8 @@ $(PORTSDIR)/muibase/$(ARCHBASE)/appstrings_cat.c : $(PORTSDIR)/muibase/$(ARCHBAS
 
 ##### Copy files and directories #####
 
-#MM
-ports-office-muibase-cpy :
-%copy_files_q files="AUTHORS COPYING" src=$(PORTSDIR)/muibase/$(ARCHBASE) dst=$(TARGETDIR) maketarget=ports-office-muibase-cpy
+%copy_files_q mmake=ports-office-muibase-cpy files="AUTHORS COPYING" src=$(PORTSDIR)/muibase/$(ARCHBASE) \
+    dst=$(TARGETDIR)
 
 
 %copy_dir_recursive mmake=ports-office-muibase-demos \
