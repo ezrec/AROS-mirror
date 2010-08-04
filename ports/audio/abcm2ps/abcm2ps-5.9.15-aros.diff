@@ -1,18 +1,6 @@
-diff -Naur abcm2ps-5.9.13-orig/abc2ps.h abcm2ps-5.9.13/abc2ps.h
---- abcm2ps-5.9.13-orig/abc2ps.h	2008-12-22 09:05:09.000000000 +0100
-+++ abcm2ps-5.9.13/abc2ps.h	2010-06-14 12:38:35.269219644 +0200
-@@ -3,7 +3,7 @@
- #include "config.h"
- 
- #define OUTPUTFILE	"Out.ps"	/* standard output file */
--#if defined(unix) || defined(__unix__)
-+#if defined(unix) || defined(__unix__) || defined(__AROS__)
- #define DIRSEP '/'
- #else
- #define DIRSEP '\\'
-diff -Naur abcm2ps-5.9.13-orig/config.h abcm2ps-5.9.13/config.h
---- abcm2ps-5.9.13-orig/config.h	2010-04-11 12:16:54.000000000 +0200
-+++ abcm2ps-5.9.13/config.h	1970-01-01 01:00:00.000000000 +0100
+diff -Naur abcm2ps-5.9.15-orig/config.h abcm2ps-5.9.15/config.h
+--- abcm2ps-5.9.15-orig/config.h	2010-08-04 10:07:39.110550757 +0200
++++ abcm2ps-5.9.15/config.h	1970-01-01 01:00:00.000000000 +0100
 @@ -1,20 +0,0 @@
 -/* config.h.  Generated from config.h.in by configure.  */
 -/* config.h.in */
@@ -32,15 +20,15 @@ diff -Naur abcm2ps-5.9.13-orig/config.h abcm2ps-5.9.13/config.h
 -/* Define to have ~ as roll instead of twiddle.  */
 -/* #undef DECO_IS_ROLL */
 -
--#define VERSION "5.9.13"
--#define VDATE "April 11, 2010"
-diff -Naur abcm2ps-5.9.13-orig/Makefile abcm2ps-5.9.13/Makefile
---- abcm2ps-5.9.13-orig/Makefile	2010-04-09 12:52:43.000000000 +0200
-+++ abcm2ps-5.9.13/Makefile	1970-01-01 01:00:00.000000000 +0100
+-#define VERSION "5.9.15"
+-#define VDATE "August 2, 2010"
+diff -Naur abcm2ps-5.9.15-orig/Makefile abcm2ps-5.9.15/Makefile
+--- abcm2ps-5.9.15-orig/Makefile	2010-08-04 10:07:39.110550757 +0200
++++ abcm2ps-5.9.15/Makefile	1970-01-01 01:00:00.000000000 +0100
 @@ -1,141 +0,0 @@
 -# Makefile source for abcm2ps
 -
--VERSION = 5.9.13
+-VERSION = 5.9.15
 -
 -CC = gcc
 -INSTALL = /usr/bin//install -c
@@ -179,15 +167,15 @@ diff -Naur abcm2ps-5.9.13-orig/Makefile abcm2ps-5.9.13/Makefile
 -
 -clean:
 -	rm -f *.o $(EXAMPLES) # *.obj
-diff -Naur abcm2ps-5.9.13-orig/Makefile.in abcm2ps-5.9.13/Makefile.in
---- abcm2ps-5.9.13-orig/Makefile.in	2008-02-01 10:01:55.000000000 +0100
-+++ abcm2ps-5.9.13/Makefile.in	2010-06-14 12:38:35.269219644 +0200
+diff -Naur abcm2ps-5.9.15-orig/Makefile.in abcm2ps-5.9.15/Makefile.in
+--- abcm2ps-5.9.15-orig/Makefile.in	2010-08-04 10:07:39.110550757 +0200
++++ abcm2ps-5.9.15/Makefile.in	2010-08-04 10:08:32.540500050 +0200
 @@ -29,14 +29,14 @@
  	$(CC) $(CFLAGS) -o abcm2ps $(OBJECTS) $(LDFLAGS)
  $(OBJECTS): abcparse.h abc2ps.h config.h
  
 -DOCFILES=Changes License README *.abc *.eps *.txt
-+DOCFILES=$(addprefix $(srcdir)/, Changes License README *.abc *.eps *.txt)
++DOCFILES=$(addprefix $(srcdir)/,Changes License README *.abc *.eps *.txt)
  
  install: abcm2ps
  	mkdir -p $(bindir); \

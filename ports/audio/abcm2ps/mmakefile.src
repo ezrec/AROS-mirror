@@ -3,12 +3,12 @@
 
 include $(TOP)/config/make.cfg
 
-##MM- ports-audio : ports-audio-abcm2ps
+#MM- ports-audio : ports-audio-abcm2ps
 
 #MM- ports-audio-abcm2ps : ports-audio-abcm2ps-drawericon
 
 PACKAGE      := abcm2ps
-VERSION      := 5.9.13
+VERSION      := 5.9.15
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Audio/Abcm2ps
 REPOSITORIES := http://moinejf.free.fr
 
