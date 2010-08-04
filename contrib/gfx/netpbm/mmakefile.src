@@ -36,9 +36,6 @@ PPMTOILBMFILES := converter/ppm/ppmtoilbm lib/libpm lib/libpnm1 lib/libpnm2 \
     files=$(PPMTOILBMFILES) targetdir=$(TARGETDIR) \
     uselibs="arosc"
 
-#MM
-contrib-gfx-netpbm-fetch :
-	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/netpbm \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tgz" \
-	patches_specs=netpbm-10.26.53-aros.diff:netpbm-10.26.53:-p1
+%fetch mmake=contrib-gfx-netpbm-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/netpbm \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tgz" \
+    patches_specs=netpbm-10.26.53-aros.diff:netpbm-10.26.53:-p1

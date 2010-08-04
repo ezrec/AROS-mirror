@@ -11,13 +11,10 @@ OWB_BUILD_DIR := $(GENDIR)/$(CURDIR)
 #MM- aros-tcpip-apps-owb-libs : contrib-fontconfig contrib-networking-curl contrib-AHI development-SDL development-SDL_gfx-quick contrib-sqlite contrib-icu4c contrib-libxslt
 #MM- aros-tcpip-apps-owb-webview : aros-tcpip-apps-owb-libs aros-tcpip-apps-owb-webview-fetch aros-tcpip-apps-owb-webview-setup aros-tcpip-apps-owb-webview-build aros-tcpip-apps-owb-webview-install
 
-#MM
-aros-tcpip-apps-owb-webview-fetch :
-	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/OWB \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tar.gz tar.bz2" \
-	patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p0
-	
+%fetch mmake=aros-tcpip-apps-owb-webview-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/OWB \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz tar.bz2" \
+    patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p0
+
 #MM
 aros-tcpip-apps-owb-webview-setup :
 	%mkdir_q dir=$(OWB_BUILD_DIR)

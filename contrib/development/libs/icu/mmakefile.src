@@ -11,12 +11,9 @@ ICU4C_CROSSHOST_DIR := $(GENDIR)/$(CURDIR)/host
 
 #MM- contrib-icu4c : contrib-icu4c-fetch contrib-icu4c-build-configure contrib-icu4c-build-make contrib-icu4c-host-configure contrib-icu4c-host-make contrib-icu4c-install
 
-#MM
-contrib-icu4c-fetch :
-	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/icu4c \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tgz" \
-	patches_specs=icu4c-4.2.1-aros.diff:icu:-p1
+%fetch mmake=contrib-icu4c-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/icu4c \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tgz" \
+    patches_specs=icu4c-4.2.1-aros.diff:icu:-p1
 
 #MM
 contrib-icu4c-build-configure : $(ICU4C_CROSSBUILD_DIR)/.configured

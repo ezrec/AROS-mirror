@@ -10,12 +10,10 @@ OPENSSL_BUILD_DIR := $(GENDIR)/$(CURDIR)
 
 #MM- contrib-networking-openssl : contrib-networking-openssl-fetch contrib-networking-openssl-setup contrib-networking-openssl-configure contrib-networking-openssl-build contrib-networking-openssl-install
 
-#MM
-contrib-networking-openssl-fetch :
-	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/openssl \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
-	patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
+
+%fetch mmake=contrib-networking-openssl-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/openssl \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+    patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
 
 $(OPENSSL_BUILD_DIR)/.links-created :
 	%mkdir_q dir=$(OPENSSL_BUILD_DIR)

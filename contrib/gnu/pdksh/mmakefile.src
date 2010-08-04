@@ -14,11 +14,9 @@ ORIGINS := http://gd.tuwien.ac.at/utils/shells/pdksh/ ftp://ftp.cs.mun.ca/pub/pd
 
 ARCHBASE := pdksh-5.2.14
 
-#MM
-development-pdksh-fetch :
-	%fetch archive=$(ARCHBASE).tar.gz destination=$(PORTSDIR)/pdksh archive_origins="$(ORIGINS)" \
-	patches_specs=pdksh-5.2.14-aros.diff:pdksh-5.2.14:-p1
-	
+%fetch mmake=development-pdksh-fetch archive=$(ARCHBASE).tar.gz destination=$(PORTSDIR)/pdksh archive_origins="$(ORIGINS)" \
+    patches_specs=pdksh-5.2.14-aros.diff:pdksh-5.2.14:-p1
+
 
 %build_with_configure mmake=development-pdksh srcdir=$(PORTSDIR)/pdksh/$(ARCHBASE) \
      nix=yes prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development
