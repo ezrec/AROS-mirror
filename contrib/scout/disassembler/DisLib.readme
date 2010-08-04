@@ -9,6 +9,6 @@ Architecture: all
 -----------------------------------------------------------------------------
 
 This is an opensource reimplementation of disassembler.library v40 by Thomas Richter.
-Unlike oririginal, this library is portable and can disassemble not only m68k code.
+Unlike original, this library is portable and can disassemble not only m68k code.
 
 Includes libopcode from binutils v2.19 package
