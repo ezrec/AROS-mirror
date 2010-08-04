@@ -29,12 +29,10 @@ FILES := hof biniax desktop/snd desktop/gfx desktop/net desktop/inp desktop/sys 
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc SDL_net SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL z"
 
-#MM
-ports-game-biniax2-fetch :
-	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/biniax2/biniax2-1.30 \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
-	patches_specs=biniax2-1.30-aros.diff:$(ARCHBASE):-p1
+
+%fetch mmake=ports-game-biniax2-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/biniax2/biniax2-1.30 \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+    patches_specs=biniax2-1.30-aros.diff:$(ARCHBASE):-p1
 
 
 ICONS := Biniax2

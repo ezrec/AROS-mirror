@@ -36,12 +36,10 @@ FILES := \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc m"
 
-#MM
-ports-text-antiword-fetch :
-	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/antiword \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
-	patches_specs=antiword-0.37-aros.diff:antiword-0.37:-p1
+
+%fetch mmake=ports-text-antiword-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/antiword \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+    patches_specs=antiword-0.37-aros.diff:antiword-0.37:-p1
 
 
 ICONS := Antiword

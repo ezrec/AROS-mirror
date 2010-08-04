@@ -24,12 +24,10 @@ FILES := serialecho
     files=$(FILES) targetdir=$(TARGETDIR) usestartup=no \
     uselibs="arosc amiga arossupport"
 
-#MM
-ports-shell-serialecho-fetch :
-	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/serialecho \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
-	patches_specs=serialecho-50.5-source-aros.diff:$(ARCHBASE):-p1
+
+%fetch mmake=ports-shell-serialecho-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/serialecho \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+    patches_specs=serialecho-50.5-source-aros.diff:$(ARCHBASE):-p1
 
 
 ICONS := SerialEcho

@@ -27,12 +27,10 @@ FILES := circuslinux
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL z"
 
-#MM
-ports-game-circuslinux-fetch :
-	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/circuslinux \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
-	patches_specs=circuslinux-1.0.3-aros.diff:$(ARCHBASE):-p1
+
+%fetch mmake=ports-game-circuslinux-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/circuslinux \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+    patches_specs=circuslinux-1.0.3-aros.diff:$(ARCHBASE):-p1
 
 
 ICONS := CircusLinux

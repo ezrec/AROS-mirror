@@ -117,11 +117,8 @@ ports-scientific-mathx : ports-scientific-mathx-directories
 %link_q cmd=$(TARGET_CXX) from="$(OBJS)" to=$(TARGETDIR)/MathX libs="-lmui"
 
 
-#MM
-ports-scientific-mathx-fetch :
-	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/mathx \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
+%fetch mmake=ports-scientific-mathx-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/mathx \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
 
 
 ##### create drawer icon #####

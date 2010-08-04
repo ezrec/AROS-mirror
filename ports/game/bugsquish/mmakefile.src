@@ -27,12 +27,9 @@ FILES := bugsquish
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL z"
 
-#MM
-ports-game-bugsquish-fetch :
-	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/bugsquish \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
-	patches_specs=bugsquish-0.0.6-aros.diff:$(ARCHBASE):-p1
+%fetch mmake=ports-game-bugsquish-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/bugsquish \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+    patches_specs=bugsquish-0.0.6-aros.diff:$(ARCHBASE):-p1
 
 
 ICONS := Bugsquish

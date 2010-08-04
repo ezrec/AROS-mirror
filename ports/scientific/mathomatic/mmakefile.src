@@ -28,11 +28,9 @@ FILES := main globals am solve help parse cmds simplify \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc m"
 
-#MM
-ports-scientific-mathomatic-fetch :
-	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/mathomatic \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
+
+%fetch mmake=ports-scientific-mathomatic-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/mathomatic \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
 
 
 ICONS := Mathomatic

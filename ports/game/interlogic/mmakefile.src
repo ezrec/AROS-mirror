@@ -25,12 +25,9 @@ FILES := src/password src/credits src/levels src/splash src/interlogic src/mainm
     uselibs="arosc SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL z"
 
 
-#MM
-ports-game-interlogic-fetch :
-	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/interlogic \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tar.gz"
-	
+%fetch mmake=ports-game-interlogic-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/interlogic \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz"
+
 
 ICONS := InterLogic
 

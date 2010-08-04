@@ -30,12 +30,10 @@ FILES := src/defendguin
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc SDL_mixer vorbisfile vorbis ogg SDL"
 
-#MM
-ports-game-defendguin-fetch :
-	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/defendguin \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
-	patches_specs=defendguin-0.0.12-aros.diff:$(ARCHBASE):-p1
+
+%fetch mmake=ports-game-defendguin-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/defendguin \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+    patches_specs=defendguin-0.0.12-aros.diff:$(ARCHBASE):-p1
 
 
 ICONS := Defendguin

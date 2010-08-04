@@ -44,11 +44,9 @@ FILES := \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc amiga arossupport mui jpeg z"
 
-#MM
-ports-video-screenrecorder-fetch :
-	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/screenrecorder \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
+
+%fetch mmake=ports-video-screenrecorder-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/screenrecorder \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
 
 
 ICONS := ScreenRecorder

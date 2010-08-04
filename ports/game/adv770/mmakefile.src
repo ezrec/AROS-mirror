@@ -25,12 +25,10 @@ FILES := \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc"
 
-#MM
-ports-game-adv770-fetch :
-	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/adv770/$(ARCHBASE) \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tgz" \
-	patches_specs=adv770c-aros.diff:adv770c:-p1
+
+%fetch mmake=ports-game-adv770-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/adv770/$(ARCHBASE) \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tgz" \
+    patches_specs=adv770c-aros.diff:adv770c:-p1
 
 
 ICONS := Adv770

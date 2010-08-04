@@ -87,11 +87,9 @@ FILES := \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="amiga arossupport arosc mui m codesets"
 
-#MM
-ports-office-muibase-fetch :
-	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/muibase \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tgz" \
+
+%fetch mmake=ports-office-muibase-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/muibase \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tgz"
 
 
 ##### Generate some source files #####

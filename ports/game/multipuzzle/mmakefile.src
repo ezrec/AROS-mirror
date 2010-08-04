@@ -26,11 +26,9 @@ FILES := displayinit localize multipuzzle puzzle requesters multipuzzle_strings
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc"
 
-#MM
-ports-game-multipuzzle-fetch :
-	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/multipuzzle \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
+
+%fetch mmake=ports-game-multipuzzle-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/multipuzzle \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
 
 
 ICONS := MultiPuzzle

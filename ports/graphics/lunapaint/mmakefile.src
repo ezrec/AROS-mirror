@@ -49,11 +49,9 @@ FILES := \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc m mui png z freetype2"
 
-#MM
-ports-graphics-lunapaint-fetch :
-	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/lunapaint \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
+
+%fetch mmake=ports-graphics-lunapaint-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/lunapaint \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
 
 
 ICONS := Lunapaint

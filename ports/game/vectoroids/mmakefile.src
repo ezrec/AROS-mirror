@@ -27,12 +27,10 @@ FILES := vectoroids
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL z"
 
-#MM
-ports-game-vectoroids-fetch :
-	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/vectoroids \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
-	patches_specs=vectoroids-1.1.0-aros.diff:$(ARCHBASE):-p1
+
+%fetch mmake=ports-game-vectoroids-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/vectoroids \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+    patches_specs=vectoroids-1.1.0-aros.diff:$(ARCHBASE):-p1
 
 
 ICONS := Vectoroids

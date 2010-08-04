@@ -27,12 +27,10 @@ FILES := madbomber
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc SDL_image png jpeg SDL_mixer vorbisfile vorbis ogg SDL z"
 
-#MM
-ports-game-madbomber-fetch :
-	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/madbomber \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
-	patches_specs=madbomber-0.2.5-aros.diff:$(ARCHBASE):-p1
+
+%fetch mmake=ports-game-madbomber-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/madbomber \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+    patches_specs=madbomber-0.2.5-aros.diff:$(ARCHBASE):-p1
 
 
 ICONS := MadBomber

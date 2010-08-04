@@ -39,12 +39,10 @@ USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cf
     files=xpiredit targetdir=$(TARGETDIR) nix=yes \
     uselibs="arosc SDL_image SDL_gfx png jpeg SDL z"
 
-#MM
-ports-game-xpired-fetch :
-	%fetch archive=$(ARCHBASE)-linux_source destination=$(PORTSDIR)/xpired/$(ARCHBASE) \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
-	patches_specs=xpired-1.22-aros.diff:$(ARCHBASE):-p1
+
+%fetch mmake=ports-game-xpired-fetch archive=$(ARCHBASE)-linux_source destination=$(PORTSDIR)/xpired/$(ARCHBASE) \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+    patches_specs=xpired-1.22-aros.diff:$(ARCHBASE):-p1
 
 
 ICONS := Xpired

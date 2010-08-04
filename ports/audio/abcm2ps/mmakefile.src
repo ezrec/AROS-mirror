@@ -3,7 +3,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- ports-audio : ports-audio-abcm2ps
+##MM- ports-audio : ports-audio-abcm2ps
 
 #MM- ports-audio-abcm2ps : ports-audio-abcm2ps-drawericon
 

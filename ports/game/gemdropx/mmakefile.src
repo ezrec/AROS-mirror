@@ -27,12 +27,10 @@ FILES := gemdropx
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc SDL_mixer vorbisfile vorbis ogg SDL"
 
-#MM
-ports-game-gemdropx-fetch :
-	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/gemdropx \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
-	patches_specs=gemdropx-0.9-aros.diff:$(ARCHBASE):-p1
+
+%fetch mmake=ports-game-gemdropx-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/gemdropx \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+    patches_specs=gemdropx-0.9-aros.diff:$(ARCHBASE):-p1
 
 
 ICONS := GemDropX

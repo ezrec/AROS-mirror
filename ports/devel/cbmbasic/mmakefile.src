@@ -24,12 +24,10 @@ FILES := cbmbasic plugin runtime
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc"
 
-#MM
-ports-devel-cbmbasic-fetch :
-	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/cbmbasic \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tgz" \
-	patches_specs=cbmbasic-1.0-aros.diff:$(ARCHBASE):-p1
+
+%fetch mmake=ports-devel-cbmbasic-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/cbmbasic \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tgz" \
+    patches_specs=cbmbasic-1.0-aros.diff:$(ARCHBASE):-p1
 
 
 ICONS := CBMBasic

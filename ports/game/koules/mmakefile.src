@@ -31,11 +31,9 @@ FILES := source/framebuffer source/koules source/menu source/amiga source/gamepl
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc lowlevel"
 
-#MM
-ports-game-koules-fetch :
-	%fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/koules \
-	location=$(PORTSSOURCEDIR) \
-	archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
+
+%fetch mmake=ports-game-koules-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/koules \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
 
 
 ICONS := Koules
