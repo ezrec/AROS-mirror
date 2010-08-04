@@ -1,0 +1,460 @@
+======
+kernel
+======
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_
+
+----------
+
+======================================= ======================================= ======================================= ======================================= 
+`KrnAddExceptionHandler()`_             `KrnAddIRQHandler()`_                   `KrnBug()`_                             `KrnCause()`_                           
+`KrnCli()`_                             `KrnCreateContext()`_                   `KrnDecodeLocationA()`_                 `KrnDeleteContext()`_                   
+`KrnDispatch()`_                        `KrnGetBootInfo()`_                     `KrnGetScheduler()`_                    `KrnIsSuper()`_                         
+`KrnMapGlobal()`_                       `KrnRegisterModule()`_                  `KrnRemExceptionHandler()`_             `KrnRemIRQHandler()`_                   
+`KrnSchedule()`_                        `KrnSetProtection()`_                   `KrnSetScheduler()`_                    `KrnSti()`_                             
+`KrnSwitch()`_                          `KrnUnmapGlobal()`_                     `KrnUnregisterModule()`_                `KrnVirtualToPhysical()`_               
+
+======================================= ======================================= ======================================= ======================================= 
+
+-----------
+
+KrnAddExceptionHandler()
+========================
+
+Synopsis
+~~~~~~~~
+::
+
+ void * KrnAddExceptionHandler(
+          uint8_t num,
+          void * handler,
+          void * handlerData,
+          void * handlerData2 );
+
+
+----------
+
+KrnAddIRQHandler()
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ void * KrnAddIRQHandler(
+          uint8_t irq,
+          void * handler,
+          void * handlerData,
+          void * handlerData2 );
+
+
+----------
+
+KrnBug()
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ int KrnBug(
+          const char * format,
+          va_list args );
+
+
+----------
+
+KrnCause()
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void KrnCause();
+
+
+----------
+
+KrnCli()
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ void KrnCli();
+
+
+----------
+
+KrnCreateContext()
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ void * KrnCreateContext();
+
+
+----------
+
+KrnDecodeLocationA()
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+ int KrnDecodeLocationA(
+          void * addr,
+          struct TagItem * tags );
+ 
+ int KrnDecodeLocation(
+          void * addr,
+          TAG tag, ... );
+
+Function
+~~~~~~~~
+::
+
+     Locate the given address in the list of registered modules and return
+     information about it.
+
+
+Inputs
+~~~~~~
+::
+
+     addr - An address to resolve
+     tags - An optional taglist. ti_Tag can be one of the following tags and
+            ti_Data is always a pointer to a storage of specified type.
+            Resulting values will be placed into specified locations if the
+            function succeeds.
+
+         KDL_ModuleName     (char *) - Module name
+         KDL_SegmentName    (char *) - Segment name. Can be NULL if there were
+                                       no segment names provided for the module.
+         KDL_SegmentPointer (BPTR)   - DOS pointer to the corresponding segment.
+                                       Note that it will be different from
+                                       KDL_SegmentStart value
+         
+         KDL_SegmentNumber  (unsigned int) - Order number of the segment in the
+                                             module
+         KDL_SegmentStart   (void *) - Start address of actual segment contents
+                                       in memory.
+         KDL_SegmentEnd     (void *) - End address of actual segment contents
+                                       in memory.
+     
+         The following tags may return NULL values if there was no corresponding
+         information provided for the module:
+
+         KDL_SymbolName     (char *) - Symbol name (function or variable name)
+         KDL_SymbolStart    (void *) - Start address of contents described by this
+                                       symbol.
+         KDL_SymbolEnd      (void *) - End address of contents described by this
+                                       symbol.
+
+
+Result
+~~~~~~
+::
+
+     Zero if lookup failed and no corresponding module found, nonzero
+     otherwise.
+
+
+Notes
+~~~~~
+::
+
+     If the function fails values pointed to by taglist will not be changed.
+
+
+
+----------
+
+KrnDeleteContext()
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ void KrnDeleteContext(
+          void * context );
+
+
+----------
+
+KrnDispatch()
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ void KrnDispatch();
+
+
+----------
+
+KrnGetBootInfo()
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct TagItem * KrnGetBootInfo();
+
+
+----------
+
+KrnGetScheduler()
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ KRN_SchedType KrnGetScheduler();
+
+
+----------
+
+KrnIsSuper()
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ int KrnIsSuper();
+
+
+----------
+
+KrnMapGlobal()
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ int KrnMapGlobal(
+          void * virtual,
+          void * physical,
+          uint32_t length,
+          KRN_MapAttr flags );
+
+
+----------
+
+KrnRegisterModule()
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ void KrnRegisterModule(
+          const char * name,
+          BPTR segList,
+          ULONG debugType,
+          APTR debugInfo );
+
+Function
+~~~~~~~~
+::
+
+     Add information about the loaded executable module to the
+     debug information database
+
+
+Inputs
+~~~~~~
+::
+
+     name      - Module name
+     segList   - DOS segment list for the module
+     debugType - Type of supplied debug information. The only currently
+                 supported type is DEBUG_ELF.
+     debugInfo - Debug information data. For DEBUG_ELF type this should be
+                 a pointer to struct ELF_DebugInfo, filled in as follows:
+                   eh - a pointer to ELF file header with int_shnum and
+                        int_shstrndx fields filled in.
+                   sh - a pointer to an array of ELF section headers.
+
+
+Result
+~~~~~~
+::
+
+     None
+
+
+
+----------
+
+KrnRemExceptionHandler()
+========================
+
+Synopsis
+~~~~~~~~
+::
+
+ void KrnRemExceptionHandler(
+          void * handle );
+
+
+----------
+
+KrnRemIRQHandler()
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ void KrnRemIRQHandler(
+          void * handle );
+
+
+----------
+
+KrnSchedule()
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ void KrnSchedule();
+
+
+----------
+
+KrnSetProtection()
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ void KrnSetProtection(
+          void * address,
+          uint32_t length,
+          KRN_MapAttr flags );
+
+
+----------
+
+KrnSetScheduler()
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ void KrnSetScheduler(
+          KRN_SchedType sched );
+
+
+----------
+
+KrnSti()
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ void KrnSti();
+
+
+----------
+
+KrnSwitch()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void KrnSwitch();
+
+
+----------
+
+KrnUnmapGlobal()
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ int KrnUnmapGlobal(
+          void * virtual,
+          uint32_t length );
+
+
+----------
+
+KrnUnregisterModule()
+=====================
+
+Synopsis
+~~~~~~~~
+::
+
+ void KrnUnregisterModule(
+          BPTR segList );
+
+Function
+~~~~~~~~
+::
+
+     Remove previously registered module from the debug information database
+
+
+Inputs
+~~~~~~
+::
+
+     segList - DOS segment list for the module to remove
+
+
+Result
+~~~~~~
+::
+
+     None
+
+
+Notes
+~~~~~
+::
+
+     The function correctly supports partial removal of the module
+     (when an existing seglist is broken and only a part of the module
+     is unloaded).
+
+
+
+----------
+
+KrnVirtualToPhysical()
+======================
+
+Synopsis
+~~~~~~~~
+::
+
+ void * KrnVirtualToPhysical(
+          void * virtual );
+
+

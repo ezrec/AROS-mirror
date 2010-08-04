@@ -61,7 +61,36 @@ Inputs
 ~~~~~~
 ::
 
-     tags - A pointer to a TagList
+     tags - An optional pointer to a TagList containint requirements
+            for the display mode. Valid tags are:
+
+       CYBRBIDTG_Depth (ULONG) - depth the returned ModeID must support.
+                                 Defaults to 8.
+       CYBRBIDTG_NominalWidth  (UWORD),
+       CYBRBIDTG_NominalHeight (UWORD) - desired width and height for the
+                                         display mode.
+       CYBRBIDTG_MonitorID (ULONG) - Specify numeric driver ID to find only
+                                     modes belonging to this driver. Useful
+                                     for systems with several graphics cards.
+                                     Defined board IDs are:
+                                       1 - CVision64
+                                       2 - Piccolo
+                                       3 - PicassoII
+                                       4 - Spectrum
+                                       5 - Domino
+                                       6 - RetinaZ3
+                                       7 - PiccoSD64
+                                       8 - A2410
+                                      13 - CVision3D (V41)
+                                      14 - Inferno   (V41)
+                                      15 - PicassoIV (V41)
+                                     Note that this tag exists only for
+                                     compatibility with old software. New
+                                     programs should use CYBRIDTG_BoardName
+                                     tag instead.
+     CYBRBIDTG_BoardName (STRPTR) - Specify the driver name directly. For
+                                    example, pass "CVision3D" to get a
+                                    CyberVision64/3D display mode ID
 
 
 Result
@@ -69,13 +98,6 @@ Result
 ::
 
      Best matchind display mode ID or INVALID_ID if there is no match
-
-
-Bugs
-~~~~
-::
-
-     At the moment MonitorID and BoardName tags are not implemented
 
 
 

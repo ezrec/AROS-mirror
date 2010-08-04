@@ -11,6 +11,7 @@ Autodocs for Modules
 + `asl <asl>`_
 + `battclock <battclock>`_
 + `boopsi <boopsi>`_
++ `bootloader <bootloader>`_
 + `bootmenu <bootmenu>`_
 + `bsdsocket <bsdsocket>`_
 + `bullet <bullet>`_
@@ -31,6 +32,7 @@ Autodocs for Modules
 + `gallium <gallium>`_
 + `graphics <graphics>`_
 + `graphics_hidd <graphics_hidd>`_
++ `hidd_hidd <hidd_hidd>`_
 + `hyperlayers <hyperlayers>`_
 + `icon <icon>`_
 + `identify <identify>`_
@@ -38,6 +40,7 @@ Autodocs for Modules
 + `input <input>`_
 + `intuition <intuition>`_
 + `kbd_hidd <kbd_hidd>`_
++ `kernel <kernel>`_
 + `keymap <keymap>`_
 + `locale <locale>`_
 + `lowlevel <lowlevel>`_
@@ -48,6 +51,7 @@ Autodocs for Modules
 + `nonvolatile <nonvolatile>`_
 + `oop <oop>`_
 + `partition <partition>`_
++ `processor <processor>`_
 + `prometheus <prometheus>`_
 + `realtime <realtime>`_
 + `reqtools <reqtools>`_

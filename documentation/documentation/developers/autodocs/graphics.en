@@ -46,16 +46,17 @@ graphics
 `ReleasePen()`_                         `RemFont()`_                            `RemIBob()`_                            `RemVSprite()`_                         
 `ScalerDiv()`_                          `ScrollRaster()`_                       `ScrollRasterBF()`_                     `ScrollRegion()`_                       
 `ScrollVPort()`_                        `SetABPenDrMd()`_                       `SetAPen()`_                            `SetBPen()`_                            
-`SetChipRev()`_                         `SetCollision()`_                       `SetDrMd()`_                            `SetFont()`_                            
-`SetMaxPen()`_                          `SetOutlinePen()`_                      `SetRast()`_                            `SetRegion()`_                          
-`SetRGB32()`_                           `SetRGB32CM()`_                         `SetRGB4()`_                            `SetRGB4CM()`_                          
-`SetRPAttrsA()`_                        `SetSoftStyle()`_                       `SetWriteMask()`_                       `SortGList()`_                          
-`StripFont()`_                          `SwapRegions()`_                        `SyncSBitMap()`_                        `Text()`_                               
-`TextExtent()`_                         `TextFit()`_                            `TextLength()`_                         `UCopperListInit()`_                    
-`UnlockLayerRom()`_                     `VBeamPos()`_                           `VideoControl()`_                       `WaitBlit()`_                           
-`WaitBOVP()`_                           `WaitTOF()`_                            `WeighTAMatch()`_                       `WriteChunkyPixels()`_                  
-`WritePixel()`_                         `WritePixelArray8()`_                   `WritePixelLine8()`_                    `XorRectRegion()`_                      
-`XorRectRegionND()`_                    `XorRegionRegion()`_                    `XorRegionRegionND()`_                  
+`SetChipRev()`_                         `SetCollision()`_                       `SetDisplayDriverCallback()`_           `SetDrMd()`_                            
+`SetFont()`_                            `SetMaxPen()`_                          `SetOutlinePen()`_                      `SetRast()`_                            
+`SetRegion()`_                          `SetRGB32()`_                           `SetRGB32CM()`_                         `SetRGB4()`_                            
+`SetRGB4CM()`_                          `SetRPAttrsA()`_                        `SetSoftStyle()`_                       `SetWriteMask()`_                       
+`SortGList()`_                          `StripFont()`_                          `SwapRegions()`_                        `SyncSBitMap()`_                        
+`Text()`_                               `TextExtent()`_                         `TextFit()`_                            `TextLength()`_                         
+`UCopperListInit()`_                    `UnlockLayerRom()`_                     `VBeamPos()`_                           `VideoControl()`_                       
+`WaitBlit()`_                           `WaitBOVP()`_                           `WaitTOF()`_                            `WeighTAMatch()`_                       
+`WriteChunkyPixels()`_                  `WritePixel()`_                         `WritePixelArray8()`_                   `WritePixelLine8()`_                    
+`XorRectRegion()`_                      `XorRectRegionND()`_                    `XorRegionRegion()`_                    `XorRegionRegionND()`_                  
+
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -6569,6 +6570,75 @@ See also
 ~~~~~~~~
 
 `InitGels()`_ `graphics/rastport.h <../headerfiles/graphics/rastport.h>`_ `graphics/gels.h <../headerfiles/graphics/gels.h>`_ 
+
+----------
+
+SetDisplayDriverCallback()
+==========================
+
+Synopsis
+~~~~~~~~
+::
+
+ void SetDisplayDriverCallback(
+          APTR callback,
+          APTR userdata );
+
+Function
+~~~~~~~~
+::
+
+     Specify a display driver notification callback.
+     
+     The callback function is called using "C" calling convention and its
+     declaration should have a form:
+
+     APTR DriverNotify(APTR object, BOOL add, APTR userdata);
+
+     The function will be called upon display driver insertion and removal.
+     Upon insertion the parameters will be the following:
+       object   - A pointer to a struct MonitorHandle for the new driver
+       add      - TRUE, indicates driver insertion
+       userdata - User data originally passed to SetDisplayDriverCallback()
+     The function should return a pointer to opaque data object which will
+     be stored in the display driver handle structure.
+
+     Upon driver removal the parameters mean:
+       object   - A pointer to opaque object returned by the callback when
+                  the driver was added.
+       add      - FALSE, indicates driver removal.
+       userdata - User data originally passed to SetDisplayDriverCallback()
+     Callback return value is ignored in removal mode.
+
+
+Inputs
+~~~~~~
+::
+
+     callback - A pointer to a function to call.
+     userdata - User-defined data, will be passed to the callback function
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Notes
+~~~~~
+::
+
+     This function is private to AROS. Do not use it in any end-user software,
+     the specification may change at any moment.
+
+
+
+See also
+~~~~~~~~
+
+`AddDisplayDriverA()`_ 
 
 ----------
 

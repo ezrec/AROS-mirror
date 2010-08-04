@@ -35,14 +35,15 @@ intuition
 `RemoveClass()`_                        `RemoveGadget()`_                       `RemoveGList()`_                        `ReportMouse()`_                        
 `Request()`_                            `ResetMenuStrip()`_                     `RethinkDisplay()`_                     `ScreenDepth()`_                        
 `ScreenPosition()`_                     `ScreenToBack()`_                       `ScreenToFront()`_                      `ScrollWindowRaster()`_                 
-`SetAttrsA()`_                          `SetDefaultPubScreen()`_                `SetDMRequest()`_                       `SetEditHook()`_                        
-`SetGadgetAttrsA()`_                    `SetIPrefs()`_                          `SetMenuStrip()`_                       `SetMouseQueue()`_                      
-`SetPointer()`_                         `SetPrefs()`_                           `SetPubScreenModes()`_                  `SetWindowPointerA()`_                  
-`SetWindowTitles()`_                    `ShowTitle()`_                          `ShowWindow()`_                         `SizeWindow()`_                         
-`StartScreenNotifyTagList()`_           `SysReqHandler()`_                      `TimedDisplayAlert()`_                  `UnlockIBase()`_                        
-`unlockPubClass()`_                     `UnlockPubScreen()`_                    `UnlockPubScreenList()`_                `ViewAddress()`_                        
-`ViewPortAddress()`_                    `WBenchToBack()`_                       `WBenchToFront()`_                      `WindowLimits()`_                       
-`WindowToBack()`_                       `WindowToFront()`_                      `ZipWindow()`_                          
+`ScrollWindowRasterNoFill()`_           `SetAttrsA()`_                          `SetDefaultPubScreen()`_                `SetDMRequest()`_                       
+`SetEditHook()`_                        `SetGadgetAttrsA()`_                    `SetIPrefs()`_                          `SetMenuStrip()`_                       
+`SetMouseQueue()`_                      `SetPointer()`_                         `SetPrefs()`_                           `SetPubScreenModes()`_                  
+`SetWindowPointerA()`_                  `SetWindowTitles()`_                    `ShowTitle()`_                          `ShowWindow()`_                         
+`SizeWindow()`_                         `StartScreenNotifyTagList()`_           `SysReqHandler()`_                      `TimedDisplayAlert()`_                  
+`UnlockIBase()`_                        `unlockPubClass()`_                     `UnlockPubScreen()`_                    `UnlockPubScreenList()`_                
+`ViewAddress()`_                        `ViewPortAddress()`_                    `WBenchToBack()`_                       `WBenchToFront()`_                      
+`WindowAction()`_                       `WindowLimits()`_                       `WindowToBack()`_                       `WindowToFront()`_                      
+`ZipWindow()`_                          
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -675,30 +676,32 @@ Function
 ~~~~~~~~
 ::
 
- Setup a new decorator for intuition windows, screens or menus.
+     Setup a new decorator for intuition windows, screens or menus.
 
 
 Inputs
 ~~~~~~
 ::
 
- ID - identifier for decorations, see screens.h
- nd -  an ID dependent NewDecorator structure
+     ID - identifier for decorations, see screens.h
+     nd -  an ID dependent NewDecorator structure
 
 
 Result
 ~~~~~~
 ::
 
- void - this Function cannot fail, 
+     void - this Function cannot fail, 
 
 
 Notes
 ~~~~~
 ::
 
- The function fails if screens are open, use ChangeIntuition() to notify applications that
- the UI will be changed.
+     The function fails if screens are open, use ChangeIntuition() to notify applications that
+     the UI will be changed.
+
+     This function is private and AROS-specific. Do not use it in regular applications.
 
 
 
@@ -1683,21 +1686,28 @@ Function
 ~~~~~~~~
 ::
 
- Remove a Screen Notifications from Intuition.
+     Remove a Screen Notifications from Intuition.
 
 
 Inputs
 ~~~~~~
 ::
 
- notify - notification returned from StartScreenNotifyTagList() 
+     notify - notification returned from StartScreenNotifyTagList() 
 
 
 Result
 ~~~~~~
 ::
 
- BOOL - if false Notification is in use and cannot be removed, try later
+     BOOL - if false Notification is in use and cannot be removed, try later
+
+
+Notes
+~~~~~
+::
+
+     This function is compatible with AmigaOS v4.
 
 
 
@@ -1865,6 +1875,13 @@ Result
 ::
 
      None.
+
+
+Notes
+~~~~~
+::
+
+     This function is compatible with MorphOS v2.
 
 
 
@@ -2287,11 +2304,11 @@ Result
      FreeMonitorList()
 
 
-Bugs
-~~~~
+Notes
+~~~~~
 ::
 
-     Tags are currently ignored
+     This function is compatible with MorphOS v2.
 
 
 
@@ -2510,9 +2527,28 @@ Inputs
 ~~~~~~
 ::
 
- window - The window to affect.
+     window - The window to affect.
 
 
+Result
+~~~~~~
+::
+
+     None.
+
+
+Notes
+~~~~~
+::
+
+     This function is compatible with AmigaOS v4.
+
+
+
+See also
+~~~~~~~~
+
+`ShowWindow()`_ 
 
 ----------
 
@@ -5365,6 +5401,67 @@ Inputs
 
 ----------
 
+ScrollWindowRasterNoFill()
+==========================
+
+Synopsis
+~~~~~~~~
+::
+
+ void ScrollWindowRasterNoFill(
+          struct Window * win,
+          WORD dx,
+          WORD dy,
+          WORD xmin,
+          WORD ymin,
+          WORD xmax,
+          WORD ymax );
+
+Function
+~~~~~~~~
+::
+
+     Scrolls the content of the rectangle defined by (xmin,ymin)-
+     (xmax,ymax) by (dx,dy) towards (0,0). This function calls
+     ScrollRasterBF().
+     The advantage of this function over calling ScrollRasterBF() is
+     that the window will be informed about damages. A damage happens
+     if in a simple window parts from concelealed areas are scrolled
+     to visible areas. The visible areas will be blank as simple
+     windows store no data for concealed areas.
+     The blank parts that appear due to the scroll will be filled
+     with EraseRect() and are not considered damaged areas.
+
+
+Inputs
+~~~~~~
+::
+
+     win       - pointer to window in which to scroll
+     dx,dy     - scroll by (dx,dy) towards (0,0)
+     xmin,ymin - upper left corner of the rectangle that will be
+                 affected by the scroll
+     xmax,ymax - lower rigfht corner of the rectangle that will be
+                 affected by the scroll
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Notes
+~~~~~
+::
+
+     This function is compatible with MorphOS.
+
+
+
+----------
+
 SetAttrsA()
 ===========
 
@@ -6007,14 +6104,32 @@ Function
      switches it into visible state.
 
 
-
 Inputs
 ~~~~~~
 ::
 
- window - The window to affect.
+     window - The window to affect.
 
 
+Result
+~~~~~~
+::
+
+     None.
+
+
+Notes
+~~~~~
+::
+
+     This function is compatible with AmigaOS v4.
+
+
+
+See also
+~~~~~~~~
+
+`HideWindow()`_ 
 
 ----------
 
@@ -6081,8 +6196,8 @@ Function
 ~~~~~~~~
 ::
 
- Add Notifications to Intuition. You will be notified when
- the screen changes.
+     Add Notifications to Intuition. You will be notified when
+     the screen changes.
 
 
 Inputs
@@ -6112,7 +6227,14 @@ Result
 ~~~~~~
 ::
 
- The value is private, only a test against ZERO is allowed and means Failure
+     The value is private, only a test against ZERO is allowed and means Failure
+
+
+Notes
+~~~~~
+::
+
+     This function is compatible with AmigaOS v4.
 
 
 
@@ -6513,6 +6635,74 @@ See also
 ~~~~~~~~
 
 `ScreenToBack()`_ `ScreenToFront()`_ `WBenchToBack()`_ 
+
+----------
+
+WindowAction()
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ void WindowAction(
+          struct Window * window,
+          ULONG action,
+          struct TagItem * tags );
+ 
+ void WindowActionTags(
+          struct Window * window,
+          ULONG action,
+          TAG tag, ... );
+
+Function
+~~~~~~~~
+::
+
+     Perform an acynchronous action on a window that is not controlled
+     by the caller task.
+
+     This function is safe even when the window is destroyed by the owner
+     during the call.
+
+
+Inputs
+~~~~~~
+::
+
+     window - a window to act upon
+     action - a requested action code
+     tags   - additional parameters, depending on the action
+     
+     Currently defined actions are:
+
+       WAC_SENDIDCMPCLOSE - send an IDCMP_CLOSEWINDOW message.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Notes
+~~~~~
+::
+
+     This function is compatible with MorphOS.
+     
+     The requested action is executed asynchronously, the function actually
+     returns before it is complete.
+
+
+Bugs
+~~~~
+::
+
+     At the moment only WAC_SENDIDCMPCLOSE action is implemented.
+
+
 
 ----------
 

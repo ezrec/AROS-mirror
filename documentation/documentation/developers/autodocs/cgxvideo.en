@@ -407,7 +407,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- ULONG UnlockVLayer(
+ void UnlockVLayer(
           struct VLayerHandle * VLayerHandle );
 
 Function

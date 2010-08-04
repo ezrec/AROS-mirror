@@ -93,6 +93,7 @@ Shell Commands
     + `uuidgen <uuidgen>`_
     + `version <version>`_
     + `wait <wait>`_
+    + `waitx <waitx>`_
     + `which <which>`_
     + `why <why>`_
 

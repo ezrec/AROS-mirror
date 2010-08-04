@@ -1,0 +1,219 @@
+=========
+hidd_hidd
+=========
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_
+
+----------
+
+========================================== ========================================== ========================================== ========================================== 
+`--background--`_                          `aoHidd_HardwareName`_                     `aoHidd_Name`_                             `aoHidd_Producer`_                         
+`aoHidd_ProducerName`_                     `aoHidd_Product`_                          
+========================================== ========================================== ========================================== ========================================== 
+
+-----------
+
+--background--
+==============
+
+Notes
+~~~~~
+::
+
+     This class is a base class for all object-oriented hardware drivers in AROS. Its
+     main purpose is to provide some information about the driver itself.
+     
+     At the moment this class is just a primary design. Many defined attributes and
+     methods are drafts and reserved. This documentation includes only already
+     estabilished definitions. Do not use any other methods and attributes, their
+     definitions may change at any moment.
+
+
+
+----------
+
+aoHidd_HardwareName
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+     [I.G], STRPTR
+
+
+Function
+~~~~~~~~
+::
+
+     Query hardware name string.
+
+
+Notes
+~~~~~
+::
+
+     Initial value for this attribute is usually supplied by driver class in its
+     moRoot_New implementation.
+
+     The supplied string is not copied!
+
+
+
+See also
+~~~~~~~~
+
+`aoHidd_Name`_ 
+
+----------
+
+aoHidd_Name
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+     [I.G], STRPTR
+
+
+Function
+~~~~~~~~
+::
+
+     Name of the driver instance under which it is known to the OS. This name is
+     provided to OS components that use the driver. For example Intuition's MONITORCLASS
+     expects to find something like "ati_dvi1.monitor", "ati_vga1.monitor" or
+     "pcvga.monitor" here.
+
+     Note that is is instance name, not class name. Different instances of the driver may
+     need to provide different names for different objects (like in ATI example) in order
+     to let the OS to distinguish between them.
+
+     The supplied string is internally copied, you may destroy it after object creation.
+
+
+Notes
+~~~~~
+::
+
+     Initial value for this attribute is usually supplied by driver class in its
+     moRoot_New implementation.
+
+
+
+See also
+~~~~~~~~
+
+`aoHidd_HardwareName`_ 
+
+----------
+
+aoHidd_Producer
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+     [I.G], ULONG
+
+
+Function
+~~~~~~~~
+::
+
+     Query hardware manufacturer's numeric ID. This ID may come for example from PCI
+     or Zorro bus configuration data.
+
+
+Notes
+~~~~~
+::
+
+     It is valid to return 0 if your hardware doesn't provide any ID number.
+     
+     Initial value for this attribute is usually supplied by driver class in its
+     moRoot_New implementation.
+
+
+
+See also
+~~~~~~~~
+
+`aoHidd_Product`_ 
+
+----------
+
+aoHidd_ProducerName
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+     [I.G], STRPTR
+
+
+Function
+~~~~~~~~
+::
+
+     Query hardware manufacturer string. NULL is a valid value for this attribute
+     meaning that the information is not specified.
+
+
+Notes
+~~~~~
+::
+
+     Initial value for this attribute is usually supplied by driver class in its
+     moRoot_New implementation.
+
+     The supplied string is not copied!
+
+
+
+See also
+~~~~~~~~
+
+`aoHidd_HardwareName`_ 
+
+----------
+
+aoHidd_Product
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+     [I.G], ULONG
+
+
+Function
+~~~~~~~~
+::
+
+     Query hardware's numeric produce ID. This ID may come for example from PCI
+     or Zorro bus configuration data.
+
+
+Notes
+~~~~~
+::
+
+     It is valid to return 0 if your hardware doesn't provide any ID number.
+
+     Initial value for this attribute is usually supplied by driver class in its
+     moRoot_New implementation.
+
+
+
+See also
+~~~~~~~~
+
+`aoHidd_Producer`_ 
+

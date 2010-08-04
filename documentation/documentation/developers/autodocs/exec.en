@@ -357,7 +357,10 @@ Function
 ~~~~~~~~
 ::
 
-     The given Interrupr structure is inserted into list according to
+     Install a system warm reset notification callback. The callback
+     will be called whenever system warm reboot is performed.
+
+     The given Interrupt structure is inserted into list according to
      its proirity. The callback code is called with the following arguments:
      
          A0 - scratch (set to NULL)
@@ -377,6 +380,13 @@ Result
 ::
 
      TRUE for success, FALSE for failure
+
+
+Notes
+~~~~~
+::
+
+     This function is compatible with AmigaOS v4.
 
 
 
@@ -5071,6 +5081,13 @@ Result
 ::
 
      None.
+
+
+Notes
+~~~~~
+::
+
+     This function is compatible with AmigaOS v4.
 
 
 
