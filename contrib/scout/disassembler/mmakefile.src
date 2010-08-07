@@ -9,6 +9,13 @@ FILES := library disassemble findstartposition libbfd libc object support
 USER_CFLAGS  := -I$(SRCDIR)/$(CURDIR)/bfd -I$(SRCDIR)/$(CURDIR)/opcodes/include
 USER_LDFLAGS := -L$(GENDIR)/$(CURDIR)/opcodes
 
+# NOTE: If this library is in future enabled in the nightly build and/or SDK
+# please take necessary steps to inform possible users (3rd party developer)
+# that unlike all AROS libraries this one is licensed under GPL which can
+# have severe impact on their software. The need for GPL licensing of
+# disasembler.library comes from the fact of using libopcodes which is 
+# GPL itself.
+
 #MM contrib-scout-disassembler : contrib-scout-disassembler-includes contrib-scout-disassembler-opcodes includes linklibs
 #MM contrib-scout-disassembler-quick : contrib-scout-disassembler-includes contrib-scout-disassembler-opcodes-quick
 contrib-scout-disassembler: $(GENDIR)/$(CURDIR)/opcodes/libmyopcodes.a
