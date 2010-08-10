@@ -29,7 +29,7 @@ make-dirs :
 MameSourceFix: $(TOOLDIR)/stripcr
 	@find . -name "*.c" -or -name "*.h" -or -name "*.txt" | xargs $(TOOLDIR)/stripcr
 	
-$(TOOLDIR)/stripcr: src/aros/stripcr/stripcr.c
+$(TOOLDIR)/stripcr: $(SRCDIR)/$(CURDIR)/src/aros/stripcr/stripcr.c
 	@$(HOST_CC) -s $< -o $@ 
 
 #ASM = nasm
