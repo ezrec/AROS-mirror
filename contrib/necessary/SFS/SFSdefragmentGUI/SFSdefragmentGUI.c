@@ -96,17 +96,19 @@ int main() {
       UnLockDosList(LDF_DEVICES|LDF_READ);
 
       {
-        struct TagItem tags[]={ASQ_TOTAL_BLOCKS, 0,
-                               ASQ_VERSION, 0,
-                               TAG_END, 0};
+        struct TagItem tags[] = {
+	  {ASQ_TOTAL_BLOCKS, 0},
+          {ASQ_VERSION     , 0},
+          {TAG_END         , 0}
+	};
 
-        if((errorcode=DoPkt(msgport, ACTION_SFS_QUERY, (LONG)&tags, 0, 0, 0, 0))!=DOSFALSE) {
+        if((errorcode=DoPkt(msgport, ACTION_SFS_QUERY, (SIPTR)tags, 0, 0, 0, 0))!=DOSFALSE) {
           ULONG blocks_total=tags[0].ti_Data;
 
           if(tags[1].ti_Data >= (1<<16) + 83) {
             if((errorcode=DoPkt(msgport, ACTION_SFS_DEFRAGMENT_INIT, 0, 0, 0, 0, 0))!=DOSFALSE) {
               if((bitmap=AllocVec(blocks_total / 8 + 32, MEMF_CLEAR))!=0) {
-                if((errorcode=DoPkt(msgport, ACTION_SFS_READ_BITMAP, (LONG)bitmap, 0, blocks_total, 0, 0))!=DOSFALSE) {
+                if((errorcode=DoPkt(msgport, ACTION_SFS_READ_BITMAP, bitmap, 0, blocks_total, 0, 0))!=DOSFALSE) {
                   if((mywindow=OpenWindowTags(0, WA_Width, dw+16,
                                                  WA_Height, dh+16,
                                                  WA_MinWidth, 100,
@@ -137,7 +139,7 @@ int main() {
                       UWORD class,code,qualifier;
 
                       if(defragmented==FALSE) {
-                        if((errorcode=DoPkt(msgport, ACTION_SFS_DEFRAGMENT_STEP, (LONG)steps, 190, 0, 0, 0))!=DOSFALSE) {
+                        if((errorcode=DoPkt(msgport, ACTION_SFS_DEFRAGMENT_STEP, (SIPTR)steps, 190, 0, 0, 0))!=DOSFALSE) {
                           struct DefragmentStep *ds=(struct DefragmentStep *)steps;
                           WORD e;
 
@@ -159,7 +161,7 @@ int main() {
                               bmset(bitmap, (blocks_total+31)/32, ds->data[1], ds->data[0]);
 
                               if(arglist.debug!=0) {
-                                printf("Moved %ld blocks from %ld to %ld\n", ds->data[0], ds->data[1], ds->data[2]);
+                                printf("Moved %d blocks from %d to %d\n", ds->data[0], ds->data[1], ds->data[2]);
                               }
 
                               lastread[e]=ds->data[1];
@@ -230,6 +232,8 @@ int main() {
   CloseLibrary((struct Library *)GfxBase);
   CloseLibrary((struct Library *)IntuitionBase);
   CloseLibrary((struct Library *)DOSBase);
+
+  return 0;
 }
 
 

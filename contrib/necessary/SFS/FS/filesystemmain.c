@@ -111,7 +111,7 @@ struct fsNotifyRequest {
 struct SFSMessage {
   struct Message msg;
   ULONG command;
-  ULONG data;
+  IPTR  data;
   LONG errorcode;
 };
 
@@ -2778,7 +2778,7 @@ _DEBUG(("examine ED_TYPE, o->bits=%x, o->objectnode=%d\n", o->bits, BE2L(o->be_o
                     returnpacket(0, errorcode);
                   }
                   else {
-                    returnpacket((LONG)lock, 0);
+                    returnpacket((IPTR)lock, 0);
                   }
                 }
                 break;
@@ -3720,7 +3720,7 @@ LONG initdisk() {
 
             if((sfsm=AllocVec(sizeof(struct SFSMessage), MEMF_CLEAR))!=0) {
               sfsm->command=SFSM_ADD_VOLUMENODE;
-              sfsm->data=(ULONG)vn;
+              sfsm->data=(IPTR)vn;
               sfsm->msg.mn_Length=sizeof(struct SFSMessage);
 
               PutMsg(globals->sdlhport, (struct Message *)sfsm);
@@ -3774,7 +3774,7 @@ static struct DosList *attemptlockdoslist(LONG tries, LONG delay) {
   for(;;) {
     dol=AttemptLockDosList(LDF_WRITE|LDF_VOLUMES);
 
-    if(((ULONG)dol & ~1)!=0) {
+    if(((IPTR)dol & ~1)!=0) {
       return(dol);
     }
 
@@ -3837,8 +3837,8 @@ static void deinitdisk() {
       globals->volumenode->dl_Ext.dl_AROS.dl_Unit = NULL;
 #endif
       globals->volumenode->dl_Task=0;
-      globals->volumenode->dl_LockList=(LONG)globals->locklist;
-      globals->volumenode->dl_unused=(LONG)globals->notifyrequests;
+      globals->volumenode->dl_LockList=globals->locklist;
+      globals->volumenode->dl_unused=globals->notifyrequests;
 
       Permit();
 
@@ -3864,7 +3864,7 @@ static void deinitdisk() {
 
       if((sfsm=AllocVec(sizeof(struct SFSMessage), MEMF_CLEAR))!=0) {
         sfsm->command=SFSM_REMOVE_VOLUMENODE;
-        sfsm->data=(ULONG)globals->volumenode;
+        sfsm->data=(IPTR)globals->volumenode;
         sfsm->msg.mn_Length=sizeof(struct SFSMessage);
 
         PutMsg(globals->sdlhport, (struct Message *)sfsm);

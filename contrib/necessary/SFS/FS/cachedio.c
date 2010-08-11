@@ -183,7 +183,7 @@ struct MinList *allocate(ULONG size, LONG n) {
       invalidateiocache(ioc);
 
       /* ioc->data is aligned to 16 byte boundaries. */
-      ioc->data=(UBYTE *)((ULONG)((UBYTE *)ioc+sizeof(struct IOCache)+15) & 0xFFFFFFF0);
+      ioc->data=(UBYTE *)((IPTR)((UBYTE *)ioc+sizeof(struct IOCache)+15) & (~0x0F));
 
       addtailm(lruhead, &ioc->node);
     }
@@ -776,7 +776,7 @@ LONG read(BLCK block, UBYTE *buffer, ULONG blocks) {
             break;
           }
 
-          if(((ULONG)buffer & 0x00000003) != 0) {
+          if(((IPTR)buffer & 0x00000003) != 0) {
             CopyMem((UBYTE *)ioc->data + (blockoffset<<globals->shifts_block), buffer, blocklength<<globals->shifts_block);
           }
           else {
@@ -860,7 +860,7 @@ void writethroughoverlappingiocaches(BLCK block, ULONG blocks, UBYTE *buffer) {
       src=buffer + ((startinline-block)<<globals->shifts_block);
       dst=(UBYTE *)ioc->data + (offsetinline<<globals->shifts_block);
 
-      if(((ULONG)buffer & 0x00000003) != 0) {
+      if(((IPTR)buffer & 0x00000003) != 0) {
         CopyMem(src, dst, overlappedblocks<<globals->shifts_block);
       }
       else {

@@ -104,9 +104,10 @@ Object *MakeLabel(STRPTR str)
   return (MUI_MakeObject(MUIO_Label, str, 0));
 }
 
-LONG xget(Object * obj, ULONG attr)
+IPTR xget(Object * obj, ULONG attr)
 {
-    LONG x = 0;
+    IPTR x = 0;
+
     get(obj, attr, &x);
     return x;
 }
@@ -170,7 +171,7 @@ void getDeviceData(STRPTR device)
         
         UnLockDosList(LDF_DEVICES|LDF_READ);
         
-        if(DoPkt(mp, ACTION_SFS_QUERY, (LONG)&tags, 0, 0, 0, 0)!=DOSFALSE)
+        if(DoPkt(mp, ACTION_SFS_QUERY, (SIPTR)tags, 0, 0, 0, 0)!=DOSFALSE)
         {
             blocks_total=tags[0].ti_Data;
             blocks_inone=(blocks_total + 19255)/19256;
@@ -181,7 +182,7 @@ void getDeviceData(STRPTR device)
             
             if ((bitmap = AllocVec(blocks_total / 8 + 32, MEMF_CLEAR))!=0)
             {
-                if(DoPkt(mp, ACTION_SFS_READ_BITMAP, (LONG)bitmap, 0, blocks_total, 0, 0)!=DOSFALSE)
+                if(DoPkt(mp, ACTION_SFS_READ_BITMAP, (SIPTR)bitmap, 0, blocks_total, 0, 0)!=DOSFALSE)
                 {
                     updateBitmap(0, blocks_total);
                 }
@@ -214,7 +215,7 @@ AROS_UFH3(void, start_function,
             ULONG clrlo=blocks_total,clrhi=0;
             ULONG setlo=blocks_total,sethi=0;
             
-            if(DoPkt(mp, ACTION_SFS_DEFRAGMENT_STEP, (LONG)steps, 190, 0, 0, 0)!=DOSFALSE)
+            if(DoPkt(mp, ACTION_SFS_DEFRAGMENT_STEP, (SIPTR)steps, 190, 0, 0, 0)!=DOSFALSE)
             {
                 struct DefragmentStep *ds=(struct DefragmentStep *)steps;
                 
@@ -277,7 +278,7 @@ AROS_UFH3(void, refresh_function,
     
     if (active != MUIV_List_Active_Off)
     {
-        if(DoPkt(mp, ACTION_SFS_READ_BITMAP, (LONG)bitmap, 0, blocks_total, 0, 0)!=DOSFALSE)
+        if(DoPkt(mp, ACTION_SFS_READ_BITMAP, (SIPTR)bitmap, 0, blocks_total, 0, 0)!=DOSFALSE)
         {
             updateBitmap(0, blocks_total);
         }
@@ -376,7 +377,7 @@ BOOL GUIinit()
             };
         
             mp = dll->dol_Task;
-            if(DoPkt(mp, ACTION_SFS_QUERY, (LONG)&tags, 0, 0, 0, 0)!=DOSFALSE)
+            if(DoPkt(mp, ACTION_SFS_QUERY, (SIPTR)tags, 0, 0, 0, 0)!=DOSFALSE)
             {
                 if(tags[0].ti_Data >= (1<<16) + 83)
                     DoMethod(DevList, MUIM_List_InsertSingle, (IPTR)dll->dol_Ext.dol_AROS.dol_DevName, MUIV_List_Insert_Bottom);

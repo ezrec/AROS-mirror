@@ -762,7 +762,7 @@ LONG transfer(UWORD action, UBYTE *buffer, ULONG blockoffset, ULONG blocklength)
         ULONG maxblocks=globals->blocks_maxtransfer;
         LONG errorcode;
 
-        if(((ULONG)buffer & ~globals->mask_mask)!=0) {   // Buffered transfer needed?
+        if(((IPTR)buffer & ~globals->mask_mask)!=0) {   // Buffered transfer needed?
             return(transfer_buffered(action, buffer, blockoffset, blocklength));
         }
 
