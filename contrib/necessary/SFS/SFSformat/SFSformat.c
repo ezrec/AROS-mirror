@@ -75,7 +75,7 @@ LONG main()
                             struct TagItem *tag=tags;
 
                             tag->ti_Tag=ASF_NAME;
-                            tag->ti_Data=(ULONG)arglist.name;
+                            tag->ti_Data=(IPTR)arglist.name;
                             tag++;
 
                             if(arglist.casesensitive!=0)
@@ -102,7 +102,7 @@ LONG main()
                             tag->ti_Tag=TAG_END;
                             tag->ti_Data=0;
 
-                            if((errorcode=DoPkt(msgport, ACTION_SFS_FORMAT, (LONG)&tags, 0, 0, 0, 0))==DOSFALSE)
+                            if((errorcode=DoPkt(msgport, ACTION_SFS_FORMAT, (SIPTR)&tags, 0, 0, 0, 0))==DOSFALSE)
                             {
                                 PrintFault(IoErr(),"error while initializing the drive");
                             }

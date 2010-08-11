@@ -6,12 +6,14 @@
  *
  * ----------------------------------------------------------------------
  * This code is (C) Copyright 1993,1994 by Frank Munkert.
+ *              (C) Copyright 2002-2010 The AROS Development Team
  * All rights reserved.
  * This software may be freely distributed and redistributed for
  * non-commercial purposes, provided this notice is included.
  * ----------------------------------------------------------------------
  * History:
  *
+ * 11-Aug-10 sonic     - Fixed for 64-bit compatibility
  * 08-Apr-07 sonic     - removed redundant "TRACKDISK" option
  * 31-Mar-07 sonic     - merged together 2 versions of Get_Startup(), changed
  *		         startup mechanism under AmigaOS/MorphOS
@@ -127,8 +129,7 @@ int OpenCDRom() {
 		Display_Error
 		(
 			"Cannot open \"%s\" unit %ld",
-			(ULONG)global->g_device,
-			(int) global->g_unit
+			global->g_device, global->g_unit
 		);
      break;
 	case CDROMERR_BLOCKSIZE:
@@ -167,7 +168,6 @@ int Get_Startup(struct FileSysStartupMsg *fssm) {
 	static UBYTE LocalBuffer[250];
 	struct RDArgs *ArgsPtr;
 	int result = FALSE,len,i;
-	int cnt;
 	struct DosEnvec *de;
 
 	if (fssm != (struct FileSysStartupMsg *)-1)
@@ -339,7 +339,7 @@ int Get_Startup(struct FileSysStartupMsg *fssm) {
 			    } else {
 			      Fault(IoErr (), (UBYTE *) "", LocalBuffer, sizeof (LocalBuffer));
 			      Display_Error ("Error while parsing \"Control\" field in Mountlist:\n%s",
-					     (ULONG)LocalBuffer + 2);
+					     LocalBuffer + 2);
 			    }
 
 			    FreeDosObject (DOS_RDARGS, ArgsPtr);
@@ -360,7 +360,7 @@ int Get_Startup(struct FileSysStartupMsg *fssm) {
 		return FALSE;
 }
 
-int Handle_Control_Packet (ULONG p_type, ULONG p_par1, ULONG p_par2)
+int Handle_Control_Packet (ULONG p_type, IPTR p_par1, IPTR p_par2)
 {
   switch (p_type) {
   case CDCMD_LOWERCASE:

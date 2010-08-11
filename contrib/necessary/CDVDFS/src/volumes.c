@@ -4,12 +4,14 @@
  *
  * ----------------------------------------------------------------------
  * This code is (C) Copyright 1993,1994 by Frank Munkert.
+ *              (C) Copyright 2002-2010 The AROS Development Team
  * All rights reserved.
  * This software may be freely distributed and redistributed for
  * non-commercial purposes, provided this notice is included.
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 11-Aug-10 sonic     - Fixed for 64-bit compatibility
  * 27-Aug-07 sonic   - Register_Volume_Node() now takes separate pointer to a volume name.
  * 19-Sep-94   fmu   Fixed bug in Reinstall_Locks()
  * 22-May-94   fmu   Performance improvement for lock+filehandle processing.
@@ -147,7 +149,7 @@ int Reinstall_Locks (void)
         BUG(dbprintf ("(FAILED) ]\n");)
 	continue;
       }
-      ptr->lock->fl_Link = (LONG) obj;
+      ptr->lock->fl_Link = (IPTR)obj;
     }
   }
   return result;

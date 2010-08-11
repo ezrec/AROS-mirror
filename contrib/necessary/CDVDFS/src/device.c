@@ -12,6 +12,7 @@
  * ----------------------------------------------------------------------
  * History:
  *
+ * 11-Aug-10 sonic     - Fixed for 64-bit compatibility
  * 04-Jun-10 neil      - No longer removes device node and seglist when
  *                       exiting. It isn't our job.
  *                     - Delay returning ACTION_DIE packet until handler is
@@ -162,7 +163,7 @@
 LONG handler(struct ExecBase *);
 LOCK *cdlock(CDROM_OBJ *, int);
 void cdunlock (LOCK *);
-CDROM_OBJ *getlockfile (LONG);
+CDROM_OBJ *getlockfile(IPTR);
 char *typetostr (int);
 void returnpacket(struct DosPacket *);
 int packetsqueued (void);
@@ -399,16 +400,16 @@ ULONG signals;
 #define UtilityBase global->UtilityBase
 
 struct TagItem PlayTags[] = {
-	{SYS_Input, NULL},
-	{SYS_Output, NULL},
-	{SYS_Asynch, TRUE},
-	TAG_END
+    {SYS_Input , 0   },
+    {SYS_Output, 0   },
+    {SYS_Asynch, TRUE},
+    {TAG_END   , 0   }
 };
 
 LONG handlemessage(ULONG signals) {
 register PACKET *packet;
 MSG     *msg;
-void    *tmp;
+void    *tmp = NULL;
 char    buf[256];
 register WORD   error;
 UBYTE   notdone = 1;
@@ -457,7 +458,7 @@ UBYTE   notdone = 1;
 		{
 			ReplyMsg (msg);
 			if (global->g_play_cdda_command[0]) {
-				PlayTags[0].ti_Data = Open ("NIL:", MODE_OLDFILE);
+				PlayTags[0].ti_Data = (IPTR)Open ("NIL:", MODE_OLDFILE);
 				System(global->g_play_cdda_command, PlayTags);
 			}
 			else
@@ -627,7 +628,7 @@ UBYTE   notdone = 1;
 				if (!error)
 				{
 					global->g_volume->file_handles++;
-					((FH *)BADDR(packet->dp_Arg1))->fh_Arg1 = (LONG) obj;
+					((FH *)BADDR(packet->dp_Arg1))->fh_Arg1 = (IPTR)obj;
 					Register_File_Handle (obj);
 				}
 			}
@@ -755,7 +756,7 @@ openbreak:
 				error = 0;
 				memset (id, 0, sizeof(*id));
 				id->id_UnitNumber = global->g_unit;
-				id->id_VolumeNode = (LONG) MKBADDR(global->DevList);
+				id->id_VolumeNode = MKBADDR(global->DevList);
 				id->id_InUse = 0;
 				id->id_DiskState = ID_WRITE_PROTECTED;
 				if (global->g_inhibited)
@@ -813,8 +814,7 @@ openbreak:
 						}
 						else
 						{
-							packet->dp_Res1 = (LONG)
-								MKBADDR(cdlock (parent, ACCESS_READ));
+							packet->dp_Res1 = (IPTR)MKBADDR(cdlock (parent, ACCESS_READ));
 						}
 					}
 				}
@@ -862,7 +862,7 @@ openbreak:
 						if (obj->symlink_f)
 						error = ERROR_IS_SOFT_LINK;
 					else
-						packet->dp_Res1 = (LONG)MKBADDR(cdlock (obj, packet->dp_Arg3));
+						packet->dp_Res1 = (IPTR)MKBADDR(cdlock (obj, packet->dp_Arg3));
 				}
 				else
 				{
@@ -901,7 +901,7 @@ openbreak:
 				if (!new)
 					error = ERROR_NO_FREE_STORE;
 				else
-					packet->dp_Res1 = (LONG)MKBADDR(cdlock (new, ACCESS_READ));
+					packet->dp_Res1 = (IPTR)MKBADDR(cdlock (new, ACCESS_READ));
 			}
 			else
 				packet->dp_Res1 = 0;
@@ -915,9 +915,9 @@ openbreak:
 		{
 			CDROM_OBJ *obj = (CDROM_OBJ*) packet->dp_Arg1;
 			if (obj)
-				packet->dp_Res1 = (LONG)MKBADDR(Find_Dev_List (obj));
+				packet->dp_Res1 = (IPTR)MKBADDR(Find_Dev_List (obj));
 			else
-				packet->dp_Res1 = (LONG)MKBADDR(global->DevList);
+				packet->dp_Res1 = (IPTR)MKBADDR(global->DevList);
 			break;
 		}
 		case ACTION_INHIBIT:        /* Bool       Bool */
@@ -1205,7 +1205,7 @@ void cdunlock (LOCK *lock)
  *  the root directory of the CDROM.
  */
 
-CDROM_OBJ *getlockfile (LONG lock)
+CDROM_OBJ *getlockfile (IPTR lock)
 {
   LOCK *rl = (LOCK *)BADDR (lock);
 

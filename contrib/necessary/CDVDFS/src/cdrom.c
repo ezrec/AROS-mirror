@@ -11,6 +11,7 @@
  * ----------------------------------------------------------------------
  * History:
  *
+ * 11-Aug-10 sonic   Fixed comparison warning in Has_Audio_Tracks()
  * 01-Mar-10 neil    Do not read past end of disc.
  * 12-Jun-09 neil    If drive returns incorrect TOC length, calculate it
  *                   based on the number of tracks.
@@ -152,7 +153,7 @@ CDROM *Open_CDROM
 	 * performance on '040-powered systems with DMA SCSI
 	 * controllers.
 	 */
-	cd->buffers[0] = (UBYTE *)(((ULONG)cd->buffer_data + 15) & ~15);
+	cd->buffers[0] = (UBYTE *)(((IPTR)cd->buffer_data + 15) & ~15);
 	cd->current_sectors[0] = -1;
 
 	for (i=1; i<cd->buffers_cnt; i++)
@@ -594,7 +595,7 @@ int Start_Play_Audio(CDROM *p_cd)
      */
     for (; i<len; i++)
     {
-	if ((99  < toc[i].track_number > 99) || 
+	if (((99 < toc[i].track_number) && (toc[i].track_number > 99)) || 
 	    (0  != (toc[i].flags & 4)))
 	    break;
     }

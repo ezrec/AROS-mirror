@@ -42,36 +42,38 @@ LONG main() {
         UnLockDosList(LDF_DEVICES|LDF_READ);
 
         {
-          struct TagItem tags[]={ASQ_CACHE_ACCESSES, 0,
-                                 ASQ_CACHE_MISSES, 0,
+            struct TagItem tags[]={
+		{ASQ_CACHE_ACCESSES       , 0},
+                {ASQ_CACHE_MISSES         , 0},
 
-                                 ASQ_START_BYTEH, 0,
-                                 ASQ_START_BYTEL, 0,
-                                 ASQ_END_BYTEH, 0,
-                                 ASQ_END_BYTEL, 0,
-                                 ASQ_DEVICE_API, 0,
+                {ASQ_START_BYTEH          , 0},
+                {ASQ_START_BYTEL          , 0},
+                {ASQ_END_BYTEH            , 0},
+                {ASQ_END_BYTEL            , 0},
+                {ASQ_DEVICE_API           , 0},
 
-                                 ASQ_BLOCK_SIZE, 0,
-                                 ASQ_TOTAL_BLOCKS, 0,
+                {ASQ_BLOCK_SIZE           , 0},
+                {ASQ_TOTAL_BLOCKS         , 0},
 
-                                 ASQ_ROOTBLOCK, 0,
-                                 ASQ_ROOTBLOCK_OBJECTNODES, 0,
-                                 ASQ_ROOTBLOCK_EXTENTS, 0,
-                                 ASQ_FIRST_BITMAP_BLOCK, 0,
-                                 ASQ_FIRST_ADMINSPACE, 0,
+                {ASQ_ROOTBLOCK            , 0},
+                {ASQ_ROOTBLOCK_OBJECTNODES, 0},
+                {ASQ_ROOTBLOCK_EXTENTS    , 0},
+                {ASQ_FIRST_BITMAP_BLOCK   , 0},
+                {ASQ_FIRST_ADMINSPACE     , 0},
 
-                                 ASQ_CACHE_LINES, 0,
-                                 ASQ_CACHE_READAHEADSIZE, 0,
-                                 ASQ_CACHE_MODE, 0,
-                                 ASQ_CACHE_BUFFERS, 0,
+                {ASQ_CACHE_LINES          , 0},
+                {ASQ_CACHE_READAHEADSIZE  , 0},
+                {ASQ_CACHE_MODE           , 0},
+                {ASQ_CACHE_BUFFERS        , 0},
 
-                                 ASQ_IS_CASESENSITIVE, 0,
-                                 ASQ_HAS_RECYCLED, 0,
-                                 TAG_END, 0};
+                {ASQ_IS_CASESENSITIVE     , 0},
+                {ASQ_HAS_RECYCLED         , 0},
+                {TAG_END                  , 0}
+	    };
 
 
           printf("SFSquery information for %s:\n", arglist.name);
-          if((errorcode=DoPkt(msgport, ACTION_SFS_QUERY, (LONG)&tags, 0, 0, 0, 0))!=DOSFALSE) {
+          if((errorcode=DoPkt(msgport, ACTION_SFS_QUERY, (SIPTR)&tags, 0, 0, 0, 0))!=DOSFALSE) {
             ULONG perc;
 
             if(tags[0].ti_Data!=0) {
@@ -100,7 +102,7 @@ LONG main() {
             }
 
             printf("Bytes/block      : %-8ld   Total blocks : %ld\n", tags[7].ti_Data, tags[8].ti_Data);
-            printf("Cache accesses   : %-8ld   Cache misses : %ld (%ld%%)\n", tags[0].ti_Data, tags[1].ti_Data, perc);
+            printf("Cache accesses   : %-8ld   Cache misses : %ld (%d%%)\n", tags[0].ti_Data, tags[1].ti_Data, perc);
             printf("Read-ahead cache : %ldx %ld bytes ",tags[14].ti_Data, tags[15].ti_Data);
 
             if(tags[16].ti_Data!=0) {

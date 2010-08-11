@@ -45,12 +45,14 @@ int main()
                 UnLockDosList(LDF_DEVICES|LDF_READ);
 
                 if(arglist.lines!=0 || arglist.readahead!=0 || arglist.nocopyback!=0) {
-                    struct TagItem tags[]={ASQ_CACHE_LINES, 0,
-                                 ASQ_CACHE_READAHEADSIZE, 0,
-                                 ASQ_CACHE_MODE, 0,
-                                 TAG_END, 0};
+                    struct TagItem tags[]={
+		        {ASQ_CACHE_LINES        , 0},
+                        {ASQ_CACHE_READAHEADSIZE, 0},
+                        {ASQ_CACHE_MODE         , 0},
+                        {TAG_END                , 0}
+		    };
 
-                    if((errorcode=DoPkt(msgport, ACTION_SFS_QUERY, (LONG)&tags, 0, 0, 0, 0))!=DOSFALSE) {
+                    if((errorcode=DoPkt(msgport, ACTION_SFS_QUERY, (SIPTR)&tags, 0, 0, 0, 0))!=DOSFALSE) {
                         ULONG lines,readahead;
 
                         lines=tags[0].ti_Data;
@@ -87,11 +89,13 @@ int main()
                 }
 
                 {
-                    struct TagItem tags[]={ASQ_CACHE_LINES, 0,
-                                 ASQ_CACHE_READAHEADSIZE, 0,
-                                 ASQ_CACHE_MODE, 0};
+                    struct TagItem tags[]={
+			{ASQ_CACHE_LINES        , 0},
+                        {ASQ_CACHE_READAHEADSIZE, 0},
+                        {ASQ_CACHE_MODE         , 0}
+		    };
 
-                    if((errorcode=DoPkt(msgport, ACTION_SFS_QUERY, (LONG)&tags, 0, 0, 0, 0))!=DOSFALSE) {
+                    if((errorcode=DoPkt(msgport, ACTION_SFS_QUERY, (SIPTR)&tags, 0, 0, 0, 0))!=DOSFALSE) {
                         VPrintf("Current cache settings: %ld lines,", &tags[0].ti_Data);
                         VPrintf(" %ld bytes readahead, ", &tags[1].ti_Data);
                         if(tags[2].ti_Data==0) {

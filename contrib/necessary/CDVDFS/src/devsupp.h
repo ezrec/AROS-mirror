@@ -31,6 +31,6 @@ int Get_Startup (struct FileSysStartupMsg *);
 
 #define HANDLER_VERSION "cdrom.handler 3.0 (2007-03-07)\n"
 
-int Handle_Control_Packet (ULONG p_type, ULONG p_par1, ULONG p_par2);
+int Handle_Control_Packet (ULONG p_type, IPTR p_par1, IPTR p_par2);
 
 #endif /* DEVSUPP_H */
