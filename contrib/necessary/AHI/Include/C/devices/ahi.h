@@ -409,7 +409,7 @@ struct AHIRequest
 	UWORD			 ahir_Version;		/* Needed version */
 /* --- New for V4, they will be ignored by V2 and earlier --- */
 	UWORD			 ahir_Pad1;
-	ULONG			 ahir_Private[2];	/* Hands off! */
+	IPTR			 ahir_Private[2];	/* Hands off! */
 	ULONG			 ahir_Type;		/* Sample format */
 	ULONG			 ahir_Frequency;	/* Sample/Record frequency */
 	Fixed			 ahir_Volume;		/* Sample volume */

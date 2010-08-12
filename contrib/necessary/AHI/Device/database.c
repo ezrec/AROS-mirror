@@ -661,7 +661,7 @@ AddModeFile ( UBYTE *filename )
   {
     { AHIDB_Driver,         0 },
     { AHIDB_Data,           0 },
-    { AHIDB_DriverBaseName, (ULONG) (IS_MORPHOS ? "MOSSYS:DEVS/AHI" : "DEVS:AHI") },
+    { AHIDB_DriverBaseName, (IS_MORPHOS ? "MOSSYS:DEVS/AHI" : "DEVS:AHI") },
     { TAG_MORE,             0 }
   };
   ULONG rc=FALSE;
@@ -671,7 +671,7 @@ AddModeFile ( UBYTE *filename )
   if(iff != NULL)
   {
 
-    iff->iff_Stream = (ULONG) Open(filename, MODE_OLDFILE);
+    iff->iff_Stream = (IPTR)Open(filename, MODE_OLDFILE);
 
     if(iff->iff_Stream != 0)
     {
@@ -703,7 +703,7 @@ AddModeFile ( UBYTE *filename )
               if( name->sp_Size <= 0 )
               {
                 Req( "%s:\nAUDN chunk has illegal size: %ld.", 
-                     (ULONG) filename, name->sp_Size );
+                     filename, name->sp_Size );
               }
               else
               {
@@ -726,7 +726,7 @@ AddModeFile ( UBYTE *filename )
                 if( !rc )
                 {
                   Req( "%s:\nAUDN chunk is not NUL-terminated.", 
-                       (ULONG) filename );
+                       filename );
                 }
               }
 
@@ -778,7 +778,7 @@ AddModeFile ( UBYTE *filename )
               if( name->sp_Size <= 0 )
               {
                 Req( "%s:\nAUDD chunk has illegal size: %ld.", 
-                     (ULONG) filename, name->sp_Size );
+                     filename, name->sp_Size );
 
                 rc = FALSE;
               }
@@ -799,7 +799,7 @@ AddModeFile ( UBYTE *filename )
 		
                 if(tag->ti_Tag & (AHI_TagBaseR ^ AHI_TagBase))
                 {
-                  tag->ti_Data += (ULONG) ci->ci_Data;
+                  tag->ti_Data += ci->ci_Data;
                 }
                
                 rc = FALSE;
@@ -810,11 +810,11 @@ AddModeFile ( UBYTE *filename )
                   {
                     // Make sure the string is within the chuck and NUL-term.
                     
-                    if( tag->ti_Data <  (ULONG) ci->ci_Data || 
-                        tag->ti_Data >= (ULONG) ci->ci_Data + ci->ci_Size )
+                    if( tag->ti_Data <  (IPTR) ci->ci_Data || 
+                        tag->ti_Data >= (IPTR) ci->ci_Data + ci->ci_Size )
                     {
                       Req( "%s:\nAUDM chunk contains an invalid string.", 
-                           (ULONG) filename );
+                           filename );
                     }
                     else
                     {
@@ -846,7 +846,7 @@ AddModeFile ( UBYTE *filename )
                 if( !rc )
                 {
                   Req( "%s:\nAUDM chunk contains a string that is not "
-                       "NUL-terminated.", (ULONG) filename  );
+                       "NUL-terminated.", filename  );
                 }
               }
 

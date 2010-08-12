@@ -84,7 +84,7 @@ _DevBeginIO( struct AHIRequest* ioreq,
 {
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)
   {
-    KPrintF("BeginIO(0x%08lx)\n", (ULONG) ioreq);
+    KPrintF("BeginIO(0x%P)\n", ioreq);
   }
 
   ioreq->ahir_Std.io_Message.mn_Node.ln_Type = NT_MESSAGE;
@@ -133,7 +133,7 @@ _DevAbortIO( struct AHIRequest* ioreq,
   
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)
   {
-    KPrintF("AbortIO(0x%08lx)", (ULONG) ioreq);
+    KPrintF("AbortIO(0x%P)", ioreq);
   }
 
   iounit = (struct AHIDevUnit *) ioreq->ahir_Std.io_Unit;
@@ -779,7 +779,7 @@ ReadCmd ( struct AHIRequest *ioreq,
   if(iounit->IsRecording)
   {
     AHI_ControlAudio(iounit->AudioCtrl,
-        AHIC_MixFreq_Query, (ULONG) &mixfreq,
+        AHIC_MixFreq_Query, &mixfreq,
         TAG_DONE);
 
     /* Initialize ahir_Frequency for the assembler record routines */
@@ -897,7 +897,7 @@ WriteCmd ( struct AHIRequest *ioreq,
     }
   }
 
-  ioreq->ahir_Extras = (ULONG) AllocVec(sizeof(struct Extras), MEMF_PUBLIC|MEMF_CLEAR);
+  ioreq->ahir_Extras = (IPTR) AllocVec(sizeof(struct Extras), MEMF_PUBLIC|MEMF_CLEAR);
 
   if(ioreq->ahir_Extras == 0)
   {
@@ -1154,7 +1154,7 @@ FillReadBuffer ( struct AHIRequest *ioreq,
         break;
     }
     
-    ioreq->ahir_Std.io_Actual += ((ULONG) ioreq->ahir_Std.io_Data - (ULONG) oldaddress);
+    ioreq->ahir_Std.io_Actual += ((IPTR) ioreq->ahir_Std.io_Data - (IPTR) oldaddress);
 
     if(remove)
     {

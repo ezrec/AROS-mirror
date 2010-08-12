@@ -268,8 +268,8 @@ D(bug("AHI: Start: Stop called\n"));
   {
     struct TagItem proctags[] =
     {
-      { NP_Entry,     (ULONG) &slaveentry },
-      { NP_Name,      (ULONG) LibName     },
+      { NP_Entry,     (IPTR) &slaveentry },
+      { NP_Name,      (IPTR) LibName     },
       { NP_Priority,  -1                  },
       { TAG_DONE,     0                   }
     };
@@ -378,10 +378,10 @@ _AHIsub_Stop( ULONG                   flags,
 ** AHIsub_GetAttr *************************************************************
 ******************************************************************************/
 
-LONG
+IPTR
 _AHIsub_GetAttr( ULONG                   attribute,
 		 LONG                    argument,
-		 LONG                    def,
+		 IPTR                    def,
 		 struct TagItem*         taglist,
 		 struct AHIAudioCtrlDrv* AudioCtrl,
 		 struct DriverBase*      AHIsubBase )
@@ -430,13 +430,13 @@ _AHIsub_GetAttr( ULONG                   attribute,
       return 0;  // Will not happen
 
     case AHIDB_Author:
-      return (LONG) "Michal Schulz";
+      return (IPTR) "Michal Schulz";
 
     case AHIDB_Copyright:
-      return (LONG) "APL";
+      return (IPTR) "APL";
 
     case AHIDB_Version:
-      return (LONG) LibIDString;
+      return (IPTR) LibIDString;
 
     case AHIDB_Record:
       return FALSE;
@@ -461,7 +461,7 @@ _AHIsub_GetAttr( ULONG                   attribute,
       return 0x10000;
 
     case AHIDB_Output:
-      return (LONG) "Default";    // We have only one "output"!
+      return (IPTR) "Default";    // We have only one "output"!
 
     default:
       return def;

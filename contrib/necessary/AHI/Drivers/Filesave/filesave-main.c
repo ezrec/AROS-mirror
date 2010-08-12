@@ -291,8 +291,8 @@ ULONG _AHIsub_Start(
     {
       struct TagItem proctags[] =
       {
-	{ NP_Entry,     (ULONG) &playslaveentry },
-	{ NP_Name,      (ULONG) LibName         },
+	{ NP_Entry,     (IPTR) &playslaveentry },
+	{ NP_Name,      (IPTR) LibName         },
 	{ NP_Priority,  -1                      }, // It's a number cruncher...
 	{ NP_StackSize, 10000,                  },
 	{ TAG_DONE,     0                       }
@@ -457,10 +457,10 @@ void _AHIsub_Stop(
 ** AHIsub_GetAttr *************************************************************
 ******************************************************************************/
 
-LONG _AHIsub_GetAttr(
+IPTR _AHIsub_GetAttr(
     ULONG Attribute,
     LONG Argument,
-    LONG Default,
+    IPTR Default,
     struct TagItem *tagList,
     struct AHIAudioCtrlDrv *AudioCtrl,
     struct DriverBase*      AHIsubBase )
@@ -524,13 +524,13 @@ LONG _AHIsub_GetAttr(
       return 0;  // Will not happen
 
     case AHIDB_Author:
-      return (LONG) "Martin 'Leviticus' Blom";
+      return (IPTR) "Martin 'Leviticus' Blom";
 
     case AHIDB_Copyright:
-      return (LONG) "Public Domain";
+      return (IPTR) "Public Domain";
 
     case AHIDB_Version:
-      return (LONG) LibIDString;
+      return (IPTR) LibIDString;
 
     case AHIDB_Record:
       return TRUE;
@@ -548,13 +548,13 @@ LONG _AHIsub_GetAttr(
       return 1;
 
     case AHIDB_Input:
-      return (LONG) "File";    // We have only one input!
+      return (IPTR) "File";    // We have only one input!
 
     case AHIDB_Outputs:
       return 1;
 
     case AHIDB_Output:
-      return (LONG) "File";    // We have only one output!
+      return (IPTR) "File";    // We have only one output!
 
     default:
       return Default;

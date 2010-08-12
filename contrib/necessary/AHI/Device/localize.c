@@ -57,7 +57,7 @@ void OpenahiCatalog(struct Locale *loc, STRPTR language)
   {
     ahi_Catalog = OpenCatalog(loc, (STRPTR) "ahi.catalog",
         language ? OC_Language : TAG_IGNORE, (IPTR)language,
-        TAG_MORE, (ULONG)&ahi_tags[0]);
+        TAG_MORE, ahi_tags);
   }
 }
 
@@ -67,7 +67,7 @@ struct Catalog *ExtOpenCatalog(struct Locale *loc, STRPTR language)
   {
     return OpenCatalog(loc, (STRPTR) "ahi.catalog",
         language ? OC_Language : TAG_IGNORE, (IPTR)language,
-        TAG_MORE, (ULONG)&ahi_tags[0]);
+        TAG_MORE, ahi_tags);
   }
   return NULL;
 }

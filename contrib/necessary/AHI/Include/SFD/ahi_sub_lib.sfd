@@ -31,7 +31,7 @@ ULONG AHIsub_LoadSound(UWORD Sound, ULONG Type, APTR Info, struct AHIAudioCtrlDr
 ULONG AHIsub_UnloadSound(UWORD Sound, struct AHIAudioCtrlDrv * Audioctrl) (d0,a2)
 
 * Functions for driver queries
-LONG AHIsub_GetAttr(ULONG Attribute, LONG Argument, LONG DefValue, struct TagItem * tagList,
+IPTR AHIsub_GetAttr(ULONG Attribute, LONG Argument, IPTR DefValue, struct TagItem * tagList,
 	struct AHIAudioCtrlDrv * AudioCtrl) (d0,d1,d2,a1,a2)
 
 * Functions for controlling the analog mixer etc.

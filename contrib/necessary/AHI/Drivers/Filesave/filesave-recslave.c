@@ -30,7 +30,7 @@ static void RecSlave( struct ExecBase* SysBase );
 
 #include <aros/asmcall.h>
 
-AROS_UFH3(LONG, RecSlaveEntry,
+AROS_UFH3(void, RecSlaveEntry,
 	  AROS_UFHA(STRPTR, argPtr, A0),
 	  AROS_UFHA(ULONG, argSize, D0),
 	  AROS_UFHA(struct ExecBase *, SysBase, A6))
@@ -92,8 +92,8 @@ static void RecSlave( struct ExecBase* SysBase )
     
     struct TagItem attrtags[] =
     {
-      { SDTA_Sample,       (ULONG) &samples },
-      { SDTA_SampleLength, (ULONG) &length  },
+      { SDTA_Sample,       &samples },
+      { SDTA_SampleLength, &length  },
       { TAG_DONE,          0                }
     };
     

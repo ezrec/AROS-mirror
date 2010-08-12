@@ -92,19 +92,19 @@ Fixed DizzyTestAudioID(ULONG id, struct TagItem *tags )
   }
 
   AHI_GetAudioAttrs( id, NULL,
-                     AHIDB_Volume,      (ULONG) &volume,
-                     AHIDB_Stereo,      (ULONG) &stereo,
-                     AHIDB_Panning,     (ULONG) &panning,
-                     AHIDB_MultiChannel,(ULONG) &multichannel,
-                     AHIDB_HiFi,        (ULONG) &hifi,
-                     AHIDB_PingPong,    (ULONG) &pingpong,
-                     AHIDB_Record,      (ULONG) &record,
-                     AHIDB_Bits,        (ULONG) &bits,
-                     AHIDB_MaxChannels, (ULONG) &channels,
-                     AHIDB_MinMixFreq,  (ULONG) &minmix,
-                     AHIDB_MaxMixFreq,  (ULONG) &maxmix,
-                     AHIDB_Realtime,    (ULONG) &realtime,
-                     AHIDB_FullDuplex,  (ULONG) &fullduplex,
+                     AHIDB_Volume,       &volume,
+                     AHIDB_Stereo,       &stereo,
+                     AHIDB_Panning,      &panning,
+                     AHIDB_MultiChannel, &multichannel,
+                     AHIDB_HiFi,         &hifi,
+                     AHIDB_PingPong,     &pingpong,
+                     AHIDB_Record,       &record,
+                     AHIDB_Bits,         &bits,
+                     AHIDB_MaxChannels,  &channels,
+                     AHIDB_MinMixFreq,   &minmix,
+                     AHIDB_MaxMixFreq,   &maxmix,
+                     AHIDB_Realtime,     &realtime,
+                     AHIDB_FullDuplex,   &fullduplex,
                      TAG_DONE );
 
   tstate = tags;
@@ -483,18 +483,18 @@ _AHI_GetAudioAttrsA( ULONG                    id,
             case AHIDB_Copyright:
             case AHIDB_Version:
             case AHIDB_Annotation:
-              stccpy((char *)tag1->ti_Data,(char *)AHIsub_GetAttr(tag1->ti_Tag,0,(ULONG)"",dbtags,audioctrl),stringlen);
+              stccpy((char *)tag1->ti_Data,(char *)AHIsub_GetAttr(tag1->ti_Tag,0, (IPTR)"",dbtags,audioctrl),stringlen);
               break;
 // Input & Output strings
             case AHIDB_Input:
               stccpy((char *)tag1->ti_Data,(char *)AHIsub_GetAttr(tag1->ti_Tag,
                   GetTagData(AHIDB_InputArg,0,tags),
-                  (ULONG) GetahiString(msgDefault),dbtags,audioctrl),stringlen);
+                  (IPTR) GetahiString(msgDefault),dbtags,audioctrl),stringlen);
               break;
             case AHIDB_Output:
               stccpy((char *)tag1->ti_Data,(char *)AHIsub_GetAttr(tag1->ti_Tag,
                   GetTagData(AHIDB_OutputArg,0,tags),
-                  (ULONG) GetahiString(msgDefault),dbtags,audioctrl),stringlen);
+                  (IPTR) GetahiString(msgDefault),dbtags,audioctrl),stringlen);
               break;
 // Other
             case AHIDB_Bits:
@@ -587,7 +587,7 @@ _AHI_GetAudioAttrsA( ULONG                    id,
 
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_HIGH)
   {
-    KPrintF("=>%s\n", rc ? (ULONG) "TRUE" : (ULONG) "FALSE" );
+    KPrintF("=>%s\n", rc ? "TRUE" : "FALSE" );
   }
 
   return (ULONG) rc;

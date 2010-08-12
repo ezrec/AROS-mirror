@@ -109,7 +109,7 @@ OpenAHI( void )
 
     if( AHIDevice != 0 )
     {
-      Printf( "Unable to open %s version %ld\n", (ULONG) AHINAME, AHIVERSION );
+      Printf( "Unable to open %s version %ld\n", AHINAME, AHIVERSION );
       cleanup();
       exit( RETURN_FAIL );
     }
@@ -136,14 +136,14 @@ main( void )
   
   if( GfxBase == NULL )
   {
-    Printf( "Unable to open %s version %ld\n", (ULONG) GRAPHICSNAME, 37 );
+    Printf( "Unable to open %s version %ld\n", GRAPHICSNAME, 37 );
     cleanup();
     return RETURN_FAIL;
   }
 
   if( IntuitionBase == NULL )
   {
-    Printf( "Unable to open %s version %ld\n", (ULONG) "intuition.library", 37 );
+    Printf( "Unable to open %s version %ld\n", "intuition.library", 37 );
     cleanup();
     return RETURN_FAIL;
   }
@@ -306,7 +306,7 @@ main( void )
       {
         screen = OpenScreenTags( NULL,
                                  SA_DisplayID,  bestid,
-                                 SA_Colors,    (ULONG) &colorspecs,
+                                 SA_Colors,     &colorspecs,
                                  TAG_DONE );
       }
       else if( ( GfxBase->ChipRevBits0 & (GFXF_HR_DENISE | GFXF_AA_LISA ) ) != 0 )

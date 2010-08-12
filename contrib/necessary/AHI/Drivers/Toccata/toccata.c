@@ -435,10 +435,10 @@ void __asm __saveds intAHIsub_Stop(
 
 
 
-LONG __asm __saveds intAHIsub_GetAttr(
+IPTR __asm __saveds intAHIsub_GetAttr(
     register __d0 ULONG Attribute,
     register __d1 LONG Argument,
-    register __d2 LONG Default,
+    register __d2 IPTR Default,
     register __a1 struct TagItem *tagList,
     register __a2 struct AHIAudioCtrlDrv *AudioCtrl)
 {
@@ -476,13 +476,13 @@ LONG __asm __saveds intAHIsub_GetAttr(
       return index;
     }
     case AHIDB_Author:
-      return (LONG) "Martin 'Leviticus' Blom";
+      return (IPTR) "Martin 'Leviticus' Blom";
     case AHIDB_Copyright:
-      return (LONG) "Public Domain";
+      return (IPTR) "Public Domain";
     case AHIDB_Version:
-      return (LONG) _LibID;
+      return (IPTR) _LibID;
     case AHIDB_Annotation:
-      return (LONG) "Based on code by Pauli Porkka, Peter Kunath and Frank Riffel.";
+      return (IPTR) "Based on code by Pauli Porkka, Peter Kunath and Frank Riffel.";
     case AHIDB_Record:
       return TRUE;
     case AHIDB_FullDuplex:
@@ -519,11 +519,11 @@ LONG __asm __saveds intAHIsub_GetAttr(
     case AHIDB_Inputs:
       return INPUTS;
     case AHIDB_Input:
-      return (LONG) Inputs[Argument];
+      return (IPTR) Inputs[Argument];
     case AHIDB_Outputs:
       return 1;
     case AHIDB_Output:
-      return (LONG) "Line";     // We have only one output!
+      return (IPTR) "Line";     // We have only one output!
     default:
       return Default;
   }

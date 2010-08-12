@@ -335,7 +335,7 @@ static void GUINewMode(void)
       arg5,
       arg6 );
 
-    set(MUIInfos, MUIA_Text_Contents, (ULONG) buffer);
+    set(MUIInfos, MUIA_Text_Contents, (IPTR) buffer);
 
     FreeVec(buffer);
   }
@@ -349,7 +349,7 @@ static void GUINewMode(void)
     set(MUIFreq, MUIA_Numeric_Max, Max);
     set(MUIFreq, MUIA_Numeric_Value, Sel);
   }
-  set(MUILFreq, MUIA_Text_Contents, (ULONG) getFreq());
+  set(MUILFreq, MUIA_Text_Contents, (IPTR) getFreq());
 
   Max = max(state.Channels, 0);
   Sel = min(Max, state.ChannelsSelected);
@@ -360,7 +360,7 @@ static void GUINewMode(void)
     set(MUIChannels, MUIA_Numeric_Max, Max);
     set(MUIChannels, MUIA_Numeric_Value, Sel);
   }
-  set(MUILChannels, MUIA_Text_Contents, (ULONG) getChannels());
+  set(MUILChannels, MUIA_Text_Contents, (IPTR) getChannels());
 
   Max = max(state.OutVols -1, 0);
   Sel = min(Max, state.OutVolSelected);
@@ -371,7 +371,7 @@ static void GUINewMode(void)
     set(MUIOutvol, MUIA_Numeric_Max, Max);
     set(MUIOutvol, MUIA_Numeric_Value, Sel);
   }
-  set(MUILOutvol, MUIA_Text_Contents, (ULONG) getOutVol());
+  set(MUILOutvol, MUIA_Text_Contents, (IPTR) getOutVol());
 
   Max = max(state.MonVols -1, 0);
   Sel = min(Max, state.MonVolSelected);
@@ -382,7 +382,7 @@ static void GUINewMode(void)
     set(MUIMonvol, MUIA_Numeric_Max, Max);
     set(MUIMonvol, MUIA_Numeric_Value, Sel);
   }
-  set(MUILMonvol, MUIA_Text_Contents, (ULONG) getMonVol());
+  set(MUILMonvol, MUIA_Text_Contents, (IPTR) getMonVol());
 
   Max = max(state.Gains -1, 0);
   Sel = min(Max, state.GainSelected);
@@ -393,7 +393,7 @@ static void GUINewMode(void)
     set(MUIGain, MUIA_Numeric_Max, Max);
     set(MUIGain, MUIA_Numeric_Value, Sel);
   }
-  set(MUILGain, MUIA_Text_Contents, (ULONG) getGain());
+  set(MUILGain, MUIA_Text_Contents, (IPTR) getGain());
 
   Max = max(state.Inputs -1, 0);
   Sel = min(Max, state.InputSelected);
@@ -404,7 +404,7 @@ static void GUINewMode(void)
     set(MUIInput, MUIA_Numeric_Max, Max);
     set(MUIInput, MUIA_Numeric_Value, Sel);
   }
-  set(MUILInput, MUIA_Text_Contents, (ULONG) getInput());
+  set(MUILInput, MUIA_Text_Contents, (IPTR) getInput());
 
   Max = max(state.Outputs -1, 0);
   Sel = min(Max, state.OutputSelected);
@@ -415,7 +415,7 @@ static void GUINewMode(void)
     set(MUIOutput, MUIA_Numeric_Max, Max);
     set(MUIOutput, MUIA_Numeric_Value, Sel);
   }
-  set(MUILOutput, MUIA_Text_Contents, (ULONG) getOutput());
+  set(MUILOutput, MUIA_Text_Contents, (IPTR) getOutput());
 
 
   set(MUIPlay, MUIA_Disabled, getAudioMode() == AHI_INVALID_ID);
@@ -429,37 +429,37 @@ SliderHookFunc( struct Hook *hook,
   if(obj == MUIFreq)
   {
     state.FreqSelected = (LONG) (*arg);
-    set(MUILFreq,MUIA_Text_Contents, (ULONG) getFreq());
+    set(MUILFreq,MUIA_Text_Contents, (IPTR) getFreq());
   }
   else if(obj == MUIChannels )
   {
     state.ChannelsSelected = (LONG) (*arg);
-    set(MUILChannels,MUIA_Text_Contents, (ULONG) getChannels());
+    set(MUILChannels,MUIA_Text_Contents, (IPTR) getChannels());
   }
   else if(obj == MUIOutvol )
   {
     state.OutVolSelected = (LONG) (*arg);
-    set(MUILOutvol,MUIA_Text_Contents, (ULONG) getOutVol());
+    set(MUILOutvol,MUIA_Text_Contents, (IPTR) getOutVol());
   }
   else if(obj == MUIMonvol )
   {
     state.MonVolSelected = (LONG) (*arg);
-    set(MUILMonvol,MUIA_Text_Contents, (ULONG) getMonVol());
+    set(MUILMonvol,MUIA_Text_Contents, (IPTR) getMonVol());
   }
   else if(obj == MUIGain )
   {
     state.GainSelected = (LONG) (*arg);
-    set(MUILGain,MUIA_Text_Contents, (ULONG) getGain());
+    set(MUILGain,MUIA_Text_Contents, (IPTR) getGain());
   }
   else if(obj == MUIInput )
   {
     state.InputSelected = (LONG) (*arg);
-    set(MUILInput,MUIA_Text_Contents, (ULONG) getInput());
+    set(MUILInput,MUIA_Text_Contents, (IPTR) getInput());
   }
   else if(obj == MUIOutput )
   {
   state.OutputSelected = (ULONG) (*arg);
-  set(MUILOutput,MUIA_Text_Contents, (ULONG) getOutput());
+  set(MUILOutput,MUIA_Text_Contents, (IPTR) getOutput());
   }
 }
 

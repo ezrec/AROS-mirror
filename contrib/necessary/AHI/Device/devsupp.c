@@ -49,7 +49,7 @@ RecM8S( ULONG  size,
 {
   Fixed64        offs = 0;
   Fixed64        step = ((Fixed64) add) << 16;
-  struct sample* from = (struct sample*) ((ULONG)src + *offset);
+  struct sample* from = (struct sample*) (src + *offset);
   BYTE*          to   = *dest;
   ULONG          i;
 
@@ -73,7 +73,7 @@ RecS8S( ULONG  size,
 {
   Fixed64        offs = 0;
   Fixed64        step = ((Fixed64) add) << 16;
-  struct sample* from = (struct sample*) ((ULONG)src + *offset);
+  struct sample* from = (struct sample*) (src + *offset);
   BYTE*          to   = *dest;
   ULONG          i;
 
@@ -98,7 +98,7 @@ RecM16S( ULONG  size,
 {
   Fixed64        offs = 0;
   Fixed64        step = ((Fixed64) add) << 16;
-  struct sample* from = (struct sample*) ((ULONG)src + *offset);
+  struct sample* from = (struct sample*) (src + *offset);
   WORD*          to   = *dest;
   ULONG          i;
 
@@ -122,7 +122,7 @@ RecS16S( ULONG  size,
 {
   Fixed64        offs = 0;
   Fixed64        step = ((Fixed64) add) << 16;
-  struct sample* from = (struct sample*) ((ULONG)src + *offset);
+  struct sample* from = (struct sample*) (src + *offset);
   WORD*          to   = *dest;
   ULONG          i;
 
@@ -147,7 +147,7 @@ RecM32S( ULONG  size,
 {
   Fixed64        offs = 0;
   Fixed64        step = ((Fixed64) add) << 16;
-  struct sample* from = (struct sample*) ((ULONG)src + *offset);
+  struct sample* from = (struct sample*) (src + *offset);
   LONG*          to   = *dest;
   ULONG          i;
 
@@ -171,7 +171,7 @@ RecS32S( ULONG  size,
 {
   Fixed64        offs = 0;
   Fixed64        step = ((Fixed64) add) << 16;
-  struct sample* from = (struct sample*) ((ULONG)src + *offset);
+  struct sample* from = (struct sample*) (src + *offset);
   LONG*          to   = *dest;
   ULONG          i;
 

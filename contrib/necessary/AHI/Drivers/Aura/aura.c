@@ -361,10 +361,10 @@ void __asm __saveds intAHIsub_Stop(
 
 
 
-LONG __asm __saveds intAHIsub_GetAttr(
+IPTR __asm __saveds intAHIsub_GetAttr(
     register __d0 ULONG Attribute,
     register __d1 LONG Argument,
-    register __d2 LONG Default,
+    register __d2 IPTR Default,
     register __a1 struct TagItem *tagList,
     register __a2 struct AHIAudioCtrlDrv *AudioCtrl)
 {
@@ -395,13 +395,13 @@ LONG __asm __saveds intAHIsub_GetAttr(
       return 0;  // Will not happen
     }
     case AHIDB_Author:
-      return (LONG) "Martin 'Leviticus' Blom";
+      return (IPTR) "Martin 'Leviticus' Blom";
     case AHIDB_Copyright:
-      return (LONG) "Public Domain";
+      return (IPTR) "Public Domain";
     case AHIDB_Version:
-      return (LONG) _LibID;
+      return (IPTR) _LibID;
     case AHIDB_Annotation:
-      return (LONG) "This driver plays some very nasty tricks with the\n"
+      return (IPTR) "This driver plays some very nasty tricks with the\n"
                     "Level 6 interrupt, and will not work unless it can\n"
                     "get full control over both timer A and B.";
       break;
@@ -426,7 +426,7 @@ LONG __asm __saveds intAHIsub_GetAttr(
       return 1;
     case AHIDB_Input:
     case AHIDB_Output:
-      return (LONG) "Line";
+      return (IPTR) "Line";
     default:
       return Default;
   }

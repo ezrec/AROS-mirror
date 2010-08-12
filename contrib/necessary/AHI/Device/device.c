@@ -272,7 +272,7 @@ _DevOpen ( struct AHIRequest* ioreq,
     else
     {
 /*       KPrintF( "Tagging %08lx on task %08lx\n", ioreq, FindTask(0)); */
-      ioreq->ahir_Private[1] = (ULONG) ioreq;
+      ioreq->ahir_Private[1] = (IPTR) ioreq;
     }
   }
 
@@ -398,11 +398,11 @@ _DevClose ( struct AHIRequest* ioreq,
 
   if(AHIBase->ahib_DebugLevel >= AHI_DEBUG_LOW)
   {
-    KPrintF("CloseDevice(0x%08lx)\n", (ULONG) ioreq);
+    KPrintF("CloseDevice(0x%P)\n", ioreq);
 
-    if( ioreq->ahir_Private[1] != (ULONG) ioreq )
+    if( ioreq->ahir_Private[1] != (IPTR) ioreq )
     {
-      KPrintF( "Warning: Expected I/O request 0x%08lx.\n",
+      KPrintF( "Warning: Expected I/O request 0x%P.\n",
 	       ioreq->ahir_Private[1] );
     }
   }
@@ -498,7 +498,7 @@ InitUnit ( ULONG unit,
 
             iounit->Process = CreateNewProcTags( NP_Entry,    (IPTR) &m68k_DevProc,
                                                  NP_Name,     (IPTR) AHINAME " Unit Process",
-                                                 NP_Priority, (IPTR) AHI_PRI,
+                                                 NP_Priority, AHI_PRI,
                                                  TAG_DONE );
 
             if( iounit->Process != NULL )
@@ -789,18 +789,18 @@ AllocHardware ( struct AHIDevUnit *iounit,
       AHIA_MixFreq,       iounit->Frequency,
       AHIA_Channels,      iounit->Channels,
       AHIA_Sounds,        MAXSOUNDS,
-      AHIA_PlayerFunc,    (ULONG) &iounit->PlayerHook,
-      AHIA_RecordFunc,    (ULONG) &iounit->RecordHook,
-      AHIA_SoundFunc,     (ULONG) &iounit->SoundHook,
+      AHIA_PlayerFunc,    &iounit->PlayerHook,
+      AHIA_RecordFunc,    &iounit->RecordHook,
+      AHIA_SoundFunc,     &iounit->SoundHook,
       TAG_DONE);
 
   if(iounit->AudioCtrl != NULL)
   {
     /* Full duplex? */
     AHI_GetAudioAttrs(AHI_INVALID_ID,iounit->AudioCtrl,
-      AHIDB_FullDuplex, (ULONG) &fullduplex,
-      AHIDB_Stereo,     (ULONG) &stereo,
-      AHIDB_Panning,    (ULONG) &panning,
+      AHIDB_FullDuplex, &fullduplex,
+      AHIDB_Stereo,     &stereo,
+      AHIDB_Panning,    &panning,
       TAG_DONE);
     iounit->FullDuplex   = fullduplex;
     iounit->PseudoStereo = stereo && !panning;

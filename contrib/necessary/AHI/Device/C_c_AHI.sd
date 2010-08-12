@@ -34,7 +34,7 @@ void Open%bCatalog(struct Locale *loc, STRPTR language)
   {
     %b_Catalog = OpenCatalog(loc, (STRPTR) "%b.catalog",
         language ? OC_Language : TAG_IGNORE, (ULONG)language,
-        TAG_MORE, (ULONG)&%b_tags[0]);
+        TAG_MORE, %b_tags);
   }
 }
 
@@ -44,7 +44,7 @@ struct Catalog *ExtOpenCatalog(struct Locale *loc, STRPTR language)
   {
     return OpenCatalog(loc, (STRPTR) "%b.catalog",
         language ? OC_Language : TAG_IGNORE, (ULONG)language,
-        TAG_MORE, (ULONG)&%b_tags[0]);
+        TAG_MORE, %b_tags);
   }
   return NULL;
 }

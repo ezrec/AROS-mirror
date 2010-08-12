@@ -106,7 +106,7 @@ static void PlaySlave( struct ExecBase* SysBase );
 
 #include <aros/asmcall.h>
 
-AROS_UFH3(LONG, PlaySlaveEntry,
+AROS_UFH3(void, PlaySlaveEntry,
 	  AROS_UFHA(STRPTR, argPtr, A0),
 	  AROS_UFHA(ULONG, argSize, D0),
 	  AROS_UFHA(struct ExecBase *, SysBase, A6))

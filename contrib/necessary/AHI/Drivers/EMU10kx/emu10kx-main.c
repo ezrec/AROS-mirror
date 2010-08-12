@@ -656,10 +656,10 @@ _AHIsub_Stop( ULONG                   flags,
 ** AHIsub_GetAttr *************************************************************
 ******************************************************************************/
 
-LONG
+IPTR
 _AHIsub_GetAttr( ULONG                   attribute,
 		 LONG                    argument,
-		 LONG                    def,
+		 IPTR                    def,
 		 struct TagItem*         taglist,
 		 struct AHIAudioCtrlDrv* AudioCtrl,
 		 struct DriverBase*      AHIsubBase )
@@ -708,16 +708,16 @@ _AHIsub_GetAttr( ULONG                   attribute,
       return 0;  // Will not happen
 
     case AHIDB_Author:
-      return (LONG) "Martin 'Leviticus' Blom, Bertrand Lee et al.";
+      return (IPTR) "Martin 'Leviticus' Blom, Bertrand Lee et al.";
 
     case AHIDB_Copyright:
-      return (LONG) "GNU GPL";
+      return (IPTR) "GNU GPL";
 
     case AHIDB_Version:
-      return (LONG) LibIDString;
+      return (IPTR) LibIDString;
 
     case AHIDB_Annotation:
-      return (LONG)
+      return (IPTR)
 	"Funded by Hyperion Entertainment. Based on the Linux driver.";
 
     case AHIDB_Record:
@@ -754,13 +754,13 @@ _AHIsub_GetAttr( ULONG                   attribute,
       return INPUTS;
 
     case AHIDB_Input:
-      return (LONG) Inputs[ argument ];
+      return (IPTR) Inputs[ argument ];
 
     case AHIDB_Outputs:
       return OUTPUTS;
 
     case AHIDB_Output:
-      return (LONG) Outputs[ argument ];
+      return (IPTR) Outputs[ argument ];
 
     default:
       return def;
