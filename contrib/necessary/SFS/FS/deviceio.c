@@ -142,7 +142,7 @@ AROS_UFH3(LONG, changeintserver,
 {
     AROS_USERFUNC_INIT
  
-    intdata->diskchanged=(ULONG *)1;
+    *intdata->diskchanged=1;
     Signal(intdata->task, intdata->signal);
     return(0);
      
