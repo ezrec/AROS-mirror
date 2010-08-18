@@ -1,9 +1,7 @@
-Contents of the "human68k" sub-archive for UnZip 5.1 and later:
+Contents of the "human68k" sub-archive for UnZip 5.50 and later:
 
   Contents       this file
-  Makefile.gcc   (shorter) makefile for GNU C on X68000
-  human68k.c     Human68K-specific routines for UnZip
-  options.s      TwentyOne option checker (assembler routines) for Human68K
-
-Note that options.s contains high-order ASCII characters; it must be
-treated as a binary file when e-mailing or posting via Usenet.
+  Makefile       (shorter) Makefile for GNU C on X680x0/Human68k
+  human68k.c     Human68k-specific routines for UnZip
+  crc_68.s       assembler version of crc32.c
+  flate.s        assembler version of inflate_codes() (define ASM_INFLATECODES)

@@ -1,3 +1,11 @@
+/*
+  Copyright (c) 1990-2005 Info-ZIP.  All rights reserved.
+
+  See the accompanying file LICENSE, version 2000-Apr-09 or later
+  (the contents of which are also included in unzip.h) for terms of use.
+  If, for some reason, all these files are missing, the Info-ZIP license
+  also may be found at:  ftp://ftp.info-zip.org/pub/infozip/license.html
+*/
 /* amiga.h
  *
  * Globular definitions that affect all of AmigaDom.
@@ -5,26 +13,60 @@
  * Originally included in unzip.h, extracted for simplicity and eeze of
  * maintenance by John Bush.
  *
- * THIS FILE IS #INCLUDE'd by unzip.h
+ * THIS FILE IS #INCLUDE'd by unzpriv.h
  *
  */
 
 #ifndef __amiga_amiga_h
 #define __amiga_amiga_h
-#include <time.h>
-#include <fcntl.h>
+
+#include <exec/types.h>
+
+#ifndef __GNUC__
+#include "amiga/z-stat.h"     /* substitute for <stat.h> and <direct.h> */
+#endif
 #include <limits.h>
+#ifndef NO_FCNTL_H
+#  include <fcntl.h>
+#else
+   int mkdir(const char *_name);
+#endif
+
+/* we only have dinky old-sk00l 32 bit filesystems */
+#ifdef LARGE_FILE_SUPPORT
+#  undef LARGE_FILE_SUPPORT
+#endif
+
+typedef long        zoff_t;
+#define ZOFF_T_DEFINED
+typedef struct stat z_stat;
+#define Z_STAT_DEFINED
 
 #ifdef AZTEC_C                       /* Manx Aztec C, 5.0 or newer only */
 #  include <clib/dos_protos.h>
 #  include <pragmas/dos_lib.h>           /* do inline dos.library calls */
 #  define O_BINARY 0
-#  include "amiga/z-stat.h"   /* substitute for <stat.h> and <direct.h> */
 #  define direct dirent
+
+#  ifndef IZTZ_DEFINESTDGLOBALS
+#    define IZTZ_DEFINESTDGLOBALS
+#  endif
 
 #  define DECLARE_TIMEZONE
 #  define ASM_INFLATECODES
 #  define ASM_CRC
+
+   /* This compiler environment supplies a flat 32-bit address space    */
+   /* where C rtl functions are capable of handling large (32-bit-wide) */
+   /* allocations and I/O.  But, for speed on old 68000 CPUs, standard  */
+   /* ints are 16-bits wide per default.  ("size_t" is defined as       */
+   /* "unsigned long" in this case.)  The Deflate64 support requires    */
+   /* the variables for handling the decompression buffer to hold       */
+   /* 32-bit wide integers.  The INT_16BIT symbol defined below forces  */
+   /* the declarations of these variables to use "unsigned long" type.  */
+#  ifndef _INT32
+#    define INT_16BIT                   /* or deflate64 stuff will fail */
+#  endif
 
 /* Note that defining REENTRANT will not eliminate all global/static */
 /* variables.  The functions we use from c.lib, including stdio, are */
@@ -37,9 +79,11 @@
 
 
 #ifdef __SASC
+/* NOTE: SAS/C COMPILATION HAS BEEN UNSUPPORTED THROUGH MANY UNZIP VERSIONS. */
+/* (Which is too bad, because it would probably perform better than Aztec.)  */
+
 /* includes */
 #  include <sys/types.h>
-#  include <sys/stat.h>
 #  include <sys/dir.h>
 #  include <dos.h>
 #  include <exec/memory.h>
@@ -55,52 +99,84 @@
 #  ifdef DEBUG
 #    include <sprof.h>      /* profiler header file */
 #  endif
-
 #  if ( (!defined(O_BINARY)) && defined(O_RAW))
 #    define O_BINARY O_RAW
 #  endif
-
 #  if (defined(_SHORTINT) && !defined(USE_FWRITE))
 #    define USE_FWRITE      /* define if write() returns 16-bit int */
 #  endif
-
 #  if (!defined(REENTRANT) && !defined(FUNZIP))
 #    define REENTRANT      /* define if unzip is going to be pure */
 #  endif
-
 #  if defined(REENTRANT) && defined(DYNALLOC_CRCTAB)
 #    undef DYNALLOC_CRCTAB
 #  endif
-
 #  ifdef MWDEBUG
 #    include <stdio.h>      /* both stdio.h and stdlib.h must be included */
 #    include <stdlib.h>     /* before memwatch.h                          */
 #    include "memwatch.h"
 #    undef getenv
 #  endif /* MWDEBUG */
-
-#if 0   /* disabled for now - we don't have alloc_remember() yet */
-/* SAS/C built-in getenv() calls malloc to store the envvar string.       */
-/* Therefore we need to remember the allocation in order to free it later */
-#  include <stdlib.h>       /* getenv() prototype in stdlib.h */
-#  ifdef getenv
-#    undef getenv           /* remove previously preprocessor symbol */
+#  ifndef IZTZ_SETLOCALTZINFO
+     /*  XXX !!  We have really got to find a way to operate without these. */
+#    define IZTZ_SETLOCALTZINFO
 #  endif
-#  ifndef MWDEBUG
-/* #    define getenv(name)    ((char *)remember_alloc((zvoid *)getenv(name))) */
-#  else                     /* MWGetEnv() ripped from memlib's memwatch.h */
-#    define getenv(name)    ((char *)remember_alloc((zvoid *)MWGetEnv(name, __FILE__, __LINE__)))
-#  endif
-#endif /* 0 */
-
 #endif /* SASC */
 
+#ifdef __GNUC__
+#  include <dirent.h>
+#  include <sys/stat.h>
+
+#  include <exec/memory.h>
+#  include <exec/execbase.h>
+#  include <proto/exec.h>
+#  include <proto/dos.h>
+#  include <proto/locale.h>
+
+#  ifndef IZTZ_DEFINESTDGLOBALS
+#    define IZTZ_DEFINESTDGLOBALS
+#  endif
+#else
+#  ifndef __m68000__
+#    define __m68000__
+#  endif
+#endif
+
+/* Info() AmigaDOS function clashes with zip's own Info() macro */
+#undef Info
+
+#ifndef BADDR
+  #define BADDR(x) (x << 2)
+#endif
+#ifndef MKBADDR
+  #define MKBADDR(x) (x >> 2)
+#endif
 
 #define MALLOC_WORK
 #define USE_EF_UT_TIME
+#if (!defined(NOTIMESTAMP) && !defined(TIMESTAMP))
+#  define TIMESTAMP
+#endif
+
+#ifndef IZTZ_GETLOCALETZINFO
+#  define IZTZ_GETLOCALETZINFO GetPlatformLocalTimezone
+#endif
+/* the amiga port uses Info-ZIP's own timezone library, which includes
+ * a "working" mktime() implementation
+ */
+#ifndef HAVE_MKTIME
+#  define HAVE_MKTIME
+#endif
+
+/* check that TZ environment variable is defined before using UTC times */
+#if (!defined(NO_IZ_CHECK_TZ) && !defined(IZ_CHECK_TZ))
+#  define IZ_CHECK_TZ
+#endif
 
 #define AMIGA_FILENOTELEN 80
-#define DATE_FORMAT       DF_MDY
+#ifndef DATE_FORMAT
+#  define DATE_FORMAT     DF_MDY
+#endif
 #define lenEOL            1
 #define PutNativeEOL      *q++ = native(LF);
 #define PIPE_ERROR        0
@@ -111,27 +187,33 @@
 
 /* Funkshine Prough Toe Taipes */
 
-LONG FileDate (char *, time_t[]);
+extern int real_timezone_is_set;
 void tzset(void);
-int windowheight (BPTR fh);
+#define VALID_TIMEZONE(tempvar) (tzset(), real_timezone_is_set)
+
+int Agetch(void);               /* getch() like function, in amiga/filedate.c */
+LONG FileDate(char *, time_t[]);
+int screensize(int *ttrows, int *ttcols);
 void _abort(void);              /* ctrl-C trap */
 
-#define SCREENLINES windowheight(Output())
+#define SCREENSIZE(ttrows, ttcols) screensize(ttrows, ttcols)
+#define SCREENWIDTH 80
+#define SCREENLWRAP 1
+#define TABSIZE     8
 
-
-/* Static variables that we have to add to struct Globals: */
+/* Static variables that we have to add to Uz_Globs: */
 #define SYSTEM_SPECIFIC_GLOBALS \
-    int N_flag;\
     int filenote_slot;\
     char *(filenotes[DIR_BLKSIZ]);\
     int created_dir, renamed_fullpath, rootlen;\
     char *rootpath, *buildpath, *build_end;\
     DIR *wild_dir;\
-    char *dirname, *wildname, matchname[FILNAMSIZ];\
+    ZCONST char *wildname;\
+    char *dirname, matchname[FILNAMSIZ];\
     int dirnamelen, notfirstcall;
 
-/* N_flag, filenotes[], and filenote_slot are for the -N option that      */
-/*    restores zipfile comments as AmigaDOS filenotes.  The others        */
+/* filenotes[] and filenote_slot are for the -N option that restores      */
+/*    comments of Zip archive entries as AmigaDOS filenotes.  The others  */
 /*    are used by functions in amiga/amiga.c only.                        */
 /* created_dir and renamed_fullpath are used by mapname() and checkdir(). */
 /* rootlen, rootpath, buildpath, and build_end are used by checkdir().    */

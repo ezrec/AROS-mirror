@@ -1,8 +1,17 @@
+/*
+  Copyright (c) 1990-2000 Info-ZIP.  All rights reserved.
+
+  See the accompanying file LICENSE, version 2000-Apr-09 or later
+  (the contents of which are also included in zip.h) for terms of use.
+  If, for some reason, all these files are missing, the Info-ZIP license
+  also may be found at:  ftp://ftp.info-zip.org/pub/infozip/license.html
+*/
 /* Here we have a handmade stat() function because Aztec's c.lib stat() */
 /* does not support an st_mode field, which we need... also a chmod().  */
 
 /* This stat() is by Paul Wells, modified by Paul Kienitz. */
-/* for use with Aztec C >= 5.0 and Lattice C <= 4.01  */
+/* Originally for use with Aztec C >= 5.0 and Lattice C <= 4.01  */
+/* Adapted for SAS/C 6.5x by Haidinger Walter */
 
 /* POLICY DECISION: We will not attempt to remove global variables from */
 /* this source file for Aztec C.  These routines are essentially just   */
@@ -13,32 +22,24 @@
 #ifndef __amiga_stat_c
 #define __amiga_stat_c
 
+#include <exec/types.h>
+#include <exec/memory.h>
+#include "amiga/z-stat.h"             /* fake version of stat.h */
+#include <string.h>
+
 #ifdef AZTEC_C
-#  include <exec/types.h>
-#  include <exec/memory.h>
 #  include <libraries/dos.h>
 #  include <libraries/dosextens.h>
 #  include <clib/exec_protos.h>
 #  include <clib/dos_protos.h>
 #  include <pragmas/exec_lib.h>
 #  include <pragmas/dos_lib.h>
-#  include "amiga/z-stat.h"             /* fake version of stat.h */
-#  include <string.h>
-#else /* __SASC */
-/* Uncomment define of USE_REPLACEMENTS to use the directory functions below */
-/* #define USE_REPLACEMENTS */
-#  include <sys/stat.h>
-#  ifndef USE_REPLACEMENTS
-#     include <sys/dir.h>               /* SAS/C dir function prototypes */
-#     include <dos.h>
-#  else
-#     include <exec/types.h>
-#     include <exec/memory.h>
-#     include <sys/types.h>
-#     include <proto/exec.h>
-#     include <proto/dos.h>
-#     include <string.h>
-#  endif
+#endif
+#ifdef __SASC
+#  include <sys/dir.h>               /* SAS/C dir function prototypes */
+#  include <sys/types.h>
+#  include <proto/exec.h>
+#  include <proto/dos.h>
 #endif
 
 #ifndef SUCCESS
@@ -58,23 +59,22 @@ void close_leftover_open_dirs(void)
         closedir(dir_cleanup_list);
 }
 
-#if defined(AZTEC_C) || defined(USE_REPLACEMENTS)
 
 unsigned short disk_not_mounted;
 
-extern int stat(char *file,struct stat *buf);
+extern int stat(const char *file, struct stat *buf);
 
 stat(file,buf)
-char *file;
+const char *file;
 struct stat *buf;
 {
 
         struct FileInfoBlock *inf;
         BPTR lock;
-        long ftime;
-        void tzset(void);
+        time_t ftime;
+        struct tm local_tm;
 
-        if( (lock = Lock(file,SHARED_LOCK))==0 )
+        if( (lock = Lock((char *)file,SHARED_LOCK))==0 )
                 /* file not found */
                 return(-1);
 
@@ -114,8 +114,11 @@ struct stat *buf;
                 (86400 * 8 * 365 )                              +
                 (86400 * 2 );  /* two leap years */
 
-        tzset();
-        ftime += timezone;
+        /* tzset(); */  /* this should be handled by mktime(), instead */
+        /* ftime += timezone; */
+        local_tm = *gmtime(&ftime);
+        local_tm.tm_isdst = -1;
+        ftime = mktime(&local_tm);
 
         buf->st_ctime =
         buf->st_atime =
@@ -133,13 +136,23 @@ struct stat *buf;
 
 }
 
-/* opendir(), readdir(), closedir() and rmdir() by Paul Kienitz. */
+int fstat(int handle, struct stat *buf)
+{
+    /* fake some reasonable values for stdin */
+    buf->st_mode = (S_IREAD|S_IWRITE|S_IFREG);
+    buf->st_size = -1;
+    buf->st_mtime = time(&buf->st_mtime);
+    return 0;
+}
 
-DIR *opendir(char *path)
+
+/* opendir(), readdir(), closedir(), rmdir(), and chmod() by Paul Kienitz. */
+
+DIR *opendir(const char *path)
 {
     DIR *dd = AllocMem(sizeof(DIR), MEMF_PUBLIC);
     if (!dd) return NULL;
-    if (!(dd->d_parentlock = Lock(path, MODE_OLDFILE))) {
+    if (!(dd->d_parentlock = Lock((char *)path, MODE_OLDFILE))) {
         disk_not_mounted = IoErr() == ERROR_DEVICE_NOT_MOUNTED;
         FreeMem(dd, sizeof(DIR));
         return NULL;
@@ -176,21 +189,19 @@ struct dirent *readdir(DIR *dd)
 }
 
 
-int rmdir(char *path)
+#ifdef AZTEC_C
+
+int rmdir(const char *path)
 {
-    return (DeleteFile(path) ? 0 : IoErr());
+    return (DeleteFile((char *)path) ? 0 : IoErr());
 }
 
-
-int chmod(char *filename, int bits)     /* bits are as for st_mode */
+int chmod(const char *filename, int bits)       /* bits are as for st_mode */
 {
     long protmask = (bits & 0xFF) ^ 0xF;
-    return !SetProtection(filename, protmask);
+    return !SetProtection((char *)filename, protmask);
 }
 
-#endif /* AZTEC_C || USE_REPLACEMENTS */
-
-#ifdef AZTEC_C
 
 /* This here removes unnecessary bulk from the executable with Aztec: */
 void _wb_parse(void)  { }
@@ -278,8 +289,5 @@ void _cli_parse(struct Process *pp, long alen, register UBYTE *aptr)
 }
 
 #endif /* AZTEC_C */
-/* remove local define */
-#ifdef USE_REPLACEMENTS
-#   undef USE_REPLACEMENTS
-#endif
+
 #endif /* __amiga_stat_c */

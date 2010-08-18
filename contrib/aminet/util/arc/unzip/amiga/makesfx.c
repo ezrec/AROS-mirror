@@ -1,3 +1,11 @@
+/*
+  Copyright (c) 1990-2000 Info-ZIP.  All rights reserved.
+
+  See the accompanying file LICENSE, version 2000-Apr-09 or later
+  (the contents of which are also included in unzip.h) for terms of use.
+  If, for some reason, all these files are missing, the Info-ZIP license
+  also may be found at:  ftp://ftp.info-zip.org/pub/infozip/license.html
+*/
 /* MakeSFX: join UnZipSFX and a .zip archive into a single self-extracting   */
 /* Amiga program.  On most systems simple concatenation does the job but for */
 /* the Amiga a special tool is needed.  By Paul Kienitz, no rights reserved. */
@@ -8,14 +16,24 @@
 /* just combine any archive with any self-extractor program that is capable  */
 /* of reading a HUNK_DEBUG section at the end as an archive.                 */
 
-#include <stat.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <dos/dos.h>
-#include <clib/dos_protos.h>
-#if (defined(DEBUG) && defined(__SASC))
-#  include <sprof.h>
+#ifdef __SASC
+#  include <proto/dos.h>
+#  ifdef DEBUG
+#    include <sprof.h>
+#  endif
+#endif /* __SASC */
+#ifdef AZTEC_C
+#  include <dos/dos.h>
+#  include <clib/dos_protos.h>
+#endif /* AZTEC_C */
+#ifdef __GNUC__
+#  include <sys/stat.h>
+#  include <proto/dos.h>
+#else
+#  include <stat.h>
 #endif
 
 typedef unsigned long ulg;
@@ -106,7 +124,7 @@ bool CopyData(FILE *out, FILE *inn, ulg archivesize,
 }
 
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     FILE *out, *arch, *tool;
     char *toolname = argv[3];

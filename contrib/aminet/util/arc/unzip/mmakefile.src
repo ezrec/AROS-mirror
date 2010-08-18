@@ -4,19 +4,47 @@
 
 include $(TOP)/config/make.cfg
 
-FILES := unzip crypt envargs explode extract file_io inflate match\
-unreduce unshrink zipinfo unix
+# UnZip files
+FILES := unzip crc32 crypt envargs explode \
+         extract fileio globals list inflate match \
+         process ttyio ubz2err unreduce unshrink zipinfo \
+         amiga/amiga timezone
 
+# UnZipSFX files
+FILESX := unzip extract inflate match process \
+          crypt crc32 fileio globals ttyio ubz2err \
+          amiga/amiga timezone
 
-EXEDIR := $(CONTRIBDIR)/Misc/aminet/C
+# fUnZip files
+FILESF = funzip \
+         crc32 crypt globals inflate ttyio \
+         amiga/filedate
 
-USER_CFLAGS := -DUNIX -DNO_ZIPINFO -DBSD -DBSD4_4
+# MakeSFX files
+FILESM = amiga/makesfx
 
-#MM aminet-util-arc-unzip : includes linklibs
+EXEDIR := $(AROS_C)
 
-%build_prog mmake=aminet-util-arc-unzip \
-    progname=unzip targetdir=$(EXEDIR) \
-    files=$(FILES) uselibs="arossupport amiga arosc m"
+#MM- aminet-util-arc-unzip: includes linklibs unzip-unzip unzip-unzipsfx unzip-funzip unzip-makesfx
+
+%build_prog mmake=unzip-unzip \
+    progname=UnZip objdir=$(GENDIR)/$(CURDIR)/UnZip targetdir=$(EXEDIR) \
+    files=$(FILES)
+
+%build_prog mmake=unzip-makesfx \
+    progname=MakeSfx objdir=$(GENDIR)/$(CURDIR)/MakeSFX targetdir=$(EXEDIR) \
+    files=$(FILESM)
+
+USER_CFLAGS := -DSFX
+
+%build_prog mmake=unzip-unzipsfx \
+    progname=UnZipSfx objdir=$(GENDIR)/$(CURDIR)/UnZipSfx targetdir=$(EXEDIR) \
+    files=$(FILESX)
+
+USER_CFLAGS := -DFUNZIP
+
+%build_prog mmake=unzip-funzip \
+    progname=fUnZip objdir=$(GENDIR)/$(CURDIR)/fUnZip targetdir=$(EXEDIR) \
+    files=$(FILESF)
 
 %common
-

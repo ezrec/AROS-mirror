@@ -1,3 +1,11 @@
+/*
+  Copyright (c) 1990-2007 Info-ZIP.  All rights reserved.
+
+  See the accompanying file LICENSE, version 2000-Apr-09 or later
+  (the contents of which are also included in unzip.h) for terms of use.
+  If, for some reason, all these files are missing, the Info-ZIP license
+  also may be found at:  ftp://ftp.info-zip.org/pub/infozip/license.html
+*/
 /*------------------------------------------------------------------------
 
   amiga.c
@@ -5,21 +13,26 @@
   Amiga-specific routines for use with Info-ZIP's UnZip 5.1 and later.
   See History.5xx for revision history.
 
-  Contents:   mapattr()
+  Contents:   do_wild()
+              mapattr()
               mapname()
-              do_wild()
               checkdir()
               close_outfile()
+              stamp_file()
               _abort()                (Aztec C only)
              [dateformat()]           (currently not used)
-              windowheight()
+              screensize()
               version()
 
   ------------------------------------------------------------------------*/
 
 
 #define UNZIP_INTERNAL
+#ifdef AZTEC_C
+#  define NO_FCNTL_H
+#endif
 #include "unzip.h"
+#include "unzvers.h"
 
 /* Globular varibundus -- now declared in SYSTEM_SPECIFIC_GLOBALS in amiga.h */
 
@@ -27,8 +40,12 @@
 /* static int renamed_fullpath; */ /* ditto */
 
 #define PERMS   0777
-#define MKDIR(path,mode) mkdir(path)
 
+#ifdef __GNUC__
+#  define MKDIR mkdir
+#else
+#  define MKDIR(path,mode) mkdir(path)
+#endif
 
 #ifndef S_ISCRIPT          /* not having one implies you have none */
 #  define S_IARCHIVE 0020  /* not modified since this bit was last set */
@@ -46,180 +63,22 @@
 #endif /* !S_HIDDEN */
 
 #ifndef SFX
-/* Make sure the number here matches version.h in the *EXACT* form */
-/* UZ_MAJORVER "." UZ_MINORVER PATCHLEVEL vvvv     No non-digits!  */
-const char version_id[]  = "\0$VER: UnZip 5.30 ("
+/* Make sure the number here matches unzvers.h in the *EXACT* form */
+/* UZ_MAJORVER "." UZ_MINORVER UZ_PATCHLEVEL vvvv  No non-digits!  */
+const char version_id[]  = "\0$VER: UnZip " UZ_VER_STRING " ("
+#ifdef __GNUC__
+__DATE__
+#else
 #include "env:VersionDate"
+#endif
    ")\r\n";
 #endif /* SFX */
 
 
-/**********************/
-/* Function mapattr() */
-/**********************/
-
-int mapattr(__G)      /* Amiga version */
-    __GDEF
-{
-    ulg  tmp = G.crec.external_file_attributes;
-
-
-    /* Amiga attributes = hsparwed = hidden, script, pure, archive,
-     * read, write, execute, delete */
-
-    switch (G.pInfo->hostnum) {
-        case AMIGA_:
-            if ((tmp & 1) == (tmp>>18 & 1))
-                tmp ^= 0x000F0000;      /* PKAZip compatibility kluge */
-            /* turn off archive bit for restored Amiga files */
-            G.pInfo->file_attr = (unsigned)((tmp>>16) & (~S_IARCHIVE));
-            break;
-
-        case UNIX_:   /* preserve read, write, execute:  use logical-OR of */
-        case VMS_:    /* user, group, and other; if writable, set delete bit */
-            tmp >>= 16;
-            tmp = (( tmp>>6 | tmp>>3 | tmp) & 07) << 1;
-            G.pInfo->file_attr = (unsigned)(tmp&S_IWRITE? tmp|S_IDELETE : tmp);
-            break;
-
-        /* all other platforms:  assume read-only bit in DOS half of attribute
-         * word is set correctly ==> will become READ or READ+WRITE+DELETE */
-        case FS_FAT_:
-        case FS_HPFS_:  /* can add S_IHIDDEN check to MSDOS/OS2/NT eventually */
-        case FS_NTFS_:
-        case MAC_:
-        case ATARI_:
-        case TOPS20_:
-        default:
-            G.pInfo->file_attr = (unsigned)(tmp&1? S_IREAD : S_IRWD);
-            break;
-
-    } /* end switch (host-OS-created-by) */
-
-    G.pInfo->file_attr &= 0xff;   /* mask off all but lower eight bits */
-    return 0;
-
-} /* end function mapattr() */
-
-
-
-
-/************************/
-/*  Function mapname()  */
-/************************/
-
-int mapname(__G__ renamed)  /* return 0 if no error, 1 if caution (truncate), */
-    __GDEF                  /* 2 if warning (skip because dir doesn't exist), */
-    int renamed;            /* 3 if error (skip file), 10 if no memory (skip) */
-{                           /*  [also IZ_CREATED_DIR] */
-    char pathcomp[FILNAMSIZ];   /* path-component buffer */
-    char *pp, *cp=NULL;         /* character pointers */
-    char *lastsemi = NULL;      /* pointer to last semi-colon in pathcomp */
-    int error = 0;
-    register unsigned workch;   /* hold the character being tested */
-
-
-/*---------------------------------------------------------------------------
-    Initialize various pointers and counters and stuff.
-  ---------------------------------------------------------------------------*/
-
-    /* can create path as long as not just freshening, or if user told us */
-    G.create_dirs = (!G.fflag || renamed);
-
-    G.created_dir = FALSE;      /* not yet */
-
-    /* user gave full pathname:  don't prepend G.rootpath */
-    G.renamed_fullpath = (renamed && strchr(G.filename, ':'));
-
-    if (checkdir(__G__ (char *)NULL, INIT) == 10)
-        return 10;              /* initialize path buffer, unless no memory */
-
-    *pathcomp = '\0';           /* initialize translation buffer */
-    pp = pathcomp;              /* point to translation buffer */
-    if (G.jflag)                /* junking directories */
-        cp = (char *)strrchr(G.filename, '/');
-    if (cp == NULL)             /* no '/' or not junking dirs */
-        cp = G.filename;        /* point to internal zipfile-member pathname */
-    else
-        ++cp;                   /* point to start of last component of path */
-
-/*---------------------------------------------------------------------------
-    Begin main loop through characters in filename.
-  ---------------------------------------------------------------------------*/
-
-    while ((workch = (uch)*cp++) != 0) {
-
-        switch (workch) {
-        case '/':             /* can assume -j flag not given */
-            *pp = '\0';
-            if ((error = checkdir(__G__ pathcomp, APPEND_DIR)) > 1)
-                return error;
-            pp = pathcomp;    /* reset conversion buffer for next piece */
-            lastsemi = NULL;  /* leave directory semi-colons alone */
-            break;
-
-        case ';':             /* VMS version (or DEC-20 attrib?) */
-            lastsemi = pp;         /* keep for now; remove VMS ";##" */
-            *pp++ = (char)workch;  /*  later, if requested */
-            break;
-
-        default:
-            /* allow ISO European characters in filenames: */
-            if (isprint(workch) || (160 <= workch && workch <= 255))
-                *pp++ = (char)workch;
-        } /* end switch */
-    } /* end while loop */
-
-    *pp = '\0';                   /* done with pathcomp:  terminate it */
-
-    /* if not saving them, remove with VMS version numbers (appended ";###") */
-    if (!G.V_flag && lastsemi) {
-        pp = lastsemi + 1;
-        while (isdigit((uch)(*pp)))
-            ++pp;
-        if (*pp == '\0')          /* only digits between ';' and end:  nuke */
-            *lastsemi = '\0';
-    }
-
-/*---------------------------------------------------------------------------
-    Report if directory was created (and no file to create:  filename ended
-    in '/'), check name to be sure it exists, and combine path and name be-
-    fore exiting.
-  ---------------------------------------------------------------------------*/
-
-    if (G.filename[strlen(G.filename) - 1] == '/') {
-        checkdir(__G__ G.filename, GETPATH);
-        if (G.created_dir) {
-            if (QCOND2) {
-                Info(slide, 0, ((char *)slide, "   creating: %s\n",
-                  G.filename));
-            }
-            return IZ_CREATED_DIR;   /* set dir time (note trailing '/') */
-        }
-        return 2;   /* dir existed already; don't look for data to extract */
-    }
-
-    if (*pathcomp == '\0') {
-        Info(slide, 1, ((char *)slide, "mapname:  conversion of %s failed\n",
-             G.filename));
-        return 3;
-    }
-
-    if ((error = checkdir(__G__ pathcomp, APPEND_NAME)) == 1) {
-        /* GRR:  OK if truncated here:  warn and continue */
-        /* (warn in checkdir?) */
-    }
-    checkdir(__G__ G.filename, GETPATH);
-
-    return error;
-
-} /* end function mapname() */
-
-
-static int ispattern(char *p)
+static int ispattern(ZCONST char *p)
 {
     register char c;
-    while (c = *p++)
+    while ((c = *p++))
         if (c == '\\') {
             if (!*++p)
                 return FALSE;
@@ -245,32 +104,37 @@ static int ispattern(char *p)
 
 char *do_wild(__G__ wildspec)
     __GDEF
-    char *wildspec;         /* only used first time on a given dir */
+    ZCONST char *wildspec;  /* only used first time on a given dir */
 {
 /* these statics are now declared in SYSTEM_SPECIFIC_GLOBALS in amiga.h:
     static DIR *wild_dir = NULL;
-    static char *dirname, *wildname, matchname[FILNAMSIZ];
+    static ZCONST char *wildname;
+    static char *dirname, matchname[FILNAMSIZ];
     static int notfirstcall = FALSE, dirnamelen;
 */
     struct dirent *file;
     BPTR lok = 0;
+
     /* Even when we're just returning wildspec, we *always* do so in
      * matchname[]--calling routine is allowed to append four characters
      * to the returned string, and wildspec may be a pointer to argv[].
      */
     if (!G.notfirstcall) {      /* first call:  must initialize everything */
         G.notfirstcall = TRUE;
+
         /* avoid needless readdir() scans: */
-        if (!ispattern(wildspec) || (lok = Lock(wildspec, ACCESS_READ))) {
+        if (!ispattern(wildspec) ||
+                (lok = Lock((char *)wildspec, ACCESS_READ))) {
             if (lok) UnLock(lok);       /* ^^ we ignore wildcard chars if */
             G.dirnamelen = 0;           /* the name matches a real file   */
-            strcpy(G.matchname, wildspec);
+            strncpy(G.matchname, wildspec, FILNAMSIZ);
+            G.matchname[FILNAMSIZ-1] = '\0';
             return G.matchname;
         }
 
         /* break the wildspec into a directory part and a wildcard filename */
-        if ((G.wildname = strrchr(wildspec, '/')) == NULL
-                        && (G.wildname = strrchr(wildspec, ':')) == NULL) {
+        if ((G.wildname = (ZCONST char *)strrchr(wildspec, '/')) == NULL &&
+            (G.wildname = (ZCONST char *)strrchr(wildspec, ':')) == NULL) {
             G.dirname = "";             /* current dir */
             G.dirnamelen = 0;
             G.wildname = wildspec;
@@ -279,17 +143,18 @@ char *do_wild(__G__ wildspec)
             G.dirnamelen = G.wildname - wildspec;
             if ((G.dirname = (char *)malloc(G.dirnamelen+1)) == NULL) {
                 Info(slide, 1, ((char *)slide,
-                     "warning:  can't allocate wildcard buffers\n"));
-                strcpy(G.matchname, wildspec);
+                     "warning:  cannot allocate wildcard buffers\n"));
+                strncpy(G.matchname, wildspec, FILNAMSIZ);
+                G.matchname[FILNAMSIZ-1] = '\0';
                 return G.matchname; /* but maybe filespec was not a wildcard */
             }
             strncpy(G.dirname, wildspec, G.dirnamelen);
-            G.dirname[G.dirnamelen] = 0;
+            G.dirname[G.dirnamelen] = '\0';
         }
 
         if ((G.wild_dir = opendir(G.dirname)) != NULL) {
             while ((file = readdir(G.wild_dir)) != NULL) {
-                if (match(file->d_name, G.wildname, 1)) {  /* ignore case */
+                if (match(file->d_name, G.wildname, 1 WISEP)) {/* ignore case */
                     strcpy(G.matchname, G.dirname);
                     strcpy(G.matchname + G.dirnamelen, file->d_name);
                     return G.matchname;
@@ -302,7 +167,8 @@ char *do_wild(__G__ wildspec)
 
         /* return the raw wildspec in case that works (e.g., directory not
          * searchable, but filespec was not wild and file is readable) */
-        strcpy(G.matchname, wildspec);
+        strncpy(G.matchname, wildspec, FILNAMSIZ);
+        G.matchname[FILNAMSIZ-1] = '\0';
         return G.matchname;
     }
 
@@ -319,7 +185,7 @@ char *do_wild(__G__ wildspec)
      * matchname already.
      */
     while ((file = readdir(G.wild_dir)) != NULL)
-        if (match(file->d_name, G.wildname, 1)) {   /* 1 == ignore case */
+        if (match(file->d_name, G.wildname, 1 WISEP)) { /* 1 == ignore case */
             /* strcpy(G.matchname, dirname); */
             strcpy(G.matchname + G.dirnamelen, file->d_name);
             return G.matchname;
@@ -327,12 +193,285 @@ char *do_wild(__G__ wildspec)
 
     closedir(G.wild_dir);  /* have read at least one dir entry; nothing left */
     G.wild_dir = NULL;
-    G.notfirstcall = FALSE;  /* reset for new wildspec */
+    G.notfirstcall = FALSE; /* reset for new wildspec */
     if (G.dirnamelen > 0)
         free(G.dirname);
     return (char *)NULL;
 
 } /* end function do_wild() */
+
+
+
+
+/**********************/
+/* Function mapattr() */
+/**********************/
+
+int mapattr(__G)      /* Amiga version */
+    __GDEF
+{
+    ulg  tmp = G.crec.external_file_attributes;
+
+
+    /* Amiga attributes = hsparwed = hidden, script, pure, archive,
+     * read, write, execute, delete */
+
+    switch (G.pInfo->hostnum) {
+        case AMIGA_:
+            if ((tmp & 1) == (tmp>>18 & 1))
+                tmp ^= 0x000F0000;      /* PKAZip compatibility kluge */
+            /* turn off archive bit for restored Amiga files */
+            G.pInfo->file_attr = (unsigned)((tmp>>16) & (~S_IARCHIVE));
+            break;
+
+        case UNIX_:   /* preserve read, write, execute:  use logical-OR of */
+        case VMS_:    /* user, group, and other; if writable, set delete bit */
+        case ACORN_:
+        case ATARI_:
+        case ATHEOS_:
+        case BEOS_:
+        case QDOS_:
+        case TANDEM_:
+            {
+              unsigned uxattr = (unsigned)(tmp >> 16);
+              int r = FALSE;
+
+              if (uxattr == 0 && G.extra_field) {
+                /* Some (non-Info-ZIP) implementations of Zip for Unix and
+                   VMS (and probably others ??) leave 0 in the upper 16-bit
+                   part of the external_file_attributes field. Instead, they
+                   store file permission attributes in some extra field.
+                   As a work-around, we search for the presence of one of
+                   these extra fields and fall back to the MSDOS compatible
+                   part of external_file_attributes if one of the known
+                   e.f. types has been detected.
+                   Later, we might implement extraction of the permission
+                   bits from the VMS extra field. But for now, the work-around
+                   should be sufficient to provide "readable" extracted files.
+                   (For ASI Unix e.f., an experimental remap of the e.f.
+                   mode value IS already provided!)
+                 */
+                ush ebID;
+                unsigned ebLen;
+                uch *ef = G.extra_field;
+                unsigned ef_len = G.crec.extra_field_length;
+
+                while (!r && ef_len >= EB_HEADSIZE) {
+                    ebID = makeword(ef);
+                    ebLen = (unsigned)makeword(ef+EB_LEN);
+                    if (ebLen > (ef_len - EB_HEADSIZE))
+                        /* discoverd some e.f. inconsistency! */
+                        break;
+                    switch (ebID) {
+                      case EF_ASIUNIX:
+                        if (ebLen >= (EB_ASI_MODE+2)) {
+                            uxattr =
+                              (unsigned)makeword(ef+(EB_HEADSIZE+EB_ASI_MODE));
+                            /* force stop of loop: */
+                            ef_len = (ebLen + EB_HEADSIZE);
+                            break;
+                        }
+                        /* else: fall through! */
+                      case EF_PKVMS:
+                        /* "found nondecypherable e.f. with perm. attr" */
+                        r = TRUE;
+                      default:
+                        break;
+                    }
+                    ef_len -= (ebLen + EB_HEADSIZE);
+                    ef += (ebLen + EB_HEADSIZE);
+                }
+              }
+              if (!r) {
+                uxattr = (( uxattr>>6 | uxattr>>3 | uxattr) & 07) << 1;
+                G.pInfo->file_attr = (unsigned)(uxattr&S_IWRITE ?
+                                                uxattr|S_IDELETE : uxattr);
+                break;
+              }
+            }
+            /* fall through! */
+
+        /* all other platforms:  assume read-only bit in DOS half of attribute
+         * word is set correctly ==> will become READ or READ+WRITE+DELETE */
+        case FS_FAT_:
+        case FS_HPFS_:  /* can add S_IHIDDEN check to MSDOS/OS2/NT eventually */
+        case FS_NTFS_:
+        case MAC_:
+        case TOPS20_:
+        default:
+            G.pInfo->file_attr = (unsigned)(tmp&1? S_IREAD : S_IRWD);
+            break;
+
+    } /* end switch (host-OS-created-by) */
+
+    G.pInfo->file_attr &= 0xff;   /* mask off all but lower eight bits */
+    return 0;
+
+} /* end function mapattr() */
+
+
+
+
+/************************/
+/*  Function mapname()  */
+/************************/
+
+int mapname(__G__ renamed)
+    __GDEF
+    int renamed;
+/*
+ * returns:
+ *  MPN_OK          - no problem detected
+ *  MPN_INF_TRUNC   - caution (truncated filename)
+ *  MPN_INF_SKIP    - info "skip entry" (dir doesn't exist)
+ *  MPN_ERR_SKIP    - error -> skip entry
+ *  MPN_ERR_TOOLONG - error -> path is too long
+ *  MPN_NOMEM       - error (memory allocation failed) -> skip entry
+ *  [also MPN_VOL_LABEL, MPN_CREATED_DIR]
+ */
+{
+    char pathcomp[FILNAMSIZ];   /* path-component buffer */
+    char *pp, *cp=NULL;         /* character pointers */
+    char *lastsemi = NULL;      /* pointer to last semi-colon in pathcomp */
+    int killed_ddot = FALSE;    /* is set when skipping "../" pathcomp */
+    int error = MPN_OK;
+    register unsigned workch;   /* hold the character being tested */
+
+
+/*---------------------------------------------------------------------------
+    Initialize various pointers and counters and stuff.
+  ---------------------------------------------------------------------------*/
+
+    if (G.pInfo->vollabel)
+        return MPN_VOL_LABEL;   /* can't set disk volume labels in AmigaDOS */
+
+    /* can create path as long as not just freshening, or if user told us */
+    G.create_dirs = (!uO.fflag || renamed);
+
+    G.created_dir = FALSE;      /* not yet */
+
+    /* user gave full pathname:  don't prepend G.rootpath */
+#ifndef OLD_AMIGA_RENAMED
+    G.renamed_fullpath = (renamed &&
+                          (*G.filename == '/' || *G.filename == ':'));
+#else
+    /* supress G.rootpath even when user gave a relative pathname */
+# if 1
+    G.renamed_fullpath = (renamed && strpbrk(G.filename, ":/");
+# else
+    G.renamed_fullpath = (renamed &&
+                          (strchr(G.filename, ':') || strchr(G.filename, '/')));
+# endif
+#endif
+
+    if (checkdir(__G__ (char *)NULL, INIT) == MPN_NOMEM)
+        return MPN_NOMEM;       /* initialize path buffer, unless no memory */
+
+    *pathcomp = '\0';           /* initialize translation buffer */
+    pp = pathcomp;              /* point to translation buffer */
+    if (uO.jflag)               /* junking directories */
+        cp = (char *)strrchr(G.filename, '/');
+    if (cp == (char *)NULL)     /* no '/' or not junking dirs */
+        cp = G.filename;        /* point to internal zipfile-member pathname */
+    else
+        ++cp;                   /* point to start of last component of path */
+
+/*---------------------------------------------------------------------------
+    Begin main loop through characters in filename.
+  ---------------------------------------------------------------------------*/
+
+    while ((workch = (uch)*cp++) != 0) {
+
+        switch (workch) {
+            case '/':             /* can assume -j flag not given */
+                *pp = '\0';
+                if (strcmp(pathcomp, ".") == 0) {
+                    /* don't bother appending "./" to the path */
+                    *pathcomp = '\0';
+                } else if (!uO.ddotflag && strcmp(pathcomp, "..") == 0) {
+                    /* "../" dir traversal detected, skip over it */
+                    *pathcomp = '\0';
+                    killed_ddot = TRUE;     /* set "show message" flag */
+                }
+                /* when path component is not empty, append it now */
+                if (*pathcomp != '\0' &&
+                    ((error = checkdir(__G__ pathcomp, APPEND_DIR))
+                     & MPN_MASK) > MPN_INF_TRUNC)
+                    return error;
+                pp = pathcomp;    /* reset conversion buffer for next piece */
+                lastsemi = (char *)NULL; /* leave direct. semi-colons alone */
+                break;
+
+            case ';':             /* VMS version (or DEC-20 attrib?) */
+                lastsemi = pp;         /* keep for now; remove VMS ";##" */
+                *pp++ = (char)workch;  /*  later, if requested */
+                break;
+
+            default:
+                /* allow ISO European characters in filenames: */
+                if (isprint(workch) || (160 <= workch && workch <= 255))
+                    *pp++ = (char)workch;
+        } /* end switch */
+
+    } /* end while loop */
+
+    /* Show warning when stripping insecure "parent dir" path components */
+    if (killed_ddot && QCOND2) {
+        Info(slide, 0, ((char *)slide,
+          "warning:  skipped \"../\" path component(s) in %s\n",
+          FnFilter1(G.filename)));
+        if (!(error & ~MPN_MASK))
+            error = (error & MPN_MASK) | PK_WARN;
+    }
+
+/*---------------------------------------------------------------------------
+    Report if directory was created (and no file to create:  filename ended
+    in '/'), check name to be sure it exists, and combine path and name be-
+    fore exiting.
+  ---------------------------------------------------------------------------*/
+
+    if (G.filename[strlen(G.filename) - 1] == '/') {
+        checkdir(__G__ G.filename, GETPATH);
+        if (G.created_dir) {
+            if (QCOND2) {
+                Info(slide, 0, ((char *)slide, "   creating: %s\n",
+                  FnFilter1(G.filename)));
+            }
+            /* set dir time (note trailing '/') */
+            return (error & ~MPN_MASK) | MPN_CREATED_DIR;
+        }
+        /* dir existed already; don't look for data to extract */
+        return (error & ~MPN_MASK) | MPN_INF_SKIP;
+    }
+
+    *pp = '\0';                   /* done with pathcomp:  terminate it */
+
+    /* if not saving them, remove VMS version numbers (appended ";###") */
+    if (!uO.V_flag && lastsemi) {
+        pp = lastsemi + 1;
+        while (isdigit((uch)(*pp)))
+            ++pp;
+        if (*pp == '\0')          /* only digits between ';' and end:  nuke */
+            *lastsemi = '\0';
+    }
+
+    if (*pathcomp == '\0') {
+        Info(slide, 1, ((char *)slide, "mapname:  conversion of %s failed\n",
+          FnFilter1(G.filename)));
+        return (error & ~MPN_MASK) | MPN_ERR_SKIP;
+    }
+
+    error = (error & ~MPN_MASK) | checkdir(__G__ pathcomp, APPEND_NAME);
+    if ((error & MPN_MASK) == MPN_INF_TRUNC) {
+        /* GRR:  OK if truncated here:  warn and continue */
+        /* (warn in checkdir?) */
+    }
+    checkdir(__G__ G.filename, GETPATH);
+
+    return error;
+
+} /* end function mapname() */
+
 
 
 
@@ -345,12 +484,14 @@ int checkdir(__G__ pathcomp, flag)
     char *pathcomp;
     int flag;
 /*
- * returns:  1 - (on APPEND_xxx) truncated path component
- *           2 - path doesn't exist, not allowed to create
- *           3 - path doesn't exist, tried to create and failed; or
- *               path exists and is not a directory, but is supposed to be
- *           4 - path is too long
- *          10 - can't allocate memory for filename buffers
+ * returns:
+ *  MPN_OK          - no problem detected
+ *  MPN_INF_TRUNC   - (on APPEND_NAME) truncated filename
+ *  MPN_INF_SKIP    - path doesn't exist, not allowed to create
+ *  MPN_ERR_SKIP    - path doesn't exist, tried to create and failed; or path
+ *                    exists and is not a directory, but is supposed to be
+ *  MPN_ERR_TOOLONG - path is too long
+ *  MPN_NOMEM       - can't allocate memory for filename buffers
  */
 {
 /* these statics are now declared in SYSTEM_SPECIFIC_GLOBALS in amiga.h: */
@@ -361,7 +502,6 @@ int checkdir(__G__ pathcomp, flag)
 
 #   define FN_MASK   7
 #   define FUNCTION  (flag & FN_MASK)
-
 
 
 /*---------------------------------------------------------------------------
@@ -375,48 +515,55 @@ int checkdir(__G__ pathcomp, flag)
     if (FUNCTION == APPEND_DIR) {
         int too_long = FALSE;
 
-        Trace((stderr, "appending dir segment [%s]\n", pathcomp));
-        while ((*G.build_end = *pathcomp++))
+        Trace((stderr, "appending dir segment [%s]\n", FnFilter1(pathcomp)));
+        while ((*G.build_end = *pathcomp++) != '\0')
             ++G.build_end;
         /* Truncate components over 30 chars? Nah, the filesystem handles it. */
         if ((G.build_end-G.buildpath) > FILNAMSIZ-3)       /* room for "/a\0" */
-            too_long = TRUE;                /* check if extracting directory? */
-        if (stat(G.buildpath, &G.statbuf)) {  /* path doesn't exist */
+            too_long = TRUE;                    /* check if extracting dir? */
+        if (SSTAT(G.buildpath, &G.statbuf)) {   /* path doesn't exist */
             if (!G.create_dirs) { /* told not to create (freshening) */
                 free(G.buildpath);
-                return 2;         /* path doesn't exist:  nothing to do */
+                return MPN_INF_SKIP;    /* path doesn't exist: nothing to do */
             }
             if (too_long) {
                 Info(slide, 1, ((char *)slide,
-                  "checkdir error:  path too long: %s\n", G.buildpath));
+                  "checkdir error:  path too long: %s\n",
+                  FnFilter1(G.buildpath)));
                 free(G.buildpath);
-                return 4;         /* no room for filenames:  fatal */
+                /* no room for filenames:  fatal */
+                return MPN_ERR_TOOLONG;
             }
             if (MKDIR(G.buildpath, 0777) == -1) {   /* create the directory */
                 Info(slide, 1, ((char *)slide,
-                 "checkdir error:  can't create %s\n\
-                 unable to process %s.\n", G.buildpath, G.filename));
+                  "checkdir error:  cannot create %s\n\
+                 unable to process %s.\n",
+                  FnFilter2(G.buildpath), FnFilter1(G.filename)));
                 free(G.buildpath);
-                return 3;      /* path didn't exist, tried to create, failed */
+                /* path didn't exist, tried to create, failed */
+                return MPN_ERR_SKIP;
             }
             G.created_dir = TRUE;
         } else if (!S_ISDIR(G.statbuf.st_mode)) {
             Info(slide, 1, ((char *)slide,
-                 "checkdir error:  %s exists but is not a directory\n\
-                 unable to process %s.\n", G.buildpath, G.filename));
+              "checkdir error:  %s exists but is not directory\n\
+                 unable to process %s.\n",
+              FnFilter2(G.buildpath), FnFilter1(G.filename)));
             free(G.buildpath);
-            return 3;          /* path existed but wasn't dir */
+            /* path existed but wasn't dir */
+            return MPN_ERR_SKIP;
         }
         if (too_long) {
             Info(slide, 1, ((char *)slide,
-                 "checkdir error:  path too long: %s\n", G.buildpath));
+              "checkdir error:  path too long: %s\n", FnFilter1(G.buildpath)));
             free(G.buildpath);
-            return 4;         /* no room for filenames:  fatal */
+            /* no room for filenames:  fatal */
+            return MPN_ERR_TOOLONG;
         }
         *G.build_end++ = '/';
         *G.build_end = '\0';
-        Trace((stderr, "buildpath now = [%s]\n", G.buildpath));
-        return 0;
+        Trace((stderr, "buildpath now = [%s]\n", FnFilter1(G.buildpath)));
+        return MPN_OK;
 
     } /* end if (FUNCTION == APPEND_DIR) */
 
@@ -427,10 +574,11 @@ int checkdir(__G__ pathcomp, flag)
 
     if (FUNCTION == GETPATH) {
         strcpy(pathcomp, G.buildpath);
-        Trace((stderr, "getting and freeing path [%s]\n", pathcomp));
+        Trace((stderr, "getting and freeing path [%s]\n",
+          FnFilter1(pathcomp)));
         free(G.buildpath);
-        G.buildpath = G.build_end = NULL;
-        return 0;
+        G.buildpath = G.build_end = (char *)NULL;
+        return MPN_OK;
     }
 
 /*---------------------------------------------------------------------------
@@ -439,19 +587,21 @@ int checkdir(__G__ pathcomp, flag)
   ---------------------------------------------------------------------------*/
 
     if (FUNCTION == APPEND_NAME) {
-        Trace((stderr, "appending filename [%s]\n", pathcomp));
-        while ((*G.build_end = *pathcomp++)) {
+        Trace((stderr, "appending filename [%s]\n", FnFilter1(pathcomp)));
+        while ((*G.build_end = *pathcomp++) != '\0') {
             ++G.build_end;
             if ((G.build_end-G.buildpath) >= FILNAMSIZ) {
                 *--G.build_end = '\0';
-                Info(slide, 1, ((char *)slide,
-                   "checkdir warning:  path too long; truncating\n\
-                   %s\n                -> %s\n", G.filename, G.buildpath));
-                return 1;   /* filename truncated */
+                Info(slide, 0x201, ((char *)slide,
+                  "checkdir warning:  path too long; truncating\n\
+                   %s\n                -> %s\n",
+                  FnFilter1(G.filename), FnFilter2(G.buildpath)));
+                return MPN_INF_TRUNC;   /* filename truncated */
             }
         }
-        Trace((stderr, "buildpath static now = [%s]\n", G.buildpath));
-        return 0;  /* could check for existence here, prompt for new name... */
+        Trace((stderr, "buildpath now = [%s]\n", FnFilter1(G.buildpath)));
+        /* could check for existence here, prompt for new name... */
+        return MPN_OK;
     }
 
 /*---------------------------------------------------------------------------
@@ -461,10 +611,10 @@ int checkdir(__G__ pathcomp, flag)
   ---------------------------------------------------------------------------*/
 
     if (FUNCTION == INIT) {
-        Trace((stderr, "initializing buildpath static to "));
+        Trace((stderr, "initializing buildpath to "));
         if ((G.buildpath = (char *)malloc(strlen(G.filename)+G.rootlen+1))
-              == NULL)
-            return 10;
+            == (char *)NULL)
+            return MPN_NOMEM;
         if ((G.rootlen > 0) && !G.renamed_fullpath) {
             strcpy(G.buildpath, G.rootpath);
             G.build_end = G.buildpath + G.rootlen;
@@ -472,8 +622,8 @@ int checkdir(__G__ pathcomp, flag)
             *G.buildpath = '\0';
             G.build_end = G.buildpath;
         }
-        Trace((stderr, "[%s]\n", G.buildpath));
-        return 0;
+        Trace((stderr, "[%s]\n", FnFilter1(G.buildpath)));
+        return MPN_OK;
     }
 
 /*---------------------------------------------------------------------------
@@ -485,39 +635,45 @@ int checkdir(__G__ pathcomp, flag)
 
 #if (!defined(SFX) || defined(SFX_EXDIR))
     if (FUNCTION == ROOT) {
-        Trace((stderr, "initializing root path to [%s]\n", pathcomp));
-        if (pathcomp == NULL) {
+        Trace((stderr, "initializing root path to [%s]\n",
+          FnFilter1(pathcomp)));
+        if (pathcomp == (char *)NULL) {
             G.rootlen = 0;
-            return 0;
+            return MPN_OK;
         }
+        if (G.rootlen > 0)      /* rootpath was already set, nothing to do */
+            return MPN_OK;
         if ((G.rootlen = strlen(pathcomp)) > 0) {
             if (stat(pathcomp, &G.statbuf) || !S_ISDIR(G.statbuf.st_mode)) {
                 /* path does not exist */
                 if (!G.create_dirs) {
                     G.rootlen = 0;
-                    return 2;   /* treat as stored file */
+                    /* skip (or treat as stored file) */
+                    return MPN_INF_SKIP;
                 }
-                /* create the directory (could add loop here to scan pathcomp
-                 * and create more than one level, but why really necessary?) */
+                /* create the directory (could add loop here scanning pathcomp
+                 * to create more than one level, but why really necessary?) */
                 if (MKDIR(pathcomp, 0777) == -1) {
                     Info(slide, 1, ((char *)slide,
-                         "checkdir:  can't create extraction directory: %s\n",
-                         pathcomp));
-                    G.rootlen = 0; /* path didn't exist, tried to create, and */
-                    return 3;  /* failed:  file exists, or 2+ levels required */
+                      "checkdir:  cannot create extraction directory: %s\n",
+                      FnFilter1(pathcomp)));
+                    G.rootlen = 0;
+                    /* path didn't exist, tried to create, and failed: */
+                    /* file exists, or 2+ subdir levels required */
+                    return MPN_ERR_SKIP;
                 }
             }
             if ((G.rootpath = (char *)malloc(G.rootlen+2)) == NULL) {
                 G.rootlen = 0;
-                return 10;
+                return MPN_NOMEM;
             }
             strcpy(G.rootpath, pathcomp);
             if (G.rootpath[G.rootlen-1] != ':' && G.rootpath[G.rootlen-1] != '/')
                 G.rootpath[G.rootlen++] = '/';
             G.rootpath[G.rootlen] = '\0';
-            Trace((stderr, "rootpath now = [%s]\n", G.rootpath));
+            Trace((stderr, "rootpath now = [%s]\n", FnFilter1(G.rootpath)));
         }
-        return 0;
+        return MPN_OK;
     }
 #endif /* !SFX || SFX_EXDIR */
 
@@ -527,14 +683,19 @@ int checkdir(__G__ pathcomp, flag)
 
     if (FUNCTION == END) {
         Trace((stderr, "freeing rootpath\n"));
-        if (G.rootlen > 0)
+        if (G.rootlen > 0) {
             free(G.rootpath);
-        return 0;
+            G.rootlen = 0;
+        }
+        return MPN_OK;
     }
 
-    return 99;  /* should never reach */
+    return MPN_INVALID; /* should never reach */
 
 } /* end function checkdir() */
+
+
+
 
 
 /**************************************/
@@ -552,47 +713,53 @@ void close_outfile(__G)
 #endif
     LONG FileDate();
 
-    if (G.cflag)                /* can't set time or filenote on stdout */
+    if (uO.cflag)               /* can't set time or filenote on stdout */
         return;
 
-  /* close the file *before* setting its time under AmigaDos */
+  /* close the file *before* setting its time under AmigaDOS */
 
     fclose(G.outfile);
 
+    /* skip restoring time stamps on user's request */
+    if (uO.D_flag <= 1) {
 #ifdef USE_EF_UT_TIME
-    if (G.extra_field &&
-        (ef_scan_for_izux(G.extra_field, G.lrec.extra_field_length, 0,
-                          &z_utime, NULL) & EB_UT_FL_MTIME)) {
-        TTrace((stderr, "close_outfile:  Unix e.f. modif. time = %ld\n",
-                         z_utime.mtime));
-        m_time = z_utime.mtime;
-    } else {
-        /* Convert DOS time to time_t format */
-        m_time = dos_to_unix_time(G.lrec.last_mod_file_date,
-                                  G.lrec.last_mod_file_time);
-    }
+        if (G.extra_field &&
+#ifdef IZ_CHECK_TZ
+            G.tz_is_valid &&
+#endif
+            (ef_scan_for_izux(G.extra_field, G.lrec.extra_field_length, 0,
+                              G.lrec.last_mod_dos_datetime, &z_utime, NULL)
+             & EB_UT_FL_MTIME))
+        {
+            TTrace((stderr, "close_outfile:  Unix e.f. modif. time = %ld\n",
+                             z_utime.mtime));
+            m_time = z_utime.mtime;
+        } else {
+            /* Convert DOS time to time_t format */
+            m_time = dos_to_unix_time(G.lrec.last_mod_dos_datetime);
+        }
 #else /* !USE_EF_UT_TIME */
-    /* Convert DOS time to time_t format */
-    m_time = dos_to_unix_time(G.lrec.last_mod_file_date,
-                              G.lrec.last_mod_file_time);
+        /* Convert DOS time to time_t format */
+        m_time = dos_to_unix_time(G.lrec.last_mod_dos_datetime);
 #endif /* ?USE_EF_UT_TIME */
 
 #ifdef DEBUG
-    Info(slide, 1, ((char *)slide, "\nclose_outfile(): m_time=%s\n",
-                         ctime(&m_time)));
+        Info(slide, 1, ((char *)slide, "\nclose_outfile(): m_time=%s\n",
+             ctime(&m_time)));
 #endif
 
-    if (!FileDate(G.filename, &m_time))
-        Info(slide, 1, ((char *)slide,
-             "warning:  can't set the time for %s\n", G.filename));
+        if (!FileDate(G.filename, &m_time))
+            Info(slide, 1, ((char *)slide,
+                 "warning:  cannot set the time for %s\n", G.filename));
+    }
 
-  /* set file perms after closing (not done at creation)--see mapattr() */
+    /* set file perms after closing (not done at creation)--see mapattr() */
 
     chmod(G.filename, G.pInfo->file_attr);
 
-  /* give it a filenote from the zipfile comment, if appropriate */
+    /* give it a filenote from the zipfile comment, if appropriate */
 
-    if (G.N_flag && G.filenotes[G.filenote_slot]) {
+    if (uO.N_flag && G.filenotes[G.filenote_slot]) {
         SetComment(G.filename, G.filenotes[G.filenote_slot]);
         free(G.filenotes[G.filenote_slot]);
         G.filenotes[G.filenote_slot] = NULL;
@@ -601,20 +768,48 @@ void close_outfile(__G)
 } /* end function close_outfile() */
 
 
+#ifdef TIMESTAMP
+
+/*************************/
+/* Function stamp_file() */
+/*************************/
+
+int stamp_file(fname, modtime)
+    ZCONST char *fname;
+    time_t modtime;
+{
+    time_t m_time;
+    LONG FileDate();
+
+    m_time = modtime;
+    return (FileDate((char *)fname, &m_time));
+
+} /* end function stamp_file() */
+
+#endif /* TIMESTAMP */
+
+
+#ifndef __SASC
 /********************************************************************/
 /* Load filedate as a separate external file; it's used by Zip, too.*/
 /*                                                                  */
-#include "amiga/filedate.c"                                      /* */
+#  include "amiga/filedate.c"                                    /* */
 /*                                                                  */
 /********************************************************************/
 
 /********************* do linewise with stat.c **********************/
 
-#  include "amiga/stat.c"
+#  ifndef __GNUC__
+#    include "amiga/stat.c"
+#  endif
 /* this is the exact same stat.c used by Zip */
+#endif /* !__SASC */
+/* SAS/C makes separate object modules of these; there is less  */
+/* trouble that way when redefining standard library functions. */
 
-#  include <stdio.h>
+#include <stdio.h>
 
+#ifndef __GNUC__
 void _abort(void)               /* called when ^C is pressed */
 {
     /* echon(); */
@@ -623,35 +818,67 @@ void _abort(void)               /* called when ^C is pressed */
     fputs("\n^C\n", stderr);
     exit(1);
 }
+#endif
 
 
-/**************************************************************/
-/* function windowheight() -- uses sendpkt() from filedate.c: */
-/**************************************************************/
+/************************************************************/
+/* function screensize() -- uses sendpkt() from filedate.c: */
+/************************************************************/
 
 #include <devices/conunit.h>
 #include <dos/dosextens.h>
 #include <exec/memory.h>
 #include <clib/exec_protos.h>
 
+#ifdef __AROS__
+#  include <dos/filesystem.h>
+
+void InitIOFS(struct IOFileSys *iofs, ULONG type, struct DosLibrary *DOSBase);
+#endif
+
 extern long sendpkt(struct MsgPort *pid, long action, long *args, long nargs);
 
-int windowheight(BPTR fh)
+int screensize(int *ttrows, int *ttcols)
 {
+    BPTR fh = Output();
+    
     if (fh && IsInteractive(fh)) {
         struct ConUnit *conunit = NULL;
-        void *conp = ((struct FileHandle *) (fh << 2))->fh_Type;
+        void *conp = ((struct FileHandle *)BADDR(fh))->fh_Type;
         struct InfoData *ind = AllocMem(sizeof(*ind), MEMF_PUBLIC);
-        long argp = ((unsigned long) ind) >> 2;
+        long argp = (long)MKBADDR(ind);
 
         if (ind && conp && sendpkt(conp, ACTION_DISK_INFO, &argp, 1))
             conunit = (void *) ((struct IOStdReq *) ind->id_InUse)->io_Unit;
+#ifdef __AROS__
+	if (ind && (!conp))
+	{
+	    struct IOFileSys iofs;
+	    struct FileHandle *handle = (struct FileHandle *)BADDR(fh);
+    
+	    InitIOFS(&iofs, FSA_DISK_INFO, DOSBase);
+
+	    iofs.IOFS.io_Device = handle->fh_Device;
+	    iofs.IOFS.io_Unit   = handle->fh_Unit;
+	    iofs.io_Union.io_INFO.io_Info = ind;
+
+	    DoIO(&iofs.IOFS);
+
+	    if (!iofs.io_DosError)
+	    	conunit = (void *) ((struct IOStdReq *) ind->id_InUse)->io_Unit;
+	}
+#endif
         if (ind)
             FreeMem(ind, sizeof(*ind));
-        if (conunit)
-            return conunit->cu_YMax + 1;
+        if (conunit) {
+            if (ttrows) *ttrows = conunit->cu_YMax + 1;
+            if (ttcols) *ttcols = conunit->cu_XMax + 1;
+            return 0;     /* success */
+        }
     }
-    return INT_MAX;
+    if (ttrows) *ttrows = INT_MAX;
+    if (ttcols) *ttcols = INT_MAX;
+    return 1;             /* failure */
 }
 
 
@@ -661,18 +888,18 @@ int windowheight(BPTR fh)
 #  include <dos/filehandler.h>
 #  include <clib/macros.h>
 
-BOOL is_floppy(char *path)
+BOOL is_floppy(ZCONST char *path)
 {
     BOOL okay = FALSE;
     char devname[32], *debna;
     ushort i;
-    BPTR lok = Lock(path, ACCESS_READ), pok;
+    BPTR lok = Lock((char *)path, ACCESS_READ), pok;
     struct FileSysStartupMsg *fart;
     struct DeviceNode *debb, devlist = (void *) BADDR((struct DosInfo *)
                                 BADDR(DOSBase->dl_Root->rn_Info)->di_DevInfo);
     if (!lok)
         return FALSE;                   /* should not happen */
-    if (pok = ParentDir(path)) {
+    if (pok = ParentDir((char *)path)) {
         UnLock(lok);
         UnLock(pok);
         return FALSE;                   /* it's not a root directory path */
@@ -756,15 +983,6 @@ int dateformat()
 /*  Function version()  */
 /************************/
 
-
-/* NOTE:  the following include depends upon the environment
- *        variable $Workbench to be set correctly.  (Set by
- *        default, by kickstart during startup)
- */
-int WBversion = (int)
-#include "ENV:Workbench"
-;
-
 void version(__G)
    __GDEF
 {
@@ -774,7 +992,7 @@ void version(__G)
    char buf2[16];  /* revstamp */
    char buf3[16];  /* OS */
    char buf4[16];  /* Date */
-/*   char buf5[16];  /* Time */
+/*   char buf5[16]; */  /* Time */
 
 /* format "with" name strings */
 
@@ -788,12 +1006,24 @@ void version(__G)
 #   ifdef AZTEC_C
      strcpy(buf1,"Manx Aztec C ");
 #   else
-     strcpy(buf1,"UNKNOWN ");
+#    ifdef __GNUC__
+      strcpy(buf1, "GNU/C ");
+#    else
+      strcpy(buf1,"UNKNOWN ");
+#    endif
 #   endif
 #  endif
 # endif
 /* "under" */
-  sprintf(buf3,"AmigaDOS v%d",WBversion);
+# ifdef __AROS__
+   strcpy(buf3, "AROS");
+# else
+#  ifdef __MORPHOS__
+    strcpy(buf3, "MorphOS");
+#  else
+    strcpy(buf3, "AmigaOS");
+#  endif
+# endif
 #else
   strcpy(buf1,"Unknown compiler ");
   strcpy(buf3,"Unknown OS");
@@ -804,6 +1034,9 @@ void version(__G)
  * Pass these strings via your makefile if undefined.
  */
 
+#ifdef __GNUC__
+  strcpy(buf2, __VERSION__);
+#else
 #if defined(__VERSION__) && defined(__REVISION__)
   sprintf(buf2,"version %d.%d",__VERSION__,__REVISION__);
 #else
@@ -812,6 +1045,7 @@ void version(__G)
 # else
   sprintf(buf2,"unknown version");
 # endif
+#endif
 #endif
 
 #ifdef __DATE__
@@ -829,7 +1063,7 @@ void version(__G)
 ******/
 
 /* Print strings using "CompiledWith" mask defined in unzip.c (used by all).
- *  ("Compiled with %s%s under %s%s%s%s.")
+ *  ("Compiled with %s%s for %s%s%s%s.")
  */
 
    printf(LoadFarString(CompiledWith),

@@ -1,15 +1,26 @@
-/* funzip.c -- put in the public domain by Mark Adler */
+/*
+  Copyright (c) 1990-2009 Info-ZIP.  All rights reserved.
 
-#if defined(HAVE_CONFIG_H)
-# include <config.h>
-#endif
+  See the accompanying file LICENSE, version 2009-Jan-02 or later
+  (the contents of which are also included in unzip.h) for terms of use.
+  If, for some reason, all these files are missing, the Info-ZIP license
+  also may be found at:  ftp://ftp.info-zip.org/pub/infozip/license.html
+*/
+/* funzip.c -- by Mark Adler */
 
-#define VERSION "3.83 of 28 August 1994"
+#define VERSION "3.95 of 20 January 2009"
 
 
-/* You can do whatever you like with this source file, though I would
-   prefer that if you modify it and redistribute it that you include
-   comments to that effect with your name and the date.  Thank you.
+/* Copyright history:
+   - Starting with UnZip 5.41 of 16-April-2000, this source file
+     is covered by the Info-Zip LICENSE cited above.
+   - Prior versions of this source file, found in UnZip source packages
+     up to UnZip 5.40, were put in the public domain.
+     The original copyright note by Mark Adler was:
+         "You can do whatever you like with this source file,
+         though I would prefer that if you modify it and
+         redistribute it that you include comments to that effect
+         with your name and the date.  Thank you."
 
    History:
    vers     date          who           what
@@ -61,33 +72,61 @@
    3.8    28 Jan 94  GRR/JlG         initialized g variable in main() for gcc
    3.81   22 Feb 94  M. Hanning-Lee  corrected usage message
    3.82   27 Feb 94  G. Roelofs      added some typecasts to avoid warnings
-   3.83   22 Jul 94  G. Roelofs      changed fprintf to FPRINTF for DLLs
+   3.83   22 Jul 94  G. Roelofs      changed fprintf to macro for DLLs
     -      2 Aug 94  -               public release with UnZip 5.11
     -     28 Aug 94  -               public release with UnZip 5.12
+   3.84    1 Oct 94  K. U. Rommel    changes for Metaware High C
+   3.85   29 Oct 94  G. Roelofs      changed fprintf macro to Info
+   3.86    7 May 95  K. Davis        RISCOS patches;
+                     P. Kienitz      Amiga patches
+   3.87   12 Aug 95  G. Roelofs      inflate_free(), DESTROYGLOBALS fixes
+   3.88    4 Sep 95  C. Spieler      reordered macro to work around MSC 5.1 bug
+   3.89   22 Nov 95  PK/CS           ifdef'd out updcrc() for ASM_CRC
+   3.9    17 Dec 95  G. Roelofs      modified for USE_ZLIB (new fillinbuf())
+    -     30 Apr 96  -               public release with UnZip 5.2
+   3.91   17 Aug 96  G. Roelofs      main() -> return int (Peter Seebach)
+   3.92   13 Apr 97  G. Roelofs      minor cosmetic fixes to messages
+    -     22 Apr 97  -               public release with UnZip 5.3
+    -     31 May 97  -               public release with UnZip 5.31
+   3.93   20 Sep 97  G. Roelofs      minor cosmetic fixes to messages
+    -      3 Nov 97  -               public release with UnZip 5.32
+    -     28 Nov 98  -               public release with UnZip 5.4
+    -     16 Apr 00  -               public release with UnZip 5.41
+    -     14 Jan 01  -               public release with UnZip 5.42
+   3.94   20 Feb 01  C. Spieler      added support for Deflate64(tm)
+          23 Mar 02  C. Spieler      changed mask_bits[] type to "unsigned"
  */
 
 
 /*
 
-   All funzip does is take a zip file from stdin and decompress the
+   All funzip does is take a zipfile from stdin and decompress the
    first entry to stdout.  The entry has to be either deflated or
    stored.  If the entry is encrypted, then the decryption password
    must be supplied on the command line as the first argument.
 
    funzip needs to be linked with inflate.o and crypt.o compiled from
    the unzip source.  If decryption is desired, the full version of
-   crypt.c (and crypt.h) from zcrypt21.zip or later must be used.
+   crypt.c (and crypt.h) from zcrypt28.zip or later must be used.
 
  */
 
-#define FUNZIP
+#ifndef FUNZIP
+#  define FUNZIP
+#endif
+#define UNZIP_INTERNAL
 #include "unzip.h"
+#include "crc32.h"
 #include "crypt.h"
+#include "ttyio.h"
 
 #ifdef EBCDIC
 #  undef EBCDIC                 /* don't need ebcdic[] */
 #endif
-#include "tables.h"             /* crc_32_tab[] */
+
+#ifndef USE_ZLIB  /* zlib's function is called inflate(), too */
+#  define UZinflate inflate
+#endif
 
 /* PKZIP header definitions */
 #define ZIPMAG 0x4b50           /* two-byte zip lead-in */
@@ -120,99 +159,148 @@
 #define GZPCOS 7                /* offset of operating system compressed on */
 #define GZPHDR 8                /* length of minimal gzip header */
 
+#ifdef THEOS
+/* Macros cause stack overflow in compiler */
+ush SH(uch* p) { return ((ush)(uch)((p)[0]) | ((ush)(uch)((p)[1]) << 8)); }
+ulg LG(uch* p) { return ((ulg)(SH(p)) | ((ulg)(SH((p)+2)) << 16)); }
+#else /* !THEOS */
 /* Macros for getting two-byte and four-byte header values */
 #define SH(p) ((ush)(uch)((p)[0]) | ((ush)(uch)((p)[1]) << 8))
 #define LG(p) ((ulg)(SH(p)) | ((ulg)(SH((p)+2)) << 16))
+#endif /* ?THEOS */
 
 /* Function prototypes */
-ulg updcrc OF((uch *, ulg));
-int inflate OF((void));
-void err OF((int, char *));
+static void err OF((int, char *));
+#if (defined(USE_DEFLATE64) && defined(__16BIT__))
+static int partflush OF((uch *rawbuf, unsigned w));
+#endif
 int main OF((int, char **));
 
 /* Globals */
-FILE *in, *out;                 /* input and output files */
-union work area;                /* inflate sliding window */
-uch *outptr;                    /* points to next byte in output buffer */
-ulg outcnt;                     /* bytes in output buffer */
+FILE *out;                      /* output file (*in moved to G struct) */
 ulg outsiz;                     /* total bytes written to out */
 int encrypted;                  /* flag to turn on decryption */
-int qflag = 1;                  /* turn off messages in inflate.c */
 
 /* Masks for inflate.c */
-ush near mask_bits[] = {
+ZCONST unsigned near mask_bits[17] = {
     0x0000,
     0x0001, 0x0003, 0x0007, 0x000f, 0x001f, 0x003f, 0x007f, 0x00ff,
     0x01ff, 0x03ff, 0x07ff, 0x0fff, 0x1fff, 0x3fff, 0x7fff, 0xffff
 };
 
 
+#ifdef USE_ZLIB
 
-ulg updcrc(s, n)
-uch *s;                 /* pointer to bytes to pump through */
-ulg n;                  /* number of bytes in s[] */
-/* Run a set of bytes through the crc shift register.  If s is a NULL
-   pointer, then initialize the crc shift register contents instead.
-   Return the current crc in either case. */
+int fillinbuf(__G)
+__GDEF
+/* Fill input buffer for pull-model inflate() in zlib.  Return the number of
+ * bytes in inbuf. */
 {
-  register ulg c;       /* temporary variable */
+/*   GRR: check return value from fread(): same as read()?  check errno? */
+  if ((G.incnt = fread((char *)G.inbuf, 1, INBUFSIZ, G.in)) <= 0)
+    return 0;
+  G.inptr = G.inbuf;
 
-  static ulg crc = 0xffffffffL; /* shift register contents */
+#if CRYPT
+  if (encrypted) {
+    uch *p;
+    int n;
 
-  if (s == (uch *)NULL)
-    c = 0xffffffffL;
-  else
-  {
-    c = crc;
-    while (n--)
-      c = crc_32_tab[((int)c ^ (*s++)) & 0xff] ^ (c >> 8);
+    for (n = G.incnt, p = G.inptr;  n--;  p++)
+      zdecode(*p);
   }
-  crc = c;
-  return c ^ 0xffffffffL;       /* (instead of ~c for 64-bit machines) */
+#endif /* CRYPT */
+
+  return G.incnt;
+
 }
 
+#endif /* USE_ZLIB */
 
-void err(n, m)
+
+static void err(n, m)
 int n;
 char *m;
 /* Exit on error with a message and a code */
 {
-  FPRINTF(stderr, "funzip error: %s\n", m);
-  exit(n);
+  Info(slide, 1, ((char *)slide, "funzip error: %s\n", m));
+  DESTROYGLOBALS();
+  EXIT(n);
 }
 
 
-int flush(w)    /* used by inflate.c (FLUSH macro) */
-ulg w;          /* number of bytes to flush */
+#if (defined(USE_DEFLATE64) && defined(__16BIT__))
+
+static int partflush(rawbuf, w)
+uch *rawbuf;     /* start of buffer area to flush */
+extent w;       /* number of bytes to flush */
 {
-  updcrc(slide, w);
-  if (fwrite((char *)slide,1,(extent)w,out) != (extent)w && !PIPE_ERROR)
+  G.crc32val = crc32(G.crc32val, rawbuf, (extent)w);
+  if (fwrite((char *)rawbuf,1,(extent)w,out) != (extent)w && !PIPE_ERROR)
     err(9, "out of space on stdout");
   outsiz += w;
   return 0;
 }
 
 
+int flush(w)    /* used by inflate.c (FLUSH macro) */
+ulg w;          /* number of bytes to flush */
+{
+    uch *rawbuf;
+    int ret;
+
+    /* On 16-bit systems (MSDOS, OS/2 1.x), the standard C library functions
+     * cannot handle writes of 64k blocks at once.  For these systems, the
+     * blocks to flush are split into pieces of 32k or less.
+     */
+    rawbuf = slide;
+    while (w > 0x8000L) {
+        ret = partflush(rawbuf, 0x8000);
+        if (ret != PK_OK)
+            return ret;
+        w -= 0x8000L;
+        rawbuf += (unsigned)0x8000;
+    }
+    return partflush(rawbuf, (extent)w);
+} /* end function flush() */
+
+#else /* !(USE_DEFLATE64 && __16BIT__) */
+
+int flush(w)    /* used by inflate.c (FLUSH macro) */
+ulg w;          /* number of bytes to flush */
+{
+  G.crc32val = crc32(G.crc32val, slide, (extent)w);
+  if (fwrite((char *)slide,1,(extent)w,out) != (extent)w && !PIPE_ERROR)
+    err(9, "out of space on stdout");
+  outsiz += w;
+  return 0;
+}
+
+#endif /* ?(USE_DEFLATE64 && __16BIT__) */
+
+
 int main(argc, argv)
 int argc;
 char **argv;
-/* Given a zip file on stdin, decompress the first entry to stdout. */
+/* Given a zipfile on stdin, decompress the first entry to stdout. */
 {
   ush n;
   uch h[LOCHDR];                /* first local header (GZPHDR < LOCHDR) */
   int g = 0;                    /* true if gzip format */
-#ifdef CRYPT
+  unsigned method = 0;          /* initialized here to shut up gcc warning */
+#if CRYPT
   char *s = " [-password]";
   char *p;                      /* password */
 #else /* !CRYPT */
   char *s = "";
 #endif /* ?CRYPT */
+  CONSTRUCTGLOBALS();
 
   /* skip executable name */
   argc--;
   argv++;
 
-#ifdef CRYPT
+#if CRYPT
   /* get the command line password, if any */
   p = (char *)NULL;
   if (argc && **argv == '-')
@@ -222,69 +310,115 @@ char **argv;
   }
 #endif /* CRYPT */
 
+#ifdef MALLOC_WORK
+  /* The following expression is a cooked-down simplyfication of the
+     calculation for the work area size of UnZip (see unzip.c).  For
+     fUnZip, the work area does not need to match the granularity
+     of the complex unshrink structures, because it only supports
+     inflation.  But, like in UnZip, the zcalloc() wrapper function
+     is needed for the allocation, to support the 64kByte buffer on
+     16-bit systems.
+   */
+# define UZ_SLIDE_CHUNK (sizeof(shrint)+sizeof(uch)+sizeof(uch))
+# define UZ_NUMOF_CHUNKS (unsigned)( (WSIZE+UZ_SLIDE_CHUNK-1)/UZ_SLIDE_CHUNK )
+  G.area.Slide = (uch *)zcalloc(UZ_NUMOF_CHUNKS, UZ_SLIDE_CHUNK);
+# undef UZ_SLIDE_CHUNK
+# undef UZ_NUMOF_CHUNKS
+#endif
+
   /* if no file argument and stdin not redirected, give the user help */
   if (argc == 0 && isatty(0))
   {
-    FPRINTF(stderr, "fUnZip (filter UnZip), version %s\n", VERSION);
-    FPRINTF(stderr, "usage: ... | funzip%s | ...\n", s);
-    FPRINTF(stderr, "       ... | funzip%s > outfile\n", s);
-    FPRINTF(stderr, "       funzip%s infile.zip > outfile\n", s);
-    FPRINTF(stderr, "       funzip%s infile.gz > outfile\n", s);
-    FPRINTF(stderr, "Extracts to stdout the gzip file or first zip entry of\
- stdin or the given file.\n");
-    exit(3);
+    Info(slide, 1, ((char *)slide, "fUnZip (filter UnZip), version %s\n",
+      VERSION));
+    Info(slide, 1, ((char *)slide, "usage: ... | funzip%s | ...\n", s));
+    Info(slide, 1, ((char *)slide, "       ... | funzip%s > outfile\n", s));
+    Info(slide, 1, ((char *)slide, "       funzip%s infile.zip > outfile\n",s));
+    Info(slide, 1, ((char *)slide, "       funzip%s infile.gz > outfile\n", s));
+    Info(slide, 1, ((char *)slide, "Extracts to stdout the gzip file or first\
+ zip entry of stdin or the given file.\n"));
+    DESTROYGLOBALS();
+    EXIT(3);
   }
 
   /* prepare to be a binary filter */
   if (argc)
   {
-    if ((in = fopen(*argv, FOPR)) == (FILE *)NULL)
+    if ((G.in = fopen(*argv, FOPR)) == (FILE *)NULL)
       err(2, "cannot find input file");
   }
   else
   {
-#ifdef DOS_NT_OS2
+#ifdef DOS_FLX_NLM_OS2_W32
+#if (defined(__HIGHC__) && !defined(FLEXOS))
+    setmode(stdin, _BINARY);
+#else
     setmode(0, O_BINARY);  /* some buggy C libraries require BOTH setmode() */
 #endif                     /*  call AND the fdopen() in binary mode :-( */
-    if ((in = fdopen(0, FOPR)) == (FILE *)NULL)
+#endif /* DOS_FLX_NLM_OS2_W32 */
+
+#ifdef RISCOS
+    G.in = stdin;
+#else
+    if ((G.in = fdopen(0, FOPR)) == (FILE *)NULL)
       err(2, "cannot find stdin");
+#endif
   }
-#ifdef DOS_NT_OS2
+
+#ifdef DOS_FLX_H68_NLM_OS2_W32
+#if (defined(__HIGHC__) && !defined(FLEXOS))
+  setmode(stdout, _BINARY);
+#else
   setmode(1, O_BINARY);
 #endif
+#endif /* DOS_FLX_H68_NLM_OS2_W32 */
+
+#ifdef RISCOS
+  out = stdout;
+#else
   if ((out = fdopen(1, FOPW)) == (FILE *)NULL)
     err(2, "cannot write to stdout");
+#endif
 
   /* read local header, check validity, and skip name and extra fields */
-  n = getc(in);  n |= getc(in) << 8;
+  n = getc(G.in);  n |= getc(G.in) << 8;
   if (n == ZIPMAG)
   {
-    if (fread((char *)h, 1, LOCHDR, in) != LOCHDR || SH(h) != LOCREM)
-      err(3, "invalid zip file");
-    if (SH(h + LOCHOW) != STORED && SH(h + LOCHOW) != DEFLATED)
-      err(3, "first entry not deflated or stored--can't funzip");
-    for (n = SH(h + LOCFIL); n--; ) g = getc(in);
-    for (n = SH(h + LOCEXT); n--; ) g = getc(in);
+    if (fread((char *)h, 1, LOCHDR, G.in) != LOCHDR || SH(h) != LOCREM)
+      err(3, "invalid zipfile");
+    switch (method = SH(h + LOCHOW)) {
+      case STORED:
+      case DEFLATED:
+#ifdef USE_DEFLATE64
+      case ENHDEFLATED:
+#endif
+        break;
+      default:
+        err(3, "first entry not deflated or stored--cannot unpack");
+        break;
+    }
+    for (n = SH(h + LOCFIL); n--; ) g = getc(G.in);
+    for (n = SH(h + LOCEXT); n--; ) g = getc(G.in);
     g = 0;
     encrypted = h[LOCFLG] & CRPFLG;
   }
   else if (n == GZPMAG)
   {
-    if (fread((char *)h, 1, GZPHDR, in) != GZPHDR)
+    if (fread((char *)h, 1, GZPHDR, G.in) != GZPHDR)
       err(3, "invalid gzip file");
-    if (h[GZPHOW] != DEFLATED)
+    if ((method = h[GZPHOW]) != DEFLATED && method != ENHDEFLATED)
       err(3, "gzip file not deflated");
     if (h[GZPFLG] & GZPMUL)
       err(3, "cannot handle multi-part gzip files");
     if (h[GZPFLG] & GZPISX)
     {
-      n = getc(in);  n |= getc(in) << 8;
-      while (n--) g = getc(in);
+      n = getc(G.in);  n |= getc(G.in) << 8;
+      while (n--) g = getc(G.in);
     }
     if (h[GZPFLG] & GZPISF)
-      while ((g = getc(in)) != 0 && g != EOF) ;
+      while ((g = getc(G.in)) != 0 && g != EOF) ;
     if (h[GZPFLG] & GZPISC)
-      while ((g = getc(in)) != 0 && g != EOF) ;
+      while ((g = getc(G.in)) != 0 && g != EOF) ;
     g = 1;
     encrypted = h[GZPFLG] & GZPISE;
   }
@@ -293,15 +427,19 @@ char **argv;
 
   /* if entry encrypted, decrypt and validate encryption header */
   if (encrypted)
-#ifdef CRYPT
+#if CRYPT
     {
       ush i, e;
 
-      if (p == (char *)NULL)
-        if ((p = (char *)malloc(PWLEN+1)) == (char *)NULL)
+      if (p == (char *)NULL) {
+        if ((p = (char *)malloc(IZ_PWLEN+1)) == (char *)NULL)
           err(1, "out of memory");
-        else if ((p = getp("Enter password: ", p, PWLEN+1)) == (char *)NULL)
+        else if ((p = getp("Enter password: ", p, IZ_PWLEN+1)) == (char *)NULL)
           err(1, "no tty to prompt for password");
+      }
+      /* initialize crc_32_tab pointer for decryption */
+      CRC_32_TAB = get_crc_table();
+      /* prepare the decryption keys for extraction and check the password */
       init_keys(p);
       for (i = 0; i < RAND_HEAD_LEN; i++)
         e = NEXTBYTE;
@@ -313,82 +451,97 @@ char **argv;
 #endif /* ?CRYPT */
 
   /* prepare output buffer and crc */
-  outptr = slide;
-  outcnt = 0L;
+  G.outptr = slide;
+  G.outcnt = 0L;
   outsiz = 0L;
-  updcrc(NULL, 0L);
+  G.crc32val = CRCVAL_INITIAL;
 
   /* decompress */
   if (g || h[LOCHOW])
   {                             /* deflated entry */
     int r;
- 
-    if ((r = inflate()) != 0)
+
+#ifdef USE_ZLIB
+    /* need to allocate and prepare input buffer */
+    if ((G.inbuf = (uch *)malloc(INBUFSIZ)) == (uch *)NULL)
+       err(1, "out of memory");
+#endif /* USE_ZLIB */
+    if ((r = UZinflate(__G__ (method == ENHDEFLATED))) != 0) {
       if (r == 3)
         err(1, "out of memory");
       else
         err(4, "invalid compressed data--format violated");
-    inflate_free();
+    }
+    inflate_free(__G);
   }
   else
   {                             /* stored entry */
     register ulg n;
 
     n = LG(h + LOCLEN);
+#if CRYPT
     if (n != LG(h + LOCSIZ) - (encrypted ? RAND_HEAD_LEN : 0)) {
-      FPRINTF(stderr, "len %ld, siz %ld\n", n, LG(h + LOCSIZ));
+#else
+    if (n != LG(h + LOCSIZ)) {
+#endif
+      Info(slide, 1, ((char *)slide, "len %ld, siz %ld\n", n, LG(h + LOCSIZ)));
       err(4, "invalid compressed data--length mismatch");
     }
     while (n--) {
-      ush c = getc(in);
-#ifdef CRYPT
+      ush c = getc(G.in);
+#if CRYPT
       if (encrypted)
         zdecode(c);
 #endif
-      *outptr++ = (uch)c;
-      if (++outcnt == WSIZE)    /* do FlushOutput() */
+      *G.outptr++ = (uch)c;
+#if (defined(USE_DEFLATE64) && defined(__16BIT__))
+      if (++G.outcnt == (WSIZE>>1))     /* do FlushOutput() */
+#else
+      if (++G.outcnt == WSIZE)    /* do FlushOutput() */
+#endif
       {
-        updcrc(slide, outcnt);
-        if (fwrite((char *)slide, 1,(extent)outcnt,out) != (extent)outcnt
+        G.crc32val = crc32(G.crc32val, slide, (extent)G.outcnt);
+        if (fwrite((char *)slide, 1,(extent)G.outcnt,out) != (extent)G.outcnt
             && !PIPE_ERROR)
           err(9, "out of space on stdout");
-        outsiz += outcnt;
-        outptr = slide;
-        outcnt = 0L;
+        outsiz += G.outcnt;
+        G.outptr = slide;
+        G.outcnt = 0L;
       }
     }
   }
-  if (outcnt)   /* flush one last time; no need to reset outptr/outcnt */
+  if (G.outcnt)   /* flush one last time; no need to reset G.outptr/outcnt */
   {
-    updcrc(slide, outcnt);
-    if (fwrite((char *)slide, 1,(extent)outcnt,out) != (extent)outcnt
+    G.crc32val = crc32(G.crc32val, slide, (extent)G.outcnt);
+    if (fwrite((char *)slide, 1,(extent)G.outcnt,out) != (extent)G.outcnt
         && !PIPE_ERROR)
       err(9, "out of space on stdout");
-    outsiz += outcnt;
+    outsiz += G.outcnt;
   }
   fflush(out);
 
   /* if extended header, get it */
   if (g)
   {
-    if (fread((char *)h + LOCCRC, 1, 8, in) != 8)
+    if (fread((char *)h + LOCCRC, 1, 8, G.in) != 8)
       err(3, "gzip file ended prematurely");
   }
   else
     if ((h[LOCFLG] & EXTFLG) &&
-        fread((char *)h + LOCCRC - 4, 1, EXTHDR, in) != EXTHDR)
-      err(3, "zip file ended prematurely");
+        fread((char *)h + LOCCRC - 4, 1, EXTHDR, G.in) != EXTHDR)
+      err(3, "zipfile ended prematurely");
 
   /* validate decompression */
-  if (LG(h + LOCCRC) != updcrc(slide, 0L))
+  if (LG(h + LOCCRC) != G.crc32val)
     err(4, "invalid compressed data--crc error");
-  if (LG(h + (g ? LOCSIZ : LOCLEN)) != outsiz)
+  if (LG((g ? (h + LOCSIZ) : (h + LOCLEN))) != outsiz)
     err(4, "invalid compressed data--length error");
 
   /* check if there are more entries */
-  if (!g && fread((char *)h, 1, 4, in) == 4 && LG(h) == LOCSIG)
-    FPRINTF(stderr,
-      "funzip warning: zip file has more than one entry--rest ignored\n");
+  if (!g && fread((char *)h, 1, 4, G.in) == 4 && LG(h) == LOCSIG)
+    Info(slide, 1, ((char *)slide,
+      "funzip warning: zipfile has more than one entry--rest ignored\n"));
 
-  exit(0);
+  DESTROYGLOBALS();
+  RETURN (0);
 }

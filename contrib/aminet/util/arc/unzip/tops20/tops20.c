@@ -1,3 +1,11 @@
+/*
+  Copyright (c) 1990-2007 Info-ZIP.  All rights reserved.
+
+  See the accompanying file LICENSE, version 2000-Apr-09 or later
+  (the contents of which are also included in unzip.h) for terms of use.
+  If, for some reason, all these files are missing, the Info-ZIP license
+  also may be found at:  ftp://ftp.info-zip.org/pub/infozip/license.html
+*/
 /*---------------------------------------------------------------------------
 
   tops20.c
@@ -17,6 +25,7 @@
   ---------------------------------------------------------------------------*/
 
 
+#define UNZIP_INTERNAL
 #include "unzip.h"
 
 
@@ -24,34 +33,39 @@
 /* Function mapattr() */
 /**********************/
 
-int mapattr()      /* just like Unix except no umask() */
+int mapattr(__G)        /* just like Unix except no umask() */
+    __GDEF
 {
-    ulg  tmp = crec.external_file_attributes;
+    ulg  tmp = G.crec.external_file_attributes;
 
-    switch (pInfo->hostnum) {
+    switch (G.pInfo->hostnum) {
         case UNIX_:
         case VMS_:
-            pInfo->file_attr = (unsigned)(tmp >> 16);
+        case ACORN_:
+        case ATARI_:
+        case ATHEOS_:
+        case BEOS_:
+        case QDOS_:
+            G.pInfo->file_attr = (unsigned)(tmp >> 16);
             break;
         case AMIGA_:
             tmp = (unsigned)(tmp>>1 & 7);   /* Amiga RWE bits */
-            pInfo->file_attr = (unsigned)(tmp<<6 | tmp<<3 | tmp);
+            G.pInfo->file_attr = (unsigned)(tmp<<6 | tmp<<3 | tmp);
             break;
         case FS_FAT_:   /* MSDOS half of attributes should always be correct */
         case FS_HPFS_:
         case FS_NTFS_:
         case MAC_:
-        case ATARI_:
         case TOPS20_:
         default:
             tmp = !(tmp & 1) << 1;   /* read-only bit --> write perms bits */
-            pInfo->file_attr = (unsigned)(0444 | tmp<<6 | tmp<<3 | tmp);
+            G.pInfo->file_attr = (unsigned)(0444 | tmp<<6 | tmp<<3 | tmp);
             break;
 #if 0
         case ATARI_:
         case TOPS20_:
         default:
-            pInfo->file_attr = 0666;
+            G.pInfo->file_attr = 0666;
             break;
 #endif
     } /* end switch (host-OS-created-by) */
@@ -68,7 +82,8 @@ int mapattr()      /* just like Unix except no umask() */
 /* Function close_outfile() */
 /****************************/
 
-void close_outfile()
+void close_outfile(__G)
+    __GDEF
 {
 #   define JSYS_CLASS           0070000000000
 #   define FLD(val,mask)        (((unsigned)(val)*((mask)&(-(mask))))&(mask))
@@ -80,40 +95,86 @@ void close_outfile()
     int yr, mo, dy, hh, mm, ss;
     char temp[100];
     unsigned tad;
+#ifdef USE_EF_UT_TIME
+    iztimes z_utime;
+    struct tm *t;
 
 
-    /* dissect the date */
-    yr = ((lrec.last_mod_file_date >> 9) & 0x7f) + (1980 - YRBASE);
-    mo = (lrec.last_mod_file_date >> 5) & 0x0f;
-    dy = lrec.last_mod_file_date & 0x1f;
+    /* skip restoring time stamps on user's request */
+    if (uO.D_flag <= 1) {
 
-    /* dissect the time */
-    hh = (lrec.last_mod_file_time >> 11) & 0x1f;
-    mm = (lrec.last_mod_file_time >> 5) & 0x3f;
-    ss = (lrec.last_mod_file_time & 0x1f) * 2;
-    
-    sprintf(temp, "%02d/%02d/%02d %02d:%02d:%02d", mo, dy, yr, hh, mm, ss);
+        if (G.extra_field &&
+#ifdef IZ_CHECK_TZ
+            G.tz_is_valid &&
+#endif
+            (ef_scan_for_izux(G.extra_field, G.lrec.extra_field_length, 0,
+                              G.lrec.last_mod_dos_date, &z_utime, NULL)
+             & EB_UT_FL_MTIME))
+            t = localtime(&(z_utime.mtime));
+        else
+            t = (struct tm *)NULL;
 
-    ablock[1] = (int)(temp - 1);
-    ablock[2] = 0;
-    if (!jsys(IDTIM, ablock)) {
-        fprintf(stderr, "error:  IDTIM failure for %s\n", filename);
-        fclose(outfile);
-        return;
-    }
+        if (t != (struct tm *)NULL)
+        {
+            yr = t->tm_year + 1900;
+            mo = t->tm_mon;
+            dy = t->tm_mday;
+            hh = t->tm_hour;
+            mm = t->tm_min;
+            ss = t->tm_sec;
+        }
+        else
+        {
+            /* dissect the date */
+            yr = ((G.lrec.last_mod_dos_date >> 9) & 0x7f) + 1980;
+            mo = ((G.lrec.last_mod_dos_date >> 5) & 0x0f) - 1;
+            dy = (G.lrec.last_mod_dos_date & 0x1f);
 
-    tad = ablock[2];
-    tblock[0] = tad;
-    tblock[1] = tad;
-    tblock[2] = -1;
+            /* dissect the time */
+            hh = (G.lrec.last_mod_dos_time >> 11) & 0x1f;
+            mm = (G.lrec.last_mod_dos_time >> 5) & 0x3f;
+            ss = (G.lrec.last_mod_dos_time & 0x1f) * 2;
+        }
+#else /* !USE_EF_UT_TIME */
 
-    ablock[1] = fcntl(fileno(outfile), F_GETSYSFD, 0); /* _uffd[outfd]->uf_ch */
-    ablock[2] = (int) tblock;
-    ablock[3] = 3;
-    if (!jsys(SFTAD, ablock))
-        fprintf(stderr, "error:  can't set the time for %s\n", filename);
+        /* dissect the date */
+        yr = ((G.lrec.last_mod_dos_datetime >> 25) & 0x7f) + (1980 - YRBASE);
+        mo = (G.lrec.last_mod_dos_datetime >> 21) & 0x0f;
+        dy = (G.lrec.last_mod_dos_datetime >> 16) & 0x1f;
 
-    fclose(outfile);
+        /* dissect the time */
+        hh = (G.lrec.last_mod_dos_datetime >> 11) & 0x1f;
+        mm = (G.lrec.last_mod_dos_datetime >> 5) & 0x3f;
+        ss = (G.lrec.last_mod_dos_datetime << 1) & 0x1f;
+#endif /* ?USE_EF_UT_TIME */
+
+        sprintf(temp, "%02d/%02d/%02d %02d:%02d:%02d", mo, dy, yr, hh, mm, ss);
+
+        ablock[1] = (int)(temp - 1);
+        ablock[2] = 0;
+        if (!jsys(IDTIM, ablock)) {
+            Info(slide, 1, ((char *)slide, "error:  IDTIM failure for %s\n",
+              G.filename));
+            fclose(G.outfile);
+            return;
+        }
+
+        tad = ablock[2];
+        tblock[0] = tad;
+        tblock[1] = tad;
+        tblock[2] = -1;
+
+        ablock[1] = fcntl(fileno(G.outfile), F_GETSYSFD, 0);
+                                                    /* _uffd[outfd]->uf_ch */
+        ablock[2] = (int) tblock;
+        ablock[3] = 3;
+        if (!jsys(SFTAD, ablock))
+            Info(slide, 1,((char *)slide,
+              "error:  cannot set the time for %s\n", G.filename));
+
+    } /* if (uO.D_flag <= 1) */
+
+    fclose(G.outfile);
 
 } /* end function close_outfile() */
 
@@ -127,14 +188,14 @@ void close_outfile()
 /*  Function version()  */
 /************************/
 
-void version()
+void version(__G)
+    __GDEF
 {
-    extern char Far  CompiledWith[];
 #if 0
     char buf[40];
 #endif
 
-    printf(LoadFarString(CompiledWith),
+    sprintf((char *)slide, LoadFarString(CompiledWith),
 
 #ifdef __GNUC__
       "gcc ", __VERSION__,
@@ -163,7 +224,9 @@ void version()
 #else
       "", ""
 #endif
-      );
+    );
+
+    (*G.message)((zvoid *)&G, slide, (ulg)strlen((char *)slide), 0);
 
 } /* end function version() */
 

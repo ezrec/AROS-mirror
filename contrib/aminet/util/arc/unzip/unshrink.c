@@ -1,22 +1,38 @@
+/*
+  Copyright (c) 1990-2008 Info-ZIP.  All rights reserved.
 
-#if defined(HAVE_CONFIG_H)
-# include <config.h>
-#endif
-
-#include "unzip.h"
-
-#ifdef NEW_UNSHRINK
-
+  See the accompanying file LICENSE, version 2000-Apr-09 or later
+  (the contents of which are also included in unzip.h) for terms of use.
+  If, for some reason, all these files are missing, the Info-ZIP license
+  also may be found at:  ftp://ftp.info-zip.org/pub/infozip/license.html
+*/
 /*---------------------------------------------------------------------------
 
-  unshrink.c                     version 0.94                     26 Apr 94
+  unshrink.c                     version 1.22                     19 Mar 2008
+
+
+       NOTE:  This code may or may not infringe on the so-called "Welch
+       patent" owned by Unisys.  (From reading the patent, it appears
+       that a pure LZW decompressor is *not* covered, but this claim has
+       not been tested in court, and Unisys is reported to believe other-
+       wise.)  It is therefore the responsibility of the user to acquire
+       whatever license(s) may be required for legal use of this code.
+
+       THE INFO-ZIP GROUP DISCLAIMS ALL LIABILITY FOR USE OF THIS CODE
+       IN VIOLATION OF APPLICABLE PATENT LAW.
+
 
   Shrinking is basically a dynamic LZW algorithm with allowed code sizes of
   up to 13 bits; in addition, there is provision for partial clearing of
   leaf nodes.  PKWARE uses the special code 256 (decimal) to indicate a
   change in code size or a partial clear of the code tree:  256,1 for the
-  former and 256,2 for the latter.  See the notes in the code below about
-  orphaned nodes after partial clearing.
+  former and 256,2 for the latter.  [Note that partial clearing can "orphan"
+  nodes:  the parent-to-be can be cleared before its new child is added,
+  but the child is added anyway (as an orphan, as though the parent still
+  existed).  When the tree fills up to the point where the parent node is
+  reused, the orphan is effectively "adopted."  Versions prior to 1.05 were
+  affected more due to greater use of pointers (to children and siblings
+  as well as parents).]
 
   This replacement version of unshrink.c was written from scratch.  It is
   based only on the algorithms described in Mark Nelson's _The Data Compres-
@@ -24,299 +40,16 @@
   IEEE _Computer_; no existing source code, including any in Nelson's book,
   was used.
 
-  Memory requirements are fairly large.  While the NODE struct could be mod-
-  ified to fit in a single 64KB segment (as a "far" data structure), for now
-  it is assumed that a flat, 32-bit address space is available.  outbuf2 is
-  always malloc'd, and flush() is always called with unshrink == FALSE.
-
-  Copyright (C) 1994 Greg Roelofs.  See the accompanying file "COPYING" in
-  the UnZip 5.11 (or later) source distribution.
-
-  ---------------------------------------------------------------------------*/
-
-
-/* #include "unzip.h" */
-
-#ifdef DEBUG
-#  define OUTDBG(c)  if ((c)=='\n') {PUTC('^',stderr); PUTC('J',stderr);}\
-                     else PUTC((c),stderr);
-#else
-#  define OUTDBG(c)
-#endif
-
-typedef struct leaf {
-    struct leaf *parent;
-    struct leaf *next_sibling;
-    struct leaf *first_child;
-    uch value;
-} NODE;
-
-static void  partial_clear  __((NODE *cursib));
-
-static NODE *node, *bogusnode, *lastfreenode;
-
-
-int unshrink()
-{
-#ifdef MACOS
-    static uch *stacktop = NULL;
-#else
-    static uch *stacktop = stack + 8192 - 1;
-#endif
-    register uch *newstr;
-    int codesize=9, code, oldcode=0, len, KwKwK;
-    unsigned int outbufsiz;
-    NODE *freenode, *curnode, *lastnode=node, *oldnode;
-
-
-/*---------------------------------------------------------------------------
-    Initialize various variables.
-  ---------------------------------------------------------------------------*/
-
-#ifdef MACOS
-    if (stacktop == NULL) stacktop = stack + 8192 - 1;
-#endif
-
-    if ((node = (NODE *)malloc(8192*sizeof(NODE))) == (NODE *)NULL)
-        return PK_MEM3;
-    bogusnode = node + 256;
-    lastfreenode = node + 256;
-
-#ifndef SMALL_MEM   /* always true, at least for now */
-    /* non-memory-limited machines:  allocate second (large) buffer for
-     * textmode conversion in flush(), but only if needed */
-    if (pInfo->textmode && !outbuf2 &&
-        (outbuf2 = (uch *)malloc(TRANSBUFSIZ)) == (uch *)NULL)
-    {
-        free(node);
-        return PK_MEM3;
-    }
-#endif
-
-    /* this stuff was an attempt to debug compiler errors(?) when had
-     * node[8192] in union work area...no clues what was wrong (SGI worked)
-    Trace((stderr, "\nsizeof(NODE) = %d\n", sizeof(NODE)));
-    Trace((stderr, "sizeof(node) = %d\n", sizeof(node)));
-    Trace((stderr, "sizeof(area) = %d\n", sizeof(area)));
-    Trace((stderr, "address of node[0] = %d\n", (int)&node[0]));
-    Trace((stderr, "address of node[6945] = %d\n", (int)&node[6945]));
-     */
-
-    for (code = 0;  code < 256;  ++code) {
-        node[code].value = code;
-        node[code].parent = bogusnode;
-        node[code].next_sibling = &node[code+1];
-        node[code].first_child = (NODE *)NULL;
-    }
-    node[255].next_sibling = (NODE *)NULL;
-    for (code = 257;  code < 8192;  ++code)
-        node[code].parent = node[code].next_sibling = (NODE *)NULL;
-
-    outptr = outbuf;
-    outcnt = 0L;
-    if (pInfo->textmode)
-        outbufsiz = RAWBUFSIZ;
-    else
-        outbufsiz = OUTBUFSIZ;
-
-/*---------------------------------------------------------------------------
-    Get and output first code, then loop over remaining ones.
-  ---------------------------------------------------------------------------*/
-
-    READBITS(codesize, oldcode)
-    if (!zipeof) {
-        *outptr++ = (uch)oldcode;
-        OUTDBG((uch)oldcode)
-        if (++outcnt == outbufsiz) {
-            flush(outbuf, outcnt, FALSE);
-            outptr = outbuf;
-            outcnt = 0L;
-        }
-    }
-
-    do {
-        READBITS(codesize, code)
-        if (zipeof)
-            break;
-        if (code == 256) {   /* GRR:  possible to have consecutive escapes? */
-            READBITS(codesize, code)
-            if (code == 1) {
-                ++codesize;
-                Trace((stderr, " (codesize now %d bits)\n", codesize));
-            } else if (code == 2) {
-                Trace((stderr, " (partial clear code)\n"));
-#ifdef DEBUG
-                fprintf(stderr, "   should clear:\n");
-                for (curnode = node+257;  curnode < node+8192;  ++curnode)
-                    if (!curnode->first_child)
-                        fprintf(stderr, "%d\n", curnode-node);
-                fprintf(stderr, "   did clear:\n");
-#endif
-                partial_clear(node);       /* recursive clear of leafs */
-                lastfreenode = bogusnode;  /* reset start of free-node search */
-            }
-            continue;
-        }
-
-    /*-----------------------------------------------------------------------
-        Translate code:  traverse tree from leaf back to root.
-      -----------------------------------------------------------------------*/
-
-        curnode = &node[code];
-        newstr = stacktop;
-
-        if (curnode->parent)
-            KwKwK = FALSE;
-        else {
-            KwKwK = TRUE;
-            Trace((stderr, " (found a KwKwK code %d; oldcode = %d)\n", code,
-              oldcode));
-            --newstr;   /* last character will be same as first character */
-            curnode = &node[oldcode];
-        }
-
-        do {
-            *newstr-- = curnode->value;
-            curnode = curnode->parent;
-        } while (curnode != bogusnode);
-
-        len = stacktop - newstr++;
-        if (KwKwK)
-            *stacktop = *newstr;
-
-    /*-----------------------------------------------------------------------
-        Write expanded string in reverse order to output buffer.
-      -----------------------------------------------------------------------*/
-
-        Trace((stderr, "code %4d; oldcode %4d; char %3d (%c); string [", code,
-          oldcode, (int)(*newstr), *newstr));
-        {
-            register uch *p;
-
-            for (p = newstr;  p < newstr+len;  ++p) {
-                *outptr++ = *p;
-                OUTDBG(*p)
-                if (++outcnt == outbufsiz) {
-                    flush(outbuf, outcnt, FALSE);
-                    outptr = outbuf;
-                    outcnt = 0L;
-                }
-            }
-        }
-
-    /*-----------------------------------------------------------------------
-        Add new leaf (first character of newstr) to tree as child of oldcode.
-      -----------------------------------------------------------------------*/
-
-        /* search for freenode */
-        freenode = lastfreenode + 1;
-        while (freenode->parent)       /* add if-test before loop for speed? */
-            ++freenode;
-        lastfreenode = freenode;
-        Trace((stderr, "]; newcode %d\n", freenode-node));
-
-        oldnode = &node[oldcode];
-        if (!oldnode->first_child) {   /* no children yet:  add first one */
-            if (!oldnode->parent) {
-                /*
-                 * oldnode is itself a free node:  the only way this can happen
-                 * is if a partial clear occurred immediately after oldcode was
-                 * received and therefore immediately before this step (adding
-                 * freenode).  This is subtle:  even though the parent no longer
-                 * exists, it is treated as if it does, and pointers are set as
-                 * usual.  Thus freenode is an orphan, *but only until the tree
-                 * fills up to the point where oldnode is reused*.  At that
-                 * point the reborn oldnode "adopts" the orphaned node.  Such
-                 * wacky guys at PKWARE...
-                 *
-                 * To mark this, we set oldnode->next_sibling to point at the
-                 * bogus node (256) and then check for this in the freenode sec-
-                 * tion just below.
-                 */
-                Trace((stderr, "  [%d's parent (%d) was just cleared]\n",
-                  freenode-node, oldcode));
-                oldnode->next_sibling = bogusnode;
-            }
-            oldnode->first_child = freenode;
-        } else {
-            curnode = oldnode->first_child;
-            while (curnode) {          /* find last child in sibling chain */
-                lastnode = curnode;
-                curnode = curnode->next_sibling;
-            }
-            lastnode->next_sibling = freenode;
-        }
-        freenode->value = *newstr;
-        freenode->parent = oldnode;
-        if (freenode->next_sibling != bogusnode)  /* no adoptions today... */
-            freenode->first_child = (NODE *)NULL;
-        freenode->next_sibling = (NODE *)NULL;
-
-        oldcode = code;
-    } while (!zipeof);
-
-/*---------------------------------------------------------------------------
-    Flush any remaining data, free malloc'd space and return to sender...
-  ---------------------------------------------------------------------------*/
-
-    if (outcnt > 0L)
-        flush(outbuf, outcnt, FALSE);
-
-    free(node);
-    return PK_OK;
-
-} /* end function unshrink() */
-
-
-
-
-
-static void partial_clear(cursib)   /* like, totally recursive, eh? */
-    NODE *cursib;
-{
-    NODE *lastsib=(NODE *)NULL;
-
-    /* Loop over siblings, removing any without children; recurse on those
-     * which do have children.  This hits even the orphans because they're
-     * always adopted (parent node is reused) before tree becomes full and
-     * needs clearing.
-     */
-    do {
-        if (cursib->first_child) {
-            partial_clear(cursib->first_child);
-            lastsib = cursib;
-        } else if ((cursib - node) > 256) {  /* no children (leaf):  clear it */
-            Trace((stderr, "%d\n", cursib-node));
-            if (!lastsib)
-                cursib->parent->first_child = cursib->next_sibling;
-            else
-                lastsib->next_sibling = cursib->next_sibling;
-            cursib->parent = (NODE *)NULL;
-        }
-        cursib = cursib->next_sibling;
-    } while (cursib);
-    return;
-}
-
-
-
-#else /* !NEW_UNSHRINK */
-
-
-
-/*---------------------------------------------------------------------------
-
-  unshrink.c
-
-  Shrinking is a dynamic Lempel-Ziv-Welch compression algorithm with partial
-  clearing.  Sadly, it uses more memory than any of the other algorithms (at
-  a minimum, 8K+8K+16K, assuming 16-bit short ints), and this does not even
-  include the output buffer (the other algorithms leave the uncompressed data
-  in the work area, typically called slide[]).  For machines with a 64KB data
-  space, this is a problem, particularly when text conversion is required and
-  line endings have more than one character.  UnZip's solution is to use two
-  roughly equal halves of outbuf for the ASCII conversion in such a case; the
-  "unshrink" argument to flush() signals that this is the case.
+  Memory requirements have been reduced in this version and are now no more
+  than the original Sam Smith code.  This is still larger than any of the
+  other algorithms:  at a minimum, 8K+8K+16K (stack+values+parents) assuming
+  16-bit short ints, and this does not even include the output buffer (the
+  other algorithms leave the uncompressed data in the work area, typically
+  called slide[]).  For machines with a 64KB data space this is a problem,
+  particularly when text conversion is required and line endings have more
+  than one character.  UnZip's solution is to use two roughly equal halves
+  of outbuf for the ASCII conversion in such a case; the "unshrink" argument
+  to flush() signals that this is the case.
 
   For large-memory machines, a second outbuf is allocated for translations,
   but only if unshrinking and only if translations are required.
@@ -326,186 +59,238 @@ static void partial_clear(cursib)   /* like, totally recursive, eh? */
     big mem   |  big outbuf  | big outbuf + big outbuf2  <- malloc'd here
     small mem | small outbuf | half + half small outbuf
 
-  This version contains code which is copyright (C) 1989 Samuel H. Smith.
-  See the accompanying file "COPYING" in the UnZip 5.11 (or later) source
-  distribution.
+  Copyright 1994, 1995 Greg Roelofs.  See the accompanying file "COPYING"
+  in UnZip 5.20 (or later) source or binary distributions.
 
   ---------------------------------------------------------------------------*/
 
 
-/* #include "unzip.h" */
-
-/*      MAX_BITS   13   (in unzip.h; defines size of global work area)  */
-#define INIT_BITS  9
-#define FIRST_ENT  257
-#define CLEAR      256
-
-#define OUTB(c) {\
-    *outptr++=(uch)(c);\
-    if (++outcnt==outbufsiz) {\
-        flush(outbuf,outcnt,TRUE);\
-        outcnt=0L;\
-        outptr=outbuf;\
-    }\
-}
-
-static void partial_clear __((void));
-
-int codesize, maxcode, maxcodemax, free_ent;
+#define __UNSHRINK_C    /* identifies this source module */
+#define UNZIP_INTERNAL
+#include "unzip.h"
 
 
+#ifndef LZW_CLEAN
 
-/*************************/
-/*  Function unshrink()  */
-/*************************/
+static void  partial_clear  OF((__GPRO__ int lastcodeused));
 
-int unshrink()   /* return PK-type error code */
-{
-    register int code;
-    register int stackp;
-    int finchar;
-    int oldcode;
-    int incode;
-    unsigned int outbufsiz;
-
-
-    /* non-memory-limited machines:  allocate second (large) buffer for
-     * textmode conversion in flush(), but only if needed */
-#ifndef SMALL_MEM
-    if (pInfo->textmode && !outbuf2 &&
-        (outbuf2 = (uch *)malloc(TRANSBUFSIZ)) == (uch *)NULL)
-        return PK_MEM3;
+#ifdef DEBUG
+#  define OUTDBG(c) \
+   if ((c)<32 || (c)>=127) fprintf(stderr,"\\x%02x",(c)); else putc((c),stderr);
+#else
+#  define OUTDBG(c)
 #endif
 
-    outptr = outbuf;
-    outcnt = 0L;
-    if (pInfo->textmode)
+/* HSIZE is defined as 2^13 (8192) in unzip.h (resp. unzpriv.h */
+#define BOGUSCODE  256
+#define FLAG_BITS  parent        /* upper bits of parent[] used as flag bits */
+#define CODE_MASK  (HSIZE - 1)   /* 0x1fff (lower bits are parent's index) */
+#define FREE_CODE  HSIZE         /* 0x2000 (code is unused or was cleared) */
+#define HAS_CHILD  (HSIZE << 1)  /* 0x4000 (code has a child--do not clear) */
+
+#define parent G.area.shrink.Parent
+#define Value  G.area.shrink.value /* "value" conflicts with Pyramid ioctl.h */
+#define stack  G.area.shrink.Stack
+
+
+/***********************/
+/* Function unshrink() */
+/***********************/
+
+int unshrink(__G)
+     __GDEF
+{
+    uch *stacktop = stack + (HSIZE - 1);
+    register uch *newstr;
+    uch finalval;
+    int codesize=9, len, error;
+    shrint code, oldcode, curcode;
+    shrint lastfreecode;
+    unsigned int outbufsiz;
+#if (defined(DLL) && !defined(NO_SLIDE_REDIR))
+    /* Normally realbuf and outbuf will be the same.  However, if the data
+     * are redirected to a large memory buffer, realbuf will point to the
+     * new location while outbuf will remain pointing to the malloc'd
+     * memory buffer. */
+    uch *realbuf = G.outbuf;
+#else
+#   define realbuf G.outbuf
+#endif
+
+
+/*---------------------------------------------------------------------------
+    Initialize various variables.
+  ---------------------------------------------------------------------------*/
+
+    lastfreecode = BOGUSCODE;
+
+#ifndef VMS     /* VMS uses its own buffer scheme for textmode flush(). */
+#ifndef SMALL_MEM
+    /* non-memory-limited machines:  allocate second (large) buffer for
+     * textmode conversion in flush(), but only if needed */
+    if (G.pInfo->textmode && !G.outbuf2 &&
+        (G.outbuf2 = (uch *)malloc(TRANSBUFSIZ)) == (uch *)NULL)
+        return PK_MEM3;
+#endif
+#endif /* !VMS */
+
+    for (code = 0;  code < BOGUSCODE;  ++code) {
+        Value[code] = (uch)code;
+        parent[code] = BOGUSCODE;
+    }
+    for (code = BOGUSCODE+1;  code < HSIZE;  ++code)
+        parent[code] = FREE_CODE;
+
+#if (defined(DLL) && !defined(NO_SLIDE_REDIR))
+    if (G.redirect_slide) { /* use normal outbuf unless we're a DLL routine */
+        realbuf = G.redirect_buffer;
+        outbufsiz = (unsigned)G.redirect_size;
+    } else
+#endif
+#ifdef DLL
+    if (G.pInfo->textmode && !G.redirect_data)
+#else
+    if (G.pInfo->textmode)
+#endif
         outbufsiz = RAWBUFSIZ;
     else
         outbufsiz = OUTBUFSIZ;
+    G.outptr = realbuf;
+    G.outcnt = 0L;
 
-    /* decompress the file */
-    codesize = INIT_BITS;
-    maxcode = (1 << codesize) - 1;
-    maxcodemax = HSIZE;         /* (1 << MAX_BITS) */
-    free_ent = FIRST_ENT;
+/*---------------------------------------------------------------------------
+    Get and output first code, then loop over remaining ones.
+  ---------------------------------------------------------------------------*/
 
-    code = maxcodemax;
-/*
-    OvdL: -Ox with SCO's 3.2.0 cc gives
-    a. warning: overflow in constant multiplication
-    b. segmentation fault (core dumped) when using the executable
-    for (code = maxcodemax; code > 255; code--)
-        prefix_of[code] = -1;
- */
-    do {
-        prefix_of[code] = -1;
-    } while (--code > 255);
+    READBITS(codesize, oldcode)
+    if (G.zipeof)
+        return PK_OK;
 
-    for (code = 255; code >= 0; code--) {
-        prefix_of[code] = 0;
-        suffix_of[code] = (uch)code;
-    }
+    finalval = (uch)oldcode;
+    OUTDBG(finalval)
+    *G.outptr++ = finalval;
+    ++G.outcnt;
 
-    READBITS(codesize,oldcode)  /* ; */
-    if (zipeof)
-        return PK_COOL;
-    finchar = oldcode;
-
-    OUTB(finchar)
-
-    stackp = HSIZE;
-
-    while (!zipeof) {
-        READBITS(codesize,code)  /* ; */
-        if (zipeof) {
-            if (outcnt > 0L)
-                flush(outbuf, outcnt, TRUE);   /* flush last, partial buffer */
-            return PK_COOL;
+    while (TRUE) {
+        READBITS(codesize, code)
+        if (G.zipeof)
+            break;
+        if (code == BOGUSCODE) {   /* possible to have consecutive escapes? */
+            READBITS(codesize, code)
+            if (G.zipeof)
+                break;
+            if (code == 1) {
+                ++codesize;
+                Trace((stderr, " (codesize now %d bits)\n", codesize));
+                if (codesize > MAX_BITS) return PK_ERR;
+            } else if (code == 2) {
+                Trace((stderr, " (partial clear code)\n"));
+                /* clear leafs (nodes with no children) */
+                partial_clear(__G__ lastfreecode);
+                Trace((stderr, " (done with partial clear)\n"));
+                lastfreecode = BOGUSCODE; /* reset start of free-node search */
+            }
+            continue;
         }
 
-        while (code == CLEAR) {
-            READBITS(codesize,code)  /* ; */
-            switch (code) {
-                case 1:
-                    codesize++;
-                    if (codesize == MAX_BITS)
-                        maxcode = maxcodemax;
-                    else
-                        maxcode = (1 << codesize) - 1;
-                    break;
+    /*-----------------------------------------------------------------------
+        Translate code:  traverse tree from leaf back to root.
+      -----------------------------------------------------------------------*/
 
-                case 2:
-                    partial_clear();
-                    break;
-            }
+        newstr = stacktop;
+        curcode = code;
 
-            READBITS(codesize,code)  /* ; */
-            if (zipeof) {
-                if (outcnt > 0L)
-                    flush(outbuf, outcnt, TRUE);   /* partial buffer */
-                return PK_COOL;
-            }
-        }
-
-
-        /* special case for KwKwK string */
-        incode = code;
-        if (prefix_of[code] == -1) {
-            stack[--stackp] = (uch)finchar;
+        if (parent[code] == FREE_CODE) {
+            /* or (FLAG_BITS[code] & FREE_CODE)? */
+            Trace((stderr, " (found a KwKwK code %d; oldcode = %d)\n", code,
+              oldcode));
+            *newstr-- = finalval;
             code = oldcode;
         }
-        /* generate output characters in reverse order */
-        while (code >= FIRST_ENT) {
-            if (prefix_of[code] == -1) {
-                stack[--stackp] = (uch)finchar;
+
+        while (code != BOGUSCODE) {
+            if (newstr < stack) {
+                /* Bogus compression stream caused buffer underflow! */
+                Trace((stderr, "unshrink stack overflow!\n"));
+                return PK_ERR;
+            }
+            if (parent[code] == FREE_CODE) {
+                /* or (FLAG_BITS[code] & FREE_CODE)? */
+                Trace((stderr, " (found a KwKwK code %d; oldcode = %d)\n",
+                  code, oldcode));
+                *newstr-- = finalval;
                 code = oldcode;
             } else {
-                stack[--stackp] = suffix_of[code];
-                code = prefix_of[code];
+                *newstr-- = Value[code];
+                code = (shrint)(parent[code] & CODE_MASK);
             }
         }
 
-        finchar = suffix_of[code];
-        stack[--stackp] = (uch)finchar;
+        len = (int)(stacktop - newstr++);
+        finalval = *newstr;
 
+    /*-----------------------------------------------------------------------
+        Write expanded string in reverse order to output buffer.
+      -----------------------------------------------------------------------*/
 
-        /* and put them out in forward order, block copy */
-        if ((HSIZE - stackp + outcnt) < outbufsiz) {
-            /* GRR:  this is not necessarily particularly efficient:
-             *       typically output only 2-5 bytes per loop (more
-             *       than a dozen rather rare?) */
-            memcpy(outptr, &stack[stackp], HSIZE - stackp);
-            outptr += HSIZE - stackp;
-            outcnt += HSIZE - stackp;
-            stackp = HSIZE;
+        Trace((stderr,
+          "code %4d; oldcode %4d; char %3d (%c); len %d; string [", curcode,
+          oldcode, (int)(*newstr), (*newstr<32 || *newstr>=127)? ' ':*newstr,
+          len));
+
+        {
+            register uch *p;
+
+            for (p = newstr;  p < newstr+len;  ++p) {
+                *G.outptr++ = *p;
+                OUTDBG(*p)
+                if (++G.outcnt == outbufsiz) {
+                    Trace((stderr, "doing flush(), outcnt = %lu\n", G.outcnt));
+                    if ((error = flush(__G__ realbuf, G.outcnt, TRUE)) != 0) {
+                        Trace((stderr, "unshrink:  flush() error (%d)\n",
+                          error));
+                        return error;
+                    }
+                    G.outptr = realbuf;
+                    G.outcnt = 0L;
+                    Trace((stderr, "done with flush()\n"));
+                }
+            }
         }
-        /* output byte by byte if we can't go by blocks */
-        else
-            while (stackp < HSIZE)
-                OUTB(stack[stackp++])
 
+    /*-----------------------------------------------------------------------
+        Add new leaf (first character of newstr) to tree as child of oldcode.
+      -----------------------------------------------------------------------*/
 
-        /* generate new entry */
-        code = free_ent;
-        if (code < maxcodemax) {
-            prefix_of[code] = oldcode;
-            suffix_of[code] = (uch)finchar;
+        /* search for freecode */
+        code = (shrint)(lastfreecode + 1);
+        /* add if-test before loop for speed? */
+        while ((code < HSIZE) && (parent[code] != FREE_CODE))
+            ++code;
+        lastfreecode = code;
+        Trace((stderr, "]; newcode %d\n", code));
+        if (code >= HSIZE)
+            /* invalid compressed data caused max-code overflow! */
+            return PK_ERR;
 
-            do
-                code++;
-            while ((code < maxcodemax) && (prefix_of[code] != -1));
+        Value[code] = finalval;
+        parent[code] = oldcode;
+        oldcode = curcode;
 
-            free_ent = code;
-        }
-        /* remember previous code */
-        oldcode = incode;
     }
 
-    /* never reached? */
-    /* flush last, partial buffer */
-    if (outcnt > 0L)
-        flush(outbuf, outcnt, TRUE);
+/*---------------------------------------------------------------------------
+    Flush any remaining data and return to sender...
+  ---------------------------------------------------------------------------*/
+
+    if (G.outcnt > 0L) {
+        Trace((stderr, "doing final flush(), outcnt = %lu\n", G.outcnt));
+        if ((error = flush(__G__ realbuf, G.outcnt, TRUE)) != 0) {
+            Trace((stderr, "unshrink:  flush() error (%d)\n", error));
+            return error;
+        }
+        Trace((stderr, "done with flush()\n"));
+    }
 
     return PK_OK;
 
@@ -513,37 +298,39 @@ int unshrink()   /* return PK-type error code */
 
 
 
-/******************************/
-/*  Function partial_clear()  */
-/******************************/
 
-static void partial_clear()
+
+/****************************/
+/* Function partial_clear() */      /* no longer recursive... */
+/****************************/
+
+static void partial_clear(__G__ lastcodeused)
+    __GDEF
+    int lastcodeused;
 {
-    register int pr;
-    register int cd;
+    register shrint code;
 
-    /* mark all nodes as potentially unused */
-    for (cd = FIRST_ENT; cd < free_ent; cd++)
-        prefix_of[cd] |= 0x8000;
+    /* clear all nodes which have no children (i.e., leaf nodes only) */
 
-    /* unmark those that are used by other nodes */
-    for (cd = FIRST_ENT; cd < free_ent; cd++) {
-        pr = prefix_of[cd] & 0x7fff;    /* reference to another node? */
-        if (pr >= FIRST_ENT)    /* flag node as referenced */
-            prefix_of[pr] &= 0x7fff;
+    /* first loop:  mark each parent as such */
+    for (code = BOGUSCODE+1;  code <= lastcodeused;  ++code) {
+        register shrint cparent = (shrint)(parent[code] & CODE_MASK);
+
+        if (cparent > BOGUSCODE)
+            FLAG_BITS[cparent] |= HAS_CHILD;   /* set parent's child-bit */
     }
 
-    /* clear the ones that are still marked */
-    for (cd = FIRST_ENT; cd < free_ent; cd++)
-        if ((prefix_of[cd] & 0x8000) != 0)
-            prefix_of[cd] = -1;
+    /* second loop:  clear all nodes *not* marked as parents; reset flag bits */
+    for (code = BOGUSCODE+1;  code <= lastcodeused;  ++code) {
+        if (FLAG_BITS[code] & HAS_CHILD)    /* just clear child-bit */
+            FLAG_BITS[code] &= ~HAS_CHILD;
+        else {                              /* leaf:  lose it */
+            Trace((stderr, "%d\n", code));
+            parent[code] = FREE_CODE;
+        }
+    }
 
-    /* find first cleared node as next free_ent */
-    cd = FIRST_ENT;
-    while ((cd < maxcodemax) && (prefix_of[cd] != -1))
-        cd++;
-    free_ent = cd;
+    return;
 }
 
-
-#endif /* ?NEW_UNSHRINK */
+#endif /* !LZW_CLEAN */

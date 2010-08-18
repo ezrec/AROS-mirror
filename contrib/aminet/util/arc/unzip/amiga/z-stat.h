@@ -1,6 +1,13 @@
-#ifndef __Z_STAT_H
-#define __Z_STAT_H
-#define __STAT_H
+/*
+  Copyright (c) 1990-2000 Info-ZIP.  All rights reserved.
+
+  See the accompanying file LICENSE, version 2000-Apr-09 or later
+  (the contents of which are also included in zip.h) for terms of use.
+  If, for some reason, all these files are missing, the Info-ZIP license
+  also may be found at:  ftp://ftp.info-zip.org/pub/infozip/license.html
+*/
+#ifndef __amiga_z_stat_h
+#define __amiga_z_stat_h
 
 /* Since older versions of the Lattice C compiler for Amiga, and all current */
 /* versions of the Manx Aztec C compiler for Amiga, either provide no stat() */
@@ -15,12 +22,19 @@
 /* functions included in amiga/stat.c.  If you use amiga/stat.c, this must   */
 /* be included wherever you use either readdir() or stat().                  */
 
-/* This include file should ONLY be loaded if AZTEC_C is defined, and
- * you are using the substitute version of stat() from amiga/stat.c.
- * Bit definitions are based on those in headers for SAS/C v6.0
- */
-
+#ifdef AZTEC_C
+#  define __STAT_H
+#else  /* __SASC */
+/* do not include the following header, replacement definitions are here */
+#  define _STAT_H      /* do not include SAS/C <stat.h> */
+#  define _DIRENT_H    /* do not include SAS/C <dirent.h> */
+#  define _SYS_DIR_H   /* do not include SAS/C <sys/dir.h> */
+#  define _COMMIFMT_H  /* do not include SAS/C <sys/commifmt.h> */
+#  include <dos.h>
+#endif
+#include <libraries/dos.h>
 #include <time.h>
+
 
 struct stat {
     unsigned short st_mode;
@@ -54,10 +68,8 @@ struct stat {
 #define S_IEXECUTE   (1<<1)
 #define S_IDELETE    (1<<0)
 
-int stat(char *name, struct stat *buf);
-
-
-#include <libraries/dos.h>
+int stat(const char *name, struct stat *buf);
+int fstat(int handle, struct stat *buf);      /* returns dummy values */
 
 typedef struct dirent {
     struct dirent       *d_cleanuplink,
@@ -69,17 +81,15 @@ typedef struct dirent {
 
 extern unsigned short disk_not_mounted;         /* flag set by opendir() */
 
-DIR *opendir(char *);
+DIR *opendir(const char *);
 void closedir(DIR *);
 void close_leftover_open_dirs(void);    /* call this if aborted in mid-run */
 struct dirent *readdir(DIR *);
-
-int rmdir(char *);
-
-#  ifdef AZTEC_C
-void tzset(void);
 int umask(void);
-int chmod(char *filename, int bits);
-#  endif
 
-#endif /* __Z_STAT_H */
+#ifdef AZTEC_C
+int rmdir(const char *);
+int chmod(const char *filename, int bits);
+#endif
+
+#endif /* __amiga_z_stat_h */

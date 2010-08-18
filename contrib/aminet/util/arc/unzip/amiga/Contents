@@ -1,4 +1,4 @@
-Contents of the "amiga" directory for UnZip 5.3 and later:
+Contents of the "amiga" directory for UnZip 5.5 and later:
 
   Contents      this file
   amiga.c       Amiga-specific file I/O routines
@@ -13,60 +13,20 @@ Contents of the "amiga" directory for UnZip 5.3 and later:
   crc_68.a      assembler version of crc32.c
   flate.a       assembler version of inflate_codes() (define ASM_INFLATECODES)
 
-  mkGoff.c      source for MkGoff which generates include file used by flate.a
   makesfx.c     source for MakeSFX, without which UnZipSFX is not usable
 
 Notes:
 
   The crc_68.a source file is not currently used by the SAS/C makefile,
-  nor is flate.a; as of UnZip 5.20 neither of these wants args in
+  nor is flate.a; as of UnZip 5.2 neither of these wants args in
   registers.
 
   The DICE makefile has been removed since no one is supporting that
   compiler anymore.
 
-  It was discovered on release of UnZip 5.1 that the latest SAS compiler
-  revision (6.50 or 6.51) changed the timezone handling.   The result is
-  that UnZip can extract files with the wrong times, usually off by an
-  offset of a few hours which is a function of the how the TZ environment
-  variable is set.  Now the TZ variable needs to be set according to the
-  timezone you are in, because the tzname() function operates correctly
-  now (it didn't used to).  In UnZip 5.2, handling of the TZ variable is now
-  independent of the compiler library used in creating UnZip.
-
   As of UnZip 5.2, if you have AmigaDOS 2.1 or newer and have set your
   timezone in the Locale preferences editor, this will be an adequate
   substitute for setting TZ.  If you do not set TZ to your current timezone,
   files will be restored with times corrsponding to "EST5EDT", U.S. Eastern
-  time.  To set the TZ environment variable, place the following line in your
-  startup sequence:
-
-         setenv TZ XXXNYYY
-
-            where XXX is the 3-character timezone notation
-                    N is the offset from Greenwich mean time
-                  YYY is an optional 3-character daylight savings notation
-
-  example:
-
-         setenv TZ PST8PDT     ; for California time
-
-  Daylight savings time is currently handled according to United States
-  calendar rules only -- one hour's difference starting on the first Sunday
-  in April and ending on the last Sunday in October.  If you set TZ with no
-  characters after the number, for example "MST7", then daylight savings will
-  not be applied.  (This would be a valid setting for Arizona.)  If the
-  timezone is derived from your Locale preferences, daylight savings time is
-  applied if the time zone is in the Americas, otherwise not.  Fractional
-  hours can be indicated by putting minutes after the hours offset, like
-  this: "NST3:30NDT", which might be used for Newfoundland.  The exact text
-  before and after the number does not matter; the only thing that is checked
-  is whether the optional second part is present or absent.  UnZip 5.1 and
-  older had no daylight savings support at all.
-
-  Timezone translation will have no effect on files which are zipped on
-  MS-DOS or similar systems which only store a local timestamp without time
-  zone information.  Archives from Unix systems, and some others, include
-  timestamps given in universal (Greenwich) time.  Such timestamps will be
-  converted according to the local time zone.  Amiga Zip can, if desired, be
-  compiled to produce such Unix-style timestamps, but by default it does not.
+  time.  See ../proginfo/timezone.txt for directions on how to set the
+  TZ variable.

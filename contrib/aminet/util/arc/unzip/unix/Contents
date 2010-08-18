@@ -1,12 +1,12 @@
-Contents of the "unix" sub-archive for UnZip 5.11 and later:
+Contents of the "unix" subdirectory for UnZip 6.0 and later:
 
   Contents      this file
   Makefile      makefile for UnZip for various architectures and OS's
+  configure     automatic build configuration script
   unix.c        Unix-specific support routines
-  unzip.1	UnZip manual page, nroff format
-  unzipsfx.1	UnZipSFX manual page, nroff format
-  zipinfo.1	ZipInfo manual page, nroff format
-  funzip.1 	fUnZip manual page, nroff format
+  unxcfg.h      Unix-specific configuration settings
+  zipgrep       script to scan zip archive entries for lines matching a pattern
+  Packaging/    subdirectory containing SysV.4 (e.g., Solaris 2.x) package info
 
 Type "make" or "make help" to get general compile instructions (beyond
 those in the INSTALL file), or "make list" for a list of makefile targets.
