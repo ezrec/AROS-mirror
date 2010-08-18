@@ -20,20 +20,13 @@ FILESF = funzip \
          crc32 crypt globals inflate ttyio \
          amiga/filedate
 
-# MakeSFX files
-FILESM = amiga/makesfx
-
 EXEDIR := $(AROS_C)
 
-#MM- aminet-util-arc-unzip: includes linklibs unzip-unzip unzip-unzipsfx unzip-funzip unzip-makesfx
+#MM- aminet-util-arc-unzip: includes linklibs unzip-unzip unzip-unzipsfx unzip-funzip
 
 %build_prog mmake=unzip-unzip \
     progname=UnZip objdir=$(GENDIR)/$(CURDIR)/UnZip targetdir=$(EXEDIR) \
     files=$(FILES)
-
-%build_prog mmake=unzip-makesfx \
-    progname=MakeSfx objdir=$(GENDIR)/$(CURDIR)/MakeSFX targetdir=$(EXEDIR) \
-    files=$(FILESM)
 
 USER_CFLAGS := -DSFX
 
