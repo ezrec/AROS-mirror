@@ -66,6 +66,8 @@ OPT  = -O2
 # common compiler flags
 CFLAGSC  =  $(CDBG) $(OPT) $(CUSECPU) $(CIGNORE)
 
+OS=$(shell uname)
+
 ##################
 # TARGET OBJECTS #
 ##################
@@ -124,10 +126,10 @@ all: $(UNZIPS)
 	$(CC) -c $(CFLAGSC) $*.c -o $@ -DFUNZIP
 
 amiga$(O): amiga/amiga.c
-	$(CC) -c $(CFLAGSC) amiga/amiga.c -o $@ -I.
+	$(CC) -c $(CFLAGSC) -DUNDER='"$(OS)"' amiga/amiga.c -o $@ -I.
 
 amiga$(OX): amiga/amiga.c
-	$(CC) -c $(CFLAGSC) amiga/amiga.c -o $@ -DSFX -I.
+	$(CC) -c $(CFLAGSC) -DUNDER='"$(OS)"' amiga/amiga.c -o $@ -DSFX -I.
 
 filedate$(OF): amiga/filedate.c
 	$(CC) -c $(CFLAGSC) amiga/filedate.c -o $@ -DFUNZIP -I.

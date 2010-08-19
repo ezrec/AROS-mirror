@@ -4,6 +4,8 @@
 
 include $(TOP)/config/make.cfg
 
+OS=$(shell uname)
+
 # UnZip files
 FILES := unzip crc32 crypt envargs explode \
          extract fileio globals list inflate match \
@@ -24,17 +26,19 @@ EXEDIR := $(AROS_C)
 
 #MM- aminet-util-arc-unzip: includes linklibs unzip-unzip unzip-unzipsfx unzip-funzip
 
+USER_CFLAGS := -DUNDER='"$(OS)"'
+
 %build_prog mmake=unzip-unzip \
     progname=UnZip objdir=$(GENDIR)/$(CURDIR)/UnZip targetdir=$(EXEDIR) \
     files=$(FILES)
 
-USER_CFLAGS := -DSFX
+USER_CFLAGS := -DSFX -DUNDER='"$(OS)"'
 
 %build_prog mmake=unzip-unzipsfx \
     progname=UnZipSfx objdir=$(GENDIR)/$(CURDIR)/UnZipSfx targetdir=$(EXEDIR) \
     files=$(FILESX)
 
-USER_CFLAGS := -DFUNZIP
+USER_CFLAGS := -DFUNZIP -DUNDER='"$(OS)"'
 
 %build_prog mmake=unzip-funzip \
     progname=fUnZip objdir=$(GENDIR)/$(CURDIR)/fUnZip targetdir=$(EXEDIR) \

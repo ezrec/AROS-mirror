@@ -983,6 +983,17 @@ int dateformat()
 /*  Function version()  */
 /************************/
 
+
+#ifndef UNDER
+/* NOTE:  the following include depends upon the environment
+ *        variable $Workbench to be set correctly.  (Set by
+ *        default, by kickstart during startup)
+ */
+int WBversion = (int)
+#include "ENV:Workbench"
+;
+#endif
+
 void version(__G)
    __GDEF
 {
@@ -1015,15 +1026,11 @@ void version(__G)
 #  endif
 # endif
 /* "under" */
-# ifdef __AROS__
-   strcpy(buf3, "AROS");
-# else
-#  ifdef __MORPHOS__
-    strcpy(buf3, "MorphOS");
-#  else
-    strcpy(buf3, "AmigaOS");
-#  endif
-# endif
+#ifdef UNDER
+  strcpy(buf3, UNDER);
+#else
+  sprintf(buf3,"AmigaDOS v%d",WBversion);
+#endif
 #else
   strcpy(buf1,"Unknown compiler ");
   strcpy(buf3,"Unknown OS");
