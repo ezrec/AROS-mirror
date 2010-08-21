@@ -36,15 +36,26 @@ FILES :=               \
 #MM                        aros-tcpip-apps-owb-licenses  \
 #MM                        aros-tcpip-apps-startowb
 
-LDFLAGS += -Wl,-whole-archive -lwebkit-owb -lwtf -ljsc -lwebcore -Wl,-no-whole-archive
-AROS_CC := $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-g++ -specs=$(GENDIR)/config/specs
-
 #MM aros-tcpip-apps-owb-resources : aros-tcpip-apps-owb-icons iconset-$(AROS_TARGET_ICONSET)-contrib-icons-owb aros-tcpip-apps-owb-readme
 
-%build_prog mmake=aros-tcpip-apps-owb \
-    files=$(FILES) targetdir=$(EXEDIR) \
-    progname="owb" uselibs="icui18n icuuc icudata codesets thread xml2 fontconfig freetype2 SDL SDL_gfx png jpeg curl iconv z amiga arosc m mui ssl crypto sqlite3 xslt" \
-    cflags="$(CFLAGS) -DZUNE_BUILTIN_SCROLLGROUP=0 -DWTF_PLATFORM_AROS=1 -I$(SRCDIR)/$(CURDIR)/tabs -I$(AROS_INCLUDES)/SDL -I$(AROS_INCLUDES)/webkit-owb"
+LDFLAGS += -Wl,-whole-archive -lwebkit-owb -lwtf -ljsc -lwebcore -Wl,-no-whole-archive \
+    -licui18n -licuuc -licudata -lcodesets -lthread -lxml2 -lfontconfig -lfreetype2 \
+    -lSDL -lSDL_gfx -lpng -ljpeg -lcurl -liconv -lz -lamiga -larosc -lm -lmui -lssl \
+    -lcrypto -lsqlite3 -lxslt
+
+OWB_CXX := $(TOOLDIR)/$(AROS_TARGET_CPU)-aros-g++ -specs=$(GENDIR)/config/specs
+OWB_OBJ := $(addprefix $(OBJDIR)/,$(addsuffix .o,$(FILES)))
+OWB_CFLAGS := $(CFLAGS) -DZUNE_BUILTIN_SCROLLGROUP=0 -DMUIMASTER_YES_INLINE_STDARG \
+    -DWTF_PLATFORM_AROS=1 -I$(SRCDIR)/$(CURDIR)/tabs -I$(AROS_INCLUDES)/SDL \
+    -I$(AROS_INCLUDES)/webkit-owb
+
+#MM
+aros-tcpip-apps-owb : $(FILES)
+%link_q cmd=$(OWB_CXX) from=$(OWB_OBJ) to=$(EXEDIR)/owb
+
+$(FILES) :
+%mkdir_q dir=$(OBJDIR)/tabs
+%compile_q cmd=$(TARGET_CC) opt=$(OWB_CFLAGS) from=$(SRCDIR)/$(CURDIR)/$@.c to="$(addsuffix .o,$(addprefix $(OBJDIR)/,$@))"
 
 ICONS := back.png close.png download.png find.png forward.png go.png home.png preferences.png reload.png search.png stop.png bookmarks.png logo.png
 
