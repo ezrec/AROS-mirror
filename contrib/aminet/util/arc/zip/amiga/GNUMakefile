@@ -1,0 +1,282 @@
+#===========================================================================
+# Makefile for Zip, ZipNote, ZipCloak, ZipSplit     AMIGA SAS/C Version 6.58
+# Version:  1.0                                     last revised:  17 Aug 10
+#===========================================================================
+# from Pavel Fedin <pavel_fedin@mail.ru>
+
+# Based on SAS/C version
+
+# Available targets:
+# all           builds all executeables below
+# zip           builds zip executeable
+# zipsplit      builds zipsplit executeable
+# zipcloak      builds zipcloak executeable
+# zipnote       builds zipnote executeable
+# ziplm         builds low memory version of zip executable
+# clean         remove all files created by the compilation
+# spotless      like clean target but removes binaries too
+
+
+##########################
+# USER MACRO DEFINITIONS #
+##########################
+
+# Set the processor to generate code for UnZip and fUnZip.
+
+CUSECPU =
+
+#
+# DEBUGGING
+# ---------
+
+# Default: No debugging information added.
+CDBG =
+
+#
+# SUPPRESSED COMPILER WARNINGS
+# ----------------------------
+
+# This is for gcc v4
+CIGNORE = -Wno-pointer-sign
+
+
+#
+# OBJECT EXTENSIONS
+#
+
+# Extensions used for objects of each executeable.
+# Transformation rules require unique extensions.
+# Enter *with* dot.
+#
+O  = .o     # extension for Zip     objects
+OU = .uo    # extension for utility objects (ZipNote, ZipSplit and ZipCloak)
+OL = .lo    # extension for low memory Zip objects
+
+# Define AMIGA_BETA to print "Beta Notice" up front.  See tailor.h.
+# Undefine AMIGA_BETA when building a released version.
+#CDEFBETA = -DAMIGA_BETA
+
+#####################################
+# NOTHING TO CHANGE BEYOND HERE ... #
+#####################################
+# (except for C/asm dependencies)
+
+# Define MEDIUM_MEM for production release (per Paul Kienitz).
+# This reduces runtime memory requirement but not speed or compression.
+# Note: Do *not* use BIG_MEM or MMAP since it isn't yet supported by the
+#       assembler version of deflate.c : amiga/deflate.a
+CUSEMEM = -DMEDIUM_MEM
+
+
+# Defines for building low-memory use version of Zip
+WSIZEL   = WSIZE=4096     # deflate.c window size for low-mem version
+CLOWMEM = -DSMALL_MEM -D$(WSIZEL)
+
+
+# Compiler definitions
+#
+CC = gcc
+#
+# Optimizer flags
+#
+OPT = -O2
+
+
+# Compiler flags
+#
+CFLAGS  =  $(CDBG) $(OPT) $(CUSECPU) $(CIGNORE) -DAMIGA -I.
+
+OS=$(shell uname)
+
+##################
+# TARGET OBJECTS #
+##################
+
+
+# Zip objects
+OBJZ1 = zip$(O) zipfile$(O) zipup$(O) fileio$(O) util$(O) globals$(O)
+OBJZ2 = crc32$(O) crypt$(O) timezone$(O) ttyio$(O)
+OBJZI = deflate$(O) trees$(O)
+OBJZA = amiga$(O) amigazip$(O) filedate$(O)
+OBJZ  = $(OBJZ1) $(OBJZ2) $(OBJZI) $(OBJZA)
+
+# Shared utility objects for ZipNote, ZipCloak and ZipSplit
+OBJU1 = globals$(O)
+OBJUU = zipfile$(OU) fileio$(OU) timezone$(O) util$(OU)
+OBJUA = amigazip$(OU) amiga$(O) filedate$(O)
+OBJU  = $(OBJU1) $(OBJUU) $(OBJUA)
+
+# ZipNote objects
+OBJN1 = zipnote$(O)
+OBJN  = $(OBJN1) $(OBJU)
+
+# ZipCloak objects
+OBJC1 = zipcloak$(O)
+OBJCU = $(OBJU) crypt$(OU)
+OBJCS = crc32$(OU) ttyio$(O)
+OBJC  = $(OBJC1) $(OBJCU) $(OBJCS)
+
+#ZipSplit objects
+OBJS1 = zipsplit$(O)
+OBJS  = $(OBJS1) $(OBJU)
+
+# ZipLM objects
+OBJL1 = zip$(OL) zipfile$(OL) zipup$(OL) fileio$(OL) util$(OL) globals$(OL)
+OBJL2 = crc32$(OL) crypt$(OL) timezone$(OL) ttyio$(OL)
+OBJLI = deflate$(OL) trees$(OL)
+OBJLA = amiga$(OL) amigazip$(OL) filedate$(OL)
+OBJL  = $(OBJL1) $(OBJL2) $(OBJLI) $(OBJLA)
+
+# Common header files
+ZIP_H1 = zip.h ziperr.h tailor.h
+ZIP_HA = amiga/osdep.h amiga/z-stat.h
+ZIP_H  = $(ZIP_H1) $(ZIP_HA)
+
+# Output targets
+ZIPS  = zip zipnote zipcloak zipsplit ziplm
+
+
+#######################################
+# DEFAULT TARGET AND PROCESSING RULES #
+#######################################
+
+all: $(ZIPS)
+
+# Zip transformation rules
+#
+%$(O): %.c
+	$(CC) -c $(CFLAGS) $(CUSEMEM) $*.c -o $@
+
+# Zip low-memory version transformation rules
+#
+%$(OL): %.c
+	$(CC) -c $(CFLAGS) $(CLOWMEM) $*.c -o $@
+
+# Utilities (ZipNote, ZipCloak and ZipSplit) transformation rules
+#
+%$(OU): %.c
+	$(CC) -c $(CFLAGS) $(CUSEMEM) -DUTIL $*.c -o $@
+
+amiga$(O): amiga/amiga.c
+	$(CC) -c $(CFLAGS) $(CUSEMEM) $< -o $@
+
+amigazip$(O): amiga/amigazip.c
+	$(CC) -c $(CFLAGS) $(CUSEMEM) -DUNDER='"$(OS)"' $< -o $@
+
+filedate$(O): amiga/filedate.c
+	$(CC) -c $(CFLAGS) $(CUSEMEM) $< -o $@
+
+amiga$(OL): amiga/amiga.c
+	$(CC) -c $(CFLAGS) $(CLOWMEM) $< -o $@
+
+amigazip$(OL): amiga/amigazip.c
+	$(CC) -c $(CFLAGS) $(CLOWMEM) -DUNDER='"$(OS)"' $< -o $@
+
+filedate$(OL): amiga/filedate.c
+	$(CC) -c $(CFLAGS) $(CLOWMEM) $< -o $@
+
+amigazip$(OU): amiga/amigazip.c
+	$(CC) -c $(CFLAGS) $(CUSEMEM) -DUNDER='"$(OS)"' -DUTIL $< -o $@
+
+#########################
+# Final output targets. #
+#########################
+
+
+zip: $(OBJZ)
+	$(CC) -o Zip $^
+
+zipnote: $(OBJN)
+	$(CC) -o ZipNote $^
+
+zipcloak: $(OBJC)
+	$(CC) -o ZipCloak $^
+
+zipsplit: $(OBJS)
+	$(CC) -o ZipSplit $^
+
+ziplm: $(OBJL)
+	$(CC) -o ZipLM $^
+
+clean:
+	-rm -f $(OBJZ)
+	-rm -f $(OBJN)
+	-rm -f $(OBJC)
+	-rm -f $(OBJS)
+	-rm -f $(OBJL)
+
+spotless: clean
+	-rm -f $(ZIPS)
+
+
+################
+# DEPENDENCIES #
+################
+
+# To change between the assembler and C sources, you have to comment/uncomment
+# the approprite lines. C sources are marked by #C-src and assembler sources
+# #asm-src at the end.
+# Zip dependencies:
+#
+
+zip$(O):        zip.c      $(ZIP_H) revision.h crc32.h crypt.h ttyio.h
+zipup$(O):      zipup.c    $(ZIP_H) revision.h crc32.h crypt.h amiga/zipup.h
+zipfile$(O):    zipfile.c  $(ZIP_H) revision.h crc32.h
+crypt$(O):      crypt.c    $(ZIP_H) crypt.h crc32.h ttyio.h
+ttyio$(O):      ttyio.c    $(ZIP_H) crypt.h ttyio.h
+deflate$(O):    deflate.c  $(ZIP_H)                          #C-src
+trees$(O):      trees.c    $(ZIP_H)
+fileio$(O):     fileio.c   $(ZIP_H) crc32.h
+util$(O):       util.c     $(ZIP_H)
+crc32$(O):      crc32.c    $(ZIP_H) crc32.h
+globals$(O):    globals.c  $(ZIP_H)
+timezone$(O):   timezone.c $(ZIP_H) timezone.h
+# Amiga specific objects
+stat$(O):       amiga/stat.c     amiga/z-stat.h
+filedate$(O):   amiga/filedate.c crypt.h timezone.h
+amiga$(O):      amiga/amiga.c    ziperr.h
+amigazip$(O):   amiga/amigazip.c $(ZIP_H) amiga/amiga.h
+# Substitute assembly version of deflate.c:
+#deflate$(O):  amiga/deflate.a                               #asm-src
+#        $(ASM) $(ASMOPTSZ) -o$@ $*.a                        #asm-src
+
+
+# Utility (ZipNote, ZipCloak, ZipSplit) dependencies:
+#
+zipnote$(O):    zipnote.c  $(ZIP_H) revision.h
+zipcloak$(O):   zipcloak.c $(ZIP_H) revision.h crc32.h crypt.h ttyio.h
+zipsplit$(O):   zipsplit.c $(ZIP_H) revision.h
+zipfile$(OU):   zipfile.c  $(ZIP_H) revision.h crc32.h
+fileio$(OU):    fileio.c   $(ZIP_H) crc32.h
+util$(OU):      util.c     $(ZIP_H)
+crc32$(OU):     crc32.c    $(ZIP_H) crc32.h
+crypt$(OU):     crypt.c    $(ZIP_H) crypt.h crc32.h ttyio.h
+# Amiga specific objects
+amigazip$(OU):   amiga/amigazip.c $(ZIP_H) amiga/amiga.h
+
+# ZipLM dependencies:
+#
+zip$(OL):       zip.c      $(ZIP_H) revision.h crc32.h crypt.h ttyio.h
+zipup$(OL):     zipup.c    $(ZIP_H) revision.h crc32.h crypt.h amiga/zipup.h
+zipfile$(OL):   zipfile.c  $(ZIP_H) revision.h crc32.h
+crypt$(OL):     crypt.c    $(ZIP_H) crypt.h crc32.h ttyio.h
+ttyio$(OL):     ttyio.c    $(ZIP_H) crypt.h ttyio.h
+deflate$(OL):   deflate.c  $(ZIP_H)
+trees$(OL):     trees.c    $(ZIP_H)
+fileio$(OL):    fileio.c   $(ZIP_H) crc32.h
+util$(OL):      util.c     $(ZIP_H)
+crc32$(OL):     crc32.c    $(ZIP_H)
+globals$(OL):   globals.c  $(ZIP_H)
+timezone$(OL):  timezone.c $(ZIP_H) timezone.h
+# Amiga specific objects
+stat$(OL):      amiga/stat.c     amiga/z-stat.h
+filedate$(OL):  amiga/filedate.c crypt.h timezone.h
+amiga$(OL):     amiga/amiga.c    ziperr.h
+# Substitute assembly version of deflate.c:
+#deflate$(OL): amiga/deflate.a
+#        $(ASM) $(ASMOPTSL) -o$@ $*.a
+
+
+########################
+# DEPENDECIES END HERE #
+########################

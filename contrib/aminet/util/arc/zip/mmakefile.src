@@ -1,0 +1,66 @@
+#   $Id: mmakefile.src 34220 2010-08-19 13:47:14Z sonic $
+#
+#   Makefile to make UnZip.
+
+include $(TOP)/config/make.cfg
+
+OS=$(shell uname)
+
+CUSEMEM := -DMEDIUM_MEM
+
+WSIZEL  := WSIZE=4096     # deflate.c window size for low-mem version
+CLOWMEM := -DSMALL_MEM -D$(WSIZEL)
+
+# Zip files
+FILESZ := zip zipfile zipup fileio util globals \
+          crc32 crypt timezone ttyio \
+          deflate trees \
+          amiga/amiga amiga/amigazip amiga/filedate
+
+# Shared utility files for ZipNote, ZipCloak and ZipSplit
+FILESU := globals zipfile fileio timezone util \
+          amiga/amigazip amiga/amiga amiga/filedate
+
+# ZipNote files
+FILESN := zipnote $(FILESU)
+
+# ZipCloak files
+FILESC := zipcloak $(FILESU) crypt \
+          crc32 ttyio
+
+#ZipSplit files
+FILESS := zipsplit $(FILESU)
+
+EXEDIR := $(AROS_C)
+
+#MM- aminet-util-arc-zip: includes linklibs zip-zip zip-zipnote zip-zipcloak zip-zipsplit
+
+USER_CFLAGS := $(CUSEMEM) -DUNDER='"$(OS)"'
+
+%build_prog mmake=zip-zip \
+    progname=Zip objdir=$(GENDIR)/$(CURDIR)/Zip targetdir=$(EXEDIR) \
+    files=$(FILESZ)
+
+USER_CFLAGS := $(CUSEMEM) -DUTIL -DUNDER='"$(OS)"'
+
+%build_prog mmake=zip-zipnote \
+    progname=ZipNote objdir=$(GENDIR)/$(CURDIR)/ZipNote targetdir=$(EXEDIR) \
+    files=$(FILESN)
+
+%build_prog mmake=zip-zipcloak \
+    progname=ZipCloak objdir=$(GENDIR)/$(CURDIR)/ZipCloak targetdir=$(EXEDIR) \
+    files=$(FILESC)
+
+%build_prog mmake=zip-zipsplit \
+    progname=ZipSplit objdir=$(GENDIR)/$(CURDIR)/ZipSplit targetdir=$(EXEDIR) \
+    files=$(FILESS)
+
+# Low-memory version. By default we don't build it.
+
+USER_CFLAGS := $(CLOWMEM) -DUNDER='"$(OS)"'
+
+%build_prog mmake=zip-ziplm \
+    progname=ZipLM objdir=$(GENDIR)/$(CURDIR)/ZipLM targetdir=$(EXEDIR) \
+    files=$(FILESZ)
+
+%common
