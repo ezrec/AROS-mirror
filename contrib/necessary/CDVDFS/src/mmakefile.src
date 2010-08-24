@@ -26,7 +26,7 @@ CHECKCD_FILES := checkcd cdrom iso9660 rock joliet \
 USER_CFLAGS := -DNDEBUG -DDEBUG=0
 
 %build_prog mmake=contrib-cdvdfs-packet \
-    progname=cdrom-handler targetdir=$(AROS_DEVS) \
+    progname=cdrom.handler targetdir=$(AROS_DEVS) \
     objdir=$(GENDIR)/$(CURDIR)-packet files="$(HANDLER_FILES)" usestartup=no uselibs="arossupport rom"
 
 %build_prog mmake=contrib-cdvdfs-cdcontrol \
