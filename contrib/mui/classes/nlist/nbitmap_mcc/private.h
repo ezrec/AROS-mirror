@@ -42,22 +42,22 @@
 #define MUIV_NBitmap_Selected     2
 
 #ifndef uint8
-typedef unsigned char uint8;
+typedef UBYTE uint8;
 #endif
 #ifndef int8
-typedef signed char int8;
+typedef BYTE int8;
 #endif
 #ifndef uint16
-typedef unsigned short uint16;
+typedef UWORD uint16;
 #endif
 #ifndef int16
-typedef signed short int16;
+typedef WORD int16;
 #endif
 #ifndef uint32
-typedef unsigned long uint32;
+typedef ULONG uint32;
 #endif
 #ifndef int32
-typedef signed long int32;
+typedef LONG int32;
 #endif
 
 /* private structures */

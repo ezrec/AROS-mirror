@@ -1,6 +1,7 @@
 ## chunk AUTH Pär Boberg
 ## language svenska
 ## version $VER: NListviews_mcp.ct 2.1 (26.10.09)
+## codeset 0
 MSG_FONTS
 Typsnitt
 ;#DEF Fonts
@@ -254,7 +255,7 @@ Tangentbindningar
 ;#DEF Keybindings
 ;#SET (62//)
 MSG_SB_HORIZONTAL
-Horisontellt dragreglage 
+Horisontellt dragreglage
 ;#DEF Horizontal Scrollbar
 ;#SET (63//)
 MSG_SB_HORIZONTAL_HELP

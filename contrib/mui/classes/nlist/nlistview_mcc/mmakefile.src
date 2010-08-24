@@ -8,8 +8,7 @@ USER_CFLAGS := -DNO_INLINE_STDARG
 
 FILES := library \
          NListview \
-         Debug \
-         vastubs
+         Debug
 
 %build_module_simple mmake=contrib-zune-classes-nlistview-class \
   modname=NListview modtype=mcc moduledir=$(CONTRIBDIR)/Zune/MCC_NList/Classes/Zune \

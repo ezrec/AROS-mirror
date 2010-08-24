@@ -1480,9 +1480,9 @@ static int GetVisualInsertPos( struct NListtree_Data *data, struct MUI_NListtree
 {
   int ent;
 
-  if ((LONG)prevtn == INSERT_POS_HEAD)
+  if ((SIPTR)prevtn == INSERT_POS_HEAD)
     ent = GetVisualPos(data, CTN(ln)) + 1;
-  else if ( (LONG)prevtn == INSERT_POS_TAIL )
+  else if ( (SIPTR)prevtn == INSERT_POS_TAIL )
     ent = GetVisualPos(data, CTN(ln)) + GetVisualEntries(data, CTN(ln)) + 1;
   else
     ent = GetVisualPos(data, CTN(prevtn)) + GetVisualEntries(data,CTN(prevtn)) + 1;
@@ -1901,28 +1901,32 @@ LONG InsertTreeNodeVisible( struct NListtree_Data *data, struct MUI_NListtree_Tr
 
 
 
-VOID ShowTree( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn )
+VOID ShowTree(struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn)
 {
-  LONG first, visible, max, pos, a, b, treeentries = 0, jmp;
-
-  if ( tn->tn_Flags & TNF_OPEN )
+  if(isFlagSet(tn->tn_Flags, TNF_OPEN))
   {
-    first = xget( data->Obj, MUIA_NList_First );
-    visible = xget( data->Obj, MUIA_NList_Visible );
+    LONG first = xget(data->Obj, MUIA_NList_First);
+    LONG visible = xget(data->Obj, MUIA_NList_Visible);
+    LONG max;
+    LONG pos;
+    LONG a;
+    LONG b;
+    LONG treeentries = 0;
+    LONG jmp;
 
-    pos = GetVisualPos( data, tn );
-    GetVisualEntriesMax( data, tn, pos, &treeentries, visible );
+    pos = GetVisualPos(data, tn);
+    GetVisualEntriesMax(data, tn, pos, &treeentries, visible);
 
     a = pos - first;
     b = visible - a - 1;
 
     max = a + b;
-    jmp = pos + MIN( max, treeentries );
+    jmp = pos + MIN(max, treeentries);
 
     D(DBF_LISTTREE, "first: %ld, visible: %ld, pos: %ld, treeentries: %ld, a: %ld, b: %ld, max: %ld, jmp: %ld",
       first, visible, pos, treeentries, a, b, max, jmp);
 
-    DoMethod( data->Obj, MUIM_NList_Jump, jmp );
+    DoMethod(data->Obj, MUIM_NList_Jump, jmp);
   }
 }
 
@@ -2236,59 +2240,58 @@ VOID CloseTreeNodeListCollapse( struct NListtree_Data *data, struct MUI_NListtre
 
 
 
-VOID ActivateTreeNode( struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn )
+VOID ActivateTreeNode(struct NListtree_Data *data, struct MUI_NListtree_TreeNode *tn)
 {
   struct MUI_NListtree_TreeNode *tn2 = tn;
   ULONG jmppos;
   LONG newact;
 
-  if ( data->ActiveNode )
+  if(data->ActiveNode != NULL)
   {
-    switch( data->AutoVisible )
+    switch(data->AutoVisible)
     {
       case MUIV_NListtree_AutoVisible_Off:
-        break;
-
+      {
+        // nothing to do
+      }
+      break;
 
       case MUIV_NListtree_AutoVisible_Normal:
-
-        if ( tn2->tn_IFlags & TNIF_VISIBLE )
+      {
+        if(isFlagSet(tn2->tn_IFlags, TNIF_VISIBLE))
         {
-          jmppos = GetVisualPos( data, tn2 );
-          DoMethod( data->Obj, MUIM_NList_Jump, jmppos );
+          jmppos = GetVisualPos(data, tn2);
+          DoMethod(data->Obj, MUIM_NList_Jump, jmppos);
         }
-
-        break;
-
+      }
+      break;
 
       case MUIV_NListtree_AutoVisible_FirstOpen:
-
-        while ( !( tn2->tn_IFlags & TNIF_VISIBLE ) )
-        {
+      {
+        while(isFlagClear(tn2->tn_IFlags, TNIF_VISIBLE))
           tn2 = tn2->tn_Parent;
-        }
 
-        jmppos = GetVisualPos( data, tn2 );
-        DoMethod( data->Obj, MUIM_NList_Jump, jmppos );
-
-        break;
-
+        jmppos = GetVisualPos(data, tn2);
+        DoMethod(data->Obj, MUIM_NList_Jump, jmppos);
+      }
+      break;
 
       case MUIV_NListtree_AutoVisible_Expand:
+      {
+        while((tn2 = tn2->tn_Parent) != NULL)
+          OpenTreeNode(data, tn2);
 
-        while((tn2 = tn2->tn_Parent))
-        {
-          OpenTreeNode( data, tn2 );
-        }
-
-        jmppos = GetVisualPos( data, tn2 );
-        DoMethod( data->Obj, MUIM_NList_Jump, jmppos );
-
-        break;
+        jmppos = GetVisualPos(data, tn2);
+        DoMethod(data->Obj, MUIM_NList_Jump, jmppos);
+      }
+      break;
     }
   }
 
-  newact = tn ? GetVisualPos( data, tn ) : MUIV_NList_Active_Off;
+  if(tn != NULL)
+    newact = GetVisualPos(data, tn);
+  else
+    newact = MUIV_NList_Active_Off;
 
   /* sba: set the new entry only if it really changes, otherwise we lose some
      MUIA_NList_Active notifications */
@@ -2613,11 +2616,11 @@ VOID InsertTreeNode( struct NListtree_Data *data, struct MUI_NListtree_ListNode 
   /*
   **  Insert entry into list.
   */
-  if ( (ULONG)tn2 == (ULONG)INSERT_POS_HEAD )
+  if ( (IPTR)tn2 == (IPTR)INSERT_POS_HEAD )
   {
     AddHead( (struct List *)&ln->ln_List, (struct Node *)&tn1->tn_Node );
   }
-  else if ( (ULONG)tn2 == (ULONG)INSERT_POS_TAIL )
+  else if ( (IPTR)tn2 == (IPTR)INSERT_POS_TAIL )
   {
     AddTail( (struct List *)&ln->ln_List, (struct Node *)&tn1->tn_Node );
   }
@@ -3275,7 +3278,7 @@ MakeStaticHook(_FindNameHook_PartCaseInsensitive, _FindNameFunc_PartCaseInsensit
 
 HOOKPROTONHNO(_FindNameFunc_PointerCompare, LONG, struct MUIP_NListtree_FindNameMessage *msg)
 {
-  return( (LONG)( (LONG)msg->Name - (LONG)msg->NodeName ) );
+  return( (LONG)( (SIPTR)msg->Name - (SIPTR)msg->NodeName ) );
 }
 MakeStaticHook(_FindNameHook_PointerCompare, _FindNameFunc_PointerCompare);
 
@@ -3305,7 +3308,7 @@ MakeStaticHook(_FindUserDataHook_PartCaseInsensitive, _FindUserDataFunc_PartCase
 
 HOOKPROTONHNO(_FindUserDataFunc_PointerCompare, LONG, struct MUIP_NListtree_FindUserDataMessage *msg)
 {
-  return( (LONG)( (LONG)msg->User - (LONG)msg->UserData ) );
+  return( (LONG)( (SIPTR)msg->User - (SIPTR)msg->UserData ) );
 }
 MakeStaticHook(_FindUserDataHook_PointerCompare, _FindUserDataFunc_PointerCompare);
 
@@ -4713,7 +4716,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
       case MUIA_NListtree_Active:
         D(DBF_GETSET, "SET MUIA_NListtree_Active");
         if((tag->ti_Data == (ULONG)MUIV_NListtree_Active_Off) ||
-           (tag->ti_Data == (ULONG)&data->RootList) ||
+           (tag->ti_Data == (IPTR)&data->RootList) ||
            ((tag->ti_Data == (ULONG)MUIV_NListtree_Active_Parent) &&
             (data->ActiveNode == (ULONG)MUIV_NListtree_Active_Off))
           )
@@ -4730,14 +4733,14 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
           */
           if(tag->ti_Data == (ULONG)MUIV_NListtree_Active_Parent)
           {
-            tag->ti_Data = (ULONG)GetParent( data->ActiveNode );
+            tag->ti_Data = (IPTR)GetParent( data->ActiveNode );
           }
 
           /*
           **  First list entry (visible or not).
           */
           if(tag->ti_Data == (ULONG)MUIV_NListtree_Active_First)
-            tag->ti_Data = (ULONG)List_First( (struct List *)&data->RootList.ln_List );
+            tag->ti_Data = (IPTR)List_First( (struct List *)&data->RootList.ln_List );
 
           /*
           **  First visible entry.
@@ -4749,7 +4752,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
             firstvisible = xget( data->Obj, MUIA_NList_First );
             DoMethod( data->Obj, MUIM_NList_GetEntry, firstvisible, &tn );
 
-            tag->ti_Data = (ULONG)tn;
+            tag->ti_Data = (IPTR)tn;
           }
 
           /*
@@ -4762,10 +4765,10 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
             lastvisible = xget( data->Obj, MUIA_NList_First ) + xget( data->Obj, MUIA_NList_Visible ) - 1;
             DoMethod( data->Obj, MUIM_NList_GetEntry, lastvisible, &tn );
 
-            tag->ti_Data = (ULONG)tn;
+            tag->ti_Data = (IPTR)tn;
           }
 
-          if ( (ULONG)tag->ti_Data != (ULONG)&data->RootList )
+          if ( tag->ti_Data != (IPTR)&data->RootList )
           {
             actnode = CTN( tag->ti_Data );
             actlist = CLN( GetParent( (CTN( tag->ti_Data) ) ) );
@@ -4821,7 +4824,7 @@ VOID SetAttributes( struct NListtree_Data *data, struct opSet *msg, BOOL initial
 
       case MUIA_NListtree_AutoVisible:
 
-        data->AutoVisible = (UBYTE)tag->ti_Data;
+        data->AutoVisible = (IPTR)tag->ti_Data;
 
         D(DBF_GETSET, "SET MUIA_NListtree_AutoVisible: %ld", tag->ti_Data);
         break;
@@ -5553,7 +5556,7 @@ IPTR _New(struct IClass *cl, Object *obj, struct opSet *msg)
                                        "NListtree will terminate now to avoid problems...\n";
             es.es_GadgetFormat = (STRPTR)"Terminate";
 
-            EasyRequest( NULL, &es, NULL, (LONG)taskname, ver, rev );
+            EasyRequest( NULL, &es, NULL, (IPTR)taskname, ver, rev );
 
             //CoerceMethod( cl, obj, OM_DISPOSE );
             return( 0 );
@@ -5712,7 +5715,7 @@ IPTR _Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
 {
   struct NListtree_Data *data = INST_DATA(cl, obj);
   Object *pdobj, *idobj;
-  LONG d;
+  SIPTR d;
   BOOL x;
 
   ENTER();
@@ -5959,7 +5962,7 @@ IPTR _Show(struct IClass *cl, Object *obj, Msg msg)
   if (!DoSuperMethodA( cl, obj, (Msg)msg))
     return 0;
 
-  data->EHNode.ehn_Priority = 1;
+  data->EHNode.ehn_Priority = 2;
   data->EHNode.ehn_Flags    = 0;
   data->EHNode.ehn_Object   = obj;
   data->EHNode.ehn_Class    = cl;
@@ -6060,7 +6063,7 @@ IPTR _HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
             }
             else if((tn = CTN(DoMethod(obj, MUIM_NListtree_GetEntry, data->ActiveNode, MUIV_NListtree_GetEntry_Position_Head, 0))))
             {
-              if(xget(obj, MUIA_NListtree_Active) != (ULONG)tn)
+              if(xget(obj, MUIA_NListtree_Active) != (IPTR)tn)
               {
                 set( obj, MUIA_NListtree_Active, tn );
                 changed = TRUE;
@@ -6657,7 +6660,7 @@ IPTR _DragNDrop_DragDrop(struct IClass *cl, Object *obj, UNUSED Msg msg)
     {
       DoMethod( obj, MUIM_NListtree_NextSelected, &tn );
 
-      if ( (LONG)tn == MUIV_NListtree_NextSelected_End )
+      if ( (IPTR)tn == (IPTR)MUIV_NListtree_NextSelected_End )
         break;
 
       if((rettn = IsXChildOfListMemberNotSelf(tn, &data->SelectedTable)))
@@ -6915,7 +6918,7 @@ IPTR _NListtree_Open(struct IClass *cl, Object *obj, struct MUIP_NListtree_Open 
   /*
   **
   */
-  switch( (ULONG)msg->ListNode )
+  switch( (IPTR)msg->ListNode )
   {
     case MUIV_NListtree_Open_ListNode_Root:
       ln = &data->RootList;
@@ -6937,7 +6940,7 @@ IPTR _NListtree_Open(struct IClass *cl, Object *obj, struct MUIP_NListtree_Open 
   /*
   **
   */
-  switch( (ULONG)msg->TreeNode )
+  switch( (IPTR)msg->TreeNode )
   {
     case MUIV_NListtree_Open_TreeNode_Head:
       tn = CTN( List_First( (struct List *)&ln->ln_List ) );
@@ -6985,7 +6988,7 @@ IPTR _NListtree_Open(struct IClass *cl, Object *obj, struct MUIP_NListtree_Open 
         else
           OpenTreeNode( data, tn );
 
-        if((ULONG)msg->ListNode == (ULONG)MUIV_NListtree_Open_ListNode_Parent)
+        if ((IPTR)msg->ListNode == (IPTR)MUIV_NListtree_Open_ListNode_Parent)
         {
           tn2 = tn;
 
@@ -7101,7 +7104,7 @@ IPTR _NListtree_Close(struct IClass *cl, Object *obj, struct MUIP_NListtree_Clos
   /*
   **
   */
-  switch( (ULONG)msg->ListNode )
+  switch( (IPTR)msg->ListNode )
   {
     case MUIV_NListtree_Close_ListNode_Root:
       ln = &data->RootList;
@@ -7123,7 +7126,7 @@ IPTR _NListtree_Close(struct IClass *cl, Object *obj, struct MUIP_NListtree_Clos
   /*
   **
   */
-  switch( (ULONG)msg->TreeNode )
+  switch( (IPTR)msg->TreeNode )
   {
     case MUIV_NListtree_Close_TreeNode_Head:
       tn = CTN( List_First( (struct List *)&ln->ln_List ) );
@@ -7370,7 +7373,7 @@ IPTR _NListtree_Insert(struct IClass *cl, Object *obj, struct MUIP_NListtree_Ins
       /*
       **  Check out which list to use.
       */
-      switch( (ULONG)msg->ListNode )
+      switch( (IPTR)msg->ListNode )
       {
         case MUIV_NListtree_Insert_ListNode_Root:
           li = &data->RootList;
@@ -7416,7 +7419,7 @@ IPTR _NListtree_Insert(struct IClass *cl, Object *obj, struct MUIP_NListtree_Ins
         /*
         **  Add the new created entry to the specified list.
         */
-        switch( (ULONG)msg->PrevNode )
+        switch( (IPTR)msg->PrevNode )
         {
           case MUIV_NListtree_Insert_PrevNode_Head:
             AddHead( (struct List *)&li->ln_List, (struct Node *)&tn->tn_Node );
@@ -7455,7 +7458,7 @@ IPTR _NListtree_Insert(struct IClass *cl, Object *obj, struct MUIP_NListtree_Ins
             {
               in = GetInsertNodeSorted( data->CompareHook, data, li, tn );
 
-              if ( (ULONG)in == (ULONG)INSERT_POS_HEAD )
+              if ( (IPTR)in == (IPTR)INSERT_POS_HEAD )
               {
                 AddHead( (struct List *)&li->ln_List, (struct Node *)&tn->tn_Node );
               }
@@ -7531,7 +7534,7 @@ IPTR _NListtree_Insert(struct IClass *cl, Object *obj, struct MUIP_NListtree_Ins
 
         D(DBF_LISTTREE, "Result: 0x%lx  %ld",tn,data->NumEntries);
 
-        return( (ULONG)tn );
+        return( (IPTR)tn );
       }
 
       /*
@@ -7803,7 +7806,7 @@ IPTR _NListtree_Remove(struct IClass *cl, Object *obj, struct MUIP_NListtree_Rem
   /*
   **
   */
-  switch( (ULONG)msg->ListNode )
+  switch( (IPTR)msg->ListNode )
   {
     case MUIV_NListtree_Remove_ListNode_Root:
       li = &data->RootList;
@@ -7823,7 +7826,7 @@ IPTR _NListtree_Remove(struct IClass *cl, Object *obj, struct MUIP_NListtree_Rem
   */
   if ( li )
   {
-    switch( (ULONG)msg->TreeNode )
+    switch( (IPTR)msg->TreeNode )
     {
       case MUIV_NListtree_Remove_TreeNode_Head:
         tn = CTN( List_First( (struct List *)&li->ln_List ) );
@@ -8168,7 +8171,7 @@ IPTR _NListtree_Exchange(struct IClass *cl, Object *obj, struct MUIP_NListtree_E
   /*
   **  Handle all special events.
   */
-  switch( (ULONG)msg->ListNode1 )
+  switch( (IPTR)msg->ListNode1 )
   {
     case MUIV_NListtree_Exchange_ListNode1_Root:
       ln1 = &data->RootList;
@@ -8183,7 +8186,7 @@ IPTR _NListtree_Exchange(struct IClass *cl, Object *obj, struct MUIP_NListtree_E
       break;
   }
 
-  switch( (ULONG)msg->TreeNode1 )
+  switch( (IPTR)msg->TreeNode1 )
   {
     case MUIV_NListtree_Exchange_TreeNode1_Head:
       tn1 = CTN( List_First( (struct List *)&ln1->ln_List ) );
@@ -8202,7 +8205,7 @@ IPTR _NListtree_Exchange(struct IClass *cl, Object *obj, struct MUIP_NListtree_E
       break;
   }
 
-  switch( (ULONG)msg->ListNode2 )
+  switch( (IPTR)msg->ListNode2 )
   {
     case MUIV_NListtree_Exchange_ListNode2_Root:
       ln2 = &data->RootList;
@@ -8217,7 +8220,7 @@ IPTR _NListtree_Exchange(struct IClass *cl, Object *obj, struct MUIP_NListtree_E
       break;
   }
 
-  switch( (ULONG)msg->TreeNode2 )
+  switch( (IPTR)msg->TreeNode2 )
   {
     case MUIV_NListtree_Exchange_TreeNode2_Head:
       tn2 = CTN( List_First( (struct List *)&ln1->ln_List ) );
@@ -8259,10 +8262,10 @@ IPTR _NListtree_Exchange(struct IClass *cl, Object *obj, struct MUIP_NListtree_E
     insnode1 = Node_Prev( (struct Node *)tn1 );
     insnode2 = Node_Prev( (struct Node *)tn2 );
 
-    if ( (ULONG)insnode1 == (ULONG)tn2 )
+    if ( insnode1 == (struct Node *)tn2 )
       insnode1 = Node_Prev( insnode1 );
 
-    if ( (ULONG)insnode2 == (ULONG)tn1 )
+    if ( insnode2 == (struct Node *)tn1 )
       insnode2 = Node_Prev( insnode2 );
 
     //D(bug( "Node1: 0x%08lx - %s, Node2: 0x%08lx - %s", tn1, tn1->tn_Name, tn2, tn2->tn_Name ) );
@@ -8461,7 +8464,7 @@ IPTR _NListtree_Move(struct IClass *cl, Object *obj, struct MUIP_NListtree_Move 
   /*
   **  Handle all special events.
   */
-  switch( (ULONG)msg->OldListNode )
+  switch( (IPTR)msg->OldListNode )
   {
     case MUIV_NListtree_Move_OldListNode_Root:
       ln1 = &data->RootList;
@@ -8476,7 +8479,7 @@ IPTR _NListtree_Move(struct IClass *cl, Object *obj, struct MUIP_NListtree_Move 
       break;
   }
 
-  switch( (ULONG)msg->OldTreeNode )
+  switch( (IPTR)msg->OldTreeNode )
   {
     case MUIV_NListtree_Move_OldTreeNode_Head:
       tn1 = CTN( List_First( (struct List *)&ln1->ln_List ) );
@@ -8495,7 +8498,7 @@ IPTR _NListtree_Move(struct IClass *cl, Object *obj, struct MUIP_NListtree_Move 
       break;
   }
 
-  switch( (ULONG)msg->NewListNode )
+  switch( (IPTR)msg->NewListNode )
   {
     case MUIV_NListtree_Move_NewListNode_Root:
       ln2 = &data->RootList;
@@ -8510,7 +8513,7 @@ IPTR _NListtree_Move(struct IClass *cl, Object *obj, struct MUIP_NListtree_Move 
       break;
   }
 
-  switch( (ULONG)msg->NewTreeNode )
+  switch( (IPTR)msg->NewTreeNode )
   {
     case MUIV_NListtree_Move_NewTreeNode_Head:
       tn2 = CTN( INSERT_POS_HEAD );
@@ -8706,7 +8709,7 @@ IPTR _NListtree_Copy(struct IClass *cl, Object *obj, struct MUIP_NListtree_Copy 
   /*
   **  Handle all special events.
   */
-  switch( (ULONG)msg->SourceListNode )
+  switch( (IPTR)msg->SourceListNode )
   {
     case MUIV_NListtree_Copy_SourceListNode_Root:
       ln1 = &data->RootList;
@@ -8721,7 +8724,7 @@ IPTR _NListtree_Copy(struct IClass *cl, Object *obj, struct MUIP_NListtree_Copy 
       break;
   }
 
-  switch( (ULONG)msg->SourceTreeNode )
+  switch( (IPTR)msg->SourceTreeNode )
   {
     case MUIV_NListtree_Copy_SourceTreeNode_Head:
       tn1 = CTN( List_First( (struct List *)&ln1->ln_List ) );
@@ -8740,7 +8743,7 @@ IPTR _NListtree_Copy(struct IClass *cl, Object *obj, struct MUIP_NListtree_Copy 
       break;
   }
 
-  switch( (ULONG)msg->DestListNode )
+  switch( (IPTR)msg->DestListNode )
   {
     case MUIV_NListtree_Copy_DestListNode_Root:
       ln2 = &data->RootList;
@@ -8755,7 +8758,7 @@ IPTR _NListtree_Copy(struct IClass *cl, Object *obj, struct MUIP_NListtree_Copy 
       break;
   }
 
-  switch( (ULONG)msg->DestTreeNode )
+  switch( (IPTR)msg->DestTreeNode )
   {
     case MUIV_NListtree_Copy_DestTreeNode_Head:
       tn2 = CTN( INSERT_POS_HEAD );
@@ -8896,7 +8899,7 @@ IPTR _NListtree_Rename(struct IClass *cl, Object *obj, struct MUIP_NListtree_Ren
   /*
   **  Handle special events.
   */
-  if ( (ULONG)msg->TreeNode == (ULONG)MUIV_NListtree_Rename_TreeNode_Active )
+  if ( (IPTR)msg->TreeNode == (IPTR)MUIV_NListtree_Rename_TreeNode_Active )
     tn = data->ActiveNode;
   else
     tn = msg->TreeNode;
@@ -9047,7 +9050,7 @@ IPTR _NListtree_FindName(struct IClass *cl, Object *obj, struct MUIP_NListtree_F
   /*
   **  Handle special events.
   */
-  switch( (ULONG)msg->ListNode )
+  switch( (IPTR)msg->ListNode )
   {
     case MUIV_NListtree_FindName_ListNode_Root:
       ln = &data->RootList;
@@ -9184,7 +9187,7 @@ IPTR _NListtree_FindUserData(struct IClass *cl, Object *obj, struct MUIP_NListtr
   /*
   **  Handle special events.
   */
-  switch( (ULONG)msg->ListNode )
+  switch( (IPTR)msg->ListNode )
   {
     case MUIV_NListtree_FindUserData_ListNode_Root:
       ln = &data->RootList;
@@ -9324,7 +9327,7 @@ IPTR _NListtree_GetEntry(struct IClass *cl, Object *obj, struct MUIP_NListtree_G
   /*
   **  Handle special events.
   */
-  switch( (ULONG)msg->Node )
+  switch( (IPTR)msg->Node )
   {
     case MUIV_NListtree_GetEntry_ListNode_Root:
       ln = &data->RootList;
@@ -9482,9 +9485,9 @@ IPTR _NListtree_GetNr(struct IClass *cl, Object *obj, struct MUIP_NListtree_GetN
   /*
   **  Handle special events.
   */
-  if ( (ULONG)msg->TreeNode == (ULONG)MUIV_NListtree_GetNr_TreeNode_Active )
+  if ( (IPTR)msg->TreeNode == (IPTR)MUIV_NListtree_GetNr_TreeNode_Active )
     tn = data->ActiveNode;
-  else if ( (ULONG)msg->TreeNode == (ULONG)MUIV_NListtree_GetNr_TreeNode_Root )
+  else if ( (IPTR)msg->TreeNode == (IPTR)MUIV_NListtree_GetNr_TreeNode_Root )
     tn = CTN((APTR)&data->RootList);
   else
     tn = msg->TreeNode;
@@ -9605,7 +9608,7 @@ IPTR _NListtree_Sort(struct IClass *cl, Object *obj, struct MUIP_NListtree_Sort 
     /*
     **  Handle special events.
     */
-    switch( (ULONG)msg->ListNode )
+    switch( (IPTR)msg->ListNode )
     {
       case MUIV_NListtree_Sort_ListNode_Active:
         ln = data->ActiveList;
@@ -9826,7 +9829,7 @@ IPTR _NListtree_Redraw(struct IClass *cl, Object *obj, struct MUIP_NListtree_Red
 
   //D(bug( "TreeNode: 0x%08lx (pos: %ld), Flags: 0x%08lx (%s)\n", msg->TreeNode, GetVisualPos( data, msg->TreeNode ), msg->Flags, ( msg->Flags & MUIV_NListtree_Redraw_Flag_Nr ) ? "NR" : "" ) );
 
-  if(((LONG)msg->TreeNode != MUIV_NListtree_Redraw_Active) && ((LONG)msg->TreeNode != MUIV_NListtree_Redraw_All) && !(msg->Flags & MUIV_NListtree_Redraw_Flag_Nr))
+  if(((IPTR)msg->TreeNode != (IPTR)MUIV_NListtree_Redraw_Active) && ((IPTR)msg->TreeNode != (IPTR)MUIV_NListtree_Redraw_All) && !(msg->Flags & MUIV_NListtree_Redraw_Flag_Nr))
   {
     LONG pos;
 
@@ -9837,7 +9840,7 @@ IPTR _NListtree_Redraw(struct IClass *cl, Object *obj, struct MUIP_NListtree_Red
   else
   {
     D(DBF_DRAW, "EXTERNAL REDRAW REQUESTED!");
-    DoMethod( obj, MUIM_NList_Redraw, (LONG)msg->TreeNode );
+    DoMethod( obj, MUIM_NList_Redraw, (IPTR)msg->TreeNode );
   }
 
   return(0);
@@ -9946,7 +9949,7 @@ IPTR _NListtree_Select(struct IClass *cl, Object *obj, struct MUIP_NListtree_Sel
   /*
   **  Handle special events.
   */
-  switch( (ULONG)msg->TreeNode )
+  switch( (IPTR)msg->TreeNode )
   {
     case MUIV_NListtree_Select_Active:
       if ( msg->SelType == MUIV_NListtree_Select_Ask )
@@ -10075,7 +10078,7 @@ IPTR _NListtree_NextSelected(struct IClass *cl, Object *obj, struct MUIP_NListtr
 
   //D(bug( "TreeNode: 0x%08lx ", *msg->TreeNode ) );
 
-  if ( (ULONG)*msg->TreeNode == (ULONG)MUIV_NListtree_NextSelected_Start )
+  if ( (IPTR)*msg->TreeNode == (IPTR)MUIV_NListtree_NextSelected_Start )
     curr = 0;
   else
     curr++;
@@ -10087,7 +10090,7 @@ IPTR _NListtree_NextSelected(struct IClass *cl, Object *obj, struct MUIP_NListtr
       data->SelectedTable.tb_Current = curr;
       *msg->TreeNode = data->SelectedTable.tb_Table[curr];
     }
-    else if(((ULONG)*msg->TreeNode == (ULONG)MUIV_NListtree_NextSelected_Start) &&
+    else if(((IPTR)*msg->TreeNode == (IPTR)MUIV_NListtree_NextSelected_Start) &&
              (data->ActiveNode != MUIV_NListtree_Active_Off))
     {
       *msg->TreeNode = data->ActiveNode;
@@ -10189,7 +10192,7 @@ IPTR _NListtree_PrevSelected(struct IClass *cl, Object *obj, struct MUIP_NListtr
 
   //D(bug( "TreeNode: 0x%08lx ", *msg->TreeNode ) );
 
-  if((ULONG)*msg->TreeNode == (ULONG)MUIV_NListtree_PrevSelected_Start)
+  if((IPTR)*msg->TreeNode == (IPTR)MUIV_NListtree_PrevSelected_Start)
     curr = data->SelectedTable.tb_Entries;
 
   curr--;
@@ -10201,7 +10204,7 @@ IPTR _NListtree_PrevSelected(struct IClass *cl, Object *obj, struct MUIP_NListtr
       data->SelectedTable.tb_Current = curr;
       *msg->TreeNode = data->SelectedTable.tb_Table[curr];
     }
-    else if(((ULONG)*msg->TreeNode == (ULONG)MUIV_NListtree_NextSelected_Start) &&
+    else if(((IPTR)*msg->TreeNode == (IPTR)MUIV_NListtree_NextSelected_Start) &&
              (data->ActiveNode != MUIV_NListtree_Active_Off))
     {
       *msg->TreeNode = data->ActiveNode;
@@ -10276,7 +10279,7 @@ IPTR _NListtree_CopyToClip(struct IClass *cl, Object *obj, struct MUIP_NListtree
 
   if ( data->CopyToClipHook )
   {
-    if ( (LONG)( string = (STRPTR)MyCallHook( data->CopyToClipHook, data, MUIA_NListtree_CopyToClipHook, msg->TreeNode, msg->Pos, msg->Unit ) ) == -1 )
+    if ( (SIPTR)( string = (STRPTR)MyCallHook( data->CopyToClipHook, data, MUIA_NListtree_CopyToClipHook, msg->TreeNode, msg->Pos, msg->Unit ) ) == -1 )
       string = msg->TreeNode->tn_Name;
   }
   else
@@ -10620,7 +10623,7 @@ IPTR _NListtree_GetDoubleClick(struct IClass *cl, Object *obj, UNUSED struct MUI
     */
     DoMethod( obj, MUIM_NList_GetEntry, data->LDClickEntry, &tn );
 
-    if ( (LONG)tn != -1 )
+    if ( (SIPTR)tn != -1 )
     {
       DoMethod( obj, MUIM_NListtree_DoubleClick, tn, data->LDClickEntry, data->LDClickColumn );
       MakeNotify( data, MUIA_NListtree_DoubleClick, tn );
@@ -10686,7 +10689,7 @@ IPTR _NListtree_Data(struct IClass *cl, Object *obj, struct MUIP_NListtree_Data 
   switch( msg->ID )
   {
     case MUIV_NListtree_Data_MemPool:
-      return( (ULONG)data->MemoryPool );
+      return( (IPTR)data->MemoryPool );
 
     case MUIV_NListtree_Data_VersInfo:
     case MUIV_NListtree_Data_Sample:

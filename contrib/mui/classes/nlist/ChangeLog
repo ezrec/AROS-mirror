@@ -5,19 +5,151 @@ MUI NList MCC classes - ChangeLog
 $Id$
 $URL: https://nlist-classes.svn.sourceforge.net/svnroot/nlist-classes/trunk/ChangeLog $
 
+#### v0.107 RELEASE ###########################################################
+
+2010-08-18  Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final v0.107 release preparations
+
+2010-08-17 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlisttree_mcc/NListtree.c: raised the eventhandler's priority to 2. This
+    fixes the double click issue to open closed nodes.
+
+#### v0.106 RELEASE ###########################################################
+
+2010-08-16  Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final v0.106 release preparations
+
+2010-08-16 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc.c: raised the eventhandler's priority to +1. This solves
+    the problem that the NList object was no longer getting key presses as soon
+    as a horizontal scrollbar was added due a resized window.
+
+2010-08-12  Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlist_mcc: implemented new MUIM_NList_SetActive method which will replace
+    the old method of setting an entry active via MUIA_NList_Active. The new
+    method allows to set the entry active and make it immediately visible via
+    an internal call to MUIM_NList_Jump. In addition this method allows to
+    set additional flags and should perform a bit faster instead of executing
+    a MUIA_NList_Active call together with a Jump call.
+  * nlist_mcc/NList_func.c: moved the functionality of MUIM_NList_Jump into an
+    own static function NL_List_Jump() and made NL_List_Active() also utilizing
+    this new function for jumping to the right entry to make it visible.
+
+2010-08-11  Jens Langner <Jens.Langner@light-speed.de>
+
+  * nlist_mcc: replaced the recently added global MUIA_NList_CenterOnJump
+    attribute with an additional MUIV_NList_Jump_Active_Center value that can
+    be supplied to the MUIM_NList_Jump method to perform a centered jump for
+    the currently active entry. This should be a bit more convienent than having
+    to set a global attribute.
+
+2010-07-30 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc: added new attribute MUIA_NList_CenterOnJump to make the method
+    MUIM_NList_Jump not just jump to the given entry but also center the display
+    on that entry.
+  * nlistview_mcc/NListview.c: moved some inlined code to separate functions.
+  * nlist_mcc: the parent NListview object is now determined during MUIM_Setup
+    to correctly fulfil the "active object on click" feature due to the latest
+    changes.
+  * nlistview_mcc/NListview.c: forward any modifications of the key focus
+    attributes to the NList object.
+  * docs/MCC_NList.doc: added documentation for new MUIA_NList_CenterOnJump
+    attribute.
+
+2010-07-29 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/misc, nlistview_mcc/misc: made the two attributes
+    MUIA_NList_Active/DefaultObjectOnClick get()able to let the surrounding
+    NListview object derive the "active border visible" from the embedded list
+    object.
+  * nlist_mcc/NList_mcc2.c: the "active object on click" feature must set the
+    surrounding listview as active object instead of itself.
+  * doc/MCC_NList.doc: updated Autodocs according to latest changes.
+  * nlist_mcc/NList_func.c: "moved" the centering of the active entry to the
+    MUIM_NList_Jump method.
+
+2010-07-08 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_func.c: setting the active entry will now try to show the
+    entry centered within the visible lines if it was outside before. Further-
+    more NList will ensure that the last item is shown on the last line (no
+    empty space below the last line).
+  * all/Debug.c: added CleanupDebug() function needed by the latest mccinit.c.
+
+2010-06-29 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/locale/swedish.ct: added ##codeset line.
+
+2010-06-25 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc/NList_mcc2.c: the custom pointers will be shown only if the mouse
+    is over the respective object instead of just being over the list's window.
+    Although I could not reproduce the effect with AmigaOS3 this should fix the
+    problems on MorphOS.
+
+2010-06-11 Thore Böckelmann <tboeckel@gmx.de>
+
+  * Install-MCC: extended the final message that a reboot might be necessary to
+    be able to use the just installed version.
+
+2010-06-06 Thore Böckelmann <tboeckel@gmx.de>
+
+  * include/SDI_compiler.h: updated to latest version.
+  * misc: added lots of type casts due to latest AROS changes.
+
+2010-06-06 Matthias Rustler <mrustler@gmx.de>
+
+  * nbitmap_mcc/private.h: fixed definition of types. You can't assume that
+    "long" is 32 bit on all systems.
+  * demo/NBitmap-Demo.c: wrong type caused corrupt images on 64-bit AROS.
+  * mmakefile.src: fixed copying of png.icon
+  * some warnings removed, some TODO comments added.
+
+2010-06-05 Matthias Rustler <mrustler@gmx.de>
+
+  * mmakefile.src: updated to recent changes
+  * mccinit.c: updated to current version
+  * some fixes for 64-bit AROS (ULONG -> IPTR)
+
+2010-05-28 Thore Böckelmann <tboeckel@gmx.de>
+
+  * nlist_mcc: cleaned up the config import and export functions.
+
+2010-05-27 Thore Böckelmann <tboeckel@gmx.de>
+
+  * dist/Install-MCC: the supported languages are now collected dynamically
+    instead of being defined statically. Furthermore the .mcc name must be
+    specified in the script's icon as application name. This makes it possible
+    to use the script for arbitrary classes without modification.
+  * dist/icons: set some reasonable default icon positions.
+  * nlist_mcc: removed the permanent copy of the exported stuff as this is not
+    needed at all outside the export function.
+
+2010-05-26 Thore Böckelmann <tboeckel@gmx.de>
+
+  * dist/Install-MCC: added the first version of a generic MCC Installer script.
+    To use this script for other classes only the name and the set of supported
+    languages needs to be adapted.
+
 2010-05-20 Mariusz Danilewicz <mandi@interia.pl>
 
- * ChangeLog: updated - missed last time.
+  * ChangeLog: updated - missed last time.
 
 2010-05-20 Mariusz Danilewicz <mandi@interia.pl>
 
- * nlistviews_mcp\locale\NListviews_mcp.cd: fixed typo in
-   MSG_FUNC_DEFALLORDERCOL and updated (c) notice in MSG_EXAMPLE_TEXT
- * nlistviews_mcp\locale\polish.ct: added Polish translation
- * nlisttree_mcp\locale\polish.ct: added Polish translation
- * tools\mkrelease.sh: added generating Polish catalog to release
- * nlistviews_mcp\makefile and mmakefile.src: added generating Polish catalog
- * nlisttree_mcp\makefile and mmakefile.src: added generating Polish catalog
+  * nlistviews_mcp\locale\NListviews_mcp.cd: fixed typo in
+    MSG_FUNC_DEFALLORDERCOL and updated (c) notice in MSG_EXAMPLE_TEXT
+  * nlistviews_mcp\locale\polish.ct: added Polish translation
+  * nlisttree_mcp\locale\polish.ct: added Polish translation
+  * tools\mkrelease.sh: added generating Polish catalog to release
+  * nlistviews_mcp\makefile and mmakefile.src: added generating Polish catalog
+  * nlisttree_mcp\makefile and mmakefile.src: added generating Polish catalog
 
 2010-05-20 Thore Böckelmann <tboeckel@gmx.de>
 

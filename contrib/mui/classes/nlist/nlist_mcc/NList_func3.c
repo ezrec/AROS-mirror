@@ -38,10 +38,10 @@
 
 #include "NList_func.h"
 
-ULONG MyCallHookPkt(Object *obj,BOOL hdata,struct Hook *hook,APTR object,APTR message)
+IPTR MyCallHookPkt(Object *obj,BOOL hdata,struct Hook *hook,APTR object,APTR message)
 {
   if (hdata)
-  { ULONG retval;
+  { IPTR retval;
     APTR h_Data = hook->h_Data;
     if (!h_Data)
       hook->h_Data = obj;
@@ -56,7 +56,7 @@ ULONG MyCallHookPkt(Object *obj,BOOL hdata,struct Hook *hook,APTR object,APTR me
 
 
 #if defined(__AROS__)
-ULONG STDARGS VARARGS68K MyCallHookPktA(Object *obj, struct Hook *hook, ...)
+IPTR STDARGS VARARGS68K MyCallHookPktA(Object *obj, struct Hook *hook, ...)
 {
     AROS_SLOWSTACKHOOKS_PRE(hook)
     retval = CallHookPkt(hook, obj, AROS_SLOWSTACKHOOKS_ARG(hook));
@@ -904,7 +904,7 @@ static LONG CopyToFile(STRPTR filename, STRPTR buffer)
   return result;
 }
 
-LONG NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG clipnum,APTR *entries,struct Hook *hook)
+SIPTR NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG clipnum,APTR *entries,struct Hook *hook)
 {
   char *retstr = NULL;
   char *clipstr = NULL;

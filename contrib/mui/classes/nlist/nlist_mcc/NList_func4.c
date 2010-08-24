@@ -421,7 +421,7 @@ IPTR NL_CreateImage2(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
 
 IPTR NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
 {
-  LONG CI_BM_Width = 0;
+  SIPTR CI_BM_Width = 0;
 
   if (!imgobj)
     return(0);

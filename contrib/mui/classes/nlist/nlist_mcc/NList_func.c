@@ -30,6 +30,10 @@
 
 #include "NList_func.h"
 
+// static functions in this file
+static BOOL NL_List_Jump(struct NLData *data, LONG pos);
+static BOOL NL_List_GetPos(struct NLData *data, APTR entry, LONG *pos);
+
 /* Extent the selection between ent1 and ent2.
    Make the first_change and last_change optimal for redrawing optimiztion */
 void NL_SegChanged(struct NLData *data,LONG ent1,LONG ent2)
@@ -623,15 +627,16 @@ BOOL NL_List_First(Object *obj,struct NLData *data,LONG lf,struct TagItem *tag)
 }
 
 
-BOOL NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,LONG newactsel,LONG acceptsame)
+BOOL NL_List_Active(Object *obj, struct NLData *data, LONG la, struct TagItem *tag, LONG newactsel, LONG acceptsame, ULONG flags)
 {
-  struct TagItem ltag,*tag2 = tag;
+  struct TagItem ltag;
+  struct TagItem *tag2 = tag;
   LONG ent;
   BOOL changed = FALSE;
 
   ENTER();
 
-//	D(bug("0x%lx la=%ld newactsel=%ld acceptsame=%ld data->pad1=%ld\n",obj,la,newactsel,acceptsame,data->pad1));
+	//D(DBF_STARTUP, "NL_List_Active: 0x%lx la=%ld newactsel=%ld acceptsame=%ld data->pad1=%ld",obj,la,newactsel,acceptsame,data->pad1);
 
   if (data->NList_TypeSelect || !data->NList_Input)
   {
@@ -647,7 +652,7 @@ BOOL NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,
     }
     else if (la < 0)
     {
-      if(!tag2)
+      if(tag2 == NULL)
       {
         changed = NL_List_First(obj,data,la,tag);
 
@@ -702,21 +707,15 @@ BOOL NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,
       la = data->NList_Entries - 1;
 
     data->pad1 = la;
-    if(la < data->NList_First)
+
+    // if the SetActive_Jump_Center flag is active we make sure
+    // the new active entry will be centered
+    if(isFlagSet(flags, MUIV_NList_SetActive_Jump_Center))
+      la = MUIV_NList_Jump_Active_Center;
+
+    // make sure the entry is visible
+    if(NL_List_Jump(data, la) == TRUE)
     {
-      DO_NOTIFY(NTF_First);
-      data->NList_First = la;
-      REDRAW;
-
-      changed = TRUE;
-    }
-    else if (la >= data->NList_First + data->NList_Visible)
-    {
-      data->NList_First = la - data->NList_Visible + 1;
-
-      if (data->NList_First < 0)
-        data->NList_First = 0;
-
       DO_NOTIFY(NTF_First);
       REDRAW;
 
@@ -906,23 +905,20 @@ BOOL NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,
 
         tag->ti_Data = la;
         data->do_draw_active = TRUE;
-        if (la < data->NList_First)
-        {
-          DO_NOTIFY(NTF_First);
-          data->NList_First = la;
-          REDRAW;
-        }
-        else if (la >= data->NList_First + data->NList_Visible)
-        {
-          data->NList_First = la - data->NList_Visible + 1;
-          if (data->NList_First < 0)
-            data->NList_First = 0;
 
+        // if the SetActive_Jump_Center flag is active we make sure
+        // the new active entry will be centered
+        if(isFlagSet(flags, MUIV_NList_SetActive_Jump_Center))
+          la = MUIV_NList_Jump_Active_Center;
+
+        // make sure the entry is visible
+        if(NL_List_Jump(data, la) == TRUE)
+        {
           DO_NOTIFY(NTF_First);
-          REDRAW;
         }
-        else
-          REDRAW;
+
+        // redraw at all means
+        REDRAW;
       }
       else if (la == MUIV_NList_Active_Off)
       {
@@ -1587,47 +1583,131 @@ IPTR mNL_List_GetEntryInfo(struct IClass *cl,Object *obj,struct  MUIP_NList_GetE
   return (TRUE);
 }
 
-
-IPTR mNL_List_Jump(struct IClass *cl,Object *obj,struct  MUIP_NList_Jump *msg)
+static BOOL NL_List_Jump(struct NLData *data, LONG pos)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
-  LONG pos = msg->pos;
-  /*DoSuperMethodA(cl,obj,(Msg) msg);*/
-  switch (pos)
-  { case MUIV_NList_Jump_Top :
+  BOOL result = FALSE;
+  ENTER();
+
+  switch(pos)
+  {
+    case MUIV_NList_Jump_Top:
+    {
       pos = 0;
-      break;
-    case MUIV_NList_Jump_Bottom :
+    }
+    break;
+
+    case MUIV_NList_Jump_Bottom:
+    {
       pos = data->NList_Entries - 1;
-      break;
-    case MUIV_NList_Jump_Active :
+    }
+    break;
+
+    case MUIV_NList_Jump_Active:
+    {
       pos = data->NList_Active;
-      break;
-    case MUIV_NList_Jump_Up :
+    }
+    break;
+
+    case MUIV_NList_Jump_Up:
+    {
       pos = data->NList_First - 1;
-      break;
-    case MUIV_NList_Jump_Down :
+    }
+    break;
+
+    case MUIV_NList_Jump_Down:
+    {
       pos = data->NList_First + data->NList_Visible;
-      break;
-  }
-  if ((pos >= 0) && (pos < data->NList_Entries))
-  { if (pos < data->NList_First)
-    { data->NList_First = pos;
-      DO_NOTIFY(NTF_First);
-      REDRAW;
     }
-    else if (pos >= data->NList_First + data->NList_Visible)
-    { data->NList_First = pos - data->NList_Visible + 1;
-      if (data->NList_First < 0)
+    break;
+
+    case MUIV_NList_Jump_Active_Center:
+    {
+      // center the item in the visible area
+      LONG first = data->NList_Active - data->NList_Visible/2;
+
+      // make sure that the last item is displayed in the last line
+      while(first + data->NList_Visible > data->NList_Entries)
+        first--;
+
+      if(first < 0)
+        first = 0;
+
+      data->NList_First = first;
+
+      result = TRUE;
+      pos = -1;
+    }
+    break;
+  }
+
+  if(pos >= 0 && pos < data->NList_Entries)
+  {
+    // old style jump, just make the requested item visible
+    if(pos < data->NList_First)
+    {
+      data->NList_First = pos;
+
+      result = TRUE;
+    }
+    else if(pos >= data->NList_First + data->NList_Visible)
+    {
+      data->NList_First = pos - data->NList_Visible + 1;
+
+      // make sure that the last item is displayed in the last line
+      while(data->NList_First + data->NList_Visible > data->NList_Entries)
+        data->NList_First--;
+
+      if(data->NList_First < 0)
         data->NList_First = 0;
-      DO_NOTIFY(NTF_First);
-      REDRAW;
+
+      result = TRUE;
     }
   }
-/*  do_notifies(NTF_AllChanges|NTF_MinMax);*/
-  return (TRUE);
+
+  RETURN(result);
+  return result;
 }
 
+IPTR mNL_List_Jump(struct IClass *cl, Object *obj, struct MUIP_NList_Jump *msg)
+{
+  struct NLData *data = INST_DATA(cl,obj);
+
+  ENTER();
+
+  if(NL_List_Jump(data, msg->pos) == TRUE)
+  {
+    DO_NOTIFY(NTF_First);
+    REDRAW;
+  }
+ 
+/*  do_notifies(NTF_AllChanges|NTF_MinMax);*/
+
+  RETURN(TRUE);
+  return TRUE;
+}
+
+IPTR mNL_List_SetActive(struct IClass *cl, Object *obj, struct MUIP_NList_SetActive *msg)
+{
+  BOOL result = FALSE;
+  struct NLData *data = INST_DATA(cl,obj);
+  LONG pos = msg->pos;
+
+  ENTER();
+
+  // check if the user used msg->pos for specifying the entry position (integer)
+  // or by using the entry address
+  if(isFlagSet(msg->flags, MUIV_NList_SetActive_Entry))
+    NL_List_GetPos(data, (APTR)msg->pos, &pos);
+
+  result = NL_List_Active(obj, data, pos, NULL, data->NList_List_Select, FALSE, msg->flags);
+  if(result == TRUE)
+  {
+    DO_NOTIFY(NTF_Active | NTF_L_Active);
+  }
+
+  RETURN(result);
+  return result;
+}
 
 IPTR mNL_List_Select(struct IClass *cl,Object *obj,struct MUIP_NList_Select *msg)
 {
@@ -1987,9 +2067,9 @@ IPTR mNL_List_DoMethod(struct IClass *cl,Object *obj,struct MUIP_NList_DoMethod 
       newMsg.params[63] = 0;
     }
 
-    if((LONG)msg->DestObj == MUIV_NList_DoMethod_Self)
+    if((IPTR)msg->DestObj == (IPTR)MUIV_NList_DoMethod_Self)
       dest = (APTR) obj;
-    else if((LONG)msg->DestObj == MUIV_NList_DoMethod_App)
+    else if((IPTR)msg->DestObj == (IPTR)MUIV_NList_DoMethod_App)
     {
       if(data->SETUP)
         dest = (APTR) _app(obj);
@@ -2013,7 +2093,7 @@ IPTR mNL_List_DoMethod(struct IClass *cl,Object *obj,struct MUIP_NList_DoMethod 
       ent = 0;
     while((ent >= 0) && (ent < data->NList_Entries))
     {
-      if((LONG) msg->DestObj == MUIV_NList_DoMethod_Entry)
+      if((IPTR) msg->DestObj == (IPTR)MUIV_NList_DoMethod_Entry)
         dest = data->EntriesArray[ent]->Entry;
       if(dest)
       {
@@ -2072,32 +2152,59 @@ IPTR mNL_List_DoMethod(struct IClass *cl,Object *obj,struct MUIP_NList_DoMethod 
   return (TRUE);
 }
 
+static BOOL NL_List_GetPos(struct NLData *data, APTR entry, LONG *pos)
+{
+  BOOL result = FALSE;
+
+  ENTER();
+
+  if(entry == NULL)
+  { 
+    *pos = MUIV_NList_GetPos_End;
+    result = FALSE;
+  }
+  else if((ULONG)entry == (ULONG)-2)
+  {
+    if(data->NList_LastInserted == -1)
+      *pos = (data->NList_Entries - 1);
+    else
+      *pos = data->NList_LastInserted;
+
+    result = TRUE;
+  }
+  else
+  {
+    LONG ent = *pos + 1;
+
+    while(ent < data->NList_Entries)
+    { 
+      if(data->EntriesArray[ent]->Entry == entry)
+      { 
+        *pos = ent;
+
+        result = TRUE;
+        break;
+      }
+      ent++;
+    }
+
+    if(result == FALSE)
+    {
+      *pos = MUIV_NList_GetPos_End;
+      result = TRUE;
+    }
+  }
+
+  RETURN(result);
+  return result;
+}
 
 IPTR mNL_List_GetPos(struct IClass *cl,Object *obj,struct MUIP_NList_GetPos *msg)
 {
-  register struct NLData *data = INST_DATA(cl,obj);
-  LONG ent = *msg->pos + 1;
-  if (!msg->entry)
-  { *msg->pos = MUIV_NList_GetPos_End;
-    return (FALSE);
-  }
-  else if ( (ULONG)msg->entry == (ULONG)-2 )
-  {
-    if ( data->NList_LastInserted == -1 )
-      *msg->pos = ( data->NList_Entries - 1 );
-    else
-      *msg->pos = data->NList_LastInserted;
+  struct NLData *data = INST_DATA(cl,obj);
+  BOOL result;
 
-    return(TRUE);
-  }
+  result = NL_List_GetPos(data, msg->entry, msg->pos);
 
-  while (ent < data->NList_Entries)
-  { if (data->EntriesArray[ent]->Entry == msg->entry)
-    { *msg->pos = ent;
-      return (TRUE);
-    }
-    ent++;
-  }
-  *msg->pos = MUIV_NList_GetPos_End;
-  return (TRUE);
+  return result;
 }

@@ -128,11 +128,13 @@
 	LP7(0xba, ULONG, ExtractColor, struct RastPort *, a0arg, a0, struct BitMap *, BitMap, a1, ULONG, Colour, d0, ULONG, SrcX, d1, ULONG, SrcY, d2, ULONG, Width, d3, ULONG, Height, d4, \
 	, CYBERGRAPHICS_BASE_NAME)
 
-/*
+#if __GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ > 0)
+
 #define WriteLUTPixelArray(srcRect, SrcX, SrcY, SrcMod, a1arg, ColorTab, DestX, DestY, SizeX, SizeY, CTFormat) \
 	LP11(0xc6, ULONG, WriteLUTPixelArray, APTR, srcRect, a0, UWORD, SrcX, d0, UWORD, SrcY, d1, UWORD, SrcMod, d2, struct RastPort *, a1arg, a1, APTR, ColorTab, a2, UWORD, DestX, d3, UWORD, DestY, d4, UWORD, SizeX, d5, UWORD, SizeY, d6, UBYTE, CTFormat, d7, \
 	, CYBERGRAPHICS_BASE_NAME)
-*/
+
+#else
 
 #define WriteLUTPixelArray(srcRect, SrcX, SrcY, SrcMod, a1arg, ColorTab, DestX, DestY, SizeX, SizeY, CTFormat) ({ \
   APTR _WriteLUTPixelArray_srcRect = (srcRect); \
@@ -169,6 +171,8 @@
   }); \
   _WriteLUTPixelArray__re; \
 })
+
+#endif
 
 #define WritePixelArrayAlpha(srcRect, SrcX, SrcY, SrcMod, a1arg, DestX, DestY, SizeX, SizeY, AlphaValue) \
 	LP10(0xd8, ULONG, WritePixelArrayAlpha, APTR, srcRect, a0, UWORD, SrcX, d0, UWORD, SrcY, d1, UWORD, SrcMod, d2, struct RastPort *, a1arg, a1, UWORD, DestX, d3, UWORD, DestY, d4, UWORD, SizeX, d5, UWORD, SizeY, d6, ULONG, AlphaValue, d7, \

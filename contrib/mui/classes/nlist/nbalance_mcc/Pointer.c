@@ -491,7 +491,7 @@ void SetupCustomPointers(struct InstData *data)
     if(((struct Library *)IntuitionBase)->lib_Version >= 39)
     {
       data->horizSizePointerObj = (Object *)NewObject(NULL, (STRPTR)"pointerclass",
-        POINTERA_BitMap,      (LONG)&horizSizePointerBitmap,
+        POINTERA_BitMap,      (IPTR)&horizSizePointerBitmap,
         POINTERA_WordWidth,   (ULONG)1,
         POINTERA_XResolution, (ULONG)POINTERXRESN_SCREENRES,
         POINTERA_YResolution, (ULONG)POINTERYRESN_SCREENRESASPECT,
@@ -525,7 +525,7 @@ void SetupCustomPointers(struct InstData *data)
     if(((struct Library *)IntuitionBase)->lib_Version >= 39)
     {
       data->vertSizePointerObj = (Object *)NewObject(NULL, (STRPTR)"pointerclass",
-        POINTERA_BitMap,      (LONG)&vertSizePointerBitmap,
+        POINTERA_BitMap,      (IPTR)&vertSizePointerBitmap,
         POINTERA_WordWidth,   (ULONG)1,
         POINTERA_XResolution, (ULONG)POINTERXRESN_SCREENRES,
         POINTERA_YResolution, (ULONG)POINTERYRESN_SCREENRESASPECT,

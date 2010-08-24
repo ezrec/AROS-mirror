@@ -22,7 +22,7 @@ USER_CFLAGS := -DNO_INLINE_STDARG
 #MM 	    	    	    	      contrib-zune-classes-nfloattext \
 #MM 	    	    	    	      contrib-zune-classes-nlisttree
 
-#MM contrib-zune-classes-nbitmap-demo : includes linklibs
+#MM contrib-zune-classes-nbitmap-demo : includes linklibs contrib-zune-classes-nbitmap-demo-cpy
 
 %build_prog mmake=contrib-zune-classes-nlist-demo \
     progname=NList-Demo targetdir=$(EXEDIR) \
@@ -35,5 +35,8 @@ USER_CFLAGS := -DNO_INLINE_STDARG
 %build_prog mmake=contrib-zune-classes-nbitmap-demo \
     progname=NBitmap-Demo targetdir=$(EXEDIR) \
     files=NBitmap-Demo uselibs="mui arossupport amiga arosc"
+
+%copy_files_q mmake=contrib-zune-classes-nbitmap-demo-cpy \
+    files=icon.png src=../nbitmap_mcc dst=$(EXEDIR)
 
 %common

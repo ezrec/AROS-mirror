@@ -105,9 +105,9 @@ FLEX    = flex
 FC      = flexcat
 EXPR    = expr
 DATE    = date
-RM      = delete force
-RMDIR   = delete force all
-MKDIR   = makedir
+RM      = rm -f #delete force
+RMDIR   = rm -rf #delete force all
+MKDIR   = mkdir -p #makedir force
 CHMOD   = protect FLAGS=rwed
 CP      = copy
 CC      = gcc

@@ -704,7 +704,7 @@ static IPTR _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settin
   Object *pdobj, *idobj;
   struct MUI_ImageSpec *is;
   struct MUI_PenSpec *pen;
-  ULONG d;
+  IPTR d;
 
   ENTER();
 

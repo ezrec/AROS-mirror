@@ -577,7 +577,7 @@ void SetupCustomPointers(struct NLData *data)
     if(((struct Library *)IntuitionBase)->lib_Version >= 39)
     {
       data->SizePointerObj = (Object *)NewObject(NULL, (STRPTR)"pointerclass",
-        POINTERA_BitMap,      (LONG)&sizePointerBitmap,
+        POINTERA_BitMap,      (IPTR)&sizePointerBitmap,
         POINTERA_WordWidth,   (ULONG)1,
         POINTERA_XResolution, (ULONG)POINTERXRESN_SCREENRES,
         POINTERA_YResolution, (ULONG)POINTERYRESN_SCREENRESASPECT,
@@ -611,7 +611,7 @@ void SetupCustomPointers(struct NLData *data)
     if(((struct Library *)IntuitionBase)->lib_Version >= 39)
     {
       data->MovePointerObj = (Object *)NewObject(NULL, (STRPTR)"pointerclass",
-        POINTERA_BitMap,      (LONG)&movePointerBitmap,
+        POINTERA_BitMap,      (IPTR)&movePointerBitmap,
         POINTERA_WordWidth,   (ULONG)1,
         POINTERA_XResolution, (ULONG)POINTERXRESN_SCREENRES,
         POINTERA_YResolution, (ULONG)POINTERYRESN_SCREENRESASPECT,
@@ -645,7 +645,7 @@ void SetupCustomPointers(struct NLData *data)
     if(((struct Library *)IntuitionBase)->lib_Version >= 39)
     {
       data->SelectPointerObj = (Object *)NewObject(NULL, (STRPTR)"pointerclass",
-        POINTERA_BitMap,      (LONG)&selectPointerBitmap,
+        POINTERA_BitMap,      (IPTR)&selectPointerBitmap,
         POINTERA_WordWidth,   (ULONG)1,
         POINTERA_XResolution, (ULONG)POINTERXRESN_SCREENRES,
         POINTERA_YResolution, (ULONG)POINTERYRESN_SCREENRESASPECT,

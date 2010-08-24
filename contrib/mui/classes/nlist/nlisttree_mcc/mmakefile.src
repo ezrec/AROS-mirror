@@ -10,8 +10,7 @@ FILES := library \
          ClipboardServer \
          NListtree \
          QuickSort \
-         Debug \
-         vastubs
+         Debug
 
 %build_module_simple mmake=contrib-zune-classes-nlisttree-class \
   modname=NListtree modtype=mcc moduledir=$(CONTRIBDIR)/Zune/MCC_NList/Classes/Zune \

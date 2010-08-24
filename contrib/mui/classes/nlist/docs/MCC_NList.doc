@@ -124,6 +124,7 @@ NList.mcc/MUIM_NList_Remove
 NList.mcc/MUIM_NList_ReplaceSingle
 NList.mcc/MUIM_NList_Select
 NList.mcc/MUIM_NList_SelectChange
+NList.mcc/MUIM_NList_SetActive
 NList.mcc/MUIM_NList_SetColumnCol
 NList.mcc/MUIM_NList_Sort
 NList.mcc/MUIM_NList_Sort2
@@ -220,7 +221,7 @@ NList.mcc/MUIM_NList_UseImage
 NList.mcc/MUIA_NList_ActiveObjectOnClick
 
     NAME
-        MUIA_NList_ActiveObjectOnClick -- [IS.], BOOL
+        MUIA_NList_ActiveObjectOnClick -- [ISG], BOOL
 
     FUNCTION
         If set to TRUE, the NList object will become the
@@ -361,7 +362,7 @@ NList.mcc/MUIM_NList_UseImage
 
     SEE ALSO
         MUIA_NList_DisplayHook, MUIA_NList_DoubleClick, MUIA_NList_MultiClick,
-        MUIA_NList_EntryClick, MUIA_NList_TitleClick.
+        MUIA_NList_EntryClick, MUIA_NList_TitleClick
 NList.mcc/MUIA_NList_ClickColumn
 
     NAME
@@ -545,7 +546,7 @@ NList.mcc/MUIM_NList_UseImage
 NList.mcc/MUIA_NList_DefaultObjectOnClick
 
     NAME
-        MUIA_NList_DefaultObjectOnClick -- [IS.], BOOL
+        MUIA_NList_DefaultObjectOnClick -- [ISG], BOOL
 
     FUNCTION
         If set to TRUE, the NList object will become the
@@ -2980,7 +2981,9 @@ NList.mcc/MUIM_NList_UseImage
     INPUTS
         pos - Number of the entry that should be made visible.
               Use MUIV_NList_Jump_Active to jump to the active
-              entry.
+              entry. And use MUIV_NList_Jump_Active_Center to
+              make the active entry visible centered in the
+              listview.
 
     SEE ALSO
         MUIA_NList_Active, MUIA_NList_First
@@ -3211,6 +3214,53 @@ NList.mcc/MUIM_NList_UseImage
 
     SEE ALSO
         MUIA_NList_SelectChange, MUIA_NList_TypeSelect, MUIM_NList_Select
+NList.mcc/MUIM_NList_SetActive
+
+    NAME
+        MUIM_NList_SetActive -- make s specific entry the active one (v20.125)
+
+    SYNOPSIS
+        DoMethod(obj, MUIM_NList_SetActive, LONG pos, ULONG flags);
+
+    FUNCTION
+        This method is a replacement function for the old-style way of making an
+        entry active via a simple set(obj, MUIA_NList_Active, pos) call. While the
+        old method still works, this new function has the advantage that it allows
+        to set an entry active together with making it immediately visible in the
+        listview.
+        Previously, a developer had to do a combination of a set() call to set
+        MUIA_NList_Active and then immediately perform a MUIM_NList_Jump function
+        call so that the entry becomes visible at the specific position. With this
+        new function both operations are combined, potentially allowing future
+        enhancements to be added via the additional 'flags' variable.
+
+    INPUTS
+        The parameter description is as followed:
+
+        pos     - The position (int) of the entry which should be made the new
+                  active entry. This can also be MUIV_NList_Active_XXXX values as
+                  explained in the MUIA_NList_Active documentation. Furthermore,
+                  pos might also be perfectly a pointer to the entry directly in
+                  case you have specified the correct flag.
+
+        flags   - Can be a combination of the following flags:
+ 
+                  MUIV_NList_SetActive_Entry:
+                 
+                    the parameter 'pos' will be a pointer to the entry rather
+                    than the position (int) of the entry to be made active. If
+                    this flag is set NList will perform an internal GetPos()
+                    operation to first obtain the position and then set
+                    this entry active.
+
+                  MUIV_NList_SetActive_Jump_Center:
+
+                    Together with making the specified entry the new active one
+                    the listview will also be scrolled so that the new entry
+                    will be shown centered instead of having it simply visible.
+
+    SEE ALSO
+        MUIA_NList_Active, MUIM_NList_Jump
 NList.mcc/MUIM_NList_SetColumnCol
 
     NAME

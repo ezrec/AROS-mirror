@@ -47,19 +47,18 @@
 #define CLASS           MUIC_NListtree
 #define SUPERCLASS      MUIC_NList
 
-#define INSTDATA			  NListtree_Data
+#define INSTDATA        NListtree_Data
 
-#define USERLIBID     CLASS " " LIB_REV_STRING " [" SYSTEMSHORT "/" CPU "] (" LIB_DATE ") " LIB_COPYRIGHT
-#define MASTERVERSION	  19
+#define USERLIBID       CLASS " " LIB_REV_STRING " [" SYSTEMSHORT "/" CPU "] (" LIB_DATE ") " LIB_COPYRIGHT
+#define MASTERVERSION   19
 
 #define	CLASSINIT
 #define	CLASSEXPUNGE
-#define MIN_STACKSIZE 8192
 
-#define USEDCLASSESP  used_classesP
-#define USEDCLASSES   used_classes
-static const char *used_classesP[] = { "NListtree.mcp", "NListviews.mcp", NULL };
-static const char *used_classes[]  = { "NList.mcc", NULL };
+#define USEDCLASSESP used_mcps
+static const char *used_mcps[] = { "NListtree.mcp", "NListviews.mcp", NULL };
+
+#define MIN_STACKSIZE   8192
 
 /******************************************************************************/
 /* define the functions used by the startup code ahead of including mccinit.c */

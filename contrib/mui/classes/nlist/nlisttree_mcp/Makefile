@@ -387,7 +387,7 @@ locale.c: $(LOCALE)/NListtree_mcp.cd C_h.sd C_c.sd
 
 ## CATALOG GENERATION #################
 
-$(LOCALE)/%.catalog: $(LOCALE)/%.ct
+$(LOCALE)/%.catalog: $(LOCALE)/%.ct $(LOCALE)/NListtree_mcp.cd
 	@echo "  FC $@"
 	@$(FC) $(LOCALE)/NListtree_mcp.cd $< CATALOG $@
 

@@ -115,7 +115,7 @@ extern void UnSelectCharSel(Object *obj,struct NLData *data,BOOL redraw);
 extern void SelectFirstPoint(Object *obj,struct NLData *data,WORD x,WORD y);
 extern void SelectSecondPoint(Object *obj,struct NLData *data,WORD x,WORD y);
 extern BOOL NL_List_First(Object *obj,struct NLData *data,LONG lf,struct TagItem *tag);
-extern BOOL NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,LONG newactsel,LONG acceptsame);
+extern BOOL NL_List_Active(Object *obj,struct NLData *data,LONG la,struct TagItem *tag,LONG newactsel,LONG acceptsame,ULONG flags);
 extern BOOL NL_List_Horiz_First(Object *obj,struct NLData *data,LONG hf,struct TagItem *tag);
 extern LONG NList_Compare(Object *obj,struct NLData *data,APTR s1,APTR s2);
 extern ULONG NL_List_SelectChar(Object *obj,struct NLData *data,LONG pos,LONG seltype,LONG *state);
@@ -126,6 +126,7 @@ extern ULONG NL_List_TestPos(Object *obj,struct NLData *data,LONG x,LONG y,struc
 extern IPTR mNL_List_GetEntry(struct IClass *cl,Object *obj,struct  MUIP_NList_GetEntry *msg);
 extern IPTR mNL_List_GetEntryInfo(struct IClass *cl,Object *obj,struct  MUIP_NList_GetEntryInfo *msg);
 extern IPTR mNL_List_Jump(struct IClass *cl,Object *obj,struct  MUIP_NList_Jump *msg);
+extern IPTR mNL_List_SetActive(struct IClass *cl,Object *obj,struct MUIP_NList_SetActive *msg);
 extern IPTR mNL_List_Select(struct IClass *cl,Object *obj,struct  MUIP_NList_Select *msg);
 extern IPTR mNL_List_TestPos(struct IClass *cl,Object *obj,struct MUIP_NList_TestPos *msg);
 extern IPTR mNL_List_TestPosOld(struct IClass *cl,Object *obj,struct MUIP_List_TestPos *msg);
@@ -173,8 +174,8 @@ extern IPTR mNL_DropEntryDrawErase(struct IClass *cl,Object *obj,struct MUIP_NLi
 
 /* NList_func3.c */
 
-extern ULONG MyCallHookPkt(Object *obj,BOOL hdata,struct Hook *hook,APTR object,APTR message);
-extern ULONG STDARGS VARARGS68K MyCallHookPktA(Object *obj, struct Hook *hook, ...);
+extern IPTR MyCallHookPkt(Object *obj,BOOL hdata,struct Hook *hook,APTR object,APTR message);
+extern IPTR STDARGS VARARGS68K MyCallHookPktA(Object *obj, struct Hook *hook, ...);
 extern LONG DeadKeyConvert(struct NLData *data,struct IntuiMessage *msg,STRPTR buf,LONG bufsize,struct KeyMap *kmap);
 extern char *ltoa(ULONG val, char *buffer, int len);
 
@@ -192,7 +193,7 @@ extern VOID	NL2_Free( struct NLData *data, APTR memory, STRPTR string );
 
 extern void NL_Free_Format(Object *obj,struct NLData *data);
 extern BOOL NL_Read_Format(Object *obj,struct NLData *data,char *strformat,BOOL oldlist);
-extern LONG NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG clipnum,APTR *entries,struct Hook *hook);
+extern SIPTR NL_CopyTo(Object *obj,struct NLData *data,LONG pos,char *filename,ULONG clipnum,APTR *entries,struct Hook *hook);
 
 extern IPTR mNL_CopyToClip(struct IClass *cl,Object *obj,struct MUIP_NList_CopyToClip *msg);
 extern IPTR mNL_CopyTo(struct IClass *cl,Object *obj,struct MUIP_NList_CopyTo *msg);

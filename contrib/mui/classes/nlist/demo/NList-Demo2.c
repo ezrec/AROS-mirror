@@ -23,6 +23,10 @@
 
 ***************************************************************************/
 
+#if defined(__AROS__)
+#include <clib/alib_protos.h>
+#endif
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>

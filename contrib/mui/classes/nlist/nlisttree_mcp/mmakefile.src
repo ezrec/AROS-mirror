@@ -5,7 +5,7 @@ include $(TOP)/config/make.cfg
 
 USER_INCLUDES = -I$(SRCDIR)/$(CURDIR)/../include
 USER_CFLAGS := -DNO_INLINE_STDARG
-FILES := library icon NListtree locale
+FILES := library NListtree icon locale
 
 %build_module_simple mmake=contrib-zune-classes-nlisttree-mcp \
   modname=NListtree modtype=mcp moduledir=$(CONTRIBDIR)/Zune/MCC_NList/Classes/Zune \
@@ -23,7 +23,8 @@ contrib-zune-classes-nlisttree-mcp-catalogs : locale.c locale.h \
     $(TARGETDIR)/czech/NListtree_mcp.catalog \
     $(TARGETDIR)/svenska/NListtree_mcp.catalog \
     $(TARGETDIR)/français/NListtree_mcp.catalog \
-    $(TARGETDIR)/deutsch/NListtree_mcp.catalog
+    $(TARGETDIR)/deutsch/NListtree_mcp.catalog \
+    $(TARGETDIR)/polish/NListtree_mcp.catalog
 
 
 locale.h: locale/NListtree_mcp.cd C_h.sd
@@ -55,6 +56,10 @@ $(TARGETDIR)/english-british/NListtree_mcp.catalog: locale/english-british.ct
 
 $(TARGETDIR)/russian/NListtree_mcp.catalog: locale/russian.ct
 	@$(MKDIR) $(TARGETDIR)/russian
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListtree_mcp.cd $< CATALOG $@
+
+$(TARGETDIR)/polish/NListtree_mcp.catalog: locale/polish.ct
+	@$(MKDIR) $(TARGETDIR)/polish
 	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/NListtree_mcp.cd $< CATALOG $@
 
 %common

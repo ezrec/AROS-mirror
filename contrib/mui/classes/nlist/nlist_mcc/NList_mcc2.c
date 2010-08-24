@@ -124,7 +124,7 @@ static BOOL GotoPage(struct IClass *cl, Object *obj, ULONG activePage)
   ENTER();
 
   if(data->NList_Input && !data->NList_TypeSelect && data->EntriesArray != NULL)
-    changed = NL_List_Active(obj, data, activePage, NULL, data->NList_List_Select, FALSE);
+    changed = NL_List_Active(obj, data, activePage, NULL, data->NList_List_Select, FALSE,0);
   else
     changed = NL_List_First(obj, data, activePage, NULL);
 
@@ -287,7 +287,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
         {
           MOREQUIET;
           NL_List_Select(obj,data,MUIV_NList_Select_Active,MUIV_NList_Active_Off,MUIV_NList_Select_Toggle,NULL);
-          NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->NList_List_Select,FALSE);
+          NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->NList_List_Select,FALSE,0);
           LESSQUIET;
 
           retval = MUI_EventHandlerRC_Eat;
@@ -302,6 +302,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
         // if we have an object that we should make the new active object
         // of the window we do so in case this left key action didn't end up in
         // a real scrolling
+        D(DBF_STARTUP, "KeyLeftFocus: %ld %lx", scrolled, data->NList_KeyLeftFocus);
         if(scrolled == FALSE && data->NList_KeyLeftFocus != NULL)
           set(_win(obj), MUIA_Window_ActiveObject, data->NList_KeyLeftFocus);
 
@@ -316,6 +317,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
         // if we have an object that we should make the new active object
         // of the window we do so in case this right key action didn't end up in
         // a real scrolling
+        D(DBF_STARTUP, "KeyRightFocus: %ld %lx", scrolled, data->NList_KeyRightFocus);
         if(scrolled == FALSE && data->NList_KeyRightFocus != NULL)
           set(_win(obj), MUIA_Window_ActiveObject, data->NList_KeyRightFocus);
 
@@ -360,7 +362,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
   /*D(bug("NL: mNL_HandleEvent() /before \n"));*/
 
   if (msg->imsg && !data->NList_Quiet && !data->NList_Disabled)
-  { LONG tagval,tagval2;
+  { SIPTR tagval,tagval2;
     LONG drag_ok = FALSE;
     WORD hfirst = data->NList_Horiz_AffFirst & ~1;
     WORD hfirsthpos = hfirst - data->hpos;
@@ -526,9 +528,9 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
           #endif
 
           if((tagval = xget(_win(obj), MUIA_Window_ActiveObject)) &&
-             ((tagval == (LONG)obj) ||
-               (tagval && (tagval2 = xget((Object *)tagval, MUIA_Listview_List)) && (tagval2 == (LONG)obj)) ||
-               (!tagval && (tagval2 = xget(_win(obj), MUIA_Window_DefaultObject)) && (tagval2 == (LONG)obj)))
+             ((tagval == (SIPTR)obj) ||
+               (tagval && (tagval2 = xget((Object *)tagval, MUIA_Listview_List)) && (tagval2 == (SIPTR)obj)) ||
+               (!tagval && (tagval2 = xget(_win(obj), MUIA_Window_DefaultObject)) && (tagval2 == (SIPTR)obj)))
              )
           {
             if (data->NList_AutoCopyToClip)
@@ -548,7 +550,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               	LONG newactsel = MUIV_NList_Select_On;
               	if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
               		newactsel = MUIV_NList_Select_Off;
-                NL_List_Active(obj,data,MUIV_NList_Active_UntilTop,NULL,newactsel,FALSE);
+                NL_List_Active(obj,data,MUIV_NList_Active_UntilTop,NULL,newactsel,FALSE,0);
               }
               retval = MUI_EventHandlerRC_Eat;
             }
@@ -559,7 +561,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               	LONG newactsel = MUIV_NList_Select_On;
               	if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
               		newactsel = MUIV_NList_Select_Off;
-                NL_List_Active(obj,data,MUIV_NList_Active_UntilBottom,NULL,newactsel,FALSE);
+                NL_List_Active(obj,data,MUIV_NList_Active_UntilBottom,NULL,newactsel,FALSE,0);
               }
               retval = MUI_EventHandlerRC_Eat;
             }
@@ -571,7 +573,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               	LONG newactsel = MUIV_NList_Select_On;
               	if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
               		newactsel = MUIV_NList_Select_Off;
-                NL_List_Active(obj,data,MUIV_NList_Active_UntilPageUp,NULL,newactsel,FALSE);
+                NL_List_Active(obj,data,MUIV_NList_Active_UntilPageUp,NULL,newactsel,FALSE,0);
               }
               retval = MUI_EventHandlerRC_Eat;
             }
@@ -583,7 +585,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               	LONG newactsel = MUIV_NList_Select_On;
               	if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
               		newactsel = MUIV_NList_Select_Off;
-                NL_List_Active(obj,data,MUIV_NList_Active_UntilPageDown,NULL,newactsel,FALSE);
+                NL_List_Active(obj,data,MUIV_NList_Active_UntilPageDown,NULL,newactsel,FALSE,0);
               }
               retval = MUI_EventHandlerRC_Eat;
             }
@@ -596,7 +598,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
 
                 if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
               		newactsel = MUIV_NList_Select_Off;
-               	NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,newactsel,FALSE);
+               	NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,newactsel,FALSE,0);
               }
               retval = MUI_EventHandlerRC_Eat;
             }
@@ -609,7 +611,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
 
                 if (data->NList_Active >= 0 && data->EntriesArray[data->NList_Active]->Select == TE_Select_None)
               		newactsel = MUIV_NList_Select_Off;
-               	NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,newactsel,FALSE);
+               	NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,newactsel,FALSE,0);
               }
               retval = MUI_EventHandlerRC_Eat;
             }
@@ -789,9 +791,9 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               data->selectmode = data->NList_List_Select;
               if (data->NList_Input && !data->NList_TypeSelect)
               { if (data->NList_Active > data->NList_First)
-                  NL_List_Active(obj,data,MUIV_NList_Active_PageUp,NULL,data->selectmode,FALSE);
+                  NL_List_Active(obj,data,MUIV_NList_Active_PageUp,NULL,data->selectmode,FALSE,0);
                 else
-                  NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE);
+                  NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
               }
               else
                 NL_List_First(obj,data,MUIV_NList_First_Up,NULL);
@@ -804,9 +806,9 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               data->selectmode = data->NList_List_Select;
               if (data->NList_Input && !data->NList_TypeSelect)
               { if (data->NList_Active < data->NList_First - 1 + data->NList_Visible)
-                  NL_List_Active(obj,data,MUIV_NList_Active_PageDown,NULL,data->selectmode,FALSE);
+                  NL_List_Active(obj,data,MUIV_NList_Active_PageDown,NULL,data->selectmode,FALSE,0);
                 else
-                  NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE);
+                  NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
               }
               else
                 NL_List_First(obj,data,MUIV_NList_First_Down,NULL);
@@ -980,11 +982,11 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                 }
               }
 
-              if(data->NList_DefaultObjectOnClick)
+              if(data->NList_DefaultObjectOnClick == TRUE)
               {
-                ULONG tst = xget(_win(obj), MUIA_Window_ActiveObject);
+                IPTR tst = xget(_win(obj), MUIA_Window_ActiveObject);
 
-                if((tst != MUIV_Window_ActiveObject_None) && (tst != data->NList_KeepActive) && (tst != (ULONG) obj))
+                if((tst != MUIV_Window_ActiveObject_None) && (tst != data->NList_KeepActive) && (tst != (IPTR) obj))
                 {
                   if (data->NList_MakeActive)
                     newActiveObject = (Object *)data->NList_MakeActive;
@@ -994,7 +996,8 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                   modifyActiveObject = TRUE;
                 }
 
-                set(_win(obj), MUIA_Window_DefaultObject, (LONG) obj);
+                // set our parent NListview object as new default object
+                set(_win(obj), MUIA_Window_DefaultObject, data->nlistviewobj);
               }
               else if(data->NList_MakeActive)
               {
@@ -1004,9 +1007,10 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
 
               // now we check if the user wants to set this object
               // as the active one or not.
-              if(data->NList_ActiveObjectOnClick && data->isActiveObject == FALSE)
+              if(data->NList_ActiveObjectOnClick == TRUE && data->isActiveObject == FALSE)
               {
-                newActiveObject = obj;
+                // set our parent NListview object as new active object
+                newActiveObject = data->nlistviewobj;
                 modifyActiveObject = TRUE;
               }
 
@@ -1094,14 +1098,14 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                   if (data->multiselect == MUIV_NList_MultiSelect_None)
                   {
                     data->selectmode = MUIV_NList_Select_On;
-                    NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE);
+                    NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE,0);
                   }
                   else if (!multi)
                   {
                     MOREQUIET;
                     NL_UnSelectAll(obj,data,lactive);
                     data->selectmode = MUIV_NList_Select_On;
-                    NL_List_Active(obj,data,lactive,NULL,data->selectmode,TRUE);
+                    NL_List_Active(obj,data,lactive,NULL,data->selectmode,TRUE,0);
                     LESSQUIET;
                     data->selectskiped = TRUE;
                   }
@@ -1111,7 +1115,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                       data->selectmode = MUIV_NList_Select_On;
                     else
                       data->selectmode = MUIV_NList_Select_Off;
-                    NL_List_Active(obj,data,lactive,NULL,data->selectmode,TRUE);
+                    NL_List_Active(obj,data,lactive,NULL,data->selectmode,TRUE,0);
                     data->selectskiped = TRUE;
                   }
                 }
@@ -1138,7 +1142,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               /* click was not in _isinobject2() */
               ULONG tst = xget(_win(obj), MUIA_Window_DefaultObject);
 
-              if(tst == (ULONG)obj)
+              if(tst == (IPTR)obj)
                 set(_win(obj), MUIA_Window_DefaultObject, NULL);
 
               // do not return MUI_EventHandlerRC_Eat, because this click happened outside
@@ -1274,7 +1278,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
         //retval = MUI_EventHandlerRC_Eat;
         break;
       case IDCMP_INTUITICKS:
-        {
+      {
         struct MUI_NList_TestPos_Result res;
 /*
 ** Store Current Values to Temp Variables
@@ -1324,11 +1328,16 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
         data->affbuttoncol = tempbuttoncol;
         data->affbuttonstate = tempbuttonstate;
         data->storebutton = tempstorebutton;
-        if (data->NumIntuiTick > 0)
-           { data->NumIntuiTick--;
-             break;
-           }
+        if(data->NumIntuiTick > 0)
+        {
+          data->NumIntuiTick--;
+          break;
         }
+      }
+
+      if(!_isinobject(msg->imsg->MouseX,msg->imsg->MouseY) && data->moves == FALSE)
+        HideCustomPointer(obj, data);
+
       // walk through to next case...
 
       case IDCMP_MOUSEMOVE:
@@ -1547,6 +1556,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
 
         {
           struct MUI_NList_TestPos_Result res;
+
           res.char_number = -2;
           NL_List_TestPos(obj,data,msg->imsg->MouseX,msg->imsg->MouseY,&res);
 
@@ -1568,20 +1578,20 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
           }
           else
           {
-            BOOL onWindow = NL_OnWindow(obj, data, msg->imsg->MouseX, msg->imsg->MouseY);
+            BOOL overObject = _isinobject(msg->imsg->MouseX, msg->imsg->MouseY);
 
             if (((data->adjustbar >= 0) ||
                  ((!data->moves) && (data->adjustbar >= -1) &&
                   (res.flags & MUI_NLPR_BAR) && (res.flags & MUI_NLPR_ONTOP) &&
                   (res.column < data->numcols) && (res.column >= 0))) &&
-                (onWindow == TRUE))
+                (overObject == TRUE))
             {
               // set a custom mouse pointer
               ShowCustomPointer(obj, data, PT_SIZE);
             }
             else if(data->NList_SelectPointer == TRUE &&
-                    (data->NList_TypeSelect == MUIV_NList_TypeSelect_Char) &&
-                    (onWindow == TRUE))
+                    data->NList_TypeSelect == MUIV_NList_TypeSelect_Char &&
+                    overObject == TRUE)
             {
               // in case the NList object is in charwise selection mode and the mouse
               // is above the object itself we show a specialized selection pointer
@@ -1669,17 +1679,18 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               { MOREQUIET;
                 if (data->multiselect && data->selectskiped && (lactive >= 0) && (lactive != data->lastactived))
                 { NL_List_Select(obj,data,lactive,data->lastactived,data->selectmode,NULL);
-                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE);
+                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE,0);
                 }
                 else
-                  NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE);
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE);
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE);
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE);
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE);
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE);
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE);
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE);
+                  NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+
+                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
                 LESSQUIET;
               }
               else
@@ -1694,13 +1705,14 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               { MOREQUIET;
                 if (data->multiselect && data->selectskiped && (lactive >= 0) && (lactive != data->lastactived))
                 { NL_List_Select(obj,data,lactive,data->lastactived,data->selectmode,NULL);
-                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE);
+                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE,0);
                 }
                 else
-                  NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE);
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE);
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE);
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE);
+                  NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+
+                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
                 LESSQUIET;
               }
               else
@@ -1711,11 +1723,12 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               { MOREQUIET;
                 if (data->multiselect && data->selectskiped && (lactive >= 0) && (lactive != data->lastactived))
                 { NL_List_Select(obj,data,lactive,data->lastactived,data->selectmode,NULL);
-                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE);
+                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE,0);
                 }
                 else
-                  NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE);
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE);
+                  NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
+
+                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
                 LESSQUIET;
               }
               else
@@ -1723,7 +1736,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
             }
             else
             { if (data->NList_Input && !data->NList_TypeSelect)
-                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE);
+                NL_List_Active(obj,data,MUIV_NList_Active_Up,NULL,data->selectmode,FALSE,0);
               else
                 NL_List_First(obj,data,MUIV_NList_First_Up,NULL);
             }
@@ -1747,17 +1760,17 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               { MOREQUIET;
                 if (data->multiselect && data->selectskiped && (lactive >= 0) && (lactive != data->lastactived))
                 { NL_List_Select(obj,data,lactive,data->lastactived,data->selectmode,NULL);
-                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE);
+                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE,0);
                 }
                 else
-                  NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE);
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE);
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE);
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE);
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE);
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE);
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE);
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE);
+                  NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
                 LESSQUIET;
               }
               else
@@ -1772,13 +1785,13 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               { MOREQUIET;
                 if (data->multiselect && data->selectskiped && (lactive >= 0) && (lactive != data->lastactived))
                 { NL_List_Select(obj,data,lactive,data->lastactived,data->selectmode,NULL);
-                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE);
+                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE,0);
                 }
                 else
-                  NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE);
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE);
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE);
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE);
+                  NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
                 LESSQUIET;
               }
               else
@@ -1789,11 +1802,11 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
               { MOREQUIET;
                 if (data->multiselect && data->selectskiped && (lactive >= 0) && (lactive != data->lastactived))
                 { NL_List_Select(obj,data,lactive,data->lastactived,data->selectmode,NULL);
-                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE);
+                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE,0);
                 }
                 else
-                  NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE);
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE);
+                  NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
+                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
                 LESSQUIET;
               }
               else
@@ -1801,7 +1814,7 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
             }
             else
             { if (data->NList_Input && !data->NList_TypeSelect)
-                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE);
+                NL_List_Active(obj,data,MUIV_NList_Active_Down,NULL,data->selectmode,FALSE,0);
               else
                 NL_List_First(obj,data,MUIV_NList_First_Down,NULL);
             }
@@ -1828,15 +1841,15 @@ IPTR mNL_HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleInput *ms
                 if (data->multiselect && data->selectskiped)
                 {
                   NL_List_Select(obj,data,lactive,data->lastactived,data->selectmode,NULL);
-                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE);
+                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE,0);
                 }
                 else if (data->multiselect)
                 { data->selectskiped = TRUE;
-                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE);
+                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE,0);
                 }
                 else
                 {
-                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE);
+                  NL_List_Active(obj,data,lactive,NULL,data->selectmode,FALSE,0);
                 }
               }
             }

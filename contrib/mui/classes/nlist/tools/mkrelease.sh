@@ -21,7 +21,7 @@
 #
 # NList classes Support Site:  http://www.sf.net/projects/nlist-classes
 #
-# $Id: mkrelease.sh 427 2010-05-20 10:22:50Z mandi78 $
+# $Id: mkrelease.sh 467 2010-08-16 14:12:38Z damato $
 #
 ############################################################################
 
@@ -108,6 +108,5 @@ cp -a nlistviews_mcp/locale/NListviews_mcp.cd "release/MCC_NList/Locale/"
 
 echo "  MK MCC_NList-0.$1.lha"
 find release -nowarn -name ".svn" -exec rm -rf {} \; 2>/dev/null
-pushd release >/dev/null
+cd release
 lha -aq ../MCC_NList-0.$1.lha *
-popd >/dev/null

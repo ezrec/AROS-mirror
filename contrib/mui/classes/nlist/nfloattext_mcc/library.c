@@ -35,21 +35,24 @@
 #include "private.h"
 #include "version.h"
 
-#define	VERSION				LIB_VERSION
-#define	REVISION			LIB_REVISION
+#define	VERSION             LIB_VERSION
+#define	REVISION            LIB_REVISION
 
-#define CLASS				  MUIC_NFloattext
-#define SUPERCLASS    MUIC_NList
+#define CLASS               MUIC_NFloattext
+#define SUPERCLASS          MUIC_NList
 
-#define	INSTDATA      NFTData
+#define	INSTDATA            NFTData
 
-#define USERLIBID     CLASS " " LIB_REV_STRING " [" SYSTEMSHORT "/" CPU "] (" LIB_DATE ") " LIB_COPYRIGHT
-#define MASTERVERSION	19
+#define USERLIBID           CLASS " " LIB_REV_STRING " [" SYSTEMSHORT "/" CPU "] (" LIB_DATE ") " LIB_COPYRIGHT
+#define MASTERVERSION       19
 
-#define USEDCLASSESP  used_classesP
-static const char *used_classesP[] = { "NListviews.mcp", NULL };
+#define USEDCLASSES used_mccs
+static const char *used_mccs[] = { "NList.mcc", "NListview.mcc", NULL };
 
-#define MIN_STACKSIZE 8192
+#define USEDCLASSESP used_mcps
+static const char *used_mcps[] = { "NListviews.mcp", NULL };
+
+#define MIN_STACKSIZE       8192
 
 /******************************************************************************/
 /* define the functions used by the startup code ahead of including mccinit.c */

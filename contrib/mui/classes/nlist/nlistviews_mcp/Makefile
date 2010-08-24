@@ -114,6 +114,29 @@ CC      = gcc
 STRIP   = strip
 OBJDUMP = objdump
 
+# override commands for native builds
+ifeq ($(HOST), AmigaOS4)
+  # AmigaOS4 host
+#  RM    = delete force
+#  RMDIR = delete force all
+#  MKDIR = makedir
+  DATE  = gdate
+else
+ifeq ($(HOST), AmigaOS)
+  # AmigaOS3 host
+  RM    = delete force
+  RMDIR = delete force all
+  MKDIR = makedir
+else
+ifeq ($(HOST), MorphOS)
+  # MorphOS host
+  RM    = delete force
+  RMDIR = delete force all
+  MKDIR = makedir
+endif
+endif
+endif
+
 # path definitions
 CDUP  = /
 CDTHIS=
@@ -386,7 +409,7 @@ locale.c: $(LOCALE)/NListviews_mcp.cd C_h.sd C_c.sd
 
 ## CATALOG GENERATION #################
 
-$(LOCALE)/%.catalog: $(LOCALE)/%.ct
+$(LOCALE)/%.catalog: $(LOCALE)/%.ct $(LOCALE)/NListviews_mcp.cd
 	@echo "  GN $@"
 	@$(FC) $(LOCALE)/NListviews_mcp.cd $< CATALOG $@
 

@@ -24,8 +24,7 @@ FILES := \
         NList_img2   \
         ClipboardServer \
         Pointer      \
-        Debug        \
-        vastubs
+        Debug
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../nlistviews_mcp \
     -I$(SRCDIR)/$(CURDIR)/../nlistview_mcc
@@ -34,7 +33,7 @@ USER_CFLAGS := -DNO_INLINE_STDARG
 
 %build_module_simple mmake=contrib-zune-classes-nlist-class \
   modname=NList modtype=mcc moduledir=$(CONTRIBDIR)/Zune/MCC_NList/Classes/Zune \
-  files="library $(FILES)" uselibs="amiga arossupport mui rom m"
+  files="library $(FILES)" uselibs="amiga mui rom m"
 
 
 

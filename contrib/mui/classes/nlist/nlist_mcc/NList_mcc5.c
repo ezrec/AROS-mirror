@@ -239,7 +239,7 @@ LONG NL_DoNotifies(Object *obj,struct NLData *data,LONG which)
   if(NEED_NOTIFY(NTF_LV_Doubleclick) & which)
   {
     DONE_NOTIFY(NTF_LV_Doubleclick);
-    if(data->listviewobj)
+    if(data->listviewobj != NULL)
       DoMethod(data->listviewobj, MUIM_Set, MUIA_Listview_DoubleClick, (LONG)TRUE);
     else
       set(obj,MUIA_Listview_DoubleClick,(LONG) TRUE);
@@ -282,7 +282,7 @@ LONG NL_DoNotifies(Object *obj,struct NLData *data,LONG which)
   if (NEED_NOTIFY(NTF_LV_Select) & which)
   {
     DONE_NOTIFY(NTF_LV_Select);
-    if(data->listviewobj)
+    if(data->listviewobj != NULL)
       DoMethod(data->listviewobj, MUIM_Set, MUIA_Listview_SelectChange, (LONG)TRUE);
     else
       set(obj,MUIA_Listview_SelectChange,(LONG) TRUE);
@@ -329,7 +329,7 @@ LONG NL_DoNotifies(Object *obj,struct NLData *data,LONG which)
   /* notify columns */
   if (NEED_NOTIFY(NTF_Columns) & which)
   { DONE_NOTIFY(NTF_Columns);
-    notdoset(obj,MUIA_NList_Columns,(LONG) NL_Columns(obj,data,NULL));
+    notdoset(obj,MUIA_NList_Columns,(IPTR) NL_Columns(obj,data,NULL));
   }
   return (TRUE);
 }
@@ -633,7 +633,7 @@ LONG NL_DrawQuietBG(Object *obj,struct NLData *data,LONG dowhat,LONG bg)
             struct IClass *realclass = OCLASS(obj);
             data->nodraw++;
             OCLASS(obj) = data->ncl;
-            nnset(obj,MUIA_Background,(LONG)"0:128");
+            nnset(obj,MUIA_Background,(IPTR)"0:128");
             OCLASS(obj) = realclass;
             data->nodraw--;
             muiAreaData(obj)->mad_Flags = mad_Flags;
@@ -655,7 +655,7 @@ LONG NL_DrawQuietBG(Object *obj,struct NLData *data,LONG dowhat,LONG bg)
           struct IClass *realclass = OCLASS(obj);
           data->nodraw++;
           OCLASS(obj) = data->ncl;
-          nnset(obj,MUIA_Background,(LONG)"0:128");
+          nnset(obj,MUIA_Background,(IPTR)"0:128");
           OCLASS(obj) = realclass;
           data->nodraw--;
           muiAreaData(obj)->mad_Flags = mad_Flags;
@@ -674,7 +674,7 @@ LONG NL_DrawQuietBG(Object *obj,struct NLData *data,LONG dowhat,LONG bg)
           struct IClass *realclass = OCLASS(obj);
           data->nodraw++;
           OCLASS(obj) = data->ncl;
-          nnset(obj,MUIA_Background,(LONG)"0:128");
+          nnset(obj,MUIA_Background,(IPTR)"0:128");
           OCLASS(obj) = realclass;
           data->nodraw--;
           muiAreaData(obj)->mad_Flags = mad_Flags;
@@ -694,7 +694,7 @@ LONG NL_DrawQuietBG(Object *obj,struct NLData *data,LONG dowhat,LONG bg)
             struct IClass *realclass = OCLASS(obj);
             data->nodraw++;
             OCLASS(obj) = data->ncl;
-            nnset(obj,MUIA_Background,(LONG)"0:128");
+            nnset(obj,MUIA_Background,(IPTR)"0:128");
             OCLASS(obj) = realclass;
             data->nodraw--;
             muiAreaData(obj)->mad_Flags = mad_Flags;
@@ -718,7 +718,7 @@ LONG NL_DrawQuietBG(Object *obj,struct NLData *data,LONG dowhat,LONG bg)
             struct IClass *realclass = OCLASS(obj);
             data->nodraw++;
             OCLASS(obj) = data->ncl;
-            nnset(obj,MUIA_Background,(LONG)"0:128");
+            nnset(obj,MUIA_Background,(IPTR)"0:128");
             OCLASS(obj) = realclass;
             data->nodraw--;
             muiAreaData(obj)->mad_Flags = mad_Flags;
@@ -741,7 +741,7 @@ LONG NL_DrawQuietBG(Object *obj,struct NLData *data,LONG dowhat,LONG bg)
             struct IClass *realclass = OCLASS(obj);
             data->nodraw++;
             OCLASS(obj) = data->ncl;
-            nnset(obj,MUIA_Background,(LONG)"0:128");
+            nnset(obj,MUIA_Background,(IPTR)"0:128");
             OCLASS(obj) = realclass;
             data->nodraw--;
             muiAreaData(obj)->mad_Flags = mad_Flags;
@@ -767,7 +767,7 @@ LONG NL_DrawQuietBG(Object *obj,struct NLData *data,LONG dowhat,LONG bg)
             struct IClass *realclass = OCLASS(obj);
             data->nodraw++;
             OCLASS(obj) = data->ncl;
-            nnset(obj,MUIA_Background,(LONG)"0:128");
+            nnset(obj,MUIA_Background,(IPTR)"0:128");
             OCLASS(obj) = realclass;
             data->nodraw--;
             muiAreaData(obj)->mad_Flags = mad_Flags;
@@ -804,7 +804,7 @@ LONG NL_DrawQuietBG(Object *obj,struct NLData *data,LONG dowhat,LONG bg)
         OCLASS(obj) = data->ncl;
         if (bg == data->actbackground)
         { data->nodraw++;
-          nnset(obj,MUIA_Background,(LONG)"0:128");
+          nnset(obj,MUIA_Background,(IPTR)"0:128");
           data->nodraw--;
         }
         data->actbackground = bg;
@@ -1252,7 +1252,7 @@ IPTR mNL_ContextMenuBuild(struct IClass *cl,Object *obj,struct MUIP_ContextMenuB
 
       MenuObj = (Object *) DoMethod(obj,MUIM_NList_ContextMenuBuild,msg->mx,msg->my,res.entry,column,flags,ontop);
 
-      if ((LONG) (MenuObj) == -1)
+      if ((IPTR)MenuObj == (IPTR)-1)
         return (0);
 
       if (!MenuObj)

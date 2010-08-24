@@ -349,6 +349,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
     return(0);
 
   data->this = obj;
+  data->nlistviewobj = NULL;
   data->listviewobj = NULL;
   data->scrollersobj = NULL;
   data->SETUP = FALSE;
@@ -569,7 +570,6 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->MOUSE_MOVE = FALSE;
   data->pad1 = -1;
   data->pad2 = TRUE;
-  data->nlie = NULL;
   data->isActiveObject = FALSE;
   data->NList_KeyUpFocus = NULL;
   data->NList_KeyDownFocus = NULL;
@@ -796,7 +796,15 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
     data->NList_DefaultObjectOnClick = (LONG) tag->ti_Data;
 
   if((tag = FindTagItem(MUIA_NList_ActiveObjectOnClick, taglist)))
+  {
     data->NList_ActiveObjectOnClick = (BOOL)tag->ti_Data;
+    if(data->NList_ActiveObjectOnClick)
+    {
+      // disable that the object will automatically get a border when
+      // the ActiveObjectOnClick option is active
+      _flags(obj) |= (1<<7);
+    }
+  }
 
   if((tag = FindTagItem(MUIA_NList_MinLineHeight, taglist)))
     data->NList_MinLineHeight = (LONG) tag->ti_Data;
@@ -922,7 +930,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
       NL_List_First(obj,data,(long) tag->ti_Data,tag);
 
     if((tag = FindTagItem(MUIA_NList_Active, taglist)))
-      NL_List_Active(obj,data,(long) tag->ti_Data,tag,MUIV_NList_Select_None,FALSE);
+      NL_List_Active(obj,data,(long) tag->ti_Data,tag,MUIV_NList_Select_None,FALSE,0);
   }
   else if((tag = FindTagItem(MUIA_NList_SourceString, taglist)) && tag->ti_Data)
   {
@@ -935,7 +943,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
       NL_List_First(obj,data,(long) tag->ti_Data,tag);
 
     if((tag = FindTagItem(MUIA_NList_Active, taglist)))
-      NL_List_Active(obj,data,(long) tag->ti_Data,tag,MUIV_NList_Select_None,FALSE);
+      NL_List_Active(obj,data,(long) tag->ti_Data,tag,MUIV_NList_Select_None,FALSE,0);
   }
   else if((tag = FindTagItem(MUIA_NList_SourceArray, taglist)) ||
           (tag = FindTagItem(MUIA_List_SourceArray, taglist)))
@@ -949,7 +957,7 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
       NL_List_First(obj,data,(long) tag->ti_Data,tag);
 
     if((tag = FindTagItem(MUIA_NList_Active, taglist)))
-      NL_List_Active(obj,data,(long) tag->ti_Data,tag,MUIV_NList_Select_None,FALSE);
+      NL_List_Active(obj,data,(long) tag->ti_Data,tag,MUIV_NList_Select_None,FALSE,0);
   }
 
   if((tag = FindTagItem(MUIA_NList_IgnoreSpecialChars, taglist)))
@@ -998,11 +1006,6 @@ IPTR mNL_Dispose(struct IClass *cl,Object *obj,Msg msg)
   data->NList_UseImages = NULL;
   data->LastImage = 0;
 
-  if (data->nlie)
-  { NL_Free(data,(void *)data->nlie,"Dispose_Export struct");
-    data->nlie = NULL;
-  }
-
   FreeAffInfo(obj,data);
 
   NL_Free_Format(obj,data);
@@ -1018,9 +1021,9 @@ IPTR mNL_Dispose(struct IClass *cl,Object *obj,Msg msg)
 
 IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 {
-  register struct NLData *data;
+  struct NLData *data = INST_DATA(cl,obj);
   LONG ent;
-  data = INST_DATA(cl,obj);
+  Object *o;
 
 /*D(bug("%lx|mNL_Setup() 1 \n",obj));*/
 
@@ -1096,11 +1099,6 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     }
     return(FALSE);
   }
-
-  // disable that the object will automatically get a border when
-  // the ActiveObjectOnClick option is active
-  if(data->NList_ActiveObjectOnClick == TRUE)
-    _flags(obj) |= (1<<7);
 
   data->rp = NULL;
 
@@ -1210,61 +1208,73 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
     }
   }
 
+  // determine our parent NListview object
+  data->nlistviewobj = NULL;
+  o = obj;
+  while((o = (Object *)xget(o, MUIA_Parent)) != NULL)
+  {
+    // check if the parent object return ourself as its NList object
+    // this one will be our parent NListview object
+    if((Object *)xget(o, MUIA_NListview_NList) == obj)
+    {
+      data->nlistviewobj = o;
+      D(DBF_STARTUP, "found parent NListview object %08lx", data->nlistviewobj);
+      break;
+    }
+  }
+
   // now we try to see if the parent listview object is
   // an NListview or a plain Listview.mui object so that we
   // can set the listviewobj pointer accordingly
   data->listviewobj = NULL;
+  o = obj;
+  while((o = (Object *)xget(o, MUIA_Parent)))
   {
-    Object *o = obj;
+    Object *tagobj;
 
-    while((o = (Object *)xget(o, MUIA_Parent)))
+    if((tagobj = (Object *)xget(o, MUIA_Listview_List)) != NULL)
     {
-      Object *tagobj;
-
-      if((tagobj = (Object *)xget(o, MUIA_Listview_List)))
+      if(tagobj == obj && (Object *)xget(o, MUIA_NListview_NList) == NULL)
       {
-        if((tagobj == obj) && xget(o, MUIA_NListview_NList) == 0)
+        SIPTR tagval;
+
+        data->listviewobj = o;
+        WANT_NOTIFY(NTF_LV_Select);
+        WANT_NOTIFY(NTF_LV_Doubleclick);
+        WANT_NOTIFY(NTF_L_Active);
+        WANT_NOTIFY(NTF_Entries);
+
+        // check if we have a DragType attribute or not
+        if(GetAttr(MUIA_Listview_DragType, data->listviewobj, (IPTR *)&tagval) != FALSE)
+          data->NList_DragType = tagval;
+
+        // in case this is MUI 3.8 we can query more detailed information
+        // by directly accessing the raw instance data of the Listview.mui
+        // object. Puh, what a hack!
+        if(MUIMasterBase->lib_Version <= 19 && data->pad2)
         {
-          LONG tagval;
+          struct IClass *lcl,*lcl1,*lcl2,*lcl3,*lcl4;
+          UBYTE *ldata = ((UBYTE *) o) + 178;
+          lcl = lcl1 = lcl2 = lcl3 = lcl4 = OCLASS(o);
 
-          data->listviewobj = o;
-          WANT_NOTIFY(NTF_LV_Select);
-          WANT_NOTIFY(NTF_LV_Doubleclick);
-          WANT_NOTIFY(NTF_L_Active);
-          WANT_NOTIFY(NTF_Entries);
+          while (lcl->cl_Super)     /* when loop is finished : */
+          { lcl4 = lcl3;            /*  Listview  */
+            lcl3 = lcl2;            /*  Group     */
+            lcl2 = lcl1;            /*  Area      */
+            lcl1 = lcl;             /*  Notify    */
+            lcl = lcl->cl_Super;    /*  rootclass */
+          }
 
-          // check if we have a DragType attribute or not
-          if(GetAttr(MUIA_Listview_DragType, data->listviewobj, (IPTR *)&tagval) != FALSE)
-            data->NList_DragType = tagval;
-
-          // in case this is MUI 3.8 we can query more detailed information
-          // by directly accessing the raw instance data of the Listview.mui
-          // object. Puh, what a hack!
-          if(MUIMasterBase->lib_Version <= 19 && data->pad2)
+          if (lcl4->cl_InstSize == 68)  /* data size of Listview.mui class in 3.8 */
           {
-            struct IClass *lcl,*lcl1,*lcl2,*lcl3,*lcl4;
-            UBYTE *ldata = ((UBYTE *) o) + 178;
-            lcl = lcl1 = lcl2 = lcl3 = lcl4 = OCLASS(o);
-
-            while (lcl->cl_Super)     /* when loop is finished : */
-            { lcl4 = lcl3;            /*  Listview  */
-              lcl3 = lcl2;            /*  Group     */
-              lcl2 = lcl1;            /*  Area      */
-              lcl1 = lcl;             /*  Notify    */
-              lcl = lcl->cl_Super;    /*  rootclass */
-            }
-
-            if (lcl4->cl_InstSize == 68)  /* data size of Listview.mui class in 3.8 */
-            {
-              data->multiselect = data->NList_MultiSelect = (LONG) ldata[43];
-              data->NList_Input = (LONG) ldata[65];
-              ldata[40] = ldata[41] = ldata[42] = ldata[43] = 0;
-              ldata[64] = ldata[65] = 0;
-            }
+            data->multiselect = data->NList_MultiSelect = (LONG) ldata[43];
+            data->NList_Input = (LONG) ldata[65];
+            ldata[40] = ldata[41] = ldata[42] = ldata[43] = 0;
+            ldata[64] = ldata[65] = 0;
           }
         }
-        break;
       }
+      break;
     }
   }
 
@@ -1487,8 +1497,8 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
   data->MOUSE_MOVE = FALSE;
 /*  data->ehnode.ehn_Events = (IDCMP_MOUSEBUTTONS|IDCMP_RAWKEY|IDCMP_INTUITICKS|IDCMP_MOUSEMOVE);*/
   data->ehnode.ehn_Events = (IDCMP_MOUSEBUTTONS|IDCMP_RAWKEY|IDCMP_INTUITICKS|IDCMP_ACTIVEWINDOW|IDCMP_INACTIVEWINDOW);
-  data->ehnode.ehn_Priority = 0;
-  data->ehnode.ehn_Flags = 0;
+  data->ehnode.ehn_Priority = 1;
+  data->ehnode.ehn_Flags = MUI_EHF_GUIMODE;
   data->ehnode.ehn_Object = obj;
   data->ehnode.ehn_Class  = cl;
 
@@ -1553,11 +1563,6 @@ IPTR mNL_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
   release_pen(data->mri, &data->NList_SelectPen);
   release_pen(data->mri, &data->NList_CursorPen);
   release_pen(data->mri, &data->NList_UnselCurPen);
-
-  // enable that the object will automatically get a border when
-  // the ActiveObjectOnClick option is active
-  if(data->NList_ActiveObjectOnClick == TRUE)
-    _flags(obj) &= ~(1<<7);
 
   retval = DoSuperMethodA(cl,obj,(Msg) msg);
 

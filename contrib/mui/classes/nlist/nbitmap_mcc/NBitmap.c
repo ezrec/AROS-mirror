@@ -93,6 +93,8 @@ ULONG GetConfigItem(Object *obj, ULONG configitem, ULONG defaultsetting)
   if(DoMethod(obj, MUIM_GetConfigItem, configitem, &value))
     result = *(ULONG *)value;
 
+  /* XXX: On 64-bit AROS I'm getting for the line above the warning "cast to pointer from integer of different size". */
+
   RETURN(result);
   return result;
 }
@@ -198,7 +200,7 @@ static BOOL NBitmap_ExamineData(Object *dt_obj, uint32 item, struct IClass *cl, 
     else if(data->depth >=24)
     {
       #if defined(__MORPHOS__)
-      /* XXX: Check out is this needed in OS 3 */
+      /* XXX: Check out is this needed in OS 3 and AROS */
       IPTR use_alpha;
 
       GetDTAttrs(dt_obj, PDTA_AlphaChannel, (IPTR)&use_alpha, TAG_DONE);
@@ -713,13 +715,13 @@ BOOL NBitmap_SetupImage(struct IClass *cl, Object *obj)
             if(data->data[i] != NULL)
             {
               // create a dithered copy of the raw image
-              data->ditheredImage[i] = DitherImage(DITHERA_Data, (uint32)data->data[i],
+              data->ditheredImage[i] = DitherImage(DITHERA_Data, (IPTR)data->data[i],
                                                    DITHERA_Width, data->width,
                                                    DITHERA_Height, data->height,
                                                    DITHERA_Format, data->type,
-                                                   DITHERA_ColorMap, (uint32)colorMap,
-                                                   DITHERA_PenMap, (uint32)data->ditherPenMap,
-                                                   DITHERA_MaskPlane, (uint32)&data->ditheredMask[i],
+                                                   DITHERA_ColorMap, (IPTR)colorMap,
+                                                   DITHERA_PenMap, (IPTR)data->ditherPenMap,
+                                                   DITHERA_MaskPlane, (IPTR)&data->ditheredMask[i],
                                                    TAG_DONE);
 
               #if !defined(__amigaos4__)

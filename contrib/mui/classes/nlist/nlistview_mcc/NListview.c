@@ -68,7 +68,7 @@ static LONG IMsgToChar(struct IntuiMessage *imsg, ULONG dccode, ULONG dcquali)
 
     ie.ie_Code         = imsg->Code & ~dccode;
     ie.ie_Qualifier    = imsg->Qualifier & ~dcquali;
-    ie.ie_EventAddress = (APTR *)*((ULONG *)imsg->IAddress);
+    ie.ie_EventAddress = (APTR *)*((IPTR *)imsg->IAddress);
 
     #if defined(__amigaos4__)
     ie.ie_TimeStamp.Seconds = imsg->Seconds;
@@ -251,7 +251,7 @@ static void NLV_Scrollers(Object *obj, struct NLVData *data, LONG vert, LONG hor
     {
       LONG *scrollbar;
 
-      if(DoMethod(obj, MUIM_GetConfigItem, MUICFG_NListview_VSB, (LONG)&scrollbar))
+      if(DoMethod(obj, MUIM_GetConfigItem, MUICFG_NListview_VSB, (IPTR)&scrollbar))
         data->VertSB = *scrollbar;
       else
         data->VertSB = MUIV_NListview_VSB_Always;
@@ -291,7 +291,7 @@ static void NLV_Scrollers(Object *obj, struct NLVData *data, LONG vert, LONG hor
     {
       LONG *scrollbar;
 
-      if(DoMethod(obj, MUIM_GetConfigItem, MUICFG_NListview_HSB, (LONG)&scrollbar))
+      if(DoMethod(obj, MUIM_GetConfigItem, MUICFG_NListview_HSB, (IPTR)&scrollbar))
         data->HorizSB = *scrollbar;
       else
         data->HorizSB = DEFAULT_HSB;
@@ -558,7 +558,11 @@ static IPTR mNLV_New(struct IClass *cl, Object *obj, struct opSet *msg)
 
     DoMethod(data->LI_NList, MUIM_Notify, MUIA_NListview_Horiz_ScrollBar, MUIV_EveryTime, obj, 3, MUIM_Set, MUIA_NListview_Horiz_ScrollBar, MUIV_TriggerValue);
 
-    set(data->LI_NList, MUIA_NList_KeepActive, (LONG)obj);
+    set(data->LI_NList, MUIA_NList_KeepActive, (IPTR)obj);
+
+    // derive the "active border visible" setting from the embedded list
+    if(xget(data->LI_NList, MUIA_NList_ActiveObjectOnClick) == TRUE)
+      _flags(obj) |= (1<<7);
   }
 
   RETURN(obj);
@@ -668,7 +672,9 @@ static IPTR mNLV_Notify(struct IClass *cl, Object *obj, struct MUIP_Notify *msg)
     case MUIA_List_Active:
     case MUIA_Listview_SelectChange:
     case MUIA_Listview_DoubleClick:
+    {
       return DoMethodA(data->LI_NList, (Msg)msg);
+    }
 
     default:
       return DoSuperMethodA(cl, obj, (Msg)msg);
@@ -723,6 +729,17 @@ static IPTR mNLV_Set(struct IClass *cl,Object *obj,Msg msg)
           NLV_Scrollers(obj, data, 0, tag->ti_Data);
           data->sem = FALSE;
         }
+      }
+      break;
+
+      case MUIA_NList_KeyUpFocus:
+      case MUIA_NList_KeyDownFocus:
+      case MUIA_NList_KeyLeftFocus:
+      case MUIA_NList_KeyRightFocus:
+      {
+        // forward these to the embedded list object
+        if(data->LI_NList != NULL)
+          set(data->LI_NList, tag->ti_Tag, tag->ti_Data);
       }
       break;
     }
@@ -812,6 +829,30 @@ static IPTR mNLV_Get(struct IClass *cl,Object *obj,Msg msg)
   return result;
 }
 
+static IPTR mNLV_GoActive(struct IClass *cl, Object *obj, Msg msg)
+{
+  struct NLVData *data = INST_DATA(cl, obj);
+
+  // forward the method to the NList object
+  D(DBF_ALWAYS, "go active %08lx", obj);
+  if(data->LI_NList != NULL)
+    DoMethod(data->LI_NList, MUIM_NList_GoActive);
+
+  return DoSuperMethodA(cl, obj, msg);
+}
+
+static IPTR mNLV_GoInactive(struct IClass *cl, Object *obj, Msg msg)
+{
+  struct NLVData *data = INST_DATA(cl, obj);
+
+  D(DBF_ALWAYS, "go inactive %08lx", obj);
+  // forward the method to the NList object
+  if(data->LI_NList != NULL)
+    DoMethod(data->LI_NList, MUIM_NList_GoInactive);
+
+  return DoSuperMethodA(cl, obj, msg);
+}
+
 DISPATCHER(_Dispatcher)
 {
   switch(msg->MethodID)
@@ -833,18 +874,8 @@ DISPATCHER(_Dispatcher)
     case MUIM_KillNotifyObj         :
     case MUIM_Notify                : return (mNLV_Notify(cl,obj,(APTR)msg));
 
-    // in case the listview is receiving the
-    // active/inactive method we forward it to
-    // the nlist object itself
-    case MUIM_GoActive:
-    case MUIM_GoInactive:
-    {
-      struct NLVData *data = INST_DATA(cl, obj);
-
-      if(data->LI_NList != NULL)
-        DoMethod(data->LI_NList, msg->MethodID == MUIM_GoActive ? MUIM_NList_GoActive: MUIM_NList_GoInactive);
-    }
-    break;
+    case MUIM_GoActive              : return mNLV_GoActive(cl, obj, msg);
+    case MUIM_GoInactive            : return mNLV_GoInactive(cl, obj, msg);
 
     // the following method calls are all forwarded
     // to the corresponding NList object
@@ -897,12 +928,12 @@ DISPATCHER(_Dispatcher)
     {
       struct NLVData *data = INST_DATA(cl, obj);
 
-      if(data->LI_NList)
+      if(data->LI_NList != NULL)
         return DoMethodA(data->LI_NList, msg);
       else
         return 0;
     }
-  }
 
-  return DoSuperMethodA(cl, obj, msg);
+    default: return DoSuperMethodA(cl, obj, msg);
+  }
 }

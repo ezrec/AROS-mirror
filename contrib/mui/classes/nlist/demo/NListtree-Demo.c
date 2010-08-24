@@ -292,7 +292,7 @@ struct MUI_NListtree_TreeNode *IsXChildOfY( Object *obj, struct MUI_NListtree_Tr
 /*
 **	Allocates memory for each entry we create.
 */
-HOOKPROTONHNO(confunc, LONG, struct MUIP_NListtree_ConstructMessage *msg)
+HOOKPROTONHNO(confunc, SIPTR, struct MUIP_NListtree_ConstructMessage *msg)
 {
 	struct SampleArray *sa;
 
@@ -311,7 +311,7 @@ HOOKPROTONHNO(confunc, LONG, struct MUIP_NListtree_ConstructMessage *msg)
 		sa->flags = (ULONG)msg->UserData;
 	}
 
-	return( (LONG)sa );
+	return( (SIPTR)sa );
 }
 MakeStaticHook(conhook, confunc);
 
@@ -425,7 +425,7 @@ HOOKPROTONH(exchangefunc, LONG, Object *obj, ULONG **para)
 	STATIC struct MUI_NListtree_TreeNode *tn1, *tn2;
 	STATIC LONG exchcnt = 0;
 
-	if ( ( exchcnt == 0 ) && ( (ULONG)*para == 42 ) )
+	if ( ( exchcnt == 0 ) && ( (IPTR)*para == 42 ) )
 	{
 		get( obj, MUIA_NListtree_Active, &tn1 );
 
@@ -506,7 +506,7 @@ HOOKPROTONH(movefunc, LONG, Object *obj, ULONG **para)
 	STATIC struct MUI_NListtree_TreeNode *tn1, *tn2;
 	STATIC LONG movecnt = 0;
 
-	if ( ( movecnt == 0 ) && ( (ULONG)*para == 42 ) )
+	if ( ( movecnt == 0 ) && ( (IPTR)*para == 42 ) )
 	{
 		get( obj, MUIA_NListtree_Active, &tn1 );
 
@@ -560,7 +560,7 @@ HOOKPROTONH(copyfunc, LONG, Object *obj, ULONG **para)
 	STATIC struct MUI_NListtree_TreeNode *tn1, *tn2;
 	STATIC LONG copycnt = 0;
 
-	if ( ( copycnt == 0 ) && ( (ULONG)*para == 42 ) )
+	if ( ( copycnt == 0 ) && ( (IPTR)*para == 42 ) )
 	{
 		get( obj, MUIA_NListtree_Active, &tn1 );
 
@@ -608,7 +608,7 @@ HOOKPROTONH(moveksfunc, LONG, Object *obj, ULONG **para)
 	STATIC struct MUI_NListtree_TreeNode *tn1, *tn2;
 	STATIC LONG movekscnt = 0;
 
-	if ( ( movekscnt == 0 ) && ( (ULONG)*para == 42 ) )
+	if ( ( movekscnt == 0 ) && ( (IPTR)*para == 42 ) )
 	{
 		get( obj, MUIA_NListtree_Active, &tn1 );
 
@@ -655,7 +655,7 @@ HOOKPROTONH(copyksfunc, LONG, Object *obj, ULONG **para)
 	STATIC struct MUI_NListtree_TreeNode *tn1, *tn2;
 	STATIC LONG copykscnt = 0;
 
-	if ( ( copykscnt == 0 ) && ( (ULONG)*para == 42 ) )
+	if ( ( copykscnt == 0 ) && ( (IPTR)*para == 42 ) )
 	{
 		get( obj, MUIA_NListtree_Active, &tn1 );
 
@@ -823,7 +823,7 @@ HOOKPROTONHNP(numselfunc, LONG, Object *obj)
 		{
 			DoMethod( obj, MUIM_NListtree_NextSelected, &tn );
 
-			if ( (LONG)tn == MUIV_NListtree_NextSelected_End )
+			if ( (IPTR)tn == (IPTR)MUIV_NListtree_NextSelected_End )
 				break;
 
 			D(bug( "Next TreeNode: 0x%08lx - %s\n", tn, tn->tn_Name ) );
@@ -837,7 +837,7 @@ HOOKPROTONHNP(numselfunc, LONG, Object *obj)
 		{
 			DoMethod( obj, MUIM_NListtree_PrevSelected, &tn );
 
-			if ( (LONG)tn == MUIV_NListtree_PrevSelected_End )
+			if ( (IPTR)tn == (IPTR)MUIV_NListtree_PrevSelected_End )
 				break;
 
 			D(bug( "Prev TreeNode: 0x%08lx - %s\n", tn, tn->tn_Name ) );

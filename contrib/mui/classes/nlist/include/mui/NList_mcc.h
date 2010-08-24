@@ -181,7 +181,6 @@ extern "C" {
 #define MUIA_NList_KeyLeftFocus             0x9d5100C6UL /* GM  isg. Object *          */
 #define MUIA_NList_KeyRightFocus            0x9d5100C7UL /* GM  isg. Object *          */
 
-
 #define MUIA_NLIMG_EntryCurrent             MUIA_NList_First   /* LONG (special for nlist custom image object) */
 #define MUIA_NLIMG_EntryHeight              MUIA_NList_Visible /* LONG (special for nlist custom image object) */
 
@@ -278,8 +277,9 @@ extern "C" {
 #define MUIV_NList_Jump_Top               0
 #define MUIV_NList_Jump_Active           -1
 #define MUIV_NList_Jump_Bottom           -2
-#define MUIV_NList_Jump_Up               -4
 #define MUIV_NList_Jump_Down             -3
+#define MUIV_NList_Jump_Up               -4
+#define MUIV_NList_Jump_Active_Center    -5
 
 #define MUIV_NList_NextSelected_Start    -1
 #define MUIV_NList_NextSelected_End      -1
@@ -402,14 +402,17 @@ extern "C" {
 #define MUIV_NList_TitleMark2_Box         0x40000000
 #define MUIV_NList_TitleMark2_Circle      0xC0000000
 
-#define MUIV_NList_SetColumnCol_Default  -1
+#define MUIV_NList_SetColumnCol_Default   (-1)
 
-#define MUIV_NList_GetPos_Start          -1
-#define MUIV_NList_GetPos_End            -1
+#define MUIV_NList_GetPos_Start           (-1)
+#define MUIV_NList_GetPos_End             (-1)
 
-#define	MUIV_NList_SelectChange_Flag_Multi (1 << 0)
+#define MUIV_NList_SelectChange_Flag_Multi (1 << 0)
 
-#define MUIV_NList_UseImage_All         (-1)
+#define MUIV_NList_UseImage_All           (-1)
+
+#define MUIV_NList_SetActive_Entry         (1 << 0)
+#define MUIV_NList_SetActive_Jump_Center   (1 << 1)
 
 /* Structs */
 
@@ -533,6 +536,7 @@ struct MUI_NList_GetSelectInfo
 #define MUIM_NList_Display            0x9d5100A4UL /* GM */
 #define MUIM_NList_GoActive           0x9d5100A5UL /* GM */
 #define MUIM_NList_GoInactive         0x9d5100A6UL /* GM */
+#define MUIM_NList_SetActive          0x9d5100A7UL /* GM */
 
 /*
 for future extensions, skip 0x9d5100AF as method ID, this one is already used by NFloattext
@@ -583,6 +587,7 @@ struct MUIP_NList_Compare            { STACKED ULONG MethodID; STACKED APTR entr
 struct MUIP_NList_Display            { STACKED ULONG MethodID; STACKED APTR entry; STACKED LONG entry_pos; STACKED STRPTR *strings; STACKED STRPTR *preparses; };
 struct MUIP_NList_GoActive           { STACKED ULONG MethodID; };
 struct MUIP_NList_GoInactive         { STACKED ULONG MethodID; };
+struct MUIP_NList_SetActive          { STACKED ULONG MethodID; STACKED LONG pos; STACKED ULONG flags; };
 
 #define DISPLAY_ARRAY_MAX 64
 
