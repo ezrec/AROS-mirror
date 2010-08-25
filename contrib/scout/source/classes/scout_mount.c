@@ -297,23 +297,11 @@ STATIC void IterateList( void (* callback)( struct MountEntry *me, void *userDat
 
     if ((id = tbAllocVecPooled(globalPool, sizeof(*id))) != NULL) {
         ITERATE_LIST(&tmplist, struct MountEntry *, me) {
+            BPTR lock;
+            BOOL infoSuccessful = FALSE;
 
-        #if defined(__MORPHOS__)
-            if (me->me_ValidFSSM) {
-        #else
-            if (IsFileSystem(me->me_Name) && me->me_ValidFSSM) {
-        #endif
-                struct DosEnvec *env = &me->me_fssmEnviron;
-                BPTR lock;
-                BOOL infoSuccessful = FALSE;
-
-                if (env->de_Surfaces < 42 * 42) {
-                    _snprintf(me->me_Heads, sizeof(me->me_Heads), "%6lD", env->de_Surfaces);
-                }
-
-                _snprintf(me->me_Cylinders, sizeof(me->me_Cylinders), "%12lD", env->de_HighCyl - env->de_LowCyl + 1);
-
-                if ((lock = Lock(me->me_Name, SHARED_LOCK)) != ZERO) {
+	    if (IsFileSystem(me->me_Name)) {
+	        if ((lock = Lock(me->me_Name, SHARED_LOCK)) != ZERO) {
                     if (Info(lock, id)) {
                         stccpy(me->me_DiskState, GetDiskState(id->id_DiskState), sizeof(me->me_DiskState));
                         stccpy(me->me_Filesystem, GetDiskType(id->id_DiskType), sizeof(me->me_DiskState));
@@ -321,6 +309,15 @@ STATIC void IterateList( void (* callback)( struct MountEntry *me, void *userDat
                     }
                     UnLock(lock);
                 }
+	    }
+            if (me->me_ValidFSSM) {
+                struct DosEnvec *env = &me->me_fssmEnviron;
+
+                if (env->de_Surfaces < 42 * 42) {
+                    _snprintf(me->me_Heads, sizeof(me->me_Heads), "%6lD", env->de_Surfaces);
+                }
+
+                _snprintf(me->me_Cylinders, sizeof(me->me_Cylinders), "%12lD", env->de_HighCyl - env->de_LowCyl + 1);
 
                 if (!infoSuccessful) {
                     struct MsgPort *mp;
