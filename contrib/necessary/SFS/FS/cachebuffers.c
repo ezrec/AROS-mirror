@@ -670,9 +670,12 @@ struct CacheBuffer *getcachebuffer() {
 //  killunlockedcachebuffers();
 
   do {
-    cb=(struct CacheBuffer *)globals->cblrulist.mlh_Head;
+//    cb=(struct CacheBuffer *)globals->cblrulist.mlh_Head;
+//    mrucachebuffer(cb);
 
-    mrucachebuffer(cb);
+    /* weissms: changed to trick gcc-4.4.4 optimizer */
+    cb=(struct CacheBuffer *)RemHead((struct List*)&globals->cblrulist);
+    addtailm(&globals->cblrulist,&cb->node);
 
   } while((cb->locked>0 || ((cb->bits & (CB_ORIGINAL|CB_LATEST))==CB_ORIGINAL && findlatestcachebuffer(cb->blckno)!=0)) && buffers-->0);
 
