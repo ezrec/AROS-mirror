@@ -2,7 +2,7 @@
 #include <sys/stat.h>
 
 #if defined(__AROS__)
-#define DEBUG 1
+#define DEBUG 0
 #include <aros/debug.h>
 #include <sys/param.h>
 #endif
@@ -445,6 +445,13 @@ static bool is_empty_arg(char *string)
 
 static bool contains_whitespace(char *string)
 {
+    int l = strlen(string);
+    
+    if (!l)
+	return false;
+    /* If the string is already quoted, we should take it as it is */
+    if ((string[0] == '"') && (string[l-1] == '"'))
+	return false;
     if(strchr(string,' ')) return true;
     if(strchr(string,'\t')) return true;
     if(strchr(string,'\n')) return true;
@@ -610,6 +617,7 @@ int execve(const char *filename, char *const argv[], char *const envp[])
 
             for (cur = (char**)argv+1; *cur != 0; cur++)
             {
+		D(fprintf(stderr, "[sh] Argument: %s\n", *cur));
                 if(contains_whitespace(*cur) || is_empty_arg(*cur))
                 {
                     int esc = no_of_escapes(*cur);
@@ -653,6 +661,7 @@ int execve(const char *filename, char *const argv[], char *const envp[])
             if (envp)
                 createvars(envp);
 
+	    D(fprintf(stderr, "[sh] Running: %s %s", fname, full));
 #ifndef __USE_RUNCOMMAND__
             lastresult = SystemTags(full,
                 SYS_UserShell, true,
