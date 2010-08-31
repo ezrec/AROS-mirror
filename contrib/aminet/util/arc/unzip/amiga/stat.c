@@ -196,13 +196,6 @@ int rmdir(const char *path)
     return (DeleteFile((char *)path) ? 0 : IoErr());
 }
 
-int chmod(const char *filename, int bits)       /* bits are as for st_mode */
-{
-    long protmask = (bits & 0xFF) ^ 0xF;
-    return !SetProtection((char *)filename, protmask);
-}
-
-
 /* This here removes unnecessary bulk from the executable with Aztec: */
 void _wb_parse(void)  { }
 

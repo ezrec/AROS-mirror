@@ -89,7 +89,6 @@ int umask(void);
 
 #ifdef AZTEC_C
 int rmdir(const char *);
-int chmod(const char *filename, int bits);
 #endif
 
 #endif /* __amiga_z_stat_h */

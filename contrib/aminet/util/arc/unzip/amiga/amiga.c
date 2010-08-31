@@ -708,6 +708,7 @@ void close_outfile(__G)
     __GDEF
 {
     time_t m_time;
+    ULONG protmask;
 #ifdef USE_EF_UT_TIME
     iztimes z_utime;
 #endif
@@ -754,8 +755,8 @@ void close_outfile(__G)
     }
 
     /* set file perms after closing (not done at creation)--see mapattr() */
-
-    chmod(G.filename, G.pInfo->file_attr);
+    protmask = (G.pInfo->file_attr & 0xFF) ^ 0xF;
+    SetProtection(G.filename, protmask);;
 
     /* give it a filenote from the zipfile comment, if appropriate */
 
