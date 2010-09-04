@@ -1445,7 +1445,7 @@ void Read_Png_Image(IMAGE *Image, char *name)
     if (r_info_ptr->valid & PNG_INFO_tRNS)
     {
       for (index = 0; index < r_info_ptr->num_trans; index++)
-        cmap[index].Transmit = 255 - r_info_ptr->trans[index];
+        cmap[index].Transmit = 255 - r_info_ptr->trans_alpha[index];
     }
 
     Image->data.map_lines = (unsigned char **)
@@ -1479,7 +1479,7 @@ void Read_Png_Image(IMAGE *Image, char *name)
     if (r_info_ptr->valid & PNG_INFO_tRNS)
     {
       for (index = 0; index < r_info_ptr->num_trans; index++)
-        cmap[index].Transmit = 255 - r_info_ptr->trans[index];
+        cmap[index].Transmit = 255 - r_info_ptr->trans_alpha[index];
     }
 
     Image->data.map_lines = (unsigned char **)
