@@ -1,6 +1,7 @@
 ## chunk AUTH Pär Boberg
 ## language svenska
-## version $VER: TheBar.ct 26.1 (06.03.08)
+## version $VER: TheBar.ct 26.4 (26.10.09)
+## codeset 0
 Msg_Reg_Colors
 Färger
 ;#DEF Colors
@@ -322,12 +323,12 @@ Om vald, så skalas knapparna.
 ;#DEF If selected, buttons are scaled.
 ;#SET (//)
 Msg_BarSpacer
-Radavskiljare
-;#DEF Bar spacer
+Tvinga radavskiljare
+;#DEF Force Bar spacer
 ;#SET (//)
 Msg_BarSpacer_Help
-Om vald, så används en radavskiljare\nsom knapp separatör.
-;#DEF If selected, a bar spacer is used\nas buttons separator.
+Om vald, så används en radavskiljare\nför alla typer av separatörer.
+;#DEF If selected, a bar spacer is used\nfor all kind of separators.
 ;#SET (//)
 Msg_EnableKeys
 Aktivera snabbtangenter
@@ -659,7 +660,7 @@ För senaste versioner och uppdateringar:\nhttp://www.sourceforge.net/projects/th
 ;#SET (//)
 Msg_Info_Translator
 Svenska av: Pär Boberg
-;#DEF 
+;#DEF
 ;#SET (//)
 Msg_Item_Globals
 Återställ till globala

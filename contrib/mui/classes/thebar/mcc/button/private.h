@@ -119,7 +119,7 @@ struct InstData
     ULONG                       qualifier;              // cureently active RAWKEY-Qualifiers
 
     #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
-    ULONG                       allowAlphaChannel;
+    BOOL                        allowAlphaChannel;
     #endif
 };
 

@@ -123,7 +123,7 @@ struct InstData
     ULONG                          userFrame;
 
     #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
-    ULONG                          allowAlphaChannel;
+    BOOL                           allowAlphaChannel;
     #endif
 
     ULONG                          flags;

@@ -215,9 +215,9 @@ MakeStaticHook(SaveHook, SaveFunc);
 
 HOOKPROTONHNO(SleepFunc, ULONG, Object **sb)
 {
-    ULONG sleeping;
+    IPTR sleeping;
 
-    DoMethod(*sb, MUIM_TheBar_GetAttr, 6, MUIA_TheBar_Attr_Sleep, (ULONG)&sleeping);
+    DoMethod(*sb, MUIM_TheBar_GetAttr, 6, MUIA_TheBar_Attr_Sleep, (IPTR)&sleeping);
 
     D(DBF_STARTUP, "SleepHook triggered: %08lx %ld\n", (ULONG)*sb, sleeping);
 

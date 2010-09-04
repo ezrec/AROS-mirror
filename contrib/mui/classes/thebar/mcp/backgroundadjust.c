@@ -401,7 +401,11 @@ build(UNUSED struct IClass *cl,Object *obj,struct dtpicData *data)
                         if (!data->bitmap) GetDTAttrs(data->dto,PDTA_BitMap,&data->bitmap,TAG_DONE);
                         if (data->bitmap)
                         {
-                            GetDTAttrs(data->dto,PDTA_MaskPlane,&data->plane,TAG_DONE);
+                            IPTR storage;
+
+                            GetDTAttrs(data->dto,PDTA_MaskPlane,&storage,TAG_DONE);
+                            data->plane = (APTR)storage;
+
                             return TRUE;
                         }
                     }
@@ -1047,7 +1051,7 @@ mGradientGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpec
     struct gradientData *data = INST_DATA(cl,obj);
     struct MUIS_TheBar_Gradient  *grad = msg->grad;
     struct MUI_RGBcolor          *rgb1, *rgb2;
-    ULONG                        x;
+    IPTR                          x;
 
     get(data->from,MUIA_Coloradjust_RGB,&rgb1);
     get(data->to,MUIA_Coloradjust_RGB,&rgb2);

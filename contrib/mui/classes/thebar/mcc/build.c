@@ -409,7 +409,8 @@ static UBYTE * RGBToRGB(UNUSED struct InstData *data,struct MUIS_TheBar_Brush *i
         if (image->left!=0 || image->top!=0 || image->width!=image->dataWidth || image->height!=image->dataHeight || 4*image->dataWidth!=image->dataTotalWidth)
         {
             UBYTE *src, *dest;
-            ULONG trColor, useAlpha, reallyHasAlpha = FALSE;
+            ULONG trColor;
+            BOOL useAlpha, reallyHasAlpha = FALSE;
             UWORD tsw;
             int   x, y;
 
@@ -706,7 +707,8 @@ static UBYTE * RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
     if (chunky != NULL)
     {
         UBYTE *src, *dest, *alpha = NULL, *gdest;
-        ULONG trColor, useAlpha;
+        ULONG trColor;
+        BOOL useAlpha;
         int   x, y;
 
         if (isFlagClear(flags, MFLG_NtMask))
@@ -733,7 +735,7 @@ static UBYTE * RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
 
                 if (alpha)
                 {
-                    ULONG hi;
+                    BOOL hi;
 
                     if (!aflag)
                     {
@@ -742,7 +744,7 @@ static UBYTE * RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
                     }
 
                     if (useAlpha)
-                        hi = !(c & 0xFF000000);
+                        hi = (c & 0xFF000000) ? FALSE : TRUE;
                     else
                         hi = (c & 0x00FFFFFF)==trColor;
 
@@ -955,9 +957,9 @@ makeSourcesRGB(struct InstData *data,struct make *make)
         copy.flags = make->flags;
 
         if (isFlagSet(data->image.flags, BRFLG_ARGB))
-            make->chunky = RGBToRGB(data, &data->image,&copy);
+            make->chunky = RGBToRGB(data, &data->image, &copy);
         else
-            make->chunky = LUT8ToRGB(&data->image,&copy);
+            make->chunky = LUT8ToRGB(&data->image, &copy);
 
         freeSource(&data->image,back);
         if(!make->chunky)
@@ -976,7 +978,7 @@ makeSourcesRGB(struct InstData *data,struct make *make)
             if((data->simage.data = getSource(&data->simage)))
             {
                 if (isFlagSet(data->simage.flags, BRFLG_ARGB))
-                    make->schunky = RGBToRGB(data, &data->simage,&copy);
+                    make->schunky = RGBToRGB(data, &data->simage, &copy);
                 else
                     make->schunky = LUT8ToRGB(&data->simage,&copy);
 
@@ -997,7 +999,7 @@ makeSourcesRGB(struct InstData *data,struct make *make)
             if((data->dimage.data = getSource(&data->dimage)))
             {
                 if (isFlagSet(data->dimage.flags, BRFLG_ARGB))
-                    make->dchunky = RGBToRGB(data, &data->dimage,&copy);
+                    make->dchunky = RGBToRGB(data, &data->dimage, &copy);
                 else
                     make->dchunky = LUT8ToRGB(&data->dimage,&copy);
 
@@ -1289,7 +1291,7 @@ greyBitMap(struct InstData *data,
             *gc++ = gcol;
         }
 
-        result = LUT8ToBitMap(data,src,width,height,greyColors,0,pens);
+        result = LUT8ToBitMap(data,src,width,height,greyColors,FALSE,pens);
     }
 
     RETURN(result);

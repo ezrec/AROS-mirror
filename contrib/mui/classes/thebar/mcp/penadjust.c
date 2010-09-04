@@ -465,7 +465,7 @@ mPenadjustGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpe
     struct penadjustData *data = INST_DATA(cl,obj);
     char spec[32];
     IPTR res = MUIV_Popbackground_GetSpec_Spec;
-    LONG x;
+    SIPTR x;
 
     superget(cl,obj,MUIA_Group_ActivePage,&x);
     switch(x)

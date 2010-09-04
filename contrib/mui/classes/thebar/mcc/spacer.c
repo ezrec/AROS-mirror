@@ -150,7 +150,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 {
     struct data *data = INST_DATA(cl,obj);
     APTR        pen;
-    ULONG       *val;
+    ULONG      *val;
 
     ENTER();
 

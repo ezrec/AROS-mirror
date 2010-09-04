@@ -279,7 +279,7 @@ struct MUIS_Popbackground_Status
 
 // xget()
 // Gets an attribute value from a MUI object
-ULONG xget(Object *obj, const IPTR attr);
+IPTR xget(Object *obj, const IPTR attr);
 #if defined(__GNUC__)
   // please note that we do not evaluate the return value of GetAttr()
   // as some attributes (e.g. MUIA_Selected) always return FALSE, even

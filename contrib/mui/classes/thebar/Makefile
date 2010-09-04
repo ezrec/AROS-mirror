@@ -16,7 +16,7 @@
 #
 # TheBar class Support Site:  http://www.sf.net/projects/thebar
 #
-# $Id: Makefile 302 2009-05-24 12:42:47Z damato $
+# $Id: Makefile 354 2010-05-19 08:10:43Z thboeckel $
 #
 #***************************************************************************/
 
@@ -59,3 +59,11 @@ install:
 	@$(MAKE) -C mcc --no-print-directory install
 	@$(MAKE) -C mcp --no-print-directory install
 	@$(MAKE) -C demo --no-print-directory install
+
+.PHONY: bumprev
+bumprev:
+	@sh tools/bumprev.sh all
+
+.PHONY: release
+release:
+	@sh tools/mkrelease.sh

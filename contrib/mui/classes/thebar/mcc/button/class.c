@@ -815,7 +815,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
     struct InstData    *data = INST_DATA(cl,obj);
     Object                  *parent;
     APTR                    ptr;
-    ULONG                   *val; // TODO: do we need IPTR here?
+    ULONG                   *val;
 
     ENTER();
 
@@ -825,7 +825,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
     {
       superget(cl,obj,MUIA_Parent,&parent);
       data->parentBack = parent ? _backspec(parent) : (APTR)MUII_WindowBack;
-      superset(cl,obj,MUIA_Background,isFlagSet(data->flags, FLG_Borderless) ? (ULONG)data->parentBack : MUII_ButtonBack);
+      superset(cl,obj,MUIA_Background,isFlagSet(data->flags, FLG_Borderless) ? (IPTR)data->parentBack : MUII_ButtonBack);
     }
 
     /* Super method */
@@ -845,7 +845,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
                  ptr = MUIDEF_TheBar_ButtonFrame;
 
             SetSuperAttrs(cl, obj, MUIA_Group_Forward, FALSE,
-                                   MUIA_Frame, (ULONG)ptr,
+                                   MUIA_Frame, (IPTR)ptr,
                                    TAG_DONE);
 
             // modify MUIA_FrameDynamic/Visible only for MUI3 as MUI3.x doesn't know
@@ -905,7 +905,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
         data->disBodyPen = MUI_ObtainPen(muiRenderInfo(obj),(struct MUI_PenSpec *)ptr,0);
 
         /* Disabled shadow */
-        if (!getconfigitem(cl,obj,MUICFG_TheBar_DisShadowPen,(ULONG)&ptr))
+        if (!getconfigitem(cl,obj,MUICFG_TheBar_DisShadowPen,(IPTR)&ptr))
             ptr = MUIDEF_TheBar_DisShadowPen;
         data->disShadowPen = MUI_ObtainPen(muiRenderInfo(obj),(struct MUI_PenSpec *)ptr,0);
 
@@ -1471,9 +1471,9 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                 UWORD         x = 0, y = 0;
                 UBYTE           *chunky = NULL;
                 #if defined(WITH_ALPHA)
-                ULONG           useChunky = isFlagSet(data->image->flags, BRFLG_AlphaMask);
+                BOOL            useChunky = isFlagSet(data->image->flags, BRFLG_AlphaMask);
                 #else
-                ULONG           useChunky = (data->allowAlphaChannel && isFlagSet(data->image->flags, BRFLG_AlphaMask));
+                BOOL            useChunky = (data->allowAlphaChannel && isFlagSet(data->image->flags, BRFLG_AlphaMask));
                 #endif
 
                 if ((disMode==MUIV_TheButton_DisMode_Blend) || (disMode==MUIV_TheButton_DisMode_BlendGrey))
@@ -2391,14 +2391,14 @@ mSendNotify(struct IClass *cl, Object *obj, struct MUIP_TheButton_SendNotify *ms
         {
           ULONG i;
           Object *destObj = NULL;
-          ULONG *para = (ULONG *)(((LONG)&notify->msg.FollowParams)+sizeof(ULONG));
+          ULONG *para = (ULONG *)(((IPTR)&notify->msg.FollowParams)+sizeof(ULONG));
 
           // now we fill the notify structure
           memcpy(destMessage, para, sizeof(ULONG)*(notify->msg.FollowParams));
 
           // parse through the destMessage and replace certain
           // variable with their correct values.
-          switch((ULONG)notify->msg.DestObj)
+          switch((IPTR)notify->msg.DestObj)
           {
             case MUIV_Notify_Self:
               destObj = obj;

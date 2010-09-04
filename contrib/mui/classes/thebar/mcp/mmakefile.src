@@ -8,9 +8,9 @@ FILES := \
 	 library \
 	 utils \
 	 locale \
+	 icon \
 	 class \
 	 debug \
-	 vastubs
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include
 USER_CFLAGS := -DNO_INLINE_STDARG
@@ -35,27 +35,32 @@ contrib-zune-classes-thebar-mcp-catalogs : locale.h locale.c \
     $(TARGETDIR)/czech/TheBar.catalog \
     $(TARGETDIR)/svenska/TheBar.catalog \
     $(TARGETDIR)/italiano/TheBar.catalog \
-    $(TARGETDIR)/français/TheBar.catalog
+    $(TARGETDIR)/français/TheBar.catalog \
+    $(TARGETDIR)/polski/TheBar.catalog
 
-locale.h: locale/TheBar.cd locale_h.sd
-	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd locale.h=$(SRCDIR)/$(CURDIR)/locale_h.sd
+locale.h: locale/TheBar_mcp.cd locale_h.sd
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar_mcp.cd locale.h=$(SRCDIR)/$(CURDIR)/locale_h.sd
 
 $(TARGETDIR)/deutsch/TheBar.catalog: locale/german.ct
 	@$(MKDIR) $(TARGETDIR)/deutsch
-	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar_mcp.cd $< CATALOG $@
 
 $(TARGETDIR)/czech/TheBar.catalog: locale/czech.ct
 	@$(MKDIR) $(TARGETDIR)/czech
-	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar_mcp.cd $< CATALOG $@
 
 $(TARGETDIR)/français/TheBar.catalog: locale/french.ct
 	@$(MKDIR) $(TARGETDIR)/français
-	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar_mcp.cd $< CATALOG $@
 
 $(TARGETDIR)/svenska/TheBar.catalog: locale/swedish.ct
 	@$(MKDIR) $(TARGETDIR)/svenska
-	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar_mcp.cd $< CATALOG $@
 
 $(TARGETDIR)/italiano/TheBar.catalog: locale/italian.ct
 	@$(MKDIR) $(TARGETDIR)/italiano
-	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar_mcp.cd $< CATALOG $@
+
+$(TARGETDIR)/polski/TheBar.catalog: locale/polish.ct
+	@$(MKDIR) $(TARGETDIR)/polski
+	@$(FLEXCAT) $(SRCDIR)/$(CURDIR)/locale/TheBar_mcp.cd $< CATALOG $@

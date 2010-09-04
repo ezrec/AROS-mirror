@@ -42,10 +42,13 @@
 #define USERLIBID     CLASS " " LIB_REV_STRING " [" SYSTEMSHORT "/" CPU "] (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION 19
 
-#define MIN_STACKSIZE 8192
+#define USEDCLASSES used_mccs
+static const char *used_mccs[] = { "TheBarVirt.mcc", "TheButton.mcc", NULL };
 
-#define USEDCLASSESP  used_classesP
-static const char * const used_classesP[] = { "TheBar.mcp", NULL };
+#define USEDCLASSESP used_mcps
+static const char *used_mcps[] = { "TheBar.mcp", NULL };
+
+#define MIN_STACKSIZE 8192
 
 #define CLASSINIT
 static BOOL ClassInit(UNUSED struct Library *base);

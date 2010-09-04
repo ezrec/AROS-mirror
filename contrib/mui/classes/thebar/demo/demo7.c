@@ -118,7 +118,7 @@ Of course, this is only a simplification of a real situation, where more than fo
 Programmers should always avoid to Init/Exit Change and to set Horiz on groups or whatever when not strictly needed!\
 "
 
-ULONG
+IPTR
 mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     Object *bar, *list;
@@ -158,7 +158,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         data->barPos = BARPOS_TOP;
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 /***********************************************************************/

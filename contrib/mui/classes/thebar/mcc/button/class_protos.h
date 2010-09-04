@@ -21,13 +21,14 @@
 ***************************************************************************/
 
 /* utils.c */
-#ifdef __MORPHOS__
-APTR DoSuperNew( struct IClass *cl, APTR obj, ... );
-#elif defined(__AROS__)
-IPTR DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
+#if !defined(__MORPHOS__)
+#if defined(__AROS__)
+IPTR VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
 #else
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
 #endif
+#endif
+
 BOOL CreateSharedPool(void);
 void DeleteSharedPool(void);
 APTR SharedAlloc(ULONG size);

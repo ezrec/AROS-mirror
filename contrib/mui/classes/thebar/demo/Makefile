@@ -16,7 +16,7 @@
 #
 # TheBar class Support Site:  http://www.sf.net/projects/thebar
 #
-# $Id: Makefile 323 2009-08-14 06:44:57Z thboeckel $
+# $Id: Makefile 354 2010-05-19 08:10:43Z thboeckel $
 #
 #***************************************************************************/
 
@@ -316,6 +316,27 @@ DEMO10OBJS = $(OBJDIR)/demo10.o $(OBJDIR)/vastubs.o
 #
 
 all: $(BINDIR) $(OBJDIR) $(DEMO1TARGET) $(DEMO2TARGET) $(DEMO3TARGET) $(DEMO4TARGET) $(DEMO5TARGET) $(DEMO6TARGET) $(DEMO7TARGET) $(DEMO8TARGET) $(DEMO9TARGET) $(DEMO10TARGET)
+
+# for making a release we compile ALL target with no debug
+release:
+	@echo "  CC $<"
+	make OS=os4 clean
+	make OS=os4 DEBUG=
+	@echo "  CC $<"
+	make OS=os3 clean
+	make OS=os3 DEBUG=
+	@echo "  CC $<"
+	make OS=mos clean
+	make OS=mos DEBUG=
+	@echo "  CC $<"
+	make OS=aros-i386 clean
+	make OS=aros-i386 DEBUG=
+	@echo "  CC $<"
+	make OS=aros-ppc clean
+	make OS=aros-ppc DEBUG=
+	@echo "  CC $<"
+	make OS=aros-x86_64 clean
+	make OS=aros-x86_64 DEBUG=
 
 # make the object directories
 $(OBJDIR):

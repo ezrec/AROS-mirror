@@ -21,12 +21,13 @@
 ***************************************************************************/
 
 /* utils.c */
-#ifdef __MORPHOS__
-#elif defined(__AROS__)
-IPTR DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
+#if !defined(__MORPHOS__)
+#if defined(__AROS__)
+IPTR VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
 #else
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
 int stch_l(const char *chr_ptr, long *u_ptr);
+#endif
 #endif
 
 Object *obutton(ULONG text,ULONG help);
@@ -38,7 +39,9 @@ Object *opoppen(ULONG key,ULONG title,ULONG help);
 Object *opopfri(ULONG key,ULONG title,ULONG help);
 Object *opopback(ULONG gradient,ULONG key,ULONG title,ULONG help);
 Object *opopframe(ULONG key,ULONG title,ULONG help);
+#if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
 void drawGradient(Object *obj, struct MUIS_TheBar_Gradient *grad);
+#endif
 
 /* loc.c */
 struct Catalog *openCatalogVR(CONST_STRPTR name,ULONG minVer,ULONG minRev);
@@ -46,7 +49,7 @@ void initStrings(void);
 STRPTR tr(ULONG id);
 ULONG getKeyChar(STRPTR string);
 
-#if !defined(__MORPHOS__) && !defined(__amigaos4__)
+#if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
 /* coloradjust.c */
 void freeColoradjust ( void );
 ULONG initColoradjust ( void );

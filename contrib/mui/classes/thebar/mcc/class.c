@@ -1164,7 +1164,8 @@ loadDTBrush(struct MUIS_TheBar_Brush *brush,STRPTR file)
                                TAG_DONE)))
     {
         struct BitMapHeader *bmh;
-        ULONG               *colors, numColors;
+        ULONG               *colors;
+        IPTR                 numColors;
 
         if (GetDTAttrs(dto,PDTA_CRegs,(IPTR)&colors,PDTA_NumColors,(IPTR)&numColors,PDTA_BitMapHeader,(IPTR)&bmh,TAG_DONE)==3)
         {
@@ -1309,7 +1310,7 @@ loadDTBrush(struct MUIS_TheBar_Brush *brush,STRPTR file)
                                 {
                                     // otherwise we ask the DT object about an alpha channel
                                     APTR plane = NULL;
-                                    ULONG hasAlpha = 0;
+                                    IPTR hasAlpha = 0;
 
                                     if (GetDTAttrs(dto, PDTA_MaskPlane, (IPTR)&plane, TAG_DONE) && plane != NULL)
                                         setFlag(brush->flags, BRFLG_AlphaMask);
@@ -3870,7 +3871,7 @@ static IPTR mKillNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_KillN
   {
     // now we kill the notify as we have identifed the button
     if(msg->dest != NULL)
-      DoMethod(button->obj, MUIM_KillNotifyObj, (ULONG)msg->attr, (ULONG)msg->dest);
+      DoMethod(button->obj, MUIM_KillNotifyObj, (IPTR)msg->attr, (IPTR)msg->dest);
     else
       DoMethod(button->obj, MUIM_KillNotify, msg->attr);
   }
@@ -4044,13 +4045,13 @@ hideButton(struct IClass *cl,Object *obj,struct InstData *data,struct Button *bt
         else
         {
             clearFlag(bt->flags, BFLG_Hide);
-            DoSuperMethod(cl,obj,OM_ADDMEMBER,(ULONG)bt->obj);
+            DoSuperMethod(cl,obj,OM_ADDMEMBER,(IPTR)bt->obj);
 
             if (orderButtons(cl,obj,data))
                 res = TRUE;
             else
             {
-                DoSuperMethod(cl,obj,OM_REMMEMBER,(ULONG)bt->obj);
+                DoSuperMethod(cl,obj,OM_REMMEMBER,(IPTR)bt->obj);
                 setFlag(bt->flags, BFLG_Hide);
             }
 
@@ -4094,7 +4095,7 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
         if(isFlagSet(data->flags, FLG_Setup))
           DoMethod(obj, MUIM_Group_InitChange);
 
-        DoSuperMethod(cl, obj, OM_REMMEMBER, (ULONG)bt->obj);
+        DoSuperMethod(cl, obj, OM_REMMEMBER, (IPTR)bt->obj);
 
         if(isFlagSet(data->flags, FLG_Setup))
           DoMethod(obj, MUIM_Group_ExitChange);
@@ -4152,12 +4153,12 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
     {
       if((bt->obj = makeButton(bt, obj, data)))
       {
-        SetAttrs(bt->obj, MUIA_TheButton_TheBar, (ULONG)obj,
+        SetAttrs(bt->obj, MUIA_TheButton_TheBar, (IPTR)obj,
                           MUIA_Group_Horiz,      isFlagSet(data->flags, FLG_Horiz),
                           TAG_DONE);
 
         if(bt->exclude)
-          DoMethod(bt->obj, MUIM_Notify, MUIA_Selected, TRUE, (ULONG)obj, 3, MUIM_Set, MUIA_TheBar_Active, bt->ID);
+          DoMethod(bt->obj, MUIM_Notify, MUIA_Selected, TRUE, (IPTR)obj, 3, MUIM_Set, MUIA_TheBar_Active, bt->ID);
 
         if(isFlagSet(bt->flags, BFLG_Hide))
           res = TRUE;
@@ -4166,7 +4167,7 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
           if(isFlagSet(data->flags, FLG_Setup))
             DoMethod(obj, MUIM_Group_InitChange);
 
-          DoSuperMethod(cl, obj, OM_ADDMEMBER, (ULONG)bt->obj);
+          DoSuperMethod(cl, obj, OM_ADDMEMBER, (IPTR)bt->obj);
 
           // put the buttons in order
           if(orderButtons(cl, obj, data))
@@ -4174,7 +4175,7 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
           else
           {
             // otherwise remove it again
-            DoSuperMethod(cl, obj, OM_REMMEMBER,(ULONG)bt->obj);
+            DoSuperMethod(cl, obj, OM_REMMEMBER,(IPTR)bt->obj);
             MUI_DisposeObject(bt->obj);
             bt->obj = NULL;
           }

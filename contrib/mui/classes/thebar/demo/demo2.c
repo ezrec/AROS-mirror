@@ -203,7 +203,7 @@ main(UNUSED int argc,char **argv)
                 {
                     if (id==(LONG)TAG_USER)
                     {
-                        ULONG rowsV, colsV, viewModeV, barPosV, labelPosV, borderlessV, sunnyV,
+                        IPTR rowsV, colsV, viewModeV, barPosV, labelPosV, borderlessV, sunnyV,
                               raisedV, scaledV, enableKeysV, barSpacerV, freeHorizV, freeVertV,
                               rbV, rsV, riV, raV, rem;
 

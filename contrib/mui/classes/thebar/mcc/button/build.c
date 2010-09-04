@@ -435,7 +435,7 @@ static UBYTE *
 RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy)
 #else
 static UBYTE *
-RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy, ULONG allowAlphaChannel)
+RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy, BOOL allowAlphaChannel)
 #endif
 {
     UBYTE *chunky;
@@ -505,7 +505,8 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy, ULONG allowAlphaChan
             if (image->left!=0 || image->top!=0 || image->width!=image->dataWidth || image->height!=image->dataHeight || 4*image->dataWidth!=image->dataTotalWidth)
             {
                 UBYTE *src, *dest;
-                ULONG trColor, useAlpha, reallyHasAlpha = FALSE;
+                ULONG trColor;
+                BOOL useAlpha, reallyHasAlpha = FALSE;
                 UWORD tsw;
                 int   x, y;
 
@@ -526,7 +527,7 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy, ULONG allowAlphaChan
 
                         if (alpha)
                         {
-                            ULONG hi;
+                            BOOL hi;
 
                             if (!aflag)
                             {
@@ -535,9 +536,11 @@ RGBToRGB(struct MUIS_TheBar_Brush *image,struct copy *copy, ULONG allowAlphaChan
                             }
 
                             #if defined(WITH_ALPHA)
-                            if (useAlpha) hi = *src<0xFF;
+                            if (useAlpha)
+                            	hi = *src<0xFF;
                             #else
-                            if (useAlpha) hi = (allowAlphaChannel ? *src<0xFF : !(c & 0xFF000000));
+                            if (useAlpha)
+                            	hi = (allowAlphaChannel ? *src<0xFF : !(c & 0xFF000000));
                             #endif
                             else
                                 hi = (c & 0x00FFFFFF)==trColor;
@@ -827,7 +830,8 @@ RGBToLUT8(struct MUIS_TheBar_Brush *image,struct copy *copy)
     if (chunky != NULL)
     {
         UBYTE *src, *dest, *alpha = NULL, *gdest;
-        ULONG trColor, useAlpha;
+        ULONG trColor;
+        BOOL useAlpha;
         int   x, y;
 
         if (isFlagClear(flags, MFLG_NtMask))
@@ -1445,7 +1449,7 @@ greyBitMap(struct InstData *data,
             *gc++ = gcol;
         }
 
-        bm = LUT8ToBitMap(data,src,width,height,greyColors,numColors,0,pens);
+        bm = LUT8ToBitMap(data,src,width,height,greyColors,numColors,FALSE,pens);
 
         RETURN(bm);
         return bm;

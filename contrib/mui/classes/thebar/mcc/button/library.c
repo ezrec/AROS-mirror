@@ -37,11 +37,14 @@
 #define USERLIBID     CLASS " " LIB_REV_STRING " [" SYSTEMSHORT "/" CPU "] (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION 19
 
-#define USEDCLASSESP  used_classesP
-static const char * const used_classesP[] = { "TheBar.mcp", NULL };
-
 #define CLASSINIT
 #define CLASSEXPUNGE
+
+#define USEDCLASSES used_mccs
+static const char *used_mccs[] = { "TheBar.mcc", "TheBarVirt.mcc", NULL };
+
+#define USEDCLASSESP used_mcps
+static const char *used_mcps[] = { "TheBar.mcp", NULL };
 
 #define MIN_STACKSIZE 8192
 

@@ -138,7 +138,7 @@ main(UNUSED int argc,char **argv)
                 {
                     if (id==(LONG)TAG_USER)
                     {
-                        ULONG appearanceV, labelPosV, borderlessV, sunnyV, raisedV, scaledV;
+                        IPTR appearanceV, labelPosV, borderlessV, sunnyV, raisedV, scaledV;
 
                         get(appearance,MUIA_Cycle_Active,&appearanceV);
                         get(labelPos,MUIA_Cycle_Active,&labelPosV);
