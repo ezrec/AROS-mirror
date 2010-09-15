@@ -57,8 +57,8 @@ AROS_UFH3(void, ASFSOldEntry,
 }
 
 /*
-	every packet style process needs it's own global variable
-	we may loose it on every task switch so set it up here
+	every packet style process needs its own global variable.
+	we may lose it on every task switch so set it up here
 	before switching the task
 */
 static
@@ -216,7 +216,7 @@ void ASFS_work(struct ASFSBase *asfsbase)
             else
             {
                     if (iofs->IOFS.io_Command != (UWORD)-1)
-                        bug("[SFS] no acdrhandle!!!\n");
+                        bug("[SFS] no asfshandle!!!\n");
             }
 #endif
 #endif
@@ -617,6 +617,8 @@ D(bug("[SFS] the next one\n"));
             case FSA_ADD_NOTIFY:
                 packet.dp_Type = ACTION_ADD_NOTIFY;
                 packet.dp_Arg1 = (IPTR)BADDR(iofs->io_Union.io_NOTIFY.io_NotificationRequest);
+                ((APTR *)iofs->io_Union.io_NOTIFY.io_NotificationRequest->nr_Reserved)[0] =
+                    &asfshandle->device->rootfh;
                 sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
                 if (packet.dp_Res1)
                     error = 0;
