@@ -1,0 +1,38 @@
+=====
+Debug
+=====
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <date>`_ `Next <decoration>`_ 
+
+---------------
+
+Name
+~~~~
+::
+
+     Debug
+
+
+Format
+~~~~~~
+::
+
+     Debug
+
+
+Location
+~~~~~~~~
+::
+
+     C:
+
+
+Function
+~~~~~~~~
+::
+
+     Activates built-in AROS debugger (SAD)
+
+
