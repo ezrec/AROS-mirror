@@ -1,5 +1,5 @@
 ========
-Unsetenv
+UnSetEnv
 ========
 
 .. This document is automatically generated. Don't edit it!
@@ -13,7 +13,7 @@ Name
 ::
 
 
-     Unsetenv
+     UnSetEnv
 
 
 Synopsis
@@ -21,7 +21,7 @@ Synopsis
 ::
 
 
-     NAME
+     NAME,SAVE/S
 
 
 Location
@@ -32,12 +32,31 @@ Location
      C:
 
 
+Function
+~~~~~~~~
+::
+
+
+     Unsets a global variable from the current shell. These variables can
+     be accessed from any program executing at any time.
+
+     These variables are usually not saved in the ENVARC: directory, hence they
+     can only be used by programs during the current execution of the
+     operating system. If set using SAVE argument, the variable is also saved
+     in ENVARC: and can then be deleted there by UnSetEnv with the SAVE argument.
+
+     If no parameter is specified, the current list of global variables
+     is displayed.
+
+
 Inputs
 ~~~~~~
 ::
 
 
      NAME    - The name of the global variable to unset.
+
+     SAVE    - Unset (delete) the variable also in ENVARC:
 
 
 Result
@@ -47,4 +66,24 @@ Result
 
      Standard DOS error codes.
 
+
+Example
+~~~~~~~
+::
+
+
+     UnSetEnv EDITOR SAVE
+
+         Any program that accesses the variable "EDITOR" (like More and
+         MultiView) are able to find out the name of the text-editor the
+         user would like to use, by examining the contents of the variable.
+         This command would delete this variable in Ram (in ENV:) _and_ in
+         ENVARC: (assuming it was already set there, for example by the use
+         of the SAVE argument of SetEnv).
+
+
+See also
+~~~~~~~~
+
+`GetEnv <getenv>`_ `SetEnv <setenv>`_ 
 

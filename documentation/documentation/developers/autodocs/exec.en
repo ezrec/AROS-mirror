@@ -32,17 +32,17 @@ exec
 `InitStruct()`_                         `Insert()`_                             `MakeFunctions()`_                      `MakeLibrary()`_                        
 `NewAddTask()`_                         `NewAllocEntry()`_                      `NewStackSwap()`_                       `ObtainQuickVector()`_                  
 `ObtainSemaphoreList()`_                `ObtainSemaphoreShared()`_              `OldOpenLibrary()`_                     `OpenDevice()`_                         
-`OpenLibrary()`_                        `OpenResource()`_                       `Permit()`_                             `Procure()`_                            
-`PutMsg()`_                             `RawDoFmt()`_                           `ReleaseSemaphore()`_                   `ReleaseSemaphoreList()`_               
-`RemDevice()`_                          `RemHead()`_                            `RemIntServer()`_                       `RemLibrary()`_                         
-`RemMemHandler()`_                      `Remove()`_                             `RemPort()`_                            `RemResetCallback()`_                   
-`RemResource()`_                        `RemSemaphore()`_                       `RemTail()`_                            `RemTask()`_                            
-`ReplyMsg()`_                           `SendIO()`_                             `SetExcept()`_                          `SetFunction()`_                        
-`SetIntVector()`_                       `SetSignal()`_                          `SetSR()`_                              `SetTaskPri()`_                         
-`ShutdownA()`_                          `Signal()`_                             `StackSwap()`_                          `SumKickData()`_                        
-`SumLibrary()`_                         `SuperState()`_                         `Supervisor()`_                         `Switch()`_                             
-`TypeOfMem()`_                          `UserState()`_                          `Vacate()`_                             `VNewRawDoFmt()`_                       
-`Wait()`_                               `WaitIO()`_                             `WaitPort()`_                           
+`OpenLibrary()`_                        `OpenResource()`_                       `Procure()`_                            `PutMsg()`_                             
+`RawDoFmt()`_                           `ReleaseSemaphore()`_                   `ReleaseSemaphoreList()`_               `RemDevice()`_                          
+`RemHead()`_                            `RemIntServer()`_                       `RemLibrary()`_                         `RemMemHandler()`_                      
+`Remove()`_                             `RemPort()`_                            `RemResetCallback()`_                   `RemResource()`_                        
+`RemSemaphore()`_                       `RemTail()`_                            `RemTask()`_                            `ReplyMsg()`_                           
+`SendIO()`_                             `SetExcept()`_                          `SetFunction()`_                        `SetIntVector()`_                       
+`SetSignal()`_                          `SetSR()`_                              `SetTaskPri()`_                         `ShutdownA()`_                          
+`Signal()`_                             `StackSwap()`_                          `SumKickData()`_                        `SumLibrary()`_                         
+`SuperState()`_                         `Supervisor()`_                         `Switch()`_                             `TypeOfMem()`_                          
+`UserState()`_                          `Vacate()`_                             `VNewRawDoFmt()`_                       `Wait()`_                               
+`WaitIO()`_                             `WaitPort()`_                           
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -725,6 +725,14 @@ Notes
      are rounded up to a multiple of that size.
 
 
+Bugs
+~~~~
+::
+
+     Does not work with managed memory blocks because of backwards
+     compatibility issues
+
+
 
 See also
 ~~~~~~~~
@@ -1109,7 +1117,7 @@ Example
 
      Print the total available memory.
 
-     printf("Free memory: %lu bytes\n",AvailMem(0));
+     printf("Free memory: %lu bytes\n", AvailMem(0));
 
      Print the size of the largest chunk of chip memory.
 
@@ -1122,7 +1130,7 @@ Notes
 ::
 
      Due to the nature of multitasking the returned value may already
-     be obsolete if this function returns.
+     be obsolete when this function returns.
 
 
 
@@ -2813,6 +2821,14 @@ Notes
      a multiple of sizeof(struct MemChunk) and to include the block.
 
 
+Bugs
+~~~~
+::
+
+     Does not work with managed memory blocks because of backwards
+     compatibility issues
+
+
 
 See also
 ~~~~~~~~
@@ -2830,6 +2846,20 @@ Synopsis
 
  void Debug(
           unsigned long flags );
+
+Function
+~~~~~~~~
+::
+
+     Runs SAD - internal debuger.
+
+
+Inputs
+~~~~~~
+::
+
+     flags   not used. Should be 0 now.
+
 
 
 ----------
@@ -4070,21 +4100,12 @@ Function
      Add a new task to the system. If the new task has the highest
      priority of all and task switches are allowed it will be started
      immediately.
-
-     You must initialise certain fields, and allocate a stack before
-     calling this function. The fields that must be initialised are:
-     tc_SPLower, tc_SPUpper, tc_SPReg, and the tc_Node structure.
-
-     If any other fields are initialised to zero, then they will be
-     filled in with the system defaults.
-
-     The value of tc_SPReg will be used as the location for the stack
-     pointer. You can place any arguments you wish to pass to the Task
-     onto the stack before calling AddTask(). However note that you may
-     need to consider the stack direction on your processor.
-
-     Memory can be added to the tc_MemEntry list and will be freed when
-     the task dies. The new task's registers are set to 0.
+     Certain task fields should be intitialized and a stack must be
+     allocated before calling this function. tc_SPReg will be used as the
+     starting location for the stack pointer, i.e. a part of the stack can
+     be reserved to pass the task some initial arguments.
+     Memory can be added to the tc_MemEntry list and will be freed when the
+     task dies. The new task's registers are set to 0.
 
 
 Inputs
@@ -4093,15 +4114,16 @@ Inputs
 
      task      - Pointer to task structure.
      initialPC - Entry point for the new task.
-     finalPC   - Routine that is called if the initialPC() function
-                 returns. A NULL pointer installs the default finalizer.
+     finalPC   - Routine that is called if the initialPC() function returns.
+                 A NULL pointer installs the default finalizer.
 
 
 Result
 ~~~~~~
 ::
 
-     The address of the new task or NULL if the operation failed.
+     The address of the new task or NULL if the operation failed (can only
+     happen with TF_ETASK set - currenty not implemented).
 
 
 
@@ -4475,71 +4497,6 @@ See also
 ~~~~~~~~
 
 `AddResource()`_ `RemResource()`_ 
-
-----------
-
-Permit()
-========
-
-Synopsis
-~~~~~~~~
-::
-
- void Permit();
-
-Function
-~~~~~~~~
-::
-
-     This function will reactivate the task dispatcher after a call
-     to Forbid(). Note that calls to Forbid() nest, and for every
-     call to Forbid() you need a matching call to Permit().
-
-
-Inputs
-~~~~~~
-::
-
-     None.
-
-
-Result
-~~~~~~
-::
-
-     Multitasking will be re-enabled.
-
-
-Example
-~~~~~~~
-::
-
-     No you really don't want to use this function.
-
-
-Notes
-~~~~~
-::
-
-     This function preserves all registers.
-
-     To prevent deadlocks calling Wait() in forbidden state breaks
-     the forbid - thus taskswitches may happen again.
-
-
-Bugs
-~~~~
-::
-
-     The only architecture that you can rely on the registers being
-     saved is on the Motorola mc68000 family.
-
-
-
-See also
-~~~~~~~~
-
-`Forbid()`_ `Disable()`_ `Enable()`_ `Wait()`_ 
 
 ----------
 
@@ -5932,17 +5889,16 @@ Function
 ~~~~~~~~
 ::
 
-     Switch to the next task which wishes to be run. This function has
-     a similar effect to calling Dispatch(), however it may be called
-     at any time, and will not lose the current task if it is of type
-     TS_RUN.
+     This function is obsolete and subject to removal.
+     On AmigaOS(tm) this was a private function.
 
 
 Notes
 ~~~~~
 ::
 
-     This function will preserve all its registers.
+     This function is still there because i386-native port
+     still uses it.
 
 
 

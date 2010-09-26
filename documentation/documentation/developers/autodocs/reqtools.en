@@ -2191,12 +2191,12 @@ Synopsis
 ~~~~~~~~
 ::
 
- ULONG rtReqHandlerA(
+ IPTR rtReqHandlerA(
           struct rtHandlerInfo * handlerinfo,
           ULONG sigs,
           struct TagItem * taglist );
  
- ULONG rtReqHandler(
+ IPTR rtReqHandler(
           struct rtHandlerInfo * handlerinfo,
           ULONG sigs,
           TAG tag, ... );

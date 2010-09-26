@@ -57,14 +57,11 @@ Tags
      GCIT_NumberOfProcessors - (ULONG *) Provides the number of processors 
                               present in the system.
 
-     GCIT_ModelString - (STRPTR) Fills in a passed buffer with model
-                        information. Buffer should be at least 128 bytes long.
+     GCIT_ModelString - (CONST_STRPTR *) Provides the name of the model of the
+                         processor. The string is considered read-only.
 
      GCIT_Family - (ULONG *) Provides designation of processor family using
                    one of the CPUFAMILY_XXX values.
-
-     GCIT_FamilyString - (STRPTR) Fills in a passed buffer with family
-                         information. Buffer should be at least 64 bytes long.
 
      GCIT_VectorUnit - (ULONG *) Provides designation of available vectory
                        unit using one of the VECTORTYPE_XXX values.
@@ -75,6 +72,12 @@ Tags
 
      GCIT_Endianness - (ULONG *) Provides designation of current processor
                        endianness using one of the ENDIANNESS_XXX values.
+
+     GCIT_ProcessorSpeed - (UQUAD *) Provides the current CPU speed in Hz
+     
+     GCIT_FrontsideSpeed - (UQUAD *) Provides the current FSB speed in Hz
+
+     GCIT_ProcessorLoad - (UBYTE *) Provides the current CPU load in % (0-100)
 
      Cache sizes - (ULONG *) Following tags are used to retrieve size of 
                    specified caches.
@@ -123,6 +126,7 @@ Tags
                 GCIT_SupportsVirtualization
                 GCIT_SupportsNoExecutionBit
                 GCIT_Supports64BitMode
+                GCIT_SupportsMSR
 
 
 Result

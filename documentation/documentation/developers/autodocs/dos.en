@@ -1360,14 +1360,14 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG DoPkt(
+ SIPTR DoPkt(
           struct MsgPort * port,
           LONG action,
-          LONG arg1,
-          LONG arg2,
-          LONG arg3,
-          LONG arg4,
-          LONG arg5 );
+          SIPTR arg1,
+          SIPTR arg2,
+          SIPTR arg3,
+          SIPTR arg4,
+          SIPTR arg5 );
 
 Function
 ~~~~~~~~
@@ -3437,7 +3437,7 @@ Function
 ::
 
      Unloads a seglist loaded with InternalLoadSeg().
-     
+
 
 Inputs
 ~~~~~~

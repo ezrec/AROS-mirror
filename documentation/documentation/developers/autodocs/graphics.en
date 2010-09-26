@@ -362,16 +362,43 @@ Inputs
          BMF_SPECIALFMT: causes graphics to allocate a bitmap
              of a standard CyberGraphX format. The format
              (PIXFMT_????) must be stored in the 8 most significant bits.
-     
-         BMF_SCREEN: causes graphics to allocate a bitmap which is actually
-             displayable using RTG driver. You must also pass a displaymode
-             ID number (and NOT a bitmap pointer) in friend_bitmap parameter.
-             Note that this flag is not stored in Flags member of the BitMap
-             structure.
+
+         BMF_RTGTAGS,
+         BMF_RTGCHECK,
+         BMF_FRIENDSTAG: Setting these flags to 1's while BMF_SPECIALFMT
+             and BMF_INVALID are set to 0 means that friend_bitmap
+             points to a taglist instead of BitMap structure.
 
      friend_bitmap - pointer to another bitmap, or NULL. If this pointer
          is passed, then the bitmap data will be allocated in
          the most efficient form for blitting to friend_bitmap.
+
+         This pointer can also point to a TagList, if specified by flags.
+         In this case it may contain the following tags:
+
+           - BMATags_Friend (struct BitMap *)
+                 An actual pointer to friend bitmap. Defaults to NULL.
+
+           - BMATags_Depth (ULONG)
+                 Depth of the bitmap to create. Defaults to depth argument
+                 of AllocBitMap().
+
+           - BMATags_Clear (BOOL)
+                 Tells if the newly created bitmap should be explicitly
+                 cleared. Defaults to the value of BMF_CLEAR flag in
+                 AllocBitMap() arguments.
+
+           - BMATags_Displayable (BOOL)
+                 Tells if the bitmap should be displayable by the hardware.
+                 Defaults to the value of BMF_DISPLAYABLE flag in AllocBitMap()
+                 arguments.
+
+           - BMATags_NoMemory (BOOL)
+                 Tells AllocBitMap() not to allocate actual bitmap storage. Only
+                 header is allocated and set up. Default value is FALSE.
+     
+           - BMATags_DisplayID (ULONG)
+                 Allocate a displayable bitmap for specified display mode.
 
 
 Result
@@ -1421,7 +1448,7 @@ Function
 ~~~~~~~~
 ::
 
-     Moves a part of a bitmap around or into another bitmaps.
+     Moves a part of a bitmap around or into another bitmap.
 
 
 Inputs

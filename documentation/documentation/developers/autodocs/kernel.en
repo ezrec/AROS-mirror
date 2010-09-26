@@ -9,10 +9,11 @@ kernel
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`KrnAddExceptionHandler()`_             `KrnAddIRQHandler()`_                   `KrnBug()`_                             `KrnCause()`_                           
-`KrnCli()`_                             `KrnCreateContext()`_                   `KrnDecodeLocationA()`_                 `KrnDeleteContext()`_                   
-`KrnDispatch()`_                        `KrnGetBootInfo()`_                     `KrnGetScheduler()`_                    `KrnIsSuper()`_                         
-`KrnMapGlobal()`_                       `KrnRegisterModule()`_                  `KrnRemExceptionHandler()`_             `KrnRemIRQHandler()`_                   
+`KrnAddExceptionHandler()`_             `KrnAddIRQHandler()`_                   `KrnAllocPages()`_                      `KrnBug()`_                             
+`KrnCause()`_                           `KrnCli()`_                             `KrnCreateContext()`_                   `KrnDecodeLocationA()`_                 
+`KrnDeleteContext()`_                   `KrnDispatch()`_                        `KrnFreePages()`_                       `KrnGetBootInfo()`_                     
+`KrnGetScheduler()`_                    `KrnIsSuper()`_                         `KrnMapGlobal()`_                       `KrnMayGetChar()`_                      
+`KrnPutChar()`_                         `KrnRegisterModule()`_                  `KrnRemExceptionHandler()`_             `KrnRemIRQHandler()`_                   
 `KrnSchedule()`_                        `KrnSetProtection()`_                   `KrnSetScheduler()`_                    `KrnSti()`_                             
 `KrnSwitch()`_                          `KrnUnmapGlobal()`_                     `KrnUnregisterModule()`_                `KrnVirtualToPhysical()`_               
 
@@ -29,10 +30,64 @@ Synopsis
 
  void * KrnAddExceptionHandler(
           uint8_t num,
-          void * handler,
+          exhandler_t * handler,
           void * handlerData,
           void * handlerData2 );
 
+Function
+~~~~~~~~
+::
+
+     Add a raw CPU exception handler to the chain of handlers.
+
+
+Inputs
+~~~~~~
+::
+
+     num          - CPU-specific exception number
+     handler      - Pointer to a handler function
+     handlerData,
+     handlerData2 - User-defined data which is passed to the
+                    handler.
+     
+       Handler function uses a C calling convention and must be
+       declared as follows:
+       
+       int ExceptionHandler(void *ctx, void *handlerData, void *handlerData2)
+         
+       handlerData and handlerData2 will be values passed to the
+       KrnAddExceptionHandler() function. ctx is a CPU context handle.
+       Consider this parameter private and reserved for now.
+
+       Exception handler should return nonzero value if it processes the
+       exception and wants to continue program execution. Otherwise it should
+       return zero. If all exception handlers in the chain return zero, the
+       exception will be passed on to exec.library trap handler pointed to
+       by tc_TrapCode field of task structure.
+
+
+Result
+~~~~~~
+::
+
+     An opaque handle that can be used for handler removal or NULL in case
+     of failure (like unsupported exception number).
+
+
+Notes
+~~~~~
+::
+
+     The specification of this function is preliminary and subject to change.
+     Consider it private for now.
+
+
+
+See also
+~~~~~~~~
+
+`KrnRemExceptionHandler()`_ 
 
 ----------
 
@@ -45,9 +100,63 @@ Synopsis
 
  void * KrnAddIRQHandler(
           uint8_t irq,
-          void * handler,
+          irqhandler_t * handler,
           void * handlerData,
           void * handlerData2 );
+
+Function
+~~~~~~~~
+::
+
+     Add a raw hardware IRQ handler to the chain of handlers.
+
+
+Inputs
+~~~~~~
+::
+
+     num          - hardware-specific IRQ number
+     handler      - Pointer to a handler function
+     handlerData,
+     handlerData2 - User-defined data which is passed to the
+                    handler.
+     
+       Handler function uses a C calling convention and must be
+       declared as follows:
+
+       void IRQHandler(void *handlerData, void *handlerData2)
+
+       handlerData and handlerData2 will be values passed to the
+       KrnAddExceptionHandler() function.
+
+       There is no return code for the IRQ handler.
+
+
+Result
+~~~~~~
+::
+
+     An opaque handle that can be used for handler removal or NULL in case
+     of failure (like unsupported exception number).
+
+
+
+See also
+~~~~~~~~
+
+`KrnRemIRQHandler()`_ 
+
+----------
+
+KrnAllocPages()
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ void * KrnAllocPages(
+          uint32_t length );
 
 
 ----------
@@ -62,6 +171,31 @@ Synopsis
  int KrnBug(
           const char * format,
           va_list args );
+
+Function
+~~~~~~~~
+::
+
+     Output a formatted string to low-level debug output stream.
+
+     The function supports the same set of formatting specifiers
+     as standard C printf() function.
+
+
+Inputs
+~~~~~~
+::
+
+     format - A format string
+     args   - A list of arguments
+
+
+Result
+~~~~~~
+::
+
+     Number of succesfully printed characters
+
 
 
 ----------
@@ -87,6 +221,41 @@ Synopsis
 
  void KrnCli();
 
+Function
+~~~~~~~~
+::
+
+     Instantly disable interrupts.
+
+
+Inputs
+~~~~~~
+::
+
+     None
+
+
+Result
+~~~~~~
+::
+
+     None
+
+
+Notes
+~~~~~
+::
+
+     This is low level function, it does not have nesting count
+     and state tracking mechanism. It operates directly on the CPU.
+     Normal applications should consider using exec.library/Disable().
+
+
+
+See also
+~~~~~~~~
+
+`KrnSti()`_ 
 
 ----------
 
@@ -98,6 +267,35 @@ Synopsis
 ::
 
  void * KrnCreateContext();
+
+Function
+~~~~~~~~
+::
+
+     Allocate and initialize CPU context storage area.
+
+
+Inputs
+~~~~~~
+::
+
+     None.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to a CPU context storage area.
+
+
+Notes
+~~~~~
+::
+
+     CPU context storage is considered private and accessible
+     only from within supevisor mode.
+
 
 
 ----------
@@ -202,6 +400,20 @@ Synopsis
 
 ----------
 
+KrnFreePages()
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ void KrnFreePages(
+          void * phy_addr,
+          uint32_t length );
+
+
+----------
+
 KrnGetBootInfo()
 ================
 
@@ -235,6 +447,37 @@ Synopsis
 
  int KrnIsSuper();
 
+Function
+~~~~~~~~
+::
+
+     Determine if the caller is running in supervisor mode
+
+
+Inputs
+~~~~~~
+::
+
+     None
+
+
+Result
+~~~~~~
+::
+
+     Nonzero for supervisor mode, zero for user mode
+
+
+Notes
+~~~~~
+::
+
+     Callers should only test the return value against zero.
+     Nonzero values may actually be different, since they
+     may carry some private implementation-dependent information
+     (like CPU privilege level, for example).
+
+
 
 ----------
 
@@ -250,6 +493,82 @@ Synopsis
           void * physical,
           uint32_t length,
           KRN_MapAttr flags );
+
+
+----------
+
+KrnMayGetChar()
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ int KrnMayGetChar();
+
+Function
+~~~~~~~~
+::
+
+     Read a single character from low-level debug input stream
+
+
+Inputs
+~~~~~~
+::
+
+     None
+
+
+Result
+~~~~~~
+::
+
+     An ASCII code of the character or -1 if there's no character
+     available
+
+
+Notes
+~~~~~
+::
+
+     This function never waits. If there is no character available on
+     the stream it just returns with -1
+
+
+
+----------
+
+KrnPutChar()
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void KrnPutChar(
+          char c );
+
+Function
+~~~~~~~~
+::
+
+     Output a single character to low-level debug output stream
+
+
+Inputs
+~~~~~~
+::
+
+     c - A character to output
+
+
+Result
+~~~~~~
+::
+
+     None
+
 
 
 ----------
@@ -310,6 +629,28 @@ Synopsis
  void KrnRemExceptionHandler(
           void * handle );
 
+Function
+~~~~~~~~
+::
+
+     Remove previously installed CPU exception handler
+
+
+Inputs
+~~~~~~
+::
+
+     handle - an opaque handler returned by KrnAddExceptionHandler()
+              function
+
+
+Result
+~~~~~~
+::
+
+     None
+
+
 
 ----------
 
@@ -322,6 +663,28 @@ Synopsis
 
  void KrnRemIRQHandler(
           void * handle );
+
+Function
+~~~~~~~~
+::
+
+     Remove previously installed hardware IRQ handler
+
+
+Inputs
+~~~~~~
+::
+
+     handle - an opaque handler returned by KrnAddIRQHandler()
+              function
+
+
+Result
+~~~~~~
+::
+
+     None
+
 
 
 ----------
@@ -375,6 +738,41 @@ Synopsis
 
  void KrnSti();
 
+Function
+~~~~~~~~
+::
+
+     Instantly enable interrupts.
+
+
+Inputs
+~~~~~~
+::
+
+     None
+
+
+Result
+~~~~~~
+::
+
+     None
+
+
+Notes
+~~~~~
+::
+
+     This is low level function, it does not have nesting count
+     and state tracking mechanism. It operates directly on the CPU.
+     Normal applications should consider using exec.library/Enable().
+
+
+
+See also
+~~~~~~~~
+
+`KrnCli()`_ 
 
 ----------
 

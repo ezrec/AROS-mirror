@@ -1678,19 +1678,41 @@ Synopsis
                                      HIDDT_PixelLUT *pixlut, UBYTE transparent);
 
 
+Function
+~~~~~~~~
+::
+
+     Copy an array of 8-bit LUT pixels to the bitmap at the specified position making
+     one of colors transparent.
+
+     Pixels are converted to bitmap's native format using either user-supplied LUT (if
+     given) or bitmap's own colormap.
+
+     Draw mode of the supplied GC is ignored, the operation is always bulk copy.
+
+
 Inputs
 ~~~~~~
 ::
 
-     obj         -
-     gc          -
-     pixels      -
-     modulo      -
-     x, y        -
-     width       -
-     height      -
-     pixlut      -
-     transparent -
+     obj         - A bitmap to draw image on
+     gc          - A GC used for drawing
+     pixels      - A pointer to source pixel array
+     modulo      - Total number of bytes per line in the source array
+     x, y        - Top-left corner of the destination rectangle
+     width       - Width of the image to draw
+     height      - Height of the image to draw
+     pixlut      - An optional pointer to a LUT to use. NULL means using bitmap's
+                   own colormap (if available)
+     transparent - Value of pixels in the source array which will be made
+                   transparent
+
+
+Result
+~~~~~~
+::
+
+     None
 
 
 
