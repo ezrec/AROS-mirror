@@ -318,6 +318,8 @@ __glut_exit_atexit (void)
 
             tail = GetTail(&__glutTask->AMGLUTTN_WindowList);
         }
+        
+        DeleteMsgPort(__glutTask->AMGLUTTN_MsgPort);
     }
 }
 
