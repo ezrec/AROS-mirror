@@ -289,8 +289,8 @@ GLUTAPI void *glutStrokeRoman;
 GLUTAPI void *glutStrokeMonoRoman;
 
 /* Stroke font constants (use these in GLUT program). */
-#define GLUT_STROKE_ROMAN		(&glutStrokeRoman)
-#define GLUT_STROKE_MONO_ROMAN		(&glutStrokeMonoRoman)
+#define GLUT_STROKE_ROMAN		(glutStrokeRoman)
+#define GLUT_STROKE_MONO_ROMAN		(glutStrokeMonoRoman)
 
 /* Bitmap font opaque addresses (use constants instead in source code). */
 GLUTAPI void *glutBitmap9By15;
@@ -302,14 +302,14 @@ GLUTAPI void *glutBitmapHelvetica12;
 GLUTAPI void *glutBitmapHelvetica18;
 
 /* Bitmap font constants (use these in GLUT program). */
-#define GLUT_BITMAP_9_BY_15		(&glutBitmap9By15)
-#define GLUT_BITMAP_8_BY_13		(&glutBitmap8By13)
-#define GLUT_BITMAP_TIMES_ROMAN_10	(&glutBitmapTimesRoman10)
-#define GLUT_BITMAP_TIMES_ROMAN_24	(&glutBitmapTimesRoman24)
+#define GLUT_BITMAP_9_BY_15		(glutBitmap9By15)
+#define GLUT_BITMAP_8_BY_13		(glutBitmap8By13)
+#define GLUT_BITMAP_TIMES_ROMAN_10	(glutBitmapTimesRoman10)
+#define GLUT_BITMAP_TIMES_ROMAN_24	(glutBitmapTimesRoman24)
 #if (GLUT_API_VERSION >= 3)
-#define GLUT_BITMAP_HELVETICA_10	(&glutBitmapHelvetica10)
-#define GLUT_BITMAP_HELVETICA_12	(&glutBitmapHelvetica12)
-#define GLUT_BITMAP_HELVETICA_18	(&glutBitmapHelvetica18)
+#define GLUT_BITMAP_HELVETICA_10	(glutBitmapHelvetica10)
+#define GLUT_BITMAP_HELVETICA_12	(glutBitmapHelvetica12)
+#define GLUT_BITMAP_HELVETICA_18	(glutBitmapHelvetica18)
 #endif
 #endif
 

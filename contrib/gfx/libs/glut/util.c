@@ -37,15 +37,15 @@ _glut_font (void * font)
 {
    D(bug("[AMGLUT] In _glut_font(font = %d:%x)\n", font, font));
 
-    if ((font == &glutStrokeRoman) ||
-        (font == &glutStrokeMonoRoman) ||
-        (font == &glutBitmap9By15) ||
-        (font == &glutBitmap8By13) ||
-        (font == &glutBitmapTimesRoman10) ||
-        (font == &glutBitmapTimesRoman24) ||
-        (font == &glutBitmapHelvetica10) ||
-        (font == &glutBitmapHelvetica12) ||
-        (font == &glutBitmapHelvetica18)) 
+    if ((font == glutStrokeRoman) ||
+        (font == glutStrokeMonoRoman) ||
+        (font == glutBitmap9By15) ||
+        (font == glutBitmap8By13) ||
+        (font == glutBitmapTimesRoman10) ||
+        (font == glutBitmapTimesRoman24) ||
+        (font == glutBitmapHelvetica10) ||
+        (font == glutBitmapHelvetica12) ||
+        (font == glutBitmapHelvetica18)) 
     {
         return font;
     }
