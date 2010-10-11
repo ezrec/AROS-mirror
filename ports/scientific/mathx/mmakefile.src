@@ -9,7 +9,7 @@ include $(TOP)/config/make.cfg
 #MM  ports-scientific-mathx-data ports-scientific-mathx-docs \
 #MM  ports-scientific-mathx-icons ports-scientific-mathx-images \
 #MM  ports-scientific-mathx-rexx ports-scientific-mathx-cpy \
-#MM  ports-scientific-mathx-directories ports-scientific-mathx-fetch
+#MM  ports-scientific-mathx-fetch
 
 #MM  ports-scientific-mathx-catalogs : ports-scientific-mathx-fetch
 
@@ -105,14 +105,14 @@ OBJS  := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CXX_SOURCES)
 
 
 #MM 
-ports-scientific-mathx-cpp : ports-scientific-mathx-directories ports-scientific-mathx-makeimages $(CXX_SOURCES)
+ports-scientific-mathx-cpp : $(CXX_SOURCES)
 
-$(CXX_SOURCES) :
+$(CXX_SOURCES) : ports-scientific-mathx-makeimages | $(GENDIR)/$(CURDIR)
 %compile_q cmd=$(TARGET_CXX) opt=$(CXX_FLAGS) from=$(PORTSDIR)/mathx/$(ARCHBASE)/$@.cpp to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
 
 
 #MM
-ports-scientific-mathx : ports-scientific-mathx-directories
+ports-scientific-mathx :
 %link_q cmd=$(TARGET_CXX) from="$(OBJS)" to=$(TARGETDIR)/MathX libs="-lmui"
 
 
@@ -156,10 +156,11 @@ CPYFILES := AUTHORS COPYING
 
 ##### setup directories #####
 
-#MM
-ports-scientific-mathx-directories :
-%mkdirs_q dirs="$(GENDIR)/$(CURDIR) images"
+images :
+%mkdir_q dir="images"
 
+$(GENDIR)/$(CURDIR) :
+%mkdir_q dir="$(GENDIR)/$(CURDIR)"
 
 ##### localisation #####
 
@@ -175,10 +176,10 @@ IMAGES := $(patsubst %.iff,%.c,$(IMAGES))
 IMAGES := $(subst $(PORTSDIR)/mathx/$(ARCHBASE)/,,$(IMAGES))
 
 #MM
-ports-scientific-mathx-makeimages : $(IMAGES) | images
+ports-scientific-mathx-makeimages : $(IMAGES)
 	$(NOP)
 
-images/IMG_%.c : $(PORTSDIR)/mathx/$(ARCHBASE)/images/IMG_%.iff
+images/IMG_%.c : $(PORTSDIR)/mathx/$(ARCHBASE)/images/IMG_%.iff | images
 	@$(ECHO) Create source from image file $<
 	$(ILBMTOC) -b2c $< > $@
 
