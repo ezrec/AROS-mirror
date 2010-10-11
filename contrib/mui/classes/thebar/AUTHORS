@@ -17,7 +17,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: AUTHORS 325 2009-08-30 10:08:52Z damato $
+ $Id: AUTHORS 388 2010-09-08 06:47:14Z mandi78 $
 
 ***************************************************************************/
 
@@ -29,5 +29,14 @@ Gianfranco Gignina <sh1nkur0@libero.it>
 Jens Langner       <Jens.Langner@light-speed.de>
 Matthias Rustler   <mrustler@gmx.de>
 Thore Boeckelmann  <thboeckel@users.sourceforge.net>
+
+Translations provided and maintained by following people:
+
+Czech:     Vit Sindlar <sindlarv at centrum dot cz>
+French:    Alexandre Balaban
+German:    Jens Langner <Jens.Langner@light-speed.de>, Hans-Jörg Ottinger
+Italian:   Alfonso Ranieri <alforan@tin.it>
+Polish:    Mariusz Danilewicz <mandi@interia.pl>
+Swedish:   Pär Boberg <pbobbenb@spray.se>
 
 The development of TheBar.mcc is hosted by SourceForge http://www.sf.net/
