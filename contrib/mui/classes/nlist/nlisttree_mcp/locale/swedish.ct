@@ -1,7 +1,15 @@
-## chunk AUTH Pär Boberg
+## version $VER: NListtree_mcp.catalog 2.1 (18.09.2010)
 ## language svenska
-## version $VER: NListtree_mcp.catalog 2.1 (7.12.2007)
 ## codeset 0
+;
+## chunk AUTH Pär Boberg
+;
+; NListtree_mcp.ct - NListtree MUI custom prefs catalog translation file
+; $Id$
+;
+;#version 2
+;#language english
+;
 ;
 MSG_TAB_LAYOUT
 Layout
@@ -69,7 +77,8 @@ w
 ;
 MSG_HELP_SHADOW_COLOR
 Färg att använda för\natt kasta skugga efter linjer.
-; Color to use to cast\nshadows after lines.
+; Color to use to cast\n\
+; shadows after lines.
 ;
 MSG_WIN_TITLE_SHADOW_COLOR
 Justera skugg färg
@@ -85,7 +94,8 @@ i
 ;
 MSG_HELP_SPECIAL_IMAGE
 En speciell bild att visa\nefter varje nod.
-; A special image to be\ndisplayed after every node.
+; A special image to be\n\
+; displayed after every node.
 ;
 MSG_WIN_TITLE_SPECIAL_IMAGE
 Justera special bild
@@ -101,7 +111,8 @@ d
 ;
 MSG_HELP_DRAW_COLOR
 En rit färg att kombinera\nmed linje färgen.
-; A draw color to be combined\nwith the lines color.
+; A draw color to be combined\n\
+; with the lines color.
 ;
 MSG_WIN_TITLE_DRAW_COLOR
 Justera rit färg
@@ -121,7 +132,10 @@ s
 ;
 MSG_HELP_STYLE
 Välj här global stil för trädet.\n\nBeroende på ditt val, så kan\nvissa av alternativen ovan\nbli otillgängliga.
-; Select here the global style of the tree.\n\nDepending on your choice, some of the\noptions above may become (un)available.
+; Select here the global style of the tree.\n\
+; \n\
+; Depending on your choice, some of the\n\
+; options above may become (un)available.
 ;
 MSG_CYCLE_ITEM_STYLE_NORMAL
 Normal
@@ -165,7 +179,8 @@ p
 ;
 MSG_HELP_SPACE
 Ju mer mellanrum, desto\nvidare blir listträdet.
-; The more spacing, the wider\nthe listtree will be.
+; The more spacing, the wider\n\
+; the listtree will be.
 ;
 MSG_BUTTON_LABEL_REMEMBER
 Kom ihåg status?
@@ -177,7 +192,12 @@ r
 ;
 MSG_HELP_REMEMBER
 Om vald, kommer öppen/stängd statusen\nför noder att 'kommas-ihåg' efter att listträdet\nstängs nästa gång det öppnas igen.\n\nVar god notera att, en applikation kan\nåsidosätta ditt val här.
-; If enabled, the open/closed status of nodes\nwill be 'remembered' after the listtree is closed\nthe next time it is opened again.\n\nPlease note, however, that an application\ncan override your choice here.
+; If enabled, the open/closed status of nodes\n\
+; will be 'remembered' after the listtree is closed\n\
+; the next time it is opened again.\n\
+; \n\
+; Please note, however, that an application\n\
+; can override your choice here.
 ;
 MSG_BUTTON_LABEL_AUTOSCROLL
 Autorulla?
@@ -189,7 +209,9 @@ a
 ;
 MSG_HELP_AUTOSCROLL
 Om vald, kommer listvyn att autorulla\ndess innehåll vid öppning av noder\nför att försöka passa i det synliga området.
-; If enabled, the listview will auto-scroll its\ncontents when opening nodes to try and fit the\nvisible area.
+; If enabled, the listview will auto-scroll its\n\
+; contents when opening nodes to try and fit the\n\
+; visible area.
 ;
 MSG_TAB_EXAMPLE
 Exempel
@@ -197,7 +219,10 @@ Exempel
 ;
 MSG_HELP_LISTVIEW_EXAMPLE
 Detta NListtree objekt, reagerar i realtid\ntill ändringarna som du gör under 'Layout' fliken.\n\nPröva så får du se! :)
-; This NListtree object reacts in real time to\nthe changes you apply under the 'Layout' tab.\n\nGive it a try! :)
+; This NListtree object reacts in real time to\n\
+; the changes you apply under the 'Layout' tab.\n\
+; \n\
+; Give it a try! :)
 ;
 MSG_BUTTON_LABEL_EXPAND
 Expandera

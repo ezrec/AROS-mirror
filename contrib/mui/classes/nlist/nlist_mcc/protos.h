@@ -25,8 +25,8 @@
 
 /* NList_mcc.c */
 
-extern void release_pen(struct MUI_RenderInfo *mri, ULONG *pen);
-extern void obtain_pen(struct MUI_RenderInfo *mri, ULONG *pen, struct MUI_PenSpec *ps);
+extern void release_pen(Object *obj, ULONG *pen);
+extern void obtain_pen(Object *obj, ULONG *pen, struct MUI_PenSpec *ps);
 extern IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg);
 extern IPTR mNL_Dispose(struct IClass *cl,Object *obj,Msg msg);
 extern IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg);
@@ -173,7 +173,6 @@ extern IPTR mNL_DropType(struct IClass *cl,Object *obj,struct MUIP_NList_DropTyp
 extern IPTR mNL_DropEntryDrawErase(struct IClass *cl,Object *obj,struct MUIP_NList_DropEntryDrawErase *msg);
 
 /* NList_func3.c */
-
 extern IPTR MyCallHookPkt(Object *obj,BOOL hdata,struct Hook *hook,APTR object,APTR message);
 extern IPTR STDARGS VARARGS68K MyCallHookPktA(Object *obj, struct Hook *hook, ...);
 extern LONG DeadKeyConvert(struct NLData *data,struct IntuiMessage *msg,STRPTR buf,LONG bufsize,struct KeyMap *kmap);

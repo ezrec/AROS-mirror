@@ -165,7 +165,7 @@ static VOID DrawSampleTree( Object *ltobj )
 
 VOID TransferValues(struct NListtreeP_Data *data)
 {
-  LONG v0, v1, v2, v3, v4, v5, v6, v7, v8, v9;
+  LONG v0=0, v1=0, v2=0, v3=0, v4=0, v5=0, v6=0, v7=0, v8=0, v9=0;
 
   /*
   **  Style
@@ -703,7 +703,7 @@ static IPTR _ConfigToGadgets( struct IClass *cl, Object *obj, struct MUIP_Settin
   struct NListtreeP_Data *data = INST_DATA(cl, obj);
   Object *pdobj, *idobj;
   struct MUI_ImageSpec *is;
-  struct MUI_PenSpec *pen;
+  struct MUI_PenSpec *pen = NULL;
   IPTR d;
 
   ENTER();
@@ -916,7 +916,7 @@ static IPTR _GadgetsToConfig( struct IClass *cl, Object *obj, struct MUIP_Settin
 {
   struct NListtreeP_Data *data = INST_DATA( cl, obj );
   char buf[8];
-  ULONG d;
+  ULONG d=0;
 
   ENTER();
 

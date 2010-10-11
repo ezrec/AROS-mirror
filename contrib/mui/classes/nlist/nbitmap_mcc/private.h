@@ -148,8 +148,9 @@ VOID NBitmap_DrawImage(struct IClass *cl, Object *obj);
 BOOL NBitmap_SetupShades(struct InstData *data);
 void NBitmap_CleanupShades(struct InstData *data);
 
-#if defined(__M68K__)
-VOID _WritePixelArrayAlpha(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct RastPort *rp, UWORD destx, UWORD desty, UWORD width, UWORD height, ULONG globalalpha);
+#if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
+ULONG _WPA(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct RastPort *rp, UWORD destx, UWORD desty, UWORD width, UWORD height, ULONG fmt);
+ULONG _WPAA(APTR src, UWORD srcx, UWORD srcy, UWORD srcmod, struct RastPort *rp, UWORD destx, UWORD desty, UWORD width, UWORD height, ULONG globalalpha);
 #endif
 
 #ifndef PDTA_AlphaChannel

@@ -170,29 +170,32 @@ struct TreeImage_Data
   LONG  spec;
 };
 
-#ifdef __AROS__
-IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...) __stackparm;
-IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...)
+#if !defined(__MORPHOS__)
+#if defined(__AROS__)
+static IPTR VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
-  AROS_SLOWSTACKTAGS_PRE(tag1)
-
-  retval = DoSuperNewTagList(cl, obj, NULL, AROS_SLOWSTACKTAGS_ARG(tag1));
-
-  AROS_SLOWSTACKTAGS_POST
-}
-#elif !defined(__MORPHOS__)
-Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
+  IPTR rc;
+#else
+static Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
   Object *rc;
+#endif
   VA_LIST args;
 
+  ENTER();
+
   VA_START(args, obj);
+  #if defined(__AROS__)
+  rc = (IPTR)DoSuperNewTagList(cl, obj, NULL, (struct TagItem *)VA_ARG(args, IPTR));
+  #else
   rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, VA_ARG(args, ULONG), NULL);
+  #endif
   VA_END(args);
 
+  RETURN(rc);
   return rc;
 }
-#endif
+#endif // !__MORPHOS__
 
 /*****************************************************************************\
 *******************************************************************************
@@ -735,26 +738,17 @@ INLINE ULONG MyCallHookA(struct Hook *hook, struct NListtree_Data *data, struct 
 }
 #endif
 
-#ifdef __AROS__
-static IPTR MyCallHook(struct Hook *hook, struct NListtree_Data *data, ...)
+static IPTR STDARGS VARARGS68K MyCallHook(struct Hook *hook, struct NListtree_Data *data, ...)
 {
-    AROS_SLOWSTACKHOOKS_PRE(data)
-    retval = CallHookPkt(hook, data->Obj, AROS_SLOWSTACKHOOKS_ARG(data));
-    AROS_SLOWSTACKHOOKS_POST
-}
-#else
-static ULONG STDARGS VARARGS68K MyCallHook(struct Hook *hook, struct NListtree_Data *data, ...)
-{
-  ULONG ret;
+  IPTR ret;
   VA_LIST va;
 
   VA_START(va, data);
   ret = CallHookPkt(hook, data->Obj, VA_ARG(va, APTR));
   VA_END(va);
 
-  return(ret);
+  return ret;
 }
-#endif
 
 /*
 **  Release a pen.
@@ -5518,7 +5512,7 @@ IPTR _New(struct IClass *cl, Object *obj, struct opSet *msg)
           struct NListtree_Data *data = INST_DATA(cl, obj);
           struct Task *mytask;
           const char *taskname;
-          ULONG ver, rev;
+          ULONG ver=0, rev=0;
 
           CopyMem( &ld, data, sizeof( struct NListtree_Data ) );
 
@@ -6333,6 +6327,12 @@ IPTR _HandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
       break;
     }
   }
+
+  #if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
+  // with MUI 3.8 the superclass get this method, hence we must forward it ourself.
+  if(ret != MUI_EventHandlerRC_Eat && MUIMasterBase != NULL && MUIMasterBase->lib_Version <= 19)
+    ret = DoSuperMethodA(cl, obj, (Msg)msg);
+  #endif
 
   return( ret );
 }

@@ -81,12 +81,12 @@ DEFAULT_KEYS_ARRAY
     { \
       LONG ptrd; \
       if (DoMethod(obj, MUIM_GetConfigItem, cfg_attr, &ptrd)) \
-        obtain_pen(data->mri, &var_dest, (struct MUI_PenSpec *) ptrd); \
+        obtain_pen(obj, &(var_dest), (struct MUI_PenSpec *)ptrd); \
       else \
-        obtain_pen(data->mri, &var_dest, (struct MUI_PenSpec *) defaultval); \
+        obtain_pen(obj, &(var_dest), (struct MUI_PenSpec *)(defaultval)); \
     } \
     else \
-      obtain_pen(data->mri, &var_dest, (struct MUI_PenSpec *) test); \
+      obtain_pen(obj, &(var_dest), (struct MUI_PenSpec *)(test)); \
   }
 
 #define LOAD_BG(test,var_dest,cfg_attr,defaultval) \
@@ -97,7 +97,7 @@ DEFAULT_KEYS_ARRAY
       if (DoMethod(obj, MUIM_GetConfigItem, cfg_attr, &ptrd)) \
         var_dest = ptrd; \
       else \
-        var_dest = (LONG) defaultval; \
+        var_dest = (LONG)(defaultval); \
     } \
   }
 
@@ -216,46 +216,48 @@ HOOKPROTONHNO(NL_LayoutFuncGroup, ULONG, struct MUI_LayoutMsg *lm)
 MakeStaticHook(NL_LayoutHookGroup, NL_LayoutFuncGroup);
 
 
-void release_pen(struct MUI_RenderInfo *mri, ULONG *pen)
+void release_pen(Object *obj, ULONG *pen)
 {
   if(*pen != (ULONG)-1)
   {
-    MUI_ReleasePen(mri, *pen);
+    MUI_ReleasePen(muiRenderInfo(obj), *pen);
     *pen = (ULONG)-1;
   }
 }
 
 
-void obtain_pen(struct MUI_RenderInfo *mri, ULONG *pen, struct MUI_PenSpec *ps)
+void obtain_pen(Object *obj, ULONG *pen, struct MUI_PenSpec *ps)
 {
-  release_pen(mri, pen);
-  *pen = MUI_ObtainPen(mri, ps, 0);
+  release_pen(obj, pen);
+  *pen = MUI_ObtainPen(muiRenderInfo(obj), ps, 0);
 }
 
-
-#ifdef __AROS__
-IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...) __stackparm;
-IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...)
+#if !defined(__MORPHOS__)
+#if defined(__AROS__)
+static IPTR VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
-  AROS_SLOWSTACKTAGS_PRE(tag1)
-
-  retval = DoSuperNewTagList(cl, obj, NULL, AROS_SLOWSTACKTAGS_ARG(tag1));
-
-  AROS_SLOWSTACKTAGS_POST
-}
-#elif !defined(__MORPHOS__)
-Object * STDARGS VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
+  IPTR rc;
+#else
+static Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
   Object *rc;
+#endif
   VA_LIST args;
 
+  ENTER();
+
   VA_START(args, obj);
+  #if defined(__AROS__)
+  rc = (IPTR)DoSuperNewTagList(cl, obj, NULL, (struct TagItem *)VA_ARG(args, IPTR));
+  #else
   rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, VA_ARG(args, ULONG), NULL);
+  #endif
   VA_END(args);
 
+  RETURN(rc);
   return rc;
 }
-#endif
+#endif // !__MORPHOS__
 
 IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
 {
@@ -511,7 +513,6 @@ IPTR mNL_New(struct IClass *cl,Object *obj,struct opSet *msg)
   data->MenuObj = NULL;
   data->LastImage = 0;
   data->DragRPort = NULL;
-  data->mri = NULL;
   data->cols = NULL;
   data->Title_PixLen = -1;
   data->numcols = 0;
@@ -1102,8 +1103,6 @@ IPTR mNL_Setup(struct IClass *cl,Object *obj,struct MUIP_Setup *msg)
 
   data->rp = NULL;
 
-  /*data->mri = msg->RenderInfo;*/
-  data->mri = muiRenderInfo(obj);
   data->nodraw = 0;
 
   if (data->NList_MinLineHeight <= 0)
@@ -1558,11 +1557,11 @@ IPTR mNL_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
     data->NList_Keys = default_keys;
   }
 
-  release_pen(data->mri, &data->NList_TitlePen);
-  release_pen(data->mri, &data->NList_ListPen);
-  release_pen(data->mri, &data->NList_SelectPen);
-  release_pen(data->mri, &data->NList_CursorPen);
-  release_pen(data->mri, &data->NList_UnselCurPen);
+  release_pen(obj, &data->NList_TitlePen);
+  release_pen(obj, &data->NList_ListPen);
+  release_pen(obj, &data->NList_SelectPen);
+  release_pen(obj, &data->NList_CursorPen);
+  release_pen(obj, &data->NList_UnselCurPen);
 
   retval = DoSuperMethodA(cl,obj,(Msg) msg);
 
@@ -1577,7 +1576,6 @@ IPTR mNL_Cleanup(struct IClass *cl,Object *obj,struct MUIP_Cleanup *msg)
 
   data->rp = NULL;
   data->badrport = FALSE;
-  data->mri = FALSE;
   data->UpdateScrollersRedrawn = FALSE;
 
   data->NList_Quiet--;

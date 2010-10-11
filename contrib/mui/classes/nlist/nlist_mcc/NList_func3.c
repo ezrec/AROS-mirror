@@ -54,28 +54,17 @@ IPTR MyCallHookPkt(Object *obj,BOOL hdata,struct Hook *hook,APTR object,APTR mes
     return (CallHookPkt(hook,object,message));
 }
 
-
-#if defined(__AROS__)
 IPTR STDARGS VARARGS68K MyCallHookPktA(Object *obj, struct Hook *hook, ...)
 {
-    AROS_SLOWSTACKHOOKS_PRE(hook)
-    retval = CallHookPkt(hook, obj, AROS_SLOWSTACKHOOKS_ARG(hook));
-    AROS_SLOWSTACKHOOKS_POST
-}
-#else
-ULONG STDARGS VARARGS68K MyCallHookPktA(Object *obj, struct Hook *hook, ...)
-{
-  ULONG ret;
+  IPTR ret;
   VA_LIST va;
 
   VA_START(va, hook);
-  ret = MyCallHookPkt(obj, FALSE, hook, obj, VA_ARG(va, APTR));
+  ret = CallHookPkt(hook, obj, VA_ARG(va, APTR));
   VA_END(va);
 
   return ret;
 }
-#endif
-
 
 LONG DeadKeyConvert(struct NLData *data,struct IntuiMessage *msg,STRPTR buf,LONG bufsize,struct KeyMap *kmap)
 {

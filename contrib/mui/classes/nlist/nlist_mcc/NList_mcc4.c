@@ -205,71 +205,76 @@ BOOL NeedAffInfo(Object *obj,struct NLData *data,WORD niask)
 }
 
 
-void NL_GetDisplayArray(Object *obj,struct NLData *data,LONG ent)
+void NL_GetDisplayArray(Object *obj, struct NLData *data, LONG ent)
 {
   char *useptr;
 
-  if ((ent >= 0) && (ent < data->NList_Entries))
-  { data->parse_ent = ent;
-    if (data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine)
-    { if (data->EntriesArray[ent]->len < -1)
+  ENTER();
+
+  if(ent >= 0 && ent < data->NList_Entries)
+  {
+    data->parse_ent = ent;
+
+    if(data->EntriesArray[ent]->Wrap & TE_Wrap_TmpLine)
+    {
+      if(data->EntriesArray[ent]->len < -1)
+      {
         useptr = NULL;
+      }
       else
-      { ent -= data->EntriesArray[data->parse_ent]->dnum;
-        if ((ent < 0) || (ent >= data->NList_Entries))
+      {
+        ent -= data->EntriesArray[data->parse_ent]->dnum;
+
+        if(ent < 0 || ent >= data->NList_Entries)
           ent = 0;
-        useptr = (char *) data->EntriesArray[ent]->Entry;
+
+        useptr = (char *)data->EntriesArray[ent]->Entry;
       }
     }
     else
-      useptr = (char *) data->EntriesArray[ent]->Entry;
+    {
+      useptr = (char *)data->EntriesArray[ent]->Entry;
+    }
   }
   else
-  { useptr = (char *) data->NList_Title;
+  {
+    useptr = (char *)data->NList_Title;
     data->display_ptr = NULL;
     data->parse_ent = -1;
     ent = -1;
   }
 
-  if (!data->display_ptr || (useptr != data->display_ptr) || (ent != ((LONG) data->DisplayArray[1])))
-  { char **display_array = &data->DisplayArray[2];
+  if(data->display_ptr == NULL || useptr != data->display_ptr || ent != (LONG)data->DisplayArray[1])
+  {
+    char **display_array = &data->DisplayArray[2];
     WORD column;
+
     data->display_ptr = useptr;
-    data->DisplayArray[1] = (char *) ent;
-    for (column = 0;column < data->numcols;column++)
-    { display_array[data->cols[column].c->col] = NULL;
+    data->DisplayArray[1] = (char *)ent;
+
+    // set up the string and preparses pointers
+    for(column = 0; column < data->numcols; column++)
+    {
+      display_array[data->cols[column].c->col] = NULL;
       display_array[data->cols[column].c->col + DISPLAY_ARRAY_MAX] = NULL;
     }
-    if (useptr)
-    { display_array[0] = useptr;
-//		  if (data->NList_DisplayHook && useptr)
-		if( useptr )
-      { if ((ent < 0) || (ent >= data->NList_Entries))
-          useptr = NULL;
-#if 1
-			//$$$Sensei
-			/* Display hook forwarded to method. */
-			data->DisplayArray[0] = (char *) useptr;
-			DoMethod( obj, MUIM_NList_Display, data->DisplayArray[ 0 ], data->DisplayArray[ 1 ], &data->DisplayArray[ 2 ], &data->DisplayArray[ 3 ] );
-#else
-			if( data->NList_DisplayHook )
-			{
-				if( data->NList_DisplayHook2 )
-				{
-					data->DisplayArray[0] = (char *) useptr;
-					MyCallHookPkt(obj,FALSE,data->NList_DisplayHook,obj,data->DisplayArray);
-				}
-				else
-				{
-					data->DisplayArray[0] = (char *) data->NList_PrivateData;
-					MyCallHookPkt(obj,TRUE,data->NList_DisplayHook,display_array,useptr);
-				}
-			}
-#endif
-      }
+    if(useptr != NULL)
+    {
+      display_array[0] = useptr;
+
+      if(ent < 0 || ent >= data->NList_Entries)
+        useptr = NULL;
+
+      // invoke the display method
+      // if this method is not catched by a subclass our own implementation will
+      // correctly choose one of the two possible hook functions as default
+      data->DisplayArray[0] = (char *)useptr;
+      DoMethod(obj, MUIM_NList_Display, data->DisplayArray[0], data->DisplayArray[1], &data->DisplayArray[2], &data->DisplayArray[2+DISPLAY_ARRAY_MAX]);
     }
     data->parse_column = -1;
   }
+
+  LEAVE();
 }
 
 

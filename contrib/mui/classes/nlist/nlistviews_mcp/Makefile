@@ -295,6 +295,7 @@ ifeq ($(OS), aros-i386)
   endif
 
   # Compiler/Linker flags
+  OPTFLAGS = -O2 -fomit-frame-pointer -funroll-loops
   CFLAGS += -Wno-pointer-sign -DNO_INLINE_STDARG
   LDLIBS += -larossupport -lrom -lmui
 
@@ -311,6 +312,7 @@ ifeq ($(OS), aros-ppc)
   endif
 
   # Compiler/Linker flags
+  OPTFLAGS = -O2 -fomit-frame-pointer -funroll-loops
   CFLAGS += -Wno-pointer-sign -DNO_INLINE_STDARG
   LDLIBS += -larossupport -lrom -lmui
 
@@ -327,6 +329,7 @@ ifeq ($(OS), aros-x86_64)
   endif
 
   # Compiler/Linker flags
+  OPTFLAGS = -O2 -fomit-frame-pointer -funroll-loops
   CFLAGS += -Wno-pointer-sign -DNO_INLINE_STDARG
   LDLIBS += -larossupport -lrom -lmui
 
@@ -404,13 +407,13 @@ $(TESTTARGET): $(TESTOBJS)
 
 locale.h: locale.c
 locale.c: $(LOCALE)/NListviews_mcp.cd C_h.sd C_c.sd
-	@echo "  GN $@"
+	@echo "  FC $@"
 	@$(FC) $(LOCALE)/NListviews_mcp.cd locale.h=C_h.sd locale.c=C_c.sd
 
 ## CATALOG GENERATION #################
 
 $(LOCALE)/%.catalog: $(LOCALE)/%.ct $(LOCALE)/NListviews_mcp.cd
-	@echo "  GN $@"
+	@echo "  FC $@"
 	@$(FC) $(LOCALE)/NListviews_mcp.cd $< CATALOG $@
 
 .IGNORE: $(CATALOGS)

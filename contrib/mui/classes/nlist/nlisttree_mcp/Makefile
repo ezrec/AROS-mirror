@@ -184,13 +184,13 @@ TOBJS = #NListtree-Test.o
 
 # available catalog translations
 CATALOGS = \
-  $(LOCALE)/german.catalog \
-  $(LOCALE)/russian.catalog \
-  $(LOCALE)/swedish.catalog \
-  $(LOCALE)/english-british.catalog \
   $(LOCALE)/czech.catalog \
+  $(LOCALE)/english-british.catalog \
+  $(LOCALE)/german.catalog \
   $(LOCALE)/french.catalog \
-  $(LOCALE)/polish.catalog
+  $(LOCALE)/polish.catalog \
+  $(LOCALE)/swedish.catalog
+  # $(LOCALE)/russian.catalog
 
 MCCOBJS  = $(addprefix $(OBJDIR)/,$(LOBJS)) $(addprefix $(OBJDIR)/,$(COBJS))
 TESTOBJS = $(addprefix $(OBJDIR)/,$(COBJS)) $(addprefix $(OBJDIR)/,$(TOBJS))
@@ -273,6 +273,7 @@ ifeq ($(OS), aros-i386)
   endif
 
   # Compiler/Linker flags
+  OPTFLAGS = -O2 -fomit-frame-pointer -funroll-loops
   CFLAGS += -Wno-pointer-sign -DNO_INLINE_STDARG
   LDLIBS += -larossupport -lrom -lmui
 
@@ -289,6 +290,7 @@ ifeq ($(OS), aros-ppc)
   endif
 
   # Compiler/Linker flags
+  OPTFLAGS = -O2 -fomit-frame-pointer -funroll-loops
   CFLAGS += -Wno-pointer-sign -DNO_INLINE_STDARG
   LDLIBS += -larossupport -lrom -lmui
 
@@ -305,6 +307,7 @@ ifeq ($(OS), aros-x86_64)
   endif
 
   # Compiler/Linker flags
+  OPTFLAGS = -O2 -fomit-frame-pointer -funroll-loops
   CFLAGS += -Wno-pointer-sign -DNO_INLINE_STDARG
   LDLIBS += -larossupport -lrom -lmui
 

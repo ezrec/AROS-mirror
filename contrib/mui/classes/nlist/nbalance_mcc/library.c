@@ -67,22 +67,22 @@ static VOID ClassExpunge(UNUSED struct Library *base);
 /******************************************************************************/
 static BOOL ClassInit(UNUSED struct Library *base)
 {
-	if((LayersBase = OpenLibrary("layers.library", 37L)) &&
+  if((LayersBase = OpenLibrary("layers.library", 37L)) &&
      GETINTERFACE(ILayers, struct LayersIFace *, LayersBase))
-	{
+  {
     return(TRUE);
-	}
+  }
 
-	return(FALSE);
+  return(FALSE);
 }
 
 
 static VOID ClassExpunge(UNUSED struct Library *base)
 {
-	if(LayersBase)
+  if(LayersBase != NULL)
   {
     DROPINTERFACE(ILayers);
-		CloseLibrary(LayersBase);
-	  LayersBase = NULL;
+	CloseLibrary(LayersBase);
+    LayersBase = NULL;
   }
 }

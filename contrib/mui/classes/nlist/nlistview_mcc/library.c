@@ -94,7 +94,7 @@ static BOOL ClassInit(UNUSED struct Library *base)
 
 static VOID ClassExpunge(UNUSED struct Library *base)
 {
-  if(KeymapBase)
+  if(KeymapBase != NULL)
   {
     DROPINTERFACE(IKeymap);
     CloseLibrary(KeymapBase);

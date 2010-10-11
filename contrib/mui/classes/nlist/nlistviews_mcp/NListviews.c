@@ -138,7 +138,7 @@ Object *MakeCheck(STRPTR label, STRPTR help, ULONG check)
 
 #define SAVE_DATALONG(obj,attr,cfg_attr) \
   { \
-    LONG ptrd; \
+    LONG ptrd=0; \
     get(obj, attr, &ptrd); \
     DoMethod(msg->configdata, MUIM_Dataspace_Add, &ptrd, 8, cfg_attr); \
   }
@@ -154,7 +154,7 @@ Object *MakeCheck(STRPTR label, STRPTR help, ULONG check)
 
 #define SAVE_DATASPEC(obj,attr,cfg_attr) \
   { \
-    LONG ptrd; \
+    LONG ptrd=0; \
     get(obj, attr, &ptrd); \
     if (ptrd) \
       DoMethod(msg->configdata, MUIM_Dataspace_Add, ptrd, sizeof(struct MUI_PenSpec), cfg_attr); \
@@ -162,7 +162,7 @@ Object *MakeCheck(STRPTR label, STRPTR help, ULONG check)
 
 #define SAVE_DATASPEC2(obj,attr,cfg_attr) \
   { \
-    LONG ptrd; \
+    LONG ptrd=0; \
     get(obj, attr, &ptrd); \
     if (ptrd) \
       DoMethod(msg->configdata, MUIM_Dataspace_Add, ptrd, sizeof(struct MUI_ImageSpec), cfg_attr); \
@@ -179,7 +179,7 @@ Object *MakeCheck(STRPTR label, STRPTR help, ULONG check)
 
 #define SAVE_DATAFONT(obj,cfg_attr) \
   { \
-    LONG ptrd; \
+    LONG ptrd=0; \
     get(obj, MUIA_String_Contents, &ptrd); \
     if (ptrd) \
     { \
@@ -460,7 +460,7 @@ kprintf("%lx|pos=%ld  key=%lx  kt=%lx (!= %lx)\n",list,pos,key,k1,k2);
 
 HOOKPROTONH(StrObjFunc, LONG, Object *pop, Object *str)
 {
-  LONG i;
+  LONG i = 0;
 
   get(str,MUIA_UserData,&i);
   if (i >= 0)
@@ -594,7 +594,7 @@ HOOKPROTONHNP(InsertFunc, VOID, Object *list)
 {
   if (list)
   { struct KeyBinding *key;
-    LONG pos;
+    LONG pos = 0;
     DoMethod(list,MUIM_NList_GetEntry,MUIV_NList_GetEntry_Active, &key);
     if (!key)
     { empty_key.kb_KeyTag = keytags[0];
@@ -612,7 +612,7 @@ MakeStaticHook(InsertHook, InsertFunc);
 HOOKPROTONH(DisplayFunc, VOID, Object *obj, struct NList_DisplayMessage *ndm)
 {
   struct KeyBinding *key = (struct KeyBinding *) ndm->entry;
-  struct NListviews_MCP_Data *data;
+  struct NListviews_MCP_Data *data = NULL;
   get(obj,MUIA_UserData,&data);
 
   if (key && data)
@@ -1807,7 +1807,7 @@ IPTR mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsg
   SAVE_DATAFONT(data->mcp_Font_Fixed, MUICFG_NList_Font_Fixed);
 
   {
-    LONG ptrd,num;
+    LONG ptrd=0,num;
     get(data->mcp_R_Drag, MUIA_Radio_Active, &ptrd);
     if      (ptrd == 2)
       num = MUIV_NList_DragType_Qualifier;
@@ -1819,14 +1819,14 @@ IPTR mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsg
   }
 
   {
-    LONG ptrd,num;
+    LONG ptrd=0,num;
     get(data->mcp_ColWidthDrag, MUIA_Radio_Active, &ptrd);
     num = ptrd;
     DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, 8, MUICFG_NList_ColWidthDrag);
   }
 
   {
-    LONG ptrd,num;
+    LONG ptrd=0,num;
     get(data->mcp_R_Multi, MUIA_Radio_Active, &ptrd);
     if (ptrd == 1)
       num = MUIV_NList_MultiSelect_Always;
@@ -1841,20 +1841,20 @@ IPTR mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsg
   }
 
   {
-    LONG ptrd,num;
+    LONG ptrd=0,num;
     get(data->mcp_R_HSB, MUIA_Radio_Active, &ptrd);
     num = ptrd+1;
     DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, 8, MUICFG_NListview_HSB);
   }
   {
-    LONG ptrd,num;
+    LONG ptrd=0,num;
     get(data->mcp_R_VSB, MUIA_Radio_Active, &ptrd);
     num = ptrd+1;
     DoMethod(msg->configdata, MUIM_Dataspace_Add, &num, 8, MUICFG_NListview_VSB);
   }
 
   {
-    LONG ptrd,num;
+    LONG ptrd=0,num;
     get(data->mcp_ForcePen, MUIA_Selected, &ptrd);
     if (ptrd)
       num = TRUE;
@@ -1871,7 +1871,7 @@ IPTR mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsg
   SAVE_DATALONG(data->mcp_WheelMMB,     MUIA_Selected,          MUICFG_NList_WheelMMB);
 
   {
-    LONG ptrd,num;
+    LONG ptrd=0,num;
     get(data->mcp_SerMouseFix, MUIA_Selected, &ptrd);
     if (ptrd)
       num = TRUE;
@@ -1881,7 +1881,7 @@ IPTR mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsg
   }
 
   {
-    LONG ptrd,num;
+    LONG ptrd=0,num;
     get(data->mcp_List_Select, MUIA_Selected, &ptrd);
     if (ptrd)
       num = TRUE;
@@ -1891,7 +1891,7 @@ IPTR mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsg
   }
 
   {
-    LONG ptrd,num;
+    LONG ptrd=0,num;
     get(data->mcp_PartialCol, MUIA_Selected, &ptrd);
     if (ptrd)
       num = TRUE;
@@ -1901,7 +1901,7 @@ IPTR mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsg
   }
 
   {
-    LONG ptrd,num;
+    LONG ptrd=0,num;
     get(data->mcp_PartialChar, MUIA_Selected, &ptrd);
     if (ptrd)
       num = TRUE;
@@ -1911,7 +1911,7 @@ IPTR mNL_MCP_GadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsg
   }
 
   {
-    LONG ptrd,num = MUIV_NList_ContextMenu_Always;
+    LONG ptrd=0,num = MUIV_NList_ContextMenu_Always;
     get(data->mcp_NList_Menu, MUIA_Radio_Active, &ptrd);
     if      (ptrd == 1)
       num = MUIV_NList_ContextMenu_TopOnly;

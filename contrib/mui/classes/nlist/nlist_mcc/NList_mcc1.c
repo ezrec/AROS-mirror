@@ -44,10 +44,10 @@ extern const struct Hook NL_DestructHook_String;
 #define SET_PEN(var_dest,test_init) \
   { \
     tag->ti_Tag = TAG_IGNORE; \
-    if (data->mri) \
+    if(data->SETUP == TRUE) \
     { \
       test_init = tag->ti_Data; \
-      obtain_pen(data->mri, &var_dest, (struct MUI_PenSpec *) tag->ti_Data); \
+      obtain_pen(obj, &(var_dest), (struct MUI_PenSpec *)tag->ti_Data); \
       REDRAW_ALL; \
     } \
   }

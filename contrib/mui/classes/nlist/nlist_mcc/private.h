@@ -475,7 +475,6 @@ struct NLData
   LONG old_horiz_delta;
   LONG drawsuper;
 
-  struct MUI_RenderInfo *mri;
   struct RastPort *rp;
   struct TextFont *font;
   UWORD  *pens;

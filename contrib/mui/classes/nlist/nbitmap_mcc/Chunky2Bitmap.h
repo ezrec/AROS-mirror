@@ -20,29 +20,16 @@
 
 ***************************************************************************/
 
-#ifndef DITHERIMAGE_H
-#define DITHERIMAGE_H 1
+#ifndef CHUNKY2BITMAP_H
+#define CHUNKY2BITMAP_H 1
 
 #ifndef EXEC_TYPES_H
   #include <exec/types.h>
 #endif
-#ifndef UTILITY_TAGITEM_H
-  #include <utility/tagitem.h>
+#ifndef GRAPHICS_GFX_H
+  #include <graphics/gfx.h>
 #endif
 
-APTR DitherImageA(CONST_APTR data, struct TagItem *tags);
-#if defined(__PPC__)
-#define DitherImage(data, ...) ({ ULONG _tags[] = { __VA_ARGS__ }; DitherImageA(data, (struct TagItem *)_tags); })
-#else
-APTR STDARGS VARARGS68K DitherImage(CONST_APTR data, ...);
-#endif
-void FreeDitheredImage(APTR image, APTR mask);
+struct BitMap *Chunky2Bitmap(APTR chunky, ULONG width, ULONG height, ULONG depth);
 
-#define DITHERA_Width                  (TAG_USER+2)
-#define DITHERA_Height                 (TAG_USER+3)
-#define DITHERA_Format                 (TAG_USER+4)
-#define DITHERA_ColorMap               (TAG_USER+5)
-#define DITHERA_PenMap                 (TAG_USER+6)
-#define DITHERA_MaskPlane              (TAG_USER+7)
-
-#endif /* DITHERIMAGE_H */
+#endif /* CHUNKY2BITMAP_H */
