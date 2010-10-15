@@ -3,7 +3,7 @@ include $(TOP)/config/make.cfg
 
 #MM mesa-demos-glexcess : \
 #MM	includes \
-#MM	contrib-gnu-crosstools \
+#MM	tools-crosstools \
 #MM	contrib-gfx-libs-mesa-includes \
 #MM	contrib-gfx-libs-mesa-glu-linklib \
 #MM	contrib-gfx-libs-mesa-glut-linklib \

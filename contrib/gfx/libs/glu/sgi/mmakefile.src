@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 #MM- contrib-gfx-libs : contrib-gfx-libs-glu
 
-#MM contrib-gfx-libs-glu : contrib-gnu-crosstools includes contrib-gfx-libs-glu-includes contrib-gfx-libs-glu-cpp
+#MM contrib-gfx-libs-glu : tools-crosstools includes contrib-gfx-libs-glu-includes contrib-gfx-libs-glu-cpp
 
 LIBUTIL_SOURCES = \
     libutil/error \
