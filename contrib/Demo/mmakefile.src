@@ -20,9 +20,8 @@ include $(TOP)/config/make.cfg
 #MM		demo-blackhole \
 #MM		demo-rubberstrings \
 #MM		demo-kitty \
-#MM		demo-powerzoom
-
-##MM     demo-mesa
+#MM		demo-powerzoom \
+#MM     demo-mesa
 
 SCRIPTFILES = StartSomeDemos StartSomeDemos2 StartMesaDemos
 DSTDIR := $(CONTRIBDIR)/Demos
