@@ -38,6 +38,10 @@ contrib-source:
 docs-html:
     Documentation in HTML format. Contains everything available
     on the website, but adapted for offline reading.
+amiga-m68k-eabi-system:
+    The native version for m68k Amigas or UAE. This version is not binary
+    compatible with AmigaOS. This archive contains rom image and all AROS
+    system binaries compiled from the Subversion tree.
 freebsd5-i386-system:
     The hosted version for FreeBSD/i386 5.x. Note that it
     will not work on FreeBSD 4.x systems.
