@@ -2,12 +2,11 @@
 #define _PTHREAD_H_
 
 /*
-    Copyright © 2007, The AROS Development Team. All rights reserved.
+    Copyright © 2007-2010, The AROS Development Team. All rights reserved.
     $Id: $
 */
 
-//#include <proto/pthread.h>
-
+#include <exec/semaphores.h>
 #include <semaphore.h>
 #include <sys/cdefs.h>
 #include <time.h>
