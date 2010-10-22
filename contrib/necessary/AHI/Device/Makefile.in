@@ -71,7 +71,7 @@ ifeq ($(ENABLE_WARPUP),yes)
 OBJECTS		+= elfloader.o warpup.o
 endif
 
-ifeq ($(host_cpu),m68k)
+ifeq ($(host_cpu)-$(host-os),m68k-amigaos)
 OBJECTS		+= addroutines_68k.o dspechofuncs_68k.o
 endif
 
