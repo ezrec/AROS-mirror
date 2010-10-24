@@ -80,6 +80,10 @@ sam440-ppc-boot-iso:
     The native version for Sam440EP and Sam440EP Flex computers. 
     This is the bootable CDROM ISO image including ub2lb (Parthenope) 
     SLB. It contains all AROS system and contributed programs.
+efika-chrp-ppc-boot-iso:
+    The native version for PowerPC Efika computers. This is the
+    bootable CDROM ISO image including ub2lb for openfirmware. It
+    contains all AROS system and contributed programs.
 pc-i386-contrib:
     This archive contains all the contributed programs
     compiled for the i386 architecture. They will work in
