@@ -1,0 +1,68 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+# Disabled because it doesn't build because of a problem with brackets and whitespace in the defines
+##MM- ports-text : ports-text-polyglotman
+
+#MM  ports-text-polyglotman : includes linklibs ports-text-polyglotman-fetch \
+#MM  ports-text-polyglotman-contrib ports-text-polyglotman-drawericon ports-text-polyglotman-cpy
+
+#MM  ports-text-polyglotman-contrib : ports-text-polyglotman-fetch
+
+#MM  ports-text-polyglotman-cpy : ports-text-polyglotman-fetch
+
+#MM  ports-text-polyglotman-quick : ports-text-polyglotman-fetch
+
+REPOSITORIES := sf://polyglotman
+ARCHBASE     := rman-3.2
+TARGETDIR    := $(AROS_CONTRIB)/Utilities/Text/PolyglotMan
+
+
+# list of valid volume numbers and letters
+# you can also set these at runtime with -V
+VOLLIST := "1:2:3:4:5:6:7:8:9:o:l:n:p"
+# SCO Unix has expanded set of volume letters
+#VOLLIST = "1:2:3:4:5:6:7:8:9:o:l:n:p:C:X:S:L:M:F:G:A:H"
+# SGI and UnixWare 2.0
+#VOLLIST = "1:2:3:4:5:6:7:8:9:o:l:n:p:D"
+
+# the printf strings used to set the HTML <TITLE> and
+# to set URL hyperlinks to referenced manual pages
+# can be defined at runtime.  The defaults are defined below.
+# The first %s parameter is the manual page name,
+# the second the volume/section number.
+# you can set these at runtime with -l and -r, respectively
+MANTITLEPRINTF := "%s(%s) manual page"
+
+# relative link to pregenerated file in same directory
+MANREFPRINTF := "%s.%s"
+
+USER_CFLAGS  := -DVOLLIST=\"$(VOLLIST)\" -DMANTITLEPRINTF=\"$(MANTITLEPRINTF)\" -DMANREFPRINTF=\"$(MANREFPRINTF)\" -DPOLYGLOTMANVERSION=\"3.2\"
+
+FILES := rman
+
+%build_prog mmake=ports-text-polyglotman progname=PolyglotMan \
+    srcdir=$(PORTSDIR)/polyglotman/$(ARCHBASE)/ \
+    files=$(FILES) targetdir=$(TARGETDIR) \
+    uselibs="arosc m"
+
+
+%fetch mmake=ports-text-polyglotman-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/polyglotman \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz"
+
+
+ICONS := PolyglotMan
+
+%build_icons mmake=ports-text-polyglotman-drawericon \
+	icons=$(ICONS) dir=$(TARGETDIR)/..
+
+
+%copy_dir_recursive mmake=ports-text-polyglotman-contrib src=$(PORTSDIR)/polyglotman/$(ARCHBASE)/contrib \
+    dst=$(TARGETDIR)/Contrib
+
+CPYFILES := CHANGES MANIFEST README-rman.txt rman.1 rman.html
+%copy_files_q mmake=ports-text-polyglotman-cpy files=$(CPYFILES) src=$(PORTSDIR)/polyglotman/$(ARCHBASE) dst=$(TARGETDIR)
+
+
+%common
