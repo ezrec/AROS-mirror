@@ -3446,7 +3446,7 @@ struct DeviceList *usevolumenode(UBYTE *name, ULONG creationdate) {
 
   /* This function locates the specified volumenode, and if found
      uses it for the current volume inserted.  If the node is not
-     found this function returns 0.  If the specificied volumenode
+     found this function returns 0.  If the specified volumenode
      is found, but is found to be in use, then this function
      returns -1.  Otherwise the found volumenode is returned. */
 
@@ -3479,7 +3479,11 @@ struct DeviceList *usevolumenode(UBYTE *name, ULONG creationdate) {
         }
 
         while(nr!=0) {
-          nr->nr_Handler=globals->msgportnotify;
+#ifdef AROS_KERNEL
+          nr->nr_Handler=globals->asfsbase;
+#else
+          nr->nr_Handler=&globals->mytask->pr_MsgPort;
+#endif
           nr=nr->next;
         }
 
@@ -3819,7 +3823,7 @@ static void deinitdisk() {
   if(globals->volumenode!=0) {
 
     /* We first check if the VolumeNode needs to be removed; if not
-       then we donot lock the DosList and modify some of its fields.
+       then we do not lock the DosList and modify some of its fields.
        If it must be removed, we first attempt to lock the DosList
        synchronously; whether this fails or not, we always send a
        removal message to the DosList subtask. */
