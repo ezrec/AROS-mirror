@@ -2,8 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-# Disabled because it doesn't build because of a problem with brackets and whitespace in the defines
-##MM- ports-text : ports-text-polyglotman
+#MM- ports-text : ports-text-polyglotman
 
 #MM  ports-text-polyglotman : includes linklibs ports-text-polyglotman-fetch \
 #MM  ports-text-polyglotman-contrib ports-text-polyglotman-drawericon ports-text-polyglotman-cpy
@@ -18,6 +17,9 @@ REPOSITORIES := sf://polyglotman
 ARCHBASE     := rman-3.2
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Text/PolyglotMan
 
+# direct using of the brackets in the defines doesn't work
+BRA := "\("
+KET := "\)"
 
 # list of valid volume numbers and letters
 # you can also set these at runtime with -V
@@ -33,7 +35,7 @@ VOLLIST := "1:2:3:4:5:6:7:8:9:o:l:n:p"
 # The first %s parameter is the manual page name,
 # the second the volume/section number.
 # you can set these at runtime with -l and -r, respectively
-MANTITLEPRINTF := "%s(%s) manual page"
+MANTITLEPRINTF := "%s$(BRA)%s$(KET) manual page"
 
 # relative link to pregenerated file in same directory
 MANREFPRINTF := "%s.%s"
@@ -42,7 +44,7 @@ USER_CFLAGS  := -DVOLLIST=\"$(VOLLIST)\" -DMANTITLEPRINTF=\"$(MANTITLEPRINTF)\" 
 
 FILES := rman
 
-%build_prog mmake=ports-text-polyglotman progname=PolyglotMan \
+%build_prog mmake=ports-text-polyglotman progname=rman \
     srcdir=$(PORTSDIR)/polyglotman/$(ARCHBASE)/ \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="arosc m"
