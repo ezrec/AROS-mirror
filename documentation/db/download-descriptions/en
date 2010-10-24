@@ -82,7 +82,7 @@ sam440-ppc-boot-iso:
     SLB. It contains all AROS system and contributed programs.
 efika-chrp-ppc-boot-iso:
     The native version for PowerPC Efika computers. This is the
-    bootable CDROM ISO image including ub2lb for openfirmware. It
+    bootable CDROM ISO image including ub2lb for open firmware. It
     contains all AROS system and contributed programs.
 pc-i386-contrib:
     This archive contains all the contributed programs
