@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 #MM- AHI-quick : contrib-AHI-quick
 #MM- AHI       : contrib-AHI
 
-#MM- contrib-AHI : workbench-libs-oss
+#MM- contrib-AHI : $(OSS_LIBRARY_TARGET)
 
 EXEDIR := $(AROSDIR)
 
