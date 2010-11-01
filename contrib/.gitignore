@@ -1437,9 +1437,6 @@
 # /gnu/cpuid/
 /gnu/cpuid/mmakefile
 
-# /gnu/crosstools/
-/gnu/crosstools/mmakefile
-
 # /gnu/diffutils/
 /gnu/diffutils/mmakefile
 /gnu/diffutils/.files-touched
