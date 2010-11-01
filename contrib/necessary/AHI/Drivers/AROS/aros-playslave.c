@@ -77,9 +77,9 @@ static void SmallDelay(struct ExecBase *SysBase)
     i.is_Node.ln_Type = NT_INTERRUPT;
     
     SetSignal(0, SIGBREAKF_CTRL_F);
-    AddIntServer(INTB_TIMERTICK, &i);
+    AddIntServer(INTB_VERTB, &i);
     Wait(SIGBREAKF_CTRL_F);
-    RemIntServer(INTB_TIMERTICK, &i);
+    RemIntServer(INTB_VERTB, &i);
 }
 
 #endif
