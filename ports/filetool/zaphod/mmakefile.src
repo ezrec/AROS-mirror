@@ -1,0 +1,72 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-filetool : ports-filetool-zaphod
+
+#MM  ports-filetool-zaphod : includes linklibs ports-filetool-zaphod-catalogs \
+#MM  ports-filetool-fetch ports-filetool-zaphod-docs ports-filetool-zaphod-fonts \
+#MM  ports-filetool-zaphod-drawericon ports-filetool-zaphod-cpy
+
+#MM  ports-filetool-zaphod-catalogs : ports-filetool-zaphod-fetch
+
+#MM  ports-filetool-zaphod-docs : ports-filetool-zaphod-fetch
+
+#MM  ports-filetool-zaphod-fonts : ports-filetool-zaphod-fetch
+
+#MM  ports-filetool-zaphod-quick : ports-filetool-zaphod-fetch
+
+REPOSITORIES := sf://zaphodeditor
+ARCHBASE     := zaphod-src-1.2
+TARGETDIR    := $(AROS_CONTRIB)/Utilities/Filetool/Zaphod
+
+USER_CFLAGS  := -D__LOCALE_STDLIBBASE__
+USER_INCLUDES:= -I$(PORTSDIR)/zaphod/$(ARCHBASE)/src
+
+FILES := \
+	src/locale \
+	src/events \
+	src/config \
+	src/misc \
+	src/display \
+	src/clipboard \
+	src/zaphod
+
+%build_prog mmake=ports-filetool-zaphod progname=Zaphod \
+    srcdir=$(PORTSDIR)/zaphod/$(ARCHBASE)/ \
+    files=$(FILES) targetdir=$(TARGETDIR) \
+    uselibs="amiga arosc arossupport"
+
+
+%fetch mmake=ports-filetool-zaphod-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/zaphod \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
+
+
+ICONS := Zaphod
+
+%build_icons mmake=ports-filetool-zaphod-drawericon \
+	icons=$(ICONS) dir=$(TARGETDIR)/..
+
+
+%build_catalogs mmake=ports-filetool-zaphod-catalogs name=Zaphod subdir= dir=$(TARGETDIR)/Catalogs \
+	source=locale.h sourcedescription=$(PORTSDIR)/zaphod/$(ARCHBASE)/locale/C_h \
+	srcdir=$(PORTSDIR)/zaphod/$(ARCHBASE)/locale
+
+$(PORTSDIR)/zaphod/$(ARCHBASE)/src/locale.c : $(PORTSDIR)/zaphod/$(ARCHBASE)/locale/Zaphod.cd $(PORTSDIR)/zaphod/$(ARCHBASE)/locale/C_c.sd
+	$(FLEXCAT) $< $@=$(PORTSDIR)/zaphod/$(ARCHBASE)/locale/C_c.sd
+
+
+%copy_dir_recursive mmake=ports-filetool-zaphod-docs src=$(PORTSDIR)/zaphod/$(ARCHBASE)/Docs \
+dst=$(TARGETDIR)/Docs
+
+%copy_dir_recursive mmake=ports-filetool-zaphod-fonts src=$(PORTSDIR)/zaphod/$(ARCHBASE)/fonts \
+dst=$(TARGETDIR)/fonts
+
+
+CPFILES := COPYING Zaphod.info Docs.info
+
+%copy_files_q mmake=ports-filetool-zaphod-cpy files=$(CPFILES) src=$(PORTSDIR)/zaphod/$(ARCHBASE) \
+    dst=$(TARGETDIR)
+
+
+%common
