@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 #MM  ports-filetool-zaphod : includes linklibs ports-filetool-zaphod-catalogs \
 #MM  ports-filetool-fetch ports-filetool-zaphod-docs ports-filetool-zaphod-fonts \
-#MM  ports-filetool-zaphod-drawericon ports-filetool-zaphod-cpy
+#MM  ports-filetool-zaphod-drawericon ports-filetool-zaphod-icons ports-filetool-zaphod-cpy
 
 #MM  ports-filetool-zaphod-catalogs : ports-filetool-zaphod-fetch
 
@@ -17,10 +17,10 @@ include $(TOP)/config/make.cfg
 #MM  ports-filetool-zaphod-quick : ports-filetool-zaphod-fetch
 
 REPOSITORIES := sf://zaphodeditor
-ARCHBASE     := zaphod-src-1.2
+ARCHBASE     := zaphod-src-1.3
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Filetool/Zaphod
 
-USER_CFLAGS  := -D__LOCALE_STDLIBBASE__
+USER_CFLAGS  := -D__LOCALE_STDLIBBASE__ -D__GRAPHICS_STDLIBBASE__ -D__INTUITION_STDLIBBASE__
 USER_INCLUDES:= -I$(PORTSDIR)/zaphod/$(ARCHBASE)/src
 
 FILES := \
@@ -48,6 +48,22 @@ ICONS := Zaphod
 	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 
+#MM
+ports-filetool-zaphod-icons : $(TARGETDIR)/Zaphod.info $(TARGETDIR)/Docs.info $(TARGETDIR)/Docs/deutsch.info $(TARGETDIR)/Docs/english.info
+
+$(TARGETDIR)/Zaphod.info : $(PORTSDIR)/zaphod/$(ARCHBASE)/icons/mason/aros/Zaphod.info
+	$(CP) $^ $@
+
+$(TARGETDIR)/Docs.info : $(PORTSDIR)/zaphod/$(ARCHBASE)/icons/mason/aros/Drawer.info
+	$(CP) $^ $@
+
+$(TARGETDIR)/Docs/deutsch.info : $(PORTSDIR)/zaphod/$(ARCHBASE)/icons/mason/aros/Drawer.info
+	$(CP) $^ $@
+
+$(TARGETDIR)/Docs/english.info : $(PORTSDIR)/zaphod/$(ARCHBASE)/icons/mason/aros/Drawer.info
+	$(CP) $^ $@
+
+
 %build_catalogs mmake=ports-filetool-zaphod-catalogs name=Zaphod subdir= dir=$(TARGETDIR)/Catalogs \
 	source=locale.h sourcedescription=$(PORTSDIR)/zaphod/$(ARCHBASE)/locale/C_h \
 	srcdir=$(PORTSDIR)/zaphod/$(ARCHBASE)/locale
@@ -63,7 +79,7 @@ dst=$(TARGETDIR)/Docs
 dst=$(TARGETDIR)/fonts
 
 
-CPFILES := COPYING Zaphod.info Docs.info
+CPFILES := COPYING README ChangeLog
 
 %copy_files_q mmake=ports-filetool-zaphod-cpy files=$(CPFILES) src=$(PORTSDIR)/zaphod/$(ARCHBASE) \
     dst=$(TARGETDIR)
