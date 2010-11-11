@@ -450,7 +450,7 @@ Example usage of libraries::
     #include <intuition/intuition.h> /* struct EasyStruct */
 
     /* This variable will store the pointer to intuition.library */
-    struct Library *IntuitionBase;
+    struct IntuitionBase *IntuitionBase;
 
     int main(int argc, char *argv[])
     {
@@ -464,7 +464,7 @@ Example usage of libraries::
            because EasyRequestArgs() was introduced in that version of
            intuition.library.
         */
-        IntuitionBase = OpenLibrary("intuition.library", 36);
+        IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library", 36);
 
         /* We have to check, if intuition.library was successfully opened.
            If it was not, we must not call a function from it, so we return
@@ -477,7 +477,7 @@ Example usage of libraries::
         EasyRequestArgs(NULL, &es, NULL, NULL);
 
         /* At last, we have to close intuition.library again. */
-        CloseLibrary(IntuitionBase);
+        CloseLibrary((struct Library *)IntuitionBase);
 
         return RETURN_OK;
     }

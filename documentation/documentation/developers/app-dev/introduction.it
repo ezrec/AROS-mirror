@@ -413,7 +413,7 @@ Esempio d'uso delle librerie::
     #include <intuition/intuition.h> /* struct EasyStruct */
 
     /* Questa variabile conterrà il puntatore a intuition.library */    
-    struct Library *IntuitionBase;
+    struct IntuitionBase *IntuitionBase;
 
     int main(int argc, char *argv[])
     {
@@ -423,13 +423,13 @@ Esempio d'uso delle librerie::
           "Requester", "Hello World!", "Ok"
         };
         
-	/* Prima, apriamo intuition.library. Ci serve la versione 36 o
+        /* Prima, apriamo intuition.library. Ci serve la versione 36 o
            successiva, perchè EasyRequestArgs() è stata introdotta in questa
            versione di intuition.library
         */
-        IntuitionBase = OpenLibrary("intuition.library", 36);        
+        IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library", 36);        
 
-	/* Dobbiamo controllare se intuition.library è stata aperta con
+        /* Dobbiamo controllare se intuition.library è stata aperta con
            successo. In caso contrario, non dobbiamo chiamarne funzioni, quindi
            usciamo immediatamente con un errore.
         */
@@ -440,7 +440,7 @@ Esempio d'uso delle librerie::
         EasyRequestArgs(NULL, &es, NULL, NULL);
         
         /* Infine, dobbiamo chiudere intuition.library */
-        CloseLibrary(IntuitionBase);
+        CloseLibrary((struct Library *)IntuitionBase);
 
         return RETURN_OK;
     }

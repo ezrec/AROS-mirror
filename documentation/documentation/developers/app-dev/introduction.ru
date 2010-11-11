@@ -425,7 +425,7 @@ version
     #include <intuition/intuition.h> /* struct EasyStruct */
 
     /* Эта переменная будет хранить указатель на intuition.library */
-    struct Library *IntuitionBase;
+    struct IntuitionBase *IntuitionBase;
 
     int main(int argc, char *argv[])
     {
@@ -439,7 +439,7 @@ version
            новее, потому что EasyRequestArgs() была введена именно начиная
            с этой версии intuition.library.
         */
-        IntuitionBase = OpenLibrary("intuition.library", 36);
+        IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library", 36);
 
         /* Надо проверить, действительно ли intuition.library была успешно
            открыта. Если нет, то мы не должны вызывать функции из неё, поэтому
@@ -452,7 +452,7 @@ version
         EasyRequestArgs(NULL, &es, NULL, NULL);
 
         /* И, наконец, нам надо закрыть intuition.library. */
-        CloseLibrary(IntuitionBase);
+        CloseLibrary((struct Library *)IntuitionBase);
 
         return RETURN_OK;
     }
