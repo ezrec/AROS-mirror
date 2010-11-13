@@ -46,7 +46,7 @@ CardInterrupt( struct CardData* card )
 
     if (intreq & HD_INTCTL_GLOBAL)
     {       
-        if (intreq & 0x01FFFFFFF) // stream interrupt
+        if (intreq & 0x3fffffff) // stream interrupt
         {
             ULONG position;
             BOOL playback = FALSE;
