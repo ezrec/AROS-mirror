@@ -21,6 +21,7 @@ MA 02111-1307, USA.
 
 */
 
+#include <aros/debug.h>
 #include <exec/types.h>
 #include <exec/resident.h>
 #include <exec/alerts.h>
@@ -35,35 +36,24 @@ MA 02111-1307, USA.
 #define _STR(A) #A
 #define STR(A) _STR(A)
 
-#ifndef REG
-#ifdef __mc68000
-#define _REG(A, B) B __asm(#A)
-#define REG(A, B) _REG(A, B)
-#else
-#define REG(A, B) B
-#endif
-#endif
-
-#ifndef BASE_REG
-#define BASE_REG a6
-#endif
-
 #define HANDLER_NAME "amberram.handler"
 #define VERSION 1
 #define REVISION 9
-#define DATE "14.12.2008"
 
 #ifdef __AROS__
 #define rom_tag Ram_ROMTag
 #endif
 
-extern LONG Main();
-static APTR Init(REG(d0, ULONG unused), REG(a0, APTR seg_list),
-   REG(BASE_REG, struct ExecBase *sys_base));
+extern LONG Main(void);
+
+static AROS_UFP3 (APTR, Init,
+		  AROS_UFPA(struct Library *, lh, D0),
+		  AROS_UFPA(BPTR, segList, A0),
+		  AROS_UFPA(struct ExecBase *, sysBase, A6));
 
 static const TEXT handler_name[] = HANDLER_NAME;
 static const TEXT version_string[] =
-   HANDLER_NAME " " STR(VERSION) "." STR(REVISION) " (" DATE ")\n";
+   HANDLER_NAME " " STR(VERSION) "." STR(REVISION) " (" __DATE__ ")\n";
 static const TEXT dev_name[] = "RAM";
 
 extern const TEXT dos_name[];
@@ -82,18 +72,25 @@ const struct Resident rom_tag =
    (APTR)Init
 };
 
+#ifdef DOSBase
+#undef DOSBase
+#endif
 
-
-static APTR Init(REG(d0, ULONG unused), REG(a0, APTR seg_list),
-   REG(BASE_REG, struct ExecBase *sys_base))
+static AROS_UFH3 (APTR, Init,
+		  AROS_UFHA(struct Library *, lh, D0),
+		  AROS_UFHA(BPTR, segList, A0),
+		  AROS_UFHA(struct ExecBase *, sysBase, A6)
+)
 {
    struct DosLibrary *DOSBase;
    struct DeviceNode *dev_node;
 
+    AROS_USERFUNC_INIT
+
    /* Create device node and add it to the system. The handler will then be
       started when it is first accessed */
 
-   DOSBase = (struct DosLibrary *)OpenLibrary(dos_name, DOS_VERSION);
+   DOSBase = (struct DosLibrary *)OpenLibrary("dos.library", DOS_VERSION);
    dev_node = (APTR)MakeDosEntry(dev_name, DLT_DEVICE);
    if(dev_node == NULL)
       Alert(AT_DeadEnd | AG_NoMemory);
@@ -103,8 +100,7 @@ static APTR Init(REG(d0, ULONG unused), REG(a0, APTR seg_list),
    if(!AddDosEntry((APTR)dev_node))
       Alert(AT_DeadEnd);
 
+   AROS_USERFUNC_EXIT
+
    return NULL;
 }
-
-
-

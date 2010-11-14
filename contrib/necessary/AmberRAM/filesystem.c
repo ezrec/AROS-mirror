@@ -84,7 +84,7 @@ VOID DeleteHandler(struct Handler *handler)
       if(volume != NULL)
       {
          RemDosEntry(volume);
-         MyFreeDosEntry(volume);
+         MyFreeDosEntry(handler, volume);
       }
 
       DeletePool(handler->public_pool);
@@ -535,7 +535,7 @@ struct Object *GetObject(struct Handler *handler, struct Lock *lock,
             old_object = object;
             object = GetRealObject(object);
             object = (struct Object *)
-               FindNameNoCase((struct List *)&object->elements, buffer);
+               FindNameNoCase(handler, (struct List *)&object->elements, buffer);
             if(object != NULL)
             {
                /* Check for and handle a soft link */
@@ -710,7 +710,7 @@ PINT ChangeFileSize(struct Handler *handler, struct Opening *opening,
 
       diff = new_length - full_length;
       file->length = full_length;
-      CmdSeek(opening, 0, OFFSET_END);
+      CmdSeek(handler, opening, 0, OFFSET_END);
 
       if(ChangeFileSize(handler, opening, diff, OFFSET_END) != -1)
       {
@@ -745,7 +745,7 @@ PINT ChangeFileSize(struct Handler *handler, struct Opening *opening,
       {
          opening->pos = file->length;
       }
-      CmdSeek(opening, opening->pos, OFFSET_BEGINNING);
+      CmdSeek(handler, opening, opening->pos, OFFSET_BEGINNING);
       opening = (APTR)((struct MinNode *)opening)->mln_Succ;
    }
 
@@ -1084,10 +1084,10 @@ BOOL ExamineObject(struct Handler *handler, struct Object *object,
       info->fib_DirEntryType = entry_type;
       info->fib_EntryType = entry_type;
       s = ((struct Node *)object)->ln_Name;
-      CopyMem(MkBStr(s), &info->fib_FileName, StrSize(s));
+      CopyMem(MkBStr(handler, s), &info->fib_FileName, StrSize(s));
       s = object->comment;
       if(s != NULL && ((struct Node *)object)->ln_Pri != ST_SOFTLINK)
-         CopyMem(MkBStr(s), &info->fib_Comment, StrSize(s));
+         CopyMem(MkBStr(handler, s), &info->fib_Comment, StrSize(s));
       else
          info->fib_Comment[0] = '\0';
       info->fib_NumBlocks = object->block_count;

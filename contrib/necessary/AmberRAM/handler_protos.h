@@ -30,7 +30,7 @@ MA 02111-1307, USA.
 
 /* Function prototypes */
 
-struct Handler *CmdStartup(STRPTR name, struct DeviceNode *dev_node,
+BOOL CmdStartup(struct Handler *h, STRPTR name, struct DeviceNode *dev_node,
    struct MsgPort *proc_port);
 BOOL CmdDie(struct Handler *handler);
 BOOL CmdIsFileSystem();
@@ -39,10 +39,10 @@ BOOL CmdFind(struct Handler *handler, struct FileHandle *handle,
 BOOL CmdFHFromLock(struct Handler *handler, struct FileHandle *handle,
    struct Lock *lock);
 BOOL CmdEnd(struct Handler *handler, struct Opening *opening);
-UPINT CmdRead(struct Opening *opening, UBYTE *buffer, UPINT length);
+UPINT CmdRead(struct Handler *handler, struct Opening *opening, UBYTE *buffer, UPINT length);
 UPINT CmdWrite(struct Handler *handler, struct Opening *opening,
    UBYTE *buffer, UPINT length);
-UPINT CmdSeek(struct Opening *opening, PINT offset, LONG mode);
+UPINT CmdSeek(struct Handler *handler, struct Opening *opening, PINT offset, LONG mode);
 PINT CmdSetFileSize(struct Handler *handler, struct Opening *opening,
    PINT offset, LONG mode);
 struct Lock *CmdLocateObject(struct Handler *handler,
@@ -54,7 +54,7 @@ struct Lock *CmdCopyDirFH(struct Handler *handler,
 struct Lock *CmdParent(struct Handler *handler, struct Lock *lock);
 struct Lock *CmdParentFH(struct Handler *handler,
    struct Opening *opening);
-BOOL CmdSameLock(struct Lock *lock1, struct Lock *lock2);
+BOOL CmdSameLock(struct Handler *handler, struct Lock *lock1, struct Lock *lock2);
 struct Lock *CmdCreateDir(struct Handler *handler,
    struct Lock *lock, const TEXT *name);
 BOOL CmdExamineObject(struct Handler *handler, struct Lock *lock,
@@ -79,7 +79,7 @@ BOOL CmdSetDate(struct Handler *handler, struct Lock *lock, STRPTR name,
 BOOL CmdDeleteObject(struct Handler *handler, struct Lock *lock,
    STRPTR name);
 struct DosList *CmdCurrentVolume(struct Handler *handler);
-BOOL CmdChangeMode(ULONG type, APTR thing, ULONG new_mode);
+BOOL CmdChangeMode(struct Handler *handler, ULONG type, APTR thing, ULONG new_mode);
 BOOL CmdMakeLink(struct Handler *handler, struct Lock *lock, STRPTR name,
    APTR reference, LONG link_type);
 LONG CmdReadLink(struct Handler *handler, struct Lock *lock,
@@ -125,16 +125,16 @@ struct Notification *FindNotification(struct Handler *handler,
    struct NotifyRequest *request);
 VOID Notify(struct Handler *handler, struct Notification *notification);
 
-UBYTE *MkBStr(STRPTR str);
+UBYTE *MkBStr(struct Handler *h, STRPTR str);
 
 PINT SetString(struct Handler *handler, TEXT **field, const TEXT *new_str);
 PINT SwapStrings(TEXT **field1, TEXT **field2);
 UPINT StrLen(const TEXT *s);
 UPINT StrSize(const TEXT *s);
-struct Node *FindNameNoCase(struct List *start, const TEXT *name);
-struct DosList *MyMakeDosEntry(const TEXT *name, LONG type);
-VOID MyFreeDosEntry(struct DosList *entry);
-BOOL MyRenameDosEntry(struct DosList *entry, const TEXT *name);
+struct Node *FindNameNoCase(struct Handler *handler, struct List *start, const TEXT *name);
+struct DosList *MyMakeDosEntry(struct Handler *handler, const TEXT *name, LONG type);
+VOID MyFreeDosEntry(struct Handler *handler, struct DosList *entry);
+BOOL MyRenameDosEntry(struct Handler *handler, struct DosList *entry, const TEXT *name);
 
 
 #endif

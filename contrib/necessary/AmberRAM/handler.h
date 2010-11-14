@@ -154,17 +154,17 @@ struct Handler
    APTR clear_pool;
    APTR muddy_pool;
    APTR public_pool;
+
+   TEXT b_buffer[256];
+   TEXT b_buffer2[256];
+   struct DosLibrary *DOSBase;
+   struct UtilityBase *UtilityBase;
+   struct LocaleBase *LocaleBase;
 };
 
-
-
-/* Global variables */
-
-GLOBAL struct ExecBase *SysBase;
-GLOBAL struct DosLibrary *DOSBase;
-GLOBAL struct UtilityBase *UtilityBase;
-GLOBAL struct LocaleBase *LocaleBase;
-
+#define LocaleBase (handler->LocaleBase)
+#define UtilityBase (handler->UtilityBase)
+#define DOSBase (handler->DOSBase)
 
 #endif
 

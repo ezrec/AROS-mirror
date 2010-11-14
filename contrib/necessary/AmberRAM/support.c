@@ -248,9 +248,9 @@ UPINT StrSize(const TEXT *s)
 *	FindNameNoCase --
 *
 *   SYNOPSIS
-*	node = FindNameNoCase(start, name)
+*	node = FindNameNoCase(handler, start, name)
 *
-*	struct Node *FindNameNoCase(struct List *, TEXT *);
+*	struct Node *FindNameNoCase(struct Handler *handler, struct List *, TEXT *);
 *
 *   FUNCTION
 *
@@ -270,7 +270,7 @@ UPINT StrSize(const TEXT *s)
 *
 */
 
-struct Node *FindNameNoCase(struct List *start, const TEXT *name)
+struct Node *FindNameNoCase(struct Handler *handler, struct List *start, const TEXT *name)
 {
    struct Node *node, *next_node, *matching_node;
    TEXT *node_name;
@@ -305,9 +305,9 @@ struct Node *FindNameNoCase(struct List *start, const TEXT *name)
 *	MyMakeDosEntry --
 *
 *   SYNOPSIS
-*	dos_entry = MyMakeDosEntry(name, type)
+*	dos_entry = MyMakeDosEntry(handler, name, type)
 *
-*	struct DosList *MyMakeDosEntry(TEXT *, LONG);
+*	struct DosList *MyMakeDosEntry(struct Handler *handler, TEXT *, LONG);
 *
 *   FUNCTION
 *
@@ -327,7 +327,7 @@ struct Node *FindNameNoCase(struct List *start, const TEXT *name)
 *
 */
 
-struct DosList *MyMakeDosEntry(const TEXT *name, LONG type)
+struct DosList *MyMakeDosEntry(struct Handler *handler, const TEXT *name, LONG type)
 {
    struct DosList *entry;
    LONG error = 0;
@@ -336,7 +336,7 @@ struct DosList *MyMakeDosEntry(const TEXT *name, LONG type)
 
    if(entry != NULL)
    {
-      if(!MyRenameDosEntry(entry, name))
+      if(!MyRenameDosEntry(handler, entry, name))
          error = IoErr();
       entry->dol_Type = type;
    }
@@ -345,7 +345,7 @@ struct DosList *MyMakeDosEntry(const TEXT *name, LONG type)
 
    if(error != 0)
    {
-      MyFreeDosEntry(entry);
+      MyFreeDosEntry(handler, entry);
       entry = NULL;
    }
 
@@ -361,9 +361,9 @@ struct DosList *MyMakeDosEntry(const TEXT *name, LONG type)
 *	MyFreeDosEntry --
 *
 *   SYNOPSIS
-*	MyFreeDosEntry(entry)
+*	MyFreeDosEntry(handler, entry)
 *
-*	VOID MyFreeDosEntry(struct DosList *);
+*	VOID MyFreeDosEntry(struct Handler *handler, struct DosList *);
 *
 *   FUNCTION
 *
@@ -383,11 +383,11 @@ struct DosList *MyMakeDosEntry(const TEXT *name, LONG type)
 *
 */
 
-VOID MyFreeDosEntry(struct DosList *entry)
+VOID MyFreeDosEntry(struct Handler *handler, struct DosList *entry)
 {
    if(entry != NULL)
    {
-      MyRenameDosEntry(entry, NULL);
+      MyRenameDosEntry(handler, entry, NULL);
       FreeMem(entry, sizeof(struct DosList));
    }
 
@@ -425,7 +425,7 @@ VOID MyFreeDosEntry(struct DosList *entry)
 */
 
 #ifdef __AROS__
-BOOL MyRenameDosEntry(struct DosList *entry, const TEXT *name)
+BOOL MyRenameDosEntry(struct Handler *handler, struct DosList *entry, const TEXT *name)
 {
    LONG error = 0;
    UPINT length;

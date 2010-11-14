@@ -21,12 +21,11 @@ MA 02111-1307, USA.
 
 */
 
+#include <aros/debug.h>
 
 #include "handler_protos.h"
 
 
-static const TEXT utility_name[] = UTILITYNAME;
-static const TEXT locale_name[] = "locale.library";
 static const TEXT default_vol_name[] = "RAM Disk";
 
 
@@ -72,11 +71,10 @@ static const UWORD examine_sizes[] =
 *
 */
 
-struct Handler *CmdStartup(STRPTR name, struct DeviceNode *dev_node,
+BOOL CmdStartup(struct Handler *handler, STRPTR name, struct DeviceNode *dev_node,
    struct MsgPort *proc_port)
 {
    struct DosList *volume;
-   struct Handler *handler;
    struct Object *root_dir;
    struct MsgPort *port;
    LONG error;
@@ -85,23 +83,19 @@ struct Handler *CmdStartup(STRPTR name, struct DeviceNode *dev_node,
    /* Open extra libraries */
 
    error = 0;
-   base = OpenLibrary(utility_name, UTILITY_VERSION);
+   base = OpenLibrary(UTILITYNAME, UTILITY_VERSION);
    if(base != NULL)
       UtilityBase = base;
    else
       error = 1;
 
-   base = OpenLibrary(locale_name, LOCALE_VERSION);
+   base = OpenLibrary("locale.library", LOCALE_VERSION);
    if(base != NULL)
       LocaleBase = base;
    else
       error = 1;
 
    /* Initialise private handler structure */
-
-   handler = AllocMem(sizeof(struct Handler), MEMF_CLEAR);
-   if(handler == NULL)
-      error = IoErr();
 
    if(error == 0)
    {
@@ -131,7 +125,7 @@ struct Handler *CmdStartup(STRPTR name, struct DeviceNode *dev_node,
 
       /* Create a volume dos node */
 
-      volume = MyMakeDosEntry(default_vol_name, DLT_VOLUME);
+      volume = MyMakeDosEntry(handler, default_vol_name, DLT_VOLUME);
       if(volume == NULL)
          error = IoErr();
    }
@@ -175,18 +169,10 @@ struct Handler *CmdStartup(STRPTR name, struct DeviceNode *dev_node,
          error = IoErr();
    }
 
-   /* Shut down handler if an error occurred */
-
-   if(error != 0)
-   {
-      DeleteHandler(handler);
-      handler = NULL;
-   }
-
    /* Return result */
 
    SetIoErr(error);
-   return handler;
+   return error != 0;
 }
 
 
@@ -562,7 +548,7 @@ BOOL CmdEnd(struct Handler *handler, struct Opening *opening)
 *
 */
 
-UPINT CmdRead(struct Opening *opening, UBYTE *buffer, UPINT length)
+UPINT CmdRead(struct Handler *handler, struct Opening *opening, UBYTE *buffer, UPINT length)
 {
    LONG error = 0;
    struct Object *file;
@@ -686,7 +672,7 @@ UPINT CmdWrite(struct Handler *handler, struct Opening *opening,
 *
 */
 
-UPINT CmdSeek(struct Opening *opening, PINT offset, LONG mode)
+UPINT CmdSeek(struct Handler *handler, struct Opening *opening, PINT offset, LONG mode)
 {
    struct Block *block;
    struct Object *file;
@@ -1107,9 +1093,9 @@ struct Lock *CmdParentFH(struct Handler *handler,
 *	CmdSameLock --
 *
 *   SYNOPSIS
-*	result = CmdSameLock(lock1, lock2)
+*	result = CmdSameLock(handler, lock1, lock2)
 *
-*	BOOL CmdSameLock(struct Lock *, struct Lock *);
+*	BOOL CmdSameLock(struct Handler *, struct Lock *, struct Lock *);
 *
 *   FUNCTION
 *
@@ -1129,7 +1115,7 @@ struct Lock *CmdParentFH(struct Handler *handler,
 *
 */
 
-BOOL CmdSameLock(struct Lock *lock1, struct Lock *lock2)
+BOOL CmdSameLock(struct Handler *handler, struct Lock *lock1, struct Lock *lock2)
 {
    SetIoErr(0);
    return lock1 == lock2;
@@ -1922,7 +1908,7 @@ BOOL CmdRenameDisk(struct Handler *handler, STRPTR new_name)
          error = IoErr();
 
    if(error == 0)
-      if(!MyRenameDosEntry(handler->volume, new_name))
+      if(!MyRenameDosEntry(handler, handler->volume, new_name))
          error = IoErr();
 
    /* Return success indicator */
@@ -2110,9 +2096,9 @@ struct DosList *CmdCurrentVolume(struct Handler *handler)
 *	CmdChangeMode --
 *
 *   SYNOPSIS
-*	success = CmdChangeMode(type, thing, new_mode)
+*	success = CmdChangeMode(handler, type, thing, new_mode)
 *
-*	BOOL CmdChangeMode(ULONG, APTR, ULONG);
+*	BOOL CmdChangeMode(struct Handler *, ULONG, APTR, ULONG);
 *
 *   FUNCTION
 *
@@ -2132,7 +2118,7 @@ struct DosList *CmdCurrentVolume(struct Handler *handler)
 *
 */
 
-BOOL CmdChangeMode(ULONG type, APTR thing, ULONG new_mode)
+BOOL CmdChangeMode(struct Handler *handler, ULONG type, APTR thing, ULONG new_mode)
 {
    struct Lock *lock;
    struct Opening *opening;
