@@ -62,10 +62,11 @@ Inputs
      PUBSCREEN  -- Open requester on given pubscreen.
 
 
-Notes
-~~~~~
+Bugs
+~~~~
 ::
 
-     TODO: improve layout
+     PERSIST doesn't allways work.
+     WIDTH not implemented.
 
 
