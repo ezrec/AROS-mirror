@@ -92,13 +92,12 @@ xref_kind_any = 5
 
 # don't generate autodocs from these files
 blacklist = (   "buildeasyrequestargs.c", "buildeasyrequestargs_morphos.c",
-                "buildsysrequest.c", "buildsysrequest_morphos.c",
+                "buildsysrequest_morphos.c",
                 "refreshwindowframe.c", "refreshwindowframe_morphos.c",
                 "setiprefs.c", "setiprefs_morphos.c",
                 "sysreqhandler.c", "sysreqhandler_morphos.c",
                 "match_old.c","dosdoio.c","exec_util.c","strerror_rom.c",
                 "runprocess.c",
-                
                 "monitorclass.c")
 
 
