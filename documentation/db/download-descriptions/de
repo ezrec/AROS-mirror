@@ -38,6 +38,10 @@ contrib-source:
 docs-html:
     Dokumentation im HTML-Format. Enthält alles, was auf der Webseite
     vorhanden ist, aufbereitet zum Offline-Lesen.
+amiga-m68k-system:
+    Die native Version für m68k Amigas oder UAE. Diese Version ist binärkompatibel
+    mit AmigaOS. Dieses Archiv enthält ROM-Speicherabbilder und alle AROS
+    System-Binärdateien, welche aus dem Subversion-Verzeichnis erstellt wurden.
 freebsd5-i386-system:
     Die gehostete Version für FreeBSD/i386 5.x. Beachte, dass
     sie nicht auf FreeBSD 4.x-Systemen läuft.
@@ -69,17 +73,29 @@ pc-x86_64-boot-iso:
     Die native Version für 64-Bit (x86_64, amd64) Computer.
     Dies ist das bootbare CDROM ISO-Image, welches alle
     AROS-Systemprogramme und beigesteuerte Programme enthält.
+sam440-ppc-boot-iso:
+    Die native Version für Sam440EP und Sam440EP Flex Computer. 
+    Dies ist das bootfähige ROM-Speicherabbild einschließlich
+    ub2lb (Parthenope) SLB. Es enthält alle AROS System- und
+    beigesteuerte Programme.
+efika-chrp-ppc-boot-iso:
+    Die native Version für PowerPC Efika Computer. Dies ist das
+    bootfähige CDROM ISO-Speicherabbild einschließlich ub2lb für
+    "open firmware". Es enthält alle AROS System- und beigesteuerte
+    Programme.
 pc-i386-contrib:
     Dieses Archiv enthält alle beigesteuerten Programme für die
     i386-Architektur. Sie funktionieren sowohl für hosted (z.B. i386-linux)
     als auch für native (i386-pc).
 pc-x86_64-contrib:
-    This archive contains all the contributed programs
-    compiled for the x86_64 architecture, for use with the
-    x86_64 native version.
+    Dieses Archiv enthält alle beigesteuerte Programme für die
+    native Version der X86_64-Architektur.
 linux-ppc-contrib:
     Dieses Archiv enthält alle beigesteuerten Programme für die
     PowerPC-Architektur für die Linux/PowerPC-Portierung.
+sam440-ppc-contrib:
+    Dieses Archiv enthält alle beigesteuerte Programme für die
+    PowerPC-Architektur zur Verwendung mit dem Sam440EP-Port.
 pc-i386-sdk:
     Dateien und Werkzeuge um Deine eigenen AROS-Programme
     auf Deiner Maschine zu erstellen. GCC und die Binutils
@@ -90,6 +106,10 @@ linux-ppc-sdk:
     auf Deiner Maschine zu erstellen. GCC und die Binutils
     müssen so konfiguriert sein, dass sie Programme im
     ppc-elf-Format erzeugen.
+sam440-ppc-sdk:
+    Dateien und Werkzeuge um Deine eigenen AROS-Programme auf Deiner
+    bevorzugten Maschine zu erstellen. GCC und die Binutils müssen so
+    konfiguriert sein, dass sie Programme im ppc-elf-Format erzeugen.
 pc-x86_64-sdk:
     Dateien und Werkzeuge um Deine eigenen AROS-Programme
     auf Deiner Maschine zu erstellen. GCC und die Binutils
