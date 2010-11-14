@@ -501,7 +501,7 @@ Notes
 See also
 ~~~~~~~~
 
-`WaitThread()`_ `WaitAllThreads()`_ `exit()`_ 
+`WaitThread()`_ `WaitAllThreads()`_ `clib.library/exit() <./clib#exit>`_ 
 
 ----------
 

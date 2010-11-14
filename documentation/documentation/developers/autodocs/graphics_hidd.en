@@ -23,7 +23,7 @@ hidd.graphics.bitmap
 --------------------
 
 ========================================== ========================================== ========================================== ========================================== 
-`--background--`_                          `aoHidd_BitMap_Align`_                     `aoHidd_BitMap_BytesPerRow`_               `aoHidd_BitMap_ClassID`_                   
+`--background_bitmap--`_                   `aoHidd_BitMap_Align`_                     `aoHidd_BitMap_BytesPerRow`_               `aoHidd_BitMap_ClassID`_                   
 `aoHidd_BitMap_ClassPtr`_                  `aoHidd_BitMap_ColorMap`_                  `aoHidd_BitMap_Displayable`_               `aoHidd_BitMap_FrameBuffer`_               
 `aoHidd_BitMap_Friend`_                    `aoHidd_BitMap_GfxHidd`_                   `aoHidd_BitMap_Height`_                    `aoHidd_BitMap_IsLinearMem`_               
 `aoHidd_BitMap_LeftEdge`_                  `aoHidd_BitMap_ModeID`_                    `aoHidd_BitMap_PixFmt`_                    `aoHidd_BitMap_PixFmtTags`_                
@@ -41,8 +41,8 @@ hidd.graphics.bitmap
 
 -----------
 
---background--
-==============
+--background_bitmap--
+=====================
 
 Notes
 ~~~~~
@@ -425,7 +425,7 @@ Bugs
 See also
 ~~~~~~~~
 
-`moHidd_ObtainDirectAccess`_ `moHidd_ReleaseDirectAccess`_ `moHidd_UpdateRect`_ 
+`moHidd_BitMap_ObtainDirectAccess`_ `moHidd_BitMap_ReleaseDirectAccess`_ `moHidd_BitMap_UpdateRect`_ 
 
 ----------
 
@@ -2297,7 +2297,7 @@ hidd.graphics.graphics
 ----------------------
 
 ========================================== ========================================== ========================================== ========================================== 
-`--background--`_                          `--display_modes--`_                       `aoHidd_Gfx_ActiveCallBack`_               `aoHidd_Gfx_ActiveCallBackData`_           
+`--background_graphics--`_                 `--display_modes--`_                       `aoHidd_Gfx_ActiveCallBack`_               `aoHidd_Gfx_ActiveCallBackData`_           
 `aoHidd_Gfx_DMPSLevel`_                    `aoHidd_Gfx_DriverName`_                   `aoHidd_Gfx_HWSpriteTypes`_                `aoHidd_Gfx_IsWindowed`_                   
 `aoHidd_Gfx_MemoryClock`_                  `aoHidd_Gfx_MemorySize`_                   `aoHidd_Gfx_ModeTags`_                     `aoHidd_Gfx_NoFrameBuffer`_                
 `aoHidd_Gfx_NumSyncs`_                     `aoHidd_Gfx_SupportsHWCursor`_             `moHidd_Gfx_CheckMode`_                    `moHidd_Gfx_CopyBox`_                      
@@ -2312,8 +2312,8 @@ hidd.graphics.graphics
 
 -----------
 
---background--
-==============
+--background_graphics--
+=======================
 
 Notes
 ~~~~~
@@ -4345,14 +4345,14 @@ hidd.graphics.overlay
 ---------------------
 
 ========================================== ========================================== ========================================== ========================================== 
-`--background--`_                          `aoHidd_Overlay_Error`_                    `aoHidd_Overlay_SrcFormat`_                `aoHidd_Overlay_SrcHeight`_                
+`--background_overlay--`_                  `aoHidd_Overlay_Error`_                    `aoHidd_Overlay_SrcFormat`_                `aoHidd_Overlay_SrcHeight`_                
 `aoHidd_Overlay_SrcWidth`_                 
 ========================================== ========================================== ========================================== ========================================== 
 
 -----------
 
---background--
-==============
+--background_overlay--
+======================
 
 Notes
 ~~~~~

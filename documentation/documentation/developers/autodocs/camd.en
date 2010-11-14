@@ -15,10 +15,10 @@ camd
 `GetSysEx()`_                           `GoodPutMidi()`_                        `LockCAMD()`_                           `Midi2Driver()`_                        
 `MidiLinkConnected()`_                  `MidiMsgLen()`_                         `MidiMsgType()`_                        `NextCluster()`_                        
 `NextClusterLink()`_                    `NextMidi()`_                           `NextMidiLink()`_                       `OpenMidiDevice()`_                     
-`ParseMidi()`_                          `PutMidi()`_                            `PutSysEx()`_                           `QuerySysEx()`_                         
-`RemoveMidiLink()`_                     `RethinkCAMD()`_                        `SetMidiAttrsA()`_                      `SetMidiLinkAttrsA()`_                  
-`SkipSysEx()`_                          `StartClusterNotify()`_                 `UnlockCAMD()`_                         `WaitMidi()`_                           
-
+`ParseMidi()`_                          `PutMidi()`_                            `PutMidiMsg()`_                         `PutSysEx()`_                           
+`QuerySysEx()`_                         `RemoveMidiLink()`_                     `RethinkCAMD()`_                        `SetMidiAttrsA()`_                      
+`SetMidiLinkAttrsA()`_                  `SkipSysEx()`_                          `StartClusterNotify()`_                 `UnlockCAMD()`_                         
+`WaitMidi()`_                           
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -1007,7 +1007,7 @@ Notes
 ::
 
              Sending an illegal message may have serious consequences. If you for
-             some reason are not completely shure whether your message is legal,
+             some reason are not completely sure whether your message is legal,
              you could do the following test:
 
              if((msg>>24)<0x80 || (msg>>24)==0xf0 || (msg>>24)==0xf7 || (msg>>16&0xff)>0x7f || (msg>>8&0xff)>0x7f){
@@ -1022,6 +1022,35 @@ See also
 ~~~~~~~~
 
 `PutMidiMsg()`_ 
+
+----------
+
+PutMidiMsg()
+============
+
+Synopsis
+~~~~~~~~
+::
+
+  PutMidiMsg(
+     link,
+     msg);
+
+
+Function
+~~~~~~~~
+::
+
+     Calls PutMidi((midilink),(msg)->mm_Msg)
+
+
+Notes
+~~~~~
+::
+
+     Implemented as macro.
+
+
 
 ----------
 

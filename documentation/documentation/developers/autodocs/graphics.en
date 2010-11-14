@@ -18,45 +18,45 @@ graphics
 `AttemptLockLayerRom()`_                `BestModeIDA()`_                        `BitMapScale()`_                        `BltBitMap()`_                          
 `BltBitMapRastPort()`_                  `BltClear()`_                           `BltMaskBitMapRastPort()`_              `BltPattern()`_                         
 `BltRastPortBitMap()`_                  `BltTemplate()`_                        `CalcIVG()`_                            `CBump()`_                              
-`ChangeExtSpriteA()`_                   `ChangeSprite()`_                       `ChangeVPBitMap()`_                     `ClearEOL()`_                           
-`ClearRectRegion()`_                    `ClearRectRegionND()`_                  `ClearRegion()`_                        `ClearRegionRegion()`_                  
-`ClearRegionRegionND()`_                `ClearScreen()`_                        `ClipBlit()`_                           `CloneRastPort()`_                      
-`CloseFont()`_                          `CloseMonitor()`_                       `CMove()`_                              `CoerceMode()`_                         
-`CopyRegion()`_                         `CopySBitMap()`_                        `CreateRastPort()`_                     `CWait()`_                              
-`DeinitRastPort()`_                     `DisownBlitter()`_                      `DisposeRegion()`_                      `DoCollision()`_                        
-`Draw()`_                               `DrawEllipse()`_                        `DrawGList()`_                          `EraseRect()`_                          
-`ExtendFont()`_                         `FindColor()`_                          `FindDisplayInfo()`_                    `Flood()`_                              
-`FontExtent()`_                         `FreeBitMap()`_                         `FreeColorMap()`_                       `FreeCopList()`_                        
-`FreeCprList()`_                        `FreeDBufInfo()`_                       `FreeGBuffers()`_                       `FreeRaster()`_                         
-`FreeRastPort()`_                       `FreeSprite()`_                         `FreeSpriteData()`_                     `FreeVPortCopLists()`_                  
-`GetAPen()`_                            `GetBitMapAttr()`_                      `GetBPen()`_                            `GetColorMap()`_                        
-`GetDisplayInfoData()`_                 `GetDrMd()`_                            `GetExtSpriteA()`_                      `GetGBuffers()`_                        
-`GetOutlinePen()`_                      `GetRGB32()`_                           `GetRGB4()`_                            `GetRPAttrsA()`_                        
-`GetSprite()`_                          `GetVPModeID()`_                        `GfxAssociate()`_                       `GfxFree()`_                            
-`GfxLookUp()`_                          `GfxNew()`_                             `InitArea()`_                           `InitBitMap()`_                         
-`InitGels()`_                           `InitGMasks()`_                         `InitMasks()`_                          `InitRastPort()`_                       
-`InitTmpRas()`_                         `InitView()`_                           `InitVPort()`_                          `IsPointInRegion()`_                    
-`LoadRGB32()`_                          `LoadRGB4()`_                           `LoadView()`_                           `LockLayerRom()`_                       
-`MakeVPort()`_                          `ModeNotAvailable()`_                   `Move()`_                               `MoveSprite()`_                         
-`MrgCop()`_                             `NewRectRegion()`_                      `NewRegion()`_                          `NextDisplayInfo()`_                    
-`ObtainBestPenA()`_                     `ObtainPen()`_                          `OpenFont()`_                           `OpenMonitor()`_                        
-`OrRectRegion()`_                       `OrRectRegionND()`_                     `OrRegionRegion()`_                     `OrRegionRegionND()`_                   
-`OwnBlitter()`_                         `PolyDraw()`_                           `QBlit()`_                              `QBSBlit()`_                            
-`ReadPixel()`_                          `ReadPixelArray8()`_                    `ReadPixelLine8()`_                     `RectFill()`_                           
-`ReleasePen()`_                         `RemFont()`_                            `RemIBob()`_                            `RemVSprite()`_                         
-`ScalerDiv()`_                          `ScrollRaster()`_                       `ScrollRasterBF()`_                     `ScrollRegion()`_                       
-`ScrollVPort()`_                        `SetABPenDrMd()`_                       `SetAPen()`_                            `SetBPen()`_                            
-`SetChipRev()`_                         `SetCollision()`_                       `SetDisplayDriverCallback()`_           `SetDrMd()`_                            
-`SetFont()`_                            `SetMaxPen()`_                          `SetOutlinePen()`_                      `SetRast()`_                            
-`SetRegion()`_                          `SetRGB32()`_                           `SetRGB32CM()`_                         `SetRGB4()`_                            
-`SetRGB4CM()`_                          `SetRPAttrsA()`_                        `SetSoftStyle()`_                       `SetWriteMask()`_                       
-`SortGList()`_                          `StripFont()`_                          `SwapRegions()`_                        `SyncSBitMap()`_                        
-`Text()`_                               `TextExtent()`_                         `TextFit()`_                            `TextLength()`_                         
-`UCopperListInit()`_                    `UnlockLayerRom()`_                     `VBeamPos()`_                           `VideoControl()`_                       
-`WaitBlit()`_                           `WaitBOVP()`_                           `WaitTOF()`_                            `WeighTAMatch()`_                       
-`WriteChunkyPixels()`_                  `WritePixel()`_                         `WritePixelArray8()`_                   `WritePixelLine8()`_                    
-`XorRectRegion()`_                      `XorRectRegionND()`_                    `XorRegionRegion()`_                    `XorRegionRegionND()`_                  
-
+`CEND()`_                               `ChangeExtSpriteA()`_                   `ChangeSprite()`_                       `ChangeVPBitMap()`_                     
+`CINIT()`_                              `ClearEOL()`_                           `ClearRectRegion()`_                    `ClearRectRegionND()`_                  
+`ClearRegion()`_                        `ClearRegionRegion()`_                  `ClearRegionRegionND()`_                `ClearScreen()`_                        
+`ClipBlit()`_                           `CloneRastPort()`_                      `CloseFont()`_                          `CloseMonitor()`_                       
+`CMove()`_                              `CoerceMode()`_                         `CopyRegion()`_                         `CopySBitMap()`_                        
+`CreateRastPort()`_                     `CWait()`_                              `DeinitRastPort()`_                     `DisownBlitter()`_                      
+`DisposeRegion()`_                      `DoCollision()`_                        `Draw()`_                               `DrawEllipse()`_                        
+`DrawGList()`_                          `EraseRect()`_                          `ExtendFont()`_                         `FindColor()`_                          
+`FindDisplayInfo()`_                    `Flood()`_                              `FontExtent()`_                         `FreeBitMap()`_                         
+`FreeColorMap()`_                       `FreeCopList()`_                        `FreeCprList()`_                        `FreeDBufInfo()`_                       
+`FreeGBuffers()`_                       `FreeRaster()`_                         `FreeRastPort()`_                       `FreeSprite()`_                         
+`FreeSpriteData()`_                     `FreeVPortCopLists()`_                  `GetAPen()`_                            `GetBitMapAttr()`_                      
+`GetBPen()`_                            `GetColorMap()`_                        `GetDisplayInfoData()`_                 `GetDrMd()`_                            
+`GetExtSpriteA()`_                      `GetGBuffers()`_                        `GetOutlinePen()`_                      `GetRGB32()`_                           
+`GetRGB4()`_                            `GetRPAttrsA()`_                        `GetSprite()`_                          `GetVPModeID()`_                        
+`GfxAssociate()`_                       `GfxFree()`_                            `GfxLookUp()`_                          `GfxNew()`_                             
+`InitArea()`_                           `InitBitMap()`_                         `InitGels()`_                           `InitGMasks()`_                         
+`InitMasks()`_                          `InitRastPort()`_                       `InitTmpRas()`_                         `InitView()`_                           
+`InitVPort()`_                          `IsPointInRegion()`_                    `LoadRGB32()`_                          `LoadRGB4()`_                           
+`LoadView()`_                           `LockLayerRom()`_                       `MakeVPort()`_                          `ModeNotAvailable()`_                   
+`Move()`_                               `MoveSprite()`_                         `MrgCop()`_                             `NewRectRegion()`_                      
+`NewRegion()`_                          `NextDisplayInfo()`_                    `ObtainBestPenA()`_                     `ObtainPen()`_                          
+`OpenFont()`_                           `OpenMonitor()`_                        `OrRectRegion()`_                       `OrRectRegionND()`_                     
+`OrRegionRegion()`_                     `OrRegionRegionND()`_                   `OwnBlitter()`_                         `PolyDraw()`_                           
+`QBlit()`_                              `QBSBlit()`_                            `ReadPixel()`_                          `ReadPixelArray8()`_                    
+`ReadPixelLine8()`_                     `RectFill()`_                           `ReleasePen()`_                         `RemFont()`_                            
+`RemIBob()`_                            `RemVSprite()`_                         `ScalerDiv()`_                          `ScrollRaster()`_                       
+`ScrollRasterBF()`_                     `ScrollRegion()`_                       `ScrollVPort()`_                        `SetABPenDrMd()`_                       
+`SetAPen()`_                            `SetBPen()`_                            `SetChipRev()`_                         `SetCollision()`_                       
+`SetDisplayDriverCallback()`_           `SetDrMd()`_                            `SetFont()`_                            `SetMaxPen()`_                          
+`SetOutlinePen()`_                      `SetRast()`_                            `SetRegion()`_                          `SetRGB32()`_                           
+`SetRGB32CM()`_                         `SetRGB4()`_                            `SetRGB4CM()`_                          `SetRPAttrsA()`_                        
+`SetSoftStyle()`_                       `SetWriteMask()`_                       `SortGList()`_                          `StripFont()`_                          
+`SwapRegions()`_                        `SyncSBitMap()`_                        `Text()`_                               `TextExtent()`_                         
+`TextFit()`_                            `TextLength()`_                         `UCopperListInit()`_                    `UnlockLayerRom()`_                     
+`VBeamPos()`_                           `VideoControl()`_                       `WaitBlit()`_                           `WaitBOVP()`_                           
+`WaitTOF()`_                            `WeighTAMatch()`_                       `WriteChunkyPixels()`_                  `WritePixel()`_                         
+`WritePixelArray8()`_                   `WritePixelLine8()`_                    `XorRectRegion()`_                      `XorRectRegionND()`_                    
+`XorRegionRegion()`_                    `XorRegionRegionND()`_                  
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -854,11 +854,11 @@ Synopsis
 ~~~~~~~~
 ::
 
-  ULONG AreaCircle(
-     struct RastPort * rp,
-     WORD cx,
-     WORD cy,
-     WORD r );
+  AreaCircle(
+     rp,
+     cx,
+     cy,
+     r );
 
 
 Function
@@ -866,6 +866,13 @@ Function
 ::
 
      Calls AreaEllipse with "a" and "b" set to "r".
+
+
+Notes
+~~~~~
+::
+
+     Implemented as macros.
 
 
 
@@ -1849,6 +1856,27 @@ See also
 
 ----------
 
+CEND()
+======
+
+Synopsis
+~~~~~~~~
+::
+
+  CEND(
+     c );
+
+
+Notes
+~~~~~
+::
+
+     Not implemeted yet.
+
+
+
+----------
+
 ChangeExtSpriteA()
 ==================
 
@@ -1925,6 +1953,28 @@ Inputs
           the same layout as the one attached to the viewport
           (same depth, alignment and BytesPerRow)
      db - pointer to a DBufInfo
+
+
+
+----------
+
+CINIT()
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  CINIT(
+     c,
+     n );
+
+
+Notes
+~~~~~
+::
+
+     Not implemented yet.
 
 
 

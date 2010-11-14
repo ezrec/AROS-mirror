@@ -32,17 +32,18 @@ exec
 `InitStruct()`_                         `Insert()`_                             `MakeFunctions()`_                      `MakeLibrary()`_                        
 `NewAddTask()`_                         `NewAllocEntry()`_                      `NewStackSwap()`_                       `ObtainQuickVector()`_                  
 `ObtainSemaphoreList()`_                `ObtainSemaphoreShared()`_              `OldOpenLibrary()`_                     `OpenDevice()`_                         
-`OpenLibrary()`_                        `OpenResource()`_                       `Procure()`_                            `PutMsg()`_                             
-`RawDoFmt()`_                           `ReadGayle()`_                          `ReleaseSemaphore()`_                   `ReleaseSemaphoreList()`_               
-`RemDevice()`_                          `RemHead()`_                            `RemIntServer()`_                       `RemLibrary()`_                         
-`RemMemHandler()`_                      `Remove()`_                             `RemPort()`_                            `RemResetCallback()`_                   
-`RemResource()`_                        `RemSemaphore()`_                       `RemTail()`_                            `RemTask()`_                            
-`ReplyMsg()`_                           `SendIO()`_                             `SetExcept()`_                          `SetFunction()`_                        
-`SetIntVector()`_                       `SetSignal()`_                          `SetSR()`_                              `SetTaskPri()`_                         
-`ShutdownA()`_                          `Signal()`_                             `StackSwap()`_                          `SumKickData()`_                        
-`SumLibrary()`_                         `SuperState()`_                         `Supervisor()`_                         `Switch()`_                             
-`TypeOfMem()`_                          `UserState()`_                          `Vacate()`_                             `VNewRawDoFmt()`_                       
-`Wait()`_                               `WaitIO()`_                             `WaitPort()`_                           
+`OpenLibrary()`_                        `OpenResource()`_                       `Permit()`_                             `Procure()`_                            
+`PutMsg()`_                             `RawDoFmt()`_                           `ReadGayle()`_                          `ReleaseSemaphore()`_                   
+`ReleaseSemaphoreList()`_               `RemDevice()`_                          `RemHead()`_                            `RemIntServer()`_                       
+`RemLibrary()`_                         `RemMemHandler()`_                      `Remove()`_                             `RemPort()`_                            
+`RemResetCallback()`_                   `RemResource()`_                        `RemSemaphore()`_                       `RemTail()`_                            
+`RemTask()`_                            `ReplyMsg()`_                           `SendIO()`_                             `SetExcept()`_                          
+`SetFunction()`_                        `SetIntVector()`_                       `SetSignal()`_                          `SetSR()`_                              
+`SetTaskPri()`_                         `ShutdownA()`_                          `Signal()`_                             `StackSwap()`_                          
+`SumKickData()`_                        `SumLibrary()`_                         `SuperState()`_                         `Supervisor()`_                         
+`Switch()`_                             `TypeOfMem()`_                          `UserState()`_                          `Vacate()`_                             
+`VNewRawDoFmt()`_                       `Wait()`_                               `WaitIO()`_                             `WaitPort()`_                           
+
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -4498,6 +4499,72 @@ See also
 ~~~~~~~~
 
 `AddResource()`_ `RemResource()`_ 
+
+----------
+
+Permit()
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ void Permit();
+
+Function
+~~~~~~~~
+::
+
+     This function will reactivate the task dispatcher after a call
+     to Forbid(). Note that calls to Forbid() nest, and for every
+     call to Forbid() you need a matching call to Permit().
+
+
+Inputs
+~~~~~~
+::
+
+     None.
+
+
+Result
+~~~~~~
+::
+
+     Multitasking will be re-enabled.
+
+
+Example
+~~~~~~~
+::
+
+     No you really don't want to use this function.
+
+S
+ The only architecture that you can rely on the registers being
+ saved is on the Motorola mc68000 family.
+
+ ALSO
+ Forbid(), Disable(), Enable(), Wait()
+
+ERNALS
+ If you want to preserve all the registers, replace this function
+ in your $(KERNEL) directory. Otherwise this function is
+ satisfactory.
+
+TORY
+
+
+Notes
+~~~~~
+::
+
+     This function preserves all registers.
+
+     To prevent deadlocks calling Wait() in forbidden state breaks
+     the forbid - thus taskswitches may happen again.
+
+
 
 ----------
 
