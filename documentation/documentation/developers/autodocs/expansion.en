@@ -14,7 +14,7 @@ expansion
 `FindConfigDev()`_                      `FreeBoardMem()`_                       `FreeConfigDev()`_                      `FreeExpansionMem()`_                   
 `GetCurrentBinding()`_                  `MakeDosNode()`_                        `ObtainConfigBinding()`_                `ReadExpansionByte()`_                  
 `ReadExpansionRom()`_                   `ReleaseConfigBinding()`_               `RemConfigDev()`_                       `SetCurrentBinding()`_                  
-`WriteExpansionByte()`_                 
+`WriteExpansionByte()`_                 `WriteExpansionWord()`_                 
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -44,7 +44,7 @@ Function
      2. Otherwise, save the information for later use by DOS, possibly
         as a boot device.
 
-     This allows device drivers to add devices into the systems disk
+     This allows device drivers to add devices into the system's disk
      device list at any time, without having to worry about whether DOS
      is available.
 
@@ -62,7 +62,7 @@ Function
      floppy disk.
 
      AddBootNode() will also perform a second bit of magic, that if there
-     is no filesystem specified for this device, (ie dn_SegList, dn_Task
+     is no filesystem specified for this device, (i.e. dn_SegList, dn_Task
      and dn_Handler are all NULL), then the standard DOS filesystem
      will be used for this device.
 
@@ -306,7 +306,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ConfigBoard(
+ BOOL ConfigBoard(
           APTR board,
           struct ConfigDev * configDev );
 
@@ -678,7 +678,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ReadExpansionRom(
+ BOOL ReadExpansionRom(
           APTR board,
           struct ConfigDev * configDev );
 
@@ -831,5 +831,20 @@ Synopsis
           APTR board,
           ULONG offset,
           ULONG byte );
+
+
+----------
+
+WriteExpansionWord()
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+ void WriteExpansionWord(
+          APTR board,
+          ULONG offset,
+          ULONG word );
 
 

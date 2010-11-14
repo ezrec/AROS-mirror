@@ -33,16 +33,16 @@ exec
 `NewAddTask()`_                         `NewAllocEntry()`_                      `NewStackSwap()`_                       `ObtainQuickVector()`_                  
 `ObtainSemaphoreList()`_                `ObtainSemaphoreShared()`_              `OldOpenLibrary()`_                     `OpenDevice()`_                         
 `OpenLibrary()`_                        `OpenResource()`_                       `Procure()`_                            `PutMsg()`_                             
-`RawDoFmt()`_                           `ReleaseSemaphore()`_                   `ReleaseSemaphoreList()`_               `RemDevice()`_                          
-`RemHead()`_                            `RemIntServer()`_                       `RemLibrary()`_                         `RemMemHandler()`_                      
-`Remove()`_                             `RemPort()`_                            `RemResetCallback()`_                   `RemResource()`_                        
-`RemSemaphore()`_                       `RemTail()`_                            `RemTask()`_                            `ReplyMsg()`_                           
-`SendIO()`_                             `SetExcept()`_                          `SetFunction()`_                        `SetIntVector()`_                       
-`SetSignal()`_                          `SetSR()`_                              `SetTaskPri()`_                         `ShutdownA()`_                          
-`Signal()`_                             `StackSwap()`_                          `SumKickData()`_                        `SumLibrary()`_                         
-`SuperState()`_                         `Supervisor()`_                         `Switch()`_                             `TypeOfMem()`_                          
-`UserState()`_                          `Vacate()`_                             `VNewRawDoFmt()`_                       `Wait()`_                               
-`WaitIO()`_                             `WaitPort()`_                           
+`RawDoFmt()`_                           `ReadGayle()`_                          `ReleaseSemaphore()`_                   `ReleaseSemaphoreList()`_               
+`RemDevice()`_                          `RemHead()`_                            `RemIntServer()`_                       `RemLibrary()`_                         
+`RemMemHandler()`_                      `Remove()`_                             `RemPort()`_                            `RemResetCallback()`_                   
+`RemResource()`_                        `RemSemaphore()`_                       `RemTail()`_                            `RemTask()`_                            
+`ReplyMsg()`_                           `SendIO()`_                             `SetExcept()`_                          `SetFunction()`_                        
+`SetIntVector()`_                       `SetSignal()`_                          `SetSR()`_                              `SetTaskPri()`_                         
+`ShutdownA()`_                          `Signal()`_                             `StackSwap()`_                          `SumKickData()`_                        
+`SumLibrary()`_                         `SuperState()`_                         `Supervisor()`_                         `Switch()`_                             
+`TypeOfMem()`_                          `UserState()`_                          `Vacate()`_                             `VNewRawDoFmt()`_                       
+`Wait()`_                               `WaitIO()`_                             `WaitPort()`_                           
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -4372,7 +4372,7 @@ Synopsis
 
  BYTE OpenDevice(
           CONST_STRPTR devName,
-          ULONG unitNumber,
+          IPTR unitNumber,
           struct IORequest * iORequest,
           ULONG flags );
 
@@ -4393,7 +4393,8 @@ Inputs
 ::
 
      devName    - Pointer to the devices's name.
-     unitNumber - The unit number. Most often 0.
+     unitNumber - The unit number. Most often 0. In some special cases this can be
+                  a pointer to something (device-dependent).
      iORequest  - Pointer to device specific information.
                   Will be filled out by the device.
                   Must lie in public (or at least shared) memory.
@@ -4714,6 +4715,32 @@ Bugs
 
      PutChData cannot be modified from the callback hook on non-m68k
      systems.
+
+
+
+----------
+
+ReadGayle()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG ReadGayle();
+
+Function
+~~~~~~~~
+::
+
+ Gets the Gayle ID
+
+
+Inputs
+~~~~~~
+::
+
+     None.
 
 
 

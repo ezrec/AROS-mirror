@@ -1139,34 +1139,47 @@ Function
 ~~~~~~~~
 ::
 
- Bring up an alert with the given message.
- A system recoverable alert is a RECOVERY_ALERT which waits until
- the user presses a mouse button. The display is then restored and
- a boolean value will be returned showing if the has pressed the
- left mouse button.
- A DEADEND_ALERT is an alert from which the system cannot recover.
- This alert immediately returns with FALSE after creating the
- alert display.
- If the system can not get enough memory for a RECOVERY_ALERT,
- this function returns FALSE.
+     Bring up an alert with the given message.
 
 
 Inputs
 ~~~~~~
 ::
 
- alertnumber - The
- string - The
- height - The
+     alertnumber - Value determining type of alert. For historic reasons
+                   this is the same value as passed to Alert(). However
+                   this functions takes into account only AT_DeadEnd bit.
+     string - A pointer to a text data. Text data have the following layout:
+              each string is preceded by 3 bytes. First two of them are X coordinate
+              of the string in alert display. This is given as bigendian value. Third
+              byte is Y coordinate of text's baseline. Then NULL-terminated string
+              follows by itself. After NULL terminator there's one more byte. If it's
+              not zero, another string starts from the next byte. Zero marks end of
+              the sequence.
+              The text is always rendered using topaz/8 font.
+     height - The height of alert display in pixels.
 
 
 Result
 ~~~~~~
 ::
 
- Always FALSE if DEADEND_ALERT. RECOVERY_ALERT returns TRUE if
- the user pressed the left mouse button and FALSE for other
- mouse button or if the alert could not be posted.
+     Always FALSE if AT_DeadEnd bit is set in the alertnumber. Otherwise the function
+     returns TRUE or FALSE depending on what user chooses. In AROS alerts are presented
+     in a requester with two gadgets: Ok and Cancel. Ok returns TRUE, Cancel returns FALSE.
+
+     If the alert could not be posted for whatever reason, FALSE is returned.
+
+
+Notes
+~~~~~
+::
+
+     This function is obsolete and exists only for backwards compatibility with
+     AmigaOS(tm). On various modern systems this function has different effects.
+     On classic Amiga(tm) this function may not work with RTG displays, so it
+     is generally deprecated. Please don't use it in a new software! Use legitimate
+     intuition requesters if you want to present some message to the user.
 
 
 
@@ -2878,6 +2891,7 @@ Inputs
 
  Name   --  Name of the public screen or NULL for the default public
             screen. The name "Workbench" refers to the Workbench screen.
+            The name is case insensitive.
 
 
 Result
@@ -4262,7 +4276,7 @@ Tags
          TRUE means that Intuition can move or shrink the window
          to fit on the screen, within the limits given with
          WA_MinWidth and WA_MinHeight. This attribute defaults
-         to TRUE when you call OpenWindowTags with a NULL pointer
+         to TRUE when you call OpenWindowTags() with a NULL pointer
          for NewWindow.
 
      WA_InnerWidth
@@ -4282,7 +4296,7 @@ Tags
      WA_PubScreen (struct Screen *)
          Open the window on the public screen with the given address.
          An address of NULL means default public screen. You're
-         responsible that the screen stays open until OpenScreenTags()
+         responsible that the screen stays open until OpenWindowTags()
          has finished, i.e. 
          you're the owner of the screen,
          you have already a window open on the screen
@@ -6333,7 +6347,43 @@ Function
 ::
 
      Display an alert with automatic time-out.
+     
+     See DisplayAlert() documentation
  
+
+Inputs
+~~~~~~
+::
+
+     alertnumber - Alert code
+     string - Text data to display
+     height - Total height of alert display in pixels
+     time   - Timeout measured in display frame refresh periods.
+
+
+Result
+~~~~~~
+::
+
+     TRUE or FALSE depending on user's reaction. FALSE in case of timeout.
+
+
+Notes
+~~~~~
+::
+
+     See DisplayAlert() documentation for detailed description of
+     parameters.
+
+
+Bugs
+~~~~
+::
+
+     In AROS timeout is currently not implemented. Note that this
+     function is obsolete and strongly deprecated for use in software.
+     It is present only for backwards compatibility with AmigaOS(tm).
+
 
 
 See also
@@ -6434,7 +6484,7 @@ Inputs
 ~~~~~~
 ::
 
- name - Name of the public screen to unlock
+ name - Name of the public screen to unlock. The name is case insensitive.
  screen - Pointer to the screen to unlock
 
 

@@ -1869,14 +1869,47 @@ Synopsis
      VOID HIDD_BM_UpdateRect(OOP_Object *obj, WORD x, WORD y, WORD width, WORD height);
 
 
+Function
+~~~~~~~~
+::
+
+     Update displayed image of the given rectangle.
+
+     Some drivers (like VGA and VESA) may work not with VRAM directly, but with a mirrored
+     copy of it. Usually it is done in case if VRAM reading is slow. This method is called
+     by the system after it completes any drawing operation, in order to make sure that
+     changes made are visible on the actual screen. If your driver uses mirroring, this method
+     should copy the given rectangle (at least) from the mirror buffer to the actual VRAM.
+
+     This method is also called after changing currently visible bitmap (after moHidd_Gfx_Show
+     method call) in order to allow the mirroring driver to refresh the screen after current bitmap
+     changed. Note that moHidd_Gfx_ShowViewPorts is very different and moHidd_BitMap_UpdateRect
+     will not be called if it succeeded!
+
+
 Inputs
 ~~~~~~
 ::
 
-     obj    -
-     x, y   -
-     width  -
-     height -
+     obj    - an object whose image to refresh
+     x, y   - A top-left edge of the rectangle to refresh
+     width  - Width of the rectangle to refresh
+     height - Height of the rectangle to refresh
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Notes
+~~~~~
+::
+
+     This method is called also on offscreen bitmaps. You should track visible state of your bitmap
+     and ignore these calls if it's not currently visible on the screen.
 
 
 
@@ -4194,6 +4227,16 @@ Result
      detailed description)
 
 
+Notes
+~~~~~
+::
+
+     Drivers which use mirrored video data buffer do not have to update the display
+     immediately in this method. moHidd_BitMap_UpdateRect will be sent to the returned
+     bitmap if it's not NULL. Of course display blanking (if NULL bitmap was received)
+     needs to be performed immediately.
+
+
 
 See also
 ~~~~~~~~
@@ -4265,8 +4308,8 @@ Function
      It is valid to get NULL pointer as data parameter. This means that there's
      nothing to show and the screen should go blank.
 
-     Bitmaps display offsets are stored in their aHidd_BitMap_XOffset and
-     aHidd_BitMap_YOffset attributes. This function is not expected to modify their
+     Bitmaps display offsets are stored in their aHidd_BitMap_LeftEdge and
+     aHidd_BitMap_TopEdge attributes. This function is not expected to modify their
      values somehow. They are assumed to be preserved between calls unless changed
      explicitly by the system.
 

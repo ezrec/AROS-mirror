@@ -896,7 +896,7 @@ Synopsis
 ::
 
  struct Process * CreateNewProc(
-          struct TagItem * tags );
+          const struct TagItem * tags );
  
  struct Process * CreateNewProcTags(
           TAG tag, ... );
@@ -2286,8 +2286,8 @@ Function
 
      Looks for the next dos list entry with the right name. The list
      must be locked for this. There may be not more than one device
-     or assign node of the same name. There are no restrictions on
-     volume nodes.
+     or assign node of the same name. There are no such restrictions
+     on volume nodes.
 
 
 Inputs
@@ -4670,8 +4670,8 @@ Synopsis
 
  LONG Pipe(
           CONST_STRPTR name,
-          BPTR *reader,
-          BPTR *writer );
+          BPTR * reader,
+          BPTR * writer );
 
 Function
 ~~~~~~~~
@@ -6586,7 +6586,7 @@ Function
  path will be used to find the command.
      Normally, the boot shell is used but other shells may be specified
  via tags. The tags are passed through to CreateNewProc() except those
- who conflict with SystemTagList(). Currently, these are
+ that conflict with SystemTagList(). Currently, these are
 
      NP_Seglist
      NP_FreeSeglist
@@ -6620,7 +6620,7 @@ Result
 ::
 
 
- The return code of the command executed or -1 or if the command could
+ The return code of the command executed or -1 if the command could
  not run because the shell couldn't be created. If the command is not
  found, the shell will return an error code, usually RETURN_ERROR.
 

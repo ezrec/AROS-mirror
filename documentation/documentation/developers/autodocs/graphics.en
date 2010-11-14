@@ -4617,7 +4617,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void InitRastPort(
+ BOOL InitRastPort(
           struct RastPort * rp );
 
 Function

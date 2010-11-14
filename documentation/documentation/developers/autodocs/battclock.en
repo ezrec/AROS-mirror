@@ -46,7 +46,7 @@ Result
 See also
 ~~~~~~~~
 
-`WriteBattClock`_ `ResetBattClock`_ 
+`WriteBattClock()`_ `ResetBattClock()`_ 
 
 ----------
 
@@ -93,7 +93,7 @@ Notes
 See also
 ~~~~~~~~
 
-`ReadBattClock`_ `WriteBattClock`_ 
+`ReadBattClock()`_ `WriteBattClock()`_ 
 
 ----------
 
@@ -141,5 +141,5 @@ Notes
 See also
 ~~~~~~~~
 
-`ReadBattClock`_ `ResetBattClock`_ 
+`ReadBattClock()`_ `ResetBattClock()`_ 
 

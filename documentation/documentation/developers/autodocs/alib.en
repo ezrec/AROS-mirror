@@ -9,16 +9,16 @@ alib
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`__attribute__()`_                      `__sprintf()`_                          `AddAmigaGuideHost()`_                  `AddAppIcon()`_                         
-`AddAppMenuItem()`_                     `AddAppWindow()`_                       `AddAppWindowDropZone()`_               `AllocAslRequestTags()`_                
-`AllocDosObjectTags()`_                 `AllocNamedObject()`_                   `AllocSpriteData()`_                    `ArgArrayDone()`_                       
-`ArgArrayInit()`_                       `ArgInt()`_                             `ArgString()`_                          `ArosInquire()`_                        
-`AslRequestTags()`_                     `AsmAllocPooled()`_                     `AsmCreatePool()`_                      `AsmDeletePool()`_                      
-`AsmFreePooled()`_                      `BeginIO()`_                            `BestCModeIDTags()`_                    `BestModeID()`_                         
-`BuildEasyRequest()`_                   `CallHook()`_                           `CallHookA()`_                          `ChangeExtSprite()`_                    
-`CheckRexxMsg()`_                       `CloseWorkbenchObject()`_               `CoerceMethodA()`_                      `CreateExtIO()`_                        
-`CreateGadget()`_                       `CreateLayerTags()`_                    `CreateMenus()`_                        `CreateNewProcTags()`_                  
-`CreatePort()`_                         `CreateStdIO()`_                        `CreateTask()`_                         `DeleteExtIO()`_                        
+`__sprintf()`_                          `AddAmigaGuideHost()`_                  `AddAppIcon()`_                         `AddAppMenuItem()`_                     
+`AddAppWindow()`_                       `AddAppWindowDropZone()`_               `AllocAslRequestTags()`_                `AllocDosObjectTags()`_                 
+`AllocNamedObject()`_                   `AllocSpriteData()`_                    `ArgArrayDone()`_                       `ArgArrayInit()`_                       
+`ArgInt()`_                             `ArgString()`_                          `ArosInquire()`_                        `AslRequestTags()`_                     
+`AsmAllocPooled()`_                     `AsmCreatePool()`_                      `AsmDeletePool()`_                      `AsmFreePooled()`_                      
+`BeginIO()`_                            `BestCModeIDTags()`_                    `BestModeID()`_                         `BuildEasyRequest()`_                   
+`CallHook()`_                           `CallHookA()`_                          `ChangeExtSprite()`_                    `CheckRexxMsg()`_                       
+`CloseWorkbenchObject()`_               `CoerceMethodA()`_                      `CreateExtIO()`_                        `CreateGadget()`_                       
+`CreateLayerTags()`_                    `CreateMenus()`_                        `CreateNewProcTags()`_                  `CreatePort()`_                         
+`CreateStdIO()`_                        `CreateTask()`_                         `defined()`_                            `DeleteExtIO()`_                        
 `DeletePort()`_                         `DeleteStdIO()`_                        `DeleteTask()`_                         `DoDTMethod()`_                         
 `DoGadgetMethod()`_                     `DoMethodA()`_                          `DoSuperMethodA()`_                     `DoSuperNewTagList()`_                  
 `DrawBevelBox()`_                       `EasyRequest()`_                        `ExtendFontTags()`_                     `FastRand()`_                           
@@ -41,56 +41,6 @@ alib
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
-
-__attribute__()
-===============
-
-Synopsis
-~~~~~~~~
-::
-
-  __attribute__(
-     struct MinNode *l,
-     int (*compare)(struct MinNode *n1, struct MinNode *n2, void *data),
-     void *data)
-
-
-Function
-~~~~~~~~
-::
-
-     Given a list of ordered circular sublists, merge pairs of ordered sublists into one
-     ordered circular sublist. 
-
-
-Inputs
-~~~~~~
-::
-
-     l       - The first node of the first sublist. The sublists must be linked one
-               after the other one, and must be circular lists, that is their
-               first node's Pred pointer must point to their last node.
-               
-               I.e., the 2nd sublist will be at l->mln_Pred->mln_Succ, the 3rd will be at
-               l->mln_Pred->mln_Succ->mln_Pred->mln_Succ and so on.
-              
-     compare - Pointer to the comparison function used to merge the 
-               sublists
-              
-     data    - Pointer to user-defined data which will be passed untouched
-               to the comparison function.
-
-
-Result
-~~~~~~
-::
-
-     Pointer to the first node of the resulting list of sublists, with the same
-     format of the input list, but with pairs of sublists merged into one.
- 
-
-
-----------
 
 __sprintf()
 ===========
@@ -1372,6 +1322,56 @@ Result
 
      A pointer to the new task or NULL on failure.
 
+
+
+----------
+
+defined()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  #if defined(__GNUC__) && (defined(__x86_64__) || defined(
+     struct MinNode *l,
+     int (*compare)(struct MinNode *n1, struct MinNode *n2, void *data),
+     void *data)
+
+
+Function
+~~~~~~~~
+::
+
+     Given a list of ordered circular sublists, merge pairs of ordered sublists into one
+     ordered circular sublist. 
+
+
+Inputs
+~~~~~~
+::
+
+     l       - The first node of the first sublist. The sublists must be linked one
+               after the other one, and must be circular lists, that is their
+               first node's Pred pointer must point to their last node.
+               
+               I.e., the 2nd sublist will be at l->mln_Pred->mln_Succ, the 3rd will be at
+               l->mln_Pred->mln_Succ->mln_Pred->mln_Succ and so on.
+              
+     compare - Pointer to the comparison function used to merge the 
+               sublists
+              
+     data    - Pointer to user-defined data which will be passed untouched
+               to the comparison function.
+
+
+Result
+~~~~~~
+::
+
+     Pointer to the first node of the resulting list of sublists, with the same
+     format of the input list, but with pairs of sublists merged into one.
+ 
 
 
 ----------
