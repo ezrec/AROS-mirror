@@ -43,7 +43,7 @@ static int hex_char_to_int(char c);
 
 BOOL DriverInit(struct DriverBase* ahisubbase)
 {
-    struct CardBase* card_base = (struct CardBase*) ahisubbase;
+    struct HDAudioBase* card_base = (struct HDAudioBase*) ahisubbase;
     struct PCIDevice *dev;
     int card_no;
     int i;
@@ -110,7 +110,7 @@ BOOL DriverInit(struct DriverBase* ahisubbase)
 
     /*** Allocate and init all cards *******************************************/
 
-    card_base->driverdatas = (struct CardData **) AllocVec(sizeof(*card_base->driverdatas) * card_base->cards_found, MEMF_PUBLIC);
+    card_base->driverdatas = (struct HDAudioChip **) AllocVec(sizeof(*card_base->driverdatas) * card_base->cards_found, MEMF_PUBLIC);
 
     if (card_base->driverdatas == NULL)
     {
@@ -142,7 +142,7 @@ BOOL DriverInit(struct DriverBase* ahisubbase)
 
 VOID DriverCleanup(struct DriverBase* AHIsubBase)
 {
-    struct CardBase* card_base = (struct CardBase*) AHIsubBase;
+    struct HDAudioBase* card_base = (struct HDAudioBase*) AHIsubBase;
     int i;
 
     for(i = 0; i < card_base->cards_found; ++i)

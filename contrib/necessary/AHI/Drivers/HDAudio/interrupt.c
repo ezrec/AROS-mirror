@@ -27,10 +27,10 @@ ULONG timer = 0; // for demo/test
 
 #ifdef __AMIGAOS4__
 ULONG
-CardInterrupt( struct ExceptionContext *pContext, struct ExecBase *SysBase, struct CardData* card )
+CardInterrupt( struct ExceptionContext *pContext, struct ExecBase *SysBase, struct HDAudioChip* card )
 #else
 ULONG
-CardInterrupt( struct CardData* card )
+CardInterrupt( struct HDAudioChip* card )
 #endif
 {
     struct AHIAudioCtrlDrv* AudioCtrl = card->audioctrl;
@@ -186,10 +186,10 @@ CardInterrupt( struct CardData* card )
 
 #ifdef __AMIGAOS4__
 void
-PlaybackInterrupt( struct ExceptionContext *pContext, struct ExecBase *SysBase, struct CardData* card )
+PlaybackInterrupt( struct ExceptionContext *pContext, struct ExecBase *SysBase, struct HDAudioChip* card )
 #else
 void
-PlaybackInterrupt( struct CardData* card )
+PlaybackInterrupt( struct HDAudioChip* card )
 #endif
 {
     struct AHIAudioCtrlDrv* AudioCtrl = card->audioctrl;
@@ -250,10 +250,10 @@ PlaybackInterrupt( struct CardData* card )
 
 #ifdef __AMIGAOS4__
 void
-RecordInterrupt( struct ExceptionContext *pContext, struct ExecBase *SysBase, struct CardData* card )
+RecordInterrupt( struct ExceptionContext *pContext, struct ExecBase *SysBase, struct HDAudioChip* card )
 #else
 void
-RecordInterrupt( struct CardData* card )
+RecordInterrupt( struct HDAudioChip* card )
 #endif
 {
     struct AHIAudioCtrlDrv* AudioCtrl = card->audioctrl;

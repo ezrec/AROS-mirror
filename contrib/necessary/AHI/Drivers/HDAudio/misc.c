@@ -19,25 +19,25 @@
 extern int z;
 
 /* Public functions in main.c */
-int card_init(struct CardData *card);
-void card_cleanup(struct CardData *card);
-static BOOL allocate_corb(struct CardData *card);
-static BOOL allocate_rirb(struct CardData *card);
-static BOOL allocate_pos_buffer(struct CardData *card);
-static BOOL alloc_streams(struct CardData *card);
-static BOOL perform_codec_specific_settings(struct CardData *card);
-static void determine_frequencies(struct CardData *card);
+int card_init(struct HDAudioChip *card);
+void card_cleanup(struct HDAudioChip *card);
+static BOOL allocate_corb(struct HDAudioChip *card);
+static BOOL allocate_rirb(struct HDAudioChip *card);
+static BOOL allocate_pos_buffer(struct HDAudioChip *card);
+static BOOL alloc_streams(struct HDAudioChip *card);
+static BOOL perform_codec_specific_settings(struct HDAudioChip *card);
+static void determine_frequencies(struct HDAudioChip *card);
 static void set_frequency_info(struct Freq *freq, UWORD bitnr);
-static BOOL reset_chip(struct CardData *card);
-static ULONG get_response(struct CardData *card);
-static void perform_realtek_specific_settings(struct CardData *card, UWORD device);
-static void perform_via_specific_settings(struct CardData *card, UWORD device);
-static int find_pin_widget_with_encoding(struct CardData *card, UBYTE encoding);
-static BOOL interrogate_unknown_chip(struct CardData *card);
-static int find_audio_output(struct CardData *card, UBYTE digital);
-static int find_speaker_nid(struct CardData *card);
-static int find_headphone_nid(struct CardData *card);
-static void power_up_all_nodes(struct CardData *card);
+static BOOL reset_chip(struct HDAudioChip *card);
+static ULONG get_response(struct HDAudioChip *card);
+static void perform_realtek_specific_settings(struct HDAudioChip *card, UWORD device);
+static void perform_via_specific_settings(struct HDAudioChip *card, UWORD device);
+static int find_pin_widget_with_encoding(struct HDAudioChip *card, UBYTE encoding);
+static BOOL interrogate_unknown_chip(struct HDAudioChip *card);
+static int find_audio_output(struct HDAudioChip *card, UBYTE digital);
+static int find_speaker_nid(struct HDAudioChip *card);
+static int find_headphone_nid(struct HDAudioChip *card);
+static void power_up_all_nodes(struct HDAudioChip *card);
 
 struct Device *TimerBase = NULL;
 struct timerequest *TimerIO = NULL;
@@ -45,7 +45,7 @@ struct MsgPort *replymp = NULL;
 static BOOL forceQuery = FALSE;
 static BOOL dumpAll = FALSE;
 static int force_speaker_nid = -1;
-//void AddResetHandler(struct CardData *card);
+//void AddResetHandler(struct HDAudioChip *card);
 
 
 #ifdef __AROS__
@@ -104,15 +104,15 @@ void micro_delay(unsigned int val)
 ** DriverData allocation ******************************************************
 ******************************************************************************/
 
-struct CardData* AllocDriverData(APTR dev, struct DriverBase* AHIsubBase)
+struct HDAudioChip* AllocDriverData(APTR dev, struct DriverBase* AHIsubBase)
 {
-    struct CardBase* card_base = (struct CardBase*) AHIsubBase;
-    struct CardData* card;
+    struct HDAudioBase* card_base = (struct HDAudioBase*) AHIsubBase;
+    struct HDAudioChip* card;
     UWORD command_word;
     int i;
     unsigned short uval;
 
-    card = (struct CardData *) AllocVec(sizeof(struct CardData), MEMF_PUBLIC | MEMF_CLEAR);
+    card = (struct HDAudioChip *) AllocVec(sizeof(struct HDAudioChip), MEMF_PUBLIC | MEMF_CLEAR);
 
     if (card == NULL)
     {
@@ -197,7 +197,7 @@ struct CardData* AllocDriverData(APTR dev, struct DriverBase* AHIsubBase)
 ** DriverData deallocation ****************************************************
 ******************************************************************************/
 
-void FreeDriverData(struct CardData* card, struct DriverBase*  AHIsubBase)
+void FreeDriverData(struct HDAudioChip* card, struct DriverBase*  AHIsubBase)
 {
     if (card != NULL)
     {
@@ -229,7 +229,7 @@ void FreeDriverData(struct CardData* card, struct DriverBase*  AHIsubBase)
 
 
 
-int card_init(struct CardData *card)
+int card_init(struct HDAudioChip *card)
 {
     struct PCIDevice *dev = (struct PCIDevice *) card->pci_dev;
     UWORD uwval;
@@ -307,12 +307,12 @@ int card_init(struct CardData *card)
 }
 
 
-void card_cleanup(struct CardData *card)
+void card_cleanup(struct HDAudioChip *card)
 {
 }
 
 
-static BOOL reset_chip(struct CardData *card)
+static BOOL reset_chip(struct HDAudioChip *card)
 {
     int counter = 0;
     UBYTE ubval = 0;
@@ -382,7 +382,7 @@ static BOOL reset_chip(struct CardData *card)
 }
 
 
-void codec_discovery(struct CardData *card)
+void codec_discovery(struct HDAudioChip *card)
 {
     int i;
     ULONG node_count_response = get_parameter(0, VERB_GET_PARMS_NODE_COUNT, card);
@@ -469,7 +469,7 @@ void codec_discovery(struct CardData *card)
 }
 
 
-static void power_up_all_nodes(struct CardData *card)
+static void power_up_all_nodes(struct HDAudioChip *card)
 {
     int i;
     ULONG node_count_response = get_parameter(0, VERB_GET_PARMS_NODE_COUNT, card);
@@ -553,13 +553,13 @@ void pci_free_consistent(void* addr)
 }
 
 
-ULONG get_parameter(UBYTE node, UBYTE parameter, struct CardData *card)
+ULONG get_parameter(UBYTE node, UBYTE parameter, struct HDAudioChip *card)
 {
     return send_command_12(card->codecnr, node, VERB_GET_PARMS, parameter, card);
 }
 
 
-ULONG send_command_4(UBYTE codec, UBYTE node, UBYTE verb, UWORD payload, struct CardData *card)
+ULONG send_command_4(UBYTE codec, UBYTE node, UBYTE verb, UWORD payload, struct HDAudioChip *card)
 {
     UWORD wp = pci_inw(HD_CORBWP, card) & 0xFF;
     ULONG data = (codec << 28) | (node << 20) | (verb << 16) | payload;
@@ -582,7 +582,7 @@ ULONG send_command_4(UBYTE codec, UBYTE node, UBYTE verb, UWORD payload, struct 
 }
 
 
-ULONG send_command_12(UBYTE codec, UBYTE node, UWORD verb, UBYTE payload, struct CardData *card)
+ULONG send_command_12(UBYTE codec, UBYTE node, UWORD verb, UBYTE payload, struct HDAudioChip *card)
 {
     UWORD wp = pci_inw(HD_CORBWP, card) & 0xFF;
     ULONG data = (codec << 28) | (node << 20) | (verb << 8) | payload;
@@ -605,7 +605,7 @@ ULONG send_command_12(UBYTE codec, UBYTE node, UWORD verb, UBYTE payload, struct
 }
 
 
-ULONG get_response(struct CardData *card)
+ULONG get_response(struct HDAudioChip *card)
 {
     int timeout = 10000;
     int i;
@@ -675,7 +675,7 @@ ULONG get_response(struct CardData *card)
 }
 
 
-static BOOL allocate_corb(struct CardData *card)
+static BOOL allocate_corb(struct HDAudioChip *card)
 {
     UBYTE corbsize_reg;
 
@@ -733,7 +733,7 @@ static BOOL allocate_corb(struct CardData *card)
 }
 
 
-static BOOL allocate_rirb(struct CardData *card)
+static BOOL allocate_rirb(struct HDAudioChip *card)
 {
     UBYTE rirbsize_reg;
 
@@ -793,7 +793,7 @@ static BOOL allocate_rirb(struct CardData *card)
 
 
 
-static BOOL allocate_pos_buffer(struct CardData *card)
+static BOOL allocate_pos_buffer(struct HDAudioChip *card)
 {
     card->dma_position_buffer = pci_alloc_consistent(sizeof(APTR) * 36, NULL, 128);
     //pci_outl((ULONG) card->dma_position_buffer | HD_DPLBASE_ENABLE, HD_DPLBASE, card);
@@ -810,7 +810,7 @@ static BOOL allocate_pos_buffer(struct CardData *card)
 }
 
 
-static BOOL alloc_streams(struct CardData *card)
+static BOOL alloc_streams(struct HDAudioChip *card)
 {
     int i;
     card->nr_of_input_streams = (pci_inw(HD_GCAP, card) & HD_GCAP_ISS_MASK) >> 8;
@@ -844,7 +844,7 @@ static BOOL alloc_streams(struct CardData *card)
 }
 
 
-/*static ULONG ResetHandler(struct ExceptionContext *ctx, struct ExecBase *pExecBase, struct CardData *card)
+/*static ULONG ResetHandler(struct ExceptionContext *ctx, struct ExecBase *pExecBase, struct HDAudioChip *card)
 {
     struct PCIDevice *dev = card->pci_dev;
 
@@ -852,7 +852,7 @@ static BOOL alloc_streams(struct CardData *card)
 }
 
 
-void AddResetHandler(struct CardData *card)
+void AddResetHandler(struct HDAudioChip *card)
 {
     static struct Interrupt interrupt;
 
@@ -866,7 +866,7 @@ void AddResetHandler(struct CardData *card)
 }*/
 
 
-static BOOL perform_codec_specific_settings(struct CardData *card)
+static BOOL perform_codec_specific_settings(struct HDAudioChip *card)
 {
     ULONG vendor_device_id = get_parameter(0x0, VERB_GET_PARMS_VENDOR_DEVICE, card); // get vendor and device ID from root node
     UBYTE old;
@@ -906,7 +906,7 @@ static BOOL perform_codec_specific_settings(struct CardData *card)
 }
 
 
-static void perform_realtek_specific_settings(struct CardData *card, UWORD device)
+static void perform_realtek_specific_settings(struct HDAudioChip *card, UWORD device)
 {
     bug("Found Realtek codec\n");
         
@@ -1072,7 +1072,7 @@ static void perform_realtek_specific_settings(struct CardData *card, UWORD devic
 }
 
 
-static void perform_via_specific_settings(struct CardData *card, UWORD device)
+static void perform_via_specific_settings(struct HDAudioChip *card, UWORD device)
 {
     bug("Found VIA codec\n");
         
@@ -1118,7 +1118,7 @@ static void perform_via_specific_settings(struct CardData *card, UWORD device)
 }
 
 
-static BOOL interrogate_unknown_chip(struct CardData *card)
+static BOOL interrogate_unknown_chip(struct HDAudioChip *card)
 {
     int dac, front, speaker = -1, steps = 0, offset0dB = 0;
     double step_size = 0.25;
@@ -1307,7 +1307,7 @@ static BOOL interrogate_unknown_chip(struct CardData *card)
 }
 
 
-static int find_pin_widget_with_encoding(struct CardData *card, UBYTE encoding)
+static int find_pin_widget_with_encoding(struct HDAudioChip *card, UBYTE encoding)
 {
     int i;
     ULONG node_count_response = get_parameter(0, VERB_GET_PARMS_NODE_COUNT, card);
@@ -1355,7 +1355,7 @@ static int find_pin_widget_with_encoding(struct CardData *card, UBYTE encoding)
 }
 
 
-static int find_speaker_nid(struct CardData *card)
+static int find_speaker_nid(struct HDAudioChip *card)
 {
     int i;
     ULONG node_count_response = get_parameter(0, VERB_GET_PARMS_NODE_COUNT, card);
@@ -1403,7 +1403,7 @@ static int find_speaker_nid(struct CardData *card)
 }
 
 
-static int find_headphone_nid(struct CardData *card)
+static int find_headphone_nid(struct HDAudioChip *card)
 {
     int i;
     ULONG node_count_response = get_parameter(0, VERB_GET_PARMS_NODE_COUNT, card);
@@ -1451,7 +1451,7 @@ static int find_headphone_nid(struct CardData *card)
 }
 
 
-static int find_audio_output(struct CardData *card, UBYTE digital)
+static int find_audio_output(struct HDAudioChip *card, UBYTE digital)
 {
     int i;
     ULONG node_count_response = get_parameter(0, VERB_GET_PARMS_NODE_COUNT, card);
@@ -1497,7 +1497,7 @@ static int find_audio_output(struct CardData *card, UBYTE digital)
 }
 
 
-static void determine_frequencies(struct CardData *card)
+static void determine_frequencies(struct HDAudioChip *card)
 {
     ULONG verb = get_parameter(card->dac_nid, 0xA, card);
     UWORD samplerate_flags = verb & 0x0FFF;
@@ -1631,7 +1631,7 @@ static void set_frequency_info(struct Freq *freq, UWORD bitnr)
 }
 
 
-void set_monitor_volumes(struct CardData *card, double dB)
+void set_monitor_volumes(struct HDAudioChip *card, double dB)
 {
     int i;
     int dB_steps = (int) ((dB + 34.5) / 1.5);
@@ -1659,7 +1659,7 @@ void set_monitor_volumes(struct CardData *card, double dB)
 }
 
 
-void set_adc_input(struct CardData *card)
+void set_adc_input(struct HDAudioChip *card)
 {
     int i;
     
@@ -1697,7 +1697,7 @@ void set_adc_input(struct CardData *card)
 }
 
 
-void set_adc_gain(struct CardData *card, double dB)
+void set_adc_gain(struct HDAudioChip *card, double dB)
 {
     int i;
     int dB_steps = (int) ( (dB - card->adc_min_gain) / card->adc_step_gain);
@@ -1718,7 +1718,7 @@ void set_adc_gain(struct CardData *card, double dB)
 }
 
 
-void set_dac_gain(struct CardData *card, double dB)
+void set_dac_gain(struct HDAudioChip *card, double dB)
 {
     int i;
     int dB_steps = (int) ( (dB - card->dac_min_gain) / card->dac_step_gain);
@@ -1732,7 +1732,7 @@ void set_dac_gain(struct CardData *card, double dB)
 }
 
 
-void switch_nid_to_input(struct CardData *card, UBYTE NID)
+void switch_nid_to_input(struct HDAudioChip *card, UBYTE NID)
 {
     ULONG data = send_command_12(card->codecnr, NID, VERB_GET_PIN_WIDGET_CONTROL , 0, card);
     
@@ -1742,7 +1742,7 @@ void switch_nid_to_input(struct CardData *card, UBYTE NID)
 }
 
 
-void switch_nid_to_output(struct CardData *card, UBYTE NID)
+void switch_nid_to_output(struct HDAudioChip *card, UBYTE NID)
 {
     ULONG data = send_command_12(card->codecnr, NID, VERB_GET_PIN_WIDGET_CONTROL , 0, card);
     
@@ -1771,7 +1771,7 @@ void setForceSpeaker(int speaker_nid)
 
 
 
-BOOL is_jack_connected(struct CardData *card, UBYTE NID)
+BOOL is_jack_connected(struct HDAudioChip *card, UBYTE NID)
 {
     ULONG result;
     
@@ -1791,7 +1791,7 @@ BOOL is_jack_connected(struct CardData *card, UBYTE NID)
 
 
 
-void detect_headphone_change(struct CardData *card)
+void detect_headphone_change(struct HDAudioChip *card)
 {
     if (card->speaker_nid != 255 &&
         card->headphone_nid != 255)

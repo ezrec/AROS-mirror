@@ -23,9 +23,9 @@
 
 #include "DriverBase.h"
 
-struct CardData;
+struct HDAudioChip;
 
-struct CardBase
+struct HDAudioBase
 {
     struct DriverBase      driverbase;
 
@@ -36,11 +36,11 @@ struct CardBase
     /** The number of cards found */
     int                    cards_found;
 
-    /** A CardData structure for each card found */
-    struct CardData**   driverdatas;
+    /** A HDAudioChip structure for each card found */
+    struct HDAudioChip**   driverdatas;
 };
 
-#define DRIVERBASE_SIZEOF (sizeof (struct CardBase))
+#define DRIVERBASE_SIZEOF (sizeof (struct HDAudioBase))
 
 #define RECORD_BUFFER_SAMPLES     1024
 #define RECORD_BUFFER_SIZE_VALUE  ADCBS_BUFSIZE_4096
@@ -79,7 +79,7 @@ struct Freq
 
 
 
-struct CardData
+struct HDAudioChip
 {
     struct PCIDevice *pci_dev;
     APTR iobase;

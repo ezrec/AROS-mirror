@@ -29,10 +29,10 @@ extern int z, timer;
 ** Globals ********************************************************************
 ******************************************************************************/
 
-static BOOL build_buffer_descriptor_list(struct CardData *card, ULONG nr_of_buffers, ULONG buffer_size, struct Stream *stream);
-static void free_buffer_descriptor_list(struct CardData *card, ULONG nr_of_buffers, struct Stream *stream);
-static BOOL stream_reset(struct Stream *stream, struct CardData *card);
-void set_converter_format(struct CardData *card, UBYTE nid);
+static BOOL build_buffer_descriptor_list(struct HDAudioChip *card, ULONG nr_of_buffers, ULONG buffer_size, struct Stream *stream);
+static void free_buffer_descriptor_list(struct HDAudioChip *card, ULONG nr_of_buffers, struct Stream *stream);
+static BOOL stream_reset(struct Stream *stream, struct HDAudioChip *card);
+void set_converter_format(struct HDAudioChip *card, UBYTE nid);
 
 
 static const char *Inputs[INPUTS] =
@@ -66,7 +66,7 @@ ULONG _AHIsub_AllocAudio(struct TagItem* taglist,
                          struct AHIAudioCtrlDrv* AudioCtrl,
                          struct DriverBase* AHIsubBase)
 {
-    struct CardBase* card_base = (struct CardBase*) AHIsubBase;
+    struct HDAudioBase* card_base = (struct HDAudioBase*) AHIsubBase;
 
     int   card_num;
     ULONG ret;
@@ -78,14 +78,14 @@ ULONG _AHIsub_AllocAudio(struct TagItem* taglist,
         card_base->driverdatas[card_num] == NULL)
     {
         DebugPrintF("no date for card = %ld\n", card_num);
-        Req("No CardData for card %ld.", card_num);
+        Req("No HDAudioChip for card %ld.", card_num);
         return AHISF_ERROR;
     }
     else
     {
         BOOL in_use;
         struct PCIDevice *dev;
-        struct CardData *card;
+        struct HDAudioChip *card;
         unsigned short uval;
 
         card  = card_base->driverdatas[card_num];
@@ -150,8 +150,8 @@ ULONG _AHIsub_AllocAudio(struct TagItem* taglist,
 void _AHIsub_FreeAudio(struct AHIAudioCtrlDrv* AudioCtrl,
                        struct DriverBase* AHIsubBase)
 {
-    struct CardBase* card_base = (struct CardBase*) AHIsubBase;
-    struct CardData* card = (struct CardData*) AudioCtrl->ahiac_DriverData;
+    struct HDAudioBase* card_base = (struct HDAudioBase*) AHIsubBase;
+    struct HDAudioChip* card = (struct HDAudioChip*) AudioCtrl->ahiac_DriverData;
 
     if (card != NULL)
     {
@@ -176,7 +176,7 @@ void _AHIsub_FreeAudio(struct AHIAudioCtrlDrv* AudioCtrl,
 void _AHIsub_Disable(struct AHIAudioCtrlDrv* AudioCtrl,
                      struct DriverBase* AHIsubBase)
 {
-    struct CardBase* card_base = (struct CardBase*) AHIsubBase;
+    struct HDAudioBase* card_base = (struct HDAudioBase*) AHIsubBase;
 
     // V6 drivers do not have to preserve all registers
 
@@ -191,7 +191,7 @@ void _AHIsub_Disable(struct AHIAudioCtrlDrv* AudioCtrl,
 void _AHIsub_Enable(struct AHIAudioCtrlDrv* AudioCtrl,
                     struct DriverBase* AHIsubBase)
 {
-    struct CardBase* card_base = (struct CardBase*) AHIsubBase;
+    struct HDAudioBase* card_base = (struct HDAudioBase*) AHIsubBase;
 
     // V6 drivers do not have to preserve all registers
 
@@ -207,8 +207,8 @@ ULONG _AHIsub_Start(ULONG flags,
                     struct AHIAudioCtrlDrv* AudioCtrl,
                     struct DriverBase* AHIsubBase)
 {
-    struct CardBase* card_base = (struct CardBase*) AHIsubBase;
-    struct CardData* card = (struct CardData*) AudioCtrl->ahiac_DriverData;
+    struct HDAudioBase* card_base = (struct HDAudioBase*) AHIsubBase;
+    struct HDAudioChip* card = (struct HDAudioChip*) AudioCtrl->ahiac_DriverData;
     struct PCIDevice *dev = card->pci_dev;
     UWORD PlayCtrlFlags = 0, RecCtrlFlags = 0;
     ULONG dma_buffer_size = 0;
@@ -378,8 +378,8 @@ void _AHIsub_Update(ULONG flags,
                     struct AHIAudioCtrlDrv* AudioCtrl,
                     struct DriverBase* AHIsubBase)
 {
-    struct CardBase* card_base = (struct CardBase*) AHIsubBase;
-    struct CardData* card = (struct CardData*) AudioCtrl->ahiac_DriverData;
+    struct HDAudioBase* card_base = (struct HDAudioBase*) AHIsubBase;
+    struct HDAudioChip* card = (struct HDAudioChip*) AudioCtrl->ahiac_DriverData;
 
     card->current_frames = AudioCtrl->ahiac_BuffSamples;
 
@@ -402,8 +402,8 @@ void _AHIsub_Stop(ULONG flags,
                   struct AHIAudioCtrlDrv* AudioCtrl,
                   struct DriverBase* AHIsubBase)
 {
-    struct CardBase* card_base = (struct CardBase*) AHIsubBase;
-    struct CardData* card = (struct CardData*) AudioCtrl->ahiac_DriverData;
+    struct HDAudioBase* card_base = (struct HDAudioBase*) AHIsubBase;
+    struct HDAudioChip* card = (struct HDAudioChip*) AudioCtrl->ahiac_DriverData;
     struct PCIDevice *dev = card->pci_dev;
 
     unsigned char val;
@@ -462,8 +462,8 @@ LONG _AHIsub_GetAttr(ULONG attribute,
 		             struct AHIAudioCtrlDrv* AudioCtrl,
 		             struct DriverBase* AHIsubBase)
 {
-    struct CardBase* card_base = (struct CardBase*) AHIsubBase;
-    struct CardData* card = card_base->driverdatas[0];
+    struct HDAudioBase* card_base = (struct HDAudioBase*) AHIsubBase;
+    struct HDAudioChip* card = card_base->driverdatas[0];
     ULONG i;
 
     switch(attribute)
@@ -587,8 +587,8 @@ ULONG _AHIsub_HardwareControl(ULONG attribute,
                               struct AHIAudioCtrlDrv* AudioCtrl,
                               struct DriverBase* AHIsubBase)
 {
-    struct CardBase* card_base = (struct CardBase*) AHIsubBase;
-    struct CardData* card = card_base->driverdatas[0];
+    struct HDAudioBase* card_base = (struct HDAudioBase*) AHIsubBase;
+    struct HDAudioChip* card = card_base->driverdatas[0];
 
     switch(attribute)
     {
@@ -655,7 +655,7 @@ ULONG _AHIsub_HardwareControl(ULONG attribute,
 }
 
 
-static BOOL build_buffer_descriptor_list(struct CardData *card, ULONG nr_of_buffers, ULONG buffer_size, struct Stream *stream)
+static BOOL build_buffer_descriptor_list(struct HDAudioChip *card, ULONG nr_of_buffers, ULONG buffer_size, struct Stream *stream)
 {
     unsigned int entry;
 
@@ -680,7 +680,7 @@ static BOOL build_buffer_descriptor_list(struct CardData *card, ULONG nr_of_buff
 }
 
 
-static void free_buffer_descriptor_list(struct CardData *card, ULONG nr_of_buffers, struct Stream *stream)
+static void free_buffer_descriptor_list(struct HDAudioChip *card, ULONG nr_of_buffers, struct Stream *stream)
 {
     unsigned int entry;
 
@@ -702,7 +702,7 @@ static void free_buffer_descriptor_list(struct CardData *card, ULONG nr_of_buffe
 }
 
 
-static BOOL stream_reset(struct Stream *stream, struct CardData *card)
+static BOOL stream_reset(struct Stream *stream, struct HDAudioChip *card)
 {
     int i;
     UBYTE control;
@@ -759,7 +759,7 @@ static BOOL stream_reset(struct Stream *stream, struct CardData *card)
 }
 
 
-void set_converter_format(struct CardData *card, UBYTE nid)
+void set_converter_format(struct HDAudioChip *card, UBYTE nid)
 {
     send_command_4(card->codecnr, nid, VERB_SET_CONVERTER_FORMAT, (1 << 14) | (0x3 << 4) | 1, card); // 44.1kHz 24-bits stereo
 }

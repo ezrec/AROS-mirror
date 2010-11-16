@@ -37,20 +37,20 @@ void ahi_pci_exit(void);
 
 APTR ahi_pci_find_device(ULONG vendorid, ULONG deviceid, APTR dev);
 
-ULONG pci_inl(ULONG addr, struct CardData *card);
-UWORD pci_inw(ULONG addr, struct CardData *card);
-UBYTE pci_inb(ULONG addr, struct CardData *card);
+ULONG pci_inl(ULONG addr, struct HDAudioChip *card);
+UWORD pci_inw(ULONG addr, struct HDAudioChip *card);
+UBYTE pci_inb(ULONG addr, struct HDAudioChip *card);
 
-void pci_outl(ULONG value, ULONG addr, struct CardData *card);
-void pci_outw(UWORD value, ULONG addr, struct CardData *card);
-void pci_outb(UBYTE value, ULONG addr, struct CardData *card);
+void pci_outl(ULONG value, ULONG addr, struct HDAudioChip *card);
+void pci_outw(UWORD value, ULONG addr, struct HDAudioChip *card);
+void pci_outb(UBYTE value, ULONG addr, struct HDAudioChip *card);
 
-void outb_setbits(UBYTE value, ULONG addr, struct CardData *card);
-void outw_setbits(UWORD value, ULONG addr, struct CardData *card);
-void outl_setbits(ULONG value, ULONG addr, struct CardData *card);
-void outb_clearbits(UBYTE value, ULONG addr, struct CardData *card);
-void outw_clearbits(UWORD value, ULONG addr, struct CardData *card);
-void outl_clearbits(ULONG value, ULONG addr, struct CardData *card);
+void outb_setbits(UBYTE value, ULONG addr, struct HDAudioChip *card);
+void outw_setbits(UWORD value, ULONG addr, struct HDAudioChip *card);
+void outl_setbits(ULONG value, ULONG addr, struct HDAudioChip *card);
+void outb_clearbits(UBYTE value, ULONG addr, struct HDAudioChip *card);
+void outw_clearbits(UWORD value, ULONG addr, struct HDAudioChip *card);
+void outl_clearbits(ULONG value, ULONG addr, struct HDAudioChip *card);
 
 ULONG inl_config(UBYTE reg, APTR dev);
 UWORD inw_config(UBYTE reg, APTR dev);

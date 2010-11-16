@@ -138,44 +138,44 @@ APTR ahi_pci_find_device(ULONG vendorid, ULONG deviceid, APTR dev)
     return (APTR)ed.found_dev;
 }
 
-ULONG pci_inl(ULONG addr, struct CardData *card)
+ULONG pci_inl(ULONG addr, struct HDAudioChip *card)
 {
     ULONG *real_addr = (ULONG *) (card->iobase + addr); // card->iobase should be virtual
 
     return *(real_addr);
 }
 
-UWORD pci_inw(ULONG addr, struct CardData *card)
+UWORD pci_inw(ULONG addr, struct HDAudioChip *card)
 {
     UWORD *real_addr = (UWORD *) (card->iobase + addr);
 
     return *(real_addr);
 }
 
-UBYTE pci_inb(ULONG addr, struct CardData *card)
+UBYTE pci_inb(ULONG addr, struct HDAudioChip *card)
 {
     UBYTE *real_addr = (UBYTE *) (card->iobase + addr);
 
     return *(real_addr);
 }
 
-void pci_outl(ULONG value, ULONG addr, struct CardData *card)
+void pci_outl(ULONG value, ULONG addr, struct HDAudioChip *card)
 {
     *((ULONG *) (card->iobase + addr)) = value;  
 }
 
-void pci_outw(UWORD value, ULONG addr, struct CardData *card)
+void pci_outw(UWORD value, ULONG addr, struct HDAudioChip *card)
 {
     *((UWORD *) (card->iobase + addr)) = value;
 }
 
-void pci_outb(UBYTE value, ULONG addr, struct CardData *card)
+void pci_outb(UBYTE value, ULONG addr, struct HDAudioChip *card)
 {
     *((UBYTE *) (card->iobase + addr)) = value;
 }
 
 
-void outb_setbits(UBYTE value, ULONG addr, struct CardData *card)
+void outb_setbits(UBYTE value, ULONG addr, struct HDAudioChip *card)
 {
     UBYTE data = pci_inb(addr, card);
     data |= value;
@@ -184,7 +184,7 @@ void outb_setbits(UBYTE value, ULONG addr, struct CardData *card)
 }
 
 
-void outb_clearbits(UBYTE value, ULONG addr, struct CardData *card)
+void outb_clearbits(UBYTE value, ULONG addr, struct HDAudioChip *card)
 {
     UBYTE data = pci_inb(addr, card);
     data &= ~value;
@@ -193,7 +193,7 @@ void outb_clearbits(UBYTE value, ULONG addr, struct CardData *card)
 }
 
 
-void outw_setbits(UWORD value, ULONG addr, struct CardData *card)
+void outw_setbits(UWORD value, ULONG addr, struct HDAudioChip *card)
 {
     UWORD data = pci_inw(addr, card);
     data |= value;
@@ -202,7 +202,7 @@ void outw_setbits(UWORD value, ULONG addr, struct CardData *card)
 }
 
 
-void outw_clearbits(UWORD value, ULONG addr, struct CardData *card)
+void outw_clearbits(UWORD value, ULONG addr, struct HDAudioChip *card)
 {
     UWORD data = pci_inw(addr, card);
     data &= ~value;
@@ -211,7 +211,7 @@ void outw_clearbits(UWORD value, ULONG addr, struct CardData *card)
 }
 
 
-void outl_setbits(ULONG value, ULONG addr, struct CardData *card)
+void outl_setbits(ULONG value, ULONG addr, struct HDAudioChip *card)
 {
     ULONG data = pci_inl(addr, card);
     data |= value;
@@ -220,7 +220,7 @@ void outl_setbits(ULONG value, ULONG addr, struct CardData *card)
 }
 
 
-void outl_clearbits(ULONG value, ULONG addr, struct CardData *card)
+void outl_clearbits(ULONG value, ULONG addr, struct HDAudioChip *card)
 {
     ULONG data = pci_inl(addr, card);
     data &= ~value;
