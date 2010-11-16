@@ -318,6 +318,17 @@ static BOOL reset_chip(struct HDAudioChip *card)
     UBYTE ubval = 0;
     UWORD uwval = 0;
     int count;
+    UBYTE tcsel;
+
+    /*
+        Intel® HIgh Definition Audio Traffic Class Assignment (TCSEL), bits 0:2 -> 000 = TC0
+        This register assigned the value to be placed in the TC field. CORB and RIRB data will always be
+        assigned TC0.
+    */
+    #define TCSEL_PCIREG 0x44
+    tcsel = inb_config(TCSEL_PCIREG, card->pci_dev);
+    tcsel &= ~0x07;
+    outb_config(TCSEL_PCIREG, tcsel, card->pci_dev);
 
     pci_outb(0, HD_CORBCTL, card);
     pci_outb(0, HD_RIRBCTL, card);
