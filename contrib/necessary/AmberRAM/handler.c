@@ -49,7 +49,7 @@ static TEXT *BStr2(struct Handler *h, UBYTE *b_str);
 #if (AROS_FLAVOUR & AROS_FLAVOUR_BINCOMPAT)
 
     /* SegList points here, must be long aligned */
-    asm (".text\n.balign 4\n");
+    __attribute__((aligned(4)))
 
 #endif
 
