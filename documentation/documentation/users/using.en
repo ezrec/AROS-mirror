@@ -278,7 +278,7 @@ Using AROS hosted on Linux or FreeBSD
 Once you got the binaries for your system, either by compiling or by
 downloading pre-compiled binaries, you should go down into the
 "bin/$TARGET/AROS/boot" directory, where $TARGET is your system target
-(something like "linux-i386"). Run the file "AROSBootstrap" ("AROSBootstrap").
+(something like "linux-i386"). Run the file "AROSBootstrap" ("./AROSBootstrap").
 The Workbench replacement "Wanderer" will be started.
 
 There are some command line options for aros executable that could be used.
