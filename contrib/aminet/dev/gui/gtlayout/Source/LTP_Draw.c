@@ -108,7 +108,6 @@ VOID
 LTP_PolyDraw(struct RastPort *rp,LONG totalPairs,LONG left,LONG top,...)
 {
 	LONG x0,y0,x1,y1;
-	LONG *pairs;
 	va_list args;
 
 	x0 = left;
@@ -116,12 +115,10 @@ LTP_PolyDraw(struct RastPort *rp,LONG totalPairs,LONG left,LONG top,...)
 
 	va_start(args,top);
 
-	pairs = (LONG *)args;
-
 	while(--totalPairs > 0)
 	{
-		x1 = *pairs++;
-		y1 = *pairs++;
+		x1 = va_arg(args, LONG);
+		y1 = va_arg(args, LONG);
 
 		LTP_DrawLine(rp,x0,y0,x1,y1);
 
