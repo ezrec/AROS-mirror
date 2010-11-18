@@ -624,10 +624,10 @@ InactiveMethod(struct IClass *class,struct Gadget *gadget,struct gpGoInactive *I
 }
 
 BOOL
-LTP_ObtainTabSize(struct IBox *Box,...)
+LTP_ObtainTabSizeA(struct IBox *Box, struct TagItem *TagList)
 {
 	va_list			 VarArgs;
-	struct TagItem	*TagList,*Tag;
+	struct TagItem	*Tag;
 	struct TextAttr	*FontAttr;
 	struct DrawInfo	*DrawInfo;
 	STRPTR			*Labels;
@@ -636,10 +636,6 @@ LTP_ObtainTabSize(struct IBox *Box,...)
 	BOOL			 Success;
 
 	Success = FALSE;
-
-	va_start(VarArgs,Box);
-
-	TagList = (struct TagItem *)VarArgs;
 
 	SizeType = GDOMAIN_NOMINAL;
 	FontAttr = NULL;
@@ -720,10 +716,21 @@ LTP_ObtainTabSize(struct IBox *Box,...)
 		}
 	}
 
-	va_end(VarArgs);
-
 	return(Success);
 }
+
+#undef AROS_TAGRETURNTYPE
+#define AROS_TAGRETURNTYPE BOOL
+
+BOOL
+LTP_ObtainTabSize(struct IBox *Box, Tag tag1, ...)
+{
+    AROS_SLOWSTACKTAGS_PRE(tag1);
+    retval = LTP_ObtainTabSizeA(Box, AROS_SLOWSTACKTAGS_ARG(tag1));
+    AROS_SLOWSTACKTAGS_POST
+}
+
+#undef AROS_TAGRETURNTYPE
 
 #ifndef __AROS__
 ULONG SAVE_DS ASM

@@ -337,7 +337,7 @@ VOID LTP_PutStorage(ObjectNode *Node);
 VOID LTP_CopyFraction(STRPTR To, STRPTR From);
 
 /* LTP_TabClass.c */
-BOOL LTP_ObtainTabSize(struct IBox *Box, ...);
+BOOL LTP_ObtainTabSize(struct IBox *Box, Tag tag1, ...);
 #ifndef __AROS__
 ULONG SAVE_DS ASM LTP_TabClassDispatcher(REG(a0) struct IClass *class, REG(a2) Object *object, REG(a1) Msg msg);
 #else
