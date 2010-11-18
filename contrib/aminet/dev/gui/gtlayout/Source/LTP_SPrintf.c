@@ -44,7 +44,7 @@ SPrintf(STRPTR buffer, STRPTR formatString,...)
 
 	va_start(varArgs,formatString);
 #ifdef __AROS__
-	RawDoFmt(formatString,varArgs,cpy_func,&buffer_ptr);
+	VNewRawDoFmt(formatString,cpy_func,&buffer_ptr,varArgs);
 #else
 	RawDoFmt(formatString,varArgs,(VOID (*)())"\x16\xC0\x4E\x75",buffer);
 #endif
