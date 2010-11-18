@@ -559,23 +559,19 @@ DrawSlider(struct RastPort *rp,LONG left,LONG top,UWORD selected,struct SliderCl
 /****************************************************************************/
 
 STATIC VOID
-DoSetMethod(Object *object,struct GadgetInfo *ginfo,...)
+DoSetMethod(Object *object,struct GadgetInfo *ginfo, Tag tag1, ...)
 {
-	va_list args;
-
-	va_start(args,ginfo);
-	DoMethod(object,OM_SET,(struct TagItem *)args,ginfo);
-	va_end(args);
+	AROS_SLOWSTACKTAGS_PRE(tag1);
+	DoMethod(object,OM_SET,AROS_SLOWSTACKTAGS_ARG(tag1),ginfo);
+	AROS_SLOWSTACKTAGS_POST
 }
 
 STATIC VOID
-DoUpdateMethod(Object *object,struct GadgetInfo *ginfo,...)
+DoUpdateMethod(Object *object,struct GadgetInfo *ginfo, Tag tag1, ...)
 {
-	va_list args;
-
-	va_start(args,ginfo);
-	DoMethod(object,OM_UPDATE,(struct TagItem *)args,ginfo,OPUF_INTERIM);
-	va_end(args);
+	AROS_SLOWSTACKTAGS_PRE(tag1);
+	DoMethod(object,OM_UPDATE,AROS_SLOWSTACKTAGS_ARG(tag1),ginfo,OPUF_INTERIM);
+	AROS_SLOWSTACKTAGS_POST
 }
 
 STATIC ULONG
