@@ -65,15 +65,46 @@ STRPTR LocaleHookFunc(struct Hook *UnusedHook, APTR Unused, LONG ID, struct Glob
 
 void Message(UBYTE *Msg,...)
 {
-	va_list Arg;
+	va_list args;
 	struct EasyStruct Req={sizeof(struct EasyStruct),0,"GTPopUp message",0,"Okay"};
+	const char *ptr;
+	int argcnt = 0;
+	IPTR *argtable = NULL;
+	
 	Req.es_TextFormat=Msg;
-	va_start(Arg,Msg);
+
+	for (ptr = Msg; *ptr; ptr++)
+	{
+		if (*ptr == '%')
+		{
+			if (ptr[1] == '%')
+			{
+				ptr++;
+				continue;
+			}
+			argcnt++;
+		}
+	}
+
+	if (argcnt)
+	{
+	    va_start (args, Msg);
+	
+	    int i;
+
+	    argtable = AllocVec(sizeof(IPTR)*argcnt, MEMF_PUBLIC);
+
+	    for (i=0; i < argcnt; i++)
+		    argtable[i] = va_arg(args, IPTR);
+
+	    va_end (args);
+	}
 	
 	DisplayBeep(NULL);
-	EasyRequestArgs(NULL,&Req,0,Arg);
+	EasyRequestArgs(NULL,&Req,0,argtable);
 	
-	va_end(Arg);
+	if (argtable)
+		FreeVec(argtable);
 }
 
 STRPTR LocaleString(ULONG ID)
