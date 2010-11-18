@@ -23,9 +23,8 @@ void xprsprintf(STRPTR Buffer, STRPTR FormatString, ... )
 	STRPTR Buffer_Ptr = Buffer;
 	va_list VarArgs;
 	va_start(VarArgs, FormatString);
-	
 
-	RawDoFmt(FormatString,(APTR)VarArgs,cpy_func,&Buffer_Ptr);
+	VNewRawDoFmt(FormatString,cpy_func,&Buffer_Ptr,VarArgs);
 	
 	va_end(VarArgs);
 }
