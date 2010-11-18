@@ -437,11 +437,20 @@ BOOL MyRenameDosEntry(struct Handler *handler, struct DosList *entry, const TEXT
    if(name != NULL)
    {
       length = StrLen(name);
+#ifdef AROS_FAST_BPTR
       name_copy = AllocVec(length + 1, MEMF_PUBLIC);
       if(name_copy != NULL)
       {
          CopyMem(name, name_copy, length + 1);
       }
+#else
+      name_copy = AllocVec(length + 2, MEMF_PUBLIC);
+      if(name_copy != NULL)
+      {
+         name_copy[0] = (UBYTE)(length > 255 ? 255 : length); 
+         CopyMem(name, name_copy + 1, length + 1);
+      }
+#endif
       else
          error = IoErr();
    }
