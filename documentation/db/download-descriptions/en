@@ -63,6 +63,10 @@ linux-x86_64-system:
 linux-ppc-system:
     The hosted version for Linux/PowerPC. This archive contains all AROS
     system binaries compiled from the Subversion tree.
+linux-arm-system:
+    The hosted version for Linux/ARM. This archive
+    contains AROS core system binaries compiled from the Subversion
+    tree. Please note this version requires at least ARMv6 CPU with VFP unit.
 pc-i386-boot-floppy:
     The native version for i386-based PC AT computers and
     compatibles. This archive contains the boot
