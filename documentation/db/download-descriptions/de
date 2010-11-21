@@ -61,6 +61,10 @@ linux-x86_64-system:
 linux-ppc-system:
     Die gehostete Version für Linux/PowerPC. Dieses Archiv enthält alle
     AROS-System-Binärdateien aus dem Subversion-Archiv.
+linux-arm-system:
+    Die gehostete Version für Linux/ARM. Dieses Archiv enthält die
+    AROS-System-Binärdateien aus dem Subversion-Archiv. Beachte bitte dass
+    diese Version mindestens eine ARMv6-CPU mit VFP-Einheit benötigt.
 pc-i386-boot-floppy:
     Die native Version für i386-PC-AT-Computer und Kompatible.
     Dieses Archiv enthält das Boot-Diskettenimage, welches Du
