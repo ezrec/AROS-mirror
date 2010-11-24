@@ -42,6 +42,9 @@ amiga-m68k-system:
     The native version for m68k Amigas or UAE. This version is binary
     compatible with AmigaOS. This archive contains rom image(s) and all AROS
     system binaries compiled from the Subversion tree.
+darwin-i386-system:
+    The hosted version for Darwin and MacOS X on i386 platform.
+    Should work on all Intel MacOS X versions starting from 10.4.
 freebsd5-i386-system:
     The hosted version for FreeBSD/i386 5.x. Note that it
     will not work on FreeBSD 4.x systems.
