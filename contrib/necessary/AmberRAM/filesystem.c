@@ -984,7 +984,7 @@ struct Lock *LockObject(struct Handler *handler, struct Object *object,
    LONG access)
 {
    struct Lock *lock;
-   LONG error, lock_access;
+   LONG error = 0, lock_access;
 
    object = GetRealObject(object);
    lock = object->lock;
