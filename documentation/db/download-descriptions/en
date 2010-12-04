@@ -45,6 +45,9 @@ amiga-m68k-system:
 darwin-i386-system:
     The hosted version for Darwin and MacOS X on i386 platform.
     Should work on all Intel MacOS X versions starting from 10.4.
+darwin-ppc-system:
+    The hosted version for Darwin and MacOS X on PowerPC platform.
+    Should work on all MacOS X versions.
 freebsd5-i386-system:
     The hosted version for FreeBSD/i386 5.x. Note that it
     will not work on FreeBSD 4.x systems.
