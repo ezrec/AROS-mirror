@@ -98,7 +98,8 @@ VOID DeleteHandler(struct Handler *handler)
 
       base = LocaleBase;
       if(base != NULL) {
-         CloseLocale(handler->locale);
+      	if (handler->locale)
+             CloseLocale(handler->locale);
          CloseLibrary(base);
       }
 
@@ -1209,11 +1210,12 @@ BOOL SetName(struct Handler *handler, struct Object *object,
 
    /* Check name doesn't have any strange characters in it */
 
-   locale = handler->locale;
-   for(p = name; (ch = *p) != '\0'; p++)
-      if((ch & 0x80) == 0
-         && (!IsPrint(locale, ch) || IsCntrl(locale, ch) || ch == ':'))
-         error = ERROR_INVALID_COMPONENT_NAME;
+   if ((locale = handler->locale)) {
+       for(p = name; (ch = *p) != '\0'; p++)
+           if((ch & 0x80) == 0
+               && (!IsPrint(locale, ch) || IsCntrl(locale, ch) || ch == ':'))
+               error = ERROR_INVALID_COMPONENT_NAME;
+   }
 
    /* Store new name */
 

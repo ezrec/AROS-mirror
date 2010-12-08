@@ -89,11 +89,13 @@ BOOL CmdStartup(struct Handler *handler, STRPTR name, struct DeviceNode *dev_nod
    else
       error = 1;
 
+#if !(AROS_FLAVOUR & AROS_FLAVOUR_BINCOMPAT)
    base = OpenLibrary("locale.library", LOCALE_VERSION);
    if(base != NULL)
       LocaleBase = base;
    else
       error = 1;
+#endif
 
    /* Initialise private handler structure */
 
@@ -142,8 +144,8 @@ BOOL CmdStartup(struct Handler *handler, STRPTR name, struct DeviceNode *dev_nod
       handler->volume = volume;
 
       /* Open default locale */
-
-      handler->locale = OpenLocale(NULL);
+      if (LocaleBase)
+          handler->locale = OpenLocale(NULL);
 
       /* Initialise notification handling */
 
@@ -1720,11 +1722,11 @@ BOOL CmdSetComment(struct Handler *handler, struct Lock *lock,
       error = ERROR_COMMENT_TOO_BIG;
 
    /* Check comment doesn't have any strange characters in it */
-
-   locale = handler->locale;
-   for(p = comment; (ch = *p) != '\0'; p++)
-      if((ch & 0x80) == 0 && (!IsPrint(locale, ch) || IsCntrl(locale, ch)))
-         error = ERROR_INVALID_COMPONENT_NAME;
+   if ((locale = handler->locale)) {
+       for(p = comment; (ch = *p) != '\0'; p++)
+           if((ch & 0x80) == 0 && (!IsPrint(locale, ch) || IsCntrl(locale, ch)))
+               error = ERROR_INVALID_COMPONENT_NAME;
+   }
 
    /* Check volume isn't write-protected */
 
