@@ -10,15 +10,16 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 08-Dec-10 neil    Do not mark files/dirs as unwritable/undeletable.
  * 06-Mar-09 error   - Removed madness, fixed insanity. Cleanup started
  * 18-Aug-07 sonic   Fixed reading CL and PL fields on little-endian machines
  * 04-Jun-07 sonic   Fixed endianess check in Is_A_Symbolic_Link()
  * 05-May-07 sonic   Added support for RockRidge protection bits and file comments
- * 05-Feb-94   fmu   Added support for relocated directories.
- * 16-Oct-93   fmu   Adapted to new VOLUME structure.
  * 07-Jul-02 sheutlin  various changes when porting to AROS
  *                     - global variables are now in a struct Globals *global
  *                     - replaced (unsigned) long by (U)LONG
+ * 05-Feb-94   fmu   Added support for relocated directories.
+ * 16-Oct-93   fmu   Adapted to new VOLUME structure.
  */
 
 #include <proto/exec.h>
@@ -208,7 +209,7 @@ int total = 0;
 	}
 }
 
-/* Determines the Rock Ridge Amiga priotection bits and file comment of the CDROM object p_obj.
+/* Determines the Rock Ridge Amiga protection bits and file comment of the CDROM object p_obj.
  * Protection bits will be stored in the p_prot.
  * The file comment will be stored in the buffer p_buf (with length p_buf_len).
  * The file comment will NOT be null-terminated. The number of characters in
@@ -246,7 +247,7 @@ int Get_RR_File_Comment(VOLUME *p_volume, directory_record *p_dir, uint32_t *p_p
 		if (as.flags & AS_PROTECTION) {
 			CopyMem(ptr, &pbuf, 4);
 			ptr += 4;
-			*p_prot = AROS_BE2LONG(pbuf);
+			*p_prot = AROS_BE2LONG(pbuf) & ~(FIBF_WRITE | FIBF_DELETE);
 		}
 		if (!(as.flags & AS_COMMENT))
 			return -1;
@@ -294,20 +295,14 @@ int Is_A_Symbolic_Link(VOLUME *p_volume, directory_record *p_dir, uint32_t *amig
 	if (!Get_System_Use_Field(p_volume,p_dir,"PX",(char *)&px,sizeof(px),0))
 		return 0;
 	*amiga_mode = 0;
-	if (!(px.mode & S_IWUSR))
-		*amiga_mode |= FIBF_DELETE|FIBF_WRITE;
 	if (!(px.mode & S_IXUSR))
 		*amiga_mode |= FIBF_EXECUTE;
 	if (!(px.mode & S_IRUSR))
 		*amiga_mode |= FIBF_READ;
-	if (px.mode & S_IWGRP)
-		*amiga_mode |= FIBF_GRP_DELETE|FIBF_GRP_WRITE;
 	if (px.mode & S_IXGRP)
 		*amiga_mode |= FIBF_GRP_EXECUTE;
 	if (px.mode & S_IRGRP)
 		*amiga_mode |= FIBF_GRP_READ;
-	if (px.mode & S_IWOTH)
-		*amiga_mode |= FIBF_OTR_DELETE|FIBF_OTR_WRITE;
 	if (px.mode & S_IXOTH)
 		*amiga_mode |= FIBF_OTR_EXECUTE;
 	if (px.mode & S_IROTH)
