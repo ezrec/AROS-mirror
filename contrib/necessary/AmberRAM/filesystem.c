@@ -91,15 +91,16 @@ VOID DeleteHandler(struct Handler *handler)
       DeletePool(handler->muddy_pool);
       DeletePool(handler->clear_pool);
 
-      CloseLocale(handler->locale);
       DeleteMsgPort(handler->notify_port);
       FreeMem(handler, sizeof(struct Handler));
 
       /* Close libraries */
 
       base = LocaleBase;
-      if(base != NULL)
+      if(base != NULL) {
+         CloseLocale(handler->locale);
          CloseLibrary(base);
+      }
 
       base = UtilityBase;
       if(base != NULL)
