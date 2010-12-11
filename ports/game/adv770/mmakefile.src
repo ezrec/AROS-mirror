@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- ports-game : ports-game-adv770
+# #MM- ports-game : ports-game-adv770
 
 #MM  ports-game-adv770 : includes linklibs ports-game-adv770-fetch \
 #MM  ports-game-adv770-cpy ports-game-adv770-drawericon
