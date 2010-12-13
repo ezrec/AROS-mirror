@@ -43,7 +43,7 @@ FILES  := madahi \
 	  timer \
 	  version
 
-#MM sound-madahi : contrib-AHI
+#MM sound-madahi : workbench-devs-AHI
 
 %build_prog mmake=sound-madahi \
     progname=madahi targetdir=$(EXEDIR) \

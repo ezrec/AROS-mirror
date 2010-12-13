@@ -94,7 +94,7 @@ FILES :=             \
 STARTSCRIPTS := start2 start3 start4
 SCRIPTFILES  := $(foreach f, $(STARTSCRIPTS), $(EXEDIR)/$(f)) 
 
-#MM Doom-extra : contrib-AHI
+#MM Doom-extra : workbench-devs-AHI
 Doom-extra : Doom-scriptfiles
 
 
