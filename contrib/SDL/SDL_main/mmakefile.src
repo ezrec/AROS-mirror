@@ -5,7 +5,7 @@
 
 SDLVERSION := 1.2.11
 
-#MM- contrib-sdl : development-SDL
+#MM- contrib-sdl : workbench-devs-AHI development-SDL
 #MM- contrib-sdl : development-SDL_gfx development-SDL_image development-SDL_mixer development-SDL_net development-SDL_sound contrib-sdl-sdl-ttf
 
 %fetch_and_build_gnu_development package=SDL version=$(SDLVERSION) \
