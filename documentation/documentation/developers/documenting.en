@@ -148,8 +148,8 @@ The rules for an autodoc block are:
 
 + Block ends with at least 7 stars. (again usually 77 stars.)
 
-+ You can find the rules for library functions in the document about
-  system development.
++ You can find the rules for documenting of library functions in the document
+  about `system development`__.
 
 + Autodocs for Shell functions are similar. Here is an example for the
   function "Alias"::
@@ -217,7 +217,7 @@ The rules for an autodoc block are:
 + The text blocks should start at column 9.
 
 + If you want to mark a function as internal put the letter "i" somewhere within
-  the 6 stars in the initial comment line. This way the autodoc is ignored by
+  the first 6 stars in the initial comment line. This way the autodoc is ignored by
   the build script.
 
 + The "SEE ALSO" chapter is parsed and hyperlinks are created. The rules are:
@@ -252,6 +252,8 @@ and the documentation archive must be checked out like this::
         ...
         documentation
             scripts
+
+__ sys-dev/system-development
 
 
 Commit
