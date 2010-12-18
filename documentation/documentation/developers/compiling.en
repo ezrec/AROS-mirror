@@ -102,13 +102,10 @@ You can download the AROS sources either from the `download page`__ or by
 using SVN (which requires that you `apply for access`__ though; see 
 `subversion documentation`__ as well).
 
-In both cases you need to get both the ``source`` and ``contrib`` packages.
 Extract or download ``source`` package sources into a directory of your
-choice. Next, extract or download ``contrib`` package sources into a
-``./contrib`` subdirectory of ``source`` package directory tree.
-
-You don't need have all ``contrib`` sources. The minimal set is located in
-``./contrib/necessary``.
+choice. If you want to build contributed software as well, extract or
+download ``contrib`` package sources into a ``./contrib`` subdirectory
+of ``source`` package directory tree.
 
 __ ../../download
 __ ../../documentation/developers/contribute#the-subversion-repository

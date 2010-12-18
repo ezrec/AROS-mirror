@@ -127,20 +127,12 @@ To get a copy of the AROS sources you use the "checkout" command, like this::
 This will create a directory called AROS and populate it with all the sources,
 which might take quite some time if you have a slow network connection.
 
-In addition to the main repository, there is also the "contrib"
-repository, containing third-party programs that have been ported to
-AROS. To compile AROS, it is *essential* to check out at least the
-"necessary" subdirectory of this source tree. To check out only the
-necessary directory, use the following commands::
+In addition to the main repository, there is also the "contrib" repository,
+containing third-party programs that have been ported to AROS. Additionally,
+the entire "contrib" directory can be checked out as follows::
 
     > cd AROS
     > mkdir contrib
-    > cd contrib
-    > svn checkout https://svn.aros.org/svn/aros/trunk/contrib/necessary
-
-Alternatively, the entire "contrib" directory can be checked out as follows::
-
-    > cd AROS
     > svn checkout https://svn.aros.org/svn/aros/trunk/contrib
 
 .. Tip:: 
@@ -169,7 +161,7 @@ periodically update them to get the latest changes the other developers
 have committed. For this you use the "update" command::
 
     > cd AROS
-    > svn update . contrib/necessary
+    > svn update . contrib
 
 This will merge any changes that other developers have made into your sources 
 and also check out new directories and files that have been added. If someone
