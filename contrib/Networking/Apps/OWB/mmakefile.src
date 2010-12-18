@@ -28,7 +28,8 @@ FILES :=               \
 	
 #MM- aros-tcpip-apps-startowb : contrib-fontconfig
 
-#MM- aros-tcpip-apps-owb : aros-tcpip-apps-owb-webview   \
+#MM- aros-tcpip-apps-owb : workbench-libs-thread         \
+#MM                        aros-tcpip-apps-owb-webview   \
 #MM                        aros-tcpip-apps-owb-icon      \
 #MM                        aros-tcpip-apps-owb-catalogs  \
 #MM                        aros-tcpip-apps-owb-resources \
