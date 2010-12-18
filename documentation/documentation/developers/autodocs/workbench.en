@@ -11,9 +11,10 @@ workbench
 ======================================= ======================================= ======================================= ======================================= 
 `AddAppIconA()`_                        `AddAppMenuItemA()`_                    `AddAppWindowA()`_                      `AddAppWindowDropZoneA()`_              
 `ChangeWorkbenchSelectionA()`_          `CloseWorkbenchObjectA()`_              `GetNextAppIcon()`_                     `MakeWorkbenchObjectVisibleA()`_        
-`OpenWorkbenchObjectA()`_               `RegisterWorkbench()`_                  `RemoveAppIcon()`_                      `RemoveAppMenuItem()`_                  
-`RemoveAppWindow()`_                    `RemoveAppWindowDropZone()`_            `SendAppWindowMessage()`_               `UnregisterWorkbench()`_                
-`UpdateWorkbenchObjectA()`_             `WBInfo()`_                             `WorkbenchControlA()`_                  
+`OpenWorkbenchObjectA()`_               `QuoteWorkbench()`_                     `RegisterWorkbench()`_                  `RemoveAppIcon()`_                      
+`RemoveAppMenuItem()`_                  `RemoveAppWindow()`_                    `RemoveAppWindowDropZone()`_            `SendAppWindowMessage()`_               
+`StartWorkbench()`_                     `UnregisterWorkbench()`_                `UpdateWorkbench()`_                    `UpdateWorkbenchObjectA()`_             
+`WBInfo()`_                             `WorkbenchControlA()`_                  
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -653,6 +654,19 @@ Synopsis
 
 ----------
 
+QuoteWorkbench()
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL QuoteWorkbench(
+          ULONG stringNum );
+
+
+----------
+
 RegisterWorkbench()
 ===================
 
@@ -1003,6 +1017,20 @@ Example
 
 ----------
 
+StartWorkbench()
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL StartWorkbench(
+          ULONG flags,
+          APTR ptr );
+
+
+----------
+
 UnregisterWorkbench()
 =====================
 
@@ -1053,6 +1081,21 @@ See also
 ~~~~~~~~
 
 `RegisterWorkbench()`_ 
+
+----------
+
+UpdateWorkbench()
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL UpdateWorkbench(
+          CONST_STRPTR name,
+          BPTR lock,
+          ULONG flags );
+
 
 ----------
 

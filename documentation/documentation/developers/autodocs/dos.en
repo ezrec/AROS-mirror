@@ -451,7 +451,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL AssignLock(
+ LONG AssignLock(
           CONST_STRPTR name,
           BPTR lock );
 
@@ -1771,7 +1771,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL Examine(
+ LONG Examine(
           BPTR lock,
           struct FileInfoBlock * fib );
 
@@ -1798,7 +1798,8 @@ Result
 ::
 
 
- A boolean telling whether the operation was successful or not.
+ != 0    if operation was successful
+ == 0    if operation was not successful
 
 
 Notes
@@ -1927,7 +1928,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL ExNext(
+ LONG ExNext(
           BPTR lock,
           struct FileInfoBlock * fileInfoBlock );
 
@@ -1954,9 +1955,11 @@ Result
 ::
 
 
- success  --  a boolean telling whether the operation was successful
-              or not. A failure occurs also if there is no "next" entry in
-              the directory. Then IoErr() equals ERROR_NO_MORE_ENTRIES.
+ != 0    if operation was successful
+ == 0    if operation was not successful
+
+         A failure occurs also if there is no "next" entry in
+         the directory. Then IoErr() equals ERROR_NO_MORE_ENTRIES.
 
 
 Example
@@ -1970,8 +1973,8 @@ Example
      AllocDosObject()) to Examine().
  2.  Pass the same parameters to ExNext().
  3.  Do something with the FileInfoBlock returned.
- 4.  Call ExNext() repeatedly until it returns FALSE and use the
-     information you are provided. When ExNext returns FALSE, check IoErr()
+ 4.  Call ExNext() repeatedly until it returns 0 and use the
+     information you are provided. When ExNext returns 0, check IoErr()
      to make sure that there was no real failure (ERROR_NO_MORE_ENTRIES).
 
 
@@ -3243,7 +3246,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL Info(
+ LONG Info(
           BPTR lock,
           struct InfoData * parameterBlock );
 
@@ -3270,7 +3273,10 @@ Result
 ::
 
 
- Boolean indicating success or failure. If TRUE (success) the
+ != 0    if operation was successful
+ == 0    if operation was not successful
+
+ Boolean indicating success or failure. If success (!= 0) the
  'parameterBlock' is filled with information on the volume.
 
 
@@ -3536,7 +3542,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL IsInteractive(
+ LONG IsInteractive(
           BPTR file );
 
 Function
@@ -5647,7 +5653,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL SetComment(
+ LONG SetComment(
           CONST_STRPTR name,
           CONST_STRPTR comment );
 
@@ -5673,8 +5679,8 @@ Result
 ~~~~~~
 ::
 
-     Boolean success indicator. IoErr() gives additional information upon
-     failure.
+     != 0 if all went well, 0 else. IoErr() gives additional
+     information in that case.
 
 
 
@@ -6154,7 +6160,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL SetProtection(
+ LONG SetProtection(
           CONST_STRPTR name,
           ULONG protect );
 
@@ -7026,7 +7032,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL WaitForChar(
+ LONG WaitForChar(
           BPTR file,
           LONG timeout );
 

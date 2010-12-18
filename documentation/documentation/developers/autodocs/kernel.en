@@ -12,11 +12,12 @@ kernel
 `KrnAddExceptionHandler()`_             `KrnAddIRQHandler()`_                   `KrnAllocPages()`_                      `KrnBug()`_                             
 `KrnCause()`_                           `KrnCli()`_                             `KrnCreateContext()`_                   `KrnDecodeLocationA()`_                 
 `KrnDeleteContext()`_                   `KrnDispatch()`_                        `KrnFreePages()`_                       `KrnGetBootInfo()`_                     
-`KrnGetScheduler()`_                    `KrnGetSystemAttr()`_                   `KrnIsSuper()`_                         `KrnMapGlobal()`_                       
-`KrnMayGetChar()`_                      `KrnPutChar()`_                         `KrnRegisterModule()`_                  `KrnRemExceptionHandler()`_             
-`KrnRemIRQHandler()`_                   `KrnSchedule()`_                        `KrnSetProtection()`_                   `KrnSetScheduler()`_                    
-`KrnSetSystemAttr()`_                   `KrnSti()`_                             `KrnSwitch()`_                          `KrnUnmapGlobal()`_                     
-`KrnUnregisterModule()`_                `KrnVirtualToPhysical()`_               
+`KrnGetScheduler()`_                    `KrnGetSystemAttr()`_                   `KrnInitMemory()`_                      `KrnIsSuper()`_                         
+`KrnMapGlobal()`_                       `KrnMayGetChar()`_                      `KrnPutChar()`_                         `KrnRegisterModule()`_                  
+`KrnRemExceptionHandler()`_             `KrnRemIRQHandler()`_                   `KrnSchedule()`_                        `KrnSetProtection()`_                   
+`KrnSetScheduler()`_                    `KrnSetSystemAttr()`_                   `KrnStatMemory()`_                      `KrnSti()`_                             
+`KrnSwitch()`_                          `KrnUnmapGlobal()`_                     `KrnUnregisterModule()`_                `KrnVirtualToPhysical()`_               
+
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -156,8 +157,50 @@ Synopsis
 ::
 
  void * KrnAllocPages(
-          uint32_t length );
+          void * addr,
+          uintptr_t length,
+          uint32_t flags );
 
+Function
+~~~~~~~~
+::
+
+     Allocate physical memory pages
+
+
+Inputs
+~~~~~~
+::
+
+     addr   - Starting address of region which must be included in the
+              allocated region or NULL for the system to choose the
+              starting address. Normally you will supply NULL here.
+     length - Length of the memory region to allocate
+     flags  - Flags describing type of needed memory. These are the same
+              flags as passed to exec.library/AllocMem().
+
+
+Result
+~~~~~~
+::
+
+     Real starting address of the allocated region.
+
+
+Notes
+~~~~~
+::
+
+     Since this allocator is page-based, length will always be round up
+     to system's memory page size. The same applies to starting address
+     (if specified), it will be rounded down to page boundary.
+
+
+
+See also
+~~~~~~~~
+
+`KrnFreePages()`_ 
 
 ----------
 
@@ -298,6 +341,11 @@ Notes
 
 
 
+See also
+~~~~~~~~
+
+`KrnDeleteContext()`_ 
+
 ----------
 
 KrnDecodeLocationA()
@@ -385,6 +433,33 @@ Synopsis
  void KrnDeleteContext(
           void * context );
 
+Function
+~~~~~~~~
+::
+
+     Free CPU context storage area
+
+
+Inputs
+~~~~~~
+::
+
+     context - a pointer to a CPU context storage previously allocated using
+               KrnCreateContext()
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+
+See also
+~~~~~~~~
+
+`KrnCreateContext()`_ 
 
 ----------
 
@@ -408,8 +483,8 @@ Synopsis
 ::
 
  void KrnFreePages(
-          void * phy_addr,
-          uint32_t length );
+          void * addr,
+          uintptr_t length );
 
 
 ----------
@@ -497,6 +572,40 @@ See also
 ~~~~~~~~
 
 `KrnSetSystemAttr()`_ 
+
+----------
+
+KrnInitMemory()
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ void KrnInitMemory(
+          struct MemHeader * mh );
+
+Function
+~~~~~~~~
+::
+
+     Initialize kernel memory management on a given memory region
+
+
+Inputs
+~~~~~~
+::
+
+     mh - Address of a filled in structure describing the region.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
 
 ----------
 
@@ -844,6 +953,64 @@ See also
 ~~~~~~~~
 
 `KrnGetSystemAttr()`_ 
+
+----------
+
+KrnStatMemory()
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ void KrnStatMemory(
+          struct TagItem * query,
+          ULONG flags );
+
+Function
+~~~~~~~~
+::
+
+     Get various statistics about memory usage
+
+
+Inputs
+~~~~~~
+::
+
+     query - An array of TagItems containing query specification. Each
+             TagItem consists of tag ID and a pointer to IPTR value
+             which will contain the result of the query.
+
+             Available tag IDs are:
+
+             KMS_Free          - Get amount of free memory in bytes
+             KMS_Total         - Get total amount of memory in bytes
+             KMS_LargestAlloc  - Get size of the largest allocated chunk in bytes
+             KMS_SmallestAlloc - Get size of the smallest allocated chunk in bytes
+             KMS_LargestFree   - Get size of the largest free chunk in bytes
+             KMS_SmallestFree  - Get size of the smallest free chunk in bytes
+             KMS_NumAlloc      - Get number of allocated chunks
+             KMS_NumFree       - Get number of free chunks
+
+     flags - Flags which specify physical properties of the memory to query.
+             These are the same flags as passed to exec.library/AllocMem().
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Notes
+~~~~~
+::
+
+     For all unknown tag IDs result values will be set to 0.
+
+
 
 ----------
 
