@@ -165,7 +165,7 @@ The following options are available for hosted builds:
 ``--with-resolution=WIDTHxHEIGHTxDEPTH [default: 800x600x8]``
     Set the default resolution and depth AROS will use. 
     
-``--enable-xshm-extension [default: enabled]``
+``--enable-x11-shm [default: auto]``
     Enable usage of the X11 MIT-SHM extension. Enabling it gives a significant
     performance gain, but it might not work very well if you are using a 
     remote display.
