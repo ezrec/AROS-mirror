@@ -79,13 +79,21 @@ INDEX
 
 - IMPORTANT2: to be able to produce working AROS executables, you also
               need a tool named collect-aros, which is part of the
-	      AROS build system, and thus can be found, once AROS is
-              compiled, under bin/<host>-<cpu>/tools/ OR in the
-              AROS-SDK package downloadable from
-	      http://www.aros.org/download.php. Make sure that
-              collect-aros is in the PATH, so that the compiler can
-              access it.
+	      AROS build system. The version produced during AROS build
+	      have hardcoded paths to binutils, so it won't work with
+	      standalone toolchain. Instructions for building a correct
+	      version of collect-aros for standalone toolchain can be
+	      found in tools/env.h.cross file. Compiled collect-aros
+	      can be placed into <your_install_prefix)/<cpu>-aros/bin
+	      directory (there you'll also see some binutils stuff).
 
+- IMPORTANT3: to be able to build a cross-toolchain under MacOS X you
+	      need to specify the following additional arguments to
+	      configure:
+
+     binutils: --disable-werror
+     gcc     : --with-libiconv-prefix=/opt/local --with-gmp=/opt/local --with-mpfr=/opt/local
+	      
 4. What is and how to build a native compiler for AROS?
 
   As opposed to a crosscompiler, a native compiler runs on the same
