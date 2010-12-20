@@ -15,5 +15,5 @@ to deal with problems. ;-)
  
  v4.4.2 - tested as a crosscompiler running MacOS X v10.6/x86-64. Builds working
           AROS kickstart.
- v4.5.1 - tested as a crosscompiler running Cygwin/i386. Builds working system
-	  (boots on Android up to Workbench).
+ v4.5.1 - tested as a crosscompiler running both Cygwin and MinGW on i386. Builds
+          working system (boots on Android up to Workbench).
