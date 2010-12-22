@@ -7,13 +7,13 @@ include $(TOP)/config/make.cfg
 #MM- ports-graphics-potrace : ports-graphics-potrace-drawericon
 
 PACKAGE      := potrace
-VERSION      := 1.8
+VERSION      := 1.9
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/Potrace
 REPOSITORIES := sf://potrace
 
 %fetch_and_build mmake=ports-graphics-potrace prefix=$(TARGETDIR) \
 	package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
-	patch=yes package_repo=$(REPOSITORIES) \
+	patch=no package_repo=$(REPOSITORIES) \
 	extraoptions="--enable-metric --enable-a4"
 
 
@@ -21,6 +21,12 @@ ICONS := Potrace
 
 %build_icons mmake=ports-graphics-potrace-drawericon \
 	icons=$(ICONS) dir=$(TARGETDIR)/..
+
+
+#MM
+ports-graphics-potrace-clean :
+	$(RM) $(TARGETDIR)
+	$(RM) $(GENDIR)/$(CURDIR)
 
 
 %common
