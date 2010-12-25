@@ -17,7 +17,7 @@ ARCHBASE     := lunapaint-0.4
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/Lunapaint
 
 # Next version of Lunapaint shouldn't need -fgnu89-inline anymore
-USER_CFLAGS  := -fgnu89-inline
+USER_CFLAGS  := -fgnu89-inline -fno-strict-aliasing
 USER_INCLUDES:= -I$(PORTSDIR)/lunapaint/lunapaint-0.4/src
 
 FILES := \

@@ -41,7 +41,7 @@ USER_CFLAGS  := -D__MATHX_VERDATE=\"`date +%d.%m.%Y`\" \
                 -D__GRAPHICS_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ \
                 -D__REXXSYSLIB_STDLIBBASE__ -D__UTILITY_STDLIBBASE__ \
                 -DMUI_OBSOLETE \
-                -Wno-write-strings -funroll-loops -DDEBUG
+                -Wno-write-strings -funroll-loops -fno-strict-aliasing -DDEBUG
 USER_INCLUDES:= -I$(PORTSDIR)/mathx/$(ARCHBASE) -I$(PORTSDIR)/mathx/$(ARCHBASE)/extrasrc
 
 # Remove C-only flags
