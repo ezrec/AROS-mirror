@@ -1,6 +1,6 @@
 diff -Naur gnurobbo-0.65.6-orig/board.c gnurobbo-0.65.6/board.c
---- gnurobbo-0.65.6-orig/board.c	2010-06-26 20:24:58.130999488 +0200
-+++ gnurobbo-0.65.6/board.c	2010-06-26 20:47:15.923076160 +0200
+--- gnurobbo-0.65.6-orig/board.c	2010-01-16 16:10:33.000000000 +0100
++++ gnurobbo-0.65.6/board.c	2010-12-25 20:30:37.441737364 +0100
 @@ -1897,7 +1897,7 @@
  		  if (rcfile.save_frequency == RCFILE_SAVE_ON_CHANGE)
  		    {
@@ -11,8 +11,8 @@ diff -Naur gnurobbo-0.65.6-orig/board.c gnurobbo-0.65.6/board.c
  		      system ("sync");
  #elif defined(PLATFORM_ZAURUS)
 diff -Naur gnurobbo-0.65.6-orig/controls.c gnurobbo-0.65.6/controls.c
---- gnurobbo-0.65.6-orig/controls.c	2010-06-26 20:24:58.130999488 +0200
-+++ gnurobbo-0.65.6/controls.c	2010-06-26 20:34:22.432196443 +0200
+--- gnurobbo-0.65.6-orig/controls.c	2010-01-06 17:04:12.000000000 +0100
++++ gnurobbo-0.65.6/controls.c	2010-12-25 20:30:37.441737364 +0100
 @@ -563,7 +563,7 @@
  	/* Set some defaults */
  	for (count = 0; count < USER_CONTROLS; count++)
@@ -41,8 +41,8 @@ diff -Naur gnurobbo-0.65.6-orig/controls.c gnurobbo-0.65.6/controls.c
  			{
  		#elif defined(PLATFORM_GP2X)
 diff -Naur gnurobbo-0.65.6-orig/game.c gnurobbo-0.65.6/game.c
---- gnurobbo-0.65.6-orig/game.c	2010-06-26 20:24:58.130999488 +0200
-+++ gnurobbo-0.65.6/game.c	2010-06-26 21:16:24.431004025 +0200
+--- gnurobbo-0.65.6-orig/game.c	2010-01-16 16:10:33.000000000 +0100
++++ gnurobbo-0.65.6/game.c	2010-12-25 20:30:37.441737364 +0100
 @@ -183,7 +183,7 @@
    pointer_controls.state = POINTER_CONTROLS_MODE_OFF;
    pointer_controls.shoot_state = POINTER_CONTROLS_SHOOT_OFF;
@@ -101,8 +101,8 @@ diff -Naur gnurobbo-0.65.6-orig/game.c gnurobbo-0.65.6/game.c
  	      system ("sync");
  #elif defined(PLATFORM_ZAURUS)
 diff -Naur gnurobbo-0.65.6-orig/levels.c gnurobbo-0.65.6/levels.c
---- gnurobbo-0.65.6-orig/levels.c	2010-06-26 20:24:58.130999488 +0200
-+++ gnurobbo-0.65.6/levels.c	2010-06-26 20:53:51.154787451 +0200
+--- gnurobbo-0.65.6-orig/levels.c	2010-01-16 23:33:19.000000000 +0100
++++ gnurobbo-0.65.6/levels.c	2010-12-25 20:30:37.441737364 +0100
 @@ -182,7 +182,7 @@
  	FILE *fp;
  	char fullpath[256];
@@ -152,8 +152,8 @@ diff -Naur gnurobbo-0.65.6-orig/levels.c gnurobbo-0.65.6/levels.c
  				strcpy (foldername, getenv ("HOME"));
  				strcat (foldername, "/" LOCAL_DATA_DIR LEVELS_DIR);
 diff -Naur gnurobbo-0.65.6-orig/locales.c gnurobbo-0.65.6/locales.c
---- gnurobbo-0.65.6-orig/locales.c	2010-06-26 20:24:58.130999488 +0200
-+++ gnurobbo-0.65.6/locales.c	2010-06-26 20:56:15.600944550 +0200
+--- gnurobbo-0.65.6-orig/locales.c	2010-01-06 00:02:23.000000000 +0100
++++ gnurobbo-0.65.6/locales.c	2010-12-25 20:30:37.441737364 +0100
 @@ -324,6 +324,10 @@
  		strcpy (config_items[++row].name, "[txt_intro_keys_PLATFORM_PC]");
  		config_items[row].destination = txt_intro_keys;
@@ -166,8 +166,8 @@ diff -Naur gnurobbo-0.65.6-orig/locales.c gnurobbo-0.65.6/locales.c
  		strcpy (config_items[++row].name, "[txt_intro_keys_PLATFORM_GP2X]");
  		config_items[row].destination = txt_intro_keys;
 diff -Naur gnurobbo-0.65.6-orig/rcfile.h gnurobbo-0.65.6/rcfile.h
---- gnurobbo-0.65.6-orig/rcfile.h	2010-06-26 20:24:58.130999488 +0200
-+++ gnurobbo-0.65.6/rcfile.h	2010-06-26 20:48:31.055613469 +0200
+--- gnurobbo-0.65.6-orig/rcfile.h	2010-01-05 01:18:39.000000000 +0100
++++ gnurobbo-0.65.6/rcfile.h	2010-12-25 20:30:37.441737364 +0100
 @@ -23,6 +23,8 @@
  	#define RESOURCE_FILE "gnurobborc"
  #elif defined(PLATFORM_PC)
@@ -178,8 +178,8 @@ diff -Naur gnurobbo-0.65.6-orig/rcfile.h gnurobbo-0.65.6/rcfile.h
  	#define RESOURCE_FILE "gnurobborc"
  #elif defined(PLATFORM_ZAURUS)
 diff -Naur gnurobbo-0.65.6-orig/screen.c gnurobbo-0.65.6/screen.c
---- gnurobbo-0.65.6-orig/screen.c	2010-06-26 20:24:58.140955328 +0200
-+++ gnurobbo-0.65.6/screen.c	2010-06-26 20:33:32.133488254 +0200
+--- gnurobbo-0.65.6-orig/screen.c	2010-01-16 21:41:55.000000000 +0100
++++ gnurobbo-0.65.6/screen.c	2010-12-25 20:30:37.451737205 +0100
 @@ -1248,7 +1248,7 @@
  	video.field_size = 16;
      }
@@ -225,3 +225,20 @@ diff -Naur gnurobbo-0.65.6-orig/screen.c gnurobbo-0.65.6/screen.c
  		#elif defined(PLATFORM_GP2X)
  			#ifndef HAVE_DESIGNER
  				/* F100 doesn't support the mouse, F200 does (or can) so
+diff -Naur gnurobbo-0.65.6-orig/sound.c gnurobbo-0.65.6/sound.c
+--- gnurobbo-0.65.6-orig/sound.c	2010-01-05 01:18:39.000000000 +0100
++++ gnurobbo-0.65.6/sound.c	2010-12-27 10:08:27.311019891 +0100
+@@ -413,11 +413,11 @@
+ 	sounds[c].initialized = SND_MISSING;
+     }
+ 
+-    sprintf(name, "%s%s/skins/%s", PACKAGE_DATA_DIR, SOUNDS_DIR, fname);
++    sprintf(name, "%s%sskins/%s", PACKAGE_DATA_DIR, SOUNDS_DIR, fname);
+     if ((fd = fopen(name, "r")) == NULL) {	/* no skin file, well,
+ 						 * what a pity, let's try
+ 						 * the default one */
+-	sprintf(name, "%s%s/skins/default.dat", PACKAGE_DATA_DIR,
++	sprintf(name, "%s%sskins/default.dat", PACKAGE_DATA_DIR,
+ 		SOUNDS_DIR);
+ 	if ((fd = fopen(name, "r")) == NULL)	/* hmmm no default sound * 
+ 						 * skin, how strange */
