@@ -214,6 +214,7 @@ int IfcExecScript( int NameLen, const char *Name,
    int RetCode=0 ;
    int num=0 ;
    int type=0 ;
+   int added=0 ;
    volatile paramboxptr params=NULL ;
    jmp_buf panic, *oldpanic ;
    tsd_t *wTSD;
@@ -252,7 +253,10 @@ int IfcExecScript( int NameLen, const char *Name,
       environment = Str_cre_TSD( wTSD, "DEFAULT" ) ;
 
    if ( !envir_exists( wTSD, (streng *)environment ) )
+   {
       add_envir( wTSD, Str_dup_TSD(wTSD, (streng *)environment), ENVIR_PIPE, 0 ) ;
+      added = 1 ;
+   }
 
    /* It may be that TSD->systeminfo->panic is not set. This may lead to
     * an exit() call, e.g. at Rexx "EXIT". We set TSD->systeminfo->panic if it
@@ -331,7 +335,8 @@ int IfcExecScript( int NameLen, const char *Name,
    }
 
    TSD->systeminfo->panic = oldpanic;
-   del_envir( wTSD, (streng *) environment ) ;
+   if (added)
+       del_envir( wTSD, (streng *) environment ) ;
    Free_string_TSD( wTSD, (streng *) environment ) ;
    RestoreInterpreterStatus(wTSD,InterpreterStatus);
 
