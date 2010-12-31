@@ -166,11 +166,12 @@ STATIC void IterateList( void (* callback)( struct ResidentEntry *re, void *user
     if ((resip = (LONG *)SysBase->KickTagPtr) != NULL) {
         while ((resi = *resip) != 0) {
             // HSMOD: must handle the case that has directly jump after each other
+#if !defined(__AROS__) || (AROS_FLAVOUR & AROS_FLAVOUR_BINCOMPAT)
             while (resi & 0x80000000) {
                 resip = (LONG *)(resi & 0x7fffffff);
                 resi = *resip;
             }
-
+#endif
             if ((re = AllocVec(sizeof(struct ResidentEntry), MEMF_CLEAR)) != NULL) {
                 struct Resident *rt;
 
@@ -195,11 +196,12 @@ STATIC void IterateList( void (* callback)( struct ResidentEntry *re, void *user
     if ((resip = (LONG *)SysBase->ResModules) != NULL) {
         while ((resi = *resip) != 0) {
             // HSMOD: must handle the case that has directly jump after each other
+#if !defined(__AROS__) || (AROS_FLAVOUR & AROS_FLAVOUR_BINCOMPAT)
             while (resi & 0x80000000) {
                 resip = (LONG *)(resi & 0x7fffffff);
                 resi = *resip;
             }
-
+#endif
             if ((re = AllocVec(sizeof(struct ResidentEntry), MEMF_CLEAR)) != NULL) {
                 struct Resident *rt;
 
