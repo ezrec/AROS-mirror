@@ -138,7 +138,7 @@ STATIC void ReceiveList( void (* callback)( struct OOPClassEntry *ce, void *user
     }
 }
 
-static void FormatAddress(STRPTR buf, APTR dispentry)
+STATIC void FormatAddress(STRPTR buf, APTR dispentry)
 {
     if (points2ram(dispentry)) {
         _snprintf(buf, ADDRESS_LENGTH, MUIX_PH "$%08lx" MUIX_PT, dispentry);
@@ -226,7 +226,7 @@ STATIC void UpdateCallback( struct OOPClassEntry *ce,
     DoMethod(ud->ud_Tree, MUIM_NListtree_Insert, ce->ce_ClassName, ce, parent, MUIV_NListtree_Insert_PrevNode_Sorted, TNF_LIST | TNF_OPEN);
 }
 
-static inline STRPTR SkipFormat(STRPTR str)
+INLINE STRPTR SkipFormat(STRPTR str)
 {
     if (strncmp(str, MUIX_PH, strlen(MUIX_PH)))
         return str;
@@ -367,7 +367,7 @@ STATIC ULONG mRemove( struct IClass *cl,
     struct MUI_NListtree_TreeNode *tn;
 
     if ((tn = GetActiveTreeNode(cwd->cwd_ClassTree)) != NULL) {
-        struct OOPClassEntry *ce = (struct ClassEntry *)tn->tn_User;
+        struct OOPClassEntry *ce = (struct OOPClassEntry *)tn->tn_User;
 
         if (MyRequest(msgYesNo, msgWantToRemoveClass, ce->ce_ClassName)) {
             if (MyDoCommand("RemoveClass %s", ce->ce_Address) == RETURN_OK) {
@@ -413,7 +413,7 @@ STATIC ULONG mListChange( struct IClass *cl,
     struct MUI_NListtree_TreeNode *tn;
 
     if ((tn = GetActiveTreeNode(cwd->cwd_ClassTree)) != NULL) {
-        struct OOPClassEntry *ce = (struct ClassEntry *)tn->tn_User;
+        struct OOPClassEntry *ce = (struct OOPClassEntry *)tn->tn_User;
 
         MySetContents(cwd->cwd_ClassText, "%s \"%s\"", ce->ce_Address, ce->ce_ClassName);
         DoMethod(obj, MUIM_MultiSet, MUIA_Disabled, FALSE, cwd->cwd_RemoveButton,

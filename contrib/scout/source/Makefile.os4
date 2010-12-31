@@ -58,7 +58,7 @@ CFLAGS=             -mcrt=$(CRT) -I. -idirafter ./include -I./netinclude -I./cla
 LFLAGS=             -mcrt=$(CRT) -nostartfiles -Wl,--cref,-M,-Map=$@.map
 
 LOCALE=             locale
-`
+
 # $(PROJECT).o _has_ to be the first module !!! (Because we use no
 # startup-code)
 

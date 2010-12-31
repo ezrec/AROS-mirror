@@ -1,0 +1,98 @@
+# find out the HOST operating system
+# on which this makefile is run
+HOST ?= $(shell uname)
+
+# if no host is identifed (no uname tool)
+# we assume a AmigaOS build
+ifeq ($(HOST),)
+  HOST = AmigaOS
+endif
+
+ifeq ($(HOST), AmigaOS3)
+  CC    = gcc
+  AR    = ar
+  MKDIR = makedir
+  RM    = delete quiet
+  RMDIR = delete quiet
+  MUISDK= /SDK/MUI/C/include
+else
+  CC    = m68k-amigaos-gcc
+  AR    = m68k-amigaos-ar
+  MKDIR = mkdir -p
+  RM    = rm
+  RMDIR = rm -rf
+  MUISDK= /usr/local/amiga/ppc-amigaos/SDK/MUI/C/include
+endif
+
+OBJDIR = .obj_os3
+BINDIR = bin_os3
+
+TARGET = $(BINDIR)/libtblib.a
+
+CPU      = -m68020-60 -msoft-float
+REDEFINE =
+OPTIMIZE = -O2
+DEBUG    = -g -gstabs
+CFLAGS   = -noixemul -Wall -Wwrite-strings -I../include -I$(MUISDK) $(CPU) $(REDEFINE) $(DEBUG) -DNO_INLINE_STDARG -c
+
+OBJS = $(OBJDIR)/ports_AllocPort.o \
+	$(OBJDIR)/ports_FreePort.o \
+	$(OBJDIR)/ports_AllocSig.o \
+	$(OBJDIR)/ports_FreeSig.o \
+	$(OBJDIR)/ports_SafePutMsg.o \
+	$(OBJDIR)/timer_TimerDelay.o \
+	$(OBJDIR)/timer_StartTimer.o \
+	$(OBJDIR)/timer_AbortTimer.o \
+	$(OBJDIR)/string_b2cstr.o \
+	$(OBJDIR)/string_b2cstrn.o \
+	$(OBJDIR)/string_c2bstr.o \
+	$(OBJDIR)/string_snprintf.o \
+	$(OBJDIR)/string_sprintf.o \
+	$(OBJDIR)/string_strcat.o \
+	$(OBJDIR)/string_strcatn.o \
+	$(OBJDIR)/string_strdup.o \
+	$(OBJDIR)/string_strdup_pool.o \
+	$(OBJDIR)/string_strsep.o \
+	$(OBJDIR)/string_parse_string.o \
+	$(OBJDIR)/i2m_word_c.o \
+	$(OBJDIR)/i2m_long_c.o \
+	$(OBJDIR)/math64_add64_c.o \
+	$(OBJDIR)/math64_sub64_c.o \
+	$(OBJDIR)/math64_cmp64_c.o \
+	$(OBJDIR)/envvar_GetEnvVar.o \
+	$(OBJDIR)/envvar_SetEnvVar.o \
+	$(OBJDIR)/mui_DoSuperNew.o \
+	$(OBJDIR)/mui_MakeButton.o \
+	$(OBJDIR)/mui_MakeCheckmark.o \
+	$(OBJDIR)/errorreq_ErrorMsg.o \
+	$(OBJDIR)/library_CheckLibVersion.o \
+	$(OBJDIR)/library_CheckLibVersionName.o \
+	$(OBJDIR)/memory_AllocVecPooled.o \
+	$(OBJDIR)/memory_FreeVecPooled.o
+
+INCLUDES= tblib.h \
+	SDI_compiler.h
+
+all: $(OBJDIR) $(BINDIR) $(TARGET)
+
+$(OBJDIR)/%.o: %.c
+	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINE) $< -o $@
+
+$(OBJDIR):
+	@$(MKDIR) $(OBJDIR)
+
+$(BINDIR):
+	@$(MKDIR) $(BINDIR)
+
+$(TARGET): $(OBJS)
+	$(AR) -r $(TARGET) $(OBJS)
+
+clean:
+	-$(RM) $(OBJS) $(TARGET) quiet
+
+realclean: clean
+	-$(RMDIR) $(OBJDIR) $(BINDIR)
+
+date:
+	@;
+

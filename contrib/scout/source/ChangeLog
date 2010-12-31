@@ -2,8 +2,22 @@
 Scout Open Source - ChangeLog
 -----------------------------
 
-$Id: ChangeLog,v 1.164 2010/05/05 06:12:18 thboeckel Exp $
+$Id: ChangeLog,v 1.167 2010/10/04 03:02:10 thboeckel Exp $
 $Source: /cvsroot/scoutos/scoutos/source/ChangeLog,v $
+
+2010-10-04  Thore Boeckelmann <tboeckel@gmx.de>
+
+  * scout_net.c: corrected the usage of all va_list occurences.
+
+2010-09-15  Thore Boeckelmann <tboeckel@gmx.de>
+
+  * smakefile, scout_oop.c: added missing dependencies and fixed a wrong type
+    cast.
+
+2010-07-17  Pavel Fedin <pavel_fedin@mail.ru>
+
+  * misc: Implemented separate monitorclass and monitorclass details
+	  windows
 
 2010-05-05  Thore Boeckelmann <tboeckel@gmx.de>
 

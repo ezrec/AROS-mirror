@@ -1,7 +1,7 @@
 /*************************************************************************
  ** disassembler.library                                                **
  **                                                                     **
- ** An GPL reimplementation of disassembler.library v40                **
+ ** An LGPL reimplementation of disassembler.library v40                **
  ** © 2010 Pavel Fedin                                                  **
  **                                                                     **
  ** disassembler.libary v40 is:                                         **

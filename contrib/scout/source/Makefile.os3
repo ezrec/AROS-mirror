@@ -1,77 +1,61 @@
-# You may call this makefile with:
-# make OS=<target>
-#  where target is your crosscompiler prefix (like ppc-morphos,
-#
-# Note that you may omit OS specification, in this case your host OS will be detected
+# find out the HOST operating system
+# on which this makefile is run
+HOST ?= $(shell uname)
 
-# Evaluate explicit target specification
-ifneq ($(OS),)
-    PREFIX   := $(OS)-
-    HOST     := $(subst -, ,$(OS))
-    HOST_CPU := $(word 1,$(HOST))
-    HOST_OS  := $(word 2,$(HOST))
-else
-    PREFIX  :=
-    HOST_OS := $(shell uname)
-endif
-
-# Translate canonical OS name to lowercase
-ifeq ($(HOST_OS),AROS)
-    HOST_OS := aros
-    # TODO: detect CPU here for self-hosted build under AROS
-endif
-ifeq ($(HOST_OS),MorphOS)
-    HOST_OS  := morphos
-    HOST_CPU := ppc
-endif
-
-# target-dependent options
-ifeq ($(HOST_OS),aros)
-    NOIXEMUL :=
-    SYSLIB   := -larossupport -larosm -lmui -lrom
-else
-    NOIXEMUL := -noixemul
-    SYSLIB   := -lc -ldebug -lmath
-endif
-ifeq ($(HOST_OS),morphos)
-    ALIB := -labox -laboxstubs
-else
-    ALIB := -lamiga
-endif
-ifeq ($(HOST_CPU),ppc)
-    CPU := -mcpu=750
-else
-    CPU :=
+# if no host is identifed (no uname tool)
+# we assume a AmigaOS build
+ifeq ($(HOST),)
+  HOST = AmigaOS
 endif
 
 PROJECT=            Scout
-TARGET=             $(PROJECT)
+TARGET=             $(PROJECT).os3
 
 VERSION=            37
 
-OUT=                Scout
+ifeq ($(HOST), AmigaOS3)
+  CC     = gcc
+  LD     = gcc
+  STRIP  = strip
+  OBJDUMP= objdump
+  MKDIR  = makedir
+  RM     = delete quiet
+  RMDIR  = delete quiet
+  CHMOD  = protect flags=rwed
+  MUISDK = /SDK/MUI/C/include
+else
+  CC     = m68k-amigaos-gcc
+  LD     = m68k-amigaos-gcc
+  STRIP  = m68k-amigaos-strip
+  OBJDUMP= m68k-amigaos-objdump
+  MKDIR  = mkdir -p
+  RM     = rm
+  RMDIR  = rm -rf
+  CHMOD  = chmod 755
+  MUISDK = /usr/local/amiga/ppc-amigaos/SDK/MUI/C/include
+endif
 
-CC=                 $(PREFIX)gcc
-LD=                 $(PREFIX)gcc
-STRIP=              $(PREFIX)strip
-OBJDUMP=	    $(PREFIX)objdump
-RM=                 rm -f
-
-OBJDIR=             .obj
+OBJDIR=             .obj_os3
 CLASSESDIR=         classes
 EXTRASRC=           extrasrc
 
-OPTIMIZE=           -O3
-DEFINE=
-CFLAGS:=            $(USER_CFLAGS) -Wall $(NOIXEMUL) $(CPU) -I. -idirafter ./include -I./classes -I./tbLib -c
-LFLAGS=             $(NOIXEMUL) -nostartfiles
+CRT=                newlib
+
+CPU=                -m68020-60 -msoft-float
+WARN=               -W -Wall -Wwrite-strings -Wpointer-arith -Wsign-compare
+REDEFINE=
+OPTFLAGS=           -O3 -fomit-frame-pointer -funroll-loops
+DEBUG=              -g -gstabs
+CFLAGS=             -noixemul -I. -idirafter ./include -I./netinclude -I./classes -I./tbLib -I$(MUISDK) -DNO_INLINE_STDARG $(CPU) $(WARN) $(OPTFLAGS) $(REDEFINE) $(DEBUG)
+LFLAGS=             -noixemul -nostartfiles -mstackextend -Wl,--cref,-M,-Map=$@.map
 
 LOCALE=             locale
 
 # $(PROJECT).o _has_ to be the first module !!! (Because we use no
 # startup-code)
 
-OBJECTS=$(OBJDIR)/startup.o \
+OBJECTS=$(OBJDIR)/prestartup.o \
+   $(OBJDIR)/startup.o \
    $(OBJDIR)/Scout.o \
    $(OBJDIR)/scout_logo.o \
    $(OBJDIR)/scout_net.o \
@@ -152,7 +136,8 @@ OBJECTS=$(OBJDIR)/startup.o \
    $(OBJDIR)/hexdump.o \
    $(OBJDIR)/scout_cat.o \
    $(OBJDIR)/SmartReadArgs.o \
-   $(OBJDIR)/all_gcc.o
+   $(OBJDIR)/all_gcc.o \
+   $(OBJDIR)/vastubs.o
 
 HEADERS=system_headers.h startup.h scout.h \
    scout_logo.h scout_net.h \
@@ -227,52 +212,68 @@ HEADERS=system_headers.h startup.h scout.h \
    SmartReadArgs.h \
    include/extra.h
 
-LIBS = -L./netlib -L./tbLib -L./lib $(ALIB) $(SYSLIB) -ltblib
+LIBS = -LtbLib/bin_os3 -L./lib/os3 -ltblib -lmui
 
-all: $(OBJDIR) $(HEADERS) $(TARGET)
+all: $(TARGET)
 
+.PHONY: tblib
+
+tblib:
+	@$(MAKE) -C tbLib -f Makefile.os3 all
+
+# make the object directories
 $(OBJDIR):
-	@mkdir $(OBJDIR)
-	@mkdir $(OBJDIR)/$(CLASSESDIR)
+	@echo "  MK $@"
+	@$(MKDIR) $(OBJDIR)
+	@$(MKDIR) $(OBJDIR)/$(CLASSESDIR)
 
+# for compiling single .c files
 $(OBJDIR)/%.o: %.c
-	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINE) $< -o $@
+	@echo "  CC $<"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(LOCALE)/%.catalog: $(LOCALE)/%.ct
 	flexcat $(LOCALE)/scout.cd $< catalog $@ flush
 
-$(TARGET): $(OBJECTS) tbLib/libtblib.a
-	$(LD) $(OBJECTS) -o $@.debug $(LIBS) $(LFLAGS)
-	$(STRIP) -R.comment -R.sdata2 -S $@.debug -o $@
-	chmod +x $@
+$(TARGET): $(OBJDIR) $(HEADERS) $(OBJECTS) tbLib/bin_os3/libtblib.a
+	@echo "  LD $@.debug"
+	@$(LD) $(LFLAGS) $(OBJECTS) -o $@.debug $(LIBS)
+	@echo "  LD $@"
+	@$(STRIP) -R ".comment" -o $@ $@.debug
+	@$(CHMOD) $@
 
 scout_cat.h: $(LOCALE)/scout.cd
-	flexcat locale/scout.cd scout_cat.h=C_h.sd scout_cat.c=C_c.sd
+	flexcat $(LOCALE)/scout.cd scout_cat.h=C_h.sd scout_cat.c=C_c.sd
 
 $(OBJDIR)/scout_cat.o: scout_cat.h
 
 $(OBJDIR)/$(CLASSESDIR)/scout_customclasses.o: $(CLASSESDIR)/scout_customclasses.c
-	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINE) $< -o $@
+	@echo "  CC $<"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR)/$(CLASSESDIR)/scout_about.o: $(CLASSESDIR)/scout_about.c $(CLASSESDIR)/scout_version.h Scout_rev.h
-	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINE) $< -o $@
+	@echo "  CC $<"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR)/$(CLASSESDIR)/scout_version.o: $(CLASSESDIR)/scout_version.c $(CLASSESDIR)/scout_version.h Scout_rev.h
-	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINE) $< -o $@
+	@echo "  CC $<"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
-$(OBJDIR)/all_gcc.o: all_gcc.c $(EXTRASRC)/init_inet_daemon.c $(EXTRASRC)/vasprintf.c
+$(OBJDIR)/all_gcc.o: all_gcc.c $(EXTRASRC)/stccpy.c $(EXTRASRC)/stcd_i.c $(EXTRASRC)/stcd_l.c \
+    $(EXTRASRC)/init_inet_daemon.c
 
-tbLib/libtblib.a:
-	@cd tbLib; make OS=$(OS) USER_CFLAGS=$(USER_CFLAGS)
+tbLib/bin_os3/libtblib.a:
+	-make -C tbLib -f Makefile.os3 all
 
 clean:
 	-$(RM) $(OBJDIR)/*.o $(OBJDIR)/$(CLASSESDIR)/*.o $(TARGET) $(TARGET).debug $(TARGET).dump
-	@cd tbLib; make $@
+	-make -C tbLib $@
 
 realclean: clean
+	-$(RMDIR) $(OBJDIR)
 
 version:
-	bumprev2 $(VERSION) $(PROJECT)
+	bumprev $(VERSION) $(PROJECT)
 
 date:
 	@eval `type $(PROJECT)_rev.rev`-1 >t:$(PROJECT)_rev.rev
@@ -283,8 +284,8 @@ date:
 dump:
 	$(OBJDUMP) --section-headers --all-headers --reloc --syms --disassemble-all $(TARGET).debug >$(TARGET).dump
 
-install: $(PROJECT)
-	copy $(PROJECT) Work:Debug/Scout
+install: $(TARGET)
+	copy $(TARGET) Work:Debug/Scout
 
 cvs-tag:
 	cvs -q tag V$(VERSION)_`type $(PROJECT)_rev.rev`
@@ -297,4 +298,6 @@ doc:
 	pushcd help
 	smake
 	popcd
+
+catalogs: $(LOCALE)/français.catalog
 

@@ -308,8 +308,12 @@ int VARARGS68K STDARGS SendDaemon( CONST_STRPTR fmt, ... )
 
     VA_START(args, fmt);
 
-    if ((buf = VASPrintf(fmt, args)) != NULL) {
-
+#if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
+    if ((buf = VASPrintf(fmt, VA_ARG(args, APTR))) != NULL) {
+#else
+    if ((buf = AllocVec(TMP_STRING_LENGTH, MEMF_ANY)) != NULL) {
+        _vsnprintf(buf, TMP_STRING_LENGTH, fmt, VA_ARG(args, APTR));
+#endif
         if (send(client_socket, buf, strlen(buf) + 1, 0) == (LONG)strlen(buf) + 1) {
             result = TRUE;
         }
@@ -495,7 +499,12 @@ int VARARGS68K STDARGS SendClient( CONST_STRPTR fmt, ... )
 
     VA_START(args,fmt);
 
-    if ((buf = VASPrintf(fmt, args)) != NULL) {
+#if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
+    if ((buf = VASPrintf(fmt, VA_ARG(args, APTR))) != NULL) {
+#else
+    if ((buf = AllocVec(TMP_STRING_LENGTH, MEMF_ANY)) != NULL) {
+        _vsnprintf(buf, TMP_STRING_LENGTH, fmt, VA_ARG(args, APTR));
+#endif
         if (send(server_socket, buf, strlen(buf) + 1, 0) == (LONG)strlen(buf) + 1) {
             result = TRUE;
         }
@@ -528,7 +537,12 @@ long VARARGS68K STDARGS SendResultString( CONST_STRPTR fmt, ... )
 
     VA_START(args, fmt);
 
-    if ((buf = VASPrintf(fmt, args)) != NULL) {
+#if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
+    if ((buf = VASPrintf(fmt, VA_ARG(args, APTR))) != NULL) {
+#else
+    if ((buf = AllocVec(TMP_STRING_LENGTH, MEMF_ANY)) != NULL) {
+        _vsnprintf(buf, TMP_STRING_LENGTH, fmt, VA_ARG(args, APTR));
+#endif
         if (serverstate) {
             strcat(buf, "\n");
             SendClient(buf);
@@ -555,7 +569,12 @@ void VARARGS68K STDARGS PrintFOneLine( BPTR hd,
 
     VA_START(args, fmt);
 
-    if ((buf = VASPrintf(fmt, args)) != NULL) {
+#if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
+    if ((buf = VASPrintf(fmt, VA_ARG(args, APTR))) != NULL) {
+#else
+    if ((buf = AllocVec(TMP_STRING_LENGTH, MEMF_ANY)) != NULL) {
+        _vsnprintf(buf, TMP_STRING_LENGTH, fmt, VA_ARG(args, APTR));
+#endif
         if (serverstate) {
             SendClient(buf);
         } else {
@@ -709,7 +728,12 @@ ULONG VARARGS68K STDARGS MyDoCommand( CONST_STRPTR fmt, ... )
 
     VA_START(args, fmt);
 
-    if ((buf = VASPrintf(fmt, args)) != NULL) {
+#if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
+    if ((buf = VASPrintf(fmt, VA_ARG(args, APTR))) != NULL) {
+#else
+    if ((buf = AllocVec(TMP_STRING_LENGTH, MEMF_ANY)) != NULL) {
+        _vsnprintf(buf, TMP_STRING_LENGTH, fmt, VA_ARG(args, APTR));
+#endif
         if (clientstate) {
             result = NetCommand(buf);
         } else {

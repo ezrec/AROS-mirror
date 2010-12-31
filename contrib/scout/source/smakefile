@@ -366,6 +366,12 @@ $(OBJDIR)/$(CLASSESDIR)/scout_monitors.o: classes/scout_monitors.c classes/scout
 $(OBJDIR)/$(CLASSESDIR)/scout_monitors_detail.o: classes/scout_monitors_detail.c classes/scout_monitors_detail.h \
 	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
 
+$(OBJDIR)/$(CLASSESDIR)/scout_monitorclass.o: classes/scout_monitorclass.c classes/scout_monitorclass.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_monitorclass_detail.o: classes/scout_monitorclass_detail.c classes/scout_monitorclass_detail.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
 $(OBJDIR)/$(CLASSESDIR)/scout_mount.o: classes/scout_mount.c classes/scout_mount.h \
 	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
 
@@ -376,6 +382,12 @@ $(OBJDIR)/$(CLASSESDIR)/scout_parentwindow.o: classes/scout_parentwindow.c class
 	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
 
 $(OBJDIR)/$(CLASSESDIR)/scout_patches.o: classes/scout_patches.c classes/scout_patches.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_oop.o: classes/scout_oop.c classes/scout_oop.h \
+	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
+
+$(OBJDIR)/$(CLASSESDIR)/scout_oop_detail.o: classes/scout_oop_detail.c classes/scout_oop_detail.h \
 	$(OBJDIR)/$(PROJECT).gst scout.h scout_defs.h scout_tags.h scout_cat.h
 
 $(OBJDIR)/$(CLASSESDIR)/scout_ports.o: classes/scout_ports.c classes/scout_ports.h \
