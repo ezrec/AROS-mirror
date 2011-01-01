@@ -14,7 +14,7 @@ workbench
 `OpenWorkbenchObjectA()`_               `QuoteWorkbench()`_                     `RegisterWorkbench()`_                  `RemoveAppIcon()`_                      
 `RemoveAppMenuItem()`_                  `RemoveAppWindow()`_                    `RemoveAppWindowDropZone()`_            `SendAppWindowMessage()`_               
 `StartWorkbench()`_                     `UnregisterWorkbench()`_                `UpdateWorkbench()`_                    `UpdateWorkbenchObjectA()`_             
-`WBInfo()`_                             `WorkbenchControlA()`_                  
+`WBConfig()`_                           `WBInfo()`_                             `WorkbenchControlA()`_                  
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -1155,6 +1155,20 @@ Bugs
      The existance of this function is a bug itself. It should be removed
      once there is a adequate notification API in dos.library that works.
 
+
+
+----------
+
+WBConfig()
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL WBConfig(
+          ULONG unk1,
+          ULONG unk2 );
 
 
 ----------

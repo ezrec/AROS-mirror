@@ -15,7 +15,7 @@ kernel
 `KrnGetScheduler()`_                    `KrnGetSystemAttr()`_                   `KrnInitMemory()`_                      `KrnIsSuper()`_                         
 `KrnMapGlobal()`_                       `KrnMayGetChar()`_                      `KrnPutChar()`_                         `KrnRegisterModule()`_                  
 `KrnRemExceptionHandler()`_             `KrnRemIRQHandler()`_                   `KrnSchedule()`_                        `KrnSetProtection()`_                   
-`KrnSetScheduler()`_                    `KrnSetSystemAttr()`_                   `KrnStatMemory()`_                      `KrnSti()`_                             
+`KrnSetScheduler()`_                    `KrnSetSystemAttr()`_                   `KrnStatMemoryA()`_                     `KrnSti()`_                             
 `KrnSwitch()`_                          `KrnUnmapGlobal()`_                     `KrnUnregisterModule()`_                `KrnVirtualToPhysical()`_               
 
 ======================================= ======================================= ======================================= ======================================= 
@@ -194,6 +194,9 @@ Notes
      Since this allocator is page-based, length will always be round up
      to system's memory page size. The same applies to starting address
      (if specified), it will be rounded down to page boundary.
+
+     This function works only on systems with MMU support. Without MMU
+     it will always return NULL.
 
 
 
@@ -485,6 +488,13 @@ Synopsis
  void KrnFreePages(
           void * addr,
           uintptr_t length );
+
+Notes
+~~~~~
+::
+
+     This function works only on systems with MMU support.
+
 
 
 ----------
@@ -956,16 +966,20 @@ See also
 
 ----------
 
-KrnStatMemory()
-===============
+KrnStatMemoryA()
+================
 
 Synopsis
 ~~~~~~~~
 ::
 
- void KrnStatMemory(
-          struct TagItem * query,
-          ULONG flags );
+ ULONG KrnStatMemoryA(
+          ULONG flags,
+          struct TagItem * query );
+ 
+ ULONG KrnStatMemory(
+          ULONG flags,
+          TAG tag, ... );
 
 Function
 ~~~~~~~~
@@ -979,19 +993,20 @@ Inputs
 ::
 
      query - An array of TagItems containing query specification. Each
-             TagItem consists of tag ID and a pointer to IPTR value
-             which will contain the result of the query.
+             TagItem consists of tag ID and a pointer to a value of
+             specified type which will contain the result of the query.
 
              Available tag IDs are:
 
-             KMS_Free          - Get amount of free memory in bytes
-             KMS_Total         - Get total amount of memory in bytes
-             KMS_LargestAlloc  - Get size of the largest allocated chunk in bytes
-             KMS_SmallestAlloc - Get size of the smallest allocated chunk in bytes
-             KMS_LargestFree   - Get size of the largest free chunk in bytes
-             KMS_SmallestFree  - Get size of the smallest free chunk in bytes
-             KMS_NumAlloc      - Get number of allocated chunks
-             KMS_NumFree       - Get number of free chunks
+             KMS_Free          (IPTR)  - Get amount of free memory in bytes
+             KMS_Total         (IPTR)  - Get total amount of memory in bytes
+             KMS_LargestAlloc  (IPTR)  - Get size of the largest allocated chunk in bytes
+             KMS_SmallestAlloc (IPTR)  - Get size of the smallest allocated chunk in bytes
+             KMS_LargestFree   (IPTR)  - Get size of the largest free chunk in bytes
+             KMS_SmallestFree  (IPTR)  - Get size of the smallest free chunk in bytes
+             KMS_NumAlloc      (IPTR)  - Get number of allocated chunks
+             KMS_NumFree       (IPTR)  - Get number of free chunks
+             KMS_PageSize      (ULONG) - Get memory page size
 
      flags - Flags which specify physical properties of the memory to query.
              These are the same flags as passed to exec.library/AllocMem().
@@ -1001,7 +1016,8 @@ Result
 ~~~~~~
 ::
 
-     None.
+     TRUE if the function worked, FALSE if MMU is not up and running on the system.
+     If the function returns FALSE, values will stay uninitialized.
 
 
 Notes
