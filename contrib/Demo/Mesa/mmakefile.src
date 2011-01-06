@@ -11,11 +11,12 @@ FILES 	    :=  bounce \
                 arbfslight \
                 ray \
                 spectex \
+                eglgears \
                 
 EXEDIR      := $(CONTRIBDIR)/Demos/Mesa
 
 #MM- demo-mesa-prerequisites : workbench-libs-mesa-$(AROS_TARGET_CPU) contrib-gfx-libs-glu\
-#MM     contrib-gfx-libs-glut demo-mesa-images
+#MM     contrib-gfx-libs-glut demo-mesa-images contrib-gfx-libs-eglut
 
 #MM demo-mesa : demo-mesa-prerequisites demo-mesa-teapot demo-mesa-fire demo-mesa-textures\
 #MM     demo-mesa-tunnel demo-mesa-ipers demo-mesa-reflect
@@ -29,7 +30,7 @@ EXEDIR      := $(CONTRIBDIR)/Demos/Mesa
 
 %build_progs mmake=demo-mesa \
     targetdir=$(EXEDIR) \
-    files="$(FILES)" uselibs="glut GL GLU"
+    files="$(FILES)" uselibs="glut eglut GL GLU"
 
 %build_prog mmake=demo-mesa-teapot \
     targetdir=$(EXEDIR) progname="teapot" \
