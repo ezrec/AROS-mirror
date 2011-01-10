@@ -195,31 +195,28 @@ C library
 
 * no static version of arosc.library - This makes building arosc quite complex 
   and all programs should be able to use the shared version anyway. 
-  I don't think currently any program uses the static version of library.
-* remove librom.a - I would split arosc.library in three parts:
+* remove librom.a and arosc.library. arosc.library is split in three parts:
 
     * a std C subset that can be put in ROM as the first library, that thus 
-      does not need dos.library. This should then replace all usage of librom.a
-    * a std C implementation, stdio is done as a light weight wrapper around 
-      amiga OS filehandles
+      does not need dos.library. This should then replace all usage of
+      librom.a.
+      This library is called arosstdc.library. It contains also the math
+      functions which may make it too big for for example m68k ROMs.
+    * a std C implementation of stdio is done as a light weight wrapper around 
+      amiga OS filehandles. The library is arosstdcdos.library
     * Full POSIX implementation; possibly also including some BSD functions. 
       This would then provide a (nearly) full POSIX implementation. This library
       should be optional and real amiga programs should not need this library.
+      The library is called arosnixc.library.
 
-* this change will influence all already compiled programs as the new 
-  arosc.library will have a different binary interface
+* this change will influence all already compiled programs as arosc.library
+  is gone.
+
 * a possibility to retain the compatibility by creating 
   arosc2.library (new library) and reimplementing arosc.library as stub to 
-  arosc.library was rejected - the ABI_V1 should be clean of such hacks
+  arosc2.library was rejected - the ABI_V1 should be clean of such hacks
 
-STATUS: IN PROGRESS (branch in svn: branches/ABI_V1/trunk-aroscsplit. First
-stage is completed. The C99 standard C part is split off from arosc.library.
-There are now two libraries implementing the C99 API: arosstdc.library and
-arosstdcdos.library. The former is linked into the kernel and is initialized
-as one of the first libraries so it can be used by all other modules in the
-kernel; the latter is a disk based library that needs DOS functions.
-The next stage is to convert the remaining library guided by the POSIX
-standard, named arosuxc.library)
+STATUS: IMPLEMENTED (branch in svn: branches/ABI_V1/trunk-aroscsplit.)
 
 DECISION: A decision has been made on 2008-12-14 to include this item into 
 ABI_V1.
