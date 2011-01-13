@@ -169,3 +169,14 @@ INDEX
 If you need to blame someone for how crappy this gcc port is, then by
 any means blame Fabio Alemagna <falemagn@studenti.unina.it>. Feel free
 to also ask normal questions, though :-)
+
+6. Various notes
+
+Starting from 13.01.2011 AROS startup code supports using DWARF2 unwinding
+in C++ exceptions. This means that --enable-sjlj-exceptions option can now
+be omitted on all architectures. This requires collect-aros and libautoinit.a
+not older than from the specified date.
+
+The fix was succesfully tested on i386 architecture. PPC and x86-64 are expected
+to work too. On ARM linking fails because of undefined weak symbol, this is
+still being worked on.
