@@ -15,10 +15,10 @@ FILES 	    :=  bounce \
                 
 EXEDIR      := $(CONTRIBDIR)/Demos/Mesa
 
-#MM- demo-mesa-prerequisites : workbench-libs-mesa-$(AROS_TARGET_CPU) contrib-gfx-libs-glu\
+#MM- demo-mesa-prerequisites : workbench-libs-mesa workbench-libs-glu \
 #MM     contrib-gfx-libs-glut demo-mesa-images contrib-gfx-libs-eglut workbench-libs-vega
 
-#MM demo-mesa : demo-mesa-prerequisites demo-mesa-teapot demo-mesa-fire demo-mesa-textures\
+#MM demo-mesa : demo-mesa-prerequisites demo-mesa-teapot demo-mesa-fire demo-mesa-textures \
 #MM     demo-mesa-tunnel demo-mesa-ipers demo-mesa-reflect demo-mesa-lion
 
 #MM demo-mesa-teapot : demo-mesa-prerequisites
