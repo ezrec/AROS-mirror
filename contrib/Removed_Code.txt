@@ -6,6 +6,12 @@ removal if you want.
 
 ----------------------------------------------------------------------------
 
+15 Jan 2011: contrib/aminet/dev/c
+
+  Deleted because building it was disabled about a year ago. There was only
+  a port of gnu indent which had build problems at that time. Additionally,
+  there is another port of gnu indent in contrib/gnu.
+
 30 Dec 2009: contrib/Feelin
 
   This code was considered obsolete. It was not the recent version and the
