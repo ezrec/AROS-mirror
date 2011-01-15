@@ -16,10 +16,10 @@ FILES 	    :=  bounce \
 EXEDIR      := $(CONTRIBDIR)/Demos/Mesa
 
 #MM- demo-mesa-prerequisites : workbench-libs-mesa-$(AROS_TARGET_CPU) contrib-gfx-libs-glu\
-#MM     contrib-gfx-libs-glut demo-mesa-images contrib-gfx-libs-eglut
+#MM     contrib-gfx-libs-glut demo-mesa-images contrib-gfx-libs-eglut workbench-libs-vega
 
 #MM demo-mesa : demo-mesa-prerequisites demo-mesa-teapot demo-mesa-fire demo-mesa-textures\
-#MM     demo-mesa-tunnel demo-mesa-ipers demo-mesa-reflect
+#MM     demo-mesa-tunnel demo-mesa-ipers demo-mesa-reflect demo-mesa-lion
 
 #MM demo-mesa-teapot : demo-mesa-prerequisites
 #MM demo-mesa-fire : demo-mesa-prerequisites
@@ -27,6 +27,7 @@ EXEDIR      := $(CONTRIBDIR)/Demos/Mesa
 #MM demo-mesa-tunnel : demo-mesa-prerequisites
 #MM demo-mesa-ipers : demo-mesa-prerequisites
 #MM demo-mesa-reflect : demo-mesa-prerequisites
+#MM demo-mesa-lion : demo-mesa-prerequisites
 
 %build_progs mmake=demo-mesa \
     targetdir=$(EXEDIR) \
@@ -46,14 +47,18 @@ EXEDIR      := $(CONTRIBDIR)/Demos/Mesa
 
 %build_prog mmake=demo-mesa-tunnel \
     targetdir=$(EXEDIR) progname="tunnel" \
-    files="tunnel readtex" uselibs="glut GL GLU "
+    files="tunnel readtex" uselibs="glut GL GLU"
 
 %build_prog mmake=demo-mesa-ipers \
     targetdir=$(EXEDIR) progname="ipers" \
-    files="ipers readtex" uselibs="glut GL GLU "
+    files="ipers readtex" uselibs="glut GL GLU"
 
 %build_prog mmake=demo-mesa-reflect \
     targetdir=$(EXEDIR) progname="reflect" \
-    files="reflect readtex showbuffer" uselibs="glut GL GLU "
+    files="reflect readtex showbuffer" uselibs="glut GL GLU"
+
+%build_prog mmake=demo-mesa-lion \
+    targetdir=$(EXEDIR) progname="lion" \
+    files="lion lion-render" uselibs="eglut GL OpenVG"
 
 %common
