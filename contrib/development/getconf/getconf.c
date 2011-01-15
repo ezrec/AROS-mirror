@@ -377,12 +377,6 @@ static size_t confstr(int name, char *buf, size_t len)
     errno = EINVAL;
     return -1;
 }
-
-static long pathconf(const char *path, int name)
-{
-    errno = EINVAL;
-    return -1;
-}
 #endif
 
 int
