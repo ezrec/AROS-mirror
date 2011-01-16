@@ -16,7 +16,8 @@ FILES 	    :=  bounce \
 EXEDIR      := $(CONTRIBDIR)/Demos/Mesa
 
 #MM- demo-mesa-prerequisites : workbench-libs-mesa workbench-libs-glu \
-#MM     contrib-gfx-libs-glut demo-mesa-images contrib-gfx-libs-eglut workbench-libs-vega
+#MM     contrib-gfx-libs-glut demo-mesa-images contrib-gfx-libs-eglut \
+#MM     workbench-libs-vega workbench-libs-egl
 
 #MM demo-mesa : demo-mesa-prerequisites demo-mesa-teapot demo-mesa-fire demo-mesa-textures \
 #MM     demo-mesa-tunnel demo-mesa-ipers demo-mesa-reflect demo-mesa-lion
@@ -31,7 +32,7 @@ EXEDIR      := $(CONTRIBDIR)/Demos/Mesa
 
 %build_progs mmake=demo-mesa \
     targetdir=$(EXEDIR) \
-    files="$(FILES)" uselibs="glut eglut GL GLU"
+    files="$(FILES)" uselibs="glut eglut GL GLU EGL"
 
 %build_prog mmake=demo-mesa-teapot \
     targetdir=$(EXEDIR) progname="teapot" \
@@ -59,6 +60,6 @@ EXEDIR      := $(CONTRIBDIR)/Demos/Mesa
 
 %build_prog mmake=demo-mesa-lion \
     targetdir=$(EXEDIR) progname="lion" \
-    files="lion lion-render" uselibs="eglut GL OpenVG"
+    files="lion lion-render" uselibs="eglut EGL OpenVG"
 
 %common
