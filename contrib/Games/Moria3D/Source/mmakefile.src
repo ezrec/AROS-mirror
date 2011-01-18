@@ -1,4 +1,4 @@
-# $Id: mmakefile 19699 2003-09-08 22:13:08Z hkiel $
+# $Id$
 include $(TOP)/config/make.cfg
 
 STARTUP := $(LIBDIR)/startup.o

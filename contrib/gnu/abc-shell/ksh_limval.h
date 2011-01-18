@@ -1,5 +1,5 @@
 /* Wrapper around the values.h/limits.h includes/ifdefs */
-/* $Id: ksh_limval.h,v 1.4 2005/12/10 18:43:05 hnl_dk Exp $ */
+/* $Id$ */
 
 /* limits.h is included in sh.h */
 

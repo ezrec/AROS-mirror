@@ -2,7 +2,7 @@
  * Public Domain Bourne/Korn shell
  */
 
-/* $Id: sh.h,v 1.42 2007/11/12 20:43:51 hnl_dk Exp $ */
+/* $Id$ */
 
 #define ABC_VERSION "52.10"
 #define RELEASE_DATE "12.11.2007"

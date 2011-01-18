@@ -1,7 +1,7 @@
 /*
  * prototypes for PD-KSH
  * originally generated using "cproto.c 3.5 92/04/11 19:28:01 cthuang "
- * $Id: proto.h,v 1.14 2007/11/10 22:46:32 hnl_dk Exp $
+ * $Id$
  */
 
 #include "attrib.h"

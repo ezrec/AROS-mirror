@@ -1,6 +1,6 @@
 /*
     Copyright © 1995-2003, The AROS Development Team. All rights reserved.
-    $Id: icon_init.c 21964 2004-07-17 09:55:17Z verhaegs $
+    $Id$
 
 */
 

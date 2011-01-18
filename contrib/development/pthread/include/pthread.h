@@ -3,7 +3,7 @@
 
 /*
     Copyright © 2007-2010, The AROS Development Team. All rights reserved.
-    $Id: $
+    $Id$
 */
 
 #include <exec/semaphores.h>

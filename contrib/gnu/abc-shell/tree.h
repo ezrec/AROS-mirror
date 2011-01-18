@@ -2,7 +2,7 @@
  * command trees for compile/execute
  */
 
-/* $Id: tree.h,v 1.3 2004/11/24 23:07:14 hnl_dk Exp $ */
+/* $Id$ */
 
 #define NOBLOCK ((struct op *)NULL)
 #define NOWORD  ((char *)NULL)

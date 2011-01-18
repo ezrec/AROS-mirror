@@ -5,8 +5,8 @@
 /*
  *	$Filename: inetd.h $
  *	$Release$
- *	$Revision: 1.3 $
- *	$Date: 2010/04/29 06:35:44 $
+ *	$Revision$
+ *	$Date$
  *
  * Internet daemon interface definitions
  *
@@ -16,7 +16,7 @@
  *
  * Author: ppessi <Pekka.Pessi@hut.fi>
  *
- * $Id: inetd.h,v 1.3 2010/04/29 06:35:44 thboeckel Exp $
+ * $Id$
  *
  * $Log: inetd.h,v $
  * Revision 1.3  2010/04/29 06:35:44  thboeckel

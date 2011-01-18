@@ -1,4 +1,4 @@
-#   $Id: mmakefile.src 26744 2007-09-20 01:45:45Z mazze $
+#   $Id$
 include $(TOP)/config/make.cfg
 
 FILES := Package-Startup Package-Shutdown

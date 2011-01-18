@@ -1,4 +1,4 @@
-/* $Id: table.h,v 1.9 2005/12/13 21:38:35 hnl_dk Exp $ */
+/* $Id$ */
 
 /*
  * generic hashed associative table for commands and variables.

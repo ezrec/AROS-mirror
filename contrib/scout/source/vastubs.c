@@ -21,7 +21,7 @@
  YAM Official Support Site :  http://www.yam.ch/
  YAM OpenSource project    :  http://sourceforge.net/projects/yamos/
 
- $Id: vastubs.c,v 1.1 2010/04/29 06:37:53 thboeckel Exp $
+ $Id$
 
 ***************************************************************************/
 

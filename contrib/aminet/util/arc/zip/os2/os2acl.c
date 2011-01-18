@@ -30,8 +30,8 @@
 
 #ifdef KUR
    static char *rcsid =
-   "$Id: os2acl.c,v 1.3 1996/04/03 19:18:27 rommel Exp rommel $";
-   static char *rcsrev = "$Revision: 1.3 $";
+   "$Id$";
+   static char *rcsrev = "$Revision$";
 #endif
 
 /*

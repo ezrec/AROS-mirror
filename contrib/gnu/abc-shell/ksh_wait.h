@@ -1,5 +1,5 @@
 /* Wrapper around the ugly sys/wait includes/ifdefs */
-/* $Id: ksh_wait.h,v 1.3 2004/11/24 23:07:12 hnl_dk Exp $ */
+/* $Id$ */
 
 /* Get rid of system macros (which probably use union wait) */
 #undef WIFCORED

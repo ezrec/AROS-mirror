@@ -4,7 +4,7 @@
 /*
  * Shell file I/O routines
  */
-/* $Id: shf.h,v 1.6 2005/12/13 21:38:35 hnl_dk Exp $ */
+/* $Id$ */
 
 #define SHF_BSIZE       512
 

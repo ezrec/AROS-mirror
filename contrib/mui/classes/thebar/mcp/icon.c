@@ -16,7 +16,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: icon.c 349 2010-04-28 15:08:08Z thboeckel $
+ $Id$
 
 ***************************************************************************/
 

@@ -2,7 +2,7 @@
 LIBRARIES_XADMASTER_I	SET	1
 
 *
-*   $Id: xadmaster.i,v 13.3 2005/06/23 15:47:23 stoecker Exp $
+*   $Id$
 *   xadmaster.library defines and structures
 *
 *   XAD library system for archive handling

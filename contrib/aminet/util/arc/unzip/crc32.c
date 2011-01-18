@@ -17,7 +17,7 @@
  * of two increase in speed on a Power PC G4 (PPC7455) using gcc -O3.
  */
 
-/* $Id: crc32.c,v 2.0 2007/01/07 05:20:36 spc Exp $ */
+/* $Id$ */
 
 #define __CRC32_C       /* identifies this source module */
 

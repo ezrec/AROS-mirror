@@ -5,7 +5,7 @@
  *                       Network Solutions Development, Inc.
  *                       All rights reserved.
  *
- *	    $Id: utmp.h,v 1.1 2010/04/21 17:10:24 sonic_amiga Exp $
+ *	    $Id$
  */
 
 #ifndef	_UTMP_H_

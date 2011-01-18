@@ -2,7 +2,7 @@
 # define KSH_TIME_H
 
 /* Wrapper around the ugly time.h,sys/time.h includes/ifdefs */
-/* $Id: ksh_time.h,v 1.3 2004/11/24 23:07:12 hnl_dk Exp $ */
+/* $Id$ */
 
 #include <sys/time.h>
 #include <time.h>

@@ -4,7 +4,7 @@
 **  Registered MUI class, Serial Num: 1d51     0x9d510030 to 0x9d5100A0 / 0x9d5100C0 to 0x9d5100FF
 **  *** use only YOUR OWN Serial Number for your public custom class ***
 **
-**  $Id: NList_mcc.h,v 1.1 2010/04/29 06:37:09 thboeckel Exp $
+**  $Id$
 **
 **  NList_mcc.h
 */

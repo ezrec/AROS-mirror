@@ -12,7 +12,7 @@
  * Created: Fri Mar 29 1996
  */
 
-/* $Id: os2acl.h,v 1.1 1996/03/30 09:35:00 rommel Exp rommel $ */
+/* $Id$ */
 
 /*
  * $Log: os2acl.h,v $

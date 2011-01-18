@@ -1,4 +1,4 @@
-#   $Id: mmakefile.src 31739 2009-08-24 18:56:44Z deadwood $
+#   $Id$
 include $(TOP)/config/make.cfg
 
 #MM mesa-demos-glexcess : \

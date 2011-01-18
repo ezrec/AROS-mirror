@@ -16,7 +16,7 @@
 
  NList classes Support Site:  http://www.sf.net/projects/nlist-classes
 
- $Id: icon.h 392 2010-04-28 15:06:59Z thboeckel $
+ $Id$
 
 ***************************************************************************/
 
