@@ -785,8 +785,7 @@ Inputs
                  supported type is DEBUG_ELF.
      debugInfo - Debug information data. For DEBUG_ELF type this should be
                  a pointer to struct ELF_DebugInfo, filled in as follows:
-                   eh - a pointer to ELF file header with int_shnum and
-                        int_shstrndx fields filled in.
+                   eh - a pointer to ELF file header.
                    sh - a pointer to an array of ELF section headers.
 
 

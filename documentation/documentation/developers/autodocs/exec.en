@@ -30,20 +30,20 @@ exec
 `FreeSignal()`_                         `FreeTrap()`_                           `FreeVec()`_                            `GetCC()`_                              
 `GetMsg()`_                             `InitCode()`_                           `InitResident()`_                       `InitSemaphore()`_                      
 `InitStruct()`_                         `Insert()`_                             `MakeFunctions()`_                      `MakeLibrary()`_                        
-`NewAddTask()`_                         `NewAllocEntry()`_                      `NewStackSwap()`_                       `ObtainQuickVector()`_                  
-`ObtainSemaphoreList()`_                `ObtainSemaphoreShared()`_              `OldOpenLibrary()`_                     `OpenDevice()`_                         
-`OpenLibrary()`_                        `OpenResource()`_                       `Permit()`_                             `Procure()`_                            
-`PutMsg()`_                             `RawDoFmt()`_                           `ReadGayle()`_                          `ReleaseSemaphore()`_                   
-`ReleaseSemaphoreList()`_               `RemDevice()`_                          `RemHead()`_                            `RemIntServer()`_                       
-`RemLibrary()`_                         `RemMemHandler()`_                      `Remove()`_                             `RemPort()`_                            
-`RemResetCallback()`_                   `RemResource()`_                        `RemSemaphore()`_                       `RemTail()`_                            
-`RemTask()`_                            `ReplyMsg()`_                           `SendIO()`_                             `SetExcept()`_                          
-`SetFunction()`_                        `SetIntVector()`_                       `SetSignal()`_                          `SetSR()`_                              
-`SetTaskPri()`_                         `ShutdownA()`_                          `Signal()`_                             `StackSwap()`_                          
-`SumKickData()`_                        `SumLibrary()`_                         `SuperState()`_                         `Supervisor()`_                         
-`Switch()`_                             `TypeOfMem()`_                          `UserState()`_                          `Vacate()`_                             
-`VNewRawDoFmt()`_                       `Wait()`_                               `WaitIO()`_                             `WaitPort()`_                           
-
+`NewAddTask()`_                         `NewAllocEntry()`_                      `NewCreateTaskA()`_                     `NewStackSwap()`_                       
+`ObtainQuickVector()`_                  `ObtainSemaphoreList()`_                `ObtainSemaphoreShared()`_              `OldOpenLibrary()`_                     
+`OpenDevice()`_                         `OpenLibrary()`_                        `OpenResource()`_                       `Permit()`_                             
+`Procure()`_                            `PutMsg()`_                             `RawDoFmt()`_                           `ReadGayle()`_                          
+`ReleaseSemaphore()`_                   `ReleaseSemaphoreList()`_               `RemDevice()`_                          `RemHead()`_                            
+`RemIntServer()`_                       `RemLibrary()`_                         `RemMemHandler()`_                      `Remove()`_                             
+`RemPort()`_                            `RemResetCallback()`_                   `RemResource()`_                        `RemSemaphore()`_                       
+`RemTail()`_                            `RemTask()`_                            `ReplyMsg()`_                           `SendIO()`_                             
+`SetExcept()`_                          `SetFunction()`_                        `SetIntVector()`_                       `SetSignal()`_                          
+`SetSR()`_                              `SetTaskPri()`_                         `ShutdownA()`_                          `Signal()`_                             
+`StackSwap()`_                          `SumKickData()`_                        `SumLibrary()`_                         `SuperState()`_                         
+`Supervisor()`_                         `Switch()`_                             `TypeOfMem()`_                          `UserState()`_                          
+`Vacate()`_                             `VNewRawDoFmt()`_                       `Wait()`_                               `WaitIO()`_                             
+`WaitPort()`_                           
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -4192,6 +4192,68 @@ See also
 
 ----------
 
+NewCreateTaskA()
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Task * NewCreateTaskA(
+          struct TagItem * tags );
+ 
+ struct Task * NewCreateTask(
+          TAG tag, ... );
+
+Function
+~~~~~~~~
+::
+
+     Create a new task.
+
+
+Inputs
+~~~~~~
+::
+
+     tags - TagList which may contain the following tags:
+
+       TASKTAG_ERROR        (ULONG *) - a pointer to an optional location for secondary
+                                        return code. The code itself will be set to
+                                        TASKERROR_OK on success or TASKERROR_NOMEMORY on
+                                        failure.
+       TASKTAG_PC           (APTR)    - Start address of the task's code.
+       TAGKTAG_FINALPC      (APTR)    - Address of the finalization routine. Defaults to
+                                        SysBase->TaskExitCode.
+       TASKTAG_STACKSIZE    (ULONG)   - Size of task's stack. Defaults to CPU-dependent
+                                        value.
+       TASKTAG_NAME         (STRPTR)  - A pointer to task name. The name will be copied.
+       TASKTAG_USERDATA     (APTR)    - Anything. Will be written into tc_UserData.
+       TASKTAG_PRI          (BYTE)    - Task's priority. Defaults to 0.
+       TASKTAG_FLAGS        (ULONG)   - Initial value for tc_Flags.
+       TASKTAG_TCBEXTRASIZE (ULONG)   - Value which will be added to sizeof(struct Task)
+                                        in order to determine final size of task structure.
+                                        Can be used for appending user data to task structure.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the new task or NULL on failure.
+
+
+Bugs
+~~~~
+::
+
+     Value of TASKTAG_FLAGS is actually ignored.
+     There are some more tags which are currently not implemented.
+
+
+
+----------
+
 NewStackSwap()
 ==============
 
@@ -4498,7 +4560,7 @@ Inputs
 ~~~~~~
 ::
 
-     libName - Pointer to the resource's name.
+     resName - Pointer to the resource's name.
 
 
 Result
@@ -4736,8 +4798,20 @@ Inputs
                               AROS_UFCA(UBYTE, char,      D0),
                               AROS_UFCA(APTR , PutChData, A3));
                  
-                    The argument may be NULL. This makes RawDoFmt() use an internal
-                    function. If you want to be compatible with AmigaOS you
+                    Additionally, PutChProc can be set to one of the following
+                    magic values:
+
+                      RAWFMTFUNC_STRING - Write output to string buffer pointed
+                                          to by PutChData which is incremented
+                                          every character.
+                      RAWFMTFUNC_SERIAL - Write output to debug output. PutChData
+                                          is ignored and not touched.
+                      RAWFMTFUNC_COUNT  - Count number of characters in the result.
+                                          PutChData is a pointer to ULONG which
+                                          is incremented every character. Initial
+                                          value of the cointer is kept as it is.
+
+                    If you want to be compatible with AmigaOS you
                     should check that exec.library has at least version 45.
 
      PutChData    - Data propagated to each call of the callback hook.
@@ -6178,12 +6252,27 @@ Inputs
 
      DataStream   - C-style data stream (va_list variable)
 
-     PutChProc    - Callback function. In caseCalled for each character, including
-                    the NULL terminator. The fuction is called as follow:
+     PutChProc    - Callback function. Called for each character, including
+                    the NULL terminator. The function should be declared as
+                    follows:
 
-                    AROS_UFC2(void, PutChProc,
-                              AROS_UFCA(UBYTE, char,      D0),
-                              AROS_UFCA(APTR , PutChData, A3));
+                    APTR PutChProc(APTR PutChData, UBYTE char);
+
+                    The function should return new value for PutChData variable.
+
+                    Additionally, PutChProc can be set to one of the following
+                    magic values:
+
+                      RAWFMTFUNC_STRING - Write output to string buffer pointed
+                                          to by PutChData which is incremented
+                                          every character.
+                      RAWFMTFUNC_SERIAL - Write output to debug output. PutChData
+                                          is ignored and not touched.
+                      RAWFMTFUNC_COUNT  - Count number of characters in the result.
+                                          PutChData is a pointer to ULONG which
+                                          is incremented every character. Initial
+                                          value of the cointer is kept as it is.
+
 
      PutChData    - Data propagated to each call of the callback hook.
 
@@ -6192,7 +6281,7 @@ Result
 ~~~~~~
 ::
 
-     Pointer to the rest of the DataStream.
+     Final PutChData value.
 
 
 Example
