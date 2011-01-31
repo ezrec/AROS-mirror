@@ -5,8 +5,6 @@ include $(TOP)/config/make.cfg
 # The build_catalogs macro doesn't have the option for a source directory,
 # therefore we have to build the catalogs manually
 
-#MM- ports-game-multipuzzle : ports-game-multipuzzle-catalogs
-
 TARGETDIR    := $(AROS_CONTRIB)/Games/MultiPuzzle/Catalogs
 ARCHBASE     := multipuzzle-src-1.3.2
 LANGUAGES    := $(subst $(PORTSDIR)/multipuzzle/$(ARCHBASE)/catalogs/, , $(basename $(call WILDCARD, $(PORTSDIR)/multipuzzle/$(ARCHBASE)/catalogs/*.ct)))
@@ -21,7 +19,7 @@ ports-game-multipuzzle-catalogs : ../multipuzzle_strings.h $(PORTSDIR)/multipuzz
 	$(MKDIR) $(GENDIR)/$(CURDIR)
 	$(FLEXCAT) $< $@=$(TOOLDIR)/C_h_orig.sd
 
-$(PORTSDIR)/multipuzzle/$(ARCHBASE)/multipuzzle_strings.c : $(PORTSDIR)/multipuzzle/$(ARCHBASE)/catalogs/multipuzzle.cd
+$(PORTSDIR)/multipuzzle/$(ARCHBASE)/multipuzzle_strings.c : $(PORTSDIR)/multipuzzle/$(ARCHBASE)/catalogs/multipuzzle.cd ../multipuzzle_strings.h
 	$(MKDIR) $(GENDIR)/$(CURDIR)
 	$(FLEXCAT) $< $@=$(TOOLDIR)/C_c_orig.sd
 

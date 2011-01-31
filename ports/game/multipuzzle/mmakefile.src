@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 #MM- ports-game: ports-game-multipuzzle
 
 #MM  ports-game-multipuzzle : includes linklibs ports-game-multipuzzle-cpy \
-#MM  ports-game-multipuzzle-drawericon ports-game-multipuzzle-fetch
+#MM  ports-game-multipuzzle-drawericon ports-game-multipuzzle-catalogs ports-game-multipuzzle-fetch
 
 #MM  ports-game-multipuzzle-cpy : ports-game-multipuzzle-fetch
 
@@ -19,6 +19,8 @@ TARGETDIR    := $(AROS_CONTRIB)/Games/MultiPuzzle
 
 
 FILES := displayinit localize multipuzzle puzzle requesters multipuzzle_strings
+USER_CFLAGS := -Wno-implicit-function-declaration -Wno-parentheses
+USER_INCLUDES := -I.
 
 %build_prog mmake=ports-game-multipuzzle progname=MultiPuzzle \
     srcdir=$(PORTSDIR)/multipuzzle/$(ARCHBASE)/ \
