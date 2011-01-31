@@ -14,12 +14,12 @@ include $(TOP)/config/make.cfg
 #MM  ports-graphics-lunapaint-quick : ports-graphics-lunapaint-fetch
 
 REPOSITORIES := http://download.berlios.de/lunapaintami
-ARCHBASE     := lunapaint-0.4
+ARCHBASE     := lunapaint-0.5
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/Lunapaint
 
 # Next version of Lunapaint shouldn't need -fgnu89-inline anymore
 USER_CFLAGS  := -fgnu89-inline -fno-strict-aliasing
-USER_INCLUDES:= -I$(PORTSDIR)/lunapaint/lunapaint-0.4/src
+USER_INCLUDES:= -I$(PORTSDIR)/lunapaint/$(ARCHBASE)/src
 
 FILES := \
 	src/main \
