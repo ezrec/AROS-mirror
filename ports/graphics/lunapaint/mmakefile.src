@@ -7,7 +7,8 @@ include $(TOP)/config/make.cfg
 #MM  ports-graphics-lunapaint : includes linklibs workbench-libs-freetype-linklib ports-graphics-lunapaint-fetch \
 #MM  ports-graphics-lunapaint-data ports-graphics-lunapaint-drawericon \
 #MM  ports-graphics-lunapaint-cpy \
-#MM  ports-graphics-lunapaint-catalogs
+#MM  ports-graphics-lunapaint-catalogs \
+#MM  ports-graphics-lunapaint-deficon
 
 #MM  ports-graphics-lunapaint-data : ports-graphics-lunapaint-fetch
 
@@ -16,6 +17,7 @@ include $(TOP)/config/make.cfg
 REPOSITORIES := http://download.berlios.de/lunapaintami
 ARCHBASE     := lunapaint-0.5
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/Lunapaint
+DEFICON      := def_Lunapaint
 
 # Next version of Lunapaint shouldn't need -fgnu89-inline anymore
 USER_CFLAGS  := -fgnu89-inline -fno-strict-aliasing
@@ -58,8 +60,10 @@ FILES := \
 ICONS := Lunapaint
 
 %build_icons mmake=ports-graphics-lunapaint-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
+    icons=$(ICONS) dir=$(TARGETDIR)/..
 
+%build_icons mmake=ports-graphics-lunapaint-deficon \
+    icons=$(DEFICON) dir=$(AROS_ENVARC)/SYS
 
 %copy_dir_recursive mmake=ports-graphics-lunapaint-data src=$(PORTSDIR)/lunapaint/$(ARCHBASE)/data \
 dst=$(TARGETDIR)/data
