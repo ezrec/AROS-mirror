@@ -1,12 +1,13 @@
-# Copyright © 2009-2010, The AROS Development Team. All rights reserved.
+# Copyright © 2009-2011, The AROS Development Team. All rights reserved.
 # $Id$
 
 -include $(TOP)/config/make.cfg
 
 SDLVERSION := 1.2.11
 
-#MM- contrib-sdl : workbench-devs-AHI development-SDL
-#MM- contrib-sdl : development-SDL_gfx development-SDL_image development-SDL_mixer development-SDL_net development-SDL_sound contrib-sdl-sdl-ttf
+#MM- contrib-sdl : development-SDL development-SDL_gfx development-SDL_image development-SDL_mixer development-SDL_net development-SDL_sound contrib-sdl-sdl-ttf
+
+#MM- development-SDL : workbench-devs-AHI
 
 %fetch_and_build_gnu_development package=SDL version=$(SDLVERSION) \
     patch=yes package_repo="http://www.libsdl.org/release" suffixes="tar.gz" \

@@ -1,4 +1,4 @@
-# Copyright © 2008-2010, The AROS Development Team. All rights reserved.
+# Copyright © 2008-2011, The AROS Development Team. All rights reserved.
 # $Id$
 
 -include $(TOP)/config/make.cfg
@@ -8,7 +8,7 @@ ARCHBASE := OWB-r1097
 OWB_SOURCE := $(PORTSDIR)/OWB/$(ARCHBASE)
 OWB_BUILD_DIR := $(GENDIR)/$(CURDIR)
 
-#MM- aros-tcpip-apps-owb-libs : contrib-fontconfig contrib-networking-curl workbench-devs-AHI development-SDL development-SDL_gfx-quick contrib-sqlite contrib-icu4c contrib-libxslt
+#MM- aros-tcpip-apps-owb-libs : contrib-fontconfig contrib-networking-curl development-SDL development-SDL_gfx-quick contrib-sqlite contrib-icu4c contrib-libxslt
 #MM- aros-tcpip-apps-owb-webview : aros-tcpip-apps-owb-libs aros-tcpip-apps-owb-webview-fetch aros-tcpip-apps-owb-webview-setup aros-tcpip-apps-owb-webview-build aros-tcpip-apps-owb-webview-install
 
 %fetch mmake=aros-tcpip-apps-owb-webview-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/OWB \
