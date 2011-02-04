@@ -1753,101 +1753,6 @@
 /mui/madmatrix/*.lnk
 /mui/madmatrix/mmakefile
 
-# /necessary/
-/necessary/mmakefile
-
-# /necessary/AHI/
-/necessary/AHI/mmakefile
-/necessary/AHI/.files-touched
-
-# /necessary/AHI/PackageFiles/Packages/
-/necessary/AHI/PackageFiles/Packages/mmakefile
-
-# /necessary/AHI/PackageFiles/S/
-/necessary/AHI/PackageFiles/S/mmakefile
-
-# /necessary/AmberRAM/
-/necessary/AmberRAM/mmakefile
-
-# /necessary/CDVDFS/src/
-/necessary/CDVDFS/src/mmakefile
-
-# /necessary/SFS/
-/necessary/SFS/mmakefile
-
-# /necessary/SFS/FS/
-/necessary/SFS/FS/mmakefile
-
-# /necessary/SFS/SFSdefrag/
-/necessary/SFS/SFSdefrag/mmakefile
-/necessary/SFS/SFSdefrag/strings.h
-
-# /necessary/SFS/SFSdefrag/Catalogs/
-/necessary/SFS/SFSdefrag/Catalogs/mmakefile
-
-# /necessary/SFS/SFSdefrag/Icons/
-/necessary/SFS/SFSdefrag/Icons/mmakefile
-
-# /necessary/SFS/SFSdefragmentGUI/
-/necessary/SFS/SFSdefragmentGUI/mmakefile
-
-# /necessary/SFS/SFSformat/
-/necessary/SFS/SFSformat/mmakefile
-
-# /necessary/SFS/SFSquery/
-/necessary/SFS/SFSquery/mmakefile
-
-# /necessary/SFS/SetCache/
-/necessary/SFS/SetCache/mmakefile
-
-# /necessary/USB/
-/necessary/USB/.cdtproject
-/necessary/USB/.project
-/necessary/USB/.settings
-/necessary/USB/mmakefile
-
-# /necessary/USB/classes/
-/necessary/USB/classes/mmakefile
-
-# /necessary/USB/classes/HID/
-/necessary/USB/classes/HID/mmakefile
-
-# /necessary/USB/classes/HID/include/
-/necessary/USB/classes/HID/include/mmakefile
-
-# /necessary/USB/classes/MassStorage/
-/necessary/USB/classes/MassStorage/mmakefile
-
-# /necessary/USB/classes/MassStorage/include/
-/necessary/USB/classes/MassStorage/include/mmakefile
-
-# /necessary/USB/drivers/
-/necessary/USB/drivers/mmakefile
-
-# /necessary/USB/drivers/EHCI/
-/necessary/USB/drivers/EHCI/mmakefile
-
-# /necessary/USB/drivers/OHCI/
-/necessary/USB/drivers/OHCI/mmakefile
-
-# /necessary/USB/drivers/UHCI/
-/necessary/USB/drivers/UHCI/mmakefile
-
-# /necessary/USB/include/
-/necessary/USB/include/mmakefile
-
-# /necessary/USB/stack/
-/necessary/USB/stack/mmakefile
-
-# /necessary/USB/stack/stubs/
-/necessary/USB/stack/stubs/mmakefile
-
-# /necessary/USB/tools/
-/necessary/USB/tools/mmakefile
-
-# /necessary/USB/tools/lsusb/
-/necessary/USB/tools/lsusb/mmakefile
-
 # /pack/libxad/portable/
 /pack/libxad/portable/mmakefile
 
@@ -1871,6 +1776,9 @@
 
 # /rexx/src/
 /rexx/src/mmakefile
+
+# /scout/source/locale/
+/scout/source/locale/mmakefile
 
 # /sqlite3/
 /sqlite3/mmakefile
