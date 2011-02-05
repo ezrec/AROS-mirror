@@ -1904,18 +1904,31 @@ Function
 ~~~~~~~~
 ::
 
+     Instantly terminate the program.
 
- Obsolete function, the purpose of which was to exit from a BCPL program.
- DO NOT CALL THIS FUNCTION!
+
+Inputs
+~~~~~~
+::
+
+     returnCode - Process' return code.
+
+
+Result
+~~~~~~
+::
+
+     None.
 
 
 Notes
 ~~~~~
 ::
 
-
- This function is obsolete and doens't do anything. Therefore, do not
- call it!
+     Calling this function bypasses normal termination sequence of your program.
+     Automatically opened libraries will not be closed, destructors will not be
+     called, etc. Do this only if you really know what are you doing. It's not
+     adviced to use this function at all.
 
 
 
@@ -6296,12 +6309,13 @@ Function
 ::
 
      Changes the buffering modes and buffer size for a filehandle.
-     With buff == NULL, the current buffer will be deallocated and a
-     new one of (approximately) size will be allocated.  If buffer is
-     non-NULL, it will be used for buffering and must be at least
-     max(size,208) bytes long, and MUST be longword aligned.  If size
-     is -1, then only the buffering mode will be changed.
- 
+     With buff == NULL, the current buffer will be deallocated (if it
+     was not a user-supplied one) and a new one of (approximately) size
+     will be allocated. If buffer is non-NULL, it will be used for
+     buffering and must be at least max(size,208) bytes long, and MUST
+     be longword aligned. If size is -1, then only the buffering mode
+     will be changed.
+
 
 Inputs
 ~~~~~~

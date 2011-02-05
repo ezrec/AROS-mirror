@@ -64,7 +64,7 @@ Inputs
                      multiplication        *
                      division              /
                      modulo                mod, M, m, %
-                     bitwise and           &
+                            bitwise and           &
                      bitwise or            |
                      bitwise not           ~
                      left shift            lsh, L, l
