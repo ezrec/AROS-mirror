@@ -784,8 +784,8 @@ diff -ruN gcc-4.5.2.orig/gcc/config/i386/aros.h gcc-4.5.2/gcc/config/i386/aros.h
 +#undef MD_FALLBACK_FRAME_STATE_FOR
 diff -ruN gcc-4.5.2.orig/gcc/config/i386/aros64.h gcc-4.5.2/gcc/config/i386/aros64.h
 --- gcc-4.5.2.orig/gcc/config/i386/aros64.h	1970-01-01 03:00:00.000000000 +0300
-+++ gcc-4.5.2/gcc/config/i386/aros64.h	2010-12-29 11:11:25.000000000 +0300
-@@ -0,0 +1,43 @@
++++ gcc-4.5.2/gcc/config/i386/aros64.h	2011-02-07 12:43:12.000000000 +0300
+@@ -0,0 +1,49 @@
 +/* Definitions for AMD x86_64 running AROS systems with ELF64 format.
 +   Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2001, 2002
 +   Free Software Foundation, Inc.
@@ -829,6 +829,12 @@ diff -ruN gcc-4.5.2.orig/gcc/config/i386/aros64.h gcc-4.5.2/gcc/config/i386/aros
 +
 +/* FIXME: AROS doesn't support dw2 unwinding yet.  */
 +#undef MD_FALLBACK_FRAME_STATE_FOR
++
++/* 64-bit AROS uses large code model */
++#undef  SUBTARGET_OVERRIDE_OPTIONS
++#define SUBTARGET_OVERRIDE_OPTIONS	\
++  if (ix86_cmodel_string == 0)		\
++      ix86_cmodel_string = "large"
 diff -ruN gcc-4.5.2.orig/gcc/config/rs6000/aros.h gcc-4.5.2/gcc/config/rs6000/aros.h
 --- gcc-4.5.2.orig/gcc/config/rs6000/aros.h	1970-01-01 03:00:00.000000000 +0300
 +++ gcc-4.5.2/gcc/config/rs6000/aros.h	2010-12-29 11:11:25.000000000 +0300
