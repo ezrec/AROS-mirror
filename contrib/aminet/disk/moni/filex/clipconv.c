@@ -584,7 +584,7 @@ static void UpdateClipConvSignal( void )
 AROS_UFH3S(ULONG, ClipHookFunc,
     AROS_UFHA(struct Hook *, hook, A0),
     AROS_UFHA(APTR, Obj, A2),
-    AROS_UFHA(APTR, Msg, msg))
+    AROS_UFHA(APTR, Msg, A1))
 {
     AROS_USERFUNC_INIT
 #else
