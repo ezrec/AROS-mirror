@@ -592,7 +592,29 @@ const USED_VAR ULONG __abox__ = 1;
 
 /* generic StackSwap() function which calls function() surrounded by
    StackSwap() calls */
-#if defined(__mc68000__)
+#if defined(__AROS__)
+ULONG stackswap_call(struct StackSwapStruct *stack,
+                             ULONG (*function)(struct LibraryHeader *),
+                             struct LibraryHeader *arg)
+{
+   struct StackSwapArgs swapargs;
+
+   swapargs.Args[0] = (IPTR)arg;
+
+   return NewStackSwap(stack, function, &swapargs);
+}
+#elif defined(__MORPHOS__)
+ULONG stackswap_call(struct StackSwapStruct *stack,
+                     ULONG (*function)(struct LibraryHeader *),
+                     struct LibraryHeader *arg)
+{
+   struct PPCStackSwapArgs swapargs;
+
+   swapargs.Args[0] = (ULONG)arg;
+
+   return NewPPCStackSwap(stack, function, &swapargs);
+}
+#elif defined(__mc68000__)
 ULONG stackswap_call(struct StackSwapStruct *stack,
                      ULONG (*function)(struct LibraryHeader *),
                      struct LibraryHeader *arg);
@@ -618,28 +640,6 @@ asm(".text                    \n\
       movel d2,d0             \n\
       moveml sp@+,#0x440c     \n\
       rts");
-#elif defined(__MORPHOS__)
-ULONG stackswap_call(struct StackSwapStruct *stack,
-                     ULONG (*function)(struct LibraryHeader *),
-                     struct LibraryHeader *arg)
-{
-   struct PPCStackSwapArgs swapargs;
-
-   swapargs.Args[0] = (ULONG)arg;
-
-   return NewPPCStackSwap(stack, function, &swapargs);
-}
-#elif defined(__AROS__)
-ULONG stackswap_call(struct StackSwapStruct *stack,
-                             ULONG (*function)(struct LibraryHeader *),
-                             struct LibraryHeader *arg)
-{
-   struct StackSwapArgs swapargs;
-
-   swapargs.Args[0] = (IPTR)arg;
-
-   return NewStackSwap(stack, function, &swapargs);
-}
 #else
 #error Bogus operating system
 #endif
