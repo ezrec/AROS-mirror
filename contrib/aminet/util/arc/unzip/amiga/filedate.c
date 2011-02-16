@@ -329,7 +329,7 @@ char *getenv(const char *var)         /* not reentrant! */
 
     me->pr_WindowPtr = (void *) -1;   /* suppress any "Please insert" popups */
 #ifdef __m68000__
-    if (DOSBase->LibNode.lib_Version < ReqVers)
+    if (((struct Library *)DOSBase)->lib_Version < ReqVers)
     {
         BPTR hand, foot, spine;
         int z = 0;

@@ -851,7 +851,7 @@ int screensize(int *ttrows, int *ttcols)
 
         if (ind && conp && sendpkt(conp, ACTION_DISK_INFO, &argp, 1))
             conunit = (void *) ((struct IOStdReq *) ind->id_InUse)->io_Unit;
-#ifdef __AROS__
+#if defined(__AROS__) && !defined(AROS_DOS_PACKETS)
 	if (ind && (!conp))
 	{
 	    struct IOFileSys iofs;
