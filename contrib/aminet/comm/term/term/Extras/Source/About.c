@@ -159,6 +159,8 @@ RecolourBitMap (struct BitMap *Src, UBYTE * Mapping, UBYTE DestDepth, LONG Width
 
 				for(i = 1 ; i <= Mask ; i++)
 				{
+					ULONG Bits = Mask ^ i;
+
 						/* Set the single plane bitmap to all 1's. */
 
 					BltBitMap(SingleMap,0,0,SingleMap,0,0,Width,Height,MINTERM_ONE,1,NULL);
@@ -169,8 +171,9 @@ RecolourBitMap (struct BitMap *Src, UBYTE * Mapping, UBYTE DestDepth, LONG Width
 
 					BltBitMap(Src,0,0,FullMap,0,0,Width,Height,MINTERM_B_AND_C,i,NULL);
 
-					if(Mask ^ i)
-						BltBitMap(Src,0,0,FullMap,0,0,Width,Height,MINTERM_NOT_B_AND_C,Mask ^ i,NULL);
+					if (Bits) {
+						BltBitMap(Src,0,0,FullMap,0,0,Width,Height,MINTERM_NOT_B_AND_C,Bits,NULL);
+					}
 
 						/* Set the pixels in the destination bitmap,
 						 * use the designated colour.

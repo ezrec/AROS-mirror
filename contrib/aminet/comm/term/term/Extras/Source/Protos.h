@@ -132,7 +132,14 @@ VOID StartAccountant(ULONG OnlineSeconds);
 /* AmigaGuide.c */
 VOID GuideCleanup(VOID);
 VOID GuideContext(LONG NewContextID);
+#ifdef __AROS__
+AROS_UFP3(ULONG, GuideSetupHook,
+	AROS_UFPA(struct Hook *, UnusedHook, A0),
+	AROS_UFPA(HelpMsg *, UnusedHelpMessage, A2),
+	AROS_UFPA(struct IBox *, UnusedBounds, A1));
+#else
 ULONG SAVE_DS ASM GuideSetupHook(REG(a0) struct Hook *UnusedHook, REG(a2) HelpMsg *UnusedHelpMessage, REG(a1) struct IBox *UnusedBounds);
+#endif
 VOID GuideSetup(VOID);
 VOID GuideDisplay(LONG ContextID);
 
@@ -411,8 +418,12 @@ BOOL CursorPanelConfig(struct Configuration *LocalConfig, struct CursorKeys *Cur
 
 /* CustomRequest.c */
 #ifdef __AROS__
-VOID SAVE_DS ASM CustomStuffText(REG(d0) UBYTE Char, REG(a3) LONG *Data);
-VOID ASM CustomCountChar(REG(d0) UBYTE Char, REG(a3) LONG *Count);
+AROS_UFP2(VOID, CustomStuffText,
+	AROS_UFPA(UBYTE, Char, D0),
+	AROS_UPFA(LONG *, Data, A3));
+AROS_UFP2(VOID, CustomCountChar,
+	AROS_UFPA(UBYTE, Char, D0),
+	AROS_UPFA(LONG *, Data, A3));
 #else
 VOID SAVE_DS ASM CustomStuffText(REG(a3) LONG *Data, REG(d0) UBYTE Char);
 VOID ASM CustomCountChar(REG(a3) LONG *Count, REG(d0) UBYTE Char);
@@ -443,7 +454,14 @@ BOOL AddDialEntry(PhonebookHandle *PhoneHandle, PhoneEntry *Entry, STRPTR Number
 BOOL AddAllDialEntries(PhonebookHandle *PhoneHandle);
 
 /* EditRoutine.c */
+#ifdef __AROS__
+AROS_UFP3(ULONG, CommonEditRoutine,
+	AROS_UFPA(struct Hook *, UnusedHook, A0),
+	AROS_UFPA(struct SGWork *, Work, A2),
+	AROS_UFPA(Msg, msg, A1));
+#else
 ULONG SAVE_DS ASM CommonEditRoutine(REG(a0) struct Hook *UnusedHook, REG(a2) struct SGWork *Work, REG(a1) Msg msg);
+#endif
 
 /* Emulation.c */
 VOID UpdatePens(VOID);
@@ -667,7 +685,14 @@ VOID CreateSum(LONG Quantity, BOOL UseCurrency, STRPTR Buffer, LONG BufferSize);
 VOID LocalizeString(STRPTR *Strings, LONG From, LONG To);
 VOID LocalizeStringTable(STRPTR *Strings, LONG *Table);
 STRPTR LocaleString(ULONG ID);
+#ifdef __AROS__
+AROS_UFP3(STRPTR, LocaleHookFunc,
+ AROS_UFPA(struct Hook * , UnusedHook , A0),
+ AROS_UFPA(APTR          , Unused, A2),
+ AROS_UFPA(LONG          , ID, A1));
+#else
 STRPTR SAVE_DS ASM LocaleHookFunc(REG(a0) struct Hook *UnusedHook, REG(a2) APTR Unused, REG(a1) LONG ID);
+#endif
 BOOL FormatStamp(struct DateStamp *Stamp, STRPTR BothBuffer, LONG BothBufferSize, BOOL SubstituteDay);
 VOID FormatTime(STRPTR Buffer, LONG BufferSize, LONG Hours, LONG Minutes, LONG Seconds);
 STRPTR SAVE_DS STACKARGS StandardShowTime(struct Gadget *UnusedGadget, LONG Seconds);
@@ -1119,7 +1144,14 @@ VOID BumpWindow(struct Window *SomeWindow);
 VOID PushWindow(struct Window *Window);
 VOID PopWindow(VOID);
 VOID SplitFileName(STRPTR FullName, STRPTR *FileName, STRPTR DrawerName);
+#ifdef __AROS__
+AROS_UFP3(VOID, BackfillRoutine,
+	AROS_UFPA(struct Hook *, UnusedHook, A0),
+	AROS_UFPA(struct RastPort *, RPort, A2),
+	AROS_UFPA(LayerMsg *, Bounds, A1));
+#else
 VOID SAVE_DS ASM BackfillRoutine(REG(a0) struct Hook *UnusedHook, REG(a2) struct RastPort *RPort, REG(a1) LayerMsg *Bounds);
+#endif
 UBYTE *ShrinkName(UBYTE *Source, UBYTE *Destination, LONG MaxLength, BOOL FixSuffix);
 VOID BuildFontName(STRPTR Destination, LONG DestinationSize, STRPTR Name, LONG Size);
 VOID FixName(STRPTR Name);
@@ -1246,7 +1278,9 @@ BOOL FindLibDev(struct Window *Parent, STRPTR File, LONG Type, LONG *Error);
 
 /* VSPrintf.c */
 #ifdef __AROS__
-VOID ASM StuffChar(REG(d0) UBYTE Char, REG(a3) struct FormatContext *Context);
+AROS_UFP2(VOID, StuffChar,
+	AROS_UFPA(UBYTE, Char, D0),
+	AROS_UFPA(struct FormatContext *, Context, A3));
 #else
 VOID ASM StuffChar(REG(a3) struct FormatContext *Context, REG(d0) UBYTE Char);
 #endif
@@ -1255,7 +1289,9 @@ VOID LimitedSPrintf(LONG Size, STRPTR Buffer, STRPTR FormatString, ...);
 VOID VSPrintf(STRPTR Buffer, STRPTR FormatString, va_list VarArgs);
 VOID SPrintf(STRPTR Buffer, STRPTR FormatString, ...);
 #ifdef __AROS__
-VOID ASM CountChar(REG(d0) UBYTE dummy,REG(a3) ULONG *Count);
+AROS_UFP2(VOID, CountChar,
+	AROS_UFPA(UBYTE, dummy, D0),
+	AROS_UFPA(ULONG *,Count, A3));
 #else
 VOID ASM CountChar(REG(a3) ULONG *Count);
 #endif

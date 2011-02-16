@@ -327,9 +327,19 @@ GuideContext(LONG NewContextID)
 	GuideContextID = NewContextID;
 }
 
+#ifdef __AROS__
+AROS_UFH3(ULONG, GuideSetupHook,
+	AROS_UFHA(struct Hook *, UnusedHook, A0),
+	AROS_UFHA(HelpMsg *, UnusedHelpMessage, A2),
+	AROS_UFHA(struct IBox *, UnusedBounds, A1))
+#else
 ULONG SAVE_DS ASM
 GuideSetupHook(REG(a0) struct Hook *UnusedHook,REG(a2) HelpMsg *UnusedHelpMessage,REG(a1) struct IBox *UnusedBounds)
+#endif
 {
+#ifdef __AROS__
+	AROS_USERFUNC_INIT
+#endif
 	if(GuideLaunch(GuideContextID))
 	{
 		SetAmigaGuideContext(Context,GuideContextID,TAG_DONE);
@@ -339,6 +349,9 @@ GuideSetupHook(REG(a0) struct Hook *UnusedHook,REG(a2) HelpMsg *UnusedHelpMessag
 	}
 	else
 		return(FALSE);
+#ifdef __AROS__
+	AROS_USERFUNC_EXIT
+#endif
 }
 
 	/* GuideSetup():
