@@ -887,7 +887,7 @@ static int solve_quadratic(DBL *x, DBL  *y)
 static int solve_cubic(DBL *x, DBL  *y)
 {
   DBL Q, R, Q3, R2, sQ, d, an, theta;
-  DBL A2, a0, a1, a2, a3;
+  DBL dA2, a0, a1, a2, a3;
 
   a0 = x[0];
 
@@ -911,14 +911,14 @@ static int solve_cubic(DBL *x, DBL  *y)
     }
   }
 
-  A2 = a1 * a1;
+  dA2 = a1 * a1;
 
-  Q = (A2 - 3.0 * a2) / 9.0;
+  Q = (dA2 - 3.0 * a2) / 9.0;
 
   /* Modified to save some multiplications and to avoid a floating point
      exception that occured with DJGPP and full optimization. [DB 8/94] */
 
-  R = (a1 * (A2 - 4.5 * a2) + 13.5 * a3) / 27.0;
+  R = (a1 * (dA2 - 4.5 * a2) + 13.5 * a3) / 27.0;
 
   Q3 = Q * Q * Q;
 
