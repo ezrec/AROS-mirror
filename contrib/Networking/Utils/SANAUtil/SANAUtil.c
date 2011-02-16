@@ -61,7 +61,7 @@
 #include <string.h>
 
 #ifndef REG
-#ifdef __mc68000
+#if !defined(__AROS__) && defined(__mc68000)
 #define _REG(A, B) B __asm(#A)
 #define REG(A, B) _REG(A, B)
 #else
