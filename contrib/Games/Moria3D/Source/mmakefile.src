@@ -1,10 +1,9 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-STARTUP := $(LIBDIR)/startup.o
 LIBS	:= -L$(LIBDIR) -larosc -larosm -lamiga -larossupport -lautoinit
-DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a $(LIBDIR)/libarosm.a \
-	    $(LIBDIR)/libamiga.a $(LIBDIR)/libarossupport.a
+#DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a $(LIBDIR)/libarosm.a \
+#	    $(LIBDIR)/libamiga.a $(LIBDIR)/libarossupport.a
 
 INSTDIR := $(CONTRIBDIR)/Games/Moria3D
 EXE	:= $(INSTDIR)/Moria3D
@@ -26,8 +25,8 @@ OBJS := $(GENDIR)/$(CURDIR)/Moveing.o \
 Moria3D : $(EXE)
 	@$(NOP)
 
-$(EXE) : $(OBJS) $(DEPLIBS)
-	$(TARGET_LD) -o $(EXE) $(STARTUP) $(OBJS) $(ARCHIVE) $(LIBS)
+$(EXE) : $(OBJS)
+	$(TARGET_CC) -o $(EXE) $(OBJS) $(ARCHIVE) $(LIBS)
 
 #MM
 Moria3D-setup :
