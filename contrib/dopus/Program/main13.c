@@ -370,7 +370,7 @@ int getroot(name,ds)
 char *name;
 struct DateStamp *ds;
 {
-#ifdef __AROS__
+#if defined(__AROS__) && !defined(AROS_DOS_PACKETS)
         struct DosList *dl;
         BPTR           lock;
         BOOL           success;

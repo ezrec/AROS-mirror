@@ -114,7 +114,7 @@ int rexx;
 void dodevicelist(win)
 int win;
 {
-#ifndef __AROS__
+#if !defined(__AROS__) || defined(AROS_DOS_PACKETS)
     struct DeviceList *devlist;
     struct RootNode *rootnode;
     struct DosInfo *dosinfo;

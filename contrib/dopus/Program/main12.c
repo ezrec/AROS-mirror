@@ -415,7 +415,7 @@ BPTR lock;
 char *buffer;
 struct MsgPort *port;
 {
-#ifndef __AROS__
+#if !defined(__AROS__) || defined(AROS_DOS_PACKETS)
     struct DeviceList *devlist,*dl;
     struct RootNode *rootnode;
     struct DosInfo *dosinfo;

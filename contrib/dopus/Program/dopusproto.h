@@ -564,7 +564,12 @@ CxObj *set_dopus_filter(CxObj *,struct MsgPort *,char *,UWORD,UWORD,int,int);
 void set_hotkey(CxObj *,UWORD,UWORD);
 void dummy_idcmp(struct MsgPort *,ULONG,UWORD,APTR,int,int);
 void __saveds clocktask(void);
-#ifdef __MORPHOS__
+#ifdef __AROS__
+AROS_UFP2(struct InputEvent *, keyhandler,
+    AROS_UFPA(struct InputEvent *, oldevent, A0),
+    AROS_UFPA(APTR, userdata, A1)
+);
+#elif defined(__MORPHOS__)
 struct InputEvent * keyhandler(void);
 #else
 struct InputEvent *__saveds keyhandler(register struct InputEvent * __asm("a0"),register APTR __asm("a1"));

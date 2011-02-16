@@ -1025,7 +1025,7 @@ int __saveds DoDefaultConfig(register struct ConfigStuff *cstuff __asm("a0"))
 
 int __saveds DoGetDevices(register struct ConfigStuff *cstuff __asm("a0"))
 {
-#ifndef __AROS__
+#if !defined(__AROS__) || defined(AROS_DOS_PACKETS)
     struct DeviceList *devlist;
     struct RootNode *rootnode;
     struct DosInfo *dosinfo;
