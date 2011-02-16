@@ -193,18 +193,18 @@ while(i--)
 
 void InitRandomMasks()
 {
-mask_kr_trapped_w[0]=BitPosArray[H2];
-mask_kr_trapped_w[1]=BitPosArray[H1]|BitPosArray[H2];
-mask_kr_trapped_w[2]=BitPosArray[G1]|BitPosArray[H1]|BitPosArray[H2];
-mask_qr_trapped_w[0]=BitPosArray[A2];
-mask_qr_trapped_w[1]=BitPosArray[A1]|BitPosArray[A2];
-mask_qr_trapped_w[2]=BitPosArray[A1]|BitPosArray[B1]|BitPosArray[A2];
-mask_kr_trapped_b[0]=BitPosArray[H7];
-mask_kr_trapped_b[1]=BitPosArray[H8]|BitPosArray[H7];
-mask_kr_trapped_b[2]=BitPosArray[H8]|BitPosArray[G8]|BitPosArray[H7];
-mask_qr_trapped_b[0]=BitPosArray[A7];
-mask_qr_trapped_b[1]=BitPosArray[A8]|BitPosArray[A7];
-mask_qr_trapped_b[2]=BitPosArray[A8]|BitPosArray[B8]|BitPosArray[A7];
+mask_kr_trapped_w[0]=BitPosArray[sH2];
+mask_kr_trapped_w[1]=BitPosArray[sH1]|BitPosArray[sH2];
+mask_kr_trapped_w[2]=BitPosArray[sG1]|BitPosArray[sH1]|BitPosArray[sH2];
+mask_qr_trapped_w[0]=BitPosArray[sA2];
+mask_qr_trapped_w[1]=BitPosArray[sA1]|BitPosArray[sA2];
+mask_qr_trapped_w[2]=BitPosArray[sA1]|BitPosArray[sB1]|BitPosArray[sA2];
+mask_kr_trapped_b[0]=BitPosArray[sH7];
+mask_kr_trapped_b[1]=BitPosArray[sH8]|BitPosArray[sH7];
+mask_kr_trapped_b[2]=BitPosArray[sH8]|BitPosArray[sG8]|BitPosArray[sH7];
+mask_qr_trapped_b[0]=BitPosArray[sA7];
+mask_qr_trapped_b[1]=BitPosArray[sA8]|BitPosArray[sA7];
+mask_qr_trapped_b[2]=BitPosArray[sA8]|BitPosArray[sB8]|BitPosArray[sA7];
 }
 
 void InitPassedPawnMask()
@@ -260,8 +260,8 @@ for(sq=0;sq<64;sq++)
 		i++;
 		}
 	}
-for(sq=A2;sq<=H2;sq++) SquarePawnMask[white][sq]=SquarePawnMask[white][sq+8];
-for(sq=A7;sq<=H7;sq++) SquarePawnMask[black][sq]=SquarePawnMask[black][sq-8];
+for(sq=sA2;sq<=sH2;sq++) SquarePawnMask[white][sq]=SquarePawnMask[white][sq+8];
+for(sq=sA7;sq<=sH7;sq++) SquarePawnMask[black][sq]=SquarePawnMask[black][sq-8];
 }
 
 void InitBitCount()
@@ -281,10 +281,10 @@ void InitRotAtak()
 {
 int sq,map,sq1,sq2;
 int cmap[8]={128,64,32,16,8,4,2,1};
-int rot1[8]={A1,A2,A3,A4,A5,A6,A7,A8};
-int rot2[8]={A1,B2,C3,D4,E5,F6,G7,H8};
-int rot3[8]={A8,B7,C6,D5,E4,F3,G2,H1};
-for(sq=A1;sq<=H1;sq++)
+int rot1[8]={sA1,sA2,sA3,sA4,sA5,sA6,sA7,sA8};
+int rot2[8]={sA1,sB2,sC3,sD4,sE5,sF6,sG7,sH8};
+int rot3[8]={sA8,sB7,sC6,sD5,sE4,sF3,sG2,sH1};
+for(sq=sA1;sq<=sH1;sq++)
 	{
 	for(map=0;map<256;map++)
 		{
@@ -309,7 +309,7 @@ for(sq=A1;sq<=H1;sq++)
 	} 
 for(map=0;map<256;map++)
 	{
-	for(sq=A2;sq<=H8;sq++)
+	for(sq=sA2;sq<=sH8;sq++)
 		{
 		Rook00Atak[sq][map]=Rook00Atak[sq-8][map]>>8;
 		}
@@ -321,28 +321,28 @@ for(map=0;map<256;map++)
 			Rook90Atak[sq][map]=Rook90Atak[sq-1][map]>>1;
 			}
 		}
-	for(sq1=B1,sq2=H7;sq1<=H1;sq1++,sq2-=8)
+	for(sq1=sB1,sq2=sH7;sq1<=sH1;sq1++,sq2-=8)
 		{
 		for(sq=sq1;sq<=sq2;sq+=9)
 			{
 			Bishop45Atak[sq][map]=Bishop45Atak[sq+8][map]<<8;
 			}
 		}
-	for(sq1=A2,sq2=G8;sq1<=A8;sq1+=8,sq2--)
+	for(sq1=sA2,sq2=sG8;sq1<=sA8;sq1+=8,sq2--)
 		{
 		for(sq=sq1;sq<=sq2;sq+=9)
 			{
 			Bishop45Atak[sq][map]=(Bishop45Atak[sq+1][map]&NotBitPosArray[sq1-8])<<1;
 			}
 		}
-	for(sq1=H2,sq2=B8;sq1<=H8;sq1+=8,sq2++)
+	for(sq1=sH2,sq2=sB8;sq1<=sH8;sq1+=8,sq2++)
 		{
 		for(sq=sq1;sq<=sq2;sq+=7)
 			{
 			Bishop315Atak[sq][map]=Bishop315Atak[sq-8][map]>>8;
 			}
 		}
-	for(sq1=G1,sq2=A7;sq1>=A1;sq1--,sq2-=8)
+	for(sq1=sG1,sq2=sA7;sq1>=sA1;sq1--,sq2-=8)
 		{
 		for(sq=sq1;sq<=sq2;sq+=7)
 			{
@@ -396,77 +396,77 @@ SETBIT(board.b[black][bishop],61);
 SETBIT(board.b[black][knight],62);
 SETBIT(board.b[black][rook],63);
 
-SETBIT(stonewall[white],D4);
-SETBIT(stonewall[white],E3);
-SETBIT(stonewall[white],F4);
-SETBIT(stonewall[black],D5);
-SETBIT(stonewall[black],E6);
-SETBIT(stonewall[black],F5);
+SETBIT(stonewall[white],sD4);
+SETBIT(stonewall[white],sE3);
+SETBIT(stonewall[white],sF4);
+SETBIT(stonewall[black],sD5);
+SETBIT(stonewall[black],sE6);
+SETBIT(stonewall[black],sF5);
 
-SETBIT(rings[0],D4);
-SETBIT(rings[0],D5);
-SETBIT(rings[0],E4);
-SETBIT(rings[0],E5);
-SETBIT(rings[1],C3);
-SETBIT(rings[1],D3);
-SETBIT(rings[1],E3);
-SETBIT(rings[1],F3);
-SETBIT(rings[1],C4);
-SETBIT(rings[1],F4);
-SETBIT(rings[1],C5);
-SETBIT(rings[1],F5);
-SETBIT(rings[1],C6);
-SETBIT(rings[1],D6);
-SETBIT(rings[1],E6);
-SETBIT(rings[1],F6);
-SETBIT(rings[2],B2);
-SETBIT(rings[2],C2);
-SETBIT(rings[2],D2);
-SETBIT(rings[2],E2);
-SETBIT(rings[2],F2);
-SETBIT(rings[2],G2);
-SETBIT(rings[2],B3);
-SETBIT(rings[2],G3);
-SETBIT(rings[2],B4);
-SETBIT(rings[2],G4);
-SETBIT(rings[2],B5);
-SETBIT(rings[2],G5);
-SETBIT(rings[2],B6);
-SETBIT(rings[2],G6);
-SETBIT(rings[2],B7);
-SETBIT(rings[2],C7);
-SETBIT(rings[2],D7);
-SETBIT(rings[2],E7);
-SETBIT(rings[2],F7);
-SETBIT(rings[2],G7);
-SETBIT(rings[3],A1);
-SETBIT(rings[3],B1);
-SETBIT(rings[3],C1);
-SETBIT(rings[3],D1);
-SETBIT(rings[3],E1);
-SETBIT(rings[3],F1);
-SETBIT(rings[3],G1);
-SETBIT(rings[3],H1);
-SETBIT(rings[3],A2);
-SETBIT(rings[3],H2);
-SETBIT(rings[3],A3);
-SETBIT(rings[3],H3);
-SETBIT(rings[3],A4);
-SETBIT(rings[3],H4);
-SETBIT(rings[3],A5);
-SETBIT(rings[3],H5);
-SETBIT(rings[3],A6);
-SETBIT(rings[3],H6);
-SETBIT(rings[3],A7);
-SETBIT(rings[3],H7);
-SETBIT(rings[3],A8);
-SETBIT(rings[3],B8);
-SETBIT(rings[3],C8);
-SETBIT(rings[3],D8);
-SETBIT(rings[3],E8);
-SETBIT(rings[3],F8);
-SETBIT(rings[3],G8);
-SETBIT(rings[3],H8);
+SETBIT(rings[0],sD4);
+SETBIT(rings[0],sD5);
+SETBIT(rings[0],sE4);
+SETBIT(rings[0],sE5);
+SETBIT(rings[1],sC3);
+SETBIT(rings[1],sD3);
+SETBIT(rings[1],sE3);
+SETBIT(rings[1],sF3);
+SETBIT(rings[1],sC4);
+SETBIT(rings[1],sF4);
+SETBIT(rings[1],sC5);
+SETBIT(rings[1],sF5);
+SETBIT(rings[1],sC6);
+SETBIT(rings[1],sD6);
+SETBIT(rings[1],sE6);
+SETBIT(rings[1],sF6);
+SETBIT(rings[2],sB2);
+SETBIT(rings[2],sC2);
+SETBIT(rings[2],sD2);
+SETBIT(rings[2],sE2);
+SETBIT(rings[2],sF2);
+SETBIT(rings[2],sG2);
+SETBIT(rings[2],sB3);
+SETBIT(rings[2],sG3);
+SETBIT(rings[2],sB4);
+SETBIT(rings[2],sG4);
+SETBIT(rings[2],sB5);
+SETBIT(rings[2],sG5);
+SETBIT(rings[2],sB6);
+SETBIT(rings[2],sG6);
+SETBIT(rings[2],sB7);
+SETBIT(rings[2],sC7);
+SETBIT(rings[2],sD7);
+SETBIT(rings[2],sE7);
+SETBIT(rings[2],sF7);
+SETBIT(rings[2],sG7);
+SETBIT(rings[3],sA1);
+SETBIT(rings[3],sB1);
+SETBIT(rings[3],sC1);
+SETBIT(rings[3],sD1);
+SETBIT(rings[3],sE1);
+SETBIT(rings[3],sF1);
+SETBIT(rings[3],sG1);
+SETBIT(rings[3],sH1);
+SETBIT(rings[3],sA2);
+SETBIT(rings[3],sH2);
+SETBIT(rings[3],sA3);
+SETBIT(rings[3],sH3);
+SETBIT(rings[3],sA4);
+SETBIT(rings[3],sH4);
+SETBIT(rings[3],sA5);
+SETBIT(rings[3],sH5);
+SETBIT(rings[3],sA6);
+SETBIT(rings[3],sH6);
+SETBIT(rings[3],sA7);
+SETBIT(rings[3],sH7);
+SETBIT(rings[3],sA8);
+SETBIT(rings[3],sB8);
+SETBIT(rings[3],sC8);
+SETBIT(rings[3],sD8);
+SETBIT(rings[3],sE8);
+SETBIT(rings[3],sF8);
+SETBIT(rings[3],sG8);
+SETBIT(rings[3],sH8);
 
 boardhalf[white]=RankBit[0]|RankBit[1]|RankBit[2]|RankBit[3];
 boardhalf[black]=RankBit[4]|RankBit[5]|RankBit[6]|RankBit[7];
@@ -476,8 +476,8 @@ board.flag|=(WCASTLE|BCASTLE);
 board.side=white;
 DoMethod(mui_app,MUIM_Chess_Side);
 board.ep=-1;
-board.king[white]=E1;
-board.king[black]=E8;
+board.king[white]=sE1;
+board.king[black]=sE8;
 GameCnt=-1;
 Game50=0;
 computer=black;
@@ -488,7 +488,7 @@ board.material[white]=board.material[black]=board.pmaterial[white]+8*ValueP;
 UpdateFriends();
 UpdateCBoard();
 UpdateMvboard();
-for(i=A1;i<=H8;i++)
+for(i=sA1;i<=sH8;i++)
 	{
 	if(cboard[i])
 		{
@@ -499,8 +499,8 @@ for(i=A1;i<=H8;i++)
 	}
 
 TreePtr[0]=TreePtr[1]=Tree;
-SET(flags,USEHASH);
-// SET(flags,USENULL);
+SETFLAG(flags,USEHASH);
+// SETFLAG(flags,USENULL);
 // SearchTime=5;
 // SearchDepth=0;
 MoveLimit[white]=MoveLimit[black]=TCMove;
@@ -591,7 +591,7 @@ if(!PawnTab[0]||!PawnTab[1])
 
 void NewPosition()
 {
-CLEAR(flags,ENDED);
+CLEARFLAG(flags,ENDED);
 Game50=0;
 GameCnt=-1;
 Game[0].hashkey=HashKey;

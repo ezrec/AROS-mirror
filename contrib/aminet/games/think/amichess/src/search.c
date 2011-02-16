@@ -98,7 +98,7 @@ for(p=TreePtr[1];p<TreePtr[2];p++)
 	if(SearchDepth==0&&(NodeCnt&TIMECHECK)==0)
 		{
 		GetElapsed();
-		if((et>=SearchTime&&(rootscore==-INFINITY-1||ply1score>lastrootscore-25||flags&SOLVE))||et>=maxtime) SET(flags,TIMEOUT);
+		if((et>=SearchTime&&(rootscore==-INFINITY-1||ply1score>lastrootscore-25||flags&SOLVE))||et>=maxtime) SETFLAG(flags,TIMEOUT);
 		}
 	if(best==MATE) return best;
 	}
@@ -322,7 +322,7 @@ while(1)
 	if(SearchDepth==0&&(NodeCnt&TIMECHECK)==0)
 		{
 		GetElapsed();
-		if((et>=SearchTime&&(rootscore==-INFINITY-1||ply1score>lastrootscore-25||flags&SOLVE))||et>=maxtime) SET(flags,TIMEOUT);
+		if((et>=SearchTime&&(rootscore==-INFINITY-1||ply1score>lastrootscore-25||flags&SOLVE))||et>=maxtime) SETFLAG(flags,TIMEOUT);
 		}
 	if(MATE+1==best+ply) goto done;
 	}

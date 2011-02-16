@@ -48,7 +48,7 @@ for(p=TreePtr[ply];p<TreePtr[ply+1];p++)
 	p->score+=KILLERSORTSCORE;
 	else if(ply > 2 &&(m==killer1[ply-2]||m==killer2[ply-2]))
 	p->score+=KILLERSORTSCORE;
-	p->score+=history[side][(p->move&0x0FFF)]+taxicab[f][D5]-taxicab[t][E4];
+	p->score+=history[side][(p->move&0x0FFF)]+taxicab[f][sD5]-taxicab[t][sE4];
 	if(cboard[f]==pawn)
 		{
 		if((enemyP&PassedPawnMask[side][t])==NULLBITBOARD) p->score+=50;
@@ -75,7 +75,7 @@ for(p=TreePtr[1];p<TreePtr[2];p++)
 		else p->score=-1000+SwapOff(p->move);
 		}
 	else p->score=-3000+SwapOff(p->move);
-	p->score+=taxicab[FROMSQ(p->move)][D5]-taxicab[TOSQ(p->move)][E4];
+	p->score+=taxicab[FROMSQ(p->move)][sD5]-taxicab[TOSQ(p->move)][sE4];
 	if(f==ValueP)
 		{
 		if((enemyP&PassedPawnMask[side][TOSQ(p->move)])==NULLBITBOARD) p->score+=50;
@@ -161,7 +161,7 @@ switch(pickphase[ply])
 		GenNonCaptures(ply);
 		for(p2=p[ply];p2<TreePtr[ply+1];p2++)
 			{
-			p2->score=history[side][(p2->move&0x0FFF)]+taxicab[FROMSQ(p2->move)][D5]-taxicab[TOSQ(p2->move)][E4];
+			p2->score=history[side][(p2->move&0x0FFF)]+taxicab[FROMSQ(p2->move)][sD5]-taxicab[TOSQ(p2->move)][sE4];
 			if(p2->move&CASTLING)
 			p2->score+=CASTLINGSCORE;
 			}

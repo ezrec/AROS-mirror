@@ -573,7 +573,7 @@ if(MUI_AslRequestTags(data->filereq,ASLFR_InitialPattern,"#?",ASLFR_DoSaveMode,0
 		LoadEPD(data->filereq->fr_File);
 		if(!ValidateBoard())
 			{
-			SET(flags,ENDED);
+			SETFLAG(flags,ENDED);
 			DoMethod(obj,MUIM_Chess_ShowThinking,"Board is wrong!");
 			}
 		CurrentDir(olddir);
@@ -632,8 +632,8 @@ if(MUI_AslRequestTags(data->filereq,ASLFR_InitialPattern,"#?.pgn",ASLFR_DoSaveMo
 
 static void mChessAutoplay(struct MUIP_Chess_Autoplay *msg)
 {
-if(msg->autoplay) SET(flags,AUTOPLAY);
-else CLEAR(flags,AUTOPLAY);
+if(msg->autoplay) SETFLAG(flags,AUTOPLAY);
+else CLEARFLAG(flags,AUTOPLAY);
 }
 
 static void mChessSwapSides(Object *obj)
@@ -641,15 +641,15 @@ static void mChessSwapSides(Object *obj)
 if(flags&SUPERVISOR) DoMethod(obj,MUIM_Chess_ShowThinking,"Not possible in supervisor mode.");
 else
 	{
-	CLEAR(flags,TIMEOUT);
-	CLEAR(flags,ENDED);
+	CLEARFLAG(flags,TIMEOUT);
+	CLEARFLAG(flags,ENDED);
 	computer=board.side;
 	//SetAttrs(obj,MUIA_Application_Sleep,1,TAG_END);
 	Iterate();
 	if(flags&ENDED)
 		{
 		SetAttrs(find(ID_MENU_Autoplay),MUIA_NoNotify,1,MUIA_Menuitem_Checked,0,TAG_END);
-		CLEAR(flags,AUTOPLAY);
+		CLEARFLAG(flags,AUTOPLAY);
 		}
 	//SetAttrs(obj,MUIA_Application_Sleep,0,TAG_END);
 	}
@@ -694,8 +694,8 @@ static void mChessRemove(struct IClass *cl,Object *obj)
 struct Data *data=(struct Data *)INST_DATA(cl,obj);
 if(GameCnt>=0)
 	{
-	CLEAR(flags,ENDED);
-	CLEAR(flags,TIMEOUT);
+	CLEARFLAG(flags,ENDED);
+	CLEARFLAG(flags,TIMEOUT);
 	DoMethod(board.side==white?data->lv_white:data->lv_black,MUIM_NList_Remove,MUIV_NList_Remove_Last);
 	UnmakeMove(board.side,&Game[GameCnt].move);
 	if(GameCnt>=0)
@@ -712,16 +712,16 @@ else DisplayBeep(0);
 
 static void mChessSupervisor(struct MUIP_Chess_Supervisor *msg)
 {
-if(msg->value) SET(flags,SUPERVISOR);
-else CLEAR(flags,SUPERVISOR);
+if(msg->value) SETFLAG(flags,SUPERVISOR);
+else CLEARFLAG(flags,SUPERVISOR);
 }
 
 static void mChessPost(Object *obj,struct MUIP_Chess_Post *msg)
 {
-if(msg->value) SET(flags,POST);
+if(msg->value) SETFLAG(flags,POST);
 else
 	{
-	CLEAR(flags,POST);
+	CLEARFLAG(flags,POST);
 	DoMethod(obj,MUIM_Chess_ShowThinking,0);
 	}
 }
@@ -797,7 +797,7 @@ if(!TCMove&&!TCTime)
 /*	SearchTime=5; */
 	sprintf(text,"Searchtime set to %.1f secs.",SearchTime);
 	DoMethod(obj,MUIM_Chess_ShowThinking,text);
-	CLEAR(flags,TIMECTL);
+	CLEARFLAG(flags,TIMECTL);
 	}
 else
 	{
@@ -810,13 +810,13 @@ else
 	else suddendeath=0;
 	if(!TCTime)
 		{
-		SET(flags,TIMECTL);
+		SETFLAG(flags,TIMECTL);
 		SearchTime=TCinc/2;
 	/*	printf("Fischer increment of %d seconds\n",TCinc); */
 		}
 	else
 		{
-		SET(flags,TIMECTL);
+		SETFLAG(flags,TIMECTL);
 	/*	MoveLimit[white]=MoveLimit[black]=TCMove-(GameCnt+1)/2; */
 		MoveLimit[white]=MoveLimit[black]=TCMove;
 		TimeLimit[white]=TimeLimit[black]=TCTime*60;
@@ -850,14 +850,14 @@ SetAttrs(data->think,MUIA_Text_Contents,msg->line,TAG_END);
 
 static void mChessNullMove(struct MUIP_Chess_NullMove *msg)
 {
-if(msg->value) SET(flags,USENULL);
-else CLEAR(flags,USENULL);
+if(msg->value) SETFLAG(flags,USENULL);
+else CLEARFLAG(flags,USENULL);
 }
 
 static void mChessReverseBoard(Object *obj,struct MUIP_Chess_ReverseBoard *msg)
 {
-if(msg->reverse) SET(flags,REVERSEBOARD);
-else CLEAR(flags,REVERSEBOARD);
+if(msg->reverse) SETFLAG(flags,REVERSEBOARD);
+else CLEARFLAG(flags,REVERSEBOARD);
 DoMethod(obj,MUIM_Chess_ShowBoard);
 }
 
@@ -894,7 +894,7 @@ static void mChessClearFlag(struct MUIP_Chess_ClearFlag *msg)
 if(msg->flag==AUTOPLAY)
 	{
 	SetAttrs(find(ID_MENU_Autoplay),MUIA_NoNotify,1,MUIA_Menuitem_Checked,0,TAG_END);
-	CLEAR(flags,AUTOPLAY);
+	CLEARFLAG(flags,AUTOPLAY);
 	}
 }
 

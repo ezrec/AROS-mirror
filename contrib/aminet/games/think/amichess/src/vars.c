@@ -167,14 +167,14 @@ int Shift00[64]={
 };
 
 int r90[64]={
-A8,A7,A6,A5,A4,A3,A2,A1,
-B8,B7,B6,B5,B4,B3,B2,B1,
-C8,C7,C6,C5,C4,C3,C2,C1,
-D8,D7,D6,D5,D4,D3,D2,D1,
-E8,E7,E6,E5,E4,E3,E2,E1,
-F8,F7,F6,F5,F4,F3,F2,F1,
-G8,G7,G6,G5,G4,G3,G2,G1,
-H8,H7,H6,H5,H4,H3,H2,H1
+sA8,sA7,sA6,sA5,sA4,sA3,sA2,sA1,
+sB8,sB7,sB6,sB5,sB4,sB3,sB2,sB1,
+sC8,sC7,sC6,sC5,sC4,sC3,sC2,sC1,
+sD8,sD7,sD6,sD5,sD4,sD3,sD2,sD1,
+sE8,sE7,sE6,sE5,sE4,sE3,sE2,sE1,
+sF8,sF7,sF6,sF5,sF4,sF3,sF2,sF1,
+sG8,sG7,sG6,sG5,sG4,sG3,sG2,sG1,
+sH8,sH7,sH6,sH5,sH4,sH3,sH2,sH1
 };
 
 int Shift90[64]=
@@ -190,14 +190,14 @@ int Shift90[64]=
 };
 
 int r45[64]={
-E4,F3,H2,C2,G1,D1,B1,A1,
-E5,F4,G3,A3,D2,H1,E1,C1,
-D6,F5,G4,H3,B3,E2,A2,F1,
-B7,E6,G5,H4,A4,C3,F2,B2,
-G7,C7,F6,H5,A5,B4,D3,G2,
-C8,H7,D7,G6,A6,B5,C4,E3,
-F8,D8,A8,E7,H6,B6,C5,D4,
-H8,G8,E8,B8,F7,A7,C6,D5
+sE4,sF3,sH2,sC2,sG1,sD1,sB1,sA1,
+sE5,sF4,sG3,sA3,sD2,sH1,sE1,sC1,
+sD6,sF5,sG4,sH3,sB3,sE2,sA2,sF1,
+sB7,sE6,sG5,sH4,sA4,sC3,sF2,sB2,
+sG7,sC7,sF6,sH5,sA5,sB4,sD3,sG2,
+sC8,sH7,sD7,sG6,sA6,sB5,sC4,sE3,
+sF8,sD8,sA8,sE7,sH6,sB6,sC5,sD4,
+sH8,sG8,sE8,sB8,sF7,sA7,sC6,sD5
 };
 
 int Shift45[64]={
@@ -223,14 +223,14 @@ int Mask45[64]={
 };
 
 int r315[64]={
-A1,C1,F1,B2,G2,E3,D4,D5,
-B1,E1,A2,F2,D3,C4,C5,C6,
-D1,H1,E2,C3,B4,B5,B6,A7,
-G1,D2,B3,A4,A5,A6,H6,F7,
-C2,A3,H3,H4,H5,G6,E7,B8,
-H2,G3,G4,G5,F6,D7,A8,E8,
-F3,F4,F5,E6,C7,H7,D8,G8,
-E4,E5,D6,B7,G7,C8,F8,H8
+sA1,sC1,sF1,sB2,sG2,sE3,sD4,sD5,
+sB1,sE1,sA2,sF2,sD3,sC4,sC5,sC6,
+sD1,sH1,sE2,sC3,sB4,sB5,sB6,sA7,
+sG1,sD2,sB3,sA4,sA5,sA6,sH6,sF7,
+sC2,sA3,sH3,sH4,sH5,sG6,sE7,sB8,
+sH2,sG3,sG4,sG5,sF6,sD7,sA8,sE8,
+sF3,sF4,sF5,sE6,sC7,sH7,sD8,sG8,
+sE4,sE5,sD6,sB7,sG7,sC8,sF8,sH8
 };
 
 int Shift315[64]={

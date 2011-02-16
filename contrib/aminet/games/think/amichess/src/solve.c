@@ -14,7 +14,7 @@ long TotalNodes;
 char *p;
 total=correct=0;
 TotalNodes=0;
-SET(flags,SOLVE); 
+SETFLAG(flags,SOLVE); 
 while(ReadEPDFile(file,0))
 	{
 	NewPosition();
@@ -41,6 +41,6 @@ while(ReadEPDFile(file,0))
 	printf("Correct=%d Total=%d\n",correct,total);
 	}
 printf("\nTotal nodes = %ld\n",TotalNodes);
-CLEAR(flags,SOLVE);
+CLEARFLAG(flags,SOLVE);
 }
 

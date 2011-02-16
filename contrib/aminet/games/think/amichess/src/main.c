@@ -31,8 +31,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
-#include "common.h"
 #include "book.h"
+#include "common.h"
 
 extern struct MUI_CustomClass *MUI_Chess_Class;
 
@@ -436,12 +436,12 @@ time(&now);
 srand((unsigned) now);
 
 flags=0;
-SET(flags,POST);
+SETFLAG(flags,POST);
 Initialize();
 
 bookmode=BOOKPREFER;
 bookfirstlast=3;
-SET(flags,USENULL);
+SETFLAG(flags,USENULL);
 SearchTime=5;
 
 DoMethod(mui_app,MUIM_Chess_WinOpen);

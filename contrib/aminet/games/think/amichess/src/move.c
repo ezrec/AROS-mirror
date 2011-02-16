@@ -125,12 +125,12 @@ if(side==white)
 		}
 	else if(fpiece==rook)
 		{
-		if(f==H1)
+		if(f==sH1)
 			{
 			if(board.flag&WKINGCASTLE) HashKey^=WKCastlehash;
 			board.flag&=~WKINGCASTLE;
 			}
-		else if(f==A1) 
+		else if(f==sA1) 
 			{
 			if(board.flag&WQUEENCASTLE) HashKey^=WQCastlehash;
 			board.flag&=~WQUEENCASTLE;
@@ -138,12 +138,12 @@ if(side==white)
 		}
 	if(tpiece==rook)
 		{
-		if(t==H8) 
+		if(t==sH8) 
 			{
 			if(board.flag&BKINGCASTLE) HashKey^=BKCastlehash;
 			board.flag&=~BKINGCASTLE;
 			}
-		else if(t==A8) 
+		else if(t==sA8) 
 			{
 			if(board.flag&BQUEENCASTLE) HashKey^=BQCastlehash;
 			board.flag&=~BQUEENCASTLE;
@@ -160,12 +160,12 @@ else
 		}
 	else if(fpiece==rook)
 		{
-		if(f==H8) 
+		if(f==sH8) 
 			{
 			if(board.flag&BKINGCASTLE) HashKey^=BKCastlehash;
 			board.flag&=~BKINGCASTLE;
 			}
-		else if(f==A8) 
+		else if(f==sA8) 
 			{
 			if(board.flag&BQUEENCASTLE) HashKey^=BQCastlehash;
 			board.flag&=~BQUEENCASTLE;
@@ -173,12 +173,12 @@ else
 		}
 	if(tpiece==rook)
 		{
-		if(t==H1) 
+		if(t==sH1) 
 			{
 			if(board.flag&WKINGCASTLE) HashKey^=WKCastlehash;
 			board.flag&=~WKINGCASTLE;
 			}
-		else if(t==A1) 
+		else if(t==sA1) 
 			{
 			if(board.flag&WQUEENCASTLE) HashKey^=WQCastlehash;
 			board.flag&=~WQUEENCASTLE;
@@ -573,13 +573,13 @@ else if(piece==king)
 	{
 	if(side==white)
 		{
-		if(!(MoveArray[piece][f]&BitPosArray[t])&&!(f==E1&&t==G1&&board.flag&WKINGCASTLE&&!(FromToRay[E1][G1]&blocker)&&!SqAtakd(E1,black)&&!SqAtakd(F1,black))&&!(f==E1&&t==C1&&board.flag&WQUEENCASTLE&&
-		!(FromToRay[E1][B1]&blocker)&&!SqAtakd(E1,black)&&!SqAtakd(D1,black))) return false;
+		if(!(MoveArray[piece][f]&BitPosArray[t])&&!(f==sE1&&t==sG1&&board.flag&WKINGCASTLE&&!(FromToRay[sE1][sG1]&blocker)&&!SqAtakd(sE1,black)&&!SqAtakd(sF1,black))&&!(f==sE1&&t==sC1&&board.flag&WQUEENCASTLE&&
+		!(FromToRay[sE1][sB1]&blocker)&&!SqAtakd(sE1,black)&&!SqAtakd(sD1,black))) return false;
 		}
 	if(side==black)
 		{
-		if(!(MoveArray[piece][f]&BitPosArray[t])&&!(f==E8&&t==G8&&board.flag&BKINGCASTLE&&!(FromToRay[E8][G8]&blocker)&&!SqAtakd(E8,white)&&!SqAtakd(F8,white))&&!(f==E8&&t==C8&&board.flag&BQUEENCASTLE&&
-		!(FromToRay[E8][B8]&blocker)&&!SqAtakd(E8,white)&&!SqAtakd(D8,white))) return false;
+		if(!(MoveArray[piece][f]&BitPosArray[t])&&!(f==sE8&&t==sG8&&board.flag&BKINGCASTLE&&!(FromToRay[sE8][sG8]&blocker)&&!SqAtakd(sE8,white)&&!SqAtakd(sF8,white))&&!(f==sE8&&t==sC8&&board.flag&BQUEENCASTLE&&
+		!(FromToRay[sE8][sB8]&blocker)&&!SqAtakd(sE8,white)&&!SqAtakd(sD8,white))) return false;
 		}
 	}
 else 

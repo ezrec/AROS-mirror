@@ -163,10 +163,10 @@ if(side==black)
 		}
 	}
 b=board.b[side][rook];
-if(side==white&&(board.flag&WKINGCASTLE)&&(b&BitPosArray[H1])&&!(FromToRay[E1][G1]&blocker)&&!SqAtakd(E1,black)&&!SqAtakd(F1,black)&&!SqAtakd(G1,black)) ADDMOVE(E1,G1,CASTLING);
-if(side==white&&(board.flag&WQUEENCASTLE)&&(b&BitPosArray[A1])&&!(FromToRay[E1][B1]&blocker)&&!SqAtakd(E1,black)&&!SqAtakd(D1,black)&&!SqAtakd(C1,black)) ADDMOVE(E1,C1,CASTLING);
-if(side==black&&(board.flag&BKINGCASTLE)&&(b&BitPosArray[H8])&&!(FromToRay[E8][G8]&blocker)&&!SqAtakd(E8,white)&&!SqAtakd(F8,white)&&!SqAtakd(G8,white)) ADDMOVE(E8,G8,CASTLING);
-if(side==black&&(board.flag&BQUEENCASTLE)&&(b&BitPosArray[A8])&&!(FromToRay[E8][B8]&blocker)&&!SqAtakd(E8,white)&&!SqAtakd(D8,white)&&!SqAtakd(C8,white)) ADDMOVE(E8,C8,CASTLING);
+if(side==white&&(board.flag&WKINGCASTLE)&&(b&BitPosArray[sH1])&&!(FromToRay[sE1][sG1]&blocker)&&!SqAtakd(sE1,black)&&!SqAtakd(sF1,black)&&!SqAtakd(sG1,black)) ADDMOVE(sE1,sG1,CASTLING);
+if(side==white&&(board.flag&WQUEENCASTLE)&&(b&BitPosArray[sA1])&&!(FromToRay[sE1][sB1]&blocker)&&!SqAtakd(sE1,black)&&!SqAtakd(sD1,black)&&!SqAtakd(sC1,black)) ADDMOVE(sE1,sC1,CASTLING);
+if(side==black&&(board.flag&BKINGCASTLE)&&(b&BitPosArray[sH8])&&!(FromToRay[sE8][sG8]&blocker)&&!SqAtakd(sE8,white)&&!SqAtakd(sF8,white)&&!SqAtakd(sG8,white)) ADDMOVE(sE8,sG8,CASTLING);
+if(side==black&&(board.flag&BQUEENCASTLE)&&(b&BitPosArray[sA8])&&!(FromToRay[sE8][sB8]&blocker)&&!SqAtakd(sE8,white)&&!SqAtakd(sD8,white)&&!SqAtakd(sC8,white)) ADDMOVE(sE8,sC8,CASTLING);
 TreePtr[ply+1]=node;
 GenCnt+=TreePtr[ply+1]-TreePtr[ply];
 }
@@ -401,7 +401,7 @@ if(nbits(checkers)==1)
 		CLEARBIT(b,sq);
 		if(!PinnedOnKing(sq,side))
 			{
-			if(cboard[sq]==pawn&&(chksq<=H1||chksq>=A8)) ADDPROMOTE(sq,chksq);
+			if(cboard[sq]==pawn&&(chksq<=sH1||chksq>=sA8)) ADDPROMOTE(sq,chksq);
 			else ADDMOVE(sq,chksq,0);
 			}
 		}
@@ -428,12 +428,12 @@ if(nbits(checkers)==1)
 			CLEARBIT(c,sq);
 			b=AttackTo(sq,side);
 			b&=~(board.b[side][king]|p);
-			if(side==white&&sq>H2)
+			if(side==white&&sq>sH2)
 				{
 				if(BitPosArray[sq-8]&p) b|=BitPosArray[sq-8];
 				if(RANK(sq)==3&&cboard[sq-8]==empty&&(BitPosArray[sq-16]&p)) b|=BitPosArray[sq-16];
 				}
-			if(side==black&&sq<H7)
+			if(side==black&&sq<sH7)
 				{
 				if(BitPosArray[sq+8]&p) b|=BitPosArray[sq+8];
 				if(RANK(sq)==4&&cboard[sq+8]==empty&&(BitPosArray[sq+16]&p)) b|=BitPosArray[sq+16];
@@ -444,7 +444,7 @@ if(nbits(checkers)==1)
 				CLEARBIT(b,sq1);
 				if(!PinnedOnKing(sq1,side))
 					{
-					if(cboard[sq1]==pawn&&(sq>H7||sq<A2)) ADDPROMOTE(sq1,sq);
+					if(cboard[sq1]==pawn&&(sq>sH7||sq<sA2)) ADDPROMOTE(sq1,sq);
 					else ADDMOVE(sq1,sq,0);
 					}
 				}

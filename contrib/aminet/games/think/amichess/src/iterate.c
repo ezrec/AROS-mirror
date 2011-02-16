@@ -50,7 +50,7 @@ memset(history,0,sizeof(history));
 memset(killer1,0,sizeof(killer1));
 memset(killer2,0,sizeof(killer2));
 TTClear();
-CLEAR(flags,TIMEOUT);
+CLEARFLAG(flags,TIMEOUT);
 if(flags&TIMECTL)
 	{
 	SearchTime=(TimeLimit[side]-2)/MoveLimit[side];
@@ -79,13 +79,13 @@ if(!GenCnt)
 		else if(computerplays==white) DoMethod(mui_app,MUIM_Chess_ShowThinking,"0-1: Computer loses as white");
 		}
 	else DoMethod(mui_app,MUIM_Chess_ShowThinking,"0.5-0.5: Stalemate");
-	SET(flags,TIMEOUT|ENDED);
+	SETFLAG(flags,TIMEOUT|ENDED);
 	return;
 	}
 else if(GenCnt==1)
 	{
 	RootPV=TreePtr[1]->move;
-	SET(flags,TIMEOUT);
+	SETFLAG(flags,TIMEOUT);
 	}
 lastrootscore=score=Evaluate(-INFINITY,INFINITY);
 wasbookmove=0;
@@ -95,7 +95,7 @@ if(bookmode!=BOOKOFF&&!(flags&SOLVE)&&nmovesfrombook<=3)
 		{
 		nmovesfrombook=0;
 		wasbookmove=1;
-		SET(flags,TIMEOUT);
+		SETFLAG(flags,TIMEOUT);
 		}
 	else nmovesfrombook++;
 	}
@@ -154,8 +154,8 @@ while(!(flags&TIMEOUT))
 		}
 	ShowLine(RootPV,score,'.');
 	lastrootscore=score;
-	if(!SearchDepth&&(flags&TIMECTL)&&et>=2*SearchTime/3) SET(flags,TIMEOUT);
-	if(abs(score)+Idepth>=MATE+1) SET(flags,TIMEOUT);
+	if(!SearchDepth&&(flags&TIMECTL)&&et>=2*SearchTime/3) SETFLAG(flags,TIMEOUT);
+	if(abs(score)+Idepth>=MATE+1) SETFLAG(flags,TIMEOUT);
 	if(Idepth==SearchDepth*DEPTH) break; 
 	}
 SANMove(RootPV,1);
@@ -213,13 +213,13 @@ if(TreePtr[1]==TreePtr[2])
 		DoMethod(mui_app,MUIM_Chess_ShowThinking,"0.5-0.5: Stalemate");
 		PlaySound(snd_smate,0);
 		}
-	SET(flags,ENDED);
+	SETFLAG(flags,ENDED);
 	}
 if(EvaluateDraw()||Repeat()>=2)
 	{
 	DoMethod(mui_app,MUIM_Chess_ShowThinking,"0.5-0.5: Draw");
 	PlaySound(snd_draw,0);
-	SET(flags,ENDED);
+	SETFLAG(flags,ENDED);
 	}
 DoMethod(mui_app,MUIM_Chess_Side);
 } 

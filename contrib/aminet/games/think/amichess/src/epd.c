@@ -236,7 +236,7 @@ int r,c,sq,k;
 char c1;
 if(fp=fopen(file,"a"))
 	{
-	for(r=A8;r>=A1;r-=8)
+	for(r=sA8;r>=sA1;r-=8)
 		{
 		k=0;
 		for(c=0;c<8;c++)
@@ -253,7 +253,7 @@ if(fp=fopen(file,"a"))
 				}
 			}
 		if(k) fprintf(fp,"%1d",k);
-		if(r>A1) fprintf(fp,"/");
+		if(r>sA1) fprintf(fp,"/");
 		}
 	fprintf(fp,(board.side==white?" w ":" b "));
 	if(board.flag&WKINGCASTLE) fprintf(fp,"K");

@@ -205,8 +205,8 @@ int phase;
 
 #define MAX(a,b) ((a)>(b)?(a):(b))
 #define MIN(a,b) ((a)<(b)?(a):(b))
-#define SET(a,b) (a|=b)
-#define CLEAR(a,b) (a&=~b)
+#define SETFLAG(a,b) (a|=b)
+#define CLEARFLAG(a,b) (a&=~b)
 #define DRAWSCORE (computerplays==board.side?(opprating-myrating)/4:(myrating-opprating)/4)
 #define MATERIAL (board.material[side]-board.material[1^side])
 #define PHASE (8-(board.material[white]+board.material[black])/1150)
@@ -520,14 +520,14 @@ extern int bookloaded;
 enum Piece { empty,pawn,knight,bishop,rook,queen,king,bpawn };
 
 enum Square {
-A1,B1,C1,D1,E1,F1,G1,H1,
-A2,B2,C2,D2,E2,F2,G2,H2,
-A3,B3,C3,D3,E3,F3,G3,H3,
-A4,B4,C4,D4,E4,F4,G4,H4,
-A5,B5,C5,D5,E5,F5,G5,H5,
-A6,B6,C6,D6,E6,F6,G6,H6,
-A7,B7,C7,D7,E7,F7,G7,H7,
-A8,B8,C8,D8,E8,F8,G8,H8
+sA1,sB1,sC1,sD1,sE1,sF1,sG1,sH1,
+sA2,sB2,sC2,sD2,sE2,sF2,sG2,sH2,
+sA3,sB3,sC3,sD3,sE3,sF3,sG3,sH3,
+sA4,sB4,sC4,sD4,sE4,sF4,sG4,sH4,
+sA5,sB5,sC5,sD5,sE5,sF5,sG5,sH5,
+sA6,sB6,sC6,sD6,sE6,sF6,sG6,sH6,
+sA7,sB7,sC7,sD7,sE7,sF7,sG7,sH7,
+sA8,sB8,sC8,sD8,sE8,sF8,sG8,sH8
 };
 
 enum File { A_FILE,B_FILE,C_FILE,D_FILE,E_FILE,F_FILE,G_FILE,H_FILE };

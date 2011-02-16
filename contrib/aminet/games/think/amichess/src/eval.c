@@ -142,15 +142,15 @@ ptable->phase=phase;
 phase2:
 c=board.b[side][pawn];
 sq=board.king[xside];
-if(side==white&&board.b[side][queen]&&(BitPosArray[C6]|BitPosArray[F6])&c)
+if(side==white&&board.b[side][queen]&&(BitPosArray[sC6]|BitPosArray[sF6])&c)
 	{
-	if(c&BitPosArray[F6]&&sq>H6&&distance[sq][G7]==1) s+=PAWNNEARKING;
-	if(c&BitPosArray[C6]&&sq>H6&&distance[sq][B7]==1) s+=PAWNNEARKING;
+	if(c&BitPosArray[sF6]&&sq>sH6&&distance[sq][sG7]==1) s+=PAWNNEARKING;
+	if(c&BitPosArray[sC6]&&sq>sH6&&distance[sq][sB7]==1) s+=PAWNNEARKING;
 	}
-else if(side==black&&board.b[side][queen]&&(BitPosArray[C3]|BitPosArray[F3])&c)
+else if(side==black&&board.b[side][queen]&&(BitPosArray[sC3]|BitPosArray[sF3])&c)
 	{
-	if(c&BitPosArray[F3]&&sq<A3&&distance[sq][G2]==1) s+=PAWNNEARKING;
-	if(c&BitPosArray[C3]&&sq<A3&&distance[sq][B2]==1) s+=PAWNNEARKING;
+	if(c&BitPosArray[sF3]&&sq<sA3&&distance[sq][sG2]==1) s+=PAWNNEARKING;
+	if(c&BitPosArray[sC3]&&sq<sA3&&distance[sq][sB2]==1) s+=PAWNNEARKING;
 	}
 t=passed[side]&brank67[side];
 if(t&&(board.pmaterial[xside]==ValueR||(board.pmaterial[xside]==ValueN&&pieces[xside]==board.b[xside][knight])))
@@ -294,13 +294,13 @@ while(c)
 		}
 	if(side==white)
 		{
-		if(board.king[side]>=F1&&board.king[side]<=H1&&sq==G2) s1+=FIANCHETTO;
-		if(board.king[side]>=A1&&board.king[side]<=C1&&sq==B2) s1+=FIANCHETTO;
+		if(board.king[side]>=sF1&&board.king[side]<=sH1&&sq==sG2) s1+=FIANCHETTO;
+		if(board.king[side]>=sA1&&board.king[side]<=sC1&&sq==sB2) s1+=FIANCHETTO;
 		}
 	else if(side==black)
 		{
-		if(board.king[side]>=F8&&board.king[side]<=H8&&sq==G7) s1+=FIANCHETTO;
-		if(board.king[side]>=A8&&board.king[side]<=C8&&sq==B7) s1+=FIANCHETTO;
+		if(board.king[side]>=sF8&&board.king[side]<=sH8&&sq==sG7) s1+=FIANCHETTO;
+		if(board.king[side]>=sA8&&board.king[side]<=sC8&&sq==sB7) s1+=FIANCHETTO;
 		}
 	if(BishopAttack(sq)&weaked[xside]) s1+=ATAKWEAKPAWN;
 	pscore[sq]=s1;
@@ -315,13 +315,13 @@ int BishopTrapped(int side)
 int s=0;
 if(side==white)
 	{
-	if((board.b[white][bishop]&BitPosArray[A7])&&(board.b[black][pawn]&BitPosArray[B6])&&SwapOff(MOVE(A7,B6))<0) s+=BISHOPTRAPPED;
-	if((board.b[white][bishop]&BitPosArray[H7])&&(board.b[black][pawn]&BitPosArray[G6])&&SwapOff(MOVE(H7,G6))<0) s+=BISHOPTRAPPED;
+	if((board.b[white][bishop]&BitPosArray[sA7])&&(board.b[black][pawn]&BitPosArray[sB6])&&SwapOff(MOVE(sA7,sB6))<0) s+=BISHOPTRAPPED;
+	if((board.b[white][bishop]&BitPosArray[sH7])&&(board.b[black][pawn]&BitPosArray[sG6])&&SwapOff(MOVE(sH7,sG6))<0) s+=BISHOPTRAPPED;
 	}
 else
 	{
-	if((board.b[black][bishop]&BitPosArray[A2])&&(board.b[white][pawn]&BitPosArray[B3])&&SwapOff(MOVE(A2,B3))<0) s+=BISHOPTRAPPED;
-	if((board.b[black][bishop]&BitPosArray[H2])&&(board.b[white][pawn]&BitPosArray[G3])&&SwapOff(MOVE(H2,G3))<0) s+=BISHOPTRAPPED;
+	if((board.b[black][bishop]&BitPosArray[sA2])&&(board.b[white][pawn]&BitPosArray[sB3])&&SwapOff(MOVE(sA2,sB3))<0) s+=BISHOPTRAPPED;
+	if((board.b[black][bishop]&BitPosArray[sH2])&&(board.b[white][pawn]&BitPosArray[sG3])&&SwapOff(MOVE(sH2,sG3))<0) s+=BISHOPTRAPPED;
 	}
 return s;
 }
@@ -450,18 +450,18 @@ if(!ENDING)
 			{
 			if(sq==4&&Mvboard[sq]==0)
 				{
-				if((board.b[side][rook]&BitPosArray[H1])!=NULLBITBOARD&&Mvboard[H1]==0) n=nbits(MoveArray[king][G1]&board.b[side][pawn]&RankBit[rank+1]);
-				if((board.b[side][rook]&BitPosArray[A1])!=NULLBITBOARD&&Mvboard[A1]==0) n=nbits(MoveArray[king][C1]&board.b[side][pawn]&RankBit[rank+1]);
+				if((board.b[side][rook]&BitPosArray[sH1])!=NULLBITBOARD&&Mvboard[sH1]==0) n=nbits(MoveArray[king][sG1]&board.b[side][pawn]&RankBit[rank+1]);
+				if((board.b[side][rook]&BitPosArray[sA1])!=NULLBITBOARD&&Mvboard[sA1]==0) n=nbits(MoveArray[king][sC1]&board.b[side][pawn]&RankBit[rank+1]);
 				}
 			}
 		else
 			{
 			if(sq==60&&Mvboard[sq]==0)
 				{
-				if((board.b[side][rook]&BitPosArray[H8])!=NULLBITBOARD&&Mvboard[H8]==0)
-				n=nbits(MoveArray[king][G8]&board.b[side][pawn]&RankBit[rank-1]);
-				if((board.b[side][rook]&BitPosArray[A8])!=NULLBITBOARD&&Mvboard[A8]==0)
-				n=nbits(MoveArray[king][C8]&board.b[side][pawn]&RankBit[rank-1]);
+				if((board.b[side][rook]&BitPosArray[sH8])!=NULLBITBOARD&&Mvboard[sH8]==0)
+				n=nbits(MoveArray[king][sG8]&board.b[side][pawn]&RankBit[rank-1]);
+				if((board.b[side][rook]&BitPosArray[sA8])!=NULLBITBOARD&&Mvboard[sA8]==0)
+				n=nbits(MoveArray[king][sC8]&board.b[side][pawn]&RankBit[rank-1]);
 				}
 			}
 		pawncover[3]=30;
@@ -469,8 +469,8 @@ if(!ENDING)
 		}
 	if(side==computer&&file>=F_FILE&&!(FileBit[G_FILE]&board.b[side][pawn]))
 		{
-		if(side==white&&cboard[F2]==pawn) s+=GOPEN;
-		else if(side==black&&cboard[F7]==pawn) s+=GOPEN;
+		if(side==white&&cboard[sF2]==pawn) s+=GOPEN;
+		else if(side==black&&cboard[sF7]==pawn) s+=GOPEN;
 		}
 	if(!(FileBit[file]&board.b[side][pawn])) s+=KINGOPENFILE;
 	if(!(FileBit[file]&board.b[xside][pawn])) s+=KINGOPENFILE1;
@@ -496,22 +496,22 @@ if(!ENDING)
 			{
 			if(file>E_FILE)
 				{
-				if(!(BitPosArray[F2]&board.b[side][pawn])||!(BitPosArray[G2]&board.b[side][pawn])||!(BitPosArray[H2]&board.b[side][pawn])) s+=RUPTURE;
+				if(!(BitPosArray[sF2]&board.b[side][pawn])||!(BitPosArray[sG2]&board.b[side][pawn])||!(BitPosArray[sH2]&board.b[side][pawn])) s+=RUPTURE;
 				}
 			else if(file<E_FILE)
 				{
-				if(!(BitPosArray[A2]&board.b[side][pawn])||!(BitPosArray[B2]&board.b[side][pawn])||!(BitPosArray[C2]&board.b[side][pawn])) s+=RUPTURE;
+				if(!(BitPosArray[sA2]&board.b[side][pawn])||!(BitPosArray[sB2]&board.b[side][pawn])||!(BitPosArray[sC2]&board.b[side][pawn])) s+=RUPTURE;
 				}
 			}
 		else
 			{
 			if(file>E_FILE)
 				{
-				if(!(BitPosArray[F7]&board.b[side][pawn])||!(BitPosArray[G7]&board.b[side][pawn])||!(BitPosArray[H7]&board.b[side][pawn])) s+=RUPTURE;
+				if(!(BitPosArray[sF7]&board.b[side][pawn])||!(BitPosArray[sG7]&board.b[side][pawn])||!(BitPosArray[sH7]&board.b[side][pawn])) s+=RUPTURE;
 				}
 			else if(file<E_FILE)
 				{
-				if(!(BitPosArray[A7]&board.b[side][pawn])||!(BitPosArray[B7]&board.b[side][pawn])||!(BitPosArray[C7]&board.b[side][pawn])) s+=RUPTURE;
+				if(!(BitPosArray[sA7]&board.b[side][pawn])||!(BitPosArray[sB7]&board.b[side][pawn])||!(BitPosArray[sC7]&board.b[side][pawn])) s+=RUPTURE;
 				}
 			}
 		}
@@ -544,14 +544,14 @@ if(!ENDING)
 	if(file>E_FILE&&ROW(board.king[xside])<D_FILE)
 		{
 		if(side==white)
-		fsq=G3; else fsq=G6;
-		if((BitPosArray[fsq]&board.b[side][pawn])!=NULLBITBOARD) if(((BitPosArray[F4]|BitPosArray[H4]|BitPosArray[F5]|BitPosArray[H5])&board.b[xside][pawn])!=NULLBITBOARD)  s+=FIANCHETTO_TARGET;	
+		fsq=sG3; else fsq=sG6;
+		if((BitPosArray[fsq]&board.b[side][pawn])!=NULLBITBOARD) if(((BitPosArray[sF4]|BitPosArray[sH4]|BitPosArray[sF5]|BitPosArray[sH5])&board.b[xside][pawn])!=NULLBITBOARD)  s+=FIANCHETTO_TARGET;	
 		}
 	if(file<E_FILE&&ROW(board.king[xside])>E_FILE)
 		{
-		if(side==white) fsq=B3;
-		else fsq=B6;
-		if((BitPosArray[fsq]&board.b[side][pawn])!=NULLBITBOARD) if(((BitPosArray[A4]|BitPosArray[C4]|BitPosArray[A5]|BitPosArray[C5])&board.b[xside][pawn])!=NULLBITBOARD) s+=FIANCHETTO_TARGET;	
+		if(side==white) fsq=sB3;
+		else fsq=sB6;
+		if((BitPosArray[fsq]&board.b[side][pawn])!=NULLBITBOARD) if(((BitPosArray[sA4]|BitPosArray[sC4]|BitPosArray[sA5]|BitPosArray[sC5])&board.b[xside][pawn])!=NULLBITBOARD) s+=FIANCHETTO_TARGET;	
 		}
 	x=boardhalf[side]&boardside[file<=D_FILE];
 	n1=nbits(x&(board.friends[xside]));
@@ -582,11 +582,11 @@ if(phase>=4)
 	{
 	if(side==white)
 		{
-		if(sq<A2) if(!(MoveArray[king][sq] &(~board.b[side][pawn]&RankBit[1]))) s+=KING_BACK_RANK_WEAK;
+		if(sq<sA2) if(!(MoveArray[king][sq] &(~board.b[side][pawn]&RankBit[1]))) s+=KING_BACK_RANK_WEAK;
 		}
 	else
 		{
-		if(sq>H7) if(!(MoveArray[king][sq] &(~board.b[side][pawn]&RankBit[6]))) s+=KING_BACK_RANK_WEAK;
+		if(sq>sH7) if(!(MoveArray[king][sq] &(~board.b[side][pawn]&RankBit[6]))) s+=KING_BACK_RANK_WEAK;
 		}
 	}
 pscore[sq]=s;
@@ -629,7 +629,7 @@ if(ROW(sq)&&ROW(sq)!=7&&((IsolaniMask[ROW(sq)]|FileBit[ROW(sq)])&board.b[winer][
 		if(RANK(sqw)==RANK(sq)+1)
 			{
 			if(RANK(sqw)==5) return winer==side?s:-s;
-			if(sqw<A6) 
+			if(sqw<sA6) 
 				{
 				if(sqw+16==sql&&winer==side) return 0;
 				else return winer==side?s:-s;
@@ -653,7 +653,7 @@ if(ROW(sq)&&ROW(sq)!=7&&((IsolaniMask[ROW(sq)]|FileBit[ROW(sq)])&board.b[winer][
 		if(RANK(sqw)==RANK(sq)-1)
 			{
 			if(RANK(sqw)==2) return winer==side?s:-s;
-			if(sqw>H3)
+			if(sqw>sH3)
 				{
 				if(sqw-16==sql&&winer==side) return 0;
 				else return winer==side?s:-s;

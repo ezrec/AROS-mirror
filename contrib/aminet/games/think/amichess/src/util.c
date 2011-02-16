@@ -78,7 +78,7 @@ for(sq=0;sq<64;sq++)
 
 void EndSearch(int dummy)
 {
-SET(flags,TIMEOUT);
+SETFLAG(flags,TIMEOUT);
 #ifdef __AROS__
 #warning "Disabled signal() call here"
 #else
@@ -101,23 +101,23 @@ if(board.ep>=0)
 	}
 if(board.flag&WKINGCASTLE)
 	{
-	if(!(BitPosArray[E1]&board.b[white][king])) return false;
-	if(!(BitPosArray[H1]&board.b[white][rook])) return false;
+	if(!(BitPosArray[sE1]&board.b[white][king])) return false;
+	if(!(BitPosArray[sH1]&board.b[white][rook])) return false;
 	}
 if(board.flag&WQUEENCASTLE)
 	{
-	if(!(BitPosArray[E1]&board.b[white][king])) return false;
-	if(!(BitPosArray[A1]&board.b[white][rook])) return false;
+	if(!(BitPosArray[sE1]&board.b[white][king])) return false;
+	if(!(BitPosArray[sA1]&board.b[white][rook])) return false;
 	}
 if(board.flag&BKINGCASTLE)
 	{
-	if(!(BitPosArray[E8]&board.b[black][king])) return false;
-	if(!(BitPosArray[H8]&board.b[black][rook])) return false;
+	if(!(BitPosArray[sE8]&board.b[black][king])) return false;
+	if(!(BitPosArray[sH8]&board.b[black][rook])) return false;
 	}
 if(board.flag&BQUEENCASTLE)
 	{
-	if(!(BitPosArray[E8]&board.b[black][king])) return false;
-	if(!(BitPosArray[A8]&board.b[black][rook])) return false;
+	if(!(BitPosArray[sE8]&board.b[black][king])) return false;
+	if(!(BitPosArray[sA8]&board.b[black][rook])) return false;
 	}
 return true;
 }
