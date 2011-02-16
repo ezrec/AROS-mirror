@@ -16,7 +16,11 @@
 
 /* Converted to AROS by SDuvan 18.11.2000 (some bugs fixed too) */
 
-#define  AROS
+#if !defined(__AROS__) || defined(AROS_DOS_PACKETS)
+#define USE_DOS_PACKETS
+#else
+#define USE_AROS_PACKETS
+#endif
 
 /// Includes
 #include <exec/types.h>
@@ -34,7 +38,7 @@
 #include <proto/dos.h>
 #include <proto/utility.h>
 
-#ifdef  AROS
+#ifdef  __AROS__
     #define   DEBUG 1
     #include  <aros/debug.h>
 
@@ -104,7 +108,7 @@ struct DirEntry
 
 struct CopyNode
 {
-#ifndef AROS
+#ifdef USE_DOS_PACKETS
     struct Message     cn_DosMessage; /* a message for the DOS process */
     struct DosPacket   cn_DosPacket;  /* the message to be posted */
 #else
@@ -213,7 +217,7 @@ ULONG MainCopyProcess(BPTR source, BPTR dest, struct MinList *dirlist,
 BOOL SetRootLock(struct DirEntry *de);
 void FreeCopyNode(struct CopyNode *cn, ULONG *limit);
 
-#ifdef  AROS
+#ifdef  USE_AROS_PACKETS
 struct CopyNode *AllocCopyNode_AROS(BPTR from, ULONG size, ULONG *limit);
 BOOL AsyncCopy_AROS(BPTR from, BPTR to, ULONG readsize, char *name);
 #else
@@ -259,7 +263,7 @@ int main(void)
     
     tclower = (LONG)(this->pr_Task.tc_SPLower);
 
-#ifndef  AROS
+#ifdef USE_DOS_PACKETS
     DOSBase = (struct DosLibrary *)(OpenLibrary("dos.library", 37L));
 
     if(DOSBase != NULL)
@@ -330,7 +334,7 @@ int main(void)
 	CurrentDir(oldlock);
 	CloseLibrary((struct Library *)DOSBase);
 	
-#ifndef  AROS
+#ifdef USE_DOS_PACKETS
     }
     else
     {
@@ -834,7 +838,7 @@ BOOL CheckAbort(void)
 	return TRUE;
     
 #warning  Take care of stack check
-#ifndef AROS
+#ifndef __AROS__
     if((getreg(REG_A7) - tclower) < 1024)
     {
 	PrintFault(ERROR_TOO_MANY_LEVELS, "SortCopy failed");
@@ -878,7 +882,7 @@ void PostFailure(LONG error, char *failtext, ...)
     if(error)
     {
 
-#ifdef  AROS
+#ifdef  __AROS__
 	vsprintf(failbuffer, failtext, args);
 #else
 	tinyvsprintf(failbuffer, failtext, args);
@@ -915,7 +919,7 @@ BOOL FindSoftOrginal(struct DirEntry *de)
     CurrentDir(dirlock);
 
 #warning  Using lock internals here
-#ifndef  AROS
+#ifdef USE_DOS_PACKETS
     flock = (struct FileLock *)(BADDR(dirlock));
     
     if(flock->fl_Task == NULL)
@@ -1259,7 +1263,7 @@ BOOL CopyFile(BPTR source, BPTR dest, char *name)
 	size = 0xffffffff;
     }
     
-#ifdef  AROS
+#ifdef USE_AROS_PACKETS
     return AsyncCopy_AROS(source, dest, size, name);
 #else
     return AsyncCopy(source, dest, size, name);
@@ -2901,7 +2905,7 @@ BOOL PurgeDir(BPTR sourcelock, BPTR destlock, struct MinList *dirlist,
     return result;
 }
 
-#ifndef  AROS
+#ifdef USE_DOS_PACKETS
 
 ///
 /// AllocCopyNode
@@ -2959,7 +2963,7 @@ struct CopyNode *AllocCopyNode(BPTR from, ULONG size, ULONG *limit)
     return cn;
 }
 
-#endif /* #ifndef  AROS */
+#endif /* #ifdef USE_DOS_PACKETS */
 
 ///
 /// FreeCopyNode
@@ -2974,7 +2978,7 @@ void FreeCopyNode(struct CopyNode *cn, ULONG *limit)
 	lastchancebusy = FALSE;
 }
 
-#ifndef  AROS
+#ifdef USE_DOS_PACKETS
 
 ///
 /// AsyncCopy
@@ -3250,9 +3254,10 @@ BOOL AsyncCopy(BPTR from, BPTR to, ULONG readsize, char *name)
 }
 
 
-#endif /* #ifndef AROS */
+#endif /* #ifdef USE_DOS_PACKETS*/
 
 
+#ifdef USE_AROS_PACKETS
 ///
 /// AsyncCopy_AROS
 BOOL AsyncCopy_AROS(BPTR from, BPTR to, ULONG readsize, char *name)
@@ -3567,9 +3572,6 @@ BOOL AsyncCopy_AROS(BPTR from, BPTR to, ULONG readsize, char *name)
     
     return TRUE;
 }
-
-
-#ifdef AROS
 
 struct CopyNode *AllocCopyNode_AROS(BPTR from, ULONG size, ULONG *limit)
 {
