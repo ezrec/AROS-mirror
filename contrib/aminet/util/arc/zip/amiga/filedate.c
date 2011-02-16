@@ -256,7 +256,7 @@ LONG FileDate(filename, u)
         pDate.ds_Tick = ltm->tm_sec * TICKS_PER_SECOND;
     }
 #ifdef __m68000__
-    if (DOSBase->LibNode.lib_Version < ReqVers)
+    if (((struct Library *)DOSBase)->lib_Version < ReqVers)
     {
 	struct MsgPort *taskport;
 	BPTR dirlock, lock;
