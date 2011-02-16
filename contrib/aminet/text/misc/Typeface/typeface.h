@@ -331,8 +331,15 @@ void CloseCharWin(struct CharNode *node);
 Object *CreateSysImage(ULONG which,struct DrawInfo *dri);
 Object *CreatePropGadg(ULONG freedom,Tag tag1,...);
 Object *CreateButtonGadg(Object *image,Tag tag1,...);
+#ifdef __AROS__
+AROS_UFP3(void, CharHook,
+    AROS_UFPA(struct Hook *, hook, A0),
+    AROS_UFPA(Object *, o, A2),
+    AROS_UFPA(struct IntuiMessage *, msg, A1));
+#else
 SAVEDS ASM void CharHook(TF_REGPARAM(a0, struct Hook *, hook), TF_REGPARAM(a2, Object *, o),
   TF_REGPARAM(a1, struct IntuiMessage *, msg));
+#endif
 void ForceResizeChar(struct CharNode *node);
 void SetScrollers(struct CharNode *node);
 void RedrawEdit(struct CharNode *node);

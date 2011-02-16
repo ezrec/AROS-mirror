@@ -54,7 +54,14 @@ struct CharGadgData
   ULONG cg_ShiftPressed;
 };
 
+#ifdef __AROS__
+AROS_UFP3(ULONG, DispatchCharGadg,
+    AROS_UFPA(Class *, cl, A0),
+    AROS_UFPA(Object *, o, A2),
+    AROS_UFPA(Msg, msg, A1));
+#else
 SAVEDS ASM ULONG DispatchCharGadg(TF_REGPARAM(a0, Class *, cl), TF_REGPARAM(a2, Object *, o), TF_REGPARAM(a1, Msg, msg));
+#endif
 ULONG CharGadg_NEW(Class *cl,Object *o,struct opSet *ops);
 ULONG CharGadg_RENDER(Class *cl,struct Gadget *gadg,struct gpRender *gpr);
 ULONG CharGadg_GOACTIVE(Class *cl,struct Gadget *gadg,struct gpInput *gpi);
@@ -486,7 +493,14 @@ struct EditGadgData
   UWORD eg_Toggle, eg_FirstPixelState;
 };
 
+#ifdef __AROS__
+AROS_UFP3(ULONG, DispatchEditGadg,
+    AROS_UFPA(Class *, cl, A0),
+    AROS_UFPA(Object *, o, A2),
+    AROS_UFPA(Msg, msg, A1));
+#else
 SAVEDS ASM ULONG DispatchEditGadg(TF_REGPARAM(a0, Class *, cl), TF_REGPARAM(a2, Object *, o), TF_REGPARAM(a1, Msg, msg));
+#endif
 ULONG EditGadg_NEW(Class *cl,Object *o,struct opSet *ops);
 ULONG EditGadg_GET(Class *cl,Object *o,struct opGet *opg);
 ULONG EditGadg_SET(Class *cl,struct Gadget *gadg,struct opSet *ops);
@@ -1018,7 +1032,14 @@ struct SlideGadgData
   ULONG sg_Total,sg_Visible;
 };
 
+#ifdef __AROS__
+AROS_UFP3(ULONG, DispatchSlideGadg,
+    AROS_UFPA(Class *, cl, A0),
+    AROS_UFPA(Object *, o, A2),
+    AROS_UFPA(Msg, msg, A1));
+#else
 SAVEDS ASM ULONG DispatchSlideGadg(TF_REGPARAM(a0, Class *, cl), TF_REGPARAM(a2, Object *, o), TF_REGPARAM(a1, Msg, msg));
+#endif
 ULONG SlideGadg_NOTIFY(Class *cl,Object *o,struct opUpdate *opu);
 ULONG SlideGadg_NEW(Class *cl,Object *o,struct opSet *ops);
 ULONG SlideGadg_SET(Class *cl,Object *o,struct opSet *ops);
