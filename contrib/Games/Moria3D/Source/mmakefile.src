@@ -26,7 +26,7 @@ Moria3D : $(EXE)
 	@$(NOP)
 
 $(EXE) : $(OBJS)
-	$(TARGET_CC) -o $(EXE) $(OBJS) $(ARCHIVE) $(LIBS)
+	$(CC) $(CFLAGS) -o $(EXE) $(OBJS) $(ARCHIVE) $(LIBS)
 
 #MM
 Moria3D-setup :
