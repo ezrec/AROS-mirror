@@ -166,9 +166,11 @@ METHOD_END
 /*
  * Emulate the OS 3.0 DoGadgetMethod call.
  */
-makeproto ULONG myDoGadgetMethod(Object *obj, struct Window *win, struct Requester *req, ULONG methodid, ... )
+makeproto ULONG myDoGadgetMethod(Object *obj, struct Window *win, struct Requester *req, IPTR methodid, ... )
 {
-   return BGUI_DoGadgetMethodA(obj, win, req, (Msg)&methodid);
+   AROS_SLOWSTACKMETHODS_PRE(methodid)
+   retval = BGUI_DoGadgetMethodA(obj, win, req, AROS_SLOWSTACKMETHODS_ARG(methodid));
+   AROS_SLOWSTACKMETHODS_POST
 }
 
 /*

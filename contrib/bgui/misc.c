@@ -248,7 +248,6 @@ makeproto ASM UBYTE *DoBuffer(REG(a0) UBYTE *text, REG(a1) UBYTE **buf_ptr, REG(
 makeproto VOID DoMultiSet(Tag tag, IPTR data, ULONG count, Object *obj1, ...)
 {
    ULONG         i;
-#ifdef __AROS__
    va_list ap;
    va_start(ap, obj1);
 
@@ -256,14 +255,6 @@ makeproto VOID DoMultiSet(Tag tag, IPTR data, ULONG count, Object *obj1, ...)
        if (obj1) DoSetMethodNG(obj1, tag, data, TAG_END);
 
    va_end(ap);
-#else
-   Object         **array = &obj1;
-
-   for (i = 0; i < count; i++)
-   {
-      if (array[i]) DoSetMethodNG(array[i], tag, data, TAG_END);
-   }
-#endif
 }
 
 /*

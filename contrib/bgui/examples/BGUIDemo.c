@@ -150,7 +150,7 @@ struct NewMenu MainMenus[] = {
 /*
 ** Put up a simple requester.
 **/
-ULONG Req( struct Window *win, UBYTE *gadgets, UBYTE *body, ... )
+STATIC ULONG ReqA( struct Window *win, UBYTE *gadgets, UBYTE *body, IPTR *args)
 {
    struct bguiRequest   req = { };
 
@@ -158,8 +158,13 @@ ULONG Req( struct Window *win, UBYTE *gadgets, UBYTE *body, ... )
    req.br_TextFormat = body;
    req.br_Flags      = BREQF_CENTERWINDOW|BREQF_XEN_BUTTONS|BREQF_AUTO_ASPECT;
 
-   return( BGUI_RequestA( win, &req, ( ULONG * )( &body + 1 )));
+   return( BGUI_RequestA( win, &req, args));
 }
+
+#define Req(win, gadgets, body, ...) \
+	({ IPTR __args[] = { AROS_PP_VARIADIC_CAST2IPTR(__VA_ARGS__) }; \
+	    ReqA(win, gadgets, body, __args); })
+
 
 /*
 ** Main window button ID's.

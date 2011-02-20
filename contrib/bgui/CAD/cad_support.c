@@ -41,7 +41,7 @@ extern struct Window		*MainWindow;
 /*
  *	Show an AmigaDOS error via BGUI_Request().
  */
-ULONG DosRequest( UBYTE *gadgets, UBYTE *body, ... )
+STATIC ULONG DosRequestA( UBYTE *gadgets, UBYTE *body, IPTR *args)
 {
 	static struct bguiRequest		req = { (LONG)NULL };
 	UBYTE					buffer[ 256 ], ebuf[ 80 ];
@@ -75,13 +75,13 @@ ULONG DosRequest( UBYTE *gadgets, UBYTE *body, ... )
 	/*
 	 *	Pop it.
 	 */
-	return( BGUI_RequestA( MainWindow, &req, ( ULONG * )( &body + 1 )));
+	return BGUI_RequestA( MainWindow, &req, args);
 }
 
 /*
  *	Show a requester via BGUI_Request().
  */
-ULONG MyRequest( UBYTE *gadgets, UBYTE *body, ... )
+ULONG MyRequestA( UBYTE *gadgets, UBYTE *body, IPTR *args )
 {
 	static struct bguiRequest		req = { (LONG)NULL };
 
@@ -97,39 +97,37 @@ ULONG MyRequest( UBYTE *gadgets, UBYTE *body, ... )
 	/*
 	 *	Pop it.
 	 */
-	return( BGUI_RequestA( MainWindow, &req, ( ULONG * )( &body + 1 )));
+	return( BGUI_RequestA( MainWindow, &req, args));
 }
 
 /*
  *	Set attributes on multiple-objects.
  */
-VOID MultiSetAttr( struct GadgetInfo *gi, Tag tag, ULONG data, Object *obj1, ... )
+VOID MultiSetAttr( struct GadgetInfo *gi, Tag tag, ULONG data, ... )
 {
-	Object			**array = &obj1;
+	Object			*obj;
 	struct TagItem		  tags[ 2 ];
+	va_list ap;
+
+	va_start(ap, data);
 
 	tags[ 0 ].ti_Tag  = tag;
 	tags[ 0 ].ti_Data = data;
 	tags[ 1 ].ti_Tag  = TAG_END;
 
-	while ( *array ) {
-		DoMethod( *array, OM_SET, &tags[ 0 ], gi );
-		array++;
+	while ( (obj = va_arg(ap, Object *)) ) {
+		DoMethod(obj, OM_SET, &tags[ 0 ], gi );
 	}
+
+	va_end(ap);
 }
 
 /*
  *	Set attributes to an object.
  */
-VOID SetAttr( Object *obj, struct GadgetInfo *gi, Tag tag1, ... )
+ULONG SetAttr( Object *obj, struct GadgetInfo *gi, Tag tag1, ... )
 {
-	DoMethod( obj, OM_SET, ( struct TagItem * )&tag1, gi );
-}
-
-/*
- *	Format output to a file.
- */
-VOID MyFPrintf( BPTR file, UBYTE *body, ... )
-{
-	VFPrintf( file, body, ( ULONG * )( &body + 1 ));
+	AROS_SLOWSTACKTAGS_PRE_AS(tag1, ULONG);
+	retval = DoMethod( obj, OM_SET, AROS_SLOWSTACKTAGS_ARG(tag1), gi );
+	AROS_SLOWSTACKTAGS_POST
 }

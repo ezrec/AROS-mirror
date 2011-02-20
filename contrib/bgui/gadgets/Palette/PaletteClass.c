@@ -674,7 +674,9 @@ STATIC ASM VOID GetTopLeft( REG(a0) PD *pd, REG(d0) UWORD color, REG(a1) UWORD *
  */
 STATIC ULONG NotifyAttrChange( Object *obj, struct GadgetInfo *gi, ULONG flags, Tag tag1, ... )
 {
-   return( DoMethod( obj, OM_NOTIFY, &tag1, gi, flags ));
+   AROS_SLOWSTACKTAGS_PRE_AS(tag1, ULONG)
+   retval = DoMethod( obj, OM_NOTIFY, AROS_SLOWSTACKTAGS_ARG(tag1), gi, flags );
+   AROS_SLOWSTACKTAGS_POST
 }
 
 /*

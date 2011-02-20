@@ -100,6 +100,8 @@ extern struct Library   *BGUIBase;                              /* V40+ */
  */
 
 #ifdef __AROS__
+#include <proto/arossupport.h>
+#define KPrintF kprintf
 #else
 extern void __stdargs KPrintF(char *fmt,...);
 #endif

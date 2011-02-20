@@ -4,7 +4,6 @@ include $(TOP)/config/make.cfg
 
 FILES		:= bgui_newobject \
                    bgui_dogadgetmethod \
-		   bgui_makeclass \
-		   bgui_request
+		   bgui_makeclass
 
 %build_linklib mmake=linklib-bgui libname=bgui files=$(FILES)

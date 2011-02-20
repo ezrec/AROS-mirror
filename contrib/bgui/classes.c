@@ -159,9 +159,11 @@ makeproto UBYTE *GadgetClass = "gadgetclass";
 makeproto UBYTE *PropGClass  = "propgclass";
 makeproto UBYTE *StrGClass   = "strgclass";
 
-makeproto Class *BGUI_MakeClass(ULONG tag, ...)
+makeproto Class *BGUI_MakeClass(Tag tag, ...)
 {
-   return BGUI_MakeClassA((struct TagItem *)&tag);
+   AROS_SLOWSTACKTAGS_PRE_AS(tag, Class *)
+   retval = BGUI_MakeClassA(AROS_SLOWSTACKTAGS_ARG(tag));
+   AROS_SLOWSTACKTAGS_POST
 }
 
 //static ASM ULONG ClassCallDispatcher(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg, REG(a4) APTR global_data)
@@ -872,8 +874,10 @@ makeproto IPTR NewSuperObject(Class *cl, Object *obj, struct TagItem *tags)
  */
 makeproto ULONG DoSetMethodNG(Object *obj, Tag tag1, ...)
 {
-   if (obj) return (ULONG)AsmDoMethod(obj, OM_SET, (struct TagItem *)&tag1, NULL);
-   else     return 0;
+   AROS_SLOWSTACKTAGS_PRE_AS(tag1, ULONG)
+   if (obj) retval = (ULONG)AsmDoMethod(obj, OM_SET, AROS_SLOWSTACKTAGS_ARG(tag1), NULL);
+   else     retval = 0;
+   AROS_SLOWSTACKTAGS_POST
 }
 
 /*
@@ -881,8 +885,10 @@ makeproto ULONG DoSetMethodNG(Object *obj, Tag tag1, ...)
  */
 makeproto ULONG DoSuperSetMethodNG(Class *cl, Object *obj, Tag tag1, ...)
 {
-   if (obj) return (ULONG)AsmDoSuperMethod(cl, obj, OM_SET, (struct TagItem *)&tag1, NULL);
-   else     return 0;
+   AROS_SLOWSTACKTAGS_PRE_AS(tag1, ULONG)
+   if (obj) retval = (ULONG)AsmDoSuperMethod(cl, obj, OM_SET, AROS_SLOWSTACKTAGS_ARG(tag1), NULL);
+   else     retval = 0;
+   AROS_SLOWSTACKTAGS_POST
 }
 
 /*
@@ -890,8 +896,10 @@ makeproto ULONG DoSuperSetMethodNG(Class *cl, Object *obj, Tag tag1, ...)
  */
 makeproto ULONG DoSetMethod(Object *obj, struct GadgetInfo *ginfo, Tag tag1, ...)
 {
-   if (obj) return (ULONG)AsmDoMethod(obj, OM_SET, (struct TagItem *)&tag1, ginfo);
-   else     return 0;
+   AROS_SLOWSTACKTAGS_PRE_AS(tag1, ULONG)
+   if (obj) retval = (ULONG)AsmDoMethod(obj, OM_SET, AROS_SLOWSTACKTAGS_ARG(tag1), ginfo);
+   else     retval = 0;
+   AROS_SLOWSTACKTAGS_POST
 }
 
 /*
@@ -899,8 +907,10 @@ makeproto ULONG DoSetMethod(Object *obj, struct GadgetInfo *ginfo, Tag tag1, ...
  */
 makeproto ULONG DoSuperSetMethod(Class *cl, Object *obj, struct GadgetInfo *ginfo, Tag tag1, ...)
 {
-   if (obj) return (ULONG)AsmDoSuperMethod(cl, obj, OM_SET, (struct TagItem *)&tag1, ginfo);
-   else     return 0;
+   AROS_SLOWSTACKTAGS_PRE_AS(tag1, ULONG)
+   if (obj) retval = (ULONG)AsmDoSuperMethod(cl, obj, OM_SET, AROS_SLOWSTACKTAGS_ARG(tag1), ginfo);
+   else     retval = 0;
+   AROS_SLOWSTACKTAGS_POST
 }
 
 /*
@@ -908,8 +918,10 @@ makeproto ULONG DoSuperSetMethod(Class *cl, Object *obj, struct GadgetInfo *ginf
  */
 makeproto ULONG DoUpdateMethod(Object *obj, struct GadgetInfo *ginfo, ULONG flags, Tag tag1, ...)
 {
-   if (obj) return (ULONG)AsmDoMethod(obj, OM_UPDATE, (struct TagItem *)&tag1, ginfo, flags);
-   else     return 0;
+   AROS_SLOWSTACKTAGS_PRE_AS(tag1, ULONG)
+   if (obj) retval = (ULONG)AsmDoMethod(obj, OM_UPDATE, AROS_SLOWSTACKTAGS_ARG(tag1), ginfo, flags);
+   else     retval = 0;
+   AROS_SLOWSTACKTAGS_POST
 }
 
 /*
@@ -917,8 +929,10 @@ makeproto ULONG DoUpdateMethod(Object *obj, struct GadgetInfo *ginfo, ULONG flag
  */
 makeproto ULONG DoNotifyMethod(Object *obj, struct GadgetInfo *ginfo, ULONG flags, Tag tag1, ...)
 {
-   if (obj) return (ULONG)AsmDoMethod(obj, OM_NOTIFY, (struct TagItem *)&tag1, ginfo, flags);
-   else     return 0;
+   AROS_SLOWSTACKTAGS_PRE_AS(tag1, ULONG)
+   if (obj) retval = (ULONG)AsmDoMethod(obj, OM_NOTIFY, AROS_SLOWSTACKTAGS_ARG(tag1), ginfo, flags);
+   else     retval = 0;
+   AROS_SLOWSTACKTAGS_POST
 }
 
 /*
@@ -1004,14 +1018,18 @@ makeproto ASM IPTR ForwardMsg(REG(a0) Object *s, REG(a1) Object *d, REG(a2) Msg 
 #define BI_FREE_DRI 2
 
 #ifdef DEBUG_BGUI
-makeproto struct BaseInfo *AllocBaseInfoDebug(STRPTR file, ULONG line,ULONG tag1, ...)
+makeproto struct BaseInfo *AllocBaseInfoDebug(STRPTR file, ULONG line,Tag tag1, ...)
 {
-   return BGUI_AllocBaseInfoDebugA((struct TagItem *)&tag1,file,line);
+   AROS_SLOWSTACKTAGS_PRE_AS(tag1, struct BaseInfo *)
+   retval = BGUI_AllocBaseInfoDebugA(AROS_SLOWSTACKTAGS_ARG(tag1),file,line);
+   AROS_SLOWSTACKTAGS_POST
 }
 #else
-makeproto struct BaseInfo *AllocBaseInfo(ULONG tag1, ...)
+makeproto struct BaseInfo *AllocBaseInfo(Tag tag1, ...)
 {
-   return BGUI_AllocBaseInfoA((struct TagItem *)&tag1);
+   AROS_SLOWSTACKTAGS_PRE_AS(tag1, struct BaseInfo *)
+   retval = BGUI_AllocBaseInfoA(AROS_SLOWSTACKTAGS_ARG(tag1));
+   AROS_SLOWSTACKTAGS_POST
 }
 #endif
 

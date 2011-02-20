@@ -220,7 +220,9 @@ STATIC ASM Object *CreateVectorImage( REG(a1) struct TagItem *attrs )
 **/
 STATIC ULONG NotifyAttrChange( Object *obj, struct GadgetInfo *gi, ULONG flags, Tag tag1, ... )
 {
-   return( DoMethod( obj, OM_NOTIFY, &tag1, gi, flags ));
+   AROS_SLOWSTACKTAGS_PRE_AS(tag1, ULONG)
+   retval = (ULONG)DoMethod( obj, OM_NOTIFY, AROS_SLOWSTACKTAGS_ARG(tag1), gi, flags );
+   AROS_SLOWSTACKTAGS_POST
 }
 
 /*

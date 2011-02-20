@@ -113,11 +113,6 @@ ASM SAVEDS REGFUNCPROTO3(ULONG, WindowHandler,
         REGPARAM(A2, Object *, obj),
         REGPARAM(A1, struct IntuiMessage *, imsg));
 
-#ifdef __AROS__
-#else
-extern void __stdargs KPrintF(char *fmt,...);
-#endif
-
 /************************************************************************
 *****************************  LOCAL DATA  ******************************
 ************************************************************************/

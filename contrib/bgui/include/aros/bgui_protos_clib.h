@@ -164,7 +164,9 @@ AROS_LP3(void, FreePoolMemDebug,
 );
 /* varargs */
 Object *BGUI_NewObject( ULONG, Tag, ... );
-ULONG BGUI_Request( struct Window *, struct bguiRequest *, ... );
+#define BGUI_Request(win, breq, ...) \
+	({ IPTR __args[] = { AROS_PP_VARIADIC_CAST2IPTR(__VA_ARGS__) }; \
+	   BGUI_RequestA(win, breq, __args); })
 ULONG BGUI_DoGadgetMethod( Object *, struct Window *, struct Requester *, IPTR, ... );
 Class *BGUI_MakeClass( Tag, ... );
 

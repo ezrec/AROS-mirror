@@ -126,7 +126,12 @@ ASM SAVEDS REGFUNCPROTO3(ULONG, TVNotifyHandler,
 struct List     *MakeList(void);
 void FreeList(struct List *list);
 
+#ifdef __AROS__
+#include <aros/arossupport.h>
+#define KPrintF kprintf
+#else
 extern void __stdargs KPrintF(char *fmt,...);
+#endif
 
 /************************************************************************
 *****************************  LOCAL DATA  ******************************

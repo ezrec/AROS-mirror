@@ -119,7 +119,7 @@ struct IntuitionBase *IntuitionBase;
 /*
  *	Put up a simple requester.
  */
-ULONG Req( struct Window *win, UBYTE *gadgets, UBYTE *body, ... )
+ULONG ReqA( struct Window *win, UBYTE *gadgets, UBYTE *body, IPTR *args )
 {
 	struct bguiRequest	req = { NULL };
 
@@ -127,8 +127,11 @@ ULONG Req( struct Window *win, UBYTE *gadgets, UBYTE *body, ... )
 	req.br_TextFormat	= body;
 	req.br_Flags		= BREQF_CENTERWINDOW|BREQF_AUTO_ASPECT|BREQF_LOCKWINDOW|BREQF_FAST_KEYS;
 
-	return( BGUI_RequestA( win, &req, ( ULONG * )( &body + 1 )));
+	return BGUI_RequestA( win, &req, args);
 }
+#define Req(win, gadgets, body, ...) \
+({ IPTR __args[] = { AROS_PP_VARIADIC_CAST2IPTR(__VA_ARGS__) }; \
+   ReqA(win, gadgets, body, __args); })
 
 int main( int argc, char **argv )
 {

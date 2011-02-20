@@ -51,12 +51,12 @@
 
 
 #ifdef __AROS__
+#include <proto/arossupport.h>
 extern struct Library * BGUIBase;
-#endif
-
-
+#else
 void kprintf(char *format,...);
 #define bug kprintf
+#endif
 
 #ifdef DEBUG_BAR_CLASS
 #define D(x) (x)

@@ -50,10 +50,9 @@ struct Library *BGUIBase;
 
 struct IntuitionBase * IntuitionBase;
 
-VOID Tell( UBYTE *fstr, ... )
-{
-   if ( StdOut ) VFPrintf( StdOut, fstr, ( ULONG * )&fstr + 1 );
-}
+#define Tell(fstr, args...) do { \
+	        if ( StdOut ) FPrintf( StdOut, fstr ,##args); \
+} while (0)
 
 STATIC struct VectorItem left_down_arrow[] = {
    { 20, 20, VIF_SCALE                  },

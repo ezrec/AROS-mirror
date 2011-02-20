@@ -72,7 +72,9 @@
 
 ULONG TV_DoSuperNew(Class *cl,Object *obj,Tag tag1,...)
 {
-return(DoSuperMethod(cl,obj,OM_NEW,&tag1,NULL));
+   AROS_SLOWSTACKTAGS_PRE_AS(tag1, ULONG)
+   retval = (ULONG)DoSuperMethod(cl,obj,OM_NEW,AROS_SLOWSTACKTAGS_ARG(tag1),NULL);
+   AROS_SLOWSTACKTAGS_POST
 }
 
 /************************************************************************
@@ -86,7 +88,9 @@ return(DoSuperMethod(cl,obj,OM_NEW,&tag1,NULL));
 ULONG TV_NotifyAttrChange(Object *obj,struct GadgetInfo *gi,
 	ULONG flags,Tag tag1,...)
 {
-return(DoMethod(obj,OM_NOTIFY,&tag1,gi,flags));
+   AROS_SLOWSTACKTAGS_PRE_AS(tag1, ULONG)
+   return (ULONG)DoMethod(obj,OM_NOTIFY,AROS_SLOWSTACKTAGS_ARG(tag1),gi,flags);
+   AROS_SLOWSTACKTAGS_POST
 }
 
 

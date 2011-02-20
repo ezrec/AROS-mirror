@@ -107,11 +107,9 @@ struct UtilityBase    *UtilityBase;
 /*
  * Output text to the CLI or Workbench console.
  */
-
-VOID Tell( UBYTE *fstr, ... )
-{
-   if ( StdOut ) VFPrintf( StdOut, fstr, ( ULONG * )&fstr + 1 );
-}
+#define Tell(fstr, args...) do { \
+	        if ( StdOut ) FPrintf( StdOut, fstr ,##args); \
+} while (0)
 
 BOOL openlibs(void)
 {

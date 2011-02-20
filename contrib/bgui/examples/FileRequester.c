@@ -37,21 +37,25 @@ quit
 /*
 **      Bulk GetAttr(). This really belongs in amiga.lib... I think.
 **/
-ULONG GetAttrs( Object *obj, ULONG tag1, ... )
+ULONG GetAttrs( Object *obj, Tag tag1, ... )
 {
-        struct TagItem          *tstate = ( struct TagItem * )&tag1, *tag;
+	AROS_SLOWSTACKTAGS_PRE_AS(tag1, ULONG)
+        const struct TagItem    *tstate = AROS_SLOWSTACKTAGS_ARG(tag1);
+        struct TagItem          *tag;
         ULONG                    num = 0L;
 
         while (( tag = NextTagItem( &tstate )))
                 num += GetAttr( tag->ti_Tag, obj, ( ULONG * )tag->ti_Data );
 
-        return( num );
+        retval = num;
+
+        AROS_SLOWSTACKTAGS_POST
 }
 
 /*
 **      Put up a simple requester.
 **/
-ULONG Req( UBYTE *gadgets, UBYTE *body, ... )
+ULONG ReqA( UBYTE *gadgets, UBYTE *body, IPTR *args)
 {
         struct bguiRequest      req = { };
 
@@ -60,8 +64,12 @@ ULONG Req( UBYTE *gadgets, UBYTE *body, ... )
         req.br_Flags            = BREQF_AUTO_ASPECT;
         req.br_Underscore       = '_';
 
-        return( BGUI_RequestA( NULL, &req, ( ULONG * )( &body + 1 )));
+        return BGUI_RequestA( NULL, &req, args);
 }
+#define Req(gadgets, body, ...) \
+	({ IPTR __args[] = { AROS_PP_VARIADIC_CAST2IPTR(__VA_ARGS__) }; \
+	    ReqA(gadgets, body, __args); })
+
 
 VOID StartDemo( void )
 {

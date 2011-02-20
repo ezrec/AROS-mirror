@@ -54,7 +54,11 @@ extern struct Library * BGUIBase;
 #endif
 
 #ifdef DEBUG_GROUP_CLASS
+#ifdef __AROS__
+#include <aros/debug.h>
+#else
 void kprintf(char *format,...);
+#endif /* __AROS__ */
 #define bug kprintf
 #define D(x) (x)
 #else
@@ -98,13 +102,15 @@ typedef struct
 }
 GD;
 
-static ULONG MultipleGet(Object *obj,ULONG attribute,...)
+static ULONG MultipleGet(Object *obj,Tag attribute,...)
 {
+	AROS_SLOWSTACKTAGS_PRE_AS(attribute, ULONG)
 	struct ogpMGet mget;
 
 	mget.MethodID=LGM_MGET;
 	mget.ogpg_AttrList= (struct TagItem *)&attribute;
-	return(DoMethodA(obj,(Msg)&mget));
+	retval = (ULONG)DoMethodA(obj, (Msg)&mget);
+	AROS_SLOWSTACKTAGS_POST
 }
 
 METHOD(GroupClassLayout,struct bmLayout *,bml)

@@ -69,11 +69,6 @@ BGUI_RequestA(BASE_PAR_DECL struct Window * win, struct bguiRequest * estruct, U
    return res;
 }
 
-ULONG BGUI_Request(struct Window * win, struct bguiRequest * estruct, ...)
-{
-  return BGUI_RequestA(win, estruct, (ULONG *) ((ULONG) &estruct + sizeof(struct bguiRequest *)));
-}
-
 __inline BOOL
 BGUI_Help(BASE_PAR_DECL struct Window * win, UBYTE * name, UBYTE * node, ULONG line)
 {

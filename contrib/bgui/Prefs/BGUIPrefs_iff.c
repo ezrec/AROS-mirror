@@ -71,9 +71,11 @@ extern	ULONG		 grp_frmtype,
 
 
 struct TagItem *
-CloneTagList( ULONG t, ... )
+CloneTagList( Tag t, ... )
 {
-	return CloneTagItems( ( struct TagItem * )&t );
+	AROS_SLOWSTACKTAGS_PRE_AS(t, struct TagItem *)
+	retval = CloneTagItems(AROS_SLOWSTACKTAGS_ARG(t));
+	AROS_SLOWSTACKTAGS_POST
 }
 
 

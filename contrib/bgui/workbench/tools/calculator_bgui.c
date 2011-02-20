@@ -175,21 +175,14 @@ static void OpenTape( void );
 
 /*** Functions ***************************************************************/
 
-#ifdef __AROS__
-
-#undef AROS_TAGRETURNTYPE
-#define AROS_TAGRETURNTYPE Object *
-
 Object *BGUI_NewObject(ULONG num, Tag tag1, ...)
 {
-    AROS_SLOWSTACKTAGS_PRE(tag1)
+    AROS_SLOWSTACKTAGS_PRE_AS(tag1, Object *)
 
     retval = BGUI_NewObjectA(num, AROS_SLOWSTACKTAGS_ARG(tag1));
 
     AROS_SLOWSTACKTAGS_POST
 }
-
-#endif
 
 /// static void DosError( void )
 static void DosError( void )
